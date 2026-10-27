@@ -1,0 +1,542 @@
+
+-- Executing script file `/srv/opentallas-scratch2/claude/codex-kv-phy-specialize-1027/actual_link/kv3_sys_SD_v1/link.ys' --
+
+1. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/sd_kit_rtl/kv3_sys_SD_v1/kv3_sys_SD_v1_part.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/sd_kit_rtl/kv3_sys_SD_v1/kv3_sys_SD_v1_part.sv' to AST representation.
+Generating RTLIL representation for module `\kv3_sys_SD_v1_part'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/sd_kit_rtl/kv3_sys_SD_v1/kv3_sys_SD_v1_part_bound.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/sd_kit_rtl/kv3_sys_SD_v1/kv3_sys_SD_v1_part_bound.sv' to AST representation.
+Generating RTLIL representation for module `\kv3_sys_SD_v1_part_bound'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/rtl/bind_cells.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/rtl/bind_cells.sv' to AST representation.
+Generating RTLIL representation for module `\ot_dp_st'.
+Generating RTLIL representation for module `\ot_dp_rsync'.
+Generating RTLIL representation for module `\ot_dp_or'.
+Generating RTLIL representation for module `\ot_dp_and'.
+Generating RTLIL representation for module `\ot_dp_dly'.
+Warning: Replacing memory \r with list of registers. See /srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/rtl/bind_cells.sv:60
+Generating RTLIL representation for module `\ot_dp_rrelay'.
+Generating RTLIL representation for module `\ot_dp_rgate'.
+Generating RTLIL representation for module `\ot_dp_rsync_s2'.
+Generating RTLIL representation for module `\ot_dp_rsync_s3'.
+Generating RTLIL representation for module `\ot_dp_lockq'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_reset_sync.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_reset_sync.sv' to AST representation.
+Generating RTLIL representation for module `\ot_reset_sync'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/physical/die_plan/qwen_kvsys/bind/kv45/serdes_c45.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/physical/die_plan/qwen_kvsys/bind/kv45/serdes_c45.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qfd_serdes_112g_x6_phy_c45'.
+Generating RTLIL representation for module `\ot_qfd_serdes_112g_x12_phy_s2_c45'.
+Generating RTLIL representation for module `\ot_qfd_serdes_112g_x12_phy_c45'.
+Generating RTLIL representation for module `\qkd_rlys_kv45_valid4'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/sd_kit_rtl/kv3_sys_SD_v1/physical_specialization/provider_kv_phy_slices.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/sd_kit_rtl/kv3_sys_SD_v1/physical_specialization/provider_kv_phy_slices.sv' to AST representation.
+Generating RTLIL representation for module `\qkd_hbm3e_phy_pc4'.
+Generating RTLIL representation for module `\qkd_hbm3e_phy_pc_s8'.
+Generating RTLIL representation for module `\ot_qfd_serdes_112g_x12_phy_s2'.
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv' to AST representation.
+Generating RTLIL representation for module `\ot_fdi_phy_cdc'.
+Successfully finished Verilog frontend.
+
+8. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv' to AST representation.
+Generating RTLIL representation for module `\ot_async_fifo'.
+Warning: Replacing memory \mem with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:178
+Successfully finished Verilog frontend.
+
+9. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/sd_kit_rtl/kv3_sys_SD_v1/physical_specialization/ot_qfd_serdes_112g_x6_phy_physical.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/sd_kit_rtl/kv3_sys_SD_v1/physical_specialization/ot_qfd_serdes_112g_x6_phy_physical.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qfd_serdes_112g_x6_phy'.
+Successfully finished Verilog frontend.
+
+10. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/sd_kit_rtl/kv3_sys_SD_v1/physical_specialization/ot_qfd_serdes_112g_x6_phy_w521_bb.v
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/sd_kit_rtl/kv3_sys_SD_v1/physical_specialization/ot_qfd_serdes_112g_x6_phy_w521_bb.v' to AST representation.
+Generating RTLIL representation for module `\ot_qfd_serdes_112g_x6_phy_w521'.
+Successfully finished Verilog frontend.
+
+11. Executing HIERARCHY pass (managing design hierarchy).
+
+11.1. Analyzing design hierarchy..
+Top module:  \kv3_sys_SD_v1_part
+Used module:     \kv3_sys_SD_v1_part_bound
+Used module:         \ot_qfd_serdes_112g_x6_phy_c45
+Used module:             \ot_qfd_serdes_112g_x6_phy
+Used module:             \ot_fdi_phy_cdc
+Used module:                 \ot_async_fifo
+Used module:                     \ot_reset_sync
+Used module:         \ot_dp_st
+Used module:         \ot_dp_rrelay
+Used module:         \ot_dp_rgate
+Parameter \W = 521
+
+11.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qfd_serdes_112g_x6_phy_c45'.
+Parameter \W = 521
+Generating RTLIL representation for module `$paramod\ot_qfd_serdes_112g_x6_phy_c45\W=s32'00000000000000000000001000001001'.
+Parameter \W = 1
+
+11.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 1
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 522
+
+11.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 522
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000001000001010'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 522
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000001000001010'.
+Parameter \W = 522
+
+11.5. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qfd_serdes_112g_x6_phy'.
+Parameter \W = 522
+Generating RTLIL representation for module `$paramod\ot_qfd_serdes_112g_x6_phy\W=s32'00000000000000000000001000001010'.
+Parameter \W = 522
+Parameter \DEPTH = 8
+
+11.6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_fdi_phy_cdc'.
+Parameter \W = 522
+Parameter \DEPTH = 8
+Generating RTLIL representation for module `$paramod$f1adfd70d7a6a41a41b686e40dcffd6cd1ee2702\ot_fdi_phy_cdc'.
+Parameter \WIDTH = 522
+Parameter \DEPTH = 8
+
+11.7. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_async_fifo'.
+Parameter \WIDTH = 522
+Parameter \DEPTH = 8
+Generating RTLIL representation for module `$paramod$c9bfbffdb5c181d612691c2fcf95eee6e374fd3b\ot_async_fifo'.
+Warning: Replacing memory \mem with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:178
+Parameter \WIDTH = 522
+Parameter \DEPTH = 8
+Found cached RTLIL representation for module `$paramod$c9bfbffdb5c181d612691c2fcf95eee6e374fd3b\ot_async_fifo'.
+
+11.8. Analyzing design hierarchy..
+Top module:  \kv3_sys_SD_v1_part
+Used module:     \kv3_sys_SD_v1_part_bound
+Used module:         $paramod\ot_qfd_serdes_112g_x6_phy_c45\W=s32'00000000000000000000001000001001
+Used module:             \ot_qfd_serdes_112g_x6_phy
+Used module:             \ot_fdi_phy_cdc
+Used module:                 $paramod$c9bfbffdb5c181d612691c2fcf95eee6e374fd3b\ot_async_fifo
+Used module:                     \ot_reset_sync
+Used module:         $paramod\ot_dp_st\W=s32'00000000000000000000000000000001
+Used module:         $paramod\ot_dp_st\W=s32'00000000000000000000001000001010
+Used module:         \ot_dp_rrelay
+Used module:         \ot_dp_rgate
+Parameter \W = 521
+
+11.9. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qfd_serdes_112g_x6_phy'.
+Parameter \W = 521
+Generating RTLIL representation for module `$paramod\ot_qfd_serdes_112g_x6_phy\W=s32'00000000000000000000001000001001'.
+Parameter \W = 521
+Parameter \DEPTH = 8
+
+11.10. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_fdi_phy_cdc'.
+Parameter \W = 521
+Parameter \DEPTH = 8
+Generating RTLIL representation for module `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc'.
+
+11.11. Analyzing design hierarchy..
+Top module:  \kv3_sys_SD_v1_part
+Used module:     \kv3_sys_SD_v1_part_bound
+Used module:         $paramod\ot_qfd_serdes_112g_x6_phy_c45\W=s32'00000000000000000000001000001001
+Used module:             $paramod\ot_qfd_serdes_112g_x6_phy\W=s32'00000000000000000000001000001001
+Used module:             $paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc
+Used module:                 \ot_async_fifo
+Used module:                     \ot_reset_sync
+Used module:         $paramod\ot_dp_st\W=s32'00000000000000000000000000000001
+Used module:         $paramod\ot_dp_st\W=s32'00000000000000000000001000001010
+Used module:         \ot_dp_rrelay
+Used module:         \ot_dp_rgate
+Parameter \WIDTH = 521
+Parameter \DEPTH = 8
+
+11.12. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_async_fifo'.
+Parameter \WIDTH = 521
+Parameter \DEPTH = 8
+Generating RTLIL representation for module `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo'.
+Warning: Replacing memory \mem with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:178
+Parameter \WIDTH = 521
+Parameter \DEPTH = 8
+Found cached RTLIL representation for module `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo'.
+
+11.13. Analyzing design hierarchy..
+Top module:  \kv3_sys_SD_v1_part
+Used module:     \kv3_sys_SD_v1_part_bound
+Used module:         $paramod\ot_qfd_serdes_112g_x6_phy_c45\W=s32'00000000000000000000001000001001
+Used module:             $paramod\ot_qfd_serdes_112g_x6_phy\W=s32'00000000000000000000001000001001
+Used module:             $paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc
+Used module:                 $paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo
+Used module:                     \ot_reset_sync
+Used module:         $paramod\ot_dp_st\W=s32'00000000000000000000000000000001
+Used module:         $paramod\ot_dp_st\W=s32'00000000000000000000001000001010
+Used module:         \ot_dp_rrelay
+Used module:         \ot_dp_rgate
+
+11.14. Analyzing design hierarchy..
+Top module:  \kv3_sys_SD_v1_part
+Used module:     \kv3_sys_SD_v1_part_bound
+Used module:         $paramod\ot_qfd_serdes_112g_x6_phy_c45\W=s32'00000000000000000000001000001001
+Used module:             $paramod\ot_qfd_serdes_112g_x6_phy\W=s32'00000000000000000000001000001001
+Used module:             $paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc
+Used module:                 $paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo
+Used module:                     \ot_reset_sync
+Used module:         $paramod\ot_dp_st\W=s32'00000000000000000000000000000001
+Used module:         $paramod\ot_dp_st\W=s32'00000000000000000000001000001010
+Used module:         \ot_dp_rrelay
+Used module:         \ot_dp_rgate
+Removing unused module `$paramod$c9bfbffdb5c181d612691c2fcf95eee6e374fd3b\ot_async_fifo'.
+Removing unused module `$paramod$f1adfd70d7a6a41a41b686e40dcffd6cd1ee2702\ot_fdi_phy_cdc'.
+Removing unused module `$paramod\ot_qfd_serdes_112g_x6_phy\W=s32'00000000000000000000001000001010'.
+Removing unused module `\ot_qfd_serdes_112g_x6_phy'.
+Removing unused module `\ot_async_fifo'.
+Removing unused module `\ot_fdi_phy_cdc'.
+Removing unused module `\ot_qfd_serdes_112g_x12_phy_s2'.
+Removing unused module `\qkd_hbm3e_phy_pc_s8'.
+Removing unused module `\qkd_rlys_kv45_valid4'.
+Removing unused module `\ot_qfd_serdes_112g_x12_phy_c45'.
+Removing unused module `\ot_qfd_serdes_112g_x12_phy_s2_c45'.
+Removing unused module `\ot_qfd_serdes_112g_x6_phy_c45'.
+Removing unused module `\ot_dp_lockq'.
+Removing unused module `\ot_dp_rsync_s3'.
+Removing unused module `\ot_dp_rsync_s2'.
+Removing unused module `\ot_dp_dly'.
+Removing unused module `\ot_dp_and'.
+Removing unused module `\ot_dp_or'.
+Removing unused module `\ot_dp_rsync'.
+Removing unused module `\ot_dp_st'.
+Removed 20 unused modules.
+
+12. Executing PROC pass (convert processes to netlists).
+
+12.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:35$170'.
+Removing empty process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:35$170'.
+Cleaned up 1 empty switch.
+
+12.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_reset_sync.sv:18$24 in module ot_reset_sync.
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/rtl/bind_cells.sv:19$79 in module $paramod\ot_dp_st\W=s32'00000000000000000000001000001010.
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/rtl/bind_cells.sv:19$76 in module $paramod\ot_dp_st\W=s32'00000000000000000000000000000001.
+Removed 1 dead cases from process $proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:154$167 in module $paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:154$167 in module $paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:186$165 in module $paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.
+Marked 3 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:158$157 in module $paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv:77$135 in module $paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv:74$133 in module $paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv:66$130 in module $paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv:59$127 in module $paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.
+Removed a total of 1 dead cases.
+
+12.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 23 redundant assignments.
+Promoted 10 assignments to connections.
+
+12.4. Executing PROC_INIT pass (extract init attributes).
+
+12.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \async_rst_n in `\ot_reset_sync.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_reset_sync.sv:18$24'.
+Found async reset \rst_n in `$paramod\ot_dp_st\W=s32'00000000000000000000001000001010.$proc$/srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/rtl/bind_cells.sv:19$79'.
+Found async reset \rst_n in `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001.$proc$/srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/rtl/bind_cells.sv:19$76'.
+Found async reset \rd_domain_rst_n in `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:186$165'.
+Found async reset \wr_domain_rst_n in `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:158$157'.
+Found async reset \c_rst_n in `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv:77$135'.
+Found async reset \p_rst_n in `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv:74$133'.
+Found async reset \c_rst_n in `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv:66$130'.
+Found async reset \p_rst_n in `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv:59$127'.
+
+12.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~3 debug messages>
+
+12.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_reset_sync.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_reset_sync.sv:18$24'.
+     1/1: $0\reset_pipe[1:0]
+Creating decoders for process `$paramod\ot_dp_st\W=s32'00000000000000000000001000001010.$proc$/srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/rtl/bind_cells.sv:19$79'.
+     1/1: $0\eq[0:0]
+Creating decoders for process `$paramod\ot_dp_st\W=s32'00000000000000000000001000001010.$proc$/srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/rtl/bind_cells.sv:18$78'.
+Creating decoders for process `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001.$proc$/srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/rtl/bind_cells.sv:19$76'.
+     1/1: $0\eq[0:0]
+Creating decoders for process `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001.$proc$/srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/rtl/bind_cells.sv:18$75'.
+Creating decoders for process `\ot_dp_rgate.$proc$/srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/rtl/bind_cells.sv:74$11'.
+Creating decoders for process `\ot_dp_rrelay.$proc$/srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/rtl/bind_cells.sv:69$10'.
+Creating decoders for process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:154$167'.
+     1/1: $1$mem2reg_rd$\mem$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:154$137_DATA[520:0]$169
+Creating decoders for process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:186$165'.
+     1/9: $0\rd_empty[0:0]
+     2/9: $0\rd_gray[3:0]
+     3/9: $0\rd_bin[3:0]
+     4/9: $0\wr_gray_r2[3:0]
+     5/9: $0\wr_gray_r1[3:0]
+     6/9: $0\wr_online_r2[0:0]
+     7/9: $0\wr_online_r1[0:0]
+     8/9: $0\rd_online[0:0]
+     9/9: $0\rd_underflow[0:0]
+Creating decoders for process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:158$157'.
+     1/21: $2$mem2reg_wr$\mem$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:178$138_ADDR[2:0]$163
+     2/21: $2$mem2reg_wr$\mem$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:178$138_DATA[520:0]$164
+     3/21: $0\wr_full[0:0]
+     4/21: $0\wr_gray[3:0]
+     5/21: $0\wr_bin[3:0]
+     6/21: $1$mem2reg_wr$\mem$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:178$138_DATA[520:0]$162
+     7/21: $1$mem2reg_wr$\mem$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:178$138_ADDR[2:0]$161
+     8/21: $0\rd_gray_w2[3:0]
+     9/21: $0\rd_gray_w1[3:0]
+    10/21: $0\rd_online_w2[0:0]
+    11/21: $0\rd_online_w1[0:0]
+    12/21: $0\wr_online[0:0]
+    13/21: $0\mem[7][520:0]
+    14/21: $0\mem[6][520:0]
+    15/21: $0\mem[5][520:0]
+    16/21: $0\mem[4][520:0]
+    17/21: $0\mem[3][520:0]
+    18/21: $0\mem[2][520:0]
+    19/21: $0\mem[1][520:0]
+    20/21: $0\mem[0][520:0]
+    21/21: $0\wr_overflow[0:0]
+Creating decoders for process `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv:77$135'.
+     1/1: $0\up_s[1:0]
+Creating decoders for process `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv:74$133'.
+     1/1: $0\p_tx_v[0:0]
+Creating decoders for process `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv:73$132'.
+Creating decoders for process `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv:66$130'.
+     1/1: $0\c_rx_v[0:0]
+Creating decoders for process `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv:65$129'.
+Creating decoders for process `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv:59$127'.
+     1/1: $0\rq_v[0:0]
+Creating decoders for process `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv:58$126'.
+
+12.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$mem2reg_rd$\mem$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:154$137_DATA' from process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:154$167'.
+
+12.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_reset_sync.\reset_pipe' using process `\ot_reset_sync.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_reset_sync.sv:18$24'.
+  created $adff cell `$procdff$258' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_dp_st\W=s32'00000000000000000000001000001010.\eq' using process `$paramod\ot_dp_st\W=s32'00000000000000000000001000001010.$proc$/srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/rtl/bind_cells.sv:19$79'.
+  created $adff cell `$procdff$263' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_dp_st\W=s32'00000000000000000000001000001010.\q' using process `$paramod\ot_dp_st\W=s32'00000000000000000000001000001010.$proc$/srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/rtl/bind_cells.sv:18$78'.
+  created $dff cell `$procdff$264' with positive edge clock.
+Creating register for signal `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001.\eq' using process `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001.$proc$/srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/rtl/bind_cells.sv:19$76'.
+  created $adff cell `$procdff$269' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001.\q' using process `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001.$proc$/srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/rtl/bind_cells.sv:18$75'.
+  created $dff cell `$procdff$270' with positive edge clock.
+Creating register for signal `\ot_dp_rgate.\q' using process `\ot_dp_rgate.$proc$/srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/rtl/bind_cells.sv:74$11'.
+  created $dff cell `$procdff$271' with positive edge clock.
+Creating register for signal `\ot_dp_rrelay.\q' using process `\ot_dp_rrelay.$proc$/srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/rtl/bind_cells.sv:69$10'.
+  created $dff cell `$procdff$272' with positive edge clock.
+Creating register for signal `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.\rd_underflow' using process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:186$165'.
+  created $adff cell `$procdff$277' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.\rd_bin' using process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:186$165'.
+  created $adff cell `$procdff$282' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.\rd_gray' using process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:186$165'.
+  created $adff cell `$procdff$287' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.\wr_gray_r1' using process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:186$165'.
+  created $adff cell `$procdff$292' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.\wr_gray_r2' using process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:186$165'.
+  created $adff cell `$procdff$297' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.\rd_online' using process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:186$165'.
+  created $adff cell `$procdff$302' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.\wr_online_r1' using process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:186$165'.
+  created $adff cell `$procdff$307' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.\wr_online_r2' using process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:186$165'.
+  created $adff cell `$procdff$312' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.\rd_empty' using process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:186$165'.
+  created $adff cell `$procdff$317' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.\wr_overflow' using process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:158$157'.
+  created $adff cell `$procdff$322' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.\wr_bin' using process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:158$157'.
+  created $adff cell `$procdff$327' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.\wr_gray' using process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:158$157'.
+  created $adff cell `$procdff$332' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.\rd_gray_w1' using process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:158$157'.
+  created $adff cell `$procdff$337' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.\rd_gray_w2' using process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:158$157'.
+  created $adff cell `$procdff$342' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.\wr_online' using process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:158$157'.
+  created $adff cell `$procdff$347' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.\rd_online_w1' using process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:158$157'.
+  created $adff cell `$procdff$352' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.\rd_online_w2' using process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:158$157'.
+  created $adff cell `$procdff$357' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.\wr_full' using process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:158$157'.
+  created $adff cell `$procdff$362' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.\mem[0]' using process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:158$157'.
+  created $dff cell `$procdff$369' with positive edge clock.
+Creating register for signal `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.\mem[1]' using process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:158$157'.
+  created $dff cell `$procdff$376' with positive edge clock.
+Creating register for signal `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.\mem[2]' using process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:158$157'.
+  created $dff cell `$procdff$383' with positive edge clock.
+Creating register for signal `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.\mem[3]' using process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:158$157'.
+  created $dff cell `$procdff$390' with positive edge clock.
+Creating register for signal `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.\mem[4]' using process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:158$157'.
+  created $dff cell `$procdff$397' with positive edge clock.
+Creating register for signal `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.\mem[5]' using process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:158$157'.
+  created $dff cell `$procdff$404' with positive edge clock.
+Creating register for signal `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.\mem[6]' using process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:158$157'.
+  created $dff cell `$procdff$411' with positive edge clock.
+Creating register for signal `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.\mem[7]' using process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:158$157'.
+  created $dff cell `$procdff$418' with positive edge clock.
+Creating register for signal `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$mem2reg_wr$\mem$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:178$138_ADDR' using process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:158$157'.
+  created $adff cell `$procdff$423' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$mem2reg_wr$\mem$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:178$138_DATA' using process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:158$157'.
+  created $adff cell `$procdff$428' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.\up_s' using process `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv:77$135'.
+  created $adff cell `$procdff$433' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.\p_tx_v' using process `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv:74$133'.
+  created $adff cell `$procdff$438' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.\p_tx_d' using process `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv:73$132'.
+  created $dff cell `$procdff$439' with positive edge clock.
+Creating register for signal `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.\c_rx_v' using process `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv:66$130'.
+  created $adff cell `$procdff$444' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.\c_rx_d' using process `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv:65$129'.
+  created $dff cell `$procdff$445' with positive edge clock.
+Creating register for signal `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.\rq_v' using process `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv:59$127'.
+  created $adff cell `$procdff$450' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.\rq_d' using process `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv:58$126'.
+  created $dff cell `$procdff$451' with positive edge clock.
+
+12.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+12.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `ot_reset_sync.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_reset_sync.sv:18$24'.
+Removing empty process `$paramod\ot_dp_st\W=s32'00000000000000000000001000001010.$proc$/srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/rtl/bind_cells.sv:19$79'.
+Removing empty process `$paramod\ot_dp_st\W=s32'00000000000000000000001000001010.$proc$/srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/rtl/bind_cells.sv:18$78'.
+Removing empty process `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001.$proc$/srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/rtl/bind_cells.sv:19$76'.
+Removing empty process `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001.$proc$/srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/rtl/bind_cells.sv:18$75'.
+Removing empty process `ot_dp_rgate.$proc$/srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/rtl/bind_cells.sv:74$11'.
+Removing empty process `ot_dp_rrelay.$proc$/srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/rtl/bind_cells.sv:69$10'.
+Found and cleaned up 1 empty switch in `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:154$167'.
+Removing empty process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:154$167'.
+Removing empty process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:186$165'.
+Found and cleaned up 2 empty switches in `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:158$157'.
+Removing empty process `$paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv:158$157'.
+Removing empty process `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv:77$135'.
+Removing empty process `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv:74$133'.
+Removing empty process `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv:73$132'.
+Removing empty process `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv:66$130'.
+Removing empty process `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv:65$129'.
+Removing empty process `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv:59$127'.
+Removing empty process `$paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.$proc$/srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv:58$126'.
+Cleaned up 3 empty switches.
+
+12.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_reset_sync.
+<suppressed ~2 debug messages>
+Optimizing module $paramod\ot_qfd_serdes_112g_x6_phy\W=s32'00000000000000000000001000001001.
+Optimizing module $paramod\ot_dp_st\W=s32'00000000000000000000001000001010.
+<suppressed ~2 debug messages>
+Optimizing module $paramod\ot_dp_st\W=s32'00000000000000000000000000000001.
+<suppressed ~2 debug messages>
+Optimizing module ot_dp_rgate.
+Optimizing module ot_dp_rrelay.
+Optimizing module $paramod\ot_qfd_serdes_112g_x6_phy_c45\W=s32'00000000000000000000001000001001.
+Optimizing module $paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.
+<suppressed ~60 debug messages>
+Optimizing module $paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.
+<suppressed ~8 debug messages>
+Optimizing module kv3_sys_SD_v1_part_bound.
+Optimizing module kv3_sys_SD_v1_part.
+
+13. Executing FLATTEN pass (flatten design).
+Keeping kv3_sys_SD_v1_part_bound.u_rst_in (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part_bound.u_run_in (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part_bound.u_rrl_0 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part_bound.u_srl_0 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part_bound.u_rrl_1 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part_bound.u_srl_1 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part_bound.u_rrl_2 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part_bound.u_rrl_2_g (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part_bound.u_rrl_3 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part_bound.u_srl_3 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part_bound.u_rrl_4 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part_bound.u_srl_4 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part_bound.u_rrl_5 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part_bound.u_rrl_6 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part_bound.u_srl_6 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part_bound.u_rrl_7 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part_bound.u_srl_7 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part_bound.u_rrl_8 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part_bound.u_rrl_9 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part_bound.u_srl_9 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part_bound.u_rrl_10 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part_bound.u_srl_10 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part_bound.u_rrl_11 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part_bound.u_rrl_12 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part_bound.u_srl_12 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part_bound.u_rrl_13 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part_bound.u_srl_13 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part_bound.u_rrl_14 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part_bound.u_bin_i_host_fdi (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part_bound.u_bin_i_host_link_rst_n (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part_bound.u_bout_o_serdes_E_rx_flit (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part_bound.u_bout_o_serdes_E_tx_up (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_rst_in (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_run_in (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_rrl_0 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_srl_0 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_rrl_1 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_srl_1 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_rrl_2 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_rrl_2_g (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_rrl_3 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_srl_3 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_rrl_4 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_srl_4 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_rrl_5 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_rrl_6 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_srl_6 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_rrl_7 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_srl_7 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_rrl_8 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_rrl_9 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_srl_9 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_rrl_10 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_srl_10 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_rrl_11 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_rrl_12 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_srl_12 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_rrl_13 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_srl_13 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_rrl_14 (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_bin_i_host_fdi (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_bin_i_host_link_rst_n (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_bout_o_serdes_E_rx_flit (found keep_hierarchy attribute).
+Keeping kv3_sys_SD_v1_part.u_bound.u_bout_o_serdes_E_tx_up (found keep_hierarchy attribute).
+Deleting now unused module ot_reset_sync.
+Deleting now unused module $paramod\ot_qfd_serdes_112g_x6_phy\W=s32'00000000000000000000001000001001.
+Deleting now unused module $paramod\ot_qfd_serdes_112g_x6_phy_c45\W=s32'00000000000000000000001000001001.
+Deleting now unused module $paramod$48955d016e5ac788ceb086af265cdba270c82433\ot_async_fifo.
+Deleting now unused module $paramod$518896a3275725f1d1fe8ba77ea112c3bb973e89\ot_fdi_phy_cdc.
+Deleting now unused module kv3_sys_SD_v1_part_bound.
+<suppressed ~10 debug messages>
+
+14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\ot_dp_st\W=s32'00000000000000000000001000001010..
+Finding unused cells or wires in module $paramod\ot_dp_st\W=s32'00000000000000000000000000000001..
+Finding unused cells or wires in module \ot_dp_rgate..
+Finding unused cells or wires in module \ot_dp_rrelay..
+Finding unused cells or wires in module \kv3_sys_SD_v1_part..
+Removed 96 unused cells and 307 unused wires.
+<suppressed ~109 debug messages>
+
+15. Executing CHECK pass (checking for obvious problems).
+Checking module $paramod\ot_dp_st\W=s32'00000000000000000000001000001010...
+Checking module $paramod\ot_dp_st\W=s32'00000000000000000000000000000001...
+Checking module ot_dp_rgate...
+Checking module ot_dp_rrelay...
+Checking module kv3_sys_SD_v1_part...
+Found and reported 0 problems.
+
+16. Executing JSON backend.

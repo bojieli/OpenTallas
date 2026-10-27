@@ -1,0 +1,16 @@
+read_verilog -sv /srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/sd_kit_rtl/kv3_sys_SD_v1/kv3_sys_SD_v1_part.sv
+read_verilog -sv /srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/sd_kit_rtl/kv3_sys_SD_v1/kv3_sys_SD_v1_part_bound.sv
+read_verilog -sv /srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/rtl/bind_cells.sv
+read_verilog -sv /srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_reset_sync.sv
+read_verilog -sv /srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/physical/die_plan/qwen_kvsys/bind/kv45/serdes_c45.sv
+read_verilog -sv /srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/sd_kit_rtl/kv3_sys_SD_v1/physical_specialization/provider_kv_phy_slices.sv
+read_verilog -sv /srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/physical/ot_fdi_phy_cdc.sv
+read_verilog -sv /srv/opentallas-scratch2/claude/wt/codex-kv-native-bind-1027/rtl/lib/ot_async_fifo.sv
+read_verilog -sv /srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/sd_kit_rtl/kv3_sys_SD_v1/physical_specialization/ot_qfd_serdes_112g_x6_phy_physical.sv
+read_verilog -sv /srv/opentallas-scratch2/claude/codex-kv-native-bind-1027/bind4/sd_kit_rtl/kv3_sys_SD_v1/physical_specialization/ot_qfd_serdes_112g_x6_phy_w521_bb.v
+hierarchy -check -top kv3_sys_SD_v1_part
+proc
+flatten
+opt_clean
+check -assert
+write_json /srv/opentallas-scratch2/claude/codex-kv-phy-specialize-1027/actual_link/kv3_sys_SD_v1/linked.json
