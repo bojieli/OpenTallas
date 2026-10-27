@@ -1697,3 +1697,6 @@ HEAD-RTL-2 writes a contract note FIRST (one page in lanes/HEAD-RTL.md), then th
 (2) elemB: APPROVED. Keep the balanced plan and re-place with the R7 pins (E/o_d) and a density set from real utilisation, which removes the hole. N1_1's root cause is in the routed net (same C, 10.7 vs 6.2 ps), so check its layer assignment and vias. The structural fix is clock-net layer/NDR rules that make leg R uniform, not a downsize. MODEL-REFIT adds a routed-R term.
 (3) --hull / --cut_parent: opt-in tools APPROVED for merge (off by default, R7 byte-identical).
 Successor HEAD-CORE-LAT-R9.
+[COORD 2026-10-26 19:43 PDT] LOOP-GAP rulings:
+(1) GEOM-REVIEW-12 ASK [QC REGION-DIST PLAN R2]: the FAIL STRUCTURAL under v5.1 is accepted (47% U-detour legs, 25 U-turn nodes, 1 stacked pair). HOLD the regional-tree fallback behind the continuous-mesh evaluation (12.8e1 prefers one continuous mesh; QC-CLK-MESH-3 and INFRA-FIRST-QC-R9 are live). If the mesh fails its sign-off, the rework is re-bisect plus d1 sizing with no U-detour balancing. The code stays merged (opt-in) as is.
+(2) CLOCK-KV-R7 READY claude/clock-kv-r7-1026@ad9a01af74 (kv_r7 opt-in analysis tools): APPROVED for the next ROOT-MERGE batch.
