@@ -127,7 +127,8 @@ endmodule
 // packed CPS to a registered stage (CPS 2: 3 stages, CPS 3: 2 stages; the first two exchanges of a stage one compare
 // deep, dsdv_sel_cx8_2).  ZQ = 1 zeroes the last register when !iv (zero-idle output bus).  qn / fn: the last
 // register's next value (before the ZQ zeroing) and its flags, for a consumer's pin-only output twin (same edge).
-// MUT 10 (bench only): the last compare-exchange of the last 3-exchange stage is skipped.
+// MUT 10 (bench only): the last compare-exchange (8, 1) is skipped (CPS 3: of the last 3-exchange stage; CPS 2: the
+// last 2-exchange stage keeps only its first exchange (8, 2)).
 module dsdv_sel_sort8 #(
     parameter integer EW  = 41,
     parameter integer CPS = 2,
@@ -166,7 +167,9 @@ module dsdv_sel_sort8 #(
                 localparam integer IY = IX + 1;
                 localparam integer JY = (IY == 0 || IY == 2 || IY == 5) ? 1 : (IY == 1 || IY == 4) ? 2 : 4;
                 localparam integer KY = (IY == 0) ? 2 : (IY <= 2) ? 4 : 8;
-                if (CPS >= 2 && k == 0) begin : g_two                // exchanges IX, IX + 1: one compare deep
+                if (CPS == 2 && k == 0 && MUT == 10 && s == NS - 1) begin : g_mut2   // bench mutant: last exchange (8, 1) dropped
+                    dsdv_sel_cx8 #(.EW(EW), .J(JJ), .KB(KK)) u (.d(t[0]), .q(t[2]));
+                end else if (CPS >= 2 && k == 0) begin : g_two       // exchanges IX, IX + 1: one compare deep
                     dsdv_sel_cx8_2 #(.EW(EW), .J1(JJ), .KB1(KK), .J2(JY), .KB2(KY)) u (.d(t[0]), .q(t[2]));
                 end else if (CPS >= 2 && k == 1) begin : g_skip2
                 end else begin : g_one
