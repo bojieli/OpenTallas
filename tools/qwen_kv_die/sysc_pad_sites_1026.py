@@ -7,7 +7,7 @@ postplace census, and no CTS/route is authorized by this allocation.
 import argparse,json,math,re
 from pathlib import Path
 
-def allocate(plan,pins,netlist,out):
+def allocate(plan,pins,netlist,out,reset_tcl=None):
     raw=json.loads(Path(plan).read_text());t=raw['partition_types']['kv3_sys_c']
     pins=json.loads(Path(pins).read_text()); pp={(p['bus'],p['bit']):(p['x'],p['y']) for p in pins}
     cells=re.findall(r'^  (\w*DFF\w*)\s+\\(u_bound\.u_pd\S+)\s+\(',Path(netlist).read_text(),re.M)
@@ -24,6 +24,12 @@ def allocate(plan,pins,netlist,out):
             for x,y in stage:reserve(x,y)
     for station in t.get('internal_stations',[]):
         for x,y in station.get('regs_um',[]):reserve(x,y)
+    if reset_tcl:
+        text=Path(reset_tcl).read_text()
+        for x,y in re.findall(r'^rtr_place \S+ \{[^}]+\} ([0-9.]+) ([0-9.]+) ',text,re.M):
+            ix,iy=round(float(x)/.108),round(float(y)/.27)
+            for a in range(ix-40,ix+41):
+                for b in range(iy-16,iy+17):occupied.add((a,b))
     blocked=[tuple(r) for r in t.get('clock',{}).get('die_islands_um',[])]
     for c in t['contents']:
         x,y=c['origin_um'];w,h=c['outline_um'];blocked.append((x-8.64,y-8.64,x+w+8.64,y+h+8.64))
@@ -64,7 +70,7 @@ def allocate(plan,pins,netlist,out):
     (out/'sites.json').write_text(json.dumps(dict(status='PLACEMENT TRIAL ONLY; consumer reach not measured',count=len(sites),max_source_pad_hop_um=maxhop,sites=sites),indent=1)+'\n')
     tcl=['# Actual native R8 pad FF trial allocation; no latency changes.', 'uplevel #0 {','set pb [ord::get_db_block]','set pu [[ord::get_db_tech] getDbUnitsPerMicron]','set pr {}','foreach r [$pb getRows] { dict set pr [lindex [$r getOrigin] 1] [$r getOrient] }','set pc 0']
     for row in sites:
-        n=row['inst'];x,y=row['xy_um'];tcl += [f'set pi [$pb findInst {{{n}}}]',f'if {{$pi eq "NULL"}} {{ error {{missing landing FF {n}}} }}',f'set px [expr {{round({x}*$pu)}}]; set py [expr {{round({y}*$pu)}}]', 'if {![dict exists $pr $py]} { error "landing FF row not legal: $py" }', '$pi setOrient [dict get $pr $py]', '$pi setOrigin $px $py', '$pi setPlacementStatus FIRM','incr pc']
+        n=re.sub(r'(?<!\\)([\[\]])',r'\\\1',row['inst']);x,y=row['xy_um'];tcl += [f'set pi [$pb findInst {{{n}}}]',f'if {{$pi eq "NULL"}} {{ error {{missing landing FF {n}}} }}',f'set px [expr {{round({x}*$pu)}}]; set py [expr {{round({y}*$pu)}}]', 'if {![dict exists $pr $py]} { error "landing FF row not legal: $py" }', '$pi setOrient [dict get $pr $py]', '$pi setOrigin $px $py', '$pi setPlacementStatus FIRM','incr pc']
     tcl += ['puts "SYS_C_NATIVE_PADS FIRM $pc"','}']
     (out/'pad_sites.tcl').write_text('\n'.join(tcl)+'\n')
     (out/'pad_release.tcl').write_text('uplevel #0 {\nset b [ord::get_db_block]\nforeach i [$b getInsts] { if {[regexp {^u_bound[.]u_pd[0-9]+_} [$i getName]] && [$i getPlacementStatus] eq "FIRM"} { $i setPlacementStatus PLACED } }\n}\n')
@@ -73,4 +79,5 @@ def allocate(plan,pins,netlist,out):
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     for n in ('plan','pins','netlist','out'):p.add_argument('--'+n,required=True)
-    a=p.parse_args();allocate(a.plan,a.pins,a.netlist,a.out)
+    p.add_argument("--reset-tcl")
+    a=p.parse_args();allocate(a.plan,a.pins,a.netlist,a.out,a.reset_tcl)
