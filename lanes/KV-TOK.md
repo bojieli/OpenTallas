@@ -342,3 +342,6 @@ Independent B33 build9 completed exit0, native boot now LIVE epyc1:codex-kv-boot
 
 ## CODEX notes 2026-10-26 20:07 PDT
 B33 fixed run7 COMPLETE PASS:7404/7404frames,14/14images, setup_ready37950, START38080, boot/host/cf faults0. Collected exact log in codex/kv-boot-2005@91c5d3c1d results/kv_tok/codex_boot_2005. B48 build3 rc0,peak254GB; asis stuck0frames5Mcycles because8clk_region inputs are absent from tb DUT instance, all regions unclocked. Generic bench binding fix+4focused tests in91c5d3c1d; native B48 successor being prepared, inherited gate3 top frontend still live1348049. No job killed or duplicated.
+
+## CODEX notes 2026-10-26 20:51 PDT -- corrected current B48 build
+Own corrected B48 scope oth-ubuntu-2702208-1793070819 on intel2, client894681 on epyc1: all18PC boot-window variants rebuilt by20:19, top frontend still progressing. Runtime /srv/opentallas-scratch2/claude/codex-kv-boot-2005, log on epyc1 otrun_intel2_v2.log. The first own spill attempt failed on omitted hier.vlt/gen include; preserved under attempt1 and corrected. Current native benchmark drives all8regional clocks at833ps, uses saved B33-qualified static host pacing/START and ABI-correct HOST lib. Nominal+frame mutant queued after build. No B48 functional verdict yet. Source ac3366eaa remains an opt-in bench/helper candidate; B33 run7 PASS14/14 remains component evidence.
