@@ -59,12 +59,11 @@ module ot_s81sl_cap_ed #(
     assign o_e = q[65];
     // S81-CORE-LAT-R20 10-27 (RAW face_guard: i_f unregistered, o_f shared by its own sticky loop): i_f gets a pin
     // flop (+1 edge on fault visibility ONLY: the sticky fault is phase-end checked, OWNERS-S81/CAP2 fault_p
-    // precedent), the sticky lives in f_s and the pin o_f is a kept copy flop with the SAME next state (0 extra edges).
-    reg i_f_q, f_s;
+    // precedent), the sticky lives in f_s and the pin o_f is a copy flop (f_s kept: no merge) with the SAME next state (0 extra edges).
+    reg i_f_q;
+    (* keep = "true" *) reg f_s;
     always @(posedge clk or negedge rsv[1]) if (!rsv[1]) i_f_q <= 1'b0; else i_f_q <= i_f;
     always @(posedge clk or negedge rsv[1]) if (!rsv[1]) f_s <= 1'b0; else if (i_f_q) f_s <= 1'b1;
-    (* keep = "true" *) reg o_f_k;
-    always @(posedge clk or negedge rsv[1]) if (!rsv[1]) o_f_k <= 1'b0; else o_f_k <= f_s || i_f_q;
-    always @* o_f = o_f_k;
+    always @(posedge clk or negedge rsv[1]) if (!rsv[1]) o_f <= 1'b0; else o_f <= f_s || i_f_q;
 endmodule
 `default_nettype wire

@@ -58,7 +58,7 @@ module ot_s81sl_cap_rt #(
     output wire [3:0]    cw_n_v,       // leaves 3, 4 (N face)
     output wire [47:0]   cw_n_a,
     output wire [127:0]  cw_n_d,
-    output wire          fault
+    output reg           fault
 );
     reg  [9:0]   cw_v; (* keep = "true" *) reg [119:0] cw_a; (* keep = "true" *) reg [319:0] cw_d;   // kept: never folded into the pin copies
     // OWNERS-S81/CAP2 (10-18): the held capture words cw_a / cw_d keep their value between writes, so their flops load
@@ -66,10 +66,8 @@ module ot_s81sl_cap_rt #(
     // ~25 um from its N pin on a late leaf).  The pins are driven by dedicated TOP-module copy flops (* keep *) loaded
     // with the SAME next state at the SAME edge (0 edges moved); the hold feedback taps the internal copies only.
     (* keep = "true" *) reg [119:0] cw_a_p; (* keep = "true" *) reg [319:0] cw_d_p;
-    (* keep = "true" *) reg fault_p;
     assign cw_s_v = cw_v[5:0];   assign cw_s_a = cw_a_p[71:0];   assign cw_s_d = cw_d_p[191:0];
     assign cw_n_v = cw_v[9:6];   assign cw_n_a = cw_a_p[119:72]; assign cw_n_d = cw_d_p[319:192];
-    assign fault = fault_p;
     wire [19:0] rsv;
     ot_rst_relay #(.REGIONS(20), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rsv));
     wire rs_n = rsv[0], rs_f = rsv[1], rs_o = rsv[2], rs_c = rsv[3];
@@ -264,7 +262,9 @@ module ot_s81sl_cap_rt #(
     always @(posedge clk) begin re_t <= re_tn; re_d <= sum; re_e <= serr != 2'd0; end
 
     // cfg pin flops
-    reg cfgv_q; reg [159:0] cfgd_q;
+    // S81-CORE-LAT-R20 10-27 (RAW face_guard: cfg_d[159:74] unread -> their pin flops removed): every cfg_d bit keeps its
+    // pin flop (the plan's face register; no logic reads [159:74]).
+    reg cfgv_q; (* keep = "true" *) reg [159:0] cfgd_q;
     always @(posedge clk or negedge rs_c) if (!rs_c) cfgv_q <= 1'b0; else cfgv_q <= cfg_v;
     always @(posedge clk) cfgd_q <= cfg_d;
     // ------------------------------------------------------------ DEC: config + two complete-word pipes
@@ -368,7 +368,9 @@ module ot_s81sl_cap_rt #(
     // fault is checked at phase end, not timed: SLICE_CONTRACT).  Its only load is the S pin, so io_flop_at_pins anchors
     // it there (gate @59b690283: the sticky flop sat at (120, 77.8) beside its OR cone, ~170 um from the S pin, launch
     // 236.7 ps > 220).  f5..f7 are decision logic, not registered bits: a same-edge copy would carry the cone to the pin.
-    always @(posedge clk or negedge rs_c) if (!rs_c) fault_p <= 1'b0; else fault_p <= fault_q;
+    // S81-CORE-LAT-R20 10-27 (RAW face_guard 'shared' on fault: the kept fault_p wire added a load beside the port): the
+    // copy flop IS the port register now (same next state fault_q, same edge as fault_p).
+    always @(posedge clk or negedge rs_c) if (!rs_c) fault <= 1'b0; else fault <= fault_q;
 `ifndef SYNTHESIS
     // bench visibility: which obligation fired first ([1] tree leaves, [3] n6, [4..10] F5..F11)
     reg [15:0] fcause;
