@@ -24,4 +24,4 @@
 
 prog L2 numbers: depth 7.074 um; 8 strips (E x263.544-270.618, W x83.646-90.72).
 
-**Run.** kit epyc2:/srv/opentallas-scratch2/claude/qc-su-prog-l2-1026/kit_l2h (chain_halo.sh) keeps the GRT clock recipe. Results UNCHECKED until collected.
+**Run.** kit epyc2:/srv/opentallas-scratch2/claude/qc-su-prog-l2-1026/kit_l2h (chain_halo.sh) keeps the GRT clock recipe. Try 1 hit DPL-0004 (blockage over the endcaps) and was fixed. Try 2 placed with STRIP_CHECK 32 blockages and 0 cells in strips (CHECKED, render prog_l2h_place.png viewed: the u_twd0 wall sits at x>=270.7 and the old DRT window is empty). CTS/GRT/DRT/RCX are UNCHECKED until collected.
