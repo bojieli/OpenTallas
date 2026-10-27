@@ -3,7 +3,7 @@
 # from M9 (die-like GRT+DRT on the core abstract).  $1 = trial dir (has quad.json + run/), output -> $1/proof
 set -uo pipefail
 K=$(realpath "$1"); NICK=$(sed -n 's/^export DESIGN_NICKNAME = //p' $K/config.mk); P=$K/proof; mkdir -p $P
-ODB=/work/run/results/asap7/$NICK/base/4_cts.odb; IMG=openroad/orfs:asap7lock; N=hclp-$(basename $K)-$$
+B=run/results/asap7/$NICK/base; ODB=/work/$B/4_cts.odb; [ -f $K/$B/4_cts.odb ] || ODB=/work/$B/4_1_cts_gate.odb; IMG=openroad/orfs:asap7lock; N=hclp-$(basename $K)-$$
 PLAN=$(python3 -c "import json;q=json.load(open('$K/quad.json'));print(' '.join('%s:%s:%.3f:%.3f'%tuple(c[:4]) for c in q['die_cells']))")
 run() { docker run --rm --name $N-$1 --cpus=4 --memory=16g --memory-swap=16g -v "$K":/work -v "$P":/out "${@:2}"; }
 run a -e ODB=$ODB -e "PLAN=$PLAN" $IMG bash -lc 'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -exit /work/pushdown_place_check.tcl' > $P/a.log 2>&1

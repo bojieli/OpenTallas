@@ -185,5 +185,24 @@ assert m == 1
 open(dst + '/constraint.sdc', 'w').write(s)   # synth-time SDC: ports clk / rst_n still exist
 if Q.get('remove_ports'):   # post-patch SDC, copied over 1_synth.sdc after patch_synth.tcl
     s = s.replace('[get_ports {clk}]', '[get_ports {ft_mstrap_i}]').replace('[get_ports {rst_n}]', '[get_ports {ft_rst_i}]')
+    # R4 (c3q-A FF diag): ft_* ports are die-owned feed-throughs, not core data IO.  ft_ck*/ft_mesh are clock-through
+    # (timed by die STA as clock), so no IO delay here; ft_rst_i/ft_rst_o are the island reset hop, related to the
+    # island root clock (vclk_isl, latency 0), not to the 250 ps core-latency vclk.
+    s = s.replace('set non_clk_in [all_inputs -no_clocks]',
+                  'set non_clk_in [lsearch -all -inline -not -glob [get_object_name [all_inputs -no_clocks]] ft_*]\n'
+                  'set data_out [lsearch -all -inline -not -glob [get_object_name [all_outputs]] ft_*]')
+    s = s.replace('$non_clk_in', '[get_ports $non_clk_in]').replace('[all_outputs]', '[get_ports $data_out]')
+    s = s.replace('[get_object_name [get_ports $data_out]]', '[get_object_name [all_outputs]]')
+    s = re.sub(r'^set_input_delay -max [0-9.]+ -clock vclk \[get_ports \{ft_rst_i\}\]\n', '', s, flags=re.M)
+    s += ('create_clock -name vclk_isl -period 833.0000\n'
+          'set_input_delay -max 416.5000 -clock vclk_isl [get_ports {ft_rst_i}]\n'
+          'set_input_delay -min 0.0000 -clock vclk_isl [get_ports {ft_rst_i}]\n'
+          'set_output_delay -max 416.5000 -clock vclk_isl [get_ports {ft_rst_o}]\n'
+          'set_output_delay -min 0.0000 -clock vclk_isl [get_ports {ft_rst_o}]\n')
     open(dst + '/constraint_pd.sdc', 'w').write(s)
+    # R3: face_flops must not duplicate/move island cells or register ft ports (u_isl_rst_otdup seen in c3q-A)
+    ff = open(dst + '/face_flops.tcl').read()
+    ff, m = re.subn(r'set ff_skip_re \{\^\(clk\|rst_n\)\$\}', 'set ff_skip_re {^(clk|rst_n|ft_.*)$}', ff)
+    assert m == 1
+    open(dst + '/face_flops.tcl', 'w').write(ff)
 print('c3q kit', dst, Q)

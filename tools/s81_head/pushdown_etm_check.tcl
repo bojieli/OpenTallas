@@ -27,12 +27,12 @@ if {$::env(PHASE) eq "flat"} {
   foreach pr $ft_comb {
     lassign $pr a z
     set p [find_timing_paths -unconstrained -from [get_ports $a] -to [get_ports $z] -path_delay max]
-    set d [expr {[get_property $p data_arrival_time] - [get_property [get_ports $a] input_delay_max]}]
+    set pts [get_property $p points]; set d [expr {[get_property [lindex $pts end] arrival] - [get_property [lindex $pts 0] arrival]}]
     lappend res [format "\"%s->%s\": %.2f" $a $z $d]
   }
   # clock source -> pin-register insertion (the 12.3 core latency) and clock -> ft_rst_o (reset hop)
   set p [find_timing_paths -unconstrained -from [get_ports ft_mstrap_i] -to [get_ports ft_rst_o] -path_delay max]
-  if {$p ne ""} { lappend res [format "\"ft_mstrap_i->ft_rst_o(clk2q)\": %.2f" [get_property $p data_arrival_time]] }
+  if {$p ne ""} { lappend res [format "\"ft_mstrap_i->ft_rst_o(clk2q)\": %.2f" [expr {[get_property [lindex [get_property $p points] end] arrival] - [get_property [lindex [get_property $p points] 0] arrival]}]] }
   set fh [open $OUT/etm_flat_${c}.json w]; puts $fh "{[join $res {, }]}"; close $fh
   puts "ETM_FLAT $C {[join $res {, }]}"
   write_timing_model -library_name ot_s81hd_elemA_pd_${c} $OUT/ot_s81hd_elemA_pd_${c}.lib
