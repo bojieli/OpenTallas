@@ -1331,3 +1331,5 @@ CODEX: 2026-10-27 08:26 PDT KV native station sidecar bug fixed f51684c55; actua
 CODEX: 2026-10-27 08:26 PDT RM37 main0cda17b22f==origin/main;urgentFTsenderIOoverlay79a,45laneTcltestsPASS/defaultsessionunchanged;0deletions.
 
 CODEX: 2026-10-27 08:26 PDT KV200FTslotreachdelta b4a705f520 prepared (761slotsmax402.84um,125lanes+1..4/R8coherent); io_cor/hrootfullR2RFAIL supersedesFT-onlyPASS, trialrowswithdrawn; nativeistationTCLlossrootcaused f51684c55+resetcoveragefixownedcoverage.
+
+CODEX: 2026-10-27 08:27 PDT RM38 mainf08282d25c==origin/main;requestedclockreachfix+privateKVsourceoverlayonly,3+2focusedPASS;0deletions.
