@@ -1,0 +1,7 @@
+# PV join proposed family pin/lot repair
+
+Source predecessor ac705a7e81 is retained historical proposal. Final immutable `out_dataflow/pd/cores/pv_join_pins*.json` refines only face chunks: ts0 all S; ts1[0:447] S and [448:1023] W; ts2 all N; ts3[0:95] W, [96:575] E, [576:1023] N. Whole32-bit chunks, numeric order, no RTL/cycle change. Actual pinned core_conns confirms 10 normal PV types have ts0/1 producers south, ts2/3 north. Six n variants require explicit fresh-binding alias trace before any claim covering those variants.
+
+All3 views rendered and personally viewed: PASS pin window <=60 pins/10um, native single face layers, no corner rollover. R0 E994/W681/N1472/S1472 with peak60/41/58/58. Global clock/reset entries unchanged; 259.2x172.8 body and160 parentclock relocation ledger remain exactly predecessor ac705. Quarter-grid internal clock is model-only; no new physical build or timing signoff.
+
+Whole geometry remains BLOCKED. Full R26-based G0 found154 actual-bit station slot collisions after anchor-only repair plus2 unresolved io-sidecar dependencies. An exploratory owncopy moved211 station groups,18 still need coupled moves; this is not released and not committed as finalplan. CLOCK-KV now supplied a newer200-slot current capsule: repairs must apply to that exact source, replacing stale R26 anchors. Original172.8 pin-density FAIL and withdrawn autopilot rows remain preserved. No route release.
