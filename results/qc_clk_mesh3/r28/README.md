@@ -74,3 +74,23 @@ R25 DRC unit oth-ubuntu-1828381-1793110415 (intel2 qc-mesh-r25/drc, old R24b geo
 Note: the PG cut was applied to main's physical/die_plan/qwen_compute/die_plan.json (H 26265.6). The dry build and its
 mesh come from the prototype8 plan (H 26317.44, Codex candidate lineage). The straps lie inside both outlines, and
 the cut depends only on the strap coordinates.
+
+## 2. COORD 12:1x ruling: ONE wide coarse-pitch grid (supersedes the section-1 cut; no cut needed)
+* `die.pg.grid[].pair_spacing_um` (schema): VDD/VSS PAIR per pitch, second stripe at edge spacing `pair_spacing_um`
+  (pdngen `-spacing`), honoured by `die_infra.pg_rects`, `die_trial.pg_stripes` and `pg_regions.row_spec/stripe_tcl`
+  (test `test_pair_spacing_wide_pair_and_pdngen_spacing`; 20 tests PASS).
+* QC die.pg.grid (adopted, net_holes removed, rest of die_plan.json byte-equal as JSON):
+  M8 1.92 um @ 8.64, offset 2.86, pair spacing 1.0 -> clock gap 3.80 um centred on every 0 mod 8.64 strap lane;
+  M9 2.26 um @ 8.64, offset 2.69, pair spacing 1.0 -> clock gap 3.12 um.  Metal fraction M8 44.4 %, M9 52.3 %
+  (dense 0.48@2.16 = 44.4 % / 0.48@1.728 = 55.6 %; M9 2.40 = 55.6 % leaves 2.84 um and the drawn 8w shield 0.86 um
+  from VDD < 1.0 wide-table spacing -> needs flank mode; 2.26 keeps drawn shields).
+* `qc_pg_wide_check.py` (mesh clock metal + drawn VSS shields vs PG with the ASAP7 wide-metal spacing table, mesh =
+  `mesh_straps.json`): 0 violations; min gaps M8 mesh 1.74 / shield 1.34, M9 mesh 1.40 / shield 1.00 um (`pg_wide_check.json`).
+* IR window (same core_centre 0.759 W/mm2 deck, `ir_window.json`, UNCHECKED, gate 35.45 mV):
+  wide226 (adopted) VSS 30.9 / VDD 27.3 mV worst (avg 16.0 / 15.3); wide (M9 2.40) VSS 29.8 / VDD 26.6 mV.
+* G0 / G0C on the combined plan (R3B + wide grid): 0 E / 111 W = base (`g0_wide.txt`, `g0c_wide.txt`).
+* Open: 2x16w drawn needs 5.56 um between stripe edges, more than the 3.80 / 3.12 gaps at the dense fraction ->
+  the planner per-gap allotment keeps 16w/2x16w trunks out of the gaps (M9 drop out of the island window, 4w jogs);
+  TrackRouter must use the wide-table 1.0 um spacing to wide stripes (it uses NDR space today).
+* R25 DRC (unit 1828381, `../r25_drc/`): 24 unique markers, all M8 Min Step at cell/net ends; same-net VSS shield gaps
+  408 (24 at 0.04, 384 at 0.28 um), 0 marked -> PASS.

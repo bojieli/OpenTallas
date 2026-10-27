@@ -36,3 +36,15 @@ def test_floating_piece_detected():
     r = I.pg_rects(P, g)
     fl = M.continuity_floating(r, "VSS", "M8")
     assert len(fl) == 1 and fl[0][0] >= 80.0 - 1e-6     # the 80..86.4 tail crosses no VSS column (86.4 off-die)
+
+
+def test_pair_spacing_wide_pair_and_pdngen_spacing():
+    """R28 wide grid: VDD at offset, VSS at offset + width + pair_spacing, one wide gap per pitch (same in tcl)."""
+    import pg_regions as R
+    row = dict(layer="M8", width_um=1.92, pitch_um=8.64, offset_um=2.86, nets=["VDD", "VSS"], pair_spacing_um=1.0)
+    r = sorted(x for x in I.pg_rects(P, [row]) if x[3] < 8.64)
+    assert [(x[0], round(x[3], 3), round(x[5], 3)) for x in r] == [("VDD", 1.9, 3.82), ("VSS", 4.82, 6.74)]
+    gap = 8.64 + 1.9 - 6.74
+    assert abs(gap - 3.80) < 1e-9                       # clock gap centred on the 0 mod 8.64 strap lane
+    spec = R.row_spec(row, tuple(R._d(v) for v in (0.0, 0.0, 86.4, 86.4)), ["VDD", "VSS"])
+    assert "-spacing 1" in R.stripe_tcl("{top}", spec) and "-starts_with POWER" in R.stripe_tcl("{top}", spec)

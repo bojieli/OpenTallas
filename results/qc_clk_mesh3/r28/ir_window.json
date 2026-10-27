@@ -52,7 +52,30 @@
     "add_pdn_stripe -grid {top} -layer {M8} -width {0.48} -pitch {2.16} -offset {1.08} -spacing {0.6} -starts_with POWER\n",
     "add_pdn_stripe -grid {top} -layer {M9} -width {0.48} -pitch {1.728} -offset {0.864} -spacing {0.384} -starts_with POWER\n"
    ]
+  },
+  "wide": {
+   "VSS_worst_mV": 29.8,
+   "VSS_avg_mV": 15.4,
+   "VDD_worst_mV": 26.6,
+   "VDD_avg_mV": 14.8,
+   "cut": null,
+   "pdn": [
+    "add_pdn_stripe -grid {top} -layer M8 -width 1.92 -pitch 8.64 -offset 2.86 -spacing 1 -starts_with POWER\n",
+    "add_pdn_stripe -grid {top} -layer M9 -width 2.4 -pitch 8.64 -offset 2.62 -spacing 1 -starts_with POWER\n"
+   ]
+  },
+  "wide226": {
+   "VSS_worst_mV": 30.9,
+   "VSS_avg_mV": 16.0,
+   "VDD_worst_mV": 27.3,
+   "VDD_avg_mV": 15.3,
+   "cut": null,
+   "pdn": [
+    "add_pdn_stripe -grid {top} -layer M8 -width 1.92 -pitch 8.64 -offset 2.86 -spacing 1 -starts_with POWER\n",
+    "add_pdn_stripe -grid {top} -layer M9 -width 2.26 -pitch 8.64 -offset 2.69 -spacing 1 -starts_with POWER\n"
+   ]
   }
  },
- "status": "own runs (UNCHECKED, NUMBER-CHECK pending)"
+ "status": "own runs (UNCHECKED, NUMBER-CHECK pending)",
+ "adopted": "wide226 (die_plan.json die.pg.grid: M8 1.92@8.64 off 2.86, M9 2.26@8.64 off 2.69, VDD/VSS pair spacing 1.0; no cut)"
 }

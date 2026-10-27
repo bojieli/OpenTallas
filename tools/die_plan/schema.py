@@ -246,7 +246,11 @@ SCHEMA = {
                                        # stripes of this row, exact keep-out (no bloat), die frame
                                        "net_holes_um": {"type": "object", "additionalProperties": {
                                            "type": "array", "items": _rect}},
-                                       "net_holes_note": {"type": "string"}}}},
+                                       "net_holes_note": {"type": "string"},
+                                       # INFRA-FIRST-QC-R28 (COORD 10-27 12:1x): wide VDD/VSS PAIR per pitch, the second
+                                       # net's stripe at edge spacing pair_spacing_um from the first (pdngen -spacing),
+                                       # leaving one wide clock gap per pitch (default: alternate at half pitch)
+                                       "pair_spacing_um": _pos}}},
                     # OWNER DECISION 7 (2026-10-24, IR over SerDes windows): a separate PHY supply per window with its own
                     # dense die-layer straps and dedicated power/ground bump rows over the macro (die_io.check_pg_domains)
                     "domains": {"type": "array", "items": {
