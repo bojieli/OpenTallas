@@ -9,7 +9,15 @@ set c [$b getCoreArea]; puts $f "CORE [um [$c xMin]] [um [$c yMin]] [um [$c xMax
 if {[info exists ::env(ENTRY)] && $::env(ENTRY) ne ""} { lassign $::env(ENTRY) ex ey } else {
   set ex [um [expr {([$d xMin]+[$d xMax])/2}]]; set ey [um [expr {([$d yMin]+[$d yMax])/2}]] }
 puts $f "PIN ck $ex $ey"
+# R14: the declared clock port may be a 1-bit bus (`input [0:0] clk` -> BTerm clk[0]); resolve it exactly, fail closed
 set bt [$b findBTerm $::env(CLK)]
+if {$bt eq "NULL"} {
+  set b0 [$b findBTerm "$::env(CLK)\[0\]"]; set b1 [$b findBTerm "$::env(CLK)\[1\]"]
+  if {$b0 ne "NULL" && $b1 eq "NULL"} { set bt $b0 }
+}
+if {$bt eq "NULL"} { puts "DUMP_GEO_ERROR clock port $::env(CLK) has no BTerm (nor a 1-bit bus $::env(CLK)\[0\])"; exit 2 }
+if {[$bt getNet] eq "NULL"} { puts "DUMP_GEO_ERROR clock BTerm [$bt getName] has no net"; exit 2 }
+puts "DUMP_GEO_CLKPORT [$bt getName]"
 set net [$bt getNet]; set ns 0; set nm 0; set nb 0
 foreach it [$net getITerms] {
   set i [$it getInst]; set m [$i getMaster]

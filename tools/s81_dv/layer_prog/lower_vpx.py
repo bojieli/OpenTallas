@@ -79,15 +79,21 @@ def rd_beat(src, hops, dst_mask, leaf, row, pairs, data, kind=K_RD):
 
 # Edge constants of the send / receive path, from the RTL edge chain below; bench_vpx asserts every one of them on
 # every run (send edges, read-back edges and the receive latency must match exactly); edge chain (inward port = the edge the beat is on the slice pin):
-#   CTL beat on the slice pin -> rstop pin flop + delivery flop (2) -> xr pin flop (1) -> cvld: CFG_AT = 3
+#   CTL beat on the slice pin -> rstop pin flop + delivery flop (2) -> xr pin flop (1) -> XR7 stage-1 register (1,
+#   ot_s81sl_xr.sv:181-204, "every CTL / RD / lo / V / SC consequence moves +1 cycle") -> cvld / tg: CFG_AT = 4
 #   cvld (target 0) -> c_d flop (1) -> leaf relay DL 4 -> vp pin flop (1) -> sequencer step 0 (1) -> macro + output
-#   register + dv (2) -> lo flop (1) -> relay DL 4 -> xr lo pin flop (1): first lo pair at xr = CFG_AT + LO_AFTER_CTL
-#   pk_go the edge after the 4th pair; snd -> ci flop -> rstop ci flop -> ro flop: beat on the outward port SEND_AFTER_GO
-CFG_AT = 3
+#   register + dv (2) -> lo flop (1) -> relay DL 4 -> xr lo pin flop (1) = lov: first lo pair at xr = CFG_AT + LO_AFTER_CTL
+#   XR7 (TOK-DS-9 10-27): the packer reads lov1 = lov one edge later (ot_s81sl_xr.sv:204, 250-251), and a send config
+#   (tg[4]) in a cycle with |lov1 is a sticky fault (xr.sv:558): the config slot is the lov1-free edge = LO_PACK after lov
+#   pk_go the edge after the 4th lov1 pair; snd -> ci flop -> rstop ci flop -> ro flop: beat on the outward port SEND_AFTER_GO
+# Measured TOK-DS-9 on tb_vpx_ag (current main RTL, the TOK-DS-8 binary; sources sha-identical to main 0f9789993e):
+# RDOUT pin 8136 -> cvld 8140 (CFG_AT 4), lov 8155 (LO_AFTER_CTL 15); 10-18 values were CFG_AT 3, no LO_PACK, RX 5.
+CFG_AT = 4
 LO_AFTER_CTL = 15
+LO_PACK = 1
 SEND_AFTER_GO = 3
-RX_WR_AFTER_PIN = 5          # RD beat on the slice pin -> rstop pin + delivery flops (2) -> xr pin flop (1) -> unpacker
-                             # busy flop (1) -> sw row-pair write flop (1); pair j one edge later each
+RX_WR_AFTER_PIN = 6          # RD beat on the slice pin -> rstop pin + delivery flops (2) -> xr pin flop (1) -> XR7 stage 1
+                             # (1) -> unpacker busy flop (1) -> sw row-pair write flop (1); pair j one edge later each
 PAIRS = 4                    # row pairs per RD beat (the 1,024-b payload)
 
 
@@ -95,18 +101,20 @@ def beat_period():
     """issue period of one 4-pair beat: 4 lo cycles + the one lo-free cycle that takes the next config (= pk_go of the
     previous beat; xr.sv:137-143), with the config CTL and the RDOUT CTL on distinct pin cycles"""
     p = PAIRS + 1
-    while (LO_AFTER_CTL - 1) % p == 0:        # config of beat i (pin t_i + LO_AFTER_CTL - 1) vs RDOUT of beat j (t0 + p j)
+    while (LO_AFTER_CTL + LO_PACK - 1) % p == 0:   # config of beat i (pin t_i + LO_AFTER_CTL + LO_PACK - 1) vs RDOUT j (t0 + p j)
         p += 1
     return p
 
 
-def leg_program(sid, dir_, peer_sid, rows, leaf=0, t0=0, mut=None):
+def leg_program(sid, dir_, peer_sid, rows, leaf=0, t0=0, mut=None, dst_leaf=None, dst_off=0):
     """one end slice's send leg: own rows (even base row list of 2-row pairs, grouped 4 pairs a beat) out of the outward
     port (dir W at a W end, E at an E end) to the peer die's end slice (hops 1, dst mask = peer sid bit, same rows).
     Returns CTL arrivals at the slice pin (relative cycles), and the expected outward beats (cycle, rows).
     Per beat i (period P): RDOUT CTL at t0 + P i; its 4 pairs reach xr at + CFG_AT + LO_AFTER_CTL .. + 3; the config for
-    beat i lands on xr the lo-free edge before (the previous beat's pk_go edge)."""
+    beat i lands on xr the lo-free edge before (the previous beat's pk_go edge).
+    TOK-DS-8: dst_leaf / dst_off = the peer's leaf / row offset (reduce-scatter scratch); default = the same leaf and rows."""
     P = beat_period()
+    dleaf = leaf if dst_leaf is None else dst_leaf
     pairs = [rows[i:i + 2] for i in range(0, len(rows), 2)]
     assert all(len(p) == 2 and p[0] % 2 == 0 and p[1] == p[0] + 1 for p in pairs), 'rows must be even-based pairs'
     beats = [pairs[i:i + PAIRS] for i in range(0, len(pairs), PAIRS)]
@@ -115,18 +123,18 @@ def leg_program(sid, dir_, peer_sid, rows, leaf=0, t0=0, mut=None):
         base = bp[0][0]
         assert all(bp[j][0] == base + 2 * j for j in range(len(bp))), 'beat rows must be consecutive'
         tr = t0 + P * i
-        lo0 = tr + CFG_AT + LO_AFTER_CTL
+        lo0 = tr + CFG_AT + LO_AFTER_CTL + LO_PACK      # first pair at the packer (lov1)
         tc = lo0 - 1 - CFG_AT
-        dst = base
+        dst = base + dst_off
         if mut == 'row' and i == 2:
-            dst = base + 2                      # mutant: wrong dst row field in beat 2's config
+            dst = base + dst_off + 2            # mutant: wrong dst row field in beat 2's config
         if mut == 'shift' and i == 2:
             tr += 1                             # mutant: beat 2's RDOUT CTL one edge late (collides with the next config)
-        ctl.append(dict(cycle=tc, target=4, body=send_cfg(dir_, K_RD, 1, 1 << peer_sid, leaf, dst, len(bp)),
+        ctl.append(dict(cycle=tc, target=4, body=send_cfg(dir_, K_RD, 1, 1 << peer_sid, dleaf, dst, len(bp)),
                         tag=f'cfg{i}', leaf_mask=0))
         ctl.append(dict(cycle=tr, target=0, body=_vp(VP_RDOUT, a0=base, n=len(bp)), tag=f'rdout{i}', leaf_mask=1 << leaf))
-        sends.append(dict(cycle=lo0 + len(bp) - 1 + 1 + SEND_AFTER_GO, rows=[r for p in bp for r in p], dst_row=base,
-                          dst_mask=1 << peer_sid, leaf=leaf, pairs=len(bp), src=sid))
+        sends.append(dict(cycle=lo0 + len(bp) - 1 + 1 + SEND_AFTER_GO, rows=[r for p in bp for r in p], dst_row=base + dst_off,
+                          dst_mask=1 << peer_sid, leaf=dleaf, src_leaf=leaf, pairs=len(bp), src=sid))
     return dict(period=P, ctl=sorted(ctl, key=lambda c: c['cycle']), sends=sends)
 
 
@@ -143,6 +151,34 @@ def _payload(smask, target, lmask, body):
 # placement is the xs return plan's (where the frames' capture writes the a_proj rows) -- not yet compiled (GAP below).
 def a_rows(rank):
     return list(range(80 * rank, 80 * rank + 80)) + list(range(320 + 32 * rank, 320 + 32 * rank + 32))
+
+
+# TOK-DS-8 (10-27): vehicle placements of the other shared collectives on the SAME endpoint ABI (leaf rows of 4 FP32
+# words; a beat = 4 consecutive row pairs of ONE leaf; a leaf has 1024 rows).  As for a_rows, these are where the
+# compiler puts the rows, not yet where the producers' capture writes them (GAP_PLACE stays: status PARTIAL).
+#   ffn.router_allgather  384 router logits = 96 rows; rank r owns experts 96 r .. 96 r + 95 = leaf 0 rows 448 + 24 r ..
+#   substage_hop0        [4, 5120] HC residual; rank r carries stream r (5120 words = 1280 rows) to the next stage's
+#                        rank r: rows 0..639 of leaf 1 then of leaf 2 (priced 1033.5 = 160 beats x 5 + edges)
+#   attn.out_allreduce   rank partial 1280 rows; quarter q (owner rank q) = leaf 3 + q // 2 rows 320 (q % 2) ..; RS:
+#                        each rank sends quarter p to owner p into scratch slot k = (src - p) % 4 - 1 = leaf 1 + k rows
+#                        640..959; owner fold ((p0+p1)+(p2+p3), owner_fold.py / run_owner_fold.sh) in place; AG: the
+#                        folded own quarter to the 3 peers at the same leaf / rows (their partial quarter is dead)
+def router_rows(rank):
+    return list(range(448 + 24 * rank, 472 + 24 * rank))
+
+
+STAGE_SEGS = [(1, 0, 640), (2, 640, 640)]        # (leaf, first stream row, rows): leaf rows 0..639
+
+
+def ar_quarter(q):
+    """(leaf, first leaf row) of quarter q of a rank partial / the folded result"""
+    return 3 + q // 2, 320 * (q % 2)
+
+
+def rs_slot(src_rank, owner_rank):
+    k = (src_rank - owner_rank) % 4 - 1
+    assert 0 <= k < 3
+    return 1 + k, 640
 
 
 # TP4 circuits (S81-LINK5, owner 10-21; dv_mu_calendar.CIRCUITS): d.ES <-> (d+1).WS, d.EN <-> (d+2).EN (ONE
@@ -212,47 +248,17 @@ def lower(die, op, ctx):
         sl = die.slices()
         rows, templates, events, insts = [], [], [], []
         own = a_rows(rank) if name.endswith('a_allgather') else []
-        used = set()
-        for src, d, peer in LEGS:
-            if src not in sl or not own:
-                continue
-            sid, psid = sl[src]['sid'], sl[peer]['sid']
-            leg = leg_program(sid, d, psid, own, t0=0)
-            eng = 0 if src.endswith('N') else 1
-            # the calendar issues each CTL so that it is on the slice pin at its leg cycle: issue = t0 + cycle - lat
-            from dv_layer_compile import ctl_path   # noqa: E402 (plugin runs inside the compiler)
-            lat = ctl_path(die, src)['edges']
-            first = min(c['cycle'] for c in leg['ctl'])
-            # one V row per engine per edge (vo_n / vo_s): the legs of one tier are staggered whole (the pin-relative
-            # programme of each slice is unchanged)
-            sh = 0
-            while any((eng, t0 + c['cycle'] - first + sh) in used for c in leg['ctl']):
-                sh += 1
-            first -= sh
-            used |= {(eng, t0 + c['cycle'] - first) for c in leg['ctl']}
-            for c in leg['ctl']:
-                ti = len(templates)
-                templates.append((f'{src}.{c["tag"]}', _payload(1 << sid, c['target'], c['leaf_mask'], c['body'])))
-                issue = t0 + c['cycle'] - first
-                rows.append(dict(eng=eng, issue=issue, arg=ti, what=f'{src} {c["tag"]}'))
-                events.append(dict(cycle=issue + lat, inst=src, port='ri_e' if d == 'W' else 'ri_w', dir='in',
-                                   kind='CTL', tag=c['tag'], payload=f'template {ti}'))
-            for s in leg['sends']:
-                # LB2-S81/EVENTS: the beat as it leaves the outward port (bench_vpx SEND edge): header bits [51:0]
-                # exact, the 4 row pairs are leaf-store data (fixture rows; their producer is not compiled: GAP_PLACE).
-                # The outward port is INSIDE the end-slice lep master: at the die cut it continues as the reliable
-                # link lanes lt_lk_* (seq / CRC / credits: flow control at the off-die boundary, owner 10-14), so no
-                # cut sees this word at a fixed cycle -> boundary 'offdie' (bench_vpx checks it through the real lep)
-                ce = t0 + s['cycle'] - first + lat
-                hdr = rd_beat(s['src'], 1, s['dst_mask'], s['leaf'], s['dst_row'], s['pairs'], 0)
-                events.append(dict(cycle=ce, inst=src, port='lep (outward line port)', dir='out', kind='RD',
-                                   tag=f'rows {s["rows"][0]}..{s["rows"][-1]} -> sid {psid}',
-                                   payload='fixture a_allgather words', boundary='offdie',
-                                   observe=f'{src} outward ring port ({"ro_w" if d == "W" else "ro_e"} of the slice '
-                                           f'inside the lep master) -> lt_lk link lanes',
-                                   words=[[ce, f'{hdr:x}', f'{(1 << 52) - 1:x}']],
-                                   data_masked='row pairs [1075:52] = leaf rows (fixture)'))
-            insts.append(src)
+        # TOK-DS-8: (src, dir, peer, rows, leaf, dst_leaf, dst_off, tier) legs; a_allgather unchanged (3 TP legs, leaf 0)
+        specs = [(src, d, peer, own, 0, None, 0, 0) for src, d, peer in LEGS] if own else []
+        if name.endswith('ffn.router_allgather'):
+            own = router_rows(rank)
+            specs = [(src, d, peer, own, 0, None, 0, 0) for src, d, peer in LEGS]
+        if re.search(r'substage_hop0$', name):
+            own = [r for lf, _, n in STAGE_SEGS for r in range(n)]
+            # one xr send packer on s_0N: segment k starts after segment k-1's beats (n / 8 beats a segment)
+            specs = [(STAGE_LEG[0], STAGE_LEG[1], STAGE_LEG[2], list(range(n)), lf, None, 0,
+                      sum(m // 8 for _, _, m in STAGE_SEGS[:k]) * beat_period()) for k, (lf, _, n) in enumerate(STAGE_SEGS)]
+        _emit(die, sl, specs, t0, rows, templates, events, insts)
         st = 'PARTIAL' if own else 'GAP'
         gap = GAP_PLACE if own else dict(GAP_PLACE, missing='same endpoint ABI as attn.a_allgather (bench_vpx); the '
                                          'production rows of this op are not placed')
@@ -308,6 +314,99 @@ def lower(die, op, ctx):
         if name == 'ffn.combine_allreduce':
             return dict(status='PARTIAL', unit='output-row-owned VS13 then combined-result allgather',
                         insts=[], rows=[], templates=[], events=[], gap=GAP_FFN_COMBINE, bench=BENCH)
+        if name == 'attn.out_allreduce':
+            return lower_ar(die, ctx, t0)
         return dict(status='GAP', unit='RS + AG over the end-slice endpoints + owner fold', insts=[], gap=GAP_FOLD,
                     bench=BENCH)
     return dict(status='GAP', unit='vpx', insts=[], gap=dict(module='lower_vpx', port='-', missing=f'{name} not lowered'))
+
+
+# ------------------------------------------------------------------------------------- TOK-DS-8 generic leg emission
+def _emit(die, sl, specs, t0, rows, templates, events, insts, used=None):
+    """CTL rows / templates / events of leg specs (src, dir, peer, leaf rows, leaf, dst leaf, dst row offset, t_rel);
+    the a_allgather emission of 10-18 generalised (identical output for its 3 leaf-0 legs).  Returns the last outward
+    beat edge (relative to t0, CTL latency included) so a following phase can start after it."""
+    from dv_layer_compile import ctl_path   # noqa: E402 (plugin runs inside the compiler)
+    used = set() if used is None else used
+    last = 0
+    for src, d, peer, own, leaf, dleaf, doff, trel in specs:
+        if src not in sl or peer not in sl or not own:
+            continue
+        sid, psid = sl[src]['sid'], sl[peer]['sid']
+        leg = leg_program(sid, d, psid, own, leaf=leaf, t0=0, dst_leaf=dleaf, dst_off=doff)
+        eng = 0 if src.endswith('N') else 1
+        lat = ctl_path(die, src)['edges']
+        first = min(c['cycle'] for c in leg['ctl']) - trel
+        sh = 0
+        while any((eng, t0 + c['cycle'] - first + sh) in used for c in leg['ctl']):
+            sh += 1
+        first -= sh
+        used |= {(eng, t0 + c['cycle'] - first) for c in leg['ctl']}
+        for c in leg['ctl']:
+            ti = len(templates)
+            templates.append((f'{src}.{c["tag"]}', _payload(1 << sid, c['target'], c['leaf_mask'], c['body'])))
+            issue = t0 + c['cycle'] - first
+            # template_index: the family index may exceed arg[6:0] (RS + AG of out_allreduce = 240 beats); absorb()
+            # re-points arg to the shared table from it (arg & 0x7F would alias index 128+ onto 0+)
+            rows.append(dict(eng=eng, issue=issue, arg=ti & 0x7F, template_index=ti, what=f'{src} {c["tag"]}'))
+            events.append(dict(cycle=issue + lat, inst=src, port='ri_e' if d == 'W' else 'ri_w', dir='in',
+                               kind='CTL', tag=c['tag'], payload=f'template {ti}'))
+        for s in leg['sends']:
+            ce = t0 + s['cycle'] - first + lat
+            last = max(last, ce - t0)
+            hdr = rd_beat(s['src'], 1, s['dst_mask'], s['leaf'], s['dst_row'], s['pairs'], 0)
+            events.append(dict(cycle=ce, inst=src, port='lep (outward line port)', dir='out', kind='RD',
+                               tag=f'leaf {s["src_leaf"]} rows {s["rows"][0]}..{s["rows"][-1]} -> sid {psid} leaf '
+                                   f'{s["leaf"]} row {s["dst_row"]}',
+                               payload='vehicle-placed collective words', boundary='offdie',
+                               observe=f'{src} outward ring port ({"ro_w" if d == "W" else "ro_e"} of the slice '
+                                       f'inside the lep master) -> lt_lk link lanes',
+                               words=[[ce, f'{hdr:x}', f'{(1 << 52) - 1:x}']],
+                               data_masked='row pairs [1075:52] = leaf rows (vehicle placement)'))
+        if src not in insts:
+            insts.append(src)
+    return last
+
+
+# TP4 rank of the die reached by each leg (S81-LINK5: s_0S W -> d-1, s_7S E -> d+1, s_7N E -> d+2)
+LEG_PEER_RANK = {'u_s_0S': -1, 'u_s_7S': 1, 'u_s_7N': 2}
+# owner fold VS11 pair tree after the last RS write.  TOK-DS-9 (10-27) replaces the 10-27 FOLD_GAP 64 placeholder:
+#   RS_LAND_TAIL  MEASURED (CHECKED) on bench_vpx out_allreduce_rs_none (current main RTL): last outward RS beat edge ->
+#                 the owner's last RS row-pair write = 50 edges (send -> lep -> lane -> peer lep 41 / 42 + RX_WR_AFTER_PIN 6
+#                 + pairs 1..3); the same 50 on a_allgather / router / out_allreduce_ag.
+#   owner_fold_span(rows)  DERIVED, UNCHECKED: the fold is NOT bound to these rows (RS slots sit on leaves 1..3, the own
+#                 quarter on leaf 3 / 4, and VS RB is leaf-local), so its span is the owner_fold.py law for one leaf: three
+#                 serial RB commands of n = rows pairs, VS_DUR RB n + 19 (measured at n = 1 / 6 only) + guard 8 between.
+RS_LAND_TAIL = 50
+FOLD_GUARD = 8
+
+
+def owner_fold_span(rows):
+    return 3 * (rows + 19) + 2 * FOLD_GUARD
+
+
+FOLD_GAP = RS_LAND_TAIL + owner_fold_span(320)      # = 50 + 1033 = 1083 edges
+
+
+def lower_ar(die, ctx, t0):
+    """attn.out_allreduce transport: RS (quarter p of the own partial -> owner p's scratch slot) then AG (folded own
+    quarter -> the 3 peers, same leaf / rows), both on the 3 TP legs of the endpoint ABI."""
+    rank = int(ctx.get('rank', 0))
+    sl = die.slices()
+    rows, templates, events, insts = [], [], [], []
+    used = set()
+    rs, ag = [], []
+    for src, d, peer in LEGS:
+        p = (rank + LEG_PEER_RANK[src]) % 4
+        lf, r0 = ar_quarter(p)
+        dl, dr = rs_slot(rank, p)
+        rs.append((src, d, peer, list(range(r0, r0 + 320)), lf, dl, dr - r0, 0))
+    last = _emit(die, sl, rs, t0, rows, templates, events, insts, used)
+    lf, r0 = ar_quarter(rank)
+    ag = [(src, d, peer, list(range(r0, r0 + 320)), lf, None, 0, last + FOLD_GAP) for src, d, peer in LEGS]
+    _emit(die, sl, ag, t0, rows, templates, events, insts, used)
+    return dict(status='PARTIAL', unit='RS (3 TP legs, quarter -> owner scratch) + owner fold + AG (3 TP legs) on the '
+                'end-slice endpoint ABI', insts=insts, rows=rows, templates=templates, events=events, bench=BENCH,
+                gap=dict(GAP_FOLD, missing='RS + AG transport is lowered on the benched endpoint ABI (bench_vpx op '
+                         'out_allreduce_rs / _ag); the owner fold between them is not bound to these rows (FOLD_GAP '
+                         f'{FOLD_GAP} = RS landing tail {RS_LAND_TAIL} CHECKED + fold law {owner_fold_span(320)} UNCHECKED) and the partial rows\' producer capture is not placed'))

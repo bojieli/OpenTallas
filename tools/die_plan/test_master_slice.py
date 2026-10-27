@@ -269,3 +269,14 @@ def test_core_generators_wired(gen):
     assert s.index('(kd / "face_flops.tcl").write_text(') < i < s.index('(kd / "config.mk").write_text(')
     assert 'gpl_hook=kd / "face_flops.tcl"' in s and 'kind="core"' in s
     assert s.index('fz["master_plan"] = ms') < s.index('(kd / "freeze.json").write_text(')
+
+
+def test_clock_entry_has_routable_via_access(tmp_path):
+    io = tmp_path / "io.tcl"
+    io.write_text("place_pin -pin_name {clk} -layer M5 -location {0 0} -pin_size {0.032 0.192}\n"
+                  "place_pin -pin_name {din[0]} -layer M7 -location {0 0} -pin_size {0.032 0.192}\n")
+    MS._consume_io(tmp_path, good_slice(kind="core"), "clk")
+    lines = io.read_text().splitlines()
+    assert "-pin_size {0.048 0.48}" in lines[0]
+    assert "-location {432.0000 432.0000}" in lines[0]
+    assert "-pin_size {0.032 0.192}" in lines[1]

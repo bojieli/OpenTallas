@@ -484,7 +484,10 @@ def _consume_io(kd, sl, clock_port):
                 continue
             name = _pin_name(m.group(2))
             layer, (x, y) = want[name]
-            lines[i] = (f"{m.group(1)}{{{name}}} -layer {layer} -location {{{x:.4f} {y:.4f}}} -pin_size {{0.032 0.192}}"
+            # The centre clock entry needs a full M5 routing track and
+            # enough length for via access beside the root driver.
+            size = "0.048 0.48" if name == clock_port else "0.032 0.192"
+            lines[i] = (f"{m.group(1)}{{{name}}} -layer {layer} -location {{{x:.4f} {y:.4f}}} -pin_size {{{size}}}"
                         f"   ;# master-plan slice (was:{m.group(3).strip()[:80]})")
             done.setdefault(name, []).append(f.name)
             hit = True

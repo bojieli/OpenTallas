@@ -22,7 +22,7 @@ usage:
   core_family_slice.py run --family FAMILIES.json --core MODULE --kit KITDIR --work DIR [--fit FIT --libdir DIR]
   core_family_slice.py family --family FAMILIES.json --name FAMILY --kits DIR --work DIR   (every member with a 3_place)
 PLAN MODEL numbers are UNCHECKED until a build measures them."""
-import argparse, collections, gzip, json, math, os, subprocess, sys, tempfile
+import argparse, collections, gzip, json, math, os, re, subprocess, sys, tempfile
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -131,9 +131,11 @@ def reassign_nearest(P, cap):
         for u in sorted(leaves, key=lambda u: (d(s_, u), u)):
             if len(new[u]) < cap: new[u].append(s_); break
     moved = sum(1 for u in leaves for s_ in new[u] if s_ not in set(map(tuple, P['leafsinks'][u])))
-    for u in leaves:
-        if not new[u]: new[u] = P['leafsinks'][u][:1]   # never empty (cannot happen with cap >= mean)
+    # R14: a leaf that is nobody's nearest driver is REMOVED with its exclusive chain (prune_empty_leaves); the R13
+    # fallback copied one of its old sinks back into it, so that sink sat in two leaves (gunit_l2, sstn_base566).
     P['leafsinks'] = new
+    pruned = prune_empty_leaves(P)
+    new = P['leafsinks']
     cell = {u: mz.cell((sum(p[0] for p in g) / len(g), sum(p[1] for p in g) / len(g))) for u, g in new.items()}
     P['nodes'] = [(n[0], n[1], cell[n[0]] if n[0] in cell else n[2], n[3], n[4]) for n in P['nodes']]
     node = {n[0]: n for n in P['nodes']}
@@ -141,7 +143,39 @@ def reassign_nearest(P, cap):
         if w['edge'] in cell:
             k = len(w['segs']); b = node[w['edge'] + ('_br' if k == 1 else '_r%d' % (k - 2))][2]
             w['segs'][-1] = mz.md(b, cell[w['edge']]); w['cells'][-1] = mz.path(b, cell[w['edge']])
-    return dict(moved=moved, cap=cap)
+    return dict(moved=moved, cap=cap, pruned=pruned)
+
+
+def _edge_of(name):
+    """plan node name -> its wire edge (T0123_br / T0123_r1 / T0123 -> T0123)."""
+    m = re.match(r"(.*)_(br|r\d+)$", name)
+    return m.group(1) if m else name
+
+
+def prune_empty_leaves(P):
+    """structure, no wire: a leaf left without sinks is REMOVED together with its exclusive driver chain (branch
+    buffer, repeaters, wire edge, landing); any driver left without children is removed the same way (recursive).
+    No sink is ever copied (each census sink stays in exactly one leaf) and no driver drives nothing; the surviving
+    root->sink paths keep their stage count.  Returns the removed node names (sorted)."""
+    empty = sorted(u for u, v in P['leafsinks'].items() if not v)
+    if not empty:
+        return []
+    for u in empty:
+        del P['leafsinks'][u]
+    gone = set(empty)
+    while True:
+        alive = [n for n in P['nodes'] if n[0] not in gone]
+        haskid = {n[1] for n in alive if n[1]}
+        more = {n[0] for n in alive if n[4] not in ('entry', 'leaf') and n[0] not in haskid}
+        if not more:
+            break
+        gone |= more
+    P['nodes'] = [n for n in P['nodes'] if n[0] not in gone]
+    live = {_edge_of(n[0]) for n in P['nodes']}
+    P['wires'] = [w for w in P['wires'] if w['edge'] in live]
+    if 'land' in P:
+        P['land'] = {k: v for k, v in P['land'].items() if k not in gone and v[1] in live}
+    return sorted(gone)
 
 
 # ------------------------------------------------------------------ census
@@ -158,6 +192,18 @@ def docker_or(kit, tcl, env, log):
         raise SystemExit("census: %s rc %d (see %s)" % (tcl, rc, log))
 
 
+def clock_bterm_from_log(log, declared):
+    """R14: the census tcl resolves the declared clock port to the placed ODB's BTerm (a 1-bit bus port `clk` is the
+    BTerm `clk[0]`; bk_g, qbank_S) and prints DUMP_GEO_CLKPORT <bterm>; the slice names that exact BTerm."""
+    got = re.findall(r"^DUMP_GEO_CLKPORT (\S+)\s*$", log, re.M)
+    if len(got) != 1:
+        raise SystemExit("census: clock port %s not resolved to one BTerm (%d DUMP_GEO_CLKPORT lines)" % (declared, len(got)))
+    b = got[0]
+    if b != declared and b != declared + "[0]":
+        raise SystemExit("census: clock BTerm %s does not match declared port %s" % (b, declared))
+    return b
+
+
 def census(kit, work):
     kit = Path(kit).resolve(); work.mkdir(parents=True, exist_ok=True)
     base = sorted(kit.glob("run/results/asap7/*/base"))
@@ -169,10 +215,76 @@ def census(kit, work):
     if not (work / "geo.txt").is_file():
         docker_or(kit, "core_family_geo.tcl", dict(ODB="/work/%s/3_place.odb" % rel, OUT="/work/r13_geo.txt", CLK=clk), work / "geo.log")
         (kit / "r13_geo.txt").replace(work / "geo.txt")
+        (work / "clkport.txt").write_text(clock_bterm_from_log((work / "geo.log").read_text(), clk) + "\n")
+    if (work / "clkport.txt").is_file():
+        clk = (work / "clkport.txt").read_text().strip()
     if not (work / "sites.txt").is_file():
         docker_or(kit, "core_family_sites.tcl", dict(ODB="/work/%s/2_floorplan.odb" % rel, OUT="/work/r13_sites.txt"), work / "sites.log")
         (kit / "r13_sites.txt").replace(work / "sites.txt")
     return clk
+
+
+# ------------------------------------------------------------------ 12.8c fixed entry trunk (R14)
+TRUNK_MENU = ['BUFx8_ASAP7_75t_R', 'BUFx10_ASAP7_75t_R', 'BUFx12f_ASAP7_75t_R', 'BUFx16f_ASAP7_75t_R', 'BUFx24_ASAP7_75t_R']
+TRUNK_NMAX = 16
+
+
+def add_entry_trunk(P, master, n):
+    """12.8c: ONE designed fixed trunk at the entry of a shallow core: n identical buffers in series between the entry
+    root and the root's children (the W/E branch buffers), on a straight column below the entry at 1.08 um pitch; the
+    LAST stage sits next to the branch buffers (stubs <= 2.2 um), the root drives the first stage.  Same cell chain
+    for every instance of the type; kind 'trunk' (never resized by d1 sizing); every root->sink path gains n stages."""
+    if n <= 0:
+        return []
+    mz = P['mz']; ex, ey = mz.xy(P['ent'])
+    names = ['K_r%d' % i for i in range(n)]
+    tr = [(nm, 'root' if i == 0 else names[i - 1], mz.cell((ex, ey - 1.08 * (n - i) - 0.54)), master, 'trunk')
+          for i, nm in enumerate(names)]
+    out = []
+    for nd in P['nodes']:
+        if nd[1] == 'root':
+            nd = (nd[0], names[-1], nd[2], nd[3], nd[4])
+        out.append(nd)
+        if nd[0] == 'root':
+            out += tr
+    P['nodes'] = out
+    return names
+
+
+def remove_entry_trunk(P):
+    names = {n[0] for n in P['nodes'] if n[4] == 'trunk'}
+    if not names:
+        return
+    last = [n[0] for n in P['nodes'] if n[4] == 'trunk'][-1]
+    P['nodes'] = [(n[0], 'root' if n[1] == last else n[1], n[2], n[3], n[4]) for n in P['nodes'] if n[0] not in names]
+
+
+def choose_entry_trunk(P, libs, r, c, wc, cal):
+    """plan-computed trunk (12.8c + d1: deterministic, before the build).  cal = the core's own BUILT CTS insertion and
+    the plan-model number of that same built slice (COORD RULING S81-CORE-LAT-R13: calibrate on the built CTS, not on
+    the plan number): offset[c] = built[c] - plan[c]; for every (master, n) in TRUNK_MENU x 1..TRUNK_NMAX the predicted
+    built latency = model(plan + trunk) + offset; pick min |TT - 250| + |FF - 202.5| (tie: fewer cells, smaller master)."""
+    off = {k: float(cal["built_" + k]) - float(cal["plan_" + k]) for k in ("TT", "FF")}
+    base, _ = M7.model_x(P, libs, r, c, wc)
+    best = None
+    for m in TRUNK_MENU:
+        for n in range(1, TRUNK_NMAX + 1):
+            add_entry_trunk(P, m, n)
+            res, _ = M7.model_x(P, libs, r, c, wc)
+            remove_entry_trunk(P)
+            pred = {k: res[k]["mean"] + off[k] for k in ("TT", "FF")}
+            err = abs(pred["TT"] - BAND["TT"][0]) + abs(pred["FF"] - BAND["FF"][0])
+            key = (round(err, 1), n, TRUNK_MENU.index(m))
+            if best is None or key < best[0]:
+                best = (key, m, n, pred, {k: res[k]["mean"] for k in ("TT", "FF")})
+    _, m, n, pred, mod = best
+    add_entry_trunk(P, m, n)
+    return dict(rule="12.8c fixed entry trunk, plan-computed (d1) from the core's own built CTS insertion (COORD RULING S81-CORE-LAT-R13)",
+                master=m, stages=n, offset_ps={k: round(v, 2) for k, v in off.items()}, calibration=cal,
+                model_no_trunk={k: base[k]["mean"] for k in ("TT", "FF")}, model_with_trunk=mod,
+                predicted_built={k: round(v, 2) for k, v in pred.items()},
+                predicted_band={k: ("IN" if abs(pred[k] - BAND[k][0]) <= BAND[k][1] else "OUT") for k in ("TT", "FF")},
+                label="PLAN MODEL + one-build calibration, UNCHECKED until the trunk build is measured")
 
 
 # ------------------------------------------------------------------ family template -> splits
@@ -190,7 +302,7 @@ def splits_for(n, fam):
     return sp if len(sp) > 2 else [2, 2, 1]
 
 
-def plan(geo, fam, libtt, libff, name):
+def plan(geo, fam, libtt, libff, name, trunk_cal=None):
     sinks = sum(1 for l in open(geo) if l.startswith("SINK"))
     sp = splits_for(sinks, fam)
     M7.BUFS = list(ENV)
@@ -204,6 +316,7 @@ def plan(geo, fam, libtt, libff, name):
     M7.apply_masters(P, {"rep": "BUFx24_ASAP7_75t_R"})
     wc = {l: fam.get("wire", "std") for l in range(1, len(sp) + 2)}
     sized = M7.size_d1(P, libs, r, c, wc)
+    trunk = choose_entry_trunk(P, libs, r, c, wc, trunk_cal) if trunk_cal else None
     res, st = M7.model_x(P, libs, r, c, wc)
     par = {n[0]: n[1] for n in P["nodes"]}; depths = set()
     for n in P["nodes"]:
@@ -221,7 +334,7 @@ def plan(geo, fam, libtt, libff, name):
     spread = M8.leaf_spread(P)
     islands = sorted({mz.xy(P["site"][g]) for g in P["site"] if len(g) == 2})
     rec = dict(name=name, family=fam["name"], splits=",".join(map(str, sp)), smax=fam.get("smax", 70.0), wire=fam.get("wire", "std"),
-               sinks=sinks, split_leaves=split, reassign=rea, level_len_um=[round(x, 2) for x in P["T"]],
+               sinks=sinks, split_leaves=split, reassign=rea, entry_trunk=trunk, level_len_um=[round(x, 2) for x in P["T"]],
                repeaters_per_edge=[k - 1 for k in P["K"]], stages=sorted(depths), n_cells=len(P["nodes"]),
                sized_masters={"%s:%s" % k: v for k, v in sorted(sized.items())},
                frozen_masters={n[0]: n[3] for n in P["nodes"]}, TT=res["TT"], FF=res["FF"],
@@ -265,6 +378,10 @@ def checks(rec, slice_, geo):
                       band_info="IN" if abs(x["mean"] - m) <= tol else "OUT")
         if x["window"] > GATES["window_ps"]: fails.append("%s window %.1f > 20" % (c, x["window"]))
         if x["leaf_out_slew_max"] > GATES["slew_ps"]: fails.append("%s leaf slew %.1f > 80" % (c, x["leaf_out_slew_max"]))
+    if rec.get("entry_trunk"):
+        tk = rec["entry_trunk"]
+        out["entry_trunk"] = dict(master=tk["master"], stages=tk["stages"], predicted_built=tk["predicted_built"],
+                                  band_info=tk["predicted_band"], offset_ps=tk["offset_ps"])
     if slice_ is not None:
         disp = slice_["plan_conversion"]["displacement_um"]["max"]
         out["disp_max_um"] = disp
@@ -318,7 +435,8 @@ def run_core(fams, core, kit, work, a):
     work = Path(work) / core; work.mkdir(parents=True, exist_ok=True)
     clk = census(kit, work)
     geo = work / "geo.txt"
-    rec = plan(geo, fam, a.libtt, a.libff, "%s_r13_%s" % (core, fam["name"]))
+    cal = json.loads(Path(a.trunk_cal).read_text()).get(core) if getattr(a, "trunk_cal", None) else None
+    rec = plan(geo, fam, a.libtt, a.libff, "%s_r13_%s%s" % (core, fam["name"], "_tk" if cal else ""), trunk_cal=cal)
     pj = work / "plan.json"; pj.write_text(json.dumps([rec]))
     if a.fit:
         r = subprocess.run([sys.executable, str(REPO / "results/core_lat_r9_1026/l0r_r9_d1.py"), str(pj), str(geo), a.libdir, a.fit,
@@ -339,7 +457,8 @@ def run_core(fams, core, kit, work, a):
     (work / "checks.json").write_text(json.dumps(ck, indent=1))
     render(geo, rec, sl, work / ("%s_r13.png" % core))
     line = dict(core=core, family=fam["name"], splits=rec["splits"], sinks=rec["sinks"], cells=rec["n_cells"], stages=rec["stages"],
-                TT=rec["TT"]["mean"], TTw=rec["TT"]["window"], FF=rec["FF"]["mean"], FFw=rec["FF"]["window"], verdict=ck["verdict"], fails=ck["fails"])
+                TT=rec["TT"]["mean"], TTw=rec["TT"]["window"], FF=rec["FF"]["mean"], FFw=rec["FF"]["window"], verdict=ck["verdict"], fails=ck["fails"],
+                **({"trunk": ck["entry_trunk"]} if ck.get("entry_trunk") else {}))
     print("CORE_FAMILY_SLICE", json.dumps(line), flush=True)
     return line
 
@@ -351,6 +470,8 @@ def main():
     ap.add_argument("--kits", help="dir holding <module>_<suffix> trial census kits"); ap.add_argument("--suffix", default="c13")
     ap.add_argument("--work", required=True)
     ap.add_argument("--libtt", required=True); ap.add_argument("--libff", required=True)
+    ap.add_argument("--trunk-cal", default=None, help="JSON {core: {built_TT, built_FF, plan_TT, plan_FF, basis, source}}: "
+                    "12.8c entry trunk calibrated on the core's own built CTS insertion")
     ap.add_argument("--fit", default=None); ap.add_argument("--libdir", default=None); ap.add_argument("--d1-steps", type=int, default=60)
     a = ap.parse_args()
     fams = json.loads(Path(a.family).read_text())

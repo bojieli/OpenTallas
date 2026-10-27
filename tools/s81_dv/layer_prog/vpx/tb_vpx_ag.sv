@@ -68,8 +68,8 @@ module tb_vpx_ag #(parameter integer SA = 0, parameter integer SB = 14, paramete
         if (B.u.lro[0]) $display("SEND B %0d %h", cyc, B.u.lro);
         if (A.u.lri[0]) $display("LRI A %0d %h", cyc, A.u.lri);
         if (B.u.lri[0]) $display("LRI B %0d %h", cyc, B.u.lri);
-        if (A.u.g_w.u_sl.g_c1.u_xr.u.cvld) $display("CTL A %0d %0d", cyc, A.u.g_w.u_sl.g_c1.u_xr.u.tgt);
-        if (B.u.g_e.u_sl.g_c1.u_xr.u.cvld) $display("CTL B %0d %0d", cyc, B.u.g_e.u_sl.g_c1.u_xr.u.tgt);
+        if (A.u.g_w.u_sl.g_c1.u_xr.u.cvld) $display("CTL A %0d %b", cyc, A.u.g_w.u_sl.g_c1.u_xr.u.tg);
+        if (B.u.g_e.u_sl.g_c1.u_xr.u.cvld) $display("CTL B %0d %b", cyc, B.u.g_e.u_sl.g_c1.u_xr.u.tg);
         if (|A.u.g_w.u_sl.g_c1.u_xr.u.lov) $display("LO A %0d %b", cyc, A.u.g_w.u_sl.g_c1.u_xr.u.lov);
         if (|B.u.g_e.u_sl.g_c1.u_xr.u.lov) $display("LO B %0d %b", cyc, B.u.g_e.u_sl.g_c1.u_xr.u.lov);
         for (k = 0; k < 5; k = k + 1) begin

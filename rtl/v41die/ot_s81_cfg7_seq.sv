@@ -151,11 +151,25 @@ module ot_s81_cfg7_seq_local #(
     reg [4:0]   ld_k;
     reg [2:0]   ld_np;
     reg         pend;
-    reg [PHW-1:0] pend_ph;
-    reg [2:0]   pend_np;
+    wire [PHW-1:0] pend_ph;
+    wire [2:0]   pend_np;
     reg [1:0]   tag;
     wire        ld_ok = (PQ == 0) || (ef_i[0] && ef_i[1]);
     wire        ld_start = (cfg_go && ld_ok) || (PQ != 0 && pend && !cfg_go && ld_ok);
+    // pending phase / np (PQ only).  PQ 0 has no pending load (ld_ok = 1, so ld_start == cfg_go) and every consumer
+    // of pend_ph / pend_np sits behind cfg_go ? cfg_* : pend_*, so they alias cfg_ph / cfg_np; the registers used to be
+    // declared for every PQ and left undriven at PQ 0 (check -assert: 13 used-but-undriven bits).
+    generate if (PQ != 0) begin : g_pend
+        reg [PHW-1:0] ph_q;
+        reg [2:0]     np_q;
+        // same capture as before: not reset, held while rst_c is low (it sat in the else branch of the async-reset block)
+        always @(posedge clk[0]) if (rst_c && cfg_go && !ld_ok) begin ph_q <= cfg_ph; np_q <= cfg_np; end
+        assign pend_ph = ph_q;
+        assign pend_np = np_q;
+    end else begin : g_nopend
+        assign pend_ph = cfg_ph;
+        assign pend_np = cfg_np;
+    end endgenerate
     // same-edge lookahead of the reference's combinational cm_a = ld_a: read ld_a's word one edge early
     wire          rce = rst_c && (ld_start || (ld_run && ld_k < 5'(CW - 1)));
     wire [AW-13:0] rbank;
@@ -250,7 +264,7 @@ module ot_s81_cfg7_seq_local #(
             pend <= pend;
             c_v <= ld_run_x;
             if (PQ != 0) begin
-                if (cfg_go && !ld_ok) begin pend <= 1'b1; pend_ph <= cfg_ph; pend_np <= cfg_np; end
+                if (cfg_go && !ld_ok) pend <= 1'b1;
                 else if (ld_start) pend <= 1'b0;
                 if (ev1_x) fault <= 1'b1;                                         // a second broadcast before the load
                 if (go_x && (pend_x || ld_run_x || c_v || cfg_go_x)) fault <= 1'b1;  // go before the load finished
