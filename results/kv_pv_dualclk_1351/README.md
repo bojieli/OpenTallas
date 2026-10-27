@@ -1,1 +1,3 @@
 PVpairR0 physicalclock correction: actualRTLdrives boths0/s1domains but oldmetadata marked s1unused. Both are one related833psclock, samepins/geometry/RTL/cycles. Q6owner adds missing s1deliveredtaprelation. No oldSDCSTA/signedclaim. Newplacement+nativeclockcensus mandatory.
+
+Full native census SUPERSEDES the two-live-clock premise: actualR9top connects BOTH leaf clocks to s1; all29724CLOCKterminal sinks are behind s1, s0has0loads. Metadata must be s1live/s0unused. PrimaryclockSDC and Q6deliveredtap change to existingS1pin,0newtap/RTL/data cycles. Earlierdual-clockkit is diagnostic/unreleased.

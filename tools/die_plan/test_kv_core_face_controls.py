@@ -24,3 +24,15 @@ def test_live_pv_alias_is_a_real_related_clock(tmp_path):
     sdc=g.sdc(833,250,40,["s0__clk","s1__clk"],[],"pair")
     assert "[get_ports {s0__clk s1__clk}]" in sdc
     assert "all_inputs -no_clocks" in sdc
+
+
+def test_pv_actual_s1_primary_demotes_disconnected_s0(tmp_path):
+    import sys
+    sys.path.insert(0,str(p.parent))
+    import pv_pair_clock_contract
+    (tmp_path/"kv3_pv_pair.sv").write_text("leaf s0 (.clk(s1__clk[0])); leaf s1 (.clk(s1__clk[0]));")
+    cj={"module":"kv3_pv_pair","pin_class":{"s0__clk[0]":"clk","s1__clk[0]":"clk_unused"},"report":{"clk_unused":["s1__clk[0]"]}}
+    cj=pv_pair_clock_contract.update(cj,tmp_path)
+    assert g.core_clocks_resets(cj)[0]==["s1__clk"]
+    assert cj["report"]["clk_unused"]==["s0__clk[0]"]
+    assert cj["report"]["clock_nets"]=={"clk":"s1__clk[0]"}
