@@ -1,4 +1,4 @@
-# OpenTallas design methodology (FROZEN v4.8, 2026-10-26 17:4x; v4.7 17:3x; v4.6 17:0x; v4.5 16:5x; v4.4 06:39; v4.3 06:33; v4.2 06:15; v4.1 06:11; v4 06:07; v3 05:58; v2 earlier 10-26; v1 2026-10-24 21:40 PDT)
+# OpenTallas design methodology (FROZEN v4.9, 2026-10-26 17:3x-18:0x; v4.8 17:4x; v4.7 17:3x; v4.6 17:0x; v4.5 16:5x; v4.4 06:39; v4.3 06:33; v4.2 06:15; v4.1 06:11; v4 06:07; v3 05:58; v2 earlier 10-26; v1 2026-10-24 21:40 PDT)
 
 One rule set for every lane (Claude, Codex, sub-agents) on all four release dies (S81, Qwen compute, Qwen KV, HBM).
 Build to these rules; do not re-derive them per lane. Precedence: latest OWNER decision > this file > AGENTS.md >
@@ -293,6 +293,11 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
      until a kit exists, labelled). Related-pair skew <= 80 ps TT/FF is the CLOCK DESIGN TARGET and a reported diagnostic, NOT a pass/fail gate.
      Hold is made safe by STRUCTURE (zero-logic register pairs share a clock leaf; die crossings are landed/forwarded hops), never by post-measurement
      padding (12.8). Release gate stays die STA on real (signed) views + token pass.
+  a1. (OWNER 10-26 ~17:3x) HOLD BUFFERS ON DATA PATHS ARE ALLOWED (industry standard): the router/timing repair (OpenROAD repair_timing -hold
+     or equivalent) inserts delay cells on short DATA paths at tile and die level until FF hold passes under 12.4a. The clock network
+     is never touched (12.8 d still bans clock pads/trims/ECOs). The flow inserts the cells; no hand edits. Setup at TT must still pass
+     after insertion, and the inserted cell count/area is reported per die. Structure (shared leaf / landed crossings) remains preferred
+     where it is cheap.
   b. CPPR (OWNER 10-26 06:07, 12.8): the GATE number credits CPPR only to the last common H-tree/tree node (region root for same-mesh pairs);
      no credit at the mesh node. The mesh-node-credited number (COORD 10-26 early ruling) is INFO only.
      EXCEPTION (12.8e, OWNER 10-26 17:0x): a regional mesh SIGNED OFF by variation circuit simulation counts as a common point; its
@@ -334,6 +339,7 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
   - 10-26 17:3x OWNER: "if continuous mesh can work, switch to it" (12.8e1) = CURRENT: continuous die mesh cut only at landed crossings is the preferred form; per-region meshes = fallback when the continuous mesh fails its evaluation. Reason: seam pairs between separate regional meshes still see unshared global-tree delay (~1.5-2 ns, UNCHECKED estimate).
   - 10-26 17:4x OWNER: "replace the flat clock margin with a depth- and distance-based table, the standard practice" (12.4a b1) = CURRENT. Supersedes flat 5 %/3 % clock derates (die CI lane choice 10-24, never an owner decision). Gates after owner review of the table.
   - 10-26 17:5x OWNER: supply droop treated as SHARED between the two clocks (12.4a b1) = CURRENT: clock charged only differential droop (0 within one mesh/PDN region; full +5.1 % one-sided across regions until PDNSim); data path keeps +5.1 % late. (COORD first misread the owner as keeping the one-sided margin; corrected same minute.)
+  - 10-26 ~17:3x OWNER: "approve automatic hold-buffer insertion on data paths" (12.4a a1) = CURRENT. Supersedes reading "hold safe by structure, never padding" as a ban on data-path hold buffers; clock padding stays banned. Trigger: QC-MP-REGION-2 zero-logic seam hold budget 10.9 ps FF < >=29.5 ps flat-OCV pessimism (UNCHECKED).
 
 - 12.7 MASTER PLAN FIRST -- CITY-PLANNING MODEL (OWNER 2026-10-26 05:58, "yes, do all of them on all dies"). Supersedes/extends 12.1-12.4 where stricter.
   Utilities (PG) -> transit (clock, reset, with islands as stations) -> roads (die-level routing corridors) with rest stops (repeater bays) and
