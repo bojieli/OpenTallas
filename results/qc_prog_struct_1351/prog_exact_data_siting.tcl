@@ -2,7 +2,7 @@
 # Source AFTER existing PRE_DETAIL_PLACE releases; this hook then holds ONLY assigned data cells.
 # No clock/terminal/control FF edits. Never source into either live route.
 set pgp_block [ord::get_db_block]
-set pgp_dbu [$pgp_block getDbUnitsPerMicron]
+set pgp_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 set pgp_assignments {
   {{u_twd0/_913_} {INVx3_ASAP7_75t_R} 273.888000 113.400000 MY}
   {{u_twd0/q\[0\]$_DFF_P_} {DFFHQNx1_ASAP7_75t_R} 274.158000 113.400000 MY}
