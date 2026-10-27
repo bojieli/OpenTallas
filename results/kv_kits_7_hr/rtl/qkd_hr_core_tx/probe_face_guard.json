@@ -1,0 +1,37 @@
+{
+ "verdict": "FAIL",
+ "top": "qkd_hr_core_tx",
+ "checked": 3766,
+ "ok": 3764,
+ "fail_counts": {
+  "dropped": 2
+ },
+ "fails": {
+  "dropped": [
+   "u_ctrl__package_abort[0]: no load on u_ctrl__package_abort[0] (register removed)",
+   "u_ctrl__por_n[0]: no load on u_ctrl__por_n[0] (register removed)"
+  ]
+ },
+ "netlist": "/work/run/results/asap7/hc_qkd_hr_core_tx__276_48x267_84/base/1_2_yosys.v",
+ "pins": "/work/pins.json",
+ "boundary_context": {
+  "manifest": "/work/boundary_guard_context.json",
+  "source_core_json": "/work/core.json",
+  "controls": [
+   "ck",
+   "u_tx__rst_n",
+   "u_axi__rst_n",
+   "u_ctrl__rst_n"
+  ]
+ },
+ "one_station_ft_slots": [],
+ "port_gate": {
+  "verdict": "PASS",
+  "io_pins": 3770,
+  "netlist_ports": 3770,
+  "io_only": 0,
+  "net_only": 0,
+  "io_only_first": [],
+  "net_only_first": []
+ }
+}

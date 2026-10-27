@@ -31,3 +31,6 @@ dropped_in = input bits with no load at all after synthesis: declared-dead pin o
    pin CENTRES (edge -/+ half the pin length). PREFLIGHT-2 pins_canonical therefore fails every hr kit
    (phy_pad: 1577/1577 pins differ by exactly 0.096 um along the face normal). Fix = either convert the hr pin files to
    centres in the plan delta, or let pins_canonical apply the generator's edge->centre inset; owner PREFLIGHT/KV-PLAN.
+
+## core_tx kept-face probe (12:10, old kv-cores-pv kit + emitted RTL, synth only)
+CORE_PREFLIGHT face_guard: shared 299/dropped 215 -> dropped 2 (u_ctrl__package_abort[0] = the multi_in merged capture, u_ctrl__por_n[0]); port_gate PASS 3770/3770. Both inputs are logically dead after synthesis: need kept-face to also wrap the merged-in capture + por_n capture, or a declared-dead entry (COORD choice).
