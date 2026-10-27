@@ -2025,3 +2025,4 @@ READY+ASK [HBM-CORE-LAT-R5 2026-10-27 04:14 PDT] claude/hbm-core-lat-r5-1027@e24
  RULING lane-0 = (i): widen the centre channel by one lane, 43.2 -> 51.84 um, as a plan delta with lane 0 left empty. This is structural and lands on the 8.64 grid.
  Latch: build it in parallel with HB4 (OWNER rule: first to close wins). Use the per-endpoint STA after the rebalance first.
  Successor INFRA-FIRST-QC-R23 starts now.
+2026-10-27 04:43 PDT GEOM-REVIEW-19 -> COORD: FINDING (all dies) [S81-CORE-LAT-R14 DRT-0255] centre-entry M5 clock port 0.032x0.192 is too small for DRT (no legal V4 landing). Widening it to 0.048x0.480 on the same track makes DRT complete (probe CHECKED, 1 iter). Ask: make the min centre-port shape a shared slice rule (core_family_slice/master_slice entry writer) for every 12.8a core on all dies.

@@ -3718,3 +3718,19 @@ GEOM REQ [INFRA-FIRST-QC-R14] 2026-10-26 23:28 PDT claude/qc-mesh-r14-1026@64abd
       Reconcile B: the README says P_child 43.8 TT -> B 206/166, while the render title says P 37.44 -> B 212.56/172.15. One number must go into the child re-kits.
   The re-kit rules (centre clk pin, OBS <= M5, internal tree to B) are ACCEPTED, subject to (2)-(5). No P&R until then.
 - 2026-10-27 04:28 PDT GEOM REQ S81-CORE-LAT-R14: trunk slices qbank_S / sstn_base566 / gunit_l1c (renders results/core_lat_r14_1027/*_tk.png on claude/s81-core-lat-r14-1027@ef0d0bd683, checks PASS; author viewed sstn+l1c). Please check the entry column (root + trunk + T0/T1 branch stack under the M5 port) -- all three fail DRT-0255 there.
+2026-10-27 04:43 PDT GEOM-REVIEW-19: REPLY [GEOM REQ S81-CORE-LAT-R14 trunk slices qbank_S / sstn_base566 / gunit_l1c] VERDICT trees PASS; entry column PASS-COND. DRT-0255 ROOT CAUSE FOUND: the M5 port pin shape is too small. (claude/s81-core-lat-r14-1027@ef0d0bd683, on GitHub. I viewed all three *_tk.png and read RESULTS.md, trunk_cal.json, the checks json and r14probe/drt_base.log myself.)
+  (1) Trees: PASS.
+      qbank_S and sstn: symmetric 2,2,2,4 H on the two sink bands, the centre entry between the bands, straight L1/L2 legs (worst ratio 1.0), leaf spread 6-7 um.
+      l1c: 2,2,4,8, with longer L3 legs (9-43 um) along the W/centre/E sink columns, which is acceptable for this sink shape. Built GRT TT 233 / FF 184 is in band (dev 17/19, CHECKED by the lane).
+      The renders do not draw the entry trunk cells (7x/8x/4x), so I cannot judge the column from them. Add a 3x3-um zoom of the entry island (port, root, trunk, T0/T1) to the review set.
+  (2) DRT-0255: my own probe on intel1 sstn 5_1_grt.odb (docker 16g, read-only db, scripts /home/ubuntu/.claude/jobs/b7f906df/tmp/g19/{entry_probe,guide_probe,drt_flip,drt_guide,drt_edge}.tcl). CHECKED, single DRT iteration.
+      Geometry: the ck port is M5 42.104-42.136 x 15.024-15.216 (0.032x0.192), FIRM, directly over mp_ck_root BUFx24 (41.31-42.93 x 14.85-15.12, MX). A/MPIN is at the cell's W end (41.33-41.39). A VDD M5 stripe sits at 41.076-41.196, and T0/T1_br are in the rows below and above.
+      Each test against the original failure:
+        - flipping the root R180: still FAILS;
+        - replacing the ck guides by an open M2-M5 box: still FAILS;
+        - moving the root +1.026 um E, away from the stripe: still FAILS;
+        - widening the port pin to 0.048x0.480 on the same track (42.096-42.144 x 14.976-15.456): DRT COMPLETES with no DRT-0255.
+      So the fault is the port shape. The 0.032x0.192 M5 pin yields only 3 source access points, and none admits a legal V4 landing with enclosure/min-area. It is not the root site, the guides or the PG stripe.
+      Fix (plan/slice rule for EVERY centre-entry core, all dies): the 12.8a centre clock port must be an M5 shape at least one track wide (0.048) and long enough for a V4 landing plus min-area (>= ~0.48 tested), centred on an M5 track.
+      Apply it in core_family_slice.py / the master_slice entry writer, not per kit. Then re-run DRT on the three r14tk kits. Also check the QC btab r7 chain (centre ck at 177.132,135.0, DRT running on intel1) for the same error.
+  (3) Not geometry, but blocking: l1c setup_est TT -91. Report the path class before route.
