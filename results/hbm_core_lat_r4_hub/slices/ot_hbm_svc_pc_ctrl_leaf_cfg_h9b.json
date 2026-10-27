@@ -1,0 +1,56 @@
+{
+ "schema": "opentallas.master_plan_slice.v1",
+ "die": "hbm",
+ "kind": "core",
+ "type": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+ "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+ "instances": [],
+ "master_plan_sha256": "TRIAL-no-frozen-master-plan",
+ "frozen": false,
+ "outline_um": [
+  177.984,
+  177.984
+ ],
+ "latency": {
+  "common_clock_latency_ps": {
+   "TT": 250,
+   "FF": 202.5
+  },
+  "tol_ps": 20,
+  "early_taps": false
+ },
+ "keepouts": [],
+ "bays": [],
+ "entry_pins": [],
+ "hard_cores": [],
+ "corridors": [],
+ "gates": {},
+ "core_clock_port": "clk",
+ "islands": [
+  {
+   "name": "ck_entry",
+   "rect_um": [
+    86.85600000000001,
+    86.85600000000001,
+    91.176,
+    91.176
+   ],
+   "centre_um": [
+    89.016,
+    89.016
+   ],
+   "use": "clock_driver",
+   "via_stack": [
+    "M9",
+    "M5"
+   ],
+   "clock_pin": {
+    "layer": "M5",
+    "xy_um": [
+     89.016,
+     89.016
+    ]
+   }
+  }
+ ]
+}
