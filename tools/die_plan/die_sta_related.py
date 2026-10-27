@@ -1135,7 +1135,8 @@ def main(argv=None):
         if r.returncode:
             raise SystemExit(f"fold report failed, see {out / 'fold_report.log'}")
         d = cp
-    plan = json.loads(Path(a.plan).read_text())
+    plan_bytes = Path(a.plan).read_bytes()
+    plan = json.loads(plan_bytes)
     kits = {}
     for k in a.kit:
         n, f = k.split("=", 1)
@@ -1149,6 +1150,7 @@ def main(argv=None):
     hwin = kit_windows(pc, a.intra_window_ps)
     lat = dict(TT=lat_tt, FF=a.core_latency_ff if a.core_latency_ff is not None else lat_tt)
     res = dict(proof=str(Path(a.proof).resolve()), timed_dir=str(d.resolve()), plan=str(Path(a.plan).resolve()),
+               plan_sha256=hashlib.sha256(plan_bytes).hexdigest(),
                period_ps=period, unc_setup_ps=UNC_SETUP_PS, unc_hold_ps=UNC_HOLD_PS, gate="METHODOLOGY 12.4a v4.3: TT setup "
                ">= 0 and FF hold >= 0 on every related pair; CPPR at last common tree node (12.4b); skew = DIAGNOSTIC",
                block_model=dict(label="declared-budget", core_latency_ps=lat, cancels="same declared latency both sides",
