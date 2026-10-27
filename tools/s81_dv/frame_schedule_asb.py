@@ -583,13 +583,19 @@ def archive(rev, dest):
 
 
 def main():
+    global MANIFEST
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--master', required=True, choices=['col_h9', 'col_h10'])
     ap.add_argument('--var', required=True, choices=['x', 'nx'])
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--work', type=Path)
     ap.add_argument('--mem-gb', type=int, default=24)
+    ap.add_argument('--manifest', default=MANIFEST,
+                    help='selected source manifest within this source root; canonical default unchanged')
     a = ap.parse_args()
+    import slice_source
+    selected, ab, _, _ = slice_source.manifest_selection(ROOT.resolve(), a.manifest)
+    MANIFEST = str(selected.relative_to(ROOT.resolve()))
     m, v = a.master, a.var
     work = a.work or a.out / 'work'
     work.mkdir(parents=True, exist_ok=True)
@@ -619,6 +625,9 @@ def main():
     for nm, me in (('validate_' + lp_top, meas_v), (lp_top, meas_t), (ab_top, meas_ab)):
         (work / f'{nm}.meas.json').write_text(json.dumps(me, indent=1))
     src = dict(sha_ab)
+    # Bare hard-leaf parameters and selection precedence are part of the elaborated source contract.
+    for f in [MANIFEST] + ab.get('hard_params', []):
+        src[f] = sha(f)
     for f in (LP_SCHED.format(m=m), PLAN_MAP.format(m=m), 'tools/s81_dv/frame_schedule_asb.py',
               'physical/die_plan/s81/die_plan.json'):
         src[f] = sha(f)
