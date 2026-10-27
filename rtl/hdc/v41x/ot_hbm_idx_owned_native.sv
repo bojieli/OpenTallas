@@ -205,7 +205,7 @@ endmodule
     end endgenerate
     always @(posedge clk) begin c_v <= vl[0] && rn; c_kv <= vl[NKT:1]; end
 endmodule
-(* keep_hierarchy="yes" *) module ot_hbm_idx_tail_native (
+(* keep_hierarchy="yes" *) module ot_hbm_idx_tail_native #(parameter integer DELIVERED_RESET=0) (
     input  wire                  clk,
     input  wire                  rst_n,
     input  wire                  i_v,
@@ -229,7 +229,11 @@ endmodule
     // (was rv <= i_v && rst_n: a 5,228-load async net + datapath AND, native capture 402.8 ps).  Data timing unchanged.
     localparam integer RR = NKT + 1;
     wire [RR-1:0]        rr;
+    generate if(DELIVERED_RESET!=0)begin:g_delivered_reset
+        ot_rst_delivered3 #(.REGIONS(RR)) u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
+    end else begin:g_legacy_reset
     ot_rst_relay #(.REGIONS(RR), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
+    end endgenerate
     reg                  rv;
     reg [NKT-1:0]        rkv, rkeep;
     reg [NKT*NCH*32-1:0] rsum;
