@@ -1,0 +1,228 @@
+NE_io	type	None	0	0	None	
+NW_io	type	None	0	0	None	
+hfd_ep_static_261e40d1235d	core	hfd_ep_static	6	0	[250.56, 375.84]	NE_io,NW_io,q_spb0,vsN0
+hfd_ep_static_936f8dc7fe73	core	hfd_ep_static	6	0	[250.56, 375.84]	NE_io,NW_io,q_spb0,vsN0
+hfd_hgi_vm_calendar_f20	core	hfd_hgi_vm_calendar_f20	4	4	[241.92, 116.64]	q_hub_ne,q_hub_nw
+hfd_hgi_vms_glue_nw_t	core	hfd_hgi_vms_glue_nw_t	4	4	[869.832, 1334.88]	q_hub_ne,q_hub_nw
+hfd_vms_bank_native_q0_faces_08b030c8c5fa	core	hfd_vms_bank_native_q0_faces	16	0	[270.0, 313.2]	q_hub_ne,q_hub_nw
+hfd_vms_bank_native_q0_faces_1dc19a048d64	core	hfd_vms_bank_native_q0_faces	16	0	[270.0, 313.2]	q_hub_ne,q_hub_nw
+hfd_vms_bank_native_q0_faces_48eaaf6eb467	core	hfd_vms_bank_native_q0_faces	16	0	[270.0, 313.2]	q_hub_ne,q_hub_nw
+hfd_vms_bank_native_q0_faces_60b03fdc5b14	core	hfd_vms_bank_native_q0_faces	16	0	[270.0, 313.2]	q_hub_ne,q_hub_nw
+hfd_vms_bank_native_q0_faces_70f7f3b9c4b9	core	hfd_vms_bank_native_q0_faces	16	0	[270.0, 313.2]	q_hub_ne,q_hub_nw
+hfd_vms_bank_native_q0_faces_9119a4edb587	core	hfd_vms_bank_native_q0_faces	16	0	[270.0, 313.2]	q_hub_ne,q_hub_nw
+hfd_vms_bank_native_q0_faces_cdf7edf6aef9	core	hfd_vms_bank_native_q0_faces	16	0	[270.0, 313.2]	q_hub_ne,q_hub_nw
+hfd_vms_bank_native_q0_faces_f98a45862fe1	core	hfd_vms_bank_native_q0_faces	16	0	[270.0, 313.2]	q_hub_ne,q_hub_nw
+hnx_rp3lp3h_n	core	hnx_rp3lp3h_n	128	0	[630.72, 1209.6]	q_sm0,q_sm1,q_sm2,q_sm3
+hnx_rp3lp3h_s	core	hnx_rp3lp3h_s	128	0	[630.72, 1036.8]	q_sm0,q_sm1,q_sm2,q_sm3
+ot_hbm_hc_bankq0_static__lanes0_2	core	None	0	0	None	
+ot_hbm_hc_bankq0_static__lanes3_5	core	None	0	0	None	
+ot_hbm_hc_bankq0_static__lanes6_7_bank	core	None	0	0	None	
+ot_hbm_hc_bankq_ft_static__lanes0_2_43d2a3be8b5a	core	None	0	0	None	
+ot_hbm_hc_bankq_ft_static__lanes0_2_d7bcdf811862	core	None	0	0	None	
+ot_hbm_hc_bankq_ft_static__lanes3_5_1d3df82b9ed3	core	None	0	0	None	
+ot_hbm_hc_bankq_ft_static__lanes3_5_20947a7cbdde	core	None	0	0	None	
+ot_hbm_hc_bankq_ft_static__lanes6_7_bank_26496f98b6d5	core	None	0	0	None	
+ot_hbm_hc_bankq_ft_static__lanes6_7_bank_56966ec8a129	core	None	0	0	None	
+ot_hbm_hc_bankq_static__lanes0_2_73698994063d	core	None	0	0	None	
+ot_hbm_hc_bankq_static__lanes0_2_96294e05efa9	core	None	0	0	None	
+ot_hbm_hc_bankq_static__lanes0_2_e6588042a5d1	core	None	0	0	None	
+ot_hbm_hc_bankq_static__lanes3_5_2217a22f183c	core	None	0	0	None	
+ot_hbm_hc_bankq_static__lanes3_5_2d54ff50920c	core	None	0	0	None	
+ot_hbm_hc_bankq_static__lanes3_5_60b283a425e3	core	None	0	0	None	
+ot_hbm_hc_bankq_static__lanes6_7_bank_345a3ba2271a	core	None	0	0	None	
+ot_hbm_hc_bankq_static__lanes6_7_bank_4766a3ee91ef	core	None	0	0	None	
+ot_hbm_hc_bankq_static__lanes6_7_bank_4be7d9f11ffa	core	None	0	0	None	
+ot_hbm_hc_bankq_static__lanes6_7_bank_9ac6b0c89af5	core	None	0	0	None	
+ot_hbm_hc_bankq_term_static__lanes6_7_bank	core	None	0	0	None	
+ot_hbm_hc_qhub_static	core	None	0	0	None	
+ot_hbm_hc_root_static__hcp_sys1	core	ot_hbm_hc_root_static__hcp_sys1	1	0	[155.52, 172.8]	root
+ot_hbm_hc_root_static__tail0_rest	core	ot_hbm_hc_root_static__tail0_rest	1	0	[155.52, 172.8]	root
+ot_hbm_hc_root_static__tail0_sk_steady	core	ot_hbm_hc_root_static__tail0_sk_steady	1	0	[155.52, 172.8]	root
+ot_hbm_hc_root_static__tail0_sk_step0	core	ot_hbm_hc_root_static__tail0_sk_step0	1	0	[155.52, 172.8]	root
+ot_hbm_hc_root_static__tail1_rest	core	ot_hbm_hc_root_static__tail1_rest	1	0	[155.52, 172.8]	root
+ot_hbm_hc_root_static__tail1_sk_steady	core	ot_hbm_hc_root_static__tail1_sk_steady	1	0	[155.52, 172.8]	root
+ot_hbm_hc_root_static__tail1_sk_step0	core	ot_hbm_hc_root_static__tail1_sk_step0	1	0	[155.52, 172.8]	root
+ot_hbm_host_cp_rxs	core	ot_hbm_host_cp_rxs	1	0	[434.808, 432.0]	root
+ot_hbm_idx_query_static	core	ot_hbm_idx_query_static	4	4	[170.64, 164.16]	q_hub_ne,q_hub_nw
+ot_hbm_idx_score_quarter_static__r0c0_k0h0	core	ot_hbm_idx_score_quarter_static__r0c0_k0h0	2	0	[218.592, 187.488]	q_b100
+ot_hbm_idx_score_quarter_static__r0c0_k0h1	core	ot_hbm_idx_score_quarter_static__r0c0_k0h1	2	0	[218.592, 187.488]	q_b100
+ot_hbm_idx_score_quarter_static__r0c0_k2h1	core	ot_hbm_idx_score_quarter_static__r0c0_k2h1	2	0	[218.592, 187.488]	q_b100
+ot_hbm_idx_score_quarter_static__r0c0_k3h1	core	ot_hbm_idx_score_quarter_static__r0c0_k3h1	2	0	[218.592, 187.488]	q_b100
+ot_hbm_idx_score_quarter_static__r0c1_k2h0	core	ot_hbm_idx_score_quarter_static__r0c1_k2h0	2	0	[218.592, 187.488]	q_b100
+ot_hbm_idx_score_quarter_static__r0c1_k2h1	core	ot_hbm_idx_score_quarter_static__r0c1_k2h1	2	0	[218.592, 187.488]	q_b100
+ot_hbm_idx_score_quarter_static__r0c1_k3h0	core	ot_hbm_idx_score_quarter_static__r0c1_k3h0	2	0	[218.592, 187.488]	q_b100
+ot_hbm_idx_score_quarter_static__r0c3_k3h1	core	ot_hbm_idx_score_quarter_static__r0c3_k3h1	2	0	[218.592, 187.488]	q_b101,q_b101_nw
+ot_hbm_idx_score_quarter_static__r1c0_k0h0	core	ot_hbm_idx_score_quarter_static__r1c0_k0h0	2	0	[218.592, 187.488]	q_b101,q_b101_nw
+ot_hbm_idx_score_quarter_static__r1c1_k0h0	core	ot_hbm_idx_score_quarter_static__r1c1_k0h0	2	0	[218.592, 187.488]	q_b102
+ot_hbm_idx_score_quarter_static__r1c1_k3h1	core	ot_hbm_idx_score_quarter_static__r1c1_k3h1	2	0	[218.592, 187.488]	q_b102
+ot_hbm_idx_score_quarter_static__tail1	core	ot_hbm_idx_score_quarter_static__tail1	2	0	[218.592, 187.488]	q_b103
+ot_hbm_idx_selector_static_sel	core	ot_hbm_idx_selector_static_sel	1	0	[600.048, 450.36]	root
+ot_hbm_idx_topk_link_static	core	ot_hbm_idx_topk_link_static	1	0	[650.16, 500.04]	root
+ot_hbm_idx_vm_query_static_n12	core	ot_hbm_idx_vm_query_static_n12	4	4	[216.0, 108.0]	q_hub_ne,q_hub_nw
+ot_hbm_sm_vm_wr_q_t_lanes4	core	ot_hbm_sm_vm_wr_q_t_lanes4	4	4	[142.56, 388.8]	q_hub_ne,q_hub_nw
+ot_hbm_su_programme_pslice_c5	core	ot_hbm_su_programme_pslice_c5	4	4	[939.6, 760.32]	q_hub_ne,q_hub_nw
+ot_hbm_su_static_cxport_ij_q	core	ot_hbm_su_static_cxport_ij_q	4	4	[250.56, 449.28]	q_hub_ne,q_hub_nw
+ot_hbm_su_static_pgslice_lg__lane_exp0	core	ot_hbm_su_static_pgslice_lg__lane_exp0	4	0	[440.64, 207.36]	q_su00,q_su10
+ot_hbm_su_static_pgslice_lg__lane_exp10_2912e200f83d	core	ot_hbm_su_static_pgslice_lg__lane_exp10	4	0	[440.64, 207.36]	q_su00,q_su10
+ot_hbm_su_static_pgslice_lg__lane_exp10_8d2f62efc35d	core	ot_hbm_su_static_pgslice_lg__lane_exp10	4	0	[440.64, 207.36]	q_su00,q_su10
+ot_hbm_su_static_pgslice_lg__lane_exp11_1510b1b6a90f	core	ot_hbm_su_static_pgslice_lg__lane_exp11	4	0	[440.64, 207.36]	q_su01,q_su11
+ot_hbm_su_static_pgslice_lg__lane_exp11_628405c4b899	core	ot_hbm_su_static_pgslice_lg__lane_exp11	4	0	[440.64, 207.36]	q_su01,q_su11
+ot_hbm_su_static_pgslice_lg__lane_exp12_75dc9e6a2efa	core	ot_hbm_su_static_pgslice_lg__lane_exp12	4	0	[440.64, 207.36]	q_su00,q_su10
+ot_hbm_su_static_pgslice_lg__lane_exp12_9bb0c4d58883	core	ot_hbm_su_static_pgslice_lg__lane_exp12	4	0	[440.64, 207.36]	q_su00,q_su10
+ot_hbm_su_static_pgslice_lg__lane_exp13_2918e8eb5d6c	core	ot_hbm_su_static_pgslice_lg__lane_exp13	4	0	[440.64, 207.36]	q_su01,q_su11
+ot_hbm_su_static_pgslice_lg__lane_exp13_fea6b23e56b4	core	ot_hbm_su_static_pgslice_lg__lane_exp13	4	0	[440.64, 207.36]	q_su01,q_su11
+ot_hbm_su_static_pgslice_lg__lane_exp14_4a8fa8d47007	core	ot_hbm_su_static_pgslice_lg__lane_exp14	4	0	[440.64, 207.36]	q_su00,q_su10
+ot_hbm_su_static_pgslice_lg__lane_exp14_dbc0410883c5	core	ot_hbm_su_static_pgslice_lg__lane_exp14	4	0	[440.64, 207.36]	q_su00,q_su10
+ot_hbm_su_static_pgslice_lg__lane_exp1_cc6a70ac5f18	core	ot_hbm_su_static_pgslice_lg__lane_exp1	4	0	[440.64, 207.36]	q_su01,q_su11
+ot_hbm_su_static_pgslice_lg__lane_exp1_d5715440ccac	core	ot_hbm_su_static_pgslice_lg__lane_exp1	4	0	[440.64, 207.36]	q_su01,q_su11
+ot_hbm_su_static_pgslice_lg__lane_exp2_4240b9ef0b3f	core	ot_hbm_su_static_pgslice_lg__lane_exp2	4	0	[440.64, 207.36]	q_su00,q_su10
+ot_hbm_su_static_pgslice_lg__lane_exp2_d3ba1a7783b3	core	ot_hbm_su_static_pgslice_lg__lane_exp2	4	0	[440.64, 207.36]	q_su00,q_su10
+ot_hbm_su_static_pgslice_lg__lane_exp3_565417693226	core	ot_hbm_su_static_pgslice_lg__lane_exp3	4	0	[440.64, 207.36]	q_su01,q_su11
+ot_hbm_su_static_pgslice_lg__lane_exp3_6549fac62117	core	ot_hbm_su_static_pgslice_lg__lane_exp3	4	0	[440.64, 207.36]	q_su01,q_su11
+ot_hbm_su_static_pgslice_lg__lane_exp4_b74f1b0dd8d3	core	ot_hbm_su_static_pgslice_lg__lane_exp4	4	0	[440.64, 207.36]	q_su00,q_su10
+ot_hbm_su_static_pgslice_lg__lane_exp4_be1a70a46266	core	ot_hbm_su_static_pgslice_lg__lane_exp4	4	0	[440.64, 207.36]	q_su00,q_su10
+ot_hbm_su_static_pgslice_lg__lane_exp5_4f3a945c1229	core	ot_hbm_su_static_pgslice_lg__lane_exp5	4	0	[440.64, 207.36]	q_su01,q_su11
+ot_hbm_su_static_pgslice_lg__lane_exp5_bde86fff1bda	core	ot_hbm_su_static_pgslice_lg__lane_exp5	4	0	[440.64, 207.36]	q_su01,q_su11
+ot_hbm_su_static_pgslice_lg__lane_exp6_82d218e839cd	core	ot_hbm_su_static_pgslice_lg__lane_exp6	4	0	[440.64, 207.36]	q_su00,q_su10
+ot_hbm_su_static_pgslice_lg__lane_exp6_9f91e5c14a67	core	ot_hbm_su_static_pgslice_lg__lane_exp6	4	0	[440.64, 207.36]	q_su00,q_su10
+ot_hbm_su_static_pgslice_lg__lane_exp7_3fa591887d18	core	ot_hbm_su_static_pgslice_lg__lane_exp7	4	0	[440.64, 207.36]	q_su01,q_su11
+ot_hbm_su_static_pgslice_lg__lane_exp7_6245e6cd25b3	core	ot_hbm_su_static_pgslice_lg__lane_exp7	4	0	[440.64, 207.36]	q_su01,q_su11
+ot_hbm_su_static_pgslice_lg__lane_exp8	core	ot_hbm_su_static_pgslice_lg__lane_exp8	4	0	[440.64, 207.36]	q_su00,q_su10
+ot_hbm_su_static_pgslice_lg__lane_exp9_1b3202c4b870	core	ot_hbm_su_static_pgslice_lg__lane_exp9	4	0	[440.64, 207.36]	q_su01,q_su11
+ot_hbm_su_static_pgslice_lg__lane_exp9_de7a529fa6e7	core	ot_hbm_su_static_pgslice_lg__lane_exp9	4	0	[440.64, 207.36]	q_su01,q_su11
+ot_hbm_su_static_pgslice_lg__lane_exp_l_2e4754467283	core	ot_hbm_su_static_pgslice_lg__lane_exp_l	4	0	[440.64, 207.36]	q_su01,q_su11
+ot_hbm_su_static_pgslice_lg__lane_exp_l_99db70deab19	core	ot_hbm_su_static_pgslice_lg__lane_exp_l	4	0	[440.64, 207.36]	q_su01,q_su11
+ot_hbm_su_static_pgslice_lg__lanes12_15_aee690bf3444	core	ot_hbm_su_static_pgslice_lg__lanes12_15	4	0	[760.32, 725.76]	q_su21,q_su31
+ot_hbm_su_static_pgslice_lg__lanes12_15_eb590bc5e9de	core	ot_hbm_su_static_pgslice_lg__lanes12_15	4	0	[760.32, 725.76]	q_su21,q_su31
+ot_hbm_su_static_pgslice_lg__lanes16_19_0d1ec45f866e	core	ot_hbm_su_static_pgslice_lg__lanes16_19	4	0	[760.32, 725.76]	q_su20,q_su30
+ot_hbm_su_static_pgslice_lg__lanes16_19_6930bb464143	core	ot_hbm_su_static_pgslice_lg__lanes16_19	4	0	[760.32, 725.76]	q_su20,q_su30
+ot_hbm_su_static_pgslice_lg__lanes20_23_f5958ea07f29	core	ot_hbm_su_static_pgslice_lg__lanes20_23	4	0	[760.32, 725.76]	q_su21,q_su31
+ot_hbm_su_static_pgslice_lg__lanes20_23_f62fbff895b8	core	ot_hbm_su_static_pgslice_lg__lanes20_23	4	0	[760.32, 725.76]	q_su21,q_su31
+ot_hbm_su_static_pgslice_lg__lanes24_27_53fde75129b8	core	ot_hbm_su_static_pgslice_lg__lanes24_27	4	0	[760.32, 725.76]	q_su20,q_su30
+ot_hbm_su_static_pgslice_lg__lanes24_27_ac922fae577a	core	ot_hbm_su_static_pgslice_lg__lanes24_27	4	0	[760.32, 725.76]	q_su20,q_su30
+ot_hbm_su_static_pgslice_lg__lanes28_31_4ce1cba54fb1	core	ot_hbm_su_static_pgslice_lg__lanes28_31	4	0	[760.32, 725.76]	q_su21,q_su31
+ot_hbm_su_static_pgslice_lg__lanes28_31_97095470da01	core	ot_hbm_su_static_pgslice_lg__lanes28_31	4	0	[760.32, 725.76]	q_su21,q_su31
+ot_hbm_su_static_pgslice_lg__lanes4_7_3b8d20184137	core	ot_hbm_su_static_pgslice_lg__lanes4_7	4	0	[760.32, 725.76]	q_su21,q_su31
+ot_hbm_su_static_pgslice_lg__lanes4_7_7c5136131e9e	core	ot_hbm_su_static_pgslice_lg__lanes4_7	4	0	[760.32, 725.76]	q_su21,q_su31
+ot_hbm_su_static_pgslice_lg__lanes8_11_1516af9871b4	core	ot_hbm_su_static_pgslice_lg__lanes8_11	4	0	[760.32, 725.76]	q_su20,q_su30
+ot_hbm_su_static_pgslice_lg__lanes8_11_a1c0c37ab566	core	ot_hbm_su_static_pgslice_lg__lanes8_11	4	0	[760.32, 725.76]	q_su20,q_su30
+ot_hbm_su_static_pgslice_lg__lanes_plain0_3	core	ot_hbm_su_static_pgslice_lg__lanes_plain0_3	4	0	[440.64, 457.92]	q_su00,q_su10
+ot_hbm_su_static_pgslice_lg__lanes_plain12_15_871944876423	core	ot_hbm_su_static_pgslice_lg__lanes_plain12_15	4	0	[440.64, 457.92]	q_su01,q_su11
+ot_hbm_su_static_pgslice_lg__lanes_plain12_15_a15494473cec	core	ot_hbm_su_static_pgslice_lg__lanes_plain12_15	4	0	[440.64, 457.92]	q_su01,q_su11
+ot_hbm_su_static_pgslice_lg__lanes_plain4_7_80ba81b7a4cd	core	ot_hbm_su_static_pgslice_lg__lanes_plain4_7	4	0	[440.64, 457.92]	q_su01,q_su11
+ot_hbm_su_static_pgslice_lg__lanes_plain4_7_9e7c6dac470e	core	ot_hbm_su_static_pgslice_lg__lanes_plain4_7	4	0	[440.64, 457.92]	q_su01,q_su11
+ot_hbm_su_static_pgslice_lg__lanes_plain8_11	core	ot_hbm_su_static_pgslice_lg__lanes_plain8_11	4	0	[440.64, 457.92]	q_su00,q_su10
+ot_hbm_su_static_pgslice_lg__pretree_0132854c0b0e	core	ot_hbm_su_static_pgslice_lg__pretree	8	0	[164.16, 457.92]	q_su00,q_su10,q_su20,q_su30
+ot_hbm_su_static_pgslice_lg__pretree_44645377c174	core	ot_hbm_su_static_pgslice_lg__pretree	8	0	[164.16, 457.92]	q_su00,q_su10,q_su20,q_su30
+ot_hbm_su_static_pgslice_lg__side_rest	core	ot_hbm_su_static_pgslice_lg__side_rest	4	0	[440.64, 457.92]	q_su01,q_su11
+ot_hbm_su_static_pgslice_lg__side_softplus	core	ot_hbm_su_static_pgslice_lg__side_softplus	4	0	[440.64, 457.92]	q_su00,q_su10
+ot_hbm_su_static_qcore_r13	core	ot_hbm_su_static_qcore_r13	4	4	[224.64, 207.36]	q_hub_ne,q_hub_nw
+ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_0ba555c248ef	core	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	32	32	[177.984, 177.984]	q_hub_ne,q_hub_nw
+ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_22cce13e347f	core	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	32	32	[177.984, 177.984]	q_hub_ne,q_hub_nw
+ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_34e30ff4f4aa	core	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	32	32	[177.984, 177.984]	q_hub_ne,q_hub_nw
+ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_437e9758ecb9	core	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	32	32	[177.984, 177.984]	q_hub_ne,q_hub_nw
+ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_73e88d49e427	core	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	32	32	[177.984, 177.984]	q_hub_ne,q_hub_nw
+ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_91cace6cf5b1	core	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	32	32	[177.984, 177.984]	q_hub_ne,q_hub_nw
+ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_cc82b5aed9bc	core	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	32	32	[177.984, 177.984]	q_hub_ne,q_hub_nw
+ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_ddd96e4df4f5	core	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	32	32	[177.984, 177.984]	q_hub_ne,q_hub_nw
+ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_e94f31d435ad	core	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	32	32	[177.984, 177.984]	q_hub_ne,q_hub_nw
+ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_f667644f356a	core	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	32	32	[177.984, 177.984]	q_hub_ne,q_hub_nw
+ot_hbm_svc_sm_group_rel_id_0f9e9fbe2050	core	ot_hbm_svc_sm_group_rel_id	8	8	[776.304, 646.92]	q_hub_ne,q_hub_nw
+ot_hbm_svc_sm_group_rel_id_63240fc857a9	core	ot_hbm_svc_sm_group_rel_id	8	8	[776.304, 646.92]	q_hub_ne,q_hub_nw
+ot_hbm_svc_sm_group_rel_id_6c0e8c7a853b	core	ot_hbm_svc_sm_group_rel_id	8	8	[776.304, 646.92]	q_hub_ne,q_hub_nw
+ot_hbm_svc_sm_group_rel_id_97add0219b22	core	ot_hbm_svc_sm_group_rel_id	8	8	[776.304, 646.92]	q_hub_ne,q_hub_nw
+ot_hbm_svc_sm_xcal_rel_t_3a407d730120	core	ot_hbm_svc_sm_xcal_rel_t	8	0	[207.36, 207.36]	q_spb2,q_spt0
+ot_hbm_svc_sm_xcal_rel_t_bb4af239dbb1	core	ot_hbm_svc_sm_xcal_rel_t	8	0	[207.36, 207.36]	q_spb2,q_spt0
+ot_hbm_svc_sm_xcal_rel_t_c060b9fea7b6	core	ot_hbm_svc_sm_xcal_rel_t	8	0	[207.36, 207.36]	q_spb2,q_spt0
+ot_hbm_svc_sm_xcal_rel_t_e3533f638d2f	core	ot_hbm_svc_sm_xcal_rel_t	8	0	[207.36, 207.36]	q_spb2,q_spt0
+ot_hbm_svc_vm_kshare_splitstrap_5b4268cf4000	core	ot_hbm_svc_vm_kshare_splitstrap	8	8	[354.24, 453.6]	q_hub_ne,q_hub_nw
+ot_hbm_svc_vm_kshare_splitstrap_6bbd87383348	core	ot_hbm_svc_vm_kshare_splitstrap	8	8	[354.24, 453.6]	q_hub_ne,q_hub_nw
+ot_hbm_svc_vm_kshare_splitstrap_cd020cecd26b	core	ot_hbm_svc_vm_kshare_splitstrap	8	8	[354.24, 453.6]	q_hub_ne,q_hub_nw
+ot_hbm_svc_vm_kshare_splitstrap_fcb962e88e4d	core	ot_hbm_svc_vm_kshare_splitstrap	8	8	[354.24, 453.6]	q_hub_ne,q_hub_nw
+ot_hbm_svc_vmdel_lane_n_2a05a10afa45	core	ot_hbm_svc_vmdel_lane_n	16	16	[257.04, 108.0]	q_hub_ne,q_hub_nw
+ot_hbm_svc_vmdel_lane_n_307cf2d942d9	core	ot_hbm_svc_vmdel_lane_n	16	16	[257.04, 108.0]	q_hub_ne,q_hub_nw
+ot_hbm_svc_vmdel_lane_n_400683920753	core	ot_hbm_svc_vmdel_lane_n	16	16	[257.04, 108.0]	q_hub_ne,q_hub_nw
+ot_hbm_svc_vmdel_lane_n_7b8f4f130078	core	ot_hbm_svc_vmdel_lane_n	16	16	[257.04, 108.0]	q_hub_ne,q_hub_nw
+ot_hbm_svc_vmdel_lane_n_9b0a52d82cb0	core	ot_hbm_svc_vmdel_lane_n	16	16	[257.04, 108.0]	q_hub_ne,q_hub_nw
+ot_hbm_svc_wb_kport_q	core	ot_hbm_svc_wb_kport_q	4	4	[475.2, 475.2]	q_hub_ne,q_hub_nw
+ot_hbm_xp_aq_tree13_fmt_55d250ae9185	core	ot_hbm_xp_aq_tree13_fmt	4	4	[183.6, 108.0]	q_hub_ne,q_hub_nw
+ot_hbm_xp_aq_tree13_fmt_a7982cec9a7d	core	ot_hbm_xp_aq_tree13_fmt	4	4	[183.6, 108.0]	q_hub_ne,q_hub_nw
+ot_hfd_coll_q2_hard_v8g__body	core	None	0	0	None	
+ot_hfd_coll_q2_hard_v8g__reduce	core	ot_hfd_coll_q2_hard_v8g__reduce	4	4	[233.28, 233.28]	q_hub_ne,q_hub_nw
+ot_hgi_coll_gq_issue	core	ot_hgi_coll_gq_issue	4	4	[237.6, 237.6]	q_hub_ne,q_hub_nw
+ot_hgi_coll_tkm_m_tp192__tile1	core	None	0	0	None	
+ot_hgi_coll_tkm_m_tp192__tile10	core	None	0	0	None	
+ot_hgi_coll_tkm_m_tp192__tile11	core	None	0	0	None	
+ot_hgi_coll_tkm_m_tp192__tile12	core	None	0	0	None	
+ot_hgi_coll_tkm_m_tp192__tile13	core	None	0	0	None	
+ot_hgi_coll_tkm_m_tp192__tile14	core	None	0	0	None	
+ot_hgi_coll_tkm_m_tp192__tile15	core	None	0	0	None	
+ot_hgi_coll_tkm_m_tp192__tile16	core	None	0	0	None	
+ot_hgi_coll_tkm_m_tp192__tile17	core	None	0	0	None	
+ot_hgi_coll_tkm_m_tp192__tile18	core	None	0	0	None	
+ot_hgi_coll_tkm_m_tp192__tile19	core	None	0	0	None	
+ot_hgi_coll_tkm_m_tp192__tile2	core	None	0	0	None	
+ot_hgi_coll_tkm_m_tp192__tile20	core	None	0	0	None	
+ot_hgi_coll_tkm_m_tp192__tile21	core	None	0	0	None	
+ot_hgi_coll_tkm_m_tp192__tile22	core	None	0	0	None	
+ot_hgi_coll_tkm_m_tp192__tile23	core	None	0	0	None	
+ot_hgi_coll_tkm_m_tp192__tile24	core	None	0	0	None	
+ot_hgi_coll_tkm_m_tp192__tile25	core	None	0	0	None	
+ot_hgi_coll_tkm_m_tp192__tile26	core	None	0	0	None	
+ot_hgi_coll_tkm_m_tp192__tile27	core	None	0	0	None	
+ot_hgi_coll_tkm_m_tp192__tile28	core	None	0	0	None	
+ot_hgi_coll_tkm_m_tp192__tile29	core	None	0	0	None	
+ot_hgi_coll_tkm_m_tp192__tile3	core	None	0	0	None	
+ot_hgi_coll_tkm_m_tp192__tile30	core	None	0	0	None	
+ot_hgi_coll_tkm_m_tp192__tile31	core	None	0	0	None	
+ot_hgi_coll_tkm_m_tp192__tile4	core	None	0	0	None	
+ot_hgi_coll_tkm_m_tp192__tile5	core	None	0	0	None	
+ot_hgi_coll_tkm_m_tp192__tile6	core	None	0	0	None	
+ot_hgi_coll_tkm_m_tp192__tile7	core	None	0	0	None	
+ot_hgi_coll_tkm_m_tp192__tile8	core	None	0	0	None	
+ot_hgi_coll_tkm_m_tp192__tile9	core	None	0	0	None	
+ot_hgi_dma_back_static_vp4_banks_cp	core	ot_hgi_dma_back_static_vp4_banks_cp	4	4	[239.976, 240.84]	q_hub_ne,q_hub_nw
+ot_hgi_qw_dec	core	ot_hgi_qw_dec	4	4	[260.0, 260.0]	q_hub_ne,q_hub_nw
+ot_hgi_sfu_core_split3__ctl	core	ot_hgi_sfu_core_split3__ctl	2	0	[669.6, 626.4]	q_b113
+ot_hgi_sfu_core_split3__lane0	core	None	0	0	None	
+ot_hgi_sfu_core_split3__lane1	core	None	0	0	None	
+ot_hgi_sfu_core_split3__lane10	core	None	0	0	None	
+ot_hgi_sfu_core_split3__lane11	core	None	0	0	None	
+ot_hgi_sfu_core_split3__lane12	core	None	0	0	None	
+ot_hgi_sfu_core_split3__lane13	core	None	0	0	None	
+ot_hgi_sfu_core_split3__lane14	core	None	0	0	None	
+ot_hgi_sfu_core_split3__lane15	core	None	0	0	None	
+ot_hgi_sfu_core_split3__lane2	core	None	0	0	None	
+ot_hgi_sfu_core_split3__lane3	core	None	0	0	None	
+ot_hgi_sfu_core_split3__lane4	core	None	0	0	None	
+ot_hgi_sfu_core_split3__lane5	core	None	0	0	None	
+ot_hgi_sfu_core_split3__lane6	core	None	0	0	None	
+ot_hgi_sfu_core_split3__lane7	core	None	0	0	None	
+ot_hgi_sfu_core_split3__lane8	core	None	0	0	None	
+ot_hgi_sfu_core_split3__lane9	core	None	0	0	None	
+ot_hgi_sfu_core_split3__opstore_a	core	ot_hgi_sfu_core_split3__opstore_a	2	0	[388.8, 345.6]	q_b113
+ot_hgi_sfu_core_split3__opstore_b	core	ot_hgi_sfu_core_split3__opstore_b	2	0	[760.32, 691.2]	q_b113
+ot_hgi_sfu_programme_store_r10	core	ot_hgi_sfu_programme_store_r10	4	4	[574.56, 738.72]	q_hub_ne,q_hub_nw
+ot_hgi_sm_xload_cl2_bdring_2f4ce4cfb609	core	ot_hgi_sm_xload_cl2_bdring	4	4	[86.4, 302.4]	q_hub_ne,q_hub_nw
+ot_hgi_sm_xload_cl2_bdring_709af958dd74	core	ot_hgi_sm_xload_cl2_bdring	4	4	[86.4, 302.4]	q_hub_ne,q_hub_nw
+ot_hgi_sm_xload_cl2_bfqg_1b2fb119b618	core	ot_hgi_sm_xload_cl2_bfqg	16	16	[302.4, 298.08]	q_hub_ne,q_hub_nw
+ot_hgi_sm_xload_cl2_bfqg_1d82ff40b7b2	core	ot_hgi_sm_xload_cl2_bfqg	16	16	[302.4, 298.08]	q_hub_ne,q_hub_nw
+ot_hgi_sm_xload_cl2_bfqg_a386c1ab9f9d	core	ot_hgi_sm_xload_cl2_bfqg	16	16	[302.4, 298.08]	q_hub_ne,q_hub_nw
+ot_hgi_sm_xload_cl2_bfqg_c13e769a54d7	core	ot_hgi_sm_xload_cl2_bfqg	16	16	[302.4, 298.08]	q_hub_ne,q_hub_nw
+ot_hgi_sm_xload_cl2_ctlx	core	ot_hgi_sm_xload_cl2_ctlx	4	4	[388.8, 388.8]	q_hub_ne,q_hub_nw
+ot_hgi_sm_xload_xq_pegress_7730b41f6dbc	core	ot_hgi_sm_xload_xq_pegress	4	4	[369.36, 369.36]	q_hub_ne,q_hub_nw
+ot_hgi_sm_xload_xq_pegress_9839b19b37d6	core	ot_hgi_sm_xload_xq_pegress	4	4	[369.36, 369.36]	q_hub_ne,q_hub_nw
+ot_pdie_serdes	core	ot_pdie_serdes	5	0	[600.048, 600.48]	NE_io,NW_io,q_spb0,vsN0
+q_b111	type	None	0	0	None	
+q_mca	type	None	0	0	None	
+q_sm0	type	None	0	0	None	
+q_sm1	type	None	0	0	None	
+q_sm2	type	None	0	0	None	
+q_sm3	type	None	0	0	None	
+q_spb0	type	None	0	0	None	
+q_spb1	type	None	0	0	None	
+q_su00	type	None	0	0	None	
+q_su20	type	None	0	0	None	
+q_su31	type	None	0	0	None	
+vsN1	type	None	0	0	None	
+vsN2	type	None	0	0	None	

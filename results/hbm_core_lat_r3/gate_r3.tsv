@@ -1,0 +1,28 @@
+# HBM-CORE-LAT-R3 gate (2026-10-27). Plan of record = unified HBM: codex/hbm-2001@3c3dae6bb hubs H4320 (+quad fix, HBM-MU-QUAD-2 repacking NE) + SU plan B2o non-hub partitions (R15 planS2 bundle epyc2:/srv/opentallas-scratch2/claude/path-hbm-r15-1026/planS2) shifted +794.88.
+# Pending deltas checked: D-HBM-B1 (q_b112,q_b113,q_hub_nw/ne,q_b000-013,q_su00/01), D-HBM-RESET-RELAY (hubs,q_b001,q_b010), TR2-HBM (sfu_core_split3, pgslice_lg, idx_score_quarter_static), unified-plan G1/G2/G4 (hub repack, root FUSED slot + 888 b/hub links through root).
+# lat_before = measured TT at the old edge entry from core_insertion_b2l.json (B2l kits; 7/19 on a different outline -> UNCHECKED basis per NUMBER-CHECK 10-26 11:18); model = R4 centre-entry plan model (known 90-125 ps low).
+# type	inst	where	G1_survives	G2_interface_free	verdict	reason	lat_before_TT	status
+hfd_ep_static	6	NW_io,NE_io,q_spb0,vsN0	yes	yes (B2o outline/pins kept; <=405 both axes -> no in-core bay; no island)	PASS	2 pin variants (A 7e1768be x5, B 0d2c6a1d host_ep x1)	577 UNCHECKED	BUILDING sub-lane EP
+ot_hbm_svc_sm_xcal_rel_t	8	q_spb2,q_spt0	yes	yes (207.36^2 kept)	PASS	4 per-instance pin variants (plan-assigned); one tree plan per type	527 UNCHECKED	BUILDING sub-lane XCAL
+ot_hbm_hc_root_static__{hcp_sys1,tail0_rest,tail0_sk_steady,tail0_sk_step0,tail1_rest,tail1_sk_steady,tail1_sk_step0}	7x1	root	yes (HC children subtree32 in B2o and U)	yes (155.52x172.8, placement-only in root)	PASS	NEEDS-KIT, shallow 12.8c fixed trunk (model 138.7)	hcp_sys1 251; others never measured	BUILDING sub-lane HCROOT
+ot_hbm_argmax_static_sw_vm_r2	1	root	yes	yes (118.8^2)	PASS	FIX (NEAR-MISS 4c65077137aa), shallow 12.8c	191 UNCHECKED	BUILDING sub-lane SHALLOW
+ot_hbm_static_cfg_collar_idx256r	1	root	yes	yes (108^2)	PASS	GEOM-REQ since 10-25 on old clocking -> superseded by rebuild, shallow 12.8c	182 UNCHECKED	BUILDING sub-lane SHALLOW
+ot_hbm_host_cp_rxs	1	root	yes	NO	SKIP	434.8x432 > 405 on both axes: in-core bay need depends on root roads; unified-plan G4 routes FUSED root 888 b/hub through root (slot 682.56,4536 S2, halo to 46 cores) -> pending	model 367.5	WAIT G4 root slice
+ot_hbm_idx_selector_static_sel	1	root	yes	NO	SKIP	600x450 > 405: same G4 root-road dependency	model 446.0	WAIT G4 root slice
+ot_hbm_idx_rootctl_static_am	1	root	yes	NO	SKIP	475.2 wide > 405: same G4 dependency (GEOM-REQ 57925f664904 old kit)	model 310.3	WAIT G4 root slice
+ot_hbm_idx_topk_link_static	1	root	yes	-	SKIP	live ot-run kit job intel2 pid 3426757 (path-hbm-cores/topk_tree/kits_r2, other owner) - not duplicated; also 650 wide (G4)	model 487.4	OTHER OWNER LIVE
+hfd_vms_bank_native_q0_faces	16	q_hub_nw/ne	NO	-	SKIP	replaced by NEW hnx_vms_bank_q0_faces 270x403.92 (hub bank) in unified plan	437	SKIP (G3 owns new type)
+ot_hgi_sm_xload_cl2_ctlx (xl_ctl)	4	hubs (quad service column)	yes	NO	SKIP	re-laid inside MU quad beside NEW bank/FUSED types; MU-QUAD-2 repack running	505	WAIT unified plan
+ot_hbm_sm_vm_wr_q_t_lanes4 (smw)	4	hubs (quad service column)	yes	NO	SKIP	quad service column + R14 NE enclosed-pin FAIL vmb.wq1->smw needs plan fix	356	WAIT unified plan
+ot_hbm_svc_vm_kshare_splitstrap	8	hubs	yes	NO	SKIP	4 plan-assigned pin maps + R14 NE enclosed-pin FAIL vmks.c_k->ctl_p14	543	WAIT unified plan
+ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	32	hubs	yes	NO	SKIP	10 plan-assigned pin maps (clk at 3 spots) + R14 NE enclosed-pin FAIL target ctl_p14	295	WAIT unified plan
+ot_hgi_coll_gq_land	4	hubs	yes	NO	SKIP	R14 NE enclosed-pin FAIL hcollgl pa_*->coll body_n2; QUAD-2 moves coll body/reduce	328	WAIT unified plan
+ot_hgi_coll_gq_issue	4	hubs (coll cluster)	yes	NO	SKIP	coll cluster re-packed by QUAD-2 (body_n2+reduce adjacency); hub pins are per-plan tables	343	WAIT unified plan / ASK
+ot_hgi_qw_dec,ot_hbm_su_static_qcore_r13,ot_hbm_su_static_cxport_ij_q,ot_hbm_su_static_sfustore_hw,ot_hgi_sfu_programme_store_r10,ot_hgi_coll_inj_idx_join_rg,ot_hgi_sm_xload_xq_pegress,ot_hgi_sm_xload_cl2_bfqg	4/4/4/4/4/4/4/16	hubs	yes	UNKNOWN	SKIP (ASK)	placed-only in U candidate with B2o pin tables, but all 104/102 hub cores move (0 same origin) and hub pin tables are per-plan (qw_dec B2n->B2r2 re-pinned) -> needs PATH-HBM/MU-QUAD-2 statement "hub core pins frozen at B2o"; then PASS	368/434/447/550/1150/417/448/385	WAIT ASK
+ot_hbm_su_static_pgslice_lg__{side_softplus,side_rest,lanes*} (54 OWNERS items)	4/4/...	q_su*	yes	NO	SKIP	TR2-HBM pending delta (pgslice_lg type reduce) + D-HBM-B1 (q_su00/01) + B1d outline proposals	572/515	WAIT TR2-HBM/B1
+hnx_rp3lp3h_n/_s (SM halves)	128+128	q_sm0-3	yes	NO	SKIP	765k flat > 400k cap; strip column into SM-CLUSTER plan rev; unified die SM row growth (120 um) open	model 778/705	WAIT SM-CLUSTER plan
+ot_hgi_sfu_core_split3__*, ot_hbm_idx_score_quarter_static__*	2-each	q_b113 / q_b100-103	yes	NO	SKIP	TR2-HBM pending + D-HBM-B1 (q_b113)	-	WAIT TR2-HBM
+ot_hbm_hc_bank128_pair_core	112	q_b001-013	yes	NO	SKIP	D-HBM-B1 + RESET-RELAY partitions	-	WAIT B1
+other hub NEEDS-KIT (vm_calendar_f20, vms_glue_nw_t, idx_query, idx_vm_query_n12, pslice_c5, sm_group_rel_id, vmdel_lane_n, wb_kport_q, xp_aq_tree13_fmt, coll_q2 reduce, dma_back_vp4, xload_bdring)	-	hubs	yes	NO	SKIP	hub repack (QUAD service column: cal/vmdel/hb_vms) or per-plan hub pins; calendar in R14 NE enclosed-pin FAIL	-	WAIT unified plan
+TKM tiles 1-31, old bankq*/qhub_static, coll_q2_hard_v8g__body, NW_io/NE_io (OWNERS names)	-	not hard cores in B2o/U	NO	-	SKIP	stale OWNERS rows: no such hard core in the plan of record	-	ROOT: retire rows
+ot_pdie_serdes	5	io	yes	-	SKIP	IP macro (declared driverless hole)	-	n/a
