@@ -1923,6 +1923,9 @@ def cone_sim(m, lits, fixed, words, seed):
     return [val[l >> 1] ^ (mask if l & 1 else 0) for l in lits], mask
 
 
+ZH = -2                                  # fsm_proposals: the zero-hot (all gate bits 0) state
+
+
 def fsm_proposals(L, log, words=2, max_bits=4):
     """FSM state recoding (yosys fsm: a binary RTL state vector B[n-1:0] becomes one-hot gate flops B#t[i]).
     For each such vector the code -> one-hot-bit map is found by simulating both next-state functions from every
@@ -1959,38 +1962,58 @@ def fsm_proposals(L, log, words=2, max_bits=4):
             continue
         dl = [L.dlit[("gold", k)] for k in gk] + [L.dlit[("gate", k)] for k in tk]
         R = {}
+        zh = nt + 1 <= (1 << n)            # room for a zero-hot state (all gate bits 0, LEC-FPREG-4 L3 u_rw.st)
         for c in range(1 << n):
-            for j in range(nt):
+            for j in list(range(nt)) + ([ZH] if zh else []):
                 ones = (1 << (64 * words)) - 1
                 fixed = {var[("gold", k)]: (ones if (c >> b) & 1 else 0) for b, k in enumerate(gk)}
                 fixed.update({var[("gate", k)]: (ones if i == j else 0) for i, k in enumerate(tk)})
-                vals, mask = cone_sim(m, dl, fixed, words, seed=c * 64 + j)
+                vals, mask = cone_sim(m, dl, fixed, words, seed=c * 64 + (j if j >= 0 else 63))
                 obs = collections.Counter()
                 for lane in range(64 * words):
                     gn = sum(((vals[b] >> lane) & 1) << b for b in range(n))
                     tn = [(vals[n + i] >> lane) & 1 for i in range(nt)]
-                    obs[(gn, tn.index(1) if sum(tn) == 1 else -1)] += 1
+                    obs[(gn, tn.index(1) if sum(tn) == 1 else (ZH if sum(tn) == 0 else -1))] += 1
                 R[(c, j)] = obs
         # the next states also depend on registers not yet paired (a renamed alias of a state flag is a free input
         # on each side), so a transition agrees only where those agree: pick the map with the most agreeing
         # transitions (unique best, a majority of all lanes); the induction proof decides
         import itertools
         lanes = 64 * words
-        best, second, pi = -1, -1, None
-        for codes in itertools.combinations(range(1 << n), nt):
-            for perm in itertools.permutations(range(nt)):
-                cand = dict(zip(codes, perm))
-                sc = sum(cnt for c, j in cand.items() for (gn, ti), cnt in R[(c, j)].items()
-                         if ti >= 0 and cand.get(gn) == ti)
-                if sc > best:
-                    best, second, pi = sc, best, cand
-                elif sc > second:
-                    second = sc
-        if pi is None or best == second or 2 * best <= nt * lanes:
+        def search(zero_hot):
+            # zero_hot: one more code is the all-zero gate state (yosys fsm one-hot recoding of a reset/idle state
+            # as no bit set); its transitions are scored like the one-hot ones
+            best, second, pi = -1, -1, None
+            for codes in itertools.combinations(range(1 << n), nt):
+                for perm in itertools.permutations(range(nt)):
+                    base_ = dict(zip(codes, perm))
+                    for z in ([c for c in range(1 << n) if c not in base_] if zero_hot else [None]):
+                        cand = dict(base_)
+                        if z is not None:
+                            cand[z] = ZH
+                        sc = sum(cnt for c, j in cand.items() for (gn, ti), cnt in R[(c, j)].items()
+                                 if ti != -1 and cand.get(gn) == ti)
+                        if sc > best:
+                            best, second, pi = sc, best, cand
+                        elif sc > second:
+                            second = sc
+            ok = pi is not None and best != second and 2 * best > len(pi) * lanes
+            return ok, best, second, pi
+        ok, best, second, pi = search(False)
+        if not ok and zh:                  # only when no one-hot map is unique: earlier verdicts are unchanged
+            if math.comb(1 << n, nt) * math.factorial(nt) * ((1 << n) - nt) > 200000:
+                log.append(f"fsm: {base} ({n} gold / {nt} gate bits): zero-hot encoding search too large")
+            else:
+                okz, bz, sz, pz = search(True)
+                if okz:
+                    ok, best, second, pi = okz, bz, sz, pz
+        if not ok:
             log.append(f"fsm: {base} ({n} gold / {nt} gate bits): no unique encoding (best {best}, next {second} of "
                        f"{nt * lanes} transitions), none proposed")
             continue
         for c, j in sorted(pi.items()):
+            if j == ZH:                    # zero-hot: implied by the other cubes (every gate bit 0), no flop of its own
+                continue
             L.hyp[("gate", tk[j])] = ("cube", "gold", list(gk), [(c >> b) & 1 for b in range(n)])
             n_new += 1
         # a later round can re-propose the same state vector (its cube hypotheses were dropped and its gate bits are
@@ -1998,7 +2021,8 @@ def fsm_proposals(L, log, words=2, max_bits=4):
         # a second one with the same proof-output name (cons:gold:<first key>, rejected by build() as a duplicate)
         L.cons = [c for c in L.cons if not (c[0] == "gold" and list(c[1]) == list(gk))]
         L.cons.append(("gold", list(gk), [[(c >> b) & 1 for b in range(n)] for c in sorted(pi)]))
-        log.append(f"fsm: {base} recoded one-hot: " + ", ".join(f"{c}->{tk[j]}" for c, j in sorted(pi.items())))
+        log.append(f"fsm: {base} recoded one-hot: " + ", ".join(f"{c}->{tk[j] if j != ZH else 'zero-hot'}"
+                                                                for c, j in sorted(pi.items())))
     return n_new
 
 
