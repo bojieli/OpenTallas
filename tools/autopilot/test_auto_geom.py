@@ -118,6 +118,19 @@ class TestRules(unittest.TestCase):
         self.assertEqual(m["pins_unregistered"], 0)
         self.assertEqual(G.judge(m, {"metrics": t})[1], "PASS")
 
+    def test_all_kits_requires_absolute_limits_and_complete_measurement(self):
+        m = G.metrics(str(self.base(far=190)), odb="3_place.odb")
+        # Rule fixtures use unit-area cells; supply a production-like density independently.
+        m.update(fill_of_free=.4, empty_area=.1)
+        self.assertEqual(G.judge(m, None, [200, 200], all_kits=True)[1], "PASS")
+        for key, value in (("fill_of_free", .05), ("comb_loop_cells", 1), ("unrooted_sinks", 1),
+                           ("clock_sinks", 0), ("r2r_max", 406)):
+            bad = dict(m, **{key: value})
+            self.assertEqual(G.judge(bad, None, [200, 200], all_kits=True)[1], "FAIL", key)
+        self.assertEqual(G.judge(m, None, None, all_kits=True)[1], "FAIL")
+        with self.assertRaises(ValueError):
+            G.judge(m, {"metrics": m}, [200, 200], all_kits=True)
+
     def test_tap_rules_nearest_split_and_empty_tap(self):
         flops = [(i, 10 + (i % 10) * 2, 10 + (i // 10) * 2) for i in range(1, 101)]      # all near SW
         nets = [("CLOCK", "p0", [f"i{i}c" for i in range(1, 101)])]
@@ -162,6 +175,17 @@ class TestRegistry(unittest.TestCase):
         reg = AG.parse_registry("\t".join(self.ROWT) + "\n" + "\t".join(self.ROWT[:12] + ["revoked"] + self.ROWT[13:]))
         self.assertEqual(reg, {})
 
+    def test_standalone_contract_rejects_unmeasured_and_invalid_inputs(self):
+        row = dict(die="s81", type="foo", src="branch@abc")
+        sig = dict(design="foo", rtl_sha="a", pins_sha="b", die_area="0 0 100 200",
+                   checkpoints=["/kit/3_place.odb"])
+        self.assertEqual(AG.standalone_contract(sig, row)["outline"], "100.0x200.0")
+        for key, value in (("rtl_sha", ""), ("pins_sha", ""), ("die_area", "0 0 nan 100"),
+                           ("die_area", "0 0 -1 100")):
+            self.assertIsNone(AG.standalone_contract(dict(sig, **{key: value}), row))
+        self.assertIsNone(AG.standalone_contract(sig, dict(row, src="")))
+        self.assertIsNone(AG.standalone_contract(sig, dict(row, die="die_assembly")))
+
     def test_later_review_fail_revokes(self):
         import loopgaps as LG
         t = dict(zip(AG.REG_COLS, self.ROWT))
@@ -171,10 +195,10 @@ class TestRegistry(unittest.TestCase):
         txt += "2026-10-25 17:54 PDT GEOM-REVIEW: REPLY [KV ASTK z3] kv3_astk FAIL-to-route contract\n"
         self.assertIn("FAIL", AG.revoked_by_review(t, txt, LG))
 
-    def test_sample_is_deterministic_about_one_in_ten(self):
+    def test_sample_is_deterministic_about_one_in_five(self):
         ids = [f"{i:012x}" for i in range(2000)]
         n = sum(AG.sampled(i) for i in ids)
-        self.assertTrue(150 < n < 250, n)
+        self.assertTrue(350 < n < 450, n)
         self.assertEqual([AG.sampled(i) for i in ids[:50]], [AG.sampled(i) for i in ids[:50]])
 
 
@@ -203,6 +227,7 @@ class TestAutopilotAutoGeom(TickBase):
 
     def tearDown(self):
         os.environ.pop("AP_AUTO_GEOM", None)
+        os.environ.pop("AP_AUTO_GEOM_ALL", None)
         super().tearDown()
 
     def finish_check(self, verdict):
@@ -225,6 +250,43 @@ class TestAutopilotAutoGeom(TickBase):
         (j,) = self.tick().values()
         self.assertEqual(j["status"], "WAIT-GEOM")
         self.assertIn("not a registered template replica", j["auto_geom_note"])
+        self.assertEqual(self.f.launched, [])
+
+    def test_all_kits_measured_check_without_template_then_routes(self):
+        os.environ["AP_AUTO_GEOM_ALL"] = "1"
+        self.row[5] = ""
+        self.sig["rtl_sha"] = "new-design"
+        self.queue(self.row)
+        self.tick()
+        st = json.loads((Path(self.tmp.name) / "state.json").read_text())
+        (a,) = st["auto_geom"].values()
+        self.assertEqual(a["template"], "measured-kit")
+        self.finish_check("PASS")
+        self.tick()
+        (j,) = self.tick().values()
+        self.assertEqual(j["status"], "RUNNING")
+
+    def test_all_kits_pending_request_checked_but_visual_fail_stays_held(self):
+        os.environ["AP_AUTO_GEOM_ALL"] = "1"
+        self.row[4:6] = ["REQ", "GEOM REQ [NEW-KIT]"]
+        self.sig["rtl_sha"] = "new-design"
+        self.queue(self.row)
+        self.tick()
+        self.assertEqual(len(self.f.launched), 1)
+        # A reviewer failure of the original request prevents the saved auto PASS taking effect.
+        self.finish_check("PASS")
+        co = Path(self.tmp.name) / "coord" / "lanes" / "GEOM-REVIEW.md"
+        co.write_text("2099-01-01 00:00 PDT GEOM-REVIEW: REPLY [NEW-KIT] slice_station__t5 FAIL STRUCTURAL\n")
+        (j,) = self.tick().values()
+        self.assertEqual(j["status"], "WAIT-GEOM")
+        self.assertEqual(len(self.f.launched), 1)
+
+    def test_all_kits_explicit_template_mismatch_still_waits(self):
+        os.environ["AP_AUTO_GEOM_ALL"] = "1"
+        self.sig["rtl_sha"] = "wrong-template"
+        self.queue(self.row)
+        (j,) = self.tick().values()
+        self.assertEqual(j["status"], "WAIT-GEOM")
         self.assertEqual(self.f.launched, [])
 
     def test_pass_routes_next_tick(self):

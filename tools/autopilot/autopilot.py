@@ -1633,6 +1633,9 @@ def tick(args):
     geom_text = read_coord("lanes/GEOM-REVIEW.md")
     global GEOM_TEXT
     GEOM_TEXT = geom_text
+    # Resolve explicit visual verdicts before promoting pending requests to measured checks.
+    # Resolve again after prepare to apply a later reviewer FAIL on an AUTO-GEOM result.
+    resolve_geom(rows, geom_text)
     AG.prepare(sys.modules[__name__], st, rows)
     resolve_geom(rows, geom_text)
     load_closure()

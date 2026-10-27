@@ -2,8 +2,9 @@
 """auto_geom.py -- AUTO-GEOM: template registry + autopilot step (OWNER 2026-10-25 ~20:25).
 
 Owner decision: a part built from a template that already passed visual GEOM review may pass on AUTOMATED rule checks
-(geom_rules.py), with visual review sampled ~1 in 10.  Visual review stays mandatory for new templates, failures and
-die-level items.  OFF unless the hub sets AP_AUTO_GEOM=1 (enable only after COORD approval).
+(geom_rules.py), with visual review sampled 1 in 5 (owner 2026-10-27 08:02).  AP_AUTO_GEOM_ALL=1 also accepts new kits on
+absolute measured checks plus their source/outline/pin contract. Every FAIL requests visual review; die-level
+items stay on their separate review path. AP_AUTO_GEOM=1 retains template-only matching.
 
 Template registry (coord/state autopilot/geom_templates.tsv, append-only; last row per template id wins):
     tid die type design die_area rtl_sha pins_sha stage template_kit checkpoint metrics geom_ref scope registered by
@@ -23,7 +24,7 @@ Queue: --geom AUTO [--geom-ref 'TEMPLATE <tid>'] (no tid: matched by signature).
     PASS            -> row geom PASS, geom_ref 'GEOM-REVIEW [AUTO-GEOM <id>] AUTO PASS ...' -> routes (closure-order
                        holds, canary, path gate rule 1 unchanged; a later reviewer FAIL on that tag demotes / alerts
                        as for any verdict);
-    PASS + sampled  -> same, and the line is a 'GEOM REQ [AUTO-GEOM <id>]' audit request (deterministic 1 in 10);
+    PASS + sampled  -> same, and the line is a 'GEOM REQ [AUTO-GEOM <id>]' audit request (deterministic 1 in 5);
     FAIL            -> 'GEOM REQ [AUTO-GEOM <id>]' for the visual reviewers; the row waits on that tag like any REQ.
 """
 from __future__ import annotations
@@ -42,7 +43,7 @@ REG_COLS = ["tid", "die", "type", "design", "die_area", "rtl_sha", "pins_sha", "
 AG_TSV = "auto_geom.tsv"
 AG_HEAD = "time\tid\tdie\ttype\tkit\ttemplate\tcheckpoint\tverdict\tsampled\tline"
 AG_ROOT = "/srv/opentallas-scratch2/claude/autopilot/auto_geom"
-SAMPLE_MOD = 10
+SAMPLE_MOD = 5
 CHECK_MEM_GB = 24
 CHECK_TIMEOUT_S = 2 * 3600
 
@@ -151,14 +152,43 @@ def match(reg, sig, die, want_tid=""):
     return None, "not a registered template replica" + (f" ({'; '.join(why[:3])})" if why else " (no template)")
 
 
+def standalone_contract(sig, row):
+    """A source-pinned kit with a real outline and pin input can be measured without a prior template.
+
+    Die assemblies do not enter this path: only the five release-die kit namespaces, a named
+    type, source revision and pre-route checkpoint are accepted.  The queue's source gates,
+    explicit visual FAILs, plan-delta holds and canaries remain enforced by autopilot.
+    """
+    if (row.get("die") not in ("s81", "s81_head", "qwen_compute", "qwen_kvsys", "hbm")
+            or not row.get("type") or not row.get("src") or not sig.get("rtl_sha")
+            or not sig.get("pins_sha") or not sig.get("design")):
+        return None
+    try:
+        x0, y0, x1, y1 = map(float, sig["die_area"].split())
+        if not all(__import__("math").isfinite(v) for v in (x0, y0, x1, y1)) or x1 <= x0 or y1 <= y0:
+            return None
+    except (KeyError, ValueError, TypeError):
+        return None
+    checkpoints = sig.get("checkpoints") or []
+    stage = "cts" if any(c.endswith("4_cts.odb") for c in checkpoints) else "placed"
+    return dict(tid="measured-kit", standalone=True, stage=stage, metrics="", outline=f"{x1-x0}x{y1-y0}",
+                geom_ref="OWNER 2026-10-27 08:02 measured checks + 1-in-5 visual")
+
+
 def sampled(rid):
     return int(hashlib.sha1(f"auto-geom|{rid}".encode()).hexdigest(), 16) % SAMPLE_MOD == 0
 
 
 # ------------------------------------------------------------------------------------------------ autopilot step
+def all_kits_enabled():
+    """Owner 2026-10-27 08:02: measured checks for all partition/core kits."""
+    import os
+    return os.environ.get("AP_AUTO_GEOM_ALL", "") == "1"
+
+
 def enabled():
     import os
-    return os.environ.get("AP_AUTO_GEOM", "") == "1"
+    return os.environ.get("AP_AUTO_GEOM", "") == "1" or all_kits_enabled()
 
 
 def prepare(ap, st, rows):
@@ -166,6 +196,10 @@ def prepare(ap, st, rows):
     REQ on their own AUTO-GEOM tag (FAIL), so a reviewer REPLY [AUTO-GEOM <id>] is read by the normal geom chain"""
     ag = st.setdefault("auto_geom", {})
     for rid, r in rows.items():
+        if (all_kits_enabled() and not r["error"] and r.get("mode") not in ("adopt", "withdraw")
+                and r["geom"].upper() in ("REQ", "WAIT", "WAIT-GEOM")):
+            # Called after explicit review verdicts resolve, so a visual FAIL is never promoted.
+            r["geom"] = "AUTO"
         if r["error"] or r["geom"].upper() != "AUTO":
             continue
         a = ag.get(rid) or {}
@@ -203,6 +237,16 @@ def step(ap, st, r, geom_text):
     if m:
         want = m.group(1)
     t, why = match(reg, sig, r["die"], want)
+    if not t and all_kits_enabled() and not want:
+        # A missing replica match no longer blocks an independently measured kit.  Keep explicit
+        # TEMPLATE requests strict, and keep revoked templates on the visual-review path.
+        if a.get("revoked_note"):
+            return "AUTO-GEOM: revoked template -> visual GEOM REQ needed"
+        t = standalone_contract(sig, r)
+        if not t:
+            a.update(state="NOT-REPLICA", why="AUTO-GEOM: missing source/outline/pin contract -> visual GEOM REQ needed",
+                     t=time.time())
+            return a["why"]
     if not t:
         a.update(state="NOT-REPLICA", why=f"AUTO-GEOM: {why} -> visual GEOM REQ needed", t=time.time())
         ap.log(f"AUTO-GEOM {rid} {r['die']}/{r['type']}: {a['why']}")
@@ -234,7 +278,7 @@ def launch(ap, st, r, a, t, odb, sig):
             rc, _, err = ap.sh(["scp", "-q", "-o", "BatchMode=yes", "-o", "ControlPath=none", str(f), f"{host}:{out}/tools/"],
                                timeout=120)
             ok = rc == 0
-    if ok:   # the template metrics travel with the check (template host may differ from the kit host)
+    if ok and not t.get("standalone"):   # template metrics travel with the check
         rc, txt, err = ap.rbash(ap.ssh_host(th), f"cat {shlex.quote(tp)}", timeout=120)
         ok = rc == 0 and txt.strip().startswith("{")
         if ok:
@@ -244,8 +288,10 @@ def launch(ap, st, r, a, t, odb, sig):
         a.update(state="NOT-REPLICA", why=f"AUTO-GEOM: check setup failed ({err.strip()[-160:]})", t=time.time())
         return a["why"]
     mem = max(CHECK_MEM_GB, min(128, int(6 * (sig.get("odb_bytes") or 0) / 2**30) + 8))
+    rules_args = (["--all-kits", "--outline", t["outline"]] if t.get("standalone")
+                  else ["--template", f"{out}/template.json"])
     meta = {"id": rid, "odb": odb, "image": ap.IMAGE, "mem_gb": mem,
-            "rules_args": ["--template", f"{out}/template.json", "--title", f"{r['die']}/{r['type']} tmpl {t['tid']}"]}
+            "rules_args": rules_args + ["--title", f"{r['die']}/{r['type']} {t['tid']}"]}
     ap.rbash(host, f"cat > {shlex.quote(out)}/check.json <<'EOF'\n{json.dumps(meta)}\nEOF\n", timeout=60)
     unit = f"ap-{rid}-ageom"
     logf = ap.AP_DIR / "jobs" / rid / "auto_geom.log"
@@ -281,7 +327,7 @@ def poll(ap, st, r, a):
             + f"{line} | {r['die']}/{r['type']} kit {r['kit']} src {r['src']} checkpoint {a['odb']} template "
               f"{a['template']} ({a['template_ref']}) rules {host_out}/auto_geom.json")
     head += (" | visual review requested: rule FAIL (reviewers: REPLY [AUTO-GEOM " + rid + "] naming the type)"
-             if verdict == "FAIL" else " | 1-in-10 visual audit sample; routing proceeds on the AUTO PASS" if smp else "")
+             if verdict == "FAIL" else " | 1-in-5 visual audit sample; routing proceeds on the AUTO PASS" if smp else "")
     a.update(state="DONE", verdict=verdict, sampled=smp, line=line, t_done=time.time(),
              geom_ref=f"GEOM-REVIEW [AUTO-GEOM {rid}] AUTO {verdict} {time.strftime('%m-%d %H:%M')}")
     ap.tsv_append(AG_TSV, rid, [r["die"], r["type"], r["kit"], a["template"], a["odb"], verdict, int(smp), line[:600]])
