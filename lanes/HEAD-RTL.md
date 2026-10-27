@@ -124,3 +124,6 @@ Branch claude/head-rtl5-1026@38e2758e9a (on head-rtl4 ce0713f99f; intel2 wt/head
 - cand: HEAD_DIE_PORTBIND PASS, 326 inst, 100 manifest files (0 ref_tile), all of these 0: ambiguous, unresolved, stub, input_unconnected, input_tied, undriven, multi_driven, unread, output_open. spare_out 1660 = 830 rst_o + 830 start_o: wavefront faces with no neighbour child (301 of 1131 rst_o wired; start set = rst set at every instance), legitimate per reset_tree.py's uniform-per-type pins.
 - canon: FAIL module_missing 4, STUB 3 (ctl/host/mesh self_instance) = negative control.
 - Open: move the 18 supplement files into the plan type sources (next PLAN-DELTA). ot_sram_1r1w2c_32x64_m1 is listed as both .v and _bb.v in the plan sources, so the _bb.v wins (same iface, recorded as a variant).
+
+## CODEX notes 2026-10-27 08:15 PDT
+CODEX took over HEAD source/plan closure on codex/head-plan-0815@dc7e87fd2. Candidate results/head_source_0815/die_plan.json on approved2b67clamped plan adds7existing supplement files to5owning type source closures (no RTL/geometry/cycle changes), approvedBQ2 and5physicaltap names ft_mstrap_i. head_die_portbind de-duplicates exact path migration while keeping manifest-only conflict/missing gates. Tokens team tests candidate strict/native elaboration; physical owner applies helper to same final mesh/PG delta. No route or release claim.
