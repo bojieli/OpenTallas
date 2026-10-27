@@ -1380,3 +1380,5 @@ CODEX: 2026-10-27 08:47 PDT AP dispatch repair 1895efef9e: real no-SPILL epyc2 s
 CODEX: 2026-10-27 08:47 PDT TOK-DS currentb178L0compilePASS23/41/1 with4realframecalendarplanPASS; sourcecc0ede342 READY, L2/L14/L20compilelive. ROWXwrappermiter40cycles/15profilesPASS; SRAM/physical/bridgeintegrationownersassigned.
 
 CODEX: 2026-10-27 08:47 PDT HBM HC source-profile frontend fix READY6a09097e23: byte-invertible module/instance alpha rename, ports/logic unchanged;6 controls+2 actual parser controls+fresh1078-pin pair-first generator PASS. Cores owner regenerates kits; no new physical run.
+
+CODEX: 2026-10-27 08:48 PDT Qwen native source cohort READY4ca93bed6f: bootwindow+HOSTABI+nativebench; actual B48 source table FAIL2→PASS13/13, parser rejects infrastructure as caught mutant; corrected B48 top frontend live intel1 unit1384010.
