@@ -1,0 +1,26 @@
+# TOK-DS interim handoff — 2026-10-27 14:58 PDT
+
+Active second takeover13:51; continue until EXPLICIT reset. No reset yet. No live DS jobs. Root merges only. Sparse own local WT /srv/opentallas-scratch/claude/wt/codex-tok-ds-0815; currently codex/tokds-frame-images-1455@4fa5b926d, clean. Remote small staged mechanisms intel1; no new full intel2 copies (scratch pressure).
+
+## Ready source packets
+
+- Broad codex/tokds-gb-1355@a83ddc65d superseded for merge by thin codex/tokds-gb-thin-1440@fb278d847 (base currentmain d9973ea457 includes4dd848). Root merger curates10-file API+exact8commits; do not merge old broad L0/SVC/sliding/VPX/later-hop ancestry. Thin contains actual selected PD7f GB band/profile source, explicit realGB leaf, exact canonical2FF seam functional overlay, extractor direct return/LK and selectedmanifest/hardprofile hashes, early-GO GB guard/providerFalse, bareprofile/library carryover guards, component evidence. Existing extraction38/38 plan checks,12activeGB stations,LK0x492, nativeproviderFalse; no physical adoption. Local16/16 admission and direct source/plan/calendar/stage controls PASS. Existing related22 controls sufficient; no duplicate full extraction.
+- codex/tokds-image-bind-1450@1378b1db9: cherry-pick only this commit after curated base. Canonical VG INSTANCE expressions restored in actual GB partition calls (185declarations inclinactive r0_nx:154CFGROM+16QX+10BFcol+5BFroots). All ports/non-INSTANCE shapeparams unchanged; no pins/clock/data/boot cycles. Runtime helper rejects missing/ambiguous/wrong identities, records exact source hashes. Separate candidate manifest physical/die_plan/s81/bind/asbuilt_b178_gb_image_candidate_1450.json needs its OWN fresh extraction; prior1355 receipt cannot qualify it. Native72bit ROM2bank lookup8192words833ps PASS, static wrongidentity+realwrongbank mutants CAUGHT. Synthetic mask mechanism only; not model/frame numeric proof. Evidence results/token_pass/gb_image_bind_1450.
+- codex/tokds-frame-images-1455@4fa5b926d: cherry-pick only this4file commit, no ancestry needed. Production lower_xs previously called existing field_images only in cmd_gen, so native lower emitted metadata/sharedXS but no perframe MAT/CFG files. Native-only integration now emits actual source Field material under existing prog/xs/native/<op>/<slice>/frame_images prefix and hash inventory; exact existing writer/placement/names/rank-tag logic,0cycles, default/status unchanged. Roundtrip57344 CFG rows and16384 MAT words with wrong-bank/path controls PASS (bounded synthetic source fixture; no real layer replay). Evidence results/token_pass/frame_image_material_1458. Full admission stays PARTIAL/providerFalse.
+
+## Terminal jobs and failures
+
+All on intel1 /srv/opentallas-scratch2/claude/codex-tokds-gb-1355, immutable source WT codex-gb-asb-1012 (remote source4b212d4806):
+- extract unit324278-1793134931 h10x_r4 PASS38/38,12GB,LK0x492.
+- canonical seam unit324869-1793134932 seam_r4 PASS512full1264b833ps; removed-stage mutant caught.
+- actual XScontroller unit428057-1793135784 native_ctl_r1 PASS3GO/3CFG/176streams833ps; oldQlaunch mutant caughtt106. Real ot_s81sl_xs_ctl, actual released L0 calendar Q/B/Q, distinct from older v41spine proof. CFG/data/BF dates unchanged, Qadvance1+capture1 restoresdates. FullframeFalse.
+- imageidentity unit1260185-1793137781 intel1 /srv/opentallas-scratch2/claude/codex-gb-images-1450/run1 PASS, no livejob.
+Retained failures: initial sparse copied source absent; retry missing explicit GBleaf; retry empty physical structural_full s81b_fint (no return trace). Corrected functional-only copy with exact canonical2FF body after core/dieowner confirmation, no cycle/sourceadoption. Logs committed results/token_pass/gb_candidate_1355/failures.
+
+## Remaining actual contracts / next
+
+Production perframe emission now exists; still need source-correct per-die frame INSTANCE binding/actual selected loaded checkpoint contents and whole GB GO/TAG/CFG/data/return/capture/retirement composition. Component XS/seam/lookup proofs cannot qualify native fullframe. Root/S81 core/die own one eventual actual-source/plan event; no old739 receipts may qualify737.
+Incoming selected VQ/rstopt_xo/ring gather source and aggregate FIN/cap5r completion/clock phases remain current production PARTIAL. No new architecture chosen. ROWX16 owner→stage/rank map and storage lots unresolved; root-owned plain OWNER question already logged, defaultOFF. Actual existing svc5/11 cannot fit evenoneRPmacro. Codec+60edge price separate from unpriced routing. IDX root/pair producer reachable domains and second-round capture/lookup lifetime programme remain unaccepted; no D expansion. Prior optional PHYS_LANE preserves tree dst0 lanes2/3 and onlynormalizes TPdst1/2. No new owner questions.
+HEAD tensor oldcheckpoint default absent intel1/2/epyc2; parent owns released HEAD checkpoint/source and nativecoupon. DS fixtures only cite old paths; no full headweight tensor found.
+
+No P&R/STA launched, no clock/plan/adoption/default feature enablement, no repeated whole-layer runs. Parent/root notified all READY shas and exact limits. Current continued work should target actual producer bindings, not routine validation.
