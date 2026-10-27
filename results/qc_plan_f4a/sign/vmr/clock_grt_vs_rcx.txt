@@ -1,0 +1,23 @@
+{"file": "grt_TT.tsv", "n": 3713, "mean": 240.78, "min": 232.8, "max": 256.5, "leaves": 64, "leaf_mean_lo": 233.4, "leaf_mean_hi": 249.7, "window": 16.3, "early_mean": 229.02, "early_window": 14.6, "nonleaf": 2, "nonleaf_ex": [["g_bank[0].u_m/clk", "ot_ms_m1_clk", 235.7], ["g_bank[1].u_m/clk", "ot_ms_m0_clk", 237.4]]}
+{"file": "grt_FF.tsv", "n": 3713, "mean": 192.92, "min": 185.9, "max": 209.1, "leaves": 64, "leaf_mean_lo": 186.5, "leaf_mean_hi": 202.0, "window": 15.5, "early_mean": 183.37, "early_window": 14.1, "nonleaf": 2, "nonleaf_ex": [["g_bank[0].u_m/clk", "ot_ms_m1_clk", 188.1], ["g_bank[1].u_m/clk", "ot_ms_m0_clk", 189.4]]}
+{"file": "rcx_TT_prehold.tsv", "n": 3713, "mean": 252.65, "min": 222.4, "max": 300.4, "leaves": 64, "leaf_mean_lo": 227.2, "leaf_mean_hi": 290.5, "window": 63.3, "early_mean": 239.04, "early_window": 59.8, "nonleaf": 2, "nonleaf_ex": [["g_bank[0].u_m/clk", "ot_ms_m1_clk", 222.4], ["g_bank[1].u_m/clk", "ot_ms_m0_clk", 228.6]]}
+{"file": "rcx_FF_prehold.tsv", "n": 3713, "mean": 205.61, "min": 178.4, "max": 250.5, "leaves": 64, "leaf_mean_lo": 182.8, "leaf_mean_hi": 240.1, "window": 57.3, "early_mean": 194.39, "early_window": 54.2, "nonleaf": 2, "nonleaf_ex": [["g_bank[0].u_m/clk", "ot_ms_m1_clk", 178.8], ["g_bank[1].u_m/clk", "ot_ms_m0_clk", 185.0]]}
+Q4B1L3   grt 249.7 rcx 290.5 delta +40.8 intra-leaf-spread 22.5
+Q4B0L3   grt 242.9 rcx 283.1 delta +40.2 intra-leaf-spread 16.0
+Q4B0L2   grt 243.5 rcx 279.5 delta +36.1 intra-leaf-spread 7.1
+Q4B1L0   grt 243.6 rcx 279.6 delta +35.9 intra-leaf-spread 5.3
+Q4B2L2   grt 244.1 rcx 279.9 delta +35.8 intra-leaf-spread 6.5
+Q4B2L0   grt 244.7 rcx 280.5 delta +35.8 intra-leaf-spread 4.6
+Q4B0L0   grt 243.0 rcx 278.5 delta +35.6 intra-leaf-spread 4.2
+Q4B3L2   grt 243.1 rcx 278.2 delta +35.1 intra-leaf-spread 6.5
+Q4B2L3   grt 244.0 rcx 278.5 delta +34.5 intra-leaf-spread 4.2
+Q4B2L1   grt 243.8 rcx 278.2 delta +34.4 intra-leaf-spread 4.4
+Q4B3L0   grt 243.1 rcx 277.5 delta +34.4 intra-leaf-spread 5.2
+Q4B1L1   grt 242.2 rcx 276.4 delta +34.2 intra-leaf-spread 5.1
+...
+Q2B0L2   grt 242.1 rcx 230.3 delta -11.9 intra-leaf-spread 3.9
+Q2B1L0   grt 241.0 rcx 228.7 delta -12.3 intra-leaf-spread 4.8
+Q5B1L2   grt 242.3 rcx 229.9 delta -12.4 intra-leaf-spread 5.8
+Q5B1L1   grt 240.4 rcx 227.8 delta -12.6 intra-leaf-spread 5.7
+Q5B1L0   grt 240.6 rcx 227.2 delta -13.4 intra-leaf-spread 6.8
+delta mean 11.9 sd 16.6
