@@ -1,0 +1,13 @@
+{
+  "plan": "R13 planS2 9e154039a4c3eb2019b6c2b552f44e1ec4e8bc5aaac6aba38eb34b66c4c098df",
+  "picture": "results/geom_review/codex_hbm_2001/hub_clock_review.png",
+  "viewed": true,
+  "scope": "Clock tap identity and centre-entry postpass only; no routing authorized",
+  "verdict": "PASS-COND",
+  "findings": [
+    "206 hub cores each have one centre clock entry after replication; original 161 taps named removed cores or stale coordinates.",
+    "Core placement unchanged: open horizontal/vertical channels remain between shelf groups; service links still span multiple shelves with planned register stations.",
+    "No connected die clock, PG or reset overlay is present in this picture; current native core entries and real-view STA remain required.",
+    "Existing whole-plan geometry/static holds remain; this delta repairs clock connectivity metadata and does not claim physical closure."
+  ]
+}

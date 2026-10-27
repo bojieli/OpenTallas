@@ -1,0 +1,22 @@
+{
+ "planS2": {
+  "q_hub_nw": {
+   "error": "type q_hub_nw: core tap u_sfup_Q names no hard_cores[] inst"
+  },
+  "q_hub_ne": {
+   "error": "type q_hub_ne: core tap u_sfup_Q names no hard_cores[] inst"
+  }
+ },
+ "planS2_retarget": {
+  "q_hub_nw": {
+   "rows": 104,
+   "unique_cores": 104,
+   "cores": 104
+  },
+  "q_hub_ne": {
+   "rows": 102,
+   "unique_cores": 102,
+   "cores": 102
+  }
+ }
+}

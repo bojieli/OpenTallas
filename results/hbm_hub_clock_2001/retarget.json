@@ -1,0 +1,2492 @@
+{
+ "source_sha256": "9e154039a4c3eb2019b6c2b552f44e1ec4e8bc5aaac6aba38eb34b66c4c098df",
+ "types": {
+  "q_hub_nw": {
+   "cores": 104,
+   "old_taps": 81,
+   "new_taps": 104,
+   "moves": [
+    {
+     "name": "u_svg_Q0",
+     "source": "u_svg_Q0",
+     "old_xy": [
+      3888.0,
+      2406.24
+     ],
+     "new_xy": [
+      2314.872,
+      1489.86
+     ]
+    },
+    {
+     "name": "u_svg_Q1",
+     "source": "u_svg_Q1",
+     "old_xy": [
+      5520.96,
+      2406.24
+     ],
+     "new_xy": [
+      6958.872,
+      3066.66
+     ]
+    },
+    {
+     "name": "u_svg_Q2",
+     "source": "u_svg_Q2",
+     "old_xy": [
+      1637.28,
+      414.72
+     ],
+     "new_xy": [
+      1779.192,
+      379.62
+     ]
+    },
+    {
+     "name": "u_svg_Q3",
+     "source": "u_svg_Q3",
+     "old_xy": [
+      5374.08,
+      414.72
+     ],
+     "new_xy": [
+      6492.312,
+      345.06
+     ]
+    },
+    {
+     "name": "u_xq_Q_p0_eg",
+     "source": "u_xq_Q_p0_eg",
+     "old_xy": [
+      1766.88,
+      2268.0
+     ],
+     "new_xy": [
+      1973.16,
+      3273.48
+     ]
+    },
+    {
+     "name": "u_xq_Q_p1_eg",
+     "source": "u_xq_Q_p1_eg",
+     "old_xy": [
+      1382.4,
+      1702.08
+     ],
+     "new_xy": [
+      1696.68,
+      1351.08
+     ]
+    },
+    {
+     "name": "u_vmb_Q0",
+     "source": "u_vmb_Q0",
+     "old_xy": [
+      6056.64,
+      613.44
+     ],
+     "new_xy": [
+      7150.68,
+      1249.56
+     ]
+    },
+    {
+     "name": "u_vmb_Q1",
+     "source": "u_vmb_Q1",
+     "old_xy": [
+      6056.64,
+      980.64
+     ],
+     "new_xy": [
+      7150.68,
+      916.92
+     ]
+    },
+    {
+     "name": "u_vmb_Q2",
+     "source": "u_vmb_Q2",
+     "old_xy": [
+      6842.88,
+      1671.84
+     ],
+     "new_xy": [
+      7993.08,
+      2403.0
+     ]
+    },
+    {
+     "name": "u_vmb_Q3",
+     "source": "u_vmb_Q3",
+     "old_xy": [
+      272.16,
+      2237.76
+     ],
+     "new_xy": [
+      1361.88,
+      2714.04
+     ]
+    },
+    {
+     "name": "u_vmb_Q4",
+     "source": "u_vmb_Q4",
+     "old_xy": [
+      5369.76,
+      946.08
+     ],
+     "new_xy": [
+      6843.96,
+      1547.64
+     ]
+    },
+    {
+     "name": "u_vmb_Q5",
+     "source": "u_vmb_Q5",
+     "old_xy": [
+      5957.28,
+      1671.84
+     ],
+     "new_xy": [
+      6723.0,
+      2403.0
+     ]
+    },
+    {
+     "name": "u_vmb_Q6",
+     "source": "u_vmb_Q6",
+     "old_xy": [
+      7227.36,
+      1671.84
+     ],
+     "new_xy": [
+      7695.0,
+      2403.0
+     ]
+    },
+    {
+     "name": "u_vmb_Q7",
+     "source": "u_vmb_Q7",
+     "old_xy": [
+      6056.64,
+      246.24
+     ],
+     "new_xy": [
+      7150.68,
+      1582.2
+     ]
+    },
+    {
+     "name": "u_xq_Q_p0_bd",
+     "source": "u_xq_Q_p0_bd",
+     "old_xy": [
+      2453.76,
+      2233.44
+     ],
+     "new_xy": [
+      3771.36,
+      2708.64
+     ]
+    },
+    {
+     "name": "u_xq_Q_p1_bd",
+     "source": "u_xq_Q_p1_bd",
+     "old_xy": [
+      2998.08,
+      2233.44
+     ],
+     "new_xy": [
+      989.28,
+      2859.84
+     ]
+    },
+    {
+     "name": "u_xq_Q_p0_bfq0",
+     "source": "u_xq_Q_p0_bfq0",
+     "old_xy": [
+      7892.64,
+      2229.12
+     ],
+     "new_xy": [
+      5806.08,
+      2892.24
+     ]
+    },
+    {
+     "name": "u_xq_Q_p0_bfq1",
+     "source": "u_xq_Q_p0_bfq1",
+     "old_xy": [
+      6199.2,
+      2229.12
+     ],
+     "new_xy": [
+      4916.16,
+      2892.24
+     ]
+    },
+    {
+     "name": "u_xq_Q_p0_bfq2",
+     "source": "u_xq_Q_p0_bfq2",
+     "old_xy": [
+      5559.84,
+      1663.2
+     ],
+     "new_xy": [
+      5806.08,
+      3332.88
+     ]
+    },
+    {
+     "name": "u_xq_Q_p0_bfq3",
+     "source": "u_xq_Q_p0_bfq3",
+     "old_xy": [
+      6639.84,
+      2229.12
+     ],
+     "new_xy": [
+      6402.24,
+      3332.88
+     ]
+    },
+    {
+     "name": "u_xq_Q_p1_bfq0",
+     "source": "u_xq_Q_p1_bfq0",
+     "old_xy": [
+      6505.92,
+      1097.28
+     ],
+     "new_xy": [
+      6410.88,
+      2395.44
+     ]
+    },
+    {
+     "name": "u_xq_Q_p1_bfq1",
+     "source": "u_xq_Q_p1_bfq1",
+     "old_xy": [
+      6505.92,
+      747.36
+     ],
+     "new_xy": [
+      6847.2,
+      1224.72
+     ]
+    },
+    {
+     "name": "u_xq_Q_p1_bfq2",
+     "source": "u_xq_Q_p1_bfq2",
+     "old_xy": [
+      6199.2,
+      2579.04
+     ],
+     "new_xy": [
+      6402.24,
+      2892.24
+     ]
+    },
+    {
+     "name": "u_xq_Q_p1_bfq3",
+     "source": "u_xq_Q_p1_bfq3",
+     "old_xy": [
+      6505.92,
+      237.6
+     ],
+     "new_xy": [
+      6847.2,
+      909.36
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p00",
+     "source": "u_ctl_Q_p00",
+     "old_xy": [
+      2725.92,
+      2406.24
+     ],
+     "new_xy": [
+      2560.032,
+      3177.792
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p01",
+     "source": "u_ctl_Q_p01",
+     "old_xy": [
+      4505.76,
+      2172.96
+     ],
+     "new_xy": [
+      3527.712,
+      2646.432
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p02",
+     "source": "u_ctl_Q_p02",
+     "old_xy": [
+      3270.24,
+      2172.96
+     ],
+     "new_xy": [
+      2192.832,
+      2646.432
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p03",
+     "source": "u_ctl_Q_p03",
+     "old_xy": [
+      2725.92,
+      2172.96
+     ],
+     "new_xy": [
+      3052.512,
+      3177.792
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p04.clk",
+     "source": "u_ctl_Q_p04.clk",
+     "old_xy": [
+      7512.48,
+      2172.96
+     ],
+     "new_xy": [
+      3544.992,
+      3177.792
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p05",
+     "source": "u_ctl_Q_p05",
+     "old_xy": [
+      7106.4,
+      2678.4
+     ],
+     "new_xy": [
+      7817.472,
+      3303.072
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p06",
+     "source": "u_ctl_Q_p06",
+     "old_xy": [
+      7512.48,
+      2406.24
+     ],
+     "new_xy": [
+      8102.592,
+      2832.192
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p07",
+     "source": "u_ctl_Q_p07",
+     "old_xy": [
+      7892.64,
+      2522.88
+     ],
+     "new_xy": [
+      8102.592,
+      3030.912
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p08",
+     "source": "u_ctl_Q_p08",
+     "old_xy": [
+      2626.56,
+      1766.88
+     ],
+     "new_xy": [
+      196.992,
+      2646.432
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p09",
+     "source": "u_ctl_Q_p09",
+     "old_xy": [
+      2181.6,
+      2406.24
+     ],
+     "new_xy": [
+      1384.992,
+      3177.792
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p10",
+     "source": "u_ctl_Q_p10",
+     "old_xy": [
+      1766.88,
+      2596.32
+     ],
+     "new_xy": [
+      892.512,
+      3177.792
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p11",
+     "source": "u_ctl_Q_p11",
+     "old_xy": [
+      1352.16,
+      2172.96
+     ],
+     "new_xy": [
+      400.032,
+      3177.792
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p12",
+     "source": "u_ctl_Q_p12",
+     "old_xy": [
+      4864.32,
+      2332.8
+     ],
+     "new_xy": [
+      5545.152,
+      2832.192
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p13",
+     "source": "u_ctl_Q_p13",
+     "old_xy": [
+      2959.2,
+      1607.04
+     ],
+     "new_xy": [
+      4806.432,
+      2335.392
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p14",
+     "source": "u_ctl_Q_p14",
+     "old_xy": [
+      4864.32,
+      2566.08
+     ],
+     "new_xy": [
+      5545.152,
+      3030.912
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p15",
+     "source": "u_ctl_Q_p15",
+     "old_xy": [
+      2181.6,
+      2172.96
+     ],
+     "new_xy": [
+      4655.232,
+      2832.192
+     ]
+    },
+    {
+     "name": "u_vmks_Q0",
+     "source": "u_vmks_Q0",
+     "old_xy": [
+      3693.6,
+      1740.96
+     ],
+     "new_xy": [
+      3153.6,
+      2784.24
+     ]
+    },
+    {
+     "name": "u_vmks_Q1",
+     "source": "u_vmks_Q1",
+     "old_xy": [
+      7106.4,
+      2306.88
+     ],
+     "new_xy": [
+      7819.2,
+      2970.0
+     ]
+    },
+    {
+     "name": "u_vmks_Q2",
+     "source": "u_vmks_Q2",
+     "old_xy": [
+      1857.6,
+      1740.96
+     ],
+     "new_xy": [
+      574.56,
+      2784.24
+     ]
+    },
+    {
+     "name": "u_vmks_Q3",
+     "source": "u_vmks_Q3",
+     "old_xy": [
+      4531.68,
+      1740.96
+     ],
+     "new_xy": [
+      5261.76,
+      2970.0
+     ]
+    },
+    {
+     "name": "u_vmdel_Q0.clk",
+     "source": "u_vmdel_Q0.clk",
+     "old_xy": [
+      4324.32,
+      1067.04
+     ],
+     "new_xy": [
+      6085.8,
+      2170.8
+     ]
+    },
+    {
+     "name": "u_vmdel_Q1.clk",
+     "source": "u_vmdel_Q1.clk",
+     "old_xy": [
+      4112.64,
+      1728.0
+     ],
+     "new_xy": [
+      5316.84,
+      2425.68
+     ]
+    },
+    {
+     "name": "u_vmdel_Q2.clk",
+     "source": "u_vmdel_Q2.clk",
+     "old_xy": [
+      4324.32,
+      1226.88
+     ],
+     "new_xy": [
+      5316.84,
+      2300.4
+     ]
+    },
+    {
+     "name": "u_vmdel_Q3.clk",
+     "source": "u_vmdel_Q3.clk",
+     "old_xy": [
+      2626.56,
+      1568.16
+     ],
+     "new_xy": [
+      988.2,
+      2611.44
+     ]
+    },
+    {
+     "name": "u_vmdel_Q4.clk",
+     "source": "u_vmdel_Q4.clk",
+     "old_xy": [
+      4112.64,
+      1887.84
+     ],
+     "new_xy": [
+      5805.0,
+      3112.56
+     ]
+    },
+    {
+     "name": "u_vmdel_Q5.clk",
+     "source": "u_vmdel_Q5.clk",
+     "old_xy": [
+      4864.32,
+      2134.08
+     ],
+     "new_xy": [
+      6103.08,
+      2797.2
+     ]
+    },
+    {
+     "name": "u_vmdel_Q6.clk",
+     "source": "u_vmdel_Q6.clk",
+     "old_xy": [
+      5957.28,
+      1935.36
+     ],
+     "new_xy": [
+      7494.12,
+      2797.2
+     ]
+    },
+    {
+     "name": "u_vmdel_Q7.clk",
+     "source": "u_vmdel_Q7.clk",
+     "old_xy": [
+      4112.64,
+      1568.16
+     ],
+     "new_xy": [
+      5601.96,
+      2300.4
+     ]
+    },
+    {
+     "name": "u_xl_Q_aqhi.clk",
+     "source": "u_xl_Q_aqhi.clk",
+     "old_xy": [
+      5555.52,
+      1918.08
+     ],
+     "new_xy": [
+      6399.0,
+      3112.56
+     ]
+    },
+    {
+     "name": "u_xl_Q_aqlo.clk",
+     "source": "u_xl_Q_aqlo.clk",
+     "old_xy": [
+      6056.64,
+      1244.16
+     ],
+     "new_xy": [
+      6407.64,
+      2615.76
+     ]
+    },
+    {
+     "name": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_0.clk",
+     "source": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_0.clk",
+     "old_xy": [
+      3996.0,
+      540.0
+     ],
+     "new_xy": [
+      5259.6,
+      3324.24
+     ]
+    },
+    {
+     "name": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_1.clk",
+     "source": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_1.clk",
+     "old_xy": [
+      4237.92,
+      540.0
+     ],
+     "new_xy": [
+      4520.88,
+      870.48
+     ]
+    },
+    {
+     "name": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_2.clk",
+     "source": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_2.clk",
+     "old_xy": [
+      3996.0,
+      773.28
+     ],
+     "new_xy": [
+      4382.64,
+      131.76
+     ]
+    },
+    {
+     "name": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_3.clk",
+     "source": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_3.clk",
+     "old_xy": [
+      4229.28,
+      773.28
+     ],
+     "new_xy": [
+      1077.84,
+      1276.56
+     ]
+    },
+    {
+     "name": "u_calendar_Q__q0",
+     "source": "u_calendar_Q",
+     "old_xy": [
+      3283.2,
+      1576.8
+     ],
+     "new_xy": [
+      1697.76,
+      1890.0
+     ]
+    },
+    {
+     "name": "u_calendar_Q__q1",
+     "source": "u_calendar_Q",
+     "old_xy": [
+      3283.2,
+      1576.8
+     ],
+     "new_xy": [
+      5317.92,
+      2555.28
+     ]
+    },
+    {
+     "name": "u_hb_vms_Q__q0.clk",
+     "source": "u_hb_vms_Q.clk",
+     "old_xy": [
+      7253.28,
+      756.0
+     ],
+     "new_xy": [
+      3182.436,
+      1833.84
+     ]
+    },
+    {
+     "name": "u_hb_vms_Q__q1.clk",
+     "source": "u_hb_vms_Q.clk",
+     "old_xy": [
+      7253.28,
+      756.0
+     ],
+     "new_xy": [
+      7740.036,
+      1427.76
+     ]
+    },
+    {
+     "name": "u_hb_idx__qctl_Q__q0",
+     "source": "u_hb_idx__qctl_Q",
+     "old_xy": [
+      7948.8,
+      190.08
+     ],
+     "new_xy": [
+      3708.936,
+      676.62
+     ]
+    },
+    {
+     "name": "u_hb_idx__qctl_Q__q1",
+     "source": "u_hb_idx__qctl_Q",
+     "old_xy": [
+      7948.8,
+      190.08
+     ],
+     "new_xy": [
+      7791.336,
+      244.62
+     ]
+    },
+    {
+     "name": "u_hb_idx__q_Q__q0",
+     "source": "u_hb_idx__q_Q",
+     "old_xy": [
+      4739.04,
+      172.8
+     ],
+     "new_xy": [
+      3709.8,
+      902.88
+     ]
+    },
+    {
+     "name": "u_hb_idx__q_Q__q1",
+     "source": "u_hb_idx__q_Q",
+     "old_xy": [
+      4739.04,
+      172.8
+     ],
+     "new_xy": [
+      7282.44,
+      103.68
+     ]
+    },
+    {
+     "name": "u_hb_idx__op_Q__q0",
+     "source": "u_hb_idx__op_Q",
+     "old_xy": [
+      6505.92,
+      492.48
+     ],
+     "new_xy": [
+      3710.88,
+      481.68
+     ]
+    },
+    {
+     "name": "u_hb_idx__op_Q__q1",
+     "source": "u_hb_idx__op_Q",
+     "old_xy": [
+      6505.92,
+      492.48
+     ],
+     "new_xy": [
+      7793.28,
+      75.6
+     ]
+    },
+    {
+     "name": "u_smw_Q__q0",
+     "source": "u_smw_Q",
+     "old_xy": [
+      3140.64,
+      1097.28
+     ],
+     "new_xy": [
+      637.2,
+      2142.72
+     ]
+    },
+    {
+     "name": "u_smw_Q__q1",
+     "source": "u_smw_Q",
+     "old_xy": [
+      3140.64,
+      1097.28
+     ],
+     "new_xy": [
+      6205.68,
+      1732.32
+     ]
+    },
+    {
+     "name": "u_pgp_Q__q0.clk",
+     "source": "u_pgp_Q.clk",
+     "old_xy": [
+      3144.96,
+      470.88
+     ],
+     "new_xy": [
+      2711.88,
+      436.32
+     ]
+    },
+    {
+     "name": "u_pgp_Q__q1.clk",
+     "source": "u_pgp_Q.clk",
+     "old_xy": [
+      3144.96,
+      470.88
+     ],
+     "new_xy": [
+      6206.76,
+      1140.48
+     ]
+    },
+    {
+     "name": "u_cxij_Q_q__q0",
+     "source": "u_cxij_Q_q",
+     "old_xy": [
+      613.44,
+      1740.96
+     ],
+     "new_xy": [
+      172.8,
+      1697.76
+     ]
+    },
+    {
+     "name": "u_cxij_Q_q__q1",
+     "source": "u_cxij_Q_q",
+     "old_xy": [
+      613.44,
+      1740.96
+     ],
+     "new_xy": [
+      4397.76,
+      2471.04
+     ]
+    },
+    {
+     "name": "u_sucore_Q__q0",
+     "source": "u_sucore_Q",
+     "old_xy": [
+      2350.08,
+      963.36
+     ],
+     "new_xy": [
+      1779.84,
+      851.04
+     ]
+    },
+    {
+     "name": "u_sucore_Q__q1",
+     "source": "u_sucore_Q",
+     "old_xy": [
+      2350.08,
+      963.36
+     ],
+     "new_xy": [
+      4760.64,
+      864.0
+     ]
+    },
+    {
+     "name": "u_sfus_Q__q0",
+     "source": "u_sfus_Q",
+     "old_xy": [
+      4324.32,
+      254.88
+     ],
+     "new_xy": [
+      3710.88,
+      220.32
+     ]
+    },
+    {
+     "name": "u_sfus_Q__q1",
+     "source": "u_sfus_Q",
+     "old_xy": [
+      4324.32,
+      254.88
+     ],
+     "new_xy": [
+      5620.32,
+      185.76
+     ]
+    },
+    {
+     "name": "u_wbk_Q__q0",
+     "source": "u_wbk_Q",
+     "old_xy": [
+      5058.72,
+      1753.92
+     ],
+     "new_xy": [
+      2630.88,
+      2795.04
+     ]
+    },
+    {
+     "name": "u_wbk_Q__q1",
+     "source": "u_wbk_Q",
+     "old_xy": [
+      5058.72,
+      1753.92
+     ],
+     "new_xy": [
+      5996.16,
+      2484.0
+     ]
+    },
+    {
+     "name": "u_hb_coll_Q_reduce__q0.clk",
+     "source": "u_hb_coll_Q_reduce.clk",
+     "old_xy": [
+      967.68,
+      1632.96
+     ],
+     "new_xy": [
+      172.8,
+      2082.24
+     ]
+    },
+    {
+     "name": "u_hb_coll_Q_reduce__q1.clk",
+     "source": "u_hb_coll_Q_reduce.clk",
+     "old_xy": [
+      967.68,
+      1632.96
+     ],
+     "new_xy": [
+      5006.88,
+      876.96
+     ]
+    },
+    {
+     "name": "u_hb_coll_Q_ring_ag__q0.clk",
+     "source": "u_hb_coll_Q_ring_ag.clk",
+     "old_xy": [
+      7594.56,
+      1632.96
+     ],
+     "new_xy": [
+      3784.32,
+      1568.16
+     ]
+    },
+    {
+     "name": "u_hb_coll_Q_ring_ag__q1.clk",
+     "source": "u_hb_coll_Q_ring_ag.clk",
+     "old_xy": [
+      7594.56,
+      1632.96
+     ],
+     "new_xy": [
+      7002.72,
+      2363.04
+     ]
+    },
+    {
+     "name": "u_hb_coll_Q_body_core__q0",
+     "source": "u_hb_coll_Q_body_core",
+     "old_xy": [
+      799.2,
+      617.76
+     ],
+     "new_xy": [
+      626.4,
+      583.2
+     ]
+    },
+    {
+     "name": "u_hb_coll_Q_body_core__q1",
+     "source": "u_hb_coll_Q_body_core",
+     "old_xy": [
+      799.2,
+      617.76
+     ],
+     "new_xy": [
+      5430.24,
+      1287.36
+     ]
+    },
+    {
+     "name": "u_hb_coll_Q_edge__q0",
+     "source": "u_hb_coll_Q_edge",
+     "old_xy": [
+      254.88,
+      617.76
+     ],
+     "new_xy": [
+      168.48,
+      583.2
+     ]
+    },
+    {
+     "name": "u_hb_coll_Q_edge__q1",
+     "source": "u_hb_coll_Q_edge",
+     "old_xy": [
+      254.88,
+      617.76
+     ],
+     "new_xy": [
+      4069.44,
+      1287.36
+     ]
+    },
+    {
+     "name": "u_hb_coll_Q_vm__q0",
+     "source": "u_hb_coll_Q_vm",
+     "old_xy": [
+      2350.08,
+      449.28
+     ],
+     "new_xy": [
+      1153.44,
+      414.72
+     ]
+    },
+    {
+     "name": "u_hb_coll_Q_vm__q1",
+     "source": "u_hb_coll_Q_vm",
+     "old_xy": [
+      2350.08,
+      449.28
+     ],
+     "new_xy": [
+      4972.32,
+      380.16
+     ]
+    },
+    {
+     "name": "u_hcollgi_Q__q0",
+     "source": "u_hcollgi_Q",
+     "old_xy": [
+      2263.68,
+      1632.96
+     ],
+     "new_xy": [
+      1350.0,
+      1285.2
+     ]
+    },
+    {
+     "name": "u_hcollgi_Q__q1",
+     "source": "u_hcollgi_Q",
+     "old_xy": [
+      2263.68,
+      1632.96
+     ],
+     "new_xy": [
+      5043.6,
+      2365.2
+     ]
+    },
+    {
+     "name": "u_hcollgl_Q__q0",
+     "source": "u_hcollgl_Q",
+     "old_xy": [
+      2345.76,
+      1222.56
+     ],
+     "new_xy": [
+      1695.6,
+      1684.8
+     ]
+    },
+    {
+     "name": "u_hcollgl_Q__q1",
+     "source": "u_hcollgl_Q",
+     "old_xy": [
+      2345.76,
+      1222.56
+     ],
+     "new_xy": [
+      4620.24,
+      2350.08
+     ]
+    },
+    {
+     "name": "u_cij_Q__q0",
+     "source": "u_cij_Q",
+     "old_xy": [
+      3883.68,
+      518.4
+     ],
+     "new_xy": [
+      3363.12,
+      213.84
+     ]
+    },
+    {
+     "name": "u_cij_Q__q1",
+     "source": "u_cij_Q",
+     "old_xy": [
+      3883.68,
+      518.4
+     ],
+     "new_xy": [
+      4287.6,
+      918.0
+     ]
+    },
+    {
+     "name": "u_hb_dbk_Q__q0",
+     "source": "u_hb_dbk_Q",
+     "old_xy": [
+      5374.08,
+      1278.72
+     ],
+     "new_xy": [
+      3783.348,
+      1286.82
+     ]
+    },
+    {
+     "name": "u_hb_dbk_Q__q1",
+     "source": "u_hb_dbk_Q",
+     "old_xy": [
+      5374.08,
+      1278.72
+     ],
+     "new_xy": [
+      6846.228,
+      1844.1
+     ]
+    },
+    {
+     "name": "u_hb_quant_Q__u_dec__q0",
+     "source": "u_hb_quant_Q__u_dec",
+     "old_xy": [
+      241.92,
+      1645.92
+     ],
+     "new_xy": [
+      173.2,
+      1296.4
+     ]
+    },
+    {
+     "name": "u_hb_quant_Q__u_dec__q1",
+     "source": "u_hb_quant_Q__u_dec",
+     "old_xy": [
+      241.92,
+      1645.92
+     ],
+     "new_xy": [
+      4113.04,
+      2376.4
+     ]
+    },
+    {
+     "name": "u_sfup_Q__q0",
+     "source": "u_sfup_Q",
+     "old_xy": [
+      833.76,
+      2453.76
+     ],
+     "new_xy": [
+      637.2,
+      1535.76
+     ]
+    },
+    {
+     "name": "u_sfup_Q__q1",
+     "source": "u_sfup_Q",
+     "old_xy": [
+      833.76,
+      2453.76
+     ],
+     "new_xy": [
+      4261.68,
+      3112.56
+     ]
+    },
+    {
+     "name": "u_xl_Q_ctl__q0",
+     "source": "u_xl_Q_ctl",
+     "old_xy": [
+      6402.24,
+      1710.72
+     ],
+     "new_xy": [
+      1801.44,
+      2751.84
+     ]
+    },
+    {
+     "name": "u_xl_Q_ctl__q1",
+     "source": "u_xl_Q_ctl",
+     "old_xy": [
+      6402.24,
+      1710.72
+     ],
+     "new_xy": [
+      7339.68,
+      2440.8
+     ]
+    }
+   ]
+  },
+  "q_hub_ne": {
+   "cores": 102,
+   "old_taps": 80,
+   "new_taps": 102,
+   "moves": [
+    {
+     "name": "u_svg_Q0",
+     "source": "u_svg_Q0",
+     "old_xy": [
+      3667.68,
+      2414.88
+     ],
+     "new_xy": [
+      4219.992,
+      2448.9
+     ]
+    },
+    {
+     "name": "u_svg_Q1",
+     "source": "u_svg_Q1",
+     "old_xy": [
+      5533.92,
+      2414.88
+     ],
+     "new_xy": [
+      6030.072,
+      3144.42
+     ]
+    },
+    {
+     "name": "u_svg_Q2",
+     "source": "u_svg_Q2",
+     "old_xy": [
+      1753.92,
+      997.92
+     ],
+     "new_xy": [
+      768.312,
+      1956.42
+     ]
+    },
+    {
+     "name": "u_svg_Q3",
+     "source": "u_svg_Q3",
+     "old_xy": [
+      4872.96,
+      997.92
+     ],
+     "new_xy": [
+      6656.472,
+      370.98
+     ]
+    },
+    {
+     "name": "u_xq_Q_p0_eg",
+     "source": "u_xq_Q_p0_eg",
+     "old_xy": [
+      2604.96,
+      2276.64
+     ],
+     "new_xy": [
+      2305.8,
+      3195.72
+     ]
+    },
+    {
+     "name": "u_xq_Q_p1_eg",
+     "source": "u_xq_Q_p1_eg",
+     "old_xy": [
+      1110.24,
+      859.68
+     ],
+     "new_xy": [
+      2076.84,
+      227.88
+     ]
+    },
+    {
+     "name": "u_vmb_Q0",
+     "source": "u_vmb_Q0",
+     "old_xy": [
+      7063.2,
+      829.44
+     ],
+     "new_xy": [
+      6748.92,
+      1616.76
+     ]
+    },
+    {
+     "name": "u_vmb_Q1",
+     "source": "u_vmb_Q1",
+     "old_xy": [
+      6009.12,
+      1196.64
+     ],
+     "new_xy": [
+      6977.88,
+      2282.04
+     ]
+    },
+    {
+     "name": "u_vmb_Q2",
+     "source": "u_vmb_Q2",
+     "old_xy": [
+      6350.4,
+      829.44
+     ],
+     "new_xy": [
+      6748.92,
+      899.64
+     ]
+    },
+    {
+     "name": "u_vmb_Q3",
+     "source": "u_vmb_Q3",
+     "old_xy": [
+      207.36,
+      2246.4
+     ],
+     "new_xy": [
+      2739.96,
+      3167.64
+     ]
+    },
+    {
+     "name": "u_vmb_Q4",
+     "source": "u_vmb_Q4",
+     "old_xy": [
+      6009.12,
+      829.44
+     ],
+     "new_xy": [
+      6321.24,
+      1642.68
+     ]
+    },
+    {
+     "name": "u_vmb_Q5",
+     "source": "u_vmb_Q5",
+     "old_xy": [
+      6704.64,
+      1412.64
+     ],
+     "new_xy": [
+      6748.92,
+      1258.2
+     ]
+    },
+    {
+     "name": "u_vmb_Q6",
+     "source": "u_vmb_Q6",
+     "old_xy": [
+      7063.2,
+      1429.92
+     ],
+     "new_xy": [
+      7072.92,
+      899.64
+     ]
+    },
+    {
+     "name": "u_vmb_Q7",
+     "source": "u_vmb_Q7",
+     "old_xy": [
+      6596.64,
+      237.6
+     ],
+     "new_xy": [
+      7764.12,
+      204.12
+     ]
+    },
+    {
+     "name": "u_xq_Q_p0_bd",
+     "source": "u_xq_Q_p0_bd",
+     "old_xy": [
+      2907.36,
+      2242.08
+     ],
+     "new_xy": [
+      4782.24,
+      2579.04
+     ]
+    },
+    {
+     "name": "u_xq_Q_p1_bd",
+     "source": "u_xq_Q_p1_bd",
+     "old_xy": [
+      4281.12,
+      1140.48
+     ],
+     "new_xy": [
+      2790.72,
+      980.64
+     ]
+    },
+    {
+     "name": "u_xq_Q_p0_bfq0",
+     "source": "u_xq_Q_p0_bfq0",
+     "old_xy": [
+      570.24,
+      2237.76
+     ],
+     "new_xy": [
+      596.16,
+      3160.08
+     ]
+    },
+    {
+     "name": "u_xq_Q_p0_bfq1",
+     "source": "u_xq_Q_p0_bfq1",
+     "old_xy": [
+      6147.36,
+      2587.68
+     ],
+     "new_xy": [
+      4380.48,
+      2970.0
+     ]
+    },
+    {
+     "name": "u_xq_Q_p0_bfq2",
+     "source": "u_xq_Q_p0_bfq2",
+     "old_xy": [
+      6566.4,
+      2678.4
+     ],
+     "new_xy": [
+      5339.52,
+      2970.0
+     ]
+    },
+    {
+     "name": "u_xq_Q_p0_bfq3",
+     "source": "u_xq_Q_p0_bfq3",
+     "old_xy": [
+      6985.44,
+      2237.76
+     ],
+     "new_xy": [
+      6721.92,
+      2970.0
+     ]
+    },
+    {
+     "name": "u_xq_Q_p1_bfq0",
+     "source": "u_xq_Q_p1_bfq0",
+     "old_xy": [
+      6708.96,
+      1771.2
+     ],
+     "new_xy": [
+      6022.08,
+      2274.48
+     ]
+    },
+    {
+     "name": "u_xq_Q_p1_bfq1",
+     "source": "u_xq_Q_p1_bfq1",
+     "old_xy": [
+      6147.36,
+      2237.76
+     ],
+     "new_xy": [
+      5676.48,
+      2274.48
+     ]
+    },
+    {
+     "name": "u_xq_Q_p1_bfq2",
+     "source": "u_xq_Q_p1_bfq2",
+     "old_xy": [
+      5568.48,
+      1853.28
+     ],
+     "new_xy": [
+      5106.24,
+      2274.48
+     ]
+    },
+    {
+     "name": "u_xq_Q_p1_bfq3",
+     "source": "u_xq_Q_p1_bfq3",
+     "old_xy": [
+      6708.96,
+      820.8
+     ],
+     "new_xy": [
+      5564.16,
+      1846.8
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p00",
+     "source": "u_ctl_Q_p00",
+     "old_xy": [
+      4281.12,
+      1753.92
+     ],
+     "new_xy": [
+      3614.112,
+      3285.792
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p01",
+     "source": "u_ctl_Q_p01",
+     "old_xy": [
+      4639.68,
+      2687.04
+     ],
+     "new_xy": [
+      4378.752,
+      3251.232
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p02",
+     "source": "u_ctl_Q_p02",
+     "old_xy": [
+      4259.52,
+      2341.44
+     ],
+     "new_xy": [
+      3614.112,
+      3061.152
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p03",
+     "source": "u_ctl_Q_p03",
+     "old_xy": [
+      4259.52,
+      2574.72
+     ],
+     "new_xy": [
+      3985.632,
+      2909.952
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p04.clk",
+     "source": "u_ctl_Q_p04.clk",
+     "old_xy": [
+      7728.48,
+      2414.88
+     ],
+     "new_xy": [
+      7618.752,
+      2909.952
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p05",
+     "source": "u_ctl_Q_p05",
+     "old_xy": [
+      7387.2,
+      2687.04
+     ],
+     "new_xy": [
+      7618.752,
+      3134.592
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p06",
+     "source": "u_ctl_Q_p06",
+     "old_xy": [
+      7728.48,
+      2648.16
+     ],
+     "new_xy": [
+      7618.752,
+      3359.232
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p07",
+     "source": "u_ctl_Q_p07",
+     "old_xy": [
+      7728.48,
+      2181.6
+     ],
+     "new_xy": [
+      7951.392,
+      2909.952
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p08",
+     "source": "u_ctl_Q_p08",
+     "old_xy": [
+      2604.96,
+      2604.96
+     ],
+     "new_xy": [
+      948.672,
+      3324.672
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p09",
+     "source": "u_ctl_Q_p09",
+     "old_xy": [
+      3114.72,
+      2181.6
+     ],
+     "new_xy": [
+      3242.592,
+      2909.952
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p10",
+     "source": "u_ctl_Q_p10",
+     "old_xy": [
+      1533.6,
+      2181.6
+     ],
+     "new_xy": [
+      948.672,
+      3100.032
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p11",
+     "source": "u_ctl_Q_p11",
+     "old_xy": [
+      3330.72,
+      1477.44
+     ],
+     "new_xy": [
+      3428.352,
+      2214.432
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p12",
+     "source": "u_ctl_Q_p12",
+     "old_xy": [
+      4872.96,
+      1784.16
+     ],
+     "new_xy": [
+      5104.512,
+      2555.712
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p13",
+     "source": "u_ctl_Q_p13",
+     "old_xy": [
+      6708.96,
+      1114.56
+     ],
+     "new_xy": [
+      6322.752,
+      1350.432
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p14",
+     "source": "u_ctl_Q_p14",
+     "old_xy": [
+      4980.96,
+      2181.6
+     ],
+     "new_xy": [
+      5389.632,
+      2214.432
+     ]
+    },
+    {
+     "name": "u_ctl_Q_p15",
+     "source": "u_ctl_Q_p15",
+     "old_xy": [
+      7063.2,
+      1131.84
+     ],
+     "new_xy": [
+      6322.752,
+      1933.632
+     ]
+    },
+    {
+     "name": "u_vmks_Q0",
+     "source": "u_vmks_Q0",
+     "old_xy": [
+      4639.68,
+      2315.52
+     ],
+     "new_xy": [
+      4860.0,
+      3047.76
+     ]
+    },
+    {
+     "name": "u_vmks_Q1",
+     "source": "u_vmks_Q1",
+     "old_xy": [
+      7387.2,
+      2315.52
+     ],
+     "new_xy": [
+      7201.44,
+      3047.76
+     ]
+    },
+    {
+     "name": "u_vmks_Q2",
+     "source": "u_vmks_Q2",
+     "old_xy": [
+      2168.64,
+      2315.52
+     ],
+     "new_xy": [
+      1330.56,
+      3237.84
+     ]
+    },
+    {
+     "name": "u_vmks_Q3",
+     "source": "u_vmks_Q3",
+     "old_xy": [
+      5568.48,
+      1425.6
+     ],
+     "new_xy": [
+      6393.6,
+      2352.24
+     ]
+    },
+    {
+     "name": "u_vmdel_Q0.clk",
+     "source": "u_vmdel_Q0.clk",
+     "old_xy": [
+      3952.8,
+      725.76
+     ],
+     "new_xy": [
+      5563.08,
+      1600.56
+     ]
+    },
+    {
+     "name": "u_vmdel_Q1.clk",
+     "source": "u_vmdel_Q1.clk",
+     "old_xy": [
+      4281.12,
+      1555.2
+     ],
+     "new_xy": [
+      4781.16,
+      2179.44
+     ]
+    },
+    {
+     "name": "u_vmdel_Q2.clk",
+     "source": "u_vmdel_Q2.clk",
+     "old_xy": [
+      4281.12,
+      1395.36
+     ],
+     "new_xy": [
+      4781.16,
+      2330.64
+     ]
+    },
+    {
+     "name": "u_vmdel_Q3.clk",
+     "source": "u_vmdel_Q3.clk",
+     "old_xy": [
+      4259.52,
+      2142.72
+     ],
+     "new_xy": [
+      3614.76,
+      2874.96
+     ]
+    },
+    {
+     "name": "u_vmdel_Q4.clk",
+     "source": "u_vmdel_Q4.clk",
+     "old_xy": [
+      4872.96,
+      1425.6
+     ],
+     "new_xy": [
+      5675.4,
+      2520.72
+     ]
+    },
+    {
+     "name": "u_vmdel_Q5.clk",
+     "source": "u_vmdel_Q5.clk",
+     "old_xy": [
+      6009.12,
+      1460.16
+     ],
+     "new_xy": [
+      6975.72,
+      2538.0
+     ]
+    },
+    {
+     "name": "u_vmdel_Q6.clk",
+     "source": "u_vmdel_Q6.clk",
+     "old_xy": [
+      6009.12,
+      1939.68
+     ],
+     "new_xy": [
+      7563.24,
+      2179.44
+     ]
+    },
+    {
+     "name": "u_vmdel_Q7.clk",
+     "source": "u_vmdel_Q7.clk",
+     "old_xy": [
+      4872.96,
+      1585.44
+     ],
+     "new_xy": [
+      5675.4,
+      2671.92
+     ]
+    },
+    {
+     "name": "u_xl_Q_aqhi.clk",
+     "source": "u_xl_Q_aqhi.clk",
+     "old_xy": [
+      6009.12,
+      1779.84
+     ],
+     "new_xy": [
+      6705.72,
+      2179.44
+     ]
+    },
+    {
+     "name": "u_xl_Q_aqlo.clk",
+     "source": "u_xl_Q_aqlo.clk",
+     "old_xy": [
+      6009.12,
+      1620.0
+     ],
+     "new_xy": [
+      6390.36,
+      2676.24
+     ]
+    },
+    {
+     "name": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_0.clk",
+     "source": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_0.clk",
+     "old_xy": [
+      3996.0,
+      540.0
+     ],
+     "new_xy": [
+      3643.92,
+      157.68
+     ]
+    },
+    {
+     "name": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_1.clk",
+     "source": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_1.clk",
+     "old_xy": [
+      4237.92,
+      540.0
+     ],
+     "new_xy": [
+      222.48,
+      3121.2
+     ]
+    },
+    {
+     "name": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_2.clk",
+     "source": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_2.clk",
+     "old_xy": [
+      3996.0,
+      773.28
+     ],
+     "new_xy": [
+      3367.44,
+      157.68
+     ]
+    },
+    {
+     "name": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_3.clk",
+     "source": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_3.clk",
+     "old_xy": [
+      4229.28,
+      773.28
+     ],
+     "new_xy": [
+      3367.44,
+      421.2
+     ]
+    },
+    {
+     "name": "u_calendar_Q__q0",
+     "source": "u_calendar_Q",
+     "old_xy": [
+      3633.12,
+      734.4
+     ],
+     "new_xy": [
+      2475.36,
+      887.76
+     ]
+    },
+    {
+     "name": "u_calendar_Q__q1",
+     "source": "u_calendar_Q",
+     "old_xy": [
+      3633.12,
+      734.4
+     ],
+     "new_xy": [
+      6091.2,
+      105.84
+     ]
+    },
+    {
+     "name": "u_hb_vms_Q__q0.clk",
+     "source": "u_hb_vms_Q.clk",
+     "old_xy": [
+      7706.88,
+      1339.2
+     ],
+     "new_xy": [
+      1657.476,
+      2300.4
+     ]
+    },
+    {
+     "name": "u_hb_vms_Q__q1.clk",
+     "source": "u_hb_vms_Q.clk",
+     "old_xy": [
+      7706.88,
+      1339.2
+     ],
+     "new_xy": [
+      7696.836,
+      1410.48
+     ]
+    },
+    {
+     "name": "u_hb_idx__qctl_Q__q0",
+     "source": "u_hb_idx__qctl_Q",
+     "old_xy": [
+      7469.28,
+      181.44
+     ],
+     "new_xy": [
+      2421.576,
+      140.94
+     ]
+    },
+    {
+     "name": "u_hb_idx__qctl_Q__q1",
+     "source": "u_hb_idx__qctl_Q",
+     "old_xy": [
+      7469.28,
+      181.44
+     ],
+     "new_xy": [
+      8054.856,
+      145.26
+     ]
+    },
+    {
+     "name": "u_hb_idx__q_Q__q0",
+     "source": "u_hb_idx__q_Q",
+     "old_xy": [
+      4885.92,
+      164.16
+     ],
+     "new_xy": [
+      2422.44,
+      367.2
+     ]
+    },
+    {
+     "name": "u_hb_idx__q_Q__q1",
+     "source": "u_hb_idx__q_Q",
+     "old_xy": [
+      4885.92,
+      164.16
+     ],
+     "new_xy": [
+      7187.4,
+      129.6
+     ]
+    },
+    {
+     "name": "u_hb_idx__op_Q__q0",
+     "source": "u_hb_idx__op_Q",
+     "old_xy": [
+      6596.64,
+      501.12
+     ],
+     "new_xy": [
+      2077.92,
+      511.92
+     ]
+    },
+    {
+     "name": "u_hb_idx__op_Q__q1",
+     "source": "u_hb_idx__op_Q",
+     "old_xy": [
+      6596.64,
+      501.12
+     ],
+     "new_xy": [
+      7763.04,
+      460.08
+     ]
+    },
+    {
+     "name": "u_smw_Q__q0",
+     "source": "u_smw_Q",
+     "old_xy": [
+      3330.72,
+      1140.48
+     ],
+     "new_xy": [
+      766.8,
+      2518.56
+     ]
+    },
+    {
+     "name": "u_smw_Q__q1",
+     "source": "u_smw_Q",
+     "old_xy": [
+      3330.72,
+      1140.48
+     ],
+     "new_xy": [
+      5842.8,
+      241.92
+     ]
+    },
+    {
+     "name": "u_pgp_Q__q0.clk",
+     "source": "u_pgp_Q.clk",
+     "old_xy": [
+      2682.72,
+      1054.08
+     ],
+     "new_xy": [
+      1731.24,
+      1209.6
+     ]
+    },
+    {
+     "name": "u_pgp_Q__q1.clk",
+     "source": "u_pgp_Q.clk",
+     "old_xy": [
+      2682.72,
+      1054.08
+     ],
+     "new_xy": [
+      5563.08,
+      1123.2
+     ]
+    },
+    {
+     "name": "u_cxij_Q_q__q0",
+     "source": "u_cxij_Q_q",
+     "old_xy": [
+      462.24,
+      1693.44
+     ],
+     "new_xy": [
+      190.08,
+      1857.6
+     ]
+    },
+    {
+     "name": "u_cxij_Q_q__q1",
+     "source": "u_cxij_Q_q",
+     "old_xy": [
+      462.24,
+      1693.44
+     ],
+     "new_xy": [
+      3170.88,
+      2350.08
+     ]
+    },
+    {
+     "name": "u_sucore_Q__q0",
+     "source": "u_sucore_Q",
+     "old_xy": [
+      2682.72,
+      1879.2
+     ],
+     "new_xy": [
+      2272.32,
+      1736.64
+     ]
+    },
+    {
+     "name": "u_sucore_Q__q1",
+     "source": "u_sucore_Q",
+     "old_xy": [
+      2682.72,
+      1879.2
+     ],
+     "new_xy": [
+      3676.32,
+      2229.12
+     ]
+    },
+    {
+     "name": "u_sfus_Q__q0",
+     "source": "u_sfus_Q",
+     "old_xy": [
+      3996.0,
+      246.24
+     ],
+     "new_xy": [
+      2751.84,
+      207.36
+     ]
+    },
+    {
+     "name": "u_sfus_Q__q1",
+     "source": "u_sfus_Q",
+     "old_xy": [
+      3996.0,
+      246.24
+     ],
+     "new_xy": [
+      5546.88,
+      211.68
+     ]
+    },
+    {
+     "name": "u_wbk_Q__q0",
+     "source": "u_wbk_Q",
+     "old_xy": [
+      5568.48,
+      911.52
+     ],
+     "new_xy": [
+      2687.04,
+      1870.56
+     ]
+    },
+    {
+     "name": "u_wbk_Q__q1",
+     "source": "u_wbk_Q",
+     "old_xy": [
+      5568.48,
+      911.52
+     ],
+     "new_xy": [
+      6324.48,
+      980.64
+     ]
+    },
+    {
+     "name": "u_hb_coll_Q_reduce__q0.clk",
+     "source": "u_hb_coll_Q_reduce.clk",
+     "old_xy": [
+      1110.24,
+      1213.92
+     ],
+     "new_xy": [
+      267.84,
+      946.08
+     ]
+    },
+    {
+     "name": "u_hb_coll_Q_reduce__q1.clk",
+     "source": "u_hb_coll_Q_reduce.clk",
+     "old_xy": [
+      1110.24,
+      1213.92
+     ],
+     "new_xy": [
+      3170.88,
+      859.68
+     ]
+    },
+    {
+     "name": "u_hb_coll_Q_ring_ag__q0.clk",
+     "source": "u_hb_coll_Q_ring_ag.clk",
+     "old_xy": [
+      8009.28,
+      2207.52
+     ],
+     "new_xy": [
+      2687.04,
+      2548.8
+     ]
+    },
+    {
+     "name": "u_hb_coll_Q_ring_ag__q1.clk",
+     "source": "u_hb_coll_Q_ring_ag.clk",
+     "old_xy": [
+      8009.28,
+      2207.52
+     ],
+     "new_xy": [
+      7274.88,
+      2242.08
+     ]
+    },
+    {
+     "name": "u_hb_coll_Q_body_n2__q0",
+     "source": "u_hb_coll_Q_body_n2",
+     "old_xy": [
+      462.24,
+      1045.44
+     ],
+     "new_xy": [
+      1438.56,
+      414.72
+     ]
+    },
+    {
+     "name": "u_hb_coll_Q_body_n2__q1",
+     "source": "u_hb_coll_Q_body_n2",
+     "old_xy": [
+      462.24,
+      1045.44
+     ],
+     "new_xy": [
+      4648.32,
+      1114.56
+     ]
+    },
+    {
+     "name": "u_hb_coll_Q_vm__q0",
+     "source": "u_hb_coll_Q_vm",
+     "old_xy": [
+      1097.28,
+      336.96
+     ],
+     "new_xy": [
+      522.72,
+      298.08
+     ]
+    },
+    {
+     "name": "u_hb_coll_Q_vm__q1",
+     "source": "u_hb_coll_Q_vm",
+     "old_xy": [
+      1097.28,
+      336.96
+     ],
+     "new_xy": [
+      4272.48,
+      302.4
+     ]
+    },
+    {
+     "name": "u_hcollgi_Q__q0",
+     "source": "u_hcollgi_Q",
+     "old_xy": [
+      2678.4,
+      1602.72
+     ],
+     "new_xy": [
+      2684.88,
+      2270.16
+     ]
+    },
+    {
+     "name": "u_hcollgi_Q__q1",
+     "source": "u_hcollgi_Q",
+     "old_xy": [
+      2678.4,
+      1602.72
+     ],
+     "new_xy": [
+      3458.16,
+      861.84
+     ]
+    },
+    {
+     "name": "u_hcollgl_Q__q0",
+     "source": "u_hcollgl_Q",
+     "old_xy": [
+      2263.68,
+      185.76
+     ],
+     "new_xy": [
+      2421.36,
+      596.16
+     ]
+    },
+    {
+     "name": "u_hcollgl_Q__q1",
+     "source": "u_hcollgl_Q",
+     "old_xy": [
+      2263.68,
+      185.76
+     ],
+     "new_xy": [
+      3129.84,
+      151.2
+     ]
+    },
+    {
+     "name": "u_cij_Q__q0",
+     "source": "u_cij_Q",
+     "old_xy": [
+      3948.48,
+      989.28
+     ],
+     "new_xy": [
+      2473.2,
+      1432.08
+     ]
+    },
+    {
+     "name": "u_cij_Q__q1",
+     "source": "u_cij_Q",
+     "old_xy": [
+      3948.48,
+      989.28
+     ],
+     "new_xy": [
+      4896.72,
+      205.2
+     ]
+    },
+    {
+     "name": "u_hb_dbk_Q__q0",
+     "source": "u_hb_dbk_Q",
+     "old_xy": [
+      6350.4,
+      1162.08
+     ],
+     "new_xy": [
+      2474.388,
+      1109.7
+     ]
+    },
+    {
+     "name": "u_hb_dbk_Q__q1",
+     "source": "u_hb_dbk_Q",
+     "old_xy": [
+      6350.4,
+      1162.08
+     ],
+     "new_xy": [
+      7451.028,
+      167.94
+     ]
+    },
+    {
+     "name": "u_hb_quant_Q__u_dec__q0",
+     "source": "u_hb_quant_Q__u_dec",
+     "old_xy": [
+      4281.12,
+      803.52
+     ],
+     "new_xy": [
+      2747.92,
+      544.72
+     ]
+    },
+    {
+     "name": "u_hb_quant_Q__u_dec__q1",
+     "source": "u_hb_quant_Q__u_dec",
+     "old_xy": [
+      4281.12,
+      803.52
+     ],
+     "new_xy": [
+      5188.72,
+      177.52
+     ]
+    },
+    {
+     "name": "u_sfup_Q__q0",
+     "source": "u_sfup_Q",
+     "old_xy": [
+      1080.0,
+      2462.4
+     ],
+     "new_xy": [
+      822.96,
+      1198.8
+     ]
+    },
+    {
+     "name": "u_sfup_Q__q1",
+     "source": "u_sfup_Q",
+     "old_xy": [
+      1080.0,
+      2462.4
+     ],
+     "new_xy": [
+      3916.08,
+      1112.4
+     ]
+    },
+    {
+     "name": "u_xl_Q_ctl__q0",
+     "source": "u_xl_Q_ctl",
+     "old_xy": [
+      6566.4,
+      2285.28
+     ],
+     "new_xy": [
+      1814.4,
+      3205.44
+     ]
+    },
+    {
+     "name": "u_xl_Q_ctl__q1",
+     "source": "u_xl_Q_ctl",
+     "old_xy": [
+      6566.4,
+      2285.28
+     ],
+     "new_xy": [
+      7931.52,
+      2319.84
+     ]
+    }
+   ]
+  }
+ },
+ "plan_sha256": "e876baf4156b28464764965fbc8de764153823644774d1df11afb4f83760c24a"
+}
