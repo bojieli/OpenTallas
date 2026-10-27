@@ -15,7 +15,7 @@ def tracks(lo,hi,n,exclude=None):
 clks=[q for q in g["N"] if q["name"].startswith("clk")];data=[q for q in sorted(g["N"],key=lambda q:q["x"]) if q not in clks]
 for q,x in zip(data,tracks(8.64,W-8.64,len(data))):q["x"]=x
 # Preserve the unresolved five real clock pins and their order. Their source contract remains a build blocker.
-for i,q in enumerate(sorted(clks,key=lambda q:q["x"])):q.update(x=round(W/2-.072+.048*i,3),y=138.264)
+for i,q in enumerate(sorted(clks,key=lambda q:q["x"])):q.update(x=round(W/2-.168+.096*i,3),y=138.264)
 for q in g["E"]:q["x"]=round(W-.019,3)
 for q,x in zip(sorted(g["S"],key=lambda q:q["x"]),tracks(8.64,W-8.64,len(g["S"]))):q["x"]=x
 newname="ot_hgi_sm_xload_xq_pegress__362.88x276.48__pin6_trial.json"

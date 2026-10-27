@@ -1,0 +1,93 @@
+{
+  "qualification": "requested actual IO geometry; selectedLEF/Lib pending",
+  "source_common_phase_contract": "8470c76cbf results/hbm_source_1351/xq_common_clock.json",
+  "merged_clock_ports": [
+    "clk",
+    "clk_c",
+    "clk_e",
+    "clk_s",
+    "clk_w"
+  ],
+  "island_um": [
+    177.12,
+    133.92,
+    185.76,
+    142.56
+  ],
+  "entry_um": [
+    181.464,
+    138.264
+  ],
+  "pins": [
+    {
+      "port": "clk",
+      "layer": "M5",
+      "center_um": [
+        181.272,
+        138.264
+      ],
+      "rect_um": [
+        181.248,
+        138.024,
+        181.296,
+        138.504
+      ]
+    },
+    {
+      "port": "clk_w",
+      "layer": "M5",
+      "center_um": [
+        181.56,
+        138.264
+      ],
+      "rect_um": [
+        181.536,
+        138.024,
+        181.584,
+        138.504
+      ]
+    },
+    {
+      "port": "clk_s",
+      "layer": "M5",
+      "center_um": [
+        181.656,
+        138.264
+      ],
+      "rect_um": [
+        181.632,
+        138.024,
+        181.68,
+        138.504
+      ]
+    },
+    {
+      "port": "clk_e",
+      "layer": "M5",
+      "center_um": [
+        181.464,
+        138.264
+      ],
+      "rect_um": [
+        181.44,
+        138.024,
+        181.488,
+        138.504
+      ]
+    },
+    {
+      "port": "clk_c",
+      "layer": "M5",
+      "center_um": [
+        181.368,
+        138.264
+      ],
+      "rect_um": [
+        181.344,
+        138.024,
+        181.392,
+        138.504
+      ]
+    }
+  ]
+}

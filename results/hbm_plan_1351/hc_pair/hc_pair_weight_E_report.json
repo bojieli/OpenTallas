@@ -1,0 +1,279 @@
+{
+  "basis": "C15 errors identify exact E-side partner L42_i/L43_i, window1126.848..1270.464, last pair origin1131.84; sourcepincentres64.8..70locally alongside that window",
+  "changed_instances": [
+    [
+      "q_b002",
+      "u_hcb_Q2.ot_hbm_hc_bank128_pair3"
+    ],
+    [
+      "q_b011",
+      "u_hcb_Q6.ot_hbm_hc_bank128_pair3"
+    ]
+  ],
+  "native_port_names_unchanged": true,
+  "input_copies_added": 0,
+  "port_bits_moved": 13,
+  "face_delta": "N\u2192E for end-pair actual weight input partner; all other instances keep canonical view",
+  "cycles_added": 0,
+  "pin6_peaks": {
+    "W": 2.1,
+    "E": 3.5,
+    "S": 0.1,
+    "N": 2.6
+  },
+  "core_faces_checks": {
+    "before": {
+      "summary": {
+        "groups": 240,
+        "groups_away": 8,
+        "pins": 25408,
+        "pins_away": 26,
+        "types_away": 2,
+        "cores": 16,
+        "cores_unchecked": 0
+      },
+      "errors": [
+        {
+          "level": "ERROR",
+          "check": "core_faces",
+          "msg": "type q_b002 core u_hcb_Q2.ot_hbm_hc_bank128_pair3 port weight_we0: 1 pins on face N face away from its partner(s) face E (L42_i): mean cos -0.28, 1 pins on the far side (re-pin to face E)",
+          "type": "q_b002",
+          "g0c": true
+        },
+        {
+          "level": "ERROR",
+          "check": "core_faces",
+          "msg": "type q_b002 core u_hcb_Q2.ot_hbm_hc_bank128_pair3 port weight_we1: 1 pins on face N face away from its partner(s) face E (L42_i): mean cos -0.28, 1 pins on the far side (re-pin to face E)",
+          "type": "q_b002",
+          "g0c": true
+        },
+        {
+          "level": "ERROR",
+          "check": "core_faces",
+          "msg": "type q_b002 core u_hcb_Q2.ot_hbm_hc_bank128_pair3 port write_addr: 10 pins on face N face away from its partner(s) face E (L42_i): mean cos -0.28, 10 pins on the far side (re-pin to face E)",
+          "type": "q_b002",
+          "g0c": true
+        },
+        {
+          "level": "ERROR",
+          "check": "core_faces",
+          "msg": "type q_b002 core u_hcb_Q2.ot_hbm_hc_bank128_pair3 port x_write: 1 pins on face N face away from its partner(s) face E (L42_i): mean cos -0.28, 1 pins on the far side (re-pin to face E)",
+          "type": "q_b002",
+          "g0c": true
+        },
+        {
+          "level": "ERROR",
+          "check": "core_faces",
+          "msg": "type q_b011 core u_hcb_Q6.ot_hbm_hc_bank128_pair3 port weight_we0: 1 pins on face N face away from its partner(s) face E (L43_i): mean cos -0.30, 1 pins on the far side (re-pin to face E)",
+          "type": "q_b011",
+          "g0c": true
+        },
+        {
+          "level": "ERROR",
+          "check": "core_faces",
+          "msg": "type q_b011 core u_hcb_Q6.ot_hbm_hc_bank128_pair3 port weight_we1: 1 pins on face N face away from its partner(s) face E (L43_i): mean cos -0.30, 1 pins on the far side (re-pin to face E)",
+          "type": "q_b011",
+          "g0c": true
+        },
+        {
+          "level": "ERROR",
+          "check": "core_faces",
+          "msg": "type q_b011 core u_hcb_Q6.ot_hbm_hc_bank128_pair3 port write_addr: 10 pins on face N face away from its partner(s) face E (L43_i): mean cos -0.30, 10 pins on the far side (re-pin to face E)",
+          "type": "q_b011",
+          "g0c": true
+        },
+        {
+          "level": "ERROR",
+          "check": "core_faces",
+          "msg": "type q_b011 core u_hcb_Q6.ot_hbm_hc_bank128_pair3 port x_write: 1 pins on face N face away from its partner(s) face E (L43_i): mean cos -0.30, 1 pins on the far side (re-pin to face E)",
+          "type": "q_b011",
+          "g0c": true
+        }
+      ]
+    },
+    "after": {
+      "summary": {
+        "groups": 240,
+        "groups_away": 0,
+        "pins": 25408,
+        "pins_away": 0,
+        "types_away": 0,
+        "cores": 16,
+        "cores_unchecked": 0
+      },
+      "errors": []
+    }
+  },
+  "delta": [
+    {
+      "name": "write_addr[0]",
+      "old_xy_layer": [
+        221.352,
+        267.821,
+        "M5"
+      ],
+      "xy_layer": [
+        250.541,
+        64.824,
+        "M4"
+      ]
+    },
+    {
+      "name": "write_addr[1]",
+      "old_xy_layer": [
+        221.784,
+        267.821,
+        "M5"
+      ],
+      "xy_layer": [
+        250.541,
+        64.968,
+        "M4"
+      ]
+    },
+    {
+      "name": "write_addr[2]",
+      "old_xy_layer": [
+        222.216,
+        267.821,
+        "M5"
+      ],
+      "xy_layer": [
+        250.541,
+        65.112,
+        "M4"
+      ]
+    },
+    {
+      "name": "write_addr[3]",
+      "old_xy_layer": [
+        222.6,
+        267.821,
+        "M5"
+      ],
+      "xy_layer": [
+        250.541,
+        65.256,
+        "M4"
+      ]
+    },
+    {
+      "name": "write_addr[4]",
+      "old_xy_layer": [
+        223.032,
+        267.821,
+        "M5"
+      ],
+      "xy_layer": [
+        250.541,
+        65.4,
+        "M4"
+      ]
+    },
+    {
+      "name": "write_addr[5]",
+      "old_xy_layer": [
+        223.464,
+        267.821,
+        "M5"
+      ],
+      "xy_layer": [
+        250.541,
+        65.544,
+        "M4"
+      ]
+    },
+    {
+      "name": "write_addr[6]",
+      "old_xy_layer": [
+        223.848,
+        267.821,
+        "M5"
+      ],
+      "xy_layer": [
+        250.541,
+        65.736,
+        "M4"
+      ]
+    },
+    {
+      "name": "write_addr[7]",
+      "old_xy_layer": [
+        224.28,
+        267.821,
+        "M5"
+      ],
+      "xy_layer": [
+        250.541,
+        65.88,
+        "M4"
+      ]
+    },
+    {
+      "name": "write_addr[8]",
+      "old_xy_layer": [
+        224.712,
+        267.821,
+        "M5"
+      ],
+      "xy_layer": [
+        250.541,
+        66.024,
+        "M4"
+      ]
+    },
+    {
+      "name": "write_addr[9]",
+      "old_xy_layer": [
+        225.096,
+        267.821,
+        "M5"
+      ],
+      "xy_layer": [
+        250.541,
+        66.216,
+        "M4"
+      ]
+    },
+    {
+      "name": "weight_we0",
+      "old_xy_layer": [
+        240.456,
+        267.821,
+        "M5"
+      ],
+      "xy_layer": [
+        250.541,
+        66.36,
+        "M4"
+      ]
+    },
+    {
+      "name": "weight_we1",
+      "old_xy_layer": [
+        240.888,
+        267.821,
+        "M5"
+      ],
+      "xy_layer": [
+        250.541,
+        66.504,
+        "M4"
+      ]
+    },
+    {
+      "name": "x_write",
+      "old_xy_layer": [
+        241.704,
+        267.821,
+        "M5"
+      ],
+      "xy_layer": [
+        250.541,
+        66.696,
+        "M4"
+      ]
+    }
+  ],
+  "qualification": "PHYSICAL INTERFACE CANDIDATE; freshselectedkit/LEF/Lib/station-ends/nativegraph requiredbeforeadoption"
+}

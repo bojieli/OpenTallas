@@ -1,6 +1,6 @@
 {
   "basis_plan_sha256": "3a73d67be12d429eb3a7c8da4a464cfcb7ad00af0d51c3e09348de92417eaeaa",
-  "source_basis": "e41772821a + main5b3f0f6b2; owned integration1bbd7db768",
+  "source_basis": "C15 e41772821a plus current main e3497c17; physical candidate unadopted",
   "C15_result": {
     "G0_errors": 0,
     "G0C_errors": 20,
@@ -54,11 +54,11 @@
       0.48
     ],
     "clock_centres_x_um": [
+      181.272,
       181.368,
-      181.416,
       181.464,
-      181.512,
-      181.56
+      181.56,
+      181.656
     ],
     "clock_centres_y_um": 138.264,
     "source_common_phase_contract": "8470c76cbf results/hbm_source_1351/xq_common_clock.json",
@@ -67,7 +67,8 @@
     "other_pin6_violations": 46,
     "body_collisions": 0,
     "data_faces_changed": 0,
-    "added_cycles": 0
+    "added_cycles": 0,
+    "clock_windows_gap_um": 0.048
   },
   "integration_checks": {
     "existing_core_channels_mesh_vias_tests": 17,
