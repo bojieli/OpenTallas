@@ -1,0 +1,11 @@
+[
+ {"type": "root", "inst": "u_col_idx", "outline_um": [86.4, 86.4], "origin_um": [967.68, 768.96],
+  "pins_src": "/srv/opentallas-scratch2/claude/hbm-mu-quad-4-1027/inputs/ot_hbm_static_cfg_collar_idx256r__86.4x86.4__r5.json",
+  "why": "COORD RULING HBM-CORE-LAT-R5 collar 2623288395 (03:02): slot 108^2 -> 86.4^2 + rebalanced faces, pins byte-identical to the R5 trial kit pins_r5.json"},
+ {"type": "q_spt0", "inst": "u_xc_Q0", "outline_um": [241.92, 224.64], "origin_um": [112.32, 25.92], "clk_xy": [120.984, 112.32],
+  "regs_shift": [{"conn": "bus:L77_o", "match_x": 142.56, "dx": -38.88}],
+  "why": "COORD RULING HBM-CORE-LAT-R4 (4) + R5 REQ: xcal re-pack 241.92x224.64, Q0 grows W, option (a) L77_o station column shifted W (142.56 -> 103.68, outside the 8.64 halo)"},
+ {"type": "q_spt0", "inst": "u_xc_Q1", "outline_um": [241.92, 224.64], "origin_um": [1494.72, 25.92], "clk_xy": [120.984, 112.32], "why": "xcal re-pack, grow W"},
+ {"type": "q_spb2", "inst": "u_xc_Q2", "outline_um": [241.92, 224.64], "origin_um": [786.24, 1244.16], "clk_xy": [120.984, 112.32], "why": "xcal re-pack, grow W+S"},
+ {"type": "q_spb2", "inst": "u_xc_Q3", "outline_um": [241.92, 224.64], "origin_um": [1391.04, 1244.16], "clk_xy": [120.984, 112.32], "why": "xcal re-pack, grow W+S"}
+]

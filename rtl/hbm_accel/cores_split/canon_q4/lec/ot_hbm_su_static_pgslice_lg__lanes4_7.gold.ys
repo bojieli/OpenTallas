@@ -1,0 +1,5 @@
+read_verilog -sv -lib /srv/opentallas-scratch2/claude/wt/hbm-mu-quad-4-1027/rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_lanes4_core.sv
+read_verilog -sv /srv/opentallas-scratch2/claude/wt/hbm-mu-quad-4-1027/physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lanes4_7.sv
+hierarchy -top ot_hbm_su_static_pgslice_lg__lanes4_7
+proc; flatten; opt_clean -purge
+write_json lec/ot_hbm_su_static_pgslice_lg__lanes4_7.gold.json

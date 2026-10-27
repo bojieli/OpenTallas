@@ -1,0 +1,74 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `lec/ot_hbm_su_static_pgslice_lg__lane_exp8.gold.ys' --
+
+1. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/hbm-mu-quad-4-1027/rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_lane_exp_core.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/hbm-mu-quad-4-1027/rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_lane_exp_core.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_su_pg_lane_exp_core'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/hbm-mu-quad-4-1027/physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lane_exp8.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/hbm-mu-quad-4-1027/physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lane_exp8.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_su_static_pgslice_lg__lane_exp8'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \ot_hbm_su_static_pgslice_lg__lane_exp8
+
+3.2. Analyzing design hierarchy..
+Top module:  \ot_hbm_su_static_pgslice_lg__lane_exp8
+Removed 0 unused modules.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+4.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+4.4. Executing PROC_INIT pass (extract init attributes).
+
+4.5. Executing PROC_ARST pass (detect async resets in processes).
+
+4.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+4.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+4.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+4.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+4.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hbm_su_static_pgslice_lg__lane_exp8.
+
+5. Executing FLATTEN pass (flatten design).
+
+6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hbm_su_static_pgslice_lg__lane_exp8..
+Removed 0 unused cells and 12 unused wires.
+<suppressed ~12 debug messages>
+
+7. Executing JSON backend.
+
+End of script. Logfile hash: c5a0fdd348, time: 0.02s, user: 0.02s, system: 0.00s, MEM: 31.03 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 69% 4x read_verilog (0 sec), 14% 1x opt_clean (0 sec), ...

@@ -1,0 +1,626 @@
+[
+ {
+  "conn": "u_hb_idx__link.gbase|u_col_idx",
+  "end": "capture",
+  "status": "UNCHANGED",
+  "pt": [
+   967.68,
+   768.96
+  ]
+ },
+ {
+  "conn": "u_hb_idx__link.rank|u_col_idx",
+  "end": "capture",
+  "status": "UNCHANGED",
+  "pt": [
+   967.68,
+   768.96
+  ]
+ },
+ {
+  "conn": "u_hb_idx__selector.k|u_col_idx",
+  "end": "capture",
+  "status": "UNCHANGED",
+  "pt": [
+   967.68,
+   768.96
+  ]
+ },
+ {
+  "conn": "u_hb_argmax.a_base|u_col_idx",
+  "end": "capture",
+  "status": "UNCHANGED",
+  "pt": [
+   967.68,
+   812.179
+  ]
+ },
+ {
+  "conn": "u_hb_argmax.a_mirror|u_col_idx",
+  "end": "capture",
+  "status": "UNCHANGED",
+  "pt": [
+   967.68,
+   812.179
+  ]
+ },
+ {
+  "conn": "u_hb_argmax.busy|u_col_idx",
+  "end": "capture",
+  "status": "UNCHANGED",
+  "pt": [
+   967.68,
+   812.179
+  ]
+ },
+ {
+  "conn": "u_hb_argmax.die_id|u_col_idx",
+  "end": "capture",
+  "status": "UNCHANGED",
+  "pt": [
+   967.68,
+   812.179
+  ]
+ },
+ {
+  "conn": "u_hb_argmax.fault|u_col_idx",
+  "end": "capture",
+  "status": "UNCHANGED",
+  "pt": [
+   967.68,
+   812.179
+  ]
+ },
+ {
+  "conn": "u_hb_argmax.go|u_col_idx",
+  "end": "capture",
+  "status": "UNCHANGED",
+  "pt": [
+   967.68,
+   812.179
+  ]
+ },
+ {
+  "conn": "u_hb_argmax.imm_a|u_col_idx",
+  "end": "capture",
+  "status": "UNCHANGED",
+  "pt": [
+   967.68,
+   812.179
+  ]
+ },
+ {
+  "conn": "u_hb_argmax.mode|u_col_idx",
+  "end": "capture",
+  "status": "UNCHANGED",
+  "pt": [
+   967.68,
+   812.179
+  ]
+ },
+ {
+  "conn": "u_hb_argmax.n|u_col_idx",
+  "end": "capture",
+  "status": "UNCHANGED",
+  "pt": [
+   967.68,
+   812.179
+  ]
+ },
+ {
+  "conn": "u_hb_argmax.o_base|u_col_idx",
+  "end": "capture",
+  "status": "UNCHANGED",
+  "pt": [
+   967.68,
+   812.179
+  ]
+ },
+ {
+  "conn": "u_hb_argmax.o_is|u_col_idx",
+  "end": "capture",
+  "status": "UNCHANGED",
+  "pt": [
+   967.68,
+   812.179
+  ]
+ },
+ {
+  "conn": "u_col_idx.c_busy|u_hb_argmax",
+  "end": "launch",
+  "bus": "c_busy",
+  "old": [
+   970.32,
+   876.941
+  ],
+  "new": [
+   967.68,
+   817.968
+  ],
+  "moved_um": 61.61,
+  "max_hop": 404.59,
+  "status": "PASS"
+ },
+ {
+  "conn": "u_col_idx.c_fault|u_hb_argmax",
+  "end": "launch",
+  "bus": "c_fault",
+  "old": [
+   1007.059,
+   876.941
+  ],
+  "new": [
+   967.68,
+   818.712
+  ],
+  "moved_um": 97.61,
+  "max_hop": 236.28,
+  "status": "PASS"
+ },
+ {
+  "conn": "u_col_idx.go|u_hb_argmax",
+  "end": "launch",
+  "bus": "go",
+  "old": [
+   972.024,
+   876.941
+  ],
+  "new": [
+   967.68,
+   819.456
+  ],
+  "moved_um": 61.83,
+  "max_hop": 403.1,
+  "status": "PASS"
+ },
+ {
+  "conn": "bus:L124_o",
+  "end": "capture",
+  "bus": "prm",
+  "old": [
+   1070.476,
+   812.645
+  ],
+  "new": [
+   1032.415,
+   801.599
+  ],
+  "moved_um": 49.11,
+  "max_hop": 343.66,
+  "status": "PASS"
+ },
+ {
+  "conn": "bus:L124m_o",
+  "end": "capture",
+  "bus": "prm",
+  "old": [
+   1070.476,
+   812.645
+  ],
+  "new": [
+   1032.415,
+   801.599
+  ],
+  "moved_um": 49.11,
+  "max_hop": 327.13,
+  "status": "PASS"
+ },
+ {
+  "conn": "bus:L64_i",
+  "end": "capture",
+  "bus": "prm",
+  "old": [
+   1070.476,
+   812.645
+  ],
+  "new": [
+   1032.415,
+   801.599
+  ],
+  "moved_um": 49.11,
+  "max_hop": 358.78,
+  "status": "PASS"
+ },
+ {
+  "conn": "bus:L64m_i",
+  "end": "capture",
+  "bus": "prm",
+  "old": [
+   1070.476,
+   812.645
+  ],
+  "new": [
+   1032.415,
+   801.599
+  ],
+  "moved_um": 49.11,
+  "max_hop": 358.17,
+  "status": "PASS"
+ },
+ {
+  "conn": "bus:L80_o",
+  "end": "capture",
+  "bus": "prm",
+  "old": [
+   1070.476,
+   812.645
+  ],
+  "new": [
+   1032.415,
+   801.599
+  ],
+  "moved_um": 49.11,
+  "max_hop": 343.66,
+  "status": "PASS"
+ },
+ {
+  "conn": "bus:L80m_o",
+  "end": "capture",
+  "bus": "prm",
+  "old": [
+   1070.476,
+   812.645
+  ],
+  "new": [
+   1032.415,
+   801.599
+  ],
+  "moved_um": 49.11,
+  "max_hop": 345.67,
+  "status": "PASS"
+ },
+ {
+  "conn": "u_col_idx.prm|u_hb_argmax",
+  "end": "launch",
+  "bus": "prm",
+  "old": [
+   1070.476,
+   812.645
+  ],
+  "new": [
+   1032.415,
+   801.599
+  ],
+  "moved_um": 49.11,
+  "max_hop": 268.83,
+  "status": "PASS"
+ },
+ {
+  "conn": "u_col_idx.prm|u_hb_idx__link",
+  "end": "launch",
+  "bus": "prm",
+  "old": [
+   1070.476,
+   812.645
+  ],
+  "new": [
+   1032.415,
+   801.599
+  ],
+  "moved_um": 49.11,
+  "max_hop": 358.34,
+  "status": "PASS"
+ },
+ {
+  "conn": "u_col_idx.rec|u_hb_argmax",
+  "end": "launch",
+  "bus": "rec",
+  "old": [
+   1002.324,
+   876.941
+  ],
+  "new": [
+   967.68,
+   794.401
+  ],
+  "moved_um": 117.18,
+  "max_hop": 236.28,
+  "status": "PASS"
+ },
+ {
+  "conn": "bus:L62m_o",
+  "end": "launch",
+  "bus": "active",
+  "old": [
+   970.632,
+   876.941
+  ],
+  "new": [
+   1028.856,
+   855.36
+  ],
+  "moved_um": 79.81,
+  "max_hop": 358.17,
+  "status": "PASS"
+ },
+ {
+  "conn": "bus:L89_i",
+  "end": "capture",
+  "bus": "c_fault",
+  "old": [
+   1008.288,
+   876.941
+  ],
+  "new": [
+   967.68,
+   818.712
+  ],
+  "moved_um": 98.84,
+  "max_hop": 359.81,
+  "status": "PASS"
+ },
+ {
+  "conn": "bus:L74m_i",
+  "end": "capture",
+  "bus": "cfg_addr",
+  "old": [
+   975.552,
+   876.941
+  ],
+  "new": [
+   973.348,
+   855.36
+  ],
+  "moved_um": 23.79,
+  "max_hop": 336.96,
+  "status": "PASS"
+ },
+ {
+  "conn": "bus:L74m_i",
+  "end": "capture",
+  "bus": "cfg_data",
+  "old": [
+   1036.51,
+   876.941
+  ],
+  "new": [
+   1001.683,
+   855.36
+  ],
+  "moved_um": 56.41,
+  "max_hop": 328.32,
+  "status": "PASS"
+ },
+ {
+  "conn": "bus:L74m_i",
+  "end": "capture",
+  "bus": "cfg_target",
+  "old": [
+   973.092,
+   876.941
+  ],
+  "new": [
+   971.238,
+   855.36
+  ],
+  "moved_um": 23.43,
+  "max_hop": 336.96,
+  "status": "PASS"
+ },
+ {
+  "conn": "bus:L74m_i",
+  "end": "capture",
+  "bus": "cfg_v",
+  "old": [
+   970.872,
+   876.941
+  ],
+  "new": [
+   969.864,
+   855.36
+  ],
+  "moved_um": 22.59,
+  "max_hop": 336.96,
+  "status": "PASS"
+ },
+ {
+  "conn": "bus:L74m_i",
+  "end": "capture",
+  "bus": "desc_v",
+  "old": [
+   971.064,
+   876.941
+  ],
+  "new": [
+   970.056,
+   855.36
+  ],
+  "moved_um": 22.59,
+  "max_hop": 336.96,
+  "status": "PASS"
+ },
+ {
+  "conn": "bus:L62m_o",
+  "end": "launch",
+  "bus": "fault",
+  "old": [
+   971.304,
+   876.941
+  ],
+  "new": [
+   1029.048,
+   855.36
+  ],
+  "moved_um": 79.33,
+  "max_hop": 358.17,
+  "status": "PASS"
+ },
+ {
+  "conn": "bus:L74m_i",
+  "end": "capture",
+  "bus": "launch_v",
+  "old": [
+   971.496,
+   876.941
+  ],
+  "new": [
+   970.296,
+   855.36
+  ],
+  "moved_um": 22.78,
+  "max_hop": 336.96,
+  "status": "PASS"
+ },
+ {
+  "conn": "bus:L62_o",
+  "end": "launch",
+  "bus": "prm",
+  "old": [
+   1075.661,
+   778.153
+  ],
+  "new": [
+   1032.415,
+   801.599
+  ],
+  "moved_um": 66.69,
+  "max_hop": 358.17,
+  "status": "PASS"
+ },
+ {
+  "conn": "bus:L62m_o",
+  "end": "launch",
+  "bus": "prm",
+  "old": [
+   1075.661,
+   778.153
+  ],
+  "new": [
+   1032.415,
+   801.599
+  ],
+  "moved_um": 66.69,
+  "max_hop": 354.24,
+  "status": "PASS"
+ },
+ {
+  "conn": "bus:L62_o",
+  "end": "launch",
+  "bus": "pw_addr",
+  "old": [
+   1011.04,
+   876.941
+  ],
+  "new": [
+   1030.86,
+   855.36
+  ],
+  "moved_um": 41.4,
+  "max_hop": 356.54,
+  "status": "PASS"
+ },
+ {
+  "conn": "bus:L62m_o",
+  "end": "launch",
+  "bus": "pw_addr",
+  "old": [
+   1011.04,
+   876.941
+  ],
+  "new": [
+   1030.86,
+   855.36
+  ],
+  "moved_um": 41.4,
+  "max_hop": 358.17,
+  "status": "PASS"
+ },
+ {
+  "conn": "bus:L62_o",
+  "end": "launch",
+  "status": "UNCHANGED",
+  "pt": [
+   1014.749,
+   810.73
+  ]
+ },
+ {
+  "conn": "bus:L62m_o",
+  "end": "launch",
+  "status": "UNCHANGED",
+  "pt": [
+   1014.749,
+   810.73
+  ]
+ },
+ {
+  "conn": "bus:L62_o",
+  "end": "launch",
+  "bus": "pw_we",
+  "old": [
+   1004.64,
+   876.941
+  ],
+  "new": [
+   1029.72,
+   855.36
+  ],
+  "moved_um": 46.66,
+  "max_hop": 356.54,
+  "status": "PASS"
+ },
+ {
+  "conn": "bus:L62m_o",
+  "end": "launch",
+  "bus": "pw_we",
+  "old": [
+   1004.64,
+   876.941
+  ],
+  "new": [
+   1029.72,
+   855.36
+  ],
+  "moved_um": 46.66,
+  "max_hop": 358.17,
+  "status": "PASS"
+ },
+ {
+  "conn": "bus:L62m_o",
+  "end": "launch",
+  "bus": "ready",
+  "old": [
+   971.688,
+   876.941
+  ],
+  "new": [
+   1029.288,
+   855.36
+  ],
+  "moved_um": 79.18,
+  "max_hop": 358.17,
+  "status": "PASS"
+ },
+ {
+  "conn": "bus:L62_o",
+  "end": "launch",
+  "bus": "start_v",
+  "old": [
+   1005.216,
+   876.941
+  ],
+  "new": [
+   1029.912,
+   855.36
+  ],
+  "moved_um": 46.28,
+  "max_hop": 356.54,
+  "status": "PASS"
+ },
+ {
+  "conn": "bus:L62m_o",
+  "end": "launch",
+  "bus": "start_v",
+  "old": [
+   1005.216,
+   876.941
+  ],
+  "new": [
+   1029.912,
+   855.36
+  ],
+  "moved_um": 46.28,
+  "max_hop": 358.17,
+  "status": "PASS"
+ }
+]

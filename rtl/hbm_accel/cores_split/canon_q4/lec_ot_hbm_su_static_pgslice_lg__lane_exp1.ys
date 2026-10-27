@@ -1,0 +1,14 @@
+read_verilog -sv -lib /srv/opentallas-scratch2/claude/wt/hbm-mu-quad-4-1027/rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_lane_exp_core.sv
+read_verilog -sv /srv/opentallas-scratch2/claude/wt/hbm-mu-quad-4-1027/physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lane_exp1.sv
+hierarchy -top ot_hbm_su_static_pgslice_lg__lane_exp1
+rename ot_hbm_su_static_pgslice_lg__lane_exp1 gold
+read_verilog -sv /srv/opentallas-scratch2/claude/wt/hbm-mu-quad-4-1027/rtl/hbm_accel/cores_split/canon_q4/ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691.sv /srv/opentallas-scratch2/claude/wt/hbm-mu-quad-4-1027/rtl/hbm_accel/cores_split/canon_q4/shim_ot_hbm_su_static_pgslice_lg__lane_exp1.sv
+hierarchy -top ot_hbm_su_static_pgslice_lg__lane_exp1
+rename ot_hbm_su_static_pgslice_lg__lane_exp1 gate
+flatten gold gate
+opt_clean
+equiv_make gold gate equiv
+hierarchy -top equiv
+equiv_simple -undef
+equiv_induct -undef
+equiv_status -assert
