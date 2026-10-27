@@ -44,6 +44,7 @@ from pathlib import Path
 
 CORE_MODE = "early"
 GROUPS = []
+HARD_MERGE = "all"
 
 
 def legacy_cores(t):
@@ -112,6 +113,34 @@ def merge_hard(P, reg):
     """a HARD partition (e.g. the PHY macro) cannot host a landing ring: it shares ONE region with every partition it
     has a port to (its existing pin contract stays synchronous), so none of its ports is landed."""
     T = P["partition_types"]
+    if HARD_MERGE == "inputs":
+        # A ring cannot live at a hard INPUT. A hard OUTPUT may land at its
+        # ordinary receiving partition. Merge exact driving partitions only:
+        # merging their entire existing region drags unrelated svc neighbours
+        # into the PHY tree, defeating explicitly requested compact groups.
+        par = {n: n for n in reg}
+
+        def find(n):
+            while par[n] != n:
+                par[n] = par[par[n]]
+                n = par[n]
+            return n
+
+        touched = set()
+        hard = sorted(p["name"] for p in P["partitions"] if T[p["type"]].get("hard"))
+        for name in hard:
+            touched.add(name)
+            for q in P["ports"]:
+                if q["dst"]["part"] == name and q["src"]["part"] in reg:
+                    src = q["src"]["part"]
+                    touched.add(src)
+                    par[find(src)] = find(name)
+        tags = {}
+        for name in hard:
+            tags.setdefault(find(name), "hard_" + name)
+        for name in touched:
+            reg[name] = tags[find(name)]
+        return reg
     for p in P["partitions"]:
         if not T[p["type"]].get("hard"):
             continue
@@ -137,10 +166,13 @@ def main():
     a.add_argument("--cycles", type=int, default=3)
     a.add_argument("--core", choices=("early", "land", "rebuild", "tap"), default="early")
     a.add_argument("--groups", help="JSON {groups: [[part, ...], ...]}: each group is one region key (opt-in)")
+    a.add_argument("--hard-merge", choices=("all", "inputs"), default="all",
+                   help="inputs: merge only exact partitions driving hard inputs; hard outputs land at their receivers")
     g = ap.parse_args()
-    global CORE_MODE, GROUPS
+    global CORE_MODE, GROUPS, HARD_MERGE
     CORE_MODE = g.core
     GROUPS = json.load(open(g.groups))["groups"] if g.groups else []
+    HARD_MERGE = g.hard_merge
     P = json.load(open(g.plan))
     L = json.load(open(g.lat))
     d = Path(g.out)
