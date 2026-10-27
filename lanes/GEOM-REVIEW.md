@@ -4009,3 +4009,4 @@ GEOM REQ [INFRA-FIRST-QC-R14] 2026-10-26 23:28 PDT claude/qc-mesh-r14-1026@64abd
   - Conditions:
     (1) Kit GRT overflow 0 at >= 50 iterations.
     (2) If it does not reach 0, grow the outline in y. This is a plan delta for QUAD-6, because N-face pin fan-in on an M5 ceiling sets the depth; do not raise util. A 20-25 % taller outline takes fill to ~0.45.
+2026-10-27 07:52 PDT GEOM-REVIEW-25: FOLLOW-UP [HBM-CORES-R8 idx_query_static k2] the 50-iteration GRT confirms FAIL STRUCTURAL (CHECKED, intel2:/srv/opentallas-scratch2/claude/geom25/ot_hbm_idx_query_stati/probe.log). Total overflow went from 15,262 at 3 iterations to 13,484 at 50 iterations (M2 6,028 / M3 4,482 / M4 2,258 / M5 716, max H/V 22/22). Usage is M2 74 % / M3 71 %. Iterations do not clear the capacity-0 cells over the SRAMs, so the 07:31 fix stands.
