@@ -25,3 +25,16 @@
 
 ## Next
 Collecthcore/NNfd/currentcanary, diagnoseexactremainingclasses; finishL3FSM/validinvariantsandRXsf/Bkselrange; rootreviewsuniversalD; noobsoletebroadproofwaves. Existingjobsstayrunningonreset; packetwillbeupdatedbeforeparking.
+
+## Interim delta 2026-10-27 14:55 PDT — still working, no reset
+
+- Release guard fd417 and L1 width source are merged. NNfd routed fd417 is EQUIVALENT2066/2066,0diff; retained physical TT+8.23/FF+2.11/DRC0/pins202. Corrected L1 fresh synthesis+whole LEC also EQUIVALENT, face3519/3519/fanoutPASS (S81 owner packages).
+- Universal raw-D e6 is merged; actual hcore vehicle TERMINAL NOT_EQ28572/29892,1320diff,32rawbases:408 fewer failures than original1728. This is partial progress, not closure.
+- New prefix source READY: codex/lec-prefix-1428@c6e4bfa53, basee6, EXCLUDES unready zero-hot branch.198LECtestsPASS/2skip. OT_LEC_RAW_BASE_STEPS=N is defaultOFF. Raw time-expanded cones have arbitrary initial Q and fresh independent PI/X each frame; UNSAT only establishes exactedgeN. Late bases still require release-unobservability, matchedlatebases banned, finalinductionmandatory. No reset-duration or X waiver.
+- Actual cap_tr prefix6 replay TERMINAL6382proved/2diff, allHproved,36FWWcandidatesretained/30prefixbases. Unit231248-1793137735, intel2 codex-lec-fpreg-1355/cap_rf_prefix6/result.json. Independent exactRF6-edge/5-edge/wrongvalue controls committed by S81095b446a1c. Remainingq3/q17 see unpaired memory bits.
+- First cap_rf_pairs identitynumericbit proposal REJECTED,12diff includingH. Gate compacts awaythreefixedlowbits: exactcones show GOLDmem[w][3] vsGATEmem#t[w][0], GOLD17 vsGATE14. Corrected8pair candidate +wrongwordcontrol RUNNING intel2 codex-lec-fpreg-1355/cap_rf_pairs_compact (session26851). No wholecorePASS yet. Prior failures retained.
+- Hcore prefix4 actualnewmechanism retry LIVE intel1 codex-lec-fpreg-1355/hcore_prefix4/out, docker codex-lecfp-hcore-prefix4,32GB4threads, unit1264698-1793137803/session30384. Latest1hypcheckpoint14:54. Exactpreviouskit/AIGs; noRTL/synth repeat; unconditional four-edge prefix is stronger than existingbootmodel, not a longerreset assumption.
+- Q2b live30057s/RSS6.65GB in sim_refine, Q2c live25723s/RSS5.51GB in correspondence, no receipts at14:54. Same paths/units above, no restart.
+- L3 zero-hot branch codex/lec-fsm-zero-1418@af970e425 is WIP/NOTREADY.68focusedPASS/1skip but both actualdiagnostics propose0 due764/768 tiedscores;857remaining unchanged. Preserve l3_zero_hot andl3_zero_reset artifacts; no sourceadoption.
+- Cap_rt265 inherited shiftline failure now S81 owner owns singlefd417 retry; no duplication. RXsf306/Bksel6382/currentEG835/VS172/VE_mKEEP640 remain open classes in earliercoverage. HBM AQ1056 source-specificfoldedFP4 pipeline case under HBMowner; toldverifyruntime release guard andobservationbound before any retry.
+- OWNER? existing CODEX-LOG14:00 vsw16edge contract remains unestablished; actualS81generatorfails16. No new ownerdecision or X waiver.
