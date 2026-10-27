@@ -22,7 +22,8 @@ def so(verdict="NOT SIGNED", tt=5.0, ff=-3.0, fails=("hold_ff",), drc=0, pg="PAS
     return {"signoff": {"path": "/k/signoff/signoff.json", "verdict": verdict, "reasons": ["r"], "fails": list(fails),
                         "tt_wns": tt, "ff_wns": ff, "drc": drc, "odb": "/k/run/x/6_final.odb", "base": "/k/run/x",
                         "pg": pg},
-            "grt_overflow": 0, "chain": {"started": time.time(), "verdict": "PASS", "lec_verdict": "EQUIVALENT", "lec_exit": 0}}
+            "grt_overflow": 0, "chain": {"started": time.time(), "verdict": "PASS", "lec_verdict": "EQUIVALENT", "lec_exit": 0,
+                                          "lec_all_shown": True, "gates": {"setup_tt": "PASS", "routed_lec": "PASS"}}}
 
 
 class Base(unittest.TestCase):
@@ -320,7 +321,13 @@ class FakeHosts:
         if code is self.ap.PROBE_DELETE:
             return {"deleted": [args["kit"] + "/run/results"], "errors": []}
         if code is self.ap.PROBE_ARCHIVE:
-            return {"files": 12, "errors": []}
+            self.archived = args
+            return {"files": 12, "errors": [], "view": args["dest"] + "/view/" + str((args.get("view") or {}).get("module"))}
+        if code is self.ap.PROBE_VIEW_READ:
+            return k.get("view_read", {"module": "slice_station", "core": {"module": "slice_station",
+                    "outline_um": [10.0, 8.0]}, "pins": {"pins": [{"name": "a", "x": 0.0, "y": 1.0, "layer": "M5"}]},
+                    "files": {"slice_station.lef": "/k/x.lef", "slice_station_tt.lib": "/k/tt.lib",
+                              "slice_station_ff.lib": "/k/ff.lib"}})
         if code is self.ap.PROBE_MD5CHECK:
             return {"ok": True}
         return {"error": "unknown probe"}
@@ -448,7 +455,7 @@ class TestTick(TickBase):
         self.assertEqual(len(rows), 2)                   # header + one row
         self.assertNotIn(path, [c[2]["kit"] for c in self.f.calls if c[1] == self.ap.PROBE_DELETE[:40]])
 
-    def test_near_miss_keeps_checkpoint_until_diagnosed(self):
+    def test_near_miss_rendered_then_stopped_and_deleted(self):
         self.queue(ROW)
         self.tick()
         path = "/srv/opentallas-scratch2/claude/s81/kits/slice_station__t5"
@@ -471,7 +478,68 @@ class TestTick(TickBase):
         self.assertIn("/r/paths.png", rv)
         self.assertIn("/r/paths_ff_hold.txt", rv)
         self.assertEqual(len(self.f.launched), 2)        # the run + the render, never an ECO / re-route
-        self.assertFalse(any(c[1] == self.ap.PROBE_DELETE[:40] for c in self.f.calls))
+        # AUTOPILOT-SIGNOFF-2: a chain job's failed run data is deleted once the review bundle exists (logs kept)
+        self.assertTrue(any(c[1] == self.ap.PROBE_DELETE[:40] for c in self.f.calls))
+        self.assertTrue(j["data_deleted"])
+        self.tick()
+        self.assertEqual(len(self.f.launched), 2)        # never retried
+
+    def test_signed_view_published_with_canon_pins_and_gates(self):
+        self.queue(ROW)
+        self.tick()
+        path = "/srv/opentallas-scratch2/claude/s81/kits/slice_station__t5"
+        self.f.kits[path] = {"classify": so("SIGNED", 3.0, 2.0, ()), "mtime": 9e9}
+        self.finish_client(self.f.launched[0][0], "ot-run: RAN on epyc2: exit 0\nAP_RC=0\n")
+        self.assertEqual(list(self.tick().values())[0]["status"], "ARCHIVED")
+        v = self.f.archived["view"]
+        sys.path.insert(0, str(HERE.parent / "die_plan"))
+        import die_sta_related as DSR
+        doc = {"pins": [{"name": "a", "x": 0.0, "y": 1.0, "layer": "M5"}]}
+        self.assertEqual(v["provenance"]["kit"]["pins_canon_sha256"], DSR.canon_sha256(DSR.canon_pins(doc, [10.0, 8.0])))
+        self.assertEqual(v["provenance"]["views_status"], "signoff")
+        self.assertEqual(v["gates"]["routed_lec_all_shown"], True)
+        self.assertEqual(v["gates"]["gates"]["routed_lec"], "PASS")
+
+    def test_kit_pin_list_with_bus_bit_is_canonicalised(self):
+        doc = self.ap.pins_doc([{"bus": "addr", "bit": 0, "layer": "M4", "x": 0.042, "y": 1.0}, {"bus": "ck", "bit": None,
+                                "layer": "M5", "x": 1.0, "y": 0.0}])
+        self.assertEqual([p["name"] for p in doc["pins"]], ["addr[0]", "ck"])
+        self.assertEqual(len(self.ap.pins_canon(doc, [2.0, 2.0])), 64)
+
+    def test_chain_without_all_shown_is_not_archived(self):
+        self.queue(ROW)
+        self.tick()
+        path = "/srv/opentallas-scratch2/claude/s81/kits/slice_station__t5"
+        c = so("SIGNED", 3.0, 2.0, ())
+        c["chain"]["lec_all_shown"] = None
+        self.f.kits[path] = {"classify": c, "mtime": 9e9}
+        self.finish_client(self.f.launched[0][0], "ot-run: RAN on epyc2: exit 0\nAP_RC=0\n")
+        j = list(self.tick().values())[0]
+        self.assertNotIn(j["status"], ("ARCHIVED", "SIGNED"))
+        self.assertEqual(j["kind"], "routed-lec")
+
+    def test_failure_notice_goes_to_lane_and_coord_queue(self):
+        lines = []
+        self.ap.coord_append = lambda rel, line: lines.append((rel, line))
+        self.queue(ROW)
+        self.tick()
+        path = "/srv/opentallas-scratch2/claude/s81/kits/slice_station__t5"
+        self.f.kits[path] = {"classify": {"FAIL_POSTCTS": "FF structural hold gate"}, "mtime": 9e9}
+        self.finish_client(self.f.launched[0][0], "ot-run: RAN on epyc2: exit 1\nAP_RC=1\n")
+        j = list(self.tick().values())[0]
+        self.assertEqual(j["status"], "DONE-STRUCTURAL")
+        self.assertEqual([r for r, _ in lines], ["lanes/S81.md", "lanes/COORD-REVIEW-QUEUE.md"])
+        self.assertIn("FAILED", lines[0][1])
+        self.assertTrue(j["data_deleted"])
+
+    def test_admission_priority_kv_qc_head_s81_hbm(self):
+        rows = []
+        for i, die in enumerate(("hbm", "s81", "s81_head", "qwen_compute", "kv")):
+            rows.append([die, f"t{i}", KIT + f"_{i}"] + ROW[3:])
+        self.queue(*rows)
+        self.tick()
+        order = [a[a.index("--dir") + 1].rsplit("_", 1)[1] for _, a in self.f.launched]
+        self.assertEqual(order, ["4", "3", "2", "1", "0"])
 
     def test_infra_oom_resubmits_once_with_more_mem_then_marks(self):
         self.queue(ROW)
