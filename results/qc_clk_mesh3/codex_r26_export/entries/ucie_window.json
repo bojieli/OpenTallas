@@ -1,0 +1,39 @@
+{
+ "verdict": "PLAN_CANDIDATE; NOT DECLARED OR PHY-CONNECTED",
+ "host": "coll_core",
+ "host_rect": [
+  777.6,
+  8432.64,
+  1563.8400000000001,
+  10022.4
+ ],
+ "window_um": [
+  817.83,
+  9629.685,
+  826.47,
+  9638.325
+ ],
+ "halo_um": [
+  812.4300000000001,
+  9624.285,
+  831.87,
+  9643.725
+ ],
+ "window_inside_host": true,
+ "halo_inside_host": true,
+ "window_opaque_hits": [],
+ "halo_opaque_hits": [],
+ "stack_clearance": {
+  "max_riser_um": 2.5,
+  "stack_xy_span_um": 0.54,
+  "via89_halfpad_um": 0.64,
+  "nominal_origin_um": [
+   821.34,
+   9633.6
+  ],
+  "three_rows_top_um": 9634.41,
+  "stack_top_um": 9637.415,
+  "within_window": true
+ },
+ "limitations": "This spare geometric window is not a finished branch: actual UCIe clk M5 boundary pin and missing macro origin must replace invalid centre target; die-metal shields and PG clearance need actual full importer census."
+}

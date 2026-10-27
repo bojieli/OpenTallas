@@ -1,0 +1,117 @@
+{
+ "entries": [
+  {
+   "part": "io_serdes",
+   "default_type_tap_um": [
+    777.6,
+    1157.76
+   ],
+   "macro_size_um": [
+    1563.57,
+    2320.056
+   ],
+   "canonical_clk_pin": "clk",
+   "canonical_layer": "M5",
+   "canonical_rect_um": [
+    753.006,
+    2319.864,
+    753.03,
+    2320.056
+   ],
+   "canonical_centre_um": [
+    753.018,
+    2319.96
+   ],
+   "default_to_canonical_L1_um": 1186.782,
+   "lef": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597.lef",
+   "view_commit": "f5539107eb",
+   "lef_sha256": "4c62ffde575d234fef5ab6dde33f09b3ddda9f9ab8d7cc7501f5a60e75c4cc55",
+   "verdict": "BLOCKED: native LEF/origin/orientation contract must replace default type-centre endpoint; no inside-PHY buffer or connection invented"
+  },
+  {
+   "part": "io_serdes_1",
+   "default_type_tap_um": [
+    777.6,
+    1157.76
+   ],
+   "macro_size_um": [
+    1563.57,
+    2320.056
+   ],
+   "canonical_clk_pin": "clk",
+   "canonical_layer": "M5",
+   "canonical_rect_um": [
+    753.006,
+    2319.864,
+    753.03,
+    2320.056
+   ],
+   "canonical_centre_um": [
+    753.018,
+    2319.96
+   ],
+   "default_to_canonical_L1_um": 1186.782,
+   "lef": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597.lef",
+   "view_commit": "f5539107eb",
+   "lef_sha256": "4c62ffde575d234fef5ab6dde33f09b3ddda9f9ab8d7cc7501f5a60e75c4cc55",
+   "verdict": "BLOCKED: native LEF/origin/orientation contract must replace default type-centre endpoint; no inside-PHY buffer or connection invented"
+  },
+  {
+   "part": "io_serdes_2",
+   "default_type_tap_um": [
+    777.6,
+    1157.76
+   ],
+   "macro_size_um": [
+    1563.57,
+    2320.056
+   ],
+   "canonical_clk_pin": "clk",
+   "canonical_layer": "M5",
+   "canonical_rect_um": [
+    753.006,
+    2319.864,
+    753.03,
+    2320.056
+   ],
+   "canonical_centre_um": [
+    753.018,
+    2319.96
+   ],
+   "default_to_canonical_L1_um": 1186.782,
+   "lef": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597.lef",
+   "view_commit": "f5539107eb",
+   "lef_sha256": "4c62ffde575d234fef5ab6dde33f09b3ddda9f9ab8d7cc7501f5a60e75c4cc55",
+   "verdict": "BLOCKED: native LEF/origin/orientation contract must replace default type-centre endpoint; no inside-PHY buffer or connection invented"
+  },
+  {
+   "part": "ucie_kv",
+   "default_type_tap_um": [
+    388.8,
+    388.8
+   ],
+   "macro_size_um": [
+    777.6,
+    777.6
+   ],
+   "canonical_clk_pin": "clk",
+   "canonical_layer": "M5",
+   "canonical_rect_um": [
+    276.384,
+    777.408,
+    276.408,
+    777.6
+   ],
+   "canonical_centre_um": [
+    276.396,
+    777.504
+   ],
+   "default_to_canonical_L1_um": 501.108,
+   "lef": "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy.lef",
+   "view_commit": "f5539107eb",
+   "lef_sha256": "b6cae26293fe9265ed000e134d5044b0c04933ecafc38a897dac973cbd06f9d6",
+   "verdict": "BLOCKED: native LEF/origin/orientation contract must replace default type-centre endpoint; no inside-PHY buffer or connection invented"
+  }
+ ],
+ "note": "Macro-frame LEF pin geometry is authoritative at the pinned source; plan contents supply lib but no explicit lef/origin. Absolute terminal coordinates are not asserted."
+}

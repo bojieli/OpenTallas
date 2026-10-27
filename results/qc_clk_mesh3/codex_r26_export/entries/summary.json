@@ -1,0 +1,114 @@
+{
+ "partitions": 377,
+ "legacy_entry_mismatches": 0,
+ "nearest_mesh_um": {
+  "max": 1244.16,
+  "over450": 17,
+  "over405": 17
+ },
+ "entry_inside_core": 0,
+ "entry_inside_phy": 4,
+ "declared_islands": 196628,
+ "declared_free": 196242,
+ "declared_opaque": 285,
+ "vehicles": {
+  "tt_ctlm": {
+   "verdict": "PLAN_CANDIDATE",
+   "segments": 4,
+   "wire_um": 1568.97,
+   "points": [
+    [
+     1632.96,
+     12268.800000000001
+    ],
+    [
+     1403.5140000000001,
+     12106.395
+    ],
+    [
+     974.1600000000001,
+     12106.395
+    ],
+    [
+     583.6859999999999,
+     12106.395
+    ],
+    [
+     388.8,
+     12268.800000000001
+    ]
+   ],
+   "islands": [
+    {
+     "part": "coll_f4",
+     "index": 37,
+     "rect": [
+      1402.164,
+      12105.990000000002,
+      1404.864,
+      12106.800000000001
+     ],
+     "xy": [
+      1403.5140000000001,
+      12106.395
+     ],
+     "blocked": [],
+     "occupied": [],
+     "available": true
+    },
+    {
+     "part": "coll_f4",
+     "index": 15,
+     "rect": [
+      972.8100000000001,
+      12105.990000000002,
+      975.51,
+      12106.800000000001
+     ],
+     "xy": [
+      974.1600000000001,
+      12106.395
+     ],
+     "blocked": [],
+     "occupied": [],
+     "available": true
+    },
+    {
+     "part": "tt_ctlm",
+     "index": 7,
+     "rect": [
+      582.336,
+      12105.99,
+      585.036,
+      12106.800000000001
+     ],
+     "xy": [
+      583.6859999999999,
+      12106.395
+     ],
+     "blocked": [],
+     "occupied": [],
+     "available": true
+    }
+   ],
+   "hop_um": [
+    391.851,
+    429.354,
+    390.474,
+    357.291
+   ],
+   "scope": "declared empty plan holes only; pin/PG/shield/clock timing and kit reservation unqualified; no core-internal buffer invented"
+  },
+  "ucie_kv": {
+   "verdict": "NEEDS_PLAN_ISLAND",
+   "reachable_nodes": 127,
+   "candidate_islands": 126,
+   "nearest_reachable_to_entry_um": 462.753,
+   "nearest_reachable": [
+    841.158,
+    9643.994999999999
+   ],
+   "scope": "declared empty plan holes only; pin/PG/shield/clock timing and kit reservation unqualified; no core-internal buffer invented"
+  }
+ }
+}
