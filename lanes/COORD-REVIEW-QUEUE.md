@@ -2213,3 +2213,5 @@ READY [CODEX RESET-LOCAL 2026-10-27 08:35 PDT] codex/reset-local-1027@aa74a3105:
 READY UPDATE [CODEX RESET-LOCAL 2026-10-27 08:39 PDT] final codex/reset-local-1027@7beec5b1d supersedes aa74: independent review caught old initialized rst_n leaf alias surviving kit_rsync re-plan and creating two reset drivers; fixed, two-pass re-plan regression PASS. Pipelined local consumer preservation metadata+render updated.54 focused+3G2PASS, no KV cycle or interface change from prior proposal. Exact source commits e2c0eb95f(feature),aa74a3105(model),7beec5b1d(follow-up); current main cleanly merged.
 
 READY [CODEX FLOW 2026-10-27 08:44 PDT] codex/ft-overlay-1027@bae112e24: PGwindowtoolerrors rethrow+noOT_DONEfalse-success,6generatedTclcontrolsPASS, narrowfollow-uponced7b8d2d.
+
+READY [CODEX HBM-NATIVE-CAP 2026-10-27 08:45 PDT] codex/hbm-rp3-macroscope-0825@a124d454cd:8native SM child synths+2residuals PASS cellcap (max84055std; parent29593/28918), exact18N/16S hierarchy/nativeports,0extraRTLcycles,noFSHELL; no timing/P&R claim. Extends380dmacrofix.
