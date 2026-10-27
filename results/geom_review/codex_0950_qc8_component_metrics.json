@@ -1,0 +1,74 @@
+{
+  "cells": 50149,
+  "groups": 33417,
+  "orientation_counts": {
+    "R0": 29177,
+    "MX": 20972
+  },
+  "row_parity_errors": 0,
+  "die_edge_guard_errors": 0,
+  "max_pin_to_pin_um": 448.524,
+  "reported_site_errors": {},
+  "pg_primitive": {
+    "verdict": "PASS",
+    "master": "BUFx24_ASAP7_75t_R",
+    "dbu_per_um": 1000,
+    "height_dbu": 270,
+    "lower_R0": {
+      "VDD": [
+        [
+          10800,
+          11061,
+          12420,
+          11079
+        ]
+      ],
+      "VSS": [
+        [
+          10800,
+          10791,
+          12420,
+          10809
+        ]
+      ]
+    },
+    "wrong_upper_R0": {
+      "VDD": [
+        [
+          10800,
+          11331,
+          12420,
+          11349
+        ]
+      ],
+      "VSS": [
+        [
+          10800,
+          11061,
+          12420,
+          11079
+        ]
+      ]
+    },
+    "correct_upper_MX": {
+      "VDD": [
+        [
+          10800,
+          11061,
+          12420,
+          11079
+        ]
+      ],
+      "VSS": [
+        [
+          10800,
+          11331,
+          12420,
+          11349
+        ]
+      ]
+    },
+    "proof": "Actual native M1 PG boxes: R0/R0 opposite-net overlap; R0/MX same-net abutment with no opposite-net overlap"
+  },
+  "verdict": "PASS-COND dry component build only; full PG/shield/via/delivery/type uniformity remain open"
+}

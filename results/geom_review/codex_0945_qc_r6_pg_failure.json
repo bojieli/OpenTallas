@@ -1,0 +1,95 @@
+{
+  "expected_crossings": 36370,
+  "declared_vias": 36370,
+  "missing_vias": 0,
+  "extra_vias": 0,
+  "duplicate_vias": 0,
+  "max_cells_in_50um_bin": 17,
+  "max_cell_area_fraction_in_50um_bin": 0.002974320000000001,
+  "identical_types": 29,
+  "types": 86,
+  "export_orient_counts": {
+    "R0": 50149
+  },
+  "die_edge_guard_failures": 210,
+  "die_edge_examples": [
+    {
+      "name": "ckt_2047_0",
+      "xy": [
+        31214.7,
+        809.19
+      ],
+      "edge_um": -0.0
+    },
+    {
+      "name": "ckt_2050_0",
+      "xy": [
+        31214.7,
+        1097.01
+      ],
+      "edge_um": -0.0
+    },
+    {
+      "name": "ckt_2051_0",
+      "xy": [
+        31214.7,
+        953.1
+      ],
+      "edge_um": -0.0
+    },
+    {
+      "name": "ckt_2054_0",
+      "xy": [
+        31214.7,
+        1385.1
+      ],
+      "edge_um": -0.0
+    },
+    {
+      "name": "ckt_2058_0",
+      "xy": [
+        31214.7,
+        1817.1
+      ],
+      "edge_um": -0.0
+    },
+    {
+      "name": "ckt_2059_0",
+      "xy": [
+        31214.7,
+        1745.01
+      ],
+      "edge_um": -0.0
+    }
+  ],
+  "actual_pg_master": {
+    "width": 1.62,
+    "height": 0.27,
+    "VDD_M1_y": [
+      0.261,
+      0.279
+    ],
+    "VSS_M1_y": [
+      -0.009,
+      0.009
+    ]
+  },
+  "failure_example": {
+    "lower": "ckt_0_0",
+    "upper": "ckt_0_1",
+    "x": 2487.402,
+    "lower_y": 1330.02,
+    "upper_y": 1330.29,
+    "overlap_net_pair": [
+      "VDD",
+      "VSS"
+    ],
+    "shared_M1_box_um": [
+      2487.402,
+      1330.281,
+      2489.022,
+      1330.299
+    ]
+  },
+  "verdict": "FAIL physical build; original siting metrics remain INFO"
+}

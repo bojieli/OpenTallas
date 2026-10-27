@@ -1,0 +1,160 @@
+{
+  "pins": 1306,
+  "pin_entries": 1306,
+  "duplicate_names": {},
+  "counts_by_face": {
+    "area": 1,
+    "W": 1055,
+    "N": 249,
+    "E": 1
+  },
+  "layers_by_face": {
+    "area": {
+      "M5": 1
+    },
+    "W": {
+      "M4": 1055
+    },
+    "N": {
+      "M5": 249
+    },
+    "E": {
+      "M4": 1
+    }
+  },
+  "peaks": {
+    "W": {
+      "pins_per_um": 5.3,
+      "window_pins": 53,
+      "interval_um": [
+        2.076,
+        12.06
+      ],
+      "first_names": [
+        "g_hit[9]",
+        "g_hit[10]",
+        "g_hit[11]",
+        "g_hit[12]",
+        "g_hit[13]"
+      ]
+    },
+    "N": {
+      "pins_per_um": 5.3,
+      "window_pins": 53,
+      "interval_um": [
+        10.524,
+        20.508
+      ],
+      "first_names": [
+        "s_d[72]",
+        "s_d[73]",
+        "s_d[74]",
+        "s_d[75]",
+        "s_d[76]"
+      ]
+    },
+    "E": {
+      "pins_per_um": 0.1,
+      "window_pins": 1,
+      "interval_um": [
+        184.476,
+        184.476
+      ],
+      "first_names": [
+        "rst_n"
+      ]
+    }
+  },
+  "max_pins_per_um": 5.3,
+  "verdict": "PASS",
+  "by_layer": {
+    "M4": {
+      "pins": 1056,
+      "pin_entries": 1056,
+      "duplicate_names": {},
+      "counts_by_face": {
+        "W": 1055,
+        "E": 1
+      },
+      "layers_by_face": {
+        "W": {
+          "M4": 1055
+        },
+        "E": {
+          "M4": 1
+        }
+      },
+      "peaks": {
+        "W": {
+          "pins_per_um": 5.3,
+          "window_pins": 53,
+          "interval_um": [
+            2.076,
+            12.06
+          ],
+          "first_names": [
+            "g_hit[9]",
+            "g_hit[10]",
+            "g_hit[11]",
+            "g_hit[12]",
+            "g_hit[13]"
+          ]
+        },
+        "E": {
+          "pins_per_um": 0.1,
+          "window_pins": 1,
+          "interval_um": [
+            184.476,
+            184.476
+          ],
+          "first_names": [
+            "rst_n"
+          ]
+        }
+      },
+      "max_pins_per_um": 5.3,
+      "verdict": "PASS"
+    },
+    "M5": {
+      "pins": 250,
+      "pin_entries": 250,
+      "duplicate_names": {},
+      "counts_by_face": {
+        "area": 1,
+        "N": 249
+      },
+      "layers_by_face": {
+        "area": {
+          "M5": 1
+        },
+        "N": {
+          "M5": 249
+        }
+      },
+      "peaks": {
+        "N": {
+          "pins_per_um": 5.3,
+          "window_pins": 53,
+          "interval_um": [
+            10.524,
+            20.508
+          ],
+          "first_names": [
+            "s_d[72]",
+            "s_d[73]",
+            "s_d[74]",
+            "s_d[75]",
+            "s_d[76]"
+          ]
+        }
+      },
+      "max_pins_per_um": 5.3,
+      "verdict": "PASS"
+    }
+  },
+  "missing_shapes": [],
+  "outline_um": [
+    86.4,
+    216.0
+  ]
+}
