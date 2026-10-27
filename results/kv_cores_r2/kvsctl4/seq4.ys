@@ -1,0 +1,25 @@
+read_json FP/pre.json
+memory_share
+memory_map
+setattr -mod -unset keep_hierarchy
+flatten
+rename qkd_kvs_ctl gold
+design -stash g
+read_verilog -sv FP/qkd_kvs_ctl.v
+read_verilog -sv -DSYNTHESIS physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v physical/asap7_memory_macros_v2/ctl_sram_1r1w_64x128_p192/ctl_sram_1r1w_64x128_p192_bb.v
+hierarchy -top qkd_kvs_ctl
+proc
+memory_collect
+memory_share
+memory_map
+setattr -mod -unset keep_hierarchy
+flatten
+rename qkd_kvs_ctl gate
+design -copy-from g -as gold gold
+equiv_make gold gate eq
+hierarchy -top eq
+expose -evert eq/t:ot_sram_1r1w_128x256_m1_r2c2 eq/t:ctl_sram_1r1w_64x128_p192
+async2sync
+equiv_simple -seq 4
+equiv_induct -seq 4
+equiv_status -assert
