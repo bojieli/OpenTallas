@@ -1,0 +1,1061 @@
+{
+ "top": "qkd_hr_phy_adp",
+ "private_out": [
+  {
+   "pin": "tx_flit[18]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 0,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[19]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 1,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[20]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 2,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[21]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 3,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[22]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 4,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[23]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 5,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[24]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 6,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[25]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 7,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[26]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 8,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[27]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 9,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[28]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 10,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[29]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 11,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[30]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 12,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[31]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 13,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[32]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 14,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[33]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 15,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[34]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 16,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[35]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 17,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[36]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 18,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[37]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 19,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[38]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 20,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[39]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 21,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[40]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 22,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[41]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 23,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[42]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 24,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[43]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 25,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[44]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 26,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[45]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 27,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[46]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 28,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[47]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 29,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[48]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 30,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[49]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 31,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[50]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 32,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[51]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 33,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[52]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 34,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[53]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 35,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[54]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 36,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[55]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 37,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[56]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 38,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[57]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 39,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[58]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 40,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[59]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 41,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[60]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 42,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[61]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 43,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[62]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 44,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[63]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 45,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[64]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 46,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[65]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 47,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[66]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 48,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[67]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 49,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[68]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 50,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[69]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 51,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[70]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 52,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[71]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 53,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[72]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 54,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[73]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 55,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[74]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 56,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[75]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 57,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[76]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 58,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[77]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 59,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[78]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 60,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[79]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 61,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[80]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 62,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[81]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 63,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[82]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 64,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[83]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 65,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[84]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 66,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[85]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 67,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[86]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 68,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[87]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 69,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[88]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 70,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[89]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 71,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[90]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 72,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[91]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 73,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[92]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 74,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[93]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 75,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[94]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 76,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[95]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 77,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[96]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 78,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[97]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 79,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[98]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 80,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[99]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 81,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[100]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 82,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[101]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 83,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[102]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 84,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[103]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 85,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[104]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 86,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[105]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 87,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[106]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 88,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[107]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 89,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[108]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 90,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[109]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 91,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[110]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 92,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[111]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 93,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[112]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 94,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[113]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 95,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[114]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 96,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[115]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 97,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[116]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 98,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[117]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 99,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[118]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 100,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[119]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 101,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[120]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 102,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[121]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 103,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[122]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 104,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[123]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 105,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[124]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 106,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[125]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 107,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[126]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 108,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[127]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 109,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[128]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 110,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[129]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 111,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[130]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 112,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[131]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 113,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[132]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 114,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[133]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 115,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[134]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 116,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[135]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 117,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[136]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 118,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[137]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 119,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[138]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 120,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[139]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 121,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[140]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 122,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[141]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 123,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[142]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 124,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[143]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 125,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[144]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 126,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "tx_flit[145]",
+   "orig_ff": "$flatten\\u_slice.\\u_body.$procdff$206",
+   "orig_bit": 127,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  }
+ ],
+ "merged_in": [
+  {
+   "pin": "c_v[0]",
+   "kept": "$flatten\\u_slice.\\u_body.$procdff$327",
+   "merged": [
+    "$flatten\\u_slice.\\u_body.$procdff$332"
+   ],
+   "cycles": 0
+  }
+ ],
+ "unregistered_out": [],
+ "const_out": [],
+ "feedthrough": [],
+ "dropped_in": [],
+ "logic_in": [
+  "r_cr[0]: $mux.S"
+ ],
+ "multi_in": [],
+ "added_ff_bits": 128,
+ "added_cycles": 0,
+ "mutant": false,
+ "n_unregistered_out": 0,
+ "n_feedthrough": 0,
+ "n_dropped_in": 0,
+ "n_logic_in": 1,
+ "n_multi_in": 0,
+ "n_const_out": 0,
+ "kept_face_bits": 558,
+ "kept_face_modules": [
+  "hrfp_kff_cdccab55a2",
+  "hrfp_kff_63d4065401"
+ ]
+}

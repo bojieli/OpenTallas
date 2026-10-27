@@ -1,0 +1,1370 @@
+{
+ "top": "qkd_hr_core_guard",
+ "private_out": [
+  {
+   "pin": "u_guard__service_epoch[0]",
+   "orig_ff": "$flatten\\u_guard.$procdff$14296",
+   "orig_bit": 0,
+   "internal_loads": 3,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_guard__service_epoch[1]",
+   "orig_ff": "$flatten\\u_guard.$procdff$14296",
+   "orig_bit": 1,
+   "internal_loads": 3,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_guard__service_epoch[2]",
+   "orig_ff": "$flatten\\u_guard.$procdff$14296",
+   "orig_bit": 2,
+   "internal_loads": 3,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_guard__service_epoch[3]",
+   "orig_ff": "$flatten\\u_guard.$procdff$14296",
+   "orig_bit": 3,
+   "internal_loads": 3,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_guard__service_epoch[4]",
+   "orig_ff": "$flatten\\u_guard.$procdff$14296",
+   "orig_bit": 4,
+   "internal_loads": 3,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_guard__service_epoch[5]",
+   "orig_ff": "$flatten\\u_guard.$procdff$14296",
+   "orig_bit": 5,
+   "internal_loads": 3,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_guard__service_epoch[6]",
+   "orig_ff": "$flatten\\u_guard.$procdff$14296",
+   "orig_bit": 6,
+   "internal_loads": 3,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_guard__service_epoch[7]",
+   "orig_ff": "$flatten\\u_guard.$procdff$14296",
+   "orig_bit": 7,
+   "internal_loads": 3,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_guard__service_epoch[8]",
+   "orig_ff": "$flatten\\u_guard.$procdff$14296",
+   "orig_bit": 8,
+   "internal_loads": 3,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_guard__service_epoch[9]",
+   "orig_ff": "$flatten\\u_guard.$procdff$14296",
+   "orig_bit": 9,
+   "internal_loads": 3,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_guard__service_epoch[10]",
+   "orig_ff": "$flatten\\u_guard.$procdff$14296",
+   "orig_bit": 10,
+   "internal_loads": 3,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_guard__service_epoch[11]",
+   "orig_ff": "$flatten\\u_guard.$procdff$14296",
+   "orig_bit": 11,
+   "internal_loads": 3,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_guard__service_epoch[12]",
+   "orig_ff": "$flatten\\u_guard.$procdff$14296",
+   "orig_bit": 12,
+   "internal_loads": 3,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_guard__service_epoch[13]",
+   "orig_ff": "$flatten\\u_guard.$procdff$14296",
+   "orig_bit": 13,
+   "internal_loads": 3,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_guard__service_epoch[14]",
+   "orig_ff": "$flatten\\u_guard.$procdff$14296",
+   "orig_bit": 14,
+   "internal_loads": 3,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_guard__service_epoch[15]",
+   "orig_ff": "$flatten\\u_guard.$procdff$14296",
+   "orig_bit": 15,
+   "internal_loads": 3,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_guard__service_ready[0]",
+   "orig_ff": "$flatten\\u_guard.$procdff$14291",
+   "orig_bit": 0,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__protocol_fault[0]",
+   "orig_ff": "$flatten\\u_native.$procdff$14718",
+   "orig_bit": 0,
+   "internal_loads": 6,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_gen[0]",
+   "orig_ff": "$flatten\\u_native.$procdff$14688",
+   "orig_bit": 0,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_gen[1]",
+   "orig_ff": "$flatten\\u_native.$procdff$14688",
+   "orig_bit": 1,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_pos[0]",
+   "orig_ff": "$flatten\\u_native.$procdff$14698",
+   "orig_bit": 0,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_pos[1]",
+   "orig_ff": "$flatten\\u_native.$procdff$14698",
+   "orig_bit": 1,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_pos[2]",
+   "orig_ff": "$flatten\\u_native.$procdff$14698",
+   "orig_bit": 2,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_pos[3]",
+   "orig_ff": "$flatten\\u_native.$procdff$14698",
+   "orig_bit": 3,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_pos[4]",
+   "orig_ff": "$flatten\\u_native.$procdff$14698",
+   "orig_bit": 4,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_pos[5]",
+   "orig_ff": "$flatten\\u_native.$procdff$14698",
+   "orig_bit": 5,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_pos[6]",
+   "orig_ff": "$flatten\\u_native.$procdff$14698",
+   "orig_bit": 6,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_pos[7]",
+   "orig_ff": "$flatten\\u_native.$procdff$14698",
+   "orig_bit": 7,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_pos[8]",
+   "orig_ff": "$flatten\\u_native.$procdff$14698",
+   "orig_bit": 8,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_pos[9]",
+   "orig_ff": "$flatten\\u_native.$procdff$14698",
+   "orig_bit": 9,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_pos[10]",
+   "orig_ff": "$flatten\\u_native.$procdff$14698",
+   "orig_bit": 10,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_pos[11]",
+   "orig_ff": "$flatten\\u_native.$procdff$14698",
+   "orig_bit": 11,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_pos[12]",
+   "orig_ff": "$flatten\\u_native.$procdff$14698",
+   "orig_bit": 12,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_pos[13]",
+   "orig_ff": "$flatten\\u_native.$procdff$14698",
+   "orig_bit": 13,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_pos[14]",
+   "orig_ff": "$flatten\\u_native.$procdff$14698",
+   "orig_bit": 14,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_pos[15]",
+   "orig_ff": "$flatten\\u_native.$procdff$14698",
+   "orig_bit": 15,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_pos[16]",
+   "orig_ff": "$flatten\\u_native.$procdff$14698",
+   "orig_bit": 16,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_pos[17]",
+   "orig_ff": "$flatten\\u_native.$procdff$14698",
+   "orig_bit": 17,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[0]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 0,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[1]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 1,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[2]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 2,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[3]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 3,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[4]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 4,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[5]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 5,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[6]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 6,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[7]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 7,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[8]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 8,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[9]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 9,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[10]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 10,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[11]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 11,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[12]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 12,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[13]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 13,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[14]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 14,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[15]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 15,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[16]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 16,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[17]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 17,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[18]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 18,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[19]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 19,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[20]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 20,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[21]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 21,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[22]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 22,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[23]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 23,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[24]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 24,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[25]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 25,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[26]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 26,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[27]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 27,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[28]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 28,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[29]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 29,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[30]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 30,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[31]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 31,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[32]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 32,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[33]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 33,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[34]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 34,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[35]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 35,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[36]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 36,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[37]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 37,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[38]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 38,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[39]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 39,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[40]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 40,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[41]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 41,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[42]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 42,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[43]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 43,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[44]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 44,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[45]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 45,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[46]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 46,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[47]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 47,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[48]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 48,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[49]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 49,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[50]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 50,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[51]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 51,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[52]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 52,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[53]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 53,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[54]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 54,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[55]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 55,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[56]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 56,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[57]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 57,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_tag[58]",
+   "orig_ff": "$flatten\\u_native.$procdff$14678",
+   "orig_bit": 58,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_token[0]",
+   "orig_ff": "$flatten\\u_native.$procdff$14693",
+   "orig_bit": 0,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_token[1]",
+   "orig_ff": "$flatten\\u_native.$procdff$14693",
+   "orig_bit": 1,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_token[2]",
+   "orig_ff": "$flatten\\u_native.$procdff$14693",
+   "orig_bit": 2,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_token[3]",
+   "orig_ff": "$flatten\\u_native.$procdff$14693",
+   "orig_bit": 3,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_token[4]",
+   "orig_ff": "$flatten\\u_native.$procdff$14693",
+   "orig_bit": 4,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_token[5]",
+   "orig_ff": "$flatten\\u_native.$procdff$14693",
+   "orig_bit": 5,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_token[6]",
+   "orig_ff": "$flatten\\u_native.$procdff$14693",
+   "orig_bit": 6,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_token[7]",
+   "orig_ff": "$flatten\\u_native.$procdff$14693",
+   "orig_bit": 7,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_token[8]",
+   "orig_ff": "$flatten\\u_native.$procdff$14693",
+   "orig_bit": 8,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_token[9]",
+   "orig_ff": "$flatten\\u_native.$procdff$14693",
+   "orig_bit": 9,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_token[10]",
+   "orig_ff": "$flatten\\u_native.$procdff$14693",
+   "orig_bit": 10,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_token[11]",
+   "orig_ff": "$flatten\\u_native.$procdff$14693",
+   "orig_bit": 11,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_token[12]",
+   "orig_ff": "$flatten\\u_native.$procdff$14693",
+   "orig_bit": 12,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_token[13]",
+   "orig_ff": "$flatten\\u_native.$procdff$14693",
+   "orig_bit": 13,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_token[14]",
+   "orig_ff": "$flatten\\u_native.$procdff$14693",
+   "orig_bit": 14,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_token[15]",
+   "orig_ff": "$flatten\\u_native.$procdff$14693",
+   "orig_bit": 15,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_token[16]",
+   "orig_ff": "$flatten\\u_native.$procdff$14693",
+   "orig_bit": 16,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_token[17]",
+   "orig_ff": "$flatten\\u_native.$procdff$14693",
+   "orig_bit": 17,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[0]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 0,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[1]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 1,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[2]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 2,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[3]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 3,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[4]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 4,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[5]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 5,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[6]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 6,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[7]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 7,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[8]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 8,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[9]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 9,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[10]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 10,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[11]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 11,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[12]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 12,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[13]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 13,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[14]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 14,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[15]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 15,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[16]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 16,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[17]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 17,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[18]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 18,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[19]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 19,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[20]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 20,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[21]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 21,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[22]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 22,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[23]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 23,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[24]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 24,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[25]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 25,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[26]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 26,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[27]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 27,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[28]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 28,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[29]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 29,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[30]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 30,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_trace[31]",
+   "orig_ff": "$flatten\\u_native.$procdff$14683",
+   "orig_bit": 31,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_native__request_v[0]",
+   "orig_ff": "$flatten\\u_native.$procdff$14673",
+   "orig_bit": 0,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  }
+ ],
+ "merged_in": [],
+ "unregistered_out": [
+  "u_native__context_owned[0]: $reduce_or"
+ ],
+ "const_out": [],
+ "feedthrough": [],
+ "dropped_in": [
+  "u_native__legacy_tk[0]",
+  "u_native__legacy_tk[1]",
+  "u_native__legacy_tk[2]",
+  "u_native__legacy_tk[3]",
+  "u_native__legacy_tk[4]",
+  "u_native__legacy_tk[5]",
+  "u_native__legacy_tk[6]",
+  "u_native__legacy_tk[7]",
+  "u_native__legacy_tk[8]",
+  "u_native__legacy_tk[9]",
+  "u_native__legacy_tk[10]",
+  "u_native__legacy_tk[11]",
+  "u_native__legacy_tk[12]",
+  "u_native__legacy_tk[13]",
+  "u_native__legacy_tk[14]",
+  "u_native__legacy_tk[15]",
+  "u_native__legacy_tk[16]",
+  "u_native__legacy_tk[17]",
+  "u_native__legacy_tk[18]",
+  "u_native__legacy_tk[19]",
+  "u_native__legacy_tk[20]",
+  "u_native__legacy_tk[21]",
+  "u_native__legacy_tk[22]",
+  "u_native__legacy_tk[23]",
+  "u_native__legacy_tk[24]",
+  "u_native__legacy_tk[25]",
+  "u_native__legacy_tk[26]",
+  "u_native__legacy_tk[27]",
+  "u_native__legacy_tk[28]",
+  "u_native__legacy_tk[29]",
+  "u_native__legacy_tk[30]",
+  "u_native__legacy_tk[31]",
+  "u_native__legacy_tk[32]",
+  "u_native__legacy_tk[33]",
+  "u_native__legacy_tk[34]",
+  "u_native__legacy_tk[35]",
+  "u_native__legacy_tk[36]",
+  "u_native__legacy_tk[37]",
+  "u_native__legacy_tk[38]",
+  "u_native__legacy_tk[39]",
+  "u_native__legacy_tk[40]",
+  "u_native__legacy_tk[41]",
+  "u_native__legacy_tk[42]",
+  "u_native__legacy_tk[43]",
+  "u_native__legacy_tk[44]",
+  "u_native__legacy_tk[45]",
+  "u_native__legacy_tk[46]",
+  "u_native__legacy_tk[47]",
+  "u_native__legacy_tk[48]",
+  "u_native__legacy_tk[49]",
+  "u_native__legacy_tk[50]",
+  "u_native__legacy_tk[51]",
+  "u_native__legacy_tk[52]",
+  "u_native__legacy_tk[53]",
+  "u_native__legacy_tk[54]",
+  "u_native__legacy_tk[55]",
+  "u_native__legacy_tk[56]",
+  "u_native__legacy_tk[57]",
+  "u_native__legacy_tk[58]",
+  "u_native__legacy_tk[59]",
+  "u_native__legacy_tk[60]",
+  "u_native__legacy_tk[61]",
+  "u_native__legacy_tk[62]",
+  "u_native__legacy_tk[63]",
+  "u_native__legacy_tk[64]",
+  "u_native__legacy_tk[65]",
+  "u_native__legacy_tk[66]",
+  "u_native__legacy_tk[67]",
+  "u_native__legacy_tk[68]",
+  "u_native__legacy_tk[69]",
+  "u_native__legacy_tk[70]",
+  "u_native__legacy_tk[71]",
+  "u_native__legacy_tk[72]",
+  "u_native__legacy_tk[73]",
+  "u_native__legacy_tk[74]",
+  "u_native__legacy_tk[75]",
+  "u_native__legacy_tk[76]",
+  "u_native__legacy_tk[77]",
+  "u_native__legacy_tk[78]",
+  "u_native__legacy_tk[79]",
+  "u_native__legacy_tk[80]",
+  "u_native__legacy_tk[81]",
+  "u_native__legacy_tk[82]",
+  "u_native__legacy_tk[83]",
+  "u_native__legacy_tk[84]",
+  "u_native__legacy_tk[85]",
+  "u_native__legacy_tk[86]",
+  "u_native__legacy_tk[87]",
+  "u_native__legacy_tk[88]",
+  "u_native__legacy_tk[89]",
+  "u_native__legacy_tk[90]",
+  "u_native__legacy_tk[91]",
+  "u_native__legacy_tk[92]"
+ ],
+ "logic_in": [],
+ "multi_in": [
+  "u_native__cancel_release_gen[0]: $ne.A, $mux.A",
+  "u_native__cancel_release_gen[1]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[0]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[1]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[2]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[3]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[4]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[5]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[6]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[7]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[8]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[9]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[10]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[11]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[12]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[13]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[14]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[15]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[16]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[17]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[18]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[19]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[20]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[21]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[22]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[23]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[24]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[25]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[26]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[27]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[28]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[29]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[30]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[31]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[32]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[33]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[34]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[35]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[36]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[37]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[38]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[39]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[40]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[41]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[42]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[43]: $eq.A, $ne.A, $eq.A, $eq.A",
+  "u_native__cancel_release_tag[44]: $eq.A, $ne.A, $eq.A, $eq.A",
+  "u_native__cancel_release_tag[45]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[46]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[47]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[48]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[49]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[50]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[51]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[52]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[53]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[54]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[55]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[56]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[57]: $ne.A, $mux.A",
+  "u_native__cancel_release_tag[58]: $ne.A, $mux.A",
+  "u_native__cancel_release_v[0]: $logic_and.A, $mux.S, $mux.S, $mux.S",
+  "u_native__hc[38]: $logic_not.A, $adff.D",
+  "u_native__recovery_clear[0]: $mux.S, $mux.S, $mux.S, $mux.S"
+ ],
+ "added_ff_bits": 148,
+ "added_cycles": 0,
+ "mutant": false,
+ "n_unregistered_out": 1,
+ "n_feedthrough": 0,
+ "n_dropped_in": 93,
+ "n_logic_in": 0,
+ "n_multi_in": 64,
+ "n_const_out": 0,
+ "kept_face_bits": 1013,
+ "kept_face_modules": [
+  "hrfp_kff_cdccab55a2"
+ ]
+}

@@ -1,0 +1,1589 @@
+{
+ "top": "qkd_hr_core_queue",
+ "private_out": [
+  {
+   "pin": "u_bootbarrier__fault[0]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$365",
+   "orig_bit": 0,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[0]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 0,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[1]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 1,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[2]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 2,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[3]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 3,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[4]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 4,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[5]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 5,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[6]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 6,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[7]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 7,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[8]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 8,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[9]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 9,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[10]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 10,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[11]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 11,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[12]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 12,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[13]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 13,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[14]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 14,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[15]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 15,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[16]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 16,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[17]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 17,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[18]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 18,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[19]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 19,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[20]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 20,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[21]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 21,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[22]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 22,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[23]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 23,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[24]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 24,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[25]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 25,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[26]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 26,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[27]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 27,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[28]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 28,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[29]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 29,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[30]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 30,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[31]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 31,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[32]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 32,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[33]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 33,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[34]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 34,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[35]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 35,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[36]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 36,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[37]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 37,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[38]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 38,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[39]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 39,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[40]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 40,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[41]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 41,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[42]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 42,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[43]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 43,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[44]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 44,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[45]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 45,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[46]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 46,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[47]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 47,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[48]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 48,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[49]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 49,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[50]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 50,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[51]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 51,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[52]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 52,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[53]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 53,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[54]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 54,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[55]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 55,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[56]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 56,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[57]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 57,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[58]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 58,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[59]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 59,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[60]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 60,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[61]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 61,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[62]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 62,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[63]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 63,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[64]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 64,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_bootbarrier__out_d[65]",
+   "orig_ff": "$flatten\\u_bootbarrier.$procdff$360",
+   "orig_bit": 65,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[0]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 0,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[1]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 1,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[2]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 2,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[3]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 3,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[4]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 4,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[5]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 5,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[6]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 6,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[7]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 7,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[8]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 8,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[9]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 9,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[10]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 10,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[11]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 11,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[12]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 12,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[13]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 13,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[14]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 14,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[15]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 15,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[16]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 16,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[17]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 17,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[18]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 18,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[19]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 19,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[20]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 20,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[21]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 21,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[22]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 22,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[23]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 23,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[24]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 24,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[25]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 25,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[26]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 26,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[27]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 27,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[28]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 28,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[29]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 29,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[30]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 30,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[31]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 31,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[32]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 32,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[33]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 33,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[34]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 34,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[35]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 35,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[36]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 36,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[37]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 37,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[38]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 38,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[39]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 39,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[40]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 40,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[41]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 41,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[42]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 42,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[43]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 43,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[44]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 44,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[45]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 45,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[46]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 46,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[47]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 47,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[48]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 48,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[49]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 49,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[50]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 50,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[51]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 51,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[52]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 52,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[53]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 53,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[54]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 54,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[55]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 55,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[56]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 56,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[57]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 57,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[58]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 58,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[59]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 59,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[60]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 60,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[61]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 61,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[62]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 62,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[63]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 63,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[64]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 64,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate[65]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$315",
+   "orig_bit": 65,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[0]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 0,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[1]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 1,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[2]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 2,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[3]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 3,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[4]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 4,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[5]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 5,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[6]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 6,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[7]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 7,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[8]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 8,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[9]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 9,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[10]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 10,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[11]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 11,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[12]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 12,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[13]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 13,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[14]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 14,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[15]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 15,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[16]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 16,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[17]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 17,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[18]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 18,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[19]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 19,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[20]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 20,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[21]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 21,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[22]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 22,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[23]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 23,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[24]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 24,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[25]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 25,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[26]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 26,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[27]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 27,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[28]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 28,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[29]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 29,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[30]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 30,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__certificate_prefix[31]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$320",
+   "orig_bit": 31,
+   "internal_loads": 2,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_marker_consumer__fault[0]",
+   "orig_ff": "$flatten\\u_marker_consumer.$procdff$300",
+   "orig_bit": 0,
+   "internal_loads": 3,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_queue__fault[0]",
+   "orig_ff": "$flatten\\u_queue.$procdff$238",
+   "orig_bit": 0,
+   "internal_loads": 4,
+   "other_ports": 0,
+   "cycles": 0
+  },
+  {
+   "pin": "u_queue__out_v[0]",
+   "orig_ff": "$flatten\\u_queue.$procdff$233",
+   "orig_bit": 0,
+   "internal_loads": 1,
+   "other_ports": 0,
+   "cycles": 0
+  }
+ ],
+ "merged_in": [],
+ "unregistered_out": [],
+ "const_out": [],
+ "feedthrough": [],
+ "dropped_in": [
+  "u_marker_consumer__est[2]",
+  "u_marker_consumer__est[3]",
+  "u_marker_consumer__est[4]",
+  "u_marker_consumer__est[5]",
+  "u_marker_consumer__est[6]",
+  "u_marker_consumer__est[7]",
+  "u_marker_consumer__est[8]",
+  "u_marker_consumer__est[9]",
+  "u_marker_consumer__est[10]",
+  "u_marker_consumer__est[11]",
+  "u_marker_consumer__est[12]",
+  "u_queue__allow[0]"
+ ],
+ "logic_in": [
+  "u_bootbarrier__in_d[0]: $mux.B",
+  "u_bootbarrier__in_d[1]: $mux.B",
+  "u_bootbarrier__in_d[2]: $mux.B",
+  "u_bootbarrier__in_d[3]: $mux.B",
+  "u_bootbarrier__in_d[4]: $mux.B",
+  "u_bootbarrier__in_d[5]: $mux.B",
+  "u_bootbarrier__in_d[6]: $mux.B",
+  "u_bootbarrier__in_d[7]: $mux.B",
+  "u_bootbarrier__in_d[8]: $mux.B",
+  "u_bootbarrier__in_d[9]: $mux.B",
+  "u_bootbarrier__in_d[10]: $mux.B",
+  "u_bootbarrier__in_d[11]: $mux.B",
+  "u_bootbarrier__in_d[12]: $mux.B",
+  "u_bootbarrier__in_d[13]: $mux.B",
+  "u_bootbarrier__in_d[14]: $mux.B",
+  "u_bootbarrier__in_d[15]: $mux.B",
+  "u_bootbarrier__in_d[16]: $mux.B",
+  "u_bootbarrier__in_d[17]: $mux.B",
+  "u_bootbarrier__in_d[18]: $mux.B",
+  "u_bootbarrier__in_d[19]: $mux.B",
+  "u_bootbarrier__in_d[20]: $mux.B",
+  "u_bootbarrier__in_d[21]: $mux.B",
+  "u_bootbarrier__in_d[22]: $mux.B",
+  "u_bootbarrier__in_d[23]: $mux.B",
+  "u_bootbarrier__in_d[24]: $mux.B",
+  "u_bootbarrier__in_d[25]: $mux.B",
+  "u_bootbarrier__in_d[26]: $mux.B",
+  "u_bootbarrier__in_d[27]: $mux.B",
+  "u_bootbarrier__in_d[28]: $mux.B",
+  "u_bootbarrier__in_d[29]: $mux.B",
+  "u_bootbarrier__in_d[30]: $mux.B",
+  "u_bootbarrier__in_d[31]: $mux.B",
+  "u_bootbarrier__in_d[32]: $mux.B",
+  "u_bootbarrier__in_d[33]: $mux.B",
+  "u_bootbarrier__in_d[34]: $mux.B",
+  "u_bootbarrier__in_d[35]: $mux.B",
+  "u_bootbarrier__in_d[36]: $mux.B",
+  "u_bootbarrier__in_d[37]: $mux.B",
+  "u_bootbarrier__in_d[38]: $mux.B",
+  "u_bootbarrier__in_d[39]: $mux.B",
+  "u_bootbarrier__in_d[40]: $mux.B",
+  "u_bootbarrier__in_d[41]: $mux.B",
+  "u_bootbarrier__in_d[42]: $mux.B",
+  "u_bootbarrier__in_d[43]: $mux.B",
+  "u_bootbarrier__in_d[44]: $mux.B",
+  "u_bootbarrier__in_d[45]: $mux.B",
+  "u_bootbarrier__in_d[46]: $mux.B",
+  "u_bootbarrier__in_d[47]: $mux.B",
+  "u_bootbarrier__in_d[48]: $mux.B",
+  "u_bootbarrier__in_d[49]: $mux.B",
+  "u_bootbarrier__in_d[50]: $mux.B",
+  "u_bootbarrier__in_d[51]: $mux.B",
+  "u_bootbarrier__in_d[52]: $mux.B",
+  "u_bootbarrier__in_d[53]: $mux.B",
+  "u_bootbarrier__in_d[54]: $mux.B",
+  "u_bootbarrier__in_d[55]: $mux.B",
+  "u_bootbarrier__in_d[56]: $mux.B",
+  "u_bootbarrier__in_d[57]: $mux.B",
+  "u_bootbarrier__in_d[58]: $mux.B",
+  "u_bootbarrier__in_d[59]: $mux.B",
+  "u_bootbarrier__in_d[60]: $mux.B",
+  "u_bootbarrier__in_d[61]: $mux.B",
+  "u_bootbarrier__in_d[62]: $mux.B",
+  "u_bootbarrier__in_d[63]: $mux.B",
+  "u_bootbarrier__in_d[64]: $mux.B",
+  "u_bootbarrier__in_d[65]: $mux.B",
+  "u_bootbarrier__require_fresh[0]: $logic_not.A",
+  "u_marker_consumer__est[0]: $logic_and.A",
+  "u_marker_consumer__est[1]: $logic_not.A",
+  "u_marker_consumer__issued[0]: $mux.A",
+  "u_marker_consumer__issued[1]: $mux.A",
+  "u_marker_consumer__issued[2]: $mux.A",
+  "u_marker_consumer__issued[3]: $mux.A",
+  "u_marker_consumer__issued[4]: $mux.A",
+  "u_marker_consumer__issued[5]: $mux.A",
+  "u_marker_consumer__issued[6]: $mux.A",
+  "u_marker_consumer__issued[7]: $mux.A",
+  "u_marker_consumer__issued[8]: $mux.A",
+  "u_marker_consumer__issued[9]: $mux.A",
+  "u_marker_consumer__issued[10]: $mux.A",
+  "u_marker_consumer__issued[11]: $mux.A",
+  "u_marker_consumer__issued[12]: $mux.A",
+  "u_marker_consumer__issued[13]: $mux.A",
+  "u_marker_consumer__issued[14]: $mux.A",
+  "u_marker_consumer__issued[15]: $mux.A",
+  "u_marker_consumer__issued[16]: $mux.A",
+  "u_marker_consumer__issued[17]: $mux.A",
+  "u_marker_consumer__issued[18]: $mux.A",
+  "u_marker_consumer__issued[19]: $mux.A",
+  "u_marker_consumer__issued[20]: $mux.A",
+  "u_marker_consumer__issued[21]: $mux.A",
+  "u_marker_consumer__issued[22]: $mux.A",
+  "u_marker_consumer__issued[23]: $mux.A",
+  "u_marker_consumer__issued[24]: $mux.A",
+  "u_marker_consumer__issued[25]: $mux.A",
+  "u_marker_consumer__issued[26]: $mux.A",
+  "u_marker_consumer__issued[27]: $mux.A",
+  "u_marker_consumer__issued[28]: $mux.A",
+  "u_marker_consumer__issued[29]: $mux.A",
+  "u_marker_consumer__issued[30]: $mux.A",
+  "u_marker_consumer__issued[31]: $mux.A",
+  "u_marker_consumer__landed[0]: $mux.A",
+  "u_marker_consumer__landed[1]: $mux.A",
+  "u_marker_consumer__landed[2]: $mux.A",
+  "u_marker_consumer__landed[3]: $mux.A",
+  "u_marker_consumer__landed[4]: $mux.A",
+  "u_marker_consumer__landed[5]: $mux.A",
+  "u_marker_consumer__landed[6]: $mux.A",
+  "u_marker_consumer__landed[7]: $mux.A",
+  "u_marker_consumer__landed[8]: $mux.A",
+  "u_marker_consumer__landed[9]: $mux.A",
+  "u_marker_consumer__landed[10]: $mux.A",
+  "u_marker_consumer__landed[11]: $mux.A",
+  "u_marker_consumer__landed[12]: $mux.A",
+  "u_marker_consumer__landed[13]: $mux.A",
+  "u_marker_consumer__landed[14]: $mux.A",
+  "u_marker_consumer__landed[15]: $mux.A",
+  "u_marker_consumer__landed[16]: $mux.A",
+  "u_marker_consumer__landed[17]: $mux.A",
+  "u_marker_consumer__landed[18]: $mux.A",
+  "u_marker_consumer__landed[19]: $mux.A",
+  "u_marker_consumer__landed[20]: $mux.A",
+  "u_marker_consumer__landed[21]: $mux.A",
+  "u_marker_consumer__landed[22]: $mux.A",
+  "u_marker_consumer__landed[23]: $mux.A",
+  "u_marker_consumer__landed[24]: $mux.A",
+  "u_marker_consumer__landed[25]: $mux.A",
+  "u_marker_consumer__landed[26]: $mux.A",
+  "u_marker_consumer__landed[27]: $mux.A",
+  "u_marker_consumer__landed[28]: $mux.A",
+  "u_marker_consumer__landed[29]: $mux.A",
+  "u_marker_consumer__landed[30]: $mux.A",
+  "u_marker_consumer__landed[31]: $mux.A",
+  "u_marker_consumer__marker[0]: $mux.A",
+  "u_marker_consumer__marker[1]: $mux.A",
+  "u_marker_consumer__marker[2]: $mux.A",
+  "u_marker_consumer__marker[3]: $mux.A",
+  "u_marker_consumer__marker[4]: $mux.A",
+  "u_marker_consumer__marker[5]: $mux.A",
+  "u_marker_consumer__marker[6]: $mux.A",
+  "u_marker_consumer__marker[7]: $mux.A",
+  "u_marker_consumer__marker[8]: $mux.A",
+  "u_marker_consumer__marker[9]: $mux.A",
+  "u_marker_consumer__marker[10]: $mux.A",
+  "u_marker_consumer__marker[11]: $mux.A",
+  "u_marker_consumer__marker[12]: $mux.A",
+  "u_marker_consumer__marker[13]: $mux.A",
+  "u_marker_consumer__marker[14]: $mux.A",
+  "u_marker_consumer__marker[15]: $mux.A",
+  "u_marker_consumer__marker[16]: $mux.A",
+  "u_marker_consumer__marker[17]: $mux.A",
+  "u_marker_consumer__marker[18]: $mux.A",
+  "u_marker_consumer__marker[19]: $mux.A",
+  "u_marker_consumer__marker[20]: $mux.A",
+  "u_marker_consumer__marker[21]: $mux.A",
+  "u_marker_consumer__marker[22]: $mux.A",
+  "u_marker_consumer__marker[23]: $mux.A",
+  "u_marker_consumer__marker[24]: $mux.A",
+  "u_marker_consumer__marker[25]: $mux.A",
+  "u_marker_consumer__marker[26]: $mux.A",
+  "u_marker_consumer__marker[27]: $mux.A",
+  "u_marker_consumer__marker[28]: $mux.A",
+  "u_marker_consumer__marker[29]: $mux.A",
+  "u_marker_consumer__marker[30]: $mux.A",
+  "u_marker_consumer__marker[31]: $mux.A",
+  "u_marker_consumer__marker[32]: $mux.A",
+  "u_marker_consumer__marker[33]: $mux.A",
+  "u_marker_consumer__marker[34]: $mux.A",
+  "u_marker_consumer__marker[35]: $mux.A",
+  "u_marker_consumer__marker[36]: $mux.A",
+  "u_marker_consumer__marker[37]: $mux.A",
+  "u_marker_consumer__marker[38]: $mux.A",
+  "u_marker_consumer__marker[39]: $mux.A",
+  "u_marker_consumer__marker[40]: $mux.A",
+  "u_marker_consumer__marker[41]: $mux.A",
+  "u_marker_consumer__marker[42]: $mux.A",
+  "u_marker_consumer__marker[43]: $mux.A",
+  "u_marker_consumer__marker[44]: $mux.A",
+  "u_marker_consumer__marker[45]: $mux.A",
+  "u_marker_consumer__marker[46]: $mux.A",
+  "u_marker_consumer__marker[47]: $mux.A",
+  "u_marker_consumer__marker[48]: $mux.A",
+  "u_marker_consumer__marker[49]: $mux.A",
+  "u_marker_consumer__marker[50]: $mux.A",
+  "u_marker_consumer__marker[51]: $mux.A",
+  "u_marker_consumer__marker[52]: $mux.A",
+  "u_marker_consumer__marker[53]: $mux.A",
+  "u_marker_consumer__marker[54]: $mux.A",
+  "u_marker_consumer__marker[55]: $mux.A",
+  "u_marker_consumer__marker[56]: $mux.A",
+  "u_marker_consumer__marker[57]: $mux.A",
+  "u_marker_consumer__marker[58]: $mux.A",
+  "u_marker_consumer__marker[59]: $mux.A",
+  "u_marker_consumer__marker[60]: $mux.A",
+  "u_marker_consumer__marker[61]: $mux.A",
+  "u_marker_consumer__marker[62]: $mux.A",
+  "u_marker_consumer__marker[63]: $mux.A",
+  "u_marker_consumer__marker[64]: $mux.A",
+  "u_marker_consumer__marker[65]: $mux.A",
+  "u_marker_consumer__source_fault[0]: $mux.A"
+ ],
+ "multi_in": [
+  "u_bootbarrier__in_v[0]: $adff.D, $mux.S",
+  "u_marker_consumer__marker_v[0]: $mux.S, $mux.S, $mux.S, $mux.S",
+  "u_queue__in_v[0]: $logic_not.A, $adff.D",
+  "u_queue__out_cr[0]: $logic_not.A, $adff.D"
+ ],
+ "added_ff_bits": 168,
+ "added_cycles": 0,
+ "mutant": false,
+ "n_unregistered_out": 0,
+ "n_feedthrough": 0,
+ "n_dropped_in": 12,
+ "n_logic_in": 200,
+ "n_multi_in": 4,
+ "n_const_out": 0,
+ "kept_face_bits": 1250,
+ "kept_face_modules": [
+  "hrfp_kff_cdccab55a2",
+  "hrfp_kff_63d4065401"
+ ]
+}
