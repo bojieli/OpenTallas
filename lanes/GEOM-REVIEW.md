@@ -3678,3 +3678,28 @@ GEOM REQ [INFRA-FIRST-QC-R14] 2026-10-26 23:28 PDT claude/qc-mesh-r14-1026@64abd
       (c) An M6 ceiling is last, and only by COORD ruling.
       Then run a GRT probe (M2-M5 overflow 0 at >=50 it) before any DRT. Keep the 12.8c 4x BUFx16f entry trunk (in band TT 253.6 / FF 194.1, placement RC UNCHECKED): it is structural and carries over.
   (3) DRT-0421: the core clk pin must be snapped to the M5 track (0.024+k*0.048) in the re-pin, the same as the collar 43.2 -> 43.224 case.
+2026-10-27 04:17 PDT COORD GEOM HBM planU4f (sha 30113b293491) = FAIL, die GRT stays on HOLD. Renders: whole die plus zooms of NW_hub, root, NW_b011, NW_su10, NW_io and PHY_N, all viewed. They are in epyc2:/srv/opentallas-scratch2/claude/geom-hbm-coord/out/*.png, made by rg.py with numeric checks gchk.py/gchk2.py in the same dir. Counts below are CHECKED by direct plan read.
+ BLOCKING:
+ B1. 33 internal station registers sit INSIDE hard cores, which are OBS M1-M5 and cannot hold std cells:
+  - q_su11: 22, the L103_i/L135_o/L37_i stack at (1104.4,686.9) inside u_su_Q1_lanes_plain4_7;
+  - q_hub_nw: 5, L28_o at (151-160, 2838-3266) inside u_cxij_Q_q__q0 / u_ctl_Q_p08;
+  - root: 6, L74m_i at (1408.3,1188) inside u_hc_eng_tail1_sk_steady.
+ B2. 83 ft-slot registers sit INSIDE hard cores:
+  - q_su21 19 (L32x1), q_su31 17, q_su30 9, q_b110 3, q_su10 2;
+  - all 8 q_b0xx bank strips together 33.
+  Neither G0 nor G0C caught B1 or B2, so add a check.py rule "station/ft reg inside hard core = ERROR".
+ B3. Soft-region boxes overlap foreign hard cores:
+  - q_hub_nw 135 and q_hub_ne 138, e.g. u_sfup_Q on u_svg_Q0 0.105/0.194 mm2;
+  - root 11 (u_tkm_SW on the tail sk cores);
+  - q_su31 6, q_su00 2.
+  Soft-soft overlaps: hub 73/78, e.g. u_pgp_Q with u_hb_coll_Q 0.71 mm2.
+  Fix: either make every soft region the free area left after macros, or prove that each region's free area holds its cells at <=0.65 utilisation. Report which of the two.
+ NON-BLOCKING (fix if cheap, ledger otherwise):
+ N1. The 8 q_b0xx bank strips hold identical content: 8 cores in bbox x 26..276, y 17..2886. Yet their outlines vary from 380 to 829 um wide and are 4320 tall, so fill is 0.15-0.33. The top 1434 um is empty in every strip, because of the R11/QUAD-3 growth. Justify each width by its ft cut, or unify to one width. Put the cores where their hub/SU partners are, not at the bottom.
+ N2. Partitions with only feedthroughs and 1000-cell placeholders: q_mca x2 (4899x2074, 0 ft_slots, 0 buses: dead area 20.3 mm2), q_mcb x2 (2840 cells), spu0/spu1/spt1/spt2/spb1/vsN1/2/4/5/6. They exist because the PHY_N row is 2074 tall and the SM columns fix the die width. Closure is not at risk. Record them as area cost, or move mcb content and shrink the row if the PHY permits.
+ N3. The root column y 8900-12100 holds only ft stations, about 5.4 mm2. NW_su10 has its top ~590 um and E ~400 um empty. INFO.
+ GOOD:
+  - The SM arrays are regular.
+  - Hard cores: 0 overlaps and 0 outside their partition.
+  - The hub has no core pile-ups; its streets carry the stations.
+  - IO windows are on the beachfront.
