@@ -4750,3 +4750,6 @@ OWNER? HEAD PG: 150um bump grid reported92.4mV vs35mV budget;75um20.6mV candidat
 
 ## Handoff to Claude 2026-10-27 05:12 PDT
 Qwen packet: handoff/codex_qwen_20261027_0511.md. Integratedb2929dab77/nativeflowa3d325c83d; candidate5ce987747; WIP12d550955. LiveQCguardGRTintel2unit366583-1793102932; distributedKVIRintel1unit3222051-1793103039. sys_c1168declaredbumpportcontractgap next. OWNER? none.
+
+## Handoff to Claude 2026-10-27 05:13 PDT
+HBM codex/hbm-keybuf-main-1027@190c6da3ff PUSHED: positive2088/0+lintPASS, mutant intel2unit250387 LIVE/notREADY. QUAD5rescue codex/hbm-1027@e95b335809 PUSHED, wholemergeHOLD oldchecker. Full source/jobs/results/failures/next/OWNER? in handoff/codex_hbm_20261027_0511.md. PR0native7116/9489PASS; keybufoldlotimpossible/nativeconnsabsent; collarNOTSIGNED, EPGRTfalseouterexit0diagnosed. No newOWNER? questions.

@@ -1284,3 +1284,5 @@ CODEX: 2026-10-27 05:10 PDT main8810c5e6a4 plainmerged S81 shared clock port/MC/
 CODEX: 2026-10-27 05:12 PDT explicitreset S81/HEAD parked; handoff/codex_s81_head_20261027_0511.md; d80e01ac1 A/CsourceREADY57tests,3corequeue trials,HEADecoSIGNED/routedLECpending,MCclockFAIL.
 
 CODEX: 2026-10-27 05:12 PDT explicitreset PARK root main8810c5e6a4==origin/main; fullsource/jobs/failures/urgent05:25retirement packet handoff/codex_root_20261027_0511.md + CODEX-LOG Handoff.3proofjobscontinue; workers parking.
+
+CODEX: 2026-10-27 05:13 PDT HBM PARK reset:190c6da3ff source+positive2088/0+lintPASS pushed, mutantunit250387 live; QUAD5e95rescue, propertargetchecker only4missingkeybuf; full handoff/codex_hbm_20261027_0511.md.
