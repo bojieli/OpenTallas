@@ -3773,8 +3773,12 @@ def cmd_combo(a):
           "foreach nm [split [string trim [read $fh]] \"\\n\"] { set n [$blk findNet $nm]; if {$n == \"NULL\"} "
           "{ error \"missing clock net $nm\" }; $n setNonDefaultRule $ndr; $n setSigType CLOCK; incr nn }",
           "close $fh", "puts \"OT_NDR nets=$nn\"",
-          "global_route -congestion_iterations 50 -allow_congestion -verbose -congestion_report_file "
-          "/out/congestion_$::env(CORNER).rpt",
+          # KV-GRT-STALL 10-27: congestion-only die GRT, never timing-driven. FastRoute's default critical-net
+          # pass (mazeRoute -> CalculatePartialSlack -> sta::slack -> full delay calc) times the multi-driver
+          # ck_mesh net (ckm_d_* drivers still enabled here, 10112 terminals) in O(drivers x loads): e20/G12
+          # combos sat at extra iteration 3 for > 2.5 h; with 0 the same e20 combo routes 0/0 in 3 min.
+          "global_route -congestion_iterations 50 -critical_nets_percentage 0 -allow_congestion -verbose "
+          "-congestion_report_file /out/congestion_$::env(CORNER).rpt",
           "write_guides /out/route_$::env(CORNER).guide",
           *(["puts \"OT_CLK_OBS_REMOVED [llength $::ot_clk_obs]\"",
              "foreach o $::ot_clk_obs { odb::dbObstruction_destroy $o }"] if getattr(a, "routed_clock", False) else []),

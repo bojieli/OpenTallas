@@ -102,7 +102,7 @@ def build(kit, clock, out, plan=None, width_corrected_rc=False):
         name=n['name'] if n['name'] in cp else 'ck_'+n['name']
         lines.append(f'[$blk findNet {name}] setNonDefaultRule $n{width}')
     lines += [f'puts "OT_NDR nets4={counts[4]} nets8={counts[8]}"',
-        'global_route -congestion_iterations 5 -allow_congestion -verbose -congestion_report_file /out/congestion_$::env(CORNER).rpt',
+        'global_route -congestion_iterations 5 -critical_nets_percentage 0 -allow_congestion -verbose -congestion_report_file /out/congestion_$::env(CORNER).rpt',
         'write_guides /out/route_$::env(CORNER).guide',
         'write_global_route_segments /out/segments_$::env(CORNER).txt',
         'source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl',
