@@ -1,0 +1,290 @@
+{
+  "schema": "opentallas.die_plan.bus_groups.v1",
+  "landing": [
+    {
+      "sink": "native59",
+      "sink_part": "native59",
+      "src_part": "tt_ctlm",
+      "aligned_by_lanes": false,
+      "aligned_landed": true,
+      "asbuilt_stage_set": [
+        0,
+        2
+      ],
+      "members": [
+        {
+          "sink_port": "command_stage",
+          "sink_bits": [
+            [
+              0,
+              5
+            ]
+          ],
+          "source": "tt_ctlm.command_stage",
+          "source_bits": [
+            [
+              0,
+              5
+            ]
+          ],
+          "asbuilt_stages": 0,
+          "bound_stages": 2,
+          "landed_stages": 3,
+          "lane": "tt_ctlm__command_stage_command_stage"
+        },
+        {
+          "sink_port": "head_prepare_position",
+          "sink_bits": [
+            [
+              0,
+              17
+            ]
+          ],
+          "source": "tt_ctlm.emb_position",
+          "source_bits": [
+            [
+              0,
+              17
+            ]
+          ],
+          "asbuilt_stages": 2,
+          "bound_stages": 2,
+          "landed_stages": 5,
+          "lane": "tt_ctlm__emb_position_head_prepare_position"
+        },
+        {
+          "sink_port": "head_prepare_token",
+          "sink_bits": [
+            [
+              0,
+              17
+            ]
+          ],
+          "source": "tt_ctlm.emb_token",
+          "source_bits": [
+            [
+              0,
+              17
+            ]
+          ],
+          "asbuilt_stages": 2,
+          "bound_stages": 2,
+          "landed_stages": 5,
+          "lane": "tt_ctlm__emb_token_head_prepare_token"
+        },
+        {
+          "sink_port": "head_prepare_user",
+          "sink_bits": [
+            [
+              0,
+              1
+            ]
+          ],
+          "source": "tt_ctlm.emb_user",
+          "source_bits": [
+            [
+              0,
+              1
+            ]
+          ],
+          "asbuilt_stages": 2,
+          "bound_stages": 2,
+          "landed_stages": 5,
+          "lane": "tt_ctlm__emb_user_head_prepare_user"
+        },
+        {
+          "sink_port": "head_prepare_v",
+          "sink_bits": [
+            [
+              0,
+              0
+            ]
+          ],
+          "source": "tt_ctlm.emb_start",
+          "source_bits": [
+            [
+              0,
+              0
+            ]
+          ],
+          "asbuilt_stages": 2,
+          "bound_stages": 2,
+          "landed_stages": 5,
+          "lane": "tt_ctlm__emb_start_head_prepare_v"
+        },
+        {
+          "sink_port": "layer_context_v",
+          "sink_bits": [
+            [
+              0,
+              0
+            ]
+          ],
+          "source": "tt_ctlm.layer_context_v",
+          "source_bits": [
+            [
+              0,
+              0
+            ]
+          ],
+          "asbuilt_stages": 0,
+          "bound_stages": 2,
+          "landed_stages": 3,
+          "lane": "tt_ctlm__layer_context_v_layer_context_v"
+        },
+        {
+          "sink_port": "native_cmd",
+          "sink_bits": [
+            [
+              0,
+              379
+            ]
+          ],
+          "source": "tt_ctlm.native_cmd",
+          "source_bits": [
+            [
+              0,
+              379
+            ]
+          ],
+          "asbuilt_stages": 0,
+          "bound_stages": 2,
+          "landed_stages": 3,
+          "lane": "tt_ctlm__native_cmd_native_cmd"
+        },
+        {
+          "sink_port": "native_position",
+          "sink_bits": [
+            [
+              0,
+              17
+            ]
+          ],
+          "source": "tt_ctlm.native_pos",
+          "source_bits": [
+            [
+              0,
+              17
+            ]
+          ],
+          "asbuilt_stages": 0,
+          "bound_stages": 2,
+          "landed_stages": 3,
+          "lane": "tt_ctlm__native_pos_native_position"
+        },
+        {
+          "sink_port": "native_token",
+          "sink_bits": [
+            [
+              0,
+              17
+            ]
+          ],
+          "source": "tt_ctlm.native_tok",
+          "source_bits": [
+            [
+              0,
+              17
+            ]
+          ],
+          "asbuilt_stages": 0,
+          "bound_stages": 2,
+          "landed_stages": 3,
+          "lane": "tt_ctlm__native_tok_native_token"
+        }
+      ]
+    },
+    {
+      "sink": "sys_face",
+      "sink_part": "glue",
+      "src_part": "native59",
+      "aligned_by_lanes": true,
+      "aligned_landed": true,
+      "asbuilt_stage_set": [
+        2
+      ],
+      "members": [
+        {
+          "sink_port": "head_descriptor_generation",
+          "sink_bits": [
+            [
+              0,
+              1
+            ]
+          ],
+          "source": "native59.head_descriptor_generation",
+          "source_bits": [
+            [
+              0,
+              1
+            ]
+          ],
+          "asbuilt_stages": 2,
+          "bound_stages": 2,
+          "landed_stages": 2,
+          "lane": "native59__head_descriptor_generation_head_descriptor_generation"
+        },
+        {
+          "sink_port": "head_descriptor_tag",
+          "sink_bits": [
+            [
+              0,
+              58
+            ]
+          ],
+          "source": "native59.head_descriptor_tag",
+          "source_bits": [
+            [
+              0,
+              58
+            ]
+          ],
+          "asbuilt_stages": 2,
+          "bound_stages": 2,
+          "landed_stages": 2,
+          "lane": "native59__head_descriptor_tag_head_descriptor_tag"
+        },
+        {
+          "sink_port": "head_descriptor_v",
+          "sink_bits": [
+            [
+              0,
+              0
+            ]
+          ],
+          "source": "native59.head_descriptor_v",
+          "source_bits": [
+            [
+              0,
+              0
+            ]
+          ],
+          "asbuilt_stages": 2,
+          "bound_stages": 2,
+          "landed_stages": 2,
+          "lane": "native59__head_descriptor_v_head_descriptor_v"
+        },
+        {
+          "sink_port": "native_fault",
+          "sink_bits": [
+            [
+              0,
+              0
+            ]
+          ],
+          "source": "native59.fault",
+          "source_bits": [
+            [
+              0,
+              0
+            ]
+          ],
+          "asbuilt_stages": 2,
+          "bound_stages": 2,
+          "landed_stages": 2,
+          "lane": "native59__fault_native_fault"
+        }
+      ]
+    }
+  ]
+}
