@@ -8,8 +8,11 @@ Static only (no synth, no place): each check is one bug class seen on 10-26/10-2
                        vclk latency in a hook of a single-mode multi-corner session other than TT; per-mode (MM) kits
                        bind FF through one staged FF SDC (HEAD-CORE-R17 / SIGNOFF-MODES)
   ff_binding           OT_VCLK_FF = sdc_lint insertion_ff_ps = clock_binding ff = 202.5; TT 250 (METHODOLOGY 12.3)
-  clock_pin_geometry   every file that places/declares a clock port: M5, centre on the M5 track, >= 0.048 x 0.48
-                       (io.tcl, core_infra_impl.tcl procs + master_core_infra.tcl calls, pins.json) (GEOM-21)
+  clock_pin_geometry   CORE kits: every file that places/declares a clock port: M5, centre on the M5 track,
+                       >= 0.048 x 0.48 (io.tcl, core_infra_impl.tcl procs + master_core_infra.tcl calls, pins.json)
+                       (GEOM-21).  gen_phys PARTITION kits (budget.json partition_budget): every clock port is a
+                       die-clock on-ramp (METHODOLOGY 12.7/12.8a): on the partition top layer (budget signal_max, M7),
+                       exactly at its plan tap (budget clock.taps_snapped), >= M7 width x PIN_LEN (COORD 10-27)
   rc_calibration       the kit RC file(s) carry signal + clock calibration records (FLOW-RC-1 check_rc_cal)
   duplicate_modules    no module defined twice in VERILOG_FILES (and no file listed twice)
   keep_hook            (* keep *) registers -> SYNTH_CANONICALIZE_TCL keep-regs hook staged and enabled; keep-by-name
@@ -214,9 +217,84 @@ def _is_clock(name, ports):
     return name in ports or _base(name) in {_base(p) for p in ports}
 
 
+PARTITION_CLOCK_MIN = (0.032, 0.192)   # M7 min width x gen_phys PIN_LEN_UM (die-clock on-ramp, 12.7)
+
+
+def partition_budget(kd):
+    """budget.json of a gen_phys partition kit (schema partition_budget), else None (core / other kits)."""
+    kd = Path(kd)
+    if is_core_kit(kd):
+        return None
+    try:
+        b = json.loads((kd / "budget.json").read_text())
+    except (OSError, ValueError):
+        return None
+    return b if "partition_budget" in str(b.get("schema", "")) else None
+
+
+def _partition_clock_pin_geometry(kd, bud):
+    """COORD 10-27 ruling 2: GEOM-21 is a CORE rule; a partition die-clock pin is the M7 mesh drop / on-ramp of 12.7,
+    placed exactly at its plan tap."""
+    import master_slice as MS
+    ports, err, seen, entries = clock_ports(kd), [], {}, []
+    if not ports:
+        return ["no clock port found (constraint.sdc create_clock / pins.json clock)"], dict(applies=True)
+    clk = bud.get("clock") or {}
+    taps = {d["name"]: tuple(map(float, d["xy"])) for d in (clk.get("taps_snapped") or []) if d.get("xy")}
+    top = bud.get("signal_max")
+    if not top:
+        err.append("budget.json has no signal_max (partition top layer)")
+    for f in sorted(Path(kd).glob("*.tcl")):
+        for line in f.read_text(errors="replace").splitlines():
+            if not _strip_tcl_comment(line):
+                continue
+            m = re.match(r"^\s*place_pin\s+-pin_name\s+(\{[^}]*\}|\S+)(.*)$", line)
+            if not m:
+                continue
+            n = m.group(1).strip("{}").strip()
+            if n.startswith("$") or not _is_clock(n, ports):
+                continue
+            seen[_base(n)] = seen.get(_base(n), 0) + 1
+            lm = re.search(r"-layer\s+(\S+)", line)
+            xm = re.search(r"-location\s+\{\s*" + _NUM + r"\s+" + _NUM + r"\s*\}", line)
+            sm = re.search(r"-pin_size\s+\{\s*" + _NUM + r"\s+" + _NUM + r"\s*\}", line)
+            layer = lm.group(1) if lm else None
+            src = f.name
+            if layer != top:
+                err.append(f"{src}: partition clock {n} on {layer}, not the partition top layer {top} (12.7 on-ramp)")
+            if not sm or min(float(sm.group(1)), float(sm.group(2))) < PARTITION_CLOCK_MIN[0] - 1e-6 or \
+                    max(float(sm.group(1)), float(sm.group(2))) < PARTITION_CLOCK_MIN[1] - 1e-6:
+                err.append(f"{src}: partition clock {n} pin_size {sm.groups() if sm else None} < "
+                           f"{PARTITION_CLOCK_MIN[0]}x{PARTITION_CLOCK_MIN[1]}")
+            if not xm:
+                err.append(f"{src}: partition clock {n}: no static location")
+                continue
+            x, y = float(xm.group(1)), float(xm.group(2))
+            entries.append((src, n, x, y))
+            want = taps.get(n) or taps.get(_base(n))
+            if want is None:
+                err.append(f"{src}: partition clock {n} is not a plan tap (budget.json clock.taps_snapped)")
+            elif abs(want[0] - x) > TOL or abs(want[1] - y) > TOL:
+                err.append(f"{src}: partition clock {n} at ({x:g}, {y:g}) != plan tap ({want[0]:g}, {want[1]:g}) (12.8a)")
+            if layer == top and layer:
+                try:
+                    if not MS.on_track(kd, layer, x, y):
+                        err.append(f"{src}: partition clock {n} centre ({x:g}, {y:g}) off the {layer} track")
+                except ValueError as e:
+                    err.append(f"{src}: partition clock {n}: {e}")
+    for p in sorted(ports):
+        if _base(p) not in seen:
+            err.append(f"clock {p}: no static placement found in any kit file")
+    return list(dict.fromkeys(err)), dict(applies=True, kind="partition", clock_ports=sorted(ports), placements=seen,
+                                          entries=[list(e) for e in entries], rule="12.7 M7 on-ramp at plan tap")
+
+
 def clock_pin_geometry(kd):
     import master_slice as MS
     kd = Path(kd)
+    bud = partition_budget(kd)
+    if bud is not None:
+        return _partition_clock_pin_geometry(kd, bud)
     ports, err, seen = clock_ports(kd), [], {}
     if not ports:
         return ["no clock port found (constraint.sdc create_clock / pins.json clock)"], dict(applies=True)
