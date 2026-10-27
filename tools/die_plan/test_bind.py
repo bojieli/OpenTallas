@@ -647,6 +647,43 @@ def test_kit_closure_needed_only_and_strip_dups(tmp_path):
     assert (r / "helper.sv").read_text().count("module qadd") == 1  # original unchanged
 
 
+def test_kit_closure_macro_view_beats_successor_wrapper(tmp_path):
+    """QC-CORES-4 10-27 (coll_n LEC UNPROVEN): a memory macro with a hardened view under the macro roots is a HARD MACRO
+    (bb + view) even when a same-named successor wrapper under rtl/ defines it; a macro reached only through RTL is
+    found in the views too, never silently dropped (old: wrapper in the list, its _p192_mir child missing, no error)."""
+    import bind_elab as E
+    r = tmp_path / "rtl"
+    (r / "lib").mkdir(parents=True)
+    (r / "leaf.sv").write_text("module leaf (input wire clk, output wire [3:0] q);\n  sram_m u_sram (.clk(clk), .q(q));\n"
+                               "  succ_only u_s (.clk(clk));\nendmodule\n")
+    (r / "lib" / "sram_m__p192.sv").write_text("module sram_m (input wire clk, output wire [3:0] q);\n"
+                                               "  sram_m_p192_mir u_p192 (.clk(clk), .q(q));\nendmodule\n")
+    (r / "succ.sv").write_text("module succ_only (input wire clk);\n  sram_m_p192_mir u_m (.clk(clk), .q());\nendmodule\n")
+
+    def view(root, n):
+        d = tmp_path / root / n
+        d.mkdir(parents=True)
+        (d / f"{n}.lef").write_text(f"MACRO {n}\nEND {n}\n")
+        (d / f"{n}_bb.v").write_text(f"(* blackbox *) module {n} (input wire clk, output wire [3:0] q); endmodule\n")
+        (d / f"{n}.v").write_text(f"module {n} (input wire clk, output reg [3:0] q); endmodule\n")
+        (d / f"{n}_tt.lib").write_text("library (x) {}\n")
+    view("physical/asap7_memory_macros_v2", "sram_m")
+    view("physical/asap7_memory_macros", "sram_m")            # v1 copy: the v2 root wins
+    view("physical/asap7_memory_macros", "sram_m_p192_mir")
+    idx = E.module_index([str(r)], [], str(tmp_path))
+    # old behaviour (no views): wrapper descended, its macro child dropped without a missing entry
+    files, missing, macros = bind.kit_closure(["leaf"], idx, [])
+    assert any(f.endswith("sram_m__p192.sv") for f in files) and not macros and not missing
+    views = bind.macro_views(tmp_path)
+    assert views["sram_m"] == tmp_path / "physical/asap7_memory_macros_v2/sram_m"
+    files, missing, macros = bind.kit_closure(["leaf"], idx, [], views=views)
+    names = sorted(Path(f).name for f in files)
+    assert not missing and not any(f.endswith("sram_m__p192.sv") for f in files), files
+    assert names == ["leaf.sv", "sram_m_bb.v", "sram_m_p192_mir_bb.v", "succ.sv"], names
+    assert sorted(macros) == ["sram_m", "sram_m_p192_mir"]
+    assert "asap7_memory_macros_v2" in macros["sram_m"]["dir"] and macros["sram_m"]["libs"]
+
+
 def test_kit_inline_includes(tmp_path):
     """QC-KITS 10-25: a flattened kit cannot open `include "sub/x.svh"`: kit-rtl inlines it (recursively, relative to
     the including file) into KIT/inline/, and a missing include is a BindError."""
