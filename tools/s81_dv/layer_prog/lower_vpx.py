@@ -48,7 +48,6 @@ OPS = [
     r'(^|\.)(attn|ffn)\.norm\.(sumsq|rsqrt|scale)$',
     r'(^|\.)(attn|ffn)\.hc_post$',
     r'(^|\.)attn\.a_allgather$',
-    r'(^|\.)attn\.rows_allgather$',
     r'(^|\.)eng\.rows_allgather$',      # TOK-S81-GAPS/IDX: same endpoint ABI (Engram rows, L14)
     r'(^|\.)ffn\.router_allgather$',
     r'(^|\.)attn\.out_allreduce$',
