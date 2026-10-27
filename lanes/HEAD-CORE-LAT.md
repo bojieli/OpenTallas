@@ -138,3 +138,12 @@ NEXT R14 (after ASK):
 - elemA: centre re-pin at (159.84,159.84) with a symmetric trunk. The flow repairs slew on unscaled RC (or SLEW_MARGIN), and then a post-route repair_design + hold (HB4 data only) + ECO DRT runs.
 - elemB: keep the edge pin; run the same route-stage slew fix; face_guard per the ruling.
 - Post-route LEC runs whatever the verdict.
+2026-10-27 03:29 PDT HEAD-CORE-R13 R14 PLAN, per the COORD rulings on ASK1-4:
+- elemA: rebuild with the clock pin moved to the centre (159.84,159.84) and a balanced (symmetric H-tree) entry trunk, aiming for the 250 TT / 202.5 FF band.
+- elemB: keep the edge W pin. Remove the 50 dead input ports (row0[16:0], b_v, b_d[31:0]): change the RTL, run LEC vs r11, and drop the parent bundle ties. Then re-synthesise and rebuild.
+- Both cores get the ASK3 flow behind the flow canary:
+  - repair_design at GRT with SLEW_MARGIN 20%;
+  - after route: repair_design, then repair_timing -hold (HB4 only), then ECO DRT;
+  - routed LEC on 6_final.v always runs (no set -e gate on the signoff exit code).
+- Gaps (ROW0/TEN straps, hd_serdes open pins, PMA pin class, leaf-pin check) go to INFRA-FIRST-HEAD-4.
+- Still to collect: the R13 post-route LEC of the R12b netlists (flow-path proof only), B ~03:45, A ~04:30.
