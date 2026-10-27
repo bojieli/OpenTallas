@@ -1,0 +1,13 @@
+# HBM N4 root link preparation
+
+C8b has four symbolic face endpoints but no central FUSED root provider. The additive helper `tools/die_plan/hbm_n4_links.py` audits the exact ABI and preserves the old failed records; it emits a candidate, never mutates the input or claims route readiness.
+
+The source contract is `codex/hbm-n4-abi-1027@f2fac98a4e:results/hbm_n4_abi_codex/source_abi.json`. It is the actual surviving N4EXT1 source, not functional whole-die qualification. NW uses uq0/dq0 and NE uses uq2/dq2: 271 up +173 down per hub, 888 total. Identity bit order is preserved. The generated die-port candidates have epoch=false to preserve that exact ABI; this does not waive native reset/START/valid proof.
+
+The helper separates UP and DOWN windows, bounds their density to <=6 pins/um under a combined-layer interpretation, verifies the actual MY/R0 abutments, and reports actual N4 pin-to-existing-station Manhattan reach. Existing end hops are392.203um UP and341.141um DOWN, but this is not a macro-avoidance or full per-bit route PASS. In particular the DOWN approach needs a legal route to west-face pins, rather than crossing the N4 body. Both hub and root station plans must be regenerated from actual pin abstracts and new windows. All added register cycles must enter the model/compiler and R8 alignment.
+
+`root_slot_probe.png` was visually reviewed. Blue blocks are existing cores/contents, gray is actual FT bank bounds and relay/clock exclusions, and tan is the full reserved die FT channel. The closest free historical345.6x345.6 model rectangle found on8.64um grid is [43.2,6937.92], halo4.32um. It is far from the old seam Y5231.52 and needs long registered root legs. The natural central slot intersects existing FT banks and cannot be used silently. This is a size assumption from the historical architecture, not a measured N4EXT1 master area, and the candidate must be re-probed against the real source's measured outline/pins before adoption. No PG, clock, STA or route pass is claimed.
+
+TOK owns an explicit `ot_hnx_fused_hub_n4ext` wrapper with the live up_nw/up_ne/down_nw/down_ne ports and removal of source-proven dead ports. A new actual instance `u_mu_fused_root` is proposed, not an alias to an existing unrelated core. The HBM plan owner must supply actual native hierarchy, job/control producers and consumers, clock/reset/START bindings, lot and actual pins in the single HBM batch before this helper's candidates can become die geometry.
+
+Validation: three focused lot-exclusion tests pass (actual per-bit FT bank bounds, full reserved band and no-fit). Exact C8b+ABI audit produced four links/888 bits; changed orphan/ABI/orientation input raises an error. No P&R launched.
