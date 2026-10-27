@@ -255,6 +255,16 @@ def _storage_band(t,bus,width,used,*,has_epoch=True):
         ys={margin,h-bh-margin,max(margin,min(h-bh-margin,py-bh/2))}
         for o in obstacles:
             xs.update((o[0]-bw-2.16,o[2]+2.16));ys.update((o[1]-bh-2.16,o[3]+2.16))
+        # Necessary components of the exact corner/reach predicate below.
+        # Keep iteration order and the same candidate set, but do not form the
+        # Cartesian product of obstacle edges on the far side of a large tile.
+        # S81 svc has hundreds of such edges; the unfiltered product dominates
+        # the compose although every far-away box is immediately rejected.
+        reach=405-2.16
+        xs=[x for x in xs if margin<=x<=w-margin-bw and
+            max(abs(x-px),abs(x+bw-px))<=reach]
+        ys=[y for y in ys if margin<=y<=h-margin-bh and
+            max(abs(y-py),abs(y+bh-py))<=reach]
         for x0 in xs:
             for y0 in ys:
                 box=[x0,y0,x0+bw,y0+bh]
