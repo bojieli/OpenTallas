@@ -1,7 +1,8 @@
 """lec.py: a register that only holds or (re)loads the constant 1 (reset value 1 and every load 1, or no reset and
-every load 1) is folded to 1 by synthesis; LEC proposes constant 1 for it (free-at-1 cofactor) and proves it by
+every load 1) can be folded to 1 by synthesis; LEC proposes constant 1 for it (free-at-1 cofactor) and proves it by
 induction with the reset input free (LEC-TOOL-1 10-27: HBM argmax_sw_vm_r2 ti[lv][e] low index bits, hcp_sys1
-d0 = last ? nlast : 256).  Mutants: a register that resets to 0 or ever loads a non-constant value is refuted.
+d0 = last ? nlast : 256). A constant's base case must be established;
+observing an unreset hold before its first load remains a difference. Mutants: a register that resets to 0 or ever loads a non-constant value is refuted.
     python3 -m pytest -q tools/die_plan/test_lec_const_hold_one.py"""
 import sys
 from pathlib import Path
@@ -57,7 +58,7 @@ def _gate(m, l):                         # synthesis removed c1 as the constant 
 
 
 @pytest.mark.parametrize("kind,want", [
-    ("x1", "proved"),        # no reset, every load 1 (X power-up): constant 1
+    ("x1", "differs"),       # MUTANT: observed unreset hold before its first load
     ("rst1", "proved"),      # reset value 1, every load 1: constant 1 from reset
     ("rst0", "differs"),     # MUTANT reset value 0 != load value: not a constant, real difference kept
     ("loadb", "differs"),    # MUTANT loads an input: not a constant
