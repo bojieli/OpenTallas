@@ -1,0 +1,810 @@
+{
+  "schema": "opentallas.hbm-n4-root-abi.v1",
+  "source_state": "exact surviving QUAD3 bundle; not main RTL and not a functional qualification",
+  "sources": {
+    "ot_hnx_fused_tree.sv": "89c4d2bbb5ead4deba511721a87d3ddc0bf2aac1407ebf8fc9bbf01c3faf01ec",
+    "ot_hnx_fused_eng.sv": "11dce25459efa96db88323cbb9da19ab0f6558048cade64e5f0c79bd3fff5a8f"
+  },
+  "source_path": "epyc2:/srv/opentallas-scratch2/claude/hbm-mu-quad-3-1027/n4rtl/bundle/rtl/hbm_next/fused",
+  "recorded_patch": "197e94e48d:results/hbm_mu_quad_3/n4rtl/n4ext.patch",
+  "root_module": "ot_hnx_fused_hub",
+  "root_parameters": {
+    "D": 5120,
+    "RR": 10,
+    "NMAX": 8,
+    "MUT": 0,
+    "UW": 271,
+    "DW": 173,
+    "N4EXT": 1
+  },
+  "root_all_ports": {
+    "clk": {
+      "direction": "input",
+      "bits": 1
+    },
+    "rst_n": {
+      "direction": "input",
+      "bits": 1
+    },
+    "job_v": {
+      "direction": "input",
+      "bits": 1
+    },
+    "job": {
+      "direction": "input",
+      "bits": 217
+    },
+    "done": {
+      "direction": "output",
+      "bits": 1
+    },
+    "fault": {
+      "direction": "output",
+      "bits": 1
+    },
+    "busy": {
+      "direction": "output",
+      "bits": 1
+    },
+    "wsc": {
+      "direction": "input",
+      "bits": 8
+    },
+    "pk4a": {
+      "direction": "input",
+      "bits": 6
+    },
+    "pk4b": {
+      "direction": "input",
+      "bits": 6
+    },
+    "pk5": {
+      "direction": "input",
+      "bits": 6
+    },
+    "pb4a": {
+      "direction": "input",
+      "bits": 1
+    },
+    "pb4b": {
+      "direction": "input",
+      "bits": 1
+    },
+    "pb5": {
+      "direction": "input",
+      "bits": 1
+    },
+    "uq0": {
+      "direction": "input",
+      "bits": 271
+    },
+    "uq1": {
+      "direction": "input",
+      "bits": 271
+    },
+    "uq2": {
+      "direction": "input",
+      "bits": 271
+    },
+    "uq3": {
+      "direction": "input",
+      "bits": 271
+    },
+    "dq0": {
+      "direction": "output",
+      "bits": 173
+    },
+    "dq1": {
+      "direction": "output",
+      "bits": 173
+    },
+    "dq2": {
+      "direction": "output",
+      "bits": 173
+    },
+    "dq3": {
+      "direction": "output",
+      "bits": 173
+    }
+  },
+  "node_module": "ot_hnx_fused_tnode",
+  "node_parameters": {
+    "LA": 6,
+    "UW": 271,
+    "DW": 173
+  },
+  "node_ports": {
+    "clk": {
+      "direction": "input",
+      "bits": 1
+    },
+    "rst_n": {
+      "direction": "input",
+      "bits": 1
+    },
+    "pad_k": {
+      "direction": "input",
+      "bits": 6
+    },
+    "pad_b": {
+      "direction": "input",
+      "bits": 1
+    },
+    "ua": {
+      "direction": "input",
+      "bits": 271
+    },
+    "ub": {
+      "direction": "input",
+      "bits": 271
+    },
+    "uo": {
+      "direction": "output",
+      "bits": 271
+    },
+    "dn": {
+      "direction": "input",
+      "bits": 173
+    },
+    "da": {
+      "direction": "output",
+      "bits": 173
+    },
+    "db": {
+      "direction": "output",
+      "bits": 173
+    }
+  },
+  "up_packet": {
+    "width": 271,
+    "concat": "{v,t,x[9:0],fa,fo,fl,d[255:0]}",
+    "fields": [
+      {
+        "field": "v",
+        "msb": 270,
+        "lsb": 270,
+        "bits": 1
+      },
+      {
+        "field": "t",
+        "msb": 269,
+        "lsb": 269,
+        "bits": 1
+      },
+      {
+        "field": "x",
+        "msb": 268,
+        "lsb": 259,
+        "bits": 10
+      },
+      {
+        "field": "fa",
+        "msb": 258,
+        "lsb": 258,
+        "bits": 1
+      },
+      {
+        "field": "fo",
+        "msb": 257,
+        "lsb": 257,
+        "bits": 1
+      },
+      {
+        "field": "fl",
+        "msb": 256,
+        "lsb": 256,
+        "bits": 1
+      },
+      {
+        "field": "d",
+        "msb": 255,
+        "lsb": 0,
+        "bits": 256
+      }
+    ],
+    "semantics": "t=0 scalar with x scalar index and full256 payload; t=1 chunk sum in d[31:0], upper224 zero. Fin flags fa/fo are independent of v; lane source packs both from fin."
+  },
+  "down_packet": {
+    "width": 173,
+    "concat": "{cv,cop[2:0],cx[7:0],cd[127:0],rv,rd[31:0]}",
+    "actual_root_concat": "{pv,pop,px,pd,prv,prb}",
+    "fields": [
+      {
+        "field": "cv",
+        "msb": 172,
+        "lsb": 172,
+        "bits": 1
+      },
+      {
+        "field": "cop",
+        "msb": 171,
+        "lsb": 169,
+        "bits": 3
+      },
+      {
+        "field": "cx",
+        "msb": 168,
+        "lsb": 161,
+        "bits": 8
+      },
+      {
+        "field": "cd",
+        "msb": 160,
+        "lsb": 33,
+        "bits": 128
+      },
+      {
+        "field": "rv",
+        "msb": 32,
+        "lsb": 32,
+        "bits": 1
+      },
+      {
+        "field": "rd",
+        "msb": 31,
+        "lsb": 0,
+        "bits": 32
+      }
+    ],
+    "commands": {
+      "0": "JOB",
+      "1": "WGT",
+      "2": "SCRD",
+      "3": "GO"
+    }
+  },
+  "root_job": {
+    "width": 217,
+    "fields": [
+      {
+        "field": "post",
+        "msb": 0,
+        "lsb": 0,
+        "bits": 1
+      },
+      {
+        "field": "nm1",
+        "msb": 4,
+        "lsb": 1,
+        "bits": 4
+      },
+      {
+        "field": "A_word_address",
+        "msb": 23,
+        "lsb": 5,
+        "bits": 19
+      },
+      {
+        "field": "B_word_address",
+        "msb": 42,
+        "lsb": 24,
+        "bits": 19
+      },
+      {
+        "field": "C_word_address",
+        "msb": 61,
+        "lsb": 43,
+        "bits": 19
+      },
+      {
+        "field": "O_word_address",
+        "msb": 80,
+        "lsb": 62,
+        "bits": 19
+      },
+      {
+        "field": "rs_A_words",
+        "msb": 104,
+        "lsb": 81,
+        "bits": 24
+      },
+      {
+        "field": "rs_B_words",
+        "msb": 128,
+        "lsb": 105,
+        "bits": 24
+      },
+      {
+        "field": "rs_C_words",
+        "msb": 152,
+        "lsb": 129,
+        "bits": 24
+      },
+      {
+        "field": "rs_O_words",
+        "msb": 176,
+        "lsb": 153,
+        "bits": 24
+      },
+      {
+        "field": "row_gap",
+        "msb": 184,
+        "lsb": 177,
+        "bits": 8
+      },
+      {
+        "field": "epsilon_fp32",
+        "msb": 216,
+        "lsb": 185,
+        "bits": 32
+      }
+    ],
+    "job_command_cd_fields": [
+      {
+        "field": "post",
+        "msb": 0,
+        "lsb": 0,
+        "bits": 1
+      },
+      {
+        "field": "nm1",
+        "msb": 4,
+        "lsb": 1,
+        "bits": 4
+      },
+      {
+        "field": "A_sector",
+        "msb": 20,
+        "lsb": 5,
+        "bits": 16
+      },
+      {
+        "field": "B_sector",
+        "msb": 36,
+        "lsb": 21,
+        "bits": 16
+      },
+      {
+        "field": "O_sector",
+        "msb": 52,
+        "lsb": 37,
+        "bits": 16
+      },
+      {
+        "field": "rs_A_sectors",
+        "msb": 68,
+        "lsb": 53,
+        "bits": 16
+      },
+      {
+        "field": "rs_B_sectors",
+        "msb": 84,
+        "lsb": 69,
+        "bits": 16
+      },
+      {
+        "field": "rs_O_sectors",
+        "msb": 100,
+        "lsb": 85,
+        "bits": 16
+      },
+      {
+        "field": "row_gap",
+        "msb": 108,
+        "lsb": 101,
+        "bits": 8
+      },
+      {
+        "field": "reserved_zero",
+        "msb": 127,
+        "lsb": 109,
+        "bits": 19
+      }
+    ],
+    "checks": [
+      "A/B/C/O low3 word-address bits zero",
+      "A/B/O same bank phase",
+      "HC_PRE_NORM phase0, HC_POST phase free",
+      "rsA/rsB/rsO low8 bits zero; rsC low3 zero",
+      "HC_PRE_NORM rsB=0",
+      "nm1<NMAX"
+    ]
+  },
+  "native_links": [
+    {
+      "side": "NW",
+      "partition_type": "q_hub_nw",
+      "orphan_station_index": 2894,
+      "conn": "mu_tree_root:n4:up",
+      "width": 271,
+      "source": {
+        "module": "ot_hnx_fused_tnode",
+        "instance": "u_mu_fused_n4",
+        "port": "uo"
+      },
+      "destination": {
+        "module": "ot_hnx_fused_hub",
+        "instance": null,
+        "port": "uq0"
+      },
+      "bit_map": {
+        "kind": "identity",
+        "source_lsb": 0,
+        "destination_lsb": 0,
+        "count": 271,
+        "stride": 1
+      },
+      "existing_hub_station_count": 9,
+      "symbolic_anchor": {
+        "conn": "mu_tree_root:n4:up",
+        "launch": "u_mu_fused_n4.uo",
+        "capture": "face root.up",
+        "bits": 271,
+        "from_um": [
+          4933.44,
+          3525.12
+        ],
+        "to_um": [
+          8216.64,
+          3503.52
+        ],
+        "regs_um": [
+          [
+            5326.56,
+            3516.48
+          ],
+          [
+            5728.32,
+            3516.48
+          ],
+          [
+            6130.08,
+            3516.48
+          ],
+          [
+            6531.84,
+            3516.48
+          ],
+          [
+            6933.6,
+            3516.48
+          ],
+          [
+            7335.36,
+            3516.48
+          ],
+          [
+            7534.08,
+            3516.48
+          ],
+          [
+            7737.12,
+            3516.48
+          ],
+          [
+            8138.88,
+            3516.48
+          ]
+        ],
+        "r9_segments": [
+          1,
+          1
+        ],
+        "note": " | PATH-HBM-R9 quadrant (HV, 3311.28 um, 9 st)"
+      },
+      "native_root_endpoint_missing": true
+    },
+    {
+      "side": "NW",
+      "partition_type": "q_hub_nw",
+      "orphan_station_index": 2895,
+      "conn": "mu_tree_root:n4:down",
+      "width": 173,
+      "source": {
+        "module": "ot_hnx_fused_hub",
+        "instance": null,
+        "port": "dq0"
+      },
+      "destination": {
+        "module": "ot_hnx_fused_tnode",
+        "instance": "u_mu_fused_n4",
+        "port": "dn"
+      },
+      "bit_map": {
+        "kind": "identity",
+        "source_lsb": 0,
+        "destination_lsb": 0,
+        "count": 173,
+        "stride": 1
+      },
+      "existing_hub_station_count": 9,
+      "symbolic_anchor": {
+        "conn": "mu_tree_root:n4:down",
+        "launch": "face root.dn",
+        "capture": "u_mu_fused_n4.dn",
+        "bits": 173,
+        "from_um": [
+          8216.64,
+          3503.52
+        ],
+        "to_um": [
+          4933.44,
+          3525.12
+        ],
+        "regs_um": [
+          [
+            7814.88,
+            3503.52
+          ],
+          [
+            7413.12,
+            3503.52
+          ],
+          [
+            7011.36,
+            3503.52
+          ],
+          [
+            6609.6,
+            3503.52
+          ],
+          [
+            6207.84,
+            3503.52
+          ],
+          [
+            6009.12,
+            3503.52
+          ],
+          [
+            5806.08,
+            3503.52
+          ],
+          [
+            5404.32,
+            3503.52
+          ],
+          [
+            5002.56,
+            3503.52
+          ]
+        ],
+        "r9_segments": [
+          1,
+          1
+        ],
+        "note": " | PATH-HBM-R9 quadrant (HV, 3311.28 um, 9 st)"
+      },
+      "native_root_endpoint_missing": true
+    },
+    {
+      "side": "NE",
+      "partition_type": "q_hub_ne",
+      "orphan_station_index": 2870,
+      "conn": "mu_tree_root:n4:up",
+      "width": 271,
+      "source": {
+        "module": "ot_hnx_fused_tnode",
+        "instance": "u_mu_fused_n4",
+        "port": "uo"
+      },
+      "destination": {
+        "module": "ot_hnx_fused_hub",
+        "instance": null,
+        "port": "uq2"
+      },
+      "bit_map": {
+        "kind": "identity",
+        "source_lsb": 0,
+        "destination_lsb": 0,
+        "count": 271,
+        "stride": 1
+      },
+      "existing_hub_station_count": 9,
+      "symbolic_anchor": {
+        "conn": "mu_tree_root:n4:up",
+        "launch": "u_mu_fused_n4.uo",
+        "capture": "face root.up",
+        "bits": 271,
+        "from_um": [
+          4933.44,
+          3525.12
+        ],
+        "to_um": [
+          8216.64,
+          3503.52
+        ],
+        "regs_um": [
+          [
+            5326.56,
+            3516.48
+          ],
+          [
+            5728.32,
+            3516.48
+          ],
+          [
+            6130.08,
+            3516.48
+          ],
+          [
+            6531.84,
+            3516.48
+          ],
+          [
+            6933.6,
+            3516.48
+          ],
+          [
+            7335.36,
+            3516.48
+          ],
+          [
+            7534.08,
+            3516.48
+          ],
+          [
+            7737.12,
+            3516.48
+          ],
+          [
+            8138.88,
+            3516.48
+          ]
+        ],
+        "r9_segments": [
+          1,
+          1
+        ],
+        "note": " | PATH-HBM-R9 quadrant (HV, 3311.28 um, 9 st)"
+      },
+      "native_root_endpoint_missing": true
+    },
+    {
+      "side": "NE",
+      "partition_type": "q_hub_ne",
+      "orphan_station_index": 2871,
+      "conn": "mu_tree_root:n4:down",
+      "width": 173,
+      "source": {
+        "module": "ot_hnx_fused_hub",
+        "instance": null,
+        "port": "dq2"
+      },
+      "destination": {
+        "module": "ot_hnx_fused_tnode",
+        "instance": "u_mu_fused_n4",
+        "port": "dn"
+      },
+      "bit_map": {
+        "kind": "identity",
+        "source_lsb": 0,
+        "destination_lsb": 0,
+        "count": 173,
+        "stride": 1
+      },
+      "existing_hub_station_count": 9,
+      "symbolic_anchor": {
+        "conn": "mu_tree_root:n4:down",
+        "launch": "face root.dn",
+        "capture": "u_mu_fused_n4.dn",
+        "bits": 173,
+        "from_um": [
+          8216.64,
+          3503.52
+        ],
+        "to_um": [
+          4933.44,
+          3525.12
+        ],
+        "regs_um": [
+          [
+            7814.88,
+            3503.52
+          ],
+          [
+            7413.12,
+            3503.52
+          ],
+          [
+            7011.36,
+            3503.52
+          ],
+          [
+            6609.6,
+            3503.52
+          ],
+          [
+            6207.84,
+            3503.52
+          ],
+          [
+            6009.12,
+            3503.52
+          ],
+          [
+            5806.08,
+            3503.52
+          ],
+          [
+            5404.32,
+            3503.52
+          ],
+          [
+            5002.56,
+            3503.52
+          ]
+        ],
+        "r9_segments": [
+          1,
+          1
+        ],
+        "note": " | PATH-HBM-R9 quadrant (HV, 3311.28 um, 9 st)"
+      },
+      "native_root_endpoint_missing": true
+    }
+  ],
+  "total_link_bits": 888,
+  "lane_order": {
+    "NW_global_lanes": [
+      0,
+      15
+    ],
+    "NE_global_lanes": [
+      16,
+      31
+    ],
+    "NW_n4_children": [
+      "Q0",
+      "Q1"
+    ],
+    "NE_n4_children": [
+      "Q2",
+      "Q3"
+    ],
+    "root_a": "NW uq0",
+    "root_b": "NE uq2"
+  },
+  "unused_when_n4ext1": {
+    "inputs": [
+      "uq1",
+      "uq3",
+      "pk4a",
+      "pk4b",
+      "pb4a",
+      "pb4b"
+    ],
+    "outputs": [
+      "dq1",
+      "dq3"
+    ],
+    "output_values": "dq1=dq3=0 inside actual N4EXT branch; never add external dummy links"
+  },
+  "reset_pad": {
+    "reset_relay": "each tnode REGIONS4, default SYNC_STAGES2+TREE_STAGES1",
+    "control_domains": {
+      "up_pin": "rl0",
+      "up_align_output": "rl1",
+      "down_pin": "rl2",
+      "down_child_outputs": "rl3"
+    },
+    "datapath_reset": false,
+    "pad_k_range": [
+      0,
+      32
+    ],
+    "pad_b": "1 delays b;0 delays a; input ordering never swaps",
+    "pad_implementation": "k0 wire;k1 flop;k>=2 SRAM ring with fill mask",
+    "straps_registered_once": true,
+    "source_model_node_latency": {
+      "scalar": "4+pad",
+      "chunk": "LA+3+pad=9+pad",
+      "down": 2
+    },
+    "reset_extraction_difference": "old internal t4 rst_n=hub.rl3, new external t4 rst_n=global; old release3edges later, so minimum miter must warm both trees fully before valid input"
+  },
+  "physical_status": {
+    "current_plan": "C8b",
+    "current_root_content_found": false,
+    "native_root_instance_path": null,
+    "reference_only_path": "ot_hnx_fused_tree_top.u_hub",
+    "historical_standalone_outline_um": [
+      345.6,
+      345.6
+    ],
+    "historical_outline_area_mm2": 0.11943936,
+    "required_action": "plan owner adds actual central master/content/lot and native binding; coverage adds real die buses/windows/405um stations from this exact ABI",
+    "no_invented_alias": true
+  },
+  "functional_status": "BLOCKED: inherited full-tree baseline and N4 tests failed; TOK owns minimum structural miter/mutant; no sim rerun in this ABI task"
+}
