@@ -1,0 +1,57 @@
+# Coverage interim — 2026-10-27 13:51 takeover, prepared 14:55+
+
+ACTIVE: no explicit reset received. Expected 15:10/15:12 is not a stop. Root owns merges. No owner dialog; questions only plain OWNER? in CODEX-LOG.
+
+## Coverage and ownership
+
+Full fresh3490-line CODEX-HANDOFF read across team: coverage1–1800, geom_collect1801–2600, geom_auto2601–3490. Every134 lane file covered. Comprehensive134-row seven-lead current/jobs/next/failure inventory appended to lanes/CODEX.md; source JSON/script local /srv/opentallas-scratch/claude/codex-coverage-1351/inventory.*. No new inventory sweep needed. Current real work assigned across root/flow/qwen/s81_head/hbm/tokens/coverage; no new orphan tasks.
+
+## HBM current source — source-only candidate, NOT adoption
+
+Own sparse WT /srv/opentallas-scratch/claude/wt/codex-hbm-native-bays-1351, branch codex/hbm-native-bays-1351@f3f6a3b3bb434dd8690408821e05372fe4bffbf8 PUSHED/CLEAN (earlier ce19d8079,37ac0ce5c). Results/hbm_native_composition_1351 and bootstrap225 are inspectable code/artifacts; new helpers current_native_top.py/native_bootstrap_bind.py. No P&R.
+
+First emitted356-instance source retained all28 exact released IDX/VMS/argmax instances: all4 qctl/operand/query/scorer paths, XQ/selector/rootctl/topk/link, 4 actual VMS roles. Real4 quarter wrappers TP192/D1/packedNP4RS0 each17SRAM; root+2N4 add888 exact links. LEC reviewed658 retained ports/directions0mismatches, correctSW CQ/CR scalar slices and common833clock source. Old B1 argmax.NW.cr mismatch fixed to actual original SW NC2 graph.
+
+Current optional bootstrap225 conservative variant has12,527 instances including12,170 actual original transport RTL instances,357 leaf/module instances. Full transport_history_contract.json preserves literal source connections, parameterized stage maps, clock/reset nets and widths;352 imported inputs had original history, max129edges. Current C15 station/epoch ledger EMPTY. No stripped history or zero-delay promise. Runtime intel2:/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/bootstrap_history1/{SV,native_instance_manifest.json,composition.json,transport_history_contract.json}. Collapsed compose4 retains187 boundaries/48 new obligations; bootstrap variant183/44.
+
+TARGET225 namespace review found no allocation/alias in75 actual original target straps,81 original status IDs, current43 status IDs/full8bit decoders. Added actual native9 hleaf_NW a_* ports→ot_hnx_fused_host_program #TARGET225,D1→root job217/WSC8/PK5/PB5, root DONE/FAULT/BUSY back. Ingress mask225; leaf NT19→20/NF31→32; host NT43→44/NF75→76; inserted TGTS E1 exactlyonce atreadybit22, oldbitorder preserved. Seven focused tests PASS (role/clock/history/status/collision/partialreview). TOK bounded actualRTL wire/width review PASS. Actual provider clean source owned TOK codex/hbm-host-boot-clean-1351@71a496cba64dea405eb4f8c61eddba15c5ccd3d7 (earlier1b90666e) functional1332/0+cold/warm/mutants; latestcompiler requires explicit perrole reset ledger and START after max delivery+localrelease+padwarm, supplies NO dates. Host ingress _obs wrapper identity still explicit closure requirement.
+
+Eight D1 reset inputs remain MISSING, including programme. Root/quarter/N4 delivered local release components are proved, but actual die-delivered endpoints/offsets are not invented. Existing frontend source gate uses legacy reset profile. Production programme/calendar/header, lower FUSED child links/pad controls, actual physical root/programme slots/pins/clock/PG/holds remain OPEN. Source capability can integrate separately from die adoption only with root review.
+
+### Strict current source bind: terminal FAIL, diagnosed
+
+Immutable actualmain ee405a63 snapshot included837reset/dd540HCOL adapter. ot-run intel2 unit oth-ubuntu-3990745-1793135643 TERMINAL exit1 (12GB/1thread), no live own heavy job. Log/report intel2 codex-hbm-native-bays-1351/strict_port_bind_ee405a63.{log,json}; strict_bind_diagnosis.json in source packet. Tree-only index:13 UNBOUND masters,7 width checks,38 tied fields,3 unknownparams;0 stubs/0 port-not-in-RTL/0 input-unconnected/0 multidriven. Undriven14245/unread16546 largely reflect omitted actual definitions, NOT a global waiver.
+
+Actual original asbuilt.json supplies273 pinned source preferences,7 defines (incl OT_SMH_RSTRELAY) and reviewedidentitystrap regex. Most13 masters live in TRACKED physical/die_plan/hbm/bind/r18h5_bundle; tree-only indexing omitted them.37 tied fields match existing identity/position review. Remaining QDQ lg.wq_i is explicit oldR7 open (4instances), NOT a strap. Rootctl FAN32/RSTL and programme PARTS require actual bundled definitions. Seven widths are3programme PARTS2 fields (bundle supports it) +4stree NLEG2 fields (thin source needed). Actual child macro/models15 missing and4 ambiguous source families need source-of-record selection, never stubs or widthmatching aliases. Prefer current quarter/FUSED13file closure over oldbundle HCOL header. Next source closure/actualstrictbind should consume these sources after thinSU merge and provider merge; no duplicate old run.
+
+Actual SU2 gap now source-only READY codex/su2-thin-1351@926aa43b91b0e4996067a3bad953438a1e418a7c, implemented existing geom_auto. ThreeRTLfiles + focused donorbenches, currentdefaults/core unchanged, NLEG2/root2/PARTS2 +new qcore_w2. LEC source review: NW0→oldwriter2/NE1→old3/sameNEpriority/0edges. Retained qualified donor receipt818651e99 results/arch/hbm_arch_1024/b2_native_bind_rtl.json has20k/0 and swap2947errors; don't whole-SU rerun. Root owns merge.
+
+### Missing full source inventory is a real physical/source gap
+
+Actual released source has16 independent SVG providers SW0..7+NW0..7; currentB1/candidate+C15 have8 actualNW only. Eight SW sm_packet1099 sources are explicit MISSING boundary inputs, not aliases/ties. Direct original input graph additionally needs16VMS bank response providers+2SW/SE calendars. Full original632leaf vs candidate357 census committed native_inventory_delta.json; transitive original connectivity includes omitted SM arrays,PC controllers,stores/load/fault/host machinery.280 omitted upstream original identities is a structural connectivity census, NOT authorization to restore every original16SM component or proof of minimal required hardware. HBMplan has actualC15 expanded128SM/RP128, VMSbank32 etc and owns semantic expansion/capacity comparison with TOK. No inference from wrappers/suffixes. Eight more SVG same current size ~4.017mm²global may area-fit at~69.6% hubhardarea but needs actual source/contiguous/dataflow repack. Root/HBM/TOK/plan notified; no complete capacity claim.
+
+HBMplan/channels active owns whole-hub30NW/26NE dataflow station relayout, consumes graph only when exact pin/native/epoch ledger supplied. New strict consumer helper141ed22ec7 requires ACTUAL_NATIVE_BIT_BINDING and hashes, exactbits/history; there is no equivalent produced qualified ledger yet. C15 immutableintel2 codex-hbm-plan-1351/c15_ref sha3a73d67... remains reference, not adopted restoredsource.
+
+## Joint geometry/ordinary mapped identities
+
+Existing geom_auto pushed codex/hbm-joint-bays-1351@be2756a57, no live packing job. All17SRAM bodies preserved. Actual RF2×11489stdcells incl6164FF at exactLEF dims/rowgrid and27.72% bankfill; reservedboxes before12542 surrounding sourceFF allocation;exactcovered arcs78881, max404.838,0missing/fail. Bare alias diagnostic resolved52groups (48multiplecoords),84duplicate placements removed,72813unique arcs/max404.838, mergedincident404.062, legaldisjoint sites+spare. Still SUBSET MODEL, not physical adoption.151 unresolved ordinary source identities and outputaliases/fullclock/PG/reset/hold remain OPEN.
+
+HBM/LEC actual ordinary keep-enabled selectedquarter profile TERMINALPASS: codex/hbm-quarter-profile-1452@7c63e9405b; intel2 codex-hbm-quarter-keep-1445/quarter_residual.mapped.json.134434STD/56507FF/20733.109920um² +17SRAM+64HCOL+2tail, hook5196keptregs, OT_KEEP_PIN_REGS1,13source/hook hashes matchd997. Supersedes oldbareHIER1 227684STD/94263FF as actual alias authority. geom_auto can refresh aliases when SK exporter ready after SU packet. No new actualphysical job.
+
+LEC reset lower-bound source census137local syncpairs/521regionaltreeFF (128SMtileu_rr,hostleaf/join/ingress,SU). Actual oldB1 inputs rawPOR,8new nativeD1inputsMISSING. Artifact /home/ubuntu/hbm-native-review-1418/reset_source_audit_1458.json; no blanket data reset edit/waiver.
+
+## GEOM/QC/KV and other checks
+
+Existing geom_collect owns QC/PROG proposal and RAWLEAF packaging, no generic generator edits. Rawleaf source95444301f localcapture move6.048um fixed150.963→144.915 entryreach;132465timedpairs/max155.79/0over, rows/rails/image reviewed. Still needs freshAPsource recipe/canary; pv_review child actively packages, Qwen authorized. BTABposthold3235pairs/max366.768 pass, Romleaf6476/max172.098, NodeNC133874/max393.174; Nodeclock229.635/1170FF>200 ownedqkclockplan, no oldsingleentryCTS.
+
+PROG previous83@it40 was old08:19 artifact: RETRACTED. Actualreport35=744@13:58, live603dynamic, both current DRTjobs continue untouched. Structuralproposal codex/geom-1351-1027@1e9f3e120:136pinorderedINV+FF pairs,1371muxgates inemptyx300..320, actualpin/orient proof FFQN→INVAmax0.091um/INVY→WDmax12.208,0staticbody/row/site violations. Restores actual routing capacity rather than another7umroutingOBS/halo sweep. Qk owns source integration; PGcutcapacity/clockrefresh/composedGEOM before any newroute; no3rdvariant.
+
+KV q0 exact AUTO d6a89ab35738: two unregistered pins are ft_ck_i_0/o_0 through actual declared mp_isl0_ck0 BUFx24. DumpBTerms SIGNAL misclassification; geom_auto routes explicit clockcontract classification fixAP. Real fill.1475/empty.5953 failures remain; priorreach/imagePASS was scoped, no blanket override. PV0396 actualentry198.783>150 (wrong prior91.1scope), s1__clk DATA/SDC metadata bug; qwen owns coherentface+clockmetadatafix. HHP own register directly capturesN pin; centreclone wouldviolatefirstcapture, qwen owns phaseddelivery/sourcecontract solution, no P&R. sys_c6bottom-onlyclocktaps across1036.8height realcoverageFAIL, qwenclock owns2Dgrid.
+
+KV PG NUMBER-CHECK COMPLETE: independently paired4761 VDD/VSS CSV instances, worstu_b36_0 VDD19.963+VSS24.583=44.546mV aboveM7 +6.05below=50.596>35 FAIL. Matches FLOWreceipt exactly; no solve. Localcodex-coverage-1351/kv_pg/independent_review.json hashesVDD4c375b73.../VSSd421cc91.... Root/FLOWsta_pg notified. HBMlead owns QC/HBM canonical activity; FLOW ownsKV currentmesh and repeatedsourcegapfix, no duplicatePG job.
+
+## Disk and operational disposition
+
+Safe30.02GiB oldinactive artifacts removed bygeom_auto, manifest intel2 codex-disk-prune-1351/deleted.json. Kept allactive/source/log/failed evidence and signedresults. DirtyoldHEAD17, ambiguouspausedClaudeWTs and infra-head2 with process/broadmount refs KEPT; no forcedarchive or sourcepruning. Lastfree~309GB/91%, fleetcapacityavailable; stoproutinepruning. FlowRC exactbytehardlinkdedup9.47GiB terminalODBs preservespaths/bytes; sharedinodesIMMUTABLE, reusecopyfirst. KEEP activeinfra venv intel2codex-infra-tool-1026/venv (FLOW S81RCX usesit).
+
+Existing children resumed via followup_task after14:39 brainrestart; no newagents/jobs. Existing fleet jobs continue. No blocking OWNER questions opened. Keep working until explicit reset notice; then safelypark descendants, let existingfleetjobscontinue, updatefinaldelta/root.
