@@ -41,7 +41,7 @@ def lower(plan,nodes):
   for tag in tags:
    g=groups[tag]
    for i in range(logical[tag]['mult']):
-    cells['h%d_u%d'%(g,i)]=dict(origin_um=[x,round(y+(off+i)*D.ROW_Y,4)],part=p['name'],master=D.BUF,orient='R0',group=g,kind=logical[tag]['kind'])
+    cells['h%d_u%d'%(g,i)]=dict(origin_um=[x,round(y+(off+i)*D.ROW_Y,4)],part=p['name'],master=D.BUF,orient='R0',group=g,kind=logical[tag]['kind'],logical_tag=tag)
    off+=logical[tag]['mult']
   if len(tags)>1: packing.append(dict(xy=xy,groups=tags,rows=count))
  nets=[dict(drv='g'+str(groups[a]),load='g'+str(groups[b]),layer=l,ndr='16w',edge=a+'>'+b) for a,b,l in edges]

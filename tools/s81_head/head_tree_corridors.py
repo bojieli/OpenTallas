@@ -34,7 +34,7 @@ def color_intervals(rows):
     return result, count
 
 
-def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=False, separate_drops=False, mesh_straps=None, ndr="16w"):
+def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=False, separate_drops=False, mesh_straps=None, ndr="16w", spine_landing=False):
     mesh_straps = mesh_straps or []
     out = copy.deepcopy(spec)
     for edge in out["nets"]:edge["ndr"]=ndr
@@ -206,6 +206,14 @@ def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=Fa
         for g in set(groups)-set(incoming):
             cc=groups[g];y=D.snap(landing-len(cc)*D.ROW_Y/2,D.ROW_Y)
             for k,(_,cell) in enumerate(cc):cell['origin_um'][1]=round(y+k*D.ROW_Y,4)
+    if spine_landing:
+        for g,cc in groups.items():
+            if cc[0][1].get('logical_tag')=='YD1':
+                # The lower folded trunk's capture crosses a neighbouring
+                # output landing. One PG row south supplies a disjoint M8
+                # input landing with the existing pin-stack/reach limits.
+                for _,cell in cc:cell['origin_um'][1]=round(cell['origin_um'][1]-grid['M8']['pitch_um'],4)
+                out['summary']['requires_new_island_census']=True
     original_ax={g:pin(g,'A')[0] for g in groups}
     def allocate_capture_columns():
         # Distinct clock nets cannot share a local "M9" capture drop. Allocate
@@ -386,13 +394,14 @@ def main():
     ap.add_argument('--exact-local-jogs', action='store_true')
     ap.add_argument('--lower-face-gap', action='store_true')
     ap.add_argument('--separate-drops', action='store_true')
+    ap.add_argument('--spine-landing', action='store_true')
     ap.add_argument('--ndr', choices=['8w','16w'], default='16w')
     ap.add_argument('--mesh-straps', type=Path, help='actual continuous mesh strap file reserved before all tree metal')
     a = ap.parse_args(); a.out.mkdir(parents=True, exist_ok=True)
     plan = S.Plan(S.load(a.plan))
     mesh_straps=json.loads(a.mesh_straps.read_text()) if a.mesh_straps else []
     spec, corridors = allocate(json.loads(a.spec.read_text()), plan, align_inputs=a.align_inputs,
-                               exact_jogs=a.exact_local_jogs, lower_face_gap=a.lower_face_gap, separate_drops=a.separate_drops, mesh_straps=mesh_straps, ndr=a.ndr)
+                               exact_jogs=a.exact_local_jogs, lower_face_gap=a.lower_face_gap, separate_drops=a.separate_drops, mesh_straps=mesh_straps, ndr=a.ndr, spine_landing=a.spine_landing)
     (a.out/'explicit_tree.json').write_text(json.dumps(spec, indent=1)+'\n')
     (a.out/'corridors.json').write_text(json.dumps(corridors, indent=1)+'\n')
     try:
