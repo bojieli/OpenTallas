@@ -95,3 +95,20 @@ the cut depends only on the strap coordinates.
 * R25 DRC (unit 1828381, `../r25_drc/`): 24 unique markers, all M8 Min Step at cell/net ends; same-net VSS shield gaps
   408 (24 at 0.04, 384 at 0.28 um), 0 marked -> PASS.
 * Render `pg_wide_mesh.png` (viewed, `render_wide.py`): strap corner 1632.96/250.56, M8 + M9: each green strap with its black VSS shields sits inside the clock gap between pairs, clear of red VDD / blue VSS.
+
+## 3. COORD PG-GRID-AUDIT 12:35 revision: QC die.pg.grid back to the light 0.48@8.64 + VSS clock-gap cut (sec 1)
+* The wide grid (sec 2) is NOT in the plan: COORD keeps the light grid if the canonical-deck number (PG-ACTIVITY-2,
+  survey 32.9 mV) is <= 35 mV CHECKED.  pair_spacing_um tooling + TrackRouter wide-metal spacing (scoped to kind pg;
+  no effect on 0.48 um grids) stay for the fallback.  Extra IR point: M8+M9 1.92 pair (gap 3.80 both layers) VSS 34.1 /
+  VDD 30.8 mV on the retired 864-um deck (UNCHECKED, ir/wide192).
+
+## 4. QC-MESH-R25 24 M8 Min Step -> clock_routed encoder fix (minstep/)
+* Cause (odb dump + DRT): 0.187 um M8 branch from the 6x6 VIA89 array (M8 +-0.265) to the VIA78 junction; the R19 end
+  ext 0.08 put the wire end at 2204.173, 2 nm past the array M8 edge 2204.175.
+* Fix `_array_flush_ext`: when the array M8 edge lies past the junction within FLUSH_TOL_UM 0.01 of the extended end,
+  the end extension = the array edge (0.078).  Wider mismatches (0.058 / 0.102 um, no R25 marker) unchanged.
+* DRT check_drc on the R25 routed odb, re-encoding ckm_w_ckt_17717_0 alone in fresh sessions: control (ext 80) 2 Min
+  Step (`v0r.rpt`), fix (ext 78) 0 (`v4_ext78only.rpt`); ext 280 / 345 also 0.
+* Regenerated combo.tcl for the R25 tree with the fix: exactly 12 lines differ (`combo_r25_vs_fix.diff`) = the 12
+  marked nets (addPoint x 10749240 80 -> 78); m8_array_flush_ext 12; stair census 0 shorts / 0 spacing.  Full-die DRC
+  on the fixed tree not run (next re-plan chain).
