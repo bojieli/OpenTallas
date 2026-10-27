@@ -280,11 +280,11 @@ module tb_kvslice;
         while (cyc_core < maxcyc && !(n_ready >= n_exp && n_exp > 0 && (t_setup >= 0 || cyc_core > t_last + setup_wait)) && t_bfault < 0)
             @(posedge ck_core);
         repeat (2000) @(posedge ck_core);
-        $display("KVSLICE_BOOT %s frames_sent %0d/%0d images_ready %0d/%0d errors %0d boot_fault %0d setup_ready %0d (cyc %0d) cf_fault %0d pll_locked %0d host_faults %b die_to_host_words %0d last_ready_cyc %0d cyc %0d",
-            (errors == 0 && n_ready == n_exp && n_exp > 0 && t_bfault < 0 && t_setup >= 0 && !cf_fault) ? "PASS" : "FAIL",
-            sent, nfr, n_ready, n_exp, errors, (t_bfault >= 0), (t_setup >= 0), t_setup, cf_fault, locked, host_faults, rx_words,
+        $display("KVSLICE_BOOT %s frames_sent %0d/%0d images_ready %0d/%0d errors %0d boot_fault %0d setup_ready %0d (cyc %0d) cf_fault %0d pll_locked %0d host_faults %b dcal_fault %b die_to_host_words %0d last_ready_cyc %0d cyc %0d",
+            (errors == 0 && n_ready == n_exp && n_exp > 0 && t_bfault < 0 && t_setup >= 0 && !cf_fault && !dut.sys_c.w_dcal_fault[0]) ? "PASS" : "FAIL",
+            sent, nfr, n_ready, n_exp, errors, (t_bfault >= 0), (t_setup >= 0), t_setup, cf_fault, locked, host_faults, dut.sys_c.w_dcal_fault[0], rx_words,
             t_last, cyc_core);
-        if (!(errors == 0 && n_ready == n_exp && n_exp > 0 && t_bfault < 0 && t_setup >= 0 && !cf_fault))
+        if (!(errors == 0 && n_ready == n_exp && n_exp > 0 && t_bfault < 0 && t_setup >= 0 && !cf_fault && !dut.sys_c.w_dcal_fault[0]))
             $fatal(1, "KVSLICE_BOOT verdict FAIL: native bench exits nonzero");
         if (post > 0) begin
             repeat (post) @(posedge ck_core);
