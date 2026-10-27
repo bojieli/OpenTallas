@@ -1,6 +1,6 @@
-# Codex handoff document (generated 2026-10-27 08:09 PDT)
+# Codex handoff document (generated 2026-10-27 13:51 PDT)
 
-Claude hit its usage limit (resets 10:10am); expected back at 2026-10-27 10:12 PDT.
+Claude hit its usage limit (resets 3:10pm (America/Los_Angeles) (session b7f906df, no normal reply anywhere since 2026-10-27 13:42 PDT)); expected back at 2026-10-27 15:12 PDT.
 
 Read ~/coord/CODEX-ROLE.md first: your role, the binding rules, and how to cover every task.
 
@@ -178,23 +178,23 @@ Servers fetch from hub = localhost. Toolchain is `~/.local/opentallas-tools/bin`
 
 ### main
 ```
-a54fa8a6c 2026-10-27 07:35:29 -0700 Merge commit '88aa12dd68' into claude/root-merge-33-1027
-9140cf605 2026-10-27 07:28:46 -0700 ROOT-MERGE-33: take results/kv_cores_r6/tools/*.py from claude/kv-cores-r6-1027@6d6cf6b839 (COORD APPROVED: pass1_reserve ca
-4c1310ad5 2026-10-27 07:28:34 -0700 Merge commit 'cf2033315' into claude/root-merge-33-1027
-8bd496ef4 2026-10-27 07:28:32 -0700 Merge commit '15b76fe3fa' into claude/root-merge-33-1027
-a14244af6 2026-10-27 07:16:59 -0700 ROOT-MERGE-32: take tools/die_plan/die_clock_128.py + test_clock128_r8.py from claude/qc-mesh-r24-1027@bce82068b3 (COORD APP
-9f6484c78 2026-10-27 07:16:59 -0700 ROOT-MERGE-32: merge claude/kv-kits-4-1027@ef76d0a2c8 (COORD APPROVED; sys_c LEC KEEP FAIL 46/42095 ruled RTL duplicate regi
-831edd18c 2026-10-27 07:16:59 -0700 ROOT-MERGE-32: merge claude/mesh-vias-g0-1027@ad7c8d2e0a (COORD APPROVED): fail-closed die clock mesh crossing-via G0 check 
-3ea381bb4 2026-10-27 07:16:59 -0700 ROOT-MERGE-32: merge claude/gate-pins-2-1027@e666a3923 (COORD 06:35 APPROVED): canonical geometric pin hash + exact-mirror a
-15b76fe3f 2026-10-27 07:06:16 -0700 Merge remote-tracking branch 'origin/main' into claude/tok-ds-11-1027
-dc990b4fb 2026-10-27 07:06:16 -0700 TOK-DS-11: as-built S81 band frame schedule extractor + compiler plan-latency gate
-88aa12dd6 2026-10-27 07:04:37 -0700 S81-CORE-LAT-R17: sort8 per-stage data registers (RTL/netlist bit names align for kit LEC); proof vs pre-R17 source PROVED, 
-471dd392b 2026-10-27 06:38:31 -0700 test_master_plan_r3: expect clock entry centre on the M5 track (432.012) after GEOM-21 on-track snap 51646a5c4d
+5b3f0f6b2 2026-10-27 12:44:44 -0700 ROOT-MERGE-37: hbm-cores-r13 claude/hbm-cores-r13-1027@5d7e523aa6 (HBM TT setup hook installed before the shared plan-tree C
+02e8d04ee 2026-10-27 12:39:08 -0700 ROOT-MERGE-37: standin-padport claude/standin-padport@38abd765c8 (untimed pad ports on die_trial stand-ins; fixes test_stand
+2bc4f881d 2026-10-27 12:39:07 -0700 INFRA-FIRST-QC-R27: opt-in V2 dry-build plan-error census; R26/R8 export 15,774 errors at PG 4.32, 25,656 at 2.16 (2.16 alon
+c3c761aef 2026-10-27 12:39:04 -0700 ROOT-MERGE-37: TOK-QK-6 f116325110 results (hm_r26q3 +37 cyc/token -0.0125% ledgered; COORD 11:39 ACCEPTED)
+f940c86bc 2026-10-27 12:39:04 -0700 ROOT-MERGE-37: hbm-codex-rebase claude/hbm-codex-rebase-1027@b9239ea39b (COORD 11:37 ruling 4 APPROVED)
+d7f62fbd0 2026-10-27 12:38:58 -0700 ROOT-MERGE-37: s81-eco-1 claude/s81-eco-1-1027@cea0b97cf (rstg + payload536 signed views, registry 11->13; COORD 11:52 APPRO
+5f5613484 2026-10-27 12:38:58 -0700 ROOT-MERGE-37: HEAD R19 tree tools from claude/head-r19-tree-1027@6acfb0b663 (tools/tests/results only; NUMBER-CHECK 11:46 i
+5d7e523aa 2026-10-27 12:21:54 -0700 HBM-CORES-R13: install the post-CTS TT setup hook before the shared plan-tree CTS hook (RM36 hold)
+260bc3703 2026-10-27 12:19:33 -0700 ROOT-MERGE-37: KV q3/q4 plan tools from claude/kv-plan-q4-1027@a41bf8c1e9 (tool parts only: check.py core_pin_form + island_
+eea0d384c 2026-10-27 12:18:26 -0700 kit_contract: parse gen_core_kit_kv --hard-children macro_place.tcl (per-instance setOrient/setLocation FIRM sites)
+bc363c2d6 2026-10-27 12:17:50 -0700 kit_contract: resolve gen.py phys partition place_macro instance names via plan contents (--plan-dir) for macro_channels/clo
+2d5ec209f 2026-10-27 12:17:33 -0700 ROOT-MERGE-37: QC romleaf r2 claude/qc-a0-kits-romleaf-r2-1027@7428715a6b (rebased on main QC kit generator, no MAX_CHAIN; C
 ```
 
 ### Fleet
 ```
-ot-run status: epyc2 admits 640 GB (avail 724, reserve 0, fresh 0, peak 19.7) load 75/128 run 10 root 2% scratch 233 GB | intel1 admits 745 GB (avail 823, reserve 0, fresh 7.1, peak 6.3) load 57/112 run 10 root 7% scratch 1500 GB | localhost admits 495 GB (avail 647, reserve 0, fresh 25.9, peak 61.3) load 74/112 run 31 root 12% scratch 692 GB | next 16-thread 32 GB job -> intel1
+ot-run status: epyc2 admits 790 GB (avail 881, reserve 0, fresh 0, peak 26) load 11/128 run 9 root 2% scratch 266 GB | intel1 admits 891 GB (avail 961, reserve 0, fresh 0, peak 4.9) load 11/112 run 8 root 7% scratch 1546 GB | localhost admits 588 GB (avail 727, reserve 0, fresh 23.6, peak 50.5) load 46/112 run 25 root 12% scratch 340 GB | next 16-thread 32 GB job -> epyc2
 ```
 
 ### Open release-tree items (~/coord/RELEASE_TREE.md)
@@ -254,7 +254,7 @@ ot-run status: epyc2 admits 640 GB (avail 724, reserve 0, fresh 0, peak 19.7) lo
 
 ### Lanes (current step / status / next / OWNER? / review findings from each lane file)
 
-#### AUTOPILOT (lane file updated 10-26 20:10)
+#### AUTOPILOT (lane file updated 10-27 10:49)
 Code: tools/autopilot/ on claude/autopilot-1025@af3f62215 (READY in COORD-REVIEW-QUEUE). Running copy on epyc1:
 ~/.local/lib/autopilot/autopilot/ ; systemd --user autopilot.timer (every 10 min at :02/:12/...) -> autopilot.service
 
@@ -278,6 +278,52 @@ CODEX 2026-10-25 21:50 PDT: scope follow-up READY codex/shared-flow-2144@1bca870
 
 ## CODEX notes 2026-10-26 20:14 PDT
 Timer operational; all real kits remain matching-flow/GEOM gated. Root owns deployment after merges.
+
+## CODEX notes 2026-10-27 08:15 PDT AUTOPILOT-SIGNOFF-1
+CODEX took over automatic route/signoff/routed-LEC continuation on codex/autopilot-signoff-1027@ee05d9ad37 (intel2 sparse wt /srv/opentallas-scratch2/claude/wt/codex-autopilot-signoff-1027). Existing runners already route/RCX/sign off; missing stage was routed LEC before archive, plus route-only runners leaving no signoff. New staged chain runs in the SAME ot-run allocation, executes staged PREFLIGHT if present, preserves runner corner/hold policy, recovers missing signoff only from unique actual 6_final ODB+SPEF (no reroute), and requires exit0 + EQUIVALENT on actual 6_final.v before publication. CTS/GRT diagnostics remain scoped. Missing lec.py rejected before routing; proof logs/receipt archived. Existing jobs/adopted runs untouched. 89 focused unittest controls PASS incl zero-exit failed-LEC mutant, stale/missing proof, missing routed netlist, preflight failure, diagnostic scope. No physical job launched; deploy only after root merges. Next: root review/merge and ordinary timer deployment; first real ready kit exercises chain.
+
+CODEX 2026-10-27 08:17 PDT: successor codex/autopilot-signoff-1027@8c3b2dbdd3 (includes ee05d9ad37) preserves fresh LOCAL_PASS_NEEDS_PARENT exit1 as provisional while routed LEC runs; WAIT-PARENT remains, not publication. 90 focused tests PASS. Final READY sha8c3b2dbdd3.
+
+## CODEX notes 2026-10-27 08:21 PDT shared continuation
+AUTOPILOT source successor f4aa309205 adds separately staged shared tools/die_plan preflight for ALL kits (no overwrite of kit signoff/lint tools), missing shared checker fails before route; 92 focused tests PASS. Requires PREFLIGHT tool merged first. Infrastructure report falsePASS fixed on codex/infra-gate-1027@fec71b55c5: connected_preroutes absent/false or CAPACITY_RESERVATION_ONLY now FAIL even with clock/GRT PASS; 5 focused tests PASS. Existing actual importer proof is DONE on main results/infra_replay_1026/guard_summary.json: actual clock+PG wires/vias/terminals preserved after GRT50 overflow0, protected-terminal/deleted-wire mutants caught, actual-shape capacity extension measured. Remaining general integration gap: die_infra.cmd_grt still consumes OBS only. Qwen owner confirms current QC direct clock_routed combo imports actual routed clock and bypasses capacity-only freeze. No duplicate proof launched and no physical qualification inferred.
+
+## CODEX notes 2026-10-27 08:31 PDT proof resources and alias
+... (7 more lines in the lane file)
+
+#### BUMP-SURVEY (lane file updated 10-27 12:18)
+Scope: S81, S81-HEAD, QC (qwen_compute), KV (qwen_kvsys), HBM. Open pad data only (COORD 07:33 basis: GF180MCU open PDK 9.4.3
+pitch >= 70 + 1.3*UBM -> pad >= 73.5 um at 150 um; CERN hep-ex/0101011 150-um pitch = 70-80 um footprint; TOPLINE daisy-chain
+
+
+Survey under the HEAD-5 basis (150 um, pad 70/75), this lane's PDNSim, CHECKED (run outputs; window power from each die's model):
+| die | window W/mm2 (basis) | PL p70 | G12 p70 | G12 p75 | C3 p70 | edge band G12 p70/p75 | B75C3 (75 um/37.5) |
+|---|---|---|---|---|---|---|---|
+| S81 | 0.115 (infra_pg region model) | 6.5 | 2.1 | 2.0 | 3.7 | 3.8 / 3.7 | - |
+| QC | 0.582 (region model, owner cap) | 32.9 | 10.8 | 10.0 | 17.9 | 12.4 / 11.8 | - |
+| KV | 1.82 (hg window, KV-INFRA-R2 vectorless measured) | - | 37.6 | 35.2 | - | not run | 22.6 |
+| HBM | 2.18 (B2r2 power_map, SM r25gp) | - | 39.8 | 37.6 | - | 112.3 / 87.7 | 24.6 |
+| S81-HEAD (NUMBER-CHECK) | 1.542 hot block | - | 26.0 (+5.13 = 31.1) | 24.8 (+5.13 = 29.9) | - | 19.9/23.7 (75) | - |
+H8 (M8 0.96@4.32) kits for KV/HBM OOM-killed (exit 137); not rerun.
+Reading: at the HEAD-5 basis S81 and QC PASS with wide margin (and QC even on the plan grid at 32.9 above-M7, marginal once below-M7 is added).
+KV and HBM FAIL 35 already above M7 at 150 um / 70-75 um pads (KV 35.2-37.6, HBM 37.6-39.8, + an estimated ~6-7 mV below-M7 UNCHECKED);
+both PASS at 75-um pitch (22.6 / 24.6 above M7). HBM edge band 88-112 mV: first bump column sits 147 um from the die edge (grid centred),
+so the strip x<147 is fed one-sided -- an edge-row placement fix, UNCHECKED. KV/HBM power maps are not activity-measured (owner 10-27:
+PG on measured toggle rates) -- a lower measured density may move them under 35.
+Next: KV/HBM measured-activity power maps; edge-aligned bump row on HBM; below-M7 slice per die; adopt pad_um into main (HEAD-5 merge).
+
+## 2026-10-27 12:18 PDT PG-ACTIVITY-KVHBM result (claude/pg-act-kvhbm-1027@48f939873f, results/pg_activity_kvhbm_1027/README.md)
+150-um bumps, 70-um pads, G12 grid (M8 0.48@4.32 / M9 12.96@34.56), PDNSim VDD+VSS co-located, interior. The PDNSim numbers are CHECKED: they are the run outputs, with pad_fallback 0, PG_CHECK OK and EXIT 0 on every kit, and KV agrees with linear scaling (21.7 vs 21.8). The power bases are UNCHECKED.
+| die | power basis (window W/mm2) | above M7 | below M7 | total | verdict |
+|---|---|---|---|---|---|
+| KV | old vectorless 1.818 | 37.6 | - | - | FAIL |
+| KV | MEASURED 1.050 (head_eighth e1 x0.580, pv_pair x0.520) | 21.8 | 6.05 (e1 slice; 3.88 at measured W) | 27.9 | PASS |
+| HBM | old 10-24 map 2.179 | 39.8 | - | - | FAIL |
+| HBM | SM FLAT 0.5 upper bound 1.366 (real hnx_rp3lp3h halves + CTS x1.189) | 25.0 | 5.13 est (no SM final odb) | 30.1 | PASS (upper) |
+| HBM | SM vectorless lower bound 0.755 | 13.8 | | | |
+Measured activity: KV types hg 2.054->1.191, hgi 1.971->1.143, pv 1.257->0.654 W/mm2. The other KV types are scaled by ratio (UNCHECKED-ESTIMATE). HBM SM measured is still running: tb_hgi_sm_e2e --ds, ot-run unit oth-ubuntu-1788511-1793125212 (intel2 pg-act-kvhbm-1027/hbm/sim). Collect with tools/pg_activity/collect_hbm.sh + make_hbm_map.py. It can only land between 0.755 and 1.366, i.e. 13.8-25.0 mV above M7. HBM non-SM blocks keep their 10-24 values.
+HBM die edge (task 3): EDGE-FILL lattice (pitch 150 kept, 168 columns, first column 72.12 um from the edge instead of 147.12; pg_meas_psm.py --edge-margin 60). Die-edge band goes 112.3 -> 38.5 mV on the old map (= inner 39.5), and is 24.2 on the flat-0.5 map. Render hbm_edge_lattice.png viewed. KV edge windows are cold (0.23 W/mm2).
+Denser M8 H8 (M8 0.96@4.32), old maps, run at 96 GB: KV 37.6->28.4, HBM 39.8->30.6. It needs 88% of M8 tracks, so it is not needed. KV H8 on the measured map is still running (intel2 pg-act-kvhbm-1027/kits/kv_meas/H8_p70_int); this is informational only.
+Next: collect the HBM SM measured run; adopt the bump lattice (edge-fill) + pad_um into the plans (HEAD-5 merge); rerun HBM on the current unified plan once it is adopted.
 
 #### CLK-AOCV (lane file updated 10-26 18:34)
 2026-10-26 18:00 PDT CLK-AOCV: RESULT DRAFT (for OWNER review, not a gate; all numbers UNCHECKED -> NUMBER-CHECK) claude/clk-aocv-1026@b0c11ff91e, review doc results/clk_aocv_1026/README.md.
@@ -322,7 +368,7 @@ CODEX foundgeneric clock_routed non-pin_stack duplicate-dropvia bug; ownKVactual
 R9 own codex/qc-r9-2000@09db4023fa: mainb25fdf5231 merged manually keepingR9 MY/site declarations+KV/FALLBACKtools. Tree2 completed FAIL91:84 overwrittenabstractwindow shorts+7M7boundary issues; graphaudit267nets/266drivers0opens. RCXleafspread6.808TT/5.846FF (UNCHECKED). Tree3 physicalaliases+shortstack maxriser0.955 removes ALLshorts/spacing; FAIL156MinArea only (M7/M8). Tree4 opt-in connectedminarea pads reviewed/viewed,27testsPASS; actualroute live epyc2 unit112318-1793072428 path codex-qc-r9-2000/tree4, hubclient2251809. Collect route_report.json/r9cls4.txt/connectivity audit. Stilltree-only diagnostic, notfullmesh/signoff.
 
 
-#### CLOCK-KV (lane file updated 10-27 07:18)
+#### CLOCK-KV (lane file updated 10-27 13:07)
 2026-10-26 16:32 PDT CLOCK-KV-R1 STATUS: branch claude/clock-kv-r1-1026@5ca97fbccf = main 63f0898a30 (pdn-one ff81c089a, clock128-shield, infra-r4-holdwin) + master-plan-r5 5d9916b4c1 + KV plan window keys (physical/die_plan/qwen_kvsys/die_plan.json clock.tap_window 80, clock.seam_hold 25/80; flow-watched via gen_phys -> needs a KV canary before merge). Fleet worktree epyc1:/srv/opentallas-scratch2/claude/wt/clock-kv-r1-1026 (sparse clone), data epyc1:/srv/opentallas-scratch2/claude/clock-kv-r1-1026. kv-land-adapter qwen_kvsys canary collected: NO-REGRESSION (queue line). Root-cause probe of the g32x64 430 ps: see next line. Next build: KV die clock on pdn-one PDN after the tree structure decision.
 2026-10-26 16:42 PDT CLOCK-KV-R1 RESULT (all numbers UNCHECKED, NUMBER-CHECK please). Branch claude/clock-kv-r1-1026@e444b9df74 (main 63f0898a30 + master-plan-r6 b2760e03db + KV plan window keys 5ca97fbccf). PG basis: plan die.pg rows via main die_infra.pg_grid = pdn-one ff81c089a model (no --pg-json; the old pg_x2.0 IR file is NOT used); shields per clock128-shield (on main). Data epyc1:/srv/opentallas-scratch2/claude/clock-kv-r1-1026.
 
@@ -343,6 +389,20 @@ R21/R22 approved tools/results now integrated b2929dab7 (default pin-match; chan
 - 2026-10-27 06:46 PDT CLOCK-KV-R25 RESULT (claude/clock-kv-r25-1027@98711b8be0, results/clock_kv_r25/; run intel1:/srv/opentallas-scratch2/claude/clock-kv-r25-1027; real-copy plan dir for core lanes intel2:/srv/opentallas-scratch2/claude/clock-kv-r25-1027/pd/ (hm_r25.json + cores/ + cores.sha256, no symlinks)). PLAN hm_r24 53cc76e3 -> hm_r25 113a1664 (sites clock_mesh_sites_r25.json d25f60c6), ONE delta = D-KV-ISL-FT-R25 + D-KV-MIRROR-R25. G0 PASS / G0C PASS 0E/1851W, warning set identical to R24 (own runs, CHECKED). (1) ISLAND FT PORTS: every 12.2a1 pushdown group (mesh driver = 2xBUFx24, tree node = 1xBUFx24) = one clock ft arc ft_ck_i_<k> -> cell(s) -> ft_ck_o_<k>, k by core-frame (y,x); scalar names pass ft_ports IDENT/_kind=clock and pin_audit INTERIOR. M5 interior pins (die M9->M5 stacks VIA89/78/67/56), x on M5 tracks clear of the kit M5 PG pair, in-port >=1.08 um left / out-port >=1.08 um right of the group, y = island row centre; file-level island_ft {arcs: source, sink, kind, role, cells, master, rect_um}. pv_pair 2 arcs (node k0, mesh drv k1), kvs_pc 2, head_p 2, ectlk_q0/q2 1 each. Die-frame check: all 832 groups / 1664 ports of 448 instances land beside their own die cells on the same row in every orient/view (0 bad, CHECKED verify_render.py); render die_zoom.png + core_*.png VIEWED. (2) MIRROR (COORD GATE-PINS-2): sub-core reset pins moved into the centre entry row y=H/2 (MX-invariant, M5, free track, PG-clear): pv_pair s0/s1__rst_n (2), e0 6, e5 4, e6 5 (+7 stale fMX clocks fixed by imaging); fMX views rewritten as EXACT MX images (0 non-image pins, CHECKED); head_p R0 view = exact MY image of the plan fMY view (unused by plan). kvs_pc: island set made MX-symmetric (ideal points 86.4 / 276.48 = H-86.4; rule 'row on the core-centre side of the ideal point' moves the upper group 0.27 um down, 248 cells, 0 overlaps) -> kvs_pc fMX = exact MX image incl. ports -> ONE GDS for 124 inst. pv_pair: fMX = image except the 4 ft ports: islands (drv v138.24, node v43.2) are NOT MX-symmetric and the 80 fMX instances' die cells sit at the same pin-frame points, so kv3_pv_pair_fMX stays its own type (2 GDS) until a lattice change (CHECKED geometry). (3) pv_join fR180 = OWN TYPE: the true R180 image of R0 puts 1024 ts0/ts2 M3 pins half an M3 track (0.018 um) off the lattice (W=172.8 not symmetric for the M3 offset) + moves the centre entry; fR180 is the snapped version -> KV-CORES-PV builds pv_join_fR180 (20 inst); pv_join fMX = exact image (0 diff) -> same GDS as R0. Moved island bodies 0.27 um: timing not re-extracted (r22u RCX/MC, UNCHECKED). Not folded: D-KV-HEAD-TR(A) e5 (pdA) - compatible, apply on hm_r25 next.
 - 2026-10-27 07:15 PDT CLOCK-KV-R26 RESULT (claude/clock-kv-r26-1027@38c1ed8519, results/clock_kv_r26/; run intel1:/srv/opentallas-scratch2/claude/clock-kv-r26-1027; real-copy plan dir intel2:/srv/opentallas-scratch2/claude/clock-kv-r26-1027/pd/ (hm_r26.json + cores/ + cores.sha256 70 files + plan.sha256, 0 symlinks, sha -c verified; all non-r26 cores byte-identical to r25)). PLAN hm_r25 113a1664 -> hm_r26 568fc66e (mesh sites unchanged clock_mesh_sites_r25.json d25f60c6), ONE delta = D-KV-CENTRE-R26 + D-KV-HEAD-TR(A) e5. (1) e1 + e5 clock pins (6 each) -> 12.8a centre entry at the kv_core_slice sites (= KV-CORES-R6 pdR6 sites: x 107.256/107.64/108.024/108.408/108.792/109.176, y 108, M5; same site set as e6). (2) e5 sub-core rst_n (4): r25 had g_t_10_u_stin on 108.024 (= slice clock site) -> moved to the e6-analogue reset sites of the centre row (g_t_10<->g_t_12, g_t_11<->g_t_13: stin10 107.928, stk10 108.216, stin11 107.832, stk11 108.312), off every clock site, >=2 M5 tracks from all pins, on track, PG-clear, y=H/2 (MX-invariant). INTERPRETATION: kept INSIDE the 8.64-um entry island (12.8a = clock/reset island; e0/e6 resets sit there too); a site outside the island has no die M9->M5 stack and would need a new in-core island -> say if COORD wants them outside. e1 rst_n unchanged on the N face (e1 uses one view at R0 and MX: no image issue). (3) e5 fMX r26 = exact MX image (0 non-image pins); D-KV-HEAD-TR(A) folded: 24 hard-core entries fMX@MX -> canonical e5_pins_r26@R0 (same origin) -> ALL 256 e5 + 256 e1 instances on ONE view each. Every other pin byte-identical (asserted). Type clock taps: 112 R21 taps (e1 g_t_2_u_l8 / e5 g_t_10_u_l8) moved with their pin to the core centre entry, 24 taps added for the TR(A) e5 entries (taps 504 -> 528); their insertion notes (R21 measured path) are stale until re-sign. CHECKS (own, CHECKED): G0 PASS / G0C PASS 0E/1851W, finding set identical to R25 (summary differs only in run paths + taps count), core_pins_off_track 0; die frame (kv_r26_dieframe.py) 512 instances x all pins = 279,552 pins: 0 data/strap/face pins changed die xy vs r25 (incl. the 24 TR(A) instances), 4,096 moved entry pins all on their core's centre row inside the die-frame entry square, 0 bad, in all 4 partition orients x core orients. Renders VIEWED: render/core_e1_e5_r26.png (core frame + entry zoom, e1/e5/e5fMX vs e6 ref) and render/die_heads_r26.png (hg_WS/WN/ES/EN = R0/MX/MY/R180: every e1/e5 clock cluster + tap at its core centre). Timing not re-run (plan pin move only). No live jobs.
 - 2026-10-27 07:18 PDT ROOT-MERGE-32 NOTICE (CLOCK-KV/PATH-KV): canary KV hold demand 2213 endpoints / -94.57 FF is real under the declared 80 ps tap window (5ca97fbccf) -- goes away only with signed KV kit margins replacing the window. Also mesh-vias-g0 ad7c8d2e0a on main: codex-kv-clock-2001 proof/mcp_rcx mesh builds have 0 VIA89 at 2272 crossings -> rebuild combo (vias default ON) before any --mesh-signoff.
+
+## CODEX notes 2026-10-27 08:13 PDT
+CODEX took over CLOCK-KV/PATH-KV on codex/kv-clock-1027 (R26 + main merge e26e75de3). No inherited live jobs. Adopted hm_r26 retained; new own current build copies R25 canonical cell bodies (including MX-symmetric kvs_pc), replays with main crossing VIA89 default and merged shields, then fresh RCX/tree STA/mesh/stub chain. Review VIEWED results/geom_review/codex_kv_clock27/current_review.png: R0/R180/MX clock bodies exactly inside declared core islands; r26 centre clock/reset pin render reviewed, clock sites clear. PASS-COND on continuity/connectivity. Live ot-run client intel2 PID333473, log ~/codex_kv_clock27.otrun.log, own data intel1:/srv/opentallas-scratch2/claude/codex-kv-clock-1027/current. Next: collect meshvias+RCX, fresh MC on canonical bodies, then related-pair gate with R7 real views as they arrive. Existing old e1/e5 content mismatch remains 0 honest real coverage; no reroute or old-view qualification.
+
+## CODEX notes 2026-10-27 08:22 PDT
+Current adopted-body chain DONE: GRT50 TT overflow0 (170210 nets, usage3.76%); mesh continuity2048/2048 emitted+routed,0findings; RCX4372/4372 nets connected,0unreachable pins; driver-input spread44.6TT/40.7FF; tap slew92.10TT/68.48FF,0/1920>120 (own numbers UNCHECKED). First continuity verdict FAIL was checker false-negative: combo_gen.log entered min across corner logs; actual TT had2048vias. Failed receipt meshvias_initial_fail.json retained; source-only fix codex/meshvia-log-1027@ff17a2a98 (main-based),9focusedPASS, READY via Qwen coordinator. Resumed post stage without repeating GRT. New24sampleTT+FF MC live via intel2 client2348242 ~/codex_kv_clock27_mc.otrun.log (intel1 own current build); fresh gate follows matching MC. Canonical-body timing now freshly extracted rather than reusing r22u.
+
+## CODEX notes 2026-10-27 10:02 PDT
+Own codex/kv-clock-1027@563778e9a pending ONE event: R26+200FT+resetlocal+q2rename+completelegalKVSCTL+widePV259.2x172.8. PV actualsites127group translations,0cycles,404.136ummax; mirrored n joins24pinrefs corrected to existingfMX. Parentclock rebuilt12563cells,0unplaced/overlap/hardkeepout; EXACT160cells moved(128driver+32repeaters),other12403same canonicalcurrent. PersonallyVIEWED results/codex_kv_event27/pv_clock_review.png; islands applyPASS. CombinedG0 live intel2 client2143415 ~/codex_kv_event_g0c563.otrun.log, data intel1:/srv/opentallas-scratch2/claude/codex-kv-clock-1027/event/g0c_pv563. No newroute yet. Current pre-PV MC24 TT118.62/FF115.21ps; raw seamTT+435.25/FF-200.64,intra+471.31/-174.42, HB4budget only (notinserted),realcoverage0 after exactcontentfilter; oldincompatibleviews notqualified. Multi-view helper child78c9c13542 ready separately. Native strict5c7PASS0 andPVcalendarPASS; portbind5 currentworker owns. Exact thin missing sourceasset/R8/helper47/keepGPL deltas imported; no oldwholeplan copy.
+- 2026-10-27 11:01 PDT KV-PLAN-EVAL RESULT (claude/kv-plan-eval-1027@e2be676e45 results/kv_plan_eval_1027/README.txt; data intel2:/srv/opentallas-scratch2/claude/kv-plan-eval-1027). Event codex/kv-clock-1027@3cb5395c6 vs adopted hm_r26q2 1d257518.
+  (a) PRICE. 130 lanes +210 cycles, all of it stations (CHECKED from the plan latency tables). Codex price 674cd499f re-run from its inputs (CHECKED):
+    - 89 PV calendar joins and inbound RX/KVN cost 0 per token.
+    - The attention TX bundle goes +1 per layer: direct +36 cycles/token = -0.012 % (4051.0 -> 4050.5 tok/s).
+... (35 more lines in the lane file)
 
 #### CLOCK-MESH (lane file updated 10-26 04:25)
 2026-10-25 23:59 PDT CLOCK-MESH (fresh): owns D-QC-CLKMESH realisation (COORD 23:53) + KV it5 tap-leg slew (23 TT / 22 FF > 320). Branch claude/clock-mesh-2355 (= claude/die-proto-qcb2-2325@821a7e092e + main 1d335f9d99 conservative core-union die model), sparse wt epyc1:/srv/opentallas-scratch2/claude/wt/clock-mesh-2355, data epyc1:/srv/opentallas-scratch2/claude/clock-mesh-2355/. Adopts DIE-PROTO 23:52 mesh model + CLOCK-RESET 23:49 root cause; D-QC-CLKISLAND (CLOCK-RESET 23:49) is folded into the mesh driver-site plan item (one QC clock delta, not two). Live: S81-HEAD d7b8d1eb GRT re-probe on the new die model (ROOT-MERGE-13 ask); KV slew sub-agent (branch claude/clock-mesh-kv-2355).
@@ -402,7 +462,7 @@ Design: every trunk edge is a PRIVATE buffered leg (leg-start buffer at the pare
 ## CODEX notes 2026-10-25 21:52 PDT
 CODEX took over clock/reset group on codex/clock-2144s; detailed current/jobs/next/failures in ~/coord/codex-clock-coverage.md. E5 CTS04b inherited GRT probe collected overflow0; physical remains FAIL (trunk7 slew>80, macro CK13.2..54.1ps early). Local insertion and macro clock structural fixes underway; CP1 successor child owns sender_min+early face taps. QC wide-clock rerun owned DIE-PROTO; no duplicate whole-die STA.
 
-#### CLOCK (lane file updated 10-25 23:49)
+#### CLOCK (lane file updated 10-27 09:59)
 Branch claude/clock-1024 (from origin/main d13ff7c78), worktree rtx-pro:/home/ubuntu/wt/clock-1024r.
 tools/die_plan clock tools (spine.py, die_trial clock, die_sta.py, new die_clock.py) have ONE owner from now on: CLOCK.
 
@@ -436,9 +496,9 @@ CODEX took over: contract-budget result collection + current B2o PG-corridor clo
 2026-10-25 06:02 PDT CODEX: READY opt-in PHY PG corridor tool rebased to currentmain on codex/clock-push2-1025@bfadc17bb (88cc72442 original0a9c3adaa; bf32be2d7 router dependencye6f120c7e; bfadc17bb honors uniform per-type local clock.keepouts on rotated instances). Focused17testsPASS; prior actual tiny TT/FF pair7.32/7.21ps proof retained, image viewed open channels/symmetric grid/clear PG detour. No full B2o claim; current generator repair at HBM-PLAN precedes review+STA. No default change.
 2026-10-25 06:27 PDT CLOCK-RESET/hold: contract stand-ins: S81 FF all 2151 seams timed, worst hold +32.85 (s_4S_C->s_5S_C, was -6.75), 0 neg; TT setup +666.1 hold +45.0 pair 3.53. KV FF all 3939 seams, worst +33.79 (was -5.81), 0 neg; TT setup +666.8 pair 2.81. QC FF 2088/2934 seams, worst so far +33.69, 0 neg (still running, QC TT running). FF die_sta.json (CRPR/pair tail) pending for S81/KV/QC at intel2 clock-reset/hold/<die>/run_bhc_*.
 2026-10-25 06:39 PDT CLOCK-RESET (restart 06:10): hold contract stand-in runs COLLECTED (intel2 /srv/opentallas-scratch2/claude/clock-reset/hold/<die>/run_bhc_{TT,FF}/die_sta.json, 833.333 historical budget, diagnostic): S81 TT setup +666.12 / FF hold +32.85 (0 neg), TT hold +44.97, pair 3.53/3.47; KV(qwen_kvsys) +666.84 / +33.79 (0 neg), pair 2.81/2.53; head +666.06 / +31.09, pair 3.59/5.30. QC still in STA (ot-run units 334*-1792928128, ~1.5 h in). Rule carried: the die tree balances to each kit's routed RCX latency, never the GRT estimate.
-... (28 more lines in the lane file)
+... (29 more lines in the lane file)
 
-#### CORES-KITS (lane file updated 10-27 06:39)
+#### CORES-KITS (lane file updated 10-27 08:28)
 Scope: hard cores only (no pending die-plan delta). Skipped: ot_s81sl_vn_b ot_s81sl_vn_a ot_s81sl_ve_s (PENDING-DELTA TR2-S81).
 Flow: S81 kits = released canary 0f076c3f7 flow; KV = canary golden flow (flow-20261025-b not cut; KV routes autopilot-HOLD on KV core canary REGRESSION).
 
@@ -472,7 +532,7 @@ Root independently viewed canonical host_qm placement and approved PASS-COND for
 
 ## CODEX notes — 2026-10-26 02:55 PDT S81 physical progress
 - L1c k26b: place PASS, LEC EQUIVALENT, raw/post face PASS; actual r2r max 255.1 um, zero >405; fill 29.04%, pin-reg p90 8.14/max 67.36 um. Independent CODEX-S81-L1C-1026 PASS-COND accepts the fixed 86.4x216 slot aspect 2.5. Autopilot row 6a3ab1a7d74e published; normal flow/plan holds apply.
-... (52 more lines in the lane file)
+... (54 more lines in the lane file)
 
 #### CP1-R10 (lane file updated 10-26 02:07)
 ## Current step
@@ -510,42 +570,14 @@ CODEX took over CP1 result collection and data-net ECO on codex/cp1-push-1025 (f
 - COLLECTED full-repair reach405R r1: NOT SIGNED, TT+181.73, FF+8.39/0 endpoints, slew146/82, DRC0. Residual DRV is output-face D pins (400..436ps against320ps), data nets rather than clock/reset. Full repair fixed the small IO hold failures.
 ... (31 more lines in the lane file)
 
-#### CRASH-TRIAGE (lane file updated 10-25 21:13)
+#### CRASH-TRIAGE (lane file updated 10-27 08:13)
 Scope: the 48 DONE-CRASH rows and 48 DONE-STRUCTURAL rows in epyc1 ~/coord/autopilot/state.json (snapshot taken 20:05).
 Each signature: stage that failed + first error line from the run logs / client log.
 
-| S4 | FAIL_PREFLOOR LEC NOT EQUIVALENT | 2 | hbm | tkm_tp192 root d8e5ea0d9433 / tile 1d7cc749d634 | PATH-HBM (TKM LEC) |
-| S5 | routed: FF hold -34..-40 ps over ~1600 EP + TT slew 900-1960 pins (+ small TT setup) on every ASTK orientation | 7 | qwen_kvsys | kv3_astk_EN 773d6e878a4a | KV-CORES / PATH-KV (ASTK_EN is on the KV path). The same signature in all 4 orientations = one structural cause. **TYPE-REDUCE: EN/ES/WN/WS = 4 types, one cause, 7 rows** |
-| S6 | routed: related-pair skew > 80 ps + FF hold (macro CK vs IF regs) | 5 | qwen_compute | qfd_dv_s8x_btab__s6 54fc4d99cbf9 | PATH-QC SRAMIF: superseded by SRAMIF2 variant F (prog_a1f / btab_a1f) |
-| S7 | routed: pin-flop insertion outside 250 +- 40 ps (375.7 / 199.2) | 3 | s81, s81_head | hd_turn_b 3385ba2ea2ad (x2 rows), ot_s81sl_vn_a 38286eb7249e | PATH-S81 (hd_turn_b), S81-CORES (vn_a) |
-| S8 | routed, other single misses: FF hold -17..-37 (cp1 col_h10_r1, argmax r2 s2f2, kv3_pv_pair), TT setup -58.6 (dsfd_su_t_rxsf), face_guard shared 3 + hold -25.9/3 EP (slice_station__t24) | 5 | cp1, hbm, qwen_kvsys, s81 | kv3_pv_pair e72f8267ae87 | CLOCK-RESET, HBM-KITS, KV-CORES, S81-CORES, S81 |
-| | **total** | **48** | | | |
+## CODEX notes 2026-10-27 08:13 PDT
+Historical known generator failures remain assigned to current die/core teams and FLOW shared preflight. Owner08:02 PREFLIGHT-1 sent FLOW; no dead-host kit resurrection. Full lane inventory123md files in CODEX.md.
 
-## Re-enqueue / deletion
-- Re-enqueue: no crash row needs a plain re-enqueue. Each one has a successor row, a superseding rebuild, or a recorded verdict (see the table). Once crash-triage-1025 merges, these regenerated kits get the IR deferral automatically: kv3_io_ft / kv3_io_ft_v1 (PATH-KV / KITS-SPARE rebuild with gen.py phys on main). Enqueue them normally; they do not need extra --mem for 6_report.
-- Data release: autopilot/failure-resolved.tsv DELETE rows for the 40 crash rows above whose kit is not shared with a live, archived or near-miss row (20:3x). The autopilot deletes only run/results + run/objects and refuses while a container mounts the kit. KEPT (still in use): vq_f6 81cab70b3f92 (S81-CORES census; epyc3 retired), qbank_N 8da8b06c0f6a (S81-CORES re-sign), astk cts 3d790abf8b60/9c1dca017848, rp1 e91891f9eed3 / f62 897f05140dde, btab_s8 39a0c5d4d168, prog_s8b 610890e3f05e (kits shared with NEAR-MISS/ARCHIVED rows).
-
-## PARKED 2026-10-25 20:20 PDT
-- Done: 48 crash rows grouped into 12 signatures; 5 fixed at the root on READY claude/crash-triage-1025@3bda8a58af (merges cleanly on main 4347ae33b6: main has not touched these files); 48 structural rows summarised in 8 causes; owners told (PATH-S81/FLOW S3, PATH-KV C2/S5); 40 crash rows released for data deletion in autopilot/failure-resolved.tsv (8 kept, listed above).
-- Live jobs: none (only the read-only docker patch smoke test, finished).
-- Next: after ROOT-MERGE merges crash-triage-1025, check the hub log for "GOAL ..." and "REJECT ... signoff.py lacks" lines and that the next Error 247 row is resubmitted at 1.5x. KITS-SPARE/PATH-KV regenerate the kv3_io_ft kits. TYPE-REDUCE candidates: slice_station (S1, 16 rows over 12 variants) and kv3_astk EN/ES/WN/WS (S5, 7 rows).
-- OWNER? none.
-2026-10-25 20:41 PDT KITS-WAVE/E3: GENERATOR-GAP ot_s81sl_vs (withdrawn row 8990217325ab, kit died with epyc3): main 94e94224c gen_core_kit_legacy.py cannot produce the successor GEOM-REVIEW-2 06:40 requires (FAIL-F1 on vs_lfp). Has: F1 per-corner vclk (core_flow), F2 setRC_rcx, rtl_lint, reg_fanout. Missing: (1) no ot_s81sl_vs recipe and no plan_pins_file selector on main (both only in unmerged codex-hub/s81-cores3-nk-1025 adedc8678; FCAP dont_touch release 20b1e3302 also unmerged); (2) F4 leaf_affinity not wired: the legacy cts_post.tcl = tap_balance + setup-only repair, no leaf_affinity.tcl (gen_phys has it); (3) no recipe/env knob for a face pin-register band region depth (face_flops.tcl has no depth parameter) for the W 12-15 um band. Not rebuilt; no hand-patched kit. Fix owner: S81-CORES/legacy generator (port adedc8678+20b1e3302, source leaf_affinity.tcl in cts_post, add a face-band depth recipe key), then re-kit.
-2026-10-25 20:41 PDT KITS-WAVE/E3: GENERATOR-GAP ot_s81sl_vq (withdrawn row, DONE-CRASH 81cab70b3f92 vq_f6 NOT SIGNED; KEPT kit died with epyc3): vq_f6 was a kits_repin (kr_*) kit; gen_kit_repin.py is not on main or on claude/s81-cores3-rt-1025, and main gen_core_kit_legacy.py has no vq recipe and no hook for split_clock/macro_if_flops.tcl (F6 IF regs at the SRAM, which vq_bfq failed without: 69-184 um) nor F4. The PATH-S81 08:55 successor (F6 per-pin census + fresh-FF CTS from 3_place) needs F6 in a generator. No live vq job on epyc1/epyc2/intel1/intel2 (docker ps). Not rebuilt. Also note TYPE-REDUCE-2 20:19 proposes a new template pin table for vq/vs (claude/type-reduce2-1025@0ccde7a09): if adopted, both re-kit on it anyway.
-2026-10-25 21:13 PDT KITS-WAVE: GENERATOR-FAIL classes from the 10-25 kit wave (main 190ebb428e, tools/die_plan/gen.py phys; QC via bind.py all --asbuilt physical/die_plan/qwen_compute/bind/asbuilt_meth_fixed_su.json + bind.py kit-rtl + gen.py --kit-rtl; logs epyc1:/srv/opentallas-scratch2/claude/kits-wave/{status.log,logs/<die>/<T>.*.log}, kits gen/ (S81, head) and gen_b/ (QC bound)). No kit hand-patched.
-  (G1) S81 gen 'bus X is not bound to any leaf port (open input)': serdes__t1-t4,t12-t16, gunit__t1, iqf__t1, kv_leaf__t1/t2/t5, lep*_LP (4), bk_sel__t2, svc_* -- plan buses with no leaf port in the current RTL.
-  (G2) S81 col_h* (8): gen 'FileNotFoundError macro view missing'.
-  (G3) phy types exit rc 0 with no config.mk (silent): S81 phy__t1; QC phy_serdes, phy_serdes_b, phy_ucie_kv -- gen must fail closed.
-  (G4) plain gen.py on QC/head emits invalid SV from placeholder contents (module '<type>_pstn' status new / 'slice s6b u_fup') instead of failing closed; QC 'bound twice' in gen for sle_sc_v1-3, sle_stm_v1-3, slw_sc_v1/v2, coll_ucie, sle_ctl, tt_ctlm.
-  (G5) QC bind of FROZEN plan 441d1401 (repo recipe): first run crashed FileNotFoundError OUT/bind_reset.json (wavefront writes it to out.parent, cmd_bind reads out/; passes only when OUT already holds one); rerun: unbound 0 tied 0 multiply_bound 0, n_errors 32 = R8_STALE x30 (c16_E0_0.u_t_2_2.n_y bound 14 vs r8 table 13) + TYPE_SPLIT sle_ctl (4 variants) and sle_fw_v1 (2). bind exits rc 1.
-  (G6) QC kit-rtl 'instances carry different parameters' (needs --instance/variant per slot): cbf_q00, cbf_q11, cbn_q11.
-  (G7) QC bound kits, rtl_lint check -assert multi-driven (16): e.g. sle_hc1 qfd_dv_s5_xhead3.c[31:0], sle_stm_v3 qfd_dv_stream_tile_se0.qi; coll_ucie: ot_qfd_ucie_x64_phy has no port lclk.
-  (G8) QC bound kits, face_guard 'dropped 2 bits' (6): sle_fw/slw_fw variants.
-  (G9) QC bound kits, synth_odb ORD-2013 LEF master missing in kit (ot_sram_1r1w_64x512_m1_r2c2, ot_sram_1r1w2c_64x546_m1 ...): coll_n, sle_st_a_v1/v2, sle_st_b_v1/v2, slw_st_a_v1/v2, slw_st_b_v1/v2.
-  (G10) QC bound kits, GPL ODB-0360 'change orientation of FIRM instance u_bound.u_run_in/q$_DFF_P_': sle_fe_v1-3, slw_fe_v1/v2.
-  (G11) S81-HEAD plan d7b8d1eb has no asbuilt section: hd_ctl/hd_host/hd_mesh synth 'recursive instantiations'; hd_lep0N missing dsdv_slice_lepw_mu.LP, hd_serdes missing ot_pdie_serdes.
-
-#### DIE-CI (lane file updated 10-26 20:10)
+#### DIE-CI (lane file updated 10-27 08:16)
 Owner-approved toolchain item 2026-10-24: whole-die prototype CI on every change.
 
 ## Current step (12:20 PDT) RESUMED 12:1x, adopted: commit-timer run on main 9f6cbf0662 (intel2
@@ -578,9 +610,9 @@ CODEX 10:50 PDT COLLECTED nightly pinned9d2065c7a2, service inactive/exit0 but g
 - CODEX took over: collect pending CI and fix missing current-plan latency tables on codex/die-ci-refresh-1024. Old pinned da5213b0b3 run still progressing: intel2 HBM q_sfuc GRT iter8/30 (20:50), B2 q_b010 iter16/30 (21:05). Left intact; no duplicate. Four completed dies each G2 PASS 6/6, overflow/access0. Old KV policy seam TT +93.348 / FF +230.957 PASS; recorded FAIL came from obsolete margin gate. Current main already gates policy and excludes retired d4g/B2r2.
 - Fixed real current-main latency failures: new base-plan KV lat_v38v tables (2416 lanes,max36 cycles) and HBM B2l lat tables (298,max35). gate_latency PASS both, prior files retained. KV prior lat_v38s differs 43 lane depths, so this is a regenerated table, not a digest relabel. R8/token rebind remains separate. Branch committed/pushed for root integration.
 - Remaining CI failures: S81 old run 91 hardcores/rack128 -> S81 lane; QC old R8+4ft -> capacity adoption lane; missing actual seam views except recovered KV IO -> waiting physical signed views to register.
-... (14 more lines in the lane file)
+... (17 more lines in the lane file)
 
-#### DIE-PROTO (lane file updated 10-27 03:32)
+#### DIE-PROTO (lane file updated 10-27 09:59)
 Goal: die-top GRT on partition abstracts (signals <= M7, dec. 12) + die STA with real signed views where they exist
 (stand-ins + 40 ps contract elsewhere), per release die: s81, s81_head, qwen_compute, qwen_kvsys, HBM (B2n on main if G0C).
 
@@ -606,7 +638,17 @@ Pending QC inventory request: contents-only182SRAM/9types, wait terminal indepen
 Budget stand-in old failures preserved; current physical ownership QC/KV/HBM/S81 paths. IO-HOLD optimized input no fabricated legacy delay on e1f718f079.
 2026-10-27 03:32 PDT ASK from CLOCK-KV-R20 (COORD RULING CLOCK-KV-R19 ASK3): KV PDNSim on die_trial plan abstracts (intel1:/srv/opentallas-scratch2/claude/kv-pdn-m78-1026/kitC, dtrial-psm-3852148) puts each partition instance's power at ONE M1 VDD terminal (psm/ir_VDD.csv = 160 rows, one per instance, layer M1) although the abstracts carry 101-251 M7 VDD rects. Worst IR 468.4 mV is that point load, not the grid. Please emit distributed PG for the KV plan abstracts that PSM loads as distributed current (e.g. per-row/per-strap PG pins down to the partition's lowest grid layer, or PSM per-region current sources), then re-run kitC PSM. CLOCK-KV sets no droop regions until then.
 
-#### DIE-STA (lane file updated 10-27 06:39)
+## CODEX notes 2026-10-27 08:16 PDT
+CODEX took over distributed PG experiment on codex/sta-pg-1027. Pinned OpenROAD 6cb3f2b704 source disproves inference that one M1 CSV node means one physical M1 point load: ir_network.cpp generatePolygonsFromITerms links that node to EVERY M7 supply rectangle by 0.001-ohm virtual connections (connection.h TermConnection). This also creates ideal cross-strap shorts. Controlled successor makes independent equal-area PG terminals on EXACT same M7 rectangles, keeping same macro placements, die wires/vias, bump grid and 44.932 W instance powers. Original kitC failure preserved. First preparation failed on Python binding freeze() (no output ODB); fixed setFrozen(), native tiny positive preserves MX/location/net connectivity and unequal-area mutant rejects. Full corrected preparation LIVE intel1:/srv/opentallas-scratch2/claude/codex-sta-pg-1027/run2.sh, ot-run 256GB/8threads, container codex-psm-distributed2-1027; actual distributed IR pending. No droop adopted.
+
+## CODEX notes 2026-10-27 08:25 PDT
+READY codex/ft-overlay-1027@ced7b8d2d (standalone commit after79a0cfe0a): die_trial.py generated GRT runner previously returned echo status0 after OpenROAD failure, and clock runner lost TT failure if FF passed. New logged_stages preserves exact EXIT status per tool, executes both TT/FF, returns first failure. 5 actual generated-shell controls PASS (TTfail/FFpass, reverse, bothfail, bothpass, GRT23). No physical rerun. Current PG independent-terminal solve still LIVE intel1 codex-sta-pg-1027/analyze2.log; no IR verdict.
+
+## CODEX notes 2026-10-27 08:44 PDT
+Shared window error propagation READY codex/ft-overlay-1027@bae112e24 afterced7b8d2d: infra_pg/phy_ir generated window Tcl keeps diagnostic FAIL markers then rethrows before OT_DONE; phy_ir runner logging preserves tool status.6 generated-Tcl positive/check-fail/solve-fail controls PASS. No jobs restarted. PG160->47032 terminal experiment VDD/VSS connectivity PASS, actual IR solve still LIVE intel1 codex-sta-pg-1027. Historical sys_SW/SE worst468mV both have0 intended VDD targets because generic bump_grid excludes SerDes IO windows; current KV owner checks current R26 dedicated PHY grid/bump integration (infra_pg.pg_bumps already has PHY micro-bumps). No droop adopted.
+... (3 more lines in the lane file)
+
+#### DIE-STA (lane file updated 10-27 08:16)
 ## RESUMED 12:15 PDT (after 08:50-12:04 limit)
 - Adopted: Codex-collected N512 flat capacity (73,363,456 inst, 172.82 GB, 5816.7 s, SPEF 4368 s; receipt main
 
@@ -640,7 +682,7 @@ CODEX took over: contract-budget result collection + current B2o PG-corridor clo
 
 ## CODEX notes 2026-10-25 07:24 PDT
 Collected completed historical833.333ps budget-standin TT/FF runs intel2:/srv/opentallas-scratch2/claude/clock-reset/hold: S81 TTsetup+666.115/FFhold+32.849ps,pair3.53/3.47; QC+664.336/+31.090,pair5.31/5.23; KV+666.839/+33.790,pair2.81/2.53. All6 exit0. Contract stand-ins resolve prior zero-data-delay floor, not current physical die SIGNED or833.000 release gates. No reruns.
-... (14 more lines in the lane file)
+... (17 more lines in the lane file)
 
 #### DISK (lane file updated 10-27 01:27)
 ## 2026-10-26 18:40 PDT PRUNE-EPYC1 epyc1:/srv/opentallas-scratch2 85% -> 74% (Avail 530G -> 886G, df CHECKED; 73.5% used/(used+avail))
@@ -656,7 +698,7 @@ Earlier archival/provenance complete; do not spend this takeover repeating. No c
 - ~9.3G codex-kv-token-0719 (40 h; boot160 build COLLECTED, superseded by path-kv-tok) + ~7.3G path-kv-tok (36 h; Stage A COLLECTED KVSLICE_BOOT FAIL, all runs ended 10-25 12:26) -> same build-artifact prune; logs kept
 KEPT: moved/ (59G, 0 h, fresh localhost move), wt/{hbm-mu-quad-3-1027,path-hbm-r15-1026,infra-first-qc-r9-1026,hbm-mu-quad-r13price} + hbm-mu-quad-3-1027 (<24 h/live procs), flow-canary (5 h), qc-f4g-1026/qc-su-prog-l2-1026/qc-su-lat-r6 (live docker+units), clkreset-g2 + wt/clkreset-g2-0810 (clkreset-g2-audit container live 41 h, reads that die_plan), kit dirs (s81-head-kits, s81-kits, kits-spare, kits-wave*, hbm-face/runs_synth 21.8G 43 h, codex-hbm-cores-1025) not pruned: may hold signed-off routes -> closed-archive flow, not deleted here; next candidates if needed: hbm-face (21.8G 43 h, 25 lane refs), infra2 (9.5G 30 h), tok-ds-dskr (7.4G 27 h).
 
-#### ELASTIC (lane file updated 10-25 21:48)
+#### ELASTIC (lane file updated 10-27 08:13)
 Branch claude/elastic-1024 (worktree localhost:~/wt/elastic, removed after merge). No server runs (analysis + 15 s yosys cal on localhost).
 ## Status: DONE 2026-10-24 07:42 PDT — verdict REJECT (analytical, AGENTS.md step 1); merged main 8e69517bf2 (record only, 0 code/default change)
 
@@ -668,7 +710,10 @@ Record: results/arch/elastic_seam_1024/ (README verdict, analyze.py -> sizing.js
 ## CODEX notes 2026-10-25 21:48 PDT
 CODEX remaining-lanes takeover: DONE REJECT main8e69517bf2. Jobs: None. Next: No action; fixed plan-side padding retained. Failure disposition: Elastic overhead2.9x/5.2x with0cycle gain rejected.
 
-#### ELEM-HBM (lane file updated 10-26 20:03)
+## CODEX notes 2026-10-27 08:13 PDT
+REJECT remains final (main8e69517bf2): overhead2.9x/5.2x, zero cycles saved. No jobs or followup.
+
+#### ELEM-HBM (lane file updated 10-27 08:13)
 branch claude/elem-hbm-1024 (worktree localhost:~/wt/elem-hbm), scratch localhost:/srv/opentallas-scratch/claude/elem-hbm
 Scope (COORD owner correction 2026-10-24 07:43): B2r2 plan (claude/hbm-arch-1024 3277b5e78b) 436 hard cores / 49 types; close through
 
@@ -702,7 +747,7 @@ Scope (COORD owner correction 2026-10-24 07:43): B2r2 plan (claude/hbm-arch-1024
 ## CODEX notes 2026-10-24 21:10 PDT — PARKED for Claude reset
 CODEX took over collection + measured-memory fix on codex/elem-hbm-push-1024, epyc1:/srv/opentallas-scratch2/claude/wt/codex-elem-hbm-push (HEAD 77ad44e788, verified matches lane origin). No new fleet jobs launched; all inherited jobs preserved. Collected 117 recent jobs: 30 pgslice exp-lane synth FAIL (Yosys actual descriptor table 256x61=15616 bits; default inference guard4096), 4 GRT-0116 FAIL (xcal9ee64d/afccc1/f9e949 and svc_pc95777e), 22 CTS completed, rest progressing. Completed tkm insertion ~441ps, pgslice pretree595-599ps; update insertion contracts next. Collection JSON saved epyc1:/srv/opentallas-scratch2/claude/codex-hbm-core-memory/collection_1024.json. Memory guard fix source saved gen_core_kit_hbm.memory15616.py alongside; local helper /srv/opentallas-scratch2/claude/codex_hbm_memory_fix.py. Pilot generation NOT RUN: initial worktree checkout still in progress (git reset child2318653), tools/die_plan/sdc_lint.py not yet installed; wait for that checkout before retrying. Do not rerun helper as-is (its first replacement has already applied); resume its generation part. No arithmetic/latency change. Review PNGs for exp0 visually inspected, low pin density <=1.9/um, channelled surrounding plan; other29 require contact-sheet view before launch. No route approval granted. New OWNER? none; face_guard technical repairs remain open, argmax zero-cycle output clone is best next clean-timing candidate.
 
-... (27 more lines in the lane file)
+... (30 more lines in the lane file)
 
 #### ELEM-QK (lane file updated 10-26 20:10)
 Branch claude/elem-qk-1024 (localhost wt /srv/opentallas-scratch/claude/wt/elem-qk, base main 4b7b2b3e64). Run root localhost:/srv/opentallas-scratch/claude/elem-qk.
@@ -769,53 +814,32 @@ signed closed view through the new kit gates (main 4b7b2b3e64+), excluding S81 (
   | l3 (intel1) | +127.45 | -11.64 (252) | 42.1/41.0 | 0/0 | FAIL shared107 | hold_ff, face_guard, sdc_lint |
 ... (77 more lines in the lane file)
 
-#### EPYC1-RETIRE (lane file updated 10-27 05:26)
+#### EPYC1-RETIRE (lane file updated 10-27 08:13)
 epyc1 = tender-ray, Cherry server 1042435, 84.32.71.203 (project 294737, team 216188).
 
-## Rescue / data (manifests in intel2:/srv/opentallas-scratch2/claude/epyc1-retire/)
-- Git: 72 rescue/epyc1-* refs pushed (ls-remote verified); 86 dirty checkouts -> git-patches/ (126 MB). LIVE epyc1 worktrees to re-create on intel1/intel2: clock-kv-r14, codex-kv-pv-image-0733, path-s81-pd5-1026, head-rtl5-1026, head-rtl4-1026, rm27, path-hbm-r15-1026, qc-su-f4g-1026, rm26 (+ ~/OpenTallas, ~/coord). A FINAL patch pass is needed ~05:00.
-- Closed evidence archived: AGIdock /archive/epyc1-retire-1026 (46,160 files, 3.30 GB, verified).
-- Kits/live dirs: bulk copy to intel1/intel2 same paths (~1.5 TB, ~1 GB/s, ETA ~01:00) -> DATA-MANIFEST.tsv.
+## CODEX notes 2026-10-27 08:13 PDT
+Deletion complete per 05:26 terminal receipt (DELETE204/GET404); rescue+logs copied. Do not access retired host. Current scheduler reports three surviving hosts intel2(localhost), intel1, epyc2. Historical final-pass steps are fulfilled/superseded, no repeat deletion.
 
-## Jobs on epyc1 (JOBS.tsv/JOBS.md in intel2:/srv/opentallas-scratch2/claude/epyc1-retire/, ETAs UNCHECKED)
-- KILLED 23:29: GRT(B) path-s81-pd4-1026 signal-only (COORD-approved; GRT(A) untouched).
-- RERUN now: flow-canary qwen_kvsys_core_278c7c4e8 (intel1 unit 3261682-1793084050) and hbm_a90c886f6 (intel1 unit 3360501-1793084188), same run paths; TOPK link_static LEC (intel2 unit 3427267-1793083036; may stall in the same ABC cone -> PATH-HBM picks a LEC strategy); rm26 SVCROWX miter/mut6/7/8 HEDGE on intel2 (units 3465812/3465642/3465821/3465822-1793083196), epyc1 original ETA ~02:30.
-- LEAVE + COLLECT before 05:25: hold-coll-r1 coll_ftc route (ETA ~00:30-01:30, copy hold-coll-r1 to intel1 after it ends), rm26 epyc1 original (~02:30), docker dtrial-grt-647494 ft-m89-probe/hbm/base50 (no owner; collect grt.log ~02:00 or drop).
-- NOT rerun (stuck/superseded, evidence in JOBS.tsv; die with epyc1 unless COORD objects): mu32_r13 probes, rq0_kvpool synth (31 h OPT_DFF loop), qx LEC r2, master-plan b1n6, tok-qk-b48 boot sims, docker kvhr2_fp_core_peer.
-- Clients on epyc1 for units on other hosts (die at 05:25, units keep running, outputs local to workers; no open spill records): see JOBS.md. die-ci client 2d11h on intel2 (>48 h rule) -> COORD.
-- Canary follow-up: when the intel1 canaries end, copy runs/<two>/canary.json + logs to intel2 flow-canary/runs (canary home); delete intel1 flow-canary.spillcopy-stale-20261026 and intel2 wt/rm26 partial tree after ROOT-MERGE-27 collects.
-
-## Data result (DATA agent 23:55, CHECKED by rsync -n dry runs + file/byte counts)
-- Copied ~1.24 TB to intel1/intel2 SAME absolute paths: LIVE 346 dirs, KITS 34, RECENT 280, hbm-arch (RECOVERED). 514 exact + 142 dst-superset. Manifest: intel2:/srv/opentallas-scratch2/claude/epyc1-retire/DATA-MANIFEST.tsv (+ classes.tsv, AP_KIT_MOVES.tsv). Exception: root-disk die-ci -> intel2:/srv/opentallas-scratch2/claude/epyc1-retire/scratch1/die-ci (hub copy also at intel2:/srv/opentallas-scratch/claude/die-ci, 613 files = epyc1).
-- Archived closed evidence: AGIdock /archive/epyc1-retire-1026 = 1,697 signed-record dirs + autopilot/closed + hub-backup, 46,160 files / 3.30 GB, src=dst (57 signed-record dirs already absent on epyc1).
-- Dropped (owner rule, not copied): 494 unreferenced dirs untouched >24 h (~685 GB) + rest of flow-canary (~410 GB). List in classes.tsv.
-- flow-canary home = intel2: stale spill marker renamed (.ot-run-spill-copy.removed-epyc1-retire-1026); sources/{278c7c4e850c,a90c886f6b0a} rebuilt as worktrees of intel2 ~/OpenTallas (00:05).
-
-## Remaining steps for the successor (deadline DELETE 2026-10-27 05:25 PDT; do not delete if a copy is unverified -> report)
-1. ~04:00 final data pass runs by itself on epyc1 (nohup PID 1403075, re-syncs all 379 LIVE/KITS paths). After 04:00: `ssh -o ControlPath=none epyc1 'cd /srv/opentallas-scratch2/claude/epyc1-retire-logs; tail -1 final_intel1.status final_intel2.status'` must show DONE; then `./verify.sh intel1 final_intel1.txt` and `./verify.sh intel2 final_intel2.txt` there (last column 0). Then copy that logs dir to intel2:/srv/opentallas-scratch2/claude/epyc1-retire/epyc1-retire-logs/.
-2. Collect leftovers on epyc1 (check `systemctl --user list-units 'oth-*' --state=running` + `docker ps`): hold-coll-r1 (ETA ~01:00; then rsync -a epyc1:/srv/opentallas-scratch2/claude/hold-coll-r1/ to intel1 same path), rm26 original (~02:30; rm26 -> intel1 same path; ROOT-MERGE-27 also has the intel2 hedge units), dtrial-grt-647494 ft-m89-probe/hbm/base50 (no owner: copy grt.log/reports or drop). Anything still running at 05:00 that is not in JOBS.tsv (a) list: record path + reason in this file; never kill others' jobs before the delete.
-3. ~05:00 final git rescue: on epyc1 for each LIVE worktree (wt/{clock-kv-r14*,codex-kv-pv-image-0733,path-s81-pd5-1026,head-rtl5-1026,head-rtl4-1026,rm27,path-hbm-r15-1026,qc-su-f4g-1026,rm26} if still present): `git log --branches --not --remotes` -> push as rescue/epyc1-<name>-final (never force); `git diff HEAD` -> intel2:/srv/opentallas-scratch2/claude/epyc1-retire/git-patches/<name>-final.patch. Verify with git ls-remote.
-4. Final ~/coord: `ssh epyc1 'bash ~/bin/hub-git-sync.sh coord'` must say "= origin coord/state"; rsync epyc1:coord/autopilot/jobs/ -> intel2:coord/autopilot/jobs/ (client logs of the 3 ORPHAN-watched QC jobs).
-5. Copy intel1 canary verdicts home: when intel1 units 3261682/3360501 end, rsync intel1:/srv/opentallas-scratch2/claude/flow-canary/runs/{qwen_kvsys_core_278c7c4e8_1026_222325_886648,hbm_a90c886f6_1026_205322_209247}/ -> intel2 same path (not time-critical; intel1 is not deleted).
-6. DELETE (~05:25): `source <(grep -E '^export CHERRY_SERVERS_API_KEY=' ~/.bashrc)`; GET https://api.cherryservers.com/v1/servers/1042435 -> expect id 1042435, hostname tender-ray, IP 84.32.71.203, project 294737 (CHECKED 23:58: deployed/active); DELETE same URL; GET again -> 404. Never print the key.
-7. After: intel2 `~/.local/bin/ot-run` + `ot-sizes-sync`: remove "epyc1" from HOSTS/HOST_ROLE (backup .bak-epyc1-deleted), remove the epyc1 line from intel2 ~/.config/ot-run/held_hosts; `ot-run --status` + `--selftest choose` PASS; rename the epyc1/tender-ray/hub(old) ssh aliases on rtx-pro (~/.ssh/config Host epyc1 tender-ray -> epyc1-RETIRED-1027) and intel2; drop epyc1 from fleet-viz host lists (grep -rn epyc1 ~/.local/share/fleet-viz); HANDOFF line with $(date); memory note.
-8. Later (not deadline): ROOT-MERGE lands claude/epyc1-retire-hub-1026@211fb91d6e -> delete intel2 zz-pinned-tools.conf drop-ins + daemon-reload; choose a new hub standby (intel1); delete intel1 flow-canary.spillcopy-stale-20261026 and intel2 wt/rm26 partial tree after ROOT-MERGE-27 collects; COORD: die-ci client on intel2 >48 h.
-- 2026-10-27 00:47 PDT COORD: EPYC1-RETIRE-2 (04:07) MUST ALSO: (a) move the flow-canary timer off epyc1 to intel1 (its rebuilt private-clone worktrees work there); intel2 flow-canary copy is a stale spill copy pointing at epyc1 git -> delete or rebuild like intel1; copy intel1 canary.json (units 3261682 qwen_kvsys_core, 3360501 HBM TKM) to the canary home; (b) collect hold-coll-r1 route (~01:00) + dtrial-grt-647494 (unowned ft-m89-probe, record result then delete); (c) delete intel1 flow-canary.spillcopy-stale-20261026 and intel2 wt/rm26 partial tree (RM27 done); (d) TOPK LEC on intel2 unit 3427267 likely stalls on same cone -> PATH-HBM picks another LEC approach. Manifest: ~/.claude/jobs/b7f906df/tmp/epyc1-retire/JOBS.md.
-- 2026-10-27 05:26 PDT COORD: epyc1 (Cherry 1042435 tender-ray) DELETED via API (DELETE 204, GET 404). Final rescue+logs resynced to intel2 epyc1-retire/ (0 checksum diff), coord 0 unpushed. ot-run/ot-sizes-sync/held_hosts cleaned on intel2 (.bak-epyc1-deleted), selftest PASS; ssh aliases renamed epyc1-RETIRED-1027. Superseded jobs died with host (topk link LEC, rq0_kvpool, b1n6, tok-qk-b48, kvhr2/ps81 docker).
-
-#### FALLBACK-HEAD (lane file updated 10-26 20:08)
+#### FALLBACK-HEAD (lane file updated 10-27 08:34)
 ## [FALLBACK-HEAD 2026-10-26 18:30 PDT] 16 ring-rebuild kits: NOT SUBMITTED (structural blocker, no job running)
 
 ## CODEX notes 2026-10-26 20:12 PDT takeover
 Tool monitor=dataflow and reserved-site source READY982a208cfa; root merge review. Rings cannot build until HEAD-RTL and strict real bind; sl300 GRT0 historical, no dieSTA.
 
-#### FALLBACK-LAND (lane file updated 10-26 20:08)
+## CODEX notes 2026-10-27 08:34 PDT — plan prep under owner08:02
+Concrete current-provider candidate codex/head-plan-0815@c9bd770f5 results/head_fallback_prep_0815/compose/landed_portable.json + landed_sidecar.json:16types0splits0storage-bandFAIL0landing-contracterrors;326regions427ports211813bits1061200ringFF;1281edges,boot327,+171cycles/headpass,0.987mm2unmapped. No fallback build. Old missing-provider blocker is resolved by currentHEADRTL; actual remaining blockers= native binder ring emission/observer exact binding, eight physicalFTport adapter, finalR18outline/PGsite reservation. Candidate on adoptedR17geometry; run same recipe on finalR18event beforeadoption. Historicalsl300GRT/timing not reused as gate.
+
+#### FALLBACK-LAND (lane file updated 10-27 10:57)
 CODEX shared-generator owns this secondary lane; first concrete packet codex/shared-core-0733@5ecb35da4, updated1d2f06b42. Owner-approved analysis07:13; no rule, RTL, calendar or physical-build change. Results: results/fallback_land_0733/README.md and per-die JSON.
 
 ## CODEX notes 2026-10-26 20:12 PDT takeover
 S81 fallback GRT overflow0TTFF but landed135/85fail; childPD2 fixes directPHY regions, equal roots and lk405umrepeaters. Thin bank60->22fail, residuals measured before anystrip.
 
-#### FLEET-DISK (lane file updated 10-26 20:10)
+## CODEX notes 2026-10-27 08:13 PDT
+Owner08:02 FALLBACK-PLAN-PREP assigned KV to qwen and S81/HEAD to s81_head; PLANS ONLY, no fallback builds. Old S81GRT0/landed135TT85FF failures retained; latest structural prep uses directPHY/equalroots/405um relays. Current no new run.
+
+
+#### FLEET-DISK (lane file updated 10-27 08:13)
 Merged to main 1ed91ad4ca + 6281884e3d (census resync); ~/.local/bin/ot-run re-installed (v13). Lane DONE except background movers.
 ## Root fs BEFORE (07:31) -> AFTER (2026-10-24 08:06)
 
@@ -835,7 +859,10 @@ CODEX remaining-lanes takeover: Migration tool DONE; INFRA2 current fleet owner.
 ## CODEX notes 2026-10-26 20:14 PDT
 Scratch admission operational; current root/scratch headroom positive. No new cleanup needed, live artifacts untouched.
 
-#### FLEET-NEW3 (lane file updated 10-26 20:10)
+## CODEX notes 2026-10-27 08:13 PDT
+Current scheduler headroom positive, scratch233/1500/669GB on surviving hosts. No destructive pruning. Old five-host, epyc1, epyc3 notes historical only.
+
+#### FLEET-NEW3 (lane file updated 10-27 08:13)
 Merged to main 8a5d1f3dab (branch tip 00a85d87a6), pushed. Lane DONE except OWNER? below.
 Status: ot-run LIVE on localhost (~/.local/bin/ot-run) for epyc2, epyc3, intel1, intel2, localhost.
 
@@ -848,7 +875,10 @@ CODEX remaining-lanes takeover: DONE tools/live fleet; epyc3 retired later. Jobs
 ## CODEX notes 2026-10-26 20:14 PDT
 Fleet tool operational; oldNVMe question closed by owner wipe. Use current four hosts.
 
-#### FLOW-CANARY (lane file updated 10-27 07:56)
+## CODEX notes 2026-10-27 08:13 PDT
+Fleet migration complete; current three surviving hosts healthy. Owner wipe closes historical old-NVMe question. No tool parity sweep required.
+
+#### FLOW-CANARY (lane file updated 10-27 11:15)
 2026-10-25 06:51 PDT FLOW-CANARY: branch claude/flow-canary-1025@0d4f922aa (from main 6a6fc12dd), tests tools/flow_canary/test_flow_canary.py 11/11 + test_face_guard + test_flow_hold_basis PASS.
 - tools/flow_canary/canaries.json: s81 slice_station__t12 (type, golden SIGNED B_1024 +18.24/+8.62, ft keep-reg + rst_o relays), s81_head hd_turn_a (type, 24k cells, golden NOT SIGNED -27.20/-20.85 PROTO m5), qwen_compute coll_ftm (type, BASELINE), qwen_kvsys kv3_io_ft (type, BASELINE), hbm core hfd_hgi_vm_calendar_f20@dd5b84a9fbfa (gen_core_kit_hbm.py on main, B2l views, SRAM ot_sram_1r1w_1024x256_m2_r2c2, golden NOT SIGNED -30.71/+8.26). No signed-off QC/KV/HBM TYPE exists and no S81/QC/KV type carries an SRAM (type macros = hard cores) -> SRAM is covered by the HBM core canary only.
 
@@ -882,30 +912,67 @@ The corrected density helper is integrated in Qwen production candidate c6adf823
 - cand 335b3d5a4 (taps opt-in + rtl_lint -defer): s81 t12 TT 226.54 FAIL; KV io_ft TT 228.69 FAIL; QC hold -135.95 FAIL; KV core lint PASS but face_cover + signoff TT -222.85 vs golden 36.61.
 - cand2 1ae8ebeb0 (+ tap_grt_pre ON): s81_head full PASS (gate TT 242.91/FF 192.15, 35 pads; sign-off TT -24.59/FF -9.08 vs golden -27.20/-20.85). KV io_ft gate PASS TT 254.84/FF 202.55 (52 pads), routed; client killed 12:26 by TOK-SCHED (INFRA: NOT SIGNED TT -32.24/FF -73.33, DRC 0). s81 t12 UNCHANGED 226.54 FAIL: the pad pass read the pin-register mean as 245.94 (0 pads) while the gate on 5_1_grt.odb read 226.54; head/KV show the same +15..19 ps pad-vs-gate offset -> the pad and the gate do not measure in the same context. Sub-agent diagnosing the cause now (input for CLOCK-RESET item (b) shared ot_cf_pinregs). HBM e68 AB still in GRT.
 - Branch claude/flowcan-tapgrt-on-1025@d29a86f2e (TAP_GRT_PRE default ON + tests) is ready but NOT posted: COORD 14:23 says default-on only after CLOCK-RESET 416fd2ec2 + shared pinreg proc + cap/spread FAIL.
-... (26 more lines in the lane file)
+... (51 more lines in the lane file)
 
-#### FLOW-FT-SDC (lane file updated 10-26 20:10)
+#### FLOW-CLKFREEZE (lane file updated 10-27 13:16)
+Branch claude/flow-clkfreeze-1027 (from origin/main 441bad4d3). Owner: Claude lane FLOW-CLKFREEZE (COORD 10-27 11:18).
+
+# FLOW-CLKFREEZE -- lock routed clock nets through every post-route ECO (all dies)
+
+Branch claude/flow-clkfreeze-1027 (from origin/main 441bad4d3). Owner: Claude lane FLOW-CLKFREEZE (COORD 10-27 11:18).
+
+- 2026-10-27 11:55 PDT START/ROOT CAUSE (CHECKED, own dumps intel1:/srv/opentallas-scratch2/claude/flow-clkfreeze-1027/diag/): ECO = do-5_1_grt from the routed DB; hook repair -> `global_route -end_incremental` -> GlobalRouter::updateDirtyNets destroys the dbWire of every dirty net (instance moved/resized, iterm change, rsz journal) and DRT re-routes it; dont_touch is rsz-only. HEAD r19_residual3: 83/712 clock nets (80/514 leaf) wire destroyed at GRT (6 by DPL-moved sink flops), DRT re-created them. DRT DRC iterations may rip any non-FIXED net.
+- FIX (commits 939936f6f, 64a26d699, d2e654ead, 8eef32f65): tools/die_plan/clk_freeze.tcl ot_clk_freeze (after read_spef, before global_route -start_incremental): all clock nets (sigType CLOCK + sta find_all_clk_nets) re-encoded dbWire type FIXED (byte-identical check, fail-closed) -> GRT skips, DRT never rips (frNet::isFixed); clock-net instances LOCKED + dont_touch; nets dont_touch; ot_clk_freeze_assert post_grt after each end_incremental. Blocking check tools/die_plan/clk_freeze_check.sh + clk_geom_diff.py (wire opcode stream / pins / instance master+loc / missing+new nets) gates sign-off in HEAD head_post_route_eco.sh (exit 4), KV run_eco.sh (rc 5), QC run_hold.sh (rc 5). QC mk_hold_qc: override POST/PRE GRT hooks (kits' override exports beat the old plain export -> ECO never ran) + eco_pre_grt.tcl (routed SPEF when GRT has 0 routes, EST-0005). 28 unit tests PASS.
+- Offline (CHECKED): freeze on HEAD elemA ECO input: 712 nets FIXED, 29434 insts, 14 s; write/reload diff PASS 0 changed.
+- 2026-10-27 12:46 PDT CANARY FINDINGS -> fixes: (a) FIXED alone is not enough: GRT updateDirtyNets destroys the dbWire of every dirty net with no wire-type guard (QC 20/106, HEAD 79/712, KV 21/1375 clock nets dirtied by the hold ECO) -> ot_clk_freeze_assert now restores each frozen net's FIXED wire byte-identically from the op list taken at freeze, right after end_incremental (before DRT), and asserts; (b) dont_touch on sink flops -> RSZ-3006 (hold buffer before D) -> dont_touch only on clock-tree cells (output on a clock net), sinks LOCKED only (a sink resize would fail the blocking diff). Commit d6231262f.
+- HEAD elemA_m2 canary (src d6231262f, kit head-core-r19/elemA_m2.eco_r19_repair_kit, margin 10, same repair as residual3: 586 hold EP / 583 bufs + 8 DRV bufs): CLK_GEOM_DIFF PASS 712/712 nets 0 changed, 29434 clock-net insts 0 changed (CHECKED clk_geom_diff.json); signoff.py SIGNED TT +121.07 / FF hold +6.51 (residual3 same kit no lock: -1.10, 2 EP), pair skew 40.9/37.0, DRC 0 ant 0 (CHECKED signoff_actual.log 12:37, after 6_final 12:26); routed LEC running (UNCHECKED). intel1:/srv/opentallas-scratch2/claude/flow-clkfreeze-1027/head_elemA_m2.eco_r19_clkfreeze{,.lec_final}.
+- KV canary (canonical core canary kit kv3_head_eighth_e1, b3 fanout 64): lock ON 1375 nets, post_grt restored 21, OK; DRT running at park (intel2:.../kv_e1_holdeco_clkfreeze, log kv_ab.otrun.log, rc.txt) -> collect clk_freeze_check_rc + signoff vs canary TT +12.02 / FF +2.93.
+- QC canary (vmr_f4k_final via mk_hold_qc margin 3): lock ON 106 nets, 77 hold bufs, post_grt restored 20, OK; but the shared QC warm hold chain is not runnable on fully routed f4 kits independent of the lock: fixed EST-0005 (eco_pre_grt.tcl) + kit f4d DRT tree-guide hook (off in ECO); UNRESOLVED: ORFS detail_route.tcl:8 grt::have_routes=0 although 5_1_grt.odb carries 214k dbGuides on 25589 nets -> QC chain PARKED (diag epyc2:.../flow-clkfreeze-1027/diag_qc). QC SU hold ECOs today run through kit-local eco.tcl (Codex F4K), which already shows clock segment churn (clockdiff_f4k.log) -> should source clk_freeze.tcl the same way.
+- 2026-10-27 13:14 PDT PARKED: KV clock diff PASS 1375 nets/28917 insts 0 changed (CHECKED); HEAD LEC + KV sign-off running, collect ~14:00 (paths in COORD-REVIEW-QUEUE park line). Worktree removed; branch pushed @1f7ecaeb4.
+- 2026-10-27 13:16 PDT FLOW-CLKFREEZE KV canary DONE: SIGNED TT +12.02 / FF hold +3.0 (canary w/o lock +2.93), pair skew 35.2/30.1, DRC 0 ant 0, PIN_AUDIT 544/544, 88 hold bufs; clock diff 0/1375 nets 0/28917 insts (CHECKED kv_ab.otrun.log). Only HEAD elemA LEC (~14:00) remains before READY ROOT-MERGE-38/39 @1f7ecaeb4.
+
+#### FLOW-FT-SDC (lane file updated 10-27 08:16)
 ## FLOW-FT-SDC 2026-10-26 13:16 PDT (Claude) -- ft-port SDC contract implemented; btab_r6 chain rerun LIVE in DRT (not signed off yet)
 Branch claude/flow-ft-sdc-1026@4b2a674e6b (from main fec963a5e): tools/die_plan/{ft_ports.py,test_ft_ports.py} new; sdc_lint.py, signoff.py, master_slice.py changed (FLOW-WATCHED).
 
 ## CODEX notes 2026-10-26 20:14 PDT
 FT interface/arrival fixes merged by root25. btab_r6 route collection is QC physical-owned; no duplicate trial.
 
-#### FLOW-RC (lane file updated 10-27 08:08)
+## CODEX notes 2026-10-27 08:16 PDT
+Source already merged; btab_r6 physical collection with Qwen owner. No stale trial duplicated.
+
+#### FLOW-RC (lane file updated 10-27 13:06)
 2026-10-27 07:52 PDT FLOW-RC-1 START (COORD brief 07:46): HBM-CORES-R8 collar a4 routed RCX slew 32 TT/25 FF vs 1 at GRT repair; hypothesis setRC_rcx.tcl (clock-weighted per-layer C) under-estimates signal C. Plan: (1) per-layer/per-class RCX vs table on collar a4/a5 (intel2), S81 rr_h1_c signed (epyc2), QC rst3_k0 hold_b (intel1), HEAD elemA_eco (intel1); (2) per-class tables + fail-closed guard in shared gen_phys/core_flow; (3) collar a4 GRT re-estimate + canaries; data /srv/opentallas-scratch2/claude/flow-rc-1027 on each host. Note: OpenROAD 26Q3 set_layer_rc (GRT/RCX-estimate basis) has NO -signal/-clock form; set_wire_rc -signal/-clock is placement-only.
 2026-10-27 08:08 PDT FLOW-RC-1 RESULT claude/flow-rc-1027@2bbe885e4 (code 7944d7dae + evidence results/flow_rc_1027/; data <host>:/srv/opentallas-scratch2/claude/flow-rc-1027/<view>). All numbers CHECKED by my own probes (session-exact libs, asap7lock 26Q3) unless marked.
 
-# FLOW-RC lane: per-class (signal vs clock) wire RC calibration for every die's kit flow
+## CODEX notes 2026-10-27 08:19 PDT
+CODEX took over: combined shared-flow candidate codex/rc-canary-1027@ab3ae7c3ab8a. RC2bbe885e4 + placement repair37d9b8a28 (shared repair_design-max_wire_length60, all five generators, existing POST_RESIZE hooks preserved) + preflightb56b0b55be incl FF-bound9529b56ff0 + pin-snap5b2b94251f.79 required generator/RC tests PASS on fleet Python3.14; local3.10 cannot parse preexisting PEP701 HBM generator (environment mismatch, not source failure). Seven AB references submitted PLACE-only; actual placement review required before CTS/route. Intel2:/srv/opentallas-scratch2/claude/codex-rc-canary-1027/ab/runs/*_ab3ae7c3a_1027_081901_659397; client units flow-canary-<die>-ab3ae7c3a-1027-081901-659397. Source worktree locked. No mass-route release, CANARY PENDING.
 
-2026-10-27 07:52 PDT FLOW-RC-1 START (COORD brief 07:46): HBM-CORES-R8 collar a4 routed RCX slew 32 TT/25 FF vs 1 at GRT repair; hypothesis setRC_rcx.tcl (clock-weighted per-layer C) under-estimates signal C. Plan: (1) per-layer/per-class RCX vs table on collar a4/a5 (intel2), S81 rr_h1_c signed (epyc2), QC rst3_k0 hold_b (intel1), HEAD elemA_eco (intel1); (2) per-class tables + fail-closed guard in shared gen_phys/core_flow; (3) collar a4 GRT re-estimate + canaries; data /srv/opentallas-scratch2/claude/flow-rc-1027 on each host. Note: OpenROAD 26Q3 set_layer_rc (GRT/RCX-estimate basis) has NO -signal/-clock form; set_wire_rc -signal/-clock is placement-only.
-2026-10-27 08:08 PDT FLOW-RC-1 RESULT claude/flow-rc-1027@2bbe885e4 (code 7944d7dae + evidence results/flow_rc_1027/; data <host>:/srv/opentallas-scratch2/claude/flow-rc-1027/<view>). All numbers CHECKED by my own probes (session-exact libs, asap7lock 26Q3) unless marked.
- (1) QUANTIFIED on 5 routed views / 4 designs (HBM collar a4 + a5, S81 rr_h1_c signed, QC rst3_k0 hold_b signed, HEAD elemA_eco): RCX unit R and via R = stock for BOTH classes (fit residual <0.3%). Per-layer RCX unit C, len-weighted: SIGNAL M2 .157 M3 .132 M4 .148 M5 .114; CLOCK M2 .115 M3 .151 M4 .115 M5 .096 fF/um; shipped table M2 .1675 M3 .1315 M4 .1275 M5 .098 (signal M4/M5 ~16% above it, M2/M3 at it). GRT-est/RCX per-net C, SIGNAL median (long >=50um): a4 0.98 (0.905), a5 0.95 (0.89), QC 1.02 (1.03), S81 1.10 (1.00), HEAD 1.16 (1.17); R long nets 0.85/0.85/0.93/0.96/0.99. CLOCK C 1.06-1.37. => the "table underestimates signal C" claim holds ONLY for the dense HBM collar (-10% C on long nets); other dies are over-estimated.
- (2) ROOT CAUSE of the a4 blind spot = route topology, not unit RC: the 32 RCX violators (324-369 ps) are 12-load ~180-um cd[*] fan-out nets with DRT via density ~0.9/um (net2568: 172 vias, via R = 38% of RCX R; est R 5.8k vs RCX 8.0k ohm, C 24.7 vs 28.6 fF). GRT-est slew at those pins: shipped table 197-261, stock 209-279, signal-C + M2/M3 R x1.3 (T2) 232-312 ps -> 0 est violations at 320 under EVERY table (counts: a4 est 0/0/0/0 vs RCX 32 TT / 25 FF). No set_layer_rc/set_wire_rc table makes GRT see them.
- (3) PER-CLASS FIX: OpenROAD 26Q3 set_layer_rc (the GRT / estimate_parasitics -global_routing basis) has NO -signal/-clock form; putting the signal C into it moves the GRT clock-sink arrival est-RCX mean a4 +0.1->+2.9, QC +6.6->+14.9, S81 +4.8->+12.5 ps (would break the insertion gates) -> per-layer table kept as the CLOCK calibration; set_wire_rc -signal (placement-stage, per class) = measured signal fit R 0.02882 kohm/um C 0.1402 fF/um (was 0.02657/0.1292); -clock unchanged. Fail-closed guard core_flow.check_rc_cal/install_rc (OT_RC_CAL signal+clock records, set_wire_rc -signal/-clock, M2-M7 set_layer_rc) on every generator path (gen_phys, core_flow.apply -> QC/S81 legacy, HBM gen_core_kit_hbm, KV gen_core_kit_kv). tools/die_plan/test_rc_calib.py 10/10 PASS; other touched-generator tests could not run in my sparse clone (missing physical/ref_tile, UNCHECKED on a full tree).
- (4) VALIDATION: a4 GRT-stage repair does NOT see the routed slew violations with the new file either (expected: GRT basis unchanged; T1/T2 tables also 0) -> the structural fix stays the R8 placement repair_design -max_wire_length 60 (a5 signed, slew 0 TT/FF CHECKED here: RCX 0). Kit SLEW_MARGIN 20 flags only 2/32 (est >256); margin sweep at est: 30% -> a4 1185 / a5 451 / QC 0 / S81 0 pins, 40% -> 1881/821/0/0 (pins incl. clock, UNCHECKED split). CANARY NOT RUN (canary.py submit needs a full worktree; no time in lane) -> placement-stage -signal change needs one canary per die before mass use.
- NEXT: COORD rulings (a) merge guard + -signal change after canaries, (b) make placement max_wire_length (R8 value 60 um) a shared default for long fan-out signal nets, canary-gated, instead of a bigger global SLEW_MARGIN.
+## CODEX notes 2026-10-27 08:34 PDT
+Combined ab3ae7c3a actual placements reviewed/viewed before route: HBM_SRAM PASS-COND (central SRAM with continuous rim; PG36574/0open;60um +1112cells17175->18287), QCcoll_ftm PASS-COND (aligned station bands/open access;PG348168/0open;+47436cells126648->174084=37.5% materialcost), HEADhd_turn_a PASS-COND (left/south turn rows/no newblockage;PG55740/0open;+3833cells24037->27870). Evidence codex/rc-evidence-1027@9ad9755af results/geom_review/codex_rc_canary_1027/*actual_place.png. Three diagnosticCTS/routes resumed through ot-run; units codex-canary-route-{hbm-sram,qwen-compute,s81-head}-ab3ae7c3a, receipts intel2:/srv/opentallas-scratch2/claude/codex-rc-canary-1027/ab/final/<die>_ab3ae7c3a_1027_081901_659397. Initial placement-only FAIL receipts preserved underab/runs. Other4 stillinplace/LEC. No physicalclosure/promotion yet; cellcostreportedwithfinalQoR.
 
-#### FLOW (lane file updated 10-27 04:57)
+## CODEX notes 2026-10-27 09:07 PDT
+Terminalcombinedab3: HBM_SRAM/HEAD/KVtype NO-REGRESSION (absolute designstops retained); QC REGRESSION FFhold -197.06 vs-167.66,2320vs2324EP. Diagnosed exactFF4CTS: start_i data175.552vs175.734, capture349.048vs319.478 (+29.57ps/3extraCTSstages); oldcheckpoint+newRC WNS-167.658vs-167.660. PreCTS old/newrootclk9164loads/directu_run_in, noclocknet/bufferchange. Exactcanaryusedplan sourceab3/a54 sha54a1aeb5065d061a14e15a838e491b5f24975530a655e1c3eafb99f22ace4e9f omitscontrol_sinks;21generictaps. PendingONEQCcandidate100alreadydeclarescontrol_sinks+sender40; Qwenownsphysicaltrial, noduplicateport/clockECO. RC60promotionHELD. Evidence codex/rc-evidence-1027@245b3aa7b results/flow_rc_1027/qc_regression.5/7placementsreviewed/resumed; HBM/KVcoreinitialplace/LECstilllive.
+
+## CODEX notes 2026-10-27 09:15 PDT: mixed-width RCX
+CODEX took over the isolated mixed-width extraction qualification on codex/rcx-mixed-1027 (current ab0d9454d8; generator fix f32e8e3597). Reviewed results/rcx_mixed_1027/review.png before native extraction: twenty isolated 100-um wires, aligned pins, actual QC spacings .08/.08/.5/1.0 um, no macro/channel issue; extraction-only PASS-COND, no IR/timing claim.
+Initial native unit 3788589 failed before extraction on this probe's tuple/list API mismatch; preserved and fixed in fresh coupon2. Native unit 3812618 then proved 20/20 exact width entries selected: multi/single-.64 marker C ratios 4,8,1,2 for widths .16/.32/.64/1.28 on both M8/M9. Marker C is deliberately synthetic, never a timing table. The old second-entry-only premise is refuted: _scale_row cache omitted W and reused the first width's capacitance ratios. Fixed, four focused controls PASS; historical R6 records retained.
+RUNNING: intel2:/srv/opentallas-scratch2/claude/codex-rcx-mixed-1027/field, ot-run unit oth-ubuntu-3870285-1793116957, Python PID3870713. Real four-width field-calibrated table generation, using existing scipy venv read-only; ~1 CPU/110 MB, progressing. Check generator.log and physical_multi.rules. NEXT: native physical multi-table versus each matching single-width control, then deliver rules SHA/width/native-PASS receipt to QC clock owner before full clock STA. QC owns encoder/coverage guard; no flow defaults changed here.
+
+## CODEX notes 2026-10-27 09:22 PDT: mixed-width qualification complete
+COLLECTED field unit3870285 PASS and native physical unit4113299 PASS. Calibrated mixed-width table agrees with matching independent single-width extraction on all 20 coupon nets (M8/M9; .16/.32/.64/1.28 um, solo and actual shield spacings). This is tooling qualification, not die timing. Independent NUMBER-CHECK requested; figures remain UNCHECKED by that reviewer.
+READY codex/rcx-mixed-1027@166adab391: generator W-cache fix f32e8e3597 (four focused tests PASS), reviewed coupon and preserved initial TypeError, native selector evidence refuting second-entry-only premise, and production assets tools/die_plan/rcx/asap7_rcx_mixed016_032_064_128.rules plus .qualification.json/.rules.provenance.json. Rules SHA256 732a3b391032a54d556c6b80e7d31d161c6d4284b4aa8a023f9e430f0bf1928a. Defaults unchanged.
+QC clock owner received the exact committed packet and owns its coverage guard plus actual full-clock RCX/STA. Isolated coupon C must not be compared directly with the dense routed mesh model; actual environment extraction decides. No live child-owned jobs and no unhandled failure here.
+
+## CODEX notes 2026-10-27 09:34 PDT
+ROOT-approved structural QC trial launched PLACE only from pinned source7fd3cec6d876, after viewing planned_control_taps.png: modern control_sinks + sender40 + C60, controls 9.12/11.296um from local clk_t13. Concrete gen/ copied without regeneration into intel2:/srv/opentallas-scratch2/claude/codex-rc-canary-1027/qc_ctltrial/runs/qwen_compute_7fd3cec6d_1027_093146_950078; unit flow-canary-qwen-compute-7fd3cec6d-1027-093146-950078. Custom item/root, no old baseline comparison or production AP hold bypass. Qwen owns actual-placement rendering before continuation; old canonical regression remains preserved.
+
+## CODEX notes 2026-10-27 10:13 PDT
+Combined S81ab3 terminal NO-REGRESSION: insertion TT224.30/FF180.66ps vs226.54/183.35; FFhold−81.96ps/691EP vs−76.73/691, overflow0/DRV0. Absolute insertion gate fails deviation25.70/21.84ps vs20ps; no routed signoff. Cohort now4NO-REGRESSION/1QC REGRESSION/2active; exact5b andQC7fd trial alsoactive. Exact5b progresses GRT hold iter760/1379buffers/WNS−30.772ps; QC7fd GRT setup586EP/WNS−11.441ps. Currentjobs unchanged. Full nine-source/four-active receipt and helper handoff: handoff/codex_rc_canary_20261027_1006.md; check intel2 python3 /srv/opentallas-scratch2/claude/codex-rc-canary-1027/status.py. RC60promotion remainsHELD; continuedcollectionuntil explicitreset.
+- 2026-10-27 10:42 PDT FLOW-CANARY-2 (Claude) QC RC60 ATTRIBUTION RESULT (CHECKED: OT_HOLD_GATE lines of each arm's hold_gate.log; same ab3 coll_ftm kit, only the named file changed, GOAL=cts, all deterministic: the ab3 control reproduces Codex -197.06 exactly). FF structural hold gate @4_cts: a14244 baseline (old RC, no 60um) -167.66/2324 EP; rcOnly (FLOW-RC-1 setRC_rcx.tcl -signal, POST_RESIZE 60um line removed) -158.22/2323 (+9.44, NO-REGRESSION); w60Only (a14244 setRC_rcx.tcl + 60um) -187.20/2321 (-19.54, REGRESSION vs tol -10); ab3Ctl (both) -197.06/2320 (-29.40). => QC regression is the shared 60um placement repair (124.5k->174.0k cells, +39.7%), RC -signal alone improves QC. Underlying QC hold failure (plan omits control_sinks, u_run_in on far clk_t18) is pre-existing and Codex's 7fd ctl trial owns it. VERDICT: FLOW-RC-1 claude/flow-rc-1027@2bbe885e4 (guard + -signal) READY alone (merges onto main 60b5ddf52 with no conflict); shared-default 60um STOP for QC (keep per-kit opt-in where routed RCX slew failure is measured, e.g. HBM collar). Data intel2:/srv/opentallas-scratch2/claude/flow-canary-2-1027/qc_attr/{rcOnly,w60Only,ab3Ctl} (results/ODBs deleted, logs+kits kept).
+- 2026-10-27 13:06 PDT ASK HEAD-CORE-R21 -> FLOW-RELEASE: please cut a flow tag (per-die, e.g. flow-20261027-x-head) that covers the HEAD post-route ECO flow actually used by the S81-HEAD core views, so they count as versioned. Exact source: tools/s81_head/head_post_route_eco.sh + head_eco_modes.py + kit signoff.py as staged from codex/head-1027@6ddb210f73 (staged copy intel1/epyc2:/srv/opentallas-scratch2/claude/codex-head-1027/source_6ddb). Not on main: origin/main 5b3f0f6b2 carries the R17 per-mode script WITHOUT the optional OT_HOLD_ALLOWANCE block (allowance unset in both runs, so ENV/flow behaviour identical; only ECO.json key differs). Views: elemB_cv claude/head-r20-plan-1027@bde8765399 results/physical/head_core_r20/elemB_signed (SIGNED + LEC EQ, src_commit/flow_tag null); elemA_cv pending routed LEC (head-core-r19/elemA_m2.eco_r19_residual4). Note FLOW-CLKFREEZE (d6231262f) will change this same script; tag the 6ddb ECO flow as-run (or tell us to re-run on the CLKFREEZE tag once READY).
+
+#### FLOW (lane file updated 10-27 08:57)
 2026-10-25 04:55 PDT FLOW: branch claude/flow-hold-basis-1025@2fd43d861 (from main 155518ae4), tests tools/die_plan/test_flow_hold_basis.py 12/12 + related suites PASS.
 - (A) gen_phys.insertion_binding(): per type and corner, bound I = types[].clock.insertion_ps / insertion_ff_ps (signed view routed RCX mean, basis string) else die clock.insertion_ps / insertion_ff_ps (parent budget), FF absent -> 0.81 x TT (measured routed FF/TT ratio 0.80-0.82 on ve_s, vmr_cqb, idx_vm, crh). constraint.sdc vclk = bound TT. FINDING: OpenSTA -min/-max on set_clock_latency -source are early/late, NOT hold/setup (probe epyc2: -max 300/-min 200 put 300 on the hold capture), so one SDC cannot carry both corners: FF-only steps switch vclk to the FF value via vclk_corner.tcl (run_kit.sh FF-only GRT hold repair = new default, hold_gate.tcl). Kit writes clock_binding.json; budget.json/sdc_lint.json carry tt+ff+parent_early_tap_ps (9.7 formula).
 
@@ -939,9 +1006,9 @@ KVfinalreportmemorycausePROVEN149perf samples EigenSparseLU->psmIRSolver->PDNSim
   rr_h0_s2       277.8-263.7 = +14.1                  +19.5                297.3->305.5 +8.2    +41.8      | 215.5
  (1) tap residual: pad step d = min(tgt-mean, tgt+OT_TAP_WINDOW_PS-max); gen_phys sets window 20 (clock.local_window_ps) but trees span 40-90 ps (hd clk 188-278, kv 235-315, t12 9 trees >270: OT_TAP_CHECK WARN) -> the max cap stops padding below target (kv's 4 big trees got 0 cells); rr: one BUFx4 on an 18.5k-sink root = +36 ps quantum -> overshoot, and padding can never trim. (2) pin-reg vs tree mean is design-dependent (rr centre-fed: face regs are the far leaves, +19.5). (3) calibrated setRC_rcx was fitted on the GRT basis (est-RCX <=5 ps); on the placement estimate it is NOT calibrated and the error flips sign per design (-14/-10/+8; stock RC is -60..-80). t12 (gate -25.8) shows the same window-capped tap log (means 203..267). Note the FLOW 05:25 '~75 ps early' was stock RC; with calRC placement now reads LATE on tiled kits.
  FIX (structural, no kit constants): balance in the gate's frame on the gate's quantity. (a) gen_phys: make the POST_GLOBAL_ROUTE GRT rebalance (tap_balance_grt.tcl, OT_TAP_GRT_MODE=grt) the default for ALL kits, not only _density_cfg kits (canaries have no OT_TAP_GRT_MODE -> grt pass never runs); keep the POST_CTS pass as coarse pre-balance. (b) tap_balance.tcl tb_measure: target statistic = mean over the pin-register set (same fanout/fanin set as postcts_gate.tcl; factor into clock_family.tcl so gate + balance share one proc), per tap; interior sinks only constrain max. (c) window cap: use the R4 rule ins+tol (OT_TAP_TOL is the ±40 insertion_tol, METHODOLOGY 9.8) on pin-reg max, not local_window_ps 20 on all-sink max; a tree whose spread exceeds it is a CTS/pitch structural FAIL (re-pitch), not a silent short mean. (d) delay granularity + trim: insert per-subtree (below the root buffer, near pin-reg leaves) with small cells (BUFx2/HB1, ~8-10 ps) instead of one BUFx4 driving the whole root; when mean > bound+tol, re-run CTS with a smaller tap pitch / earlier tap (rr_h0) - no un-padding ECO. (e) corner: the GRT step runs FF libs with vclk=FF bound, so the GRT pass must target OT_VCLK_FF there (OT_TAP_TARGET_PS is TT 250) or measure in a TT scene; then postcts_gate checks both. Files: tools/die_plan/gen_phys.py (_density_cfg -> all kits), tap_balance.tcl (tb_measure/target/cap/tb_hang), tap_balance_grt.tcl (corner target), clock_family.tcl (shared pin-reg set). No tools changed.
-... (59 more lines in the lane file)
+... (72 more lines in the lane file)
 
-#### FP32 (lane file updated 10-26 20:10)
+#### FP32 (lane file updated 10-27 08:16)
 Branch claude/fp32-lat4-1024, worktree epyc1:/srv/opentallas-scratch2/claude/fp32/wt (scratch2). Bench + flow: tools/fp32_lat4/.
 
 ## CODEX notes 2026-10-25 02:54 PDT
@@ -953,15 +1020,32 @@ CODEX remaining-lanes takeover: LAT4 condition MET and merged. Jobs: None. Next:
 ## CODEX notes 2026-10-26 20:14 PDT
 One833psdomain f12_l4 rule already adopted; no retired serial-domain work.
 
-#### GATE-PINS (lane file updated 10-27 07:18)
+## CODEX notes 2026-10-27 08:16 PDT
+LAT4f12 one833psdomain work complete; in-context operand-mux timing owned HBM/KV actual cores. No duplicate20Mbench.
+
+#### GATE-PINS (lane file updated 10-27 08:16)
 - 2026-10-27 06:34 PDT GATE-PINS-2 RESULT (claude/gate-pins-2-1027@e666a3923 on gate-pins-content 03a0552428; 3 files tools/die_plan; tests 29 PASS incl 5 new: free-text same hash, 1-nm move differs, exact MX/MY/R180 accepted, mirror 1 pin off rejected, layer change rejected). die_sta_related.pins_relation (+hold_demand_die_sta): canonical sha over (name, direction, layer, x, y, size, clock-entry flag) + core outline, 1-nm grid, sorted; free text never hashed. Signed pin content found by VERIFIED whole-file sha (view dir pins.json/<module>_pins.json, kit.pins_file, any plan pins file) or new optional kit.pins_canon_sha256; else falls back to whole-file sha. Mirror = every pin exact under MX (x,H-y)/MY/R180, same names+layers+outline. Coverage record adds pin_view_match_how. KV coverage rerun (intel1:/srv/opentallas-scratch2/claude/gate-pins-2-1027/sta/{P24,P24a}, R24 sta.sh args, plans pd/pdA hm_r24): still 0/1628 core inst real (e1 256 + e5 256 mismatch); gate timing numbers byte-equal to G24 (G24a differs only in HB4 delay fields: R24 opt-in not in this base). CHECKED own script vs git 563711727 signed files: e1/e5 views signed on 544 pins, plan has 546 (+strap_bsel[0:1]) = real physical change, correctly rejected. Mirror survey on R24 plan files (R0 as signed): pv_join fMX = MX image ACCEPT, kvs_pc fMX ACCEPT; pv_join fR180 reject (1027 pins), pv_pair fMX reject (s0/s1 rst_n kept, 2 pins -- KV-CORES-PV called it exact), kvs_pc_h_head_p fMY reject (ck/rst/pc__hes[287], 3), e0/e5/e6 fMX reject (rst pins 6/4/12). Follow-up (not done): per-die collect_core tools could copy pins.json into views / write pins_canon_sha256 so later free-text edits never need the old file.
 - 2026-10-27 07:18 PDT ROOT-MERGE-32 NOTICE: e666a3923 is on main a14244af63 (canonical pin hash + exact-mirror).
 
-# GATE-PINS (shared die gate pin-view match)
-- 2026-10-27 06:34 PDT GATE-PINS-2 RESULT (claude/gate-pins-2-1027@e666a3923 on gate-pins-content 03a0552428; 3 files tools/die_plan; tests 29 PASS incl 5 new: free-text same hash, 1-nm move differs, exact MX/MY/R180 accepted, mirror 1 pin off rejected, layer change rejected). die_sta_related.pins_relation (+hold_demand_die_sta): canonical sha over (name, direction, layer, x, y, size, clock-entry flag) + core outline, 1-nm grid, sorted; free text never hashed. Signed pin content found by VERIFIED whole-file sha (view dir pins.json/<module>_pins.json, kit.pins_file, any plan pins file) or new optional kit.pins_canon_sha256; else falls back to whole-file sha. Mirror = every pin exact under MX (x,H-y)/MY/R180, same names+layers+outline. Coverage record adds pin_view_match_how. KV coverage rerun (intel1:/srv/opentallas-scratch2/claude/gate-pins-2-1027/sta/{P24,P24a}, R24 sta.sh args, plans pd/pdA hm_r24): still 0/1628 core inst real (e1 256 + e5 256 mismatch); gate timing numbers byte-equal to G24 (G24a differs only in HB4 delay fields: R24 opt-in not in this base). CHECKED own script vs git 563711727 signed files: e1/e5 views signed on 544 pins, plan has 546 (+strap_bsel[0:1]) = real physical change, correctly rejected. Mirror survey on R24 plan files (R0 as signed): pv_join fMX = MX image ACCEPT, kvs_pc fMX ACCEPT; pv_join fR180 reject (1027 pins), pv_pair fMX reject (s0/s1 rst_n kept, 2 pins -- KV-CORES-PV called it exact), kvs_pc_h_head_p fMY reject (ck/rst/pc__hes[287], 3), e0/e5/e6 fMX reject (rst pins 6/4/12). Follow-up (not done): per-die collect_core tools could copy pins.json into views / write pins_canon_sha256 so later free-text edits never need the old file.
-- 2026-10-27 07:18 PDT ROOT-MERGE-32 NOTICE: e666a3923 is on main a14244af63 (canonical pin hash + exact-mirror).
+## CODEX notes 2026-10-27 08:16 PDT
+Canonical/exact-mirror tool already merged e666a3923. No live job. Actual e1/e5 544vs546 strap pin mismatch remains physical, no provenance-only rerun. Collector pin copy is optional follow-up after path closure.
 
-#### GEOM-REVIEW (lane file updated 10-27 08:05)
+#### GEOM-AUTO (lane file updated 10-27 10:59)
+## CODEX notes 2026-10-27 08:16 PDT
+CODEX took over GEOM-AUTO-1 on codex/geom-auto-1027@98156863a (pushed; own sparse tree /srv/opentallas-scratch/claude/wt/codex-geom-auto-1027). Owner08:02 permits all kits measured +1-in5visual/everyFAILvisual. AP_AUTO_GEOM_ALL=1 promotes pending REQ/newAUTO to absolute measured checks without prior template; requires source/RTL/pin/outline contract, accepts only pre-route checkpoints. Explicit visualFAIL resolves before promotion and remains held. Strict mode has no template exceptions; missing metricsFAIL to visual. Existing canary/path/plan-delta holds remain.159autopilot testsPASS(1skip); initial broad run lacked sparse flow_canary, corrected by adding dependency. No service configuration/restart yet; root owns integration.
+
+## CODEX notes 2026-10-27 08:16 PDT
+CODEX took over GEOM-AUTO-1 on codex/geom-auto-1027@98156863a (pushed; own sparse tree /srv/opentallas-scratch/claude/wt/codex-geom-auto-1027). Owner08:02 permits all kits measured +1-in5visual/everyFAILvisual. AP_AUTO_GEOM_ALL=1 promotes pending REQ/newAUTO to absolute measured checks without prior template; requires source/RTL/pin/outline contract, accepts only pre-route checkpoints. Explicit visualFAIL resolves before promotion and remains held. Strict mode has no template exceptions; missing metricsFAIL to visual. Existing canary/path/plan-delta holds remain.159autopilot testsPASS(1skip); initial broad run lacked sparse flow_canary, corrected by adding dependency. No service configuration/restart yet; root owns integration.
+Read-only actual KV e2 ODB: FAIL maxr2r409.54um,5captures>405/28184; all other checksPASS(fill.3903,empty.1902,pinregp90/max7.27/11.44,unregistered0,clockunrooted0,combloops0). Worst c2[2]->g_port.g_ft[3].u_rsc/q[14] in u_g_front_1_u_front. Artifacts intel2:/srv/opentallas-scratch2/claude/codex-geom-auto-1027/e2/{auto_geom.json,geom.tsv}; no kit modified. Sent to GEOM/qwen for visual failing-path diagnosis.
+Next: root merge+enable AP_AUTO_GEOM_ALL=1 on hub after review; collect automatedFAILs and visual samples. OWNER? none.
+
+2026-10-27 08:19 PDT GEOM-AUTO-1: final source is codex/geom-auto-1027@91be61fb1, pushed. Followup scopes revoked-template holds to matching signatures; unrelated revoked templates do not block new kits. 22 focused tests PASS (including both revocation cases). Read-only io_cor and hroot measurements also FAIL: io_cor maximum reach 1135.67 um / 1640 capture flops beyond 405 um; hroot 1407.24 um / 2257. This census includes synchronous reset. FT-only passing numbers did not cover these internal paths. Coverage independently confirmed the structural failure and is appending visual demotions; Qwen owns the structural fixes. All diagnostic jobs ended; no route was launched.
+
+## CODEX notes 2026-10-27 08:39 PDT
+Native station geometry fix f51684c55 on main; local synchronous reset consumers source READY codex/reset-local-1027@7beec5b1d. KV oneevent owner has grids and +3/+2bootSTARTcycles/data0. io_cor/hroot routes remain FAIL until coherent re-kit+fullr2r review; old FT-only PASS explicitly superseded. Independent review also fixed kit_rsync old leaf initializer causing two reset drivers on re-plan.54focused+3G2PASS, no own heavy jobs.
+
+
+#### GEOM-REVIEW (lane file updated 10-27 13:25)
 Branch claude/geom-review-1024, worktree localhost:/srv/opentallas-scratch/claude/wt/geom-review (base origin/main 4ab1ec1399).
 Owner order 08:05: visual die + tile review before routing/STA. Records: results/geom_review/<die-or-kit>__<sha>.json + README per batch.
 
@@ -995,9 +1079,9 @@ GR-S81S (34 slice_station, S81-CORES vs/vq/hrow + svc hcore, head hd_tile), GR-H
   ot_s81sl_eg_c: author FAIL, NOT requested for route (clk+rst_n at the far corner (0,250), S face 26.5/um > 24.3) -> plan pin revision
   Please reply PASS/FAIL here; S81/KITS routes on PASS (same host epyc2).
 2026-10-24 21:30 PDT GEOM-REVIEW: REPLY [S81/KITS 21:24] legacy r6 @ea509f9ac (looked at all 6 placed pictures): dsfd_node_LLfd_c / LLfu_c / NNfd_c / NNfu_c PASS -> route (uniform, faces <=10.5/um, clk/rst_n E mid). dsdv_gunit_l4r_c PASS-COND -> route (all pins W like l5f; rst_n recovery at sign-off, in-core relay if missed). ot_s81sl_eg_c FAIL (agree): clk+rst_n at far NW corner of a 259x259/33k-flop core, S cluster 26.5/um > cap, E/W empty -> plan pin revision, clk/rst_n mid-face. Records <kit>__s81kits_r6_ea509f9ac__geomreview.json (@5ce9f91957).
-... (112 more lines in the lane file)
+... (169 more lines in the lane file)
 
-#### HBM-ARCH (lane file updated 10-26 20:03)
+#### HBM-ARCH (lane file updated 10-27 08:13)
 branch claude/hbm-arch-1024, worktree localhost:~/wt/hbm-arch
 ## RESUMED 12:12 PDT (after 08:50-12:04 usage stop)
 
@@ -1031,9 +1115,9 @@ extra q_su10/b102/b113/b000/su30 (32g), q_hub (160g). Dirs: localhost:/srv/opent
 CODEX took over: B2m pipelined-reset adoption and native-bind integration on codex/hbm-arch-r2-1024 (epyc1 scratch2 worktree); HBM core/token/trial/IDX/HC groups active. Native HC exact128 half candidate under construction (W128 banks + seven-level centre, no accumulation reorder), area delta to be planned. Existing jobs preserved.
 
 ## CODEX notes — 2026-10-24 21:10 PDT native IDX PARKED
-... (65 more lines in the lane file)
+... (68 more lines in the lane file)
 
-#### HBM-CORE-LAT (lane file updated 10-27 07:45)
+#### HBM-CORE-LAT (lane file updated 10-27 13:01)
 2026-10-26 05:55 PDT HBM-CORE-LAT: branch claude/hbm-core-lat-1026@2f7e1488ef (on PATH-HBM event claude/hbm-b1-event-1026@6a6f70de56), sparse wt epyc1:/srv/opentallas-scratch2/claude/wt/hbm-core-lat-1026, data epyc1:/srv/opentallas-scratch2/claude/hbm-core-lat-1026/. Coordinated with CLOCK-2 (did not touch its regions/lattice) and PATH-HBM B1 (no plan edit).
 ## (1) Cores under required mesh sites AFTER the CLOCK-2 region move
 
@@ -1048,8 +1132,28 @@ Collected collar R5 attempt3: NOT SIGNED (TT setup+16.06ps, FF hold-22.31ps/1231
 
 CODEX 2026-10-27 05:06 PDT: EP repack rp1 diagnostic GRT outer exit0 was false success: inner PROBE_GRT rc1 ORD-0013 command units uninitialized (setRC before std liberty). Also actual rp1 kit retains OLD S-face sd_rx/sd_tx + edge clock while QUAD5 plan re-pins them; needs a fresh kit from revised pins before GRT. Collar slew traced to bank9 payload data control net2568 (358.34ps vs320), not clock. config.mk exports TT250/FF202.5 but signoff invocation omitted FF binding. Both failures need source/flow successor; failed verdicts retained. Stable vmdel kit placement PASS, LEC3648/3648 EQ; others live.
 
+## CODEX notes 2026-10-27 08:14 PDT HBM LEC takeover
+CODEX took over argmax RTL/frontend diagnosis on codex/hbm-argmax-1027, own intel2 WT /srv/opentallas-scratch2/claude/wt/codex-hbm-argmax-1027. Prior tool4 argmax SAT receipt NOT EQUIVALENT 21256/21290 (34 differ). Constant-index registered tree candidate preserves 0 added cycles: full LP8/IW18/33-bit keys/32-bit payload mechanism miter PROVED 2016/2016; wrong-winner mutant FAIL. Full kit new-gold/original-R5-gate LEC RUNNING intel2:/srv/opentallas-scratch2/claude/codex-hbm-argmax-1027/lec_gen.log (ot-run launcher375708,48GB8threads; tool codex/lec-0815@c337ef681). No route; not READY. Q2n2b collected still live RSS3.4GB after5800s, past original OOM; newer q2n2c already live under FLOW/LEC owner. ctlx48 root support is gold-only merged lane_en[] holding command masks; likely correspondence, not yet proven.
 
-#### HBM-CORES (lane file updated 10-27 01:08)
+## CODEX notes 2026-10-27 08:35 PDT
+CODEX took over HBM-CORE-LAT/HBM-CORES/HBM-KITS on codex/hbm-cores-0815 (intel2 own sparse WT). Collected R7 opstore_b synth LEC EQUIVALENT34853/34853; vms_glue UNPROVEN62978/62979(status[0], expected array reverse-index correspondence) assigned own codex/hbm-lec-0820; ctlx48 lane_en quartet-replica proof gaps assigned same worker, inductive hints+mutants live (no RTL changes). R8 HC pair_first/subtree place exit0; rendered/views inspected, no route (native masters still TRIAL). Existing collar_a5 SIGNED TT+31.56/FF+0.03, EQ9393 retained.
+vm_query GRT50 FAIL3819 from GEOM25: append-only WITHDRAW published rowa380cefb25c8 coord3b05a7914627; outline successor passed to QUAD6 plan owner. DMA MPL0065 diagnosed as automatic macro tiling/halo fit; explicit two-column5-row same-outline candidate rendered/viewed, own placement-only TRIAL live intel2:/srv/opentallas-scratch2/claude/codex-hbm-cores-0815/dma_trial (ot-run launcher380197, log dma_place.otrun.log), no route. Pslice GRT50 still running extra iterations3/50, not closed. R8 tkm/split3/q3/rp3 units live, not duplicated. Plan owner fixes mirrored-face port tables; no unsafe input alias wrapper added.
+
+## CODEX notes 2026-10-27 08:17 PDT LEC continuation
+CODEX took over ctlx/vms_glue proof blockers on codex/hbm-lec-0820, own intel2 worktree /srv/opentallas-scratch2/claude/wt/codex-hbm-lec-0820. ctlx prior FAIL48/27696: 48 unreset lane_en quartet twins eliminated by synth; RTL D expressions identical within each quartet, automatic proposal search found none. VMS prior UNPROVEN1/62979 status[0]: four expected array bit0 pairs missing; actual gold.aliases driver Qs prove source expected[0][i] maps Slang expected[9-3*i], versus gate expected#t[i][0]. No RTL change. Existing lec.py inductively proved correspondence hints + deliberately wrong-index controls RUNNING via ot-run in intel2:/srv/opentallas-scratch2/claude/codex-hbm-lec-0820; units ctlx318668-1793113960, vms339770-1793113994 (wrong-index control), correctVMS427988-1793114151, ctlxmutant pending admission. Sources pending 4-line HBM generator recipe-hints passthrough + recipe data; no READY until proof. Old failed receipts retained.
+
+## CODEX notes 2026-10-27 08:21 PDT: Sinkhorn enable source takeover
+CODEX took over CE source/kit blocker on codex/hbm-sk-ce-0835@c5e3bd5e28 (intel2 sparse WT codex-hbm-sk-ce-0835). QUAD5 e910 CE exactness already PASS: step0 7976/7976, steady 4989/4989, hold disabled-state proof, arithmetic and enable mutants caught; four 78–84k-edge lockstep configurations. Current U6d pins already carry sk_en_i data + die clk; old core recipes still target divided-clock tops (root cause of NO_RECIPE/interface gap). Isolated tools/hbm_b2/sk_ce_kit.py selects CE tops and extracts CE remainder with Sinkhorn removed; no source arithmetic/cycle changes. New split composition40launch lockstep + early-enable mutant queued intel2 client2225881, log /srv/opentallas-scratch2/claude/codex-sk-ce-run.log; 4 current-view kit generation queued client2306296, log codex-sk-ce-kitgen.log. NOT READY until results collected; no P&R launched.
+
+## CODEX notes 2026-10-27 08:24 PDT: macro channels and native demand
+CODEX took over demand-aware checker on codex/hbm-channels-0812@1b59341d70 (14 focused tests PASS; preserves clock_entry_macro). Root COORD: no blanket10.8-um gate; actual crossing demand<=0.6 and legal pin escape decide. Missing crossing census remains UNKNOWN; no zero-seam declaration invented. Native diagnostic source+summaries 08fdf5da14: R7 vmdel2SRAM/8889nets H0.469604/V0.180141; pslice100SRAM/161081nets H0.327458/V0.549502; immediate outward pin escape0blocked both. Necessary cut model only. Negative control old EP knownGRTFAIL64245 also passes cuts H0.248162/V0.295184 -> local access/fanout still requires actual GRT; no routing qualification. Full raw native data intel2:/srv/opentallas-scratch2/claude/codex-hbm-channels-0812. Pslice inherited live container pslicegrt-grt-1882071 extra4/50 at08:23, raw clk fanout23474; not duplicated/killed. DMA trial native placement pending (cores owner); EP newMY/channel plan must still place/GRT.
+
+## CODEX notes 2026-10-27 08:28 PDT rp3 source packaging fix READY
+Both R8 rp3 n/s synth runs reached LEC UNPROVEN before proof: Slang unknown OT_RP4_AR at leaf209/215/232. Root cause: hnx_rp4lp4_leaf relies on macro defined only in hnx_rp4_leafh; Slang separates compilation units while read_verilog shares macro state. READY codex/hbm-rp3-macroscope-0825@380d546462 (profile4673cf757e): guarded local macro profile reproduces sync/async reset branches, all240 old body lines byte-identical,0cycles; n/s recipes pin only that source. Original N-kit lint.ys with file overmounted PASS Slang elaboration/proc/opt exit0 via ot-run2440890-1793114770. Old failures retained; full synth LEC NOT RUN for fixedprofile. Root notified to merge; receipt results/hbm_rp3_macroscope_1027.
+
+... (52 more lines in the lane file)
+
+#### HBM-CORES (lane file updated 10-27 10:11)
 2026-10-25 05:13 PDT CLOCK-RESET/argmax -> HBM-CORES HANDOVER (assignment misrouted; nothing killed): argmax_r2 STRUCT fix on claude/argmax-struct-1025@b3928fd4a (value leaf param STRUCT=1: ring delay line with replicated one-hot pointers + kept bvalid/fin replicas per lane group, 0 cycles; Yosys keeps 17 ring_ptr + 32 rep_reg). GEOM REQ [CLOCK-RESET/argmax] 05:05 -> PASS-COND 05:06 (synth->CTS now, route after post-CTS render; lockstep+golden+3 mutants PASS first). Lockstep 8 configs 0 mismatches, golden argmax18 bench PASS with STRUCT=1, BUT mutants m1 (ptr reset +1 slot) and m3 (fb d=e_v) SURVIVED; only m2 caught -> bench too weak or mutants equivalent, condition 1 NOT met (log intel1:/srv/opentallas-scratch2/claude/clock-reset/argmax/lockstep.out). AUTOPILOT ids 7f91538514fc (rc0665) + 062ede949556 (rc0700), goal finish, held on unanswered tag CLOCK-RESET/argmax-route. Running ot-run CTS (spilled to epyc2, outputs return to intel1): kits intel1:/srv/opentallas-scratch2/claude/clock-reset/argmax/kits/argmax_struct_{rc0665,rc0700} (setRC x0.665/x0.70, FLOW claude/flow-hold-basis-1025@2fd43d861 vclk_corner+rebind signoff, OT_VCLK_FF 190.2), logs epyc1 .../argmax/cts_{v}.otrun.log; first try failed on sdc_lint (my extra key, fixed). Post-CTS probe ready: .../argmax/probe/run_postcts.sh KIT OUT (N/S pin-reg CK arrival, replica load centroids). Base CTS: N band TT 226.8 / FF 176.0, S band TT 224.1 / FF 174.3 (spread under 3 ps, so union cond 3 via N/S within 20 ps looks met); CTS-stage slew list 0 (the 262 slew violations appear only at route). Causes confirmed: 480 FF output holds = vclk 250 vs FF I 190; internal holds = u_native dval/dm/di zero-logic shift chain; slew = fin 673 loads + bvalid[5] 135.
 2026-10-25 05:18 PDT S81-HEAD -> HBM-CORES/CLOCK/NEARMISS-STRUCT/QC-CQB2 (F2 cross-lane): the orfs:asap7lock image never reads SET_RC_TCL, so a kit SET_RC_TCL = fitted setRC (HBM argmax struct_rc0665/0700 recipe) changes NOTHING; the image reads LAYER_PARASITICS_FILE in every stage -> point that at the fitted file (head elem s2 kits do: claude/s81-head-elem-1025@358b997a5a). Also rc_fit.tcl's own global_route must match the flow's resistance-aware GRT (added opt OT_GRT_ARGS there), else the fit is off by +87/+132 ps vs the flow's +36/+68. Head fits (C-only, FF, vs RCX per sink): elemB C x0.6 mean -3.1/p95 7.7, elemA C x0.5 +2.0/5.8; R scaling makes it worse (error is in C).
 
@@ -1083,9 +1187,9 @@ CODEX ROOTPIPE production root-cut lockstep7115comparisons×5configs eachlegacy/
 2026-10-25 23:24 PDT CODEX PARK (Claude limitreset, rootorder): q3sourcebranch codex/hbm-q3-kit-ready-2200@ebeccf1c4 pushed; includes e06physicalheaders, c674canonicaloneclkmap, eceafdirectiongate, rootpipepreCTS/canonicalclosurecounterparts e457/e908. Actualhubdiagnosticownsource038b4e473a (NOTmergebranch). Fulloneclkviews PASS5views/7slots generatedat /srv/opentallas-scratch2/claude/codex-hbm-corridor-2149/composite_oneclk/views_q3_oneclk.json,147->5clockbits/36674nonclockbits preservedbyplanpublisher82e095df4. Correctoneclk5sourcebundle/interfacegate NOTcompleted; q3_common_clock.py actual847ref mustbeintegrated (diagnosticmainlackshelper). Nextactualsource-onlygate requires exactadapt_recipe+canonical_oneclk_map and tokenemithelper extension; noFSprogrammebench/noCTSlaunched. Tokenlegacyhelper2a24ea8bc supportsoldmultiportonly. CompletedEDGEsourcekitc20d9065075493d5 remainsPRE_CTSHOLD. Noownedliveq3/SFUjobs; allterminalresultsretained. SFUfinal6a712da2f source/evidence/recipe pushedandactualhubfetched; P&Rheldpendingactualkit/parentmap/clockPDNreview.
 
 2026-10-26 CODEX collection: Q3 rerun intel1:lecdiag/q3_rerun_1a20967/lec.json EQUIVALENT83261/83261,0diff/undecided,15982/15982keptregisterspresent, clean1a20967d65. EXP rerun remainsEQ41418; ROOT original rerun has actual unmatched-state diagnosis under flow_tokens targeted jointinduction work, no coldrepeat/waiver. TOPK tree still running (no lec.json at collection).
-... (26 more lines in the lane file)
+... (39 more lines in the lane file)
 
-#### HBM-KITS (lane file updated 10-27 06:39)
+#### HBM-KITS (lane file updated 10-27 10:11)
 2026-10-25 06:20 PDT HBM-KITS (sub-agent of lane HBM): census of the 210 B2n hard-core modules (OWNERS hbm/core: 208 NEEDS-KIT + 2 GEOM-REQ),
 branch claude/hbm-kits-census-1025@919adf3e6c results/hbm_kits_1025/census.tsv (+census.py, fleet_kits_probe_1025.tsv).
 
@@ -1119,9 +1223,9 @@ H0score old failure25053cp/21493proved/3560diff (427clean) retained; current-mai
 
 CODEX FD3 23:22: one-head HALF0 actualASAP7 held-query+q4dot+fadd context LEC EQUIVALENT6663/6663,187merges+161constants,0unmatched (unit3031889,3063.9s). Fullcurrent parentLEC stilllive hyp19, failuresdown3586->1225 withlaterfadd refinement; finalfailurecause OPEN, no duplicatefullLEC/no waiver.
 
-... (5 more lines in the lane file)
+... (16 more lines in the lane file)
 
-#### HBM-MU-AUDIT (lane file updated 10-27 04:07)
+#### HBM-MU-AUDIT (lane file updated 10-27 10:06)
 2026-10-26 18:47 PDT HBM-MU-AUDIT RESULT (read-only, no builds): MU P=3 fork (HBM-NEXT-PROG) = ~40 unmerged branches claude/hbm-next-*-1019, claude/hnx-*-1020, codex/p3-cmtp-successor-1019 (last commit 10-20 10:08), RTL rtl/hbm_next/{att,fused,vm,idxn,idxq,hc,coll,su,sm} not on main; CMTP P=3 images ar/mtp_N6/mu_N1..4 + static_check PASS (fork). Frame = d4g 16-SM 4-stack (f4c_t5 693 mm2 model, 767 owner). Current B2n (8 SM, ~504 mm2 R11) already binds only the P=3 SM halves hnx_rp3lp3h_n/s (128 inst, NEEDS-KIT); all other B2n units are d4g single-user rtl/hbm_accel (0 att4/idxn/hnx_hc/vm refs in B2n die_plan). Verdict (inference): MU harder to close -- d4g/A-class frame (spec sec.5: A 16 SM 853 mm2 face>1, ft 1.76, 754 G0C errs), hub cut/corridor problem carries over and grows (COLL L5 x1.25, VM 2^19, HC row engine), new unit types ~8-10 un-hardened; cheaper path = MU on B2 frame (swap units, more dies). Details in COORD reply.
 2026-10-26 19:47 PDT HBM-MU-SIZE INTERIM (read-only plan arithmetic + one diagnostic probe, no builds; numbers UNCHECKED unless CHECKED). Frame = B2n R11 planA2 (claude/path-hbm-r11-1026@2947bd5953, 28.40 x 17.75 mm, partitions 503.997 mm2 CHECKED from die_plan). B2n already binds the P=3 SM halves (hnx_rp3lp3h_n/s, 256 inst, 181.4 mm2), so SM width is paid; MU adds only units.
 
@@ -1148,15 +1252,32 @@ H4320,bound3957.12: NW whole0.548/0.414 maxsegment0.553;k3. NE whole0.463/0.520 
 Architecture model PASS-COND ONLY; NOT ROUTE READY. New native pins/clock/PG/reset and FUSED W/E repin/rekit required; root placement, real native static calendar/token, existing SU transport pricing and TT/FF die STA remain. Old R11 face stations have reach gaps because pin spreading follows routing; NE4 old routes also failed. Retained and diagnosed, no waiver or die freeze.
 Conditional die area526.571mm2 withoutSMrowgrowth /529.979 with120umSMrow assumption, vs503.997SU. No unchangedSUlatency or FUSED81/103II claim. Source native zero-cycle adapter is FLOW-KITS-owned. Old diagnostic proxies remain live: mu_r13 H4043NE447905,mu32_r13 H4320NE1201563/H4665NW1202180; they do not block current native candidate.
 
+## CODEX notes 2026-10-27 08:13 PDT
+Current unified plan work consolidated /root/hbm/plan on codex/hbm-plan-0815 from QUAD6@568934d32a; collects five paused PORTS/CLK/OUTL/EP/HUBPIN results then folds one plan event. Current U6d G0 0/G0C3 phantom partner-face errors. New vmquery50it GRT FAIL3819 -> height/capacity fix before route.
 
-#### HBM-PG (lane file updated 10-26 20:03)
+## CODEX notes 2026-10-27 10:08 PDT
+Native canonical4quarter/4role source remains selected; bare16slice+2facecycles proxy rejected as physical view. Packedsoftquarter17SRAM/quarter=68whole, keycostledger b2b95296c11628writes/58140reads; old80 diagnostic explicit. Quarter key/query reach model7d63a06a91 worst401.339um/0errors; actualoutput1056sources now modeled existing9/7/5/3hops, no new cycles, fullcrosshalf/controlgraph+hubfit stillopen. ActualFUSEDjob217provider has161decodedrecords/0rejects, control221/0+mutant, but actual unified4rolecalendar/bootloader/STARTauthority MISSING, no executableROM. TOK owns failclosedprovider; no old149bit job substitution.
+
+#### HBM-PG (lane file updated 10-27 09:05)
 [HBM-PG 2026-10-26 13:06 PDT] RESULT claude/hbm-pg-phy-1026@a0ee63780 (1 commit on main fec963a5e; tools/die_plan only).
 Root cause: die_clock_128.pg_grid overlaid each die.pg.domains grid (1.92-um VDDPHY/VSS) on the FULL-DIE core rows, on a region-local phase (offset from rect edge) -> PHY stripes on top of / beside core VDD/VSS. The real PDN (pg_regions.pdn_tcl) already cuts core at PHY regions on the die phase; only the clock/shield/reset PG model diverged.
 
 ## CODEX notes 2026-10-26 20:03 PDT
 CODEX reviewed latest result: PG model/real parity and domains cause diagnosed; PDN-ONE merged main resolves shared emission contract, so HBM clock must rebuild against corrected PG. Historical PHY isolatedIR5/5 PASS20.993..28.842mV is not current-die freeze evidence. No superseded PG/clock route adopted.
 
-#### HEAD-CORE-LAT (lane file updated 10-27 07:46)
+## CODEX notes 2026-10-27 08:13 PDT
+CODEX took over current-unified PG sizing on codex/hbm-pg-0823 (intel2 own sparse worktree). U6d frame unchanged; conservative old-trial642.7W non-PHY core envelope + separately charged PHY, explicitly not a new current-power claim. First ot-run FAIL missing scipy; corrected isolated venv successor live intel2 unit oth-ubuntu-346755-1793114007, /srv/opentallas-scratch2/claude/codex-hbm-pg-0823/{size_scipy.log,pg_envelope642/}. Next compare feasible grid/capacity then clock rebuild on final reviewed QUAD6. No route before review.
+
+## CODEX notes 2026-10-27 08:21 PDT: narrow-grid failure diagnosed; finite-pad structural coupons live
+- Initial642.7W envelope size finished exit0 but feasible=false FAIL: core125.921mV; SerDes112.31..140.811mV vs35; M8.48@2.88/M9.48@1.728 consumes44.2/70.1%tracks. Tool limits to thin stripes and its approximate PHY model ignores actual domain45um bump contract, so no adoption. Retained output intel2 codex-hbm-pg-0823/pg_envelope642/pg.json.
+- Successor codex/hbm-pg-pad-0828@db7baec13b (based exact HEAD5 e5f4fb2cd1) builds currentU6d core-only hub/SM PDNSim coupons at1.2709W/mm2, M8.48@4.32/M9 12.96@34.56,150um bumps/70um pads, bothVDD+VSS. Render VIEWED PASS-COND results/geom_review/hbm_pg_pad70_0828. No PHY/lower-stack/current-power/release claim.
+- LIVE epyc2:/srv/opentallas-scratch2/claude/codex-hbm-pg-0823/pad70/hub unit1899402-1793114324 and /sm unit1902779-1793114341, ot-run40GB8threads; launcher logs intel2 codex-hbm-pg-0823/{hub_psm,sm_psm}.log. Hub pdngen complete+padfallback0; collectpsm/psm.log+ir_VDD/VSS.csv then co-located sum450um interior.
+- Reset wavefront model onU6d still running intel2 unit376393-1793114067, python377288,99.8%CPU; reset.log. No duplicate started.
+
+## CODEX notes 2026-10-27 09:05 PDT: finite-pad measured result
+Core-only upper-stack co-located VDD+VSS PASS hub23.396 / SM23.151mV (450um interior), bothPGrailsconnected, padfallback0, bothjobsEXIT0. Leaves11.604/11.849mV to35 for lowerstack. Source/result codex/hbm-pg-pad-0828@9c2f9a36f1; sourceHEAD5dep, no planadoption/fullIRclaim. Actualactivity, lowerstack,PHY and correctednativecomposition stillowed. U6dreset modelPASS maxhop377.3um/88nets/23.384mm/0unreachable,maxrelease95; rerunfinaldelta. All ownPG/resetjobsDONE.
+
+#### HEAD-CORE-LAT (lane file updated 10-27 10:04)
 2026-10-26 05:50 PDT HEAD-CORE-LAT: start. Branch claude/head-core-lat-1026@185704afa (main adb6c7adc + tools/s81_head/infra_island.py, infra_island_kit_patch.py, infra_island_trial.sh, results/head_core_lat_1026/island_spec.json). COORD corrections 1+2 applied: island = top-owned hole for die CLOCK + RESET drivers ONLY; die-signal FT stations/repeaters stay pushed down in core repeater bays (<=M7, every <=405 um), signals M4-M7 + leftover M8/M9 only via a checked via field. HEAD census: hd_tile has no ft_slots -> elemA/elemB need 0 FT bays.
 ISLAND DESIGN (measured): one 8.64 x 8.64 um hole per core (= 1 die lattice cell = PG pitch, 32 rows) = core placement keep-out (hole + 1.08 halo) + core route OBS M2-M5 (core max layer M5; core M1 rails continue = shared PG); die M9->M1 via stack at the hole centre; core clk pin on the hole N edge, rst_n on the S edge (M5). Sites (R0 core frame): elemA (155.52,120.96) under rom0, elemB (129.6,86.4) under rom0. Demand (clock+reset only, actual LEF widths): mesh driver pair 2xBUFx24 + core-root stub 1xBUFx24 + trim chain 8xBUFx4f (~130 ps) + regional reset reg 2xDFFHQNx2 + 2xBUFx12f hop repeaters = 12.5 um row length -> 8 % (elemA hole incl. via keep) of 32 rows; area 0.073 % elemA / 0.092 % elemB.
 
@@ -1190,9 +1311,9 @@ NEXT: (1) top-down equal-length L1 (4 L1 legs of one length from the entry along
 2026-10-26 19:41 PDT HEAD-CORE-LAT-R8 RESULT (claude/head-core-lat-r8-1026@b4ab7e20ee, base R7 afbf12635d; ALL numbers UNCHECKED unless CHECKED; uf_phys3 v1 GRT; windows = per-leaf as p3_predict). (1) Planner rule: head_tree_plan.py --hull 1 (node inside children bbox, on the face toward the parent when the parent lies beyond it, legal-site projection) + --cut_parent 1 (GEOM-9 fix: cut across the parent's approach axis) + GEOM-9 grandparent gate always reported (plan.json gp_gate). Test tests/test_head_tree_plan_hull.py 3 OK (incl. the elemB N1_1 case); --hull 0 reproduces R7 r7b byte-identically (CHECKED). Findings: the literal bbox rule has 0 hits in r7b (CHECKED) so it cannot fix N1_1; the full no-double-back form collapses balance: elemB 12 plans pred TT w36.7-49.3 / FF w30.4-41.1 (render pred/h8b_f5_24444_b0.png: nodes hug the entry, long low-level legs). --cut_parent: TT w20.7-23.9, gp hits still 6-27. Both kept OFF by default. My gp counts (level>=3 incl. leaves): r7b 19 / r7a 32 (GEOM-9: 9/19). (2) R7 elemB model error (to MODEL-REFIT): pred 233.8 w13.6 / 179.0 w11.5 vs meas 239.3 w19.5 / 185.7 w16.4; per-leaf residual TT +5.5 sd 2.6 (max 14.6), FF +6.7 sd 2.2; by L2 N1_1 +11.5 vs 3.5-5.5 elsewhere; residual vs doubled-back path excess corr -0.27, i.e. NOT path length. Node probe (read-only, routed odb): N1_1_n has the same wire C (19.2 fF), fanout and star length as N1_2_n but 10.7 vs 6.2 ps net delay and 41.6 vs 31.1 ps child slew -> GRT route RC/topology of that net. (3) Sizers collected: elemB r7b_szw pred TT 234.3 w8.84 / FF 178.2 w8.66, but it downsizes N1_1 to BUFx10, and pred + R7 per-leaf residual = TT w17.9 / FF w13.9 -> NOT built (also GEOM-9: no elemB build before re-place). elemA r7a_szw pred TT 243.75 w10.88 / FF 186.05 w9.62, L1 means 241.8-245.2. (4) BUILT elemA r7a_szw (cal2 recipe, intel1 ot-run oth-ubuntu-2108550-1793068107 exit 0, kit head-core-lat-r8-1026/elemA_r8sz): GRT overflow 0 (CHECKED, Total line); measured GRT-RC TT 247.1 w13.68 / FF 190.78 w11.12 (leaf windows <=14 both); per-sink windows 19.7/18.6; L1 means TT 245.2/248.5/247.3/247.4, FF 190.0-192.1 (within +-3); model residual TT +3.3 sd 1.3 / FF +4.7 sd 1.1. gp gate still 32 hits. Render pred/elemA_r8sz_measured.png viewed (colour = measured leaf mean despite the label): uniform, hottest leaves on the E fringe and the NW corner under rom0. No residual tools (d1 sizing is plan-computed; no CLOCK-RESIDUAL entry). Not done: elemB re-place with r7 pins + utilisation density (GEOM-9 hole). NEXT: that re-place, then the elemB plan on the new geometry.
 
 ## CODEX notes 2026-10-26 20:12 PDT takeover
-... (102 more lines in the lane file)
+... (122 more lines in the lane file)
 
-#### HEAD-RTL (lane file updated 10-27 00:23)
+#### HEAD-RTL (lane file updated 10-27 10:12)
 ## [HEAD-RTL 2026-10-26 19:30 PDT] hd_mesh RTL written, hd_lep0N covered by the existing provider; hd_ctl and hd_host ASK. No job running.
 
 ## CODEX notes 2026-10-26 20:12 PDT takeover
@@ -1221,13 +1342,21 @@ READY codex/head-host-2000@bceaec7caf includes HOSTc24cb818b4 and CTL825fe511a7.
 ## CODEX notes 2026-10-26 20:54 PDT integrated/clean
 HEAD ctl8b18e51e8a +HOSTbceaec7caf both merged mainf795e41b9a. Ownmergedctlworktreecleanremoved; no livejobs. Full source/failure/gate/remainingpacket handoff/codex-head-ctl-20261026-2055.md; HOSTpacket handoff/codex-head-host-20261026-2049.md. Canonicalplan/physical/token gates remainopen, no ownerquestions.
 
+## CODEX notes 2026-10-27 08:15 PDT
+CODEX took over HEAD source/plan closure on codex/head-plan-0815@dc7e87fd2. Candidate results/head_source_0815/die_plan.json on approved2b67clamped plan adds7existing supplement files to5owning type source closures (no RTL/geometry/cycle changes), approvedBQ2 and5physicaltap names ft_mstrap_i. head_die_portbind de-duplicates exact path migration while keeping manifest-only conflict/missing gates. Tokens team tests candidate strict/native elaboration; physical owner applies helper to same final mesh/PG delta. No route or release claim.
 
-#### HOLD-COLL-R1 (lane file updated 10-27 05:00)
+## CODEX notes 2026-10-27 08:34 PDT — physical source profile gap fixed
+... (18 more lines in the lane file)
+
+#### HOLD-COLL-R1 (lane file updated 10-27 08:23)
 2026-10-26 21:28 PDT HOLD-COLL-R1: branch claude/hold-coll-r1-1026@1c2a4689d8 (on main f795e41b9a; epyc1 sparse wt /srv/opentallas-scratch2/claude/wt/hold-coll-r1).
 - COLLECTED Codex HB4 GRT (unit 552477-1793070783, done 20:51, BC only, 5_global_route.rpt CHECKED): hold FF -90.15 / 5107 ep, 7 HB4; setup -47.12 / 1320 ep. No DRT. Data retained (Codex-owned).
 
 ## CODEX notes 2026-10-27 05:00 PDT
 COLLECTED epyc1 unit958350 terminal exit0, NOT SIGNED: TT setup-77.26/1957; FFhold-58.69/3149 (rawSDC-17.46/10); slew4986TT/3325FF; DRC0 ant0; pair36.27TT/28.11FF. Full run copied intel1 same /srv/opentallas-scratch2/claude/hold-coll-r1. TT worst = reset recovery u_rrl45 -> u_ft_out_err_re_wi_s1/eq RESETN (FT eq async control); FF std worst u_rrl71 -> FT cmd eq RESETN; sender-specific FT output overlay still noted in lane and must be preserved (global overlay-40/0). Qwen worker owns structural reset/overlay successor and parent receipts; no obsolete reroute. Figures UNCHECKED-independent.
+
+## CODEX notes 2026-10-27 08:23 PDT
+READY codex/ft-overlay-1027@79a0cfe0a (actual intel2 main8fcd97ac44): current main lacked HOLD-COLL sender per-port output-overlay support; ported only those signoff hunks, then fixed declared die-timed FT endpoint exclusions on BOTH per-port input and output overrides after get_ports bus expansion. Mixed core/FT bits in one bus work; ordinary core IO floors/window shifts unchanged. 45 focused tests PASS incl Tcl-executed mixed-bus control + reintroduced-FT mutant; 6 default TT/FF sessions byte-identical. No RTL/physical changes. Parent FLOW/root owns integration. Physical reset-recovery/slew failures stay with Qwen successors; no obsolete route repeated.
 
 #### HOLD-REPAIR (lane file updated 10-26 20:33)
 2026-10-26 17:38 PDT HOLD-REPAIR: branch claude/hold-repair-1026@74517416c8 (on main 9c9a9eb91; local sparse checkout, no full worktree). Numbers UNCHECKED (plan model, no routed census).
@@ -1239,7 +1368,29 @@ Both coll_ftc inherited scenarios DRT60%; GRT hold173.562ps negative/5107ep and 
 ## CODEX notes 2026-10-26 20:33 PDT result
 Inherited region_flat coll_ftc terminal NOT SIGNED (signoff/signoff.json generated20:27): TTsetup-67.27ps/1151endpoints, FFhold-183.21ps/5100, slewTT5072/FF3403, DRC0/antenna0/PGopen0. RelatedpairclockPASS74.39TT/56.13FF,9805pairs; parentreceiptmissing. Holdworstcrec_tx_i461=-163inputmin+singleBUFx2(12.81ps),arrival41.35vsrequired224.56; missingHB4dispatchconfirmed. SeparateTTsetupFTinputmax766.36ps leavesonly66.64psreceiverbudget; capturetapmin177.2vsbound250 plusinputpathmeansnomarginfor~225psTTHB4chain. RequiresFTmaxbudgetredistribution/commonclock fromQCplan, notpaddingalone. OwnfixedGRTunit552477stillrunninginitialcongestion; inheritedmesh20DRTstilllive.
 
-#### INFRA-FIRST (lane file updated 10-27 07:25)
+#### INFRA-FIRST-QC (lane file updated 10-27 12:47)
+- 2026-10-27 11:25 PDT QC-A0-KITS -> INFRA-FIRST-QC-R28 (COORD ruling 11:1x (1)): D-QC-A0-R3B claude/qc-a0-plan-delta-1027@ba3b9825ea (base main 441bad4d3a) is APPROVED as content of the ONE batched QC plan event that R28 owns (together with the PG option-A VSS cut). Content: physical/die_plan/qwen_compute/cores/{a0_core.json,a0_nk_pins.json,a0_nl_pins.json} (A0 E pins y-19.344; legacy E ck pin retired -> 22 ck_isl_* M5 island feed ports, face C, x = U-0.024 on the M5 plan track; a0_core.json clock = R3b drop-island form, type lattice U {112.32,224.64,345.6,449.28} V {8.64,138.24,276.48,406.08,535.68,665.28,820.8,984.96}, child budget 201 TT/161.5 FF, centre child pins), inputs/a0_drop_r3b.json (= the qc_clk_mesh3 --a0-mesh input; 192 M9 + 128 M8 drop straps over the A0 field), a0_plan_delta_r3b.py (generator), tools/die_plan/core_pin_sites_gate.py (+test: plan-declared face-C ports accepted). Gates on the delta alone: G0 0E/111W, G0C 0E/111W (= base), core_pin_sites PASS. R28 to-do: fold into the event, re-run G0/G0C on the combined plan, check the island feed ports stay on the drop crossings after the VSS cut (U/V are clock-strap positions; the cut must not move them), and retire the dead R26 WT intel2 wt/qc-mesh-r26-1027 (its only uncommitted file qc_clk_mesh3.py is already rescued in codex/qc-clock-1027 03e87531a). QC-A0-KITS NK/NL parents start after the event lands.
+- 2026-10-27 12:20 PDT QC-KITS-R1 -> INFRA-FIRST-QC (R28 successor) ASK + plan-fix list for the ONE QC plan event (no plan edit by me):
+
+# INFRA-FIRST-QC lane notes (file created by QC-A0-KITS 2026-10-27 11:25 PDT for the COORD hand-over)
+- 2026-10-27 11:25 PDT QC-A0-KITS -> INFRA-FIRST-QC-R28 (COORD ruling 11:1x (1)): D-QC-A0-R3B claude/qc-a0-plan-delta-1027@ba3b9825ea (base main 441bad4d3a) is APPROVED as content of the ONE batched QC plan event that R28 owns (together with the PG option-A VSS cut). Content: physical/die_plan/qwen_compute/cores/{a0_core.json,a0_nk_pins.json,a0_nl_pins.json} (A0 E pins y-19.344; legacy E ck pin retired -> 22 ck_isl_* M5 island feed ports, face C, x = U-0.024 on the M5 plan track; a0_core.json clock = R3b drop-island form, type lattice U {112.32,224.64,345.6,449.28} V {8.64,138.24,276.48,406.08,535.68,665.28,820.8,984.96}, child budget 201 TT/161.5 FF, centre child pins), inputs/a0_drop_r3b.json (= the qc_clk_mesh3 --a0-mesh input; 192 M9 + 128 M8 drop straps over the A0 field), a0_plan_delta_r3b.py (generator), tools/die_plan/core_pin_sites_gate.py (+test: plan-declared face-C ports accepted). Gates on the delta alone: G0 0E/111W, G0C 0E/111W (= base), core_pin_sites PASS. R28 to-do: fold into the event, re-run G0/G0C on the combined plan, check the island feed ports stay on the drop crossings after the VSS cut (U/V are clock-strap positions; the cut must not move them), and retire the dead R26 WT intel2 wt/qc-mesh-r26-1027 (its only uncommitted file qc_clk_mesh3.py is already rescued in codex/qc-clock-1027 03e87531a). QC-A0-KITS NK/NL parents start after the event lands.
+- 2026-10-27 12:20 PDT QC-KITS-R1 -> INFRA-FIRST-QC (R28 successor) ASK + plan-fix list for the ONE QC plan event (no plan edit by me):
+  ASK 1 (event basis): is the event's partition-type set main's 68 types (R28 applied the PG cut to main die_plan.json, 0 types changed; R3B changes only the A0 core files = all 9 cb* types) or Codex's native100 candidate (codex/qc-bind-1027 58cc059cae candidate_guard51_native100_io.json, H 26317.44 = the prototype8 lineage your dry build/mesh uses; strict bind fresh_v6 verify PASS 0 unbound/tied, portbind PASS 100/377)? CHECKED diff main->n100: all 68 types change at least clock+cells (n100 carries die_islands_um 20-1551 per type, cut from the R8 tree), 24 split into 2-4 classes. Either way my reading: NO QC partition type is kittable before the event (islands re-cut after the per-gap planner allotment); partition PDN itself is PG-grid independent (partition_pg_max M7, fixed M7 8.64 pitch in gen_phys). Please confirm or name types you will NOT touch.
+  ASK 2 (SU lane cores): COORD 06:16 ruled the 24 constant c_o bits are NARROWED in the same event that brings the su_exact pin tables (n100: 16 modules qfd_qc_su_lane_{w,e}_l0..l7). Is that narrowing + su pin table in your event, and who writes it? Until then the SU lane core kits cannot be cut (pins change). Codex const miter (intel2 codex_qc_const_globalclk_{proof,mutant}) ended 11:30 exit 1 = harness error 'No SAT model available for cell ...qfd_dv_s1_rst_relay' (blackboxed relay), NOT a verdict.
+  PLAN-FIX list (the 9 OWNERS PLAN-STRUCTURAL items; evidence = PROTO 10-25 geom scan on main bdd5f960a, results/proto_1025/geom/qwen_compute.json). My plan-level per-bit Manhattan re-check on CURRENT main + n100 (station0 = regs_um[0], plan bit_sites_um, bit-ordered out-window pin; UNCHECKED model, no placement):
+   (1) sle_su_c + slw_su_c (all 6 n100 classes): slot cws2 first hop 406.31 um for 5 bits (b506-510, N pin 662.35 -> site 730.08,1000.62) -> move cws2 station-1 sites >=1.4 um toward N (or shift the window); slot x_su_l1_stm (W->N, 228 b, 1 st) has NO plan sites -> add.
+   (2) coll_ftc: all 26 slots have NO plan bit_sites (generator-placed stations); PROTO tl_st_wi 483.8 um, 902 bits >405 -> plan bit_sites on an L route with the station at the knee (ft_bit_sites.py / ft_knee_sites.py as S81 KITS-SPARE3).
+   (3) coll_ftn: 4 slots NO plan sites; PROTO crec_tx_s0 406.3 (7 bits) -> plan sites.
+   (4) slw_su_l0: cws3 (N->S 516 b, 4 st) NO plan sites (sle_su_l0 cws3 has them); PROTO showed 272 station sites inside the SU cores -> mirror sle sites, check 0 in-core.
+   (5) sle_su_l0 / sle_su_l1: x_st_a_fe (1 st) NO plan sites -> add; rest of both types plan-level max 352 / 369 um.
+   (6) cbf_q00_s2, cbf_q01, cbf_q01_s2, cbn_q01: PROTO FAIL is STALE: current plan has bit_sites on every slot, per-bit max 378/346/375/352 um, 0 sites in A0 cores -> no plan fix; need a fresh proto/G2 geometry scan on the event plan (they are touched by R3B anyway).
+  Tools + outputs: claude/qc-kits-r1-1027@bcbae3c097 results/qc_kits_r1/{plan_reach.py,plan_sites.py,reach_*.txt,sites_*.txt}.
+- 2026-10-27 12:47 PDT QC-KITS-R1 -> INFRA-FIRST-QC plan/bind-fix items 7-8 (from n100 pre-kit synth+LEC on fresh_v6 bind, diagnostic only, CHECKED from logs):
+  (7) coll_core + coll_s: RTL_LINT FAIL -- ot_sram_1r1w2c_64x546_m1 (qfd_static_ch546 u_mem) not part of the kit: plan contents of the 2x qfd_coll_static_face cores ("planned hard core, status rework") declare no face SRAM macros, while coll_n declares 4x ot_sram_1r1w_64x512_m1_r2c2 + 2x ot_sram_1r1w2c_64x546_m1 with positions. Fix: declare + place the face macros in coll_core/coll_s in the event.
+  (8) coll_n: LEC UNPROVEN -- bind lists rtl/lib/sram_p192_1019/ot_sram_1r1w_64x512_m1_r2c2__p192.sv, which instantiates ot_sram_1r1w_64x512_m1_r2c2_p192_mir (no source/bb in the kit, no p192_mir macro view in asap7_memory_macros_v2; synth netlist uses base _r2c2 x4 + 64x546 x2). Fix: bind the base macro wrapper or ship the p192_mir view + bb consistently.
+  coll_ft pre-kit all pre-floor gates PASS, LEC EQUIVALENT 8946/8946; coll_ucie kit-rtl OK (needs physical/qwen_missing_phy in sparse set).
+
+#### INFRA-FIRST (lane file updated 10-27 13:21)
 2026-10-26 01:41 PDT INFRA-FIRST (fresh lead): branch claude/infra-first-0140 (= main 767c6c90b6, has die_clock_mesh fdb5b851c7/d0803fe0b7), sparse wt epyc1:/srv/opentallas-scratch2/claude/wt/infra-first-0140, data epyc1/epyc2:/srv/opentallas-scratch2/claude/infra-first-0140/. Builds ON die_trial.py (kit/psm/grt), die_clock_mesh.py (+ CLOCK-MESH-2 regional meshes, coordinated in CLOCK-MESH.md), apply_clkmesh_sites.py, reset_tree.py (wf_plan), pg_regions/partition_ir/phy_ir. No fork; new code = tools/die_plan/die_infra.py (orchestrator, opt-in) + opt-in flags; default paths unchanged until COORD approves.
 ## METHOD (D-INFRA-FIRST, owner 01:37 + COORD 01:4x additions) -- per die, in order
 
@@ -1273,7 +1424,7 @@ QC infra holds; R4 window80 merged, R5 DRT model caveats collected. Next R9 die-
 ## CODEX notes 2026-10-26 20:42 PDT
 R9 row/stack master delta declared266sites incl3trunk,170rowmoves+48MY; shortstack/physicalmaster/minarea fixes progressing in CLOCK-128. Mesh3 per-pair STA integration still needed after physicaltree/mesh views; root19:52relatedpair ruling respected, no multi-root redesign. HOLD-REPAIR peer counted773pairs1,277,486bits ->2,377,548HB4(.242748mm2),type-worstcontracts2,809,874(.286888mm2), UNCHeCKED modelbudget pending revisedplan/endpointmapping.
 
-... (3 more lines in the lane file)
+... (9 more lines in the lane file)
 
 #### INFRA (lane file updated 10-26 20:10)
 Tasks: (1) release-tree element layer from current die plans; (2) Claude<->Codex auto-switch on rtx-pro; (3) old nvme0n1 CLOSED-result recovery -> AGIdock /archive; (4) disk prune epyc1 + rtx-pro to <=75%.
@@ -1310,7 +1461,7 @@ Installed usermatplotlib3.11.2 on epyc2/epyc3/intel1/intel2, all4importPASS, CLO
 - Lanes still to act on: dirty idle full trees qc-ft405 (13 paths), s81-dec12r (17), s81-idxnet (78), s81-plan2-cconn (3), kv-cores-1025r (1). Commit/push or discard, then remove or go sparse.
 ... (18 more lines in the lane file)
 
-#### INFRA2 (lane file updated 10-26 20:08)
+#### INFRA2 (lane file updated 10-27 12:27)
 Tasks: (A) epyc1 ot-run hub single point of failure: inventory, nightly backup, standby recipe dry-run on epyc3; (B) re-enable die-ci-commit/die-ci-nightly/release-task-watch timers on epyc1.
 
 ## CODEX notes 2026-10-25 02:38 PDT
@@ -1327,6 +1478,11 @@ Auxiliary takeover collected current operational state; details codex-aux-infra-
 
 ## CODEX notes 2026-10-26 20:08 PDT
 Backup+sync operational lane; no QC-specific active failure. Ops remains root auxiliary coverage.
+
+## CODEX notes 2026-10-27 08:13 PDT
+Current intel2 timers healthy (autopilot active08:12, canary08:16, stall-watch08:20). Scheduler memory headroom646/753/500GB; scratch233/1500/669GB epyc2/intel1/intel2. No cleanup needed. Diagnosed ownership gaps assigned: old HBM serdes48h to HBM, topk LEC idle2h to HBM, old QC NK44hGRT and duplicate btab32hDRT to Qwen, DIE-CI67h to FLOW. No other jobs killed or repeated.
+
+2026-10-27 12:27 PDT INFRA2/EPYC2-PRUNE: epyc2 /srv/opentallas-scratch2 85% (704G used/132G avail) -> 68% (561G/274G; other jobs also freed ~20G meanwhile). Deleted 30 dirs under claude/ untouched >24h (no file newer than 24h, not in lsof +D/ps/docker, no .git, no 6_final.odb, not LIVE in Codex 1027 handoffs), ~140G du: hbm-face 21, tok-hbm-suv 10, path-hbm 10, tok-ds-dskr 8, codex-s81-head-eng-1026, codex-s81-plan-1713, path-s81-x2rb, lec-cp1-infra 7 each, codex-ds-abi-2148 6, clock-reset, path-kv 5, kits-wave, path-s81-x2ctl 4, codex-kv-astk-1026, path-s81-ftA, tr3-hbm, die-ft-1830, path-s81-e5, codex-canary-1309, kv-tok2 3, tok-qk-xd4, codex-qc-su-0733 (root-owned residue left), codex-kv-mesh-1026, infra-first-0140, tok-qk-xd3, codex-e5-local-2144, path-kv-bind, clock-trunk, codex-hbm-physical-1309, s81-cores3 2. Kept: all wt/* (wt/codex-hbm-native has untracked files + no upstream), moved/, die-ci, flow-canary, tok-qk-kvh, s81/infra2/path-qc-collftm2 (hold 6_final.odb, check CLOSED before any prune), tok-lec+kits-wave2 (open by processes), tok-sched (strict-bind evidence), flow. List: localhost /home/ubuntu/.claude/jobs/b7f906df/tmp/prune_epyc2.txt.
 
 #### IO-HOLD (lane file updated 10-26 20:10)
 2026-10-25 10:38 PDT IO-HOLD: branch claude/io-hold-a-1025@dbd81734d1 (base main 55b7f9277; merges clean into 2c31876f3, 155 related tests PASS on the merge). Opt-in only: plan clock.io_hold = "sender_min" or env OT_IO_HOLD=sender_min at gen.py phys; default legacy = byte-identical kits (test).
@@ -1348,7 +1504,7 @@ CODEX took over clock/reset group on codex/clock-2144s; detailed current/jobs/ne
 ## CODEX notes 2026-10-26 20:14 PDT
 Implemented outstanding CI/trial follow-up e1f718f079: optimized hold unresolved until actual real-view parent; no inherited legacy slack claimed.
 
-#### KIT-CENSUS (lane file updated 10-26 20:10)
+#### KIT-CENSUS (lane file updated 10-27 08:16)
 Read-only census. Two independent sources:
 - **FS**: every ORFS run dir on epyc1/epyc2/epyc3/intel1/intel2 (/srv/opentallas-scratch*/claude/**, ~/wt, /tmp) with a stage
 
@@ -1361,7 +1517,10 @@ CODEX remaining-lanes takeover: Historical census DONE. Jobs: None. Next: Use cu
 ## CODEX notes 2026-10-26 20:14 PDT
 Unsigned kits held where pending plan delta changes interface; use master-plan slices/current die flow, no obsolete census rerun.
 
-#### KITS-SPARE (lane file updated 10-26 20:10)
+## CODEX notes 2026-10-27 08:16 PDT
+Historical census complete; no live jobs. Current early kit admission implemented PREFLIGHT-1 b56b0b55be; ownership/geometry rules remain.
+
+#### KITS-SPARE (lane file updated 10-27 08:16)
 Rules: item NOT on a PATH-* cut, NOT in a pending plan delta (TYPE-REDUCE folds, KV-PLAN3 fwd_reach, QC-PLAN3, S81-PLAN2/LEAF3, head delta),
 die canary not FAIL at kit stage; current generators (per-corner basis, calibrated RC, reg_fanout + lint gates); GEOM REQ via autopilot
 
@@ -1387,7 +1546,10 @@ CODEX 22:56 PDT: collected density full23 FAIL16round nonconvergence, diagnosed 
 ## CODEX notes 2026-10-26 20:14 PDT
 Current route holds still apply; no spare route bypass pending plan delta. IO-HOLD stand-in gap fixed on e1f718f079.
 
-#### KITS-WAVE (lane file updated 10-27 06:39)
+## CODEX notes 2026-10-27 08:16 PDT
+Old generic spare route waves superseded current slices/deltas; real die path owners handle current eligible kits. No bypass of held interface.
+
+#### KITS-WAVE (lane file updated 10-27 08:28)
 Branch claude/kits-wave-1025 (= main 190ebb428e, no edits), epyc1 wt /srv/opentallas-scratch2/claude/wt/kits-wave-1025. Data epyc1:/srv/opentallas-scratch2/claude/kits-wave/{gen,logs,render,status.log}.
 Selection (no PENDING-DELTA / PATH-PARTS machine lines exist yet, so derived from the live plan candidates by plan diff vs main, tool epyc1 kits-wave/pd2.py): EXCLUDED = owner PATH-* or named in a lanes/PATH-*.md, plus types changed in (a) PATH-S81 FT candidate a4/a5 (die-ft-1830/s81_a4/src, 88 types: all leaves, c1x/c3x/iq/kv512/lep*_C slices, kv_leaf t3/t4, st t41/t51), (b) KITS-SPARE3 ST3 stations (13 types), (c) PATH-QC plan d3c vs main (12: coll_ftm glue native59 phy_serdes* phy_ucie_kv sle_ctl s?w_st_a_v1/v2 tt_ctlm), (d) codex/kv-plan-1713 (31 = every KV type). HBM: TYPE-REDUCE-2 has marked no HBM type final -> HBM skipped (229).
 
@@ -1421,9 +1583,9 @@ VS alias-layout re-LEC remains LIVE intel1:/srv/opentallas-scratch2/claude/kits-
 
 ## CODEX notes 2026-10-26 02:13 PDT — VQ/VS
 CODEX took over fresh VQ canary-compatible re-kit on codex/vqvs-1026@25817a7cc (exact flow/source 877cfdeb2815). Preplan image viewed results/geom_review/codex_vqvs_1026/vq_preplan.png: PASS-COND place-only, south SRAM edge/no south signals, open north/east channels, max face density2.5/um, north-center clock/reset. Fresh kit3da2783116e6fa67 generated702pins/+0cycles. Actual ot-run32GB8threads spilled to intel2:/srv/opentallas-scratch2/claude/codex-vqvs-1026/gen/ot_s81sl_vq_tpl_f6, unit oth-ubuntu-1669667-1793005923 (launcher epyc1 PID1263980, place.otrun.log). RTL lint PASS; synthesis live. Existing VQ rowc97a51659727 WAIT-CANARY because old kit flow differs877; this fresh build resolves that blocker after actual geometry/LEC pass. VS existing kw3-vs-lec070 still LIVE on intel1, hyp15failed452; no duplicate.
-... (18 more lines in the lane file)
+... (21 more lines in the lane file)
 
-#### KV-CORES (lane file updated 10-27 07:37)
+#### KV-CORES (lane file updated 10-27 13:23)
 2026-10-25 06:57 PDT KV: FIX 147ef624e94d 598600015ec2 kv3_head_eighth_e2 + acdb1455f742 kv3_head_eighth_e4 (h0m8dlr/h5m8, NOT SIGNED FF hold -10..-15 + slew): structural verdict = regional clock tap per lane + per-corner insertion basis, no hold-fix ECO (ECO stopped/deleted). Rebuild = heads/f25 e0/e2/e4/e6 on claude/kv-r3-1025@4b679188fd (RCX RC + MCMM tc/bc + leaf_affinity + fanout 24; GEOM REQ [KV-R3 f25/F 06:20], placed, LEC rerun with KV-LEC fix claude/kv-lec-1025@1e8b9dc82); per-lane regional tap is added to the f25 kit before route. Old h0m8dlr data deleted; h5m8 data deleted now.
 2026-10-25 06:57 PDT KV: FIX 1d8f9c56aa8d bf937593fd6e qkd_kvs_pc + 3742c83ea8dc caf11deb0560 qkd_kvs_pc_h_head_p (A/B preflight FAIL shared 1716/928, dropped 258/282): structural fix = native one-clock boundary recut (dedicated output register copies for po with internal loads, land_er[258:1] plan dead-pin drop, fi landing register, split ki/ko FFs), owner KV-CORE-RTL on claude/kv-core-rtl-1025 (Codex diagnosis codex/kv-pc-boundary-1025); pin drop goes in KV plan delta v3.9f. A/B kit data deleted.
 
@@ -1450,6 +1612,14 @@ Completed all8superseded KV-R3f25/F exact-ID withdraw rows via enqueue.py --mode
 2026-10-27 02:15 PDT KV-CORES-R2/AHUB: qkd_ahub UNBLOCKED — current-source LEC EQUIVALENT 6292/6292 compare points, differs 0, undecided 0 (CHECKED; 4189.8 s; unit oth-ubuntu-2880229-1793088282 exit 0; intel2:/srv/opentallas-scratch2/claude/kv-ahub-r2/kits/qkd_ahub__604.8x440.64/lec/lec.json). Source claude/kv-ahub-r2-1027@80a104f8c0 (cut + gen repo-relative sources + Codex static zseen banks + LEC hard-macro genvar/localparam fixes). Build flags as in the line above; BUILD CONDITION GEOM-REVIEW-16: real binary H-tree on the 8x4 island grid (no one-trunk fishbone). Merge ask in COORD-REVIEW-QUEUE.
 2026-10-27 02:34 PDT KV-CORES-R2/KVSCTL-2 RESULT: kvs_ctl still BLOCKED (emitted_v, and ruling (a) not built). Branch claude/kv-kvsctl2-1027@bb6d423642 (intel2 hub + origin) = tools e58e40597f + src 41ac57c25f cherry-pick. (c) ROOT CAUSE of the 35486 = PROOF SETUP: hr_face_ports.sh emit wrote only the top module (select/-selected), so the 25 kept-hierarchy $paramod ot_s32_* leaves were missing; yosys kept them as unknown internal cells -> "No SAT model" (CHECKED: 1 module vs 26). Fixed: full emit + a guard that fails on undefined $paramod types (it catches the old fp2 RTL: 19 missing). The rerun (kvsctl-r2/fp3) is NOT a pass: 37 unproven (91450/91487 proved), all internal u_lprg wa_d/b_data/w_one/w_zero no-reset regs, no output bit listed (CHECKED); the root cause of the 37 is UNCHECKED (likely undef/init on the .v round trip). (b) DONE: 250 load-less inputs dropped as live-range port pieces (kvsctl_dead_drop.py, kvs_pc precedent, no pin ties): d2d__svc 138 / boot_pr 67 / kg 23 (stale, never referenced) / cht 12 / srx 10. Dead-drop LEC EQUIVALENT 96120/96120 rc 0 (CHECKED; dropped nets blacklisted from name matching, the only diff in run 2). Plan pin view results/kv_core_slice_1/pd_slice_delta/cores/kvs_ctl_pins.json 6795->6545 with a declared_dead list; hm_r12 sha 1814a2d8 unchanged; core cut results/kv_cores_r2/kvsctl2/rtl (pin_bits 7099->6849). The recut proof on the dropped core (intel2 docker kvsctl2-fp4, out kvsctl-r2/fp4/eq_rc.txt): post rc 0 / mut rc 1, emitted_v running. Collect with: cat fp4/eq_rc.txt, then the equiv_status tail of fp4/eq_v.log; expect the same 37. Recut report: unregistered_out 360 / logic_in 113 / dropped 0 / feedthrough 0 (UNCHECKED as face_guard; no kit synth was run). (a) NOT BUILT. Design is in results/kv_cores_r2/kvsctl2/landing_plan.json. FINDING: +1 on only the listed bits would skew buses (o_hroot has 12 layer bits through logic out of 1118). Proposed: 0-cycle retimes for layer/layer_e (54 bits: o_hroot x48 + lp 6), auth (80) and i_hroot fault (32); +1 only on static sealed config (dcfg age 272 + o_attn 33) and setup_ready (1); embgw bw[0] needs the sender owner. TOKEN effect if adopted: only boot visibility (setup_ready +1); lat_v39r lane table unaffected. NEXT: root-cause the 37, then (a) RTL + LEC, then the kit. Build after that: gen_core_kit_kv.py --core-json <cut>/qkd_kvs_ctl_core.json --plan results/kv_core_slice_1/pd_slice_delta/hm_r12.json --kit-rtl /srv/opentallas-scratch2/claude/kvsctl-r2/kit_rtl2 --hr-face-ports <fp dir> --out <kit>. The hub_C parent binding must follow the new piece names (d2d__svc_23/_74/_92, srx_10, cht_6/_43, boot__boot_pr_142, kg removed). The [4,2] grid is a balanced binary H-tree (carried forward).
 
+## CODEX notes 2026-10-27 08:20 PDT
+CODEX took over KV cores on codex/kv-cores-0809 (intel2 own sparse worktree). Collected e1/e5 r26 and e2 placed + LEC EQUIVALENT; independent GEOM corrected e2 from PASS to FAIL (4 connected pairs / 5 capture census above405, max409.536um). Exact autopilot e85f0e533ce0 WITHDRAWN append-only (coord dcea57091904), prior evidence retained. Structural successor own codex-kv-cores-0809/e2_reach moves all four internal c2 context FFs from SW corner inward to16.2um, no pin/RTL/cycle change; DPL via ot-run PID2188209, then full census + image before route. e1/e5 remain independent GEOM PASS/PASS-COND (max404.406/285.552um), existing r26 queue rows ready when flow admits.
+Source fix READY 436b706cb3 (2 tests PASS): kvspc_core_clock.py no longer injects duplicate CORE_CLOCK declaration/forwarding into current head-p source; that duplication made PV2 h_head_p LEC fail elaboration. Own h_head_p corrected-gold LEC live ot-run spilled epyc2 unit oth-ubuntu-1869929-1793114171, client435752, log intel2 codex-kv-cores-0809/lec_clockfix_stage.otrun.log; original failed evidence untouched. First own unstarted client347634 cancelled after diagnosing spill scan of all shared worktrees, explicit stage successor admitted.
+Q2 plan rename approved07:38 is254 bits si[283..536]->si_283[283..536] (not5: old diagnostic was capped), unchanged xy/layer. Own pd snapshot+cores.sha256 under codex-kv-cores-0809/pd; kit gen/G0C running PID1328609, q2gen_numpy.otrun.log (first G0C NOT RUN missing numpy in predecessor venv, system Python has numpy2.3.5).
+Other failures diagnosed: ectlk_q1 re-place still DPL FAIL4 fixed face flops rs_d[1002,974,976,979] overlap PHY_EDGE taps at SRAM edge (new cause, separate from tap-carved entry blockage). hr_core_tx shared299 are constant-zero output FFs (TIELO; source begin_available<=0), dropped215 feed dead internal capture logic; needs dead/constant pin contract recut/source regen, not stronger keep. No route on either. pv_join fR180 + e6 now placed; remaining inherited PV2/e0/ahub jobs continue, no duplicates.
+
+## CODEX notes 2026-10-27 08:35 PDT
+... (36 more lines in the lane file)
 
 #### KV-G3 (lane file updated 10-25 22:12)
 Host: intel2 (+ epyc3 overflow). Branch claude/kv-g3-1024 (from kv-p8-hub-1023 @1f988a72f, v3.8s; main not yet merged by ROOT-MERGE).
@@ -1487,7 +1657,7 @@ Host: intel2 (+ epyc3 overflow). Branch claude/kv-g3-1024 (from kv-p8-hub-1023 @
 
 ... (52 more lines in the lane file)
 
-#### KV-KITS (lane file updated 10-27 07:18)
+#### KV-KITS (lane file updated 10-27 13:18)
 ## 10-27 03:40 PDT KV-KITS-1 result
 - Branch claude/kv-kits-1-1027@d0a1b4a326 (base batch-r2@2a130d7df6). die_plan := hm_r12 sha 1814a2d8 (slice@18c72cf920). Pieces: pvcal restore re-derived for the approved +1 station (4 members, landed=as-built, +0 cyc) fa89531f58; main taps.py/schema.py overlay d0a1b4a326 (batch B31 tap rules gave 20 vs plan 8 clk taps on band types -> port_bind FAIL).
 
@@ -1497,8 +1667,17 @@ CODEX took over: KV-KITS-3 PHY regeneration + pc_v1 island/demand kit + placed h
 ## CODEX notes 2026-10-27 05:04 PDT
 Approved KV-KITS2+3 integrated by root b2929dab7. Original KV-KITS3 dangling b9958e5e70 exported and integrated (proper untimed line-side kind, FDI pins preserved), 26testsPASS. sys_c own smoke revealed NEW INSTANCE canonicalizer FAIL; current native_bb.py existed but generated kit runner never invoked it. Fixed gen_phys copy+invoke failclosed (codex/qwen-current-1027@9a584b617),17testsPASS, own synth now beyond canonicalize, live intel2 unit297090-1793102556, data codex-qwen-1027/sysc/kv3_sys_c; log sysc_synth_native.otrun.log. No P&R launched.
 
+## CODEX notes 2026-10-27 08:16 PDT
+CODEX took over KV-KITS-5 on codex/kv-kits-1027b (intel2 scratch2 own sparse tree). Recovered unlogged tools 7b9ec5d6c (dcal auto_go duplicate removal + keep-cell hook + --gpl-plain) and plan ca77c7e90 (R8 d739228dc + FT lane158d3b5c6). First bind53 failed exit127 missing script on selected host; successor intel2 kv5-i2/b53 PASS strict port-bind51masters160parts/0ties/0open. io_cor/hroot gen2 synth LEC EQUIVALENT, place+GRT overflow0 with3.61%/1.64%usage; renders VIEWED spaced columns/no macro walls, independent GEOM requested. sys_c LIVE docker dpkit-kv3_sys_c-1852311 (ot-heavy1852268) at hyp9; preflight port6143/face4967/fanoutPASS; no duplicate. Old sys_c46diff/374missing failure preserved. FT delta sites728/1006;200slots21types+syscft1 unsited. +1station what-if sites all761/max402.8um but cycle change NOT applied; OWNER? logged, other work continues. PC/hgi kits stay blocked on current plan/core views and unsited slots; no route of failed hub_Ei spine.
 
-#### KV-TOK (lane file updated 10-26 20:51)
+## CODEX notes 2026-10-27 08:26 PDT: native station placement propagation
+CODEX took over bind.py kit-rtl sidecar loss on codex/kv-reset-bind-1027@f51684c55 (base ac2ad01a82, own sparse tree). Root cause: native materialize placed 13 io_cor / 7 hroot u_ist registers in RTL and wrote FIRM placement under BIND/native_internal_stations/TYPE, but kit-rtl copied only RTL and lost istations.tcl; gen_phys only discovers sidecars beside the first kit RTL. Fix copies validated istations.tcl, native_station_receipt.json, and source-ordered native_station_plan.json into kit_rtl; missing/partial geometry fails closed. No RTL or lane-cycle changes. Three focused tests PASS with missing/partial/comment-only placement controls; actual b53 RTL + receipts pass 13/7 station equality and copy. QK cores owns regeneration in same KV plan event; coverage owns independent full-height local reset delivery without changing clock ports. Earlier FT-only PASS is superseded by full r2r structural FAIL (io_cor/hroot max 1135.67/1407.24 um including reset). No new route launched.
+
+## CODEX notes 2026-10-27 08:26 PDT
+Prescribed405 FT batch capsule PUSHED codex/kv-kits-1027b@b4a705f520 (17newresults paths only; not adopted). 200slots+1/21types, all761FTslots now perbit max402.84um PASS405; 125lanes gain1..4cycles(sum205). R8 successor151boundmoves/216classmembers/157changes + compilerlatpkg; token lane pricing finalW/DQ/CFG_FIA regeneration. G0 currentcheckerFAIL3 inheritedpcfamilyout-of-outlineclockislands; acceptedR22clip joins clockowner currenthm_r26event. Priorio_cor/hrootFT-onlyGEOM PASS invalidated by FULLconnectedR2R FAIL(1100.358/1407.24um): owntrialrows3ce0b577e2dd/e199e63db343 WITHDRAWN append-only702b6275dd10/aebdc62d3820. Rootcause DATA: nativeu_ist chains lost istations.tcl at bindkit-rtl export; fix coverage/geom_auto f51684c55 READY. RESET: edge-onlytaprow y21.6 fails fullheightcoverage; coverage ownsgridfix. BothsameKVevent; no stale route.
+
+
+#### KV-TOK (lane file updated 10-27 08:48)
 ## PARKED 18:56 PDT 2026-10-24
 - Branch claude/kv-tok-1024 @5a351c94dd (pushed). main has efd14deb5c (vehicle + sub-benches + root causes).
 
@@ -1532,7 +1711,7 @@ CODEX progress: BO1opt-in source mergedmaina2757edd53, variantdefault0; sixrealb
 - 2026-10-24 21:14 PDT TOK-QK: resumed after account switch; D agent resumed (adopts Codex codex/kv-d-clock-1024 @7cf1d726b apply_D); kv43abc build still live epyc2.
 - 2026-10-24 21:34 PDT TOK-QK: owner decisions 13/14 applied to token work: D sub-agent re-scoped (kvs_pc controller on die clock -> the one CDC sits at
   the PHY/DFI boundary; pc lanes stay core). Boot/token benches: start on the explicit start broadcast, not the reset edge; datapath
-... (105 more lines in the lane file)
+... (113 more lines in the lane file)
 
 #### KV (lane file updated 10-25 21:48)
 ## TO KV-PLAN2 [KV-CORES2 2026-10-25 05:33 PDT] two items for the batched KV plan delta (COORD KV-CORES RULINGS 05:28, rulings 1/2)
@@ -1594,6 +1773,30 @@ Original hub_Wi pin task remains DONE (22/22 cores pinned, G0C0 missing); no liv
 ## CODEX notes 2026-10-25 21:48 PDT
 CODEX remaining-lanes takeover: DONE22host cores pinned maina7e29a44ac. Jobs: None. Next: Current host binding/clock/boot owned qwen/token. Failure disposition: No missing core-pin task remains.
 
+#### LEC-FPREG (lane file updated 10-27 13:01)
+## 2026-10-27 12:32 PDT START (Claude lane, from S81-CORES-R1)
+- Cases: l1 13, l3 1, bksel_c 6370, rxsf 306, hcore 1728, vsw 53 (kits intel2/epyc2/intel1 :/srv/opentallas-scratch2/claude/s81-cores-r1/kits) + COORD add NNfd d9943d03b0f0 265 cal_d (intel2 s81-eco-1-1027).
+
+# LEC-FPREG (S81 core fresh-kit LEC NEQ: "RTL registers removed by synthesis although not constant" in pipelined fp mul/exp)
+
+## 2026-10-27 12:32 PDT START (Claude lane, from S81-CORES-R1)
+- Cases: l1 13, l3 1, bksel_c 6370, rxsf 306, hcore 1728, vsw 53 (kits intel2/epyc2/intel1 :/srv/opentallas-scratch2/claude/s81-cores-r1/kits) + COORD add NNfd d9943d03b0f0 265 cal_d (intel2 s81-eco-1-1027).
+- Worktree intel2:/srv/opentallas-scratch2/claude/wt/lec-fpreg-1027 (sparse, branch claude/lec-fpreg-1027 from main d9d8fce68). Runs <host>:/srv/opentallas-scratch2/claude/lec-fpreg/<kit>.{new,r16} (docker lecfp-*, mine).
+- l3 ROOT CAUSE (CHECKED, lec.json + RTL): gold-only u_mul.g_l6.u.u.u_k6.g_r.r[46] = s2_err[1] of ot_hdc_fp32_mul_f12 (CUTS 01101011). err[1] is constant 0 at the decode; it rides 5 unreset cut registers (k0 edge1, k1 2, k3 3, k5 4, k6 5). The tool's no-reset rule only establishes constants within OT_LEC_RESET_CYCLES=4 edges, so k6 is dropped and err (output reg) differs. Yosys folding a constant-D, init-undefined flop is legal (no synthesis bug). The err reader is reset by the core's own ot_rst_relay (2 sync + 1 tree): it cannot load before edge 4+3, so the gold X is never observed -> the design is EQUIVALENT under the tool's existing model and the LEC base case is what is wrong.
+
+## 2026-10-27 13:01 PDT RESULT + PARKED
+- FIX READY: claude/lec-fpreg-1027@3a21d540c3 (main d9d8fce68 + 1 commit, tools/die_plan/lec.py + test_lec_release_edges.py). It adds "release-edge" constant base cases. For unmatched registers only, the no-reset reload fixpoint now continues OT_LEC_RELEASE_EDGES=8 edges past the 4-edge window. Such a constant is kept only if release_unmasked shows that nothing depends on the register's X before its edge: a ternary run with every input free (reset port too), then a taint pass blocked only by forced 0s (relay-held reset, reset-valid write enable). Checked observers: compare points, hypothesised/anonymous registers, primary outputs. No reset-duration assumption, no waiver. Matched registers never use it. lec.json noreset_constants gets basis "release" plus n_release/release lists. Tests 8 (5 mutants); test_lec* 182 PASS / 2 skip on epyc2 (CHECKED). FLOW-CANARY: lec.py is a watched tool, so canaries re-run on merge; no canary is run pre-merge.
+- Re-runs (same kits and netlists, new tool, docker; receipts <host>:/srv/opentallas-scratch2/claude/lec-fpreg/<kit>.new|r16/lec/lec.json; r16 = what-if OT_LEC_RESET_CYCLES=16), all CHECKED from lec_run.out:
+  NNfd d9943d03b0f0 raw 1_2_yosys.v: 265 -> **EQUIVALENT 2066/2066** (u_fsb line[204,205] edge 5, line[272,273] edge 6 release basis; cal_d write enable is reset-valid). Same fp/delay-line class. The routed netlist was not re-run: run lec_after.sh with the new lec.py.
+  l3: the fp point is fixed (u_k6.g_r.r[46] release edge 5). It is now **UNPROVEN 857** (r16 same). These 857 were already inside the old differs=858. They are a separate class: u_rw a_a/a_b/k/sc/id are unreset registers inside the async-reset always block, X until loaded, plus the st->st#t FSM recode and gold X rails. Same class as l1.
+  vsw: 53 -> 51 (u_exp err fixed). The rest are u_exp.a_r u_g6 data registers. These readers are unreset compare points loaded every cycle, so gold and gate really differ in edges 5-7 after a 4-edge reset under the tool model. **r16 = EQUIVALENT 15818/15818.** Closing it needs a reset-duration contract (OWNER/COORD).
+  hcore: 1728 new and 1728 r16. NOT the window. The base register u_cut0.g_reg.r[0][1] (b[0] = constant sk_b bit) has RTL X sources (setundef) in its gold D cone. latch_cone refuses any X in a base cone, so it is never established; the gate folded it. Needs a COORD ruling: may an RTL-X don't-care cone give a constant base case? (fork CHECKED on the AIG: 813 ANDs, 6 X inputs, random sim always 0.)
+  rxsf: 306 new / 304 r16; bksel_c: 6370 new / 6182 r16. Mostly value-range or multi-register invariants (bksel u_cs.bt from t_sum lanes; rxsf m_u2 d_cut line[107] from 40 s1_rows). Not ternary-provable, and not this class (fork diagnosis: partly CHECKED).
+  l1: 13 unchanged. Unreset jne/jset/ne/rscale/smask load only on job_w, so they are X until loaded (the strict unwritten-X rule). Needs an RTL reset or a declared input constraint.
+- No synthesis bug in any case: yosys removes constant-D, init-undefined flops, which is legal. The netlists are correct refinements.
+- OWNER?/COORD asks: (1) a die boot reset contract ">= N clock edges with clock running" (METHODOLOGY 4.5 already says the clock runs at boot); N=16 closes vsw. (2) RTL-X cones as constant base cases (hcore).
+- Live: none (all lecfp containers exited and removed). Worktree intel2:/srv/opentallas-scratch2/claude/wt/lec-fpreg-1027 is kept until merge.
+
 #### LEC-ICG-2 (lane file updated 10-26 20:42)
 2026-10-26 19:45 PDT RESULT: TOOL, not design (CHECKED). Branch claude/lec-icg2-1026@12da17af55 (lec.py fix 8785f895a5 + evidence results/lec_icg2_1026/).
 (1) Co-sim: Verilator 5.032 (docker) ran RTL vs 1_2_yosys.v in lock-step from reset. Cell models were generated from the ASAP7 liberty. It compared all outputs plus 521 internal bits (196 failing/unproven LEC points plus 325 controls). Stimulus: 3 seeds x 300 phases (go/cfg/pq_swap/xs, chaos pins plus resets, idle gaps; gate_edges 314). Result: 5,696,811 cycles, 0 output mismatches, 0 internal mismatches; 193/196 failpoints toggled. Mutant (u_cg_r3 ENA tied 1): 290 output mismatches, first at cycle 86 -> the bench detects a changed netlist. YC scan (YOSYS-CONCAT 47aa9825d): 1 benign YC1 hit (pq_tags.sv:96, genvar widening cast). Nothing to send to S81-CORE-LAT-R7.
@@ -1614,37 +1817,41 @@ Inherited QXPQ tool-only and hinted full reruns plus kvcore canary still LIVE (n
 ## CODEX notes 2026-10-26 20:07 PDT
 Original261false differences diagnosed by LEC-ICG-2 co-sim. Current focused successor owns exact relaidarray/removedlive/twin correspondence, no RTL change or route release.
 
-#### LEC-TOOL (lane file updated 10-27 06:52)
+#### LEC-TOOL (lane file updated 10-27 10:41)
 ## 2026-10-27 04:22 PDT LEC-TOOL-1 START
 - Scope: tools/die_plan/lec.py so correct designs prove EQUIVALENT without masking; every new rule gets a mutant test.
 
-# LEC-TOOL (lec.py proof rules: constant-from-reset, FSM/array pairing, read-back netlists)
+## CODEX notes 2026-10-27 08:13 PDT
+CODEX took over shared proof tool on codex/lec-0815@c337ef681 (base undocumented live LEC-TOOL-4 fee8698dd). Collected Q2n2b past replica OOM stage: ~3-4 GB RSS at 5848s, still correspondence; successor Q2n2c live intel1:/srv/opentallas-scratch2/claude/lec-tool4-1027/q2n2c/out (lt4-q2n2c), no verdict. hcp4 and argmax_nr live intel2 lec-tool4-1027; argmax_nr 89 empty failed-hyp files. Diagnosed noreset filter/closure loop: rejected no-reset constants re-proposed after a proved round, eventually clearing valid correspondence. Fix c337ef681 filters closure candidates before deciding another proof is needed; 27 focused tests PASS incl observed no-reset mutant rejected and valid reset constant retained. READY parent, no merge by lane. Argmax CEX terminal NOT EQUIVALENT 21256/21290, 34 differ, root-cause RTL/frontend diagnosis assigned /root/hbm/lec. KV bmc without por reset FAIL; with por reset 12-cycle bounded SUCCESS (not full EQ); 48-cycle bmc3 still solving, intel2 lec-tool4-1027/kvs/bmc3.log. Original KV seq4/undef diagnostics remain live in induct (no rc); no cancellation/relaunch. Next: collect KV BMC, diagnose remaining bit0 correspondence; collect successor Q2n2c.
 
-## 2026-10-27 04:22 PDT LEC-TOOL-1 START
-- Scope: tools/die_plan/lec.py so correct designs prove EQUIVALENT without masking; every new rule gets a mutant test.
-- Cases: (1) HBM hcp_sys1 1075/8530 (reset-tied-zero consts, st re-encode, u_div naming); (2) HBM argmax_sw_vm_r2 51 unproven (2-D array last level); (3) KV kvs_ctl recut 37 unproven in data_q[0] cone (read-back only); gq_land 24 rerun after (1).
-- Heavy proofs: docker with memory cap on intel1/intel2/epyc2. Worktree intel2:/srv/opentallas-scratch2/claude/wt/lec-tool-1027.
+## CODEX notes 2026-10-27 08:20 PDT KV proof collected
+KV-KVSCTL-4 undef diagnostic FINISHED rc=0: intel2:/srv/opentallas-scratch2/claude/kvsctl4/diag/undef.log, 92,037/92,037 equiv cells PROVEN, 0 unproven; 14,389.43 s, peak 5,304.59 MB (direct artifact numbers, UNCHECKED independent review). Both equiv_simple and equiv_induct use -undef -seq 2; induction establishes base case then proves all 56,267 remaining cells at step2. Prior 37-unproven verdict preserved; -undef is the successful proof setting. Qwen team notified to adopt canonical emit/readback proof + seeded mutant; no RTL change needed. My targeted w_one alias blacklist diagnostic still UNPROVEN (hypothesis insufficient); register-only cuts also UNPROVEN; retained as diagnostics, no rule adopted. Small-cone attempt FAIL missing SAT model after pruning/expose renames; no closure claim. Initial diagnostic missing-macro setup failures preserved; repaired by using exact pre.json-stashed macro definitions. No new live jobs started by me remain. Existing bmc3/seq4/Q2n2/hcp4/argmax_nr continue.
 
-2026-10-27 05:57 PDT KV-CORES-R5 -> LEC-TOOL-2: KV-KVSCTL-4 diagnostics (intel2 docker kvsctl4-diag-seq4 / kvsctl4-diag-undef, 64g, started 04:17, owner KV-KVSCTL-4) are STILL RUNNING at 05:56. There are no rc files yet, and both are still in equiv_simple: seq4.log 12,842 'success' / 28,395 'failed' hyps; undef.log 30,129 / 48,262. Scripts: /srv/opentallas-scratch2/claude/kvsctl4/diag/{seq4,undef}.ys (gold = kvsctl3/fp/pre.json, gate = kvsctl3/fp/qkd_kvs_ctl.v, equiv_simple/induct -seq 4 or -undef). COLLECT: {seq4,undef}.rc (when written) + 'grep -c unproven' / equiv_status tail of {seq4,undef}.log. rc 0 on either = root cause found (induction depth or undef) -> rerun the hr_face_ports.sh emit proof with that setting. If both stay non-zero, the 37 u_lprg points (data_q[0] cone) are LEC-TOOL-2 case (3). I did not touch the containers.
+## CODEX notes 2026-10-27 08:31 PDT recipe + coverage
+Source identity for KVSCTL composed proof is established: regenerate pre from pinned bc1a556176+b5cef30c3 gives BYTE-IDENTICAL pre.json; currenttransform gives identical post/mut JSON, emitted RTL after standard src stripping is BYTE-IDENTICAL to inherited 92,037-point proof input (4,733,877bytes). Helper -undef patch codex/kvface-0820@b5cef30c3 actualtiny wholechain post0/mut1/emitted_v0 PASS. Fresh production mutant -undef live intel2 unit2465159, codex-lec-0815/kvs/mut_undef.log; waiting terminal before a composedcleanreceipt. Parent instructed reuse exact completedpositive rather than repeat4h. cdc_ch/pc -undef diagnostics started from exact frozenpre/emitted, existingmacrodefinitions imported from pre stash (no newmacrobehavior): units2551035/2551036, dirs codex-lec-0815/qkd_hr_cdc_ch + _pc, 64GB2threads each. Prior14/10fails preserved.
 
-## 2026-10-27 06:02 PDT LEC-TOOL-2 RESULT (succeeds LEC-TOOL-1; branch claude/lec-tool2-1027@17be94fc47 = codex/root-1027@e1a456e1bf + 2 commits, worktree intel2:/srv/opentallas-scratch2/claude/wt/lec-tool2-1027)
-- Codex LIVE jobs collected: (1) Q2n2 memory trial intel1 unit oth-ubuntu-3211886-1793102969 = KILLED exit 137 at 05:52 after 42 min (320 GB cap, Python correspondence), NO VERDICT -> ec325894af bounded-XOR does NOT fix Q2n2 memory; codex/root-1027@e1a456e1bf NOT READY on that basis (its diagnostic fields are carried in my branch). (2) argmax_tree_hints = UNPROVEN 20771/20822, 51 unproven (all 1260 hints applied/induction-refined; the last-level pair gate ti#t[24][b] <-> gold ti[3][126+b] stays unpaired, 51 out_idx/tvl points; gate anon hyps refuted round 2) = NOT EQUIVALENT-proved, NOT EQ. (3) gq_diagnostic = NOT EQUIVALENT 24/11019, every cone input matched (CHECKED).
-- gq_land ROOT CAUSE (CHECKED on the AIGs): bits 277..279 = ln_s[m][15:13] = base_q[*][15:13] = g_dst[15:13] in all 8 lanes (hold while rn low). Both sides keep 4 matched copies per bit, but each side's record mux reads a different copy (gold-only lanes were proved equal to ln_s[0][29], gate reads ln_s[0][45]); no rule relates two MATCHED registers -> free -> SAT diff. Not an RTL defect.
-- NEW RULE 1 matched_copy_closure (4edac7a331): matched, non-constant registers of equal sequential trace on both sides, kept only if their next states simulate equal on both sides with the pair bound, proposed ('both', k) == first copy; proved by the simultaneous induction. gq_land rerun (same AIGs, same kit) = LEC EQUIVALENT 11037 proved, 9 copy relations (CHECKED, intel2:/srv/opentallas-scratch2/claude/lec-tool2-1027/gq1/lec.json). Tests test_lec_matched_copies.py 6 PASS incl. mutants: other load condition, one-cycle-late copy, forged equal trace -> all still differ; disabling the rule -> differs.
-- hcp_sys1: main LEC (96d9fb0471 / e9db8, LEC-TOOL-1 run 3237198 intel2:/srv/opentallas-scratch2/claude/lec-tool-1027/hcp_sys1/lec) already cut 1075 -> 99 differ / 9322 (CHECKED from lec.json); so main handles most constant-from-reset. Remaining 99: sd_nv q[0..8] (gold d0[F_NV] = last_r?nlast_r:256 with nlast_r[7:0] proved == matched nout_r[1], which stays FREE: nout_r[1] async-resets to 0 and reloads tied cmd_nout[1]=0; gate DFFASRHQN via async2sync carries structural X muxes (3 x per async flop, 2004 total, select const 0 via TIEHI SETN), self-holding so random-sim never proposes it); u_div g_rec src_q/d_e + r_rem#t (313 gate-only, array naming unpaired); r/wcur/xpos/o/p (gold const hyps refuted: they really count); db[10..17] gold-only. st re-encoding no longer in the failing set.
-- NEW RULE 2 trace_constant_closure (17be94fc47): self-holding registers (own Q within 8 AND levels) whose sequential trace is one constant on every side that has it -> proposed constant, induction decides. Tests test_lec_trace_const.py 6 PASS incl. mutants (data register, forged constant trace -> differ; rule off -> differs). All test_lec*.py 153 PASS / 2 skip (pycryptosat, yosys) on intel2 (CHECKED).
-- LIVE (mine, >30 min, collect): hcp_sys1 rerun with both rules, same AIGs: intel2:/srv/opentallas-scratch2/claude/lec-tool2-1027/hcp1/{run.out,lec.json} (started 05:55, ~40 min, plain python+docker ABC, 48 GB cap). Expect sd_nv 9 to close; u_div naming + db[] need a further rule. Also argmax rerun with rule 1 alone (gq-era code): still 51 UNPROVEN, intel2:.../lec-tool2-1027/argmax1.
-- kvs_ctl 37: KV diag seq4/undef (intel2:/srv/opentallas-scratch2/claude/kvsctl4/diag) still in equiv_simple at 06:01 (~1h45), no rc files -> NOT collected; data_q[0] round-trip not root-caused this lane.
-- NEXT (LEC-TOOL-3): collect hcp1; u_div r_rem#t <-> gold r_rem array pairing (memory_layout for that 2-D array); argmax last-level ti/tvl pairing; Q2n2 Python memory profile (correspondence data structures, not parity); kvs_ctl collect.
+## CODEX notes 2026-10-27 08:43 PDT KVSCTL unblocked
+APPROVED complete composed KVSCTL face proof: codex/kvface-0820@1e9d0bd70 (helper -undef + actual tinycanary + committed manifest/CEX). Packet intel2:/srv/opentallas-scratch2/claude/codex-lec-0815/kvsctl_composed_fp, explicit composed_proof.json and truthful combined eq_rc post0/mut1/emitted_v0. Source pre freshly elaborated BYTE-ID; current post/mut JSON-ID; fresh emittedV BYTE-ID. Reused completed fullpost 91,441/91,441 EQ and completed undefreadback 92,037/92,037 EQ; fresh fullundefmutant 91,440/91,441 (one unproven) plus definite output SAT CEX (o_hroot_WS[784], gold0/gate1 atstep4 afterreset2cycles) and unmutated same-cone positive PASS at6cycles. Full mutant merely UNPROVEN was not counted as CAUGHT; concrete CEX establishes it. Qwen kitowner received packet and may build on matchingbc1 source. All own KV short jobs terminal; cdc_ch/pc readbacks remain live2551035/2551036.
+S81 EG/BF c13 tools confirmed predate matched_copy_closure (function absent). Six EG rsqrt sign comparepoints likely missing equal-operand-sign invariants after square optimization; exact FP32 math unchanged. Small frozen-AIG diagnostic started intel2 codex-lec-0815/eg_sign, unit3519540 (32GB2threads), oldfinalhyp treated untrusted + re-proved before latest copyclosure, target6sign comparepoints only, NOT fullblockclaim. Actualsource/KEEP repairs remain S81 owner.
 
-### LEC-TOOL-3 result 2026-10-27 06:52 PDT (claude/lec-tool3-1027@22b7d1abfd, base 17be94fc47; 2 commits, test_lec* 168 PASS 2 skip on intel2, CHECKED)
-- d56b9ea7a4 memory_layout array-index pairing: (a) widened word with partial last word (hcp_sys1 u_div r_rem 27x25 gold 649 b, gate 313 -> 313 paired), (b) reduction-tree arrays with absent trailing elements / 1-bit elements, slang inner-dim fold K = the one divisor of W landing every gate bit on a gold bit (argmax ti 259/259, tvl 14/14, tk 462/462, tbits 480/480 paired), (c) source geometry tried before guessed-layout size guards. test_lec_array_index.py 12 tests incl. 2 swapped-index mutants (FAIL as required); old code fails 9 of them.
-- 22b7d1abfd Q2n2 OOM root cause + fix: replica_proposals built one design-wide Python bitset per AIG node over all inputs+latches (~1M symbols x 6M ANDs). Profile (old code, intel1 docker, Q2n2 kit, prof.log intel1:/srv/opentallas-scratch2/claude/lec-tool3-1027/q2prof/out/prof.log): <=4 GB through 2350 s of relayout, then in replica_proposals.groups RSS 10 -> 106 GB in 60 s (CHECKED; killed by me). New replica_groups: per norm(k) bucket, singleton buckets skipped, cone-local leaf numbering, dead supports freed; grouping identical to the old form on 300 random AIGs, mutant (distinct primary input) splits a cohort, 200k-input/400k-AND design < 50 MB (test_lec_replica_groups.py 3 PASS).
-- LIVE (mine, >30 min, collect): Q2n2 rerun with 22b7d1abfd via ot-run --mem 128 on intel1 (oth-ubuntu-401487-1793107992, docker lt3-q2n2b 128g cap, --jobs 8 --reuse): intel1:/srv/opentallas-scratch2/claude/lec-tool3-1027/q2n2b/out/{run.out,lec.json,prof.log}; ot-run log intel2:/srv/opentallas-scratch2/claude/lec-tool3-1027/q2n2b.otrun.log. At 926 s still in relayout at 3.9 GB; replica stage expected ~2400 s (~07:13). Memory past replica_proposals on the real kit UNCHECKED; later stages (merged_proposals full-support frozensets) not yet measured.
-- hcp_sys1 hcp1 (LEC-TOOL-2 code, both rules) COLLECTED: NOT EQUIVALENT 99 differ / 9322 (72 listed). sd_nv did NOT close: sd_nv.q[k] cone = only gold-only d0[6+k] (d0[F_NV] = last_r ? nlast_r : WNV, no reset, removed by synthesis "although not constant"). hcp3 (my code): gate_unmatched 313 -> 0, gold_unmatched_live 1305 -> 992, but 412 differ / 9662 because 313 r_rem points are now compared and their cones need gold-only r_mb (2520) / d_mb (200) / db (105). Not a pairing error; next gap = gold registers with no reset that synthesis removed (d0 NV field, db, d_mb, r_mb).
-- db[10..17] verdict (UNCHECKED by proof): db <= nf_r at h-start, no reset; nf_r loads tied cmd_nf. So db is X until its first load, then a fixed value. db is live (feeds u_div d_e/d_mb), so it is not unobservable. Removing it is legitimate only as X-init don't-care plus constant-after-load. Both reset-based rules (constant closure, trace const) miss it because it has no reset. A new rule is needed for no-reset registers whose next state is inductively constant from cycle 1 (gate may use that constant), with mutants. Not built this lane.
-- argmax3 (my code, kit hbm-core-lat-r5/argmax, 50 kit hints all skipped) COLLECTED: 67 differ / 21276, cone_unmatched EMPTY on all 67, so pairing is complete (old 51 ti#t[24] gap closed). The 67 = tbits[1][128..191] (level-1 elements 2,3) + ti[1][72,73,91]: next-state differs with every state matched. Gate cones are clean (a = lv*8+e, elem e from 2e,2e+1). Gold slang cones of level-1 elem e reach elems 0..2e+1 plus self (shared module-level 'integer lv, e' across two always blocks + partial writes to one 256-b word). Real mismatch vs gold-frontend lowering UNCHECKED. Next: dump the SAT counterexample for tbits[1][128].
-- kvs_ctl 37 (UNCHECKED root cause): the 37 are exactly data_q[0]-dependent w_data[0], w_zero, w_one + their wa_d/b_data fanout. Both sides have the same structure: u_wd0/u_wd1 ot_s32_sel, $eq ==0/==1, $sdff SRST rnv[0]. Gold reads equiv-Y src[31:0]; gate reads its own alias src_gate of anonymous reg _5485_ (192 b = 3 copies of layer_data) and _5469_ (w_data). equiv_simple -seq 2 on w_one alone fails at every depth, which points to an induction-strength or pairing artifact around bit 0, not a logic difference. Not proved. KV-KVSCTL-4 seq4/undef diag still running (not mine). Diag scripts/logs: intel2:/srv/opentallas-scratch2/claude/lec-tool3-1027/kvs/.
+## CODEX notes 2026-10-27 08:57 PDT reset-pin bug + stranded recovery
+New tool tip codex/lec-0815@05992df62: RESET_PORT missed physical rst_n_pin; suffix-aware detection + stem polarity fixes it (reset_pin stays active high). 30 focused tests PASS incl reset-enabled unreset capture and wrong-enable-reset mutant. Actual BF c13 frozen-AIG check: beforefix p0_fp4/ze_q reset-state UNKNOWN; afterfix both1 atedge1; actual p0_fp4==1 induction PROVED with allotherstatefree and retained by noreset_filter. Specific old BF KEEP failure is toolingfalsealarm, no physicalRTLchange; wholeBF709 definite diffs remain separate. Data intel2 codex-lec-0815/bf_{reset,reset_fixed,const}.
+CORRECTION to inherited status: actual Docker mount/process census confirms hcp4 + argmax_nr have NOlive job and artifacts frozen08:08/nojson. They are INCOMPLETE/stranded, notLIVE (earlier notes inferredliveness from partialfiles). Preserved unchanged. HBM child confirms no canonicalargmaxduplicate. Recovery launched originalR5 canonicalargmax current05992df62 in owned codex-lec-0815/argmax_canonical, client3763557,48GB8threads,frozenAIGreuse/exactcopiedsource/netlist. Diagnosticonly: oldkit lacksPROVENANCE; no currentdiereleaseclaim. hcp4 originalsourcekit lookup ongoing with HBMchild; all failures assigned. EG sixsignpoint oldhyp reproof continues3519540; cdcch/pc undefreadbacks continue2551035/2551036.
+
+## CODEX notes 2026-10-27 09:23 PDT THIN ROOT-PRIORITY package READY
+Root requested current-main isolation (no unready22b/Q2/array ancestry). New codex/lec-noreset-thin-0909@7b97aa307 is based EXACTLY intel2 main f108b501 and changes only lec.py + test_lec_noreset_const.py + old constant-hold test. Proper reset/cycle1 constant basecase + reset_pin stempolarity + closureconvergence. Additional soundness controls reject equality/FSM assumptions as unknown basecases and reject X-masked/anonymous/unwritten seeds; the old induction can vacuously prove D=X constant, now explicitly caught. No bypass to assume unknown powerup. Actual cycle1 unconditional constants allowed; bad held-X/userhint/wrongenable/polarity/shortreload mutants rejected. FINAL ALL test_lec*:171PASS/2skip (42.92s). Source~230lines, no broadmatching changes. Actual BF single p0_fp4 lemma re-proved with THIN code: resetbase1edge1, filterretains, inductionPROVED; intel2 codex-lec-0815/bf_const_thin/result.json. No wholeBF gate claim. Parent received READY.
+Canonical old-R5 argmax current05992 diagnostic terminalNOT_EQ:20,007/20,602 proved,595diff; same as source-shape experiment, so historical34CEX is obsolete for stricttool. Sourcegen NOTadopted/noRTLbugclaimed; originalkit lacksPROVENANCE. HCP current05992 frozenAIGdiagnostic still running; synthesizednetlist absent so not releaseevidence. EG6point replay still6diff/2relatedproved, newcopyclosure0; preciseabstractCEX usesgold-onlyu_k6.r44=1 to producegoldsign1/gate0, withgoldXsourceincone. No4.5hrebuild; S81owner receivedCEX path codex-lec-0815/eg_cex/cex.json. cdcch/pc readbacks continue.
+
+## CODEX notes 2026-10-27 09:27 PDT: phase-resume cache audit
+Existing lec.json is NOT REUSABLE as a general completed-proof cache. It stores netlist path/frontends/counts, but no original netlist content hash; _provenance(kit) returns commit/dirty/source rather than retaining the exact proof-input map and running-tool hash. Hints may be hashed; black-box/library/environment identity remains incomplete. --reuse is debug AIG reuse, not a validated completed-proof cache. The new no-reset tool guard makes old EQUIVALENT receipts especially unsafe across tool changes. LEC owner agrees. No old receipt was skipped, no cache framework added, and progressing jobs were untouched. The independent identical adder-map write fix remains the safe immediate speedup.
+
+## CODEX notes 2026-10-27 09:46 PDT counter-refinement fix + inherited SYS_C failure
+SYS_C old KITS5 proof terminalNOT_EQ 33,164/37,725,4,561diff (3,555 comparediffs+removedregs),7,427.5s. ROOT CAUSE: after round63 ~5,490 relations remained but6 falsehighcounterconstants peeled rc_hi/e/pcnt onebit per SATround, then budget expired and the tool CLEARED ALL hypotheses (hyp.jsonEMPTY). Broad3555failures are correspondence-collapse fallout, not demonstratedRTLdefects. It had sim_refine/copy/trace, but no noreset_filter. Qwenowner assigned recovery to thislane.
+READY separate tiny source codex/lec-counter-0930@0d1e7a780 on properthin7b97: sim_refine retainsrandomlanes +two concretefree0/free1 lanes withlegalFSMseeds; existingvalidmask/constraints+actualsuccessor checks still decide everydiscard, acceptsNOhypotheses. 32bitcounterfixture old0/24 falseconstantsrefuted vsnew24/24in27cheapiterations; realconstantupperbitsretained; wrongincrementmutantfails. ALL test_lec*:174PASS/2skip43.48s. Actualfixedmechanism SYS_C retryusesEXACTfrozen synth AIG/currentoldRTL+gate, noRTL/synthrepeat: intel2 codex-lec-0815/sys_c_directed, client1147503,48GB8threads, out/lec.json whencomplete. RunningconfirmedDocker codex-sys-c-directed09:45. cdcch/pc helpersalsoLIVEconfirmed(notOOM), still equiv_simple.
+HCP current05992 frozenAIG diagnostic terminal9,250proved/412diff (9,662 outputs), unchanged priorclass; originalR5netlistmissing, not current-releaseevidence. Canonicalargmax595diff preserved. EGconditionalreset-depthprobe: stage0r44 zeroonlyfromedge5(default4too shortforthose2), stage1r44UNKNOWN even16; y31 reset0at1. ActualbootresetdurationNOTestablished, so NO durationadoption orwholegateclaim. S81owner receivedresult.
+
+CODEX VMR concrete proof scope: toolSHA9f4958d67e6d28ec6ead1a911ff8626b484f34f72f2549105bbc74b54b790e6f equals source427885801ad51e96f04d413c16d27ab808522bd7; complete hyp.json113eq/0const acrossboth112+gate1, SHAba5d6d5db6e33d1d33acb1c8c57ee2675f0890610cc1fc6bfd7fdcd460eb0b26; hints absent, island_ft.json absent. Thin7b noreset and newerFTnormalizer inert; coreL.build/prove unchanged in actualdiff. LECowner/root reviewing bounded completedproof adoption, no automatic rerun/generalcache.
+... (3 more lines in the lane file)
 
 #### LEC (lane file updated 10-26 20:21)
 Goal: industry-standard LEC (Conformal/Formality method) on every kit before P&R; catches frontend bugs like the
@@ -1681,6 +1888,39 @@ CODEX14:09 TOK/LEC: genericREADY codex/token-lec-1309@8af1f6aa6 (hub+GitHub), ch
 KVfresh2 terminalKEEPFAIL65/2287 +4s1_power[8..11] needinggoldu_c1.r8/9 (older15btoolwithout75closure); newcurrenttargetwithallgenericfixesLIVE kv_e0_current_target, physicalKVcoresinformedneedactualremainingKEEPdiagnosis. DoNOTuseoldtargetEQagainstnewfreshgoldwithoutproof. Authoritative E5be69/net3c0b outputeng_e5_immutable LIVE unit1916641-1792961601 hyp5tentativefails264; TIMEDhcoreeafc/net0890 outputhcore_timed_immutable LIVE unit1918180-1792961601 hyp2fails8501; onlyterminalprooffailures count, noCTSrelease. Oldmutablekiteng_e5_fresh STALE_INPUTS.txt; exactcancelownclient1328707 issued14:05, ot-run saysstartedcommandskeep running, preserveoutputs/noresultcredit.
 HBMroot_k hyp42zeroinductionfail, finalmiterpending; root_tr hyp13fails444, bothinheritedLIVE (notduplicatesnewdeliveredrootownedHBMphysical). Oldhcore_tr terminalNOT_EQ22 expectedconstant/skew family, solvedtarget/generic75, notcurrentTIMEDcohort.
 ... (28 more lines in the lane file)
+
+#### LIB-VDROOP (lane file updated 10-27 10:34)
+## 2026-10-27 10:34 PDT result (lane agent, continues the 08:09-dead lane)
+Method: ngspice-42 + BSIM-CMG OSDI on the open ASAP7 extracted cell netlists + 7-nm model cards (TT 25 C, FF 0 C), per VT R/L/SL;
+
+# LIB-VDROOP-CHECK (OWNER request 10-27): ASAP7 delay at 0.665 V vs the 12 droop model (+5.1 % late on data)
+
+## 2026-10-27 10:34 PDT result (lane agent, continues the 08:09-dead lane)
+Method: ngspice-42 + BSIM-CMG OSDI on the open ASAP7 extracted cell netlists + 7-nm model cards (TT 25 C, FF 0 C), per VT R/L/SL;
+nominal vs drop: TT 0.700 -> 0.665 V (-35 mV), FF 0.770 -> 0.7315 V (-5 %). Files intel1:/srv/opentallas-scratch2/claude/nc-vdroop-1027/
+{scripts/vdsim.py,vdan.py, res_cells/dff/chain.json, rvt3/*.log (RVT 10-stage chain, ideal-ramp drive, .ic/uic + gear: the BUFx-driven
+deck did not converge)}. Ratio = t(drop)/t(nominal). Cells: 3 slews (10/20/40 ps) x 3 loads x rise/fall each.
+Cross-check: SPICE nominal INVx1 RVT TT s20/5.76 fF = 28.0 / 32.2 ps vs Liberty asap7sc7p5t_INVBUF_RVT_TT 27.7 / 32.5 ps (<=1.2 %) -> deck CHECKED.
+The flow is RVT (ORFS asap7 default; all OT_* cells _R), so RVT rows govern.
+
+| class (TT, 0.665/0.700) | RVT med (min-max) | LVT med | SLVT med | FF RVT med (0.7315/0.77) |
+|---|---|---|---|---|
+| INVx1 / INVx4 | +6.7 % (5.8-9.7) | +5.2 % | +3.6 % | +5.9 % |
+| NAND2x1 / NOR2x1 | +7.8 / +7.5 % (5.8-9.9) | +5.5 / +6.3 % | +3.7 / +4.5 % | +6.5 / +7.3 % |
+| BUFx4 / BUFx12f / BUFx24 | +7.4 / +7.1 / +6.3 % | +5.3 / +5.1 / +4.2 % | +3.7 / +3.5 / +2.9 % | +6.0 / +5.7 / +4.5 % |
+| all cells | +7.1 % (4.8-9.9) | +5.2 % | +3.6 % | +5.9 % (3.0-11.3) |
+| DFFHQNx1 clk->QN | +8.9 % (7.9-9.7) | +6.5 % | +4.6 % | +7.4 % |
+| DFF setup / hold (RVT) | +0.2..+1.35 ps / -0.7..+0.9 ps | | | +0..+1.1 ps / -0.7..+0.45 ps |
+| 10-stage logic chain (INV/NAND/NOR, 300 ohm + 5 fF/node) | **+9.4 / +9.9 % (r/f)** 417.6 -> 456.7 ps | +6.8 / +7.2 % | +4.7 / +5.0 % | +7.7 / +8.2 % |
+| 405-um M8 repeated stage, BUFx12f (wire-dominated) | +5.0 / +4.7 % | | | +3.7 / +3.5 % |
+| 405-um M9 NDR stage, BUFx24 (C UNCHECKED) | +6.3 % | | | +5.0 % |
+
+Verdict (CHECKED, SPICE): +5.1 % is NOT conservative for RVT logic. Measured TT RVT sensitivity is ~1.4-2.0 %/% Vdd: cells +7.1 % median
+(up to +9.9 %), DFF clk->Q +8.9 %, a logic-dominated 10-stage chain +9.4..+9.9 %. +5.1 % only covers wire-dominated M8 repeater segments
+(+4.7..+5.0 %) and LVT/SLVT cells (+5.2 / +3.6 % median). A logic-dominated 833-ps RVT reg-to-reg path at 35 mV needs ~+9-10 % late
+(~+30-40 ps more than the model on a full-cycle path vs +5.1 %); FF-corner sensitivity is lower (+5.9 % cells, +7.7..8.2 % chain).
+Setup/hold constraint change at drop is <=1.4 ps (negligible). Not a rule edit: reported to COORD for a ruling on the 12 data derate
+(options: +10 % RVT logic / +5 % wire segments, or pass on a smaller droop budget, e.g. +5.1 % ~ 18-20 mV on RVT logic, UNCHECKED interpolation).
 
 #### MASTER-PLAN (lane file updated 10-26 20:57)
 (File created by S81-CORE-LAT to post slice inputs; the MASTER-PLAN lane owns this file -- restructure freely.)
@@ -1745,40 +1985,16 @@ CODEX remaining-lanes takeover: Structural review DONE; physical owners adopted 
 ## CODEX notes 2026-10-26 20:14 PDT
 Structural diagnoses adopted by S81/HBMphysical owners; original misses retained. No blind ECO sweep.
 
-#### NUMBER-CHECK (lane file updated 10-27 07:29)
+#### NUMBER-CHECK (lane file updated 10-27 12:54)
 Scope (v4.3, OWNER 10-26 06:33): FREEZE GATE = die GRT0 incl clock (>=50 it) + die STA with the real clock on related pairs (TT setup >=0, FF hold >=0).
 For STA claims I also check: clock arrivals propagated from the routed die clock (routed RC, not ideal), CPPR only to the last common tree node,
 
-| 1c | elemA 0.1244 W / elemB 0.1189 W | reproduced exactly (0.1243734 / 0.1188751); with fixed map 0.1235 / 0.1181; busy-window rates (x1.08) 0.1273 / 0.1218; zero data activity floor (A) 0.0757 W = 61% | CONFIRMED (+-3%) |
-| 1d | 72% internal = clock/flop/ROM | internal 72.2% CHECKED; clock tree 21.3 mW + flop 52.8 + ROM 18.4 = 74% of A. ROM: lib power unconditional on clk, ce_in toggles 0.908/cycle (~50% duty) -> up to -9.2 mW/core CE credit not taken (conservative) | CONFIRMED |
-| 2a | tile 1.258 W/mm2 upper | (4x0.1244+0.1189)/0.49007 = 1.258; glue at core density = ASSUMPTION (lower 0.839) | CONFIRMED (arith.) |
-| 2b | bumps / current | 1.486-mm window: 150 um = 100 bumps / 50 VDD -> 79.4 mA per VDD bump; 75 um = 400 / 200 VDD -> 19.8 mA. Checkerboard VDD/VSS | CHECKED |
-| 2c | 35 mV budget | = 5% of 0.7 V on VDD only (R3 README; STA charges 5% drop). VSS never solved by the lane: own VSS interior 150-C3 61.9, 75-C3 15.6 mV. If 5% is rail-to-rail, budget must cover VDD+VSS | CHECKED, basis caveat |
-| 3a | PDNSim @150 C3 worst 92.4 mV | lane kit rerun (K0) 92.4; own generator same geometry (K1) 92.4 VDD / 107.9 VSS. Worst is an open-edge artefact: interior 67.7 VDD / 61.9 VSS (K2) | CONFIRMED number; FAIL holds for this bump model |
-| 3b | vias / straps | V8 = 14792 = 344 M8 x 43 M9 VDD crossings (every crossing via'd); V7 58820 ~ 170 M7 pin columns x 344; check_power_grid OK VDD+VSS. No missing M7-M8-M9 vias (KV bug absent) | CONFIRMED |
-| 3c | @75 C3 20.6 mV PASS | own interior (K5) 16.2 VDD / 15.6 VSS; VDD+VSS 31.8 also < 35 | CONFIRMED |
-| 4 | "no 150 grid closes; best analytic 58.4 mV at 99% M9" | REFUTED. The lane's bump = 4-um box on ONE M9 strap (point contact). With a bump pad (Pad layer + V9 array on the VDD M9 straps under it, pad D um long, ideal plate) at 150 um: C3 D=30 49.2 (K9) / D=50 34.3 (K3, VSS 32.3) / D=75 24.1 (K7); M9 12.96@34.56 (R3-lane-feasible, gap 4.32 fits 16W at 1.0 spacing, 85.7% M9) D=50 21.9 VDD / 18.5 VSS (K6) PASS; M9 6.48@17.28 D=50 19.3 (K8) but 2.16 gap does not fit a 16W lane | REFUTED (model-dependent) |
-Best 150-um result: M8 0.48@4.32 / M9 12.96@34.56 + 50-um bump pads = 21.9 mV VDD interior (13 mV margin), VDD+VSS 40.4. Metal-max bound K4 (M8 1.66@4.32 / M9 7.64@17.28) still running at 06:31 (>30 min): collect intel1:.../psm/K4/run.log + ir_*.csv (nc_irsum.py K4).
-Not modelled by lane or me: M1-M7 drop below the M7 block pins; elemB hotspot 1.462 W/mm2 (+16% over the uniform 1.258); real bump-pad size of the package (sensitivity above: 30 um fails, 50 um marginal on C3).
-Recommendation: do NOT adopt 75 um on this evidence. Per the OWNER rule (150 basis), 150 only fails under the point-contact bump model. Next: (i) infra_pg / window_kit bump model gets real bump pads (Pad layer + V9 farm, pad size from the package spec); (ii) rerun at 150 with M9 12.96@34.56 + pads on the measured power map (elemB hotspot, VDD+VSS), with a stated margin for M1-M7; (iii) check that 85.7% M9 PG leaves the die-top signal/clock-lane M9 the plan needs. 75 um stays the fallback only if (ii) fails.
+## CODEX notes 2026-10-27 08:13 PDT
+Latest HEADPG-2 collection is terminal: 150-um bump/75-um pad 29.9 mV incl 5.13 below-M7 CONFIRMED; 70-um lower bound 31.1 mV PASS physical contact, margin 3.9; centre-only conservative bound 35.45. Shared with HEAD lead; no duplicate solves. QC R25 assumptions remain explicit and next routed R26 evidence belongs QC lead.
 
-## 2026-10-27 07:29 PDT NUMBER-CHECK-QCR25: INFRA-FIRST-QC-R25 claude/qc-mesh-r25-1027@a764d022ff (QC mesh drivers on the A0 drop lattice)
-Own solver ncsolve.py (own netlist builder from plan_replan.json H8/V9 + rec drivers + r3b drop taps, 27-um segments (lane 54), trapezoidal dt 0.5 (lane backward-Euler); fine check 13.5 um / dt 0.25 = same to 0.01 ps; own MC 40 samples/corner, own RNG). Shared model inputs kept: thev_r2 BUFx24 Thevenin, RC_R6 8w, BUF_CIN 2.3 fF, stage table. Run dir intel2:/srv/opentallas-scratch2/claude/nc-qcr25-1027 (ncsolve.py, geomchk.py, summ.py, out/*.json); copies in /home/ubuntu/.claude/jobs/b7f906df/tmp/nc.
-| # | claim | own number | verdict |
-|---|---|---|---|
-| 1 | TT crossing spread 122.4 (base 157.3, R24 rephase 363.957) | 122.47 (fine 122.47); base R23 157.26; rephase 363.94 | CONFIRMED |
-| 2 | drop skew 101.4 TT / 95.9 FF | 101.45 / 95.95 (A0-field crossing 102.59 / 97.23; part taps 42.27 / 32.26) | CONFIRMED |
-| 3 | in-core drop spread med/p90/max 58/82/87 TT | 58.17 / 82.09 / 87.14 TT; FF 58.87 / 79.61 / 83.37 | CONFIRMED |
-| 4 | MC worst crossing 197/195, drop 177/178, in-core max 122/122 | own 40 samples: worst crossing 207.2/200.0, drop 182.1/179.8, in-core max 116.2/115.3, p90 85.9/83.9. mean+3sd crossing 216.8/209.5, drop 192.5/190.0. Lane numbers = worst of 13 (~+1.4 sd), not a 3-sigma bound; in-core max depends on wire-variation segment length (uncorrelated per segment) | PARTLY (sample-limited; use ~217/193 TT as 3-sigma) |
-| 5 | mesh C 2,838 pF (+26.5 %) | 2838.37 pF (wire 2798.65 + 17,273 taps x 2.3 fF); base 2243.15 -> +26.54 %; rephase 3081.84 | CONFIRMED |
-| 6 | 36,370 crossings all with vias | own geometric count 36,370, 0 without a shared node; 9,782 driver sites / 11,510 BUFx24 units; 17,273 taps, 0 unattached | CONFIRMED |
-| 7 | W column 1632.96 clear of the 5.4 halo and W pin face | island edge 1637.28; gap 12.96 um to the A0 W face (x0 1650.24) and to the 4 su_lane_w_l4-l7 cores (8 M8 ys skipped); 0 of 170 W drivers and 0 of 3,456 band drivers < 5.4 from any core. NOTE: 6 W-column drivers sit on partition seams (y 2617.92/5227.2/7845.12/18472.32/21090.24/23699.52) -- the seam check covers band drivers only; R23 already has 216/6156 column drivers on seams, so not new in kind | CONFIRMED (+note) |
-Assumptions:
-- Balanced feed (41-268 ps legs): A (lane, balanced) 122.5/101.5/in-core p90 82.1 TT. Residual sigma 10 ps per leaf: 131.0/105.2/81.7 (+8.5/+3.7). 10 % tracking error signed by leg length: 134.7/102.4/82.1. Raw legs (arr = parent + D(leg), no balancing): 261.7/223.4, in-core p90/max 144.6/189.8 TT; FF 222.4/191.0. All leaves padded to Lmax=1229.76 um from the parent output (268 ps late vs the R23 drivers): 336.4/286.8, part taps 250.9, in-core 108.6/128.0/197.5 -> worse than R24. So the 122 result holds ONLY if the R26 band trees tap the H-tree upstream so leaf arrival = column driver arrival to ~10 ps; a tree hung off the column driver outputs refutes it.
-- x2 sizing = geometric rule (24 A0 columns with 1 adjacent driver column within 200 um), one value tried by the lane, not swept: own sweep crossing/drop x1 142.8/126.6, x1.5 126.9/111.1, x2 122.5/101.5, x3 124.3/95.3 (in-core med 66.7). Not tuned to an optimum (x3 gives lower drop skew); RULE, not a computed drive target.
-- mc-gapfold: NO. R25 MC is the pre-route mesh sim; no routed RCX tree json exists for the new mesh, so gap = 0 in every sample and die_sta_related (where dffd539c3c folds the gap) was not run. All MC numbers are pre-gap; the gap fold applies in R26 after the guard51 rebuild + route.
-- Not modelled (lane or me): partition tap stub 17.28 um (C only via BUF_CIN), driver input slew / Thevenin vs load (thev_r2 UNCHECKED source), feed-leg sigma beyond 2 ps/stage.
-VERDICT: 1,2,3,5,6,7 CONFIRMED; 4 PARTLY (worst-of-13; own 40-sample worst 207/182 TT). Headline 122/101 ps is conditional on balanced band-tree arrivals (+-10 ps -> +4..9 ps; unbalanced -> 262/223).
+2026-10-27 09:33 PDT CODEX NUMBER-CHECK [RCX-MIXED 166adab391] CONFIRMED: own parser independently read5native SPEFs,20/20 exact matching-width mixed-vs-single tuples (D_NET C, summedground/couplingC, summedR);20/20 reported100um-normalized values reproduced. Rules SHA256732a3b391032a54d556c6b80e7d31d161c6d4284b4aa8a023f9e430f0bf1928a matches actualbytes. Units PF/OHM readfromheaders. Widths0.16/0.32/0.64/1.28 and0.04baseline, M8/M9 shielded/unshielded. No die timing/closure inference. Own script+receipt /srv/opentallas-scratch/claude/codex-numbercheck-rcx-1027/{check.py,independent_check.json}.
+[NUMBER-CHECK-3 2026-10-27 12:54 PDT] QC-MESH-R25 dfcc9c428e DRC claim: CHECKED with one correction. Own parser of all 20,857 raw tree/drc/box_*.rpt: 96 raw = 24 unique markers, all Min Step on M8, on 12 ckm_w_ckt_* nets (2 each); no other type or layer. My own VSS M9 gap scan of routed.def gives the same 408 shield-shield gaps (24 at 0.04, 384 at 0.28), and 0 of them meet a marker (the nearest marker is 39.4 um away). Coverage caveat: the lane's DRC windows only partly cover the gaps (the 0.04 gaps 47-49% of their length, 12 with neither end checked; 180 of the 384 0.28 gaps partial). So I re-ran drt::check_drc on every gap box +1 um, all 408 (docker on intel2, read-only from the lane odb): 0 markers. CORRECTION: in the same 24 places an M9 VSS PG stripe (x 2177.04-2177.52 etc.) overlaps the far shield. The merged same-net notch is therefore 0.02 um, not 0.04. The scan also finds 540 shield-to-PG-stripe gaps of 0.42 um and 48 M8 shield end-to-end gaps (0.374 um with flush ends, 0.017 um with half-width ends). check_drc on all 708 of those boxes: 0 markers. So 'no DRC marker on same-net gaps' holds for the 0.02 notches too. Caveat: this rests on DRT's same-net rules (a 0.02 notch is below the 0.04 spacing, and DRT does not flag it). Evidence: intel2:/srv/opentallas-scratch2/claude/nc3-r25 (gapboxes/extraboxes, drc/, drcx/), scripts at localhost .claude/jobs/b7f906df/tmp/nc3/bin.
+[NUMBER-CHECK-3 2026-10-27 12:54 PDT] PG-ACTIVITY-KVHBM 48f939873f power bases (PG-ACTIVITY-2 has not posted them): KV CHECKED from the raw OpenSTA logs. e1: vectorless 0.2014671 / measured 0.1167979 W = x0.5797. pv_pair: 0.2020355 / 0.1050221 = x0.5198. The type math reproduces: hg 3.9924 W -> 2.3145 W = 1.1914 W/mm2, pv 4.1255 W -> 2.1445 W = 0.654 W/mm2. Window: 9.2758 W / 8.834 mm2 = 1.050. Linear check: 37.59 x 9.276/16.063 = 21.7. Note: the ratio is applied to the kv_power.json basis (e1 0.2573), not to report_power 0.2015, which is conservative by about 28%. The ratios for the other types (0.5498 mean) stay UNCHECKED-ESTIMATE. HBM arithmetic CHECKED from the raw intel1 rpts: halves s 0.4446/0.7906, n 0.4548/0.8364 W; slot 14.392/26.033 W over 22.670 mm2 = 0.6348/1.1483; x CTS 1.1892 = 0.755/1.366. MISMATCH (small): the flat-0.5 bound uses the vectorless BDC CTS factor. The flat-0.5 BDC factor is 0.08051/0.06697 = 1.2022, so the upper bound is 1.381 W/mm2, about 25.3 + 5.13 = 30.4 mV, still PASS. Caveat: the SM halves are 3_place with about 0 clock power (6.8 uW). The CTS uplift comes from BDC (16% clock share), while the KV e1 routed clock share is 27% measured, so 'flat-0.5 = upper bound' is an estimate, not a bound. The HBM numbers stay UNCHECKED for quoting until the SM measured run (sm.vcd 28 GB, still writing) lands on a CTS/routed view.
 
 #### OTRUN-HUB-RECOVERY (lane file updated 10-26 23:45)
 **2026-10-26 23:45 PDT EPYC1-RETIRE: CUTOVER DONE -- the hub is now intel2 (tolerant-swine, 185.8.106.226).** epyc1 is held
@@ -1805,7 +2021,7 @@ Runtime workaround: /run/user/1000/systemd/user/dbus.service.d/codex-runtime-rec
 Shared tools: die_clock_mesh.py = CLOCK-128 · die_infra.py master-plan mode = MASTER-PLAN · die_infra.py pg/clock/reset = INFRA-FIRST · flow tags = ROOT-MERGE/FLOW.
 Number check: NUMBER-CHECK recomputes every owner-reported gate number (12.9f).
 
-#### PART-CAP (lane file updated 10-26 20:10)
+#### PART-CAP (lane file updated 10-27 08:13)
 Goal: origin of the 400k cells/partition cap; measure ORFS/OpenROAD scaling ASAP7 833 ps at ~0.4/0.8/1.6/3M cells;
 recommend max partition size. Measurement only (no die-plan edits). Results -> results/arch/part_capacity_1024/.
 
@@ -1839,7 +2055,7 @@ CODEX took over: pending collection and N27 source-only resume on codex/partcap-
 ## CODEX notes 2026-10-25 05:56 PDT
 CODEX took over capacity collection/report on codex/partcap-0555 (from codex/partcap-1025). Both retained jobs LIVE; N27 GRT3281s now setup repair WNS-137.923ps/995 endpoints at old async-reset pins, current34.87GiB; N44 pinaccess1775s then GRT build, peak53.1GiB, CTS19260.5s wall/32527.2sCPU. Diagnostic-only, not SIGNED. No relaunch/cancellation. Refreshing report; final collection remains pending.
 
-... (8 more lines in the lane file)
+... (11 more lines in the lane file)
 
 #### PATH-FREEZE (lane file updated 10-26 02:29)
 S81   | GRT0 | FAIL (FT G0C222; t14/t58 G2 FAIL) | see PATH-S81.md | 2026-10-25 18:45
@@ -1847,7 +2063,7 @@ S81   | GRT0 | FAIL (FT G0C222; t14/t58 G2 FAIL) | see PATH-S81.md | 2026-10-25 
 ## CODEX notes 2026-10-26 02:29 PDT — KV clock body legality
 Owner/coordinator requested a narrow read-only body-overlap census after QC/head overlap failures. Exact accepted artifact epyc1:/srv/opentallas-scratch2/claude/path-kv-grtmesh-0125/r1/place.json (SHA256 d15c046c1c2f711641a22d88b0fbae252e4596a7037e6ef4b0f2b3ba9096a076; 9503 sites) FAILS physical body legality: 12 overlapping cell pairs / 22 cells for actual BUFx24 body 1.35 x 0.27 um, comprising 4 stub/stub pairs and 8 driver/stub pairs. Four stub pairs occupy exactly identical sites. Evidence epyc1:/srv/opentallas-scratch2/claude/codex-kv-ahub-1026/kv_clock_body_overlaps.json. Existing TT/FF 73.16/73.50 ps remains measured clock diagnostic evidence; it cannot establish freeze until the ONE KV batch legalizes sites and re-measures routed clock RC. No site changed, no mesh rebuilt, no route repeated. Root and INFRA-FIRST informed.
 
-#### PATH-HBM (lane file updated 10-27 07:15)
+#### PATH-HBM (lane file updated 10-27 12:01)
 Path: hb_coll_NW TKM static II8 -> native NW L74 two-beat -> shared root tkm_SW (TP192/KMAX2048) canonical root + 32 common
 tiles -> return L12 (CTL) / L13 (DATA) -> hb_coll_NW tkx_w*.  "Complete" = every partition/core on the path GEOM PASS +
 
@@ -1881,9 +2097,9 @@ CODEXtookoverALLHBMlanes oncodex/*-1713, currentmainc51d; quickinventorycodex-hb
 
 ## CODEX notes 2026-10-25 17:26 PDT physical takeover
 CODEX took over selected no-ID actualrecipe/kit gates + remainingSMphysical on own codex/hbm-physical-1713 frommainc51d. G2collector reconciled PLAN canonicalhubTT139.83/FF-2.89(1042),b101TT-87.88/FF-2.07(4),ov4261941/2435displaced; parentownsrootRTcollision,PLANownsb101structuralrepair,no rerun. TOKLEC collectedfreshXS3EQ62931,ownsrootdeliveredfirst0artifact. NewboundedTKMrecipe emits approvednoID plus existingchain3 nativeCLR+1/CONV0 controlrelays (previouslyhand-edited); generatedcandidate common_noid_v1@9425e79e39b251c7 pins1383,terminal_noid_v1@ad0c51e421607d1d pins694 under epyc1codex-hbm-physical-1713,planned__strapnamesretainedbutNOIDports/straps. Minimumactualshellmiter+wrongupbitmutant andSYNTHONLY+LECnowrunning; notP&Rqualified. CP1ownsactualclock C1-5/firstEfacebuffer/shared33graph; no duplicateCTS. Fulljobpaths/SMfailureownership inventorycoord/codex-hbm-physical-1713-inventory.md.
-... (183 more lines in the lane file)
+... (196 more lines in the lane file)
 
-#### PATH-KV (lane file updated 10-27 06:39)
+#### PATH-KV (lane file updated 10-27 09:56)
 Lane started 2026-10-25 08:10 PDT (Claude). Plan base codex/kv-plan-0719@b0b916f1d (v3.9g/f7); own branch claude/path-kv-1025,
 sparse WT epyc1:/srv/opentallas-scratch2/claude/wt/path-kv-1025, scratch epyc1:/srv/opentallas-scratch2/claude/path-kv.
 
@@ -1917,9 +2133,9 @@ CODEX 2026-10-25 22:13 PDT: MU833 compile of actual b15 PASS18.12s, emb_fill mar
 READY codex/kv-hgiv8-2155@eb7d7d76646109d34c8b9ca4b5b85ea74a826551: balancedR2G2PASS0overflow allM2-M7/0noAP/0errors, maxM3usage30.96%, actual27FTslotsmax396.144um/0overreach/0in-core. Existingface_budget.py derives13.2fromthisactualprobe; G0CnowPASS0errors1367warnings40/40types (all4historicalhgi_WN_7faceerrorsclosed). Pins/stationcounts/cyclesunchanged. Main9650mergedcleanly; freshprobeinputs byte-identical afterTR3aliases. Rootindependentvisualreview/mergepending; trackedpicture results/geom_review/kv_hgi_v8_2155_r2/review.png, localcopy coord/hgiv8_r2_review.png. NoSIGNOFFclaim. BothG2jobsendedPASS (r1GRT670s,R2GRT109s;R2selectedcandidate).
 OddS3fallbackfixtureprofiletip now44403bba7a (no generator-source changes); exactgatebothmastersPASS andmutantcaught. Freshmain9650generatedS3+LTcopy+strapodd+lanetap kits e1/e5 have546pins0added/unmapped, hashesffe75f4a/1d58dbfc; generatedRTLbyteidenticaltotestedfixtures. Two SYNTH+LEC-ONLYjobs running actualepyc1 codex-kv-odds3-2200/generated/<master>__216x216 (clients3500670/3500671, unitse13885/e5seeotrunlogs). NOplacement/CTS/route. GenerationinitialNOTRUNdue sparsecheckoutmissingphysical/common_flow/clock_family.tcl fixedbymaterialisingtrackedcommonflow; correctedgenerationPASS, olderrorlogretained.
 
-... (64 more lines in the lane file)
+... (69 more lines in the lane file)
 
-#### PATH-QC (lane file updated 10-27 06:39)
+#### PATH-QC (lane file updated 10-27 11:42)
 Path (Codex 07:19-08:04 selection, coord/codex-qcphys-0719-path-matrix.md):
 landed QK/V in slice **W5** (SU/CROM/VM in sl_W5_su_c + SU lanes sl_W5_su_l0/l1) -> slice glue -> `sl_W5_fw` (slw_fw_v3, u_fdn dd_wo 548b)
 
@@ -1953,9 +2169,9 @@ ExistingVMR6f61/source3317 staysWAIT-CANARY. RetainedexactnativeTT+199.43/FF+5.9
 CODEX 2026-10-25 18:24 PDT RESET QCtoken1713: candidatecodex/qc-token-1713@90e23102b8 legalCB-DAG168R8pads/712464FF/root0cycles,18phaseclasses(+9types) approvedcandidate.3guardsPASS; all8classRTLflowbuildPASS but nominaltbmissingtimeprecision causeszero-timeclock DIDNOTCONVERGE;mutantsNOTRUN/nohardwareverdict. Alljobs terminal,no fullbind/largewholebuild. ActualP8191prehistoryCTX8192,lastrowzero READYintel1:codex-qc-token-1713/history_run/native_preload; newMU/DIECFG/nativeKVqualificationpending. DetailedCODEXLOGhandback.
 
 ## CODEX notes 2026-10-25 21:5x PDT — SRAMIF/N59 takeover
-... (84 more lines in the lane file)
+... (95 more lines in the lane file)
 
-#### PATH-S81 (lane file updated 10-27 07:18)
+#### PATH-S81 (lane file updated 10-27 10:13)
 Started 2026-10-25 08:07 PDT (Claude, fresh lane per _FRESH_LANE_BRIEF item 10).
 Path source: CODEX-LOG handoffs 08:03-08:04 (S81 PLAN3, CCONN, LEAF0719, cores parent, KITS0719, HEAD0719) and the
 
@@ -1989,7 +2205,7 @@ Separate epyc2:/srv/opentallas-scratch2/claude/codex-s81-eng-1309/eng_e5_be69ca1
 CODEX 14:10: GEOM independent PASS F6 geometry from /root/flow_geom/geom_queue (completeall15macros, alllaunch/capture<20um, IFbars outsidefaces/halos/centralcorridorclear). Actualplace01 3_place.odb SHA256a93a9bfd8606e8049b33b9c86c039f31b4010c2a05824b01928b40fc82b3e4f9. This permits only nextgatedclock/placementengineering, notCTS/route/SIGNED. CurrentLEC+reviewedCLOCKcanary stillpending; preservefrozenbe69/net3c0b. Futureworkingruntime mustguardCTS too (oldwrapperonlyroute/finishLEC) and fix missinggrt_prepare.tcl reference beforeGRT.
 2026-10-25 14:18 PDT PATH-S81: lead shift after 14:13 RESET. Adopt Codex E5 cohort codex/s81-eng-source-1309@be69ca1ba7 (all-macro F6 placement GEOM PASS 14:10) over claude/path-s81-e5-1025@88ec67b9f3 (wrappers only, superseded). Sub-lanes: PATH-S81/ELEMB (elemB_if2d routed FAIL -> structural clock kit, continues wt/path-s81-elemb), PATH-S81/SPLITS (7 strict-bind type splits on codex/s81-bind-1309 vp_emit). Lead: E5 LEC 1916641 + shallow trunk (TKM-R2 CTS FAILED 14:14 'OT_DTSH NDR was not created', CLOCK), CS m1/m2/muv, KV rq0, xrt1/xrt3.
 2026-10-25 14:36 PDT PATH-S81: (1) E5 CTS01 on Codex be69 place01 copy (epyc2 path-s81-e5/e5_cts01, unit oth-ubuntu-1648819-1792963549 EXIT 0): planned shallow trunk runs end to end after my NDR fix (claude/path-s81-dtsh-ndr-1025@11bc09946, also posted to CLOCK.md for TKM-R2) -> 22 BUFx24/5 levels/127 taps, placement sha unchanged, insertion TC placement-RC sink mean 388 (308-448; trunk at tap inputs 229-327) vs E4 571-622; NOT <=250 yet; GEOM REQ [PATH-S81/E5-CTS01] posted with image. (2) READY claude/s81-ir-1024r re-post = claude/s81-ir-1025rb@9b9c3e2b8 (pg_domains hunk superseded by main 92da1fc12). (3) xrt1/xrt3: READY claude/path-s81-xrt3key-1025@f33409159 (plan iq_C -> xrt3, generator keys by slice HB; G0/G0C 0E). (4) KV rq0_unroll32768 = EXIT 2: slang elaborated, then hierarchy ERROR 'ot_sram_1r1w2c_32x64_m1 ... no parameter CB' (kit fed full behavioural SRAM models; slang blackbox emits their localparams). Successor epyc1 path-s81-kv/rq0_bb with port-only stubs (same headers), synth via ot-run 64G running. CS m1/m2/muv still running (25+ min).
-... (98 more lines in the lane file)
+... (115 more lines in the lane file)
 
 #### PDN-ONE (lane file updated 10-26 20:10)
 [PDN-ONE 2026-10-26 14:02 PDT] RESULT claude/pdn-one-1026@ff81c089a (1 commit on claude/hbm-pg-phy-1026@a0ee63780; tools/die_plan only). COORD RULING 13:13 implemented.
@@ -1997,6 +2213,31 @@ Single source: pg_regions.row_spec/plan_regions -- per region+row the first die-
 
 ## CODEX notes 2026-10-26 20:14 PDT
 PDN generated model parity fixed on main; newestHMBcanary ff81 terminal absoluteFAIL/regressionINFO selfbaseline,527.71/428.22ins,hold0/overflow0/DRV0. Current clocks rebuilt against corrected phase by die owners.
+
+#### PG-GRID-AUDIT (lane file updated 10-27 12:34)
+## 2026-10-27 12:34 PDT RESULT (read-only audit; no plan edits)
+Metal fraction = VDD+VSS metal / layer = 2*w/pitch (pg_regions.row_spec: pitch = VDD-to-VDD, nets alternate at pitch/2). tracks = infra_pg.tracks_of.
+
+# PG-GRID-AUDIT lane (COORD 10-27 12:0x, ruling (A) follow-up): plan die.pg.grid == IR-checked grid == clock/GRT grid? S81/HEAD/KV/HBM (+QC ref)
+
+## 2026-10-27 12:34 PDT RESULT (read-only audit; no plan edits)
+Metal fraction = VDD+VSS metal / layer = 2*w/pitch (pg_regions.row_spec: pitch = VDD-to-VDD, nets alternate at pitch/2). tracks = infra_pg.tracks_of.
+Grids: PL = M8 0.48@8.64 / M9 0.48@8.64 (11.1 % / 11.1 %, tracks 14.6/14.6 %); C3 = M8 0.48@4.32 / M9 6.48@34.56 (22.2 / 37.5 %, tr 29.4/48.3);
+G12 (HEAD-5) = M8 0.48@4.32 / M9 12.96@34.56 (22.2 / 75.0 %, tr 29.4/85.7); QC-dense = M8 0.48@2.16 / M9 0.48@1.728 (44.4 / 55.6 %). PHY domains 1.92@8.64 (44.4 %) not compared.
+Who reads what (main d9d8fce68 source): die GRT/dry build (gen_phys.die_pdn_tcl, die_trial.psm_pdn_tcl) = plan die.pg.grid only; die_clock_mesh = plan die.pg.grid unless --pg-json.
+
+| die (adopted plan) | (a) plan die.pg.grid M8/M9 % | (b) grid of the IR headline | (c) clock planner / dry / die GRT | match | IR on the PLAN grid |
+|---|---|---|---|---|---|
+| S81 (main) | PL 11.1/11.1 | G12 22.2/75.0 (survey 2.1 mV) | plan (PATH-S81 12.8 build, no --pg-json); GRT plan | plan=clock=GRT, IR headline differs | survey PL p70 = 6.5 mV PASS (0.115 W/mm2 region model, not measured activity) -- no new run needed |
+| S81-HEAD (main = R19 df038a2a = R20 c588bb01) | C3 22.2/37.5 | G12 22.2/75.0 (HEAD-5 delta 33029005, NUMBER-CHECKED 31.1 incl below-M7) -- 33029005 NOT on main/R20 | clock: R19/R20 straps from head_mesh_r3 --pg-lanes on 33029005 = G12; die GRT = plan C3 (GEOM-27 M9 probe substituted 12.96) | NO: plan C3 vs IR+clock G12 | HEAD-5 C3 pad75 42.6 FAIL (UNCHECKED); THIS LANE (bs_psm, uniform 1.258 W/mm2 CONFIRMED tile basis, 150/70-um pad): C3 38.8 above-M7 (VDD 25.0+VSS 21.4) +5.13 below = 43.9 FAIL; same deck G12 23.2 (+5.13 = 28.3 PASS) |
+| QC (main; R28 branch adds VSS holes) | PL 11.1/11.1 (R28 VSS -5.55 pts) | QC-dense 44.4/55.6 (33.5 mV qc-pg-wc); survey G12 10.8 | plan PL | NO (ruled 12:0x (A)) | R28 111 mV (864-um window, 64 POINT bumps, no pad, 0.759) vs survey PL p70 32.9 (2972 window, 150/70-um pads, 0.582): two different decks, 3.4x apart on the same grid -> NUMBER-CHECK must pick one deck |
+| KV hm_r26q4 b5aefbd6 | PL 11.1/11.1 | G12 (survey 37.6 @1.82 vectorless; PG-ACT kv_meas G12/H8 LIVE @1.05 measured); B75C3 22.6 (75-um pitch) | plan (CLOCK-KV R1.. 'PG basis plan die.pg rows, no --pg-json'); GRT plan | NO: plan=clock=GRT, IR on G12/C3 | THIS LANE: 67.4 mV FAIL (VDD 44.2 + VSS 43.1 co-located interior, 1.05 W/mm2 MEASURED-activity map kv_types_meas, 150 um/70-um pad), 1.9x of 35, before below-M7 |
+| HBM c14 (claude/hbm-mu-quad-7-1027@e41772821, not on main) | PL 11.1/11.1 | G12 (survey 39.8 @2.18; Codex pad70 23.4/23.2 @1.27); B75C3 24.6 | H-tree planner not PG-aware; G0/G0C + die GRT plan PL; no PG-aware die mesh yet | NO: plan PL vs IR G12 | THIS LANE: 122.7 mV FAIL (VDD 80.6 + VSS 79.7) at the survey 2.18 W/mm2 B2r2 map (linear ~71 mV at 1.27, UNCHECKED estimate) |
+
+Runs: epyc2 docker 40g cap, kits epyc2:/srv/opentallas-scratch2/claude/pg-grid-audit-1027/kits (gen copy on intel2)/{kv/PL_p70_int,hbm/PL_p70_int,head/{C3,G12}_p70_int}
+(bump-survey bs_psm.py + HEAD-5 src, same windows/bases as BUMP-SURVEY / PG-ACT; summary epyc2 .../pg-grid-audit-1027/summ_{pl,head}.json). Numbers = own PDNSim, UNCHECKED (NUMBER-CHECK please).
+Reading: only S81 has plan grid == clock grid == a passing IR grid. KV and HBM plan PL fails 2-3.5x; their passing IR numbers are on G12/75-um grids no clock/GRT tool sees.
+HEAD: plan C3 vs IR/clock G12 -> adopt 33029005's M9 12.96 into the HEAD plan (one plan event), so plan == IR == clock.
 
 #### PLAN-DELTA (lane file updated 10-27 06:46)
 Inputs: TYPE-REDUCE REPORT claude/type-reduce-1025@befcf3f66; COORD rulings 06:08 (PHY_SHORT a), 06:47 (TYPE-REDUCE), 07:01 (ID straps option B). Path types (PATH-S81/QC/HBM lane files + brief item 10 KV list) are EXCLUDED unless the PATH lane agrees in its lane file.
@@ -2040,7 +2281,40 @@ Branch claude/plan-icg-model-1026@5a2a795666 (= model-refit 930fa9628d + core-la
 ## CODEX notes 2026-10-26 20:14 PDT
 Tool merged, strict calibration envelope prevents wide-domain invalid build. S81 ICG followup current physical/model owners.
 
-#### PROTO-KITS (lane file updated 10-26 20:10)
+#### PREFLIGHT (lane file updated 10-27 10:44)
+## 2026-10-27 10:44 PDT PREFLIGHT-2 result
+READY claude/preflight-2-1027@db1eb4c5e (base main 60b5ddf52). PREFLIGHT-1 left only an unmodified sparse worktree (no commits); continued there.
+
+
+## 2026-10-27 10:44 PDT PREFLIGHT-2 result
+READY claude/preflight-2-1027@db1eb4c5e (base main 60b5ddf52). PREFLIGHT-1 left only an unmodified sparse worktree (no commits); continued there.
+- tools/die_plan/kit_contract.py: 10 static checks (no synth/place, <1 s/kit): corner_modes, ff_binding (TT 250/FF 202.5), clock_pin_geometry (M5 track + >=0.048x0.48 in io.tcl AND core_infra procs/calls; pins.json mismatch = warning only), rc_calibration (FLOW-RC-1 check_rc_cal records, local copy of claude/flow-rc-1027@2bbe885e4), duplicate_modules, keep_hook (+$paramod rename), pins_canonical (GATE-PINS-2 sha of io.tcl placed set == freeze pins_canon_sha256 [+ plan file when reachable]), mesh_vias (DCM.mesh_via_findings), macro_channels (>=10.8 um both sides per column + interior H channel per stack), clock_entry_clear. A check that cannot run = FAIL.
+- kit_preflight.py v2 runs them; BINDING on hard-core kits (core freeze schema / core master_slice / core.json), advisory on partition kits (--contract forces). Writes <kit>/preflight.json beside freeze.json (excluded from KV/HBM kit_hash); --out receipts unchanged.
+- Admission hook: autopilot signoff_chain already execs the immutable admission bundle's die_plan/kit_preflight.py (main f108b501fd), and gen_phys run_kit.sh runs the kit copy pre-floor -> both pick this up on merge; signoff.py bundle deps + kit_contract.py/die_sta_related.py. ot-run itself (~/.local/bin/ot-run, not in repo) NOT changed. AUTOPILOT-SIGNOFF-2 coordination: no code change needed on its side.
+- Tests: test_kit_contract.py 16 PASS (fixture passes all 10; 11 mutants each fail only their check); existing test_static_preflight/test_kit_preflight/test_signoff/test_master_slice 104 PASS, autopilot test_signoff_chain 11 PASS (CHECKED, localhost sparse).
+- Sweep (CHECKED, read-only, no preflight.json written) over 72 existing queued kits on intel2/epyc2/intel1 (274 epyc1 rows dead): 72/72 FAIL. Every kit FAILs rc_calibration (no '# OT_RC_CAL signal/clock' records: FLOW-RC-1 not on main yet -> merging this BEFORE FLOW-RC-1 blocks all admissions; merge FLOW-RC-1 first or together). pins_canonical FAIL 69/72 (pins_canon_sha256 recorded only in KV-CORES kits; 8/11 recorded KV kits match on io.tcl; kv3_head_eighth_e1/e5 r26 + pv_join fR180 mismatch UNCHECKED cause). clock_pin_geometry FAIL 51 (QC pushdown.tcl 0.024x0.384, io.tcl 0.024x0.084, S81 c15b core_infra 0.032x0.192 off-track = the DRT-0255 class, M3/M4 entries). corner_modes 17 / ff_binding 22 (QC prog/btab/vmr contracts 452-520 TT, S81 eh1 258.53, HBM idx_score no insertion_ff_ps). keep_hook 10 (CLOCK-RESET col_h10 kits: keep regs, no SYNTH_CANONICALIZE_TCL). macro_channels/clock_entry_clear 5 (HBM/KV macro kits with no MACRO_PLACEMENT_TCL -> placement not static -> FAIL closed). duplicate_modules 0, mesh_vias NA (no mesh inputs in core kits).
+Per lane (kits / FAIL checks besides rc_calibration):
+  CLOCK-RESET: 9 kits (1 core); only-RC-FAIL 0; clock_pin_geometry 9, rc_calibration 9, keep_hook 9, pins_canonical 9, ff_binding 1
+  CODEX-S81: 3 kits (3 core); only-RC-FAIL 0; clock_pin_geometry 3, rc_calibration 3, pins_canonical 3
+  CORES-KITS: 3 kits (3 core); only-RC-FAIL 0; clock_pin_geometry 3, rc_calibration 3, pins_canonical 3, ff_binding 1, macro_channels 1, clock_entry_clear 1
+  FLOW: 1 kits (1 core); only-RC-FAIL 0; corner_modes 1, ff_binding 1, clock_pin_geometry 1, rc_calibration 1, pins_canonical 1
+  HBM-CORE-LAT: 3 kits (3 core); only-RC-FAIL 0; rc_calibration 3, pins_canonical 3, clock_pin_geometry 1, macro_channels 1, clock_entry_clear 1
+  HBM-KITS: 1 kits (1 core); only-RC-FAIL 0; ff_binding 1, clock_pin_geometry 1, rc_calibration 1, pins_canonical 1
+  KITS-WAVE: 1 kits (1 core); only-RC-FAIL 0; clock_pin_geometry 1, rc_calibration 1, pins_canonical 1
+  KV-CORES: 10 kits (10 core); only-RC-FAIL 0; rc_calibration 10, pins_canonical 10
+  KV-KITS: 2 kits (0 core); only-RC-FAIL 0; clock_pin_geometry 2, rc_calibration 2, pins_canonical 2
+  KV-unqueued: 3 kits (3 core); only-RC-FAIL 0; rc_calibration 3, macro_channels 3, clock_entry_clear 3
+  PATH-KV: 1 kits (1 core); only-RC-FAIL 0; clock_pin_geometry 1, rc_calibration 1, pins_canonical 1
+  PATH-QC: 9 kits (8 core); only-RC-FAIL 0; corner_modes 9, ff_binding 9, clock_pin_geometry 9, rc_calibration 9, pins_canonical 9, keep_hook 1
+  PATH-S81: 1 kits (1 core); only-RC-FAIL 0; clock_pin_geometry 1, rc_calibration 1, pins_canonical 1
+  QC-CORES: 2 kits (2 core); only-RC-FAIL 0; clock_pin_geometry 2, rc_calibration 2, pins_canonical 2, ff_binding 1
+  QC-CORES-CODEX: 11 kits (11 core); only-RC-FAIL 0; clock_pin_geometry 11, rc_calibration 11, pins_canonical 11, corner_modes 6, ff_binding 6
+  S81: 2 kits (2 core); only-RC-FAIL 0; ff_binding 2, clock_pin_geometry 2, rc_calibration 2, pins_canonical 2, corner_modes 1
+  S81-CORE-LAT: 10 kits (10 core); only-RC-FAIL 0; rc_calibration 10, pins_canonical 10, clock_pin_geometry 4
+Full per-kit list: intel2:/srv/opentallas-scratch2/claude/preflight-2-tools/sweep_*.json is NOT kept; per-kit summary copied to intel2:/srv/opentallas-scratch2/claude/preflight-2-tools/summary.txt.
+ASKs: (1) MIN_CHANNEL_UM 10.8 adopted from HBM-MU-QUAD-6 ASK 07:52 (unruled; abutted pairs count as no channel). (2) unplaced macros (ORFS auto macro place) FAIL closed - confirm or require MACRO_PLACEMENT_TCL in HBM/KV generators. (3) merge order vs FLOW-RC-1.
+
+#### PROTO-KITS (lane file updated 10-27 08:16)
 2026-10-25 07:16 PDT S81-KITS: FIX 2332d674a71e slice_station__t37 (m0, claude/proto-1025@0da5319bda): STRUCTURAL/post-cts-hold. The tap-grid tool splits the station register banks across taps (CLOCK lane fixing: one tap per station band + its rst relay); per-corner insertion basis on the ports (main default, already in the R1 re-kit k1/m0/slice_station__t37). Rebuild after that tool fix + face_guard rst_o generator fix, no ECO. Run data deleted 07:2x (no signoff.json existed: failed at CTS gate).
 2026-10-25 07:16 PDT S81-KITS: FIX 6304e701ee5a slice_station__t25 (m0, claude/proto-1025@0da5319bda): STRUCTURAL/post-cts-hold. The tap-grid tool splits the station register banks across taps (CLOCK lane fixing: one tap per station band + its rst relay); per-corner insertion basis on the ports (main default, already in the R1 re-kit k1/m0/slice_station__t25). Rebuild after that tool fix + face_guard rst_o generator fix, no ECO. Run data deleted 07:2x (no signoff.json existed: failed at CTS gate).
 
@@ -2062,7 +2336,10 @@ Reset ordered. Full handoff CODEX-LOG S81KITS0719. Optionalhelper6ad8ead pushed;
 ## CODEX notes 2026-10-26 20:14 PDT
 Current master-plan slices + held plan delta determine eligibility; no old diagnostic promoted.
 
-#### PROTO (lane file updated 10-26 20:10)
+## CODEX notes 2026-10-27 08:16 PDT
+S81 adopt178 obsolete rows stay superseded; current S81 physical owner owns slice kits. No old re-route.
+
+#### PROTO (lane file updated 10-27 08:16)
 Branch claude/proto-1024r (worktree rtx-pro:/home/ubuntu/wt/proto-1024r, base origin/main a11334b98). Fleet data: <host>:/srv/opentallas-scratch2/claude/proto/ (ot-run --dir, spills).
 Goal: prove every partition type without a SIGNED view is routable / roughly meets timing BEFORE detailed route (no DRT).
 
@@ -2083,6 +2360,31 @@ CODEX takeover genericPROTO on codex/proto-0719, stationwave separately S81/kits
 
 ## CODEX notes 2026-10-26 20:14 PDT
 Current die-first method supersedes old budget prototype; no abandoned-plan physical rerun.
+
+## CODEX notes 2026-10-27 08:16 PDT
+Old budget prototype superseded die-first/master-slice method; no retired-plan rerun. Current PG modeling diagnostic owned flow/sta_pg.
+
+#### QC-A0-KITS (lane file updated 10-27 11:55)
+Scope: (1) BTAB corrective QC canary at codex/qc-prog-halo-0820@8b078ae717 (COORD 10:37 option A); (2) A0 NK/NL re-kit: 5 sub-kits (rawleaf M5+centre clk, romleaf centre clk, node real view, NK/NL parents w/ R3b 22 drop islands + E pin shift -19.344) + composition LEC, after the R3b drop-strap plan event (R27 owns QC plan); (3) delete stopped superseded container data after no-live-reader check, clear OWNERS rows.
+- 2026-10-27 10:42 PDT CANARY submitted: qwen_compute coll_ftm src 8b078ae7175c, run intel2:/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_compute_8b078ae71_1027_104107_484293, client flow-canary-qwen-compute-8b078ae71-1027-104107-484293 (32 GB/8 thr), source snapshot flow-canary/sources/8b078ae7175c (trigger.source_snapshot, locked). Compare vs released 38ebe196be78 run qwen_compute_38ebe196b_1027_093211_323204 (NO-REGRESSION, hold_ff -167.66/2324).
+
+# QC-A0-KITS lane (Claude, started 2026-10-27 10:42 PDT by COORD)
+Scope: (1) BTAB corrective QC canary at codex/qc-prog-halo-0820@8b078ae717 (COORD 10:37 option A); (2) A0 NK/NL re-kit: 5 sub-kits (rawleaf M5+centre clk, romleaf centre clk, node real view, NK/NL parents w/ R3b 22 drop islands + E pin shift -19.344) + composition LEC, after the R3b drop-strap plan event (R27 owns QC plan); (3) delete stopped superseded container data after no-live-reader check, clear OWNERS rows.
+
+- 2026-10-27 10:42 PDT CANARY submitted: qwen_compute coll_ftm src 8b078ae7175c, run intel2:/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_compute_8b078ae71_1027_104107_484293, client flow-canary-qwen-compute-8b078ae71-1027-104107-484293 (32 GB/8 thr), source snapshot flow-canary/sources/8b078ae7175c (trigger.source_snapshot, locked). Compare vs released 38ebe196be78 run qwen_compute_38ebe196b_1027_093211_323204 (NO-REGRESSION, hold_ff -167.66/2324).
+- 2026-10-27 10:46 PDT CLEANUP DONE (task 3): no live reader CHECKED (no container mounts, no process cwd/args, sudo lsof empty, no external symlinks; last writes = the COORD 10:37 stop, rt6 rc 137). Deleted intel2 path-qc-nk2/r6 (7.3G) + path-qc-sramif4/btab_fh_s40 (315M), intel1 path-qc-sramif4/prog_fh16_s40 (360M). Queue rows withdrawn (enqueue --mode withdraw): 9a214dac7f9b prog__fh16, 559d7c1df5c2 btab__fh (blocks the AP infra-orphan resubmit); NK r6 row 14e02be8d1cf already WITHDRAWN 10-25. OWNERS qfd_tile_nk/nl_a0c KIT-PLACED rows point at superseded r6/r2 kits -> replaced by this lane's A0 kits.
+- 2026-10-27 10:53 PDT CANARY RESULT (task 1) CHECKED from canary.json: qwen_compute coll_ftm src 8b078ae7175c = **NO-REGRESSION** vs baseline canary-run-info qwen_compute_2cf25f6d7_1025_154711_100962: GRT hold_ff_wns -167.66 vs -167.66 (+0.00, tol -10), hold_ff_ep 2324 vs 2324 (tol +5 %) -- identical to the released 38ebe196be78 run. Absolute verdict FAIL = inherited design stops only (FAIL_POSTCTS insertion gate + structural FF hold gate of the reference, same notes as 38eb). Run intel2:/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_compute_8b078ae71_1027_104107_484293/canary.json (client done 10:52). This releases AP c5b192a33322 qfd_dv_s8x_btab__r10ff (kit src codex/qc-prog-halo-0820@8b078ae717) and the R9e/R10 lineage (hold -> route -> sign-off -> LEC) on the next autopilot tick.
+- 2026-10-27 11:05 PDT COORD loop gap [QC-PROG-CODEX L2h3]: NOT re-enqueued -- already routing as AP 501990c30b6d qfd_dv_s8x_prog__l2h3r2 (prog_l2h3_route2, submitted 09:53, live epyc2; earlier row prog_l2h3_route). Recorded ROUTED in autopilot/resolved.tsv.
+- 2026-10-27 11:13 PDT R27 CHECK (task 2): no INFRA-FIRST-QC-R27 lane file/entry exists yet (lanes/INFRA-FIRST.md, QC-CLK-MESH.md, queue: none). State CHECKED: R3b drop-strap form ADOPTED as the die clock FORM (COORD 07:18) and implemented OPT-IN on main (qc_clk_mesh3 --a0-mesh R3B.json, RM56-59); NOT in any adopted QC plan event (no PENDING-DELTA, no frozen candidate; Codex R26 parked 10:14 with the open PG-phase defect: all 3,299 mesh segments short PG at offset 4.32, 2.16-offset per-plan repair proposed, not applied). Core-side slice on main is still the 10-23 one-pin form (cores/a0_core.json ck E 457.824,668.076; pins unshifted; 24 E pins inside the EF5 window, CHECKED). Dead R26 WT intel2 wt/qc-mesh-r26-1027: 1 uncommitted file (qc_clk_mesh3.py +484/-5, 07:56) -- Codex already rescued it into codex/qc-clock-1027 (03e87531a, per QC-CLK-MESH 'rescued paused uncommitted 489-line model'); left untouched for R27 to retire.
+- 2026-10-27 11:13 PDT PLAN DELTA prepared (NOT adopted): D-QC-A0-R3B claude/qc-a0-plan-delta-1027@ba3b9825ea (base main 441bad4d3a). (1) A0 NK/NL E pin block y-19.344 (403 M4 tracks): 527 E pins 541.692..654.684, gaps EF4 4.500 / EF5 4.476 um, 0 pins in EF0-5/EN1-2 windows incl 0.5-um margin (CHECKED, GEOM-25 cond 4); (2) legacy ck pin removed -> 22 ck_isl_* M5 island feed ports at R3b drop points (x = U-0.024 on the M5 plan track), face C; (3) cores/a0_core.json clock = drop-island form + type lattice + child budget 201/161.5 + centre pins; inputs/a0_drop_r3b.json = R3b json (the --a0-mesh input). Tool: core_pin_sites_gate accepts plan-declared face-C ports (+1 test; 46 tests PASS test_check+pin_sites). Gates: G0 PASS 0E/111W, G0C PASS 0E/111W (= base), core_pin_sites PASS 2/2. Die side (192 M9+128 M8 drop straps, PG phase) = R27.
+- 2026-10-27 11:13 PDT SUB-KITS: romleaf claude/qc-a0-kits-romleaf-1027@8493a1c2aa kit intel2 qc-a0-kits-1027/romleaf/kits/ot_qwen_tile_romleaf_a0r3b (9e80c785f2706fec) PLACED (unit oth-ubuntu-217877-1793124434): LEC EQ 3351/3351, sdc/selrange PASS, util 53 %, clk M5 at (86.400,55.080) read back; face_guard FAIL 1 bit (ce_d -> 2 flops, RTL fix: ce_q from req_m[12]); also gen fix 900e476fb4 (G.MAX_CHAIN gone on main face_guard -> every regenerated QC legacy kit FAIL_PREFLOOR). Render viewed by me: clk star centre over the ROM (OBS M1-M4), logic in W band x5-20 + S band y5-19 + small E cluster, top band empty, 528 pins W face. rawleaf claude/qc-a0-kits-rawleaf-1027@9618e14b5b kit .../rawleaf/kits/ot_qwen_tile_lsl_rawfault_m3_a0k (23a47eb989d590c7) KIT_PREFLIGHT PASS, M5 ceiling, 224 M6 pins->M4, clk M5 (57.660,70.2) (-0.012 track snap); place FAIL_PREFLOOR rc 8 at rtl_lint: source is a mapped netlist, rtl_lint reads only DFF/INVBUF libs -> needs all ASAP7 RVT TT libs as lint blackboxes (FLOW) or lint waiver; data deleted. node: in progress.
+- 2026-10-27 11:14 PDT BTAB follow-up: canary release WORKED (AP SUBMIT c5b192a33322 r10ff 10:54) but the job CRASHED 11:02 (flow-error, exit 1, CHECKED intel1 btab_m0_r10_ff/r10_ff.log): 'btab_r10_ff.tcl, 22 can't read "::ot_ms_tapnets": no such variable' -- the FF-only runner calls ot_ms_regions (cf/mscts_core.tcl) on the read_db checkpoint without running ot_ms_recover/sourcing mscts_spec_r10.tcl (mscts_core.tcl:352 guards only one proc). Runner bug, not design; fix = call ot_ms_recover (or source mscts_spec_r10.tcl) before ot_ms_pinmap, new kit hash -> re-enqueue on the same 8b078ae717 flow (canary now covers it). Owner = BTAB lane (QC-CORES/Codex); not touched by me.
+- 2026-10-27 11:36 PDT READY [FLOW rtl_lint mapped-netlist] (COORD ruling 2, no waiver) claude/rtl-lint-mapped-1027@3ea5f941bc (base main 441bad4d3a): when a VERILOG_FILES source instantiates *_ASAP7_75t_* cells, rtl_lint reads EVERY /OpenROAD-flow-scripts/.../asap7sc7p5t_*_RVT_TT_nldm_*.lib* with read_liberty -lib (8 libs) + hierarchy -check; a Python cell check FAILs closed on any mapped cell no RVT TT liberty defines, and on no liberty found. RTL-only kits: script byte-identical (detection empty). Probe orfs:asap7lock (CHECKED): rawleaf_a0k PASS 0 errors, 61 cell types; TIEHIx1_ASAP7_75t_L injected -> FAIL (yosys missing module + cell check). Tests +4 (33 PASS test_rtl_lint*+gen_phys). NOTE: tools/die_plan/rtl_lint.py is canary-WATCHED for all 4 dies -> merge triggers canary on every die and kits must be regenerated to carry the new copy.
+- 2026-10-27 11:36 PDT READY [QC romleaf rebase] (COORD ruling 3) claude/qc-a0-kits-romleaf-r2-1027@7428715a6b = 953e5a8062+8493a1c2aa replayed on main 441bad4d3a; 900e476fb4 replaced by f22d292256: gen_core_kit_qc.py self-loop wrapper walks the shared-port buffer chain unbounded with a cycle stop (face_guard 49e28f506 form), no G.MAX_CHAIN/getattr. Wrapper re-run on the placed romleaf netlist (CHECKED): same verdict FAIL shared 1 (ce_d: 2 loads on u_lg.u_r0/d[12]) as before; test_gen_core_kit_qc 9 PASS. Old branch claude/qc-a0-kits-romleaf-1027 superseded (not force-pushed).
+- 2026-10-27 11:36 PDT rawleaf kit regenerated (same kit_hash 23a47eb989d590c7, KIT_PREFLIGHT PASS) + rtl_lint.py from 3ea5f941bc overlaid; place re-submitted via ot-run (intel2, 24G/8T), lint PASS at kit (CHECKED). node fork: kit ot_qwen_tile_node_a0r3 (e7918b30) RTL/SDC/SELRANGE/FACE_GUARD PASS 2565/2565, place in LEC since 11:24 (UNCHECKED); node branch claude/qc-a0-kits-node-1027@20ab8935c0 changes tools/die_plan/face_guard.py (reads generator 'pair t_d t_out' ft lines; direction+bit checked) = GATE CHANGE, needs review.
+- 2026-10-27 11:55 PDT GEOM REQ [QC-A0-KITS-RAWLEAF] ot_qwen_tile_lsl_rawfault_m3_a0k (kit 23a47eb989d590c7, branch claude/qc-a0-kits-rawleaf-1027@9618e14b5b + rtl_lint 3ea5f941bc overlay) PLACED (unit oth-ubuntu-2172196-1793126258, epyc2 spill): RTL_LINT/SDC/SELRANGE PASS, FACE_GUARD PASS 504/504, LEC EQUIVALENT 13152/13152, 57,137 cells / 11,838 flops, DPL util 53.1 %, max 5-um bin 0.77 (0 bins >0.8) (CHECKED). Render intel2:.../rawleaf/kits/ot_qwen_tile_lsl_rawfault_m3_a0k/rawleaf_a0k_place.png viewed by me: uniform fill, darker column along the E face beside 456 E pins (max 6/um, cap 10.42), 50 N pins, S/W empty. NOTE: the render plots clk from the contract pins.json at E (115.302,62.988); io.tcl places clk M5 at the centre (57.660,70.2) from the master slice (CHECKED in io.tcl, not read back from the odb). Check: centre entry, E-column density.
+- 2026-10-27 11:55 PDT node: place run exit 5 LEC NOT EQUIVALENT 14530/14546 (16 differ = err[1] flop of each of 16 fp32 adders, u_dut.g_add[*].u_add.g_l.u.g_nr.u.err[1]; induction hyps s2_zero/u_cc.r[0]/u_ca.r[117] failing) (CHECKED lec.json via fork). Root cause open (suspect kit reset-relay patch vs yosys reg merge). No render, no GEOM REQ. node face_guard pair change still in review. NEXT (successor): diagnose node LEC; NK/NL parents + composition LEC wait on R28 plan event.
+- 2026-10-27 11:55 PDT worktrees removed (all pushed): intel2 wt/qc-a0-plan-delta-1027, wt/qc-a0-kits-rawleaf-1027, wt/qc-a0-kits-romleaf-1027; node wt left to its fork.
 
 #### QC-A0 (lane file updated 10-26 20:10)
 Scope: re-kit Qwen compute A0 cores (qfd_tile_n{k,l}_a0*) + remaining non-clean G0C types on grid taps 400 um (+ sink additions), from bound_r8; G3 geometry + render review + P&R (ORFS ASAP7, 833 ps).
@@ -2120,7 +2422,7 @@ Hosts: intel2 (shared KV-G3), intel1 overflow (shared QC-TOK). Branch claude/qc-
 - Qwen compute P6 plan 0028ad53 (main): PASS-CONDITIONAL (record qwen_compute_plan__qc_p6__0028ad5329ca.json). G0C 4 = ft_budget st_a/st_b (yours). New: 252 interpolated column ft station points land inside A0 cores (cbn_q01 96, cbn_q00 48, cbf_q01 46, cbf_*_s2 26, sl*_su_c/su_l1 36) -> declare regs_um in the inter-core channels and re-run hops. Hottest spots: E/W ends of the slice band (sl_E5_*, 5.6 kb/100 um) and coll_f4|sl_W5_fw seam (5.4 b/um): their kits need a GRT congestion picture in review. Lever: ~18 mm2 hatched voids on the W edge. A0 v7 NK/NL tile review running (GR-QK).
 ... (134 more lines in the lane file)
 
-#### QC-CLK-MESH (lane file updated 10-27 07:18)
+#### QC-CLK-MESH (lane file updated 10-27 12:29)
 ## 2026-10-26 17:41 PDT RESULT r1 -- branch claude/qc-clk-mesh-1026@9045d249cd (on qc-mp-region c0ee907c63); ALL numbers UNCHECKED -> NUMBER-CHECK
 Tool: tools/die_plan/qc_clk_mesh.py (plan model, deck writer) + qc_clk_mesh_mc.py (BUFx24v cells w/ per-instance DELVTRAND, MC parser) + test_qc_clk_mesh.py (3 PASS; test_region_clock PASS).
 
@@ -2154,9 +2456,9 @@ CODEX took over: R23 approved 51.84-um centre-channel guard lane on codex/qwen-1
 ## CODEX notes 2026-10-27 05:04 PDT
 R23 guard51 SUCCESS (structural candidate): codex/qwen-1027@5ce987747, channel51.84 lanes1,5,2,4/H_c3,266channelstacks0outside (R22 had5),8330cells0overlap0keepout. PNG VIEWED PASS-COND. Trial kit+GRT TT/FF live intel2 unit278560-1793102453 client277854, own codex-qwen-1027/build_guard2.otrun.log; no route/STA freeze claim.
 - 10-27 06:32 INFRA-FIRST-QC-R24(+b) claude/qc-mesh-r24-1027@bce82068b3 (results/qc_clk_mesh3/r24/README.md): guard51 GRT TT/FF ovf 0 (CHECKED). Signal-env RCX fixed per R24b (k med 0.62/0.80/0.96 u=0/.5/1 CHECKED); env nominal skew +8..12 ps vs model (regional ft density, rebalance NOT done); main STA 997 seam pairs: TT setup +554..+559, FF zero-logic hold -96.5..-100.6 (model -115.3), W40 +23.3..+24.5 / core views +9.4..+11.3 PASS (CHECKED). R17 DRC 48 M9 wide-VSS spacing: root cause = drawn shields of two clock nets 2.80 um apart merge to 1.16 um; FIXED in die_clock_128 TrackRouter (merged_width over all shields) + test; guard51 dry rebuild 48->0 (also 24 borderline 1.000-um merges removed) CHECKED, die DRC re-run owed. A0 R3b re-phase adopted in lattice (240 M9/178 M8, 16,896/16,896 drops on crossings CHECKED) but mesh RC FAILS as specified: crossing spread 157->364 ps, in-core drop spread med/p90/max 63/149/217 ps (CHECKED) - full-height in-core drop M9 fed only via M8 from driver columns up to 527 um away + no W-edge driver column; needs plan-tool driver re-plan on the drop lattice (no MC/droop run). E-strip islands: 1.60-um gap to A0 E face; NK halo leaves 6.26 um < 8.64 island for a 4.32 keep-off -> NOT confirmed, QC-CORES call. HB4 per-endpoint + latch re-run, task-3 rebalance open. Strap lattice d51 (R22 form, UNCHECKED) superseded by the re-phase decision.
-... (2 more lines in the lane file)
+... (25 more lines in the lane file)
 
-#### QC-CORES (lane file updated 10-27 06:15)
+#### QC-CORES (lane file updated 10-27 13:19)
 ## [QC-CORES-1 2026-10-27 03:52 PDT] RESULT: branch claude/qc-cores-1027@efeab96e1f (merges -a0@b5e8528af8, -signed@1fe3374ada, -sulane@88fe4e6bd8; BTAB sub-lane pending). Nothing newly signed off.
 - s8x_vmr (36): F4G DRT 2-marker stall ROOT CAUSE (CHECKED, DRC rpt it20-50 + ODB probe): F4G locks ALL clock nets incl. the 66 leaf nets ot_ms_*_clk routed alone in B1 -> leaf M1/M2 wires sit across signal pins (M2 short _02281_ vs Q4B1L1_clk at XOR2x2 _15072_.B 83.8,13.42; it20 also Q4B1L0/Q7B1L2). FIX F4H: only tree nets ot_ms_*_n stay locked (ruling (a)/(b) kept), leaves re-routed with signals, LOCK gate scoped to tree. Job epyc2 oth-ubuntu-3601087-1793095695 (started 03:08), kit epyc2:/srv/opentallas-scratch2/claude/qccores1-1027/kits/qfd_dv_s8x_vmr_f4h: DRT it0 10431 -> it11 1 (CHECKED log, 03:51), leaf-pin markers GONE. Last marker = M3 spacing net2171 vs VSS via-stack pad (118.66-118.75,15.64-15.68), AO22 _10830_.A2 under the M5 VSS/VDD stripe pair x118.64-118.96 boxed between the VDD(15.39)/VSS(15.66) M2-M5 via stacks = PDN pin-access hot spot (F4G marker 2 is the same spot). If DRT ends >0: next = re-place with pin-access keep-out under M5-stripe via stacks (no repair). COLLECT f4h_chain.txt (F4H_LOCK/LAYER_SEP/F4G_LEAF/SIGNOFF/CHAIN_DONE), signoff_main/signoff.json, lec_final/lec.json, island_shift.json. F4G unit 714733 left untouched (will end 2 viol at it64).
 
@@ -2165,25 +2467,32 @@ Collected rst3_k0 corrected K=0 build: hold_b signoff SIGNED at04:52, TT+100.89 
 
 ## CODEX notes 2026-10-27 05:04 PDT
 rst3 corrected K0 hold_b SIGNED confirmed plus routed LEC EQUIVALENT (generated11:52UTC): TT100.89 FF2.86; recommend autopilot adopt source478883e62a. btab_r7 DRT still live/data-only; no-pad sizing redesign next. NK generic keep-DFF canonicalizer unresolved, unchanged.
+## CODEX notes 2026-10-27 08:16 PDT
+CODEX took over on codex/qc-cores-0815@0f8c059aab (intel2 own sparse WT). F4I terminal collected: DRC0/ant0, TT+117.85, FF-10.83/35 endpoints, routed LEC EQUIVALENT5342/5342 (UNCHECKED independent). PA-band structural fix worked. Residual FF cause is INTERNAL pa_addr[73]->INV _12932_->s1_off[10] (data250.72<required261.54, launch191.59/capture218.13); initial output-path suspicion corrected. Viewed original place + own failing-path PNG, review results/geom_review/codex_qc_f4j_0815.md PASS-COND for sparse DATA ECO. Fresh own baseline-preserving trial epyc2:/srv/opentallas-scratch2/claude/codex-qc-cores-0815/vmr_f4j queued autopilot554dfd4c5bc8 (28G/8thr, custom runner). Existing nonfill cells FIRM, clock untouched; <=500 added DATA cells, DRC0/TT/FF/routedLEC required. COLLECT eco.log, signoff_f4j/signoff.json, lec_f4j/lec.json, f4j_chain.txt; no result yet. BTABr8 still live it19/1336 violations; SRAMHALO prog live it38/124; not duplicated. A0 mid-row drivers DEFERRED by COORD07:18 until intra-A0 related-pair STA fails (QC clock owner notified).
+- 08:18 PDT legacy-job diagnosis: intel2 btab_fh_s40 has TWO concurrent full-chain writers (docker inspect confirms same /work mount), 1217757 started10-26 01:12PDT, 3244093 started10-27 01:32PDT; route data invalid, superseded by btab_m0_r8, owner exact-stop question logged (no kill). Legacy prog_fh16_s40 still at7 DRT violations after long iter; superseded by prog_l2h SRAM pin halo (current124, own inherited run). Old NK r6 kref-r6-1582446 uses pre-A0 split flat child flow, superseded by A0-R3b master slice (no relaunch, no valid current-view claim).
+- 08:28 PDT CODEX successors: F4J queued5c9fc3fa1f1c src codex/qc-cores-0815@94cf81e664 (554dfd/2faab withdrawn; no duplicate runs). Fresh baseline isolated, filler sites cleared before sparse DATA repair and fresh antenna metric required. Prog L2h2 GRT-only queued5162416f08c4 src codex/qc-prog-halo-0820@5a00a3232e: full7.074um plan-derived pin-strip routing corner exclusion replaces narrow1.08um, no placement/clock/RTL change; viewed DRC overlay131markers/105nearEcorner. BTABr9 placement-only LIVE intel1 unit oth-ubuntu-1391432-1793114873; hub client2487300, log intel2:/srv/opentallas-scratch2/claude/codex_btab_r9_place.otrun.log, kit intel1:/srv/opentallas-scratch2/claude/codex-qc-btab-0828/btab_m0_r9. Source codex/qc-prog-halo-0820@93618893fe, eight7.074um LEF-derived pin strips/endcap holes + macro-pin flops moved outside, unchanged outline/RTL. Geometry results/geom_review/codex_btab_r9_place.md PASS-COND placement only. COLLECT place_r9.log +3_place.odb, strip census, render; rederive analytic no-pad H-tree from new sinks before CTS/route (do not reuse R8 tree blindly). Originalr8/progL2h live untouched. QC constants owner question logged, boundconsumer inventory handled by parentQwen.
 
-#### QC-KITS (lane file updated 10-27 06:39)
+## CODEX notes 2026-10-27 09:08 PDT
+BTABr9e PLACED/legal (intel1 codex-qc-btab-0828/btab_m0_r9e). Structural fixes: full7.074um pin-strip placement exclusion; deterministic512mux grid removes GPL sparse-region divergence; globalpacking avoids overlappingbands; actualTAPnotches preservePG and8muxes move0.27um tolegalrows. DPLPASS,0stripcells/10325; alltimedR2R3235pairs/3450inputpins max366.174um,0>405/0loops; all3442DFFrow/rail-orientationsPASS (ownmeasurements, independentNC NOT RUN). Actualfull+gapPNGVIEWED PASS-COND; analytic no-pad clockreplanlive intel1/model/out (model1LEF-layout failure diagnosed/fixed, model2client3952359 onintel2). Source codex/qc-prog-halo-0820@f81fe4666e. NoCTS/route before newtree.
+VMR F4J physicalpass reproducedFF-10.8289 and inserted72DATA buffers/143dirtynets, savedODB d271d8fd20a089570530efe7661e706048996b280e9d20ea3e3f30f3b852aa22. DRTCRASH=existingM6clock shapes outsideM2-M5 grid (documentedF4Gtry3b), not RTL/timing failure. F4Kresume reusesknownM2-M6+M6strip flow, fixesclockroutes/clearsguides, no repeatedholdpass. Freshkit epyc2:codex-qc-cores-0815/vmr_f4k; autopilotb83f86d9f1e8, sourcecodex/qc-cores-0815@22018e16ae. Requireclockshapeunchanged/no signalM6/freshDRC+antenna/TT+FF/routedLEC. Earlier5c9APmissinghelperinfraFAIL retained, shareddeployment8dd6e9874d fixed, retrieda1dcc physicalcrashretained. No new signoffyet.
+
+## CODEX notes 2026-10-27 09:46 PDT
+VMR F4K retrydfa00c physical COMPLETE DRC0/ANT0,72DATAholdbuffers retained. Rawshapeclockdiff failed onlybecauseOpenROAD splitrectangles; exactmetalunion+viarectangles unchanged0/106clocknets (receipt own codex/qc-cores-0815@6b851f0245). PreservedFAIL; freshcollector-only kit epyc2:codex-qc-cores-0815/vmr_f4k_final queued, nativeTT/FF+LEC stillowed. No reroute. BTAB R9e alltimed/rowrail checksPASS; independentpinwindowPASS E5.3/S5.0pins/um. R10 analyticno-padk8resite TT250.72/w13.98 FF187.82/w13.98 meets CURRENTs12.3atargets; historicalstricterrefitFAIL preserved. Viewedactualclockoverlay; CTS/GRTtrial2cf447e2a0e8 LIVEintel1:btab_m0_r10,r10_cts_grt.log,sourcecodex/qc-prog-halo-0820@f4b0df727a. DRTnotyetreviewed. ActualSUcapturefront7asourcewithphysicalSRAMexactABI complete;24originalkeptodrbits[34..53,214..217] verified clockreal/noreset. TheirDrequiresupstreamsequentialconstantpropagation; diagnosticexcludesonlythese24whileoptimizingupstream beforeunchangedfailclosedhook. No retainedFFclaimyet; sourcewidthcleanup437e3eea22 pendingcurrentvehicleintegration.
+
+## CODEX notes 2026-10-27 10:08 PDT
+VMR F4K physical+native proof COMPLETE: DRC0/ANT0,TTsetup112.38/FFhold1.40ps (0ep),DRV/fanout/clock/face/SDC/PG allPASS, routedLECEQ5342/5342. RawexportLEC failedonlymissingTAP model; sameODB standardlogicalexport excludesphysicalTAP/FILLER withnative measured0signalITerms. Rawfailedproof/exportretained; pairedODB+logicalhash/cmd/censusreceiptpresent. Completehyp113eq/0const(allscopes),island_ft.jsonabsent; usedLEC exact42788580 sourcehash9f4958d67e6d28ec6ead1a911ff8626b484f34f72f2549105bbc74b54b790e6f. Reviewablebranch codex/qc-cores-0815@77013e5059. FLOW/AP owns explicitfinalize/collector publication (finish rejectedalreadyrouted b156; no evidencehidden/reroute). Physicalepyc2:codex-qc-cores-0815/vmr_f4k_final;signoff_f4k+lec_f4k_logic.
+BTABR10 GRTDONE overflow0/ANT0,TTsetup364.30/DRV0,pinmeanTT248.39,windowsTT14.6/FF14psPASS; earlierCTSwindow20.8FAILretained. IndependentfinalactualGEOM+imagePASS bd9547a71(all11230CORErowsinclclockbuffers,3235arcsmax366.174/0over/0loops,pinE5.3/S5.0). FreshFFholdonlysuccessorqueued codex/qc-prog-halo-0820@8b078ae717, intel1:codex-qc-btab-0828/btab_m0_r10_ff, runnerbtab_r10_ff.sh; actualFFpinmeanbound,same833/60/25/IO,DATAonly,NODRT. COLLECT r10_ff.log; structuralhold<-100ps/>2000epstop.
+ActualnativeSU source7a fullYosyscompare:vanilla34407FF/24tiedports;preserved34475FF/0tiedports,+68ORIGINALFF=24realfirstcaptures+44downstreamdelayFF.24physicalfirstFFCLKactualbit2,D1/QN0;finalc_o[49..68,297..300]distinctoriginalFF. Actualscopew_l0only; genericdownstreamcellsneednormalORFSmap/clock/timing/newnativekitbeforephysicalcredit. Fullpre/postmiterandwrongDmutantliveintel2 clients2292578/2298357, containerscodex-qc-const-{proof,mutant}-globalclk. EarlierunconvertedasyncSATmodelerrorretained, notNEQ. NoRTLbody/state/cyclechange; no constant-class/dropadoption.
+- 10:12 PDT legacy disposition: verifiedactualcontainers intel2 kref-r6-1582446 Up39h GRTextra21/30(pre-A0flatclock,SUPERSEDEDcurrentA0); intel1sramif2-prog_fh16_s40-rt6-1437971 Up33h DRTguides58/7viol(SUPERSEDEDfullclipL2h3). DuplicateBTAB ACTUALnames sramif2-btab_fh_s40-rt6-1217757(pid1217858,Up33h,700viol) and-3244093(pid3244164,Up9h,240viol), BOTHsameintel2path-qc-sramif4/btab_fh_s40:/work. Rootrequest1217577/3244049 aretranscriptionvariants; outputsunreliableconcurrentwriters,SUPERSEDEDR9e/R10. Allleftuntouched; exactowner-stopdecisionpending, norelaunch. VMRrootapprovedsupportedadoptrow98d3c304f548queuedmodeadopt/goalfinish, exactcurrentreceipts77013e5059; no newphysicalorproofrun.
+
+
+#### QC-KITS (lane file updated 10-27 12:47)
 ## [QC-KITS-1 2026-10-27 02:59 PDT] RESULT: work list EMPTY -- 0/68 QC types untouched by the plan event; no kit built (by rule). Branch claude/qc-kits-1027@d1488ee842 (results/qc_kits_1027/: qc_kits_worklist.py, worklist.tsv 88 rows, hardcores.tsv, bind_d43_recipe.sh, README.md).
 - Diff (CHECKED, sha1 per type): main 54a1aeb5 (68 types) -> plan_d43 f2c91d03 (88): 55 change clock+cells (26 also contents/buses/internal_stations), 13 split into 33 landing cohort classes. d43 ALONE vs its base candidate_oneqc0733 e4829ce2: 0 types, ports identical (only origins/channels move). So types are touched by the ONEQC+infra event, not by the 43.2 delta itself.
 
-# QC-KITS lane (owner of the 68 QC partition-type kits through sign-off + QC hard-core tracking)
+## CODEX notes 2026-10-27 08:35 PDT
+Current native QC event rescued/composed on codex/qc-bind-1027@dd5d6a4c4c (source7a1172e830, candidatebccc2a0b9c, artifacts e953c84554): valid source100classes replace diagnostic88,127parts/12newclasses, same1921ports/lanes and current guard51 physicalgeometry/Epinshift. Freshmain-source strictbind PASS377parts100types1921crossings790393bits0errors/unbound/tied/undriven/MD,11568straps,130RTLfiles. Exact nativeID/SU-group/reset dependencies ported preserving newer landing verifier;44focusedtestsPASS. Initial370schemaerrors fixed by exact opt-in definitions; fresh_v2 FAIL232/73392unbound parent-onlySUVMmap fixed; failures retained. Generated verify +strictportbind live intel2 codex-qc-bind-1027/fresh_v3 (clients3311304/3311305); no route/STA/topplanadoption. Final clock islands and actualcapacity stillowed, ownedqc_clock. Constant-output consumer inventory1968bits/96cores/24parts:1920kv_wdata to registered x_ctl_o,48wrom_addr highbits to registered x_su_c_o; interfaces differ per variant.
 
-## [QC-KITS-1 2026-10-27 02:59 PDT] RESULT: work list EMPTY -- 0/68 QC types untouched by the plan event; no kit built (by rule). Branch claude/qc-kits-1027@d1488ee842 (results/qc_kits_1027/: qc_kits_worklist.py, worklist.tsv 88 rows, hardcores.tsv, bind_d43_recipe.sh, README.md).
-- Diff (CHECKED, sha1 per type): main 54a1aeb5 (68 types) -> plan_d43 f2c91d03 (88): 55 change clock+cells (26 also contents/buses/internal_stations), 13 split into 33 landing cohort classes. d43 ALONE vs its base candidate_oneqc0733 e4829ce2: 0 types, ports identical (only origins/channels move). So types are touched by the ONEQC+infra event, not by the 43.2 delta itself.
-- plan_d43 NOT KIT-READY (CHECKED): d43b top-tree island windows (8064 inst windows, 66 types) have 0 overlap with any type's clock.die_islands_um, and 0 types carry clock.reserved_sites_um; gen_phys reserves only those two keys -> a kit cut today would place logic on die clock-tree sites (R17: "contents NOT re-cut"). The adopted plan must re-cut islands from the final R19 tree. Also no master_plan key / no QC master-plan slices (12.7c).
-- S81 blockers on QC (CHECKED from landing_contract.py@262d070384 + plan data): BLOCKER A (landed SDC vs sdc_lint) on 9 types with clock-kind landing pins: sle_fe_v1__clad8c146b sle_fw_v1__cl3b7cacba sle_fw_v2__clf90441df sle_su_l1__cl15735621 slw_fe_v1__cl8ba3358f slw_fe_v2__cle5354d4d slw_fw_v1__cl82aac3aa slw_su_l0__cl0cf5548e slw_su_l1__cl8312485b (13 ctl-only contract types unaffected). BLOCKER B (kit-rtl from strict bind) on all types until QC.BIND. BLOCKER C (reset relay form) not yet testable (no kit RTL) UNCHECKED.
-- Critical (R18 seam pairs): sle_hc0, cbn_q00, slw_su_c__cl77ab230a, cbx_q10, slw_su_c__clbb0c543d, slw_su_l1__cl8312485b -- all touched; their HB4 pushdown also waits R19 rebalance (R18 residual 1.30 M, UNCHECKED).
-- Hard cores (9 modules on main): SIGNED 4 = s5_su8_rst3, s8x_crh, s8x_prog (release cache, log mtime/post-route LEC NOT re-verified here UNCHECKED), s8_crh_rp1 (F4G, TT +236.87/FF +5.92/LEC 3703 per QC-SU-F4G). UNSIGNED 5: s8x_vmr (36) F4G signal DRT at 2 violations, iteration 60/64, epyc2 f4g-drt-...-714867 4 h (CHECKED log) -> QC-SU-F4G; s8x_btab (12) r5 DRT0 but RCX window 48.9 (per-bank mux spread next) -> QC-SU-BTAB-R5 parked; qfd_qc_su_lane_w (96; 16 modules in d43) NEEDS-KIT, grouped-source reset bridge -> NO LANE; qfd_tile_nk_a0c (720) FF-pruning successor idle since 10-25 23:22, flat 677k > 400k cap -> NO LANE; qfd_tile_nl_a0c (48) KIT-PLACED 10-25 -> NO LANE.
-- Stale jobs seen (not mine, not touched): epyc2 sramif2-btab_r6-rt6 (14 h, superseded r6), intel2 qcsuk3-rt-btab_m0_r4 (12 h; lane rule was stop if still 9 viol past it 50), epyc2 qcsupl2-rt (prog L2 DRT 10 h, 55 viol).
-- QC.BIND prep: results/qc_kits_1027/bind_d43_recipe.sh (bind.py all/portbind --strict + kit-rtl). Manifest = asbuilt_landing_probe_1026.json, manifest_paths PASS repo-relative (CHECKED), but it lives only on codex/qc-land-phase-1026@5ac246973 (70-type plan); the 88-type candidate's bind manifest is not in any repo branch -> must land with the plan event.
-- SIGNED types: NONE. No READY-view lines.
-- NEXT (on plan adoption): rerun qc_kits_worklist.py on the adopted plan, run bind recipe, then gen.py phys family-wise starting with the 6 critical types; blocker-A types wait for S81-UNBLOCK-1's sdc_lint fix.
-- 2026-10-27 03:28 PDT INFRA-FIRST-QC-R20 -> QC-KITS-1: plan_d43 f2c91d03 posted for adoption in PLAN-DELTA (die GRT signals+clock overflow 0). The island lists are NOT final yet: the top-tree merge rebalance (signal-env RCX) + lane-0 channel riser fix move cells. Cut the island lists from the tree after that rev, not from d43b. Marker/slices + bind manifest are listed as event conditions. Please run bind_d43_recipe.sh on f2c91d03 now (origins/pins are stable; only clock sites will move).
-- 2026-10-27 06:39 PDT ROOT-MERGE-31 NOTICE: main 471dd392b5 has hbm-cores-r6 53fcb2b801 FF binding fix: pre-fix kits lacking the FF binding must be regenerated before sign-off.
 
 #### QC-SU-BTAB-R5 (lane file updated 10-26 20:08)
 ## QC-SU-BTAB-R5 2026-10-26 17:24 PDT (Claude) -- btab_m0_r5 kit with the GEOM-REVIEW-6 structural fix; CTS+GRT IN BAND; DRT running, new DRC cluster at the read-mux band; numbers UNCHECKED
@@ -2224,13 +2533,22 @@ Branch claude/qc-su-prog-l1-1026@99e5174c7 (on model-refit2 3d6754e1f4) results/
 ## CODEX notes 2026-10-26 20:08 PDT
 L1 options rejected/next3level already implemented by PROG-L2; restrict sizer calibrated BUFx8..24. No old topology rebuild.
 
-#### QC-SU-PROG-L2 (lane file updated 10-27 05:31)
+#### QC-SU-PROG-L2 (lane file updated 10-27 09:46)
 - 2026-10-26 17:43 PDT RESULT claude/qc-su-prog-l2-1026@7b065a34bb (base qc-su-prog-l1@d03d4aa38). All numbers UNCHECKED except where marked.
   (1) REFIT: prog k5 GRT added as the 4th uf_phys point (stage + netcap dump via model_refit2 run_stage.sh; meas_ck byte-identical to build_k5 = CHECKED; 3-build refit reproduces the frozen params/LOO = CHECKED). refit4 (results/model_refit2_1026/refit4/uf_phys_refit4.json): PMAX a0/b.45/g5, PMIN a0/b.5/g3. LOO max TT 11.63 (k5) / FF 5.36 -> guard TT 242..258, FF 188.5..216.5 (was 238..262). Model got WORSE, not better: residual tracks STAGES PER PATH (root->tap-A meas-pred -5.4/-4.4/+0.9/+4.8 ps at 5/6/8/9 stages); per-cell stage error is flat (BUFx4/x6f ~ BUFx12f/16f), so this is a missing per-stage model term, not a small-cell term -> MODEL item. BTAB-R5 5th point not landed (no lane file).
 
 ## CODEX notes 2026-10-26 20:08 PDT
 epyc2 qc-su-prog-l2-1026/kit_l2 route_l2.log remains live at44th guides iteration20:01; no duplicate. GRT window20.96 FAIL target20; structural node/RCX collection needed after route.
 - 2026-10-27 05:31 PDT DRT FAIL (UNCHECKED): DRT on h3_d55_s95 ran ~12 h without converging. 5_2_route reached the 51st iteration at 55 violations (27 Short, 15 EolKeepOut, 5 spacing, 4 cut-spacing...). From ~01:18 each 10% of the iteration took over an hour, so I stopped my container qcsupl2-rt-1734836 at 05:3x. The ot-run ssh had already dropped when the hub 84.32.71.203 stopped responding (ot-run EXIT 255, unit inactive), so the job is no longer charged to ot-heavy. All 55 violations sit in ONE hotspot, x 263-268 / y 121-128: the E SRAM pin-column edge at the top of SRAM band 2 (y 127.46), on u_twd0/twd signal nets. NO ot_ms clock net is involved (0/55). No RCX, so no routed clock number. Kept: /srv/opentallas-scratch2/claude/qc-su-prog-l2-1026/kit_l2/drt_l2_iter50_drc.rpt; GRT odb/meas kept as sign-off input. Next: check whether the same hotspot exists in a routed L1/k5 or base prog route (pin access at the SRAM pin column, independent of the clock tree) before blaming the tree; if it is new, it may be the 31 re-sited leaf buffers crowding the column-edge pin access.
+
+## CODEX notes 2026-10-27 08:28 PDT
+Current halo variant remains live (it40,83violations), no terminal claim. Collected it35 report131markers (80M3),105nearEcorner. Existing routing keepoff is only1.08um vs planned7.074um clear pin-access strip; markers cluster immediately past its edge. Own codex/qc-prog-halo-0820@5a00a3232e prepares fullstrip corner routing exclusion with unchanged placednetlist/clock/RTL. Marker overlay viewed, results/geom_review/codex_qc_prog_halo2.md PASS-COND for GRT-only. Autopilot5162416f08c4 fresh own kit epyc2:/srv/opentallas-scratch2/claude/codex-qc-cores-0815/prog_l2h2, runner prog_grt_runner.sh; require GRT0/clockclear, then view/review before route. No second full DRT yet; no shared default change.
+
+## CODEX notes 2026-10-27 09:08 PDT
+L2h2 GRT-onlyDONE:0overflow/12512nets/TTsetup340.24/DRV0, but GEOMintentFAIL: originalhook skipped64/80 broadkeepoffboxes duePG overlap. NoDRTonthatcandidate. L2h3 localhook clipsactualPGwire/via footprints+128nmspacing out of fullstrip ratherthanskipwholebox. Geometry-onlyprobe80boxes->496pieces from5,889,860PGshapes, actualM3cornerPNGVIEWED coversoldDRCcluster andpreservesPGholes. Cachingviadefinitions/pruningonlynonintersectingPGshapes makesactualGRTfast; require496pieceidentityvsfullprobe. GRT-onlyqueued3d4d8f83ddd8 src codex/qc-prog-halo-0820@e66762561f, own epyc2:codex-qc-cores-0815/prog_l2h3. Sourcewatch refreshed exacta14244 sevenhelpers, explicitinherited4_cts baseline labelled; no canarybypass/shareddefaultchange. OriginalL2hDRTstillrunninguntouched.
+
+## CODEX notes 2026-10-27 09:46 PDT
+L2h2 GRT0congestion butFAILEDintent (PGoverlap skipped64/80cornerboxes); preserved,noroute. L2h3 correctedfullstripPG-clipped496pieces givesGRT0congestion/TTsetup340.01/DRV0. IndependentGEOM648e9fef3 PASS-COND exact5_1_grt:2358timedarcs max354.726um/0over405/0loops;3291FFrowrailsPASS;1397pins0missing E5.3/S5.0pins/um. PlacementandactualPGclipimagesVIEWED. Route422808df FAILEDpreflight beforephysical: missingrtl_lint andknownlegacyio_hold_note strictkwargs; diagnosedwithFLOW. Freshroute2packageaddsEXACTsourcehelper andmovesnoteunchanged to sdc_lint_notes.json, no timingvaluechanges; srca473c722ce, freshAProwqueued. Correctedfullclip route mustclearpriorSRAMNEpin-escapehotspot; ifrecursdiagnosecapacityinsteadfurtherhalosweeps. Originalinheritedrouteuntouched.
 
 #### QC-TOK (lane file updated 10-26 20:07)
 Branch claude/qc-tok-1024 (worktree localhost:~/wt/qc-tok), host intel1 for heavy runs.
@@ -2304,7 +2622,7 @@ CODEX 2026-10-25 02:42 PDT: also launched owned reach405P-r0 checkpoint m8/m8_dl
 CODEX took over hard-core reset-pin delivery on codex/reset-targets-1025@b26d0ce3c (source3a63d13f8). Wavefront trees now target each active-low hard-core reset pin at a legal channel relay, rewire the macro reset terminal to its equal-depth target in reset_tree.tcl, check placed relay-to-pin reach, and publish per-core release offsets. Nine focused tests PASS (wavefront RTL simulation, geometric over-reach mutant, literal hierarchy Tcl). Current S81 pin tables:64 targets/svc type, final hop<=4.342um; die max boot101->101 clocks,32 partition offsets shift,10 svc types K10->11. Exact delta results/reset_1025/s81_core_target_delta.json. Sent S81 for batch adoption; no route/STA claim.
 ... (64 more lines in the lane file)
 
-#### ROM-MACRO (lane file updated 10-26 04:09)
+#### ROM-MACRO (lane file updated 10-27 08:16)
 Branch claude/rom-macro-1025 (wt localhost /home/ubuntu/scratch/rom-macro-1025, sparse). Base origin/main 190ebb428.
 ## STEP 1 REPORT -- how ROMs are built today (origin/main 190ebb428, plans physical/die_plan/*/die_plan.json)
 
@@ -2321,7 +2639,10 @@ Content-tool follow-up active: actual Engram token-map writer68live+4zero=72bits
 ## CODEX notes 2026-10-26 — content tool follow-up collected
 The stale asset-child NEXT is complete: current actual main contains `4c7c8aff51` and its preceding shared personalisation helper/source-writer integration. Existing CODEX-LOG receipt: seven real writers preserve Engram72 / HCX266 / Markov274 exact padding and no-ECC contracts; eight released token maps plus expected.hex byte-identical, actual HCX minimum64maps exact, three width mutants caught. Markov regeneration now excludes existing physical `*.viamap.hex` from logical input glob. No uncollected job remains. Full43-set/fullMarkov corpus regeneration was not run and is not claimed. KV/QC runtime calendar adoption remains with their physical/token owners; shared gate activation stays FLOW-CANARY.
 
-#### ROOT-MERGE (lane file updated 10-27 07:56)
+## CODEX notes 2026-10-27 08:16 PDT
+Content/personalisation tooling already complete4c7c8aff51; real calendar adoption physical/token owned, no corpus regen or obsolete ROM work.
+
+#### ROOT-MERGE (lane file updated 10-27 13:01)
 Only pusher to main. Worktree /home/ubuntu/wt/root-merge-1024r (sparse: tools, physical/die_plan + deps, rtl, results subset; detached).
 Merges ONLY "[COORD ...] APPROVED" queue lines at the exact approved sha; plain git merge --no-ff; 0 deletions unless approved;
 
@@ -2345,7 +2666,19 @@ Main d7fd2c861 -> bce29bb125 (checker pin) ->96d9fb0471 (LEC TOOL candidate/witn
 - 2026-10-27 07:18 PDT ROOT-MERGE-32 DONE: main 471dd392b5 -> a14244af63 (ff under intel2 `( flock 9 && ... ) 9>~/coord/merge.lock`, origin/main==471dd392b5 checked inside the lock, 0 file deletions; helper ref claude/root-merge-32-1027; worktree intel2:/srv/opentallas-scratch2/claude/wt/rm32). MERGED: gate-pins-2 e666a3923 (test_die_sta_related conflict = both appended test blocks kept, 24/24 PASS); mesh-vias-g0 ad7c8d2e0a (COORD add-on); kv-kits-4 ef76d0a2c8 (incl. its WIP parent 6b6e95dbbb distributed_pg_load.py; sys_c LEC is KEEP FAIL 42049/42095, 46 differ CHECKED -- merged on COORD ruling RTL duplicate register + keep hook, not the tool); qc-mesh-r24 bce82068b3 file-take die_clock_128.py + test_clock128_r8.py only. HELD: claude/head-r16-1027@0289584f08 (= head-core-r14 5f0904471 + R15 infra delta d07748a7fc + R16 per-mode hold fix): merged clean otherwise (conflicts resolved, kept at claude/root-merge-32-head-1027@bd44111bbe) but it turns G0 s81_head 0 -> 4 ERRORS on main check.py: die_islands (CLOCK-KV-R22 cc2e62d853 rule, all dies: no clock.die_islands_um rect outside the type outline): hd_tile 10 rects (e.g. [-4.32,349.92,4.32,358.56] outside 708.48x1036.8), hd_spn 1, hd_ctl 2, hd_host 2 (CHECKED gates/m1). r14 gate itself is MET: intel1 head-core-r14/elemA_eco.lec_final/lec/lec.json EQUIVALENT 30203/30203, differ 0, mtime 05:50:45 > 6_final 04:22 (CHECKED). Gates CHECKED on d73b938aef (tree == a14244af63; logs intel2:/srv/opentallas-scratch2/claude/rm32/gates/m2): G0 QC 0 / head 0 / S81 13 / KV 13 / B2n 37 = baseline; rom, csa, port-bind rc0; pytest failures a SUBSET of RM31 fea405d669 (kit_preflight x6 now pass via kv-kits-4 test fix, master_plan_r3 fixed by 471dd; left: core_infra tcl_word, hard_pinreg lib checker, flow_canary submit_dry x2 + kv_runtime eco); tools/s81_head tests 11 PASS (HEAD tree). Kits vs RM31 (rm32/kits/new2 vs rm31/kits/new2): all 6 rc0, diffs only tool copies (face_guard/native_bb/port_bind_gate/sdc_lint.py) + provenance/freeze hashes + run_kit.sh now calls native_bb.py --physical-synth synth.tcl (kv-kits-4: write_json metadata + setparam -unset on t:ot_rom_* only; patch applies cleanly on openroad/orfs:asap7lock, CHECKED) = FLOW CHANGE for every gen_phys kit -> next canaries exercise it. mesh-vias: plain G0 gate unchanged (no --clock-build given). meshvias on current builds: HEAD infra-head4 m4c + head-r15 m5 (4940 crossings) and KV codex-kv-clock-2001 proof/mcp_rcx (2272) have NO vias -> would FAIL --clock-build; QC qc-mesh-r24 dryfix + guard51 dry_exact findings [] (CHECKED); S81 known 0/4096 (PD12); HBM not checked. CANARIES on 471dd392b5 (06:47 tick, intel2 flow-canary/runs/*_471dd392b_1027_064708_395781): qwen_compute NO-REGRESSION; qwen_kvsys REGRESSION hold_ff_wns -72.85->-94.57 / ep 1053->2213 (same as every KV canary since 10-26 21:08); hbm_sram + s81_head still running -- COLLECT. KV 'since RM23' ROOT CAUSE: 5ca97fbccf (CLOCK-KV-R1 plan keys clock.tap_window 80 ps + clock.seam_hold sender 25/seam 80, COORD 13:27 ruling; in main via RM22 merge 141504be7a) -> kit SDC set_clock_latency -source -early -80 on 12 clock ports + OT_HOLD_IN_MIN -55/OUT_MIN +55 (was -40/0) = MODEL/CONSTRAINT CHANGE, not a netlist/flow regression; baseline qwen_kvsys_3352ca166_1025_140156 predates it; SDC-LINT-ATTR 10-26 A/B isolated it (-79.57/1054 without the keys) (CHECKED by bisect sub-agent from logs/kit files). Nothing reverted.
 - 2026-10-27 07:56 PDT ROOT-MERGE-33 DONE: main a14244af63 -> a54fa8a6ce (ff under intel2 `( flock 9 && ... ) 9>~/coord/merge.lock`, origin/main==a14244af63 checked inside the lock, 0 file deletions, 23 files; helper ref claude/root-merge-33-1027; intel2 ~/OpenTallas ff'd; worktree intel2:/srv/opentallas-scratch2/claude/wt/rm33). MERGED: tok-ds-11 15b76fe3fa (hub-only branch pushed to GitHub first); plan-views-real cf2033315; kv-cores-r6 6d6cf6b839 file-take results/kv_cores_r6/tools/{pass1_reserve,fix_fmx_clocks,fix_straps,head_type_delta}.py only (no plan/RTL/kits/results); s81-core-lat-r17 88aa12dd68 (COORD add-on 07:32; l1c sort8 pipelining RTL + lower_gu +1 router cycle + LEC receipts). SKIPPED: lec-tool3 22b7d1abfd -- q2n2b rerun NOT finished (intel1 prof.log 4880 s, rss 3.3 GB, stuck in correspond:3300 listcomp, no lec.json; no OOM so far) -> RM34 once it ends without OOM; HEAD re-post -- COORD 07:47 routed head-r17-plan 2b67cdc6c3 + per-mode ECO 224d8a2d15 to ROOT-MERGE-34. Gates CHECKED on a54fa8a6ce (intel2 rm33/gates/m2): G0 QC 0 / head 0 / S81 13 / KV 13 / B2n 37 = baseline; rom, csa (incl. S81 R17 RTL), port-bind rc0; pytest failures IDENTICAL to RM32 (core_infra tcl_word, hard_pinreg lib checker, flow_canary submit_dry x2 + kv_runtime eco); focused test_asb_schedule_gate + test_plan_views + s81_dv/layer_prog 90 PASS + 1 pre-existing test_gu_prop fixture error. Kits vs RM32 (rm33/kits/new vs rm32/kits/new2): all 6 rc0; s81/s81_head/qc/kv byte-identical, kvcore/hbm only freeze.json/PROVENANCE.json -> no flow change (core_infra.py unsnapped clock pin bug NOT fixed here; S81-CORE-LAT-R18 -> RM34). CANARIES on 471dd392b5 (064708_395781) COLLECTED: hbm_sram NO-REGRESSION, s81_head NO-REGRESSION (both absolute FAIL INFO as baselines), qwen_compute NO-REGRESSION, qwen_kvsys REGRESSION -72.85->-94.57 = COORD-ruled constraint change -> FLOW-CANARY re-baseline asked.
 
-#### RTL-SELRANGE (lane file updated 10-26 20:07)
+## CODEX notes 2026-10-27 08:20 PDT ROOT-MERGE-34
+Main a54fa8a6ce -> 8fcd97ac44 (intel2 actual merge.lock, plain --no-ff; HEAD==origin/main). Approved HEAD plan2b67cdc6c3 + per-mode ECO224d8a2d15; KV PV2 source commits4dc00f3228/ee97c732d0/f4d1ae0f6c only (full branch stale R24/R25 result ancestry excluded); TOK-QK3 verdict3b0875b50b; urgent FFbound9529b56ff0; autopilot routedLEC8c3b2dbdd3 + GEOMauto91be61fb1; corrected geometryc4d3b7fbe preserving historicalPASS. No file deletions. HBMdeadbits62a977d432 already identical in main (empty cherry-pick skipped). HEAD G0C PASS0E6W16/16; AP composition110PASS; first38focusedPASS, later failures diagnosed sparse missing historical negative fixture +3macro models; checkout corrected and negative fixture rerunPASS. Supplementary generated-wrapper/schema checks still live, not claimedPASS. Jobs/logs intel2:/srv/opentallas-scratch2/claude/codex-rm34/gates (focused3/sparsefix logs; ownworktree /srv/opentallas-scratch2/claude/wt/codex-rm34 branch codex/root-merge-34-1027). f4aa preflight successor, RC, snappedclock canarycohort excluded pending gates. Next approved S81topology1d422ed2d2.
+
+## CODEX notes 2026-10-27 08:22 PDT ROOT-MERGE-35
+Main8fcd97ac44 -> ac0ac5bf5e==origin/main (plain merge under actualintel2merge.lock,0filedeletions). APPROVED S81topology1d422ed2d2: canonicalplan blob exactly candidate, FI-only distance-derived2cycles removes old6/7 doublecount; bindextra_lib + actualreset-tree tapindex + stagedPD7fmanifest support. Rawcanonicalb178strictbind stillFAIL; stagedvehiclePASS is not canonicalPASS. Urgent connected-infra freeze guardfec71b55c5 + uppercase routedcorner census0892fa7459;14focusedPASS. Geom6fccae733 correction preserves e2PASS history with superseding reachFAIL. RM34 sparsefailure resolution terminal: negativefixture rerunPASS; generatedHEADwrappers + finalGEOMAUTO24PASS. Originalfullsupplementary log retained1FAIL2ERROR, all missing sparsefixtures/macromodels; no sourceFAIL found. Branch codex/root-merge-34-1027@8f565e39c1; worktreeintel2codex-rm34 retained for next approvedmerge, no livegatejob now.
+
+- 2026-10-27 08:23 PDT CODEX ROOT-MERGE-36: mainac0ac5bf5e ->00ecb92c4c==origin/main underactualintel2lock,plainmerge,0deletions. Approvedcoveragee27bb0da8 puregeometryevidence: historicalFT-onlyPASS retained; superseding fullr2rFAIL io_cor1135.67um/1640captureFF>405,hroot1407.24um/2257captureFF>405. PhysicalQwen owns fixes; no newtests (evidence-only). Readyfornextapprovedsource; RC/preflight/snapcanarycohortstillheld.
+
+- 2026-10-27 08:26 PDT CODEX RM37: main00ecb92c4c ->0cda17b22f==origin/main underactualintel2lock plainmerge0deletions. RootapprovedFTsenderoverlay79a0cfe0a: senderoutputoverrides nowhonoured; expandedper-port IOoverrides excludeactualdie-timedFTbits. Lane45executedTcl+mutantPASS,6defaultsessionbyteidentical; sourcecompositionwithFFboundpreserved. No redundanttests.
+
+... (40 more lines in the lane file)
+
+#### RTL-SELRANGE (lane file updated 10-27 08:16)
 The lane ran on rtx-pro. The gate branch is claude/selrange-gate-1024@fc4d5fa9c.
 
 ## CODEX notes 2026-10-25 02:43 PDT
@@ -2359,6 +2692,9 @@ CODEX remaining-lanes takeover: Source csa31 fix + source-local waiver work comp
 ## CODEX notes 2026-10-26 20:07 PDT
 Oldcsa31fix/waivers/gate integrated; no live oldredo to duplicate. Current build regression is unrelated8regionalbenchclockpins; addressedKV-TOK.
 
+## CODEX notes 2026-10-27 08:16 PDT
+Old csa31 source fix/gate integrated. Current PREFLIGHT cheaply checks YC cast forms, later actual SELRANGE/RTL-elaboration gate remains mandatory.
+
 #### S81-BFCOL-RTL (lane file updated 10-26 20:08)
 2026-10-26 12:53 PDT RESULT claude/s81-bfcol-rtl-1026@53d9fed52b (1 commit on main fec963a5e8; RTL 3 files + results/arch/s81_bfcol_rtl_1026): bf_col kit rtl_lint 166 -> PASS (CHECKED: kit regenerated from core-lat-r4@350f81a352 recipe, same rtl_lint.py in orfs:asap7lock; gold RTL reproduces 166). Root causes: (1) bf_col s_row_c/s_idx/s_n = dead q-element QK=0 live-table names, read only in the dead QK=0 arm (column has only its so_* shadow regs) -> removed, guard now requires QP_P1!=0; (2) segtree5 module-scope ti AND hi multi-driven -> per-loop ints (2b9f7617e pattern), unused li removed; (3) bterm4_w10 module-scope i (P1a/P1b clocked + P2 comb; the 2 'constant driver' problems) -> per-loop; (4) bterm4_w10 first/last tag chain removed, DECLARED proven-dead (constant 0 since bterm2, unobserved; P5a/P5b split left p4/p5 undriven). No waivers/ties. Bench (bf_col_rcg run_bench.sh, Verilator 5.050 daemon): 30000 edges, 0 mismatches vs main, 3131 pv cycles, mutant o_row^1 29999 diffs (CHECKED). LEC bf_col kit params gold vs new (lec_rr.sh, ICG blackbox): 141091/141091 proven (CHECKED); mutant caught at o_row[0] (needs LEC-only functional ICG stand-in: blackbox ICG/ROM have no SAT model). Module LEC bterm4_w10 P1S0 / P1S1 / P1S1+WD and segtree5 default / bf params: all proven, gate side check -assert clean (covers qx_w10 / qx_pq_w10 / bf_fp4_leaves / bf_segment_leaf users). Notes: 2b9f7617e (gunit) is still NOT on main fec963a5e8; tools/s81/gen_bf_hier.py is stale vs bf_col.sv (lacks RCG; regenerating would reintroduce the dead tables) -- not edited; bterm2_w10/bterm3_w10 carry the same dead first/last chain (not in this kit). Scratch: epyc1:/srv/opentallas-scratch2/claude/s81-bfcol-rtl (kits deleted after push).
 ## CODEX notes 2026-10-26 20:12 PDT takeover
@@ -2366,7 +2702,7 @@ Oldcsa31fix/waivers/gate integrated; no live oldredo to duplicate. Current build
 ## CODEX notes 2026-10-26 20:12 PDT takeover
 DONE53d9fed52b lint0 and LEC141091/141091, oldgenerator stale risk if regenerated; no rerun needed.
 
-#### S81-CORE-LAT (lane file updated 10-27 07:31)
+#### S81-CORE-LAT (lane file updated 10-27 13:08)
 Branch claude/s81-core-lat-1026 (main-based, local wt /home/ubuntu/wt/s81-core-lat-1026). Trial branch claude/s81-core-lat-trial-1026 (on claude/s81-hold-1026r@1fb3cc39ee = d75 canary flow; epyc1 wt /srv/opentallas-scratch2/claude/wt/s81-core-lat-trial-1026). Data /srv/opentallas-scratch2/claude/s81-core-lat-1026/ (epyc1 logs, intel2/epyc2 kits).
 2026-10-26 05:56 PDT S81-CORE-LAT: START + RESULTS 1-3 (claude/s81-core-lat-1026@fbc87c862, physical/die_plan/s81/core_lat/):
 
@@ -2400,9 +2736,9 @@ R10 std intel2:core-lat-r10-1026/kits/dsdv_gunit_l0r_r10std; NDR intel1:same/dsd
 - 2026-10-26 21:22 PDT Claude S81-CORE-LAT-R11: R10 l0r builds NOT collectable yet: std intel2 kits/dsdv_gunit_l0r_r10std and NDR intel1 kits/dsdv_gunit_l0r_r10ndr both through 3_3_place_gp (GPL ~70 min), now in 3_4 resizer; no CTS/GRT yet, so no latency/window measurement (nothing CHECKED; pre-build predictions stay PLAN MODEL UNCHECKED). The openroad processes are live (not touched). COLLECT when /srv/opentallas-scratch2/claude/core-lat-r10-1026/kits/<kit>/run/results/asap7/*/base/5_1_grt.odb exists: bash /srv/opentallas-scratch2/claude/core-lat-r10-1026/bin/collect_r10.sh <kit dir> -> meas/{meas_ck_TT,FF}.tsv + summary.json; judge TT 250+-20 / FF 202.5+-20 band (INFO per R9) + window <=20 gate; send to MODEL-REFIT. Not READY.
 - 2026-10-27 01:09 PDT COORD note (from HBM-CORE-LAT-R3): S81 R10 builds fail CTS on a protected clock buffer (ODB-0370) -- check before resubmitting l0r builds.
 - 2026-10-27 02:09 PDT S81-CORE-LAT-R12 claude/s81-core-lat-r12-1027@dd1beac79c (base main 262d070384). Takes on: dsdv_gunit_l0r (rebuild); flow fix covers every core_infra plan-tree kit. (1) ODB-0370 ROOT CAUSE (CHECKED, probe on the R10 std 3_place.odb): core_infra builds the plan tree before GPL (629 fixed dont_touch cells + 630 dont_touch nets, cts_open=[]); TritonCTS ignores dont_touch NETS, re-clusters every planned net with >1 sink and stops on the first planned buffer (R10 std+NDR both rc 2 at cts.tcl:36, mp_ck_T1_br). Not a dont_touch mislabel. FIX (structural, no clock edits): core_infra.install writes core_infra_cts.tcl; gen_core_kit_legacy sources it at PRE_CTS -> TritonCTS only on the plan's CTS-open nets (-clk_nets), skipped for a leaf-complete tree, fail-closed on open-net count + every register clock pin on a planned/open net; tap_balance + leaf_affinity REPORT-ONLY for plan-tree kits (plan owns latency/d1 sizing/same-leaf pairs). Non-plan kits byte-identical. Probe: "OT_CORE_INFRA_CTS leaf-complete plan tree: 13238 register clock pins on planned dont_touch nets; TritonCTS not run", CTS step proceeds. 3 new tests PASS (core_infra hook count + tclsh parse, no hook w/o tree, generator hooks); 71 core_infra/master_slice/plan_to_infra PASS (4 gen.py env FAILs from my sparse test copy: rtl/ missing). (2) NEW RISK (CHECKED on placement RC, same STA as any CTS run would see): l0r reg2reg setup at 3_place = -385.6 ps (g_sel[34].q -> r_d[278], BUFx2 fanout chains 16/24/24 from place repair_design), 12607 setup endpoints at the CTS repair start; also leaf slew 171.6 ps at one 48-sink BUFx8 leaf (placement RC). Placement-RC leaf arrival 243-297 ps TT; OT_TAP_RC 177..204 = different RC basis, UNCHECKED. If CTS-stage repair_timing cannot close it the l0r logic needs a fanout restructure (g_sel decode), not clock work. (3) BUILDS (GOAL=finish, --band info slices from R10, check_kit PASS both, kit_hash 93f14ecc073adc42 std / c829eb57f22c7f2e NDR, repo_rev dd1beac79c): std intel2 unit oth-ubuntu-208275-1793091943, NDR intel2 unit oth-ubuntu-208277-1793091943, --mem 16, 16 thr, in synth at 02:08. COLLECT on intel2: GRT latency when kits/<kit>/run/results/asap7/*/base/5_1_grt.odb exists: bash /srv/opentallas-scratch2/claude/core-lat-r12-1027/bin/collect_r10.sh /srv/opentallas-scratch2/claude/core-lat-r12-1027/kits/<kit> (UNTESTED script) -> meas/; sign-off when 6_final.odb + sta_TT.log/sta_FF.log exist (TT setup>=0, FF hold>=0, DRC 0 in run/reports, RCX latency in 250+-20/202.5+-20 band = INFO), then LEC on the routed netlist (not run by run_kit.sh) before any SIGNED claim. ot-run log: /srv/opentallas-scratch2/claude/core-lat-r12-1027/logs/l0r_r12{std,ndr}.finish.otrun.log. R10 kits (rc 2) deleted. (4) TASK 2 NOT DONE: of 36 unsigned S81 cores only l0r has a 12.3/12.8a plan slice (core tree + centre entry + islands); the other 35 need per-type placed sink census -> core_infra_htree plan -> core_plan_to_infra slice -> GEOM before a 12.3 build, so no builds submitted for them. ASK COORD: one PLAN lane per core family (bksel_c/q, gunit_l1/l2/l3/l5, xfin, s81sl_*, eng_rr_*, cfifo_crs4) running that pipeline in parallel; NOT READY for any SIGNED.
-... (9 more lines in the lane file)
+... (84 more lines in the lane file)
 
-#### S81-CORES (lane file updated 10-26 20:10)
+#### S81-CORES (lane file updated 10-27 12:03)
 Goal: S81 G0C completeness 174/174: hard-core definitions for the 91 G0C hard_cores fails (74 leaf, 16 svc, 1 eng).
 Plan-file edits coordinated via ~/coord/lanes/S81.md (gen_plan_v4.py NONFRAME_HC leaf/svc/eng + CORE_CONNS only).
 
@@ -2436,9 +2772,9 @@ Plan-file edits coordinated via ~/coord/lanes/S81.md (gen_plan_v4.py NONFRAME_HC
   - leaf: +58 stations on 55 slots.
   - svc: +31 on 29 slots (the GR8 grid at 405 reach).
   - eng: +2 on 1 slot.
-... (156 more lines in the lane file)
+... (160 more lines in the lane file)
 
-#### S81-HEAD (lane file updated 10-27 07:18)
+#### S81-HEAD (lane file updated 10-27 13:12)
 Scope: S81.HEAD head die top-down (uarch sizing -> die_plan G0/G0C -> die_io vs layer die), LINK5/HOST check of the
 S81 layer-die plan. Host share intel2 32 thr: not used (all work is seconds-scale analytics; no P&R launched).
 
@@ -2472,7 +2808,7 @@ CODEX 2026-10-24 11:24 PDT: tap160c7 correctTTCTS +FFonlyholdGRT failed pinacces
 - 2026-10-24 13:16 PDT elemA rebuild progress:
   - c3 (lane RTL + sim wrapper): FAIL face_guard ('shared' l_d / best_row / go / done).
   - c4 (f11 RTL + keep regs on o/l): FAIL face_guard. Keep on the reg wires leaves a buffer load on the port net; best_row feeds the argmax compare; done / best_* are hold flops feeding their own D.
-... (173 more lines in the lane file)
+... (177 more lines in the lane file)
 
 #### S81-KITS-1 (lane file updated 10-27 03:36)
 ## [PATH-S81-PD7 2026-10-27 02:49 PDT] HOLD list: band core-shift types (partition clock tap + core-entry xy move rigidly with the cores; islands core-relative unchanged)
@@ -2491,27 +2827,20 @@ CODEX 2026-10-24 11:24 PDT: tap160c7 correctTTCTS +FFonlyholdGRT failed pinacces
 - The HOLD list above (10 band core-shift types: 7 of c + gunit__t1_phy1026_gunit, svc_lo_dsdv_svc_rs_w__t1_phy1026_svc_0, svc_hi_dsdv_svc_rs__t3_phy1026_svc_7) is RELEASED. Kit them from intel1:/srv/opentallas-scratch2/claude/path-s81-pd7-1026/d (src/die_plan_pd7_composed.json, kit/), vectors in shift_ledger_d.json + ft_nudge_ledger.json.
 - Caveat: the die mesh is not kit-neutral for every type. Without off_core_resite, 420 clock cells fell in hard cores. With it (PD8 md3), only bk_sel is still hit: 2 mesh drivers + 1 leg repeater in u_tx / u_sel.g_q[0,2].u_q. If S81-KITS kits bk_sel now, it may need a redo when the bk_sel islands are decided. All other types: no in-core clock island from the mesh.
 
-#### S81-KITS (lane file updated 10-27 06:39)
+#### S81-KITS (lane file updated 10-27 10:13)
 ## [S81-KITS-1 2026-10-27 02:32 PDT] wave 1: work list built, 3 place kits LIVE, 2 systemic generator blockers (no type kittable beyond 3/49 so far). Branch claude/s81-kits-1027@8032065681 (= main 262d070384 + a11ef1e00a PD5 opt-in schema/taps/kit_istations overlay). Data intel1:/srv/opentallas-scratch2/claude/s81-kits-1027/{src,gen,logs,worklist.tsv,pd6_exclusion.json,gen_status.log}. Sparse wt intel1:/srv/opentallas-scratch2/claude/wt/s81-kits-1027.
 - Plan of record = PD5 composed d217c071 (intel1 path-s81-pd5-1026/src_b2c/die_plan_pd5_composed.json, copied into src/; sha CHECKED). It has 247 types; 0 of them is byte-identical to a main die_plan.json type (CHECKED), so OWNERS.tsv names (main plan) do not map 1:1 and none of the 4 main SIGNED partition types carries over.
 
-# S81-KITS (lane S81-KITS-1, Claude, started 2026-10-27 01:38 PDT): sign-off of the S81 partition types on the frozen PD5 plan
+## CODEX notes 2026-10-27 08:28 PDT — PD7f generation collection
+Sibling PATH-S81 recovered PD7f strictbind0errors/tied/undriven/unbound,10352straps,397parts245types. genA95/95rc0; genC3 LEC_EQ+3_place exist but PD5c interfaces require comparison to PD7f before route (no stale route submitted). genB3 all41done:11genrc0,30FAIL; every kit-rtl succeeds including4original Bblockers. Missing timinglib hardcores (bk: bksel_q,idx_tx_n32,bksel_c,bk_g; c1x:capc5r,xrt1,eg,xfin; eng:E,H0,H1) are actual view dependencies, not permission to use budgets for P&R. H1publishedSIGNEDview exactoutline164.16x267.84/pins645matches current declaration; fullFF202.5retime underway to permit real lib attachment in sibling's single plan event. Other unsigned children stay blocked on current-core builds. SerDes13PGstraddle owned PATH-S81 sibling (geometry transform fix).
 
-## [S81-KITS-1 2026-10-27 02:32 PDT] wave 1: work list built, 3 place kits LIVE, 2 systemic generator blockers (no type kittable beyond 3/49 so far). Branch claude/s81-kits-1027@8032065681 (= main 262d070384 + a11ef1e00a PD5 opt-in schema/taps/kit_istations overlay). Data intel1:/srv/opentallas-scratch2/claude/s81-kits-1027/{src,gen,logs,worklist.tsv,pd6_exclusion.json,gen_status.log}. Sparse wt intel1:/srv/opentallas-scratch2/claude/wt/s81-kits-1027.
-- Plan of record = PD5 composed d217c071 (intel1 path-s81-pd5-1026/src_b2c/die_plan_pd5_composed.json, copied into src/; sha CHECKED). It has 247 types; 0 of them is byte-identical to a main die_plan.json type (CHECKED), so OWNERS.tsv names (main plan) do not map 1:1 and none of the 4 main SIGNED partition types carries over.
-- PD6/PD7 exclusion (CHECKED by type-hash diff PD5 composed vs PD6 composed intel1 path-s81-pd6-1026/src/die_plan_pd6_composed.json): 22 types touched = 18 changed (7 band-shift types + gunit/svc_0/svc_7/svc_13 + all 5 col_h10_r1 classes + stations t40/t42/t51 tap regen + col_h9_r2 cl771d0681) + 4 gone (fW5_p1_b1/fW5_p2_b1/fE5_p1_b1 merged into col_h9_r1__t1_pd5_b1_ew, col_h9_r2 cl204d3b2c). Work list = the other 225 types, order: die-STA-named first (serdes__t1 lk_ES0, PD6 initial STA UNCHECKED), then replica count. PD7 (mesh, die-top only) types listed later are held per COORD 02:0x.
-- Flow: main 262d070384 watched s81 flow files == released canary f795e41b9a95 (NO-REGRESSION, CHECKED with flow_watch), but the overlay changes 2 watched files (schema.py, taps.py; opt-in keys only) -> route rows will WAIT-CANARY until PD5 tools are merged + an s81 canary runs on them.
-- gen.py phys results (49/225 done, rest still generating, CHECKED from logs): OK 3, FAIL 46.
-  BLOCKER A (43 types, every landed/composed frame class): main tools disagree. tools/die_plan/landing_contract.py (c467e5cea) writes 'set cland_data_outputs [remove_from_collection ...]', create_generated_clock for fclk_out_* forwarded clocks and set_max/min_delay -ignore_clock_latency fclk_in_* -> clk; tools/die_plan/sdc_lint.py fails closed on all three -> gen_phys refuses the kit. Station types hit the same error (trial slice_station__t12). Needs a FLOW fix (sdc_lint support for these landed-contract forms, or the contract in a lintable form) + canary. Not done here: flow-watched, fail-closed linter policy belongs to FLOW.
-  BLOCKER B (3 so far: bk_sel__t2, serdes__t1 lk_ES0, dsdv_slice_c1x_C__t10 s_1N_C; leaf trial ot_s81sl_leaf__t12 too): 'bus X is not bound to any leaf port (open input)' -> types with leaf RTL contents need the strict bind of the PD5 composed plan (bind.py kit-rtl filelists, --kit-rtl); src_b2c/bind is the 10-25 main-plan bind. Owner: S81 bind/token owner.
-- LIVE (place only, ot-run 32 GB/8 t on intel1, clients on localhost): col_h9_r2__t1 class clce45cab5 (27 replicas) unit oth-ubuntu-1368375-1793092857; col_h10_r2__t1 class cl1f5d6c2a (2) unit oth-ubuntu-1368389-1793092857; col_h9_r0_p6__t1 class cl5865e0d7 (6) unit oth-ubuntu-1368380-1793092857. Logs /home/ubuntu/.claude/jobs/b7f906df/tmp/s81k/place_<type>.otrun.log (localhost), kits intel1:.../s81-kits-1027/gen/<type>/<type>.
-- COLLECT: (1) ssh intel1 'O=/srv/opentallas-scratch2/claude/s81-kits-1027; cat $O/gen_status.log | grep -c rc=0; ls $O/gen/*/*/FAIL_PREFLOOR'; per kit: run/results/asap7/*/base/3_place.odb, FAIL_PREFLOOR, lec/lec.json, face_guard.json. (2) render 3_place (tools/autopilot/render_review.sh) and VIEW before any route; then GEOM REQ + enqueue --geom REQ (route rows WAIT-CANARY until the overlay is canaried). (3) Sign-off needs TT setup>=0, FF hold>=0, DRC 0, RCX latency in band, LEC EQUIVALENT on the routed netlist, signoff log newer than the run.
-- SIGNED: none. OWNERS: in flight under S81-KITS: col_h9_r2__t1 col_h10_r2__t1 col_h9_r0_p6__t1 (one class each).
-## [S81-KITS-1 2026-10-27 02:33 PDT] wave-1 place COLLECTED: all 3 FAIL at 3_3 global place, BLOCKER C (CHECKED from logs). Pre-floor gates PASS on all 3 (rtl/sdc lint, face_guard PASS, LEC EQUIVALENT on the synth netlist). Error: 'OT_RESET_CORE u_r2.u_e10.rst_n (clce45cab5) / u_r0.u_e0.rst_n (cl1f5d6c2a) / u_r2.u_e11.rst_n (cl5865e0d7): existing reset is not an equal-depth relay copy; preserve its RTL latency' -> the frame RTL drives the ROM element core rst_n by a net that reset_tree.tcl cannot treat as an equal-depth relay copy. Owner CLOCK-RESET / frame RTL (structural, no retry). Failed run dirs deleted; 3_3 logs kept in logs/place_<type>.3_3.log. No units LIVE. Generation of the remaining types continues (light python, nohup on intel1, gen_status.log).
-READY S81-KITS-1: signed types = NONE. Every S81 PD5 type is blocked by A (landed SDC vs sdc_lint), B (PD5 strict bind / --kit-rtl) or C (frame core reset relay), see above.
-## [S81-KITS-1 2026-10-27 03:03 PDT] gen census COMPLETE 225/225 (CHECKED gen_status.log + logs): kit 4, blocker A (landed SDC vs sdc_lint) 94, blocker B (open input, PD5 bind needed) 126, phy__t1_phy1026_phy_hbm rc 0 but no kit dir (hard PHY IP, nothing to harden -> PHY view owner). 3 col kits = blocker C (above). LIVE: slice_station__t48_phy1026_s_4N_x06 place, ot-run unit oth-ubuntu-1645510-1793095384 (intel1, client nohup on intel2, log intel2:/tmp/s81k_place_slice_station__t48_phy1026_s_4N_x06.otrun.log). COLLECT: kit intel1:/srv/opentallas-scratch2/claude/s81-kits-1027/gen/slice_station__t48_phy1026_s_4N_x06/slice_station__t48_phy1026_s_4N_x06 -> FAIL_PREFLOOR / run/results/asap7/*/base/3_place.odb; if placed: render, VIEW, GEOM REQ, enqueue (route waits for the overlay canary). In flight under S81-KITS: slice_station__t48. Signed: none.
-## [S81-UNBLOCK-1 2026-10-27 03:24 PDT] to S81-KITS: blocker A fixed (claude/s81-unblock-a-1027@41cdc960bd, awaiting ROOT-MERGE + canary); 48 regen'd types gen rc=0 at intel1:/srv/opentallas-scratch2/claude/s81-unblock-1027/genA (47 more running) -- wave can resume on genA kits for those types once merged. Blocker C: RTL + plan delta PD5c (intel1:/srv/opentallas-scratch2/claude/s81-unblock-1027/srcC) + reset_tree QN-polarity fix on claude/s81-unblock-c-1027@499397ef5a; place reruns of the 3 classes in flight (UNCHECKED). Blocker B open. See lanes/S81-UNBLOCK.md.
-- 2026-10-27 06:39 PDT ROOT-MERGE-31 NOTICE: main 471dd392b5 has hbm-cores-r6 53fcb2b801 FF binding fix: pre-fix kits lacking the FF binding must be regenerated before sign-off.
+## CODEX notes — 2026-10-27 09:43 PDT
+
+- XRT3 former missing receipt diagnosed kernel24GB OOM; own64GB frozen-AIG retry terminal EQUIVALENT38057/38057,0diff/undecided,3517.8s (intel2 codex-s81-core-1027/xrt3_lec). Pinned5b tool predates latest strict noreset improvements; diagnostic receipt only until current-tool scope reviewed. XRT1/XFIN former20GB/12GB OOM retries remain live64GB. EG stage0 r44 resets0 atedge5, stage1 unknown16; flow/lec continues missing invariant diagnosis, no reset waiver. BF p0_fp4 specific KEEP false alarm now PROVED by05992df62 reset-pin recognition, not whole BF proof.
+- READY candidate9f575a2e2b codex/s81-core-1027: defaultOFF production spine/fieldtop QX_GO_BOUNDARY GO-only advance1, original CFG/XS/return dates retained, BF unchanged. Actual3-phase controller miter PASS3GO/3END and missing-advance mutant caught; cfg7+qbank dated LC PASS/mutant caught;9lowering tests PASS. Quantizer abstract in scheduler miter; arithmetic/full frame composition still required. Helper explicit readytypes/source-profile only, no canonical plan adoption. Current PD7f256legacy declarations remain legacy739; GB737 current slice/view/full-frame gates pending one adoption event.
+- qbank/sstn corrected actual clock pin .048x.48 verified and r2r maxima73/80um. Their new finish continuations WITHDRAWN: actual combined-face density10.8/7.3 pins/um violates current6 checker; per-layer5.4/3.7 passes. Owner scope pending, no waiver. l1c PLACE PASS5407/5407, rendering actualODB now; QXPGB census still LEC on epyc2, no unsigned slice/route.
+
+CODEX reset1012: parked. Fullsource/jobs/failures/next packet handoff/codex_s81_core_to_claude_20261027_1012.md. Ownsourcebranchtipa09d1ebcca; L0rpreferredmode3source58a0531bcd strict735rawfacePASS/formal+PLACE live, GBactualbandlowering and nocornerlibcarryover helpersREADY. C19s/QX/XFIN live, L1cGRT exact5bcanaryheld, no newSIGNEDview or canonicaladoption. Newlyreportedstation_t48physicalPLACEhasUNPROVEN emptygoldscope; donotroute.
 
 #### S81-PHY-ASSUME (lane file updated 10-26 20:08)
 2026-10-26 01:00 PDT S81-PHY-ASSUME: DONE claude/s81-phy-assume-1026@bea83f9105. Table: physical/die_plan/s81/PHY_ASSUMPTIONS.md (+ json, check). 14/14 SerDes windows short vs published N7 macro (3.36 mm2, 3.3 mm shore); IR trial power 18x below the published 4.37 W/macro; HBM PHY OK. D-S81-PHY PENDING-DELTA in PLAN-DELTA.md + COORD-REVIEW-QUEUE READY. No jobs launched. Worktree /home/ubuntu/wt/s81-phy-assume-1026 removed after push.
@@ -2529,7 +2858,7 @@ CGR8functional5.7Mcycle co-sim+mutant already closes designclassification; EQUIV
 ## CODEX notes 2026-10-26 20:12 PDT takeover
 Boundary737pins RAW735/735 fixed; later kit204LEC failure triaged LEC-ICG-2/tokens. No gatedrebuild before exactproof.
 
-#### S81-ROWX (lane file updated 10-26 21:22)
+#### S81-ROWX (lane file updated 10-27 09:43)
 Lane started 2026-10-26 13:1x PDT (Claude). Source ruling: COORD 12:51 TOK-DS-3, option (a). Branch claude/s81-rowx-1026
 (worktree epyc1:/srv/opentallas-scratch2/claude/wt/s81-rowx-1026, sparse). Owner rules applied: real hardware only,
 
@@ -2537,18 +2866,41 @@ Lane started 2026-10-26 13:1x PDT (Claude). Source ruling: COORD 12:51 TOK-DS-3,
 Tokens/ds_compiler collects ROWX benches and implements rankorderOR/re-pair. Physical merged delta in PD2. Found nw160 leaf overwrite: evacuate every160words before reuse; no transport/store claim until scheduled.
 - 2026-10-26 21:22 PDT Claude S81-ROWX-3 (+3b): (1) ROWX-2 feaec58ef0 gates COLLECTED, all 5 logs say SVCROWX_GATE PASS (CHECKED, read on epyc1:/srv/opentallas-scratch2/claude/s81-rowx2-1026/bench1/gate_*.log): base 26/26 PASS (ro0+ro1 seeds 1-3, 8 fixture layers both modes, ro1 stress 150/300 held, ro0 stress 100/150 faults caught); miter 3219 cyc 0 mismatches (seed 1 only this time; ROWX-1 had 3 seeds); mut6 err 119/138, mut7 err 41/473 (+neg29 missing), mut8 err 264/287 = all caught. -> ROWX-2 merge-ready. (2) Transport: an earlier ROWX-3 agent pushed claude/s81-rowx3-1026@7fb3eac8dc (19:38, unrecorded): dsdv_rowx_rp re-pair / _lc landed crossing / _xm reduce+broadcast OR-merge chain with self-exclusion tag, ROWXM_GATE PASS -- but at 1 beat/cycle on the lep (lane pair = 0.764). ROWX-3b @348b67718f fixes this and answers the Codex e4267efa3 gaps (nw160 wrap, XR 1 pair/cycle vs 2 in): the RO transport never uses the pvrd leaf store or the XR send (own 120x512b re-pair staging with a bank-reuse proof); PK=cfg[62] packs 2 slots per 1024-b XB beat, every other cycle = 0.5 beat/cycle per half on its own tier's end-slice lep (S: s_0S/s_7S, N: s_0N/s_7N) <= 0.764. Bench now models the lane rate cap as an elastic TX FIFO (beat n >= t0+ceil(1000n/764)): ROWXM_GATE PASS, 35 base (20 PK=0 regression identical spans; PK=1 at 0.764 seeds/fixtures/negatives; 16-die all-d2d capped; neg_rate PK=0 at 0.764 caught late at pos 4 / pos 1) + 5 mutants FAIL (new mut5 PK unpack err 61441) CHECKED. Span 16 dies PK L37 J4 = 3629 (=3614+15, +1/reduce hop) CHECKED -> C 3727: AR 1260.5 / MTP 3658.1 / ledger 16.947% (price_rowx3b.py tool output CHECKED; B=80 18.23%). Open: integration plan delta (xm at C3 between the pvrd landing and the band port, beats injected on its own tier line to the end slice, lep window booked), real svc_att e2e, ingress-during-own-export legality UNCHECKED, middle-rooted reduce -630 cyc UNCHECKED, area UNCHECKED. Logs results/rtl/s81_rowx3_1026/bench3b/.
 
-#### S81-UNBLOCK (lane file updated 10-27 06:39)
+## CODEX notes 2026-10-27 09:05 PDT — actual wrapper/codec integration
+CODEX took over remainingROWXintegration on codex/rowx-integration-0833. DefaultOFF ROWX parameter nowpasses actualselectedservice/entry/15facewrappers to dsdv_svc_att;40cyclealloutputlockstepPASS,15enabledleafparameterchecksPASS, forcedROWX0mutantCAUGHT (4096b971b, GitHub). Basewrapperbytesexactafterremovingonlynewknob/pass expressions;0addedcycles andnoengineRTLchange. New ds.../rowx/dsdv_rowx_xb.sv (f86101b75): packed1024b<->actualXB1104b/MUlanding, actualRTL1120TX/RX+64normalpass+identity/windownegativesPASS; payloadswap/userbitmutantsbothCAUGHT. TX1+RX1edge=>+60edges/16ownerreduce+broadcast inchain_plan.py; physical/PHYhopsnotpricedyet. Noenableinproductionmanifest.
+Actualbindintegrationendpoints: W entryu_rsv_05/w_pv_W_src =HB1tiles8..15/Ntier; E entryu_rsv_11/w_pv_E_src =HB0tiles0..7/Stier. Existingpvrd-nw160 mustnotreceiveROWXexportslots. SRAMRP/LC implementation ownedcoverage/geom_auto; lots/mapowneds81_die; bridge/compilerownedTOK-DS. NoownliveROWXjobs now (wrapper1525383/mut1556283,codec1627185collected); dirsintel1:/srv/opentallas-scratch2/claude/codex-rowx-0833.
+BLOCKER diagnosed: qualified16ownerlinearreferencebench isnotactualrackmapping. SourcecurrentS-tierA=d±1insideTP4, N-eastA=d+2, N-westA=stageNEXTdata/N-westB=stagePREVRX; user0forcedA. No16owner→physicalstage/rankmapincanonicaldie. TOKparent/rootsearchingcurrentmodelmap; no4STgroup/per-dietime-shareassumption, newcircuitorphonyuserchosen. Codec+60edgepricekeptseparate. Continuecompiler/sourceclosureworkwhilemappingisresolved.
+
+## CODEX notes 2026-10-27 09:15 PDT
+codex/rowx-sram-1027@a925fcac8 READY (currentmain plainmerged): explicit nativeSRAM XMtop, RP prefetch+WB +LC rp_next/empty-lastpush bypass preserve0addeddata/bootcycles. Final nativep192 lockstep640RP/bad0,2mutantscaught105/320, restartbad0; default/nativeTOP lintPASS. Final16owner packed764/alllinks37/J4 PASS2049words/err0, timingfirst22/span3629/hops1365 EXACTgold.7macro p192physicalinventory148883.58um2,492.48x669.6 recipe renderVIEWED48umchannels estimatedutil0.576. Actualimmutable svc5/svc11lotFAIL even1macro, no route. S81planowner constrainedrepack/adjacentlot owns remaining physicalwork. Source/model/receipts results/rowx_sram_1027; allownjobs terminal.
+
+## CODEX notes 2026-10-27 09:45 PDT
+READY codex/rowx-integration-0833@35afd986b extends prior default-OFF wrapper/codec package. Actual selected portfix178 native32/IN_PIPE LEP cores over direct finite-credit flit wires PASS1120 full1024-bit payloads, user0 pairA/tag/land, first50 last2288; identity-bit mutant caught at first landing50. Explicit reduced queues DT16/DR12/SRAM0/RX_SRAM0: this proves source-format/landing mechanism, not production PHY/rack latency. Added standalone statically-booked entry-q injector dsdv_rowx_qinject: zero added cycles,2101 lockstep edges PASS, booked-normal and unbooked-XM collisions set sticky fault; data mutant caught first booked edge40. Receipts results/rtl/rowx_endpoint_codex_1027 and rowx_qinject_codex_1027. All ROWX own jobs terminal. Production bridge/booking adoption remains OFF pending accepted16-owner physical graph, source bindings and lot repack; +60 codec edges still separate from unpriced routing. SRAM implementation READY a925fcac8 owned coverage; physical lots owned S81 die.
+
+#### S81-UNBLOCK (lane file updated 10-27 10:40)
 ## [S81-UNBLOCK-1 2026-10-27 03:24 PDT] blockers A/C fixed on branches, B not started (scope recorded)
 - A (landed SDC vs sdc_lint): claude/s81-unblock-a-1027@41cdc960bd. sdc_lint accepts landing_contract.py forms fail-closed: create_generated_clock (only on declared fwd-clock outputs, divide_by 1, master = real tap clock, source = its port), set_max/min_delay -ignore_clock_latency (only landed<->core clock, max = period/2 - unc, min 0, both directions required), remove_from_collection into a variable (subset check). Tests 41 pass test_sdc_lint (16 negatives) + 63 with landing tests (CHECKED). Regen with PD5 d217c071: 48/48 finished rc=0 of first 52 types (CHECKED status.log), remaining 4 + 43 more blocker-A types (slice_station etc.; S81-KITS census 94) running: intel1:/srv/opentallas-scratch2/claude/s81-unblock-1027/genA/status.log (types.txt, types2.txt). Flow canary NOT run (sdc_lint is flow-watched).
 
-## [S81-UNBLOCK-1 2026-10-27 03:24 PDT] blockers A/C fixed on branches, B not started (scope recorded)
-- A (landed SDC vs sdc_lint): claude/s81-unblock-a-1027@41cdc960bd. sdc_lint accepts landing_contract.py forms fail-closed: create_generated_clock (only on declared fwd-clock outputs, divide_by 1, master = real tap clock, source = its port), set_max/min_delay -ignore_clock_latency (only landed<->core clock, max = period/2 - unc, min 0, both directions required), remove_from_collection into a variable (subset check). Tests 41 pass test_sdc_lint (16 negatives) + 63 with landing tests (CHECKED). Regen with PD5 d217c071: 48/48 finished rc=0 of first 52 types (CHECKED status.log), remaining 4 + 43 more blocker-A types (slice_station etc.; S81-KITS census 94) running: intel1:/srv/opentallas-scratch2/claude/s81-unblock-1027/genA/status.log (types.txt, types2.txt). Flow canary NOT run (sdc_lint is flow-watched).
-- C (frame core reset): claude/s81-unblock-c-1027@499397ef5a (2 commits). (1) frame_band_plan.py --core-reset-wavefront: band modules take rst_n, every ot_v41_rom_elem_q_qxpq_w10 rst_n = partition rst_n (= rst_n_t<leaf>, the equal-depth terminal relay); lpr_c pad removed; new *_plan_kit_cr.sv for col_h9/col_h10 (main sources untouched); frame_core_reset_plan.py PD5 -> PD5c (65 types, 101 edits; intel1:/srv/opentallas-scratch2/claude/s81-unblock-1027/srcC/die_plan_pd5c_composed.json sha256 17069b4ba8...). 4 tests pass. LEC old-vs-new band col_h10 r2 (u_eN.rst_n blacklisted = declared change, async2sync, flattened, hard-core pins exposed): EQUIVALENT 77186/77186 (CHECKED lec.log); other 7 bands + 2 mutants (cfgv, rst) running intel1:/srv/opentallas-scratch2/claude/s81-unblock-1027/lec/<band>/lec.log -- mutants must be NOT PROVEN. (2) After the RTL fix place STILL failed: root cause = reset_tree.tcl rtr_reset_equiv polarity bug, not RTL. ASAP7 maps the terminal relay to DFFHQNx1 (QN only) + INV; the check recorded QN as the "q net" and demanded even parity, so the true copy INV(QN) is refused (and QN itself would be accepted). Fix records q/qn polarity: INV(QN) accepted; QN, BUF(QN), non-terminal refused. New test fails on old code. Probed on 3_2 odb (u_r0.u_e0.rst_n <- INV u_rrl_53/_2_ <- DFFHQN QN). 64 reset/bind tests pass (CHECKED).
-- Place reruns (3 classes, PD5c kits, C branch tools): gen relaunched intel1:/srv/opentallas-scratch2/claude/s81-unblock-1027/genC/logs; chain local tmp/u/place/chain.sh launches ot-run place on gen rc=0; COLLECT genC/<t>/<t>/run/results/asap7/*/base/3_place.odb or FAIL_PREFLOOR; logs tmp/u/place/place_<t>.otrun.log. UNCHECKED until collected; render+VIEW+GEOM REQ after pass.
-- B (PD5 strict bind / kit-rtl for bk_sel__t2, serdes lk_ES0, c1x s_1N_C, ot_s81sl_leaf__t12): NOT STARTED. Next: bind.py all PLAN --strict (repo-relative manifests, no --allow-external-paths) on d217c071 from a clean worktree, then bind.py kit-rtl --type T per type; fix open inputs (leafdn_i0, xring_i0, lepk_i0) by real connection.
+## CODEX notes 2026-10-27 08:14 PDT — S81 topology recovery
+CODEX took over on codex/s81-topology-0818@1d422ed2d2 (intel1 sparse wt/codex-s81-topology-0818); clean plain merge of current hub main a54fa8a6ce3 + recovered claude/s81-unblock-b3r-1027@c3dd5ad1a34. Recovered unreported completed work: PD7f strict bind PASS, errors/tied/undriven/unbound 0, 10352 straps, 397 partitions/245 types (b3/out/bind_report.json). This is PD7f composed plan + asbuilt_b178_coll_pd7d.json, NOT canonical b178 port-bind zero. Focused landing tests rerun 37 PASS (venv; initial host Python lacked pytest, sparse common_flow missing, both resolved). Observer old-output four miter logs empty under quiet successful source recipe; mutant explicit proof failure; original evidence retained.
+COORD07:11 rulings implemented by c3dd: every one of288 fi ports abuts (gap0um/stations0), fixed4/5 double-counted in-band stations, so plan seam6/7->2 matches s81b_fint. LK2 legal window1/2/3 for synchronous band xk; per-frame table records old36E4/E5 retired forwarded-clock values. E=K reset/start assumption remains for dynamic ring test. Token lane /root/tokens/ds informed to consume corrected plan and LK2. No new route authorized/launched.
+Collected genA95/95 rc0; genC three class LEC EQUIVALENT and all three3_place.odb exist (h9r2,h9r0p6,h10r2). Geometry conditions from GEOM21 still apply before route; S81 core parent owns follow-up kit routing.
 
-- 2026-10-27 05:54 PDT TOK-DS-10 -> S81-UNBLOCK-3 (coordination, no action needed): TOK-DS-10 owns these dv_die vehicle items on main die_b178.v: (1) s81b_ckrst real clock/reset source RTL (asbuilt_s81.py emits a blackbox); (2) import missing rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_guarded_mux.sv (byte-identical 229d3412 from closed record f9753ee14) + add to asbuilt_b178_coll.json files; (3) u_f_*_xok forwarded-x-clock nets left undriven when asbuilt_s81.py dropped xok; (4) prep_cuts_current prefer-list override (main rtl l20s/rg3 beat portfix178 -> 5 port_not_in_rtl + 560 undriven). Your b3 branch's copies asbuilt_b178_coll_pd5/pd7d.json will need item (2) too. I do not touch tools/die_plan, pd5 manifests or dsdv_hostb_seqhost_mux. Branch claude/tok-ds-10-1027 (intel1 wt tok-ds-9-1027).
-- 2026-10-27 06:39 PDT ROOT-MERGE-31 NOTICE to S81-UNBLOCK-3: tok-ds-10 a114419f4d is in main 471dd392b5 -- rebase onto main before any manifest change.
+## CODEX notes 2026-10-27 08:35 PDT — genB3 failures diagnosed; PHY fix underway
+Collected all41 genB3 items: every kit-rtl PASS; gen11PASS/30FAIL. Non-PHY failures = hard cores lack actual timing liberty; assigned S81-core child (no fake libs).13SerDes failures = stale u_phy content shapes versus already-adopted3.36mm2 IO/PG lots;14thWN1 had no kit-rtl file. Deterministic inverse-orientation content delta fixes all14 PHYlots, phy_pg_domains14/14PASS, no PG/grid/bump/partitionoutline/clock/data growth. ImageVIEWED `results/path_s81_codex_pd14_1027/phy_contents.png`; rootCOORDapproved correction withinONE S81event. Source script08a453f51c3 on codex/s81-pd14-0818, canonical plan not overwritten.
+One family regen attempt stopped BEFORE physical generation: WN1kit-rtl missing. Fixed by generating missing wrapper in own kit dir (existing bind output read-only); new family generation LIVE intel1 unit oth-ubuntu-1459741-1793115245, intel2 launcherPID2935767/log codex-s81-pd14-launch/phy_gen2.otrun.log; own run codex-s81-pd14-0818/phy_gen.log + phy_gen_result.json. Branch38f8e4eef1, sourcecopies byte-exact, no RTL/cycle changes. No P&R submitted.
+H1 old signed view is incompatible with current centre-clock slice and pin shapes; attachment intentionally not made. ROWX planned content flag pending tokenchild defaultOFF pass-through (NP7/NXW40/XP320/PK1), no fictional1025b direct endlep connection.
+
+## CODEX notes 2026-10-27 09:28 PDT — PHY actual cut and G2 last-band candidate
+PHY corrected-content kit attempt failed KeyError u_phy because that metadata entry is a reservation, not a real hardmacro provider. Actual boundmaster is ot_pdie_serdes_col u_core, decoder path was absent manifest (TOK-DS isolated1d5d9adef fix). FLOW /root/flow/sta_pg now owns actual6digital+2analog cut and native12115FF glue synth; area823107um2 vs3361134um2 lot is sizing only. Legacy digital views add input/output stages absent barecolsource; cannot adopt as canonical until exactcycle composition proved. Analog129.6x2246.4 shape cannot fit1013high lot, child loggedOWNER?, planning-only reshapedmodel notphysicalclaim. No whole-PHY fakehardmacro.
+Fallback currentPD7f+FI2+approvedPHYmetadata preparedpacket76047a897b; local lastsvc13 storagefailure candidate a8a36ea2b4 ready for COORD same-eventreview, no outline/cycle change. Actual0macrobodyhits/allFThops<=404.383um, landingband4017bits/20160FF/maxreach386.64um; COPY sidecar no storagefailures, originalfailedreceipt retained. Clock/resetregen +singleassembledstrictbind stillrequired, physicalqualifiedfalse. ROWX source/nativeRAM ready by coveragea925fcac8 but actualsvc5/11lots have nolegal macrospace; physical16owner map notaccepted. QXPQ currentPD7f stilllegacy256masterdecls; corechild preparingGB737 adapter/newcentreclockview. Do not claim bind consumesGB yet.
+
+## CODEX notes 2026-10-27 09:39 PDT — native PHY source/physical profile
+Actualcol uses6real digital tiles+2analogPMA leaves; no wholePHYblackbox. MissingnativeLPdecoder source closure now fixedTOK-DS1d5d9adef; correctedfullhierarchy lintPASS. Nativeparent synth exit0:12,115FF realLP/TXL/resetglue, OpenROAD823,107um2 vsadopted3,361,134um2lot24.49%(independentUNCHECKED); helper+receipt dbeb4611f. Existinganalog129.6x2246.4modelonlyXYdoesnotfit1013height, alternativeorientation/shapequestionloggedOWNER?. Legacy5KP4viewsaddinput/outputpinFFs; RMdoesnot. Realstreammiterdecoder24,990comparisonsPASS q+6/status+2or4; encoder2499raw-PMA+2comparisonsFAILbecausecoldbootframephaseisstateful, notglobaldelay. Nolegacyviewadopted. Explicitphysicalprofilepayload/FECbenchLIVE intel1 codex-s81-phy-digital-1027/link{0,_precise0}.sh; old0ppm clockquantizationpreserved, precise300.120ppm variantuses833core. TBclockfix3f0a76341READY+zeroppmmutantcaught.
+
+## CODEX notes 2026-10-27 09:59 PDT — physical PHY profile gated source
+Opt-in component source codex/s81-phy-digital-1027@b107118ca:5KP4 aliases modelactual+1in/+1out,RM0; generated P&R parent uses actualdigitalLEF/TTFF renamedviewmasters(FOREIGN original), simulationwrappersseparate(no doubleFF). Exactbyte/FECbenchat833/833.25ps(+300.120ppm)PASS6000/6000bad0; landing-bypassmutantFAIL4483bad,caught. Alias-parent synth823107um2/fanout12115FF0over64matchesbaretrial. DefaultRTL/plansunchanged. No wholePHYfakeLEF/export. Remaining: analogshape/orientationdecision(OWNER?CODEX-LOG), actualparentPNR/STA/currentSIGNEDdigitalrequalification, ONE S81eventadoption. All CODEXownedheavyjobs terminal; raw runsintel1codex-s81-phy-digital-1027.
+- 2026-10-27 10:40 PDT S81-UNBLOCK-4 (with S81-CORE-LAT-R19, see that lane): UNBLOCK-3 jobs = GRT-30 probes on genC frames still live intel1 s81-unblock-1027/geom21/full30 (collect *_it30 congestion; it3: overflow 320870 interior, pre-CTS clk net inflates) -> genC resolved NOT-ROUTE in resolved.tsv; genB3 wave collected by Codex (11 PASS/30 missing child libs). TOK-DS-11 (a)(b) in main via c3dd5ad1a34; (c) h9 schedule regen = tokens/ds codex/tok-ds-0815. No new jobs.
 
 #### S81 (lane file updated 10-26 20:17)
 Base: origin/main + s81-p9-1023(r8eq v4.8, tool, tool2, fc-lpr) + s81-p9-face + s81-p9-fc + s81-p9-cf + core-s81/-eng/-svc (merged into my branch; r8.py/test conflicts = additive, die_plan tests 120/120 PASS). ROOT-MERGE has since merged s81-p9/-cf/core-s81-eng to main; still unmerged on main: s81-p9-face, s81-p9-fc, core-s81, core-s81-svc (all included in claude/s81-p10-1024).
@@ -2586,14 +2938,32 @@ Base: origin/main + s81-p9-1023(r8eq v4.8, tool, tool2, fc-lpr) + s81-p9-face + 
   (5) Routability: GPL 'could not reach target' (19-26% tiles); the cores block M1-M7 over ~45% of the frame with M7 as top layer.
 ... (189 more lines in the lane file)
 
-#### SDC-LINT-ATTR (lane file updated 10-26 20:10)
+#### SDC-LINT-ATTR (lane file updated 10-27 08:16)
 ## 2026-10-26 19:03 PDT RESULT: canary B's KV hold regression comes from clock-kv-r1's plan keys, not from sdc-lint
 - Sources: A = qwen_kvsys_274477ed5_1026_173308_785255, src srcA@274477ed5e = main 9c9a9eb91 + sdc-lint only. B = qwen_kvsys_7b6d9deae_1026_173308_807424, src srcB@7b6d9deae2 = clock-kv-r1 e444b9df74 + sdc-lint. git diff 274477ed5e..7b6d9deae2 = ONLY physical/die_plan/qwen_kvsys/die_plan.json clock.tap_window{window_ps 80} + clock.seam_hold{sender 25, seam 80} (CHECKED). sdc-lint itself = tools/die_plan/sdc_lint.py + test only, no generator change (CHECKED).
 
 ## CODEX notes 2026-10-26 20:14 PDT
 Collected terminal30d66canary: predictedKVregression reproduced-94.57ps/2213ep. Cause KVwindow/seam plan keys, not sdc-lint; current8404same.
 
-#### SIGNOFF (lane file updated 10-26 20:10)
+## CODEX notes 2026-10-27 08:16 PDT
+Old canary regression diagnosed KV80ps tap window/55ps seam contract, not lint. Current baseline constraint-only rebaseline owned flow/rc_canary per COORD07:20; original failure retained.
+
+#### SIGNOFF-MODES (lane file updated 10-27 10:46)
+- 2026-10-27 08:09 PDT SIGNOFF-MODES-1 task3 (non-S81 retime, read-only, main a14244af6 signoff.py per-corner sessions, retime copy patched only to honour --ff-bound-ps on die-plan kits; out <host>:/srv/opentallas-scratch2/claude/signoff-modes-1/retime/<view>/so/signoff.json; all CHECKED from STA output): FF hold @vclk 202.5 / TT setup @kit SDC vclk: HBM collar_a5 (intel2) TT +31.56 FF +0.03 SIGNED PASS; HEAD elemA_eco (intel1) TT +122.36 FF +4.43 SIGNED PASS; KV e1 c_holdeco (intel1, only surviving e1 routed view) TT +2.22 FF +2.92 SIGNED PASS; QC rp1_f4g (epyc2) TT +236.87 FF +6.98 SIGNED PASS; QC su8_rst3 (intel2 qc/closed, TT 250, signed vs FF=SDC 250) TT +93.04 FF +6.80 timing PASS (record NOT SIGNED only drc/antenna NOT RUN: archive lacks route metrics); QC s8x_crh (TT 290.93, signed FF vs 290.93) TT +164.51 FF +3.94 (also +3.94 at 0.81xTT 235.65) timing PASS (face_guard/drc/antenna NOT RUN in archive); QC rp1_f62 (contract 320/260.95) FF -48.67/740 EP @202.5 -> NOT SIGNED vs 12.3 (own 260.95: +0.23); QC prog_s8b (contract 496.03/381.14, already PG-INVALID) FF -151.33/935 EP @202.5 -> NOT SIGNED (own 381.14: +4.45). KV e5: no routed ODB survives (record only) -> UNVERIFIABLE, cannot re-time. Bug: main signoff.py ignores --ff-bound-ps on non-core-contract kits (ValueError bound-ff needs ff_bound_ps).
+## CODEX notes 2026-10-27 08:16 PDT
+
+## CODEX notes 2026-10-27 08:16 PDT
+Shared CLI FF-bound bug FIXED9529b56ff0. Qwen owner auditing KV/QC per-mode scripts; S81 core owner assigned frozen-view FF202.5 re-time. Non-S81 task3 existing results retained; e5 missingODB stays UNVERIFIABLE.
+- 2026-10-27 10:42 PDT SIGNOFF-MODES-2 (Claude) RESULT claude/signoff-modes-2-1027@be05a88bb (main 60b5ddf52 + dead SIGNOFF-MODES-1 work recovered from coordinator tmp/src, finished). tools/die_plan/kit_modes.py = shared checker: kit binding (config.mk OT_VCLK_TT == constraint.sdc vclk == sdc_lint insertion_ps; OT_VCLK_FF == insertion_ff_ps) + per-step session (FF-only needs OT_VCLK_CORNER=ff; single-mode tc+bc may neither repair hold nor carry the FF vclk; staged orfs_hold_mm two-mode kits legal). Wired: core_flow.FF_GRT_STEP (QC/S81 legacy core kits) CTS check ADVISORY (QoR only; OT_KIT_MODES_STRICT=1 -> fail), GRT session check fail-closed before make grt; signoff.py timing_modes check (FAIL only if bound-ff value or kit binding disagrees; wrong-mode flow step = advisory; pre-binding kits n/a). Tests: 11 new PASS; 218 focused PASS on intel2 py3.14, remaining 7F/3E identical on main (sparse-tree inputs). Real-kit audit (kit_modes on intel2 kits, CHECKED): gen_phys type kits QC coll_ftm / HBM tile0 / HBM_SRAM / KV kv3_io_ft / S81 slice_station / HEAD hd_turn_a: CTS/GRT/sign-off one mode per corner CLEAN. VIOLATIONS (die-owned scripts, NOT changed here): (1) KV core gen (kv3_head_eighth_e1): ORFS CTS repair over tc+bc at vclk 250 (FF hold in TT frame) + run_kit_kv.sh MCMM GRT tc+bc with OT_VCLK_CORNER=ff (TT setup at 202.5) -> fails new check; fix = kit_modes.py stage (two-mode) or core_flow.FF_GRT_STEP; (2) QC legacy gen cts_post.tcl repair_timing_helper (hold) in tc+bc -> make it -setup like S81 modern; (3) QC mk_hold_qc.sh BC-only ECO without OT_VCLK_CORNER=ff (FF hold at 250; KV mk_eco b already sets it); (4) KV mk_eco.sh variant m (tc+bc single-mode hold ECO) and pvpc_1025/mk_fd4.sh (MCMM tc+bc); (5) S81 legacy non-modern cts_post repair_timing_helper. Sign-off itself already runs one session per corner (FF bound-ff / rebind). NOTE die-plan kits sign off with ff_vclk 'rebind' (own measured pin-flop mean), not the fixed 250/202.5 -- policy 9.7, unchanged; ASK COORD if fixed 250/202.5 is now required.
+
+- 2026-10-27 10:42 PDT RETIME-VIEWS-2 RESULT (Claude, read-only; finishes the two dead SIGNOFF-MODES-1 lanes + Codex S81 ETM work). Every registry SIGNED view (OWNERS.tsv 10:03) re-timed TT setup @vclk 250 / FF hold @vclk 202.5, one mode per corner. Full table intel2:/srv/opentallas-scratch2/claude/retime-views-2/summary.tsv. Methods: R = routed signoff.py --ff-vclk bound-ff 202.5 rerun (CHECKED from STA output); E = routed DB gone -> ETM boundary FF@202.5 (OpenSTA, main view _ff.lib byte-identical, -40 in_min overlay, propagated) combined with the original FF WNS as the internal bound (internal reg-reg paths do not see vclk) -- CHECKED from logs, but ETM is ~0.8 ps optimistic (VQ ETM -3.83 vs routed -4.64); A = DB and ETM gone -> archived FF sta.log worst arst_n path shifted -47.5 ps (UNCHECKED derivation). TT: every SDC except QC crh/f62/s8b already 250 -> TT unchanged; crh re-run at 250 via --sdc copy.
+  STILL SIGNED (21): S81 qbank_N R 137.99/11.84, eng_rr_h1 R 34.75/0.87 (old view only), gunit_l4r E 5.42/4.75, gunit_l5f E 44.09/5.45, LLd E 17.39/5.27, LLfd E 21.69/6.13, LLfu E 22.05/7.34, su_t_rxsb E 11.20/3.38, cfg7_seq E 263.12/2.90, hcpost E 61.39/1.60 MARGINAL, NNfu E 18.88/0.86 MARGINAL (inside the ETM error); HEAD elemA_eco R 122.36/4.43; QC rp1 F4G R 236.87/6.98, su8_rst3 R 93.04/6.80, s8x_crh R TT@250 164.51 (same as @290.93)/3.94, VMR F4K R 112.38/1.40 (signed in rebind mode 255.12/203.18; new run qc_vmr_f4k on epyc2 PASS, not yet in registry); KV e1 c_holdeco R 2.22/2.92, e5 E 24.26/4.31 (ETM boundary 19.91: e5 now VERIFIED by ETM, no longer UNVERIFIABLE); HBM collar_a5 R 31.56/0.03 MARGINAL.
+  NEEDS-ECO (11): S81 rstg R FF -28.63/68 EP, payload536 R -26.17/540, sl_vq R -4.64/32, svc_sx_hrow E -10.28/485 boundary EP, node_NNfd E -0.02/1; S81 slice_station t12/t17/t20/t21 A FF -30.48/-1.63/-20.42/-8.93 (arst_n removal into u_rsync_t0, >=1 EP each, input data hold unknown; DB+ETM gone -> need a rebuild, cannot be re-timed); QC rp1 f62 record R -48.67/740 (superseded by F4G -> retire record), prog s8b R -151.33/935 (already PG-INVALID).
+  Sign-rate effect: S81 cores 16 -> 11, S81 types 4 -> 0, s81_head 1, QC 4 -> 4 (rp1 now F4G, + VMR F4K pending registry, - prog s8b), KV 2, HBM 1. Not a new failure class: every NEEDS-ECO is input-port/reset FF hold; ruling 12.4a1 data hold buffers fixes the data ones; station/rstg arst_n removal is reset-path hold.
+  For SIGNOFF-MODES-2/FLOW-CANARY-2 (shared scripts): signoff.py has no TT vclk override; kits whose SDC carries a contract vclk (crh 290.93, f62 320, s8b 496.03) need --sdc with a 250 copy, which then fails sdc_lint by design. Suggest --tt-vclk bound-tt 250 alongside bound-ff.
+- 2026-10-27 10:46 PDT SIGNOFF-MODES-2 tip now claude/signoff-modes-2-1027@d81f3dcc8 (+ stage fails closed outside repo copy; 12 tests). Executed controls on a freshly generated QC legacy kit (qfd_dv_s5_su8_rst3, intel2): generated run_kit inner script bash -n OK; FF_GRT_STEP fragment with stub make: default -> CTS ADVISORY + FF-only grt rc 0; OT_KIT_MODES_STRICT=1 -> rc 9; OT_VCLK_FF 250 (mismatch) -> GRT refused rc 9; staged two-mode kit -> orfs_hold_mm patch path (container-only, fails closed outside ORFS). Worktrees removed (branch pushed).
+
+#### SIGNOFF (lane file updated 10-27 08:23)
 Merged: 4ab1ec1399, 0f5176689d (SS-based, SUPERSEDED), f942bf2f72 (TT rule, current). 0 deletions.
 ## Rule (owner 08:10, AGENTS.md c7ce2ed69a): setup TT / hold FF / 60-25 ps / spread <= 80; SS information only.
 
@@ -2625,7 +2995,20 @@ CODEX remaining-lanes takeover: Tool DONE; canonical TT/FF signoff current. Jobs
 ## CODEX notes 2026-10-26 20:14 PDT
 Canonical TTsetup/FFhold60/25 current; unbound PG invalid3 preserved. Actual physical closure remains per-die view work, not blind138lostDB reruns.
 
-#### TEST-FIX (lane file updated 10-26 20:10)
+## CODEX notes 2026-10-27 08:16 PDT
+Canonical TT/FF gates current; explicit --ff-bound-ps on non-core die-plan kits FIXED9529b56ff0 (4focusedPASS). Old invalidPG3/unverified13 rows retained. No blind lostDB reruns.
+... (3 more lines in the lane file)
+
+#### STANDIN-PADPORT (lane file updated 10-27 12:37)
+Scope: test_standin_reset[s81_head] FAIL on main d9d8fce68a (RM36 known failure). Tool fix in die_trial.standin_netlist, no test weakening, no tie-off.
+
+# STANDIN-PADPORT (die_trial stand-in pad / strap ports)
+
+Scope: test_standin_reset[s81_head] FAIL on main d9d8fce68a (RM36 known failure). Tool fix in die_trial.standin_netlist, no test weakening, no tie-off.
+
+- 2026-10-27 12:37 PDT RESULT: branch claude/standin-padport@38abd765c8 (on main d9d8fce68a). Cause CHECKED: s81_head die top connects 2 port classes with no stand-in port: ot_s81hd_serdes pads[] pma_tx/pma_tck/pma_rx/pma_rck (12 inst x4 = 48) AND ot_s81hd_tile_p id_straps[] strap_row0/strap_ten (264 inst x2 = 528; hidden behind the miss[:10] print). Fix: standin_netlist declares types[].pads and types[].id_straps as plain ports (plan dir/width), no face flop / hold / clock contract cell = no timing arc, like the KV hard-IP line side (bind.py bump_pins); never tied or dropped. New test test_pad_and_strap_ports_are_carried_without_arcs (no cell pin touches them). Suite CHECKED intel2 (8 chunks, rm36 suite2 recipe, logs intel2:/srv/opentallas-scratch2/claude/padport/gates): tools/die_plan 2075 pass / 6 skip / 2 xfail / 0 FAIL; flow_canary+autopilot 262 pass. Effect on die STA: those nets now resolve (no 'port not found'), still untimed. -> READY ROOT-MERGE-37/38.
+
+#### TEST-FIX (lane file updated 10-27 08:16)
 ## PARKED 2026-10-25 14:53 PDT
 - Branch claude/test-fix-1025@aa98b5973c pushed; READY posted in COORD-REVIEW-QUEUE.md. No jobs launched.
 
@@ -2635,7 +3018,10 @@ CODEX remaining-lanes takeover: READYaa98b5973c sparse-checkout/column-order fix
 ## CODEX notes 2026-10-26 20:14 PDT
 Sparse-checkout missing physical/common_flow was historical21fail cause; no current code defect to redo.
 
-#### TOK-ALL (lane file updated 10-27 05:34)
+## CODEX notes 2026-10-27 08:16 PDT
+Historical sparse checkout21fails resolved. Current focused preflight/bundle19PASS on fleetPy3.14; no sweep or duplicate fixture work.
+
+#### TOK-ALL (lane file updated 10-27 08:58)
 ## 2026-10-27 05:34 PDT TOK-ALL-1: per-design token table (current plan)
 Labels: CHECKED = I read it from a sim log / receipt or reproduced the arithmetic; UNCHECKED = priced model, derived, or not independently re-run.
 
@@ -2644,7 +3030,19 @@ Labels: CHECKED = I read it from a sim log / receipt or reproduced the arithmeti
 - Qwen KV: needs the B48 die_rst_n release fix (KV boot owner) and a rebuild on current main (incl. KVSCTL-3 +1).
 - HBM: needs the unified die top (HBM-MU-QUAD-4/5).
 
-#### TOK-DS (lane file updated 10-27 07:11)
+## CODEX notes 2026-10-27 08:20 PDT
+CODEX took over token collection/composition and HEAD native source integration on codex/head-g5-0818@315c5ba17a (source-only helper, tests2 PASS incl missing-tile mutant). DS/Qwen/HBM work is owned by tokens/ds, tokens/qk and tokens/hbm_token respectively; all remain active.
+- KV boot root cause resolved at source-build level: 28 inline PCs used old vehicle4 qkd_ctrl_pc_nc.sv without boot_win while 4 PC0 hierarchical libraries used boot2005 fixed RTL; explains exactly4/32 boot slices. Source overlay fixes ALL top+library args, fresh incremental build queued; no new RTL change or KV token PASS.
+- HEAD R17+source delta candidate generated native_bind: strict net/leaf PASS326inst,0open/tied/undriven/stub; tie_audit528 accepted, nested2217 PASS. Overall first receipt FAIL(module_missing10) is retained: copied stage had no Git metadata so module checker could not resolve providers. Exact-git module-only correction + functional elaboration is running separately on epyc2 unit oth-ubuntu-1917224-1793114381, intel2 client2260023; path /srv/opentallas-scratch2/claude/wt/codex-head-g5-git-0818/results/token_pass/head_g5_0818/{module_check_git.json,functional}. No repeated old numerical benches.
+- Native source gap: physical manifest deliberately has BB ROM/element views; real CV+memory models are selected explicitly. Generated tile wrapper previously used default INSTANCE="h" for every tile, aliasing all264tile weight images. Native helper parameterizes only simulation image lookup per partition (0cycle change), emits required image inventory. Current physical-view equivalence/actual boot schedule/numerical token execution still pending; no whole-token PASS.
+
+## CODEX notes 2026-10-27 08:34 PDT
+HEAD generated most-replicated hd_tile partition native token vehicle PASS (codex/head-g5-0818@04dc5d8885): 128releasedcheckpointrows x5120dim, golden row21946/bits4173a558, externalGO->result8429cycles,9003lockstepcycles; rowIDmutantCAUGHT at509. Existing5cycle reset/START wavefront and2boundarycycles exercised,0newRTLcycles. epyc2 unit2645943-1793114827 exit0. ExactGit providersPASS0missing, strictnet326/nested2217/tie528PASS. Native manifest264unique tileprefixes/2640images and qualifiedNATIVE32+OFF profile explicit. WholeHEADlint liveepyc2unit2390612-1793114680 (elab4.otrun.log), nativephysicalA/BFTadapter/viewequivalence+fullheadboot/images/token stillopen. Source/helper/receipt READY toROOT, no wholeheadPASS.
+
+## CODEX notes 2026-10-27 08:58 PDT
+HEAD whole-source parameter variant FAIL: native lint hit its own200GiB limit (unit2390612-1793114680, exit143); source-stage/read-model errors before it were fixed, no whole-source PASS. Failure receipt committed. Structural source fix6c345836a9 adds optional runtime-scope ROM image loading without specializing identical hardware by264different strings; original initializer remains fallback. Smallest real4096x274 two-bank miter PASS8196wordchecks at833ps; wrong-bank and missing-image controls CAUGHT;4source tests PASS. Fresh exact-Git scope successor LIVE epyc2:/srv/opentallas-scratch2/claude/wt/codex-head-scope-0857/results/token_pass/head_g5_0818/functional_scope, intel2client3786686, ot-run256GB8threads; read intel2 codex-head-g5-0818/scope_full.otrun.log. Existing generated-partition checkpoint result remains PASS; no newhardware cycles or whole-head token credit.
+
+#### TOK-DS (lane file updated 10-27 10:03)
 Goal: DeepSeek ROM (S81) token-pass gate: single-die layer runs on current RTL, per-stage cycles, composed 1-user token latency.
 ## Current step
 
@@ -2678,9 +3076,9 @@ CODEX took over TOK-DS compiler gaps on codex/tok-ds-1024, then parked on Claude
 
 ## OWNER?
 - (TOK-DS, S81.MTP) MTP rate of record: keep max(6f stretch law, causal pipeline) = 2,528.6, or adopt the calendar-checked causal pipeline = 2,763.0? With the pipeline law, plan/compiler-only recoveries (stage-hop striping + indexer-stage split + wo_a respread) reach ~3,000-3,070; under the max law 3,000 needs RTL (indexer + field speedups, combo C).
-... (212 more lines in the lane file)
+... (230 more lines in the lane file)
 
-#### TOK-HBM (lane file updated 10-27 05:35)
+#### TOK-HBM (lane file updated 10-27 10:00)
 Branch claude/tok-hbm-1024 (worktree localhost ~/wt/tok-hbm, epyc2 ~/wt/tok-hbm). Host: epyc2 (64 thr share).
 ## Findings (step 1: locate tooling + latest results)
 
@@ -2714,9 +3112,9 @@ Shared FETCH_HEAD race encountered in worktree setup and corrected before edits:
 - Added cycles: 204 of 298 lanes, max +47, sum +2665. Per-lane B2m -> B2n table: results/arch/hbm_arch_1024/b2n_lane_cycles.json (plan latency.lanes).
 - Largest: L63 35->82; L63m 35->78; L114 30->68; L114m 30->67; L22m 25->61; L140 33->69; L140m 33->68; L9 17->51; L9m 17->51; L21 18->52; L21m 18->52; L48 23->54.
 - Model price (stages_arch plan_c, c_L4, X 377.6): DS AR 1586.9 -> 1340.4 (-15.5%), MTP 2744.5 -> 2342.6 (-14.6%), Qwen 896.7 -> 866.5 (-3.4%). Please re-price at token level with these cycles.
-... (128 more lines in the lane file)
+... (156 more lines in the lane file)
 
-#### TOK-QK (lane file updated 10-27 07:46)
+#### TOK-QK (lane file updated 10-27 11:38)
 2026-10-26 00:15 PDT PATH-KV -> TOK-QK (re your TXDP blocker): fixed in the rebased kv-bind event claude/path-kv-bind-rebase-0010 (a795ac1cb6, tip b8c29f9023). Root cause: the 2144 recipe's param_regen pointed at regen_agebounds_2144.py ONLY and dropped kv_regen.py. New ONE hook physical/die_plan/qwen_kvsys/bind/kvbind1025/regen_kv_2350.py = kv_regen (ECTL RESPONSE_LAT/QK_ISSUE_AGE, AHUB AP_OFS/FR_OFS) + PV age bounds + TXDP from the committed pair image pair_image_txdp.json ([113,4,3,3] = 32'h03030471, derived with your regen_constants on b23 = b19-equivalent strict bind @c20ef31508; seams KS 56,56,54,54,54,55,55). Recipe dcal_rom/bind/position2144b19/recipe_kv_2350.json (repo-relative PASS). Checker: regen_constants VPORT_RT bound 31 -> 63. NOT done / need you: (1) "833 ps values": regen_constants has no period constant I can find -- name the constants (or the --expect file) to update; (2) KVN_A0 MISMATCH (bound 32, regen 28) is not covered by any hook rule -- owner/rule? (3) the bound die with the new hook is blocked: the rebased plan's strict bind (b27) stops on the sys_c SYS3 source projection (PLAN-DELTA). Run regen_constants against the next passing bind; it re-checks TXDP from the seams.
 (also posted in lanes/KV-TOK.md, the TOK-QK thread; this file was created by mistake)
 
@@ -2750,9 +3148,9 @@ B33 run7 boot now PASS (KV-TOK collection); B48 build3 DONErc0 but inherited asi
     2. history-seeded ISA golden decode at P8191 -> gold_real;
     3. kv_attn_vectors -> vec_real (36 layers x 8 heads, kv.hex in the format kv_preload.py --as-layer consumes);
     4. rsync to intel2:/srv/opentallas-scratch2/claude/tok-qk-kvl/vec_real (+.done or .failed).
-... (18 more lines in the lane file)
+... (66 more lines in the lane file)
 
-#### TOK-QW (lane file updated 10-26 20:07)
+#### TOK-QW (lane file updated 10-27 10:10)
 Branch claude/tok-qw-1024 (worktree localhost:~/wt/tok-qw, base main 8a5d1f3dab). Hosts: intel1 (64 thr share) + ot-run.
 Scope: Qwen ROM token-pass gate: compute-die layer runs (stg/head/attnret), compute<->KV D2D co-sim (TOK.QW.XDIE), composed 1u/4u.
 
@@ -2786,31 +3184,16 @@ needed; xdie_bound F5/F6/F7 findings now have main fixes (opt-in; bound top stil
 - KV r17 explicit-packet child archives lost with ep5/ep9: approve regenerating the ROOT-approved sha table (b0cc8cdca) or
   keep carrying the 10-23 kv/chain verdicts (readset 53/53 unchanged).
 
-... (86 more lines in the lane file)
+... (99 more lines in the lane file)
 
-#### TOKEN (lane file updated 10-26 21:11)
+#### TOKEN (lane file updated 10-27 08:21)
 ## 2026-10-26 21:11 PDT TOKEN-R1 (Claude, fresh lane after Codex 21:03 handback) — live-job collection
 - COLLECTED P3 whole-MTP producer-aligned compiler (codex/p3-compiler-2018, src 42d0caba4; lowerer_v3 3842596e3). Upstream epyc1 unit oth-ubuntu-3508070-1793073450 exit 0; follow-up client 3632846 -> unit oth-ubuntu-3634442-1793073696 exit 0. Dir epyc1:/srv/opentallas-scratch2/claude/codex-p3-compiler-2018/{producer_align_mtp_whole,producer_aligned_lowered_mtp}.
 
-# TOKEN — token pass release gate (owner 10-18): per-layer RTL sims on CURRENT dies + static schedule + inter-die traffic, measured cycles
+## CODEX notes 2026-10-27 08:20 PDT
+Current-token follow-through active under TOK-ALL/TOK-DS/TOK-QK/TOK-HBM. B48 boot failure traced to mixed top/library source copies (28 inline PCs without boot_win); unified overlay rebuild pending, not a new hardware fix. HBM recovered whole-P3 receipts are model-only; next work is native current-topology keybuf/scorer source binding. HEAD strict leaf/net bind passes326instances; native functional manifest+unique264tile ROM-image identity helper315c5ba17a is running actual elaboration. No current-die whole-token result exists yet.
 
-## 2026-10-26 21:11 PDT TOKEN-R1 (Claude, fresh lane after Codex 21:03 handback) — live-job collection
-- COLLECTED P3 whole-MTP producer-aligned compiler (codex/p3-compiler-2018, src 42d0caba4; lowerer_v3 3842596e3). Upstream epyc1 unit oth-ubuntu-3508070-1793073450 exit 0; follow-up client 3632846 -> unit oth-ubuntu-3634442-1793073696 exit 0. Dir epyc1:/srv/opentallas-scratch2/claude/codex-p3-compiler-2018/{producer_align_mtp_whole,producer_aligned_lowered_mtp}.
-  Whole image mtp_N6_token.hgi1r 3715 records, 516304 B, sha256 de555f0f…a6cc1 (CHECKED sha256sum); 41/41 segment emits (mtp 0..39 + head) errors=[] (CHECKED log); global VM need 506112 words, per-segment hw max 481376 (CHECKED log; fit vs physical VM capacity UNCHECKED).
-  lower_check.json: records 3916, before_violations 161 -> after 0, I1_I7_PASS true, materialized_fused 161, vm_copy_words 9600, hbm_load_words 414720, native_execution false (CHECKED file). Lowered image sha256 f0b93231…a972e9.
-  vs batch3 MTP (same lowerer): records 4236->3916, before_violations 403->161, vm_copy_words 12,328,320 -> 9,600 (CHECKED both lower_check.json). Compiler/Python-model evidence ONLY; unmerged P3 fork; no native RTL replay, no 8SM rate claim. Repricing of the +142666.851-cycle MTP extra work with these copy counts NOT done (owner TOK-HBM).
-- B48 corrected native KV boot (intel2 unit oth-ubuntu-2702208-1793070819, epyc1 client 894681): RUNNING, not finished. 18/18 PC libs rebuilt 20:17-20:18; TOP_FRONTEND since 20:19:05; verilator_bin pid 2727374 51 min, RSS 116 GB now, scope MemoryPeak 264.8 GB (<320 admitted) at 21:09. Remaining per run.sh: top C++ make -> BUILD_DONE -> nominal then mut_frame (+MUT_FRAME=100) boot sims (B33 run7 took ~1.5-2 h). ETA verdict ~01:00-03:00 PDT 10-27 (UNCHECKED). Not diagnosed as failing; no action.
-  COLLECT: intel2:/srv/opentallas-scratch2/claude/codex-kv-boot-2005/build/top_make.log, {nominal,mut_frame}/exit + sim.log first KVSLICE_BOOT line (setup_ready, frames n/7404, images n/14, faults); expect nominal PASS and mut_frame FAIL-closed; hub log epyc1 …/codex-kv-boot-2005/otrun_intel2_v2.log. Script does not judge the mutant — collector must.
-
-## 2026-10-26 21:11 PDT TOKEN-R1 consolidated token-gate evidence per CURRENT die (HAVE / MISSING -> owner)
-- S81 (DS ROM array die): HAVE component: L14 compressed-row attention lowered on real svc job, 16 svc_rs bench PASS (claude/tok-ds-cmp-1026@52e5e662a); L14 compile 92 ops = LOWERED 25/PARTIAL 57/GAP 10 (3dd18a3f0, lane-CHECKED); idx newkey+score + rank-3 svc benches PASS (tok-ds-6 75b33ae173); ROWX 513-bit owner-merge/PK2 compiler helper 19 tests (codex/ds-compiler-2005@e4267efa3). MISSING: any whole-layer L14 RTL run (l14_build_v2 terminal 94/95 libs, no binary; stim 157/184 inputs missing, 84 carve ROMs INSTANCE="") -> TOK-DS; ROWX/XR transport restructure (nw160 wrap vs 320-word pass, XR 1 pair/cyc vs 2 incoming) -> PATH-S81 (S81 plan owner); attn.rows_allgather + remaining 8 compiler GAPs -> TOK-DS; cross-die collective RTL on current array -> TOK-DS; all other representative layers -> TOK-DS.
-- s81_head: HAVE component: HEAD ctl 8b18e51e8a + HOST bceaec7caf merged main f795e41b9a (CTL coupon 2x8269 slices/2 tokens PASS; native-ring 5-step MTP coupon PASS; head.weight native spo->tile->spr 8304 cycles); rank-merge miter PASS. MISSING: full HEAD G5 on bound current provider/leaf bind -> HEAD-RTL; HEAD-B current gate LEC (85 diffs apply only to OLD gate AIG; current equivalence pending) -> LEC; plan/physical bind -> HEAD-CORE-LAT-R2.
-- QC (qwen_compute, critical path): HAVE component: QCLM 259/259 CROM s8-row on fresh main; MAT 112/112 all 36 layers on bound s8 row; boundrow attnret 149; XD4 QC v7<->KV B48 xdie PASS + 15 mutants (C2K/K2C 89, roundtrip 1957, period 7056 = priced), ovl4u 87539.1 cyc/tok (lane-CHECKED). MISSING: whole-QC top elaboration + L0 on ONEQC final landing bind (final88 STOPPED on landing schema) -> INFRA-FIRST (QC plan) then TOK-QW; xhead + RoPE row cross-die co-sim -> TOK-QW; QC landing-seam +3/+6 cycle repricing (143 seams, QC-MP-REGION-2 request) -> TOK-QK; current-die token composition -> TOK-QW.
-- KV (qwen_kvsys): HAVE: B33 run7 whole-die boot PASS 7404/7404 frames, 14/14 images, setup_ready 37950, START 38080, faults 0 (codex/kv-boot-2005@91c5d3c1d). MISSING: B48 (current) native boot verdict — LIVE above -> KV-TOK collect; KV per-layer kv/chain on B48 -> KV-TOK; attnret149/XD4 +130 composer update after boot -> TOK-QK; kvpc closed views re-hardened after fix-B RTL change -> PATH-KV.
-- HBM: HAVE: PR0/1 native FADV batches positive + BRIDGE_LEAF PASS, 6/6 mutants caught (current-die component); P3 compiler six images I1-I7 PASS (batch3) + producer-aligned whole MTP above (P3 fork, model only). MISSING: native RTL replay of any P3 token image on current 8SM HBM RTL -> TOK-HBM; joint WAIT/drain/token schedule pricing + reprice with 9600-word MTP copies -> TOK-HBM; serializer RTL + current B2 binding, MU hub static rate/latency (81/103 legs not promoted), unchanged SU latency not established -> PATH-HBM; P3 fork adoption decision (branch not main-ready) -> COORD/HBM-ARCH; HBM cross-die collectives RTL -> TOK-HBM.
-- Cross-cutting: no die has a current-die whole-token composition yet; release token gate = OPEN on all 5 dies. QXPQ proof codex/qxpq-proof-2037@c0dbad315 (64713/64713 points, source UNKNOWN) must be re-proved on a source-pinned kit -> LEC.
-
-#### TRIAL-HBM (lane file updated 10-26 20:03)
+#### TRIAL-HBM (lane file updated 10-27 08:13)
 branch claude/trial-hbm-1024 (main + claude/hbm-arch-1024 @3277b5e78b), worktree localhost:~/wt/trial-hbm
 ## current step
 
@@ -2840,6 +3223,9 @@ CODEX current-trial work is actualHcorridor/densitycoupon on q_b001/q_b011, pres
 
 ## CODEX notes 2026-10-26 20:03 PDT
 CODEX collected R12 die signalGRT50 ovf0 KIT rc1, stale replicated-core clock taps root cause now repaired in optin postpass (PATH-HBM). Last partial-M5 root-only FAIL1437784 vs bank-only1196448, allM5=0: both core families needM5. Prior isolatedPHYIR passes remain historical until corrected currentPG+clock. No full-die rerun before geometry review.
+
+## CODEX notes 2026-10-27 08:13 PDT
+Current die-trial continuation consolidated PATH-HBM QUAD6 + HBM-PG. Legacy R12 GRT0 and PHY5/5 IR remain historical; no B2l duplicate run. Next final QUAD6 geometry -> corrected PG/continuous mesh -> combined50it GRT -> related-pair TT/FF STA.
 
 #### TRIAL-QK (lane file updated 10-25 03:37)
 Scope: trial full-chip (die-level) prototype runs for qwen_compute and qwen_kvsys (v3.8s): abstracts + fixed placement +
@@ -2906,7 +3292,7 @@ CODEX took over PHY window IR on codex/trial-phy-1025 (own sparse WT /srv/openta
 2026-10-25 02:47 PDT CODEX: also reviewed narrow vertical reserve-PHY WS3 (593.7x2303.76um,539 PG sources) to cover non-horizontal geometry; epyc2 HELD for falling disk so first admission correctly NOT RUN, no work was lost. Re-staged on intel2 scratch2 codex-trial-phy/s81_WS3; ot-run unit oth-ubuntu-2595048-1792921556 active. WS0 VDDPHY connectivity PASS; head/WS3 checking. The domains are standalone pathfinding: legacy whole-die tool still needs domain-aware regional grids/shared-ground coupling, and neighboring head PHY halos overlap127um, requiring coalesced same-net PHY region treatment.
 ... (19 more lines in the lane file)
 
-#### TYPE-DEDUP (lane file updated 10-26 20:10)
+#### TYPE-DEDUP (lane file updated 10-27 08:13)
 ## Status: DONE (tool merged; proposals posted in S81.md, S81-CORES.md, KV-G3.md, QC-A0.md, HBM-ARCH.md)
 ## Tool
 
@@ -2923,7 +3309,10 @@ CODEX remaining-lanes takeover: Tool DONE main4a5c3620d8. Jobs: None. Next: Curr
 ## CODEX notes 2026-10-26 20:14 PDT
 Tool done; exact strap/type reductions remain per-die plans and must preserve R7. Historical questions not reopened.
 
-#### TYPE-REDUCE (lane file updated 10-26 20:10)
+## CODEX notes 2026-10-27 08:13 PDT
+Historical dedup tool done. Current S81 family replica tooling and HBM planU6 family work owned physical leads; no new retyping of frozen S81.
+
+#### TYPE-REDUCE (lane file updated 10-27 08:13)
 Branch claude/type-reduce-1025 (wt rtx-pro /home/ubuntu/wt/type-reduce-1025). Read-only analysis + proposal; builds on lanes/TYPE-DEDUP.md (tools/die_plan/dedup.py).
 2026-10-25 06:35 PDT TYPE-REDUCE: started. Census of origin/main@6a6fc12dd plans (lane plan branches s81-plan2-1025r / qc-plan3-1025 / hbm-b2o-1025r have the same counts): S81 177 types -> 166 exact netlist -> 48 ignoring ft slots -> 34 RTL groups; head 16->16->10->8; QC 56->56->54->51; KV 49->45->35->25; HBM 49 types all distinct, 210 core modules / 436 inst / 280 pin tables. 3 sub-agents (S81, QC+KV, HBM cores) running.
 
@@ -2951,12 +3340,20 @@ Collected stale remaining HBM tasks: SFU lane0/15 full kit EQUIVALENT59246/59246
 ## CODEX notes 2026-10-26 20:14 PDT
 All earlier HBMproofs collected EQ including recovered exp closure; no duplicate proof. Current D-HBM-B1 slices need rebuild, HBM path owns.
 
-#### YOSYS-CONCAT (lane file updated 10-26 20:07)
+## CODEX notes 2026-10-27 08:13 PDT
+Historical HBM strap/exp/IDX proofs already collected EQUIVALENT; no missing proof remains. Current unified-plan family reductions owned HBM lead; no replay of retired kit cohorts.
+
+#### YOSYS-CONCAT (lane file updated 10-27 10:13)
 [2026-10-26 16:21 PDT] DONE branch claude/yosys-concat-1026@47aa9825d (2 commits off main 29917a2ec). Bug (CHECKED, flow yosys 0.68+post read_verilog -sv vs read_slang, 520 probes): YC1 = a concat/replication member that is an operator expression (binary op or ?: branch) holding a non-constant TRUNCATING cast N'(e) is sized at e's uncast width, so more-significant members shift off (QC-LEC-4 {3'b010,5'd0,({1'(..)..}^3'(..))} -> 3'b010 lost). Safe: bare cast member, bare nested concat of casts, constant cast, cast in index/call arg/?: condition, relational top level. YC2 = unary op before a cast: |2'(x) parses as (|2)'(x) (silent for | ^; loud for ~ - & !).
   Sweep (CHECKED, scanner 0 misses on 520 probes): all rtl/ 294 hits (275 YC1, 19 YC2); release closures S81 356 / QC 170 / KV 187 / HBM 326 files -> 20 hits in 15 files. Expression proof per site: 5 sites REALLY mis-elaborate in the flow: QC ot_qfd_su_kv_static_posted x2 + native_posted (word tag), qfd_native59_svc_obs1:815 (6'(k3-ROPE_FIRST)); S81 ot_s81dv_finish_sram:1305 (wp slot); HBM ot_hgi_qdq_record_calendar:80-81 (16'(beat*4)), ot_hbm_svc_pc_ctrl_leaf_cfg:165 + _h9b:213/251 (2'(incoming[1:0]+b)). The other 10 sites are widening/loop-constant casts (correct today), rewritten anyway so lint is clean. After fix: 0 release-closure hits (CHECKED); 274 remain in non-release/test RTL.
 
 ## CODEX notes 2026-10-26 20:07 PDT
 Known5release mis-elaboration source fixes/lint already ready47aa9825d and upstreamissueYosysHQ/yosys#6408filed(owner16:35). No new upstream action needed. Unsigned affected kits must use correctedsource whenphysicalownersrebuild; signed27had0hits.
+
+## CODEX notes 2026-10-27 08:13 PDT
+Tool/source correction DONE historical 47aa9825d; owner-approved upstream issue already filed. No live job or new source work required here; corrected release sources flow into physical owners' current kits. No new issue or redundant proof launched.
+
+CODEX 2026-10-27 10:14 PDT PARKED on explicit root reset. LEC proof jobs continue; no kills/merges. Full packet handoff/codex_flow_lec_20261027_1007.md includes latest PC alias rejection and KVSCTL physical-helper diagnosis. YOSYS-CONCAT remains historical DONE; no reopening.
 
 #### _FRESH_LANE_BRIEF (lane file updated 10-26 23:45)
 1. Read /home/ubuntu/coord/lanes/_LANE_PREAMBLE.md and obey it (git, fleet, ot-run, rules).
@@ -3030,74 +3427,64 @@ Per die: once die GRT passes with overflow 0 INCLUDING the die clock, the die pl
 
 ### Last 60 milestones (~/coord/HANDOFF.md)
 ```
-CODEX: 2026-10-26 20:53 PDT HBMprice25d0786c4: frozenP3batch2sixcostsconcrete, buddybothhubs96nativeVMlegsk1fixoldserializationfailure, bank5/3avoidsnativeVMII2calendaroverflow; current8SMrate/native/treebindingstillopen.
+CODEX: 2026-10-27 09:10 PDT HBM full-root CE provider READY370a701a36; actual508tail40/40 PASS; native consumer emit509PASS/508mutantcaught; opt-in alias only, wholebind/planTOKadoption pending; steady synth live3743419.
 
-2026-10-26 20:57 PDT CODEX: mainf795e41b9a pushed/plainmerge HEADproviders0missing/0unresolved + actual2coreHBC/7CSR/HFWD and5stepMTPcontrolPASS/mutants; canonicalHEADplanheld, notG5. HBMunifiedscope recommendation loggedOWNER? basedfullnativebuddycandidatea810b810f; all96VMlegsparallel, nativecuts<
+CODEX: 2026-10-27 09:13 PDT TOK-HBM actualnativekeyprogrammePASS2516/0+tagmutant855; SOFT17SRAMquarter227684cells under400k,c131a8087/ef994fe77. True4roleVMSbitgraph/canonicalkeyregages delivered63f0317cf; physicalrestore andnativewholepathremainopen.
 
-2026-10-26 20:58 PDT CODEX: native32VM/32FUSED/full28tree buddy model a810b810f pushed; cuts0.553/0.588,96parallel nativeports,0coreoverlaps. Directgap111/75cyclesremoved+NEupk4; nativepins/clock/root/PG/reset/token/TTFF gates remain.
+CODEX: 2026-10-27 09:15 PDT ROWX-SRAM sourceREADY a925fcac8 nativep192miter+2mutants+restart+16ownerPASS exactgoldcycles;0addedcycles;7macrorecipeviewed;oldlotFAIL retained, S81planrepackowned;noP&R.
 
-CODEX: 2026-10-26 21:04 PDT explicitreset PARK S81/HEAD. BstructuralGRTclockPASS12.63/10.58pswindows; actualTT+120.55/FFhold-72.33. QualifiedHB4repair+wholeLEClive; PD2globalplacementmodelall1210meanlandpairsPASS but21bands/24cuts/corefaces remain. Fullhandoff codex_s81_head_20261026_2102.md, no can
+CODEX: 2026-10-27 09:15 PDT mixed-width RCX native selection 20/20 PASS refutes second-entry-only premise; W-cache bug fixed f32e8e3597. Physical four-width table generation live intel2 unit3870285; full clock STA awaits its native qualification.
 
-CODEX: 2026-10-26 21:04 PDT PD2 parked; R864sourcecomposed21band/G024/7faces; exactbanksconsumer+clockcensusfixed,PHYdensity15taps/globalR5reach405nativeTTFFmodelmean178/147; BKTXy64.8no-stripcandidate0/6; fullpacket handoff/codex_s81_pd2_20261026_2103.md; noownedlivejobs/OWNER?.
+CODEX: 2026-10-27 09:15 PDT RM52 main 37c7a1f9c0 == origin/main; early preferred-RTL errors + opt-in PHY clock-driver pruning, 15+3 lane gates PASS; current S81 FAIL retained.
 
-2026-10-26 21:05 PDT CODEX: HBMparked3c3dae6bb afterexplicitreset; NE_MYlocalEfixcut0.586, NW0.553. Fullsource/jobs/failures/next inhandoff/codex_hbm_20261026_2104.md; nativephysical/calendar gatesremain.
-2026-10-26 21:06 PDT COORD: Codex handback 21:03 read (packets handoff/codex-*-2026102*). Restarted 10 fresh lanes: QC-SU-F4F-COLLECT, INFRA-FIRST-QC-R10 (mesh3 legalize-in-solve fix + related-pair STA), ROOT-MERGE-26, CLOCK-KV-R10, PATH-HBM-R14 (shared SU/MU tasks: clock taps regen + GRT incl clock
+CODEX: 2026-10-27 09:22 PDT mixed-width RCX READY166adab391: physical .16/.32/.64/1.28 table qualified 20/20 native controls, W-cache bug fixed; committed packet delivered to QC clock owner, independent check pending. All child jobs terminal.
 
-2026-10-26 21:07 PDT CODEX: explicitreset HANDOFF parkedallagents; mainf795e41b9a HEAD==origin/clean, rootmergedWTremoved. Full perlaneSHAs/jobs/results/failures/OWNER? in CODEX-LOG.md ## Handoff to Claude 2026-10-26 21:07 PDT. LatestHBM3c3dae6bb correctsNE_MYrootface,max.586; unifiedscope recommend
-2026-10-26 21:09 PDT COORD: reconciled Codex 21:07 handoff. Forwarded newer facts to running lanes (HEAD elemB live jobs, S81 PD2 base 58f5778db, HBM final 3c3dae6bb + route_station helper fail, RM26 already-merged list, ROWX 160/320-word + 1-vs-2 pair gap). Added TOKEN-R1 (collect B48 + P3 producer
-2026-10-26 21:20 PDT COORD hourly: delta 0 (by design); fleet epyc2 878/intel1 898/intel2 624 GB admit at low load -> lanes told to use them; disks fine (epyc1 scratch2 75%, rtx-pro root 76%). Approved hbm-r13 tool, qc-2000 lint fix (one of dup), qxpq results. PD3 found g0fix overflow = 14 ft_phy ch
-2026-10-26 22:20 PDT COORD hourly: delta 0 in cache (+QC RP1 signed by lane, registry lag). Fleet very idle (epyc2 881/intel1 902/intel2 634 GB admit, load <15%); lanes told to use them; disks OK. HBM R14 GRT chains both FAILED (clock span 1048>750 um plan error) -> PATH-HBM-R15 started. RM26 main 2
-2026-10-26 23:05 PDT COORD: OWNER DECISION: HBM = ONE UNIFIED design (single-user + MTP + MU), built once; qualify single-user latency first. Base candidate codex/hbm-2001@a810b810f (32 VM + 32 FUSED, cuts NW 0.553 / NE 0.588). SU-only implementation stops being a separate target. Lane HBM-UNIFIED-1
-2026-10-26 23:21 PDT COORD hourly: S81 PD4 GRT incl clock overflow 0 both corners; HEAD elemB LEC r11 EQ; HEAD cand portbind ambiguous-source FAIL -> HEAD-RTL-5; HBM plan of record = unified 3c3dae6bb+quad, R15 = tool test; HBM-MU-QUAD started; owner asked about releasing epyc1 (Cherry credit 231.60
-2026-10-26 23:25 PDT COORD: OWNER: release epyc1 (tender-ray, Cherry 1042435, 1.88 EUR/h). Plan: hold for new jobs now; move ot-run head + merge.lock + coord hub to epyc2; let live jobs finish / rerun; copy current kits/evidence, archive closed data to AGIdock; then verify + DELETE (OWNER 23:25: 10-
-2026-10-26 23:25 PDT COORD: OWNER: epyc1 release time = 2026-10-27 05:25 PDT; move coordinator (ot-run head/merge.lock/hub), kits and closed evidence to epyc2/intel1/intel2 or AGIdock /archive.
-2026-10-26 23:36 PDT COORD: OWNER: copy epyc1 user SSH key (GitHub push) to intel2; new hub = intel2 (ot-run head live there; git-side hub switches after key test).
-2026-10-26 23:46 PDT EPYC1-RETIRE: HUB MOVED epyc1 -> intel2: ot-run = ssh -o ControlPath=none intel2 ~/.local/bin/ot-run; autopilot/stall-watch/release-task-watch/flow-canary/die-ci timers + ~/coord mirror + merge.lock on intel2; epyc1 HELD, deleted 10-27 05:25. See lanes/EPYC1-RETIRE.md.
-2026-10-26 23:51 PDT COORD: OWNER: start freeze-independent core lanes, avoid back-and-forth -> KV-CORES-R1 (16+ KV cores) and HBM-CORE-LAT-R3 (19 slow HBM types); each type gated first (interface from plan of record, not in a pending delta/running repack) else SKIP; build once to section 12 v5.1. H
-2026-10-26 23:54 PDT COORD: OWNER: real-view KV die timing as early as possible (CLOCK-KV-R15 runs it first on R14 clock, KV-CORES-R1 orders cores by seam need); bottom-up landed fallback NOT started, owner: wait a few more days. Pushed qc-mesh-r13/r14 + hbm-mu-quad to GitHub before epyc1 release; G
-2026-10-27 00:08 PDT COORD: EPYC1-RETIRE phases 1-3 done (hub=intel2 since 23:43, 1.24 TB copied+verified, 46,160 closed files to AGIdock /archive/epyc1-retire-1026, 72 rescue branches); phase 4 at 05:25 by EPYC1-RETIRE-2 (cron 04:07). COORD confirms: 7 stuck/superseded epyc1 jobs are NOT rerun (TOP
-2026-10-27 00:09 PDT ROOT-MERGE-27: main -> 4983d8e2da (2bd05a07c2 epyc1-retire-hub first, then batch: clock-kv-r11/12/13, qc-mesh-r10/12/13 tools, path-hbm-r15, qc-su-f4g recipe). Gates baseline CHECKED. HOLD s81-rowx3 until SVCROWX rerun on intel1 (rm27/svc) ends; other holds per queue.
-2026-10-27 00:20 PDT COORD hourly: main 4983d8e2da (RM27: clock/QC/HBM tools); HEAD elemA+B LEC r11 EQ, elemA hold2 SIGNED; HBM-LEC-2 gate2 still running; hub intel2; epyc1 HELD until 05:25 release (EPYC1-RETIRE-2 cron 04:07).
-2026-10-27 00:23 PDT COORD: CLOCK-KV-R15 eb916226f1 recorded (band feed, budget STA only); CLOCK-KV-R16 started = first real-view KV die STA (owner priority); HEAD-CORE-R12 started.
-2026-10-27 00:23 PDT COORD GEOM spot-check (viewed): KV R15 r15_render.png. H-tree symmetric, 32x128 leaf grid regular, the V mesh straps run continuously across the 12.1-13.9k hub gap, with no H straps there (strap_cover intent). OK. Also viewed xcal_Q0 via GEOM-REVIEW-16 REQ (SRAM-filled core, ent
-2026-10-27 00:28 PDT COORD CORRECTION: HEAD elemA 'SIGNED' was a stale 10-25 log; neither element signed off; R12 chains (LEC->route->signoff) live intel1 oth-ubuntu-3616694-1793085923 / epyc2 oth-ubuntu-1289176-1793085922; post-route LEC made mandatory.
-2026-10-27 00:40 PDT COORD: S81 PD5 die GRT0 incl clock (accepted) -> PD6 die STA+bands; KV first real-view die STA FAIL (unsigned mesh + droop tool bug) -> R17 mesh MC sign-off; QC R16 hold PASS identity 65/66 -> R17; KV slice accepted -> KV-CORES-R2; HEAD R12 chains live.
-2026-10-27 01:19 PDT COORD: KV R17 mesh MC-signed; real-view TT +161 PASS, FF -242 band (R16 -110/-400 was draft 0.42 table, corrected); R18 + NUMBER-CHECK-KV-R17 started; GEOM-REVIEW-17 started; HBM-CORE-LAT-R4 started.
-2026-10-27 01:21 PDT COORD hourly: sign rate delta 0 all dies (>2 h); fleet idle (~800 GB admits each) -> TOK-QK + TOK-DS restarted; epyc2 scratch 16% free -> DISK-EPYC2 prune lane; HBM.B1/SU owner -> MU-QUAD-3; ROOT-MERGE-28 running.
-2026-10-27 01:21 PDT COORD GEOM spot-check (viewed): kv_core_slice.png. Entries centred, hr 2x1/2x2 H-shapes OK. The fishbone trunk is NOT only ahub: kvs_ctl/kvs_pc/h_head_p [4,2] are fishbones too -> KV-CORES-R2 told to build balanced binary H-trees for all multi-island grids. 2nd spot-check: KV R1
-2026-10-27 01:22 PDT ROOT-MERGE-28: main 4983d8e2da -> 262d070384 (head-core-r11 dfc4dfc3e7, head-rtl5 38e2758e9a +HEAD-RTL-4, s81-rowx3 348b67718f after SVCROWX PASS); gates baseline; port-bind smoke 4 dies no new fail; worktrees removed. lanes/ROOT-MERGE.md
-2026-10-27 01:23 PDT COORD: ROOT-MERGE-28 done main 4983d8e2da -> 262d070384 (head-core-r11, head-rtl5 incl RTL-4, s81-rowx3 SVCROWX PASS); merge.lock recipe corrected in lane preamble: ( flock 9 && cmds ) 9>~/coord/merge.lock.
-2026-10-27 01:38 PDT COORD: ownership gap closed for non-pending work -> S81-KITS-1 (166 S81 types, PD5 plan GRT0 = freeze rule 1, skip PD6 deltas), S81-CORE-LAT-R12 (34 cores + ODB-0370), HEAD-KITS-1 (16 head types + R12 collect), TOK-HBM restarted. Still waiting on plan deltas: QC types (R17), KV 
-2026-10-27 01:41 PDT OWNER: agreed type-reduction plan -- HBM collapse families (canonical pin slots, orientation views, shared FT) in the planU2 delta (MU-QUAD-3); S81 no re-type (PD5 frozen at GRT0), family waves + template-replica auto checks; QC/KV/HEAD near 1 design/family.
-2026-10-27 01:45 PDT COORD: INFRA-FIRST-HEAD-1 started (head infra-first plan event had no owner; holds all 16 head types).
+CODEX: 2026-10-27 09:23 PDT ROOT-priority thinLEC7b97aa307 on mainf108 only: properreset/cycle1basecase +_pinpolarity +closureprogress;171focusedPASS/2skip, actualBFp0lemmaPROVED. No22b/Q2/arrayancestry. READY root.
 
-CODEX: 2026-10-27 04:54 PDT HBM takeover: unpushed QUAD5 e91031b844 rescued/pushed codex/hbm-1027; U3f GRT kit stale tap diagnosed; collarR5 NOTSIGNED TT+16.06/FF-22.31/slew65+41, routedLEC9393EQ; q2n2gate2 OOM300G needs proof strategy fix.
+CODEX: 2026-10-27 09:23 PDT RM53 main b61dbfa6d4 == origin/main; HBM RX iterator fix + SAT-reproved ctlx/VMS hints, positives/mutants PASS; diagnostic scope only, 0 deletions.
 
-CODEX: 2026-10-27 04:57 PDT main bce29bb125 merged canary checker pin fix7689ad5f45 (7 focused PASS). S81 RM29 original face_cover import REGRESSION retained; corrected separate *_checkerfix receipt NO-REGRESSION using exact0f978 source checker and unchanged physical artifacts. Absolute postCTS desi
+CODEX: 2026-10-27 09:23 PDT HBM cores: ctlxEQ42320/VMS107998 source gaps closed; nativeSM4hard hierarchy13children max84055,parent58218/38853,noaddededges;5placedG1/full582503pairs0>405,pretreeCOND/4pin6FAIL retained; HCcallerREADY3c51+2sourcejobs live; SK508tail/emit509 exact provider+5cycles, quar
 
-CODEX: 2026-10-27 05:00 PDT main b2929dab77 plainmerged Qwen approved R21/R22 tool/source package4bd216200 (26 focused PASS); prior96d9fb0471 LEC constant1+witness refinement2f3a46a66c (12 focused incl mutants PASS), RM30 structured superset receipts preserved. HEAD==origin/main. HOLD-COLL-R1 termin
+CODEX: 2026-10-27 09:27 PDT LEC phase-resume cache audit: existing receipts lack original netlist/tool/input identities; no safe general reuse, no proof skipped. LEC owner concurs; identical-write speedup remains separate.
 
-CODEX: 2026-10-27 05:01 PDT S81 integration READY b89ee2a33: coreR14/R15 fixes+TOK9b5PASS/10mutants+finite-gradientMC; clock-port-only .048x.48 clears sstn DRT-0255 diagnostic. MC599.56/516.77ps remains structural die clock FAIL; HEAD elemA_eco SIGNED +122.36/+4.43, routedLEC pending.
+CODEX: 2026-10-27 09:28 PDT RM54 main 38ebe196be == origin/main; sound reset/cycle-one base proof + unchanged-map mtime,171LEC/5map lane testsPASS; full core proof still open,0deletions.
 
-CODEX: 2026-10-27 05:04 PDT Qwen: rst3 corrected core SIGNED100.89/2.86+routedLECEQ; QC51.84guard candidate5ce987747 dry266stacks0outside/imagePASS-COND/fullGRTlive; approvedQwen tools mergedb2929dab7; sys_c native-BB canonicalizer gapfixed9a584b617/re-synthlive.
+CODEX: 2026-10-27 09:34 PDT FLOW mtime fix18a1048a4 READY (5 tests), separate helper watch e0fbdbc0f READY (6 tests); active jobs unchanged. QC control/sender40/C60 trial7fd PLACE-only launched under explicit ROOT exception; Qwen owns actual image before CTS. Exact5b S81 canonical canary still live.
 
-CODEX: 2026-10-27 05:06 PDT HBM PR0 native stage PASS7116/9489edges delta0. Keybuf declared324² lot impossible34realSRAMs; exact8slice successor+mutant live, needs0.5685mm²/oldkeybuf and real8792-bit nativebinding (currentcore_conns absent). Correct U5e_r targetedchecker only4missingkeybuf.
+CODEX: 2026-10-27 09:39 PDT RM55 fallback/geometry artifacts; RM56 main a76dafeab6 == origin/main exact opt-in ROWX native SRAM, full production smoke+mutantsPASS; parent-lotFAIL/no physical adoption,0deletions.
 
-CODEX: 2026-10-27 05:10 PDT main8810c5e6a4 plainmerged S81 shared clock port/MC/XR7 then native ROM bb runnera3d325c83d then A/C landedSDC+reset polarityd80e01ac1 (57 focused PASS;8bandLEC+2mutant existing PASS). No top-level plan deltas. Fresh S81 cores queued. LEC memory fixec325894af trial Q2n2 l
+CODEX: 2026-10-27 09:39 PDT nativePHYsynth823107um2/12115FFexit0(dbeb4611f); realdigital6tiles, analogshapeOPEN; physicalpinFFmodeldecoder+6proven/encoderglobal+2FAILframephase. SerDesbenchclockquantizationfixed3f0a76341(833/833.25ps,+300.120ppm); payloadphysicalprofilebencheslive. PGindependentterm
 
-CODEX: 2026-10-27 05:12 PDT explicitreset S81/HEAD parked; handoff/codex_s81_head_20261027_0511.md; d80e01ac1 A/CsourceREADY57tests,3corequeue trials,HEADecoSIGNED/routedLECpending,MCclockFAIL.
+CODEX: 2026-10-27 09:41 PDT TOK-DS L0 programme now zero GAP:24 LOWERED/41 PARTIAL, source5c27db4d4; no extra residency cycles. L2 later-hop compile live unit1913762 on intel1.
+CODEX: HBM N4 fourorphans diagnosed entirelymissingcentralprovider; exact888bit additive linkprep+reviewedlotprobe `codex/hbm-n4-links-1027@366f79971`. TOK owns realwrapper24d4f93a6, LEC mappedrootprofile, HBMplan nativejob/controlbindings. No aliases/no routepass; actualpins/405stations/modelcycles
 
-CODEX: 2026-10-27 05:12 PDT explicitreset PARK root main8810c5e6a4==origin/main; fullsource/jobs/failures/urgent05:25retirement packet handoff/codex_root_20261027_0511.md + CODEX-LOG Handoff.3proofjobscontinue; workers parking.
+CODEX:09:43 S81 GO-boundary integration candidate9f575a2e2b, controller and dated-LC golden/mutants PASS; no canonical adoption. XRT3 OOM retry38057EQ. qbank/sstn finish held current combined density.
 
-CODEX: 2026-10-27 05:13 PDT HBM PARK reset:190c6da3ff source+positive2088/0+lintPASS pushed, mutantunit250387 live; QUAD5e95rescue, propertargetchecker only4missingkeybuf; full handoff/codex_hbm_20261027_0511.md.
+CODEX: 2026-10-27 09:46 PDT SYS_C4561FAIL diagnosed as timebudget-clearedallH aftercounterbitpeeling; smallwitnessfix0d1e7a780174testsPASS/2skip, exactfrozenAIGretryLIVE(noRTL/synthrepeat). HCP9,250/9,662 diagnostic/412diff preserved; CDCproofsLIVE.
+
+CODEX: 2026-10-27 09:46 PDT CODEX HEAD bootstrap QUALIFIED: a480f95d1 + actual coupon fa34757d2/459ad0359; 3 pre-START HOST276 payload frames in old/new, new raw epochs and PHY reset correct, mission leaves held; 201 post-START equal comparisons, zero added source cycles. Native PHY packet/token and
+
+2026-10-27 09:46 PDT CODEX: QC R6 PG FAIL diagnosed (all-R0 stacks short actual LEF rails); no route. Canonical row/pin+dieedge fix0a3c806f9 READY,21focusedPASS; exporter successor8 running next. R25 inherited DRC stilllive.
+
+CODEX: 2026-10-27 09:49 PDT HEAD transport coupon PASS fa34757d2:3 real HOST276 frames move pre-START in old/new payload, candidate epochs/PHY reset1 vs0, mission cores0;201 post-START comparisons equal. Production recipe still BLOCKED2 on actual HBC/START authority.
+
+CODEX: HEAD native40FT source e25676d2da ready; actual A/B HM0 routed hold residuals diagnosed (A-8.86/199, B-3.92/53), no clock changes. A/B data-only margin2 successors live intel1/epyc2 under codex-head-1027/{elemA_m2,elemB}.eco_residual2_clean. B missing signoff bundle + stale absent-port metada
+CODEX: KV pending event563778e9a integrates legalwidePV+127actualstationmoves/0cycles+160parentclockresites; imageviewed, combinedG0client2143415 live. Native5c7strictPASS0, portbind5workeractive. FallbackPLANPREP d06cccbc4 done/no builds. ModeledSerDesPGconnects but IR114mVPHY/485-493mVglueFAIL; R4
+
+CODEX: 2026-10-27 10:00 PDT Collected legacy KV reference physical SIGNED TT+12.02/FF+2.93 (0f978 signoff_hold), Qwen owns fit/proof/preservation. QC7fd actual-placement review PASS-COND and continuation live; exact5b canonical canary still repairing hold.
+
+CODEX: 2026-10-27 10:09 PDT RM57 native HEAD public generator/schema fixed47PASS; RM58 main6e1b890791==origin/main GBguard+HBMnative+clocktests,9+11controlsPASS. Interim ROOT-MERGE handoff recorded; no live own jobs, still active until explicit reset.
+
+CODEX: 10:10 PDT actual S8 minimum xhead capsule63a3d2b4c collected: GU/QKV pin/window+3controls PASS; O/down no legal GO failure edge, explicit PARTIAL and no full-row/token claim. Native imagec2d remains programme-blocked; freshQCv6 resolves LS407 hook.
+
+CODEX: 2026-10-27 10:13 PDT explicit-reset ROOT-MERGE PARK: main60b5ddf523==origin/main, RM59 already-started gates/Htree/HEAD support pushed; ownworktree removed/no live jobs. RCX six approved but unmerged named in final handoff.
+
+CODEX: 2026-10-27 10:12 PDT EXPLICITRESET PARK. Root main6e1b890791 throughRM58; mergeleadfinishing already-started safeRM59 flow/Htree/HEADbootstrap/ROMsource. Full per-lane branch/job/result/failure/OWNER handback in CODEX-LOG.md section Handoff to Claude2026-10-2710:12PDT plus allhandoff/codex_*i
+CODEX: 2026-10-27 10:12 PDT HBM-plan PARK explicitreset: fdc89866a8 pushed/WTclean, C11 unadopted; narrow7e334schemaREADY, actual2clocktaps+coherentH1pins; quarter71648+channelsc911 sourcepackets,20/21colliders/47pin6/142nativeedges stillopen; no live ownjobs. PATH-HBM parked notes.
+
+CODEX: 2026-10-27 10:16 PDT sharedflowPARK explicitreset; finalpacket handoff/codex_flow_interim_20261027_1008.md. VMRnativeSIGNED/5342EQ rootapprovedadopt98d3c304f548 queuedrow792, publicationpending;4canariesactive; allproof/source/OWNER nextsteps preserved, no kills/newjobs.
+2026-10-27 12:03 PDT S81-CORES-R1 PARKED: cfg7_seq_bfp (228) master-slice kit enqueued db741d0e57f0 (trial grt, GEOM REQ); 10 more cores on unattended chain2 (intel2 s81-cores-r1/logs/chain2_*); LEC NEQ blocks l1/l3/bksel_c/rxsf/hcore/vsw (flow/lec class), slice windows block l2/l4/h0/bk_g; READY+AS
+- 2026-10-27 12:20 PDT KV-KITS-7 PARKED: sys_c q3 kit PREFLIGHT-2 PASS, place live + row 925b16a6ca75 GEOM REQ; kit_contract/gen_phys partition fixes READY (38 tests pass) claude/kv-kits-7-1027@86fa10a59d; h_head_p live; hr/ahub/astk blocked (see lanes/KV-KITS.md PARKED).
+- 2026-10-27 12:47 PDT QC-KITS-R1 PARKED: 0 kits (all QC types in R28 event); face_guard fix READY claude/qc-kits-r1-1027@f73174ec4b; plan-fix items 1-8 in lanes/INFRA-FIRST-QC.md; coll_ft pre-kit LEC EQUIVALENT 8946/8946.
 ```
 
-
-## CODEX QC-CORES / QC-SU-PROG-L2 PARK on explicit reset (2026-10-27 10:14 PDT)
-No new jobs after reset. All inherited/own live jobs left running; no wait for terminal results.
-- VMR F4K COMPLETE physical+proof: epyc2:/srv/opentallas-scratch2/claude/codex-qc-cores-0815/vmr_f4k_final, native signoff_f4k/signoff.json TT112.38/FF1.40ps/0ep/DRV0/PG0open/clockPASS,DRC0/ANT0; lec_f4k_logic/lec.json EQ5342/5342,0diff/0undecided. Root explicitly approved composed publication. SUPPORTED mode=adopt/goal=finish row98d3c304f548 queued src codex/qc-cores-0815@77013e505901e6fc6fd1079fc283284d0fe70e4f, normalguards intact; hub tick pending at lastread. FLOW/autopilot owns publication; NO newcollectfeature/no physical/proof rerun. Exact receipt copies lec_routed_autopilot_adopt_f4k/ preserve mtimes, root routed_proof_adoption.json has approval/tool/source/ODB/export/hyp hashes+complete113eq/0const/allscopes, no hints/island_ft. Paired base6_final_logic.v+.export.json measures0excluded signalITerms, rawexport+failedTAPproof and b156 rejection preserved. ODB2560e8bf1ccb9ef653f250b1dfd230fef7e2b8cf51037a7d93e481999f139e02;logic72ca78c74c7ed7d709392136597591dbf22a46cf51b4a229c234ffa384d63d0a. Source receipts ba696+77013 pushed; root merges.
-- BTAB R10 GRTDONE: intel1:/srv/opentallas-scratch2/claude/codex-qc-btab-0828/btab_m0_r10, exact5_1_grt.odb.Overflow0/ANT0,setupTT364.30/DRV0,pinmeanTT248.39,windowsTT14.6/FF14psPASS (earlierCTS20.8FAILretained). Independent finalgeometry/image PASS bd9547a71 (3235timedarcsmax366.174,0over405/loops,all11230CORErowsrailslegal,pinE5.3/S5.0). FFhold-only successorQUEUED, NOT started atlastread: btab_m0_r10_ff, src codex/qc-prog-halo-0820@8b078ae7175c9bf87d5bd0e92a1191cb74cf54d9, runner /srv/opentallas-scratch2/claude/codex-qc-btab-0828/btab_r10_ff.sh. ActualFFpinmeanbinding,same833/60/25/IO,DATAonly,structuralstop<-100ps/>2000ep,NODRT. COLLECT r10_ff.log then geometry/image before anyDRT. R9e/R10 helpers + all failed predecessors in ownbranch.
-- Prog fullclip actualroute LIVE: AP501990c30b6d, epyc2:/srv/opentallas-scratch2/claude/codex-qc-cores-0815/prog_l2h3_route2, ot-rununit3062330-1793120014/containercodex-prog-h3-route. Latest1005violations it~10/11, reducing; no terminal verdict yet. Exact496piecePG-awarefullstrip source a473c722ce, independentGEOM648e9fef3 PASSCOND (2358timedarcsmax354.726/0over405/0loops,3291FFrowsrailslegal,pinE5.3/S5.0). RequiredclearoldSRAMNEhotspot; ifrecursdiagnosecapacity,nomorehalosweep. EarlierH2intentFAIL64skippedboxes and H3route422preflightFAIL retained; route2fixedexactrtl_lint+io_hold_note movedunchangedintonotes (noSDCvaluechanges). COLLECT route_h3.log, nativeTT/FF/routedLEC APchain. InheritedoldL2h untouched.
-- Actual SU retention mechanism full-source synthesis PASS but formal stillLIVE (no physicalkit credit): own intel2:/srv/opentallas-scratch2/claude/codex-qc-su-const-0920, WTcodex-qc-su-const-0920 branch a465c0c78db244dfad5bb4cef1576eeda56b111b. Source7a explicit29providers+exactSRAMheaderABI; currentwidthsyntax437 cherry-picked inWT. Vanilla34407FF/24tiedports vs preserved34475FF/0tiedports (+68ORIGINAL:24realfirst+44downstream). Original odr[34..53,214..217] actualclk, D1/QN0; finalc_o[49..68,297..300] distinctoriginalFF, appliesw_l0only. Production ORFS requires scopedupstreamconstantprep before unchangedguardedhook (earlyhookalonewillrejectnonliteralD), and actualnativekit/map/clock/timing stillowed. Recipes/receipts results/qc_const_actual_1027. FULLsourceglobal-eventmiter +wrongDmutant running intel2 clients2292578/2298357, units oth-ubuntu-2293605-1793120463 / oth-ubuntu-2299605-1793120485, containerscodex-qc-const-proof-globalclk/codex-qc-const-mutant-globalclk,48G/8thr each. Logs sibling codex_qc_const_globalclk_{proof,mutant}.otrun.log, ~100MB, bothcurrentlyequiv_simple progressingrsqNR1 internals, no finalverdict. Initial opt_dff-only20Dsnonliteral resolvedstandardfine lowering; initialfullmitererrorasyncSATmodel unsupported resolvedexactclk2fflogic, olddiagnosticpreserved. equiv_simple20outputfailinitial canrequirelater5-stepinduction (2outboundstages); do NOT call NEQ untilterminal/miterdiagnosis. Fullformal/mutant stillowed; leavejobsrunning.
-- Legacy disposition explicit: intel2kref-r6-1582446 Up39h/GRTextra21of30 preA0flatclock SUPERSEDED currentA0; intel1sramif2-prog_fh16_s40-rt6-1437971 Up33h/DRTguides58/7viol SUPERSEDEDfullclipL2h3. BTABactualcontainers suffix1217757(pid1217858,Up33h/700viol) and3244093(pid3244164,Up9h/240viol) BOTHsameintel2path-qc-sramif4/btab_fh_s40:/work; concurrentwritesinvalidateoutputs, SUPERSEDEDR9e/R10. Nootherskilled/restarted; OWNER? exactretirementlogged CODEX-LOG. Rootrequest1217577/3244049 aretranscriptionvariants, actualverifiednamesabove.
-- A0 midrow-driver change DEFERRED by COORD07:18 until related-pair intraA0 STA fails; clockowners informed. No unapprovedconstant-class/drop contract adopted; routineoriginalFFpreservation only perrootauthorization.
