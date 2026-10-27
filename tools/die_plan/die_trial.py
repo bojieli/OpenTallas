@@ -110,12 +110,13 @@ def core_obs(t):
     return out
 
 
-def abstract_lef(P, tn, slots_only_pins=False):
+def abstract_lef(P, tn, slots_only_pins=False, module_name=None):
     """partition abstract (see module doc).  Returns (lef text, stats)."""
     t = P.types[tn]
     w, h = t["outline_um"]
+    module_name = module_name or t["module"]
     top = P.layer_budget["partition_signal_max"]
-    L = ["VERSION 5.8 ;", 'BUSBITCHARS "[]" ;', 'DIVIDERCHAR "/" ;', f"MACRO {t['module']}", "  CLASS BLOCK ;",
+    L = ["VERSION 5.8 ;", 'BUSBITCHARS "[]" ;', 'DIVIDERCHAR "/" ;', f"MACRO {module_name}", "  CLASS BLOCK ;",
          "  ORIGIN 0 0 ;", f"  SIZE {w:.4f} BY {h:.4f} ;"]
 
     def pin(name, d, use, rects):
@@ -157,7 +158,7 @@ def abstract_lef(P, tn, slots_only_pins=False):
     for i in sorted(by_layer):
         L.append(f"    LAYER M{i} ;")
         L += [f"      RECT {a:.4f} {b:.4f} {c:.4f} {d:.4f} ;" for a, b, c, d in by_layer[i]]
-    L += ["  END", f"END {t['module']}", "END LIBRARY", ""]
+    L += ["  END", f"END {module_name}", "END LIBRARY", ""]
     st = dict(pins=npins, cores=len(cores), cores_with_view=sum(1 for c in cores if c[6]),
               core_area_um2=round(sum((c[2] - c[0]) * (c[3] - c[1]) for c in cores), 1),
               core_top_layers=sorted({c[4] for c in cores}))
@@ -410,6 +411,7 @@ def route_netlist(P, type_bits):
     spine.  type_bits {type: {bus: nbits}} from the plan pins."""
     v = [f"module {sv(P.name)}_route (rst_n);", "  input rst_n;"]
     insts, nft = [], 0
+    smod = standin_module_names(P)
     for n, p in sorted(P.parts.items()):
         tn = p["type"]
         t = P.types[tn]
@@ -424,7 +426,7 @@ def route_netlist(P, type_bits):
             conns.append(f".{s['name']}_i({w})")
             conns.append(f".{s['name']}_o({w})")
             nft += k
-        insts.append(f"  {t['module']} {sv(n)} ({', '.join(conns)});")
+        insts.append(f"  {smod[tn]} {sv(n)} ({', '.join(conns)});")
     v += insts + ["endmodule"]
     return "\n".join(v) + "\n", nft
 
@@ -934,6 +936,18 @@ def standin_module_names(P):
     return {tn: (t["module"] if n[t["module"]] == 1 else f"{t['module']}__{tn}") for tn, t in P.types.items()}
 
 
+def retarget_lef_macro(text, old, new):
+    """Alias one closed LEF macro without changing pins, OBS or its plan RTL name."""
+    if old == new:
+        return text
+    for keyword in ('MACRO', 'END'):
+        pat = re.compile(r'^(\s*' + keyword + r'\s+)' + re.escape(old) + r'(\s*)$', re.M)
+        text, count = pat.subn(lambda m: m.group(1) + new + m.group(2), text)
+        if count != 1:
+            raise ValueError(f'closed LEF: expected one {keyword} {old}, found {count}')
+    return text
+
+
 def retarget_shared_modules(P, top, smod):
     """die top text with every instance of a shared-module type re-pointed at its per-type stand-in module."""
     for name, p in P.parts.items():
@@ -1004,19 +1018,23 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
                 types=len(P.types), ports=len(P.ports), lanes=len(raw.get("lanes", [])), image=IMAGE)
     import hashlib
     meta["plan_sha256"] = hashlib.sha256(Path(plan_path).read_bytes()).hexdigest()
-    # abstracts
+    # Abstracts need one physical master per type, like the STA stand-ins.
+    # Shared RTL names can have different outlines, pins and internal core OBS.
+    smod = standin_module_names(P)
     lefs, ab = [], {}
     type_bits = {}
     for tn, t in sorted(P.types.items()):
         v = Path(views) / tn / f"{t['module']}.lef" if views else None
         if v and v.is_file():
-            (out / "abstracts" / v.name).write_text(v.read_text())
+            txt = retarget_lef_macro(v.read_text(), t["module"], smod[tn])
+            (out / "abstracts" / f"{smod[tn]}.lef").write_text(txt)
             ab[tn] = dict(source="closed view", path=str(v))
         else:
-            txt, st = abstract_lef(P, tn)
-            (out / "abstracts" / f"{t['module']}.lef").write_text(txt)
+            txt, st = abstract_lef(P, tn, module_name=smod[tn])
+            (out / "abstracts" / f"{smod[tn]}.lef").write_text(txt)
             ab[tn] = dict(source="plan abstract", **st)
-        lefs.append(f"{t['module']}.lef")
+        ab[tn]["physical_module"] = smod[tn]
+        lefs.append(f"{smod[tn]}.lef")
         bits = defaultdict(int)
         for bus, bit, *_ in gen_phys.type_pins(P, tn):
             bits[bus] = max(bits[bus], bit + 1)
@@ -1067,7 +1085,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     (out / "run_clock.sh").write_text(run_sh("clock", 32, 4, ck).replace("-v $D:/work", "-v $D:/work"))
     # psm
     power = part_power(P, plan_dir, density)
-    pv = [f"module {sv(P.name)}_psm ();"] + [f"  {P.types[p['type']]['module']} {sv(n)} ();" for n, p in sorted(P.parts.items())] + ["endmodule"]
+    pv = [f"module {sv(P.name)}_psm ();"] + [f"  {smod[p['type']]} {sv(n)} ();" for n, p in sorted(P.parts.items())] + ["endmodule"]
     (out / "psm" / "psm.v").write_text("\n".join(pv) + "\n")
     (out / "psm" / "pdn.tcl").write_text(psm_pdn_tcl(P))
     bumps = bump_grid(P, io)
@@ -1084,7 +1102,6 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
                                                          "/work/psm/psm.tcl > /work/psm/psm.log 2>&1"))
     # sta stand-ins
     nff = 0
-    smod = standin_module_names(P)
     for tn, t in sorted(P.types.items()):
         d = out / "sta" / "parts" / smod[tn]
         d.mkdir(parents=True, exist_ok=True)
