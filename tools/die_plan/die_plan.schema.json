@@ -1402,6 +1402,15 @@
           "budget_owner": {
            "type": "string"
           },
+          "merged_clock_ports": {
+           "type": "array",
+           "minItems": 2,
+           "uniqueItems": true,
+           "items": {
+            "type": "string",
+            "minLength": 1
+           }
+          },
           "from_root_um": {
            "type": "number",
            "minimum": 0
