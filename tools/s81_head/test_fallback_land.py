@@ -50,3 +50,35 @@ def test_variant_one_entry_and_htree_full_depth(tmp_path):
     nd = DT.build_htree(P, taps, 300.0, True)
     leaf_levels = {n["level"] for n in nd.values() if n["taps"]}
     assert len(leaf_levels) == 1                                                       # equal-depth leaves
+
+
+def test_tree_site_legal(tmp_path):
+    import types
+    import die_trial as DT
+    import schema as S
+    out = tmp_path / "fb1.json"
+    F.cmd_variant(types.SimpleNamespace(plan=str(PLAN), out=str(out)))
+    P = S.Plan(S.load(str(out)))
+    *_, m = DT.clock_kit(P, tmp_path / "clk", 300.0, 450.0, True, True)
+    assert m["site_legal"]["illegal"] == {} and m["site_legal"]["forbidden_rects"] == 1332
+
+
+def test_tree_site_slide_keeps_lengths(tmp_path):
+    import types
+    import die_trial as DT
+    import schema as S
+    out = tmp_path / "fb1.json"
+    F.cmd_variant(types.SimpleNamespace(plan=str(PLAN), out=str(out)))
+    P = S.Plan(S.load(str(out)))
+    *_, m = DT.clock_kit(P, tmp_path / "clk", 300.0, 450.0, True, False, True)
+    assert m["site_legal"]["mode"] == "slide" and m["site_legal"]["illegal"] == {}
+
+
+def test_dataflow_monitor_uniform_tree_bus():
+    import clock_landing_plan as CLP
+    import schema as S
+    p = _plan()
+    t = F.table(p, "part")
+    tb, parent, dist = CLP._dataflow_tree(S.Plan(p), t, {x["id"]: x for x in p["ports"]}, "ctl")
+    assert tb["hd_tile"] == "o" and tb["hd_ctl"] is None and parent["ctl"] is None
+    assert all(dist[c] < dist[n] for n, c in parent.items() if c is not None)

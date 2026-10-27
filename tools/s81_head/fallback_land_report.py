@@ -29,6 +29,56 @@ def arrivals(f):
     return late, early, slew
 
 
+def plan_rects(plan):
+    """die-frame hard-core outlines and VDDPHY domain rects (independent of die_trial's SiteMap; no halo)."""
+    T = plan["partition_types"]
+    cores, parts = [], []
+    for p in plan["partitions"]:
+        t = T[p["type"]]
+        W, H = t["outline_um"]
+        ox, oy = p["origin_um"]
+        o = p.get("orient", "R0")
+        parts.append((ox, oy, ox + W, oy + H))
+        for c in t.get("hard_cores", []) or []:
+            cx, cy = c["origin_um"]
+            cw, ch = c["outline_um"]
+            if c.get("orient", "R0") in ("R90", "R270", "MXR90", "MYR90"):
+                cw, ch = ch, cw
+            x = W - cx - cw if o in ("MY", "R180") else cx
+            y = H - cy - ch if o in ("MX", "R180") else cy
+            cores.append((ox + x, oy + y, ox + x + cw, oy + y + ch))
+    phy = [d["rect_um"] for d in plan["die"].get("pg", {}).get("domains", []) or []
+           if any("PHY" in str(n) for n in d.get("nets", []))]
+    return cores, phy, parts
+
+
+def cell_sites(run):
+    import re
+    xy = {}
+    for ln in (run / "clk" / "ctree.tcl").read_text().splitlines():
+        m = re.match(r"place_inst -name (\S+) -location \{([\d.]+) ([\d.]+)\}", ln)
+        if m:
+            xy[m.group(1)] = (float(m.group(2)), float(m.group(3)))
+    return xy
+
+
+def site_check(plan, run):
+    cores, phy, parts = plan_rects(plan)
+    inr = lambda q, R: any(r[0] < q[0] < r[2] and r[1] < q[1] < r[3] for r in R)
+    xy = cell_sites(run)
+    bad = {"core": [], "phy": [], "outside": []}
+    for i, q in xy.items():
+        if inr(q, cores):
+            bad["core"].append(i)
+        elif inr(q, phy):
+            bad["phy"].append(i)
+        elif not any(r[0] <= q[0] <= r[2] and r[1] <= q[1] <= r[3] for r in parts):
+            bad["outside"].append(i)
+    return dict(cells=len(xy), buffers=sum(1 for i in xy if i.startswith("b")), repeaters=sum(1 for i in xy if i.startswith("r")),
+                on_core=len(bad["core"]), in_phy=len(bad["phy"]), outside_partition=len(bad["outside"]),
+                examples={k: v[:5] for k, v in bad.items() if v}, hard_core_rects=len(cores), phy_rects=len(phy))
+
+
 def render(plan, run, tree, A, rows, budget, png):
     import re
     import matplotlib
@@ -43,11 +93,20 @@ def render(plan, run, tree, A, rows, budget, png):
         w, h = T[p["type"]]["outline_um"]
         ax.add_patch(Rectangle((p["origin_um"][0] / 1000, p["origin_um"][1] / 1000), w / 1000, h / 1000,
                                fc=col.get(p["type"], "#efefef"), ec="#888", lw=0.3))
-    xy = {}
-    for ln in (run / "clk" / "ctree.tcl").read_text().splitlines():
-        m = re.match(r"place_inst -name (\S+) -location \{([\d.]+) ([\d.]+)\}", ln)
-        if m:
-            xy[m.group(1)] = (float(m.group(2)) / 1000, float(m.group(3)) / 1000)
+    cores, phy, _ = plan_rects(plan)
+    for r in cores:
+        ax.add_patch(Rectangle((r[0] / 1000, r[1] / 1000), (r[2] - r[0]) / 1000, (r[3] - r[1]) / 1000,
+                               fc="#c9d3e6", ec="#7f8fb0", lw=0.2))
+    for r in phy:
+        ax.add_patch(Rectangle((r[0] / 1000, r[1] / 1000), (r[2] - r[0]) / 1000, (r[3] - r[1]) / 1000,
+                               fc="none", ec="#b05050", lw=0.4, hatch="//"))
+    xy = {k: (v[0] / 1000, v[1] / 1000) for k, v in cell_sites(run).items()}
+    inr = lambda q, R: any(r[0] < q[0] * 1000 < r[2] and r[1] < q[1] * 1000 < r[3] for r in R)
+    ok = [q for q in xy.values() if not inr(q, cores) and not inr(q, phy)]
+    badc = [q for q in xy.values() if inr(q, cores) or inr(q, phy)]
+    ax.scatter([q[0] for q in ok], [q[1] for q in ok], s=2.5, c="#222", marker="s", lw=0, zorder=2)
+    if badc:
+        ax.scatter([q[0] for q in badc], [q[1] for q in badc], s=18, c="red", marker="x", lw=0.8, zorder=6)
     for c, par in tree["parent_of"].items():
         if c in xy and par in xy:
             ax.plot([xy[c][0], xy[par][0]], [xy[c][1], xy[par][1]], color="#555", lw=0.35)
@@ -73,7 +132,8 @@ def render(plan, run, tree, A, rows, budget, png):
     m = tree["meta"]
     ax.set_title(f"s81_head FB1 landed fallback: {len(plan['partitions'])} regions = partitions, {m['taps']} entries, "
                  f"{m['repeaters']} reps, leaf {m['leaf_um']:g} um; red = landed crossing |d| > {budget:g} ps; "
-                 f"ring = entry slew > 320 ps  [mm]", fontsize=8)
+                 f"ring = entry slew > 320 ps\nblue = hard cores, hatched = VDDPHY, black squares = tree buffers/repeaters "
+                 f"({len(ok)} legal, {len(badc)} illegal = red x)  [mm]", fontsize=8)
     fig.tight_layout(); fig.savefig(png, dpi=130); plt.close(fig)
 
 
@@ -122,10 +182,13 @@ def main(argv=None):
                                  landed_over_budget=sum(1 for v in dv if v > a.budget_ps),
                                  landed_margin_ps=round(a.budget_ps - max(dv), 2),
                                  worst=sorted(rows, key=lambda r: -abs(r[f"d_{c}"]))[:6])
+    out["site_check"] = site_check(plan, run)
     if "TT" in A and "FF" in A:
         out["drift_max_ps"] = max(r["drift_ps"] for r in rows)
         ok = all(out["corners"][c]["landed_over_budget"] == 0 for c in ("TT", "FF"))
+        sc = out["site_check"]
         out["verdict"] = dict(landing_window="PASS" if ok else "FAIL",
+                              tree_sites="PASS" if sc["on_core"] + sc["in_phy"] + sc["outside_partition"] == 0 else "FAIL",
                               scope="die clock landing window only; NOT the 12.4a freeze gate (needs partition views "
                                     "with landing rings, ring-window STA, real-view die STA)")
     if a.png:

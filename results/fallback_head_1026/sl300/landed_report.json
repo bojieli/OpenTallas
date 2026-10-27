@@ -1,0 +1,181 @@
+{
+ "method": "FB1 one entry per partition; every plan port landed; phase offset of region roots on the GRT-RC routed die clock (combined die global_route, signals M4-M7 + clock M8-M9, 50 congestion it)",
+ "budget_ps": 416.5,
+ "tree_meta": {
+  "leaf_um": 300.0,
+  "rep_um": 450.0,
+  "full_depth": true,
+  "buffer": "BUFx24_ASAP7_75t_R",
+  "wire_r_kohm_um": 0.0043358024999999994,
+  "wire_c_ff_um": 0.10824363000000001,
+  "tap_load_ff": 3.0,
+  "nodes": 1663,
+  "leaves": 326,
+  "repeaters": 730,
+  "taps": 326,
+  "wire_um": 670963.6,
+  "levels": 12,
+  "site_legal": {
+   "mode": "slide",
+   "slide_fallbacks": 118,
+   "cells": 2393,
+   "illegal": {},
+   "forbidden_rects": 1332,
+   "moved_nodes": 1059
+  }
+ },
+ "crossings": 428,
+ "corners": {
+  "TT": {
+   "entries": 326,
+   "insertion_min_ps": 5733.5,
+   "insertion_max_ps": 6202.2,
+   "insertion_spread_ps": 468.7,
+   "entry_slew_max_ps": 81.0,
+   "entry_slew_over_320": 0,
+   "landed_phase_max_abs_ps": 212.44,
+   "landed_over_budget": 0,
+   "landed_margin_ps": 204.06,
+   "worst": [
+    {
+     "port": "chW3_b0__0",
+     "src": "tW3b10",
+     "dst": "tW3b9",
+     "width": 565,
+     "d_TT": -212.44,
+     "d_FF": -188.36,
+     "drift_ps": 24.08
+    },
+    {
+     "port": "host_tx__6",
+     "src": "sp5",
+     "dst": "host",
+     "width": 276,
+     "d_TT": -201.58,
+     "d_FF": -183.45,
+     "drift_ps": 18.13
+    },
+    {
+     "port": "host_rx__0",
+     "src": "host",
+     "dst": "sp5",
+     "width": 276,
+     "d_TT": 201.58,
+     "d_FF": 183.45,
+     "drift_ps": 18.13
+    },
+    {
+     "port": "m0S_tx__6",
+     "src": "sp5",
+     "dst": "host",
+     "width": 64,
+     "d_TT": -201.58,
+     "d_FF": -183.45,
+     "drift_ps": 18.13
+    },
+    {
+     "port": "m0S_rx__3",
+     "src": "host",
+     "dst": "sp5",
+     "width": 64,
+     "d_TT": 201.58,
+     "d_FF": 183.45,
+     "drift_ps": 18.13
+    },
+    {
+     "port": "m7S_tx__6",
+     "src": "sp5",
+     "dst": "host",
+     "width": 64,
+     "d_TT": -201.58,
+     "d_FF": -183.45,
+     "drift_ps": 18.13
+    }
+   ]
+  },
+  "FF": {
+   "entries": 326,
+   "insertion_min_ps": 4962.4,
+   "insertion_max_ps": 5375.7,
+   "insertion_spread_ps": 413.3,
+   "entry_slew_max_ps": 78.7,
+   "entry_slew_over_320": 0,
+   "landed_phase_max_abs_ps": 188.36,
+   "landed_over_budget": 0,
+   "landed_margin_ps": 228.14,
+   "worst": [
+    {
+     "port": "chW3_b0__0",
+     "src": "tW3b10",
+     "dst": "tW3b9",
+     "width": 565,
+     "d_TT": -212.44,
+     "d_FF": -188.36,
+     "drift_ps": 24.08
+    },
+    {
+     "port": "host_tx__6",
+     "src": "sp5",
+     "dst": "host",
+     "width": 276,
+     "d_TT": -201.58,
+     "d_FF": -183.45,
+     "drift_ps": 18.13
+    },
+    {
+     "port": "host_rx__0",
+     "src": "host",
+     "dst": "sp5",
+     "width": 276,
+     "d_TT": 201.58,
+     "d_FF": 183.45,
+     "drift_ps": 18.13
+    },
+    {
+     "port": "m0S_tx__6",
+     "src": "sp5",
+     "dst": "host",
+     "width": 64,
+     "d_TT": -201.58,
+     "d_FF": -183.45,
+     "drift_ps": 18.13
+    },
+    {
+     "port": "m0S_rx__3",
+     "src": "host",
+     "dst": "sp5",
+     "width": 64,
+     "d_TT": 201.58,
+     "d_FF": 183.45,
+     "drift_ps": 18.13
+    },
+    {
+     "port": "m7S_tx__6",
+     "src": "sp5",
+     "dst": "host",
+     "width": 64,
+     "d_TT": -201.58,
+     "d_FF": -183.45,
+     "drift_ps": 18.13
+    }
+   ]
+  }
+ },
+ "site_check": {
+  "cells": 2393,
+  "buffers": 1663,
+  "repeaters": 730,
+  "on_core": 0,
+  "in_phy": 0,
+  "outside_partition": 0,
+  "examples": {},
+  "hard_core_rects": 1320,
+  "phy_rects": 12
+ },
+ "drift_max_ps": 24.08,
+ "verdict": {
+  "landing_window": "PASS",
+  "tree_sites": "PASS",
+  "scope": "die clock landing window only; NOT the 12.4a freeze gate (needs partition views with landing rings, ring-window STA, real-view die STA)"
+ }
+}

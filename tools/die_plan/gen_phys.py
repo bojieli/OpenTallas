@@ -899,6 +899,64 @@ def die_islands_tcl(P, tn):
     return "\n".join(lines) + "\n"
 
 
+RESERVED_KINDS = ("die_clock_tree", "landing_ring_bank")
+
+
+def reserved_sites_tcl(P, tn):
+    """Opt-in clock.reserved_sites_um (FALLBACK-HEAD-2): per-type reserved site rectangles, type frame.
+
+    kind die_clock_tree: die clock-tree cell sites (union over every instance of the type, mapped from the die
+    tree); a permanent hard placement blockage, physical-only cells cleared, exactly like die_islands_um.
+    kind landing_ring_bank: the landing ring storage bank; a GPL-only full blockage created AFTER the landing
+    rings are FIRM in it (other logic stays out of the bank), released before DPL (DPL counts fixed cells
+    under a blockage as not placed in rows). Returns (pre_tcl, post_landing_tcl, release_tcl); empty strings
+    when the key is absent, so a plan without it emits a byte-identical kit.
+    """
+    t = P.types[tn]
+    rows = t.get("clock", {}).get("reserved_sites_um", [])
+    if not rows:
+        return "", "", ""
+    w, h = t["outline_um"]
+    hard, bank = [], []
+    for r in rows:
+        x0, y0, x1, y1 = r["rect_um"]
+        if r.get("kind") not in RESERVED_KINDS:
+            raise ValueError(f"{tn}: reserved site kind {r.get('kind')} not in {RESERVED_KINDS}")
+        if not (0 <= x0 < x1 <= w and 0 <= y0 < y1 <= h):
+            raise ValueError(f"{tn}: reserved site outside outline or empty: {[x0, y0, x1, y1]}")
+        (hard if r["kind"] == "die_clock_tree" else bank).append((x0, y0, x1, y1))
+    # A die clock-tree hole inside a ring bank is legal: landing_placement.tcl packs the ring around it
+    # (cland_avoid_rects) and fails closed when the bank no longer holds the ring.
+    def create(rects, var):
+        out = []
+        for x0, y0, x1, y1 in rects:
+            q = f"[expr {{round({x0:g}*$rs_u)}}] [expr {{round({y0:g}*$rs_u)}}] [expr {{round({x1:g}*$rs_u)}}] [expr {{round({y1:g}*$rs_u)}}]"
+            out += [f"set rs_k [odb::dbBlockage_create $rs_b {q}]", f"lappend {var} $rs_k", f"lappend rs_rects [list {q}]"]
+        return out
+    head = ["uplevel #0 {", "set rs_b [ord::get_db_block]", "set rs_u [[ord::get_db_tech] getDbUnitsPerMicron]",
+            "set rs_rects {}"]
+    pre = post = rel = ""
+    if hard:
+        pre = "\n".join(["# Generated (gen_phys reserved_sites_um): die clock-tree cell sites, permanent hard blockages.",
+                          *head, "source /work/keepout_phys.tcl", "set rs_hard {}", *create(hard, "rs_hard"),
+                          "ot_clear_keepout_physical $rs_b $rs_rects reserved_die_clock_tree",
+                          # landing_placement.tcl packs ring/status cells around these (opt-in variable, default unset)
+                          "set ::cland_avoid_rects $rs_rects",
+                          f'puts "OT_RESERVED_SITES kind=die_clock_tree rects={len(hard)} area_um2={sum((c-a)*(d-b) for a,b,c,d in hard):.3f}"',
+                          "}"]) + "\n"
+    if bank:
+        post = "\n".join(["# Generated (gen_phys reserved_sites_um): landing ring banks, GPL-only blockages after FIRM rings.",
+                           *head, "set ::rs_bank {}", *create(bank, "::rs_bank"),
+                           f'puts "OT_RESERVED_SITES kind=landing_ring_bank rects={len(bank)} area_um2={sum((c-a)*(d-b) for a,b,c,d in bank):.3f}"',
+                           "}"]) + "\n"
+        rel = "\n".join(["# Generated (gen_phys reserved_sites_um): release the GPL-only ring-bank blockages before DPL.",
+                          "set rs_n 0",
+                          "if {[info exists ::rs_bank]} { foreach rs_k $::rs_bank { odb::dbBlockage_destroy $rs_k; incr rs_n } }",
+                          f"if {{$rs_n != {len(bank)}}} {{ error \"OT_RESERVED_SITES released $rs_n of {len(bank)} ring-bank blockages\" }}",
+                          'puts "OT_RESERVED_SITES released ring-bank blockages $rs_n before DPL"']) + "\n"
+    return pre, post, rel
+
+
 def _pdn_inst_patterns(instances):
     # PDN -instances is a Tcl list of regular expressions, not literal names.
     # ODB stores escaped Verilog brackets as literal backslash-bracket pairs.
@@ -1313,6 +1371,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         (kd / "die_islands.tcl").write_text(islands)
         hook = kd / "face_flops.tcl"
         hook.write_text("source /work/die_islands.tcl\n" + hook.read_text())
+    rs_pre, rs_post, rs_rel = reserved_sites_tcl(P, tn)
+    if rs_pre:
+        (kd / "reserved_sites.tcl").write_text(rs_pre)
+        hook = kd / "face_flops.tcl"
+        hook.write_text("source /work/reserved_sites.tcl\n" + hook.read_text())
     if t.get("clock", {}).get("landing_contract"):
         import landing_contract as LC
         (kd / "landing_contract.json").write_text(json.dumps(t["clock"]["landing_contract"], indent=1) + "\n")
@@ -1339,6 +1402,14 @@ foreach cland_line [split [read $cland_fh] "\n"] {
 close $cland_fh
 puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
 """)
+    if rs_post:
+        # after the landing placement hook: the rings are FIRM in their banks before the bank becomes a GPL blockage
+        (kd / "reserved_banks.tcl").write_text(rs_post)
+        (kd / "reserved_banks_release.tcl").write_text(rs_rel)
+        hook = kd / "face_flops.tcl"
+        hook.write_text(hook.read_text() + "\nsource /work/reserved_banks.tcl\n")
+        hook = kd / "face_flops_release.tcl"
+        hook.write_text("source /work/reserved_banks_release.tcl\n" + hook.read_text())
     # MASTER PLAN 12.7c (opt-in --master-slice DIR): the type's slice -> master_slice.json/.tcl, sourced at
     # PRE_GLOBAL_PLACE (face_flops.tcl: after io placement, before GPL); refused without a slice once required
     import master_slice as MS

@@ -911,6 +911,35 @@
          "maxItems": 4
         }
        },
+       "reserved_sites_um": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "required": [
+          "rect_um",
+          "kind"
+         ],
+         "properties": {
+          "rect_um": {
+           "type": "array",
+           "items": {
+            "type": "number"
+           },
+           "minItems": 4,
+           "maxItems": 4
+          },
+          "kind": {
+           "enum": [
+            "die_clock_tree",
+            "landing_ring_bank"
+           ]
+          },
+          "ref": {
+           "type": "string"
+          }
+         }
+        }
+       },
        "tap_pitch_um": {
         "type": "number",
         "exclusiveMinimum": 0

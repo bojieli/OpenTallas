@@ -167,7 +167,7 @@ def cmd_compose(a):
                                                 "type_count_before", "type_count_after")}
     rep["requirements"]["split_types"] = sorted(req["split_types"])
     try:
-        raw, side = CLP.compose(plan, tab, a.plan, observer_part=a.observer)
+        raw, side = CLP.compose(plan, tab, a.plan, observer_part=a.observer, monitor=a.monitor)
     except Exception as e:  # report the exact first blocker; do not invent geometry
         rep["compose"] = dict(status="FAIL", error=f"{type(e).__name__}: {e}")
         (out / "compose_report.json").write_text(json.dumps(rep, indent=1) + "\n")
@@ -265,6 +265,7 @@ def main(argv=None):
     c.add_argument("--table", required=True)
     c.add_argument("--out", required=True)
     c.add_argument("--observer", default="ctl")
+    c.add_argument("--monitor", default="reset", choices=["reset", "dataflow"], help="monitor network: reset-wavefront cohorts (default) or uniform dataflow (no type split)")
     v = sub.add_parser("variant")
     v.add_argument("plan")
     v.add_argument("--out", required=True)

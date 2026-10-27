@@ -154,6 +154,9 @@ class Landings:
     def __init__(self, plan, table, *, require_geometry=True):
         self.plan = plan
         self.collector = table.get("collector")
+        self.dataflow = bool(self.collector) and self.collector.get("monitor", "reset") == "dataflow"
+        if self.collector and self.collector.get("monitor", "reset") not in ("reset", "dataflow"):
+            raise LandingError(f"clock landing: unknown monitor mode {self.collector.get('monitor')}")
         self.parts = {p["name"]: p for p in plan["partitions"]}
         self.types = plan["partition_types"]
         ports = {p["id"]: p for p in plan["ports"]}
@@ -228,7 +231,21 @@ class Landings:
                 required.update({f"fclk_in_{b}": "in"})
                 if not self.collector:
                     required.update({f"landing_ready_{b}": "out", f"landing_fault_{b}": "out"})
-            if self.collector:
+            if self.dataflow:
+                # monitor="dataflow" (FALLBACK-HEAD-2, opt-in): status rides each landed data crossing; every
+                # pin is named by its DATA bus, so all instances of a type expose identical ports.
+                info=self.collector["types"][tn]
+                if sorted(info["mask"]["inputs"])!=sorted(mask[0]) or sorted(info["mask"]["outputs"])!=sorted(mask[1]):
+                    raise LandingError(f"clock landing {tn}: dataflow monitor mask differs from the landed buses")
+                for b in mask[1]:
+                    required.update({f"cland_up_ready_{b}":"out",f"cland_up_fault_{b}":"out"})
+                for b in mask[0]:
+                    required.update({f"cland_dn_ready_{b}":"in",f"cland_dn_fault_{b}":"in"})
+                tb=info["mask"].get("tree_bus")
+                if (tb is None)!=bool(info["mask"].get("observer")) or (tb is not None and tb not in mask[1]):
+                    raise LandingError(f"clock landing {tn}: dataflow tree bus {tb} is not one of its landed outputs")
+                if not mask[0]:raise LandingError(f"clock landing {tn}: dataflow monitor needs a landed input (ring reset)")
+            elif self.collector:
                 info=self.collector["types"][tn]
                 if info["mask"]["active"]:
                     if not info["mask"].get("observer"):
@@ -247,6 +264,8 @@ class Landings:
     def validate_observer(self,binder):
         if not self.collector or not self.collector.get("observer"):return
         spec=self.collector["observer"];pn=spec["part"]
+        if "OPEN" in (spec.get("module"),spec.get("instance_suffix"),spec.get("fault_port"),spec.get("ready_port")):
+            raise LandingError(f"clock landing observer on {pn}: RTL module/instance/ports still OPEN in the sidecar")
         # The sidecar names the emitted wrapper member. Original ELAB paths
         # can be root-relative ("sys_face"), so use the exact binder emitter's
         # name transformation and still require one actual module/input pair.
@@ -347,17 +366,33 @@ class Landings:
                     copied_raw_parent=relay.group(2), extra_control_flops=int(relay.group(1) == "gate"),
                     must_be_ready_before_start=True, boot_settle_cycles=21)
             extra += [f"    input wire fclk_in_{b}"]
+            if self.dataflow:
+                extra += [f"    input wire cland_dn_ready_{b}", f"    input wire cland_dn_fault_{b}"]
             if self.collector:
                 logic.append(f"    wire landing_ready_{b}, landing_fault_{b};")
             else:
                 extra += [f"    output wire landing_ready_{b}",f"    output wire landing_fault_{b}"]
             landed = f"cland_{b}"
             body = re.sub(r"\b" + re.escape(b) + r"\b", landed, body)
+            if self.dataflow:
+                # ring W+2: {fault, ready} of the sender's status ride the spare padded ring bits under the same
+                # forwarded write clock; no extra data cycle, no die-top status wire beside the bus.
+                ring = f"cland_ring_{b}"
+                logic += [f"    wire [{w+1}:0] {ring};", f"    wire [{w-1}:0] {landed};",
+                          f"    assign {landed} = {ring}[{w-1}:0];",
+                          f"    ot_dp_clk_landing #(.W({w+2})) u_cland_{b} (",
+                          f"        .fclk(fclk_in_{b}), .clk(clk), .rst_n({reset}), .d({{cland_dn_fault_{b}, cland_dn_ready_{b}, {b}}}), .q({ring}),",
+                          f"        .ready(landing_ready_{b}), .fault(landing_fault_{b}));",
+                          f"    wire cland_ok_{b} = {ring}[{w}] && landing_ready_{b} && !landing_fault_{b};",
+                          f"    wire cland_bad_{b} = landing_fault_{b} || (landing_ready_{b} && {ring}[{w+1}]);"]
+                continue
             logic += [f"    wire [{w-1}:0] {landed};",
                       f"    ot_dp_clk_landing #(.W({w})) u_cland_{b} (",
                       f"        .fclk(fclk_in_{b}), .clk(clk), .rst_n({reset}), .d({b}), .q({landed}),",
                       f"        .ready(landing_ready_{b}), .fault(landing_fault_{b}));"]
-        if active_collector:
+        if self.dataflow:
+            body = self._dataflow_monitor(tn, key, mask, collector_info, extra, logic, body)
+        elif active_collector:
             import landing_collector as LC
             if collector_info["mask"].get("observer"):
                 logic.append("    wire cland_up_ready, cland_up_fault;")
@@ -401,6 +436,59 @@ class Landings:
         self.emitted_types.add(tn)
         return head + marker + "\n".join(logic) + "\n" + body
 
+    def _dataflow_monitor(self, tn, key, mask, info, extra, logic, body):
+        """Registered dataflow monitor: local = AND(landing_ready) / OR(landing_fault), aggregate = AND(in_ok) /
+        OR(in_bad) over every landed input (in_ok includes the local ring ready), registered
+        local_registered_depth times. Every output pin gets its OWN dedicated output register (the last stage):
+        the tree bus carries the aggregate, every other landed output the local status. The observer type keeps
+        the aggregate on cland_up_ready/fault for gate_observer (never new IO)."""
+        ins = list(mask["inputs"]); n = len(ins)
+        depth = int(info["local_registered_depth"])
+        if depth < 1:raise LandingError(f"{tn}: dataflow monitor depth {depth} < 1")
+        rp = self.reset_placements[tn]
+        root_xy = info.get("collector_root_xy")
+        # One existing raw ring reset (nearest to the collector root): the monitor must train before START.
+        def dist(b):
+            xy = rp[b]["xy_um"];return (abs(xy[0]-root_xy[0])+abs(xy[1]-root_xy[1])) if root_xy else 0, b
+        rst = rp[min(ins, key=dist)]["net"]
+        ready_l = ", ".join(f"landing_ready_{b}" for b in ins); fault_l = ", ".join(f"landing_fault_{b}" for b in ins)
+        ok_l = ", ".join(f"cland_ok_{b}" for b in ins); bad_l = ", ".join(f"cland_bad_{b}" for b in ins)
+        stages = []
+        def collect(name, N, rdy, flt, ro, fo):
+            logic.extend([f"    ot_dp_landing_collect #(.N({N})) {name} (",
+                          f"        .clk(clk), .rst_n({rst}), .ready_i({{{rdy}}}),",
+                          f"        .fault_i({{{flt}}}), .ready_o({ro}), .fault_o({fo}));"])
+            stages.append(name)
+        tree_bus = info["mask"].get("tree_bus")
+        prev = None
+        for k in range(1, depth):
+            ro, fo = f"cland_agg_r{k}", f"cland_agg_f{k}"
+            logic.append(f"    wire {ro}, {fo};")
+            if prev is None:collect(f"u_cland_agg_{k}", n, ok_l, bad_l, ro, fo)
+            else:collect(f"u_cland_agg_{k}", 1, prev[0], prev[1], ro, fo)
+            prev = (ro, fo)
+        final_in = prev or (ok_l, bad_l)
+        final_n = 1 if prev else n
+        outputs = []
+        for b in mask["outputs"]:
+            extra += [f"    output wire cland_up_ready_{b}", f"    output wire cland_up_fault_{b}"]
+            if b == tree_bus:
+                collect(f"u_cland_up_{b}", final_n, final_in[0], final_in[1], f"cland_up_ready_{b}", f"cland_up_fault_{b}")
+                outputs.append(dict(bus=b, carries="aggregate", registered_depth=depth))
+            else:
+                collect(f"u_cland_up_{b}", n, ready_l, fault_l, f"cland_up_ready_{b}", f"cland_up_fault_{b}")
+                outputs.append(dict(bus=b, carries="local", registered_depth=1))
+        if tree_bus is None:
+            spec = self.collector.get("observer") or {}
+            if "OPEN" in (spec.get("module"), spec.get("instance_suffix"), spec.get("fault_port"), spec.get("ready_port")):
+                raise LandingError(f"{tn}: dataflow monitor observer RTL ports still OPEN in the sidecar")
+            logic.append("    wire cland_up_ready, cland_up_fault;")
+            collect("u_cland_up_observer", final_n, final_in[0], final_in[1], "cland_up_ready", "cland_up_fault")
+            body = gate_observer(body, self.collector["observer"])
+        rp["monitor"] = dict(mode="dataflow", raw_reset=rst, depth=depth, tree_bus=tree_bus, stages=stages,
+                             outputs=outputs, flops=2*len(stages), data_cycles_added=0)
+        return body
+
     def top_rtl(self, text, emitted_modules=None):
         """Connect the new forwarded-clock pins and observed status at die top.
 
@@ -430,7 +518,12 @@ class Landings:
         fwd = {(r["src"], r["src_bus"]): f"clock_landing_fwd_{ident(r['src'])}__{ident(r['src_bus'])}"
                for r in self.rows}
         decl += [f"    wire {w};" for w in sorted(set(fwd.values()))]
-        if self.collector:
+        mon = {}
+        if self.dataflow:
+            # one wire pair per sender status pin (a source bus fanning out to several sinks shares its pin)
+            mon = {(r["src"], r["src_bus"]): f"cland_mon_{ident(r['src'])}__{ident(r['src_bus'])}" for r in self.rows}
+            decl += [f"    wire {w}_ready, {w}_fault;" for w in sorted(set(mon.values()))]
+        elif self.collector:
             for pn,p in self.collector["parts"].items():
                 if p["active"] and p["parent"] is not None:
                     decl += [f"    wire cland_ready_{ident(pn)}, cland_fault_{ident(pn)};"]
@@ -452,12 +545,18 @@ class Landings:
             if count != 1:
                 raise LandingError(f"clock landing: default clock connection not found on {pn}")
             conn = [f"        .fclk_out_{b}({fwd[(pn,b)]})" for b in sorted(self.outs[pn])]
+            if self.dataflow:
+                for b in sorted(self.outs[pn]):
+                    conn += [f"        .cland_up_ready_{b}({mon[(pn,b)]}_ready)", f"        .cland_up_fault_{b}({mon[(pn,b)]}_fault)"]
             for b, r in sorted(self.ins[pn].items()):
                 i = index[(pn,b)]
                 conn += [f"        .fclk_in_{b}({fwd[(r['src'],r['src_bus'])]})"]
-                if not self.collector:
+                if self.dataflow:
+                    w = mon[(r["src"], r["src_bus"])]
+                    conn += [f"        .cland_dn_ready_{b}({w}_ready)", f"        .cland_dn_fault_{b}({w}_fault)"]
+                elif not self.collector:
                     conn += [f"        .landing_ready_{b}(clock_landing_ready[{i}])",f"        .landing_fault_{b}(clock_landing_fault[{i}])"]
-            if self.collector and self.collector["parts"][pn]["active"]:
+            if self.collector and not self.dataflow and self.collector["parts"][pn]["active"]:
                 cp=self.collector["parts"][pn]
                 ready="clock_landing_ready" if cp["parent"] is None else "cland_ready_"+ident(pn)
                 fault="clock_landing_fault" if cp["parent"] is None else "cland_fault_"+ident(pn)
