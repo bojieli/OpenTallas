@@ -22,7 +22,7 @@ def test_exact_minimum_gap_and_pg_only_gap_are_not_edited():
 
 def test_native_postpass_requires_created_shield_swire_provenance():
     text='\n'.join(N.tcl('VSS',.64))
-    assert 'shield provenance missing' in text and '$sw in $::ot_clock_shield_swires' in text
+    assert 'shield provenance missing' in text and '[info exists provenance($sw)]' in text
     assert 'round(0.04*' in text
     merged='\n'.join(C.shield_merge_tcl('VSS',dict(width=.64)))
     assert 'ot_merge_shields VSS' in merged and 'ot_trim_shield_notches VSS' in merged
