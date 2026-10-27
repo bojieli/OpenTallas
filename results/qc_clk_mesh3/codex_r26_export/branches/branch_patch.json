@@ -3867,5 +3867,36 @@
   ]
  ],
  "shared_physical_stations": [],
- "terminal_shield_condition": "Current0.81um normalescape fits8w shieldextent0.56um.16w shieldextent1.46um requiresmidgapapproach2.052um frommacroedge(pinriser2.148um<2.5). No width or terminal PG qualification claimed."
+ "terminal_shield_condition": "Current0.81um normalescape fits8w shieldextent0.56um.16w shieldextent1.46um requiresmidgapapproach2.052um frommacroedge(pinriser2.148um<2.5). No width or terminal PG qualification claimed.",
+ "successor_vehicle": {
+  "owner": "QC-CLK-MESH parent planner",
+  "target": "io_serdes_2",
+  "method": "continuous M8 mesh strap to existing west M9; no terminal buffered stage or450um waiver",
+  "strap_um": [
+   753.018,
+   2322.108,
+   1632.96,
+   2322.108
+  ],
+  "terminal": {
+   "actual_xy": [
+    753.018,
+    2319.96
+   ],
+   "terminal_layer": "M5",
+   "terminal_access_xy": [
+    753.018,
+    2322.108
+   ],
+   "terminal_rc_tcl": "tools/die_plan/setRC_rcx_asap7.tcl",
+   "escape_um": 2.148
+  },
+  "conditions": [
+   "No M8 via at actualpin2319.96: coincident actualM8VDD stripe2319.60..2320.08",
+   "M5 wire fromtruepin toPGfreeaccess; via stack onlyat2322.108",
+   "Continuousmeshextension solver must price RC, variation,power and allactualdriverloads",
+   "W M9 originalx1632.96 coincidesPGVSSstripe1632.72..1633.2; parent rephases before actualwire gates",
+   "Native terminalcoupon plusfull PG/shield/RCX required"
+  ]
+ }
 }
