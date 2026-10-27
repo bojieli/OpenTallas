@@ -34,7 +34,7 @@ def color_intervals(rows):
     return result, count
 
 
-def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=False, separate_drops=False, mesh_straps=None, ndr="16w", spine_landing=False, mesh_driver_boundaries=False):
+def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=False, separate_drops=False, mesh_straps=None, ndr="16w", spine_landing=False, mesh_driver_boundaries=False, paired_spine_lanes=False):
     mesh_straps = mesh_straps or []
     out = copy.deepcopy(spec)
     for edge in out["nets"]:edge["ndr"]=ndr
@@ -103,11 +103,27 @@ def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=Fa
         base = phase + round((bucket-phase)/step) * step
         legal_cols = [base+k*step for k in range(-n//2, 2*n+2)
                       if not any(ss[0]==lay and abs(ss[1]-(base+k*step))<1.5 for ss in mesh_straps)]
+        if paired_spine_lanes and lay=='M9':
+            if ndr!='8w':raise ValueError('paired PG-gap lanes require the actual 8w profile')
+            centres=[];candidate=base
+            while len(centres)<(n+1)//2:
+                if not any(ss[0]=='M9' and abs(ss[1]-candidate)<1.5 for ss in mesh_straps):centres.append(candidate)
+                candidate+=step
+            halfpair=D.NDR[ndr]['width']+D.NDR[ndr]['space']
+            legal_cols=[v for centre in centres for v in (centre-halfpair,centre+halfpair)]
         for g, c in colors.items():
             desired = legal_cols[c]
             tr = D.DEFAULT_TRACKS[lay]
             targets[g] = dict(layer=lay, c=round(tr['offset_um'] +
                 round((desired-tr['offset_um'])/tr['pitch_um']) * tr['pitch_um'], 4), color=c)
+    if paired_spine_lanes:
+        for g,cc in groups.items():
+            parent=incoming.get(g)
+            if parent in targets and layers.get(parent)=='M9' and layers.get(g)=='M9':
+                # Present the capture A face toward the arriving column. This
+                # keeps consecutive fixed stages within clock repeater reach.
+                orient='MY' if targets[parent]['c']>targets[g]['c'] else 'R0'
+                for _,cell in cc:cell['orient']=orient
     for g, cells in groups.items():
         # The producing stage owns its outgoing corridor. Leaves follow their
         # incoming corridor, keeping the local mesh driver on the same row.
@@ -423,6 +439,7 @@ def main():
     ap.add_argument('--exact-local-jogs', action='store_true')
     ap.add_argument('--lower-face-gap', action='store_true')
     ap.add_argument('--separate-drops', action='store_true')
+    ap.add_argument('--paired-spine-lanes', action='store_true')
     ap.add_argument('--mesh-driver-boundaries', action='store_true')
     ap.add_argument('--spine-landing', action='store_true')
     ap.add_argument('--ndr', choices=['8w','16w'], default='16w')
@@ -431,7 +448,7 @@ def main():
     plan = S.Plan(S.load(a.plan))
     mesh_straps=json.loads(a.mesh_straps.read_text()) if a.mesh_straps else []
     spec, corridors = allocate(json.loads(a.spec.read_text()), plan, align_inputs=a.align_inputs,
-                               exact_jogs=a.exact_local_jogs, lower_face_gap=a.lower_face_gap, separate_drops=a.separate_drops, mesh_straps=mesh_straps, ndr=a.ndr, spine_landing=a.spine_landing, mesh_driver_boundaries=a.mesh_driver_boundaries)
+                               exact_jogs=a.exact_local_jogs, lower_face_gap=a.lower_face_gap, separate_drops=a.separate_drops, mesh_straps=mesh_straps, ndr=a.ndr, spine_landing=a.spine_landing, mesh_driver_boundaries=a.mesh_driver_boundaries, paired_spine_lanes=a.paired_spine_lanes)
     (a.out/'explicit_tree.json').write_text(json.dumps(spec, indent=1)+'\n')
     (a.out/'corridors.json').write_text(json.dumps(corridors, indent=1)+'\n')
     try:
