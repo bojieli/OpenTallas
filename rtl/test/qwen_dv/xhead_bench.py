@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -40,6 +41,7 @@ STATE = {}
 
 
 BUILD = {}
+VEC_AGES = None
 
 
 def build_xh(work):
@@ -50,6 +52,10 @@ def build_xh(work):
                '-Wno-TIMESCALEMOD', '--x-assign', '0', '--x-initial', '0', '--top-module', 'tb_qfd_dv2', '--prefix', 'Vtb',
                '+define+DV2_XHEAD', '-GMUT=0', f'-GN={N}', '-Mdir', str(obj), str(HERE / 'main2.cpp')] + \
               [str(ROOT / s) for s in B2.SRCS2]
+        xv = os.environ.get('DV_LOWER_VFLAGS', '').split()
+        cmd += B2.DEFINES2 + xv + os.environ.get('OT_XH_BUILD_FLAGS', '').split()
+        if '-GSU_LT=1' in xv:
+            cmd += [str(ROOT / s) for s in B2.XSRCS]
         r = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
         (BUILD['dir'] / 'build_xh.log').write_text(r.stdout)
         if r.returncode:
@@ -96,7 +102,7 @@ def run_family(work, consumer, plan_fn, tag, seed=1):
     LB.build = build_xh
     (work / tag).mkdir(parents=True, exist_ok=True)
     try:
-        rc = VB.main_run(work / tag, FAMILY[consumer], None, seed, None, 'row' if FAMILY[consumer] == 'resid' else 'slice')
+        rc = VB.main_run(work / tag, FAMILY[consumer], None, seed, VEC_AGES, 'row' if FAMILY[consumer] == 'resid' else 'slice')
     finally:
         VB.lowered = _orig_lowered
         LB.run = _orig_run
@@ -313,6 +319,7 @@ def main():
     ap.add_argument('--calibrate', action='store_true')
     ap.add_argument('--run', choices=tuple(FAMILY))
     ap.add_argument('--ages')
+    ap.add_argument('--vec-ages', help='producer ages measured on this exact RTL/profile')
     ap.add_argument('--mutant', choices=('goearly', 'xpflate', 'isaxbase'))
     ap.add_argument('--build-dir', help='where obj_xh lives (shared by every run; default --work)')
     ap.add_argument('--point', choices=tuple(FAMILY), help='one per-consumer sweep point (--go-lag, --xpf-lead)')
@@ -320,6 +327,8 @@ def main():
     ap.add_argument('--xpf-lead', type=int)
     ap.add_argument('--merge', help='fold the pt_*.json of --work into --ages -> this file (ages[consumer])')
     a = ap.parse_args()
+    global VEC_AGES
+    VEC_AGES = VB.V.load_ages(a.vec_ages) if a.vec_ages else None
     work = Path(a.work)
     work.mkdir(parents=True, exist_ok=True)
     BUILD['dir'] = Path(a.build_dir) if a.build_dir else work
