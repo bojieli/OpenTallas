@@ -9,3 +9,7 @@ Full combinational r2r connectivity census (unbounded BFS, no dropped large cone
 Actual ODB confirms the source fix acts after the later pushdown hook: qbank ck[0] M5 rectangle(30.228,12.720)-(30.276,13.200), centre(30.252,12.960); sstn ck M5 rectangle(42.084,14.880)-(42.132,15.360), centre(42.108,15.120). Both are 0.048x0.48um, on the exact kit M5 track. The original failed c16 ODB used0.032x0.192 and off-track centre; failures retained.
 
 Verdict PASS-COND for continuation to one trial route each, after the exact5b S81 flow canary releases. Routed clock access and real TT/FF sign-off remain required. Old unstarted original-kit queue rows are withdrawn; new rows point to these actual placed copies, so synthesis/placement is not repeated.
+
+## Later density disposition — HOLD (not a replacement verdict)
+
+Qbank/sstn actual clock access and reach fixes remain valid, but current combined-face pin window checker fails10.8/7.3pins/um respectively; M3/M5 perlayer5.4/3.7passes. Finish continuation rows withdrawn pending OWNER? rule scope. No checker change or waiver. Fresh l1c passes both interpretations at5.3pins/um.
