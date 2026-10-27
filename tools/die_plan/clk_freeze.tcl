@@ -153,13 +153,26 @@ proc ot_clk_wire_ops {net} {
     switch $op {
       0 - 1 - 2 - 3 {
         # PATH / JUNCTION / SHORT / VWIRE (+ optional RULE op right after)
+        # Capture the PATH/JUNCTION operands before consuming optional RULE:
+        # decoder.next changes its current operand to the layer-rule ID.
         set rule ""
-        if {[$dec peek] == 11} { $dec next; set rule [$dec getRule] }
         switch $op {
           0 { set a [list newPath [$dec getLayer] FIXED] }
           1 { set a [list newPath [$dec getJunctionValue] FIXED] }
           2 { set a [list newPathShort [$dec getJunctionValue] [$dec getLayer] FIXED] }
           3 { set a [list newPathVirtualWire [$dec getJunctionValue] [$dec getLayer] FIXED] }
+        }
+        if {[$dec peek] == 11} { $dec next; set rule [$dec getRule] }
+        if {$op == 1} {
+          # newPath(junction) already emits the following colinear point.
+          # Re-emitting it with addPoint shifts every later junction index.
+          # Preserve an extension with newPathExt instead of adding a point.
+          set point_op [$dec next]
+          if {$point_op == 5} {
+            set a [list newPathExt [lindex $a 1] [lindex [$dec getPoint_ext] 2] FIXED]
+          } elseif {$point_op != 4} {
+            error "OT_CLK_FREEZE FAIL: junction lacks its initial point in [$net getName]"
+          }
         }
         if {$rule ne ""} { lappend a $rule }
         lappend ops $a
@@ -179,6 +192,17 @@ proc ot_clk_wire_ops {net} {
       default { error "OT_CLK_FREEZE FAIL: unsupported wire op $op in [$net getName]" }
     }
   }
+  # Read raw property operands. Decoder getProperty is undefined for the
+  # first point; raw positions also preserve the exact existing wire encoding.
+  for {set i 0} {$i < [$w length]} {incr i} {
+    if {([$w getOpcode $i] & 0x1F) != 12 || [$w getData $i] == 0} continue
+    set junction [expr {$i - 1}]
+    if {([$w getOpcode $junction] & 0x1F) ni {4 5}} { incr junction -1 }
+    if {$junction < 0 || ([$w getOpcode $junction] & 0x1F) ni {4 5}} {
+      error "OT_CLK_FREEZE FAIL: unsupported property operand at $i"
+    }
+    lappend ops [list wireProperty $junction [$w getData $i]]
+  }
   return $ops
 }
 
@@ -188,8 +212,23 @@ proc ot_clk_encode_wire {net ops tokens} {
   set nw [odb::dbWire_create [$net getBlock]]
   set enc [odb::dbWireEncoder]
   $enc begin $nw
-  foreach a $ops { $enc {*}$a }
+  set properties {}
+  foreach a $ops {
+    if {[lindex $a 0] eq "wireProperty"} {
+      lappend properties [lrange $a 1 2]
+    } else {
+      $enc {*}$a
+    }
+  }
   $enc end
+  # RCX junction metadata defaults to zero in the encoder. Restore it with
+  # the supported dbWire API, then require the SAME complete token stream.
+  foreach pair $properties {
+    lassign $pair junction property
+    if {![$nw setProperty $junction $property]} {
+      error "OT_CLK_FREEZE FAIL: cannot preserve point property at $junction"
+    }
+  }
   set w [$net getWire]
   if {$w ne "NULL" && $w ne ""} { odb::dbWire_destroy $w }
   $nw attach $net

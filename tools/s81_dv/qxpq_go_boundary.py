@@ -85,19 +85,33 @@ def _named(s):
     return spans
 
 
-def lower_frame_text(text):
+def lower_frame_text(text, *, hard_params=None):
     """Swap only actual QXPQ instances; drop the proved-unused xs_sv input connection, preserving its upstream driver wires.
     Parameter expressions and all other connections are byte-preserved. This changes the GO input contract;
     callers must select the matching calendar explicitly. No automatic canonical source writes.
     """
     edits, removed, instances = [], set(), []
-    pattern = re.compile(r'(?m)^[ \t]*' + re.escape(LEGACY) + r'\s*#\s*\(')
+    pattern = re.compile(r'(?m)^[ \t]*' + re.escape(LEGACY) + r'\b')
     for m in pattern.finditer(text):
-        p0 = text.find('(', m.start()); p1 = _group(text, p0)
+        tail = text[m.end():]
+        explicit = tail.lstrip().startswith('#')
+        if explicit:
+            p0 = text.find('(', m.end()); p1 = _group(text, p0)
+            param_body = text[p0+1:p1-1]
+            params = _named(param_body)
+            prefix = text[m.start():p0].replace(LEGACY, GB, 1)
+        else:
+            if not hard_params:
+                raise ValueError('bare QXPQ instance requires explicit selected hard_params profile')
+            p1 = m.end()
+            param_body = ', '.join('.%s(%s)' % (k,v) for k,v in sorted(hard_params.items()))
+            params = _named(param_body)
+            prefix = text[m.start():m.end()].replace(LEGACY, GB, 1) + ' #'
+
         nm = re.match(r'\s*(\w+)\s*\(', text[p1:])
         if not nm: raise ValueError('unsupported QXPQ instance syntax')
         c0 = p1 + nm.end() - 1; c1 = _group(text, c0)
-        params = _named(text[p0+1:p1-1]); ports = _named(text[c0+1:c1-1])
+        ports = _named(text[c0+1:c1-1])
         if params.get('NB', (None,None,None))[2] != '2':
             raise ValueError('GB737 contract requires the actual NB2 instance')
         for key, value in (('PP','1'), ('PQ','1'), ('QX','10')):
@@ -118,8 +132,7 @@ def lower_frame_text(text):
                 left = re.sub(r',\s*$', '', left, count=1)
             body = left + right
         add = ''.join(', .%s(%s)' % (k,v) for k,v in (('GO_BOUNDARY','1'),('CGR','8')) if k not in params)
-        prefix = text[m.start():p0].replace(LEGACY, GB, 1)
-        replacement = prefix + '(' + text[p0+1:p1-1] + add + ')' + text[p1:c0+1] + body + ')'
+        replacement = prefix + '(' + param_body + add + ')' + text[p1:c0+1] + body + ')'
         edits.append((m.start(),c1,replacement)); instances.append(nm.group(1))
     if not edits: raise ValueError('no actual legacy NB2 QXPQ instances')
     for a,b,r in reversed(edits): text = text[:a] + r + text[b:]
@@ -135,7 +148,8 @@ def lower_plan(raw, ready_types):
         t = out['partition_types'][name]; count = 0
         for hc in t.get('hard_cores', []):
             if hc.get('module') != LEGACY: continue
-            if hc.get('lib'): raise ValueError('replacing a signed view needs an explicit re-sign analysis')
+            if any(v for k,v in hc.items() if k.lower().startswith('lib')):
+                raise ValueError('replacing a signed view needs an explicit re-sign analysis')
             hc.update(module=GB, lef=GB_LEF, pins_file=GB_PINS)
             count += 1
         if not count: raise ValueError('ready type has no legacy QXPQ: ' + name)
@@ -146,10 +160,16 @@ def lower_plan(raw, ready_types):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--rtl',type=Path);p.add_argument('--plan',type=Path)
-    p.add_argument('--types',nargs='+');p.add_argument('--out',type=Path,required=True);a=p.parse_args()
+    p.add_argument('--types',nargs='+');p.add_argument('--hard-params',type=Path);p.add_argument('--out',type=Path,required=True);a=p.parse_args()
     if bool(a.rtl)==bool(a.plan):p.error('choose exactly one source RTL or candidate plan')
     if a.rtl:
-        text,receipt=lower_frame_text(a.rtl.read_text());a.out.write_text(text)
+        hp=None
+        if a.hard_params:
+            hpraw=json.loads(a.hard_params.read_text())
+            if hpraw.get('schema') != 'opentallas.frame_kit.hard_params.v1':
+                raise ValueError('selected frame_kit.hard_params.v1 manifest profile required')
+            hp=hpraw['masters'][LEGACY]
+        text,receipt=lower_frame_text(a.rtl.read_text(),hard_params=hp);a.out.write_text(text)
     else:
         result,receipt=lower_plan(json.loads(a.plan.read_text()),a.types);a.out.write_text(json.dumps(result,indent=1)+'\n')
     a.out.with_suffix(a.out.suffix+'.contract.json').write_text(json.dumps(receipt,indent=1)+'\n')

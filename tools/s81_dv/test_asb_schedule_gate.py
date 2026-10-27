@@ -39,7 +39,11 @@ def main():
         source = Path(d) / 'frame.sv'
         source.write_text('legacy739')
         os.environ['OT_S81_SELECTED_SOURCE_ROOT'] = d
+        manifest = Path(d) / 'selected.json'
+        manifest.write_text('{}')
+        os.environ['OT_S81_SELECTED_ASBUILT_MANIFEST'] = 'selected.json'
         hashes = {'frame.sv': hashlib.sha256(source.read_bytes()).hexdigest()}
+        hashes['selected.json'] = hashlib.sha256(manifest.read_bytes()).hexdigest()
         expect_raise(lambda: X.source_frame_schedule(M), 'needs its extracted frame schedule'); n += 1
         sp, cp = Path(d) / (M + '_schedule.json'), Path(d) / (M + '_check.json')
         sp.write_text(json.dumps(dict(schema='opentallas.s81.frame_schedule.v1', source_sha256=hashes)))
@@ -50,6 +54,21 @@ def main():
         expect_raise(lambda: X.source_frame_schedule(M), 'not bound'); n += 1
         cp.write_text(json.dumps(dict(verdict='PASS', fails=[], schedule_sha256=hashlib.sha256(sp.read_bytes()).hexdigest())))
         assert X.source_frame_schedule(M) == sp; n += 1
+        # Both candidate files can coexist unchanged; only the manifest actually selected can qualify the programme.
+        os.environ['OT_S81_SELECTED_ASBUILT_MANIFEST'] = 'another.json'
+        expect_raise(lambda: X.source_frame_schedule(M), 'does not bind the selected manifest'); n += 1
+        os.environ['OT_S81_SELECTED_ASBUILT_MANIFEST'] = 'selected.json'
+        class Die:
+            inst = {'frame': {'master': M}}
+            value = None
+            def strap(self, frame, port): return self.value
+        die = Die()
+        expect_raise(lambda: X.frame_lk(die, 'frame'), 'lacks its measured'); n += 1
+        sp.write_text(json.dumps(dict(schema='opentallas.s81.frame_schedule.v1', landing_lk=0x492, source_sha256=hashes)))
+        cp.write_text(json.dumps(dict(verdict='PASS', fails=[], schedule_sha256=hashlib.sha256(sp.read_bytes()).hexdigest())))
+        assert X.frame_lk(die, 'frame') == 0x492; n += 1
+        die.value = 0x924
+        expect_raise(lambda: X.frame_lk(die, 'frame'), 'differs from measured'); n += 1
         # Real source mutation: changing selected739 to737 at the SAME path cannot reuse the old PASS receipt.
         source.write_text('GB737')
         expect_raise(lambda: X.source_frame_schedule(M), 'differs from selected source'); n += 1
@@ -62,6 +81,7 @@ def main():
         expect_raise(lambda: X.qualify_frame_source({}, M, d), 'lacks exact source'); n += 1
         del os.environ['OT_XS_ASB_SCHEDULE_DIR']
         del os.environ['OT_S81_SELECTED_SOURCE_ROOT']
+        del os.environ['OT_S81_SELECTED_ASBUILT_MANIFEST']
     c = json.loads((ROOT / 'results/arch/s81_dv_1016/frame_lp/asb_schedule' / (M + '_check.json')).read_text())
     assert c['validation']['links'] > 0 and not c['validation']['fails'], c['validation']['fails']
     assert c['verdict'] == 'FAIL' and all(f.startswith('frame_int ') for f in c['fails']), c['fails']

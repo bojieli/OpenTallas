@@ -59,3 +59,19 @@ def test_plan_selection_is_explicit_and_signed_view_cannot_be_reused():
     with pytest.raises(ValueError):G.lower_plan(raw,[])
     raw['partition_types']['a']['hard_cores'][0]['lib']='old_signed.lib'
     with pytest.raises(ValueError,match='signed'):G.lower_plan(raw,['a'])
+
+
+def test_bare_actual_band_requires_explicit_selected_profile():
+    src=FRAME.replace('#(.NB(2), .PP(1), .PQ(1), .QX(10), .RSTP(1), .INSTANCE({INSTANCE,"_e0"})) ', '')
+    with pytest.raises(ValueError,match='hard_params'):G.lower_frame_text(src)
+    out,r=G.lower_frame_text(src,hard_params=dict(NB='2',PP='1',PQ='1',QX='10',RSTP='1',QM='5'))
+    assert '.QM(5)' in out and '.RSTP(1)' in out and '.NB(2)' in out
+    assert '.GO_BOUNDARY(1)' in out and '.CGR(8)' in out
+    assert '.xs_sv' not in out and r['instances']==['u_e0']
+    with pytest.raises(ValueError,match='NB2'):G.lower_frame_text(src,hard_params=dict(NB='1'))
+
+
+@pytest.mark.parametrize('field', ['libTT','libFF','lib_tt','lib_ff'])
+def test_no_corner_library_carryover(field):
+    raw=dict(partition_types={'a':dict(hard_cores=[dict(module=G.LEGACY, **{field:'old.lib'})])})
+    with pytest.raises(ValueError,match='signed'):G.lower_plan(raw,['a'])
