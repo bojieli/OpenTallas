@@ -1,0 +1,335 @@
+{
+ "status": "UNCHECKED (NUMBER-CHECK)",
+ "lane": "CLOCK-KV-R7",
+ "build": "epyc1:/srv/opentallas-scratch2/claude/clock-kv-r6-1026/b3 (otrun-tender-ray-3763063-65394714, d3 band-tree plan)",
+ "grt": {
+  "TT": "EXIT 0, total congestion 0 (2 extra iterations)",
+  "FF": "EXIT 0, total congestion 0"
+ },
+ "mesh_signoff": {
+  "method": "QC-CLK-MESH-2 (qc_clk_mesh2.py @a84a90e2af + extend_to_points patch): whole-die linear RC transient, Thevenin BUFx24 (m=2), R6 RCX 4W rules, MC sigma vt 10 mV / wire 5 % / tree 2 ps per stage (hierarchical); ngspice BUFx24v DELVTRAND windows (5 TT x 7 samples + 5 FF nominal, ring 400 um, reltol 1e-3, 1 ps step) on intel1/intel2 docker 4g",
+  "linear": {
+   "die_FF.json": {
+    "nominal": 60.042,
+    "mc_worst": 107.182
+   },
+   "die_FF_R250.json": {
+    "nominal": 58.718,
+    "mc_worst": 106.93
+   },
+   "die_FF_R60.json": {
+    "nominal": 60.391,
+    "mc_worst": 107.335
+   },
+   "die_TT.json": {
+    "nominal": 68.225,
+    "mc_worst": 114.885
+   },
+   "die_TT_R250.json": {
+    "nominal": 67.09,
+    "mc_worst": 114.329
+   },
+   "die_TT_R60.json": {
+    "nominal": 68.822,
+    "mc_worst": 115.46
+   },
+   "die_TT_notree.json": {
+    "nominal": 68.225,
+    "mc_worst": 69.019
+   }
+  },
+  "ngspice_windows": {
+   "w_cSW_FF": null,
+   "w_cSW_TT": null,
+   "w_cS_FF": {
+    "n": 4,
+    "min": 33.15,
+    "max": 46.784,
+    "skew": 13.634
+   },
+   "w_cS_TT": {
+    "worst": 29.64,
+    "mean": 24.877
+   },
+   "w_hubN_FF": {
+    "n": 6,
+    "min": 31.566,
+    "max": 48.739,
+    "skew": 17.174
+   },
+   "w_hubN_TT": {
+    "worst": 19.911,
+    "mean": 18.872
+   },
+   "w_hubS_FF": {
+    "n": 4,
+    "min": 68.501,
+    "max": 81.345,
+    "skew": 12.844
+   },
+   "w_hubS_TT": {
+    "worst": 34.013,
+    "mean": 21.624
+   },
+   "w_sys_FF": {
+    "n": 4,
+    "min": 65.313,
+    "max": 85.168,
+    "skew": 19.855
+   },
+   "w_sys_TT": {
+    "worst": 21.306,
+    "mean": 19.389
+   }
+  },
+  "routed_nominal_mesh_load_spread_ps": {
+   "TT": 84.96,
+   "FF": 70.83
+  },
+  "declared_uncertainty_ps": {
+   "TT": 133.33,
+   "FF": 119.45,
+   "basis": "die-wide MC worst over Thevenin R 60/151/250 + (routed nominal - sim nominal) model gap"
+  }
+ },
+ "sta": {
+  "h_only_aocv": {
+   "intra": {
+    "tt_setup_ps": null,
+    "ff_hold_ps": -383.67,
+    "verdict": "FAIL",
+    "ff_hold_kit_contract_ps": -22.59,
+    "kit_contract_window_ps": 80.0,
+    "kit_contract_window_needed_ps": 102.59,
+    "kit_contract_verdict": "FAIL"
+   },
+   "seam": {
+    "tt_setup_ps": null,
+    "ff_hold_ps": -517.72,
+    "verdict": "FAIL",
+    "ff_hold_kit_contract_ps": -162.6,
+    "kit_contract_window_ps": 80.0,
+    "kit_contract_window_needed_ps": 242.6,
+    "kit_contract_verdict": "FAIL"
+   },
+   "landed": {
+    "tt_setup_margin_ps": null,
+    "ff_hold_margin_ps": null,
+    "verdict": "FAIL"
+   },
+   "status": "UNCHECKED (NUMBER-CHECK pending)",
+   "label": "declared-budget (no QC kit)"
+  },
+  "mesh_dieU": {
+   "intra": {
+    "tt_setup_ps": null,
+    "ff_hold_ps": -191.53,
+    "verdict": "FAIL",
+    "ff_hold_kit_contract_ps": 35.21,
+    "kit_contract_window_ps": 80.0,
+    "kit_contract_window_needed_ps": 44.79,
+    "kit_contract_verdict": "PASS"
+   },
+   "seam": {
+    "tt_setup_ps": null,
+    "ff_hold_ps": -301.75,
+    "verdict": "FAIL",
+    "ff_hold_kit_contract_ps": -77.94,
+    "kit_contract_window_ps": 80.0,
+    "kit_contract_window_needed_ps": 157.94,
+    "kit_contract_verdict": "FAIL"
+   },
+   "landed": {
+    "tt_setup_margin_ps": null,
+    "ff_hold_margin_ps": null,
+    "verdict": "FAIL"
+   },
+   "status": "UNCHECKED (NUMBER-CHECK pending)",
+   "label": "declared-budget (no QC kit)"
+  },
+  "mesh_pairU": {
+   "intra": {
+    "tt_setup_ps": null,
+    "ff_hold_ps": -147.81,
+    "verdict": "FAIL",
+    "ff_hold_kit_contract_ps": 35.21,
+    "kit_contract_window_ps": 80.0,
+    "kit_contract_window_needed_ps": 44.79,
+    "kit_contract_verdict": "PASS"
+   },
+   "seam": {
+    "tt_setup_ps": null,
+    "ff_hold_ps": -252.14,
+    "verdict": "FAIL",
+    "ff_hold_kit_contract_ps": -77.94,
+    "kit_contract_window_ps": 80.0,
+    "kit_contract_window_needed_ps": 157.94,
+    "kit_contract_verdict": "FAIL"
+   },
+   "landed": {
+    "tt_setup_margin_ps": null,
+    "ff_hold_margin_ps": null,
+    "verdict": "FAIL"
+   },
+   "status": "UNCHECKED (NUMBER-CHECK pending)",
+   "label": "declared-budget (no QC kit)"
+  },
+  "mesh_dieU_TT": {
+   "intra": {
+    "tt_setup_ps": 451.74,
+    "ff_hold_ps": null,
+    "verdict": "FAIL"
+   },
+   "seam": {
+    "tt_setup_ps": 310.23,
+    "ff_hold_ps": null,
+    "verdict": "FAIL"
+   },
+   "landed": {
+    "tt_setup_margin_ps": null,
+    "ff_hold_margin_ps": null,
+    "verdict": "FAIL"
+   },
+   "status": "UNCHECKED (NUMBER-CHECK pending)",
+   "label": "declared-budget (no QC kit)"
+  },
+  "mesh_pairU_TT": {
+   "intra": {
+    "tt_setup_ps": 499.27,
+    "ff_hold_ps": null,
+    "verdict": "FAIL"
+   },
+   "seam": {
+    "tt_setup_ps": 366.45,
+    "ff_hold_ps": null,
+    "verdict": "FAIL"
+   },
+   "landed": {
+    "tt_setup_margin_ps": null,
+    "ff_hold_margin_ps": null,
+    "verdict": "FAIL"
+   },
+   "status": "UNCHECKED (NUMBER-CHECK pending)",
+   "label": "declared-budget (no QC kit)"
+  }
+ },
+ "hb4": {
+  "h_only": {
+   "mesh_unc": {},
+   "mesh_unc_pairs": null,
+   "endpoints_bits": 603026,
+   "hb4_cells": 4104643,
+   "hb4_area_um2": 419084.1,
+   "by_class": {
+    "band_bits": 70175,
+    "band_bits_fail": 70175,
+    "band_cells": 474437,
+    "array_bits": 532851,
+    "array_bits_fail": 532851,
+    "array_cells": 3630206
+   },
+   "cells_per_bit_hist": {
+    "3": 80,
+    "4": 14877,
+    "6": 119770,
+    "7": 437711,
+    "8": 17487,
+    "9": 10251,
+    "10": 1207,
+    "11": 1643
+   },
+   "tt_setup_worst_after_insertion_ps": -447.6,
+   "tt_setup_fail_bits_after": 603026,
+   "basis": "CLOCK-KV-R6 data hold-buffer count from the REAL endpoint list (12.4a a1): every abutted plan port bit",
+   "status": "UNCHECKED",
+   "clock_ocv": "table /srv/opentallas-scratch2/claude/clock-kv-r7-1026/clk_aocv_table_g021.json"
+  },
+  "mesh_dieU": {
+   "mesh_unc": {
+    "TT": 133.33,
+    "FF": 119.45
+   },
+   "mesh_unc_pairs": null,
+   "endpoints_bits": 603026,
+   "hb4_cells": 2339172,
+   "hb4_area_um2": 238829.5,
+   "by_class": {
+    "band_bits": 70175,
+    "band_bits_fail": 70175,
+    "band_cells": 262138,
+    "array_bits": 532851,
+    "array_bits_fail": 532851,
+    "array_cells": 2077034
+   },
+   "cells_per_bit_hist": {
+    "1": 14957,
+    "3": 56006,
+    "4": 518962,
+    "6": 11358,
+    "7": 1743
+   },
+   "tt_setup_worst_after_insertion_ps": 83.84,
+   "tt_setup_fail_bits_after": 0,
+   "basis": "CLOCK-KV-R6 data hold-buffer count from the REAL endpoint list (12.4a a1): every abutted plan port bit",
+   "status": "UNCHECKED",
+   "clock_ocv": "table /srv/opentallas-scratch2/claude/clock-kv-r7-1026/clk_aocv_table_g021.json"
+  },
+  "mesh_pairU": {
+   "mesh_unc": {
+    "TT": 133.33,
+    "FF": 119.45
+   },
+   "mesh_unc_pairs": "TT=lin/die_TT.json,FF=lin/die_FF.json",
+   "endpoints_bits": 603026,
+   "hb4_cells": 785495,
+   "hb4_area_um2": 80199.0,
+   "by_class": {
+    "band_bits": 70175,
+    "band_bits_fail": 55218,
+    "band_cells": 102138,
+    "array_bits": 532851,
+    "array_bits_fail": 532851,
+    "array_cells": 683357
+   },
+   "cells_per_bit_hist": {
+    "1": 417474,
+    "2": 156865,
+    "3": 629,
+    "4": 13101
+   },
+   "tt_setup_worst_after_insertion_ps": 371.15,
+   "tt_setup_fail_bits_after": 0,
+   "basis": "CLOCK-KV-R6 data hold-buffer count from the REAL endpoint list (12.4a a1): every abutted plan port bit",
+   "status": "UNCHECKED",
+   "clock_ocv": "table /srv/opentallas-scratch2/claude/clock-kv-r7-1026/clk_aocv_table_g021.json"
+  },
+  "band_upstream_variant_h": {
+   "mesh_unc": {},
+   "mesh_unc_pairs": null,
+   "endpoints_bits": 603026,
+   "hb4_cells": 4096645,
+   "hb4_area_um2": 418267.5,
+   "by_class": {
+    "band_bits": 70175,
+    "band_bits_fail": 70175,
+    "band_cells": 466439,
+    "array_bits": 532851,
+    "array_bits_fail": 532851,
+    "array_cells": 3630206
+   },
+   "cells_per_bit_hist": {
+    "4": 80,
+    "5": 14877,
+    "6": 123010,
+    "7": 439442,
+    "8": 22767,
+    "9": 2850
+   },
+   "tt_setup_worst_after_insertion_ps": -371.93,
+   "tt_setup_fail_bits_after": 603026,
+   "basis": "CLOCK-KV-R6 data hold-buffer count from the REAL endpoint list (12.4a a1): every abutted plan port bit",
+   "status": "UNCHECKED",
+   "clock_ocv": "table /srv/opentallas-scratch2/claude/clock-kv-r7-1026/clk_aocv_table_g021.json"
+  }
+ }
+}
