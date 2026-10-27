@@ -142,7 +142,7 @@ def sdc(per, ins, clks, rsts, tid):
 def kit_hash(kd):
     h = hashlib.sha256()
     for f in sorted(p for p in Path(kd).rglob("*") if p.is_file() and "run" not in p.relative_to(kd).parts[:1]
-                    and p.name not in ("freeze.json",) and not p.name.startswith("run_")):
+                    and p.name not in ("freeze.json", "preflight.json") and not p.name.startswith("run_")):
         h.update(str(f.relative_to(kd)).encode() + b"\0" + f.read_bytes())
     return h.hexdigest()[:16]
 
