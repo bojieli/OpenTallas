@@ -1,0 +1,8 @@
+{"schema": "ot_qc_latch_setup/1", "label": "UNCHECKED inputs (R18 f64 shared-model STA, pre-R20 geometry); arithmetic CHECKED",
+ "form": "launch-side transparent-low DLLx1 on the sender clock per hold-fix bit; releases at the falling edge",
+ "source": "epyc2:/srv/opentallas-scratch2/claude/qc-mesh-r18/run/f64/sta/die_sta_related.json",
+ "period_ps": 833.333, "half_period_ps": 416.667, "latch_ckq_ps": 73.0, "launch_flop_clkq_max_wire_ps_TT": 107.63,
+ "seam_tt_setup_before_ps": 565.40, "seam_ff_hold_before_ps": -85.17,
+ "tt_setup_after_no_flop_credit_ps": 75.73, "tt_setup_after_flop_clkq_credited_ps": 183.36, "ff_hold_after_ps": 331.50,
+ "formula": "setup_after = setup - T/2 - ckq_latch (+ ckq_flop if credited: the flop Q only feeds the local latch D, which is opaque until T/2); hold_after = hold + T/2 (KV latch_eval.py form)",
+ "verdict": "PASS in model both ways (KV failed because its seam setup was +292.87, QC +565.40); rerun per endpoint on the post-rebalance STA before a build"}

@@ -1,0 +1,11 @@
+{
+ "plan": "inputs/d43/plan_d43.json",
+ "error": "1 plan error(s): cell_overlap 1",
+ "rows": [
+  {
+   "kind": "cell_overlap",
+   "name": "cells",
+   "detail": "[['ckt_18479_0', 'ckt_20119_0'], ['ckt_18479_1', 'ckt_20119_1'], ['ckt_19082_0', 'ckt_20148_0']]"
+  }
+ ]
+}
