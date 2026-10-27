@@ -153,10 +153,11 @@ class Islands:
     ONE slot row per partition (the one nearest the row), a vertical leg ONE slot column per partition."""
     CW, BH, EDGE, CLR = 1.62, 0.54, 8.64, 1.08
 
-    def __init__(self, P, cores, pitch=19.3, pitch_x=4.86, margin=2, vss=False):
+    def __init__(self, P, cores, pitch=19.3, pitch_x=4.86, margin=2, vss=False, edge_sym=False):
         import numpy as np
         self.np = np
         self.vss = vss
+        self.edge_sym = edge_sym
         self.P, self.pitch, self.pitch_x = P, pitch, pitch_x
         self.margin = margin * pitch_x       # reach margin for slot conflicts (a taken slot -> the next one, +-pitch_x)
         bt = defaultdict(list)
@@ -203,7 +204,12 @@ class Islands:
 
     def vss_grid(self, L, body):
         """R15: slot rows on the VSS phase (type frame k * ISL), inside [EDGE, L - EDGE - body]."""
-        return [round(ISL * k, 4) for k in range(1, int((L - self.EDGE - body) / ISL + 1e-9) + 1) if ISL * k >= self.EDGE - 1e-9]
+        # R16 --island-edge-sym (COORD ruling R15: risers fixed by island windows): the type-frame TOP edge keeps the
+        # same VSS lane as the bottom edge (slot k * ISL <= L - EDGE, body top EDGE - body from the edge), so an MX
+        # instance's die-bottom lane (and an R0 instance's die-top lane) at seam +- 8.64 exists; R15 dropped it (slot
+        # <= L - EDGE - body) and pushed the nudged / centre local-row lane-0 repeaters onto lane 1 (riser collisions)
+        top = L - self.EDGE if self.edge_sym else L - self.EDGE - body
+        return [round(ISL * k, 4) for k in range(1, int(top / ISL + 1e-9) + 1) if ISL * k >= self.EDGE - 1e-9]
 
     def to_die(self, part, sx, sy):
         x0, y0, x1, y1 = self.prect[part]
@@ -589,7 +595,8 @@ def build(a, st):
     I = None
     ISLANDS[0] = None
     if getattr(a, "islands", "none") == "type":
-        I = Islands(P, cores, pitch=a.island_pitch, pitch_x=a.island_pitch_x, vss=getattr(a, "lanes", "none") == "vss")
+        I = Islands(P, cores, pitch=a.island_pitch, pitch_x=a.island_pitch_x, vss=getattr(a, "lanes", "none") == "vss",
+                    edge_sym=bool(getattr(a, "island_edge_sym", False)))
         CORR[0] = json.loads(Path(a.island_corr).read_text())["corr"] if getattr(a, "island_corr", None) else {}
         I.et = top
         ISLANDS[0] = I
@@ -736,7 +743,13 @@ def periodic_feed(a, top, P, cols, gaps, nodes, rows=None, m=None, col=None, cor
     gb = [g for g in gaps if g < YC - 1]
     gc = [g for g in gaps if abs(g - YC) < 1e-3]
     assert len(gc) == 1 and len(gb) * 2 + 1 == len(gaps), (len(gb), gc)
-    lb = [r3(g + PER_NUDGE) if round(g, 3) in seams else g for g in gb] + [r3(YC - PER_NUDGE)]
+    # R16 (COORD ruling R15: su_c hold, structural): a gap row whose local x-tree lanes run into hard cores (row 10471.68:
+    # its lanes +8.64..+25.92 hit the su_l0 lane cores at partition y 34.56, the midpoint merge is pushed 127 um off
+    # centre -> 41 ps template imbalance, su_c taps early) is moved to a core-free band of the partition AWAY from the
+    # centre (--row-at G=Y, plan geometry, mirrored in the top half; its lanes step away, see local())
+    row_at = {r3(float(kv.split("=")[0])): r3(float(kv.split("=")[1]))
+              for kv in (getattr(a, "row_at", None) or "").split(",") if kv.strip()}
+    lb = [row_at[r3(g)] if r3(g) in row_at else (r3(g + PER_NUDGE) if round(g, 3) in seams else g) for g in gb] + [r3(YC - PER_NUDGE)]
     K = len(trunk) // 2
     x0 = trunk[K]
     keep = ISLANDS[0], BLOCK[0]
@@ -829,7 +842,17 @@ def periodic_feed_lanes(a, top, P, cols, gaps, nodes, rows, m, col, cores, H, YC
     sx = -1.0 if Rc_ - x0 >= x0 - Lc_ else 1.0
     free_lanes = int(((x0 - Lc_) if sx < 0 else (Rc_ - x0)) // st) - 1
     srows = sorted(lb)
-    ndep = tree_depths(len(srows), 1)          # y-tree leaf depth (H_c = 0, half-tree root = 1)
+    # R16 --ytree-split TAG=H: the y-tree subtree TAG splits its rows h | n - h instead of n // 2 (plan topology).  Used
+    # so the two cbx_q10 rows of one type (local rows i and i + 4) get the SAME y-tree depth -> the same lift lane in
+    # every instance (12.2a1 identity) after --row-at moves rows 3 / 7 into the cbx top band
+    ysplit = {kv.split("=")[0]: int(kv.split("=")[1]) for kv in (getattr(a, "ytree_split", None) or "").split(",") if kv.strip()}
+
+    def ydeps(n, t, d):
+        if n == 1:
+            return [d]
+        h = ysplit.get(t, n // 2)
+        return ydeps(h, t + "0", d + 1) + ydeps(n - h, t + "1", d + 1)
+    ndep = ydeps(len(srows), "T_b", 1)          # y-tree leaf depth (H_c = 0, half-tree root = 1)
     lane_x = lambda d: r3(x0 + sx * st * d)
     info_rows = []
 
@@ -845,7 +868,8 @@ def periodic_feed_lanes(a, top, P, cols, gaps, nodes, rows, m, col, cores, H, YC
 
     def local(i, y, tag):
         ys, centre = grows(i)
-        dy = -1.0 if centre else 1.0           # toward the die centre (bottom half: +y); centre rows away from it
+        dy = -1.0 if (centre or y < sorted(gb)[i] - 1e-6) else 1.0   # toward the die centre (bottom half: +y); centre
+        #                                       rows and R16 --nudge-away rows away from it (lanes stay in their partition)
         lane_y = lambda d: r3(y + dy * st * d)
         dl = tree_depths(len(PER_OFF), 1)       # dtree root = lane 1 (local root = lane 0)
         lv = [(x0 + o, lane_y(d)) for o, d in zip(PER_OFF, dl)]
@@ -864,7 +888,7 @@ def periodic_feed_lanes(a, top, P, cols, gaps, nodes, rows, m, col, cores, H, YC
     def yt(items, t, d):
         if len(items) == 1:
             return items[0]
-        h = len(items) // 2
+        h = ysplit.get(t, len(items) // 2)
         return merge_lane(yt(items[:h], t + "0", d + 1), yt(items[h:], t + "1", d + 1), "y", top, t, tmpl, lane_x(d))
     Bt = yt([local(i, y, f"t_b{i:02d}_") for i, y in enumerate(srows)], "T_b", 1)
     nb = list(tmpl)
@@ -2115,6 +2139,13 @@ def add_common(p):
     p.add_argument("--lanes", default="none", choices=["none", "vss"],
                    help="R15 (opt-in, --feed periodic --islands type): VSS-phase slot rows + one 8.64-um lane per tree level, "
                         "leaves re-balanced by their plan-computed downstream delay, centre fine row split at the seam")
+    p.add_argument("--island-edge-sym", action="store_true",
+                   help="R16 (with --lanes vss): VSS slot rows keep the 8.64 lane at BOTH type-frame edges (see vss_grid)")
+    p.add_argument("--ytree-split", default=None,
+                   help="R16 (with --lanes vss): comma list TAG=H, y-tree subtree TAG (T_b, T_b0, T_b1, ...) splits h | n-h")
+    p.add_argument("--row-at", default=None,
+                   help="R16: comma list G=Y: bottom-half gap row G gets its local row at Y (< G: lanes step away from the "
+                        "die centre; mirrored in the top half); default none = R15 behaviour")
     p.add_argument("--centre-split", type=float, default=ISL, help="R15: centre fine row split -> YC -/+ this (um)")
     p.add_argument("--r9-dir", default=str(HERE.parent.parent / "results/qc_clk_mesh3/r10_inputs"),
                    help="r9_lattice.json + r9_tree5_tree_{TT,FF}_rcx.txt")

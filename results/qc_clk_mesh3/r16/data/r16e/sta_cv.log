@@ -1,0 +1,5 @@
+nearest-tap INFO classes skipped (no mesh.json)
+nearest-tap INFO classes skipped (no mesh.json)
+sta_in_cv TT seam               pairs     997 setup   531.45 (neg 0) hold  -114.45 (neg 997) skew   45.32
+sta_in_cv FF seam               pairs     997 setup   574.87 (neg 0) hold  -119.20 (neg 997) skew   44.66 kit-contract hold -4.66 (W 40, need 44.66, neg 8)
+SUMMARY {"intra": {"tt_setup_ps": null, "ff_hold_ps": null, "verdict": "FAIL"}, "seam": {"tt_setup_ps": 531.45, "ff_hold_ps": -119.2, "verdict": "FAIL", "ff_hold_kit_contract_ps": -4.66, "kit_contract_window_ps": 40.0, "kit_contract_window_needed_ps": 44.66, "kit_contract_verdict": "FAIL"}, "landed": {"tt_setup_margin_ps": null, "ff_hold_margin_ps": null, "verdict": "FAIL"}, "status": "UNCHECKED (NUMBER-CHECK pending)", "label": "declared-budget (no QC kit)"}
