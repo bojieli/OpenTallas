@@ -94,3 +94,4 @@ the cut depends only on the strap coordinates.
   TrackRouter must use the wide-table 1.0 um spacing to wide stripes (it uses NDR space today).
 * R25 DRC (unit 1828381, `../r25_drc/`): 24 unique markers, all M8 Min Step at cell/net ends; same-net VSS shield gaps
   408 (24 at 0.04, 384 at 0.28 um), 0 marked -> PASS.
+* Render `pg_wide_mesh.png` (viewed, `render_wide.py`): strap corner 1632.96/250.56, M8 + M9: each green strap with its black VSS shields sits inside the clock gap between pairs, clear of red VDD / blue VSS.
