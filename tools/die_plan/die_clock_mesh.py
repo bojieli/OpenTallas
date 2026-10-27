@@ -2574,6 +2574,86 @@ def _body_keepout_violations(K, W, H, cells):
     return bad
 
 
+def _explicit_v2_wires(out, cells, nets, groups, router, off, r8, exact, default_ndr):
+    """V2 keeps per-edge widths on pieces of ONE logical net.
+
+    For mixed-master parallel groups the M7 tie backbone is virtual routing
+    geometry only. Actual instance origins/masters are never changed; each unit's
+    true pin point is carried in tie.unit_points for the fixed-wire encoder.
+    """
+    proxy = {k: dict(c) for k,c in cells.items()}
+    hetero = {}
+    ties = {us[0]: list(us) for us in groups.values() if len(us)>1}
+    for us in groups.values():
+        mixed = len({cells[u].get("lib", BUF) for u in us})>1 or len({cells[u]["x"] for u in us})>1
+        if not mixed: continue
+        rep=us[0]
+        # One BUFx24-width backbone model at the group centre. This is not a cell
+        # resize: unit_points below retains every original M1 bar coordinate.
+        xc=sum(cells[u]["x"]+cell_width(cells[u])/2 for u in us)/len(us)
+        for u in us:
+            proxy[u].update(x=xc-BUF_W/2,lib=BUF)
+        hetero[rep]=us
+    wires=[]
+    for n in nets:
+        pieces=[]
+        conns=n.get("plan_connections")
+        if conns:
+            branches=[(e.get("ndr",default_ndr),dict(n,loads=[e["loads"][0]],plan_connections=None,
+                        physical_edge=e.get("edge"),physical_layer=e.get("layer"))) for e in conns]
+        else:
+            branches=[(default_ndr,n)]
+        for ndr,n0 in branches:
+            if ndr not in NDR:
+                raise C128.PlanError([dict(kind="net_ndr",name=n0["name"],detail=f"unmodelled NDR {ndr}")])
+            nd=NDR[ndr]
+            # The metal occupancy is shared across widths. The largest spacing
+            # is conservative for narrow pieces; no pre-existing shape is lost.
+            router.nd=nd
+            router.wide_merge_um=nd.get("wide_merge_um",C128.WIDE_MERGE_UM) if r8 else None
+            router.ix.space=max(router.ix.space,nd["space"])
+            pp=C128.fixed_wires(out,proxy,[n0],BUF_W,ROW_Y,off=off,router=router,pin_stack=True,
+                port_on_trunk=r8,ties=ties,l_drops=True,exact_reserve=exact)
+            if len(pp)!=1: raise RuntimeError("one edge must produce one physical wire piece")
+            w=pp[0]
+            expected=n0.get("physical_layer")
+            if expected and expected != ("M8" if w["horiz"] else "M9"):
+                raise C128.PlanError([dict(kind="net_trunk_layer",name=n0["name"],detail=f"edge {n0.get('physical_edge')}: planned {expected} disagrees with actual pin geometry")])
+            w.update(ndr=ndr,enc="r8" if r8 else "r7",clock_topology_version=2,physical_edge=n0.get("physical_edge"))
+            for st in w["stacks"]:
+                st["short_stack"]=True
+                if st["pin"]=="Y" and st.get("tie"):
+                    # All branch pieces share ONE M7 entry junction; choosing
+                    # the nearest unit independently would create disconnected
+                    # dbWire branch anchors on different unit rows.
+                    u0=ties[st["cell"]][0]
+                    st["entry"]=u0
+                    st["xy"]=list(C128.pin_xy(proxy,u0,"Y",ROW_Y))
+                    st["riser_um"]=round(abs(st["xy"][1]-st["riser_from"][1]),4)
+                    if st["riser_um"]>C128.STACK_RISER_MAX_UM+(len(ties[st["cell"]])-1)*ROW_Y+1e-6:
+                        raise C128.PlanError([dict(kind="no_pin_stack",name=u0,detail="V2 shared driver entry leaves the group island")])
+                if st["cell"] in hetero:
+                    us=hetero[st["cell"]]
+                    pts=[[u,*C128.pin_xy(cells,u,st["pin"],ROW_Y)] for u in us]
+                    st["tie"]["unit_points"]=pts
+                    st["tie"]["heterogeneous"]=True
+                    st["entry_xy"]=next(p[1:] for p in pts if p[0]==st["entry"])
+            pieces.append(w)
+        if len(pieces)==1:
+            wires.append(pieces[0]); continue
+        # Downstream emits these pieces into a single dbWire. Aggregate arrays
+        # remain available to shielding/obstruction/DRC footprint collectors.
+        w=dict(pieces[0]); w["pieces"]=pieces; w["piecewise"]=True
+        for key in ("segs","branches","stacks","shield_modes","shield_ext"):
+            w[key]=[v for p in pieces for v in p.get(key,[])]
+        w["segment_ndr"]=[p["ndr"] for p in pieces for _ in p["segs"]]
+        w["loads"]=list(n["loads"])
+        w["wire_um"]=round(sum(p["wire_um"] for p in pieces),3)
+        wires.append(w)
+    out["meta"]["ndr_rules"]={k:dict(NDR[k]) for k in sorted({p["ndr"] for w in wires for p in w.get("pieces",[w])})}
+    return wires
+
+
 def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, die=None, parts=None, keepouts=None,
                    root_um=None, leaf_stub_um=8.64, stack_offset=0.0, stack_r8=True, exact_reserve=None):
     """INFRA-FIRST-QC-R12: the die clock tree from an EXPLICIT cell + net list (the planner's delay-balanced mesh3 top
@@ -2596,6 +2676,7 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
     P: the die plan (hosts, keep-outs, PG); or die=(W, H), parts={name: rect}, keepouts=[(x0, y0, x1, y1, tag)].
     Returns (cells, nets, ports, M) as build_lattice does (M.fixed_wires: R7 pin-stack wires, short-stack pads)."""
     nd = NDR[ndr]
+    v2 = spec.get("clock_topology_version", 1) == 2
     if P is not None:
         W, H = float(P.W), float(P.H)
         ko = DC.keepouts(P)
@@ -2657,8 +2738,9 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
         c0 = cells[us[0]]
         for i, u in enumerate(us):
             c = cells[u]
-            if abs(c["x"] - c0["x"]) > 1e-6 or c["orient"] != c0["orient"] or c.get("lib") != c0.get("lib") or \
-                    abs(c["y"] - (c0["y"] + i * ROW_Y)) > 1e-6:
+            if ((not v2 and (abs(c["x"] - c0["x"]) > 1e-6 or c.get("lib") != c0.get("lib")))
+                    or c["orient"] != c0["orient"]
+                    or abs(c["y"] - (c0["y"] + i * ROW_Y)) > 1e-6):
                 perr.append(dict(kind="tie_stack", name=u, detail=f"group {g}: units must stack in consecutive rows of "
                                  "one column (same x, orient, master)"))
     rep_of = {u: us[0] for us in groups.values() for u in us}
@@ -2668,7 +2750,7 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
         if bad:
             perr.append(dict(kind="net_group", name=str(n.get("edge")), detail=f"unknown {bad}: {n.get('drv')}->{n.get('load')}"))
             continue
-        if n.get("ndr", ndr) != ndr:
+        if n.get("ndr", ndr) not in NDR or (not v2 and n.get("ndr", ndr) != ndr):
             perr.append(dict(kind="net_ndr", name=str(n.get("edge")), detail=f"net ndr {n.get('ndr')} != build {ndr}"))
         if n.get("layer") not in ("M8", "M9"):
             perr.append(dict(kind="net_layer", name=str(n.get("edge")), detail=str(n.get("layer"))))
@@ -2709,7 +2791,8 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
         if ns:
             loads = [u for n in ns for u in groups[n["load"]]]
             nets.append(dict(name=f"ckm_w_{r_}", drv=r_, drv_units=list(us), loads=loads, level=lv[g],
-                             plan_layers=sorted({n["layer"] for n in ns}), plan_edges=[n.get("edge") for n in ns]))
+                             plan_layers=sorted({n["layer"] for n in ns}), plan_edges=[n.get("edge") for n in ns],
+                             **(dict(plan_connections=[dict(n, loads=list(groups[n["load"]])) for n in ns]) if v2 else {})))
             continue
         yx, yy = C128.pin_xy(cells, r_, "Y", ROW_Y, cells[r_].get("lib", BUF))
         west = cells[r_]["orient"] in ("MY", "R180")
@@ -2727,7 +2810,7 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
         D = C128.pin_xy(cells, n["drv"], "Y", ROW_Y, cells[n["drv"]].get("lib", BUF))
         Ls = [C128.pin_xy(cells, ld, "A", ROW_Y, cells[ld].get("lib", BUF)) for ld in n["loads"]]
         horiz = max(abs(p[0] - D[0]) for p in Ls) >= max(abs(p[1] - D[1]) for p in Ls)
-        if n["plan_layers"] != ["M8" if horiz else "M9"]:
+        if not v2 and n["plan_layers"] != ["M8" if horiz else "M9"]:
             perr.append(dict(kind="net_trunk_layer", name=n["name"], detail=f"plan {n['plan_layers']} vs trunk "
                              f"{'M8' if horiz else 'M9'} (dominant extent)"))
     overlaps = placement_overlaps(cells)
@@ -2765,11 +2848,18 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
         out["meta"]["clock_channel_keep"] = [list(r) for r in chan_rects]
     # physical view: one pin stack per GROUP (the tie reaches the other units); logical nets keep every unit
     phys = [dict(n, loads=[ld for ld in n["loads"] if ld.startswith("port:") or rep_of[ld] == ld]) for n in nets]
-    wires = C128.fixed_wires(out, cells, phys, BUF_W, ROW_Y, off=stack_offset, router=router, pin_stack=True,
-                             port_on_trunk=stack_r8, ties=ties, l_drops=True,
-                             exact_reserve=bool(spec.get("exact_reserve") if exact_reserve is None else exact_reserve))
+    if v2:
+        wires = _explicit_v2_wires(out, cells, phys, groups, router, stack_offset, stack_r8,
+                                   bool(spec.get("exact_reserve") if exact_reserve is None else exact_reserve), ndr)
+        out["meta"]["explicit_tree"].update(clock_topology_version=2,
+            edge_ndrs=sorted({n.get("ndr", ndr) for n in spec.get("nets", [])}),
+            heterogeneous_groups=sum(len({cells[u].get("lib", BUF) for u in us}) > 1 for us in groups.values()))
+    else:
+        wires = C128.fixed_wires(out, cells, phys, BUF_W, ROW_Y, off=stack_offset, router=router, pin_stack=True,
+                                 port_on_trunk=stack_r8, ties=ties, l_drops=True,
+                                 exact_reserve=bool(spec.get("exact_reserve") if exact_reserve is None else exact_reserve))
     for w in wires:
-        w["ndr"] = ndr
+        w.setdefault("ndr", ndr)
         for s_ in w.get("stacks", []):
             s_["short_stack"] = True
         if stack_r8:
@@ -2794,6 +2884,9 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
                        reps=sum(1 for c in cells.values() if c["kind"] == "rep"), stubs=len(tap_rows),
                        clock_cell_overlap_pairs=0, clock_hard_keepout_violations=0, unplaced=0,
                        tree_wire_mm=round(sum(w["wire_um"] for w in wires) / 1e3, 3))
+    if v2 and spec.get("mesh"):
+        from explicit_clock_mesh import attach_mesh
+        cells, nets, ports, out = attach_mesh(spec, cells, nets, ports, out)
     return cells, nets, ports, out
 
 
@@ -3368,7 +3461,7 @@ def cmd_combo(a):
             import clock_routed as CR
             L.append(f"create_ndr -name ot_mesh_ndr -width {{M8 {nd['width']} M9 {nd['width']}}} "
                      f"-spacing {{M8 {nd['space']} M9 {nd['space']}}}")
-            L += CR.shield_only_tcl(C128.combo_tcl(wires, nd, M["meta"]["rule_12_8"]["shield_net"]))
+            L += CR.mixed_shield_tcl(wires, nd, M["meta"]["rule_12_8"]["shield_net"]) if M["meta"].get("explicit_tree", {}).get("clock_topology_version")==2 else CR.shield_only_tcl(C128.combo_tcl(wires, nd, M["meta"]["rule_12_8"]["shield_net"]))
             ports_ = {t_["port"]: dict(layer=t_.get("layer", M["meta"].get("tap_layer", "M7")), xy=t_["xy"])
                       for t_ in M["taps"]}
             ports_["root"] = dict(layer="M9", xy=list(M["meta"]["root_um"]))
