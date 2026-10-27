@@ -1,0 +1,119 @@
+[
+ {
+  "core": "dsdv_eng_rr_h1",
+  "ff_vclk_ps": 202.5,
+  "hold_wns_ps": 9.94,
+  "negative_endpoints": 0,
+  "verdict": "PASS",
+  "scope": "boundary ETM only; not a routed sign-off",
+  "log": "/srv/opentallas-scratch2/claude/codex-s81-core-1027/etm_retime/dsdv_eng_rr_h1/etm_fixed_p1_202.5.log"
+ },
+ {
+  "core": "dsdv_gunit_l4r",
+  "ff_vclk_ps": 202.5,
+  "hold_wns_ps": 13.37,
+  "negative_endpoints": 0,
+  "verdict": "PASS",
+  "scope": "boundary ETM only; not a routed sign-off",
+  "log": "/srv/opentallas-scratch2/claude/codex-s81-core-1027/etm_retime/dsdv_gunit_l4r/etm_fixed_p1_202.5.log"
+ },
+ {
+  "core": "dsdv_gunit_l5f",
+  "ff_vclk_ps": 202.5,
+  "hold_wns_ps": 18.82,
+  "negative_endpoints": 0,
+  "verdict": "PASS",
+  "scope": "boundary ETM only; not a routed sign-off",
+  "log": "/srv/opentallas-scratch2/claude/codex-s81-core-1027/etm_retime/dsdv_gunit_l5f/etm_fixed_p1_202.5.log"
+ },
+ {
+  "core": "dsdv_svc_sx_hrow",
+  "ff_vclk_ps": 202.5,
+  "hold_wns_ps": -10.28,
+  "negative_endpoints": 485,
+  "verdict": "FAIL",
+  "scope": "boundary ETM only; not a routed sign-off",
+  "log": "/srv/opentallas-scratch2/claude/codex-s81-core-1027/etm_retime/dsdv_svc_sx_hrow/etm_fixed_p1_202.5.log"
+ },
+ {
+  "core": "dsfd_node_LLd",
+  "ff_vclk_ps": 202.5,
+  "hold_wns_ps": 7.49,
+  "negative_endpoints": 0,
+  "verdict": "PASS",
+  "scope": "boundary ETM only; not a routed sign-off",
+  "log": "/srv/opentallas-scratch2/claude/codex-s81-core-1027/etm_retime/dsfd_node_LLd/etm_fixed_p1_202.5.log"
+ },
+ {
+  "core": "dsfd_node_LLfd",
+  "ff_vclk_ps": 202.5,
+  "hold_wns_ps": 7.45,
+  "negative_endpoints": 0,
+  "verdict": "PASS",
+  "scope": "boundary ETM only; not a routed sign-off",
+  "log": "/srv/opentallas-scratch2/claude/codex-s81-core-1027/etm_retime/dsfd_node_LLfd/etm_fixed_p1_202.5.log"
+ },
+ {
+  "core": "dsfd_node_LLfu",
+  "ff_vclk_ps": 202.5,
+  "hold_wns_ps": 12.64,
+  "negative_endpoints": 0,
+  "verdict": "PASS",
+  "scope": "boundary ETM only; not a routed sign-off",
+  "log": "/srv/opentallas-scratch2/claude/codex-s81-core-1027/etm_retime/dsfd_node_LLfu/etm_fixed_p1_202.5.log"
+ },
+ {
+  "core": "dsfd_node_NNfd",
+  "ff_vclk_ps": 202.5,
+  "hold_wns_ps": -0.02,
+  "negative_endpoints": 1,
+  "verdict": "FAIL",
+  "scope": "boundary ETM only; not a routed sign-off",
+  "log": "/srv/opentallas-scratch2/claude/codex-s81-core-1027/etm_retime/dsfd_node_NNfd/etm_fixed_p1_202.5.log"
+ },
+ {
+  "core": "dsfd_node_NNfu",
+  "ff_vclk_ps": 202.5,
+  "hold_wns_ps": 0.86,
+  "negative_endpoints": 0,
+  "verdict": "PASS",
+  "scope": "boundary ETM only; not a routed sign-off",
+  "log": "/srv/opentallas-scratch2/claude/codex-s81-core-1027/etm_retime/dsfd_node_NNfu/etm_fixed_p1_202.5.log"
+ },
+ {
+  "core": "dsfd_su_t_rxsb",
+  "ff_vclk_ps": 202.5,
+  "hold_wns_ps": 13.36,
+  "negative_endpoints": 0,
+  "verdict": "PASS",
+  "scope": "boundary ETM only; not a routed sign-off",
+  "log": "/srv/opentallas-scratch2/claude/codex-s81-core-1027/etm_retime/dsfd_su_t_rxsb/etm_fixed_p1_202.5.log"
+ },
+ {
+  "core": "ot_dsrom_su_hcpost_lane_pr",
+  "ff_vclk_ps": 202.5,
+  "hold_wns_ps": 1.6,
+  "negative_endpoints": 0,
+  "verdict": "PASS",
+  "scope": "boundary ETM only; not a routed sign-off",
+  "log": "/srv/opentallas-scratch2/claude/codex-s81-core-1027/etm_retime/ot_dsrom_su_hcpost_lane_pr/etm_fixed_p1_202.5.log"
+ },
+ {
+  "core": "ot_s81_cfg7_seq",
+  "ff_vclk_ps": 202.5,
+  "hold_wns_ps": 2.9,
+  "negative_endpoints": 0,
+  "verdict": "PASS",
+  "scope": "boundary ETM only; not a routed sign-off",
+  "log": "/srv/opentallas-scratch2/claude/codex-s81-core-1027/etm_retime/ot_s81_cfg7_seq/etm_fixed_p1_202.5.log"
+ },
+ {
+  "core": "ot_s81sl_vq",
+  "ff_vclk_ps": 202.5,
+  "hold_wns_ps": -3.83,
+  "negative_endpoints": 14,
+  "verdict": "FAIL",
+  "scope": "boundary ETM only; not a routed sign-off",
+  "log": "/srv/opentallas-scratch2/claude/codex-s81-core-1027/etm_retime/ot_s81sl_vq/etm_fixed_p1_202.5.log"
+ }
+]
