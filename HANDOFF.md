@@ -1225,3 +1225,5 @@ CODEX: 2026-10-26 20:42 PDT TOK-LEC QXPQ exactAIG formalclose64713/64713+outputm
 2026-10-26 20:50 PDT CODEX: HEADactualHOSTprogrammepath PASS throughsafe8/HBC/HOST276->CTL512-bitstageforward,3HBC+7CSRs; physicalpayloadmutantCAUGHT. DefaultoffHOST_FRAMES fixesS81consumer mismatch; phaseawareTEST501/505/511. CombinedREADYbceaec7caf includesCTL825MTPfix; nolivejobs,canonicalheld.
 
 CODEX: 2026-10-26 20:51 PDT P3 serialized and optimized successors both6/6I1-I7PASS, true gain/C/ID transfers; batched MTP extra unit-work142666.851cycles before drains, no8SM/native claim. Producer-aligned allocator42d0caba4 under actual L0 trial. QXPQ pinned-AIG64713/64713 proof closed with mutant; source provenance remains unknown, no route release. B48 corrected18PCbuilds complete, top frontend live.
+
+CODEX: 2026-10-26 20:53 PDT HBMprice25d0786c4: frozenP3batch2sixcostsconcrete, buddybothhubs96nativeVMlegsk1fixoldserializationfailure, bank5/3avoidsnativeVMII2calendaroverflow; current8SMrate/native/treebindingstillopen.
