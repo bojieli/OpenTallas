@@ -3562,6 +3562,11 @@ def _write_provenance(a, step):
 
 def cmd_elab(a):
     raw = load_plan(a.plan)
+    import manifest_paths
+    missing = manifest_paths.required_prefer_files(raw["asbuilt"], plan_base(a.plan, raw))
+    if missing:
+        raise BindError(f"{a.plan}: {len(missing)} required preferred RTL file(s) missing before elaboration; "
+                        "restore the declared source instead of falling back to an automatic stub:\n" + "\n".join(missing))
     _write_provenance(a, "elab")
     rec = E.elab(raw["asbuilt"], plan_base(a.plan, raw), a.out, a.mem)
     print(json.dumps({k: (v if k not in ("ambiguous", "undefined") else len(v)) for k, v in rec.items()}))
