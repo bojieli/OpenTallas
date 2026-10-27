@@ -98,4 +98,4 @@ def test_measured_selection_mirrors_signoff():
 def test_generators_stage_the_step():
     for f in ("gen_phys.py", "core_flow.py"):
         s = (HERE / f).read_text()
-        assert "\"vclk_measured_hold.tcl\", \"vclk_ref.py\"" in s, f
+        assert '"vclk_measured_hold.tcl", "vclk_ref.py"' in s, f
