@@ -1,0 +1,138 @@
+{
+ "TT": {
+  "crossings": 1199,
+  "missing": 0,
+  "max_abs_d_mean": 1867.53,
+  "max_d_worst": 1928.63,
+  "over_budget_mean": 135,
+  "over_budget_worst": 232,
+  "worst5": [
+   {
+    "port": "dfi__svc_14__phy_hbm__0",
+    "src": "svc_14",
+    "dst": "eng",
+    "d_mean": 1867.5284722740744,
+    "d_worst": 1928.629882000001
+   },
+   {
+    "port": "flt__eng__svc_14__0",
+    "src": "eng",
+    "dst": "svc_14",
+    "d_mean": -1867.5284722740744,
+    "d_worst": 1928.629882000001
+   },
+   {
+    "port": "hbmrd__phy_hbm__svc_14__1",
+    "src": "eng",
+    "dst": "svc_14",
+    "d_mean": -1867.5284722740744,
+    "d_worst": 1928.629882000001
+   },
+   {
+    "port": "unit__eng__svc_14__0",
+    "src": "eng",
+    "dst": "svc_14",
+    "d_mean": -1867.5284722740744,
+    "d_worst": 1928.629882000001
+   },
+   {
+    "port": "unit__seqhost__eng__6",
+    "src": "svc_14",
+    "dst": "eng",
+    "d_mean": 1867.5284722740744,
+    "d_worst": 1928.629882000001
+   }
+  ],
+  "insertion_ps": [
+   9836.2,
+   14088.7
+  ],
+  "region_root_arrival": {
+   "n": 168,
+   "min": 9189.2,
+   "max": 9829.2,
+   "spread": 640.0
+  },
+  "region_spread_max": [
+   "std_b3_9_0",
+   {
+    "parts": 3,
+    "spread_ps": 3848.32
+   }
+  ],
+  "phy_region": {
+   "hard_phy_hbm": {
+    "parts": 7,
+    "spread_ps": 151.55
+   }
+  }
+ },
+ "FF": {
+  "crossings": 1199,
+  "missing": 0,
+  "max_abs_d_mean": 1619.6,
+  "max_d_worst": 1673.9,
+  "over_budget_mean": 85,
+  "over_budget_worst": 174,
+  "worst5": [
+   {
+    "port": "dfi__svc_14__phy_hbm__0",
+    "src": "svc_14",
+    "dst": "eng",
+    "d_mean": 1619.59643368889,
+    "d_worst": 1673.8994139999995
+   },
+   {
+    "port": "flt__eng__svc_14__0",
+    "src": "eng",
+    "dst": "svc_14",
+    "d_mean": -1619.59643368889,
+    "d_worst": 1673.8994139999995
+   },
+   {
+    "port": "hbmrd__phy_hbm__svc_14__1",
+    "src": "eng",
+    "dst": "svc_14",
+    "d_mean": -1619.59643368889,
+    "d_worst": 1673.8994139999995
+   },
+   {
+    "port": "unit__eng__svc_14__0",
+    "src": "eng",
+    "dst": "svc_14",
+    "d_mean": -1619.59643368889,
+    "d_worst": 1673.8994139999995
+   },
+   {
+    "port": "unit__seqhost__eng__6",
+    "src": "svc_14",
+    "dst": "eng",
+    "d_mean": 1619.59643368889,
+    "d_worst": 1673.8994139999995
+   }
+  ],
+  "insertion_ps": [
+   8508.3,
+   12282.6
+  ],
+  "region_root_arrival": {
+   "n": 168,
+   "min": 7957.3,
+   "max": 8524.1,
+   "spread": 566.9
+  },
+  "region_spread_max": [
+   "std_b3_9_0",
+   {
+    "parts": 3,
+    "spread_ps": 3423.0
+   }
+  ],
+  "phy_region": {
+   "hard_phy_hbm": {
+    "parts": 7,
+    "spread_ps": 135.12
+   }
+  }
+ }
+}

@@ -1,0 +1,447 @@
+[
+ {
+  "phase": [
+   0,
+   0
+  ],
+  "regions": 167,
+  "largest": 18,
+  "landed_ports": 1128,
+  "landed_bits": 488897,
+  "band_fails": 12,
+  "fail_types": {
+   "col_h10_r1": 4,
+   "svc_hi_dsdv_svc_rs": 1,
+   "dsdv_slice_c1x_C": 1,
+   "bk_sel": 6
+  },
+  "fails": [
+   {
+    "part": "fE1_p1_b1",
+    "type": "col_h10_r1__t1",
+    "bus": "frame_int_i1",
+    "width": 1264,
+    "err": " landing storage band forframe_int_i1, required depth21.60um"
+   },
+   {
+    "part": "fE1_p4_b1",
+    "type": "col_h10_r1__t1",
+    "bus": "frame_int_i1",
+    "width": 1264,
+    "err": " landing storage band forframe_int_i1, required depth21.60um"
+   },
+   {
+    "part": "fW1_p1_b1",
+    "type": "col_h10_r1__t1",
+    "bus": "frame_int_i1",
+    "width": 1264,
+    "err": " landing storage band forframe_int_i1, required depth21.60um"
+   },
+   {
+    "part": "fW1_p4_b1",
+    "type": "col_h10_r1__t1",
+    "bus": "frame_int_i1",
+    "width": 1264,
+    "err": " landing storage band forframe_int_i1, required depth21.60um"
+   },
+   {
+    "part": "svc_15",
+    "type": "svc_hi_dsdv_svc_rs__t6_phy1026_svc_15",
+    "bus": "ft1_i",
+    "width": 1104,
+    "err": "e clock landing storage band forft1_i, required depth21.60um"
+   },
+   {
+    "part": "s_1S_C",
+    "type": "dsdv_slice_c1x_C__t1_phy1026_s_1S_C",
+    "bus": "leafup_i2",
+    "width": 668,
+    "err": "ock landing storage band forleafup_i2, required depth23.76um"
+   },
+   {
+    "part": "bk_sel",
+    "type": "bk_sel__t2_phy1026_bk_sel",
+    "bus": "ca_i0",
+    "width": 276,
+    "err": "e clock landing storage band forca_i0, required depth25.92um"
+   },
+   {
+    "part": "bk_sel",
+    "type": "bk_sel__t2_phy1026_bk_sel",
+    "bus": "cb_i0",
+    "width": 276,
+    "err": "e clock landing storage band forcb_i0, required depth25.92um"
+   },
+   {
+    "part": "bk_sel",
+    "type": "bk_sel__t2_phy1026_bk_sel",
+    "bus": "idx_i0",
+    "width": 276,
+    "err": " clock landing storage band foridx_i0, required depth25.92um"
+   },
+   {
+    "part": "bk_sel",
+    "type": "bk_sel__t2_phy1026_bk_sel",
+    "bus": "tp_i0",
+    "width": 276,
+    "err": "e clock landing storage band fortp_i0, required depth25.92um"
+   },
+   {
+    "part": "bk_sel",
+    "type": "bk_sel__t2_phy1026_bk_sel",
+    "bus": "xtier_i0",
+    "width": 276,
+    "err": "lock landing storage band forxtier_i0, required depth25.92um"
+   },
+   {
+    "part": "bk_sel",
+    "type": "bk_sel__t2_phy1026_bk_sel",
+    "bus": "xtier_i1",
+    "width": 276,
+    "err": "lock landing storage band forxtier_i1, required depth25.92um"
+   }
+  ]
+ },
+ {
+  "phase": [
+   1,
+   0
+  ],
+  "regions": 169,
+  "largest": 18,
+  "landed_ports": 1132,
+  "landed_bits": 488036,
+  "band_fails": 11,
+  "fail_types": {
+   "col_h10_r1": 4,
+   "svc_hi_dsdv_svc_rs": 1,
+   "bk_sel": 6
+  },
+  "fails": [
+   {
+    "part": "fE1_p1_b1",
+    "type": "col_h10_r1__t1",
+    "bus": "frame_int_i1",
+    "width": 1264,
+    "err": " landing storage band forframe_int_i1, required depth21.60um"
+   },
+   {
+    "part": "fE1_p4_b1",
+    "type": "col_h10_r1__t1",
+    "bus": "frame_int_i1",
+    "width": 1264,
+    "err": " landing storage band forframe_int_i1, required depth21.60um"
+   },
+   {
+    "part": "fW1_p1_b1",
+    "type": "col_h10_r1__t1",
+    "bus": "frame_int_i1",
+    "width": 1264,
+    "err": " landing storage band forframe_int_i1, required depth21.60um"
+   },
+   {
+    "part": "fW1_p4_b1",
+    "type": "col_h10_r1__t1",
+    "bus": "frame_int_i1",
+    "width": 1264,
+    "err": " landing storage band forframe_int_i1, required depth21.60um"
+   },
+   {
+    "part": "svc_15",
+    "type": "svc_hi_dsdv_svc_rs__t6_phy1026_svc_15",
+    "bus": "ft1_i",
+    "width": 1104,
+    "err": "e clock landing storage band forft1_i, required depth21.60um"
+   },
+   {
+    "part": "bk_sel",
+    "type": "bk_sel__t2_phy1026_bk_sel",
+    "bus": "ca_i0",
+    "width": 276,
+    "err": "e clock landing storage band forca_i0, required depth25.92um"
+   },
+   {
+    "part": "bk_sel",
+    "type": "bk_sel__t2_phy1026_bk_sel",
+    "bus": "cb_i0",
+    "width": 276,
+    "err": "e clock landing storage band forcb_i0, required depth25.92um"
+   },
+   {
+    "part": "bk_sel",
+    "type": "bk_sel__t2_phy1026_bk_sel",
+    "bus": "idx_i0",
+    "width": 276,
+    "err": " clock landing storage band foridx_i0, required depth25.92um"
+   },
+   {
+    "part": "bk_sel",
+    "type": "bk_sel__t2_phy1026_bk_sel",
+    "bus": "tp_i0",
+    "width": 276,
+    "err": "e clock landing storage band fortp_i0, required depth25.92um"
+   },
+   {
+    "part": "bk_sel",
+    "type": "bk_sel__t2_phy1026_bk_sel",
+    "bus": "xtier_i0",
+    "width": 276,
+    "err": "lock landing storage band forxtier_i0, required depth25.92um"
+   },
+   {
+    "part": "bk_sel",
+    "type": "bk_sel__t2_phy1026_bk_sel",
+    "bus": "xtier_i1",
+    "width": 276,
+    "err": "lock landing storage band forxtier_i1, required depth25.92um"
+   }
+  ]
+ },
+ {
+  "phase": [
+   0,
+   1
+  ],
+  "regions": 167,
+  "largest": 18,
+  "landed_ports": 1143,
+  "landed_bits": 502238,
+  "band_fails": 17,
+  "fail_types": {
+   "col_h10_r1": 8,
+   "svc_hi_dsdv_svc_rs": 1,
+   "ot_s81sl_leaf": 4,
+   "bk_sel": 4
+  },
+  "fails": [
+   {
+    "part": "fE0_p1_b1",
+    "type": "col_h10_r1__t1",
+    "bus": "frame_int_i1",
+    "width": 1264,
+    "err": " landing storage band forframe_int_i1, required depth21.60um"
+   },
+   {
+    "part": "fE0_p4_b1",
+    "type": "col_h10_r1__t1",
+    "bus": "frame_int_i1",
+    "width": 1264,
+    "err": " landing storage band forframe_int_i1, required depth21.60um"
+   },
+   {
+    "part": "fE2_p1_b1",
+    "type": "col_h10_r1__t1",
+    "bus": "frame_int_i1",
+    "width": 1264,
+    "err": " landing storage band forframe_int_i1, required depth21.60um"
+   },
+   {
+    "part": "fE2_p4_b1",
+    "type": "col_h10_r1__t1",
+    "bus": "frame_int_i1",
+    "width": 1264,
+    "err": " landing storage band forframe_int_i1, required depth21.60um"
+   },
+   {
+    "part": "fW0_p1_b1",
+    "type": "col_h10_r1__t1",
+    "bus": "frame_int_i1",
+    "width": 1264,
+    "err": " landing storage band forframe_int_i1, required depth21.60um"
+   },
+   {
+    "part": "fW0_p4_b1",
+    "type": "col_h10_r1__t1",
+    "bus": "frame_int_i1",
+    "width": 1264,
+    "err": " landing storage band forframe_int_i1, required depth21.60um"
+   },
+   {
+    "part": "fW2_p1_b1",
+    "type": "col_h10_r1__t1",
+    "bus": "frame_int_i1",
+    "width": 1264,
+    "err": " landing storage band forframe_int_i1, required depth21.60um"
+   },
+   {
+    "part": "fW2_p4_b1",
+    "type": "col_h10_r1__t1",
+    "bus": "frame_int_i1",
+    "width": 1264,
+    "err": " landing storage band forframe_int_i1, required depth21.60um"
+   },
+   {
+    "part": "svc_15",
+    "type": "svc_hi_dsdv_svc_rs__t6_phy1026_svc_15",
+    "bus": "ft1_i",
+    "width": 1104,
+    "err": "e clock landing storage band forft1_i, required depth21.60um"
+   },
+   {
+    "part": "s_2N_L1",
+    "type": "ot_s81sl_leaf__t28_phy1026_s_2N_L1",
+    "bus": "ft5_i",
+    "width": 1104,
+    "err": "e clock landing storage band forft5_i, required depth28.08um"
+   },
+   {
+    "part": "s_0N_L1",
+    "type": "ot_s81sl_leaf__t8_phy1026_s_0N_L1",
+    "bus": "ft13_i",
+    "width": 597,
+    "err": " clock landing storage band forft13_i, required depth30.24um"
+   },
+   {
+    "part": "s_0N_L1",
+    "type": "ot_s81sl_leaf__t8_phy1026_s_0N_L1",
+    "bus": "ft12_i",
+    "width": 597,
+    "err": " clock landing storage band forft12_i, required depth30.24um"
+   },
+   {
+    "part": "s_5S_L1",
+    "type": "ot_s81sl_leaf__t47_phy1026_s_5S_L1",
+    "bus": "leafdn_i0",
+    "width": 597,
+    "err": "ock landing storage band forleafdn_i0, required depth23.76um"
+   },
+   {
+    "part": "bk_sel",
+    "type": "bk_sel__t2_phy1026_bk_sel",
+    "bus": "ca_i0",
+    "width": 276,
+    "err": "e clock landing storage band forca_i0, required depth25.92um"
+   },
+   {
+    "part": "bk_sel",
+    "type": "bk_sel__t2_phy1026_bk_sel",
+    "bus": "cb_i0",
+    "width": 276,
+    "err": "e clock landing storage band forcb_i0, required depth25.92um"
+   },
+   {
+    "part": "bk_sel",
+    "type": "bk_sel__t2_phy1026_bk_sel",
+    "bus": "xtier_i0",
+    "width": 276,
+    "err": "lock landing storage band forxtier_i0, required depth25.92um"
+   },
+   {
+    "part": "bk_sel",
+    "type": "bk_sel__t2_phy1026_bk_sel",
+    "bus": "xtier_i1",
+    "width": 276,
+    "err": "lock landing storage band forxtier_i1, required depth25.92um"
+   }
+  ]
+ },
+ {
+  "phase": [
+   1,
+   1
+  ],
+  "regions": 173,
+  "largest": 18,
+  "landed_ports": 1153,
+  "landed_bits": 505639,
+  "band_fails": 13,
+  "fail_types": {
+   "col_h10_r1": 8,
+   "svc_hi_dsdv_svc_rs": 1,
+   "ot_s81sl_leaf": 4
+  },
+  "fails": [
+   {
+    "part": "fE0_p1_b1",
+    "type": "col_h10_r1__t1",
+    "bus": "frame_int_i1",
+    "width": 1264,
+    "err": " landing storage band forframe_int_i1, required depth21.60um"
+   },
+   {
+    "part": "fE0_p4_b1",
+    "type": "col_h10_r1__t1",
+    "bus": "frame_int_i1",
+    "width": 1264,
+    "err": " landing storage band forframe_int_i1, required depth21.60um"
+   },
+   {
+    "part": "fE2_p1_b1",
+    "type": "col_h10_r1__t1",
+    "bus": "frame_int_i1",
+    "width": 1264,
+    "err": " landing storage band forframe_int_i1, required depth21.60um"
+   },
+   {
+    "part": "fE2_p4_b1",
+    "type": "col_h10_r1__t1",
+    "bus": "frame_int_i1",
+    "width": 1264,
+    "err": " landing storage band forframe_int_i1, required depth21.60um"
+   },
+   {
+    "part": "fW0_p1_b1",
+    "type": "col_h10_r1__t1",
+    "bus": "frame_int_i1",
+    "width": 1264,
+    "err": " landing storage band forframe_int_i1, required depth21.60um"
+   },
+   {
+    "part": "fW0_p4_b1",
+    "type": "col_h10_r1__t1",
+    "bus": "frame_int_i1",
+    "width": 1264,
+    "err": " landing storage band forframe_int_i1, required depth21.60um"
+   },
+   {
+    "part": "fW2_p1_b1",
+    "type": "col_h10_r1__t1",
+    "bus": "frame_int_i1",
+    "width": 1264,
+    "err": " landing storage band forframe_int_i1, required depth21.60um"
+   },
+   {
+    "part": "fW2_p4_b1",
+    "type": "col_h10_r1__t1",
+    "bus": "frame_int_i1",
+    "width": 1264,
+    "err": " landing storage band forframe_int_i1, required depth21.60um"
+   },
+   {
+    "part": "svc_15",
+    "type": "svc_hi_dsdv_svc_rs__t6_phy1026_svc_15",
+    "bus": "ft1_i",
+    "width": 1104,
+    "err": "e clock landing storage band forft1_i, required depth21.60um"
+   },
+   {
+    "part": "s_2N_L1",
+    "type": "ot_s81sl_leaf__t28_phy1026_s_2N_L1",
+    "bus": "ft5_i",
+    "width": 1104,
+    "err": "e clock landing storage band forft5_i, required depth28.08um"
+   },
+   {
+    "part": "s_0N_L1",
+    "type": "ot_s81sl_leaf__t8_phy1026_s_0N_L1",
+    "bus": "ft13_i",
+    "width": 597,
+    "err": " clock landing storage band forft13_i, required depth30.24um"
+   },
+   {
+    "part": "s_0N_L1",
+    "type": "ot_s81sl_leaf__t8_phy1026_s_0N_L1",
+    "bus": "ft12_i",
+    "width": 597,
+    "err": " clock landing storage band forft12_i, required depth30.24um"
+   },
+   {
+    "part": "s_5S_L1",
+    "type": "ot_s81sl_leaf__t47_phy1026_s_5S_L1",
+    "bus": "leafdn_i0",
+    "width": 597,
+    "err": "ock landing storage band forleafdn_i0, required depth23.76um"
+   }
+  ]
+ }
+]
