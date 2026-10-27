@@ -1,4 +1,4 @@
-# OpenTallas design methodology (FROZEN v4.9, 2026-10-26 17:3x-18:0x; v4.8 17:4x; v4.7 17:3x; v4.6 17:0x; v4.5 16:5x; v4.4 06:39; v4.3 06:33; v4.2 06:15; v4.1 06:11; v4 06:07; v3 05:58; v2 earlier 10-26; v1 2026-10-24 21:40 PDT)
+# OpenTallas design methodology (FROZEN v4.9, 2026-10-26 17:3x; v4.8 17:4x; v4.7 17:3x; v4.6 17:0x; v4.5 16:5x; v4.4 06:39; v4.3 06:33; v4.2 06:15; v4.1 06:11; v4 06:07; v3 05:58; v2 earlier 10-26; v1 2026-10-24 21:40 PDT)
 
 One rule set for every lane (Claude, Codex, sub-agents) on all four release dies (S81, Qwen compute, Qwen KV, HBM).
 Build to these rules; do not re-derive them per lane. Precedence: latest OWNER decision > this file > AGENTS.md >
