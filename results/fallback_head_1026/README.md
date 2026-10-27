@@ -104,9 +104,10 @@ Die STA on real views needs four things first:
 1. Landed partition views: every one of the 16 types rebuilt with its rings, fclk pins and monitor, then signed off.
 2. Ring-window STA at the landing.
 3. die_sta.py with `--spine-tree fd300`.
-4. The compose step finished. Run 1 of `clock_landing_plan.compose` FAILED after ~14 min with KeyError buses
-   (HEAD frame types hd_turn_a/b and hd_st_* declare only ft_slots). This branch makes it generic with
-   setdefault("buses"); clock_landing tests still PASS (17). The rerun is live:
-   epyc1:/srv/opentallas-scratch2/claude/fallback-head-1026/compose2/compose_report.json (log compose2.log).
+4. Clear the compose result. compose2 (after the buses fix): status OK, landing_contract 0 errors (487 pins, 1,403 infra
+   edges, max hop 366 um), boot_ready max 692 cycles, network lane cycles 1,284 over 328 lanes. But **types 16 -> 33** (the
+   monitor-cohort splits of hd_tile) and **10 placement failures**, one per hd_tile cohort type. Both have to be fixed in
+   the ring rebuild plan, and the type growth has to be reduced. Full landed_plan.json:
+   epyc1:/srv/opentallas-scratch2/claude/fallback-head-1026/compose2/.
 
 The hd_ctl observer ports (fault/ready) are not declared and are recorded as OPEN.
