@@ -1,0 +1,4 @@
+PROVIDER_ROOT_RESULT checks=221 errors=22 pulses=1 scalar_returns=0 native_trace=1 root_done=0 provider_done=0 MUT_JOB=1 clock_ps=833
+[263230] %Fatal: tb_provider_root.sv:34: Assertion failed in tb_provider_root: PROVIDER_ROOT FAIL
+%Error: tb_provider_root.sv:34: Verilog $stop
+Aborting...
