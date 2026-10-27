@@ -832,6 +832,7 @@ def main():
     # macros: the closed kit's views; sites from the recipe, default spec "at" (lower-left core-frame um) snapped onto
     # the M4 track phase of the macro pins
     lefs, libs, mplace = [], [], {}
+    gds_empty = []   # macro views with no GDS (abstract LEF + lib, e.g. the ASAP7 SRAM): GDS_ALLOW_EMPTY
     sites = rec.get("macro_sites", {})
     for m in spec.get("macros", []):
         md = REPO / m["view"]
@@ -844,6 +845,8 @@ def main():
         if f"/work/macros/{master}.lef" not in lefs:
             lefs.append(f"/work/macros/{master}.lef")
             libs.append(f"/work/macros/{master}_tt.lib")
+            if not any((md / f"{master}{x}").is_file() for x in (".gds", ".gds.gz", ".oas")):
+                gds_empty.append(master)
         bb = md / f"{master}_bb.v"
         if bb.name not in bbs:
             shutil.copyfile(bb, kd / "rtl" / bb.name)
@@ -1153,6 +1156,9 @@ def main():
               f"export MACRO_ROWS_HALO_X = {rec.get('macro_rows_halo', 4.32):g}",
               f"export MACRO_ROWS_HALO_Y = {rec.get('macro_rows_halo', 4.32):g}"]
              if mplace else []),
+           # FLOW-MCMM-GRT 10-27 (HBM generator precedent, HBM-ELEM 10-24): a macro view without GDS (SRAM abstract)
+           # made 6_1_merge fail rc 2 'LEF Cell ... has no matching GDS' (sl_vq e1); sign-off reads ODB + SPEF only
+           *([f"export GDS_ALLOW_EMPTY = ^(fakeram.*|{'|'.join(re.escape(m) for m in gds_empty)})$"] if gds_empty else []),
            # legacy closures used the default Yosys frontend (it keeps 1-bit [0:0] buses: plan pins ck[0], fo[0])
            *(["export SYNTH_HDL_FRONTEND = slang"] if rec.get("slang") else []),
            *[f"export {k} = {v}" for k, v in rec.get("orfs_vars", {}).items()],

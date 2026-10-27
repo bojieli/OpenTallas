@@ -6,6 +6,7 @@ This is a static gate; RTL elaboration, netlist LEC/face/fanout, PG and routed
 corner checks remain mandatory later stages, and are not reported as passed here.
 """
 import argparse
+import re
 import json
 from pathlib import Path
 import sys
@@ -22,6 +23,38 @@ INPUT_VARS = ('VERILOG_FILES', 'VERILOG_INCLUDE_DIRS', 'SYNTH_INCLUDE_DIRS',
               'POST_GLOBAL_ROUTE_TCL', 'LAYER_PARASITICS_FILE', 'SET_RC_TCL')
 REQUIRED = ('config.mk', 'constraint.sdc', 'sdc_lint.json', 'pins.json',
             'lec.py', 'rtl_lint.py', 'face_guard.py', 'signoff.py')
+
+
+# FLOW-MCMM-GRT 2026-10-27 (S81-ECO-2 CHECKED, ot_s81sl_vq TT -64.57 / 88 EP): an FF-only GRT repair step
+# (`make grt CORNER=BC CORNERS=bc`) loads the FF libraries only and never repairs TT setup on the GRT parasitics.  A
+# two-corner kit (CORNERS tc bc) with the per-corner vclk binding must run the two-scene step (grt_scenes.sh).
+FF_ONLY_GRT = re.compile(r"(?:\bgrt|do-5_1_grt)\s+CORNER=BC\s+CORNERS=bc\b")
+RUNNERS = ('run_kit.sh', 'run_kit_kv.sh', 'run_kit_hbm.sh')
+SCENE_FILES = ('grt_scenes.sh', 'grt_ff_scene.sdc', 'orfs_hold_mm.py', 'orfs_hold_mm.tcl', 'vclk_corner.tcl',
+               'vclk_measured_hold.tcl', 'vclk_ref.py')
+
+
+def grt_scenes_errors(kit):
+    """[errors]: two-corner kit whose runner repairs at GRT in an FF-only session, or lacks the scene helpers."""
+    kit = Path(kit)
+    if not (kit/'config.mk').is_file():
+        return []
+    import kit_modes
+    v = kit_modes.mk_vars((kit/'config.mk').read_text(errors='replace'))
+    if kit_modes.corners(v.get('CORNERS')) != ['tc', 'bc'] or not v.get('OT_VCLK_FF'):
+        return []
+    errors = []
+    for name in RUNNERS:
+        if not (kit/name).is_file():
+            continue
+        text = (kit/name).read_text(errors='replace')
+        for m in FF_ONLY_GRT.finditer(text):
+            line = text.count('\n', 0, m.start()) + 1
+            errors.append(f'{name}:{line}: FF-only GRT repair step on a tc+bc kit (FF libraries only: TT setup is '
+                          'never repaired on GRT parasitics); use grt_scenes.sh (regenerate with main tools)')
+        if 'grt_scenes.sh' in text:
+            errors += [f'{name} runs grt_scenes.sh but the kit lacks {f}' for f in SCENE_FILES if not (kit/f).is_file()]
+    return errors
 
 
 def check(kit, plan_dir=None, contract=False):
@@ -58,6 +91,7 @@ def check(kit, plan_dir=None, contract=False):
         return errors
     run('staged_inputs', staged_inputs)
     run('sdc_and_ff_binding', lambda: sdc_lint.lint_kit_files(kit))
+    run('grt_scenes', lambda: grt_scenes_errors(kit))
     def cast_forms():
         hits = rtl_lint.yosys_cast_scan(rtl_lint._kit_sources(kit))
         return [f'{path}:{line}: {rule}: {snippet}' for path, entries in hits.items()

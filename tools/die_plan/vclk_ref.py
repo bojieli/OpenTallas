@@ -47,6 +47,22 @@ def hard_core_latency_contract(kit):
     return cc
 
 
+def declared_ref(kit):
+    """FLOW-MCMM-GRT 10-27: the kit runner's explicit sign-off FF frame, declared once in config.mk
+    (`export OT_FF_VCLK_REF = bound-ff | rebind`, = the runner's signoff.py --ff-vclk flag), or None (derived)."""
+    cfg = Path(kit) / "config.mk"
+    if not cfg.is_file():
+        return None
+    val = None
+    for line in cfg.read_text(errors="replace").splitlines():
+        parts = line.split("#", 1)[0].split()
+        if len(parts) >= 3 and parts[-3:-1] == ["OT_FF_VCLK_REF", "="] and parts[0] in ("export", "override"):
+            val = parts[-1]
+    if val is not None and val not in ("bound-ff", "rebind"):
+        raise RefError(f"config.mk OT_FF_VCLK_REF {val!r} (bound-ff | rebind)")
+    return val
+
+
 def ff_reference(kit):
     """-> dict(ref, ff_bound, tol) with ff_bound / tol in SDC time units (None when absent)."""
     kd = Path(kit)
@@ -65,7 +81,10 @@ def ff_reference(kit):
     tol = lctx.get("insertion_tol_ps")
     ffu = None if ff is None else float(ff) / unit
     tolu = None if tol is None else float(tol) / unit
-    if hard_core_latency_contract(kd):
+    declared = declared_ref(kd)
+    if declared == "bound-ff" and ffu is None:
+        raise RefError("config.mk OT_FF_VCLK_REF bound-ff without sdc_lint insertion_ff_ps")
+    if declared == "bound-ff" or (declared is None and hard_core_latency_contract(kd)):
         return dict(ref="bound-ff", ff_bound=ffu, tol=tolu)
     if ff is not None:
         return dict(ref="rebind", ff_bound=ffu, tol=tolu if tolu is not None else 40.0 / unit)

@@ -151,9 +151,11 @@ def test_ff_grt_step_checks_modes_before_each_session():
     # CTS check before `make cts`; advisory unless OT_KIT_MODES_STRICT
     assert s.index("--step cts") < s.index("\\$M cts")
     assert "OT_KIT_MODES_STRICT = 1" in s and "KIT_MODES ADVISORY cts" in s
-    # FF-only GRT: session check (fail closed) right before the FF-only make grt with the FF vclk
-    i = s.index("--step grt --session bc --vclk-corner ff --hold-repair || rc=9")
-    assert i < s.index("OT_VCLK_CORNER=ff \\$M grt CORNER=BC CORNERS=bc")
+    # FLOW-MCMM-GRT: unstaged kits run grt_scenes.sh, which checks its own session (fail closed) before make grt
+    assert "bash /work/grt_scenes.sh" in s and "OT_VCLK_CORNER=ff" not in s
+    gs = (Path(core_flow.__file__).with_name("grt_scenes.sh")).read_text()
+    assert gs.index("--step grt --session 'tc bc' --scenes --hold-repair") < gs.index("OT_HOLD_MM=1 OT_MM_SETUP_CORNER=tc")
+    assert gs.index("--step grt --session bc --vclk-corner ff --hold-repair") < gs.index("OT_VCLK_CORNER=ff $M grt CORNER=BC")
     # staged two-mode kit: its own corners, no OT_VCLK_CORNER
     j = s.index("--step grt --session 'tc bc' --hold-repair || rc=9")
     seg = s[j:s.index("elif", j)]

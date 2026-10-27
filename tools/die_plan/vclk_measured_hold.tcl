@@ -1,6 +1,7 @@
 # GENERATED-COPY of tools/die_plan/vclk_measured_hold.tcl (S81-ECO-2 10-27, FLOW): repair FF hold in the frame the
 # kit is SIGNED OFF in.  Sourced by grt_post.tcl in the FF-only GRT step (OT_VCLK_CORNER=ff), on the global-route
-# parasitics, before the vclk goes back to TT.
+# parasitics, before the vclk goes back to TT; in the two-scene GRT step (grt_scenes.sh) grt_ff_scene.sdc calls
+# ot_vmh_scene_bind instead (FF scene vclk measured before the stage repair; FLOW-MCMM-GRT 10-27).
 #
 # Die-plan kits sign off FF IO hold against the routed FF pin-register mean ('rebind', ruling 9.7 / 5e, COORD REBIND
 # 10-27, band-checked vs the bound FF insertion +- tol).  The in-flow repair used the fixed bound (OT_VCLK_FF): on
@@ -68,13 +69,11 @@ proc ot_vmh_pinreg_mean {} {
   return [list [expr {$n ? $sum / $n : "nan"}] $n $bad [dict size $clocks]]
 }
 
-proc ot_vclk_measured_hold {} {
-  lassign [ot_vmh_reference] ref ffb tol
-  if {$ref ne "rebind"} { puts "OT_VCLK_MEASURED_HOLD skip ref $ref (sign-off frame = bound / sdc, already repaired)"; return }
+# the IO virtual clock + its band-checked measured FF pin-register mean (fail closed) -> {vclk mean n ffb tol}
+proc ot_vmh_measured {ffb tol} {
   set vc {}
   foreach c [all_clocks] { if {![llength [get_property $c sources]]} { lappend vc $c } }
   if {[llength $vc] != 1} { error "OT_VCLK_MEASURED_HOLD: expected exactly one IO virtual clock, found [llength $vc]" }
-  estimate_parasitics -global_routing
   lassign [ot_vmh_pinreg_mean] mean n bad ncl
   if {$n == 0 || $bad != 0 || $ncl != 1} {
     error "OT_VCLK_MEASURED_HOLD: pin-register mean unavailable (samples $n missing $bad clocks $ncl) -- sign-off would be NOT RUN"
@@ -82,10 +81,31 @@ proc ot_vclk_measured_hold {} {
   if {abs($mean - $ffb) > $tol} {
     error "OT_VCLK_MEASURED_HOLD: FF pin-register mean [format %.3f $mean] outside bound $ffb +- $tol (sign-off band FAIL; fix the clock, not the hold)"
   }
-  set_clock_latency -source $mean [lindex $vc 0]
+  return [list [lindex $vc 0] $mean $n]
+}
+
+# FLOW-MCMM-GRT 10-27: FF scene binding of the two-scene GRT repair (grt_ff_scene.sdc, read in mode ff by
+# orfs_hold_mm.tcl ot_mm_sync on GRT parasitics, arrivals from scene BC).  vclk = OT_VCLK_FF (+ core-tap FF overlay);
+# 'rebind' kits: then the measured mean (same selection / band as signoff.py).  No repair here: the stage's own
+# repair_timing repairs TT setup (scene tc) and FF hold (scene BC) together.
+proc ot_vmh_scene_bind {} {
+  ot_vclk_bind ff
+  lassign [ot_vmh_reference] ref ffb tol
+  if {$ref ne "rebind"} { puts "OT_GRT_SCENES ff vclk = bound OT_VCLK_FF (sign-off ref $ref)"; return }
+  lassign [ot_vmh_measured $ffb $tol] vc mean n
+  set_clock_latency -source $mean $vc
+  puts "OT_GRT_SCENES ff vclk = measured FF pin-register mean [format %.6f $mean] (bound $ffb tol $tol samples $n, ref rebind)"
+}
+
+proc ot_vclk_measured_hold {} {
+  lassign [ot_vmh_reference] ref ffb tol
+  if {$ref ne "rebind"} { puts "OT_VCLK_MEASURED_HOLD skip ref $ref (sign-off frame = bound / sdc, already repaired)"; return }
+  estimate_parasitics -global_routing
+  lassign [ot_vmh_measured $ffb $tol] vc mean n
+  set_clock_latency -source $mean $vc
   set hm 0
   foreach k {OT_HOLD_FF_MARGIN HOLD_SLACK_MARGIN} { if {[info exists ::env($k)] && [string is double -strict $::env($k)]} { set hm $::env($k); break } }
-  puts "OT_VCLK_MEASURED_HOLD ref rebind clock [get_full_name [lindex $vc 0]] measured [format %.6f $mean] bound $ffb tol $tol samples $n hold_margin $hm"
+  puts "OT_VCLK_MEASURED_HOLD ref rebind clock [get_full_name $vc] measured [format %.6f $mean] bound $ffb tol $tol samples $n hold_margin $hm"
   set before [llength [get_cells -quiet -hierarchical hold*]]
   global_route -start_incremental
   repair_timing -hold -hold_margin $hm -max_buffer_percent 100

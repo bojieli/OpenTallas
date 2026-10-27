@@ -24,7 +24,9 @@ Everything else FAILS CLOSED (exit 2).  Bindings must agree: config.mk OT_VCLK_T
 sdc_lint insertion_ps; OT_VCLK_FF == sdc_lint insertion_ff_ps (== vclk_ff.sdc, == the sign-off --ff-bound-ps).
 
   kit_modes.py stage KIT                         two-corner kit -> per-mode block (generators, mk_eco m, mk_fd4)
-  kit_modes.py check KIT --step cts|grt|eco [--session 'tc bc'|bc|tc] [--vclk-corner ff|tt|''] [--hold-repair]
+  kit_modes.py check KIT --step cts|grt|eco [--session 'tc bc'|bc|tc] [--vclk-corner ff|tt|''] [--hold-repair] [--scenes]
+  --scenes: the GRT stage alone runs two-scene (grt_scenes.sh, FLOW-MCMM-GRT 10-27: env OT_HOLD_MM=1, scene tc = TT
+            libs + constraint.sdc, scene BC = FF libs + grt_ff_scene.sdc), the kit itself is not staged.
   kit_modes.py check KIT --step signoff [--ff-bound-ps X]
 Prints 'KIT_MODES ok ...' or 'KIT_MODES FAIL <reason>'."""
 import argparse
@@ -187,10 +189,32 @@ def cts_repairs_hold(kd, v):
     return any(hook_repairs_hold(kd, v.get(k, "")) for k in ("PRE_CTS_TCL", "POST_CTS_TCL"))
 
 
-def check(kd, step, session=None, vclk_corner="", hold_repair=None, ff_bound=None):
+SCENE_FILES = ("orfs_hold_mm.py", "orfs_hold_mm.tcl", "grt_ff_scene.sdc", "vclk_corner.tcl", "vclk_measured_hold.tcl",
+               "vclk_ref.py")
+
+
+def scenes_state(kd, b):
+    """GRT-only two-scene session (grt_scenes.sh): two-corner kit + every scene file staged (fail closed)."""
+    v = b["v"]
+    if corners(v.get("CORNERS")) != ["tc", "bc"]:
+        raise Fail(f"--scenes on kit CORNERS {v.get('CORNERS')!r} (need tc bc)")
+    for k in ("TC_LIB_FILES", "BC_LIB_FILES"):
+        if not v.get(k):
+            raise Fail(f"--scenes: {k} missing in config.mk")
+    miss = [f for f in SCENE_FILES if not (Path(kd) / f).is_file()]
+    if miss:
+        raise Fail(f"--scenes: kit lacks {miss} (regenerate with main tools)")
+    return True
+
+
+def check(kd, step, session=None, vclk_corner="", hold_repair=None, ff_bound=None, scenes=False):
     kd = Path(kd)
     b = binding(kd)
     mm = mm_state(kd, b)
+    if scenes:
+        if step != "grt":
+            raise Fail("--scenes is a GRT-step session only")
+        mm = scenes_state(kd, b)
     v = b["v"]
     if ff_bound is not None and not same(float(ff_bound), b["ff"]):
         raise Fail(f"sign-off FF bound {ff_bound:g} != kit OT_VCLK_FF {b['ff']:g}")
@@ -253,6 +277,7 @@ def main(argv=None):
     ap.add_argument("--vclk-corner", default="")
     ap.add_argument("--hold-repair", action="store_true", default=None)
     ap.add_argument("--ff-bound-ps", type=float, default=None)
+    ap.add_argument("--scenes", action="store_true", help="GRT-only two-scene session (grt_scenes.sh)")
     a = ap.parse_args(argv)
     try:
         if a.cmd == "stage":
@@ -260,7 +285,7 @@ def main(argv=None):
         else:
             if not a.step:
                 raise Fail("check needs --step")
-            r = check(a.kit, a.step, a.session, a.vclk_corner, a.hold_repair, a.ff_bound_ps)
+            r = check(a.kit, a.step, a.session, a.vclk_corner, a.hold_repair, a.ff_bound_ps, a.scenes)
     except Fail as e:
         print(f"KIT_MODES FAIL {e}")
         return 2

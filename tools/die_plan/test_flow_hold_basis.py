@@ -94,7 +94,9 @@ def test_gen_cli_defaults_are_the_flow_defaults():
 
 def test_run_kit_binds_ff_vclk_in_ff_only_steps():
     rk = gen_phys.RUN_KIT
-    assert "OT_VCLK_CORNER=ff \\$M grt CORNER=BC CORNERS=bc" in rk
+    assert "export M; bash /work/grt_scenes.sh \\$HM" in rk                # FLOW-MCMM-GRT: two-scene / FF-only step
+    gs = (HERE / "grt_scenes.sh").read_text()
+    assert "OT_VCLK_CORNER=ff $M grt CORNER=BC CORNERS=bc" in gs           # one-corner kits keep the FF-only step
     assert "OT_VCLK_FF=" in rk and "LAYER_PARASITICS_FILE=" in rk          # hold_gate.tcl env
     hg = (HERE / "hold_gate.tcl").read_text()
     assert "ot_vclk_bind ff" in hg and "LAYER_PARASITICS_FILE" in hg
@@ -110,7 +112,7 @@ def test_preroute_insertion_gate():
     # measured on 5_1_grt with the calibrated GRT RC (rr_h0_c original run: 269.3 / 217.2 vs routed RCX 263.7 / 212.1);
     # the placement estimate read the same registers ~75 ps early, so it is never the gate basis.
     rk = gen_phys.RUN_KIT
-    i_grt, i_gate = rk.index("grt CORNER=BC CORNERS=bc"), rk.index("postcts_gate.tcl")
+    i_grt, i_gate = rk.index("bash /work/grt_scenes.sh"), rk.index("postcts_gate.tcl")
     assert i_grt < i_gate < rk.index("\\$M $GOAL")
     assert "OT_POSTCTS_GRT=1" in rk and "FAIL_POSTCTS pre-route insertion gate" in rk
     # ROOT-MERGE2 10-25: distinct exit codes (3 selrange, 4 FF hold gate, 5 LEC NOT EQUIVALENT, 6 pre-route insertion)
@@ -241,7 +243,7 @@ def test_ff_grt_step_runs_cts_in_kit_corners_first():
     floorplan .. CTS repair must already exist (built in the kit's own tc+bc corners) before the FF-only GRT step."""
     import core_flow
     s = core_flow.FF_GRT_STEP
-    assert s.index("\\$M cts;") < s.index("\\$M grt CORNER=BC CORNERS=bc")
+    assert s.index("\\$M cts;") < s.index("bash /work/grt_scenes.sh")
     kv = (Path(__file__).resolve().parents[2] / "physical/die_plan/qwen_kvsys/cores/harden/run_kit_kv.sh").read_text()
     assert kv.index("\\$M cts;") < kv.index("\\$M grt \\$GC")
     # FLOW-CANARY 10-25: MCMM KV kits run the GRT step in the kit corners (TT setup repaired after GRT), else FF-only

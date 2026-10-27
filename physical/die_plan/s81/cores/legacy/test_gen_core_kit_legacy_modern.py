@@ -29,7 +29,7 @@ def test_run_kit_templates():
     assert "  python3 -I /work/sdc_lint.py" in leg          # old unguarded first step, old indentation
     i_lint, i_sdc = mod.index("rtl_lint.py"), mod.index("sdc_lint.py /work")
     i_fg, i_rf, i_ff, i_goal = (mod.index("face_guard_core.py \\$N"), mod.index("reg_fanout_gate.py"),
-                                mod.index("OT_VCLK_CORNER=ff"), mod.index("\\$M $GOAL"))
+                                mod.index("bash /work/grt_scenes.sh"), mod.index("\\$M $GOAL"))
     assert i_lint < i_sdc < i_fg < i_rf < i_ff < i_goal
 
 

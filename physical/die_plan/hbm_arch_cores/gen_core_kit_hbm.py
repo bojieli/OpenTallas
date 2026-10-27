@@ -806,6 +806,9 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     # FLOW 10-26 PG: cells created by CTS / tap / F4 / GRT repair (dont_touch ones included) get their supplies, then
     # the hard check (OT_PG_OPEN fails the GRT step); tools/die_plan/pg_connect.tcl
     shutil.copyfile(TOOL / "pg_connect.tcl", kd / "pg_connect.tcl")
+    # FLOW-MCMM-GRT 10-27: run_kit_hbm.sh GRT repair = grt_scenes.sh (two scenes: tc TT setup + BC FF hold)
+    sys.path.insert(0, str(TOOL)); import core_flow
+    core_flow.install_grt_scenes(kd)
     (kd / "core_grt_post.tcl").write_text("if {[info exists ::env(OT_VCLK_CORNER)] && $::env(OT_VCLK_CORNER) eq \"ff\"} { ot_vclk_bind tt }\n"
                                           "uplevel #0 [list source /work/pg_connect.tcl]\not_pg_connect_all grt_post\not_pg_require_bound grt_post\n")
     # Keep the standalone runtime complete, including sender-min qualification and clock helpers.
