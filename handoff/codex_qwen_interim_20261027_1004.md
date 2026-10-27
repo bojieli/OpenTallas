@@ -40,3 +40,6 @@ Owner /root/qwen; active until EXPLICIT Claude-reset notice. Root handles merges
 
 ## OWNER / next
 No blocking dialog. Owner questions stay plain text under OWNER? CODEX-LOG; keepworking. Open real signoff gaps are clock uniformity/entry+STA, KV PG/PHYclock, actualcapacity/currentnativeprogrammeprofiles, held physicalkits. No policy/target relaxation requested. Root merge currenttool fixes independently; candidates remain unfrozen. Continue primary v6bind collection and finishedVMRpublication first.
+
+## Update 10:08 PDT — current primary result
+Fresh_v6 strict bind COLLECTED PASS377parts100types1921crossings790393bits0errors/unbound/tied/undriven/MD,11568straps. Real `param_regen.json` LS376→407, D2D_TXDP_C0a010308, PHY362/343/362, R/peerR11. Direct current emitted-row contract check `fresh_v6/reset_rows.json`:699rows0errors,31originalraw wavefront rr_t output aliases (same .d/name/.qABI), no tablewaiver. Current source5d2ce53210 remains LOCKED. Full generated verify LIVE unified session5240/log `verify_v6.otrun.log`; A0strictportbindv4 closure jobstilllive, do not duplicate. Compiler qcbench informed actualcurrent v6peer, programme qualification remains open. Detailed child interim handoffs: `codex_qk_cores_20261027_1003.md`, `codex-kv-clock-interim-1027.md`, `codex_qc_clock_20261027_1018.md`. Team continues until explicit reset.
