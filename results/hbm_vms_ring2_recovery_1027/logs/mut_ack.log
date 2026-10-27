@@ -1,0 +1,14 @@
+VMS_RING2 ERROR t=55 node0 fault ring000 hub001 vmstat000
+VMS_RING2 ERROR t=56 node0 fault ring000 hub001 vmstat000
+VMS_RING2 ERROR t=57 node0 fault ring000 hub001 vmstat000
+VMS_RING2 ERROR t=58 node0 fault ring000 hub001 vmstat100
+VMS_RING2 ERROR t=59 node0 fault ring000 hub001 vmstat100
+VMS_RING2 ERROR t=60 node0 fault ring000 hub001 vmstat100
+VMS_RING2 ERROR t=61 node0 fault ring000 hub001 vmstat100
+VMS_RING2 ERROR t=62 node0 fault ring000 hub001 vmstat100
+VMS_RING2 ERROR t=63 node0 fault ring000 hub001 vmstat100
+VMS_RING2 ERROR t=64 node0 fault ring000 hub001 vmstat100
+VMS_RING2 ERROR t=65 node0 fault ring000 hub001 vmstat100
+VMS_RING2 ERROR t=66 node0 fault ring000 hub001 vmstat100
+VMS_RING2 FAIL SYM=0 LINK=3 checks=311974 errors=11944
+tb_vms_ring2_static.sv:323: $finish called at 120026000 (1ps)

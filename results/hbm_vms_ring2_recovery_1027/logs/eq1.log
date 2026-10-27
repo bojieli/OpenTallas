@@ -1,0 +1,12 @@
+VMS_RING2_EQ mismatch cyc38 rstop l_out
+VMS_RING2_EQ mismatch cyc38 rstop l_out
+VMS_RING2_EQ mismatch cyc51 rstop l_out
+VMS_RING2_EQ mismatch cyc51 rstop l_out
+VMS_RING2_EQ mismatch cyc66 rstop l_out
+VMS_RING2_EQ mismatch cyc66 rstop l_out
+VMS_RING2_EQ mismatch cyc98 rstop l_out
+VMS_RING2_EQ mismatch cyc98 rstop l_out
+VMS_RING2_EQ mismatch cyc217 rstop l_out
+VMS_RING2_EQ mismatch cyc217 rstop l_out
+VMS_RING2_EQ FAIL MUT=1 checks=440000 errors=1278
+tb_vms_ring2_default_eq.sv:91: $finish called at 200026000 (1ps)

@@ -1,0 +1,14 @@
+VMS_RING2 ERROR t=27 node1 xq mismatch egress0
+VMS_RING2 ERROR t=31 node0 xq mismatch egress1
+VMS_RING2 ERROR t=34 node0 xq mismatch egress2
+VMS_RING2 ERROR t=37 node0 xq mismatch egress4
+VMS_RING2 ERROR t=42 node1 xq mismatch egress3
+VMS_RING2 ERROR t=45 node0 xq mismatch egress6
+VMS_RING2 ERROR t=45 node1 xq mismatch egress5
+VMS_RING2 ERROR t=60 node1 xq mismatch egress7
+VMS_RING2 ERROR t=61 node1 xq mismatch egress8
+VMS_RING2 ERROR t=66 node0 xq mismatch egress9
+VMS_RING2 ERROR t=73 node1 xq mismatch egress10
+VMS_RING2 ERROR t=74 node1 xq mismatch egress11
+VMS_RING2 FAIL SYM=0 LINK=3 checks=311974 errors=59
+tb_vms_ring2_static.sv:323: $finish called at 120026000 (1ps)

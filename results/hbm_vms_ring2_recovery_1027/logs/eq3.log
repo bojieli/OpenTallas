@@ -1,0 +1,12 @@
+VMS_RING2_EQ mismatch cyc2 NE glue
+VMS_RING2_EQ mismatch cyc10 NE glue
+VMS_RING2_EQ mismatch cyc19 NE glue
+VMS_RING2_EQ mismatch cyc25 NE glue
+VMS_RING2_EQ mismatch cyc30 NE glue
+VMS_RING2_EQ mismatch cyc56 NE glue
+VMS_RING2_EQ mismatch cyc65 NE glue
+VMS_RING2_EQ mismatch cyc89 NE glue
+VMS_RING2_EQ mismatch cyc141 NE glue
+VMS_RING2_EQ mismatch cyc150 NE glue
+VMS_RING2_EQ FAIL MUT=3 checks=440000 errors=953
+tb_vms_ring2_default_eq.sv:91: $finish called at 200026000 (1ps)
