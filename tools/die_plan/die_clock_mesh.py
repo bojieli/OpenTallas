@@ -606,6 +606,27 @@ def placement_overlaps(cells):
     return out
 
 
+def ft_halo_keepouts(P):
+    """Conservative FT-bank and station envelopes with the required 2um clock-cell halo.
+    Explicit coordinates are cell lower-left sites; transforms use all envelope
+    corners so MX/MY instances reserve the same physical cells as their type.
+    """
+    out = []
+    for part, decl in P.parts.items():
+        for f in P.types[decl["type"]].get("ft_slots", []):
+            w, h = f.get("bit_site_cell_um", [1.404, .27])
+            groups = [(f"bank_{j}", bs) for j,bs in enumerate(f.get("bit_sites_um", [])) if bs]
+            groups += [(f"station_{j}", [xy]) for j,xy in enumerate(f.get("regs_um", []))]
+            for tag, pts in groups:
+                x0, y0 = min(q[0] for q in pts)-2., min(q[1] for q in pts)-2.
+                x1, y1 = max(q[0] for q in pts)+w+2., max(q[1] for q in pts)+h+2.
+                corners = [P.to_die(part,(x,y)) for x in (x0,x1) for y in (y0,y1)]
+                out.append((min(x for x,y in corners), min(y for x,y in corners),
+                            max(x for x,y in corners), max(y for x,y in corners),
+                            f"{part}/ft_halo/{f['name']}_{tag}"))
+    return out
+
+
 def hard_keepout_violations(P, cells, islands=None):
     """Check actual cell bodies, including split repeaters, against every hard/PHY clock keepout.  islands (12.2a /
     12.7, --clock-floorplan island_windows): a clock DRIVER body wholly inside a declared in-core island window of
@@ -1393,6 +1414,8 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         return tuple(st["xy_um"]), d, st
     W, H = float(P.W), float(P.H)
     ko = DC.keepouts(P)
+    ft_keepouts = ft_halo_keepouts(P) if (lattice or {}).get("avoid_ft_halos") else []
+    ko = list(ko) + ft_keepouts
     if sites == "channel":   # every die clock cell outside all partitions (channels only; no tile outline change)
         ko = list(ko) + [P.rect(n) for n in P.parts]
     K = DC.KeepIndex(ko, die=(W, H))
@@ -2242,6 +2265,13 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     out["clock_cell_overlaps"] = overlaps
     out["clock_hard_keepout_violations"] = hard_keepout_violations(
         P, cells, (islands if fp is not None else None) or [tuple(w) for w in out.get("island_windows", [])] or None)
+    if ft_keepouts:
+        ft_bad = _body_keepout_violations(DC.KeepIndex(ft_keepouts), W, H, cells)
+        out["clock_ft_keepout_violations"] = ft_bad
+        out["meta"]["clock_ft_keepout_violations"] = len(ft_bad)
+        out["meta"]["ft_halo_um"] = 2.0
+        out["meta"]["ft_keepout_envelopes"] = len(ft_keepouts)
+        perr += [dict(kind="clock_ft_halo", name=v["cell"], role="clock_cell", detail=v) for v in ft_bad]
     if fp is not None and islands:
         out["island_windows"] = [list(w) for w in islands]
         out["meta"]["island_drivers"] = sum(1 for d in out["drivers"].values() if d.get("island"))
