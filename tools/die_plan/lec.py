@@ -2358,6 +2358,74 @@ def structural_twin_closure(L, log):
 
 
 
+def matched_copy_closure(L, log, T, tried, words=8, seed=5151, rounds=8):
+    """Propose MATCHED registers equal to a matched copy of the same function (LEC-TOOL-2 10-27).
+
+    Both frontends may keep several copies of one value, each a matched register of its own name, while the
+    downstream logic reads a DIFFERENT copy on each side (HBM ot_hgi_coll_gq_land r4: the eight landing lanes'
+    sector high bits ln_s[*][15:13] all load base_q[*][15:13] == g_dst[15:13], holding while rn is low; synthesis
+    kept four copies per bit and each side's record mux reads its own choice, so the miter left ln_s[0][29] and
+    ln_s[0][45] free of each other and 24 record bits 277..279 'differed' with every cone input matched).  The
+    name-based pairing never relates two matched registers, and merged_proposals only relates same-support
+    siblings (here the lanes read different le_k entries, whose selection drops out only for the high bits).
+
+    Candidates: matched, not yet merged, non-constant registers whose sequential traces from the zero state (seq_traces)
+    are equal on both sides and to each other (either polarity).  Each is bound to the first copy of its class and
+    kept only if, with that binding (the copies hold themselves), its next state simulates equal to the copy's on
+    BOTH sides (gold X lanes are don't care); then it enters the simultaneous induction proof with every other
+    hypothesis: a register that is not a copy (other load condition, other data) is refuted there and dropped,
+    never assumed.  Each pair is proposed at most once.  -> number of relations proposed."""
+    if T is None:
+        return 0
+    nat = lambda k: [int(x) if x.isdigit() else x for x in re.split(r"(\d+)", k)]
+    groups = collections.defaultdict(list)
+    for k in sorted(L.matched, key=nat):
+        if not k.startswith("ff:") or ("both", k) in L.hyp or k not in L.gc or k not in L.tc:
+            continue
+        tg, tt = T.get(("gold", k)), T.get(("gate", k))
+        if not tg or tg != tt:
+            continue
+        groups[min(tg)].append((k, int(tg[0] > tg[1])))
+    pending = {}
+    for ks in groups.values():
+        if len(ks) < 2:
+            continue
+        rk, rp = ks[0]       # a copy that already is some register's partner may be bound too (build() follows chains)
+        for k, p in ks:
+            if k != rk and not tried[("both", k, rk, p ^ rp)] and not tried[("cc", k, rk)]:
+                pending[k] = ("eq", "gold", rk, p ^ rp)
+    for it in range(rounds):
+        if not pending:
+            break
+        for k, h in pending.items():
+            L.hyp[("both", k)] = h
+        m, _ = L.build(with_compare=False, with_hyp=False)
+        val, mask = m.simulate(words, seed=seed + it)
+        bad = []
+        for k, (_, _, rk, inv) in pending.items():
+            im = mask if inv else 0
+            care = mask ^ (lit_val(val, mask, L.dxlit[k]) | lit_val(val, mask, L.dxlit[rk]))
+            g = (lit_val(val, mask, L.dlit[("gold", k)]) ^ lit_val(val, mask, L.dlit[("gold", rk)]) ^ im) & care
+            t = lit_val(val, mask, L.dlit[("gate", k)]) ^ lit_val(val, mask, L.dlit[("gate", rk)]) ^ im
+            if g or t:
+                bad.append(k)
+        for k in bad:
+            L.hyp.pop(("both", k), None)
+            tried[("cc", k, pending.pop(k)[2])] += 1
+        if not bad:
+            break
+    else:
+        for k in pending:                          # undecided after `rounds`: not proposed
+            L.hyp.pop(("both", k), None)
+        pending = {}
+    for k, h in pending.items():
+        tried[("cc", k, h[2])] += 1
+    if pending:
+        log.append(f"matched copy closure: {len(pending)} matched registers proposed equal to a matched copy of equal "
+                   f"trace and next state")
+    return len(pending)
+
+
 def slang_elements(aliases_file):
     """slang lays an unpacked array out as one flat vector (`reg [3:0] x [0:N-1]`: element 0 at the MSB) and drives
     each element from its own cell `$driver$x[i]` (the aldff / dff of that element).  -> {gold key 'ff:<scope>x[f]':
@@ -3323,6 +3391,10 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             fsm_proposals(L, log)
         if os.environ.get("OT_LEC_SIM_REFINE", "1") != "0":
             sim_refine(L, log, tried, seed=4242 + rnd)
+        if not L.hyp and os.environ.get("OT_LEC_COPY_CLOSURE", "1") != "0":
+            if traces is None:
+                traces = seq_traces(L, log)
+            matched_copy_closure(L, log, traces, tried)     # (each pair at most once: no loop)
         if not L.hyp:
             return
         m, kind = L.build(with_compare=False, with_hyp=True)
@@ -3334,6 +3406,11 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
         if not bad:
             if structural_constant_closure(L, log) or structural_twin_closure(L, log):
                 continue     # prove the new constants before returning
+            if os.environ.get("OT_LEC_COPY_CLOSURE", "1") != "0":
+                if traces is None:
+                    traces = seq_traces(L, log)
+                if matched_copy_closure(L, log, traces, tried):
+                    continue     # prove the matched copy relations before returning
             if L.hyp == before or not adding:
                 return
             continue
