@@ -38,10 +38,10 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 
 ## DIE qwen_kvsys · Qwen KV · rev batch claude/path-kv-batch-0115@650841e1ef (rebase 5665cd3386 + FT reserve + D-KV-CLKMESH)
 - [ ] KV.BIND Strict bind of the batch · PATH-KV · RUNNING · B31 a8c24031c strict PASS 160 parts/51 types + R8 0 unequal + full verify 2553368/2553368; final batch (8-region landings, q2 rename, B32 PV) needs one re-bind
-- [ ] KV.CLK Clock under 12.8 (gate = related-pair STA) · CLOCK-KV-R17 · RUNNING · mesh variation sign-off (12.8e) + droop-region tool fix + clock_entry on slice 1814a2d8 · ETA freeze est 10-28..29
+- [ ] KV.CLK Clock under 12.8 (gate = related-pair STA) · CLOCK-KV-R18 · RUNNING · mesh MC-signed (R17, UNCHECKED); equal-insertion mesh-fed band; clock_entry 664/664 -> 0 on slice 1814a2d8 · ETA freeze est 10-28..29
 - [ ] KV.INFRA PG from IR + pre-routed PG/clock/reset via shared tool · PATH-KV · RUNNING · die_infra reset 287 nets max hop 377um PASS; signal GRT50 M4-M9 w/ clock reservation ovf0; PG needs KV power figure (0.15 W/mm2 fallback) → IF.TOOL
 - [ ] KV.GRT GRT0 incl. clock on the batch · PATH-KV · PASS · batch 650841e1ef one global_route signals M4-M7 + mesh M8-M9: ovf 0 TT+FF; freeze waits KV.BIND + D-INFRA-FIRST PG/pre-route
-- [ ] KV.STA Die STA on real views · CLOCK-KV-R17 · FAIL · first real-view run R16: TT -110.8 / FF -400.5 (31% inst real, UNCHECKED) = unsigned mesh + droop tool bug; w/o AOCV TT +399 / FF -6..-12
+- [ ] KV.STA Die STA on real views · CLOCK-KV-R18 · FAIL (hold) · R17 signed mesh + 0.21 table: TT +161.4 0 neg; FF -242 (leaf-fed band) / both-real +24.7 PASS; 31% inst real (UNCHECKED, NUMBER-CHECK running); R18 = mesh-fed band + HB4 model + slice entries
   - [ ] KV.TILES Tile sign-offs · PATH-KV / KV-CORES · BLOCKED · KV-CORES-R1 gate 0/24 core types buildable: no 12.8a centre entry + R1-R7 islands in plan hm_r12 96e6d1cb; signed only head e1/e5 → KV.CORE-SLICE
   - [ ] KV.CORE-SLICE One KV core slice (centre entries, in-core islands, M7 entry pins; hr recut, q2 rename, phy_pad outline) · KV-CORE-SLICE-1 · RUNNING → KV-CORES-R2 → KV.CLK
 
