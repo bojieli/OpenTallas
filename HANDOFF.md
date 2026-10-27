@@ -1270,3 +1270,5 @@ CODEX: 2026-10-26 21:04 PDT PD2 parked; R864sourcecomposed21band/G024/7faces; ex
 CODEX: 2026-10-27 04:54 PDT HBM takeover: unpushed QUAD5 e91031b844 rescued/pushed codex/hbm-1027; U3f GRT kit stale tap diagnosed; collarR5 NOTSIGNED TT+16.06/FF-22.31/slew65+41, routedLEC9393EQ; q2n2gate2 OOM300G needs proof strategy fix.
 
 CODEX: 2026-10-27 04:57 PDT main bce29bb125 merged canary checker pin fix7689ad5f45 (7 focused PASS). S81 RM29 original face_cover import REGRESSION retained; corrected separate *_checkerfix receipt NO-REGRESSION using exact0f978 source checker and unchanged physical artifacts. Absolute postCTS design FAIL remains.
+
+CODEX: 2026-10-27 05:00 PDT main b2929dab77 plainmerged Qwen approved R21/R22 tool/source package4bd216200 (26 focused PASS); prior96d9fb0471 LEC constant1+witness refinement2f3a46a66c (12 focused incl mutants PASS), RM30 structured superset receipts preserved. HEAD==origin/main. HOLD-COLL-R1 terminal FAIL copied intel1; reset-recovery/FT-output overlay causes assigned Qwen.
