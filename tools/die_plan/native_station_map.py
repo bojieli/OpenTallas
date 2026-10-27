@@ -25,6 +25,7 @@ parts_by_type=collections.defaultdict(set)
 for part in raw['partitions']:parts_by_type[part['type']].add(part['name'])
 
 connection_cache={}
+alias_directions={}
 cache={}
 def lookup(config,tn,inst):
  for key in [f'{tn}:{inst}',f'{tn}:{baseinst(inst)}',f'{original_types.get(tn,tn)}:{inst}',f'{original_types.get(tn,tn)}:{baseinst(inst)}']:
@@ -79,7 +80,11 @@ def connections(tn,t,h):
   if not spec:raise
   if h['module']!=spec['expected_module']:raise ValueError('split-map module contract differs from actual core')
   current_map=json.load(open(spec['cut_map']))
-  if current_map.get('public_identity_only'):
+  if current_map.get('parent_alias_source'):
+   if current_map.get('verdict')!='PASS':raise ValueError('current parent alias map is not complete')
+   for source,sha in current_map['sources'].items():
+    if hashlib.sha256(Path(source).read_bytes()).hexdigest()!=sha:raise ValueError('current cut source changed since parent alias extraction')
+  elif current_map.get('public_identity_only'):
    if hashlib.sha256(Path(current_map['source']).read_bytes()).hexdigest()!=current_map['source_sha256']:raise ValueError('current public wrapper source changed since exact map extraction')
    allowed=set(current_map['identity_public_widths'])
   else:
@@ -89,12 +94,16 @@ def connections(tn,t,h):
   n=spec['native_parent']
   if n not in d.insts:raise ValueError('split-map parent absent in native die')
   mapping=json.load(open(spec['cut_map']))
-  if mapping.get('public_identity_only'):
+  if mapping.get('public_identity_only') or mapping.get('parent_alias_source'):
    declared=re.search(r'\.NLINK\((\d+)\)',d.insts[n]['params'])
    if not declared or int(declared[1])!=mapping['variant']['nlink']:raise ValueError('current public wrapper NLINK differs from actual native parent')
   if mapping['module']!=h['module']:raise ValueError('cut map module differs from actual core')
   ports={}
-  for port,labels in mapping['buses'].items():
+  if mapping.get('parent_alias_source'):
+   from parent_alias_binding import bind
+   ports,alias_failures=bind(mapping,n,{p:bits(e) for p,e in d.insts[n]['conns'].items()})
+   alias_directions[key]=mapping['directions']
+  for port,labels in mapping.get('buses',{}).items():
    vv=[];complete=True
    for label in labels:
     m=re.fullmatch(r'([A-Za-z_$][\w$]*)(?:\[(\d+)\])?',label)
@@ -116,6 +125,7 @@ if a.core_graph:
   spec=lookup(split_maps,tn,h['inst']) or {}
   return spec.get('native_parent',label.split('::')[0])+'::'+spec.get('subcore',h['module'])
  def source_direction(tn,h,label,port,vector):
+  if (tn,h['inst']) in alias_directions:return alias_directions[(tn,h['inst'])].get(port,'unknown')
   origin=label.split('::')[0];states=set()
   for value in vector:
    if value is None:continue
