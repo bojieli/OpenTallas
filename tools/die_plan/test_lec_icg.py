@@ -117,3 +117,20 @@ def test_sync_reset_over_enable_gated_flop_keeps_reset_inside_the_clock_enable(t
     ce = f["connections"]["E"][0]
     types = {c["type"] for n, c in m["cells"].items() if n.startswith("$lec_icg$")}
     assert types == {"$_AND_", "$_OR_", "$_NOT_"} and ce != 7 and st["gated_flops"] == 1
+
+
+# ---- S81-CORE-LAT-R7: post-hook netlist with a clock-gate COPY (core_infra ot_ci_tree_gate_copy), fixtures from
+# make_copy_netlists.py: the copy on the same registered enable (through a tree buffer) is EQUIVALENT; a copy on
+# another enable net or with SE tied high is NOT EQUIVALENT.
+@needs_image
+def test_clock_gate_copy_on_same_enable_is_equivalent(tmp_path):
+    rc, r = _run(_kit(tmp_path, "netlist_COPY.v"))
+    assert rc == 0 and r["verdict"] == "EQUIVALENT", r
+    assert r["clock_gates"]["gate"]["gates"] == 3 and r["clock_gates"]["gold"]["gates"] == 2, r["clock_gates"]
+
+
+@needs_image
+@pytest.mark.parametrize("mut", ["MUT_COPY_EN", "MUT_COPY_SE"])
+def test_clock_gate_copy_mutants_are_not_equivalent(tmp_path, mut):
+    rc, r = _run(_kit(tmp_path, f"netlist_{mut}.v"))
+    assert rc == 1 and r["verdict"] == "NOT EQUIVALENT", r

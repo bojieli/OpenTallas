@@ -1508,6 +1508,8 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
     if grep -hq 'OT_POSTCTS_GATE.*FAIL' /work/postcts_gate_TT.log /work/postcts_gate_FF.log; then \
       grep -h OT_POSTCTS_GATE /work/postcts_gate_*.log | sed 's/^/FAIL_POSTCTS pre-route insertion gate: /' >> /work/FAIL_POSTCTS; rc=6; fi; fi; \
   if [ \$rc = 0 ]; then \$M $GOAL; rc=\$?; fi; \
+  if [ \$rc = 0 ] && [ -f /work/core_infra_post.v ] && [ -f /work/lec.py ]; then python3 -I /work/lec.py /work --netlist /work/core_infra_post.v --out /work/lec_post > /work/lec_post.log 2>&1; lr=\$?; tail -1 /work/lec_post.log; \
+    if [ \$lr != 0 ]; then echo \"FAIL_POSTPLACE clock-gate copy LEC exit \$lr (lec_post/lec.json): copies not proved equivalent\" | tee -a /work/FAIL_POSTCTS; rc=5; fi; fi; \
   if [ \$rc = 0 ] && [ $GOAL = route ]; then \$M do-finish; rc=\$?; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \$M do-generate_abstract; rc=\$?; fi; \
   O=\$(ls /work/run/results/asap7/*/base/5_route.odb /work/run/results/asap7/*/base/6_final.odb 2>/dev/null | tail -1); \
