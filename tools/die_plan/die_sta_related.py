@@ -256,7 +256,7 @@ def kit_windows(pc, intra_override=None):
         wseam = dict(ps=float(pc.get("insertion_tol_ps", 40.0)) - 0.0,
                      basis="legacy: receiver in_min -insertion_tol, sender out_min 0 (gen_phys.seam_hold)")
     if pc.get("io_hold"):
-        wseam["basis"] += "; plan has clock.io_hold (sender_min) -> per-port, not modelled: bound is conservative"
+        wseam["basis"] += f"; plan has clock.io_hold ({pc['io_hold']}) -> per-port, not modelled: bound is conservative"
     if intra_override is not None:
         wintra = dict(ps=intra_override, basis=f"WHAT-IF --intra-window-ps {intra_override:g} (not the plan)")
     elif pc.get("tap_window"):
