@@ -1,0 +1,287 @@
+{
+ "schema": "opentallas.r11_top_sites.v1",
+ "label": "UNCHECKED (plan export; no route)",
+ "config": {
+  "top_w": "16w",
+  "top_m": 2,
+  "top_reach": 450.0,
+  "no_spine": true
+ },
+ "groups": 4682,
+ "groups_by_kind": {
+  "top_node": 930,
+  "col_tap": 912,
+  "top_rep": 2840
+ },
+ "instances": 8452,
+ "instances_by_master": {
+  "BUFx24_ASAP7_75t_R": 8452
+ },
+ "mirrored": 3686,
+ "nets": 4681,
+ "nets_by_layer": {
+  "M8": 4541,
+  "M9": 140
+ },
+ "leaf_rows": 19,
+ "leaf_rows_y": [
+  1313.28,
+  2617.92,
+  3913.92,
+  5227.2,
+  6540.48,
+  7845.12,
+  9141.12,
+  10471.68,
+  11802.24,
+  13132.8,
+  14463.36,
+  15793.92,
+  17115.84,
+  18420.48,
+  19725.12,
+  21038.4,
+  22343.04,
+  23647.68,
+  24952.32
+ ],
+ "leaves": 912,
+ "seam_fix_moves": {
+  "n": 902,
+  "max_um": 0.81
+ },
+ "gate": {
+  "errors": {
+   "seam_body_x": 866,
+   "hard_keepout": 19,
+   "seam_body_y": 48
+  },
+  "examples": {
+   "seam_body_x": [
+    {
+     "cell": "ckt_12_0",
+     "kind": "top_node",
+     "origin_um": [
+      10211.67,
+      1317.33
+     ],
+     "host": "c_W2_bf_01"
+    },
+    {
+     "cell": "ckt_12_1",
+     "kind": "top_node",
+     "origin_um": [
+      10211.67,
+      1317.6
+     ],
+     "host": "c_W2_bf_01"
+    },
+    {
+     "cell": "ckt_17_0",
+     "kind": "top_node",
+     "origin_um": [
+      13918.122,
+      1317.33
+     ],
+     "host": "c_W1_bf_11"
+    },
+    {
+     "cell": "ckt_17_1",
+     "kind": "top_node",
+     "origin_um": [
+      13918.122,
+      1317.6
+     ],
+     "host": "c_W1_bf_11"
+    },
+    {
+     "cell": "ckt_24_0",
+     "kind": "top_node",
+     "origin_um": [
+      17624.79,
+      1317.33
+     ],
+     "host": "c_E0_bf_01"
+    }
+   ],
+   "hard_keepout": [
+    {
+     "cell": "ckt_1793_0",
+     "kind": "col_tap",
+     "origin_um": [
+      31215.51,
+      1313.28
+     ],
+     "host": "c_E5_bf_11"
+    },
+    {
+     "cell": "ckt_2657_0",
+     "kind": "col_tap",
+     "origin_um": [
+      31215.51,
+      2617.65
+     ],
+     "host": "c_E5_bf_11"
+    },
+    {
+     "cell": "ckt_3521_0",
+     "kind": "col_tap",
+     "origin_um": [
+      31215.51,
+      3913.65
+     ],
+     "host": "c_E5_bf_10"
+    },
+    {
+     "cell": "ckt_4385_0",
+     "kind": "col_tap",
+     "origin_um": [
+      31215.51,
+      5226.93
+     ],
+     "host": "c_E5_bf_10"
+    },
+    {
+     "cell": "ckt_5249_0",
+     "kind": "col_tap",
+     "origin_um": [
+      31215.51,
+      6540.21
+     ],
+     "host": "c_E5_bn_11"
+    }
+   ],
+   "seam_body_y": [
+    {
+     "cell": "ckt_5267_0",
+     "kind": "col_tap",
+     "origin_um": [
+      2167.83,
+      7844.85
+     ],
+     "host": "c_W5_bn_01"
+    },
+    {
+     "cell": "ckt_5285_0",
+     "kind": "col_tap",
+     "origin_um": [
+      2789.91,
+      7844.85
+     ],
+     "host": "c_W5_bn_01"
+    },
+    {
+     "cell": "ckt_5303_0",
+     "kind": "col_tap",
+     "origin_um": [
+      3420.63,
+      7844.85
+     ],
+     "host": "c_W5_bn_11"
+    },
+    {
+     "cell": "ckt_5321_0",
+     "kind": "col_tap",
+     "origin_um": [
+      4034.07,
+      7844.85
+     ],
+     "host": "c_W5_bn_11"
+    },
+    {
+     "cell": "ckt_5339_0",
+     "kind": "col_tap",
+     "origin_um": [
+      4638.87,
+      7844.85
+     ],
+     "host": "c_W4_bn_01"
+    }
+   ]
+  },
+  "overlaps": 0,
+  "overlap_examples": [],
+  "verdict": "FAIL"
+ },
+ "hosts": 360,
+ "types_hosting": 74,
+ "type_window_union_worst": [
+  [
+   "cbn_q01",
+   {
+    "instances": 24,
+    "union_sites": 620,
+    "max_inst_sites": 58,
+    "union_over_max": 10.69
+   }
+  ],
+  [
+   "cbx_q10",
+   {
+    "instances": 48,
+    "union_sites": 524,
+    "max_inst_sites": 50,
+    "union_over_max": 10.48
+   }
+  ],
+  [
+   "cbn_q11",
+   {
+    "instances": 24,
+    "union_sites": 520,
+    "max_inst_sites": 50,
+    "union_over_max": 10.4
+   }
+  ],
+  [
+   "cbf_q00",
+   {
+    "instances": 23,
+    "union_sites": 535,
+    "max_inst_sites": 58,
+    "union_over_max": 9.22
+   }
+  ],
+  [
+   "cbn_q00",
+   {
+    "instances": 24,
+    "union_sites": 565,
+    "max_inst_sites": 62,
+    "union_over_max": 9.11
+   }
+  ],
+  [
+   "cbf_q11",
+   {
+    "instances": 24,
+    "union_sites": 448,
+    "max_inst_sites": 50,
+    "union_over_max": 8.96
+   }
+  ],
+  [
+   "cbf_q01",
+   {
+    "instances": 23,
+    "union_sites": 505,
+    "max_inst_sites": 58,
+    "union_over_max": 8.71
+   }
+  ],
+  [
+   "sle_ctl",
+   {
+    "instances": 12,
+    "union_sites": 270,
+    "max_inst_sites": 41,
+    "union_over_max": 6.59
+   }
+  ]
+ ],
+ "r9_tool_gaps": [
+  "die_clock_mesh.NDR has 4w/8w only; mesh3 top tree is 16W (0.64 um) M8/M9: TrackRouter/shield/short-stack pads/via arrays need a 16w NDR (wide-metal spacing + VIA78/89 arrays) before route",
+  "build_lattice() accepts only binary, midpoint, equal-cut, equal-length H-trees (plan errors node_midpoint/leg_reps/path_spread); mesh3 is DELAY-balanced (node off-midpoint, lifts arity 1, extra repeaters) -> needs an explicit-cells build path (cells+nets from this export) into C128.fixed_wires",
+  "multi-unit groups (2 x BUFx24 stacked rows) need the unit A/Y tie straps encoded as fixed wires"
+ ]
+}
