@@ -1,0 +1,16 @@
+{
+ "table": "results/fallback_head_1026/regions_part.json",
+ "granularity": "part",
+ "requirements": {
+  "crossings": 428,
+  "required_new_scalar_pins": 1712,
+  "added_live_data_storage_flops": 1065250,
+  "type_count_before": 16,
+  "type_count_after": 16,
+  "split_types": []
+ },
+ "compose": {
+  "status": "FAIL",
+  "error": "KeyError: 'buses'"
+ }
+}

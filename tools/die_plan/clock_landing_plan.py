@@ -376,10 +376,10 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None):
                 tap=min(range(tree["n_clock_taps"]),key=lambda i:abs(tapxy[i][0]-status[0])+abs(tapxy[i][1]-status[1]))
             info["local_sources"].append(dict(name=bus,ready="landing_ready_"+bus,fault="landing_fault_"+bus,tap=tap,
                 xy_um=status or point,pin_xy_um=point,band=band,**(dict(node=tree["leaf_node"],reset="delivered") if hard else {})))
-            b=_scalar(t,"fclk_in_"+bus,"in",point,"clock");t["buses"].append(b)
+            b=_scalar(t,"fclk_in_"+bus,"in",point,"clock");t.setdefault("buses",[]).append(b)
             t.setdefault("clock",{}).setdefault("edge_clocks",[]).append(dict(port=b["name"],tap_um=point,period_mult=1,
                 note="source-forwarded ring write clock; actual source-export/window STA required"))
-        for bus in sorted(outs[pn]):t["buses"].append(_scalar(t,"fclk_out_"+bus,"out",_bus_xy(t,bus),"clock"))
+        for bus in sorted(outs[pn]):t.setdefault("buses",[]).append(_scalar(t,"fclk_out_"+bus,"out",_bus_xy(t,bus),"clock"))
         if pn in active:
             if monitor_parent[pn] is None and hard:raise ValueError(f"hard partition {pn} cannot be the monitor root")
             if monitor_parent[pn] is None:
@@ -388,17 +388,17 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None):
             else:
                 end=_monitor_endpoints(P,W,pn,monitor_parent[pn],hard_xy);node=end["src_node"];point=end["src_xy"]
                 for j,kind in enumerate(("ready","fault")):
-                    t["buses"].append(_scalar(t,"cland_up_"+kind,"out",point,"ctl",shift=2.16*(j+2)))
-                if sig["up_seam"]:t["buses"].append(_scalar(t,"fclk_out_cland_up","out",point,"clock",shift=2.16))
+                    t.setdefault("buses",[]).append(_scalar(t,"cland_up_"+kind,"out",point,"ctl",shift=2.16*(j+2)))
+                if sig["up_seam"]:t.setdefault("buses",[]).append(_scalar(t,"fclk_out_cland_up","out",point,"clock",shift=2.16))
             info.update(collector_root_node=node,collector_root_xy=point)
             ch=sorted(children[pn],key=lambda c:(c["xy_um"],c["seam"],c["part"]))
             for i,c in enumerate(ch):
                 row=dict(c,index=i,ready=f"cland_dn_ready_{i}",fault=f"cland_dn_fault_{i}")
                 for j,kind in enumerate(("ready","fault")):
-                    t["buses"].append(_scalar(t,f"cland_dn_{kind}_{i}","in",c["xy_um"],"ctl",shift=2.16*(j+2)))
+                    t.setdefault("buses",[]).append(_scalar(t,f"cland_dn_{kind}_{i}","in",c["xy_um"],"ctl",shift=2.16*(j+2)))
                 if c["seam"]:
                     b=_scalar(t,f"fclk_in_cland_dn_{i}","in",c["xy_um"],"clock",shift=2.16)
-                    t["buses"].append(b);t["clock"].setdefault("edge_clocks",[]).append(dict(port=b["name"],tap_um=c["xy_um"],period_mult=1,
+                    t.setdefault("buses",[]).append(b);t["clock"].setdefault("edge_clocks",[]).append(dict(port=b["name"],tap_um=c["xy_um"],period_mult=1,
                         note="reverse monitor forwarded clock; 2bit landed ring, boot-only cost"))
                 if c["seam"]:
                     monbus=f"cland_dn_ready_{i}"
@@ -468,7 +468,7 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None):
     # registered-hop contracts in the infrastructure model instead.
     import gen_phys as GP
     for tn,t in raw["partition_types"].items():
-        special=[b for b in t["buses"] if b["name"].startswith(("fclk_","cland_"))]
+        special=[b for b in t.get("buses",[]) if b["name"].startswith(("fclk_","cland_"))]
         pins=[];w,h=t["outline_um"]
         for b in special:
             at=sum(b["window_um"])/2;f=b["face"]
@@ -491,7 +491,7 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None):
                 collector_root_node=bytype[tn].get("collector_root_node"),
                 collector_local_sources=bytype[tn]["local_sources"],
                 collector_children=bytype[tn]["children"])
-        t["buses"]=[b for b in t["buses"] if b not in special]
+        t["buses"]=[b for b in t.get("buses",[]) if b not in special]
     infra_edges=[]
     for pr in raw["ports"]:
         if pr["id"] in pports:continue
