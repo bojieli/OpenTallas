@@ -1,0 +1,603 @@
+{
+ "schema": "opentallas.hbm_b1_lane_price.v1",
+ "status": "CONDITIONAL_MODEL_NOT_ADOPTED",
+ "source_commit": "8af91432b5265bac57dd692b1461d1434f5496fe",
+ "baseline": {
+  "plan": "/srv/opentallas-scratch2/claude/hbm-mu-quad-7-1027/c14/die_plan.json",
+  "sha256": "941d77895a6d1297f92cbf764d79695958b7006e23dcc0598df710dd061f7600",
+  "core_conns_sha256": "37b631a09ea47408467be64c7af3d70dddec29b0d12b41985fa9f59c6a3551c9"
+ },
+ "candidate": {
+  "plan": "/srv/opentallas-scratch2/claude/hbm-mu-quad-7-1027/c15/die_plan.json",
+  "sha256": "3a73d67be12d429eb3a7c8da4a464cfcb7ad00af0d51c3e09348de92417eaeaa",
+  "core_conns_sha256": "37b631a09ea47408467be64c7af3d70dddec29b0d12b41985fa9f59c6a3551c9"
+ },
+ "changed_lanes": {},
+ "op_deltas": [
+  {
+   "op": "SU.*",
+   "families": [
+    "SU",
+    "SU_BANK"
+   ],
+   "delta_cycles": 0,
+   "parallel": false,
+   "detail": {
+    "SU": {
+     "baseline": 93,
+     "candidate": 93,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    },
+    "SU_BANK": {
+     "baseline": 0,
+     "candidate": 0,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "ARGMAX.*",
+   "families": [
+    "SU",
+    "ARGMAX"
+   ],
+   "delta_cycles": 0,
+   "parallel": false,
+   "detail": {
+    "SU": {
+     "baseline": 93,
+     "candidate": 93,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    },
+    "ARGMAX": {
+     "baseline": 0,
+     "candidate": 0,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "SFU.*",
+   "families": [
+    "SFU"
+   ],
+   "delta_cycles": 0,
+   "parallel": false,
+   "detail": {
+    "SFU": {
+     "baseline": 61,
+     "candidate": 61,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "HC.*|FUSED.HC_*",
+   "families": [
+    "HC"
+   ],
+   "delta_cycles": 0,
+   "parallel": false,
+   "detail": {
+    "HC": {
+     "baseline": 211,
+     "candidate": 211,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       145,
+       [
+        "L14",
+        "L15",
+        "L10",
+        "L16",
+        "L18",
+        "L17",
+        "L11"
+       ]
+      ],
+      [
+       145,
+       [
+        "L14",
+        "L15",
+        "L10",
+        "L16",
+        "L18",
+        "L17",
+        "L11"
+       ]
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "FUSED.QDQ*",
+   "families": [
+    "QUANT"
+   ],
+   "delta_cycles": 0,
+   "parallel": false,
+   "detail": {
+    "QUANT": {
+     "baseline": 0,
+     "candidate": 0,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "FUSED.*",
+   "families": [
+    "SU"
+   ],
+   "delta_cycles": 0,
+   "parallel": false,
+   "detail": {
+    "SU": {
+     "baseline": 93,
+     "candidate": 93,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "IDX.TOPK",
+   "families": [
+    "IDX",
+    "TOPK"
+   ],
+   "delta_cycles": 0,
+   "parallel": false,
+   "detail": {
+    "IDX": {
+     "baseline": 136,
+     "candidate": 136,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    },
+    "TOPK": {
+     "baseline": 30,
+     "candidate": 30,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "IDX.*",
+   "families": [
+    "IDX",
+    "COLL_INJ"
+   ],
+   "delta_cycles": 0,
+   "parallel": false,
+   "detail": {
+    "IDX": {
+     "baseline": 136,
+     "candidate": 136,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    },
+    "COLL_INJ": {
+     "baseline": 0,
+     "candidate": 0,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "COLL.TOPK_MERGE",
+   "families": [
+    "COLL",
+    "TOPK"
+   ],
+   "delta_cycles": 0,
+   "parallel": false,
+   "detail": {
+    "COLL": {
+     "baseline": 109,
+     "candidate": 109,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    },
+    "TOPK": {
+     "baseline": 30,
+     "candidate": 30,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "COLL.*",
+   "families": [
+    "COLL",
+    "COLL_INJ"
+   ],
+   "delta_cycles": 0,
+   "parallel": false,
+   "detail": {
+    "COLL": {
+     "baseline": 109,
+     "candidate": 109,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    },
+    "COLL_INJ": {
+     "baseline": 0,
+     "candidate": 0,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "SM.*|ATT.*",
+   "families": [
+    "SM"
+   ],
+   "delta_cycles": 0,
+   "parallel": true,
+   "detail": {
+    "SM": {
+     "baseline": 218,
+     "candidate": 218,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "DMA.*",
+   "families": [
+    "VM"
+   ],
+   "delta_cycles": 0,
+   "parallel": false,
+   "detail": {
+    "VM": {
+     "baseline": 36,
+     "candidate": 36,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  }
+ ],
+ "excluded_families": [],
+ "unbound_changed": [],
+ "family_latency": {
+  "ARGMAX": {
+   "baseline": 0,
+   "candidate": 0
+  },
+  "COLL": {
+   "baseline": 109,
+   "candidate": 109
+  },
+  "COLL_INJ": {
+   "baseline": 0,
+   "candidate": 0
+  },
+  "HC": {
+   "baseline": 211,
+   "candidate": 211
+  },
+  "IDX": {
+   "baseline": 136,
+   "candidate": 136
+  },
+  "QUANT": {
+   "baseline": 0,
+   "candidate": 0
+  },
+  "SFU": {
+   "baseline": 61,
+   "candidate": 61
+  },
+  "SM": {
+   "baseline": 218,
+   "candidate": 218
+  },
+  "SU": {
+   "baseline": 93,
+   "candidate": 93
+  },
+  "SU_BANK": {
+   "baseline": 0,
+   "candidate": 0
+  },
+  "TOPK": {
+   "baseline": 30,
+   "candidate": 30
+  },
+  "VM": {
+   "baseline": 36,
+   "candidate": 36
+  }
+ },
+ "schedule": {
+  "ds_ar": {
+   "base_cycles": 576702.4,
+   "base_tok_s": 2080.8,
+   "records": {
+    "HC.*|FUSED.HC_*": 241,
+    "SM.*|ATT.*": 1175,
+    "COLL.*": 633,
+    "DMA.*": 420,
+    "SU.*": 1356,
+    "FUSED.QDQ*": 40,
+    "IDX.TOPK": 40,
+    "IDX.*": 8,
+    "COLL.TOPK_MERGE": 9,
+    "ARGMAX.*": 1
+   },
+   "lower": {
+    "terms": [],
+    "cycles": 576702.4,
+    "added_cycles": 0.0,
+    "tok_s": 2080.8,
+    "e2e_loss_pct": 0.0
+   },
+   "upper": {
+    "terms": [],
+    "cycles": 576702.4,
+    "added_cycles": 0.0,
+    "tok_s": 2080.8,
+    "e2e_loss_pct": 0.0
+   },
+   "op_rows": {
+    "ARGMAX.LOCAL": "ARGMAX.*",
+    "ATT.PV": "SM.*|ATT.*",
+    "ATT.QK": "SM.*|ATT.*",
+    "COLL.ALL_GATHER": "COLL.*",
+    "COLL.ARGMAX_MERGE": "COLL.*",
+    "COLL.GROUP_REDUCE_MCAST": "COLL.*",
+    "COLL.ROW_GATHER": "COLL.*",
+    "COLL.TOPK_MERGE": "COLL.TOPK_MERGE",
+    "DMA.FENCE": "DMA.*",
+    "DMA.KVWB_DS": "DMA.*",
+    "DMA.LOAD": "DMA.*",
+    "FUSED.HC_POST": "HC.*|FUSED.HC_*",
+    "FUSED.HC_PRE_NORM": "HC.*|FUSED.HC_*",
+    "FUSED.QDQ_FP8": "FUSED.QDQ*",
+    "HC.HC_MIX_POST": "HC.*|FUSED.HC_*",
+    "IDX.INDEX": "IDX.*",
+    "IDX.TOPK": "IDX.TOPK",
+    "SM.MATVEC": "SM.*|ATT.*",
+    "SU.VOP": "SU.*"
+   },
+   "unmapped_ops": [
+    "CTL.FENCE",
+    "CTL.NOP"
+   ]
+  },
+  "qwen_ar": {
+   "base_cycles": 1269120.1,
+   "base_tok_s": 945.54,
+   "records": {
+    "DMA.*": 12,
+    "SU.*": 12,
+    "FUSED.*": 5,
+    "SM.*|ATT.*": 9,
+    "COLL.*": 3,
+    "SFU.*": 1,
+    "ARGMAX.*": 1
+   },
+   "lower": {
+    "terms": [],
+    "cycles": 1269120.1,
+    "added_cycles": 0.0,
+    "tok_s": 945.54,
+    "e2e_loss_pct": 0.0
+   },
+   "upper": {
+    "terms": [],
+    "cycles": 1269120.1,
+    "added_cycles": 0.0,
+    "tok_s": 945.54,
+    "e2e_loss_pct": 0.0
+   },
+   "op_rows": {
+    "ARGMAX.LOCAL": "ARGMAX.*",
+    "ATT.PV": "SM.*|ATT.*",
+    "ATT.QK": "SM.*|ATT.*",
+    "COLL.ALL_REDUCE_SUM": "COLL.*",
+    "COLL.ARGMAX_MERGE": "COLL.*",
+    "DMA.FENCE": "DMA.*",
+    "DMA.LOAD": "DMA.*",
+    "DMA.STORE": "DMA.*",
+    "FUSED.ROW_NORM": "FUSED.*",
+    "SFU.GLU": "SFU.*",
+    "SM.MATVEC": "SM.*|ATT.*",
+    "SU.VOP": "SU.*"
+   },
+   "unmapped_ops": [
+    "CTL.END",
+    "CTL.ENDLOOP",
+    "CTL.LOOP"
+   ]
+  }
+ }
+}

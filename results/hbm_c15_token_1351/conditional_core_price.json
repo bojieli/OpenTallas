@@ -1,0 +1,57 @@
+{
+  "scope": "C14toC15 core-chain sensitivity ONLY; unproved native capture graph prevents adoption",
+  "lane_total_delta": 0,
+  "changes": "4COLLdatachains+1 and2SMresponsechains+1; coherent operations not22cycle sum",
+  "workloads": {
+    "ds_ar": {
+      "reference_cycles": 576702.4178468838,
+      "reference_tok_s": 2080.7958539175115,
+      "variants": {
+        "COLL_plus1": {
+          "added_cycles": 473.9071578946896,
+          "tok_s": 2079.0873568663183,
+          "reference_loss_pct": 0.08210786502560463
+        },
+        "SM_response_plus1": {
+          "added_cycles": 441.0,
+          "tok_s": 2079.2059008084543,
+          "reference_loss_pct": 0.07641081685471063
+        },
+        "both_serial_upper": {
+          "added_cycles": 913.0,
+          "tok_s": 2077.506872086472,
+          "reference_loss_pct": 0.1580636478512476
+        }
+      },
+      "record_class_counts": {
+        "COLL.*": 642,
+        "SM.*|ATT.*": 1175
+      }
+    },
+    "qwen_ar": {
+      "reference_cycles": 1269120.1126093396,
+      "reference_tok_s": 945.5369811552138,
+      "variants": {
+        "COLL_plus1": {
+          "added_cycles": 73.0,
+          "tok_s": 945.4825968389592,
+          "reference_loss_pct": 0.005751685797439343
+        },
+        "SM_response_plus1": {
+          "added_cycles": 289.0,
+          "tok_s": 945.3217154974842,
+          "reference_loss_pct": 0.022766497981563383
+        },
+        "both_serial_upper": {
+          "added_cycles": 362.0,
+          "tok_s": 945.2673559405074,
+          "reference_loss_pct": 0.028515565237541285
+        }
+      },
+      "record_class_counts": {
+        "COLL.*": 3,
+        "SM.*|ATT.*": 9
+      }
+    }
+  }
+}
