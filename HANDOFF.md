@@ -1278,3 +1278,5 @@ CODEX: 2026-10-27 05:01 PDT S81 integration READY b89ee2a33: coreR14/R15 fixes+T
 CODEX: 2026-10-27 05:04 PDT Qwen: rst3 corrected core SIGNED100.89/2.86+routedLECEQ; QC51.84guard candidate5ce987747 dry266stacks0outside/imagePASS-COND/fullGRTlive; approvedQwen tools mergedb2929dab7; sys_c native-BB canonicalizer gapfixed9a584b617/re-synthlive.
 
 CODEX: 2026-10-27 05:06 PDT HBM PR0 native stage PASS7116/9489edges delta0. Keybuf declared324² lot impossible34realSRAMs; exact8slice successor+mutant live, needs0.5685mm²/oldkeybuf and real8792-bit nativebinding (currentcore_conns absent). Correct U5e_r targetedchecker only4missingkeybuf.
+
+CODEX: 2026-10-27 05:10 PDT main8810c5e6a4 plainmerged S81 shared clock port/MC/XR7 then native ROM bb runnera3d325c83d then A/C landedSDC+reset polarityd80e01ac1 (57 focused PASS;8bandLEC+2mutant existing PASS). No top-level plan deltas. Fresh S81 cores queued. LEC memory fixec325894af trial Q2n2 liveintel1 unit3211886, argmax fulltree hints liveintel2 unit326500, GQsupport diagnostic liveintel2 unit377015.
