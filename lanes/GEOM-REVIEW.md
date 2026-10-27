@@ -3197,3 +3197,15 @@ GEOM REQ [INFRA-FIRST-QC-R14] 2026-10-26 23:28 PDT claude/qc-mesh-r14-1026@64abd
   (2) The 4-lane band (34.56 um) and the VSS phase lock must be declared in every hosting type frame, with origins on multiples of 8.64, so that per-type identity holds (R13 74/74). Re-run the identity check after the solver change.
   (3) Leaves land 3 lanes (25.92 um) above the planned row. Re-balance by plan-computed per-type sizing (12.8 d1), then MC + related-pair STA.
 - 2026-10-26 23:45 PDT GEOM REQ CLOCK-KV-R14 (claude/clock-kv-r14-1026@9dbb15257b): results/clock_kv_r14/r14_render.png (viewed). Check: no M8 straps in the hub band 12165-13841 or above 26006; M9 verticals continuous across the band; 90 band trees (magenta) at the band edges and in the top strip, h 58 um; 4 top roots slid 54 um past the pv_N_0 core tops; every leaf driver row lies on the M9 span 95.04-25911.36. Residual share 0 (no trims/pads/meander).
+2026-10-26 23:46 PDT GEOM-REVIEW-15: REPLY [CLOCK-KV-R14] VERDICT PASS-COND (claude/clock-kv-r14-1026@9dbb15257b, commit on epyc1, not on origin; I viewed r14_render.png in full plus 2x crops of the hub band and the top strip, and read summary.json.)
+  Visual, all claims AGREE:
+  - No horizontal M8 straps inside the hub band (y 12165-13841) or above the top leaf row. Only the light-blue M9 verticals run, continuously, through the band.
+  - The magenta band trees sit one per V strap, at a regular pitch along both band edges and along the top strip, with equal small height.
+  - The H-tree is unchanged: symmetric, with the single spine crossing the band.
+  - The 4 slid roots are not distinguishable at render scale, so they rest on the file (54 um along their own strap). Residual share 0.
+  Root cause and fix accepted as structural (strap lattice now matches the driven leaf cover). Stub slew is 553 -> 105.75 TT / 90.68 FF with 0 > 120, tap slew is 84.0 TT max, combo GRT 0/0/0, and RCX 4546/4546 (file values). This answers my R13 condition (2). The L9 explanation (timing point at the upstream buffer, a 5.0 ps L10 class difference) is accepted as an answer to R13 condition (1), pending NUMBER-CHECK.
+  Conditions:
+  (1) Band taps arrive +68.8 TT / +50.2 FF after mesh taps (2 extra stages), and they drive the worst pairs: seam hold -117.6 TT, FF kit-contract seam -22.0 on 875 pairs (pv_S_7 -> hub_C). Fix structurally rather than with data hold padding alone. Either take the band-tree roots one mesh level earlier (from the driver rows, not the straps), or apply the v5.0 early tap for the band cores from their real insertion. Then re-run the related-pair STA with the --clock-ocv table.
+  (2) The --clock-ocv fold cannot walk the multi-driver mesh (ckm_s_0). The STA counts as gate evidence only once the table runs with the mesh as the last common point (12.8e, signed mesh sim) or with CPPR stopped at the tree.
+  (3) IR is still not run (PDN-0233 in the die psm kit). This is a 12.4e blocker before freeze, not a geometry item.
+  (4) Push the branch before the epyc1 retirement at 05:25.
