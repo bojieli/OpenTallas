@@ -1319,7 +1319,11 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                 raise ValueError("--lattice-spec: leaf_grid replaces driver_rows (drivers decoupled from strap rows)")
             if plan_sites is not None:
                 raise ValueError("--lattice-spec leaf_grid: in-core slides are plan rules, not --plan-sites")
+            io_policy = lattice.get("io_macro_drivers", "slide")
+            if io_policy not in ("slide", "drop_inside"):
+                raise ValueError("leaf-grid io_macro_drivers must be slide or drop_inside")
             lg = dict(nx=int(lattice["leaf_grid"][0]), ny=int(lattice["leaf_grid"][1]),
+                      drop_io_ideal=(io_policy == "drop_inside"),
                       drv_reach=float(lattice.get("drv_reach_um", 200.0)),
                       hop_reach=float(lattice.get("hop_reach_um", 600.0)),
                       wire_levels={int(v) for v in lattice.get("wire_levels", [])},
@@ -1553,6 +1557,17 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         out["meta"]["driver_pair_fixes"] = []
         for i, x in enumerate(xs):
             for j, y in enumerate(ly):
+                if lg.get("drop_io_ideal"):
+                    im = next((r[4] for r in ko if str(r[4]).startswith("io/")
+                               and in_rect(r, x, y)), None)
+                    if im is not None:
+                        # The analog window needs no parent clock cells. Retaining
+                        # a near-edge relocated driver otherwise keeps an interior
+                        # subtree whose nodes still lie in the analog macro body.
+                        out.setdefault("dropped_drivers", []).append(dict(
+                            name=f"ckm_d_{i}_{j}", i=i, j=j, ideal=[round(x, 3), round(y, 3)],
+                            core=im, reason="io_macro_ideal_inside"))
+                        continue
                 q, d = free_along(K, (x, y), 1, lg["drv_reach"], bounds=(0.0, H))
                 if lg["in_core"] in ("pushdown", "drivers", "level", "upstream") and d:
                     q = None   # CLOCK-KV-R8: no slide, pushdown island at the ideal point
@@ -1752,7 +1767,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
             # A dropped mesh-driver subtree has no electrical loads.  Prune it before
             # placing any interior node, just as rec() does for macro-hole branches.
             # Leaf-grid indices address the driver lattice directly (not strap rows).
-            if lg.get("off_core_drop") and not any(
+            if (lg.get("off_core_drop") or lg.get("drop_io_ideal")) and not any(
                     f"{i_}_{j_}" in out["drivers"]
                     for i_ in range(kr[0], kr[1]) for j_ in range(kr[2], kr[3])):
                 out.setdefault("pruned_branches", []).append(f"{path}{c}")
@@ -1761,7 +1776,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
             kp = node_xy(*kr)
             if (kr[1] - kr[0]) * (kr[3] - kr[2]) == 1:
                 dvr = out["drivers"].get(f"{kr[0]}_{kr[2]}")
-                if dvr is None and lg.get("off_core_drop"):
+                if dvr is None and (lg.get("off_core_drop") or lg.get("drop_io_ideal")):
                     # PATH-S81-PD9: dropped driver (no die-top site) -> no leaf leg; the sibling keeps the node loaded
                     out["htree"].append(dict(level=level + 1, tag=tag, a=list(here), b=list(kp), len_um=0.0,
                                              n_seg=1, reps=[], leaf=True, dropped=f"ckm_d_{kr[0]}_{kr[2]}"))
