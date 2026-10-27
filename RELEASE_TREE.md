@@ -49,7 +49,7 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 - [ ] S81.B2 One plan event D-S81-B2: A25 + stations v4 + PHY pins + leaf pins + eng SRAM r0c0 + FT alignment/corridors + D-S81-PHY + infra-first · PATH-S81 · RUNNING · gate: lateral jog <5M bit-um → GRT0 → skew
 - [ ] S81.GRT Die GRT0 incl clock · PATH-S81-PD6 · GRT0 DONE on PD5 6d6e8b34f9 (TT+FF overflow 0, CHECKED); 13 B5 cut errors -> measured-usage waiver; 17 storage bands fixing · ETA freeze est 10-28..29
 - [ ] S81.PHY 14 SerDes windows · PATH-S81 · RUNNING · zero-area fit 14/14; gunit R180 re-plan PASS-COND (GEOM-17); bk_sel option B re-cut 864x483.84 APPROVED (rebuild quarter tile) → S81.B2
-- [ ] S81.CLK Clock under 12.8 · PATH-S81 · NOT RUN · replace early taps (gunit u_l5 520, bk_sel u_c 430) with centre entries; cores → S81-CORE-LAT → IF.CLK128
+- [ ] S81.CLK Clock under 12.8 · PATH-S81-PD8 + S81-CORE-LAT-R14 · RUNNING · one continuous die mesh (PD8); cores via family slices (2/23 slices pass, gunit_l0/l1c building; CTS hook port to 6 generators) → IF.CLK128
 - [ ] S81.BIND Strict bind on main · TOK-DS · PASS on 877cfdeb2 (0 tied, 10,352 straps) → re-run after S81.B2
 - [ ] S81.STA Die STA on real views · PATH-S81-PD6 · RUNNING · related-pair STA on PD5 kit (real where signed + budget)
   - [ ] S81.TILES Tile sign-offs · PATH-S81 / CORES-KITS · RUNNING · 4/171 types, 16/52 hard cores signed
