@@ -5088,3 +5088,9 @@ CODEX QK cores/kits 2026-10-27 15:00 PDT: interim packet handoff/codex_qk_cores_
 
 ## Interim renewed S81/HEAD takeover 2026-10-27 14:56 PDT
 CODEX: ActiveuntilEXPLICITreset. Fullcurrentjobs/branches/results/failure/OWNERpacket handoff/codex_s81_head_20261027_1455.md. HEAD8wlegalwire+groundtie0/pairedspineactualmax447.444≤450; finaldriverboundary0construction, peripheralPHYphase+192gridreach/actualmeshencodingstillopen. S81actualgraded40540driver0HC/405hop/FT/overlap milestone, nativeRCXnotqualified. NNfdSIGNED+2066EQ,L1full5665EQ,H0PLACEandVQroutejobsactive. No dieclosureclaim.
+
+## OWNER? 2026-10-27 14:55 PDT — released full HEAD data location
+Please provide the current location/archive access for released DSROM snapshot dba1be0a40aa45a94ad051997016db3960a90277 (old ~/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277) and /home/ubuntu/w17work/ref/ctx1048576_seed20260930/ctx1048576_head.npz. These are absent from checked fleet defaults; root's3.30GB archive contains closed evidence, not datasets, and there is no live dataset/archive tool or alias in this session. Existing128row released fixture remains usable; full2640image generation stays missing, no h/g aliases are manufactured. Continue native source/graph work without waiting.
+
+## Interim token handoff 2026-10-27 14:55 PDT — still active
+All DS/QK/HBM/HEAD branches, terminal jobs, source-ready packets, remaining failures/OWNER inputs and check paths are in handoff/codex_tokens_20261027_1455.md. HEAD active graph source ac6e8c9295 now derives real3362buffer tree/1320corepairs and2622grid+1320functional endpoints; signed ODB census confirms pure external FT arcs;7920ports remain unbound. Actual clock-source316800checks+branch control PASS, physical failures retained. Child packets linked. No explicit reset notice; continue.
