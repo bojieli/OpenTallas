@@ -1,0 +1,14 @@
+ot-run: localhost      admits   405 GB (avail 732, reserve 0, fresh 204.9, peak 58.2, headroom 0, waiters 0/0 GB) load 49/112 running 32 disk 824 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-2346925-1793120618 after 0 s
+ACTUAL_S8_XHEAD_CONSUMER gu PASS -5 4
+ACTUAL_S8_XHEAD_CONSUMER qkv PASS -35 4
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/codex-xh-consumer-1027/run.py", line 60, in <module>
+    gs.update({k:run(name,k,L)['ok'] for k in range(nxt,lo)})
+                 ~~~^^^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/codex-xh-consumer-1027/run.py", line 44, in run
+    assert hr_go==want_go and xf_edges==want_xf,(tag,'actual control pins differ',hr_go,want_go,xf_edges,want_xf)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('pins4_o_g-60_L3_isa0', 'actual control pins differ', [889], [889], [], [889])
+ot-run: RAN on localhost (unit oth-ubuntu-2346925-1793120618): exit 1
