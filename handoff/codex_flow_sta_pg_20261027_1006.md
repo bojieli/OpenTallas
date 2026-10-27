@@ -120,3 +120,10 @@ when checked; root/FLOW informed, no cancellation or stale rerun by me.
 `3ecb807519`. PGexit `bae112e24` was explicitly not separately taken/approved
 in RM intake. Source remains clean/pushed and can be selected independently
 now that its logged_stages dependency is on main. No physical rerun required.
+
+10:11 KV owner result update: R3 dedicated PHY source solve114.043mV both;
+R4 existing odd5 grid1.728/.48 yields34.319mV both PHYs. Full source event
+still FAIL: unchanged digital glue485.370mV SW /493.047mV SE. Their
+infra_pg_domains.make uses direct uncaught check/analyze, with explicit PG_OK
+for all3 nets and real CSV minima, so no false process-success claim there.
+See handoff/codex-kv-clock-interim-1027.md; correction remains KV-owned.
