@@ -1041,6 +1041,22 @@
           "tap_um"
          ],
          "additionalProperties": false,
+         "not": {
+          "required": [
+           "period_ps",
+           "period_mult"
+          ]
+         },
+         "if": {
+          "required": [
+           "cdc_contract"
+          ]
+         },
+         "then": {
+          "required": [
+           "period_ps"
+          ]
+         },
          "properties": {
           "port": {
            "type": "string",
@@ -1053,6 +1069,19 @@
            },
            "minItems": 2,
            "maxItems": 2
+          },
+          "period_ps": {
+           "type": "number",
+           "exclusiveMinimum": 0
+          },
+          "layer": {
+           "type": "string",
+           "pattern": "^M[1-9]$"
+          },
+          "cdc_contract": {
+           "enum": [
+            "ot_fdi_phy_cdc"
+           ]
           },
           "period_mult": {
            "type": "integer",

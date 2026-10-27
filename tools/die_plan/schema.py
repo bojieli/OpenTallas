@@ -379,7 +379,12 @@ SCHEMA = {
                         # period_mult x the die period, synchronous with clk: no exception, no clock group).
                         "edge_clocks": {"type": "array", "items": {
                             "type": "object", "required": ["port", "tap_um"], "additionalProperties": False,
+                            "not": {"required": ["period_ps", "period_mult"]},
+                            "if": {"required": ["cdc_contract"]}, "then": {"required": ["period_ps"]},
                             "properties": {"port": _name, "tap_um": _xy,
+                                           "period_ps": {"type": "number", "exclusiveMinimum": 0},
+                                           "layer": _layer,
+                                           "cdc_contract": {"enum": ["ot_fdi_phy_cdc"]},
                                            "period_mult": {"type": "integer", "minimum": 1},
                                            "source": {"type": "string"}, "note": {"type": "string"}}}},
                         "tap_max_sinks": {"type": "integer", "minimum": 1},
@@ -1663,6 +1668,11 @@ def validate(raw):
                 errs.append(f"{what} '{x[key]}' defined twice")
             seen.add(x[key])
     for tn, t in raw["partition_types"].items():
+        for e in t.get("clock", {}).get("edge_clocks", []):
+            if "period_ps" in e and "period_mult" in e:
+                errs.append(f"type {tn}: edge clock period_ps and period_mult are exclusive")
+            if e.get("cdc_contract") and "period_ps" not in e:
+                errs.append(f"type {tn}: CDC edge clock requires explicit period_ps")
         for y in t.get("clock", {}).get("tap_edge_y_um", []):
             if not 0 <= y <= t["outline_um"][1]:
                 errs.append(f"type {tn}: clock edge y {y} outside outline")
