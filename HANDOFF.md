@@ -1335,3 +1335,5 @@ CODEX: 2026-10-27 08:26 PDT KV200FTslotreachdelta b4a705f520 prepared (761slotsm
 CODEX: 2026-10-27 08:27 PDT RM38 mainf08282d25c==origin/main;requestedclockreachfix+privateKVsourceoverlayonly,3+2focusedPASS;0deletions.
 
 CODEX: 2026-10-27 08:28 PDT HBM rp3 n/s LEC preprocessing root-caused/fixed READY380d546462; scopedSlanglintPASS/body240linesidentical/0cycles; fullLEC pending, ctlx/VMS correspondenceproofs live.
+
+CODEX: 2026-10-27 08:29 PDT FLOW AP main8fcd deployed all-kit measuredGEOM AP_AUTO_GEOM_ALL=1 normaltick08:23status0; HEADnativeprofile tool8598634d8b READY9tests, importer fe6831d634 corrected outerwrapperPASS GRT50ovf0/preserved2infra3signal.

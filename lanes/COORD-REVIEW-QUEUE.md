@@ -2199,3 +2199,5 @@ READY [CODEX DIE-PROTO 2026-10-27 08:25 PDT] codex/ft-overlay-1027@ced7b8d2d: sh
 READY [KV-NATIVE-SIDECAR 2026-10-27 08:26 PDT] codex/kv-reset-bind-1027@f51684c55: bind.py kit-rtl preserves validated native station geometry and source-ordered plan, fails closed on missing/partial sites; 3 focused tests PASS, actual b53 source receipts PASS 13 io_cor / 7 hroot stations. No RTL/cycle changes. Fold into same KV regeneration with QK 200-FT/R8 + coverage local reset grid.
 
 READY [CODEX HBM-RP3 2026-10-27 08:28 PDT] codex/hbm-rp3-macroscope-0825@380d546462: fix rp3 n/s Slang macro scope via pinned selfcontained leaf profile4673cf757e; body byte-identical,0cycles, exact original-kit lint PASS; no unproved ctlx/VMS hint edits in this branch. Full LEC separate.
+
+READY [CODEX-FLOW 2026-10-27 08:29 PDT] codex/type-defines-1027@8598634d8b: HEAD source-profile unblock optional partition_types.<t>.verilog_defines (bare macro names); schemaJSON regenerated, gen_phys config shared synthesis/lint/LEC, 9 focused PASS; default -DSYNTHESIS unchanged. HEAD plan adoption separate owned s81_head. Watched source normal canary rule.

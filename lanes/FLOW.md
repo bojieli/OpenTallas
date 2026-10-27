@@ -174,3 +174,6 @@ CODEX took over shared flow on codex/root-1027. Merged bce29bb125: stage exact-s
 
 ## CODEX notes 2026-10-27 08:16 PDT
 Shared flow takeover: PREFLIGHT-1 b56b0b55be and FF-bound fix9529b56ff0 READY (19preflight/bundle+4FF tests); canary integration owned flow/rc_canary. Existing physical failures remain assigned die teams.
+
+## CODEX notes 2026-10-27 08:29 PDT
+HEAD native-profile unblock READY codex/type-defines-1027@8598634d8b: optional partition type verilog_defines bare macro list, synthesis/lint/LEC share config; 9 focused PASS, absent default unchanged. HEAD owner adopts BOTH OT_COLL_NATIVE32 and OT_COLL_NATIVE32_OFF on hd_mesh/hd_lep0N/hd_ctl/hd_host and whole-die asbuilt defines; no added cycles or physical closure claimed. AP main8fcd deployed AP_AUTO_GEOM_ALL=1 via intel2 systemd all-kits-1027.conf; normal08:20tick ended08:23 status0; no flow-tag hold bypass.
