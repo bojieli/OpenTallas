@@ -576,7 +576,7 @@ def lattice(a):
     lattice.added = added
     drv = [n for n in rec["nodes"] if n["driver"]]
     rows = sorted({r3(n["site"][1]) for n in drv})
-    m = (len(rows) // 19 - 1) // 2 if len(rows) % 19 == 0 else 4
+    m = (len(rows) // ROW_GROUP - 1) // 2 if len(rows) % ROW_GROUP == 0 else 4
     ng = len(rows) // (2 * m + 1)
     gaps = [rows[g * (2 * m + 1) + m] for g in range(ng)]
     dy = r3(rows[1] - rows[0])
@@ -584,6 +584,7 @@ def lattice(a):
 
 
 def build(a, st):
+    set_lattice(a)
     rec, P, dtp, parts, cores, cols, gaps, rows, m, dy = lattice(a)
     free = lambda x: not any(c[0] - ISL < x < c[2] + ISL for c in cores)
     bk = defaultdict(list)
@@ -713,6 +714,26 @@ PER_OFF = (0.0, 622.08, 1235.52, 1848.96)   # column-tap offsets from the period
 CHAN_HC = 2                # R17 centre channel: H_c lane index (channel bottom + 8.64 k)
 CHAN_LANES = (0, 4, 1, 3)  # R17 centre channel: lane index of channel x-tree node depth 0..3 (12 leaves -> depth <= 3)
 PER_NUDGE = 8.64           # a gap row on a partition seam -> local row 8.64 um into the partition NEARER the die centre
+ROW_GROUP = 19             # r2 fine lattice: driver rows come in groups of 19 (2m+1 per gap row group)
+# INFRA-FIRST-HEAD-2 (COORD RULING INFRA-FIRST-HEAD-1 ASK1): the QC lattice constants above are the DEFAULTS of CLI
+# parameters (--per-x/--per-off/--chan-hc/--chan-lanes/--per-nudge/--row-group).  Without those flags nothing changes
+# (QC byte-identical, tests/test_qc_clk_mesh3.py::test_qc_defaults_*).
+QC_LATTICE = dict(PER_X=PER_X, PER_OFF=PER_OFF, CHAN_HC=CHAN_HC, CHAN_LANES=CHAN_LANES, PER_NUDGE=PER_NUDGE,
+                  ROW_GROUP=ROW_GROUP)
+
+
+def set_lattice(a):
+    """apply the per-die lattice parameters of `a` (None = the QC default) to the module constants."""
+    g = globals()
+    for k, v in QC_LATTICE.items():
+        x = getattr(a, k.lower(), None)
+        if x is None:
+            g[k] = v
+        elif k in ("PER_OFF", "CHAN_LANES"):
+            g[k] = tuple((float if k == "PER_OFF" else int)(t) for t in str(x).split(","))
+        else:
+            g[k] = (int if k in ("CHAN_HC", "ROW_GROUP") else float)(x)
+    return {k: g[k] for k in QC_LATTICE}
 
 
 def centre_rows(grow_all, m, split):
@@ -2167,6 +2188,85 @@ def cmd_em(a):
     return 0
 
 
+def grid_tree(drivers, et, root=None, trunk_x=None):
+    """INFRA-FIRST-HEAD-2: delay-balanced zero-skew tree over an arbitrary drive grid (any number of columns per row and
+    of rows; NOT restricted to a power of two -- dtree splits n into n//2 + (n - n//2) and merge() balances the unequal
+    halves by the node position on the straight segment plus equal stage counts, r2 rule).  Rows first (an x-tree per
+    driver row over its columns), then ONE y-tree over the row roots on the trunk column, then one straight / L leg to
+    the clock source.  Rows with an identical column set give row roots on one x (no lift); otherwise every row root is
+    lifted to trunk_x (majority x by default) with its own straight leg (reported: such lifts unbalance the tree).
+    Returns (nodes, root, info)."""
+    from collections import Counter
+    keep = ISLANDS[0], BLOCK[0], CORR[0], LANE[0]
+    ISLANDS[0], BLOCK[0], CORR[0], LANE[0] = None, None, {}, None
+    try:
+        nodes = []
+        rows = defaultdict(list)
+        for x, y in drivers:
+            rows[r3(y)].append(float(x))
+        rroots = []
+        for i, y in enumerate(sorted(rows)):
+            xs = sorted(rows[y])
+            rroots.append(dtree([(x, y) for x in xs], "x", et, f"r{i:02d}_", nodes))
+        xs0 = Counter(r3(r["xy"][0]) for r in rroots)
+        tx = trunk_x if trunk_x is not None else xs0.most_common(1)[0][0]
+        lifted = [r["tag"] for r in rroots if abs(r3(r["xy"][0]) - tx) > 1e-6]
+        rroots = [r if abs(r3(r["xy"][0]) - tx) < 1e-6 else lift(r, (tx, r["xy"][1]), et, r["tag"] + "J", nodes) for r in rroots]
+        top = dtree_nodes(rroots, "y", et, "Y", nodes)
+        if root is not None and md(top["xy"], root) > 1e-6:
+            top = lift(top, tuple(root), et, "SRC", nodes)
+        top["parent"] = None
+        return nodes, top, dict(rows=len(rows), cols_per_row=sorted({len(v) for v in rows.values()}),
+                                row_root_x=sorted(xs0), lifted_rows=lifted, trunk_x=tx)
+    finally:
+        ISLANDS[0], BLOCK[0], CORR[0], LANE[0] = keep
+
+
+def dtree_nodes(items, ax, et, tag, nodes):
+    """dtree over already-built subtree roots (sorted along ax), same split rule as dtree()."""
+    items = sorted(items, key=lambda r: r["xy"][0 if ax == "x" else 1])
+    if len(items) == 1:
+        return items[0]
+    h = len(items) // 2
+    return merge(dtree_nodes(items[:h], ax, et, tag + "0", nodes), dtree_nodes(items[h:], ax, et, tag + "1", nodes),
+                 ax, et, tag, nodes)
+
+
+def grid_report(nodes, root):
+    """root -> every driver: stage count and arrival per corner from the plan stage model."""
+    ch, by = paths(nodes)
+    arr = {c: {k: sum(e["et"].delay(e["leg"], c, e["nseg"]) for e in v) for k, v in ch.items()} for c in ("TT", "FF")}
+    stg = {k: sum(e["nseg"] for e in v) for k, v in ch.items()}
+    eg = edge_geom(nodes)
+    out = dict(drivers=len(ch), stages=sorted(set(stg.values())),
+               arrival_ps={c: dict(min=r3(min(v.values())), max=r3(max(v.values())),
+                                   skew=r3(max(v.values()) - min(v.values()))) for c, v in arr.items()},
+               repeaters=sum(n["nseg"] for n in nodes if n.get("parent")) - sum(1 for n in nodes if n.get("parent")),
+               edges=len(eg), wire_um=r3(sum(e["leg_um"] for e in eg)), max_leg_um=r3(max(e["leg_um"] for e in eg)),
+               all_straight=all(e["straight"] for e in eg if by[e["tag"]].get("parent") != "SRC"),
+               src_leg_um=r3(sum(e["leg_um"] for e in eg if by[e["tag"]].get("parent") == "SRC")),
+               max_merge_imbalance_ps={c: r3(max((abs(n.get("imbalance_" + c, 0.0)) for n in nodes), default=0.0))
+                                       for c in ("TT", "FF")})
+    return out, arr
+
+
+def cmd_grid(a):
+    st = Stage(a.stage)
+    et = EdgeType(st, a.top_w, a.top_m, a.top_reach)
+    G = json.loads(Path(a.grid).read_text())
+    nodes, root, info = grid_tree([tuple(d) for d in G["drivers"]], et, root=G.get("root"), trunk_x=G.get("trunk_x"))
+    rep, arr = grid_report(nodes, root)
+    rep.update(info, edge=dict(w=a.top_w, m=a.top_m, reach_um=a.top_reach), stage_table=a.stage, grid=a.grid,
+               note="plan model only (ngspice stage-table fit, straight legs); UNCHECKED until mesh MC / RCX")
+    od = Path(a.out)
+    od.mkdir(parents=True, exist_ok=True)
+    (od / "grid_tree.json").write_text(json.dumps(dict(summary=rep, nodes=[
+        {k: (v if k != "et" else None) for k, v in n.items()} for n in nodes],
+        arrival_ps={c: {k: r3(v) for k, v in d.items()} for c, d in arr.items()}), indent=1))
+    print(json.dumps(rep, indent=1))
+    return 0
+
+
 def add_common(p):
     p.add_argument("--r2", required=True, help="r2 plan json (fine lattice, taps, plan/tree-plan paths)")
     p.add_argument("--stage", required=True, help="stage_table.json (ngspice)")
@@ -2216,6 +2316,12 @@ def add_common(p):
                    help="R17 (with --lanes vss): local-root lift node lane: own y-tree leaf depth (R15/R16) or the deepest leaf "
                         "lane for every row (identical lift legs per type, 12.2a1)")
     p.add_argument("--centre-split", type=float, default=ISL, help="R15: centre fine row split -> YC -/+ this (um)")
+    p.add_argument("--per-x", default=None, help="periodic feed x period um (default QC 2471.04)")
+    p.add_argument("--per-off", default=None, help="periodic column-tap offsets, comma list (default QC 0,622.08,1235.52,1848.96)")
+    p.add_argument("--chan-hc", default=None, help="centre channel H_c lane index (default QC 2)")
+    p.add_argument("--chan-lanes", default=None, help="centre channel x-tree lane per depth, comma list (default QC 0,4,1,3)")
+    p.add_argument("--per-nudge", default=None, help="seam gap row nudge um (default QC 8.64)")
+    p.add_argument("--row-group", default=None, help="r2 driver rows per gap group (default QC 19)")
     p.add_argument("--r9-dir", default=str(HERE.parent.parent / "results/qc_clk_mesh3/r10_inputs"),
                    help="r9_lattice.json + r9_tree5_tree_{TT,FF}_rcx.txt")
 
@@ -2266,6 +2372,14 @@ def main(argv=None):
     x.add_argument("--declared", default="TT=250,FF=202.5", help="12.3 declared common core latency per corner")
     x.add_argument("--out", required=True)
     x.set_defaults(fn=cmd_sta_export)
+    gq = sub.add_parser("grid", help="INFRA-FIRST-HEAD-2: delay-balanced tree over an arbitrary (non-2^n) drive grid")
+    gq.add_argument("--grid", required=True, help='json {"drivers": [[x, y], ...], "root": [x, y]?, "trunk_x": x?}')
+    gq.add_argument("--stage", required=True, help="stage_table.json (ngspice)")
+    gq.add_argument("--top-w", default="16w")
+    gq.add_argument("--top-m", type=int, default=2)
+    gq.add_argument("--top-reach", type=float, default=450.0)
+    gq.add_argument("--out", required=True)
+    gq.set_defaults(fn=cmd_grid)
     e = sub.add_parser("em")
     e.add_argument("loads")
     e.add_argument("--mesh-w", default="8w")
