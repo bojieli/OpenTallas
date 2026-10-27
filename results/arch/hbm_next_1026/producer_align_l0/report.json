@@ -1,0 +1,267 @@
+{
+  "source": "42d0caba4",
+  "scope": "actual allocator/emitter L0 MTP6 trial; no native execution",
+  "fused": [
+    {
+      "offset": 0,
+      "op": "HC_PRE_NORM",
+      "ABO": {
+        "A": {
+          "base": 0,
+          "space": "VM",
+          "phase": 0,
+          "stride": 20480
+        },
+        "B": {
+          "base": 17179869184,
+          "space": "HBM",
+          "phase": 0,
+          "stride": 0
+        },
+        "O": {
+          "base": 123136,
+          "space": "VM",
+          "phase": 0,
+          "stride": 5120
+        }
+      },
+      "remaining": [
+        [
+          "F1",
+          "B in HBM, not VM"
+        ]
+      ]
+    },
+    {
+      "offset": 5536,
+      "op": "HC_POST",
+      "ABO": {
+        "A": {
+          "base": 319744,
+          "space": "VM",
+          "phase": 0,
+          "stride": 5120
+        },
+        "B": {
+          "base": 123136,
+          "space": "VM",
+          "phase": 0,
+          "stride": 20480
+        },
+        "O": {
+          "base": 0,
+          "space": "VM",
+          "phase": 0,
+          "stride": 20480
+        }
+      },
+      "remaining": [
+        [
+          "F2",
+          "C word 122932 / rs_C 24 not sector aligned"
+        ]
+      ]
+    },
+    {
+      "offset": 5712,
+      "op": "HC_PRE_NORM",
+      "ABO": {
+        "A": {
+          "base": 0,
+          "space": "VM",
+          "phase": 0,
+          "stride": 20480
+        },
+        "B": {
+          "base": 17179889664,
+          "space": "HBM",
+          "phase": 0,
+          "stride": 0
+        },
+        "O": {
+          "base": 123136,
+          "space": "VM",
+          "phase": 0,
+          "stride": 5120
+        }
+      },
+      "remaining": [
+        [
+          "F1",
+          "B in HBM, not VM"
+        ]
+      ]
+    },
+    {
+      "offset": 11808,
+      "op": "HC_POST",
+      "ABO": {
+        "A": {
+          "base": 246016,
+          "space": "VM",
+          "phase": 0,
+          "stride": 5120
+        },
+        "B": {
+          "base": 123136,
+          "space": "VM",
+          "phase": 0,
+          "stride": 20480
+        },
+        "O": {
+          "base": 0,
+          "space": "VM",
+          "phase": 0,
+          "stride": 20480
+        }
+      },
+      "remaining": [
+        [
+          "F2",
+          "C word 276740 / rs_C 24 not sector aligned"
+        ]
+      ]
+    }
+  ],
+  "vm_vector_phase_pass": true,
+  "emitter": {
+    "values": 551,
+    "objects": {
+      "pinned_column": 2,
+      "row_array": 44,
+      "shared_load": 5
+    },
+    "alloc": {
+      "pinned_words": 122928,
+      "high_water": 350464,
+      "object_bound": 350400,
+      "object_peak_at": 9181.51141368356,
+      "peak_objects": [
+        {
+          "kind": "row_array",
+          "anchor": "0|SU.VOP|attn.res_copy",
+          "rows": 6,
+          "size": 20480,
+          "need": 122880,
+          "ar": [
+            20480,
+            40960
+          ],
+          "t0": 7586.3,
+          "t1": 11602.2,
+          "packed": false
+        },
+        {
+          "kind": "row_array",
+          "anchor": "0|COLL.GROUP_REDUCE_MCAST|o-group tree reduce (8 contributors) + multicast",
+          "rows": 6,
+          "size": 12288,
+          "need": 73728,
+          "ar": [
+            69952,
+            82240
+          ],
+          "t0": 7576.3,
+          "t1": 9813.1,
+          "packed": false
+        },
+        {
+          "kind": "row_array",
+          "anchor": "0|SM.MATVEC|wo_b",
+          "rows": 6,
+          "size": 5120,
+          "need": 30720,
+          "ar": [
+            82240,
+            87360
+          ],
+          "t0": 9181.5,
+          "t1": 11602.2,
+          "packed": false
+        },
+        {
+          "kind": "row_array",
+          "anchor": "0|HC.HC_MIX|hc_attn (mixes + Sinkhorn)",
+          "rows": 6,
+          "size": 24,
+          "need": 144,
+          "ar": [
+            41024,
+            41048
+          ],
+          "t0": 7585.3,
+          "t1": 13056.5,
+          "packed": false
+        }
+      ],
+      "method": "greedy_by_size",
+      "tries": {
+        "first_fit_by_time": 364800,
+        "greedy_by_size": 350464
+      },
+      "pinned_bases": {
+        "0": 0,
+        "40960": 122880
+      }
+    },
+    "c4_peak": 300038,
+    "frag_over_c4": 1.168,
+    "objects_over_c4": 1.168,
+    "aux": {
+      "union.list": [
+        350464,
+        36
+      ],
+      "union.count": [
+        350528,
+        1
+      ],
+      "union.tables": [
+        350560,
+        1152
+      ],
+      "kvunion.plan.p0": [
+        351712,
+        10240
+      ],
+      "kvunion.map.p0": [
+        361952,
+        400
+      ],
+      "kvunion.plan.p3": [
+        362368,
+        10240
+      ],
+      "kvunion.map.p3": [
+        372608,
+        400
+      ]
+    },
+    "vm_need_words": 373024,
+    "fits": {
+      "as_built": false,
+      "grown_412k": true,
+      "vm_2p19": true
+    },
+    "emit": {
+      "rowx_records": 77,
+      "ok": 85,
+      "plain_records": 8,
+      "union_expert_in_loop": 18,
+      "union_slot_group_copies_folded": 76,
+      "note_att_plan_records": 4,
+      "union_K": 7
+    },
+    "errors": [],
+    "image_bytes": 11984,
+    "livein_words": 0,
+    "livein_top": [],
+    "self_overwritten_read_words": {
+      "COLL.ALL_GATHER": 169488
+    },
+    "c4_self_overwritten": {
+      "COLL.ALL_GATHER": 432144
+    },
+    "image_sha256": "b45aa5d016e37b8e959a9bad6496be66ea9a5ea957d31b97fd5a516ae44357f9"
+  }
+}
