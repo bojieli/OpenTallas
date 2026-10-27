@@ -15,7 +15,7 @@ endmodule
 
 // This is a separate, opt-in physical type. The native 512-bit port is internal;
 // the die must bind the two real buses with the published source-bit manifest.
-module ot_hbm_svc_vmdel_lane_n_faces (
+module ot_hbm_svc_vmdel_lane_n_faces #(parameter integer PAYLOAD_BANK_CAPTURE = 0) (
  input wire clk, rst_n,
  input wire [2:0] bank_id,
  input wire begin_v_i, begin_bank_i,
@@ -38,7 +38,7 @@ module ot_hbm_svc_vmdel_lane_n_faces (
   .fill_data_w(fill_data_w), .fill_data_e(fill_data_e),
   .fill_data_native(fill_data_native)
  );
- ot_hbm_svc_vmdel_lane_n #(.NPC(2)) u_native (
+ ot_hbm_svc_vmdel_lane_n #(.NPC(2), .PAYLOAD_BANK_CAPTURE(PAYLOAD_BANK_CAPTURE)) u_native (
   .clk(clk), .rst_n(rst_n), .bank_id(bank_id),
   .begin_v_i(begin_v_i), .begin_bank_i(begin_bank_i), .begin_epoch_i(begin_epoch_i),
   .start_i(start_i), .start_bank_i(start_bank_i), .start_epoch_i(start_epoch_i),
