@@ -23,3 +23,6 @@ CODEX took over current-unified PG sizing on codex/hbm-pg-0823 (intel2 own spars
 - Successor codex/hbm-pg-pad-0828@db7baec13b (based exact HEAD5 e5f4fb2cd1) builds currentU6d core-only hub/SM PDNSim coupons at1.2709W/mm2, M8.48@4.32/M9 12.96@34.56,150um bumps/70um pads, bothVDD+VSS. Render VIEWED PASS-COND results/geom_review/hbm_pg_pad70_0828. No PHY/lower-stack/current-power/release claim.
 - LIVE epyc2:/srv/opentallas-scratch2/claude/codex-hbm-pg-0823/pad70/hub unit1899402-1793114324 and /sm unit1902779-1793114341, ot-run40GB8threads; launcher logs intel2 codex-hbm-pg-0823/{hub_psm,sm_psm}.log. Hub pdngen complete+padfallback0; collectpsm/psm.log+ir_VDD/VSS.csv then co-located sum450um interior.
 - Reset wavefront model onU6d still running intel2 unit376393-1793114067, python377288,99.8%CPU; reset.log. No duplicate started.
+
+## CODEX notes 2026-10-27 09:05 PDT: finite-pad measured result
+Core-only upper-stack co-located VDD+VSS PASS hub23.396 / SM23.151mV (450um interior), bothPGrailsconnected, padfallback0, bothjobsEXIT0. Leaves11.604/11.849mV to35 for lowerstack. Source/result codex/hbm-pg-pad-0828@9c2f9a36f1; sourceHEAD5dep, no planadoption/fullIRclaim. Actualactivity, lowerstack,PHY and correctednativecomposition stillowed. U6dreset modelPASS maxhop377.3um/88nets/23.384mm/0unreachable,maxrelease95; rerunfinaldelta. All ownPG/resetjobsDONE.
