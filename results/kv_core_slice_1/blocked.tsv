@@ -1,0 +1,7 @@
+type	item	status	reason	unblock
+qkd_kvs_ctl	source_cut	BLOCKED	B32 bound regen not landed; raw-cut preflight FAIL (shared 4442 / ft)	B32 regen on current source, then raw-cut preflight
+qkd_ahub	source_cut+LEC	BLOCKED	current-source cut WIP codex/kv-ahub-current-1026@7b3ff1b7e; lec_new3 lived on epyc1 (deleted)	finish cut, rerun LEC on intel2
+qkd_hr_ingest_eng	face_recut	BLOCKED	rtl_lint FAIL (const driver/latch); fix ffaea6dce+cf4b025ad not merged; no face_guard	merge fix, rerun face census
+qkd_ectlk_q2	pin_rename	PENDING_DELTA	D-KV-ECTLK-Q2-SI rename si[283..536]->si_283[...] queued in KV-BATCH-R2 (claude/kv-batch-r2-1026@2a130d7df6, 7fa3ef5fa8); slice view keeps plan names, coords unchanged	R2 builds q2 from slice view + KV-BATCH-R2 rename
+hr (cdc_ci,cdc_hi,guard,order,peer,prompt,queue,rx)+phy_adp,phy_pad	face_recut_+1cyc	ASK	+1-cycle buses (in_fanout/unregistered/feedthrough) need TOKEN latency table + COORD ruling; cdc_ch,cdc_pc,core_tx,host_qm are 0-cycle; face_guard lists 5 examples/class (pricing partial)	COORD ruling + TOKEN table
+all 24 clocked types	clock_entry_gate	HANDOFF	master_plan clock_entry needs plan tap <inst>.ck at slice entry (taps/band trees owned by CLOCK-KV-R15)	R15 adds partition-tree leaves at entries.json die coords

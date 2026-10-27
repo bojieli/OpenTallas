@@ -1,0 +1,115 @@
+{
+ "schema": "opentallas.kv_core_slice.v1",
+ "lane": "KV-CORE-SLICE-1",
+ "plan": "pd/hm_r12.json",
+ "plan_sha256": "96e6d1cb6054a2b0405554574ffdf898980bbcde78cc647a6b930f525f0aff7c",
+ "census": "r15_census.json",
+ "census_sha256": "0185cf34f73276bdb8bcac66cb72889b98dc694a4ca45d488dec07bb7772c2d1",
+ "mesh": "r15_mesh.json",
+ "mesh_sha256": "39f0de2abc732ad62dee8384e2c7de0291f59bc4c6a646017dc8057878402a23",
+ "applied_plan_sha256": "1814a2d8105739d949c5a203b68723f2967af0b0909125174ac64de55ba9e634",
+ "common_latency_ps": 250.0,
+ "model": {
+  "A": 86.86,
+  "B": 0.8057,
+  "FF_RATIO": 0.8118,
+  "rms_ps": 4.8,
+  "loo_max_ps": 10.9
+ },
+ "slice": {
+  "module": "qkd_ectlk_q3",
+  "outline_um": [
+   216.0,
+   172.8
+  ],
+  "instances": 32,
+  "partition_types": [
+   "kv3_hg",
+   "kv3_hg_v1",
+   "kv3_hg_v1p2",
+   "kv3_hg_v1p3",
+   "kv3_hg_v1p4",
+   "kv3_hg_v1p5",
+   "kv3_hg_v1p6",
+   "kv3_hg_v3"
+  ],
+  "pin_views": {
+   "cores/qkd_ectlk_q3_pins.json": 32
+  },
+  "die_clocked": true,
+  "entry": {
+   "xy_um": [
+    108.0,
+    86.4
+   ],
+   "island_um": [
+    103.68,
+    82.08,
+    112.32,
+    90.72
+   ],
+   "layer": "M5",
+   "via_stack": [
+    "VIA89",
+    "VIA78",
+    "VIA67",
+    "VIA56"
+   ],
+   "stack_from": "M9",
+   "pins": [
+    {
+     "pin": "ck[0]",
+     "from_": [
+      "M5",
+      108.024,
+      172.704
+     ],
+     "to": [
+      "M5",
+      108.024,
+      86.4
+     ]
+    },
+    {
+     "pin": "rst_n[0]",
+     "from_": [
+      "M5",
+      108.6,
+      172.704
+     ],
+     "to": [
+      "M5",
+      108.408,
+      86.4
+     ]
+    }
+   ],
+   "rule": "12.8a centre (outline centre on the 4.32 PG lattice)"
+  },
+  "phy_clocks": [],
+  "far_corner_um": 194.4,
+  "core_tree": {
+   "form": "single CTS tree from the centre entry",
+   "grid": [
+    1,
+    1
+   ]
+  },
+  "die_islands": null,
+  "island_conflicts": [],
+  "insertion_model": {
+   "L_max_um": 194.4,
+   "pred_TT_ps": 243.5,
+   "pred_FF_ps": 197.7,
+   "target_TT_ps": 250.0,
+   "htree": null,
+   "in_cal_range": true,
+   "band": "IN",
+   "form": "master_plan.core_insertion (CTS-grown centre-entry fit, MODEL UNCHECKED)",
+   "note": null
+  },
+  "trunk": null,
+  "m6_m7_pins": {},
+  "outline_delta": null
+ }
+}

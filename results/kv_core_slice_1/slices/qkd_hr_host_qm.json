@@ -1,0 +1,138 @@
+{
+ "schema": "opentallas.kv_core_slice.v1",
+ "lane": "KV-CORE-SLICE-1",
+ "plan": "pd/hm_r12.json",
+ "plan_sha256": "96e6d1cb6054a2b0405554574ffdf898980bbcde78cc647a6b930f525f0aff7c",
+ "census": "r15_census.json",
+ "census_sha256": "0185cf34f73276bdb8bcac66cb72889b98dc694a4ca45d488dec07bb7772c2d1",
+ "mesh": "r15_mesh.json",
+ "mesh_sha256": "39f0de2abc732ad62dee8384e2c7de0291f59bc4c6a646017dc8057878402a23",
+ "applied_plan_sha256": "1814a2d8105739d949c5a203b68723f2967af0b0909125174ac64de55ba9e634",
+ "common_latency_ps": 250.0,
+ "model": {
+  "A": 86.86,
+  "B": 0.8057,
+  "FF_RATIO": 0.8118,
+  "rms_ps": 4.8,
+  "loo_max_ps": 10.9
+ },
+ "slice": {
+  "module": "qkd_hr_host_qm",
+  "outline_um": [
+   77.76,
+   77.76
+  ],
+  "instances": 1,
+  "partition_types": [
+   "kv3_hub_Wi"
+  ],
+  "pin_views": {
+   "cores/qkd_hr_host_qm_pins.json": 1
+  },
+  "die_clocked": true,
+  "entry": {
+   "xy_um": [
+    38.88,
+    38.88
+   ],
+   "island_um": [
+    34.56,
+    34.56,
+    43.2,
+    43.2
+   ],
+   "layer": "M5",
+   "via_stack": [
+    "VIA89",
+    "VIA78",
+    "VIA67",
+    "VIA56"
+   ],
+   "stack_from": "M9",
+   "pins": [
+    {
+     "pin": "ck[0]",
+     "from_": [
+      "M5",
+      38.904,
+      77.76
+     ],
+     "to": [
+      "M5",
+      38.904,
+      38.88
+     ]
+    },
+    {
+     "pin": "rst_n[0]",
+     "from_": [
+      "M5",
+      70.344,
+      0.0
+     ],
+     "to": [
+      "M5",
+      39.288,
+      38.88
+     ]
+    }
+   ],
+   "rule": "12.8a centre (outline centre on the 4.32 PG lattice)"
+  },
+  "phy_clocks": [],
+  "far_corner_um": 77.76,
+  "core_tree": {
+   "form": "single CTS tree from the centre entry",
+   "grid": [
+    1,
+    1
+   ]
+  },
+  "die_islands": null,
+  "island_conflicts": [],
+  "insertion_model": {
+   "L_max_um": 77.76,
+   "pred_TT_ps": 149.5,
+   "pred_FF_ps": 121.4,
+   "target_TT_ps": 250.0,
+   "htree": null,
+   "in_cal_range": false,
+   "band": "LOW (trunk)",
+   "form": "master_plan.core_insertion (CTS-grown centre-entry fit, MODEL UNCHECKED)",
+   "note": null
+  },
+  "trunk": {
+   "cell": "BUFx4_ASAP7_75t_R",
+   "n": 4,
+   "delay_ps": {
+    "TT": 95.6,
+    "FF": 70.4
+   },
+   "pred_after_ps": {
+    "TT": 245.1,
+    "FF": 191.8
+   },
+   "place": "in the entry island ahead of the CTS root, dont_touch, identical in every instance",
+   "frozen": "with the plan; a miss -> plan model fix + PLAN-DELTA (12.8e), never a post-measurement change"
+  },
+  "m6_m7_pins": {},
+  "outline_delta": null,
+  "face_recut_price": {
+   "checked": 8,
+   "ok": 7,
+   "fail_counts": {
+    "shared": 1
+   },
+   "bits_by_fix": {
+    "out_shared": 1
+   },
+   "private_q_ff": 1,
+   "pin_drops": 0,
+   "plus1_buses": 0,
+   "plus1_bits": 0,
+   "plus1_bus_list": [],
+   "zero_cycle": true,
+   "listed_complete": true
+  }
+ }
+}

@@ -1,0 +1,109 @@
+{
+ "schema": "opentallas.kv_core_slice.v1",
+ "lane": "KV-CORE-SLICE-1",
+ "plan": "pd/hm_r12.json",
+ "plan_sha256": "96e6d1cb6054a2b0405554574ffdf898980bbcde78cc647a6b930f525f0aff7c",
+ "census": "r15_census.json",
+ "census_sha256": "0185cf34f73276bdb8bcac66cb72889b98dc694a4ca45d488dec07bb7772c2d1",
+ "mesh": "r15_mesh.json",
+ "mesh_sha256": "39f0de2abc732ad62dee8384e2c7de0291f59bc4c6a646017dc8057878402a23",
+ "applied_plan_sha256": "1814a2d8105739d949c5a203b68723f2967af0b0909125174ac64de55ba9e634",
+ "common_latency_ps": 250.0,
+ "model": {
+  "A": 86.86,
+  "B": 0.8057,
+  "FF_RATIO": 0.8118,
+  "rms_ps": 4.8,
+  "loo_max_ps": 10.9
+ },
+ "slice": {
+  "module": "kv3_astk",
+  "outline_um": [
+   190.08,
+   181.44
+  ],
+  "instances": 4,
+  "partition_types": [
+   "kv3_hub_Eo",
+   "kv3_hub_Wo"
+  ],
+  "pin_views": {
+   "cores/kv3_astk_pins.json": 4
+  },
+  "die_clocked": true,
+  "entry": {
+   "xy_um": [
+    95.04,
+    90.72
+   ],
+   "island_um": [
+    90.72,
+    86.4,
+    99.36,
+    95.04
+   ],
+   "layer": "M5",
+   "via_stack": [
+    "VIA89",
+    "VIA78",
+    "VIA67",
+    "VIA56"
+   ],
+   "stack_from": "M9",
+   "pins": [
+    {
+     "pin": "ck[None]",
+     "from_": [
+      "M4",
+      0.0,
+      90.696
+     ],
+     "to": [
+      "M5",
+      95.064,
+      90.72
+     ]
+    },
+    {
+     "pin": "rst_n[None]",
+     "from_": [
+      "M4",
+      0.0,
+      90.792
+     ],
+     "to": [
+      "M5",
+      95.448,
+      90.72
+     ]
+    }
+   ],
+   "rule": "12.8a centre (outline centre on the 4.32 PG lattice)"
+  },
+  "phy_clocks": [],
+  "far_corner_um": 185.76,
+  "core_tree": {
+   "form": "single CTS tree from the centre entry",
+   "grid": [
+    1,
+    1
+   ]
+  },
+  "die_islands": null,
+  "island_conflicts": [],
+  "insertion_model": {
+   "L_max_um": 185.76,
+   "pred_TT_ps": 236.5,
+   "pred_FF_ps": 192.0,
+   "target_TT_ps": 250.0,
+   "htree": null,
+   "in_cal_range": true,
+   "band": "IN",
+   "form": "master_plan.core_insertion (CTS-grown centre-entry fit, MODEL UNCHECKED)",
+   "note": null
+  },
+  "trunk": null,
+  "m6_m7_pins": {},
+  "outline_delta": null
+ }
+}

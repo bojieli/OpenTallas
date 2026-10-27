@@ -1,0 +1,216 @@
+{
+ "schema": "opentallas.kv_core_slice.v1",
+ "lane": "KV-CORE-SLICE-1",
+ "plan": "pd/hm_r12.json",
+ "plan_sha256": "96e6d1cb6054a2b0405554574ffdf898980bbcde78cc647a6b930f525f0aff7c",
+ "census": "r15_census.json",
+ "census_sha256": "0185cf34f73276bdb8bcac66cb72889b98dc694a4ca45d488dec07bb7772c2d1",
+ "mesh": "r15_mesh.json",
+ "mesh_sha256": "39f0de2abc732ad62dee8384e2c7de0291f59bc4c6a646017dc8057878402a23",
+ "applied_plan_sha256": "1814a2d8105739d949c5a203b68723f2967af0b0909125174ac64de55ba9e634",
+ "common_latency_ps": 250.0,
+ "model": {
+  "A": 86.86,
+  "B": 0.8057,
+  "FF_RATIO": 0.8118,
+  "rms_ps": 4.8,
+  "loo_max_ps": 10.9
+ },
+ "slice": {
+  "module": "qkd_hr_core_order",
+  "outline_um": [
+   328.32,
+   328.32
+  ],
+  "instances": 1,
+  "partition_types": [
+   "kv3_hub_Wi"
+  ],
+  "pin_views": {
+   "cores/qkd_hr_core_order_pins.json": 1
+  },
+  "die_clocked": true,
+  "entry": {
+   "xy_um": [
+    164.16,
+    164.16
+   ],
+   "island_um": [
+    159.84,
+    159.84,
+    168.48,
+    168.48
+   ],
+   "layer": "M5",
+   "via_stack": [
+    "VIA89",
+    "VIA78",
+    "VIA67",
+    "VIA56"
+   ],
+   "stack_from": "M9",
+   "pins": [
+    {
+     "pin": "ck[0]",
+     "from_": [
+      "M5",
+      164.28,
+      328.32
+     ],
+     "to": [
+      "M5",
+      164.184,
+      164.16
+     ]
+    }
+   ],
+   "rule": "12.8a centre (outline centre on the 4.32 PG lattice)"
+  },
+  "phy_clocks": [],
+  "far_corner_um": 328.32,
+  "core_tree": {
+   "form": "internal H-tree from the entry (12.8b)",
+   "grid": [
+    2,
+    2
+   ],
+   "grid_candidates": [
+    {
+     "leaf_reach_limit_um": 200.0,
+     "grid": [
+      2,
+      2
+     ],
+     "islands": 4,
+     "pred_TT_ps": 251.9
+    },
+    {
+     "leaf_reach_limit_um": 150.0,
+     "grid": [
+      4,
+      2
+     ],
+     "islands": 8,
+     "pred_TT_ps": 226.7
+    },
+    {
+     "leaf_reach_limit_um": 110.0,
+     "grid": [
+      4,
+      4
+     ],
+     "islands": 16,
+     "pred_TT_ps": 201.4
+    }
+   ],
+   "leaf_reach_um": 164.16,
+   "islands": [
+    {
+     "centre_um": [
+      82.08,
+      82.08
+     ],
+     "rect_um": [
+      77.76,
+      77.76,
+      86.4,
+      86.4
+     ]
+    },
+    {
+     "centre_um": [
+      82.08,
+      246.24
+     ],
+     "rect_um": [
+      77.76,
+      241.92,
+      86.4,
+      250.56
+     ]
+    },
+    {
+     "centre_um": [
+      246.24,
+      82.08
+     ],
+     "rect_um": [
+      241.92,
+      77.76,
+      250.56,
+      86.4
+     ]
+    },
+    {
+     "centre_um": [
+      246.24,
+      246.24
+     ],
+     "rect_um": [
+      241.92,
+      241.92,
+      250.56,
+      250.56
+     ]
+    }
+   ],
+   "trunk_um": [
+    164.16,
+    164.16,
+    164.16,
+    164.16
+   ]
+  },
+  "die_islands": null,
+  "island_conflicts": [],
+  "insertion_model": {
+   "L_max_um": 328.32,
+   "pred_TT_ps": 251.9,
+   "pred_FF_ps": 204.6,
+   "target_TT_ps": 250.0,
+   "htree": {
+    "leaf_TT_ps": 219.1,
+    "leaf_FF_ps": 177.9,
+    "trunk_um": 164.16,
+    "trunk_TT_ps": 32.8,
+    "pred_TT_ps": 251.9,
+    "pred_FF_ps": 204.6,
+    "form": "leaf = core_insertion(leaf reach) + trunk 0.20 ps/um x centre->island Manhattan (MODEL UNCHECKED)"
+   },
+   "in_cal_range": false,
+   "band": "IN",
+   "form": "master_plan.core_insertion (CTS-grown centre-entry fit, MODEL UNCHECKED)",
+   "note": "H-tree cores: plan-built tree, predicted by core_infra_htree at kit time"
+  },
+  "trunk": null,
+  "m6_m7_pins": {},
+  "outline_delta": null,
+  "face_recut_price": {
+   "checked": 2279,
+   "ok": 561,
+   "fail_counts": {
+    "shared": 1705,
+    "feedthrough": 8,
+    "dropped": 4,
+    "unregistered": 1
+   },
+   "bits_by_fix": {
+    "out_shared": 5,
+    "feedthrough": 5,
+    "dropped": 4,
+    "unregistered": 1
+   },
+   "private_q_ff": 5,
+   "pin_drops": 4,
+   "plus1_buses": 3,
+   "plus1_bits": 6,
+   "plus1_bus_list": [
+    "u_chain__chain_f",
+    "u_chain__chain_fault",
+    "u_dispatch__fault"
+   ],
+   "zero_cycle": false,
+   "listed_complete": false
+  }
+ }
+}

@@ -1,0 +1,85 @@
+{
+ "schema": "opentallas.kv_core_slice.v1",
+ "lane": "KV-CORE-SLICE-1",
+ "plan": "pd/hm_r12.json",
+ "plan_sha256": "96e6d1cb6054a2b0405554574ffdf898980bbcde78cc647a6b930f525f0aff7c",
+ "census": "r15_census.json",
+ "census_sha256": "0185cf34f73276bdb8bcac66cb72889b98dc694a4ca45d488dec07bb7772c2d1",
+ "mesh": "r15_mesh.json",
+ "mesh_sha256": "39f0de2abc732ad62dee8384e2c7de0291f59bc4c6a646017dc8057878402a23",
+ "applied_plan_sha256": "1814a2d8105739d949c5a203b68723f2967af0b0909125174ac64de55ba9e634",
+ "common_latency_ps": 250.0,
+ "model": {
+  "A": 86.86,
+  "B": 0.8057,
+  "FF_RATIO": 0.8118,
+  "rms_ps": 4.8,
+  "loo_max_ps": 10.9
+ },
+ "slice": {
+  "module": "qkd_hr_phy_pad",
+  "outline_um": [
+   86.4,
+   95.04
+  ],
+  "instances": 1,
+  "partition_types": [
+   "kv3_hub_Wi"
+  ],
+  "pin_views": {
+   "cores/qkd_hr_phy_pad_pins.json": 1
+  },
+  "die_clocked": false,
+  "entry": null,
+  "phy_clocks": [
+   {
+    "pin": "ck_phy[0]",
+    "layer": "M5",
+    "xy": [
+     43.224,
+     95.04
+    ],
+    "face": "N"
+   }
+  ],
+  "far_corner_um": 90.72,
+  "core_tree": null,
+  "die_islands": null,
+  "island_conflicts": [],
+  "insertion_model": null,
+  "trunk": null,
+  "m6_m7_pins": {},
+  "outline_delta": {
+   "old_um": [
+    138.24,
+    129.6
+   ],
+   "new_um": [
+    86.4,
+    95.04
+   ],
+   "anchor": "SE"
+  },
+  "face_recut_price": {
+   "checked": 1575,
+   "ok": 1026,
+   "fail_counts": {
+    "shared": 548,
+    "feedthrough": 1
+   },
+   "bits_by_fix": {
+    "out_shared": 5,
+    "feedthrough": 1
+   },
+   "private_q_ff": 5,
+   "pin_drops": 0,
+   "plus1_buses": 1,
+   "plus1_bits": 1,
+   "plus1_bus_list": [
+    "out_v"
+   ],
+   "zero_cycle": false,
+   "listed_complete": false
+  }
+ }
+}

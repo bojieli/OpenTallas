@@ -1,0 +1,188 @@
+{
+ "schema": "opentallas.kv_core_slice.v1",
+ "lane": "KV-CORE-SLICE-1",
+ "plan": "pd/hm_r12.json",
+ "plan_sha256": "96e6d1cb6054a2b0405554574ffdf898980bbcde78cc647a6b930f525f0aff7c",
+ "census": "r15_census.json",
+ "census_sha256": "0185cf34f73276bdb8bcac66cb72889b98dc694a4ca45d488dec07bb7772c2d1",
+ "mesh": "r15_mesh.json",
+ "mesh_sha256": "39f0de2abc732ad62dee8384e2c7de0291f59bc4c6a646017dc8057878402a23",
+ "applied_plan_sha256": "1814a2d8105739d949c5a203b68723f2967af0b0909125174ac64de55ba9e634",
+ "common_latency_ps": 250.0,
+ "model": {
+  "A": 86.86,
+  "B": 0.8057,
+  "FF_RATIO": 0.8118,
+  "rms_ps": 4.8,
+  "loo_max_ps": 10.9
+ },
+ "slice": {
+  "module": "qkd_hr_cdc_hi",
+  "outline_um": [
+   224.64,
+   224.64
+  ],
+  "instances": 1,
+  "partition_types": [
+   "kv3_hub_Wi"
+  ],
+  "pin_views": {
+   "cores/qkd_hr_cdc_hi_pins.json": 1
+  },
+  "die_clocked": true,
+  "entry": {
+   "xy_um": [
+    112.32,
+    112.32
+   ],
+   "island_um": [
+    108.0,
+    108.0,
+    116.64,
+    116.64
+   ],
+   "layer": "M5",
+   "via_stack": [
+    "VIA89",
+    "VIA78",
+    "VIA67",
+    "VIA56"
+   ],
+   "stack_from": "M9",
+   "pins": [
+    {
+     "pin": "ck[0]",
+     "from_": [
+      "M5",
+      112.344,
+      224.64
+     ],
+     "to": [
+      "M5",
+      112.344,
+      112.32
+     ]
+    }
+   ],
+   "rule": "12.8a centre (outline centre on the 4.32 PG lattice)"
+  },
+  "phy_clocks": [],
+  "far_corner_um": 224.64,
+  "core_tree": {
+   "form": "internal H-tree from the entry (12.8b)",
+   "grid": [
+    2,
+    1
+   ],
+   "grid_candidates": [
+    {
+     "leaf_reach_limit_um": 200.0,
+     "grid": [
+      2,
+      1
+     ],
+     "islands": 2,
+     "pred_TT_ps": 233.8
+    },
+    {
+     "leaf_reach_limit_um": 150.0,
+     "grid": [
+      2,
+      2
+     ],
+     "islands": 4,
+     "pred_TT_ps": 199.9
+    },
+    {
+     "leaf_reach_limit_um": 110.0,
+     "grid": [
+      4,
+      2
+     ],
+     "islands": 8,
+     "pred_TT_ps": 183.2
+    }
+   ],
+   "leaf_reach_um": 168.48,
+   "islands": [
+    {
+     "centre_um": [
+      56.16,
+      112.32
+     ],
+     "rect_um": [
+      51.84,
+      108.0,
+      60.48,
+      116.64
+     ]
+    },
+    {
+     "centre_um": [
+      168.48,
+      112.32
+     ],
+     "rect_um": [
+      164.16,
+      108.0,
+      172.8,
+      116.64
+     ]
+    }
+   ],
+   "trunk_um": [
+    56.16,
+    56.16
+   ]
+  },
+  "die_islands": null,
+  "island_conflicts": [],
+  "insertion_model": {
+   "L_max_um": 224.64,
+   "pred_TT_ps": 233.8,
+   "pred_FF_ps": 189.8,
+   "target_TT_ps": 250.0,
+   "htree": {
+    "leaf_TT_ps": 222.6,
+    "leaf_FF_ps": 180.7,
+    "trunk_um": 56.16,
+    "trunk_TT_ps": 11.2,
+    "pred_TT_ps": 233.8,
+    "pred_FF_ps": 189.8,
+    "form": "leaf = core_insertion(leaf reach) + trunk 0.20 ps/um x centre->island Manhattan (MODEL UNCHECKED)"
+   },
+   "in_cal_range": false,
+   "band": "IN",
+   "form": "master_plan.core_insertion (CTS-grown centre-entry fit, MODEL UNCHECKED)",
+   "note": "H-tree cores: plan-built tree, predicted by core_infra_htree at kit time"
+  },
+  "trunk": null,
+  "m6_m7_pins": {},
+  "outline_delta": null,
+  "face_recut_price": {
+   "checked": 1173,
+   "ok": 5,
+   "fail_counts": {
+    "shared": 588,
+    "unregistered": 580
+   },
+   "bits_by_fix": {
+    "out_shared": 1,
+    "in_fanout": 3,
+    "reset_ctl": 1,
+    "unregistered": 5
+   },
+   "private_q_ff": 1,
+   "pin_drops": 0,
+   "plus1_buses": 3,
+   "plus1_bits": 8,
+   "plus1_bus_list": [
+    "u_cx__rd",
+    "u_cx__rdata",
+    "u_cx__wdata"
+   ],
+   "zero_cycle": false,
+   "listed_complete": false
+  }
+ }
+}
