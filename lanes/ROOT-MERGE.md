@@ -138,3 +138,9 @@ HOLD (do NOT merge): codex/qc-crom-bind-1026@d58e17858a (folds into ONE QC infra
 - HOLD kv-land-r3 3873151ece (conflicts + KV plan adoption beyond approval), join2 (no READY), bf_col recipe (owner). Flow-watched: hbm-hc-plainid + master-plan-r3-tip -> tags stay on e68117ea12.
 - Lesson: never edit the merge worktree while gates.sh runs on it; pgrep/pkill -f on a pattern in the ssh command kills the ssh shell itself.
 - No live jobs. Worktree epyc1:/srv/opentallas-scratch2/claude/wt/root-merge19 removed at park.
+
+## PARKED ROOT-MERGE-22 2026-10-26 18:10 PDT
+- main = c25f354461 (hub ff'd). Chain on 8ab0304725: 3d103a3f04 pdn-one ff81c089a -> 63f0898a30 tok-ds-6 4997aa68d7 (results) -> e737f193ca..9c9a9eb91e plan chain (master-plan-r6, model-refit, plan-icg-model, su-kit-gate, path-hbm-r7, path-hbm-r8) -> b73cf6407b kv-land-adapter, 90a23c8338 s81-core-lat-r6, 04c40208b8 fallback-kv, 8f40bf00c7 fallback-head (clock_landing_plan conflict resolved), 141504be7a clock-kv-r2 (+KV plan tap_window/seam_hold keys), d42ddbeafe ROOT test fix (fallback_land module-name clash) -> c25f354461 yosys-concat 47aa9825d.
+- Gates baseline every step: G0 QC 0 / head 0 / S81 13 / KV 13 / B2n 37; die_plan pytest only test_core_infra tkinter ENV. Script epyc1:/srv/opentallas-scratch2/claude/rm22/gates.sh (arg1 wt, arg2 out); 5-plan master_plan byte check rm22/mp.sh.
+- COLLECT (stopped, >30 min): pdn-one HBM canary pdn-one-1026/canary/hbm_ff81c089a_1026_140127_731599; yosys hbm + qwen_kvsys_core rm22/canary/*_31b728aff_1026_162751_900014 (keep wt/rm22-yc until done, then remove). canary.py check --root /srv/opentallas-scratch2/claude/flow-canary/runs.
+- HELD: kv-tok-bootabi2 1b4bd820a (KV run6), clock128-r4 1e8203d640 (QC-MP-REGION). Lesson: two lanes added same-named modules (tools/die_plan/fallback_land.py vs tools/s81_head/fallback_land.py) -> sys.path order broke a test after merge; run each merged branch's own tests on the stacked tree.
