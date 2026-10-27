@@ -1,0 +1,60 @@
+{
+  "status": "COMPONENT_PASS; physical and token NOT_RUN",
+  "base": "5ad3d04c55",
+  "mux": {
+    "cycles": 2812,
+    "frames": 803,
+    "positive": "PASS",
+    "mutant1": "CAUGHT premature CSR",
+    "mutant2": "CAUGHT dropped fault"
+  },
+  "hbc": {
+    "rx_only0_modes": "0..5 PASS",
+    "rx_only1_modes": "0..5 PASS"
+  },
+  "provider_lint": "Elaboration PASS; no changed-file WIDTH/SELRANGE; inherited primitive warnings retained",
+  "leaf_bind": "PASS gen.py rtl --types hd_host --rtl-root",
+  "boot_dates": "UNRESOLVED explicit compiler params; defaults not admitted",
+  "rx_only_return_probe": "PASS all6 modes at RX_ONLY1 with nonzero local/return rings; original RX_ONLY0 control passes all6",
+  "staging_failure": "First probe NOT RUN after helper imported unstaged die_plan/gen; fixed with standalone source closure and reran successfully.",
+  "combined_source_providers": {
+    "candidate_only": true,
+    "partition_types": 16,
+    "ports": 427,
+    "leaf_binding": "PASS ctl,host,lep0N,mesh --rtl-root",
+    "module_check": "PASS missing0/unresolved0",
+    "ctl_commit": "e58bbcd7da",
+    "host_commit": "1e7937b2f7",
+    "physical": "NOT_RUN",
+    "production_boot": "UNRESOLVED compiler slots"
+  },
+  "head_host_frames": {
+    "status": "PASS real two-core TEST boot and ordinary HFWD mechanism; production token/STA not run",
+    "root_contract": "Explicit default-off HOST_FRAMES omits inapplicable S81 HBE consumer, retains actual HBC authority loader/book and context/date/CRC/job admission",
+    "mux": {
+      "cycles": 2817,
+      "frames": 804,
+      "mutants": "premature CSR, dropped fault, flipped payload all CAUGHT"
+    },
+    "default_hbc": "modes0..5 PASS RX_ONLY0 and RX_ONLY1; HOST_FRAMES defaults0",
+    "test_hbc_boot": [
+      501,
+      505,
+      511
+    ],
+    "test_peer_launch": [
+      472,
+      476,
+      482
+    ],
+    "measured_peer_to_hbc_edges": 29,
+    "observed_context_bench_cycle": 522,
+    "observed_issue_config_bench_cycle": 637,
+    "configuration_records": 7,
+    "ordinary_hfwd": "full512-bit payload survives safe8, HBC stripping, HOST276, ctl stagekind6",
+    "physical_payload_mutant3": "CAUGHT full512 payload mismatch",
+    "test_start_boot_edge": 750,
+    "clock_period_ps": 833,
+    "production_boot": "UNRESOLVED; TEST profile never adopted"
+  }
+}
