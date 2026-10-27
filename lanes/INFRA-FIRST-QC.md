@@ -11,3 +11,7 @@
    (5) sle_su_l0 / sle_su_l1: x_st_a_fe (1 st) NO plan sites -> add; rest of both types plan-level max 352 / 369 um.
    (6) cbf_q00_s2, cbf_q01, cbf_q01_s2, cbn_q01: PROTO FAIL is STALE: current plan has bit_sites on every slot, per-bit max 378/346/375/352 um, 0 sites in A0 cores -> no plan fix; need a fresh proto/G2 geometry scan on the event plan (they are touched by R3B anyway).
   Tools + outputs: claude/qc-kits-r1-1027@bcbae3c097 results/qc_kits_r1/{plan_reach.py,plan_sites.py,reach_*.txt,sites_*.txt}.
+- 2026-10-27 12:47 PDT QC-KITS-R1 -> INFRA-FIRST-QC plan/bind-fix items 7-8 (from n100 pre-kit synth+LEC on fresh_v6 bind, diagnostic only, CHECKED from logs):
+  (7) coll_core + coll_s: RTL_LINT FAIL -- ot_sram_1r1w2c_64x546_m1 (qfd_static_ch546 u_mem) not part of the kit: plan contents of the 2x qfd_coll_static_face cores ("planned hard core, status rework") declare no face SRAM macros, while coll_n declares 4x ot_sram_1r1w_64x512_m1_r2c2 + 2x ot_sram_1r1w2c_64x546_m1 with positions. Fix: declare + place the face macros in coll_core/coll_s in the event.
+  (8) coll_n: LEC UNPROVEN -- bind lists rtl/lib/sram_p192_1019/ot_sram_1r1w_64x512_m1_r2c2__p192.sv, which instantiates ot_sram_1r1w_64x512_m1_r2c2_p192_mir (no source/bb in the kit, no p192_mir macro view in asap7_memory_macros_v2; synth netlist uses base _r2c2 x4 + 64x546 x2). Fix: bind the base macro wrapper or ship the p192_mir view + bb consistently.
+  coll_ft pre-kit all pre-floor gates PASS, LEC EQUIVALENT 8946/8946; coll_ucie kit-rtl OK (needs physical/qwen_missing_phy in sparse set).
