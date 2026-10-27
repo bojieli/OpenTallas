@@ -1,6 +1,6 @@
-import json,numpy as np,itertools,collections,math
+import json,numpy as np,itertools,collections,math,pathlib,sys
 from scipy.optimize import linprog
-P=json.load(open('/tmp/pv_current.json'));moves=[];fails=[]
+P=json.load(open(sys.argv[1]));out=pathlib.Path(sys.argv[2]);out.mkdir(parents=True,exist_ok=True);moves=[];fails=[]
 def box(h):
  x,y=h['origin_um'];dx,dy=h.get('track_offset_um',[0,0]);w,hh=h['outline_um'];return min(x,x+dx),min(y,y+dy),max(x+w,x+dx+w),max(y+hh,y+dy+hh)
 def hit(a,b):return min(a[2],b[2])-max(a[0],b[0])>1e-7 and min(a[3],b[3])-max(a[1],b[1])>1e-7
@@ -40,4 +40,4 @@ for tn,t in P['partition_types'].items():
    if abs(dx)+abs(dy)>1e-6:moves.append(dict(type=tn,slot=slot['name'],stage=j+1,old=g,new=ng,delta_um=[dx,dy],cycles_added=0))
   slot['bit_sites_um']=new
 print('MOVED',len(moves),'FAIL',fails)
-json.dump(P,open('/tmp/pv_solved.json','w'),indent=1);json.dump(moves,open('/tmp/pv_solved_delta.json','w'),indent=1);json.dump(fails,open('/tmp/pv_solved_pending.json','w'),indent=1)
+json.dump(P,open(out/'pv_solved.json','w'),indent=1);json.dump(moves,open(out/'pv_solved_delta.json','w'),indent=1);json.dump(fails,open(out/'pv_solved_pending.json','w'),indent=1)
