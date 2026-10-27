@@ -740,3 +740,39 @@ CODEX 2026-10-27 05:01 PDT MC gradient fix completed TT+FF24 samples each (own a
 - (3) claude/mc-gapfold-1027@dffd539c3c is READY for ROOT-MERGE (queued). It affects all dies. S81 PD9 TT p50 24.9 -> 21.06, p99 156.1 -> 152.05, max 278.38 unchanged (CHECKED).
 - Live jobs of mine: none.
 - 2026-10-27 06:39 PDT ROOT-MERGE-31 NOTICE: main 471dd392b5 carries (a) core-view match-pins default ON + pin-file content sha (gate-pins-content 03a0552428): views signed off on old pin files no longer count -- regenerate; (b) mc-gapfold dffd539c3c: RC gap folded per MC sample in die STA; (c) clock entry port centre snapped onto its track + check-kit on-track/>=0.048x0.48 check (clock-port-track 51646a5c4d); (d) R24 apply_clkmesh_sites in-core islands, opt-in --hb4-delay.
+
+## [PATH-S81-PD12 2026-10-27 06:46 PDT] (A) DONE: mesh-via fail-closed check READY (all dies). (B) The vias are now in the DB, but the result is unchanged: the transient and MC already modelled shorted crossings, so the split-line tail is real, not a via artefact. (C) Only a UNIFORM wide mesh closes the split lines (128w: max U 70 ps). It costs ~4 W and a predicted driver slew over 320 ps. A local band moves the tail to the band edge. (D) predicted only, not built. Lane branch claude/path-s81-pd12-1027@0b4a838f78; shared tool claude/mesh-vias-g0-1027@ad7c8d2e0a. Run dir intel1:/srv/opentallas-scratch2/claude/path-s81-pd12-1027.
+- (A) Shared tool on main 8810c5e6a4, 5 files:
+  - die_clock_mesh combo now emits a VIA89 at every strap crossing by DEFAULT. --no-mesh-vias is a diagnostic-only opt-out.
+  - New mesh_via_findings. It treats a regionless continuous mesh as one region; the old mesh_connected returned {} for that case and so silently passed. It counts macro-clipped crossings the way combo emits them. It takes the routed OT_MESH_VIAS minimum over EVERY corner log, and a missing line counts as 0.
+  - check.py --clock-build DIR (repeatable) reports a plain G0 ERROR in both G0 and G0C. die_sta_related --mesh-signoff now refuses a mesh without the vias, and 'report' marks it BLOCKED. A standalone check: die_clock_mesh.py meshvias DIR.
+  - Tests: test_mesh_vias 8/8 PASS. The full tools/die_plan suite fails the same 84 tests as origin/main (env), with +8 new passes. CHECKED.
+  - Check on the old S81 PD9 me1: FAILs, "no M8-M9 vias at its 4096 crossings". On the new me1v: continuous.
+- OTHER DIES (read-only survey, UNCHECKED): ALL have the gap.
+  - KV r22u: 0/2,048. The chain dropped --mesh-vias from r13 on; r8-r11 had the vias.
+  - HBM r15 runF2/runS2 mesh_b: 0/2,048.
+  - QC guard51 (Codex): the routed DB has 0 straps AND 0 vias. The mesh exists only as a model lattice, while the MC/STA treat it as connected.
+  - S81-HEAD r15 m5 (head_mesh_r3): no vias and no routed DB. Its "continuity PASS" is purely geometric. The routed v2s has 0/1,024.
+  - Fix: after the merge, the default combo fixes KV and HBM. QC must first draw its straps in combo. HEAD needs a via-emitting export or must go through die_clock_mesh combo.
+- (B) me1v = PD9 me1 build with combo --mesh-vias --merge-shields:
+  - Routed OT_MESH_VIAS 4096/4096 in TT and FF. GRT overflow 0/0/0, usage identical to PD9 (M8 2.37 / M9 2.67 %). RCX 13,171 nets, 0 disconnected.
+  - Stub-in TT 6712.94-6964.51, FF 5546.84-5766.86: identical to PD9. MC (gap-fold mesh_mc18, 24 samples) TT nominal 220.61 / mc 263.24 / gradient 286.96: identical.
+  - Per-pair U <=1 mm, gap folded: TT p50 21.1 / p99 152.1 / max 278.4 with 3,952 > 80; FF p50 20.6 / p99 139.3 / max 254.4. Split lines TT: x p50 187 / max 261, y p50 155 / max 278. CHECKED (own script; reproduces PD10/PD11).
+  - Why nothing moved: the vias add continuity in the DB, but the model had already merged the crossings. The mesh does not average because one 4w strap pitch is ~1.04 kOhm on M8 (492 um x 2.115 Ohm/um), against ~0.2 kOhm per driver site. Each driver owns its node.
+- (C) Model what-ifs (main mesh_mc18 + RC_R6 width extrapolation, cf = 0.9 + 0.0875 w; TT, 8 samples, gap term excluded; UNCHECKED). Format: p99 / max / pairs > 80 / split-line p50 x,y.
+  - Uniform strap width:
+    - 4w: 159 / 289 / 3504 / 188,161
+    - 16w: 104 / 234 / 1591
+    - 64w: 55 / 118 / 101 / 49,42
+    - 128w: 41 / 70 / 0 / 36,30
+    - 256w: 32 / 50 / 0
+  - Stronger drivers (x4 BUFx24 per site) make U WORSE: 128w k4 max 143, 64w k4 max 212. Averaging needs strap R per pitch well below driver R.
+  - Cost (estimate, UNCHECKED): total strap length is 3.41 m. Mesh cap is 0.64 nF at 4w, 3.6 nF at 64w and 6.8 nF at 128w, i.e. about +1.8 W (64w) and +3.6 W (128w) at TT, 1.2 GHz. Per-site tau = 0.2 kOhm x 0.9 / 1.65 pF gives an edge of ~400 / ~730 ps, over the 320 slew limit. Restoring the slew with stronger drivers kills the averaging. Width is cheap in tracks: 128w = 64 x 5.1 um, ~1.5 % of M8.
+  - Local split-line band (128w or 64w, +-1-2 mm, cross or full) fixes the split line itself: 128w 2 mm full gives split max 76/72. But the tail moves to the band EDGES (whole-die max 303, 3,949 > 80), because the band drivers are loaded more and lag. Render umap_TT.png VIEWED: the built mesh shows hot crosses at the L1/L2 lines and also at the L3 lines (x ~8/24 mm); uniform 128w is clean; the band shows hot frames at its edges.
+  - Not built (predict-first): no structure closes at an acceptable cost yet. A graded band (width taper) with plan-computed band driver sizing (12.8 d1) is the remaining mesh option; it needs a model first.
+- (D) 405-um cap on PD9 me1 (dpred.py, x-first L, band trees excluded, UNCHECKED):
+  - 380 legs over 405 (L1-3 14, L8 50, L10 107, L11 176, L12 26). 382 repeaters to add.
+  - 86 of the 606 repeater positions on those legs have no free die-top site within the hop slack. These are in-core pushdowns beyond the declared islands (L2 26, L8 27, L12 14, L10 10; repeated eh/f* cores).
+  - The band trees also need one more equal level (PD11: half-depth 482).
+  - Note: the split-line U is dominated by the unshared-tree GRADIENT term (0.21 %/mm over a ~6.7 ns insertion). An extra level ADDS insertion delay, so (D) alone will not cut the split-line U. A shorter/faster upper tree (L1-L6 sizing) is what reduces the gradient term.
+- Live jobs of mine: none. Worktrees on intel1: wt/path-s81-pd12-1027 and wt/mesh-vias-g0-1027 (sparse); both pushed.
