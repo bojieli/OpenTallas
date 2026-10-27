@@ -143,3 +143,30 @@ change to pin faces, landings or lanes, and no new straps. The CFG DP field repl
     - Held rows in the bench: ex 40, rx 29-40. ex was 40 on all three seeds; I did not look into why.
   - Ingress cycle count is still the UNCHECKED arithmetic: 2,401 per half at B=40, or 1,905 data-exact, vs 3,809 measured. The bench proves PK2 landing correct, not this count.
   - LEC for ROWX=0 is still not closed in Yosys (239k unproven). The regression evidence is the miter above.
+- 2026-10-26 19:18 PDT Claude S81-ROWX-2: rank-order export slots + B=80 fallback PUSHED claude/s81-rowx2-1026@feaec58ef0 (on 489441e63 receipts). Bench verdicts PENDING.
+  - (1) Collected: ee24 bench3: base s1/s2 PASS (s3 was still running), miter PASS x3 (0 mismatches), mut6/mut7 caught. ROWX=0 LEC is still open, with nothing new. The held_ex = 40 on seeds 1-3 is a BENCH ARTEFACT: a standalone replay of the tb's selection loop on Verilator 5.050 gives ex 40/40/40 for seeds 1-3 and 46/43 for seeds 4/5. That comes from the RNG plus the 14 forced r%37==5 ranks. The RTL has no clamp, and the export is checked against an independent golden. CHECKED.
+  - (2) Fallback: ROWX [30] RO = 0 is the ee24 held-list export, and the B = 80 config is one pass, NXW 40, LAST. Both modes are in the same ROWX = 1 hardware, selected per frame. Fault 24 is now raised at a held-list frame after the list overflowed XN, no longer at the scan.
+  - (3) RO = 1 fields: [34:31] NP-1, [46:35] XP. Word i of pass p is sent at XO+pvs+1+p*XP+i and carries ranks 2(p*NXW+i) and +1. A half is valid iff rank < nsel and the new 512-b x_own held mask is set.
+    - Each rank has one fixed slot, so the schedule is data-independent, with no count to overflow and no credit or ready.
+    - Die config: NP 7, NXW 40, XP 320 (the 8 tile windows).
+    - Fault 26 (RO) = the passes do not cover nsel (static). Fault 25 adds XP <= NXW. The PK2 ingress is unchanged.
+    - Die position: the tb now drives CFG DP on both ex and rx (the ROWX-1 fix is kept).
+  - Bench gate run_svc_rowx.sh (base/miter/mut6/mut7/mut8):
+    - base: ro0 and ro1 on 3 seeds; the 8 golden fixture layers in both modes (ex = the max owner, 41-49 rows); ro1 stress at 150 and 300 rows (no overflow); ro0 stress at 100 and 150 rows (faults 26 and 24 must be caught).
+    - RO ingress check: the full 2,049-word rank-order PK2 stream is built as the OR of ex's actual export and the synthetic peers (disjointness asserted). All 512 rx slots must land exactly.
+    - Verilator front end is clean on all 4 new builds. The C++ builds are running:
+      - base: intel1. mut7/mut8: intel2. miter: epyc2.
+      - Paths: /srv/opentallas-scratch2/claude/s81-rowx2-1026/bench1/{run_*,build_*}.log, with gate logs at epyc1:/srv/opentallas-scratch2/claude/s81-rowx2-1026/bench1/gate_{base,miter,mut6,mut7,mut8}.log.
+      - mut6 runs on epyc1 from the worktree.
+    - Not PASS until each gate log says SVCROWX_GATE PASS.
+  - (4) Price (results/rtl/s81_rowx2_1026/price_rowx2.py, run on the 9f97c5c993 tree):
+
+    | config | ingress per half | AR | MTP | +export (serial) | ledger |
+    |---|---|---|---|---|---|
+    | B=80 | 4801 | 1249.2 | 3621.1 | 1245.9 / 3610.2 (export 320) | 18.23 % (18.61) |
+    | RO | 2049 | 1278.5 | 3717.6 | 1254.5 / 3638.6 (export 2240) | 14.90 % (17.62) |
+
+    - Baseline 1259.6/3655.3 reproduced (CHECKED tool output).
+    - Ledger % = table 17.045 + the change in the A+B rows from the same compute. UNCHECKED. It differs from ROWX-BUDGET's 17.97 % because compute now binds MTP for these rows.
+    - Transport is not counted, the same as for the 3809 row.
+  - Open: the TOK-DS/xr transport must OR-merge the 15 peers' slot-aligned RO streams, excluding the receiver's own, and re-pair them into PK2 in rank order. This is not RTL here. The svc_rs ROWX=1 rebuild is left to COORD (one rebuild after this lane).
