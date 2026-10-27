@@ -1443,38 +1443,13 @@
      "bind": {
       "ck": "clk",
       "rst_n": "rst_n",
-      "row0": "net:row0",
-      "ten": "net:ten"
+      "row0": "strap:strap_row0",
+      "ten": "strap:strap_ten"
      },
      "note": "tile glue: bundle BST / skew lines, 2-stage x pass, chain-best merge; elements = the 5 closed views (CV 1, CUT 0x1ff / SPLIT9 1)"
-    },
-    {
-     "inst": "u_strap",
-     "module": "ot_s81hd_strap",
-     "status": "new",
-     "cells": 18,
-     "params": {
-      "ROW0": "0",
-      "TEN": "1"
-     },
-     "bind": {
-      "row0": "net:row0",
-      "ten": "net:ten"
-     },
-     "note": "per-instance position straps row0 / ten = 18 mask-programmed TIEHI / TIELO cells (same footprint, the ROM-code mask-variant class); the kit is built at ROW0 0 / TEN 1, instance k differs only by the tie masters (no die ports)"
     }
    ],
    "note": "LM-head tile = 1 bundle (128 vocab rows, 10 ROM4096) on bus B 565; 4 x elemA 214445 (ASSUMED: elemB cells x area ratio (no elemA count committed)) + elemB 163817 + glue 50000 ASSUMED",
-   "nets": [
-    {
-     "name": "row0",
-     "width": 17
-    },
-    {
-     "name": "ten",
-     "width": 1
-    }
-   ],
    "sources": [
     "rtl/common/ot_prefix.sv",
     "rtl/v41rom/ot_v41_fadd.sv",
@@ -1485,8 +1460,7 @@
     "rtl/dsrom_sys/s81_head/ot_s81hd_elem_cv_bb.v",
     "rtl/dsrom_sys/s81_head/ot_s81hd_elem.sv",
     "rtl/dsrom_sys/s81_head/ot_s81hd_bundle.sv",
-    "rtl/dsrom_sys/s81_head/ot_s81hd_tile.sv",
-    "rtl/dsrom_sys/s81_head/ot_s81hd_strap.sv"
+    "rtl/dsrom_sys/s81_head/ot_s81hd_tile.sv"
    ],
    "hard_cores": [
     {
@@ -1629,6 +1603,18 @@
       "M6"
      ],
      "order": "lsb_low"
+    }
+   ],
+   "id_straps": [
+    {
+     "name": "strap_row0",
+     "width": 17,
+     "note": "bundle first LOCAL vocab row (128 x slot; global = + c_rbase), per instance (partitions[].id_straps from tools/s81_head/head_row_map.py); 0 on a dark tile"
+    },
+    {
+     "name": "strap_ten",
+     "width": 1,
+     "note": "1 = used tile, 0 = dark (head_row_map.py: slot >= active bundles of the rank)"
     }
    ]
   },
@@ -3180,9 +3166,17 @@
    "contents": [
     {
      "inst": "u_phy",
-     "module": "ot_pdie_serdes",
+     "module": "ot_s81hd_serdes_link",
      "status": "reuse",
-     "note": "same PHY model, slot and bump field as the layer die's serdes partitions"
+     "bind": {
+      "ck": "clk",
+      "rst_n": "rst_n",
+      "pma_tx": "pad:pma_tx",
+      "pma_tck": "pad:pma_tck",
+      "pma_rx": "pad:pma_rx",
+      "pma_rck": "pad:pma_rck"
+     },
+     "note": "layer-die KP4 link (ot_pdie_serdes) + {st, rx} packing, 0 added cycles (ot_s81hd_serdes_link); PMA pins = type pads (HEAD-BIND-4)"
     }
    ],
    "note": "SerDes partition: 112G PHY (6 lanes, 512-b TX flit / 514-b RX {st, rx}) + boundary flops; PHY on the separate VDDPHY domain (die.pg.domains, OWNER 10-24 decision 7) with dedicated bump rows over its window",
@@ -3192,7 +3186,7 @@
      "dir": "in",
      "width": 512,
      "kind": "data",
-     "leaf": "u_phy.tx",
+     "leaf": "u_phy.coll_i0",
      "face": "S",
      "window_um": [
       1824.88,
@@ -3209,7 +3203,7 @@
      "dir": "out",
      "width": 514,
      "kind": "data",
-     "leaf": "u_phy.rx",
+     "leaf": "u_phy.coll_o0",
      "face": "S",
      "window_um": [
       1602.88,
@@ -3221,6 +3215,45 @@
      ],
      "order": "lsb_low"
     }
+   ],
+   "pads": [
+    {
+     "name": "pma_tx",
+     "dir": "out",
+     "width": 544
+    },
+    {
+     "name": "pma_tck",
+     "dir": "out",
+     "width": 1,
+     "clock": true
+    },
+    {
+     "name": "pma_rx",
+     "dir": "in",
+     "width": 544
+    },
+    {
+     "name": "pma_rck",
+     "dir": "in",
+     "width": 1,
+     "clock": true,
+     "note": "recovered PMA clock (own reset sync + rate matcher)"
+    }
+   ],
+   "sources": [
+    "rtl/dsrom_sys/s81_head/ot_s81hd_serdes_link.sv",
+    "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv",
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv",
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv",
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv",
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv",
+    "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v"
    ]
   },
   "hd_st_turn": {
@@ -5617,7 +5650,11 @@
     9452.16,
     13962.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 2816,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE0b0",
@@ -5626,7 +5663,11 @@
     9452.16,
     12925.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 5504,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW0o0",
@@ -5635,7 +5676,11 @@
     7361.28,
     13962.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 0,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW0b0",
@@ -5644,7 +5689,11 @@
     7361.28,
     12925.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 2688,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE0o1",
@@ -5653,7 +5702,11 @@
     10160.64,
     13962.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 2944,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE0b1",
@@ -5662,7 +5715,11 @@
     10160.64,
     12925.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 5376,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW0o1",
@@ -5671,7 +5728,11 @@
     6652.8,
     13962.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 128,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW0b1",
@@ -5680,7 +5741,11 @@
     6652.8,
     12925.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 2560,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE0o2",
@@ -5689,7 +5754,11 @@
     10869.12,
     13962.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 3072,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE0b2",
@@ -5698,7 +5767,11 @@
     10869.12,
     12925.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 5248,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW0o2",
@@ -5707,7 +5780,11 @@
     5944.32,
     13962.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 256,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW0b2",
@@ -5716,7 +5793,11 @@
     5944.32,
     12925.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 2432,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE0o3",
@@ -5725,7 +5806,11 @@
     11577.6,
     13962.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 3200,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE0b3",
@@ -5734,7 +5819,11 @@
     11577.6,
     12925.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 5120,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW0o3",
@@ -5743,7 +5832,11 @@
     5235.84,
     13962.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 384,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW0b3",
@@ -5752,7 +5845,11 @@
     5235.84,
     12925.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 2304,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE0o4",
@@ -5761,7 +5858,11 @@
     12286.08,
     13962.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 3328,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE0b4",
@@ -5770,7 +5871,11 @@
     12286.08,
     12925.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 4992,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW0o4",
@@ -5779,7 +5884,11 @@
     4527.36,
     13962.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 512,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW0b4",
@@ -5788,7 +5897,11 @@
     4527.36,
     12925.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 2176,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE0o5",
@@ -5797,7 +5910,11 @@
     12994.56,
     13962.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 3456,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE0b5",
@@ -5806,7 +5923,11 @@
     12994.56,
     12925.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 4864,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW0o5",
@@ -5815,7 +5936,11 @@
     3818.88,
     13962.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 640,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW0b5",
@@ -5824,7 +5949,11 @@
     3818.88,
     12925.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 2048,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE0o6",
@@ -5833,7 +5962,11 @@
     13703.04,
     13962.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 3584,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE0b6",
@@ -5842,7 +5975,11 @@
     13703.04,
     12925.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 4736,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW0o6",
@@ -5851,7 +5988,11 @@
     3110.4,
     13962.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 768,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW0b6",
@@ -5860,7 +6001,11 @@
     3110.4,
     12925.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 1920,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE0o7",
@@ -5869,7 +6014,11 @@
     14411.52,
     13962.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 3712,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE0b7",
@@ -5878,7 +6027,11 @@
     14411.52,
     12925.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 4608,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW0o7",
@@ -5887,7 +6040,11 @@
     2401.92,
     13962.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 896,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW0b7",
@@ -5896,7 +6053,11 @@
     2401.92,
     12925.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 1792,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE0o8",
@@ -5905,7 +6066,11 @@
     15120.0,
     13962.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 3840,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE0b8",
@@ -5914,7 +6079,11 @@
     15120.0,
     12925.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 4480,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW0o8",
@@ -5923,7 +6092,11 @@
     1693.44,
     13962.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 1024,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW0b8",
@@ -5932,7 +6105,11 @@
     1693.44,
     12925.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 1664,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE0o9",
@@ -5941,7 +6118,11 @@
     15828.48,
     13962.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 3968,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE0b9",
@@ -5950,7 +6131,11 @@
     15828.48,
     12925.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 4352,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW0o9",
@@ -5959,7 +6144,11 @@
     984.96,
     13962.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 1152,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW0b9",
@@ -5968,7 +6157,11 @@
     984.96,
     12925.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 1536,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE0o10",
@@ -5977,7 +6170,11 @@
     16536.96,
     13962.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 4096,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE0b10",
@@ -5986,7 +6183,11 @@
     16536.96,
     12925.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 4224,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW0o10",
@@ -5995,7 +6196,11 @@
     276.48,
     13962.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 1280,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW0b10",
@@ -6004,7 +6209,11 @@
     276.48,
     12925.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 1408,
+    "strap_ten": 1
+   }
   },
   {
    "name": "sp1",
@@ -6058,7 +6267,11 @@
     9452.16,
     11888.64
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 8448,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE1b0",
@@ -6067,7 +6280,11 @@
     9452.16,
     10851.84
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 11136,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW1o0",
@@ -6076,7 +6293,11 @@
     7361.28,
     11888.64
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 5632,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW1b0",
@@ -6085,7 +6306,11 @@
     7361.28,
     10851.84
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 8320,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE1o1",
@@ -6094,7 +6319,11 @@
     10160.64,
     11888.64
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 8576,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE1b1",
@@ -6103,7 +6332,11 @@
     10160.64,
     10851.84
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 11008,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW1o1",
@@ -6112,7 +6345,11 @@
     6652.8,
     11888.64
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 5760,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW1b1",
@@ -6121,7 +6358,11 @@
     6652.8,
     10851.84
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 8192,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE1o2",
@@ -6130,7 +6371,11 @@
     10869.12,
     11888.64
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 8704,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE1b2",
@@ -6139,7 +6384,11 @@
     10869.12,
     10851.84
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 10880,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW1o2",
@@ -6148,7 +6397,11 @@
     5944.32,
     11888.64
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 5888,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW1b2",
@@ -6157,7 +6410,11 @@
     5944.32,
     10851.84
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 8064,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE1o3",
@@ -6166,7 +6423,11 @@
     11577.6,
     11888.64
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 8832,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE1b3",
@@ -6175,7 +6436,11 @@
     11577.6,
     10851.84
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 10752,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW1o3",
@@ -6184,7 +6449,11 @@
     5235.84,
     11888.64
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 6016,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW1b3",
@@ -6193,7 +6462,11 @@
     5235.84,
     10851.84
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 7936,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE1o4",
@@ -6202,7 +6475,11 @@
     12286.08,
     11888.64
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 8960,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE1b4",
@@ -6211,7 +6488,11 @@
     12286.08,
     10851.84
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 10624,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW1o4",
@@ -6220,7 +6501,11 @@
     4527.36,
     11888.64
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 6144,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW1b4",
@@ -6229,7 +6514,11 @@
     4527.36,
     10851.84
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 7808,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE1o5",
@@ -6238,7 +6527,11 @@
     12994.56,
     11888.64
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 9088,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE1b5",
@@ -6247,7 +6540,11 @@
     12994.56,
     10851.84
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 10496,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW1o5",
@@ -6256,7 +6553,11 @@
     3818.88,
     11888.64
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 6272,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW1b5",
@@ -6265,7 +6566,11 @@
     3818.88,
     10851.84
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 7680,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE1o6",
@@ -6274,7 +6579,11 @@
     13703.04,
     11888.64
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 9216,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE1b6",
@@ -6283,7 +6592,11 @@
     13703.04,
     10851.84
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 10368,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW1o6",
@@ -6292,7 +6605,11 @@
     3110.4,
     11888.64
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 6400,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW1b6",
@@ -6301,7 +6618,11 @@
     3110.4,
     10851.84
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 7552,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE1o7",
@@ -6310,7 +6631,11 @@
     14411.52,
     11888.64
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 9344,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE1b7",
@@ -6319,7 +6644,11 @@
     14411.52,
     10851.84
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 10240,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW1o7",
@@ -6328,7 +6657,11 @@
     2401.92,
     11888.64
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 6528,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW1b7",
@@ -6337,7 +6670,11 @@
     2401.92,
     10851.84
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 7424,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE1o8",
@@ -6346,7 +6683,11 @@
     15120.0,
     11888.64
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 9472,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE1b8",
@@ -6355,7 +6696,11 @@
     15120.0,
     10851.84
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 10112,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW1o8",
@@ -6364,7 +6709,11 @@
     1693.44,
     11888.64
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 6656,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW1b8",
@@ -6373,7 +6722,11 @@
     1693.44,
     10851.84
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 7296,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE1o9",
@@ -6382,7 +6735,11 @@
     15828.48,
     11888.64
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 9600,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE1b9",
@@ -6391,7 +6748,11 @@
     15828.48,
     10851.84
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 9984,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW1o9",
@@ -6400,7 +6761,11 @@
     984.96,
     11888.64
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 6784,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW1b9",
@@ -6409,7 +6774,11 @@
     984.96,
     10851.84
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 7168,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE1o10",
@@ -6418,7 +6787,11 @@
     16536.96,
     11888.64
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 9728,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE1b10",
@@ -6427,7 +6800,11 @@
     16536.96,
     10851.84
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 9856,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW1o10",
@@ -6436,7 +6813,11 @@
     276.48,
     11888.64
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 6912,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW1b10",
@@ -6445,7 +6826,11 @@
     276.48,
     10851.84
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 7040,
+    "strap_ten": 1
+   }
   },
   {
    "name": "sp2",
@@ -6499,7 +6884,11 @@
     9452.16,
     9815.04
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 14080,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE2b0",
@@ -6508,7 +6897,11 @@
     9452.16,
     8778.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 16768,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW2o0",
@@ -6517,7 +6910,11 @@
     7361.28,
     9815.04
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 11264,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW2b0",
@@ -6526,7 +6923,11 @@
     7361.28,
     8778.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 13952,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE2o1",
@@ -6535,7 +6936,11 @@
     10160.64,
     9815.04
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 14208,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE2b1",
@@ -6544,7 +6949,11 @@
     10160.64,
     8778.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 16640,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW2o1",
@@ -6553,7 +6962,11 @@
     6652.8,
     9815.04
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 11392,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW2b1",
@@ -6562,7 +6975,11 @@
     6652.8,
     8778.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 13824,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE2o2",
@@ -6571,7 +6988,11 @@
     10869.12,
     9815.04
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 14336,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE2b2",
@@ -6580,7 +7001,11 @@
     10869.12,
     8778.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 16512,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW2o2",
@@ -6589,7 +7014,11 @@
     5944.32,
     9815.04
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 11520,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW2b2",
@@ -6598,7 +7027,11 @@
     5944.32,
     8778.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 13696,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE2o3",
@@ -6607,7 +7040,11 @@
     11577.6,
     9815.04
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 14464,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE2b3",
@@ -6616,7 +7053,11 @@
     11577.6,
     8778.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 16384,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW2o3",
@@ -6625,7 +7066,11 @@
     5235.84,
     9815.04
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 11648,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW2b3",
@@ -6634,7 +7079,11 @@
     5235.84,
     8778.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 13568,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE2o4",
@@ -6643,7 +7092,11 @@
     12286.08,
     9815.04
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 14592,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE2b4",
@@ -6652,7 +7105,11 @@
     12286.08,
     8778.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 16256,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW2o4",
@@ -6661,7 +7118,11 @@
     4527.36,
     9815.04
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 11776,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW2b4",
@@ -6670,7 +7131,11 @@
     4527.36,
     8778.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 13440,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE2o5",
@@ -6679,7 +7144,11 @@
     12994.56,
     9815.04
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 14720,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE2b5",
@@ -6688,7 +7157,11 @@
     12994.56,
     8778.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 16128,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW2o5",
@@ -6697,7 +7170,11 @@
     3818.88,
     9815.04
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 11904,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW2b5",
@@ -6706,7 +7183,11 @@
     3818.88,
     8778.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 13312,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE2o6",
@@ -6715,7 +7196,11 @@
     13703.04,
     9815.04
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 14848,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE2b6",
@@ -6724,7 +7209,11 @@
     13703.04,
     8778.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 16000,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW2o6",
@@ -6733,7 +7222,11 @@
     3110.4,
     9815.04
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 12032,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW2b6",
@@ -6742,7 +7235,11 @@
     3110.4,
     8778.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 13184,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE2o7",
@@ -6751,7 +7248,11 @@
     14411.52,
     9815.04
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 14976,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE2b7",
@@ -6760,7 +7261,11 @@
     14411.52,
     8778.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 15872,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW2o7",
@@ -6769,7 +7274,11 @@
     2401.92,
     9815.04
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 12160,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW2b7",
@@ -6778,7 +7287,11 @@
     2401.92,
     8778.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 13056,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE2o8",
@@ -6787,7 +7300,11 @@
     15120.0,
     9815.04
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 15104,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE2b8",
@@ -6796,7 +7313,11 @@
     15120.0,
     8778.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 15744,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW2o8",
@@ -6805,7 +7326,11 @@
     1693.44,
     9815.04
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 12288,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW2b8",
@@ -6814,7 +7339,11 @@
     1693.44,
     8778.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 12928,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE2o9",
@@ -6823,7 +7352,11 @@
     15828.48,
     9815.04
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 15232,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE2b9",
@@ -6832,7 +7365,11 @@
     15828.48,
     8778.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 15616,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW2o9",
@@ -6841,7 +7378,11 @@
     984.96,
     9815.04
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 12416,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW2b9",
@@ -6850,7 +7391,11 @@
     984.96,
     8778.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 12800,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE2o10",
@@ -6859,7 +7404,11 @@
     16536.96,
     9815.04
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 15360,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE2b10",
@@ -6868,7 +7417,11 @@
     16536.96,
     8778.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 15488,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW2o10",
@@ -6877,7 +7430,11 @@
     276.48,
     9815.04
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 12544,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW2b10",
@@ -6886,7 +7443,11 @@
     276.48,
     8778.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 12672,
+    "strap_ten": 1
+   }
   },
   {
    "name": "sp3",
@@ -6940,7 +7501,11 @@
     9452.16,
     7741.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 19712,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE3b0",
@@ -6949,7 +7514,11 @@
     9452.16,
     6704.64
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 22400,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW3o0",
@@ -6958,7 +7527,11 @@
     7361.28,
     7741.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 16896,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW3b0",
@@ -6967,7 +7540,11 @@
     7361.28,
     6704.64
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 19584,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE3o1",
@@ -6976,7 +7553,11 @@
     10160.64,
     7741.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 19840,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE3b1",
@@ -6985,7 +7566,11 @@
     10160.64,
     6704.64
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 22272,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW3o1",
@@ -6994,7 +7579,11 @@
     6652.8,
     7741.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 17024,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW3b1",
@@ -7003,7 +7592,11 @@
     6652.8,
     6704.64
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 19456,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE3o2",
@@ -7012,7 +7605,11 @@
     10869.12,
     7741.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 19968,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE3b2",
@@ -7021,7 +7618,11 @@
     10869.12,
     6704.64
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 22144,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW3o2",
@@ -7030,7 +7631,11 @@
     5944.32,
     7741.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 17152,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW3b2",
@@ -7039,7 +7644,11 @@
     5944.32,
     6704.64
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 19328,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE3o3",
@@ -7048,7 +7657,11 @@
     11577.6,
     7741.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 20096,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE3b3",
@@ -7057,7 +7670,11 @@
     11577.6,
     6704.64
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 22016,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW3o3",
@@ -7066,7 +7683,11 @@
     5235.84,
     7741.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 17280,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW3b3",
@@ -7075,7 +7696,11 @@
     5235.84,
     6704.64
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 19200,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE3o4",
@@ -7084,7 +7709,11 @@
     12286.08,
     7741.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 20224,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE3b4",
@@ -7093,7 +7722,11 @@
     12286.08,
     6704.64
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 21888,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW3o4",
@@ -7102,7 +7735,11 @@
     4527.36,
     7741.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 17408,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW3b4",
@@ -7111,7 +7748,11 @@
     4527.36,
     6704.64
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 19072,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE3o5",
@@ -7120,7 +7761,11 @@
     12994.56,
     7741.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 20352,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE3b5",
@@ -7129,7 +7774,11 @@
     12994.56,
     6704.64
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 21760,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW3o5",
@@ -7138,7 +7787,11 @@
     3818.88,
     7741.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 17536,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW3b5",
@@ -7147,7 +7800,11 @@
     3818.88,
     6704.64
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 18944,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE3o6",
@@ -7156,7 +7813,11 @@
     13703.04,
     7741.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 20480,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE3b6",
@@ -7165,7 +7826,11 @@
     13703.04,
     6704.64
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 21632,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW3o6",
@@ -7174,7 +7839,11 @@
     3110.4,
     7741.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 17664,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW3b6",
@@ -7183,7 +7852,11 @@
     3110.4,
     6704.64
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 18816,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE3o7",
@@ -7192,7 +7865,11 @@
     14411.52,
     7741.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 20608,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE3b7",
@@ -7201,7 +7878,11 @@
     14411.52,
     6704.64
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 21504,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW3o7",
@@ -7210,7 +7891,11 @@
     2401.92,
     7741.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 17792,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW3b7",
@@ -7219,7 +7904,11 @@
     2401.92,
     6704.64
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 18688,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE3o8",
@@ -7228,7 +7917,11 @@
     15120.0,
     7741.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 20736,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE3b8",
@@ -7237,7 +7930,11 @@
     15120.0,
     6704.64
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 21376,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW3o8",
@@ -7246,7 +7943,11 @@
     1693.44,
     7741.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 17920,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW3b8",
@@ -7255,7 +7956,11 @@
     1693.44,
     6704.64
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 18560,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE3o9",
@@ -7264,7 +7969,11 @@
     15828.48,
     7741.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 20864,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE3b9",
@@ -7273,7 +7982,11 @@
     15828.48,
     6704.64
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 21248,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW3o9",
@@ -7282,7 +7995,11 @@
     984.96,
     7741.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 18048,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW3b9",
@@ -7291,7 +8008,11 @@
     984.96,
     6704.64
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 18432,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE3o10",
@@ -7300,7 +8021,11 @@
     16536.96,
     7741.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 20992,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE3b10",
@@ -7309,7 +8034,11 @@
     16536.96,
     6704.64
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 21120,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW3o10",
@@ -7318,7 +8047,11 @@
     276.48,
     7741.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 18176,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW3b10",
@@ -7327,7 +8060,11 @@
     276.48,
     6704.64
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 18304,
+    "strap_ten": 1
+   }
   },
   {
    "name": "sp4",
@@ -7381,7 +8118,11 @@
     9452.16,
     5667.84
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 25344,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE4b0",
@@ -7390,7 +8131,11 @@
     9452.16,
     4631.04
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 28032,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW4o0",
@@ -7399,7 +8144,11 @@
     7361.28,
     5667.84
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 22528,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW4b0",
@@ -7408,7 +8157,11 @@
     7361.28,
     4631.04
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 25216,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE4o1",
@@ -7417,7 +8170,11 @@
     10160.64,
     5667.84
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 25472,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE4b1",
@@ -7426,7 +8183,11 @@
     10160.64,
     4631.04
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 27904,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW4o1",
@@ -7435,7 +8196,11 @@
     6652.8,
     5667.84
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 22656,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW4b1",
@@ -7444,7 +8209,11 @@
     6652.8,
     4631.04
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 25088,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE4o2",
@@ -7453,7 +8222,11 @@
     10869.12,
     5667.84
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 25600,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE4b2",
@@ -7462,7 +8235,11 @@
     10869.12,
     4631.04
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 27776,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW4o2",
@@ -7471,7 +8248,11 @@
     5944.32,
     5667.84
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 22784,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW4b2",
@@ -7480,7 +8261,11 @@
     5944.32,
     4631.04
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 24960,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE4o3",
@@ -7489,7 +8274,11 @@
     11577.6,
     5667.84
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 25728,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE4b3",
@@ -7498,7 +8287,11 @@
     11577.6,
     4631.04
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 27648,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW4o3",
@@ -7507,7 +8300,11 @@
     5235.84,
     5667.84
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 22912,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW4b3",
@@ -7516,7 +8313,11 @@
     5235.84,
     4631.04
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 24832,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE4o4",
@@ -7525,7 +8326,11 @@
     12286.08,
     5667.84
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 25856,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE4b4",
@@ -7534,7 +8339,11 @@
     12286.08,
     4631.04
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 27520,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW4o4",
@@ -7543,7 +8352,11 @@
     4527.36,
     5667.84
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 23040,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW4b4",
@@ -7552,7 +8365,11 @@
     4527.36,
     4631.04
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 24704,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE4o5",
@@ -7561,7 +8378,11 @@
     12994.56,
     5667.84
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 25984,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE4b5",
@@ -7570,7 +8391,11 @@
     12994.56,
     4631.04
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 27392,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW4o5",
@@ -7579,7 +8404,11 @@
     3818.88,
     5667.84
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 23168,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW4b5",
@@ -7588,7 +8417,11 @@
     3818.88,
     4631.04
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 24576,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE4o6",
@@ -7597,7 +8430,11 @@
     13703.04,
     5667.84
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 26112,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE4b6",
@@ -7606,7 +8443,11 @@
     13703.04,
     4631.04
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 27264,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW4o6",
@@ -7615,7 +8456,11 @@
     3110.4,
     5667.84
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 23296,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW4b6",
@@ -7624,7 +8469,11 @@
     3110.4,
     4631.04
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 24448,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE4o7",
@@ -7633,7 +8482,11 @@
     14411.52,
     5667.84
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 26240,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE4b7",
@@ -7642,7 +8495,11 @@
     14411.52,
     4631.04
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 27136,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW4o7",
@@ -7651,7 +8508,11 @@
     2401.92,
     5667.84
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 23424,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW4b7",
@@ -7660,7 +8521,11 @@
     2401.92,
     4631.04
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 24320,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE4o8",
@@ -7669,7 +8534,11 @@
     15120.0,
     5667.84
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 26368,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE4b8",
@@ -7678,7 +8547,11 @@
     15120.0,
     4631.04
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 27008,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW4o8",
@@ -7687,7 +8560,11 @@
     1693.44,
     5667.84
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 23552,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW4b8",
@@ -7696,7 +8573,11 @@
     1693.44,
     4631.04
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 24192,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE4o9",
@@ -7705,7 +8586,11 @@
     15828.48,
     5667.84
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 26496,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE4b9",
@@ -7714,7 +8599,11 @@
     15828.48,
     4631.04
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 26880,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW4o9",
@@ -7723,7 +8612,11 @@
     984.96,
     5667.84
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 23680,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW4b9",
@@ -7732,7 +8625,11 @@
     984.96,
     4631.04
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 24064,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE4o10",
@@ -7741,7 +8638,11 @@
     16536.96,
     5667.84
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 26624,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE4b10",
@@ -7750,7 +8651,11 @@
     16536.96,
     4631.04
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 26752,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW4o10",
@@ -7759,7 +8664,11 @@
     276.48,
     5667.84
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 23808,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW4b10",
@@ -7768,7 +8677,11 @@
     276.48,
     4631.04
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 23936,
+    "strap_ten": 1
+   }
   },
   {
    "name": "sp5",
@@ -7822,7 +8735,11 @@
     9452.16,
     3594.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 30976,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE5b0",
@@ -7831,7 +8748,11 @@
     9452.16,
     2557.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 0,
+    "strap_ten": 0
+   }
   },
   {
    "name": "tW5o0",
@@ -7840,7 +8761,11 @@
     7361.28,
     3594.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 28160,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW5b0",
@@ -7849,7 +8774,11 @@
     7361.28,
     2557.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 30848,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE5o1",
@@ -7858,7 +8787,11 @@
     10160.64,
     3594.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 31104,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE5b1",
@@ -7867,7 +8800,11 @@
     10160.64,
     2557.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 0,
+    "strap_ten": 0
+   }
   },
   {
    "name": "tW5o1",
@@ -7876,7 +8813,11 @@
     6652.8,
     3594.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 28288,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW5b1",
@@ -7885,7 +8826,11 @@
     6652.8,
     2557.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 30720,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE5o2",
@@ -7894,7 +8839,11 @@
     10869.12,
     3594.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 31232,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE5b2",
@@ -7903,7 +8852,11 @@
     10869.12,
     2557.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 0,
+    "strap_ten": 0
+   }
   },
   {
    "name": "tW5o2",
@@ -7912,7 +8865,11 @@
     5944.32,
     3594.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 28416,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW5b2",
@@ -7921,7 +8878,11 @@
     5944.32,
     2557.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 30592,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE5o3",
@@ -7930,7 +8891,11 @@
     11577.6,
     3594.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 31360,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE5b3",
@@ -7939,7 +8904,11 @@
     11577.6,
     2557.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 0,
+    "strap_ten": 0
+   }
   },
   {
    "name": "tW5o3",
@@ -7948,7 +8917,11 @@
     5235.84,
     3594.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 28544,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW5b3",
@@ -7957,7 +8930,11 @@
     5235.84,
     2557.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 30464,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE5o4",
@@ -7966,7 +8943,11 @@
     12286.08,
     3594.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 31488,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE5b4",
@@ -7975,7 +8956,11 @@
     12286.08,
     2557.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 0,
+    "strap_ten": 0
+   }
   },
   {
    "name": "tW5o4",
@@ -7984,7 +8969,11 @@
     4527.36,
     3594.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 28672,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW5b4",
@@ -7993,7 +8982,11 @@
     4527.36,
     2557.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 30336,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE5o5",
@@ -8002,7 +8995,11 @@
     12994.56,
     3594.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 31616,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE5b5",
@@ -8011,7 +9008,11 @@
     12994.56,
     2557.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 0,
+    "strap_ten": 0
+   }
   },
   {
    "name": "tW5o5",
@@ -8020,7 +9021,11 @@
     3818.88,
     3594.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 28800,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW5b5",
@@ -8029,7 +9034,11 @@
     3818.88,
     2557.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 30208,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE5o6",
@@ -8038,7 +9047,11 @@
     13703.04,
     3594.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 31744,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE5b6",
@@ -8047,7 +9060,11 @@
     13703.04,
     2557.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 0,
+    "strap_ten": 0
+   }
   },
   {
    "name": "tW5o6",
@@ -8056,7 +9073,11 @@
     3110.4,
     3594.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 28928,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW5b6",
@@ -8065,7 +9086,11 @@
     3110.4,
     2557.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 30080,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE5o7",
@@ -8074,7 +9099,11 @@
     14411.52,
     3594.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 31872,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE5b7",
@@ -8083,7 +9112,11 @@
     14411.52,
     2557.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 0,
+    "strap_ten": 0
+   }
   },
   {
    "name": "tW5o7",
@@ -8092,7 +9125,11 @@
     2401.92,
     3594.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 29056,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW5b7",
@@ -8101,7 +9138,11 @@
     2401.92,
     2557.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 29952,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE5o8",
@@ -8110,7 +9151,11 @@
     15120.0,
     3594.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 32000,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE5b8",
@@ -8119,7 +9164,11 @@
     15120.0,
     2557.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 0,
+    "strap_ten": 0
+   }
   },
   {
    "name": "tW5o8",
@@ -8128,7 +9177,11 @@
     1693.44,
     3594.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 29184,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW5b8",
@@ -8137,7 +9190,11 @@
     1693.44,
     2557.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 29824,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE5o9",
@@ -8146,7 +9203,11 @@
     15828.48,
     3594.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 32128,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE5b9",
@@ -8155,7 +9216,11 @@
     15828.48,
     2557.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 0,
+    "strap_ten": 0
+   }
   },
   {
    "name": "tW5o9",
@@ -8164,7 +9229,11 @@
     984.96,
     3594.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 29312,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW5b9",
@@ -8173,7 +9242,11 @@
     984.96,
     2557.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 29696,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE5o10",
@@ -8182,7 +9255,11 @@
     16536.96,
     3594.24
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 32256,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tE5b10",
@@ -8191,7 +9268,11 @@
     16536.96,
     2557.44
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 0,
+    "strap_ten": 0
+   }
   },
   {
    "name": "tW5o10",
@@ -8200,7 +9281,11 @@
     276.48,
     3594.24
    ],
-   "orient": "MY"
+   "orient": "MY",
+   "id_straps": {
+    "strap_row0": 29440,
+    "strap_ten": 1
+   }
   },
   {
    "name": "tW5b10",
@@ -8209,7 +9294,11 @@
     276.48,
     2557.44
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "id_straps": {
+    "strap_row0": 29568,
+    "strap_ten": 1
+   }
   }
  ],
  "ports": [
