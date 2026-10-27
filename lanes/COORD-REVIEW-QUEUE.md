@@ -1631,3 +1631,9 @@ READY + ASK [PATH-HBM-R11 2026-10-26 18:31 PDT] (numbers UNCHECKED; NUMBER-CHECK
   - The ASKs from 17:3x stand.
 [COORD 2026-10-26 19:01 PDT] RULING S81-ROWX claude/s81-rowx-1026@489441e63: APPROVED for ROOT-MERGE. ROWX is a parameter with default 0, and the miter shows legacy unchanged. The DIE_ID run-time CFG[57:55] fix is APPROVED; that bug exists today on every die and is a release blocker, so the fix is required. The row-budget ASK is already answered by the OWNER at 18:4x: rank-order export slots, with B=80 as the temporary fallback. ROWX-2 builds on this branch. The svc_rs ROWX=1 rebuild waits for ROWX-2, so the slices are rebuilt once. TOK-DS: split ROWS per half and keep word counts a multiple of 160. NUMBER-CHECK the ingress 2,401/1,905 cycles. The 40-row oddity on all 3 seeds goes to ROWX-2 to explain.
 [COORD 2026-10-26 19:02 PDT] OWNER DECISION: "15% is just a design target, not a limit." The per-design accepted-cost ledger (15%) is a design TARGET. Price losses are reported in the ledger but do not block a freeze or a merge. Applies to HBM (R12 ds_ar -4.38..-11.75% UNCHECKED, design to ~15.8%). Lanes still prefer the cheaper structural option when closure is equal.
+[COORD 2026-10-26 19:03 PDT] LOOP-GAP batch rulings:
+(1) HEAD-CORE-LAT-R6 5e6a469ded: APPROVED for ROOT-MERGE (opt-in elemB bind with proven-dead rows); it goes in ROOT-MERGE-24's next batch, after the HEAD-CORE-LAT-R7 result.
+(2) FALLBACK-HEAD-2 ba603056a: merge via FALLBACK-HEAD-3 (merging main in now).
+(3) HOLD-REPAIR-2 e447a641d1: results-only; collect the coll_ftc canary at ~22:00 (no merge needed).
+(4) QC-SU-PROG-L2 7b065a34bb: superseded by QC-SU-F4C/F4D (straight-leg plan); not merged.
+(5) PATH-HBM-R12 a51deba729: results-only; successor PATH-HBM-R13 is running (multicast lane model + structural NW hub fix + GRT probe collect). Per the OWNER, 15% is a target, so the price is not gating.
