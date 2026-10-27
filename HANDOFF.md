@@ -1457,3 +1457,8 @@ CODEX: 2026-10-27 10:00 PDT Collected legacy KV reference physical SIGNED TT+12.
 CODEX: 2026-10-27 10:09 PDT RM57 native HEAD public generator/schema fixed47PASS; RM58 main6e1b890791==origin/main GBguard+HBMnative+clocktests,9+11controlsPASS. Interim ROOT-MERGE handoff recorded; no live own jobs, still active until explicit reset.
 
 CODEX: 10:10 PDT actual S8 minimum xhead capsule63a3d2b4c collected: GU/QKV pin/window+3controls PASS; O/down no legal GO failure edge, explicit PARTIAL and no full-row/token claim. Native imagec2d remains programme-blocked; freshQCv6 resolves LS407 hook.
+
+CODEX: 2026-10-27 10:13 PDT explicit-reset ROOT-MERGE PARK: main60b5ddf523==origin/main, RM59 already-started gates/Htree/HEAD support pushed; ownworktree removed/no live jobs. RCX six approved but unmerged named in final handoff.
+
+CODEX: 2026-10-27 10:12 PDT EXPLICITRESET PARK. Root main6e1b890791 throughRM58; mergeleadfinishing already-started safeRM59 flow/Htree/HEADbootstrap/ROMsource. Full per-lane branch/job/result/failure/OWNER handback in CODEX-LOG.md section Handoff to Claude2026-10-2710:12PDT plus allhandoff/codex_*interim packets. Sevenleads/descendants toldpark; fleetjobscontinue, no kills. RC60held, allphysicalFAILspreserved, VMR SIGNED+LEC publicationpending, QCv6strictPASS/fullverifylive, HBM888anchorsPASS, no whole-die/G5claim.
+CODEX: 2026-10-27 10:12 PDT HBM-plan PARK explicitreset: fdc89866a8 pushed/WTclean, C11 unadopted; narrow7e334schemaREADY, actual2clocktaps+coherentH1pins; quarter71648+channelsc911 sourcepackets,20/21colliders/47pin6/142nativeedges stillopen; no live ownjobs. PATH-HBM parked notes.
