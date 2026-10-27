@@ -36,7 +36,7 @@ def candidates(lines, extent, width, origin, quantum, maximum_move, offset_step=
     return sorted(out)
 
 
-def solve(P,M,family,axis,gap=20.,max_move=500.):
+def solve(P,M,family,axis,gap=20.,max_move=500.,core_grid=None):
     points=[tuple(d['ideal']) for d in M['drivers'].values()]
     ptypes=sorted(t for t in P.types if t.startswith(family) and P.types[t].get('hard_cores'))
     lat={}
@@ -59,7 +59,9 @@ def solve(P,M,family,axis,gap=20.,max_move=500.):
         for hc in P.types[tn]['hard_cores']:
             groups[(round(hc['origin_um'][axis],3),hc['outline_um'][axis])].append(hc)
         for (old,e),hc in groups.items():
-            cs=candidates(lat[tn],e,P.types[tn]['outline_um'][axis],old,(.054,.27)[axis],max_move)
+            cs=candidates(lat[tn],e,P.types[tn]['outline_um'][axis],old,core_grid or (.054,.27)[axis],max_move)
+            if core_grid and core_grid < P.grid:
+                cs=[c for c in cs if abs(c[0]-round(c[0]/P.grid)*P.grid)<2.16-1e-6]
             items.append(dict(type=tn,old=old,extent=e,cores=hc,candidates=cs))
     # Distinct hard-core modules that occupy the same coordinate/extent share a pattern.
     patterns=sorted({c[2] for it in items for c in it['candidates']})
@@ -80,7 +82,7 @@ def solve(P,M,family,axis,gap=20.,max_move=500.):
             overlap=any(c['origin_um'][oa]<d['origin_um'][oa]+d['outline_um'][oa]-1e-6 and d['origin_um'][oa]<c['origin_um'][oa]+c['outline_um'][oa]-1e-6 for c in a['cores'] for d in b['cores'])
             if overlap:s.add(pos[j]+b['extent']+gap<=pos[i] if b['old']<a['old'] else pos[i]+a['extent']+gap<=pos[j])
     stat=s.check()
-    out=dict(family=family,axis='xy'[axis],status=str(stat),gap_um=gap,site_quantum_um=.5,items=len(items),candidates=sum(len(it['candidates']) for it in items),checked='UNCHECKED')
+    out=dict(family=family,axis='xy'[axis],status=str(stat),gap_um=gap,site_quantum_um=.5,core_origin_quantum_um=core_grid,items=len(items),candidates=sum(len(it['candidates']) for it in items),checked='UNCHECKED')
     if stat!=z3.sat:return out
     best=s.model()
     # Feasibility first, then binary-search an upper bound in physical 0.27-um steps.
@@ -95,7 +97,7 @@ def solve(P,M,family,axis,gap=20.,max_move=500.):
     return out
 
 if __name__=='__main__':
-    ap=argparse.ArgumentParser();ap.add_argument('build');ap.add_argument('tools');ap.add_argument('family');ap.add_argument('axis',choices=['x','y']);ap.add_argument('out');ap.add_argument('--gap',type=float,default=20.);a=ap.parse_args()
+    ap=argparse.ArgumentParser();ap.add_argument('build');ap.add_argument('tools');ap.add_argument('family');ap.add_argument('axis',choices=['x','y']);ap.add_argument('out');ap.add_argument('--gap',type=float,default=20.);ap.add_argument('--core-grid',type=float);a=ap.parse_args()
     sys.path.insert(0,a.tools);import schema as S
     P=S.Plan(S.load(str(Path(a.build)/'plan.json')));M=json.load(open(Path(a.build)/'mesh.json'))
-    result=solve(P,M,a.family,'xy'.index(a.axis),a.gap);Path(a.out).write_text(json.dumps(result,indent=1)+'\n');print(json.dumps({k:v for k,v in result.items() if k not in ('patterns','placements')}))
+    result=solve(P,M,a.family,'xy'.index(a.axis),a.gap,core_grid=a.core_grid);Path(a.out).write_text(json.dumps(result,indent=1)+'\n');print(json.dumps({k:v for k,v in result.items() if k not in ('patterns','placements')}))

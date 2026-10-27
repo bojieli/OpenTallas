@@ -471,12 +471,14 @@ def mesh_tracks(path, P):
     return out
 
 
-def pg_free_axis(ideal, shapes, layer, axis, span, profile, half_width, spacing, max_move):
+def pg_free_axis(ideal, shapes, layer, axis, span, profile, half_width, spacing, max_move, tie_break=None):
     """Project the mesh onto real routing tracks outside exact PG rectangles plus the clock NDR footprint.
 
     Shapes are die_infra.pg_rects tuples (net, layer, x0, y0, x1, y1). A full mesh strap must avoid every
     parallel PG shape on its span; an impossible PHY band fails here instead of silently shorting its supply.
     """
+    if tie_break not in (None, "positive"):
+        raise ValueError(f"unknown PG-axis tie policy: {tie_break}")
     clearance = half_width + spacing + .001   # one actual 1x-LEF DBU beyond the NDR boundary
     intervals = sorted((r[2 + axis] - clearance, r[4 + axis] + clearance) for r in shapes if r[1] == layer)
     merged = []
@@ -489,7 +491,10 @@ def pg_free_axis(ideal, shapes, layer, axis, span, profile, half_width, spacing,
     pitch, offset = profile["pitch_um"], profile["offset_um"]
     out = []
     for target in ideal:
-        k0 = round((target - offset) / pitch)
+        # A half-track tie must have the same sign after an integer-period translation.
+        # Python round + binary noise otherwise flips selected columns by 1.36 um.
+        k0 = (math.floor(round((target - offset) / pitch, 8) + .5)
+              if tie_break == "positive" else round((target - offset) / pitch))
         best = None
         for d in range(math.ceil(max_move / pitch) + 2):
             ks = [k0] if d == 0 else sorted((k0 - d, k0 + d), key=lambda k: abs(offset + k * pitch - target))
@@ -1076,13 +1081,13 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
             if shielded:
                 try:
                     r_ = pg_free_axis(v, pg_shapes, layer, ax, span, track_profile[layer], shield_foot, NDR[ndr]["space"],
-                                      pg_mm)
+                                      pg_mm, tie_break=(lattice or {}).get("pg_tie_break"))
                     strap_mode[layer] = C128.DRAWN
                     return r_
                 except ValueError:
                     strap_mode[layer] = C128.FLANK
             return pg_free_axis(v, pg_shapes, layer, ax, span, track_profile[layer], NDR[ndr]["width"] / 2,
-                                NDR[ndr]["space"], pg_mm)
+                                NDR[ndr]["space"], pg_mm, tie_break=(lattice or {}).get("pg_tie_break"))
         try:
             xs = axis(xs, "M9", 0, W)
             ys = axis(ys, "M8", 1, H)
