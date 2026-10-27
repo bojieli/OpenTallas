@@ -1,0 +1,55 @@
+{
+ "spine": {
+  "nodes": 18599,
+  "drivers": 960,
+  "mult_hist": {
+   "1.0": 69,
+   "1.334": 9,
+   "2.0": 578,
+   "4.0": 304
+  },
+  "arr_spread_ps": 61.891,
+  "top_arr_ps": {
+   "min": 6341.321,
+   "max": 6403.212
+  },
+  "tap_spread_ps": 54.392,
+  "tap_slew_ps": {
+   "min": 236.789,
+   "max": 389.787
+  }
+ },
+ "fine": {
+  "nodes": 150926,
+  "drivers": 8232,
+  "mult_hist": {
+   "1.0": 228,
+   "1.334": 245,
+   "2.0": 7007,
+   "3.0": 728,
+   "3.334": 15,
+   "4.0": 9
+  },
+  "driver_arr_spread_ps": 85.113,
+  "voronoi_C_fF": {
+   "min": 98.494,
+   "med": 388.519,
+   "max": 731.069
+  },
+  "entry_slew_ps": {
+   "min": 153.118,
+   "max": 216.002
+  }
+ },
+ "insertion_ps": {
+  "min": 6758.7,
+  "max": 6822.903
+ },
+ "tap_skew_ps": 64.203,
+ "sigma": {
+  "vt_mV": 10.0,
+  "wire_rel": 0.05,
+  "tree": 1.0,
+  "grad_per_mm": 0.0021
+ }
+}

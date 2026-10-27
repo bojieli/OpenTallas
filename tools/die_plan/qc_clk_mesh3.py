@@ -1632,9 +1632,11 @@ def render(B, plan, path, box):
 
 
 # ------------------------------------------------------------------------------------------------ mesh netlist + solve
-def mesh(hs, vs, drivers, taps, wtab, stub, seg_um=54.0, wire_rel=0.0, rnd=None):
+def mesh(hs, vs, drivers, taps, wtab, stub, seg_um=54.0, wire_rel=0.0, rnd=None, jog_um=0.0):
     """hs: [(y, x0, x1)] M8, vs: [(x, y0, y1)] M9; drivers/taps: [(x, y)] on a strap.  Nodes keyed by coordinate.
-    stub = (wtab_stub, length): pieces within `length` of a driver use the stub RC (EM straps)."""
+    stub = (wtab_stub, length): pieces within `length` of a driver use the stub RC (EM straps).
+    jog_um (R19, spine mesh): a point off every strap joins the NEAREST strap by one straight perpendicular jog
+    (M9 from an M8 strap, M8 from an M9 strap) of length <= jog_um, drawn with the stub RC; 0 = the r3 rule (error)."""
     att_h, att_v = defaultdict(set), defaultdict(set)
     for y, x0, x1 in hs:
         att_h[y] |= {x0, x1}
@@ -1648,13 +1650,28 @@ def mesh(hs, vs, drivers, taps, wtab, stub, seg_um=54.0, wire_rel=0.0, rnd=None)
                 att_h[y].add(x)
                 att_v[x].add(y)
     dset = set()
+    jogs = []
     for q in list(drivers) + list(taps):
         if q[1] in span_h:
             att_h[q[1]].add(q[0])
         elif q[0] in span_v:
             att_v[q[0]].add(q[1])
         else:
-            raise SystemExit(f"point {q} not on a strap")
+            best = None
+            if jog_um > 0:
+                for y, (x0, x1) in span_h.items():
+                    if x0 - 1e-6 <= q[0] <= x1 + 1e-6 and abs(y - q[1]) <= jog_um + 1e-6:
+                        if best is None or abs(y - q[1]) < best[0]:
+                            best = (abs(y - q[1]), "h", (q[0], y))
+                for x, (y0, y1) in span_v.items():
+                    if y0 - 1e-6 <= q[1] <= y1 + 1e-6 and abs(x - q[0]) <= jog_um + 1e-6:
+                        if best is None or abs(x - q[0]) < best[0]:
+                            best = (abs(x - q[0]), "v", (x, q[1]))
+            if best is None:
+                raise SystemExit(f"point {q} not on a strap")
+            _, kind, at = best
+            (att_h[at[1]] if kind == "h" else att_v[at[0]]).add(at[0] if kind == "h" else at[1])
+            jogs.append((at, tuple(q), "M9" if kind == "h" else "M8"))
     dset = {tuple(q) for q in drivers}
     nid, xy = {}, []
 
@@ -1691,6 +1708,19 @@ def mesh(hs, vs, drivers, taps, wtab, stub, seg_um=54.0, wire_rel=0.0, rnd=None)
         p = sorted(pts)
         for u, w in zip(p, p[1:]):
             wire((x, u), (x, w), "M9")
+    for at, q, lay in sorted(set(jogs)):          # R19 perpendicular jogs (stub RC), one per point
+        L = md(at, q)
+        n = max(1, int(math.ceil(L / seg_um)))
+        prev = node(at)
+        r, c = sw[lay]
+        for k in range(1, n + 1):
+            pt = (at[0] + (q[0] - at[0]) * k / n, at[1] + (q[1] - at[1]) * k / n)
+            cur = node(pt)
+            f = rnd.gauss(1.0, wire_rel) if (wire_rel and rnd) else 1.0
+            R.append((prev, cur, r * L / n * f))
+            C[prev] += c * L / n / 2 * f
+            C[cur] += c * L / n / 2 * f
+            prev = cur
     dn = [nid[(round(q[0], 3), round(q[1], 3))] for q in drivers]
     tn = [nid[(round(q[0], 3), round(q[1], 3))] for q in taps]
     return dict(R=R, C=C, xy=xy, dn=dn, tn=tn, n=len(nid))
@@ -1904,7 +1934,8 @@ def cmd_solve(a):
     sdrv = [tuple(n["xy"]) for n in B["spine_drv"]]
     staps = [ct["tap"] for ct in B["ctrees"]]
     if not a.no_spine:
-      NS = mesh(hs, vs, sdrv, staps, sw, (RC3[a.spine_stub_w], a.stub_um), wire_rel=sg.get("wire_rel", 0.0) if s else 0.0, rnd=rnd)
+      NS = mesh(hs, vs, sdrv, staps, sw, (RC3[a.spine_stub_w], a.stub_um), wire_rel=sg.get("wire_rel", 0.0) if s else 0.0, rnd=rnd,
+                jog_um=a.spine_jog_um)
       smult = size(voronoi_c(NS), a.spine_m, a.sizing)
       sdvt = [(seeded("vs", s, k).gauss(0, sg["vt_mV"]) + seeded("vs2", s, k).gauss(0, sg["vt_mV"])) / 2 / math.sqrt(max(1.0, smult[k]))
               if s else 0.0 for k in range(len(sdrv))]
@@ -2019,6 +2050,14 @@ def pair_u(x, y, tap, solve_, aocv, g):
         r[c] = dict(noncommon_ps=r3(nc), aocv_random_ps=r3(rnd_), aocv_distance_ps=r3(sys_), droop_ps=0.0,
                     mesh_uncertainty_ps=mesh_u, total_ps=r3(rnd_ + sys_ + mesh_u))
     r["bbox_diag_mm"] = r3(dmm)
+    # R19 (COORD ruling R18 / OWNER one shared die timing model): ONE variation model per segment.  The MC solve ends at
+    # the fine-mesh tap node (mesh() taps = rec taps[].tap, the tap->entry stub is NOT in the netlist); the AOCV terms
+    # above price only the stages below it (tap buffer + stub: ceil(stub/450) >= 1 stage; core tree: 10 stages, CORE
+    # latency).  Overlap = 0 by construction; asserted so a future MC that absorbs the stub/tap buffer cannot double count.
+    r["var_model"] = dict(mc="die input -> fine-mesh tap node: tree per-stage random + gradient + wire RC + driver Vt",
+                          aocv="tap buffer + tap->entry stub + core tree (10 stages): class-A random k=3 + g x bbox",
+                          overlap_stages=0)
+    assert not getattr(pair_u, "mc_includes_stub", False), "MC netlist includes the tap stub: drop the stub stage from AOCV"
     return r
 
 
@@ -2186,6 +2225,9 @@ def add_common(p):
     p.add_argument("--stub-w", default="2x16w")
     p.add_argument("--stub-um", type=float, default=54.0)
     p.add_argument("--sizing", default="d1", choices=["d1", "none"])
+    p.add_argument("--spine-jog-um", type=float, default=0.0,
+                   help="R19: column taps / spine drivers off the spine straps join the nearest strap by one perpendicular "
+                        "jog <= this (stub RC); 0 = r3 rule (every point must sit on a strap)")
     p.add_argument("--no-spine", action="store_true", help="comparison: top tree straight to every column tap")
     p.add_argument("--t-extra", type=float, default=1500.0)
     p.add_argument("--feed", default="mesh3", choices=["mesh3", "r9", "periodic"],
