@@ -366,6 +366,87 @@ def free_toward(K, p, axis, target, limit, step=None):
     return None, None
 
 
+def level_slides(lg, nx, nty, axes, node_xy, hop_slack, K, root_here, step=None):
+    """CLOCK-KV-R11 in_core "level" (plan-computed before any node is placed): per H-tree level, the ideal node
+    points (parent at its ideal point; the parent's own slide is along the other axis, so the child's slide target is
+    unchanged) and ONE slide d toward the parent for the whole level: the smallest multiple of STEP_UM <= the level's
+    reach/geometry limit that leaves the fewest nodes on a keep-out (0 if none is hit at the ideal points or the level
+    splits on the incoming axis).  Every leg of the level then has one length (ideal + d upstream, ideal + d on both
+    child legs), i.e. sibling pairs are mirror images.  Returns ({level: d}, {level: record})."""
+    step = step or STEP_UM
+    per = defaultdict(list)
+
+    def pre(i0, i1, j0, j1, level, here):
+        ax = split_axis(i1 - i0, j1 - j0, level, axes)
+        h = (i0 + i1) // 2 if ax == 0 else (j0 + j1) // 2
+        for kr in ([(i0, h, j0, j1), (h, i1, j0, j1)] if ax == 0 else [(i0, i1, j0, h), (i0, i1, h, j1)]):
+            if (kr[1] - kr[0]) * (kr[3] - kr[2]) == 1:
+                continue
+            kp = node_xy(*kr)
+            if level + 1 not in lg["wire_levels"]:
+                per[level + 1].append((kp, here, ax, split_axis(kr[1] - kr[0], kr[3] - kr[2], level + 1, axes), kr))
+            pre(*kr, level + 1, kp)
+
+    pre(0, nx, 0, nty, 0, root_here)
+
+    def mv(r, d):
+        kp, here, inc = r[0], r[1], r[2]
+        sg = 1.0 if here[inc] >= kp[inc] else -1.0
+        return (kp[0] + sg * d, kp[1]) if inc == 0 else (kp[0], kp[1] + sg * d)
+
+    sl, rec = {}, {}
+    for lv, rows in sorted(per.items()):
+        h0 = sum(1 for r in rows if hitf(K, r[0]))
+        best, lim = (h0, 0.0), 0.0
+        if h0 and all(r[3] != r[2] for r in rows):
+            lim = min(min(abs(r[0][r[2]] - r[1][r[2]]), max(0.0, hop_slack(r[4], lv))) for r in rows)
+            k = 1
+            while k * step <= lim + 1e-9 and best[0]:
+                nh = sum(1 for r in rows if hitf(K, mv(r, k * step)))
+                if nh < best[0]:
+                    best = (nh, k * step)
+                k += 1
+        sl[lv] = round(best[1], 4)
+        rec[str(lv)] = dict(nodes=len(rows), hit_at_ideal=h0, slide_um=round(best[1], 4), hit_at_slide=best[0],
+                            limit_um=round(lim, 2))
+    return sl, rec
+
+
+def core_frame(P, part, core, pt, inverse=False):
+    """die point <-> hard-core frame (origin_um + track_offset_um, core orient; the four orients are involutions)."""
+    w, h = core["outline_um"]
+    ox, oy = (a + b for a, b in zip(core["origin_um"], core.get("track_offset_um") or [0.0, 0.0]))
+    o = core.get("orient", "R0")
+    if not inverse:
+        x, y = P.to_type(part, pt)
+        u, v = x - ox, y - oy
+        return (w - u if o in ("MY", "R180") else u, h - v if o in ("MX", "R180") else v)
+    u, v = pt
+    u, v = (w - u if o in ("MY", "R180") else u, h - v if o in ("MX", "R180") else v)
+    return P.to_die(part, (u + ox, v + oy))
+
+
+def canon_island_point(P, isl, q, canon, tol):
+    """CLOCK-KV-R11: snap a pushdown driver point q (die frame) inside core isl ('part/inst') onto its module's
+    canonical core-frame island site.  Returns (point, displacement um); (q, 0.0) when the module has no canon entry;
+    (q, None) when no canonical site lies within tol."""
+    if not isl or "/" not in isl:
+        return q, 0.0
+    part, inst = isl.split("/", 1)
+    if part not in P.parts:
+        return q, 0.0
+    core = next((c for c in P.ptype(part).get("hard_cores", []) if c["inst"] == inst), None)
+    if core is None or core["module"] not in canon:
+        return q, 0.0
+    u, v = core_frame(P, part, core, q)
+    best = min(canon[core["module"]], key=lambda s_: abs(s_[0] - u) + abs(s_[1] - v))
+    dd = abs(best[0] - u) + abs(best[1] - v)
+    if dd > tol + 1e-9:
+        return q, None
+    p = core_frame(P, part, core, best, inverse=True)
+    return (round(p[0], 4), round(p[1], 4)), dd
+
+
 def poly_point(pts, s):
     """point at arc length s along the Manhattan polyline pts (clamped to its ends)."""
     s = max(0.0, s)
@@ -430,7 +511,8 @@ def placement_overlaps(cells):
 def hard_keepout_violations(P, cells, islands=None):
     """Check actual cell bodies, including split repeaters, against every hard/PHY clock keepout.  islands (12.2a /
     12.7, --clock-floorplan island_windows): a clock DRIVER body wholly inside a declared in-core island window of
-    that very core is legal (the core is built with the island)."""
+    that very core is legal (the core is built with the island).  CLOCK-KV-R11: an H-tree node buffer (kind "node",
+    12.2a: island = die clock drivers incl. H-tree) is a driver too -- legal only wholly inside its declared window."""
     K = DC.KeepIndex(DC.keepouts(P), die=(P.W, P.H))
     bad = []
     for name, c in cells.items():
@@ -446,7 +528,7 @@ def hard_keepout_violations(P, cells, islands=None):
                         continue
                     seen.add(tuple(r))
                     if x0 < r[2] and x1 > r[0] and y0 < r[3] and y1 > r[1]:
-                        if islands and c.get("kind") in ("drv", "broot", "bnode") and any(
+                        if islands and c.get("kind") in ("drv", "broot", "bnode", "node") and any(
                                 w[4] == r[4] and w[0] <= x0 and x1 <= w[2] and w[1] <= y0 and y1 <= w[3] for w in islands):
                             continue
                         bad.append(dict(cell=name, keepout=r[4], rect_um=[x0, y0, x1, y1], keepout_um=list(r[:4])))
@@ -997,11 +1079,20 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                       # CLOCK-KV-R8 (opt-in): "pushdown" = no driver/node slide at all; every lattice point that falls in
                       # a hard core stays at its ideal point as a 12.2a1 in-core PUSHDOWN island (type-identical coords
                       # checked by the census), so every root->driver path keeps its equal-structure legs by construction
-                      in_core=str(lattice.get("in_core", "slide")))
+                      in_core=str(lattice.get("in_core", "slide")),
+                      # CLOCK-KV-R11 (opt-in): {module: [[u, v], ...]} canonical in-core island sites in the CORE frame
+                      # (origin + track_offset, core orient); a pushdown driver in such a core snaps onto the nearest
+                      # site within canon_tol_um so every instance of the module carries one identical island
+                      canon={k: [tuple(map(float, s_)) for s_ in v] for k, v in (lattice.get("island_canon") or {}).items()},
+                      canon_tol=float(lattice.get("island_canon_tol_um", 0.05)))
             # "drivers": only the mesh drivers stay at their ideal points (pushdown), tree nodes keep the
             # path-length-preserving re-site toward the parent
-            if lg["in_core"] not in ("slide", "pushdown", "drivers"):
-                raise ValueError("--lattice-spec in_core: slide | pushdown | drivers")
+            # CLOCK-KV-R11 "level": drivers as "drivers"; every tree node of a level takes ONE level-wide slide toward its
+            # parent (plan-computed before placement, the smallest slide that frees the most nodes of the level), so
+            # every leg of a level keeps one length (mirror-symmetric sibling pairs); a node still on a core at that
+            # slide becomes a pushdown island at the slid point (never an individual re-site)
+            if lg["in_core"] not in ("slide", "pushdown", "drivers", "level"):
+                raise ValueError("--lattice-spec in_core: slide | pushdown | drivers | level")
             if lg["nx"] != nx or not pow2(lg["ny"]):
                 raise ValueError("--lattice-spec leaf_grid: [nx, ny_leaf] with nx = --nx (leaves on the V straps), "
                                  "ny_leaf a power of two")
@@ -1187,11 +1278,19 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         for i, x in enumerate(xs):
             for j, y in enumerate(ly):
                 q, d = free_along(K, (x, y), 1, lg["drv_reach"], bounds=(0.0, H))
-                if lg["in_core"] in ("pushdown", "drivers") and d:
+                if lg["in_core"] in ("pushdown", "drivers", "level") and d:
                     q = None   # CLOCK-KV-R8: no slide, pushdown island at the ideal point
                 isl = None
                 if q is None:
                     q, d, isl = (x, y), 0.0, core_at(ko, (x, y))
+                    if lg.get("canon"):
+                        q, dc = canon_island_point(P, isl, q, lg["canon"], lg["canon_tol"])
+                        if dc is None:
+                            out["unplaced"].append([f"ckm_d_{i}_{j}", "STRUCTURAL driver in a canon-island module "
+                                                    "core but no canonical site within tolerance", isl])
+                            q = (x, y)
+                        elif dc:
+                            out["meta"].setdefault("canon_snaps", []).append([f"ckm_d_{i}_{j}", isl, round(dc, 4)])
                     out["pushdown"].append(dict(role="mesh_driver", name=f"ckm_d_{i}_{j}", xy=[round(x, 3), round(y, 3)],
                                                 core=isl))
                 names = [cell(f"ckm_d_{i}_{j}_{k}", q[0] + (k - (m - 1) / 2) * BUF_W, q[1], "drv", i=i, j=j)
@@ -1364,7 +1463,17 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                 loads += rec_lg(*kr, level + 1, drv_cell, tag, tuple(kp), plen + L, wire_pt=True)
                 continue
             q, d, isl = kp, 0.0, None
-            if hitf(K, kp):
+            if lg["in_core"] == "level":
+                d = lvl_slide.get(level + 1, 0.0)
+                if d:
+                    sg_ = 1.0 if here[inc] >= kp[inc] else -1.0
+                    q = (kp[0] + sg_ * d, kp[1]) if inc == 0 else (kp[0], kp[1] + sg_ * d)
+                if hitf(K, q):
+                    isl = core_at(ko, q)
+                    out["pushdown"].append(dict(role="tree_node", name=f"ckm_n{level + 1}_{tag}", level=level + 1,
+                                                xy=[round(q[0], 3), round(q[1], 3)], core=isl, level_slide_um=d,
+                                                same_axis_split=cax == inc))
+            elif hitf(K, kp):
                 q = None
                 if cax != inc and lg["in_core"] != "pushdown":
                     # the re-site lengthens both child legs by the slide: keep their hops within reach
@@ -1581,6 +1690,11 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     if fp is not None:
         rec(0, nx, 0, ny, 0, n0, "h", kids=[(g["i0"], g["i1"], g["j0"], g["j1"]) for g in R], here=c0)
     elif lg:
+        lvl_slide = {}
+        if lg["in_core"] == "level":
+            lvl_slide, lvl_rec = level_slides(lg, nx, nty, axes, node_xy, hop_slack, K,
+                                              (cells[n0]["x"] + BUF_W / 2, cells[n0]["y"] + ROW_Y / 2))
+            out["meta"]["level_slides"] = lvl_rec
         rec_lg(0, nx, 0, nty, 0, n0, "h", (cells[n0]["x"] + BUF_W / 2, cells[n0]["y"] + ROW_Y / 2), 0.0)
         pl = [dv["path_um"] for dv in out["drivers"].values()]
         pd = out["pushdown"]
