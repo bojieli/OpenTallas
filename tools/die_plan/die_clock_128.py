@@ -419,6 +419,7 @@ STACK_PAD = {"M2": (0.019, 0.009), "M3": (0.009, 0.020), "M4": (0.043, 0.012), "
 SHORT_STACK_PAD = {"M7": (0.016, 0.036), "M8": (0.08, 0.08)}
 CHANNEL_KEEP_UM = 0.864     # R20: channel-cell trunk centre >= one track pair (TREE_OFF_UM) inside the channel edge
 STACK_RISER_MAX_UM = 2.5     # longest M7 riser (TREE_OFF_UM + track move) the island window is sized for
+ESCAPE_MAX_UM = 21.6         # R31 trunk escape: farthest escaped M8 trunk from the pin row (2.5 PG pitches)
 
 
 def pin_xy(cells, c, pin, row_y, buf="BUFx24_ASAP7_75t_R"):
@@ -542,10 +543,51 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
                                             for ld, p in Ls)
             mh = 0.0 if exact_h else mm
             rsv = (min(xs_all) - mh, max(xs_all) + mh)
-            ty, tm = track("M8", D[1] + off, rsv[0], rsv[1], nm, "trunk", keep=pin_keep(n["drv"], chan_keep(D)) if dcell else None)
+            esc = None
+            em = M.get("meta", {}).get("trunk_escape")
+            # R31b: a numeric trunk_escape = span threshold (um): horizontal cell-driven trunks at least that long go
+            # out of the island window FIRST (pass-through trunks need the window only at their ends); shorter ones
+            # escape only when the window is full.  True = window-full fallback only.
+            first = dcell and em is not None and not isinstance(em, bool) and max(xs_all) - min(xs_all) >= float(em)
+            if (dcell and router is not None and em and (first or
+                    router.place("M8", D[1] + off, rsv[0], rsv[1], nm, keep=pin_keep(n["drv"], chan_keep(D)), dry=True)[0] is None)):
+                # R31 trunk escape (opt-in meta.trunk_escape): the driver island pin window (+-STACK_RISER_MAX_UM of the
+                # pin row) has no legal track left for this trunk.  Allot the trunk to the nearest free track OUTSIDE the
+                # window (next PG gaps, <= ESCAPE_MAX_UM off the pin row); driver and loads reach it by an M8 jog inside
+                # their own window + an M9 drop at their bar column (the R12 L-net form).  Same cells/NDR/endpoints.
+                lo_w = STACK_RISER_MAX_UM + 0.5
+                for dy in sorted((s_ * k for k in (lo_w + 4.32, lo_w + 12.96) for s_ in (1.0, -1.0)), key=abs):
+                    kp = (D[1] + lo_w, D[1] + ESCAPE_MAX_UM) if dy > 0 else (D[1] - ESCAPE_MAX_UM, D[1] - lo_w)
+                    if router.place("M8", D[1] + dy, rsv[0], rsv[1], nm, keep=kp, dry=True)[0] is not None:
+                        esc = (D[1] + dy, kp)
+                        break
+            if esc is not None:
+                ty, tm = track("M8", esc[0], rsv[0], rsv[1], nm, "escape trunk", keep=esc[1])
+                router.modes["M8:trunk_escape"] += 1
+            else:
+                ty, tm = track("M8", D[1] + off, rsv[0], rsv[1], nm, "trunk", keep=pin_keep(n["drv"], chan_keep(D)) if dcell else None)
             te = last_ext[0]
             xs_ = []
-            if dcell:
+            dx0 = D[0]
+            def esc_link(cell, pin, p, what):
+                # escaped-trunk endpoint: M9 drop at the bar column reserved over the WHOLE pin window (any jog row),
+                # then an M8 jog inside the window reserved only between the bar and the drop column (+-0.3 um)
+                sg = 1.0 if ty >= p[1] else -1.0
+                bx, bm = track("M9", p[0], ty, p[1] - sg * STACK_RISER_MAX_UM, nm, f"escape drop {what}",
+                               keep=(rsv[0], rsv[1]) if exact_h else None)
+                by, jm = track("M8", p[1] + sg * off, min(bx, p[0]) - 0.3, max(bx, p[0]) + 0.3, nm, f"escape jog {what}",
+                               keep=pin_keep(cell))
+                add(("M9", bx, min(ty, by), bx, max(ty, by)), bm)
+                if abs(bx - p[0]) > 1e-6:
+                    add(("M8", min(bx, p[0]), by, max(bx, p[0]), by), jm)
+                s_ = stack(cell, pin, p, (p[0], by))
+                s_["drop"] = dict(layer="M9", x=bx, y0=ty, y1=by)
+                s_["trunk_escape"] = True
+                stacks.append(s_)
+                return bx
+            if dcell and esc is not None:
+                dx0 = esc_link(n["drv"], "Y", D, "drv")
+            elif dcell:
                 stacks.append(stack(n["drv"], "Y", D, (D[0], ty)))
             for ld, p in Ls:
                 if ld.startswith("port:") and port_on_trunk:
@@ -563,6 +605,11 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
                     else:
                         bx = p[0] + off
                     branches.append((ld, bx, p[1]))
+                    xs_.append(bx)
+                    continue
+                if esc is not None and abs(p[1] - ty) > STACK_RISER_MAX_UM:
+                    bx = esc_link(ld, "A", p, ld)
+                    branches.append((ld, bx, ty))
                     xs_.append(bx)
                     continue
                 if l_drops and abs(p[1] - ty) > STACK_RISER_MAX_UM:
@@ -583,7 +630,7 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
                 stacks.append(stack(ld, "A", p, (p[0], ty)))
                 branches.append((ld, p[0], ty))
                 xs_.append(p[0])
-            xlo, xhi = min([D[0]] + xs_), max([D[0]] + xs_)
+            xlo, xhi = min([dx0] + xs_), max([dx0] + xs_)
             if exact_reserve and (xlo < rsv[0] - 1e-6 or xhi > rsv[1] + 1e-6):
                 errs.append(dict(kind="reserve_overflow", name=nm, detail=f"M8 trunk {xlo:.3f}..{xhi:.3f} outside "
                                  f"reservation {rsv[0]:.3f}..{rsv[1]:.3f}"))
@@ -594,7 +641,7 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
                 segs.insert(0, ("M8", xlo, ty, xhi, ty))
                 modes.insert(0, tm)
                 exts.insert(0, te)
-            tap0 = (D[0], ty)
+            tap0 = (dx0, ty)
         else:
             ys_all = [D[1]] + [p[1] + off for _, p in Ls]
             mv = min(mm, STACK_RISER_MAX_UM + off + 2 * row_y) if exact_reserve else mm
