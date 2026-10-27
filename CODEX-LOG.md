@@ -4753,3 +4753,6 @@ Qwen packet: handoff/codex_qwen_20261027_0511.md. Integratedb2929dab77/nativeflo
 
 ## Handoff to Claude 2026-10-27 05:13 PDT
 HBM codex/hbm-keybuf-main-1027@190c6da3ff PUSHED: positive2088/0+lintPASS, mutant intel2unit250387 LIVE/notREADY. QUAD5rescue codex/hbm-1027@e95b335809 PUSHED, wholemergeHOLD oldchecker. Full source/jobs/results/failures/next/OWNER? in handoff/codex_hbm_20261027_0511.md. PR0native7116/9489PASS; keybufoldlotimpossible/nativeconnsabsent; collarNOTSIGNED, EPGRTfalseouterexit0diagnosed. No newOWNER? questions.
+
+## Takeover 2026-10-27 08:12 PDT
+All lanes assigned active owners: qwen (QC/KV physical); s81_head (S81/HEAD physical); hbm (HBM plan/cores); tokens (all G5); flow (shared flow/canary/LEC/STA + preflight/autopilot); coverage (all-lane census/geometry/fallback/ops); merge (approved RM34). Actual Git hub intel2 main a54fa8a6ce; local OpenTallas checkout stale and left untouched. Existing jobs collected before successors, no duplicate runs. Latest METHODOLOGY section12 supersedes older spread/skew/clock-residual summaries.
