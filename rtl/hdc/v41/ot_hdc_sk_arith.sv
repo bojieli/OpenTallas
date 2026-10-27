@@ -120,10 +120,13 @@ module ot_hdc_sk_csa #(
             end
         end
     endgenerate
-    assign s = g_lv[LV].v[0 +: W];
+    // Last level in a module-scope wire: yosys read_verilog -sv does not resolve the
+    // hierarchical name g_lv[LV].v from inside the nested g_two generate scope.
+    wire [N*W-1:0] v_last = g_lv[LV].v;
+    assign s = v_last[0 +: W];
     generate
         if (cnt(LV) >= 2) begin : g_two
-            assign c = g_lv[LV].v[W +: W];
+            assign c = v_last[W +: W];
         end else begin : g_one
             assign c = {W{1'b0}};
         end
