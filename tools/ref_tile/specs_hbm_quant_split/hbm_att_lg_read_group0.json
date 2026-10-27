@@ -1,0 +1,113 @@
+{
+  "name": "hbm_att_lg_read_group0",
+  "top": "ot_hbm_attn_lg_read_group",
+  "kind": "tile",
+  "sources": [
+    "rtl/hdc/v41x/static/ot_hbm_attn_lg_read_group.sv"
+  ],
+  "params": {
+    "GROUP": 0
+  },
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 129.6,
+    "h": 43.2,
+    "exact": false
+  },
+  "layer_cap": "M5",
+  "macros": [],
+  "pins": {
+    "N": [
+      "rq",
+      "rr_i"
+    ],
+    "S": [
+      "rr_o",
+      "q_fetch_v",
+      "q_fetch_base",
+      "p_fetch_v",
+      "p_fetch_base"
+    ],
+    "W": [
+      "clk",
+      "rst_n"
+    ]
+  },
+  "recipe": 2,
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 5.4,
+    "pin_balance": {
+      "group_max": 1,
+      "h": "M4",
+      "v": "M5"
+    }
+  },
+  "slot_change_request": "NEW LG port-group leaf (v15 engine_lg_port_group_rule); slot requested from H-DIE (ATT_NE/QUANT_SW not yet in the rule table).",
+  "job": {
+    "owner": "Claude:H-ATTQ",
+    "branch": "main",
+    "tag": "hbmattlgreadgroup0",
+    "purpose": "ATT GEO-H LG read group leaf (dcf0b6dd1): query/P front bank-pair read port group with own clock entry; rq same edge, rr +1 internal (FILL_LAT 9), 0 added programme cycles.",
+    "benches": [
+      {
+        "name": "ATT_QP_LG_exact",
+        "cmd": "LG=1 bash tools/hbm_static_attention/run_QP_local_host_front.sh {RUN}/bench_lg && cat {RUN}/bench_lg/profile0.log {RUN}/bench_lg/gate",
+        "expect": "pass",
+        "pass_regex": "PASS LG group-binding mutant m7 killed",
+        "threads": 4,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "ATT_QP_LG_binding_mutant",
+        "cmd": "LG=1 bash tools/hbm_static_attention/run_QP_local_host_front.sh {RUN}/bench_lg_m >/dev/null 2>&1; cat {RUN}/bench_lg_m/m7.log; exit $(cat {RUN}/bench_lg_m/m7.rc)",
+        "expect": "fail",
+        "fail_regex": "ATT_FRONT",
+        "threads": 4,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ]
+      }
+    ],
+    "extra_paths": [
+      "physical/asap7_memory_macros",
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+      "physical/hbm_accel_die_views/common",
+      "physical/hbm_accel_die_views/quant",
+      "results/hbm_static_quant_1015/SW_replica",
+      "rtl/hbm_accel/generic",
+      "rtl/hdc",
+      "rtl/hdc/v41x/static",
+      "rtl/lib",
+      "rtl/test/hbm_accel/generic",
+      "tools/hbm_static_attention",
+      "tools/hgi_unit_tput"
+    ],
+    "views_to": "physical/ref_tile/hbm_att_lg_read_group0/views",
+    "record_to": "results/rtl/ref_tile/hbm_att_lg_read_group0"
+  },
+  "children": [],
+  "inter": [],
+  "io_flop_at_pins": {
+    "cols": 4,
+    "allow_none": true
+  },
+  "inhold": true,
+  "outhold": true,
+  "keep_pin_regs": true,
+  "pin_reg_split": true,
+  "hold_pad": {
+    "cell": "HB2xp67_ASAP7_75t_R"
+  },
+  "structural_change": "ATT GEO-H LG read group leaf (dcf0b6dd1): query/P front bank-pair read port group with own clock entry; rq same edge, rr +1 internal (FILL_LAT 9), 0 added programme cycles."
+}

@@ -1,0 +1,98 @@
+{
+ "kind": "tile",
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "layer_cap": "M5",
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "name": "coll_vmcore",
+ "top": "ot_hgi_coll_b2_vmcore",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_b2_vmport.sv",
+  "rtl/hbm_accel/generic/collective/rgx/ot_hgi_coll_rgx_snk.sv"
+ ],
+ "params": {
+  "CRD": 16,
+  "WCRD": 4
+ },
+ "pins": {
+  "S": [
+   "hv",
+   "hrx",
+   "th",
+   "epoch",
+   "qfault",
+   "pop_cmd",
+   "rgx_t_v",
+   "rgx_t_vm",
+   "rgx_f_cr",
+   "tkw_f_cr",
+   "fault"
+  ],
+  "N": [
+   "cq",
+   "cr"
+  ],
+  "E": [
+   "wq",
+   "wq_cr",
+   "wq_done"
+  ],
+  "W": [
+   "clk",
+   "rst_n",
+   "sid",
+   "xw",
+   "xwa"
+  ]
+ },
+ "outline": {
+  "w": 324.0,
+  "h": 259.2
+ },
+ "job": {
+  "owner": "Claude:H-COLL",
+  "branch": "claude/hbm-p2p-coll-1014",
+  "tag": "r2",
+  "hold_merge": "Individual leaf route; SW slice parent ot_vms_slice_coll_sw native pin/reset/clock integration qualification remains required.",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/vm",
+   "rtl/hbm_accel/generic/collective",
+   "rtl/link",
+   "physical/asap7_memory_macros"
+  ],
+  "purpose": "SW VM slice COLL writer core leaf r2 (26f8e459b): registered decode stage, one-hot bank issue, registered owner retire + popcount; WCRD 4 (COLL write group WRS 0 in-parent); bench 29,771 cyc vs 29,768 before",
+  "benches": [
+   {
+    "name": "b2vm_nc4_pos",
+    "cmd": "JOBS=4 bash rtl/hbm_accel/generic/collective/p2p/run_b2_vmport_bench.sh {RUN}/b2vm_nc4_pos -GRLY=20 -GSNC=4",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "b2vm_early_credit",
+    "cmd": "if JOBS=4 bash rtl/hbm_accel/generic/collective/p2p/run_b2_vmport_bench.sh {RUN}/b2vm_early_credit -GRLY=20 -GSNC=4 -GMUT=1; then exit 0; elif test -s {RUN}/b2vm_early_credit/run.log && ! grep -q '^B2_COLL_VMPORT PASS' {RUN}/b2vm_early_credit/run.log; then exit 1; else exit 0; fi",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/coll_vmcore/views",
+  "record_to": "results/rtl/ref_tile/coll_vmcore"
+ }
+}

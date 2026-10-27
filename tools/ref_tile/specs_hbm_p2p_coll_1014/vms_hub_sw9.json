@@ -1,0 +1,93 @@
+{
+ "kind": "tile",
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "layer_cap": "M5",
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "name": "vms_hub_sw9",
+ "top": "ot_vms_hub",
+ "sources": [
+  "rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv"
+ ],
+ "pins": {
+  "W": [
+   "cq",
+   "cr"
+  ],
+  "E": [
+   "pq",
+   "pq_cr",
+   "pr"
+  ],
+  "N": [
+   "cwi",
+   "cwi_cr",
+   "cco0"
+  ],
+  "S": [
+   "clk",
+   "rst_n",
+   "sid",
+   "cci",
+   "cci_cr",
+   "cco1",
+   "status"
+  ]
+ },
+ "params": {
+  "PHYSICAL_RING": 1,
+  "NC": 9,
+  "CWI": 2,
+  "CCI": 2
+ },
+ "outline": {
+  "w": 129.6,
+  "h": 648.0
+ },
+ "job": {
+  "owner": "Claude:H-COLL",
+  "branch": "claude/hbm-p2p-coll-1014",
+  "tag": "r1",
+  "hold_merge": "Individual leaf route; SW slice parent ot_vms_slice_coll_sw native pin/reset/clock integration qualification remains required.",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/vm",
+   "rtl/hbm_accel/generic/collective",
+   "rtl/link",
+   "physical/asap7_memory_macros"
+  ],
+  "purpose": "B2 VM hub for the SW slice with the COLL port: NC 9 (4 die clients + 5 COLL lanes), PHYSICAL_RING 1 (perimeter SID order); RTL = closed vms_hub v06 + P2P ring mapping",
+  "benches": [
+   {
+    "name": "b2vm_nc4_pos",
+    "cmd": "JOBS=4 bash rtl/hbm_accel/generic/collective/p2p/run_b2_vmport_bench.sh {RUN}/b2vm_nc4_pos -GRLY=20 -GSNC=4",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "b2vm_route_mut",
+    "cmd": "if JOBS=4 bash rtl/hbm_accel/generic/collective/p2p/run_b2_vmport_bench.sh {RUN}/b2vm_route_mut -GRLY=20 -GSNC=4 -GROUTE_MUT=1; then exit 0; elif test -s {RUN}/b2vm_route_mut/run.log && ! grep -q '^B2_COLL_VMPORT PASS' {RUN}/b2vm_route_mut/run.log; then exit 1; else exit 0; fi",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/vms_hub_sw9/views",
+  "record_to": "results/rtl/ref_tile/vms_hub_sw9"
+ }
+}

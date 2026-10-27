@@ -1,0 +1,100 @@
+{
+ "name": "qfd_static_command_fork42",
+ "top": "qfd_static_command_fork42",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_split/qfd_static_command_fork42.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 17.28,
+  "h": 15.12,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "W": [
+   "a"
+  ],
+  "E": [
+   "b0"
+  ],
+  "N": [
+   "b1",
+   "ck",
+   "rst_n"
+  ]
+ },
+ "io_tcl": "physical/qwen_b2_forks/qfd_static_command_fork42.tcl",
+ "inter": [
+  "*"
+ ],
+ "refglob": "*",
+ "io_budget": {
+  "in": 0.2,
+  "out": 0.2
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 4,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "m5_pg_pitch": 2.7
+ },
+ "macros": [],
+ "children": [],
+ "inhold": true,
+ "outhold": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual RTL captures each a bit in independent b0/b1 flops on the same edge; outputs are these actual FFs. Reset pin captures in one FF. Adding generic boundary registers would change the proved one-edge compiled command/selector latency."
+ },
+ "recipe": 3,
+ "keep_pin_regs": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "job": {
+  "owner": "Codex:Q-COMPUTE-DIE",
+  "branch": "codex/qwen-b2-allocator-command-0812",
+  "tag": "cf1",
+  "purpose": "NEW actual 42bit registered fork: exact one-edge independently registered outputs, source-bound balanced static tree; native clock/pin/TTFFDRC gate required before die adoption",
+  "benches": [
+   {
+    "name": "fork_exact",
+    "cmd": "bash tools/qwen_split/run_fork_bench.sh command 0 {RUN}/bench/positive",
+    "expect": "pass",
+    "pass_regex": "PASS COMMAND_FORK checked=2048",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "fork_mutant",
+    "cmd": "bash tools/qwen_split/run_fork_bench.sh command 1 {RUN}/bench/mutant",
+    "expect": "fail",
+    "fail_regex": "fork exact edge k=0",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/test/qwen_command_fork",
+   "tools/qwen_split/run_fork_bench.sh",
+   "physical/qwen_b2_forks"
+  ]
+ },
+ "std_area_um2": 38.46204,
+ "structural_change": "Actual first gate identified pin-anchor pack failure: packed4um IO bands cannot hold output FF plus BUF/HB2/BUF and inputhold FIRM stations. Spread all data bits across available faces and grow core for measured source cells plus actual hold/clock cells; preserve actual same-edge RTL copies."
+}

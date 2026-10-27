@@ -158,14 +158,86 @@ class Transient(unittest.TestCase):
         j = job(status="READY", stage_tag=None, hosts_tried=["h"])
         stl = cl.stage_list(SPEC)
         j["stage_idx"] = next(i for i, x in enumerate(stl) if x["kind"] == "bench")
-        fleet = SimpleNamespace(choose=lambda spec, exclude: ("h2", None))
+        fleet = SimpleNamespace(choose=lambda spec, exclude: ("h2", None), launched=lambda *a, **kw: None)
         ex = subprocess.TimeoutExpired(["ssh", "h"], 300)
-        with patch.object(cl, "log"), patch.object(cl, "host_cfg", return_value=dict(label="H", base="/b")):
+        with patch.object(cl, "log"), patch.object(cl, "experiment"), \
+                patch.object(cl, "host_cfg", return_value=dict(label="H", base="/b")):
             self.assertTrue(cl.handle_transient(j, fleet, ex))
             self.assertEqual(j["host"], "h")
             cl.handle_transient(j, fleet, ex)
             cl.handle_transient(j, fleet, ex)
         self.assertEqual((j["host"], j["status"]), ("h2", "SYNC"))
+
+    def test_ready_route_moves_after_three(self):
+        """2026-10-11: a never-launched route job on an overloaded host (ssh timeouts) moves and re-calibrates"""
+        import subprocess
+        spec = dict(SPEC, stages=dict(SPEC["stages"], calibrate=dict(cmd="cal", base="/b/x")))
+        stl = cl.stage_list(spec)
+        cal = next(i for i, x in enumerate(stl) if x["kind"] == "calibrate")
+        rt = next(i for i, x in enumerate(stl) if x["kind"] == "route")
+        self.assertGreater(rt, cal)
+        j = job(spec=spec, status="READY", stage_tag=None, stage_idx=rt, hosts_tried=["h"])
+        seen = []
+        fleet = SimpleNamespace(choose=lambda spec, exclude: (seen.append(exclude) or ("h2", None)),
+                                launched=lambda *a, **kw: None)
+        ex = subprocess.TimeoutExpired(["ssh", "h"], 300)
+        with patch.object(cl, "log"), patch.object(cl, "experiment"), \
+                patch.object(cl, "host_cfg", return_value=dict(label="H", base="/b")):
+            for _ in range(3):
+                self.assertTrue(cl.handle_transient(j, fleet, ex))
+        self.assertEqual((j["host"], j["status"], j["stage_idx"], j["transient"]), ("h2", "SYNC", cal, 0))
+        self.assertEqual(seen, [["h"]])
+        self.assertNotIn("transient_next", j)
+        # stage_tag left over from the finished calibrate (never cleared) does not pin a READY route job
+        j2 = job(spec=spec, status="READY", stage_tag="calibrate.a1", stage_idx=rt, hosts_tried=["h"])
+        with patch.object(cl, "log"), patch.object(cl, "experiment"), \
+                patch.object(cl, "host_cfg", return_value=dict(label="H", base="/b")):
+            for _ in range(3):
+                cl.handle_transient(j2, fleet, ex)
+        self.assertEqual((j2["host"], j2["stage_idx"]), ("h2", cal))
+        # a launched route (RUNNING) keeps backing off on its host
+        j3 = job(spec=spec, status="RUNNING", stage_tag="route.a1", stage_idx=rt, hosts_tried=["h"])
+        with patch.object(cl, "log"), patch.object(cl, "experiment"), \
+                patch.object(cl, "host_cfg", return_value=dict(label="H", base="/b")):
+            for _ in range(3):
+                cl.handle_transient(j3, fleet, ex)
+        self.assertEqual(j3["host"], "h")
+
+
+class MemoryOffload(unittest.TestCase):
+    """HBM group A 2026-10-14: a bench that never fits the artifact host's memory moves after the wait, chain restarts."""
+
+    class Tight(Fleet):
+        def fits(self, host, *a):
+            return (host != "h"), "h MemAvailable 88 GB < 96+2"
+
+    def _run(self, since):
+        j = job(bench_par=True, status="RUNNING", stage_idx=1, bench_location=dict(host="h", run="/r", attempt=1),
+                btrack={"bench_exact": dict(state="done", host="h", run="/r", tag="bench_exact.a1b1", n=1)},
+                benches={"bench_exact": dict(ok=True)}, bwait="x", bwait_since=since)
+        launched = []
+
+        def launch(v, st, cmd):
+            v["stage_tag"] = f"{st['key']}.a{v['attempt']}"
+            launched.append((v["host"], st["key"]))
+        off = dict(host="h2", run="/b/t-bench", attempt=1)
+        with patch.object(cl, "launch_stage", launch), patch.object(cl, "offload_bench_location", return_value=off), \
+                patch.object(cl, "vanished_bench_location", return_value=False), patch.object(cl, "log"), \
+                patch.object(cl, "hosts_table", return_value=[dict(name="h", caps=[]), dict(name="h2", caps=[])]):
+            cl.bench_track(j, self.Tight(), cl.stage_list(SPEC))
+        return j, launched
+
+    def test_waits_before_the_threshold(self):
+        j, launched = self._run(cl.now_iso())
+        self.assertEqual(launched, [])
+        self.assertEqual(j["bench_location"]["host"], "h")
+
+    def test_moves_after_the_threshold_and_restarts_the_chain(self):
+        j, launched = self._run("2026-10-14T00:00:00-07:00")
+        self.assertEqual(launched, [("h2", "bench_neg")])
+        self.assertEqual(j["bench_location"]["host"], "h2")
+        self.assertNotIn("bench_exact", j["benches"])
+        self.assertNotIn("bwait_since", j)
 
 
 if __name__ == "__main__":

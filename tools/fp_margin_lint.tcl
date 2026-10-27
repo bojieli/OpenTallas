@@ -33,8 +33,19 @@ proc ot_fp_lint_dump {out {edge_band_um 3.0}} {
   set ls {}
   foreach l [$tech getLayers] {
     if {[$l getType] ne "ROUTING"} { continue }
+    # Actual DEF tracks, not a presumed zero-origin technology pitch. Manual
+    # BPin placement can bypass PPL's track snapping (TT fs4: 695 pins -12 nm).
+    set patterns {}
+    set grid [$block findTrackGrid $l]
+    if {$grid ne "NULL" && $grid ne ""} {
+      set axis [expr {[$l getDirection] eq "VERTICAL" ? "X" : "Y"}]
+      for {set i 0} {$i < [$grid getNumGridPatterns$axis]} {incr i} {
+        lassign [$grid getGridPattern$axis $i] start count step
+        lappend patterns [format {[%.6f,%d,%.6f]} [expr {$start / $dbu}] $count [expr {$step / $dbu}]]
+      }
+    }
     lappend ls "\{\"name\": [ot_fpl_q [$l getName]], \"level\": [$l getRoutingLevel], \"dir\": [ot_fpl_q [$l getDirection]],\
- \"pitch\": [expr {[$l getPitch] / $dbu}], \"width\": [expr {[$l getWidth] / $dbu}]\}"
+ \"pitch\": [expr {[$l getPitch] / $dbu}], \"width\": [expr {[$l getWidth] / $dbu}], \"track_patterns\": \[[join $patterns ,]\]\}"
   }
   puts $f "\"layers\": \[[join $ls ,]\],"
   # instances: per-master counts, macros (BLOCK masters) with their geometry
@@ -182,6 +193,14 @@ proc ot_fp_lint_flow {} {
   puts "OT_FP_LINT: [expr {[clock seconds] - $t0}] s"
   # the loop's verdict file (docker shim mounts {CL}/fplint at /ot_fplint)
   if {[file isdirectory /ot_fplint]} { catch {file copy -force $rep /ot_fplint/fp_margin_lint.json} }
+  # TEXTBOOK-LINT (owner 2026-10-11): classic unclosable structures on the synthesis netlist + this floorplan
+  set tb [ot_textbook_lint $outdir $dump]
+  if {$tb ne "" && !($rc && [regexp {FLOORPLAN_MARGIN} $res])} {
+    if {[file isdirectory /ot_fplint]} {
+      set fh [open /ot_fplint/FAIL w]; puts $fh "FLOORPLAN_MARGIN: $tb"; close $fh
+    }
+    error "FLOORPLAN_MARGIN: $tb (textbook lint refused the netlist / floorplan before global placement, see $outdir/textbook_lint.json)"
+  }
   if {$rc && [regexp {FLOORPLAN_MARGIN} $res]} {
     if {[file isdirectory /ot_fplint]} {
       set fh [open /ot_fplint/FAIL w]; puts $fh $res; close $fh
@@ -190,4 +209,41 @@ proc ot_fp_lint_flow {} {
   } elseif {$rc} {
     puts "OT_FP_LINT: checker error (not a verdict), flow continues: $res"
   }
+}
+
+# TEXTBOOK-LINT (owner 2026-10-11, tools/textbook_lint.py): runs inside the floorplan-lint hook on the ORFS synthesis
+# netlist (1_2_yosys.v / 1_synth.v in RESULTS_DIR, else a write_verilog of the current db) and the geometry dump just
+# written.  Config: /ot_fplint/textbook_cfg.json from the loop ({"mode": "warn"|"refuse"|"off", "set", "waive",
+# "refuse_checks"}); without it the lint WARNs.  Writes textbook_lint.json + the printed lines to REPORTS_DIR and
+# /ot_fplint (TEXTBOOK = the loop's WARN log).  Returns "" or the refusal text ("textbook_lint: ...").  A checker error
+# or a timeout (OT_TEXTBOOK_TIMEOUT, default 1800 s) never stops the flow.
+proc ot_textbook_lint {outdir dump} {
+  set py $::ot_fpl_dir/textbook_lint.py
+  if {[info exists ::env(OT_TEXTBOOK_LINT_PY)]} { set py $::env(OT_TEXTBOOK_LINT_PY) }
+  if {![file exists $py]} { puts "OT_TEXTBOOK_LINT: $py missing: skipped"; return "" }
+  set cfg /ot_fplint/textbook_cfg.json
+  set net ""
+  foreach f {1_2_yosys.v 1_synth.v} {
+    if {[info exists ::env(RESULTS_DIR)] && [file exists $::env(RESULTS_DIR)/$f]} { set net $::env(RESULTS_DIR)/$f; break }
+  }
+  if {$net eq ""} {
+    set net $outdir/textbook_netlist.v
+    if {[catch {write_verilog $net} msg]} { puts "OT_TEXTBOOK_LINT: no netlist ($msg): skipped"; return "" }
+  }
+  set rep $outdir/textbook_lint.json
+  set to 1800
+  if {[info exists ::env(OT_TEXTBOOK_TIMEOUT)]} { set to $::env(OT_TEXTBOOK_TIMEOUT) }
+  set args [list timeout $to python3 $py check --netlist $net --dump $dump --out $rep]
+  if {[file exists $cfg]} { lappend args --cfg $cfg }
+  set t0 [clock seconds]
+  set rc [catch {exec {*}$args 2>@1} res]
+  puts $res
+  puts "OT_TEXTBOOK_LINT: [expr {[clock seconds] - $t0}] s"
+  if {[file isdirectory /ot_fplint]} {
+    catch {file copy -force $rep /ot_fplint/textbook_lint.json}
+    catch {set fh [open /ot_fplint/TEXTBOOK w]; puts $fh $res; close $fh}
+  }
+  if {$rc && [regexp {TEXTBOOK_LINT: ([^\n]*)} $res -> why]} { return "textbook_lint: $why" }
+  if {$rc} { puts "OT_TEXTBOOK_LINT: checker error / timeout (not a verdict), flow continues" }
+  return ""
 }

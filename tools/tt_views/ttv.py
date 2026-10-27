@@ -33,7 +33,7 @@ HERE = Path(__file__).resolve().parent
 STORE = Path("/home/ubuntu/claude-takeover-20261007/tt-views/store")
 INBOX = Path("/tmp/claude-review-20261003/closure_jobs")
 LOOPJOBS = Path.home() / ".local/state/closure_loop/jobs"
-LOOPCODE = Path("/home/ubuntu/wt-codex-closure-reliability/tools/closure_loop/closure_loop.py")
+LOOPCODE = Path("/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py")  # the live daemon's code (wt-codex-closure-reliability was pruned)
 ROOTS = ["/srv/opentallas-scratch2/scratch/claude", "/srv/opentallas-scratch/claude"]
 TTV_FIND = ("$(ls -d /srv/opentallas-scratch2/scratch/claude/ttviews/ttv_install.sh "
             "/srv/opentallas-scratch/claude/ttviews/ttv_install.sh 2>/dev/null | head -1)")

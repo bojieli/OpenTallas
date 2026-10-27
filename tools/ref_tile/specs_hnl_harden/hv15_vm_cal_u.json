@@ -1,0 +1,321 @@
+{
+ "name": "hv15_vm_cal_u",
+ "top": "hfd_hgi_vm_calendar",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n",
+   "cfg_we",
+   "cfg_addr",
+   "cfg_data",
+   "start_v",
+   "start_base",
+   "start_limit",
+   "start_loops"
+  ],
+  "E": [
+   "client_seq",
+   "response_enable",
+   "response_seq",
+   "bank_enable",
+   "bank_client",
+   "hub_ring_enable",
+   "hub_ring_client",
+   "rslot_v",
+   "wslot_v",
+   "rslot",
+   "wslot",
+   "ring_tx_enable",
+   "ring_tx_source",
+   "replay_enable",
+   "replay_source",
+   "lg_local_read",
+   "lg_local_write"
+  ],
+  "S": [
+   "calendar_v",
+   "active",
+   "done",
+   "fault",
+   "ordinal"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 3,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1
+  }
+ ],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M5",
+   "group_max": 1
+  }
+ },
+ "job": {
+  "owner": "Codex:H-HARDEN-2330",
+  "branch": "claude/hnl-harden-2210",
+  "tag": "compact2330",
+  "purpose": "ONE VM calendar master hfd_hgi_vm_calendar for SW/SE/NW/NE (dedupe, replaces 4 closed per-quadrant masters): universal programme layout (per-field max width, W=187), compiler programme SRAM 1024x256 drives VM slots/LG/ring/replay on fixed cycles; structural fix of the native capture FAIL (rst_n 229-268 ps > 190: async reset fanned to ~90 flops) = local 2-flop reset synchroniser, rst_n pin load 2 flops; 0 normal cycles. Compact die-owned grant e948073d9:220.32x116.64 and exact assigned per-bus face ranges, removes unused north/south whitespace; fixed normal edges unchanged.",
+  "extra_paths": [
+   "tools/hbm_v15_harden",
+   "tools/hbm_vm_static_calendar.py",
+   "results/arch/hbm_vm_static_1014/quadrant_abi.json",
+   "results/arch/hbm_vm_lg_split_1015/programme",
+   "rtl/hbm_accel/generic/vm/static",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "results/arch/hier_contract_1015/hbm_v15.json"
+  ],
+  "record_to": "results/rtl/ref_tile/hv15_vm_cal_u",
+  "benches": [
+   {
+    "name": "exact",
+    "cmd": "bash tools/hbm_v15_harden/bench_calendar_universal.sh {RUN}/bench/exact 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "VM_CALENDAR_UNIVERSAL_ALL PASS4",
+    "min_count_regex": "PASS(\\d+) edges exact"
+   },
+   {
+    "name": "mut_reset",
+    "cmd": "bash tools/hbm_v15_harden/bench_calendar_universal.sh {RUN}/bench/m1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mut_field",
+    "cmd": "bash tools/hbm_v15_harden/bench_calendar_universal.sh {RUN}/bench/m2 2",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mut_core",
+    "cmd": "bash tools/hbm_v15_harden/bench_calendar_universal.sh {RUN}/bench/m3 3",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "lg_programme",
+    "cmd": "bash tools/hbm_v15_harden/bench_lg_programmed_universal.sh {RUN}/bench/lg0 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "VM_LG_PROGRAMMED_UNIVERSAL PASS"
+   },
+   {
+    "name": "lg_mutant",
+    "cmd": "bash tools/hbm_v15_harden/bench_lg_programmed_universal.sh {RUN}/bench/lg1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "core_exact",
+    "cmd": "bash tools/hbm_v15_harden/bench_calendar.sh {RUN}/bench/core 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "VMS_STATIC_CALENDAR PASS",
+    "min_count_regex": "PASS(\\d+) gapless"
+   }
+  ]
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "outline": {
+  "w": 220.32,
+  "h": 116.64,
+  "exact": true
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every data input at the pin (ot_vms_calendar_static cfg_we_q/cfg_addr_q/cfg_data_q/start_*_q) and every output is a flop (calendar word, calendar_v, ordinal, active, done, fault); rst_n drives only a local 2-flop synchroniser (async assert, 2-edge release); a wrapper stage would duplicate them (+1/+1 for nothing)"
+ },
+ "pin_ranges": {
+  "clk": [
+   43.584,
+   43.68
+  ],
+  "rst_n": [
+   43.68,
+   43.776
+  ],
+  "cfg_we": [
+   43.776,
+   43.872
+  ],
+  "cfg_addr": [
+   43.872,
+   44.832
+  ],
+  "cfg_data": [
+   44.832,
+   69.408
+  ],
+  "start_v": [
+   69.408,
+   69.504
+  ],
+  "start_base": [
+   69.504,
+   70.464
+  ],
+  "start_limit": [
+   70.464,
+   71.52
+  ],
+  "start_loops": [
+   71.52,
+   73.056
+  ],
+  "client_seq": [
+   49.344,
+   50.304
+  ],
+  "response_enable": [
+   50.304,
+   50.784
+  ],
+  "response_seq": [
+   50.784,
+   51.744
+  ],
+  "bank_enable": [
+   51.744,
+   52.512
+  ],
+  "bank_client": [
+   52.512,
+   54.816
+  ],
+  "hub_ring_enable": [
+   54.816,
+   55.008
+  ],
+  "hub_ring_client": [
+   55.008,
+   55.584
+  ],
+  "rslot_v": [
+   55.584,
+   56.352
+  ],
+  "wslot_v": [
+   56.352,
+   57.12
+  ],
+  "rslot": [
+   57.12,
+   59.424
+  ],
+  "wslot": [
+   59.424,
+   61.728
+  ],
+  "ring_tx_enable": [
+   61.728,
+   61.92
+  ],
+  "ring_tx_source": [
+   61.92,
+   62.496
+  ],
+  "replay_enable": [
+   62.496,
+   62.592
+  ],
+  "replay_source": [
+   62.592,
+   62.688
+  ],
+  "lg_local_read": [
+   62.688,
+   64.992
+  ],
+  "lg_local_write": [
+   64.992,
+   67.296
+  ],
+  "calendar_v": [
+   108.432,
+   108.528
+  ],
+  "active": [
+   108.528,
+   108.624
+  ],
+  "done": [
+   108.624,
+   108.72
+  ],
+  "fault": [
+   108.72,
+   108.816
+  ],
+  "ordinal": [
+   108.816,
+   111.888
+  ]
+ },
+ "contract": {
+  "file": "results/arch/hier_contract_1015/hbm_v15.json",
+  "slot": "calendar_NE"
+ }
+}

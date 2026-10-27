@@ -1,0 +1,257 @@
+{
+ "name": "dsdv_svc_sx_hrow",
+ "top": "dsdv_svc_sx_hrow",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv"
+ ],
+ "params": {},
+ "orfs_vars": {
+  "VERILOG_INCLUDE_DIRS": "/src/rtl/dsrom_sys/s81_dv/svc_rs"
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "macros": [],
+ "pins": {
+  "N": [
+   "gi_n",
+   "si_n",
+   "ck",
+   "rst",
+   "go_n",
+   "so_n"
+  ],
+  "E": [
+   "gi_e",
+   "go_e",
+   "si_e",
+   "so_e",
+   "rt_o"
+  ],
+  "S": [
+   "gi_s",
+   "go_s",
+   "si_s",
+   "so_s",
+   "t_o",
+   "sid",
+   "hb",
+   "fault"
+  ],
+  "W": [
+   "gi_w",
+   "go_w",
+   "si_w",
+   "so_w",
+   "l_i"
+  ]
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "clock": "cts",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.0,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1
+  },
+  "cts_sink": {
+   "size": 30,
+   "diameter_um": 60,
+   "extra": "-sink_clustering_levels 2 -distance_between_buffers 100 -clustering_unbalance_ratio 0.5",
+   "why": "S81U-SVCX3 10-17: gate 2 default H-tree (32/44 clusters, 8 levels to 17 um regions, 11 BUFx24/path) gave TT 401..543 ps, a 207-flop SW-corner gather pin-flop group hung on 150 um return wires from far taps (+120 ps). Measured on the gate-2 placement (re-CTS, TT, placement RC): this setting 329..401 ps (spread 72), no corner outliers; default 401..546; unclustered 437..535 / dbb>=80 unclustered diverges. Kept unchanged for the half-row leaf (S81U-SVCX4). S81U-SVCX4 10-17 half-row gate 1 (a069ef9ef, 7,310 sinks): gate-3 setting TT 177.8..293.3 ps (spread 115.5); 18-variant re-CTS sweep on its 3_place.odb (TT, placement RC): unbalance 0.5 + buffer every 100 um = 207.0..261.4 ps (spread 54.5); 0.5/80 266.8 max / 73.4; 0.5/120 63.0; default levels 244..305; 0.8 variants 82..154 spread."
+  }
+ },
+ "structural_change": "S81U-SVCX4 (clock rule): the one-row centre leaf dsdv_svc_sx_row (14.4k sinks, 388.8 sq) measured TT 326..415 ps / 89 ps spread at its best CTS (gate 3), over 300/80; the leaf is now HALF a row (head-parity half: 8 qaddf + gather/scatter crossbars, ~7.3k sinks, 216 sq at <= 5.3 pins/um), 8 per slice, hardened once (strap hb). Nothing crosses halves (pair nodes no longer shift the scatter; the leaf taps local slot 0 of half head[0]); bit-identical, zero added cycles, 5-cycle hop kept; dsdv_svc_sx ports unchanged.",
+ "job": {
+  "owner": "Claude:S81U-SVCX4",
+  "branch": "claude/s81u-svcx4-1017",
+  "tag": "dsdv_svc_sx_hrow",
+  "purpose": "S81-DV svc_rs score-exchange centre half-row leaf dsdv_svc_sx_hrow to closure (TT setup / FF hold / DRC 0 + native audit).",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/svc_rs",
+   "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
+   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+   "tools/s81_dv/svc_rs",
+   "results/rtl/s81_dv_1016/svc_rs_split"
+  ],
+  "benches": [
+   {
+    "name": "sx_exact",
+    "cmd": "bash tools/s81_dv/svc_rs/sx_bench.sh {RUN}/sx_exact base '1 2'",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 28,
+    "pass_regex": "^SX_BENCH PASS$",
+    "min_count_regex": "^SX root 600/600 beats \\(err 0\\)  taps (9600)/9600 \\(err 0\\)"
+   },
+   {
+    "name": "sx_mutflag",
+    "cmd": "bash tools/s81_dv/svc_rs/sx_bench.sh {RUN}/sx_mutflag mut1 '1'",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 28,
+    "fail_regex": "^SX_BENCH FAIL$",
+    "fail_witness": "results/rtl/s81_dv_1016/svc_rs_split/svcx4/mut1/run_s1.log"
+   },
+   {
+    "name": "sx_mutscatter",
+    "cmd": "bash tools/s81_dv/svc_rs/sx_bench.sh {RUN}/sx_mutscatter mut2 '1'",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 28,
+    "fail_regex": "^SX_BENCH FAIL$",
+    "fail_witness": "results/rtl/s81_dv_1016/svc_rs_split/svcx4/mut2/run_s1.log"
+   },
+   {
+    "name": "sx_mutorder",
+    "cmd": "bash tools/s81_dv/svc_rs/sx_bench.sh {RUN}/sx_mutorder mutorder '1'",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 28,
+    "fail_regex": "^SX_BENCH FAIL$",
+    "fail_witness": "results/rtl/s81_dv_1016/svc_rs_split/svcx4/mutorder/run_s1.log"
+   },
+   {
+    "name": "sx_mutskew",
+    "cmd": "bash tools/s81_dv/svc_rs/sx_bench.sh {RUN}/sx_mutskew mutskew '1'",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 28,
+    "fail_regex": "^SX_BENCH FAIL$",
+    "fail_witness": "results/rtl/s81_dv_1016/svc_rs_split/svcx4/mutskew/run_s1.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/dsdv_svc_sx_hrow/views",
+  "record_to": "results/rtl/ref_tile/dsdv_svc_sx_hrow"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered (dsdv_svc_sx_hrow header): every input lands in a flop at the pin and every output is a flop; recipe pin_regs would add a second unpriced stage on every lane (the role ROM offsets assume exactly the monolith's 5-cycle hop)."
+ },
+ "outline": {
+  "w": 216.0,
+  "h": 216.0
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "children": [],
+ "inter": [],
+ "pin_ranges": {
+  "gi_n": [
+   5.4,
+   73.13
+  ],
+  "si_n": [
+   73.13,
+   107.75
+  ],
+  "ck": [
+   107.75,
+   108.0
+  ],
+  "rst": [
+   108.0,
+   108.25
+  ],
+  "go_n": [
+   108.25,
+   175.98
+  ],
+  "so_n": [
+   175.98,
+   210.6
+  ],
+  "gi_e": [
+   5.4,
+   56.42
+  ],
+  "go_e": [
+   56.42,
+   107.43
+  ],
+  "si_e": [
+   107.43,
+   133.51
+  ],
+  "so_e": [
+   133.51,
+   159.58
+  ],
+  "rt_o": [
+   159.58,
+   210.6
+  ],
+  "gi_s": [
+   5.4,
+   69.75
+  ],
+  "go_s": [
+   69.75,
+   134.1
+  ],
+  "si_s": [
+   134.1,
+   166.99
+  ],
+  "so_s": [
+   166.99,
+   199.88
+  ],
+  "t_o": [
+   199.88,
+   209.17
+  ],
+  "sid": [
+   209.17,
+   210.12
+  ],
+  "hb": [
+   210.12,
+   210.36
+  ],
+  "fault": [
+   210.36,
+   210.6
+  ],
+  "gi_w": [
+   5.4,
+   56.42
+  ],
+  "go_w": [
+   56.42,
+   107.43
+  ],
+  "si_w": [
+   107.43,
+   133.51
+  ],
+  "so_w": [
+   133.51,
+   159.58
+  ],
+  "l_i": [
+   159.58,
+   210.6
+  ]
+ }
+}

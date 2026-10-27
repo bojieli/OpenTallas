@@ -1,0 +1,7 @@
+{
+  "OT_PIN_REGS_RESET_PORTS": "rst,rsv",
+  "OT_PIN_REGS_RESET": "^(rst|rsv)(\\[.*\\])?$",
+  "OT_PIN_REGS": "1",
+  "OT_PIN_REGS_EXCLUDE": "^ckv$|^(f_ks|f_pw|t_kd|t_st)(\\[.*\\])?$",
+  "OT_PIN_REGS_CLOCK": "ck,ckv"
+}

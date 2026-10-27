@@ -1,0 +1,209 @@
+{
+ "name": "hv15_dbk_vp4_ctl",
+ "top": "ot_hgi_dma_back_static_vp4_controller",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "E": [
+   "clk",
+   "rst_n",
+   "stk",
+   "cycle_in",
+   "mv_v",
+   "mv",
+   "issue_at",
+   "drain_at",
+   "mv_wb_bank",
+   "mv_wb_epoch",
+   "mv_src",
+   "mv_done",
+   "mv_fault",
+   "quiet",
+   "busy"
+  ],
+  "N": [
+   "wa",
+   "wb_ready",
+   "wb_reserve_v",
+   "wb_reserve_bank",
+   "wb_fill_bank",
+   "wb_reserve_epoch",
+   "wb_fill_epoch",
+   "wb_reserve_sectors",
+   "wb_reserve_base",
+   "wb_fill_start"
+  ],
+  "W": [
+   "rq",
+   "rr_valid_i",
+   "bank_read_en",
+   "bank_read_slot",
+   "bank_write_slot",
+   "bank_output_en"
+  ],
+  "S": [
+   "bank_read_addr"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 3,
+ "macros": [],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:H-HARDEN",
+  "branch": "claude/hnl-harden-2210",
+  "tag": "st1",
+  "purpose": "DMA STORE back DESC_LAT4 controller leaf, ONE master for all four stacks (stk[1:0] strap pin replaces STK/QID; DEDUPE); pins re-planned for the hb_dbk parent; logic otherwise = closed native-PASS rm1 (TT +71.41/FF +21.67). Bench: vp4 lockstep vs cursor + actual 4-stack 32VM/128SRAM production with stk=0..3 + mutants (stride, rows, landing addr, strap ignored) + reset/fault + wb_ready.",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "rtl/hbm_accel/generic/peers/static",
+   "rtl/hbm_accel/generic/vm/static",
+   "tools/hbm_v15_harden"
+  ],
+  "record_to": "results/rtl/ref_tile/hv15_dbk_vp4_ctl",
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_dma_back_static_vp4_controller u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "exact",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks.sh {RUN}/bench/exact 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "DMA_VP4_BANKS_BENCH_PASS",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "mutant1",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks.sh {RUN}/bench/mut1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mutant2",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks.sh {RUN}/bench/mut2 2",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "landing_address_mutant",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks.sh {RUN}/bench/mut3 3",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "write beat mismatch"
+   },
+   {
+    "name": "strap_mutant",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks.sh {RUN}/bench/mut4 4",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "native_fault_reset",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_native_fault.sh {RUN}/bench/native_fault",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "DMA_NATIVE_FAULT_PASS",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "wbready_fault",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_wbready_fault.sh {RUN}/bench/wb 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "DMA_WBREADY_FAULT_PASS",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "wbready_fault_mutant",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_wbready_fault.sh {RUN}/bench/wbm 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "merge_target": "main"
+ },
+ "params": {},
+ "structural_change": "DEDUPE (owner 19:50 fewer tiles, H-DIE grants v7): ONE controller master for all four stacks; the STK/QID parameters (descriptor stack check a_mv[134:133], acceptance c_hend_d[36:35], request sector queue bits) become a 2-bit strap pin stk[1:0] captured by a pin flop stk_q (die-level declared constant per instance). Pin faces re-planned for the hb_dbk parent (controller in the NE corner): die control + clock on E, writeback on N, rq/rr_valid/bank strobes W, bank_read_addr S. 0 cycles.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
+  "why_route": "stk strap pin replaces the STK/QID parameters (one master x4, DEDUPE); pin faces re-planned for the hb_dbk wires-only parent; closed rm1 view is STK=0-only."
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "outline": {
+  "w": 69.12,
+  "h": 69.12,
+  "exact": true
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every data input at the pin (a_mv/a_ci/a_cd/a_cb/a_ce, cycle_q, wa_q, wb_ready_q, rr_valid capture, stk_q) and drives every output from a flop; rst_n enters the local 2-flop reset_meta/reset_ready synchroniser; a wrapper stage would add +1/+1 to the compiled DESC_LAT4 schedule for nothing"
+ }
+}

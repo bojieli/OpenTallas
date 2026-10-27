@@ -1,0 +1,74 @@
+{
+ "name": "qfd_rstsync",
+ "top": "qfd_rstsync",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_split/qfd_link_slots.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "arst_n"
+ ],
+ "outline": {
+  "w": 21.6,
+  "h": 21.6
+ },
+ "recipe": 2,
+ "layer_cap": "M5",
+ "pins": {
+  "W": [
+   "ck",
+   "arst_n"
+  ],
+  "E": [
+   "rso_d",
+   "rso_f"
+  ],
+  "N": [],
+  "S": []
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8
+ },
+ "slot_change_request": "FILL-Q 2026-10-15: compute die master qfd_rstsync has no slot/pin file in c17_source_pins; proposed 21.6 x 21.6 M5 leaf (pin cut <0.05), clock + reset W, outputs E. Die lead re-pins top-down at the next contract.",
+ "job": {
+  "owner": "Claude:el1015-fill-qwen",
+  "branch": "claude/el1015-fillq-1015",
+  "tag": "r1",
+  "purpose": "Qwen compute die reset entry: forwarded-reset synchroniser (async assert / 2-flop sync release, link-clock rso_d + forwarded release rso_f to the sequencer). Real RTL rtl/qwen_split/qfd_link_slots.sv, die master qfd_rstsync (c13 port-bind PASS).",
+  "extra_paths": [
+   "rtl/test/qwen_split"
+  ],
+  "benches": [
+   {
+    "name": "rst_tiles_exact",
+    "cmd": "bash rtl/test/qwen_split/run_qfd_rst_tiles.sh {RUN}/bench/e",
+    "expect": "pass",
+    "pass_regex": "RST_TILES .* PASS",
+    "min_count_regex": "checks=(\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "note": "production FLUSH 512 / STEP 256, rstsync->rstseq chained as on the die, cycle-exact reference + order property, 7 reset scenarios"
+   },
+   {
+    "name": "rst_tiles_mutant",
+    "cmd": "bash rtl/test/qwen_split/run_qfd_rst_tiles.sh {RUN}/bench/m mut_rstsync",
+    "expect": "fail",
+    "fail_regex": "RST_TILES .* FAIL",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_rstsync/views",
+  "record_to": "results/rtl/ref_tile/qfd_rstsync"
+ }
+}

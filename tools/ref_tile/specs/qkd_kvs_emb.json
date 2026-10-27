@@ -1,0 +1,155 @@
+{
+ "name": "qkd_kvs_emb",
+ "top": "qkd_kvs_emb",
+ "sources": [
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4_cal.sv",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4.sv",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join.sv",
+  "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv"
+ ],
+ "params": {},
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [],
+  "S": [
+   "ck",
+   "rst_n",
+   "i_ctl",
+   "i_hroot_ES",
+   "i_hroot_EN"
+  ],
+  "E": [
+   "d2d__svc",
+   "d2d__emb_tx_slot",
+   "rowtx__emb_tx_v",
+   "rowtx__emb_tx_payload",
+   "px_tok",
+   "px_tep"
+  ],
+  "W": [
+   "i_hroot_WS",
+   "i_hroot_WN"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Generated wires-only parent of the static join: every tile <-> tile / die-master hop is priced in the compiled join ages with the die relays only (kv_relays, die_ages.json); a recipe-3 pin register would add an unpriced edge to every crossing.  The children land / launch their boundary nets in their own flops."
+ },
+ "kind": "cluster",
+ "clock_port": "ck",
+ "layer_cap": "M5",
+ "macros": [],
+ "children": [
+  {
+   "view": "physical/ref_tile/qkd_embedding_row_tx/views/qkd_embedding_row_tx",
+   "count": 1,
+   "orient": "MY",
+   "at": [
+    129.60000000000002,
+    86.4
+   ],
+   "inst": "*u_rowtx"
+  }
+ ],
+ "inter": [],
+ "keep_pin_regs": true,
+ "inhold": true,
+ "outhold": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_min_tracks": 3,
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 3,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "outline": {
+  "w": 388.8,
+  "h": 302.40000000000003,
+  "exact": true
+ },
+ "structural_change": "NEW kit (RTL-BUILD-KV M1, KV-INTEG/KITS-A): generated static tile qkd_kvs_emb of the KV die (2 children: qkd_embedding_row_tx, qkd_embedding_static_join4_cal; hard: qkd_embedding_row_tx), from rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv (sha256 36f274261cab) by tools/qwen_kv_die/kvs_tile_kits.py; one clock port ck (OT_KV_TILE_KITS).  Faces {'S': 673, 'E': 758, 'W': 598} pins on 388.8 x 302.4 um (die frame record (388.8, 302.4) ASSUMED -> this outline for KV-PLAN3).",
+ "job": {
+  "owner": "Claude:KV-INTEG2",
+  "branch": "claude/kv-integ2-kits-1018",
+  "tag": "i2",
+  "purpose": "KV-INTEG/KITS-A 10-18 (RTL-BUILD-KV M1): kit of the generated singleton static tile qkd_kvs_emb.  Bench: LOCKSTEP of the kit top (one ck) against the die-bound tile of the same design point without OT_KV_TILE_KITS (per-child clock ports, all on the one die trunk), random inputs from reset + a phase with every child output wire forced random; mutants: a dropped child wire (1), two swapped wire slices (2), a missing child (3).",
+  "benches": [
+   {
+    "name": "emb_lockstep",
+    "cmd": "bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/emb_m0 emb 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_TILE PASS tile=emb .* errors=0 mut=0",
+    "min_count_regex": "checks=(\\d+)",
+    "pass_witness": "results/rtl/qwen_kv_die/kvs_kits_1018/emb_m0.log"
+   },
+   {
+    "name": "emb_mut1",
+    "cmd": "bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/emb_m1 emb 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_TILE PASS tile=emb ",
+    "fail_regex": "^KVS_TILE FAIL tile=emb .* mut=1 ",
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_1018/emb_m1.log"
+   },
+   {
+    "name": "emb_mut2",
+    "cmd": "bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/emb_m2 emb 2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_TILE PASS tile=emb ",
+    "fail_regex": "^KVS_TILE FAIL tile=emb .* mut=2 ",
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_1018/emb_m2.log"
+   },
+   {
+    "name": "emb_mut3",
+    "cmd": "bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/emb_m3 emb 3",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_TILE PASS tile=emb ",
+    "fail_regex": "^KVS_TILE FAIL tile=emb .* mut=3 ",
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_1018/emb_m3.log"
+   }
+  ],
+  "extra_paths": [
+   "rtl",
+   "tools",
+   "results/arch/qwen_kv_static_programme_1017",
+   "results/arch/qwen_kv_die",
+   "results/arch/qwen_kv_pvfin_1017",
+   "results/rtl/qwen_kv_die/kvs_kits_1018",
+   "physical/ref_tile/qkd_embedding_row_tx/views/qkd_embedding_row_tx"
+  ],
+  "views_to": "physical/ref_tile/qkd_kvs_emb/views",
+  "record_to": "results/rtl/ref_tile/qkd_kvs_emb"
+ }
+}

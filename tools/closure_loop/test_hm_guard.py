@@ -69,7 +69,8 @@ def run_repair(stats, guard_hm, env=""):
     src = TCL.read_text()
     procs = []
     for name in ("ot_env_num", "ot_hold_guard_on", "ot_hold_stage", "ot_hold_stop_cap", "ot_hold_stop_args", "ot_hold_stop",
-                 "ot_repair_timing"):
+                 "ot_rc_cal_on", "ot_rc_cal_rc", "ot_rc_cal_mode", "ot_rc_cal_spine", "ot_rc_cal_apply", "ot_rc_cal_restore",
+                 "ot_rc_cal_hold", "ot_repair_timing", "ot_repair_hold_guarded"):
         i = src.index(f"proc {name} ")
         j = src.index("\nproc ", i + 1) if src.find("\nproc ", i + 1) > 0 else len(src)
         procs.append(src[i:j])
@@ -143,10 +144,21 @@ class ShipFhTests(unittest.TestCase):
             (ttb / "physical/common_flow").mkdir(parents=True)
             (ttb / "physical/common_flow/link_budget_consistent.sdc").write_text("stale lbc")
             (run / "cl/link_budget_consistent.sdc").write_text("new lbc")
+            # SNAPSHOT-MAIN-ONLY: a frozen job's older helper in cl/ never overwrites the fleet snapshot
+            (ttb / "tools/closure_loop").mkdir(parents=True)
+            (ttb / "tools/closure_loop/tt_overlay.py").write_text("fleet main ttov")
+            (run / "cl/tt_overlay.py").write_text("frozen old ttov")
+            import hashlib
+            main = {f: hashlib.sha256((run / "cl" / f).read_bytes()).hexdigest() for f in
+                    ("orfs_hold_mm.py", "orfs_hold_mm.tcl", "h1_patch.py", "hold_corners_patch.py",
+                     "link_budget_consistent.sdc")}
+            main["tt_overlay.py"] = hashlib.sha256(b"fleet main ttov").hexdigest()
             with patch.object(cl, "SNAPSHOT_REFRESH", (((str(fh), str(Path(t) / "absent")), cl.FH_FILES),
-                                                       ((str(ttb),), cl.TTB_FILES))):
+                                                       ((str(ttb),), cl.TTB_FILES))), \
+                    patch.object(cl, "_snapshot_main_sha", lambda f: main.get(f)):
                 env = cl.fp_lint_env(dict(run=str(run), spec={}), "x", lint=False)
             subprocess.run(["bash", "-c", env], check=True)
+            self.assertEqual((ttb / "tools/closure_loop/tt_overlay.py").read_text(), "fleet main ttov")
             self.assertEqual((fh / "tools/orfs_hold_mm.py").read_text(), "new py")
             self.assertEqual((fh / "tools/orfs_hold_mm.tcl").read_text(), "new tcl")
             self.assertEqual((run / "src/tools/orfs_hold_mm.tcl").read_text(), "new tcl")

@@ -1,0 +1,58 @@
+# replay 2026-10-18 (CX-IJ-ROOT): tools/ref_tile/path_classes.tcl + cross_clock_paths.tcl of branch claude/root-cxclk-1018 on the
+# preserved gate state ot-epyc5:/srv/opentallas-scratch/claude/ref_gate/hbm_su_cx_dl_1017-20261018-045853 (4_1_cts.odb,
+# kit signoff.sdc of claude/hbm-su6-cx-1017); the route of this kit (hbm_su_cx_dl_1017-s2-761317600) failed TT -166.7.
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_serial can not be propagated.
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_serial can not be propagated.
+OT_HYBRID CTS_MEASURE tt clk_s sinks=1599 reference_scope=boundary boundary_sinks=1599 min=172.91787515455303 mean=180.36412912018037 max=192.2406269637612 all_mean=180.3641291201805
+OT_HYBRID CTS_MEASURE tt clk_q sinks=1048 reference_scope=boundary boundary_sinks=1048 min=171.57794698077882 mean=185.00850187647922 max=218.54110275504448 all_mean=185.00850187647924
+OT_ENTRIES LEVEL clk_s deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_s -> dl_slot[0][0]$_DFFE_PP_/CLK wire=0 R=180.36412912018037 latency=4.64437275629885 phi=185.00850187647922
+OT_ENTRIES LEVEL clk_q deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_q -> dw_d[0]$_DFF_P_/CLK wire=0 R=185.00850187647922 latency=0.0 phi=185.00850187647922
+OT_ENTRIES DOMAIN core 833.333008ps IO587/0 boundary=177.56224791085188..196.88499972006005
+OT_ENTRIES DOMAIN serial 1111.110596ps IO1/1045 boundary=171.5779469807788..218.5411027550445
+OT_MULTI_ROOT RELATED_PATH core -> serial max slack=-156.189423 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> serial min slack=-78.553055 (ordinary synchronous timing retained)
+OT_MULTI_ROOT OWNERSHIP PASS roots=2 registers=2647 inputs=588 outputs=1045 async_control_pins=18
+OT_ENTRIES COMP DONE tt 2 entries phi=185.00850187647922 boundary=171.5779469807788..218.5411027550445
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_serial can not be propagated.
+GATE_PC constraints signoff /src/physical/ref_tile/hbm_su_cx_dl_1017/signoff.sdc (TT placement RC; diagnostic)
+GATE_PC reg->reg      566 paths, worst slack -156.2 ps (e.g. fault$_DFFE_PN0P_/D)
+GATE_PC in->reg        43 paths, worst slack 144.4 ps (e.g. dl_slot[1][523]$_DFFE_PP_/D)
+GATE_PC reg->out      300 paths, worst slack 656.8 ps (e.g. fault)
+GATE_PC setup WNS -1.5618942250661405e-10 hold WNS -7.855305295123571e-11
+GATE_XCLK_SCOPE clocks=2 names=ot_entry_0,ot_entry_1 exceptions=0
+GATE_XCLK launch=ot_entry_0 capture=ot_entry_1 kind=max timed=1046 declared=0 violating=1045 worst_ps=-156.2 uncertainty_ps=150.0 startpoint=dv_slot[0]$_DFFE_PP_/QN endpoint=fault$_DFFE_PN0P_/D declared_kinds=- capped=0
+GATE_XCLK launch=ot_entry_0 capture=ot_entry_1 kind=min timed=1046 declared=0 violating=120 worst_ps=-78.6 uncertainty_ps=100.0 startpoint=sfault_s$_DFFE_PN0P_/QN endpoint=sf_q$_DFF_PN0_/D declared_kinds=- capped=0
+GATE_XCLK launch=ot_entry_1 capture=ot_entry_0 kind=max timed=0 declared=0 violating=0 worst_ps=- uncertainty_ps=- startpoint=- endpoint=- declared_kinds=- capped=0
+GATE_XCLK launch=ot_entry_1 capture=ot_entry_0 kind=min timed=0 declared=0 violating=0 worst_ps=- uncertainty_ps=- startpoint=- endpoint=- declared_kinds=- capped=0
+GATE_XCLK_DONE pairs=4

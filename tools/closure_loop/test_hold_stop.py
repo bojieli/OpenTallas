@@ -36,7 +36,10 @@ class Gate(ProbeAndGates):
         self.assertIn("near-miss", d["why"][0])
 
     def test_deep_stall_still_early_fails(self):
-        d = self.hold_diag("OT_HOLD_GUARD start: x\n" + tile_like(-20.0))
+        # PAD-FIRST (Q-TTH18): a guarded FIRST repair call still inserting buffers gets hold_pad_s before rule (2)
+        self.assertEqual(self.hold_diag("OT_HOLD_GUARD start: x\n" + tile_like(-20.0))["action"], "let_run")
+        ages = dict(self.HOLD_AGES, **{"4_1_cts.log": ss.GATES["hold_pad_s"] + 600})
+        d = self.hold_diag("OT_HOLD_GUARD start: x\n" + tile_like(-20.0), ages)
         self.assertEqual(d["verdict"], "EARLY_FAIL_HOLD")
 
     def test_setup_gate_blocks_hold_stop(self):

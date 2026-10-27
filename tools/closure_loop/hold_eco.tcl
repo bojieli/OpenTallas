@@ -33,6 +33,29 @@ proc ot_libc {c} {   ;# OWNER OPTION B: the setup scene ("ss") reads OT_SETUP_LI
   return [string toupper $c]
 }
 proc envd {n d} { expr {[info exists ::env($n)] && $::env($n) ne "" ? $::env($n) : $d} }
+# OT_PG_STRICT_LOADER_BEGIN
+# Opt-in source prototype. Frozen/copied ECO scripts must set OT_PG_HELPER
+# explicitly unless this script retains its repository-relative location.
+if {[envd OT_PG_STRICT 0] eq "1"} {
+  set ot_pg_helper [envd OT_PG_HELPER [file join [file dirname [info script]] .. .. physical common_flow native_pg_binding.tcl]]
+  if {![file isfile $ot_pg_helper]} { error "OT_PG_HELPER_MISSING: $ot_pg_helper" }
+  source $ot_pg_helper
+  foreach ot_pg_api {ot_pg_prepare ot_pg_assert_all_native} {
+    if {![llength [info commands $ot_pg_api]]} { error "OT_PG_HELPER_API_MISSING: $ot_pg_api" }
+  }
+}
+# OT_PG_STRICT_LOADER_END
+# read_db replaces LEF libraries with the ODB's inventory. Add any declared
+# new VT AFTER read_db, as vtswap_eco.tcl does, before swapping a master.
+proc ot_load_extra_vt_lefs {} {
+  foreach vt [envd OT_VT RVT] {
+    if {$vt eq "RVT"} continue
+    set tag [string map {SLVT SL LVT L} $vt]
+    if {[[ord::get_db] findMaster BUFx2_ASAP7_75t_$tag] eq "NULL"} {
+      read_lef -library $::P/lef/asap7sc7p5t_28_${tag}_1x_220121a.lef
+    }
+  }
+}
 proc ot_vt_libs {C} {
   set r {}
   foreach vt [envd OT_VT RVT] {
@@ -64,6 +87,7 @@ if {$session eq "mm"} {
     foreach m [envd OT_MACROS ""] { read_liberty $m/[file tail $m]_[string tolower [ot_libc $c]].lib; lappend L($c) $m/[file tail $m]_[string tolower [ot_libc $c]].lib }
   }
   read_db $::env(OT_DB)
+  ot_load_extra_vt_lefs
   read_sdc -mode ss $::env(OT_SDC_SS)
   read_sdc -mode ff $::env(OT_SDC_FF)
   define_scene ss -mode ss -liberty $L(ss)
@@ -86,6 +110,7 @@ foreach c $corners {
   foreach m [envd OT_MACROS ""] { read_liberty -corner $c $m/[file tail $m]_[string tolower [ot_libc $c]].lib }
 }
 read_db $::env(OT_DB)
+ot_load_extra_vt_lefs
 read_sdc $::env(OT_SDC)
 }
 # no set_propagated_clock here: the effective SDC carries each clock's sign-off propagation state (write_sdc)
@@ -176,19 +201,112 @@ set block [ord::get_db_block]
 # strip + fresh GRT + DRT alone took SS +70.18 -> +5.98 and FF -4.20 -> -2.06, i.e. the whole "ECO kills setup" loss
 # was the fresh global route, not the hold buffers.  (Keeping untouched WIRES instead fails in DRT: 1,300-2,800
 # 'pin not visited' + checkConnectivity on untouched nets; keeping clock wires fails checkConnectivity.)
+# FACE-PIN KEEPOUT (hold_eco.sh OT_ECO_PK=1, el1011-ds-misc 2026-10-12): re-apply the route's face-pin keepout, ABOVE ONLY,
+# for this pass's GRT/DRT (stn_pin_keepout.tcl is a toggle: the first source adds the obstructions, the second removes
+# exactly those), so the ECO re-route keeps the layer above every face pin clear as the route did (child_lint (f)).
+set ot_pk_stn /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl
+# Sourced inside a proc: the hook's scratch variables (a b c d f k l x0 ...) stay local and cannot clobber this session's.
+proc ot_pk_toggle {} { source $::ot_pk_stn }
+set ot_eco_pk [expr {[envd OT_ECO_PK 0] && [file exists $ot_pk_stn]}]
+if {$ot_eco_pk} { puts "OT_ECO face-pin keepout: add (above only [envd OT_PK_ABOVE_ONLY 0])"; ot_pk_toggle }
+# LAYER-CAP LEAK REFUSAL (s81su qnq/qbe v2, hrow5_cbe/cbw r5c, 2026-10-13): a route whose kit predates dc5594311 detail-
+# routed on the layer ABOVE its cap (GRT top shadow not restored: 281 / 401 / 350 M6 segments under an M5 cap).  The ECO's
+# GRT has only $lo-$hi, so the first incremental update that removed such a wire indexed a per-layer vector out of range
+# and OpenROAD aborted inside repair_timing (grt::GlobalRouter::removeWireUsage, "hold ECO MISS: no result (rc=9)", three
+# times per job).  Such a route already violates its layer cap (child_lint (c) at collect): no ECO can close it; say so.
+set ot_hi_lvl [[[ord::get_db_tech] findLayer $hi] getRoutingLevel]
+set ot_leak [dict create]
+foreach nt [$block getNets] {
+  if {[$nt getSigType] in {POWER GROUND}} continue
+  set w [$nt getWire]; if {$w eq "NULL"} continue
+  # count wire SEGMENTS only (a point that follows a point on the same path): a via up to a granted pin on the layer
+  # above the cap is not a leak and GRT does not index it
+  set dec [odb::dbWireDecoder]; $dec begin $w
+  set prev 0
+  while {[set op [$dec next]] != $odb::dbWireDecoder_END_DECODE} {
+    if {$op == $odb::dbWireDecoder_POINT || $op == $odb::dbWireDecoder_POINT_EXT} {
+      if {$prev} { set tl [$dec getLayer]; if {[$tl getRoutingLevel] > $ot_hi_lvl} { dict incr ot_leak [$tl getName] } }
+      set prev 1
+    } else { set prev 0 }
+  }
+}
+if {[dict size $ot_leak]} {
+  puts "OT_ECO layer_cap_leak $ot_leak above $hi: the route detail-routed above its layer cap (kit older than dc5594311?)"
+  error "OT_ECO refused: routed signal wire above the route's max routing layer $hi ($ot_leak); regenerate the kit and re-route"
+}
+# MACRO-EDGE VIA GUARD (hold_eco.sh OT_ECO_MEG=1 when the route's hooks carried physical/common_flow/
+# macro_edge_via_guard.tcl): re-apply it for this pass's GRT/DRT, as the face-pin keepout above -- the ECO strips and
+# re-routes nets next to the macro edges, and without the guard its DRT bridges M4 through the macro obstruction again
+# (swe_sp8 ECO pass 1 came back with DRC 3 from a DRC-0 route).
+set ot_meg_tcl /src/physical/common_flow/macro_edge_via_guard.tcl
+if {![file exists $ot_meg_tcl]} { set ot_meg_tcl [envd OT_CL /cl]/macro_edge_via_guard.tcl }
+proc ot_meg_apply {mode} { set ::env(OT_MEG_LAYER) $::hi; set ::env(OT_MEG_MODE) $mode; source $::ot_meg_tcl }
+set ot_eco_meg [envd OT_ECO_MEG 0]
+if {$ot_eco_meg && ![file exists $ot_meg_tcl]} { error "OT_ECO macro-edge guard requested but $ot_meg_tcl is missing" }
+if {$ot_eco_meg} { puts "OT_ECO macro-edge via guard: add"; ot_meg_apply add }
+# The route removes its temporary M6 interior obstruction before writing ODB.
+# Reinstate it for every ECO reroute and remove explicitly before export.
+set ot_m6_stub [envd OT_ECO_M6_STUB_UM ""]
+set ot_m6_hook [envd OT_CL /cl]/m6_pin_access.tcl
+proc ot_m6_apply {mode} {
+  set ::ot_m6_stub_um $::ot_m6_stub
+  set ::ot_m6_pin_access_mode $mode
+  source $::ot_m6_hook
+}
+if {$ot_m6_stub ne ""} {
+  if {$hi ne "M6" || ![file exists $ot_m6_hook]} {error "OT_ECO M6 stub policy cannot be applied"}
+  ot_m6_apply add
+}
 set guides [expr {[envd OT_GUIDES 1] && [grt::have_routes]}]
 set allow_fresh [envd OT_ALLOW_FRESH_GRT 0]
 puts "OT_ECO route guides from the db: $guides"
+set snap [dict create]
+foreach i [$block getInsts] { dict set snap [$i getName] [list {*}[$i getLocation] [$i getOrient] [[$i getMaster] getName]] }
+# Source-pinned opt-in for diagnosed input overpadding. It changes
+# physical buffers, not constraints or RTL stages. Normal repair follows; the
+# resulting netlist must be rerouted/extracted and judged by unchanged signoff.
+set ot_native [envd OT_ECO_NATIVE_NORMALIZE ""]
+if {$ot_native ne ""} {
+  set ot_native_block [envd OT_ECO_NATIVE_NORMALIZE_BLOCK qkd_ectl_a_tp8_epoch_direct]
+  if {$ot_native_block ni {qkd_ectl_a_tp8_epoch_direct hfd_ep_static} || [$block getName] ne $ot_native_block} {
+    error "native normalization block mismatch or unsupported block"
+  }
+  if {![file isfile $ot_native]} {error "native normalization source missing"}
+  set ot_native_sha [envd OT_ECO_NATIVE_NORMALIZE_SHA256 ""]
+  if {![regexp {^[0-9a-f]{64}$} $ot_native_sha] || [lindex [exec sha256sum $ot_native] 0] ne $ot_native_sha} {
+    error "native normalization source hash mismatch"
+  }
+  # Reconnected sinks keep their instance location/master, so the dirty census
+  # below would miss their nets: kept or frozen wires would be stale topology.
+  if {[envd OT_KEEP_UNTOUCHED 0] || [envd OT_FREEZE_MACRO_NETS 0]} {
+    error "native normalization rejects OT_KEEP_UNTOUCHED/OT_FREEZE_MACRO_NETS (full strip required; OT_KEEP_CLOCK allowed)"
+  }
+  # Default: apply the plan INSIDE the incremental GRT session of the original guides (as the resizer's own buffer
+  # removal does), so only the changed nets re-route and the routed clock tree / untouched guides stand. Measured
+  # 2026-10-15 (ECTL A r1): a fresh GRT of the whole tile re-routed the clock tree to reg2reg TT -106 / FF -297 ps,
+  # and fresh GRT + KEEPCLK left kept clock wires without guides (DRT-0206 on 596 terms). OT_NATIVE_FRESH_GRT=1 keeps
+  # the explicit fresh-route variant (requires OT_ALLOW_FRESH_GRT=1).
+  if {[envd OT_NATIVE_FRESH_GRT 0]} {
+    if {![envd OT_ALLOW_FRESH_GRT 0]} { error "native normalization fresh variant requires OT_ALLOW_FRESH_GRT=1" }
+    set guides 0
+  } elseif {!$guides} {
+    error "native normalization (incremental) needs the original route guides in the db"
+  }
+}
 if {$guides} {
   puts "OT_ECO route_strategy incremental_original_guides"
   global_route -start_incremental
 } elseif {$allow_fresh} {
-  puts "OT_ECO route_strategy fresh_global reason missing_original_guides explicit_opt_in 1"
+  set native_reason [expr {$ot_native ne "" ? "native_topology_normalization" : "missing_original_guides"}]
+  puts "OT_ECO route_strategy fresh_global reason $native_reason explicit_opt_in 1"
 } else {
   error "OT_ECO original guides unavailable; fresh GRT requires OT_ALLOW_FRESH_GRT=1"
 }
-set snap [dict create]
-foreach i [$block getInsts] { dict set snap [$i getName] [list {*}[$i getLocation] [$i getOrient] [[$i getMaster] getName]] }
+if {$ot_native ne ""} {
+  source $ot_native
+  puts "OT_ECO native normalization applied ([expr {$guides ? {incremental, original guides} : {fresh GRT}}]); canonical route/signoff still required"
+}
+
 if {[llength [dict get $win fixable]]} {
   if {[catch {repair_timing -hold -hold_margin $hm -setup_margin $sm -max_buffer_percent [envd OT_MAX_BUF_PCT 30] -verbose} err]} {
     # the buffer cap (RSZ-0060) keeps what was inserted: continue and let the sign-off judge it (hfd_stn_r38 pass 2 died
@@ -291,7 +409,9 @@ set fz [dict create]; foreach nt $frozen { dict set fz [$nt getName] 1 }
 set nstrip 0
 foreach net [$block getNets] {
   if {[$net getSigType] in {POWER GROUND}} continue
-  if {[envd OT_KEEP_CLOCK 0] && [$net getSigType] eq "CLOCK"} continue
+  # KEEPCLK keeps the routed clock tree, except a clock net on a new / moved / resized instance (the repair's DPL can move
+  # a clock buffer: its kept wire no longer reaches the pin -> DRT-0206, ECTL A recovery 2026-10-15); those re-route.
+  if {[envd OT_KEEP_CLOCK 0] && [$net getSigType] eq "CLOCK" && ![dict exists $dirty [$net getName]]} continue
   if {[dict exists $fz [$net getName]]} continue
   set w [$net getWire]; if {$w ne "NULL"} { odb::dbWire_destroy $w; incr nstrip }
 }
@@ -319,17 +439,40 @@ if {$drt_err} {
   global_route -allow_congestion -congestion_iterations 30 {*}$ra
   detailed_route -output_drc $::env(OT_OUT)/eco_drc.rpt -verbose 1
 }
+if {$ot_m6_stub ne ""} { ot_m6_apply remove }
+if {$ot_eco_pk} { puts "OT_ECO face-pin keepout: remove"; ot_pk_toggle }
+if {$ot_eco_meg} { puts "OT_ECO macro-edge via guard: remove"; ot_meg_apply remove }
 # MULTI-VT: one filler pair per VT present (OT_VT); RVT-only fillers leave LVTN/SLVTN implant gaps -> DPL-0050
 # "No fillers found for LVTN" (dshead-ep-r6-60f5a0a90-tt-lvt hold ECO, drive-2041)
 set ot_fill {}
 foreach vt [envd OT_VT RVT] { set t [string map {SLVT SL LVT L RVT R} $vt]; lappend ot_fill FILLERxp5_ASAP7_75t_$t FILLER_ASAP7_75t_$t }
 filler_placement $ot_fill
 check_placement -verbose
+# OT_PG_DEFAULT_CONNECT_BEGIN
+# KV-HOST2 10-19 (KV-CLOSED-PG-AUDIT): hold/vt ECO cells and re-placed fillers were written with NULL VDD/VSS ITerms
+# (cdc_pc 589,522 / cdc_host 957,466 unbound native PG terminals in CLOSED 6_final.odb).  Bind every instance to the
+# DB's own global-connect rules before any final artifact, in DEFAULT jobs too; the strict block below still asserts.
+if {[envd OT_ECO_GLOBAL_CONNECT 1] eq "1"} {
+  if {[catch {global_connect} ot_gc_err]} { error "OT_ECO global_connect failed: $ot_gc_err" }
+  puts "OT_ECO global_connect: native PG terminals bound by the DB global-connect rules"
+}
+# OT_PG_DEFAULT_CONNECT_END
+# OT_PG_STRICT_FINAL_BEGIN
+# Insertion, master replacement and filler placement invalidate earlier maps.
+# The final check visits native MASTER PG terminals, independent of PSM.
+if {[envd OT_PG_STRICT 0] eq "1"} {
+  global_connect
+  set ot_pg_final_block [ord::get_db_block]
+  set ot_pg_final_mapping [ot_pg_prepare $ot_pg_final_block]
+  ot_pg_assert_all_native $ot_pg_final_block $ot_pg_final_mapping
+}
+# OT_PG_STRICT_FINAL_END
 extract_parasitics -ext_model_file $P/rcx_patterns.rules
 write_spef $::env(OT_OUT)/6_final.spef
 foreach c $corners { read_spef -corner $c $::env(OT_OUT)/6_final.spef }
 rep post
 puts "OT_ECO post_ws ss [expr {$session in {two mm} ? [ws max ss] : "n/a"}] ff [ws min ff]"
+write_def $::env(OT_OUT)/6_final.def
 write_db $::env(OT_OUT)/6_final.odb
 write_verilog $::env(OT_OUT)/6_final.v
 puts "OT_ECO done"

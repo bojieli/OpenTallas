@@ -1,0 +1,168 @@
+{
+ "name": "qkd_seq_core_st_r2",
+ "top": "qkd_seq_core_static",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/static_kv_20261014/qkd_seq_static.sv",
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv",
+  "rtl/lib/ot_rst_relay.sv"
+ ],
+ "params": {
+  "MUT": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 64.8,
+  "h": 29.16,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "pins": {
+  "N": [
+   "att_rx_v",
+   "att_rx_kind",
+   "att_rx_beat",
+   "kvn_word_valid",
+   "kvn_word_tag",
+   "cmd_d",
+   "lp_run",
+   "lp_layer",
+   "lp_ctx_t",
+   "x_v",
+   "x_cls",
+   "s_qpop",
+   "s_kpop",
+   "s_kidx",
+   "s_kwgo",
+   "s_kwn",
+   "ck"
+  ],
+  "S": [
+   "svc_h",
+   "ar_h",
+   "hf",
+   "hs",
+   "tk",
+   "kst",
+   "rst_n"
+  ],
+  "W": [
+   "f_aqm_w",
+   "f_kwm_w",
+   "f_kc_w",
+   "f_cr_w",
+   "f_af_w",
+   "f_mf_w"
+  ],
+  "E": [
+   "f_aqm_e",
+   "f_kwm_e",
+   "f_kc_e",
+   "f_cr_e",
+   "f_af_e",
+   "f_mf_e"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "All functional inputs are captured at their existing pin flops. Q store pushes use the compiled CMD timeline, and registered Q events are checked against its expected slots. Every external data/production edge is unchanged."
+ },
+ "keep_pin_regs": true,
+ "inhold": true,
+ "outhold": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "pin_min_tracks": 3,
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:Q-KV-1552",
+  "branch": "codex/qwen-kv-1552",
+  "tag": "r2",
+  "purpose": "Q-KVSYS PVJOIN 10-16 (lead-approved qkd_seq retirement): static control leaf of qkd_seq_static. Every store pop / aq start / Q beat / posted row / stream descriptor at a fixed edge after the compiled CMD slot of the static D2D end (link compiler), arrivals off-slot fault, landing row credits only checked. Bench: qkd_seq_static (this leaf + closed qkd_seq_xs_tp8 x4 + qkd_seq_fan x4) vs legacy qkd_seq on 36 link-slotted layers: aq 1188 / kvn 72 / kc 72 words per quadrant bit-identical, aq start at the compiled CMD+47 every layer (legacy +1 edge earlier, rows equal); mutants Q-beat swap / row t / start late / KVN push early FAIL.",
+  "benches": [
+   {
+    "name": "seq_static_pass",
+    "cmd": "bash tools/qwen_static_kv/seq_static_bench.sh {RUN}/bench/m0 0 36",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SEQ_STATIC PASS layers=36 aq=1188 kvn=72 kc=72 errors=0 mut=0 aq_start_from_cmd=47",
+    "min_count_regex": "aq=(\\d+)"
+   },
+   {
+    "name": "seq_static_mut_qswap",
+    "cmd": "bash tools/qwen_static_kv/seq_static_bench.sh {RUN}/bench/m1 1 36",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SEQ_STATIC PASS",
+    "fail_regex": "^SEQ_STATIC FAIL layers=36 aq=1188 kvn=72 kc=72 errors=288 mut=1"
+   },
+   {
+    "name": "seq_static_mut_late",
+    "cmd": "bash tools/qwen_static_kv/seq_static_bench.sh {RUN}/bench/m3 3 36",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^SEQ_STATIC PASS",
+    "fail_regex": "^SEQ_STATIC FAIL layers=36 aq=1188 kvn=72 kc=72 errors=1 mut=3 aq_start_from_cmd=48"
+   },
+   {
+    "name": "seq_static_offslot_q",
+    "cmd": "bash tools/qwen_static_kv/seq_static_bench.sh {RUN}/bench/offslot 0 36 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^SEQ_STATIC FAIL layers=36 aq=1188 kvn=72 kc=72 errors=[1-9][0-9]* mut=0 aq_start_from_cmd=47"
+   }
+  ],
+  "extra_paths": [
+   "rtl",
+   "tools",
+   "results/arch/token_path_20261009/qwen_rom.json",
+   "results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json",
+   "results/arch/qwen_split_1014/kvsys_v1_4_3_design/hbm_refresh_calendar.json",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
+  ],
+  "views_to": "physical/ref_tile/qkd_seq_core_st_r2/views",
+  "record_to": "results/rtl/ref_tile/qkd_seq_core_st_r2"
+ },
+ "recipe": 3,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "Native capture defect repair: all att_rx inputs end at existing pin registers. Q pushes issue from cmd || (act && a<31), checking registered qev against act && a<32. Removes the raw att_rx_v/kind decode into x_v/x_cls (capture 207.57 ps, budget190). No state bits or production edges added; existing a comparator supplies 31/32-edge slot windows. Closed r1 view preserved.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "source": "results/arch/qwen_split_1014/kvsys_1552/native_audit.json",
+  "fix": "Replace raw Q-kind-driven store pushes with CMD-compiled Q slots; registered events are checked against slots. No payload, issue or output edge changes."
+ }
+}

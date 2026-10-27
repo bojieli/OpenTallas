@@ -1,0 +1,131 @@
+{
+ "name": "qfd_dv_s8_crh_rp1",
+ "top": "qfd_dv_s8_crh_rp1",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_dv/s5/s8/qfd_dv_s8_crh_rp1.sv",
+  "rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 259.2,
+  "h": 276.48
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_crb?0?*u_m",
+   "at": [
+    43.2,
+    86.4
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "*g_crb?1?*u_m",
+   "at": [
+    43.2,
+    181.44
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "W": [
+   "cr_re",
+   "cr_addr",
+   "q"
+  ],
+  "S": [
+   "rst_n",
+   "tw_we",
+   "tw_kind",
+   "tw_addr",
+   "tw_d",
+   "fault",
+   "ck"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "hold_budget": "die",
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers every input and every output at its pin (vm8 pin registers, priced); a flow pin register would add a second, unpriced edge"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands rst_n in two registered stages (rl0 -> rl1) and rl1 resets only the sticky fault register"
+ },
+ "safe_design_checklist": {
+  "1_pins": "PASS: RTL registers every input and output at its pin (= vm8 pin registers); rst_n lands rl0 -> rl1 and resets only the sticky fault; no combinational pin arc",
+  "2_reach": "PASS (by floorplan): outline 259.2 x 276.48, every pin <= 276 um from any sink; gate wire_reach checks 405 um",
+  "3_fanout": "OWED fresh mapped native census on new2bit half/bank controls, then qualified gate; oldCRH census not alias.",
+  "4_depth": "PASS: = vm8 (census depth recorded); no logic before a macro pin except the 2-register collision compare",
+  "5_storage": "PASS: all > 2 kb state in SRAM macros",
+  "6_floorplan": "PASS: x on 43.2, y on 8.64, macro channels >= 20 um, S band 86.4, aspect 1.07, faces W 456 / 276.5 = 1.6/um, S 542 / 259.2 = 2.1/um",
+  "7_clock": "ONE CTS root (S-centre ck) over the whole leaf = one region; pin-flop spread <= 80 TT+FF judged in the gate; every crossing to a slice2 neighbour lands in a parent mesochronous ring; io_hold_margin 0.03",
+  "8_schedule": "Same CRH sequential stages; focused actual-RP-to-CRH SRAM eight-beat byte/bank test passed with two mutants. Selected s8 LP programme ages OWED (4 new landings/pad3 D4), no whole-parent age claim."
+ },
+ "fill_reason": {
+  "pin_bound": "macro- and pin-bound leaf: the dense S face (W 456 / 276.5 = 1.6/um, S 542 / 259.2 = 2.1/um) carries the registered table/VM write bus; the leaf is kept <= 259.2 um wide on that face so every pin register sits <= 130 um from the S-centre clock pin (r1 leaves 302-475 um wide: pin-flop spread 107-146 ps); the outline is set by the face width x macro column, not by the std-cell area"
+ },
+ "structural_change": "Existing CRH with c0f8097f3 CRH1 half-write recovery: two kept half/bank selector bits at same capture age, per-bank WCE, legal half-address fault. Same ABI/read stages/two SRAMs/outline; new source must close independently.",
+ "children": [],
+ "inter": [],
+ "job": {
+  "owner": "Codex:Q-CB16-SLICE",
+  "branch": "codex/q-slice2-native-1021",
+  "tag": "rp1",
+  "purpose": "Existing CRH1 exact half-bank write recovery for selected s8 split source; unique new closure, no old view alias",
+  "extra_paths": [
+   "rtl",
+   "rtl/test/qwen_dv",
+   "physical/asap7_memory_macros_v2",
+   "results/arch/qw_vm8split_1020",
+   "tools/qwen_dv",
+   "results/arch/codex_slice2_native_1021/s8"
+  ],
+  "benches": [
+   {
+    "name": "rp1_crh_eightbeats",
+    "cmd": "bash tools/qwen_dv/run_s8_rp1.sh {RUN}/rp1",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_dv_s8_crh_rp1/views",
+  "record_to": "results/rtl/ref_tile/qfd_dv_s8_crh_rp1"
+ },
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true
+}

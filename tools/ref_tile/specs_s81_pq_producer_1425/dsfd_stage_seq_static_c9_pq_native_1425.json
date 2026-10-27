@@ -1,0 +1,258 @@
+{
+ "name": "dsfd_stage_seq_static_c9_pq_native_1425",
+ "top": "dsfd_stage_seq_static_c9",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv",
+  "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv",
+  "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c.sv",
+  "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c9.sv",
+  "rtl/dsrom_sys/s81_static_control/ot_s81_pq_boot_control.sv"
+ ],
+ "params": {
+  "NOPS": 128,
+  "STAGE": 0
+ },
+ "defines": [],
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck",
+ "clock_ports": [
+  "ck",
+  "ckv"
+ ],
+ "clock_data_paths": "related_pll_ratio",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   4,
+   3
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck"
+   ],
+   "inputs": [
+    "rst",
+    "f_plen",
+    "pq_image_sealed",
+    "pq_calendar_primed",
+    "pq_calendar_fault",
+    "d0",
+    "s0",
+    "d1",
+    "s1",
+    "d2",
+    "s2",
+    "d3",
+    "s3",
+    "d4",
+    "s4",
+    "d5",
+    "s5",
+    "d6",
+    "s6",
+    "d7",
+    "s7",
+    "d12",
+    "s12",
+    "d13",
+    "s13"
+   ],
+   "outputs": [
+    "t_pq_desc_pw",
+    "calendar_prime",
+    "stage_start",
+    "calendar_base",
+    "calendar_length",
+    "c0",
+    "c1",
+    "c2",
+    "c3",
+    "c4",
+    "c5",
+    "c6",
+    "c7",
+    "c12",
+    "c13"
+   ]
+  },
+  "serial": {
+   "ratio": [
+    4,
+    3
+   ],
+   "ports": [
+    "ckv"
+   ],
+   "inputs": [
+    "rsv",
+    "f_ks",
+    "f_pw",
+    "f_pq_pw"
+   ],
+   "outputs": [
+    "t_kd",
+    "t_st"
+   ]
+  }
+ },
+ "reset_ports": [
+  "rst",
+  "rsv"
+ ],
+ "outline": {
+  "w": 302.4,
+  "h": 108,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "N": [
+   "c3",
+   "c4",
+   "d4",
+   "s4",
+   "f_pq_pw",
+   "t_pq_desc_pw",
+   "calendar_prime",
+   "stage_start",
+   "calendar_base",
+   "calendar_length",
+   "pq_image_sealed",
+   "pq_calendar_primed",
+   "pq_calendar_fault"
+  ],
+  "S": [
+   "c5",
+   "c7",
+   "ck",
+   "ckv",
+   "d5",
+   "d7",
+   "f_ks",
+   "rst",
+   "rsv",
+   "s0",
+   "s5"
+  ],
+  "E": [
+   "c0",
+   "c1",
+   "c12",
+   "c2",
+   "c6",
+   "d0",
+   "d1",
+   "d12",
+   "d2",
+   "d3",
+   "d6",
+   "f_plen",
+   "f_pw",
+   "s1",
+   "s12",
+   "s2",
+   "s3",
+   "s6",
+   "s7",
+   "t_kd",
+   "t_st",
+   "c13",
+   "d13",
+   "s13"
+  ]
+ },
+ "io_tcl": "physical/s81_die_pins/pq_producer_c9_h108_1417/dsfd_stage_seq_static_c9.tcl",
+ "recipe": 2,
+ "outhold": false,
+ "inhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "m5_pg_pitch": 2.7
+ },
+ "slot_change_request": {
+  "contract": "S81 PQ producer explicit source-bound leaf grant",
+  "version": "18ea77d79",
+  "source": "physical/s81_die_pins/pq_producer_c9_h108_1417/grant.json",
+  "outline": [
+   302.4,
+   108
+  ],
+  "why": "C9 actual14982.7um2 std with48.5% insetmargin; HOST splitrealrootmax9293FF, exact1223/993 top-down pins; no c8/oldHOST view or parentfit inheritance."
+ },
+ "structural_change": "True engine13 c9 and actual host CSR0x12 boot source. All14 native engines preserve identities0..12; no credits or ready issue. Fixed initial prime plus compiled fixed re-prime enables repeatedjobs. Host one23124FF root replaced by real ingest-host9279, ingest-core9293, core4556 and serial118 roots. C9 actual mapped12401 core/378 serial. All new interfaces are explicit. Leaf native CTS/TT setup/FF hold/DRC0 and actual die-stage compiler binding remain unqualified.",
+ "job": {
+  "owner": "Codex:s81-pq-producer-1425",
+  "branch": "codex/s81-pq-producer-1425",
+  "tag": "n1",
+  "purpose": "Actual PQ sequencer and host producer native leaf candidate; real128-row stage0 mapped RTL, fixed3:4 relationship and exacttyped18ea pins, full actual HOST/FIFO/c9/PQ/mapped-memory positive and actual source mutants.",
+  "views_to": "physical/ref_tile/dsfd_stage_seq_static_c9_pq_native_1425/views",
+  "record_to": "results/rtl/ref_tile/dsfd_stage_seq_static_c9_pq_native_1425",
+  "extra_paths": [
+   "rtl",
+   "tools/s81",
+   "tools/s81_static_control",
+   "tools/s81_compile_schedule",
+   "tools/s81_vm",
+   "physical/s81_die_pins/pq_producer_c9_h108_1417",
+   "physical/s81_pq_hier/pinned",
+   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/rom_host_ingest/rtl"
+  ],
+  "benches": [
+   {
+    "name": "actual_host_c9_PQ_pass",
+    "cmd": "bash tools/s81_static_control/pq_producer_bench.sh pass {RUN}/bench_pass",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "PQPRODUCER PASS"
+   },
+   {
+    "name": "actual_host_c9_PQ_slot",
+    "cmd": "bash tools/s81_static_control/pq_producer_bench.sh slot {RUN}/bench_slot",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "PQPRODUCER FAIL slot"
+   },
+   {
+    "name": "actual_host_c9_PQ_prime",
+    "cmd": "bash tools/s81_static_control/pq_producer_bench.sh prime {RUN}/bench_prime",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "PQPRODUCER FAIL prime"
+   }
+  ]
+ }
+}
