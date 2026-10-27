@@ -224,10 +224,11 @@ def step(ap, st, r, geom_text):
     if a.get("state") in ("NOT-REPLICA", "NO-CHECKPOINT") and time.time() - a.get("t", 0) < 3600:
         return a["why"]
     reg = parse_registry(ap.read_coord(REG_PATH))
+    revoked = {}
     for tid, t in list(reg.items()):
         why = revoked_by_review(t, geom_text, ap.LG)
         if why:
-            reg.pop(tid)
+            revoked[tid] = reg.pop(tid)
             if a.get("revoked_note") != why:
                 ap.log(f"AUTO-GEOM template {tid} revoked for {rid}: {why}")
                 a["revoked_note"] = why
@@ -240,8 +241,9 @@ def step(ap, st, r, geom_text):
     if not t and all_kits_enabled() and not want:
         # A missing replica match no longer blocks an independently measured kit.  Keep explicit
         # TEMPLATE requests strict, and keep revoked templates on the visual-review path.
-        if a.get("revoked_note"):
-            return "AUTO-GEOM: revoked template -> visual GEOM REQ needed"
+        revoked_t, _ = match(revoked, sig, r["die"])
+        if revoked_t:
+            return f"AUTO-GEOM: revoked template {revoked_t['tid']} -> visual GEOM REQ needed"
         t = standalone_contract(sig, r)
         if not t:
             a.update(state="NOT-REPLICA", why="AUTO-GEOM: missing source/outline/pin contract -> visual GEOM REQ needed",

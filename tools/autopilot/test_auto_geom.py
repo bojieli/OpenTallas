@@ -281,6 +281,26 @@ class TestAutopilotAutoGeom(TickBase):
         self.assertEqual(j["status"], "WAIT-GEOM")
         self.assertEqual(len(self.f.launched), 1)
 
+    def test_all_kits_unrelated_revoked_template_does_not_block_new_kit(self):
+        os.environ["AP_AUTO_GEOM_ALL"] = "1"
+        self.row[5] = ""
+        self.sig["rtl_sha"] = "new-design"
+        co = Path(self.tmp.name) / "coord" / "lanes" / "GEOM-REVIEW.md"
+        co.write_text("2099-01-01 00:00 PDT GEOM-REVIEW: REPLY [S81/KITS t4] slice_station__t4 FAIL STRUCTURAL\n")
+        self.queue(self.row)
+        self.tick()
+        self.assertEqual(len(self.f.launched), 1)
+
+    def test_all_kits_matching_revoked_template_stays_visual(self):
+        os.environ["AP_AUTO_GEOM_ALL"] = "1"
+        self.row[5] = ""
+        co = Path(self.tmp.name) / "coord" / "lanes" / "GEOM-REVIEW.md"
+        co.write_text("2099-01-01 00:00 PDT GEOM-REVIEW: REPLY [S81/KITS t4] slice_station__t4 FAIL STRUCTURAL\n")
+        self.queue(self.row)
+        (j,) = self.tick().values()
+        self.assertEqual(j["status"], "WAIT-GEOM")
+        self.assertEqual(self.f.launched, [])
+
     def test_all_kits_explicit_template_mismatch_still_waits(self):
         os.environ["AP_AUTO_GEOM_ALL"] = "1"
         self.sig["rtl_sha"] = "wrong-template"
