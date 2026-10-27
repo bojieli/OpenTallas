@@ -1011,6 +1011,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                       gpl_hook=kd / "face_flops.tcl")
     # CTS-HOOK-PORT-1: plan-built core tree -> shared PRE/POST_CTS hook (no plan tree: kit unchanged)
     MS.plan_tree_cts(kd, cfg)
+    core_flow.install_signal_repair(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     fz = dict(schema="opentallas.hbm_arch.core_freeze.v1", view=a.view, module=module, design=design, rtl_top=top,
               recipe_key=rk, recipe_sha256=hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest(),

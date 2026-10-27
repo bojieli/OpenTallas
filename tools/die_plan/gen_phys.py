@@ -1537,6 +1537,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         cfg += ["export OT_TAP_GRT_PRE = 1", "export OT_PINREG_PAD = 1"]
     if P.reset.get("relay_driver"):
         cfg.append("export OT_RESET_PAIR_FIXED = 1")
+    import core_flow
+    core_flow.install_signal_repair(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
               "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "grt_pre.tcl",
