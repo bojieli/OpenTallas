@@ -39,7 +39,7 @@
         },
         {
           "layer": "M9",
-          "width_um": 6.48,
+          "width_um": 12.96,
           "pitch_um": 34.56,
           "offset_um": 17.28,
           "nets": [
@@ -952,7 +952,7 @@
         "insertion_ps": 250,
         "taps": [
           {
-            "name": "u_core.u_b.g_cv.u_eA0.clk",
+            "name": "u_core.u_b.g_cv.u_eA0.ft_mstrap_i",
             "kind": "core",
             "xy": [
               177.12,
@@ -960,10 +960,10 @@
             ],
             "insertion_ps": 250.0,
             "budget_owner": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
-            "note": "INSERTION PENDING (no centre-entry real view; hold2 kits have edge clk pins). D-INFRA-FIRST-HEAD: 12.8a centre clock entry (M9->M5 in-core island), core-local (159.84, 159.84) on the rebuilt 319.68 outline; die common latency target until the core's centre-entry signed view publishes its real insertion (12.3 v5.0)"
+            "note": "Native R16 trial geometry; insertion budget pending this view signoff; no early tap."
           },
           {
-            "name": "u_core.u_b.g_cv.u_eA1.clk",
+            "name": "u_core.u_b.g_cv.u_eA1.ft_mstrap_i",
             "kind": "core",
             "xy": [
               531.36,
@@ -971,10 +971,10 @@
             ],
             "insertion_ps": 250.0,
             "budget_owner": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
-            "note": "INSERTION PENDING (no centre-entry real view; hold2 kits have edge clk pins). D-INFRA-FIRST-HEAD: 12.8a centre clock entry (M9->M5 in-core island), core-local (159.84, 159.84) on the rebuilt 319.68 outline; die common latency target until the core's centre-entry signed view publishes its real insertion (12.3 v5.0)"
+            "note": "Native R16 trial geometry; insertion budget pending this view signoff; no early tap."
           },
           {
-            "name": "u_core.u_b.g_cv.u_eA2.clk",
+            "name": "u_core.u_b.g_cv.u_eA2.ft_mstrap_i",
             "kind": "core",
             "xy": [
               177.12,
@@ -982,10 +982,10 @@
             ],
             "insertion_ps": 250.0,
             "budget_owner": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
-            "note": "INSERTION PENDING (no centre-entry real view; hold2 kits have edge clk pins). D-INFRA-FIRST-HEAD: 12.8a centre clock entry (M9->M5 in-core island), core-local (159.84, 159.84) on the rebuilt 319.68 outline; die common latency target until the core's centre-entry signed view publishes its real insertion (12.3 v5.0)"
+            "note": "Native R16 trial geometry; insertion budget pending this view signoff; no early tap."
           },
           {
-            "name": "u_core.u_b.g_cv.u_eA3.clk",
+            "name": "u_core.u_b.g_cv.u_eA3.ft_mstrap_i",
             "kind": "core",
             "xy": [
               531.36,
@@ -993,433 +993,175 @@
             ],
             "insertion_ps": 250.0,
             "budget_owner": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
-            "note": "INSERTION PENDING (no centre-entry real view; hold2 kits have edge clk pins). D-INFRA-FIRST-HEAD: 12.8a centre clock entry (M9->M5 in-core island), core-local (159.84, 159.84) on the rebuilt 319.68 outline; die common latency target until the core's centre-entry signed view publishes its real insertion (12.3 v5.0)"
+            "note": "Native R16 trial geometry; insertion budget pending this view signoff; no early tap."
           },
           {
-            "name": "u_core.u_b.g_cvb.u_eB.clk",
+            "name": "u_core.u_b.g_cvb.u_eB.ft_mstrap_i",
             "kind": "core",
             "xy": [
-              354.24,
-              876.96
+              360.72,
+              880.56
             ],
             "insertion_ps": 250.0,
             "budget_owner": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemB_cv/ot_s81hd_elemB_cv_tt.lib",
-            "note": "INSERTION PENDING (no centre-entry real view; hold2 kits have edge clk pins). D-INFRA-FIRST-HEAD: 12.8a centre clock entry (M9->M5 in-core island), core-local (138.24, 142.56) on the rebuilt 285.12 outline; die common latency target until the core's centre-entry signed view publishes its real insertion (12.3 v5.0)"
+            "note": "Native R16 trial geometry; insertion budget pending this view signoff; no early tap."
           }
         ],
         "die_islands_um": [
           [
-            -4.32,
+            0.0,
             349.92,
-            4.32,
+            8.64,
             358.56
           ],
           [
-            -4.15,
+            92.57,
             349.92,
-            4.49,
+            101.21,
             358.56
           ],
           [
-            -4.12,
+            95.04,
             349.92,
-            4.52,
+            103.68,
             358.56
           ],
           [
-            -4.05,
+            101.21,
             349.92,
-            4.59,
+            109.85,
             358.56
           ],
           [
-            -3.82,
+            108.0,
             349.92,
-            4.82,
+            116.64,
             358.56
           ],
           [
-            16.37,
+            190.08,
             349.92,
-            25.01,
+            198.72,
             358.56
           ],
           [
-            20.55,
+            193.78,
             349.92,
-            29.19,
+            202.42,
             358.56
           ],
           [
-            56.2,
+            202.42,
             349.92,
-            64.84,
+            211.06,
             358.56
           ],
           [
-            60.83,
+            203.04,
             349.92,
-            69.47,
+            211.68,
             358.56
           ],
           [
-            64.56,
+            294.99,
             349.92,
-            73.2,
+            303.63,
             358.56
           ],
           [
-            67.32,
+            298.08,
             349.92,
-            75.96,
+            306.72,
             358.56
           ],
           [
-            85.89,
+            303.63,
             349.92,
-            94.53,
+            312.27,
             358.56
           ],
           [
-            96.39,
+            345.6,
             349.92,
-            105.03,
+            354.24,
             358.56
           ],
           [
-            100.76,
+            354.24,
             349.92,
-            109.4,
+            362.88,
             358.56
           ],
           [
-            136.68,
+            396.21,
             349.92,
-            145.32,
+            404.85,
             358.56
           ],
           [
-            140.59,
+            401.76,
             349.92,
-            149.23,
+            410.4,
             358.56
           ],
           [
-            142.13,
+            404.85,
             349.92,
-            150.77,
+            413.49,
             358.56
           ],
           [
-            146.13,
+            496.8,
             349.92,
-            154.77,
+            505.44,
             358.56
           ],
           [
-            171.87,
+            497.42,
             349.92,
-            180.51,
+            506.06,
             358.56
           ],
           [
-            181.96,
+            506.06,
             349.92,
-            190.6,
+            514.7,
             358.56
           ],
           [
-            186.42,
+            509.76,
             349.92,
-            195.06,
+            518.4,
             358.56
           ],
           [
-            207.04,
+            591.84,
             349.92,
-            215.68,
+            600.48,
             358.56
           ],
           [
-            209.8,
+            598.63,
             349.92,
-            218.44,
+            607.27,
             358.56
           ],
           [
-            221.97,
+            604.8,
             349.92,
-            230.61,
+            613.44,
             358.56
           ],
           [
-            226.52,
+            607.27,
             349.92,
-            235.16,
+            615.91,
             358.56
           ],
           [
-            261.58,
+            699.84,
             349.92,
-            270.22,
-            358.56
-          ],
-          [
-            262.26,
-            349.92,
-            270.9,
-            358.56
-          ],
-          [
-            266.35,
-            349.92,
-            274.99,
-            358.56
-          ],
-          [
-            307.73,
-            349.92,
-            316.37,
-            358.56
-          ],
-          [
-            312.0,
-            349.92,
-            320.64,
-            358.56
-          ],
-          [
-            347.56,
-            349.92,
-            356.2,
-            358.56
-          ],
-          [
-            349.52,
-            349.92,
-            358.16,
-            358.56
-          ],
-          [
-            349.59,
-            349.92,
-            358.23,
-            358.56
-          ],
-          [
-            349.79,
-            349.92,
-            358.43,
-            358.56
-          ],
-          [
-            349.92,
-            349.92,
-            358.56,
-            358.56
-          ],
-          [
-            350.05,
-            349.92,
-            358.69,
-            358.56
-          ],
-          [
-            350.25,
-            349.92,
-            358.89,
-            358.56
-          ],
-          [
-            350.32,
-            349.92,
-            358.96,
-            358.56
-          ],
-          [
-            352.28,
-            349.92,
-            360.92,
-            358.56
-          ],
-          [
-            387.84,
-            349.92,
-            396.48,
-            358.56
-          ],
-          [
-            392.11,
-            349.92,
-            400.75,
-            358.56
-          ],
-          [
-            433.49,
-            349.92,
-            442.13,
-            358.56
-          ],
-          [
-            437.58,
-            349.92,
-            446.22,
-            358.56
-          ],
-          [
-            438.26,
-            349.92,
-            446.9,
-            358.56
-          ],
-          [
-            473.32,
-            349.92,
-            481.96,
-            358.56
-          ],
-          [
-            477.87,
-            349.92,
-            486.51,
-            358.56
-          ],
-          [
-            490.04,
-            349.92,
-            498.68,
-            358.56
-          ],
-          [
-            492.8,
-            349.92,
-            501.44,
-            358.56
-          ],
-          [
-            513.42,
-            349.92,
-            522.06,
-            358.56
-          ],
-          [
-            517.88,
-            349.92,
-            526.52,
-            358.56
-          ],
-          [
-            527.97,
-            349.92,
-            536.61,
-            358.56
-          ],
-          [
-            553.71,
-            349.92,
-            562.35,
-            358.56
-          ],
-          [
-            557.71,
-            349.92,
-            566.35,
-            358.56
-          ],
-          [
-            559.25,
-            349.92,
-            567.89,
-            358.56
-          ],
-          [
-            563.16,
-            349.92,
-            571.8,
-            358.56
-          ],
-          [
-            599.08,
-            349.92,
-            607.72,
-            358.56
-          ],
-          [
-            603.45,
-            349.92,
-            612.09,
-            358.56
-          ],
-          [
-            613.95,
-            349.92,
-            622.59,
-            358.56
-          ],
-          [
-            632.52,
-            349.92,
-            641.16,
-            358.56
-          ],
-          [
-            635.28,
-            349.92,
-            643.92,
-            358.56
-          ],
-          [
-            639.01,
-            349.92,
-            647.65,
-            358.56
-          ],
-          [
-            643.64,
-            349.92,
-            652.28,
-            358.56
-          ],
-          [
-            679.29,
-            349.92,
-            687.93,
-            358.56
-          ],
-          [
-            683.47,
-            349.92,
-            692.11,
-            358.56
-          ],
-          [
-            703.66,
-            349.92,
-            712.3,
-            358.56
-          ],
-          [
-            703.89,
-            349.92,
-            712.53,
-            358.56
-          ],
-          [
-            703.96,
-            349.92,
-            712.6,
-            358.56
-          ],
-          [
-            703.99,
-            349.92,
-            712.63,
-            358.56
-          ],
-          [
-            704.16,
-            349.92,
-            712.8,
+            708.48,
             358.56
           ]
         ]
@@ -1471,18 +1213,18 @@
             8.64
           ],
           "outline_um": [
-            317.672,
-            317.672
+            319.68,
+            319.68
           ],
           "orient": "MX",
           "track_offset_um": [
-            0.012,
-            0.028
+            0,
+            0
           ],
           "pins_file": "cores/elemA_pins.json",
           "lef": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv.lef",
           "lib": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
-          "note": "214445 cells (ASSUMED: elemB cells x area ratio (no elemA count committed)); CLOSED SS view dshead-elemA-ss-f11f3cc47 (SS +133.67 / FF +10.81 ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff SPLIT9 1), renamed ot_s81hd_elemA_cv (tools/s81_head/hd_cv_views.py, names only). 10-24: the tile is rebased on this parameter point (ot_s81hd_tile CUT 0x1ff / SPLIT9 1 / CV 1); ot_s81hd_elem == the closed RTL there (tools/s81_head/hd_elem_eq.sh EQ_BENCH_PASS A and B)"
+          "note": "R16 native abstract trial; size/pins from this own-view LEF; timing remains unsigned until signoff.py SIGNED plus routed LEC."
         },
         {
           "inst": "u_core.u_b.g_cv.u_eA1",
@@ -1492,18 +1234,18 @@
             8.64
           ],
           "outline_um": [
-            317.672,
-            317.672
+            319.68,
+            319.68
           ],
           "orient": "R180",
           "track_offset_um": [
-            0.028,
-            0.028
+            0,
+            0
           ],
           "pins_file": "cores/elemA_pins.json",
           "lef": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv.lef",
           "lib": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
-          "note": "214445 cells (ASSUMED: elemB cells x area ratio (no elemA count committed)); CLOSED SS view dshead-elemA-ss-f11f3cc47 (SS +133.67 / FF +10.81 ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff SPLIT9 1), renamed ot_s81hd_elemA_cv (tools/s81_head/hd_cv_views.py, names only). 10-24: the tile is rebased on this parameter point (ot_s81hd_tile CUT 0x1ff / SPLIT9 1 / CV 1); ot_s81hd_elem == the closed RTL there (tools/s81_head/hd_elem_eq.sh EQ_BENCH_PASS A and B)"
+          "note": "R16 native abstract trial; size/pins from this own-view LEF; timing remains unsigned until signoff.py SIGNED plus routed LEC."
         },
         {
           "inst": "u_core.u_b.g_cv.u_eA2",
@@ -1513,18 +1255,18 @@
             380.16
           ],
           "outline_um": [
-            317.672,
-            317.672
+            319.68,
+            319.68
           ],
           "orient": "R0",
           "track_offset_um": [
-            0.012,
-            0.012
+            0,
+            0
           ],
           "pins_file": "cores/elemA_pins.json",
           "lef": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv.lef",
           "lib": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
-          "note": "214445 cells (ASSUMED: elemB cells x area ratio (no elemA count committed)); CLOSED SS view dshead-elemA-ss-f11f3cc47 (SS +133.67 / FF +10.81 ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff SPLIT9 1), renamed ot_s81hd_elemA_cv (tools/s81_head/hd_cv_views.py, names only). 10-24: the tile is rebased on this parameter point (ot_s81hd_tile CUT 0x1ff / SPLIT9 1 / CV 1); ot_s81hd_elem == the closed RTL there (tools/s81_head/hd_elem_eq.sh EQ_BENCH_PASS A and B)"
+          "note": "R16 native abstract trial; size/pins from this own-view LEF; timing remains unsigned until signoff.py SIGNED plus routed LEC."
         },
         {
           "inst": "u_core.u_b.g_cv.u_eA3",
@@ -1534,18 +1276,18 @@
             380.16
           ],
           "outline_um": [
-            317.672,
-            317.672
+            319.68,
+            319.68
           ],
           "orient": "MY",
           "track_offset_um": [
-            0.028,
-            0.012
+            0,
+            0
           ],
           "pins_file": "cores/elemA_pins.json",
           "lef": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv.lef",
           "lib": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
-          "note": "214445 cells (ASSUMED: elemB cells x area ratio (no elemA count committed)); CLOSED SS view dshead-elemA-ss-f11f3cc47 (SS +133.67 / FF +10.81 ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff SPLIT9 1), renamed ot_s81hd_elemA_cv (tools/s81_head/hd_cv_views.py, names only). 10-24: the tile is rebased on this parameter point (ot_s81hd_tile CUT 0x1ff / SPLIT9 1 / CV 1); ot_s81hd_elem == the closed RTL there (tools/s81_head/hd_elem_eq.sh EQ_BENCH_PASS A and B)"
+          "note": "R16 native abstract trial; size/pins from this own-view LEF; timing remains unsigned until signoff.py SIGNED plus routed LEC."
         },
         {
           "inst": "u_core.u_b.g_cvb.u_eB",
@@ -1555,18 +1297,18 @@
             734.4
           ],
           "outline_um": [
-            277.652,
-            277.652
+            285.12,
+            285.12
           ],
           "orient": "R0",
           "track_offset_um": [
-            0.012,
-            0.012
+            0,
+            0
           ],
           "pins_file": "cores/elemB_pins.json",
           "lef": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemB_cv/ot_s81hd_elemB_cv.lef",
           "lib": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemB_cv/ot_s81hd_elemB_cv_tt.lib",
-          "note": "163817 cells (measured (elemB_final original_physical.json)); CLOSED SS view dshead-elemB-ss-a318fdf47 (SS +91.75 / FF +19.13 ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff SPLIT9 1), renamed ot_s81hd_elemB_cv (tools/s81_head/hd_cv_views.py, names only). 10-24: the tile is rebased on this parameter point (ot_s81hd_tile CUT 0x1ff / SPLIT9 1 / CV 1); ot_s81hd_elem == the closed RTL there (tools/s81_head/hd_elem_eq.sh EQ_BENCH_PASS A and B)"
+          "note": "R16 native abstract trial; size/pins from this own-view LEF; timing remains unsigned until signoff.py SIGNED plus routed LEC."
         }
       ],
       "buses": [
@@ -1726,15 +1468,63 @@
         ],
         "die_islands_um": [
           [
-            271.71,
+            0.0,
             349.92,
-            280.35,
+            8.64,
             358.56
           ],
           [
-            271.71,
+            0.0,
             1386.72,
-            280.35,
+            8.64,
+            1395.36
+          ],
+          [
+            285.12,
+            349.92,
+            293.76,
+            358.56
+          ],
+          [
+            285.12,
+            1386.72,
+            293.76,
+            1395.36
+          ],
+          [
+            303.63,
+            349.92,
+            312.27,
+            358.56
+          ],
+          [
+            303.63,
+            1386.72,
+            312.27,
+            1395.36
+          ],
+          [
+            354.24,
+            349.92,
+            362.88,
+            358.56
+          ],
+          [
+            354.24,
+            1386.72,
+            362.88,
+            1395.36
+          ],
+          [
+            665.28,
+            349.92,
+            673.92,
+            358.56
+          ],
+          [
+            665.28,
+            1386.72,
+            673.92,
             1395.36
           ],
           [
@@ -1744,267 +1534,147 @@
             4.32
           ],
           [
-            687.69,
-            2036.45,
-            696.33,
-            2045.09
+            686.88,
+            177.12,
+            695.52,
+            185.76
           ],
           [
-            688.04,
-            1713.31,
-            696.68,
-            1721.95
+            686.88,
+            246.24,
+            695.52,
+            254.88
           ],
           [
-            688.39,
-            1390.18,
-            697.03,
-            1398.82
-          ],
-          [
-            688.74,
-            90.72,
-            697.38,
-            99.36
-          ],
-          [
-            688.74,
-            90.97,
-            697.38,
-            99.61
-          ],
-          [
-            688.74,
-            91.05,
-            697.38,
-            99.69
-          ],
-          [
-            688.74,
-            128.08,
-            697.38,
-            136.72
-          ],
-          [
-            688.74,
-            276.2,
-            697.38,
-            284.84
-          ],
-          [
-            688.74,
+            686.88,
             349.92,
-            697.38,
+            695.52,
             358.56
           ],
           [
-            688.74,
-            350.25,
-            697.38,
-            358.89
+            686.88,
+            522.72,
+            695.52,
+            531.36
           ],
           [
-            688.74,
-            424.31,
-            697.38,
-            432.95
-          ],
-          [
-            688.74,
-            479.85,
-            697.38,
-            488.49
-          ],
-          [
-            688.74,
-            572.42,
-            697.38,
-            581.06
-          ],
-          [
-            688.74,
+            686.88,
             609.12,
-            697.38,
+            695.52,
             617.76
           ],
           [
-            688.74,
-            609.2,
-            697.38,
-            617.84
+            686.88,
+            660.96,
+            695.52,
+            669.6
           ],
           [
-            688.74,
-            609.29,
-            697.38,
-            617.93
-          ],
-          [
-            688.74,
-            720.54,
-            697.38,
-            729.18
-          ],
-          [
-            688.74,
+            686.88,
             868.32,
-            697.38,
+            695.52,
             876.96
           ],
           [
-            688.74,
-            868.49,
-            697.38,
-            877.13
+            686.88,
+            1075.68,
+            695.52,
+            1084.32
           ],
           [
-            688.74,
-            868.65,
-            697.38,
-            877.29
-          ],
-          [
-            688.74,
-            1016.77,
-            697.38,
-            1025.41
-          ],
-          [
-            688.74,
-            1067.04,
-            697.38,
-            1075.68
-          ],
-          [
-            688.74,
+            686.88,
             1127.52,
-            697.38,
+            695.52,
             1136.16
           ],
           [
-            688.74,
-            1127.77,
-            697.38,
-            1136.41
+            686.88,
+            1213.92,
+            695.52,
+            1222.56
           ],
           [
-            688.74,
-            1164.88,
-            697.38,
-            1173.52
-          ],
-          [
-            688.74,
-            1257.45,
-            697.38,
-            1266.09
-          ],
-          [
-            688.74,
-            1313.0,
-            697.38,
-            1321.64
-          ],
-          [
-            688.74,
+            686.88,
             1386.72,
-            697.38,
+            695.52,
             1395.36
           ],
           [
-            688.74,
-            1387.05,
-            697.38,
-            1395.69
+            686.88,
+            1490.4,
+            695.52,
+            1499.04
           ],
           [
-            688.74,
-            1461.11,
-            697.38,
-            1469.75
+            686.88,
+            1559.52,
+            695.52,
+            1568.16
           ],
           [
-            688.74,
-            1609.22,
-            697.38,
-            1617.86
-          ],
-          [
-            688.74,
-            1645.92,
-            697.38,
-            1654.56
-          ],
-          [
-            688.74,
-            1646.0,
-            697.38,
-            1654.64
-          ],
-          [
-            688.74,
-            1646.09,
-            697.38,
-            1654.73
-          ],
-          [
-            688.74,
-            1646.25,
-            697.38,
-            1654.89
-          ],
-          [
-            688.74,
-            1757.34,
-            697.38,
-            1765.98
-          ],
-          [
-            688.74,
-            1775.85,
-            697.38,
-            1784.49
-          ],
-          [
-            688.74,
+            686.88,
             1905.12,
-            697.38,
+            695.52,
             1913.76
           ],
           [
-            688.74,
-            1905.29,
-            697.38,
-            1913.93
-          ],
-          [
-            688.74,
-            1905.45,
-            697.38,
-            1914.09
-          ],
-          [
-            688.74,
-            2035.05,
-            697.38,
-            2043.69
-          ],
-          [
-            688.74,
-            2053.57,
-            697.38,
-            2062.21
-          ],
-          [
-            1105.87,
+            708.48,
             349.92,
-            1114.51,
+            717.12,
             358.56
           ],
           [
-            1105.87,
+            708.48,
             1386.72,
-            1114.51,
+            717.12,
+            1395.36
+          ],
+          [
+            1019.52,
+            349.92,
+            1028.16,
+            358.56
+          ],
+          [
+            1019.52,
+            1386.72,
+            1028.16,
+            1395.36
+          ],
+          [
+            1070.13,
+            349.92,
+            1078.77,
+            358.56
+          ],
+          [
+            1070.13,
+            1386.72,
+            1078.77,
+            1395.36
+          ],
+          [
+            1088.64,
+            349.92,
+            1097.28,
+            358.56
+          ],
+          [
+            1088.64,
+            1386.72,
+            1097.28,
+            1395.36
+          ],
+          [
+            1373.76,
+            349.92,
+            1382.4,
+            358.56
+          ],
+          [
+            1373.76,
+            1386.72,
+            1382.4,
             1395.36
           ]
         ]
@@ -2594,111 +2264,171 @@
         ],
         "die_islands_um": [
           [
-            271.71,
+            0.0,
             349.92,
-            280.35,
+            8.64,
             358.56
           ],
           [
-            271.71,
+            0.0,
             1386.72,
-            280.35,
+            8.64,
             1395.36
           ],
           [
-            687.58,
-            128.27,
-            696.22,
-            136.91
-          ],
-          [
-            687.87,
-            501.29,
-            696.51,
-            509.93
-          ],
-          [
-            688.16,
-            874.3,
-            696.8,
-            882.94
-          ],
-          [
-            688.45,
-            1247.32,
-            697.09,
-            1255.96
-          ],
-          [
-            688.74,
+            285.12,
             349.92,
-            697.38,
+            293.76,
             358.56
           ],
           [
-            688.74,
-            609.2,
-            697.38,
-            617.84
-          ],
-          [
-            688.74,
-            868.49,
-            697.38,
-            877.13
-          ],
-          [
-            688.74,
-            1127.77,
-            697.38,
-            1136.41
-          ],
-          [
-            688.74,
+            285.12,
             1386.72,
-            697.38,
+            293.76,
             1395.36
           ],
           [
-            688.74,
-            1387.05,
-            697.38,
-            1395.69
+            303.63,
+            349.92,
+            312.27,
+            358.56
           ],
           [
-            688.74,
-            1620.33,
-            697.38,
-            1628.97
+            303.63,
+            1386.72,
+            312.27,
+            1395.36
           ],
           [
-            688.74,
-            1645.92,
-            697.38,
-            1654.56
+            354.24,
+            349.92,
+            362.88,
+            358.56
           ],
           [
-            688.74,
-            1775.85,
-            697.38,
-            1784.49
+            354.24,
+            1386.72,
+            362.88,
+            1395.36
           ],
           [
-            688.74,
+            665.28,
+            349.92,
+            673.92,
+            358.56
+          ],
+          [
+            665.28,
+            1386.72,
+            673.92,
+            1395.36
+          ],
+          [
+            686.88,
+            349.92,
+            695.52,
+            358.56
+          ],
+          [
+            686.88,
+            609.12,
+            695.52,
+            617.76
+          ],
+          [
+            686.88,
+            868.32,
+            695.52,
+            876.96
+          ],
+          [
+            686.88,
+            1127.52,
+            695.52,
+            1136.16
+          ],
+          [
+            686.88,
+            1213.92,
+            695.52,
+            1222.56
+          ],
+          [
+            686.88,
+            1386.72,
+            695.52,
+            1395.36
+          ],
+          [
+            686.88,
+            1559.52,
+            695.52,
+            1568.16
+          ],
+          [
+            686.88,
             1905.12,
-            697.38,
+            695.52,
             1913.76
           ],
           [
-            1105.87,
+            708.48,
             349.92,
-            1114.51,
+            717.12,
             358.56
           ],
           [
-            1105.87,
+            708.48,
             1386.72,
-            1114.51,
+            717.12,
+            1395.36
+          ],
+          [
+            1019.52,
+            349.92,
+            1028.16,
+            358.56
+          ],
+          [
+            1019.52,
+            1386.72,
+            1028.16,
+            1395.36
+          ],
+          [
+            1070.13,
+            349.92,
+            1078.77,
+            358.56
+          ],
+          [
+            1070.13,
+            1386.72,
+            1078.77,
+            1395.36
+          ],
+          [
+            1088.64,
+            349.92,
+            1097.28,
+            358.56
+          ],
+          [
+            1088.64,
+            1386.72,
+            1097.28,
+            1395.36
+          ],
+          [
+            1373.76,
+            349.92,
+            1382.4,
+            358.56
+          ],
+          [
+            1373.76,
+            1386.72,
+            1382.4,
             1395.36
           ]
         ]
@@ -4713,15 +4443,15 @@
         "insertion_ps": 250,
         "die_islands_um": [
           [
-            -4.21,
+            0.0,
             609.12,
-            4.43,
+            8.64,
             617.76
           ],
           [
-            -3.86,
+            0.0,
             285.98,
-            4.78,
+            8.64,
             294.62
           ],
           [
@@ -5142,15 +4872,15 @@
         "insertion_ps": 250,
         "die_islands_um": [
           [
-            -4.21,
+            0.0,
             609.12,
-            4.43,
+            8.64,
             617.76
           ],
           [
-            -3.92,
+            0.0,
             982.14,
-            4.72,
+            8.64,
             990.78
           ],
           [
