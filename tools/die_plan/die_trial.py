@@ -686,12 +686,14 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
             if parent not in xy:continue
             a,b=xy[parent],xy[child]
             segs.append((*a,*b,0))
-        leaf_legs=[];indices=defaultdict(int)
+        leaf_legs=[];indices=defaultdict(int);last_driver={}
+        for name in xy:
+            if name.startswith("rtap"):
+                ni,ti,j=map(int,name[4:].split("_"));key=(ni,ti)
+                if key not in last_driver or j>last_driver[key][0]:last_driver[key]=(j,name)
         for tp,x,y,part,port,i in tap_ports:
             ti=indices[i];indices[i]+=1
-            prefix=f"rtap{i}_{ti}_"
-            names=[name for name in xy if name.startswith(prefix)]
-            driver=max(names,key=lambda n:int(n.rsplit("_",1)[1])) if names else node_buf[i]
+            driver=last_driver[(i,ti)][1] if (i,ti) in last_driver else node_buf[i]
             leaf_legs.append((*xy[driver],x,y))
     tcl = [f"read_lef {TECH_LEF}", f"read_lef {SC_LEF}",
            "foreach f [glob $::env(LIBDIR)/*RVT_$::env(CORNER)_nldm*.lib*] { read_liberty $f }",
