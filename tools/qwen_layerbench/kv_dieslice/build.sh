@@ -27,6 +27,8 @@ TB="$H/tb_kvslice.sv"
 printf "%s\n" "${NATIVE_BOOT:-0}" > "$O/native_boot.profile"
 python3 $H/bind_tb_clocks.py "$TOPF" "$TB" "$O/tb_kvslice.sv" || exit 2
 R=$(cd $H/../../.. && pwd)
+JOIN_SRC=
+[ "${NATIVE_BOOT:-0}" = 0 ] || JOIN_SRC="$R/rtl/physical/ot_fdi_join2.sv"
 IMGD=${D2D_IMG:-$R/physical/die_plan/qwen_kvsys/boot_v36/image_kv41}   # the pair image the KV boot image carries
 cat > $O/vl.f <<EOF
 -Wno-fatal
@@ -42,6 +44,7 @@ $H/kvs_link_phy_models.sv
 $H/qkd_pll_analog_model_bench.sv
 $H/qkd_hbm3e_phy_pc4_bench.sv
 $H/kvs_compute_end.sv
+$JOIN_SRC
 $R/rtl/qwen_split/qfd_kvn_static_transport.sv
 $R/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv
 $R/rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv
