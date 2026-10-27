@@ -821,8 +821,10 @@ def submit(st, j, attempt_note=""):
     if not runner.startswith(kit + "/"):
         argv += ["--stage", runner]
     if j["goal"] not in ("cts", "grt"):
-        chain = str(Path(__file__).with_name("signoff_chain.py").resolve())
-        argv += ["--stage", chain, "--", "python3", chain, runner, kit, j["goal"], str(mem), str(thr)]
+        # ot-run --stage copies extras only on SPILL. An existing data host
+        # may not have the scheduler checkout or newly added helper file.
+        chain = Path(__file__).with_name("signoff_chain.py").read_text()
+        argv += ["--", "python3", "-c", chain, runner, kit, j["goal"], str(mem), str(thr)]
         j["chain_required"] = True
     else:
         argv += ["--", "bash", runner, kit, j["goal"], str(mem), str(thr)]
