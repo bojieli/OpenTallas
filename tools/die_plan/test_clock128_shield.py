@@ -113,3 +113,27 @@ def test_no_legal_track_is_a_plan_error():
         assert {r["kind"] for r in e.rows} == {"no_clock_track"}
     else:
         raise AssertionError("expected a plan error")
+
+
+def test_shield_union_merges_overlapping_same_track_shields_only():
+    """CLOCK-KV-R10: a trunk and the leg that retraces it share one shield track; RCX double-counts coincident
+    shapes, so the shield net carries one box per overlapping/abutting run, other tracks untouched"""
+    boxes = [("M9", True, 0, 16, 0, 100), ("M9", True, 0, 16, 50, 200), ("M9", True, 0, 16, 200, 250),
+             ("M9", True, 0, 16, 300, 400), ("M9", True, 24, 40, 0, 100), ("M8", False, 0, 16, 0, 100)]
+    out, n = C.shield_union(boxes)
+    assert n == 3
+    assert sorted(out) == sorted([("M9", True, 0, 16, 0, 250), ("M9", True, 0, 16, 300, 400),
+                                  ("M9", True, 24, 40, 0, 100), ("M8", False, 0, 16, 0, 100)])
+
+
+def test_shield_merge_tcl_is_one_proc_and_call_on_the_shield_net():
+    L = C.shield_merge_tcl("VSS", ND)
+    assert len(L) == 2 and L[0].startswith("proc ot_merge_shields ") and L[1].startswith("ot_merge_shields VSS ")
+    assert "odb::dbSBox_destroy" in L[0] and L[0].count("odb::dbSBox_create") == 2
+    assert L[0].count("{") == L[0].count("}")
+
+
+def test_combo_merge_shields_flag_is_opt_in():
+    src = (Path(__file__).resolve().parent / "die_clock_mesh.py").read_text()
+    assert '"--merge-shields", action="store_true"' in src
+    assert 'if getattr(a, "merge_shields", False):' in src

@@ -1,0 +1,18 @@
+{
+ "lane": "CLOCK-KV-R10", "date": "2026-10-26 21:26 PDT", "numbers": "CHECKED by this lane from the files named; not NUMBER-CHECK independent",
+ "l2_ground_c": {
+  "root_cause": "Coincident/overlapping VSS shield SBoxes on one track (L1 trunk h0/h1 and the L2 legs that retrace it share the shield track x=5539.72-5539.88 at 0.48 um pitch; also 112 L10 + 12 L9 nets). OpenRCX counts lateral coupling to each duplicate shape over the overlap. Which of two identical geometries (h01 vs h10) is hit depends on shape order (h01 L2 shield starts above the L1 shield, h10 below). Not PG density: h01 has FEWER M8 VSS crossings than h10.",
+  "evidence": {"h01_odd_leg_C_fF": [128.3, 127.9, 128.0], "h01_odd_after_merge_fF": [86.1, 86.1, 86.4], "peers_fF": 86.2, "native_fF": 52.8,
+     "skip_over_cell_effect": "none (128 fF unchanged)", "shield_boxes_merged": 21683, "runs": 8283, "clock_nets_changed_gt_1fF": 127},
+  "fix": "die_clock_128.shield_merge_tcl / shield_union + die_clock_mesh combo --merge-shields (opt-in): union same-track shield boxes after ties; geometry-equivalent metal. Tcl proc verified on the b5 RCX odb: identical caps to the python probe (0 nets differ).",
+  "tree_input_spread_ps": {"native": {"TT": 24.678, "FF": 20.713}, "rcx_codex": {"TT": 174.364, "FF": 152.625}, "rcx_merged": {"TT": 71.919, "FF": 65.005}},
+  "per_level_node_spread_TT_ps": {"native": "L2 4.0 L6 7.8 L7 29.5 L10 24.3 D 24.7", "rcx": "L2 105.7 L6 117.2 L7 154.2 D 174.4", "rcx_merged": "L2 9.2 L6 27.2 L7 62.9 L8 68.1 L10 53.2 D 71.9"},
+  "remaining": "L7 step +36 ps (re-sited L7-L9 nodes, GEOM: mirror re-site pairs) and L3-L6 +19 ps vs native under RCX",
+  "data": "epyc1:/srv/opentallas-scratch2/claude/clock-kv-r10-1026/l2probe (merged.spef, routed.odb, tree_{TT,FF}_merged.txt, tclmerge.spef)"
+ },
+ "headmirror_island_identity": {
+  "data": "epyc1:/srv/opentallas-scratch2/claude/clock-kv-r10-1026/census",
+  "result": "7/8 GEOM types PASS (head_eighth e0/e1/e2/e5/e6 + pv_join_t 0 islands each instance; kv3_pv_pair 1 site 256/256); qkd_kvs_pc FAIL 2 patterns differing by 16 nm (R0/MX 124.984 vs MY/R180 125.0); Codex 0.5-um rounding hid it",
+  "legs": "node nets wire/sum-Manhattan max 1.017 (headmirror r9 mesh), 1.004/1.008 (b5), 0 > 1.10"
+ }
+}
