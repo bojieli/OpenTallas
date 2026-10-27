@@ -57,7 +57,10 @@ proc ff_from_in {net depth} {
   if {$net eq "NULL" || $net eq ""} { return "" }
   foreach it [$net getITerms] {
     set i [$it getInst]
-    if {[[$it getMTerm] getIoType] ne "INPUT"} continue
+    set mt [$it getMTerm]
+    # A clock load is not a data capture, even if a caller omitted the port
+    # from its skip metadata (PV secondary clock formerly stole v_r[9]).
+    if {[$mt getIoType] ne "INPUT" || [$mt getSigType] eq "CLOCK"} continue
     if {[ff_is_ff $i]} { return $i }
   }
   if {$depth >= 2} { return "" }

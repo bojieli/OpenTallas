@@ -497,6 +497,24 @@
        "type": "string",
        "pattern": "^M[1-9]$"
       },
+      "bumps": {
+       "type": "object",
+       "additionalProperties": false,
+       "properties": {
+        "pitch_um": {
+         "type": "number",
+         "exclusiveMinimum": 0
+        },
+        "pad_um": {
+         "type": "number",
+         "minimum": 0
+        },
+        "edge_margin_um": {
+         "type": "number",
+         "minimum": 0
+        }
+       }
+      },
       "grid": {
        "type": "array",
        "items": {
@@ -3542,6 +3560,32 @@
       "branch_leaf_um": {
        "type": "number",
        "exclusiveMinimum": 0
+      },
+      "trunk": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "layer",
+        "node_x_um",
+        "lane_x_um",
+        "riser_um"
+       ],
+       "properties": {
+        "layer": {
+         "type": "string",
+         "pattern": "^M[1-9]$"
+        },
+        "node_x_um": {
+         "type": "number"
+        },
+        "lane_x_um": {
+         "type": "number"
+        },
+        "riser_um": {
+         "type": "number",
+         "minimum": 0
+        }
+       }
       }
      }
     },

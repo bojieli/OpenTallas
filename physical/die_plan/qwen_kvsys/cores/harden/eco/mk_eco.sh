@@ -26,6 +26,9 @@ for f in 6_final.spef 1_2_yosys.v 1_synth.v clock_period.txt mem.json ot_face_fl
 rsync -a $KIT/run/objects/asap7/$NICK/base/ $OUT/run/objects/asap7/$NICK/base/ 2>/dev/null || true
 { cat $OUT/constraint.sdc; echo 'set_propagated_clock [all_clocks]'; } > $B/4_cts.sdc
 cp $HERE/eco_route.tcl $OUT/
+# FLOW-CLKFREEZE 2026-10-27: clock lock sourced by eco_route.tcl + blocking clock-net geometry check (run_eco.sh)
+ROOT=$(cd "$HERE/../../../../../.." && pwd)
+for f in clk_freeze.tcl clk_dump_db.tcl clk_geom_diff.py clk_freeze_check.sh; do cp "$ROOT/tools/die_plan/$f" $OUT/; done
 # FLOW-TAG 10-26: current kits set 'override export POST_GLOBAL_ROUTE_TCL = grt_post_core.tcl' (core_flow.py), which beat
 # the plain export below, so the ECO hook never ran (route-only re-route). eco_post.tcl = the ECO, then the kit's own
 # post-GRT hook (grt_post.tcl: IO vclk back to TT) when the kit has one; the FF-only variant runs in the FF vclk frame.
