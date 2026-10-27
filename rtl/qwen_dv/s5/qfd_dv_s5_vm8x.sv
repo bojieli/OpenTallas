@@ -50,6 +50,7 @@ module qfd_dv_s8x_vmr #(parameter integer MUT = 0, parameter integer MIF = 0) (
     output reg             fault
 );
     integer l, b, s, k, lc;   // lc: clocked-block loop only (no shared loop variable between processes)
+    integer lwb;              // QC-SU-F4E: w_bad/w_coll process loop only (it shared l with the off_oh/hitS process: latch on l + constant-driver conflict, Yosys check -assert)
     genvar gl, gb, gs, gk, bk;
     reg rl0, rl1;
     generate if (MIF == 0) begin : g_legacy_reset
@@ -120,8 +121,8 @@ module qfd_dv_s8x_vmr #(parameter integer MUT = 0, parameter integer MIF = 0) (
         w_coll_r = 1'b0; w_bad_r = 1'b0;
         if (pw1_we && pw1_addr[23:14] != 10'd0) w_bad_r = 1'b1;
         if (su_any_k[5]) begin
-            for (l = 0; l < 8; l = l + 1)
-                if (su_we_c[l] && (pvm_waddr[24*l+3 +: 21] != pvm_waddr[3 +: 21] || !su_we_c[0])) w_bad_r = 1'b1;
+            for (lwb = 0; lwb < 8; lwb = lwb + 1)
+                if (su_we_c[lwb] && (pvm_waddr[24*lwb+3 +: 21] != pvm_waddr[3 +: 21] || !su_we_c[0])) w_bad_r = 1'b1;
             if (pvm_waddr[23:14] != 10'd0) w_bad_r = 1'b1;
             if (pw1_we && w1_bank_r == su_bank_r) w_coll_r = 1'b1;
         end
@@ -154,9 +155,10 @@ module qfd_dv_s8x_vmr #(parameter integer MUT = 0, parameter integer MIF = 0) (
         wire [7:0] lw;
         qfd_dv_s8x_kff #(.W(8), .ID(1000 + gs)) u_win (.ck(ck), .d(winS[gs]), .q(lw));
         reg [31:0] e;
+        integer le;   // QC-SU-F4E: per-generate-instance loop variable (was the module-wide l, shared by 10 processes)
         always @(*) begin
             e = 32'd0;
-            for (l = 0; l < 8; l = l + 1) e = e | ({32{lw[l]}} & l_sud[32*l +: 32]);
+            for (le = 0; le < 8; le = le + 1) e = e | ({32{lw[le]}} & l_sud[32*le +: 32]);
         end
         assign dS[32*gs +: 32] = e;
     end endgenerate

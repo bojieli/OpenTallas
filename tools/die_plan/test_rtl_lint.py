@@ -48,3 +48,15 @@ def test_lint_fails_closed_on_malformed_top_parameters(tmp_path):
     (tmp_path / 'config.mk').write_text('export DESIGN_NAME = demo\nexport VERILOG_FILES = /work/demo.sv\nexport VERILOG_TOP_PARAMS = AQ_XMEM\n')
     assert rtl_lint.run(tmp_path) == 1
     assert 'name/value pairs' in (tmp_path / 'rtl_lint.json').read_text()
+
+
+def test_config_empty_value_does_not_read_next_line(tmp_path):
+    """QC-SU-F4D: 'export VERILOG_TOP_PARAMS =' (empty) must parse as empty, not as the next line's text."""
+    (tmp_path / 'config.mk').write_text('export DESIGN_NAME = demo\nexport VERILOG_FILES = /work/demo.sv\n'
+                                        'export VERILOG_TOP_PARAMS =\nexport HOLD_SLACK_MARGIN = 5\n'
+                                        'override export EMPTY2 ?=   \nexport NEXT = 7\n')
+    cfg = rtl_lint.config(tmp_path)
+    assert cfg['VERILOG_TOP_PARAMS'] == [] and cfg['HOLD_SLACK_MARGIN'] == ['5'], cfg
+    assert cfg['EMPTY2'] == [] and cfg['NEXT'] == ['7'], cfg
+    text = rtl_lint.script(tmp_path)
+    assert 'chparam' not in text and 'hierarchy -check -top demo' in text

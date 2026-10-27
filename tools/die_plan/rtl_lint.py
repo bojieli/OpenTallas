@@ -12,7 +12,9 @@ from pathlib import Path
 def config(kit):
     values = {}
     text = (kit / 'config.mk').read_text().replace('\\\n', ' ')
-    for key, value in re.findall(r'^\s*(?:override\s+)?export\s+(\w+)\s*[:?]?=\s*(.*?)\s*$', text, re.M):
+    # [ \t], not \s, around '=': \s also matches the newline, so an empty 'export X =' line took the NEXT line as its
+    # value (QC-SU-F4D: 'export VERILOG_TOP_PARAMS =' read 'export HOLD_SLACK_MARGIN = 5' -> bogus chparam -> FAIL).
+    for key, value in re.findall(r'^[ \t]*(?:override[ \t]+)?export[ \t]+(\w+)[ \t]*[:?]?=[ \t]*(.*?)[ \t]*$', text, re.M):
         values[key] = value.split()
     return values
 
