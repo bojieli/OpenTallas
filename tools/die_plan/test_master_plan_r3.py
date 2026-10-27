@@ -28,7 +28,7 @@ def _kit(tmp_path, sl, io_lines, name="core_m"):
 def _core_slice():
     sl = sample()
     sl["islands"] = [dict(name="clock_entry", rect_um=[427.68, 427.68, 436.32, 436.32], centre_um=[432, 432],
-                          clock_pin=dict(layer="M5", xy_um=[432, 432]))]
+                          clock_pin=dict(layer="M5", xy_um=[432.012, 432]))]   # on an M5 track (R15)
     sl["keepouts"] = [dict(name="clock_entry_island", rect_um=[427.68, 427.68, 436.32, 436.32], kind="island",
                            use=["placement"])]
     return sl
@@ -39,8 +39,8 @@ def test_core_kit_consumes_clock_entry_and_passes_check(tmp_path):
                                         "-pin_size {0.032 0.192}",
                                         "place_pin -pin_name {d[0]} -layer M4 -location {0.0160 110.0000}"])
     io = (kd / "io.tcl").read_text()
-    assert "-pin_name {clk} -layer M5 -location {432.0000 432.0000}" in io and "{d[0]} -layer M4" in io
-    assert "ot_ci_clock_entry {clk} 432 432" in (kd / "master_core_infra.tcl").read_text()
+    assert "-pin_name {clk} -layer M5 -location {432.0120 432.0000} -pin_size {0.048 0.48}" in io and "{d[0]} -layer M4" in io
+    assert "ot_ci_clock_entry {clk} 432.012 432" in (kd / "master_core_infra.tcl").read_text()
     assert "placement blockage: keepout clock_entry_island" not in (kd / "master_slice.tcl").read_text()
     rep = MS.check_kit(kd)
     assert rep["verdict"] == "PASS", rep["issues"]
@@ -81,7 +81,7 @@ def _partition_slice():
     sl["islands"] = [dict(name="island", rect_um=[427.68, 427.68, 436.32, 436.32], centre_um=[432, 432])]
     sl["keepouts"] = [dict(name="island", rect_um=[427.68, 427.68, 436.32, 436.32], kind="island", use=["placement"])]
     sl["bays"] = [dict(name="bay0", rect_um=[10, 10, 50, 20], kind="station", bits=64, layer="M7")]
-    sl["entry_pins"] = [dict(name="ep0", pin="x_i[0]", layer="M7", xy_um=[30.0, 15.0], bay="bay0"),
+    sl["entry_pins"] = [dict(name="ep0", pin="x_i[0]", layer="M7", xy_um=[30.032, 15.0], bay="bay0"),
                         dict(name="ep1", pin=None, layer="M7", xy_um=[32.0, 15.0], bay="bay0")]
     return sl
 
@@ -94,8 +94,8 @@ def test_partition_kit_pushdown_island_repeater_and_entry_pins(tmp_path):
     assert plan["reserved_bays"][0]["name"] == "bay0" and plan["unbound_entry_pins"] == 1
     tcl = (kd / "master_slice.tcl").read_text()
     assert "placement blockage: island" not in tcl and "placement blockage: keepout island" not in tcl
-    assert "ot_ci_entry {x_i[0]} 30 15" in (kd / "master_core_infra.tcl").read_text()
-    assert "{x_i[0]} -layer M7 -location {30.0000 15.0000}" in (kd / "io.tcl").read_text()
+    assert "ot_ci_entry {x_i[0]} 30.032 15" in (kd / "master_core_infra.tcl").read_text()
+    assert "{x_i[0]} -layer M7 -location {30.0320 15.0000}" in (kd / "io.tcl").read_text()
     rep = MS.check_kit(kd)
     assert rep["verdict"] == "PASS", rep["issues"]
 
@@ -153,3 +153,37 @@ def test_core_trunk_refused_without_pg_model_and_over_sram_pg():
     s["pg_obstructions_um"] = {"M5": [[590, 300, 610, 700]], "M4": []}   # route via x=430 vertical is clear
     assert "ot_ci_tree_begin" in CI.emit_tcl(s)
     assert CI.trunk_pg_clearance(s, CI.compile_slice(s))["verdict"] == "PASS"
+
+
+# ---------------------------------------------------------------- S81-CORE-LAT-R15 / COORD 10-27: clock entry pin form
+def test_check_kit_fails_off_track_clock_entry(tmp_path):
+    sl = _core_slice()
+    sl["islands"][0]["clock_pin"]["xy_um"] = [432.0, 432]      # 0.012 + 8999.75 x 0.048: off the M5 track
+    kd = _kit(tmp_path, sl, ["place_pin -pin_name {clk} -layer M4 -location {0.016 100}"])
+    rep = MS.check_kit(kd)
+    assert rep["verdict"] == "FAIL" and any("off the M5 track (nearest 432.012)" in i for i in rep["issues"]), rep["issues"]
+    assert rep["checks"]["pin_tracks"]["off_track"] == {"clk": "x 432 off the M5 track (nearest 432.012)"}
+
+
+def test_check_kit_uses_kit_make_tracks(tmp_path):
+    kd = _kit(tmp_path, _core_slice(), ["place_pin -pin_name {clk} -layer M4 -location {0.016 100}"])
+    (kd / "make_tracks.tcl").write_text("make_tracks M5 -x_offset 0.024 -x_pitch 0.048 -y_offset 0.024 -y_pitch 0.048\n")
+    (kd / "config.mk").write_text((kd / "config.mk").read_text() + "override export MAKE_TRACKS = /work/make_tracks.tcl\n")
+    rep = MS.check_kit(kd)
+    assert rep["checks"]["pin_tracks"]["source"] == "make_tracks.tcl"
+    assert any("off the M5 track (nearest 432.024)" in i for i in rep["issues"]), rep["issues"]
+
+
+def test_check_kit_fails_small_clock_entry_port(tmp_path):
+    kd = _kit(tmp_path, _core_slice(), ["place_pin -pin_name {clk} -layer M4 -location {0.016 100}"])
+    assert "-pin_size {0.048 0.48}" in (kd / "io.tcl").read_text() and MS.check_kit(kd)["verdict"] == "PASS"
+    (kd / "io.tcl").write_text((kd / "io.tcl").read_text().replace("-pin_size {0.048 0.48}", "-pin_size {0.032 0.192}"))
+    rep = MS.check_kit(kd)
+    assert rep["verdict"] == "FAIL" and any("< 0.048 x 0.48" in i for i in rep["issues"]), rep["issues"]
+
+
+def test_shared_clock_entry_proc_uses_ruling_size():
+    from pathlib import Path
+    t = (Path(MS.__file__).with_name("core_infra.tcl")).read_text()
+    body = t.split("proc ot_ci_clock_entry", 1)[1].split("\n}", 1)[0]
+    assert "-pin_size {%g %g}" % MS.CLOCK_ENTRY_PIN_UM in body

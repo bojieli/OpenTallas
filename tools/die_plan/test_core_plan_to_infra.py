@@ -17,7 +17,8 @@ def sites(tap_x=None, strap=(25.0, 25.12)):
     if tap_x is not None:
         fixed = [(tap_x, r[1], tap_x + 0.108, r[1] + SH) for r in rows]
     return dict(row0=dict(x=4.32, y=4.32, site_w=SW, site_h=SH, nrows=len(rows), nsites=600), rows=rows, fixed=fixed,
-                masters=dict(MASTERS), pg={"M5": [(strap[0], 4.31, strap[1], 36.73)], "M4": []})
+                masters=dict(MASTERS), pg={"M5": [(strap[0], 4.31, strap[1], 36.73)], "M4": []},
+                tracks={"M5": [(0.012, 0.048, 0.012, 0.048)], "M4": [(0.012, 0.048, 0.012, 0.048)]})
 
 
 def plan(stack=False, leaf_master="BUFx8_ASAP7_75t_R"):
@@ -169,3 +170,31 @@ def test_band_default_gate_unchanged_and_byte_identical():
 def test_band_unknown_policy_refused():
     with pytest.raises(CI.InfraError, match="band_policy"):
         CI.emit_tcl(_oob("off"))
+
+
+# ---------------------------------------------------------------- S81-CORE-LAT-R15: clock entry pin on an M5 track
+def test_clock_pin_snapped_to_m5_track():
+    p = plan(); p["entry"] = [42.12, 15.12]          # sstn r14tk: x 42.12 = 0.012 + 877.25 x 0.048 (off track)
+    sl = C.convert(p, sites(), "tiny_core", outline=[60.0, 37.8])
+    isl = sl["islands"][0]
+    assert isl["clock_pin"]["xy_um"] == [42.108, 15.12] and isl["centre_um"] == [42.12, 15.12]
+    assert MS.off_track("M5", isl["clock_pin"]["xy_um"], sites()["tracks"]) is None
+    assert sl["plan_conversion"]["clock_pin_snap"]["moved_um"] == 0.012
+    # half track goes up (HBM collar 43.2 -> 43.224 on its 0.024 grid)
+    assert MS.snap_to_track("M5", [43.2, 1.0], {"M5": [(0.024, 0.048, 0.024, 0.048)]}) == [43.224, 1.0]
+    assert MS.snap_to_track("M4", [1.0, 15.13], {"M4": [(0.012, 0.048, 0.012, 0.048)]}) == [1.0, 15.132]
+
+
+def test_no_track_grid_refused():
+    s = sites(); s.pop("tracks")
+    with pytest.raises(C.ConvertError, match="TRACK"):
+        C.convert(plan(), s, "tiny_core", outline=[37.8, 37.8])
+
+
+def test_read_sites_tracks(tmp_path):
+    f = tmp_path / "sites.txt"
+    f.write_text("ROW0 4.32 4.32 site_w 0.054 site_h 0.27 nrows 1 nsites 10 orient0 R0\nROW 4.32 4.32 R0 10\n"
+                 "MASTER BUFx24_ASAP7_75t_R 1.62 0.27\nTRACKX M5 0.012 0.048 1755\nTRACKY M5 0.012 0.048 630\n"
+                 "TRACKX M2 0.009 0.036 2340\nTRACKY M2 0.045 0.27 112\nTRACKY M2 0.081 0.27 112\n")
+    t = C.read_sites(f)["tracks"]
+    assert t["M5"] == [(0.012, 0.048, 0.012, 0.048)] and len(t["M2"]) == 2

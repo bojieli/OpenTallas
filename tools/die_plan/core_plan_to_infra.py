@@ -34,7 +34,7 @@ class ConvertError(ValueError):
 
 def read_sites(path):
     rows, fixed, masters, pg = [], [], {}, {"M4": [], "M5": []}
-    row0 = None
+    row0 = None; tx, ty = {}, {}
     for l in Path(path).read_text().splitlines():
         f = l.split()
         if not f:
@@ -50,9 +50,12 @@ def read_sites(path):
             masters[f[1]] = (float(f[2]), float(f[3]))
         elif f[0] == "PG" and f[2] in pg:
             pg[f[2]].append(tuple(map(float, f[3:7])))
+        elif f[0] in ("TRACKX", "TRACKY"):              # R15: ODB track grid pattern (layer, origin, step[, count])
+            (tx if f[0] == "TRACKX" else ty).setdefault(f[1], []).append((float(f[2]), float(f[3])))
     if row0 is None or not rows or not masters:
         raise ConvertError(f"{path}: sites file needs ROW0, ROW and MASTER lines")
-    return dict(row0=row0, rows=sorted(rows, key=lambda r: r[1]), fixed=fixed, masters=masters, pg=pg)
+    tracks = {ln: [(a[0], a[1], b[0], b[1]) for a in tx[ln] for b in ty[ln]] for ln in tx if ln in ty}
+    return dict(row0=row0, rows=sorted(rows, key=lambda r: r[1]), fixed=fixed, masters=masters, pg=pg, tracks=tracks)
 
 
 def pg_obstructions(sites, pad_half_um=0.04):
@@ -182,13 +185,22 @@ def convert(rec, sites, module, clock_port="clk", outline=None, calibration=Fals
                          slew_max=max(m.get("leaf_out_slew_max", 0), m.get("leaf_slew_in_max", 0)), mean=m["mean"])
     disp = [t["displacement_um"] for t in tree_nodes]
     ex, ey = rec["entry"]
+    # S81-CORE-LAT-R15 (COORD 2026-10-27): the M5 clock-entry pin sits ON an M5 routing track of the kit floorplan
+    # (an off-track centre has no on-track access point -> DRT-0255 'no path' on the port net); the island/plan entry
+    # stays where the plan put it, only the pin moves (< half a pitch, 0.024 um on M5).
+    if not sites.get("tracks", {}).get("M5"):
+        raise ConvertError("sites file has no M5 TRACKX/TRACKY lines: re-run the sites census (core_family_sites.tcl R15)")
+    import master_slice as MS
+    px, py = MS.snap_to_track("M5", [ex, ey], sites["tracks"])
+    snap = dict(layer="M5", plan_xy_um=[ex, ey], pin_xy_um=[px, py], moved_um=round(abs(px - ex) + abs(py - ey), 4),
+                rule="pin centre on an M5 track of the kit floorplan (x; M5 vertical)")
     sl = dict(schema=schema, die=die, kind="core", type=module, module=module, instances=[],
               master_plan_sha256=master_plan_sha256, frozen=False, outline_um=[round(v, 4) for v in outline],
               latency=dict(common_clock_latency_ps={"TT": 250, "FF": 202.5}, tol_ps=20, early_taps=False),
               keepouts=[], bays=[], entry_pins=[], hard_cores=[], corridors=[], gates={},
               core_clock_port=clock_port,
               islands=[dict(name="ck_entry", rect_um=[ex - 2.16, ey - 2.16, ex + 2.16, ey + 2.16], centre_um=[ex, ey],
-                            use="clock_driver", via_stack=["M9", "M5"], clock_pin=dict(layer="M5", xy_um=[ex, ey]))],
+                            use="clock_driver", via_stack=["M9", "M5"], clock_pin=dict(layer="M5", xy_um=[px, py]))],
               pushdown=dict(islands=[], clock_repeaters=[], note="in-core clock tree only (core_tree); no feedthrough ports"),
               core_tree=dict(clock_port=clock_port, nodes=[{k: t[k] for k in ("name", "master", "xy_um", "parent")} for t in tree_nodes],
                              leaves=leaves, equal_load=False, load_balance="joint_nldm_plan", trunk_layers=["M4", "M5"],
@@ -201,7 +213,8 @@ def convert(rec, sites, module, clock_port="clk", outline=None, calibration=Fals
                                    cells=len(tree_nodes), sinks=len(allsinks), leaves=len(leaves),
                                    displacement_um=dict(max=max(disp), mean=round(sum(disp) / len(disp), 4),
                                                         over_2um=sum(d > 2 for d in disp)),
-                                   site_rule="row by y, site-grid x, no overlap with planned/fixed cells, centre x off M5 straps"))
+                                   site_rule="row by y, site-grid x, no overlap with planned/fixed cells, centre x off M5 straps",
+                                   clock_pin_snap=snap))
     return sl
 
 

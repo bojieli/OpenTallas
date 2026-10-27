@@ -19,6 +19,7 @@ without a slice is refused; `--trial` kits (not sign-off) stay allowed and are s
 """
 import hashlib
 import json
+import math
 import os
 import re
 import shutil
@@ -484,7 +485,8 @@ def _consume_io(kd, sl, clock_port):
                 continue
             name = _pin_name(m.group(2))
             layer, (x, y) = want[name]
-            lines[i] = (f"{m.group(1)}{{{name}}} -layer {layer} -location {{{x:.4f} {y:.4f}}} -pin_size {{0.032 0.192}}"
+            pw, pl = CLOCK_ENTRY_PIN_UM if name == clock_port else (0.032, 0.192)
+            lines[i] = (f"{m.group(1)}{{{name}}} -layer {layer} -location {{{x:.4f} {y:.4f}}} -pin_size {{{pw:g} {pl:g}}}"
                         f"   ;# master-plan slice (was:{m.group(3).strip()[:80]})")
             done.setdefault(name, []).append(f.name)
             hit = True
@@ -506,6 +508,87 @@ def _kit_outline(kd):
         return None
     x0, y0, x1, y1 = (float(v) for v in m.groups())
     return (x1 - x0, y1 - y0)
+
+
+# ------------------------------------------------------------------------------------------------ routing tracks
+# S81-CORE-LAT-R15 (COORD 2026-10-27): a slice-fixed pin whose centre is off the kit's routing track for its layer has no
+# on-track access point -> detailed_route DRT-0255 "no path" on the port net (S81 qbank_S / sstn / gunit_l1c centre
+# entry at x 42.12 = 0.012 + 877.25 x 0.048; HBM collar_idx256r at 43.2).  The pin centre must sit ON a track of its
+# layer across the layer's routing direction (x for a vertical layer, y for a horizontal one).
+# COORD RULING 2026-10-27 (GEOM-REVIEW-19 DRT probe on the sstn kit): the core clock-entry port is at least 0.048 x 0.48
+# um (width x length along its vertical M5 track), every die; a 0.032 x 0.192 port gave DRT no access.
+CLOCK_ENTRY_PIN_UM = (0.048, 0.48)
+VERTICAL = frozenset({"M1", "M3", "M5", "M7", "M9"})          # ASAP7 preferred directions (M2/M4/M6/M8 horizontal)
+# ORFS platforms/asap7/openRoad/make_tracks.tcl (openroad/orfs:asap7lock), used when a kit has no make_tracks.tcl
+ASAP7_PLATFORM_TRACKS = """make_tracks M9 -x_offset 0.116 -x_pitch 0.080 -y_offset 0.116 -y_pitch 0.080
+make_tracks M8 -x_offset 0.116 -x_pitch 0.080 -y_offset 0.116 -y_pitch 0.080
+make_tracks M7 -x_offset 0.016 -x_pitch 0.064 -y_offset 0.016 -y_pitch 0.064
+make_tracks M6 -x_offset 0.012 -x_pitch 0.048 -y_offset 0.016 -y_pitch 0.064
+make_tracks M5 -x_offset 0.012 -x_pitch 0.048 -y_offset 0.012 -y_pitch 0.048
+make_tracks M4 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.012 -y_pitch 0.048
+make_tracks M3 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.009 -y_pitch 0.036
+make_tracks M1 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.009 -y_pitch 0.036
+"""
+_TRK = re.compile(r"^\s*make_tracks\s+(\S+)\s+-x_offset\s+([-\d.eE+]+)\s+-x_pitch\s+([-\d.eE+]+)"
+                  r"\s+-y_offset\s+([-\d.eE+]+)\s+-y_pitch\s+([-\d.eE+]+)", re.M)
+
+
+def parse_tracks(text):
+    """{layer: [(x_offset, x_pitch, y_offset, y_pitch), ...]} from make_tracks lines (um)."""
+    out = {}
+    for m in _TRK.finditer(text):
+        out.setdefault(m.group(1), []).append(tuple(float(v) for v in m.groups()[1:]))
+    return out
+
+
+def kit_tracks(kd):
+    """(tracks, source): the kit's own make_tracks.tcl when config.mk points MAKE_TRACKS at it, else the platform's."""
+    kd = Path(kd)
+    cfg = kd / "config.mk"
+    m = re.search(r"^\s*(?:override\s+)?export\s+MAKE_TRACKS\s*:?=\s*(\S+)", cfg.read_text(), re.M) if cfg.is_file() else None
+    if m:
+        p = kd / Path(m.group(1)).name if m.group(1).startswith("/work/") else Path(m.group(1))
+        if not p.is_file():
+            return None, f"MAKE_TRACKS {m.group(1)} not in the kit"
+        return parse_tracks(p.read_text()), p.name
+    return parse_tracks(ASAP7_PLATFORM_TRACKS), "asap7 platform make_tracks.tcl"
+
+
+def _axis(layer):
+    return 0 if layer in VERTICAL else 1
+
+
+def track_nearest(layer, xy, tracks):
+    """nearest track coordinate across the routing direction of `layer` (x for vertical, y for horizontal), or None.
+    A tie (exact half track) goes up (HBM collar 43.2 -> 43.224)."""
+    a = _axis(layer); v = float(xy[a]); best = None
+    for t in tracks.get(layer, []):
+        off, pitch = (t[0], t[1]) if a == 0 else (t[2], t[3])
+        c = off + math.floor((v - off) / pitch + 0.5 + 1e-9) * pitch
+        if best is None or abs(c - v) < abs(best - v):
+            best = c
+    return None if best is None else round(best, 4)
+
+
+def snap_to_track(layer, xy, tracks):
+    """xy with the across-direction coordinate moved onto the nearest track of `layer`; raises SliceError w/o a grid."""
+    c = track_nearest(layer, xy, tracks)
+    if c is None:
+        raise SliceError(f"no routing track grid for layer {layer}")
+    out = [float(xy[0]), float(xy[1])]
+    out[_axis(layer)] = c
+    return out
+
+
+def off_track(layer, xy, tracks, tol=5e-4):
+    """None when the pin centre is on a track of its layer, else the reason."""
+    c = track_nearest(layer, xy, tracks)
+    a = _axis(layer)
+    if c is None:
+        return f"no {layer} track grid"
+    if abs(c - float(xy[a])) > tol:
+        return f"{'x' if a == 0 else 'y'} {float(xy[a]):g} off the {layer} track (nearest {c:g})"
+    return None
 
 
 def check_kit(kd, slice_path=None, tol=1e-3):
@@ -591,11 +674,27 @@ def check_kit(kd, slice_path=None, tol=1e-3):
             xm = re.search(r"-location\s+\{\s*([-\d.eE+]+)\s+([-\d.eE+]+)\s*\}", ln)
             lay, (x, y) = want[n]
             seen[n] = seen.get(n, 0) + 1
+            if n == clock_port:
+                sz = re.search(r"-pin_size\s+\{\s*([-\d.eE+]+)\s+([-\d.eE+]+)\s*\}", ln)
+                w_, l_ = sorted(float(v) for v in sz.groups()) if sz else (0.0, 0.0)
+                if w_ < CLOCK_ENTRY_PIN_UM[0] - 1e-6 or l_ < CLOCK_ENTRY_PIN_UM[1] - 1e-6:
+                    issues.append(f"{f.name}: clock entry {n} pin_size {sz.groups() if sz else '?'} < "
+                                  f"{CLOCK_ENTRY_PIN_UM[0]:g} x {CLOCK_ENTRY_PIN_UM[1]:g} um (COORD 10-27: DRT access)")
             if not lm or lm.group(1) != lay or not xm or abs(float(xm.group(1)) - x) > tol or abs(float(xm.group(2)) - y) > tol:
                 issues.append(f"{f.name}: {n} placed at {xm.groups() if xm else '?'} {lm.group(1) if lm else '?'}, "
                               f"slice {lay} ({x:g}, {y:g})")
     checks["slice_pins"] = dict(fixed=len(want), placed_by_kit_io=sum(seen.values()),
                                 clock_port=clock_port, clock_entry=list(entry["xy_um"]) if entry else None)
+    # every slice-fixed pin on a routing track of its layer (S81-CORE-LAT-R15: off-track pin -> DRT-0255)
+    if want:
+        trk, src = kit_tracks(kd)
+        offs = {}
+        for n, (lay, xy) in sorted(want.items()):
+            why = off_track(lay, xy, trk) if trk is not None else src
+            if why:
+                offs[n] = why
+                issues.append(f"slice pin {n} {lay} ({xy[0]:g}, {xy[1]:g}): {why} [{src}] -> no on-track access (DRT-0255)")
+        checks["pin_tracks"] = dict(source=src, checked=len(want), off_track=offs)
     # latency target carried into the kit SDC/budget (12.3)
     lat = (sl.get("latency") or {}).get("common_clock_latency_ps") or {}
     checks["latency"] = lat

@@ -23,6 +23,13 @@ foreach net [$b getNets] {
       if {$ln in {M4 M5}} { puts $f "PG [$net getName] $ln [um [$w xMin]] [um [$w yMin]] [um [$w xMax]] [um [$w yMax]]" } }
   } }
 }
+# S81-CORE-LAT-R15: routing track grids (um) -> core_plan_to_infra snaps the centre clock-entry pin onto its layer's track
+foreach ln {M2 M3 M4 M5 M6 M7} {
+  set l [[ord::get_db_tech] findLayer $ln]; if {$l eq "NULL"} continue
+  set tg [$b findTrackGrid $l]; if {$tg eq "NULL"} continue
+  for {set k 0} {$k < [$tg getNumGridPatternsX]} {incr k} { lassign [$tg getGridPatternX $k] o n s; puts $f "TRACKX $ln [um $o] [um $s] $n" }
+  for {set k 0} {$k < [$tg getNumGridPatternsY]} {incr k} { lassign [$tg getGridPatternY $k] o n s; puts $f "TRACKY $ln [um $o] [um $s] $n" }
+}
 close $f
 puts DUMP_SITES_DONE
 exit

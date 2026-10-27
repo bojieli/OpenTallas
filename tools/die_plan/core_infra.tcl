@@ -15,7 +15,8 @@ proc ot_ci_net {name} {
 proc ot_ci_clock_entry {name x y} {
   set bt [$::ot_ci_b findBTerm $name]
   if {$bt eq "NULL" || [$bt getIoType] ne "INPUT"} {error "OT_CORE_INFRA_CLOCK_ENTRY_PORT $name"}
-  place_pin -pin_name $name -layer M5 -location [list $x $y] -pin_size {0.032 0.192}
+  # COORD 2026-10-27 (GEOM-REVIEW-19 / S81-CORE-LAT-R15): >= 0.048 x 0.48 on an M5 track (0.032 x 0.192 -> DRT-0255)
+  place_pin -pin_name $name -layer M5 -location [list $x $y] -pin_size {0.048 0.48}
 }
 proc ot_ci_port {name direction x y} {
   set bt [$::ot_ci_b findBTerm $name]

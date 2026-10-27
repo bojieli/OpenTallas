@@ -31,7 +31,7 @@ def good_slice(**kw):
         "bays": [{"name": "bay_w0", "rect_um": [10.0, 200.0, 40.0, 260.0], "owner": "src", "kind": "station",
                   "bits": 64, "cell_area_um2": 120.0, "fill": 0.4, "layer": "M7", "paths": ["L0"]}],
         "entry_pins": [
-            {"name": "e0", "pin": "din[0]", "layer": "M7", "xy_um": [0.0, 210.0], "bay": "bay_w0", "path": "L0", "bit": 0},
+            {"name": "e0", "pin": "din[0]", "layer": "M7", "xy_um": [0.032, 210.0], "bay": "bay_w0", "path": "L0", "bit": 0},
             {"name": "e1", "pin": None, "layer": "M7", "xy_um": [0.0, 211.0], "bay": "bay_w0", "path": "L0", "bit": 1},
         ],
         "hard_cores": [],
@@ -108,7 +108,7 @@ def test_emit_tcl_contents():
     assert "odb::dbBlockage_create $b $x0 $y0 $x1 $y1" in tcl
     assert "odb::dbObstruction_create $b $l $x0 $y0 $x1 $y1" in tcl
     assert "dict set ot_master_bays {bay_w0}" in tcl and "rect_um {10 200 40 260}" in tcl
-    assert "place_pin -pin_name {din[0]} -layer M7 -location {0.0000 210.0000} -pin_size {0.032 0.192}" in tcl
+    assert "place_pin -pin_name {din[0]} -layer M7 -location {0.0320 210.0000} -pin_size {0.032 0.192}" in tcl
     assert "place_pin -pin_name {e1}" not in tcl and "dict set ot_master_entry_pins {e1}" in tcl
     assert tcl.count("place_pin") == 1
     assert "getDbUnitsPerMicron] != 1000" in tcl

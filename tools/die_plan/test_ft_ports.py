@@ -177,7 +177,7 @@ def test_fail_closed_on_other_all_inputs_forms(tmp_path):
 def test_kit_apply_installs_ft_for_a_pushdown_core(tmp_path):
     sl = dict(sample(), type="core_m", module="core_m")
     sl["islands"] = [dict(name="clock_entry", rect_um=[427.68, 427.68, 436.32, 436.32], centre_um=[432, 432],
-                          clock_pin=dict(layer="M5", xy_um=[432, 432]))]
+                          clock_pin=dict(layer="M5", xy_um=[432.012, 432]))]   # on an M5 track (R15)
     sd = tmp_path / "slices"
     sd.mkdir()
     (sd / "core_m.json").write_text(json.dumps(sl))
