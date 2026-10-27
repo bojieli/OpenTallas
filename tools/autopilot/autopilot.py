@@ -813,6 +813,43 @@ def runner_goal(goal, p):
     return goal
 
 
+def stage_admission_tools(source_chain=None, source_tools=None, root=None):
+    """Own immutable scratch bundle: never rsync tools into another repo checkout."""
+    import hashlib
+    import tempfile
+    chain = Path(source_chain or Path(__file__).with_name("signoff_chain.py")).resolve()
+    tools = Path(source_tools or Path(__file__).resolve().parents[1] / "die_plan").resolve()
+    root = Path(root or Path(ARCHIVE_ROOT).parent / "admission_tools")
+    files = [p for p in tools.rglob("*") if p.is_file() and
+             not any(x in ("__pycache__", ".pytest_cache", ".git") for x in p.relative_to(tools).parts)]
+    chain_bytes = chain.read_bytes()
+    payload = {path.relative_to(tools): path.read_bytes() for path in sorted(files)}
+    digest = hashlib.sha256(chain_bytes)
+    for relative, content in payload.items():
+        digest.update(str(relative).encode()+b"\0")
+        digest.update(content)
+    version = digest.hexdigest()
+    dest = root / version[:20]
+    if not dest.exists() and not DRY:
+        root.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix=".staging-", dir=root) as temporary:
+            temp = Path(temporary) / "bundle"
+            (temp / "die_plan").mkdir(parents=True)
+            (temp / "signoff_chain.py").write_bytes(chain_bytes)
+            for relative, content in payload.items():
+                target = temp / "die_plan" / relative
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(content)
+            (temp / "BUNDLE.json").write_text(json.dumps(dict(sha256=version, source=str(tools),
+                note="current scheduler admission tools; frozen kit source/tools untouched"), indent=1)+"\n")
+            # One scheduler tick submits serially; a second process may already
+            # have installed the same immutable content while we copied it.
+            if not dest.exists():
+                temp.rename(dest)
+    return dict(dir=str(dest), chain=str(dest / "signoff_chain.py"),
+                preflight=str(dest / "die_plan/kit_preflight.py"), sha256=version)
+
+
 def submit(st, j, attempt_note=""):
     n = j.get("attempts", 0) + 1
     unit = f"ap-{j['id']}-a{n}"
@@ -822,12 +859,10 @@ def submit(st, j, attempt_note=""):
     if not runner.startswith(kit + "/"):
         argv += ["--stage", runner]
     if j["goal"] not in ("cts", "grt"):
-        chain = str(Path(__file__).with_name("signoff_chain.py").resolve())
-        preflight_dir = str(Path(__file__).resolve().parents[1] / "die_plan")
-        preflight = str(Path(preflight_dir) / "kit_preflight.py")
-        argv += ["--stage", chain, "--stage", preflight_dir, "--", "python3", chain,
-                 "--preflight", preflight, runner, kit, j["goal"], str(mem), str(thr)]
-        j["chain_required"] = True
+        bundle = stage_admission_tools()
+        argv += ["--stage", bundle["dir"], "--", "python3", bundle["chain"],
+                 "--preflight", bundle["preflight"], runner, kit, j["goal"], str(mem), str(thr)]
+        j.update(chain_required=True, admission_tools_sha256=bundle["sha256"])
     else:
         argv += ["--", "bash", runner, kit, j["goal"], str(mem), str(thr)]
     if DRY:

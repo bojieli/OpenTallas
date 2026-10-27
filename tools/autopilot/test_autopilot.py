@@ -36,6 +36,9 @@ class Base(unittest.TestCase):
         import autopilot
         self.ap = importlib.reload(autopilot)
         self.ap.DRY = False
+        self.ap.stage_admission_tools = lambda: dict(dir="/srv/opentallas-scratch2/claude/ap-tools/v1",
+            chain="/srv/opentallas-scratch2/claude/ap-tools/v1/signoff_chain.py",
+            preflight="/srv/opentallas-scratch2/claude/ap-tools/v1/die_plan/kit_preflight.py", sha256="tools-v1")
 
     def tearDown(self):
         self.tmp.cleanup()
@@ -83,6 +86,28 @@ class TestQueue(Base):
         rows = self.ap.parse_queue(t)
         self.assertEqual(len(rows), 1)
         self.assertEqual(list(rows.values())[0]["geom"], "PASS")
+
+
+class TestAdmissionBundle(unittest.TestCase):
+    def test_source_changes_create_new_immutable_own_scratch_bundle(self):
+        import autopilot
+        ap = importlib.reload(autopilot)
+        ap.DRY = False
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            chain=root/"chain.py"; chain.write_text("# chain")
+            tools=root/"source"; tools.mkdir()
+            (tools/"kit_preflight.py").write_text("# checker")
+            (tools/"helper.py").write_text("# helper1")
+            first=ap.stage_admission_tools(chain, tools, root/"own-scratch")
+            before=Path(first["dir"])/"die_plan/helper.py"
+            (tools/"helper.py").write_text("# helper2")
+            second=ap.stage_admission_tools(chain, tools, root/"own-scratch")
+            self.assertNotEqual(first["dir"],second["dir"])
+            self.assertEqual(before.read_text(),"# helper1")
+            self.assertEqual((tools/"helper.py").read_text(),"# helper2")
+            self.assertEqual(Path(second["preflight"]).read_text(),"# checker")
+            self.assertNotEqual(Path(second["preflight"]).parent,tools)
 
 
 class TestRoutedChainGate(Base):
