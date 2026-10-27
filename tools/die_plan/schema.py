@@ -339,8 +339,6 @@ SCHEMA = {
                         # R4 revised (COORD 10-23): tap grid pitch for this type, sized from the measured tree
                         # (OT_TAP_CHECK WARN suggests it); default budgets.tap_pitch_um
                         "tap_pitch_um": _pos,
-                        # CLOCK-KV-R8: opt-in array-facing edge rows (one tap per grid column).
-                        "tap_edge_y_um": {"type": "array", "minItems": 1, "uniqueItems": True, "items": _nonneg},
                         # default "grid" (R4, CP1 r8 RULING 21:26).  "grid+sinks" (alias "sinks", KV-P6) = the
                         # grid PLUS sink-anchored taps (taps.py k-medians of face registers + ft stations) ADDED
                         # for face-register clusters; sink taps never replace the grid (CP1 r8: interior logic
@@ -501,7 +499,11 @@ SCHEMA = {
                                        "bits": {"type": "integer", "minimum": 1}, "launch": {"type": "string"},
                                        "capture": {"type": "string"}, "note": {"type": "string"},
                                        # per-bit station sites (kit_istations): bit b on its own L leaf_um <-> pin b
-                                       "leaf_um": _xy, "bit_route": {"enum": ["per_bit"]}}}},
+                                       "leaf_um": _xy, "bit_route": {"enum": ["per_bit"]},
+                                       # Exact lower-left FF banks, payload then epoch; one bank per regs_um.
+                                       "bit_sites_um": {"type": "array", "items": {"type": "array", "items": _xy}},
+                                       "bit_site_cell_um": _xy,
+                                       "face_bit_sites_um": {"type": "array", "items": _xy}}}},
                     "channels": {"type": "array", "items": {
                         "type": "object", "required": ["rect_um", "reason"], "additionalProperties": False,
                         "properties": {"rect_um": _rect, "reason": {"type": "string", "minLength": 3}}}},
@@ -1249,7 +1251,7 @@ def _grid_taps(P, tn):
     w, h = t["outline_um"]
     pitch = tap_pitch(P, tn)
     nx, ny = max(1, math.ceil(w / pitch - 1e-9)), max(1, math.ceil(h / pitch - 1e-9))
-    if nx == 1 and ny == 1 and not t.get("clock", {}).get("tap_edge_y_um"):
+    if nx == 1 and ny == 1:
         x, y = t.get("clock", {}).get("tap_um", [w / 2, h / 2])
         x, y = tap_clear(t, float(x), float(y))
         return [("clk", x, y)]
@@ -1525,9 +1527,6 @@ def validate(raw):
                 errs.append(f"{what} '{x[key]}' defined twice")
             seen.add(x[key])
     for tn, t in raw["partition_types"].items():
-        for y in t.get("clock", {}).get("tap_edge_y_um", []):
-            if not 0 <= y <= t["outline_um"][1]:
-                errs.append(f"type {tn}: clock edge y {y} outside outline")
         import core_clock_groups as CG
         try:
             CG.groups(P, tn)
