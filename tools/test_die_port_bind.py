@@ -18,6 +18,17 @@ endmodule
 module wrap (input wire ck, input wire [15:0] i, output wire [15:0] o);
   a #(.N(2)) u (.ck(ck), .i(i), .o(o), .en(1'b1));
 endmodule
+module selfw (input wire ck, input wire rst_n, input wire [3:0] x, output wire [3:0] y, output reg r);
+  always @(posedge ck) r <= rst_n;
+  selfw u_core (.ck(ck), .rst_n(rst_n), .x(x), .y(y), .r());
+endmodule
+module feed (input wire [3:0] x, output wire [3:0] y);
+  assign y = {x[1:0], x[3:2]};
+endmodule
+module rec #(parameter integer D = 2) (input wire [3:0] x, output wire [3:0] y);
+  generate if (D == 0) begin : g_leaf assign y = ~x; end
+  else begin : g_up rec #(.D(D - 1)) u (.x(x), .y(y)); end endgenerate
+endmodule
 """
 
 
@@ -33,6 +44,28 @@ def run(die, extra=()):
 
 
 class T(unittest.TestCase):
+    def test_self_instance_stub(self):
+        # HEAD-RTL-4: a wrapper that instantiates ITSELF as u_core (missing content provider) is a STUB even though
+        # its own reset register makes it look real
+        rc, r = run("module top (ck, x, y);\n  input ck;\n  input [3:0] x;\n  output [3:0] y;\n"
+                    "  selfw u0 (.ck(ck), .rst_n(ck), .x(x), .y(y), .r());\nendmodule\n")
+        self.assertNotEqual(rc, 0)
+        self.assertEqual(r['summary']['stub_masters'], 1, r['summary'])
+        self.assertEqual(r['masters']['selfw']['stub_reason'], 'self_instance')
+
+    def test_logic_free_wiring_stub(self):
+        die = "module top (x, y);\n  input [3:0] x;\n  output [3:0] y;\n  feed u0 (.x(x), .y(y));\nendmodule\n"
+        rc, r = run(die)
+        self.assertEqual(r['summary']['stub_masters'], 0, r['summary'])   # opt-in only
+        rc, r = run(die, ['--logic-free-stub'])
+        self.assertNotEqual(rc, 0)
+        self.assertEqual(r['summary']['stub_masters'], 1, r['summary'])
+        self.assertEqual(r['masters']['feed']['stub_reason'], 'logic_free_wiring')
+
+    def test_parameterised_recursion_real(self):
+        rc, r = run("module top (x, y);\n  input [3:0] x;\n  output [3:0] y;\n  rec u0 (.x(x), .y(y));\nendmodule\n")
+        self.assertEqual(r['summary']['stub_masters'], 0, r['summary'])
+
     def test_pass(self):
         rc, r = run("module top (ck);\n  input ck;\n  wire [15:0] n1;\n  wire [15:0] n2;\n"
                     "  a u0 (.ck(ck), .i(n2), .o(n1), .en(ck));\n  wrap w (.ck(ck), .i(n1), .o(n2));\nendmodule\n")

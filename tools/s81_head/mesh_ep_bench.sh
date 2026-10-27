@@ -2,6 +2,7 @@
 # HEAD-RTL 2026-10-26: ot_s81hd_mesh_ep_core bench (Verilator 5.050, the daemon's pinned version).  usage (repo root cwd):
 #   mesh_ep_bench.sh OUTDIR        -> production (PASS expected) + mutants 1..6 (FAIL expected); exit 0 iff all as expected
 #   mutants 1..4 = ot_s81hd_mesh_ep_core MUT; 5 = link OT_DSROM_LINK_MUT_NOREPLAY, 6 = OT_DSROM_LINK_MUT_NOCRC (HEAD-RTL-3)
+#   7 = burst FIFO one record short (BQ - 1, HEAD-RTL-4); MUTS / BQ env override the list / depth (diagnostics)
 set -u
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 O=${1:?outdir}; T=rtl/dsrom_sys/s81_head; mkdir -p "$O"; rc=0
@@ -13,16 +14,17 @@ SRC="rtl/link/ot_link_crc32.sv rtl/lib/ot_rst_relay_tree3.sv rtl/dsrom_sys/s81_p
  physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.v
  $T/ot_s81hd_beat_link.sv $T/ot_s81hd_best64.sv $T/ot_s81hd_mesh_ep_core.sv $T/test/tb_s81hd_mesh_ep.sv"
 "$VL" --version | tee "$O/verilator_version.txt"
-for m in 0 1 2 3 4 5 6; do
+BQV=${BQ:-7}
+for m in ${MUTS:-0 1 2 3 4 5 6 7}; do
   E=$([ $m = 0 ] && echo PASS || echo FAIL)
   G=$m; D=""; [ $m = 5 ] && { G=0; D=+define+OT_DSROM_LINK_MUT_NOREPLAY; }; [ $m = 6 ] && { G=0; D=+define+OT_DSROM_LINK_MUT_NOCRC; }
   "$VL" --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-lint -Wno-style \
-    +define+OT_COLL_NATIVE32 +define+OT_COLL_NATIVE32_OFF --top-module tb_s81hd_mesh_ep -GMUT=$G $D \
+    +define+OT_COLL_NATIVE32 +define+OT_COLL_NATIVE32_OFF --top-module tb_s81hd_mesh_ep -GMUT=$G -GBQ=$BQV $D \
     -Mdir "$O/obj_m$m" $SRC --build-jobs ${J:-2} > "$O/build_m$m.log" 2>&1 \
     || { echo "m$m BUILD FAIL"; grep -m10 %Error "$O/build_m$m.log"; rc=1; continue; }
   "$O/obj_m$m/Vtb_s81hd_mesh_ep" > "$O/run_m$m.log" 2>&1
   r=$(grep -oE '^MESH_EP (PASS|FAIL)' "$O/run_m$m.log" | awk '{print $2}')
   v=$([ "$r" = "$E" ] && echo OK || echo BAD); [ $v = OK ] || rc=1
-  echo "mut$m expect=$E got=${r:-NONE} $v | $(grep -E '^MESH_(STATS|REPLAY|EP)' "$O/run_m$m.log" | tr '\n' ' ')"
+  echo "mut$m expect=$E got=${r:-NONE} $v | $(grep -E '^MESH_(STATS|REPLAY|FIFO|EP)' "$O/run_m$m.log" | tr '\n' ' ')"
 done
 echo "MESH_EP_BENCH rc=$rc"; exit $rc

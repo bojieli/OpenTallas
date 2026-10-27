@@ -15,6 +15,8 @@
 0. tools/s81_head/head_module_check.py PLAN (content providers): REQUIRED, because die_port_bind does not see a missing
    provider -- the canonical plan's wrappers instantiate THEMSELVES as u_core (ot_s81hd_ctl u_core inside module
    ot_s81hd_ctl), which die_port_bind indexes as a 'real' master (HEAD-RTL-3 10-26: canonical 4 missing, port-bind PASS).
+   HEAD-RTL-4: die_port_bind now itself reports a self-instantiating master (no parameter override) as STUB, and with
+   --logic-free-stub (passed here) a wiring-only master too, so the canonical plan fails in die_port_bind as well.
 Exit 0 iff module check 0 missing AND die_port_bind PASS."""
 import argparse, json, re, subprocess, sys
 from pathlib import Path
@@ -65,7 +67,7 @@ fl = sorted(str(p) for p in gen.glob('*.sv')) + src
 (out / 'portbind.f').write_text('\n'.join(fl) + '\n')
 print('pads: %d instances, %d open wavefront outs' % (len(pads), sum(len(v['ports']) for v in pads.values())))
 r = subprocess.run([sys.executable, 'tools/die_port_bind.py', str(top), '--top', 's81_head_top', '-f', str(out / 'portbind.f'),
-                    '--pad-file', str(out / 'pads.json'), '--out', str(out / 'port_bind_strict.json')],
+                    '--pad-file', str(out / 'pads.json'), '--out', str(out / 'port_bind_strict.json'), '--logic-free-stub'],
                    capture_output=True, text=True)
 (out / 'port_bind_strict.txt').write_text(r.stdout + r.stderr)
 print(r.stdout[-3000:], r.stderr[-1000:])

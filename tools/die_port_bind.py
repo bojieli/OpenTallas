@@ -238,11 +238,13 @@ def ev(expr: str, env: dict):
         return None
 
 
+LOGIC_FREE_STUB = False   # --logic-free-stub (HEAD-RTL-4)
 # ------------------------------------------------------------------------------------------------ RTL modules
 class Module:
     def __init__(self, name, path, params, ports, body, order):
         self.name, self.path, self.params, self.ports, self.body, self.order = name, path, params, ports, body, order
         self._kind = None
+        self.stub_reason = None
 
     def env(self, overrides=None):
         env = {}
@@ -287,11 +289,26 @@ class Module:
         # a macro between master and instance name (`child `MUTP u_x (...)`, e.g. dsdv_gunit's `DSDV_GU_MUT) hid real
         # instances from the regex below (S81-BIND3 10-17: dsdv_gunit reported STUB) -> drop `macro tokens first
         b = re.sub(r'`\w+', ' ', self.body)
+        # SELF INSTANCE (HEAD-RTL-4 10-26, COORD ruling HEAD-RTL-3 ASK3, fail closed): a module that instantiates its OWN
+        # name WITHOUT a parameter override can never elaborate (unbounded recursion).  It is the shape gen.py rtl emits
+        # when the plan names the wrapper and its content provider alike and the provider is missing (canonical s81_head:
+        # `ot_s81hd_ctl u_core (...)` inside module ot_s81hd_ctl): the wrapper's own reset relays / wiring made it 'real'
+        # although no content exists.  A parameterised self instance (`m #(...) u (...)`, recursive generate) stays allowed.
+        if re.search(r'(?:^|;|\bbegin\b|\bend\b|\))\s*' + re.escape(self.name) + r'\s+[A-Za-z_]\w*\s*\(', b, re.M):
+            self._kind = 'stub'; self.stub_reason = 'self_instance'; return 'stub'
         if re.search(r'\balways(_ff|_comb|_latch)?\b', b) or re.search(r'\binitial\b[^;]*\$readmem', b):
             self._kind = 'real'; return 'real'
+        # LOGIC-FREE (HEAD-RTL-4): an assign whose right side is only nets / bit selects / concatenations (no operator,
+        # no function call) is wiring, not behaviour; a module whose only "behaviour" is such wiring is a STUB.  Opt-in
+        # (--logic-free-stub, tools/s81_head/head_die_portbind.py passes it) until the other dies' binds are re-censused:
+        # pure-wiring masters / fixtures elsewhere were 'real' so far (tools/tests/test_die_bind_unread_manifest producer).
+        wiring = False
         for m in re.finditer(r'\bassign\b([^;]*)=([^;]*);', b):
             rhs = m.group(2).strip()
             if not re.fullmatch(r"[\s{}(),\d'bBhHdDoOxXzZ_]*", rhs):
+                if LOGIC_FREE_STUB and re.fullmatch(r"[\s{},\w']*", re.sub(r'\[[^\]]*\]', '', rhs)):
+                    wiring = True
+                    continue
                 self._kind = 'real'; return 'real'
         # (?:^|;): a one-line module ('module m (...); child #(..) u (...); endmodule') has its body start at ';'
         for m in re.finditer(r'(?:^|;)\s*(\w+)\s*(#\s*\(.*?\)\s*)?\w+\s*\(', b, re.M | re.S):
@@ -300,7 +317,7 @@ class Module:
         # gate primitives count as behaviour (a hand netlist)
         if re.search(r'^\s*(and|or|nand|nor|xor|xnor|not|buf|bufif[01])\s+\w*\s*\(', b, re.M):
             self._kind = 'real'; return 'real'
-        self._kind = 'stub'
+        self._kind = 'stub'; self.stub_reason = 'logic_free_wiring' if wiring else 'no_behaviour'
         return 'stub'
 
 
@@ -814,6 +831,7 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
             continue
         rec['rtl'] = mod.path.replace(str(ROOT) + '/', '')
         rec['kind'] = 'model' if mst in allow_model else mod.kind(idx)
+        rec['stub_reason'] = mod.stub_reason if rec['kind'] == 'stub' else None
         if not params and mst in mparams:     # sidecar: the master's hardened elaboration parameters
             params = {k: v for k, v in mparams[mst].items() if not k.startswith('_')}
         # inline #(...) overrides AND sidecar parameters must name a parameter of the RTL module (S81-LBGAP/G5 10-18:
@@ -928,7 +946,7 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
                 S[{'die_port_not_in_rtl': 'port_not_in_rtl', 'unparsed_conn': 'unparsed_connections',
                    'duplicate_port': 'duplicate_port_connections', 'output_open': 'output_open_ports'}.get(key, key)] += len(r[key])
         out_m[mst] = dict(verdict='PASS' if not bad else 'FAIL', fails=bad, instances=r['instances'], rtl=r['rtl'],
-                          kind=r['kind'], ambiguous_defs=amb.get(mst), examples=r['examples'],
+                          kind=r['kind'], stub_reason=r.get('stub_reason'), ambiguous_defs=amb.get(mst), examples=r['examples'],
                           param_sets=dict(list(r['param_sets'].items())[:8]),
                           die_port_not_in_rtl=sorted(r['die_port_not_in_rtl'])[:max_list],
                           input_unconnected=sorted(r['input_unconnected'])[:max_list],
@@ -1164,6 +1182,8 @@ def main(argv=None):
     ap.add_argument('--lib-root', action='append', default=[], help='hard-macro behavioural model tree indexed for the '
                     'child closure (e.g. physical/asap7_memory_macros)')
     ap.add_argument('--no-child-closure', action='store_true', help='check the die-top masters only (pre-Q-STUB behaviour)')
+    ap.add_argument('--logic-free-stub', action='store_true',
+                    help='HEAD-RTL-4: a master whose only behaviour is wiring assigns (no operator / always / child) is a STUB')
     ap.add_argument('--prefer-list', action='append', default=[], help='file list (or bench script) whose RTL files win '
                     'over other definitions of the same module (e.g. tools/s81_dv/frame_bench.f: the frames are built '
                     'from the _rne_* variants); its defines are NOT applied.  An earlier list wins; all below --prefer / -f / --rtl-file')
@@ -1178,6 +1198,8 @@ def main(argv=None):
     ap.add_argument('--unread-proposal-out', help='write a proposal only; no admission or die verdict')
     ap.add_argument('--out')
     a = ap.parse_args(argv)
+    global LOGIC_FREE_STUB
+    LOGIC_FREE_STUB = a.logic_free_stub
     unread_args = (a.unread_review, a.unread_contract, a.unread_manifest, a.unread_manifest_sha256, a.unread_proposal_out)
     if any(unread_args):
         if not a.unread_review or not a.unread_contract or a.no_child_closure or a.closure:

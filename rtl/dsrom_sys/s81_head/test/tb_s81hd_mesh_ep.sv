@@ -14,7 +14,7 @@
 //   link replays), and lane a must see 0 CRC errors.  Link mutants (bench defines) OT_DSROM_LINK_MUT_NOREPLAY and
 //   OT_DSROM_LINK_MUT_NOCRC must FAIL.
 module tb_s81hd_mesh_ep;
-    parameter integer MUT = 0, NREC = 400, P2 = 9000, NCYC = 11000;
+    parameter integer MUT = 0, BQ = 7, NREC = 400, P2 = 9000, NCYC = 11000;
     reg ck = 0, rst_n = 0; always #0.5 ck = ~ck;
     reg [31:0] rng = 32'h1f2e3d4c;
     reg tv [0:1]; reg [552:0] tf [0:1];
@@ -31,9 +31,9 @@ module tb_s81hd_mesh_ep;
         ot_s81hd_mesh64_rx u_rx (.ck(ck), .rn(rst_n), .lane(mrx[s]), .va(va_[s]), .vb(vb_[s]), .frame(rfr[s]),
             .ep_fault(epf[s]), .fault(rf[s]));
     end endgenerate
-    ot_s81hd_mesh_ep_core #(.MUT(MUT)) u_x (.ck(ck), .rst_n(rst_n), .coll_ia({2'b10, oa[1]}), .coll_oa(oa[0]),
+    ot_s81hd_mesh_ep_core #(.BQ(BQ), .MUT(MUT)) u_x (.ck(ck), .rst_n(rst_n), .coll_ia({2'b10, oa[1]}), .coll_oa(oa[0]),
         .coll_ib({2'b10, ob[1] ^ imp[1]}), .coll_ob(ob[0]), .m_tx_i(mtx_drv[0]), .m_rx_o(mrx[0]));
-    ot_s81hd_mesh_ep_core #(.MUT(MUT)) u_y (.ck(ck), .rst_n(rst_n), .coll_ia({2'b10, oa[0]}), .coll_oa(oa[1]),
+    ot_s81hd_mesh_ep_core #(.BQ(BQ), .MUT(MUT)) u_y (.ck(ck), .rst_n(rst_n), .coll_ia({2'b10, oa[0]}), .coll_oa(oa[1]),
         .coll_ib({2'b10, ob[0] ^ imp[0]}), .coll_ob(ob[1]), .m_tx_i(mtx_drv[1]), .m_rx_o(mrx[1]));
     wire [31:0] ce_xb = u_x.u_lb.u_ln.u.u_ep.st_crc_err, ce_yb = u_y.u_lb.u_ln.u.u_ep.st_crc_err;
     wire [31:0] ce_xa = u_x.u_la.u_ln.u.u_ep.st_crc_err, ce_ya = u_y.u_la.u_ln.u.u_ep.st_crc_err;
@@ -48,6 +48,12 @@ module tb_s81hd_mesh_ep;
         end endfunction
     integer c = 0, err = 0, i, sk [0:1], ra [0:1], rb [0:1], gap [0:1], f1 = 0, lmax = 0, lmaxb = 0;
     integer ts [0:1][0:1023];
+    // HEAD-RTL-4: peak burst-FIFO occupancy per copy (records held + the landing in flight), both endpoints
+    integer pk_a = 0, pk_b = 0;
+    always @(posedge ck) begin
+        if (u_x.na + u_x.la > pk_a) pk_a = u_x.na + u_x.la; if (u_y.na + u_y.la > pk_a) pk_a = u_y.na + u_y.la;
+        if (u_x.nb + u_x.lb > pk_b) pk_b = u_x.nb + u_x.lb; if (u_y.nb + u_y.lb > pk_b) pk_b = u_y.nb + u_y.lb;
+    end
     initial for (i = 0; i < 2; i = i + 1) begin sk[i] = 0; ra[i] = 0; rb[i] = 0; gap[i] = 0; tv[i] = 0; tf[i] = 0; imp[i] = 0; end
     always @(negedge ck) begin
         c = c + 1;
@@ -75,8 +81,10 @@ module tb_s81hd_mesh_ep;
         // HEAD-RTL-3: the first windows (4 / 10 consecutive beats) mostly hit idle beats (1 CRC error, 0 retransmitted
         // flits in one direction only); now one corrupted beat every 16 cycles over 200 cycles per direction, so data
         // beats are hit and each corruption is replayed before the next.
-        if (c >= 3000 && c < 3200 && c % 16 == 0) imp[0] = {rng, rng[15:0]} << 96;
-        if (c >= 5000 && c < 5200 && c % 16 == 8) imp[1] = {rng[7:0], rng} << 300;
+        // HEAD-RTL-4: both windows now fall INSIDE the record traffic (records end near cycle 3,300; the old imp[1]
+        // window at 5,000-5,200 hit only idle / empty-slot beats, which carry no flit to check: hence X crc_err 0).
+        if (c >= 1000 && c < 1200 && c % 16 == 0) imp[0] = {rng, rng[15:0]} << 96;
+        if (c >= 2000 && c < 2200 && c % 16 == 8) imp[1] = {rng[7:0], rng} << 300;
         for (i = 0; i < 2; i = i + 1) begin
             tv[i] = rst_n && c > 60 && c < P2 - 600 && sk[i] < NREC && gap[i] >= 6 && rng[i * 3 + 1];
             if (c == P2 + 200 && i == 1) tv[i] = 1'b1;                      // phase 2: one more record Y -> X
@@ -88,6 +96,7 @@ module tb_s81hd_mesh_ep;
                 sk[0], sk[1], ra[1], ra[0], rb[1], rb[0], lmax, lmaxb, err, f1, epf[0], epf[1], rf[0], rf[1]);
             $display("MESH_REPLAY crc_err_b X=%0d Y=%0d crc_err_a X=%0d Y=%0d replays_b X=%0d Y=%0d retx_flits_b X=%0d Y=%0d",
                 ce_xb, ce_yb, ce_xa, ce_ya, rp_xb, rp_yb, rx_xb, rx_yb);
+            $display("MESH_FIFO BQ=%0d peak_occupancy copyA=%0d copyB=%0d", BQ, pk_a, pk_b);
             if (err != 0 || ra[0] != sk[1] || rb[0] != sk[1] || ra[1] != sk[0] || rb[1] != sk[0] || sk[0] < NREC)
                 $display("MESH_EP FAIL data: errors %0d", err);
             else if (f1 != 0) $display("MESH_EP FAIL fault on the static schedule");
