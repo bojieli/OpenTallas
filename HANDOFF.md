@@ -1377,3 +1377,4 @@ CODEX: 2026-10-27 08:45 PDT HBM native SM hierarchy capacityPASS8children(max840
 CODEX: 2026-10-27 08:46 PDT RM47 main 6fc74684f0 == origin/main; QC native grouped source + KV opt-in position-bank binding, conflict composition34PASS, no plan adoption/0deletions.
 
 CODEX: 2026-10-27 08:47 PDT AP dispatch repair 1895efef9e: real no-SPILL epyc2 stub PASS; gated all-kit bootstrap 8e680fa910: 98 tests + real checker negative control PASS; guarded KV alias f8e8f69222: 46 tests PASS. No child-owned live jobs.
+CODEX: 2026-10-27 08:47 PDT TOK-DS currentb178L0compilePASS23/41/1 with4realframecalendarplanPASS; sourcecc0ede342 READY, L2/L14/L20compilelive. ROWXwrappermiter40cycles/15profilesPASS; SRAM/physical/bridgeintegrationownersassigned.
