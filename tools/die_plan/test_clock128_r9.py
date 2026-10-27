@@ -45,5 +45,7 @@ def test_short_stack_has_real_min_area_pads_on_both_riser_ends():
     R._emit_stack(lines,R.stack_down(st),p,split_down=True)
     i=next(i for i,l in enumerate(lines) if "VIA78" in l)
     assert "addRect" in lines[i-1]
+    j=next(i for i,l in enumerate(lines) if "VIA67" in l)
+    assert "addRect" in lines[j-1]
     assert C.SHORT_STACK_PAD["M7"][0]*C.SHORT_STACK_PAD["M7"][1]*4 >= .0021875
     assert C.SHORT_STACK_PAD["M8"][0]*C.SHORT_STACK_PAD["M8"][1]*4 >= .00752

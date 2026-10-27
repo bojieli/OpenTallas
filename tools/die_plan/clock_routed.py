@@ -249,7 +249,7 @@ def _emit_stack(L, pts, pads, final_junction=False, split_down=False):
             l0, l1, xy = lands[k]
             k += 1
             # Short-stack junction pads belong on the existing M8 path BEFORE its downward VIA78.
-            if l0 == "M8" and l0 in pads.get(xy, ()):
+            if l0 in ("M7", "M8") and l0 in pads.get(xy, ()) and LAYER_ORDER.index(l1) < LAYER_ORDER.index(l0):
                 hx, hy = P[l0]
                 L.insert(len(L) - 1, f"$e addRect {-q(hx)} {-q(hy)} {q(hx)} {q(hy)}")
             if l1 in pads.get(xy, ()) and (not s.startswith("set jt") or l1 == "M8"):
