@@ -171,7 +171,7 @@ def compose(original, base, config, out, preserve_history=False, fused_target=No
         transport_history_obligations=history, current_plan_station_binding_ledger=[],
         original_history_realization='ORIGINAL_TRANSPORT_RTL_RETAINED' if preserve_history else 'COLLAPSED_HISTORY_MISSING',
         retained_transport_instances=sorted(transport_cone),
-        original_parameters_provenance={name: instances[name]['params'] for name in sorted(selected)},
+        original_parameters_provenance={name: source.insts[name]['params'] for name in sorted(selected)},
         native_bootstrap_binding=bootstrap, obligations=obligations, original_reset_provenance=original_reset_provenance, unconsumed_native_outputs=sorted(exposed_outputs),
         scope='Source candidate only. Existing non-IDX/VMS B1 leaves remain historical scaffold pending current full-native review. No geometry, boot, LEC, P&R or timing qualification.')
     (out / 'composition.json').write_text(json.dumps(report, indent=2) + '\n')
