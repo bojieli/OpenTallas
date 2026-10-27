@@ -11,3 +11,9 @@
 - main d398138f3f already carries the same tap_window/seam_hold keys (diff vs B's plan empty, CHECKED). Main canary qwen_kvsys_c25f35446 FAILs at sdc_lint (ModuleNotFoundError gen_phys), so main KV canaries cannot reach the hold gate without the fix.
 - SUBMITTED: claude/sdc-lint-attr-1026@30d66da422 = d398138f3f + merge 274477ed5e (diff = sdc_lint.py + test only). KV canary epyc1:/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_30d66da42_1026_190249_362478, ot-run --mem 52 (spec, measured peak 41.9 GB) --threads 8, unit flow-canary-qwen-kvsys-30d66da42-1026-190249-362478, submitted ~19:02, about 70-80 min.
 - Expected (UNCHECKED): it reproduces B's FF hold stop, because the plan is the same. COLLECT: canary.json, written automatically at the end (do not run check by hand while live, or use --out /tmp/x.json). Look at the regression rows hold_ff_wns/ep and hold_gate.log OT_HOLD_GATE. Then remove the worktree epyc1:/srv/opentallas-scratch2/claude/wt/sdc-lint-attr (branch pushed).
+
+## CODEX notes 2026-10-26 20:14 PDT
+Collected terminal30d66canary: predictedKVregression reproduced-94.57ps/2213ep. Cause KVwindow/seam plan keys, not sdc-lint; current8404same.
+
+## CODEX notes 2026-10-27 08:16 PDT
+Old canary regression diagnosed KV80ps tap window/55ps seam contract, not lint. Current baseline constraint-only rebaseline owned flow/rc_canary per COORD07:20; original failure retained.

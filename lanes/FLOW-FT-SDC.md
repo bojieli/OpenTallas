@@ -9,3 +9,9 @@ Branch claude/flow-ft-sdc-1026@4b2a674e6b (from main fec963a5e): tools/die_plan/
 - btab_r6 kit (epyc2:/srv/opentallas-scratch2/claude/qc-su-lat-r6/btab_r6): declared ft (ft_ck_i->ot_isl_ckft->ft_ck_o clock, ft_rst_i->ot_isl_rstft->ft_rst_o reset; source pushdown.tcl md5 5e791507; sha ffd0642f), SDC regenerated (diff = port lists only), new sdc_lint PASS; kit sdc_lint.py + so_exact/{sdc_lint,signoff}.py = branch (signoff = flow-pg-final eda7910d2 + same patch). Kit defect fixed: sdc_lint.json key io_hold_note (rejected by lint(): sign-off sdc_lint would FAIL) moved to sdc_lint_notes.json. Pre-edit copies in ftsdc_pre/. 5_1_grt.odb == 5_1_grt_cal.odb (cmp) before rerun.
 - Rerun r6_route_chain.sh UNCHANGED (md5 b6db75b3) 13:12: stageA I TT 263.41/FF 217.73; FF hold before -56.06/21 ep (out class 0: ft arcs gone), after +14.62/0 ep, 181 data hold buffers; pre-route gate TT 266.97/FF 221.04 PASS; GRT re-run tap window TT 22.9/FF 20.4 (FAIL >20, info: routed number decides, no tuning); PG bind 6412 open -> 0. DRT started 13:16 (UNCHECKED, from logs).
 COLLECT (~15:00): epyc2:/srv/opentallas-scratch2/claude/qc-su-lat-r6/btab_r6/r6_chain.status (run_kit rc), signoff.log + signoff/signoff.json (setup_tt/hold_ff WNS, drc, pg, unconstrained ft_die_timed=2, ft_interface PASS + arcs TT/FF), signoff/{tt,ff}/corner.json insertion_pinflops (post-route TT/FF mean) + tap window (cf ot_ms_report on 6_final / pair_skew). MIF1 diagnostic until MASTER-PLAN-R5 canonical variant.
+
+## CODEX notes 2026-10-26 20:14 PDT
+FT interface/arrival fixes merged by root25. btab_r6 route collection is QC physical-owned; no duplicate trial.
+
+## CODEX notes 2026-10-27 08:16 PDT
+Source already merged; btab_r6 physical collection with Qwen owner. No stale trial duplicated.

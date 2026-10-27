@@ -158,3 +158,6 @@ CODEX remaining-lanes takeover: Source csa31 fix + source-local waiver work comp
 
 ## CODEX notes 2026-10-26 20:07 PDT
 Oldcsa31fix/waivers/gate integrated; no live oldredo to duplicate. Current build regression is unrelated8regionalbenchclockpins; addressedKV-TOK.
+
+## CODEX notes 2026-10-27 08:16 PDT
+Old csa31 source fix/gate integrated. Current PREFLIGHT cheaply checks YC cast forms, later actual SELRANGE/RTL-elaboration gate remains mandatory.

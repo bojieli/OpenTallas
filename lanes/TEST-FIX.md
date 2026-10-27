@@ -8,3 +8,9 @@
 
 ## CODEX notes 2026-10-25 21:48 PDT
 CODEX remaining-lanes takeover: READYaa98b5973c sparse-checkout/column-order fixture fix. Jobs: None. Next: Root main carries current test fixes; avoid sparse false regression. Failure disposition: 21 failures were missing physical/common_flow+results, not design.
+
+## CODEX notes 2026-10-26 20:14 PDT
+Sparse-checkout missing physical/common_flow was historical21fail cause; no current code defect to redo.
+
+## CODEX notes 2026-10-27 08:16 PDT
+Historical sparse checkout21fails resolved. Current focused preflight/bundle19PASS on fleetPy3.14; no sweep or duplicate fixture work.

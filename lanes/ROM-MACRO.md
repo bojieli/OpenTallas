@@ -94,3 +94,6 @@ Content-tool follow-up active: actual Engram token-map writer68live+4zero=72bits
 
 ## CODEX notes 2026-10-26 — content tool follow-up collected
 The stale asset-child NEXT is complete: current actual main contains `4c7c8aff51` and its preceding shared personalisation helper/source-writer integration. Existing CODEX-LOG receipt: seven real writers preserve Engram72 / HCX266 / Markov274 exact padding and no-ECC contracts; eight released token maps plus expected.hex byte-identical, actual HCX minimum64maps exact, three width mutants caught. Markov regeneration now excludes existing physical `*.viamap.hex` from logical input glob. No uncollected job remains. Full43-set/fullMarkov corpus regeneration was not run and is not claimed. KV/QC runtime calendar adoption remains with their physical/token owners; shared gate activation stays FLOW-CANARY.
+
+## CODEX notes 2026-10-27 08:16 PDT
+Content/personalisation tooling already complete4c7c8aff51; real calendar adoption physical/token owned, no corpus regen or obsolete ROM work.

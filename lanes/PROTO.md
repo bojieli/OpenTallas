@@ -384,3 +384,9 @@ PENDING:
 ## CODEX notes 2026-10-25 07:27 PDT
 CODEX takeover genericPROTO on codex/proto-0719, stationwave separately S81/kits0719. Late leaf8 epyc2 spill finishedEXIT0: STRUCTURALoverflow3724986,hotbbox73.6%,TT+18.03/FF-2.46ps. Updatedbaseline103CLEAN/6HOTSPOT/68STRUCTURAL. B2nq_su31 remainsliveGRTextraiteration2/3,no duplicate. TenCLEANS81contenttypes held on boundkitRTL nestedreset blocker,CLOCK/S81plan informed. Oldcoll_ftm/io_ft report247 failures likelymemorycap but oldclock/F1recipe requires structural successor; no stale reroute.
 2026-10-25 08:17 PDT KITS-SPARE (LOOP-GAP owner per COORD 08:4x): FIX 01c2b39db6c1 coll_ftm (m5): see lanes/PROTO-KITS.md same time (OOM at 6_report; coll_ft* in QC-PLAN3 delta; rebuild after it).
+
+## CODEX notes 2026-10-26 20:14 PDT
+Current die-first method supersedes old budget prototype; no abandoned-plan physical rerun.
+
+## CODEX notes 2026-10-27 08:16 PDT
+Old budget prototype superseded die-first/master-slice method; no retired-plan rerun. Current PG modeling diagnostic owned flow/sta_pg.

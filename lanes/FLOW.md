@@ -171,3 +171,6 @@ Collected current canaries: QC/head/HBM_SRAM NO-REGRESSION; KV REGRESSION -94.57
 
 ## CODEX notes 2026-10-27 04:57 PDT
 CODEX took over shared flow on codex/root-1027. Merged bce29bb125: stage exact-source face_guard before source worktree removal, load by file path (no cross-source module cache). 7 focused tests PASS incl mutant checker. S81 RM29 regression root cause removed rm29 checker path; new separate s81_0f9789993_1027_031410_851290_checkerfix/canary.json = NO-REGRESSION, originals retained. Absolute TT insertion226.54/dev23.46/setup_est-37.70 remains design FAIL, no signoff promotion. Future timer automatically uses main fix.
+
+## CODEX notes 2026-10-27 08:16 PDT
+Shared flow takeover: PREFLIGHT-1 b56b0b55be and FF-bound fix9529b56ff0 READY (19preflight/bundle+4FF tests); canary integration owned flow/rc_canary. Existing physical failures remain assigned die teams.

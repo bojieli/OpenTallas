@@ -174,3 +174,9 @@ Claude reset order: safe park, no new jobs. Sources/jobs/results/failures/OWNER?
 
 ## CODEX notes 2026-10-25 21:48 PDT
 CODEX remaining-lanes takeover: Historical census DONE. Jobs: None. Next: Use current preflight/clock/geometry flow fixes; no duplicate census. Failure disposition: Original2% yield traced to hold loops/RTL boundary/geometry; owned shared_flow + physical.
+
+## CODEX notes 2026-10-26 20:14 PDT
+Unsigned kits held where pending plan delta changes interface; use master-plan slices/current die flow, no obsolete census rerun.
+
+## CODEX notes 2026-10-27 08:16 PDT
+Historical census complete; no live jobs. Current early kit admission implemented PREFLIGHT-1 b56b0b55be; ownership/geometry rules remain.

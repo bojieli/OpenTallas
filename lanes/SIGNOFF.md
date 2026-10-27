@@ -82,3 +82,9 @@ CODEX remaining-lanes takeover: Tool DONE; canonical TT/FF signoff current. Jobs
 
 ## FLOW-PG 2026-10-26 12:40 PDT — sign-offs INVALID for unbound VDD/VSS (archives kept, nothing deleted)
 ODB census of every signed record (42 unique): INVALID 3 = kq_qfd_dv_s8x_prog_pd40a0 (QC s8b d73a0fbb938f, 108 ot_ms_* spine bufs/216 terms), ot_nhb_zh (KV legacy reuse, 555 CTS clkbufs), ot_qkh_recip_leaf (KV legacy reuse, 1.28M insts unbound). UNVERIFIED 13 rows/12 names (no 6_final.odb survives anywhere). CLEAN 26 incl. rp1_f62. List: lanes/FLOW-PG-INVALID.tsv; full screen (3237 rows incl. closed archive: local 1871/2054 + offloaded 985/1136 AFFECTED, mostly legacy ot_inhold/outhold dont_touch) on claude/flow-pg-final-1026@eda7910d2 results/flow_pg_1026/pg_screen.tsv. Signoff "pg" check (BLOCKING) + autopilot STRUCTURAL pg-unbound on that branch stop any new one.
+
+## CODEX notes 2026-10-26 20:14 PDT
+Canonical TTsetup/FFhold60/25 current; unbound PG invalid3 preserved. Actual physical closure remains per-die view work, not blind138lostDB reruns.
+
+## CODEX notes 2026-10-27 08:16 PDT
+Canonical TT/FF gates current; explicit --ff-bound-ps on non-core die-plan kits FIXED9529b56ff0 (4focusedPASS). Old invalidPG3/unverified13 rows retained. No blind lostDB reruns.
