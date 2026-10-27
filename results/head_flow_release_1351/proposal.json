@@ -1,0 +1,44 @@
+{
+ "schema": "opentallas.head_flow_release_proposal.v1",
+ "status": "PROPOSAL_NOT_TAGGED",
+ "proposed_tag": "flow-20261027-a-head",
+ "candidate": "7c63c4882b85eb6fa7cbda4874bfa4fdb9785a24",
+ "as_run_recipe_source": "d6231262fd0a2e7d2bc52061fb6156179c014887",
+ "die": "s81_head",
+ "normal_resolver_dry_result": {
+  "src_commit": "d6231262fd0a2e7d2bc52061fb6156179c014887",
+  "flow_tag": "flow-20261027-a-head"
+ },
+ "dry_method": "Only proposed tag ref in git diff substituted by candidate SHA; normal resolver logic unchanged; no tag created",
+ "watch_scope": "current normal resolver per-HEAD watch/exclude/foreign-plan filter",
+ "fingerprint_format": "SHA256(sorted(path NUL git_blob_oid newline))",
+ "watched_file_count": 273,
+ "fingerprint": "6b5f3f2d39766c8df7c630e63317b7f9041f4112fff6529d66238d176a78e3f9",
+ "candidate_fingerprint": "6b5f3f2d39766c8df7c630e63317b7f9041f4112fff6529d66238d176a78e3f9",
+ "watched_differences": [],
+ "all_changed_paths": [
+  "physical/die_plan/qwen_compute/cores/legacy/mk_hold_qc.sh",
+  "results/flow_clkfreeze_1351/README.md",
+  "results/flow_clkfreeze_1351/head/clk_geom_diff.json",
+  "results/flow_clkfreeze_1351/head/lec.json",
+  "results/flow_clkfreeze_1351/head/signoff.json",
+  "results/flow_clkfreeze_1351/kv/clk_geom_diff.json",
+  "results/flow_clkfreeze_1351/kv/signoff.json",
+  "tools/die_plan/clk_freeze_check.sh",
+  "tools/die_plan/test_clk_freeze.py",
+  "tools/die_plan/test_clk_freeze_fresh_dump.py"
+ ],
+ "actual_recipe_helper_sha256": {
+  "tools/s81_head/head_post_route_eco.sh": "faaad56002825dbc91a10a24eab0bffdfa5e716852b4926ef5aca0fe55c37248",
+  "tools/s81_head/head_eco_post.tcl": "1ca979013a44ed3766e284abdc3f32cda17dd4bb6d06eaf50dfc1c9cb0ec41d8",
+  "physical/die_plan/qwen_kvsys/cores/harden/eco/eco_route.tcl": "e11bf1855c8b1fb04d3942c440981e6164f10a99f807e678d4af308620b80563",
+  "tools/orfs_hold_mm.py": "bc51bdc730b5896c2029b41975f16a07836339491c8683dbef55a5a9f8d6551f",
+  "tools/orfs_hold_mm.tcl": "027430419ac5404a78c38cd72f909f64c69773ec69d1c92d9bdacc98a1fbfbda",
+  "tools/die_plan/clk_freeze.tcl": "d31e8c83bf22b8deb24322ebd224c28378949c776cfe860f3601a686c2dd59c6",
+  "tools/die_plan/clk_dump_db.tcl": "8edb7c54e67a51b43a2d77913862aa724116a34ae6df97914d9e67d61f0c36ce",
+  "tools/die_plan/clk_geom_diff.py": "8c888f9d9035244ebb37ee974dc1f8f3a50d620536f5937ca2f7c82aa836f2eb"
+ },
+ "checker_successor": "e9b7f0a9e3+b5b3350268, same approved0f95/fac5 correctness fix, three focused controls PASS, original physical canaries not repeated",
+ "proof_scope": "Original GOLD-supplied lec.py and native signoff bundle copied by as-run recipe; candidate repository lec.py is not claimed as executed proof tool. Existing COORD scoped qualification retained.",
+ "root_graph_approval_required": true
+}
