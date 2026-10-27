@@ -467,6 +467,70 @@ def hold_demand_ps(P, snd_part, rcv_part):
     return float(v)
 
 
+# CLOCK-KV-R21 (RULING CLOCK-KV-R20 (a)): opt-in clock.hold_demand source "die_sta" = the per-port-bit FF hold demand
+# the SHARED die gate (die_sta_related.py) measured on the assembled die (tools/die_plan/hold_demand_die_sta.py).  The
+# plan names the demand file + its sha256 and the provenance (gate JSON sha256, gate tool sha256); the file is checked
+# against all three.  Type-hardened (worst instance per template bit).  The kit SDC then TIGHTENS, per bit, the min
+# input delay (receiver pads: inputs[type]) or the min output delay (sender pads, receiver is a macro without a P&R
+# kit: outputs[type]) by demand_ps, so the kit's own FF hold repair inserts the hold delay on that data path; the
+# parent die gate re-verifies with the real kit views.  "unplaced" bits (no kit on either side) are never emitted.
+# It is independent of io_hold (legacy / sender_min) and of source "plan" (hold_demand_ps keeps refusing it).
+HOLD_DEMAND_DIE_STA_SCHEMA = "opentallas.hold_demand.die_sta.v1"
+_DIE_STA_CACHE = {}
+
+
+def die_sta_hold_demand(P, tn):
+    """None (no / plan-source hold_demand) or {'inputs': {sv_bus: {bit: [k, demand_ps]}}, 'outputs': {...}} for tn."""
+    import hashlib
+    hd = P.clock.get("hold_demand")
+    if not hd or hd.get("source") != "die_sta":
+        return None
+    for k in ("file", "sha256", "gate_json_sha256", "tool_sha256"):
+        if not hd.get(k):
+            raise ValueError(f"clock.hold_demand source die_sta needs '{k}' (provenance)")
+    f = Path(hd["file"])
+    if not f.is_absolute():
+        f = (Path(P.path).parent if getattr(P, "path", None) else Path.cwd()) / f
+    if str(f) not in _DIE_STA_CACHE:
+        raw = f.read_bytes()
+        if hashlib.sha256(raw).hexdigest() != hd["sha256"]:
+            raise ValueError(f"clock.hold_demand die_sta: {f} sha256 differs from the plan's")
+        d = json.loads(raw)
+        pv = d.get("provenance") or {}
+        if d.get("schema") != HOLD_DEMAND_DIE_STA_SCHEMA:
+            raise ValueError(f"clock.hold_demand die_sta: {f} schema {d.get('schema')}")
+        if pv.get("gate_json_sha256") != hd["gate_json_sha256"] or pv.get("tool_sha256") != hd["tool_sha256"]:
+            raise ValueError("clock.hold_demand die_sta: gate JSON / tool sha256 differ between plan and demand file")
+        _DIE_STA_CACHE[str(f)] = d
+    d = _DIE_STA_CACHE[str(f)]
+    return dict(inputs=(d.get("inputs") or {}).get(tn, {}), outputs=(d.get("outputs") or {}).get(tn, {}))
+
+
+def die_sta_sdc_lines(P, tn, side):
+    """per-bit tightening lines (side 'inputs' | 'outputs'), one command per distinct value, after the bus-level -min."""
+    dd = die_sta_hold_demand(P, tn)
+    if not dd or not dd[side]:
+        return ""
+    if side == "inputs":
+        A = input_hold_min(P, tn)
+        base = lambda bus: A[bus]["in_min_ps"] if bus in A else hold_in_min_ps(P)
+        cmd = "set_input_delay"
+    else:
+        base = lambda bus: hold_out_min_sdc_ps(P)
+        cmd = "set_output_delay"
+    g = {}
+    for bus, bits in dd[side].items():
+        for bit, (k, dem) in bits.items():
+            if k and float(dem) > 0:
+                g.setdefault(round(base(bus) - float(dem), 4), []).append(f"{bus}[{int(bit)}]")
+    hd = P.clock["hold_demand"]
+    out = [f"# HOLD-DEMAND die_sta ({side}): per-bit FF hold demand of the shared die gate (gate json "
+           f"{hd['gate_json_sha256'][:12]}, tool {hd['tool_sha256'][:12]}), type-hardened; tightens the bus-level -min"]
+    for v, ports in sorted(g.items()):
+        out.append(f"{cmd} -min {t_lib(v):.4f} -clock vclk [get_ports {{{' '.join(sorted(ports))}}}]")
+    return "\n".join(out) + "\n"
+
+
 def input_hold_min(P, tn, structural=False):
     """IO-HOLD option A: {sv input port: dict(in_min_ps, basis, senders)} for every bus / ft-slot input of type tn
     whose min input delay differs from the fallback hold_in_min_ps(P).  Empty in legacy mode.  One value per port
@@ -770,6 +834,7 @@ def sdc(P, tn, pins):
         out += ((f"# IO-HOLD A: sender guaranteed output-min (+{v:g} ps after vclk)\n" if io_hold_mode(P) != "plan_demand"
                  else f"# HOLD-REPAIR plan_demand: sender guarantee - plan seam hold demand ({v:g} ps vs vclk)\n")
                 + f"set_input_delay -min {t_lib(v):.4f} -clock vclk [get_ports {{{' '.join(p + '[*]' for p in ports)}}}]\n")
+    out += die_sta_sdc_lines(P, tn, "inputs")
     if root_async_reset(P, tn):
         out += "# Sole asynchronous die-root reset CDC (owner reset rule); forwarded reset remains timed.\n"
         out += ROOT_RESET_FALSE_PATH + "\n"
@@ -777,6 +842,7 @@ def sdc(P, tn, pins):
     # delay to +IO_BUDGET x T, which waived the sender's half of the seam hold check (hold uncertainty counted 0.5x
     # at kit level).  0 = the neighbour's face flop holds at the budgeted insertion; tightening only.
     out += (f"set_output_delay -min {t_lib(hold_out_min_sdc_ps(P)):.4f} -clock vclk [all_outputs]\n")
+    out += die_sta_sdc_lines(P, tn, "outputs")
     import reset_tree as RT
     fp = RT.pad_false_path_pins(P, tn)
     if fp:
@@ -1344,7 +1410,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     # FLOW 10-25: GRT hooks (grt_pre.tcl: FF vclk binding for the FF-only GRT step + optional max-wire repeaters;
     # grt_post.tcl: density GRT-RC tap pass + vclk back to the SDC value before 5_1_grt.sdc is written)
     cfg += ["export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre.tcl", "export POST_GLOBAL_ROUTE_TCL = /work/grt_post.tcl"]
-    if io_hold_mode(P) == "plan_demand":
+    if io_hold_mode(P) == "plan_demand" or die_sta_hold_demand(P, tn):
+        # CLOCK-KV-R21: a die_sta per-bit demand (die_sta_hold_demand) uses the same HB4 hook + buffer cap
         # HOLD-REPAIR 10-26 (12.4a a1): the FF GRT hold repair pads the declared seam demand on the input paths with
         # HB4 (hold_pad_hb4.tcl) and a raised buffer cap; hold_repair_pre.tcl sources grt_pre.tcl first
         cfg[cfg.index("export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre.tcl")] = "export PRE_GLOBAL_ROUTE_TCL = /work/hold_repair_pre.tcl"
@@ -1483,6 +1550,14 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
             bud['io_hold'].update(mode='plan_demand', hold_demand=dict(
                 derate=hd.get('derate'), cell=hd.get('cell'), windows_ps=hd.get('windows_ps'),
                 pairs=len(hd.get('pairs') or {}), landed=len(hd.get('landed') or ())))
+    _dsd = die_sta_hold_demand(P, tn)
+    if _dsd:
+        hd = P.clock['hold_demand']
+        bud['hold_demand_die_sta'] = dict(
+            file=hd['file'], sha256=hd['sha256'], gate_json_sha256=hd['gate_json_sha256'], tool_sha256=hd['tool_sha256'],
+            input_bits=sum(1 for b in _dsd['inputs'].values() for v in b.values() if v[0]),
+            output_bits=sum(1 for b in _dsd['outputs'].values() for v in b.values() if v[0]),
+            hb4_cells=sum(v[0] for side in ('inputs', 'outputs') for b in _dsd[side].values() for v in b.values()))
     if ms is not None:
         bud["master_plan"] = ms
     (kd / "budget.json").write_text(json.dumps(bud, indent=1) + "\n")
