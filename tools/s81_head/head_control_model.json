@@ -1,0 +1,48 @@
+{
+  "schema": "opentallas.s81.head-control-source.v1",
+  "status": "source component; no die G5 or physical adoption",
+  "provider": "ot_s81hd_ctl_core",
+  "mechanisms": [
+    "exact historical04718b43a5 HSF0 store/stream/pick/rank/RESULT/MTP payload",
+    "compiled START issue S+ISS_OFF+k*ISS_PER; readiness never moves issue date",
+    "job active until matching token emission using issued identity, not replay or merge",
+    "shared host276 N3 RESULT/status link with priority and overwrite fault",
+    "three mesh64 peer pairs with both copies preserved",
+    "one real merged spine record retains old two-edge local pick",
+    "real stage kind7 carries SEED/DHSTEP/DHRES/ROWS; no draft PHYs",
+    "independent ROWS/DHRES holds avoid ROWS user corruption"
+  ],
+  "capacity": {
+    "xstore_bits": 81920,
+    "xstore_macros": 4,
+    "macro": "ot_sram_1r1w_64x512_m1_r2c2",
+    "stage_load_beats": 80,
+    "stage_payload_bits": 1024,
+    "replay_bits_per_cycle": 512,
+    "SK": 11,
+    "replay_cycles": 8269,
+    "issue_csr9": "ISS_OFF=data[31:16], ISS_PER=data[15:0]",
+    "deadline_csr10": "MRG_DL=data[15:0]"
+  },
+  "latency": {
+    "steady_datapath_cycles_added": 0,
+    "BEST_codec_serialization_extra_vs_fullwidth": 1,
+    "HOST_codec_serialization_extra_vs_fullwidth": 2,
+    "LEP_notification_registered_edges": 1,
+    "LEP_memory_cycles_added": 0,
+    "start": "separate compiled CSR dates; caller must price actual relay+codec path"
+  },
+  "new_lep_contract": {
+    "provider": "ot_s81hd_lep0N_noidx_core",
+    "IDX_EN": 0,
+    "generic_wrapper_default": 1,
+    "dead_h4_reason": "IDX_EN0 omits g_itx/g_irx structurally",
+    "lw11": "registered {ml_wd[1056:1047], ml_wv}; accepted MU landing beat user/valid"
+  },
+  "open_release_requirements": [
+    "compile actual HEAD HBC boot and START/issue/merge dates including all relays and codecs",
+    "supply real Markov/DHRES/ROWS producer for MTP (AR component alone does not supply it)",
+    "adopt one combined HEAD infra/source delta then strict whole-head bind and native minimum path gate",
+    "fresh geometry/clock/reset/PG kits and real-view TT/FF signoff; no old physical view inherited"
+  ]
+}
