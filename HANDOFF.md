@@ -1300,3 +1300,6 @@ CODEX: 2026-10-27 08:14 PDT S81 recovered pausedc3dd5ad1a34 into codex/s81-topol
 CODEX: 2026-10-27 08:19 PDT S81 core entry fix5b2b94251f READY96PASS, reviewfd4705f77b; qbank/sstn fresh c18 trials39efbb5ba931/c0f7dd8e8002 queued after VIEWED PASS-COND, original DRT0255 retained. l0r LEC15691EQ; hold repair live diagnosis.
 
 CODEX: 2026-10-27 08:15 PDT Qwen B48 boot root cause found:28inline PCs kept old top source(no boot_win) while PC0hier libs fixed; own top-source overlay rebuild live intel2 codex-qk-boot-0818 client395700.
+
+CODEX: 2026-10-27 08:15 PDT AUTOPILOT-SIGNOFF-1 READY ee05d9ad37: automate final signoff+routedLEC before archive, 89 focused PASS; same ot-run allocation, no reroute/oldjob changes.
+CODEX: 2026-10-27 08:34 PDT QC F4I DRC0 TT+117.85 FF-10.83/35 LEC5342EQ; local internal RCX residual diagnosed/reviewed, own F4J sparse data ECO queued autopilot554dfd4c5bc8 on codex/qc-cores-0815@0f8c059aab; BTABr8/prog halo live.
