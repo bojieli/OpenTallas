@@ -1,0 +1,1576 @@
+{
+ "schema": "qc_cores_1027.a0_clk_r2.v2",
+ "scope": "PLAN MODEL ONLY, UNCHECKED-model (NLDM RVT + Elmore, setRC M5/M6 x 0.8/0.9 for M6/M7 legs); su_tree predictor family reads ~15 ps HIGH on TT vs routed (COORD 10-27), numbers raw",
+ "structure": "die mesh/H-tree (M8/M9, die-owned) -> in-core pushdown islands (12.2a1) -> sized per-branch driver -> M6/M7 leg -> child centre entry | parent-FF local root",
+ "sin_island_ps": 30.0,
+ "target": {
+  "TT": 250.0,
+  "FF": 202.5
+ },
+ "child_reKit": {
+  "clk_pin_child_frame": {
+   "ot_qwen_tile_romleaf": [
+    86.4,
+    55.08
+   ],
+   "rawleaf": [
+    57.672,
+    70.2
+   ],
+   "ot_qwen_tile_node": [
+    23.76,
+    216.0
+   ]
+  },
+  "rules": [
+   "clk pin = child centre (12.8a) on the child's own 8.64-um centre island, M7->M5 drop",
+   "child routing ceiling M5 (OBS <= M5) so parent M6/M7 legs pass over the child",
+   "child internal tree built to the common budget B (same for all three masters)"
+  ]
+ },
+ "cores": {
+  "nk": {
+   "sizes": {
+    "rom_W0": "BUFx8_ASAP7_75t_R",
+    "rom_W1": "BUFx8_ASAP7_75t_R",
+    "rom_W2": "BUFx8_ASAP7_75t_R",
+    "rom_W3": "BUFx8_ASAP7_75t_R",
+    "rom_W4": "BUFx8_ASAP7_75t_R",
+    "rom_E0": "BUFx8_ASAP7_75t_R",
+    "rom_E1": "BUFx8_ASAP7_75t_R",
+    "rom_E2": "BUFx8_ASAP7_75t_R",
+    "rom_E3": "BUFx8_ASAP7_75t_R",
+    "rom_E4": "BUFx8_ASAP7_75t_R",
+    "pch0": "BUFx8_ASAP7_75t_R",
+    "pch1": "BUFx8_ASAP7_75t_R",
+    "pch2": "BUFx8_ASAP7_75t_R",
+    "pch3": "BUFx8_ASAP7_75t_R",
+    "pch4": "BUFx8_ASAP7_75t_R",
+    "pef0": "BUFx8_ASAP7_75t_R",
+    "pef1": "BUFx8_ASAP7_75t_R",
+    "pef2": "BUFx8_ASAP7_75t_R",
+    "pef3": "BUFx8_ASAP7_75t_R",
+    "pef4": "BUFx8_ASAP7_75t_R",
+    "pef5": "BUFx8_ASAP7_75t_R",
+    "lsl_c0r0": "BUFx24_ASAP7_75t_R",
+    "lsl_c2r0": "BUFx24_ASAP7_75t_R",
+    "pslot": "BUFx8_ASAP7_75t_R",
+    "lsl_c0r1": "BUFx24_ASAP7_75t_R",
+    "lsl_c0r2": "BUFx24_ASAP7_75t_R",
+    "pgap0": "BUFx8_ASAP7_75t_R",
+    "lsl_c1r1": "BUFx24_ASAP7_75t_R",
+    "lsl_c1r2": "BUFx24_ASAP7_75t_R",
+    "pgap1": "BUFx8_ASAP7_75t_R",
+    "lsl_c2r1": "BUFx24_ASAP7_75t_R",
+    "lsl_c2r2": "BUFx24_ASAP7_75t_R",
+    "pgap2": "BUFx8_ASAP7_75t_R",
+    "pen0": "BUFx8_ASAP7_75t_R",
+    "pen1": "BUFx8_ASAP7_75t_R",
+    "pen2": "BUFx8_ASAP7_75t_R",
+    "node": "BUFx24_ASAP7_75t_R"
+   },
+   "model": {
+    "TT": {
+     "leaves": {
+      "rom_W0": {
+       "kind": "romleaf",
+       "island": "MW01",
+       "leg_um": 65.09,
+       "P": 43.96,
+       "slew": 25.57
+      },
+      "rom_W1": {
+       "kind": "romleaf",
+       "island": "MW01",
+       "leg_um": 65.09,
+       "P": 43.96,
+       "slew": 25.57
+      },
+      "rom_W2": {
+       "kind": "romleaf",
+       "island": "MW23",
+       "leg_um": 65.09,
+       "P": 43.96,
+       "slew": 25.57
+      },
+      "rom_W3": {
+       "kind": "romleaf",
+       "island": "MW23",
+       "leg_um": 65.09,
+       "P": 43.96,
+       "slew": 25.57
+      },
+      "rom_W4": {
+       "kind": "romleaf",
+       "island": "MW4",
+       "leg_um": 65.52,
+       "P": 44.08,
+       "slew": 25.73
+      },
+      "rom_E0": {
+       "kind": "romleaf",
+       "island": "ME01",
+       "leg_um": 65.09,
+       "P": 43.96,
+       "slew": 25.57
+      },
+      "rom_E1": {
+       "kind": "romleaf",
+       "island": "ME01",
+       "leg_um": 65.09,
+       "P": 43.96,
+       "slew": 25.57
+      },
+      "rom_E2": {
+       "kind": "romleaf",
+       "island": "ME23",
+       "leg_um": 65.09,
+       "P": 43.96,
+       "slew": 25.57
+      },
+      "rom_E3": {
+       "kind": "romleaf",
+       "island": "ME23",
+       "leg_um": 65.09,
+       "P": 43.96,
+       "slew": 25.57
+      },
+      "rom_E4": {
+       "kind": "romleaf",
+       "island": "ME4",
+       "leg_um": 65.52,
+       "P": 44.08,
+       "slew": 25.73
+      },
+      "pch0": {
+       "kind": "parent_tap:channel segment row 0",
+       "island": "R0",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "pch1": {
+       "kind": "parent_tap:channel segment row 1",
+       "island": "R1",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "pch2": {
+       "kind": "parent_tap:channel segment row 2",
+       "island": "R2",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "pch3": {
+       "kind": "parent_tap:channel segment row 3",
+       "island": "R3",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "pch4": {
+       "kind": "parent_tap:channel segment row 4",
+       "island": "R4",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "pef0": {
+       "kind": "parent_tap:E face strip",
+       "island": "EF0",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "pef1": {
+       "kind": "parent_tap:E face strip",
+       "island": "EF1",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "pef2": {
+       "kind": "parent_tap:E face strip",
+       "island": "EF2",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "pef3": {
+       "kind": "parent_tap:E face strip",
+       "island": "EF3",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "pef4": {
+       "kind": "parent_tap:E face strip",
+       "island": "EF4",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "pef5": {
+       "kind": "parent_tap:E face strip",
+       "island": "EF5",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "lsl_c0r0": {
+       "kind": "rawleaf",
+       "island": "L00",
+       "leg_um": 80.64,
+       "P": 43.66,
+       "slew": 27.23
+      },
+      "lsl_c2r0": {
+       "kind": "rawleaf",
+       "island": "L20",
+       "leg_um": 80.64,
+       "P": 43.66,
+       "slew": 27.23
+      },
+      "pslot": {
+       "kind": "parent_tap:c1r0 slot",
+       "island": "A",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "lsl_c0r1": {
+       "kind": "rawleaf",
+       "island": "G0",
+       "leg_um": 80.26,
+       "P": 43.56,
+       "slew": 27.07
+      },
+      "lsl_c0r2": {
+       "kind": "rawleaf",
+       "island": "G0",
+       "leg_um": 80.26,
+       "P": 43.56,
+       "slew": 27.07
+      },
+      "pgap0": {
+       "kind": "parent_tap:row gap 1-2 column 0",
+       "island": "G0",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "lsl_c1r1": {
+       "kind": "rawleaf",
+       "island": "G1",
+       "leg_um": 80.26,
+       "P": 43.56,
+       "slew": 27.07
+      },
+      "lsl_c1r2": {
+       "kind": "rawleaf",
+       "island": "G1",
+       "leg_um": 80.26,
+       "P": 43.56,
+       "slew": 27.07
+      },
+      "pgap1": {
+       "kind": "parent_tap:row gap 1-2 column 1",
+       "island": "G1",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "lsl_c2r1": {
+       "kind": "rawleaf",
+       "island": "G2",
+       "leg_um": 80.26,
+       "P": 43.56,
+       "slew": 27.07
+      },
+      "lsl_c2r2": {
+       "kind": "rawleaf",
+       "island": "G2",
+       "leg_um": 80.26,
+       "P": 43.56,
+       "slew": 27.07
+      },
+      "pgap2": {
+       "kind": "parent_tap:row gap 1-2 column 2",
+       "island": "G2",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "pen0": {
+       "kind": "parent_tap:E face strip (LSL rows)",
+       "island": "EN0",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "pen1": {
+       "kind": "parent_tap:E face strip (LSL rows)",
+       "island": "EN1",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "pen2": {
+       "kind": "parent_tap:E face strip (LSL rows)",
+       "island": "EN2",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "node": {
+       "kind": "node",
+       "island": "EN1",
+       "leg_um": 79.82,
+       "P": 43.45,
+       "slew": 26.88
+      }
+     },
+     "P_min": 30.74,
+     "P_max": 44.08,
+     "P_mean": 37.44,
+     "window": 13.34,
+     "B": 212.56,
+     "max_slew": 27.23
+    },
+    "FF": {
+     "leaves": {
+      "rom_W0": {
+       "kind": "romleaf",
+       "island": "MW01",
+       "leg_um": 65.09,
+       "P": 35.82,
+       "slew": 22.2
+      },
+      "rom_W1": {
+       "kind": "romleaf",
+       "island": "MW01",
+       "leg_um": 65.09,
+       "P": 35.82,
+       "slew": 22.2
+      },
+      "rom_W2": {
+       "kind": "romleaf",
+       "island": "MW23",
+       "leg_um": 65.09,
+       "P": 35.82,
+       "slew": 22.2
+      },
+      "rom_W3": {
+       "kind": "romleaf",
+       "island": "MW23",
+       "leg_um": 65.09,
+       "P": 35.82,
+       "slew": 22.2
+      },
+      "rom_W4": {
+       "kind": "romleaf",
+       "island": "MW4",
+       "leg_um": 65.52,
+       "P": 35.93,
+       "slew": 22.37
+      },
+      "rom_E0": {
+       "kind": "romleaf",
+       "island": "ME01",
+       "leg_um": 65.09,
+       "P": 35.82,
+       "slew": 22.2
+      },
+      "rom_E1": {
+       "kind": "romleaf",
+       "island": "ME01",
+       "leg_um": 65.09,
+       "P": 35.82,
+       "slew": 22.2
+      },
+      "rom_E2": {
+       "kind": "romleaf",
+       "island": "ME23",
+       "leg_um": 65.09,
+       "P": 35.82,
+       "slew": 22.2
+      },
+      "rom_E3": {
+       "kind": "romleaf",
+       "island": "ME23",
+       "leg_um": 65.09,
+       "P": 35.82,
+       "slew": 22.2
+      },
+      "rom_E4": {
+       "kind": "romleaf",
+       "island": "ME4",
+       "leg_um": 65.52,
+       "P": 35.93,
+       "slew": 22.37
+      },
+      "pch0": {
+       "kind": "parent_tap:channel segment row 0",
+       "island": "R0",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "pch1": {
+       "kind": "parent_tap:channel segment row 1",
+       "island": "R1",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "pch2": {
+       "kind": "parent_tap:channel segment row 2",
+       "island": "R2",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "pch3": {
+       "kind": "parent_tap:channel segment row 3",
+       "island": "R3",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "pch4": {
+       "kind": "parent_tap:channel segment row 4",
+       "island": "R4",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "pef0": {
+       "kind": "parent_tap:E face strip",
+       "island": "EF0",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "pef1": {
+       "kind": "parent_tap:E face strip",
+       "island": "EF1",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "pef2": {
+       "kind": "parent_tap:E face strip",
+       "island": "EF2",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "pef3": {
+       "kind": "parent_tap:E face strip",
+       "island": "EF3",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "pef4": {
+       "kind": "parent_tap:E face strip",
+       "island": "EF4",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "pef5": {
+       "kind": "parent_tap:E face strip",
+       "island": "EF5",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "lsl_c0r0": {
+       "kind": "rawleaf",
+       "island": "L00",
+       "leg_um": 80.64,
+       "P": 36.78,
+       "slew": 26.29
+      },
+      "lsl_c2r0": {
+       "kind": "rawleaf",
+       "island": "L20",
+       "leg_um": 80.64,
+       "P": 36.78,
+       "slew": 26.29
+      },
+      "pslot": {
+       "kind": "parent_tap:c1r0 slot",
+       "island": "A",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "lsl_c0r1": {
+       "kind": "rawleaf",
+       "island": "G0",
+       "leg_um": 80.26,
+       "P": 36.68,
+       "slew": 26.11
+      },
+      "lsl_c0r2": {
+       "kind": "rawleaf",
+       "island": "G0",
+       "leg_um": 80.26,
+       "P": 36.68,
+       "slew": 26.11
+      },
+      "pgap0": {
+       "kind": "parent_tap:row gap 1-2 column 0",
+       "island": "G0",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "lsl_c1r1": {
+       "kind": "rawleaf",
+       "island": "G1",
+       "leg_um": 80.26,
+       "P": 36.68,
+       "slew": 26.11
+      },
+      "lsl_c1r2": {
+       "kind": "rawleaf",
+       "island": "G1",
+       "leg_um": 80.26,
+       "P": 36.68,
+       "slew": 26.11
+      },
+      "pgap1": {
+       "kind": "parent_tap:row gap 1-2 column 1",
+       "island": "G1",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "lsl_c2r1": {
+       "kind": "rawleaf",
+       "island": "G2",
+       "leg_um": 80.26,
+       "P": 36.68,
+       "slew": 26.11
+      },
+      "lsl_c2r2": {
+       "kind": "rawleaf",
+       "island": "G2",
+       "leg_um": 80.26,
+       "P": 36.68,
+       "slew": 26.11
+      },
+      "pgap2": {
+       "kind": "parent_tap:row gap 1-2 column 2",
+       "island": "G2",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "pen0": {
+       "kind": "parent_tap:E face strip (LSL rows)",
+       "island": "EN0",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "pen1": {
+       "kind": "parent_tap:E face strip (LSL rows)",
+       "island": "EN1",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "pen2": {
+       "kind": "parent_tap:E face strip (LSL rows)",
+       "island": "EN2",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "node": {
+       "kind": "node",
+       "island": "EN1",
+       "leg_um": 79.82,
+       "P": 36.57,
+       "slew": 25.91
+      }
+     },
+     "P_min": 24.13,
+     "P_max": 36.78,
+     "P_mean": 30.35,
+     "window": 12.65,
+     "B": 172.15,
+     "max_slew": 26.29
+    }
+   },
+   "islands": {
+    "MW01": {
+     "xy": [
+      108.864,
+      142.344
+     ],
+     "where": "ROM W column gap rows (0, 1)"
+    },
+    "MW23": {
+     "xy": [
+      108.864,
+      402.696
+     ],
+     "where": "ROM W column gap rows (2, 3)"
+    },
+    "MW4": {
+     "xy": [
+      108.864,
+      663.48
+     ],
+     "where": "ROM W column gap rows (4,)"
+    },
+    "ME01": {
+     "xy": [
+      349.056,
+      142.344
+     ],
+     "where": "ROM E column gap rows (0, 1)"
+    },
+    "ME23": {
+     "xy": [
+      349.056,
+      402.696
+     ],
+     "where": "ROM E column gap rows (2, 3)"
+    },
+    "ME4": {
+     "xy": [
+      349.056,
+      663.48
+     ],
+     "where": "ROM E column gap rows (4,)"
+    },
+    "R0": {
+     "xy": [
+      228.96,
+      77.256
+     ],
+     "where": "A0 channel cross, ROM row 0"
+    },
+    "R1": {
+     "xy": [
+      228.96,
+      207.432
+     ],
+     "where": "A0 channel cross, ROM row 1"
+    },
+    "R2": {
+     "xy": [
+      228.96,
+      337.608
+     ],
+     "where": "A0 channel cross, ROM row 2"
+    },
+    "R3": {
+     "xy": [
+      228.96,
+      467.784
+     ],
+     "where": "A0 channel cross, ROM row 3"
+    },
+    "R4": {
+     "xy": [
+      228.96,
+      597.96
+     ],
+     "where": "A0 channel cross, ROM row 4"
+    },
+    "EF0": {
+     "xy": [
+      446.688,
+      11.088
+     ],
+     "where": "E strip, ROM gap 0"
+    },
+    "EF1": {
+     "xy": [
+      446.688,
+      142.344
+     ],
+     "where": "E strip, ROM gap 1"
+    },
+    "EF2": {
+     "xy": [
+      446.688,
+      272.52
+     ],
+     "where": "E strip, ROM gap 2"
+    },
+    "EF3": {
+     "xy": [
+      446.688,
+      402.696
+     ],
+     "where": "E strip, ROM gap 3"
+    },
+    "EF4": {
+     "xy": [
+      446.688,
+      532.872
+     ],
+     "where": "E strip, ROM gap 4"
+    },
+    "EF5": {
+     "xy": [
+      446.688,
+      663.48
+     ],
+     "where": "E strip, ROM gap 5"
+    },
+    "L00": {
+     "xy": [
+      73.656,
+      663.48
+     ],
+     "where": "ROM/LSL strip under LSL c0r0"
+    },
+    "L20": {
+     "xy": [
+      325.944,
+      663.48
+     ],
+     "where": "ROM/LSL strip under LSL c2r0"
+    },
+    "A": {
+     "xy": [
+      199.8,
+      744.12
+     ],
+     "where": "empty c1r0 slot"
+    },
+    "G0": {
+     "xy": [
+      73.656,
+      984.888
+     ],
+     "where": "LSL row gap 1-2, column 0"
+    },
+    "G1": {
+     "xy": [
+      199.8,
+      984.888
+     ],
+     "where": "LSL row gap 1-2, column 1"
+    },
+    "G2": {
+     "xy": [
+      325.944,
+      984.888
+     ],
+     "where": "LSL row gap 1-2, column 2"
+    },
+    "EN0": {
+     "xy": [
+      452.0,
+      740.0
+     ],
+     "where": "E strip above ROM 0"
+    },
+    "EN1": {
+     "xy": [
+      452.0,
+      858.66
+     ],
+     "where": "E strip above ROM 1"
+    },
+    "EN2": {
+     "xy": [
+      452.0,
+      1025.0
+     ],
+     "where": "E strip above ROM 2"
+    }
+   },
+   "n_islands": 26,
+   "n_child_entries": 19,
+   "n_parent_taps": 18,
+   "island_in_child_halo": [],
+   "island_in_pin_column": [],
+   "leg_in_pin_column": [],
+   "islands_in_bus_corridor": [
+    "R0",
+    "R1",
+    "R2",
+    "R3",
+    "R4"
+   ],
+   "max_leg_um": 80.63999999999999
+  },
+  "nl": {
+   "sizes": {
+    "rom_W0": "BUFx8_ASAP7_75t_R",
+    "rom_W1": "BUFx8_ASAP7_75t_R",
+    "rom_W2": "BUFx8_ASAP7_75t_R",
+    "rom_W3": "BUFx8_ASAP7_75t_R",
+    "rom_W4": "BUFx8_ASAP7_75t_R",
+    "rom_E0": "BUFx8_ASAP7_75t_R",
+    "rom_E1": "BUFx8_ASAP7_75t_R",
+    "rom_E2": "BUFx8_ASAP7_75t_R",
+    "rom_E3": "BUFx8_ASAP7_75t_R",
+    "rom_E4": "BUFx8_ASAP7_75t_R",
+    "pch0": "BUFx8_ASAP7_75t_R",
+    "pch1": "BUFx8_ASAP7_75t_R",
+    "pch2": "BUFx8_ASAP7_75t_R",
+    "pch3": "BUFx8_ASAP7_75t_R",
+    "pch4": "BUFx8_ASAP7_75t_R",
+    "pef0": "BUFx8_ASAP7_75t_R",
+    "pef1": "BUFx8_ASAP7_75t_R",
+    "pef2": "BUFx8_ASAP7_75t_R",
+    "pef3": "BUFx8_ASAP7_75t_R",
+    "pef4": "BUFx8_ASAP7_75t_R",
+    "pef5": "BUFx8_ASAP7_75t_R",
+    "lsl_c0r0": "BUFx24_ASAP7_75t_R",
+    "lsl_c2r0": "BUFx24_ASAP7_75t_R",
+    "pslot": "BUFx8_ASAP7_75t_R",
+    "lsl_c0r1": "BUFx24_ASAP7_75t_R",
+    "lsl_c0r2": "BUFx24_ASAP7_75t_R",
+    "pgap0": "BUFx8_ASAP7_75t_R",
+    "lsl_c1r1": "BUFx24_ASAP7_75t_R",
+    "lsl_c1r2": "BUFx24_ASAP7_75t_R",
+    "pgap1": "BUFx8_ASAP7_75t_R",
+    "lsl_c2r1": "BUFx24_ASAP7_75t_R",
+    "lsl_c2r2": "BUFx24_ASAP7_75t_R",
+    "pgap2": "BUFx8_ASAP7_75t_R",
+    "pen0": "BUFx8_ASAP7_75t_R",
+    "pen1": "BUFx8_ASAP7_75t_R",
+    "pen2": "BUFx8_ASAP7_75t_R"
+   },
+   "model": {
+    "TT": {
+     "leaves": {
+      "rom_W0": {
+       "kind": "romleaf",
+       "island": "MW01",
+       "leg_um": 65.09,
+       "P": 43.96,
+       "slew": 25.57
+      },
+      "rom_W1": {
+       "kind": "romleaf",
+       "island": "MW01",
+       "leg_um": 65.09,
+       "P": 43.96,
+       "slew": 25.57
+      },
+      "rom_W2": {
+       "kind": "romleaf",
+       "island": "MW23",
+       "leg_um": 65.09,
+       "P": 43.96,
+       "slew": 25.57
+      },
+      "rom_W3": {
+       "kind": "romleaf",
+       "island": "MW23",
+       "leg_um": 65.09,
+       "P": 43.96,
+       "slew": 25.57
+      },
+      "rom_W4": {
+       "kind": "romleaf",
+       "island": "MW4",
+       "leg_um": 65.52,
+       "P": 44.08,
+       "slew": 25.73
+      },
+      "rom_E0": {
+       "kind": "romleaf",
+       "island": "ME01",
+       "leg_um": 65.09,
+       "P": 43.96,
+       "slew": 25.57
+      },
+      "rom_E1": {
+       "kind": "romleaf",
+       "island": "ME01",
+       "leg_um": 65.09,
+       "P": 43.96,
+       "slew": 25.57
+      },
+      "rom_E2": {
+       "kind": "romleaf",
+       "island": "ME23",
+       "leg_um": 65.09,
+       "P": 43.96,
+       "slew": 25.57
+      },
+      "rom_E3": {
+       "kind": "romleaf",
+       "island": "ME23",
+       "leg_um": 65.09,
+       "P": 43.96,
+       "slew": 25.57
+      },
+      "rom_E4": {
+       "kind": "romleaf",
+       "island": "ME4",
+       "leg_um": 65.52,
+       "P": 44.08,
+       "slew": 25.73
+      },
+      "pch0": {
+       "kind": "parent_tap:channel segment row 0",
+       "island": "R0",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "pch1": {
+       "kind": "parent_tap:channel segment row 1",
+       "island": "R1",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "pch2": {
+       "kind": "parent_tap:channel segment row 2",
+       "island": "R2",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "pch3": {
+       "kind": "parent_tap:channel segment row 3",
+       "island": "R3",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "pch4": {
+       "kind": "parent_tap:channel segment row 4",
+       "island": "R4",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "pef0": {
+       "kind": "parent_tap:E face strip",
+       "island": "EF0",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "pef1": {
+       "kind": "parent_tap:E face strip",
+       "island": "EF1",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "pef2": {
+       "kind": "parent_tap:E face strip",
+       "island": "EF2",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "pef3": {
+       "kind": "parent_tap:E face strip",
+       "island": "EF3",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "pef4": {
+       "kind": "parent_tap:E face strip",
+       "island": "EF4",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "pef5": {
+       "kind": "parent_tap:E face strip",
+       "island": "EF5",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "lsl_c0r0": {
+       "kind": "rawleaf",
+       "island": "L00",
+       "leg_um": 80.64,
+       "P": 43.66,
+       "slew": 27.23
+      },
+      "lsl_c2r0": {
+       "kind": "rawleaf",
+       "island": "L20",
+       "leg_um": 80.64,
+       "P": 43.66,
+       "slew": 27.23
+      },
+      "pslot": {
+       "kind": "parent_tap:c1r0 slot",
+       "island": "A",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "lsl_c0r1": {
+       "kind": "rawleaf",
+       "island": "G0",
+       "leg_um": 80.26,
+       "P": 43.56,
+       "slew": 27.07
+      },
+      "lsl_c0r2": {
+       "kind": "rawleaf",
+       "island": "G0",
+       "leg_um": 80.26,
+       "P": 43.56,
+       "slew": 27.07
+      },
+      "pgap0": {
+       "kind": "parent_tap:row gap 1-2 column 0",
+       "island": "G0",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "lsl_c1r1": {
+       "kind": "rawleaf",
+       "island": "G1",
+       "leg_um": 80.26,
+       "P": 43.56,
+       "slew": 27.07
+      },
+      "lsl_c1r2": {
+       "kind": "rawleaf",
+       "island": "G1",
+       "leg_um": 80.26,
+       "P": 43.56,
+       "slew": 27.07
+      },
+      "pgap1": {
+       "kind": "parent_tap:row gap 1-2 column 1",
+       "island": "G1",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "lsl_c2r1": {
+       "kind": "rawleaf",
+       "island": "G2",
+       "leg_um": 80.26,
+       "P": 43.56,
+       "slew": 27.07
+      },
+      "lsl_c2r2": {
+       "kind": "rawleaf",
+       "island": "G2",
+       "leg_um": 80.26,
+       "P": 43.56,
+       "slew": 27.07
+      },
+      "pgap2": {
+       "kind": "parent_tap:row gap 1-2 column 2",
+       "island": "G2",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "pen0": {
+       "kind": "parent_tap:E face strip (LSL rows)",
+       "island": "EN0",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "pen1": {
+       "kind": "parent_tap:E face strip (LSL rows)",
+       "island": "EN1",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      },
+      "pen2": {
+       "kind": "parent_tap:E face strip (LSL rows)",
+       "island": "EN2",
+       "leg_um": 2.0,
+       "P": 30.74,
+       "slew": 10.68
+      }
+     },
+     "P_min": 30.74,
+     "P_max": 44.08,
+     "P_mean": 37.27,
+     "window": 13.34,
+     "B": 212.73,
+     "max_slew": 27.23
+    },
+    "FF": {
+     "leaves": {
+      "rom_W0": {
+       "kind": "romleaf",
+       "island": "MW01",
+       "leg_um": 65.09,
+       "P": 35.82,
+       "slew": 22.2
+      },
+      "rom_W1": {
+       "kind": "romleaf",
+       "island": "MW01",
+       "leg_um": 65.09,
+       "P": 35.82,
+       "slew": 22.2
+      },
+      "rom_W2": {
+       "kind": "romleaf",
+       "island": "MW23",
+       "leg_um": 65.09,
+       "P": 35.82,
+       "slew": 22.2
+      },
+      "rom_W3": {
+       "kind": "romleaf",
+       "island": "MW23",
+       "leg_um": 65.09,
+       "P": 35.82,
+       "slew": 22.2
+      },
+      "rom_W4": {
+       "kind": "romleaf",
+       "island": "MW4",
+       "leg_um": 65.52,
+       "P": 35.93,
+       "slew": 22.37
+      },
+      "rom_E0": {
+       "kind": "romleaf",
+       "island": "ME01",
+       "leg_um": 65.09,
+       "P": 35.82,
+       "slew": 22.2
+      },
+      "rom_E1": {
+       "kind": "romleaf",
+       "island": "ME01",
+       "leg_um": 65.09,
+       "P": 35.82,
+       "slew": 22.2
+      },
+      "rom_E2": {
+       "kind": "romleaf",
+       "island": "ME23",
+       "leg_um": 65.09,
+       "P": 35.82,
+       "slew": 22.2
+      },
+      "rom_E3": {
+       "kind": "romleaf",
+       "island": "ME23",
+       "leg_um": 65.09,
+       "P": 35.82,
+       "slew": 22.2
+      },
+      "rom_E4": {
+       "kind": "romleaf",
+       "island": "ME4",
+       "leg_um": 65.52,
+       "P": 35.93,
+       "slew": 22.37
+      },
+      "pch0": {
+       "kind": "parent_tap:channel segment row 0",
+       "island": "R0",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "pch1": {
+       "kind": "parent_tap:channel segment row 1",
+       "island": "R1",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "pch2": {
+       "kind": "parent_tap:channel segment row 2",
+       "island": "R2",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "pch3": {
+       "kind": "parent_tap:channel segment row 3",
+       "island": "R3",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "pch4": {
+       "kind": "parent_tap:channel segment row 4",
+       "island": "R4",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "pef0": {
+       "kind": "parent_tap:E face strip",
+       "island": "EF0",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "pef1": {
+       "kind": "parent_tap:E face strip",
+       "island": "EF1",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "pef2": {
+       "kind": "parent_tap:E face strip",
+       "island": "EF2",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "pef3": {
+       "kind": "parent_tap:E face strip",
+       "island": "EF3",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "pef4": {
+       "kind": "parent_tap:E face strip",
+       "island": "EF4",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "pef5": {
+       "kind": "parent_tap:E face strip",
+       "island": "EF5",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "lsl_c0r0": {
+       "kind": "rawleaf",
+       "island": "L00",
+       "leg_um": 80.64,
+       "P": 36.78,
+       "slew": 26.29
+      },
+      "lsl_c2r0": {
+       "kind": "rawleaf",
+       "island": "L20",
+       "leg_um": 80.64,
+       "P": 36.78,
+       "slew": 26.29
+      },
+      "pslot": {
+       "kind": "parent_tap:c1r0 slot",
+       "island": "A",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "lsl_c0r1": {
+       "kind": "rawleaf",
+       "island": "G0",
+       "leg_um": 80.26,
+       "P": 36.68,
+       "slew": 26.11
+      },
+      "lsl_c0r2": {
+       "kind": "rawleaf",
+       "island": "G0",
+       "leg_um": 80.26,
+       "P": 36.68,
+       "slew": 26.11
+      },
+      "pgap0": {
+       "kind": "parent_tap:row gap 1-2 column 0",
+       "island": "G0",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "lsl_c1r1": {
+       "kind": "rawleaf",
+       "island": "G1",
+       "leg_um": 80.26,
+       "P": 36.68,
+       "slew": 26.11
+      },
+      "lsl_c1r2": {
+       "kind": "rawleaf",
+       "island": "G1",
+       "leg_um": 80.26,
+       "P": 36.68,
+       "slew": 26.11
+      },
+      "pgap1": {
+       "kind": "parent_tap:row gap 1-2 column 1",
+       "island": "G1",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "lsl_c2r1": {
+       "kind": "rawleaf",
+       "island": "G2",
+       "leg_um": 80.26,
+       "P": 36.68,
+       "slew": 26.11
+      },
+      "lsl_c2r2": {
+       "kind": "rawleaf",
+       "island": "G2",
+       "leg_um": 80.26,
+       "P": 36.68,
+       "slew": 26.11
+      },
+      "pgap2": {
+       "kind": "parent_tap:row gap 1-2 column 2",
+       "island": "G2",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "pen0": {
+       "kind": "parent_tap:E face strip (LSL rows)",
+       "island": "EN0",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "pen1": {
+       "kind": "parent_tap:E face strip (LSL rows)",
+       "island": "EN1",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      },
+      "pen2": {
+       "kind": "parent_tap:E face strip (LSL rows)",
+       "island": "EN2",
+       "leg_um": 2.0,
+       "P": 24.13,
+       "slew": 8.26
+      }
+     },
+     "P_min": 24.13,
+     "P_max": 36.78,
+     "P_mean": 30.18,
+     "window": 12.65,
+     "B": 172.32,
+     "max_slew": 26.29
+    }
+   },
+   "islands": {
+    "MW01": {
+     "xy": [
+      108.864,
+      142.344
+     ],
+     "where": "ROM W column gap rows (0, 1)"
+    },
+    "MW23": {
+     "xy": [
+      108.864,
+      402.696
+     ],
+     "where": "ROM W column gap rows (2, 3)"
+    },
+    "MW4": {
+     "xy": [
+      108.864,
+      663.48
+     ],
+     "where": "ROM W column gap rows (4,)"
+    },
+    "ME01": {
+     "xy": [
+      349.056,
+      142.344
+     ],
+     "where": "ROM E column gap rows (0, 1)"
+    },
+    "ME23": {
+     "xy": [
+      349.056,
+      402.696
+     ],
+     "where": "ROM E column gap rows (2, 3)"
+    },
+    "ME4": {
+     "xy": [
+      349.056,
+      663.48
+     ],
+     "where": "ROM E column gap rows (4,)"
+    },
+    "R0": {
+     "xy": [
+      228.96,
+      77.256
+     ],
+     "where": "A0 channel cross, ROM row 0"
+    },
+    "R1": {
+     "xy": [
+      228.96,
+      207.432
+     ],
+     "where": "A0 channel cross, ROM row 1"
+    },
+    "R2": {
+     "xy": [
+      228.96,
+      337.608
+     ],
+     "where": "A0 channel cross, ROM row 2"
+    },
+    "R3": {
+     "xy": [
+      228.96,
+      467.784
+     ],
+     "where": "A0 channel cross, ROM row 3"
+    },
+    "R4": {
+     "xy": [
+      228.96,
+      597.96
+     ],
+     "where": "A0 channel cross, ROM row 4"
+    },
+    "EF0": {
+     "xy": [
+      446.688,
+      11.088
+     ],
+     "where": "E strip, ROM gap 0"
+    },
+    "EF1": {
+     "xy": [
+      446.688,
+      142.344
+     ],
+     "where": "E strip, ROM gap 1"
+    },
+    "EF2": {
+     "xy": [
+      446.688,
+      272.52
+     ],
+     "where": "E strip, ROM gap 2"
+    },
+    "EF3": {
+     "xy": [
+      446.688,
+      402.696
+     ],
+     "where": "E strip, ROM gap 3"
+    },
+    "EF4": {
+     "xy": [
+      446.688,
+      532.872
+     ],
+     "where": "E strip, ROM gap 4"
+    },
+    "EF5": {
+     "xy": [
+      446.688,
+      663.48
+     ],
+     "where": "E strip, ROM gap 5"
+    },
+    "L00": {
+     "xy": [
+      73.656,
+      663.48
+     ],
+     "where": "ROM/LSL strip under LSL c0r0"
+    },
+    "L20": {
+     "xy": [
+      325.944,
+      663.48
+     ],
+     "where": "ROM/LSL strip under LSL c2r0"
+    },
+    "A": {
+     "xy": [
+      199.8,
+      744.12
+     ],
+     "where": "empty c1r0 slot"
+    },
+    "G0": {
+     "xy": [
+      73.656,
+      984.888
+     ],
+     "where": "LSL row gap 1-2, column 0"
+    },
+    "G1": {
+     "xy": [
+      199.8,
+      984.888
+     ],
+     "where": "LSL row gap 1-2, column 1"
+    },
+    "G2": {
+     "xy": [
+      325.944,
+      984.888
+     ],
+     "where": "LSL row gap 1-2, column 2"
+    },
+    "EN0": {
+     "xy": [
+      452.0,
+      740.0
+     ],
+     "where": "E strip above ROM 0"
+    },
+    "EN1": {
+     "xy": [
+      452.0,
+      858.66
+     ],
+     "where": "E strip above ROM 1"
+    },
+    "EN2": {
+     "xy": [
+      452.0,
+      1025.0
+     ],
+     "where": "E strip above ROM 2"
+    }
+   },
+   "n_islands": 26,
+   "n_child_entries": 18,
+   "n_parent_taps": 18,
+   "island_in_child_halo": [],
+   "island_in_pin_column": [],
+   "leg_in_pin_column": [],
+   "islands_in_bus_corridor": [
+    "R0",
+    "R1",
+    "R2",
+    "R3",
+    "R4"
+   ],
+   "max_leg_um": 80.63999999999999
+  }
+ }
+}
