@@ -59,6 +59,23 @@ endmodule''',
    self.assertIn('/*verilator hier_block*/',(r/'native/ot_s81hd_tile_p.sv').read_text())
    self.assertIn('s81_head_top.tile1.ot_s81hd_tile_p.u_core.u_b.g_cvb.u_eB.u_m.u_rom1.viamap.hex',res['required_scope_images'])
    self.assertEqual(res['added_cycles'],0)
+ def test_native_declared_ports_use_native_functional_model(self):
+  with tempfile.TemporaryDirectory() as d:
+   r=Path(d);self.setup_tree(r)
+   legacy='rtl/dsrom_sys/s81_head/ot_s81hd_elem_cv_bb.v'
+   native='rtl/dsrom_sys/s81_head/ot_s81hd_elem_cv_bb_native.v'
+   model='rtl/dsrom_sys/s81_head/ot_s81hd_elem_cv_native.sv'
+   (r/native).write_text((r/legacy).read_text());(r/model).write_text('module ot_s81hd_elemA_cv(input ft_mstrap_i); endmodule')
+   f=r/'physical.f';f.write_text(f.read_text().replace(legacy,native))
+   wrapper=r/'gen/ot_s81hd_tile_p.sv';wrapper.write_text(wrapper.read_text().replace('ot_s81hd_tile #','ot_s81hd_tile_native #'))
+   p=r/'plan.json';plan=json.loads(p.read_text());t=plan['partition_types']['hd_tile']
+   t.update(contents=[{'module':'ot_s81hd_tile_native'}],simulation_substitutions={native:model},infra_ports=[{'name':str(i)} for i in range(40)])
+   p.write_text(json.dumps(plan));res=prepare(r,p,f,r/'native')
+   self.assertEqual(res['replacements'][native],model)
+   self.assertEqual(res['tile_content'],'ot_s81hd_tile_native');self.assertEqual(res['infra_ports_per_tile'],40)
+   self.assertIn('ot_s81hd_tile_native #(.INSTANCE(INSTANCE), .CV(1)',(r/'native/ot_s81hd_tile_p.sv').read_text())
+   del t['simulation_substitutions'];p.write_text(json.dumps(plan))
+   with self.assertRaisesRegex(ValueError,'explicit functional substitution'):prepare(r,p,f,r/'mut_missing_native_model')
  def test_missing_tile_mutant_is_rejected(self):
   with tempfile.TemporaryDirectory() as d:
    r=Path(d);self.setup_tree(r);p=r/'gen/s81_head_top.sv';p.write_text(p.read_text().replace('tile1','lost_tile'))
