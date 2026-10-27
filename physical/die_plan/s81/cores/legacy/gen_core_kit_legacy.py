@@ -410,7 +410,7 @@ def lef_dirs(path):
     return d
 
 
-def lef_pin_rects(path):
+def lef_pin_rects(path, geometry=False):
     """largest non-M1 rect per pin (the S81-P9-HC rule the plan pin files were extracted with): name -> (layer, w, h)"""
     out, cur, layer = {}, None, None
     for ln in Path(path).read_text().splitlines():
@@ -422,10 +422,32 @@ def lef_pin_rects(path):
         elif cur and t[:1] == ["RECT"] and layer and layer != "M1":
             x0, y0, x1, y1 = map(float, t[1:5])
             if cur not in out or (x1 - x0) * (y1 - y0) > out[cur][1] * out[cur][2]:
-                out[cur] = (layer, round(x1 - x0, 4), round(y1 - y0, 4))
+                out[cur] = (layer, round(x1 - x0, 4), round(y1 - y0, 4)) + ((x0, y0, x1, y1) if geometry else ())
         elif t[:1] == ["END"] and cur and t[1:2] == [cur]:
             cur, layer = None, None
     return out
+
+
+def planned_pin_geometry(q, shapes, w, h, modern=True):
+    """Preserve a declared edge rectangle; modern kits never silently move plan pins."""
+    f = face_of(q["x"], q["y"], w, h)
+    pw, ph = RECT[q["layer"]]
+    shape = shapes.get(q["name"])
+    if shape and len(shape) == 7 and shape[0] == q["layer"]:
+        _, sw, sh, x0, y0, x1, y1 = shape
+        centered = abs((x0+x1)/2-q["x"]) < 1e-4 and abs((y0+y1)/2-q["y"]) < 1e-4
+        edge = {"W": abs(x0), "E": abs(w-x1), "S": abs(y0), "N": abs(h-y1)}[f]
+        if centered and edge < 1e-4:
+            pw, ph = sw, sh
+    perp = {"W": ("x", pw/2), "E": ("x", w-pw/2), "S": ("y", ph/2), "N": ("y", h-ph/2)}[f]
+    distance = abs(q[perp[0]]-perp[1])
+    if distance > 1e-3:
+        if modern:
+            raise SystemExit(f"plan pin {q['name']} is {distance:.4f} um off its declared {f} edge rectangle; correct the plan pin contract (no implicit projection)")
+        if distance > 3.0:
+            raise SystemExit(f"pin {q['name']} {distance:.3f} um off its {f} face")
+        q = dict(q, **{perp[0]: round(perp[1], 4)})
+    return q, pw, ph, int(distance > 1e-3)
 
 
 def kit_hash(kd):
@@ -986,7 +1008,7 @@ def main():
     if _pg["verdict"] != "PASS":
         raise SystemExit(pin_gate_refusal(a.module, _pg))
     dirs = lef_dirs(REPO / hc["lef"])
-    shapes = lef_pin_rects(REPO / hc["lef"])
+    shapes = lef_pin_rects(REPO / hc["lef"], geometry=True)
     suffix = a.suffix or rec.get("suffix", "c")
     kd = Path(a.out) / f"{mod}_{suffix}"
     MS.precheck(a.master_slice, a.trial, plan, mod)
@@ -1072,17 +1094,8 @@ def main():
         L_ = shapes.get(q["name"], (q["layer"],))[0]
         if L_ != q["layer"] and not rec.get("rtl_dirs"):
             raise SystemExit(f"{mod}: pin {q['name']} layer {q['layer']} != plan LEF {L_}")
-        pw, ph_ = RECT[q["layer"]]
-        # legacy abstracts carry a pin-access extension PORT beside the edge rect; the plan pin file took the largest
-        # rect's centre (up to ~2.4 um inside the face).  Keep the along-face coordinate (the track) exactly and put the
-        # pin on the face it belongs to.
-        q = dict(q)
-        perp = {"W": ("x", pw / 2), "E": ("x", w - pw / 2), "S": ("y", ph_ / 2), "N": ("y", h - ph_ / 2)}[f]
-        if abs(q[perp[0]] - perp[1]) > 1e-3:
-            if abs(q[perp[0]] - perp[1]) > 3.0:
-                raise SystemExit(f"{mod}: pin {q['name']} {abs(q[perp[0]] - perp[1]):.3f} um off its {f} face")
-            q[perp[0]] = round(perp[1], 4)
-            snapped += 1
+        q, pw, ph_, projected = planned_pin_geometry(dict(q), shapes, w, h, modern=modern)
+        snapped += projected
         io.append(f"place_pin -pin_name {{{q['name']}}} -layer {q['layer']} -location {{{q['x']:.4f} {q['y']:.4f}}} "
                   f"-pin_size {{{pw:.4f} {ph_:.4f}}}")
         mt = re.match(r"^(.*)\[(\d+)\]$", q["name"])
