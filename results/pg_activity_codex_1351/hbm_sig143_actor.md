@@ -1,0 +1,9 @@
+# HBM measured trace SIG143 actor diagnosis
+
+The actual simulator PID1492262 in scopeoth-ubuntu-1788511-1793125212 was manually sent SIGTERM by Claude lanePG-ACTIVITY-2, agent aefb3ba6817f5e4c8, at2026-10-27 12:59:03.891PDT. The exact recorded tool command was `ssh -o ControlPath=none intel2 'kill 1492262; sleep3; ...'` (sleep whitespace abbreviated here). This was a direct simulator kill rather than an ot-run client cancellation, explaining why ~/.local/state/ot-run/signals.log has no1788511 entry.
+
+Evidence source: /home/ubuntu/.claude/projects/-home-ubuntu-OpenTallas/b7f906df-7fae-44f7-85c4-22c768baf49f/subagents/agent-aefb3ba6817f5e4c8.jsonl, tool timestamp19:59:03.891Z. Its12:58:55 status query identifies PID1492262 as Vtb_hgi_sm_e2e inside the scope. The preceding status shows78.1GB in a120GB cap,41.8GB available, and VCD73,912,840,251bytes with scratch87%/460GBfree. Afterkill VCD75,636,032,294bytes. There is no explicit prose reason for the stop; immediately afterwards the lane implemented a windowed reader. Resource observations preceded the discretionary stop, but no automatic resource guard is shown.
+
+Exact scope journal (journalctl --user -u ...scope) records start11:20:12, completion12:59:08, peak78.5GB; ot-run client log records simulatorTerminated andexit143. It was NOT an OOM, timeout, or enforced resource limit. The original simulation script contains no wall-time wrapper; timeout commands in this lane were monitoring/generation commands, not the kill mechanism.
+
+The assigned task required HGI_SM_E2E PASS before qualifying the map; that marker never occurred. Keep the71GiB partialVCD and actual bounded INT8 window reports as diagnostic estimates only. No DS-case measured power qualification or replacement full-chip claim. No new whole-DS simulation was launched for this diagnosis.
