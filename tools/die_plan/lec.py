@@ -199,6 +199,36 @@ def rtl_standard_libs(env, kit):
     return [f"{NLDM}/{l}" for l in STD_LIBS if needed and needed.intersection(lib_cells(f"{NLDM}/{l}"))]
 
 
+def blackbox_local_constant_cleanup(env, kit):
+    """Slang exports module-scope genvars and localparams as parameters even on blackboxed hard macros.
+
+    Genvars and localparams cannot be overridden as module parameters. Remove only names
+    literally declared as a genvar or localparam in that exact hard macro's source before replacing it by a pin-only stub.
+    Formal parameters and unknown names remain untouched, so bad overrides still fail hierarchy checks.
+    """
+    commands = []
+    files = [Path(kpath(kit, f)) for f in env["VERILOG_FILES"].split()]
+    for master in env.get("SYNTH_BLACKBOXES", "").split():
+        declarations = []
+        for path in files:
+            text = re.sub(r'"(?:\\.|[^"\\])*"|/\*.*?\*/|//[^\n]*', " ", path.read_text(), flags=re.S)
+            match = re.search(r"\bmodule\s+" + re.escape(master) + r"\b(.*?)\bendmodule\b", text, re.S)
+            if match:
+                names = set()
+                for declaration in re.findall(r"\bgenvar\s+([^;]+);", match.group(1)):
+                    for name in declaration.split(","):
+                        name = name.strip()
+                        if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_$]*", name):
+                            names.add(name)
+                for declaration in re.findall(r"\blocalparam\s+([^;]+);", match.group(1)):
+                    names.update(re.findall(r"([A-Za-z_][A-Za-z0-9_$]*)\s*=", declaration))
+                declarations.append(names)
+        if declarations and all(names == declarations[0] for names in declarations):
+            for name in sorted(declarations[0]):
+                commands.append(f"setparam -unset {name} t:{master}")
+    return commands
+
+
 def read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=True, slang_extra=()):
     """yosys commands reading the kit RTL with `frontend` ('verilog' | 'slang'); lib_bbs: macro liberty files whose
     cells have no Verilog body in the sources (read as blackbox cells); slang_extra: extra read_slang options."""
@@ -223,6 +253,7 @@ def read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=True, slang_extra=()):
             for c in lib_cells(l):
                 a += ["--blackboxed-module", c]
         cmds += ["read_slang " + " ".join(shlex.quote(x) for x in a), "setattr -unset init"]
+        cmds += blackbox_local_constant_cleanup(env, kit)
     else:
         cmds += ["verilog_defaults -push", "verilog_defaults -add " + " ".join(defs)]
         cmds += ["read_verilog -defer -sv " + " ".join(f"-I{i}" for i in incs) + " " + f for f in files]
@@ -944,8 +975,20 @@ class Lec:
                 if k.startswith("ff:") and m:
                     d.setdefault(m.group(1), set()).add(m.group(2))
         self.relaid = sorted(b for b in tidx if b in gidx and not tidx[b] <= gidx[b])
+        # OT_LEC_SUPERSET_VEC=1 (opt-in, default off): a 1-D vector whose gate bits are a strict superset of the gold
+        # bits (the gold frontend dropped dead bits the gate kept, e.g. inside a keep_hierarchy cell) is laid out
+        # identically on both sides; keep the common bit names and re-key only the gate-only extra bits.  Every
+        # name match is still a correspondence obligation, so a wrong pairing can only fail, never hide a difference.
+        superset_vec = os.environ.get("OT_LEC_SUPERSET_VEC") == "1"
+        one_dim = lambda s: all(ix.count("[") == 1 for ix in s)
+        self.superset_extra = []                  # [(gate bit, re-keyed gate key)]: the per-run list (lec.json)
         for b in self.relaid:
+            sub = superset_vec and gidx[b] < tidx[b] and one_dim(tidx[b])
             for ix in tidx[b]:
+                if sub and ix in gidx[b]:
+                    continue
+                if sub:
+                    self.superset_extra.append((b + ix, f"{b}#t{ix}"))
                 self.tp[f"{b}#t{ix}"] = self.tp.pop(b + ix)
                 self.tc[f"{b}#t{ix}"] = self.tc.pop(b + ix)
         self.matched = sorted(set(self.gp) & set(self.tp))
@@ -1701,6 +1744,10 @@ def fsm_proposals(L, log, words=2, max_bits=4):
         for c, j in sorted(pi.items()):
             L.hyp[("gate", tk[j])] = ("cube", "gold", list(gk), [(c >> b) & 1 for b in range(n)])
             n_new += 1
+        # a later round can re-propose the same state vector (its cube hypotheses were dropped and its gate bits are
+        # unbound again): the new encoding replaces the earlier constraint over the same gold bits instead of adding
+        # a second one with the same proof-output name (cons:gold:<first key>, rejected by build() as a duplicate)
+        L.cons = [c for c in L.cons if not (c[0] == "gold" and list(c[1]) == list(gk))]
         L.cons.append(("gold", list(gk), [[(c >> b) & 1 for b in range(n)] for c in sorted(pi)]))
         log.append(f"fsm: {base} recoded one-hot: " + ", ".join(f"{c}->{tk[j]}" for c, j in sorted(pi.items())))
     return n_new
@@ -3262,6 +3309,57 @@ def run_yosys(script, path, log):
     return r
 
 
+def superset_report(L, m, kind, verdict):
+    """COORD RULING HBM-CORE-LAT-R4 (3) / R5 collar: the per-run list of the gate-only extra bits that
+    OT_LEC_SUPERSET_VEC=1 re-keyed, each with the reason it cannot change a compare point.
+
+    binding  free   the bit is a free input of the miter (no hypothesis): an EQUIVALENT miter proves no compare
+                    point (outputs, matched next states, black-box pins) depends on it, i.e. it is unobservable;
+             const / eq / cube   the bit is bound by a register-correspondence hypothesis that the same induction
+                    proved (the bit equals a constant / a matched register): it carries no independent value;
+             rekeyed / not built   a later pass renamed the key or no miter exists: NOT shown (fail closed).
+    observers  compare / hypothesis outputs whose AIG cone structurally contains the free bit (0 = no fan-out to
+               any compare point at all; > 0 = fan-out that the proof showed is functionally masked).
+    -> dict(enabled, n_extra, all_shown, extra_bits=[...], basis)"""
+    ex = list(getattr(L, "superset_extra", []) or [])
+    free = {k: v for v, (kd, k) in kind.items() if kd == "gate_only"}
+    bit_of = {}
+    for i, (b, k) in enumerate(ex):
+        if k in free:
+            bit_of[free[k]] = i
+    # one forward pass: bitmask of the free extra bits each AIG node depends on (only nodes that depend on one)
+    dep = {v: 1 << i for v, i in bit_of.items()}
+    if dep:
+        ands, base = m.ands, m.ni + 1
+        for k in range(len(ands) // 2):
+            a, b = dep.get(ands[2 * k] >> 1, 0), dep.get(ands[2 * k + 1] >> 1, 0)
+            if a or b:
+                dep[base + k] = a | b
+    obs = collections.defaultdict(list)
+    for o, n in zip(m.outs, m.onames):
+        d = dep.get(o >> 1, 0)
+        while d:
+            low = d & -d
+            obs[low.bit_length() - 1].append(n)
+            d ^= low
+    rows, eq = [], verdict == "EQUIVALENT"
+    for i, (b, k) in enumerate(ex):
+        if k in free:
+            binding = "free"
+        elif k in L.tp and ("gate", k) in L.hyp:
+            binding = L.hyp[("gate", k)][0]
+        elif k in L.tp:
+            binding = "bound"
+        else:
+            binding = "rekeyed"
+        ok = eq and binding in ("free", "const", "eq", "cube")
+        rows.append(dict(bit=b, key=k, binding=binding, observers=len(obs.get(i, ())),
+                         first_observers=obs.get(i, [])[:4], shown=ok))
+    return dict(enabled=True, n_extra=len(rows), all_shown=all(r["shown"] for r in rows), extra_bits=rows,
+                basis=("free bits: free inputs of the proved miter (unobservable); const/eq/cube bits: bound by "
+                       "inductively proved correspondence hypotheses; shown only when the verdict is EQUIVALENT"))
+
+
 def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_map=None, reuse=False, hints=None):
     kit = str(Path(kit).resolve())
     out = Path(out or Path(kit) / "lec")
@@ -3436,6 +3534,13 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
             if rec["x_dont_care_points"]["n"]:
                 rec["note"] += (f"; {rec['x_dont_care_points']['n']} of them reach an RTL X (don't care: equal "
                                 f"wherever the RTL is not X)")
+        if os.environ.get("OT_LEC_SUPERSET_VEC") == "1":
+            rec["superset_vec"] = superset_report(L, m, kind, rec["verdict"])
+            if rec["verdict"] == "EQUIVALENT" and not rec["superset_vec"]["all_shown"]:
+                bad = [e["bit"] for e in rec["superset_vec"]["extra_bits"] if not e["shown"]]
+                rec["verdict"] = "UNPROVEN"
+                rec["reason"] = (f"OT_LEC_SUPERSET_VEC: {len(bad)} extra gate bit(s) not shown unobservable "
+                                 f"(first: " + ", ".join(bad[:6]) + ")")
     except LintFail:
         pass
     except Unproven as e:
@@ -3448,6 +3553,12 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
     if lc is not None and getattr(lc, "cycle_dropped", None):   # hypotheses dropped to break binding cycles
         rec["cycle_dropped"] = dict(n=len(lc.cycle_dropped),
                                     first=[f"{sd}:{k} {list(h)}" for (sd, k), h in lc.cycle_dropped[:40]])
+    if os.environ.get("OT_LEC_SUPERSET_VEC") == "1" and "superset_vec" not in rec:   # the check did not finish
+        ex = list(getattr(lc, "superset_extra", []) or []) if lc is not None else []
+        rec["superset_vec"] = dict(enabled=True, n_extra=len(ex), all_shown=False,
+                                   extra_bits=[dict(bit=b, key=k, binding="not built", observers=None, shown=False)
+                                               for b, k in ex],
+                                   basis=f"not shown: verdict {rec.get('verdict')} before the miter was proved")
     rec["t_total_s"] = round(time.time() - t0, 1)
     rec["provenance"] = _provenance(kit)
     (out / "lec.json").write_text(json.dumps(rec, indent=1) + "\n")
@@ -3468,6 +3579,8 @@ def via_docker(args, image, mem):
     cmd = ["docker", "run", "--rm", f"--memory={mem}g", f"--memory-swap={mem}g", "-v", f"{kit}:/work:ro",
            "-v", f"{out}:/lecout", "-v", f"{me}:/lec.py:ro", "-e", f"HUID={os.getuid()}", "-e", f"HGID={os.getgid()}", "-e", f"OT_LEC_REFINE_S={os.environ.get('OT_LEC_REFINE_S', '3600')}"]
     # optional XOR-aware SAT backend: OT_LEC_SOLVER = a host dir holding pycryptosat for the image's python (cp310)
+    if os.environ.get("OT_LEC_SUPERSET_VEC") == "1":
+        cmd += ["-e", "OT_LEC_SUPERSET_VEC=1"]
     sol = os.environ.get("OT_LEC_SOLVER", "")
     if sol and os.path.isdir(sol):
         cmd += ["-v", f"{os.path.abspath(sol)}:/lecsolver:ro", "-e", "LEC_SOLVER_PATH=/lecsolver"]

@@ -31,9 +31,12 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[4]
 CORE_MARGIN_UM = 4.32
 PIN_LEN_UM = 0.192
+INTERIOR_TOL_UM = 0.5   # KV-CORES-R2: plan pin farther than this from every face = interior entry pin (12.8a)
 LAYER_W = dict(M2=0.018, M3=0.018, M4=0.024, M5=0.024, M6=0.032, M7=0.032)
-PITCH = dict(M4=0.048, M5=0.048, M6=0.064, M7=0.064)
-OFFS = dict(M4=0.024, M5=0.024, M6=0.032, M7=0.032)
+# CORES-KITS/KVX 10-26: M3 core pins (vertical, N/S faces) on the M3 track grid of M123_TRACKS (0.009 + k 0.036):
+# the re-used pv_join view keeps 1024 S-face M3 pins (plan v3.9e pv_join_pins.json; r4..r6 closed with them)
+PITCH = dict(M3=0.036, M4=0.048, M5=0.048, M6=0.064, M7=0.064)
+OFFS = dict(M3=0.009, M4=0.024, M5=0.024, M6=0.032, M7=0.032)
 KEEP = 2.16
 IO_BUDGET = 0.2
 UNC_SETUP_PS, UNC_HOLD_PS, UNC_SPLIT, IO_LOAD_FF = 60.0, 25.0, 0.5, 2.0
@@ -145,6 +148,14 @@ def io_tcl(pins, w, h, tid):
         f = face_of(p["x"], p["y"], w, h)
         lw = LAYER_W.get(p["layer"], 0.04)
         x, y = p["x"], p["y"]
+        if min(x, w - x, y, h - y) > INTERIOR_TOL_UM:
+            # KV-CORES-R2 10-27 (METHODOLOGY 12.8a): interior clock/reset entry pin (KV core slice centre entry island,
+            # M5 via stack from M9) -- placed at its exact plan xy, never projected onto a face
+            out.append(f"place_pin -pin_name {{{p['name']}}} -layer {p['layer']} -location {{{x:.4f} {y:.4f}}} "
+                       f"-pin_size {{{lw:.4f} {PIN_LEN_UM:.4f}}}   ;# 12.8a interior entry")
+            b, i = split_name(p["name"])
+            rows.append(dict(bus=b, bit=i, layer=p["layer"], x=round(x, 4), y=round(y, 4), face="interior"))
+            continue
         if f in "EW":
             x = w if f == "E" else 0.0
             size, cx, cy = (PIN_LEN_UM, lw), (x - PIN_LEN_UM / 2 if f == "E" else x + PIN_LEN_UM / 2), y
@@ -679,6 +690,8 @@ def main():
     if a.astk_face_ports and not any(Path(f).name == "qkd_astk_static_leaves.sv" for f in files):
         files.append(str(REPO / "rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv"))
     for f in files:
+        if not Path(f).is_absolute():   # KV-CORES-R2/AHUB 10-27: repo-relative core-json sources (frozen-tree safe)
+            f = str(REPO / f)
         if a.kvspc_core_clock:
             import kvspc_core_clock
             f = str(kvspc_core_clock.source(REPO, f))
@@ -904,8 +917,8 @@ def main():
     for n, c in cj["pin_class"].items():
         names.append(n)
     add = [n for n in names if n not in have]
-    off = [q["name"] for q in pins if abs(((q["x"] if q["layer"] in ("M5", "M7") else q["y"]) - OFFS[q["layer"]]) /
-                                       PITCH[q["layer"]] - round(((q["x"] if q["layer"] in ("M5", "M7") else q["y"])
+    off = [q["name"] for q in pins if abs(((q["x"] if q["layer"] in ("M3", "M5", "M7") else q["y"]) - OFFS[q["layer"]]) /
+                                       PITCH[q["layer"]] - round(((q["x"] if q["layer"] in ("M3", "M5", "M7") else q["y"])
                                                                   - OFFS[q["layer"]]) / PITCH[q["layer"]])) > 0.05]
     if off:
         raise SystemExit(f"{tid}: {len(off)} pins off the die symmetric tracks, e.g. {off[:3]}")
@@ -1107,6 +1120,8 @@ def main():
     # (face_flops.tcl: after io placement, before GPL); refused without a slice once required unless --trial
     ms = MS.kit_apply(kd, hc["module"], [w, h], a.master_slice, plan, a.trial, kind="core",
                       gpl_hook=kd / "face_flops.tcl")
+    # CTS-HOOK-PORT-1: plan-built core tree -> shared PRE/POST_CTS hook (no plan tree: kit unchanged)
+    MS.plan_tree_cts(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     fz = dict(schema="opentallas.kv.core_freeze.v1", type=tid, module=mod, outline_um=[w, h],
               plan_sha256=sha(a.plan), pins_file=hc["pins_file"], pins_sha256=sha(plandir / hc["pins_file"]),

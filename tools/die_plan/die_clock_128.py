@@ -273,7 +273,7 @@ DROP_SPLIT_UM = 0.48   # CLOCK-KV-R13: one shielded clock track pair (4W NDR wir
 
 
 def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None, pin_stack=False, port_on_trunk=False,
-                split_drops=False, ties=None, l_drops=False):
+                split_drops=False, ties=None, l_drops=False, exact_reserve=False):
     """every tree net (root, H-tree legs/nodes/leaves, split tails, stubs) as a fixed comb pre-route: one trunk on the
     net's dominant axis (M8 horizontal / M9 vertical), offset `off` from the driver pin line, plus one perpendicular
     drop per load, offset `off` from the load pin line.  Returns [dict(name, drv, pins, segs, rc_nodes)].
@@ -296,7 +296,8 @@ def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None, pin_
         raise PlanError([dict(kind="empty_tree_net", name=x, detail="tree net without loads") for x in empty])
     if pin_stack:   # CLOCK-128-R7 opt-in: straight pin stacks (the default path below is unchanged)
         return _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=port_on_trunk,
-                                  **(dict(ties=ties, l_drops=l_drops) if ties or l_drops else {}))
+                                  **(dict(ties=ties, l_drops=l_drops) if ties or l_drops else {}),
+                                  **(dict(exact_reserve=True) if exact_reserve else {}))
     out, errs = [], []
 
     def track(layer, ideal, a0, a1, name, what, avoid=()):
@@ -416,6 +417,7 @@ PIN_BAR_X = {f"BUFx{k}_ASAP7_75t_R": {"A": 0.027, "Y": yx}
 STACK_PAD = {"M2": (0.019, 0.009), "M3": (0.009, 0.020), "M4": (0.043, 0.012), "M5": (0.012, 0.043),
              "M6": (0.035, 0.016)}
 SHORT_STACK_PAD = {"M7": (0.016, 0.036), "M8": (0.08, 0.08)}
+CHANNEL_KEEP_UM = 0.864     # R20: channel-cell trunk centre >= one track pair (TREE_OFF_UM) inside the channel edge
 STACK_RISER_MAX_UM = 2.5     # longest M7 riser (TREE_OFF_UM + track move) the island window is sized for
 
 
@@ -434,26 +436,47 @@ def pin_xy(cells, c, pin, row_y, buf="BUFx24_ASAP7_75t_R"):
     return round(v["x"] + bar, 4), round(v["y"] + row_y / 2, 4)
 
 
-def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, ties=None, l_drops=False):
+def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, ties=None, l_drops=False,
+                       exact_reserve=False):
     """ties (INFRA-FIRST-QC-R12): {representative cell: [unit cells, row order]} of stacked parallel-buffer groups; the
     pin stack of such a cell carries a `tie` (M7 strap along the shared bar column through every unit's pin row, the
     straight VIA67..VIA12 stack of each unit hangs off it) and enters at the unit nearest the junction.
     l_drops (R12): a horizontal-trunk cell load farther than STACK_RISER_MAX_UM from the trunk gets an M9 drop on a
-    PG-aware track at its bar column, then an M8 jog at the load row (an L net) instead of a plan error."""
+    PG-aware track at its bar column, then an M8 jog at the load row (an L net) instead of a plan error.
+    exact_reserve (INFRA-FIRST-QC-R14, opt-in): reserve each trunk over the extent it can actually be drawn on instead
+    of the span widened by router.max_move: a horizontal trunk whose loads all land on it (pin stacks / on-trunk
+    ports) is reserved exactly over its pin-bar span; a vertical trunk over its span widened by the riser bound
+    (STACK_RISER_MAX_UM + off: a drop farther than that is a no_pin_stack error anyway).  A drawn trunk that
+    leaves its reservation (an L drop moved past it) is a plan error (reserve_overflow), never silently drawn."""
     txy = {t["port"]: tuple(t["xy"]) for t in M["taps"]}
     root = tuple(M["meta"]["root_um"])
     errs, out, last_ext = [], [], [None]
     port_moves = {}
+    # R20 (opt-in via meta.clock_channel_keep = [[x0, y0, x1, y1], ...]): a horizontal trunk whose driver pin sits in a
+    # clock channel keeps its track inside the channel, CHANNEL_KEEP_UM off each channel edge
+    chans = [tuple(r) for r in (M.get("meta", {}).get("clock_channel_keep") or [])]
+
+    def chan_keep(pxy):
+        for r in chans:
+            if r[0] <= pxy[0] <= r[2] and r[1] <= pxy[1] <= r[3]:
+                return (r[1] + CHANNEL_KEEP_UM, r[3] - CHANNEL_KEEP_UM)
+        return None
     mm = router.max_move if router is not None else 0.0
 
     def port_xy(p):
         return root if p == "port:root" else txy[p[5:]]
 
-    def track(layer, ideal, a0, a1, name, what):
+    def track(layer, ideal, a0, a1, name, what, keep=None):
         if router is None:
             last_ext[0] = None
             return ideal, DRAWN
-        c, mode, e = router.place(layer, ideal, a0, a1, name)
+        if keep:      # R20: constrain only a track that would leave the clock channel (others unchanged)
+            c0 = router.place(layer, ideal, a0, a1, name, dry=True)[0]
+            if c0 is not None and keep[0] - 1e-9 <= c0 <= keep[1] + 1e-9:
+                keep = None
+            else:
+                router.modes[f"{layer}:channel_keep"] += 1
+        c, mode, e = router.place(layer, ideal, a0, a1, name, **(dict(keep=keep) if keep else {}))
         last_ext[0] = e
         if c is None:
             errs.append(dict(kind="no_clock_track", name=name, detail=f"{what} {layer} ideal {ideal:.3f}"))
@@ -500,7 +523,12 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
             exts.append(last_ext[0])
         if horiz:
             xs_all = [D[0]] + [p[0] + (off if ld.startswith("port:") else 0.0) for ld, p in Ls]
-            ty, tm = track("M8", D[1] + off, min(xs_all) - mm, max(xs_all) + mm, nm, "trunk")
+            exact_h = exact_reserve and all((ld.startswith("port:") and port_on_trunk) or
+                                            (not ld.startswith("port:") and abs(p[1] - D[1]) <= STACK_RISER_MAX_UM - off)
+                                            for ld, p in Ls)
+            mh = 0.0 if exact_h else mm
+            rsv = (min(xs_all) - mh, max(xs_all) + mh)
+            ty, tm = track("M8", D[1] + off, rsv[0], rsv[1], nm, "trunk", keep=chan_keep(D) if dcell else None)
             te = last_ext[0]
             xs_ = []
             if dcell:
@@ -541,6 +569,9 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
                 branches.append((ld, p[0], ty))
                 xs_.append(p[0])
             xlo, xhi = min([D[0]] + xs_), max([D[0]] + xs_)
+            if exact_reserve and (xlo < rsv[0] - 1e-6 or xhi > rsv[1] + 1e-6):
+                errs.append(dict(kind="reserve_overflow", name=nm, detail=f"M8 trunk {xlo:.3f}..{xhi:.3f} outside "
+                                 f"reservation {rsv[0]:.3f}..{rsv[1]:.3f}"))
             if xhi > xlo:
                 if router is not None and tm == DRAWN and te is not None:
                     e2 = router.tie_ext("M8", ty, xlo, xhi)
@@ -551,7 +582,9 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
             tap0 = (D[0], ty)
         else:
             ys_all = [D[1]] + [p[1] + off for _, p in Ls]
-            tx, tm = track("M9", D[0] + off, min(ys_all) - mm, max(ys_all) + mm, nm, "trunk")
+            mv = min(mm, STACK_RISER_MAX_UM + off + 2 * row_y) if exact_reserve else mm
+            rsv = (min(ys_all) - mv, max(ys_all) + mv)
+            tx, tm = track("M9", D[0] + off, rsv[0], rsv[1], nm, "trunk")
             te = last_ext[0]
             yd = D[1]
             if dcell:      # driver jog one track pair off the pin row toward the loads, Y bar -> trunk
@@ -573,6 +606,9 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
                 if not port:
                     stacks.append(stack(ld, "A", p, (p[0], by)))
             ylo, yhi = min([yd] + ys_), max([yd] + ys_)
+            if exact_reserve and (ylo < rsv[0] - 1e-6 or yhi > rsv[1] + 1e-6):
+                errs.append(dict(kind="reserve_overflow", name=nm, detail=f"M9 trunk {ylo:.3f}..{yhi:.3f} outside "
+                                 f"reservation {rsv[0]:.3f}..{rsv[1]:.3f}"))
             if yhi > ylo:
                 if router is not None and tm == DRAWN and te is not None:
                     e2 = router.tie_ext("M9", tx, ylo, yhi)
@@ -740,9 +776,11 @@ class TrackRouter:
             return None
         return round(max(e0, best), 4)
 
-    def place(self, layer, ideal, a0, a1, net, avoid=()):
+    def place(self, layer, ideal, a0, a1, net, avoid=(), keep=None, dry=False):
         """(centre, mode) of the nearest legal track, or (None, None).  avoid: track centres this segment must not
-        take (CLOCK-KV-R13 split_drops: the opposite drop of the same junction, within DROP_SPLIT_UM)"""
+        take (CLOCK-KV-R13 split_drops: the opposite drop of the same junction, within DROP_SPLIT_UM).  keep (R20,
+        optional): (lo, hi) band the track centre must lie in (a clock-channel keep-in: the riser of a host-less
+        channel cell never leaves the channel)."""
         tr = self.tracks[layer]
         pitch, offs = tr["pitch_um"], tr["offset_um"]
         k0 = round((ideal - offs) / pitch)
@@ -754,6 +792,8 @@ class TrackRouter:
                 if abs(c - ideal) > self.max_move + 1e-9:
                     continue
                 if any(abs(c - v) < DROP_SPLIT_UM - 1e-6 for v in avoid):
+                    continue
+                if keep is not None and not (keep[0] - 1e-9 <= c <= keep[1] + 1e-9):
                     continue
                 e = self.tie_ext(layer, c, a0, a1)
                 sh = seg_shapes(layer, c, a0, a1, net, self.nd, self.shield, ext=e)
@@ -772,7 +812,11 @@ class TrackRouter:
                     mode, sh, e = FLANK, sh[:1], None
                 else:
                     continue
+                if dry:
+                    return c, mode, e
                 return self._take(layer, ideal, c, mode, e, sh)
+        if untied is not None and dry:
+            return untied[0], DRAWN, None
         if untied is not None:
             self.modes[f"{layer}:untied"] += 1
             return self._take(layer, ideal, untied[0], DRAWN, None, untied[1])
@@ -1400,11 +1444,39 @@ def stage_depths(nets):
     return out, by_load
 
 
-def aocv_fold_fields(M, nets, place, nodes_arr):
+def mesh_walk_nets(nets, place, drv_kinds=("drv",), load_kinds=("stub", "broot")):
+    """CLK-AOCV opt-in (CLOCK-KV-R15, shared by every die_clock_mesh / die_clock_128 die): the multi-driver mesh is not
+    a nets.json net (mesh drivers drive the special ck_mesh[_r<k>] net), so stage_depths cannot walk from a mesh-fed
+    stub back to the root.  Return one synthetic multi-driver net per mesh region: drv = every mesh driver cell of
+    that region (place kind in drv_kinds), loads = every cell of a load kind that no nets.json net drives (its input
+    is on the mesh).  The mesh itself is wire: a mesh-fed cell's depth = 1 + the deepest driver's depth (the
+    stage_depths multi-driver rule).  Raises when mesh loads exist but no driver does."""
+    driven = {ld for n in nets for ld in n["loads"]}
+    drv, lds = defaultdict(list), defaultdict(list)
+    for c, v in sorted(place.items()):
+        k = v.get("kind")
+        if k in drv_kinds:
+            drv[v.get("region")].append(c)
+        elif k in load_kinds and c not in driven:
+            lds[v.get("region")].append(c)
+    out = []
+    for r in sorted(set(drv) | set(lds), key=lambda z: (z is None, z)):
+        if not lds.get(r):
+            continue
+        if not drv.get(r):
+            raise ValueError(f"mesh_walk_nets: region {r} has {len(lds[r])} mesh loads but no mesh driver")
+        out.append(dict(name="ck_mesh" if r is None else f"ck_mesh_r{r}", drv=drv[r], loads=lds[r], level=50,
+                        synthetic="mesh_walk"))
+    return out
+
+
+def aocv_fold_fields(M, nets, place, nodes_arr, mesh_walk=False):
     """CLK-AOCV table-mode inputs (opt-in, die_clock_mesh report --aocv-fold): per tap 'stages_from_root' (buffers
     from the die root up to the cell driving the tap) + 'xy_um'; per CPPR node ('h' = die root node ckm_n0, else the
     region root ckm_n<l>_<tag>) 'node_stages', 'node_xy_um' and the node cell's output arrival 'node_late_ps' /
     'node_early_ps' (tree STA at this corner)."""
+    if mesh_walk:
+        nets = list(nets) + mesh_walk_nets(nets, place)
     dep, by_load = stage_depths(nets)
     taps = {}
     for t in M["taps"]:

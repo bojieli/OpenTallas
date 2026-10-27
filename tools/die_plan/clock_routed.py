@@ -111,7 +111,7 @@ LAYER_ORDER = ("M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9")
 _JD = [0]
 
 
-def _emit_steps(L, pts, final_junction=False, split_down=False):
+def _emit_steps(L, pts, final_junction=False, split_down=False, m8_end_ext=None):
     """encoder calls for a vertex list (as from stair): via on a layer change, a point on a move.
     The clock NDR (0.16 um) applies on M8/M9 only: an encoder path keeps the rule it was opened with, so the path is
     split at every VIA78 -- above it a path under the NDR layer rule, below it a default-width path (a lower-layer
@@ -140,7 +140,14 @@ def _emit_steps(L, pts, final_junction=False, split_down=False):
             L.append(op)
         elif (x0, y0) != (x1, y1):
             assert x0 == x1 or y0 == y1, ("non-Manhattan step", pts)
-            L.append(f"$e addPoint {q(x1)} {q(y1)}")
+            nxt = steps[k + 1] if k + 1 < len(steps) else None
+            if m8_end_ext and l0 == "M8" and nxt and nxt[1][0] == "M7":
+                # R19 DRC: the wide M8 drop ends ON the VIA78 (stair riser); its default end extension left the
+                # VIA78 M8 enclosure (+-0.027) 5 nm outside the wire end -> Min Step @ M8.  Extend the wire end to
+                # m8_end_ext (flush with the 0.16 um junction pad), plan geometry unchanged otherwise.
+                L.append(f"$e addPoint {q(x1)} {q(y1)} {q(m8_end_ext)}")
+            else:
+                L.append(f"$e addPoint {q(x1)} {q(y1)}")
     if final_junction:
         L[-1] = f"set jt [{L[-1]}]"
 
@@ -267,12 +274,12 @@ def _tie_units(L, s, pads, split_down):
             prev = "$" + v
 
 
-def _emit_stack(L, pts, pads, final_junction=False, split_down=False):
+def _emit_stack(L, pts, pads, final_junction=False, split_down=False, m8_end_ext=None):
     """_emit_steps + one centred min-area pad (dbWireEncoder addRect) after every via that lands on a pad layer at a
     stack point.  pads: {(x, y): set(layers)}."""
     P = _stack_pad()
     tmp = []
-    _emit_steps(tmp, pts, final_junction=final_junction, split_down=split_down)
+    _emit_steps(tmp, pts, final_junction=final_junction, split_down=split_down, m8_end_ext=m8_end_ext)
     # re-walk the vertices to know where each via op lands
     vs = [(l_, round(a, 4), round(b, 4)) for l_, a, b in pts]
     lands = [(l0, l1, (x1, y1)) for (l0, x0, y0), (l1, x1, y1) in zip(vs, vs[1:]) if l0 != l1]
@@ -383,6 +390,7 @@ def _stack_net_tcl(L, w, ports, rec):
             jline[v] = len(L) - 1
     # 3. loads
     anchors = []
+    ext8 = None if horiz else _stack_pad()["M8"][0]      # R19: vertical nets, M8 drop end flush with the junction pad
     for ld, bx, by in w["branches"]:
         v = round(bx if horiz else by, 4)
         root = tp(v)
@@ -422,7 +430,7 @@ def _stack_net_tcl(L, w, ports, rec):
         if s.get("tie"):       # R12: A tie -- down to the entry unit's M7 pin row, junction, its stack, strap to units
             i = max(k for k, p_ in enumerate(pts) if p_[0] == "M7")
             n0 = len(L)
-            _emit_stack(L, pts[:i + 1], pads, final_junction=True, split_down=r8)
+            _emit_stack(L, pts[:i + 1], pads, final_junction=True, split_down=r8, m8_end_ext=ext8)
             _TJ[0] += 1
             s["_jtie"] = f"jtie{_TJ[0]}"
             _rename_last_jt(L, n0, s["_jtie"])
@@ -432,7 +440,7 @@ def _stack_net_tcl(L, w, ports, rec):
             _tie_units(L, s, pads, r8)
             rec["ties"] = rec.get("ties", 0) + 1
         else:
-            _emit_stack(L, pts, pads, split_down=r8)
+            _emit_stack(L, pts, pads, split_down=r8, m8_end_ext=ext8)
             L.append(f"$e addITerm [IT {ld} A]")
         rec["pin_stairs"] += 1
     for i, pn in sorted(anchors, reverse=True):    # R8 ports on trunk points: BTerm right after that point
@@ -877,11 +885,22 @@ create_clock -name vclk -period 833.000
 set_driving_cell -lib_cell BUFx24_ASAP7_75t_R -pin Y [get_ports root]
 set_input_delay 0 -clock vclk [get_ports root]
 set_load 3.0 [get_ports t_*]
+# INFRA-FIRST-QC-R18: optional per-tap real downstream load (column-tree first net C + pin caps), overrides the 3 fF
+if {[file exists /out/tap_loads.tcl]} { source /out/tap_loads.tcl; puts "OT_TAP_LOADS /out/tap_loads.tcl" }
+set_output_delay 0 -clock vclk [get_ports -quiet t_*]
 # build the timing graph before get_property (a bare read_db + get_property arrival segfaults in Graph::pinVertices)
 report_checks -path_delay min_max -format end
 set fh [open /out/tree_$::env(CORNER)_$::env(BASIS).txt w]
 foreach c [get_cells -quiet ckm_d_*] { set p [get_pins [get_full_name $c]/A]; puts $fh "D [get_full_name $c] [get_property $p arrival_max_rise] [get_property $p arrival_min_rise] [get_property $p slew_max_rise]" }
-foreach c [get_cells {ckm_n* ckm_r* ckm_t*}] { set p [get_pins [get_full_name $c]/Y]; puts $fh "N [get_full_name $c] [get_property $p arrival_max_rise] [get_property $p arrival_min_rise] [get_property $p slew_max_rise]" }
+foreach c [get_cells -quiet {ckm_n* ckm_r* ckm_t*}] { set p [get_pins [get_full_name $c]/Y]; puts $fh "N [get_full_name $c] [get_property $p arrival_max_rise] [get_property $p arrival_min_rise] [get_property $p slew_max_rise]" }
+# INFRA-FIRST-QC-R12+ explicit-cell builds name every tree buffer ckt_<group>_<unit> (R17: the ckm_* match above saw
+# none of them): Y as N lines, the A pin as A lines (A:<cell>); the leaves = the col_tap cells (place.json plan_kind;
+# OpenSTA get_property gives no arrival on a top output port)
+foreach c [get_cells -quiet ckt_*] {
+  set n [get_full_name $c]; set y [get_pins $n/Y]; set a [get_pins $n/A]
+  puts $fh "N $n [get_property $y arrival_max_rise] [get_property $y arrival_min_rise] [get_property $y slew_max_rise]"
+  puts $fh "A A:$n [get_property $a arrival_max_rise] [get_property $a arrival_min_rise] [get_property $a slew_max_rise]"
+}
 close $fh
 report_check_types -max_slew -max_capacitance -violators
 puts OT_DONE
@@ -927,7 +946,25 @@ def rcx_tcl(rules="stock", rules_text=None):
     return "\n".join(L)
 
 
-def write_route(d, kit, image="openroad/orfs:latest", mem=64, rcx_rules="stock"):
+NDR_WIDTH_UM = {"4w": 0.16, "8w": 0.32, "16w": 0.64, "2x16w": 1.28}
+
+
+def rules_width_check(rules_text, ndr):
+    """INFRA-FIRST-QC-R18 root cause of the R17 model-vs-RCX 2x latency gap: the 16w (0.64 um) clock NDR was extracted
+    with the CLOCK-128-R6 0.16-um rules, and OpenRCX uses the SECOND M8/M9 width entry for every wider wire, so a 0.64-um
+    wire got the 0.16-um C (R is width-scaled by -lef_res, C is not): RCX 0.087 vs model 0.50 fF/um.  The second width
+    entry of Metal 8 and 9 must equal the NDR width (an entry below it under-extracts C, one above is never selected)."""
+    import re
+    w = NDR_WIDTH_UM.get(ndr) if ndr else None
+    tab = {}
+    for m in re.finditer(r"Metal (\d+) RESOVER\s*\nWIDTH Table (\d+) entries:\s*([0-9. ]+)", rules_text):
+        tab[int(m.group(1))] = [float(v) for v in m.group(3).split()]
+    sel = {k: (v[1] if len(v) > 1 else v[0]) for k, v in tab.items() if k in (8, 9)}
+    ok = w is None or (len(sel) == 2 and all(abs(v - w) < 1e-6 for v in sel.values()))
+    return dict(ndr=ndr, ndr_width_um=w, selected_width_um=sel, ok=ok)
+
+
+def write_route(d, kit, image="openroad/orfs:latest", mem=64, rcx_rules="stock", width_mismatch_ok=False):
     import json
     from pathlib import Path
     d, kit = Path(d), Path(kit)
@@ -936,8 +973,12 @@ def write_route(d, kit, image="openroad/orfs:latest", mem=64, rcx_rules="stock")
     ports = {t["port"]: dict(layer=t.get("layer", M["meta"].get("tap_layer", "M7")), xy=t["xy"]) for t in M["taps"]}
     ports["root"] = dict(layer="M9", xy=list(M["meta"]["root_um"]))
     rules_text = None
+    width_check = None
     if rcx_rules != "stock":
         rules_text = Path(rcx_rules).read_text()
+        width_check = rules_width_check(rules_text, M["meta"].get("ndr"))
+        if not width_check["ok"] and not width_mismatch_ok:
+            raise ValueError(f"RCX rules width table does not cover the clock NDR: {width_check}")
         (d / "rcx_ndr.rules").write_text(rules_text)
     rt = ROUTE_TCL
     if any(w.get("enc") == "r8" for w in M["fixed_wires"]):
@@ -950,7 +991,8 @@ def write_route(d, kit, image="openroad/orfs:latest", mem=64, rcx_rules="stock")
         assert rt.count("write_db /out/routed.odb") == 1 and "routed_rcx.odb" in rt
     (d / "route.tcl").write_text(rt.replace("@RCX@", rcx_tcl("stock" if rcx_rules == "stock" else "ndr",
                                                              rules_text)))
-    (d / "rcx_basis.json").write_text(json.dumps(dict(rules="stock" if rcx_rules == "stock" else str(rcx_rules))))
+    (d / "rcx_basis.json").write_text(json.dumps(dict(rules="stock" if rcx_rules == "stock" else str(rcx_rules),
+                                                      width_check=width_check)))
     (d / "sta.tcl").write_text(STA_TCL)
     (d / "drc.tcl").write_text(DRC_TCL)
     (d / "drc_boxes.txt").write_text(drc_boxes(M["fixed_wires"], cells, ports, BUF_DEFAULT))
@@ -1072,6 +1114,10 @@ def report(d):
                 continue
             T = read_tree(f)
             lv = {k: v for k, v in T.items() if k.startswith("ckm_n4_")}
+            if not lv:      # R18: explicit-cell build (ckt_* cells): the leaves are the col_tap cells (Y pin)
+                lv = {k: v for k, v in T.items() if cells.get(k, {}).get("plan_kind") == "col_tap"}
+            if not lv:
+                continue
             late = [v[0] for v in lv.values()]
             early = [v[1] for v in lv.values()]
             tab[f"{c}_{b}"] = dict(leaves=len(lv), late_min=round(min(late), 2), late_max=round(max(late), 2),
@@ -1123,6 +1169,8 @@ def main(argv=None):
     r.add_argument("dir")
     r.add_argument("--kit", required=True)
     r.add_argument("--mem", type=int, default=64)
+    r.add_argument("--rcx-width-mismatch-ok", action="store_true",
+                   help="R18: allow rules whose selected M8/M9 width differs from the clock NDR width (C under/over)")
     r.add_argument("--rcx-rules", default="stock",
                    help="stock (default) or a width-characterised rules file (rcx_width_rules.py write), extracted "
                         "with -lef_res and per-layer RPERSQ from the same rules (CLOCK-128-R6)")
@@ -1130,7 +1178,7 @@ def main(argv=None):
     p.add_argument("dir")
     a = ap.parse_args(argv)
     if a.cmd == "route":
-        write_route(a.dir, a.kit, mem=a.mem, rcx_rules=a.rcx_rules)
+        write_route(a.dir, a.kit, mem=a.mem, rcx_rules=a.rcx_rules, width_mismatch_ok=a.rcx_width_mismatch_ok)
         print("route written", a.dir)
     else:
         o = report(a.dir)

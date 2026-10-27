@@ -3,7 +3,7 @@
 claude/core-hbm-1023 physical/die_plan/hbm/cores/harden/gen_core_kit.py).
 
     python3 gen_core_kit_s81.py --cores cores_svc.json --plan ../../die_plan.json --recipes recipes.json --out KITROOT
-                                [--tool TOOLDIR] [--util 0.5]
+                                [--tool TOOLDIR (default REPO/tools/die_plan)] [--util 0.5]
 
 S81 differences from the HBM generator: the core is read from cores_svc.json (not yet in the plan's hard_cores);
 pins sit on the core-frame tracks 0.012 + k*0.048 (M4/M5) so that, at an 8.64-lattice origin plus the S81
@@ -149,15 +149,15 @@ def main():
     ap.add_argument("--recipes", required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--repo", default=str(Path(__file__).resolve().parents[5]))
-    ap.add_argument("--tool", default="/home/ubuntu/scratch/core-s81-1023/pt4/tools/die_plan")
+    ap.add_argument("--tool", default=None, help="plan tool dir (default: REPO/tools/die_plan, this checkout)")
     ap.add_argument("--plan-commit", default="2a90fc8c")
     ap.add_argument("--util", type=float, default=0.5)
     ap.add_argument("--sigmax", default="M5")
     MS = _ms()
     MS.add_args(ap)   # 12.7c: --master-slice DIR (opt-in), --trial
     a = ap.parse_args()
-    TOOL = Path(a.tool)
     repo = Path(a.repo)
+    TOOL = Path(a.tool) if a.tool else repo / "tools/die_plan"
     plan = json.load(open(a.plan))
     cs = json.load(open(a.cores))
     c = dict(cs["core"])
@@ -219,8 +219,11 @@ def main():
     (kd / "make_tracks.tcl").write_text(make_tracks(plan))
     skip = "^(" + "|".join(re.escape(n) for n in clks + rsts) + ")$"
     ff = (TOOL / "face_flops.tcl").read_text()
-    ff = ff.replace("set ff_skip_re {^(clk(_t[0-9]+)?|arst_n)$}", "set ff_skip_re {" + skip + "}")
-    assert ("set ff_skip_re {" + skip + "}") in ff, "face_flops.tcl skip regex anchor changed"
+    # the skip line = exactly one "set ff_skip_re {...}" line, replaced whole (main 6c39897574 10-24 widened it with
+    # rst_o_<k>/start_* + a trailing comment; same anchor as s81/cores/legacy/gen_core_kit_legacy.py)
+    anchor = re.findall(r"^set ff_skip_re \{.*$", ff, re.M)
+    assert len(anchor) == 1, "face_flops.tcl skip regex anchor changed"
+    ff = ff.replace(anchor[0], "set ff_skip_re {" + skip + "}")
     # register-on-every-pin audit: list each signal port without a flop within 2 buffers
     ff = ff.replace("set ff_out [open $::env(RESULTS_DIR)/ot_face_flops.txt w]",
                     "set ff_out [open $::env(RESULTS_DIR)/ot_face_flops.txt w]\n"
@@ -296,6 +299,8 @@ def main():
     # (face_flops.tcl: after io placement, before GPL); refused without a slice once required unless --trial
     ms = MS.kit_apply(kd, c["module"], [w, h], a.master_slice, plan, a.trial, kind="core",
                       gpl_hook=kd / "face_flops.tcl")
+    # CTS-HOOK-PORT-1: plan-built core tree -> shared PRE/POST_CTS hook (no plan tree: kit unchanged)
+    MS.plan_tree_cts(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     rec_sha = hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest()
     try:

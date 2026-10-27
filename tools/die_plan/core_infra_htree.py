@@ -55,12 +55,21 @@ def interp(tab, s, C):
 
 
 # ---------------------------------------------------------------- geometry
+MACRO_VPASS = False
+
+
 class Maze:
     def __init__(self, core, macros, G=0.54, halo=2.2, keepout=()):
         self.core, self.G = core, G
         self.NX = int((core[2] - core[0]) / G); self.NY = int((core[3] - core[1]) / G)
-        self.B = [[any(r[0] - halo < core[0] + i * G < r[2] + halo and r[1] - halo < core[1] + j * G < r[3] + halo for _, r, _ in macros)
-                   for j in range(self.NY + 1)] for i in range(self.NX + 1)]
+        M = [[any(r[0] - halo < core[0] + i * G < r[2] + halo and r[1] - halo < core[1] + j * G < r[3] + halo for _, r, _ in macros)
+              for j in range(self.NY + 1)] for i in range(self.NX + 1)]
+        # MACRO_VPASS (HBM-CORE-LAT-R3, --macro-vertical-pass): a macro whose OBS stops below the vertical clock layer
+        # (e.g. ot_sram_1r1w_64x512_m1_r2c2: OBS M1-M4, PG on M4) is a NODE keep-out that clock wires cross VERTICALLY
+        # only (M5, between the core M5 PG straps); horizontal moves over it stay illegal (M4 blocked).  Default off =
+        # macros are full wire walls (unchanged).
+        self.V = M if MACRO_VPASS else [[False] * (self.NY + 1) for _ in range(self.NX + 1)]
+        self.B = [[False] * (self.NY + 1) for _ in range(self.NX + 1)] if MACRO_VPASS else M
         # node keep-out (wires may pass, buffers may not sit): list of rects
         self.K = [[any(k[0] <= core[0] + i * G <= k[2] and k[1] <= core[1] + j * G <= k[3] for k in keepout)
                    for j in range(self.NY + 1)] for i in range(self.NX + 1)]
@@ -68,11 +77,14 @@ class Maze:
 
     def xy(self, c): return (round(self.core[0] + c[0] * self.G, 3), round(self.core[1] + c[1] * self.G, 3))
 
-    def site_ok(self, i, j): return not self.B[i][j] and not self.K[i][j]
+    def site_ok(self, i, j): return not self.B[i][j] and not self.K[i][j] and not self.V[i][j]
+
+    def step_ok(self, a, b, na, nb):
+        return not self.B[na][nb] and (na == a or not (self.V[a][b] or self.V[na][nb]))
 
     def cell(self, p, node=True):
         i = min(self.NX, max(0, round((p[0] - self.core[0]) / self.G))); j = min(self.NY, max(0, round((p[1] - self.core[1]) / self.G)))
-        ok = self.site_ok if node else (lambda a, b: not self.B[a][b])
+        ok = self.site_ok if node else (lambda a, b: not self.B[a][b] and not self.V[a][b])
         if ok(i, j): return (i, j)
         for r in range(1, 600):
             for di in range(-r, r + 1):
@@ -88,7 +100,7 @@ class Maze:
         while q:
             a, b = q.popleft(); d = D[a][b] + 1
             for na, nb in ((a + 1, b), (a - 1, b), (a, b + 1), (a, b - 1)):
-                if 0 <= na <= NX and 0 <= nb <= NY and not B[na][nb] and D[na][nb] < 0:
+                if 0 <= na <= NX and 0 <= nb <= NY and D[na][nb] < 0 and self.step_ok(a, b, na, nb):
                     D[na][nb] = d; q.append((na, nb))
         if len(self._bfs) > 400: self._bfs.clear()
         self._bfs[c] = D; return D
@@ -102,7 +114,7 @@ class Maze:
             a0, b0 = c; nb = [(a0 + 1, b0), (a0 - 1, b0), (a0, b0 + 1), (a0, b0 - 1)]
             if last is not None: nb.sort(key=lambda n: (n[0] - a0, n[1] - b0) != last)
             for n in nb:
-                if 0 <= n[0] <= self.NX and 0 <= n[1] <= self.NY and D[n[0]][n[1]] == D[a0][b0] - 1:
+                if 0 <= n[0] <= self.NX and 0 <= n[1] <= self.NY and D[n[0]][n[1]] == D[a0][b0] - 1 and self.step_ok(a0, b0, n[0], n[1]):
                     last = (n[0] - a0, n[1] - b0); c = n; break
             out.append(c)
         return out
@@ -149,6 +161,12 @@ def minimax_site(mz, children, around, radius=90, step=2):
             if min(ds) < 0: continue
             v = (max(ds), sum(ds))
             if best is None or v < best[0]: best = (v, (i, j))
+    if best is None:
+        # HBM-CORE-LAT-R3: no legal site within the radius (children centroid over a large macro, e.g. a centred SRAM
+        # column): widen the search deterministically instead of failing
+        if radius >= max(mz.NX, mz.NY):
+            raise ValueError('no legal minimax site for children %s' % (children,))
+        return minimax_site(mz, children, around, radius=radius * 2, step=step)
     return best[1]
 
 
@@ -517,7 +535,11 @@ def main():
     ap.add_argument('--cap-balance', action='store_true', help='equal estimated C (pin + MST share) per group instead of equal count')
     ap.add_argument('--ring-islands', action='store_true', help='propose islands moved onto one maze ring about the entry')
     ap.add_argument('--r6', action='store_true'); ap.add_argument('--no-side-hub', action='store_true')
+    ap.add_argument('--macro-vertical-pass', action='store_true', help='macros = node keep-outs that clock wires cross '
+                    'vertically only (macro OBS below the vertical clock layer; default: macros are wire walls)')
     a = ap.parse_args()
+    global MACRO_VPASS
+    MACRO_VPASS = a.macro_vertical_pass
     keep = [tuple(map(float, k.split(','))) for k in a.keepout]
     isl = [tuple(map(float, p.split(','))) for p in a.islands.split(';')] if a.islands else None
     kr0, kc0 = map(float, a.rc.split(','))
