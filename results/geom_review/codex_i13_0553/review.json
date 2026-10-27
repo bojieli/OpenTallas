@@ -1,0 +1,9 @@
+{
+  "image": "plan.png",
+  "verdict": "PASS-COND FLOORPLAN",
+  "findings": [
+    "Viewed two SRAM columns with 131um central corridor,24.57um row gaps and5.4um halos; candidate rows above dense banks, id FIFO beside N vo pins. No macro wall/overlap.",
+    "Synthesis+floorplan gate permitted. Post-place review must establish input/return flops near pin faces and memory ports, control/clock fanout and PDN continuity before CTS/route.",
+    "Functional component evidence already PASS all R3/native SRAM cases plus mutants; native issue-to-done554cycles."
+  ]
+}
