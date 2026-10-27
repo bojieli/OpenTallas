@@ -285,7 +285,7 @@ endmodule
 
 // RA lane FRONT leaf: x -> exp(-|x|) Horner -> u = t / (t + 2) -> u^2 (ot_hdc_v41x_softplus_s up to T_U2, the same
 // units), max(x, 0) carried to T_U2; seam outputs registered.  Flat lane time t = this leaf's input-flop time t.
-module ot_s81_su_rxsf #(parameter integer PCUT = 1, parameter integer TFTZ = 0) (
+module ot_s81_su_rxsf #(parameter integer PCUT = 1, parameter integer TFTZ = 0, parameter integer UFTZ = 0) (
     input  wire        clk, rst_in,
     input  wire        i_v,
     input  wire [31:0] i_x,
@@ -309,7 +309,10 @@ module ot_s81_su_rxsf #(parameter integer PCUT = 1, parameter integer TFTZ = 0) 
     ot_hdc_v41x_exp_s #(.PCUT(PCUT), .TFTZ(TFTZ)) u_exp (.clk(clk), .rst_n(rst_n), .v(v_q), .x({1'b1, x_q[30:0]}), .y(), .vo(),
                              .p_pre(p_pre), .n_pre(n_pre), .fault(f_exp));
     ot_hdc_v41x_spdiv u_div (.clk(clk), .rst_n(rst_n), .v(vd[T_PN]), .p(p_pre), .n(n_pre), .y(u), .vo(), .fault(f_div));
-    ot_hdc_fp32_mul_x2 #(.DOUBLE(0), .CUT(PCUT)) m_u2 (.clk(clk), .rst_n(rst_n), .v(vd[T_U]), .a(u), .b(u), .y(u2), .fault(f_u2));
+    // UFTZ (S81-CORES-R1 10-27, rxsf GEOM-REVIEW-2 TT -58.59 on m_u2 s2_sh -> y): m_u2 flushes u^2 results below the
+    // normal range to +0 (drops the subnormal encode from its last stage; 0 cycles).  o_u2 differs only for
+    // u^2 < 2^-126; the rxsf -> rxsb pair output o_r is proven identical (tools/s81_slice/rxsf_uftz_pair_eq.sh).
+    ot_hdc_fp32_mul_x2 #(.DOUBLE(0), .CUT(PCUT), .FTZ(UFTZ)) m_u2 (.clk(clk), .rst_n(rst_n), .v(vd[T_U]), .a(u), .b(u), .y(u2), .fault(f_u2));
     ot_hdc_delay #(.W(32), .D(T_U2 - T_U)) d_u (clk, rst_n, u, u_d);
     reg  [31:0] mx;
     wire x_nan = (x_q[30:23] == 8'hFF) && (x_q[22:0] != 23'd0);
@@ -580,7 +583,12 @@ module dsfd_su_t_rxsf (
     assign o_u = u_w[30:0]; assign o_u2 = u2_w[30:0];
     // S81-CORES2/RV 2026-10-25 (GEOM FAIL 04:38, TT -6.19 on u_exp.m_t s2_sh -> y): TFTZ 1 drops t's dead subnormal
     // encode (shift + round + zero test) from m_t's last stage; 0 cycles, outputs identical (tools/s81_slice/rxsf_ftz_eq.sh).
-    ot_s81_su_rxsf #(.PCUT(1), .TFTZ(1)) u_f (.clk(ck), .rst_in(rst), .i_v(i_v), .i_x(i_x), .o_v(o_v), .o_u(u_w), .o_u2(u2_w),
+`ifdef OT_RXSF_UFTZ0
+    localparam integer RXSF_UFTZ = 0;
+`else
+    localparam integer RXSF_UFTZ = 1;
+`endif
+    ot_s81_su_rxsf #(.PCUT(1), .TFTZ(1), .UFTZ(RXSF_UFTZ)) u_f (.clk(ck), .rst_in(rst), .i_v(i_v), .i_x(i_x), .o_v(o_v), .o_u(u_w), .o_u2(u2_w),
         .o_mx(o_mx), .o_f(o_f));
 endmodule
 module dsfd_su_t_rxsb (
