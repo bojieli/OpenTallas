@@ -21,6 +21,12 @@ rc=$?
 $DK run --rm -v "$D":/work "$IMAGE" chown -R $(id -u):$(id -g) /work >/dev/null 2>&1
 echo "route_finish_rc=$rc" > $D/rc.txt
 grep -h "KVCORES_ECO\|RSZ-00[0-9]*\|Inserted" $D/run/logs/asap7/*/base/5_1_grt.log 2>/dev/null | tail -n 12
+# FLOW-CLKFREEZE 2026-10-27: BLOCKING clock-net geometry diff (ECO input route vs final DB); change -> rc 5, no sign-off
+if [ $rc = 0 ]; then
+  bash $D/clk_freeze_check.sh $D $IMAGE > $D/clk_freeze_check.log 2>&1; ck=$?
+  grep -h '^CLK_GEOM_DIFF' $D/clk_freeze_check.log | head -n 6; echo "clk_freeze_check_rc=$ck" >> $D/rc.txt
+  [ $ck = 0 ] || rc=5
+fi
 if [ $rc = 0 ]; then
   bash $D/run_kit_kv.sh $D post $MEM $CPUS; rc=$?
   echo "post_rc=$rc" >> $D/rc.txt
