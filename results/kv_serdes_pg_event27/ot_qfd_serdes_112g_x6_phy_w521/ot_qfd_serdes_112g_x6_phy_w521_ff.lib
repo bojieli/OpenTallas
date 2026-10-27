@@ -16,7 +16,7 @@ library (ot_qfd_serdes_112g_x6_phy_w521_ff) {
     process : 1; voltage : 0.77; temperature : 0;
   }
   default_operating_conditions : PVT_ff;
-  voltage_map (VDD, 0.77);
+  voltage_map (VDDPHY, 0.77);
   voltage_map (VSS, 0);
   default_max_transition : 320;
   default_fanout_load : 1;
