@@ -1,0 +1,3 @@
+# FLOW-RC lane: per-class (signal vs clock) wire RC calibration for every die's kit flow
+
+2026-10-27 07:52 PDT FLOW-RC-1 START (COORD brief 07:46): HBM-CORES-R8 collar a4 routed RCX slew 32 TT/25 FF vs 1 at GRT repair; hypothesis setRC_rcx.tcl (clock-weighted per-layer C) under-estimates signal C. Plan: (1) per-layer/per-class RCX vs table on collar a4/a5 (intel2), S81 rr_h1_c signed (epyc2), QC rst3_k0 hold_b (intel1), HEAD elemA_eco (intel1); (2) per-class tables + fail-closed guard in shared gen_phys/core_flow; (3) collar a4 GRT re-estimate + canaries; data /srv/opentallas-scratch2/claude/flow-rc-1027 on each host. Note: OpenROAD 26Q3 set_layer_rc (GRT/RCX-estimate basis) has NO -signal/-clock form; set_wire_rc -signal/-clock is placement-only.
