@@ -35,7 +35,7 @@ def test_watch_list_edits_are_not_a_flow_change():
 def test_live_watch_covers_flow_code_only():
     import json
     spec=json.loads(Path(__file__).with_name('canaries.json').read_text())
-    flow=['tools/ref_tile/ref_tile.py','tools/ref_tile/cross_clock_paths.tcl','tools/die_plan/gen_phys.py',
+    flow=['tools/die_plan/core_infra_htree.py','tools/ref_tile/ref_tile.py','tools/ref_tile/cross_clock_paths.tcl','tools/die_plan/gen_phys.py',
           'tools/die_plan/hold_gate.tcl','physical/common_flow/clock_spine.tcl','tools/flow_canary/canaries.json',
           'physical/die_plan/qwen_kvsys/cores/harden/gen_core_kit_kv.py']
     assert watch.flow_paths(flow, spec, 'qwen_kvsys_core') == sorted(flow)
