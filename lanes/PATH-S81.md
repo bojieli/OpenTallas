@@ -722,3 +722,20 @@ CODEX 2026-10-27 05:01 PDT MC gradient fix completed TT+FF24 samples each (own a
   DOUBLE COUNT: there is none between the mesh MC and AOCV. For node m, AOCV is charged only on tap-stub below the mesh; the tree random/wire/gradient terms are only in the MC; droop is 0 within the mesh. The nominal is counted once (taps are re-referenced to M0). One small over-count: the RC gap is added after max|ds| instead of being folded into each sample. Folding it gives p50 21.1 instead of 24.9, with the max unchanged. That gap term is an RC-model disagreement, not a second variation model. The model is not changed (COORD decides).
 - (3) Mesh-credit STA NOT RUN (the MC does not pass).
 - Live jobs of mine: none.
+
+## [PATH-S81-PD11 2026-10-27 06:14 PDT] PREDICT FAIL. The symmetric (mirror) re-site does not close the S81 H-tree spread, so per ruling (1) I did NOT rebuild, GRT, RCX, MC or STA. Mesh straps are continuous, but the DB has NO M8-M9 vias at the crossings. The GEOM-22 405-um cap is infeasible on the current lattice. claude/path-s81-pd11-1027@065324cd24 (results/path_s81_pd11_1027/summary.json). Run dir intel1:/srv/opentallas-scratch2/claude/path-s81-pd11-1027 (builds deleted).
+- (1) New opt-in lattice key in die_clock_mesh: off_core_mirror (true | {min_level, toward_only, drivers}). A node moves perpendicular to its children's line and its sibling mirrors the move; leaf drivers are re-sited pairwise. If no pair fits: partial fallback (each child moves along its own perpendicular), then the PD9 re-site. Default build is unchanged.
+  PD10-calibrated model, TT driver-input spread, unsized -> L1-L6 sized (UNCHECKED, own model):
+  - PD9 baseline: 215.5 -> 164.7
+  - full mirror: 485.9 -> 359.2 (mirrored pairs need d up to 456/508/706 um at L2/L5/L8)
+  - drivers only: 208.3 -> 174.1, neighbour max 119
+  - L>=10 toward-only + drivers: 194.8 -> 160.4, neighbour max 134, 13 plan errors
+  Root cause: free die-top sites inside the ROM/bf_col core arrays are periodic, so pair symmetry forces large, subtree-specific moves. Cousins stay unequal. The spread is set by where free sites exist, not by leg asymmetry within a pair.
+- GEOM-22: PD9 me1 max hop per level is L1-L6 408-445, L8 574, L10 596, L11 590, L12 555 um. 380 hops are over 405. RCX tree slew max is 345.1 ps at ckm_d_37_46_1 (CHECKED). Cap trial (--rep-um 405, hop_reach 405): the band trees fail STRUCTURALLY (half-depth 481.7 > 405, one more equal band level needed). Keeping the band trees at 600 still gives 48 plan errors and 545 in-core pushdowns (PD9 had 0). The cap needs a structural tree change: an extra equal level or repeaters on every L8/L10-L12 leg, plus a band-tree level.
+- (2) Continuity (CHECKED): ck_mesh is one SWire. Its 64 M8 + 64 M9 straps are single boxes that cross x 15,973 and y 12,377 unbroken (render viewed: me1_split_zoom.png). BUT combo was run without --mesh-vias, so the 4,096 crossings have 0 VIA89 and meta.mesh_vias is absent. The transient and MC assumed a shorted grid. The next combo MUST use --mesh-vias. This makes the mesh continuous per the rule; it is not a rule change.
+  Split-line pairs (TT, <=1 mm):
+  - x-line: 562 pairs, U p50 190 / max 261. Unshared gradient p50 114; nominal is small.
+  - y-line: 797 pairs, U p50 157 / max 278. Nominal up to 138 at the die edges.
+  Drivers already sit 28-250 um from the lines, so extra split-line drivers cannot remove unshared tree delay. Not done.
+- (3) claude/mc-gapfold-1027@dffd539c3c is READY for ROOT-MERGE (queued). It affects all dies. S81 PD9 TT p50 24.9 -> 21.06, p99 156.1 -> 152.05, max 278.38 unchanged (CHECKED).
+- Live jobs of mine: none.
