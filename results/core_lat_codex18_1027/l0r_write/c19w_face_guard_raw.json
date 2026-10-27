@@ -1,0 +1,69 @@
+{
+ "top": "dsdv_gunit_l0r",
+ "checked": 735,
+ "ok": 724,
+ "fails": {
+  "shared": [
+   "wr_agh[4]: 15 loads on wr_agh[4]",
+   "wr_agh[3]: 15 loads on wr_agh[3]",
+   "wr_agh[2]: 15 loads on wr_agh[2]",
+   "wr_agh[1]: 15 loads on wr_agh[1]",
+   "wr_agh[0]: 15 loads on wr_agh[0]",
+   "wr_bgh[4]: 15 loads on wr_bgh[4]",
+   "wr_bgh[3]: 15 loads on wr_bgh[3]",
+   "wr_bgh[2]: 15 loads on wr_bgh[2]",
+   "wr_bgh[1]: 15 loads on wr_bgh[1]",
+   "wr_bgh[0]: 15 loads on wr_bgh[0]",
+   "wr_b: 30 loads on wr_b"
+  ]
+ },
+ "flops": {
+  "wr_av": "av$_DFF_PN0_",
+  "wr_ad[191]": "ad[191]$_DFF_P_",
+  "wr_ad[190]": "ad[190]$_DFF_P_",
+  "wr_ad[189]": "ad[189]$_DFF_P_",
+  "wr_ad[188]": "ad[188]$_DFF_P_",
+  "wr_ad[187]": "ad[187]$_DFF_P_",
+  "wr_ad[186]": "ad[186]$_DFF_P_",
+  "wr_ad[185]": "ad[185]$_DFF_P_",
+  "wr_ad[184]": "ad[184]$_DFF_P_",
+  "wr_ad[183]": "ad[183]$_DFF_P_",
+  "wr_ad[182]": "ad[182]$_DFF_P_",
+  "wr_ad[181]": "ad[181]$_DFF_P_",
+  "wr_ad[180]": "ad[180]$_DFF_P_",
+  "wr_ad[179]": "ad[179]$_DFF_P_",
+  "wr_ad[178]": "ad[178]$_DFF_P_",
+  "wr_ad[177]": "ad[177]$_DFF_P_",
+  "wr_ad[176]": "ad[176]$_DFF_P_",
+  "wr_ad[175]": "ad[175]$_DFF_P_",
+  "wr_ad[174]": "ad[174]$_DFF_P_",
+  "wr_ad[173]": "ad[173]$_DFF_P_"
+ },
+ "straps_exempt": [],
+ "bumps_exempt": [],
+ "fail_counts": {
+  "shared": 11
+ },
+ "verdict": "FAIL",
+ "planned_bits": 735,
+ "missing_ports": [],
+ "extra_ports": [],
+ "missing_n": 0,
+ "extra_n": 0,
+ "self_loop_only": false,
+ "self_loops": [],
+ "non_self_loop_fails": [
+  "wr_agh[4]: 15 loads on wr_agh[4]",
+  "wr_agh[3]: 15 loads on wr_agh[3]",
+  "wr_agh[2]: 15 loads on wr_agh[2]",
+  "wr_agh[1]: 15 loads on wr_agh[1]",
+  "wr_agh[0]: 15 loads on wr_agh[0]",
+  "wr_bgh[4]: 15 loads on wr_bgh[4]",
+  "wr_bgh[3]: 15 loads on wr_bgh[3]",
+  "wr_bgh[2]: 15 loads on wr_bgh[2]",
+  "wr_bgh[1]: 15 loads on wr_bgh[1]",
+  "wr_bgh[0]: 15 loads on wr_bgh[0]",
+  "wr_b: 30 loads on wr_b"
+ ],
+ "netlist": "/work/run/results/asap7/kl_dsdv_gunit_l0r_c19w/base/1_2_yosys.v"
+}

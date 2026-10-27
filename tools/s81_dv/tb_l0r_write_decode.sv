@@ -4,7 +4,7 @@ reg clk=0;always #0.5 clk=~clk;
 reg rst=0,av=0,bv=0,bank=0,go=0,gb=0;reg[4:0]a=0,b=0,acc=0;reg[191:0]ad=0,bd=0;
 wire[1:0]v,f;wire[1:0][3:0]ri;wire[1:0][4:0]ra;wire[1:0][319:0]rd;
 legacy_l0r l(.clk(clk),.rst_n(rst),.wr_av(av),.wr_bv(bv),.wr_b(bank),.wr_agh(a),.wr_bgh(b),.wr_ad(ad),.wr_bd(bd),.go_a(go),.go_acc(acc),.go_b(gb),.r_v(v[0]),.r_f(f[0]),.r_i(ri[0]),.r_acc(ra[0]),.r_d(rd[0]));
-dsdv_gunit_l0r #(.WRITE_DECODE(2)) n(.clk(clk),.rst_n(rst),.wr_av(av),.wr_bv(bv),.wr_b(bank),.wr_agh(a),.wr_bgh(b),.wr_ad(ad),.wr_bd(bd),.go_a(go),.go_acc(acc),.go_b(gb),.r_v(v[1]),.r_f(f[1]),.r_i(ri[1]),.r_acc(ra[1]),.r_d(rd[1]));
+dsdv_gunit_l0r #(.WRITE_DECODE(3)) n(.clk(clk),.rst_n(rst),.wr_av(av),.wr_bv(bv),.wr_b(bank),.wr_agh(a),.wr_bgh(b),.wr_ad(ad),.wr_bd(bd),.go_a(go),.go_acc(acc),.go_b(gb),.r_v(v[1]),.r_f(f[1]),.r_i(ri[1]),.r_acc(ra[1]),.r_d(rd[1]));
 integer t,j,err=0,beats=0,collisions=0,writes=0;
 initial begin
  for(t=0;t<1100;t=t+1) begin

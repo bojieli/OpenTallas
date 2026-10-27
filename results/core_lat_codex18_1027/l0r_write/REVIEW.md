@@ -13,3 +13,9 @@ Mode1's input predecode may remove the original planned raw face registers; it i
 ## Final candidate refinement:16 raw capture clusters
 
 Four adjacent groups share each raw capture pair. Cluster0 still owns original agh/bgh/wb captures,15additional kept A/B pairs add180FFs. Input address pin fanout16 and bank pin fanout31 before merging stay below32. Actual local decode fanout and face placement require synthesis qualification. Golden full-store/output miter again PASS368beats/246collisions/1050writes; priority mutant caught. Same mode2 opt-in and default0; prior mode2 receipts remain historical evidence.
+
+## C19w native-boundary FAIL and mode3 correction
+
+C19w source14527769c9 SYNTHESIS passed, but raw face_guard FAIL724/735:11address pins shared15/30loads. The one-capture-per-pin rule is stricter than the32fanout budget; run stopped before floorplan and no exception was applied. Raw-copy modes are not physically qualified. Failed receipt retained separately.
+
+Mode3 retains only the original agh/bgh/wb input captures, uses direct constant six-bit group comparisons and static store indices. It removes the x192/x6 arithmetic while preserving onecapture/pin, collision priority, all ports and all data edges, adding zeroFFs/cycles. Full-store/output miter PASS368beats/246collisions/1050writes, prioritymutant caught. Candidate recipe now selects3, defaultsource remains0. Fresh synthesis/face_guard/fanout and current formal/slice remain required.

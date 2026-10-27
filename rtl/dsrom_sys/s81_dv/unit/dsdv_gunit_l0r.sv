@@ -91,6 +91,20 @@ module dsdv_gunit_l0r #(
                 end
             end
         end
+    end else if (WRITE_DECODE == 3) begin : g_write_static
+        // Strict one-capture-per-pin variant: original raw address registers
+        // drive constant group comparisons. Static word indices remove the
+        // x192/x6 computed-address arithmetic without adding any capture FF.
+        for (genvar wg = 0; wg < 64; wg = wg + 1) begin : g_group
+            wire [5:0] a_key = {wb, agh};
+            wire [5:0] b_key = {wb, bgh};
+            for (genvar wj = 0; wj < 6; wj = wj + 1) begin : g_word
+                always @(posedge clk) begin
+                    if (av && a_key == 6'(wg)) rs[6*wg+wj] <= ad[32*wj +: 32];
+                    if (bv && b_key == 6'(wg)) rs[6*wg+wj] <= bd[32*wj +: 32];
+                end
+            end
+        end
     end else begin : g_write_legacy
         always @(posedge clk) begin
             if (av) for (j = 0; j < 6; j = j + 1) rs[192 * wb + 6 * agh + j] <= ad[32 * j +: 32];
