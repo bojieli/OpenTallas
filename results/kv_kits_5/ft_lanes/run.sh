@@ -1,0 +1,4 @@
+#!/bin/bash
+cd /srv/opentallas-scratch2/claude/wt/kv-kits-3-1027
+python3 tools/die_plan/ft_corridor.py physical/die_plan/qwen_kvsys/die_plan.json --types kv3_hg,kv3_hg_v1,kv3_hg_v1p2,kv3_hg_v1p3,kv3_hg_v1p4,kv3_hg_v1p5,kv3_hg_v1p6,kv3_hg_v3,kv3_hgi,kv3_hgi_v1,kv3_hgi_v2,kv3_hgi_v3,kv3_hgi_v4,kv3_hgi_v5,kv3_hgi_v6,kv3_hgi_v7,kv3_hgi_v8,kv3_hub_C,kv3_hub_Ei,kv3_hub_Eo,kv3_hub_Wi,kv3_hub_Wo,kv3_io_cor_v1,kv3_io_ft,kv3_io_ft_v1,kv3_pc_v1,kv3_pc_v3,kv3_phy_v1,kv3_pv,kv3_pv_v1,kv3_pv_v12,kv3_pv_v1n,kv3_pv_v2,kv3_pv_v2n,kv3_pv_v3,kv3_pv_v3n,kv3_pv_v4,kv3_pv_v4n,kv3_pv_v5,kv3_pv_v5n,kv3_pv_v6,kv3_pv_v6n,kv3_pv_v7,kv3_pv_v8,kv3_sys_c --reach 405 --margin 1 --keep-going --out /srv/opentallas-scratch2/claude/kv5-i2/ft/die_plan_ft.json --ledger /srv/opentallas-scratch2/claude/kv5-i2/ft/ledger.json
+echo FT_RC=$?
