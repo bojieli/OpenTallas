@@ -41,7 +41,71 @@ def rail_gap(w, run):
     return max(D.NDR["4w"]["space"], C.wide_spacing(w, run))
 
 
-def rail_shapes(g, nd, shield="VSS"):
+def gap_axis(v, pitch=4.32, track=0.08, toff=0.04):
+    """centre-most 80-nm track of the ACTUAL PG gap holding v: the die grid alternates VDD/VSS every 4.32 um (each
+    net on 8.64), so a gap is (k*4.32, (k+1)*4.32), not the 8.64 gap graded_mesh_physical.axis assumed"""
+    k = math.floor(v / pitch)
+    mid = k * pitch + pitch / 2
+    n = round((mid - toff) / track)
+    cands = [round(toff + (n + d) * track, 6) for d in (-1, 0, 1)]
+    return min(cands, key=lambda q: (abs(q - mid), q))
+
+
+def snap_to_pg_gaps(g, pitch=4.32):
+    """the same literal mesh (same rails, order, widths, segments, via arrays, attachments) with every rail axis
+    moved to the centre track of its actual PG gap; returns (g2, moves)"""
+    fx = {round(x, 6): gap_axis(x, pitch) for x in g["xs"]}
+    fy = {round(y, 6): gap_axis(y, pitch) for y in g["ys"]}
+    if len(set(fx.values())) != len(fx) or len(set(fy.values())) != len(fy):
+        raise ValueError("two rails snap into one PG gap")
+    X = lambda x: fx[round(x, 6)]   # noqa: E731
+    Y = lambda y: fy[round(y, 6)]   # noqa: E731
+    segs = []
+    for s in g["segments"]:
+        x0, y0, x1, y1 = s["centre_um"]
+        w = s["width_um"]
+        c = [X(x0), Y(y0), X(x1), Y(y1)]
+        r = [c[0], c[1] - w / 2, c[2], c[1] + w / 2] if s["layer"] == "M8" else [c[0] - w / 2, c[1], c[0] + w / 2, c[3]]
+        segs.append(dict(s, centre_um=c, rect_um=[round(v, 6) for v in r]))
+    vias = [dict(v, x_um=X(v["x_um"]), y_um=Y(v["y_um"])) for v in g["vias"]]
+    att = []
+    for a in g["attachments"]:
+        x, y = a["xy_um"]
+        att.append(dict(a, xy_um=[X(x), y] if a["layer"] == "M9" else [x, Y(y)]))
+    moves = [abs(a - b) for a, b in list(fx.items()) + list(fy.items())]
+    g2 = dict(g, segments=segs, vias=vias, attachments=att, xs=sorted(fx.values()), ys=sorted(fy.values()))
+    return g2, dict(max_um=round(max(moves), 4), mean_um=round(sum(moves) / len(moves), 4), rails=len(moves))
+
+
+def gap_fit_findings(g, pgr):
+    """segments whose width + the wide-row spacing to BOTH actual neighbouring PG stripes does not fit their gap"""
+    idx = {"M8": collections.defaultdict(list), "M9": collections.defaultdict(list)}
+    for net, lay, x0, y0, x1, y1 in pgr:
+        if lay == "M8":
+            idx[lay][round((y0 + y1) / 2, 3)].append((x0, x1, y1 - y0))
+        elif lay == "M9":
+            idx[lay][round((x0 + x1) / 2, 3)].append((y0, y1, x1 - x0))
+    cs = {L: sorted(idx[L]) for L in idx}
+    bad = []
+    for s in g["segments"]:
+        lay = s["layer"]
+        x0, y0, x1, y1 = s["centre_um"]
+        c, a0, a1 = (y0, min(x0, x1), max(x0, x1)) if lay == "M8" else (x0, min(y0, y1), max(y0, y1))
+        w, L = s["width_um"], cs[lay]
+        i = bisect.bisect_left(L, c)
+        for p in L[max(0, i - 2):i + 2]:
+            for lo, hi, pw in idx[lay][p]:
+                prl = min(a1, hi) - max(a0, lo)
+                if prl <= 0:
+                    continue
+                need = max(D.NDR["4w"]["space"], C.wide_spacing(max(w, pw), prl))
+                gap = abs(c - p) - w / 2 - pw / 2
+                if gap < need - 1e-6:
+                    bad.append(dict(layer=lay, axis=c, span=[a0, a1], width=w, pg=p, pg_width=pw, gap=round(gap, 4), need=need))
+    return bad
+
+
+def rail_shapes(g, nd, shield="VSS", drawn=True):
     """(shapes, rails) of the literal segments. Rail-end segments are extended by half of their end via pad."""
     pad = {(round(v["x_um"], 6), round(v["y_um"], 6)): v["pad_um"] for v in g["vias"]}
     rails = collections.defaultdict(list)
@@ -63,7 +127,7 @@ def rail_shapes(g, nd, shield="VSS"):
                 e1 = p / 2
             shapes.append((lay, NET, "mesh", round(c - w / 2, 6), round(c + w / 2, 6), round(a0 - e0, 6), round(a1 + e1, 6)))
             off = w / 2 + rail_gap(w, a1 - a0) + ws / 2
-            for sg in (-1, 1):
+            for sg in ((-1, 1) if drawn else ()):
                 shapes.append((lay, shield, "rail_shield", round(c + sg * off - ws / 2, 6), round(c + sg * off + ws / 2, 6),
                                round(a0 - e0, 6), round(a1 + e1, 6)))
     return shapes, rails
@@ -160,7 +224,7 @@ def stub_tie(router, cells, attach):
         dict(unit=u, pin="A", xy_um=[px, py], layers=list(STACK), lands="M8", riser_M7=[py, c]), None
 
 
-def encode(plan, build, out, limit=400):
+def encode(plan, build, out, limit=400, gap_snap=False):
     import die_infra as DI
     import graded_mesh_graph as GG
     P = S.Plan(S.load(plan), str(plan))
@@ -172,7 +236,11 @@ def encode(plan, build, out, limit=400):
     nets = json.loads((b / "nets.json").read_text())["nets"]
     nd, sh = D.NDR[M["meta"].get("ndr", "4w")], "VSS"
     pgr = DI.pg_rects(P, C.pg_grid(P))
-    rshapes, rails = rail_shapes(g, nd, sh)
+    snap = None
+    if gap_snap:     # rails to the actual 4.32-um PG gaps; PG stripes both sides are the rail shields (12.7a pg mode)
+        g, snap = snap_to_pg_gaps(g)
+    rshapes, rails = rail_shapes(g, nd, sh, drawn=not gap_snap)
+    gfit = gap_fit_findings(g, pgr)
     wmax = {L: max([s["width_um"] for s in g["segments"] if s["layer"] == L] or [0]) for L in ("M8", "M9")}
     vbad = via_findings(g, rshapes)
     shared, close = pg_gap_findings(rails, pgr)
@@ -209,7 +277,8 @@ def encode(plan, build, out, limit=400):
         segments=len(g["segments"]), crossings=len(g["vias"]), via_cuts=sum(v["rows"] * v["cols"] for v in g["vias"]),
         rail_width_max_um=wmax, m8_maxwidth_um=M8_MAXWIDTH, m8_maxwidth_violations=sum(1 for s in g["segments"] if s["layer"] == "M8" and s["width_um"] > M8_MAXWIDTH + 1e-9),
         rail_end_extensions=sum(1 for s in rshapes if s[2] == "mesh") and None,
-        via_outside_incident=len(vbad), pg_gap_shared=len(shared), rail_pg_too_close=len(close),
+        via_outside_incident=len(vbad), gap_snap=snap, rail_shield_mode="pg" if gap_snap else "drawn",
+        segments_not_fitting_pg_gap=len(gfit), segments_not_fitting_by_pg_width=dict(collections.Counter(str(f["pg_width"]) for f in gfit)), pg_gap_shared=len(shared), rail_pg_too_close=len(close),
         graph=graph, attachments=collections.Counter(a["role"] for a in g["attachments"]),
         bank_tie_segments=sum(1 for s in tie_segs if s[6] in ("bank", "bank_riser")),
         stub_drops=sum(1 for s in tie_segs if s[6] == "stub_drop"), pin_stacks=len(stacks), tie_errors=len(errs),
@@ -219,7 +288,7 @@ def encode(plan, build, out, limit=400):
         metal_shapes=census["shapes"], metal_shorts=census["shorts"], metal_spacing=census["spacing"],
         shorts_by_kind=census["shorts_by_kind"], spacing_by_kind=census["spacing_by_kind"])
     rep["rail_end_extensions"] = 2 * (rep["rails"]["M8"] + rep["rails"]["M9"])
-    fails = [k for k in ("m8_maxwidth_violations", "via_outside_incident", "pg_gap_shared", "rail_pg_too_close",
+    fails = [k for k in ("segments_not_fitting_pg_gap", "m8_maxwidth_violations", "via_outside_incident", "pg_gap_shared", "rail_pg_too_close",
                          "tie_errors", "tree_plan_errors", "metal_shorts", "metal_spacing") if rep[k]]
     if graph["components"] != 1 or graph["cycles"] != graph["expected_cycles"]:
         fails.append("graph_topology")
@@ -233,7 +302,7 @@ def encode(plan, build, out, limit=400):
     (dst / "encoded_metal.json").write_text(json.dumps(enc, separators=(",", ":")) + "\n")
     (dst / "ENCODE.json").write_text(json.dumps(rep, indent=1) + "\n")
     (dst / "findings.json").write_text(json.dumps(dict(census_rows=census["rows"], via=vbad[:limit], pg_gap_shared=shared[:limit],
-                                                       rail_pg_close=close[:limit], tie_errors=errs[:limit], plan_errors=perr[:limit]), indent=0) + "\n")
+                                                       rail_pg_close=close[:limit], gap_fit=gfit[:limit], tie_errors=errs[:limit], plan_errors=perr[:limit]), indent=0) + "\n")
     print(json.dumps(rep, indent=1))
     return rep
 
@@ -241,5 +310,6 @@ def encode(plan, build, out, limit=400):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--plan", required=True); ap.add_argument("--build", required=True); ap.add_argument("--out", required=True)
+    ap.add_argument("--gap-snap", action="store_true", help="move every rail to the centre of its ACTUAL 4.32-um PG gap")
     a = ap.parse_args()
-    encode(a.plan, a.build, a.out)
+    encode(a.plan, a.build, a.out, gap_snap=a.gap_snap)

@@ -1,0 +1,80 @@
+{
+ "schema": "opentallas.s81.graded_mesh_encode.v1",
+ "build": "/srv/opentallas-scratch2/claude/codex-s81-graded-1351/p128_stage18",
+ "plan_sha256": "5b91b79891cafabe60423fbd83ed68136378e47cbf4d04e57d7e8329f4df1ede",
+ "graded_metal_sha256": "5bb26a05963e7374d27dbf8ed8676a9ddc7804d8dbb1e9139b08905fdf5f3480",
+ "rails": {
+  "M8": 192,
+  "M9": 192
+ },
+ "segments": 73344,
+ "crossings": 36864,
+ "via_cuts": 1963176,
+ "rail_width_max_um": {
+  "M8": 1.76,
+  "M9": 1.76
+ },
+ "m8_maxwidth_um": 2.0,
+ "m8_maxwidth_violations": 0,
+ "rail_end_extensions": 768,
+ "via_outside_incident": 0,
+ "pg_gap_shared": 0,
+ "rail_pg_too_close": 294,
+ "graph": {
+  "nodes": 84956,
+  "edges": 121436,
+  "components": 1,
+  "cycles": 36481,
+  "expected_cycles": 36481,
+  "via_edges": 36864,
+  "native_extraction_qualified": false,
+  "driver_pin_metal_encoded": false,
+  "resistance_model": null
+ },
+ "attachments": {
+  "driver": 3747,
+  "local_tree_input": 7481
+ },
+ "bank_tie_segments": 3752,
+ "stub_drops": 7481,
+ "pin_stacks": 48021,
+ "tie_errors": 0,
+ "tree_nets": 18270,
+ "tree_segments": 77079,
+ "tree_mm": 4046.441,
+ "tree_shield_modes": {
+  "drawn": 77079
+ },
+ "tree_plan_errors": 0,
+ "router_modes": {
+  "M8:drawn": 64239,
+  "M9:drawn": 24073
+ },
+ "router_move_max_um": 6.719,
+ "pg_rects": 49238,
+ "metal_shapes": 534206,
+ "metal_shorts": 4683,
+ "metal_spacing": 25442,
+ "shorts_by_kind": {
+  "mesh-rail_shield": 1104,
+  "pg-rail_shield": 2322,
+  "mesh-pg": 1257
+ },
+ "spacing_by_kind": {
+  "pg-rail_shield": 1990,
+  "mesh-rail_shield": 5304,
+  "mesh-pg": 18148
+ },
+ "fails": [
+  "rail_pg_too_close",
+  "metal_shorts",
+  "metal_spacing"
+ ],
+ "status": "ENCODED_CENSUS_FAIL",
+ "physical_encoder_qualified": false,
+ "limits": [
+  "geometry only; extraction/EM/IR/timing OPEN",
+  "M1-M7 pin stacks + M7 risers recorded, not censused against signal routing",
+  "VSS shield ties to the die grid not re-derived here"
+ ]
+}

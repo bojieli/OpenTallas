@@ -66,3 +66,18 @@ def test_pg_gap_occupancy_and_spacing():
 def test_maxwidth_respected_by_materializer_profile():
     import graded_mesh_physical as G
     assert max(G.width_at(x, 0, 0, 0)[0] for x in range(0, 4001, 7)) <= E.M8_MAXWIDTH
+
+
+def test_gap_snap_centres_rails_in_actual_4p32_gaps_and_keeps_topology():
+    assert abs(E.gap_axis(256.544) - (4.32 * 59 + 2.16)) <= 0.04 + 1e-9
+    g = mesh([450.68, 459.32, 467.96], [248.36, 257.0, 265.64])
+    g2, mv = E.snap_to_pg_gaps(g)
+    assert mv["max_um"] <= 2.2
+    assert GG.build(g2)["summary"]["cycles"] == GG.build(g)["summary"]["cycles"] == 4
+    assert [s["width_um"] for s in g2["segments"]] == [s["width_um"] for s in g["segments"]]
+    shapes, _ = E.rail_shapes(g2, ND, drawn=False)
+    assert all(s[2] == "mesh" for s in shapes) and E.via_findings(g2, shapes) == []
+    pg = [(n, "M9", 4.32 * k - .24, 0, 4.32 * k + .24, 400) for k, n in ((104, "VDD"), (105, "VSS"), (106, "VDD"), (107, "VSS"), (108, "VDD"))]
+    assert not [f for f in E.gap_fit_findings(g2, pg) if f["layer"] == "M9"]          # 0.8 rail fits a 3.84 gap
+    phy = [(n, "M9", 4.32 * k - .96, 0, 4.32 * k + .96, 400) for k, n in ((104, "VDDPHY"), (105, "VSS"), (106, "VDDPHY"), (107, "VSS"), (108, "VDDPHY"))]
+    assert [f for f in E.gap_fit_findings(g2, phy) if f["layer"] == "M9"]               # not in a 2.40 PHY gap
