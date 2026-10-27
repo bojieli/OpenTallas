@@ -732,7 +732,7 @@ class MetalIndex:
                     out.append((k, "short" if gp < eps and ga < eps else "spacing"))
                     if first:
                         return out
-                elif t[2] == "pg" and ga < -eps and gp < wide_spacing(max(phi - plo, t[4] - t[3]), -ga) - eps:
+                elif t[2] == "pg" and ga < -eps and gp < wide_spacing(max(phi - plo, t[4] - t[3]), max(0.,min(ahi,t[6])-max(alo,t[5]))) - eps:
                     out.append((k, "wide_spacing"))
                     if first:
                         return out

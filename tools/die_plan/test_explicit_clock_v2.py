@@ -96,3 +96,11 @@ def test_v2_realizes_declared_trunk_layer_even_for_short_off_axis_leg():
     piece=next(p for p in wire['pieces'] if p['physical_edge']=='e0')
     assert piece['horiz'] is False
     assert piece['physical_edge']=='e0'
+
+
+def test_wide_pg_spacing_uses_actual_overlap_of_a_nested_segment():
+    ix=C.MetalIndex(.08)
+    ix.add(('M8','VDD','pg',0.,1.92,0.,10.))
+    # The .5um segment is contained in a10um stripe: PRL is .5, not4.5.
+    assert not ix.hits(('M8','clock','tree',2.22,2.38,4.,4.5))
+    assert ix.hits(('M8','clock','tree',2.22,2.38,4.,6.))[0][1]=='wide_spacing'
