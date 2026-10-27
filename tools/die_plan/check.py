@@ -1579,6 +1579,12 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     P = S.Plan(raw, Path(plan_dir) / "die_plan.json" if plan_dir else None)
     summ = dict(die=P.name, partitions=len(P.parts), types=len(P.types), ports=len(P.ports), lanes=len(P.lanes),
                 bits=sum(p["width"] for p in P.ports.values()))
+    if any(t.get("infra_ports") for t in P.types.values()):
+        import infra_rtl as IR
+        try:
+            IR.die_lines(P)
+        except (ValueError, KeyError, TypeError) as ex:
+            R.err("infrastructure", str(ex))
     summ["types"] = check_types(P, R)
     summ["taps_cores"] = check_taps_cores(P, R, plan_dir, evidence)
     summ["core_faces"] = check_core_faces(P, R, plan_dir, core_conns)

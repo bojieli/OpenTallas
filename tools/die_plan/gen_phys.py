@@ -82,6 +82,11 @@ def io_tcl(P, tn, pins):
             cx = x
         lines.append(f"place_pin -pin_name {{{bus}[{bit}]}} -layer {ln} -location {{{cx:.4f} {cy:.4f}}} "
                      f"-pin_size {{{size[0]:.4f} {size[1]:.4f}}}")
+    import infra_rtl as IR
+    for ip in IR.type_ports(t):
+        x, y = ip["xy_um"]
+        lines.append(f"place_pin -pin_name {{{ip['name']}}} -layer {ip['layer']} -location {{{x:.4f} {y:.4f}}} "
+                     "-pin_size {0.0480 0.4800}   ;# native infrastructure via-field, die-timed")
     top = P.layer_budget["partition_signal_max"]
     for name, x, y in tap_pins(P, tn):
         lines.append(f"place_pin -pin_name {name} -layer {top} -location {{{x:.4f} {y:.4f}}} "
@@ -1519,7 +1524,19 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     # pins explicitly for exact top-level port binding (including wavefront outs).
     port_pins = [dict(bus=b, bit=i) for b, i, _l, _x, _y, _f in pins]
     port_pins += [dict(bus=n, bit=None) for n, _x, _y in tap_pins(P, tn) + reset_out_pins(P, tn)]
+    import infra_rtl as IR
+    infra = IR.type_ports(t)
+    port_pins += [dict(bus=p["name"], bit=None) for p in infra]
     (kd / "port_bind_pins.json").write_text(json.dumps(port_pins, indent=1) + "\n")
+    if infra:
+        import ft_ports as FT
+        decl = FT.declaration(t.get("infra_arcs", []), f"die plan {P.name} type {tn}: explicit native hard-core interfaces")
+        if {p["name"] for p in infra} != {p["name"] for p in decl["ports"]}:
+            raise ValueError("native infrastructure ports/arcs disagree")
+        FT.install(kd, decl)
+        (kd / "infra_ports.json").write_text(json.dumps(infra, indent=1) + "\n")
+        bud["native_infrastructure"] = dict(pins=len(infra), arcs=len(decl["arcs"]), data_cycles_added=0, timing="die-timed FT interfaces; actual characterisation required")
+        (kd / "budget.json").write_text(json.dumps(bud, indent=1) + "\n")
     return kd
 
 
