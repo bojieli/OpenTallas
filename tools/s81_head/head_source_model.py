@@ -53,14 +53,14 @@ def model(plan_path):
                     write_bits_per_cycle=512,read_bits_per_cycle=512,
                     data_reset=False,physical_storage_mapping='unmapped; no SRAM timing/area claim',
                     actual_source_witness='rtl/dsrom_sys/s81_head/test/tb_s81hd_mini.sv: loop ma[m%256]/mb[m%64]',
-                    fullhead_issue_authority='unresolved; consume compiled native/head START contract'),
+                    fullhead_issue_authority='ot_s81hd_static_issue fixed CSR9/10 dates; production BOOT/START/issue/merge calendar remains compiler work'),
         blockers=[
-          'hd_ctl: real stage/context admission and caller composition remain; xstore/rank/result/fault pieces are available',
-          'hd_mesh: BEST64 codec preserves full97-bit header/record in2 beats; duplicate-copy/fault endpoint integration remains; safe8_ntf rx515 is locally constructed from coll514 plus endpoint rxv; chb is a separate strap, so no extra die data bit is required',
-          'hd_host: real dsdv_hostb_stage_hbc1104-bit ring/context/status interface is not a drop-in276-bit endpoint; full553-bit HOST276 N3 transport is available; actual HBC/context/status dates still need composition',
-          'hd_lep0N: real no-repair ot_s81hd_lep0N_core provider and live fault-return helper available; native ages/reset/START/H4 and physical trial still need composition',
-          'tile position mapping available in head_row_map.py; physical mask masters and weight images must consume it at bind',
-          'physical SerDes PMA boundary must remain explicit and status live'],
+          'Canonical plan still awaits the one combined HEAD infra/source delta; head_control_plan_delta and head_host_plan_delta compose real ctl/HOST/LEP/mesh providers, strict leaf/module candidate checks reach zero missing/unresolved',
+          'Production HBC/START/CSR9-10 dates need phase-aware compilation from actual safe8/HOST276 path; TEST fixtures are not production dates',
+          'Current four-head Markov images/shared embedding/native DHSTEP-ROWS producer and master-plan capacity remain open; real full-shape and native/static K256 RTL exists (head_mtp_source_census.py)',
+          'Candidate controller AR and five-step MTP ring protocol components pass exact payload/negative-control gates; synthetic DHRES fixtures do not qualify Markov numerics or whole-head G5',
+          'Current geometry/PG/clock/reset kits and die real-view timing remain open; no source candidate inherits old physical views',
+          'Physical SerDes PMA boundary must remain explicit and status live'],
         rankmerge=dict(provider="rtl/dsrom_sys/s81_head/ot_s81hd_rank_merge_hsf0.sv",
                        role="exact extracted real controller mechanism; transport independent",
                        input="own81-bit BEST and6x553-bit HSF0 peer frames(two copies/peer)",
@@ -85,7 +85,8 @@ def model(plan_path):
           lep_native_ages=dict(ro_mu_face=1,lane_K_to_N=3,lane_N_to_K=3,NR_extra=0),
           status="components only; no canonical plan/whole-head binding/physical adoption"),
         historical_controller_component="results/arch/s81_head_source_1025/hsf0_component.json",
-        wholehead_implementation_allowed=False)
+        wholehead_implementation_allowed=False,
+        allowance_note='Canonical plan adoption/native image+date composition is pending; real provider candidates now exist, so this is not a missing-RTL assertion')
 
 if __name__ == '__main__':
     ap=argparse.ArgumentParser(description=__doc__)
