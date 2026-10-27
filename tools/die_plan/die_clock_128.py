@@ -314,15 +314,19 @@ def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None, pin_
     mm = router.max_move if router is not None else 0.0
     last_ext = [None]
 
-    def trunk_ext(layer, c, lo, hi, mode, e_res, name):
+    def trunk_ext(layer, c, lo, hi, mode, e_res, name, reserved_span):
         """the drawn trunk is shorter than its reservation (span widened by max_move): re-derive its shield tie
         extension on the actual span; the drawn shields must stay inside the reserved ones"""
         if router is None or mode != DRAWN or e_res is None:
             return e_res
         e = router.tie_ext(layer, c, lo, hi)
-        if e is None or e > e_res + mm + 1e-6:
+        outside = e is not None and (lo - e < reserved_span[0] - e_res - 1e-6 or hi + e > reserved_span[1] + e_res + 1e-6)
+        if (outside and getattr(router, "tie_reach_um", 0) > router.max_move
+                and router.extend_shield_reservation(layer, c, lo, hi, name, e)):
+            return e
+        if e is None or outside:
             errs.append(dict(kind="shield_tie", name=name, detail=f"trunk {layer} {c:.3f} {lo:.3f}..{hi:.3f}: shield "
-                             "tie extension outside the reserved shield footprint"))
+                             f"tie extension outside the reserved shield footprint (required={e}, reserved={e_res}, track_move={mm})"))
             return e_res
         return e
     for n in nets:
@@ -335,8 +339,9 @@ def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None, pin_
         nm = n["name"]
         if horiz:
             # the trunk is reserved over its widest possible extent (drops move <= max_move)
-            ty, tm = track("M8", D[1] + off, min([D[0]] + [p[0] + off for _, p in Ls]) - mm,
-                           max([D[0]] + [p[0] + off for _, p in Ls]) + mm, nm, "trunk")
+            reserved_span = (min([D[0]] + [p[0] + off for _, p in Ls]) - mm,
+                             max([D[0]] + [p[0] + off for _, p in Ls]) + mm)
+            ty, tm = track("M8", D[1] + off, *reserved_span, nm, "trunk")
             te = last_ext[0]
             xs_, modes, exts = [], [], []
             used = []
@@ -357,14 +362,15 @@ def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None, pin_
                 xs_.append(bx)
             xlo, xhi = min([D[0]] + xs_), max([D[0]] + xs_)
             if xhi > xlo:
-                te = trunk_ext("M8", ty, xlo, xhi, tm, te, nm)
+                te = trunk_ext("M8", ty, xlo, xhi, tm, te, nm, reserved_span)
                 segs.insert(0, ("M8", xlo, ty, xhi, ty))
                 modes.insert(0, tm)
                 exts.insert(0, te)
             tap0 = (D[0], ty)
         else:
-            tx, tm = track("M9", D[0] + off, min([D[1]] + [p[1] + off for _, p in Ls]) - mm,
-                           max([D[1]] + [p[1] + off for _, p in Ls]) + mm, nm, "trunk")
+            reserved_span = (min([D[1]] + [p[1] + off for _, p in Ls]) - mm,
+                             max([D[1]] + [p[1] + off for _, p in Ls]) + mm)
+            tx, tm = track("M9", D[0] + off, *reserved_span, nm, "trunk")
             te = last_ext[0]
             ys_, modes, exts = [], [], []
             used = []
@@ -385,7 +391,7 @@ def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None, pin_
                 ys_.append(by)
             ylo, yhi = min([D[1]] + ys_), max([D[1]] + ys_)
             if yhi > ylo:
-                te = trunk_ext("M9", tx, ylo, yhi, tm, te, nm)
+                te = trunk_ext("M9", tx, ylo, yhi, tm, te, nm, reserved_span)
                 segs.insert(0, ("M9", tx, ylo, tx, yhi))
                 modes.insert(0, tm)
                 exts.insert(0, te)
@@ -760,8 +766,11 @@ class TrackRouter:
     only option on a PG grid too dense for drawn stripes, e.g. KV M9 0.48 um every 0.864 um).  Chosen segments are
     reserved for the following ones."""
 
-    def __init__(self, nd, shield, tracks, max_move=8.64, space=None, wide_merge_um=None):
+    def __init__(self, nd, shield, tracks, max_move=8.64, space=None, wide_merge_um=None, tie_reach_um=None):
         self.nd, self.shield, self.tracks, self.max_move = nd, shield, tracks, max_move
+        self.tie_reach_um = max_move if tie_reach_um is None else float(tie_reach_um)
+        if not math.isfinite(self.tie_reach_um) or self.tie_reach_um < 0:
+            raise ValueError("shield tie reach must be finite and nonnegative")
         # CLOCK-128-R8 opt-in: a drawn VSS shield may touch a same-net PG stripe only while the merged VSS shape stays
         # narrower than the layer's wide-metal spacing row (ASAP7 M8/M9 SPACINGTABLE WIDTH 0.49975 -> 0.5 um at
         # PRL >= 1.8 um); None = R7 behaviour (any overlap allowed)
@@ -790,7 +799,7 @@ class TrackRouter:
     def tie_ext(self, layer, c, a0, a1):
         """shield end extension past the clock metal so each drawn shield crosses >= 1 perpendicular shield-net grid
         stripe centre (a VIA89 tie, cut half-size VIA_HALF): shield_geom ext, or longer for a short segment; None
-        when no grid stripe lies within max_move."""
+        when no grid stripe lies within tie_reach_um."""
         import bisect
         P = "M9" if layer == "M8" else "M8"
         if self.vss_c[P] is None:
@@ -800,16 +809,29 @@ class TrackRouter:
         lo, hi = min(a0, a1), max(a0, a1)
         cs, rows = self.vss_c[P], self.vss[P]
         best = None
-        for q in rows[bisect.bisect_left(cs, lo - e0 - self.max_move):bisect.bisect_right(cs, hi + e0 + self.max_move)]:
+        for q in rows[bisect.bisect_left(cs, lo - e0 - self.tie_reach_um):bisect.bisect_right(cs, hi + e0 + self.tie_reach_um)]:
             if not (q[1] - 1e-6 <= c <= q[2] + 1e-6):
                 continue
             need = max(e0, (lo - q[0]) + VIA_HALF if q[0] < lo else (q[0] - hi) + VIA_HALF if q[0] > hi else e0)
             best = need if best is None else min(best, need)
             if best <= e0:
                 break
-        if best is None or best > e0 + self.max_move:
+        if best is None or best > e0 + self.tie_reach_um:
             return None
         return round(max(e0, best), 4)
+
+    def extend_shield_reservation(self, layer, c, lo, hi, net, extension):
+        """Reserve the actual shield after drop-track rounding, only if its
+        complete physical shape clears all previously reserved other nets.
+        The clock segment and its track are unchanged; this is ground metal.
+        """
+        shapes = seg_shapes(layer, c, lo, hi, net, self.nd, self.shield, ext=extension)[1:]
+        if any(self.ix.hits(shape, first=True) for shape in shapes):
+            return False
+        self.reserve(shapes)
+        self.__dict__.setdefault("shield_reservation_extensions", []).append(
+            dict(net=net, layer=layer, centre_um=c, span_um=[lo, hi], end_extension_um=extension))
+        return True
 
     def place(self, layer, ideal, a0, a1, net, avoid=(), keep=None, dry=False):
         """(centre, mode) of the nearest legal track, or (None, None).  avoid: track centres this segment must not
