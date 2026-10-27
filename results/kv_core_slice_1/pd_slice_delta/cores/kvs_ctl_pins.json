@@ -2,7 +2,7 @@
  "schema": "opentallas.die_plan.core_pins.v1",
  "core": "qkd_kvs_ctl",
  "frame": "core R0, origin (0,0), outline 371.52 x 371.52",
- "source": "physical/ref_tile/qkd_kvs_ctl/views/qkd_kvs_ctl/qkd_kvs_ctl.lef (closed qkd_kvs_ctl_mu2-mu2-9105d74ed, record d20111be0), pin access points (shape centre, or the on-track point inside a wide shape) | KV-PLAN3 v3.9e: outline 475.2^2 -> 371.52^2 (GEOM-REVIEW-2 05:45), pins scaled along their face, die symmetric tracks | KV-CORE-SLICE-1 10-27: die clock/reset pins -> 12.8a centre entry island (M5 under the M9->M5 stack)",
+ "source": "physical/ref_tile/qkd_kvs_ctl/views/qkd_kvs_ctl/qkd_kvs_ctl.lef (closed qkd_kvs_ctl_mu2-mu2-9105d74ed, record d20111be0), pin access points (shape centre, or the on-track point inside a wide shape) | KV-PLAN3 v3.9e: outline 475.2^2 -> 371.52^2 (GEOM-REVIEW-2 05:45), pins scaled along their face, die symmetric tracks | KV-CORE-SLICE-1 10-27: die clock/reset pins -> 12.8a centre entry island (M5 under the M9->M5 stack) | KV-CORES-R2/KVSCTL-2 10-27: 250 proven-dead input bits dropped (d2d__svc/srx, cht, boot__boot_pr, kg), live pieces renamed P_<lo>",
  "pins": [
   {
    "name": "o_hroot_WS[1090]",
@@ -31253,387 +31253,111 @@
    "y": 371.478
   },
   {
-   "name": "d2d__svc[143]",
-   "layer": "M5",
-   "x": 56.616,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[144]",
-   "layer": "M5",
-   "x": 56.76,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[145]",
-   "layer": "M5",
-   "x": 56.856,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[146]",
-   "layer": "M5",
-   "x": 56.952,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[147]",
-   "layer": "M5",
-   "x": 57.096,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[148]",
-   "layer": "M5",
-   "x": 57.192,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[149]",
-   "layer": "M5",
-   "x": 57.336,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[150]",
-   "layer": "M5",
-   "x": 57.432,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[151]",
-   "layer": "M5",
-   "x": 57.528,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[152]",
-   "layer": "M5",
-   "x": 57.672,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[153]",
-   "layer": "M5",
-   "x": 57.768,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[154]",
-   "layer": "M5",
-   "x": 57.864,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[155]",
-   "layer": "M5",
-   "x": 58.008,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[156]",
-   "layer": "M5",
-   "x": 58.104,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[157]",
-   "layer": "M5",
-   "x": 58.2,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[158]",
-   "layer": "M5",
-   "x": 58.344,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[159]",
-   "layer": "M5",
-   "x": 58.44,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[160]",
-   "layer": "M5",
-   "x": 58.536,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[161]",
-   "layer": "M5",
-   "x": 58.68,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[162]",
-   "layer": "M5",
-   "x": 58.776,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[163]",
-   "layer": "M5",
-   "x": 58.872,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[164]",
-   "layer": "M5",
-   "x": 59.016,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[165]",
-   "layer": "M5",
-   "x": 59.112,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[166]",
-   "layer": "M5",
-   "x": 59.208,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[167]",
-   "layer": "M5",
-   "x": 59.352,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[168]",
-   "layer": "M5",
-   "x": 59.448,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[169]",
-   "layer": "M5",
-   "x": 59.544,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[170]",
-   "layer": "M5",
-   "x": 59.688,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[171]",
-   "layer": "M5",
-   "x": 59.784,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[172]",
-   "layer": "M5",
-   "x": 59.88,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[173]",
-   "layer": "M5",
-   "x": 60.024,
-   "y": 371.478
-  },
-  {
    "name": "embgw__bw[0]",
    "layer": "M5",
    "x": 60.12,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[505]",
+   "name": "d2d__srx_10[495]",
    "layer": "M5",
    "x": 60.264,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[506]",
+   "name": "d2d__srx_10[496]",
    "layer": "M5",
    "x": 60.36,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[507]",
+   "name": "d2d__srx_10[497]",
    "layer": "M5",
    "x": 60.456,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[508]",
+   "name": "d2d__srx_10[498]",
    "layer": "M5",
    "x": 60.6,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[509]",
+   "name": "d2d__srx_10[499]",
    "layer": "M5",
    "x": 60.696,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[510]",
+   "name": "d2d__srx_10[500]",
    "layer": "M5",
    "x": 60.792,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[511]",
+   "name": "d2d__srx_10[501]",
    "layer": "M5",
    "x": 60.936,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[512]",
+   "name": "d2d__srx_10[502]",
    "layer": "M5",
    "x": 61.032,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[513]",
+   "name": "d2d__srx_10[503]",
    "layer": "M5",
    "x": 61.128,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[514]",
+   "name": "d2d__srx_10[504]",
    "layer": "M5",
    "x": 61.272,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[515]",
+   "name": "d2d__srx_10[505]",
    "layer": "M5",
    "x": 61.368,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[516]",
+   "name": "d2d__srx_10[506]",
    "layer": "M5",
    "x": 61.464,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[517]",
+   "name": "d2d__srx_10[507]",
    "layer": "M5",
    "x": 61.608,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[518]",
+   "name": "d2d__srx_10[508]",
    "layer": "M5",
    "x": 61.704,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[519]",
+   "name": "d2d__srx_10[509]",
    "layer": "M5",
    "x": 61.8,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[520]",
+   "name": "d2d__srx_10[510]",
    "layer": "M5",
    "x": 61.944,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[521]",
+   "name": "d2d__srx_10[511]",
    "layer": "M5",
    "x": 62.04,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[0]",
-   "layer": "M5",
-   "x": 62.136,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[1]",
-   "layer": "M5",
-   "x": 62.28,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[2]",
-   "layer": "M5",
-   "x": 62.376,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[3]",
-   "layer": "M5",
-   "x": 62.472,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[4]",
-   "layer": "M5",
-   "x": 62.616,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[5]",
-   "layer": "M5",
-   "x": 62.712,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[6]",
-   "layer": "M5",
-   "x": 62.808,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[7]",
-   "layer": "M5",
-   "x": 62.952,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[8]",
-   "layer": "M5",
-   "x": 63.048,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[9]",
-   "layer": "M5",
-   "x": 63.144,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[10]",
-   "layer": "M5",
-   "x": 63.288,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[11]",
-   "layer": "M5",
-   "x": 63.384,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[12]",
-   "layer": "M5",
-   "x": 63.528,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[13]",
-   "layer": "M5",
-   "x": 63.624,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[14]",
-   "layer": "M5",
-   "x": 63.72,
    "y": 371.478
   },
   {
@@ -32021,193 +31745,193 @@
    "y": 371.478
   },
   {
-   "name": "d2d__srx[57]",
+   "name": "d2d__srx_10[47]",
    "layer": "M5",
    "x": 71.064,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[58]",
+   "name": "d2d__srx_10[48]",
    "layer": "M5",
    "x": 71.16,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[59]",
+   "name": "d2d__srx_10[49]",
    "layer": "M5",
    "x": 71.256,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[60]",
+   "name": "d2d__srx_10[50]",
    "layer": "M5",
    "x": 71.4,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[61]",
+   "name": "d2d__srx_10[51]",
    "layer": "M5",
    "x": 71.496,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[62]",
+   "name": "d2d__srx_10[52]",
    "layer": "M5",
    "x": 71.592,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[63]",
+   "name": "d2d__srx_10[53]",
    "layer": "M5",
    "x": 71.736,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[64]",
+   "name": "d2d__srx_10[54]",
    "layer": "M5",
    "x": 71.832,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[65]",
+   "name": "d2d__srx_10[55]",
    "layer": "M5",
    "x": 71.928,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[66]",
+   "name": "d2d__srx_10[56]",
    "layer": "M5",
    "x": 72.072,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[67]",
+   "name": "d2d__srx_10[57]",
    "layer": "M5",
    "x": 72.168,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[68]",
+   "name": "d2d__srx_10[58]",
    "layer": "M5",
    "x": 72.264,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[69]",
+   "name": "d2d__srx_10[59]",
    "layer": "M5",
    "x": 72.408,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[70]",
+   "name": "d2d__srx_10[60]",
    "layer": "M5",
    "x": 72.504,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[71]",
+   "name": "d2d__srx_10[61]",
    "layer": "M5",
    "x": 72.648,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[72]",
+   "name": "d2d__srx_10[62]",
    "layer": "M5",
    "x": 72.744,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[73]",
+   "name": "d2d__srx_10[63]",
    "layer": "M5",
    "x": 72.84,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[74]",
+   "name": "d2d__srx_10[64]",
    "layer": "M5",
    "x": 72.984,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[75]",
+   "name": "d2d__srx_10[65]",
    "layer": "M5",
    "x": 73.08,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[76]",
+   "name": "d2d__srx_10[66]",
    "layer": "M5",
    "x": 73.176,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[77]",
+   "name": "d2d__srx_10[67]",
    "layer": "M5",
    "x": 73.32,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[78]",
+   "name": "d2d__srx_10[68]",
    "layer": "M5",
    "x": 73.416,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[79]",
+   "name": "d2d__srx_10[69]",
    "layer": "M5",
    "x": 73.512,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[80]",
+   "name": "d2d__srx_10[70]",
    "layer": "M5",
    "x": 73.656,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[81]",
+   "name": "d2d__srx_10[71]",
    "layer": "M5",
    "x": 73.752,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[82]",
+   "name": "d2d__srx_10[72]",
    "layer": "M5",
    "x": 73.848,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[83]",
+   "name": "d2d__srx_10[73]",
    "layer": "M5",
    "x": 73.992,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[84]",
+   "name": "d2d__srx_10[74]",
    "layer": "M5",
    "x": 74.088,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[85]",
+   "name": "d2d__srx_10[75]",
    "layer": "M5",
    "x": 74.184,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[86]",
+   "name": "d2d__srx_10[76]",
    "layer": "M5",
    "x": 74.328,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[87]",
+   "name": "d2d__srx_10[77]",
    "layer": "M5",
    "x": 74.424,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[88]",
+   "name": "d2d__srx_10[78]",
    "layer": "M5",
    "x": 74.52,
    "y": 371.478
@@ -32405,1345 +32129,1345 @@
    "y": 371.478
   },
   {
-   "name": "d2d__srx[89]",
+   "name": "d2d__srx_10[79]",
    "layer": "M5",
    "x": 79.176,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[90]",
+   "name": "d2d__srx_10[80]",
    "layer": "M5",
    "x": 79.272,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[91]",
+   "name": "d2d__srx_10[81]",
    "layer": "M5",
    "x": 79.368,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[92]",
+   "name": "d2d__srx_10[82]",
    "layer": "M5",
    "x": 79.512,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[93]",
+   "name": "d2d__srx_10[83]",
    "layer": "M5",
    "x": 79.608,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[94]",
+   "name": "d2d__srx_10[84]",
    "layer": "M5",
    "x": 79.704,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[95]",
+   "name": "d2d__srx_10[85]",
    "layer": "M5",
    "x": 79.848,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[96]",
+   "name": "d2d__srx_10[86]",
    "layer": "M5",
    "x": 79.944,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[97]",
+   "name": "d2d__srx_10[87]",
    "layer": "M5",
    "x": 80.04,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[98]",
+   "name": "d2d__srx_10[88]",
    "layer": "M5",
    "x": 80.184,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[99]",
+   "name": "d2d__srx_10[89]",
    "layer": "M5",
    "x": 80.28,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[100]",
+   "name": "d2d__srx_10[90]",
    "layer": "M5",
    "x": 80.376,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[101]",
+   "name": "d2d__srx_10[91]",
    "layer": "M5",
    "x": 80.52,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[102]",
+   "name": "d2d__srx_10[92]",
    "layer": "M5",
    "x": 80.616,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[103]",
+   "name": "d2d__srx_10[93]",
    "layer": "M5",
    "x": 80.712,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[104]",
+   "name": "d2d__srx_10[94]",
    "layer": "M5",
    "x": 80.856,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[105]",
+   "name": "d2d__srx_10[95]",
    "layer": "M5",
    "x": 80.952,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[106]",
+   "name": "d2d__srx_10[96]",
    "layer": "M5",
    "x": 81.048,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[107]",
+   "name": "d2d__srx_10[97]",
    "layer": "M5",
    "x": 81.192,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[108]",
+   "name": "d2d__srx_10[98]",
    "layer": "M5",
    "x": 81.288,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[109]",
+   "name": "d2d__srx_10[99]",
    "layer": "M5",
    "x": 81.384,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[110]",
+   "name": "d2d__srx_10[100]",
    "layer": "M5",
    "x": 81.528,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[111]",
+   "name": "d2d__srx_10[101]",
    "layer": "M5",
    "x": 81.624,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[112]",
+   "name": "d2d__srx_10[102]",
    "layer": "M5",
    "x": 81.72,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[113]",
+   "name": "d2d__srx_10[103]",
    "layer": "M5",
    "x": 81.864,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[114]",
+   "name": "d2d__srx_10[104]",
    "layer": "M5",
    "x": 81.96,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[115]",
+   "name": "d2d__srx_10[105]",
    "layer": "M5",
    "x": 82.104,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[116]",
+   "name": "d2d__srx_10[106]",
    "layer": "M5",
    "x": 82.2,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[117]",
+   "name": "d2d__srx_10[107]",
    "layer": "M5",
    "x": 82.296,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[118]",
+   "name": "d2d__srx_10[108]",
    "layer": "M5",
    "x": 82.44,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[119]",
+   "name": "d2d__srx_10[109]",
    "layer": "M5",
    "x": 82.536,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[120]",
+   "name": "d2d__srx_10[110]",
    "layer": "M5",
    "x": 82.632,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[25]",
+   "name": "d2d__srx_10[15]",
    "layer": "M5",
    "x": 82.776,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[26]",
+   "name": "d2d__srx_10[16]",
    "layer": "M5",
    "x": 82.872,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[27]",
+   "name": "d2d__srx_10[17]",
    "layer": "M5",
    "x": 82.968,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[28]",
+   "name": "d2d__srx_10[18]",
    "layer": "M5",
    "x": 83.112,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[29]",
+   "name": "d2d__srx_10[19]",
    "layer": "M5",
    "x": 83.208,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[30]",
+   "name": "d2d__srx_10[20]",
    "layer": "M5",
    "x": 83.304,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[31]",
+   "name": "d2d__srx_10[21]",
    "layer": "M5",
    "x": 83.448,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[32]",
+   "name": "d2d__srx_10[22]",
    "layer": "M5",
    "x": 83.544,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[33]",
+   "name": "d2d__srx_10[23]",
    "layer": "M5",
    "x": 83.64,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[34]",
+   "name": "d2d__srx_10[24]",
    "layer": "M5",
    "x": 83.784,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[35]",
+   "name": "d2d__srx_10[25]",
    "layer": "M5",
    "x": 83.88,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[36]",
+   "name": "d2d__srx_10[26]",
    "layer": "M5",
    "x": 83.976,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[37]",
+   "name": "d2d__srx_10[27]",
    "layer": "M5",
    "x": 84.12,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[38]",
+   "name": "d2d__srx_10[28]",
    "layer": "M5",
    "x": 84.216,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[39]",
+   "name": "d2d__srx_10[29]",
    "layer": "M5",
    "x": 84.312,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[40]",
+   "name": "d2d__srx_10[30]",
    "layer": "M5",
    "x": 84.456,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[41]",
+   "name": "d2d__srx_10[31]",
    "layer": "M5",
    "x": 84.552,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[42]",
+   "name": "d2d__srx_10[32]",
    "layer": "M5",
    "x": 84.648,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[43]",
+   "name": "d2d__srx_10[33]",
    "layer": "M5",
    "x": 84.792,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[44]",
+   "name": "d2d__srx_10[34]",
    "layer": "M5",
    "x": 84.888,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[45]",
+   "name": "d2d__srx_10[35]",
    "layer": "M5",
    "x": 85.032,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[46]",
+   "name": "d2d__srx_10[36]",
    "layer": "M5",
    "x": 85.128,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[47]",
+   "name": "d2d__srx_10[37]",
    "layer": "M5",
    "x": 85.224,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[48]",
+   "name": "d2d__srx_10[38]",
    "layer": "M5",
    "x": 85.368,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[49]",
+   "name": "d2d__srx_10[39]",
    "layer": "M5",
    "x": 85.464,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[50]",
+   "name": "d2d__srx_10[40]",
    "layer": "M5",
    "x": 85.56,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[51]",
+   "name": "d2d__srx_10[41]",
    "layer": "M5",
    "x": 85.704,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[52]",
+   "name": "d2d__srx_10[42]",
    "layer": "M5",
    "x": 85.8,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[53]",
+   "name": "d2d__srx_10[43]",
    "layer": "M5",
    "x": 85.896,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[54]",
+   "name": "d2d__srx_10[44]",
    "layer": "M5",
    "x": 86.04,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[55]",
+   "name": "d2d__srx_10[45]",
    "layer": "M5",
    "x": 86.136,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[56]",
+   "name": "d2d__srx_10[46]",
    "layer": "M5",
    "x": 86.232,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[153]",
+   "name": "d2d__srx_10[143]",
    "layer": "M5",
    "x": 86.376,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[154]",
+   "name": "d2d__srx_10[144]",
    "layer": "M5",
    "x": 86.472,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[155]",
+   "name": "d2d__srx_10[145]",
    "layer": "M5",
    "x": 86.568,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[156]",
+   "name": "d2d__srx_10[146]",
    "layer": "M5",
    "x": 86.712,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[157]",
+   "name": "d2d__srx_10[147]",
    "layer": "M5",
    "x": 86.808,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[158]",
+   "name": "d2d__srx_10[148]",
    "layer": "M5",
    "x": 86.904,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[159]",
+   "name": "d2d__srx_10[149]",
    "layer": "M5",
    "x": 87.048,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[160]",
+   "name": "d2d__srx_10[150]",
    "layer": "M5",
    "x": 87.144,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[161]",
+   "name": "d2d__srx_10[151]",
    "layer": "M5",
    "x": 87.24,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[162]",
+   "name": "d2d__srx_10[152]",
    "layer": "M5",
    "x": 87.384,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[163]",
+   "name": "d2d__srx_10[153]",
    "layer": "M5",
    "x": 87.48,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[164]",
+   "name": "d2d__srx_10[154]",
    "layer": "M5",
    "x": 87.576,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[165]",
+   "name": "d2d__srx_10[155]",
    "layer": "M5",
    "x": 87.72,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[166]",
+   "name": "d2d__srx_10[156]",
    "layer": "M5",
    "x": 87.816,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[167]",
+   "name": "d2d__srx_10[157]",
    "layer": "M5",
    "x": 87.912,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[168]",
+   "name": "d2d__srx_10[158]",
    "layer": "M5",
    "x": 88.056,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[169]",
+   "name": "d2d__srx_10[159]",
    "layer": "M5",
    "x": 88.152,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[170]",
+   "name": "d2d__srx_10[160]",
    "layer": "M5",
    "x": 88.296,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[171]",
+   "name": "d2d__srx_10[161]",
    "layer": "M5",
    "x": 88.392,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[172]",
+   "name": "d2d__srx_10[162]",
    "layer": "M5",
    "x": 88.488,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[173]",
+   "name": "d2d__srx_10[163]",
    "layer": "M5",
    "x": 88.632,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[174]",
+   "name": "d2d__srx_10[164]",
    "layer": "M5",
    "x": 88.728,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[175]",
+   "name": "d2d__srx_10[165]",
    "layer": "M5",
    "x": 88.824,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[176]",
+   "name": "d2d__srx_10[166]",
    "layer": "M5",
    "x": 88.968,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[177]",
+   "name": "d2d__srx_10[167]",
    "layer": "M5",
    "x": 89.064,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[178]",
+   "name": "d2d__srx_10[168]",
    "layer": "M5",
    "x": 89.16,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[179]",
+   "name": "d2d__srx_10[169]",
    "layer": "M5",
    "x": 89.304,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[180]",
+   "name": "d2d__srx_10[170]",
    "layer": "M5",
    "x": 89.4,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[181]",
+   "name": "d2d__srx_10[171]",
    "layer": "M5",
    "x": 89.496,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[182]",
+   "name": "d2d__srx_10[172]",
    "layer": "M5",
    "x": 89.64,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[183]",
+   "name": "d2d__srx_10[173]",
    "layer": "M5",
    "x": 89.736,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[184]",
+   "name": "d2d__srx_10[174]",
    "layer": "M5",
    "x": 89.832,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[185]",
+   "name": "d2d__srx_10[175]",
    "layer": "M5",
    "x": 89.976,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[186]",
+   "name": "d2d__srx_10[176]",
    "layer": "M5",
    "x": 90.072,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[187]",
+   "name": "d2d__srx_10[177]",
    "layer": "M5",
    "x": 90.168,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[188]",
+   "name": "d2d__srx_10[178]",
    "layer": "M5",
    "x": 90.312,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[189]",
+   "name": "d2d__srx_10[179]",
    "layer": "M5",
    "x": 90.408,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[190]",
+   "name": "d2d__srx_10[180]",
    "layer": "M5",
    "x": 90.504,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[191]",
+   "name": "d2d__srx_10[181]",
    "layer": "M5",
    "x": 90.648,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[192]",
+   "name": "d2d__srx_10[182]",
    "layer": "M5",
    "x": 90.744,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[193]",
+   "name": "d2d__srx_10[183]",
    "layer": "M5",
    "x": 90.84,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[194]",
+   "name": "d2d__srx_10[184]",
    "layer": "M5",
    "x": 90.984,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[195]",
+   "name": "d2d__srx_10[185]",
    "layer": "M5",
    "x": 91.08,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[196]",
+   "name": "d2d__srx_10[186]",
    "layer": "M5",
    "x": 91.224,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[197]",
+   "name": "d2d__srx_10[187]",
    "layer": "M5",
    "x": 91.32,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[198]",
+   "name": "d2d__srx_10[188]",
    "layer": "M5",
    "x": 91.416,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[199]",
+   "name": "d2d__srx_10[189]",
    "layer": "M5",
    "x": 91.56,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[200]",
+   "name": "d2d__srx_10[190]",
    "layer": "M5",
    "x": 91.656,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[201]",
+   "name": "d2d__srx_10[191]",
    "layer": "M5",
    "x": 91.752,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[202]",
+   "name": "d2d__srx_10[192]",
    "layer": "M5",
    "x": 91.896,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[203]",
+   "name": "d2d__srx_10[193]",
    "layer": "M5",
    "x": 91.992,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[204]",
+   "name": "d2d__srx_10[194]",
    "layer": "M5",
    "x": 92.088,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[205]",
+   "name": "d2d__srx_10[195]",
    "layer": "M5",
    "x": 92.232,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[206]",
+   "name": "d2d__srx_10[196]",
    "layer": "M5",
    "x": 92.328,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[207]",
+   "name": "d2d__srx_10[197]",
    "layer": "M5",
    "x": 92.424,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[208]",
+   "name": "d2d__srx_10[198]",
    "layer": "M5",
    "x": 92.568,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[209]",
+   "name": "d2d__srx_10[199]",
    "layer": "M5",
    "x": 92.664,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[210]",
+   "name": "d2d__srx_10[200]",
    "layer": "M5",
    "x": 92.76,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[211]",
+   "name": "d2d__srx_10[201]",
    "layer": "M5",
    "x": 92.904,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[212]",
+   "name": "d2d__srx_10[202]",
    "layer": "M5",
    "x": 93.0,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[213]",
+   "name": "d2d__srx_10[203]",
    "layer": "M5",
    "x": 93.096,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[214]",
+   "name": "d2d__srx_10[204]",
    "layer": "M5",
    "x": 93.24,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[215]",
+   "name": "d2d__srx_10[205]",
    "layer": "M5",
    "x": 93.336,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[216]",
+   "name": "d2d__srx_10[206]",
    "layer": "M5",
    "x": 93.432,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[217]",
+   "name": "d2d__srx_10[207]",
    "layer": "M5",
    "x": 93.576,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[218]",
+   "name": "d2d__srx_10[208]",
    "layer": "M5",
    "x": 93.672,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[219]",
+   "name": "d2d__srx_10[209]",
    "layer": "M5",
    "x": 93.768,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[220]",
+   "name": "d2d__srx_10[210]",
    "layer": "M5",
    "x": 93.912,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[221]",
+   "name": "d2d__srx_10[211]",
    "layer": "M5",
    "x": 94.008,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[222]",
+   "name": "d2d__srx_10[212]",
    "layer": "M5",
    "x": 94.104,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[223]",
+   "name": "d2d__srx_10[213]",
    "layer": "M5",
    "x": 94.248,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[224]",
+   "name": "d2d__srx_10[214]",
    "layer": "M5",
    "x": 94.344,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[225]",
+   "name": "d2d__srx_10[215]",
    "layer": "M5",
    "x": 94.488,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[226]",
+   "name": "d2d__srx_10[216]",
    "layer": "M5",
    "x": 94.584,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[227]",
+   "name": "d2d__srx_10[217]",
    "layer": "M5",
    "x": 94.68,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[228]",
+   "name": "d2d__srx_10[218]",
    "layer": "M5",
    "x": 94.824,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[229]",
+   "name": "d2d__srx_10[219]",
    "layer": "M5",
    "x": 94.92,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[230]",
+   "name": "d2d__srx_10[220]",
    "layer": "M5",
    "x": 95.016,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[231]",
+   "name": "d2d__srx_10[221]",
    "layer": "M5",
    "x": 95.16,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[232]",
+   "name": "d2d__srx_10[222]",
    "layer": "M5",
    "x": 95.256,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[233]",
+   "name": "d2d__srx_10[223]",
    "layer": "M5",
    "x": 95.352,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[234]",
+   "name": "d2d__srx_10[224]",
    "layer": "M5",
    "x": 95.496,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[235]",
+   "name": "d2d__srx_10[225]",
    "layer": "M5",
    "x": 95.592,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[236]",
+   "name": "d2d__srx_10[226]",
    "layer": "M5",
    "x": 95.688,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[237]",
+   "name": "d2d__srx_10[227]",
    "layer": "M5",
    "x": 95.832,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[238]",
+   "name": "d2d__srx_10[228]",
    "layer": "M5",
    "x": 95.928,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[239]",
+   "name": "d2d__srx_10[229]",
    "layer": "M5",
    "x": 96.024,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[240]",
+   "name": "d2d__srx_10[230]",
    "layer": "M5",
    "x": 96.168,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[241]",
+   "name": "d2d__srx_10[231]",
    "layer": "M5",
    "x": 96.264,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[242]",
+   "name": "d2d__srx_10[232]",
    "layer": "M5",
    "x": 96.36,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[243]",
+   "name": "d2d__srx_10[233]",
    "layer": "M5",
    "x": 96.504,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[244]",
+   "name": "d2d__srx_10[234]",
    "layer": "M5",
    "x": 96.6,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[245]",
+   "name": "d2d__srx_10[235]",
    "layer": "M5",
    "x": 96.696,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[246]",
+   "name": "d2d__srx_10[236]",
    "layer": "M5",
    "x": 96.84,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[247]",
+   "name": "d2d__srx_10[237]",
    "layer": "M5",
    "x": 96.936,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[248]",
+   "name": "d2d__srx_10[238]",
    "layer": "M5",
    "x": 97.032,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[121]",
+   "name": "d2d__srx_10[111]",
    "layer": "M5",
    "x": 97.176,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[122]",
+   "name": "d2d__srx_10[112]",
    "layer": "M5",
    "x": 97.272,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[123]",
+   "name": "d2d__srx_10[113]",
    "layer": "M5",
    "x": 97.416,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[124]",
+   "name": "d2d__srx_10[114]",
    "layer": "M5",
    "x": 97.512,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[125]",
+   "name": "d2d__srx_10[115]",
    "layer": "M5",
    "x": 97.608,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[126]",
+   "name": "d2d__srx_10[116]",
    "layer": "M5",
    "x": 97.752,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[127]",
+   "name": "d2d__srx_10[117]",
    "layer": "M5",
    "x": 97.848,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[128]",
+   "name": "d2d__srx_10[118]",
    "layer": "M5",
    "x": 97.944,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[129]",
+   "name": "d2d__srx_10[119]",
    "layer": "M5",
    "x": 98.088,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[130]",
+   "name": "d2d__srx_10[120]",
    "layer": "M5",
    "x": 98.184,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[131]",
+   "name": "d2d__srx_10[121]",
    "layer": "M5",
    "x": 98.28,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[132]",
+   "name": "d2d__srx_10[122]",
    "layer": "M5",
    "x": 98.424,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[133]",
+   "name": "d2d__srx_10[123]",
    "layer": "M5",
    "x": 98.52,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[134]",
+   "name": "d2d__srx_10[124]",
    "layer": "M5",
    "x": 98.616,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[135]",
+   "name": "d2d__srx_10[125]",
    "layer": "M5",
    "x": 98.76,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[136]",
+   "name": "d2d__srx_10[126]",
    "layer": "M5",
    "x": 98.856,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[137]",
+   "name": "d2d__srx_10[127]",
    "layer": "M5",
    "x": 98.952,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[138]",
+   "name": "d2d__srx_10[128]",
    "layer": "M5",
    "x": 99.096,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[139]",
+   "name": "d2d__srx_10[129]",
    "layer": "M5",
    "x": 99.192,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[140]",
+   "name": "d2d__srx_10[130]",
    "layer": "M5",
    "x": 99.288,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[141]",
+   "name": "d2d__srx_10[131]",
    "layer": "M5",
    "x": 99.432,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[142]",
+   "name": "d2d__srx_10[132]",
    "layer": "M5",
    "x": 99.528,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[143]",
+   "name": "d2d__srx_10[133]",
    "layer": "M5",
    "x": 99.624,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[144]",
+   "name": "d2d__srx_10[134]",
    "layer": "M5",
    "x": 99.768,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[145]",
+   "name": "d2d__srx_10[135]",
    "layer": "M5",
    "x": 99.864,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[146]",
+   "name": "d2d__srx_10[136]",
    "layer": "M5",
    "x": 99.96,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[147]",
+   "name": "d2d__srx_10[137]",
    "layer": "M5",
    "x": 100.104,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[148]",
+   "name": "d2d__srx_10[138]",
    "layer": "M5",
    "x": 100.2,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[149]",
+   "name": "d2d__srx_10[139]",
    "layer": "M5",
    "x": 100.296,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[150]",
+   "name": "d2d__srx_10[140]",
    "layer": "M5",
    "x": 100.44,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[151]",
+   "name": "d2d__srx_10[141]",
    "layer": "M5",
    "x": 100.536,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[152]",
+   "name": "d2d__srx_10[142]",
    "layer": "M5",
    "x": 100.68,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[249]",
+   "name": "d2d__srx_10[239]",
    "layer": "M5",
    "x": 101.688,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[250]",
+   "name": "d2d__srx_10[240]",
    "layer": "M5",
    "x": 101.784,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[251]",
+   "name": "d2d__srx_10[241]",
    "layer": "M5",
    "x": 101.88,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[252]",
+   "name": "d2d__srx_10[242]",
    "layer": "M5",
    "x": 102.024,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[253]",
+   "name": "d2d__srx_10[243]",
    "layer": "M5",
    "x": 102.12,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[254]",
+   "name": "d2d__srx_10[244]",
    "layer": "M5",
    "x": 102.216,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[255]",
+   "name": "d2d__srx_10[245]",
    "layer": "M5",
    "x": 102.36,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[256]",
+   "name": "d2d__srx_10[246]",
    "layer": "M5",
    "x": 102.456,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[257]",
+   "name": "d2d__srx_10[247]",
    "layer": "M5",
    "x": 102.552,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[258]",
+   "name": "d2d__srx_10[248]",
    "layer": "M5",
    "x": 102.696,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[259]",
+   "name": "d2d__srx_10[249]",
    "layer": "M5",
    "x": 102.792,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[260]",
+   "name": "d2d__srx_10[250]",
    "layer": "M5",
    "x": 102.888,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[261]",
+   "name": "d2d__srx_10[251]",
    "layer": "M5",
    "x": 103.032,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[262]",
+   "name": "d2d__srx_10[252]",
    "layer": "M5",
    "x": 103.128,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[263]",
+   "name": "d2d__srx_10[253]",
    "layer": "M5",
    "x": 103.224,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[264]",
+   "name": "d2d__srx_10[254]",
    "layer": "M5",
    "x": 103.368,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[265]",
+   "name": "d2d__srx_10[255]",
    "layer": "M5",
    "x": 103.464,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[266]",
+   "name": "d2d__srx_10[256]",
    "layer": "M5",
    "x": 103.608,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[267]",
+   "name": "d2d__srx_10[257]",
    "layer": "M5",
    "x": 103.704,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[268]",
+   "name": "d2d__srx_10[258]",
    "layer": "M5",
    "x": 103.8,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[269]",
+   "name": "d2d__srx_10[259]",
    "layer": "M5",
    "x": 103.944,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[270]",
+   "name": "d2d__srx_10[260]",
    "layer": "M5",
    "x": 104.04,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[271]",
+   "name": "d2d__srx_10[261]",
    "layer": "M5",
    "x": 104.136,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[272]",
+   "name": "d2d__srx_10[262]",
    "layer": "M5",
    "x": 104.28,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[273]",
+   "name": "d2d__srx_10[263]",
    "layer": "M5",
    "x": 104.376,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[274]",
+   "name": "d2d__srx_10[264]",
    "layer": "M5",
    "x": 104.472,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[275]",
+   "name": "d2d__srx_10[265]",
    "layer": "M5",
    "x": 104.616,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[276]",
+   "name": "d2d__srx_10[266]",
    "layer": "M5",
    "x": 104.712,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[277]",
+   "name": "d2d__srx_10[267]",
    "layer": "M5",
    "x": 104.808,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[278]",
+   "name": "d2d__srx_10[268]",
    "layer": "M5",
    "x": 104.952,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[279]",
+   "name": "d2d__srx_10[269]",
    "layer": "M5",
    "x": 105.048,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[280]",
+   "name": "d2d__srx_10[270]",
    "layer": "M5",
    "x": 105.144,
    "y": 371.478
@@ -33791,151 +33515,91 @@
    "y": 371.478
   },
   {
-   "name": "d2d__srx[0]",
-   "layer": "M5",
-   "x": 106.056,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__srx[1]",
-   "layer": "M5",
-   "x": 106.152,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__srx[2]",
-   "layer": "M5",
-   "x": 106.296,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__srx[3]",
-   "layer": "M5",
-   "x": 106.392,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__srx[4]",
-   "layer": "M5",
-   "x": 106.488,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__srx[5]",
-   "layer": "M5",
-   "x": 106.632,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__srx[6]",
-   "layer": "M5",
-   "x": 106.728,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__srx[7]",
-   "layer": "M5",
-   "x": 106.872,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__srx[8]",
-   "layer": "M5",
-   "x": 106.968,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__srx[9]",
-   "layer": "M5",
-   "x": 107.064,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__srx[10]",
+   "name": "d2d__srx_10[0]",
    "layer": "M5",
    "x": 107.208,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[11]",
+   "name": "d2d__srx_10[1]",
    "layer": "M5",
    "x": 107.304,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[12]",
+   "name": "d2d__srx_10[2]",
    "layer": "M5",
    "x": 107.4,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[13]",
+   "name": "d2d__srx_10[3]",
    "layer": "M5",
    "x": 107.544,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[14]",
+   "name": "d2d__srx_10[4]",
    "layer": "M5",
    "x": 107.64,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[15]",
+   "name": "d2d__srx_10[5]",
    "layer": "M5",
    "x": 107.736,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[16]",
+   "name": "d2d__srx_10[6]",
    "layer": "M5",
    "x": 107.88,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[17]",
+   "name": "d2d__srx_10[7]",
    "layer": "M5",
    "x": 107.976,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[18]",
+   "name": "d2d__srx_10[8]",
    "layer": "M5",
    "x": 108.072,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[19]",
+   "name": "d2d__srx_10[9]",
    "layer": "M5",
    "x": 108.216,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[20]",
+   "name": "d2d__srx_10[10]",
    "layer": "M5",
    "x": 108.312,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[21]",
+   "name": "d2d__srx_10[11]",
    "layer": "M5",
    "x": 108.408,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[22]",
+   "name": "d2d__srx_10[12]",
    "layer": "M5",
    "x": 108.552,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[23]",
+   "name": "d2d__srx_10[13]",
    "layer": "M5",
    "x": 108.648,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[24]",
+   "name": "d2d__srx_10[14]",
    "layer": "M5",
    "x": 108.744,
    "y": 371.478
@@ -34325,757 +33989,757 @@
    "y": 371.478
   },
   {
-   "name": "d2d__srx[281]",
+   "name": "d2d__srx_10[271]",
    "layer": "M5",
    "x": 116.088,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[282]",
+   "name": "d2d__srx_10[272]",
    "layer": "M5",
    "x": 116.184,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[283]",
+   "name": "d2d__srx_10[273]",
    "layer": "M5",
    "x": 116.328,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[284]",
+   "name": "d2d__srx_10[274]",
    "layer": "M5",
    "x": 116.424,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[285]",
+   "name": "d2d__srx_10[275]",
    "layer": "M5",
    "x": 116.52,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[286]",
+   "name": "d2d__srx_10[276]",
    "layer": "M5",
    "x": 116.664,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[287]",
+   "name": "d2d__srx_10[277]",
    "layer": "M5",
    "x": 116.76,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[288]",
+   "name": "d2d__srx_10[278]",
    "layer": "M5",
    "x": 116.856,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[289]",
+   "name": "d2d__srx_10[279]",
    "layer": "M5",
    "x": 117.0,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[290]",
+   "name": "d2d__srx_10[280]",
    "layer": "M5",
    "x": 117.096,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[291]",
+   "name": "d2d__srx_10[281]",
    "layer": "M5",
    "x": 117.192,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[292]",
+   "name": "d2d__srx_10[282]",
    "layer": "M5",
    "x": 117.336,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[293]",
+   "name": "d2d__srx_10[283]",
    "layer": "M5",
    "x": 117.432,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[294]",
+   "name": "d2d__srx_10[284]",
    "layer": "M5",
    "x": 117.528,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[295]",
+   "name": "d2d__srx_10[285]",
    "layer": "M5",
    "x": 117.672,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[296]",
+   "name": "d2d__srx_10[286]",
    "layer": "M5",
    "x": 117.768,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[297]",
+   "name": "d2d__srx_10[287]",
    "layer": "M5",
    "x": 117.864,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[298]",
+   "name": "d2d__srx_10[288]",
    "layer": "M5",
    "x": 118.008,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[299]",
+   "name": "d2d__srx_10[289]",
    "layer": "M5",
    "x": 118.104,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[300]",
+   "name": "d2d__srx_10[290]",
    "layer": "M5",
    "x": 118.2,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[301]",
+   "name": "d2d__srx_10[291]",
    "layer": "M5",
    "x": 118.344,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[302]",
+   "name": "d2d__srx_10[292]",
    "layer": "M5",
    "x": 118.44,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[303]",
+   "name": "d2d__srx_10[293]",
    "layer": "M5",
    "x": 118.536,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[304]",
+   "name": "d2d__srx_10[294]",
    "layer": "M5",
    "x": 118.68,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[305]",
+   "name": "d2d__srx_10[295]",
    "layer": "M5",
    "x": 118.776,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[306]",
+   "name": "d2d__srx_10[296]",
    "layer": "M5",
    "x": 118.872,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[307]",
+   "name": "d2d__srx_10[297]",
    "layer": "M5",
    "x": 119.016,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[308]",
+   "name": "d2d__srx_10[298]",
    "layer": "M5",
    "x": 119.112,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[309]",
+   "name": "d2d__srx_10[299]",
    "layer": "M5",
    "x": 119.256,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[310]",
+   "name": "d2d__srx_10[300]",
    "layer": "M5",
    "x": 119.352,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[311]",
+   "name": "d2d__srx_10[301]",
    "layer": "M5",
    "x": 119.448,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[312]",
+   "name": "d2d__srx_10[302]",
    "layer": "M5",
    "x": 119.592,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[313]",
+   "name": "d2d__srx_10[303]",
    "layer": "M5",
    "x": 119.688,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[314]",
+   "name": "d2d__srx_10[304]",
    "layer": "M5",
    "x": 119.784,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[315]",
+   "name": "d2d__srx_10[305]",
    "layer": "M5",
    "x": 119.928,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[316]",
+   "name": "d2d__srx_10[306]",
    "layer": "M5",
    "x": 120.024,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[317]",
+   "name": "d2d__srx_10[307]",
    "layer": "M5",
    "x": 120.12,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[318]",
+   "name": "d2d__srx_10[308]",
    "layer": "M5",
    "x": 120.264,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[319]",
+   "name": "d2d__srx_10[309]",
    "layer": "M5",
    "x": 120.36,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[320]",
+   "name": "d2d__srx_10[310]",
    "layer": "M5",
    "x": 120.456,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[321]",
+   "name": "d2d__srx_10[311]",
    "layer": "M5",
    "x": 120.6,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[322]",
+   "name": "d2d__srx_10[312]",
    "layer": "M5",
    "x": 120.696,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[323]",
+   "name": "d2d__srx_10[313]",
    "layer": "M5",
    "x": 120.792,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[324]",
+   "name": "d2d__srx_10[314]",
    "layer": "M5",
    "x": 120.936,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[325]",
+   "name": "d2d__srx_10[315]",
    "layer": "M5",
    "x": 121.032,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[326]",
+   "name": "d2d__srx_10[316]",
    "layer": "M5",
    "x": 121.128,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[327]",
+   "name": "d2d__srx_10[317]",
    "layer": "M5",
    "x": 121.272,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[328]",
+   "name": "d2d__srx_10[318]",
    "layer": "M5",
    "x": 121.368,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[329]",
+   "name": "d2d__srx_10[319]",
    "layer": "M5",
    "x": 121.464,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[330]",
+   "name": "d2d__srx_10[320]",
    "layer": "M5",
    "x": 121.608,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[331]",
+   "name": "d2d__srx_10[321]",
    "layer": "M5",
    "x": 121.704,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[332]",
+   "name": "d2d__srx_10[322]",
    "layer": "M5",
    "x": 121.8,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[333]",
+   "name": "d2d__srx_10[323]",
    "layer": "M5",
    "x": 121.944,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[334]",
+   "name": "d2d__srx_10[324]",
    "layer": "M5",
    "x": 122.04,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[335]",
+   "name": "d2d__srx_10[325]",
    "layer": "M5",
    "x": 122.184,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[336]",
+   "name": "d2d__srx_10[326]",
    "layer": "M5",
    "x": 122.28,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[337]",
+   "name": "d2d__srx_10[327]",
    "layer": "M5",
    "x": 122.376,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[338]",
+   "name": "d2d__srx_10[328]",
    "layer": "M5",
    "x": 122.52,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[339]",
+   "name": "d2d__srx_10[329]",
    "layer": "M5",
    "x": 122.616,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[340]",
+   "name": "d2d__srx_10[330]",
    "layer": "M5",
    "x": 122.712,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[341]",
+   "name": "d2d__srx_10[331]",
    "layer": "M5",
    "x": 122.856,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[342]",
+   "name": "d2d__srx_10[332]",
    "layer": "M5",
    "x": 122.952,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[343]",
+   "name": "d2d__srx_10[333]",
    "layer": "M5",
    "x": 123.048,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[344]",
+   "name": "d2d__srx_10[334]",
    "layer": "M5",
    "x": 123.192,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[377]",
+   "name": "d2d__srx_10[367]",
    "layer": "M5",
    "x": 124.2,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[378]",
+   "name": "d2d__srx_10[368]",
    "layer": "M5",
    "x": 124.296,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[379]",
+   "name": "d2d__srx_10[369]",
    "layer": "M5",
    "x": 124.392,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[380]",
+   "name": "d2d__srx_10[370]",
    "layer": "M5",
    "x": 124.536,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[381]",
+   "name": "d2d__srx_10[371]",
    "layer": "M5",
    "x": 124.632,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[382]",
+   "name": "d2d__srx_10[372]",
    "layer": "M5",
    "x": 124.728,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[383]",
+   "name": "d2d__srx_10[373]",
    "layer": "M5",
    "x": 124.872,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[384]",
+   "name": "d2d__srx_10[374]",
    "layer": "M5",
    "x": 124.968,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[385]",
+   "name": "d2d__srx_10[375]",
    "layer": "M5",
    "x": 125.064,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[386]",
+   "name": "d2d__srx_10[376]",
    "layer": "M5",
    "x": 125.208,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[387]",
+   "name": "d2d__srx_10[377]",
    "layer": "M5",
    "x": 125.304,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[388]",
+   "name": "d2d__srx_10[378]",
    "layer": "M5",
    "x": 125.448,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[389]",
+   "name": "d2d__srx_10[379]",
    "layer": "M5",
    "x": 125.544,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[390]",
+   "name": "d2d__srx_10[380]",
    "layer": "M5",
    "x": 125.64,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[391]",
+   "name": "d2d__srx_10[381]",
    "layer": "M5",
    "x": 125.784,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[392]",
+   "name": "d2d__srx_10[382]",
    "layer": "M5",
    "x": 125.88,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[393]",
+   "name": "d2d__srx_10[383]",
    "layer": "M5",
    "x": 125.976,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[394]",
+   "name": "d2d__srx_10[384]",
    "layer": "M5",
    "x": 126.12,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[395]",
+   "name": "d2d__srx_10[385]",
    "layer": "M5",
    "x": 126.216,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[396]",
+   "name": "d2d__srx_10[386]",
    "layer": "M5",
    "x": 126.312,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[397]",
+   "name": "d2d__srx_10[387]",
    "layer": "M5",
    "x": 126.456,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[398]",
+   "name": "d2d__srx_10[388]",
    "layer": "M5",
    "x": 126.552,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[399]",
+   "name": "d2d__srx_10[389]",
    "layer": "M5",
    "x": 126.648,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[400]",
+   "name": "d2d__srx_10[390]",
    "layer": "M5",
    "x": 126.792,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[401]",
+   "name": "d2d__srx_10[391]",
    "layer": "M5",
    "x": 126.888,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[402]",
+   "name": "d2d__srx_10[392]",
    "layer": "M5",
    "x": 126.984,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[403]",
+   "name": "d2d__srx_10[393]",
    "layer": "M5",
    "x": 127.128,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[404]",
+   "name": "d2d__srx_10[394]",
    "layer": "M5",
    "x": 127.224,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[405]",
+   "name": "d2d__srx_10[395]",
    "layer": "M5",
    "x": 127.32,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[406]",
+   "name": "d2d__srx_10[396]",
    "layer": "M5",
    "x": 127.464,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[407]",
+   "name": "d2d__srx_10[397]",
    "layer": "M5",
    "x": 127.56,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[408]",
+   "name": "d2d__srx_10[398]",
    "layer": "M5",
    "x": 127.656,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[345]",
+   "name": "d2d__srx_10[335]",
    "layer": "M5",
    "x": 127.8,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[346]",
+   "name": "d2d__srx_10[336]",
    "layer": "M5",
    "x": 127.896,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[347]",
+   "name": "d2d__srx_10[337]",
    "layer": "M5",
    "x": 127.992,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[348]",
+   "name": "d2d__srx_10[338]",
    "layer": "M5",
    "x": 128.136,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[349]",
+   "name": "d2d__srx_10[339]",
    "layer": "M5",
    "x": 128.232,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[350]",
+   "name": "d2d__srx_10[340]",
    "layer": "M5",
    "x": 128.376,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[351]",
+   "name": "d2d__srx_10[341]",
    "layer": "M5",
    "x": 128.472,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[352]",
+   "name": "d2d__srx_10[342]",
    "layer": "M5",
    "x": 128.568,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[353]",
+   "name": "d2d__srx_10[343]",
    "layer": "M5",
    "x": 128.712,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[354]",
+   "name": "d2d__srx_10[344]",
    "layer": "M5",
    "x": 128.808,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[355]",
+   "name": "d2d__srx_10[345]",
    "layer": "M5",
    "x": 128.904,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[356]",
+   "name": "d2d__srx_10[346]",
    "layer": "M5",
    "x": 129.048,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[357]",
+   "name": "d2d__srx_10[347]",
    "layer": "M5",
    "x": 129.144,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[358]",
+   "name": "d2d__srx_10[348]",
    "layer": "M5",
    "x": 129.24,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[359]",
+   "name": "d2d__srx_10[349]",
    "layer": "M5",
    "x": 129.384,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[360]",
+   "name": "d2d__srx_10[350]",
    "layer": "M5",
    "x": 129.48,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[361]",
+   "name": "d2d__srx_10[351]",
    "layer": "M5",
    "x": 129.576,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[362]",
+   "name": "d2d__srx_10[352]",
    "layer": "M5",
    "x": 129.72,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[363]",
+   "name": "d2d__srx_10[353]",
    "layer": "M5",
    "x": 129.816,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[364]",
+   "name": "d2d__srx_10[354]",
    "layer": "M5",
    "x": 129.912,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[365]",
+   "name": "d2d__srx_10[355]",
    "layer": "M5",
    "x": 130.056,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[366]",
+   "name": "d2d__srx_10[356]",
    "layer": "M5",
    "x": 130.152,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[367]",
+   "name": "d2d__srx_10[357]",
    "layer": "M5",
    "x": 130.248,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[368]",
+   "name": "d2d__srx_10[358]",
    "layer": "M5",
    "x": 130.392,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[369]",
+   "name": "d2d__srx_10[359]",
    "layer": "M5",
    "x": 130.488,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[370]",
+   "name": "d2d__srx_10[360]",
    "layer": "M5",
    "x": 130.584,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[371]",
+   "name": "d2d__srx_10[361]",
    "layer": "M5",
    "x": 130.728,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[372]",
+   "name": "d2d__srx_10[362]",
    "layer": "M5",
    "x": 130.824,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[373]",
+   "name": "d2d__srx_10[363]",
    "layer": "M5",
    "x": 130.92,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[374]",
+   "name": "d2d__srx_10[364]",
    "layer": "M5",
    "x": 131.064,
    "y": 371.478
@@ -35087,7 +34751,7 @@
    "y": 0.042
   },
   {
-   "name": "d2d__srx[375]",
+   "name": "d2d__srx_10[365]",
    "layer": "M5",
    "x": 131.16,
    "y": 371.478
@@ -35099,7 +34763,7 @@
    "y": 0.042
   },
   {
-   "name": "d2d__srx[376]",
+   "name": "d2d__srx_10[366]",
    "layer": "M5",
    "x": 131.256,
    "y": 371.478
@@ -35147,22 +34811,10 @@
    "y": 0.042
   },
   {
-   "name": "cht[0]",
-   "layer": "M5",
-   "x": 131.736,
-   "y": 371.478
-  },
-  {
    "name": "o_attn[16]",
    "layer": "M5",
    "x": 131.832,
    "y": 0.042
-  },
-  {
-   "name": "cht[1]",
-   "layer": "M5",
-   "x": 131.832,
-   "y": 371.478
   },
   {
    "name": "o_attn[17]",
@@ -35171,22 +34823,10 @@
    "y": 0.042
   },
   {
-   "name": "cht[2]",
-   "layer": "M5",
-   "x": 131.976,
-   "y": 371.478
-  },
-  {
    "name": "o_attn[18]",
    "layer": "M5",
    "x": 132.072,
    "y": 0.042
-  },
-  {
-   "name": "cht[3]",
-   "layer": "M5",
-   "x": 132.072,
-   "y": 371.478
   },
   {
    "name": "o_attn[19]",
@@ -35195,22 +34835,10 @@
    "y": 0.042
   },
   {
-   "name": "cht[4]",
-   "layer": "M5",
-   "x": 132.168,
-   "y": 371.478
-  },
-  {
    "name": "o_attn[20]",
    "layer": "M5",
    "x": 132.312,
    "y": 0.042
-  },
-  {
-   "name": "cht[5]",
-   "layer": "M5",
-   "x": 132.312,
-   "y": 371.478
   },
   {
    "name": "o_attn[21]",
@@ -35219,7 +34847,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[6]",
+   "name": "cht_6[0]",
    "layer": "M5",
    "x": 132.408,
    "y": 371.478
@@ -35231,7 +34859,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[7]",
+   "name": "cht_6[1]",
    "layer": "M5",
    "x": 132.504,
    "y": 371.478
@@ -35243,7 +34871,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[8]",
+   "name": "cht_6[2]",
    "layer": "M5",
    "x": 132.648,
    "y": 371.478
@@ -35255,7 +34883,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[9]",
+   "name": "cht_6[3]",
    "layer": "M5",
    "x": 132.744,
    "y": 371.478
@@ -35267,7 +34895,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[10]",
+   "name": "cht_6[4]",
    "layer": "M5",
    "x": 132.84,
    "y": 371.478
@@ -35279,7 +34907,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[11]",
+   "name": "cht_6[5]",
    "layer": "M5",
    "x": 132.984,
    "y": 371.478
@@ -35291,7 +34919,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[12]",
+   "name": "cht_6[6]",
    "layer": "M5",
    "x": 133.08,
    "y": 371.478
@@ -35303,7 +34931,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[13]",
+   "name": "cht_6[7]",
    "layer": "M5",
    "x": 133.176,
    "y": 371.478
@@ -35315,7 +34943,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[14]",
+   "name": "cht_6[8]",
    "layer": "M5",
    "x": 133.32,
    "y": 371.478
@@ -35327,7 +34955,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[15]",
+   "name": "cht_6[9]",
    "layer": "M5",
    "x": 133.416,
    "y": 371.478
@@ -35339,7 +34967,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[16]",
+   "name": "cht_6[10]",
    "layer": "M5",
    "x": 133.512,
    "y": 371.478
@@ -35351,7 +34979,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[17]",
+   "name": "cht_6[11]",
    "layer": "M5",
    "x": 133.656,
    "y": 371.478
@@ -35363,7 +34991,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[18]",
+   "name": "cht_6[12]",
    "layer": "M5",
    "x": 133.752,
    "y": 371.478
@@ -35375,7 +35003,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[19]",
+   "name": "cht_6[13]",
    "layer": "M5",
    "x": 133.848,
    "y": 371.478
@@ -35387,7 +35015,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[20]",
+   "name": "cht_6[14]",
    "layer": "M5",
    "x": 133.992,
    "y": 371.478
@@ -35399,7 +35027,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[21]",
+   "name": "cht_6[15]",
    "layer": "M5",
    "x": 134.088,
    "y": 371.478
@@ -35411,7 +35039,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[22]",
+   "name": "cht_6[16]",
    "layer": "M5",
    "x": 134.184,
    "y": 371.478
@@ -35423,7 +35051,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[23]",
+   "name": "cht_6[17]",
    "layer": "M5",
    "x": 134.328,
    "y": 371.478
@@ -35435,7 +35063,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[24]",
+   "name": "cht_6[18]",
    "layer": "M5",
    "x": 134.424,
    "y": 371.478
@@ -35447,7 +35075,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[25]",
+   "name": "cht_6[19]",
    "layer": "M5",
    "x": 134.568,
    "y": 371.478
@@ -35459,55 +35087,55 @@
    "y": 0.042
   },
   {
-   "name": "cht[26]",
+   "name": "cht_6[20]",
    "layer": "M5",
    "x": 134.664,
    "y": 371.478
   },
   {
-   "name": "cht[27]",
+   "name": "cht_6[21]",
    "layer": "M5",
    "x": 134.76,
    "y": 371.478
   },
   {
-   "name": "cht[28]",
+   "name": "cht_6[22]",
    "layer": "M5",
    "x": 134.904,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[409]",
+   "name": "d2d__srx_10[399]",
    "layer": "M5",
    "x": 135.0,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[410]",
+   "name": "d2d__srx_10[400]",
    "layer": "M5",
    "x": 135.096,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[411]",
+   "name": "d2d__srx_10[401]",
    "layer": "M5",
    "x": 135.24,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[412]",
+   "name": "d2d__srx_10[402]",
    "layer": "M5",
    "x": 135.336,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[413]",
+   "name": "d2d__srx_10[403]",
    "layer": "M5",
    "x": 135.432,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[414]",
+   "name": "d2d__srx_10[404]",
    "layer": "M5",
    "x": 135.576,
    "y": 371.478
@@ -35519,7 +35147,7 @@
    "y": 0.042
   },
   {
-   "name": "d2d__srx[415]",
+   "name": "d2d__srx_10[405]",
    "layer": "M5",
    "x": 135.672,
    "y": 371.478
@@ -35531,7 +35159,7 @@
    "y": 0.042
   },
   {
-   "name": "d2d__srx[416]",
+   "name": "d2d__srx_10[406]",
    "layer": "M5",
    "x": 135.768,
    "y": 371.478
@@ -35543,7 +35171,7 @@
    "y": 0.042
   },
   {
-   "name": "d2d__srx[417]",
+   "name": "d2d__srx_10[407]",
    "layer": "M5",
    "x": 135.912,
    "y": 371.478
@@ -35555,7 +35183,7 @@
    "y": 0.042
   },
   {
-   "name": "d2d__srx[418]",
+   "name": "d2d__srx_10[408]",
    "layer": "M5",
    "x": 136.008,
    "y": 371.478
@@ -35567,7 +35195,7 @@
    "y": 0.042
   },
   {
-   "name": "d2d__srx[419]",
+   "name": "d2d__srx_10[409]",
    "layer": "M5",
    "x": 136.104,
    "y": 371.478
@@ -35579,7 +35207,7 @@
    "y": 0.042
   },
   {
-   "name": "d2d__srx[420]",
+   "name": "d2d__srx_10[410]",
    "layer": "M5",
    "x": 136.248,
    "y": 371.478
@@ -35591,7 +35219,7 @@
    "y": 0.042
   },
   {
-   "name": "d2d__srx[421]",
+   "name": "d2d__srx_10[411]",
    "layer": "M5",
    "x": 136.344,
    "y": 371.478
@@ -35603,7 +35231,7 @@
    "y": 0.042
   },
   {
-   "name": "d2d__srx[422]",
+   "name": "d2d__srx_10[412]",
    "layer": "M5",
    "x": 136.44,
    "y": 371.478
@@ -35615,7 +35243,7 @@
    "y": 0.042
   },
   {
-   "name": "d2d__srx[423]",
+   "name": "d2d__srx_10[413]",
    "layer": "M5",
    "x": 136.584,
    "y": 371.478
@@ -35627,7 +35255,7 @@
    "y": 0.042
   },
   {
-   "name": "d2d__srx[424]",
+   "name": "d2d__srx_10[414]",
    "layer": "M5",
    "x": 136.68,
    "y": 371.478
@@ -35639,7 +35267,7 @@
    "y": 0.042
   },
   {
-   "name": "d2d__srx[425]",
+   "name": "d2d__srx_10[415]",
    "layer": "M5",
    "x": 136.776,
    "y": 371.478
@@ -35651,7 +35279,7 @@
    "y": 0.042
   },
   {
-   "name": "d2d__srx[426]",
+   "name": "d2d__srx_10[416]",
    "layer": "M5",
    "x": 136.92,
    "y": 371.478
@@ -35663,7 +35291,7 @@
    "y": 0.042
   },
   {
-   "name": "d2d__srx[427]",
+   "name": "d2d__srx_10[417]",
    "layer": "M5",
    "x": 137.016,
    "y": 371.478
@@ -35675,7 +35303,7 @@
    "y": 0.042
   },
   {
-   "name": "d2d__srx[428]",
+   "name": "d2d__srx_10[418]",
    "layer": "M5",
    "x": 137.112,
    "y": 371.478
@@ -35687,7 +35315,7 @@
    "y": 0.042
   },
   {
-   "name": "d2d__srx[429]",
+   "name": "d2d__srx_10[419]",
    "layer": "M5",
    "x": 137.256,
    "y": 371.478
@@ -35699,7 +35327,7 @@
    "y": 0.042
   },
   {
-   "name": "d2d__srx[430]",
+   "name": "d2d__srx_10[420]",
    "layer": "M5",
    "x": 137.352,
    "y": 371.478
@@ -35711,7 +35339,7 @@
    "y": 0.042
   },
   {
-   "name": "d2d__srx[431]",
+   "name": "d2d__srx_10[421]",
    "layer": "M5",
    "x": 137.448,
    "y": 371.478
@@ -35723,7 +35351,7 @@
    "y": 0.042
   },
   {
-   "name": "d2d__srx[432]",
+   "name": "d2d__srx_10[422]",
    "layer": "M5",
    "x": 137.592,
    "y": 371.478
@@ -35735,7 +35363,7 @@
    "y": 0.042
   },
   {
-   "name": "d2d__srx[433]",
+   "name": "d2d__srx_10[423]",
    "layer": "M5",
    "x": 137.688,
    "y": 371.478
@@ -35747,7 +35375,7 @@
    "y": 0.042
   },
   {
-   "name": "d2d__srx[434]",
+   "name": "d2d__srx_10[424]",
    "layer": "M5",
    "x": 137.832,
    "y": 371.478
@@ -35759,7 +35387,7 @@
    "y": 0.042
   },
   {
-   "name": "d2d__srx[435]",
+   "name": "d2d__srx_10[425]",
    "layer": "M5",
    "x": 137.928,
    "y": 371.478
@@ -35771,7 +35399,7 @@
    "y": 0.042
   },
   {
-   "name": "d2d__srx[436]",
+   "name": "d2d__srx_10[426]",
    "layer": "M5",
    "x": 138.024,
    "y": 371.478
@@ -35783,7 +35411,7 @@
    "y": 0.042
   },
   {
-   "name": "d2d__srx[437]",
+   "name": "d2d__srx_10[427]",
    "layer": "M5",
    "x": 138.168,
    "y": 371.478
@@ -35795,7 +35423,7 @@
    "y": 0.042
   },
   {
-   "name": "d2d__srx[438]",
+   "name": "d2d__srx_10[428]",
    "layer": "M5",
    "x": 138.264,
    "y": 371.478
@@ -35807,7 +35435,7 @@
    "y": 0.042
   },
   {
-   "name": "d2d__srx[439]",
+   "name": "d2d__srx_10[429]",
    "layer": "M5",
    "x": 138.36,
    "y": 371.478
@@ -35819,7 +35447,7 @@
    "y": 0.042
   },
   {
-   "name": "d2d__srx[440]",
+   "name": "d2d__srx_10[430]",
    "layer": "M5",
    "x": 138.504,
    "y": 371.478
@@ -35831,7 +35459,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[29]",
+   "name": "cht_6[23]",
    "layer": "M5",
    "x": 138.6,
    "y": 371.478
@@ -35843,7 +35471,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[30]",
+   "name": "cht_6[24]",
    "layer": "M5",
    "x": 138.696,
    "y": 371.478
@@ -35855,7 +35483,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[31]",
+   "name": "cht_6[25]",
    "layer": "M5",
    "x": 138.84,
    "y": 371.478
@@ -35867,7 +35495,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[32]",
+   "name": "cht_6[26]",
    "layer": "M5",
    "x": 138.936,
    "y": 371.478
@@ -35879,7 +35507,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[33]",
+   "name": "cht_6[27]",
    "layer": "M5",
    "x": 139.032,
    "y": 371.478
@@ -35891,7 +35519,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[34]",
+   "name": "cht_6[28]",
    "layer": "M5",
    "x": 139.176,
    "y": 371.478
@@ -35903,7 +35531,7 @@
    "y": 185.76
   },
   {
-   "name": "cht[35]",
+   "name": "cht_6[29]",
    "layer": "M5",
    "x": 139.272,
    "y": 371.478
@@ -35915,7 +35543,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[36]",
+   "name": "cht_6[30]",
    "layer": "M5",
    "x": 139.368,
    "y": 371.478
@@ -35927,22 +35555,10 @@
    "y": 0.042
   },
   {
-   "name": "cht[37]",
-   "layer": "M5",
-   "x": 139.512,
-   "y": 371.478
-  },
-  {
    "name": "lp[2]",
    "layer": "M5",
    "x": 139.608,
    "y": 0.042
-  },
-  {
-   "name": "cht[38]",
-   "layer": "M5",
-   "x": 139.608,
-   "y": 371.478
   },
   {
    "name": "lp[3]",
@@ -35951,22 +35567,10 @@
    "y": 0.042
   },
   {
-   "name": "cht[39]",
-   "layer": "M5",
-   "x": 139.704,
-   "y": 371.478
-  },
-  {
    "name": "lp[4]",
    "layer": "M5",
    "x": 139.848,
    "y": 0.042
-  },
-  {
-   "name": "cht[40]",
-   "layer": "M5",
-   "x": 139.848,
-   "y": 371.478
   },
   {
    "name": "lp[5]",
@@ -35975,22 +35579,10 @@
    "y": 0.042
   },
   {
-   "name": "cht[41]",
-   "layer": "M5",
-   "x": 139.944,
-   "y": 371.478
-  },
-  {
    "name": "lp[6]",
    "layer": "M5",
    "x": 140.04,
    "y": 0.042
-  },
-  {
-   "name": "cht[42]",
-   "layer": "M5",
-   "x": 140.04,
-   "y": 371.478
   },
   {
    "name": "lp[7]",
@@ -35999,7 +35591,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[43]",
+   "name": "cht_43[0]",
    "layer": "M5",
    "x": 140.184,
    "y": 371.478
@@ -36011,7 +35603,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[44]",
+   "name": "cht_43[1]",
    "layer": "M5",
    "x": 140.28,
    "y": 371.478
@@ -36023,7 +35615,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[45]",
+   "name": "cht_43[2]",
    "layer": "M5",
    "x": 140.376,
    "y": 371.478
@@ -36035,7 +35627,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[46]",
+   "name": "cht_43[3]",
    "layer": "M5",
    "x": 140.52,
    "y": 371.478
@@ -36047,7 +35639,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[47]",
+   "name": "cht_43[4]",
    "layer": "M5",
    "x": 140.616,
    "y": 371.478
@@ -36059,7 +35651,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[48]",
+   "name": "cht_43[5]",
    "layer": "M5",
    "x": 140.76,
    "y": 371.478
@@ -36071,7 +35663,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[49]",
+   "name": "cht_43[6]",
    "layer": "M5",
    "x": 140.856,
    "y": 371.478
@@ -36083,7 +35675,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[50]",
+   "name": "cht_43[7]",
    "layer": "M5",
    "x": 140.952,
    "y": 371.478
@@ -36095,7 +35687,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[51]",
+   "name": "cht_43[8]",
    "layer": "M5",
    "x": 141.096,
    "y": 371.478
@@ -36107,7 +35699,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[52]",
+   "name": "cht_43[9]",
    "layer": "M5",
    "x": 141.192,
    "y": 371.478
@@ -36119,7 +35711,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[53]",
+   "name": "cht_43[10]",
    "layer": "M5",
    "x": 141.288,
    "y": 371.478
@@ -36131,7 +35723,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[54]",
+   "name": "cht_43[11]",
    "layer": "M5",
    "x": 141.432,
    "y": 371.478
@@ -36143,7 +35735,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[55]",
+   "name": "cht_43[12]",
    "layer": "M5",
    "x": 141.528,
    "y": 371.478
@@ -36155,7 +35747,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[56]",
+   "name": "cht_43[13]",
    "layer": "M5",
    "x": 141.624,
    "y": 371.478
@@ -36167,7 +35759,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[57]",
+   "name": "cht_43[14]",
    "layer": "M5",
    "x": 141.768,
    "y": 371.478
@@ -36179,7 +35771,7 @@
    "y": 0.042
   },
   {
-   "name": "cht[58]",
+   "name": "cht_43[15]",
    "layer": "M5",
    "x": 141.864,
    "y": 371.478
@@ -36845,385 +36437,385 @@
    "y": 371.478
   },
   {
-   "name": "d2d__srx[473]",
+   "name": "d2d__srx_10[463]",
    "layer": "M5",
    "x": 153.912,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[474]",
+   "name": "d2d__srx_10[464]",
    "layer": "M5",
    "x": 154.008,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[475]",
+   "name": "d2d__srx_10[465]",
    "layer": "M5",
    "x": 154.152,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[476]",
+   "name": "d2d__srx_10[466]",
    "layer": "M5",
    "x": 154.248,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[477]",
+   "name": "d2d__srx_10[467]",
    "layer": "M5",
    "x": 154.344,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[478]",
+   "name": "d2d__srx_10[468]",
    "layer": "M5",
    "x": 154.488,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[479]",
+   "name": "d2d__srx_10[469]",
    "layer": "M5",
    "x": 154.584,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[480]",
+   "name": "d2d__srx_10[470]",
    "layer": "M5",
    "x": 154.68,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[481]",
+   "name": "d2d__srx_10[471]",
    "layer": "M5",
    "x": 154.824,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[482]",
+   "name": "d2d__srx_10[472]",
    "layer": "M5",
    "x": 154.92,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[483]",
+   "name": "d2d__srx_10[473]",
    "layer": "M5",
    "x": 155.016,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[484]",
+   "name": "d2d__srx_10[474]",
    "layer": "M5",
    "x": 155.16,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[485]",
+   "name": "d2d__srx_10[475]",
    "layer": "M5",
    "x": 155.256,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[486]",
+   "name": "d2d__srx_10[476]",
    "layer": "M5",
    "x": 155.352,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[487]",
+   "name": "d2d__srx_10[477]",
    "layer": "M5",
    "x": 155.496,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[488]",
+   "name": "d2d__srx_10[478]",
    "layer": "M5",
    "x": 155.592,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[489]",
+   "name": "d2d__srx_10[479]",
    "layer": "M5",
    "x": 155.688,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[490]",
+   "name": "d2d__srx_10[480]",
    "layer": "M5",
    "x": 155.832,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[491]",
+   "name": "d2d__srx_10[481]",
    "layer": "M5",
    "x": 155.928,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[492]",
+   "name": "d2d__srx_10[482]",
    "layer": "M5",
    "x": 156.024,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[493]",
+   "name": "d2d__srx_10[483]",
    "layer": "M5",
    "x": 156.168,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[494]",
+   "name": "d2d__srx_10[484]",
    "layer": "M5",
    "x": 156.264,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[495]",
+   "name": "d2d__srx_10[485]",
    "layer": "M5",
    "x": 156.408,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[496]",
+   "name": "d2d__srx_10[486]",
    "layer": "M5",
    "x": 156.504,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[497]",
+   "name": "d2d__srx_10[487]",
    "layer": "M5",
    "x": 156.6,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[498]",
+   "name": "d2d__srx_10[488]",
    "layer": "M5",
    "x": 156.744,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[499]",
+   "name": "d2d__srx_10[489]",
    "layer": "M5",
    "x": 156.84,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[500]",
+   "name": "d2d__srx_10[490]",
    "layer": "M5",
    "x": 156.936,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[501]",
+   "name": "d2d__srx_10[491]",
    "layer": "M5",
    "x": 157.08,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[502]",
+   "name": "d2d__srx_10[492]",
    "layer": "M5",
    "x": 157.176,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[503]",
+   "name": "d2d__srx_10[493]",
    "layer": "M5",
    "x": 157.272,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[504]",
+   "name": "d2d__srx_10[494]",
    "layer": "M5",
    "x": 157.416,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[441]",
+   "name": "d2d__srx_10[431]",
    "layer": "M5",
    "x": 157.512,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[442]",
+   "name": "d2d__srx_10[432]",
    "layer": "M5",
    "x": 157.608,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[443]",
+   "name": "d2d__srx_10[433]",
    "layer": "M5",
    "x": 157.752,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[444]",
+   "name": "d2d__srx_10[434]",
    "layer": "M5",
    "x": 157.848,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[445]",
+   "name": "d2d__srx_10[435]",
    "layer": "M5",
    "x": 157.944,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[446]",
+   "name": "d2d__srx_10[436]",
    "layer": "M5",
    "x": 158.088,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[447]",
+   "name": "d2d__srx_10[437]",
    "layer": "M5",
    "x": 158.184,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[448]",
+   "name": "d2d__srx_10[438]",
    "layer": "M5",
    "x": 158.28,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[449]",
+   "name": "d2d__srx_10[439]",
    "layer": "M5",
    "x": 158.424,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[450]",
+   "name": "d2d__srx_10[440]",
    "layer": "M5",
    "x": 158.52,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[451]",
+   "name": "d2d__srx_10[441]",
    "layer": "M5",
    "x": 158.616,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[452]",
+   "name": "d2d__srx_10[442]",
    "layer": "M5",
    "x": 158.76,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[453]",
+   "name": "d2d__srx_10[443]",
    "layer": "M5",
    "x": 158.856,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[454]",
+   "name": "d2d__srx_10[444]",
    "layer": "M5",
    "x": 158.952,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[455]",
+   "name": "d2d__srx_10[445]",
    "layer": "M5",
    "x": 159.096,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[456]",
+   "name": "d2d__srx_10[446]",
    "layer": "M5",
    "x": 159.192,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[457]",
+   "name": "d2d__srx_10[447]",
    "layer": "M5",
    "x": 159.336,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[458]",
+   "name": "d2d__srx_10[448]",
    "layer": "M5",
    "x": 159.432,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[459]",
+   "name": "d2d__srx_10[449]",
    "layer": "M5",
    "x": 159.528,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[460]",
+   "name": "d2d__srx_10[450]",
    "layer": "M5",
    "x": 159.672,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[461]",
+   "name": "d2d__srx_10[451]",
    "layer": "M5",
    "x": 159.768,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[462]",
+   "name": "d2d__srx_10[452]",
    "layer": "M5",
    "x": 159.864,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[463]",
+   "name": "d2d__srx_10[453]",
    "layer": "M5",
    "x": 160.008,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[464]",
+   "name": "d2d__srx_10[454]",
    "layer": "M5",
    "x": 160.104,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[465]",
+   "name": "d2d__srx_10[455]",
    "layer": "M5",
    "x": 160.2,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[466]",
+   "name": "d2d__srx_10[456]",
    "layer": "M5",
    "x": 160.344,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[467]",
+   "name": "d2d__srx_10[457]",
    "layer": "M5",
    "x": 160.44,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[468]",
+   "name": "d2d__srx_10[458]",
    "layer": "M5",
    "x": 160.536,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[469]",
+   "name": "d2d__srx_10[459]",
    "layer": "M5",
    "x": 160.68,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[470]",
+   "name": "d2d__srx_10[460]",
    "layer": "M5",
    "x": 160.776,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[471]",
+   "name": "d2d__srx_10[461]",
    "layer": "M5",
    "x": 160.872,
    "y": 371.478
   },
   {
-   "name": "d2d__srx[472]",
+   "name": "d2d__srx_10[462]",
    "layer": "M5",
    "x": 161.016,
    "y": 371.478
@@ -37343,217 +36935,7 @@
    "y": 371.478
   },
   {
-   "name": "boot__boot_pr[75]",
-   "layer": "M5",
-   "x": 163.272,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[76]",
-   "layer": "M5",
-   "x": 163.368,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[77]",
-   "layer": "M5",
-   "x": 163.464,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[78]",
-   "layer": "M5",
-   "x": 163.608,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[79]",
-   "layer": "M5",
-   "x": 163.704,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[80]",
-   "layer": "M5",
-   "x": 163.8,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[81]",
-   "layer": "M5",
-   "x": 163.944,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[82]",
-   "layer": "M5",
-   "x": 164.04,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[83]",
-   "layer": "M5",
-   "x": 164.136,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[84]",
-   "layer": "M5",
-   "x": 164.28,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[85]",
-   "layer": "M5",
-   "x": 164.376,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[86]",
-   "layer": "M5",
-   "x": 164.472,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[87]",
-   "layer": "M5",
-   "x": 164.616,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[120]",
-   "layer": "M5",
-   "x": 164.712,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[121]",
-   "layer": "M5",
-   "x": 164.808,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[122]",
-   "layer": "M5",
-   "x": 164.952,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[123]",
-   "layer": "M5",
-   "x": 165.048,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[124]",
-   "layer": "M5",
-   "x": 165.144,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[125]",
-   "layer": "M5",
-   "x": 165.288,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[126]",
-   "layer": "M5",
-   "x": 165.384,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[127]",
-   "layer": "M5",
-   "x": 165.528,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[128]",
-   "layer": "M5",
-   "x": 165.624,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[129]",
-   "layer": "M5",
-   "x": 165.72,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[130]",
-   "layer": "M5",
-   "x": 165.864,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[131]",
-   "layer": "M5",
-   "x": 165.96,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[132]",
-   "layer": "M5",
-   "x": 166.056,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[133]",
-   "layer": "M5",
-   "x": 166.2,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[134]",
-   "layer": "M5",
-   "x": 166.296,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[135]",
-   "layer": "M5",
-   "x": 166.392,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[136]",
-   "layer": "M5",
-   "x": 166.536,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[137]",
-   "layer": "M5",
-   "x": 166.632,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[138]",
-   "layer": "M5",
-   "x": 166.728,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[139]",
-   "layer": "M5",
-   "x": 166.872,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[140]",
-   "layer": "M5",
-   "x": 166.968,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[141]",
-   "layer": "M5",
-   "x": 167.064,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[142]",
+   "name": "boot__boot_pr_142[0]",
    "layer": "M5",
    "x": 167.208,
    "y": 371.478
@@ -38210,144 +37592,6 @@
    "name": "embgw__bw[292]",
    "layer": "M5",
    "x": 180.36,
-   "y": 371.478
-  },
-  {
-   "name": "kg[0]",
-   "layer": "M5",
-   "x": 180.456,
-   "y": 371.478
-  },
-  {
-   "name": "kg[1]",
-   "layer": "M5",
-   "x": 180.6,
-   "y": 371.478
-  },
-  {
-   "name": "kg[2]",
-   "layer": "M5",
-   "x": 180.696,
-   "y": 371.478
-  },
-  {
-   "name": "kg[3]",
-   "layer": "M5",
-   "x": 180.792,
-   "y": 371.478
-  },
-  {
-   "name": "kg[4]",
-   "layer": "M5",
-   "x": 180.936,
-   "y": 371.478
-  },
-  {
-   "name": "kg[5]",
-   "layer": "M5",
-   "x": 181.032,
-   "y": 371.478
-  },
-  {
-   "name": "kg[6]",
-   "layer": "M5",
-   "x": 181.176,
-   "y": 371.478
-  },
-  {
-   "name": "kg[7]",
-   "layer": "M5",
-   "x": 181.272,
-   "y": 371.478
-  },
-  {
-   "name": "kg[8]",
-   "layer": "M5",
-   "x": 181.368,
-   "y": 371.478
-  },
-  {
-   "name": "kg[9]",
-   "layer": "M5",
-   "x": 181.512,
-   "y": 371.478
-  },
-  {
-   "name": "kg[10]",
-   "layer": "M5",
-   "x": 181.608,
-   "y": 371.478
-  },
-  {
-   "name": "kg[11]",
-   "layer": "M5",
-   "x": 181.704,
-   "y": 371.478
-  },
-  {
-   "name": "kg[12]",
-   "layer": "M5",
-   "x": 181.848,
-   "y": 371.478
-  },
-  {
-   "name": "kg[13]",
-   "layer": "M5",
-   "x": 181.944,
-   "y": 371.478
-  },
-  {
-   "name": "kg[14]",
-   "layer": "M5",
-   "x": 182.04,
-   "y": 371.478
-  },
-  {
-   "name": "kg[15]",
-   "layer": "M5",
-   "x": 182.184,
-   "y": 371.478
-  },
-  {
-   "name": "kg[16]",
-   "layer": "M5",
-   "x": 182.28,
-   "y": 371.478
-  },
-  {
-   "name": "kg[17]",
-   "layer": "M5",
-   "x": 182.376,
-   "y": 371.478
-  },
-  {
-   "name": "kg[18]",
-   "layer": "M5",
-   "x": 182.52,
-   "y": 371.478
-  },
-  {
-   "name": "kg[19]",
-   "layer": "M5",
-   "x": 182.616,
-   "y": 371.478
-  },
-  {
-   "name": "kg[20]",
-   "layer": "M5",
-   "x": 182.712,
-   "y": 371.478
-  },
-  {
-   "name": "kg[21]",
-   "layer": "M5",
-   "x": 182.856,
-   "y": 371.478
-  },
-  {
-   "name": "kg[22]",
-   "layer": "M5",
-   "x": 182.952,
    "y": 371.478
   },
   {
@@ -39623,963 +38867,219 @@
    "y": 371.478
   },
   {
-   "name": "d2d__svc[15]",
-   "layer": "M5",
-   "x": 232.248,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[16]",
-   "layer": "M5",
-   "x": 232.392,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[17]",
-   "layer": "M5",
-   "x": 232.488,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[18]",
-   "layer": "M5",
-   "x": 232.584,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[19]",
-   "layer": "M5",
-   "x": 232.728,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[20]",
-   "layer": "M5",
-   "x": 232.824,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[21]",
-   "layer": "M5",
-   "x": 232.92,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[22]",
-   "layer": "M5",
-   "x": 233.064,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[23]",
+   "name": "d2d__svc_23[0]",
    "layer": "M5",
    "x": 233.16,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[24]",
+   "name": "d2d__svc_23[1]",
    "layer": "M5",
    "x": 233.256,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[25]",
-   "layer": "M5",
-   "x": 233.4,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[26]",
-   "layer": "M5",
-   "x": 233.496,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[27]",
-   "layer": "M5",
-   "x": 233.64,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[28]",
-   "layer": "M5",
-   "x": 233.736,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[29]",
-   "layer": "M5",
-   "x": 233.832,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[30]",
-   "layer": "M5",
-   "x": 233.976,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[31]",
-   "layer": "M5",
-   "x": 234.072,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[32]",
-   "layer": "M5",
-   "x": 234.168,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[33]",
-   "layer": "M5",
-   "x": 234.312,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[34]",
-   "layer": "M5",
-   "x": 234.408,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[35]",
-   "layer": "M5",
-   "x": 234.504,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[36]",
-   "layer": "M5",
-   "x": 234.648,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[37]",
-   "layer": "M5",
-   "x": 234.744,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[38]",
-   "layer": "M5",
-   "x": 234.84,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[39]",
-   "layer": "M5",
-   "x": 234.984,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[40]",
-   "layer": "M5",
-   "x": 235.08,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[41]",
-   "layer": "M5",
-   "x": 235.176,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[42]",
-   "layer": "M5",
-   "x": 235.32,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[43]",
-   "layer": "M5",
-   "x": 235.416,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[44]",
-   "layer": "M5",
-   "x": 235.512,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[45]",
-   "layer": "M5",
-   "x": 235.656,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[46]",
-   "layer": "M5",
-   "x": 235.752,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[79]",
+   "name": "d2d__svc_74[5]",
    "layer": "M5",
    "x": 236.76,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[80]",
+   "name": "d2d__svc_74[6]",
    "layer": "M5",
    "x": 236.904,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[81]",
+   "name": "d2d__svc_74[7]",
    "layer": "M5",
    "x": 237.0,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[82]",
+   "name": "d2d__svc_74[8]",
    "layer": "M5",
    "x": 237.096,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[83]",
+   "name": "d2d__svc_74[9]",
    "layer": "M5",
    "x": 237.24,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[84]",
+   "name": "d2d__svc_74[10]",
    "layer": "M5",
    "x": 237.336,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[85]",
+   "name": "d2d__svc_74[11]",
    "layer": "M5",
    "x": 237.432,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[86]",
+   "name": "d2d__svc_74[12]",
    "layer": "M5",
    "x": 237.576,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[87]",
+   "name": "d2d__svc_74[13]",
    "layer": "M5",
    "x": 237.672,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[88]",
+   "name": "d2d__svc_74[14]",
    "layer": "M5",
    "x": 237.768,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[89]",
+   "name": "d2d__svc_74[15]",
    "layer": "M5",
    "x": 237.912,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[90]",
-   "layer": "M5",
-   "x": 238.008,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[91]",
-   "layer": "M5",
-   "x": 238.104,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[92]",
+   "name": "d2d__svc_92[0]",
    "layer": "M5",
    "x": 238.248,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[93]",
+   "name": "d2d__svc_92[1]",
    "layer": "M5",
    "x": 238.344,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[94]",
+   "name": "d2d__svc_92[2]",
    "layer": "M5",
    "x": 238.44,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[95]",
+   "name": "d2d__svc_92[3]",
    "layer": "M5",
    "x": 238.584,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[96]",
+   "name": "d2d__svc_92[4]",
    "layer": "M5",
    "x": 238.68,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[97]",
+   "name": "d2d__svc_92[5]",
    "layer": "M5",
    "x": 238.776,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[98]",
+   "name": "d2d__svc_92[6]",
    "layer": "M5",
    "x": 238.92,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[99]",
+   "name": "d2d__svc_92[7]",
    "layer": "M5",
    "x": 239.016,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[100]",
+   "name": "d2d__svc_92[8]",
    "layer": "M5",
    "x": 239.112,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[101]",
+   "name": "d2d__svc_92[9]",
    "layer": "M5",
    "x": 239.256,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[102]",
+   "name": "d2d__svc_92[10]",
    "layer": "M5",
    "x": 239.352,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[103]",
+   "name": "d2d__svc_92[11]",
    "layer": "M5",
    "x": 239.448,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[104]",
+   "name": "d2d__svc_92[12]",
    "layer": "M5",
    "x": 239.592,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[105]",
+   "name": "d2d__svc_92[13]",
    "layer": "M5",
    "x": 239.688,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[106]",
+   "name": "d2d__svc_92[14]",
    "layer": "M5",
    "x": 239.832,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[107]",
+   "name": "d2d__svc_92[15]",
    "layer": "M5",
    "x": 239.928,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[108]",
+   "name": "d2d__svc_92[16]",
    "layer": "M5",
    "x": 240.024,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[109]",
+   "name": "d2d__svc_92[17]",
    "layer": "M5",
    "x": 240.168,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[110]",
-   "layer": "M5",
-   "x": 240.264,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[47]",
-   "layer": "M5",
-   "x": 240.36,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[48]",
-   "layer": "M5",
-   "x": 240.504,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[49]",
-   "layer": "M5",
-   "x": 240.6,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[50]",
-   "layer": "M5",
-   "x": 240.696,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[51]",
-   "layer": "M5",
-   "x": 240.84,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[52]",
-   "layer": "M5",
-   "x": 240.936,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[53]",
-   "layer": "M5",
-   "x": 241.032,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[54]",
-   "layer": "M5",
-   "x": 241.176,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[55]",
-   "layer": "M5",
-   "x": 241.272,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[56]",
-   "layer": "M5",
-   "x": 241.368,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[57]",
-   "layer": "M5",
-   "x": 241.512,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[58]",
-   "layer": "M5",
-   "x": 241.608,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[59]",
-   "layer": "M5",
-   "x": 241.704,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[60]",
-   "layer": "M5",
-   "x": 241.848,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[61]",
-   "layer": "M5",
-   "x": 241.944,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[62]",
-   "layer": "M5",
-   "x": 242.04,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[63]",
-   "layer": "M5",
-   "x": 242.184,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[64]",
-   "layer": "M5",
-   "x": 242.28,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[65]",
-   "layer": "M5",
-   "x": 242.376,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[66]",
-   "layer": "M5",
-   "x": 242.52,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[67]",
-   "layer": "M5",
-   "x": 242.616,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[68]",
-   "layer": "M5",
-   "x": 242.712,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[69]",
-   "layer": "M5",
-   "x": 242.856,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[70]",
-   "layer": "M5",
-   "x": 242.952,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[71]",
-   "layer": "M5",
-   "x": 243.096,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[72]",
-   "layer": "M5",
-   "x": 243.192,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[73]",
-   "layer": "M5",
-   "x": 243.288,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[74]",
+   "name": "d2d__svc_74[0]",
    "layer": "M5",
    "x": 243.432,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[75]",
+   "name": "d2d__svc_74[1]",
    "layer": "M5",
    "x": 243.528,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[76]",
+   "name": "d2d__svc_74[2]",
    "layer": "M5",
    "x": 243.624,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[77]",
+   "name": "d2d__svc_74[3]",
    "layer": "M5",
    "x": 243.768,
    "y": 371.478
   },
   {
-   "name": "d2d__svc[78]",
+   "name": "d2d__svc_74[4]",
    "layer": "M5",
    "x": 243.864,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[111]",
-   "layer": "M5",
-   "x": 322.344,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[112]",
-   "layer": "M5",
-   "x": 322.44,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[113]",
-   "layer": "M5",
-   "x": 322.536,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[114]",
-   "layer": "M5",
-   "x": 322.68,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[115]",
-   "layer": "M5",
-   "x": 322.776,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[116]",
-   "layer": "M5",
-   "x": 322.872,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[117]",
-   "layer": "M5",
-   "x": 323.016,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[118]",
-   "layer": "M5",
-   "x": 323.112,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[119]",
-   "layer": "M5",
-   "x": 323.208,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[120]",
-   "layer": "M5",
-   "x": 323.352,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[121]",
-   "layer": "M5",
-   "x": 323.448,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[122]",
-   "layer": "M5",
-   "x": 323.592,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[123]",
-   "layer": "M5",
-   "x": 323.688,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[124]",
-   "layer": "M5",
-   "x": 323.784,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[125]",
-   "layer": "M5",
-   "x": 323.928,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[126]",
-   "layer": "M5",
-   "x": 324.024,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[127]",
-   "layer": "M5",
-   "x": 324.12,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[128]",
-   "layer": "M5",
-   "x": 324.264,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[129]",
-   "layer": "M5",
-   "x": 324.36,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[130]",
-   "layer": "M5",
-   "x": 324.456,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[131]",
-   "layer": "M5",
-   "x": 324.6,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[132]",
-   "layer": "M5",
-   "x": 324.696,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[133]",
-   "layer": "M5",
-   "x": 324.792,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[134]",
-   "layer": "M5",
-   "x": 324.936,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[135]",
-   "layer": "M5",
-   "x": 325.032,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[136]",
-   "layer": "M5",
-   "x": 325.128,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[137]",
-   "layer": "M5",
-   "x": 325.272,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[138]",
-   "layer": "M5",
-   "x": 325.368,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[139]",
-   "layer": "M5",
-   "x": 325.464,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[140]",
-   "layer": "M5",
-   "x": 325.608,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[141]",
-   "layer": "M5",
-   "x": 325.704,
-   "y": 371.478
-  },
-  {
-   "name": "d2d__svc[142]",
-   "layer": "M5",
-   "x": 325.8,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[88]",
-   "layer": "M5",
-   "x": 344.856,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[89]",
-   "layer": "M5",
-   "x": 344.952,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[90]",
-   "layer": "M5",
-   "x": 345.096,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[91]",
-   "layer": "M5",
-   "x": 345.192,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[92]",
-   "layer": "M5",
-   "x": 345.288,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[93]",
-   "layer": "M5",
-   "x": 345.432,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[94]",
-   "layer": "M5",
-   "x": 345.528,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[95]",
-   "layer": "M5",
-   "x": 345.624,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[96]",
-   "layer": "M5",
-   "x": 345.768,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[97]",
-   "layer": "M5",
-   "x": 345.864,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[98]",
-   "layer": "M5",
-   "x": 345.96,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[99]",
-   "layer": "M5",
-   "x": 346.104,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[100]",
-   "layer": "M5",
-   "x": 346.2,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[101]",
-   "layer": "M5",
-   "x": 346.296,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[102]",
-   "layer": "M5",
-   "x": 346.44,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[103]",
-   "layer": "M5",
-   "x": 346.536,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[104]",
-   "layer": "M5",
-   "x": 346.632,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[105]",
-   "layer": "M5",
-   "x": 346.776,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[106]",
-   "layer": "M5",
-   "x": 346.872,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[107]",
-   "layer": "M5",
-   "x": 346.968,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[108]",
-   "layer": "M5",
-   "x": 347.112,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[109]",
-   "layer": "M5",
-   "x": 347.208,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[110]",
-   "layer": "M5",
-   "x": 347.304,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[111]",
-   "layer": "M5",
-   "x": 347.448,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[112]",
-   "layer": "M5",
-   "x": 347.544,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[113]",
-   "layer": "M5",
-   "x": 347.64,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[114]",
-   "layer": "M5",
-   "x": 347.784,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[115]",
-   "layer": "M5",
-   "x": 347.88,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[116]",
-   "layer": "M5",
-   "x": 347.976,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[117]",
-   "layer": "M5",
-   "x": 348.12,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[118]",
-   "layer": "M5",
-   "x": 348.216,
-   "y": 371.478
-  },
-  {
-   "name": "boot__boot_pr[119]",
-   "layer": "M5",
-   "x": 348.36,
    "y": 371.478
   },
   {
@@ -40774,5 +39274,312 @@
    "x": 370.872,
    "y": 371.478
   }
- ]
+ ],
+ "declared_dead": {
+  "rule": "COORD 10-27 01:33 (b): proven dead (no load after flatten/opt_clean) + LEC with the pins removed EQUIVALENT; plan drop, no pin ties",
+  "evidence": "results/kv_cores_r2/kvsctl2/rtl/dead_drop.json + eq_dd.ys (LEC)",
+  "pins": [
+   "boot__boot_pr[100]",
+   "boot__boot_pr[101]",
+   "boot__boot_pr[102]",
+   "boot__boot_pr[103]",
+   "boot__boot_pr[104]",
+   "boot__boot_pr[105]",
+   "boot__boot_pr[106]",
+   "boot__boot_pr[107]",
+   "boot__boot_pr[108]",
+   "boot__boot_pr[109]",
+   "boot__boot_pr[110]",
+   "boot__boot_pr[111]",
+   "boot__boot_pr[112]",
+   "boot__boot_pr[113]",
+   "boot__boot_pr[114]",
+   "boot__boot_pr[115]",
+   "boot__boot_pr[116]",
+   "boot__boot_pr[117]",
+   "boot__boot_pr[118]",
+   "boot__boot_pr[119]",
+   "boot__boot_pr[120]",
+   "boot__boot_pr[121]",
+   "boot__boot_pr[122]",
+   "boot__boot_pr[123]",
+   "boot__boot_pr[124]",
+   "boot__boot_pr[125]",
+   "boot__boot_pr[126]",
+   "boot__boot_pr[127]",
+   "boot__boot_pr[128]",
+   "boot__boot_pr[129]",
+   "boot__boot_pr[130]",
+   "boot__boot_pr[131]",
+   "boot__boot_pr[132]",
+   "boot__boot_pr[133]",
+   "boot__boot_pr[134]",
+   "boot__boot_pr[135]",
+   "boot__boot_pr[136]",
+   "boot__boot_pr[137]",
+   "boot__boot_pr[138]",
+   "boot__boot_pr[139]",
+   "boot__boot_pr[140]",
+   "boot__boot_pr[141]",
+   "boot__boot_pr[75]",
+   "boot__boot_pr[76]",
+   "boot__boot_pr[77]",
+   "boot__boot_pr[78]",
+   "boot__boot_pr[79]",
+   "boot__boot_pr[80]",
+   "boot__boot_pr[81]",
+   "boot__boot_pr[82]",
+   "boot__boot_pr[83]",
+   "boot__boot_pr[84]",
+   "boot__boot_pr[85]",
+   "boot__boot_pr[86]",
+   "boot__boot_pr[87]",
+   "boot__boot_pr[88]",
+   "boot__boot_pr[89]",
+   "boot__boot_pr[90]",
+   "boot__boot_pr[91]",
+   "boot__boot_pr[92]",
+   "boot__boot_pr[93]",
+   "boot__boot_pr[94]",
+   "boot__boot_pr[95]",
+   "boot__boot_pr[96]",
+   "boot__boot_pr[97]",
+   "boot__boot_pr[98]",
+   "boot__boot_pr[99]",
+   "cht[0]",
+   "cht[1]",
+   "cht[2]",
+   "cht[37]",
+   "cht[38]",
+   "cht[39]",
+   "cht[3]",
+   "cht[40]",
+   "cht[41]",
+   "cht[42]",
+   "cht[4]",
+   "cht[5]",
+   "d2d__srx[0]",
+   "d2d__srx[1]",
+   "d2d__srx[2]",
+   "d2d__srx[3]",
+   "d2d__srx[4]",
+   "d2d__srx[5]",
+   "d2d__srx[6]",
+   "d2d__srx[7]",
+   "d2d__srx[8]",
+   "d2d__srx[9]",
+   "d2d__svc[0]",
+   "d2d__svc[10]",
+   "d2d__svc[110]",
+   "d2d__svc[111]",
+   "d2d__svc[112]",
+   "d2d__svc[113]",
+   "d2d__svc[114]",
+   "d2d__svc[115]",
+   "d2d__svc[116]",
+   "d2d__svc[117]",
+   "d2d__svc[118]",
+   "d2d__svc[119]",
+   "d2d__svc[11]",
+   "d2d__svc[120]",
+   "d2d__svc[121]",
+   "d2d__svc[122]",
+   "d2d__svc[123]",
+   "d2d__svc[124]",
+   "d2d__svc[125]",
+   "d2d__svc[126]",
+   "d2d__svc[127]",
+   "d2d__svc[128]",
+   "d2d__svc[129]",
+   "d2d__svc[12]",
+   "d2d__svc[130]",
+   "d2d__svc[131]",
+   "d2d__svc[132]",
+   "d2d__svc[133]",
+   "d2d__svc[134]",
+   "d2d__svc[135]",
+   "d2d__svc[136]",
+   "d2d__svc[137]",
+   "d2d__svc[138]",
+   "d2d__svc[139]",
+   "d2d__svc[13]",
+   "d2d__svc[140]",
+   "d2d__svc[141]",
+   "d2d__svc[142]",
+   "d2d__svc[143]",
+   "d2d__svc[144]",
+   "d2d__svc[145]",
+   "d2d__svc[146]",
+   "d2d__svc[147]",
+   "d2d__svc[148]",
+   "d2d__svc[149]",
+   "d2d__svc[14]",
+   "d2d__svc[150]",
+   "d2d__svc[151]",
+   "d2d__svc[152]",
+   "d2d__svc[153]",
+   "d2d__svc[154]",
+   "d2d__svc[155]",
+   "d2d__svc[156]",
+   "d2d__svc[157]",
+   "d2d__svc[158]",
+   "d2d__svc[159]",
+   "d2d__svc[15]",
+   "d2d__svc[160]",
+   "d2d__svc[161]",
+   "d2d__svc[162]",
+   "d2d__svc[163]",
+   "d2d__svc[164]",
+   "d2d__svc[165]",
+   "d2d__svc[166]",
+   "d2d__svc[167]",
+   "d2d__svc[168]",
+   "d2d__svc[169]",
+   "d2d__svc[16]",
+   "d2d__svc[170]",
+   "d2d__svc[171]",
+   "d2d__svc[172]",
+   "d2d__svc[173]",
+   "d2d__svc[17]",
+   "d2d__svc[18]",
+   "d2d__svc[19]",
+   "d2d__svc[1]",
+   "d2d__svc[20]",
+   "d2d__svc[21]",
+   "d2d__svc[22]",
+   "d2d__svc[25]",
+   "d2d__svc[26]",
+   "d2d__svc[27]",
+   "d2d__svc[28]",
+   "d2d__svc[29]",
+   "d2d__svc[2]",
+   "d2d__svc[30]",
+   "d2d__svc[31]",
+   "d2d__svc[32]",
+   "d2d__svc[33]",
+   "d2d__svc[34]",
+   "d2d__svc[35]",
+   "d2d__svc[36]",
+   "d2d__svc[37]",
+   "d2d__svc[38]",
+   "d2d__svc[39]",
+   "d2d__svc[3]",
+   "d2d__svc[40]",
+   "d2d__svc[41]",
+   "d2d__svc[42]",
+   "d2d__svc[43]",
+   "d2d__svc[44]",
+   "d2d__svc[45]",
+   "d2d__svc[46]",
+   "d2d__svc[47]",
+   "d2d__svc[48]",
+   "d2d__svc[49]",
+   "d2d__svc[4]",
+   "d2d__svc[50]",
+   "d2d__svc[51]",
+   "d2d__svc[52]",
+   "d2d__svc[53]",
+   "d2d__svc[54]",
+   "d2d__svc[55]",
+   "d2d__svc[56]",
+   "d2d__svc[57]",
+   "d2d__svc[58]",
+   "d2d__svc[59]",
+   "d2d__svc[5]",
+   "d2d__svc[60]",
+   "d2d__svc[61]",
+   "d2d__svc[62]",
+   "d2d__svc[63]",
+   "d2d__svc[64]",
+   "d2d__svc[65]",
+   "d2d__svc[66]",
+   "d2d__svc[67]",
+   "d2d__svc[68]",
+   "d2d__svc[69]",
+   "d2d__svc[6]",
+   "d2d__svc[70]",
+   "d2d__svc[71]",
+   "d2d__svc[72]",
+   "d2d__svc[73]",
+   "d2d__svc[7]",
+   "d2d__svc[8]",
+   "d2d__svc[90]",
+   "d2d__svc[91]",
+   "d2d__svc[9]",
+   "kg[0]",
+   "kg[10]",
+   "kg[11]",
+   "kg[12]",
+   "kg[13]",
+   "kg[14]",
+   "kg[15]",
+   "kg[16]",
+   "kg[17]",
+   "kg[18]",
+   "kg[19]",
+   "kg[1]",
+   "kg[20]",
+   "kg[21]",
+   "kg[22]",
+   "kg[2]",
+   "kg[3]",
+   "kg[4]",
+   "kg[5]",
+   "kg[6]",
+   "kg[7]",
+   "kg[8]",
+   "kg[9]"
+  ],
+  "renamed_live_pieces": {
+   "boot__boot_pr": [
+    {
+     "port": "boot__boot_pr",
+     "hi": 74,
+     "lo": 0
+    },
+    {
+     "port": "boot__boot_pr_142",
+     "hi": 142,
+     "lo": 142
+    }
+   ],
+   "cht": [
+    {
+     "port": "cht_6",
+     "hi": 36,
+     "lo": 6
+    },
+    {
+     "port": "cht_43",
+     "hi": 58,
+     "lo": 43
+    }
+   ],
+   "d2d__srx": [
+    {
+     "port": "d2d__srx_10",
+     "hi": 521,
+     "lo": 10
+    }
+   ],
+   "d2d__svc": [
+    {
+     "port": "d2d__svc_23",
+     "hi": 24,
+     "lo": 23
+    },
+    {
+     "port": "d2d__svc_74",
+     "hi": 89,
+     "lo": 74
+    },
+    {
+     "port": "d2d__svc_92",
+     "hi": 109,
+     "lo": 92
+    }
+   ],
+   "kg": []
+  }
+ }
 }

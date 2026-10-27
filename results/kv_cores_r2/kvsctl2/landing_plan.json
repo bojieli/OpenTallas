@@ -1,0 +1,29 @@
+{
+ "schema": "kvsctl2.landing_plan.v1",
+ "module": "qkd_kvs_ctl",
+ "ruling": "COORD 10-27 01:33 (a): +1-cycle landing on 360 through-logic outputs / 113 through-logic inputs, TOKEN latency table + static schedule regenerated in the same delta",
+ "status": "NOT IMPLEMENTED in KVSCTL-2 (design only). Cones were measured on the B32 pre.json (kvsctl-r2/fp2) with results/kv_cores_r2/kvsctl2/cone.py, CHECKED. RTL lines are from native source 41ac57c25f.",
+ "finding": "A blanket +1 on only the listed bits skews buses. o_hroot_* has 12 through-logic bits out of 1118 (the layer/layer_e fields); the other 1106 bits are pin flops at 0 cycles. +1 on those 12 bits alone would misalign the layer field against the rest of the hroot word. Either the whole bus takes +1, or the 12 bits are retimed at 0 cycles. The 0-cycle retimes below are exact (LEC-provable) and need no TOKEN reprice.",
+ "groups": [
+  {"pins": "o_hroot_{WS,WN}[971..1077] x12, lp[6:1]", "bits": 30, "cone": "$sub: layer = stage - 1, stage = stage_o (adff u_lprg)",
+   "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_nc32_face.sv:789-790; stage_o is assigned at :799 (reset 0) and :875",
+   "fix": "0-cycle forward retime: a register layer_o, updated in the same branch as stage_o, with layer_o <= ((MUT==2)?(stage_n^1):stage_n)-1 and reset 6'h3f (= 0-1); assign layer = layer_o", "cycles": 0},
+  {"pins": "o_hroot_{ES,EN} x12", "bits": 24, "cone": "$sub: layer_e = stage_oe - 1", "rtl": "qkd_kv_ctl_nc32_face.sv:791; stage_oe at :799/:875",
+   "fix": "same as layer (layer_oe)", "cycles": 0},
+  {"pins": "dcfg__age_pv[15:0], dcfg__age_vport__*_16 x16, o_attn[31:0]", "bits": 304, "cone": "seal mux: age = sl_c[k] ? ag (no-reset hold reg) : 0",
+   "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_dcfg.sv:160-166",
+   "fix": "+1 landing register per field (async reset 0 = the unsealed value). This is static boot config, and consumers read it only after setup_ready, which also moves +1 (below), so the mission schedule does not change", "cycles": 1, "token": "boot config visibility +1 edge"},
+  {"pins": "o_attn[32]", "bits": 1, "cone": "fused_program_capability = cap_q && sealed", "rtl": "qkd_kv_ctl_c32_dcfg.sv:167",
+   "fix": "+1 landing (static capability)", "cycles": 1},
+  {"pins": "boot__setup_ready", "bits": 1, "cone": "o_setup && !x_fault", "rtl": "qkd_kv_ctl_nc32_face.sv:604",
+   "fix": "+1 landing register (reset 0)", "cycles": 1, "token": "setup_ready +1 cycle (B33 run7 setup_ready 37950 -> 37951 expected); START admission unchanged"},
+  {"pins": "auth (programme_digest 64 + programme_epoch 16)", "bits": 80, "cone": "$eq into dig_ok_q / ep_ok_q (plain dff)", "rtl": "qkd_kv_ctl_nc32_face.sv:665",
+   "fix": "0-cycle backward retime: pin flops pd_q/pe_q plus register copies of bound_digest/bound_epoch; dig_ok = pd_q==bd_q (exactly dig_ok_q)", "cycles": 0},
+  {"pins": "i_hroot_{WS,WN,EN,ES}[15+18k] k=0..7", "bits": 32, "cone": "|fault_in -> cfault node r (adff rst_n)",
+   "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_kv_cfault_tree.sv:26 (shared module -> new parameter IN_LAND, default 0)",
+   "fix": "0-cycle backward retime: land the fault_in bits (reset 0) and OR after the flops. Valid only where the node output feeds a flop or the next node, not a pin", "cycles": 0},
+  {"pins": "embgw__bw[0]", "bits": 1, "cone": "ub_base = bw[0] && !(|expected_valid) && !(es lanes) -> ubc kept copies", "rtl": "qkd_kv_ctl_nc32_face.sv:129",
+   "fix": "+1 landing changes use_b, which is on the mission path, so it needs a TOKEN reprice. Preferred: land bw[0] and move the one-edge-early use_b precompute one edge earlier at the sender", "cycles": "1 or 0 (owner of the embgw sender)"}
+ ],
+ "token": "If the 0-cycle retimes are taken, only boot-time visibility moves (+1 setup_ready, +1 sealed config). The KV TOKEN latency table physical/die_plan/qwen_kvsys/lat_v39r/qwen_kvsys_latency.json (gen.py latency over plan lanes) is unaffected, because these cycles are core-internal. The boot replay (Codex results/kv_tok/codex_boot_2005) must re-check setup_ready."
+}

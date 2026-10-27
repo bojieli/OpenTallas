@@ -23,12 +23,26 @@ YS
 $Y -q -l $O/pre.log $O/pre.ys
 python3 $HERE/hr_face_ports.py transform $O/pre.json $O/post.json $O/hr_face_ports.json --top $MOD
 python3 $HERE/hr_face_ports.py transform $O/pre.json $O/mut.json $O/hr_face_ports_mut.json --top $MOD --mutant > /dev/null
+# KV-CORES-R2/KVSCTL-2 10-27: write EVERY non-blackbox module of post.json, not only the top. The old
+# `select $MOD; write_verilog -selected` dropped the kept-hierarchy leaf cells (qkd_kvs_ctl: 25 $paramod ot_s32_sel
+# etc.); yosys treats an unknown $-prefixed cell type as an internal cell, so hierarchy did not fail and equiv_induct
+# stopped on "No SAT model available" with 35486 unproven $equiv cells (proof-setup bug, not a design mismatch).
 cat > $O/emit.ys <<YS
 read_json $O/post.json
-select $MOD
-write_verilog -selected $O/$MOD.v
+write_verilog $O/$MOD.v
 YS
 $Y -q -l $O/emit.log $O/emit.ys
+# every instantiated module type of the emitted RTL must be defined in it or be a macro black box
+python3 - $O/$MOD.v "$MACROS" <<"PY2"
+import re, sys
+t = open(sys.argv[1]).read()
+defined = set(re.findall(r"^module\s+(\\\S+|\w+)", t, re.M))
+macros = {m.split(":", 1)[1] for m in sys.argv[2].split()}
+inst = set(re.findall(r"^\s+(\\\$paramod\S+|\\\S+|\w+)\s+\\?\S+\s*\(", t, re.M)) - {"input", "output", "wire", "reg", "assign", "module", "always", "if", "else", "case", "begin", "end"}
+missing = sorted(x for x in inst if x.startswith("\\$") and x not in defined)
+if missing:
+    raise SystemExit("emitted RTL misses %d module definitions, e.g. %s" % (len(missing), missing[:3]))
+PY2
 # no absolute paths in the kit RTL (evidence reads repo-relative paths): drop the yosys src attributes; macro
 # escaped instance identities remain intact so equivalence merges the SAME macro, not independent free outputs.
 python3 - $O/$MOD.v <<'PY'
