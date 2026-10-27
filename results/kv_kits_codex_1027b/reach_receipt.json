@@ -1,0 +1,3816 @@
+{
+ "verdict": "PASS",
+ "slots": 761,
+ "max_bit_hop_um": 402.84000000000003,
+ "limit_um": 405,
+ "added_slots": 200,
+ "changed_outline_mutant": "REJECTED",
+ "double_apply_mutant": "REJECTED",
+ "rows": [
+  {
+   "type": "kv3_hg",
+   "slot": "ft0",
+   "max_bit_hop_um": 385.56000000000006
+  },
+  {
+   "type": "kv3_hg",
+   "slot": "ft1",
+   "max_bit_hop_um": 323.19
+  },
+  {
+   "type": "kv3_hg",
+   "slot": "ft2",
+   "max_bit_hop_um": 333.72
+  },
+  {
+   "type": "kv3_hgi",
+   "slot": "ft0",
+   "max_bit_hop_um": 384.48
+  },
+  {
+   "type": "kv3_hgi",
+   "slot": "ft2",
+   "max_bit_hop_um": 356.4000000000001
+  },
+  {
+   "type": "kv3_hgi",
+   "slot": "ft5",
+   "max_bit_hop_um": 328.85999999999996
+  },
+  {
+   "type": "kv3_hgi",
+   "slot": "ft6",
+   "max_bit_hop_um": 372.33000000000015
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft0",
+   "max_bit_hop_um": 274.5899999999999
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft2",
+   "max_bit_hop_um": 388.53000000000003
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft5",
+   "max_bit_hop_um": 381.897
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft6",
+   "max_bit_hop_um": 386.37000000000006
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft7",
+   "max_bit_hop_um": 346.14
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft8",
+   "max_bit_hop_um": 343.7100000000001
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft9",
+   "max_bit_hop_um": 393.39
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft10",
+   "max_bit_hop_um": 355.05000000000007
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft11",
+   "max_bit_hop_um": 355.0709999999999
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft12",
+   "max_bit_hop_um": 310.22999999999996
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft13",
+   "max_bit_hop_um": 353.43000000000006
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft14",
+   "max_bit_hop_um": 352.43100000000015
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft15",
+   "max_bit_hop_um": 359.10000000000014
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft16",
+   "max_bit_hop_um": 402.03000000000003
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft17",
+   "max_bit_hop_um": 402.29999999999995
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft18",
+   "max_bit_hop_um": 400.94999999999993
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft19",
+   "max_bit_hop_um": 343.98
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft20",
+   "max_bit_hop_um": 387.98999999999995
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft21",
+   "max_bit_hop_um": 313.19999999999993
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft22",
+   "max_bit_hop_um": 351.0000000000001
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft23",
+   "max_bit_hop_um": 308.34000000000015
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft24",
+   "max_bit_hop_um": 384.48
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft25",
+   "max_bit_hop_um": 348.29999999999995
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft26",
+   "max_bit_hop_um": 362.3399999999999
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft27",
+   "max_bit_hop_um": 358.02000000000004
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft28",
+   "max_bit_hop_um": 310.5000000000001
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft0",
+   "max_bit_hop_um": 333.54699999999997
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft1",
+   "max_bit_hop_um": 397.16999999999996
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft2",
+   "max_bit_hop_um": 390.15000000000003
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft3",
+   "max_bit_hop_um": 349.91999999999996
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft4",
+   "max_bit_hop_um": 352.3500000000001
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft5",
+   "max_bit_hop_um": 353.96999999999997
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft6",
+   "max_bit_hop_um": 386.9100000000001
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft7",
+   "max_bit_hop_um": 365.85
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft8",
+   "max_bit_hop_um": 370.1700000000001
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft9",
+   "max_bit_hop_um": 367.47
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft10",
+   "max_bit_hop_um": 366.12
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft11",
+   "max_bit_hop_um": 366.755
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft12",
+   "max_bit_hop_um": 348.3
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft13",
+   "max_bit_hop_um": 347.49
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft14",
+   "max_bit_hop_um": 354.23999999999995
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft15",
+   "max_bit_hop_um": 343.1700000000001
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft16",
+   "max_bit_hop_um": 368.01
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft17",
+   "max_bit_hop_um": 311.03999999999996
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft18",
+   "max_bit_hop_um": 346.68000000000006
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft19",
+   "max_bit_hop_um": 313.20000000000005
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft20",
+   "max_bit_hop_um": 358.0200000000001
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft21",
+   "max_bit_hop_um": 345.6
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft22",
+   "max_bit_hop_um": 350.4599999999999
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft23",
+   "max_bit_hop_um": 337.7699999999999
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft24",
+   "max_bit_hop_um": 368.00999999999993
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft25",
+   "max_bit_hop_um": 88.0749999999999
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft0",
+   "max_bit_hop_um": 333.54699999999997
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft1",
+   "max_bit_hop_um": 397.16999999999996
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft2",
+   "max_bit_hop_um": 374.9910000000001
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft3",
+   "max_bit_hop_um": 390.1500000000001
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft4",
+   "max_bit_hop_um": 375.84000000000003
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft5",
+   "max_bit_hop_um": 355.59000000000015
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft6",
+   "max_bit_hop_um": 356.4
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft7",
+   "max_bit_hop_um": 311.58
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft8",
+   "max_bit_hop_um": 356.8670000000002
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft9",
+   "max_bit_hop_um": 310.77
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft10",
+   "max_bit_hop_um": 385.29
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft11",
+   "max_bit_hop_um": 387.18000000000006
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft12",
+   "max_bit_hop_um": 355.04999999999984
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft13",
+   "max_bit_hop_um": 371.01300000000003
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft14",
+   "max_bit_hop_um": 370.9799999999999
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft15",
+   "max_bit_hop_um": 372.33
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft16",
+   "max_bit_hop_um": 386.37000000000006
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft17",
+   "max_bit_hop_um": 374.22000000000014
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft18",
+   "max_bit_hop_um": 360.72
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft19",
+   "max_bit_hop_um": 371.52
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft20",
+   "max_bit_hop_um": 366.11999999999995
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft22",
+   "max_bit_hop_um": 368.01
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft23",
+   "max_bit_hop_um": 311.03999999999996
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft24",
+   "max_bit_hop_um": 355.31999999999994
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft25",
+   "max_bit_hop_um": 337.7699999999999
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft26",
+   "max_bit_hop_um": 368.00999999999993
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft27",
+   "max_bit_hop_um": 388.5300000000001
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft0",
+   "max_bit_hop_um": 390.96000000000004
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft1",
+   "max_bit_hop_um": 375.03000000000014
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft2",
+   "max_bit_hop_um": 381.03299999999984
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft3",
+   "max_bit_hop_um": 375.02999999999986
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft4",
+   "max_bit_hop_um": 375.56999999999994
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft5",
+   "max_bit_hop_um": 377.46000000000015
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft6",
+   "max_bit_hop_um": 378.27
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft7",
+   "max_bit_hop_um": 379.0799999999999
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft8",
+   "max_bit_hop_um": 379.8899999999999
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft9",
+   "max_bit_hop_um": 382.86
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft10",
+   "max_bit_hop_um": 380.15999999999985
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft11",
+   "max_bit_hop_um": 382.3199999999998
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft12",
+   "max_bit_hop_um": 382.59000000000003
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft13",
+   "max_bit_hop_um": 382.32000000000005
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft14",
+   "max_bit_hop_um": 373.40999999999997
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft15",
+   "max_bit_hop_um": 370.43999999999994
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft16",
+   "max_bit_hop_um": 384.75
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft17",
+   "max_bit_hop_um": 383.6699999999999
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft18",
+   "max_bit_hop_um": 387.7200000000001
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft19",
+   "max_bit_hop_um": 380.1600000000001
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft20",
+   "max_bit_hop_um": 369.0899999999999
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft21",
+   "max_bit_hop_um": 367.46999999999997
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft22",
+   "max_bit_hop_um": 380.42999999999995
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft23",
+   "max_bit_hop_um": 380.42999999999995
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft24",
+   "max_bit_hop_um": 381.11700000000013
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft25",
+   "max_bit_hop_um": 363.765
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft26",
+   "max_bit_hop_um": 381.23999999999995
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft27",
+   "max_bit_hop_um": 381.15900000000005
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft28",
+   "max_bit_hop_um": 400.14
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft29",
+   "max_bit_hop_um": 397.9800000000001
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft0",
+   "max_bit_hop_um": 399.153
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft1",
+   "max_bit_hop_um": 387.7200000000001
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft2",
+   "max_bit_hop_um": 394.78499999999997
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft3",
+   "max_bit_hop_um": 385.55999999999995
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft4",
+   "max_bit_hop_um": 391.983
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft5",
+   "max_bit_hop_um": 372.06
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft6",
+   "max_bit_hop_um": 370.965
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft7",
+   "max_bit_hop_um": 369.30299999999994
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft8",
+   "max_bit_hop_um": 368.82000000000005
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft9",
+   "max_bit_hop_um": 383.1300000000001
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft10",
+   "max_bit_hop_um": 353.16
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft11",
+   "max_bit_hop_um": 352.89000000000004
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft12",
+   "max_bit_hop_um": 361.557
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft13",
+   "max_bit_hop_um": 349.10999999999996
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft14",
+   "max_bit_hop_um": 347.76000000000005
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft15",
+   "max_bit_hop_um": 402.84000000000003
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft16",
+   "max_bit_hop_um": 401.49
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft17",
+   "max_bit_hop_um": 400.67999999999995
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft18",
+   "max_bit_hop_um": 399.3299999999999
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft19",
+   "max_bit_hop_um": 348.03
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft20",
+   "max_bit_hop_um": 396.62999999999994
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft21",
+   "max_bit_hop_um": 394.47
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft22",
+   "max_bit_hop_um": 393.65999999999997
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft23",
+   "max_bit_hop_um": 393.65999999999985
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft24",
+   "max_bit_hop_um": 284.0400000000001
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft25",
+   "max_bit_hop_um": 345.6
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft26",
+   "max_bit_hop_um": 297.53999999999996
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft27",
+   "max_bit_hop_um": 353.47700000000003
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft28",
+   "max_bit_hop_um": 267.8399999999999
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft29",
+   "max_bit_hop_um": 270.0
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft30",
+   "max_bit_hop_um": 291.87000000000023
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft31",
+   "max_bit_hop_um": 291.6
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft32",
+   "max_bit_hop_um": 304.56000000000006
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft33",
+   "max_bit_hop_um": 306.99
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft34",
+   "max_bit_hop_um": 92.33999999999992
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft35",
+   "max_bit_hop_um": 123.93000000000009
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft36",
+   "max_bit_hop_um": 264.59999999999997
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft37",
+   "max_bit_hop_um": 90.17999999999984
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft38",
+   "max_bit_hop_um": 295.9200000000001
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft39",
+   "max_bit_hop_um": 91.64099999999992
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft40",
+   "max_bit_hop_um": 116.90999999999998
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft41",
+   "max_bit_hop_um": 155.79000000000002
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft42",
+   "max_bit_hop_um": 158.2199999999999
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft43",
+   "max_bit_hop_um": 158.22000000000017
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft44",
+   "max_bit_hop_um": 397.1700000000001
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft45",
+   "max_bit_hop_um": 397.17
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft46",
+   "max_bit_hop_um": 354.7800000000001
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft47",
+   "max_bit_hop_um": 400.437
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft48",
+   "max_bit_hop_um": 359.6400000000001
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft49",
+   "max_bit_hop_um": 359.37
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft50",
+   "max_bit_hop_um": 400.071
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft51",
+   "max_bit_hop_um": 397.98
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft52",
+   "max_bit_hop_um": 396.3600000000001
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft53",
+   "max_bit_hop_um": 363.69
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft54",
+   "max_bit_hop_um": 356.4000000000001
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft55",
+   "max_bit_hop_um": 269.99999999999994
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft56",
+   "max_bit_hop_um": 106.38000000000011
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft57",
+   "max_bit_hop_um": 315.63
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft58",
+   "max_bit_hop_um": 115.29000000000019
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft59",
+   "max_bit_hop_um": 119.07000000000016
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft60",
+   "max_bit_hop_um": 104.52300000000004
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft61",
+   "max_bit_hop_um": 103.95000000000005
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft62",
+   "max_bit_hop_um": 135.26999999999998
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft63",
+   "max_bit_hop_um": 388.087
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft64",
+   "max_bit_hop_um": 389.87999999999994
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft65",
+   "max_bit_hop_um": 126.16700000000017
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft66",
+   "max_bit_hop_um": 124.93500000000006
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft67",
+   "max_bit_hop_um": 124.19999999999982
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft68",
+   "max_bit_hop_um": 390.69000000000005
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft69",
+   "max_bit_hop_um": 375.29999999999995
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft70",
+   "max_bit_hop_um": 313.47
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft71",
+   "max_bit_hop_um": 315.09000000000003
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft72",
+   "max_bit_hop_um": 310.5
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft73",
+   "max_bit_hop_um": 317.2499999999999
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft74",
+   "max_bit_hop_um": 301.08899999999994
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft75",
+   "max_bit_hop_um": 303.177
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft0",
+   "max_bit_hop_um": 389.88
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft1",
+   "max_bit_hop_um": 388.80000000000007
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft2",
+   "max_bit_hop_um": 337.76999999999987
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft3",
+   "max_bit_hop_um": 327.2399999999999
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft4",
+   "max_bit_hop_um": 400.94999999999993
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft5",
+   "max_bit_hop_um": 400.40999999999997
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft6",
+   "max_bit_hop_um": 355.59000000000003
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft7",
+   "max_bit_hop_um": 399.8699999999999
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft8",
+   "max_bit_hop_um": 399.87
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft9",
+   "max_bit_hop_um": 396.90000000000003
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft10",
+   "max_bit_hop_um": 389.6100000000001
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft11",
+   "max_bit_hop_um": 352.1310000000001
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft12",
+   "max_bit_hop_um": 352.6200000000001
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft13",
+   "max_bit_hop_um": 321.84000000000003
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft14",
+   "max_bit_hop_um": 376.1100000000002
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft15",
+   "max_bit_hop_um": 370.7099999999999
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft16",
+   "max_bit_hop_um": 371.25
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft17",
+   "max_bit_hop_um": 376.11
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft18",
+   "max_bit_hop_um": 368.82000000000005
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft19",
+   "max_bit_hop_um": 352.6200000000001
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft20",
+   "max_bit_hop_um": 353.021
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft21",
+   "max_bit_hop_um": 352.95300000000003
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft22",
+   "max_bit_hop_um": 379.62
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft23",
+   "max_bit_hop_um": 383.4
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft24",
+   "max_bit_hop_um": 369.36
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft25",
+   "max_bit_hop_um": 343.4400000000001
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft26",
+   "max_bit_hop_um": 387.45000000000005
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft27",
+   "max_bit_hop_um": 390.96000000000004
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft28",
+   "max_bit_hop_um": 384.21000000000004
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft29",
+   "max_bit_hop_um": 383.6700000000001
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft30",
+   "max_bit_hop_um": 372.471
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft31",
+   "max_bit_hop_um": 380.15999999999997
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft0",
+   "max_bit_hop_um": 339.39000000000004
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft1",
+   "max_bit_hop_um": 342.3600000000001
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft2",
+   "max_bit_hop_um": 274.5899999999998
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft3",
+   "max_bit_hop_um": 312.12
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft4",
+   "max_bit_hop_um": 274.31999999999994
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft5",
+   "max_bit_hop_um": 379.35
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft6",
+   "max_bit_hop_um": 372.517
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft7",
+   "max_bit_hop_um": 336.15
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft8",
+   "max_bit_hop_um": 332.64
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft9",
+   "max_bit_hop_um": 331.28999999999996
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft10",
+   "max_bit_hop_um": 327.78
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft11",
+   "max_bit_hop_um": 324.27
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft12",
+   "max_bit_hop_um": 326.43
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft13",
+   "max_bit_hop_um": 330.2100000000001
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft14",
+   "max_bit_hop_um": 302.331
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft15",
+   "max_bit_hop_um": 376.6500000000001
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft16",
+   "max_bit_hop_um": 353.70000000000005
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft17",
+   "max_bit_hop_um": 339.159
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft18",
+   "max_bit_hop_um": 332.1
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft19",
+   "max_bit_hop_um": 323.547
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft20",
+   "max_bit_hop_um": 339.159
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft21",
+   "max_bit_hop_um": 335.07
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft22",
+   "max_bit_hop_um": 289.44000000000005
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft23",
+   "max_bit_hop_um": 302.331
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft24",
+   "max_bit_hop_um": 311.0400000000001
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft25",
+   "max_bit_hop_um": 312.65999999999997
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft26",
+   "max_bit_hop_um": 317.78999999999996
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft27",
+   "max_bit_hop_um": 318.6
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft28",
+   "max_bit_hop_um": 312.39
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft29",
+   "max_bit_hop_um": 323.73
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft30",
+   "max_bit_hop_um": 325.6199999999999
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft31",
+   "max_bit_hop_um": 193.93700000000013
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft0",
+   "max_bit_hop_um": 368.54999999999995
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft1",
+   "max_bit_hop_um": 372.33000000000004
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft2",
+   "max_bit_hop_um": 368.5499999999999
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft3",
+   "max_bit_hop_um": 368.12099999999987
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft4",
+   "max_bit_hop_um": 366.1199999999999
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft5",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft6",
+   "max_bit_hop_um": 385.55999999999995
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft7",
+   "max_bit_hop_um": 387.54700000000025
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft8",
+   "max_bit_hop_um": 384.2099999999999
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft9",
+   "max_bit_hop_um": 390.96000000000004
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft10",
+   "max_bit_hop_um": 388.79999999999995
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft11",
+   "max_bit_hop_um": 388.2600000000001
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft12",
+   "max_bit_hop_um": 375.5700000000001
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft13",
+   "max_bit_hop_um": 384.501
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft14",
+   "max_bit_hop_um": 384.4799999999999
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft15",
+   "max_bit_hop_um": 352.6199999999999
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft16",
+   "max_bit_hop_um": 393.39000000000027
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft17",
+   "max_bit_hop_um": 353.97
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft18",
+   "max_bit_hop_um": 352.62
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft19",
+   "max_bit_hop_um": 352.8900000000002
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft20",
+   "max_bit_hop_um": 354.24
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft21",
+   "max_bit_hop_um": 371.52
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft22",
+   "max_bit_hop_um": 365.03999999999996
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft23",
+   "max_bit_hop_um": 360.72
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft24",
+   "max_bit_hop_um": 360.9900000000001
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft25",
+   "max_bit_hop_um": 363.15000000000026
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft26",
+   "max_bit_hop_um": 365.31000000000034
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft27",
+   "max_bit_hop_um": 369.3600000000001
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft28",
+   "max_bit_hop_um": 360.72
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft29",
+   "max_bit_hop_um": 328.8269999999998
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft30",
+   "max_bit_hop_um": 328.3199999999998
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft31",
+   "max_bit_hop_um": 326.1870000000001
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft32",
+   "max_bit_hop_um": 324.45100000000025
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft33",
+   "max_bit_hop_um": 389.06999999999994
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft34",
+   "max_bit_hop_um": 387.18000000000006
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft35",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft36",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft37",
+   "max_bit_hop_um": 387.45000000000005
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft38",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft39",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft40",
+   "max_bit_hop_um": 338.58000000000027
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft41",
+   "max_bit_hop_um": 349.837
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft42",
+   "max_bit_hop_um": 348.5700000000003
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft43",
+   "max_bit_hop_um": 347.49000000000024
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft44",
+   "max_bit_hop_um": 344.8589999999999
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft45",
+   "max_bit_hop_um": 369.91300000000024
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft46",
+   "max_bit_hop_um": 370.71
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft47",
+   "max_bit_hop_um": 354.51
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft48",
+   "max_bit_hop_um": 352.35
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft49",
+   "max_bit_hop_um": 389.34000000000015
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft50",
+   "max_bit_hop_um": 394.20000000000005
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft51",
+   "max_bit_hop_um": 386.9100000000003
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft52",
+   "max_bit_hop_um": 388.53000000000014
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft53",
+   "max_bit_hop_um": 391.5690000000004
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft54",
+   "max_bit_hop_um": 395.28
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft55",
+   "max_bit_hop_um": 376.44300000000015
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft56",
+   "max_bit_hop_um": 372.60000000000036
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft57",
+   "max_bit_hop_um": 363.6900000000001
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft0",
+   "max_bit_hop_um": 246.77999999999997
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft1",
+   "max_bit_hop_um": 378.303
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft2",
+   "max_bit_hop_um": 322.91999999999996
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft3",
+   "max_bit_hop_um": 379.35
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft4",
+   "max_bit_hop_um": 313.2
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft5",
+   "max_bit_hop_um": 186.29999999999995
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft6",
+   "max_bit_hop_um": 226.79999999999978
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft7",
+   "max_bit_hop_um": 383.1300000000002
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft8",
+   "max_bit_hop_um": 391.22999999999996
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft9",
+   "max_bit_hop_um": 360.72
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft10",
+   "max_bit_hop_um": 380.7310000000002
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft11",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft12",
+   "max_bit_hop_um": 392.8500000000001
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft13",
+   "max_bit_hop_um": 387.9900000000001
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft14",
+   "max_bit_hop_um": 384.6010000000001
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft15",
+   "max_bit_hop_um": 377.35300000000007
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft16",
+   "max_bit_hop_um": 376.91100000000006
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft17",
+   "max_bit_hop_um": 390.9599999999999
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft18",
+   "max_bit_hop_um": 380.97000000000014
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft19",
+   "max_bit_hop_um": 371.5200000000001
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft20",
+   "max_bit_hop_um": 377.5110000000004
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft21",
+   "max_bit_hop_um": 387.45000000000005
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft22",
+   "max_bit_hop_um": 386.94300000000044
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft23",
+   "max_bit_hop_um": 376.54300000000035
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft24",
+   "max_bit_hop_um": 375.0300000000002
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft25",
+   "max_bit_hop_um": 387.18000000000006
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft26",
+   "max_bit_hop_um": 134.73000000000002
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft0",
+   "max_bit_hop_um": 246.77999999999997
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft1",
+   "max_bit_hop_um": 378.303
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft2",
+   "max_bit_hop_um": 322.91999999999996
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft3",
+   "max_bit_hop_um": 379.35
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft4",
+   "max_bit_hop_um": 313.2
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft5",
+   "max_bit_hop_um": 186.29999999999995
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft6",
+   "max_bit_hop_um": 226.79999999999978
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft7",
+   "max_bit_hop_um": 383.1300000000002
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft8",
+   "max_bit_hop_um": 391.22999999999996
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft9",
+   "max_bit_hop_um": 360.72
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft10",
+   "max_bit_hop_um": 380.7310000000002
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft11",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft12",
+   "max_bit_hop_um": 392.8500000000001
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft13",
+   "max_bit_hop_um": 387.9900000000001
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft14",
+   "max_bit_hop_um": 384.6010000000001
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft15",
+   "max_bit_hop_um": 377.35300000000007
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft16",
+   "max_bit_hop_um": 376.91100000000006
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft17",
+   "max_bit_hop_um": 390.9599999999999
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft18",
+   "max_bit_hop_um": 380.97000000000014
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft19",
+   "max_bit_hop_um": 371.5200000000001
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft20",
+   "max_bit_hop_um": 377.5110000000004
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft21",
+   "max_bit_hop_um": 387.45000000000005
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft22",
+   "max_bit_hop_um": 386.94300000000044
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft23",
+   "max_bit_hop_um": 376.54300000000035
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft24",
+   "max_bit_hop_um": 375.0300000000002
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft25",
+   "max_bit_hop_um": 387.18000000000006
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft26",
+   "max_bit_hop_um": 134.73000000000002
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft0",
+   "max_bit_hop_um": 333.9899999999998
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft1",
+   "max_bit_hop_um": 374.9909999999994
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft2",
+   "max_bit_hop_um": 373.68000000000006
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft3",
+   "max_bit_hop_um": 389.60999999999996
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft4",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft5",
+   "max_bit_hop_um": 386.91000000000014
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft6",
+   "max_bit_hop_um": 322.4870000000002
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft7",
+   "max_bit_hop_um": 394.461
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft8",
+   "max_bit_hop_um": 393.93000000000035
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft9",
+   "max_bit_hop_um": 322.7669999999995
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft10",
+   "max_bit_hop_um": 392.57700000000006
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft11",
+   "max_bit_hop_um": 393.92999999999984
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft12",
+   "max_bit_hop_um": 393.39
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft13",
+   "max_bit_hop_um": 392.3790000000003
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft14",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft15",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft16",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft17",
+   "max_bit_hop_um": 395.273
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft18",
+   "max_bit_hop_um": 390.9599999999999
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft19",
+   "max_bit_hop_um": 390.6899999999998
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft20",
+   "max_bit_hop_um": 390.42
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft21",
+   "max_bit_hop_um": 393.6450000000002
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft22",
+   "max_bit_hop_um": 390.4200000000002
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft23",
+   "max_bit_hop_um": 391.23000000000013
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft24",
+   "max_bit_hop_um": 389.37300000000005
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft0",
+   "max_bit_hop_um": 333.9899999999998
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft1",
+   "max_bit_hop_um": 374.9909999999994
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft2",
+   "max_bit_hop_um": 373.68000000000006
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft3",
+   "max_bit_hop_um": 389.60999999999996
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft4",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft5",
+   "max_bit_hop_um": 386.91000000000014
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft6",
+   "max_bit_hop_um": 322.4870000000002
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft7",
+   "max_bit_hop_um": 394.461
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft8",
+   "max_bit_hop_um": 393.93000000000035
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft9",
+   "max_bit_hop_um": 322.7669999999995
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft10",
+   "max_bit_hop_um": 392.57700000000006
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft11",
+   "max_bit_hop_um": 393.92999999999984
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft12",
+   "max_bit_hop_um": 393.39
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft13",
+   "max_bit_hop_um": 392.3790000000003
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft14",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft15",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft16",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft17",
+   "max_bit_hop_um": 395.273
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft18",
+   "max_bit_hop_um": 390.9599999999999
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft19",
+   "max_bit_hop_um": 390.6899999999998
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft20",
+   "max_bit_hop_um": 390.42
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft21",
+   "max_bit_hop_um": 393.6450000000002
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft22",
+   "max_bit_hop_um": 390.4200000000002
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft23",
+   "max_bit_hop_um": 391.23000000000013
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft24",
+   "max_bit_hop_um": 389.37300000000005
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft0",
+   "max_bit_hop_um": 246.77999999999997
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft1",
+   "max_bit_hop_um": 363.405
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft2",
+   "max_bit_hop_um": 373.67999999999995
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft3",
+   "max_bit_hop_um": 353.42999999999995
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft4",
+   "max_bit_hop_um": 368.54999999999995
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft5",
+   "max_bit_hop_um": 215.01900000000046
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft6",
+   "max_bit_hop_um": 355.8599999999999
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft7",
+   "max_bit_hop_um": 383.1300000000002
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft8",
+   "max_bit_hop_um": 333.72
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft9",
+   "max_bit_hop_um": 336.93899999999996
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft10",
+   "max_bit_hop_um": 338.0400000000001
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft11",
+   "max_bit_hop_um": 335.61
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft12",
+   "max_bit_hop_um": 337.21500000000003
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft13",
+   "max_bit_hop_um": 392.13300000000004
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft14",
+   "max_bit_hop_um": 377.19
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft15",
+   "max_bit_hop_um": 394.7399999999999
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft16",
+   "max_bit_hop_um": 395.54999999999984
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft17",
+   "max_bit_hop_um": 397.16999999999996
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft18",
+   "max_bit_hop_um": 396.029
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft19",
+   "max_bit_hop_um": 380.1600000000001
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft20",
+   "max_bit_hop_um": 390.96000000000004
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft21",
+   "max_bit_hop_um": 391.4999999999998
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft22",
+   "max_bit_hop_um": 380.42999999999984
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft23",
+   "max_bit_hop_um": 370.98
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft24",
+   "max_bit_hop_um": 363.4200000000002
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft25",
+   "max_bit_hop_um": 364.7700000000001
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft26",
+   "max_bit_hop_um": 387.72000000000014
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft27",
+   "max_bit_hop_um": 386.9100000000001
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft28",
+   "max_bit_hop_um": 382.05000000000007
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft29",
+   "max_bit_hop_um": 382.8600000000001
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft30",
+   "max_bit_hop_um": 383.66999999999985
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft31",
+   "max_bit_hop_um": 382.6229999999999
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft32",
+   "max_bit_hop_um": 382.569
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft33",
+   "max_bit_hop_um": 382.39700000000016
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft34",
+   "max_bit_hop_um": 394.1999999999998
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft35",
+   "max_bit_hop_um": 332.6209999999995
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft36",
+   "max_bit_hop_um": 333.44999999999993
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft37",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft38",
+   "max_bit_hop_um": 386.9100000000001
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft39",
+   "max_bit_hop_um": 313.7399999999999
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft40",
+   "max_bit_hop_um": 310.6050000000005
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft41",
+   "max_bit_hop_um": 311.85
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft42",
+   "max_bit_hop_um": 131.49000000000012
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft0",
+   "max_bit_hop_um": 246.77999999999997
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft1",
+   "max_bit_hop_um": 363.405
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft2",
+   "max_bit_hop_um": 373.67999999999995
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft3",
+   "max_bit_hop_um": 353.42999999999995
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft4",
+   "max_bit_hop_um": 368.54999999999995
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft5",
+   "max_bit_hop_um": 215.01900000000046
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft6",
+   "max_bit_hop_um": 355.8599999999999
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft7",
+   "max_bit_hop_um": 383.1300000000002
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft8",
+   "max_bit_hop_um": 333.72
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft9",
+   "max_bit_hop_um": 336.93899999999996
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft10",
+   "max_bit_hop_um": 338.0400000000001
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft11",
+   "max_bit_hop_um": 335.61
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft12",
+   "max_bit_hop_um": 337.21500000000003
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft13",
+   "max_bit_hop_um": 392.13300000000004
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft14",
+   "max_bit_hop_um": 377.19
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft15",
+   "max_bit_hop_um": 394.7399999999999
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft16",
+   "max_bit_hop_um": 395.54999999999984
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft17",
+   "max_bit_hop_um": 397.16999999999996
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft18",
+   "max_bit_hop_um": 396.029
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft19",
+   "max_bit_hop_um": 380.1600000000001
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft20",
+   "max_bit_hop_um": 390.96000000000004
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft21",
+   "max_bit_hop_um": 391.4999999999998
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft22",
+   "max_bit_hop_um": 380.42999999999984
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft23",
+   "max_bit_hop_um": 370.98
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft24",
+   "max_bit_hop_um": 363.4200000000002
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft25",
+   "max_bit_hop_um": 364.7700000000001
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft26",
+   "max_bit_hop_um": 387.72000000000014
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft27",
+   "max_bit_hop_um": 386.9100000000001
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft28",
+   "max_bit_hop_um": 382.05000000000007
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft29",
+   "max_bit_hop_um": 382.8600000000001
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft30",
+   "max_bit_hop_um": 383.66999999999985
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft31",
+   "max_bit_hop_um": 382.6229999999999
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft32",
+   "max_bit_hop_um": 382.569
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft33",
+   "max_bit_hop_um": 382.39700000000016
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft34",
+   "max_bit_hop_um": 394.1999999999998
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft35",
+   "max_bit_hop_um": 332.6209999999995
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft36",
+   "max_bit_hop_um": 333.44999999999993
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft37",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft38",
+   "max_bit_hop_um": 386.9100000000001
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft39",
+   "max_bit_hop_um": 313.7399999999999
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft40",
+   "max_bit_hop_um": 310.6050000000005
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft41",
+   "max_bit_hop_um": 311.85
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft42",
+   "max_bit_hop_um": 131.49000000000012
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft0",
+   "max_bit_hop_um": 382.32000000000005
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft1",
+   "max_bit_hop_um": 389.07000000000005
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft2",
+   "max_bit_hop_um": 390.03900000000004
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft3",
+   "max_bit_hop_um": 391.23
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft4",
+   "max_bit_hop_um": 393.65999999999997
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft5",
+   "max_bit_hop_um": 352.89
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft6",
+   "max_bit_hop_um": 392.03999999999996
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft7",
+   "max_bit_hop_um": 391.77
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft8",
+   "max_bit_hop_um": 385.8299999999999
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft9",
+   "max_bit_hop_um": 386.09999999999997
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft10",
+   "max_bit_hop_um": 384.4799999999999
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft11",
+   "max_bit_hop_um": 338.5050000000001
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft12",
+   "max_bit_hop_um": 339.3900000000001
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft13",
+   "max_bit_hop_um": 339.6599999999999
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft14",
+   "max_bit_hop_um": 340.4700000000002
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft15",
+   "max_bit_hop_um": 380.15999999999997
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft16",
+   "max_bit_hop_um": 393.12
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft17",
+   "max_bit_hop_um": 381.51
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft18",
+   "max_bit_hop_um": 369.63
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft19",
+   "max_bit_hop_um": 361.80000000000007
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft20",
+   "max_bit_hop_um": 353.9699999999999
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft21",
+   "max_bit_hop_um": 354.7800000000001
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft22",
+   "max_bit_hop_um": 353.9699999999999
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft23",
+   "max_bit_hop_um": 393.12
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft24",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft25",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft26",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft27",
+   "max_bit_hop_um": 388.79999999999995
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft28",
+   "max_bit_hop_um": 383.6700000000002
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft29",
+   "max_bit_hop_um": 381.2400000000001
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft30",
+   "max_bit_hop_um": 381.51
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft31",
+   "max_bit_hop_um": 384.4799999999998
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft32",
+   "max_bit_hop_um": 385.5010000000001
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft33",
+   "max_bit_hop_um": 386.64000000000004
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft34",
+   "max_bit_hop_um": 345.5999999999999
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft35",
+   "max_bit_hop_um": 390.4200000000001
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft36",
+   "max_bit_hop_um": 384.3990000000001
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft37",
+   "max_bit_hop_um": 382.5900000000002
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft38",
+   "max_bit_hop_um": 368.5500000000001
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft39",
+   "max_bit_hop_um": 354.5100000000002
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft40",
+   "max_bit_hop_um": 390.96000000000004
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft0",
+   "max_bit_hop_um": 382.32000000000005
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft1",
+   "max_bit_hop_um": 389.07000000000005
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft2",
+   "max_bit_hop_um": 390.03900000000004
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft3",
+   "max_bit_hop_um": 391.23
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft4",
+   "max_bit_hop_um": 393.65999999999997
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft5",
+   "max_bit_hop_um": 352.89
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft6",
+   "max_bit_hop_um": 392.03999999999996
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft7",
+   "max_bit_hop_um": 391.77
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft8",
+   "max_bit_hop_um": 385.8299999999999
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft9",
+   "max_bit_hop_um": 386.09999999999997
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft10",
+   "max_bit_hop_um": 384.4799999999999
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft11",
+   "max_bit_hop_um": 338.5050000000001
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft12",
+   "max_bit_hop_um": 339.3900000000001
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft13",
+   "max_bit_hop_um": 339.6599999999999
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft14",
+   "max_bit_hop_um": 340.4700000000002
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft15",
+   "max_bit_hop_um": 380.15999999999997
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft16",
+   "max_bit_hop_um": 393.12
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft17",
+   "max_bit_hop_um": 381.51
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft18",
+   "max_bit_hop_um": 369.63
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft19",
+   "max_bit_hop_um": 361.80000000000007
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft20",
+   "max_bit_hop_um": 353.9699999999999
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft21",
+   "max_bit_hop_um": 354.7800000000001
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft22",
+   "max_bit_hop_um": 353.9699999999999
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft23",
+   "max_bit_hop_um": 393.12
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft24",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft25",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft26",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft27",
+   "max_bit_hop_um": 388.79999999999995
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft28",
+   "max_bit_hop_um": 383.6700000000002
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft29",
+   "max_bit_hop_um": 381.2400000000001
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft30",
+   "max_bit_hop_um": 381.51
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft31",
+   "max_bit_hop_um": 384.4799999999998
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft32",
+   "max_bit_hop_um": 385.5010000000001
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft33",
+   "max_bit_hop_um": 386.64000000000004
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft34",
+   "max_bit_hop_um": 345.5999999999999
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft35",
+   "max_bit_hop_um": 390.4200000000001
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft36",
+   "max_bit_hop_um": 384.3990000000001
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft37",
+   "max_bit_hop_um": 382.5900000000002
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft38",
+   "max_bit_hop_um": 368.5500000000001
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft39",
+   "max_bit_hop_um": 354.5100000000002
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft40",
+   "max_bit_hop_um": 390.96000000000004
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft0",
+   "max_bit_hop_um": 246.77999999999997
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft1",
+   "max_bit_hop_um": 316.64700000000016
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft2",
+   "max_bit_hop_um": 383.6700000000002
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft3",
+   "max_bit_hop_um": 373.67999999999995
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft4",
+   "max_bit_hop_um": 369.9000000000001
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft5",
+   "max_bit_hop_um": 216.5399999999998
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft6",
+   "max_bit_hop_um": 390.15
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft7",
+   "max_bit_hop_um": 382.5899999999998
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft8",
+   "max_bit_hop_um": 269.7299999999999
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft9",
+   "max_bit_hop_um": 362.88
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft10",
+   "max_bit_hop_um": 360.99
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft11",
+   "max_bit_hop_um": 360.71999999999997
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft12",
+   "max_bit_hop_um": 361.26
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft13",
+   "max_bit_hop_um": 360.72
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft14",
+   "max_bit_hop_um": 361.8330000000001
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft15",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft16",
+   "max_bit_hop_um": 391.14300000000003
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft17",
+   "max_bit_hop_um": 390.9599999999999
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft18",
+   "max_bit_hop_um": 391.23000000000013
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft19",
+   "max_bit_hop_um": 391.5
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft20",
+   "max_bit_hop_um": 387.1800000000001
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft21",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft22",
+   "max_bit_hop_um": 389.55700000000024
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft23",
+   "max_bit_hop_um": 381.5099999999999
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft24",
+   "max_bit_hop_um": 382.3199999999998
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft25",
+   "max_bit_hop_um": 380.3430000000003
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft26",
+   "max_bit_hop_um": 380.69999999999993
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft27",
+   "max_bit_hop_um": 394.4250000000002
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft28",
+   "max_bit_hop_um": 394.2630000000004
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft29",
+   "max_bit_hop_um": 390.9599999999999
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft30",
+   "max_bit_hop_um": 389.61
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft31",
+   "max_bit_hop_um": 389.34000000000003
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft32",
+   "max_bit_hop_um": 390.0650000000005
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft33",
+   "max_bit_hop_um": 393.1199999999999
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft34",
+   "max_bit_hop_um": 395.27999999999975
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft35",
+   "max_bit_hop_um": 389.25900000000024
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft36",
+   "max_bit_hop_um": 389.2870000000005
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft37",
+   "max_bit_hop_um": 393.6600000000001
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft38",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft39",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft40",
+   "max_bit_hop_um": 387.45000000000005
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft41",
+   "max_bit_hop_um": 387.45000000000005
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft42",
+   "max_bit_hop_um": 392.58000000000004
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft43",
+   "max_bit_hop_um": 384.4799999999999
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft44",
+   "max_bit_hop_um": 350.73000000000036
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft45",
+   "max_bit_hop_um": 344.7810000000002
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft46",
+   "max_bit_hop_um": 338.85000000000014
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft47",
+   "max_bit_hop_um": 394.7400000000001
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft48",
+   "max_bit_hop_um": 394.74000000000024
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft49",
+   "max_bit_hop_um": 394.47
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft50",
+   "max_bit_hop_um": 395.28
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft51",
+   "max_bit_hop_um": 394.1410000000001
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft52",
+   "max_bit_hop_um": 343.7430000000004
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft53",
+   "max_bit_hop_um": 349.2990000000002
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft54",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft55",
+   "max_bit_hop_um": 387.18000000000006
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft56",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft57",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft58",
+   "max_bit_hop_um": 138.24000000000012
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft0",
+   "max_bit_hop_um": 246.77999999999997
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft1",
+   "max_bit_hop_um": 316.64700000000016
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft2",
+   "max_bit_hop_um": 383.6700000000002
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft3",
+   "max_bit_hop_um": 373.67999999999995
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft4",
+   "max_bit_hop_um": 369.9000000000001
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft5",
+   "max_bit_hop_um": 216.5399999999998
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft6",
+   "max_bit_hop_um": 390.15
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft7",
+   "max_bit_hop_um": 382.5899999999998
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft8",
+   "max_bit_hop_um": 269.7299999999999
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft9",
+   "max_bit_hop_um": 362.88
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft10",
+   "max_bit_hop_um": 360.99
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft11",
+   "max_bit_hop_um": 360.71999999999997
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft12",
+   "max_bit_hop_um": 361.26
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft13",
+   "max_bit_hop_um": 360.72
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft14",
+   "max_bit_hop_um": 361.8330000000001
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft15",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft16",
+   "max_bit_hop_um": 391.14300000000003
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft17",
+   "max_bit_hop_um": 390.9599999999999
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft18",
+   "max_bit_hop_um": 391.23000000000013
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft19",
+   "max_bit_hop_um": 391.5
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft20",
+   "max_bit_hop_um": 387.1800000000001
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft21",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft22",
+   "max_bit_hop_um": 389.55700000000024
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft23",
+   "max_bit_hop_um": 381.5099999999999
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft24",
+   "max_bit_hop_um": 382.3199999999998
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft25",
+   "max_bit_hop_um": 380.3430000000003
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft26",
+   "max_bit_hop_um": 380.69999999999993
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft27",
+   "max_bit_hop_um": 394.4250000000002
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft28",
+   "max_bit_hop_um": 394.2630000000004
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft29",
+   "max_bit_hop_um": 390.9599999999999
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft30",
+   "max_bit_hop_um": 389.61
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft31",
+   "max_bit_hop_um": 389.34000000000003
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft32",
+   "max_bit_hop_um": 390.0650000000005
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft33",
+   "max_bit_hop_um": 393.1199999999999
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft34",
+   "max_bit_hop_um": 395.27999999999975
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft35",
+   "max_bit_hop_um": 389.25900000000024
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft36",
+   "max_bit_hop_um": 389.2870000000005
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft37",
+   "max_bit_hop_um": 393.6600000000001
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft38",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft39",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft40",
+   "max_bit_hop_um": 387.45000000000005
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft41",
+   "max_bit_hop_um": 387.45000000000005
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft42",
+   "max_bit_hop_um": 392.58000000000004
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft43",
+   "max_bit_hop_um": 384.4799999999999
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft44",
+   "max_bit_hop_um": 350.73000000000036
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft45",
+   "max_bit_hop_um": 344.7810000000002
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft46",
+   "max_bit_hop_um": 338.85000000000014
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft47",
+   "max_bit_hop_um": 394.7400000000001
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft48",
+   "max_bit_hop_um": 394.74000000000024
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft49",
+   "max_bit_hop_um": 394.47
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft50",
+   "max_bit_hop_um": 395.28
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft51",
+   "max_bit_hop_um": 394.1410000000001
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft52",
+   "max_bit_hop_um": 343.7430000000004
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft53",
+   "max_bit_hop_um": 349.2990000000002
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft54",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft55",
+   "max_bit_hop_um": 387.18000000000006
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft56",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft57",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft58",
+   "max_bit_hop_um": 138.24000000000012
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft0",
+   "max_bit_hop_um": 368.54999999999995
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft1",
+   "max_bit_hop_um": 354.687
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft2",
+   "max_bit_hop_um": 354.51000000000005
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft3",
+   "max_bit_hop_um": 352.7550000000001
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft4",
+   "max_bit_hop_um": 352.08000000000015
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft5",
+   "max_bit_hop_um": 401.7599999999999
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft6",
+   "max_bit_hop_um": 357.4800000000001
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft7",
+   "max_bit_hop_um": 384.4799999999999
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft8",
+   "max_bit_hop_um": 393.12
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft9",
+   "max_bit_hop_um": 390.96000000000004
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft10",
+   "max_bit_hop_um": 389.06999999999994
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft11",
+   "max_bit_hop_um": 393.17700000000025
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft12",
+   "max_bit_hop_um": 393.1199999999999
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft13",
+   "max_bit_hop_um": 384.501
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft14",
+   "max_bit_hop_um": 384.4799999999999
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft15",
+   "max_bit_hop_um": 352.6200000000001
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft16",
+   "max_bit_hop_um": 393.39000000000027
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft17",
+   "max_bit_hop_um": 392.89500000000027
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft18",
+   "max_bit_hop_um": 392.7810000000003
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft19",
+   "max_bit_hop_um": 391.23000000000025
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft20",
+   "max_bit_hop_um": 334.79999999999995
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft21",
+   "max_bit_hop_um": 392.9550000000003
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft22",
+   "max_bit_hop_um": 331.33899999999966
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft23",
+   "max_bit_hop_um": 330.7830000000001
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft24",
+   "max_bit_hop_um": 328.5430000000001
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft25",
+   "max_bit_hop_um": 328.31999999999994
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft26",
+   "max_bit_hop_um": 390.68999999999994
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft27",
+   "max_bit_hop_um": 381.5100000000001
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft28",
+   "max_bit_hop_um": 375.8399999999999
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft29",
+   "max_bit_hop_um": 376.3799999999999
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft30",
+   "max_bit_hop_um": 374.9730000000004
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft31",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft32",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft33",
+   "max_bit_hop_um": 389.0700000000001
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft34",
+   "max_bit_hop_um": 387.18000000000006
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft35",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft36",
+   "max_bit_hop_um": 386.6400000000001
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft37",
+   "max_bit_hop_um": 387.45000000000016
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft38",
+   "max_bit_hop_um": 386.1390000000001
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft39",
+   "max_bit_hop_um": 364.7700000000002
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft40",
+   "max_bit_hop_um": 355.8600000000001
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft41",
+   "max_bit_hop_um": 349.837
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft42",
+   "max_bit_hop_um": 348.5700000000003
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft43",
+   "max_bit_hop_um": 347.49000000000024
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft44",
+   "max_bit_hop_um": 344.8589999999999
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft45",
+   "max_bit_hop_um": 343.44000000000005
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft46",
+   "max_bit_hop_um": 342.09000000000003
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft47",
+   "max_bit_hop_um": 340.46999999999986
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft48",
+   "max_bit_hop_um": 339.92999999999984
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft49",
+   "max_bit_hop_um": 389.34000000000015
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft50",
+   "max_bit_hop_um": 394.20000000000005
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft51",
+   "max_bit_hop_um": 341.82000000000005
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft52",
+   "max_bit_hop_um": 390.96000000000026
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft53",
+   "max_bit_hop_um": 398.52000000000044
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft54",
+   "max_bit_hop_um": 397.1250000000004
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft55",
+   "max_bit_hop_um": 395.2800000000004
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft56",
+   "max_bit_hop_um": 393.1200000000001
+  }
+ ]
+}

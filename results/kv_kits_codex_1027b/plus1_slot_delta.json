@@ -1,0 +1,1630 @@
+{
+ "approval": "COORD root 2026-10-27 08:34 PDT: prescribed 405 reach in pending KV batch, compiler/model same delta",
+ "types": [
+  "kv3_hg",
+  "kv3_hgi",
+  "kv3_hgi_v3",
+  "kv3_hgi_v5",
+  "kv3_hgi_v8",
+  "kv3_hub_C",
+  "kv3_hub_Ei",
+  "kv3_hub_Wi",
+  "kv3_hub_Wo",
+  "kv3_pv_v12",
+  "kv3_pv_v2",
+  "kv3_pv_v2n",
+  "kv3_pv_v3",
+  "kv3_pv_v3n",
+  "kv3_pv_v4",
+  "kv3_pv_v4n",
+  "kv3_pv_v5",
+  "kv3_pv_v5n",
+  "kv3_pv_v6",
+  "kv3_pv_v6n",
+  "kv3_pv_v7"
+ ],
+ "slot_changes": [
+  {
+   "type": "kv3_hg",
+   "slot": "ft2",
+   "width": 1056,
+   "old_stations": 4,
+   "new_stations": 5,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_hgi",
+   "slot": "ft2",
+   "width": 48,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_hgi",
+   "slot": "ft6",
+   "width": 1056,
+   "old_stations": 6,
+   "new_stations": 7,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft7",
+   "width": 1,
+   "old_stations": 6,
+   "new_stations": 7,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft8",
+   "width": 6,
+   "old_stations": 6,
+   "new_stations": 7,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft19",
+   "width": 2,
+   "old_stations": 6,
+   "new_stations": 7,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "slot": "ft25",
+   "width": 1,
+   "old_stations": 6,
+   "new_stations": 7,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft0",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft15",
+   "width": 2,
+   "old_stations": 6,
+   "new_stations": 7,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft18",
+   "width": 12,
+   "old_stations": 6,
+   "new_stations": 7,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "slot": "ft21",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "slot": "ft0",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_hub_C",
+   "slot": "ft18",
+   "width": 13,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft13",
+   "width": 32,
+   "old_stations": 6,
+   "new_stations": 7,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft14",
+   "width": 32,
+   "old_stations": 6,
+   "new_stations": 7,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft19",
+   "width": 1,
+   "old_stations": 6,
+   "new_stations": 7,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "slot": "ft46",
+   "width": 13,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft0",
+   "width": 35,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft1",
+   "width": 35,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft2",
+   "width": 48,
+   "old_stations": 4,
+   "new_stations": 5,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft4",
+   "width": 256,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft15",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft17",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft22",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft23",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft24",
+   "width": 144,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft26",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft27",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft28",
+   "width": 128,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "slot": "ft29",
+   "width": 128,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft19",
+   "width": 1,
+   "old_stations": 4,
+   "new_stations": 5,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "slot": "ft21",
+   "width": 299,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft9",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft10",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft11",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft12",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft13",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft14",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft15",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft17",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft18",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft19",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft20",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft21",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft22",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft23",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft24",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft29",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft30",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft31",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft32",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft34",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft35",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft36",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v12",
+   "slot": "ft51",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft9",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft12",
+   "width": 1,
+   "old_stations": 10,
+   "new_stations": 11,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft13",
+   "width": 1,
+   "old_stations": 10,
+   "new_stations": 11,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft21",
+   "width": 1,
+   "old_stations": 10,
+   "new_stations": 11,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v2",
+   "slot": "ft25",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft9",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft12",
+   "width": 1,
+   "old_stations": 10,
+   "new_stations": 11,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft13",
+   "width": 1,
+   "old_stations": 10,
+   "new_stations": 11,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft21",
+   "width": 1,
+   "old_stations": 10,
+   "new_stations": 11,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v2n",
+   "slot": "ft25",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft4",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft5",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft6",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft9",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft14",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft15",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v3",
+   "slot": "ft16",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft4",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft5",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft6",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft9",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft14",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft15",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v3n",
+   "slot": "ft16",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft6",
+   "width": 15,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft35",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft36",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft37",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft38",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft39",
+   "width": 1,
+   "old_stations": 4,
+   "new_stations": 5,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft40",
+   "width": 1,
+   "old_stations": 4,
+   "new_stations": 5,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v4",
+   "slot": "ft41",
+   "width": 1,
+   "old_stations": 4,
+   "new_stations": 5,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft6",
+   "width": 15,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft35",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft36",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft37",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft38",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft39",
+   "width": 1,
+   "old_stations": 4,
+   "new_stations": 5,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft40",
+   "width": 1,
+   "old_stations": 4,
+   "new_stations": 5,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v4n",
+   "slot": "ft41",
+   "width": 1,
+   "old_stations": 4,
+   "new_stations": 5,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft5",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft6",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft7",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft8",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft9",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft10",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft11",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft12",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft13",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft14",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft15",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft16",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft17",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft24",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft25",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft26",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft34",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft35",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft36",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft37",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft38",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5",
+   "slot": "ft39",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft5",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft6",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft7",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft8",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft9",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft10",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft11",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft12",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft13",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft14",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft15",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft16",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft17",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft24",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft25",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft26",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft34",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft35",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft36",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft37",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft38",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v5n",
+   "slot": "ft39",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft18",
+   "width": 1,
+   "old_stations": 10,
+   "new_stations": 11,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft19",
+   "width": 1,
+   "old_stations": 10,
+   "new_stations": 11,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft20",
+   "width": 1,
+   "old_stations": 10,
+   "new_stations": 11,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft21",
+   "width": 1,
+   "old_stations": 10,
+   "new_stations": 11,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft38",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft39",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft40",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft41",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft42",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft43",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft44",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft45",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft46",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft52",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft53",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft54",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft55",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft56",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6",
+   "slot": "ft57",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft18",
+   "width": 1,
+   "old_stations": 10,
+   "new_stations": 11,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft19",
+   "width": 1,
+   "old_stations": 10,
+   "new_stations": 11,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft20",
+   "width": 1,
+   "old_stations": 10,
+   "new_stations": 11,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft21",
+   "width": 1,
+   "old_stations": 10,
+   "new_stations": 11,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft38",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft39",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft40",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft41",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft42",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft43",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft44",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft45",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft46",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft52",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft53",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft54",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft55",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft56",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v6n",
+   "slot": "ft57",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft6",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft7",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft8",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft9",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft10",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft11",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft12",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft13",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft14",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft15",
+   "width": 1,
+   "old_stations": 8,
+   "new_stations": 9,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft20",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft22",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft23",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft24",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft25",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft34",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft35",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft36",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft37",
+   "width": 1,
+   "old_stations": 7,
+   "new_stations": 8,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft49",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft50",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft51",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  },
+  {
+   "type": "kv3_pv_v7",
+   "slot": "ft52",
+   "width": 1,
+   "old_stations": 5,
+   "new_stations": 6,
+   "added_cycles": 1
+  }
+ ],
+ "source": "ca77c7e90+kv5-i2/ftold/plan_plus1_ft.json",
+ "status": "CANDIDATE pending R8 and token repricing"
+}

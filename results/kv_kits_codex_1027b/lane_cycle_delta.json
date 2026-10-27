@@ -1,0 +1,2029 @@
+{
+ "station_slots": 200,
+ "type_count": 21,
+ "lanes": {
+  "L2": {
+   "old_cycles": 15,
+   "new_cycles": 16,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L2",
+    "ports": [
+     "L2_0",
+     "L2_1"
+    ],
+    "note": "p2p ahub.am_WN | +1 FIRM astk internal stations (KV-P8-HUB v3.8s, R3-INTERNAL) | v3.9 (KV-405) +1 internal stations at <= 405 um | v3.9f ASTK master re-route +3 internal stations",
+    "fixed_cycles": 5
+   }
+  },
+  "L3": {
+   "old_cycles": 16,
+   "new_cycles": 17,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L3",
+    "ports": [
+     "L3_0",
+     "L3_1"
+    ],
+    "note": "p2p ahub.am_WS | +3 FIRM astk internal stations (KV-P8-HUB v3.8s, R3-INTERNAL) | v3.9 (KV-405) +3 internal stations at <= 405 um",
+    "fixed_cycles": 6
+   }
+  },
+  "L257": {
+   "old_cycles": 14,
+   "new_cycles": 15,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L257",
+    "ports": [
+     "L257_0",
+     "L257_1"
+    ],
+    "note": "p2p astk_WS__g_phys_fault_u_fault.q | +1 FIRM astk internal stations (KV-P8-HUB v3.8s, R3-INTERNAL) | v3.9 (KV-405) +1 internal stations at <= 405 um | v3.9f ASTK master re-route +3 internal stations",
+    "fixed_cycles": 5
+   }
+  },
+  "L345": {
+   "old_cycles": 50,
+   "new_cycles": 52,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L345",
+    "ports": [
+     "L345_0",
+     "L345_1",
+     "L345_2",
+     "L345_3",
+     "L345_4",
+     "L345_5",
+     "L345_6",
+     "L345_7",
+     "L345_8",
+     "L345_9",
+     "L345_10"
+    ],
+    "note": "p2p d2d_kv.kvn_word_generation"
+   }
+  },
+  "L352": {
+   "old_cycles": 55,
+   "new_cycles": 56,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L352",
+    "ports": [
+     "L352_0",
+     "L352_1",
+     "L352_2",
+     "L352_3",
+     "L352_4",
+     "L352_5",
+     "L352_6",
+     "L352_7",
+     "L352_8",
+     "L352_9",
+     "L352_10"
+    ],
+    "note": "p2p d2d_kv.skw"
+   }
+  },
+  "L357": {
+   "old_cycles": 49,
+   "new_cycles": 51,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L357",
+    "ports": [
+     "L357_0",
+     "L357_1",
+     "L357_2",
+     "L357_3",
+     "L357_4",
+     "L357_5",
+     "L357_6",
+     "L357_7",
+     "L357_8",
+     "L357_9"
+    ],
+    "note": "p2p dcal.flt | +3 FIRM hub_Ei internal stations (KV-G3 v3.8v, plan-cell R3-INTERNAL) | v3.9 (KV-405) +2 internal stations at <= 405 um",
+    "fixed_cycles": 5
+   }
+  },
+  "L494": {
+   "old_cycles": 9,
+   "new_cycles": 10,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L494",
+    "ports": [
+     "L494_0",
+     "L494_1"
+    ],
+    "note": "p2p efault_hub_Wo.fault"
+   }
+  },
+  "L519": {
+   "old_cycles": 17,
+   "new_cycles": 19,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L519",
+    "ports": [
+     "L519_0",
+     "L519_1",
+     "L519_2"
+    ],
+    "note": "tap_tree embgw.est"
+   }
+  },
+  "L596": {
+   "old_cycles": 49,
+   "new_cycles": 50,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L596",
+    "ports": [
+     "L596_0",
+     "L596_1",
+     "L596_2",
+     "L596_3",
+     "L596_4",
+     "L596_5",
+     "L596_6",
+     "L596_7"
+    ],
+    "note": "p2p fch_pv_N_0.q"
+   }
+  },
+  "L600": {
+   "old_cycles": 49,
+   "new_cycles": 50,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L600",
+    "ports": [
+     "L600_0",
+     "L600_1",
+     "L600_2",
+     "L600_3",
+     "L600_4",
+     "L600_5",
+     "L600_6",
+     "L600_7"
+    ],
+    "note": "p2p fch_pv_S_0.q"
+   }
+  },
+  "L753": {
+   "old_cycles": 9,
+   "new_cycles": 10,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L753",
+    "ports": [
+     "L753_0",
+     "L753_1"
+    ],
+    "note": "p2p hp_fault_0.q"
+   }
+  },
+  "L754": {
+   "old_cycles": 15,
+   "new_cycles": 16,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L754",
+    "ports": [
+     "L754_0",
+     "L754_1",
+     "L754_2"
+    ],
+    "note": "p2p hp_fault_1.q"
+   }
+  },
+  "L814": {
+   "old_cycles": 25,
+   "new_cycles": 26,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L814",
+    "ports": [
+     "L814_0",
+     "L814_1",
+     "L814_2",
+     "L814_3",
+     "L814_4"
+    ],
+    "note": "p2p hsl_EN_31.sdo"
+   }
+  },
+  "L815": {
+   "old_cycles": 25,
+   "new_cycles": 26,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L815",
+    "ports": [
+     "L815_0",
+     "L815_1",
+     "L815_2",
+     "L815_3",
+     "L815_4"
+    ],
+    "note": "p2p hsl_EN_31.sfo"
+   }
+  },
+  "L883": {
+   "old_cycles": 22,
+   "new_cycles": 23,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L883",
+    "ports": [
+     "L883_0",
+     "L883_1",
+     "L883_2",
+     "L883_3",
+     "L883_4"
+    ],
+    "note": "p2p hsl_ES_31.fault_o"
+   }
+  },
+  "L1409": {
+   "old_cycles": 11,
+   "new_cycles": 12,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L1409",
+    "ports": [
+     "L1409_0",
+     "L1409_1"
+    ],
+    "note": "tap_tree kvs_attn.acal_WN | +3 FIRM astk internal stations (KV-P8-HUB v3.8s, R3-INTERNAL) | v3.9 (KV-405) +2 internal stations at <= 405 um",
+    "fixed_cycles": 5
+   }
+  },
+  "L1428": {
+   "old_cycles": 55,
+   "new_cycles": 56,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L1428",
+    "ports": [
+     "L1428_0",
+     "L1428_1",
+     "L1428_2",
+     "L1428_3",
+     "L1428_4",
+     "L1428_5",
+     "L1428_6",
+     "L1428_7",
+     "L1428_8",
+     "L1428_9",
+     "L1428_10"
+    ],
+    "note": "p2p kvs_attn.attn__tx_valid"
+   }
+  },
+  "L1429": {
+   "old_cycles": 9,
+   "new_cycles": 10,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L1429",
+    "ports": [
+     "L1429_0",
+     "L1429_1"
+    ],
+    "note": "tap_tree kvs_attn.prg"
+   }
+  },
+  "L1431": {
+   "old_cycles": 55,
+   "new_cycles": 56,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L1431",
+    "ports": [
+     "L1431_0",
+     "L1431_1",
+     "L1431_2",
+     "L1431_3",
+     "L1431_4",
+     "L1431_5",
+     "L1431_6",
+     "L1431_7",
+     "L1431_8",
+     "L1431_9",
+     "L1431_10"
+    ],
+    "note": "p2p kvs_ctl.boot__link_cfg_addr"
+   }
+  },
+  "L1575": {
+   "old_cycles": 12,
+   "new_cycles": 13,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L1575",
+    "ports": [
+     "L1575_0",
+     "L1575_1",
+     "L1575_2"
+    ],
+    "note": "p2p kvs_hroot_WN.o_ctl"
+   }
+  },
+  "L1576": {
+   "old_cycles": 7,
+   "new_cycles": 8,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L1576",
+    "ports": [
+     "L1576_0",
+     "L1576_1"
+    ],
+    "note": "p2p kvs_hroot_WN.o_emb"
+   }
+  },
+  "L1849": {
+   "old_cycles": 38,
+   "new_cycles": 42,
+   "added_cycles": 4,
+   "lane": {
+    "id": "L1849",
+    "ports": [
+     "L1849_0",
+     "L1849_1",
+     "L1849_2",
+     "L1849_3",
+     "L1849_4",
+     "L1849_5"
+    ],
+    "note": "p2p pvw_0__u_s10_j.fault"
+   }
+  },
+  "L1850": {
+   "old_cycles": 33,
+   "new_cycles": 35,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1850",
+    "ports": [
+     "L1850_0",
+     "L1850_1",
+     "L1850_2",
+     "L1850_3",
+     "L1850_4",
+     "L1850_5"
+    ],
+    "note": "p2p pvw_0__u_s10_j.y_valid"
+   }
+  },
+  "L1851": {
+   "old_cycles": 33,
+   "new_cycles": 35,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1851",
+    "ports": [
+     "L1851_0",
+     "L1851_1",
+     "L1851_2",
+     "L1851_3",
+     "L1851_4"
+    ],
+    "note": "p2p pvw_0__u_s11_j.fault"
+   }
+  },
+  "L1852": {
+   "old_cycles": 26,
+   "new_cycles": 28,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1852",
+    "ports": [
+     "L1852_0",
+     "L1852_1",
+     "L1852_2",
+     "L1852_3",
+     "L1852_4"
+    ],
+    "note": "p2p pvw_0__u_s11_j.y_valid"
+   }
+  },
+  "L1853": {
+   "old_cycles": 27,
+   "new_cycles": 28,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L1853",
+    "ports": [
+     "L1853_0",
+     "L1853_1",
+     "L1853_2",
+     "L1853_3"
+    ],
+    "note": "p2p pvw_0__u_s12_j.fault"
+   }
+  },
+  "L1854": {
+   "old_cycles": 22,
+   "new_cycles": 23,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L1854",
+    "ports": [
+     "L1854_0",
+     "L1854_1",
+     "L1854_2",
+     "L1854_3"
+    ],
+    "note": "p2p pvw_0__u_s12_j.y_valid"
+   }
+  },
+  "L1856": {
+   "old_cycles": 14,
+   "new_cycles": 16,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1856",
+    "ports": [
+     "L1856_0",
+     "L1856_1",
+     "L1856_2"
+    ],
+    "note": "p2p pvw_0__u_s13_j.y_valid"
+   }
+  },
+  "L1857": {
+   "old_cycles": 9,
+   "new_cycles": 10,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L1857",
+    "ports": [
+     "L1857_0",
+     "L1857_1"
+    ],
+    "note": "p2p pvw_0__u_s14_j.fault"
+   }
+  },
+  "L1862": {
+   "old_cycles": 49,
+   "new_cycles": 50,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L1862",
+    "ports": [
+     "L1862_0",
+     "L1862_1",
+     "L1862_2",
+     "L1862_3",
+     "L1862_4",
+     "L1862_5",
+     "L1862_6",
+     "L1862_7"
+    ],
+    "note": "p2p pvw_0__u_s16_j.y_valid"
+   }
+  },
+  "L1863": {
+   "old_cycles": 46,
+   "new_cycles": 48,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1863",
+    "ports": [
+     "L1863_0",
+     "L1863_1",
+     "L1863_2",
+     "L1863_3",
+     "L1863_4",
+     "L1863_5",
+     "L1863_6"
+    ],
+    "note": "p2p pvw_0__u_s17_j.fault"
+   }
+  },
+  "L1864": {
+   "old_cycles": 43,
+   "new_cycles": 45,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1864",
+    "ports": [
+     "L1864_0",
+     "L1864_1",
+     "L1864_2",
+     "L1864_3",
+     "L1864_4",
+     "L1864_5",
+     "L1864_6"
+    ],
+    "note": "p2p pvw_0__u_s17_j.y_valid"
+   }
+  },
+  "L1865": {
+   "old_cycles": 38,
+   "new_cycles": 41,
+   "added_cycles": 3,
+   "lane": {
+    "id": "L1865",
+    "ports": [
+     "L1865_0",
+     "L1865_1",
+     "L1865_2",
+     "L1865_3",
+     "L1865_4",
+     "L1865_5"
+    ],
+    "note": "p2p pvw_0__u_s18_j.fault"
+   }
+  },
+  "L1866": {
+   "old_cycles": 33,
+   "new_cycles": 35,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1866",
+    "ports": [
+     "L1866_0",
+     "L1866_1",
+     "L1866_2",
+     "L1866_3",
+     "L1866_4",
+     "L1866_5"
+    ],
+    "note": "p2p pvw_0__u_s18_j.y_valid"
+   }
+  },
+  "L1867": {
+   "old_cycles": 33,
+   "new_cycles": 35,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1867",
+    "ports": [
+     "L1867_0",
+     "L1867_1",
+     "L1867_2",
+     "L1867_3",
+     "L1867_4"
+    ],
+    "note": "p2p pvw_0__u_s19_j.fault"
+   }
+  },
+  "L1868": {
+   "old_cycles": 26,
+   "new_cycles": 28,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1868",
+    "ports": [
+     "L1868_0",
+     "L1868_1",
+     "L1868_2",
+     "L1868_3",
+     "L1868_4"
+    ],
+    "note": "p2p pvw_0__u_s19_j.y_valid"
+   }
+  },
+  "L1869": {
+   "old_cycles": 46,
+   "new_cycles": 49,
+   "added_cycles": 3,
+   "lane": {
+    "id": "L1869",
+    "ports": [
+     "L1869_0",
+     "L1869_1",
+     "L1869_2",
+     "L1869_3",
+     "L1869_4",
+     "L1869_5",
+     "L1869_6"
+    ],
+    "note": "p2p pvw_0__u_s1_j.fault"
+   }
+  },
+  "L1870": {
+   "old_cycles": 43,
+   "new_cycles": 46,
+   "added_cycles": 3,
+   "lane": {
+    "id": "L1870",
+    "ports": [
+     "L1870_0",
+     "L1870_1",
+     "L1870_2",
+     "L1870_3",
+     "L1870_4",
+     "L1870_5",
+     "L1870_6"
+    ],
+    "note": "p2p pvw_0__u_s1_j.y_valid"
+   }
+  },
+  "L1872": {
+   "old_cycles": 22,
+   "new_cycles": 23,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L1872",
+    "ports": [
+     "L1872_0",
+     "L1872_1",
+     "L1872_2",
+     "L1872_3"
+    ],
+    "note": "p2p pvw_0__u_s20_j.y_valid"
+   }
+  },
+  "L1873": {
+   "old_cycles": 17,
+   "new_cycles": 18,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L1873",
+    "ports": [
+     "L1873_0",
+     "L1873_1",
+     "L1873_2"
+    ],
+    "note": "p2p pvw_0__u_s21_j.fault"
+   }
+  },
+  "L1874": {
+   "old_cycles": 14,
+   "new_cycles": 16,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1874",
+    "ports": [
+     "L1874_0",
+     "L1874_1",
+     "L1874_2"
+    ],
+    "note": "p2p pvw_0__u_s21_j.y_valid"
+   }
+  },
+  "L1879": {
+   "old_cycles": 53,
+   "new_cycles": 54,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L1879",
+    "ports": [
+     "L1879_0",
+     "L1879_1",
+     "L1879_2",
+     "L1879_3",
+     "L1879_4",
+     "L1879_5",
+     "L1879_6",
+     "L1879_7"
+    ],
+    "note": "p2p pvw_0__u_s24_j.fault"
+   }
+  },
+  "L1880": {
+   "old_cycles": 48,
+   "new_cycles": 49,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L1880",
+    "ports": [
+     "L1880_0",
+     "L1880_1",
+     "L1880_2",
+     "L1880_3",
+     "L1880_4",
+     "L1880_5",
+     "L1880_6",
+     "L1880_7"
+    ],
+    "note": "p2p pvw_0__u_s24_j.y_valid"
+   }
+  },
+  "L1881": {
+   "old_cycles": 46,
+   "new_cycles": 48,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1881",
+    "ports": [
+     "L1881_0",
+     "L1881_1",
+     "L1881_2",
+     "L1881_3",
+     "L1881_4",
+     "L1881_5",
+     "L1881_6"
+    ],
+    "note": "p2p pvw_0__u_s25_j.fault"
+   }
+  },
+  "L1882": {
+   "old_cycles": 43,
+   "new_cycles": 45,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1882",
+    "ports": [
+     "L1882_0",
+     "L1882_1",
+     "L1882_2",
+     "L1882_3",
+     "L1882_4",
+     "L1882_5",
+     "L1882_6"
+    ],
+    "note": "p2p pvw_0__u_s25_j.y_valid"
+   }
+  },
+  "L1883": {
+   "old_cycles": 38,
+   "new_cycles": 41,
+   "added_cycles": 3,
+   "lane": {
+    "id": "L1883",
+    "ports": [
+     "L1883_0",
+     "L1883_1",
+     "L1883_2",
+     "L1883_3",
+     "L1883_4",
+     "L1883_5"
+    ],
+    "note": "p2p pvw_0__u_s26_j.fault"
+   }
+  },
+  "L1884": {
+   "old_cycles": 30,
+   "new_cycles": 32,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1884",
+    "ports": [
+     "L1884_0",
+     "L1884_1",
+     "L1884_2",
+     "L1884_3",
+     "L1884_4",
+     "L1884_5"
+    ],
+    "note": "p2p pvw_0__u_s26_j.y_valid"
+   }
+  },
+  "L1885": {
+   "old_cycles": 33,
+   "new_cycles": 35,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1885",
+    "ports": [
+     "L1885_0",
+     "L1885_1",
+     "L1885_2",
+     "L1885_3",
+     "L1885_4"
+    ],
+    "note": "p2p pvw_0__u_s27_j.fault"
+   }
+  },
+  "L1886": {
+   "old_cycles": 26,
+   "new_cycles": 28,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1886",
+    "ports": [
+     "L1886_0",
+     "L1886_1",
+     "L1886_2",
+     "L1886_3",
+     "L1886_4"
+    ],
+    "note": "p2p pvw_0__u_s27_j.y_valid"
+   }
+  },
+  "L1888": {
+   "old_cycles": 22,
+   "new_cycles": 24,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1888",
+    "ports": [
+     "L1888_0",
+     "L1888_1",
+     "L1888_2",
+     "L1888_3"
+    ],
+    "note": "p2p pvw_0__u_s28_j.y_valid"
+   }
+  },
+  "L1889": {
+   "old_cycles": 17,
+   "new_cycles": 18,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L1889",
+    "ports": [
+     "L1889_0",
+     "L1889_1",
+     "L1889_2"
+    ],
+    "note": "p2p pvw_0__u_s29_j.fault"
+   }
+  },
+  "L1890": {
+   "old_cycles": 14,
+   "new_cycles": 16,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1890",
+    "ports": [
+     "L1890_0",
+     "L1890_1",
+     "L1890_2"
+    ],
+    "note": "p2p pvw_0__u_s29_j.y_valid"
+   }
+  },
+  "L1891": {
+   "old_cycles": 38,
+   "new_cycles": 41,
+   "added_cycles": 3,
+   "lane": {
+    "id": "L1891",
+    "ports": [
+     "L1891_0",
+     "L1891_1",
+     "L1891_2",
+     "L1891_3",
+     "L1891_4",
+     "L1891_5"
+    ],
+    "note": "p2p pvw_0__u_s2_j.fault"
+   }
+  },
+  "L1892": {
+   "old_cycles": 30,
+   "new_cycles": 32,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1892",
+    "ports": [
+     "L1892_0",
+     "L1892_1",
+     "L1892_2",
+     "L1892_3",
+     "L1892_4",
+     "L1892_5"
+    ],
+    "note": "p2p pvw_0__u_s2_j.y_valid"
+   }
+  },
+  "L1897": {
+   "old_cycles": 33,
+   "new_cycles": 34,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L1897",
+    "ports": [
+     "L1897_0",
+     "L1897_1",
+     "L1897_2",
+     "L1897_3",
+     "L1897_4"
+    ],
+    "note": "p2p pvw_0__u_s3_j.fault"
+   }
+  },
+  "L1898": {
+   "old_cycles": 26,
+   "new_cycles": 28,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1898",
+    "ports": [
+     "L1898_0",
+     "L1898_1",
+     "L1898_2",
+     "L1898_3",
+     "L1898_4"
+    ],
+    "note": "p2p pvw_0__u_s3_j.y_valid"
+   }
+  },
+  "L1899": {
+   "old_cycles": 23,
+   "new_cycles": 24,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L1899",
+    "ports": [
+     "L1899_0",
+     "L1899_1",
+     "L1899_2",
+     "L1899_3"
+    ],
+    "note": "p2p pvw_0__u_s4_j.fault"
+   }
+  },
+  "L1900": {
+   "old_cycles": 22,
+   "new_cycles": 23,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L1900",
+    "ports": [
+     "L1900_0",
+     "L1900_1",
+     "L1900_2",
+     "L1900_3"
+    ],
+    "note": "p2p pvw_0__u_s4_j.y_valid"
+   }
+  },
+  "L1901": {
+   "old_cycles": 17,
+   "new_cycles": 18,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L1901",
+    "ports": [
+     "L1901_0",
+     "L1901_1",
+     "L1901_2"
+    ],
+    "note": "p2p pvw_0__u_s5_j.fault"
+   }
+  },
+  "L1902": {
+   "old_cycles": 14,
+   "new_cycles": 16,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1902",
+    "ports": [
+     "L1902_0",
+     "L1902_1",
+     "L1902_2"
+    ],
+    "note": "p2p pvw_0__u_s5_j.y_valid"
+   }
+  },
+  "L1907": {
+   "old_cycles": 52,
+   "new_cycles": 54,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1907",
+    "ports": [
+     "L1907_0",
+     "L1907_1",
+     "L1907_2",
+     "L1907_3",
+     "L1907_4",
+     "L1907_5",
+     "L1907_6",
+     "L1907_7"
+    ],
+    "note": "p2p pvw_0__u_s8_j.fault"
+   }
+  },
+  "L1908": {
+   "old_cycles": 48,
+   "new_cycles": 51,
+   "added_cycles": 3,
+   "lane": {
+    "id": "L1908",
+    "ports": [
+     "L1908_0",
+     "L1908_1",
+     "L1908_2",
+     "L1908_3",
+     "L1908_4",
+     "L1908_5",
+     "L1908_6",
+     "L1908_7"
+    ],
+    "note": "p2p pvw_0__u_s8_j.y_valid"
+   }
+  },
+  "L1909": {
+   "old_cycles": 46,
+   "new_cycles": 48,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1909",
+    "ports": [
+     "L1909_0",
+     "L1909_1",
+     "L1909_2",
+     "L1909_3",
+     "L1909_4",
+     "L1909_5",
+     "L1909_6"
+    ],
+    "note": "p2p pvw_0__u_s9_j.fault"
+   }
+  },
+  "L1910": {
+   "old_cycles": 41,
+   "new_cycles": 44,
+   "added_cycles": 3,
+   "lane": {
+    "id": "L1910",
+    "ports": [
+     "L1910_0",
+     "L1910_1",
+     "L1910_2",
+     "L1910_3",
+     "L1910_4",
+     "L1910_5",
+     "L1910_6"
+    ],
+    "note": "p2p pvw_0__u_s9_j.y_valid"
+   }
+  },
+  "L1960": {
+   "old_cycles": 47,
+   "new_cycles": 48,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L1960",
+    "ports": [
+     "L1960_0",
+     "L1960_1",
+     "L1960_2",
+     "L1960_3",
+     "L1960_4",
+     "L1960_5",
+     "L1960_6",
+     "L1960_7"
+    ],
+    "note": "p2p pvw_1__u_s0_j.y_valid"
+   }
+  },
+  "L1961": {
+   "old_cycles": 38,
+   "new_cycles": 42,
+   "added_cycles": 4,
+   "lane": {
+    "id": "L1961",
+    "ports": [
+     "L1961_0",
+     "L1961_1",
+     "L1961_2",
+     "L1961_3",
+     "L1961_4",
+     "L1961_5"
+    ],
+    "note": "p2p pvw_1__u_s10_j.fault"
+   }
+  },
+  "L1962": {
+   "old_cycles": 32,
+   "new_cycles": 33,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L1962",
+    "ports": [
+     "L1962_0",
+     "L1962_1",
+     "L1962_2",
+     "L1962_3",
+     "L1962_4",
+     "L1962_5"
+    ],
+    "note": "p2p pvw_1__u_s10_j.y_valid"
+   }
+  },
+  "L1963": {
+   "old_cycles": 33,
+   "new_cycles": 35,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1963",
+    "ports": [
+     "L1963_0",
+     "L1963_1",
+     "L1963_2",
+     "L1963_3",
+     "L1963_4"
+    ],
+    "note": "p2p pvw_1__u_s11_j.fault"
+   }
+  },
+  "L1964": {
+   "old_cycles": 26,
+   "new_cycles": 28,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1964",
+    "ports": [
+     "L1964_0",
+     "L1964_1",
+     "L1964_2",
+     "L1964_3",
+     "L1964_4"
+    ],
+    "note": "p2p pvw_1__u_s11_j.y_valid"
+   }
+  },
+  "L1965": {
+   "old_cycles": 27,
+   "new_cycles": 29,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1965",
+    "ports": [
+     "L1965_0",
+     "L1965_1",
+     "L1965_2",
+     "L1965_3"
+    ],
+    "note": "p2p pvw_1__u_s12_j.fault"
+   }
+  },
+  "L1966": {
+   "old_cycles": 23,
+   "new_cycles": 24,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L1966",
+    "ports": [
+     "L1966_0",
+     "L1966_1",
+     "L1966_2",
+     "L1966_3"
+    ],
+    "note": "p2p pvw_1__u_s12_j.y_valid"
+   }
+  },
+  "L1967": {
+   "old_cycles": 18,
+   "new_cycles": 19,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L1967",
+    "ports": [
+     "L1967_0",
+     "L1967_1",
+     "L1967_2"
+    ],
+    "note": "p2p pvw_1__u_s13_j.fault"
+   }
+  },
+  "L1968": {
+   "old_cycles": 16,
+   "new_cycles": 17,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L1968",
+    "ports": [
+     "L1968_0",
+     "L1968_1",
+     "L1968_2"
+    ],
+    "note": "p2p pvw_1__u_s13_j.y_valid"
+   }
+  },
+  "L1974": {
+   "old_cycles": 47,
+   "new_cycles": 49,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1974",
+    "ports": [
+     "L1974_0",
+     "L1974_1",
+     "L1974_2",
+     "L1974_3",
+     "L1974_4",
+     "L1974_5",
+     "L1974_6",
+     "L1974_7"
+    ],
+    "note": "p2p pvw_1__u_s16_j.y_valid"
+   }
+  },
+  "L1975": {
+   "old_cycles": 45,
+   "new_cycles": 47,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1975",
+    "ports": [
+     "L1975_0",
+     "L1975_1",
+     "L1975_2",
+     "L1975_3",
+     "L1975_4",
+     "L1975_5",
+     "L1975_6"
+    ],
+    "note": "p2p pvw_1__u_s17_j.fault"
+   }
+  },
+  "L1976": {
+   "old_cycles": 42,
+   "new_cycles": 44,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1976",
+    "ports": [
+     "L1976_0",
+     "L1976_1",
+     "L1976_2",
+     "L1976_3",
+     "L1976_4",
+     "L1976_5",
+     "L1976_6"
+    ],
+    "note": "p2p pvw_1__u_s17_j.y_valid"
+   }
+  },
+  "L1977": {
+   "old_cycles": 38,
+   "new_cycles": 41,
+   "added_cycles": 3,
+   "lane": {
+    "id": "L1977",
+    "ports": [
+     "L1977_0",
+     "L1977_1",
+     "L1977_2",
+     "L1977_3",
+     "L1977_4",
+     "L1977_5"
+    ],
+    "note": "p2p pvw_1__u_s18_j.fault"
+   }
+  },
+  "L1978": {
+   "old_cycles": 32,
+   "new_cycles": 34,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1978",
+    "ports": [
+     "L1978_0",
+     "L1978_1",
+     "L1978_2",
+     "L1978_3",
+     "L1978_4",
+     "L1978_5"
+    ],
+    "note": "p2p pvw_1__u_s18_j.y_valid"
+   }
+  },
+  "L1979": {
+   "old_cycles": 33,
+   "new_cycles": 35,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1979",
+    "ports": [
+     "L1979_0",
+     "L1979_1",
+     "L1979_2",
+     "L1979_3",
+     "L1979_4"
+    ],
+    "note": "p2p pvw_1__u_s19_j.fault"
+   }
+  },
+  "L1980": {
+   "old_cycles": 26,
+   "new_cycles": 28,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1980",
+    "ports": [
+     "L1980_0",
+     "L1980_1",
+     "L1980_2",
+     "L1980_3",
+     "L1980_4"
+    ],
+    "note": "p2p pvw_1__u_s19_j.y_valid"
+   }
+  },
+  "L1981": {
+   "old_cycles": 45,
+   "new_cycles": 47,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1981",
+    "ports": [
+     "L1981_0",
+     "L1981_1",
+     "L1981_2",
+     "L1981_3",
+     "L1981_4",
+     "L1981_5",
+     "L1981_6"
+    ],
+    "note": "p2p pvw_1__u_s1_j.fault"
+   }
+  },
+  "L1982": {
+   "old_cycles": 41,
+   "new_cycles": 44,
+   "added_cycles": 3,
+   "lane": {
+    "id": "L1982",
+    "ports": [
+     "L1982_0",
+     "L1982_1",
+     "L1982_2",
+     "L1982_3",
+     "L1982_4",
+     "L1982_5",
+     "L1982_6"
+    ],
+    "note": "p2p pvw_1__u_s1_j.y_valid"
+   }
+  },
+  "L1983": {
+   "old_cycles": 24,
+   "new_cycles": 25,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L1983",
+    "ports": [
+     "L1983_0",
+     "L1983_1",
+     "L1983_2",
+     "L1983_3"
+    ],
+    "note": "p2p pvw_1__u_s20_j.fault"
+   }
+  },
+  "L1984": {
+   "old_cycles": 23,
+   "new_cycles": 24,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L1984",
+    "ports": [
+     "L1984_0",
+     "L1984_1",
+     "L1984_2",
+     "L1984_3"
+    ],
+    "note": "p2p pvw_1__u_s20_j.y_valid"
+   }
+  },
+  "L1985": {
+   "old_cycles": 18,
+   "new_cycles": 19,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L1985",
+    "ports": [
+     "L1985_0",
+     "L1985_1",
+     "L1985_2"
+    ],
+    "note": "p2p pvw_1__u_s21_j.fault"
+   }
+  },
+  "L1986": {
+   "old_cycles": 16,
+   "new_cycles": 17,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L1986",
+    "ports": [
+     "L1986_0",
+     "L1986_1",
+     "L1986_2"
+    ],
+    "note": "p2p pvw_1__u_s21_j.y_valid"
+   }
+  },
+  "L1991": {
+   "old_cycles": 51,
+   "new_cycles": 52,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L1991",
+    "ports": [
+     "L1991_0",
+     "L1991_1",
+     "L1991_2",
+     "L1991_3",
+     "L1991_4",
+     "L1991_5",
+     "L1991_6",
+     "L1991_7"
+    ],
+    "note": "p2p pvw_1__u_s24_j.fault"
+   }
+  },
+  "L1992": {
+   "old_cycles": 46,
+   "new_cycles": 48,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1992",
+    "ports": [
+     "L1992_0",
+     "L1992_1",
+     "L1992_2",
+     "L1992_3",
+     "L1992_4",
+     "L1992_5",
+     "L1992_6",
+     "L1992_7"
+    ],
+    "note": "p2p pvw_1__u_s24_j.y_valid"
+   }
+  },
+  "L1993": {
+   "old_cycles": 45,
+   "new_cycles": 46,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L1993",
+    "ports": [
+     "L1993_0",
+     "L1993_1",
+     "L1993_2",
+     "L1993_3",
+     "L1993_4",
+     "L1993_5",
+     "L1993_6"
+    ],
+    "note": "p2p pvw_1__u_s25_j.fault"
+   }
+  },
+  "L1994": {
+   "old_cycles": 41,
+   "new_cycles": 43,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1994",
+    "ports": [
+     "L1994_0",
+     "L1994_1",
+     "L1994_2",
+     "L1994_3",
+     "L1994_4",
+     "L1994_5",
+     "L1994_6"
+    ],
+    "note": "p2p pvw_1__u_s25_j.y_valid"
+   }
+  },
+  "L1995": {
+   "old_cycles": 38,
+   "new_cycles": 41,
+   "added_cycles": 3,
+   "lane": {
+    "id": "L1995",
+    "ports": [
+     "L1995_0",
+     "L1995_1",
+     "L1995_2",
+     "L1995_3",
+     "L1995_4",
+     "L1995_5"
+    ],
+    "note": "p2p pvw_1__u_s26_j.fault"
+   }
+  },
+  "L1996": {
+   "old_cycles": 30,
+   "new_cycles": 32,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1996",
+    "ports": [
+     "L1996_0",
+     "L1996_1",
+     "L1996_2",
+     "L1996_3",
+     "L1996_4",
+     "L1996_5"
+    ],
+    "note": "p2p pvw_1__u_s26_j.y_valid"
+   }
+  },
+  "L1997": {
+   "old_cycles": 33,
+   "new_cycles": 35,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1997",
+    "ports": [
+     "L1997_0",
+     "L1997_1",
+     "L1997_2",
+     "L1997_3",
+     "L1997_4"
+    ],
+    "note": "p2p pvw_1__u_s27_j.fault"
+   }
+  },
+  "L1998": {
+   "old_cycles": 26,
+   "new_cycles": 28,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L1998",
+    "ports": [
+     "L1998_0",
+     "L1998_1",
+     "L1998_2",
+     "L1998_3",
+     "L1998_4"
+    ],
+    "note": "p2p pvw_1__u_s27_j.y_valid"
+   }
+  },
+  "L1999": {
+   "old_cycles": 24,
+   "new_cycles": 25,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L1999",
+    "ports": [
+     "L1999_0",
+     "L1999_1",
+     "L1999_2",
+     "L1999_3"
+    ],
+    "note": "p2p pvw_1__u_s28_j.fault"
+   }
+  },
+  "L2000": {
+   "old_cycles": 22,
+   "new_cycles": 24,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L2000",
+    "ports": [
+     "L2000_0",
+     "L2000_1",
+     "L2000_2",
+     "L2000_3"
+    ],
+    "note": "p2p pvw_1__u_s28_j.y_valid"
+   }
+  },
+  "L2001": {
+   "old_cycles": 18,
+   "new_cycles": 19,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L2001",
+    "ports": [
+     "L2001_0",
+     "L2001_1",
+     "L2001_2"
+    ],
+    "note": "p2p pvw_1__u_s29_j.fault"
+   }
+  },
+  "L2002": {
+   "old_cycles": 16,
+   "new_cycles": 18,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L2002",
+    "ports": [
+     "L2002_0",
+     "L2002_1",
+     "L2002_2"
+    ],
+    "note": "p2p pvw_1__u_s29_j.y_valid"
+   }
+  },
+  "L2003": {
+   "old_cycles": 37,
+   "new_cycles": 40,
+   "added_cycles": 3,
+   "lane": {
+    "id": "L2003",
+    "ports": [
+     "L2003_0",
+     "L2003_1",
+     "L2003_2",
+     "L2003_3",
+     "L2003_4",
+     "L2003_5"
+    ],
+    "note": "p2p pvw_1__u_s2_j.fault"
+   }
+  },
+  "L2004": {
+   "old_cycles": 30,
+   "new_cycles": 32,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L2004",
+    "ports": [
+     "L2004_0",
+     "L2004_1",
+     "L2004_2",
+     "L2004_3",
+     "L2004_4",
+     "L2004_5"
+    ],
+    "note": "p2p pvw_1__u_s2_j.y_valid"
+   }
+  },
+  "L2009": {
+   "old_cycles": 33,
+   "new_cycles": 34,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L2009",
+    "ports": [
+     "L2009_0",
+     "L2009_1",
+     "L2009_2",
+     "L2009_3",
+     "L2009_4"
+    ],
+    "note": "p2p pvw_1__u_s3_j.fault"
+   }
+  },
+  "L2010": {
+   "old_cycles": 26,
+   "new_cycles": 28,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L2010",
+    "ports": [
+     "L2010_0",
+     "L2010_1",
+     "L2010_2",
+     "L2010_3",
+     "L2010_4"
+    ],
+    "note": "p2p pvw_1__u_s3_j.y_valid"
+   }
+  },
+  "L2011": {
+   "old_cycles": 24,
+   "new_cycles": 25,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L2011",
+    "ports": [
+     "L2011_0",
+     "L2011_1",
+     "L2011_2",
+     "L2011_3"
+    ],
+    "note": "p2p pvw_1__u_s4_j.fault"
+   }
+  },
+  "L2012": {
+   "old_cycles": 22,
+   "new_cycles": 23,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L2012",
+    "ports": [
+     "L2012_0",
+     "L2012_1",
+     "L2012_2",
+     "L2012_3"
+    ],
+    "note": "p2p pvw_1__u_s4_j.y_valid"
+   }
+  },
+  "L2013": {
+   "old_cycles": 18,
+   "new_cycles": 19,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L2013",
+    "ports": [
+     "L2013_0",
+     "L2013_1",
+     "L2013_2"
+    ],
+    "note": "p2p pvw_1__u_s5_j.fault"
+   }
+  },
+  "L2014": {
+   "old_cycles": 16,
+   "new_cycles": 17,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L2014",
+    "ports": [
+     "L2014_0",
+     "L2014_1",
+     "L2014_2"
+    ],
+    "note": "p2p pvw_1__u_s5_j.y_valid"
+   }
+  },
+  "L2019": {
+   "old_cycles": 50,
+   "new_cycles": 52,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L2019",
+    "ports": [
+     "L2019_0",
+     "L2019_1",
+     "L2019_2",
+     "L2019_3",
+     "L2019_4",
+     "L2019_5",
+     "L2019_6",
+     "L2019_7"
+    ],
+    "note": "p2p pvw_1__u_s8_j.fault"
+   }
+  },
+  "L2020": {
+   "old_cycles": 46,
+   "new_cycles": 50,
+   "added_cycles": 4,
+   "lane": {
+    "id": "L2020",
+    "ports": [
+     "L2020_0",
+     "L2020_1",
+     "L2020_2",
+     "L2020_3",
+     "L2020_4",
+     "L2020_5",
+     "L2020_6",
+     "L2020_7"
+    ],
+    "note": "p2p pvw_1__u_s8_j.y_valid"
+   }
+  },
+  "L2021": {
+   "old_cycles": 45,
+   "new_cycles": 46,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L2021",
+    "ports": [
+     "L2021_0",
+     "L2021_1",
+     "L2021_2",
+     "L2021_3",
+     "L2021_4",
+     "L2021_5",
+     "L2021_6"
+    ],
+    "note": "p2p pvw_1__u_s9_j.fault"
+   }
+  },
+  "L2022": {
+   "old_cycles": 39,
+   "new_cycles": 42,
+   "added_cycles": 3,
+   "lane": {
+    "id": "L2022",
+    "ports": [
+     "L2022_0",
+     "L2022_1",
+     "L2022_2",
+     "L2022_3",
+     "L2022_4",
+     "L2022_5",
+     "L2022_6"
+    ],
+    "note": "p2p pvw_1__u_s9_j.y_valid"
+   }
+  },
+  "L2023": {
+   "old_cycles": 9,
+   "new_cycles": 10,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L2023",
+    "ports": [
+     "L2023_0",
+     "L2023_1"
+    ],
+    "note": "p2p seq__g_fan_0__u_fan.af_o"
+   }
+  },
+  "L2025": {
+   "old_cycles": 9,
+   "new_cycles": 10,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L2025",
+    "ports": [
+     "L2025_0",
+     "L2025_1"
+    ],
+    "note": "p2p seq__g_fan_1__u_fan.af_o"
+   }
+  },
+  "L2031": {
+   "old_cycles": 22,
+   "new_cycles": 23,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L2031",
+    "ports": [
+     "L2031_0",
+     "L2031_1",
+     "L2031_2",
+     "L2031_3"
+    ],
+    "note": "p2p seq__g_xs_0__u_xs.q_e"
+   }
+  },
+  "L2032": {
+   "old_cycles": 22,
+   "new_cycles": 23,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L2032",
+    "ports": [
+     "L2032_0",
+     "L2032_1",
+     "L2032_2",
+     "L2032_3"
+    ],
+    "note": "p2p seq__g_xs_1__u_xs.q_e"
+   }
+  },
+  "L2075": {
+   "old_cycles": 21,
+   "new_cycles": 22,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L2075",
+    "ports": [
+     "L2075_0",
+     "L2075_1",
+     "L2075_2",
+     "L2075_3"
+    ],
+    "note": "p2p slg_EN_4.rsp"
+   }
+  },
+  "L2114": {
+   "old_cycles": 20,
+   "new_cycles": 22,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L2114",
+    "ports": [
+     "L2114_0",
+     "L2114_1",
+     "L2114_2",
+     "L2114_3"
+    ],
+    "note": "p2p slg_ES_4.rsp"
+   }
+  },
+  "L2153": {
+   "old_cycles": 19,
+   "new_cycles": 20,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L2153",
+    "ports": [
+     "L2153_0",
+     "L2153_1",
+     "L2153_2",
+     "L2153_3"
+    ],
+    "note": "p2p slg_WN_4.rsp"
+   }
+  },
+  "L2164": {
+   "old_cycles": 16,
+   "new_cycles": 17,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L2164",
+    "ports": [
+     "L2164_0",
+     "L2164_1",
+     "L2164_2",
+     "L2164_3"
+    ],
+    "note": "p2p slg_WN_7.af__fault"
+   }
+  },
+  "L2192": {
+   "old_cycles": 18,
+   "new_cycles": 20,
+   "added_cycles": 2,
+   "lane": {
+    "id": "L2192",
+    "ports": [
+     "L2192_0",
+     "L2192_1",
+     "L2192_2",
+     "L2192_3"
+    ],
+    "note": "p2p slg_WS_4.rsp"
+   }
+  },
+  "L2232": {
+   "old_cycles": 19,
+   "new_cycles": 20,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L2232",
+    "ports": [
+     "L2232_0",
+     "L2232_1",
+     "L2232_2",
+     "L2232_3"
+    ],
+    "note": "tap_tree vport_EN_1.vq#"
+   }
+  },
+  "L2248": {
+   "old_cycles": 13,
+   "new_cycles": 14,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L2248",
+    "ports": [
+     "L2248_0",
+     "L2248_1",
+     "L2248_2"
+    ],
+    "note": "tap_tree vport_EN_3.f"
+   }
+  },
+  "L2270": {
+   "old_cycles": 12,
+   "new_cycles": 13,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L2270",
+    "ports": [
+     "L2270_0",
+     "L2270_1"
+    ],
+    "note": "tap_tree vport_ES_0.vo | v3.9f fwd_reach +5 internal forward stations at <= 405 um",
+    "fixed_cycles": 5
+   }
+  },
+  "L2284": {
+   "old_cycles": 19,
+   "new_cycles": 20,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L2284",
+    "ports": [
+     "L2284_0",
+     "L2284_1",
+     "L2284_2",
+     "L2284_3"
+    ],
+    "note": "tap_tree vport_ES_1.vq#"
+   }
+  },
+  "L2352": {
+   "old_cycles": 13,
+   "new_cycles": 14,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L2352",
+    "ports": [
+     "L2352_0",
+     "L2352_1",
+     "L2352_2"
+    ],
+    "note": "tap_tree vport_WN_3.f"
+   }
+  },
+  "L2374": {
+   "old_cycles": 14,
+   "new_cycles": 15,
+   "added_cycles": 1,
+   "lane": {
+    "id": "L2374",
+    "ports": [
+     "L2374_0",
+     "L2374_1"
+    ],
+    "note": "tap_tree vport_WS_0.vo | v3.9f fwd_reach +7 internal forward stations at <= 405 um",
+    "fixed_cycles": 7
+   }
+  }
+ },
+ "max_added_cycles": 4,
+ "requires": "Compiler/programme + token model repricing in same pending KV plan event"
+}
