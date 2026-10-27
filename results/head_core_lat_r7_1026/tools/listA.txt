@@ -1,0 +1,12 @@
+r7a_base_b1 --fanouts 4,4,4,4,2 --balance 1
+r7a_tr_b1 --fanouts 4,4,4,4,2 --balance 1 --tree_root centroid
+r7a_tr_f1_b1 --fanouts 4,4,4,4,2 --balance 1 --tree_root centroid --fringe 8,1,3
+r7a_tr_f2_b1 --fanouts 4,4,4,4,2 --balance 1 --tree_root centroid --fringe 8,1,6
+r7a_tr_f3_b1 --fanouts 4,4,4,4,2 --balance 1 --tree_root centroid --fringe 16,1.5,6
+r7a_tr_f4_b1 --fanouts 4,4,4,4,2 --balance 1 --tree_root centroid --fringe 16,1,4
+r7a_f1_b1 --fanouts 4,4,4,4,2 --balance 1 --fringe 8,1,3
+r7a_tr_f1_b0 --fanouts 4,4,4,4,2 --tree_root centroid --fringe 8,1,3
+r7a_tr_f1_24444 --fanouts 2,4,4,4,4 --balance 1 --tree_root centroid --fringe 8,1,3
+r7a_tr_f1_44244 --fanouts 4,4,2,4,4 --balance 1 --tree_root centroid --fringe 8,1,3
+r7a_tr_f2_24444 --fanouts 2,4,4,4,4 --balance 1 --tree_root centroid --fringe 8,1,6
+r7a_tr_f1_4444 --fanouts 4,4,4,4 --balance 1 --tree_root centroid --fringe 8,1,3

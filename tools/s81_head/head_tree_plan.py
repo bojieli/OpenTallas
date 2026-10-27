@@ -96,7 +96,9 @@ def l_route(a, b, macs):
 
 
 def split(S, k):
-    """count-balanced recursive bisection of sink list S into k parts (k power of 2), longer-side cut at the median."""
+    """count-balanced recursive bisection of sink list S into k parts (k power of 2), longer-side cut at the median.
+    R7: when sinks carry a plan weight "w" (--fringe), the cut is at the WEIGHTED median, so sparse fringe sinks
+    (edge band, ROM-pin fringe) get their own compact leaves with fewer sinks; leaf COUNT per node stays equal."""
     parts = [S]
     while len(parts) < k:
         nxt = []
@@ -106,9 +108,42 @@ def split(S, k):
             ax = "x" if (max(xs) - min(xs)) >= (max(ys) - min(ys)) else "y"
             Q = sorted(P, key=lambda s: (s[ax], s["y" if ax == "x" else "x"]))
             h = len(Q) // 2
+            if Q and "w" in Q[0]:
+                W = sum(s["w"] for s in Q)
+                acc, h = 0.0, 0
+                while h < len(Q) - 1 and acc + Q[h]["w"] <= W / 2:
+                    acc += Q[h]["w"]
+                    h += 1
+                h = min(max(h, 1), len(Q) - 1)
             nxt += [Q[:h], Q[h:]]
         parts = nxt
     return parts
+
+
+def fringe_weights(sinks, kn, gamma, cap):
+    """R7 plan weight per sink from local sparsity: d = distance to the kn-th nearest sink (grid buckets),
+    w = min(cap, (d / median d) ** gamma), floored at 1.  Deterministic, computed from the placed geometry only."""
+    import math
+    B = 10.0
+    grid = {}
+    for i, s in enumerate(sinks):
+        grid.setdefault((int(s["x"] // B), int(s["y"] // B)), []).append(i)
+    D = []
+    for s in sinks:
+        gx, gy = int(s["x"] // B), int(s["y"] // B)
+        r = 1
+        while True:
+            c = [abs(sinks[j]["x"] - s["x"]) + abs(sinks[j]["y"] - s["y"])
+                 for dx in range(-r, r + 1) for dy in range(-r, r + 1) for j in grid.get((gx + dx, gy + dy), [])]
+            if len(c) > kn or r > 30:
+                break
+            r += 1
+        c.sort()
+        D.append(c[min(kn, len(c) - 1)])
+    med = sorted(D)[len(D) // 2]
+    for s, d in zip(sinks, D):
+        s["w"] = max(1.0, min(cap, (d / med) ** gamma))
+    return med
 
 
 def centroid(P):
@@ -133,6 +168,9 @@ def main():
     ap.add_argument("--l1_equal", type=float, default=0.0, help="R5: every L1 leg = this route length from the entry (0 = max over groups)")
     ap.add_argument("--eq_levels", default="", help="R5: comma list of tree levels (1 = root->L1 legs) whose sibling legs get ONE plan-placed detour repeater each so that leg + mean downstream path is equal for all siblings (equal-length branches by construction, 12.8d)")
     ap.add_argument("--eq_mode", default="mean", choices=["mean", "leg"], help="mean: equalise leg + mean downstream path; leg: equalise the leg alone")
+    ap.add_argument("--fringe", default="", help="R7: 'kn,gamma,cap' sparsity weights for the weighted bisection (fringe sinks get own compact leaves)")
+    ap.add_argument("--tree_root", default=None, help="R7: 'x,y' or 'centroid': the H tree is rooted here and fed from the entry island by ONE straight leg (repeaters every --seg); the island stays at the plan entry (COORD 06:23)")
+    ap.add_argument("--l1_mirror", type=int, default=0, help="R7: L1 sites at mirror points root +-(dx,dy), dx/dy = mean |offset| of the balanced sites: every L1 leg equal by geometry (no detour)")
     ap.add_argument("--cell", default=BUF)
     ap.add_argument("--repcell", default=BUF)
     ap.add_argument("--leafcell", default=BUF)
@@ -140,6 +178,10 @@ def main():
     sinks, macs, die = read_geo(a.geo)
     fos = [int(x) for x in a.fanouts.split(",")]
     entry = tuple(map(float, a.entry.split(","))) if a.entry else ((die[0] + die[2]) / 2, (die[1] + die[3]) / 2)
+    fr_med = None
+    if a.fringe:
+        kn, gam, cap = a.fringe.split(",")
+        fr_med = fringe_weights(sinks, int(kn), float(gam), float(cap))
     tree, leaves, seg = [], [], {}
     cnt = [0]
 
@@ -178,6 +220,16 @@ def main():
         seg[tn] = 1.0
         root, rxy = tn, txy
 
+    if a.tree_root:   # R7: one straight leg entry -> tree root (common to every sink; no balance detour)
+        if a.tree_root == "centroid":
+            tr = snap_out(centroid(sinks), macs, a.halo)
+        else:
+            tr = tuple(map(float, a.tree_root.split(",")))
+        tr = (round(tr[0] / 0.054) * 0.054, round(tr[1] / 0.27) * 0.27)
+        drv, dxy = leg(root, rxy, tr, "TR", a.cell)
+        tree.append(("TR", drv, tr, a.cell))
+        seg["TR"] = abs(tr[0] - dxy[0]) + abs(tr[1] - dxy[1])
+        root, rxy = "TR", tr
     # 1) planned partition (count-balanced recursive bisection), 2) node sites, 3) legs top-down
     def part(P, lvl, name):
         if lvl == len(fos):
@@ -244,6 +296,19 @@ def main():
             kd["xy"] = snap_out((entry[0] + dx * R / d, entry[1] + dy * R / d), macs, a.halo)
         print("L1", [(kd["name"], [round(c, 1) for c in kd["xy"]], len(kd["sinks"]), round(abs(kd["xy"][0] - entry[0]) + abs(kd["xy"][1] - entry[1]), 1)) for kd in T["kids"]])
 
+    if a.l1_mirror:
+        ofs = [(kd["xy"][0] - rxy[0], kd["xy"][1] - rxy[1]) for kd in T["kids"]]
+        sg = {(o[0] > 0, o[1] > 0) for o in ofs}
+        if len(T["kids"]) != 4 or len(sg) != 4:
+            raise SystemExit(f"L1_MIRROR needs 4 L1 nodes in 4 quadrants about the root: {ofs}")
+        dx = sum(abs(o[0]) for o in ofs) / 4
+        dy = sum(abs(o[1]) for o in ofs) / 4
+        for kd, o in zip(T["kids"], ofs):
+            q = (rxy[0] + (dx if o[0] > 0 else -dx), rxy[1] + (dy if o[1] > 0 else -dy))
+            if inside(q, macs, a.halo):
+                raise SystemExit(f"L1_MIRROR site {q} in a macro halo")
+            kd["xy"] = q
+        print("L1MIRROR", round(dx, 2), round(dy, 2))
     l1_meta = []
     if a.l1_seeds:   # place every L1 node at route length R along the macro-avoiding route entry -> group centroid
         def walk(pts, R):
@@ -379,7 +444,9 @@ def main():
     sz = [len(L[3]) for L in leaves]
     summ = dict(argv=sys.argv, geo_sha256=hashlib.sha256(open(a.geo, "rb").read()).hexdigest(), entry=entry,
                 n_sinks=len(sinks), n_leaves=len(leaves), leaf_sinks=[min(sz), max(sz)], n_tree=len(tree),
-                n_rep=sum(1 for t in tree if "_r" in t[0]), macros=mac, l1=l1_meta, eq=eq_meta)
+                n_rep=sum(1 for t in tree if "_r" in t[0]), macros=mac, l1=l1_meta, eq=eq_meta,
+                tree_root=list(rxy), fringe=a.fringe, fringe_median_um=fr_med,
+                l1_legs=[round(abs(k["xy"][0] - T["xy"][0]) + abs(k["xy"][1] - T["xy"][1]), 2) for k in T["kids"]])
     json.dump(summ, open(a.out + ".plan.json", "w"), indent=1)
     print("PLAN", json.dumps({k: summ[k] for k in ("n_sinks", "n_leaves", "leaf_sinks", "n_tree", "n_rep")}))
 

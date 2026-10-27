@@ -61,6 +61,30 @@ ELEMS = dict(
            CLK_RECT=(0.0, 257.568, 0.084, 257.592), OLD_CLK=[0.0, 257.568, 0.084, 257.592],
            PARAMS="LV 6 PAD 2 JOIN 0 ROWS 128 IOREG 1 SAFE 1 CUT 511 SPLIT9 1", NPINS=None, NICK="hd_elemB_rb",
            ROMS="u_m.u_rom0 77.76 103.68 R0 u_m.u_rom1 77.76 190.08 R0"))
+# HEAD-CORE-LAT-R7 (10-26, COORD R5/R6 rulings): elemB takes the NEW abstract pin list, not the closed 458-pin LEF:
+# outline 285.12 (lattice), 352 pins (343 signal + 9 12.2a1 island ft; l_v/l_d/done/best_* removed from
+# ot_s81hd_elemB_cv; row0/b_v/b_d kept as declared proven-dead inputs), the 26 N-face pins on S, E pins on the 285.12
+# edge, o_d all on S (GEOM-REVIEW-9 a1/a2), and the north-band ROMs (R5 PLAN-DELTA).  Directions of retained pins come
+# from the closed LEF; ft_*_i / ft_*_o are INPUT / OUTPUT.  --elem B-old keeps the 10-24 closed-view rebuild.
+ELEMS["B-old"] = ELEMS["B"]
+ELEMS["B"] = dict(ELEMS["B-old"], S=285.12, NPINS=352,
+                  PINS_FILE="results/head_core_lat_r7_1026/elemB/elemB_pins_r7.json",
+                  ROMS="u_m.u_rom0 12.96 211.68 R0 u_m.u_rom1 146.88 211.68 R0")
+PIN_W = {"M4": (0.084, 0.024), "M5": (0.024, 0.084)}   # standard face pin rect (W/E faces M4, S/N faces M5)
+
+
+def file_pins(pins_file, old_lef_text):
+    """(name, direction, layer, rect) from a die pins file (centre x/y + layer); directions from the closed LEF."""
+    dirs = {n: d for n, d, _, _ in lef_pins(old_lef_text)}
+    out = []
+    for p in json.loads(pins_file.read_text())["pins"]:
+        n = p["name"]
+        d = dirs.get(n) or ("INPUT" if n.endswith("_i") else "OUTPUT" if n.endswith("_o") else None)
+        assert d, f"no direction for {n}"
+        w, h = PIN_W[p["layer"]]
+        out.append((n, d, p["layer"], (round(p["x"] - w / 2, 4), round(p["y"] - h / 2, 4),
+                                       round(p["x"] + w / 2, 4), round(p["y"] + h / 2, 4))))
+    return out
 
 
 def lef_pins(text):
@@ -88,7 +112,7 @@ def main():
     # sdc_lint port_latency_ps {clk: -EARLY}; pin-register arrival = tree - EARLY ~ 250 (signoff +-40).
     # c8: 160 (c7 at 200: TT pin-register mean 214 = network ~414; FF 138 -> output hold -43 vs the fixed 250 vclk)
     ap.add_argument("--early-ps", type=float, default=160.0)
-    ap.add_argument("--elem", choices=["A", "B"], default="A")
+    ap.add_argument("--elem", choices=["A", "B", "B-old"], default="A")
     # c9 / B c5 (10-24 20:50): c8 (A, early 160) and B c4 (early 120) routed with only FF output hold left (A -14.24 /
     # 118, B -9.87 / 104: output face flops at ~150-170 ps FF vs the fixed 250-ps vclk) + B slew 6 (BUFx3 -> w_r/t_r D
     # over 140-185 um).  The GRT repair closed hold at margin 15 on GRT RC and the routed SPEF lost ~25-30 ps.  Opt-in
@@ -180,7 +204,9 @@ def main():
     shutil.copy2(md / (ROM + "_bb.v"), K / "rtl" / (ROM + "_bb.v"))
 
     pins, io, ins, outs = [], [], set(), set()
-    for name, d, layer, (x0, y0, x1, y1) in lef_pins((R / OLD_LEF).read_text()):
+    src_pins = (file_pins(R / ELEMS[a.elem]["PINS_FILE"], (R / OLD_LEF).read_text()) if ELEMS[a.elem].get("PINS_FILE")
+                else lef_pins((R / OLD_LEF).read_text()))
+    for name, d, layer, (x0, y0, x1, y1) in src_pins:
         if name == "clk":
             x0, y0, x1, y1 = CLK_RECT
         x, y, w, h = (x0 + x1) / 2, (y0 + y1) / 2, x1 - x0, y1 - y0
@@ -312,7 +338,7 @@ foreach {name x y orient} {%s} {
         cfg += "export OT_HOLD_MM = 1\nexport OT_MM_SETUP_CORNER = tc\n"
     if a.route_gate:
         cfg += "export SKIP_CTS_REPAIR_TIMING = 1\nexport POST_CTS_TCL = /work/post_cts_gate.tcl\n"
-        cfg += f"export OT_GATE_TRW = {1 if a.elem == 'B' else 0}\n"
+        cfg += f"export OT_GATE_TRW = {1 if a.elem.startswith('B') else 0}\n"
     if a.post_grt_hold_ps is not None:
         hold = f"repair_timing -hold -hold_margin {a.post_grt_hold_ps:g} -max_buffer_percent 100\n"
         if a.hold_ff_only:   # FF-only: hold checked in scene BC only while this repair runs (ot_mm_sync / ot_mm_unsync)

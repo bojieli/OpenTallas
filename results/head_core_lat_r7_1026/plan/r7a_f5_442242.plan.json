@@ -1,0 +1,62 @@
+{
+ "argv": [
+  "/srv/opentallas-scratch2/claude/wt/head-core-lat-r7-1026/tools/s81_head/head_tree_plan.py",
+  "/srv/opentallas-scratch2/claude/head-core-lat-r5-1026/geo/elemA_n50.geo",
+  "/srv/opentallas-scratch2/claude/head-core-lat-r7-1026/p/r7a_f5_442242",
+  "--entry",
+  "159.84,159.84",
+  "--seg",
+  "1000",
+  "--fanouts",
+  "4,4,2,2,4,2",
+  "--balance",
+  "1",
+  "--fringe",
+  "8,1,6"
+ ],
+ "geo_sha256": "dea6ac06260abe51b21f598edbb0c455fb6e6e5372d004755c1ea0c680b37f56",
+ "entry": [
+  159.84,
+  159.84
+ ],
+ "n_sinks": 28721,
+ "n_leaves": 512,
+ "leaf_sinks": [
+  12,
+  67
+ ],
+ "n_tree": 372,
+ "n_rep": 0,
+ "macros": [
+  [
+   "u_m.u_rom0",
+   "N2_2_1_0_3_1",
+   [
+    25.899999999999995,
+    247.02
+   ]
+  ],
+  [
+   "u_m.u_rom1",
+   "N3_3_0_1_3_1",
+   [
+    161.172,
+    241.9
+   ]
+  ]
+ ],
+ "l1": [],
+ "eq": [],
+ "tree_root": [
+  159.84,
+  159.84
+ ],
+ "fringe": "8,1,6",
+ "fringe_median_um": 1.9980000000000047,
+ "l1_legs": [
+  122.09,
+  144.94,
+  106.51,
+  108.65
+ ]
+}

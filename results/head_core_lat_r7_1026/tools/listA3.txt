@@ -1,0 +1,12 @@
+r7a_f7_44244 --fanouts 4,4,2,4,4 --balance 1 --fringe 4,1,3
+r7a_f5_44244 --fanouts 4,4,2,4,4 --balance 1 --fringe 8,1,6
+r7a_f1_42444 --fanouts 4,2,4,4,4 --balance 1 --fringe 8,1,3
+r7a_f1_44424 --fanouts 4,4,4,2,4 --balance 1 --fringe 8,1,3
+r7a_f1_44228 --fanouts 4,4,2,2,8 --balance 1 --fringe 8,1,3
+r7a_f1_4428 --fanouts 4,4,2,8,2 --balance 1 --fringe 8,1,3
+r7a_f1_442242 --fanouts 4,4,2,2,4,2 --balance 1 --fringe 8,1,3
+r7a_f1_44244_x16 --fanouts 4,4,2,4,4 --balance 1 --fringe 8,1,3 --leafcell BUFx16f_ASAP7_75t_R
+r7a_f1_44244_s80 --fanouts 4,4,2,4,4 --balance 1 --fringe 8,1,3 --seg 80
+r7a_f7_42444 --fanouts 4,2,4,4,4 --balance 1 --fringe 4,1,3
+r7a_f1_8244 --fanouts 8,2,4,4,2 --balance 1 --fringe 8,1,3
+r7a_f1_44284 --fanouts 4,4,2,8,4 --balance 1 --fringe 8,1,3

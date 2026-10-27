@@ -1,0 +1,20 @@
+{
+ "lane": "HEAD-CORE-LAT-R7", "date": "2026-10-26", "numbers": "UNCHECKED (plan model uf_phys3 v1 GRT basis; build = GRT-RC measurement)",
+ "base": "claude/head-core-lat-r6-1026@32bf7d1ca2",
+ "predictor": "uf_phys3 v1 (MODEL-REFIT-3 c46af260b), p3_predict.py from R6, gate = predicted window <=14 TT and FF (v5.0: mean is design target only)",
+ "planner_change": "tools/s81_head/head_tree_plan.py: --fringe kn,gamma,cap (sparsity-weighted bisection: fringe sinks get own compact leaves, equal leaf count per node), --tree_root (straight entry->root leg), --l1_mirror (mirror L1 sites); defaults unchanged",
+ "elemA": {"geo": "elemA_n50 (N-band ROMs), entry 159.84,159.84", "base_44442_b1": "TT 243.98 w31.87 / FF 187.25 w27.42",
+   "best": "r7a_f5_44244 (--fanouts 4,4,2,4,4 --balance 1 --fringe 8,1,6): TT 243.84 w15.53 / FF 187.11 w12.58 -> NOT BUILT (TT window >14)",
+   "leaves": "512, 128 per L1 node, 12-67 sinks/leaf", "l1_legs_um": [122.09, 144.94, 107.36, 109.37], "n_rep_detour": 0,
+   "mirror_L1": "r7a_f5_44244_m equal L1 legs 120.94 x4: TT w35.72 (worse: L1 nodes leave their subtrees' balance points)",
+   "tree_root_centroid": "worse (TT w31-37, mean +30)",
+   "sizer": "intel1 /srv/opentallas-scratch2/claude/head-core-lat-r7-1026/p/r7a_f5_44244_szw.log (window-only d1 sizing, started 18:51, ~50 min)"},
+ "elemB": {"geo": "elemB_r6 3_place sha 84e5167c, entry 142.56,142.56",
+   "r6_br6_444222_sz": "killed by R6 at PASS 0 J 12.76 (old objective); R6 w_24444_b0 window sizer PASS1 J 11.5 still running (R6 PID 1867634)",
+   "plan": "r7b_f5_24444_b0 (--fanouts 2,4,4,4,4 --fringe 8,1,6, balance 0): pred TT 233.78 w13.59 / FF 179.01 w11.54", "n_rep_detour": 0, "l1_legs_um": [86.59, 105.62],
+   "build": {"kit": "epyc2 /srv/opentallas-scratch2/claude/head-core-lat-r7-1026/elemB_r7b (cal2 recipe: plan-built tree on u_isl_root, TritonCTS off, ITERS 0, no pads/trims)", "ot_run": "oth-ubuntu-2877521-1793066145 exit 0",
+     "grt_overflow": 0, "meas_TT": "mean 239.28 w19.49 (512 leaves)", "meas_FF": "mean 185.74 w16.40",
+     "miss": "window 5.9/4.9 over prediction; hot = subtree N1_1 (N1_1_2/N1_1_3, ~32 leaves, +13..+14.7 ps err): N1 (210,104.5) -> N1_1 (223.5,55.4) -> children back north at (208,85)/(237.6,82) = U-turn legs by centroid placement"}},
+ "pins_r7": "results/head_core_lat_r7_1026/elemB/elemB_pins_r7.json: 352 pins, 81 E on x 285.078, o_d 32/32 on S x 196.43-202.38, N face 0 signal",
+ "hd_elemA_rebuild": "--elem B uses PINS_FILE elemB_pins_r7.json, S 285.12, NPINS 352, N-band ROMs; --elem B-old = closed 458-pin view"
+}
