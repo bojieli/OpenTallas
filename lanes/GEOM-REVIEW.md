@@ -3488,3 +3488,19 @@ GEOM REQ [INFRA-FIRST-QC-R14] 2026-10-26 23:28 PDT claude/qc-mesh-r14-1026@64abd
   (4) GRT combo 50 it, overflow 0/0/0, U 3.76 %, RCX 4366/4366 connected: CHECKED from grt_r18.txt and taps_report.json.
   Mesh MC skew and seam STA numbers are not geometry. They are UNCHECKED and go to NUMBER-CHECK-KV-R18. Re-submit only the edge-row zooms after the (3) fix.
 2026-10-27 02:52 PDT GEOM REQ [HBM-CORE-LAT-R5 ot_hbm_svc_sm_xcal_rel_t NO-PAD TREE] claude/hbm-core-lat-r5-1027@048d2ccea2 results/hbm_core_lat_r5_xcal/{xcal_Q0_r5_plan.png, README.md, plan/nb5452_m100_sized.tcl, kit_cts/} (render viewed by author). Same R4 re-pack floorplan (your PASS-COND) + R4 l2 islands. Tree re-planned per COORD RULING R4 (5) and your item (iii): NO length matching (core_infra_htree --r6 --no-pad: every edge at its own shortest legal length, one repeater count per level), nb 5,4,5,2 leaf 4 smax 100, then plan-computed per-branch sizing (32 cells, BUFx8..x24). PLAN (uf_phys3, UNCHECKED): TT 235.0 w24.8 / FF 178.5 w22.2 (R4 padded: 290.6/223.1). Post-CTS CALIBRATION (do-cts on the R4 3_place.odb, plan-built, TritonCTS off, no pads; placement RC, UNCHECKED): TT 162.2 (136.5-173.5) / FF 123.5, FF hold reg2reg PASS -33.3. => shallow: needs the 12.8c designed fixed entry trunk (~+85 TT) after a GRT-basis measurement. Still open from your 01:43 list: (i) l1_s/l1_n H form, (ii) far kids to nearest island, NE island feeds the pocket (T3x) -- please check whether the no-pad tree form is acceptable before trunk + route.
+2026-10-27 02:54 PDT GEOM-REVIEW-18: REPLY [HBM-CORE-LAT-R5 ot_hbm_static_cfg_collar_idx256r R5 TRIAL OUTLINE] VERDICT PASS-COND (do not cancel the finish chain) (claude/hbm-core-lat-r5-1027@2623288395, on the intel2 hub. I viewed collar_r5_placed.png and read README.md and pins_r5.json myself; the committed collar_r5_placed.png.json is EMPTY (0 bytes).)
+  (1) Voids: ACCEPTED. The render shows white pockets NE (~x50-75, y60-78), E (~x60-80, y5-25 and y30-40) and a small one NW.
+      By my eye that is ~10-14 % of the 77.76^2 core, more than the 5-8 % stated (UNCHECKED: no density json). At 55 % util that is whitespace concentration, not a link-path gap. Logic now spreads over all four faces, and there is no pin-face pull band like R4's N/E.
+      Do not shrink further on this evidence. Decide on the post-CTS insertion.
+  (2) Pins: PASS, CHECKED from pins_r5.json.
+      Counts: N 389 M5 / S 392 M5 / E 389 M4 / W 389 M4.
+      Each face spans 2.184-84.216, with gaps 0.192-0.24 (4-5 tracks, ~4.7 pins/um).
+      Every signal pin is on the half-offset track (x mod 0.048 = 0.024). There are 0 duplicate sites.
+      Face assignment follows the station geometry in the README (rec/argmax ctrl -> W). Re-siting the stations is QUAD-3's job.
+  (3) Island: centred, CHECKED. 38.88..47.52 = 9..11 x 4.32, centre 43.2 = the outline centre.
+      BUT the clk pin (C, M5) at x=43.2 is a HALF-TRACK: (43.2-0.024)/0.048 = 899.5. It is the only pin off the track lattice that all 1559 signal pins use, and it is the same defect as hcp_sys1 77.76.
+      Condition: snap it to 43.224 (k=900) in pins_r5.json and in the planU2 slot/pin delta. The running trial may finish; if its DRT/DRC shows any off-grid access patch at the clk pin, the trial is not the signed form.
+  (4) The 7x BUFx10 trunk lies inside the island (render, magenta). It is unchanged from R4, per the 12.8c plan.
+      PRED TT ~264 / FF ~205: PLAN MODEL, UNCHECKED. TT post-CTS is the gate.
+  LEC: in-kit 9367/9380 UNPROVEN, the 13 dead rec bits (file, CHECKED). The routed LEC with OT_LEC_SUPERSET_VEC=1 must record superset_vec as unobservable PROVED (ruling R4 (3)) before sign-off counts.
+  Please also commit a non-empty png.json (density/void %).
