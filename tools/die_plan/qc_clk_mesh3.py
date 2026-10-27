@@ -139,18 +139,221 @@ def dtree(leaves, ax, et, tag, nodes, leafmk=None):
 
 
 BLOCK = [None]          # predicate xy -> True when a buffer site there would sit on a hard core (+ISL)
+CORR = [{}]             # R12 re-solve: per-edge (child tag) {corner: legal - model ps} from the previous legal placement
+ISLANDS = [None]        # R12: per-type island lattice (Islands) -> merge() candidates + repeater sites snap to it
 
 
-def _leg_blocked(p, q, n):
-    f = BLOCK[0]
-    if f is None:
-        return False
-    return any(f((p[0] + (q[0] - p[0]) * k / n, p[1] + (q[1] - p[1]) * k / n)) for k in range(1, n))
+class Islands:
+    """INFRA-FIRST-QC-R12 (COORD ruling INFRA-FIRST-QC-R11, 12.2a1 + 12.2c): ONE per-TYPE island lattice.  Every partition
+    type T carries the same slot grid in its own frame (x_k, y_j; both symmetric so R0/MX/MY instances map the grid onto
+    itself), minus every slot whose 2-unit BUFx24 body (1.62 x 0.54 um) touches a hard core (+CLR) in ANY instance of T
+    -> the surviving slot set is IDENTICAL on every instance (no union windows).  The die lattice is the image of the type
+    lattices (die lattice == island lattice); the top tree is solved and placed only on slots.  A horizontal tree row uses
+    ONE slot row per partition (the one nearest the row), a vertical leg ONE slot column per partition."""
+    CW, BH, EDGE, CLR = 1.62, 0.54, 8.64, 1.08
+
+    def __init__(self, P, cores, pitch=19.3, pitch_x=4.86, margin=2):
+        import numpy as np
+        self.np = np
+        self.P, self.pitch, self.pitch_x = P, pitch, pitch_x
+        self.margin = margin * pitch_x       # reach margin for slot conflicts (a taken slot -> the next one, +-pitch_x)
+        bt = defaultdict(list)
+        for n in P.parts:
+            bt[P.parts[n]["type"]].append(n)
+        own = defaultdict(list)
+        for c in cores:
+            own[c[4]].append(c)
+        self.types, self.tgrid = {}, {}
+        for t, insts in bt.items():
+            r0 = P.rect(insts[0])
+            w, h = r0[2] - r0[0], r0[3] - r0[1]
+            gx = np.array(self.grid(w, self.CW, 0.054, pitch_x))
+            gy = np.array(self.grid(h, self.BH, 0.27, pitch))
+            ok = np.ones((len(gx), len(gy)), bool)
+            for n in insts:
+                x0, y0, x1, y1 = P.rect(n)
+                o = P.parts[n].get("orient", "R0")
+                for c in own.get(n, ()):
+                    cx0, cx1 = (x1 - c[2], x1 - c[0]) if o in ("MY", "R180") else (c[0] - x0, c[2] - x0)
+                    cy0, cy1 = (y1 - c[3], y1 - c[1]) if o in ("MX", "R180") else (c[1] - y0, c[3] - y0)
+                    kx = (gx < cx1 + self.CLR) & (gx + self.CW > cx0 - self.CLR)
+                    jy = (gy < cy1 + self.CLR) & (gy + self.BH > cy0 - self.CLR)
+                    ok[np.ix_(kx, jy)] = False
+            self.tgrid[t] = (gx, gy, ok)
+            self.types[t] = dict(w=r3(w), h=r3(h), nx=len(gx), ny=len(gy), grid=int(ok.size), slots=int(ok.sum()),
+                                 instances=len(insts), orients=sorted({P.parts[n].get("orient", "R0") for n in insts}))
+        self.prect = {n: P.rect(n) for n in P.parts}
+        self.pby_x = sorted(self.prect, key=lambda n: self.prect[n][0])
+        self._rx, self._cy, self.at = {}, {}, {}
+        self.nslots = int(sum(self.tgrid[P.parts[n]["type"]][2].sum() for n in P.parts))
+
+    def grid(self, L, body, q, pitch):
+        """symmetric slot grid over [EDGE, L - EDGE - body] at ~pitch, on the placement grid q (row / site)."""
+        lo, hi = self.EDGE, L - self.EDGE - body
+        n = max(2, int(round((hi - lo) / pitch)))
+        n += n % 2
+        half = [round(round((lo + (hi - lo) * k / n) / q) * q, 4) for k in range(n // 2 + 1)]
+        mid = round(round(((L - body) / 2) / q) * q, 4)
+        half[-1] = mid
+        return sorted(set(half + [round(L - body - v, 4) for v in half]))
+
+    def to_die(self, part, sx, sy):
+        x0, y0, x1, y1 = self.prect[part]
+        o = self.P.parts[part].get("orient", "R0")
+        x = x1 - sx - self.CW if o in ("MY", "R180") else x0 + sx
+        y = y1 - sy - self.BH if o in ("MX", "R180") else y0 + sy
+        return x, y
+
+    def _reg(self, part, k, j):
+        t = self.P.parts[part]["type"]
+        gx, gy, _ = self.tgrid[t]
+        ox, oy = self.to_die(part, float(gx[k]), float(gy[j]))
+        key = (r3(ox + self.CW / 2), r3(oy + ROW_H / 2))
+        self.at[key] = (key[0], key[1], part, t, int(k), int(j), round(ox, 4), round(oy, 4))
+        return key
+
+    def row_x(self, y, tol=25.0):
+        """slot centre-x along a horizontal tree row at y: per partition crossing the row, its ONE slot row nearest y."""
+        k_ = r3(y)
+        if k_ in self._rx:
+            return self._rx[k_]
+        np = self.np
+        out = []
+        for n, (x0, y0, x1, y1) in self.prect.items():
+            if not (y0 - tol <= y <= y1 + tol):
+                continue
+            gx, gy, ok = self.tgrid[self.P.parts[n]["type"]]
+            o = self.P.parts[n].get("orient", "R0")
+            ycs = (y1 - gy - self.BH + ROW_H / 2) if o in ("MX", "R180") else (y0 + gy + ROW_H / 2)
+            j = int(np.argmin(np.abs(ycs - y)))
+            if abs(ycs[j] - y) > tol:
+                continue
+            inside = y0 - 1e-6 <= y < y1 - 1e-6
+            for k in np.nonzero(ok[:, j])[0]:
+                out.append(self._reg(n, k, j) + (inside,))
+        best, pri = {}, {}
+        for kx, ky, ins in out:     # one slot per x: the partition HOLDING the row line wins (a seam row -> the upper)
+            sc = (not ins, abs(ky - y))
+            if kx not in best or sc < pri[kx]:
+                best[kx], pri[kx] = ky, sc
+        self._rx[k_] = (sorted(best), best)
+        return self._rx[k_]
+
+    def col_y(self, x, tol=None):
+        """slot centre-y along a vertical leg at x: per partition crossing it, its ONE slot column nearest x."""
+        tol = self.pitch_x / 2 + 0.5 if tol is None else tol
+        k_ = r3(x)
+        if k_ in self._cy:
+            return self._cy[k_]
+        np = self.np
+        out = []
+        for n, (x0, y0, x1, y1) in self.prect.items():
+            if not (x0 - tol <= x <= x1 + tol):
+                continue
+            gx, gy, ok = self.tgrid[self.P.parts[n]["type"]]
+            o = self.P.parts[n].get("orient", "R0")
+            xcs = (x1 - gx - self.CW + self.CW / 2) if o in ("MY", "R180") else (x0 + gx + self.CW / 2)
+            k = int(np.argmin(np.abs(xcs - x)))
+            if abs(xcs[k] - x) > tol:
+                continue
+            inside = x0 - 1e-6 <= x < x1 - 1e-6
+            for j in np.nonzero(ok[k, :])[0]:
+                out.append(self._reg(n, k, j) + (inside,))
+        best, pri = {}, {}
+        for kx, ky, ins in out:
+            sc = (not ins, abs(kx - x))
+            if ky not in best or sc < pri[ky]:
+                best[ky], pri[ky] = kx, sc
+        self._cy[k_] = (sorted(best), best)
+        return self._cy[k_]
+
+    @staticmethod
+    def nearest(L, v):
+        import bisect
+        i = bisect.bisect_left(L, v)
+        c = [L[k] for k in (i - 1, i) if 0 <= k < len(L)]
+        return min(c, key=lambda q: abs(q - v)) if c else None
+
+    def snap_axis(self, ax, fixed, v):
+        L = (self.row_x(fixed) if ax == "x" else self.col_y(fixed))[0]
+        q = self.nearest(L, v)
+        return v if q is None else q
+
+    def slot_xy(self, ax, fixed, v):
+        """die centre (x, y) of the slot a leg point snaps to (the perpendicular jog included)."""
+        L, m = self.row_x(fixed) if ax == "x" else self.col_y(fixed)
+        q = self.nearest(L, v)
+        if q is None:
+            return (v, fixed) if ax == "x" else (fixed, v)
+        return (q, m[q]) if ax == "x" else (m[q], q)
+
+    def chain_delay(self, et, c, ax, fixed, p0, p1, n):
+        """delay of an n-stage straight leg p0 -> p1 along ax with the n-1 repeaters on their snapped island slots."""
+        pts = [p0] + [self.snap_axis(ax, fixed, p0 + (p1 - p0) * k / n) for k in range(1, n)] + [p1]
+        return sum(et.st.seg(et.w, et.m, c, abs(b - a)) for a, b in zip(pts, pts[1:]))
+
+    def chain_max_seg(self, ax, fixed, p0, p1, n):
+        pts = [p0] + [self.snap_axis(ax, fixed, p0 + (p1 - p0) * k / n) for k in range(1, n)] + [p1]
+        return max(abs(b - a) for a, b in zip(pts, pts[1:]))
+
+
+def nseg_snap(I, et, ax, fixed, p0, p1):
+    """fewest stages whose island-snapped segments all stay within the reach (R12)."""
+    n = et.nseg(abs(p1 - p0))
+    while n < et.nseg(abs(p1 - p0)) + 6 and I.chain_max_seg(ax, fixed, p0, p1, n) > et.reach - I.margin + 1e-6:
+        n += 1
+    return n
+
+
+def merge_islands(A, B, ax, et, tag, nodes, I):
+    """R12: merge() on the island lattice -- the node is a slot on the row / column, every repeater sits on its snapped
+    slot and the delay balance is solved with those snapped segment lengths (no post-snap trim)."""
+    i = 0 if ax == "x" else 1
+    fixed = A["xy"][1 - i]
+    pa, pb = A["xy"][i], B["xy"][i]
+    e = abs(A["xy"][1 - i] - B["xy"][1 - i])
+    lo, hi = min(pa, pb), max(pa, pb)
+    L = (I.row_x(fixed) if ax == "x" else I.col_y(fixed))[0]
+    cand_p = [p for p in L if lo - 1e-6 <= p <= hi + 1e-6]
+    if not cand_p:
+        return None
+    cands = []
+    for p in cand_p:
+        na0, nb0 = nseg_snap(I, et, ax, fixed, p, pa), nseg_snap(I, et, ax, fixed, p, pb)
+        tot = max(A["S"] + na0, B["S"] + nb0)
+        na, nb = tot - A["S"], tot - B["S"]
+        ca, cb = CORR[0].get(A["tag"], {}), CORR[0].get(B["tag"], {})
+        dl = {c: (A["T"][c] + I.chain_delay(et, c, ax, fixed, p, pa, na) + ca.get(c, 0.0)
+                  + (et.st.seg(et.w, et.m, c, e) - et.st.seg(et.w, et.m, c, 0.0) if e > 1e-6 else 0.0),
+                  B["T"][c] + I.chain_delay(et, c, ax, fixed, p, pb, nb) + cb.get(c, 0.0)) for c in ("TT", "FF")}
+        d = dl["TT"][0] - dl["TT"][1]
+        cands.append(((round(abs(d), 2), na + nb, abs(p - (lo + hi) / 2)), p, na, nb, dl))
+    cands.sort(key=lambda r: r[0])
+    best = None
+    for cnd in cands:
+        xy_ = (cnd[1], fixed) if ax == "x" else (fixed, cnd[1])
+        if BLOCK[0] is None or not BLOCK[0](xy_):
+            best = cnd
+            break
+    best = best or cands[0]
+    _, p, na, nb, dl = best
+    xy = (p, fixed) if ax == "x" else (fixed, p)
+    for ch, n_ in ((A, na), (B, nb)):
+        ch["parent"], ch["leg"], ch["nseg"], ch["et"] = tag, md(ch["xy"], xy), n_, et
+    T = {c: max(dl[c]) for c in ("TT", "FF")}
+    n = dict(tag=tag, xy=xy, kids=[A["tag"], B["tag"]], T=T, S=A["S"] + na,
+             imbalance_TT=r3(dl["TT"][0] - dl["TT"][1]), imbalance_FF=r3(dl["FF"][0] - dl["FF"][1]))
+    nodes.append(n)
+    return n
 
 
 def merge(A, B, ax, et, tag, nodes):
     """equal STAGE count on every root->leaf path (the short side gets extra repeaters in its straight leg, r2 rule) and
     zero TT delay difference by the node position on the straight segment between the two child roots (no detour)."""
+    if ISLANDS[0] is not None and et is ISLANDS[0].et:
+        r = merge_islands(A, B, ax, et, tag, nodes, ISLANDS[0])
+        if r is not None:
+            return r
     i = 0 if ax == "x" else 1
     pa, pb = A["xy"][i], B["xy"][i]
     e = abs(A["xy"][1 - i] - B["xy"][1 - i])           # perpendicular offset (0 on a lattice row/column)
@@ -198,7 +401,17 @@ def lift(r, xy, et, tag, nodes, n=None):
     straight leg (equal stage count, r2 rule)."""
     L = md(xy, r["xy"])
     r["parent"], r["leg"], r["nseg"], r["et"] = tag, L, max(n or 0, et.nseg(L)), et
-    n = dict(tag=tag, xy=xy, kids=[r["tag"]], T={c: r["T"][c] + et.delay(L, c, r["nseg"]) for c in ("TT", "FF")}, S=r["S"] + r["nseg"])
+    I = ISLANDS[0]
+    if I is not None and et is I.et and (abs(xy[0] - r["xy"][0]) < 1e-6 or abs(xy[1] - r["xy"][1]) < 1e-6) and L > 1e-6:
+        ax = "x" if abs(xy[1] - r["xy"][1]) < 1e-6 else "y"
+        i = 0 if ax == "x" else 1
+        fixed, p0, p1 = xy[1 - i], xy[i], r["xy"][i]
+        r["nseg"] = max(r["nseg"], nseg_snap(I, et, ax, fixed, p0, p1))
+        T = {c: r["T"][c] + I.chain_delay(et, c, ax, fixed, p0, p1, r["nseg"]) + CORR[0].get(r["tag"], {}).get(c, 0.0)
+             for c in ("TT", "FF")}
+    else:
+        T = {c: r["T"][c] + et.delay(L, c, r["nseg"]) for c in ("TT", "FF")}
+    n = dict(tag=tag, xy=xy, kids=[r["tag"]], T=T, S=r["S"] + r["nseg"])
     nodes.append(n)
     return n
 
@@ -246,6 +459,14 @@ def build(a, st):
     if cols[-1] not in scols and a.spine_stride > 1 and cols[-1] - scols[-1] > (scols[1] - scols[0]) * 0.75:
         scols.append(cols[-1])
     nodes = []
+    I = None
+    ISLANDS[0] = None
+    if getattr(a, "islands", "none") == "type":
+        I = Islands(P, cores, pitch=a.island_pitch, pitch_x=a.island_pitch_x)
+        CORR[0] = json.loads(Path(a.island_corr).read_text())["corr"] if getattr(a, "island_corr", None) else {}
+        I.et = top
+        ISLANDS[0] = I
+    leafx = {}
 
     def ytree(items, tag):
         if len(items) == 1:
@@ -254,9 +475,16 @@ def build(a, st):
         return merge(ytree(items[:h], tag + "0"), ytree(items[h:], tag + "1"), "y", top, tag, nodes)
 
     def xrow(gi, g, xs_, tag):
-        r = dtree([(x, g) for x in xs_], "x", top, tag, nodes)
+        if I is not None:           # R12: the leaf (column-tap cell) is the island slot nearest the column
+            for x in xs_:
+                leafx[(r3(x), r3(g))] = I.snap_axis("x", g, x)
+            r = dtree([(leafx[(r3(x), r3(g))], g) for x in xs_], "x", top, tag, nodes)
+        else:
+            r = dtree([(x, g) for x in xs_], "x", top, tag, nodes)
         if not free(r["xy"][0]):
             xc = min(cols, key=lambda x: abs(x - r["xy"][0]))
+            if I is not None:
+                xc = I.snap_axis("x", g, xc)
             r = lift(r, (xc, g), top, tag + "L", nodes)
         return r
     r9 = None
@@ -268,7 +496,12 @@ def build(a, st):
         # column by one equal leg per group (same for all).
         groots = [xrow(gi, g, scols, f"t{gi:02d}_") for gi, g in enumerate(gaps)]
         xs0 = {r3(r["xy"][0]) for r in groots}
-        assert len(xs0) == 1, xs0
+        assert len(xs0) == 1 or I is not None, xs0
+        if I is not None and len(xs0) > 1:      # R12: one trunk column -> equal straight lifts to the majority slot x
+            from collections import Counter as _C
+            xt = _C(r3(r["xy"][0]) for r in groots).most_common(1)[0][0]
+            build.groot_x = sorted(xs0)
+            groots = [r if abs(r["xy"][0] - xt) < 1e-6 else lift(r, (xt, r["xy"][1]), top, r["tag"] + "J", nodes) for r in groots]
         root = ytree(groots, "T")
         root["parent"] = None
     spine_drv = [n for n in nodes if not n["kids"]]
@@ -286,7 +519,8 @@ def build(a, st):
             leaves = [(x, y) for y in grow]
             t0 = len(cnodes)
             r = dtree(leaves, "y", col, f"c{gi:02d}_{ci:02d}_", cnodes)
-            r = lift(r, (x, g), col, f"c{gi:02d}_{ci:02d}_tap", cnodes) if md(r["xy"], (x, g)) > 1e-6 else r
+            tapxy = (leafx.get((r3(x), r3(g)), x), g)
+            r = lift(r, tapxy, col, f"c{gi:02d}_{ci:02d}_tap", cnodes) if md(r["xy"], tapxy) > 1e-6 else r
             r["parent"] = None
             if r3(x) in lattice.added:
                 cut = {n["tag"] for n in cnodes[t0:] if not n["kids"] and incore(n["xy"])}
@@ -305,10 +539,11 @@ def build(a, st):
                     cut |= more
                 cnodes[t0:] = [n for n in cnodes[t0:] if n["tag"] not in cut]
                 assert r["tag"] not in cut
-            ctrees.append(dict(g=gi, c=ci, tap=(x, g), root=r["tag"], nodes=cnodes[t0:]))
+            ctrees.append(dict(g=gi, c=ci, tap=tapxy, root=r["tag"], nodes=cnodes[t0:]))
     return dict(rec=rec, P=P, dtp=dtp, parts=parts, cores=cores, cols=cols, gaps=gaps, rows=rows, m=m, dy=dy,
                 scols=scols, top_nodes=nodes, top_root=root, spine_drv=spine_drv, ctrees=ctrees, cnodes=cnodes,
-                et=dict(top=top, col=col), free=free, incore=incore, added_cols=lattice.added, dropped_rows=dropped, r9=r9)
+                et=dict(top=top, col=col), free=free, incore=incore, added_cols=lattice.added, dropped_rows=dropped, r9=r9,
+                islands=I, groot_x=getattr(build, "groot_x", None))
 
 
 # ------------------------------------------------------------------------------------------------ R9 global H-tree feed
@@ -490,9 +725,11 @@ def legalize(B, fine_masters=None):
         iy = int(math.floor(site[1] / ROW_H + 0.5))
         return [(ix, iy + u) for u in range(units)]
     order = sorted(range(len(cells)), key=lambda i: (cells[i]["kind"] != "fine_driver", i))   # drivers keep the strap sites
+    I = B.get("islands")
+    TOPK = ("top_node", "top_rep", "col_tap")
     for i in order:
         c = cells[i]
-        if c["kind"] == "r9_leaf":
+        if c["kind"] == "r9_leaf" or (I is not None and c["kind"] in TOPK):
             continue
         s0 = list(c["site"])
         step = (0.0, ROW_H * c["units"]) if c["lane"] in ("v", "d") else (CELL_W, 0.0)
@@ -511,6 +748,9 @@ def legalize(B, fine_masters=None):
             maxbump = max(maxbump, md(cand, s0))
         c["site"] = cand
         occ.update(b)
+    isl = None
+    if I is not None:
+        isl = assign_islands(B, I, cells, TOPK)
     B["site_of"] = site_of
     phys = [c for c in cells if c["kind"] != "r9_leaf"]
     post = Counter((r3(c["site"][0]), r3(c["site"][1])) for c in phys)
@@ -526,10 +766,74 @@ def legalize(B, fine_masters=None):
                  bumped=bumped, max_bump_um=r3(maxbump), merged_top_leaf_eq_col_tap=len(ctap),
                  lane_offsets_um=dict(dx_tree_lane=DX_LANE, dy_top_lane=DY_LANE, lanes_left=sum(1 for v in side.values() if v < 0),
                                       lanes_right=sum(1 for v in side.values() if v > 0)), repeaters=nrep,
-                 max_net_extra_vs_leg_um=r3(DX_LANE + DY_LANE + maxbump),
+                 max_net_extra_vs_leg_um=r3(DX_LANE + DY_LANE + maxbump), islands=isl,
                  note="net = Manhattan L between cell sites (ratio 1.0); planned legs differ by <= max_net_extra_vs_leg_um, "
                       "same on every root->driver path of a level (common, not skew). UNCHECKED")
     return cells, stats
+
+
+def assign_islands(B, I, cells, topk):
+    """R12: every top-tree cell group (top node / repeater / column-tap leaf) takes ONE island slot: on its row's slot row
+    (horizontal) or its leg's slot column (vertical) at the tree coordinate (exact by construction for nodes / snapped
+    repeaters), else the nearest free slot along the same row / column.  Non-top cells (column trees, fine drivers) keep
+    their legalize() sites; a slot whose body overlaps one is not used."""
+    import bisect
+    other = defaultdict(list)
+    for c in cells:
+        if c["kind"] in topk or not c["masters"]:
+            continue
+        w = max(LEF_BUF[m][0] for m in c["masters"])
+        bx = (c["site"][0] - w / 2, c["site"][1] - ROW_H / 2, c["site"][0] + w / 2, c["site"][1] - ROW_H / 2 + ROW_H * len(c["masters"]))
+        for ix in range(int(bx[0] // 20), int(bx[2] // 20) + 1):
+            other[ix].append(bx)
+    ov = lambda s_: any(s_[6] < b[2] and b[0] < s_[6] + I.CW and s_[7] < b[3] and b[1] < s_[7] + I.BH
+                        for ix in range(int(s_[6] // 20) - 1, int((s_[6] + I.CW) // 20) + 2) for b in other.get(ix, ()))
+    used, moves, ex = set(), [], []
+    order = sorted((i for i, c in enumerate(cells) if c["kind"] in topk),
+                   key=lambda i: ({"top_node": 0, "col_tap": 1, "top_rep": 2}[cells[i]["kind"]], i))
+    for i in order:
+        c = cells[i]
+        x0, y0 = c["xy0"]
+        vert = c["lane"] == "v" and c["kind"] != "col_tap"
+        L, m = I.col_y(x0) if vert else I.row_x(y0)
+        v = y0 if vert else x0
+        k = bisect.bisect_left(L, v)
+        best = None
+        for t in range(400):
+            for kk in ((k + t // 2) if t % 2 == 0 else (k - 1 - t // 2),):
+                if not 0 <= kk < len(L):
+                    continue
+                key = (m[L[kk]], L[kk]) if vert else (L[kk], m[L[kk]])
+                s_ = I.at[key]
+                if key in used or ov(s_):
+                    continue
+                cand = (abs(key[0] - x0) + abs(key[1] - y0), s_, key)
+                if best is None or cand[0] < best[0]:
+                    best = cand
+            if best is not None and t > 2:
+                break
+        if best is None:
+            raise RuntimeError(f"no free island slot near {c['xy0']}")
+        d, s_, key = best
+        used.add(key)
+        c["site"] = [s_[6] + LEF_BUF[c["masters"][0]][0] / 2, s_[7] + ROW_H / 2]
+        c["island"] = dict(part=s_[2], type=s_[3], k=s_[4], j=s_[5])
+        moves.append(d)
+        if d > 1.0 and len(ex) < 8:
+            ex.append(dict(kind=c["kind"], xy0=c["xy0"], slot=[s_[0], s_[1]], d_um=r3(d)))
+    per_type = defaultdict(lambda: defaultdict(set))
+    for c in cells:
+        if "island" in c:
+            per_type[c["island"]["type"]][c["island"]["part"]].add((c["island"]["k"], c["island"]["j"]))
+    T = {}
+    for t, info in I.types.items():
+        u = per_type.get(t, {})
+        T[t] = dict(info, hosting_instances=len(u), used_slots_max_inst=max((len(v) for v in u.values()), default=0),
+                    used_slots_union=len(set().union(*u.values())) if u else 0)
+    return dict(slots_total=I.nslots, types=len(I.types), groups_on_slots=len(moves),
+                exact=sum(1 for d in moves if d < 1e-6), moved_gt_1um=sum(1 for d in moves if d > 1.0),
+                max_move_um=r3(max(moves or [0.0])), examples=ex, pitch_um=[I.pitch_x, I.pitch], per_type=T,
+                rule="slot grid identical per type (type frame, symmetric), slots on a core in ANY instance removed")
 
 
 def pin_xy(c, which):
@@ -1282,6 +1586,12 @@ def add_common(p):
     p.add_argument("--t-extra", type=float, default=1500.0)
     p.add_argument("--feed", default="mesh3", choices=["mesh3", "r9"],
                    help="global tree: mesh3 own top tree (default) or the R9 16-leaf physical H-tree (--r9-dir)")
+    p.add_argument("--islands", default="none", choices=["none", "type"],
+                   help="R12: type = solve + place the top tree on ONE per-partition-type island lattice (12.2a1/12.2c)")
+    p.add_argument("--island-pitch", type=float, default=19.3, help="island slot pitch um, y (type frame)")
+    p.add_argument("--island-corr", default=None,
+                   help="R12 re-solve: json {corr: {edge_tag: {TT, FF}}} = legal - model edge delay of the previous placement")
+    p.add_argument("--island-pitch-x", type=float, default=4.86, help="island slot pitch um, x (type frame; 3 BUFx24 widths)")
     p.add_argument("--r9-dir", default=str(HERE.parent.parent / "results/qc_clk_mesh3/r10_inputs"),
                    help="r9_lattice.json + r9_tree5_tree_{TT,FF}_rcx.txt")
 
