@@ -19,6 +19,12 @@ DESC = {'head_descriptor_v': ('native59.head_descriptor_v', 1),
         'head_descriptor_tag': ('native59.head_descriptor_tag', 59),
         'head_descriptor_generation': ('native59.head_descriptor_generation', 2)}
 
+HOST = {'host_epoch_valid': ('sys_face.host_epoch_valid', 1),
+        'host_fused_capability': ('sys_face.host_fused_capability', 1),
+        'host_epoch': ('sys_face.host_epoch', 16),
+        'host_tag': ('sys_face.host_tag', 59),
+        'host_generation': ('sys_face.host_generation', 2)}
+
 
 def tuple_age(groups, sink, fields):
     found = {}
@@ -83,7 +89,7 @@ def host_join(prepare_capture_edge, token, position, host, filler_output_edges=(
     No HOST path age is invented here. All dates are already at those pins;
     board-to-core transport and programme identity remain caller obligations.
     """
-    keys = ('first_core_edge', 'last_core_edge', 'tag', 'epoch', 'generation', 'fused_capability')
+    keys = ('first_core_edge', 'last_core_edge', 'tag', 'epoch', 'generation', 'fused_capability', 'interval_basis')
     if host is None or any(k not in host for k in keys):
         raise ValueError('actual core-published HOST cohort interval/identity required')
     if (type(prepare_capture_edge) is not int or prepare_capture_edge < 0 or
@@ -101,15 +107,46 @@ def host_join(prepare_capture_edge, token, position, host, filler_output_edges=(
         raise ValueError('HOST tuple does not match actual pending prepare')
     if any(type(c) is not int or c < 0 for c in filler_output_edges):
         raise ValueError('actual static filler output dates required')
-    date = max(prepare_capture_edge + 3, first)
+    basis=host['interval_basis']
+    if basis not in ('pre_edge_sampling', 'post_edge_publication'):
+        raise ValueError('explicit HOST publication/sampling interval basis required')
+    sample_shift=1 if basis=='post_edge_publication' else 0
+    date = max(prepare_capture_edge + 3, first + sample_shift)
     busy = set(filler_output_edges)
     while date in busy:
         date += 1
-    if date > last:
+    if date > last + sample_shift:
         raise ValueError('HOST valid interval ends before legal pending/cohort publication')
     return dict(descriptor_core_edge=date, descriptor_tag=tag,
                 descriptor_generation=generation, status='CORE_PIN_COMPONENT_JOIN_ONLY',
                 runtime_waiting=False)
+
+
+def host_core_interval(host_at_sysface, bound_component):
+    """Shift an explicit source-published interval; never invent its origin."""
+    if host_at_sysface is None or host_at_sysface.get('endpoint') != 'sys_face.host_tuple':
+        raise ValueError('actual sysface HOST publication interval required')
+    row = dict(host_at_sysface)
+    if row.get('interval_basis') != 'post_edge_publication':
+        raise ValueError('actual sysface post-edge publication basis required')
+    for key in ('first_core_edge', 'last_core_edge'):
+        if type(row.get(key)) is not int or row[key] < 0:
+            raise ValueError('explicit sysface HOST interval endpoint required')
+    if row['last_core_edge'] < row['first_core_edge']:
+        raise ValueError('reversed sysface HOST interval')
+    ages = bound_component['landed_fields']['host']
+    if set(ages) != set(HOST) or len(set(ages.values())) != 1:
+        raise ValueError('all five coherent bound HOST fields required')
+    delay = bound_component['edges']['host_to_native'] + bound_component['edges']['native_host_capture']
+    if (set(ages.values()) != {bound_component['edges']['host_to_native']} or
+            bound_component['edges']['native_host_capture'] != 1):
+        raise ValueError('actual RECV_INPUTS0 HOST capture profile required')
+    row['first_core_edge'] += delay
+    row['last_core_edge'] += delay
+    row['endpoint'] = 'native59.u_svc.p_HOST'
+    row['transport_capture_edges'] = delay
+    row['interval_basis'] = 'post_edge_publication'
+    return row
 
 
 def measure(bound, root, receipt):
@@ -135,13 +172,17 @@ def measure(bound, root, receipt):
     groups = json.loads((bound/'bus_groups.json').read_text())
     prep, prep_fields = tuple_age(groups, 'native59', PREP)
     desc, desc_fields = tuple_age(groups, 'sys_face', DESC)
+    host, host_fields = tuple_age(groups, 'native59', HOST)
+    native_text=(root/'rtl/qwen_split/qfd_native59_dv_headprep_obs1.sv').read_text()
+    if 'SVC_RECV=0' not in native_text or '.RECV_INPUTS(SVC_RECV)' not in native_text:
+        raise ValueError('actual native default RECV_INPUTS0 capture path required')
     total = local + prep + 3 + desc + wrapper['input_capture_edges'] + 1
     return dict(schema='opentallas.qwen.bound_head_prepare_age.v1',
                 status='BOUND_COMPONENT_AGE_NOT_PROGRAMME_QUALIFIED',
                 selected_masters=dict(tt=tt, native=native, face=face),
-                tt_source=witness, landed_fields=dict(prepare=prep_fields, descriptor=desc_fields),
+                tt_source=witness, landed_fields=dict(prepare=prep_fields, descriptor=desc_fields, host=host_fields),
                 edges=dict(tt_local=local, tt_to_native=prep, native_prepare_descriptor=3,
-                           native_to_face=desc, face_input=wrapper['input_capture_edges'], face_held_bank=1),
+                           native_to_face=desc, host_to_native=host, native_host_capture=1, face_input=wrapper['input_capture_edges'], face_held_bank=1),
                 filler_head_prepare_edges=total, user0_prepare_only_min_edges=total+1,
                 head_prepare_edges=None, calendar_installable=False,
                 programme_blockers=['actual core-published HOST cohort interval/identity', 'selected current programme and producer reservation'],

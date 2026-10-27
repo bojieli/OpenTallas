@@ -285,6 +285,500 @@
           "lane": "native59__fault_native_fault"
         }
       ]
+    },
+    {
+      "sink": "native59",
+      "sink_part": "native59",
+      "src_part": "glue",
+      "aligned_by_lanes": false,
+      "aligned_landed": true,
+      "asbuilt_stage_set": [
+        2,
+        3,
+        4
+      ],
+      "members": [
+        {
+          "sink_port": "complete_slot",
+          "sink_bits": [
+            [
+              0,
+              0
+            ]
+          ],
+          "source": "sys_face.complete_slot",
+          "source_bits": [
+            [
+              0,
+              0
+            ]
+          ],
+          "asbuilt_stages": 2,
+          "bound_stages": 2,
+          "landed_stages": 2,
+          "lane": "glue__complete_slot_complete_slot"
+        },
+        {
+          "sink_port": "emb_code_q",
+          "sink_bits": [
+            [
+              0,
+              511
+            ]
+          ],
+          "source": "embed_prov.embed_code_q",
+          "source_bits": [
+            [
+              0,
+              511
+            ]
+          ],
+          "asbuilt_stages": 4,
+          "bound_stages": 2,
+          "landed_stages": 4,
+          "lane": "glue__embed_code_q_emb_code_q"
+        },
+        {
+          "sink_port": "emb_scale_q",
+          "sink_bits": [
+            [
+              0,
+              15
+            ]
+          ],
+          "source": "embed_prov.embed_scale_q",
+          "source_bits": [
+            [
+              0,
+              15
+            ]
+          ],
+          "asbuilt_stages": 3,
+          "bound_stages": 2,
+          "landed_stages": 3,
+          "lane": "glue__embed_scale_q_emb_scale_q"
+        },
+        {
+          "sink_port": "host_epoch",
+          "sink_bits": [
+            [
+              0,
+              15
+            ]
+          ],
+          "source": "sys_face.host_epoch",
+          "source_bits": [
+            [
+              0,
+              15
+            ]
+          ],
+          "asbuilt_stages": 2,
+          "bound_stages": 2,
+          "landed_stages": 2,
+          "lane": "glue__host_epoch_host_epoch"
+        },
+        {
+          "sink_port": "host_epoch_valid",
+          "sink_bits": [
+            [
+              0,
+              0
+            ]
+          ],
+          "source": "sys_face.host_epoch_valid",
+          "source_bits": [
+            [
+              0,
+              0
+            ]
+          ],
+          "asbuilt_stages": 2,
+          "bound_stages": 2,
+          "landed_stages": 2,
+          "lane": "glue__host_epoch_valid_host_epoch_valid"
+        },
+        {
+          "sink_port": "host_fused_capability",
+          "sink_bits": [
+            [
+              0,
+              0
+            ]
+          ],
+          "source": "sys_face.host_fused_capability",
+          "source_bits": [
+            [
+              0,
+              0
+            ]
+          ],
+          "asbuilt_stages": 2,
+          "bound_stages": 2,
+          "landed_stages": 2,
+          "lane": "glue__host_fused_capability_host_fused_capability"
+        },
+        {
+          "sink_port": "host_generation",
+          "sink_bits": [
+            [
+              0,
+              1
+            ]
+          ],
+          "source": "sys_face.host_generation",
+          "source_bits": [
+            [
+              0,
+              1
+            ]
+          ],
+          "asbuilt_stages": 2,
+          "bound_stages": 2,
+          "landed_stages": 2,
+          "lane": "glue__host_generation_host_generation"
+        },
+        {
+          "sink_port": "host_tag",
+          "sink_bits": [
+            [
+              0,
+              58
+            ]
+          ],
+          "source": "sys_face.host_tag",
+          "source_bits": [
+            [
+              0,
+              58
+            ]
+          ],
+          "asbuilt_stages": 2,
+          "bound_stages": 2,
+          "landed_stages": 2,
+          "lane": "glue__host_tag_host_tag"
+        },
+        {
+          "sink_port": "kv_word_index",
+          "sink_bits": [
+            [
+              0,
+              1
+            ]
+          ],
+          "source": "sys_face.kv_word_index",
+          "source_bits": [
+            [
+              0,
+              1
+            ]
+          ],
+          "asbuilt_stages": 2,
+          "bound_stages": 2,
+          "landed_stages": 2,
+          "lane": "glue__kv_word_index_kv_word_index"
+        },
+        {
+          "sink_port": "kv_word_slot",
+          "sink_bits": [
+            [
+              0,
+              0
+            ]
+          ],
+          "source": "sys_face.kv_word_slot",
+          "source_bits": [
+            [
+              0,
+              0
+            ]
+          ],
+          "asbuilt_stages": 2,
+          "bound_stages": 2,
+          "landed_stages": 2,
+          "lane": "glue__kv_word_slot_kv_word_slot"
+        },
+        {
+          "sink_port": "kv_x3_slot",
+          "sink_bits": [
+            [
+              0,
+              0
+            ]
+          ],
+          "source": "d2d_rom.kv_x3_slot",
+          "source_bits": [
+            [
+              0,
+              0
+            ]
+          ],
+          "asbuilt_stages": 3,
+          "bound_stages": 2,
+          "landed_stages": 3,
+          "lane": "glue__kv_x3_slot_kv_x3_slot"
+        },
+        {
+          "sink_port": "native_rx_payload",
+          "sink_bits": [
+            [
+              0,
+              547
+            ]
+          ],
+          "source": "d2d_rom.rx_payload",
+          "source_bits": [
+            [
+              0,
+              547
+            ]
+          ],
+          "asbuilt_stages": 3,
+          "bound_stages": 2,
+          "landed_stages": 3,
+          "lane": "glue__rx_payload_native_rx_payload"
+        },
+        {
+          "sink_port": "native_rx_v",
+          "sink_bits": [
+            [
+              0,
+              0
+            ]
+          ],
+          "source": "d2d_rom.native_rx_v",
+          "source_bits": [
+            [
+              0,
+              0
+            ]
+          ],
+          "asbuilt_stages": 2,
+          "bound_stages": 2,
+          "landed_stages": 2,
+          "lane": "glue__native_rx_v_native_rx_v"
+        },
+        {
+          "sink_port": "q_slot",
+          "sink_bits": [
+            [
+              0,
+              0
+            ]
+          ],
+          "source": "sys_face.q_slot",
+          "source_bits": [
+            [
+              0,
+              0
+            ]
+          ],
+          "asbuilt_stages": 2,
+          "bound_stages": 2,
+          "landed_stages": 2,
+          "lane": "glue__q_slot_q_slot"
+        },
+        {
+          "sink_port": "q_slot_beat",
+          "sink_bits": [
+            [
+              0,
+              4
+            ]
+          ],
+          "source": "sys_face.q_slot_beat",
+          "source_bits": [
+            [
+              0,
+              4
+            ]
+          ],
+          "asbuilt_stages": 2,
+          "bound_stages": 2,
+          "landed_stages": 2,
+          "lane": "glue__q_slot_beat_q_slot_beat"
+        },
+        {
+          "sink_port": "rx_slot",
+          "sink_bits": [
+            [
+              0,
+              0
+            ]
+          ],
+          "source": "d2d_rom.native_rx_slot",
+          "source_bits": [
+            [
+              0,
+              0
+            ]
+          ],
+          "asbuilt_stages": 3,
+          "bound_stages": 2,
+          "landed_stages": 3,
+          "lane": "glue__native_rx_slot_rx_slot"
+        },
+        {
+          "sink_port": "rx_slot_beat",
+          "sink_bits": [
+            [
+              0,
+              4
+            ]
+          ],
+          "source": "d2d_rom.native_rx_slot_beat",
+          "source_bits": [
+            [
+              0,
+              4
+            ]
+          ],
+          "asbuilt_stages": 3,
+          "bound_stages": 2,
+          "landed_stages": 3,
+          "lane": "glue__native_rx_slot_beat_rx_slot_beat"
+        },
+        {
+          "sink_port": "rx_slot_kind",
+          "sink_bits": [
+            [
+              0,
+              3
+            ]
+          ],
+          "source": "d2d_rom.native_rx_slot_kind",
+          "source_bits": [
+            [
+              0,
+              3
+            ]
+          ],
+          "asbuilt_stages": 3,
+          "bound_stages": 2,
+          "landed_stages": 3,
+          "lane": "glue__native_rx_slot_kind_rx_slot_kind"
+        },
+        {
+          "sink_port": "rx_user",
+          "sink_bits": [
+            [
+              0,
+              1
+            ]
+          ],
+          "source": "d2d_rom.rx_user",
+          "source_bits": [
+            [
+              0,
+              1
+            ]
+          ],
+          "asbuilt_stages": 3,
+          "bound_stages": 2,
+          "landed_stages": 3,
+          "lane": "glue__rx_user_rx_user"
+        },
+        {
+          "sink_port": "tx_slot",
+          "sink_bits": [
+            [
+              0,
+              0
+            ]
+          ],
+          "source": "d2d_rom.native_tx_slot",
+          "source_bits": [
+            [
+              0,
+              0
+            ]
+          ],
+          "asbuilt_stages": 2,
+          "bound_stages": 2,
+          "landed_stages": 2,
+          "lane": "glue__native_tx_slot_tx_slot"
+        },
+        {
+          "sink_port": "tx_slot_beat",
+          "sink_bits": [
+            [
+              0,
+              4
+            ]
+          ],
+          "source": "d2d_rom.native_tx_slot_beat",
+          "source_bits": [
+            [
+              0,
+              4
+            ]
+          ],
+          "asbuilt_stages": 2,
+          "bound_stages": 2,
+          "landed_stages": 2,
+          "lane": "glue__native_tx_slot_beat_tx_slot_beat"
+        },
+        {
+          "sink_port": "tx_slot_kind",
+          "sink_bits": [
+            [
+              0,
+              3
+            ]
+          ],
+          "source": "d2d_rom.native_tx_slot_kind",
+          "source_bits": [
+            [
+              0,
+              3
+            ]
+          ],
+          "asbuilt_stages": 2,
+          "bound_stages": 2,
+          "landed_stages": 2,
+          "lane": "glue__native_tx_slot_kind_tx_slot_kind"
+        },
+        {
+          "sink_port": "tx_user",
+          "sink_bits": [
+            [
+              0,
+              1
+            ]
+          ],
+          "source": "d2d_rom.tx_user",
+          "source_bits": [
+            [
+              0,
+              1
+            ]
+          ],
+          "asbuilt_stages": 3,
+          "bound_stages": 2,
+          "landed_stages": 3,
+          "lane": "glue__tx_user_tx_user"
+        },
+        {
+          "sink_port": "visibility_slot",
+          "sink_bits": [
+            [
+              0,
+              0
+            ]
+          ],
+          "source": "sys_face.visibility_slot",
+          "source_bits": [
+            [
+              0,
+              0
+            ]
+          ],
+          "asbuilt_stages": 2,
+          "bound_stages": 2,
+          "landed_stages": 2,
+          "lane": "glue__visibility_slot_visibility_slot"
+        }
+      ]
     }
   ]
 }
