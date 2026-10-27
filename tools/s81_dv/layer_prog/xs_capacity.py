@@ -247,7 +247,7 @@ def frame_signature(die, frame, fixd, spec):
     import xs_bf as XB
     for op, gi, c, s_, n, R, most in XP.bf_phase_list(fx, bf, XB.BF_PAIRS_DIE):
         rows.append((op, gi, c, s_, len(XB.bf_groups(fx, op)[gi]['groups'][g][j][c * R:(c + 1) * R])))
-    return json.dumps([LX.base_master(master), die.strap(frame, 'lk'), len(q), len(bfp), len(p0), rows])
+    return json.dumps([master, LX.frame_lk(die, frame), len(q), len(bfp), len(p0), rows])
 
 
 def _sig(args):
