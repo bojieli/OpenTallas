@@ -34,6 +34,8 @@ if {![info exists ::ot_mm_synced] || !$::ot_mm_synced} { error "HEAD_ECO_MODES F
 read_spef $::env(RESULTS_DIR)/6_final.spef
 hd_eco_scene_ws
 hd_eco_counts PRE_RCX
+# R18: the gate stage of this ECO (a per-view allowance, OT_HOLD_ALLOWANCE_TCL, names it)
+set ::ot_hold_gate_stage post_route_eco
 ot_hold_structural_gate
 source /work/eco_route.tcl
 hd_eco_scene_ws

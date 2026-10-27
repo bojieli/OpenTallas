@@ -433,6 +433,53 @@ proc ot_hold_stop {rt_args} {
 # -max_iterations bounds inner passes, not the endpoint sweep, so the stall guard
 # cannot interrupt a single call that adds hundreds of thousands of buffers.
 # Count true negative-slack endpoints (ot_hold_stats), never the repair margin.
+# HEAD-CORE-R18 2026-10-27 (COORD RULING HEAD-CORE-R17 (2)): a PER-VIEW, LEDGERED allowance for the structural FF hold
+# stop.  The default limits above stay for every kit; OT_HOLD_ALLOWANCE_TCL (written only by
+# tools/s81_head/head_hold_allowance.py from a committed allowance JSON after its binding/insertion checks) names ONE
+# design nickname, ONE stage, a ws floor and an endpoint cap, and optionally the only permitted failing path classes
+# (I2R = input port -> register, the input-register data hold the ruling allows).  Anything else fails closed.
+proc ot_hold_allowance_ok {stage w n} {
+  if {![info exists ::env(OT_HOLD_ALLOWANCE_TCL)] || $::env(OT_HOLD_ALLOWANCE_TCL) eq ""} { return 0 }
+  set f $::env(OT_HOLD_ALLOWANCE_TCL)
+  if {[catch {source $f} err] || ![info exists ::ot_hold_allowance]} {
+    return -code error -errorcode {OPENTALLAS HOLD_ALLOWANCE} "OT_HOLD_STRUCTURAL: allowance $f unreadable ($err)"
+  }
+  set a $::ot_hold_allowance
+  foreach k {id nickname stage ws_floor_ps max_endpoints} {
+    if {![dict exists $a $k]} { return -code error -errorcode {OPENTALLAS HOLD_ALLOWANCE} "OT_HOLD_STRUCTURAL: allowance $f lacks $k" }
+  }
+  set nick [expr {[info exists ::env(DESIGN_NICKNAME)] ? $::env(DESIGN_NICKNAME) : ""}]
+  set why ""
+  if {[dict get $a nickname] ne $nick} { set why "nickname [dict get $a nickname] != DESIGN_NICKNAME $nick" }
+  if {$why eq "" && [dict get $a stage] ne $stage} { set why "stage [dict get $a stage] != $stage" }
+  if {$why eq "" && $w < [dict get $a ws_floor_ps]} { set why [format "ws %.2f < allowance floor %.2f" $w [dict get $a ws_floor_ps]] }
+  if {$why eq "" && $n > [dict get $a max_endpoints]} { set why "endpoints $n > allowance cap [dict get $a max_endpoints]" }
+  set cls_txt ""
+  if {$why eq "" && [dict exists $a classes] && [llength [dict get $a classes]]} {
+    array set cls {}
+    foreach p [ot_hold_paths] {
+      set s [get_property $p slack]; if {$s eq "INF" || $s >= 0} { continue }
+      set sp [get_full_name [get_property $p startpoint]]; set ep [get_full_name [get_property $p endpoint]]
+      incr cls([expr {[ot_pin_class $sp] eq "port" ? "I" : "R"}]2[expr {[ot_pin_class $ep] eq "port" ? "O" : "R"}])
+    }
+    foreach c [lsort [array names cls]] {
+      append cls_txt " $c=$cls($c)"
+      if {[lsearch -exact [dict get $a classes] $c] < 0} { set why "failing class $c ($cls($c) endpoints) not in allowance classes [dict get $a classes]" }
+    }
+  }
+  if {$why ne ""} {
+    puts "OT_HOLD_ALLOWANCE id=[dict get $a id] NOT APPLIED: $why"
+    return 0
+  }
+  set msg [format "OT_HOLD_STRUCTURAL_ALLOWED stage=%s id=%s: FF hold ws %.2f ps, %d endpoints (default limits ws >= -100 / <= 2000 missed; per-view allowance floor %.2f / cap %d%s); hold repair proceeds" \
+    $stage [dict get $a id] $w $n [dict get $a ws_floor_ps] [dict get $a max_endpoints] [expr {$cls_txt eq "" ? "" : "; classes$cls_txt"}]]
+  puts $msg
+  catch {
+    set rf [expr {[info exists ::env(REPORTS_DIR)] ? "$::env(REPORTS_DIR)/ot_hold_allowed_${stage}.rpt" : "ot_hold_allowed_${stage}.rpt"}]
+    set fh [open $rf a]; puts $fh $msg; close $fh
+  }
+  return 1
+}
 proc ot_hold_structural_gate {} {
   # ot_mm_sync creates/times the real FF BC scene with its own FF boundary SDC.
   # A primary-corner min path is not evidence of FF hold: fail closed without it.
@@ -442,7 +489,8 @@ proc ot_hold_structural_gate {} {
   }
   lassign [ot_hold_stats] w t n
   if {$w >= -100.0 && $n <= 2000} { return }
-  set stage [ot_hold_stage]
+  set stage [expr {[info exists ::ot_hold_gate_stage] ? $::ot_hold_gate_stage : [ot_hold_stage]}]
+  if {[ot_hold_allowance_ok $stage $w $n]} { return }
   set msg [format "OT_HOLD_STRUCTURAL stage=%s: FF hold ws %.2f ps, %d true failing endpoints (limits: ws >= -100 ps, endpoints <= 2000); revise plan/RTL/boundary before repair" $stage $w $n]
   puts $msg
   catch {

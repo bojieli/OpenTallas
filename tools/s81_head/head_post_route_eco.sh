@@ -52,9 +52,21 @@ cat >> "$OUT/config.mk" <<'CFG'
 override export POST_GLOBAL_ROUTE_TCL = /work/head_eco_post.tcl
 override export SKIP_INCREMENTAL_REPAIR = 1
 CFG
-ENV="-e OT_MAX_FANOUT=24 -e OT_SLEW_MARGIN=${OT_SLEW_MARGIN:-20} -e OT_SETUP_MARGIN=${OT_SETUP_MARGIN:-10} -e OT_HOLD_MARGIN=${OT_HOLD_MARGIN:-10} -e OT_HOLD_ALLOW_SETUP=1 -e OT_HOLD_MAXBUF=40 -e OT_DRV_LAST=0 -e OT_DRV_PLACE=0 -e OT_PAD_MASTERS= -e OT_RETIME_LAST=0"
-printf '{"flow": "HEAD-CORE-R17 head_post_route_eco.sh (per-mode)", "source_kit": "%s:%s", "source_route": "%s/5_2_route.odb", "gold": "%s", "env": "%s", "ff_bound_ps": %s, "modes": "eco_modes.json"}\n' \
-  "$(hostname)" "$KIT" "$RS" "$GOLD" "$ENV" "$FFB" > "$OUT/ECO.json"
+# R18 (COORD RULING HEAD-CORE-R17 (2)): optional per-view ledgered allowance for the structural FF hold stop.
+# OT_HOLD_ALLOWANCE = committed allowance JSON, OT_HOLD_ALLOWANCE_TSV = its FF RCX insertion measurement; validated
+# against the staged OUT (binding, IO contract sha, insertion band) or the chain stops.  Unset = default gate only.
+ALLOW_ENV=""
+if [ -n "${OT_HOLD_ALLOWANCE:-}" ]; then
+  test -s "$OT_HOLD_ALLOWANCE" && test -s "${OT_HOLD_ALLOWANCE_TSV:-}" || { echo "HEAD_ECO_CHAIN FAIL allowance/TSV missing"; exit 2; }
+  cp "$OT_HOLD_ALLOWANCE" "$OUT/hold_allowance.json"; cp "$OT_HOLD_ALLOWANCE_TSV" "$OUT/hold_allowance_ins_FF.tsv"
+  cp "$HERE/head_hold_allowance.py" "$OUT/"
+  AL=$(python3 -I "$HERE/head_hold_allowance.py" "$OUT/hold_allowance.json" --kit "$OUT" --tsv "$OUT/hold_allowance_ins_FF.tsv" --write "$OUT/hold_allowance.tcl"); echo "$AL"
+  case "$AL" in "HEAD_HOLD_ALLOWANCE ok "*) ;; *) echo "HEAD_ECO_CHAIN FAIL hold allowance"; exit 2;; esac
+  ALLOW_ENV="-e OT_HOLD_ALLOWANCE_TCL=/work/hold_allowance.tcl"
+fi
+ENV="$ALLOW_ENV -e OT_MAX_FANOUT=24 -e OT_SLEW_MARGIN=${OT_SLEW_MARGIN:-20} -e OT_SETUP_MARGIN=${OT_SETUP_MARGIN:-10} -e OT_HOLD_MARGIN=${OT_HOLD_MARGIN:-10} -e OT_HOLD_ALLOW_SETUP=1 -e OT_HOLD_MAXBUF=40 -e OT_DRV_LAST=0 -e OT_DRV_PLACE=0 -e OT_PAD_MASTERS= -e OT_RETIME_LAST=0"
+printf '{"flow": "HEAD-CORE-R17 head_post_route_eco.sh (per-mode)", "source_kit": "%s:%s", "source_route": "%s/5_2_route.odb", "gold": "%s", "env": "%s", "ff_bound_ps": %s, "modes": "eco_modes.json", "hold_allowance": "%s"}\n' \
+  "$(hostname)" "$KIT" "$RS" "$GOLD" "$ENV" "$FFB" "${OT_HOLD_ALLOWANCE:+hold_allowance.json}" > "$OUT/ECO.json"
 docker run --rm --name "hd-eco-$NICK-$$" --memory="${MEM}g" --memory-swap="${MEM}g" --cpus="$CPUS" -v "$OUT":/work $ENV \
   -e CPUS="$CPUS" -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc '
     set -euo pipefail
@@ -72,7 +84,7 @@ docker run --rm --name "hd-eco-$NICK-$$" --memory="${MEM}g" --memory-swap="${MEM
 rrc=$?
 docker run --rm -v "$OUT":/work "$IMAGE" chown -R "$(id -u):$(id -g)" /work >/dev/null 2>&1
 echo "HEAD_ECO_CHAIN route rc=$rrc $(date -Is)"
-grep -h '^HEAD_ECO_\|KVCORES_ECO\|R10_HOLD_DONE\|OT_HB4PAD: after\|OT_HOLD_MM\|OT_HOLD_STRUCTURAL' "$OUT"/run/logs/asap7/"$NICK"/base/5_1_grt.log 2>/dev/null | tail -n 20
+grep -h '^HEAD_ECO_\|KVCORES_ECO\|R10_HOLD_DONE\|OT_HB4PAD: after\|OT_HOLD_MM\|OT_HOLD_STRUCTURAL\|OT_HOLD_ALLOWANCE' "$OUT"/run/logs/asap7/"$NICK"/base/5_1_grt.log 2>/dev/null | tail -n 20
 src=NA
 if [ "$rrc" = 0 ]; then
   python3 -I "$OUT/signoff.py" run --kit "$OUT" --run-dir "$OUT/run" --corners tt,ff \
