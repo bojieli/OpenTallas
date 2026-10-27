@@ -580,6 +580,10 @@ def mesh_signoff(proof_dir, taps, meta, corner, so_path, band_mode="tree"):
     gv = S["grad_vec_ps"]
     rtj = json.loads((Path(proof_dir) / f"mesh_{corner}.json").read_text())["stubs"]
     M = json.loads((Path(proof_dir) / "mesh.json").read_text())
+    import die_clock_mesh as DCM_   # fail closed (COORD PATH-S81-PD12 ruling A): a signed mesh is a common point only
+    mv_ = DCM_.mesh_via_findings(M, proof_dir)   # when it is ONE connected net (VIA89 at every strap crossing)
+    if mv_:
+        raise SystemExit(f"--mesh-signoff refused: {proof_dir} mesh is not continuous: " + "; ".join(mv_[:4]))
     load = {}
     for t in M["taps"]:
         if t["port"] not in taps:
