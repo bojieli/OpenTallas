@@ -332,3 +332,102 @@ def test_core_view_match_pins_compares_content(tmp_path):
     assert R.pins_match(meta_new, "cores/nope.json", tmp_path) == "plan pins_file missing"
     assert R.pins_match(meta_new, None, tmp_path) == "no plan pins_file"
 
+
+
+def _gp2_core(tmp_path, name, pins, source="gen A", outline=(10.0, 8.0)):
+    import json as _j
+    (tmp_path / "cores").mkdir(exist_ok=True)
+    d = dict(schema="opentallas.die_plan.core_pins.v1", core="c", source=source,
+             frame=f"core R0, origin (0,0), outline {outline[0]} x {outline[1]}", pins=pins)
+    (tmp_path / "cores" / name).write_text(_j.dumps(d))
+    return f"cores/{name}"
+
+
+def _gp2_signed(tmp_path, rel, outline=(10.0, 8.0)):
+    import hashlib
+    return dict(pins_file=rel, pins_sha256=hashlib.sha256((tmp_path / rel).read_bytes()).hexdigest(),
+                outline_um=list(outline))
+
+
+_GP2_PINS = [dict(name="clk", layer="M5", x=5.0, y=4.0), dict(name="a[0]", layer="M4", x=0.096, y=1.5),
+             dict(name="a[1]", layer="M4", x=0.096, y=2.5), dict(name="z", layer="M3", x=9.0, y=7.904)]
+
+
+def test_gate_pins2_free_text_change_same_hash(tmp_path):
+    """GATE-PINS-2 (COORD ruling 1): only physical/logical pin content is hashed; 'source'/'frame' text and pin
+    order never change it."""
+    s = _gp2_core(tmp_path, "s_pins.json", _GP2_PINS, source="gen A")
+    p = _gp2_core(tmp_path, "p_pins.json", list(reversed(_GP2_PINS)), source="gen A | R3 write-through note")
+    a, b = (R.canon_pins(__import__("json").loads((tmp_path / f).read_text()), (10.0, 8.0)) for f in (s, p))
+    assert R.canon_sha256(a) == R.canon_sha256(b)
+    assert R.pins_relation(_gp2_signed(tmp_path, s), p, tmp_path, (10.0, 8.0), [s, p]) == ("canonical", None)
+    # a view that records the canonical sha matches without any copy of the signed file
+    meta = dict(pins_sha256="0" * 64, pins_canon_sha256=R.canon_sha256(a), outline_um=[10.0, 8.0])
+    assert R.pins_match(meta, p, tmp_path, (10.0, 8.0)) is None
+
+
+def test_gate_pins2_one_nm_move_different_hash(tmp_path):
+    s = _gp2_core(tmp_path, "s_pins.json", _GP2_PINS)
+    moved = [dict(q) for q in _GP2_PINS]
+    moved[1]["y"] = 1.501
+    p = _gp2_core(tmp_path, "p_pins.json", moved)
+    J = __import__("json")
+    assert R.canon_sha256(R.canon_pins(J.loads((tmp_path / s).read_text()))) != \
+        R.canon_sha256(R.canon_pins(J.loads((tmp_path / p).read_text())))
+    how, why = R.pins_relation(_gp2_signed(tmp_path, s), p, tmp_path, (10.0, 8.0), [s, p])
+    assert how is None and why.startswith("pins differ")
+    # outline change alone is a different core
+    assert R.pins_match(_gp2_signed(tmp_path, s), s, tmp_path, (10.0, 8.0)) is None
+    assert R.canon_sha256(R.canon_pins({"pins": _GP2_PINS}, (10.0, 8.0))) != \
+        R.canon_sha256(R.canon_pins({"pins": _GP2_PINS}, (10.0, 8.001)))
+
+
+def _gp2_mx(pins, H=8.0):
+    return [dict(q, y=round(H - q["y"], 6)) for q in pins]
+
+
+def test_gate_pins2_exact_mirror_accepted(tmp_path):
+    """COORD ruling 2: an exact MX/MY/R180 image (every pin, same names and layers) is the same signed core."""
+    s = _gp2_core(tmp_path, "s_pins.json", _GP2_PINS)
+    mx = _gp2_core(tmp_path, "s_pins_fMX.json", _gp2_mx(_GP2_PINS), source="mirrored MX")
+    my = _gp2_core(tmp_path, "s_pins_fMY.json", [dict(q, x=round(10.0 - q["x"], 6)) for q in _GP2_PINS])
+    r180 = _gp2_core(tmp_path, "s_pins_fR180.json",
+                     [dict(q, x=round(10.0 - q["x"], 6), y=round(8.0 - q["y"], 6)) for q in _GP2_PINS])
+    v = _gp2_signed(tmp_path, s)
+    ex = [s, mx, my, r180]
+    assert R.pins_relation(v, mx, tmp_path, (10.0, 8.0), ex) == ("mirror:MX", None)
+    assert R.pins_relation(v, my, tmp_path, (10.0, 8.0), ex) == ("mirror:MY", None)
+    assert R.pins_relation(v, r180, tmp_path, (10.0, 8.0), ex) == ("mirror:R180", None)
+    # signed content found as a verified copy in the view dir (plan no longer has the R0 file)
+    vd = tmp_path / "view"
+    vd.mkdir()
+    (vd / "pins.json").write_bytes((tmp_path / s).read_bytes())
+    v2 = dict(v, pins_file="cores/gone.json", view_dir=str(vd))
+    assert R.pins_relation(v2, mx, tmp_path, (10.0, 8.0), [mx]) == ("mirror:MX", None)
+
+
+def test_gate_pins2_mirror_one_pin_off_rejected(tmp_path):
+    """an image with one pin not mapped (e.g. a kept reset pin, KV pv_pair fMX s0/s1 rst_n) is a different core."""
+    s = _gp2_core(tmp_path, "s_pins.json", _GP2_PINS)
+    bad = _gp2_mx(_GP2_PINS)
+    bad[3]["y"] = _GP2_PINS[3]["y"]          # z kept, not mirrored
+    p = _gp2_core(tmp_path, "s_pins_fMX.json", bad)
+    how, why = R.pins_relation(_gp2_signed(tmp_path, s), p, tmp_path, (10.0, 8.0), [s, p])
+    assert how is None and "no exact MX/MY/R180 image" in why
+    # a renamed / missing pin is never an image either
+    ren = _gp2_mx(_GP2_PINS)
+    ren[2]["name"] = "a[2]"
+    q = _gp2_core(tmp_path, "s_pins_fMX2.json", ren)
+    assert R.pins_relation(_gp2_signed(tmp_path, s), q, tmp_path, (10.0, 8.0), [s, q])[0] is None
+
+
+def test_gate_pins2_layer_change_rejected(tmp_path):
+    s = _gp2_core(tmp_path, "s_pins.json", _GP2_PINS)
+    lay = [dict(q) for q in _GP2_PINS]
+    lay[1]["layer"] = "M6"
+    p = _gp2_core(tmp_path, "p_pins.json", lay)
+    assert R.pins_relation(_gp2_signed(tmp_path, s), p, tmp_path, (10.0, 8.0), [s, p])[0] is None
+    mxl = _gp2_mx(_GP2_PINS)
+    mxl[1]["layer"] = "M6"
+    q = _gp2_core(tmp_path, "s_pins_fMX.json", mxl)
+    assert R.pins_relation(_gp2_signed(tmp_path, s), q, tmp_path, (10.0, 8.0), [s, q])[0] is None
