@@ -1,0 +1,42 @@
+{
+  "frozen18c": {
+    "missing": [],
+    "sram_files": [
+      "/srv/opentallas-scratch2/claude/qc-kits-r1/kits2/coll_n/rtl/ot_sram_1r1w_64x512_m1_r2c2__p192.sv"
+    ],
+    "macros": {},
+    "files": 11
+  },
+  "main4dd848": {
+    "missing": [],
+    "sram_files": [
+      "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1351-1027/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_bb.v",
+      "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1351-1027/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+    ],
+    "macros": {
+      "ot_sram_1r1w2c_64x546_m1": {
+        "dir": "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1351-1027/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1",
+        "lef": "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1351-1027/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef",
+        "libs": [
+          "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1351-1027/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_ff.lib",
+          "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1351-1027/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_ss.lib",
+          "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1351-1027/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib"
+        ],
+        "bb": "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1351-1027/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_bb.v",
+        "model": null
+      },
+      "ot_sram_1r1w_64x512_m1_r2c2": {
+        "dir": "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1351-1027/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+        "lef": "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1351-1027/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+        "libs": [
+          "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1351-1027/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ff.lib",
+          "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1351-1027/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ss.lib",
+          "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1351-1027/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib"
+        ],
+        "bb": "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1351-1027/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
+        "model": "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1351-1027/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v"
+      }
+    },
+    "files": 12
+  }
+}
