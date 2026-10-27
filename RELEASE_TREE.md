@@ -60,7 +60,7 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 - [ ] HBM.CLK Mesh clock 12.8 on unified plan · CLOCK-128 · FAIL/INVALID · r7/r8 on old plan; rebuild after HBM.B1, 4 new types need islands (bank/fused/tnode/keybuf); core-lat R3: 11/28 types gate-PASS, 0 built past place, xcal/ep need structure ruling
 - [ ] HBM.BIND Native B2 one-clock bind · PATH-HBM / HC-NATIVE · RUNNING · 98 unread outputs classified (svg redundant views, sm.request/expected check w/o comparator, xl y, ordinals); no open inputs
 - [ ] HBM.STA Die related-pair STA real routed clock (TT setup/FF hold) · DIE-PROTO · WAITS · → HBM.GRT; SU latency qualified first (HBM.SU)
-- [ ] HBM.SU SU latency qual: ds_ar cycles/token on unified plan (target hub Δ<=5%, design <=15%, owner-accepted ~1973 tok/s) · HBM-MU-QUAD-3 · PARTIAL (upper root cause running) · planU2 R13 price lower/mid/upper 2.39/2.67/7.88 % = 2031/2025/1917 tok/s (CHECKED arith): lower+mid PASS, upper FAIL 5% + 1973
+- [ ] HBM.SU SU latency qual: ds_ar on planU2; OWNER 10-27 accepts 1917 tok/s (upper) -> priced PASS; measured SU bench PR0/PR1 rerun on main LIVE intel1 · TOK-HBM · RUNNING
 
 ## TOKEN · Token-pass gate per design
 - [ ] TOK.DS DeepSeek ROM token pass (S81 array + head) · TOK-DS-6 · RUNNING · L14 27/57/8; idx scan 3-die shard; S81 all-rows MTP 3,655 tok/s > 3,000 floor (AR 1,260), 17.0% ledger ACCEPTED (owner 10-26) → S81.BIND, → HEAD.BIND
