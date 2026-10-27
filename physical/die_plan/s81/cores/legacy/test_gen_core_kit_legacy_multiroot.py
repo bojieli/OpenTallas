@@ -132,7 +132,9 @@ def test_generator_kits_declared_crs4(tmp_path):
     assert r"set tb_port_re {^(cr|cr_s|xk)(\[[0-9]+\])?$}" in (kd / "tap_balance.tcl").read_text()
     fps = (kd / "core_face_post_synth.tcl").read_text()
     assert "ot_fc_ck_of" in fps and "connect $ot_fc_ck\n" not in fps
+    assert "set ::ot_fc_map [dict create" in (kd / "core_clock_map.tcl").read_text()
     assert "{xl3} {xk[3]}" in (kd / "core_clock_map.tcl").read_text()
+    assert "global ot_fc" not in fps and "$::ot_fc_map" in fps   # sourced inside a proc (synth_odb.tcl)
     assert "set vck [get_clocks vclk]" in (kd / "postcts_gate.tcl").read_text()
     assert "set_propagated_clock [get_clocks {clk clk_cr_s clk_xk}]" in (kd / "corners.tcl").read_text()
     assert "OT_CORE_SKIP = cr cr_s xk rst" in (kd / "config.mk").read_text()
