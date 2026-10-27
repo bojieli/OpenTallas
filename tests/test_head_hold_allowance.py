@@ -127,7 +127,7 @@ def gate_src():
 def tcl(tmp, w, n, paths, allow=None, stage=None):
     if not shutil.which("tclsh"):
         pytest.skip("no tclsh")
-    s = GATE_MOCK + gate_src() + f"set ::W {w}; set ::N {n}\nset ::PATHS [list {paths}]\n"
+    s = GATE_MOCK + gate_src() + f"set ::env(REPORTS_DIR) {tmp}\nset ::W {w}; set ::N {n}\nset ::PATHS [list {paths}]\n"
     if allow is not None:
         (tmp / "a.tcl").write_text(allow)
         s += f"set ::env(OT_HOLD_ALLOWANCE_TCL) {tmp / 'a.tcl'}\n"
