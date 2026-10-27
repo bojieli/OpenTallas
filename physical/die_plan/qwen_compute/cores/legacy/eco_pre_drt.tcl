@@ -14,7 +14,11 @@ set out [open $clean w]
 set omitted 0
 while {[gets $in line] >= 0} {
   set fields [regexp -all -inline {\S+} $line]
-  if {[llength $fields] == 6 && [lrange $fields 0 2] eq [lrange $fields 3 5]} {
+  if {[llength $fields] == 6 &&
+      [string is integer -strict [lindex $fields 0]] &&
+      [string is integer -strict [lindex $fields 1]] &&
+      [regexp {^M[0-9]+$} [lindex $fields 2]] &&
+      [lrange $fields 0 2] eq [lrange $fields 3 5]} {
     incr omitted
     continue
   }
