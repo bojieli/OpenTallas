@@ -1021,7 +1021,7 @@ def single_instance_cores(P):
     return {k: count[v] == 1 for k, v in owner.items()}
 
 
-def band_trees(BT, tap_rows, cells, nets, K, xs, ly, cell, out, hop_max, ko=None, single=None):
+def band_trees(BT, tap_rows, cells, nets, K, xs, ly, cell, out, hop_max, ko=None, single=None, root_reach=0.0):
     """CLOCK-KV-R6: create the equal-structure band trees of band_plan (see there).  Per tree: root ckm_br_<n> on the
     V strap beside the edge leaf's mesh driver (input = the continuous mesh at that driven point) and branch ckm_bn_<n>
     exactly h further into the band on the same strap line, each at its ideal point (a step of <= BAND_SLIDE_UM off neighbouring clock cells only); nets root -> branch
@@ -1032,10 +1032,20 @@ def band_trees(BT, tap_rows, cells, nets, K, xs, ly, cell, out, hop_max, ko=None
     ko = ko or []
     single = single or {}
 
-    def site(p, role, name):
+    def site(p, role, name, dr=0):
         q, d = free_along(K, p, 1, BAND_SLIDE_UM)
         if q is not None:
             return q, d
+        if role == "band_root" and root_reach > 0 and dr:
+            # CLOCK-KV-R14 (opt-in lattice band_root_reach_um): the edge leaf driver is a pushdown island inside a
+            # multi-instance core, so the root input moves along the SAME driven V strap toward the band to the first
+            # free site past the core edge (<= root_reach); it stays on the continuous mesh, the trunk stays h.
+            k = 1
+            while k * STEP_UM <= root_reach + 1e-9:
+                q = (p[0], p[1] + dr * k * STEP_UM)
+                if not hitf(K, q):
+                    return q, k * STEP_UM
+                k += 1
         core = core_at(ko, p) or next((str(r[4]) for r in ko if r[0] - 2.0 <= p[0] <= r[2] + 2.0 and
                                        r[1] - 2.0 <= p[1] <= r[3] + 2.0), None)   # footprint halo on a core edge
         if core is not None and single.get(core):
@@ -1061,7 +1071,7 @@ def band_trees(BT, tap_rows, cells, nets, K, xs, ly, cell, out, hop_max, ko=None
         # branch exactly h further into the band: every trunk = h by construction
         lj = min(range(len(ly)), key=lambda j_: abs(ly[j_] - ye))
         dsite = out["drivers"][f"{b0['i']}_{lj}"]["site"]
-        qr, dr_ = site((x, dsite[1]), "band_root", f"ckm_br_{n}")
+        qr, dr_ = site((x, dsite[1]), "band_root", f"ckm_br_{n}", dr=dr)
         qb, db_ = site((x, qr[1] + dr * h), "band_branch", f"ckm_bn_{n}")
         rt = cell(f"ckm_br_{n}", qr[0], qr[1], "broot")
         br = cell(f"ckm_bn_{n}", qb[0], qb[1], "bnode")
@@ -1851,7 +1861,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
             tap_rows[-1]["band_tree"] = bk["tree"]
     if BT:
         band_trees(BT, tap_rows, cells, nets, K, xs, ly, cell, out, lg["hop_reach"], ko=DC.keepouts(P),
-                   single=single_instance_cores(P))
+                   single=single_instance_cores(P), root_reach=float(lattice.get("band_root_reach_um") or 0.0))
     out["taps"] = tap_rows
     if uniform_regions is not None:
         ug = uniform_region_gate(P, R, tap_rows)
