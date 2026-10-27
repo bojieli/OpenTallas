@@ -1,0 +1,525 @@
+{
+ "schema": "qc_cores_1027.a0_split.v1",
+ "source": "codex/qc-a0-2157@b7da9afaa parent_floorplan.json (children unchanged)",
+ "outline_um": [
+  457.92,
+  1157.76
+ ],
+ "entry": {
+  "xy": [
+   228.96,
+   578.88
+  ],
+  "rule": "12.8a geometric centre, M9->M5 stack, one entry (replaces 42/41 external taps)"
+ },
+ "tree": {
+  "D1_um": 245.0,
+  "D2_um": 130.0,
+  "L1": {
+   "S": [
+    228.96,
+    333.88
+   ],
+   "N": [
+    228.96,
+    823.88
+   ]
+  },
+  "L2": {
+   "S0": [
+    228.96,
+    203.88
+   ],
+   "S1": [
+    228.96,
+    463.88
+   ],
+   "N0": [
+    98.96000000000001,
+    823.88
+   ],
+   "N1": [
+    358.96000000000004,
+    823.88
+   ]
+  }
+ },
+ "cores": {
+  "nk": {
+   "children": [
+    {
+     "type": "ot_qwen_tile_romleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].u_leaf",
+     "clk_pin": [
+      195.264,
+      43.932
+     ],
+     "leaf_island": "S0",
+     "leg_um": 193.64,
+     "entry_to_pin_um": 568.64
+    },
+    {
+     "type": "ot_qwen_tile_romleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[0].u_leaf",
+     "clk_pin": [
+      195.264,
+      174.108
+     ],
+     "leaf_island": "S0",
+     "leg_um": 63.47,
+     "entry_to_pin_um": 438.47
+    },
+    {
+     "type": "ot_qwen_tile_romleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[0].u_leaf",
+     "clk_pin": [
+      195.264,
+      304.284
+     ],
+     "leaf_island": "S0",
+     "leg_um": 134.1,
+     "entry_to_pin_um": 509.1
+    },
+    {
+     "type": "ot_qwen_tile_romleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[0].u_leaf",
+     "clk_pin": [
+      195.264,
+      564.636
+     ],
+     "leaf_island": "S1",
+     "leg_um": 134.45,
+     "entry_to_pin_um": 509.45
+    },
+    {
+     "type": "ot_qwen_tile_romleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[0].u_leaf",
+     "clk_pin": [
+      195.264,
+      434.46
+     ],
+     "leaf_island": "S1",
+     "leg_um": 63.12,
+     "entry_to_pin_um": 438.12
+    },
+    {
+     "type": "ot_qwen_tile_romleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+     "clk_pin": [
+      262.656,
+      43.932
+     ],
+     "leaf_island": "S0",
+     "leg_um": 193.64,
+     "entry_to_pin_um": 568.64
+    },
+    {
+     "type": "ot_qwen_tile_romleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[1].u_leaf",
+     "clk_pin": [
+      262.656,
+      174.108
+     ],
+     "leaf_island": "S0",
+     "leg_um": 63.47,
+     "entry_to_pin_um": 438.47
+    },
+    {
+     "type": "ot_qwen_tile_romleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "clk_pin": [
+      262.656,
+      304.284
+     ],
+     "leaf_island": "S0",
+     "leg_um": 134.1,
+     "entry_to_pin_um": 509.1
+    },
+    {
+     "type": "ot_qwen_tile_romleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[1].u_leaf",
+     "clk_pin": [
+      262.656,
+      564.636
+     ],
+     "leaf_island": "S1",
+     "leg_um": 134.45,
+     "entry_to_pin_um": 509.45
+    },
+    {
+     "type": "ot_qwen_tile_romleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[1].u_leaf",
+     "clk_pin": [
+      262.656,
+      434.46
+     ],
+     "leaf_island": "S1",
+     "leg_um": 63.12,
+     "entry_to_pin_um": 438.12
+    },
+    {
+     "type": "ot_qwen_tile_node",
+     "inst": "u_g.u_tile.u_tile.u_logic.genblk5.g_ndh.u_node",
+     "clk_pin": [
+      394.416,
+      892.668
+     ],
+     "leaf_island": "N1",
+     "leg_um": 104.24,
+     "entry_to_pin_um": 479.24
+    },
+    {
+     "type": "rawleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf",
+     "clk_pin": [
+      383.52,
+      736.908
+     ],
+     "leaf_island": "N1",
+     "leg_um": 111.53,
+     "entry_to_pin_um": 486.53
+    },
+    {
+     "type": "rawleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh.u_native_rawleaf",
+     "clk_pin": [
+      383.52,
+      897.42
+     ],
+     "leaf_island": "N1",
+     "leg_um": 98.1,
+     "entry_to_pin_um": 473.1
+    },
+    {
+     "type": "rawleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh.u_native_rawleaf",
+     "clk_pin": [
+      383.52,
+      1057.932
+     ],
+     "leaf_island": "N1",
+     "leg_um": 258.61,
+     "entry_to_pin_um": 633.61
+    },
+    {
+     "type": "rawleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh.u_native_rawleaf",
+     "clk_pin": [
+      142.224,
+      897.42
+     ],
+     "leaf_island": "N0",
+     "leg_um": 116.8,
+     "entry_to_pin_um": 491.8
+    },
+    {
+     "type": "rawleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh.u_native_rawleaf",
+     "clk_pin": [
+      142.224,
+      1057.932
+     ],
+     "leaf_island": "N0",
+     "leg_um": 277.32,
+     "entry_to_pin_um": 652.32
+    },
+    {
+     "type": "rawleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh.u_native_rawleaf",
+     "clk_pin": [
+      131.232,
+      736.908
+     ],
+     "leaf_island": "N0",
+     "leg_um": 119.24,
+     "entry_to_pin_um": 494.24
+    },
+    {
+     "type": "rawleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh.u_native_rawleaf",
+     "clk_pin": [
+      131.232,
+      897.42
+     ],
+     "leaf_island": "N0",
+     "leg_um": 105.81,
+     "entry_to_pin_um": 480.81
+    },
+    {
+     "type": "rawleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh.u_native_rawleaf",
+     "clk_pin": [
+      131.232,
+      1057.932
+     ],
+     "leaf_island": "N0",
+     "leg_um": 266.32,
+     "entry_to_pin_um": 641.32
+    }
+   ],
+   "island_violations": [],
+   "leaf_load": {
+    "S0": [
+     "ot_qwen_tile_romleaf",
+     "ot_qwen_tile_romleaf",
+     "ot_qwen_tile_romleaf",
+     "ot_qwen_tile_romleaf",
+     "ot_qwen_tile_romleaf",
+     "ot_qwen_tile_romleaf"
+    ],
+    "S1": [
+     "ot_qwen_tile_romleaf",
+     "ot_qwen_tile_romleaf",
+     "ot_qwen_tile_romleaf",
+     "ot_qwen_tile_romleaf"
+    ],
+    "N0": [
+     "rawleaf",
+     "rawleaf",
+     "rawleaf",
+     "rawleaf",
+     "rawleaf"
+    ],
+    "N1": [
+     "ot_qwen_tile_node",
+     "rawleaf",
+     "rawleaf",
+     "rawleaf"
+    ]
+   },
+   "max_entry_to_child_pin_um": 652.32
+  },
+  "nl": {
+   "children": [
+    {
+     "type": "ot_qwen_tile_romleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].u_leaf",
+     "clk_pin": [
+      195.264,
+      43.932
+     ],
+     "leaf_island": "S0",
+     "leg_um": 193.64,
+     "entry_to_pin_um": 568.64
+    },
+    {
+     "type": "ot_qwen_tile_romleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[0].u_leaf",
+     "clk_pin": [
+      195.264,
+      174.108
+     ],
+     "leaf_island": "S0",
+     "leg_um": 63.47,
+     "entry_to_pin_um": 438.47
+    },
+    {
+     "type": "ot_qwen_tile_romleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[0].u_leaf",
+     "clk_pin": [
+      195.264,
+      304.284
+     ],
+     "leaf_island": "S0",
+     "leg_um": 134.1,
+     "entry_to_pin_um": 509.1
+    },
+    {
+     "type": "ot_qwen_tile_romleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[0].u_leaf",
+     "clk_pin": [
+      195.264,
+      564.636
+     ],
+     "leaf_island": "S1",
+     "leg_um": 134.45,
+     "entry_to_pin_um": 509.45
+    },
+    {
+     "type": "ot_qwen_tile_romleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[0].u_leaf",
+     "clk_pin": [
+      195.264,
+      434.46
+     ],
+     "leaf_island": "S1",
+     "leg_um": 63.12,
+     "entry_to_pin_um": 438.12
+    },
+    {
+     "type": "ot_qwen_tile_romleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+     "clk_pin": [
+      262.656,
+      43.932
+     ],
+     "leaf_island": "S0",
+     "leg_um": 193.64,
+     "entry_to_pin_um": 568.64
+    },
+    {
+     "type": "ot_qwen_tile_romleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[1].u_leaf",
+     "clk_pin": [
+      262.656,
+      174.108
+     ],
+     "leaf_island": "S0",
+     "leg_um": 63.47,
+     "entry_to_pin_um": 438.47
+    },
+    {
+     "type": "ot_qwen_tile_romleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "clk_pin": [
+      262.656,
+      304.284
+     ],
+     "leaf_island": "S0",
+     "leg_um": 134.1,
+     "entry_to_pin_um": 509.1
+    },
+    {
+     "type": "ot_qwen_tile_romleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[1].u_leaf",
+     "clk_pin": [
+      262.656,
+      564.636
+     ],
+     "leaf_island": "S1",
+     "leg_um": 134.45,
+     "entry_to_pin_um": 509.45
+    },
+    {
+     "type": "ot_qwen_tile_romleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[1].u_leaf",
+     "clk_pin": [
+      262.656,
+      434.46
+     ],
+     "leaf_island": "S1",
+     "leg_um": 63.12,
+     "entry_to_pin_um": 438.12
+    },
+    {
+     "type": "rawleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf",
+     "clk_pin": [
+      383.52,
+      736.908
+     ],
+     "leaf_island": "N1",
+     "leg_um": 111.53,
+     "entry_to_pin_um": 486.53
+    },
+    {
+     "type": "rawleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh.u_native_rawleaf",
+     "clk_pin": [
+      383.52,
+      897.42
+     ],
+     "leaf_island": "N1",
+     "leg_um": 98.1,
+     "entry_to_pin_um": 473.1
+    },
+    {
+     "type": "rawleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh.u_native_rawleaf",
+     "clk_pin": [
+      383.52,
+      1057.932
+     ],
+     "leaf_island": "N1",
+     "leg_um": 258.61,
+     "entry_to_pin_um": 633.61
+    },
+    {
+     "type": "rawleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh.u_native_rawleaf",
+     "clk_pin": [
+      142.224,
+      897.42
+     ],
+     "leaf_island": "N0",
+     "leg_um": 116.8,
+     "entry_to_pin_um": 491.8
+    },
+    {
+     "type": "rawleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh.u_native_rawleaf",
+     "clk_pin": [
+      142.224,
+      1057.932
+     ],
+     "leaf_island": "N0",
+     "leg_um": 277.32,
+     "entry_to_pin_um": 652.32
+    },
+    {
+     "type": "rawleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh.u_native_rawleaf",
+     "clk_pin": [
+      131.232,
+      736.908
+     ],
+     "leaf_island": "N0",
+     "leg_um": 119.24,
+     "entry_to_pin_um": 494.24
+    },
+    {
+     "type": "rawleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh.u_native_rawleaf",
+     "clk_pin": [
+      131.232,
+      897.42
+     ],
+     "leaf_island": "N0",
+     "leg_um": 105.81,
+     "entry_to_pin_um": 480.81
+    },
+    {
+     "type": "rawleaf",
+     "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh.u_native_rawleaf",
+     "clk_pin": [
+      131.232,
+      1057.932
+     ],
+     "leaf_island": "N0",
+     "leg_um": 266.32,
+     "entry_to_pin_um": 641.32
+    }
+   ],
+   "island_violations": [],
+   "leaf_load": {
+    "S0": [
+     "ot_qwen_tile_romleaf",
+     "ot_qwen_tile_romleaf",
+     "ot_qwen_tile_romleaf",
+     "ot_qwen_tile_romleaf",
+     "ot_qwen_tile_romleaf",
+     "ot_qwen_tile_romleaf"
+    ],
+    "S1": [
+     "ot_qwen_tile_romleaf",
+     "ot_qwen_tile_romleaf",
+     "ot_qwen_tile_romleaf",
+     "ot_qwen_tile_romleaf"
+    ],
+    "N0": [
+     "rawleaf",
+     "rawleaf",
+     "rawleaf",
+     "rawleaf",
+     "rawleaf"
+    ],
+    "N1": [
+     "rawleaf",
+     "rawleaf",
+     "rawleaf"
+    ]
+   },
+   "max_entry_to_child_pin_um": 652.32
+  }
+ }
+}
