@@ -398,10 +398,13 @@ def parse_modules(text: str, path: str):
         # Declaration keywords inside strings must not resolve non-ANSI ports.
         body_masked = _lexical_mask(body, strings=True)
         # localparams / body parameters (non-ANSI parameter declarations)
-        for pm in re.finditer(r'\b(?:parameter|localparam)\s+(?:(?:integer|int|string|logic|bit|real|signed|unsigned)\s+|\[[^\]]*\]\s*)*([^;]+);', body_masked):
-            for item in _split_commas(body[pm.start(1):pm.end(1)]):          # a declaration list: localparam A = .., B = .., C = ..;
+        localparams = set()            # HEAD-RTL-5: not overridable -> not part of the elaboration interface (_iface)
+        for pm in re.finditer(r'\b(parameter|localparam)\s+(?:(?:integer|int|string|logic|bit|real|signed|unsigned)\s+|\[[^\]]*\]\s*)*([^;]+);', body_masked):
+            for item in _split_commas(body[pm.start(2):pm.end(2)]):          # a declaration list: localparam A = .., B = .., C = ..;
                 im = re.match(r'\s*(\w+)\s*=\s*(.+)$', item, re.S)
                 if im:
+                    if pm.group(1) == 'localparam' and im.group(1) not in params:
+                        localparams.add(im.group(1))
                     params.setdefault(im.group(1), im.group(2).strip())
         # non-ANSI port declarations in the body
         for pm in re.finditer(r'\b(input|output|inout)\s+(?:wire\s+|reg\s+|logic\s+)?(?:signed\s+)?((?:\[[^\]]+\]\s*)*)([^;]+);', body_masked):
@@ -410,6 +413,7 @@ def parse_modules(text: str, path: str):
                 if pn in ports and ports[pn][0] is None:
                     ports[pn] = (pm.group(1), _parse_ranges(pm.group(2)))
         parsed = Module(name, path, params, ports, body, order)
+        parsed.localparams = localparams
         parsed.port_parse_errors = port_errors
         mods.append(parsed)
     return mods
@@ -510,8 +514,11 @@ def _record_variants(variants, name, chosen, defs, by):
 
 def _iface(mod):
     """the elaboration interface: port names + directions and parameter names (a parameter override naming a parameter
-    only one variant has = Verilator PINNOTFOUND, e.g. GRADUAL_RNE on ot_v41_rom_elem_w10)"""
-    return (tuple(sorted((k, v[0]) for k, v in mod.ports.items())), tuple(sorted(mod.params)))
+    only one variant has = Verilator PINNOTFOUND, e.g. GRADUAL_RNE on ot_v41_rom_elem_w10).  HEAD-RTL-5: body
+    localparams are not overridable, so they are not interface (a macro's behavioural model and its _bb.v abstract have
+    the same pins; the model's WORDS/BITS localparams made them 'differ')"""
+    lp = getattr(mod, 'localparams', set())
+    return (tuple(sorted((k, v[0]) for k, v in mod.ports.items())), tuple(sorted(k for k in mod.params if k not in lp)))
 
 
 # ------------------------------------------------------------------------------------------------ die netlist
@@ -1190,6 +1197,11 @@ def main(argv=None):
     ap.add_argument('--ref-tile-prefer', action='store_true', help='a hardened tile whose top is in the child closure '
                     'resolves its modules from its spec sources (physical/ref_tile/*/spec.json: the RTL of record of the '
                     'closed view); conflicting tiles are recorded (prefer_conflicts).  Below --prefer-list')
+    ap.add_argument('--manifest-only', action='store_true',
+                    help='HEAD-RTL-5: index ONLY the -f manifests / --rtl-file files (+ their +libdir+ and --lib-root '
+                         'dirs): no default rtl/ + physical/**/rtl trees (they hold ref_tile / bind-bundle SNAPSHOT copies) '
+                         'and no default macro dirs; every manifest entry must exist; a module of the closure defined '
+                         'twice with different ports/parameters fails (ambiguous_children) even if a prefer rank picks one')
     ap.add_argument('--no-macro-dirs', action='store_true', help=f'do not index the memory macro libraries {MACRO_DIRS}')
     ap.add_argument('--unread-review', help='exact source-intent review JSON; default off')
     ap.add_argument('--unread-contract', help='exact reviewed source contract')
@@ -1221,20 +1233,28 @@ def main(argv=None):
     if a.strap_file:
         sj = json.loads(Path(a.strap_file).read_text())
         straps |= {tuple(x) for x in (sj.get('straps', []) if isinstance(sj, dict) else sj)}
+    if a.manifest_only and (a.rtl_root is not None or a.ref_tile_prefer or a.prefer_list):
+        ap.error('--manifest-only: sources come from -f / --rtl-file only (no --rtl-root / --ref-tile-prefer / --prefer-list)')
     files = list(a.rtl_file)
     libdirs = []
     for fl in a.filelists:
         f_, d_, l_ = load_manifest(fl)
         files += f_; a.define += d_; libdirs += l_
+    manifest_missing = sorted({f for f in files if not Path(f).is_file()}
+                              | {d for d in libdirs if not ((ROOT / d) if not Path(d).is_absolute() else Path(d)).is_dir()})
     defines = {}
     for d in a.define:
         k, _, v = d.partition('=')
         defines[k] = v
-    roots = a.rtl_root if a.rtl_root is not None else (['rtl'] + sorted(str(p.relative_to(ROOT)) for p in (ROOT / 'physical').glob('**/rtl')
-                                                                  if p.is_dir()))
+    if a.manifest_only:
+        roots = []
+    else:
+        roots = a.rtl_root if a.rtl_root is not None else (['rtl'] + sorted(str(p.relative_to(ROOT)) for p in (ROOT / 'physical').glob('**/rtl')
+                                                                      if p.is_dir()))
     # S81-LBGAP G6 (10-18): memory macro models outside rtl/ (ot_sram_1r1w_256x256_m2_r2c2 ...) were not indexed unless
     # a caller listed each file; the macro libraries are indexed by default (macro-dir order wins for a macro name)
-    roots = roots + libdirs + a.lib_root + ([d for d in MACRO_DIRS if (ROOT / d).is_dir()] if not a.no_macro_dirs else [])
+    roots = roots + libdirs + a.lib_root + ([d for d in MACRO_DIRS if (ROOT / d).is_dir()]
+                                            if not (a.no_macro_dirs or a.manifest_only) else [])
     plist = []
     for L in reversed(a.prefer_list):           # rank: a later entry wins, so the FIRST --prefer-list is highest
         plist += [f for f in list_rtl_files(L) if f not in plist]
@@ -1300,7 +1320,8 @@ def main(argv=None):
         # and a FIRST pick among definitions with different PORTS or PARAMETERS (no rule names one) fails: it binds
         # whichever file sorted first (the 10-18 whole-die probe took base ot_v41_rom_elem_w10 -> PINNOTFOUND)
         var = {n: v for n, v in sorted(variants.items()) if n in cseen}
-        amb_c = {n: v for n, v in var.items() if v['by'] == 'first' and v['iface_differ']}
+        # HEAD-RTL-5: in --manifest-only mode no rank may hide an interface conflict between two manifest entries
+        amb_c = {n: v for n, v in var.items() if v['iface_differ'] and (v['by'] == 'first' or a.manifest_only)}
         rec['child_closure'] = dict(modules=nmods, unresolved_children=unres, model_children=models,
                                     variant_children=var, ambiguous_children=amb_c,
                                     elab_traps={k: sorted(v) for k, v in sorted(traps.items())},
@@ -1318,6 +1339,15 @@ def main(argv=None):
             rec['failing'].append('unresolved_children')
             for c, ps in unres.items():
                 print(f"FAIL child {c} (no RTL) instantiated in {','.join(ps[:6])}")
+    rec['source_mode'] = 'manifest_only' if a.manifest_only else 'tree_index'
+    rec['manifest_missing'] = manifest_missing
+    if a.manifest_only:
+        rec['summary']['manifest_missing'] = len(manifest_missing)
+    if a.manifest_only and manifest_missing:
+        rec['verdict'] = 'FAIL'
+        rec['failing'].append('manifest_missing')
+        for f in manifest_missing[:20]:
+            print(f'FAIL manifest entry missing: {f}')
     rec['pads_declared'] = sorted(':'.join(k) for k in pads)
     rec['die_sha256'] = hashlib.sha256(Path(a.die_v).read_bytes()).hexdigest()
     rec['straps_declared'] = sorted(':'.join(s) for s in straps)

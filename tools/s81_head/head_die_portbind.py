@@ -17,6 +17,13 @@
    ot_s81hd_ctl), which die_port_bind indexes as a 'real' master (HEAD-RTL-3 10-26: canonical 4 missing, port-bind PASS).
    HEAD-RTL-4: die_port_bind now itself reports a self-instantiating master (no parameter override) as STUB, and with
    --logic-free-stub (passed here) a wiring-only master too, so the canonical plan fails in die_port_bind as well.
+HEAD-RTL-5 (10-26): die_port_bind runs --manifest-only: modules resolve ONLY from portbind.f (generated wrappers + plan
+   type sources + the declared supplement tools/s81_head/head_portbind_extra.f), never from the rtl/ + physical/**/rtl
+   tree index, whose physical/ref_tile/*/src snapshots made the HEAD-RTL-4 candidate run AMBIGUOUS (ot_s81ph_mem1r1w:
+   pre-WREG copy of dscoll_lane_w_rt) and made the HEAD-RTL-3 PASS depend on what the checkout held.  A child missing
+   from the manifest is unresolved (FAIL), a manifest entry that does not exist fails, and two manifest definitions with
+   different ports/parameters fail.  The supplement lists the closure modules the plan `sources` omit (to move into the
+   plan with the next PLAN-DELTA).
 Exit 0 iff module check 0 missing AND die_port_bind PASS."""
 import argparse, json, re, subprocess, sys
 from pathlib import Path
@@ -63,11 +70,20 @@ for ty in plan['partition_types'].values():
             raise SystemExit('absolute source path in plan: ' + s)
         if s not in src:
             src.append(s)
-fl = sorted(str(p) for p in gen.glob('*.sv')) + src
+EXTRA = Path('tools/s81_head/head_portbind_extra.f')
+extra = [ln.split('#')[0].strip() for ln in EXTRA.read_text().split('\n') if ln.split('#')[0].strip()]
+for s in extra:
+    if Path(s).is_absolute() or not Path(s).is_file():
+        raise SystemExit('supplement entry must be an existing repo-relative file: ' + s)
+dup = [s for s in extra if s in src]
+if dup:
+    raise SystemExit('supplement entry already in the plan sources (remove it from %s): %s' % (EXTRA, dup))
+fl = sorted(str(p) for p in gen.glob('*.sv')) + src + extra
 (out / 'portbind.f').write_text('\n'.join(fl) + '\n')
 print('pads: %d instances, %d open wavefront outs' % (len(pads), sum(len(v['ports']) for v in pads.values())))
 r = subprocess.run([sys.executable, 'tools/die_port_bind.py', str(top), '--top', 's81_head_top', '-f', str(out / 'portbind.f'),
-                    '--pad-file', str(out / 'pads.json'), '--out', str(out / 'port_bind_strict.json'), '--logic-free-stub'],
+                    '--pad-file', str(out / 'pads.json'), '--out', str(out / 'port_bind_strict.json'), '--logic-free-stub',
+                    '--manifest-only'],
                    capture_output=True, text=True)
 (out / 'port_bind_strict.txt').write_text(r.stdout + r.stderr)
 print(r.stdout[-3000:], r.stderr[-1000:])

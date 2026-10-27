@@ -360,3 +360,94 @@ class G6(unittest.TestCase):
         self.assertTrue(cc['variant_children']['c']['chosen'].endswith('c_rne.sv'))
         self.assertEqual(cc['variant_children']['c']['by'], 'prefer')
 
+
+def run_manifest(entries, extra=(), snapshot=True):  # extra: list or fn(tmpdir) -> list
+    """HEAD-RTL-5: die whose child c has a SNAPSHOT copy (old interface, as physical/ref_tile/*/src) in the indexed tree"""
+    with tempfile.TemporaryDirectory() as d:
+        d = Path(d)
+        (d / 'rtl').mkdir()
+        (d / 'rtl' / 'p.sv').write_text(G6_P)
+        (d / 'rtl' / 'c_rne.sv').write_text(G6_C_RNE)
+        (d / 'rtl' / 'c_base.sv').write_text(G6_C_BASE)
+        if snapshot:
+            (d / 'rtl' / 'ref_tile' / 'src').mkdir(parents=True)
+            (d / 'rtl' / 'ref_tile' / 'src' / 'c.sv').write_text(G6_C_BASE)
+        (d / 'm.f').write_text(''.join(f'{d / "rtl" / e}\n' for e in entries))
+        (d / 'd.v').write_text(G6_DIE)
+        out = d / 'o.json'
+        p = subprocess.run([sys.executable, str(TOOL), str(d / 'd.v'), '--top', 'die', '-f', str(d / 'm.f'),
+                            '--out', str(out)] + list(extra(d) if callable(extra) else extra), capture_output=True, text=True)
+        return p.returncode, (json.loads(out.read_text()) if out.exists() else None), p.stdout + p.stderr
+
+
+class ManifestOnly(unittest.TestCase):
+    def test_snapshot_never_indexed(self):
+        rc, rec, so = run_manifest(['p.sv', 'c_rne.sv'], ['--manifest-only'])
+        self.assertEqual(rc, 0, so)
+        self.assertEqual(rec['source_mode'], 'manifest_only')
+        self.assertEqual(rec['rtl_roots'], [])
+        self.assertEqual(rec['child_closure']['variant_children'], {})      # the snapshot copy is not even seen
+        self.assertEqual(rec['child_closure']['ambiguous_children'], {})
+
+    def test_tree_mode_reproduces_snapshot_ambiguity(self):
+        # negative control = the HEAD-RTL-4 cand failure: c not in the manifest, tree index finds rtl/ c_rne + snapshot c
+        rc, rec, so = run_manifest(['p.sv'], lambda d: ['--rtl-root', str(d / 'rtl'), '--no-macro-dirs'])
+        self.assertEqual(rc, 1)
+        self.assertIn('ambiguous_children', rec['failing'])
+        self.assertEqual(rec['child_closure']['ambiguous_children']['c']['by'], 'first')
+
+    def test_child_missing_from_manifest_fails(self):
+        # the child is NOT taken silently from some tree copy: it is unresolved
+        rc, rec, so = run_manifest(['p.sv'], ['--manifest-only'])
+        self.assertEqual(rc, 1)
+        self.assertIn('unresolved_children', rec['failing'])
+        self.assertIn('c', rec['child_closure']['unresolved_children'])
+
+    def test_iface_conflict_inside_manifest_fails(self):
+        # two manifest entries with different ports/parameters: the prefer rank (later wins) must not hide it
+        rc, rec, so = run_manifest(['p.sv', 'c_base.sv', 'c_rne.sv'], ['--manifest-only'])
+        self.assertEqual(rc, 1)
+        self.assertIn('ambiguous_children', rec['failing'])
+        self.assertEqual(rec['child_closure']['ambiguous_children']['c']['by'], 'prefer')
+        rc, rec, so = run_manifest(['p.sv', 'c_base.sv', 'c_rne.sv'],                       # tree mode: rank decides
+                                   lambda d: ['--rtl-root', str(d / 'none'), '--no-macro-dirs'])
+        self.assertNotIn('ambiguous_children', rec['failing'])
+
+    def test_missing_entry_fails(self):
+        rc, rec, so = run_manifest(['p.sv', 'c_rne.sv', 'gone.sv'], ['--manifest-only'])
+        self.assertEqual(rc, 1)
+        self.assertIn('manifest_missing', rec['failing'])
+        self.assertEqual(rec['summary']['manifest_missing'], 1)
+
+    def test_macro_model_and_bb_same_iface(self):
+        # a macro behavioural model (body localparams) and its _bb.v abstract have the same pins: not an iface conflict
+        with tempfile.TemporaryDirectory() as d:
+            d = Path(d)
+            (d / 'm.v').write_text("module m (input wire ck, input wire [3:0] a, output reg [3:0] q);\n"
+                                   "  localparam integer W = 4, D = 2;\n  always @(posedge ck) q <= a;\nendmodule\n")
+            (d / 'm_bb.v').write_text("(* blackbox *)\nmodule m (input wire ck, input wire [3:0] a, output wire [3:0] q);\nendmodule\n")
+            (d / 'w.sv').write_text("module w (input wire ck, input wire [3:0] a, output wire [3:0] q);\n"
+                                    "  m u (.ck(ck), .a(a), .q(q));\nendmodule\n")
+            (d / 'm.f').write_text(f"{d / 'w.sv'}\n{d / 'm.v'}\n{d / 'm_bb.v'}\n")
+            (d / 'd.v').write_text("module die (ck, a, q);\n  input ck;\n  input [3:0] a;\n  output [3:0] q;\n"
+                                   "  w u_w (.ck(ck), .a(a), .q(q));\nendmodule\n")
+            out = d / 'o.json'
+            p = subprocess.run([sys.executable, str(TOOL), str(d / 'd.v'), '--top', 'die', '-f', str(d / 'm.f'),
+                                '--manifest-only', '--out', str(out)], capture_output=True, text=True)
+            rec = json.loads(out.read_text())
+            self.assertEqual(p.returncode, 0, p.stdout)
+            self.assertEqual(rec['child_closure']['ambiguous_children'], {})
+            self.assertEqual(rec['child_closure']['variant_children']['m']['iface_differ'], [])
+            # a real extra parameter still differs
+            (d / 'm_bb.v').write_text("(* blackbox *)\nmodule m #(parameter integer X = 0) (input wire ck, input wire [3:0] a, "
+                                      "output wire [3:0] q);\nendmodule\n")
+            p = subprocess.run([sys.executable, str(TOOL), str(d / 'd.v'), '--top', 'die', '-f', str(d / 'm.f'),
+                                '--manifest-only', '--out', str(out)], capture_output=True, text=True)
+            self.assertEqual(p.returncode, 1, p.stdout)
+            self.assertIn('m', json.loads(out.read_text())['child_closure']['ambiguous_children'])
+
+    def test_no_tree_options(self):
+        rc, rec, so = run_manifest(['p.sv', 'c_rne.sv'], ['--manifest-only', '--rtl-root', 'rtl'])
+        self.assertEqual(rc, 2)
+        self.assertIn('--manifest-only', so)
+
