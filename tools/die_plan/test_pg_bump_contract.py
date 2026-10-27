@@ -77,3 +77,14 @@ def test_complete_pad_stays_out_of_signal_window():
     win=[{"rect_um":[x+20,y-10,x+40,y+10]}]
     assert first not in D.bump_grid(p,win)
     assert first in D.bump_grid(plan(),win)
+
+
+def test_window_and_die_resolve_plan_before_implicit_legacy_pitch():
+    import infra_pg as G
+    p=plan(pitch_um=75.,pad_um=35.,edge_margin_um=30.)
+    # size_grid's old implicit default must not silently select150.
+    assert G.resolved_bumps(p,{"bump_pitch_um":150.})["pitch_um"] == 75.
+    assert G.resolved_bumps(p,pitch_um=150.)["pitch_um"] == 150.
+    explicit=G.resolved_bumps(p,pitch_um=120.)
+    assert G.resolved_bumps(p,{"bump_contract":explicit}) == explicit
+    assert G.resolved_bumps(plan(),{"bump_pitch_um":120.})["pitch_um"] == 120.
