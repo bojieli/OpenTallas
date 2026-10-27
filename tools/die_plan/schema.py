@@ -431,6 +431,7 @@ SCHEMA = {
                                            # or the FF budget); absent -> FF_TT_INSERTION_RATIO x insertion_ps
                                            "insertion_ff_ps": _pos,
                                            "insertion_tol_ps": _nonneg, "budget_owner": {"type": "string"},
+                                           "merged_clock_ports": {"type": "array", "minItems": 2, "uniqueItems": True, "items": _name},
                                            "from_root_um": _nonneg, "parent": _name, "note": {"type": "string"}}}}}},
                     # hard cores built on PLATFORM tracks (macros inside): a per-core placement offset puts their
                     # boundary pins on the plan tracks (COORD 10-23 08:36; A0: y +0.012)

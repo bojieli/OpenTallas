@@ -33,10 +33,12 @@ if {[info exists ::env(OT_CORE_TAPS)] && [file exists $::env(OT_CORE_TAPS)]} {
   set fh [open $::env(OT_CORE_TAPS)]; set ct_cl [split [read $fh] "\n"]; close $fh
   foreach l $ct_cl {
     if {[string match "#*" $l] || [llength $l] < 3} continue
-    lassign $l port iname pin
+    lassign $l port iname pin early insertion exact
+    set strict [expr {$exact eq "exact"}]
     set bt [$ct_blk findBTerm $port]
     set inst [$ct_blk findInst $iname]
     if {$bt eq "NULL" || $bt eq "" || $inst eq "NULL" || $inst eq ""} {
+      if {$strict} { error "OT_CLOCK_TAPS exact endpoint missing $port $iname/$pin" }
       puts "OT_CLOCK_TAPS WARN core tap $port: port or core instance $iname missing"
       continue
     }
@@ -47,6 +49,26 @@ if {[info exists ::env(OT_CORE_TAPS)] && [file exists $::env(OT_CORE_TAPS)]} {
     }
     $net setSigType CLOCK
     set k 0
+    if {$strict} {
+      set exact_it [$inst findITerm $pin]
+      if {$exact_it eq "NULL" || $exact_it eq "" || ![$exact_it isInputSignal]} {
+        error "OT_CLOCK_TAPS missing exact input $iname/$pin"
+      }
+      set exact_net [$exact_it getNet]
+      if {$exact_net ne $ct_root && $exact_net ne $net} {
+        error "OT_CLOCK_TAPS exact clock $iname/$pin is not on the declared source"
+      }
+      set sp [get_pins -quiet [list $iname/$pin]]
+      set clock_ok 0
+      if {[llength $sp] == 1} {
+        set lc [get_lib_cells -quiet -of_objects [get_cells -quiet -of_objects $sp]]
+        foreach lp [get_lib_pins -quiet -of_objects $lc] {
+          if {[get_property $lp is_clock] && [get_property $lp name] eq $pin} { set clock_ok 1 }
+        }
+      }
+      if {!$clock_ok} { error "OT_CLOCK_TAPS exact endpoint is not a Liberty clock $iname/$pin" }
+      if {$exact_net eq $net} { set k 1 }
+    }
     foreach it [$inst getITerms] {
       set n0 [$it getNet]
       if {$n0 eq "NULL" || $n0 eq "" || $n0 ne $ct_root} continue
@@ -56,6 +78,7 @@ if {[info exists ::env(OT_CORE_TAPS)] && [file exists $::env(OT_CORE_TAPS)]} {
       incr k
     }
     puts "OT_CLOCK_TAPS core tap $port <- $iname/$pin: $k clock pin(s)"
+    if {$strict && $k != 1} { error "OT_CLOCK_TAPS exact endpoint coverage failed $iname/$pin count=$k" }
     if {!$k} { puts "OT_CLOCK_TAPS WARN core tap $port: no clock pin of $iname/$pin on clk" }
   }
 }
