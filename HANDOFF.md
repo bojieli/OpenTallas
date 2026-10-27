@@ -1413,3 +1413,5 @@ CODEX: 2026-10-27 09:10 PDT HBM full-root CE provider READY370a701a36; actual508
 CODEX: 2026-10-27 09:13 PDT TOK-HBM actualnativekeyprogrammePASS2516/0+tagmutant855; SOFT17SRAMquarter227684cells under400k,c131a8087/ef994fe77. True4roleVMSbitgraph/canonicalkeyregages delivered63f0317cf; physicalrestore andnativewholepathremainopen.
 
 CODEX: 2026-10-27 09:15 PDT ROWX-SRAM sourceREADY a925fcac8 nativep192miter+2mutants+restart+16ownerPASS exactgoldcycles;0addedcycles;7macrorecipeviewed;oldlotFAIL retained, S81planrepackowned;noP&R.
+
+CODEX: 2026-10-27 09:15 PDT mixed-width RCX native selection 20/20 PASS refutes second-entry-only premise; W-cache bug fixed f32e8e3597. Physical four-width table generation live intel2 unit3870285; full clock STA awaits its native qualification.
