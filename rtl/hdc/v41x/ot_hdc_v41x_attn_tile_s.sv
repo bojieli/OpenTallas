@@ -34,6 +34,12 @@ module ot_hdc_v41x_attn_hgrp_s #(
                                        //    register, and the product decodes mb[0] as 1'b0.  Same values, same edges; the
                                        //    constant no longer rides up to 24 unreset registers (power-up X past the reset
                                        //    window in the strict no-reset LEC base case).  0 = the original lines.
+    parameter integer WSEG = 0,        // >0 (S81-CORES-R1 10-27, opt-in, hcore GEOM-REVIEW-16 06:31 verdict): the per-slot write
+                                       //    select (we / wd from r_ld_v, r_ld_mode, q_hh, q_lo / q_hi, pcol, r_ld_w) is built
+                                       //    in one kept-hierarchy leaf per WSEG slots (ot_hdc_v41x_wsel_s), so only the raw
+                                       //    R0 outputs broadcast over the core and no decode cone is shared across columns
+                                       //    (d75 TT -4.62: r_ld_mode -> shared OAI21x1 fo15 / NOR2x2 fo23 -> g_m[29].ab).
+                                       //    Same expressions, same edges; 0 = the original flat select.
     parameter integer WPRE = 0         // 1 (S81-P10, opt-in): the write predicates (ld_grp == slot group, ld_grp + 1 ==
                                        //    slot group, ld_grp == hh) are decoded from the ld_* pins and captured in
                                        //    the head's R0 (kept) registers, so the R0 -> DFFE-enable path is one AND-OR
@@ -240,6 +246,15 @@ module ot_hdc_v41x_attn_hgrp_s #(
                 end
                 assign q_hh = (r_ld_grp == hh);
             end
+            if (WSEG > 0) begin : g_ws
+                for (gk = 0; gk < TD / WSEG; gk = gk + 1) begin : g_s
+                    ot_hdc_v41x_wsel_s #(.SEG(WSEG), .R(R), .PWORDS(PWORDS), .SLOT0(gk * WSEG), .TD(TD)) u_ws (
+                        .v(r_ld_v), .mode(r_ld_mode), .hh(q_hh),
+                        .lo(q_lo[gk * WSEG / R +: WSEG / R]), .hi(q_hi[gk * WSEG / R +: WSEG / R]),
+                        .pcol(pcol), .pcol2(pcol2), .w(r_ld_w[gk * WSEG * 16 +: WSEG * 16]),
+                        .we(we[gk * WSEG +: WSEG]), .wd(wd[gk * WSEG * 16 +: WSEG * 16]));
+                end
+            end else begin : g_wf
             for (gk = 0; gk < TD; gk = gk + 1) begin : g_w
                 if (PWORDS == 1) begin : g_w1
                     assign wd[gk*16 +: 16] = r_ld_mode ? pcol[(gk % R) * 16 +: 16] : r_ld_w[gk * 16 +: 16];
@@ -251,6 +266,7 @@ module ot_hdc_v41x_attn_hgrp_s #(
                                              hi ? pcol2[(gk % R) * 16 +: 16] : pcol[(gk % R) * 16 +: 16];
                     assign we[gk] = r_ld_v && (r_ld_mode ? (lo || hi) : q_hh);
                 end
+            end
             end
             // DQX: the write (enables, data, bank) one cycle later, as the reads (the operand path's D2 stage)
             wire [TD-1:0]    we_q;
@@ -289,6 +305,50 @@ module ot_hdc_v41x_attn_hgrp_s #(
         if (!rst_n) ov <= 1'b0;
         else ov <= v_core;
     end
+endmodule
+
+// WSEG leaf (S81-CORES-R1 10-27): the write select of SEG consecutive slots SLOT0 .. SLOT0+SEG-1 of one head, the
+// same expressions as hgrp_s g_w1 / g_w2, in its own kept hierarchy so synthesis keeps each segment decode local.
+(* keep_hierarchy *)
+module ot_hdc_v41x_wsel_s #(
+    parameter integer SEG = 4,
+    parameter integer R = 2,
+    parameter integer PWORDS = 1,
+    parameter integer SLOT0 = 0,
+    parameter integer TD = 32
+) (
+    input  wire              v,
+    input  wire              mode,
+    input  wire              hh,
+    input  wire [SEG/R-1:0]  lo,
+    input  wire [SEG/R-1:0]  hi,
+    input  wire [R*16-1:0]   pcol,
+    input  wire [R*16-1:0]   pcol2,
+    input  wire [SEG*16-1:0] w,
+    output wire [SEG-1:0]    we,
+    output wire [SEG*16-1:0] wd
+);
+    genvar k;
+    generate
+        for (k = 0; k < SEG; k = k + 1) begin : g_k
+            localparam integer GK = SLOT0 + k;
+            wire l = lo[k / R];
+`ifdef OT_S81C_WSEL_MUT
+            // bench negative control: the last segment of the head takes lo for its p-word select (hi <-> lo)
+            wire h = (SLOT0 + SEG == TD) ? lo[k / R] : hi[k / R];
+`else
+            wire h = hi[k / R];
+`endif
+            if (PWORDS == 1) begin : g_w1
+                assign wd[k*16 +: 16] = mode ? pcol[(GK % R) * 16 +: 16] : w[k * 16 +: 16];
+                assign we[k] = v && (mode ? l : hh);
+            end else begin : g_w2
+                assign wd[k*16 +: 16] = !mode ? w[k * 16 +: 16] :
+                                        h ? pcol2[(GK % R) * 16 +: 16] : pcol[(GK % R) * 16 +: 16];
+                assign we[k] = v && (mode ? (l || h) : hh);
+            end
+        end
+    endgenerate
 endmodule
 
 // The tile: H/HG head groups; the same ports and cycles as ot_hdc_v41x_attn_tile_l.

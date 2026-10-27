@@ -252,5 +252,21 @@
   "ref_tile": "physical/ref_tile/s81su_rxsf_ref",
   "suffix": "r1t",
   "why": "S81-CORES-R1 10-27: current-flow kit of the rxsf hard core (75 replicas; repin generator not on main). RTL from the tree: dsfd_su_t_rxsf now m_u2 UFTZ 1 (GEOM-REVIEW-2 08:12 10-25 TT -58.59 m_u2 s2_sh->y), rxsf->rxsb pair lockstep tools/s81_slice/rxsf_uftz_pair_eq.sh PASS + mutant caught."
+ },
+ "ot_s81c_attn_hcore": {
+  "ref_tile": "physical/die_plan/s81/cores/legacy/specs/ot_s81c_attn_hcore",
+  "util": 0.6,
+  "suffix": "r1",
+  "_why": "S81-CORES-R1 2026-10-27: hcore (x1024) re-kit on the modern legacy-generator flow (per-corner vclk, FF-only GRT hold, face_guard + LEC + rtl_lint). Base = bind profile CTLA+RST_TIMED; structural fix variant adds defines OT_S81C_HCORE_WSEL (hgrp_s WSEG=4 kept per-segment write select; GEOM-REVIEW-16 2026-10-26 06:31 u_rc broadcast verdict) via the recipe key ot_s81c_attn_hcore_wsel."
+ },
+ "ot_s81c_attn_hcore_wsel": {
+  "ref_tile": "physical/die_plan/s81/cores/legacy/specs/ot_s81c_attn_hcore",
+  "util": 0.6,
+  "suffix": "r1w",
+  "_why": "S81-CORES-R1 2026-10-27: hcore (x1024) re-kit on the modern legacy-generator flow (per-corner vclk, FF-only GRT hold, face_guard + LEC + rtl_lint). Base = bind profile CTLA+RST_TIMED; structural fix variant adds defines OT_S81C_HCORE_WSEL (hgrp_s WSEG=4 kept per-segment write select; GEOM-REVIEW-16 2026-10-26 06:31 u_rc broadcast verdict) via the recipe key ot_s81c_attn_hcore_wsel.",
+  "plan_module": "ot_s81c_attn_hcore",
+  "defines": [
+   "OT_S81C_HCORE_WSEL"
+  ]
  }
 }
