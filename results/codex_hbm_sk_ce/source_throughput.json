@@ -1,0 +1,11 @@
+{
+  "schema": "opentallas.hbm.ce_source_throughput.v1",
+  "scope": "full-shape isolated tail RTL; no physical timing claim",
+  "results": 40,
+  "all_run_core_edges": 21263,
+  "observed_all_run_edges_per_result": 531.575,
+  "charged_latency_edges": 508,
+  "over_charged_percent": 4.640748031496078,
+  "launch_spacing_edges": 531,
+  "notes": "Overall includes setup/drain; deliberate static launch pacing. Existing functional run, no extra simulation. Physical TT/FF timing remains NOT RUN."
+}
