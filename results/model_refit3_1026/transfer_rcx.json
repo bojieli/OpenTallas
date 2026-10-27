@@ -1,0 +1,255 @@
+{
+ "scope": "MODEL-REFIT-3 GRT->RCX transfer (T8 per-via + T9 per-um/per-stage), fitted on STAGE increments, validated per leaf.",
+ "fit_builds": [
+  "vmr_f4a",
+  "rp1_f4a"
+ ],
+ "test_builds": [
+  "btab_r5"
+ ],
+ "fit": {
+  "C0": -1.9542569695708663,
+  "CV": 0.14434608256608394,
+  "CL": -0.02467709963459873,
+  "CLEAF0": 0.0,
+  "CLEAFL": 0.0,
+  "n_stage": 230,
+  "n_leaf": 0,
+  "stage_resid_sd": 2.6433514410573853,
+  "stage_resid_max": 10.327993141340059,
+  "RFF": 1.7041642567279098
+ },
+ "loo": {
+  "vmr_f4a": {
+   "model": {
+    "C0": -1.4873717208512787,
+    "CV": 0.12772313622246453,
+    "CL": -0.025674134465393433,
+    "CLEAF0": 0.0,
+    "CLEAFL": 0.0,
+    "n_stage": 112,
+    "n_leaf": 0,
+    "stage_resid_sd": 2.8067027432755465,
+    "stage_resid_max": 9.330086251136574,
+    "RFF": 2.2697106183816995
+   },
+   "test": {
+    "TT": {
+     "err_mean": 8.24,
+     "err_sd": 12.59,
+     "err_max": 25.97,
+     "noterm_mean": 11.91,
+     "noterm_max": 40.77,
+     "rcx_meas_mean": 252.66,
+     "rcx_meas_window": 63.28,
+     "rcx_pred_mean": 244.43,
+     "rcx_pred_window": 30.91
+    },
+    "FF": {
+     "err_mean": 2.72,
+     "err_sd": 11.03,
+     "err_max": 24.01,
+     "noterm_mean": 11.07,
+     "noterm_max": 35.42,
+     "rcx_meas_mean": 194.41,
+     "rcx_meas_window": 54.2,
+     "rcx_pred_mean": 191.68,
+     "rcx_pred_window": 52.75
+    }
+   }
+  },
+  "rp1_f4a": {
+   "model": {
+    "C0": -2.8789889254915,
+    "CV": 0.1551407866925339,
+    "CL": -0.010032251736297737,
+    "CLEAF0": 0.0,
+    "CLEAFL": 0.0,
+    "n_stage": 118,
+    "n_leaf": 0,
+    "stage_resid_sd": 2.3968607797293395,
+    "stage_resid_max": 8.920739002087117,
+    "RFF": 1.4319529663994917
+   },
+   "test": {
+    "TT": {
+     "err_mean": -0.71,
+     "err_sd": 13.86,
+     "err_max": 21.41,
+     "noterm_mean": 6.81,
+     "noterm_max": 36.38,
+     "rcx_meas_mean": 245.21,
+     "rcx_meas_window": 71.76,
+     "rcx_pred_mean": 245.92,
+     "rcx_pred_window": 40.26
+    },
+    "FF": {
+     "err_mean": -3.46,
+     "err_sd": 11.04,
+     "err_max": 21.89,
+     "noterm_mean": 7.31,
+     "noterm_max": 32.11,
+     "rcx_meas_mean": 191.83,
+     "rcx_meas_window": 61.78,
+     "rcx_pred_mean": 195.29,
+     "rcx_pred_window": 47.13
+    }
+   }
+  }
+ },
+ "in_sample": {
+  "vmr_f4a": {
+   "TT": {
+    "err_mean": 7.93,
+    "err_sd": 12.19,
+    "err_max": 24.09,
+    "noterm_mean": 11.91,
+    "noterm_max": 40.77,
+    "rcx_meas_mean": 252.66,
+    "rcx_meas_window": 63.28,
+    "rcx_pred_mean": 244.73,
+    "rcx_pred_window": 33.41
+   },
+   "FF": {
+    "err_mean": 4.29,
+    "err_sd": 10.05,
+    "err_max": 21.99,
+    "noterm_mean": 11.07,
+    "noterm_max": 35.42,
+    "rcx_meas_mean": 194.41,
+    "rcx_meas_window": 54.2,
+    "rcx_pred_mean": 190.12,
+    "rcx_pred_window": 46.45
+   }
+  },
+  "rp1_f4a": {
+   "TT": {
+    "err_mean": 3.08,
+    "err_sd": 14.14,
+    "err_max": 22.75,
+    "noterm_mean": 6.81,
+    "noterm_max": 36.38,
+    "rcx_meas_mean": 245.21,
+    "rcx_meas_window": 71.76,
+    "rcx_pred_mean": 242.13,
+    "rcx_pred_window": 38.22
+   },
+   "FF": {
+    "err_mean": 0.95,
+    "err_sd": 11.04,
+    "err_max": 17.24,
+    "noterm_mean": 7.31,
+    "noterm_max": 32.11,
+    "rcx_meas_mean": 191.83,
+    "rcx_meas_window": 61.78,
+    "rcx_pred_mean": 190.87,
+    "rcx_pred_window": 49.29
+   }
+  }
+ },
+ "holdout": {
+  "btab_r5": {
+   "TT": {
+    "err_mean": 10.31,
+    "err_sd": 10.81,
+    "err_max": 30.07,
+    "noterm_mean": 4.26,
+    "noterm_max": 21.84,
+    "rcx_meas_mean": 246.81,
+    "rcx_meas_window": 48.89,
+    "rcx_pred_mean": 236.5,
+    "rcx_pred_window": 21.45
+   },
+   "FF": {
+    "err_mean": 15.06,
+    "err_sd": 11.12,
+    "err_max": 34.09,
+    "noterm_mean": 4.74,
+    "noterm_max": 20.06,
+    "rcx_meas_mean": 189.63,
+    "rcx_meas_window": 42.71,
+    "rcx_pred_mean": 174.57,
+    "rcx_pred_window": 22.33
+   }
+  }
+ },
+ "holdout_by_single_f4a": {
+  "vmr_f4a->btab_r5": {
+   "TT": {
+    "err_mean": 9.6,
+    "err_sd": 10.99,
+    "err_max": 29.75,
+    "noterm_mean": 4.26,
+    "noterm_max": 21.84,
+    "rcx_meas_mean": 246.81,
+    "rcx_meas_window": 48.89,
+    "rcx_pred_mean": 237.21,
+    "rcx_pred_window": 21.66
+   },
+   "FF": {
+    "err_mean": 12.39,
+    "err_sd": 10.76,
+    "err_max": 31.38,
+    "noterm_mean": 4.74,
+    "noterm_max": 20.06,
+    "rcx_meas_mean": 189.63,
+    "rcx_meas_window": 42.71,
+    "rcx_pred_mean": 177.24,
+    "rcx_pred_window": 20.15
+   }
+  },
+  "rp1_f4a->btab_r5": {
+   "TT": {
+    "err_mean": 9.46,
+    "err_sd": 10.55,
+    "err_max": 28.92,
+    "noterm_mean": 4.26,
+    "noterm_max": 21.84,
+    "rcx_meas_mean": 246.81,
+    "rcx_meas_window": 48.89,
+    "rcx_pred_mean": 237.35,
+    "rcx_pred_window": 21.21
+   },
+   "FF": {
+    "err_mean": 16.55,
+    "err_sd": 11.86,
+    "err_max": 36.13,
+    "noterm_mean": 4.74,
+    "noterm_max": 20.06,
+    "rcx_meas_mean": 189.63,
+    "rcx_meas_window": 42.71,
+    "rcx_pred_mean": 173.08,
+    "rcx_pred_window": 25.31
+   }
+  }
+ },
+ "provenance": {
+  "argv": [
+   "py/transfer.py",
+   "transfer_rcx.json"
+  ],
+  "sha256": {
+   "/home/ubuntu/.claude/jobs/b7f906df/tmp/wt/results/model_refit3_1026/py/transfer.py": "7e26bc9fd5ac6267f4e51bdb54c4d3f79f2dce272692326aea7a930439fa0339",
+   "/home/ubuntu/.claude/jobs/b7f906df/tmp/wt/results/model_refit3_1026/py/uf_phys3.py": "b1a3e1f7fc77cfdd904dc192517242df22d709e60c3364e8a077f6f386991348",
+   "/home/ubuntu/.claude/jobs/b7f906df/tmp/wt/results/model_refit3_1026/points/vmr_f4a/grt_TT.tsv": "7ccef39ea249a2ee0842880448bde301293e1b2e3d9bceb4f1bab5644477fdf9",
+   "/home/ubuntu/.claude/jobs/b7f906df/tmp/wt/results/model_refit3_1026/points/vmr_f4a/grt_FF.tsv": "3038677dd5e3e0258e244d3ada2d1afbc0c734c60c950d8eb4434afd686cfb4c",
+   "/home/ubuntu/.claude/jobs/b7f906df/tmp/wt/results/model_refit3_1026/points/vmr_f4a/rcx_TT_prehold.tsv": "11cdb2a0208194a12350726bc5a7a6bc0974ddbb294ac38f562a4c046f580d84",
+   "/home/ubuntu/.claude/jobs/b7f906df/tmp/wt/results/model_refit3_1026/points/vmr_f4a/rcx_FF_prehold.tsv": "d7f431d4a386c4285310c83e3583551fb378b47ffbbd311c634a1d701ebbd9c8",
+   "/home/ubuntu/.claude/jobs/b7f906df/tmp/wt/results/model_refit3_1026/points/vmr_f4a/vias_rcx.tsv": "a55dbc89db94cf33d85477658fc85a9b97f7e3985ea97ad4c50e1bc5d18026f0",
+   "/home/ubuntu/.claude/jobs/b7f906df/tmp/wt/results/model_refit3_1026/points/rp1_f4a/grt_TT.tsv": "5e3866e1a2bd9ea2347dbbe841093eaf5e9e0ba43b7ac054fbb0d6b22861167a",
+   "/home/ubuntu/.claude/jobs/b7f906df/tmp/wt/results/model_refit3_1026/points/rp1_f4a/grt_FF.tsv": "adab1fbcb72f82662f360ef5c75bc31deb1ea16411880b0848729fafbea0d81a",
+   "/home/ubuntu/.claude/jobs/b7f906df/tmp/wt/results/model_refit3_1026/points/rp1_f4a/rcx_TT_prehold.tsv": "07996f89c92e462c1e5ad0429c8a573842db72b47ef682293357650d02a5b190",
+   "/home/ubuntu/.claude/jobs/b7f906df/tmp/wt/results/model_refit3_1026/points/rp1_f4a/rcx_FF_prehold.tsv": "93815c9ea6a2822739166ef2b50c92aa6d7d30b2467bde1793a2e35ba07103b8",
+   "/home/ubuntu/.claude/jobs/b7f906df/tmp/wt/results/model_refit3_1026/points/rp1_f4a/vias_rcx.tsv": "c6cb7228ad3107ff7e584b2ab7b6d457952099f6e13093614e19ec131769f28d",
+   "/home/ubuntu/.claude/jobs/b7f906df/tmp/wt/results/model_refit3_1026/points/btab_r5/meas_grt_TT.tsv": "7db8c1debc69559526f022e12c7d6ab182dfdc0f9b2f3b4e2bc36ec4e008b386",
+   "/home/ubuntu/.claude/jobs/b7f906df/tmp/wt/results/model_refit3_1026/points/btab_r5/meas_grt_FF.tsv": "d401d156b714ad865df43e85e906344c7bafa18c3f9dc2c9de9d1bc69cf99414",
+   "/home/ubuntu/.claude/jobs/b7f906df/tmp/wt/results/model_refit3_1026/points/btab_r5/meas_rcx_TT.tsv": "a793df55fc6a4e80c9f9c1e909b002cbb8c388296365396a7ea7fc1565936d4b",
+   "/home/ubuntu/.claude/jobs/b7f906df/tmp/wt/results/model_refit3_1026/points/btab_r5/meas_rcx_FF.tsv": "2b939b6b213d7dbd855c9d03f8a7e8f03babac7744a2130dff715fb9c042a576",
+   "/home/ubuntu/.claude/jobs/b7f906df/tmp/wt/results/model_refit3_1026/points/btab_r5/vias_rcx.tsv": "5177086c2cebbf7fe379df04e1d6017db77a1c13068478cbe2870b51bcc42601",
+   "/home/ubuntu/.claude/jobs/b7f906df/tmp/wt/results/model_refit3_1026/points/vmr_f4a/nodes_grt_TT.tsv": "d695421ec2c0ab9508324f91cdc1b0d2bf656f55485dea8cefafc860fdd2d708",
+   "/home/ubuntu/.claude/jobs/b7f906df/tmp/wt/results/model_refit3_1026/points/vmr_f4a/nodes_rcx_TT.tsv": "b9f8fc9c91f6054c01ee32a3e35ec48510001af997c89a0a6356f8a668d92372",
+   "/home/ubuntu/.claude/jobs/b7f906df/tmp/wt/results/model_refit3_1026/points/rp1_f4a/nodes_grt_TT.tsv": "61ca7ad0197d2bf625433088b2d15902fd3830e25520ffa1e45dd0b68353ec20",
+   "/home/ubuntu/.claude/jobs/b7f906df/tmp/wt/results/model_refit3_1026/points/rp1_f4a/nodes_rcx_TT.tsv": "89482691f7f776ff9c70a840882665b09eba6ea6587d861d53fe8b436b638bc2"
+  }
+ }
+}

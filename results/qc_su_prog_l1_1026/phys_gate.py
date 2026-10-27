@@ -46,6 +46,12 @@ FIT_FILE = os.environ.get("OT_PHYS_FIT")            # QC-SU-PROG-L2: refitted pa
 if FIT_FILE:
     _F = json.loads(Path(FIT_FILE).read_text())
     PMAX, PMIN, LOO_MAX, FIT_NAME = dict(_F["PMAX"]), dict(_F["PMIN"]), dict(_F["LOO_MAX"]), _F["name"]
+    if _F.get("model") == "uf_phys3":                  # MODEL-REFIT-3 opt-in: uf_phys3 kernel (KSTAGE, BLEAF; GRT basis)
+        sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "model_refit3_1026" / "py"))
+        import uf_phys3 as _V3  # noqa: E402
+        U.predict = _V3.predict3                       # leaf_basis/fast_obj resolve U.predict at call time
+    if "WIN_GUARD" in _F:                              # MODEL-REFIT-3: LOO window under-prediction guard
+        WMAX = 20.0 - max(_F["WIN_GUARD"].values())
 SENS = {
     "textbook": (dict(alpha=0.0, beta=math.log(2), gslew=math.log(9), kleaf=1.2955),
                  dict(alpha=0.0, beta=math.log(2), gslew=math.log(9), kleaf=1.2955)),
