@@ -146,19 +146,21 @@ module dsdv_sel_sort8 #(
     output wire [8*EW-1:0] qn
 );
     localparam integer NS = 6 / CPS;
-    // registered stages: stage s takes the previous register (or d) through CPS exchanges
+    // registered stages: stage s takes the previous register (or d) through CPS exchanges.  S81-CORE-LAT-R17: each
+    // stage's data register is its own vector g_s[s].rd (was one flat r[NS*LW]), so a register bit has the same index in
+    // the RTL and in the netlist (Yosys names the flop after the next stage's t[0]): the kit LEC pairs them by name.
     localparam integer LW = 8 * EW;
-    reg  [NS*LW-1:0] r;
     reg  [NS*FW-1:0] f;
     genvar s, k;
     generate
         for (s = 0; s < NS; s = s + 1) begin : g_s
             wire [LW-1:0] t [0:CPS];
             wire [FW-1:0] fin;
+            reg  [LW-1:0] rd;
             if (s == 0) begin : g_i0
                 assign t[0] = d; assign fin = fi;
             end else begin : g_in
-                assign t[0] = r[LW*(s-1) +: LW]; assign fin = f[FW*(s-1) +: FW];
+                assign t[0] = g_s[s-1].rd; assign fin = f[FW*(s-1) +: FW];
             end
             for (k = 0; k < CPS; k = k + 1) begin : g_k
                 localparam integer IX = CPS * s + k;               // exchange index 0..5
@@ -179,16 +181,15 @@ module dsdv_sel_sort8 #(
             always @(posedge clk or negedge rst_n)
                 if (!rst_n) f[FW*s +: FW] <= {FW{1'b0}}; else f[FW*s +: FW] <= fin;
             if (ZQ != 0 && s == NS - 1) begin : g_z
-                always @(posedge clk) r[LW*s +: LW] <= fin[0] ? t[CPS] : {LW{1'b0}};
+                always @(posedge clk) rd <= fin[0] ? t[CPS] : {LW{1'b0}};
             end else begin : g_r
-                always @(posedge clk) r[LW*s +: LW] <= t[CPS];
+                always @(posedge clk) rd <= t[CPS];
             end
             if (s == NS - 1) begin : g_n
-                assign qn = t[CPS]; assign fn = fin;
+                assign qn = t[CPS]; assign fn = fin; assign q = rd;
             end
         end
     endgenerate
-    assign q  = r[LW*(NS-1) +: LW];
     assign fo = f[FW*(NS-1) +: FW];
 endmodule
 

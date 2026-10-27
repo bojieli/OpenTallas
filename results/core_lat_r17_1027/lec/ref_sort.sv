@@ -5,7 +5,7 @@ module ref_sort #(parameter integer EW = 11, FW = 1, ZQ = 1) (
     input wire clk, input wire rst_n, input wire [FW-1:0] fi, input wire [8*EW-1:0] d,
     output reg [FW-1:0] fo, output reg [8*EW-1:0] q, output reg [FW-1:0] fn, output reg [8*EW-1:0] qn);
     wire [FW-1:0] fo0, fn0; wire [8*EW-1:0] q0, qn0;
-    dsdv_sel_sort8 #(.EW(EW), .CPS(3), .FW(FW), .ZQ(ZQ)) u (.clk(clk), .rst_n(rst_n), .fi(fi), .d(d), .fo(fo0), .q(q0), .fn(fn0), .qn(qn0));
+    old_dsdv_sel_sort8 #(.EW(EW), .CPS(3), .FW(FW), .ZQ(ZQ)) u (.clk(clk), .rst_n(rst_n), .fi(fi), .d(d), .fo(fo0), .q(q0), .fn(fn0), .qn(qn0));
     always @(posedge clk or negedge rst_n) if (!rst_n) begin fo <= 0; fn <= 0; end else begin fo <= fo0; fn <= fn0; end
     always @(posedge clk) begin q <= q0; qn <= qn0; end
 endmodule
