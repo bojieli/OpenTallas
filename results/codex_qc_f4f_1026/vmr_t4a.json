@@ -1,0 +1,216 @@
+{
+ "TT_rise": {
+  "mean": 267.36,
+  "min": 261.84,
+  "max": 272.21,
+  "window": 10.37
+ },
+ "TT_early": {
+  "mean": 257.12,
+  "min": 251.75,
+  "max": 262.06,
+  "window": 10.31
+ },
+ "TT_late": {
+  "mean": 289.94,
+  "min": 284.33,
+  "max": 295.34,
+  "window": 11.01
+ },
+ "FF_rise": {
+  "mean": 210.82,
+  "min": 205.75,
+  "max": 215.67,
+  "window": 9.92
+ },
+ "FF_early": {
+  "mean": 201.69,
+  "min": 197.0,
+  "max": 206.51,
+  "window": 9.51
+ },
+ "FF_late": {
+  "mean": 221.81,
+  "min": 215.46,
+  "max": 227.48,
+  "window": 12.02
+ },
+ "gate": {
+  "verdict": "FAIL",
+  "checks": {
+   "TT_mean": false,
+   "FF_mean": true,
+   "TT_window": true,
+   "FF_window": true
+  },
+  "band": {
+   "TT_rise_mean": [
+    241.0,
+    259.0
+   ],
+   "FF_early_mean": [
+    192.5,
+    212.5
+   ],
+   "window_max": 14.0
+  },
+  "rule": "build only if predicted TT rise mean in 250+-(20-11), FF early mean in 202.5+-(20-10), both windows <=20 (COORD RULING MODEL-REFIT-2; guard = LOO max per-leaf error of the fit in use: uf_phys3 v1 (MODEL-REFIT-3 2026-10-26): uf_phys + KSTAGE + BLEAF, GRT basis, 10 builds)"
+ },
+ "sensitivity": {
+  "textbook": {
+   "params": {
+    "max": {
+     "alpha": 0.0,
+     "beta": 0.6931471805599453,
+     "gslew": 2.1972245773362196,
+     "kleaf": 1.2955
+    },
+    "min": {
+     "alpha": 0.0,
+     "beta": 0.6931471805599453,
+     "gslew": 2.1972245773362196,
+     "kleaf": 1.2955
+    }
+   },
+   "TT_rise": {
+    "mean": 255.75,
+    "min": 248.94,
+    "max": 267.93,
+    "window": 18.99
+   },
+   "FF_early": {
+    "mean": 200.74,
+    "min": 194.34,
+    "max": 211.93,
+    "window": 17.6
+   },
+   "delta_vs_gate": {
+    "TT_rise_mean": -11.61,
+    "TT_rise_window": 8.62,
+    "FF_early_mean": -0.95,
+    "FF_early_window": 8.09
+   },
+   "gate_under_these_params": "FAIL"
+  },
+  "ln2_fit": {
+   "params": {
+    "max": {
+     "alpha": 0.0,
+     "beta": 0.69,
+     "gslew": 3.0,
+     "kleaf": 1.2955
+    },
+    "min": {
+     "alpha": 0.2,
+     "beta": 0.69,
+     "gslew": 2.2,
+     "kleaf": 1.2955
+    }
+   },
+   "TT_rise": {
+    "mean": 259.29,
+    "min": 252.52,
+    "max": 270.23,
+    "window": 17.71
+   },
+   "FF_early": {
+    "mean": 198.61,
+    "min": 192.23,
+    "max": 209.25,
+    "window": 17.01
+   },
+   "delta_vs_gate": {
+    "TT_rise_mean": -8.07,
+    "TT_rise_window": 7.34,
+    "FF_early_mean": -3.08,
+    "FF_early_window": 7.5
+   },
+   "gate_under_these_params": "FAIL"
+  }
+ },
+ "params": {
+  "max": {
+   "alpha": 0.2,
+   "beta": 0.45,
+   "gslew": 4.0,
+   "bleaf": 0.25,
+   "kstage": 1.5,
+   "kleaf": 1.2868
+  },
+  "min": {
+   "alpha": 0.2,
+   "beta": 0.5,
+   "gslew": 3.0,
+   "bleaf": 0.25,
+   "kstage": 0.75,
+   "kleaf": 1.2868
+  },
+  "loo_max": {
+   "TT": 11,
+   "FF": 10
+  },
+  "fit": "uf_phys3 v1 (MODEL-REFIT-3 2026-10-26): uf_phys + KSTAGE + BLEAF, GRT basis, 10 builds",
+  "fit_file": "/srv/opentallas-scratch2/claude/wt/codex-qc-f4f-2000/results/model_refit3_1026/uf_phys3_v1.json"
+ },
+ "provenance": {
+  "argv": [
+   "/usr/bin/python3",
+   "/srv/opentallas-scratch2/claude/wt/codex-qc-f4f-2000/results/qc_su_f4d/pred/f4d_pred3.py",
+   "/srv/opentallas-scratch2/claude/wt/codex-qc-f4f-2000",
+   "/srv/opentallas-scratch2/claude/wt/codex-qc-f4f-2000/results/codex_qc_f4f_1026/vmr_t4a.tcl",
+   "/srv/opentallas-scratch2/claude/wt/codex-qc-f4f-2000/results/qc_su_f4c/plan/vmr_placed.geo",
+   "/srv/opentallas-scratch2/claude/master-plan-r4-1026/su_refloor",
+   "/srv/opentallas-scratch2/claude/wt/codex-qc-f4f-2000/results/codex_qc_f4f_1026/vmr_t4a.json",
+   "m56"
+  ],
+  "cwd": "/home/ubuntu",
+  "predictor_call": [
+   "phys_gate.predict_file",
+   "/srv/opentallas-scratch2/claude/wt/codex-qc-f4f-2000/results/codex_qc_f4f_1026/vmr_t4a.tcl",
+   "/tmp/tmpc826uo1o.json",
+   "/srv/opentallas-scratch2/claude/wt/codex-qc-f4f-2000/results/qc_su_f4c/plan/vmr_placed.geo",
+   "/srv/opentallas-scratch2/claude/master-plan-r4-1026/su_refloor"
+  ],
+  "sha256": {
+   "/srv/opentallas-scratch2/claude/wt/codex-qc-f4f-2000/results/codex_qc_f4f_1026/vmr_t4a.tcl": "3f99b1e6f70f6e3eb0ede45f9e2acc95d9090c9ed01e25ce9668ef0373cb81bf",
+   "/tmp/tmpc826uo1o.json": "6208796d2ed2a98cb674f992e13e9060d46b771d0091a1e44d2d4b974e3088fd",
+   "/srv/opentallas-scratch2/claude/wt/codex-qc-f4f-2000/results/qc_su_f4c/plan/vmr_placed.geo": "9e6cf475894efa18c0882ae9dea65fdf93dd5a3096561570d385f9d4d44df615",
+   "/srv/opentallas-scratch2/claude/master-plan-r4-1026/su_refloor/invbuf_tt.lib": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+   "/srv/opentallas-scratch2/claude/master-plan-r4-1026/su_refloor/invbuf_ff.lib": "806848fed619856aa96f4965a2e6cc3d5a3b9bb39494bbdad5abd0cc6219ea26",
+   "/srv/opentallas-scratch2/claude/wt/codex-qc-f4f-2000/results/qc_su_prog_l1_1026/phys_gate.py": "8b0cd6026724baa0c446eb3b5816b6ef71c8549d593530cd98205cbb0d294e14",
+   "/srv/opentallas-scratch2/claude/wt/codex-qc-f4f-2000/results/model_refit2_1026/py/uf_phys.py": "d7427e6d1f1ca699558cb42e89100192e8975b517832d345f7f2ebedf4b041ea",
+   "/srv/opentallas-scratch2/claude/wt/codex-qc-f4f-2000/results/model_refit2_1026/py/uf_phys_predict.py": "37311b8df3c3b849294a0b1217dc037b3b3fe71e6656e915f424b31ff10bdd94",
+   "/srv/opentallas-scratch2/claude/wt/codex-qc-f4f-2000/results/model_refit2_1026/py/common.py": "9ecbd3cf512a19a8ef090869eef8f803e473b30a0857841a802980cda16c6a7e",
+   "/srv/opentallas-scratch2/claude/wt/codex-qc-f4f-2000/results/model_refit2_1026/py/lib.py": "993fd4175bb75d7f72101ead4c3af9b8abd43a51d90af95651bd0e105682d630",
+   "/srv/opentallas-scratch2/claude/wt/codex-qc-f4f-2000/results/model_refit3_1026/uf_phys3_v1.json": "cef9c3672fc8aa6b5410afc461747846132eaa17424589c624272ba77e21a990"
+  }
+ },
+ "scope": "PLAN MODEL uf_phys (MODEL-REFIT-2), UNCHECKED",
+ "coord_band_1026": {
+  "TT": "250+-9",
+  "FF": "202.5+-10",
+  "window": 14,
+  "inside": false
+ },
+ "island_leaves": {
+  "Q0": 8,
+  "Q1": 8,
+  "Q2": 8,
+  "Q3": 8,
+  "Q4": 8,
+  "Q5": 8,
+  "Q6": 8,
+  "Q7": 8
+ },
+ "island_sinks": {
+  "Q0": 478,
+  "Q1": 478,
+  "Q2": 478,
+  "Q3": 456,
+  "Q4": 456,
+  "Q5": 455,
+  "Q6": 455,
+  "Q7": 455
+ },
+ "layers": "m56"
+}

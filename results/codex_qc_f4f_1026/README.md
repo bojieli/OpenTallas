@@ -1,0 +1,7 @@
+QC F4F common entry trunk proposal / calibration, 2026-10-26
+
+F4E completed DRC0, strict non-tree M6=0 on pass4, LEC vmr5342/rp13703 EQUIVALENT; both NOT SIGNED. VMR TTsetup140.86/FFhold-55.67, clock170.50TT/130.21FFearly, TT window19.9/FFearly19.8. RP1 TTsetup234.95/FFhold-54.44, clock178.52TT/136.15FFearly, windows23.8/21.6. The straight-leg design removed51% balancing meander without restoring the common entry latency. Plan-fixed common entry delay (12.8c) is the structural successor; zero data/reset cycles.
+
+uf_phys3v1 unchanged. Its parser ignores ot_h_entry_n, so F4F expresses the common trunk as ordinary tree nodes understood by both the predictor and mscts_h. VMR4newnodes uses8,8,12f,24; rp13 uses8,8,24. All sites are inside the existing8.64um root island, outside4.32um SRAM halos; no clock sinks in the surrounding30x16um window, node footprints separate. Viewed vmr_review.png and rp1_final_review.png: PASS-COND for CTS+GRT calibration only. Each new edge is Manhattan, maximum5.4um, no long detours and no per-tap trims. Existing8x8 islands/leaves/membership unchanged.
+
+Pre-build guard: VMR256.31TT/window10.56, FFearly193.14/window9.00; RP1257.01TT/window13.82, FFearly193.50/window12.33. Both inside the declared TT241..259, FF192.5..212.5, window14 guard. Failed variants retained as plan-model failures. Predictor GRT basis; routed RCX required before adoption. Inherited rp1 RCX window23.8 still a structural/residual item, so no DRT/sign-off launch until calibration and a new review resolve it. No SIGNED claim.
