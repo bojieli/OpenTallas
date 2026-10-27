@@ -236,8 +236,11 @@ def face_cover(netlist, pins_json, top=None, die_plan_dir=None, clock_ports=(), 
     start_o_*, must have its own face register."""
     if not netlist or not Path(netlist).is_file():
         return st(None, "no netlist")
-    sys.path.insert(0, str(die_plan_dir or (HERE.parent / "die_plan")))
-    import face_guard as FG
+    import importlib.util
+    guard_path = Path(die_plan_dir or (HERE.parent / "die_plan")) / "face_guard.py"
+    spec = importlib.util.spec_from_file_location("_canary_face_guard", guard_path)
+    FG = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(FG)
     pins = jload(pins_json) if pins_json else None
     skip = CLOCK_ONLY_SKIP_RE
     named = list(clock_ports) + list(reset_ports)
@@ -372,8 +375,14 @@ def check_run(run, spec=None, die_plan_dir=None):
     meta = jload(run / "canary_meta.json") or {}
     spec = spec or meta.get("spec") or {}
     kit = Path(meta.get("kit") or (run / "kit"))
-    if die_plan_dir is None and meta.get("src"):
-        die_plan_dir = Path(meta["src"]) / "tools" / "die_plan"
+    if die_plan_dir is None:
+        # The submitting worktree may be removed after merge. Use the checker
+        # copied from that exact source when the canary was submitted.
+        pinned = run / "checker_tools" / "die_plan"
+        if (pinned / "face_guard.py").is_file():
+            die_plan_dir = pinned
+        elif meta.get("src"):
+            die_plan_dir = Path(meta["src"]) / "tools" / "die_plan"
     req = spec.get("require", list(STAGES))
     base = first(f"{kit}/run/results/asap7/*/base")
     logs = first(f"{kit}/run/logs/asap7/*/base")
@@ -555,6 +564,10 @@ def cmd_submit(a):
         kit = fmt(c["kit"], **kv)
         kv["kit"] = kit
         (run / "canary.py").write_text((HERE / "canary.py").read_text())
+        checker_dir = run / "checker_tools" / "die_plan"
+        checker_dir.mkdir(parents=True, exist_ok=True)
+        # Pin to the submitted source, not the trigger's installed version.
+        (checker_dir / "face_guard.py").write_bytes((src / "tools" / "die_plan" / "face_guard.py").read_bytes())
         rtl = HERE.parent / "die_plan" / "rtl_lint.py"
         if rtl.is_file():
             (run / "rtl_lint.py").write_text(rtl.read_text())
