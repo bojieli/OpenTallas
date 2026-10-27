@@ -1481,5 +1481,12 @@
  },
  "reset_grid_data_cycles_added": 0,
  "full_wavefront_regeneration": "PENDING feature source import",
- "g0_initial_35_R8_errors": "Wrong extra overwrite of historical generic R8 table with native position2144 table; restored separate historical generic pair, native actual recipe pair retains new205station tables."
+ "g0_initial_35_R8_errors": "Wrong extra overwrite of historical generic R8 table with native position2144 table; restored separate historical generic pair, native actual recipe pair retains new205station tables.",
+ "reset_local_feature_commits": [
+  "e2c0eb95f",
+  "aa74a3105",
+  "7beec5b1d"
+ ],
+ "native_bind_feature_source": "853eae3774",
+ "native_recipe": "physical/die_plan/qwen_kvsys/dcal_rom/bind/position2144b19/recipe_kv_2350.json"
 }
