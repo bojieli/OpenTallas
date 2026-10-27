@@ -71,3 +71,6 @@ Parked clean codex/hbm-trial-1025@b69457889 pushed. IsolatedPHY remedyPASS5/5(20
 CODEX current-trial work is actualHcorridor/densitycoupon on q_b001/q_b011, preservingreal3coreOBS+31FTslots; inheritedPHY5IRPASS remainsblockedcoupledclockPG andcurrentdie. epyc3retired, no stalejobclaimedlive. No new full-dieIR beforecurrentplan/clock geometry settles.
 
 2026-10-25 23:26 PDT CODEX bank probe successor: exact primary_final geometry image f54fe7a2d reviewed, true M7 core OBS and actual FT stations, conservative6 face budget. Reset realFF+BUFx4f joint footprint PLAN_ONLY PASS q_b00199pairs/196cells and q_b010112pairs/222cells on actual rows and3growncores. Fresh bank_g2/plan_relay+source_relay generated with relay_driver/pad_spread=true from fused50c2+7386+590 source. Generation epyc1 unit3607339-1792995598, client3601906; no P&R yet. Old bare-reset prototypes retained unused; no12/um receipt or fullclock/PG claim.
+
+## CODEX notes 2026-10-26 20:03 PDT
+CODEX collected R12 die signalGRT50 ovf0 KIT rc1, stale replicated-core clock taps root cause now repaired in optin postpass (PATH-HBM). Last partial-M5 root-only FAIL1437784 vs bank-only1196448, allM5=0: both core families needM5. Prior isolatedPHYIR passes remain historical until corrected currentPG+clock. No full-die rerun before geometry review.

@@ -588,3 +588,6 @@ CODEX took over CLKSTRUCT/generic core continuation on codex/hbm-rest-1025. Coll
 
 ## CODEX notes 2026-10-25 22:06 PDT
 CODEX current physical efforts consolidated PATH-HBM: TKMcommon/terminal CTS-onlycorrectives running, rootpipeline exactnessPASS thenfreshkit, q3sync sourceprofile kitgating. LegacyF6/clock/boundaryFAIL records retained; never blanketroute failedoldviews. Full lane task coverage coord/codex-hbm-coverage.md.
+
+## CODEX notes 2026-10-26 20:03 PDT
+CODEX consolidated under PATH-HBM/HBM-CORE-LAT: legacy idx/xp/hc/bankq/gq geometry failures retained. Not launching old near-miss kits because current B1/R13 interfaces+clock/master-plan unresolved. ROOT actual LEC closure retained; new physical work proceeds on current hub plan.
