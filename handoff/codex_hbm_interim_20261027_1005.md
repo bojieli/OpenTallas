@@ -34,3 +34,8 @@ Work continues until explicit reset notice. Parent /root/hbm; children plan, cor
 - HCP412diff frozen diagnostic9250/9662, conditionalinitialized-state +removedd0; shared FLOW/LEC owns, no RTLdefect shown/no staticvariant ready. ctlx conditional iss_on=>!EW8 lemma proved+mutant, fullcurrentcorestillopen; pc_ctrl vector folding proofgap sharedFLOW; sourcehint receipts are not SIGNED.
 - Foreign legacy Serdes place nonconvergence and idletopkLEC left running, no kills/duplicates. Old pslice rawclockstarGRT not planned-clock qualification.
 - Only HBM owner item is CE/div7 timing contract in CODEX-LOG08:30. Do not decide MCP/newclock. Other programme calendar missing is actual source dependency, not an invented owner waiver. No other new blocking dialogs.
+
+## 10:07 corrections from live owners
+- C11b snapshot intel2 codex-hbm-plan-0815/c11b is UNADOPTED: pins/clockislands/81taplists only, quarter restoration NOT composed. Latest source7e334cab51 typedHCschemafixture+negative done. No plan-owned heavy job active; Q3aliasread-only child onintel1 live.47pin6violations remain31core/16partition; 4roleVMS application and12basebusclockcontracts unresolved. Next quartercollider repack, nativecounts/PGledger ONEcandidate.
+- XS3 actualsourceadjacency extraction DONE exit0 unit2330536,6336FF-portincidences, sourcegraphreceipt df9e91246b cherry-only; physicalpack remains parked. Nativebank3rd_out20capturesvs256others is actual source fact, no invented flops on constantports.
+- Steady synth DONE175222cells/16399.32um2/CHECK0, but actualLEC remains live healthyFRAIG/SAT99.9%CPU42min; not terminal/failure, no duplicate.
