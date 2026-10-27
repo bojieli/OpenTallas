@@ -2222,3 +2222,5 @@ READY GATED [AP ALL-KIT 2026-10-27 08:47 PDT] codex/autopilot-signoff-1027@8e680
 
 READY [KV ALIAS 2026-10-27 08:47 PDT] codex/canary-alias-1027@f8e8f69222 supersedes 3b60: canonical canary AND closure guards, 46 tests PASS; no held-type bypass.
 READY [CODEX TOK-DS 08:47 PDT] codex/tok-ds-0815@cc0ede342: 4currentframe source/planextractionsPASS + currentb178L0compilePASS65ops23LOWERED41PARTIAL1GAP; actualLK/sourcecalendar propagation and compilerfailureexitfix; ownfocusedmutantsPASS. Includespendingphysicalc3ddfi2prereq; reviewthatwithS81ownerbeforeplainmerge. NoRTL/token/signoffclaim. Newresults/token_pass/tokds_codex_1027 retainsoldfailures.
+
+READY [CODEX HBM HC 2026-10-27 08:47 PDT] codex/hbm-hc-alpha-1027@6a09097e23: native HC emitter identifier correction (source1ce14a5da1; base claude/hbm-cores-r8-1027@1add09346a). Six focused controls, actual Slang parse2/2, fresh pair-first generator integration PASS; no cycle/port/logic changes, no physical runs. Requires R8 native emitter dependency, not a top-level plan change.

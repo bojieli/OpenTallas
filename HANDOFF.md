@@ -1378,3 +1378,5 @@ CODEX: 2026-10-27 08:46 PDT RM47 main 6fc74684f0 == origin/main; QC native group
 
 CODEX: 2026-10-27 08:47 PDT AP dispatch repair 1895efef9e: real no-SPILL epyc2 stub PASS; gated all-kit bootstrap 8e680fa910: 98 tests + real checker negative control PASS; guarded KV alias f8e8f69222: 46 tests PASS. No child-owned live jobs.
 CODEX: 2026-10-27 08:47 PDT TOK-DS currentb178L0compilePASS23/41/1 with4realframecalendarplanPASS; sourcecc0ede342 READY, L2/L14/L20compilelive. ROWXwrappermiter40cycles/15profilesPASS; SRAM/physical/bridgeintegrationownersassigned.
+
+CODEX: 2026-10-27 08:47 PDT HBM HC source-profile frontend fix READY6a09097e23: byte-invertible module/instance alpha rename, ports/logic unchanged;6 controls+2 actual parser controls+fresh1078-pin pair-first generator PASS. Cores owner regenerates kits; no new physical run.
