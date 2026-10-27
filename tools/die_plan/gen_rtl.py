@@ -16,7 +16,11 @@ Per non-hard partition type, DIR/<module>.sv:
   - every ft slot S: a chain of `stations` ot_dp_st from S_i to S_o (data + epoch in band, the Qwen ot_qfd_lane_st
     pattern on the partition clock; no reset on data).
   - leaf instances bound by NAME: bus.leaf "inst.port" and contents[].bind {port: clk | rst_n | rst | net:N | bus:B |
-    epoch:B}.  Nothing is tied: a constant is never generated.  With --rtl-root the leaf modules' ANSI headers are
+    epoch:B | strap:S | pad:D}.  Nothing is tied inside a partition: a constant is never generated there.
+  - HEAD-BIND-4 10-27 (OWNER 10-25 option B): type id_straps -> input ports strap_* bound to leaves as strap:<name> (no
+    pin register); the die top ties each instance's partitions[].id_straps value as a literal on those pins (the only
+    constants the die top carries, listed in DIR/parent_id_straps.json for straps.audit_top_ties).  Type pads -> PHY
+    pad ports bound to leaves as pad:<name> with NO boundary flop, carried to die-top ports <part>_<name>.  With --rtl-root the leaf modules' ANSI headers are
     parsed from the type's `sources` and every leaf port must be bound exactly (unbound or unknown ports are errors).
   - OWNER RESET RULE 10-24 (plan reset.release "pipelined", tools/die_plan/reset_tree.py): no per-partition async
     synchroniser.  arst_n enters through ONE stage at the reset pin -- the region root synchroniser u_rst_root in a
@@ -301,6 +305,12 @@ def wrapper(P, tn, epochs, rtl_root=None):
         note = f"{b['width']} data" + (f" + epoch [{b['width']}]" if b["ep"] else "") + \
             (f", leaf {b['leaf']}" if b.get("leaf") else "")
         ports.append((f"{d} wire [{w - 1}:0] {sv_id(b['name'])}", note))
+    for sp in t.get("id_straps", []):
+        ports.append((f"input  wire [{sp['width'] - 1}:0] {sp['name']}", "ID strap (OWNER 10-25 B): quasi-static, tied "
+                      "at the parent per instance, no pin register, set_false_path -from in the kit SDC"))
+    for pd in t.get("pads", []):
+        ports.append((f"{'input ' if pd['dir'] == 'in' else 'output'} wire [{pd['width'] - 1}:0] {sv_id(pd['name'])}",
+                      "PHY pad (no boundary flop: PHY-side timing)" + (", PHY clock" if pd.get("clock") else "")))
     for s in slots:
         for sfx, d in (("_i", "input "), ("_o", "output")):
             w = s["width"] + (1 if epochs.get((tn, s["name"] + sfx), True) else 0)
@@ -418,6 +428,10 @@ def wrapper(P, tn, epochs, rtl_root=None):
         decl.append(f"    wire [{nt['width'] - 1}:0] n_{sv_id(nt['name'])};")
         sig[f"net:{nt['name']}"] = f"n_{sv_id(nt['name'])}"
     sig["clk"], sig["rst_n"], sig["rst"] = "clk", "rst_n", "rst"
+    for sp in t.get("id_straps", []):
+        sig[f"strap:{sp['name']}"] = sp["name"]
+    for pd in t.get("pads", []):
+        sig[f"pad:{pd['name']}"] = sv_id(pd["name"])
     if rtree is not None and rtree.get("start_tap") is not None:
         sig["start"] = f"start_t{rtree['start_tap']}"     # bootstrap type: local registered START (reset AND run)
     # leaf bindings: contents[].bind plus bus.leaf
@@ -443,6 +457,13 @@ def wrapper(P, tn, epochs, rtl_root=None):
             raise GenError(f"type {tn}: bus {b['name']} is not bound to any leaf port (open {'input' if b['dir'] == 'in' else 'output'})")
         if b["dir"] == "out" and len(use[k]) != 1:
             raise GenError(f"type {tn}: out bus {b['name']} driven by {len(use[k])} leaf ports {use[k]}")
+    for sp in t.get("id_straps", []):
+        if not use.get(f"strap:{sp['name']}"):
+            raise GenError(f"type {tn}: id strap {sp['name']} is not bound to any leaf port")
+    for pd in t.get("pads", []):
+        k = f"pad:{pd['name']}"
+        if not use.get(k) or (pd["dir"] == "out" and len(use[k]) != 1):
+            raise GenError(f"type {tn}: pad {pd['name']} must bind {'exactly one leaf port' if pd['dir'] == 'out' else 'a leaf port'}: {use.get(k)}")
     for nt in t.get("nets", []):
         if len(use.get(f"net:{nt['name']}", [])) < 2:
             raise GenError(f"type {tn}: net {nt['name']} has {len(use.get('net:' + nt['name'], []))} leaf ports")
@@ -485,6 +506,10 @@ def die_top(P, epochs, dropped=None):
         else:
             wires.append(f"    wire [{n - 1}:0] w_{sv_id(pid)};  // {pr['src']['part']}.{pr['src']['bus']} -> "
                          f"{pr['dst']['part']}.{pr['dst']['bus']}")
+    for name, p in P.parts.items():
+        for pd in P.types[p["type"]].get("pads", []):
+            io.append(f"    {'input ' if pd['dir'] == 'in' else 'output'} wire [{pd['width'] - 1}:0] "
+                      f"{sv_id(name)}_{sv_id(pd['name'])}")
     conn = {}
     for pid, pr in P.ports.items():
         if pr["src"]["part"] == S.DIE_PART:
@@ -519,7 +544,9 @@ def die_top(P, epochs, dropped=None):
             [f"        .{n}({wouts.get(name, {}).get(n, '')})" for n, _, _ in RT.out_pins(P, p["type"])] + \
             ([f"        .start_i({snet[name]})"] if name in snet else []) + \
             [f"        .{n}({wouts.get(name, {}).get(n, '')})" for n, _, _ in RT.start_out_pins(P, p["type"])] + \
-            [f"        .{sv_id(b)}({net})" for b, net in sorted(conn.get(name, []))]
+            [f"        .{sv_id(b)}({net})" for b, net in sorted(conn.get(name, []))] + \
+            [f"        .{sp['name']}({sp['width']}'d{int(p['id_straps'][sp['name']])})" for sp in t.get("id_straps", [])] + \
+            [f"        .{sv_id(pd['name'])}({sv_id(name)}_{sv_id(pd['name'])})" for pd in t.get("pads", [])]
         insts.append(f"    {t['module']} {sv_id(name)} (\n" + ",\n".join(cs) + "\n    );")
     mod = f"{sv_id(P.name)}_top"
     return (f"// GENERATED by tools/die_plan/gen.py rtl: die top of {P.name} (partitions abutted; die nets = clk spine,\n"
@@ -549,4 +576,20 @@ def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None):
     f = out / f"{sv_id(P.name)}_top.sv"
     f.write_text(die_top(P, ep))
     files.append(f)
+    man = parent_id_manifest(P)
+    if man["types"]:
+        import json
+        f = out / "parent_id_straps.json"
+        f.write_text(json.dumps(man, indent=1) + "\n")
+        files.append(f)
     return files
+
+
+def parent_id_manifest(P):
+    """the binder-manifest form (straps.manifest_straps / audit_top_ties) of the plan's partition ID straps."""
+    types = {tn: {sp["name"]: dict(width=sp["width"]) for sp in t.get("id_straps", [])}
+             for tn, t in sorted(P.types.items()) if t.get("id_straps")}
+    inst = {n: {k: dict(width=types[p["type"]][k]["width"], value=v) for k, v in sorted(p["id_straps"].items())}
+            for n, p in sorted(P.parts.items()) if p["type"] in types}
+    return dict(schema="opentallas.parent_id_straps.v1", types=types, instances=inst, added_data_cycles=0,
+                source="die_plan partition_types.<t>.id_straps + partitions[].id_straps (gen_rtl.die_top literals)")

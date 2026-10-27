@@ -1685,7 +1685,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         reach=None, detour=405.0, core_obs_top="M5", lower_pg_frac=0.25, fill_max=0.6, bay_fill=0.5,
         track_max=0.6, core_reach_um=200.0, entry_tol=0.5, core_tol_ps=20.0, skew_gate_ps=80.0, render=True, log=print,
         core_islands=None, tree_lattice=None, tree_comm_form="die", onramp_bays=False, drop_mesh_early=False,
-        tree_roads=False, region_dist=False):
+        tree_roads=False, region_dist=False, declared_slots=False):
     reach = float(reach or P.reach)
     out = Path(out)
     (out / "slices").mkdir(parents=True, exist_ok=True)
@@ -2102,6 +2102,9 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         t = P.types[tn]
         if islands.get(tn):
             isl_decl.append(IS.rect_pts(P, part, islands[tn]["rect_um"]))
+        if declared_slots:   # INFRA-FIRST-HEAD-4 opt-in: plan-declared clock slots (clock.die_islands_um, type frame)
+            for sl in (t.get("clock") or {}).get("die_islands_um", []) or []:
+                isl_decl.append(IS.rect_pts(P, part, sl))
         if t.get("hard_cores"):
             glue_parts.append(P.rect(part))
         for h in t.get("hard_cores", []):
@@ -2160,6 +2163,9 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         if islands.get(tn):
             isl_inst.append(dict(kind="partition", part=part, inst=part, role="die_node",
                                  rect_um=IS.rect_pts(P, part, islands[tn]["rect_um"])))
+        for k_, sl in enumerate((P.types[tn].get("clock") or {}).get("die_islands_um", []) or [] if declared_slots else []):
+            isl_inst.append(dict(kind="partition_slot", part=part, inst=f"{part}/slot{k_}", role="clock_slot",
+                                 rect_um=IS.rect_pts(P, part, sl)))
         for h in P.types[tn].get("hard_cores", []):
             e = entry[h["module"]]
             isl_inst.append(dict(kind="core", part=part, inst=f"{part}/{h['inst']}", role="clock_entry",
@@ -2276,7 +2282,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
                                           note="R5 die-wide form, INFO only under the regional ruling")
         tree_comm["core_lattice"] = die_form.get("core_lattice")
     rulings = dict(clock_rep_sites=rep_gate, tap_region_containment=MR.tap_region_containment(Mx, P),
-                   footless_stubs=MR.footless_stubs(Mx), island_ft_inputs=MR.island_ft_inputs(Mx, isl_inst))
+                   footless_stubs=MR.footless_stubs(Mx), island_ft_inputs=MR.island_ft_inputs(Mx, isl_inst, slot_ties=declared_slots))
     tap_in_phy = sorted(tn for tn, v in phy.items() if v.get("plan_tap_inside_phy"))
     sites["plan_taps_inside_phy"] = tap_in_phy
     if tap_in_phy:
@@ -2640,6 +2646,9 @@ def add_args(p):
     p.add_argument("--tree-lattice", default=None, help="opt-in die H-tree lattice (die_tree_plan.json lattice + gate "
                                                          "tree_lattice): NXxNY regular bbox lattice (R4) or cNXxNY = "
                                                          "channel-cross lattice, pitch = core-array multiple (R5)")
+    p.add_argument("--declared-slots", action="store_true",
+                   help="opt-in INFRA-FIRST-HEAD-4: the plan-declared clock slots partition_types[t].clock.die_islands_um "
+                        "(type frame) count as declared islands for clock_sites / island_lattice / island_ft_inputs")
     p.add_argument("--onramp-bays", action="store_true", help="opt-in R4 12.7a on-ramp repeater bays on M8/M9 legs")
     p.add_argument("--drop-mesh-early", action="store_true", help="opt-in R4 12.8: drop input-mesh early tap offsets "
                                                                   "from the plan (listed for the clock owner)")
@@ -2672,7 +2681,7 @@ def cmd(a):
                     core_islands=json.loads(Path(a.core_islands).read_text()) if a.core_islands else None,
                     tree_lattice=parse_tree_lattice(a.tree_lattice) if a.tree_lattice else None,
                     tree_comm_form=a.tree_commensurate, onramp_bays=a.onramp_bays, drop_mesh_early=a.drop_mesh_early,
-                    tree_roads=a.tree_roads, region_dist=a.region_dist)
+                    tree_roads=a.tree_roads, region_dist=a.region_dist, declared_slots=a.declared_slots)
     print(json.dumps(dict(die=mp["die"], verdict=mp["verdict"], gates=mp["gates"], census=mp["census"]), indent=1))
     return 0 if mp["verdict"] == "PASS" else 1
 

@@ -10,13 +10,17 @@
 // absorbs it; tile bench).
 // HEAD-CORE-LAT-R6 10-26 (RULING HEAD-CORE-LAT-R5 (2), no silent dangling): B's l_v / l_d / done / best_row /
 // best_bits / best_key were unconnected in the bundle (proven unused: nc_* wires with no load) -> REMOVED from this
-// macro; their element cones are dead and synthesis drops them.  row0 / b_v / b_d stay as PROVEN-DEAD inputs (JOIN 0
-// never reads them; flattened yosys no-fanout proof results/head_core_lat_r6_1026/elemB/dead_inputs.json), tied 0 at
-// the parent only under that declaration; the old kept face register u_bin_jn (50 flops, q unused) is deleted.
+// macro; their element cones are dead and synthesis drops them.  The old kept face register u_bin_jn (50 flops, q unused)
+// is deleted.
+// HEAD-CORE-R14 10-27 (COORD RULING HEAD-CORE-R13 ASK2 (a)): the PROVEN-DEAD inputs row0[16:0] / b_v / b_d[31:0] (JOIN 0
+// never reads them; flattened yosys no-fanout proof results/head_core_lat_r6_1026/elemB/dead_inputs.json) are REMOVED
+// from the macro (50 ports; the parent ties go too).  The element's row0/b_v/b_d inputs are constant 0 inside the
+// wrapper, i.e. the value the parent tied before: LEC vs the r11 RTL / its proven netlist (head_core_r14 README).
+// Synthesis source: the kit's 12.2a1 pushdown patch (patch_synth.tcl on 1_synth.odb) replaces clk by the ft_* island
+// ports after synthesis; the kit LEC gold wrapper carries those ft_* ports (clk = ft_mstrap_i).
 // ---------------------------------------------------------------------------
 module ot_s81hd_elemB_cv (
-    input  wire clk, input wire rst_n, input wire go, input wire [16:0] row0, input wire [255:0] x,
-    input  wire b_v, input wire [31:0] b_d,
+    input  wire clk, input wire rst_n, input wire go, input wire [255:0] x,
     output wire o_v, output wire [31:0] o_d,
     output wire fault
 );
@@ -31,6 +35,6 @@ module ot_s81hd_elemB_cv (
     ot_s81hd_oreg #(.W(1 + 32 + 1)) u_oreg (.clk(clk), .rst_n(rst_q),
         .d({m_ov, m_od, m_fault}), .q({o_v, o_d, fault}));
     ot_dsrom_head_elem #(.LV(6), .PAD(2), .JOIN(0), .ROWS(128), .CUT(9'h1ff), .SPLIT9(1), .IOREG(1), .SAFE(1)) u_m (
-        .clk(clk), .rst_n(rst_q), .go(go), .row0(row0), .x(x), .b_v(b_v), .b_d(b_d), .o_v(m_ov), .o_d(m_od), .l_v(nc_lv),
+        .clk(clk), .rst_n(rst_q), .go(go), .row0(17'd0), .x(x), .b_v(1'b0), .b_d(32'd0), .o_v(m_ov), .o_d(m_od), .l_v(nc_lv),
         .l_d(nc_ld), .done(nc_done), .best_row(nc_row), .best_bits(nc_bits), .best_key(nc_key), .fault(m_fault));
 endmodule
