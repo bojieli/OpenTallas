@@ -3987,7 +3987,8 @@ def mesh_crossings(M, g):
 def routed_mesh_vias(d):
     """{mesh net: min over corners of OT_MESH_VIAS in DIR/combo_<corner>.log}, and the combo logs read.  Fail closed:
     a net reported by one corner's log but absent from another's counts 0 there (that corner's DB had no vias)."""
-    per, logs = [], sorted(Path(d).glob("combo_*.log")) if d else []
+    per, logs = [], sorted(p for p in Path(d).glob("combo_*.log")
+                           if re.fullmatch(r"combo_[A-Z][A-Z0-9]*\.log", p.name)) if d else []
     for lg in logs:
         per.append({m_.group(1): int(m_.group(2)) for m_ in
                     re.finditer(r"^OT_MESH_VIAS (\S+) (\d+)", lg.read_text(errors="replace"), re.M)})
