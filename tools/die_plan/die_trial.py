@@ -1977,8 +1977,13 @@ def main(argv=None):
         elif shared:
             print(f"WARNING: {len(shared)} shared-module types got per-type stand-in modules; pass --top to write "
                   "the matching die_top.v (an old die top would instantiate the bare module name)", file=sys.stderr)
-        print(json.dumps(dict(types=len(tot), face_flops=sum(tot.values()), per_type_modules=shared,
-                              clock_contract=not a.no_clock_contract), indent=1))
+        summary = dict(types=len(tot), face_flops=sum(tot.values()), per_type_modules=shared,
+                       clock_contract=not a.no_clock_contract)
+        if gen_phys.io_hold_mode(P) != "legacy":
+            summary["io_hold"] = dict(mode=gen_phys.io_hold_mode(P), status="NEEDS_PARENT",
+                basis="bare diagnostic input flops; real-view parent FF hold/CPPR required")
+            (Path(a.out) / "io_hold_standin.json").write_text(json.dumps(summary["io_hold"], indent=1) + "\n")
+        print(json.dumps(summary, indent=1))
         return 0
     if a.cmd == "standin-contract":
         tot = {}
