@@ -38,7 +38,7 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 
 ## DIE qwen_kvsys · Qwen KV · rev batch claude/path-kv-batch-0115@650841e1ef (rebase 5665cd3386 + FT reserve + D-KV-CLKMESH)
 - [ ] KV.BIND Strict bind of the batch · PATH-KV · RUNNING · B31 a8c24031c strict PASS 160 parts/51 types + R8 0 unequal + full verify 2553368/2553368; final batch (8-region landings, q2 rename, B32 PV) needs one re-bind
-- [ ] KV.CLK Clock under 12.8 (skew 80 = target; gate = related-pair STA) · PATH-KV · RE-MEASURE · c3t 63.95/54.71 used stub trim (banned) → rebuild by construction, strict CPPR; NUMBER-CHECK → IF.CLK128
+- [ ] KV.CLK Clock under 12.8 (gate = related-pair STA) · CLOCK-KV-R13 · RUNNING · merge-shields + in-core islands 52.9/50.7; headmirror G0C 0; island census FAIL 4 modules + 11 ps via offset being fixed, then kit/GRT/RCX/STA
 - [ ] KV.INFRA PG from IR + pre-routed PG/clock/reset via shared tool · PATH-KV · RUNNING · die_infra reset 287 nets max hop 377um PASS; signal GRT50 M4-M9 w/ clock reservation ovf0; PG needs KV power figure (0.15 W/mm2 fallback) → IF.TOOL
 - [ ] KV.GRT GRT0 incl. clock on the batch · PATH-KV · PASS · batch 650841e1ef one global_route signals M4-M7 + mesh M8-M9: ovf 0 TT+FF; freeze waits KV.BIND + D-INFRA-FIRST PG/pre-route
 - [ ] KV.STA Die STA on real views · PATH-KV · FAIL · TT setup +216.6 hold -334.1 (CHECKED; worst = reset seam hub_C->hgi_EN_7), FF rerun (report corrupted); classification of hold pairs running; shielded clock must be rebuilt on corrected PG model (PDN-ONE)
@@ -63,7 +63,7 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 ## TOKEN · Token-pass gate per design
 - [ ] TOK.DS DeepSeek ROM token pass (S81 array + head) · TOK-DS-6 · RUNNING · L14 27/57/8; idx scan 3-die shard; S81 all-rows MTP 3,655 tok/s > 3,000 floor (AR 1,260), 17.0% ledger ACCEPTED (owner 10-26) → S81.BIND, → HEAD.BIND
 - [ ] TOK.QW Qwen ROM token pass (compute + KV) · TOK · RUNNING · QK vehicle on KV rebased bind; prices landed seams + FE stations → KV.BIND, → QC.INFRA
-- [ ] TOK.HDS / TOK.HQ HBM token passes (single-user in release) · TOK · RUNNING · SU programme-path fault (pgslice lw, side_pipe rsq) being root-caused
+- [ ] TOK.HDS / TOK.HQ HBM token passes (unified SU/MTP/MU, SU latency first) · TOK · RUNNING · SU programme-path fault (pgslice lw, side_pipe rsq) being root-caused
 - [ ] TOK.FREEZE Final evidence run at freeze · COORD · WAITS · → TOK.DS, → TOK.QW
 - [ ] MU.CURVE Latency-throughput curve vs A100 80GB · COORD · WAITS · → TOK.FREEZE
 
