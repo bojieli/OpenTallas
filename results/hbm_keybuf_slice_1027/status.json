@@ -1,0 +1,10 @@
+{
+ "schema": "opentallas.hbm.keybuf_slice.status.v1",
+ "collected_by": "HBM-MU-QUAD-6",
+ "collected_at": "2026-10-27 05:50 PDT",
+ "source": "rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_slice.sv sha256 3da6e52595cb1fb1b9de012ff47985ed98d04cdf5c374fac9b235c9afc1807b9 (identical to the run copy)",
+ "positive": {"log": "positive.log", "result": "PASS", "checks": 2088, "errors": 0, "faultcycles": 6},
+ "mutant_tag_plus1": {"log": "mutant.log", "unit": "oth-ubuntu-250387-1793102321 (intel2)", "mutant_sha256": "e377e27e4b9e65e98a33c1aa4102f6177d68eb73e4452eda708ecb0ce77be848", "result": "MUTANT_CAUGHT", "checks": 2088, "errors": 1542, "vvp_rc": "nonzero (FATAL tb_keybuf_slice.sv:43)", "otrun_exit": 0},
+ "lint": {"log": "lint.log", "tool": "Verilator 5.050 WIDTH/SELRANGE", "unit": "oth-ubuntu-361872-1793102911", "exit": 0},
+ "verdict": "functional receipts complete (positive PASS + tag mutant CAUGHT + lint PASS); no physical route / native bind / sign-off claimed"
+}
