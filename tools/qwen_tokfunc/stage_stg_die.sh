@@ -5,15 +5,46 @@
 # tools/qwen_tokfunc/s8die_srcs.py).  The bound s8 slice is hardened s5 == slice2 SU_LT 1 / HD_W130 / MU_NU 4 + ARF 1 / RP 1,
 # so the expected outcome of every case is the stg pos expected outcome (pos verdicts from the stg stage result.json).
 #
-#   stage_stg_die.sh E STG_RESULT POS_RUNLIST [--par N]
+#   stage_stg_die.sh E STG_RESULT POS_RUNLIST [--par N] [--fx DIR]
 #     E/tree (patched stg bench tree + FACE 3), E/die/build/obj_n12/Vtb (built, slice/vec calibrated by s8cal*.sh),
-#     E/stgdie/fx (the stg fixtures), STG_RESULT = stg result.json, POS_RUNLIST = the stg runlist 'pos' lines with
+#     STG_RESULT = stg result.json, POS_RUNLIST = the stg runlist 'pos' lines with
 #     paths relative to the stg stage dir (tree/ pos/build pos/cal_mat fx/).
+#   Fixtures (TOK-QK-2 10-27, after QCLM r2a lost 252/259 cases to an unstaged fx/): E/stgdie/fx is ALWAYS staged here,
+#     from --fx DIR, else an existing E/stgdie/fx, else dirname(STG_RESULT)/fx (stage_stg.sh writes fx/ next to its
+#     result.json).  Every fx/ file the runlist names must exist BEFORE any build check or sim runs; otherwise
+#     result.json = FAIL 'missing fixtures' and exit 7 (fail closed, never a NO RESULT per case).
+#     Test: tools/qwen_tokfunc/test_stage_stg_die_fx.py
 # Writes E/stgdie/result.json.
 set -u
 E=$(readlink -f "$1"); STG=$(readlink -f "$2"); RL=$(readlink -f "$3"); shift 3
-PAR=24; while [ $# -gt 0 ]; do case "$1" in --par) PAR=$2; shift 2;; *) echo "bad arg $1"; exit 2;; esac; done
+PAR=24; FXSRC=
+while [ $# -gt 0 ]; do case "$1" in --par) PAR=$2; shift 2;; --fx) FXSRC=$(readlink -f "$2"); shift 2;;
+  *) echo "bad arg $1"; exit 2;; esac; done
 T=$E/tree; W=$E/die; S=$E/stgdie
+# fixture staging + preflight: fail closed before any build check or sim
+mkdir -p $S
+if [ -n "$FXSRC" ]; then
+  if [ "$(readlink -f $S/fx 2>/dev/null)" != "$FXSRC" ]; then
+    [ -e $S/fx ] && [ ! -L $S/fx ] && { echo "$S/fx exists and is not --fx $FXSRC"; exit 2; }
+    ln -sfn "$FXSRC" $S/fx
+  fi
+elif [ ! -d $S/fx ] && [ -d "$(dirname "$STG")/fx" ]; then
+  ln -sfn "$(readlink -f "$(dirname "$STG")/fx")" $S/fx
+fi
+python3 - "$S" "$RL" <<'PY' || exit 7
+import json, re, sys
+from pathlib import Path
+S, RL = Path(sys.argv[1]), Path(sys.argv[2])
+need = sorted({m for line in RL.read_text().splitlines() for m in re.findall(r'(?<=\s)fx/(\S+)', line)})
+miss = [f for f in need if not (S / 'fx' / f).is_file()]
+if miss or not need:
+    json.dump(dict(stage='stg_die', verdict='FAIL',
+                   problems=[f'missing fixtures {len(miss)}/{len(need)} under {S}/fx' if need else 'runlist names no fx/ fixture'],
+                   fx=str((S / 'fx').resolve()) if (S / 'fx').exists() else None, missing=miss[:50]),
+              open(S / 'result.json', 'w'), indent=1)
+    print(f'STG_DIE FAIL missing fixtures {len(miss)}/{len(need)} (first {miss[:3]})'); raise SystemExit(1)
+print(f'STG_DIE fixtures {len(need)}/{len(need)} staged at {(S / "fx").resolve()}')
+PY
 export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH DV2_S8DIE=1
 [ -x $W/build/obj_n12/Vtb ] && [ -s $W/build/vec_ages.json ] || { echo "need built + vec-calibrated $W/build"; exit 2; }
 grep -q '^rc=0' $W/build/slice_calibrate.out && grep -q '^rc=0' $W/build/calibrate.out || { echo "slice/vec calibration not PASS"; exit 6; }

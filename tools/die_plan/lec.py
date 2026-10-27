@@ -199,6 +199,36 @@ def rtl_standard_libs(env, kit):
     return [f"{NLDM}/{l}" for l in STD_LIBS if needed and needed.intersection(lib_cells(f"{NLDM}/{l}"))]
 
 
+def blackbox_local_constant_cleanup(env, kit):
+    """Slang exports module-scope genvars and localparams as parameters even on blackboxed hard macros.
+
+    Genvars and localparams cannot be overridden as module parameters. Remove only names
+    literally declared as a genvar or localparam in that exact hard macro's source before replacing it by a pin-only stub.
+    Formal parameters and unknown names remain untouched, so bad overrides still fail hierarchy checks.
+    """
+    commands = []
+    files = [Path(kpath(kit, f)) for f in env["VERILOG_FILES"].split()]
+    for master in env.get("SYNTH_BLACKBOXES", "").split():
+        declarations = []
+        for path in files:
+            text = re.sub(r'"(?:\\.|[^"\\])*"|/\*.*?\*/|//[^\n]*', " ", path.read_text(), flags=re.S)
+            match = re.search(r"\bmodule\s+" + re.escape(master) + r"\b(.*?)\bendmodule\b", text, re.S)
+            if match:
+                names = set()
+                for declaration in re.findall(r"\bgenvar\s+([^;]+);", match.group(1)):
+                    for name in declaration.split(","):
+                        name = name.strip()
+                        if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_$]*", name):
+                            names.add(name)
+                for declaration in re.findall(r"\blocalparam\s+([^;]+);", match.group(1)):
+                    names.update(re.findall(r"([A-Za-z_][A-Za-z0-9_$]*)\s*=", declaration))
+                declarations.append(names)
+        if declarations and all(names == declarations[0] for names in declarations):
+            for name in sorted(declarations[0]):
+                commands.append(f"setparam -unset {name} t:{master}")
+    return commands
+
+
 def read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=True, slang_extra=()):
     """yosys commands reading the kit RTL with `frontend` ('verilog' | 'slang'); lib_bbs: macro liberty files whose
     cells have no Verilog body in the sources (read as blackbox cells); slang_extra: extra read_slang options."""
@@ -223,6 +253,7 @@ def read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=True, slang_extra=()):
             for c in lib_cells(l):
                 a += ["--blackboxed-module", c]
         cmds += ["read_slang " + " ".join(shlex.quote(x) for x in a), "setattr -unset init"]
+        cmds += blackbox_local_constant_cleanup(env, kit)
     else:
         cmds += ["verilog_defaults -push", "verilog_defaults -add " + " ".join(defs)]
         cmds += ["read_verilog -defer -sv " + " ".join(f"-I{i}" for i in incs) + " " + f for f in files]
@@ -950,11 +981,14 @@ class Lec:
         # name match is still a correspondence obligation, so a wrong pairing can only fail, never hide a difference.
         superset_vec = os.environ.get("OT_LEC_SUPERSET_VEC") == "1"
         one_dim = lambda s: all(ix.count("[") == 1 for ix in s)
+        self.superset_extra = []                  # [(gate bit, re-keyed gate key)]: the per-run list (lec.json)
         for b in self.relaid:
             sub = superset_vec and gidx[b] < tidx[b] and one_dim(tidx[b])
             for ix in tidx[b]:
                 if sub and ix in gidx[b]:
                     continue
+                if sub:
+                    self.superset_extra.append((b + ix, f"{b}#t{ix}"))
                 self.tp[f"{b}#t{ix}"] = self.tp.pop(b + ix)
                 self.tc[f"{b}#t{ix}"] = self.tc.pop(b + ix)
         self.matched = sorted(set(self.gp) & set(self.tp))
@@ -1138,6 +1172,7 @@ class Lec:
         for k in self.tc:
             self.dlit[("gate", k)] = T(self.tc[k])
         nx = lambda k: lgx.get(self.gc[k] & ~1, 0) ^ 1          # gold next state of k is not X
+        self.dxlit = {k: lgx.get(self.gc[k] & ~1, 0) for k in self.gc}   # gold next state of k is X (sim_refine)
         self.xpoints = sorted(k for k in self.gc if lgx.get(self.gc[k] & ~1, 0))
         if with_compare:
             for k in sorted(set(self.gc) & set(self.tc)):
@@ -1851,6 +1886,166 @@ def drop_failed(L, bad):
         L.hyp.pop(("both" if sd == "bothg" else sd, k), None)
 
 
+
+
+def _sim_given(m, ivals, mask):
+    """bit-parallel simulation of builder m with the given input values (var -> int)."""
+    val = [0] * (m.ni + len(m.ands) // 2 + 1)
+    for v, x in ivals.items():
+        val[v] = x
+    a, base = m.ands, m.ni + 1
+    for k in range(len(a) // 2):
+        r0, r1 = a[2 * k], a[2 * k + 1]
+        val[base + k] = (val[r0 >> 1] ^ (mask if r0 & 1 else 0)) & (val[r1 >> 1] ^ (mask if r1 & 1 else 0))
+    return val
+
+
+def sim_refine(L, log, tried, words=8, quiet=3, seed=4242):
+    """Witness-based refinement by simulation (LEC-TOOL-1 10-27), run before every ABC hypothesis round.
+
+    van Eijk refinement drops, per round, the hypotheses that fail from a state satisfying all current hypotheses.
+    On a long delay line of wrong duplicate / constant hypotheses only the head stage fails per round (its
+    successor stage becomes refutable only once the head is free), so the ABC loop peels one stage per round:
+    HBM hcp_sys1 R5 peeled dld[] one 47-bit stage per ~80 s round, hit OT_LEC_REFINE_S after 64 rounds and then
+    cleared EVERY hypothesis (1075 points 'differ', 0 constants / pairs kept).
+
+    Here the free miter (no hypotheses bound) is built once; each iteration draws random states, forces them onto
+    the current hypotheses (every bound register takes its partner's / constant value, lanes left inconsistent are
+    masked out), simulates one step and drops every hypothesis whose next-state relation is violated in a valid
+    lane.  Such a lane is a concrete state satisfying every current hypothesis (and FSM constraint) whose successor
+    violates the dropped one: exactly the counterexample the ABC round would find, so a dropped hypothesis can
+    never be part of the inductive fixpoint.  Nothing is ever accepted here: the surviving set still goes to the
+    ABC induction proof, so this can only save rounds, never prove a point.  -> number of hypotheses dropped."""
+    if not L.hyp:
+        return 0
+    hyp, cons = L.hyp, L.cons
+    L.hyp, L.cons = {}, []
+    try:
+        m, kind = L.build(with_compare=False, with_hyp=False)
+        dl, xl = dict(L.dlit), dict(L.dxlit)
+    finally:
+        L.hyp, L.cons = hyp, cons
+    import random
+    rnd = random.Random(seed)
+    W = 64 * words
+    mask = (1 << W) - 1
+    mvar, svar = {}, {"gold": {}, "gate": {}}
+    for v, (t, k) in kind.items():
+        if t == "matched":
+            mvar[k] = v
+        elif t in ("gold_only", "gate_only"):
+            svar[t[:4]][k] = v
+
+    def var(side, k):
+        return mvar.get(k) if k in mvar else svar.get(side, {}).get(k)
+
+    dropped, still, it = 0, 0, 0
+    while still < quiet:
+        it += 1
+        ivals = {v: rnd.getrandbits(W) for v in range(1, m.ni + 1)}
+        items = sorted(L.hyp.items())
+
+        def src(h):
+            if h[0] == "const":
+                return mask if h[1] else 0
+            if h[0] == "eq":
+                v = var(h[1], h[2])
+                return None if v is None else ivals[v] ^ (mask if h[3] else 0)
+            if h[0] == "cube":
+                c = mask
+                for ok, ov in zip(h[2], h[3]):
+                    v = var(h[1], ok)
+                    if v is None:
+                        return None
+                    c &= ivals[v] ^ (0 if ov else mask)
+                return c
+            return None
+
+        tgt = {key: var("gold" if key[0] == "both" else key[0], key[1]) for key, _ in items}
+        for _ in range(64):                         # chains resolve in passes (cycles stay inconsistent: masked)
+            changed = False
+            for key, h in items:
+                tv, s = tgt[key], src(h)
+                if tv is not None and s is not None and ivals[tv] != s:
+                    ivals[tv], changed = s, True
+            if not changed:
+                break
+        valid = mask
+        for key, h in items:
+            tv, s = tgt[key], src(h)
+            if tv is not None and s is not None:
+                valid &= ~(ivals[tv] ^ s)
+        cur = lambda sd, k: ivals.get(var(sd, k), 0)
+
+        def member(vals, allowed):
+            acc = 0
+            for t in allowed:
+                c = mask
+                for x, b in zip(vals, t):
+                    c &= x if b else ~x & mask
+                acc |= c
+            return acc
+        for sd, keys, allowed in L.cons:
+            if all(var(sd, k) is not None for k in keys):
+                valid &= member([cur(sd, k) for k in keys], allowed)
+        if not valid:
+            still += 1
+            continue
+        val = _sim_given(m, ivals, mask)
+        D = lambda sd, k: lit_val(val, mask, dl[(sd, k)])
+        NX = lambda k: ~lit_val(val, mask, xl[k]) & mask if k in xl else mask
+        bad = []
+        for key, h in items:
+            side, k = key
+            if tgt[key] is None:
+                continue
+            try:
+                if side == "both":
+                    if h[0] == "const":
+                        c = mask if h[1] else 0
+                        v = ((D("gold", k) ^ c) & NX(k)) | (D("gate", k) ^ c)
+                    elif h[0] == "eq":
+                        inv = mask if h[3] else 0
+                        v = ((D("gold", k) ^ D("gold", h[2]) ^ inv) & NX(k)) | (D("gate", k) ^ D("gate", h[2]) ^ inv)
+                    else:
+                        continue
+                elif h[0] == "const":
+                    v = (D(side, k) ^ (mask if h[1] else 0)) & (NX(k) if side == "gold" else mask)
+                elif h[0] == "eq":
+                    od = D(h[1], h[2]) if (h[1], h[2]) in dl else D("gold", h[2])
+                    xm = NX(k) if side == "gold" else (NX(h[2]) if h[1] == "gold" and h[2] in L.gc else mask)
+                    v = (D(side, k) ^ od ^ (mask if h[3] else 0)) & xm
+                elif h[0] == "cube":
+                    c = mask
+                    for ok, ov in zip(h[2], h[3]):
+                        c &= D(h[1], ok) ^ (0 if ov else mask)
+                    v = D(side, k) ^ c
+                else:
+                    continue
+            except KeyError:
+                continue
+            if v & valid:
+                bad.append((key, h))
+        badc = [f"cons:{sd}:{keys[0]}" for sd, keys, allowed in L.cons
+                if all((sd, k) in dl for k in keys) and
+                ~member([D(sd, k) for k in keys], allowed) & mask & valid]
+        if not bad and not badc:
+            still += 1
+            continue
+        still = 0
+        for key, h in bad:
+            if L.hyp.pop(key, None) is None:
+                continue
+            side, k = key
+            tried[(side, k, "c") if h[0] == "const" else (side, k, h[2], h[3]) if h[0] == "eq" else
+                  (side, k, str(h[2]), str(h[3]))] += 1
+            dropped += 1
+        if badc:
+            drop_failed(L, badc)
+            dropped += len(badc)
+    if dropped:
+        log.append(f"simulation refinement: {dropped} hypotheses refuted by concrete witnesses in {it} iterations")
+    return dropped
 
 
 def proved_state_constant(L, side, key, seen=None):
@@ -3053,13 +3248,23 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             # dropped in early rounds and becomes constant only once the cb_q -> r8 -> baddr chain is proved)
             m, kind = L.build(with_compare=False, with_hyp=False, free_const=0)
             zdl = dict(L.dlit)
+            # constant 1 from hold / reset (LEC-TOOL-1 10-27): a register that only ever holds or (re)loads 1 --
+            # reset value 1 and every load 1, or no reset (X power-up) and every load 1 (synthesis folds it to 1:
+            # HBM argmax ti[lv][e] low index bits, hcp_sys1 d0 = last ? nlast : 256) -- has next state 1 once the
+            # unpaired registers (itself) are held at 1.  Trying only 0 first made it fail twice and stay free.
+            # Candidate only: the induction below proves D == 1 with the reset input free, so a register that
+            # resets to 0 or ever loads a non-1 value is refuted.
+            m, kind = L.build(with_compare=False, with_hyp=False, free_const=1)
+            odl = dict(L.dlit)
             m, kind = L.build(with_compare=False, with_hyp=False)
             for side, keys in (("gold", L.gonly), ("gate", L.tonly)):    # gate-only flops: constant candidates too
                 for k in keys:
+                    one = odl.get((side, k)) == 1 and zdl.get((side, k)) != 0
                     if k.startswith("ff:") and (side, k) not in L.hyp and k not in partners and \
                             (tried[(side, k, "c")] < 2 or L.dlit.get((side, k), 2) in (0, 1) or
-                             (zdl.get((side, k)) == 0 and tried[(side, k, "c")] < 6)):
-                        L.hyp[(side, k)] = ("const", L.dlit.get((side, k)) if L.dlit.get((side, k)) in (0, 1) else 0)
+                             ((zdl.get((side, k)) == 0 or one) and tried[(side, k, "c")] < 6)):
+                        d = L.dlit.get((side, k))
+                        L.hyp[(side, k)] = ("const", d if d in (0, 1) else 1 if one else 0)
             # matched flops whose next state simulates constant on both sides (synthesis may have merged such a
             # flop into another constant one, so the gate's copy is a different, free register)
             m, kind = L.build(with_compare=False, with_hyp=False)
@@ -3116,6 +3321,8 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             # State relations rejected before aliases/copies settled can become
             # inductive later; retry while candidates are still being added.
             fsm_proposals(L, log)
+        if os.environ.get("OT_LEC_SIM_REFINE", "1") != "0":
+            sim_refine(L, log, tried, seed=4242 + rnd)
         if not L.hyp:
             return
         m, kind = L.build(with_compare=False, with_hyp=True)
@@ -3273,6 +3480,57 @@ def run_yosys(script, path, log):
                            if Path(str(path) + ".log").is_file() else []) if "ERROR" in l]
         raise Unproven(f"yosys {Path(path).name} failed: " + ("; ".join(err[-3:]) or r.stderr[-400:]))
     return r
+
+
+def superset_report(L, m, kind, verdict):
+    """COORD RULING HBM-CORE-LAT-R4 (3) / R5 collar: the per-run list of the gate-only extra bits that
+    OT_LEC_SUPERSET_VEC=1 re-keyed, each with the reason it cannot change a compare point.
+
+    binding  free   the bit is a free input of the miter (no hypothesis): an EQUIVALENT miter proves no compare
+                    point (outputs, matched next states, black-box pins) depends on it, i.e. it is unobservable;
+             const / eq / cube   the bit is bound by a register-correspondence hypothesis that the same induction
+                    proved (the bit equals a constant / a matched register): it carries no independent value;
+             rekeyed / not built   a later pass renamed the key or no miter exists: NOT shown (fail closed).
+    observers  compare / hypothesis outputs whose AIG cone structurally contains the free bit (0 = no fan-out to
+               any compare point at all; > 0 = fan-out that the proof showed is functionally masked).
+    -> dict(enabled, n_extra, all_shown, extra_bits=[...], basis)"""
+    ex = list(getattr(L, "superset_extra", []) or [])
+    free = {k: v for v, (kd, k) in kind.items() if kd == "gate_only"}
+    bit_of = {}
+    for i, (b, k) in enumerate(ex):
+        if k in free:
+            bit_of[free[k]] = i
+    # one forward pass: bitmask of the free extra bits each AIG node depends on (only nodes that depend on one)
+    dep = {v: 1 << i for v, i in bit_of.items()}
+    if dep:
+        ands, base = m.ands, m.ni + 1
+        for k in range(len(ands) // 2):
+            a, b = dep.get(ands[2 * k] >> 1, 0), dep.get(ands[2 * k + 1] >> 1, 0)
+            if a or b:
+                dep[base + k] = a | b
+    obs = collections.defaultdict(list)
+    for o, n in zip(m.outs, m.onames):
+        d = dep.get(o >> 1, 0)
+        while d:
+            low = d & -d
+            obs[low.bit_length() - 1].append(n)
+            d ^= low
+    rows, eq = [], verdict == "EQUIVALENT"
+    for i, (b, k) in enumerate(ex):
+        if k in free:
+            binding = "free"
+        elif k in L.tp and ("gate", k) in L.hyp:
+            binding = L.hyp[("gate", k)][0]
+        elif k in L.tp:
+            binding = "bound"
+        else:
+            binding = "rekeyed"
+        ok = eq and binding in ("free", "const", "eq", "cube")
+        rows.append(dict(bit=b, key=k, binding=binding, observers=len(obs.get(i, ())),
+                         first_observers=obs.get(i, [])[:4], shown=ok))
+    return dict(enabled=True, n_extra=len(rows), all_shown=all(r["shown"] for r in rows), extra_bits=rows,
+                basis=("free bits: free inputs of the proved miter (unobservable); const/eq/cube bits: bound by "
+                       "inductively proved correspondence hypotheses; shown only when the verdict is EQUIVALENT"))
 
 
 def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_map=None, reuse=False, hints=None):
@@ -3449,6 +3707,13 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
             if rec["x_dont_care_points"]["n"]:
                 rec["note"] += (f"; {rec['x_dont_care_points']['n']} of them reach an RTL X (don't care: equal "
                                 f"wherever the RTL is not X)")
+        if os.environ.get("OT_LEC_SUPERSET_VEC") == "1":
+            rec["superset_vec"] = superset_report(L, m, kind, rec["verdict"])
+            if rec["verdict"] == "EQUIVALENT" and not rec["superset_vec"]["all_shown"]:
+                bad = [e["bit"] for e in rec["superset_vec"]["extra_bits"] if not e["shown"]]
+                rec["verdict"] = "UNPROVEN"
+                rec["reason"] = (f"OT_LEC_SUPERSET_VEC: {len(bad)} extra gate bit(s) not shown unobservable "
+                                 f"(first: " + ", ".join(bad[:6]) + ")")
     except LintFail:
         pass
     except Unproven as e:
@@ -3461,6 +3726,12 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
     if lc is not None and getattr(lc, "cycle_dropped", None):   # hypotheses dropped to break binding cycles
         rec["cycle_dropped"] = dict(n=len(lc.cycle_dropped),
                                     first=[f"{sd}:{k} {list(h)}" for (sd, k), h in lc.cycle_dropped[:40]])
+    if os.environ.get("OT_LEC_SUPERSET_VEC") == "1" and "superset_vec" not in rec:   # the check did not finish
+        ex = list(getattr(lc, "superset_extra", []) or []) if lc is not None else []
+        rec["superset_vec"] = dict(enabled=True, n_extra=len(ex), all_shown=False,
+                                   extra_bits=[dict(bit=b, key=k, binding="not built", observers=None, shown=False)
+                                               for b, k in ex],
+                                   basis=f"not shown: verdict {rec.get('verdict')} before the miter was proved")
     rec["t_total_s"] = round(time.time() - t0, 1)
     rec["provenance"] = _provenance(kit)
     (out / "lec.json").write_text(json.dumps(rec, indent=1) + "\n")

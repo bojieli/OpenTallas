@@ -440,6 +440,7 @@ def lift(r, xy, et, tag, nodes, n=None):
 
 
 # ------------------------------------------------------------------------------------------------ R15 per-level lanes
+CHAN_L1 = [None]  # R22: dict(yb, step) -> lane-0 channel node + its leg-end repeaters sit on lane 1 (yb + ISL)
 LANE = [None]     # R15: dict(step=8.64) -> every tree node level on its own lane (COORD ruling INFRA-FIRST-QC-R14)
 
 
@@ -990,14 +991,26 @@ def periodic_feed_lanes(a, top, P, cols, gaps, nodes, rows, m, col, cores, H, YC
         # R17: channel x-tree with one channel VSS lane per level (COORD R14 lanes rule inside the R15 (a) 5-lane channel):
         # leaves (the 12 H_c) on lane CHAN_HC, node depth d on CHAN_LANES[d]; legs on the node lane, M9 drop at the end
         yb = YC - CC / 2
+        L0 = float(getattr(a, "chan_lane0_um", 0.0) or 0.0)
+        if not 0.0 <= L0 < ISL:
+            raise SystemExit(f"--chan-lane0-um {L0}: must be in [0, {ISL}) (lane 1 sits at +{ISL})")
 
         def ht(items, tag, d):
             if len(items) == 1:
                 return items[0]
             h_ = len(items) // 2
+            # R21 (COORD RULING INFRA-FIRST-QC-R20 ASK1 (a), plan geometry): --chan-lane0-um lifts the channel BOTTOM
+            # lane (lane 0, on the channel edge) so the M8 trunks of its cells land inside the channel (R20: lane-0
+            # risers crossed the partition M7 pin face at y 13132.935); 0 = R17-R20 geometry
             return merge_lane(ht(items[:h_], tag + "0", d + 1), ht(items[h_:], tag + "1", d + 1), "x", top, tag, nodes,
-                              r3(yb + ISL * CHAN_LANES[d]))
+                              r3(yb + ISL * CHAN_LANES[d] + (L0 if CHAN_LANES[d] == 0 else 0.0)))
         hr = ht(sorted(croots, key=lambda q: q["xy"][0]), "H", 0)
+        # R22 (COORD RULING INFRA-FIRST-QC-R21 lane-0 = (a)): lane 0 sits on the channel bottom edge, and the 16w M8
+        # trunks of the nets that also carry a vertical element (root M9 drop, lane-0 -> child-lane jog) find no legal
+        # in-channel track next to the yb VSS strap.  Those 5 cells (the lane-0 node + the first and last repeater of
+        # each of its legs) move to lane 1 (yb + ISL) with the full 16w NDR; lane 1 is free at their x (depth-2 runs
+        # are in the quarter spans).  Opt-in, default off = R17-R21 geometry.
+        CHAN_L1[0] = dict(yb=r3(yb), step=ISL) if getattr(a, "chan_l0_ends_lane1", False) else None
     else:
         hr = dtree([q["xy"] for q in croots], "x", top, "H", nodes,
                    leafmk=lambda xy, tag: [q for q in croots if abs(q["xy"][0] - xy[0]) < 1e-6][0])
@@ -1217,6 +1230,22 @@ def legalize(B, fine_masters=None):
                 ck = "chan_rep" if (kind == "top" and n["tag"].startswith("H")) else kind + "_rep"   # R13 channel x-tree
                 site_of[(kind + "_rep", n["tag"], k)] = add(ck, q, et.m, lane, (kind + "_rep", n["tag"], k))
                 nrep[kind] += 1
+    if CHAN_L1[0] is not None:          # R22: lane-0 channel node + leg-end repeaters -> lane 1 (see build)
+        yb0, st0 = CHAN_L1[0]["yb"], CHAN_L1[0]["step"]
+        tby0 = {n["tag"]: n for n in B["top_nodes"]}
+        mv = set()
+        for n in B["top_nodes"]:
+            if n["tag"].startswith("H") and n["kids"] and abs(n["xy"][1] - yb0) < 1e-3:
+                mv.add(site_of[("t", n["tag"])])
+                for kt in n["kids"]:
+                    kn = tby0[kt]
+                    if kn.get("nseg", 0) >= 2:
+                        mv.add(site_of[("top_rep", kt, 1)])
+                        mv.add(site_of[("top_rep", kt, kn["nseg"] - 1)])
+        for i_ in sorted(mv):
+            cells[i_]["site"][1] = r3(cells[i_]["site"][1] + st0)
+            cells[i_]["chan_l1"] = True
+        B["chan_l1_moved"] = len(mv)
     # exact coincidences before the bump (the GEOM-REVIEW-10 metric on the raw tree coordinates)
     from collections import Counter
     raw = Counter((r3(c["site"][0]), r3(c["site"][1])) for c in cells if c["kind"] != "r9_leaf")
@@ -1653,9 +1682,11 @@ def render(B, plan, path, box):
 
 
 # ------------------------------------------------------------------------------------------------ mesh netlist + solve
-def mesh(hs, vs, drivers, taps, wtab, stub, seg_um=54.0, wire_rel=0.0, rnd=None):
+def mesh(hs, vs, drivers, taps, wtab, stub, seg_um=54.0, wire_rel=0.0, rnd=None, jog_um=0.0):
     """hs: [(y, x0, x1)] M8, vs: [(x, y0, y1)] M9; drivers/taps: [(x, y)] on a strap.  Nodes keyed by coordinate.
-    stub = (wtab_stub, length): pieces within `length` of a driver use the stub RC (EM straps)."""
+    stub = (wtab_stub, length): pieces within `length` of a driver use the stub RC (EM straps).
+    jog_um (R19, spine mesh): a point off every strap joins the NEAREST strap by one straight perpendicular jog
+    (M9 from an M8 strap, M8 from an M9 strap) of length <= jog_um, drawn with the stub RC; 0 = the r3 rule (error)."""
     att_h, att_v = defaultdict(set), defaultdict(set)
     for y, x0, x1 in hs:
         att_h[y] |= {x0, x1}
@@ -1669,13 +1700,28 @@ def mesh(hs, vs, drivers, taps, wtab, stub, seg_um=54.0, wire_rel=0.0, rnd=None)
                 att_h[y].add(x)
                 att_v[x].add(y)
     dset = set()
+    jogs = []
     for q in list(drivers) + list(taps):
         if q[1] in span_h:
             att_h[q[1]].add(q[0])
         elif q[0] in span_v:
             att_v[q[0]].add(q[1])
         else:
-            raise SystemExit(f"point {q} not on a strap")
+            best = None
+            if jog_um > 0:
+                for y, (x0, x1) in span_h.items():
+                    if x0 - 1e-6 <= q[0] <= x1 + 1e-6 and abs(y - q[1]) <= jog_um + 1e-6:
+                        if best is None or abs(y - q[1]) < best[0]:
+                            best = (abs(y - q[1]), "h", (q[0], y))
+                for x, (y0, y1) in span_v.items():
+                    if y0 - 1e-6 <= q[1] <= y1 + 1e-6 and abs(x - q[0]) <= jog_um + 1e-6:
+                        if best is None or abs(x - q[0]) < best[0]:
+                            best = (abs(x - q[0]), "v", (x, q[1]))
+            if best is None:
+                raise SystemExit(f"point {q} not on a strap")
+            _, kind, at = best
+            (att_h[at[1]] if kind == "h" else att_v[at[0]]).add(at[0] if kind == "h" else at[1])
+            jogs.append((at, tuple(q), "M9" if kind == "h" else "M8"))
     dset = {tuple(q) for q in drivers}
     nid, xy = {}, []
 
@@ -1712,6 +1758,19 @@ def mesh(hs, vs, drivers, taps, wtab, stub, seg_um=54.0, wire_rel=0.0, rnd=None)
         p = sorted(pts)
         for u, w in zip(p, p[1:]):
             wire((x, u), (x, w), "M9")
+    for at, q, lay in sorted(set(jogs)):          # R19 perpendicular jogs (stub RC), one per point
+        L = md(at, q)
+        n = max(1, int(math.ceil(L / seg_um)))
+        prev = node(at)
+        r, c = sw[lay]
+        for k in range(1, n + 1):
+            pt = (at[0] + (q[0] - at[0]) * k / n, at[1] + (q[1] - at[1]) * k / n)
+            cur = node(pt)
+            f = rnd.gauss(1.0, wire_rel) if (wire_rel and rnd) else 1.0
+            R.append((prev, cur, r * L / n * f))
+            C[prev] += c * L / n / 2 * f
+            C[cur] += c * L / n / 2 * f
+            prev = cur
     dn = [nid[(round(q[0], 3), round(q[1], 3))] for q in drivers]
     tn = [nid[(round(q[0], 3), round(q[1], 3))] for q in taps]
     return dict(R=R, C=C, xy=xy, dn=dn, tn=tn, n=len(nid))
@@ -1925,7 +1984,8 @@ def cmd_solve(a):
     sdrv = [tuple(n["xy"]) for n in B["spine_drv"]]
     staps = [ct["tap"] for ct in B["ctrees"]]
     if not a.no_spine:
-      NS = mesh(hs, vs, sdrv, staps, sw, (RC3[a.spine_stub_w], a.stub_um), wire_rel=sg.get("wire_rel", 0.0) if s else 0.0, rnd=rnd)
+      NS = mesh(hs, vs, sdrv, staps, sw, (RC3[a.spine_stub_w], a.stub_um), wire_rel=sg.get("wire_rel", 0.0) if s else 0.0, rnd=rnd,
+                jog_um=a.spine_jog_um)
       smult = size(voronoi_c(NS), a.spine_m, a.sizing)
       sdvt = [(seeded("vs", s, k).gauss(0, sg["vt_mV"]) + seeded("vs2", s, k).gauss(0, sg["vt_mV"])) / 2 / math.sqrt(max(1.0, smult[k]))
               if s else 0.0 for k in range(len(sdrv))]
@@ -1973,6 +2033,10 @@ def cmd_solve(a):
                insertion_ps=dict(min=r3(float(np.nanmin(t_ent))), max=r3(float(np.nanmax(t_ent)))),
                tap_skew_ps=r3(float(np.nanmax(t_ent) - np.nanmin(t_ent))), tap_arr_ps=tap_arr,
                tap_slew_ps={p: r3(v) for p, v in zip(parts, sl_ent)}, geometry=a.geometry, feed=getattr(a, "feed", "mesh3"),
+               # R20 (NUMBER-CHECK-QC-R19): the solver states its own MC segment so the pair_u guard can fire.  The fine
+               # mesh netlist ends at the partition tap node on the strap (taps = rec taps[].tap); the tap buffer and
+               # the tap->entry stub are NOT in it (they are priced by AOCV in pair_u).
+               mc_includes_stub=False, mc_segment="die input -> fine-mesh tap node",
                checked="UNCHECKED")
     if legal:
         ets = dict(t=B["et"]["top"], c=B["et"]["col"])
@@ -2010,8 +2074,13 @@ def cmd_collect(a):
     summ["nominal"] = {k: v for k, v in (summ["nominal"] or {}).items() if k != "tap_arr_ps"}
     if mc and "physical" in mc[0]:
         summ["mc_net_um_max"] = max(r["physical"]["net_um"]["max"] for r in rows)
+    flags = {r.get("mc_includes_stub") for r in rows}
+    if None in flags:
+        raise SystemExit("collect: a solve json does not state mc_includes_stub (pre-R20 solver); re-run the solve")
+    if len(flags) != 1:
+        raise SystemExit("collect: solves disagree on mc_includes_stub")
     out = dict(summary=summ, samples=[dict(sample=r["sample"], tap_skew_ps=r["tap_skew_ps"], tap_arr_ps=r["tap_arr_ps"]) for r in rows],
-               checked="UNCHECKED")
+               mc_includes_stub=flags.pop(), checked="UNCHECKED")
     Path(a.out).write_text(json.dumps(out, indent=1))
     print(json.dumps({k: v for k, v in summ.items() if k != "nominal"}, indent=1))
     return 0
@@ -2040,7 +2109,22 @@ def pair_u(x, y, tap, solve_, aocv, g):
         r[c] = dict(noncommon_ps=r3(nc), aocv_random_ps=r3(rnd_), aocv_distance_ps=r3(sys_), droop_ps=0.0,
                     mesh_uncertainty_ps=mesh_u, total_ps=r3(rnd_ + sys_ + mesh_u))
     r["bbox_diag_mm"] = r3(dmm)
+    # R19 (COORD ruling R18 / OWNER one shared die timing model): ONE variation model per segment.  The MC solve ends at
+    # the fine-mesh tap node (mesh() taps = rec taps[].tap, the tap->entry stub is NOT in the netlist); the AOCV terms
+    # above price only the stages below it (tap buffer + stub: ceil(stub/450) >= 1 stage; core tree: 10 stages, CORE
+    # latency).  Overlap = 0 by construction; asserted so a future MC that absorbs the stub/tap buffer cannot double count.
+    r["var_model"] = dict(mc="die input -> fine-mesh tap node: tree per-stage random + gradient + wire RC + driver Vt",
+                          aocv="tap buffer + tap->entry stub + core tree (10 stages): class-A random k=3 + g x bbox",
+                          overlap_stages=0)
+    assert not getattr(pair_u, "mc_includes_stub", False), "MC netlist includes the tap stub: drop the stub stage from AOCV"
     return r
+
+
+def _set_mc_stub_flag(docs):
+    """R20: pair_u.mc_includes_stub from the collected solve docs (absent = legacy pre-R20 solve: not asserted)."""
+    vals = {d.get("mc_includes_stub") for d in docs}
+    pair_u.mc_includes_stub = bool(True in vals)
+    return pair_u.mc_includes_stub
 
 
 def cmd_sta_export(a):
@@ -2052,6 +2136,7 @@ def cmd_sta_export(a):
     rec = json.loads(Path(a.r2).read_text())
     P, dtp, parts, cores, psha = Q.load(rec["plan"], rec["tree_plan"])
     solve_ = {c: json.loads(Path(v).read_text()) for c, v in json.loads(a.mesh_skew).items()}
+    _set_mc_stub_flag(solve_.values())
     aocv = json.loads(Path(a.aocv).read_text())["clock_aocv"]
     tap = {t["part"]: t for t in rec["taps"]}
     out = Path(a.out)
@@ -2126,7 +2211,9 @@ def cmd_pairs(a):
     rec = json.loads(Path(a.r2).read_text())
     P, dtp, parts, cores, psha = Q.load(rec["plan"], rec["tree_plan"])
     pairs = RC.seam_pairs(P, parts)
-    solve_ = {c: json.loads(Path(v).read_text())["samples"] for c, v in json.loads(a.mesh_skew).items()}
+    docs_ = {c: json.loads(Path(v).read_text()) for c, v in json.loads(a.mesh_skew).items()}
+    _set_mc_stub_flag(docs_.values())
+    solve_ = {c: d["samples"] for c, d in docs_.items()}
     aocv = json.loads(Path(a.aocv).read_text())["clock_aocv"]
     g = a.g_per_mm
     tap = {t["part"]: t for t in rec["taps"]}
@@ -2286,6 +2373,9 @@ def add_common(p):
     p.add_argument("--stub-w", default="2x16w")
     p.add_argument("--stub-um", type=float, default=54.0)
     p.add_argument("--sizing", default="d1", choices=["d1", "none"])
+    p.add_argument("--spine-jog-um", type=float, default=0.0,
+                   help="R19: column taps / spine drivers off the spine straps join the nearest strap by one perpendicular "
+                        "jog <= this (stub RC); 0 = r3 rule (every point must sit on a strap)")
     p.add_argument("--no-spine", action="store_true", help="comparison: top tree straight to every column tap")
     p.add_argument("--t-extra", type=float, default=1500.0)
     p.add_argument("--feed", default="mesh3", choices=["mesh3", "r9", "periodic"],
@@ -2316,6 +2406,10 @@ def add_common(p):
                    help="R17 (with --lanes vss): local-root lift node lane: own y-tree leaf depth (R15/R16) or the deepest leaf "
                         "lane for every row (identical lift legs per type, 12.2a1)")
     p.add_argument("--centre-split", type=float, default=ISL, help="R15: centre fine row split -> YC -/+ this (um)")
+    p.add_argument("--chan-l0-ends-lane1", action="store_true",
+                   help="R22: move the lane-0 channel node + its leg-end repeaters to lane 1 (yb+8.64), full NDR (default off)")
+    p.add_argument("--chan-lane0-um", type=float, default=0.0,
+                   help="R21: lift of the centre-channel bottom lane (lane 0) in um (plan geometry; default 0 = R17-R20)")
     p.add_argument("--per-x", default=None, help="periodic feed x period um (default QC 2471.04)")
     p.add_argument("--per-off", default=None, help="periodic column-tap offsets, comma list (default QC 0,622.08,1235.52,1848.96)")
     p.add_argument("--chan-hc", default=None, help="centre channel H_c lane index (default QC 2)")

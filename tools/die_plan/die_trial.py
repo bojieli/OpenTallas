@@ -714,25 +714,133 @@ def ft_nets(P):
     return rows
 
 
-def route_netlist(P, type_bits):
+def channel_ports(P):
+    """INFRA-FIRST-QC-R21 (NUMBER-CHECK-QC-R20): partition<->partition ports that cross a planned die channel
+    (P.channel_of(pid), die.channels[].ports).  Their two faces are NOT abutted (e.g. the 43.2-um QC centre clock
+    channel), so they need die-top wires: [(pid, src part, src bus, dst part, dst bus, pin count)]."""
+    out = []
+    for pid, pr in sorted(P.ports.items()):
+        if S.DIE_PART in (pr["src"]["part"], pr["dst"]["part"]) or not P.channel_of(pid):
+            continue
+        out.append((pid, pr["src"]["part"], pr["src"]["bus"], pr["dst"]["part"], pr["dst"]["bus"], S.port_pins_count(pr)))
+    return out
+
+
+def abutted_pin_check(P, type_pin_xy=None, tol=1e-3):
+    """INFRA-FIRST-QC-R21: every bit of every ABUTTED partition<->partition port (no die channel) must land on the
+    SAME die point and layer from both sides, using the TYPE pin tables (gen_phys.type_pins, taken from each type's
+    first instance) transformed into each instance's die frame.  A miss = an abutted seam that only 'touches' in the
+    plan arithmetic but not in the hardened pins.  Returns dict(ports, bits, bad_bits, bad_ports, examples)."""
+    if type_pin_xy is None:
+        type_pin_xy = {}
+        for tn in P.types:
+            if any(p["type"] == tn for p in P.parts.values()):
+                type_pin_xy[tn] = {(bus, bit): (ln, x, y) for bus, bit, ln, x, y, _ in gen_phys.type_pins(P, tn)}
+    ports = bits = 0
+    bad, badp = [], set()
+    for pid, pr in sorted(P.ports.items()):
+        a, b = pr["src"]["part"], pr["dst"]["part"]
+        if S.DIE_PART in (a, b) or P.channel_of(pid):
+            continue
+        ports += 1
+        ta, tb = type_pin_xy[P.parts[a]["type"]], type_pin_xy[P.parts[b]["type"]]
+        for bit in range(S.port_pins_count(pr)):
+            bits += 1
+            pa, pb = ta.get((pr["src"]["bus"], bit)), tb.get((pr["dst"]["bus"], bit))
+            if pa is None or pb is None:
+                bad.append((pid, bit, "missing pin", pa, pb))
+                badp.add(pid)
+                continue
+            xa, ya = P.to_die(a, pa[1:])
+            xb, yb = P.to_die(b, pb[1:])
+            if pa[0] != pb[0] or abs(xa - xb) > tol or abs(ya - yb) > tol:
+                bad.append((pid, bit, f"{pa[0]}@({xa:.4f},{ya:.4f}) vs {pb[0]}@({xb:.4f},{yb:.4f})", None, None))
+                badp.add(pid)
+    return dict(ports=ports, bits=bits, bad_bits=len(bad), bad_ports=len(badp), examples=[list(e[:3]) for e in bad[:20]],
+                verdict="PASS" if not bad else "FAIL")
+
+
+def route_netlist(P, type_bits, channel_nets=True):
     """die route netlist: every instance's ft slots S_i[b] -> S_o[b] joined (one net per bit), arst_n on the reset
-    spine.  type_bits {type: {bus: nbits}} from the plan pins."""
+    spine.  type_bits {type: {bus: nbits}} from the plan pins.
+    INFRA-FIRST-QC-R21 (NUMBER-CHECK-QC-R20): every partition<->partition port that crosses a planned die channel
+    (channel_ports) joins its src bus pin to its dst bus pin per bit, so the die GRT routes the hop across the channel
+    (before R21 these were counted as abutted and left out of the GRT netlist).  When an end of the port is an ft slot
+    bus of that instance (the hop continues a feedthrough), the hop JOINS that ft net (one electrical net: S_i -> S_o
+    -> across the channel -> receiver), never a second driver on the same pin; otherwise it is a new ch_<port> net.
+    channel_nets=False = the pre-R21 netlist.  Returns (verilog, ft bits); route_netlist.channel = dict(ports, bits,
+    new_net_bits, ft_joined_bits) of the channel hops."""
     v = [f"module {sv(P.name)}_route (rst_n);", "  input rst_n;"]
     insts, nft = [], 0
     smod = standin_module_names(P)
+    width, ftw, slots = {}, {}, {}
     for n, p in sorted(P.parts.items()):
         tn = p["type"]
-        t = P.types[tn]
-        conns = [".arst_n(rst_n)"]
-        for s in t.get("ft_slots", []) or []:
-            bi, bo = type_bits[tn].get(s["name"] + "_i", 0), type_bits[tn].get(s["name"] + "_o", 0)
+        sl = []
+        for s_ in P.types[tn].get("ft_slots", []) or []:
+            bi, bo = type_bits[tn].get(s_["name"] + "_i", 0), type_bits[tn].get(s_["name"] + "_o", 0)
             k = min(bi, bo)
             if k <= 0:
                 continue
-            w = f"ft_{sv(n)}__{sv(s['name'])}"
-            v.append(f"  wire [{k - 1}:0] {w};")
-            conns.append(f".{s['name']}_i({w})")
-            conns.append(f".{s['name']}_o({w})")
+            w = f"ft_{sv(n)}__{sv(s_['name'])}"
+            width[w] = k
+            ftw[(n, s_["name"] + "_i")] = ftw[(n, s_["name"] + "_o")] = w
+            sl.append((s_["name"], w, k))
+        slots[n] = sl
+    parent = {}
+
+    def find(w):
+        while parent.get(w, w) != w:
+            w = parent[w]
+        return w
+
+    def union(x, y):
+        x, y = find(x), find(y)
+        if x == y:
+            return
+        # root preference: an ft wire (keeps the pre-R21 ft names), then the smaller name
+        kx, ky = (not x.startswith("ft_"), x), (not y.startswith("ft_"), y)
+        if ky < kx:
+            x, y = y, x
+        parent[y] = x
+    extra = {}            # (inst, bus) -> wire, channel-port ends that are not ft slot buses
+    nch = nchb = newb = joinb = 0
+    for pid, a, ba, b, bb, k in (channel_ports(P) if channel_nets and getattr(P, "ports", None) else []):
+        for part, bus in ((a, ba), (b, bb)):
+            have = type_bits[P.parts[part]["type"]].get(bus, 0)
+            if have != k:
+                raise ValueError(f"route_netlist: channel port {pid}: {part}.{bus} has {have} pins, port needs {k} "
+                                 "(bus shared by several ports: needs bit-slice connections)")
+            if (part, bus) in extra:
+                raise ValueError(f"route_netlist: {part}.{bus} is an end of two channel ports")
+        w = f"ch_{sv(pid)}"
+        width[w] = k
+        ends = [ftw.get((a, ba)), ftw.get((b, bb))]
+        for e in ends:
+            if e is not None:
+                if width[e] != k:
+                    raise ValueError(f"route_netlist: channel port {pid} ({k} bits) joins ft net {e} ({width[e]} bits)")
+                union(w, e)
+        if ends[0] is None:
+            extra[(a, ba)] = w
+        if ends[1] is None:
+            extra[(b, bb)] = w
+        nch += 1
+        nchb += k
+        joinb += k if any(e is not None for e in ends) else 0
+        newb += 0 if any(e is not None for e in ends) else k
+    route_netlist.channel = dict(ports=nch, bits=nchb, new_net_bits=newb, ft_joined_bits=joinb)
+    for w in sorted({find(x) for x in extra.values()}):
+        if not w.startswith("ft_"):
+            v.append(f"  wire [{width[w] - 1}:0] {w};")
+    for n, p in sorted(P.parts.items()):
+        tn = p["type"]
+        conns = [".arst_n(rst_n)"] + [f".{bus}({find(w)})" for (pn, bus), w in sorted(extra.items()) if pn == n]
+        for sname, w, k in slots[n]:
+            if find(w) == w:
+                v.append(f"  wire [{k - 1}:0] {w};")
+            conns.append(f".{sname}_i({find(w)})")
+            conns.append(f".{sname}_o({find(w)})")
             nft += k
         insts.append(f"  {smod[tn]} {sv(n)} ({', '.join(conns)});")
     v += insts + ["endmodule"]
@@ -1419,15 +1527,25 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     meta["grt"]["die_ft_bands"] = dict(layers=bl, band_rects=len(ft_band_rects(P)), share_strips=len(br),
                                        share_obstructions=len(band_share_obs(P, br)),
                                        transition_layers=list(TRANSITION_LAYERS), transition_keep=TRANSITION_KEEP)
-    seam_bits = 0
+    # INFRA-FIRST-QC-R21 (NUMBER-CHECK-QC-R20 kit bug): a port crossing a planned die channel is NOT abutted; it is a
+    # die-top net in grt/route.v (route_netlist).  abutted_seam_bits now counts only the truly abutted ports.
+    seam_bits = chan_bits = 0
     chan = 0
     for pid, pr in P.ports.items():
         if S.DIE_PART in (pr["src"]["part"], pr["dst"]["part"]):
             continue
-        seam_bits += S.port_pins_count(pr)
-        chan += 1 if P.channel_of(pid) else 0
+        if P.channel_of(pid):
+            chan += 1
+            chan_bits += S.port_pins_count(pr)
+        else:
+            seam_bits += S.port_pins_count(pr)
     meta["grt"]["abutted_seam_bits"] = seam_bits
     meta["grt"]["channel_ports"] = chan
+    meta["grt"]["channel_seam_bits"] = chan_bits
+    meta["grt"]["channel_nets"] = dict(route_netlist.channel)
+    meta["grt"]["abutted_pin_check"] = abutted_pin_check(P)
+    if meta["grt"]["channel_nets"]["bits"] != chan_bits:
+        raise SystemExit(f"die_trial kit: route.v channel nets {meta['grt']['channel_nets']} != {chan_bits} channel bits")
     (out / "run_grt.sh").write_text(run_sh("grt", 256, 16, "/usr/bin/time -v openroad -no_init -threads 16 -exit "
                                                          "/work/grt/grt.tcl > /work/grt/grt.log 2>&1; echo EXIT \\$? >> /work/grt/grt.log"))
     # clock runs (3 corners)

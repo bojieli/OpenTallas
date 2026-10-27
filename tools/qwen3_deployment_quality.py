@@ -629,7 +629,7 @@ def load_state(path, device):
 
 class Qwen3:
     def __init__(self, path, arith, weights, kv, groups=SPEC_GROUPS, device="cuda", wfile=None, order="contract", tp=4,
-                 prenorm=False):
+                 prenorm=False, fold=None):
         if prenorm and (order != "r25" or arith != "contract" or wfile is not None):
             raise ValueError("pre-norm r25 requires released checkpoint matrices and r25 arithmetic")
         self.prenorm = prenorm
@@ -658,7 +658,10 @@ class Qwen3:
         # final norm weight, ones when folded into lm_head), "pre" ({"<i>.qkv"|"<i>.gu": the
         # FP32 input channel scale applied before the product}) and "down_had" (the +-1
         # signs of the online randomised Hadamard applied to the down projection input).
-        fold_w = self.wfile["fold"] if self.wfile is not None else arith == "contract" and not prenorm
+        # fold (TOK-QK-KVL 10-27): force the norm-folded matrices in the GPU arithmetic too (RMSNorm weight -> ones,
+        # W' = bf16(W diag(w)) quantised), i.e. the very W8 codes / scales the die's ROM images hold
+        fold_w = self.wfile["fold"] if self.wfile is not None else (
+            fold if fold is not None else arith == "contract" and not prenorm)
         extra = self.wfile or {}
         pre = extra.get("pre") or {}
         self.down_had = extra.get("down_had")

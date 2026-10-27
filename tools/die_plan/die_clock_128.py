@@ -417,6 +417,7 @@ PIN_BAR_X = {f"BUFx{k}_ASAP7_75t_R": {"A": 0.027, "Y": yx}
 STACK_PAD = {"M2": (0.019, 0.009), "M3": (0.009, 0.020), "M4": (0.043, 0.012), "M5": (0.012, 0.043),
              "M6": (0.035, 0.016)}
 SHORT_STACK_PAD = {"M7": (0.016, 0.036), "M8": (0.08, 0.08)}
+CHANNEL_KEEP_UM = 0.864     # R20: channel-cell trunk centre >= one track pair (TREE_OFF_UM) inside the channel edge
 STACK_RISER_MAX_UM = 2.5     # longest M7 riser (TREE_OFF_UM + track move) the island window is sized for
 
 
@@ -451,16 +452,31 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
     root = tuple(M["meta"]["root_um"])
     errs, out, last_ext = [], [], [None]
     port_moves = {}
+    # R20 (opt-in via meta.clock_channel_keep = [[x0, y0, x1, y1], ...]): a horizontal trunk whose driver pin sits in a
+    # clock channel keeps its track inside the channel, CHANNEL_KEEP_UM off each channel edge
+    chans = [tuple(r) for r in (M.get("meta", {}).get("clock_channel_keep") or [])]
+
+    def chan_keep(pxy):
+        for r in chans:
+            if r[0] <= pxy[0] <= r[2] and r[1] <= pxy[1] <= r[3]:
+                return (r[1] + CHANNEL_KEEP_UM, r[3] - CHANNEL_KEEP_UM)
+        return None
     mm = router.max_move if router is not None else 0.0
 
     def port_xy(p):
         return root if p == "port:root" else txy[p[5:]]
 
-    def track(layer, ideal, a0, a1, name, what):
+    def track(layer, ideal, a0, a1, name, what, keep=None):
         if router is None:
             last_ext[0] = None
             return ideal, DRAWN
-        c, mode, e = router.place(layer, ideal, a0, a1, name)
+        if keep:      # R20: constrain only a track that would leave the clock channel (others unchanged)
+            c0 = router.place(layer, ideal, a0, a1, name, dry=True)[0]
+            if c0 is not None and keep[0] - 1e-9 <= c0 <= keep[1] + 1e-9:
+                keep = None
+            else:
+                router.modes[f"{layer}:channel_keep"] += 1
+        c, mode, e = router.place(layer, ideal, a0, a1, name, **(dict(keep=keep) if keep else {}))
         last_ext[0] = e
         if c is None:
             errs.append(dict(kind="no_clock_track", name=name, detail=f"{what} {layer} ideal {ideal:.3f}"))
@@ -512,7 +528,7 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
                                             for ld, p in Ls)
             mh = 0.0 if exact_h else mm
             rsv = (min(xs_all) - mh, max(xs_all) + mh)
-            ty, tm = track("M8", D[1] + off, rsv[0], rsv[1], nm, "trunk")
+            ty, tm = track("M8", D[1] + off, rsv[0], rsv[1], nm, "trunk", keep=chan_keep(D) if dcell else None)
             te = last_ext[0]
             xs_ = []
             if dcell:
@@ -760,9 +776,11 @@ class TrackRouter:
             return None
         return round(max(e0, best), 4)
 
-    def place(self, layer, ideal, a0, a1, net, avoid=()):
+    def place(self, layer, ideal, a0, a1, net, avoid=(), keep=None, dry=False):
         """(centre, mode) of the nearest legal track, or (None, None).  avoid: track centres this segment must not
-        take (CLOCK-KV-R13 split_drops: the opposite drop of the same junction, within DROP_SPLIT_UM)"""
+        take (CLOCK-KV-R13 split_drops: the opposite drop of the same junction, within DROP_SPLIT_UM).  keep (R20,
+        optional): (lo, hi) band the track centre must lie in (a clock-channel keep-in: the riser of a host-less
+        channel cell never leaves the channel)."""
         tr = self.tracks[layer]
         pitch, offs = tr["pitch_um"], tr["offset_um"]
         k0 = round((ideal - offs) / pitch)
@@ -774,6 +792,8 @@ class TrackRouter:
                 if abs(c - ideal) > self.max_move + 1e-9:
                     continue
                 if any(abs(c - v) < DROP_SPLIT_UM - 1e-6 for v in avoid):
+                    continue
+                if keep is not None and not (keep[0] - 1e-9 <= c <= keep[1] + 1e-9):
                     continue
                 e = self.tie_ext(layer, c, a0, a1)
                 sh = seg_shapes(layer, c, a0, a1, net, self.nd, self.shield, ext=e)
@@ -792,7 +812,11 @@ class TrackRouter:
                     mode, sh, e = FLANK, sh[:1], None
                 else:
                     continue
+                if dry:
+                    return c, mode, e
                 return self._take(layer, ideal, c, mode, e, sh)
+        if untied is not None and dry:
+            return untied[0], DRAWN, None
         if untied is not None:
             self.modes[f"{layer}:untied"] += 1
             return self._take(layer, ideal, untied[0], DRAWN, None, untied[1])

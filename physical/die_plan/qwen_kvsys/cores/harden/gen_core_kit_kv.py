@@ -690,6 +690,8 @@ def main():
     if a.astk_face_ports and not any(Path(f).name == "qkd_astk_static_leaves.sv" for f in files):
         files.append(str(REPO / "rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv"))
     for f in files:
+        if not Path(f).is_absolute():   # KV-CORES-R2/AHUB 10-27: repo-relative core-json sources (frozen-tree safe)
+            f = str(REPO / f)
         if a.kvspc_core_clock:
             import kvspc_core_clock
             f = str(kvspc_core_clock.source(REPO, f))
@@ -1118,6 +1120,8 @@ def main():
     # (face_flops.tcl: after io placement, before GPL); refused without a slice once required unless --trial
     ms = MS.kit_apply(kd, hc["module"], [w, h], a.master_slice, plan, a.trial, kind="core",
                       gpl_hook=kd / "face_flops.tcl")
+    # CTS-HOOK-PORT-1: plan-built core tree -> shared PRE/POST_CTS hook (no plan tree: kit unchanged)
+    MS.plan_tree_cts(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     fz = dict(schema="opentallas.kv.core_freeze.v1", type=tid, module=mod, outline_um=[w, h],
               plan_sha256=sha(a.plan), pins_file=hc["pins_file"], pins_sha256=sha(plandir / hc["pins_file"]),

@@ -111,7 +111,7 @@ LAYER_ORDER = ("M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9")
 _JD = [0]
 
 
-def _emit_steps(L, pts, final_junction=False, split_down=False):
+def _emit_steps(L, pts, final_junction=False, split_down=False, m8_end_ext=None):
     """encoder calls for a vertex list (as from stair): via on a layer change, a point on a move.
     The clock NDR (0.16 um) applies on M8/M9 only: an encoder path keeps the rule it was opened with, so the path is
     split at every VIA78 -- above it a path under the NDR layer rule, below it a default-width path (a lower-layer
@@ -140,7 +140,14 @@ def _emit_steps(L, pts, final_junction=False, split_down=False):
             L.append(op)
         elif (x0, y0) != (x1, y1):
             assert x0 == x1 or y0 == y1, ("non-Manhattan step", pts)
-            L.append(f"$e addPoint {q(x1)} {q(y1)}")
+            nxt = steps[k + 1] if k + 1 < len(steps) else None
+            if m8_end_ext and l0 == "M8" and nxt and nxt[1][0] == "M7":
+                # R19 DRC: the wide M8 drop ends ON the VIA78 (stair riser); its default end extension left the
+                # VIA78 M8 enclosure (+-0.027) 5 nm outside the wire end -> Min Step @ M8.  Extend the wire end to
+                # m8_end_ext (flush with the 0.16 um junction pad), plan geometry unchanged otherwise.
+                L.append(f"$e addPoint {q(x1)} {q(y1)} {q(m8_end_ext)}")
+            else:
+                L.append(f"$e addPoint {q(x1)} {q(y1)}")
     if final_junction:
         L[-1] = f"set jt [{L[-1]}]"
 
@@ -267,12 +274,12 @@ def _tie_units(L, s, pads, split_down):
             prev = "$" + v
 
 
-def _emit_stack(L, pts, pads, final_junction=False, split_down=False):
+def _emit_stack(L, pts, pads, final_junction=False, split_down=False, m8_end_ext=None):
     """_emit_steps + one centred min-area pad (dbWireEncoder addRect) after every via that lands on a pad layer at a
     stack point.  pads: {(x, y): set(layers)}."""
     P = _stack_pad()
     tmp = []
-    _emit_steps(tmp, pts, final_junction=final_junction, split_down=split_down)
+    _emit_steps(tmp, pts, final_junction=final_junction, split_down=split_down, m8_end_ext=m8_end_ext)
     # re-walk the vertices to know where each via op lands
     vs = [(l_, round(a, 4), round(b, 4)) for l_, a, b in pts]
     lands = [(l0, l1, (x1, y1)) for (l0, x0, y0), (l1, x1, y1) in zip(vs, vs[1:]) if l0 != l1]
@@ -383,6 +390,7 @@ def _stack_net_tcl(L, w, ports, rec):
             jline[v] = len(L) - 1
     # 3. loads
     anchors = []
+    ext8 = None if horiz else _stack_pad()["M8"][0]      # R19: vertical nets, M8 drop end flush with the junction pad
     for ld, bx, by in w["branches"]:
         v = round(bx if horiz else by, 4)
         root = tp(v)
@@ -422,7 +430,7 @@ def _stack_net_tcl(L, w, ports, rec):
         if s.get("tie"):       # R12: A tie -- down to the entry unit's M7 pin row, junction, its stack, strap to units
             i = max(k for k, p_ in enumerate(pts) if p_[0] == "M7")
             n0 = len(L)
-            _emit_stack(L, pts[:i + 1], pads, final_junction=True, split_down=r8)
+            _emit_stack(L, pts[:i + 1], pads, final_junction=True, split_down=r8, m8_end_ext=ext8)
             _TJ[0] += 1
             s["_jtie"] = f"jtie{_TJ[0]}"
             _rename_last_jt(L, n0, s["_jtie"])
@@ -432,7 +440,7 @@ def _stack_net_tcl(L, w, ports, rec):
             _tie_units(L, s, pads, r8)
             rec["ties"] = rec.get("ties", 0) + 1
         else:
-            _emit_stack(L, pts, pads, split_down=r8)
+            _emit_stack(L, pts, pads, split_down=r8, m8_end_ext=ext8)
             L.append(f"$e addITerm [IT {ld} A]")
         rec["pin_stairs"] += 1
     for i, pn in sorted(anchors, reverse=True):    # R8 ports on trunk points: BTerm right after that point

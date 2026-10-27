@@ -261,7 +261,7 @@ set rtr_ci {}
 
 def test_core_reset_rewire_refuses_a_private_pipeline_register():
     stub = '''
-set rtr_terminal_qnets {terminal 1}
+set rtr_terminal_qnets {terminal q}
 proc terminal {m} {if {$m eq "getName"} {return terminal}}
 proc buffered {m} {if {$m eq "getName"} {return buffered}; return {bo}}
 proc delayed {m} {if {$m eq "getName"} {return delayed}; return {fo}}
@@ -363,3 +363,35 @@ endmodule
                                 "-Wno-PINCONNECTEMPTY", "--top-module", "tiny_top"] + src,
                                capture_output=True, text=True)
             assert r.returncode == 0, r.stderr
+
+
+def test_core_reset_rewire_honours_qn_only_flops():
+    """S81-UNBLOCK-1 10-27: ASAP7 maps a terminal relay to DFFHQN (QN only) + INV, so the terminal net the placer
+    records is QN = NOT q.  A core reset that is INV(QN) is the relay's q (accepted); QN itself or BUF(QN) is the
+    inverted reset (refused); a non-terminal source stays refused."""
+    stub = '''
+set rtr_terminal_qnets {qn_net qn}
+proc qn_net {m} {if {$m eq "getName"} {return qn_net}}
+proc inv_q {m} {if {$m eq "getName"} {return inv_q}; return {io}}
+proc buf_qn {m} {if {$m eq "getName"} {return buf_qn}; return {bo}}
+proc other {m} {if {$m eq "getName"} {return other}; return {}}
+proc io {m} {if {$m eq "getMTerm"} {return mout}; return inv}
+proc bo {m} {if {$m eq "getMTerm"} {return mout}; return buf}
+proc ii {m} {if {$m eq "getMTerm"} {return minput}; return qn_net}
+proc mout {m} {return OUTPUT}
+proc minput {m} {return INPUT}
+proc inv {m} {if {$m eq "getMaster"} {return minv};return {io ii}}
+proc buf {m} {if {$m eq "getMaster"} {return mbuf};return {bo ii}}
+proc minv {m} {return INVx1_ASAP7_75t_R}
+proc mbuf {m} {return BUFx2_ASAP7_75t_R}
+'''
+    script = stub + RT.CORE_RESET_EQ_TCL + '''
+if {![rtr_reset_equiv inv_q 0 {}]} {error "INV(QN) = q refused"}
+if {[rtr_reset_equiv qn_net 0 {}]} {error "QN (inverted reset) accepted"}
+if {[rtr_reset_equiv buf_qn 0 {}]} {error "BUF(QN) (inverted reset) accepted"}
+if {[rtr_reset_equiv other 0 {}]} {error "non-terminal source accepted"}
+puts CORE_RESET_QN_PASS
+'''
+    out = subprocess.run(["tclsh"], input=script, text=True, capture_output=True)
+    assert out.returncode == 0 and not out.stderr, out.stderr
+    assert out.stdout.strip() == "CORE_RESET_QN_PASS"

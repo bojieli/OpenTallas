@@ -199,3 +199,69 @@ def test_edge_clocks_declared_and_linted():
     assert _errs(txt, ctx) == []
     bad = txt.replace(f"-period {6 * per:.4f} [get_ports clk_coll_blk]", f"-period {per:.4f} [get_ports clk_coll_blk]")
     assert any("clk_coll_blk" in e and "period" in e for e in _errs(bad, ctx))
+
+
+def _landing_kit():
+    """TINY + a plan clock.landing_contract (landing_contract.py c467e5cea): one landed receive clock (an edge clock)
+    and one forwarded-clock output sourced from the core tap."""
+    import copy
+    raw = copy.deepcopy(TINY)
+    P0 = schema.Plan(raw)
+    tn = next(t for t in P0.types if not P0.types[t].get("hard") and any(p["type"] == t for p in P0.parts.values()))
+    x, y = raw["partition_types"][tn]["clock"]["tap_um"]
+    ck = raw["partition_types"][tn]["clock"]
+    ck["edge_clocks"] = [{"port": "fclk_in_a", "tap_um": [x + 17.28, y + 8.64]}]
+    ck["landing_contract"] = {"pins": [
+        dict(name="fclk_in_a", dir="in", kind="clock", epoch=False, layer="M5", xy_um=[x + 17.28, y + 8.64]),
+        dict(name="fclk_out_a", dir="out", kind="clock", epoch=False, layer="M5", xy_um=[x + 34.56, y + 8.64],
+             source_clock_port=gen_phys.clock_pins(P0, tn)[0][0])]}
+    txt, ctx = _kit(raw, tn)
+    return txt, ctx
+
+
+def test_landing_contract_sdc_forms_pass():
+    """COORD 10-27 RULING S81-KITS-1: the landing contract SDC (generated clock on the forwarded output,
+    -ignore_clock_latency window on the landed crossing, remove_from_collection into a variable) lints clean."""
+    txt, ctx = _landing_kit()
+    assert "remove_from_collection" in txt and "create_generated_clock" in txt and "-ignore_clock_latency" in txt
+    assert ctx["forwarded_clock_outputs"] == ["fclk_out_a"] and ctx["landed_clock_inputs"] == ["fclk_in_a"]
+    assert _errs(txt, ctx) == []
+    # without the declared landing context the same text stays fail-closed
+    bare = {k: v for k, v in ctx.items() if k not in ("forwarded_clock_outputs", "landed_clock_inputs")}
+    assert _errs(txt, bare)
+
+
+def _gen_line(txt):
+    return next(ln for ln in txt.splitlines() if ln.startswith("create_generated_clock"))
+
+
+@pytest.mark.parametrize("mut,msg", [
+    (lambda t: t.replace("-divide_by 1 ", "-divide_by 2 "), "divide_by"),
+    (lambda t: t.replace("-divide_by 1 ", "-divide_by 1 -invert "), "option -invert"),
+    (lambda t: t.replace("-master_clock clk ", "-master_clock vclk "), "master"),
+    (lambda t: t.replace("[get_ports fclk_out_a]", "[get_ports x_o]"), "target"),
+    (lambda t: t.replace(_gen_line(t) + "\n", ""), "no create_generated_clock"),
+    (lambda t: t.replace(_gen_line(t), _gen_line(t) + "\n" + _gen_line(t).replace("-name fclk_out_a", "-name g2")),
+     "two generated clocks"),
+    (lambda t: t + "set_output_delay -max 10 -clock fclk_out_a [get_ports x_o]\n", "times a path"),
+    (lambda t: t.replace("$cland_data_outputs", "[all_outputs]"), "IO delay on forwarded clock output"),
+    (lambda t: t.replace("set_max_delay -ignore_clock_latency 356.5000", "set_max_delay -ignore_clock_latency 500"),
+     "window"),
+    (lambda t: t.replace("set_min_delay -ignore_clock_latency 0 ", "set_min_delay -ignore_clock_latency -50 "),
+     "window"),
+    (lambda t: t.replace("set_max_delay -ignore_clock_latency", "set_max_delay"), "only 'set_max_delay"),
+    (lambda t: "\n".join(ln for ln in t.splitlines() if not ln.startswith("set_min_delay")) + "\n",
+     "no set_min_delay"),
+    (lambda t: t + "set_max_delay -ignore_clock_latency 356.5 -from [get_clocks vclk] -to [get_clocks clk]\n",
+     "not between a landed receive clock"),
+    (lambda t: t + "set_false_path -from [get_clocks fclk_in_a] -to [get_clocks clk]\n", "forbidden"),
+    (lambda t: t.replace("[remove_from_collection [all_outputs] [get_ports {fclk_out_a}]]",
+                         "[remove_from_collection [all_outputs] [get_ports {fclk_out_a din}]]"), "not in the collection"),
+    (lambda t: t.replace("set cland_data_outputs", "set cland_other"), "undefined variable"),
+])
+def test_landing_contract_sdc_negatives(mut, msg):
+    txt, ctx = _landing_kit()
+    bad = mut(txt)
+    assert bad != txt
+    errs = _errs(bad, ctx)
+    assert any(msg in e for e in errs), errs

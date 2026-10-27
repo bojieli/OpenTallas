@@ -1,0 +1,110 @@
+"""S81-CORE-LAT-R13: core_family_slice unit checks (no docker, no build)."""
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import core_family_slice as F
+
+
+def test_splits_family_menu():
+    fam = dict(leaf_target=48)
+    assert F.splits_for(13238, fam)[:2] == [2, 2]          # W/E x 2 islands per side always
+    assert F.splits_for(3655, fam) == [2, 2, 4, 4]
+    assert F.splits_for(100, fam) == [2, 2, 1] or F.splits_for(100, fam)[:2] == [2, 2]
+
+
+def test_farthest_clusters_cover_and_limit():
+    pts = [(float(x), float(y), "DFF", "r%d_%d" % (x, y), "CLK") for x in range(0, 200, 5) for y in (0, 1)]
+    pts += [(5.0, 150.0, "DFF", "iso", "CLK")]
+    g = F.farthest_clusters(pts, 30.0)
+    flat = [p for x in g for p in x]
+    assert sorted(flat) == sorted(pts)                       # every sink exactly once
+    for x in g:
+        cx = sum(p[0] for p in x) / len(x); cy = sum(p[1] for p in x) / len(x)
+        assert max(abs(p[0] - cx) + abs(p[1] - cy) for p in x) <= 30.0
+
+
+# ------------------------------------------------------------------ R14: duplicate-sink fix + clock BTerm lookup
+import collections
+import pytest
+
+
+class _Maze:
+    """minimal maze: cells are (x, y) tuples on a 1 um grid."""
+    G = 1.0
+    def cell(self, p): return (round(p[0]), round(p[1]))
+    def xy(self, c): return (float(c[0]), float(c[1]))
+    def md(self, a, b): return abs(a[0] - b[0]) + abs(a[1] - b[1])
+    def path(self, a, b): return [a, (b[0], a[1]), b]
+
+
+def _plan_with_starved_leaf():
+    mz = _Maze()
+    s = lambda x, y, n: (float(x), float(y), "DFF", n, "CLK")
+    nodes = [("root", None, (50, 0), "BIG", "entry"),
+             ("A_br", "root", (50, 0), "BIG", "branch"), ("A", "A_br", (10, 0), "BIG", "leaf"),
+             ("B_br", "root", (50, 1), "BIG", "branch"), ("B", "B_br", (90, 0), "BIG", "leaf"),
+             ("C_br", "root", (50, 2), "BIG", "branch"), ("C_r0", "C_br", (50, 40), "REP", "rep"),
+             ("C", "C_r0", (50, 80), "BIG", "leaf")]
+    wires = [dict(level=1, edge="A", segs=[40.0], cells=[mz.path((50, 0), (10, 0))]),
+             dict(level=1, edge="B", segs=[40.0], cells=[mz.path((50, 1), (90, 0))]),
+             dict(level=1, edge="C", segs=[38.0, 40.0], cells=[mz.path((50, 2), (50, 40)), mz.path((50, 40), (50, 80))])]
+    # C's own sinks lie next to A and B, so after nearest-leaf reassignment C is nobody's nearest driver
+    leafsinks = {"A": [s(9, 0, "a0"), s(11, 1, "a1")], "B": [s(89, 0, "b0"), s(91, 1, "b1")],
+                 "C": [s(12, 0, "c0"), s(88, 0, "c1")]}
+    return dict(mz=mz, nodes=nodes, wires=wires, land={}, leafsinks=leafsinks)
+
+
+def test_reassign_never_duplicates_and_prunes_starved_leaf():
+    P = _plan_with_starved_leaf()
+    allsinks = sorted(x for v in P["leafsinks"].values() for x in v)
+    r = F.reassign_nearest(P, cap=10)
+    got = [x for v in P["leafsinks"].values() for x in v]
+    assert sorted(got) == allsinks                                    # every sink exactly once (R13 copied one)
+    assert max(collections.Counter(got).values()) == 1
+    assert "C" not in P["leafsinks"] and r["pruned"] == ["C", "C_br", "C_r0"]
+    names = {n[0] for n in P["nodes"]}
+    assert names == {"root", "A_br", "A", "B_br", "B"}                # no driver left driving nothing
+    assert {w["edge"] for w in P["wires"]} == {"A", "B"}
+    par = {n[0]: n[1] for n in P["nodes"]}
+    assert all(p is None or p in names for p in par.values())
+
+
+def test_prune_recursive_interior_and_land():
+    P = _plan_with_starved_leaf()
+    # interior folded edge X: X_br -> X_r0 (landing driver) -> leaves Y (empty) only
+    P["nodes"] += [("X_br", "root", (0, 0), "BIG", "branch"), ("X_r0", "X_br", (0, 5), "REP", "rep"),
+                   ("Y_br", "X_r0", (0, 9), "BIG", "branch"), ("Y", "Y_br", (0, 20), "BIG", "leaf")]
+    P["wires"] += [dict(level=1, edge="X", segs=[5.0, 4.0], cells=[]), dict(level=2, edge="Y", segs=[11.0], cells=[])]
+    P["land"] = {"X_r0": (4.0, "X")}
+    P["leafsinks"]["Y"] = []
+    gone = F.prune_empty_leaves(P)
+    assert gone == ["X_br", "X_r0", "Y", "Y_br"]
+    assert "X_r0" not in P["land"] and {w["edge"] for w in P["wires"]} == {"A", "B", "C"}
+
+
+def test_clock_bterm_bus_bit_and_fail_closed():
+    assert F.clock_bterm_from_log("x\nDUMP_GEO_CLKPORT clk[0]\n", "clk") == "clk[0]"      # bk_g: input [0:0] clk
+    assert F.clock_bterm_from_log("DUMP_GEO_CLKPORT ck\n", "ck") == "ck"
+    with pytest.raises(SystemExit):
+        F.clock_bterm_from_log("Error: invalid command name NULL\n", "ck")             # R13 symptom: no BTerm
+    with pytest.raises(SystemExit):
+        F.clock_bterm_from_log("DUMP_GEO_CLKPORT clk2\n", "clk")                        # never a guessed port
+
+
+def test_entry_trunk_insert_remove():
+    P = _plan_with_starved_leaf()
+    P["ent"] = (50, 0)
+    before = list(P["nodes"])
+    names = F.add_entry_trunk(P, "BUFx8_ASAP7_75t_R", 3)
+    assert names == ["K_r0", "K_r1", "K_r2"]
+    par = {n[0]: n[1] for n in P["nodes"]}
+    assert par["K_r0"] == "root" and par["K_r1"] == "K_r0" and par["K_r2"] == "K_r1"
+    assert all(par[k] == "K_r2" for k in ("A_br", "B_br", "C_br"))       # every path gains exactly 3 stages
+    seen = set()
+    for n in P["nodes"]:                                                  # parents precede children (converter order)
+        assert n[1] is None or n[1] in seen; seen.add(n[0])
+    xy = {n[0]: n[2] for n in P["nodes"]}
+    assert abs(xy["K_r2"][1] - 0) <= 2.2 and abs(xy["K_r0"][1]) > abs(xy["K_r2"][1])   # last stage next to branches
+    assert all(n[3] == "BUFx8_ASAP7_75t_R" and n[4] == "trunk" for n in P["nodes"] if n[0].startswith("K_r"))
+    F.remove_entry_trunk(P)
+    assert P["nodes"] == before

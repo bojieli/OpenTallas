@@ -23,7 +23,7 @@ class Pin:
     name: str           # base name
     width: int          # 1 for a scalar
     direction: str      # input / output
-    kind: str           # clock / data_in / data_out / control
+    kind: str           # clock / data_in / data_out / control / line (hard-IP line side, untimed)
     related: str = "clk"
 
     def bits(self) -> list[str]:
@@ -245,7 +245,10 @@ def write_liberty(name: str, t: Timing, pins: list[Pin], area: float, memory: di
         if p.width > 1:
             L.append(f"      bus_type : {name}_{p.name}_t;")
         L += [f"      direction : {p.direction};", "      related_power_pin : VDD;", "      related_ground_pin : VSS;"]
-        if p.direction == "output":
+        if p.kind == "line":
+            # hard-IP LINE SIDE (bump / off-die lane): no arc to the FDI clock; the macro retimes it internally
+            L.append("      max_capacitance : 46.08;" if p.direction == "output" else f"      capacitance : {t.pin_cap_ff:.4f};")
+        elif p.direction == "output":
             L += ["      max_capacitance : 46.08;", "      timing () {", f'        related_pin : "{p.related}";',
                   "        timing_type : rising_edge;", "        timing_sense : non_unate;"]
             for kind in ("cell_rise", "cell_fall"):
