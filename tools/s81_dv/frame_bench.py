@@ -64,7 +64,7 @@ class SynMat(I.Mat):
         self.w = G.Q8(G.E4M3[self.codes].astype(np.float64), self.exp.astype(np.int64) - 127)
 
 
-_Q_RE = re.compile(r'^\s*ot_v41_rom_elem_q_qxpq_w10\s+(?:#\(.*?\)\s*)?u_e(\d+)\s*\(', re.M)
+_Q_RE = re.compile(r'^\s*ot_v41_rom_elem_q_qxpq_w10(?:_gb)?\s+(?:#\(.*?\)\s*)?u_e(\d+)\s*\(', re.M)
 _BF_RE = re.compile(r'^\s*dsfd_bf_front_(?:static|roots)\s+(?:#\(.*?\)\s*)?u_e(\d+)\s*\(', re.M)
 # a frame band child (as-built col_<M>_l4_lp_asb_{x,nx} -> u_r0/u_r1/u_r2 = col_<M>_l4_lp_r<i>[_nx] plan kits)
 _BAND_RE = re.compile(r'^\s*(col_h\d+\w*)\s+(?:#\s*\(.*?\)\s*)?(u_\w+)\s*\(', re.M)
