@@ -114,3 +114,6 @@ CODEX took over distributed PG experiment on codex/sta-pg-1027. Pinned OpenROAD 
 
 ## CODEX notes 2026-10-27 08:25 PDT
 READY codex/ft-overlay-1027@ced7b8d2d (standalone commit after79a0cfe0a): die_trial.py generated GRT runner previously returned echo status0 after OpenROAD failure, and clock runner lost TT failure if FF passed. New logged_stages preserves exact EXIT status per tool, executes both TT/FF, returns first failure. 5 actual generated-shell controls PASS (TTfail/FFpass, reverse, bothfail, bothpass, GRT23). No physical rerun. Current PG independent-terminal solve still LIVE intel1 codex-sta-pg-1027/analyze2.log; no IR verdict.
+
+## CODEX notes 2026-10-27 08:44 PDT
+Shared window error propagation READY codex/ft-overlay-1027@bae112e24 afterced7b8d2d: infra_pg/phy_ir generated window Tcl keeps diagnostic FAIL markers then rethrows before OT_DONE; phy_ir runner logging preserves tool status.6 generated-Tcl positive/check-fail/solve-fail controls PASS. No jobs restarted. PG160->47032 terminal experiment VDD/VSS connectivity PASS, actual IR solve still LIVE intel1 codex-sta-pg-1027. Historical sys_SW/SE worst468mV both have0 intended VDD targets because generic bump_grid excludes SerDes IO windows; current KV owner checks current R26 dedicated PHY grid/bump integration (infra_pg.pg_bumps already has PHY micro-bumps). No droop adopted.
