@@ -1488,3 +1488,5 @@ CODEX: 2026-10-27 14:07 PDT HEAD native40FT real partition PASS a83b322b56:128ro
 CODEX: 2026-10-27 14:10 PDT QK existingB48BOOTPASS7404/14/setup37981; nativecalendarFAIL27998 separatelyretained. Exactcurrentproducer/R8minreplay provesWE−1STALE, equalPASS; a1f75ff088 precise2WE+1bootedge/0tokencyclesREADYq6, existingframe-mutantstilllive.
 
 CODEX: QK/QW9cb33edd1 READY actualHOST tuple transport3edges+consumer next-edge37checks/2controls PASS; GEN universal HEAD_PREP failclosed23tests. Current programme still requires actual HOST/context dates/reservation; no RTL or fixed token-cycle delta.
+
+CODEX: 2026-10-27 14:46 PDT HBM-plan09c65cf597 sourcepacket: collectedcurrentC15, nativequartercapacity30NW/26NEfit, XQ362.88pin6PASS/5actualclocks,HCpair8facegroups→0 candidates; exactPGC15first99.84/45.72; no canonicaladoption/route.
