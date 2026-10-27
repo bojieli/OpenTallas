@@ -95,8 +95,9 @@ def l_route(a, b, macs):
     return best[1]
 
 
-def split(S, k):
-    """count-balanced recursive bisection of sink list S into k parts (k power of 2), longer-side cut at the median.
+def split(S, k, axis=None):
+    """axis: R8 --cut_parent; None = longer side per cut, "x"/"y" = every cut of this node on that axis.
+    count-balanced recursive bisection of sink list S into k parts (k power of 2), longer-side cut at the median.
     R7: when sinks carry a plan weight "w" (--fringe), the cut is at the WEIGHTED median, so sparse fringe sinks
     (edge band, ROM-pin fringe) get their own compact leaves with fewer sinks; leaf COUNT per node stays equal."""
     parts = [S]
@@ -105,7 +106,7 @@ def split(S, k):
         for P in parts:
             xs = [s["x"] for s in P]
             ys = [s["y"] for s in P]
-            ax = "x" if (max(xs) - min(xs)) >= (max(ys) - min(ys)) else "y"
+            ax = axis or ("x" if (max(xs) - min(xs)) >= (max(ys) - min(ys)) else "y")
             Q = sorted(P, key=lambda s: (s[ax], s["y" if ax == "x" else "x"]))
             h = len(Q) // 2
             if Q and "w" in Q[0]:
@@ -150,6 +151,108 @@ def centroid(P):
     return (sum(s["x"] for s in P) / len(P), sum(s["y"] for s in P) / len(P))
 
 
+HULL_TOL = 1e-3
+
+
+def hull_box(nd, pxy):
+    """R8 planner rule (COORD RULING HEAD-CORE-LAT-R7 b): allowed site box of a non-leaf tree node.
+    Per axis: the span [lo, hi] of its children's sites (the node never lies outside its children's bounding box);
+    if the parent lies beyond the span, the node sits on the span edge that faces the parent, so the parent leg
+    ends where the children start and no leg doubles back (the elemB R7 N1_1 U-turn: parent y 104.5, node y 55.4,
+    children up to y 85).  Returns ((x0, x1), (y0, y1))."""
+    box = []
+    for ax in (0, 1):
+        lo = min(k["xy"][ax] for k in nd["kids"])
+        hi = max(k["xy"][ax] for k in nd["kids"])
+        p = pxy[ax]
+        box.append((hi, hi) if p > hi else (lo, lo) if p < lo else (lo, hi))
+    return tuple(box)
+
+
+def hull_site(want, box, macs, halo):
+    """projection of the preferred site onto the allowed box, then onto the legal sites (out of every macro halo)
+    without leaving the box; SystemExit when the box has no legal site (plan must change, no silent fallback)."""
+    (x0, x1), (y0, y1) = box
+    p = (min(max(want[0], x0), x1), min(max(want[1], y0), y1))
+    if not inside(p, macs, halo):
+        return p
+    cands = []
+    for m in macs:
+        mx0, my0, mx1, my1 = m["rect"]
+        for q in ((mx0 - halo - 0.01, p[1]), (mx1 + halo + 0.01, p[1]), (p[0], my0 - halo - 0.01), (p[0], my1 + halo + 0.01)):
+            cands.append(q)
+    cands += [(x, y) for x in (x0, x1) for y in (y0, y1)]
+    ok = [q for q in cands if x0 - HULL_TOL <= q[0] <= x1 + HULL_TOL and y0 - HULL_TOL <= q[1] <= y1 + HULL_TOL
+          and not inside(q, macs, halo)]
+    if not ok:
+        raise SystemExit(f"HULL_NO_SITE want {want} box {box}")
+    return min(ok, key=lambda q: abs(q[0] - p[0]) + abs(q[1] - p[1]))
+
+
+def hull_violations(T, rxy, tol=0.01):
+    """every non-leaf node vs its children: 'box' = outside the children's bounding box, 'back' = some leg doubles
+    back (parent beyond the children's span on an axis but the node not on the facing edge).  [] = rule holds."""
+    out = []
+
+    def walk(nd, pxy):
+        for k in nd["kids"]:
+            if k["kids"]:
+                for ax in (0, 1):
+                    lo = min(c["xy"][ax] for c in k["kids"])
+                    hi = max(c["xy"][ax] for c in k["kids"])
+                    q, p = k["xy"][ax], pxy[ax]
+                    if q < lo - tol or q > hi + tol:
+                        out.append((k["name"], "box", "xy"[ax], round(q, 2), round(lo, 2), round(hi, 2)))
+                    elif (p > hi + tol and q < hi - tol) or (p < lo - tol and q > lo + tol):
+                        out.append((k["name"], "back", "xy"[ax], round(q, 2), round(lo, 2), round(hi, 2)))
+                walk(k, k["xy"])
+    walk(T, rxy)
+    return out
+
+
+def grandparent_hits(T, margin=5.0):
+    """GEOM-REVIEW-9 gate (R7 c): a node at level >= 3 must not be nearer, by Manhattan distance + margin, to its
+    grandparent than to its parent.  Leaves count.  Returns [(name, d_grandparent, d_parent)]."""
+    out = []
+
+    def d(p, q):
+        return abs(p[0] - q[0]) + abs(p[1] - q[1])
+
+    def walk(nd, par, gp, lvl):
+        if lvl >= 3 and d(nd["xy"], gp["xy"]) + margin < d(nd["xy"], par["xy"]):
+            out.append((nd["name"], round(d(nd["xy"], gp["xy"]), 1), round(d(nd["xy"], par["xy"]), 1)))
+        for k in nd["kids"]:
+            walk(k, nd, par, lvl + 1)
+    for k in T["kids"]:
+        walk(k, T, None, 1)
+    return out
+
+
+def apply_hull(T, rxy, macs, halo, passes=12):
+    """top-down passes until no node moves: every non-leaf node = hull_site(its current site, hull_box).  Leaves stay
+    at their sink centroid.  Returns (passes used, moved node count of the first pass)."""
+    first = None
+    for it in range(1, passes + 1):
+        moved = [0]
+
+        def td(nd, pxy):
+            for k in nd["kids"]:
+                if k["kids"]:
+                    q = hull_site(k["xy"], hull_box(k, pxy), macs, halo)
+                    if abs(q[0] - k["xy"][0]) + abs(q[1] - k["xy"][1]) > HULL_TOL:
+                        moved[0] += 1
+                        k["xy"] = q
+                    td(k, k["xy"])
+        td(T, rxy)
+        first = moved[0] if first is None else first
+        if not moved[0]:
+            return it, first
+    v = hull_violations(T, rxy)
+    if v:
+        raise SystemExit(f"HULL_NO_CONVERGE {len(v)} {v[:4]}")
+    return passes, first
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("geo")
@@ -171,6 +274,10 @@ def main():
     ap.add_argument("--fringe", default="", help="R7: 'kn,gamma,cap' sparsity weights for the weighted bisection (fringe sinks get own compact leaves)")
     ap.add_argument("--tree_root", default=None, help="R7: 'x,y' or 'centroid': the H tree is rooted here and fed from the entry island by ONE straight leg (repeaters every --seg); the island stays at the plan entry (COORD 06:23)")
     ap.add_argument("--l1_mirror", type=int, default=0, help="R7: L1 sites at mirror points root +-(dx,dy), dx/dy = mean |offset| of the balanced sites: every L1 leg equal by geometry (no detour)")
+    ap.add_argument("--hull", type=int, default=0, help="R8 (COORD R7 ruling b, MEASURED BAD: elemB uf_phys3 w37-49 vs w13.6, so default 0): 1 = every non-leaf node inside its children's bounding box and on the face toward its parent when the parent lies beyond it (no leg doubles back), projected onto legal sites; 0 = legacy R4-R7 siting (reproduces old plans)")
+    ap.add_argument("--cut_parent", type=int, default=0, help="R8: 1 = partition each non-root node across the axis of its parent's approach (GEOM-REVIEW-9 R7 c fix)")
+    ap.add_argument("--cut_parent_margin", type=float, default=0.0)
+    ap.add_argument("--gp_gate", type=float, default=5.0, help="R8 GEOM-REVIEW-9 grandparent gate margin (um): fail = a level>=3 node nearer its grandparent than its parent by more than this")
     ap.add_argument("--cell", default=BUF)
     ap.add_argument("--repcell", default=BUF)
     ap.add_argument("--leafcell", default=BUF)
@@ -231,12 +338,26 @@ def main():
         seg["TR"] = abs(tr[0] - dxy[0]) + abs(tr[1] - dxy[1])
         root, rxy = "TR", tr
     # 1) planned partition (count-balanced recursive bisection), 2) node sites, 3) legs top-down
-    def part(P, lvl, name):
+    def cut_axis(P, pc):
+        """R8 --cut_parent (GEOM-REVIEW-9 R7 c): when the parent (proxy: its sink centroid, or the entry for L1)
+        lies beyond this node's sink box, cut ONLY across the approach axis, so every child group spans the
+        approach direction and none lies back between the parent and the node (the N1_1 mis-partition)."""
+        if not a.cut_parent or pc is None:
+            return None
+        xs = [s["x"] for s in P]; ys = [s["y"] for s in P]
+        bx = max(min(xs) - pc[0], pc[0] - max(xs), 0.0)
+        by = max(min(ys) - pc[1], pc[1] - max(ys), 0.0)
+        if max(bx, by) <= a.cut_parent_margin:
+            return None
+        return "x" if by >= bx else "y"
+
+    def part(P, lvl, name, pc=None):
         if lvl == len(fos):
             return dict(name=name[:-1], sinks=P, kids=[])
+        c = centroid(P)
         return dict(name=name[:-1] if lvl else "", sinks=P,
-                    kids=[part(Q, lvl + 1, f"{name}{i}_") for i, Q in enumerate(split(P, fos[lvl]))])
-    T = part(sinks, 0, "N")
+                    kids=[part(Q, lvl + 1, f"{name}{i}_", c) for i, Q in enumerate(split(P, fos[lvl], cut_axis(P, pc) if lvl else None))])
+    T = part(sinks, 0, "N", None)
     if a.sector:   # top level: count-balanced ANGULAR sectors about the entry (equal loads), L1 sites at one common L1 radius
         import math
         k = fos[0]
@@ -332,6 +453,18 @@ def main():
             l1_meta.append(dict(name=kd["name"], n=len(kd["sinks"]), centroid=[round(c, 2) for c in centroid(kd["sinks"])],
                                 route_to_centroid=round(Lr, 1), site=[round(c, 2) for c in xy], leg=round(R, 2)))
         print("L1EQ", json.dumps(l1_meta))
+
+    hull_meta = dict(mode=a.hull, before=hull_violations(T, rxy))
+    if a.hull:
+        hull_meta["passes"], hull_meta["moved_first_pass"] = apply_hull(T, rxy, macs, a.halo)
+    hull_meta["after"] = hull_violations(T, rxy)
+    print("HULL", json.dumps(dict(mode=a.hull, before=len(hull_meta["before"]), after=len(hull_meta["after"]),
+                                  passes=hull_meta.get("passes"), moved=hull_meta.get("moved_first_pass"))))
+    if a.hull and hull_meta["after"]:
+        raise SystemExit(f"HULL_FAIL {hull_meta['after'][:4]}")
+    T["xy"] = rxy
+    gp_hits = grandparent_hits(T, a.gp_gate)
+    print("GPGATE", json.dumps(dict(hits=len(gp_hits), sample=gp_hits[:6])))
 
     eqL = sorted({int(x) for x in a.eq_levels.split(",") if x}, reverse=True)
     eq_meta = []
@@ -446,7 +579,11 @@ def main():
                 n_sinks=len(sinks), n_leaves=len(leaves), leaf_sinks=[min(sz), max(sz)], n_tree=len(tree),
                 n_rep=sum(1 for t in tree if "_r" in t[0]), macros=mac, l1=l1_meta, eq=eq_meta,
                 tree_root=list(rxy), fringe=a.fringe, fringe_median_um=fr_med,
-                l1_legs=[round(abs(k["xy"][0] - T["xy"][0]) + abs(k["xy"][1] - T["xy"][1]), 2) for k in T["kids"]])
+                l1_legs=[round(abs(k["xy"][0] - T["xy"][0]) + abs(k["xy"][1] - T["xy"][1]), 2) for k in T["kids"]],
+                hull=dict(mode=hull_meta["mode"], before=len(hull_meta["before"]), after=len(hull_meta["after"]),
+                          passes=hull_meta.get("passes"), moved_first_pass=hull_meta.get("moved_first_pass"),
+                          before_sample=hull_meta["before"][:8]),
+                gp_gate=dict(margin=a.gp_gate, hits=len(gp_hits), sample=gp_hits[:12]), cut_parent=a.cut_parent)
     json.dump(summ, open(a.out + ".plan.json", "w"), indent=1)
     print("PLAN", json.dumps({k: summ[k] for k in ("n_sinks", "n_leaves", "leaf_sinks", "n_tree", "n_rep")}))
 

@@ -1,0 +1,12 @@
+c8b_f5_24444_b0 --fanouts 2,4,4,4,4 --fringe 8,1,6 --cut_parent 1
+c8b_f1_24444_b0 --fanouts 2,4,4,4,4 --fringe 8,1,3 --cut_parent 1
+c8b_f13_24444_b0 --fanouts 2,4,4,4,4 --fringe 4,1,6 --cut_parent 1
+c8b_f5_24444_b1 --fanouts 2,4,4,4,4 --balance 1 --fringe 8,1,6 --cut_parent 1
+c8b_f5_44244_b1 --fanouts 4,4,2,4,4 --balance 1 --fringe 8,1,6 --cut_parent 1
+c8b_f5_44244_b0 --fanouts 4,4,2,4,4 --fringe 8,1,6 --cut_parent 1
+c8b_f13_44244_b1 --fanouts 4,4,2,4,4 --balance 1 --fringe 4,1,6 --cut_parent 1
+c8b_f5_44442_b1 --fanouts 4,4,4,4,2 --balance 1 --fringe 8,1,6 --cut_parent 1
+c8b_f5_44442_b0 --fanouts 4,4,4,4,2 --fringe 8,1,6 --cut_parent 1
+c8b_f5_442242_b1 --fanouts 4,4,2,2,4,2 --balance 1 --fringe 8,1,6 --cut_parent 1
+c8b_f11_24444_b0 --fanouts 2,4,4,4,4 --fringe 8,1,10 --cut_parent 1
+c8b_f5_42444_b0 --fanouts 4,2,4,4,4 --fringe 8,1,6 --cut_parent 1

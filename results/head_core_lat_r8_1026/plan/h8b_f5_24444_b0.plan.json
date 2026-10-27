@@ -1,0 +1,133 @@
+{
+ "argv": [
+  "/srv/opentallas-scratch2/claude/wt/head-core-lat-r8-1026/tools/s81_head/head_tree_plan.py",
+  "/srv/opentallas-scratch2/claude/head-core-lat-r5-1026/geo/elemB_r6.geo",
+  "/srv/opentallas-scratch2/claude/head-core-lat-r8-1026/p/h8b_f5_24444_b0",
+  "--entry",
+  "142.56,142.56",
+  "--seg",
+  "1000",
+  "--fanouts",
+  "2,4,4,4,4",
+  "--fringe",
+  "8,1,6",
+  "--hull",
+  "1"
+ ],
+ "geo_sha256": "84e5167c0c74caa37720c3bc51dc8eb25e87bdb144afdc686c9315265caca2d1",
+ "entry": [
+  142.56,
+  142.56
+ ],
+ "n_sinks": 25981,
+ "n_leaves": 512,
+ "leaf_sinks": [
+  13,
+  59
+ ],
+ "n_tree": 170,
+ "n_rep": 0,
+ "macros": [
+  [
+   "u_m.u_rom0",
+   "N0_3_3_3_2",
+   [
+    135.252,
+    207.34
+   ]
+  ],
+  [
+   "u_m.u_rom1",
+   "N1_3_3_3_3",
+   [
+    269.172,
+    207.34
+   ]
+  ]
+ ],
+ "l1": [],
+ "eq": [],
+ "tree_root": [
+  142.56,
+  142.56
+ ],
+ "fringe": "8,1,6",
+ "fringe_median_um": 1.9979999999999905,
+ "l1_legs": [
+  42.72,
+  41.18
+ ],
+ "hull": {
+  "mode": 1,
+  "before": 282,
+  "after": 0,
+  "passes": 3,
+  "moved_first_pass": 154,
+  "before_sample": [
+   [
+    "N0",
+    "back",
+    "x",
+    80.6,
+    40.68,
+    124.48
+   ],
+   [
+    "N0_0",
+    "back",
+    "x",
+    40.68,
+    21.94,
+    66.96
+   ],
+   [
+    "N0_0",
+    "back",
+    "y",
+    84.37,
+    65.67,
+    105.99
+   ],
+   [
+    "N0_0_0",
+    "back",
+    "x",
+    24.81,
+    15.56,
+    29.88
+   ],
+   [
+    "N0_0_0",
+    "back",
+    "y",
+    70.14,
+    53.32,
+    81.23
+   ],
+   [
+    "N0_0_0_0",
+    "back",
+    "y",
+    53.32,
+    48.38,
+    57.61
+   ],
+   [
+    "N0_0_0_1",
+    "back",
+    "y",
+    66.37,
+    63.33,
+    69.12
+   ],
+   [
+    "N0_0_0_2",
+    "back",
+    "x",
+    15.56,
+    10.86,
+    20.03
+   ]
+  ]
+ }
+}

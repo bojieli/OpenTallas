@@ -1,0 +1,13 @@
+{"lane":"HEAD-CORE-LAT-R8","date":"Mon Oct 26 19:40:27 PDT 2026","numbers":"UNCHECKED unless marked CHECKED","model":"uf_phys3 v1 (MODEL-REFIT-3 c46af260b) GRT basis; window = per-leaf (leaf-mean) window as p3_predict reports",
+ "planner_rules":{"hull_box":"--hull 1: node in children bbox + on face toward parent; R7 elemB r7b had 0 box violations (CHECKED by script) so the literal rule does not catch N1_1; full no-double-back form collapses balance: elemB 12 plans pred TT w36.7-49.3 / FF w30.4-41.1 (default stays 0)",
+  "cut_parent":"--cut_parent 1 (GEOM-9 fix: cut across the parent approach axis): elemB 12 plans pred TT w20.7-23.9, gp-gate hits 6-27 (not 0)",
+  "gp_gate":"GEOM-9 grandparent gate (level>=3 incl leaves, margin 5 um): r7b 19 hits, r7a 32 hits (GEOM-9 counted 9/19; level convention differs)"},
+ "elemB_r7_model_error":{"pred_TT":[233.78,13.59],"meas_TT":[239.28,19.49],"pred_FF":[179.01,11.54],"meas_FF":[185.74,16.40],
+  "per_leaf_resid_TT":{"mean":5.50,"sd":2.59,"max":14.62},"per_leaf_resid_FF":{"mean":6.73,"sd":2.22,"max":14.71},"by_L2_TT_N1_1":11.5,"by_L2_TT_others":"3.5-5.5",
+  "corr_resid_vs_doubleback_excess":-0.27,
+  "N1_1_net":"same wire C 19.2 fF / fanout 4 / star 160.7 um as N1_2_n (19.2 fF, 155.6 um) but net delay 10.7 vs 6.2 ps, child input slew 41.6 vs 31.1 ps (probe nodes_r7b_TT.tsv): R/topology of the GRT route, not plan path length"},
+ "elemB_sized":{"spec":"r7b_f5_24444_b0_szw (12 cells: 10 BUFx10, 2 BUFx8)","pred_TT":[234.31,8.84],"pred_FF":[178.21,8.66],"pred_plus_R7_leaf_resid_TT":[239.80,17.94],"pred_plus_R7_leaf_resid_FF":[184.94,13.87],"built":false,"why":"sizer slows N1_1 (BUFx10) where measurement is already +11.5; GEOM-9: no elemB build before re-place (r7 pins + utilisation density, hole)"},
+ "elemA_built":{"spec":"r7a_f5_44244_szw (12 d1 cells)","unit":"oth-ubuntu-2108550-1793068107 intel1 exit 0","grt_overflow":"0 (Total line, CHECKED)",
+  "pred_TT":[243.75,10.88],"pred_FF":[186.05,9.62],"meas_TT":[247.10,13.68],"meas_FF":[190.78,11.12],"meas_sink_window_TT":19.73,"meas_sink_window_FF":18.61,
+  "L1_means_TT":{"N0":245.2,"N1":248.5,"N2":247.3,"N3":247.4},"L1_means_FF":{"N0":190.0,"N1":190.3,"N2":190.7,"N3":192.1},
+  "resid_TT":{"mean":3.34,"sd":1.29,"max":6.96},"resid_FF":{"mean":4.72,"sd":1.05,"max":8.02},"gp_gate_hits":32}}
