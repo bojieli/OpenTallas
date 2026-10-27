@@ -192,3 +192,14 @@ def test_calibrated_summary_matches_d1_kernel_and_keeps_sink_extrema(monkeypatch
     assert q["TT"]["sink_min"] == 10. and q["TT"]["sink_max"] == 30.
     assert q["FF"]["mean"] == round((10+18+30)/3,2)
     assert q["FF"]["leaf_out_slew_max"] == 5.
+
+
+def test_leaf_rebalance_moves_real_sinks_without_stage_or_coverage_changes():
+    P=_plan_with_starved_leaf();P['leafsinks']={'A':[(float(i),0.,'a'+str(i),'CLK','DFF') for i in range(10)],'B':[(10.,0.,'b0','CLK','DFF'),(11.,0.,'b1','CLK','DFF')]}
+    P['nodes']=[(n[0],n[1],(5,0) if n[0]=='A' else (11,0) if n[0]=='B' else n[2],n[3],n[4]) for n in P['nodes'] if not n[0].startswith('C')]
+    P['wires']=[w for w in P['wires'] if w['edge'] in P['leafsinks']]
+    before=sorted(x for g in P['leafsinks'].values() for x in g);nodes=[(n[0],n[1]) for n in P['nodes']]
+    got=F.rebalance_leaf_counts(P,35.)
+    assert got['moved']==4 and got['counts']==[6,6]
+    assert before==sorted(x for g in P['leafsinks'].values() for x in g)
+    assert nodes==[(n[0],n[1]) for n in P['nodes']]

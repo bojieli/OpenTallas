@@ -146,6 +146,47 @@ def reassign_nearest(P, cap):
     return dict(moved=moved, cap=cap, pruned=pruned)
 
 
+def rebalance_leaf_counts(P, limit_um):
+    """Structural leaf-load balancing BEFORE d1: move nearest eligible boundary
+    sinks from overfull leaves to underfull leaves, targeting floor(N/leaves).
+    Only actual sink membership changes; no pads, clock measurement or delay
+    target enters. A transfer must preserve the geometric leaf-spread bound.
+    """
+    leaves=P["leafsinks"]; target=sum(map(len,leaves.values()))//len(leaves)
+    pos={n[0]:P["mz"].xy(n[2]) for n in P["nodes"] if n[0] in leaves}
+    dist=lambda p,q:abs(p[0]-q[0])+abs(p[1]-q[1])
+    def spread(group):
+        xy=(sum(p[0] for p in group)/len(group),sum(p[1] for p in group)/len(group))
+        return max(dist(p,xy) for p in group)
+    moved=0
+    for receiver in sorted(leaves,key=lambda n:(len(leaves[n]),n)):
+        while len(leaves[receiver])<target:
+            candidates=[]
+            for donor in sorted(leaves):
+                if len(leaves[donor])<=target:continue
+                for point in leaves[donor]:
+                    if dist(point,pos[receiver])>2*limit_um:continue
+                    candidates.append((dist(point,pos[receiver])-dist(point,pos[donor]),donor,point))
+            chosen=None
+            for _,donor,point in sorted(candidates,key=lambda x:(x[0],x[1],x[2][2],x[2][3])):
+                dest=leaves[receiver]+[point]
+                remain=[p for p in leaves[donor] if p!=point]
+                if spread(dest)<=limit_um and spread(remain)<=limit_um:
+                    chosen=donor,point;break
+            if chosen is None:break
+            donor,point=chosen;leaves[donor].remove(point);leaves[receiver].append(point);moved+=1
+    cell={n:P["mz"].cell((sum(p[0] for p in g)/len(g),sum(p[1] for p in g)/len(g))) for n,g in leaves.items()}
+    P["nodes"]=[(n[0],n[1],cell.get(n[0],n[2]),n[3],n[4]) for n in P["nodes"]]
+    nodes={n[0]:n for n in P["nodes"]}
+    for wire in P["wires"]:
+        leaf=wire["edge"]
+        if leaf in cell:
+            parent=nodes[nodes[leaf][1]][2]
+            wire["segs"][-1]=P["mz"].md(parent,cell[leaf])
+            wire["cells"][-1]=P["mz"].path(parent,cell[leaf])
+    return dict(target=target,moved=moved,counts=[min(map(len,leaves.values())),max(map(len,leaves.values()))])
+
+
 def _edge_of(name):
     """plan node name -> its wire edge (T0123_br / T0123_r1 / T0123 -> T0123)."""
     m = re.match(r"(.*)_(br|r\d+)$", name)
@@ -347,6 +388,7 @@ def plan(geo, fam, libtt, libff, name, trunk_cal=None):
     P = H.plan(str(geo), sp, fam.get("smax", 70.0), [])
     rea = reassign_nearest(P, int(fam.get("reassign_cap", 1.5) * max(len(v) for v in P["leafsinks"].values()))) if fam.get("reassign") else None
     split = split_long_leaves(P, fam.get("leaf_limit", 35.0))
+    balanced = rebalance_leaf_counts(P, fam.get("leaf_limit",35.0)) if fam.get("balance_leaf_counts") else None
     kr, kc = map(float, fam.get("rc", "0.8,0.9").split(","))
     r = 0.5 * (1.80365e-2 + 1.89935e-2) * kr; c = 0.5 * (1.78475e-1 + 1.64264e-1) * kc
     cells = sorted(set(ENV + [H.REP, H.BIG]))
@@ -373,7 +415,7 @@ def plan(geo, fam, libtt, libff, name, trunk_cal=None):
     spread = M8.leaf_spread(P)
     islands = sorted({mz.xy(P["site"][g]) for g in P["site"] if len(g) == 2})
     rec = dict(name=name, family=fam["name"], splits=",".join(map(str, sp)), smax=fam.get("smax", 70.0), wire=fam.get("wire", "std"),
-               sinks=sinks, split_leaves=split, reassign=rea, entry_trunk=trunk, level_len_um=[round(x, 2) for x in P["T"]],
+               sinks=sinks, split_leaves=split, reassign=rea, balanced_leaf_counts=balanced, entry_trunk=trunk, level_len_um=[round(x, 2) for x in P["T"]],
                repeaters_per_edge=[k - 1 for k in P["K"]], stages=sorted(depths), n_cells=len(P["nodes"]),
                sized_masters={"%s:%s" % k: v for k, v in sorted(sized.items())},
                frozen_masters={n[0]: n[3] for n in P["nodes"]}, TT=res["TT"], FF=res["FF"],
