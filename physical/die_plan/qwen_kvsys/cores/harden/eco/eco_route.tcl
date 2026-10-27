@@ -10,6 +10,13 @@
 #   OT_HOLD_MARGIN  repair_timing -hold -hold_margin (ps), OT_HOLD_ALLOW_SETUP, OT_HOLD_MAXBUF
 # No RTL / cycle / clock-tree / SDC change; the verdict is tools/die_plan/signoff.py TT setup / FF hold on the re-routed DB.
 read_spef $::env(RESULTS_DIR)/6_final.spef
+# FLOW-CLKFREEZE 2026-10-27: lock the routed clock network (FIXED wires, FIXED + dont_touch clock-net instances)
+# before any repair, so incremental GRT / DRT never re-route a clock net (tools/die_plan/clk_freeze.tcl; blocking
+# geometry diff = tools/die_plan/clk_freeze_check.sh in the chain).  Staged next to this file by every ECO chain.
+set _ckf [file join [file dirname [info script]] clk_freeze.tcl]
+if {![file exists $_ckf]} { error "OT_CLK_FREEZE FAIL: $_ckf not staged (ECO refuses to run without the clock lock)" }
+source $_ckf
+ot_clk_freeze
 global_route -start_incremental
 proc kvc_drv {} {
   if {$::env(OT_MAX_FANOUT) > 0} {
@@ -32,6 +39,7 @@ if {$drv_place && !$drv_last} {
   kvc_drv
   detailed_placement
   global_route -end_incremental
+  ot_clk_freeze_assert post_grt
   global_route -start_incremental
   estimate_parasitics -global_routing
 } elseif {!$drv_last} { kvc_drv }
@@ -65,5 +73,6 @@ if {[info exists ::env(OT_PAD_MASTERS)] && $::env(OT_PAD_MASTERS) ne ""} {
 }
 detailed_placement
 global_route -end_incremental
+ot_clk_freeze_assert post_grt
 estimate_parasitics -global_routing
 write_guides $::env(RESULTS_DIR)/route.guide

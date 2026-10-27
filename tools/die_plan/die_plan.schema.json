@@ -494,6 +494,24 @@
        "type": "string",
        "pattern": "^M[1-9]$"
       },
+      "bumps": {
+       "type": "object",
+       "additionalProperties": false,
+       "properties": {
+        "pitch_um": {
+         "type": "number",
+         "exclusiveMinimum": 0
+        },
+        "pad_um": {
+         "type": "number",
+         "minimum": 0
+        },
+        "edge_margin_um": {
+         "type": "number",
+         "minimum": 0
+        }
+       }
+      },
       "grid": {
        "type": "array",
        "items": {
@@ -1650,6 +1668,15 @@
           },
           "budget_owner": {
            "type": "string"
+          },
+          "merged_clock_ports": {
+           "type": "array",
+           "minItems": 2,
+           "uniqueItems": true,
+           "items": {
+            "type": "string",
+            "minLength": 1
+           }
           },
           "from_root_um": {
            "type": "number",

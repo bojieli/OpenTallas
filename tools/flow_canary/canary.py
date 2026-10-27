@@ -41,7 +41,12 @@ CLOCK_ONLY_SKIP_RE = r"^(clk(_t[0-9]+|_c[0-9]+)?|arst_n|rst_n|rst_i|start_i)$"
 TCL_ERR_RE = re.compile(r"can't read \"[^\"]+\": no such variable|invalid command name \"|"
                         r"Error: [^\n]*\.tcl, \d+|couldn't open \"[^\"]+\"|can't find package|"
                         r"ERROR \[?[A-Z]{3}-\d+")
-GATE_ERR_RE = re.compile(r"Error: hold_gate\.tcl, \d+ structural FF hold failure")
+STRUCTURAL_HOLD = (r"OT_HOLD_STRUCTURAL stage=(?:cts|grt): FF hold ws -?[0-9.]+ ps, "
+                   r"[0-9]+ true failing endpoints \(limits: ws >= -100 ps, endpoints <= 2000\); "
+                   r"revise plan/RTL/boundary before repair")
+STRUCTURAL_HOLD_RE = re.compile(r"^" + STRUCTURAL_HOLD + r"$", re.M)
+GATE_ERR_RE = re.compile(r"Error: hold_gate\.tcl, \d+ structural FF hold failure|"
+                         r"Error: [^\n]*\.tcl, \d+ " + STRUCTURAL_HOLD + r"$")
 STAGES = ("lint", "sdc_lint", "selrange", "synth", "lec", "face_guard", "face_cover", "reg_fanout", "rc_file", "vclk_basis",
           "cts", "grt_gate", "route", "rcx", "signoff", "tcl_errors")
 # vclk_basis (COORD 10-25, main 9f716b354, METHODOLOGY 9.7 / BRIEFING 5e): the IO virtual clock must be the kit's
@@ -461,7 +466,15 @@ def check_run(run, spec=None, die_plan_dir=None):
     res["cts"] = st(bool(cts) or None, "4_cts.odb" if cts else "no 4_cts.odb " + read(kit / "FAIL_POSTCTS")[-200:])
     g = [read(kit / f"postcts_gate_{c}.log") for c in ("TT", "FF")]
     gl = [l for x in g for l in x.splitlines() if l.startswith("OT_POSTCTS_GATE")]
-    if spec.get("grt_gate", True) is False and not gl:
+    structural_holds = []
+    for log_path in step_logs:
+        structural_holds.extend(m.group(0) for m in STRUCTURAL_HOLD_RE.finditer(read(log_path)))
+    if structural_holds:
+        # A deliberate runtime hold rejection is a failed gate, including for
+        # references that opt out of the insertion gate. Baseline comparison
+        # remains unchanged: this reporting fix never waives lost metrics.
+        res["grt_gate"] = st(False, structural_holds[-1])
+    elif spec.get("grt_gate", True) is False and not gl:
         # FLOW-CANARY 10-25: 'false' only covers a flow WITHOUT the gate; once the flow runs it (HBM core flow on
         # main: FAIL_POSTCTS insertion TT 304.9/FF 266.4 vs 250/202.5) its lines are the verdict, never a free PASS
         res["grt_gate"] = st(True, "not part of this flow (spec grt_gate false, no OT_POSTCTS_GATE lines)")

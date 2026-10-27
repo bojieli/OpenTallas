@@ -5,7 +5,7 @@
 // ot_hidx_score_hcol, every crossing register to register, cycle-exact vs ot_hbm_idx_chunk_rt; bench
 // rtl/test/hbm_idx_static/run_chunk_rt_h_equiv.sh).  Opt-in by module name: the pinned files are unchanged (the plan
 // binds ot_hbm_idx_score_quarter_static_h only when it adopts the split).  Cycle cost 0.
-module ot_hbm_idx_score_leaf_h #(parameter integer AUXW = 30)(
+module ot_hbm_idx_score_leaf_h #(parameter integer AUXW = 30,DELIVERED_RESET=0)(
     input  wire clk, input wire [15:0] clk_pair, input wire rst_n, input wire [7:0] hb,
     input  wire w_qv, input wire [QW-1:0] w_q, input wire w_kv, input wire [3:0] w_kkv, input wire [KW4-1:0] w_key,
     input  wire [AUXW-1:0] w_aux, input wire [4*SW-1:0] w_bus,
@@ -23,7 +23,7 @@ module ot_hbm_idx_score_leaf_h #(parameter integer AUXW = 30)(
     assign e_qv = g_qv; assign e_q = g_q; assign e_kv = g_kv; assign e_kkv = g_kkv; assign e_key = g_key; assign e_aux = g_aux;
     wire c_v_u, on; wire [3:0] c_kv_u, c_f_u; wire [127:0] c_s_u;
     wire n_v; wire [3:0] n_kv, n_f; wire [127:0] n_s;
-    ot_hbm_idx_chunk_rt_h core(.clk(clk), .clk_pair(clk_pair), .rst_n(rst_n), .hb(hb_p),
+    ot_hbm_idx_chunk_rt_h #(.DELIVERED_RESET(DELIVERED_RESET)) core(.clk(clk), .clk_pair(clk_pair), .rst_n(rst_n), .hb(hb_p),
         .ql_v(f_qv), .ql_head(f_q[QW-1 -: 8]), .ql_codes(f_q[QW-9 -: 512]), .ql_sc(f_q[47:16]), .ql_w(f_q[15:0]),
         .k_v(f_kv), .k_kv(f_kkv), .k_key(f_key),
         .c_v(c_v_u), .c_kv(c_kv_u), .c_sum(c_s_u), .c_fault(c_f_u), .online(on),
@@ -39,7 +39,7 @@ module ot_hbm_idx_score_leaf_h #(parameter integer AUXW = 30)(
     end
 endmodule
 
-module ot_hbm_idx_score_quarter_static_h #(parameter integer TP=96,RANK_W=(TP<=1?1:$clog2(TP)))(
+module ot_hbm_idx_score_quarter_static_h #(parameter integer TP=96,RANK_W=(TP<=1?1:$clog2(TP)),DELIVERED_RESET=0)(
  input wire clk_ctl,input wire[1:0]clk_engine,clk_meta,clk_tail,
  input wire[7:0]clk_chunk,input wire[255:0]clk_hslice,input wire rst_n,
  input wire half,
@@ -52,7 +52,11 @@ module ot_hbm_idx_score_quarter_static_h #(parameter integer TP=96,RANK_W=(TP<=1
  localparam integer QW = 8 + 512 + 32 + 16, KW4 = 4 * 544, SW = 1 + 1 + 4 + 128 + 4, AUXW = 30, NK = 4, NCH = 4;
  // ---------------- reset relay
  wire rst_c;
+    generate if(DELIVERED_RESET!=0)begin:g_delivered_reset
+        ot_rst_delivered3 #(.REGIONS(1)) u_rr(.clk(clk_ctl),.rst_n_in(rst_n),.rst_n(rst_c));
+    end else begin:g_legacy_reset
  ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk_ctl),.rst_n_in(rst_n),.rst_n(rst_c));
+    end endgenerate
  // ---------------- input pin flops (no reset)
  (* keep *) reg h_r;(* keep *) reg[RANK_W-1:0]rk_r;(* keep *) reg[10:0]fo_r;(* keep *) reg[11:0]nk_r;
  (* keep *) reg ke_r;(* keep *) reg[170:0]kb_r;
@@ -97,7 +101,7 @@ module ot_hbm_idx_score_quarter_static_h #(parameter integer TP=96,RANK_W=(TP<=1
     assign cp[l]=clk_hslice[e*128 + c*32 + 2*l];
    end
    wire [4*SW-1:0] bo;
-   ot_hbm_idx_score_leaf_h #(.AUXW(AUXW)) leaf(.clk(clk_chunk[e*4+c]), .clk_pair(cp), .rst_n(rst_c), .hb(8'(8*c)),
+   ot_hbm_idx_score_leaf_h #(.AUXW(AUXW),.DELIVERED_RESET(DELIVERED_RESET)) leaf(.clk(clk_chunk[e*4+c]), .clk_pair(cp), .rst_n(rst_c), .hb(8'(8*c)),
     .w_qv(qv_c[c]), .w_q(q_c[c]), .w_kv(kv_c[c]), .w_kkv(kkv_c[c]), .w_key(key_c[c]), .w_aux(aux_c[c]), .w_bus(bus_c[c]),
     .e_qv(qv_c[c+1]), .e_q(q_c[c+1]), .e_kv(kv_c[c+1]), .e_kkv(kkv_c[c+1]), .e_key(key_c[c+1]), .e_aux(aux_c[c+1]), .e_bus(bo));
    assign bus_c[c+1]=bo;
@@ -129,7 +133,7 @@ module ot_hbm_idx_score_quarter_static_h #(parameter integer TP=96,RANK_W=(TP<=1
    end
   end
   wire tv; wire [NK-1:0] tkv, tf; wire [NK*16-1:0] ts;
-  ot_hbm_idx_tail_native u_t (.clk(clk_tail[e]), .rst_n(rst_c), .i_v(sv[0]), .i_kv(skv[0]),
+  ot_hbm_idx_tail_native #(.DELIVERED_RESET(DELIVERED_RESET)) u_t (.clk(clk_tail[e]), .rst_n(rst_c), .i_v(sv[0]), .i_kv(skv[0]),
    .i_keep(keep_d), .i_sum(tsum), .i_fault(tfl), .o_v(tv), .o_kv(tkv), .o_score(ts), .o_fault(tf));
   reg ov; reg [3:0] ok, ofl; reg [63:0] os;
   always @(posedge eclk or negedge rst_c) if(!rst_c) ov<=0; else ov<=tv;

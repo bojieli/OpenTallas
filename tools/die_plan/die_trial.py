@@ -1194,30 +1194,67 @@ def psm_pdn_tcl(P):
     return "\n".join(lines) + "\n"
 
 
-def bump_grid(P, io, pitch=150.0, size=60.0):
+def bump_contract(P):
+    """One optional plan-owned source geometry for die and cropped PG emitters."""
+    pg = P.die.get("pg", {}) if P is not None else {}
+    c = dict(pg.get("bumps", {}))
+    c.setdefault("pitch_um", 150.0)
+    c.setdefault("pad_um", 0.0)
+    for k in ("pitch_um", "pad_um", "edge_margin_um"):
+        if k not in c:
+            continue
+        if isinstance(c[k], bool) or not isinstance(c[k], (int, float)) or not math.isfinite(c[k]) or c[k] < 0:
+            raise ValueError("invalid PG bump " + k)
+    if c["pitch_um"] <= 0 or c["pad_um"] >= c["pitch_um"]:
+        raise ValueError("PG bump pitch must exceed its nonnegative pad width")
+    if "edge_margin_um" in c and c["edge_margin_um"] < c["pad_um"] / 2:
+        raise ValueError("PG edge margin must keep the complete pad inside the die")
+    return c
+
+
+def bump_grid(P, io, pitch=None, size=60.0):
     """C4 power bumps: a regular grid at `pitch` (alternating VDD / VSS by row+col parity) inside the die, minus the
     seal ring / corner keep-out channels and the die IO windows (signal bumps).  -> [(net, x, y)]"""
     # between-only crossing channels (R16 delta: seam ports declared by partition pair) carry no rect of their own
     keep = [c["rect_um"] for c in P.die.get("channels", []) if "rect_um" in c] + [w["rect_um"] for w in io]
     out = []
-    nx, ny = int(P.W // pitch), int(P.H // pitch)
+    cfg = bump_contract(P)
+    pitch = cfg["pitch_um"] if pitch is None else pitch
+    if isinstance(pitch, bool) or not math.isfinite(pitch) or pitch <= cfg["pad_um"]:
+        raise ValueError("PG bump pitch must exceed the pad width")
+    if "edge_margin_um" in cfg:
+        m = cfg["edge_margin_um"]
+        nx, ny = int((P.W - 2*m) // pitch) + 1, int((P.H - 2*m) // pitch) + 1
+        if min(nx, ny) < 1:
+            raise ValueError("PG edge margin leaves no bump sites")
+    else:
+        nx, ny = int(P.W // pitch), int(P.H // pitch)
     x0 = (P.W - (nx - 1) * pitch) / 2
     y0 = (P.H - (ny - 1) * pitch) / 2
     for i in range(nx):
         for j in range(ny):
             x, y = x0 + i * pitch, y0 + j * pitch
-            if any(r[0] <= x <= r[2] and r[1] <= y <= r[3] for r in keep):
+            half = cfg["pad_um"] / 2
+            if any((r[0] <= x <= r[2] and r[1] <= y <= r[3]) if half == 0 else
+                   (x+half > r[0] and x-half < r[2] and y+half > r[1] and y-half < r[3]) for r in keep):
                 continue
             out.append(("VDD" if (i + j) % 2 == 0 else "VSS", round(x, 3), round(y, 3)))
     return out
 
 
-def bumps_tcl(P, bumps, size=4.0):
+def bumps_tcl(P, bumps, size=4.0, pad_um=None):
     """Attach each source to actual M9 metal of its own net after pdngen.
 
     Stripe origins depend on the floorplan core origin and pdngen net phase.
     Computing them from the plan offset produced isolated voltage-source pins.
+    Optional die.pg.bumps.pad_um uses the qualified finite ideal pad overlap model
+    from HEAD-5 (33ac225c10); a pad missing same-net metal fails, never substitutes a point source.
     """
+    pad_um = bump_contract(P)["pad_um"] if pad_um is None else pad_um
+    if isinstance(pad_um, bool) or not math.isfinite(pad_um) or pad_um < 0:
+        raise ValueError("PG pad width must be finite and nonnegative")
+    if pad_um > 0:
+        return _pad_bumps_tcl(bumps, pad_um)
     t = ["set block [ord::get_db_block]",
          # pdngen makes boundary PG ports; they are not the specified C4 sources.
          "foreach ot_auto_name {VDD VSS} { set ot_auto_bt [$block findBTerm $ot_auto_name]; "
@@ -1266,6 +1303,54 @@ def bumps_tcl(P, bumps, size=4.0):
               f"$bt setSigType {'POWER' if net == 'VDD' else 'GROUND'}; set bp [odb::dbBPin_create $bt]",
               "odb::dbBox_create $bp $m9 {*}$best; $bp setPlacementStatus FIRM"]
     t.append(f'puts "OT_BUMPS actual_m9_sources {len(bumps)} cached_columns [dict size $bump_x_cache]"')
+    return "\n".join(t) + "\n"
+
+
+def _pad_bumps_tcl(bumps, pad_um):
+    """bumps_tcl with real bump pads (see bumps_tcl): one dbBTerm per bump, one dbBPin per pad x same-net M9 overlap."""
+    t = ["set block [ord::get_db_block]",
+         "foreach ot_auto_name {VDD VSS} { set ot_auto_bt [$block findBTerm $ot_auto_name]; "
+         "if {$ot_auto_bt ne \"NULL\"} { if {[$ot_auto_bt getSigType] ni {POWER GROUND}} "
+         "{ error \"refusing to remove non-PG boundary port $ot_auto_name\" }; "
+         "odb::dbBTerm_destroy $ot_auto_bt } }",
+         "set m9 [[ord::get_db_tech] findLayer M9]",
+         "set bump_dbu [[ord::get_db_tech] getDbUnitsPerMicron]",
+         "set bump_shapes {}",
+         "foreach net_name {VDD VSS} {",
+         "  set shapes {}",
+         "  foreach wire [[$block findNet $net_name] getSWires] {",
+         "    foreach shape [$wire getWires] {",
+         "      if {[$shape isVia] || [$shape getTechLayer] ne $m9} continue",
+         "      lappend shapes [list [$shape xMin] [$shape yMin] [$shape xMax] [$shape yMax]]",
+         "    }",
+         "  }",
+         "  if {![llength $shapes]} { error \"no actual M9 metal for $net_name voltage sources\" }",
+         "  dict set bump_shapes $net_name $shapes",
+         "}",
+         "set pad_pins 0; set pad_fallback 0; set pad_area 0.0",
+         f"set pad_half [expr {{round({pad_um:g}*$bump_dbu/2.0)}}]",
+         "proc ot_pad {net k bx by} {",
+         "  global block m9 bump_dbu bump_shapes pad_pins pad_fallback pad_area pad_half",
+         "  set bx [expr {round($bx*$bump_dbu)}]; set by [expr {round($by*$bump_dbu)}]",
+         "  set px0 [expr {$bx-$pad_half}]; set px1 [expr {$bx+$pad_half}]; set py0 [expr {$by-$pad_half}]; set py1 [expr {$by+$pad_half}]",
+         "  set hits {}; set best {}; set bd 1e30",
+         "  foreach rect [dict get $bump_shapes $net] {",
+         "    lassign $rect x0 y0 x1 y1",
+         "    set ix0 [expr {max($x0,$px0)}]; set ix1 [expr {min($x1,$px1)}]; set iy0 [expr {max($y0,$py0)}]; set iy1 [expr {min($y1,$py1)}]",
+         "    if {$ix1 > $ix0 && $iy1 > $iy0} { lappend hits [list $ix0 $iy0 $ix1 $iy1] }",
+         "    set d [expr {abs(($x0+$x1)/2.0-$bx)}]; if {$d < $bd && $y0 <= $by && $by <= $y1} { set bd $d; set best $rect }",
+         "  }",
+         "  if {![llength $hits]} {",
+         "    error \"OT_BUMPS pad misses actual same-net M9 metal: $net $k\"",
+         "  }",
+         "  set bt [odb::dbBTerm_create [$block findNet $net] ${net}_b$k]; $bt setIoType INOUT",
+         "  $bt setSigType [expr {$net eq {VDD} ? {POWER} : {GROUND}}]",
+         "  foreach h $hits { set bp [odb::dbBPin_create $bt]; odb::dbBox_create $bp $m9 {*}$h; $bp setPlacementStatus FIRM; incr pad_pins",
+         "    lassign $h a b c d; set pad_area [expr {$pad_area + ($c-$a)*($d-$b)/double($bump_dbu*$bump_dbu)}] }",
+         "}"]
+    t += [f"ot_pad {net} {k} {x:g} {y:g}" for k, (net, x, y) in enumerate(bumps)]
+    t.append(f'puts "OT_BUMPS pad_um {pad_um:g} bumps {len(bumps)} pad_pins $pad_pins pad_fallback $pad_fallback '
+             f'm9_contact_um2 [format %.1f $pad_area]"')
     return "\n".join(t) + "\n"
 
 
@@ -1590,7 +1675,8 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     (out / "psm" / "power.json").write_text(json.dumps(dict(density_w_mm2=density, total_w=round(sum(power.values()), 3),
                                                             parts=power), indent=0) + "\n")
     meta["psm"] = dict(density_w_mm2=density, total_w=round(sum(power.values()), 2), bumps=len(bumps),
-                       bumps_vdd=sum(1 for b in bumps if b[0] == "VDD"), bump_pitch_um=150.0,
+                       bumps_vdd=sum(1 for b in bumps if b[0] == "VDD"), bump_pitch_um=bump_contract(P)["pitch_um"],
+                       **({"bump_contract": bump_contract(P)} if P.die.get("pg", {}).get("bumps") else {}),
                        io_windows=len(io), pg=P.die.get("pg", {}).get("grid"))
     (out / "run_psm.sh").write_text(run_sh("psm", 256, 16, "/usr/bin/time -v openroad -no_init -threads 16 -exit "
                                                          "/work/psm/psm.tcl > /work/psm/psm.log 2>&1"))
