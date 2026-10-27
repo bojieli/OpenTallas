@@ -120,3 +120,19 @@ S81 fallback GRT overflow0TTFF but landed135/85fail; childPD2 fixes directPHY re
 
 ## CODEX notes 2026-10-27 08:13 PDT
 Owner08:02 FALLBACK-PLAN-PREP assigned KV to qwen and S81/HEAD to s81_head; PLANS ONLY, no fallback builds. Old S81GRT0/landed135TT85FF failures retained; latest structural prep uses directPHY/equalroots/405um relays. Current no new run.
+
+## [FALLBACK-PLAN-PREP-2 2026-10-27 10:57 PDT] Fallback PLANS for KV / S81 / s81_head (no builds), claude/fallback-plans-1027@1b7d068ad8, results/fallback_plans/{kv,s81,s81_head}
+- Each die has: README sections 0-9, plan_summary.json, and an UNEXECUTED launch_fallback.sh (DRY_RUN default; refuses before 10-29 12:00 PDT, without FALLBACK_TRIGGER=FIRED or without a COORD ruling id).
+- Topology consolidated from the Codex prep packets (KV d06cccbc4, S81 79bebcc855 svc13, HEAD c9bd770f5); not redone.
+- KV: 128 groups (96 single + 32 PHY+PC); 3,595 ports / 519,111 bits; 2,084 lanes, +3..+39 cycles (CHECKED).
+  - First compose of the 128 groups: OK, types 51->60, boot ready 388 cycles; 30 band FAILs on pv_v7/v12 FT inputs (CHECKED).
+  - G0C 11 -> 20 errors, all of the "no cell estimate" class; 0 new latency/landing/cut errors (CHECKED).
+  - Ring area 0.45-0.59 % (UNCHECKED). Token price NOT COMPOSED.
+- S81: 169 regions; 1,211 ports / 559,181 bits (CHECKED); ring area ~0.31 % (UNCHECKED).
+  - G0C 5 errors: 1 new real (bk_sel u_tx y=64.8 off the 8.64 lattice), 1 known svc_1 cut, 3 probe artefacts.
+  - Needs one S81 plan event plus an equal-latency PHY-region trunk.
+- HEAD: 326 regions; 427 ports / 211,813 bits; area 0.11-0.32 %; +171 cycles per head pass.
+  - G0C 0 errors after gen.py latency --inplace (CHECKED; the packet as committed had 327 latency-row errors).
+- Common: on all three dies the shared hard cores set the critical path to a real-view die STA. The fallback removes the die-wide clock sign-off and cross-region hold, not the core sign-offs.
+- ETAs from T0 if the cores are signed: KV +40..55 h, S81 +60..72 h, HEAD +39..41 h (all UNCHECKED).
+- Probe data: intel2:/srv/opentallas-scratch2/claude/fbp2-tmp (delete after review).
