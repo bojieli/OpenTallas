@@ -13,6 +13,11 @@ removed and the lane is re-routed over abutting partitions with:
   * per-seam load model: bits / tracks (seam span x sum 1/pitch on the two face layers) -- a hop whose
     seam would exceed --seam-max is refused, above --seam-soft it is penalised;
   * phy_hbm never a transit, frame fW/fE transits only in their end rows (as the PHY-fit tool) x4 cost.
+PD5 (2026-10-26) plan-delta options, default off (PD4 output unchanged without them):
+  --force LANE=p0,p1,...,pn  pin a lane to an explicit abutting path (overrides the frame-row/svc filters,
+                             still refuses seams > --seam-max and exhausted windows); a shared type on a
+                             forced transit is cloned per instance ('<type>_pd5_<inst>', counted in the report);
+  --avoid LANE=part,...      forbid these transits for that lane only.
 Window allocation and slot/port emission follow apply_phyfit_routes_1026.py (same face rules, same
 station count formula) so downstream station placement / G0 / G0C tools apply unchanged.
 """
@@ -48,6 +53,8 @@ def main():
     ap.add_argument('--prefix', default='ft_dl'); ap.add_argument('--b5-bonus', type=float, default=0.6)
     ap.add_argument('--seam-soft', type=float, default=0.45); ap.add_argument('--seam-max', type=float, default=0.55)
     ap.add_argument('--bits-per-um', type=float, default=4.6)
+    ap.add_argument('--force', action='append', default=[], help='LANE=p0,p1,...,pn explicit path')
+    ap.add_argument('--avoid', action='append', default=[], help='LANE=part,... forbidden transits')
     a = ap.parse_args()
     sys.path.insert(0, str(a.root)); from tools.die_plan import schema as S
     raw = json.loads(a.plan.read_text()); b5 = json.loads(a.b5.read_text())
@@ -65,6 +72,16 @@ def main():
         ps = [b5ports[x] for x in b5lanes[lid]['ports']]
         b5route[lid] = [ps[0]['src']['part']]+[p['dst']['part'] for p in ps]
     b5edges = {lid: {frozenset(e) for e in zip(r, r[1:])} for lid, r in b5route.items()}
+    force = {k: v.split(',') for k, v in (x.split('=', 1) for x in a.force)}
+    avoid = {k: set(v.split(',')) for k, v in (x.split('=', 1) for x in a.avoid)}
+    unknown = sorted((set(force) | set(avoid)) - set(affected))
+    if unknown: raise ValueError(f'force/avoid lanes not re-routed by this tool: {unknown}')
+    tcount0 = collections.Counter(p['type'] for p in raw['partitions']); cloned = {}
+    for lid, path in force.items():
+        for n in path[1:-1]:
+            tn = parts[n]['type']
+            if tcount0[tn] > 1 and n not in cloned:
+                nt = f'{tn}_pd5_{n}'; types[nt] = copy.deepcopy(types[tn]); parts[n]['type'] = nt; cloned[n] = (tn, nt)
     removed = {pid for lid in affected for pid in lanes[lid]['ports']}
     endpoint = {}
     for lid in affected:
@@ -133,6 +150,15 @@ def main():
         return fa, win
     FRAME_ROW = lambda n: rect[n][1] <= 103.68+1226.88+.01 or rect[n][3] >= 103.68+19*1226.88-.01
     def select_path(lid, src, dst, width):
+        if lid in force:
+            path = force[lid]
+            if path[0] != src or path[-1] != dst: raise ValueError(f'FORCE_ENDPOINTS {lid} {path[0]}->{path[-1]} vs {src}->{dst}')
+            for n, nxt in zip(path, path[1:]):
+                if not any(x == nxt for x, _ in neighbours[n]): raise ValueError(f'FORCE_NOT_ABUTTING {lid} {n}|{nxt}')
+                r = seam_ratio(n, nxt, width)
+                if r > a.seam_max: raise ValueError(f'FORCE_SEAM {lid} {n}|{nxt} {r:.3f}')
+                allocate(n, nxt, width, False)
+            return list(path)
         heap = [(0.0, src, '')]; dist = {(src, ''): 0.0}; prev = {}; end = None
         okb5 = set(b5route[lid])
         while heap:
@@ -142,6 +168,7 @@ def main():
             for nxt, face in neighbours[n]:
                 if face == inface: continue
                 if nxt != dst:
+                    if nxt in avoid.get(lid, ()): continue
                     if nxt == 'phy_hbm': continue
                     if nxt.startswith('svc_') and nxt not in okb5: continue
                     if nxt.startswith(('fW', 'fE')) and not FRAME_ROW(nxt): continue
@@ -191,7 +218,7 @@ def main():
         lanes[lid]['ports'] = [p['id'] for p in edges]
         bm = sum(abs((rect[x][0]+rect[x][2]-rect[y][0]-rect[y][2])/2)+abs((rect[x][1]+rect[x][3]-rect[y][1]-rect[y][3])/2) for x, y in zip(path, path[1:]))
         rows.append(dict(lane=lid, width=width, parts=path, transits=len(path)-2, b5_transits=len(b5route[lid])-2,
-                         b5_same=path == b5route[lid], ft_bits=width*(len(path)-2), centre_mm=round(bm/1000, 3),
+                         b5_same=path == b5route[lid], forced=lid in force, avoid=sorted(avoid.get(lid, ())), ft_bits=width*(len(path)-2), centre_mm=round(bm/1000, 3),
                          svc_transits=[n for n in path[1:-1] if n.startswith('svc_')], lk_transits=[n for n in path[1:-1] if n.startswith('lk_')]))
     raw['ports'] = [p for p in raw['ports'] if p['id'] not in removed]+newports
     # one type per instance holds; refuse a shared type receiving instance-specific slots
@@ -213,6 +240,7 @@ def main():
                same_as_b5=sum(r['b5_same'] for r in rows), svc_transit_lanes=[r['lane'] for r in rows if r['svc_transits']],
                lk_ft_bits=sum(r['width']*len(r['lk_transits']) for r in rows),
                seam_max=seam[:15], seams_over=dict(soft=sum(r['ratio'] > a.seam_soft for r in seam), max=sum(r['ratio'] > a.seam_max for r in seam)),
+               pd5_cloned_types={n: dict(base=b, new=t) for n, (b, t) in cloned.items()},
                routes=rows, params=vars(a) | {'root': str(a.root), 'plan': str(a.plan), 'b5': str(a.b5), 'out': str(a.out), 'report': str(a.report)})
     a.out.parent.mkdir(parents=True, exist_ok=True); a.out.write_text(json.dumps(raw, separators=(',', ':'))+'\n')
     a.report.write_text(json.dumps(rep, indent=1)+'\n')
