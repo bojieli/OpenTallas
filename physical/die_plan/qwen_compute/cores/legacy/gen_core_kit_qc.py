@@ -602,7 +602,19 @@ def main():
     plan = json.load(open(a.plan))
     if rec.get("plan"):
         plan = json.load(open(REPO / rec["plan"]))
-    if rec.get("lef_contract"):          # partition CONTENTS core: the closed view LEF is the pin contract
+    if rec.get("lef_contract") and rec.get("a0_child"):
+        # QC-A0-KITS 10-27 (opt-in recipe key a0_child): a hard CHILD master of the A0 hard cores (romleaf / rawleaf /
+        # node; no plan partition row of its own).  Pin contract = its own view LEF; the clock entry comes from the
+        # master-plan slice (--master-slice, islands[].clock_pin), child budget from the recipe (A0 R3b B_child).
+        ac = rec["a0_child"]
+        core = json.load(open(QC / "cores/a0_core.json"))
+        if sorted(core["modules"].values()) != sorted(ac["parents"]):
+            raise SystemExit(f"{a.module}: a0_child parents {ac['parents']} != cores/a0_core.json modules")
+        ptype = "a0_child:" + "+".join(ac["parents"])
+        outline, lpins = lef_contract(REPO / rec["lef_contract"], a.module)
+        hc = dict(module=a.module, outline_um=outline, lef=rec["lef_contract"], pins=lpins,
+                  pins_file=rec["lef_contract"])
+    elif rec.get("lef_contract"):          # partition CONTENTS core: the closed view LEF is the pin contract
         ptype = rec["plan_type"]
         pt_ = plan["partition_types"][ptype]
         pmod = rec.get("plan_module", a.module)   # QC: variant recipe keys name their plan module
