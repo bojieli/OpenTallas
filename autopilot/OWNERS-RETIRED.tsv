@@ -1,0 +1,6 @@
+# die	name (item / member module / prefix*)	reason   -- read by tools/autopilot/ownership.py (claude/hbm-core-lat-r4-owners-1027@d215e13b2, opt-in; no effect until merged)
+# HBM-CORE-LAT-R4 2026-10-27 01:16 PDT: CHECKED absent (0 partition types / hard cores) from planS2 (B2o), planU2 and planU3; OWNERS still reads B2n
+hbm	ot_hgi_coll_tkm_m_tp192__tile*	TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)
+hbm	ot_hbm_hc_bankq*	old bankq/bankq_ft/bankq_term cores absent from planS2/planU2/planU3; replaced by hc_bank128_pair (HBM-CORE-LAT-R4)
+hbm	ot_hbm_hc_qhub_static	absent from planS2/planU2/planU3 (HBM-CORE-LAT-R4)
+hbm	ot_hfd_coll_q2_hard_v8g__body	absent from planS2/planU2/planU3 (HBM-CORE-LAT-R4)
