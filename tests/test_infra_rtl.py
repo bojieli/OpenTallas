@@ -63,3 +63,65 @@ def test_real_clock_exporter_non_ansi_header():
  assert I.provider_ports(text,'die_ctree',lambda t,m:{})=={'root':('input',''),'t_g0':('output','')}
  with pytest.raises(ValueError,match='direction missing'):
   I.provider_ports(text.replace('output t_g0;',''),'die_ctree',lambda t,m:{})
+
+
+def public_fixture(tmp_path):
+ import json
+ root=Path(__file__).resolve().parents[1]
+ source=root/'tools/die_plan/examples/tiny_leaves.sv'
+ repo=tmp_path/'repo';dest=repo/'tools/die_plan/examples';dest.mkdir(parents=True)
+ text=source.read_text().replace('module tiny_src_core (','module tiny_src_core (input wire ft_i, output wire ft_o,',1)
+ text=text.replace('output reg [63:0] x, output reg [7:0] cfg);','output reg [63:0] x, output reg [7:0] cfg);\n    assign ft_o = ft_i;',1)
+ (dest/'tiny_leaves.sv').write_text(text)
+ provider=dest/'infra_provider.sv'
+ provider.write_text('module tiny_clock_provider(A,Y); input A; output Y; assign Y=A; endmodule\n')
+ raw=json.loads((root/'tools/die_plan/examples/tiny_plan.json').read_text())
+ t=raw['partition_types']['src']
+ t['infra_ports']=[dict(name='hci_i',dir='in',kind='clock',leaf='u_core.ft_i',xy_um=[.032,.032],layer='M7'),dict(name='hci_o',dir='out',kind='clock',leaf='u_core.ft_o',xy_um=[8.032,.032],layer='M7')]
+ t['infra_arcs']=[dict(cell='u_core.ft_buffer',source='hci_i',sink='hci_o',kind='clock')]
+ raw['infrastructure']=dict(sources=['tools/die_plan/examples/infra_provider.sv'],
+  nets=[dict(name='up',kind='clock'),dict(name='down',kind='clock'),dict(name='monitor',kind='clock',unused=True,owner_inventory='explicit-unused-monitor')],
+  instances=[dict(module='tiny_clock_provider',inst='u_source',bind={'A':dict(signal='root:clk',dir='in'),'Y':dict(signal='up',dir='out')}),dict(module='tiny_clock_provider',inst='u_monitor',bind={'A':dict(signal='down',dir='in'),'Y':dict(signal='monitor',dir='out')})],
+  bindings=[dict(part='pa',port='hci_i',net='up'),dict(part='pa',port='hci_o',net='down')])
+ return root,repo,raw,provider
+
+
+def run_public(tmp_path,mutant=None):
+ import json,subprocess
+ root,repo,raw,provider=public_fixture(tmp_path)
+ if mutant=='missing_network':raw.pop('infrastructure')
+ if mutant=='wrong_direction':provider.write_text('module tiny_clock_provider(A,Y); input A,Y; endmodule\n')
+ if mutant=='missing_source':provider.unlink()
+ if mutant=='unbound_port':raw['infrastructure']['bindings'].pop()
+ if mutant=='absolute_source':raw['infrastructure']['sources']=[str(provider)]
+ plan=tmp_path/'plan.json';plan.write_text(json.dumps(raw))
+ argv=[sys.executable,str(root/'tools/die_plan/gen.py'),'rtl',str(plan),'--out',str(tmp_path/'generated')]
+ if mutant!='missing_root':argv+=['--rtl-root',str(repo)]
+ return subprocess.run(argv,text=True,capture_output=True),raw
+
+
+def test_public_generation_checks_real_nonansi_provider(tmp_path):
+ import schema
+ p,raw=run_public(tmp_path)
+ assert schema.validate_structure(raw)==[]
+ assert p.returncode==0,p.stdout+p.stderr
+ top=(tmp_path/'generated/tiny_top.sv').read_text()
+ assert 'tiny_clock_provider u_source' in top and '.hci_i(infra_up)' in top
+ assert '.hci_o(infra_down)' in top
+
+
+@pytest.mark.parametrize('mutant',['missing_network','wrong_direction','missing_source','unbound_port','absolute_source','missing_root'])
+def test_public_generation_rejects_invalid_provider_or_network(tmp_path,mutant):
+ p,_=run_public(tmp_path,mutant)
+ assert p.returncode!=0, p.stdout+p.stderr
+ assert any(s in p.stdout+p.stderr for s in ('infrastructure','provider','source','unbound'))
+
+
+def test_infrastructure_schema_stays_strict(tmp_path):
+ import schema
+ _,_,raw,_=public_fixture(tmp_path)
+ raw['infrastructure']['unexpected']=True
+ assert any('unknown key' in e for e in schema.validate_structure(raw))
+ raw['infrastructure'].pop('unexpected')
+ raw['partition_types']['src']['infra_ports'][0]['layer']='M8'
+ assert schema.validate_structure(raw)

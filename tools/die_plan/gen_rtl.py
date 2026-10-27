@@ -534,7 +534,9 @@ def die_top(P, epochs, dropped=None, rtl_root=None):
                 conn.setdefault(pr[side]["part"], []).append((pr[side]["bus"], net))
     import infra_rtl as IR
     provider_ports = None
-    if rtl_root and any(t.get("infra_ports") for t in P.types.values()):
+    if any(t.get("infra_ports") for t in P.types.values()):
+        if not rtl_root:
+            raise GenError("native infrastructure requires --rtl-root for actual provider validation")
         srcs = (P.raw.get("infrastructure") or {}).get("sources") or []
         if not srcs:
             raise GenError("infrastructure providers require explicit repo-relative source closure")
@@ -609,7 +611,7 @@ def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None):
         f.write_text(wrapper(P, tn, ep, rtl_root))
         files.append(f)
     f = out / f"{sv_id(P.name)}_top.sv"
-    f.write_text(die_top(P, ep))
+    f.write_text(die_top(P, ep, rtl_root=rtl_root))
     files.append(f)
     man = parent_id_manifest(P)
     if man["types"]:

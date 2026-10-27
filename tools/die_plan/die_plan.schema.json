@@ -19,6 +19,159 @@
   "note": {
    "type": "string"
   },
+  "infrastructure": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "nets",
+    "instances",
+    "bindings",
+    "sources"
+   ],
+   "properties": {
+    "sources": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)"
+     }
+    },
+    "nets": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "name",
+       "kind"
+      ],
+      "properties": {
+       "name": {
+        "type": "string",
+        "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+       },
+       "kind": {
+        "enum": [
+         "clock",
+         "reset",
+         "clock_mesh"
+        ]
+       },
+       "unused": {
+        "type": "boolean"
+       },
+       "owner_inventory": {
+        "type": "string",
+        "minLength": 1
+       }
+      }
+     }
+    },
+    "instances": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "module",
+       "inst",
+       "bind"
+      ],
+      "properties": {
+       "module": {
+        "type": "string",
+        "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+       },
+       "inst": {
+        "type": "string",
+        "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+       },
+       "bind": {
+        "type": "object",
+        "minProperties": 1,
+        "additionalProperties": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "signal",
+          "dir"
+         ],
+         "properties": {
+          "signal": {
+           "type": "string",
+           "minLength": 1
+          },
+          "dir": {
+           "enum": [
+            "in",
+            "out"
+           ]
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "bindings": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "part",
+       "port",
+       "net"
+      ],
+      "properties": {
+       "part": {
+        "type": "string",
+        "minLength": 1
+       },
+       "port": {
+        "type": "string",
+        "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+       },
+       "net": {
+        "type": "string",
+        "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+       }
+      }
+     }
+    },
+    "clock_tap_bindings": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "part",
+       "port",
+       "net"
+      ],
+      "properties": {
+       "part": {
+        "type": "string",
+        "minLength": 1
+       },
+       "port": {
+        "type": "string",
+        "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+       },
+       "net": {
+        "type": "string",
+        "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+       }
+      }
+     }
+    }
+   }
+  },
   "station_model_keys": {
    "type": "boolean"
   },
@@ -567,6 +720,102 @@
      "module": {
       "type": "string",
       "minLength": 1
+     },
+     "infra_ports": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "name",
+        "dir",
+        "kind",
+        "leaf",
+        "xy_um",
+        "layer"
+       ],
+       "properties": {
+        "name": {
+         "type": "string",
+         "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+        },
+        "dir": {
+         "enum": [
+          "in",
+          "out"
+         ]
+        },
+        "kind": {
+         "enum": [
+          "clock",
+          "reset"
+         ]
+        },
+        "leaf": {
+         "type": "string",
+         "minLength": 1
+        },
+        "xy_um": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 2,
+         "maxItems": 2
+        },
+        "layer": {
+         "const": "M7"
+        },
+        "native_xy_um": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 2,
+         "maxItems": 2
+        },
+        "native_core": {
+         "type": "string",
+         "minLength": 1
+        },
+        "native_port": {
+         "type": "string",
+         "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+        }
+       }
+      }
+     },
+     "infra_arcs": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "cell",
+        "source",
+        "sink"
+       ],
+       "properties": {
+        "cell": {
+         "type": "string",
+         "minLength": 1
+        },
+        "source": {
+         "type": "string",
+         "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+        },
+        "sink": {
+         "type": "string",
+         "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+        },
+        "kind": {
+         "enum": [
+          "clock",
+          "reset"
+         ]
+        }
+       }
+      }
      },
      "dead_inputs": {
       "type": "array",

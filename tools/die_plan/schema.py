@@ -160,6 +160,40 @@ _clock_mesh_region = {
         "j0": {"type": "integer", "minimum": 0}, "j1": {"type": "integer", "minimum": 1},
         "box_um": _rect, "strap_box_um": _rect}}
 
+# Optional native clock/reset infrastructure. Strict shape validation supplements
+# infra_rtl's complete graph, source-header and M7 interface checks.
+_infra_id = {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}
+_infra_port = {"type": "object", "additionalProperties": False,
+    "required": ["name", "dir", "kind", "leaf", "xy_um", "layer"],
+    "properties": {"name": _infra_id, "dir": {"enum": ["in", "out"]},
+        "kind": {"enum": ["clock", "reset"]}, "leaf": _name,
+        "xy_um": _xy, "layer": {"const": "M7"}, "native_xy_um": _xy,
+        "native_core": _name, "native_port": _infra_id}}
+_infra_arc = {"type": "object", "additionalProperties": False,
+    "required": ["cell", "source", "sink"],
+    "properties": {"cell": _name, "source": _infra_id, "sink": _infra_id,
+        "kind": {"enum": ["clock", "reset"]}}}
+_infra_binding = {"type": "object", "additionalProperties": False,
+    "required": ["part", "port", "net"],
+    "properties": {"part": _name, "port": _infra_id, "net": _infra_id}}
+_infra_network = {"type": "object", "additionalProperties": False,
+    "required": ["nets", "instances", "bindings", "sources"],
+    "properties": {
+        "sources": {"type": "array", "minItems": 1,
+            "items": {"type": "string", "minLength": 1, "pattern": "^(?!/)"}},
+        "nets": {"type": "array", "minItems": 1, "items": {
+            "type": "object", "additionalProperties": False, "required": ["name", "kind"],
+            "properties": {"name": _infra_id, "kind": {"enum": ["clock", "reset", "clock_mesh"]},
+                "unused": {"type": "boolean"}, "owner_inventory": _name}}},
+        "instances": {"type": "array", "minItems": 1, "items": {
+            "type": "object", "additionalProperties": False, "required": ["module", "inst", "bind"],
+            "properties": {"module": _infra_id, "inst": _infra_id,
+                "bind": {"type": "object", "minProperties": 1, "additionalProperties": {
+                    "type": "object", "additionalProperties": False, "required": ["signal", "dir"],
+                    "properties": {"signal": _name, "dir": {"enum": ["in", "out"]}}}}}}},
+        "bindings": {"type": "array", "minItems": 1, "items": _infra_binding},
+        "clock_tap_bindings": {"type": "array", "items": _infra_binding}}}
+
 SCHEMA = {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": SCHEMA_ID,
@@ -170,6 +204,7 @@ SCHEMA = {
     "properties": {
         "schema": {"const": SCHEMA_ID},
         "note": {"type": "string"},
+        "infrastructure": _infra_network,
         # HBM-MU-QUAD-3 (opt-in, default absent/false = strict internal_stations): accept the PATH-HBM R8-R13
         # station-model keys on internal_stations[] (STATION_MODEL_PROPS below; consistency in validate_structure)
         "station_model_keys": {"type": "boolean"},
@@ -277,6 +312,8 @@ SCHEMA = {
                 "type": "object", "required": ["module", "outline_um"], "additionalProperties": False,
                 "properties": {
                     "module": _name,                 # generated wrapper module name
+                    "infra_ports": {"type": "array", "items": _infra_port},
+                    "infra_arcs": {"type": "array", "items": _infra_arc},
                     "dead_inputs": {"type": "array", "items": {
                         "type": "object", "additionalProperties": False,
                         "required": ["module", "parameters", "ports", "proof", "source", "module_sha256"],
