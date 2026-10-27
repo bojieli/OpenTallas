@@ -1217,8 +1217,9 @@ module ot_v41_bf_front_core_roots #(
     wire bn_adv = bnum != 0 && bn_cnt + {4'd0, bnum} == bn_tot && bn_b == 3'd7;
     wire bn_newpos = bn_adv && bn_q == qlast;
     if (N32 == 0) begin : g_e9
+    // S81-CORE-LAT-R21: N32 = 0 loop variables process-local (for (int ...)), as R20 a556086b5d: the module-scope integers were elaborated as constant-conflict DFFs (rtl_lint check -assert); no logic change
     always @(posedge gclk) if (cen[9]) begin
-        for (bc = 0; bc < NSEG; bc = bc + 1)
+        for (int bc = 0; bc < NSEG; bc = bc + 1)
             if (FAST != 0) begin
                 if (go_e || bn_newpos) begin
                     b_lo[bc] <= {1'b0, c_u0[bc]};
@@ -2177,7 +2178,7 @@ module ot_v41_bf_front_core_roots #(
     integer si;
     if (N32 == 0) begin : g_e27
     always @(posedge gclk) if (cen[27]) begin
-        if (go_e || w_restart) for (si = 0; si < NSEG; si = si + 1) w_ptr[si] <= s_base[si];
+        if (go_e || w_restart) for (int si = 0; si < NSEG; si = si + 1) w_ptr[si] <= s_base[si];
         else if (issue) w_ptr[w_s] <= w_ptr[w_s] + 13'd1;
         if (go_e || w_restart) a_ctr <= pbase;
         else if (issue) a_ctr <= a_ctr + 14'd1;
@@ -2186,13 +2187,13 @@ module ot_v41_bf_front_core_roots #(
             f_q0[f_wr] <= FAST != 0 ? fw_q0 : xs_q0_e; f_e0[f_wr] <= FAST != 0 ? fw_e0 : xs_e0_e;
             f_q1[f_wr] <= FAST != 0 ? fw_q1 : xs_q1_e; f_e1[f_wr] <= FAST != 0 ? fw_e1 : xs_e1_e;
         end
-        for (bk = 0; bk < 4; bk = bk + 1)
+        for (int bk = 0; bk < 4; bk = bk + 1)
             if (bmu[bk]) begin
                 f_q0[f_wr + bpre[bk]] <= xbd[256*bk +: 256];
                 f_identity[f_wr + bpre[bk]] <= {1'b1, b_identity_pb, b_identity_units[8*bk +: 8]};
             end
         hz_s[0] <= w_cnt;
-        for (k = 1; k < LAT; k = k + 1) hz_s[k] <= hz_s[k-1];
+        for (int k = 1; k < LAT; k = k + 1) hz_s[k] <= hz_s[k-1];
     end
     end else begin : g_e27n
         // N32: w_ptr per segment, a_ctr and the hazard history each on their own enable copy (selects ANDed with it);
@@ -2567,13 +2568,16 @@ module ot_v41_bf_front_core_roots #(
     assign walk_busy = w_run | n_run | bn_run | i1_v | i2_v | (BP != 0 && bp_hold != 3'd0);
     // slot field of the tag is HW bits; BF16 chains use its low log2(NCHB) bits (words per round <= NCHB)
     // N32 = 0: the N32 copy registers are plain aliases (no flops)
+    // (S81-CORE-LAT-R21: except w_ca_r2 / w_ca_r3 / n_ca_r2, which the w_ca_r / n_ca_r processes write at every N32 as
+    //  same-function registers; the alias here was a second driver (rtl_lint conflicting drivers).  At N32 = 0 nothing
+    //  reads them -- qx_case_a2/3 and qn_case_a2 select w_ca_r / n_ca_r -- so outputs are unchanged.)
     if (N32 == 0) begin : g_nbank
         assign gok = '0; assign go_bf_e2 = 1'b0; assign go_bf_e3 = 1'b0; assign xb_u_e2 = xb_u_e; assign xs_p2 = '0;
         for (genvar k1 = 0; k1 < NSEG; k1 = k1 + 1) begin : g_bk0
             assign bnum_k[k1] = bnum;
         end
-        always @* begin w_ca_r2 = w_ca_r; w_ca_r3 = w_ca_r; w_j2 = w_j; w_j3 = w_j; w_j4 = w_j; w_q2 = w_q; w_c2 = w_c; n_q2 = n_q; w_s2 = w_s;
-            w_q3 = w_q; w_q4 = w_q; w_q5 = w_q; w_c3 = w_c; w_c4 = w_c; w_c5 = w_c; n_q3 = n_q; n_ca_r2 = n_ca_r; n_q4 = n_q; n_q5 = n_q; w_s3 = w_s; w_s4 = w_s; w_s5 = w_s; w_s6 = w_s; w_s7 = w_s; w_cnt2 = w_cnt;
+        always @* begin w_j2 = w_j; w_j3 = w_j; w_j4 = w_j; w_q2 = w_q; w_c2 = w_c; n_q2 = n_q; w_s2 = w_s;
+            w_q3 = w_q; w_q4 = w_q; w_q5 = w_q; w_c3 = w_c; w_c4 = w_c; w_c5 = w_c; n_q3 = n_q; n_q4 = n_q; n_q5 = n_q; w_s3 = w_s; w_s4 = w_s; w_s5 = w_s; w_s6 = w_s; w_s7 = w_s; w_cnt2 = w_cnt;
             for (int k = 0; k < NSEG; k++) begin c_s0k2[k] = c_s0[k]; c_s0k3[k] = c_s0[k]; c_s0k4[k] = c_s0[k]; c_s0k5[k] = c_s0[k]; c_s0k6[k] = c_s0[k]; c_s0k7[k] = c_s0[k]; c_s0k8[k] = c_s0[k]; end
         end
         always @* begin

@@ -83,7 +83,7 @@
   "ref_tile": "physical/ref_tile/s81bf_front_five_roots_nlock_h03",
   "multi_root": true,
   "why_multi_root": "S81-CORE-LAT-R20 10-27: 228 replicas, 5 declared roots (ck + io_clk/io_n/io_w/io_e, spec clock_entry_domains); ref_tile = the plan-outline (116.64x198.72) nlock_h03 kit",
-  "defines": ["DSFD_BF_N32=1"],
+  "defines": ["DSFD_BF_N32=1", "DSFD_BF_DEADPIN=1"], "why_deadpin": "S81-CORE-LAT-R21 (COORD R20 ruling b): x0[281:280], cfg[52:48], cfg[46:34] have no reader in the STATIC_PROGRAM front and no die-level proven-dead declaration -> own kept io_clk face register each (no cycle on any used path); the die bind must build dsfd_bf_front_roots with the same defines",
   "includes": ["rtl/v41rom/ot_s81_so_label_q.sv", "rtl/v41rom/ot_bf6_n32.sv"],
   "why_n32": "S81-CORE-LAT-R20: N32=1 = the native-census (<=32 loads) form of the CLOSED RTAG front (n32_soq_roomy kit defines); same ports as the plan view. N32=0 is not lint-clean (N32==0 alias always@* and the unconditional sequential copy writes both drive w_ca_r2/3, n_ca_r2: rtl_lint check -assert 4 problems). The die bind must build dsfd_bf_front_roots with the same define."
  },
