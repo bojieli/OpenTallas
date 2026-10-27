@@ -139,6 +139,23 @@ def test_core_view_pair_uses_etm_arcs():
     assert r["worst_hold_slack_ps"] <= rv["worst_hold_slack_ps"]
 
 
+def test_cppr_lca_opt_in():
+    """PATH-S81-PD6 --cppr-lca: node = longest common tree_path prefix; default keeps the region/die-root form."""
+    import die_sta_related as D
+    A = dict(cppr_node="h01", tree_path="h0110")
+    B = dict(cppr_node="h00", tree_path="h0011")
+    C = dict(cppr_node="h01", tree_path="h0101")
+    old = D.CPPR_LCA
+    try:
+        D.CPPR_LCA = False
+        assert D.pair_node(A, B) == "h" and D.pair_node(A, C) == "h01"
+        D.CPPR_LCA = True
+        assert D.pair_node(A, B) == "h0" and D.pair_node(A, C) == "h01" and D.pair_node(A, A) == "h0110"
+        assert D.pair_node(dict(cppr_node="x"), dict(cppr_node="x")) == "x"   # no tree_path -> default form
+    finally:
+        D.CPPR_LCA = old
+
+
 # ---- DROOP REGION + SIGNED MESH (CLOCK-KV-R17)
 def _ocv_taps():
     t = {"a": dict(late_ps=4700.0, early_ps=4660.0, cppr_node="h", stages_from_root=46, xy_um=[1000.0, 1000.0]),
@@ -204,31 +221,6 @@ def test_mesh_signoff_rereference_and_unc(tmp_path):
     assert rec2["taps_on_mesh"] == 3 and t2["c"]["cppr_node"] == "m" and t2["c"]["late_ps"] == 4610.0 + 150.0
 
 
-def test_cppr_lca_opt_in():
-    """PATH-S81-PD6 --cppr-lca: node = longest common tree_path prefix; default keeps the region/die-root form."""
-    import die_sta_related as D
-    A = dict(cppr_node="h01", tree_path="h0110")
-    B = dict(cppr_node="h00", tree_path="h0011")
-    C = dict(cppr_node="h01", tree_path="h0101")
-    old = D.CPPR_LCA
-    try:
-        D.CPPR_LCA = False
-        assert D.pair_node(A, B) == "h" and D.pair_node(A, C) == "h01"
-        D.CPPR_LCA = True
-        assert D.pair_node(A, B) == "h0" and D.pair_node(A, C) == "h01" and D.pair_node(A, A) == "h0110"
-        assert D.pair_node(dict(cppr_node="x"), dict(cppr_node="x")) == "x"   # no tree_path -> default form
-    finally:
-        D.CPPR_LCA = old
-
-
-def test_exclusive_flags(tmp_path):
-    import pytest
-    for extra in (["--pair-unc", "x.json"], ["--cppr-lca"]):
-        with pytest.raises(SystemExit) as e:
-            R.main([str(tmp_path), "--plan", "p.json", "--out", str(tmp_path / "o"), "--mesh-signoff", "TT=a,FF=b"] + extra)
-        assert "exclusive" in str(e.value)
-
-
 def test_default_aocv_table_is_approved_021():
     """CLOCK-KV-R18: the default clock AOCV table must be the approved 0.21 %/mm table; fails on the 0.42 draft."""
     import clk_aocv as CA
@@ -259,3 +251,31 @@ def test_hold_buffer_model_hb4():
     assert r["all"]["ff_hold_after_ps"] == round(min(-100 + 3 * 44.6, -10 + 44.6, 5.0), 2)
     assert r["all"]["tt_setup_after_ps"] == round(min(300 - 3 * 83.0, 100 - 83.0, 50.0), 2)
     assert r["real_view"]["pairs"] == 1 and r["real_view"]["tt_setup_after_ps"] == round(300 - 249.0, 2)
+
+
+def test_pair_unc_exclusive_flags(tmp_path):
+    """ROOT-MERGE-29 shared model: --pair-unc never combines with --clock-ocv or --mesh-signoff (one variation model
+    per segment); --cppr-lca is not refused with any of them (it only picks the CPPR node)."""
+    import pytest
+    base = [str(tmp_path), "--plan", "p.json", "--out", str(tmp_path / "o"), "--pair-unc", "x.json"]
+    for extra in (["--mesh-signoff", "TT=a,FF=b"], ["--clock-ocv", "table"]):
+        with pytest.raises(SystemExit) as e:
+            R.main(base + extra)
+        assert "exclusive" in str(e.value)
+
+
+def test_cppr_lca_signed_mesh_pair():
+    """PATH-S81-PD7: two signed-mesh taps keep node m (re-referenced arrivals) even with --cppr-lca; any other node
+    uses the absolute arrivals."""
+    import die_sta_related as D
+    A = dict(cppr_node="m", tree_path="h0110", late_ps=10.0, early_ps=9.0, abs_late_ps=510.0, abs_early_ps=509.0)
+    B = dict(cppr_node="m", tree_path="h0011", late_ps=12.0, early_ps=11.0, abs_late_ps=512.0, abs_early_ps=511.0)
+    C = dict(cppr_node="h01", tree_path="h0101", late_ps=600.0, early_ps=590.0)
+    old = D.CPPR_LCA
+    try:
+        D.CPPR_LCA = True
+        assert D.pair_node(A, B) == "m" and D.arr4(A, B, "m") == (10.0, 9.0, 12.0, 11.0)
+        n = D.pair_node(A, C)
+        assert n == "h01" and D.arr4(A, C, n) == (510.0, 509.0, 600.0, 590.0)
+    finally:
+        D.CPPR_LCA = old

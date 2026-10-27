@@ -170,15 +170,6 @@ def load_taps(d, corner):
     return t, taps
 
 
-def arr4(A, B, node):
-    """launch late/early, capture late/early for this pair's common node: a mesh-re-referenced tap keeps its absolute
-    arrival for pairs whose common point is the die root (--mesh-signoff, CLOCK-KV-R17)."""
-    if node == "h":
-        return (A.get("abs_late_ps", A["late_ps"]), A.get("abs_early_ps", A["early_ps"]),
-                B.get("abs_late_ps", B["late_ps"]), B.get("abs_early_ps", B["early_ps"]))
-    return A["late_ps"], A["early_ps"], B["late_ps"], B["early_ps"]
-
-
 CPPR_LCA = False   # PATH-S81-PD6 opt-in --cppr-lca (default off = unchanged output)
 
 
@@ -187,6 +178,8 @@ def pair_node(A, B):
     --cppr-lca (opt-in, PATH-S81-PD6): taps carry 'tree_path' (root 'h' + one child-index char per tree level, so a
     prefix is an ancestor); the node is the longest common prefix = the true last common tree node (12.4b), which for
     cross-region pairs is the H-tree node above both region roots instead of the die root."""
+    if A["cppr_node"] == "m" and B["cppr_node"] == "m":
+        return "m"     # both taps re-referenced to the signed mesh (--mesh-signoff)
     if CPPR_LCA and "tree_path" in A and "tree_path" in B:
         x, y = A["tree_path"], B["tree_path"]
         n = 0
@@ -194,6 +187,15 @@ def pair_node(A, B):
             n += 1
         return x[:max(1, n)]
     return A["cppr_node"] if A["cppr_node"] == B["cppr_node"] else "h"
+
+
+def arr4(A, B, node):
+    """launch late/early, capture late/early for this pair's common node: a mesh-re-referenced tap keeps its absolute
+    arrival for every pair whose common point is not the signed mesh 'm' (die root or, with --cppr-lca, a tree node above it) (--mesh-signoff, CLOCK-KV-R17)."""
+    if node != "m":
+        return (A.get("abs_late_ps", A["late_ps"]), A.get("abs_early_ps", A["early_ps"]),
+                B.get("abs_late_ps", B["late_ps"]), B.get("abs_early_ps", B["early_ps"]))
+    return A["late_ps"], A["early_ps"], B["late_ps"], B["early_ps"]
 
 
 def credit(rng, node, la, ea, lc, ec):
@@ -242,7 +244,7 @@ def nearest_pairs(d, plan_path, tool, taps):
     except Exception as e:  # noqa: BLE001
         print(f"nearest-tap INFO classes skipped ({e})", file=sys.stderr)
         return {}
-    if not (d / "mesh.json").exists():          # e.g. a qc_clk_mesh3 sta-export proof (one entry tap per partition)
+    if not (d / "mesh.json").exists():          # e.g. a qc_clk_mesh3 sta-export proof / S81 region-tree proof (as main)
         print("nearest-tap INFO classes skipped (no mesh.json)", file=sys.stderr)
         return {}
     M = json.loads((d / "mesh.json").read_text())
@@ -843,7 +845,9 @@ def main(argv=None):
     ap.add_argument("--clock-ocv-cell-share", type=float, help="cell share of the die branch (default: table class A)")
     ap.add_argument("--pair-unc", help="opt-in per related pair clock uncertainty (qc_clk_mesh3 sta-export pair_unc.json: "
                     "U[corner]['partA|partB'], signed-mesh MC + approved AOCV below the mesh), subtracted from setup and "
-                    "hold of every pair; replaces --clock-ocv")
+                    "hold of every pair; replaces --clock-ocv (main e94f224396, reconciled PATH-S81-PD7: exclusive with "
+                    "--clock-ocv and --mesh-signoff, which price the same non-common clock; --cppr-lca only picks the CPPR "
+                    "node and is compatible)")
     ap.add_argument("--droop-region", choices=("mesh", "tree"), default="mesh",
                     help="shared-droop region (12.4a b1): mesh = mesh/PDN region (default, R17 fix); tree = pre-R17 rule")
     ap.add_argument("--droop-regions", help="JSON {port: region} override (e.g. PDNSim regions)")
@@ -855,10 +859,8 @@ def main(argv=None):
     ap.add_argument("--mesh-band", choices=("tree", "sim"), default="tree",
                     help="leaf-fed band taps: tree = strict CPPR at h (default); sim = sign-off pseudo loads (INFO)")
     a = ap.parse_args(argv)
-    if a.mesh_signoff and a.pair_unc:
-        raise SystemExit("--pair-unc and --mesh-signoff are exclusive (both price the signed-mesh per-pair uncertainty)")
-    if a.mesh_signoff and a.cppr_lca:
-        raise SystemExit("--cppr-lca and --mesh-signoff are exclusive (--mesh-signoff puts the common point at the mesh)")
+    if a.pair_unc and (a.clock_ocv != "none" or a.mesh_signoff):   # ROOT-MERGE-29: fail fast, before any work
+        raise SystemExit("--pair-unc is exclusive with --clock-ocv and --mesh-signoff (all price the non-common clock)")
     global CPPR_LCA
     CPPR_LCA = bool(a.cppr_lca)
     corners = a.corner or ["TT", "FF"]
@@ -931,8 +933,8 @@ def main(argv=None):
             cr["real_view_coverage"] = cr_real
         ocv = None
         if a.pair_unc:
-            if a.clock_ocv != "none":
-                raise SystemExit("--pair-unc and --clock-ocv are exclusive (both price the non-common clock)")
+            if a.clock_ocv != "none" or a.mesh_signoff:
+                raise SystemExit("--pair-unc is exclusive with --clock-ocv and --mesh-signoff (all price the non-common clock)")
             PU = json.loads(Path(a.pair_unc).read_text())["U"][c]
 
             def ocv(x, y, check, PU=PU):
