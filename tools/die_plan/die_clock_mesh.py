@@ -693,6 +693,61 @@ def split_long(cells, nets, K, taps_xy, hop_max, cell, out=None, yfirst=False, b
     return added
 
 
+def uniform_region_boxes(xs, ys, W, H, spec):
+    """--uniform-regions (CLOCK-KV-R2, opt-in): clock regions = strap boxes cut at the declared dataflow seams
+    (x_cuts_um / y_cuts_um, partition edges) on the UNIFORM die lattice xs/ys.  The H-tree stays the plain index
+    bisection of the whole nx x ny grid (equal-length by construction, independent of the cuts); a region is only a
+    mesh (its own straps, special net ck_mesh_r<k>, landed seams to its neighbours).  The region's CPPR node is the
+    lowest common H-tree node of ALL its intersections (htree_tag common prefix): the mesh shorts every driver of
+    the region, so no lower node is common to its taps.  Intersection (i, j) belongs to the box holding (xs[i], ys[j])."""
+    def intervals(cuts, span, vals, axis):
+        e = [0.0] + [float(c) for c in cuts] + [float(span)]
+        if any(b <= a for a, b in zip(e, e[1:])):
+            raise ValueError(f"--uniform-regions: {axis}_cuts_um must be ordered internal seams")
+        out = []
+        for a, b in zip(e, e[1:]):
+            idx = [k for k, v in enumerate(vals) if a <= v < b or (b == float(span) and v == b)]
+            if not idx:
+                raise ValueError(f"--uniform-regions: {axis} interval [{a}, {b}] holds no lattice line (pitch too coarse)")
+            out.append((a, b, idx[0], idx[-1] + 1))
+        return out
+    nx, ny = len(xs), len(ys)
+    R = []
+    for ya, yb, j0, j1 in intervals(spec.get("y_cuts_um", []), H, ys, "y"):
+        for xa, xb, i0, i1 in intervals(spec.get("x_cuts_um", []), W, xs, "x"):
+            tags = [htree_tag(i, j, nx, ny) for i in range(i0, i1) for j in range(j0, j1)]
+            lca = tags[0]
+            for t in tags[1:]:
+                k = 0
+                while k < min(len(lca), len(t)) and lca[k] == t[k]:
+                    k += 1
+                lca = lca[:k]
+            R.append(dict(k=len(R), tag=lca, i0=i0, i1=i1, j0=j0, j1=j1,
+                          box_um=[round(xa, 3), round(ya, 3), round(xb, 3), round(yb, 3)]))
+    if len(R) > 1 and any(g["i1"] - g["i0"] < 2 or g["j1"] - g["j0"] < 2 for g in R):
+        raise ValueError("--uniform-regions: every region needs >= 2 x 2 intersections (a mesh)")
+    return R
+
+
+def uniform_region_gate(P, R, taps, reach_um=750.0):
+    """--uniform-regions plan gate: every partition lies wholly in one region box and each of its taps reaches a
+    strap of its OWN region within the clock reach (stub foot distance); a cut that strands a partition (the
+    u32x64r3 plan error: t_sys_c clk_t11 1431 um) is a structural FAIL, never a slide into a foreign region."""
+    strad, far = [], []
+    for n in P.parts:
+        r = P.rect(n)
+        if not any(g["box_um"][0] - 1e-3 <= r[0] and r[2] <= g["box_um"][2] + 1e-3 and
+                   g["box_um"][1] - 1e-3 <= r[1] and r[3] <= g["box_um"][3] + 1e-3 for g in R):
+            strad.append(n)
+    for t in taps:
+        if t["stub_um"] < 0 or t["stub_um"] + BUF_W + ROW_Y > reach_um:
+            far.append([t["port"], t.get("region"), t["stub_um"]])
+    return dict(verdict="PASS" if not strad and not far else "FAIL", reach_um=reach_um, straddling_parts=strad,
+                stubs_beyond_reach=far, max_stub_um=round(max((t["stub_um"] for t in taps), default=0.0), 2),
+                regions=[dict(k=g["k"], tag=g["tag"], box_um=g["box_um"], i=[g["i0"], g["i1"]], j=[g["j0"], g["j1"]])
+                         for g in R])
+
+
 def part_regions(P, R):
     """every partition -> the clock region whose geometric box holds its centre (whole partition, never split)."""
     out = {}
@@ -706,7 +761,7 @@ def part_regions(P, R):
 def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, hop_max=480.0, leg_mode="slide", sites="any",
           regions=0, delta_id=None, region_edge_straps=False, reserve_sites=False, pg_shapes=None, track_profile=None,
           region_spec=None, trunk_repeaters=False, driver_pair_span_um=0.0, split_yfirst=False, floorplan=None,
-          rule128=None, plan_sites=None):
+          rule128=None, plan_sites=None, uniform_regions=None):
     """opt-in PATH-KV 10-26 site fixes (defaults keep the prior QC/S81 builds unchanged): trunk_repeaters = equal-cut
     BUFx24 repeaters on a root->ckm_n0 trunk > 750 um; driver_pair_span_um > 0 = a leaf driver pair whose nearest sites
     span more than this takes the shortest-span candidate combination; split_yfirst = split_long also tries the y-first L.
@@ -749,6 +804,9 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         regions = len(axes)
         xs, x_edges = cohort_axis_grid(nx, W, region_spec.get("x_cuts_um", []), axes.count("x"))
         ys, y_edges = cohort_axis_grid(ny, H, region_spec.get("y_cuts_um", []), axes.count("y"))
+    if uniform_regions is not None and (regions or region_spec is not None or floorplan is not None):
+        raise ValueError("--uniform-regions declares its own regions on the uniform lattice; do not combine with "
+                         "--regions/--region-spec/--clock-floorplan")
     fp = floorplan
     if fp is not None:
         if regions or region_spec is not None:
@@ -807,6 +865,10 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     if fp is not None:
         R, regions = R_fp, 1
         out["meta"].update(clock_floorplan=fp, macro_holes=holes, driverless_hard_cores=len(cores))
+    elif uniform_regions is not None:
+        R = uniform_region_boxes(xs, ys, W, H, uniform_regions)
+        regions = len(R)
+        out["meta"].update(uniform_regions=uniform_regions)
     else:
         R = region_boxes(nx, ny, regions, W, H, axes, x_edges, y_edges)
     if region_edge_straps:
@@ -1145,6 +1207,13 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                              round(fq[1], 3)], strap=("M8", j) if axis == 0 else ("M9", i), slide_um=round(fd, 2),
                              stub_um=round(abs(fq[0] - x) + abs(fq[1] - y), 2)))
     out["taps"] = tap_rows
+    if uniform_regions is not None:
+        ug = uniform_region_gate(P, R, tap_rows)
+        out["meta"]["uniform_regions_gate"] = ug
+        if ug["verdict"] != "PASS":
+            out["unplaced"] += [[n, "STRUCTURAL partition straddles a uniform-regions cut"] for n in ug["straddling_parts"]]
+            out["unplaced"] += [[p, "STRUCTURAL tap beyond clock reach of its own region strap", d]
+                                for p, _, d in ug["stubs_beyond_reach"]]
     if hop_max:
         out["meta"]["split_reps"] = split_long(cells, nets, K, {t["port"]: tuple(t["xy"]) for t in tap_rows}, hop_max,
                                                cell, out, yfirst=split_yfirst, both_l=fp is not None)
@@ -1393,7 +1462,9 @@ def cmd_build(a):
                                   split_yfirst=a.split_yfirst, floorplan=fp,
                                   rule128=(dict(libdir=a.libdir, tap_slew_max_ps=a.tap_slew_max_ps,
                                                 allow_plan_errors=getattr(a, "allow_plan_errors", False))
-                                           if getattr(a, "rule_12_8", False) else None), plan_sites=plan_sites)
+                                           if getattr(a, "rule_12_8", False) else None), plan_sites=plan_sites,
+                                  uniform_regions=(json.loads(Path(a.uniform_regions).read_text())
+                                                   if getattr(a, "uniform_regions", None) else None))
     except C128.PlanError as e:
         (out / "plan_errors.json").write_text(json.dumps(dict(plan=str(a.plan), error=str(e), rows=e.rows), indent=1)
                                               + "\n")
@@ -2436,7 +2507,14 @@ def cmd_report(a):
         def on_own_edge(p):   # --region-edge-straps: a foot ON its own region edge strap is nearest a foreign index
             b = sbox.get(reg[p])
             return bool(b) and b[0] - 1e-3 <= foot[p][0] <= b[2] + 1e-3 and b[1] - 1e-3 <= foot[p][1] <= b[3] + 1e-3
-        bad = [p for p, tg in tagof.items() if tags.get(tg[:1 + regd]) != reg[p] and not on_own_edge(p)]
+        if M["meta"].get("uniform_regions"):   # regions are strap boxes, not H-tree subtrees: check the index box
+            gk = {g["k"]: g for g in M["meta"]["regions"]}
+            near = {t["port"]: (int(np.argmin(abs(xa - t["foot"][0]))), int(np.argmin(abs(ya - t["foot"][1]))))
+                    for t in M["taps"]}
+            bad = [p for p, (i, j) in near.items()
+                   if not (gk[reg[p]]["i0"] <= i < gk[reg[p]]["i1"] and gk[reg[p]]["j0"] <= j < gk[reg[p]]["j1"])]
+        else:
+            bad = [p for p, tg in tagof.items() if tags.get(tg[:1 + regd]) != reg[p] and not on_own_edge(p)]
         if bad:
             raise SystemExit(f"die_clock_mesh report: {len(bad)} taps fed from another region's strap, e.g. {bad[:3]}")
     landed = [x for x in seam if reg[x[0]] != reg[x[1]]]
@@ -2666,6 +2744,10 @@ def main(argv=None):
     b.add_argument("--tap-slew-max-ps", type=float, default=C128.TAP_SLEW_MAX_PS)
     b.add_argument("--plan-sites", help="12.8: ot_clock_sites/1 reserved lattice island sites (clock_plan_sites.py from "
                                         "the master-plan slices); drivers/nodes/repeaters on plan sites, move <= PG snap")
+    b.add_argument("--uniform-regions", help="opt-in JSON (CLOCK-KV-R2): x_cuts_um / y_cuts_um dataflow seams (partition "
+                   "edges); regions = strap boxes on the UNIFORM nx x ny lattice, H-tree = whole-grid bisection "
+                   "independent of the cuts, CPPR node per region = lowest common tree node of its intersections, "
+                   "gate: every partition inside one box, every tap within 750 um of its own region strap")
     b.add_argument("--allow-plan-errors", action="store_true",
                    help="DIAGNOSTIC: write the build despite plan errors (never qualifies; combo refuses it)")
     b.add_argument("--clock-floorplan", help="opt-in JSON: x_cuts_um (region seams on partition edges) + region_nx "
