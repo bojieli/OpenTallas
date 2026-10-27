@@ -3959,3 +3959,11 @@ GEOM REQ [INFRA-FIRST-QC-R14] 2026-10-26 23:28 PDT claude/qc-mesh-r14-1026@64abd
     (3) The 58-ps median in-core drop spread is the 1.3-mm segment RC, driven only from both ends. It is structural and accepted until related-pair STA names intra-A0 pairs (COORD deferred the mid-row driver).
     (4) E-pin shift -19.344: re-run the pin/face audit and show 0 pins in EF0-5/EN1-2 with >=0.5-um access margin on the rebuilt kits; the legacy E-face ck pin (668.076) must not be a clock entry.
     (5) The DRC same-net 0.04/0.28 gap check (R24b condition) stays open until unit oth-ubuntu-1828381-1793110415 (~10:45) reports.
+2026-10-27 07:28 PDT GEOM-REVIEW-25: VERDICT [CLOCK-KV-R26 hm_r26 568fc66e, claude/clock-kv-r26-1027@38c1ed8519 results/clock_kv_r26/render/{core_e1_e5_r26,die_heads_r26}.png, both viewed + own parse of cores/*_pins_r26.json] PASS (confirms the COORD 07:16 adoption).
+  - e1: 6 clk pins on M5 at y 108.0 (=H/2), x 107.256-109.176 at a 0.384 pitch, all inside the 8.64 entry island (103.68-112.32). 0 clk pins are outside the island, and all are on track (x mod 0.048 = 0.024 for every pin). rst_n stays on the N face (y 215.904; x 55.08/97.416/160.92/203.256). In MX instances this becomes the S face, as die_heads_r26 shows (blue face clusters flip with the orient). The reset plan must land its leaves on that face per orient.
+  - e5: the same 6 clk sites, plus 4 rst_n inside the island on the centre row (107.832/107.928/108.216/108.312). The min pin gap in the island is 0.096 = 2 M5 tracks (CHECKED), and no rst sits on a clock site.
+  - e5 fMX: an exact MX image (0/546 pins non-image, CHECKED: x equal, y -> 216-y, layer equal). So the 256 e5 instances are on one view.
+  - die_heads_r26: in all 4 partition orients (R0/MX/MY/R180), every e1/e5 type tap (circle) sits on its core's centre entry.
+  - Conditions (kit-side, for KV-CORES-R7):
+    (1) The e5 rst_n pins sit 0.096 (one free M5 track) from clk pins. The e5 kit route must show 0 DRT markers in the island box and clock pin access under the KV clock NDR/shield. If the NDR needs more than one free track, spread the 4 rst to the 0.384-pitch slots as in e1 (still inside the island).
+    (2) The 24 new e5 taps get tap insertion re-measured after re-sign-off (as COORD said).
