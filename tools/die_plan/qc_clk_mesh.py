@@ -326,7 +326,7 @@ def draw(P, parts, cores, B, rows, out, title, box=None):
 
 # ---------------------------------------------------------------- ngspice deck of one region
 def write_deck(B, region, corner, out_dir, ndr, seg_um=54.0, samples=None, t_end=900.0, mode="late",
-               sigma=None, tree_in=None, lib="/w/lib", half_offset_ps=0.0):
+               sigma=None, tree_in=None, lib="/w/lib", half_offset_ps=0.0, attach="strap", drv_mult=1):
     """deck(s) of ONE region mesh: straps (plan RC, NDR), every driver = transistor-level BUFx24 (per-instance
     DELVTRAND n/p), each driver input = PWL ramp at its modelled H-tree arrival relative to the region root plus a
     Monte Carlo offset; every partition entry = BUFx24 tap buffer on the nearest crossing driving its stub + 20 fF.
@@ -352,8 +352,12 @@ def write_deck(B, region, corner, out_dir, ndr, seg_um=54.0, samples=None, t_end
     for d in drv:
         X, Y = d["site"]
         j = min(range(len(ys)), key=lambda j: abs(ys[j] - Y))
-        att.append(("H", j, round(X, 3), abs(ys[j] - Y)))
-        hp[j].add(round(X, 3))
+        if attach == "crossing":     # driver output to the nearest strap crossing (both M8 and M9 straps)
+            i = min(range(len(xs)), key=lambda i: abs(xs[i] - X))
+            att.append(("H", j, xs[i], abs(ys[j] - Y) + abs(xs[i] - X)))
+        else:
+            att.append(("H", j, round(X, 3), abs(ys[j] - Y)))
+            hp[j].add(round(X, 3))
     tat = []
     for t in taps:
         X, Y = t["tap"]
@@ -361,7 +365,7 @@ def write_deck(B, region, corner, out_dir, ndr, seg_um=54.0, samples=None, t_end
         tat.append(("H", j, round(X, 3)))
         hp[j].add(round(X, 3))
     seeds = samples or [0]
-    meta = dict(half_offset_ps=half_offset_ps, region=list(region), corner=corner, ndr=ndr, straps=dict(M8=len(ys), M9=len(xs)), drivers=len(drv),
+    meta = dict(attach=attach, drv_mult=drv_mult, half_offset_ps=half_offset_ps, region=list(region), corner=corner, ndr=ndr, straps=dict(M8=len(ys), M9=len(xs)), drivers=len(drv),
                 taps=len(taps), box=m["box"], seg_um=seg_um, sigma=sigma, mode=mode, decks=[])
     for s in seeds:
         rnd = random.Random(1000 * s + 17)
@@ -423,9 +427,10 @@ def write_deck(B, region, corner, out_dir, ndr, seg_um=54.0, samples=None, t_end
             L.append(f"R{ne[0]} {out_n} {node(canon(a_[:3]))} {(0.0512 + jog * LAYER_RC['M9'][0] * rf) * 1e3:.4f}")
             ne[0] += 1
             nC[out_n] += jog * LAYER_RC["M9"][1] * cf
-            dn = rnd.gauss(0.0, vt) if vt else 0.0
-            dp = rnd.gauss(0.0, vt) if vt else 0.0
-            L.append(f"X{out_n} vss vdd in{k} {out_n} BUFx24v dvn={dn / 1e3:.5f} dvp={dp / 1e3:.5f}")
+            for q_ in range(drv_mult):
+                dn = rnd.gauss(0.0, vt) if vt else 0.0
+                dp = rnd.gauss(0.0, vt) if vt else 0.0
+                L.append(f"X{out_n}_{q_} vss vdd in{k} {out_n} BUFx24v dvn={dn / 1e3:.5f} dvp={dp / 1e3:.5f}")
             d["_in"] = f"in{k}"
         t0 = min(rel)
         tsl = 40.0
@@ -509,6 +514,8 @@ def main(argv=None):
     ap.add_argument("--sigma", default='{"vt_mV": 10.0, "wire_rel": 0.05, "tree_ps_per_stage": 2.0}')
     ap.add_argument("--half-offset", type=float, default=0.0, help="deck: extra ps on right-half drivers (V2 seam test)")
     ap.add_argument("--deck-name", default=None)
+    ap.add_argument("--attach", default="strap", choices=["strap", "crossing"])
+    ap.add_argument("--drv-mult", type=int, default=1, help="parallel BUFx24 per mesh-driver island")
     ap.add_argument("--zoom", default="3,3", help="region i,j of the primary lattice to render zoomed")
     ap.add_argument("--no-render", action="store_true")
     a = ap.parse_args(argv)
@@ -593,7 +600,7 @@ def main(argv=None):
                 i, j = (int(v) for v in a.deck_region.split(","))
                 rec["deck"] = write_deck(B, (i, j), a.deck_corner, out / (a.deck_name or f"deck_{a.deck_corner}"),
                                          a.ndr, samples=list(range(a.deck_samples + 1)), sigma=json.loads(a.sigma),
-                                         half_offset_ps=a.half_offset)
+                                         half_offset_ps=a.half_offset, attach=a.attach, drv_mult=a.drv_mult)
                 rec["deck"].pop("decks", None)
     (out / "qc_clk_mesh.json").write_text(json.dumps(rec, indent=1, default=str))
     summ = {k: dict(region_um=v["region_um"], far=v["region_far_um"], drv_per_region=v["drivers_per_region"],
