@@ -1,0 +1,113 @@
+{
+ "TT_rise_model": {
+  "mean": 237.99,
+  "min": 227.62,
+  "max": 253.22,
+  "window": 25.6
+ },
+ "TT_rise_model+via": {
+  "mean": 246.43,
+  "min": 235.53,
+  "max": 262.1,
+  "window": 26.56
+ },
+ "TT_early_model": {
+  "mean": 225.8,
+  "min": 217.64,
+  "max": 237.84,
+  "window": 20.21
+ },
+ "TT_early_model+via": {
+  "mean": 234.24,
+  "min": 225.55,
+  "max": 246.84,
+  "window": 21.3
+ },
+ "TT_late_model": {
+  "mean": 257.75,
+  "min": 245.96,
+  "max": 275.05,
+  "window": 29.1
+ },
+ "TT_late_model+via": {
+  "mean": 266.18,
+  "min": 253.87,
+  "max": 283.93,
+  "window": 30.06
+ },
+ "TT_via_est_ps": {
+  "mean": 8.437,
+  "max": 9.112
+ },
+ "FF_rise_model": {
+  "mean": 188.15,
+  "min": 178.68,
+  "max": 202.42,
+  "window": 23.73
+ },
+ "FF_rise_model+via": {
+  "mean": 196.93,
+  "min": 186.91,
+  "max": 211.66,
+  "window": 24.75
+ },
+ "FF_early_model": {
+  "mean": 177.89,
+  "min": 170.21,
+  "max": 189.5,
+  "window": 19.29
+ },
+ "FF_early_model+via": {
+  "mean": 186.67,
+  "min": 178.44,
+  "max": 198.74,
+  "window": 20.31
+ },
+ "FF_late_model": {
+  "mean": 202.75,
+  "min": 191.92,
+  "max": 219.02,
+  "window": 27.1
+ },
+ "FF_late_model+via": {
+  "mean": 211.53,
+  "min": 200.15,
+  "max": 228.26,
+  "window": 28.12
+ },
+ "FF_via_est_ps": {
+  "mean": 8.779,
+  "max": 9.5
+ },
+ "guard_band": {
+  "TT_rise": 246.43,
+  "TT_window": 26.56,
+  "FF_early": 186.67,
+  "FF_window": 20.31,
+  "inside": false
+ },
+ "layers": [
+  "M4",
+  "M5"
+ ],
+ "R_leg_kohm_um": 0.014812,
+ "C_leg_fF_um": 0.15423255000000002,
+ "provenance": {
+  "argv": [
+   "f4b_predict.py",
+   "/srv/opentallas-scratch2/claude/qc-su-f4b-1026/kits/qfd_dv_s8_crh_rp1_f4b/mscts_spec_f4a.tcl",
+   "/srv/opentallas-scratch2/claude/wt/qc-su-f4b-1026/results/qc_plan_f4a/placed/rp1_placed.geo",
+   "/srv/opentallas-scratch2/claude/qc-su-f4b-1026/lib",
+   "rp1_m45.json",
+   "--layers",
+   "m45"
+  ],
+  "sha": {
+   "/srv/opentallas-scratch2/claude/qc-su-f4b-1026/kits/qfd_dv_s8_crh_rp1_f4b/mscts_spec_f4a.tcl": "dd3719a6a35dbf13",
+   "/srv/opentallas-scratch2/claude/wt/qc-su-f4b-1026/results/qc_plan_f4a/placed/rp1_placed.geo": "ea8be4cd5226b68d",
+   "/srv/opentallas-scratch2/claude/wt/qc-su-f4b-1026/results/qc_su_f4b/pred/f4b_predict.py": "8f4945ba5d28319b",
+   "/srv/opentallas-scratch2/claude/wt/qc-su-f4b-1026/results/qc_su_f4b/pred/model_ref/uf_phys.py": "d8b7fc02d6f57b34",
+   "/srv/opentallas-scratch2/claude/wt/qc-su-f4b-1026/results/qc_su_f4b/pred/model_ref/uf_phys_predict.py": "37311b8df3c3b849"
+  }
+ }
+}
