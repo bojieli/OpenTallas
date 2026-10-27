@@ -1,0 +1,12 @@
+rank	module	instances	new_real_taps	added_intra_pairs	added_seam_pairs	note
+1	kv3_pv_pair	256	192	6720	20352	also worst-seam pv_S_7->hub_C
+2	kv3_head_eighth_e6	256	128	2176	10160	unsigned routed view exists
+3	kv3_head_eighth_e2	128	128	2176	10160	unsigned routed view exists
+4	kv3_head_eighth_e0	128	128	2176	10160	NOT SIGNED
+5	ot_qwen_tp8_pv_join_t	64	64	2752	7680	worst-seam partner
+6	qkd_kvs_pc	124	124	2368	7304
+7	qkd_ectlk_q0..q3	4x32	4x32	4x576	4x2536	q2 pending delta
+8	qkd_ahub+qkd_kvs_ctl	2	2	44	256	hub_C worst seam (low coverage, high severity)
+9	kv3_astk	4	4	52	304
+10	qkd_kvs_pc_h_head_p	4	4	88	184
+11	qkd_hr_* (15 types)	22	16	~14 each	~60 each
