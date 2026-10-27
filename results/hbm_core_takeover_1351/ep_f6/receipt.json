@@ -1,0 +1,10 @@
+{
+ "scope": "Opt-in source physical profile only, compile define OT_HEP_RAM_F6 default absent. Preserve existing per-leaf capture/read FFs via keep process attributes; create same-edge per-leaf replicas of existing block ra6 under identical issue/reset. No ports, arithmetic or latency changes. No recipe adoption or physical closure.",
+ "controls": {
+  "native_leaf_keep": "Actual W306 leaf pair same capture inputs: legacy5DFFcells925bits -> profile8DFFcells1238bits, all8keep. Thus313bits of existing state retained rather than folded, no new edge.",
+  "readaddress_copy": "Actual issue guard stateDRAIN4,issued<words,slot_index==issued low6; unboundedSAT all306payload+6address+we plus twoRAcopies PASS; payloadbit andRAphase mutants both caught.",
+  "elaboration": "Actual full ot_hep_rx_block + native SRAM stub withdefine, hierarchy/proc/flatten/opt/check-assert PASS0problems."
+ },
+ "cost": "Per full four-leaf profile theoretical retained copies: +612DQ,+12AQ,+2WE,+12RA =638 FF before actual full mapping; DFFHQNx1body.2916um2 gives186.0408um2 estimate. Fresh mapped source census required; not actual full-EP area claim.",
+ "remaining": "Fresh source-profile full kit LEC/mapped census; source-pin FF anchor pack across all4macros; +336actualWE net demand; proposed241.92x397.44 macro plan; PG/clock/pin6/relatedreach then ONEdelta/P&R."
+}

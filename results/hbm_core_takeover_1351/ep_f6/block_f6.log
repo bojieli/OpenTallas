@@ -1,0 +1,1549 @@
+
+-- Running command `read_verilog -sv -DOT_HEP_RAM_F6 sram_stub.sv ep_store_f6.sv; hierarchy -check -top ot_hep_rx_block; proc; flatten; opt; check -assert; write_json block_f6.json' --
+
+1. Executing Verilog-2005 frontend: sram_stub.sv
+Parsing SystemVerilog input from `sram_stub.sv' to AST representation.
+Generating RTLIL representation for module `\ot_sram_1r1w_64x512_m1_r2c2'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: ep_store_f6.sv
+Parsing SystemVerilog input from `ep_store_f6.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hep_rx_leaf'.
+Generating RTLIL representation for module `\ot_hep_rx_block'.
+Generating RTLIL representation for module `\ot_hep_rx_pingpong'.
+Warning: Replacing memory \words with list of registers. See ep_store_f6.sv:196
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \ot_hep_rx_block
+Used module:     \ot_hep_rx_leaf
+Parameter \W = 306
+Parameter \MUT = 0
+
+3.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hep_rx_leaf'.
+Parameter \W = 306
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$a7acd6e7011c4570b02d32bd94934a1ca6c918cb\ot_hep_rx_leaf'.
+Parameter \W = 306
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$a7acd6e7011c4570b02d32bd94934a1ca6c918cb\ot_hep_rx_leaf'.
+
+3.3. Analyzing design hierarchy..
+Top module:  \ot_hep_rx_block
+Used module:     $paramod$a7acd6e7011c4570b02d32bd94934a1ca6c918cb\ot_hep_rx_leaf
+
+3.4. Analyzing design hierarchy..
+Top module:  \ot_hep_rx_block
+Used module:     $paramod$a7acd6e7011c4570b02d32bd94934a1ca6c918cb\ot_hep_rx_leaf
+Removing unused module `\ot_hep_rx_pingpong'.
+Removing unused module `\ot_hep_rx_leaf'.
+Removed 2 unused modules.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$ep_store_f6.sv:91$59 in module ot_hep_rx_block.
+Marked 1 switch rules as full_case in process $proc$ep_store_f6.sv:91$57 in module ot_hep_rx_block.
+Marked 1 switch rules as full_case in process $proc$ep_store_f6.sv:110$28 in module ot_hep_rx_block.
+Removed a total of 0 dead cases.
+
+4.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 4 redundant assignments.
+Promoted 5 assignments to connections.
+
+4.4. Executing PROC_INIT pass (extract init attributes).
+
+4.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\ot_hep_rx_block.$proc$ep_store_f6.sv:91$59'.
+Found async reset \rst_n in `\ot_hep_rx_block.$proc$ep_store_f6.sv:91$57'.
+Found async reset \rst_n in `\ot_hep_rx_block.$proc$ep_store_f6.sv:110$28'.
+
+4.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~628 debug messages>
+
+4.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_hep_rx_block.$proc$ep_store_f6.sv:91$59'.
+     1/1: $0\g_ra_f6[1].q[5:0]
+Creating decoders for process `\ot_hep_rx_block.$proc$ep_store_f6.sv:91$57'.
+     1/1: $0\g_ra_f6[0].q[5:0]
+Creating decoders for process `\ot_hep_rx_block.$proc$ep_store_f6.sv:110$28'.
+     1/15: $0\fc[2:0] [2]
+     2/15: $0\fc[2:0] [1]
+     3/15: $0\fc[2:0] [0]
+     4/15: $0\pvr[9:0]
+     5/15: $0\vp2r[9:0]
+     6/15: $0\vp[1:0]
+     7/15: $0\flush_age[1:0]
+     8/15: $0\seal_age[0:0]
+     9/15: $0\issued[6:0]
+    10/15: $0\words[6:0]
+    11/15: $0\count[6:0]
+    12/15: $0\state[2:0]
+    13/15: $0\pin_v[0:0]
+    14/15: $0\fault[0:0]
+    15/15: $0\ra[5:0]
+Creating decoders for process `\ot_hep_rx_block.$proc$ep_store_f6.sv:108$27'.
+     1/612: $0\pin_flit[611:0] [611]
+     2/612: $0\pin_flit[611:0] [610]
+     3/612: $0\pin_flit[611:0] [609]
+     4/612: $0\pin_flit[611:0] [608]
+     5/612: $0\pin_flit[611:0] [607]
+     6/612: $0\pin_flit[611:0] [606]
+     7/612: $0\pin_flit[611:0] [605]
+     8/612: $0\pin_flit[611:0] [604]
+     9/612: $0\pin_flit[611:0] [603]
+    10/612: $0\pin_flit[611:0] [602]
+    11/612: $0\pin_flit[611:0] [601]
+    12/612: $0\pin_flit[611:0] [600]
+    13/612: $0\pin_flit[611:0] [599]
+    14/612: $0\pin_flit[611:0] [598]
+    15/612: $0\pin_flit[611:0] [597]
+    16/612: $0\pin_flit[611:0] [596]
+    17/612: $0\pin_flit[611:0] [595]
+    18/612: $0\pin_flit[611:0] [594]
+    19/612: $0\pin_flit[611:0] [593]
+    20/612: $0\pin_flit[611:0] [592]
+    21/612: $0\pin_flit[611:0] [591]
+    22/612: $0\pin_flit[611:0] [590]
+    23/612: $0\pin_flit[611:0] [589]
+    24/612: $0\pin_flit[611:0] [588]
+    25/612: $0\pin_flit[611:0] [587]
+    26/612: $0\pin_flit[611:0] [586]
+    27/612: $0\pin_flit[611:0] [585]
+    28/612: $0\pin_flit[611:0] [584]
+    29/612: $0\pin_flit[611:0] [583]
+    30/612: $0\pin_flit[611:0] [582]
+    31/612: $0\pin_flit[611:0] [581]
+    32/612: $0\pin_flit[611:0] [580]
+    33/612: $0\pin_flit[611:0] [579]
+    34/612: $0\pin_flit[611:0] [578]
+    35/612: $0\pin_flit[611:0] [577]
+    36/612: $0\pin_flit[611:0] [576]
+    37/612: $0\pin_flit[611:0] [575]
+    38/612: $0\pin_flit[611:0] [574]
+    39/612: $0\pin_flit[611:0] [573]
+    40/612: $0\pin_flit[611:0] [572]
+    41/612: $0\pin_flit[611:0] [571]
+    42/612: $0\pin_flit[611:0] [570]
+    43/612: $0\pin_flit[611:0] [569]
+    44/612: $0\pin_flit[611:0] [568]
+    45/612: $0\pin_flit[611:0] [567]
+    46/612: $0\pin_flit[611:0] [566]
+    47/612: $0\pin_flit[611:0] [565]
+    48/612: $0\pin_flit[611:0] [564]
+    49/612: $0\pin_flit[611:0] [563]
+    50/612: $0\pin_flit[611:0] [562]
+    51/612: $0\pin_flit[611:0] [561]
+    52/612: $0\pin_flit[611:0] [560]
+    53/612: $0\pin_flit[611:0] [559]
+    54/612: $0\pin_flit[611:0] [558]
+    55/612: $0\pin_flit[611:0] [557]
+    56/612: $0\pin_flit[611:0] [556]
+    57/612: $0\pin_flit[611:0] [555]
+    58/612: $0\pin_flit[611:0] [554]
+    59/612: $0\pin_flit[611:0] [553]
+    60/612: $0\pin_flit[611:0] [552]
+    61/612: $0\pin_flit[611:0] [551]
+    62/612: $0\pin_flit[611:0] [550]
+    63/612: $0\pin_flit[611:0] [549]
+    64/612: $0\pin_flit[611:0] [548]
+    65/612: $0\pin_flit[611:0] [547]
+    66/612: $0\pin_flit[611:0] [546]
+    67/612: $0\pin_flit[611:0] [545]
+    68/612: $0\pin_flit[611:0] [544]
+    69/612: $0\pin_flit[611:0] [543]
+    70/612: $0\pin_flit[611:0] [542]
+    71/612: $0\pin_flit[611:0] [541]
+    72/612: $0\pin_flit[611:0] [540]
+    73/612: $0\pin_flit[611:0] [539]
+    74/612: $0\pin_flit[611:0] [538]
+    75/612: $0\pin_flit[611:0] [537]
+    76/612: $0\pin_flit[611:0] [536]
+    77/612: $0\pin_flit[611:0] [535]
+    78/612: $0\pin_flit[611:0] [534]
+    79/612: $0\pin_flit[611:0] [533]
+    80/612: $0\pin_flit[611:0] [532]
+    81/612: $0\pin_flit[611:0] [531]
+    82/612: $0\pin_flit[611:0] [530]
+    83/612: $0\pin_flit[611:0] [529]
+    84/612: $0\pin_flit[611:0] [528]
+    85/612: $0\pin_flit[611:0] [527]
+    86/612: $0\pin_flit[611:0] [526]
+    87/612: $0\pin_flit[611:0] [525]
+    88/612: $0\pin_flit[611:0] [524]
+    89/612: $0\pin_flit[611:0] [523]
+    90/612: $0\pin_flit[611:0] [522]
+    91/612: $0\pin_flit[611:0] [521]
+    92/612: $0\pin_flit[611:0] [520]
+    93/612: $0\pin_flit[611:0] [519]
+    94/612: $0\pin_flit[611:0] [518]
+    95/612: $0\pin_flit[611:0] [517]
+    96/612: $0\pin_flit[611:0] [516]
+    97/612: $0\pin_flit[611:0] [515]
+    98/612: $0\pin_flit[611:0] [514]
+    99/612: $0\pin_flit[611:0] [513]
+   100/612: $0\pin_flit[611:0] [512]
+   101/612: $0\pin_flit[611:0] [511]
+   102/612: $0\pin_flit[611:0] [510]
+   103/612: $0\pin_flit[611:0] [509]
+   104/612: $0\pin_flit[611:0] [508]
+   105/612: $0\pin_flit[611:0] [507]
+   106/612: $0\pin_flit[611:0] [506]
+   107/612: $0\pin_flit[611:0] [505]
+   108/612: $0\pin_flit[611:0] [504]
+   109/612: $0\pin_flit[611:0] [503]
+   110/612: $0\pin_flit[611:0] [502]
+   111/612: $0\pin_flit[611:0] [501]
+   112/612: $0\pin_flit[611:0] [500]
+   113/612: $0\pin_flit[611:0] [499]
+   114/612: $0\pin_flit[611:0] [498]
+   115/612: $0\pin_flit[611:0] [497]
+   116/612: $0\pin_flit[611:0] [496]
+   117/612: $0\pin_flit[611:0] [495]
+   118/612: $0\pin_flit[611:0] [494]
+   119/612: $0\pin_flit[611:0] [493]
+   120/612: $0\pin_flit[611:0] [492]
+   121/612: $0\pin_flit[611:0] [491]
+   122/612: $0\pin_flit[611:0] [490]
+   123/612: $0\pin_flit[611:0] [489]
+   124/612: $0\pin_flit[611:0] [488]
+   125/612: $0\pin_flit[611:0] [487]
+   126/612: $0\pin_flit[611:0] [486]
+   127/612: $0\pin_flit[611:0] [485]
+   128/612: $0\pin_flit[611:0] [484]
+   129/612: $0\pin_flit[611:0] [483]
+   130/612: $0\pin_flit[611:0] [482]
+   131/612: $0\pin_flit[611:0] [481]
+   132/612: $0\pin_flit[611:0] [480]
+   133/612: $0\pin_flit[611:0] [479]
+   134/612: $0\pin_flit[611:0] [478]
+   135/612: $0\pin_flit[611:0] [477]
+   136/612: $0\pin_flit[611:0] [476]
+   137/612: $0\pin_flit[611:0] [475]
+   138/612: $0\pin_flit[611:0] [474]
+   139/612: $0\pin_flit[611:0] [473]
+   140/612: $0\pin_flit[611:0] [472]
+   141/612: $0\pin_flit[611:0] [471]
+   142/612: $0\pin_flit[611:0] [470]
+   143/612: $0\pin_flit[611:0] [469]
+   144/612: $0\pin_flit[611:0] [468]
+   145/612: $0\pin_flit[611:0] [467]
+   146/612: $0\pin_flit[611:0] [466]
+   147/612: $0\pin_flit[611:0] [465]
+   148/612: $0\pin_flit[611:0] [464]
+   149/612: $0\pin_flit[611:0] [463]
+   150/612: $0\pin_flit[611:0] [462]
+   151/612: $0\pin_flit[611:0] [461]
+   152/612: $0\pin_flit[611:0] [460]
+   153/612: $0\pin_flit[611:0] [459]
+   154/612: $0\pin_flit[611:0] [458]
+   155/612: $0\pin_flit[611:0] [457]
+   156/612: $0\pin_flit[611:0] [456]
+   157/612: $0\pin_flit[611:0] [455]
+   158/612: $0\pin_flit[611:0] [454]
+   159/612: $0\pin_flit[611:0] [453]
+   160/612: $0\pin_flit[611:0] [452]
+   161/612: $0\pin_flit[611:0] [451]
+   162/612: $0\pin_flit[611:0] [450]
+   163/612: $0\pin_flit[611:0] [449]
+   164/612: $0\pin_flit[611:0] [448]
+   165/612: $0\pin_flit[611:0] [447]
+   166/612: $0\pin_flit[611:0] [446]
+   167/612: $0\pin_flit[611:0] [445]
+   168/612: $0\pin_flit[611:0] [444]
+   169/612: $0\pin_flit[611:0] [443]
+   170/612: $0\pin_flit[611:0] [442]
+   171/612: $0\pin_flit[611:0] [441]
+   172/612: $0\pin_flit[611:0] [440]
+   173/612: $0\pin_flit[611:0] [439]
+   174/612: $0\pin_flit[611:0] [438]
+   175/612: $0\pin_flit[611:0] [437]
+   176/612: $0\pin_flit[611:0] [436]
+   177/612: $0\pin_flit[611:0] [435]
+   178/612: $0\pin_flit[611:0] [434]
+   179/612: $0\pin_flit[611:0] [433]
+   180/612: $0\pin_flit[611:0] [432]
+   181/612: $0\pin_flit[611:0] [431]
+   182/612: $0\pin_flit[611:0] [430]
+   183/612: $0\pin_flit[611:0] [429]
+   184/612: $0\pin_flit[611:0] [428]
+   185/612: $0\pin_flit[611:0] [427]
+   186/612: $0\pin_flit[611:0] [426]
+   187/612: $0\pin_flit[611:0] [425]
+   188/612: $0\pin_flit[611:0] [424]
+   189/612: $0\pin_flit[611:0] [423]
+   190/612: $0\pin_flit[611:0] [422]
+   191/612: $0\pin_flit[611:0] [421]
+   192/612: $0\pin_flit[611:0] [420]
+   193/612: $0\pin_flit[611:0] [419]
+   194/612: $0\pin_flit[611:0] [418]
+   195/612: $0\pin_flit[611:0] [417]
+   196/612: $0\pin_flit[611:0] [416]
+   197/612: $0\pin_flit[611:0] [415]
+   198/612: $0\pin_flit[611:0] [414]
+   199/612: $0\pin_flit[611:0] [413]
+   200/612: $0\pin_flit[611:0] [412]
+   201/612: $0\pin_flit[611:0] [411]
+   202/612: $0\pin_flit[611:0] [410]
+   203/612: $0\pin_flit[611:0] [409]
+   204/612: $0\pin_flit[611:0] [408]
+   205/612: $0\pin_flit[611:0] [407]
+   206/612: $0\pin_flit[611:0] [406]
+   207/612: $0\pin_flit[611:0] [405]
+   208/612: $0\pin_flit[611:0] [404]
+   209/612: $0\pin_flit[611:0] [403]
+   210/612: $0\pin_flit[611:0] [402]
+   211/612: $0\pin_flit[611:0] [401]
+   212/612: $0\pin_flit[611:0] [400]
+   213/612: $0\pin_flit[611:0] [399]
+   214/612: $0\pin_flit[611:0] [398]
+   215/612: $0\pin_flit[611:0] [397]
+   216/612: $0\pin_flit[611:0] [396]
+   217/612: $0\pin_flit[611:0] [395]
+   218/612: $0\pin_flit[611:0] [394]
+   219/612: $0\pin_flit[611:0] [393]
+   220/612: $0\pin_flit[611:0] [392]
+   221/612: $0\pin_flit[611:0] [391]
+   222/612: $0\pin_flit[611:0] [390]
+   223/612: $0\pin_flit[611:0] [389]
+   224/612: $0\pin_flit[611:0] [388]
+   225/612: $0\pin_flit[611:0] [387]
+   226/612: $0\pin_flit[611:0] [386]
+   227/612: $0\pin_flit[611:0] [385]
+   228/612: $0\pin_flit[611:0] [384]
+   229/612: $0\pin_flit[611:0] [383]
+   230/612: $0\pin_flit[611:0] [382]
+   231/612: $0\pin_flit[611:0] [381]
+   232/612: $0\pin_flit[611:0] [380]
+   233/612: $0\pin_flit[611:0] [379]
+   234/612: $0\pin_flit[611:0] [378]
+   235/612: $0\pin_flit[611:0] [377]
+   236/612: $0\pin_flit[611:0] [376]
+   237/612: $0\pin_flit[611:0] [375]
+   238/612: $0\pin_flit[611:0] [374]
+   239/612: $0\pin_flit[611:0] [373]
+   240/612: $0\pin_flit[611:0] [372]
+   241/612: $0\pin_flit[611:0] [371]
+   242/612: $0\pin_flit[611:0] [370]
+   243/612: $0\pin_flit[611:0] [369]
+   244/612: $0\pin_flit[611:0] [368]
+   245/612: $0\pin_flit[611:0] [367]
+   246/612: $0\pin_flit[611:0] [366]
+   247/612: $0\pin_flit[611:0] [365]
+   248/612: $0\pin_flit[611:0] [364]
+   249/612: $0\pin_flit[611:0] [363]
+   250/612: $0\pin_flit[611:0] [362]
+   251/612: $0\pin_flit[611:0] [361]
+   252/612: $0\pin_flit[611:0] [360]
+   253/612: $0\pin_flit[611:0] [359]
+   254/612: $0\pin_flit[611:0] [358]
+   255/612: $0\pin_flit[611:0] [357]
+   256/612: $0\pin_flit[611:0] [356]
+   257/612: $0\pin_flit[611:0] [355]
+   258/612: $0\pin_flit[611:0] [354]
+   259/612: $0\pin_flit[611:0] [353]
+   260/612: $0\pin_flit[611:0] [352]
+   261/612: $0\pin_flit[611:0] [351]
+   262/612: $0\pin_flit[611:0] [350]
+   263/612: $0\pin_flit[611:0] [349]
+   264/612: $0\pin_flit[611:0] [348]
+   265/612: $0\pin_flit[611:0] [347]
+   266/612: $0\pin_flit[611:0] [346]
+   267/612: $0\pin_flit[611:0] [345]
+   268/612: $0\pin_flit[611:0] [344]
+   269/612: $0\pin_flit[611:0] [343]
+   270/612: $0\pin_flit[611:0] [342]
+   271/612: $0\pin_flit[611:0] [341]
+   272/612: $0\pin_flit[611:0] [340]
+   273/612: $0\pin_flit[611:0] [339]
+   274/612: $0\pin_flit[611:0] [338]
+   275/612: $0\pin_flit[611:0] [337]
+   276/612: $0\pin_flit[611:0] [336]
+   277/612: $0\pin_flit[611:0] [335]
+   278/612: $0\pin_flit[611:0] [334]
+   279/612: $0\pin_flit[611:0] [333]
+   280/612: $0\pin_flit[611:0] [332]
+   281/612: $0\pin_flit[611:0] [331]
+   282/612: $0\pin_flit[611:0] [330]
+   283/612: $0\pin_flit[611:0] [329]
+   284/612: $0\pin_flit[611:0] [328]
+   285/612: $0\pin_flit[611:0] [327]
+   286/612: $0\pin_flit[611:0] [326]
+   287/612: $0\pin_flit[611:0] [325]
+   288/612: $0\pin_flit[611:0] [324]
+   289/612: $0\pin_flit[611:0] [323]
+   290/612: $0\pin_flit[611:0] [322]
+   291/612: $0\pin_flit[611:0] [321]
+   292/612: $0\pin_flit[611:0] [320]
+   293/612: $0\pin_flit[611:0] [319]
+   294/612: $0\pin_flit[611:0] [318]
+   295/612: $0\pin_flit[611:0] [317]
+   296/612: $0\pin_flit[611:0] [316]
+   297/612: $0\pin_flit[611:0] [315]
+   298/612: $0\pin_flit[611:0] [314]
+   299/612: $0\pin_flit[611:0] [313]
+   300/612: $0\pin_flit[611:0] [312]
+   301/612: $0\pin_flit[611:0] [311]
+   302/612: $0\pin_flit[611:0] [310]
+   303/612: $0\pin_flit[611:0] [309]
+   304/612: $0\pin_flit[611:0] [308]
+   305/612: $0\pin_flit[611:0] [307]
+   306/612: $0\pin_flit[611:0] [306]
+   307/612: $0\pin_flit[611:0] [305]
+   308/612: $0\pin_flit[611:0] [304]
+   309/612: $0\pin_flit[611:0] [303]
+   310/612: $0\pin_flit[611:0] [302]
+   311/612: $0\pin_flit[611:0] [301]
+   312/612: $0\pin_flit[611:0] [300]
+   313/612: $0\pin_flit[611:0] [299]
+   314/612: $0\pin_flit[611:0] [298]
+   315/612: $0\pin_flit[611:0] [297]
+   316/612: $0\pin_flit[611:0] [296]
+   317/612: $0\pin_flit[611:0] [295]
+   318/612: $0\pin_flit[611:0] [294]
+   319/612: $0\pin_flit[611:0] [293]
+   320/612: $0\pin_flit[611:0] [292]
+   321/612: $0\pin_flit[611:0] [291]
+   322/612: $0\pin_flit[611:0] [290]
+   323/612: $0\pin_flit[611:0] [289]
+   324/612: $0\pin_flit[611:0] [288]
+   325/612: $0\pin_flit[611:0] [287]
+   326/612: $0\pin_flit[611:0] [286]
+   327/612: $0\pin_flit[611:0] [285]
+   328/612: $0\pin_flit[611:0] [284]
+   329/612: $0\pin_flit[611:0] [283]
+   330/612: $0\pin_flit[611:0] [282]
+   331/612: $0\pin_flit[611:0] [281]
+   332/612: $0\pin_flit[611:0] [280]
+   333/612: $0\pin_flit[611:0] [279]
+   334/612: $0\pin_flit[611:0] [278]
+   335/612: $0\pin_flit[611:0] [277]
+   336/612: $0\pin_flit[611:0] [276]
+   337/612: $0\pin_flit[611:0] [275]
+   338/612: $0\pin_flit[611:0] [274]
+   339/612: $0\pin_flit[611:0] [273]
+   340/612: $0\pin_flit[611:0] [272]
+   341/612: $0\pin_flit[611:0] [271]
+   342/612: $0\pin_flit[611:0] [270]
+   343/612: $0\pin_flit[611:0] [269]
+   344/612: $0\pin_flit[611:0] [268]
+   345/612: $0\pin_flit[611:0] [267]
+   346/612: $0\pin_flit[611:0] [266]
+   347/612: $0\pin_flit[611:0] [265]
+   348/612: $0\pin_flit[611:0] [264]
+   349/612: $0\pin_flit[611:0] [263]
+   350/612: $0\pin_flit[611:0] [262]
+   351/612: $0\pin_flit[611:0] [261]
+   352/612: $0\pin_flit[611:0] [260]
+   353/612: $0\pin_flit[611:0] [259]
+   354/612: $0\pin_flit[611:0] [258]
+   355/612: $0\pin_flit[611:0] [257]
+   356/612: $0\pin_flit[611:0] [256]
+   357/612: $0\pin_flit[611:0] [255]
+   358/612: $0\pin_flit[611:0] [254]
+   359/612: $0\pin_flit[611:0] [253]
+   360/612: $0\pin_flit[611:0] [252]
+   361/612: $0\pin_flit[611:0] [251]
+   362/612: $0\pin_flit[611:0] [250]
+   363/612: $0\pin_flit[611:0] [249]
+   364/612: $0\pin_flit[611:0] [248]
+   365/612: $0\pin_flit[611:0] [247]
+   366/612: $0\pin_flit[611:0] [246]
+   367/612: $0\pin_flit[611:0] [245]
+   368/612: $0\pin_flit[611:0] [244]
+   369/612: $0\pin_flit[611:0] [243]
+   370/612: $0\pin_flit[611:0] [242]
+   371/612: $0\pin_flit[611:0] [241]
+   372/612: $0\pin_flit[611:0] [240]
+   373/612: $0\pin_flit[611:0] [239]
+   374/612: $0\pin_flit[611:0] [238]
+   375/612: $0\pin_flit[611:0] [237]
+   376/612: $0\pin_flit[611:0] [236]
+   377/612: $0\pin_flit[611:0] [235]
+   378/612: $0\pin_flit[611:0] [234]
+   379/612: $0\pin_flit[611:0] [233]
+   380/612: $0\pin_flit[611:0] [232]
+   381/612: $0\pin_flit[611:0] [231]
+   382/612: $0\pin_flit[611:0] [230]
+   383/612: $0\pin_flit[611:0] [229]
+   384/612: $0\pin_flit[611:0] [228]
+   385/612: $0\pin_flit[611:0] [227]
+   386/612: $0\pin_flit[611:0] [226]
+   387/612: $0\pin_flit[611:0] [225]
+   388/612: $0\pin_flit[611:0] [224]
+   389/612: $0\pin_flit[611:0] [223]
+   390/612: $0\pin_flit[611:0] [222]
+   391/612: $0\pin_flit[611:0] [221]
+   392/612: $0\pin_flit[611:0] [220]
+   393/612: $0\pin_flit[611:0] [219]
+   394/612: $0\pin_flit[611:0] [218]
+   395/612: $0\pin_flit[611:0] [217]
+   396/612: $0\pin_flit[611:0] [216]
+   397/612: $0\pin_flit[611:0] [215]
+   398/612: $0\pin_flit[611:0] [214]
+   399/612: $0\pin_flit[611:0] [213]
+   400/612: $0\pin_flit[611:0] [212]
+   401/612: $0\pin_flit[611:0] [211]
+   402/612: $0\pin_flit[611:0] [210]
+   403/612: $0\pin_flit[611:0] [209]
+   404/612: $0\pin_flit[611:0] [208]
+   405/612: $0\pin_flit[611:0] [207]
+   406/612: $0\pin_flit[611:0] [206]
+   407/612: $0\pin_flit[611:0] [205]
+   408/612: $0\pin_flit[611:0] [204]
+   409/612: $0\pin_flit[611:0] [203]
+   410/612: $0\pin_flit[611:0] [202]
+   411/612: $0\pin_flit[611:0] [201]
+   412/612: $0\pin_flit[611:0] [200]
+   413/612: $0\pin_flit[611:0] [199]
+   414/612: $0\pin_flit[611:0] [198]
+   415/612: $0\pin_flit[611:0] [197]
+   416/612: $0\pin_flit[611:0] [196]
+   417/612: $0\pin_flit[611:0] [195]
+   418/612: $0\pin_flit[611:0] [194]
+   419/612: $0\pin_flit[611:0] [193]
+   420/612: $0\pin_flit[611:0] [192]
+   421/612: $0\pin_flit[611:0] [191]
+   422/612: $0\pin_flit[611:0] [190]
+   423/612: $0\pin_flit[611:0] [189]
+   424/612: $0\pin_flit[611:0] [188]
+   425/612: $0\pin_flit[611:0] [187]
+   426/612: $0\pin_flit[611:0] [186]
+   427/612: $0\pin_flit[611:0] [185]
+   428/612: $0\pin_flit[611:0] [184]
+   429/612: $0\pin_flit[611:0] [183]
+   430/612: $0\pin_flit[611:0] [182]
+   431/612: $0\pin_flit[611:0] [181]
+   432/612: $0\pin_flit[611:0] [180]
+   433/612: $0\pin_flit[611:0] [179]
+   434/612: $0\pin_flit[611:0] [178]
+   435/612: $0\pin_flit[611:0] [177]
+   436/612: $0\pin_flit[611:0] [176]
+   437/612: $0\pin_flit[611:0] [175]
+   438/612: $0\pin_flit[611:0] [174]
+   439/612: $0\pin_flit[611:0] [173]
+   440/612: $0\pin_flit[611:0] [172]
+   441/612: $0\pin_flit[611:0] [171]
+   442/612: $0\pin_flit[611:0] [170]
+   443/612: $0\pin_flit[611:0] [169]
+   444/612: $0\pin_flit[611:0] [168]
+   445/612: $0\pin_flit[611:0] [167]
+   446/612: $0\pin_flit[611:0] [166]
+   447/612: $0\pin_flit[611:0] [165]
+   448/612: $0\pin_flit[611:0] [164]
+   449/612: $0\pin_flit[611:0] [163]
+   450/612: $0\pin_flit[611:0] [162]
+   451/612: $0\pin_flit[611:0] [161]
+   452/612: $0\pin_flit[611:0] [160]
+   453/612: $0\pin_flit[611:0] [159]
+   454/612: $0\pin_flit[611:0] [158]
+   455/612: $0\pin_flit[611:0] [157]
+   456/612: $0\pin_flit[611:0] [156]
+   457/612: $0\pin_flit[611:0] [155]
+   458/612: $0\pin_flit[611:0] [154]
+   459/612: $0\pin_flit[611:0] [153]
+   460/612: $0\pin_flit[611:0] [152]
+   461/612: $0\pin_flit[611:0] [151]
+   462/612: $0\pin_flit[611:0] [150]
+   463/612: $0\pin_flit[611:0] [149]
+   464/612: $0\pin_flit[611:0] [148]
+   465/612: $0\pin_flit[611:0] [147]
+   466/612: $0\pin_flit[611:0] [146]
+   467/612: $0\pin_flit[611:0] [145]
+   468/612: $0\pin_flit[611:0] [144]
+   469/612: $0\pin_flit[611:0] [143]
+   470/612: $0\pin_flit[611:0] [142]
+   471/612: $0\pin_flit[611:0] [141]
+   472/612: $0\pin_flit[611:0] [140]
+   473/612: $0\pin_flit[611:0] [139]
+   474/612: $0\pin_flit[611:0] [138]
+   475/612: $0\pin_flit[611:0] [137]
+   476/612: $0\pin_flit[611:0] [136]
+   477/612: $0\pin_flit[611:0] [135]
+   478/612: $0\pin_flit[611:0] [134]
+   479/612: $0\pin_flit[611:0] [133]
+   480/612: $0\pin_flit[611:0] [132]
+   481/612: $0\pin_flit[611:0] [131]
+   482/612: $0\pin_flit[611:0] [130]
+   483/612: $0\pin_flit[611:0] [129]
+   484/612: $0\pin_flit[611:0] [128]
+   485/612: $0\pin_flit[611:0] [127]
+   486/612: $0\pin_flit[611:0] [126]
+   487/612: $0\pin_flit[611:0] [125]
+   488/612: $0\pin_flit[611:0] [124]
+   489/612: $0\pin_flit[611:0] [123]
+   490/612: $0\pin_flit[611:0] [122]
+   491/612: $0\pin_flit[611:0] [121]
+   492/612: $0\pin_flit[611:0] [120]
+   493/612: $0\pin_flit[611:0] [119]
+   494/612: $0\pin_flit[611:0] [118]
+   495/612: $0\pin_flit[611:0] [117]
+   496/612: $0\pin_flit[611:0] [116]
+   497/612: $0\pin_flit[611:0] [115]
+   498/612: $0\pin_flit[611:0] [114]
+   499/612: $0\pin_flit[611:0] [113]
+   500/612: $0\pin_flit[611:0] [112]
+   501/612: $0\pin_flit[611:0] [111]
+   502/612: $0\pin_flit[611:0] [110]
+   503/612: $0\pin_flit[611:0] [109]
+   504/612: $0\pin_flit[611:0] [108]
+   505/612: $0\pin_flit[611:0] [107]
+   506/612: $0\pin_flit[611:0] [106]
+   507/612: $0\pin_flit[611:0] [105]
+   508/612: $0\pin_flit[611:0] [104]
+   509/612: $0\pin_flit[611:0] [103]
+   510/612: $0\pin_flit[611:0] [102]
+   511/612: $0\pin_flit[611:0] [101]
+   512/612: $0\pin_flit[611:0] [100]
+   513/612: $0\pin_flit[611:0] [99]
+   514/612: $0\pin_flit[611:0] [98]
+   515/612: $0\pin_flit[611:0] [97]
+   516/612: $0\pin_flit[611:0] [96]
+   517/612: $0\pin_flit[611:0] [95]
+   518/612: $0\pin_flit[611:0] [94]
+   519/612: $0\pin_flit[611:0] [93]
+   520/612: $0\pin_flit[611:0] [92]
+   521/612: $0\pin_flit[611:0] [91]
+   522/612: $0\pin_flit[611:0] [90]
+   523/612: $0\pin_flit[611:0] [89]
+   524/612: $0\pin_flit[611:0] [88]
+   525/612: $0\pin_flit[611:0] [87]
+   526/612: $0\pin_flit[611:0] [86]
+   527/612: $0\pin_flit[611:0] [85]
+   528/612: $0\pin_flit[611:0] [84]
+   529/612: $0\pin_flit[611:0] [83]
+   530/612: $0\pin_flit[611:0] [82]
+   531/612: $0\pin_flit[611:0] [81]
+   532/612: $0\pin_flit[611:0] [80]
+   533/612: $0\pin_flit[611:0] [79]
+   534/612: $0\pin_flit[611:0] [78]
+   535/612: $0\pin_flit[611:0] [77]
+   536/612: $0\pin_flit[611:0] [76]
+   537/612: $0\pin_flit[611:0] [75]
+   538/612: $0\pin_flit[611:0] [74]
+   539/612: $0\pin_flit[611:0] [73]
+   540/612: $0\pin_flit[611:0] [72]
+   541/612: $0\pin_flit[611:0] [71]
+   542/612: $0\pin_flit[611:0] [70]
+   543/612: $0\pin_flit[611:0] [69]
+   544/612: $0\pin_flit[611:0] [68]
+   545/612: $0\pin_flit[611:0] [67]
+   546/612: $0\pin_flit[611:0] [66]
+   547/612: $0\pin_flit[611:0] [65]
+   548/612: $0\pin_flit[611:0] [64]
+   549/612: $0\pin_flit[611:0] [63]
+   550/612: $0\pin_flit[611:0] [62]
+   551/612: $0\pin_flit[611:0] [61]
+   552/612: $0\pin_flit[611:0] [60]
+   553/612: $0\pin_flit[611:0] [59]
+   554/612: $0\pin_flit[611:0] [58]
+   555/612: $0\pin_flit[611:0] [57]
+   556/612: $0\pin_flit[611:0] [56]
+   557/612: $0\pin_flit[611:0] [55]
+   558/612: $0\pin_flit[611:0] [54]
+   559/612: $0\pin_flit[611:0] [53]
+   560/612: $0\pin_flit[611:0] [52]
+   561/612: $0\pin_flit[611:0] [51]
+   562/612: $0\pin_flit[611:0] [50]
+   563/612: $0\pin_flit[611:0] [49]
+   564/612: $0\pin_flit[611:0] [48]
+   565/612: $0\pin_flit[611:0] [47]
+   566/612: $0\pin_flit[611:0] [46]
+   567/612: $0\pin_flit[611:0] [45]
+   568/612: $0\pin_flit[611:0] [44]
+   569/612: $0\pin_flit[611:0] [43]
+   570/612: $0\pin_flit[611:0] [42]
+   571/612: $0\pin_flit[611:0] [41]
+   572/612: $0\pin_flit[611:0] [40]
+   573/612: $0\pin_flit[611:0] [39]
+   574/612: $0\pin_flit[611:0] [38]
+   575/612: $0\pin_flit[611:0] [37]
+   576/612: $0\pin_flit[611:0] [36]
+   577/612: $0\pin_flit[611:0] [35]
+   578/612: $0\pin_flit[611:0] [34]
+   579/612: $0\pin_flit[611:0] [33]
+   580/612: $0\pin_flit[611:0] [32]
+   581/612: $0\pin_flit[611:0] [31]
+   582/612: $0\pin_flit[611:0] [30]
+   583/612: $0\pin_flit[611:0] [29]
+   584/612: $0\pin_flit[611:0] [28]
+   585/612: $0\pin_flit[611:0] [27]
+   586/612: $0\pin_flit[611:0] [26]
+   587/612: $0\pin_flit[611:0] [25]
+   588/612: $0\pin_flit[611:0] [24]
+   589/612: $0\pin_flit[611:0] [23]
+   590/612: $0\pin_flit[611:0] [22]
+   591/612: $0\pin_flit[611:0] [21]
+   592/612: $0\pin_flit[611:0] [20]
+   593/612: $0\pin_flit[611:0] [19]
+   594/612: $0\pin_flit[611:0] [18]
+   595/612: $0\pin_flit[611:0] [17]
+   596/612: $0\pin_flit[611:0] [16]
+   597/612: $0\pin_flit[611:0] [15]
+   598/612: $0\pin_flit[611:0] [14]
+   599/612: $0\pin_flit[611:0] [13]
+   600/612: $0\pin_flit[611:0] [12]
+   601/612: $0\pin_flit[611:0] [11]
+   602/612: $0\pin_flit[611:0] [10]
+   603/612: $0\pin_flit[611:0] [9]
+   604/612: $0\pin_flit[611:0] [8]
+   605/612: $0\pin_flit[611:0] [7]
+   606/612: $0\pin_flit[611:0] [6]
+   607/612: $0\pin_flit[611:0] [5]
+   608/612: $0\pin_flit[611:0] [4]
+   609/612: $0\pin_flit[611:0] [3]
+   610/612: $0\pin_flit[611:0] [2]
+   611/612: $0\pin_flit[611:0] [1]
+   612/612: $0\pin_flit[611:0] [0]
+Creating decoders for process `$paramod$a7acd6e7011c4570b02d32bd94934a1ca6c918cb\ot_hep_rx_leaf.$proc$ep_store_f6.sv:45$2586'.
+Creating decoders for process `$paramod$a7acd6e7011c4570b02d32bd94934a1ca6c918cb\ot_hep_rx_leaf.$proc$ep_store_f6.sv:36$2585'.
+
+4.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+4.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_hep_rx_block.\g_ra_f6[1].q' using process `\ot_hep_rx_block.$proc$ep_store_f6.sv:91$59'.
+  created $adff cell `$procdff$3878' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hep_rx_block.\g_ra_f6[0].q' using process `\ot_hep_rx_block.$proc$ep_store_f6.sv:91$57'.
+  created $adff cell `$procdff$3883' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hep_rx_block.\ra' using process `\ot_hep_rx_block.$proc$ep_store_f6.sv:110$28'.
+  created $adff cell `$procdff$3888' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hep_rx_block.\pin_v' using process `\ot_hep_rx_block.$proc$ep_store_f6.sv:110$28'.
+  created $adff cell `$procdff$3893' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hep_rx_block.\fault' using process `\ot_hep_rx_block.$proc$ep_store_f6.sv:110$28'.
+  created $adff cell `$procdff$3898' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hep_rx_block.\fc' using process `\ot_hep_rx_block.$proc$ep_store_f6.sv:110$28'.
+  created $adff cell `$procdff$3903' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hep_rx_block.\state' using process `\ot_hep_rx_block.$proc$ep_store_f6.sv:110$28'.
+  created $adff cell `$procdff$3908' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hep_rx_block.\count' using process `\ot_hep_rx_block.$proc$ep_store_f6.sv:110$28'.
+  created $adff cell `$procdff$3913' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hep_rx_block.\words' using process `\ot_hep_rx_block.$proc$ep_store_f6.sv:110$28'.
+  created $adff cell `$procdff$3918' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hep_rx_block.\issued' using process `\ot_hep_rx_block.$proc$ep_store_f6.sv:110$28'.
+  created $adff cell `$procdff$3923' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hep_rx_block.\seal_age' using process `\ot_hep_rx_block.$proc$ep_store_f6.sv:110$28'.
+  created $adff cell `$procdff$3928' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hep_rx_block.\flush_age' using process `\ot_hep_rx_block.$proc$ep_store_f6.sv:110$28'.
+  created $adff cell `$procdff$3933' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hep_rx_block.\vp' using process `\ot_hep_rx_block.$proc$ep_store_f6.sv:110$28'.
+  created $adff cell `$procdff$3938' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hep_rx_block.\vp2r' using process `\ot_hep_rx_block.$proc$ep_store_f6.sv:110$28'.
+  created $adff cell `$procdff$3943' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hep_rx_block.\pvr' using process `\ot_hep_rx_block.$proc$ep_store_f6.sv:110$28'.
+  created $adff cell `$procdff$3948' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hep_rx_block.\pin_flit' using process `\ot_hep_rx_block.$proc$ep_store_f6.sv:108$27'.
+  created $dff cell `$procdff$3949' with positive edge clock.
+Creating register for signal `\ot_hep_rx_block.\j' using process `\ot_hep_rx_block.$proc$ep_store_f6.sv:108$27'.
+  created $dff cell `$procdff$3950' with positive edge clock.
+Creating register for signal `$paramod$a7acd6e7011c4570b02d32bd94934a1ca6c918cb\ot_hep_rx_leaf.\dout' using process `$paramod$a7acd6e7011c4570b02d32bd94934a1ca6c918cb\ot_hep_rx_leaf.$proc$ep_store_f6.sv:45$2586'.
+  created $dff cell `$procdff$3951' with positive edge clock.
+Creating register for signal `$paramod$a7acd6e7011c4570b02d32bd94934a1ca6c918cb\ot_hep_rx_leaf.\wq' using process `$paramod$a7acd6e7011c4570b02d32bd94934a1ca6c918cb\ot_hep_rx_leaf.$proc$ep_store_f6.sv:36$2585'.
+  created $dff cell `$procdff$3952' with positive edge clock.
+Creating register for signal `$paramod$a7acd6e7011c4570b02d32bd94934a1ca6c918cb\ot_hep_rx_leaf.\aq' using process `$paramod$a7acd6e7011c4570b02d32bd94934a1ca6c918cb\ot_hep_rx_leaf.$proc$ep_store_f6.sv:36$2585'.
+  created $dff cell `$procdff$3953' with positive edge clock.
+Creating register for signal `$paramod$a7acd6e7011c4570b02d32bd94934a1ca6c918cb\ot_hep_rx_leaf.\dq' using process `$paramod$a7acd6e7011c4570b02d32bd94934a1ca6c918cb\ot_hep_rx_leaf.$proc$ep_store_f6.sv:36$2585'.
+  created $dff cell `$procdff$3954' with positive edge clock.
+
+4.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\ot_hep_rx_block.$proc$ep_store_f6.sv:91$59'.
+Removing empty process `ot_hep_rx_block.$proc$ep_store_f6.sv:91$59'.
+Found and cleaned up 1 empty switch in `\ot_hep_rx_block.$proc$ep_store_f6.sv:91$57'.
+Removing empty process `ot_hep_rx_block.$proc$ep_store_f6.sv:91$57'.
+Found and cleaned up 14 empty switches in `\ot_hep_rx_block.$proc$ep_store_f6.sv:110$28'.
+Removing empty process `ot_hep_rx_block.$proc$ep_store_f6.sv:110$28'.
+Found and cleaned up 612 empty switches in `\ot_hep_rx_block.$proc$ep_store_f6.sv:108$27'.
+Removing empty process `ot_hep_rx_block.$proc$ep_store_f6.sv:108$27'.
+Removing empty process `$paramod$a7acd6e7011c4570b02d32bd94934a1ca6c918cb\ot_hep_rx_leaf.$proc$ep_store_f6.sv:45$2586'.
+Removing empty process `$paramod$a7acd6e7011c4570b02d32bd94934a1ca6c918cb\ot_hep_rx_leaf.$proc$ep_store_f6.sv:36$2585'.
+Cleaned up 628 empty switches.
+
+4.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hep_rx_block.
+<suppressed ~37 debug messages>
+Optimizing module $paramod$a7acd6e7011c4570b02d32bd94934a1ca6c918cb\ot_hep_rx_leaf.
+<suppressed ~1 debug messages>
+
+5. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$a7acd6e7011c4570b02d32bd94934a1ca6c918cb\ot_hep_rx_leaf.
+<suppressed ~2 debug messages>
+
+6. Executing OPT pass (performing simple optimizations).
+
+6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hep_rx_block.
+
+6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hep_rx_block'.
+Computing hashes of 732 cells of `\ot_hep_rx_block'.
+Finding duplicate cells in `\ot_hep_rx_block'.
+Computing hashes of 713 cells of `\ot_hep_rx_block'.
+Finding duplicate cells in `\ot_hep_rx_block'.
+<suppressed ~57 debug messages>
+Removed a total of 19 cells.
+
+6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hep_rx_block..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~1323 debug messages>
+
+6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hep_rx_block.
+Performed a total of 0 changes.
+
+6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hep_rx_block'.
+Computing hashes of 713 cells of `\ot_hep_rx_block'.
+Finding duplicate cells in `\ot_hep_rx_block'.
+Removed a total of 0 cells.
+
+6.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$3923 ($adff) from module ot_hep_rx_block (D = $procmux$2614_Y, Q = \issued).
+Adding EN signal on $procdff$3913 ($adff) from module ot_hep_rx_block (D = $procmux$2620_Y, Q = \count).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [611], Q = \pin_flit [611]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [610], Q = \pin_flit [610]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [609], Q = \pin_flit [609]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [608], Q = \pin_flit [608]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [607], Q = \pin_flit [607]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [606], Q = \pin_flit [606]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [605], Q = \pin_flit [605]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [604], Q = \pin_flit [604]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [603], Q = \pin_flit [603]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [602], Q = \pin_flit [602]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [601], Q = \pin_flit [601]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [600], Q = \pin_flit [600]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [599], Q = \pin_flit [599]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [598], Q = \pin_flit [598]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [597], Q = \pin_flit [597]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [596], Q = \pin_flit [596]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [595], Q = \pin_flit [595]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [594], Q = \pin_flit [594]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [593], Q = \pin_flit [593]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [592], Q = \pin_flit [592]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [591], Q = \pin_flit [591]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [590], Q = \pin_flit [590]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [589], Q = \pin_flit [589]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [588], Q = \pin_flit [588]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [587], Q = \pin_flit [587]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [586], Q = \pin_flit [586]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [585], Q = \pin_flit [585]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [584], Q = \pin_flit [584]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [583], Q = \pin_flit [583]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [582], Q = \pin_flit [582]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [581], Q = \pin_flit [581]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [580], Q = \pin_flit [580]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [579], Q = \pin_flit [579]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [578], Q = \pin_flit [578]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [577], Q = \pin_flit [577]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [576], Q = \pin_flit [576]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [575], Q = \pin_flit [575]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [574], Q = \pin_flit [574]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [573], Q = \pin_flit [573]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [572], Q = \pin_flit [572]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [571], Q = \pin_flit [571]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [570], Q = \pin_flit [570]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [569], Q = \pin_flit [569]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [568], Q = \pin_flit [568]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [567], Q = \pin_flit [567]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [566], Q = \pin_flit [566]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [565], Q = \pin_flit [565]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [564], Q = \pin_flit [564]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [563], Q = \pin_flit [563]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [562], Q = \pin_flit [562]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [561], Q = \pin_flit [561]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [560], Q = \pin_flit [560]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [559], Q = \pin_flit [559]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [558], Q = \pin_flit [558]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [557], Q = \pin_flit [557]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [556], Q = \pin_flit [556]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [555], Q = \pin_flit [555]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [554], Q = \pin_flit [554]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [553], Q = \pin_flit [553]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [552], Q = \pin_flit [552]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [551], Q = \pin_flit [551]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [550], Q = \pin_flit [550]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [549], Q = \pin_flit [549]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [548], Q = \pin_flit [548]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [547], Q = \pin_flit [547]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [546], Q = \pin_flit [546]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [545], Q = \pin_flit [545]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [544], Q = \pin_flit [544]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [543], Q = \pin_flit [543]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [542], Q = \pin_flit [542]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [541], Q = \pin_flit [541]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [540], Q = \pin_flit [540]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [539], Q = \pin_flit [539]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [538], Q = \pin_flit [538]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [537], Q = \pin_flit [537]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [536], Q = \pin_flit [536]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [535], Q = \pin_flit [535]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [534], Q = \pin_flit [534]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [533], Q = \pin_flit [533]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [532], Q = \pin_flit [532]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [531], Q = \pin_flit [531]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [530], Q = \pin_flit [530]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [529], Q = \pin_flit [529]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [528], Q = \pin_flit [528]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [527], Q = \pin_flit [527]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [526], Q = \pin_flit [526]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [525], Q = \pin_flit [525]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [524], Q = \pin_flit [524]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [523], Q = \pin_flit [523]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [522], Q = \pin_flit [522]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [521], Q = \pin_flit [521]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [520], Q = \pin_flit [520]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [519], Q = \pin_flit [519]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [518], Q = \pin_flit [518]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [517], Q = \pin_flit [517]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [516], Q = \pin_flit [516]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [515], Q = \pin_flit [515]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [514], Q = \pin_flit [514]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [513], Q = \pin_flit [513]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [512], Q = \pin_flit [512]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [511], Q = \pin_flit [511]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [510], Q = \pin_flit [510]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [509], Q = \pin_flit [509]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [508], Q = \pin_flit [508]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [507], Q = \pin_flit [507]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [506], Q = \pin_flit [506]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [505], Q = \pin_flit [505]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [504], Q = \pin_flit [504]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [503], Q = \pin_flit [503]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [502], Q = \pin_flit [502]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [501], Q = \pin_flit [501]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [500], Q = \pin_flit [500]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [499], Q = \pin_flit [499]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [498], Q = \pin_flit [498]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [497], Q = \pin_flit [497]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [496], Q = \pin_flit [496]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [495], Q = \pin_flit [495]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [494], Q = \pin_flit [494]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [493], Q = \pin_flit [493]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [492], Q = \pin_flit [492]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [491], Q = \pin_flit [491]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [490], Q = \pin_flit [490]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [489], Q = \pin_flit [489]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [488], Q = \pin_flit [488]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [487], Q = \pin_flit [487]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [486], Q = \pin_flit [486]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [485], Q = \pin_flit [485]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [484], Q = \pin_flit [484]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [483], Q = \pin_flit [483]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [482], Q = \pin_flit [482]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [481], Q = \pin_flit [481]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [480], Q = \pin_flit [480]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [479], Q = \pin_flit [479]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [478], Q = \pin_flit [478]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [477], Q = \pin_flit [477]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [476], Q = \pin_flit [476]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [475], Q = \pin_flit [475]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [474], Q = \pin_flit [474]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [473], Q = \pin_flit [473]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [472], Q = \pin_flit [472]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [471], Q = \pin_flit [471]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [470], Q = \pin_flit [470]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [469], Q = \pin_flit [469]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [468], Q = \pin_flit [468]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [467], Q = \pin_flit [467]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [466], Q = \pin_flit [466]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [465], Q = \pin_flit [465]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [464], Q = \pin_flit [464]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [463], Q = \pin_flit [463]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [462], Q = \pin_flit [462]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [461], Q = \pin_flit [461]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [460], Q = \pin_flit [460]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [459], Q = \pin_flit [459]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [458], Q = \pin_flit [458]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [457], Q = \pin_flit [457]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [456], Q = \pin_flit [456]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [455], Q = \pin_flit [455]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [454], Q = \pin_flit [454]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [453], Q = \pin_flit [453]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [452], Q = \pin_flit [452]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [451], Q = \pin_flit [451]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [450], Q = \pin_flit [450]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [449], Q = \pin_flit [449]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [448], Q = \pin_flit [448]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [447], Q = \pin_flit [447]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [446], Q = \pin_flit [446]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [445], Q = \pin_flit [445]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [444], Q = \pin_flit [444]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [443], Q = \pin_flit [443]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [442], Q = \pin_flit [442]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [441], Q = \pin_flit [441]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [440], Q = \pin_flit [440]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [439], Q = \pin_flit [439]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [438], Q = \pin_flit [438]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [437], Q = \pin_flit [437]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [436], Q = \pin_flit [436]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [435], Q = \pin_flit [435]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [434], Q = \pin_flit [434]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [433], Q = \pin_flit [433]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [432], Q = \pin_flit [432]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [431], Q = \pin_flit [431]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [430], Q = \pin_flit [430]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [429], Q = \pin_flit [429]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [428], Q = \pin_flit [428]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [427], Q = \pin_flit [427]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [426], Q = \pin_flit [426]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [425], Q = \pin_flit [425]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [424], Q = \pin_flit [424]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [423], Q = \pin_flit [423]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [422], Q = \pin_flit [422]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [421], Q = \pin_flit [421]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [420], Q = \pin_flit [420]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [419], Q = \pin_flit [419]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [418], Q = \pin_flit [418]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [417], Q = \pin_flit [417]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [416], Q = \pin_flit [416]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [415], Q = \pin_flit [415]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [414], Q = \pin_flit [414]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [413], Q = \pin_flit [413]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [412], Q = \pin_flit [412]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [411], Q = \pin_flit [411]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [410], Q = \pin_flit [410]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [409], Q = \pin_flit [409]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [408], Q = \pin_flit [408]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [407], Q = \pin_flit [407]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [406], Q = \pin_flit [406]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [405], Q = \pin_flit [405]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [404], Q = \pin_flit [404]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [403], Q = \pin_flit [403]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [402], Q = \pin_flit [402]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [401], Q = \pin_flit [401]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [400], Q = \pin_flit [400]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [399], Q = \pin_flit [399]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [398], Q = \pin_flit [398]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [397], Q = \pin_flit [397]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [396], Q = \pin_flit [396]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [395], Q = \pin_flit [395]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [394], Q = \pin_flit [394]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [393], Q = \pin_flit [393]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [392], Q = \pin_flit [392]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [391], Q = \pin_flit [391]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [390], Q = \pin_flit [390]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [389], Q = \pin_flit [389]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [388], Q = \pin_flit [388]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [387], Q = \pin_flit [387]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [386], Q = \pin_flit [386]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [385], Q = \pin_flit [385]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [384], Q = \pin_flit [384]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [383], Q = \pin_flit [383]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [382], Q = \pin_flit [382]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [381], Q = \pin_flit [381]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [380], Q = \pin_flit [380]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [379], Q = \pin_flit [379]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [378], Q = \pin_flit [378]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [377], Q = \pin_flit [377]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [376], Q = \pin_flit [376]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [375], Q = \pin_flit [375]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [374], Q = \pin_flit [374]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [373], Q = \pin_flit [373]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [372], Q = \pin_flit [372]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [371], Q = \pin_flit [371]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [370], Q = \pin_flit [370]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [369], Q = \pin_flit [369]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [368], Q = \pin_flit [368]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [367], Q = \pin_flit [367]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [366], Q = \pin_flit [366]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [365], Q = \pin_flit [365]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [364], Q = \pin_flit [364]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [363], Q = \pin_flit [363]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [362], Q = \pin_flit [362]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [361], Q = \pin_flit [361]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [360], Q = \pin_flit [360]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [359], Q = \pin_flit [359]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [358], Q = \pin_flit [358]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [357], Q = \pin_flit [357]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [356], Q = \pin_flit [356]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [355], Q = \pin_flit [355]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [354], Q = \pin_flit [354]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [353], Q = \pin_flit [353]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [352], Q = \pin_flit [352]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [351], Q = \pin_flit [351]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [350], Q = \pin_flit [350]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [349], Q = \pin_flit [349]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [348], Q = \pin_flit [348]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [347], Q = \pin_flit [347]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [346], Q = \pin_flit [346]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [345], Q = \pin_flit [345]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [344], Q = \pin_flit [344]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [343], Q = \pin_flit [343]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [342], Q = \pin_flit [342]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [341], Q = \pin_flit [341]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [340], Q = \pin_flit [340]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [339], Q = \pin_flit [339]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [338], Q = \pin_flit [338]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [337], Q = \pin_flit [337]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [336], Q = \pin_flit [336]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [335], Q = \pin_flit [335]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [334], Q = \pin_flit [334]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [333], Q = \pin_flit [333]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [332], Q = \pin_flit [332]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [331], Q = \pin_flit [331]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [330], Q = \pin_flit [330]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [329], Q = \pin_flit [329]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [328], Q = \pin_flit [328]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [327], Q = \pin_flit [327]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [326], Q = \pin_flit [326]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [325], Q = \pin_flit [325]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [324], Q = \pin_flit [324]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [323], Q = \pin_flit [323]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [322], Q = \pin_flit [322]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [321], Q = \pin_flit [321]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [320], Q = \pin_flit [320]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [319], Q = \pin_flit [319]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [318], Q = \pin_flit [318]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [317], Q = \pin_flit [317]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [316], Q = \pin_flit [316]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [315], Q = \pin_flit [315]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [314], Q = \pin_flit [314]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [313], Q = \pin_flit [313]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [312], Q = \pin_flit [312]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [311], Q = \pin_flit [311]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [310], Q = \pin_flit [310]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [309], Q = \pin_flit [309]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [308], Q = \pin_flit [308]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [307], Q = \pin_flit [307]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [306], Q = \pin_flit [306]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [305], Q = \pin_flit [305]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [304], Q = \pin_flit [304]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [303], Q = \pin_flit [303]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [302], Q = \pin_flit [302]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [301], Q = \pin_flit [301]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [300], Q = \pin_flit [300]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [299], Q = \pin_flit [299]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [298], Q = \pin_flit [298]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [297], Q = \pin_flit [297]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [296], Q = \pin_flit [296]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [295], Q = \pin_flit [295]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [294], Q = \pin_flit [294]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [293], Q = \pin_flit [293]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [292], Q = \pin_flit [292]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [291], Q = \pin_flit [291]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [290], Q = \pin_flit [290]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [289], Q = \pin_flit [289]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [288], Q = \pin_flit [288]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [287], Q = \pin_flit [287]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [286], Q = \pin_flit [286]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [285], Q = \pin_flit [285]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [284], Q = \pin_flit [284]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [283], Q = \pin_flit [283]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [282], Q = \pin_flit [282]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [281], Q = \pin_flit [281]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [280], Q = \pin_flit [280]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [279], Q = \pin_flit [279]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [278], Q = \pin_flit [278]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [277], Q = \pin_flit [277]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [276], Q = \pin_flit [276]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [275], Q = \pin_flit [275]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [274], Q = \pin_flit [274]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [273], Q = \pin_flit [273]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [272], Q = \pin_flit [272]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [271], Q = \pin_flit [271]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [270], Q = \pin_flit [270]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [269], Q = \pin_flit [269]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [268], Q = \pin_flit [268]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [267], Q = \pin_flit [267]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [266], Q = \pin_flit [266]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [265], Q = \pin_flit [265]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [264], Q = \pin_flit [264]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [263], Q = \pin_flit [263]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [262], Q = \pin_flit [262]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [261], Q = \pin_flit [261]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [260], Q = \pin_flit [260]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [259], Q = \pin_flit [259]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [258], Q = \pin_flit [258]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [257], Q = \pin_flit [257]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [256], Q = \pin_flit [256]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [255], Q = \pin_flit [255]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [254], Q = \pin_flit [254]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [253], Q = \pin_flit [253]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [252], Q = \pin_flit [252]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [251], Q = \pin_flit [251]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [250], Q = \pin_flit [250]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [249], Q = \pin_flit [249]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [248], Q = \pin_flit [248]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [247], Q = \pin_flit [247]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [246], Q = \pin_flit [246]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [245], Q = \pin_flit [245]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [244], Q = \pin_flit [244]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [243], Q = \pin_flit [243]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [242], Q = \pin_flit [242]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [241], Q = \pin_flit [241]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [240], Q = \pin_flit [240]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [239], Q = \pin_flit [239]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [238], Q = \pin_flit [238]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [237], Q = \pin_flit [237]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [236], Q = \pin_flit [236]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [235], Q = \pin_flit [235]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [234], Q = \pin_flit [234]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [233], Q = \pin_flit [233]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [232], Q = \pin_flit [232]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [231], Q = \pin_flit [231]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [230], Q = \pin_flit [230]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [229], Q = \pin_flit [229]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [228], Q = \pin_flit [228]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [227], Q = \pin_flit [227]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [226], Q = \pin_flit [226]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [225], Q = \pin_flit [225]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [224], Q = \pin_flit [224]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [223], Q = \pin_flit [223]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [222], Q = \pin_flit [222]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [221], Q = \pin_flit [221]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [220], Q = \pin_flit [220]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [219], Q = \pin_flit [219]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [218], Q = \pin_flit [218]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [217], Q = \pin_flit [217]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [216], Q = \pin_flit [216]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [215], Q = \pin_flit [215]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [214], Q = \pin_flit [214]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [213], Q = \pin_flit [213]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [212], Q = \pin_flit [212]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [211], Q = \pin_flit [211]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [210], Q = \pin_flit [210]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [209], Q = \pin_flit [209]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [208], Q = \pin_flit [208]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [207], Q = \pin_flit [207]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [206], Q = \pin_flit [206]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [205], Q = \pin_flit [205]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [204], Q = \pin_flit [204]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [203], Q = \pin_flit [203]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [202], Q = \pin_flit [202]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [201], Q = \pin_flit [201]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [200], Q = \pin_flit [200]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [199], Q = \pin_flit [199]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [198], Q = \pin_flit [198]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [197], Q = \pin_flit [197]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [196], Q = \pin_flit [196]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [195], Q = \pin_flit [195]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [194], Q = \pin_flit [194]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [193], Q = \pin_flit [193]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [192], Q = \pin_flit [192]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [191], Q = \pin_flit [191]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [190], Q = \pin_flit [190]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [189], Q = \pin_flit [189]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [188], Q = \pin_flit [188]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [187], Q = \pin_flit [187]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [186], Q = \pin_flit [186]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [185], Q = \pin_flit [185]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [184], Q = \pin_flit [184]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [183], Q = \pin_flit [183]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [182], Q = \pin_flit [182]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [181], Q = \pin_flit [181]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [180], Q = \pin_flit [180]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [179], Q = \pin_flit [179]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [178], Q = \pin_flit [178]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [177], Q = \pin_flit [177]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [176], Q = \pin_flit [176]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [175], Q = \pin_flit [175]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [174], Q = \pin_flit [174]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [173], Q = \pin_flit [173]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [172], Q = \pin_flit [172]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [171], Q = \pin_flit [171]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [170], Q = \pin_flit [170]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [169], Q = \pin_flit [169]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [168], Q = \pin_flit [168]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [167], Q = \pin_flit [167]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [166], Q = \pin_flit [166]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [165], Q = \pin_flit [165]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [164], Q = \pin_flit [164]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [163], Q = \pin_flit [163]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [162], Q = \pin_flit [162]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [161], Q = \pin_flit [161]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [160], Q = \pin_flit [160]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [159], Q = \pin_flit [159]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [158], Q = \pin_flit [158]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [157], Q = \pin_flit [157]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [156], Q = \pin_flit [156]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [155], Q = \pin_flit [155]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [154], Q = \pin_flit [154]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [153], Q = \pin_flit [153]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [152], Q = \pin_flit [152]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [151], Q = \pin_flit [151]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [150], Q = \pin_flit [150]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [149], Q = \pin_flit [149]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [148], Q = \pin_flit [148]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [147], Q = \pin_flit [147]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [146], Q = \pin_flit [146]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [145], Q = \pin_flit [145]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [144], Q = \pin_flit [144]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [143], Q = \pin_flit [143]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [142], Q = \pin_flit [142]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [141], Q = \pin_flit [141]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [140], Q = \pin_flit [140]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [139], Q = \pin_flit [139]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [138], Q = \pin_flit [138]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [137], Q = \pin_flit [137]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [136], Q = \pin_flit [136]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [135], Q = \pin_flit [135]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [134], Q = \pin_flit [134]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [133], Q = \pin_flit [133]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [132], Q = \pin_flit [132]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [131], Q = \pin_flit [131]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [130], Q = \pin_flit [130]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [129], Q = \pin_flit [129]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [128], Q = \pin_flit [128]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [127], Q = \pin_flit [127]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [126], Q = \pin_flit [126]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [125], Q = \pin_flit [125]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [124], Q = \pin_flit [124]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [123], Q = \pin_flit [123]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [122], Q = \pin_flit [122]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [121], Q = \pin_flit [121]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [120], Q = \pin_flit [120]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [119], Q = \pin_flit [119]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [118], Q = \pin_flit [118]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [117], Q = \pin_flit [117]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [116], Q = \pin_flit [116]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [115], Q = \pin_flit [115]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [114], Q = \pin_flit [114]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [113], Q = \pin_flit [113]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [112], Q = \pin_flit [112]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [111], Q = \pin_flit [111]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [110], Q = \pin_flit [110]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [109], Q = \pin_flit [109]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [108], Q = \pin_flit [108]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [107], Q = \pin_flit [107]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [106], Q = \pin_flit [106]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [105], Q = \pin_flit [105]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [104], Q = \pin_flit [104]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [103], Q = \pin_flit [103]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [102], Q = \pin_flit [102]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [101], Q = \pin_flit [101]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [100], Q = \pin_flit [100]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [99], Q = \pin_flit [99]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [98], Q = \pin_flit [98]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [97], Q = \pin_flit [97]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [96], Q = \pin_flit [96]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [95], Q = \pin_flit [95]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [94], Q = \pin_flit [94]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [93], Q = \pin_flit [93]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [92], Q = \pin_flit [92]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [91], Q = \pin_flit [91]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [90], Q = \pin_flit [90]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [89], Q = \pin_flit [89]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [88], Q = \pin_flit [88]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [87], Q = \pin_flit [87]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [86], Q = \pin_flit [86]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [85], Q = \pin_flit [85]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [84], Q = \pin_flit [84]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [83], Q = \pin_flit [83]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [82], Q = \pin_flit [82]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [81], Q = \pin_flit [81]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [80], Q = \pin_flit [80]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [79], Q = \pin_flit [79]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [78], Q = \pin_flit [78]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [77], Q = \pin_flit [77]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [76], Q = \pin_flit [76]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [75], Q = \pin_flit [75]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [74], Q = \pin_flit [74]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [73], Q = \pin_flit [73]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [72], Q = \pin_flit [72]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [71], Q = \pin_flit [71]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [70], Q = \pin_flit [70]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [69], Q = \pin_flit [69]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [68], Q = \pin_flit [68]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [67], Q = \pin_flit [67]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [66], Q = \pin_flit [66]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [65], Q = \pin_flit [65]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [64], Q = \pin_flit [64]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [63], Q = \pin_flit [63]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [62], Q = \pin_flit [62]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [61], Q = \pin_flit [61]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [60], Q = \pin_flit [60]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [59], Q = \pin_flit [59]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [58], Q = \pin_flit [58]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [57], Q = \pin_flit [57]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [56], Q = \pin_flit [56]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [55], Q = \pin_flit [55]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [54], Q = \pin_flit [54]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [53], Q = \pin_flit [53]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [52], Q = \pin_flit [52]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [51], Q = \pin_flit [51]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [50], Q = \pin_flit [50]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [49], Q = \pin_flit [49]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [48], Q = \pin_flit [48]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [47], Q = \pin_flit [47]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [46], Q = \pin_flit [46]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [45], Q = \pin_flit [45]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [44], Q = \pin_flit [44]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [43], Q = \pin_flit [43]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [42], Q = \pin_flit [42]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [41], Q = \pin_flit [41]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [40], Q = \pin_flit [40]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [39], Q = \pin_flit [39]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [38], Q = \pin_flit [38]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [37], Q = \pin_flit [37]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [36], Q = \pin_flit [36]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [35], Q = \pin_flit [35]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [34], Q = \pin_flit [34]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [33], Q = \pin_flit [33]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [32], Q = \pin_flit [32]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [31], Q = \pin_flit [31]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [30], Q = \pin_flit [30]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [29], Q = \pin_flit [29]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [28], Q = \pin_flit [28]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [27], Q = \pin_flit [27]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [26], Q = \pin_flit [26]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [25], Q = \pin_flit [25]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [24], Q = \pin_flit [24]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [23], Q = \pin_flit [23]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [22], Q = \pin_flit [22]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [21], Q = \pin_flit [21]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [20], Q = \pin_flit [20]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [19], Q = \pin_flit [19]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [18], Q = \pin_flit [18]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [17], Q = \pin_flit [17]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [16], Q = \pin_flit [16]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [15], Q = \pin_flit [15]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [14], Q = \pin_flit [14]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [13], Q = \pin_flit [13]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [12], Q = \pin_flit [12]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [11], Q = \pin_flit [11]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [10], Q = \pin_flit [10]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [9], Q = \pin_flit [9]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [8], Q = \pin_flit [8]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [7], Q = \pin_flit [7]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [6], Q = \pin_flit [6]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [5], Q = \pin_flit [5]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [4], Q = \pin_flit [4]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [3], Q = \pin_flit [3]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [2], Q = \pin_flit [2]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [1], Q = \pin_flit [1]).
+Adding EN signal on $procdff$3949 ($dff) from module ot_hep_rx_block (D = \mem_data [0], Q = \pin_flit [0]).
+Adding EN signal on $procdff$3918 ($adff) from module ot_hep_rx_block (D = \block_words, Q = \words).
+Adding EN signal on $procdff$3928 ($adff) from module ot_hep_rx_block (D = $procmux$2608_Y, Q = \seal_age).
+Adding EN signal on $procdff$3878 ($adff) from module ot_hep_rx_block (D = \slot_index, Q = \g_ra_f6[1].q).
+Adding EN signal on $procdff$3883 ($adff) from module ot_hep_rx_block (D = \slot_index, Q = \g_ra_f6[0].q).
+Adding EN signal on $procdff$3888 ($adff) from module ot_hep_rx_block (D = \slot_index, Q = \ra).
+Adding EN signal on $procdff$3933 ($adff) from module ot_hep_rx_block (D = $procmux$2602_Y, Q = \flush_age).
+Adding EN signal on $procdff$3898 ($adff) from module ot_hep_rx_block (D = $procmux$2646_Y, Q = \fault).
+Adding EN signal on $procdff$3903 ($adff) from module ot_hep_rx_block (D = 1'1, Q = \fc [2]).
+Adding EN signal on $procdff$3903 ($adff) from module ot_hep_rx_block (D = 1'1, Q = \fc [1]).
+Adding EN signal on $procdff$3903 ($adff) from module ot_hep_rx_block (D = 1'1, Q = \fc [0]).
+Setting constant 0-bit at position 0 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+Setting constant 0-bit at position 1 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+Setting constant 1-bit at position 2 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+Setting constant 0-bit at position 3 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+Setting constant 0-bit at position 4 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+Setting constant 1-bit at position 5 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+Setting constant 1-bit at position 6 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+Setting constant 0-bit at position 7 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+Setting constant 0-bit at position 8 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+Setting constant 1-bit at position 9 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+Setting constant 0-bit at position 10 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+Setting constant 0-bit at position 11 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+Setting constant 0-bit at position 12 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+Setting constant 0-bit at position 13 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+Setting constant 0-bit at position 14 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+Setting constant 0-bit at position 15 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+Setting constant 0-bit at position 16 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+Setting constant 0-bit at position 17 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+Setting constant 0-bit at position 18 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+Setting constant 0-bit at position 19 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+Setting constant 0-bit at position 20 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+Setting constant 0-bit at position 21 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+Setting constant 0-bit at position 22 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+Setting constant 0-bit at position 23 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+Setting constant 0-bit at position 24 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+Setting constant 0-bit at position 25 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+Setting constant 0-bit at position 26 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+Setting constant 0-bit at position 27 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+Setting constant 0-bit at position 28 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+Setting constant 0-bit at position 29 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+Setting constant 0-bit at position 30 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+Setting constant 0-bit at position 31 on $procdff$3950 ($dff) from module ot_hep_rx_block.
+
+6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hep_rx_block..
+Removed 623 unused cells and 1334 unused wires.
+<suppressed ~625 debug messages>
+
+6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hep_rx_block.
+<suppressed ~7 debug messages>
+
+6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hep_rx_block..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~85 debug messages>
+
+6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hep_rx_block.
+Performed a total of 0 changes.
+
+6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hep_rx_block'.
+Computing hashes of 711 cells of `\ot_hep_rx_block'.
+Finding duplicate cells in `\ot_hep_rx_block'.
+Computing hashes of 710 cells of `\ot_hep_rx_block'.
+Finding duplicate cells in `\ot_hep_rx_block'.
+<suppressed ~3 debug messages>
+Removed a total of 1 cells.
+
+6.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hep_rx_block..
+Removed 0 unused cells and 1 unused wires.
+<suppressed ~1 debug messages>
+
+6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hep_rx_block.
+
+6.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hep_rx_block..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~87 debug messages>
+
+6.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hep_rx_block.
+Performed a total of 0 changes.
+
+6.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hep_rx_block'.
+Computing hashes of 710 cells of `\ot_hep_rx_block'.
+Finding duplicate cells in `\ot_hep_rx_block'.
+Removed a total of 0 cells.
+
+6.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hep_rx_block..
+
+6.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hep_rx_block.
+
+6.23. Finished fast OPT passes. (There is nothing left to do.)
+
+7. Executing CHECK pass (checking for obvious problems).
+Checking module ot_hep_rx_block...
+Found and reported 0 problems.
+
+8. Executing JSON backend.
+
+Warnings: 1 unique messages, 1 total
+End of script. Logfile hash: eaeefe0ef5, time: 0.41s, user: 0.40s, system: 0.02s, MEM: 46.03 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 15.2.0)
+Time spent: 59% 3x read_verilog (0 sec), 9% 3x opt_clean (0 sec), ...

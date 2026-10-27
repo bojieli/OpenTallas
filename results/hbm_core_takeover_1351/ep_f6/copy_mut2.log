@@ -1,0 +1,482 @@
+
+-- Running command `read_verilog -sv ep_f6_copy_miter.sv; chparam -set MUT 2 ep_f6_copy_miter; prep -top ep_f6_copy_miter; async2sync; opt; sat -seq 4 -tempinduct -set-def-inputs -prove ok 1 -verify' --
+
+1. Executing Verilog-2005 frontend: ep_f6_copy_miter.sv
+Parsing SystemVerilog input from `ep_f6_copy_miter.sv' to AST representation.
+Generating RTLIL representation for module `\ep_f6_copy_miter'.
+Successfully finished Verilog frontend.
+Parameter \MUT = 2
+
+2. Executing AST frontend in derive mode using pre-parsed AST for module `\ep_f6_copy_miter'.
+Parameter \MUT = 2
+Generating RTLIL representation for module `$paramod\ep_f6_copy_miter\MUT=s32'00000000000000000000000000000010'.
+
+3. Executing PREP pass.
+
+3.1. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1.1. Analyzing design hierarchy..
+Top module:  \ep_f6_copy_miter
+
+3.1.2. Analyzing design hierarchy..
+Top module:  \ep_f6_copy_miter
+Removed 0 unused modules.
+
+3.2. Executing PROC pass (convert processes to netlists).
+
+3.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$ep_f6_copy_miter.sv:7$35 in module ep_f6_copy_miter.
+Removed a total of 0 dead cases.
+
+3.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 12 assignments to connections.
+
+3.2.4. Executing PROC_INIT pass (extract init attributes).
+Found init rule in `\ep_f6_copy_miter.$proc$ep_f6_copy_miter.sv:11$51'.
+  Set init value: \seen = 1'0
+Found init rule in `\ep_f6_copy_miter.$proc$ep_f6_copy_miter.sv:11$52'.
+  Set init value: \seen_reset = 1'0
+
+3.2.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\ep_f6_copy_miter.$proc$ep_f6_copy_miter.sv:7$35'.
+
+3.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~2 debug messages>
+
+3.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ep_f6_copy_miter.$proc$ep_f6_copy_miter.sv:6$33'.
+Creating decoders for process `\ep_f6_copy_miter.$proc$ep_f6_copy_miter.sv:7$35'.
+     1/3: $0\ra1[5:0]
+     2/3: $0\ra0[5:0]
+     3/3: $0\ra[5:0]
+Creating decoders for process `\ep_f6_copy_miter.$proc$ep_f6_copy_miter.sv:12$38'.
+     1/1: $0\seen_reset[0:0]
+Creating decoders for process `\ep_f6_copy_miter.$proc$ep_f6_copy_miter.sv:11$51'.
+Creating decoders for process `\ep_f6_copy_miter.$proc$ep_f6_copy_miter.sv:11$52'.
+
+3.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+3.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ep_f6_copy_miter.\dq' using process `\ep_f6_copy_miter.$proc$ep_f6_copy_miter.sv:6$33'.
+  created $dff cell `$procdff$61' with positive edge clock.
+Creating register for signal `\ep_f6_copy_miter.\dq0' using process `\ep_f6_copy_miter.$proc$ep_f6_copy_miter.sv:6$33'.
+  created $dff cell `$procdff$62' with positive edge clock.
+Creating register for signal `\ep_f6_copy_miter.\dq1' using process `\ep_f6_copy_miter.$proc$ep_f6_copy_miter.sv:6$33'.
+  created $dff cell `$procdff$63' with positive edge clock.
+Creating register for signal `\ep_f6_copy_miter.\aq' using process `\ep_f6_copy_miter.$proc$ep_f6_copy_miter.sv:6$33'.
+  created $dff cell `$procdff$64' with positive edge clock.
+Creating register for signal `\ep_f6_copy_miter.\aq0' using process `\ep_f6_copy_miter.$proc$ep_f6_copy_miter.sv:6$33'.
+  created $dff cell `$procdff$65' with positive edge clock.
+Creating register for signal `\ep_f6_copy_miter.\aq1' using process `\ep_f6_copy_miter.$proc$ep_f6_copy_miter.sv:6$33'.
+  created $dff cell `$procdff$66' with positive edge clock.
+Creating register for signal `\ep_f6_copy_miter.\wq' using process `\ep_f6_copy_miter.$proc$ep_f6_copy_miter.sv:6$33'.
+  created $dff cell `$procdff$67' with positive edge clock.
+Creating register for signal `\ep_f6_copy_miter.\wq0' using process `\ep_f6_copy_miter.$proc$ep_f6_copy_miter.sv:6$33'.
+  created $dff cell `$procdff$68' with positive edge clock.
+Creating register for signal `\ep_f6_copy_miter.\wq1' using process `\ep_f6_copy_miter.$proc$ep_f6_copy_miter.sv:6$33'.
+  created $dff cell `$procdff$69' with positive edge clock.
+Creating register for signal `\ep_f6_copy_miter.\ra' using process `\ep_f6_copy_miter.$proc$ep_f6_copy_miter.sv:7$35'.
+  created $adff cell `$procdff$74' with positive edge clock and positive level reset.
+Creating register for signal `\ep_f6_copy_miter.\ra0' using process `\ep_f6_copy_miter.$proc$ep_f6_copy_miter.sv:7$35'.
+  created $adff cell `$procdff$79' with positive edge clock and positive level reset.
+Creating register for signal `\ep_f6_copy_miter.\ra1' using process `\ep_f6_copy_miter.$proc$ep_f6_copy_miter.sv:7$35'.
+  created $adff cell `$procdff$84' with positive edge clock and positive level reset.
+Creating register for signal `\ep_f6_copy_miter.\seen' using process `\ep_f6_copy_miter.$proc$ep_f6_copy_miter.sv:12$38'.
+  created $dff cell `$procdff$85' with positive edge clock.
+Creating register for signal `\ep_f6_copy_miter.\seen_reset' using process `\ep_f6_copy_miter.$proc$ep_f6_copy_miter.sv:12$38'.
+  created $dff cell `$procdff$86' with positive edge clock.
+
+3.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `ep_f6_copy_miter.$proc$ep_f6_copy_miter.sv:6$33'.
+Found and cleaned up 1 empty switch in `\ep_f6_copy_miter.$proc$ep_f6_copy_miter.sv:7$35'.
+Removing empty process `ep_f6_copy_miter.$proc$ep_f6_copy_miter.sv:7$35'.
+Found and cleaned up 1 empty switch in `\ep_f6_copy_miter.$proc$ep_f6_copy_miter.sv:12$38'.
+Removing empty process `ep_f6_copy_miter.$proc$ep_f6_copy_miter.sv:12$38'.
+Removing empty process `ep_f6_copy_miter.$proc$ep_f6_copy_miter.sv:11$51'.
+Removing empty process `ep_f6_copy_miter.$proc$ep_f6_copy_miter.sv:11$52'.
+Cleaned up 2 empty switches.
+
+3.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ep_f6_copy_miter.
+<suppressed ~9 debug messages>
+
+3.3. Executing FUTURE pass.
+
+3.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ep_f6_copy_miter.
+
+3.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ep_f6_copy_miter..
+Removed 5 unused cells and 32 unused wires.
+<suppressed ~6 debug messages>
+
+3.6. Executing CHECK pass (checking for obvious problems).
+Checking module ep_f6_copy_miter...
+Found and reported 0 problems.
+
+3.7. Executing OPT pass (performing simple optimizations).
+
+3.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ep_f6_copy_miter.
+
+3.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ep_f6_copy_miter'.
+Computing hashes of 36 cells of `\ep_f6_copy_miter'.
+Finding duplicate cells in `\ep_f6_copy_miter'.
+Removed a total of 0 cells.
+
+3.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ep_f6_copy_miter..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~8 debug messages>
+
+3.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ep_f6_copy_miter.
+Performed a total of 0 changes.
+
+3.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ep_f6_copy_miter'.
+Computing hashes of 36 cells of `\ep_f6_copy_miter'.
+Finding duplicate cells in `\ep_f6_copy_miter'.
+Removed a total of 0 cells.
+
+3.7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ep_f6_copy_miter..
+
+3.7.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ep_f6_copy_miter.
+
+3.7.8. Finished fast OPT passes. (There is nothing left to do.)
+
+3.8. Executing WREDUCE pass (reducing word size of cells).
+
+3.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ep_f6_copy_miter..
+
+3.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+3.11. Executing OPT pass (performing simple optimizations).
+
+3.11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ep_f6_copy_miter.
+
+3.11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ep_f6_copy_miter'.
+Computing hashes of 36 cells of `\ep_f6_copy_miter'.
+Finding duplicate cells in `\ep_f6_copy_miter'.
+Removed a total of 0 cells.
+
+3.11.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ep_f6_copy_miter..
+
+3.11.4. Finished fast OPT passes.
+
+3.12. Executing SORT pass.
+
+3.13. Printing statistics.
+
+=== ep_f6_copy_miter ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       46 wires
+     1335 wire bits
+       26 public wires
+     1300 public wire bits
+       11 ports
+      340 port bits
+       36 cells
+        3   $adff
+       11   $dff
+        6   $eq
+        6   $logic_and
+        2   $logic_not
+        2   $logic_or
+        1   $lt
+        4   $mux
+        1   $not
+
+3.14. Executing CHECK pass (checking for obvious problems).
+Checking module ep_f6_copy_miter...
+Found and reported 0 problems.
+
+4. Executing ASYNC2SYNC pass.
+Replacing ep_f6_copy_miter.$procdff$74 ($adff): ARST=\rst_n, D=$0\ra[5:0], Q=\ra
+Replacing ep_f6_copy_miter.$procdff$79 ($adff): ARST=\rst_n, D=$0\ra0[5:0], Q=\ra0
+Replacing ep_f6_copy_miter.$procdff$84 ($adff): ARST=\rst_n, D=$0\ra1[5:0], Q=\ra1
+
+5. Executing OPT pass (performing simple optimizations).
+
+5.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ep_f6_copy_miter.
+
+5.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ep_f6_copy_miter'.
+Computing hashes of 39 cells of `\ep_f6_copy_miter'.
+Finding duplicate cells in `\ep_f6_copy_miter'.
+Computing hashes of 33 cells of `\ep_f6_copy_miter'.
+Finding duplicate cells in `\ep_f6_copy_miter'.
+Computing hashes of 32 cells of `\ep_f6_copy_miter'.
+Finding duplicate cells in `\ep_f6_copy_miter'.
+<suppressed ~21 debug messages>
+Removed a total of 7 cells.
+
+5.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ep_f6_copy_miter..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~14 debug messages>
+
+5.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ep_f6_copy_miter.
+Performed a total of 0 changes.
+
+5.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ep_f6_copy_miter'.
+Computing hashes of 32 cells of `\ep_f6_copy_miter'.
+Finding duplicate cells in `\ep_f6_copy_miter'.
+Removed a total of 0 cells.
+
+5.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$86 ($dff) from module ep_f6_copy_miter (D = 1'1, Q = \seen_reset).
+
+5.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ep_f6_copy_miter..
+Removed 1 unused cells and 2 unused wires.
+<suppressed ~2 debug messages>
+
+5.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ep_f6_copy_miter.
+<suppressed ~4 debug messages>
+
+5.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ep_f6_copy_miter..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~12 debug messages>
+
+5.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ep_f6_copy_miter.
+Performed a total of 0 changes.
+
+5.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ep_f6_copy_miter'.
+Computing hashes of 27 cells of `\ep_f6_copy_miter'.
+Finding duplicate cells in `\ep_f6_copy_miter'.
+Removed a total of 0 cells.
+
+5.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ep_f6_copy_miter..
+Removed 5 unused cells and 15 unused wires.
+<suppressed ~16 debug messages>
+
+5.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ep_f6_copy_miter.
+
+5.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ep_f6_copy_miter..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~12 debug messages>
+
+5.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ep_f6_copy_miter.
+Performed a total of 0 changes.
+
+5.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ep_f6_copy_miter'.
+Computing hashes of 22 cells of `\ep_f6_copy_miter'.
+Finding duplicate cells in `\ep_f6_copy_miter'.
+Removed a total of 0 cells.
+
+5.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ep_f6_copy_miter..
+
+5.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ep_f6_copy_miter.
+
+5.23. Finished fast OPT passes. (There is nothing left to do.)
+
+6. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \we
+Import def constraint for this timestep: \slot_v
+Import def constraint for this timestep: \state
+Import def constraint for this timestep: \wa
+Import def constraint for this timestep: \slot_index
+Import def constraint for this timestep: \issued
+Import def constraint for this timestep: \words
+Import def constraint for this timestep: \din
+Imported 22 cells to SAT database.
+Import set-constraint from init attribute: \seen_reset = 1'0
+Final init constraint equation: \seen_reset = 1'0
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \we
+Import def constraint for this timestep: \slot_v
+Import def constraint for this timestep: \state
+Import def constraint for this timestep: \wa
+Import def constraint for this timestep: \slot_index
+Import def constraint for this timestep: \issued
+Import def constraint for this timestep: \words
+Import def constraint for this timestep: \din
+Imported 22 cells to SAT database.
+
+Setting up time step 3:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \we
+Import def constraint for this timestep: \slot_v
+Import def constraint for this timestep: \state
+Import def constraint for this timestep: \wa
+Import def constraint for this timestep: \slot_index
+Import def constraint for this timestep: \issued
+Import def constraint for this timestep: \words
+Import def constraint for this timestep: \din
+Imported 22 cells to SAT database.
+
+Setting up time step 4:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \we
+Import def constraint for this timestep: \slot_v
+Import def constraint for this timestep: \state
+Import def constraint for this timestep: \wa
+Import def constraint for this timestep: \slot_index
+Import def constraint for this timestep: \issued
+Import def constraint for this timestep: \words
+Import def constraint for this timestep: \din
+Imported 22 cells to SAT database.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \we
+Import def constraint for this timestep: \slot_v
+Import def constraint for this timestep: \state
+Import def constraint for this timestep: \wa
+Import def constraint for this timestep: \slot_index
+Import def constraint for this timestep: \issued
+Import def constraint for this timestep: \words
+Import def constraint for this timestep: \din
+Imported 22 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+
+** Trying induction with length 1 **
+
+Setting up time step 5:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \we
+Import def constraint for this timestep: \slot_v
+Import def constraint for this timestep: \state
+Import def constraint for this timestep: \wa
+Import def constraint for this timestep: \slot_index
+Import def constraint for this timestep: \issued
+Import def constraint for this timestep: \words
+Import def constraint for this timestep: \din
+Imported 22 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+
+[base case 1] Solving problem with 10179 variables and 24980 clauses..
+SAT temporal induction proof finished - model found for base case: FAIL!
+
+   ______                   ___       ___       _ _            _ _ 
+  (_____ \                 / __)     / __)     (_) |          | | |
+   _____) )___ ___   ___ _| |__    _| |__ _____ _| | _____  __| | |
+  |  ____/ ___) _ \ / _ (_   __)  (_   __|____ | | || ___ |/ _  |_|
+  | |   | |  | |_| | |_| || |       | |  / ___ | | || ____( (_| |_ 
+  |_|   |_|   \___/ \___/ |_|       |_|  \_____|_|\_)_____)\____|_|
+
+
+  Time Signal Name                                     Dec       Hex           Bin
+  ---- --------------------------------------- ----------- --------- -------------
+  init $auto$async2sync.cc:253:execute$89                0         0        000000
+  init $auto$async2sync.cc:253:execute$91                0         0        000000
+  init $auto$async2sync.cc:253:execute$93               --        --        00x000
+  init \seen_reset                                       0         0             0
+  ---- --------------------------------------- ----------- --------- -------------
+     1 \clk                                              0         0             0
+     1 \issued                                           0         0       0000000
+     1 \ok                                               1         1             1
+     1 \rst_n                                            0         0             0
+     1 \slot_index                                      22        16        010110
+     1 \slot_v                                           0         0             0
+     1 \state                                            0         0           000
+     1 \words                                           16        10       0010000
+  ---- --------------------------------------- ----------- --------- -------------
+     2 \clk                                              0         0             0
+     2 \issued                                           0         0       0000000
+     2 \ok                                               1         1             1
+     2 \rst_n                                            1         1             1
+     2 \slot_index                                      17        11        010001
+     2 \slot_v                                           1         1             1
+     2 \state                                            4         4           100
+     2 \words                                            1         1       0000001
+  ---- --------------------------------------- ----------- --------- -------------
+     3 \clk                                              0         0             0
+     3 \issued                                          33        21       0100001
+     3 \ok                                               1         1             1
+     3 \rst_n                                            1         1             1
+     3 \slot_index                                      33        21        100001
+     3 \slot_v                                           1         1             1
+     3 \state                                            4         4           100
+     3 \words                                           88        58       1011000
+  ---- --------------------------------------- ----------- --------- -------------
+     4 \clk                                              0         0             0
+     4 \issued                                          19        13       0010011
+     4 \ok                                               0         0             0
+     4 \rst_n                                            1         1             1
+     4 \slot_index                                      19        13        010011
+     4 \slot_v                                           1         1             1
+     4 \state                                            4         4           100
+     4 \words                                           32        20       0100000
+  ---- --------------------------------------- ----------- --------- -------------
+     5 \clk                                              0         0             0
+     5 \issued                                           0         0       0000000
+     5 \ok                                               0         0             0
+     5 \rst_n                                            1         1             1
+     5 \slot_index                                       0         0        000000
+     5 \slot_v                                           1         1             1
+     5 \state                                            4         4           100
+     5 \words                                           12         c       0001100
+
+ERROR: Called with -verify and proof did fail!
