@@ -1,0 +1,121 @@
+{
+  "name": "ot_hnx_fused_hub_n4ext",
+  "top": "ot_hnx_fused_hub_n4ext",
+  "kind": "tile",
+  "sources": [
+    "rtl/hbm_next/fused/ot_hnx_fused_tree.sv",
+    "rtl/hbm_next/fused/ot_hnx_fused_eng.sv",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v",
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/hdc/ot_hdc_delay_ring.sv",
+    "rtl/hdc/ot_hdc_fpu.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "rtl/hdc/ot_hdc_sfu.sv",
+    "rtl/hdc/ot_hdc_fastfp.sv",
+    "rtl/hdc/ot_hdc_fastfp_lat.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "rtl/hdc/ot_hdc_prefix.sv",
+    "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "rtl/hdc/v41x/ot_dsrom_divc.sv",
+    "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
+    "rtl/hdc/v41/ot_hdc_actquant.sv",
+    "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+    "rtl/lib/ot_rst_relay.sv",
+    "rtl/hbm_next/fused/ot_hnx_fused_hub_n4ext.sv",
+    "rtl/hbm_next/fused/ot_hnx_fused_hub_n4ext.sv"
+  ],
+  "source_contract": "codex/n4-native-1027 corrected1157befa3 source_closure.json and source_snapshot.tar.gz; do not use floating main RTL",
+  "params": {
+    "D": 5120,
+    "RR": 10,
+    "NMAX": 8,
+    "MUT": 0
+  },
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "std_area_um2": 20782.2591,
+  "outline_um": [
+    250.56,
+    388.8
+  ],
+  "clock_entry_um": [
+    125.256,
+    151.2
+  ],
+  "pins": {
+    "W": [
+      "up_nw",
+      "down_nw"
+    ],
+    "E": [
+      "up_ne",
+      "down_ne"
+    ],
+    "S": [
+      "job_v",
+      "job",
+      "wsc",
+      "pk5",
+      "pb5",
+      "clk",
+      "rst_n"
+    ],
+    "N": [
+      "done",
+      "fault",
+      "busy"
+    ]
+  },
+  "macros": [
+    {
+      "instance": "u_native.u_scb",
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+      "at": [
+        77.868,
+        48.0
+      ],
+      "orient": "R0",
+      "count": 1
+    },
+    {
+      "instance": "u_native.u_t5.u_pad.u_d",
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+      "at": [
+        77.868,
+        194.4
+      ],
+      "orient": "R0",
+      "count": 1
+    },
+    {
+      "instance": "u_native.u_t5.u_pad.u_c",
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+      "at": [
+        109.284,
+        324
+      ],
+      "orient": "R0",
+      "count": 1
+    }
+  ],
+  "route": {
+    "pd": 0.55,
+    "period_ps": 833,
+    "layers": "M2-M5",
+    "macro_halo_um": 4.32
+  },
+  "pin_regs": {
+    "enable": false,
+    "reason": "No unpriced boundary latency; native mapped register anchoring required before physical adoption"
+  },
+  "keep_pin_regs": true,
+  "physical_status": "SOURCE-KIT PREPARATION ONLY; no P&R launch. Actual source/memoryphase qualification, input/output flop anchors, PG/internalCTS remain open. Canonical native job/control bindings are not fabricated."
+}

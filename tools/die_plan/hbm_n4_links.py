@@ -124,7 +124,7 @@ def prepare(plan, abi, pins, manifest=None, root_outline=None):
         bus=f'mu_n4_{side.lower()}_'+('up' if up else 'down')
         # Separate windows: <=6 pins/um even under a combined-layer interpretation.
         center=3472.0 if up else 3536.0
-        length=47.52 if up else 30.24
+        length=54.0 if up else 34.56
         window=[round(center-length/2,6),round(center+length/2,6)]
         root_window=[round(v+h['origin_um'][1]-rp['origin_um'][1],6) for v in window]
         hc=next(c for c in t['hard_cores'] if c['inst']=='u_mu_fused_n4')
