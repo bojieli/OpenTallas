@@ -133,3 +133,13 @@ change to pin faces, landings or lanes, and no new straps. The CFG DP field repl
   - Price (TOK-DS-6b composition, baseline 1259.6/3655.3 reproduced, CHECKED tool output): B=40 2401 -> MTP 3704.9 (+49.6) but NOT schedulable. B=80 1-pass 4801 -> MTP 3621.1 (-34.2), AR 1249.2 (-10.4), ledger ~17.97 % (+0.93 pp, UNCHECKED sum). 2x B=40 = 4802 is the same cost, no benefit. Data-exact 1905 -> 3722.7.
   - RECOMMEND B=80 single pass (NXW=40).
   - OWNER ASKs: accept B=80 without real traces? What happens at run time on fault 26/24? Optional rank-ordered export slots (~2049, no budget; RTL change, UNCHECKED).
+- 2026-10-26 19:00 PDT Claude S81-ROWX: SVCROWX_GATE PASS. Branch claude/s81-rowx-1026@489441e63; receipts in results/rtl/s81_rowx_1026/bench/.
+  - CHECKED (read from the run logs):
+    - base P1 PASS on seeds 1-3, err 0. Export words match the independent golden. rx landed every row ex holds plus its own fetched rows, and no decoy row. The fault-29 and fault-25 negatives fire.
+    - miter (ROWX 1 vs 0, legacy traffic, all outputs every cycle) PASS on 3 seeds: 3,219 cycles, 0 mismatches, 16 score beats, 40 P.V words.
+    - mut6 is caught (err 86-92), and so is mut7 (err 41, plus neg29 missing).
+  - Measured export timing (CHECKED, ROWX_TIMING): first word 98 cycles after the ROWX header, which is gd 16 + XO 8 + pvs 70 + 4 cycles of q/pv pipeline. Then 40 consecutive words per slice.
+    - Per half: 8 slices x 40 = 320 entry cycles, as designed.
+    - Held rows in the bench: ex 40, rx 29-40. ex was 40 on all three seeds; I did not look into why.
+  - Ingress cycle count is still the UNCHECKED arithmetic: 2,401 per half at B=40, or 1,905 data-exact, vs 3,809 measured. The bench proves PK2 landing correct, not this count.
+  - LEC for ROWX=0 is still not closed in Yosys (239k unproven). The regression evidence is the miter above.
