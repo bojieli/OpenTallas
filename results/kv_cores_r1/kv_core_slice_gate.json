@@ -1,0 +1,909 @@
+{
+ "qkd_ectlk_q0": {
+  "outline": [
+   216.0,
+   172.8
+  ],
+  "instances": 8,
+  "partitions": [
+   "kv3_hg",
+   "kv3_hg_v1",
+   "kv3_hg_v1p2",
+   "kv3_hg_v1p3",
+   "kv3_hg_v1p4",
+   "kv3_hg_v1p5",
+   "kv3_hg_v1p6",
+   "kv3_hg_v3"
+  ],
+  "pins_files": [
+   "qkd_ectlk_q0_pins.json"
+  ],
+  "plan_clock_pins": [
+   [
+    "ck[0]",
+    "M5",
+    108.024,
+    172.704
+   ]
+  ],
+  "clock_pin_to_centre_um": 86.3,
+  "centre_entry_12_8a": [
+   108.0,
+   86.4
+  ],
+  "centre_to_corner_um": 138.3,
+  "r13_pushdown_islands": [
+   [
+    103.0,
+    8.64,
+    "n"
+   ]
+  ],
+  "quadrant_islands_needed_12_8b": []
+ },
+ "qkd_ectlk_q1": {
+  "outline": [
+   216.0,
+   172.8
+  ],
+  "instances": 8,
+  "partitions": [
+   "kv3_hg",
+   "kv3_hg_v1",
+   "kv3_hg_v1p2",
+   "kv3_hg_v1p3",
+   "kv3_hg_v1p4",
+   "kv3_hg_v1p5",
+   "kv3_hg_v1p6",
+   "kv3_hg_v3"
+  ],
+  "pins_files": [
+   "qkd_ectlk_q1_pins.json"
+  ],
+  "plan_clock_pins": [
+   [
+    "ck[0]",
+    "M5",
+    108.024,
+    172.704
+   ]
+  ],
+  "clock_pin_to_centre_um": 86.3,
+  "centre_entry_12_8a": [
+   108.0,
+   86.4
+  ],
+  "centre_to_corner_um": 138.3,
+  "r13_pushdown_islands": [],
+  "quadrant_islands_needed_12_8b": []
+ },
+ "qkd_ectlk_q2": {
+  "outline": [
+   216.0,
+   172.8
+  ],
+  "instances": 8,
+  "partitions": [
+   "kv3_hg",
+   "kv3_hg_v1",
+   "kv3_hg_v1p2",
+   "kv3_hg_v1p3",
+   "kv3_hg_v1p4",
+   "kv3_hg_v1p5",
+   "kv3_hg_v1p6",
+   "kv3_hg_v3"
+  ],
+  "pins_files": [
+   "qkd_ectlk_q2_pins.json"
+  ],
+  "plan_clock_pins": [
+   [
+    "ck[0]",
+    "M5",
+    108.024,
+    172.704
+   ]
+  ],
+  "clock_pin_to_centre_um": 86.3,
+  "centre_entry_12_8a": [
+   108.0,
+   86.4
+  ],
+  "centre_to_corner_um": 138.3,
+  "r13_pushdown_islands": [
+   [
+    103.0,
+    8.64,
+    "n"
+   ]
+  ],
+  "quadrant_islands_needed_12_8b": []
+ },
+ "qkd_ectlk_q3": {
+  "outline": [
+   216.0,
+   172.8
+  ],
+  "instances": 8,
+  "partitions": [
+   "kv3_hg",
+   "kv3_hg_v1",
+   "kv3_hg_v1p2",
+   "kv3_hg_v1p3",
+   "kv3_hg_v1p4",
+   "kv3_hg_v1p5",
+   "kv3_hg_v1p6",
+   "kv3_hg_v3"
+  ],
+  "pins_files": [
+   "qkd_ectlk_q3_pins.json"
+  ],
+  "plan_clock_pins": [
+   [
+    "ck[0]",
+    "M5",
+    108.024,
+    172.704
+   ]
+  ],
+  "clock_pin_to_centre_um": 86.3,
+  "centre_entry_12_8a": [
+   108.0,
+   86.4
+  ],
+  "centre_to_corner_um": 138.3,
+  "r13_pushdown_islands": [],
+  "quadrant_islands_needed_12_8b": []
+ },
+ "qkd_ahub": {
+  "outline": [
+   604.8,
+   440.64
+  ],
+  "instances": 1,
+  "partitions": [
+   "kv3_hub_C"
+  ],
+  "pins_files": [
+   "qkd_ahub_pins.json"
+  ],
+  "plan_clock_pins": [
+   [
+    "ck[0]",
+    "M7",
+    185.632,
+    0.096
+   ]
+  ],
+  "clock_pin_to_centre_um": 249.27,
+  "centre_entry_12_8a": [
+   302.4,
+   220.32
+  ],
+  "centre_to_corner_um": 374.1,
+  "r13_pushdown_islands": [],
+  "quadrant_islands_needed_12_8b": [
+   [
+    151.20000000000002,
+    108.0
+   ],
+   [
+    151.20000000000002,
+    328.32000000000005
+   ],
+   [
+    453.6,
+    108.0
+   ],
+   [
+    453.6,
+    328.32000000000005
+   ]
+  ]
+ },
+ "qkd_kvs_ctl": {
+  "outline": [
+   371.52,
+   371.52
+  ],
+  "instances": 1,
+  "partitions": [
+   "kv3_hub_C"
+  ],
+  "pins_files": [
+   "kvs_ctl_pins.json"
+  ],
+  "plan_clock_pins": [
+   [
+    "ck",
+    "M5",
+    139.272,
+    0.042
+   ]
+  ],
+  "clock_pin_to_centre_um": 191.45,
+  "centre_entry_12_8a": [
+   185.76,
+   185.76
+  ],
+  "centre_to_corner_um": 262.7,
+  "r13_pushdown_islands": [],
+  "quadrant_islands_needed_12_8b": [
+   [
+    90.72,
+    90.72
+   ],
+   [
+    90.72,
+    276.48
+   ],
+   [
+    276.48,
+    90.72
+   ],
+   [
+    276.48,
+    276.48
+   ]
+  ]
+ },
+ "kv3_astk": {
+  "outline": [
+   190.08,
+   181.44
+  ],
+  "instances": 4,
+  "partitions": [
+   "kv3_hub_Eo",
+   "kv3_hub_Wo"
+  ],
+  "pins_files": [
+   "kv3_astk_pins.json"
+  ],
+  "plan_clock_pins": [
+   [
+    "ck[None]",
+    "M4",
+    0.0,
+    90.696
+   ]
+  ],
+  "clock_pin_to_centre_um": 95.04,
+  "centre_entry_12_8a": [
+   95.04,
+   90.72
+  ],
+  "centre_to_corner_um": 131.4,
+  "r13_pushdown_islands": [],
+  "quadrant_islands_needed_12_8b": []
+ },
+ "ot_qwen_tp8_pv_join_t": {
+  "outline": [
+   172.8,
+   172.8
+  ],
+  "instances": 64,
+  "partitions": [
+   "kv3_pv",
+   "kv3_pv_v1",
+   "kv3_pv_v12",
+   "kv3_pv_v1n",
+   "kv3_pv_v2",
+   "kv3_pv_v2n",
+   "kv3_pv_v3",
+   "kv3_pv_v3n",
+   "kv3_pv_v4",
+   "kv3_pv_v4n",
+   "kv3_pv_v5",
+   "kv3_pv_v5n",
+   "kv3_pv_v6",
+   "kv3_pv_v6n",
+   "kv3_pv_v7",
+   "kv3_pv_v8"
+  ],
+  "pins_files": [
+   "pv_join_pins.json",
+   "pv_join_pins_fMX.json",
+   "pv_join_pins_fR180.json"
+  ],
+  "plan_clock_pins": [
+   [
+    "clk",
+    "M4",
+    0.096,
+    86.424
+   ]
+  ],
+  "clock_pin_to_centre_um": 86.3,
+  "centre_entry_12_8a": [
+   86.4,
+   86.4
+  ],
+  "centre_to_corner_um": 122.2,
+  "r13_pushdown_islands": [],
+  "quadrant_islands_needed_12_8b": []
+ },
+ "qkd_kvs_pc_h_head_p": {
+  "outline": [
+   397.44,
+   362.88
+  ],
+  "instances": 1,
+  "partitions": [
+   "kv3_pc"
+  ],
+  "pins_files": [
+   "qkd_kvs_pc_h_head_p_pins_fMY.json"
+  ],
+  "plan_clock_pins": [
+   [
+    "ck[0]",
+    "M5",
+    2.52,
+    0.096
+   ]
+  ],
+  "clock_pin_to_centre_um": 267.17,
+  "centre_entry_12_8a": [
+   198.72,
+   181.44
+  ],
+  "centre_to_corner_um": 269.1,
+  "r13_pushdown_islands": [
+   [
+    125.0,
+    86.4,
+    "d"
+   ],
+   [
+    125.0,
+    276.48,
+    "d"
+   ]
+  ],
+  "quadrant_islands_needed_12_8b": [
+   [
+    99.36000000000001,
+    90.72
+   ],
+   [
+    99.36000000000001,
+    272.16
+   ],
+   [
+    298.08000000000004,
+    90.72
+   ],
+   [
+    298.08000000000004,
+    272.16
+   ]
+  ]
+ },
+ "qkd_hr_cdc_ch": {
+  "outline": [
+   319.68,
+   319.68
+  ],
+  "instances": 1,
+  "partitions": [
+   "kv3_hub_Wi"
+  ],
+  "pins_files": [
+   "qkd_hr_cdc_ch_pins.json"
+  ],
+  "plan_clock_pins": [
+   [
+    "ck[0]",
+    "M5",
+    159.864,
+    319.68
+   ]
+  ],
+  "clock_pin_to_centre_um": 159.84,
+  "centre_entry_12_8a": [
+   159.84,
+   159.84
+  ],
+  "centre_to_corner_um": 226.0,
+  "r13_pushdown_islands": [],
+  "quadrant_islands_needed_12_8b": [
+   [
+    77.76,
+    77.76
+   ],
+   [
+    77.76,
+    237.60000000000002
+   ],
+   [
+    237.60000000000002,
+    77.76
+   ],
+   [
+    237.60000000000002,
+    237.60000000000002
+   ]
+  ]
+ },
+ "qkd_hr_cdc_ci": {
+  "outline": [
+   224.64,
+   216.0
+  ],
+  "instances": 1,
+  "partitions": [
+   "kv3_hub_Wi"
+  ],
+  "pins_files": [
+   "qkd_hr_cdc_ci_pins.json"
+  ],
+  "plan_clock_pins": [
+   [
+    "ck[0]",
+    "M5",
+    112.44,
+    216.0
+   ]
+  ],
+  "clock_pin_to_centre_um": 108.0,
+  "centre_entry_12_8a": [
+   112.32,
+   108.0
+  ],
+  "centre_to_corner_um": 155.8,
+  "r13_pushdown_islands": [],
+  "quadrant_islands_needed_12_8b": []
+ },
+ "qkd_hr_cdc_hi": {
+  "outline": [
+   224.64,
+   224.64
+  ],
+  "instances": 1,
+  "partitions": [
+   "kv3_hub_Wi"
+  ],
+  "pins_files": [
+   "qkd_hr_cdc_hi_pins.json"
+  ],
+  "plan_clock_pins": [
+   [
+    "ck[0]",
+    "M5",
+    112.344,
+    224.64
+   ]
+  ],
+  "clock_pin_to_centre_um": 112.32,
+  "centre_entry_12_8a": [
+   112.32,
+   112.32
+  ],
+  "centre_to_corner_um": 158.8,
+  "r13_pushdown_islands": [],
+  "quadrant_islands_needed_12_8b": []
+ },
+ "qkd_hr_cdc_pc": {
+  "outline": [
+   319.68,
+   319.68
+  ],
+  "instances": 1,
+  "partitions": [
+   "kv3_hub_Wi"
+  ],
+  "pins_files": [
+   "qkd_hr_cdc_pc_pins.json"
+  ],
+  "plan_clock_pins": [
+   [
+    "ck[0]",
+    "M5",
+    159.864,
+    319.68
+   ],
+   [
+    "ck_phy[0]",
+    "M5",
+    159.96,
+    319.68
+   ]
+  ],
+  "clock_pin_to_centre_um": 159.84,
+  "centre_entry_12_8a": [
+   159.84,
+   159.84
+  ],
+  "centre_to_corner_um": 226.0,
+  "r13_pushdown_islands": [],
+  "quadrant_islands_needed_12_8b": [
+   [
+    77.76,
+    77.76
+   ],
+   [
+    77.76,
+    237.60000000000002
+   ],
+   [
+    237.60000000000002,
+    77.76
+   ],
+   [
+    237.60000000000002,
+    237.60000000000002
+   ]
+  ]
+ },
+ "qkd_hr_core_guard": {
+  "outline": [
+   259.2,
+   250.56
+  ],
+  "instances": 1,
+  "partitions": [
+   "kv3_hub_Wi"
+  ],
+  "pins_files": [
+   "qkd_hr_core_guard_pins.json"
+  ],
+  "plan_clock_pins": [
+   [
+    "ck[0]",
+    "M5",
+    129.624,
+    250.56
+   ]
+  ],
+  "clock_pin_to_centre_um": 125.28,
+  "centre_entry_12_8a": [
+   129.6,
+   125.28
+  ],
+  "centre_to_corner_um": 180.3,
+  "r13_pushdown_islands": [],
+  "quadrant_islands_needed_12_8b": []
+ },
+ "qkd_hr_core_order": {
+  "outline": [
+   328.32,
+   328.32
+  ],
+  "instances": 1,
+  "partitions": [
+   "kv3_hub_Wi"
+  ],
+  "pins_files": [
+   "qkd_hr_core_order_pins.json"
+  ],
+  "plan_clock_pins": [
+   [
+    "ck[0]",
+    "M5",
+    164.28,
+    328.32
+   ]
+  ],
+  "clock_pin_to_centre_um": 164.16,
+  "centre_entry_12_8a": [
+   164.16,
+   164.16
+  ],
+  "centre_to_corner_um": 232.2,
+  "r13_pushdown_islands": [],
+  "quadrant_islands_needed_12_8b": [
+   [
+    82.08000000000001,
+    82.08000000000001
+   ],
+   [
+    82.08000000000001,
+    246.24
+   ],
+   [
+    246.24,
+    82.08000000000001
+   ],
+   [
+    246.24,
+    246.24
+   ]
+  ]
+ },
+ "qkd_hr_core_peer": {
+  "outline": [
+   311.04,
+   311.04
+  ],
+  "instances": 1,
+  "partitions": [
+   "kv3_hub_Wi"
+  ],
+  "pins_files": [
+   "qkd_hr_core_peer_pins.json"
+  ],
+  "plan_clock_pins": [
+   [
+    "ck[0]",
+    "M5",
+    155.64,
+    311.04
+   ]
+  ],
+  "clock_pin_to_centre_um": 155.52,
+  "centre_entry_12_8a": [
+   155.52,
+   155.52
+  ],
+  "centre_to_corner_um": 219.9,
+  "r13_pushdown_islands": [],
+  "quadrant_islands_needed_12_8b": [
+   [
+    77.76,
+    77.76
+   ],
+   [
+    77.76,
+    233.28000000000003
+   ],
+   [
+    233.28000000000003,
+    77.76
+   ],
+   [
+    233.28000000000003,
+    233.28000000000003
+   ]
+  ]
+ },
+ "qkd_hr_core_prompt": {
+  "outline": [
+   233.28,
+   233.28
+  ],
+  "instances": 1,
+  "partitions": [
+   "kv3_hub_Wi"
+  ],
+  "pins_files": [
+   "qkd_hr_core_prompt_pins.json"
+  ],
+  "plan_clock_pins": [
+   [
+    "ck[0]",
+    "M7",
+    143.2,
+    233.28
+   ]
+  ],
+  "clock_pin_to_centre_um": 119.63,
+  "centre_entry_12_8a": [
+   116.64,
+   116.64
+  ],
+  "centre_to_corner_um": 165.0,
+  "r13_pushdown_islands": [],
+  "quadrant_islands_needed_12_8b": []
+ },
+ "qkd_hr_core_queue": {
+  "outline": [
+   241.92,
+   241.92
+  ],
+  "instances": 1,
+  "partitions": [
+   "kv3_hub_Wi"
+  ],
+  "pins_files": [
+   "qkd_hr_core_queue_pins.json"
+  ],
+  "plan_clock_pins": [
+   [
+    "ck[0]",
+    "M5",
+    121.08,
+    241.92
+   ]
+  ],
+  "clock_pin_to_centre_um": 120.96,
+  "centre_entry_12_8a": [
+   120.96,
+   120.96
+  ],
+  "centre_to_corner_um": 171.1,
+  "r13_pushdown_islands": [],
+  "quadrant_islands_needed_12_8b": []
+ },
+ "qkd_hr_core_rx": {
+  "outline": [
+   259.2,
+   259.2
+  ],
+  "instances": 1,
+  "partitions": [
+   "kv3_hub_Wi"
+  ],
+  "pins_files": [
+   "qkd_hr_core_rx_pins.json"
+  ],
+  "plan_clock_pins": [
+   [
+    "ck[0]",
+    "M5",
+    196.824,
+    259.2
+   ]
+  ],
+  "clock_pin_to_centre_um": 146.0,
+  "centre_entry_12_8a": [
+   129.6,
+   129.6
+  ],
+  "centre_to_corner_um": 183.3,
+  "r13_pushdown_islands": [],
+  "quadrant_islands_needed_12_8b": []
+ },
+ "qkd_hr_core_tx": {
+  "outline": [
+   276.48,
+   267.84
+  ],
+  "instances": 1,
+  "partitions": [
+   "kv3_hub_Wi"
+  ],
+  "pins_files": [
+   "qkd_hr_core_tx_pins.json"
+  ],
+  "plan_clock_pins": [
+   [
+    "ck[0]",
+    "M5",
+    124.968,
+    267.84
+   ]
+  ],
+  "clock_pin_to_centre_um": 134.58,
+  "centre_entry_12_8a": [
+   138.24,
+   133.92
+  ],
+  "centre_to_corner_um": 192.5,
+  "r13_pushdown_islands": [],
+  "quadrant_islands_needed_12_8b": []
+ },
+ "qkd_hr_host_qm": {
+  "outline": [
+   77.76,
+   77.76
+  ],
+  "instances": 1,
+  "partitions": [
+   "kv3_hub_Wi"
+  ],
+  "pins_files": [
+   "qkd_hr_host_qm_pins.json"
+  ],
+  "plan_clock_pins": [
+   [
+    "ck[0]",
+    "M5",
+    38.904,
+    77.76
+   ]
+  ],
+  "clock_pin_to_centre_um": 38.88,
+  "centre_entry_12_8a": [
+   38.88,
+   38.88
+  ],
+  "centre_to_corner_um": 55.0,
+  "r13_pushdown_islands": [],
+  "quadrant_islands_needed_12_8b": []
+ },
+ "qkd_hr_ingest_eng": {
+  "outline": [
+   362.88,
+   362.88
+  ],
+  "instances": 1,
+  "partitions": [
+   "kv3_hub_Wi"
+  ],
+  "pins_files": [
+   "qkd_hr_ingest_eng_pins.json"
+  ],
+  "plan_clock_pins": [
+   [
+    "ck[0]",
+    "M5",
+    181.56,
+    362.88
+   ]
+  ],
+  "clock_pin_to_centre_um": 181.44,
+  "centre_entry_12_8a": [
+   181.44,
+   181.44
+  ],
+  "centre_to_corner_um": 256.6,
+  "r13_pushdown_islands": [],
+  "quadrant_islands_needed_12_8b": [
+   [
+    90.72,
+    90.72
+   ],
+   [
+    90.72,
+    272.16
+   ],
+   [
+    272.16,
+    90.72
+   ],
+   [
+    272.16,
+    272.16
+   ]
+  ]
+ },
+ "qkd_hr_phy_adp": {
+  "outline": [
+   103.68,
+   95.04
+  ],
+  "instances": 8,
+  "partitions": [
+   "kv3_hub_Wi"
+  ],
+  "pins_files": [
+   "qkd_hr_phy_adp_pins.json"
+  ],
+  "plan_clock_pins": [
+   [
+    "ck_phy[0]",
+    "M5",
+    51.528,
+    95.04
+   ]
+  ],
+  "clock_pin_to_centre_um": 47.52,
+  "centre_entry_12_8a": [
+   51.84,
+   47.52
+  ],
+  "centre_to_corner_um": 70.3,
+  "r13_pushdown_islands": [],
+  "quadrant_islands_needed_12_8b": []
+ },
+ "qkd_hr_phy_pad": {
+  "outline": [
+   138.24,
+   129.6
+  ],
+  "instances": 1,
+  "partitions": [
+   "kv3_hub_Wi"
+  ],
+  "pins_files": [
+   "qkd_hr_phy_pad_pins.json"
+  ],
+  "plan_clock_pins": [
+   [
+    "ck_phy[0]",
+    "M5",
+    69.144,
+    129.6
+   ]
+  ],
+  "clock_pin_to_centre_um": 64.8,
+  "centre_entry_12_8a": [
+   69.12,
+   64.8
+  ],
+  "centre_to_corner_um": 94.7,
+  "r13_pushdown_islands": [],
+  "quadrant_islands_needed_12_8b": []
+ }
+}

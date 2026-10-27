@@ -1,0 +1,27 @@
+# KV-CORES-R1 written gate 2026-10-26 PDT. Plan of record = hm_r12.json sha 96e6d1cb (CLOCK-KV-R12/R13/R14 lineage) + R13 island census + headmirror pin views. Facts in kv_core_slice_gate.json (slice_draft.py).
+# Codes: A = plan of record has no 12.8a centre clock entry for the type (plan pin table = pre-12.8 face ck pin) and no R1-R7 in-core islands (12.8b, >200 um centre-to-corner) -> core slice not issued (PATH-KV R1-R7 06:36/06:40 still "wait slice/clock plan"); B = core sits in a band partition whose internal tree / 405-um bays / equal-stage band feed is CLOCK-KV-R15 scope (in-core bay possible where a core blocks the band corridor); C = PENDING-DELTA; D = face pin-register recut still unpriced by PATH-KV (+cycles possible; CORES-KITS 04:39 "13 hr_* wait PATH-KV face contracts"); E = outline change needed (AUTO fill 17% FAIL, compact outline in KV batch, no delta yet); F = source not settled (kvs_ctl waits B32 bound regen; ahub current-source cut + hard-child LEC unproven); G = new headmirror pin views (pv_join base/fMX/fR180) + R4 fixed trunk N not frozen by plan model.
+type	instances	gate	codes	note
+qkd_ectlk_q0	32	SKIP	A	ck N-face (108.024,172.704) 86.3 um from centre; R13 pushdown node island (103,8.64) not in old kit; row 9ef481c5237c withdrawn (pre-12.8)
+qkd_ectlk_q1	32	SKIP	A	ck N-face; rows 2532bedc0c20/3f3a142a974c pre-12.8
+qkd_ectlk_q2	32	SKIP	C,A	PENDING-DELTA D-KV-ECTLK-Q2-SI (si pin rename)
+qkd_ectlk_q3	32	SKIP	A	ck N-face; rows d34738e248c7/b2771e502dc0 pre-12.8
+ot_qwen_tp8_pv_join_t	64	SKIP	A,G	clk W-face (0.096,86.424); R4 centre entry + 2xBUFx4 trunk not in plan; 3 pin views
+qkd_kvs_pc_h_head_p	4	SKIP	A	ck SW corner (2.52,0.096); R13 has 2 die mesh-driver islands, R2 wants centre entry + 4 quadrant islands; CLOCK-KV owns kvs_pc family
+qkd_ahub	1	SKIP	A,B,F	hub_C (worst seam pv_S_7->hub_C, reset seam hub_C->hgi_EN_7); ck S-face 249 um from centre, c2c 374 um -> 4-6 islands
+qkd_kvs_ctl	1	SKIP	A,B,F	hub_C; ck S-face 191 um from centre, c2c 263 -> 4 islands
+kv3_astk	4	SKIP	A,B	hub_Eo/Wo; ck W-face; PATH-KV ASTK lineage
+qkd_hr_ingest_eng	1	SKIP	A,B,D	c2c 257 -> 4 islands
+qkd_hr_core_order	1	SKIP	A,B,D	c2c 232 -> 4 islands
+qkd_hr_core_peer	1	SKIP	A,B,D	c2c 220 -> 4 islands
+qkd_hr_cdc_ch	1	SKIP	A,B	c2c 226 -> 4 islands; zero-cycle clean face
+qkd_hr_cdc_pc	1	SKIP	A,B	c2c 226 -> 4 islands; zero-cycle clean face
+qkd_hr_cdc_ci	1	SKIP	A,B,D	single centre entry
+qkd_hr_cdc_hi	1	SKIP	A,B,D	single centre entry
+qkd_hr_core_guard	1	SKIP	A,B,D	single centre entry
+qkd_hr_core_prompt	1	SKIP	A,B,D	single centre entry
+qkd_hr_core_queue	1	SKIP	A,B,D	single centre entry
+qkd_hr_core_rx	1	SKIP	A,B,D	single centre entry
+qkd_hr_core_tx	1	SKIP	A,B,D	single centre entry
+qkd_hr_host_qm	1	SKIP	A,B	77.76 um; ck N-face 38.9 um from centre; KIT-PLACED row 001d839021ce is pre-12.8
+qkd_hr_phy_adp	8	SKIP	D	ck_phy domain (not die clock); face recut unpriced
+qkd_hr_phy_pad	1	SKIP	E	ck_phy domain; zero-cycle clean, but outline must shrink
