@@ -25,7 +25,10 @@ XRT_MODEL = {'cfc3feb9b99bf96dada241b4f6323c116e888eddd25d0ad504f5cde0ba170b64':
              # component measured 7 edges for both HB variants and all 16 sids.
              # Leaf landing/partial deskew/release do not add a V-CTL edge.
              # HOST/control entry runtime proof remains mandatory below.
-             'd09cf3f6fc8045f0078769604bee1abca6b4d0bd5cbd4b6dbf3debd9334e97d3': 7}
+             'd09cf3f6fc8045f0078769604bee1abca6b4d0bd5cbd4b6dbf3debd9334e97d3': 7,
+             # TOK-DS-7 10-27: d09cf3f6 (c71b81ad0f) + 844ead2a8b cores-kits lint only (loop indices scoped per loop,
+             # `integer k, i` removed); the diff normalised for loop-variable declarations is empty -> same 7 edges
+             '59a53960b2c66851b14fbfcc615e451d380774ac483f2987a5f806abeb0cffa9': 7}
 
 
 def source_contract(tree, fallback, instances=None):
