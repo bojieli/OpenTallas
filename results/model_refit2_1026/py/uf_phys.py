@@ -39,7 +39,9 @@ C23 = 0.5 * (RC["M2"][1] + RC["M3"][1]) * KC
 FFC = {"TT": 0.4132, "FF": 0.4634}                      # register CLK pin cap per sink, report_net pin cap / n (all 3 builds, both corners agree to 1e-4); uf_asbuilt 0.4747/0.5220 was high
 MACRO_CK = 9.3458                                      # SRAM clk pin cap (report_net, TT; same lib both corners here)
 LN9 = math.log(9.0)
-SIZES = ["BUFx8_ASAP7_75t_R", "BUFx10_ASAP7_75t_R", "BUFx12f_ASAP7_75t_R", "BUFx16f_ASAP7_75t_R", "BUFx24_ASAP7_75t_R"]
+SIZES = ["BUFx8_ASAP7_75t_R", "BUFx10_ASAP7_75t_R", "BUFx12f_ASAP7_75t_R", "BUFx16f_ASAP7_75t_R", "BUFx24_ASAP7_75t_R",
+         # QC-SU-PROG-L2: parsed for the 4th fit build (prog k5 uses BUFx4/BUFx6f); the calibrated SIZER range is phys_gate's call
+         "BUFx4_ASAP7_75t_R", "BUFx4f_ASAP7_75t_R", "BUFx5_ASAP7_75t_R", "BUFx6f_ASAP7_75t_R"]
 
 
 def interp(tab, s, C):

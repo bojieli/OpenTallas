@@ -41,6 +41,11 @@ LOO_MAX = {"TT": 8.0, "FF": 5.0}                     # LOO max per-leaf |err| 7.
 TARGET = {"TT": 250.0, "FF": 202.5}
 BAND = 20.0
 WMAX = 20.0
+FIT_NAME = "claude/model-refit2-1026@3d6754e1f4 uf_phys_predict (frozen)"
+FIT_FILE = os.environ.get("OT_PHYS_FIT")            # QC-SU-PROG-L2: refitted parameter set (e.g. model_refit2_1026/refit4/uf_phys_refit4.json)
+if FIT_FILE:
+    _F = json.loads(Path(FIT_FILE).read_text())
+    PMAX, PMIN, LOO_MAX, FIT_NAME = dict(_F["PMAX"]), dict(_F["PMIN"]), dict(_F["LOO_MAX"]), _F["name"]
 SENS = {
     "textbook": (dict(alpha=0.0, beta=math.log(2), gslew=math.log(9), kleaf=1.2955),
                  dict(alpha=0.0, beta=math.log(2), gslew=math.log(9), kleaf=1.2955)),
@@ -95,8 +100,8 @@ def verdict(pred):
                   TT_window=tt["window"] <= WMAX, FF_window=ff["window"] <= WMAX)
     return dict(verdict="PASS" if all(checks.values()) else "FAIL", checks=checks,
                 band=dict(TT_rise_mean=[lo_tt, hi_tt], FF_early_mean=[lo_ff, hi_ff], window_max=WMAX),
-                rule="build only if predicted TT rise mean in 250+-(20-8), FF early mean in 202.5+-(20-5), both windows <=20 "
-                     "(COORD RULING MODEL-REFIT-2; guard = LOO max per-leaf error 7.1 TT / 4.8 FF)")
+                rule="build only if predicted TT rise mean in 250+-(20-%g), FF early mean in 202.5+-(20-%g), both windows <=20 "
+                     "(COORD RULING MODEL-REFIT-2; guard = LOO max per-leaf error of the fit in use: %s)" % (LOO_MAX["TT"], LOO_MAX["FF"], FIT_NAME))
 
 
 def predict_file(spec, asb, geo, libdir, extra_inputs=()):
@@ -114,9 +119,9 @@ def predict_file(spec, asb, geo, libdir, extra_inputs=()):
                                                        FF_early_mean=round(s["FF_early"]["mean"] - o["FF_early"]["mean"], 2),
                                                        FF_early_window=round(s["FF_early"]["window"] - o["FF_early"]["window"], 2)),
                                     gate_under_these_params=verdict(s)["verdict"])
-    o["params"] = dict(max=PMAX, min=PMIN, fit="claude/model-refit2-1026@3d6754e1f4 uf_phys_predict (frozen)")
+    o["params"] = dict(max=PMAX, min=PMIN, loo_max=LOO_MAX, fit=FIT_NAME, fit_file=FIT_FILE)
     files = [spec, asb, geo, str(Path(libdir) / "invbuf_tt.lib"), str(Path(libdir) / "invbuf_ff.lib"), __file__,
-             U.__file__, UP.__file__, str(UFDIR / "common.py"), str(UFDIR / "lib.py")] + list(extra_inputs)
+             U.__file__, UP.__file__, str(UFDIR / "common.py"), str(UFDIR / "lib.py")] + ([FIT_FILE] if FIT_FILE else []) + list(extra_inputs)
     o["provenance"] = dict(argv=[sys.executable] + list(sys.argv), cwd=os.getcwd(),
                            predictor_call=["phys_gate.predict_file", spec, asb, geo, libdir],
                            sha256={p: sha(p) for p in files})

@@ -1,13 +1,23 @@
 """measured per-stage decomposition: cell delay, wire delay, wire cap vs plan segment length."""
-import json, sys
+import json, os, sys
 sys.path.insert(0, sys.path[0])
 from common import *
 from pathlib import Path as _P
 W = str(_P(__file__).resolve().parents[2] / "qc_su_kits") + "/"
+L1 = str(_P(__file__).resolve().parents[2] / "qc_su_prog_l1_1026") + "/"
 D = str(_P(__file__).resolve().parents[1] / "meas") + "/"
 BUILDS = {"prog_r1": (W + "r2/prog_m0.ab.tcl", W + "r2/prog_m0.ab.json", W + "r2/prog_m0.geo"),
           "prog_r3": (W + "r3/out/prog_m0_r3.gate.asbuilt.tcl", W + "r3/out/prog_m0_r3.gate.asbuilt.json", W + "r2/prog_m0.geo"),
-          "btab_r4": (W + "r4/btab_m0_r4/btab_ls_k6_L3.gate.asbuilt.tcl", W + "r4/btab_m0_r4/btab_ls_k6_L3.gate.asbuilt.json", W + "r2/btab_m0.geo")}
+          "btab_r4": (W + "r4/btab_m0_r4/btab_ls_k6_L3.gate.asbuilt.tcl", W + "r4/btab_m0_r4/btab_ls_k6_L3.gate.asbuilt.json", W + "r2/btab_m0.geo"),
+          # QC-SU-PROG-L2 (COORD RULING QC-SU-PROG-L1 (2)): 4th calibration point = prog c_ls_k5_S13 CTS+GRT (kit_l1 5_1_grt.odb,
+          # spec built = mscts_spec_l1.tcl == sweep_c/c_ls_k5_S13.gate.asbuilt.sized.tcl byte-identical); first build with BUFx4/x6f
+          "prog_k5": (L1 + "sweep_c/c_ls_k5_S13.gate.asbuilt.sized.tcl", L1 + "sweep_c/c_ls_k5_S13.gate.asbuilt.json", W + "r2/prog_m0.geo")}
+EXTRA = os.environ.get("OT_REFIT_EXTRA")   # optional 5th point (btab r5 RCX lane): name=spec,asbuilt,geo
+if EXTRA:
+    _n, _v = EXTRA.split("=", 1); BUILDS[_n] = tuple(_v.split(","))
+ONLY = os.environ.get("OT_REFIT_BUILDS")   # optional subset (reproduce the 3-build fit)
+if ONLY:
+    BUILDS = {k: v for k, v in BUILDS.items() if k in ONLY.split(",")}
 def main():
   for b, (sp, aj, geo) in BUILDS.items():
     S = parse_spec(sp); A = json.load(open(aj)); seg = A["seg_um"]
