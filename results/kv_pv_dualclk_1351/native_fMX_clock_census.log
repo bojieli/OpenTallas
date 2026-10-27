@@ -1,0 +1,17 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-kv-cores-1351
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-kv-cores-1351
+ot-run: localhost      admits   446 GB (avail 790, reserve 0, fresh 232, peak 47.3, headroom 0, waiters 0/0 GB) load 51/112 running 25 disk 288 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-264213-1793137782 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+PRE 29724 {'s0__clk[0]': 0, 's1__clk[0]': 29724}
+ROOT s0__clk[0] s0__clk[0] []
+ROOT s1__clk[0] s1__clk[0] [('input2506', 'A', 'SIGNAL', 'INPUT')]
+FFTERMS [('CLK', 'CLOCK', 'INPUT', 'net5614'), ('D', 'SIGNAL', 'INPUT', 'net2225'), ('QN', 'SIGNAL', 'OUTPUT', '_011188_'), ('VDD', 'POWER', 'INOUT', 'VDD'), ('VSS', 'GROUND', 'INOUT', 'VSS')]
+{'total_clock_mterm_sinks': 29724, 'covered': 29724, 'missing': [], 'overlap': 0}
+{'s0__clk[0]': {'sinks': 0, 'nets': 1}, 's1__clk[0]': {'sinks': 29724, 'nets': 829}}
+ot-run: RAN on localhost (unit oth-ubuntu-264213-1793137782): exit 0

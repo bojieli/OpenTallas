@@ -1,0 +1,2589 @@
+{
+ "plan_file": "/srv/opentallas-scratch2/claude/kv-plan-q5-1027/pd/hm_r26q5b.json",
+ "plan_sha256": "99b9d6ddfe8937824efead26687709bbfb1e2cc439555a00d211dde7d732dfa6",
+ "instances": [
+  {
+   "partition": "pv_N_0",
+   "type": "kv3_pv_v8",
+   "core": "pvg0_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_N_0",
+   "type": "kv3_pv_v8",
+   "core": "pvg0_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_0",
+   "type": "kv3_pv_v8",
+   "core": "pvg0_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_0",
+   "type": "kv3_pv_v8",
+   "core": "pvg0_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_N_0",
+   "type": "kv3_pv_v8",
+   "core": "pvg1_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_N_0",
+   "type": "kv3_pv_v8",
+   "core": "pvg1_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_0",
+   "type": "kv3_pv_v8",
+   "core": "pvg1_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_0",
+   "type": "kv3_pv_v8",
+   "core": "pvg1_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_N_0",
+   "type": "kv3_pv_v8",
+   "core": "pvg2_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_N_0",
+   "type": "kv3_pv_v8",
+   "core": "pvg2_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_0",
+   "type": "kv3_pv_v8",
+   "core": "pvg2_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_0",
+   "type": "kv3_pv_v8",
+   "core": "pvg2_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_N_0",
+   "type": "kv3_pv_v8",
+   "core": "pvg3_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_N_0",
+   "type": "kv3_pv_v8",
+   "core": "pvg3_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_0",
+   "type": "kv3_pv_v8",
+   "core": "pvg3_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_0",
+   "type": "kv3_pv_v8",
+   "core": "pvg3_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_N_1",
+   "type": "kv3_pv_v1n",
+   "core": "pvg0_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_1",
+   "type": "kv3_pv_v1n",
+   "core": "pvg0_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_1",
+   "type": "kv3_pv_v1n",
+   "core": "pvg0_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_1",
+   "type": "kv3_pv_v1n",
+   "core": "pvg0_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_1",
+   "type": "kv3_pv_v1n",
+   "core": "pvg1_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_1",
+   "type": "kv3_pv_v1n",
+   "core": "pvg1_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_1",
+   "type": "kv3_pv_v1n",
+   "core": "pvg1_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_1",
+   "type": "kv3_pv_v1n",
+   "core": "pvg1_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_1",
+   "type": "kv3_pv_v1n",
+   "core": "pvg2_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_1",
+   "type": "kv3_pv_v1n",
+   "core": "pvg2_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_1",
+   "type": "kv3_pv_v1n",
+   "core": "pvg2_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_1",
+   "type": "kv3_pv_v1n",
+   "core": "pvg2_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_1",
+   "type": "kv3_pv_v1n",
+   "core": "pvg3_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_1",
+   "type": "kv3_pv_v1n",
+   "core": "pvg3_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_1",
+   "type": "kv3_pv_v1n",
+   "core": "pvg3_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_1",
+   "type": "kv3_pv_v1n",
+   "core": "pvg3_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_2",
+   "type": "kv3_pv_v2n",
+   "core": "pvg0_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_2",
+   "type": "kv3_pv_v2n",
+   "core": "pvg0_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_2",
+   "type": "kv3_pv_v2n",
+   "core": "pvg0_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_2",
+   "type": "kv3_pv_v2n",
+   "core": "pvg0_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_2",
+   "type": "kv3_pv_v2n",
+   "core": "pvg1_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_2",
+   "type": "kv3_pv_v2n",
+   "core": "pvg1_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_2",
+   "type": "kv3_pv_v2n",
+   "core": "pvg1_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_2",
+   "type": "kv3_pv_v2n",
+   "core": "pvg1_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_2",
+   "type": "kv3_pv_v2n",
+   "core": "pvg2_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_2",
+   "type": "kv3_pv_v2n",
+   "core": "pvg2_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_2",
+   "type": "kv3_pv_v2n",
+   "core": "pvg2_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_2",
+   "type": "kv3_pv_v2n",
+   "core": "pvg2_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_2",
+   "type": "kv3_pv_v2n",
+   "core": "pvg3_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_2",
+   "type": "kv3_pv_v2n",
+   "core": "pvg3_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_2",
+   "type": "kv3_pv_v2n",
+   "core": "pvg3_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_2",
+   "type": "kv3_pv_v2n",
+   "core": "pvg3_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_3",
+   "type": "kv3_pv_v3n",
+   "core": "pvg0_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_3",
+   "type": "kv3_pv_v3n",
+   "core": "pvg0_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_3",
+   "type": "kv3_pv_v3n",
+   "core": "pvg0_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_3",
+   "type": "kv3_pv_v3n",
+   "core": "pvg0_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_3",
+   "type": "kv3_pv_v3n",
+   "core": "pvg1_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_3",
+   "type": "kv3_pv_v3n",
+   "core": "pvg1_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_3",
+   "type": "kv3_pv_v3n",
+   "core": "pvg1_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_3",
+   "type": "kv3_pv_v3n",
+   "core": "pvg1_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_3",
+   "type": "kv3_pv_v3n",
+   "core": "pvg2_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_3",
+   "type": "kv3_pv_v3n",
+   "core": "pvg2_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_3",
+   "type": "kv3_pv_v3n",
+   "core": "pvg2_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_3",
+   "type": "kv3_pv_v3n",
+   "core": "pvg2_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_3",
+   "type": "kv3_pv_v3n",
+   "core": "pvg3_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_3",
+   "type": "kv3_pv_v3n",
+   "core": "pvg3_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_3",
+   "type": "kv3_pv_v3n",
+   "core": "pvg3_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_3",
+   "type": "kv3_pv_v3n",
+   "core": "pvg3_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_4",
+   "type": "kv3_pv_v4n",
+   "core": "pvg0_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_4",
+   "type": "kv3_pv_v4n",
+   "core": "pvg0_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_4",
+   "type": "kv3_pv_v4n",
+   "core": "pvg0_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_4",
+   "type": "kv3_pv_v4n",
+   "core": "pvg0_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_4",
+   "type": "kv3_pv_v4n",
+   "core": "pvg1_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_4",
+   "type": "kv3_pv_v4n",
+   "core": "pvg1_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_4",
+   "type": "kv3_pv_v4n",
+   "core": "pvg1_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_4",
+   "type": "kv3_pv_v4n",
+   "core": "pvg1_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_4",
+   "type": "kv3_pv_v4n",
+   "core": "pvg2_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_4",
+   "type": "kv3_pv_v4n",
+   "core": "pvg2_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_4",
+   "type": "kv3_pv_v4n",
+   "core": "pvg2_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_4",
+   "type": "kv3_pv_v4n",
+   "core": "pvg2_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_4",
+   "type": "kv3_pv_v4n",
+   "core": "pvg3_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_4",
+   "type": "kv3_pv_v4n",
+   "core": "pvg3_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_4",
+   "type": "kv3_pv_v4n",
+   "core": "pvg3_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_4",
+   "type": "kv3_pv_v4n",
+   "core": "pvg3_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_5",
+   "type": "kv3_pv_v5n",
+   "core": "pvg0_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_5",
+   "type": "kv3_pv_v5n",
+   "core": "pvg0_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_5",
+   "type": "kv3_pv_v5n",
+   "core": "pvg0_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_5",
+   "type": "kv3_pv_v5n",
+   "core": "pvg0_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_5",
+   "type": "kv3_pv_v5n",
+   "core": "pvg1_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_5",
+   "type": "kv3_pv_v5n",
+   "core": "pvg1_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_5",
+   "type": "kv3_pv_v5n",
+   "core": "pvg1_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_5",
+   "type": "kv3_pv_v5n",
+   "core": "pvg1_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_5",
+   "type": "kv3_pv_v5n",
+   "core": "pvg2_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_5",
+   "type": "kv3_pv_v5n",
+   "core": "pvg2_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_5",
+   "type": "kv3_pv_v5n",
+   "core": "pvg2_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_5",
+   "type": "kv3_pv_v5n",
+   "core": "pvg2_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_5",
+   "type": "kv3_pv_v5n",
+   "core": "pvg3_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_5",
+   "type": "kv3_pv_v5n",
+   "core": "pvg3_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_5",
+   "type": "kv3_pv_v5n",
+   "core": "pvg3_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_5",
+   "type": "kv3_pv_v5n",
+   "core": "pvg3_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_6",
+   "type": "kv3_pv_v6n",
+   "core": "pvg0_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_6",
+   "type": "kv3_pv_v6n",
+   "core": "pvg0_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_6",
+   "type": "kv3_pv_v6n",
+   "core": "pvg0_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_6",
+   "type": "kv3_pv_v6n",
+   "core": "pvg0_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_6",
+   "type": "kv3_pv_v6n",
+   "core": "pvg1_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_6",
+   "type": "kv3_pv_v6n",
+   "core": "pvg1_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_6",
+   "type": "kv3_pv_v6n",
+   "core": "pvg1_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_6",
+   "type": "kv3_pv_v6n",
+   "core": "pvg1_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_6",
+   "type": "kv3_pv_v6n",
+   "core": "pvg2_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_6",
+   "type": "kv3_pv_v6n",
+   "core": "pvg2_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_6",
+   "type": "kv3_pv_v6n",
+   "core": "pvg2_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_6",
+   "type": "kv3_pv_v6n",
+   "core": "pvg2_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_6",
+   "type": "kv3_pv_v6n",
+   "core": "pvg3_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_6",
+   "type": "kv3_pv_v6n",
+   "core": "pvg3_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_6",
+   "type": "kv3_pv_v6n",
+   "core": "pvg3_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_6",
+   "type": "kv3_pv_v6n",
+   "core": "pvg3_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_7",
+   "type": "kv3_pv_v12",
+   "core": "pvg0_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_N_7",
+   "type": "kv3_pv_v12",
+   "core": "pvg0_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_7",
+   "type": "kv3_pv_v12",
+   "core": "pvg0_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_7",
+   "type": "kv3_pv_v12",
+   "core": "pvg0_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_N_7",
+   "type": "kv3_pv_v12",
+   "core": "pvg1_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_N_7",
+   "type": "kv3_pv_v12",
+   "core": "pvg1_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_7",
+   "type": "kv3_pv_v12",
+   "core": "pvg1_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_7",
+   "type": "kv3_pv_v12",
+   "core": "pvg1_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_N_7",
+   "type": "kv3_pv_v12",
+   "core": "pvg2_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_N_7",
+   "type": "kv3_pv_v12",
+   "core": "pvg2_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_7",
+   "type": "kv3_pv_v12",
+   "core": "pvg2_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_7",
+   "type": "kv3_pv_v12",
+   "core": "pvg2_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_N_7",
+   "type": "kv3_pv_v12",
+   "core": "pvg3_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_N_7",
+   "type": "kv3_pv_v12",
+   "core": "pvg3_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_7",
+   "type": "kv3_pv_v12",
+   "core": "pvg3_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_N_7",
+   "type": "kv3_pv_v12",
+   "core": "pvg3_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_0",
+   "type": "kv3_pv",
+   "core": "pvg0_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_0",
+   "type": "kv3_pv",
+   "core": "pvg0_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_0",
+   "type": "kv3_pv",
+   "core": "pvg0_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_0",
+   "type": "kv3_pv",
+   "core": "pvg0_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_0",
+   "type": "kv3_pv",
+   "core": "pvg1_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_0",
+   "type": "kv3_pv",
+   "core": "pvg1_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_0",
+   "type": "kv3_pv",
+   "core": "pvg1_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_0",
+   "type": "kv3_pv",
+   "core": "pvg1_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_0",
+   "type": "kv3_pv",
+   "core": "pvg2_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_0",
+   "type": "kv3_pv",
+   "core": "pvg2_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_0",
+   "type": "kv3_pv",
+   "core": "pvg2_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_0",
+   "type": "kv3_pv",
+   "core": "pvg2_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_0",
+   "type": "kv3_pv",
+   "core": "pvg3_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_0",
+   "type": "kv3_pv",
+   "core": "pvg3_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_0",
+   "type": "kv3_pv",
+   "core": "pvg3_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_0",
+   "type": "kv3_pv",
+   "core": "pvg3_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_1",
+   "type": "kv3_pv_v1",
+   "core": "pvg0_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_1",
+   "type": "kv3_pv_v1",
+   "core": "pvg0_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_1",
+   "type": "kv3_pv_v1",
+   "core": "pvg0_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_1",
+   "type": "kv3_pv_v1",
+   "core": "pvg0_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_1",
+   "type": "kv3_pv_v1",
+   "core": "pvg1_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_1",
+   "type": "kv3_pv_v1",
+   "core": "pvg1_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_1",
+   "type": "kv3_pv_v1",
+   "core": "pvg1_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_1",
+   "type": "kv3_pv_v1",
+   "core": "pvg1_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_1",
+   "type": "kv3_pv_v1",
+   "core": "pvg2_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_1",
+   "type": "kv3_pv_v1",
+   "core": "pvg2_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_1",
+   "type": "kv3_pv_v1",
+   "core": "pvg2_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_1",
+   "type": "kv3_pv_v1",
+   "core": "pvg2_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_1",
+   "type": "kv3_pv_v1",
+   "core": "pvg3_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_1",
+   "type": "kv3_pv_v1",
+   "core": "pvg3_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_1",
+   "type": "kv3_pv_v1",
+   "core": "pvg3_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_1",
+   "type": "kv3_pv_v1",
+   "core": "pvg3_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_2",
+   "type": "kv3_pv_v2",
+   "core": "pvg0_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_2",
+   "type": "kv3_pv_v2",
+   "core": "pvg0_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_2",
+   "type": "kv3_pv_v2",
+   "core": "pvg0_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_2",
+   "type": "kv3_pv_v2",
+   "core": "pvg0_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_2",
+   "type": "kv3_pv_v2",
+   "core": "pvg1_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_2",
+   "type": "kv3_pv_v2",
+   "core": "pvg1_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_2",
+   "type": "kv3_pv_v2",
+   "core": "pvg1_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_2",
+   "type": "kv3_pv_v2",
+   "core": "pvg1_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_2",
+   "type": "kv3_pv_v2",
+   "core": "pvg2_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_2",
+   "type": "kv3_pv_v2",
+   "core": "pvg2_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_2",
+   "type": "kv3_pv_v2",
+   "core": "pvg2_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_2",
+   "type": "kv3_pv_v2",
+   "core": "pvg2_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_2",
+   "type": "kv3_pv_v2",
+   "core": "pvg3_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_2",
+   "type": "kv3_pv_v2",
+   "core": "pvg3_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_2",
+   "type": "kv3_pv_v2",
+   "core": "pvg3_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_2",
+   "type": "kv3_pv_v2",
+   "core": "pvg3_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_3",
+   "type": "kv3_pv_v3",
+   "core": "pvg0_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_3",
+   "type": "kv3_pv_v3",
+   "core": "pvg0_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_3",
+   "type": "kv3_pv_v3",
+   "core": "pvg0_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_3",
+   "type": "kv3_pv_v3",
+   "core": "pvg0_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_3",
+   "type": "kv3_pv_v3",
+   "core": "pvg1_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_3",
+   "type": "kv3_pv_v3",
+   "core": "pvg1_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_3",
+   "type": "kv3_pv_v3",
+   "core": "pvg1_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_3",
+   "type": "kv3_pv_v3",
+   "core": "pvg1_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_3",
+   "type": "kv3_pv_v3",
+   "core": "pvg2_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_3",
+   "type": "kv3_pv_v3",
+   "core": "pvg2_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_3",
+   "type": "kv3_pv_v3",
+   "core": "pvg2_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_3",
+   "type": "kv3_pv_v3",
+   "core": "pvg2_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_3",
+   "type": "kv3_pv_v3",
+   "core": "pvg3_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_3",
+   "type": "kv3_pv_v3",
+   "core": "pvg3_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_3",
+   "type": "kv3_pv_v3",
+   "core": "pvg3_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_3",
+   "type": "kv3_pv_v3",
+   "core": "pvg3_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_4",
+   "type": "kv3_pv_v4",
+   "core": "pvg0_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_4",
+   "type": "kv3_pv_v4",
+   "core": "pvg0_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_4",
+   "type": "kv3_pv_v4",
+   "core": "pvg0_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_4",
+   "type": "kv3_pv_v4",
+   "core": "pvg0_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_4",
+   "type": "kv3_pv_v4",
+   "core": "pvg1_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_4",
+   "type": "kv3_pv_v4",
+   "core": "pvg1_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_4",
+   "type": "kv3_pv_v4",
+   "core": "pvg1_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_4",
+   "type": "kv3_pv_v4",
+   "core": "pvg1_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_4",
+   "type": "kv3_pv_v4",
+   "core": "pvg2_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_4",
+   "type": "kv3_pv_v4",
+   "core": "pvg2_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_4",
+   "type": "kv3_pv_v4",
+   "core": "pvg2_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_4",
+   "type": "kv3_pv_v4",
+   "core": "pvg2_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_4",
+   "type": "kv3_pv_v4",
+   "core": "pvg3_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_4",
+   "type": "kv3_pv_v4",
+   "core": "pvg3_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_4",
+   "type": "kv3_pv_v4",
+   "core": "pvg3_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_4",
+   "type": "kv3_pv_v4",
+   "core": "pvg3_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_5",
+   "type": "kv3_pv_v5",
+   "core": "pvg0_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_5",
+   "type": "kv3_pv_v5",
+   "core": "pvg0_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_5",
+   "type": "kv3_pv_v5",
+   "core": "pvg0_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_5",
+   "type": "kv3_pv_v5",
+   "core": "pvg0_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_5",
+   "type": "kv3_pv_v5",
+   "core": "pvg1_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_5",
+   "type": "kv3_pv_v5",
+   "core": "pvg1_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_5",
+   "type": "kv3_pv_v5",
+   "core": "pvg1_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_5",
+   "type": "kv3_pv_v5",
+   "core": "pvg1_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_5",
+   "type": "kv3_pv_v5",
+   "core": "pvg2_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_5",
+   "type": "kv3_pv_v5",
+   "core": "pvg2_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_5",
+   "type": "kv3_pv_v5",
+   "core": "pvg2_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_5",
+   "type": "kv3_pv_v5",
+   "core": "pvg2_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_5",
+   "type": "kv3_pv_v5",
+   "core": "pvg3_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_5",
+   "type": "kv3_pv_v5",
+   "core": "pvg3_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_5",
+   "type": "kv3_pv_v5",
+   "core": "pvg3_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_5",
+   "type": "kv3_pv_v5",
+   "core": "pvg3_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_6",
+   "type": "kv3_pv_v6",
+   "core": "pvg0_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_6",
+   "type": "kv3_pv_v6",
+   "core": "pvg0_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_6",
+   "type": "kv3_pv_v6",
+   "core": "pvg0_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_6",
+   "type": "kv3_pv_v6",
+   "core": "pvg0_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_6",
+   "type": "kv3_pv_v6",
+   "core": "pvg1_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_6",
+   "type": "kv3_pv_v6",
+   "core": "pvg1_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_6",
+   "type": "kv3_pv_v6",
+   "core": "pvg1_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_6",
+   "type": "kv3_pv_v6",
+   "core": "pvg1_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_6",
+   "type": "kv3_pv_v6",
+   "core": "pvg2_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_6",
+   "type": "kv3_pv_v6",
+   "core": "pvg2_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_6",
+   "type": "kv3_pv_v6",
+   "core": "pvg2_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_6",
+   "type": "kv3_pv_v6",
+   "core": "pvg2_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_6",
+   "type": "kv3_pv_v6",
+   "core": "pvg3_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_6",
+   "type": "kv3_pv_v6",
+   "core": "pvg3_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_6",
+   "type": "kv3_pv_v6",
+   "core": "pvg3_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_6",
+   "type": "kv3_pv_v6",
+   "core": "pvg3_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_7",
+   "type": "kv3_pv_v7",
+   "core": "pvg0_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_7",
+   "type": "kv3_pv_v7",
+   "core": "pvg0_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_7",
+   "type": "kv3_pv_v7",
+   "core": "pvg0_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_7",
+   "type": "kv3_pv_v7",
+   "core": "pvg0_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_7",
+   "type": "kv3_pv_v7",
+   "core": "pvg1_p0",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_7",
+   "type": "kv3_pv_v7",
+   "core": "pvg1_p1",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_7",
+   "type": "kv3_pv_v7",
+   "core": "pvg1_p2",
+   "orient": "R180",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_7",
+   "type": "kv3_pv_v7",
+   "core": "pvg1_p3",
+   "orient": "MY",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_7",
+   "type": "kv3_pv_v7",
+   "core": "pvg2_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_7",
+   "type": "kv3_pv_v7",
+   "core": "pvg2_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_7",
+   "type": "kv3_pv_v7",
+   "core": "pvg2_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_7",
+   "type": "kv3_pv_v7",
+   "core": "pvg2_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_7",
+   "type": "kv3_pv_v7",
+   "core": "pvg3_p0",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  },
+  {
+   "partition": "pv_S_7",
+   "type": "kv3_pv_v7",
+   "core": "pvg3_p1",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_7",
+   "type": "kv3_pv_v7",
+   "core": "pvg3_p2",
+   "orient": "MX",
+   "pins_file": "cores/kv3_pv_pair_pins_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R9R0 placed"
+  },
+  {
+   "partition": "pv_S_7",
+   "type": "kv3_pv_v7",
+   "core": "pvg3_p3",
+   "orient": "R0",
+   "pins_file": "cores/kv3_pv_pair_pins_fMX_r25.json",
+   "old_primary": "s0__clk[0]",
+   "new_primary": "s1__clk[0]",
+   "source_cohort": "R8fMX byte-id PV2 placed"
+  }
+ ],
+ "r0_receipt": "clock_receipt.json",
+ "fMX_receipt": {
+  "source_identity": {
+   "current_r8_kit": "/srv/opentallas-scratch2/claude/kv-cores-r8/kits_pv/kv3_pv_pair__380.16x190.08_fMX",
+   "native_placed_parent": "/srv/opentallas-scratch2/claude/kv-cores-pv2/kits/kv3_pv_pair__380.16x190.08_fMX",
+   "all_RTL_byte_identical": true,
+   "top_sha256": "8c76f7be51e2f6e2fd45c230c247efb875a0f519dd78e83a621e9ea101e97fd7"
+  },
+  "roots": {
+   "s0__clk[0]": {
+    "sinks": 0,
+    "nets": 1
+   },
+   "s1__clk[0]": {
+    "sinks": 29724,
+    "nets": 829
+   }
+  },
+  "total_sinks": 29724,
+  "covered": 29724,
+  "missing": []
+ },
+ "scope": "ONLY currentR9R0 and currentR8fMX functionalstagedcohorts,256q5instances; nootherhistoricalviewinvalidated"
+}
