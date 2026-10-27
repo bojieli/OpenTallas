@@ -22,8 +22,8 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 ## DIE qwen_compute · Qwen compute · rev UNFROZEN 54a1aeb5 · PROTOTYPE of infra-first
 - [ ] QC.PATH CRITICAL PATH end to end (12.9b): 12.7b plan gates -> core rebuilds (12.8) -> die clock (12.8) -> GRT0 -> skew gate -> die STA · INFRA-FIRST · RUNNING · dated ETA checklist in lanes/INFRA-FIRST.md
 - [ ] QC.INFRA One QC plan event: infra-first PG/clock/reset + batch 2 (STM ROMs, SRAM, DEAD-FAULT) + D-QC-FE-REACH stations (all FE variants) + COLLFTM-CTL + CB ID straps + SCROOT + vmr_s6kc · INFRA-FIRST + PATH-QC · RUNNING · PENDING-DELTA D-INFRA-FIRST-QC holds all 68 type routes
-- [ ] QC.CLK Clock 12.8 (gate = related-pair STA) · CLOCK-128-R4 + QC-SU-KITS · RUNNING · c4x4 die tree lattice ADOPTED (31 nodes/232 reps in channels, UNCHECKED); 80 ps kit window in gen (i6p bound PASS CHECKED, r6p FAIL -> in-core islands); SU cores: btab R6 cal TT 262.9 (CHECKED) routing to sign-off, window decided on RCX; vmr/rp1/prog re-predict on MODEL-REFIT + trunks; FT ports die-timed (flow-ft-sdc)
-- [ ] QC.SU 4 SU core types (72 inst) rebuilt to 250+-20 on MIF0 · QC-SU-F4-2 / MASTER-PLAN-R6 · RUNNING · prog4b MIF0 measured 213.4 FAIL (cell-less detours) -> as-built model + G4; vmr/rp1 F4A column SRAM adopted, build after as-built re-predict → IF.MASTER
+- [ ] QC.CLK Clock 12.8 (gate = related-pair STA) · INFRA-FIRST-QC-R12 · RUNNING · R10 legal mesh STA TT +563.51 / FF hold -94.25 (997 pairs) -> HB4 2.73M/0.279 mm2 fits; R9 4-row feed rejected; R12 builds mesh3 top tree w/ R9 tools (16W NDR, per-type lattice)
+- [ ] QC.SU 4 SU core types rebuilt to 250+-20 · QC-SU-F4G · RUNNING · F4F RP1 SIGNED OFF 21:5x (TT +234.29/FF +6.37/LEC 3703, RCX 247.5/196.0, window 33.8 = target miss, accepted -> die STA); VMR tail live; F4G trunk spacing + tree-first route
 - [ ] QC.GRT Die GRT0 incl. clock on the infra-first plan · INFRA-FIRST · WAITS · → QC.INFRA
 - [ ] QC.BIND Strict bind on the QC plan event (wavefront reset/START, CB16 phase classes) · PATH-QC · WAITS · → QC.INFRA
 - [ ] QC.STA Die STA on real views · DIE-PROTO · WAITS · → QC.GRT, → QC.TILES
@@ -31,7 +31,7 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 
 ## DIE s81_head · S81 head die · rev UNFROZEN d7b8d1eb · after QC
 - [ ] HEAD.INFRA Infra-first plan event (+ HEAD8 batch 187b63494b if approved) · INFRA-FIRST · WAITS · PENDING-DELTA D-INFRA-FIRST-HEAD holds all 16 type routes → IF.TOOL
-- [ ] HEAD.CLK Clock under 12.8 (skew 80 = target; gate = related-pair STA) · HEAD clock lane · FAIL · old tree 268/254; in-tile islands 229/193; elemA/elemB rebuild w/ centre entries (HEAD-CORE-LAT) → HEAD.INFRA, → IF.CLK128
+- [ ] HEAD.CLK elemA/elemB · HEAD-CORE-R11 · RUNNING · GRT0, in band (B 252.6/197.0); LEC 30144/27595 EQ but KEEP FAIL (8 dead carry copies -> RTL fix); hold2 reruns ~23:20 then route
 - [ ] HEAD.GRT Die GRT0 incl. clock on the infra-first plan · INFRA-FIRST · WAITS · old d7b8d1eb signal GRT0 no longer counts → HEAD.INFRA
 - [ ] HEAD.BIND Whole-head as-built bind · CODEX / PATH-S81 · WAITS · source d0eb3d3d01; host/mesh/rank-row contract = spec item (no owner input)
 - [ ] HEAD.STA Die STA on real views · DIE-PROTO · WAITS · → HEAD.CLK, → HEAD.TILES
@@ -56,7 +56,7 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 
 ## DIE hbm · HBM B2n (single-user in release; MU scope at OWNER) · plan D-HBM-B1 (5fa3c6e64838)
 - [ ] HBM.B1 Plan event (native b1n4 39b34ade; G0C 36 core-face open) + 12.7 master plan (corridors/bays/M7 entry/PG/shield gates) + CORE-LAT strips + 250 ps zero-early · PATH-HBM · RUNNING · hub cut FAIL: R8 distributed + R9 replicated-segment (S=2 x 2.14/y 1.32, UNCHECKED); banks k=4/4 PASS 0.50-0.55 → R10 top-down hub face pins over consumers + equal-lane segments + W/E serial chain
-- [ ] HBM.GRT Die GRT0 · PATH-HBM · PASS DIAGNOSTIC incl clock (r7 combo 50 it TT/FF overflow 0, native plan) → HBM.B1 freeze
+- [ ] HBM.GRT Die GRT0 incl clock · PATH-HBM-R15 · RUNNING · R14 taps fixed (0 stale/0 untapped) but S2/F2 chains FAILED: clock span 1048>750 um plan error -> structural fix + rerun
 - [ ] HBM.CLK Mesh clock + skew under 12.8 · CLOCK-128 · FAIL/INVALID · r7 980/800 used early offsets; r8 build legal (183 island drivers, straps shielded) → IF.CLK128, → HBM-CORE-LAT-R2 (19 types >290 ps restructure)
 - [ ] HBM.BIND Native B2 one-clock bind · PATH-HBM / HC-NATIVE · RUNNING · 98 unread outputs classified (svg redundant views, sm.request/expected check w/o comparator, xl y, ordinals); no open inputs
 - [ ] HBM.STA Die STA on real views · DIE-PROTO · WAITS · → HBM.GRT
