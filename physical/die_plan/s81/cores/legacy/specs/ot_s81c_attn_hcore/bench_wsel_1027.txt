@@ -1,0 +1,16 @@
+# S81-CORES-R1 Tue Oct 27 11:36:44 PDT 2026 hcore WSEG lockstep: rtl/hdc/v41x/test/run_s81c_hgrp_load_stage.sh OUT 1 <defines>, verilator/verilator:v5.032 docker via ot-run (intel2), src 2f2e51d8a8. Ref = hgrp_s HG4 (WSEG 0) vs 4 x hcore; base defines OT_S81C_HCORE_CTLA OT_S81C_HCORE_RST_TIMED OT_TB_RST_TIMED
+## ctl
+S81C_HGRP_BENCH PASS gid=1 seed=1 cycles=20000 mismatches=0 ov=14644 ov_nonzero=14644
+S81C_HGRP_BENCH PASS gid=1 seed=2 cycles=20000 mismatches=0 ov=14750 ov_nonzero=14750
+S81C_HGRP_BENCH PASS gid=1 seed=3 cycles=20000 mismatches=0 ov=14668 ov_nonzero=14668
+EXIT 0
+## wsel
+S81C_HGRP_BENCH PASS gid=1 seed=1 cycles=20000 mismatches=0 ov=14644 ov_nonzero=14644
+S81C_HGRP_BENCH PASS gid=1 seed=2 cycles=20000 mismatches=0 ov=14750 ov_nonzero=14750
+S81C_HGRP_BENCH PASS gid=1 seed=3 cycles=20000 mismatches=0 ov=14668 ov_nonzero=14668
+EXIT 0
+## mut
+S81C_HGRP_BENCH FAIL gid=1 seed=1 cycles=20000 mismatches=5023 ov=14644 ov_nonzero=14644
+S81C_HGRP_BENCH FAIL gid=1 seed=2 cycles=20000 mismatches=4672 ov=14750 ov_nonzero=14750
+S81C_HGRP_BENCH FAIL gid=1 seed=3 cycles=20000 mismatches=3907 ov=14668 ov_nonzero=14668
+EXIT 0
