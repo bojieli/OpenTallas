@@ -1,0 +1,14 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+CLOCK_GRAPH new3 root_type=CLOCK nets=1 buffers=0 sequential_loads=0 depths=
+CLOCK_BUFFERS 
+LOADED_CLOCK clk iterms=9164
+RUNREG u_run_in/_1_ 593.46 919.08
+RUNREG_CLOCK net=clk type=CLOCK
+RUNREG u_run_in/q$_DFF_P_ 777.6 920.43
+RUNREG u_run_in/place27138 777.276 920.43
+RUNREG u_run_in/wire51776 650.484 919.89
+RUNREG u_run_in/wire51777 706.914 920.16
+RUNREG u_run_in/wire51778 741.582 920.43

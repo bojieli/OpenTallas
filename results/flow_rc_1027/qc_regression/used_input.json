@@ -1,0 +1,76 @@
+{
+ "source_commit": "ab3ae7c3ab8a",
+ "source_path": "/srv/opentallas-scratch2/claude/wt/codex-rc-canary-1027",
+ "run": "/srv/opentallas-scratch2/claude/codex-rc-canary-1027/ab/runs/qwen_compute_ab3ae7c3a_1027_081901_659397",
+ "kit": "/srv/opentallas-scratch2/claude/codex-rc-canary-1027/ab/runs/qwen_compute_ab3ae7c3a_1027_081901_659397/gen/coll_ftm",
+ "gen_command": "python3 -I tools/die_plan/gen.py phys physical/die_plan/qwen_compute/die_plan.json --out {gen} --types {item} --rtl-root {src} --hold-ff-margin 5",
+ "used_plan": "/srv/opentallas-scratch2/claude/wt/codex-rc-canary-1027/physical/die_plan/qwen_compute/die_plan.json",
+ "plan_sha256": "54a1aeb5065d061a14e15a838e491b5f24975530a655e1c3eafb99f22ace4e9f",
+ "coll_ftm_clock": {
+  "tap_um": [
+   388.8,
+   734.4
+  ],
+  "layer": "M9",
+  "insertion_ps": 250,
+  "insertion_tol_ps": 40,
+  "tap_mode": "density",
+  "tap_max_sinks": 1000,
+  "tap_target_sinks": 800,
+  "tap_radius_um": 180.0,
+  "tap_min_sinks": 1
+ },
+ "git_plans": {
+  "ab3ae7c3ab8a": {
+   "sha256": "54a1aeb5065d061a14e15a838e491b5f24975530a655e1c3eafb99f22ace4e9f",
+   "clock": {
+    "tap_um": [
+     388.8,
+     734.4
+    ],
+    "layer": "M9",
+    "insertion_ps": 250,
+    "insertion_tol_ps": 40,
+    "tap_mode": "density",
+    "tap_max_sinks": 1000,
+    "tap_target_sinks": 800,
+    "tap_radius_um": 180.0,
+    "tap_min_sinks": 1
+   }
+  },
+  "a54fa8a6ce3a": {
+   "sha256": "54a1aeb5065d061a14e15a838e491b5f24975530a655e1c3eafb99f22ace4e9f",
+   "clock": {
+    "tap_um": [
+     388.8,
+     734.4
+    ],
+    "layer": "M9",
+    "insertion_ps": 250,
+    "insertion_tol_ps": 40,
+    "tap_mode": "density",
+    "tap_max_sinks": 1000,
+    "tap_target_sinks": 800,
+    "tap_radius_um": 180.0,
+    "tap_min_sinks": 1
+   }
+  }
+ },
+ "clock_pins": [],
+ "sdc_clock_declaration": [
+  "create_clock -name clk -period 833.0000 [get_ports {clk clk_t1 clk_t2 clk_t3 clk_t4 clk_t5 clk_t6 clk_t7 clk_t8 clk_t9 clk_t10 clk_t11 clk_t12 clk_t13 clk_t14 clk_t15 clk_t16 clk_t17 clk_t18 clk_t19 clk_t20}]"
+ ],
+ "pre_cts_text": "# Clear only the pre-CTS LOCAL network estimate; preserve early core source latencies.\nunset_clock_latency -clock clk [get_ports {clk clk_t1 clk_t2 clk_t3 clk_t4 clk_t5 clk_t6 clk_t7 clk_t8 clk_t9 clk_t10 clk_t11 clk_t12 clk_t13 clk_t14 clk_t15 clk_t16 clk_t17 clk_t18 clk_t19 clk_t20}]\nsource /work/clock_taps.tcl\n\nset rt_postplace 1\nset rt_leaf_reach_um 405\nsource /work/reset_taps.tcl\nunset rt_postplace\n",
+ "dedicated_control_files": [],
+ "control_lines_in_clock_taps": [
+  "    # Density radius is a physical reach bound, including sparse control flops."
+ ],
+ "actual_control_assignment": {
+  "flop": "u_run_in/q$_DFF_P_",
+  "root": "clk_t18",
+  "source": "new.start.rpt exactFF4CTS path",
+  "capture_ps": 349.048,
+  "data_ps": 175.552
+ },
+ "clock_taps_sha256": "16fd1a47d82430d8c44d93f73b5e3e12c93c6238d3a142760dd4ed2bbf5665ea"
+}
