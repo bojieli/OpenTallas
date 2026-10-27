@@ -487,7 +487,8 @@ def _finish(raw,P,bytype,pports,side):
                 physical_qualified=False,collector_tree=bytype[tn]["tree"],
                 collector_root_node=bytype[tn].get("collector_root_node"),
                 collector_local_sources=bytype[tn]["local_sources"],
-                collector_children=bytype[tn]["children"])
+                collector_children=bytype[tn]["children"],
+                **({"monitor":"dataflow"} if bytype[tn]["mask"].get("monitor")=="dataflow" else {}))
         t["buses"]=[b for b in t.get("buses",[]) if b not in special]
     infra_edges=[]
     for pr in raw["ports"]:
