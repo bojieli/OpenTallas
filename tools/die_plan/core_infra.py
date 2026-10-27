@@ -585,6 +585,111 @@ def emit_cts_tcl(plan):
             f"set ::ot_ci_cts_plan_open {len(tree.get('cts_open', []))}\n" + (HERE / CTS_HOOK).read_text())
 
 
+# --------------------------------------------------------------------------------------------- kit CTS-stage hook
+# CTS-HOOK-PORT-1 (one implementation for every core-kit generator; first used by gen_core_kit_legacy, R12): a kit
+# whose slice carries a plan-built core tree (core_infra_plan.json "core_tree") must run TritonCTS only on the plan's
+# CTS-open nets (core_infra_cts.tcl at PRE_CTS) and must not let a post-CTS balancer edit the planned tree
+# (tap_balance / leaf_affinity REPORT-ONLY).  A generator calls kit_cts_hook(kd, cfg) after master_slice.kit_apply
+# and before it writes config.mk; a kit without a plan tree is left byte-identical.
+CTS_PRE_CHAIN, CTS_POST_CHAIN = "core_infra_pre_cts.tcl", "core_infra_post_cts.tcl"
+CTS_PRE_LINES = ("# S81-CORE-LAT-R12: plan-built tree -> TritonCTS only on CTS-open nets\n"
+                 "source /work/core_infra_cts.tcl\n")
+CTS_POST_LINES = ("# S81-CORE-LAT-R12: plan-built tree -> tap balance + leaf affinity measure/report only\n"
+                  "set ::env(OT_TAP_REPORT_ONLY) 1\nset ::env(OT_LEAF_AFF_REPORT_ONLY) 1\n")
+# kit stage scripts that build, re-tap or re-leaf the core clock themselves: a competing clock method for a plan tree
+# (12.7c/12.8b: the plan owns the tree), and none of them has a report-only mode -> refused, never silently mixed
+PLAN_TREE_CLOCK_EDITORS = ("regional_taps.tcl", "regional_taps_balance.tcl", "core_density_taps.tcl",
+                           "core_tap_align.tcl", "f4_chain_leaf.tcl", "multiport_clock_stage_hold.tcl",
+                           "head_lane_taps.tcl", "astk_zone_taps.tcl", "astk_face_taps.tcl")
+_CFG_RE = re.compile(r"^\s*(override\s+)?export\s+([A-Za-z0-9_]+)\s*[:?]?=\s*(.*?)\s*$")
+_SRC_RE = re.compile(r"^\s*source\s+\{?/work/([A-Za-z0-9_.-]+)\}?\s*$", re.M)
+
+
+def cfg_effective(cfg, name):
+    """GNU make value of `name` over generator config.mk lines: the last `override export` wins, else the last."""
+    value, forced = None, False
+    for line in cfg:
+        m = _CFG_RE.match(line)
+        if m and m[2] == name and (m[1] or not forced):
+            value, forced = m[3], bool(m[1])
+    return value
+
+
+def _kit_stage_file(kd, cfg, var):
+    val = cfg_effective(cfg, var)
+    if not val:
+        return None
+    m = re.fullmatch(r"/work/([A-Za-z0-9_.-]+\.tcl)", val)
+    if not m or not (kd / m[1]).is_file():
+        raise SystemExit(f"{kd.name}: plan core tree: {var} = {val!r} is not a kit Tcl file; cannot chain {CTS_HOOK}")
+    return m[1]
+
+
+def _sourced(kd, name, seen=None):
+    """name + every /work/*.tcl it sources (transitively) inside the kit."""
+    seen = set() if seen is None else seen
+    if name in seen or not (kd / name).is_file():
+        return seen
+    seen.add(name)
+    for s in _SRC_RE.findall((kd / name).read_text()):
+        _sourced(kd, s, seen)
+    return seen
+
+
+def _shared(kd, cfg, name, var):
+    """True when the stage file is used by another config variable or sourced by another kit Tcl file."""
+    ref = f"/work/{name}"
+    for line in cfg:
+        m = _CFG_RE.match(line)
+        if m and m[2] != var and ref in m[3]:
+            return True
+    return any(p.name != name and ref in p.read_text() for p in sorted(kd.glob("*.tcl")))
+
+
+def kit_cts_hook(kd, cfg):
+    """Install the plan-tree CTS hook into a core kit; returns False (kit untouched) without a plan core tree.
+
+    cfg is the generator's config.mk line list (mutated in place; the generator writes config.mk afterwards).
+    PRE_CTS : core_infra_cts.tcl runs after the kit's own PRE_CTS hook (appended to that file when only PRE_CTS uses
+              it, else via core_infra_pre_cts.tcl which sources both; added as PRE_CTS when the kit had none).
+    POST_CTS: tap_balance / leaf_affinity REPORT-ONLY before the kit's own POST_CTS hook (prepended, or chained the
+              same way); nothing to do without a POST_CTS hook.
+    Fail-closed: plan tree without core_infra_cts.tcl, a stage hook that is not a kit Tcl file, or a kit stage script
+    that builds / re-taps / re-leafs the clock itself (PLAN_TREE_CLOCK_EDITORS)."""
+    kd = Path(kd)
+    pj = kd / "core_infra_plan.json"
+    if not pj.is_file() or not json.loads(pj.read_text()).get("core_tree"):
+        return False
+    if not (kd / CTS_HOOK).is_file():
+        raise SystemExit(f"{kd.name}: plan tree without {CTS_HOOK} (core_infra.install too old)")
+    pre, post = _kit_stage_file(kd, cfg, "PRE_CTS_TCL"), _kit_stage_file(kd, cfg, "POST_CTS_TCL")
+    used = set()
+    for f in (pre, post):
+        if f:
+            _sourced(kd, f, used)
+    bad = sorted(used & set(PLAN_TREE_CLOCK_EDITORS))
+    if bad:
+        raise SystemExit(f"{kd.name}: plan core tree refuses kit clock editors at CTS {bad} (the plan owns the tree; "
+                         "drop the tap / F4 / regional-tap option for a plan-tree kit)")
+    if pre is None:
+        (kd / CTS_PRE_CHAIN).write_text(f"# GENERATED by tools/die_plan/core_infra.py kit_cts_hook\n{CTS_PRE_LINES}")
+        cfg.append(f"override export PRE_CTS_TCL = /work/{CTS_PRE_CHAIN}")
+    elif _shared(kd, cfg, pre, "PRE_CTS_TCL"):
+        (kd / CTS_PRE_CHAIN).write_text(f"# GENERATED by tools/die_plan/core_infra.py kit_cts_hook\n"
+                                        f"source /work/{pre}\n{CTS_PRE_LINES}")
+        cfg.append(f"override export PRE_CTS_TCL = /work/{CTS_PRE_CHAIN}")
+    else:
+        (kd / pre).write_text((kd / pre).read_text() + CTS_PRE_LINES)
+    if post is not None:
+        if _shared(kd, cfg, post, "POST_CTS_TCL"):
+            (kd / CTS_POST_CHAIN).write_text(f"# GENERATED by tools/die_plan/core_infra.py kit_cts_hook\n"
+                                             f"{CTS_POST_LINES}source /work/{post}\n")
+            cfg.append(f"override export POST_CTS_TCL = /work/{CTS_POST_CHAIN}")
+        else:
+            (kd / post).write_text(CTS_POST_LINES + (kd / post).read_text())
+    return True
+
+
 def install(kd, sl):
     """Called by every kit's master_slice hook. No slice/pushdown means no change."""
     if sl.get("kind") not in ("core", "partition") or not sl.get("pushdown"):
@@ -602,7 +707,7 @@ def install(kd, sl):
     plan = compile_slice(sl)
     (kd / "core_infra_plan.json").write_text(json.dumps(plan, indent=2) + "\n")
     if plan.get("core_tree"):
-        # the kit generator sources it at PRE_CTS (gen_core_kit_legacy: hold_budget.tcl); unused otherwise
+        # every core-kit generator chains it at PRE_CTS via kit_cts_hook (master_slice.plan_tree_cts); unused otherwise
         (kd / CTS_HOOK).write_text(emit_cts_tcl(plan))
     shutil.copyfile(HERE / "core_infra.tcl", kd / "core_infra_impl.tcl")
     root = HERE.parents[1]
