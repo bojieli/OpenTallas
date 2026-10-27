@@ -257,3 +257,75 @@ def test_naive_cone_unknown_does_not_shift_later_status(tmp_path, monkeypatch):
         return SimpleNamespace(stdout='\n'.join(replies[i] for i in ids), stderr='')
     monkeypatch.setattr(lec.subprocess, 'run', run)
     assert lec.prove(m, tmp_path, 100, [], tag='mixed') == {'unknown': 'undecided', 'proved': 'proved', 'different': 'differs'}
+
+
+def _seq(tmp_path, name, inputs, latches, nxt):
+    """binary AIGER with `inputs` then `latches` (names); nxt(m, var-literal dict) -> next-state literal per latch."""
+    m = lec.Aig()
+    v = {n: m.add_input(n) for n in inputs + latches}
+    lits = nxt(m, v)
+    f = tmp_path / (name + ".aig")
+    m.write(f)
+    _, body = f.read_bytes().split(b"\n", 1)
+    f.write_bytes(f"aig {m.ni + len(m.ands) // 2} {len(inputs)} {len(latches)} 0 {len(m.ands) // 2}\n".encode() +
+                  "".join(f"{lits[n]}\n" for n in latches).encode() + body)
+    mp = {"input": {i: [(n, 0)] for i, n in enumerate(inputs)},
+          "latch": {i: [(f"u_dut.{n}$_DFF_P_.lecq", 0)] for i, n in enumerate(latches)}, "output": {}}
+    return lec.read_aig(f), mp
+
+
+def _fsm(tmp_path, bug=False):
+    """gold: binary st[1:0] IDLE 0 -> RUN 1 -> (done_r) DONE 2 -> IDLE, plus done_r and busy (== RUN);
+    gate: yosys-fsm style one-hot st[0..2] = RUN, DONE, IDLE, the flag renamed `done`; `bug`: busy' = DONE."""
+    def gold(m, v):
+        s0, s1, go, dn = v["st[0]"], v["st[1]"], v["go"], v["done_r"]
+        idle, run, done = m.AND(s0 ^ 1, s1 ^ 1), m.AND(s0, s1 ^ 1), m.AND(s0 ^ 1, s1)
+        n_run = m.AND(m.AND(idle, go) ^ 1, m.AND(run, dn ^ 1) ^ 1) ^ 1
+        n_done = m.AND(run, dn)
+        return {"st[0]": n_run, "st[1]": n_done, "done_r": m.AND(run, dn ^ 1), "busy": run}
+    def gate(m, v):
+        run, done, idle, go, dn = v["st[0]"], v["st[1]"], v["st[2]"], v["go"], v["done"]
+        n_run = m.AND(m.AND(idle, go) ^ 1, m.AND(run, dn ^ 1) ^ 1) ^ 1
+        n_idle = m.AND(m.AND(idle, go ^ 1) ^ 1, done ^ 1) ^ 1
+        return {"st[0]": n_run, "st[1]": m.AND(run, dn), "st[2]": n_idle, "done": m.AND(run, dn ^ 1),
+                "busy": done if bug else run}
+    g, gm = _seq(tmp_path, "gold", ["go"], ["st[0]", "st[1]", "done_r", "busy"], gold)
+    t, tm = _seq(tmp_path, "gate", ["go"], ["st[0]", "st[1]", "st[2]", "done", "busy"], gate)
+    return lec.Lec(g, gm, t, tm)
+
+
+@pytest.mark.parametrize("fails,rounds", [(0, 10), (1, 10), (3, 3)])
+def test_fsm_recode_is_proved_and_dropped_maps_are_reproposed(tmp_path, monkeypatch, fails, rounds):
+    """the one-hot map and the renamed done flag are proved together; a map dropped in an early round (a neighbour
+    was wrong) is proposed again in the next adding round, or (3, 3: every adding round failed it, the flag pair
+    went with it) by the re-proposal pass once the set is inductive -- and still has to be proved."""
+    calls = []
+    def flaky(m, *a, **k):
+        st = _sim_prove(m)
+        calls.append(1)
+        if len(calls) <= fails:                  # early rounds: every cube fails, as if a neighbour were wrong
+            st.update({n: "differs" for n in st if n.startswith("hyp:gate:ff:u_dut.st#t")})
+        return st
+    monkeypatch.setattr(lec, "prove", flaky)
+    L = _fsm(tmp_path)
+    assert "ff:u_dut.st" in L.relaid and "ff:u_dut.busy" in L.matched
+    before, _ = L.build(with_compare=True, with_hyp=False)
+    assert _sim_prove(before)["ff:u_dut.busy"] == "differs"
+    log = []
+    lec.correspond(L, tmp_path, 100, log, rounds=rounds)
+    assert (fails == 3) == any(l.startswith("re-proposal: 3 FSM") for l in log)
+    cubes = {k: h for (sd, k), h in L.hyp.items() if h[0] == "cube"}
+    assert len(cubes) == 3 and cubes["ff:u_dut.st#t[0]"][3] == [1, 0]          # RUN = code 1
+    assert L.hyp[("gate", "ff:u_dut.done")] == ("eq", "gold", "ff:u_dut.done_r", 0)
+    after, _ = L.build(with_compare=True, with_hyp=True)
+    assert set(_sim_prove(after).values()) == {"proved"}
+
+
+def test_fsm_recode_cannot_hide_a_real_difference(tmp_path, monkeypatch):
+    monkeypatch.setattr(lec, "prove", _sim_prove)
+    L = _fsm(tmp_path, bug=True)
+    lec.correspond(L, tmp_path, 100, [])
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    st = _sim_prove(m)
+    assert st["ff:u_dut.busy"] == "differs"
+    assert all(v == "proved" for n, v in st.items() if n.startswith(("hyp:", "cons:")))

@@ -603,6 +603,8 @@ class Lec:
                 raise LecError("cyclic flop hypotheses (rebuild)")
             merged = nxt
         later = []
+        # FSM state bits a cube hypothesis decodes stay free in a cofactor (holding them would freeze the FSM)
+        fsm_bits = {(h[1], ok) for h in self.hyp.values() if h[0] == "cube" for ok in h[2]}
         for side, keys, p, lmap in (("gold", self.gonly, self.gp, lg), ("gate", self.tonly, self.tp, lt)):
             for k in keys:
                 h = self.hyp.get((side, k))
@@ -610,7 +612,7 @@ class Lec:
                     bind(lmap, p[k], h[1])
                 elif h and h[0] in ("eq", "cube"):
                     later.append((side, k, h))
-                elif free_const is not None and k.startswith("ff:"):
+                elif free_const is not None and k.startswith("ff:") and (side, k) not in fsm_bits:
                     bind(lmap, p[k], free_const)  # cofactor: unpaired registers held at a constant
                 else:
                     v = m.add_input(f"{side}:{k}")
@@ -1088,6 +1090,9 @@ def fsm_proposals(L, log, words=2, max_bits=4):
         gk = [gb[base][i] for i in sorted(gb[base])]
         tk = [tb[base][i] for i in sorted(tb[base])]
         n, nt = len(gk), len(tk)
+        if any(c[0] == "gold" and list(c[1]) == gk for c in L.cons):
+            # a re-proposal (the cube hypotheses were dropped while a neighbour was wrong): keep one constraint
+            L.cons = [c for c in L.cons if not (c[0] == "gold" and list(c[1]) == gk)]
         if not (1 < n <= max_bits and 2 < nt <= (1 << n)) or sorted(gb[base]) != list(range(n)):
             continue
         import math
@@ -1135,6 +1140,61 @@ def fsm_proposals(L, log, words=2, max_bits=4):
     return n_new
 
 
+def repropose(L, log, tried, words=16, seed=4242):
+    """re-proposal pass once the hypothesis set is inductive: candidates that failed while a neighbour was still
+    wrong (FSM one-hot cube maps, and registers whose next state reads the recoded FSM, e.g. a done flag the two
+    frontends name differently) are proposed again on top of the proved set: the FSM maps first, then pairs of
+    still-free gold-only / gate-only registers by random-simulation signature (either polarity).  Nothing is
+    assumed: the caller proves the enlarged set inductively and refines it again."""
+    n = fsm_proposals(L, log)
+    # signatures of D: plain, and with every still-free register held at 0 / at 1 (a self-holding flag reads its
+    # own state, which is a different free input on each side)
+    sigs = []
+    for fc in (None, 0, 1):
+        m, kind = L.build(with_compare=False, with_hyp=False, free_const=fc)
+        val, mask = m.simulate(words, seed=seed + (fc or 0))
+        sigs.append((val, dict(L.dlit)))
+    L.build(with_compare=False, with_hyp=False)            # restore dlit of the normal build
+    sig = lambda side, k: tuple(lit_val(v, mask, dl[(side, k)]) for v, dl in sigs)
+    flip = lambda t: tuple(x ^ mask for x in t)
+    const = lambda t: all(x in (0, mask) for x in t)
+    bound = {k for (sd, k) in L.hyp} | {h[2] for h in L.hyp.values() if h[0] == "eq"}
+    tsig, tcof = {}, {}
+    for k in L.tonly:
+        if k.startswith("ff:") and k not in bound and ("gate", k) in L.dlit:
+            t = sig("gate", k)
+            if not const(t):
+                tsig.setdefault(t, []).append(k)
+            if not const(t[1:]):
+                tcof.setdefault(t[1:], []).append(k)
+    pairs = 0
+    for k in L.gonly:
+        if not k.startswith("ff:") or k in bound or ("gold", k) not in L.dlit:
+            continue
+        s = sig("gold", k)
+        hit = None
+        for table, key in ((tsig, s), (tcof, s[1:])):
+            if const(key):
+                continue
+            for inv, t in ((0, key), (1, flip(key))):
+                c = next((c for c in closest(k, table.get(t, [])) if tried[("re", c, k, inv)] < 1), None)
+                if c:
+                    hit = (c, inv)
+                    break
+            if hit:
+                break
+        if hit:
+            c, inv = hit
+            tried[("re", c, k, inv)] += 1
+            L.hyp[("gate", c)] = ("eq", "gold", k, inv)
+            for table in (tsig, tcof):
+                for t in table:
+                    table[t] = [x for x in table[t] if x != c]
+            pairs += 1
+    log.append(f"re-proposal: {n} FSM cube hypotheses, {pairs} free-register pairs")
+    return n + pairs
+
+
 def drop_failed(L, bad):
     """drop failing hypotheses / constraints (a failing constraint takes its FSM's cube hypotheses with it)."""
     for n in bad:
@@ -1167,10 +1227,13 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
     replica_proposals(L, log)
     fsm_proposals(L, log)
     tried = collections.Counter()      # failed attempts per candidate (a pair may fail while a neighbour is wrong)
-    for rnd in range(rounds + 40):
-        adding = rnd < rounds           # then refine only: drop what fails until the set is inductive
+    settled, passes = False, 0
+    for rnd in range(rounds + 60):
+        adding = rnd < rounds and not settled   # then refine only: drop what fails until the set is inductive
         before = dict(L.hyp)
         if adding:
+            if rnd:
+                fsm_proposals(L, log)   # FSM maps dropped in the last round (a neighbour was wrong): propose again
             for it in range(sim_iters):
                 m, kind = L.build(with_compare=False, with_hyp=False)
                 val, mask = m.simulate(words, seed=7 * rnd + it + 1)
@@ -1343,8 +1406,12 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
                         changed += 1
                 if not changed:
                     break
-        if not L.hyp:
-            return
+        if not L.hyp and not L.cons:
+            settled = True                      # nothing left to prove: the (empty) set is inductive
+            if passes < 3 and repropose(L, log, tried):
+                passes += 1
+            else:
+                return
         m, kind = L.build(with_compare=False, with_hyp=True)
         st = prove(m, work, conflicts, log, tag=f"hyp{rnd}")
         bad = [n for n, s in st.items() if s != "proved"]
@@ -1353,6 +1420,11 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
                    f"({sum(st[n] == 'undecided' for n in bad)} undecided) {bad[:6]}")
         if not bad:
             if L.hyp == before or not adding:
+                # inductive: re-propose what failed only through a neighbour on top of it (bounded passes)
+                settled = True
+                if passes < 3 and repropose(L, log, tried):
+                    passes += 1
+                    continue
                 return
             continue
         drop_failed(L, [n for n in bad if n.startswith("cons:")])
