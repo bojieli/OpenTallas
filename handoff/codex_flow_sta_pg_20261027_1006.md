@@ -115,3 +115,8 @@ Evidence intel2:`/srv/opentallas-scratch2/claude/codex-head-track-witness-1027/`
 DIE-STA has no standalone current job: current real-view work belongs per-die
 owners. Retired DIE-CI q_su1 orphan wrapper3989734/docker3989737 was still live
 when checked; root/FLOW informed, no cancellation or stale rerun by me.
+
+10:09 update from ROOT-MERGE: trialexit `ced7b8d2d` was curated into main as
+`3ecb807519`. PGexit `bae112e24` was explicitly not separately taken/approved
+in RM intake. Source remains clean/pushed and can be selected independently
+now that its logged_stages dependency is on main. No physical rerun required.
