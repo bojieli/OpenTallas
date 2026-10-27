@@ -42,7 +42,8 @@
         54,
         48
       ],
-      "orient": "MY"
+      "orient": "MY",
+      "instance": "u_native.u_scb"
     },
     {
       "role": "large1",
@@ -51,7 +52,8 @@
         238.8,
         48
       ],
-      "orient": "R0"
+      "orient": "R0",
+      "instance": "u_native.u_t5.u_pad.u_d"
     },
     {
       "role": "small",
@@ -60,7 +62,8 @@
         178.416,
         184.32
       ],
-      "orient": "R0"
+      "orient": "R0",
+      "instance": "u_native.u_t5.u_pad.u_c"
     }
   ],
   "macro_halo_um": 4.32,
@@ -136,7 +139,8 @@
           77.868,
           48.0
         ],
-        "orient": "R0"
+        "orient": "R0",
+        "instance": "u_native.u_scb"
       },
       {
         "role": "large1",
@@ -145,7 +149,8 @@
           77.868,
           194.4
         ],
-        "orient": "R0"
+        "orient": "R0",
+        "instance": "u_native.u_t5.u_pad.u_d"
       },
       {
         "role": "small",
@@ -154,17 +159,41 @@
           109.284,
           324
         ],
-        "orient": "R0"
+        "orient": "R0",
+        "instance": "u_native.u_t5.u_pad.u_c"
       }
     ],
     "clock_entry_um": [
-      125.28,
+      125.256,
       151.2
     ],
     "outer_usable_channel_um": 69.228,
     "outer_signal_demand_bound": 1264,
     "outer_signal_ratio": 0.5216716605172144,
     "std_density_in_nonmacro_area": 0.2331744385108795,
-    "status": "PLACEMENT DESIGN ONLY; actual native pin anchors/internal r2r must be measured"
+    "status": "PLACEMENT DESIGN ONLY; actual native pin anchors/internal r2r must be measured",
+    "pg_island_center_um": [
+      125.28,
+      151.2
+    ],
+    "clock_pin_window_min_um": [
+      0.048,
+      0.48
+    ],
+    "preferred_parent_lot_origin_um": [
+      336.96,
+      5149.44
+    ]
+  },
+  "mapped_profile_status": "DIAGNOSTIC ORIGINAL6BIT PAD BUG; corrected7bit profile pending; do not price as production",
+  "mapped_profile_source": "codex/hbm-n4-profile-1027@2c7f9887fa:results/hbm_n4_profile_codex/mapped_profile.json",
+  "std_cells_corrected_known": 185551,
+  "corrected_standard_area_um2": "PENDING_ACTUAL_PROFILE",
+  "local_cts_requirements": {
+    "diagnostic_flop_count": 30135,
+    "sink_load_target": 1250,
+    "minimum_groups": 25,
+    "external_clock_pin_is_not_full_internal_cts": true,
+    "signoff": "propagated TT/FF related-pair skew<=80ps; setupTT60ps/holdFF25ps at833ps"
   }
 }

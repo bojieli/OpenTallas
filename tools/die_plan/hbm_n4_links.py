@@ -48,6 +48,8 @@ def obstacles(t):
 
 
 def root_lots(t, size=(345.6, 345.6), target_y=5231.52, size_status="historical model assumption; not measured N4EXT1 implementation"):
+    if len(size)!=2 or any(not math.isfinite(v) or v<=0 for v in size):
+        raise ValueError('root outline must contain two finite positive dimensions')
     obs = obstacles(t)
     w, h = t['outline_um']
     # Scan a legal manufacturing grid, closest to the two abutting N4 faces first.
