@@ -1,0 +1,19 @@
+TT_setup intra pairs 182950 neg 2
+    budget TREE-DEPTH 2 worst -2.09 lk_ES0 dmg 586.5 aocv 79.1
+TT_setup seam pairs 210069 neg 0
+TT_setup landed pairs 240819 neg 61991
+    budget LANDED-REGION-LATENCY:region-tree 37299 worst -2697.25 svc_6->svc_7 dmg 2294.4 aocv 1066.3
+    real LANDED-REGION-LATENCY:region-tree 15700 worst -2891.73 svc_6->svc_7 dmg 2298.8 aocv 1038.1
+    budget LANDED-REGION-LATENCY:root-arrival 6916 worst -1293.76 bk_sel->s_3N_x06 dmg 969.0 aocv 988.3
+    real LANDED-REGION-LATENCY:root-arrival 2076 worst -960.24 svc_9->svc_7 dmg 521.9 aocv 883.5
+FF_hold intra pairs 182950 neg 173154
+    budget OCV-ZERO-LOGIC 168454 worst -215.27 svc_8 dmg 79.3 aocv 137.2
+    budget TREE-DEPTH 3165 worst -584.2 lk_ES0 dmg 516.9 aocv 68.5
+    budget WIRE-SKEW 1535 worst -267.09 bk_sel dmg 222.9 aocv 45.4
+FF_hold seam pairs 210069 neg 199042
+    budget OCV-ZERO-LOGIC 186508 worst -221.13 eng->phy_hbm dmg 74.3 aocv 148.0
+    budget TREE-DEPTH 9137 worst -451.11 fE1_p2_b0->fE1_p1_b0 dmg 399.3 aocv 53.0
+    budget WIRE-SKEW 3397 worst -293.6 svc_6->svc_8 dmg 154.5 aocv 140.3
+FF_hold landed pairs 240819 neg 210901
+    budget LANDED-REGION-LATENCY:region-tree 164633 worst -2878.71 svc_7->svc_6 dmg 2002.3 aocv 877.6
+    budget LANDED-REGION-LATENCY:root-arrival 46268 worst -1658.36 s_3N_x06->bk_sel dmg 845.6 aocv 814.0

@@ -1,0 +1,395 @@
+{
+ "TT_setup": {
+  "intra": {
+   "pairs": 182950,
+   "neg": 2,
+   "by": [
+    {
+     "view": "budget",
+     "cause": "TREE-DEPTH",
+     "neg": 2,
+     "worst_ps": -2.09,
+     "launch": "t_lk_ES0__clk_t2",
+     "capture": "t_lk_ES0__clk_t6",
+     "where": "lk_ES0",
+     "clock_damage_ps": 586.5,
+     "aocv_ps": 79.1,
+     "models": [
+      "budget",
+      "budget"
+     ]
+    }
+   ]
+  },
+  "seam": {
+   "pairs": 210069,
+   "neg": 0,
+   "by": []
+  },
+  "landed": {
+   "pairs": 240819,
+   "neg": 61991,
+   "by": [
+    {
+     "view": "budget",
+     "cause": "LANDED-REGION-LATENCY:region-tree",
+     "neg": 37299,
+     "worst_ps": -2697.25,
+     "launch": "t_svc_6__clk_t3",
+     "capture": "t_svc_7__clk_t24",
+     "where": "svc_6->svc_7",
+     "clock_damage_ps": 2294.4,
+     "aocv_ps": 1066.3,
+     "models": [
+      "budget",
+      "budget"
+     ]
+    },
+    {
+     "view": "real",
+     "cause": "LANDED-REGION-LATENCY:region-tree",
+     "neg": 15700,
+     "worst_ps": -2891.73,
+     "launch": "t_svc_6__clk_t15",
+     "capture": "t_svc_7__clk_t15",
+     "where": "svc_6->svc_7",
+     "clock_damage_ps": 2298.8,
+     "aocv_ps": 1038.1,
+     "models": [
+      "core:dsdv_svc_sx_hrow",
+      "core:dsdv_svc_sx_hrow"
+     ]
+    },
+    {
+     "view": "budget",
+     "cause": "LANDED-REGION-LATENCY:root-arrival",
+     "neg": 6916,
+     "worst_ps": -1293.76,
+     "launch": "t_bk_sel__clk_t28",
+     "capture": "t_s_3N_x06__clk_t20",
+     "where": "bk_sel->s_3N_x06",
+     "clock_damage_ps": 969.0,
+     "aocv_ps": 988.3,
+     "models": [
+      "budget",
+      "budget"
+     ]
+    },
+    {
+     "view": "real",
+     "cause": "LANDED-REGION-LATENCY:root-arrival",
+     "neg": 2076,
+     "worst_ps": -960.24,
+     "launch": "t_svc_9__clk_t14",
+     "capture": "t_svc_7__clk_t15",
+     "where": "svc_9->svc_7",
+     "clock_damage_ps": 521.9,
+     "aocv_ps": 883.5,
+     "models": [
+      "core:dsdv_svc_sx_hrow",
+      "core:dsdv_svc_sx_hrow"
+     ]
+    }
+   ]
+  }
+ },
+ "TT_coverage": {
+  "core_instances_total": 18993,
+  "core_instances_real": 1941,
+  "real_by_module": {
+   "dsfd_rstg": 216,
+   "ot_s81_cfg7_seq": 864,
+   "ot_s81_sstn_payload536": 660,
+   "dsfd_node_LLd": 72,
+   "dsdv_svc_sx_hrow": 128,
+   "dsdv_gunit_l5f": 1
+  },
+  "taps_total": 7481,
+  "taps_with_real_model": 1649,
+  "kit_partitions": [],
+  "map_distance_max_um": 427.55,
+  "map_distance_real_um": [
+   22.86,
+   66.47,
+   71.66,
+   72.74,
+   72.74,
+   72.74,
+   72.74,
+   72.74,
+   72.74,
+   73.84,
+   73.84,
+   78.94,
+   83.28,
+   85.98,
+   85.98,
+   88.4,
+   88.4,
+   88.4,
+   88.4,
+   94.08,
+   96.05,
+   96.05,
+   97.43,
+   97.43,
+   99.98,
+   99.98,
+   102.72,
+   112.67,
+   112.67,
+   112.67,
+   112.67,
+   121.78,
+   121.78,
+   136.33,
+   136.33,
+   136.33,
+   136.33,
+   149.25,
+   152.06,
+   152.06,
+   152.06,
+   152.06,
+   167.97,
+   167.97,
+   171.9,
+   176.47,
+   176.47,
+   178.52,
+   178.52,
+   181.43,
+   181.43,
+   181.43,
+   181.43,
+   182.7,
+   182.7,
+   182.7,
+   182.7,
+   183.3,
+   184.97,
+   191.82,
+   212.74
+  ]
+ },
+ "FF_hold": {
+  "intra": {
+   "pairs": 182950,
+   "neg": 173154,
+   "by": [
+    {
+     "view": "budget",
+     "cause": "OCV-ZERO-LOGIC",
+     "neg": 168454,
+     "worst_ps": -215.27,
+     "launch": "t_svc_8__clk_t19",
+     "capture": "t_svc_8__clk_t24",
+     "where": "svc_8",
+     "clock_damage_ps": 79.3,
+     "aocv_ps": 137.2,
+     "models": [
+      "budget",
+      "budget"
+     ]
+    },
+    {
+     "view": "budget",
+     "cause": "TREE-DEPTH",
+     "neg": 3165,
+     "worst_ps": -584.2,
+     "launch": "t_lk_ES0__clk_t6",
+     "capture": "t_lk_ES0__clk_t2",
+     "where": "lk_ES0",
+     "clock_damage_ps": 516.9,
+     "aocv_ps": 68.5,
+     "models": [
+      "budget",
+      "budget"
+     ]
+    },
+    {
+     "view": "budget",
+     "cause": "WIRE-SKEW",
+     "neg": 1535,
+     "worst_ps": -267.09,
+     "launch": "t_bk_sel__clk_t21",
+     "capture": "t_bk_sel__clk_t17",
+     "where": "bk_sel",
+     "clock_damage_ps": 222.9,
+     "aocv_ps": 45.4,
+     "models": [
+      "budget",
+      "budget"
+     ]
+    }
+   ]
+  },
+  "seam": {
+   "pairs": 210069,
+   "neg": 199042,
+   "by": [
+    {
+     "view": "budget",
+     "cause": "OCV-ZERO-LOGIC",
+     "neg": 186508,
+     "worst_ps": -221.13,
+     "launch": "t_eng__clk_t9",
+     "capture": "t_phy_hbm__clk",
+     "where": "eng->phy_hbm",
+     "clock_damage_ps": 74.3,
+     "aocv_ps": 148.0,
+     "models": [
+      "budget",
+      "budget"
+     ]
+    },
+    {
+     "view": "budget",
+     "cause": "TREE-DEPTH",
+     "neg": 9137,
+     "worst_ps": -451.11,
+     "launch": "t_fE1_p2_b0__clk_t10",
+     "capture": "t_fE1_p1_b0__clk_t6",
+     "where": "fE1_p2_b0->fE1_p1_b0",
+     "clock_damage_ps": 399.3,
+     "aocv_ps": 53.0,
+     "models": [
+      "budget",
+      "budget"
+     ]
+    },
+    {
+     "view": "budget",
+     "cause": "WIRE-SKEW",
+     "neg": 3397,
+     "worst_ps": -293.6,
+     "launch": "t_svc_6__clk_t8",
+     "capture": "t_svc_8__clk_t24",
+     "where": "svc_6->svc_8",
+     "clock_damage_ps": 154.5,
+     "aocv_ps": 140.3,
+     "models": [
+      "budget",
+      "budget"
+     ]
+    }
+   ]
+  },
+  "landed": {
+   "pairs": 240819,
+   "neg": 210901,
+   "by": [
+    {
+     "view": "budget",
+     "cause": "LANDED-REGION-LATENCY:region-tree",
+     "neg": 164633,
+     "worst_ps": -2878.71,
+     "launch": "t_svc_7__clk_t24",
+     "capture": "t_svc_6__clk_t3",
+     "where": "svc_7->svc_6",
+     "clock_damage_ps": 2002.3,
+     "aocv_ps": 877.6,
+     "models": [
+      "budget",
+      "budget"
+     ]
+    },
+    {
+     "view": "budget",
+     "cause": "LANDED-REGION-LATENCY:root-arrival",
+     "neg": 46268,
+     "worst_ps": -1658.36,
+     "launch": "t_s_3N_x06__clk_t20",
+     "capture": "t_bk_sel__clk_t28",
+     "where": "s_3N_x06->bk_sel",
+     "clock_damage_ps": 845.6,
+     "aocv_ps": 814.0,
+     "models": [
+      "budget",
+      "budget"
+     ]
+    }
+   ]
+  }
+ },
+ "FF_coverage": {
+  "core_instances_total": 18993,
+  "core_instances_real": 1941,
+  "real_by_module": {
+   "dsfd_rstg": 216,
+   "ot_s81_cfg7_seq": 864,
+   "ot_s81_sstn_payload536": 660,
+   "dsfd_node_LLd": 72,
+   "dsdv_svc_sx_hrow": 128,
+   "dsdv_gunit_l5f": 1
+  },
+  "taps_total": 7481,
+  "taps_with_real_model": 1649,
+  "kit_partitions": [],
+  "map_distance_max_um": 427.55,
+  "map_distance_real_um": [
+   22.86,
+   66.47,
+   71.66,
+   72.74,
+   72.74,
+   72.74,
+   72.74,
+   72.74,
+   72.74,
+   73.84,
+   73.84,
+   78.94,
+   83.28,
+   85.98,
+   85.98,
+   88.4,
+   88.4,
+   88.4,
+   88.4,
+   94.08,
+   96.05,
+   96.05,
+   97.43,
+   97.43,
+   99.98,
+   99.98,
+   102.72,
+   112.67,
+   112.67,
+   112.67,
+   112.67,
+   121.78,
+   121.78,
+   136.33,
+   136.33,
+   136.33,
+   136.33,
+   149.25,
+   152.06,
+   152.06,
+   152.06,
+   152.06,
+   167.97,
+   167.97,
+   171.9,
+   176.47,
+   176.47,
+   178.52,
+   178.52,
+   181.43,
+   181.43,
+   181.43,
+   181.43,
+   182.7,
+   182.7,
+   182.7,
+   182.7,
+   183.3,
+   184.97,
+   191.82,
+   212.74
+  ]
+ },
+ "nominal_INFO": false
+}

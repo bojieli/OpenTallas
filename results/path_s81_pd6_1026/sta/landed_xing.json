@@ -1,0 +1,146 @@
+{
+ "TT": {
+  "window_ps": 416.67,
+  "crossings": 489,
+  "fail_worst_tap": 200,
+  "fail_mean_tap": 86,
+  "fail_root_arrival_dominated": 8,
+  "fail_region_tree_dominated": 192,
+  "damage_max_ps": 2339.6,
+  "mean_tap_max_ps": 2052.8,
+  "worst10": [
+   {
+    "crossing": "svc_7->svc_6",
+    "damage_ps": 2339.6,
+    "d_root_ps": -414.8,
+    "d_tree_ps": -1736.5
+   },
+   {
+    "crossing": "svc_6->svc_7",
+    "damage_ps": 2339.6,
+    "d_root_ps": 414.8,
+    "d_tree_ps": 1736.5
+   },
+   {
+    "crossing": "svc_5->svc_4",
+    "damage_ps": 2240.3,
+    "d_root_ps": -414.8,
+    "d_tree_ps": -1636.9
+   },
+   {
+    "crossing": "svc_4->svc_5",
+    "damage_ps": 2240.3,
+    "d_root_ps": 414.8,
+    "d_tree_ps": 1636.9
+   },
+   {
+    "crossing": "svc_10->svc_11",
+    "damage_ps": 1921.9,
+    "d_root_ps": 152.3,
+    "d_tree_ps": 1716.8
+   },
+   {
+    "crossing": "svc_11->svc_10",
+    "damage_ps": 1921.9,
+    "d_root_ps": -152.3,
+    "d_tree_ps": -1716.8
+   },
+   {
+    "crossing": "svc_9->svc_8",
+    "damage_ps": 1915.1,
+    "d_root_ps": -152.3,
+    "d_tree_ps": -1709.8
+   },
+   {
+    "crossing": "svc_8->svc_9",
+    "damage_ps": 1915.1,
+    "d_root_ps": 152.3,
+    "d_tree_ps": 1709.8
+   },
+   {
+    "crossing": "svc_0->iqf",
+    "damage_ps": 1894.3,
+    "d_root_ps": -367.7,
+    "d_tree_ps": -1328.7
+   },
+   {
+    "crossing": "iqf->svc_0",
+    "damage_ps": 1894.3,
+    "d_root_ps": 367.7,
+    "d_tree_ps": 1328.7
+   }
+  ]
+ },
+ "FF": {
+  "window_ps": 416.67,
+  "crossings": 489,
+  "fail_worst_tap": 153,
+  "fail_mean_tap": 46,
+  "fail_root_arrival_dominated": 4,
+  "fail_region_tree_dominated": 149,
+  "damage_max_ps": 2036.2,
+  "mean_tap_max_ps": 1779.4,
+  "worst10": [
+   {
+    "crossing": "svc_7->svc_6",
+    "damage_ps": 2036.2,
+    "d_root_ps": -367.3,
+    "d_tree_ps": -1498.9
+   },
+   {
+    "crossing": "svc_6->svc_7",
+    "damage_ps": 2036.2,
+    "d_root_ps": 367.3,
+    "d_tree_ps": 1498.9
+   },
+   {
+    "crossing": "svc_5->svc_4",
+    "damage_ps": 1946.3,
+    "d_root_ps": -367.3,
+    "d_tree_ps": -1408.4
+   },
+   {
+    "crossing": "svc_4->svc_5",
+    "damage_ps": 1946.3,
+    "d_root_ps": 367.3,
+    "d_tree_ps": 1408.4
+   },
+   {
+    "crossing": "svc_10->svc_11",
+    "damage_ps": 1661.8,
+    "d_root_ps": 132.6,
+    "d_tree_ps": 1481.8
+   },
+   {
+    "crossing": "svc_11->svc_10",
+    "damage_ps": 1661.8,
+    "d_root_ps": -132.6,
+    "d_tree_ps": -1481.8
+   },
+   {
+    "crossing": "svc_0->iqf",
+    "damage_ps": 1657.2,
+    "d_root_ps": -330.8,
+    "d_tree_ps": -1147.5
+   },
+   {
+    "crossing": "iqf->svc_0",
+    "damage_ps": 1657.2,
+    "d_root_ps": 330.8,
+    "d_tree_ps": 1147.5
+   },
+   {
+    "crossing": "svc_9->svc_8",
+    "damage_ps": 1654.4,
+    "d_root_ps": -132.6,
+    "d_tree_ps": -1474.0
+   },
+   {
+    "crossing": "svc_8->svc_9",
+    "damage_ps": 1654.4,
+    "d_root_ps": 132.6,
+    "d_tree_ps": 1474.0
+   }
+  ]
+ }
+}

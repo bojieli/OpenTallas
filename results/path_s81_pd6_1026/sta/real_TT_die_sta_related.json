@@ -1,0 +1,847 @@
+{
+ "proof": "/srv/opentallas-scratch2/claude/path-s81-pd6-1026/sta/proof",
+ "timed_dir": "/srv/opentallas-scratch2/claude/path-s81-pd6-1026/sta/proof",
+ "plan": "/srv/opentallas-scratch2/claude/path-s81-pd5-1026/src_b2c/die_plan_pd5_composed.json",
+ "period_ps": 833.333,
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "gate": "METHODOLOGY 12.4a v4.3: TT setup >= 0 and FF hold >= 0 on every related pair; CPPR at last common tree node (12.4b); skew = DIAGNOSTIC",
+ "block_model": {
+  "label": "real-view (11 core views, 0 kits) + declared-budget rest",
+  "core_latency_ps": {
+   "TT": 250.0,
+   "FF": 250.0
+  },
+  "cancels": "same declared latency both sides",
+  "core_tol_sensitivity_ps": 20.0,
+  "register": "DFFHQNx1_ASAP7_75t_R",
+  "seam_wire": {
+   "um": 40.0,
+   "ff_per_um": 0.15,
+   "applied": "setup only"
+  },
+  "kits_found": 0,
+  "core_views_found": 11,
+  "declared_latency_ps": {
+   "TT": 250.0,
+   "FF": 202.5
+  },
+  "core_part_delay_ps": 0.0
+ },
+ "corners": {
+  "TT": {
+   "basis": "S81 combo die GRT incl clock (die_trial region trees, routed GRT RC, estimate_parasitics -global_routing), PATH-S81-PD6 converter",
+   "tap_slew_max_ps": 156.48,
+   "register": {
+    "key": {
+     "corner": "TT",
+     "slew_ps": 156.484,
+     "load_ff": 6.0,
+     "cell": "DFFHQNx1_ASAP7_75t_R",
+     "image": "openroad/orfs:asap7lock"
+    },
+    "clkq_max_wire_ps": 103.797,
+    "clkq_min_nowire_ps": 72.058,
+    "setup_ps": 6.003,
+    "hold_ps": 33.572,
+    "note": "OpenSTA DFFHQNx1_ASAP7_75t_R, ideal clock at max tap slew; setup = -(library setup term), hold = library hold"
+   },
+   "classes": {
+    "intra": {
+     "pairs": 182950,
+     "worst_setup_slack_ps": -2.09,
+     "setup_neg_pairs": 2,
+     "worst_setup": {
+      "launch": "t_lk_ES0__clk_t2",
+      "capture": "t_lk_ES0__clk_t6",
+      "where": "lk_ES0",
+      "clock_damage_ps": 586.48,
+      "cppr_ps": 166.71
+     },
+     "worst_hold_slack_ps": -652.14,
+     "hold_neg_pairs": 167248,
+     "worst_hold": {
+      "launch": "t_lk_ES0__clk_t6",
+      "capture": "t_lk_ES0__clk_t2",
+      "where": "lk_ES0",
+      "clock_damage_ps": 586.48,
+      "cppr_ps": 166.71
+     },
+     "skew_diag_max_ps": 586.48,
+     "skew_diag_over_80": 12514,
+     "sens_core_tol": {
+      "tol_ps": 20.0,
+      "worst_setup_slack_ps": -42.09,
+      "worst_hold_slack_ps": -692.14
+     },
+     "worst_skew": [
+      [
+       586.48,
+       "t_lk_ES0__clk_t6",
+       "t_lk_ES0__clk_t2"
+      ],
+      [
+       586.48,
+       "t_lk_ES0__clk_t2",
+       "t_lk_ES0__clk_t6"
+      ],
+      [
+       584.18,
+       "t_lk_ES0__clk_t7",
+       "t_lk_ES0__clk_t2"
+      ],
+      [
+       584.18,
+       "t_lk_ES0__clk_t2",
+       "t_lk_ES0__clk_t7"
+      ],
+      [
+       577.1,
+       "t_lk_ES0__clk_t6",
+       "t_lk_ES0__clk_t3"
+      ]
+     ],
+     "real_view": {
+      "pairs_with_real_endpoint": 46234,
+      "pairs_both_real": 18122,
+      "pairs_total": 182950,
+      "setup_neg_pairs": 0,
+      "hold_neg_pairs": 10881,
+      "worst_setup_slack_ps": 25.48,
+      "worst_hold_slack_ps": -319.93,
+      "worst_setup": {
+       "launch": "t_fE1_p2_b0__clk_t4",
+       "capture": "t_fE1_p2_b0__clk_t11",
+       "where": "fE1_p2_b0",
+       "launch_model": "core:ot_s81_cfg7_seq",
+       "capture_model": "core:dsfd_node_NNfd"
+      },
+      "worst_hold": {
+       "launch": "t_fE1_p2_b0__clk_t11",
+       "capture": "t_fE1_p2_b0__clk_t4",
+       "where": "fE1_p2_b0",
+       "launch_model": "core:dsfd_rstg",
+       "capture_model": "budget",
+       "clock_damage_ps": 354.19
+      },
+      "both_real": {
+       "setup_neg_pairs": 0,
+       "hold_neg_pairs": 483,
+       "worst_setup_slack_ps": 25.48,
+       "worst_hold_slack_ps": -222.46,
+       "worst_setup": {
+        "launch": "t_fE1_p2_b0__clk_t4",
+        "capture": "t_fE1_p2_b0__clk_t11",
+        "where": "fE1_p2_b0",
+        "launch_model": "core:ot_s81_cfg7_seq",
+        "capture_model": "core:dsfd_node_NNfd",
+        "clock_damage_ps": 354.19
+       },
+       "worst_hold": {
+        "launch": "t_fE1_p2_b0__clk_t11",
+        "capture": "t_fE1_p2_b0__clk_t4",
+        "where": "fE1_p2_b0",
+        "launch_model": "core:dsfd_rstg",
+        "capture_model": "core:ot_s81_cfg7_seq",
+        "clock_damage_ps": 354.19
+       }
+      }
+     },
+     "clock_ocv_pessimism_max_ps": {
+      "setup": 159.44,
+      "hold": 159.44
+     },
+     "label": "real-view+budget"
+    },
+    "intra_cross_region": {
+     "pairs": 0,
+     "label": "real-view+budget"
+    },
+    "seam": {
+     "pairs": 210069,
+     "worst_setup_slack_ps": -49.83,
+     "setup_neg_pairs": 11,
+     "worst_setup": {
+      "launch": "t_fE1_p1_b0__clk_t2",
+      "capture": "t_fE1_p2_b0__clk_t11",
+      "where": "fE1_p1_b0->fE1_p2_b0",
+      "clock_damage_ps": 421.95,
+      "cppr_ps": 173.24
+     },
+     "worst_hold_slack_ps": -510.54,
+     "hold_neg_pairs": 196791,
+     "worst_hold": {
+      "launch": "t_fE1_p2_b0__clk_t10",
+      "capture": "t_fE1_p1_b0__clk_t6",
+      "where": "fE1_p2_b0->fE1_p1_b0",
+      "clock_damage_ps": 462.38,
+      "cppr_ps": 173.24
+     },
+     "skew_diag_max_ps": 462.38,
+     "skew_diag_over_80": 30736,
+     "sens_core_tol": {
+      "tol_ps": 20.0,
+      "worst_setup_slack_ps": -89.83,
+      "worst_hold_slack_ps": -550.54
+     },
+     "worst_skew": [
+      [
+       462.38,
+       "t_fE1_p2_b0__clk_t10",
+       "t_fE1_p1_b0__clk_t6"
+      ],
+      [
+       462.38,
+       "t_fE1_p1_b0__clk_t6",
+       "t_fE1_p2_b0__clk_t10"
+      ],
+      [
+       452.91,
+       "t_fW1_p2_b0__clk_t10",
+       "t_fW1_p1_b0__clk_t6"
+      ],
+      [
+       452.91,
+       "t_fW1_p1_b0__clk_t6",
+       "t_fW1_p2_b0__clk_t10"
+      ],
+      [
+       451.65,
+       "t_fE1_p2_b0__clk_t11",
+       "t_fE1_p1_b0__clk_t6"
+      ]
+     ],
+     "real_view": {
+      "pairs_with_real_endpoint": 53885,
+      "pairs_both_real": 21220,
+      "pairs_total": 210069,
+      "setup_neg_pairs": 11,
+      "hold_neg_pairs": 25001,
+      "worst_setup_slack_ps": -49.83,
+      "worst_hold_slack_ps": -425.56,
+      "worst_setup": {
+       "launch": "t_fE1_p1_b0__clk_t2",
+       "capture": "t_fE1_p2_b0__clk_t11",
+       "where": "fE1_p1_b0->fE1_p2_b0",
+       "launch_model": "core:ot_s81_cfg7_seq",
+       "capture_model": "core:dsfd_node_NNfd"
+      },
+      "worst_hold": {
+       "launch": "t_fE1_p2_b0__clk_t11",
+       "capture": "t_fE1_p1_b0__clk_t6",
+       "where": "fE1_p2_b0->fE1_p1_b0",
+       "launch_model": "core:dsfd_rstg",
+       "capture_model": "budget",
+       "clock_damage_ps": 451.65
+      },
+      "both_real": {
+       "setup_neg_pairs": 11,
+       "hold_neg_pairs": 1959,
+       "worst_setup_slack_ps": -49.83,
+       "worst_hold_slack_ps": -330.69,
+       "worst_setup": {
+        "launch": "t_fE1_p1_b0__clk_t2",
+        "capture": "t_fE1_p2_b0__clk_t11",
+        "where": "fE1_p1_b0->fE1_p2_b0",
+        "launch_model": "core:ot_s81_cfg7_seq",
+        "capture_model": "core:dsfd_node_NNfd",
+        "clock_damage_ps": 421.95
+       },
+       "worst_hold": {
+        "launch": "t_fE1_p2_b0__clk_t11",
+        "capture": "t_fE1_p1_b0__clk_t7",
+        "where": "fE1_p2_b0->fE1_p1_b0",
+        "launch_model": "core:dsfd_rstg",
+        "capture_model": "core:dsfd_rstg",
+        "clock_damage_ps": 406.77
+       }
+      }
+     },
+     "clock_ocv_pessimism_max_ps": {
+      "setup": 177.66,
+      "hold": 177.66
+     },
+     "label": "real-view+budget"
+    },
+    "landed": {
+     "pairs": 240819,
+     "worst_setup_slack_ps": -2891.73,
+     "setup_neg_pairs": 64529,
+     "worst_setup": {
+      "launch": "t_svc_6__clk_t15",
+      "capture": "t_svc_7__clk_t15",
+      "where": "svc_6->svc_7",
+      "clock_damage_ps": 2298.79,
+      "cppr_ps": 0.43
+     },
+     "worst_hold_slack_ps": -3347.29,
+     "hold_neg_pairs": 209706,
+     "worst_hold": {
+      "launch": "t_svc_7__clk_t24",
+      "capture": "t_svc_6__clk_t3",
+      "where": "svc_7->svc_6",
+      "clock_damage_ps": 2294.43,
+      "cppr_ps": 0.43
+     },
+     "skew_diag_max_ps": 2339.6,
+     "skew_diag_over_80": 209463,
+     "sens_core_tol": {
+      "tol_ps": 20.0,
+      "worst_setup_slack_ps": -2931.73,
+      "worst_hold_slack_ps": -3387.29
+     },
+     "worst_skew": [
+      [
+       2339.6,
+       "t_svc_7__clk_t27",
+       "t_svc_6__clk_t27"
+      ],
+      [
+       2339.6,
+       "t_svc_6__clk_t27",
+       "t_svc_7__clk_t27"
+      ],
+      [
+       2339.36,
+       "t_svc_7__clk_t24",
+       "t_svc_6__clk_t27"
+      ],
+      [
+       2339.36,
+       "t_svc_6__clk_t27",
+       "t_svc_7__clk_t24"
+      ],
+      [
+       2336.24,
+       "t_svc_7__clk",
+       "t_svc_6__clk_t27"
+      ]
+     ],
+     "real_view": {
+      "pairs_with_real_endpoint": 67548,
+      "pairs_both_real": 18530,
+      "pairs_total": 240819,
+      "setup_neg_pairs": 22282,
+      "hold_neg_pairs": 54050,
+      "worst_setup_slack_ps": -2891.73,
+      "worst_hold_slack_ps": -3269.19,
+      "worst_setup": {
+       "launch": "t_svc_6__clk_t15",
+       "capture": "t_svc_7__clk_t15",
+       "where": "svc_6->svc_7",
+       "launch_model": "core:dsdv_svc_sx_hrow",
+       "capture_model": "core:dsdv_svc_sx_hrow"
+      },
+      "worst_hold": {
+       "launch": "t_svc_7__clk_t15",
+       "capture": "t_svc_6__clk_t3",
+       "where": "svc_7->svc_6",
+       "launch_model": "core:dsdv_svc_sx_hrow",
+       "capture_model": "budget",
+       "clock_damage_ps": 2288.12
+      },
+      "both_real": {
+       "setup_neg_pairs": 5081,
+       "hold_neg_pairs": 12215,
+       "worst_setup_slack_ps": -2891.73,
+       "worst_hold_slack_ps": -3158.94,
+       "worst_setup": {
+        "launch": "t_svc_6__clk_t15",
+        "capture": "t_svc_7__clk_t15",
+        "where": "svc_6->svc_7",
+        "launch_model": "core:dsdv_svc_sx_hrow",
+        "capture_model": "core:dsdv_svc_sx_hrow",
+        "clock_damage_ps": 2298.79
+       },
+       "worst_hold": {
+        "launch": "t_svc_7__clk_t15",
+        "capture": "t_svc_6__clk_t15",
+        "where": "svc_7->svc_6",
+        "launch_model": "core:dsdv_svc_sx_hrow",
+        "capture_model": "core:dsdv_svc_sx_hrow",
+        "clock_damage_ps": 2298.79
+       }
+      }
+     },
+     "clock_ocv_pessimism_max_ps": {
+      "setup": 1142.3,
+      "hold": 1142.3
+     },
+     "plan_landing": {
+      "window_ps": 416.67,
+      "setup_margin_ps": -1922.94,
+      "hold_margin_ps": -1922.94,
+      "damage_max_ps": 2339.6,
+      "verdict": "FAIL",
+      "note": "plan-defined landed/forwarded hop: region-to-region clock damage vs landing window; single-cycle slacks above are INFO for landed pairs"
+     },
+     "label": "real-view+budget"
+    }
+   },
+   "real_view_coverage": {
+    "core_instances_total": 18993,
+    "core_instances_real": 3982,
+    "real_by_module": {
+     "dsfd_node_LLfu": 516,
+     "dsfd_node_NNfu": 504,
+     "dsfd_node_LLfd": 504,
+     "dsfd_node_NNfd": 516,
+     "dsfd_rstg": 216,
+     "ot_s81_cfg7_seq": 864,
+     "ot_s81_sstn_payload536": 660,
+     "dsfd_node_LLd": 72,
+     "dsdv_svc_sx_hrow": 128,
+     "dsdv_gunit_l5f": 1,
+     "dsdv_gunit_l4r": 1
+    },
+    "taps_total": 7481,
+    "taps_with_real_model": 2094,
+    "kit_partitions": [],
+    "core_models": {
+     "dsdv_gunit_l5f": {
+      "lib": "/srv/opentallas-scratch2/claude/path-s81-pd6-1026/sta/views/dsdv_gunit_l5f/dsdv_gunit_l5f_tt.lib",
+      "clock_pin": "clk",
+      "load_ff": 6.0,
+      "clock_tree_path_ps": {
+       "min_clock_tree_path": 237.98518,
+       "max_clock_tree_path": 270.58057
+      },
+      "out_max_ps": 399.742,
+      "out_max_pin": "yd_y[16]",
+      "out_min_ps": 376.034,
+      "out_min_pin": "ye_v",
+      "in_setup_ps": -102.439,
+      "in_setup_pin": "xe_x[31]",
+      "in_hold_ps": 152.931,
+      "in_hold_pin": "xd_b[24]",
+      "arcs": {
+       "out": 136,
+       "setup": 133,
+       "hold": 133
+      },
+      "other_timing_types": [],
+      "meta": {},
+      "part_delay_ps": 0.0
+     },
+     "dsdv_svc_sx_hrow": {
+      "lib": "/srv/opentallas-scratch2/claude/path-s81-pd6-1026/sta/views/dsdv_svc_sx_hrow/dsdv_svc_sx_hrow_tt.lib",
+      "clock_pin": "ck",
+      "load_ff": 6.0,
+      "clock_tree_path_ps": {
+       "min_clock_tree_path": 243.81348,
+       "max_clock_tree_path": 315.63547
+      },
+      "out_max_ps": 442.623,
+      "out_max_pin": "go_w[251]",
+      "out_min_ps": 392.244,
+      "out_min_pin": "rt_o[184]",
+      "in_setup_ps": -114.442,
+      "in_setup_pin": "gi_e[225]",
+      "in_hold_ps": 189.301,
+      "in_hold_pin": "si_w[46]",
+      "arcs": {
+       "out": 3884,
+       "setup": 3815,
+       "hold": 3815
+      },
+      "other_timing_types": [],
+      "meta": {},
+      "part_delay_ps": 0.0
+     },
+     "dsfd_node_LLd": {
+      "lib": "/srv/opentallas-scratch2/claude/path-s81-pd6-1026/sta/views/dsfd_node_LLd/dsfd_node_LLd_tt.lib",
+      "clock_pin": "clk[0]",
+      "load_ff": 6.0,
+      "clock_tree_path_ps": {
+       "min_clock_tree_path": 246.48833,
+       "max_clock_tree_path": 276.88745
+      },
+      "out_max_ps": 430.822,
+      "out_max_pin": "o[64]",
+      "out_min_ps": 409.738,
+      "out_min_pin": "o[46]",
+      "in_setup_ps": -124.029,
+      "in_setup_pin": "b[46]",
+      "in_hold_ps": 175.763,
+      "in_hold_pin": "a[13]",
+      "arcs": {
+       "out": 134,
+       "setup": 253,
+       "hold": 253
+      },
+      "other_timing_types": [],
+      "meta": {},
+      "part_delay_ps": 0.0
+     },
+     "ot_s81_cfg7_seq": {
+      "lib": "/srv/opentallas-scratch2/claude/path-s81-pd6-1026/sta/views/ot_s81_cfg7_seq/ot_s81_cfg7_seq_tt.lib",
+      "clock_pin": "clk[0]",
+      "load_ff": 6.0,
+      "clock_tree_path_ps": {
+       "min_clock_tree_path": 255.42712,
+       "max_clock_tree_path": 281.2644
+      },
+      "out_max_ps": 461.25,
+      "out_max_pin": "a[3]",
+      "out_min_ps": 412.754,
+      "out_min_pin": "st[1]",
+      "in_setup_ps": -134.454,
+      "in_setup_pin": "q5[28]",
+      "in_hold_ps": 186.109,
+      "in_hold_pin": "q0[34]",
+      "arcs": {
+       "out": 156,
+       "setup": 707,
+       "hold": 707
+      },
+      "other_timing_types": [],
+      "meta": {},
+      "part_delay_ps": 0.0
+     },
+     "dsfd_rstg": {
+      "lib": "/srv/opentallas-scratch2/claude/path-s81-pd6-1026/sta/views/dsfd_rstg/dsfd_rstg_tt.lib",
+      "clock_pin": "ck[0]",
+      "load_ff": 6.0,
+      "clock_tree_path_ps": {
+       "min_clock_tree_path": 245.33958,
+       "max_clock_tree_path": 261.46585
+      },
+      "out_max_ps": 412.32,
+      "out_max_pin": "o[0]",
+      "out_min_ps": 395.752,
+      "out_min_pin": "o[24]",
+      "in_setup_ps": -177.839,
+      "in_setup_pin": "i[0]",
+      "in_hold_ps": 233.45,
+      "in_hold_pin": "i[1]",
+      "arcs": {
+       "out": 132,
+       "setup": 133,
+       "hold": 133
+      },
+      "other_timing_types": [],
+      "meta": {},
+      "part_delay_ps": 0.0
+     },
+     "ot_s81_sstn_payload536": {
+      "lib": "/srv/opentallas-scratch2/claude/path-s81-pd6-1026/sta/views/ot_s81_sstn_payload536/ot_s81_sstn_payload536_tt.lib",
+      "clock_pin": "ck",
+      "load_ff": 6.0,
+      "clock_tree_path_ps": {
+       "min_clock_tree_path": 265.13654,
+       "max_clock_tree_path": 288.02222
+      },
+      "out_max_ps": 403.425,
+      "out_max_pin": "o[370]",
+      "out_min_ps": 377.777,
+      "out_min_pin": "o[154]",
+      "in_setup_ps": -163.957,
+      "in_setup_pin": "i[4]",
+      "in_hold_ps": 224.0,
+      "in_hold_pin": "i[232]",
+      "arcs": {
+       "out": 1072,
+       "setup": 1073,
+       "hold": 1073
+      },
+      "other_timing_types": [],
+      "meta": {},
+      "part_delay_ps": 0.0
+     },
+     "dsdv_gunit_l4r": {
+      "lib": "/srv/opentallas-scratch2/claude/path-s81-pd6-1026/sta/views/dsdv_gunit_l4r/dsdv_gunit_l4r_tt.lib",
+      "clock_pin": "clk",
+      "load_ff": 6.0,
+      "clock_tree_path_ps": {
+       "min_clock_tree_path": 244.7374,
+       "max_clock_tree_path": 288.11813
+      },
+      "out_max_ps": 400.735,
+      "out_max_pin": "r_y[11]",
+      "out_min_ps": 379.929,
+      "out_min_pin": "r_v",
+      "in_setup_ps": -113.463,
+      "in_setup_pin": "rst_n",
+      "in_hold_ps": 164.065,
+      "in_hold_pin": "ss[29]",
+      "arcs": {
+       "out": 68,
+       "setup": 131,
+       "hold": 131
+      },
+      "other_timing_types": [],
+      "meta": {},
+      "part_delay_ps": 0.0
+     },
+     "dsfd_node_LLfd": {
+      "lib": "/srv/opentallas-scratch2/claude/path-s81-pd6-1026/sta/views/dsfd_node_LLfd/dsfd_node_LLfd_tt.lib",
+      "clock_pin": "clk[0]",
+      "load_ff": 6.0,
+      "clock_tree_path_ps": {
+       "min_clock_tree_path": 245.97997,
+       "max_clock_tree_path": 277.43292
+      },
+      "out_max_ps": 423.168,
+      "out_max_pin": "o[41]",
+      "out_min_ps": 401.337,
+      "out_min_pin": "o[53]",
+      "in_setup_ps": -122.93,
+      "in_setup_pin": "a[3]",
+      "in_hold_ps": 179.363,
+      "in_hold_pin": "b[53]",
+      "arcs": {
+       "out": 134,
+       "setup": 255,
+       "hold": 255
+      },
+      "other_timing_types": [],
+      "meta": {},
+      "part_delay_ps": 0.0
+     },
+     "dsfd_node_LLfu": {
+      "lib": "/srv/opentallas-scratch2/claude/path-s81-pd6-1026/sta/views/dsfd_node_LLfu/dsfd_node_LLfu_tt.lib",
+      "clock_pin": "clk[0]",
+      "load_ff": 6.0,
+      "clock_tree_path_ps": {
+       "min_clock_tree_path": 249.74329,
+       "max_clock_tree_path": 277.74573
+      },
+      "out_max_ps": 428.228,
+      "out_max_pin": "o[42]",
+      "out_min_ps": 405.015,
+      "out_min_pin": "fo[0]",
+      "in_setup_ps": -123.196,
+      "in_setup_pin": "a[45]",
+      "in_hold_ps": 174.658,
+      "in_hold_pin": "b[15]",
+      "arcs": {
+       "out": 134,
+       "setup": 255,
+       "hold": 255
+      },
+      "other_timing_types": [],
+      "meta": {},
+      "part_delay_ps": 0.0
+     },
+     "dsfd_node_NNfd": {
+      "lib": "/srv/opentallas-scratch2/claude/path-s81-pd6-1026/sta/views/dsfd_node_NNfd/dsfd_node_NNfd_tt.lib",
+      "clock_pin": "clk[0]",
+      "load_ff": 6.0,
+      "clock_tree_path_ps": {
+       "min_clock_tree_path": 244.81483,
+       "max_clock_tree_path": 286.65924
+      },
+      "out_max_ps": 422.698,
+      "out_max_pin": "o[0]",
+      "out_min_ps": 406.347,
+      "out_min_pin": "o[27]",
+      "in_setup_ps": -120.499,
+      "in_setup_pin": "b[0]",
+      "in_hold_ps": 188.283,
+      "in_hold_pin": "a[56]",
+      "arcs": {
+       "out": 134,
+       "setup": 267,
+       "hold": 267
+      },
+      "other_timing_types": [],
+      "meta": {},
+      "part_delay_ps": 0.0
+     },
+     "dsfd_node_NNfu": {
+      "lib": "/srv/opentallas-scratch2/claude/path-s81-pd6-1026/sta/views/dsfd_node_NNfu/dsfd_node_NNfu_tt.lib",
+      "clock_pin": "clk[0]",
+      "load_ff": 6.0,
+      "clock_tree_path_ps": {
+       "min_clock_tree_path": 246.56299,
+       "max_clock_tree_path": 284.86951
+      },
+      "out_max_ps": 417.565,
+      "out_max_pin": "o[27]",
+      "out_min_ps": 403.129,
+      "out_min_pin": "o[14]",
+      "in_setup_ps": -125.134,
+      "in_setup_pin": "a[25]",
+      "in_hold_ps": 186.416,
+      "in_hold_pin": "b[9]",
+      "arcs": {
+       "out": 134,
+       "setup": 267,
+       "hold": 267
+      },
+      "other_timing_types": [],
+      "meta": {},
+      "part_delay_ps": 0.0
+     }
+    },
+    "map_distance_max_um": 427.55,
+    "map_distance_real_um": [
+     22.86,
+     31.34,
+     31.34,
+     48.96,
+     48.96,
+     51.57,
+     51.57,
+     51.57,
+     61.98,
+     61.98,
+     68.39,
+     71.78,
+     72.74,
+     72.74,
+     72.74,
+     72.74,
+     72.74,
+     72.74,
+     73.84,
+     73.84,
+     74.62,
+     74.62,
+     74.82,
+     74.82,
+     78.94,
+     78.94,
+     81.49,
+     81.49,
+     83.28,
+     85.29,
+     85.29,
+     85.98,
+     85.98,
+     88.4,
+     88.4,
+     88.4,
+     88.4,
+     89.74,
+     89.82,
+     89.82,
+     90.93,
+     90.93,
+     94.08,
+     96.05,
+     96.05,
+     97.43,
+     97.43,
+     98.97,
+     98.97,
+     99.98,
+     99.98,
+     102.76,
+     104.63,
+     106.23,
+     108.41,
+     108.89,
+     108.89,
+     112.67,
+     112.67,
+     112.67,
+     112.67,
+     116.79,
+     119.89,
+     119.89,
+     121.78,
+     121.78,
+     122.07,
+     122.07,
+     123.2,
+     124.32,
+     124.32,
+     128.09,
+     128.09,
+     134.91,
+     134.91,
+     135.62,
+     136.33,
+     136.33,
+     136.33,
+     136.33,
+     140.65,
+     141.22,
+     141.22,
+     141.67,
+     141.67,
+     141.67,
+     143.48,
+     143.48,
+     144.99,
+     145.7,
+     145.7,
+     148.09,
+     148.09,
+     149.25,
+     152.06,
+     152.06,
+     152.06,
+     152.06,
+     155.57,
+     155.57,
+     160.4,
+     163.21,
+     167.97,
+     167.97,
+     171.9,
+     176.47,
+     176.47,
+     177.09,
+     178.52,
+     178.52,
+     181.43,
+     181.43,
+     181.43,
+     181.43,
+     182.7,
+     182.7,
+     182.7,
+     182.7,
+     183.22,
+     184.97,
+     187.22,
+     187.22,
+     191.82,
+     191.82,
+     212.74
+    ]
+   },
+   "clock_ocv": {
+    "mode": "table",
+    "droop": "shared",
+    "status": "DRAFT 12.4a b1, UNCHECKED, not a gate"
+   }
+  }
+ },
+ "coverage": {
+  "partitions_with_taps": 398,
+  "connected_part_pairs": 967,
+  "uncovered_bits": {}
+ },
+ "summary": {
+  "intra": {
+   "tt_setup_ps": -2.09,
+   "ff_hold_ps": null,
+   "verdict": "FAIL",
+   "real_view": {
+    "pairs": "46234/182950",
+    "tt_setup_ps": 25.48,
+    "ff_hold_ps": null
+   }
+  },
+  "seam": {
+   "tt_setup_ps": -49.83,
+   "ff_hold_ps": null,
+   "verdict": "FAIL",
+   "real_view": {
+    "pairs": "53885/210069",
+    "tt_setup_ps": -49.83,
+    "ff_hold_ps": null
+   }
+  },
+  "landed": {
+   "tt_setup_margin_ps": -1922.94,
+   "ff_hold_margin_ps": null,
+   "verdict": "FAIL"
+  },
+  "status": "UNCHECKED (NUMBER-CHECK pending)",
+  "label": "real-view (11 core views, 0 kits) + declared-budget rest"
+ }
+}

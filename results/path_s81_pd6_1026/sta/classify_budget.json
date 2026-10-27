@@ -1,0 +1,207 @@
+{
+ "TT_setup": {
+  "intra": {
+   "pairs": 182950,
+   "neg": 2,
+   "by": [
+    {
+     "view": "budget",
+     "cause": "TREE-DEPTH",
+     "neg": 2,
+     "worst_ps": -2.09,
+     "launch": "t_lk_ES0__clk_t2",
+     "capture": "t_lk_ES0__clk_t6",
+     "where": "lk_ES0",
+     "clock_damage_ps": 586.5,
+     "aocv_ps": 79.1,
+     "models": [
+      "budget",
+      "budget"
+     ]
+    }
+   ]
+  },
+  "seam": {
+   "pairs": 210069,
+   "neg": 0,
+   "by": []
+  },
+  "landed": {
+   "pairs": 240819,
+   "neg": 55806,
+   "by": [
+    {
+     "view": "budget",
+     "cause": "LANDED-REGION-LATENCY:region-tree",
+     "neg": 48281,
+     "worst_ps": -2697.25,
+     "launch": "t_svc_6__clk_t3",
+     "capture": "t_svc_7__clk_t24",
+     "where": "svc_6->svc_7",
+     "clock_damage_ps": 2294.4,
+     "aocv_ps": 1066.3,
+     "models": [
+      "budget",
+      "budget"
+     ]
+    },
+    {
+     "view": "budget",
+     "cause": "LANDED-REGION-LATENCY:root-arrival",
+     "neg": 7525,
+     "worst_ps": -1293.76,
+     "launch": "t_bk_sel__clk_t28",
+     "capture": "t_s_3N_x06__clk_t20",
+     "where": "bk_sel->s_3N_x06",
+     "clock_damage_ps": 969.0,
+     "aocv_ps": 988.3,
+     "models": [
+      "budget",
+      "budget"
+     ]
+    }
+   ]
+  }
+ },
+ "FF_hold": {
+  "intra": {
+   "pairs": 182950,
+   "neg": 173154,
+   "by": [
+    {
+     "view": "budget",
+     "cause": "OCV-ZERO-LOGIC",
+     "neg": 168454,
+     "worst_ps": -215.27,
+     "launch": "t_svc_8__clk_t19",
+     "capture": "t_svc_8__clk_t24",
+     "where": "svc_8",
+     "clock_damage_ps": 79.3,
+     "aocv_ps": 137.2,
+     "models": [
+      "budget",
+      "budget"
+     ]
+    },
+    {
+     "view": "budget",
+     "cause": "TREE-DEPTH",
+     "neg": 3165,
+     "worst_ps": -584.2,
+     "launch": "t_lk_ES0__clk_t6",
+     "capture": "t_lk_ES0__clk_t2",
+     "where": "lk_ES0",
+     "clock_damage_ps": 516.9,
+     "aocv_ps": 68.5,
+     "models": [
+      "budget",
+      "budget"
+     ]
+    },
+    {
+     "view": "budget",
+     "cause": "WIRE-SKEW",
+     "neg": 1535,
+     "worst_ps": -267.09,
+     "launch": "t_bk_sel__clk_t21",
+     "capture": "t_bk_sel__clk_t17",
+     "where": "bk_sel",
+     "clock_damage_ps": 222.9,
+     "aocv_ps": 45.4,
+     "models": [
+      "budget",
+      "budget"
+     ]
+    }
+   ]
+  },
+  "seam": {
+   "pairs": 210069,
+   "neg": 199042,
+   "by": [
+    {
+     "view": "budget",
+     "cause": "OCV-ZERO-LOGIC",
+     "neg": 186508,
+     "worst_ps": -221.13,
+     "launch": "t_eng__clk_t9",
+     "capture": "t_phy_hbm__clk",
+     "where": "eng->phy_hbm",
+     "clock_damage_ps": 74.3,
+     "aocv_ps": 148.0,
+     "models": [
+      "budget",
+      "budget"
+     ]
+    },
+    {
+     "view": "budget",
+     "cause": "TREE-DEPTH",
+     "neg": 9137,
+     "worst_ps": -451.11,
+     "launch": "t_fE1_p2_b0__clk_t10",
+     "capture": "t_fE1_p1_b0__clk_t6",
+     "where": "fE1_p2_b0->fE1_p1_b0",
+     "clock_damage_ps": 399.3,
+     "aocv_ps": 53.0,
+     "models": [
+      "budget",
+      "budget"
+     ]
+    },
+    {
+     "view": "budget",
+     "cause": "WIRE-SKEW",
+     "neg": 3397,
+     "worst_ps": -293.6,
+     "launch": "t_svc_6__clk_t8",
+     "capture": "t_svc_8__clk_t24",
+     "where": "svc_6->svc_8",
+     "clock_damage_ps": 154.5,
+     "aocv_ps": 140.3,
+     "models": [
+      "budget",
+      "budget"
+     ]
+    }
+   ]
+  },
+  "landed": {
+   "pairs": 240819,
+   "neg": 210901,
+   "by": [
+    {
+     "view": "budget",
+     "cause": "LANDED-REGION-LATENCY:region-tree",
+     "neg": 164633,
+     "worst_ps": -2878.71,
+     "launch": "t_svc_7__clk_t24",
+     "capture": "t_svc_6__clk_t3",
+     "where": "svc_7->svc_6",
+     "clock_damage_ps": 2002.3,
+     "aocv_ps": 877.6,
+     "models": [
+      "budget",
+      "budget"
+     ]
+    },
+    {
+     "view": "budget",
+     "cause": "LANDED-REGION-LATENCY:root-arrival",
+     "neg": 46268,
+     "worst_ps": -1658.36,
+     "launch": "t_s_3N_x06__clk_t20",
+     "capture": "t_bk_sel__clk_t28",
+     "where": "s_3N_x06->bk_sel",
+     "clock_damage_ps": 845.6,
+     "aocv_ps": 814.0,
+     "models": [
+      "budget",
+      "budget"
+     ]
+    }
+   ]
+  }
+ },
+ "nominal_INFO": false
+}

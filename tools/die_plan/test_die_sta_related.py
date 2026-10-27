@@ -39,3 +39,118 @@ def test_windows_read_from_plan():
     assert w["intra"]["ps"] == 80.0 and w["seam"]["ps"] == 80.0 and "clock.tap_window" in w["intra"]["basis"]
     wi = R.kit_windows(dict(tap_window=dict(window_ps=80)), 120.0)
     assert wi["intra"]["ps"] == 120.0 and "WHAT-IF" in wi["intra"]["basis"]
+
+
+# ---- REAL VIEWS (CLOCK-KV-R16, opt-in)
+ETM = """library (t) {
+  cell ("c") {
+    bus("ck") {
+    pin("ck[0]") {
+      direction : input;
+      clock : true;
+      timing() {
+        timing_type : min_clock_tree_path;
+        cell_rise(scalar) {
+          values("260.0");
+        }
+      }
+      timing() {
+        timing_type : max_clock_tree_path;
+        cell_rise(scalar) {
+          values("300.0");
+        }
+      }
+    }
+    }
+    pin("d[0]") {
+      direction : input;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("120.0");
+        }
+        fall_constraint(scalar) {
+          values("125.0");
+        }
+      }
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("-90.0");
+        }
+      }
+    }
+    pin("q[0]") {
+      direction : output;
+      timing() {
+        related_pin : "ck[0]";
+        timing_type : rising_edge;
+        cell_rise(template_1) {
+          index_1("2.0, 10.0");
+          values("370.0,390.0");
+        }
+        cell_fall(template_1) {
+          index_1("2.0, 10.0");
+          values("360.0,380.0");
+        }
+      }
+    }
+  }
+}
+"""
+
+
+def test_parse_etm(tmp_path):
+    f = tmp_path / "c_tt.lib"
+    f.write_text(ETM)
+    e = R.parse_etm(f, 6.0)
+    assert e["clock_pin"] == "ck[0]" and e["clock_tree_path_ps"] == {"min_clock_tree_path": 260.0,
+                                                                     "max_clock_tree_path": 300.0}
+    assert e["out_max_ps"] == 380.0 and e["out_min_ps"] == 370.0      # interpolated at 6 fF
+    assert e["in_setup_ps"] == -90.0 and e["in_hold_ps"] == 125.0
+
+
+def test_budget_views_reproduce_declared_formula():
+    taps, rng = _taps(), {"h0": 10.0}
+    pairs = [("a", "b", "p"), ("b", "a", "p")]
+    base = R.time_class(pairs, taps, rng, REG, 20.0, 833.333, 60.0, 25.0)
+    v = {p: [R.budget_model(REG, 250.0)] for p in taps}
+    r = R.time_class(pairs, taps, rng, REG, 20.0, 833.333, 60.0, 25.0, views=v)
+    assert r["worst_setup_slack_ps"] == base["worst_setup_slack_ps"]
+    assert r["worst_hold_slack_ps"] == base["worst_hold_slack_ps"]
+    assert r["real_view"]["pairs_with_real_endpoint"] == 0
+
+
+def test_core_view_pair_uses_etm_arcs():
+    taps, rng = _taps(), {"h0": 10.0}
+    core = dict(name="core:c", real=True, lat_late=0.0, lat_early=0.0, clkq_max=380.0, clkq_min=370.0, setup=-90.0,
+                hold=125.0)
+    v = {"a": [R.budget_model(REG, 250.0)], "b": [R.budget_model(REG, 250.0), core]}
+    r = R.time_class([("a", "b", "p")], taps, rng, REG, 20.0, 833.333, 60.0, 25.0, views=v)
+    rv = r["real_view"]
+    assert rv["pairs_with_real_endpoint"] == 1 and rv["pairs_both_real"] == 0
+    # budget a -> core b hold: (990 + 250 + 46.5) - (1050 + 0 + 125) - 25 + credit 10
+    assert rv["worst_hold_slack_ps"] == round(990 + 250 + 46.5 - 1050 - 125 - 25 + 10, 2)
+    # setup: (1040 + 0 + 833.333 + 90) - (1000 + 250 + 68) - 60 + 10
+    assert rv["worst_setup_slack_ps"] == round(1040 + 833.333 + 90 - 1000 - 250 - 68 - 60 + 10, 2)
+    assert rv["worst_hold"]["capture_model"] == "core:c"
+    assert r["worst_hold_slack_ps"] <= rv["worst_hold_slack_ps"]
+
+
+def test_cppr_lca_opt_in():
+    """PATH-S81-PD6 --cppr-lca: node = longest common tree_path prefix; default keeps the region/die-root form."""
+    import die_sta_related as D
+    A = dict(cppr_node="h01", tree_path="h0110")
+    B = dict(cppr_node="h00", tree_path="h0011")
+    C = dict(cppr_node="h01", tree_path="h0101")
+    old = D.CPPR_LCA
+    try:
+        D.CPPR_LCA = False
+        assert D.pair_node(A, B) == "h" and D.pair_node(A, C) == "h01"
+        D.CPPR_LCA = True
+        assert D.pair_node(A, B) == "h0" and D.pair_node(A, C) == "h01" and D.pair_node(A, A) == "h0110"
+        assert D.pair_node(dict(cppr_node="x"), dict(cppr_node="x")) == "x"   # no tree_path -> default form
+    finally:
+        D.CPPR_LCA = old

@@ -1,0 +1,13 @@
+nearest-tap INFO classes skipped (no mesh.json)
+nearest-tap INFO classes skipped (no mesh.json)
+proof TT intra              pairs  182950 setup    -2.09 (neg 2) hold  -652.14 (neg 167248) skew  586.48
+proof TT seam               pairs  210069 setup   139.51 (neg 0) hold  -510.54 (neg 196791) skew  462.38
+proof TT landed             pairs  240819 setup -2697.25 (neg 55806) hold -3347.29 (neg 209706) skew 2339.60 landing {'window_ps': 416.67, 'setup_margin_ps': -1922.94, 'hold_margin_ps': -1922.94, 'damage_max_ps': 2339.6, 'verdict': 'FAIL', 'note': 'plan-defined landed/forwarded hop: region-to-region clock damage vs landing window; single-cycle slacks above are INFO for landed pairs'}
+proof FF intra              pairs  182950 setup   111.35 (neg 0) hold  -584.20 (neg 173154) skew  516.92 kit-contract hold -516.92 (W 0, need 516.92, neg 116659)
+proof FF seam               pairs  210069 setup   244.44 (neg 0) hold  -451.11 (neg 199042) skew  399.29 kit-contract hold -359.29 (W 40, need 399.29, neg 41042)
+proof FF landed             pairs  240819 setup -2183.16 (neg 27721) hold -2878.71 (neg 210901) skew 2036.25 landing {'window_ps': 416.67, 'setup_margin_ps': -1619.58, 'hold_margin_ps': -1619.58, 'damage_max_ps': 2036.25, 'verdict': 'FAIL', 'note': 'plan-defined landed/forwarded hop: region-to-region clock damage vs landing window; single-cycle slacks above are INFO for landed pairs'}
+SUMMARY {"intra": {"tt_setup_ps": -2.09, "ff_hold_ps": -584.2, "verdict": "FAIL", "ff_hold_kit_contract_ps": -516.92, "kit_contract_window_ps": 0.0, "kit_contract_window_needed_ps": 516.92, "kit_contract_verdict": "FAIL"}, "seam": {"tt_setup_ps": 139.51, "ff_hold_ps": -451.11, "verdict": "FAIL", "ff_hold_kit_contract_ps": -359.29, "kit_contract_window_ps": 40.0, "kit_contract_window_needed_ps": 399.29, "kit_contract_verdict": "FAIL"}, "landed": {"tt_setup_margin_ps": -1922.94, "ff_hold_margin_ps": -1619.58, "verdict": "FAIL"}, "status": "UNCHECKED (NUMBER-CHECK pending)", "label": "declared-budget (no QC kit)"}
+
+real	0m45.859s
+user	0m44.238s
+sys	0m1.136s
