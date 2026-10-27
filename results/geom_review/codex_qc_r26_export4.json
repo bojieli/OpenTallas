@@ -1,0 +1,16 @@
+{
+ "design": "QC R26 native100 full physical clock export4",
+ "verdict": "FAIL",
+ "pictures_viewed": ["results/qc_clk_mesh3/codex_r26_export/seam_edge_zoom.png", "results/qc_clk_mesh3/codex_r26_export/native100_slot_failure.png", "results/qc_clk_mesh3/codex_r26_export/native100_raw_failure.png"],
+ "findings": [
+  "Orthogonal band feeds and nearest-valid island search clear all hard-core body overlaps and physical cell overlaps in export4.",
+  "6934 cell bodies cross their declared partition seam: 4414 fine drivers, 1824 column nodes and 696 column repeaters. The viewed zoom shows bodies centred exactly on the seam.",
+  "210 column cells extend outside the die's east edge: 152 column nodes and 58 column repeaters. The 8.64-um lane offset places cell centres at the die edge; the placement heuristic omits host/die body containment.",
+  "112 band stage pieces exceed 450 um after legalization, maximum pin-to-pin length 481.94 um. Their actual displaced geometry must be re-priced.",
+  "Only 31 of 86 hosting types have identical actual cell master/footprint sets in their master frame. Top-owned hole unions may need re-kitting; no hardened-type freeze is asserted.",
+  "The selected 2x16w NDR is not yet supported by the physical adapter; it was preserved and explicitly blocked rather than substituted."
+ ],
+ "next": "Planner owner fixes full-body host/die legalization, retains original masters, prices driver-to-strap jogs and stage reach, then renders the successor before any route or STA.",
+ "route_admission": "HOLD",
+ "timing_and_signoff": "NOT RUN"
+}
