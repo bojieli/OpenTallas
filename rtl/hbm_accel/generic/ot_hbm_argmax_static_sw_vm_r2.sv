@@ -73,7 +73,11 @@ module ot_hbm_argmax_static_sw_vm_r2 #(
     for (genvar l = 0; l < 8; l = l + 1) begin : g_rq assign vm_rq[17*l +: 17] = {rq_v[l], rq_d}; end   // sector is don't-care when !v
     assign cq = {cq_v, cq_d};
     localparam [3:0] E_IDLE=0, E_CHK=1, E_ROW=2, E_RD=3, E_WAIT=4, E_W0=5, E_W1=6, E_END=7;
-    reg [3:0] st; reg [5:0] cnt; reg flt;
+    // HBM-CORE-LAT-R5 10-27: keep the RTL binary state code (no Yosys one-hot recode). The recode is legal (only the 8 codes
+    // E_IDLE..E_END are reachable, st[3] == 0: proof in results/hbm_core_lat_r5_argmax) but the LEC cannot certify the
+    // one-hot cubes (R4/R5a NOT EQUIVALENT/UNPROVEN cones all through st#t). Binary = same 4 flops as the RTL.
+    (* fsm_encoding = "none" *) reg [3:0] st;
+    reg [5:0] cnt; reg flt;
     reg mode_q, am_q; reg [17:0] imm_q, ab_q, n_q, ob_q; reg [15:0] ois_q; reg legal_q;
     wire legal = n_p != 18'd0 && imm_p < 18'd262143 &&
                  (mode_p || (am_p ? ab_p[17:16] == 2'd0 : ab_p[17:16] == sid)) &&
@@ -129,7 +133,11 @@ module ot_hbm_argmax_static_sw_vm_r2 #(
         .in_bias_en(e_be), .in_mask(e_m), .in_vals(e_vals), .in_bias(e_bias), .cfg_rank(RANK_W'(die_id_q)), .cfg_imm_a(imm_q),
         .out_v(o_v), .out_idx(o_idx), .out_nan(o_nan), .fault(o_f), .out_range_fault(o_rf), .out_value(o_val));
     // ---------------------------------------------------------------- result and writes
-    reg [31:0] res_val, res_id; reg res_bad;
+    // res_id = {14'd0, o_idx} - {29'd0, ab_q[2:0]} lies in [-7, 2^18-1], so bits 18..31 are all copies of bit 18 (the borrow):
+    // HBM-CORE-LAT-R5 10-27 stores the 19 significant bits and sign-extends combinationally (bit-identical value at every
+    // load; before the first load the old 14 upper flops were independent X, now one X). Yosys merged the 14 flops anyway.
+    reg [31:0] res_val; reg [18:0] res_id_r; reg res_bad;
+    wire [31:0] res_id = {{13{res_id_r[18]}}, res_id_r};
     wire [17:0] wa = (st == E_W1) ? ob_q + {2'd0, ois_q} : ob_q;
     wire [31:0] wdat = (st == E_W1) ? res_id : res_val;
     reg [2:0] ap [0:ACK]; reg cr_v; reg [15:0] cr_tag; reg cr_we; reg wr_now;
@@ -172,7 +180,7 @@ module ot_hbm_argmax_static_sw_vm_r2 #(
                     if (cnt == 6'd0) begin                     // L + ELAT: engine out_v
                         if (!o_v) flt <= 1'b1;
                         res_val <= o_val;
-                        res_id <= {14'd0, o_idx} - ((MUT == 1 || mode_q) ? 32'd0 : {29'd0, ab_q[2:0]});
+                        res_id_r <= {1'b0, o_idx} - ((MUT == 1 || mode_q) ? 19'd0 : {16'd0, ab_q[2:0]});
                         res_bad <= o_f || o_rf;
                         if (o_nan) nan_flag <= 1'b1;
                         st <= E_W0;

@@ -1,0 +1,7 @@
+  variant ndr_c1.5 TT 277.98 w 27.97 FF 213.7 w 27.66
+  variant ndr_r0.6 TT 273.78 w 28.41 FF 212.16 w 29.0
+  variant leaf_ndr TT 268.57 w 26.35 FF 206.21 w 25.25
+  variant stock_rc TT 282.07 w 31.77 FF 219.1 w 32.25
+  variant rcx_clockC TT 252.95 w 21.8 FF 194.73 w 22.32
+  variant worst TT 301.66 w 45.36 FF 236.51 w 45.12
+F1_s70_ndr_buf_d1_strip stages [9] TT 268.2 w 26.34 FF 206.28 w 25.4 slew 24.6 50.6 spread {'all': 49.72, 'strip': 15.04, 'main': 49.72, 'n_gt_40': 1, 'n_gt_30': 5, 'top': [('T1070', 49.72), ('T1057', 33.09), ('T1050', 32.8), ('T0072', 32.27), ('T102q', 30.74), ('T1047', 28.61), ('T0141', 27.79), ('T0120', 27.27)]} sized {'branch:BUFx10_ASAP7_75t_R': 2, 'branch:BUFx12_ASAP7_75t_R': 2, 'branch:BUFx12f_ASAP7_75t_R': 27, 'branch:BUFx16f_ASAP7_75t_R': 17, 'branch:BUFx24_ASAP7_75t_R': 52, 'branch:BUFx8_ASAP7_75t_R': 226, 'entry:BUFx24_ASAP7_75t_R': 1, 'leaf:BUFx10_ASAP7_75t_R': 2, 'leaf:BUFx12_ASAP7_75t_R': 6, 'leaf:BUFx12f_ASAP7_75t_R': 1, 'leaf:BUFx16f_ASAP7_75t_R': 3, 'leaf:BUFx24_ASAP7_75t_R': 5, 'leaf:BUFx8_ASAP7_75t_R': 267, 'rep:BUFx12f_ASAP7_75t_R': 3, 'rep:BUFx16f_ASAP7_75t_R': 2, 'rep:BUFx24_ASAP7_75t_R': 2, 'rep:BUFx8_ASAP7_75t_R': 35} lvl {1: [72.9, 72.9, 2], 2: [71.82, 72.36, 4], 3: [86.4, 87.48, 36], 4: [0.54, 93.42, 284]}

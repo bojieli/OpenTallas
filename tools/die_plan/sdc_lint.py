@@ -844,7 +844,41 @@ def lint_kit_files(kitdir, liberties=()):
     if not ctx.get("straps") and (kd / "straps.json").is_file():
         d = json.loads((kd / "straps.json").read_text())   # OWNER 10-25 option B: the kit's declared ID straps
         ctx["straps"] = list(d.get("straps", []) if isinstance(d, dict) else d)
+    err += ff_binding_errors(kd, ctx)
     return err + lint((kd / "constraint.sdc").read_text(), liberty_unit_ps=lu, **ctx)
+
+
+_VCLK_FF_RE = re.compile(r"^\s*(?:override\s+)?export\s+OT_VCLK_FF\s*[:?]?=\s*(\S+)\s*$", re.M)
+FF_BINDING_TOL_PS = 0.5
+
+
+def kit_vclk_ff(kitdir):
+    """the kit's config.mk OT_VCLK_FF (SDC time units; the FF basis of the in-flow FF-only GRT hold repair and the
+    post-CTS / pre-route FF gates), last assignment wins; None when the kit has no per-corner binding."""
+    cm = Path(kitdir) / "config.mk"
+    if not cm.is_file():
+        return None
+    m = _VCLK_FF_RE.findall(cm.read_text(errors="replace"))
+    return float(m[-1]) if m else None
+
+
+def ff_binding_errors(kitdir, ctx):
+    """HBM-CORES-R6 10-27 (collar_idx256r R5 attempt 3): the flow repaired FF hold against OT_VCLK_FF while the kit's
+    sdc_lint.json carried no insertion_ff_ps, so signoff.py silently timed FF hold against the single TT vclk and
+    failed ff_ref_missing after a 40-min route.  Fail closed BEFORE synth when the flow's FF binding and the sign-off
+    reference disagree or one is missing.  -> [errors]"""
+    ff = kit_vclk_ff(kitdir)
+    if ff is None:
+        return []
+    unit = float(ctx.get("time_unit_ps") or 1.0)
+    if ctx.get("insertion_ff_ps") is None:
+        return [f"clocks: config.mk OT_VCLK_FF {ff:g} (flow FF hold-repair basis) but sdc_lint.json has no "
+                "insertion_ff_ps: sign-off would time FF hold against the single TT vclk (ff_ref_missing); "
+                "regenerate the kit with the per-corner FF binding in sdc_lint.json"]
+    if abs(float(ctx["insertion_ff_ps"]) - ff * unit) > FF_BINDING_TOL_PS:
+        return [f"clocks: sdc_lint.json insertion_ff_ps {float(ctx['insertion_ff_ps']):g} ps != config.mk OT_VCLK_FF "
+                f"{ff:g} x {unit:g} ps (flow repair and sign-off would use different FF references)"]
+    return []
 
 
 def main(argv=None):

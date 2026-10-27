@@ -333,9 +333,27 @@ def kit_strap_list(kitdir):
     return []
 
 
-def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=()):
+def kit_bump_list(kitdir):
+    """the kit's declared hard-IP line side (budget.json bump_ports, gen_phys KV-KITS-4): [(port, dir, width)]."""
+    b = Path(kitdir) / "budget.json"
+    if not b.is_file():
+        return []
+    return [(x["port"], x["dir"], int(x["width"])) for x in json.loads(b.read_text()).get("bump_ports") or []]
+
+
+def _std_cell(master):
+    return "_ASAP7_" in master.upper() or master.startswith("$")
+
+
+def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=()):
     """straps: declared ID strap ports (OWNER 10-25 option B, straps.py): quasi-static strap_* inputs tied at the
-    parent need no pin register -> exempt (recorded in the result); any other name is refused (ValueError)."""
+    parent need no pin register -> exempt (recorded in the result); any other name is refused (ValueError).
+    bumps: declared hard-IP line-side ports [(port, dir, width)] (plan bump_ports, KV-KITS-4 10-27): the bump IS the
+    hard macro's own pin, so it carries no pin register; instead every bit must wire straight to exactly one pin of
+    one hard (non-standard-cell) macro with no other driver or load (anything else fails class "bump")."""
+    bump_names = [b[0] for b in (bumps or ())]
+    if bump_names:
+        skip_re = r"(?:" + skip_re + r")|^(?:" + "|".join(re.escape(x) for x in bump_names) + r")$"
     if straps:
         sl = strap_list(straps)
         skip_re = r"(?:" + skip_re + r")|^(?:" + "|".join(re.escape(x) for x in sl) + r")$"
@@ -369,6 +387,26 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=()):
     def fail(cls, b, why):
         res["fails"][cls].append(f"{b}: {why}")
 
+    res["bumps_exempt"] = sorted(bump_names)
+    for name, d, w in (bumps or ()):             # a declared bump: port of that dir/width, wired only to one macro pin
+        if T.dirs.get(name) != d:
+            fail("bump", name, f"declared {d} bump port is {T.dirs.get(name)} in the netlist")
+            continue
+        bits = _bits_of(T, name)
+        if len(bits) != w:
+            fail("bump", name, f"declared width {w}, netlist {len(bits)}")
+            continue
+        for b in bits:
+            r = port_root[b]
+            others = [x for x in roots_ports[r] if x != b]
+            # pin direction of a macro is unknown to this reader (OUT_PINS covers std cells only): the bit's net must
+            # touch exactly one cell pin in total, and that cell is a hard macro
+            hard = drv[r] + loads[r]
+            if others or len(hard) != 1 or _std_cell(F.cells[hard[0][0]][0]):
+                fail("bump", b, f"not a direct single hard-macro pin (ports {others[:2]}, {len(hard)} cell pins "
+                                f"{[F.cells[c][0] for c, _ in hard[:3]]})")
+                continue
+            res["bump_bits"] = res.get("bump_bits", 0) + 1
     for x in (straps or ()):                     # an exempt strap must be an input port of this block (rule 1)
         if T.dirs.get(x) != "input":
             fail("strap", x, f"declared ID strap is not an input port ({T.dirs.get(x)})")
@@ -507,13 +545,16 @@ def main(argv=None):
     ap.add_argument("--out")
     ap.add_argument("--ft", help="kit ft_stations.txt (default: beside --pins): 1-station slots share one register")
     ap.add_argument("--straps", help="kit straps.json (default: beside --pins): declared ID straps, exempt")
+    ap.add_argument("--budget-dir", help="kit dir with budget.json (default: beside --pins): declared bump_ports")
     a = ap.parse_args(argv)
     stf = a.straps or (str(Path(a.pins).parent) if a.pins else None)
     sl = kit_strap_list(Path(stf).parent if stf.endswith(".json") else stf) if stf else []
     pins = json.loads(Path(a.pins).read_text()) if a.pins else None
     ftf = a.ft or (str(Path(a.pins).with_name("ft_stations.txt")) if a.pins else None)
     ft1 = read_ft1(ftf) if ftf and Path(ftf).exists() else set()
-    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl)
+    bd = a.budget_dir or (str(Path(a.pins).parent) if a.pins else None)
+    bl = kit_bump_list(bd) if bd else []
+    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl, bumps=bl)
     r["netlist"] = a.netlist
     if a.out:
         Path(a.out).write_text(json.dumps(r, indent=1) + "\n")

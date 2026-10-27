@@ -62,7 +62,7 @@ module ot_hbm_hc_root_hcp_sys1_core (
     wire [9:0] u_core__sd_xa;
     wire [127:0] u_core__sys_sum;
     wire u_core__sys_fault;
-    ot_hdc_v41x_hcp_sys1_static #(.W(256),.TL(4),.PMAX(8),.OMAX(32),.AW(10),.CW(16),.ML(2),.DF(32),.STATIC_CALENDAR(1),.SYS(1),.SYS_LAT(146),.TPRE(6)) u_core (
+    ot_hdc_v41x_hcp_sys1_static #(.W(256),.TL(4),.PMAX(8),.OMAX(32),.AW(10),.CW(16),.ML(2),.DF(32),.STATIC_CALENDAR(1),.SYS(1),.SYS_LAT(146),.TPRE(6),.CMD_RST(1)) u_core (
         .clk(u_core__clk),
         .reduction_clk(u_core__reduction_clk),
         .scalar_clk(u_core__scalar_clk),

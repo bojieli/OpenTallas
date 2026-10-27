@@ -4,7 +4,7 @@
 // dsdv_gunit_l1f): per beat the four fronts' top-6 lists -> one top-8 list (two merge levels, the front number q
 // inserted into each record's index: global index = {b, q, k}), a running top-8 over the beats (two interleaved
 // accumulators on one 2-stage merge8: acc_t = top8(list_t U acc_{t-2}), beats back to back), the final merge of the two
-// accumulators, the first K = 6 sorted by ascending index (sort8 on {valid, ~index, ninf}, three exchanges a stage),
+// accumulators, the first K = 6 sorted by ascending index (sort8 on {valid, ~index, ninf}, two exchanges a stage),
 // then:
 //   ids out  -> the stack leaf L1 (zero when idle: forms the ids CTL row there);
 //   gather   -> per-front hit bits + local {b, k} of each id -> the fronts reply with the unbiased scores -> OR -> the
@@ -12,15 +12,20 @@
 // Exact by construction: every merge keeps the exact top 8 of its inputs under the golden's total order (records with
 // unique indices), so the result is tools/hdc_golden_v41 `sorted(topk_lowest_index(scores + bias, 6))`.
 // Timing (edges): front lists land E, level-1 merges E+2, level-2 E+4, accumulator E+6 (+ beats), final merge E+8,
-// order sort (output register) E+10 after the last beat's list lands.  Every input lands in a flop; every output
+// order sort (output register) E+11 after the last beat's list lands (S81-CORE-LAT-R17: was E+10).  Every input lands in a flop; every output
 // leaves one.  fault (sticky): a front fault, fewer than K selected.  MUT 10 (bench only): the order sort drops its last
-// compare-exchange (a 3-exchange stage).
+// compare-exchange (8, 1).
 // S81U-GUNIT-L1b (10-17, NATIVE-2 pin rules, 0 data edges): rst_n drives only ot_rst_relay (2 kept region copies);
 // i_v / i_ids leave pin-only output flops (twins of the order sort's last register, formed from its next value); the
 // gather request g_go / g_hit / g_a leaves on the SAME edge as i_v (was one edge later) -- the fronts spend that edge
 // decoding it (dsdv_gunit_l1f), so the gather reply lands on the same edge as before.  The accumulator's "fresh" select
 // is a flop of its own and an empty (fresh / single) operand clears only the VALID bits of the fed-back list (invalid
 // records order below every valid one, so every valid record lands where the zeroed list put it: same outputs).
+// S81-CORE-LAT-R17 (2026-10-27, COORD-approved structural fix): the order sort u_ord goes from CPS 3 (2 registered stages
+// of 3 exchanges: ~780 ps / ~30 logic levels into g_hit and stage 0 -> 1 at the l1c TT GRT, setup_est -43..-91 ps, class
+// LOGIC DEPTH) to CPS 2 (3 registered stages of 2 exchanges, each one compare deep: dsdv_sel_cx8_2).  Same six exchanges,
+// same records and order, bit for bit; +1 edge on i_v / i_ids / g_go / g_hit / g_a, hence on the gather reply (s_v / s_d)
+// and the L1 ids row: the compiler's static router latency (lower_gu RT_LAT_N / RT_LAT_S) is +1.  No stall, no handshake.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_gunit_l1c #(
     parameter integer MUT = 0
@@ -98,7 +103,7 @@ module dsdv_gunit_l1c #(
             assign xd[XW * l +: XW] = (l < K && e[EW-1]) ? {1'b1, e[9:1], e[0]} : {XW{1'b0}};
         end
     endgenerate
-    dsdv_sel_sort8 #(.EW(XW), .CPS(3), .FW(1), .ZQ(1), .MUT(MUT)) u_ord (.clk(clk), .rst_n(rq[1]), .fi(gfv), .d(xd), .fo(xv), .q(xq),
+    dsdv_sel_sort8 #(.EW(XW), .CPS(2), .FW(1), .ZQ(1), .MUT(MUT)) u_ord (.clk(clk), .rst_n(rq[1]), .fi(gfv), .d(xd), .fo(xv), .q(xq),
         .fn(xnv), .qn(xn));
     // the ids of the order sort's next register (zero when idle), for the pin-only output flops and the gather request
     wire [53:0] idn;

@@ -208,9 +208,9 @@ def test_mesh_signoff_rereference_and_unc(tmp_path):
     assert rec["M0_ps"] == m0 and rec["taps_on_mesh"] == 2
     assert taps["a"]["late_ps"] == m0 + 50.0 and taps["a"]["early_ps"] == m0 + 40.0 and taps["a"]["cppr_node"] == "m"
     assert taps["a"]["abs_late_ps"] == 4650.0 and taps["c"]["cppr_node"] == "h"        # band strict: not on the mesh
-    # d = s1 - s2 over samples: -12, -14, -9; MC mean -11.5 sd 3.5355 -> mu+3sd 22.11; max|d| 14 -> 22.11
-    # gap: (4600-4595) - (4610-4607) = 2; gradient |(3,0)-(0,4)| = 5
-    assert abs(U("a", "b") - (11.5 + 3 * 3.5355339 + 2 + 5)) < 1e-4
+    # d = s1 - s2 over samples: -12, -14, -9; gap (4600-4595) - (4610-4607) = 2 folded into every sample (PD11 ruling 3)
+    # -> d' = -10, -12, -7; MC mean -9.5 sd 3.5355 -> mu+3sd 20.107 > max|d'| 12; gradient |(3,0)-(0,4)| = 5
+    assert abs(U("a", "b") - (9.5 + 3 * 3.5355339 + 5)) < 1e-4
     assert U("a", "c") == 0.0 and U("a", "a") == 0.0
     # strict band pair uses absolute arrivals and the die root
     la, ea, lc, ec = R.arr4(taps["a"], taps["c"], "h")
@@ -346,3 +346,127 @@ def test_hb4_intra_bound_and_abutted_model():
     assert r2["all"]["tt_setup_after_ps"] == round(300.0 - 3 * 67.67, 2)
     assert R._DATA_PIN_SKIP.search("g_t_10_u_l8__clk[0]") and R._DATA_PIN_SKIP.search("strap_bsel[1]")
     assert R._DATA_PIN_SKIP.search("g_t_11_u_stk__rst_n[0]") and not R._DATA_PIN_SKIP.search("i_ck_data[3]")
+
+
+def test_mesh_signoff_gap_folded_per_sample_and_stats(tmp_path):
+    """PD11 ruling 3: the routed-vs-sim gap is folded into every MC sample (opposite-sign gap reduces U instead of
+    adding to it), and stats() reports per-pair percentiles + the die-wide bound over the evaluated pairs."""
+    import json
+    M = {"taps": [{"port": p, "stub": s} for p, s in (("a", "s1"), ("b", "s2"), ("c", "s3"))]}
+    (tmp_path / "mesh.json").write_text(json.dumps(M))
+    # gaps routed - sim nominal: s1 +10, s2 0, s3 0 (sim nominal s1 100, s2 110, s3 100)
+    rt = {"s1": dict(late=110.0, early=100.0), "s2": dict(late=110.0, early=100.0), "s3": dict(late=100.0, early=90.0)}
+    (tmp_path / "mesh_TT.json").write_text(json.dumps({"stubs": rt}))
+    # sim: s1 is 10 ps EARLY of s2 in every sample -> routed difference s1-s2 = 0: folded U = 0 (+ gradient 0);
+    # old form would give max|d| 10 + |gap diff| 10 = 20
+    so = dict(corner="TT", loads=["s1", "s2", "s3"], arr=[[100.0, 110.0, 100.0], [100.0, 110.0, 104.0],
+                                                           [100.0, 110.0, 96.0]],
+              grad_vec_ps=[[0.0, 0.0]] * 3, summary={}, checked="UNCHECKED")
+    (tmp_path / "so.json").write_text(json.dumps(so))
+    taps = {p: dict(late_ps=200.0, early_ps=190.0, cppr_node="h") for p in "abc"}
+    U, rec = R.mesh_signoff(tmp_path, taps, {"cppr_node_range_ps": {"h": 0.0}}, "TT", tmp_path / "so.json", "tree")
+    assert abs(U("a", "b")) < 1e-9
+    # s1 - s3 + gap 10: d' = 10, 6, 14 -> MC mean 10 sd 5.657 -> 26.97 > max 14
+    assert abs(U("a", "c") - (10 + 3 * 32 ** 0.5)) < 1e-4
+    st = U.stats()
+    assert st["pairs"] == 2 and st["max_ps"] == st["die_wide_bound_ps"] == round(10 + 3 * 32 ** 0.5, 2)
+    assert st["p50_ps"] in (0.0, round(10 + 3 * 32 ** 0.5, 2))
+
+
+def _gp2_core(tmp_path, name, pins, source="gen A", outline=(10.0, 8.0)):
+    import json as _j
+    (tmp_path / "cores").mkdir(exist_ok=True)
+    d = dict(schema="opentallas.die_plan.core_pins.v1", core="c", source=source,
+             frame=f"core R0, origin (0,0), outline {outline[0]} x {outline[1]}", pins=pins)
+    (tmp_path / "cores" / name).write_text(_j.dumps(d))
+    return f"cores/{name}"
+
+
+def _gp2_signed(tmp_path, rel, outline=(10.0, 8.0)):
+    import hashlib
+    return dict(pins_file=rel, pins_sha256=hashlib.sha256((tmp_path / rel).read_bytes()).hexdigest(),
+                outline_um=list(outline))
+
+
+_GP2_PINS = [dict(name="clk", layer="M5", x=5.0, y=4.0), dict(name="a[0]", layer="M4", x=0.096, y=1.5),
+             dict(name="a[1]", layer="M4", x=0.096, y=2.5), dict(name="z", layer="M3", x=9.0, y=7.904)]
+
+
+def test_gate_pins2_free_text_change_same_hash(tmp_path):
+    """GATE-PINS-2 (COORD ruling 1): only physical/logical pin content is hashed; 'source'/'frame' text and pin
+    order never change it."""
+    s = _gp2_core(tmp_path, "s_pins.json", _GP2_PINS, source="gen A")
+    p = _gp2_core(tmp_path, "p_pins.json", list(reversed(_GP2_PINS)), source="gen A | R3 write-through note")
+    a, b = (R.canon_pins(__import__("json").loads((tmp_path / f).read_text()), (10.0, 8.0)) for f in (s, p))
+    assert R.canon_sha256(a) == R.canon_sha256(b)
+    assert R.pins_relation(_gp2_signed(tmp_path, s), p, tmp_path, (10.0, 8.0), [s, p]) == ("canonical", None)
+    # a view that records the canonical sha matches without any copy of the signed file
+    meta = dict(pins_sha256="0" * 64, pins_canon_sha256=R.canon_sha256(a), outline_um=[10.0, 8.0])
+    assert R.pins_match(meta, p, tmp_path, (10.0, 8.0)) is None
+
+
+def test_gate_pins2_one_nm_move_different_hash(tmp_path):
+    s = _gp2_core(tmp_path, "s_pins.json", _GP2_PINS)
+    moved = [dict(q) for q in _GP2_PINS]
+    moved[1]["y"] = 1.501
+    p = _gp2_core(tmp_path, "p_pins.json", moved)
+    J = __import__("json")
+    assert R.canon_sha256(R.canon_pins(J.loads((tmp_path / s).read_text()))) != \
+        R.canon_sha256(R.canon_pins(J.loads((tmp_path / p).read_text())))
+    how, why = R.pins_relation(_gp2_signed(tmp_path, s), p, tmp_path, (10.0, 8.0), [s, p])
+    assert how is None and why.startswith("pins differ")
+    # outline change alone is a different core
+    assert R.pins_match(_gp2_signed(tmp_path, s), s, tmp_path, (10.0, 8.0)) is None
+    assert R.canon_sha256(R.canon_pins({"pins": _GP2_PINS}, (10.0, 8.0))) != \
+        R.canon_sha256(R.canon_pins({"pins": _GP2_PINS}, (10.0, 8.001)))
+
+
+def _gp2_mx(pins, H=8.0):
+    return [dict(q, y=round(H - q["y"], 6)) for q in pins]
+
+
+def test_gate_pins2_exact_mirror_accepted(tmp_path):
+    """COORD ruling 2: an exact MX/MY/R180 image (every pin, same names and layers) is the same signed core."""
+    s = _gp2_core(tmp_path, "s_pins.json", _GP2_PINS)
+    mx = _gp2_core(tmp_path, "s_pins_fMX.json", _gp2_mx(_GP2_PINS), source="mirrored MX")
+    my = _gp2_core(tmp_path, "s_pins_fMY.json", [dict(q, x=round(10.0 - q["x"], 6)) for q in _GP2_PINS])
+    r180 = _gp2_core(tmp_path, "s_pins_fR180.json",
+                     [dict(q, x=round(10.0 - q["x"], 6), y=round(8.0 - q["y"], 6)) for q in _GP2_PINS])
+    v = _gp2_signed(tmp_path, s)
+    ex = [s, mx, my, r180]
+    assert R.pins_relation(v, mx, tmp_path, (10.0, 8.0), ex) == ("mirror:MX", None)
+    assert R.pins_relation(v, my, tmp_path, (10.0, 8.0), ex) == ("mirror:MY", None)
+    assert R.pins_relation(v, r180, tmp_path, (10.0, 8.0), ex) == ("mirror:R180", None)
+    # signed content found as a verified copy in the view dir (plan no longer has the R0 file)
+    vd = tmp_path / "view"
+    vd.mkdir()
+    (vd / "pins.json").write_bytes((tmp_path / s).read_bytes())
+    v2 = dict(v, pins_file="cores/gone.json", view_dir=str(vd))
+    assert R.pins_relation(v2, mx, tmp_path, (10.0, 8.0), [mx]) == ("mirror:MX", None)
+
+
+def test_gate_pins2_mirror_one_pin_off_rejected(tmp_path):
+    """an image with one pin not mapped (e.g. a kept reset pin, KV pv_pair fMX s0/s1 rst_n) is a different core."""
+    s = _gp2_core(tmp_path, "s_pins.json", _GP2_PINS)
+    bad = _gp2_mx(_GP2_PINS)
+    bad[3]["y"] = _GP2_PINS[3]["y"]          # z kept, not mirrored
+    p = _gp2_core(tmp_path, "s_pins_fMX.json", bad)
+    how, why = R.pins_relation(_gp2_signed(tmp_path, s), p, tmp_path, (10.0, 8.0), [s, p])
+    assert how is None and "no exact MX/MY/R180 image" in why
+    # a renamed / missing pin is never an image either
+    ren = _gp2_mx(_GP2_PINS)
+    ren[2]["name"] = "a[2]"
+    q = _gp2_core(tmp_path, "s_pins_fMX2.json", ren)
+    assert R.pins_relation(_gp2_signed(tmp_path, s), q, tmp_path, (10.0, 8.0), [s, q])[0] is None
+
+
+def test_gate_pins2_layer_change_rejected(tmp_path):
+    s = _gp2_core(tmp_path, "s_pins.json", _GP2_PINS)
+    lay = [dict(q) for q in _GP2_PINS]
+    lay[1]["layer"] = "M6"
+    p = _gp2_core(tmp_path, "p_pins.json", lay)
+    assert R.pins_relation(_gp2_signed(tmp_path, s), p, tmp_path, (10.0, 8.0), [s, p])[0] is None
+    mxl = _gp2_mx(_GP2_PINS)
+    mxl[1]["layer"] = "M6"
+    q = _gp2_core(tmp_path, "s_pins_fMX.json", mxl)
+    assert R.pins_relation(_gp2_signed(tmp_path, s), q, tmp_path, (10.0, 8.0), [s, q])[0] is None

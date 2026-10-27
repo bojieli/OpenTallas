@@ -25,7 +25,30 @@ def patch(path):
         raise ValueError("unrecognized synth_preamble.tcl; refusing macro frontend patch")
     path.write_text(text.replace(OLD, NEW))
 
+PHYS_OLD = "write_verilog -nohex -nodec $::env(RESULTS_DIR)/1_2_yosys.v"
+PHYS_NEW = """# OT_NATIVE_ROM_PHYSICAL_METADATA: retain all content metadata before serialization.
+write_json $::env(RESULTS_DIR)/1_2_yosys_native_metadata.json
+# OpenSTA's physical Verilog reader cannot parse string parameter overrides.
+# Only ROM content labels are removed; all geometry/numeric parameters remain.
+setparam -unset VIAMAP -unset INSTANCE t:ot_rom_*
+""" + PHYS_OLD
+
+
+def patch_physical(path):
+    path = Path(path)
+    text = path.read_text()
+    if PHYS_NEW in text:
+        return
+    if text.count(PHYS_OLD) != 1:
+        raise ValueError("unrecognized synth.tcl; refusing physical metadata patch")
+    path.write_text(text.replace(PHYS_OLD, PHYS_NEW))
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("preamble", type=Path)
-    patch(parser.parse_args().preamble)
+    parser.add_argument("--physical-synth", type=Path)
+    args = parser.parse_args()
+    patch(args.preamble)
+    if args.physical_synth:
+        patch_physical(args.physical_synth)
