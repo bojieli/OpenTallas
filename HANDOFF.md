@@ -1208,3 +1208,5 @@ CODEX: 2026-10-26 20:19 PDT HBM SU/MU audit7a36d5f76: exactS2hubcost reproduced;
 2026-10-26 20:19 PDT CODEX: HEAD HOST provider962ca7e740 pushed; actualHBC RX_ONLY defaultoff fixes fabricatedreturnTX,803framemiter+2mutants+12HBCtestsPASS,hostleafbind+lintPASS; compilerbootdates/token/physical remainopen.
 
 2026-10-26 20:25 PDT CODEX: HEAD ctl provider e58bbcd7da pushed;2x8269 exactstream+2token component/mutantsPASS;real noidx/lw11 contract fixes candidateonly;HOST provider parallel ready, combinedbind next.
+
+CODEX: 2026-10-26 20:26 PDT HBM bankcalendar4b2efd40a fixesII1bursts forplannedk4;32heads/171keys preservehistalignment,+603span,2000/2048instructions,defaultbyteidentity. SharedSUFUSEDproducerjoinsstillopen.
