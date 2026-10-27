@@ -223,5 +223,9 @@ def test_gen_phys_kit_gets_reset_tree_tcl():
         tcl = (Path(kd) / "reset_tree.tcl").read_text()
         T = RT.for_type(P, "fa")
         assert len(re.findall(r"^rtr_place ", tcl, re.M)) == len(T["relays"]) + 1 and "OT_RESET_TREE entry relayed" in tcl
+        # PROTO-KITS 10-25: leaf hop bound after GPL (reset_sinks.tcl, PRE_RESIZE)
+        cfg = (Path(kd) / "config.mk").read_text()
+        assert "export PRE_RESIZE_TCL = /work/reset_sinks.tcl" in cfg and (Path(kd) / "reset_sinks.tcl").is_file()
+        assert f"export OT_RESET_REACH_UM = {RT.relay_um(P):g}" in cfg
     ff = (HERE / "face_flops.tcl").read_text()
     assert ff.index("source /work/reset_tree.tcl") < ff.index("source /work/reset_taps.tcl")

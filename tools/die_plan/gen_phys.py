@@ -595,6 +595,13 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         shutil.copyfile(rtt[0], kd / "reset_tree.tcl")
     elif RT.delivered(P):
         (kd / "reset_tree.tcl").write_text(RT.tcl_text(RT.for_type(P, tn)))
+    if (kd / "reset_tree.tcl").is_file():
+        # PROTO-KITS 10-25 (t8 leaf hop 448 um): after GPL every reset-tree sink moves to its nearest tap relay and
+        # the leaf hop (tap relay -> sink) is bounded by the reset reach (reset_sinks.tcl, PRE_RESIZE: repair_design
+        # then buffers the re-pointed nets)
+        shutil.copyfile(Path(__file__).with_name("reset_sinks.tcl"), kd / "reset_sinks.tcl")
+        with open(kd / "config.mk", "a") as f:
+            f.write(f"export PRE_RESIZE_TCL = /work/reset_sinks.tcl\nexport OT_RESET_REACH_UM = {RT.relay_um(P):g}\n")
     if macros:     # S81-P8 10-23: soft relay stations on their source-sink lines (relay_mid.tcl, after face_flops)
         shutil.copyfile(Path(__file__).with_name("relay_mid.tcl"), kd / "relay_mid.tcl")
     # R3: ft station table for face_flops.tcl: slot, stations, in face (route leg order), optional regs_um sites
