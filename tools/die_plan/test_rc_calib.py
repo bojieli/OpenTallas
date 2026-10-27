@@ -78,3 +78,41 @@ def test_compare(tmp_path):
     assert d["clock_arrival"]["n"] == 2 and d["clock_arrival"]["mean"] == 0.0 and d["clock_arrival"]["mean_abs"] == 5.0
     assert d["net_delay"]["mean"] == 2.0 and d["net_delay_rel_mean"] == 0.2
     assert d["hold_wns_rcx"] == (-1.0, 2)
+
+
+# FLOW-RC-1 (2026-10-27): fail-closed per-class RC calibration guard used by every kit generator
+import pytest  # noqa: E402
+import core_flow  # noqa: E402
+
+
+def test_shipped_rc_file_has_both_classes():
+    rec = core_flow.check_rc_cal(HERE / core_flow.RC_CAL_FILE)
+    assert set(rec) == {"signal", "clock"}
+
+
+@pytest.mark.parametrize("drop", ["# OT_RC_CAL signal", "set_wire_rc -signal", "set_layer_rc -layer M3"])
+def test_rc_guard_fails_closed(tmp_path, drop):
+    txt = (HERE / core_flow.RC_CAL_FILE).read_text()
+    bad = "\n".join(l for l in txt.splitlines() if not l.startswith(drop)) + "\n"
+    p = tmp_path / "setRC_bad.tcl"
+    p.write_text(bad)
+    with pytest.raises(SystemExit, match="RC_CAL_GUARD"):
+        core_flow.check_rc_cal(p)
+    with pytest.raises(SystemExit, match="RC_CAL_GUARD"):
+        core_flow.install_rc(tmp_path, p)
+    assert not (tmp_path / core_flow.RC_CAL_KIT).exists()
+
+
+def test_install_rc_copies_checked_file(tmp_path):
+    core_flow.install_rc(tmp_path)
+    assert (tmp_path / core_flow.RC_CAL_KIT).read_text() == (HERE / core_flow.RC_CAL_FILE).read_text()
+
+
+def test_generators_copy_rc_only_through_guard():
+    repo = HERE.parents[1]
+    for rel in ("tools/die_plan/gen_phys.py", "tools/die_plan/core_flow.py",
+                "physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py",
+                "physical/die_plan/qwen_kvsys/cores/harden/gen_core_kit_kv.py"):
+        src = (repo / rel).read_text()
+        assert "install_rc(" in src, rel
+        assert not [l for l in src.splitlines() if "copyfile" in l and ("RC_CAL_FILE" in l or "setRC_rcx_asap7" in l)], rel
