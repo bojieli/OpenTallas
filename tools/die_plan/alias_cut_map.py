@@ -70,8 +70,9 @@ def instance(text,name):
 
 
 def main():
- ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--mode',choices=['body','primitive'],required=True);ap.add_argument('--wrapper',required=True);ap.add_argument('--top',required=True);ap.add_argument('--canonical');ap.add_argument('--canonical-top');ap.add_argument('--primitive');ap.add_argument('--gold-path');ap.add_argument('--parent-wrapper',required=True);ap.add_argument('--parent-instance',default='u_dut');ap.add_argument('--gold',required=True);ap.add_argument('--gold-prefix',default='u_dut.');ap.add_argument('--nlink',type=int,required=True);ap.add_argument('--out',required=True);a=ap.parse_args()
+ ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--mode',choices=['body','primitive'],required=True);ap.add_argument('--wrapper',required=True);ap.add_argument('--top',required=True);ap.add_argument('--canonical');ap.add_argument('--canonical-top');ap.add_argument('--primitive');ap.add_argument('--gold-path');ap.add_argument('--parent-wrapper');ap.add_argument('--parent-top-public',action='store_true');ap.add_argument('--parent-instance',default='u_dut');ap.add_argument('--gold',required=True);ap.add_argument('--gold-prefix',default='u_dut.');ap.add_argument('--nlink',type=int,required=True);ap.add_argument('--out',required=True);a=ap.parse_args()
  if Path(a.out).exists():raise ValueError('refusing existing output')
+ if bool(a.parent_wrapper)==bool(a.parent_top_public):raise ValueError('choose parent wrapper or explicit parent-top-public')
  gold=json.load(open(a.gold));nets=gold['netnames'];w=module(a.wrapper,a.top);ww,wp=decls(w);uf=UF();assigns(w,ww,'plan',uf);associations=collections.defaultdict(set);failed=[]
  def alias(name,k,vector=False):
   full=a.gold_prefix+name
@@ -115,7 +116,7 @@ def main():
    if len(matched)!=1:failed.append(dict(port=port,bit=k,reason=f'actual parent aliases have {len(matched)} distinct bit identities'));bad=True;break
    ids.append(next(iter(matched)))
   if not bad:ports[port]=ids;directions[port]=desc['direction']
- sources={str(p):hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in [a.wrapper,a.parent_wrapper]+([a.canonical] if a.canonical else [])}
- out=dict(schema='opentallas.current_parent_cut_alias.v1',module=a.top,variant=dict(nlink=a.nlink),parent_alias_source=True,gold_source=gold['source'],gold_source_sha256=gold['source_sha256'],sources=sources,parent_public_ports={p:nets[a.gold_prefix+p]['bits'] for p in instance(Path(a.parent_wrapper).read_text(),a.parent_instance) if a.gold_prefix+p in nets},parent_alias_bits=ports,directions=directions,failed=failed,verdict='FAIL' if failed else 'PASS',scope='Actual current parent alias bit identities via exact pure-wire wrappers. No literal old ND/NPT offsets; source composition/latency qualification remains separate.')
+ sources={str(p):hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in [a.wrapper]+([a.parent_wrapper] if a.parent_wrapper else [])+([a.canonical] if a.canonical else [])}
+ out=dict(schema='opentallas.current_parent_cut_alias.v1',module=a.top,variant=dict(nlink=a.nlink),parent_alias_source=True,gold_source=gold['source'],gold_source_sha256=gold['source_sha256'],sources=sources,parent_public_ports=({p:nets[a.gold_prefix+p]['bits'] for p in instance(Path(a.parent_wrapper).read_text(),a.parent_instance) if a.gold_prefix+p in nets} if a.parent_wrapper else {p:v['bits'] for p,v in gold['ports'].items()}),parent_alias_bits=ports,directions=directions,failed=failed,verdict='FAIL' if failed else 'PASS',scope='Actual current parent alias bit identities via exact pure-wire wrappers. No literal old ND/NPT offsets; source composition/latency qualification remains separate.')
  Path(a.out).write_text(json.dumps(out,indent=1)+'\n');print(a.top,out['verdict'],'mapped_ports',len(ports),'pin_bits',sum(map(len,ports.values())),'failed',len(failed));return bool(failed)
 if __name__=='__main__':sys.exit(main())
