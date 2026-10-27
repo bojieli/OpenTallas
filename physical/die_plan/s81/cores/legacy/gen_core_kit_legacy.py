@@ -597,6 +597,31 @@ def pin_gate_refusal(module, pg):
             f"pins, e.g. {pg['examples']}) -- fix the plan pin assignment, not the kit")
 
 
+def planned_tree_cts(kd):
+    """S81-CORE-LAT-R12 (ODB-0370 root cause): a master-plan core tree (core_infra, 12.7c/12.8b) is built from the
+    plan before GPL with dont_touch cells and nets.  TritonCTS ignores dont_touch nets, re-buffers the planned tree and
+    stops on the first planned buffer (R10 l0r std + NDR: mp_ck_T1_br).  So, for such a kit only:
+      PRE_CTS  sources core_infra_cts.tcl (TritonCTS on the plan's CTS-open nets only, none for a leaf-complete tree;
+               fail-closed census of every register clock pin);
+      POST_CTS tap_balance.tcl and leaf_affinity.tcl run REPORT-ONLY (the plan sets latency, d1 sizing and the
+               same-leaf pairs; a post-CTS delay chain or leaf move would be an unplanned residual edit, 12.8 d2).
+    Kits without a plan tree are byte-identical."""
+    kd = Path(kd)
+    plan = kd / "core_infra_plan.json"
+    hold, post = kd / "hold_budget.tcl", kd / "cts_post.tcl"
+    if not plan.is_file() or not json.loads(plan.read_text()).get("core_tree"):
+        return False
+    if not (kd / "core_infra_cts.tcl").is_file():
+        raise SystemExit(f"{kd.name}: plan tree without core_infra_cts.tcl (core_infra.install too old)")
+    if not hold.is_file() or not post.is_file():
+        raise SystemExit(f"{kd.name}: plan tree needs the insertion_balance CTS hooks (PRE_CTS hold_budget.tcl)")
+    hold.write_text(hold.read_text() + "# S81-CORE-LAT-R12: plan-built tree -> TritonCTS only on CTS-open nets\n"
+                    "source /work/core_infra_cts.tcl\n")
+    post.write_text("# S81-CORE-LAT-R12: plan-built tree -> tap balance + leaf affinity measure/report only\n"
+                    "set ::env(OT_TAP_REPORT_ONLY) 1\nset ::env(OT_LEAF_AFF_REPORT_ONLY) 1\n" + post.read_text())
+    return True
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--module", required=True, help="recipe key (= plan module unless the recipe names plan_module)")
@@ -1049,6 +1074,7 @@ def main():
     # (face_flops.tcl: after io placement, before GPL); refused without a slice once required unless --trial
     ms = MS.kit_apply(kd, mod, [w, h], a.master_slice, plan, a.trial, kind="core",
                       gpl_hook=kd / "face_flops.tcl")
+    planned_tree_cts(kd)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     rev = subprocess.run(["git", "-C", str(REPO), "rev-parse", "--short", "HEAD"], capture_output=True,
                          text=True).stdout.strip() or "?"
