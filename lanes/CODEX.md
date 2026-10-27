@@ -1039,3 +1039,18 @@ Single quick pass over every lane file; latest-tail excerpts identify the curren
 - KV kits: qk_cores/kv_kits rescued unlogged KITS5 source7b9ec5d6c (dcal one-go, shared keep, gpl-plain) and planca77c7e90. b53 strict PASS160parts51masters0unbound/tied/open; io_cor/hroot LEC EQ/GRT0 images await GEOM continuation; sys_c successor live intel2 kv5-i2 unit1852268; 200FT slots21types need station/cycle decision (not applied).
 - PATH-QC native bind: qwen lead owns portable88type manifest and guard51/Epin candidate prep; recovering final bind inputs from retired fleet copies. QC clock owns plan geometry, no competing modifications.
 - Legacy ELEM-QK/KV-G3/KV/KVG3-CORES/KVG3-WI/QC-A0/QC-SU-LAT/F4/PROG-L1/BTAB-R5/TRIAL-QK: terminal/superseded failures retained; current successors above own remaining fixes; KVG3-WI22core pin task DONE. QC-TOK current token owner /root/tokens/qk, no physical duplicate.
+
+## S81 / HEAD takeover 2026-10-27 08:14 PDT
+- PATH-S81 / S81-UNBLOCK: codex/s81_die owns PD12/13 structural clock (MC278/254 FAIL; PD13 predictor promising, no real-view claim), recovered c3dd5ad1a34 strict bind0 and fi6/7→2 correction; tokens/ds coordinates schedule. Jobs collecting existing; next recover/publish source and build structurally reviewed clock.
+- S81-CORE-LAT / S81-KITS / CORES-KITS S81 / KITS-WAVE S81: codex/s81-core-1027@5b2b94251f shared snap/access fix READY96focusedPASS; old l0r proof15691/15691EQ collected; current qbank/sstn re-kits and l0 hold diagnosis owned s81_core; S81 frozenFF202.5 re-time coordinated FLOW. Historical failures remain assigned, no obsolete wave rerun.
+- S81-HEAD / HEAD-CORE-LAT / HEAD-RTL: head child collects m2/m12 ECO cap2165/2181 endpointFAIL, FF-76.52/-88.91; no new signoff. Existing approved insertion-scoped boundary allowance branch e87c46dce recovered; root review before cap change. B epyc2 unit1684250 route live; R18 tree needs declared spine slots and HEAD5 PG.
+- HEAD asbuilt: codex/head-plan-0815@dc7e87fd2 generated candidate migrates7supplement sources into5type closures, approved BQ2 and5physical tap names; tokens team owns native strict bind/elaboration. No route; mesh child folds helper into same HEAD delta.
+- FALLBACK-HEAD / FALLBACK-LAND / S81 fallback: plan prep only under owner08:02. Refresh current provider/source plan; historical sl300 GRT0 never substitutes current dieSTA; observer/ring-emission gap remains diagnosed. No fallback build.
+
+## S81 cores takeover 2026-10-27 08:19 PDT
+- S81-CORE-LAT: current clock-entry fix5b2b94251f READY + reviewed fresh qbank/sstn trials39efbb5ba931/c0f7dd8e8002; host intel2:/srv/opentallas-scratch2/claude/codex-s81-core-1027/kits; old l0r c17 job live in core-lat-r17-1027, LEC15691EQ. Next fresh route/canary collection, l1c post-pipeline family replan, l0/l0r hold root cause. Original DRT0255=access shape+late pin override; l0 RSZ0060=IO hold under low output clock insertion; l1c old CPS3=-43 setup logic-depth now pipelined+1 priced.
+- S81-KITS/CORES-KITS/KITS-WAVE S81: old waves superseded; PD5 bind blocker B assigned PATH-S81 sibling, A/C landed-SDC/reset fixes merged. Live partition/core jobs being collected after critical core access fix; no duplicate broad wave.
+
+### Qwen token coverage 2026-10-27 08:15 PDT
+- TOK-QK/KV-TOK: B484/32boot checks traced to28inline stale-sourcePCs; corrected top rebuild running intel2:codex-qk-boot-0818/build client395700, next128/128boot then14images thenKVL; former12KVLs disarmed/no result.
+- TOK-QW/QC-TOK: QCLM259/259 and XD4 PASS retained; wholeQC blocked current finalbind physical owner; missing bound-s8 xhead now fresh build/calibration epyc2 unit1855811-1793114052 (childqcbench).
