@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from matplotlib.collections import PatchCollection, LineCollection
 from matplotlib.patches import Rectangle
 
-COL = {"pg_VDD": "#d62728", "pg_VSS": "#1f77b4", "mesh": "#ff7f0e", "rail_shield": "#17becf", "tree": "#2ca02c",
+COL = {"pg_VDD": "#d62728", "pg_VDDPHY": "#e377c2", "pg_VSS": "#1f77b4", "mesh": "#ff7f0e", "rail_shield": "#17becf", "tree": "#2ca02c",
        "shield": "#9edae5", "bank": "#9467bd", "bank_riser": "#9467bd", "stub_drop": "#8c564b", "via": "#000000"}
 
 
@@ -31,13 +31,13 @@ def window(ax, E, box, title, findings):
         _, _, rx0, ry0, rx1, ry1 = r
         if rx1 < x0 or rx0 > x1 or ry1 < y0 or ry0 > y1:
             continue
-        groups.setdefault(f"pg_{net if net in ('VDD','VSS') else 'VDD'}", []).append((rx0, ry0, rx1 - rx0, ry1 - ry0))
+        groups.setdefault(f"pg_{net if net in ('VDD','VSS','VDDPHY') else 'VDD'}", []).append((rx0, ry0, rx1 - rx0, ry1 - ry0))
     for s in E["shapes"]:
         rx, ry, w, h = xyrect(s)
         if rx + w < x0 or rx > x1 or ry + h < y0 or ry > y1:
             continue
         groups.setdefault(key(s), []).append((rx, ry, w, h))
-    order = ["pg_VDD", "pg_VSS", "rail_shield", "shield", "tree", "mesh", "bank", "bank_riser", "stub_drop"]
+    order = ["pg_VDD", "pg_VDDPHY", "pg_VSS", "rail_shield", "shield", "tree", "mesh", "bank", "bank_riser", "stub_drop"]
     for k in order:
         if k in groups:
             ax.add_collection(PatchCollection([Rectangle((a, b), c, d) for a, b, c, d in groups[k]], facecolor=COL[k],
@@ -96,6 +96,10 @@ def main(a):
     wins = [("root / widest crossing", widest["x_um"], widest["y_um"], 30), ("die-edge rail end (SW corner)", corner["x_um"], corner["y_um"], 30),
             (f"largest driver bank ({len(big['units'])} BUFx24)", big["xy_um"][0], big["xy_um"][1], 25),
             ("stub drop / pin stack", stub["xy_um"][0], stub["xy_um"][1], 15)]
+    ce = E.get("phy_clip_ends") or []
+    for j, t in ((0, "first"), (len(ce) // 2, "middle"), (len(ce) - 1, "last")):
+        if ce:
+            wins.append((f"PHY-band rail end ({t} of {len(ce)})", ce[j][0], ce[j][1], 14))
     if fpts:
         wins.append(("first census finding", fpts[0][0], fpts[0][1], 12))
     if len(fpts) > 1:
