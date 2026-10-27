@@ -9,7 +9,7 @@ V=${VERILATOR:-verilator}
 for variant in gold mutant;do
  SRC="$R/rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l0r.sv"
  if [ "$variant" = mutant ];then
-  python3 -c 'from pathlib import Path;import sys;p=Path(sys.argv[1]);s=p.read_text().replace("if (bv && b_sel[wg])", "if (bv && b_sel[wg] && !(av && a_sel[wg]))");Path(sys.argv[2]).write_text(s)' "$SRC" "$B/mutant.sv"
+  python3 "$R/tools/s81_dv/l0r_write_priority_mutant.py" "$SRC" "$B/mutant.sv"
   SRC="$B/mutant.sv"
  fi
  "$V" --binary --timing -Wno-fatal -Wno-lint -Wno-style --top-module tb_l0r_write --Mdir "$B/obj_$variant" -j 4 -CFLAGS -O1 "$B/tb.sv" "$B/legacy_l0r.sv" "$SRC" "$R/rtl/lib/ot_rst_relay.sv" > "$B/build_$variant.log" 2>&1

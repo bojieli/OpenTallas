@@ -45,7 +45,7 @@ module dsdv_gunit_l0r #(
     // Optional write-side distribution: decode the INPUT address on the same
     // edge as ad/bd and av/bv. Static store indices remove the x192/x6 carry
     // chain from the registered group -> store path. No added data edge.
-    generate if (WRITE_DECODE != 0) begin : g_write_decode
+    generate if (WRITE_DECODE == 1) begin : g_write_decode
         (* keep = "true" *) reg [63:0] a_sel, b_sel;
         always @(posedge clk) begin
             a_sel <= 64'b1 << {wr_b, wr_agh};
@@ -57,6 +57,31 @@ module dsdv_gunit_l0r #(
                     if (av && a_sel[wg]) rs[6*wg+wj] <= ad[32*wj +: 32];
                     // B remains the last assignment, including an A/B collision.
                     if (bv && b_sel[wg]) rs[6*wg+wj] <= bd[32*wj +: 32];
+                end
+            end
+        end
+    end else if (WRITE_DECODE == 2) begin : g_write_raw
+        // Direct input -> FF captures preserve native pin registration. Each
+        // group has a local six-bit constant decode, with no address arithmetic
+        // or global write-enable tree. Group zero uses the original named FFs.
+        for (genvar wg = 0; wg < 64; wg = wg + 1) begin : g_group
+            wire [5:0] a_key, b_key;
+            if (wg == 0) begin : g_original
+                assign a_key = {wb, agh};
+                assign b_key = {wb, bgh};
+            end else begin : g_copy
+                (* keep = "true" *) reg [5:0] a_capture, b_capture;
+                always @(posedge clk) begin
+                    a_capture <= {wr_b, wr_agh};
+                    b_capture <= {wr_b, wr_bgh};
+                end
+                assign a_key = a_capture;
+                assign b_key = b_capture;
+            end
+            for (genvar wj = 0; wj < 6; wj = wj + 1) begin : g_word
+                always @(posedge clk) begin
+                    if (av && a_key == 6'(wg)) rs[6*wg+wj] <= ad[32*wj +: 32];
+                    if (bv && b_key == 6'(wg)) rs[6*wg+wj] <= bd[32*wj +: 32];
                 end
             end
         end
