@@ -1,0 +1,115 @@
+{
+ "nx": 0,
+ "ny": 0,
+ "m": 0,
+ "rep_um": null,
+ "ndr": "16w",
+ "sites": "explicit_cells",
+ "W": 31216.32,
+ "H": 26308.8,
+ "root_um": [
+  15767.055,
+  13132.92
+ ],
+ "tap_layer": "M8",
+ "tap_pin_size_um": [
+  1.28,
+  0.64
+ ],
+ "explicit_tree": {
+  "source": "opentallas.r15_top_sites.v1",
+  "groups": 4645,
+  "units": 8330,
+  "stacked_groups": 3685,
+  "plan_nets": 4644,
+  "nets": 4646,
+  "leaves": 960,
+  "checks": "geometry only (sites, host, seam, keep-out, overlap, tie column, Manhattan trunk layer); no midpoint / equal-cut (planner-balanced)",
+  "file": "out/d43b/spec_exact.json"
+ },
+ "tree_tracks": {
+  "method": "C128.TrackRouter: nearest PG-aware track, clock metal + VSS shields clear of PG/clock/shields by the NDR space",
+  "tracks": {
+   "M8": {
+    "pitch_um": 0.08,
+    "offset_um": 0.04
+   },
+   "M9": {
+    "pitch_um": 0.08,
+    "offset_um": 0.04
+   }
+  },
+  "max_move_um": 8.64,
+  "segments": 11566,
+  "moved": 11566,
+  "modes": {
+   "M8:drawn": 8220,
+   "M9:drawn": 3346
+  },
+  "move_max_um": 5.197,
+  "pg_rects": 13314,
+  "pin_stack": {
+   "rule": "R7 straight stacks + short-stack pads; stacked groups: M7 tie strap along the bar column through every unit pin row (A tie / Y tie), L nets = trunk + one M9 (M8) drop + M8 jog",
+   "stacks": 9290,
+   "ties": 7370,
+   "l_drops": 1702,
+   "pads": {
+    "M2": [
+     0.019,
+     0.009
+    ],
+    "M3": [
+     0.009,
+     0.02
+    ],
+    "M4": [
+     0.043,
+     0.012
+    ],
+    "M5": [
+     0.012,
+     0.043
+    ],
+    "M6": [
+     0.035,
+     0.016
+    ]
+   },
+   "r8": {
+    "wide_merge_um": 0.99975
+   }
+  },
+  "pg_source": "plan die.pg.grid"
+ },
+ "clock_shield": {
+  "net": "VSS",
+  "straps_shielded": 0,
+  "jogs_shielded": 0,
+  "fixed_tree_nets": 4646,
+  "fixed_tree_mm": 1562.2,
+  "fixed_tree_segs": 11566,
+  "grt_routed_tree_nets": 0,
+  "grt_routed_tree_mm": 0.0,
+  "complete": true,
+  "vss_tied": false,
+  "freeze_evidence_ok": false,
+  "method": "12.7a: H-tree legs, split tails, stubs and root net pre-routed as fixed special M8/M9 NDR wires, VSS stripe both sides, obstruction over the shield spacing (die_clock_128.combo_tcl)"
+ },
+ "rule_12_8": {
+  "methodology": "v5.1 12.8 (explicit planner tree)",
+  "shield_net": "VSS",
+  "sizing": "BUFx24 groups (planner)",
+  "early_offset_taps": 0
+ },
+ "cells": 8330,
+ "nodes": 3578,
+ "reps": 4752,
+ "stubs": 960,
+ "clock_cell_overlap_pairs": 0,
+ "clock_hard_keepout_violations": 0,
+ "unplaced": 0,
+ "tree_wire_mm": 1562.235,
+ "plan": "inputs/d43/plan_d43.json",
+ "plan_sha256": "f2c91d0338ee83f24741d805af1a34ce68117adb1586fca4c9f8e4135c24d0ff",
+ "build_s": 5.5
+}

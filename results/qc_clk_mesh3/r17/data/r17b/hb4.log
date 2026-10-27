@@ -1,0 +1,109 @@
+{
+ "schema": "opentallas.r11_hb_count.v1",
+ "label": "UNCHECKED plan estimate (HB4 from the r10 legal demand fragment)",
+ "plan": "inputs/candidate_oneqc0733.json",
+ "fragment": "out/r17b/pairs/hold_demand_fragment.json",
+ "fragment_pairs": 773,
+ "default_ps": 116.5,
+ "ports_on_default": 0,
+ "rule": {
+  "pad_ps": "D + 12.28 (lib hold) ; sender guarantee 12.5 cancels uncertainty share 12.5",
+  "cell": "HB4xp67",
+  "d_ff_ps": 44.555,
+  "area_um2": 0.1021,
+  "type_port": "max D over instances"
+ },
+ "vector_ports": 2707,
+ "scalar_ports_fallback": 286,
+ "bits": 1277200,
+ "hb4_cells": 2610983,
+ "hb4_area_mm2": 0.266581,
+ "hb4_area_frac_die": 0.000325,
+ "hb4_cells_per_instance_D_info": 2348270,
+ "cells_per_bit_hist": {
+  "1": 119065,
+  "2": 982487,
+  "3": 175648
+ },
+ "tt_setup_cost_ps_worst": 248.98,
+ "demand_ps": [
+  20.2,
+  116.5
+ ],
+ "partitions": 377,
+ "fit_over_headroom": [],
+ "fit_no_fill_note": 57,
+ "fit_max_frac_of_free": 0.00279
+}
+[
+ {
+  "part": "sl_E0_fw",
+  "type": "sle_fw_v1__cl3b7cacba",
+  "bits_in": 8567,
+  "hb4": 20519,
+  "hb4_area_um2": 2095.0,
+  "free_um2": 833089.5,
+  "hb4_frac_of_free": 0.00251,
+  "est_fill": 0.06,
+  "headroom_um2": 469862.5,
+  "hb4_frac_of_headroom": 0.0045,
+  "cells_before": 303708,
+  "cells_after": 324227
+ },
+ {
+  "part": "sl_W4_sc",
+  "type": "slw_sc_v1",
+  "bits_in": 9466,
+  "hb4": 18985,
+  "hb4_area_um2": 1938.4,
+  "free_um2": 821518.8,
+  "hb4_frac_of_free": 0.00236,
+  "est_fill": 0.04,
+  "headroom_um2": 473194.9,
+  "hb4_frac_of_headroom": 0.0041,
+  "cells_before": 40000,
+  "cells_after": 58985
+ },
+ {
+  "part": "sl_W2_sc",
+  "type": "slw_sc_v1",
+  "bits_in": 9466,
+  "hb4": 18985,
+  "hb4_area_um2": 1938.4,
+  "free_um2": 821518.8,
+  "hb4_frac_of_free": 0.00236,
+  "est_fill": 0.04,
+  "headroom_um2": 473194.9,
+  "hb4_frac_of_headroom": 0.0041,
+  "cells_before": 40000,
+  "cells_after": 58985
+ },
+ {
+  "part": "sl_E0_sc",
+  "type": "sle_sc_v1",
+  "bits_in": 9722,
+  "hb4": 18983,
+  "hb4_area_um2": 1938.2,
+  "free_um2": 821518.8,
+  "hb4_frac_of_free": 0.00236,
+  "est_fill": 0.04,
+  "headroom_um2": 473194.9,
+  "hb4_frac_of_headroom": 0.0041,
+  "cells_before": 40000,
+  "cells_after": 58983
+ },
+ {
+  "part": "sl_E2_sc",
+  "type": "sle_sc_v1",
+  "bits_in": 9722,
+  "hb4": 18983,
+  "hb4_area_um2": 1938.2,
+  "free_um2": 821518.8,
+  "hb4_frac_of_free": 0.00236,
+  "est_fill": 0.04,
+  "headroom_um2": 473194.9,
+  "hb4_frac_of_headroom": 0.0041,
+  "cells_before": 40000,
+  "cells_after": 58983
+ }
+]

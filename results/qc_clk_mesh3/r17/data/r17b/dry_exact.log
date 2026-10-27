@@ -1,0 +1,21 @@
+die_clock_mesh build: PLAN ERROR 84 plan error(s): no_clock_track 6, no_pin_stack 65, reserve_overflow 13 -> out/r17b/dry_exact/plan_errors.json
+  {"kind": "no_pin_stack", "name": "ckt_1191_0", "detail": "Y tie: M7 riser 6.115 um / M7 extent 6.385 um outside the island window"}
+  {"kind": "no_pin_stack", "name": "ckt_18476_0", "detail": "A tie: M7 riser 6.115 um / M7 extent 6.385 um outside the island window"}
+  {"kind": "reserve_overflow", "name": "ckm_w_ckt_1191_0", "detail": "M8 trunk 11648.840..12465.800 outside reservation 11650.365..12465.873"}
+  {"kind": "no_pin_stack", "name": "ckt_1194_0", "detail": "Y tie: M7 riser 6.115 um / M7 extent 6.385 um outside the island window"}
+  {"kind": "no_pin_stack", "name": "ckt_20123_0", "detail": "A tie: M7 riser 6.115 um / M7 extent 6.385 um outside the island window"}
+  {"kind": "reserve_overflow", "name": "ckm_w_ckt_1194_0", "detail": "M8 trunk 19061.960..19879.320 outside reservation 19063.485..19879.317"}
+  {"kind": "no_pin_stack", "name": "ckt_18476_0", "detail": "Y tie: M7 riser 6.655 um / M7 extent 6.925 um outside the island window"}
+  {"kind": "no_pin_stack", "name": "ckt_18477_0", "detail": "A tie: M7 riser 6.115 um / M7 extent 6.385 um outside the island window"}
+  {"kind": "no_pin_stack", "name": "ckt_20097_0", "detail": "Y tie: M7 riser 6.115 um / M7 extent 6.385 um outside the island window"}
+  {"kind": "no_pin_stack", "name": "ckt_19079_0", "detail": "Y tie: M7 riser 6.115 um / M7 extent 6.385 um outside the island window"}
+  {"kind": "no_pin_stack", "name": "ckt_20123_0", "detail": "Y tie: M7 riser 6.655 um / M7 extent 6.925 um outside the island window"}
+  {"kind": "no_pin_stack", "name": "ckt_20124_0", "detail": "A tie: M7 riser 6.115 um / M7 extent 6.385 um outside the island window"}
+  {"kind": "reserve_overflow", "name": "ckm_w_ckt_20123_0", "detail": "M8 trunk 19880.883..20293.240 outside reservation 19880.883..20291.337"}
+  {"kind": "no_pin_stack", "name": "ckt_18477_0", "detail": "Y tie: M7 riser 6.655 um / M7 extent 6.925 um outside the island window"}
+  {"kind": "no_pin_stack", "name": "ckt_18478_0", "detail": "A tie: M7 riser 6.115 um / M7 extent 6.385 um outside the island window"}
+  {"kind": "no_pin_stack", "name": "ckt_20098_0", "detail": "Y tie: M7 riser 6.115 um / M7 extent 6.385 um outside the island window"}
+  {"kind": "no_pin_stack", "name": "ckt_19080_0", "detail": "Y tie: M7 riser 6.115 um / M7 extent 6.385 um outside the island window"}
+  {"kind": "no_pin_stack", "name": "ckt_20124_0", "detail": "Y tie: M7 riser 6.655 um / M7 extent 6.925 um outside the island window"}
+  {"kind": "no_pin_stack", "name": "ckt_1193_0", "detail": "A tie: M7 riser 6.115 um / M7 extent 6.385 um outside the island window"}
+  {"kind": "reserve_overflow", "name": "ckm_w_ckt_20124_0", "detail": "M8 trunk 20292.903..20711.160 outside reservation 20292.903..20710.161"}

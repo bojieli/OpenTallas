@@ -2218,6 +2218,12 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
         prt = list((parts or {}).items())
     K = DC.KeepIndex(ko, die=(W, H))
     part_rects = dict(prt)
+    # R17 (opt-in spec "channel_hosts"): a die-level cell (part None, plan kind chan_*) may sit wholly inside a plan die
+    # channel declared clock_channel (the QC 43.2-um centre clock channel PLAN-DELTA); every other cell keeps its host check
+    chan_rects = []
+    if spec.get("channel_hosts") and P is not None:
+        chan_rects = [tuple(ch["rect_um"]) for ch in (P.die.get("channels", []) or [])
+                      if ch.get("clock_channel") and ch.get("rect_um")]
 
     def host(xy, half):
         for dx in (-half[0], half[0]):
@@ -2227,6 +2233,9 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
         for name, r in prt:
             if r[0] <= xy[0] <= r[2] and r[1] <= xy[1] <= r[3]:
                 return name, None
+        for r in chan_rects:
+            if r[0] <= xy[0] - half[0] and xy[0] + half[0] <= r[2] and r[1] <= xy[1] - half[1] and xy[1] + half[1] <= r[3]:
+                return None, None
         return None, "outside_partitions"
     perr, cells, groups = [], {}, defaultdict(list)
     for name, v in sorted((spec.get("cell_sites") or {}).items()):

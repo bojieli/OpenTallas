@@ -1,0 +1,233 @@
+/w/die_plan/qc_clk_mesh3.py:85: RankWarning: Polyfit may be poorly conditioned
+  c = np.polyfit(np.concatenate([[0.0], L]), np.concatenate([[D0[key[2]]], D]), 2)
+{
+ "schema": "opentallas.r15_top_sites.v1",
+ "label": "UNCHECKED (plan export; no route)",
+ "config": {
+  "top_w": "16w",
+  "top_m": 2,
+  "top_reach": 450.0,
+  "no_spine": true
+ },
+ "groups": 4645,
+ "groups_by_kind": {
+  "top_node": 1176,
+  "chan_node": 23,
+  "col_tap": 960,
+  "top_rep": 2376,
+  "chan_rep": 110
+ },
+ "instances": 8330,
+ "instances_by_master": {
+  "BUFx24_ASAP7_75t_R": 8330
+ },
+ "mirrored": 1162,
+ "nets": 4644,
+ "nets_by_layer": {
+  "M8": 2772,
+  "M9": 1872
+ },
+ "leaf_rows": 20,
+ "leaves": 960,
+ "vss_phase": {
+  "on_vss": 4645,
+  "unit1_of_stack": 3685
+ },
+ "seam_fix_moves": {
+  "n": 0,
+  "max_um": 0.0
+ },
+ "off_island_lattice": 0,
+ "gate": {
+  "errors": {},
+  "examples": {},
+  "overlaps": 0,
+  "overlap_examples": [],
+  "verdict": "PASS"
+ },
+ "hosts": 324,
+ "types_hosting": 66,
+ "type_window_union_worst": [
+  [
+   "cbf_q11",
+   {
+    "instances": 24,
+    "union_sites": 22,
+    "max_inst_sites": 11,
+    "union_over_max": 2.0
+   }
+  ],
+  [
+   "cbx_q10",
+   {
+    "instances": 48,
+    "union_sites": 66,
+    "max_inst_sites": 33,
+    "union_over_max": 2.0
+   }
+  ],
+  [
+   "cbn_q01",
+   {
+    "instances": 24,
+    "union_sites": 70,
+    "max_inst_sites": 35,
+    "union_over_max": 2.0
+   }
+  ],
+  [
+   "cbn_q11",
+   {
+    "instances": 24,
+    "union_sites": 22,
+    "max_inst_sites": 11,
+    "union_over_max": 2.0
+   }
+  ],
+  [
+   "cbn_q00",
+   {
+    "instances": 24,
+    "union_sites": 138,
+    "max_inst_sites": 69,
+    "union_over_max": 2.0
+   }
+  ],
+  [
+   "cbf_q01",
+   {
+    "instances": 23,
+    "union_sites": 34,
+    "max_inst_sites": 17,
+    "union_over_max": 2.0
+   }
+  ],
+  [
+   "cbf_q00",
+   {
+    "instances": 23,
+    "union_sites": 110,
+    "max_inst_sites": 55,
+    "union_over_max": 2.0
+   }
+  ],
+  [
+   "cbf_q01_s2",
+   {
+    "instances": 1,
+    "union_sites": 17,
+    "max_inst_sites": 17,
+    "union_over_max": 1.0
+   }
+  ]
+ ],
+ "r9_tool_gaps_r11": [
+  "die_clock_mesh.NDR has 4w/8w only; mesh3 top tree is 16W (0.64 um) M8/M9: TrackRouter/shield/short-stack pads/via arrays need a 16w NDR (wide-metal spacing + VIA78/89 arrays) before route",
+  "build_lattice() accepts only binary, midpoint, equal-cut, equal-length H-trees (plan errors node_midpoint/leg_reps/path_spread); mesh3 is DELAY-balanced (node off-midpoint, lifts arity 1, extra repeaters) -> needs an explicit-cells build path (cells+nets from this export) into C128.fixed_wires",
+  "multi-unit groups (2 x BUFx24 stacked rows) need the unit A/Y tie straps encoded as fixed wires"
+ ],
+ "islands": {
+  "mode": "periodic",
+  "groups_on_slots": 4512,
+  "classes": 539,
+  "max_move_um": 9.855,
+  "moved_gt_1um": 1320,
+  "identity_violations": [],
+  "n_identity_violations": 0,
+  "types_hosting": 66,
+  "types_identical": 66,
+  "rule": "one slot per (type, frame point) class, free + clear in every instance -> identical slot set per type",
+  "lattice_identical_per_type": true,
+  "reserved_slots_per_type": {
+   "cbf_q00_s2": 24251,
+   "cbf_q01_s2": 24502,
+   "cbx_q10": 24251,
+   "cbf_q11": 24502,
+   "cbn_q00": 24251,
+   "cbn_q01": 24502,
+   "cbn_q11": 24502,
+   "cbf_q00": 24251,
+   "cbf_q01": 24502,
+   "slw_hc0": 19250,
+   "slw_hc1": 18942,
+   "slw_hc2": 18942,
+   "slw_hc3": 19250,
+   "slw_st_b_v2": 19250,
+   "sle_ctl": 38654,
+   "slw_st_a_v2": 19250,
+   "slw_fw_v3": 19250,
+   "slw_stm_v3": 18942,
+   "slw_sc_v3": 18942,
+   "slw_fe_v2__clacbd6592": 19250,
+   "slw_su_l1__clbd68af58": 8242,
+   "slw_su_c__cl77ab230a": 24580,
+   "slw_su_l0__cl72211ea3": 8242,
+   "slw_st_b_v1": 19250,
+   "slw_st_a_v1": 19250,
+   "slw_fw_v1__cl80b8d16f": 19250,
+   "slw_stm_v1__cl522749b8": 18942,
+   "slw_sc_v1": 18942,
+   "slw_fe_v1__clcb7b024a": 19250,
+   "slw_su_l1__cl766bacee": 8242,
+   "slw_fw_v2": 19250,
+   "slw_stm_v2": 18942,
+   "slw_sc_v2": 18942,
+   "slw_fe_v2__cle5354d4d": 19250,
+   "slw_su_l0__cl0cf5548e": 8242,
+   "slw_fw_v1__cl82aac3aa": 19250,
+   "slw_su_l1__cl8312485b": 8242,
+   "slw_su_c__clbb0c543d": 24580,
+   "slw_stm_v1__cla56d6dd9": 18942,
+   "slw_sc_v1r": 18942,
+   "slw_fe_v1__cl8ba3358f": 19250,
+   "slw_su_c__cl49a25f5f": 24580,
+   "slw_su_l0__cle4811ba5": 8242,
+   "sle_hc0": 19250,
+   "sle_hc1": 18942,
+   "sle_hc2": 18942,
+   "sle_st_b_v1": 19250,
+   "sle_st_a_v1": 19250,
+   "sle_fw_v1__cl3b7cacba": 19250,
+   "sle_stm_v1": 18942,
+   "sle_sc_v1": 18942,
+   "sle_fe_v1__clfcc50df9": 19250,
+   "sle_su_l1__cl15735621": 8242,
+   "sle_su_c__cl78b6fe86": 24580,
+   "sle_su_l0__clad02be3b": 8242,
+   "sle_st_b_v2": 19250,
+   "sle_st_a_v2": 19250,
+   "sle_fw_v2__cl2b5fc15e": 19250,
+   "sle_stm_v2": 18942,
+   "sle_sc_v2": 18942,
+   "sle_fe_v2": 19250,
+   "sle_su_l1__cl9c71a39d": 8242,
+   "sle_fw_v1_e2": 19250,
+   "sle_fe_v1__clad8c146b": 19250,
+   "sle_su_c__cl99d49f55": 24580,
+   "sle_su_l0__cld14716fc": 8242,
+   "sle_fw_v2__clf90441df": 19250,
+   "sle_su_l1__cl3c610c2d": 8242,
+   "sle_su_c__cl3c67a3d5": 24580,
+   "sle_fw_v1__cl39c71cef": 19250,
+   "sle_fw_v3": 19250,
+   "sle_stm_v3": 18942,
+   "sle_sc_v3": 18942,
+   "sle_fe_v3": 19250,
+   "phy_serdes_b": 85492,
+   "phy_serdes": 85492,
+   "coll_s": 14628,
+   "coll_ft": 18126,
+   "coll_core": 29097,
+   "coll_ftm": 26871,
+   "coll_ftc": 18921,
+   "coll_ftn": 12561,
+   "coll_n": 14310,
+   "phy_ucie_kv": 13973,
+   "coll_ucie": 29673,
+   "glue": 26533,
+   "native59": 9263,
+   "tt_ctlm": 9263
+  }
+ }
+}
+render failed No module named 'matplotlib'
