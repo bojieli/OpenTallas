@@ -24,7 +24,28 @@ def occ(N, T, phase, H=400):
 def bound(S, T):
     N = S // T + 1
     return N, max(occ(N, T, p) for p in range(T))
+# HEAD-CORE-R17 2026-10-27 (COORD ruling 5 on HEAD-CORE-R15 / RULING HEAD-RTL-4: depth from the WORST-CASE replay stall of
+# the PRODUCTION link protocol, max retries x replay length, not bench spacing).  ot_s81ph_link_ep_safe4 as instantiated by
+# ot_s81ph_coll_lane_safe4 (dsfd_coll_lane_w_safe8_ntf, CH_BOARD 700, REACH 2; hd_mesh straps CH_B 2'b11 = board timeout
+# on both lanes): RTTB = 2 CH_BOARD + TX_STAGES + 2 PIPE + RX_STAGES + 6, ATOB = RTTB + 2 KEEPALIVE + 32.  A sender with no
+# ACK / NAK rewinds once per ATOB (timer reset at the rewind, TOREG at_lim registered) and declares the link fault
+# (retry_exh) at the (MAX_RETRY + 1)-th rewind without progress, so the latest a record can still land is MAX_RETRY
+# replays late: S = MAX_RETRY * ATOB (a NAK rewind comes after ~RTTB < ATOB, so it only shortens S).  Each later error
+# episode restarts the retry count at progress and again holds at most the records sent within one S window.
+# Window N = floor(S / T) + 1 at the minimum static position period T.  Common-mode worst case (the same stall on lane a):
+# both bursts land on the same edges and copy A has priority on the word port (2 N edges), while copy B lands 3 per 4
+# edges -> copy B holds its whole burst before its first read: BQ = N.  Bench: tb_s81hd_mesh_ep_burst.sv.
+def protocol(T, ch_board=700, tx_stages=2, pipe=2, rx_stages=5, keepalive=16, max_retry=8):
+    rttb = 2 * ch_board + tx_stages + 2 * pipe + rx_stages + 6
+    atob = rttb + 2 * keepalive + 32
+    S = max_retry * atob
+    N = S // T + 1
+    return dict(RTTB=rttb, ATOB=atob, S=S, N=N, BQ=N, margin_to_next_N=(N * T) - S)
 if __name__ == '__main__':
+    if sys.argv[1] == '--protocol':
+        d = protocol(int(sys.argv[2]))
+        print('T=%s ' % sys.argv[2] + ' '.join('%s=%s' % kv for kv in d.items()))
+        sys.exit(0)
     S, T = int(sys.argv[1]), int(sys.argv[2])
     N, b = bound(S, T)
     print('S=%d T=%d replay_window_records N=%d worst_copyB_occupancy BQ=%d' % (S, T, N, b))

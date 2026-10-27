@@ -74,7 +74,7 @@ endmodule
 
 module ot_s81hd_mesh_ep_core #(
     parameter [1:0]   CH_B = 2'b11,          // board-lane straps of lanes a / b (as ot_s81hd_lep0N_core CH_B)
-    parameter integer BQ   = 7,              // per-copy burst FIFO depth (HEAD-RTL-4 bound, see the RX section)
+    parameter integer BQ   = 7,              // per-copy burst FIFO depth (HEAD-RTL-4 stress bound; production = 2, see the RX section)
     parameter integer MUT  = 0
 ) (
     input  wire          ck,
@@ -116,6 +116,15 @@ module ot_s81hd_mesh_ep_core #(
     // pointers, no flow control towards the lane (the closed lsc_r0m child is unchanged).  A landing into a full FIFO
     // is DROPPED (order kept) and sets the sticky ep_fault[10].  Same edges as the slot: landing register (edge 1),
     // FIFO write + count (edge 2), decision -> word register (edge 3).  MUT 7 = BQ - 1 (bench negative control).
+    // HEAD-CORE-R17 (COORD ruling 5 on HEAD-CORE-R15): PRODUCTION depth from the static schedule and the link protocol
+    // (tools/s81_head/mesh_bq_bound.py --protocol): the lane endpoint (ot_s81ph_link_ep_safe4 in dsfd_coll_lane_w_safe8_ntf,
+    // CH_BOARD 700, straps CH_B 2'b11) rewinds once per ACK timeout ATOB = 2*700 + 2 + 2*2 + 5 + 6 + 2*16 + 32 = 1,481
+    // and declares the link fault at the 9th rewind without progress (MAX_RETRY 8), so the worst non-fault stall is
+    // S = 8 * 1,481 = 11,848 cycles; at the minimum position period T = 8,357 the replay window holds N = floor(S/T)+1 = 2
+    // records (N = 3 would need S >= 16,714).  Common-mode worst case (lane a stalled identically, copy A first on the
+    // port): copy B holds both before its first read -> BQ = 2.  Bench tools/s81_head/mesh_ep_burst_bench.sh: S 11,848
+    // measured, BQ 2 PASS, BQ 1 loses a record + ep_fault[10].  The default stays 7 (no overflow at 7; 7 >= 2) until the
+    // HEAD PLAN-DELTA freezes BQ = 2 on the hd_mesh instances (RULING HEAD-RTL-4: freeze with the plan).
     localparam integer BQE = (MUT == 7) ? BQ - 1 : BQ;
     localparam integer BCW = $clog2(BQE + 1);
     reg  la, lb;                              // landed enables (aligned with the landing registers)
