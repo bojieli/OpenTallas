@@ -109,3 +109,9 @@ Claude reset; full INFRA/DIE-CI/nativeKV45 handoff appended CODEX-LOG.md. Native
 
 ## CODEX notes 2026-10-26 02:09 PDT
 Auxiliary takeover collected current operational state; details codex-aux-infra-1026.md. Four-host launcher/timers healthy, epyc3 retired. DIE-CI remains live on retired d4g q_sfuc after37.6h (intel2 OpenROAD162242), not dead lock; no cancellation or duplicate old CI. New jobs use bounded --stage to avoid hub-only memory wait.
+
+## CODEX notes 2026-10-26 20:14 PDT
+Historical retired d4g41h job explicitly killed07:22 per handoff; do not relaunch. Current IO hold stand-in null/NEEDS_PARENT on e1f718f079.
+
+## CODEX notes 2026-10-27 08:16 PDT
+Collected legacy orphan: intel2 PID3989734 wrapper + PID3989737 docker g2part-3989734 remain LIVE on retired 2026-10-24_da5213b0b3e5 HBM part_q_su1. Old scope2466333 is inactive, but does not prove container is dead. GRT log last iter19/30. No relaunch or cancellation. Current per-die physical teams own current die gates; old budget-model failures stay historical.

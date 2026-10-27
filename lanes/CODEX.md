@@ -1054,3 +1054,29 @@ Single quick pass over every lane file; latest-tail excerpts identify the curren
 ### Qwen token coverage 2026-10-27 08:15 PDT
 - TOK-QK/KV-TOK: B484/32boot checks traced to28inline stale-sourcePCs; corrected top rebuild running intel2:codex-qk-boot-0818/build client395700, next128/128boot then14images thenKVL; former12KVLs disarmed/no result.
 - TOK-QW/QC-TOK: QCLM259/259 and XD4 PASS retained; wholeQC blocked current finalbind physical owner; missing bound-s8 xhead now fresh build/calibration epyc2 unit1855811-1793114052 (childqcbench).
+
+## Shared STA/PG coverage 2026-10-27 08:16 PDT
+- DIE-PROTO: codex/sta-pg-1027 independent PG terminal experiment; intel1:/srv/opentallas-scratch2/claude/codex-sta-pg-1027/run2.sh LIVE; next distributed IR then diagnose grid; original468.4mV point-load explanation unproven.
+- DIE-STA: no standalone live job; real-view current gates owned per-die teams, no old budget STA rerun.
+- DIE-CI: retired q_su1 wrapper3989734/docker3989737 LIVE intel2 historical da5213b0b3e5; next coordinator operational disposition; no duplicate or kill.
+
+### HEAD physical 2026-10-27 08:16 
+HEAD-CORE-LAT: m2/m12 postroute admission failures diagnosed, scoped two-view successor ECOs live intel1 codex-head-1027 units1259360/1259362; elemB existing epyc2unit1684250live. Next signoff+routedLEC collect. S81-HEAD: R18tree952a570094+snapped declared slots+HEAD5PG compositing on codex/head-tree-1027; clock_sites/island_lattice nowPASS, next corepin/source composition then DB/RCX/relatedSTA. HEAD-RTL: parent handles source/bind closure candidate dc7e87fd2, no duplicate RTL.
+
+## Shared flow/tool coverage 2026-10-27 08:16 PDT — /root/flow
+Active: FLOW-RC/FLOW-CANARY -> flow/rc_canary candidate canaries +60um sharedplacement +KVconstraint rebaseline; LEC-TOOL/YOSYS-CONCAT/LEC aliases -> flow/lec proof convergence+jobharvest; DIE-STA/DIE-PROTO/DIE-CI -> flow/sta_pg distributedPG experiment and retiredCI classification; PREFLIGHT-1 -> flow b56b0b55be READY; AUTOPILOT-SIGNOFF-1 -> flow/autopilot ee05d9ad37 READY.
+- FLOW: Shared flow takeover: PREFLIGHT-1 b56b0b55be and FF-bound fix9529b56ff0 READY (19preflight/bundle+4FF tests); canary integration owned flow/rc_canary. Existing physical failures remain assigned die teams.
+- GATE-PINS: Canonical/exact-mirror tool already merged e666a3923. No live job. Actual e1/e5 544vs546 strap pin mismatch remains physical, no provenance-only rerun. Collector pin copy is optional follow-up after path closure.
+- SIGNOFF: Canonical TT/FF gates current; explicit --ff-bound-ps on non-core die-plan kits FIXED9529b56ff0 (4focusedPASS). Old invalidPG3/unverified13 rows retained. No blind lostDB reruns.
+- SIGNOFF-MODES: Shared CLI FF-bound bug FIXED9529b56ff0. Qwen owner auditing KV/QC per-mode scripts; S81 core owner assigned frozen-view FF202.5 re-time. Non-S81 task3 existing results retained; e5 missingODB stays UNVERIFIABLE.
+- FLOW-FT-SDC: Source already merged; btab_r6 physical collection with Qwen owner. No stale trial duplicated.
+- SDC-LINT-ATTR: Old canary regression diagnosed KV80ps tap window/55ps seam contract, not lint. Current baseline constraint-only rebaseline owned flow/rc_canary per COORD07:20; original failure retained.
+- TEST-FIX: Historical sparse checkout21fails resolved. Current focused preflight/bundle19PASS on fleetPy3.14; no sweep or duplicate fixture work.
+- FP32: LAT4f12 one833psdomain work complete; in-context operand-mux timing owned HBM/KV actual cores. No duplicate20Mbench.
+- KIT-CENSUS: Historical census complete; no live jobs. Current early kit admission implemented PREFLIGHT-1 b56b0b55be; ownership/geometry rules remain.
+- KITS-SPARE: Old generic spare route waves superseded current slices/deltas; real die path owners handle current eligible kits. No bypass of held interface.
+- PROTO: Old budget prototype superseded die-first/master-slice method; no retired-plan rerun. Current PG modeling diagnostic owned flow/sta_pg.
+- PROTO-KITS: S81 adopt178 obsolete rows stay superseded; current S81 physical owner owns slice kits. No old re-route.
+- ROM-MACRO: Content/personalisation tooling already complete4c7c8aff51; real calendar adoption physical/token owned, no corpus regen or obsolete ROM work.
+- RTL-SELRANGE: Old csa31 source fix/gate integrated. Current PREFLIGHT cheaply checks YC cast forms, later actual SELRANGE/RTL-elaboration gate remains mandatory.
+Clock aliases CLK-AOCV/CLOCK-128/CLOCK-MESH/CLOCK-RESET/CLOCK-TRUNK/CLOCK/CLOCK-RESIDUAL and RESET/HOLD-REPAIR/HOLD-COLL-R1/IO-HOLD: shared tools upstream; current clock and local residual failures belong die owners QC/KV(qwen), S81/HEAD(s81_head), HBM(hbm). No independent stale structural route restarted. Old HOLD-COLL reset recovery+FT overlay successor with qwen; current shared FF-session audit with SIGNOFF-MODES physical owners.

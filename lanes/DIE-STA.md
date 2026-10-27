@@ -137,3 +137,6 @@ DIE-PROTO owns freshqualifiednative mixed-NDR QC fullclock result: GRT0/slew-cap
 ## CODEX notes 2026-10-26 20:14 PDT
 Real-view dieSTA remains release gate. No ideal/stand-in result counts as closed; current die paths own composed timing.
 - 2026-10-27 06:39 PDT ROOT-MERGE-31 NOTICE: main 471dd392b5 carries (a) core-view match-pins default ON + pin-file content sha (gate-pins-content 03a0552428): views signed off on old pin files no longer count -- regenerate; (b) mc-gapfold dffd539c3c: RC gap folded per MC sample in die STA; (c) clock entry port centre snapped onto its track + check-kit on-track/>=0.048x0.48 check (clock-port-track 51646a5c4d); (d) R24 apply_clkmesh_sites in-core islands, opt-in --hb4-delay.
+
+## CODEX notes 2026-10-27 08:16 PDT
+No standalone current DIE-STA job to duplicate. Current real-view die STA belongs QC/KV/S81/HEAD/HBM path/clock owners; old833.333-ps stand-in results remain diagnostic and preserved. Shared prototype next actionable blocker is KV distributed-PG experiment (DIE-PROTO, codex/sta-pg-1027).
