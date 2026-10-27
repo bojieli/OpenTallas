@@ -1345,3 +1345,5 @@ CODEX: 2026-10-27 08:32 PDT RM39 main5076049768 native station geometry + runtim
 CODEX: 2026-10-27 08:32 PDT HBM HCOL exactsource recovered + measured halfsynth DONE0: h0/h1 area19981/21218um2,FF24999/27862;164wide needs72/76%fill. Missingaliasrecipes + native128vs256count + genericfaceshell2edgephasefailure delivered plan/cores/token; package2885e965b6.
 
 CODEX: 2026-10-27 08:34 PDT Combinedcanaries3/7 actualplacementsreviewed/resumed HBM_SRAM/QC/HEAD,sourceab3/evidence9ad9755af;PG0open all3,60umadds1112/47436/3833cells (QC37.5%cost). InitialplaceFAILs retained.
+
+CODEX: 2026-10-27 08:34 PDT HEADnative04dc5d8885 generatedhd_tilecheckpoint+miterPASS128x5120,row21946/4173a558,8429cy/9003checks,wrongrowmutantCAUGHT; exactGitproviders+strict326/nested2217PASS; wholeHEADlintcontinues,physicalFTadapter/fullG5open.
