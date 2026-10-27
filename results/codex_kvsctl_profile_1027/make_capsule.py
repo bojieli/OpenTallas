@@ -1,5 +1,5 @@
-import pathlib,json,subprocess,hashlib,shutil
-W=pathlib.Path('/srv/opentallas-scratch2/claude/wt/codex-pv-pass2-0830');R=pathlib.Path('results/codex_kvsctl_profile_1027');O=W/R;O.mkdir(parents=True,exist_ok=True);SHA=subprocess.check_output(['git','rev-parse','bc1a556176'],cwd=W,text=True).strip();base='results/kv_cores_r2/kvsctl3';manifest={}
+import pathlib,json,subprocess,hashlib,shutil,sys
+W=pathlib.Path(__file__).resolve().parents[2];R=pathlib.Path('results/codex_kvsctl_profile_1027');O=W/R;O.mkdir(parents=True,exist_ok=True);SHA=subprocess.check_output(['git','rev-parse','bc1a556176'],cwd=W,text=True).strip();base='results/kv_cores_r2/kvsctl3';manifest={}
 def read(p):return subprocess.check_output(['git','show',f'{SHA}:{p}'],cwd=W)
 def snap(p):
  target=O/'proof_src'/p
@@ -23,7 +23,7 @@ for h in kit['hard_macros'].values():
   h[k]=str(R/'proof_src'/v) if k=='dir' else [snap(p) for p in v] if isinstance(v,list) else snap(v)
 kit['bind_out']=str(R/'proof_src'/base/'kit_rtl');kit['source_profile']=core['source_profile']
 (O/'core.json').write_text(json.dumps(core,indent=1)+'\n');(O/'kit_rtl.json').write_text(json.dumps(kit,indent=1)+'\n');(O/'kit_rtl.f').write_text('\n'.join(kit['files'])+'\n');(O/'landing_ledger.json').write_text(json.dumps(core['landing'],indent=1)+'\n')
-face=O/'face';face.mkdir(exist_ok=True);src=pathlib.Path('/srv/opentallas-scratch2/claude/codex-lec-0815/kvsctl_composed_fp');actual={}
+face=O/'face';face.mkdir(exist_ok=True);src=pathlib.Path(sys.argv[1]) if len(sys.argv)>1 else face;actual={}
 for n in ['qkd_kvs_ctl.v','hr_face_ports.json','eq_rc.txt','composed_proof.json']:
  b=(src/n).read_bytes();(face/n).write_bytes(b);actual[n]={'source':str(src/n),'sha256':hashlib.sha256(b).hexdigest(),'bytes':len(b)}
 (O/'manifest.json').write_text(json.dumps({'source_commit':SHA,'core_dependency_count':46,'source_files':manifest,'actual_composed_face':actual},indent=1)+'\n')
