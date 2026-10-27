@@ -606,8 +606,36 @@ def placement_overlaps(cells):
     return out
 
 
+def rect_union_strips(rects):
+    """Exact union as disjoint horizontal strips, coalesced vertically where possible."""
+    events = defaultdict(list)
+    for i,(x0,y0,x1,y1) in enumerate(rects):
+        events[round(y0,9)].append((True,i,(round(x0,9),round(x1,9))))
+        events[round(y1,9)].append((False,i,None))
+    active, opened, out, previous = {}, {}, [], None
+    for y in sorted(events):
+        if previous is not None and y > previous:
+            merged = []
+            for x0,x1 in sorted(active.values()):
+                if merged and x0 <= merged[-1][1] + 1e-9:merged[-1][1] = max(x1,merged[-1][1])
+                else:merged.append([x0,x1])
+            next_open = {}
+            for x0,x1 in merged:
+                key = (x0,x1)
+                r = opened.pop(key,[x0,previous,x1,y])
+                r[3] = y
+                next_open[key] = r
+            out.extend(opened.values());opened = next_open
+        for add,i,span in events[y]:
+            if add:active[i] = span
+            else:active.pop(i,None)
+        previous = y
+    out.extend(opened.values())
+    return out
+
+
 def ft_halo_keepouts(P):
-    """Conservative FT-bank and station envelopes with the required 2um clock-cell halo.
+    """Exact FT-bit and station union with the required 2um clock-cell halo.
     Explicit coordinates are cell lower-left sites; transforms use all envelope
     corners so MX/MY instances reserve the same physical cells as their type.
     """
@@ -618,12 +646,12 @@ def ft_halo_keepouts(P):
             groups = [(f"bank_{j}", bs) for j,bs in enumerate(f.get("bit_sites_um", [])) if bs]
             groups += [(f"station_{j}", [xy]) for j,xy in enumerate(f.get("regs_um", []))]
             for tag, pts in groups:
-                x0, y0 = min(q[0] for q in pts)-2., min(q[1] for q in pts)-2.
-                x1, y1 = max(q[0] for q in pts)+w+2., max(q[1] for q in pts)+h+2.
-                corners = [P.to_die(part,(x,y)) for x in (x0,x1) for y in (y0,y1)]
-                out.append((min(x for x,y in corners), min(y for x,y in corners),
-                            max(x for x,y in corners), max(y for x,y in corners),
-                            f"{part}/ft_halo/{f['name']}_{tag}"))
+                rects = rect_union_strips([(x-2.,y-2.,x+w+2.,y+h+2.) for x,y in pts])
+                for j,(x0,y0,x1,y1) in enumerate(rects):
+                    corners = [P.to_die(part,(x,y)) for x in (x0,x1) for y in (y0,y1)]
+                    out.append((min(x for x,y in corners), min(y for x,y in corners),
+                                max(x for x,y in corners), max(y for x,y in corners),
+                                f"{part}/ft_halo/{f['name']}_{tag}_{j}"))
     return out
 
 

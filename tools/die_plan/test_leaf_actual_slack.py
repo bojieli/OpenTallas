@@ -55,3 +55,9 @@ def test_ft_halo_envelope_respects_mirrored_instance():
  P=SimpleNamespace(parts={'p':{'type':'T'}},types={'T':{'ft_slots':[dict(name='a',bit_site_cell_um=[1.404,.27],bit_sites_um=[[[100.,200.],[105.,200.]]])]}},to_die=lambda n,q:(800.-q[0],q[1]))
  r=DM.ft_halo_keepouts(P)[0]
  assert tuple(round(x,6) for x in r[:4]) == (691.596,198.,702.,202.27)
+
+
+def test_ft_union_preserves_free_holes_between_scattered_bit_sites():
+ r=DM.rect_union_strips([(0.,0.,5.,5.),(10.,0.,15.,5.),(0.,3.,5.,8.)])
+ assert sorted(r)==[[0.,0.,5.,8.],[10.,0.,15.,5.]]
+ assert all(not(x0<7.<x1) for x0,y0,x1,y1 in r)
