@@ -1,0 +1,35 @@
+{
+ "clock_port": "ft_mstrap_i",
+ "source_offset_ps": 0,
+ "cycles_added": 0,
+ "database_changed": false,
+ "canonical_plan_adopted": false,
+ "real_ft_ports": 8,
+ "arcs": [
+  {
+   "cell": "u_isl_ck0",
+   "source": "ft_ck0_i",
+   "sink": "ft_ck0_o",
+   "kind": "clock"
+  },
+  {
+   "cell": "u_isl_ck1",
+   "source": "ft_ck1_i",
+   "sink": "ft_ck1_o",
+   "kind": "clock"
+  },
+  {
+   "cell": "u_isl_m0",
+   "source": "ft_mesh_i",
+   "sink": "ft_mesh_o",
+   "kind": "clock"
+  },
+  {
+   "cell": "u_isl_rstft",
+   "source": "ft_rst_i",
+   "sink": "ft_rst_o",
+   "kind": "reset"
+  }
+ ],
+ "note": "Gold source expresses exact existing physical interface; no routing or cell changes"
+}

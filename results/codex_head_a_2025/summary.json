@@ -1,0 +1,30 @@
+{
+  "status": "OPEN; not SIGNED",
+  "source": "claude/head-core-lat-r9-1026@e146c67812; accepted R8 physical kit",
+  "actual_primary_clock": "ft_mstrap_i",
+  "canonical_head_plan_adopted": false,
+  "corner_basis": "GRT rc_cal 0.8,0.9; 833ps; TTsetup/FFhold;60/25ps",
+  "TT": {
+    "setup_ps": 118.46801365053909,
+    "setup_endpoints": 0
+  },
+  "FF": {
+    "hold_ps": -73.67755046635872,
+    "hold_endpoints": 707
+  },
+  "numbers": "UNCHECKED",
+  "runtime": "intel1:/srv/opentallas-scratch2/claude/codex-head-a-2025",
+  "jobs": {
+    "lec_client": 2001766,
+    "lec_unit": "oth-ubuntu-2428351-1793072017",
+    "repair_client": 2044394,
+    "repair_unit": "oth-ubuntu-2441886-1793072091"
+  },
+  "interface_miter": {
+    "checks": 128,
+    "clock_edges": 64,
+    "added_cycles": 0,
+    "mutant": "ft_rst polarity CAUGHT at first sample"
+  },
+  "first_LEC_attempt": "UNPROVEN missing physical-only TAPCELL; original export retained; exact8176portless instances removed from functional export only"
+}
