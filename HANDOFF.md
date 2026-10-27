@@ -1404,3 +1404,5 @@ CODEX: 2026-10-27 09:05 PDT HBM PG70padcorecoupon upperstackPASS23.396/23.151mV+
 CODEX: 2026-10-27 09:05 PDT QCclock source6c038f1fd READY66tests; actualfullmesh/nativeV2 primitivePASS; physicalfails slot/diagonal/seam diagnosed, body405native100IO successorlive; no diefreeze.
 
 CODEX: 2026-10-27 09:07 PDT FLOW QC29.4psregressiondiagnosed3extraCTSstages, RC-onlyeffect0.002ps; actualreference54a1lackscontrol_sinks/Qwen100trialownsfix. Shared60held. HBMlintpackaging/runtime READY53db0772b 4controlsPASS. Exact5bS81urgentcanaryplacementlive; combined3NOreg/1reg,5/7barrierscleared.
+
+CODEX: 2026-10-27 09:08 PDT RM51 main f108b501fd == origin/main; HBM pre-synth lint + immutable AP admission bundles,149compositionPASS; LEC thin patch excluded on missing-parent dependency, flow deployment notified.
