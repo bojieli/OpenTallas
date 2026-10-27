@@ -4628,3 +4628,9 @@ Sourcecodex/head-2000@69d379c78: correctedBpins+density/tree closesGRTclockwindo
 ## CODEX notes 2026-10-26 21:04 PDT — PD2 PARKED explicit Claude reset
 Source codex/s81-pd2-2000@875f1c86a plus final parking receipt pushed. Full packet handoff/codex_s81_pd2_20261026_2103.md. Allownedjobsterminal. CorrectR864B2compose21bandFAIL/G024cuts/G0C242of244(sevenfaces1BK+6gunit). Restoredexact-bankconsumer0765/schemaeb4 andexactclockcensus94b. PHYdensity14types15taps0inside/empty,max129.288um. GlobalclockR5ded7uniqueemitter27515cells/27514edges0>405; nativeplacementRCmeanlandedmax178.474TT/147.152FF,coarsewholepartworst3TT420.696/0FF351.532,notrelated-pairgate. R4INVALIDdupnamescaughtbeforeSTA/pnr,fixded7guard. BKminimaltestedTXy64.8(+38.88)gets0of6storagebandFAIL/nooverlap/nooutlinegrowth; imageVIEWED,deltaNOTAPPLIED untilactualTXphys816 clock/reset/r2r+latency/bind. No newjob/codeafterreset; remainingfaces/epoch/PG/rings/sourceholdsretained. OWNER?none.
 Packet: /home/ubuntu/coord/handoff/codex_s81_pd2_20261026_2103.md
+
+## Handoff to Claude 2026-10-26 21:05 PDT — FLOW / HBM support
+Explicitreset: engineeringparked,allsourcepushed,nohalfmerges. Finalpacket handoff/codex-flow-reset-2103.md contains exact3branchSHAs/jobs/results/failures/nextowner. FUSHUB2716535fullfunctionalbuild+collGRT552477 maycontinue. Finalstationjobs3667192/3668546 TERMINALFAIL failclosedpricedregisterdrop; nooutputs,no retryafterreset. Buddy0a4c/cached842/adapter4abd complete; nativepin/clock/bind/open calendar stillpending. OWNER? none fromthischild.
+
+## HBM handback supplement 2026-10-26 21:05 PDT
+Full packet: handoff/codex_hbm_20261026_2104.md. Branch codex/hbm-2001@3c3dae6bb pushed; corrected orientMY NErootface localE givescut0.586 vsNW0.553. Allnativejobs terminal, three obsolete proxies may continue. Physical/nativecalendar gates open; finalstation helper guard failed on lostpricedregister, explicitFLOWowner/nextstep inpacket. No further engineering afterreset.
