@@ -96,7 +96,11 @@ for s in extra:
         raise SystemExit('supplement entry must be an existing repo-relative file: ' + s)
 dup = [s for s in extra if s in src]
 if dup:
-    raise SystemExit('supplement entry already in the plan sources (remove it from %s): %s' % (EXTRA, dup))
+    # A source-closure PLAN-DELTA migrates these exact paths into their owning
+    # types. Include each file once; manifest-only still rejects conflicting
+    # module definitions and missing dependencies below.
+    print('SUPPLEMENT_IN_PLAN %d' % len(dup))
+    extra = [s for s in extra if s not in src]
 fl = sorted(str(p) for p in gen.glob('*.sv')) + src + extra
 (out / 'portbind.f').write_text('\n'.join(fl) + '\n')
 print('pads: %d instances, %d open wavefront outs' % (len(pads), sum(len(v['ports']) for v in pads.values())))
