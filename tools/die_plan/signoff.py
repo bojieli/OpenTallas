@@ -1488,6 +1488,11 @@ def cmd_run(a):
     disc["library_config"] = str(Path(a.library_config).resolve()) if getattr(a, "library_config", None) else None
     out = Path(a.out).resolve()
     core_contract = hard_core_latency_contract(disc)
+    # An explicit source-pinned FF reference applies to every kit family.  Keep
+    # it outside the hard-core branch: die-plan kits otherwise reach the FF
+    # session with bound-ff selected but no value, despite a valid CLI request.
+    if getattr(a, "ff_bound_ps", None) is not None:
+        disc["ff_bound_ps"] = float(a.ff_bound_ps)
     bound = None
     if core_contract:
         # COORD ruling 10-24: a hard core carries a core-latency contract -- its measured insertion is published
