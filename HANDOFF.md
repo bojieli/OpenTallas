@@ -1382,3 +1382,5 @@ CODEX: 2026-10-27 08:47 PDT TOK-DS currentb178L0compilePASS23/41/1 with4realfram
 CODEX: 2026-10-27 08:47 PDT HBM HC source-profile frontend fix READY6a09097e23: byte-invertible module/instance alpha rename, ports/logic unchanged;6 controls+2 actual parser controls+fresh1078-pin pair-first generator PASS. Cores owner regenerates kits; no new physical run.
 
 CODEX: 2026-10-27 08:48 PDT Qwen native source cohort READY4ca93bed6f: bootwindow+HOSTABI+nativebench; actual B48 source table FAIL2→PASS13/13, parser rejects infrastructure as caught mutant; corrected B48 top frontend live intel1 unit1384010.
+
+CODEX: 2026-10-27 08:50 PDT RM48 clock zero-load pruning; RM49 main 961b7c0a97 == origin/main reviewed QC actual clock export + static preflight, 29 composition PASS; physical QC FAIL/RC+snap holds retained, 0 deletions.
