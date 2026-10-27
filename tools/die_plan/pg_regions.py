@@ -74,8 +74,11 @@ def row_spec(s, rect, nets):
     c0 = off + n0 * half
     if 2 * c0 + w > 2 * hi:
         return None
+    ps = s.get('pair_spacing_um')
+    if ps is not None and n0 % 2:
+        raise ValueError(f"PG row {s['layer']}: pair_spacing_um needs the first lattice stripe inside the region")
     return dict(layer=s['layer'], V=V, w=w, pitch=pitch, half=half, lo=lo, hi=hi, offset=c0 - lo,
-                start=nets[n0 % 2], other=nets[(n0 + 1) % 2])
+                start=nets[n0 % 2], other=nets[(n0 + 1) % 2], **({'pair_space': _d(ps)} if ps is not None else {}))
 
 
 def plan_regions(die, grid=None):
@@ -95,7 +98,7 @@ def stripe_tcl(grid_name, spec):
     """add_pdn_stripe for one row_spec (offset from the region / core lower edge, exact dbu, explicit parity)."""
     typ = 'GROUND' if spec['start'] == 'VSS' else 'POWER'
     return (f"add_pdn_stripe -grid {grid_name} -layer {spec['layer']} -width {_u(spec['w'])} -pitch {_u(spec['pitch'])} "
-            f"-offset {_u(spec['offset'])} -spacing {_u(spec['half'] - spec['w'])} -starts_with {typ}")
+            f"-offset {_u(spec['offset'])} -spacing {_u(spec.get('pair_space', spec['half'] - spec['w']))} -starts_with {typ}")
 
 
 def core_stripes_tcl(die, grid_name, grid=None):

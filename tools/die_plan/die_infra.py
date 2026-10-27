@@ -156,7 +156,7 @@ def pg_rects(P, grid):
         mh = m or 0.0
         while pos < hi:
             for j in range(k):
-                c = pos + j * g["pitch_um"] / k
+                c = pos + (j * (g["width_um"] + g["pair_spacing_um"]) if g.get("pair_spacing_um") else j * g["pitch_um"] / k)   # R28: VDD/VSS pair
                 a, b = c - g["width_um"] / 2, c + g["width_um"] / 2
                 if b > phi or (plo is not None and a < plo):
                     continue
