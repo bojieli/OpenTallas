@@ -50,3 +50,16 @@ tree_commensurate, tree_on_islands (master_plan form), island_ft_inputs 5280 in-
   The stuck worst endpoint is an input pin register (input min delay -40 vs vclk 250 source latency); the signed
   eco flow fixes hold post-route with HB4 under the bound-ff contract instead.
 - PG: NUMBER-CHECK-HEADPG lane (COORD 05:25); not rerun here.
+
+## 5. Tree balance / pair-skew prediction (COORD 06:2x, PD11 approach) -- PREDICTION ONLY, not built
+master_plan pair model (12.9d, QC-b3 calibration): pair = K_PITCH x mean mesh pitch + OCV x K_TREE x sum over levels of the
+LONGEST leg at that level. m5: pitch 177.12 x 259.2 -> nominal 50.1 TT; sum of per-level max legs 23,887 um -> derate 79.9
+-> 130.0 TT / 122.5 FF. But the actual root->driver paths are 13,879..14,018 um (spread 139 um, my count from
+tree_nodes.json): the tree is already path-balanced; the 175 unequal families are y-trunk merges that balance by node
+position on unequal legs (dtree_nodes n//2 split over 14 rows) and level-5..7 x legs up to 4,588 um.
+Prediction (UNCHECKED, model error 6.5 TT / 13.8 FF at calibration): a symmetric re-site with equal child legs at every
+node makes sum(level max) = path ~14.0 mm -> derate 46.9 TT / 41.8 FF -> pair 97.0 TT / 93.1 FF. Re-site alone does NOT
+reach the 80 ps target; the nominal term needs a mean strap pitch <= 144 um TT / 163 um FF (now 218), e.g. M8 rows
+259.2 -> ~110 um (more straps; m5 track share 0.2-0.3 %). L1-L6 plan-computed sizing (12.8c) then equalises stage delay.
+NEXT (R16): head_mesh_r3 symmetric node re-site (mirror the 14 driver rows about the centre row pair, power-of-two-style
+y merge with equal legs; x-trees already symmetric per row) + denser M8 rows + 12.8c sizing; re-run master_plan.
