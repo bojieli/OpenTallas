@@ -2258,3 +2258,23 @@ READY OPTIONAL SOURCE [CODEX S81 clock 2026-10-27 09:42 PDT] codex/clock-leaf-sl
 
 READY [CODEX S81PHY 2026-10-27 09:59 PDT] codex/s81-phy-digital-1027@b107118ca: opt-in actualpin-stage model+truelegacydigitalviewaliases,6000payload/FECbytesPASSat300.120ppm,landingmutant4483badcaught; nativealiasparentSYNTH/fanoutPASS. Defaultsunchanged. Analogshape/currentphysicalsignoffOPEN; sourcecomponentonly,no fakewholePHYview.
 [COORD 2026-10-27 10:23 PDT] SPOT-CHECK viewed: (1) HBM aq_tree13_fmt k2 render = GEOM-25 PASS consistent (uniform 0.46 fill, W/E pin faces, centre entry clear, no pockets). (2) KV e2 r25 head (REQ 07:49, verdict pending GEOM-27): fill 0.42, N/S/E pin faces, centre entry clear, NW empty pocket ~x0-60 y160-216 is whitespace not a wall; COORD view PASS-looking, GEOM-27 to rule. Archive /archive grown to 15 TB (5.0 TB free).
+
+[OWNER INFO 2026-10-27 10:34 PDT] LIB-VDROOP-CHECK (ASAP7 SPICE, open netlists+BSIM-CMG, TT 0.700->0.665 V; deck matches Liberty <=1.2 %; CHECKED). ASK COORD ruling on the 12 data derate:
+| class (RVT, flow VT) | TT +late | FF (0.77->0.7315) |
+|---|---|---|
+| cells INV/NAND/NOR/BUF median (range) | +7.1 % (4.8-9.9) | +5.9 % |
+| DFF clk->Q | +8.9 % | +7.4 % |
+| 10-stage logic chain | +9.4..+9.9 % | +7.7..+8.2 % |
+| 405-um M8 repeated stage (wire-dominated) | +4.7..+5.0 % | +3.5..+3.7 % |
+| LVT / SLVT cells median | +5.2 % / +3.6 % | |
+Verdict: +5.1 % is NOT conservative for RVT logic paths (needs ~+9-10 %, ~+38 ps on a full 833-ps path); it covers only wire-dominated repeater segments and LVT/SLVT. Setup/hold constraints move <=1.4 ps. Detail lanes/LIB-VDROOP.md.
+
+[OWNER INFO 2026-10-27 10:34 PDT] BUMP-SURVEY: no die plan on main carries pitch/pad; main tools = 150-um C4, 4-um point contact on M9 (pad plate only on unmerged claude/infra-head5-1027). PDNSim windows under the HEAD-5 basis (150 um, pad 70/75, VDD+VSS co-located, interior, ABOVE-M7 only; HEAD adds 5.13 below-M7). CHECKED (runs):
+| die | W/mm2 basis | plan grid p70 | G12 p70 / p75 | 75-um pitch C3 | prior IR basis |
+|---|---|---|---|---|---|
+| S81 | 0.115 region model | 6.5 | 2.1 / 2.0 | - | 130-um analytic VDD 71.2 FAIL (assumed power) |
+| S81-HEAD | 1.542 measured | - | 31.1 / 29.9 incl below-M7 (NUMBER-CHECKED) | - | = HEAD-5 basis |
+| QC | 0.582 cap | 32.9 | 10.8 / 10.0 | - | 100-um point VDD 33.5 PASS UNCHECKED |
+| KV | 1.82 hg window (vectorless) | - | 37.6 / 35.2 FAIL | 22.6 | point analytic bp150 194 FAIL, bp60 32.8 PASS |
+| HBM | 2.18 B2r2 map | - | 39.8 / 37.6 FAIL; edge band 112 / 88 | 24.6 | 45-um array 20-um contact, SM 31.7 int |
+S81/QC PASS at 150/70; KV/HBM fail at 150 um even above M7 and pass at 75-um pitch; KV/HBM power maps not activity-measured (owner: measured toggle rates) -- may move. HBM edge band = first bump column 147 um from die edge (UNCHECKED cause). Detail lanes/BUMP-SURVEY.md.
