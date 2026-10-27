@@ -11,6 +11,8 @@ sys.path.insert(0,str(Path(__file__).parent));import canary as C
 class Launch(unittest.TestCase):
  def test_client_is_independent_transient_service(self):
   with tempfile.TemporaryDirectory() as d:
+   guard = Path(d)/"tools/die_plan/face_guard.py"
+   guard.parent.mkdir(parents=True); guard.write_text("# pinned fixture\n")
    spec=dict(die='test',item='ref',top='top',mem_gb=16,kit='{gen}/ref',gen='true',run='true')
    a=SimpleNamespace(spec=None,die=['test'],src=d,root=str(Path(d)/'runs'),image='image',dry=False)
    with patch.object(C,'load_spec',return_value=({'test':spec},{})),patch.object(C,'git_head',return_value='abcdef123456'),patch.object(C.subprocess,'run',return_value=SimpleNamespace(returncode=0,stderr='')) as run:
@@ -23,6 +25,8 @@ class Launch(unittest.TestCase):
  def test_generated_physical_run_is_staged_without_live_git_dependencies(self):
   import subprocess
   with tempfile.TemporaryDirectory() as d:
+   guard = Path(d)/"tools/die_plan/face_guard.py"
+   guard.parent.mkdir(parents=True); guard.write_text("# pinned fixture\n")
    spec=dict(die='test',item='ref',top='top',mem_gb=16,kit='{gen}/ref',gen='mkdir -p {gen}/ref',run='bash {src}/physical/die_plan/qwen_kvsys/cores/harden/eco/hold_step.sh {kit} {src}')
    a=SimpleNamespace(spec=None,die=['test'],src=d,root=str(Path(d)/'runs'),image='image',dry=False)
    with patch.object(C,'load_spec',return_value=({'test':spec},{})),patch.object(C,'git_head',return_value='abcdef123456'),patch.object(C.subprocess,'run',return_value=SimpleNamespace(returncode=0,stderr='')) as launched:
@@ -40,6 +44,8 @@ class Launch(unittest.TestCase):
     self.assertEqual(result.returncode,0,result.stderr)
  def test_service_failure_is_recorded_without_job_claim(self):
   with tempfile.TemporaryDirectory() as d:
+   guard = Path(d)/"tools/die_plan/face_guard.py"
+   guard.parent.mkdir(parents=True); guard.write_text("# pinned fixture\n")
    spec=dict(die='test',item='ref',top='top',mem_gb=16,kit='{gen}/ref',gen='true',run='true')
    a=SimpleNamespace(spec=None,die=['test'],src=d,root=str(Path(d)/'runs'),image='image',dry=False)
    with patch.object(C,'load_spec',return_value=({'test':spec},{})),patch.object(C,'git_head',return_value='abcdef123456'),patch.object(C.subprocess,'run',return_value=SimpleNamespace(returncode=1,stderr='bus unavailable')):
