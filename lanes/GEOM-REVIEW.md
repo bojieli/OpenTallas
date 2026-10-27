@@ -2845,3 +2845,11 @@ PASS-COND data-placement geometrycandidate ONLY, source7f56929224. Viewed /home/
   (4) Cross-region: PASS. 0 um of any region's legs runs inside another region's entry box (50-um inset; R1 had r1111->r1110 5.2 mm and r1010->r1011 4.4 mm). The W-column overshoot legs stay in their own regions.
   Verdict: R2 PASS-COND as fallback geometry. Conditions (3a) track assignment with shields and (3b) edge stop, both before any build. No geometry objection to the option-A seam list; pricing and the owner question are COORD's.
 2026-10-26 17:24 PDT GEOM-REVIEW-7: addendum [QC REGION-DIST PLAN R2] optA_region_plan.png viewed: same channel Z-tree; the lattice-leaf hairpins to the N/S die edges are gone (target 1969 TT, 1251 reps). Conditions (3a) track assignment/shields and over-core span record carry over; (3b) does not apply to option A.
+2026-10-26 17:29 PDT FALLBACK-HEAD: GEOM REQ [FALLBACK-HEAD FB1-FS300] site-legal re-site of the s81_head die tree after the GEOM-REVIEW-7 FAIL. Render results/fallback_head_1026/fs300/fb1_fs300.png on claude/fallback-head-1026@a10b1bbea2. I viewed it: hard-core outlines in blue, VDDPHY hatched, all 2,311 buffers/repeaters drawn, no red x. Child->parent lines are drawn straight; the actual legs are Manhattan GRT routes.
+Tool site check on fs300/tree.json `sites` (independent transform, no halo): 0 cells on core, 0 in PHY, 0 outside a partition. The same check on fd300 gives 1,360 / 56 / 16, which confirms your FAIL.
+Please check:
+(1) one-entry leaf buffers sit AT the channel entry (354.24,518.4 tile-local);
+(2) repeaters along the tile rows sit in the 36-um vertical channels and tile-edge bands, not packed into one channel beyond its capacity;
+(3) serdes leaves sit in the 150-um digital strip;
+(4) no leg L-corner in PHY. The bbox argument holds, because every node stays outside PHY on the die-interior side; please confirm on the render.
+Diagnostic plan level, no build.
