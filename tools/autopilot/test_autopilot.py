@@ -22,7 +22,7 @@ def so(verdict="NOT SIGNED", tt=5.0, ff=-3.0, fails=("hold_ff",), drc=0, pg="PAS
     return {"signoff": {"path": "/k/signoff/signoff.json", "verdict": verdict, "reasons": ["r"], "fails": list(fails),
                         "tt_wns": tt, "ff_wns": ff, "drc": drc, "odb": "/k/run/x/6_final.odb", "base": "/k/run/x",
                         "pg": pg},
-            "grt_overflow": 0}
+            "grt_overflow": 0, "chain": {"started": time.time(), "verdict": "PASS", "lec_verdict": "EQUIVALENT", "lec_exit": 0}}
 
 
 class Base(unittest.TestCase):
@@ -83,6 +83,20 @@ class TestQueue(Base):
         rows = self.ap.parse_queue(t)
         self.assertEqual(len(rows), 1)
         self.assertEqual(list(rows.values())[0]["geom"], "PASS")
+
+
+class TestRoutedChainGate(Base):
+    def test_signed_record_without_current_equivalence_is_not_archived(self):
+        for proof in (None, {"started": time.time(), "verdict": "PASS", "lec_verdict": "NOT EQUIVALENT", "lec_exit": 0},
+                      {"started": 1, "verdict": "PASS", "lec_verdict": "EQUIVALENT", "lec_exit": 0}):
+            j = {"id": "chain", "die": "s81", "type": "t", "chain_required": True, "started": time.time()}
+            c = so("SIGNED", 3, 2, ())
+            c["chain"] = proof
+            self.ap.after_class = lambda st, j: None
+            self.ap.finish({"jobs": {}}, j, c, {"exit": 0})
+            self.assertEqual(j["status"], "STRUCTURAL")
+            self.assertEqual(j["kind"], "routed-lec")
+            self.assertEqual(c["signoff"]["verdict"], "SIGNED")
 
 
 class TestMissingAdopted(Base):
@@ -336,6 +350,16 @@ class TestTick(TickBase):
         self.assertEqual(len(self.f.launched), 1)
         self.assertEqual(list(jobs.values())[0]["status"], "RUNNING")
 
+    def test_chain_dispatch_is_self_contained_for_existing_data_host(self):
+        self.queue(ROW)
+        self.tick()
+        argv=self.f.launched[0][1]
+        command=argv[argv.index("--")+1:]
+        self.assertEqual(command[:2],["python3","-c"])
+        self.assertIn("def continue_kit",command[2])
+        compile(command[2],"<inline-chain>","exec")
+        self.assertFalse(any(p.endswith("/signoff_chain.py") for p in argv))
+
     def test_signed_archived_once(self):
         self.queue(ROW)
         self.tick()
@@ -403,7 +427,7 @@ class TestTick(TickBase):
         self.queue(ROW + ["route"])
         self.tick()
         argv = self.f.launched[0][1]
-        self.assertEqual(argv[argv.index("--") + 4], "finish")
+        self.assertEqual(argv[argv.index("--") + 6], "finish")
 
     def test_segfault_is_marked_not_resubmitted(self):
         self.queue(ROW)
@@ -1255,7 +1279,7 @@ class TestCrashTriage1025(unittest.TestCase):
                '  python3 "$K/signoff.py" run --run-dir "$K/run"\nfi\n')
         p = self.probe_kit({"config.mk": "export ADDITIONAL_LEFS = /work/macros/a.lef\n", "signoff.py": so,
                             "sdc_lint.py": "", "run_kit_hbm.sh": hbm})
-        self.assertEqual(p["signoff_missing"], ["face_guard.py", "pair_skew.tcl"])
+        self.assertEqual(p["signoff_missing"], ["face_guard.py", "pair_skew.tcl", "lec.py"])
         self.assertEqual(p["signoff_goals"], ["finish", "post"])
         self.assertTrue(p["gds_gap"])
         self.assertFalse(p["route_runs_finish"])

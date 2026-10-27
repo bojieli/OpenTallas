@@ -292,7 +292,14 @@ def aproj_capture_contract(die, sl, fx, flags):
 
 
 def base_master(m):
-    return re.sub(r'(_MX)?_l4(_lp)?$', '', m)   # TOK-FUNC-S81: 72-frame die binds the landed-parent wrappers col_h*_l4_lp
+    # TOK-FUNC-S81: 72-frame die binds the landed-parent wrappers col_h*_l4_lp; TOK-DS-11 (10-27): the current die binds
+    # the as-built band compositions col_h*_l4_lp_asb_{x,nx}, whose base master (pair numbering, emission off(pair) flat
+    # base) is the same col_h*; their timing comes ONLY from their own extracted schedule (source_frame_schedule)
+    return re.sub(r'(_MX)?_l4(_lp)?(_asb_n?x)?$', '', m)
+
+
+def is_asbuilt(m):
+    return re.search(r'_l4_lp_asb_n?x$', m) is not None
 
 
 def land_e(lk):
@@ -303,6 +310,24 @@ def land_e(lk):
 
 def source_frame_schedule(master):
     """LP models are immutable source-qualified inputs, never inferred flat timing."""
+    if is_asbuilt(master):
+        # TOK-DS-11 (10-27): an as-built band frame (r0/r1/r2 plan kits + 2-flop fint seams) is NOT the LP rf3r frame:
+        # its schedule is extracted from its own elaborated RTL (tools/s81_dv/frame_schedule_asb.py, validated link by
+        # link against the LP schedule on the LP seam twin) and is usable only with a PASS plan-latency consistency
+        # check bound to that exact schedule file (every frame link = the die plan's declared latency).
+        directory = Path(os.environ.get('OT_XS_ASB_SCHEDULE_DIR',
+                         str(ROOT / 'results/arch/s81_dv_1016/frame_lp/asb_schedule')))
+        path, chk = directory / (master + '_schedule.json'), directory / (master + '_check.json')
+        if not chk.is_file():
+            raise ValueError('as-built band frame needs its extracted frame schedule + plan check '
+                             '(tools/s81_dv/frame_schedule_asb.py): ' + str(chk))
+        c = json.loads(chk.read_text())
+        if c.get('verdict') != 'PASS':
+            raise ValueError('as-built frame schedule FAILS its extraction/plan latency check (' + master + '): '
+                             + ', '.join(c.get('fails', [])[:8]))
+        if not path.is_file() or c.get('schedule_sha256') != hashlib.sha256(path.read_bytes()).hexdigest():
+            raise ValueError('as-built frame plan check is not bound to this schedule: ' + str(path))
+        return path
     if not master.endswith('_lp'):
         return None
     directory = Path(os.environ.get('OT_XS_FRAME_SCHEDULE_DIR',
@@ -321,6 +346,8 @@ def frame_programme(master, lk, mats, x, seed=SEED, iters=ITERS, pairs=None, ran
     import v41_die_images_w17w10 as I
     import v41_rom_ksplit_bankmap as S
     q, _bf = B.frame_pairs(base_master(master))
+    if is_asbuilt(master):
+        assert B.frame_pairs(master) == (q, _bf), ('as-built band frame pair numbering differs from its base', master)
     # plan_phase verifies every source hash in this extracted compiler schedule.
     frame_schedule = source_frame_schedule(master)
     assert len(mats) == 1, 'a frame phase mixing wq_a and wkv rows: plan_phase takes one matrix (not needed at 28 / slice)'

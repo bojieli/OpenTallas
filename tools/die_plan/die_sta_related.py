@@ -71,8 +71,11 @@ SIGNED MESH = COMMON POINT (CLOCK-KV-R17, opt-in, METHODOLOGY 12.4a b exception 
   root input) is in the sign-off is re-referenced to the mesh: late/early := M0 + (tap - routed load late/early),
   cppr_node 'm' (credit 0: the same M0 on both sides), AOCV charged only below the load point (node 'm' stages = mesh
   driver output, no node position: distance = launch/capture bbox).  Each 'm' pair then carries the explicit signed
-  uncertainty U(a,b) = max(worst |d| over the samples, |mean d| + 3 sigma) + |routed-vs-sim gap difference| +
-  |gradient shift vector difference| (worst direction), where d = the two load arrivals' difference in a sample.
+  uncertainty U(a,b) = max(worst |d'| over the samples, |mean d'| + 3 sigma) + |gradient shift vector difference|
+  (worst direction), where d' = the two load arrivals' difference in a sample PLUS the routed-vs-sim gap difference
+  (gap_a - gap_b, folded into every sample; PD11 ruling 3, 10-27 -- before, |gap_a - gap_b| was added after max|d|,
+  which over-counted when the gap and the sample difference had opposite signs).  The record reports the die-wide
+  bound (max U) and per-pair percentiles (p50/p90/p99/max) over every mesh pair the STA evaluated.
   --mesh-band tree (default, strict): the leaf-fed band taps are NOT through the mesh; any pair with one keeps its
   absolute arrivals and CPPR at the die root 'h' (12.4b).  --mesh-band sim: band-root inputs are sign-off pseudo loads
   (same per-sample tree offsets as the drivers above them) -> 'm' too (INFO / ruling needed).
@@ -82,6 +85,7 @@ Output OUT/die_sta_related.json (+ worst pairs per class); prints one line per c
 """
 import argparse
 import itertools
+import hashlib
 import json
 import os
 import re
@@ -490,7 +494,39 @@ HB4 = dict(cell="HB4xp67_ASAP7_75t_R", ff_early_ps=44.6, tt_late_ps=83.0, area_u
            basis="HOLD-REPAIR estimate basis (CLOCK-KV-R6/R15 kv_hb_count.py), UNCHECKED")
 
 
-def hold_buffer_model(tt, ff, bits=None, hb=HB4):
+# CLOCK-KV-R24 (NUMBER-CHECK-KV-R23 4b, COORD 10-27 06:0x (c)): the plan HB4 pair (44.6 FF / 83.0 TT) is not one
+# physical form.  Own OpenSTA HB4xp67 chain stage (NC-KV-R23): ABUTTED (0 fF wire) FF min 37.41 / TT max 67.67.
+# --hb4-delay abutted sizes k with the abutted FF minimum (hold holds for ANY placement of the chain, since wire only
+# slows it) and charges the abutted TT stage (the planned island form: the k cells of a bit abut in a landing/hold
+# island beside the capture pin register).  UNCHECKED here: NC-KV-R23 measured values, recheck before default.
+HB4_ABUTTED = dict(HB4, ff_early_ps=37.41, tt_late_ps=67.67,
+                   basis="NUMBER-CHECK-KV-R23 own OpenSTA HB4xp67 4-chain stage h2, abutted (0 fF wire): FF min / TT max")
+_DATA_PIN_SKIP = re.compile(r"(^|_)(clk|ck|rst_n|rst|strap_[a-z]+)(\[|$)|__clk|__rst_n")
+
+
+def intra_bits(plan_path):
+    """{partition: data pins of all its hard cores} (clock/reset/strap pins excluded), the INTRA HB4 cell-count basis:
+    every core pin is registered (pin registers) and its other end is a register of the same partition under the
+    partition glue tap or another core's tap.  Partition-internal glue-to-glue paths are not counted (no netlist)."""
+    import schema as S
+    raw = S.load(plan_path)
+    P = S.Plan(raw)
+    root = Path(plan_path).resolve().parent
+    cache, out = {}, {}
+    for n, p in P.parts.items():
+        tot = 0
+        for h in P.types[p["type"]].get("hard_cores", []) or []:
+            pf = h.get("pins_file")
+            if pf not in cache:
+                f = root / pf if pf else None
+                pins = json.loads(f.read_text()).get("pins", []) if f and f.exists() else []
+                cache[pf] = sum(1 for q in pins if not _DATA_PIN_SKIP.search(str(q.get("name", ""))))
+            tot += cache[pf]
+        out[n] = tot
+    return out
+
+
+def hold_buffer_model(tt, ff, bits=None, hb=HB4, part_bits=None):
     """per ENDPOINT PATH k = ceil(-FF hold / ff_early) HB4 cells on the capture data input (0 when hold >= 0); after
     insertion FF hold += k ff_early, TT setup -= k tt_late, both of THAT path (CLOCK-KV-R19, NUMBER-CHECK-KV-R18: keys
     (a, b, tag, launch_model, capture_model); never size k from one endpoint and charge it to another).
@@ -530,11 +566,15 @@ def hold_buffer_model(tt, ff, bits=None, hb=HB4):
     keys = [k for k in ff if k in tt]
     hist, cells, cbits, fbits, seen = defaultdict(int), 0, 0, 0, set()
     kpair = defaultdict(int)
+    dpart = {}
     for key in keys:
         h_ = ff[key][1]
         k = max(0, _m.ceil(-h_ / hb["ff_early_ps"] - 1e-9)) if h_ < 0 else 0
         hist[k] += 1
         kpair[(key[0], key[1])] = max(kpair[(key[0], key[1])], k)
+        if isinstance(key[2], str) and "->" in key[2]:
+            dpart[(key[0], key[1])] = key[2].split("->", 1)[1]
+    by_dst = defaultdict(int)
     for pk, k in kpair.items():
         if bits is not None and pk not in seen:
             seen.add(pk)       # a tap pair's bits once (INFO keys repeat it per port id / endpoint path)
@@ -543,12 +583,29 @@ def hold_buffer_model(tt, ff, bits=None, hb=HB4):
             if k:              # cell-count bound: every bit of the pair at the pair's worst endpoint-path k
                 fbits += nb
                 cells += k * nb
+                by_dst[dpart.get(pk)] += k * nb
     out = dict(model=hb, all=blk(keys), real_view=blk([k for k in keys if ff[k][2]]),
                both_real=blk([k for k in keys if ff[k][3]]), cells_per_pair_hist=dict(sorted(hist.items())),
                pairs_needing_hb=sum(1 for k in kpair.values() if k), endpoint_paths=len(keys),
                paths_needing_hb=sum(v for k, v in hist.items() if k))
+    if part_bits is not None:
+        # intra: per partition, every hard-core data pin at the partition's worst intra endpoint-path k (bound)
+        kpart = defaultdict(int)
+        for (a_, b_, part), k in ((key[:3], k_) for key, k_ in
+                                   ((key, max(0, _m.ceil(-ff[key][1] / hb["ff_early_ps"] - 1e-9)) if ff[key][1] < 0 else 0)
+                                    for key in keys)):
+            kpart[part] = max(kpart[part], k)
+        icells = sum(k * part_bits.get(pn, 0) for pn, k in kpart.items())
+        ibits = sum(part_bits.get(pn, 0) for pn, k in kpart.items() if k)
+        out.update(bits_counted=sum(part_bits.get(pn, 0) for pn in kpart), bits_needing_hb=ibits, hb4_cells=icells,
+                   hb4_area_um2=round(icells * hb["area_um2"], 1), hb4_area_mm2=round(icells * hb["area_um2"] / 1e6, 4),
+                   hb4_cells_by_part={pn: k * part_bits.get(pn, 0) for pn, k in sorted(kpart.items()) if k},
+                   k_by_part={pn: k for pn, k in sorted(kpart.items()) if k},
+                   count_basis="BOUND: every hard-core data pin of the partition (plan pins files, clk/rst/strap "
+                               "excluded) at the partition's worst intra endpoint-path k; glue-to-glue paths not counted")
     if bits is not None:
-        out.update(bits_counted=cbits, bits_needing_hb=fbits, hb4_cells=cells,
+        out.update(bits_counted=cbits, bits_needing_hb=fbits, hb4_cells=cells, hb4_cells_by_part=dict(sorted(
+                       (str(k_), v_) for k_, v_ in by_dst.items())),
                    hb4_area_um2=round(cells * hb["area_um2"], 1), hb4_area_mm2=round(cells * hb["area_um2"] / 1e6, 4),
                    count_basis="nearest-tap seam bits (DC.seam_pairs: the pin register's own launch/capture taps)")
     return out
@@ -580,6 +637,10 @@ def mesh_signoff(proof_dir, taps, meta, corner, so_path, band_mode="tree"):
     gv = S["grad_vec_ps"]
     rtj = json.loads((Path(proof_dir) / f"mesh_{corner}.json").read_text())["stubs"]
     M = json.loads((Path(proof_dir) / "mesh.json").read_text())
+    import die_clock_mesh as DCM_   # fail closed (COORD PATH-S81-PD12 ruling A): a signed mesh is a common point only
+    mv_ = DCM_.mesh_via_findings(M, proof_dir)   # when it is ONE connected net (VIA89 at every strap crossing)
+    if mv_:
+        raise SystemExit(f"--mesh-signoff refused: {proof_dir} mesh is not continuous: " + "; ".join(mv_[:4]))
     load = {}
     for t in M["taps"]:
         if t["port"] not in taps:
@@ -621,13 +682,26 @@ def mesh_signoff(proof_dir, taps, meta, corner, so_path, band_mode="tree"):
         k = (x, y) if x < y else (y, x)
         if k not in cache:
             i, j = idx[k[0]], idx[k[1]]
-            ds = [arr[s][i] - arr[s][j] for s in range(ns)]
+            g = gap[i] - gap[j]
+            ds = [arr[s][i] - arr[s][j] + g for s in range(ns)]   # RC gap folded into every sample (PD11 ruling 3)
             mc = ds[1:] or ds
             mu = sum(mc) / len(mc)
             sd = (sum((v - mu) ** 2 for v in mc) / max(1, len(mc) - 1)) ** 0.5
             gd = ((gv[i][0] - gv[j][0]) ** 2 + (gv[i][1] - gv[j][1]) ** 2) ** 0.5
-            cache[k] = max(max(abs(v) for v in ds), abs(mu) + 3.0 * sd) + abs(gap[i] - gap[j]) + gd
+            cache[k] = max(max(abs(v) for v in ds), abs(mu) + 3.0 * sd) + gd
         return cache[k]
+
+    def stats():
+        """die-wide bound (max U) + per-pair percentiles over every mesh pair evaluated so far"""
+        v = sorted(cache.values())
+        if not v:
+            return dict(pairs=0)
+
+        def q(f):
+            return round(v[min(len(v) - 1, int(f * (len(v) - 1) + 0.5))], 2)
+        return dict(pairs=len(v), p50_ps=q(0.5), p90_ps=q(0.9), p99_ps=q(0.99), max_ps=round(v[-1], 2),
+                    die_wide_bound_ps=round(v[-1], 2), gap="folded into each sample")
+    U.stats = stats
     rec = dict(file=str(so_path), M0_ps=round(m0, 3), taps_on_mesh=len(load), taps_total=len(taps), band_mode=band_mode,
                samples=ns - 1, sim_summary=S.get("summary"), status=S.get("checked", "UNCHECKED"))
     return U, rec
@@ -725,8 +799,10 @@ def core_view_model(module, view_dir, corner, load_ff, part_delay_ps):
         meta["clock_latency_measured"] = json.loads(cj.read_text()).get("clock_latency_measured")
     if prov.exists():
         p = json.loads(prov.read_text())
-        meta.update(verdict=p.get("verdict"), pins_sha256=p.get("kit", {}).get("pins_sha256"),
-                    pins_file=p.get("kit", {}).get("pins_file"))
+        k = p.get("kit", {})
+        meta.update(verdict=p.get("verdict"), pins_sha256=k.get("pins_sha256"), pins_file=k.get("pins_file"),
+                    pins_canon_sha256=k.get("pins_canon_sha256"), outline_um=k.get("outline_um"))
+    meta.update(view_dir=str(vd), module=module)
     return dict(name=f"core:{module}", real=True, lat_late=part_delay_ps, lat_early=part_delay_ps,
                 clkq_max=etm["out_max_ps"], clkq_min=etm["out_min_ps"], setup=etm["in_setup_ps"],
                 hold=etm["in_hold_ps"], etm=etm, meta=meta)
@@ -768,22 +844,166 @@ def map_cores_to_taps(plan, taps):
     return out
 
 
-def build_views(plan, taps, corner, reg, lat, core_views, kits, load_ff, part_delay_ps, match_pins=False):
+# GATE-PINS-2 (COORD ruling on the KV-CORES-PV ask, 10-27): the pin match hashes only physically and logically
+# meaningful content -- per pin: name, direction, layer, x, y, size, clock-entry flag (when present); plus the core
+# outline -- in canonical (sorted) order, coordinates on the 1-nm grid.  Free text ('source', 'frame', 'note', ...)
+# never changes the hash.  A mirror image (MX/MY/R180) of the signed pin set is the same physical core when EVERY
+# pin maps exactly (same names, same layers, same size); otherwise it is a different core type.
+PIN_KEYS = ("direction", "dir", "layer", "w", "h", "width", "height", "size", "clock_entry", "is_clock_entry")
+ORIENTS = {"MX": lambda x, y, W, H: (x, H - y), "MY": lambda x, y, W, H: (W - x, y),
+           "R180": lambda x, y, W, H: (W - x, H - y)}
+
+
+def _nm(v):
+    return int(round(float(v) * 1000))
+
+
+def _pin_outline(doc):
+    """outline from a structured key, else from the generator's 'frame' text ('... outline W x H')."""
+    if doc.get("outline_um"):
+        return tuple(_nm(v) for v in doc["outline_um"])
+    m = re.search(r"outline\s+([0-9.]+)\s*x\s*([0-9.]+)", str(doc.get("frame", "")))
+    return (_nm(m.group(1)), _nm(m.group(2))) if m else None
+
+
+def canon_pins(doc, outline_um=None):
+    """{'outline': (W, H) nm | None, 'pins': {name: (x_nm, y_nm, (key, value)...)}} -- canonical physical content."""
+    pins = {}
+    for p in doc.get("pins", []):
+        rest = tuple((k, _nm(p[k]) if isinstance(p[k], (int, float)) and not isinstance(p[k], bool) else p[k])
+                     for k in PIN_KEYS if k in p)
+        pins[str(p["name"])] = (_nm(p["x"]) if "x" in p else None, _nm(p["y"]) if "y" in p else None) + rest
+    ol = tuple(_nm(v) for v in outline_um) if outline_um else _pin_outline(doc)
+    return dict(outline=ol, pins=pins)
+
+
+def canon_sha256(c):
+    body = json.dumps(dict(outline=c["outline"], pins=sorted([n] + list(v) for n, v in c["pins"].items())),
+                      sort_keys=True, separators=(",", ":"), default=list)
+    return hashlib.sha256(body.encode()).hexdigest()
+
+
+def mirror_of(signed, plan_c):
+    """first orientation T in MX/MY/R180 with plan_c == T(signed) on every pin (names, layers, sizes equal), else None."""
+    if signed["outline"] is None or signed["outline"] != plan_c["outline"] or set(signed["pins"]) != set(plan_c["pins"]):
+        return None
+    W, H = signed["outline"]
+    if any(v[0] is None or v[1] is None for v in signed["pins"].values()):
+        return None
+    for t, f in ORIENTS.items():
+        if all(plan_c["pins"][n] == f(v[0], v[1], W, H) + v[2:] for n, v in signed["pins"].items()):
+            return t
+    return None
+
+
+def _read_json(f, _cache={}):
+    f = Path(f)
+    if f not in _cache:
+        if f.exists():
+            b = f.read_bytes()
+            _cache[f] = (hashlib.sha256(b).hexdigest(), json.loads(b))
+        else:
+            _cache[f] = (None, None)
+    return _cache[f]
+
+
+def signed_pins_doc(view_meta, plan_dir, extra=()):
+    """the pin file content the view was signed on, VERIFIED by whole-file sha256 == kit.pins_sha256: a copy in the
+    view dir (<view>/pins.json or <module>_pins.json), kit.pins_file under plan_dir or as given, or any plan pins
+    file (extra) with that sha.  None when no verified copy exists."""
+    want = view_meta.get("pins_sha256")
+    vd = view_meta.get("view_dir")
+    cands = []
+    if vd:
+        cands += [Path(vd) / "pins.json"] + ([Path(vd) / f"{view_meta['module']}_pins.json"] if view_meta.get("module") else [])
+    if view_meta.get("pins_file"):
+        if plan_dir is not None:
+            cands.append(Path(plan_dir) / view_meta["pins_file"])
+        cands.append(Path(view_meta["pins_file"]))
+    cands += [Path(plan_dir) / e if plan_dir is not None else Path(e) for e in extra]
+    for c in cands:
+        h, d = _read_json(c)
+        if h is not None and h == want:
+            return d
+    return None
+
+
+def pins_relation(view_meta, pins, plan_dir, outline_um=None, extra=(), _memo={}):
+    """(how, reason): how = 'canonical' (same physical pin set), 'mirror:MX|MY|R180' (exact image of the signed
+    set), or None with the mismatch reason."""
+    view_meta = view_meta or {}
+    key = (json.dumps(view_meta, sort_keys=True, default=str), pins, str(plan_dir),
+           tuple(outline_um) if outline_um else None, tuple(extra))
+    if key not in _memo:
+        _memo[key] = _pins_relation(view_meta, pins, plan_dir, outline_um, extra)
+    return _memo[key]
+
+
+def _pins_relation(view_meta, pins, plan_dir, outline_um, extra):
+    want = view_meta.get("pins_sha256")
+    if not pins:
+        return None, "no plan pins_file"
+    if not want and not view_meta.get("pins_canon_sha256"):
+        return None, "view has no pins_sha256"
+    ph, pdoc = _read_json(Path(plan_dir) / pins if plan_dir is not None else Path(pins))
+    if pdoc is None:
+        return None, "plan pins_file missing"
+    if want and ph == want:
+        return "canonical", None
+    vol = view_meta.get("outline_um")
+    if outline_um and vol and tuple(_nm(v) for v in vol) != tuple(_nm(v) for v in outline_um):
+        return None, "core outline differs"
+    pc = canon_pins(pdoc, outline_um or vol)
+    if view_meta.get("pins_canon_sha256") and canon_sha256(pc) == view_meta["pins_canon_sha256"]:
+        return "canonical", None
+    sdoc = signed_pins_doc(view_meta, plan_dir, extra) if want else None
+    if sdoc is None:
+        return None, "pins content differs"            # signed content not available: whole-file sha decides
+    sc = canon_pins(sdoc, vol or outline_um)
+    if canon_sha256(sc) == canon_sha256(pc):
+        return "canonical", None
+    t = mirror_of(sc, pc)
+    if t:
+        return f"mirror:{t}", None
+    return None, "pins differ (canonical, no exact MX/MY/R180 image)"
+
+
+def core_outlines(plan):
+    """{(part, inst): outline_um} of every plan hard core (the outline the pin match compares)."""
+    import schema as S
+    P = S.Plan(plan)
+    return {(n, h["inst"]): h.get("outline_um") for n, p in P.parts.items()
+            for h in P.types[p["type"]].get("hard_cores", []) or []}
+
+
+def pins_match(view_meta, pins, plan_dir, outline_um=None, extra=()):
+    """CLOCK-KV-R24 content match, GATE-PINS-2 canonical + mirror form.  None (match) or the mismatch reason."""
+    return pins_relation(view_meta, pins, plan_dir, outline_um, extra)[1]
+
+
+def build_views(plan, taps, corner, reg, lat, core_views, kits, load_ff, part_delay_ps, match_pins=False, plan_dir=None):
     """{port: [models]} + coverage record.  core_views {module: dir}; kits {part_or_type: spec}.
-    match_pins (CLOCK-KV-R21; gate default ON since CLOCK-KV-R22): a core view applies only to instances whose plan pins_file is the view's own
-    (provenance kit.pins_file, by file name); other pin views of the module (e.g. an orientation re-pin) are a
-    different physical core and stay budget (listed in pin_view_mismatch)."""
+    match_pins (CLOCK-KV-R21; gate default ON since CLOCK-KV-R22; CONTENT match since CLOCK-KV-R24): a core view
+    applies only to instances whose plan pins_file (resolved under plan_dir) has the sha256 the view was signed on
+    (provenance kit.pins_sha256); other pin views of the module (an orientation re-pin, an added strap pin) are a
+    different physical core and stay budget (listed in pin_view_mismatch, by reason in pin_view_mismatch_reason)."""
     budget = budget_model(reg, lat)
     views = {p: [budget] for p in taps}
     cmodels = {m: core_view_model(m, d, corner, load_ff, part_delay_ps) for m, d in core_views.items()}
     cmap = map_cores_to_taps(plan, taps) if core_views else {}
     real_inst, real_taps = defaultdict(int), set()
     mism = defaultdict(int)
+    why = defaultdict(int)
+    how = defaultdict(int)
+    olines, plan_pins = core_outlines(plan), sorted({v[3] for v in cmap.values() if v[3]})
     for (n, inst), (mod, port, dist, pins) in cmap.items():
         if match_pins and mod in cmodels:
-            vp = cmodels[mod]["meta"].get("pins_file")
-            if not vp or not pins or Path(vp).name != Path(pins).name:
+            hw, r = pins_relation(cmodels[mod]["meta"], pins, plan_dir, olines.get((n, inst)), plan_pins)
+            if hw:
+                how[f"{mod}:{hw}"] += 1
+            if r:
                 mism[f"{mod}:{Path(pins).name if pins else None}"] += 1
+                why[f"{mod}:{r}"] += 1
                 continue
         if mod in cmodels and port:
             if cmodels[mod] not in views[port]:
@@ -809,6 +1029,10 @@ def build_views(plan, taps, corner, reg, lat, core_views, kits, load_ff, part_de
                map_distance_real_um=sorted(v[2] for v in cmap.values() if v[0] in cmodels and v[2] is not None)[::32])
     if match_pins:
         cov["pin_view_mismatch"] = dict(mism)
+        cov["pin_view_mismatch_reason"] = dict(why)
+        cov["pin_view_match_how"] = dict(how)
+        cov["pin_view_match"] = ("canonical content (name, direction, layer, x, y, size, clock-entry flag + core "
+                                 "outline; free text ignored) or an exact MX/MY/R180 image of the signed pin set")
     return views, cov
 
 
@@ -879,6 +1103,9 @@ def main(argv=None):
     ap.add_argument("--droop-region", choices=("mesh", "tree"), default="mesh",
                     help="shared-droop region (12.4a b1): mesh = mesh/PDN region (default, R17 fix); tree = pre-R17 rule")
     ap.add_argument("--droop-regions", help="JSON {port: region} override (e.g. PDNSim regions)")
+    ap.add_argument("--hb4-delay", choices=("plan", "abutted"), default="plan",
+                    help="CLOCK-KV-R24: HB4 stage delays for k and the setup charge: plan = 44.6 FF / 83.0 TT (default, "
+                         "unchanged); abutted = 37.41 / 67.67 (NC-KV-R23 OpenSTA abutted chain, hold-safe for any placement)")
     ap.add_argument("--hold-buffers", choices=("none", "HB4"), default="none",
                     help="CLOCK-KV-R18 opt-in: model the planned HB4 data hold-buffer insertion (12.4a a1) per pair and "
                          "report the gate after it (summary.hb4); default none = output unchanged")
@@ -947,7 +1174,7 @@ def main(argv=None):
             import schema as S_
             views, rcov = build_views(plan, taps, c, reg, S_.common_latency_ps(S_.Plan(plan), c), core_views, kits,
                                       a.seam_wire_um * a.wire_ff_per_um, a.core_part_delay_ps,
-                                      match_pins=a.core_view_match_pins)
+                                      match_pins=a.core_view_match_pins, plan_dir=Path(a.plan).resolve().parent)
             cr_real = rcov
         pairs.update(nearest_pairs(d, a.plan, a.clock_tool, taps))
         if a.hold_buffers != "none" and hbbits is None:
@@ -999,6 +1226,12 @@ def main(argv=None):
                                           rec=hrec)
             cr["classes"][k]["label"] = ("real-view+budget" if real else "declared-budget") + (
                 " / INFO subset" if k.endswith("INFO") else "")
+        if unc is not None:
+            # PD11 ruling 3: die-wide bound + per-pair percentiles of the signed-mesh U over the timed mesh pairs
+            cr["mesh_signoff"]["pair_U"] = unc.stats()
+            pu = cr["mesh_signoff"]["pair_U"]
+            print(f"MESH_U {c} pairs {pu.get('pairs')} p50 {pu.get('p50_ps')} p90 {pu.get('p90_ps')} p99 {pu.get('p99_ps')} "
+                  f"max {pu.get('max_ps')} (die-wide bound {pu.get('die_wide_bound_ps')} ps; RC gap folded per sample)")
         res["corners"][c] = cr
     res["coverage"] = cov
     gate = {}
@@ -1021,13 +1254,17 @@ def main(argv=None):
                           verdict="PASS" if lt.get("verdict") == "PASS" and lf.get("verdict") == "PASS" else "FAIL")
     if a.hold_buffers != "none" and "TT" in hbrec and "FF" in hbrec:
         hb = {}
+        HBM = HB4_ABUTTED if a.hb4_delay == "abutted" else HB4
+        ibits = intra_bits(a.plan)
         for k in ("intra", "seam", "seam_nearest_INFO"):
             if k in hbrec["TT"] and k in hbrec["FF"]:
                 hb[k] = hold_buffer_model(hbrec["TT"][k], hbrec["FF"][k],
-                                          bits=hbbits if k.startswith("seam") else None)
+                                          bits=hbbits if k.startswith("seam") else None, hb=HBM,
+                                          part_bits=ibits if k == "intra" else None)
         for k in ("intra", "seam"):
             if k in hb:
-                gate[k]["hb4"] = dict(tt_setup_ps=hb[k]["all"].get("tt_setup_after_ps"),
+                gate[k]["hb4"] = dict(cells=hb[k].get("hb4_cells"), delay_model=a.hb4_delay,
+                                      tt_setup_ps=hb[k]["all"].get("tt_setup_after_ps"),
                                       ff_hold_ps=hb[k]["all"].get("ff_hold_after_ps"),
                                       real_tt_setup_ps=hb[k]["real_view"].get("tt_setup_after_ps"),
                                       real_ff_hold_ps=hb[k]["real_view"].get("ff_hold_after_ps"),
