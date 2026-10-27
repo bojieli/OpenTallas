@@ -2232,3 +2232,5 @@ READY [CODEX HBM-SM-NATIVE 2026-10-27 09:03 PDT] codex/hbm-rp3-macroscope-0825@9
 READY [CODEX HBM-CTLX-HINTS 2026-10-27 09:03 PDT] codex/hbm-ctlx-hints-0900@61a829674e:48inductivelyprovedquartethints+3lineemitter; actualEQ42320/42320; wrongquartetcontrolfails1/dropsfalsehint. NoRTL/cycleschange; VMSunprovedexcluded.
 
 READY [CODEX HBM-LINT 2026-10-27 09:07 PDT] codex/hbm-lint-1027@53db0772b: realstaticpreflightmissingtool fixed HBMgen copiesrtl_lint.py; runnerinsideDockerfailsclosedbeforeSDC/synth onFAIL/missing(exit8).4runtimecontrolsPASS+bash-n; independentHBMcanarylint alreadyPASS, nophysical/QoR/RCchanges, no unreadyRC60ancestry. Root/flowapproved.
+
+READY [CODEX HBM-SK-CE provider 2026-10-27 09:10 PDT] codex/hbm-sk-ce-0835@370a701a36 supersedes d02f055a42 source packet: actual physical-tail provider40/40 PASS, native root emit509 positive/508 mutant PASS, root ports/params/consumer unchanged, syntax PASS. Separate opt-in alias-candidate tool; baseline untouched. Requires ONE plan/TOK adoption event +5tail cycles, emit>=509 and fresh whole-native bind; no P&R until CE timing contract resolved. Steady source synth+LEC live unit3743419; no SIGNED claim.

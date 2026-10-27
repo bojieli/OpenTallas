@@ -1407,3 +1407,5 @@ CODEX: 2026-10-27 09:07 PDT FLOW QC29.4psregressiondiagnosed3extraCTSstages, RC-
 
 CODEX: 2026-10-27 09:08 PDT RM51 main f108b501fd == origin/main; HBM pre-synth lint + immutable AP admission bundles,149compositionPASS; LEC thin patch excluded on missing-parent dependency, flow deployment notified.
 CODEX: 2026-10-27 09:08 PDT QC BTABR9e placement+alltimedreachPASS max366.174/0over405 and3442rowPASS; clockmodelnext. VMR72DATA-buffer ECO resumedasF4K afterM6-gridcrash diagnosis; progPG-clipped fullstripGRTqueued after64/80boxskipfound. No newSIGNEDclaim.
+
+CODEX: 2026-10-27 09:10 PDT HBM full-root CE provider READY370a701a36; actual508tail40/40 PASS; native consumer emit509PASS/508mutantcaught; opt-in alias only, wholebind/planTOKadoption pending; steady synth live3743419.
