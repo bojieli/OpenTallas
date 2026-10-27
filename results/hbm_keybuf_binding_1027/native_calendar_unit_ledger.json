@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.hbm.native_idxn_key_calendar_measurement.v1",
-  "scope": "Canonical one-client NQ2 key path: actual native issuer plus sixteen SRAM slices; scorer arithmetic, selector, physical stations and native TX excluded",
+  "scope": "Canonical one-client NQ2 actual native issuer, four packed17SRAM reference buffers and sixteen diagnostic five-SRAM slices; scorer arithmetic/selector/physicalstations/nativeTX excluded",
   "source_branch": "codex/keybuf-bind-1027",
   "source_revision": "409b45b0c8",
   "top": "tb_calendar_quad",
@@ -13,7 +13,8 @@
     "key_beats_per_stream": 171,
     "keybuf_slice_count": 16,
     "sram256x256_per_slice": 5,
-    "storage_sram_count": 80
+    "storage_sram_count": 80,
+    "storage_sram_count_scope": "Diagnostic16slicecut; selectedpackedreferenceis68"
   },
   "compiler": {
     "frame_instructions": 1315,
@@ -54,7 +55,7 @@
       "Apply actual key producer->buffer->scorer route and calendar phases after physical plan event",
       "Replace only measured issuer/key-storage term; this cut has no measured score/selector/TX completion",
       "N_Q4/P3 thirtytwo-slice proxy proof and old1917/1906model are not native source binding",
-      "Bare slice live pass-through is combinational; physical R2 face registers and their phase/cycle cost remain to qualify"
+      "Selected physical proposal preserves SOFT packed17SRAM/live-bypass inside nativequarter; rejected bare hard-slice R2face remains diagnostic and must not add2phantomcycles to selectedproposal."
     ]
   },
   "negative_control": {
@@ -63,5 +64,17 @@
     "checks": 2516,
     "errors": 855,
     "result": "CAUGHT"
+  },
+  "selected_native_packed_reference": {
+    "quarter_buffers": 4,
+    "macros_per_quarter": 17,
+    "storage_sram_count": 68,
+    "live_write_cycles": 171,
+    "replay_read_cycles": 855,
+    "sram_write_transactions": 11628,
+    "sram_read_transactions": 58140,
+    "live_bypass_added_cycles": 0,
+    "register_read_stages": 0,
+    "physical_boundary": "SOFT native keybuf+17SRAM inside quarter residual; hard64HCOL+2tail only"
   }
 }
