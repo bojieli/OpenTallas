@@ -1341,3 +1341,5 @@ CODEX: 2026-10-27 08:29 PDT FLOW AP main8fcd deployed all-kit measuredGEOM AP_AU
 CODEX: 2026-10-27 08:31 PDT shared tools READY: genericactualimportfe6831d634 exactgeneratedouterGRT50ovf0/PRESERVED2+3; APproofOOMresume98560e3183(95tests); KValias3b60baae53(26tests). No livejobs.
 
 CODEX: 2026-10-27 08:32 PDT RM39 main5076049768 native station geometry + runtime watches; RM40 main3ecb807519==origin/main QK boot/type profiles/HBM scoped leaf/actual infra import/runner status; 0 deletions, importer conflict 7 PASS, B48 token + HBM LEC still open.
+
+CODEX: 2026-10-27 08:32 PDT HBM HCOL exactsource recovered + measured halfsynth DONE0: h0/h1 area19981/21218um2,FF24999/27862;164wide needs72/76%fill. Missingaliasrecipes + native128vs256count + genericfaceshell2edgephasefailure delivered plan/cores/token; package2885e965b6.
