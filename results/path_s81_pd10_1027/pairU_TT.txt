@@ -1,0 +1,18 @@
+TT pairs within 1000 um: 91719
+  mesh-mesh 91667
+  U(gate formula)              p50    24.9 p90    60.2 p99   156.1 max   278.4
+  |nominal ds|                 p50     6.9 p90    24.5 p99    54.1 max   138.4
+  MC excess over nominal       p50    12.4 p90    28.1 p99    62.0 max    98.1
+  |gap_i-gap_j|                p50     2.0 p90     7.8 p99    20.9 max    41.2
+  gradient |Si-Sj|             p50     0.8 p90     4.7 p99    57.8 max   125.4
+  U(gap folded into samples)   p50    21.1 p90    55.8 p99   152.1 max   278.4
+  dist um                      p50   709.6 p90   939.7 p99   993.5 max  1000.0
+  with band root 52
+  U(gate formula)              p50    76.3 p90    90.2 p99    92.7 max    92.7
+  |nominal ds|                 p50    20.5 p90    29.0 p99    36.8 max    36.8
+  MC excess over nominal       p50    35.7 p90    42.3 p99    45.0 max    45.0
+  |gap_i-gap_j|                p50    16.3 p90    21.5 p99    21.7 max    21.7
+  gradient |Si-Sj|             p50     1.0 p90     2.2 p99     2.3 max     2.3
+  U(gap folded into samples)   p50    76.3 p90    90.2 p99    92.7 max    92.7
+  dist um                      p50   655.2 p90   966.3 p99   987.8 max   987.8
+  die-wide summary {'nominal_skew_ps': 220.61, 'mc_worst_skew_ps': 263.24, 'mesh_only_nominal_skew_ps': 220.61, 'mesh_only_mc_worst_skew_ps': 263.24, 'per_load_sigma_ps': 17.97, 'pair_3sigma_ps': 76.24, 'gradient_worst_pair_ps': 286.96, 'routed_minus_sim_mean_ps': 4.28, 'routed_minus_sim_spread_ps': 49.36, 'dieU_bound_ps': 599.56}

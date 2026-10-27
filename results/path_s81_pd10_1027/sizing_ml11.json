@@ -1,0 +1,198 @@
+{
+ "model": "NLDM lumped load + Elmore star wire, plan geometry (cell sites, Manhattan pin-to-pin), wire R/C per um calibrated globally (12.8 d1); no per-branch measured input",
+ "r_kohm_per_um": 0.0021679012499999997,
+ "c_ff_per_um": 0.17909400599999997,
+ "sizes": [
+  "BUFx24_ASAP7_75t_R",
+  "BUFx16f_ASAP7_75t_R",
+  "BUFx12f_ASAP7_75t_R",
+  "BUFx10_ASAP7_75t_R",
+  "BUFx8_ASAP7_75t_R",
+  "BUFx6f_ASAP7_75t_R",
+  "BUFx5_ASAP7_75t_R",
+  "BUFx4_ASAP7_75t_R",
+  "BUFx3_ASAP7_75t_R"
+ ],
+ "slew_max_ps": 320.0,
+ "levels": {
+  "11": {
+   "legs": 2048,
+   "target_ps": 295.43,
+   "legs_sized": 2045,
+   "T_full_range_ps": [
+    55.63,
+    295.43
+   ],
+   "T_sized_range_ps": [
+    68.33,
+    295.43
+   ]
+  },
+  "10": {
+   "legs": 1024,
+   "target_ps": 374.96,
+   "legs_sized": 1023,
+   "T_full_range_ps": [
+    223.66,
+    374.96
+   ],
+   "T_sized_range_ps": [
+    273.62,
+    389.03
+   ]
+  },
+  "9": {
+   "legs": 512,
+   "target_ps": 607.63,
+   "legs_sized": 510,
+   "T_full_range_ps": [
+    451.14,
+    607.63
+   ],
+   "T_sized_range_ps": [
+    559.39,
+    627.9
+   ]
+  },
+  "8": {
+   "legs": 256,
+   "target_ps": 918.78,
+   "legs_sized": 253,
+   "T_full_range_ps": [
+    753.22,
+    918.78
+   ],
+   "T_sized_range_ps": [
+    892.97,
+    941.87
+   ]
+  },
+  "7": {
+   "legs": 128,
+   "target_ps": 1255.86,
+   "legs_sized": 127,
+   "T_full_range_ps": [
+    1104.18,
+    1255.86
+   ],
+   "T_sized_range_ps": [
+    1193.08,
+    1269.74
+   ]
+  },
+  "6": {
+   "legs": 64,
+   "target_ps": 1663.81,
+   "legs_sized": 63,
+   "T_full_range_ps": [
+    1555.83,
+    1663.81
+   ],
+   "T_sized_range_ps": [
+    1656.83,
+    1672.84
+   ]
+  },
+  "5": {
+   "legs": 32,
+   "target_ps": 2210.92,
+   "legs_sized": 31,
+   "T_full_range_ps": [
+    2110.05,
+    2210.92
+   ],
+   "T_sized_range_ps": [
+    2205.0,
+    2218.69
+   ]
+  },
+  "4": {
+   "legs": 16,
+   "target_ps": 2913.28,
+   "legs_sized": 15,
+   "T_full_range_ps": [
+    2859.16,
+    2913.28
+   ],
+   "T_sized_range_ps": [
+    2910.29,
+    2919.15
+   ]
+  },
+  "3": {
+   "legs": 8,
+   "target_ps": 3908.29,
+   "legs_sized": 7,
+   "T_full_range_ps": [
+    3855.98,
+    3908.29
+   ],
+   "T_sized_range_ps": [
+    3903.66,
+    3914.08
+   ]
+  },
+  "2": {
+   "legs": 4,
+   "target_ps": 5278.49,
+   "legs_sized": 3,
+   "T_full_range_ps": [
+    5253.86,
+    5278.49
+   ],
+   "T_sized_range_ps": [
+    5278.49,
+    5283.33
+   ]
+  },
+  "1": {
+   "legs": 2,
+   "target_ps": 7164.86,
+   "legs_sized": 1,
+   "T_full_range_ps": [
+    7162.94,
+    7164.86
+   ],
+   "T_sized_range_ps": [
+    7164.86,
+    7164.98
+   ]
+  }
+ },
+ "hist": {
+  "BUFx10_ASAP7_75t_R": 288,
+  "BUFx12f_ASAP7_75t_R": 65,
+  "BUFx3_ASAP7_75t_R": 925,
+  "BUFx4_ASAP7_75t_R": 1697,
+  "BUFx5_ASAP7_75t_R": 905,
+  "BUFx6f_ASAP7_75t_R": 517,
+  "BUFx8_ASAP7_75t_R": 455
+ },
+ "model_endpoint_spread_full_ps": 352.782,
+ "model_endpoint_spread_sized_ps": 274.561,
+ "model_driver_input_spread_full_ps": 215.536,
+ "model_driver_input_spread_sized_ps": 208.851,
+ "model_neighbour_driver_dmax_ps": {
+  "full": [
+   10.4,
+   80.89,
+   153.98
+  ],
+  "sized": [
+   14.27,
+   81.67,
+   157.36
+  ]
+ },
+ "model_insertion_full_ps": [
+  6448.56,
+  6801.34
+ ],
+ "model_insertion_sized_ps": [
+  7115.13,
+  7389.69
+ ],
+ "model_tree_slew_max_ps": 320.6,
+ "cells_resized": 4852,
+ "sec": 3.3
+}

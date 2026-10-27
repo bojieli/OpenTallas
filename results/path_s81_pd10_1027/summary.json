@@ -1,0 +1,27 @@
+{
+ "lane": "PATH-S81-PD10", "date": "2026-10-27 05:39 PDT", "base": "claude/path-s81-pd9-1027@a04d416b4a (main 8810c5e6a4 tools in intel1 wt main-tools-pd10, not merged: 6 tool files conflict, PD9 tool deltas go via ROOT-MERGE)",
+ "inputs": {"build": "intel1:/srv/opentallas-scratch2/claude/path-s81-pd7-1026/pd9/me1 (PD9 RCX tree_TT.txt, mesh.json, place.json, nets.json, ctree.v)", "mc": "intel1:/srv/opentallas-scratch2/claude/codex-s81-mc-1027/mc_{TT,FF}.json (Codex, main mesh_mc18 with the actual-gradient fix)"},
+ "task1_branch_sizing": {
+   "tool": "tools/die_plan/branch_sizing.py (12.8 d1: NLDM lumped load + Elmore star wire from plan geometry; bottom-up subtree-mean balancing; knobs = leg repeaters + the leg's child node; sizes BUFx24..BUFx3; slew <= 320 ps); dry-run CLI s81_pd10/dry_size.py; tests test_branch_sizing.py 2/2 PASS (no pytest on intel1: run directly)",
+   "calibration": "global wire scale kr 1.0, kc 1.4 vs PD9 RCX (all BUFx24): driver-input residual mean +245 ps, sd 13.2 ps, model spread 215.5 vs RCX 214.9 (results calib_TT.txt; min-sd point kr .5 kc 1.6 sd 9.2 but mean off 1.5 ns)",
+   "model_result_TT": {
+     "size_L1-L6": "driver-input spread 215.5 -> 164.7 ps, neighbour (<=1 mm) driver pairs p99 80.9 -> 67.2, max 154.0 -> 104.8; insertion +200 ps (6661-7000); 320 cells resized; slew max 275",
+     "size_L1-L9": "215.5 -> 175.8; neighbour max 144.0; insertion +470; 1854 cells",
+     "size_L1-L11": "215.5 -> 208.9; neighbour max 157.4; insertion +590; 4852 cells (outlier legs set the level target; slowdown-only cannot follow)"},
+   "verdict": "sizing alone does NOT reach the mesh absorb range (best model 165 ps spread, 105 ps neighbour max). NOT rebuilt / GRT / RCX / MC: the plan model predicts FAIL, so a 1-h die GRT would only confirm it",
+   "root_cause_CHECK": "irregular legs (|len - level median| > 25 %): L7 10, L8 35, L9 69, L10 210, L11 591, L12 1705; at L7-L11 100 % of them have a re-sited end or parent node (1668 nodes and 1702 drivers moved by off_core_resite/PG snap). Regular legs: delay sd 2.5-7.5 ps at L10-L12; irregular: 18-70 ps. L10-L12 have one segment (no repeater), so a long re-sited leg cannot be sped up and a short one can only be slowed by its child node",
+   "structural_next": "symmetric (mirror) re-site in die_clock_mesh off_core_resite: when a node leaves a core, move it perpendicular to its children line (both child legs stay equal) and mirror the move on its sibling (parent legs stay equal); drivers likewise pairwise. Then branch_sizing on L1-L6 (repeater-rich levels) closes the residual subtree-mean differences. Owner: CLOCK-128 (tool) + S81 die-clock lane."},
+ "task2_dieU": {
+   "formula": "mesh_mc18 dieU_bound = mc_worst_skew + routed_minus_sim_spread + gradient_worst_pair (nominal is INSIDE mc_worst, not added): TT 263.24 + 49.36 + 286.96 = 599.56; FF 242.94 + 36.19 + 237.64 = 516.77",
+   "is_it_the_gate": "NO. The gate (main die_sta_related.mesh_signoff) uses a PER-PAIR U(a,b) = max(max_s|ds|, |mu|+3sd) + |gap_a-gap_b| + |S_a-S_b|. dieU_bound stacks three die-wide extremes taken on different pairs (nominal 220 ps is between opposite die corners; gradient 287 between the two die ends) and is a summary only",
+   "per_pair_U_neighbours_le_1mm": {"TT": "91,667 mesh pairs: U p50 24.9, p90 60.2, p99 156.1, max 278.4; nominal p99 54.1/max 138.4; MC excess p50 12.4/max 98.1; gap p50 2.0/max 41.2; gradient p50 0.8, p99 57.8, max 125.4", "FF": "U p50 24.1, p90 57.4, p99 143.2, max 254.4"},
+   "where_the_tail_is": "pairs U > 120 ps (1,690 of 91,719) straddle the H-tree level-1/2 split lines (x ~15,970, y ~12,376): the two sides share only the root, so nominal (~130 ps) and gradient (~65 ps) are unshared there; the continuous mesh does not short them because both sides are driven hard by their own drivers",
+   "double_count_check": {
+     "nominal": "not double counted: mesh_signoff re-references taps to M0 (removes the routed stub arrival), nominal enters only via ds_0 in U",
+     "mesh MC vs AOCV": "not double counted: for cppr_node m the AOCV table (random + 0.21 %/mm) is charged only on (tap - stub) below the mesh (clock_ocv_fn arr = late - node_late[m]); tree random/wire/gradient above the mesh only in the MC. Droop 0 within the mesh",
+     "RC gap": "minor over-count: U adds |gap_a-gap_b| after max|ds| (triangle split) instead of shifting each sample by the gap; folded form is p50 3.8 ps lower (24.9 -> 21.1), max unchanged (278.4). It is an RC-model disagreement term (sim RC vs routed RC on the same segment), not a second variation model",
+     "dieU_bound": "bounding summary, not a double count, but should not be quoted as the mesh U: it is ~2-4x the per-pair worst on related (neighbour) pairs"},
+   "to_COORD": "report only; model unchanged"},
+ "task3_sta": "NOT RUN (MC does not pass: per-pair U tail 156-278 ps at the tree split lines; sizing predicted insufficient)",
+ "checked": "own-script numbers; independent NUMBER-CHECK: see lane line"
+}

@@ -1,0 +1,15 @@
+resite rec sample {'role': 'mesh_driver', 'name': 'ckm_d_20_46', 'd_um': 71.28, 'strap': 'M8'}
+level ideal_len  legs  |dev|>25%  of_which_end_or_parent_node_moved  dly_sd_regular dly_sd_irregular
+L 1   7880.3     2     0     0     4.2    0.0
+L 2   5634.4     4     0     0    12.2    0.0
+L 3   3939.7     8     0     0    12.6    0.0
+L 4   2833.9    16     0     0    14.0    0.0
+L 5   1969.9    32     0     0    25.4    0.0
+L 6   1417.0    64     0     0    22.3    0.0
+L 7    985.0   128    10    10    23.4   13.8
+L 8    708.5   256    35    35    17.0   70.5
+L 9    493.9   512    69    69    14.2   35.3
+L10    354.2  1024   210   210     7.5   31.5
+L11    246.2  2048   591   591     4.2   29.2
+L12    177.1  4094  1705  1281     2.5   18.4
+nodes moved >1um 1668 drivers moved 1702
