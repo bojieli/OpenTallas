@@ -555,7 +555,11 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_rep_um=None):
                     src, prev, px, py = outnet, inst, qx, qy
                 hop = abs(x-px)+abs(y-py)
                 if hop > tap_rep_um + 1e-6:
-                    raise ValueError(f"no legal last tap hop for {part}.{port}: {hop:.3f} > {tap_rep_um}")
+                    nearest = site.nearest((x,y)) if site is not None else (x,y)
+                    gap = abs(x-nearest[0])+abs(y-nearest[1])
+                    raise ValueError(f"no legal last tap hop for {part}.{port}: {hop:.3f} > {tap_rep_um}; "
+                                     f"last_cell={(px,py)}, tap={(x,y)}, nearest_legal={nearest}, "
+                                     f"nearest_tap_gap={gap:.3f}")
             cells.append(f"  assign {tp} = {src};")
     v = ["module ctree (root, " + ", ".join(t[0] for t in tap_ports) + ");", "  input root;"]
     v += [f"  output {t[0]};" for t in tap_ports]
