@@ -117,3 +117,6 @@ READY codex/ft-overlay-1027@ced7b8d2d (standalone commit after79a0cfe0a): die_tr
 
 ## CODEX notes 2026-10-27 08:44 PDT
 Shared window error propagation READY codex/ft-overlay-1027@bae112e24 afterced7b8d2d: infra_pg/phy_ir generated window Tcl keeps diagnostic FAIL markers then rethrows before OT_DONE; phy_ir runner logging preserves tool status.6 generated-Tcl positive/check-fail/solve-fail controls PASS. No jobs restarted. PG160->47032 terminal experiment VDD/VSS connectivity PASS, actual IR solve still LIVE intel1 codex-sta-pg-1027. Historical sys_SW/SE worst468mV both have0 intended VDD targets because generic bump_grid excludes SerDes IO windows; current KV owner checks current R26 dedicated PHY grid/bump integration (infra_pg.pg_bumps already has PHY micro-bumps). No droop adopted.
+
+## CODEX notes 2026-10-27 09:59 PDT — PG experiment terminal
+ControlledindependentterminalFAIL commit4a042762a(codex/psm-independent-1027):23516VDDterminals160parts,44.931523Wsamegrid/bumps,VDD/VSSconnectivityPASS,linearworstdrop1165.654mV(original468.441),negative-.465654Vnotphysicaloperatingpoint. Solverexit0,4552s/93.62GiB. OneM1CSVnodeisvirtualall-M7shapeconnection,sooldpointloadexcusefalsified; dedicatedPHYsourcesrequired. KVclockownercorrectiveR3jobsactiveinsysSW/SE,nogluerelabel. No droopadopted. All ownPGjobs terminal,logs/CSV/ODBretainedintel1codex-sta-pg-1027.
