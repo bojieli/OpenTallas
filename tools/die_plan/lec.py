@@ -3736,15 +3736,25 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
         log.append(f"correspondence round {rnd}: {len(st)} hypotheses, {len(bad)} failed "
                    f"({sum(st[n] == 'undecided' for n in bad)} undecided) {bad[:6]}")
         if not bad:
-            if structural_constant_closure(L, log) or structural_twin_closure(L, log):
-                continue     # prove the new constants before returning
+            # A closure can re-propose a constant rejected by the reset-state check.
+            # Only surviving changes need another proof round; otherwise empty
+            # rounds repeat until the time budget discards valid correspondence.
+            snap = dict(L.hyp)
+
+            def surviving_change():
+                noreset_filter(L, log, tried)
+                return L.hyp != snap
+
+            if (structural_constant_closure(L, log) or structural_twin_closure(L, log)) and surviving_change():
+                continue     # prove the new surviving relations before returning
             if traces is None:
                 traces = seq_traces(L, log)
             if os.environ.get("OT_LEC_COPY_CLOSURE", "1") != "0":
-                if matched_copy_closure(L, log, traces, tried):
-                    continue     # prove the matched copy relations before returning
-            if os.environ.get("OT_LEC_TRACE_CONST", "1") != "0" and trace_constant_closure(L, log, tried):
-                continue         # prove the constant-from-reset candidates before returning
+                if matched_copy_closure(L, log, traces, tried) and surviving_change():
+                    continue
+            if os.environ.get("OT_LEC_TRACE_CONST", "1") != "0" and trace_constant_closure(L, log, tried) \
+                    and surviving_change():
+                continue
             if L.hyp == before or not adding:
                 return
             continue

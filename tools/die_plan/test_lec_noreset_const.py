@@ -110,3 +110,24 @@ def test_reset_state_is_constant_propagation_only():
     d.update(A=len(m.ands) // 2, ands=m.ands, latches=[nz, h, z ^ 1])
     st, first = lec.reset_state(d, {1: 0}, 3)
     assert st == {2: 0, 4: 1} and first == {2: 1, 4: 2}           # h (var 3) stays unknown
+
+
+def test_rejected_closure_constant_does_not_restart_proved_rounds(tmp_path, monkeypatch):
+    L = _design(tmp_path, "hold")
+    proposed = ("gold", "ff:u_dut.k1")
+    calls = []
+    original = lec.structural_constant_closure
+
+    def closure(L, log):
+        n = original(L, log)
+        L.hyp[proposed] = ("const", 0)
+        calls.append(1)
+        return n + 1
+
+    monkeypatch.setattr(lec, "structural_constant_closure", closure)
+    st, log = _verdict(tmp_path, monkeypatch, L)
+    assert st == "differs"                 # the invalid no-reset constant stays rejected
+    assert proposed not in L.hyp
+    assert L.hyp[("gold", "ff:u_dut.z")] == ("const", 0)  # valid proof survives
+    assert len(calls) < 5
+    assert not any("did not converge" in x for x in log)
