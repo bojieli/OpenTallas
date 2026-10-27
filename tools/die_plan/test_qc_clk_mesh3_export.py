@@ -65,7 +65,8 @@ def test_complete_mesh_export_keeps_original_fine_driver_outputs():
     b=graph()
     b['P']=SimpleNamespace(W=100.,H=100.,parts={'p':{'type':'T','orient':'R0'}},die={},rect=lambda n:(0.,0.,100.,100.))
     b['cores']=[]
-    b['a0']=mesh()
+    b['a0']=dict(mesh(),drops=[])
+    b['rec']={'taps':[]}
     b['bleaf']={0:(b['btrees'][0],'bf')}
     b['ctrees']=[dict(nodes=[dict(tag='cr',kids=['f']),dict(tag='f',kids=[],xy=(20.,0.))])]
     _,m=E.export(b)

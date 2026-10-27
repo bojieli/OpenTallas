@@ -207,8 +207,8 @@ def export(B):
         examples['physical_cell_overlap'] = ov[:5]
     ndrs = sorted({e['ndr'] for e in edges})
     adapter_reasons = []
-    if adapter_constraints: adapter_reasons.append('explicit adapter constraints: '+str(dict(adapter_constraints)))
-    if len(ndrs) != 1: adapter_reasons.append('die_clock_mesh.build_explicit accepts one NDR per build; this tree selects '+','.join(ndrs))
+    if adapter_constraints: adapter_reasons.append('V2 heterogeneous pin-tie import required: '+str(dict(adapter_constraints)))
+    if any(n not in {'4w','8w','16w'} for n in ndrs): adapter_reasons.append('physical NDR not yet modelled: '+','.join(n for n in ndrs if n not in {'4w','8w','16w'}))
     if errors: adapter_reasons.append('physical geometry gate fails')
     if B.get('a0'): adapter_reasons.append('continuous mesh conductor manifest still needs dbWire/pin-stack import; tree-only build is incomplete')
     driver_groups = {}
@@ -233,7 +233,7 @@ def export(B):
             idx = int(driver_groups[k][1:])
             d['physical_site'] = list(cells[idx]['site'])
             d['physical_Y_pin'] = list(M.pin_xy(cells[idx],'Y')[0])
-    spec = dict(summary=dict(schema='opentallas.qc_mesh3_all_tree_sites.v1',
+    spec = dict(clock_topology_version=2,summary=dict(schema='opentallas.qc_mesh3_all_tree_sites.v1',
                              geometry_verdict='PASS' if not errors else 'FAIL',errors=dict(errors),examples=dict(examples),
                              adapter_constraints=dict(adapter_constraints),
                              groups=len(used),instances=len(site_rows),nets=len(edges),edge_coverage=coverage,root=root,
@@ -247,6 +247,15 @@ def export(B):
         for a,d in zip(mesh['drivers'],mesh_form['drivers']):
             a['physical_site'] = d['physical_site']
             a['physical_Y_pin'] = d['physical_Y_pin']
+        mesh['ndr'] = B.get('mesh_ndr','8w')
+        mesh['partition_taps'] = [dict(t) for t in B['rec']['taps']]
+        mesh['core_drops'] = [dict(d) for d in B['a0']['drops']]
+        # Parent attach_mesh consumes this same complete graph; the standalone
+        # artifact remains useful for independent geometry review.
+        for d in mesh['drivers']:
+            gi=int(d['group'][1:])
+            d['members']=[nm for nm,v in site_rows.items() if v['group']==gi]
+        spec['mesh'] = mesh
     return spec,mesh
 
 
@@ -333,6 +342,7 @@ def main(argv=None):
     ap.add_argument('--thev'); ap.add_argument('--slew-sens')
     a=ap.parse_args(argv)
     B=M.build(a,M.Stage(a.stage))
+    B['mesh_ndr']=a.fine_w
     out=Path(a.out); out.mkdir(parents=True,exist_ok=True)
     # The parent planner owns plan-computed sizing and legalization.  This tool
     # refuses to infer or substitute missing band driver sizing/placement.
