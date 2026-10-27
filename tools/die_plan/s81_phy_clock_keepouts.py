@@ -11,7 +11,7 @@ from pathlib import Path
 import schema as S
 
 
-def apply(raw, plan_path):
+def apply(raw, plan_path, density=False):
     p = S.Plan(raw, plan_path)
     changes = {}
     for domain in p.die.get("pg", {}).get("domains", []):
@@ -29,12 +29,14 @@ def apply(raw, plan_path):
         if tn in changes and changes[tn]["rect_um"] != box:
             raise ValueError(f"nonuniform PHY footprint for shared type {tn}")
         ck = raw["partition_types"][tn].setdefault("clock", {})
-        if ck.get("tap_mode") not in (None,"grid+sinks","sinks"):
+        if ck.get("tap_mode") not in (None,"grid+sinks","sinks","density"):
             raise ValueError(f"{tn}: review existing {ck.get('tap_mode')} clock before replacing it")
         keep = ck.setdefault("keepouts_um", [])
         if box not in keep:
             keep.append(box)
         ck["tap_recentre"] = "sinks"
+        if density:
+            ck["tap_mode"] = "density"
         changes[tn] = dict(part=pn,rect_um=box,clock_interface_changed=True)
     return raw, dict(status="CANDIDATE_NOT_ADOPTED",types=len(changes),changes=changes,
                      data_cycles_added=0,requires="sink census, render, reset/START regeneration, bind and combined delta")
@@ -45,8 +47,9 @@ def main():
     ap.add_argument("plan",type=Path)
     ap.add_argument("out",type=Path)
     ap.add_argument("--report",type=Path,required=True)
+    ap.add_argument("--density",action="store_true",help="also use existing sink-density planner to remove all empty grid drops")
     a = ap.parse_args()
-    raw, report = apply(S.load(a.plan),a.plan)
+    raw, report = apply(S.load(a.plan),a.plan,a.density)
     a.out.write_text(json.dumps(raw,indent=1)+"\n")
     a.report.write_text(json.dumps(report,indent=1)+"\n")
     print(json.dumps({k:v for k,v in report.items() if k!="changes"}))
