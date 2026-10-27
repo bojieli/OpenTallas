@@ -1,0 +1,6 @@
+OWN_DIFF k=251 g=1 d=0 ebr=1 delay=1 rs=1
+OWN_DIFF k=500 g=0 d=1 ebr=0 delay=0 rs=1
+OWN_DIFF k=751 g=1 d=0 ebr=1 delay=1 rs=1
+PHASE_OFFSET_GATE boot_delta=1 steady_data_delta=0 mismatch=216 cycles=20000
+FATAL: tb.sv:69: mismatch
+       Time: 200006000  Scope: tb

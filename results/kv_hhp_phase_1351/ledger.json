@@ -1,0 +1,31 @@
+{
+ "candidate": "COORDauthorizedopt-inHHPcentralphase",
+ "boot_phase_visibility_edges": 1,
+ "steady_data_edges": 0,
+ "external_pins_changed": false,
+ "default_adopted": false,
+ "core_outline_um": [
+  397.44,
+  362.88
+ ],
+ "input_pin_um": [
+  2.328,
+  362.784
+ ],
+ "old_input_capture_um": [
+  4.32,
+  358.29
+ ],
+ "central_region_um": [
+  194.4,
+  190.08,
+  203.04,
+  194.4
+ ],
+ "worst_region_corner_to_core_corner_um": 397.44,
+ "required_boot_condition": "embeddingissuewaitsforphaseinputandone-edge-delayedreference ready; no newsteadyword/registeredge",
+ "component_offset_cycles": 20000,
+ "positive_mismatches": 0,
+ "phase_bypass_mutant_mismatches": 216,
+ "first_failure": "unresetexpectedphasepipelinecaused39mismatches; reset-aware reference fixescontract, failurelogretained"
+}

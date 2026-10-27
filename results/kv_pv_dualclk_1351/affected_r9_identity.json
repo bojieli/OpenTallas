@@ -1,0 +1,12 @@
+{
+ "affected_queue_id": "0396d971068e",
+ "kit": "/srv/opentallas-scratch2/claude/kv-cores-r8/r9/kits_pv/kv3_pv_pair__380.16x190.08",
+ "source": "1fdc08d9cd",
+ "files": {
+  "rtl/kv3_pv_pair.sv": "8c76f7be51e2f6e2fd45c230c247efb875a0f519dd78e83a621e9ea101e97fd7",
+  "core.json": "d55e5dd995ef162d3359330985e879e92fec6e8d68eda032487d16a9107b026b",
+  "constraint.sdc": "fa87270976080764f84c5cef4c2518ec80fdb56ce28783840ef6872ff247daf4",
+  "run/results/asap7/hc_kv3_pv_pair__380_16x190_08/base/1_2_yosys.v": "0b6678fe61bf6e752a78422443ff758193254feaa1cd64d2d208c21182a3ea0c"
+ },
+ "invalid_scope": "S0-only STA of thisR9stagedcohort; otherviewsnotinvalidatedwithoutsourceidentity"
+}

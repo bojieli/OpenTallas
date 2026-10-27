@@ -1,0 +1,10 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/wt/codex-kv-cores-1351
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/wt/codex-kv-cores-1351
+ot-run: localhost      admits   619 GB (avail 774, reserve 0, fresh 39.9, peak 50, headroom 0, waiters 0/0 GB) load 66/112 running 27 disk 306 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-3951375-1793135526 after 0 s
+new 1
+PHASE_OFFSET_GATE boot_delta=1 steady_data_delta=0 mismatch=39 cycles=20000
+FATAL: tb.sv:69: mismatch
+       Time: 200006000  Scope: tb
+ot-run: RAN on localhost (unit oth-ubuntu-3951375-1793135526): exit 1
