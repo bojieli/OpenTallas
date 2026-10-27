@@ -21,7 +21,7 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 ## DIE qwen_compute · Qwen compute · rev UNFROZEN 54a1aeb5 · PROTOTYPE of infra-first
 - [ ] QC.PATH CRITICAL PATH end to end (12.9b): 12.7b plan gates -> core rebuilds (12.8) -> die clock (12.8) -> GRT0 -> skew gate -> die STA · INFRA-FIRST · RUNNING · dated ETA checklist in lanes/INFRA-FIRST.md
 - [ ] QC.INFRA One QC plan event: infra-first PG/clock/reset + batch 2 (STM ROMs, SRAM, DEAD-FAULT) + D-QC-FE-REACH stations (all FE variants) + COLLFTM-CTL + CB ID straps + SCROOT + vmr_s6kc · INFRA-FIRST + PATH-QC · RUNNING · PENDING-DELTA D-INFRA-FIRST-QC holds all 68 type routes
-- [ ] QC.CLK Clock 12.8 (gate = related-pair STA) · INFRA-FIRST-QC-R14 · RUNNING · R13 74/74 types identical, nominal 48.5/39.6, STA TT +537 / kit hold +6.2 (UNCHECKED); dry build 3147 err (M7 risers) -> trunks on M8 tracks + slot rows; centre channel APPROVED, centre row split · ETA freeze est 10-28..29
+- [ ] QC.CLK Clock 12.8 (gate = related-pair STA) · INFRA-FIRST-QC-R19 · RUNNING · R18 RCX-fed die STA TT +565.40 / FF zero-logic seam -85.17 (UNCHECKED); gap root-caused (extraction width); R19 = de-dup variation + RCX rebalance + HB4 vs lockup latch in parallel (OWNER) + M8 min-step fix; plan_d43 adopt
 - [ ] QC.SU 4 SU core types · QC-SU-F4G · DONE-RP1 · F4G RP1 ADOPTED (TT +236.87/FF +5.92/LEC 3703, window 23.2/20.3 CHECKED); F4F = fallback; F4G VMR live (epyc2 unit 714733)
 - [ ] QC.GRT Die GRT0 incl. clock on the infra-first plan · INFRA-FIRST · WAITS · → QC.INFRA
 - [ ] QC.BIND Strict bind on the QC plan event (wavefront reset/START, CB16 phase classes) · PATH-QC · WAITS · → QC.INFRA
