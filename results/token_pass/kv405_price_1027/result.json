@@ -1,0 +1,311 @@
+{
+ "status": "PENDING_CANDIDATE_INCREMENTAL_PRICE_NOT_ADOPTED",
+ "source": "codex/kv-kits-1027b@b4a705f520",
+ "raw_lanes": 125,
+ "raw_added_edge_sum": 205,
+ "r8": {
+  "changed": 157,
+  "landed_delta_histogram": {
+   "0": 97,
+   "1": 50,
+   "2": 10
+  },
+  "pv_changed": 89,
+  "pv_calendar_added_cycles": 0,
+  "inbound_bundle_added_cycles": 0,
+  "attention_tx_added_cycles": 1
+ },
+ "vport": {
+  "vport_EN_0": {
+   "old": {
+    "RT": 47,
+    "W": 31,
+    "total": 78,
+    "DQ_without_extra_W_pads": 14
+   },
+   "new": {
+    "RT": 47,
+    "W": 31,
+    "total": 78,
+    "DQ_without_extra_W_pads": 16
+   },
+   "RT_delta": 0
+  },
+  "vport_EN_1": {
+   "old": {
+    "RT": 48,
+    "W": 20,
+    "total": 68,
+    "DQ_without_extra_W_pads": 24
+   },
+   "new": {
+    "RT": 49,
+    "W": 20,
+    "total": 69,
+    "DQ_without_extra_W_pads": 25
+   },
+   "RT_delta": 1
+  },
+  "vport_EN_2": {
+   "old": {
+    "RT": 49,
+    "W": 43,
+    "total": 92,
+    "DQ_without_extra_W_pads": 0
+   },
+   "new": {
+    "RT": 50,
+    "W": 43,
+    "total": 93,
+    "DQ_without_extra_W_pads": 1
+   },
+   "RT_delta": 1
+  },
+  "vport_EN_3": {
+   "old": {
+    "RT": 50,
+    "W": 2,
+    "total": 52,
+    "DQ_without_extra_W_pads": 40
+   },
+   "new": {
+    "RT": 50,
+    "W": 2,
+    "total": 52,
+    "DQ_without_extra_W_pads": 42
+   },
+   "RT_delta": 0
+  },
+  "vport_ES_0": {
+   "old": {
+    "RT": 47,
+    "W": 31,
+    "total": 78,
+    "DQ_without_extra_W_pads": 14
+   },
+   "new": {
+    "RT": 47,
+    "W": 31,
+    "total": 78,
+    "DQ_without_extra_W_pads": 16
+   },
+   "RT_delta": 0
+  },
+  "vport_ES_1": {
+   "old": {
+    "RT": 48,
+    "W": 20,
+    "total": 68,
+    "DQ_without_extra_W_pads": 24
+   },
+   "new": {
+    "RT": 49,
+    "W": 20,
+    "total": 69,
+    "DQ_without_extra_W_pads": 25
+   },
+   "RT_delta": 1
+  },
+  "vport_ES_2": {
+   "old": {
+    "RT": 49,
+    "W": 43,
+    "total": 92,
+    "DQ_without_extra_W_pads": 0
+   },
+   "new": {
+    "RT": 51,
+    "W": 43,
+    "total": 94,
+    "DQ_without_extra_W_pads": 0
+   },
+   "RT_delta": 2
+  },
+  "vport_ES_3": {
+   "old": {
+    "RT": 50,
+    "W": 2,
+    "total": 52,
+    "DQ_without_extra_W_pads": 40
+   },
+   "new": {
+    "RT": 50,
+    "W": 2,
+    "total": 52,
+    "DQ_without_extra_W_pads": 42
+   },
+   "RT_delta": 0
+  },
+  "vport_WN_0": {
+   "old": {
+    "RT": 48,
+    "W": 31,
+    "total": 79,
+    "DQ_without_extra_W_pads": 13
+   },
+   "new": {
+    "RT": 48,
+    "W": 31,
+    "total": 79,
+    "DQ_without_extra_W_pads": 15
+   },
+   "RT_delta": 0
+  },
+  "vport_WN_1": {
+   "old": {
+    "RT": 47,
+    "W": 20,
+    "total": 67,
+    "DQ_without_extra_W_pads": 25
+   },
+   "new": {
+    "RT": 47,
+    "W": 20,
+    "total": 67,
+    "DQ_without_extra_W_pads": 27
+   },
+   "RT_delta": 0
+  },
+  "vport_WN_2": {
+   "old": {
+    "RT": 44,
+    "W": 43,
+    "total": 87,
+    "DQ_without_extra_W_pads": 5
+   },
+   "new": {
+    "RT": 45,
+    "W": 43,
+    "total": 88,
+    "DQ_without_extra_W_pads": 6
+   },
+   "RT_delta": 1
+  },
+  "vport_WN_3": {
+   "old": {
+    "RT": 46,
+    "W": 2,
+    "total": 48,
+    "DQ_without_extra_W_pads": 44
+   },
+   "new": {
+    "RT": 46,
+    "W": 2,
+    "total": 48,
+    "DQ_without_extra_W_pads": 46
+   },
+   "RT_delta": 0
+  },
+  "vport_WS_0": {
+   "old": {
+    "RT": 48,
+    "W": 31,
+    "total": 79,
+    "DQ_without_extra_W_pads": 13
+   },
+   "new": {
+    "RT": 48,
+    "W": 31,
+    "total": 79,
+    "DQ_without_extra_W_pads": 15
+   },
+   "RT_delta": 0
+  },
+  "vport_WS_1": {
+   "old": {
+    "RT": 47,
+    "W": 20,
+    "total": 67,
+    "DQ_without_extra_W_pads": 25
+   },
+   "new": {
+    "RT": 47,
+    "W": 20,
+    "total": 67,
+    "DQ_without_extra_W_pads": 27
+   },
+   "RT_delta": 0
+  },
+  "vport_WS_2": {
+   "old": {
+    "RT": 43,
+    "W": 43,
+    "total": 86,
+    "DQ_without_extra_W_pads": 6
+   },
+   "new": {
+    "RT": 45,
+    "W": 43,
+    "total": 88,
+    "DQ_without_extra_W_pads": 6
+   },
+   "RT_delta": 2
+  },
+  "vport_WS_3": {
+   "old": {
+    "RT": 46,
+    "W": 2,
+    "total": 48,
+    "DQ_without_extra_W_pads": 44
+   },
+   "new": {
+    "RT": 46,
+    "W": 2,
+    "total": 48,
+    "DQ_without_extra_W_pads": 46
+   },
+   "RT_delta": 0
+  }
+ },
+ "required_fia_without_extra_W_pads": {
+  "old": 97,
+  "new": 99
+ },
+ "direct_transport_model": {
+  "accepted_cost_DAG": {
+   "base_cycles": 249431.0,
+   "new_cycles": 249467.0,
+   "added_cycles": 36.0
+  },
+  "current_QCE_additive_sensitivity": {
+   "base_cycles": 296341,
+   "added_cycles": 36,
+   "new_cycles": 296377,
+   "clock_period_ps": 833,
+   "tok_s_before": 4051.0094522082013,
+   "tok_s_after": 4050.5173885855875,
+   "loss_pct": 0.01214669154489046
+  }
+ },
+ "serial_family_sensitivity": {
+  "accepted_cost_DAG": {
+   "base_cycles": 249431.0,
+   "new_cycles": 249686.0,
+   "added_cycles": 255.0
+  },
+  "current_QCE_additive_sensitivity": {
+   "base_cycles": 296341,
+   "added_cycles": 255,
+   "new_cycles": 296596,
+   "clock_period_ps": 833,
+   "tok_s_before": 4051.0094522082013,
+   "tok_s_after": 4047.526575128561,
+   "loss_pct": 0.08597553574559333
+  }
+ },
+ "interior_family_sensitivity": {
+  "vport_slg": 2,
+  "pv_calendar": 0,
+  "ahub_astk": 1,
+  "seq_hroot": 2,
+  "acal": 1
+ },
+ "compiler_actions": [
+  "Reapply authoritative R8 extras after hm_r26 composition; exact PV calendar remains fixed.",
+  "Regenerate each Vport RT/DQ and PV FIRST_INPUT_AGE from final emitted bind. Raw unpadded DQ was already above15; W pads required; all RT values remain <=63.",
+  "Reprice OUT attention payload+valid bundle +1/layer; incoming RX/KVN source fields stay aligned at56.",
+  "Recompute EXP_START/ACAL per WN/WS (+1 AM/cal delivery), programme prg/xs/fan (+1/+1 legs), hroot_WN boot/embedding return (+1), EST embedding fan(+2). These overlap; final static compiler decides critical exposure.",
+  "No ECTL Kreq/Krsp,QK_ISSUE_AGE,AHUB AP_OFS/FR_OFS,KVN_A0,or PV TRUNK_D/FLAG_D source rule leg moved in this incremental ledger.",
+  "Recompile final native boot image and pair calendar only after final bind; do not retain old image constants. No duplicatebind/fullsim launched."
+ ]
+}
