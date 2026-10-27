@@ -285,3 +285,44 @@ def test_recursive_physical_buffer_chains_and_negative_controls():
     assert r["verdict"] == "FAIL" and any("cycle" in x for x in r["fails"]["unregistered"]), r
     merged = net.replace(".QN(oq)", ".QN(q)")
     assert face_guard.guard(merged)["verdict"] == "FAIL"
+
+
+NET_CK2 = r"""
+module top(clk, clk_coll, a, o);
+  input clk; input clk_coll; input [1:0] a; output [1:0] o;
+  wire _0_; wire _1_; wire [1:0] q;
+  DFFHQNx1_ASAP7_75t_R \u_bin_a.q[0]$_DFF_P_  (.CLK(clk_coll), .D(a[0]), .QN(q[0]));
+  DFFHQNx1_ASAP7_75t_R \u_bin_a.q[1]$_DFF_P_  (.CLK(clk_coll), .D(a[1]), .QN(q[1]));
+  DFFHQNx1_ASAP7_75t_R \u_bout_o.q[0]$_DFF_P_  (.CLK(clk), .D(q[0]), .QN(_0_));
+  DFFHQNx1_ASAP7_75t_R \u_bout_o.q[1]$_DFF_P_  (.CLK(clk), .D(q[1]), .QN(_1_));
+  INVx3_ASAP7_75t_R _2_ (.A(_0_), .Y(o[0]));
+  INVx3_ASAP7_75t_R _3_ (.A(_1_), .Y(o[1]));
+endmodule
+"""
+
+
+def test_sdc_clock_ports_parse():
+    sdc = ("create_clock -name core -period 833 [get_ports clk]\n"
+           "create_clock -name clk_coll -period 833.0000 [get_ports clk_coll]\n"
+           "create_clock -name vclk -period 833\n")
+    assert face_guard.sdc_clock_ports(sdc) == ["clk", "clk_coll"]
+
+
+def test_extra_sdc_clock_role_is_exempt():
+    # without the SDC clock list the extra clock role is a shared (data) input -> FAIL (coll_n 10-27 case)
+    assert face_guard.guard(NET_CK2)["verdict"] == "FAIL"
+    r = face_guard.guard(NET_CK2, clocks=["clk", "clk_coll"])
+    assert r["verdict"] == "PASS", r["fail_counts"]
+
+
+def test_sdc_clock_port_planned_as_data_is_refused():
+    with pytest.raises(ValueError):
+        face_guard.guard(NET_CK2, pins=[{"bus": "clk_coll", "bit": 0}], clocks=["clk_coll"])
+
+
+def test_main_reads_sdc_beside_pins(tmp_path):
+    (tmp_path / "net.v").write_text(NET_CK2)
+    (tmp_path / "pins.json").write_text("[]")
+    (tmp_path / "constraint.sdc").write_text("create_clock -name clk_coll -period 833 [get_ports clk_coll]\n")
+    assert face_guard.main([str(tmp_path / "net.v"), "--pins", str(tmp_path / "pins.json"),
+                            "--out", str(tmp_path / "fg.json")]) == 0
