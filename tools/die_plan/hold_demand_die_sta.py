@@ -37,15 +37,17 @@ def sha(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
 
-def _pins_match(view_meta, pins, plan_dir):
+def _pins_match(view_meta, pins, plan_dir, outline_um=None, extra=()):
     import die_sta_related as R
-    return R.pins_match(view_meta, pins, plan_dir) is None
+    return R.pins_match(view_meta, pins, plan_dir, outline_um, extra) is None
 
 
 def demand_rows(P, ff, tt, M, real_pins, hb, tol_um=1.0, plan_dir=None):
     """[row] one per seam bit: pid, bit, src/dst part+type+bus, launch/capture tap, model, ff_hold_ps, D, k."""
     import schema as S
     gtaps = set(x[0] for x in ff) | set(x[1] for x in ff)
+    plan_pins = sorted({h["pins_file"] for t in P.types.values() for h in t.get("hard_cores", []) or []
+                        if h.get("pins_file")})
     tb = defaultdict(list)
     for t in M["taps"]:
         if t["port"] in gtaps:
@@ -55,9 +57,10 @@ def demand_rows(P, ff, tt, M, real_pins, hb, tol_um=1.0, plan_dir=None):
         for h in P.types[p["type"]].get("hard_cores", []) or []:
             ox, oy = map(float, h["origin_um"]); w, hh = map(float, h["outline_um"])
             xs, ys = zip(*[P.to_die(n, q) for q in ((ox, oy), (ox + w, oy + hh))])
-            # CLOCK-KV-R24: content match (plan pins_file sha256 == view kit.pins_sha256), as die_sta_related
+            # CLOCK-KV-R24 content match, GATE-PINS-2 canonical + exact-mirror form, as die_sta_related
             real = h.get("module") in real_pins and (real_pins[h["module"]] is None or
-                                                     _pins_match(real_pins[h["module"]], h.get("pins_file"), plan_dir))
+                                                     _pins_match(real_pins[h["module"]], h.get("pins_file"), plan_dir,
+                                                                 h.get("outline_um"), plan_pins))
             crect[n].append((min(xs), min(ys), max(xs), max(ys), h["inst"], h["module"], real))
 
     def owner(part, pt):
@@ -135,8 +138,10 @@ def main(argv=None):
     for kv in a.core_view:
         m, vd = kv.split("=", 1)
         prov = json.loads((Path(vd) / "provenance.json").read_text())
-        real_pins[m] = dict(pins_sha256=prov["kit"].get("pins_sha256"), pins_file=prov["kit"].get("pins_file")) \
-            if a.match_pins else None
+        k = prov["kit"]
+        real_pins[m] = dict(pins_sha256=k.get("pins_sha256"), pins_file=k.get("pins_file"),
+                            pins_canon_sha256=k.get("pins_canon_sha256"), outline_um=k.get("outline_um"),
+                            view_dir=str(vd), module=m) if a.match_pins else None
     M = json.loads((Path(a.proof) / "mesh.json").read_text())
     gate = json.loads(Path(a.gate_json).read_text())
     rows, unc = demand_rows(P, ff, tt, M, real_pins, R.HB4, plan_dir=Path(a.plan).resolve().parent)

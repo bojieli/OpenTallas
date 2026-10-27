@@ -795,8 +795,10 @@ def core_view_model(module, view_dir, corner, load_ff, part_delay_ps):
         meta["clock_latency_measured"] = json.loads(cj.read_text()).get("clock_latency_measured")
     if prov.exists():
         p = json.loads(prov.read_text())
-        meta.update(verdict=p.get("verdict"), pins_sha256=p.get("kit", {}).get("pins_sha256"),
-                    pins_file=p.get("kit", {}).get("pins_file"))
+        k = p.get("kit", {})
+        meta.update(verdict=p.get("verdict"), pins_sha256=k.get("pins_sha256"), pins_file=k.get("pins_file"),
+                    pins_canon_sha256=k.get("pins_canon_sha256"), outline_um=k.get("outline_um"))
+    meta.update(view_dir=str(vd), module=module)
     return dict(name=f"core:{module}", real=True, lat_late=part_delay_ps, lat_early=part_delay_ps,
                 clkq_max=etm["out_max_ps"], clkq_min=etm["out_min_ps"], setup=etm["in_setup_ps"],
                 hold=etm["in_hold_ps"], etm=etm, meta=meta)
@@ -838,22 +840,141 @@ def map_cores_to_taps(plan, taps):
     return out
 
 
-def pins_match(view_meta, pins, plan_dir, _cache={}):
-    """CLOCK-KV-R24 (NUMBER-CHECK-KV-R23 finding): the view applies only when the plan pin file's CONTENT is the one
-    the view was signed on (provenance kit.pins_sha256 == sha256 of plan_dir/pins).  The R21/R22 file-NAME match
-    accepted e1/e5 views signed on 544-pin files against the 546-pin files of the same name.  Returns None (match)
-    or the mismatch reason."""
-    want = (view_meta or {}).get("pins_sha256")
-    if not pins:
-        return "no plan pins_file"
-    if not want:
-        return "view has no pins_sha256"
-    f = Path(plan_dir) / pins if plan_dir is not None else Path(pins)
+# GATE-PINS-2 (COORD ruling on the KV-CORES-PV ask, 10-27): the pin match hashes only physically and logically
+# meaningful content -- per pin: name, direction, layer, x, y, size, clock-entry flag (when present); plus the core
+# outline -- in canonical (sorted) order, coordinates on the 1-nm grid.  Free text ('source', 'frame', 'note', ...)
+# never changes the hash.  A mirror image (MX/MY/R180) of the signed pin set is the same physical core when EVERY
+# pin maps exactly (same names, same layers, same size); otherwise it is a different core type.
+PIN_KEYS = ("direction", "dir", "layer", "w", "h", "width", "height", "size", "clock_entry", "is_clock_entry")
+ORIENTS = {"MX": lambda x, y, W, H: (x, H - y), "MY": lambda x, y, W, H: (W - x, y),
+           "R180": lambda x, y, W, H: (W - x, H - y)}
+
+
+def _nm(v):
+    return int(round(float(v) * 1000))
+
+
+def _pin_outline(doc):
+    """outline from a structured key, else from the generator's 'frame' text ('... outline W x H')."""
+    if doc.get("outline_um"):
+        return tuple(_nm(v) for v in doc["outline_um"])
+    m = re.search(r"outline\s+([0-9.]+)\s*x\s*([0-9.]+)", str(doc.get("frame", "")))
+    return (_nm(m.group(1)), _nm(m.group(2))) if m else None
+
+
+def canon_pins(doc, outline_um=None):
+    """{'outline': (W, H) nm | None, 'pins': {name: (x_nm, y_nm, (key, value)...)}} -- canonical physical content."""
+    pins = {}
+    for p in doc.get("pins", []):
+        rest = tuple((k, _nm(p[k]) if isinstance(p[k], (int, float)) and not isinstance(p[k], bool) else p[k])
+                     for k in PIN_KEYS if k in p)
+        pins[str(p["name"])] = (_nm(p["x"]) if "x" in p else None, _nm(p["y"]) if "y" in p else None) + rest
+    ol = tuple(_nm(v) for v in outline_um) if outline_um else _pin_outline(doc)
+    return dict(outline=ol, pins=pins)
+
+
+def canon_sha256(c):
+    body = json.dumps(dict(outline=c["outline"], pins=sorted([n] + list(v) for n, v in c["pins"].items())),
+                      sort_keys=True, separators=(",", ":"), default=list)
+    return hashlib.sha256(body.encode()).hexdigest()
+
+
+def mirror_of(signed, plan_c):
+    """first orientation T in MX/MY/R180 with plan_c == T(signed) on every pin (names, layers, sizes equal), else None."""
+    if signed["outline"] is None or signed["outline"] != plan_c["outline"] or set(signed["pins"]) != set(plan_c["pins"]):
+        return None
+    W, H = signed["outline"]
+    if any(v[0] is None or v[1] is None for v in signed["pins"].values()):
+        return None
+    for t, f in ORIENTS.items():
+        if all(plan_c["pins"][n] == f(v[0], v[1], W, H) + v[2:] for n, v in signed["pins"].items()):
+            return t
+    return None
+
+
+def _read_json(f, _cache={}):
+    f = Path(f)
     if f not in _cache:
-        _cache[f] = hashlib.sha256(f.read_bytes()).hexdigest() if f.exists() else None
-    if _cache[f] is None:
-        return "plan pins_file missing"
-    return None if _cache[f] == want else "pins content differs"
+        if f.exists():
+            b = f.read_bytes()
+            _cache[f] = (hashlib.sha256(b).hexdigest(), json.loads(b))
+        else:
+            _cache[f] = (None, None)
+    return _cache[f]
+
+
+def signed_pins_doc(view_meta, plan_dir, extra=()):
+    """the pin file content the view was signed on, VERIFIED by whole-file sha256 == kit.pins_sha256: a copy in the
+    view dir (<view>/pins.json or <module>_pins.json), kit.pins_file under plan_dir or as given, or any plan pins
+    file (extra) with that sha.  None when no verified copy exists."""
+    want = view_meta.get("pins_sha256")
+    vd = view_meta.get("view_dir")
+    cands = []
+    if vd:
+        cands += [Path(vd) / "pins.json"] + ([Path(vd) / f"{view_meta['module']}_pins.json"] if view_meta.get("module") else [])
+    if view_meta.get("pins_file"):
+        if plan_dir is not None:
+            cands.append(Path(plan_dir) / view_meta["pins_file"])
+        cands.append(Path(view_meta["pins_file"]))
+    cands += [Path(plan_dir) / e if plan_dir is not None else Path(e) for e in extra]
+    for c in cands:
+        h, d = _read_json(c)
+        if h is not None and h == want:
+            return d
+    return None
+
+
+def pins_relation(view_meta, pins, plan_dir, outline_um=None, extra=(), _memo={}):
+    """(how, reason): how = 'canonical' (same physical pin set), 'mirror:MX|MY|R180' (exact image of the signed
+    set), or None with the mismatch reason."""
+    view_meta = view_meta or {}
+    key = (json.dumps(view_meta, sort_keys=True, default=str), pins, str(plan_dir),
+           tuple(outline_um) if outline_um else None, tuple(extra))
+    if key not in _memo:
+        _memo[key] = _pins_relation(view_meta, pins, plan_dir, outline_um, extra)
+    return _memo[key]
+
+
+def _pins_relation(view_meta, pins, plan_dir, outline_um, extra):
+    want = view_meta.get("pins_sha256")
+    if not pins:
+        return None, "no plan pins_file"
+    if not want and not view_meta.get("pins_canon_sha256"):
+        return None, "view has no pins_sha256"
+    ph, pdoc = _read_json(Path(plan_dir) / pins if plan_dir is not None else Path(pins))
+    if pdoc is None:
+        return None, "plan pins_file missing"
+    if want and ph == want:
+        return "canonical", None
+    vol = view_meta.get("outline_um")
+    if outline_um and vol and tuple(_nm(v) for v in vol) != tuple(_nm(v) for v in outline_um):
+        return None, "core outline differs"
+    pc = canon_pins(pdoc, outline_um or vol)
+    if view_meta.get("pins_canon_sha256") and canon_sha256(pc) == view_meta["pins_canon_sha256"]:
+        return "canonical", None
+    sdoc = signed_pins_doc(view_meta, plan_dir, extra) if want else None
+    if sdoc is None:
+        return None, "pins content differs"            # signed content not available: whole-file sha decides
+    sc = canon_pins(sdoc, vol or outline_um)
+    if canon_sha256(sc) == canon_sha256(pc):
+        return "canonical", None
+    t = mirror_of(sc, pc)
+    if t:
+        return f"mirror:{t}", None
+    return None, "pins differ (canonical, no exact MX/MY/R180 image)"
+
+
+def core_outlines(plan):
+    """{(part, inst): outline_um} of every plan hard core (the outline the pin match compares)."""
+    import schema as S
+    P = S.Plan(plan)
+    return {(n, h["inst"]): h.get("outline_um") for n, p in P.parts.items()
+            for h in P.types[p["type"]].get("hard_cores", []) or []}
+
+
+def pins_match(view_meta, pins, plan_dir, outline_um=None, extra=()):
+    """CLOCK-KV-R24 content match, GATE-PINS-2 canonical + mirror form.  None (match) or the mismatch reason."""
+    return pins_relation(view_meta, pins, plan_dir, outline_um, extra)[1]
 
 
 def build_views(plan, taps, corner, reg, lat, core_views, kits, load_ff, part_delay_ps, match_pins=False, plan_dir=None):
@@ -869,9 +990,13 @@ def build_views(plan, taps, corner, reg, lat, core_views, kits, load_ff, part_de
     real_inst, real_taps = defaultdict(int), set()
     mism = defaultdict(int)
     why = defaultdict(int)
+    how = defaultdict(int)
+    olines, plan_pins = core_outlines(plan), sorted({v[3] for v in cmap.values() if v[3]})
     for (n, inst), (mod, port, dist, pins) in cmap.items():
         if match_pins and mod in cmodels:
-            r = pins_match(cmodels[mod]["meta"], pins, plan_dir)
+            hw, r = pins_relation(cmodels[mod]["meta"], pins, plan_dir, olines.get((n, inst)), plan_pins)
+            if hw:
+                how[f"{mod}:{hw}"] += 1
             if r:
                 mism[f"{mod}:{Path(pins).name if pins else None}"] += 1
                 why[f"{mod}:{r}"] += 1
@@ -901,7 +1026,9 @@ def build_views(plan, taps, corner, reg, lat, core_views, kits, load_ff, part_de
     if match_pins:
         cov["pin_view_mismatch"] = dict(mism)
         cov["pin_view_mismatch_reason"] = dict(why)
-        cov["pin_view_match"] = "content (sha256 of plan pins_file == view provenance kit.pins_sha256)"
+        cov["pin_view_match_how"] = dict(how)
+        cov["pin_view_match"] = ("canonical content (name, direction, layer, x, y, size, clock-entry flag + core "
+                                 "outline; free text ignored) or an exact MX/MY/R180 image of the signed pin set")
     return views, cov
 
 
