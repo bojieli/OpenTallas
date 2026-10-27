@@ -121,7 +121,8 @@ def pg_rects(P, grid):
 
     Rows from pg_grid() with die.pg.domains also carry phase="die" (offset measured from the die origin, as
     pg_regions.pdn_tcl), clear_um (the stripe's own spacing kept from every region edge that is not the die edge) and
-    holes_um (rects the stripe is cut out of, bloated by clear_um: the core grid around the PHY regions)."""
+    holes_um (rects the stripe is cut out of, bloated by clear_um: the core grid around the PHY regions).
+    net_holes_um {net: [rect]} (INFRA-FIRST-QC-R28): exact cut-outs of ONE net's stripes (VSS under the clock-mesh straps)."""
     out = []
     reg = [g for g in grid if g.get("region")]
     if reg:                                   # pg_grid() regions: the pdngen model (pg_regions.region_model)
@@ -152,6 +153,7 @@ def pg_rects(P, grid):
         a0 = alo + m if m is not None and alo > die_alo + 1e-9 else alo
         a1 = ahi - m if m is not None and ahi < die_ahi - 1e-9 else ahi
         holes = g.get("holes_um") or ()
+        nholes = g.get("net_holes_um") or {}      # R28: per-net exact cut-outs (no bloat), e.g. VSS under mesh straps
         mh = m or 0.0
         while pos < hi:
             for j in range(k):
@@ -162,7 +164,10 @@ def pg_rects(P, grid):
                 # holes that the stripe's perpendicular band meets (bloated by the stripe's own spacing)
                 cut = [((h[1], h[3]) if V else (h[0], h[2])) for h in holes
                        if ((h[0], h[2]) if V else (h[1], h[3]))[0] - mh < b and a < ((h[0], h[2]) if V else (h[1], h[3]))[1] + mh]
-                for s0, s1 in (_cut(a0, a1, [(h0 - mh, h1 + mh) for h0, h1 in cut]) if cut else [(a0, a1)]):
+                ivs = [(h0 - mh, h1 + mh) for h0, h1 in cut]
+                ivs += [((h[1], h[3]) if V else (h[0], h[2])) for h in nholes.get(nets[j], ())
+                        if ((h[0], h[2]) if V else (h[1], h[3]))[0] < b and a < ((h[0], h[2]) if V else (h[1], h[3]))[1]]
+                for s0, s1 in (_cut(a0, a1, ivs) if ivs else [(a0, a1)]):
                     out.append((nets[j], g["layer"]) + ((a, s0, b, s1) if V else (s0, a, s1, b)))
             pos += g["pitch_um"]
     return out

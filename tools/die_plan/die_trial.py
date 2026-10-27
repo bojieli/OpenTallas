@@ -682,6 +682,20 @@ def coarse_tracks(P, coarse):
     return "\n".join(lines) + "\n"
 
 
+def _pg_cut(lo, hi, holes):
+    """[lo, hi] minus intervals (die_infra._cut)"""
+    out, a = [], lo
+    for h0, h1 in sorted(holes):
+        if h1 <= a or h0 >= hi:
+            continue
+        if h0 > a:
+            out.append((a, h0))
+        a = max(a, h1)
+    if a < hi:
+        out.append((a, hi))
+    return out
+
+
 def pg_stripes(P):
     """[(layer, x0, y0, x1, y1)] of the die PG stripes (die.pg.grid)."""
     out = []
@@ -699,7 +713,13 @@ def pg_stripes(P):
                 if c + g["width_um"] / 2 > span:
                     continue
                 a, b = c - g["width_um"] / 2, c + g["width_um"] / 2
-                out.append((g["layer"],) + ((a, 0, b, ext) if L["dir"] == "V" else (0, a, ext, b)))
+                V = L["dir"] == "V"
+                net = (g.get("nets") or ["VDD", "VSS"])[j]
+                # INFRA-FIRST-QC-R28: per-net cut-outs (die_infra.pg_rects net_holes_um, same rule)
+                ivs = [((h[1], h[3]) if V else (h[0], h[2])) for h in (g.get("net_holes_um") or {}).get(net, ())
+                       if ((h[0], h[2]) if V else (h[1], h[3]))[0] < b and a < ((h[0], h[2]) if V else (h[1], h[3]))[1]]
+                for s0, s1 in (_pg_cut(0.0, ext, ivs) if ivs else [(0, ext)]):
+                    out.append((g["layer"],) + ((a, s0, b, s1) if V else (s0, a, s1, b)))
             pos += g["pitch_um"]
     return out
 

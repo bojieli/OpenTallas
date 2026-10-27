@@ -240,7 +240,13 @@ SCHEMA = {
                         "type": "object", "required": ["layer", "width_um", "pitch_um", "offset_um"],
                         "additionalProperties": False,
                         "properties": {"layer": _layer, "width_um": _pos, "pitch_um": _pos, "offset_um": _nonneg,
-                                       "nets": {"type": "array", "items": _name}}}},
+                                       "nets": {"type": "array", "items": _name},
+                                       # INFRA-FIRST-QC-R28 (COORD 10-27 11:08 OPTION A): per-net stripe cut-outs, e.g. the VSS
+                                       # segments under each clock-mesh strap (pg_mesh_cut.py); a rect cuts ONLY that net's
+                                       # stripes of this row, exact keep-out (no bloat), die frame
+                                       "net_holes_um": {"type": "object", "additionalProperties": {
+                                           "type": "array", "items": _rect}},
+                                       "net_holes_note": {"type": "string"}}}},
                     # OWNER DECISION 7 (2026-10-24, IR over SerDes windows): a separate PHY supply per window with its own
                     # dense die-layer straps and dedicated power/ground bump rows over the macro (die_io.check_pg_domains)
                     "domains": {"type": "array", "items": {
