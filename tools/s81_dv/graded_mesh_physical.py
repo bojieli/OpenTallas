@@ -35,6 +35,24 @@ def cluster(x,y,count,cols):
  x0=D.snap(x-(cols-1)*D.BUF_W/2-D.BUF_W/2,D.SITE_X);y0=D.snap(y-(rows-1)*D.ROW_Y/2-D.ROW_Y/2,D.ROW_Y)
  return [dict(x=round(x0+(i%cols)*D.BUF_W,6),y=round(y0+(i//cols)*D.ROW_Y,6),kind='drv') for i in range(count)]
 
+def via_arrays(segments,xs,ys):
+ # Fit the real adjoining rectangles, including a profile-width transition.
+ # An analytic width at the crossing can exceed the narrower neighbouring
+ # segment and introduce a sub-MINSTEP pad protrusion.
+ incident=collections.defaultdict(list)
+ for seg in segments:
+  a,b,c,d=seg["centre_um"]
+  for x,y in [(a,b),(c,d)]:incident[(round(x,6),round(y,6))].append(seg["width_um"])
+ vias=[]
+ for x in xs:
+  for y in ys:
+   w=min(incident[(round(x,6),round(y,6))])
+   n=max(1,int(math.floor((w-.08)/.098+1e-8))+1)
+   pad=round(.08+(n-1)*.098,6)
+   assert pad<=w+1e-6,(x,y,w,pad)
+   vias.append(dict(x_um=round(x,6),y_um=round(y,6),rows=n,cols=n,cut_um=.04,pitch_um=.098,pad_um=pad))
+ return vias
+
 def materialize(plan,build,out,peak=128,band=4000):
  P=S.Plan(S.load(plan),str(plan));src=Path(build);dst=Path(out);dst.mkdir(parents=True,exist_ok=True)
  M=json.load(open(src/'mesh.json'));cells=json.load(open(src/'place.json'));N=json.load(open(src/'nets.json'));nets=N['nets'];ports=N['ports']
@@ -85,11 +103,7 @@ def materialize(plan,build,out,peak=128,band=4000):
  for x in vx:
   for y0,y1 in zip(hy,hy[1:]):
    w,t=width_at(x,(y0+y1)/2,rx,ry,peak,band);segments.append(dict(layer='M9',rect_um=[round(x-w/2,6),round(y0,6),round(x+w/2,6),round(y1,6)],width_um=w,centre_um=[x,y0,x,y1],target_multiple=t))
- for x in vx:
-  for y in hy:
-   # Minimum adjacent wire width governs the array. Every crossing is physically connected.
-   w,_=width_at(x,y,rx,ry,peak,band);n=max(1,int(math.floor((w-.08)/.098+1e-8))+1)
-   via.append(dict(x_um=round(x,6),y_um=round(y,6),rows=n,cols=n,cut_um=.04,pitch_um=.098,pad_um=round(.08+(n-1)*.098,6)))
+ via=via_arrays(segments,vx,hy)
  D.write_verilog(new,nets,ports,dst/'ctree.v')
  hard=D.hard_keepout_violations(P,new);over=D.placement_overlaps(new);hop=D.actual_clock_hop_violations(new,nets,405)
  ft=D._body_keepout_violations(DC.KeepIndex(D.ft_halo_keepouts(P)),P.W,P.H,new)
