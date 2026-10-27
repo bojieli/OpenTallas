@@ -1,0 +1,177 @@
+"""PREFLIGHT-2: one passing fixture kit and one mutant per kit-contract check (kit_contract.py)."""
+import json
+import sys
+from pathlib import Path
+
+import pytest
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import kit_contract as KC  # noqa: E402
+import kit_preflight as KP  # noqa: E402
+
+RC = """# OT_RC_CAL signal fit A
+# OT_RC_CAL clock fit B
+set_wire_rc -signal -resistance 2.6E-02 -capacitance 1.29E-01
+set_wire_rc -clock -resistance 2.6E-02 -capacitance 1.0E-01
+""" + "".join(f"set_layer_rc -layer {L} -resistance 1E-02 -capacitance 1E-01\n" for L in KC.RC_CAL_LAYERS)
+
+
+def write_kit(kd):
+    kd.mkdir(parents=True, exist_ok=True)
+    (kd / "rtl").mkdir(exist_ok=True)
+    (kd / "macros").mkdir(exist_ok=True)
+    (kd / "config.mk").write_text("\n".join([
+        "export DESIGN_NAME = top", "export VERILOG_FILES = /work/rtl/top.sv",
+        "export DIE_AREA = 0 0 100 100", "export CORE_AREA = 4.32 4.32 95.68 95.68",
+        "export CORNERS = tc bc", "export OT_VCLK_TT = 250.0000", "export OT_VCLK_FF = 202.5000",
+        "export SET_RC_TCL = /work/setRC_rcx.tcl", "export LAYER_PARASITICS_FILE = /work/setRC_rcx.tcl",
+        "export SYNTH_CANONICALIZE_TCL = /work/ot_keep_regs.tcl", "export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre.tcl",
+        "export ADDITIONAL_LEFS = /work/macros/m.lef", "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl", ""]))
+    (kd / "constraint.sdc").write_text("create_clock -name clk -period 833 [get_ports clk]\n"
+                                       "create_clock -name vclk -period 833\n"
+                                       "set_clock_latency -source 250.0000 [get_clocks vclk]\n")
+    (kd / "sdc_lint.json").write_text(json.dumps(dict(insertion_ps=250.0, insertion_ff_ps=202.5)))
+    (kd / "clock_binding.json").write_text(json.dumps(dict(insertion_ps=dict(tt=250.0, ff=202.5))))
+    (kd / "grt_pre.tcl").write_text('if {$::env(OT_VCLK_CORNER) eq "ff"} {\n'
+                                    '  set_clock_latency -source 202.5 [get_clocks vclk]\n}\n')
+    (kd / "io.tcl").write_text(
+        "place_pin -pin_name {clk} -layer M5 -location {50.4120 60.0000} -pin_size {0.0480 0.4800}\n"
+        "place_pin -pin_name {a} -layer M4 -location {0.0960 20.0160} -pin_size {0.1920 0.0240}\n"
+        "place_pin -pin_name {y} -layer M4 -location {99.9040 20.0160} -pin_size {0.1920 0.0240}\n")
+    (kd / "pins.json").write_text(json.dumps([dict(bus="clk", bit=None, layer="M5", x=50.412, y=60.0,
+                                                   size=[0.048, 0.48], clock=True)]))
+    (kd / "setRC_rcx.tcl").write_text(RC)
+    (kd / "rtl/top.sv").write_text("module top(input clk, a, output y);\n (* keep *) reg r;\n"
+                                   " always @(posedge clk) r <= a;\n assign y = r;\nendmodule\n")
+    (kd / "ot_keep_regs.tcl").write_text("yosys select -set ot_kw {*}{w:* a:keep %i}\nyosys setattr -set keep 1 x\n")
+    (kd / "macros/m.lef").write_text("MACRO m\n  SIZE 20 BY 20 ;\nEND m\n")
+    (kd / "macro_place.tcl").write_text("foreach {master sites} {m {{40 10 R0}}} {\n  puts $master\n}\n")
+    (kd / "mesh.json").write_text(json.dumps(dict(xs=[0.0, 100.0, 200.0], ys=[0.0, 50.0], taps=[], drivers={},
+                                                  meta=dict(ndr="4w", mesh_vias={"None": 6}))))
+    canon = KC._canon(KC.placed_pins(kd), [100.0, 100.0])
+    (kd / "freeze.json").write_text(json.dumps(dict(schema="opentallas.test.core_freeze.v1", outline_um=[100.0, 100.0],
+                                                    pins_canon_sha256=canon,
+                                                    insertion_ff_ps=202.5)))
+    return kd
+
+
+@pytest.fixture
+def kit(tmp_path):
+    return write_kit(tmp_path / "kit")
+
+
+def verdicts(kd):
+    return {k: v["verdict"] for k, v in KC.run_all(kd).items()}
+
+
+def test_fixture_passes_every_check(kit):
+    r = KC.run_all(kit)
+    assert {k: v["verdict"] for k, v in r.items()} == {k: "PASS" for k in KC.CHECKS}, \
+        {k: v["errors"] for k, v in r.items() if v["errors"]}
+
+
+def _sub(path, old, new):
+    t = path.read_text()
+    assert old in t, (path, old)
+    path.write_text(t.replace(old, new))
+
+
+def m_corner(kd):      # single-mode tc+bc session with an unconditional global FF vclk latency (HEAD R16 phantom hold)
+    (kd / "grt_pre.tcl").write_text("set_clock_latency -source 202.5 [get_clocks vclk]\n")
+
+
+def m_ff(kd):          # sdc_lint FF reference off the 12.3 contract
+    (kd / "sdc_lint.json").write_text(json.dumps(dict(insertion_ps=250.0, insertion_ff_ps=260.95)))
+
+
+def m_clock_pin(kd):   # core_infra_impl-style proc places the entry 0.032x0.192, off the M5 track (c15b DRT-0255)
+    _sub(kd / "io.tcl", "place_pin -pin_name {clk} -layer M5 -location {50.4120 60.0000} -pin_size {0.0480 0.4800}\n", "")
+    (kd / "core_infra_impl.tcl").write_text("proc ot_ci_clock_entry {name x y} {\n"
+                                            "  place_pin -pin_name $name -layer M5 -location [list $x $y] -pin_size {0.032 0.192}\n}\n")
+    (kd / "master_core_infra.tcl").write_text("ot_ci_clock_entry {clk} 50.4 60\n")
+
+
+def m_rc(kd):          # RC file without the signal-net calibration record (FLOW-RC-1)
+    _sub(kd / "setRC_rcx.tcl", "# OT_RC_CAL signal fit A\n", "")
+
+
+def m_dup(kd):         # same module in two listed sources
+    (kd / "rtl/dup.sv").write_text("module top(input clk, a, output y); assign y = a; endmodule\n")
+    _sub(kd / "config.mk", "/work/rtl/top.sv", "/work/rtl/top.sv /work/rtl/dup.sv")
+
+
+def m_keep(kd):        # keep-by-name of a parameterised module instantiated with overrides ($paramod rename)
+    (kd / "rtl/top.sv").write_text("module sub #(parameter W=1)(input a, output y); assign y = a; endmodule\n"
+                                   "module top(input clk, a, output y);\n (* keep *) reg r;\n"
+                                   " always @(posedge clk) r <= a;\n sub #(.W(2)) u(.a(r), .y(y));\nendmodule\n")
+    (kd / "config.mk").write_text((kd / "config.mk").read_text() + "export SYNTH_KEEP_MODULES = sub\n")
+
+
+def m_keep_hook(kd):   # keep registers but no keep-regs hook staged
+    _sub(kd / "config.mk", "export SYNTH_CANONICALIZE_TCL = /work/ot_keep_regs.tcl\n", "")
+
+
+def m_pins(kd):        # a placed pin moved after the plan pin hash was recorded
+    _sub(kd / "io.tcl", "{99.9040 20.0160}", "{99.9040 20.2560}")
+
+
+def m_mesh(kd):        # mesh with one crossing via short of its strap crossings
+    M = json.loads((kd / "mesh.json").read_text())
+    M["meta"]["mesh_vias"] = {"None": 5}
+    (kd / "mesh.json").write_text(json.dumps(M))
+
+
+def m_channel(kd):     # macro column abutting the core W edge: no W vertical channel
+    (kd / "macro_place.tcl").write_text("foreach {master sites} {m {{4.32 10 R0}}} {\n}\n")
+
+
+def m_entry(kd):       # macro placed under the clock entry (other foreach form: master x y orient pat)
+    (kd / "macro_place.tcl").write_text("foreach {master x y orient pat} {m 40 50 R0 {*u_m}} {\n}\n")
+
+
+@pytest.mark.parametrize("mutate,check", [
+    (m_corner, "corner_modes"), (m_ff, "ff_binding"), (m_clock_pin, "clock_pin_geometry"), (m_rc, "rc_calibration"),
+    (m_dup, "duplicate_modules"), (m_keep, "keep_hook"), (m_keep_hook, "keep_hook"), (m_pins, "pins_canonical"),
+    (m_mesh, "mesh_vias"), (m_channel, "macro_channels"), (m_entry, "clock_entry_clear")])
+def test_mutant_fails_its_check(kit, mutate, check):
+    mutate(kit)
+    r = KC.run_all(kit)
+    assert r[check]["verdict"] == "FAIL", r[check]
+    if mutate is not m_clock_pin:   # moving the entry into a proc only touches the entry checks
+        others = {k: v["verdict"] for k, v in r.items() if k != check and v["verdict"] == "FAIL"}
+        assert not others, {k: r[k]["errors"] for k in others}
+
+
+def test_no_macros_no_mesh_is_na(kit):
+    for f in ("macros/m.lef", "macro_place.tcl", "mesh.json"):
+        (kit / f).unlink()
+    _sub(kit / "config.mk", "export ADDITIONAL_LEFS = /work/macros/m.lef\n", "")
+    v = verdicts(kit)
+    assert v["macro_channels"] == v["clock_entry_clear"] == v["mesh_vias"] == "NA"
+
+
+def test_unplaced_macros_fail_closed(kit):
+    _sub(kit / "config.mk", "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl\n", "")
+    v = verdicts(kit)
+    assert v["macro_channels"] == v["clock_entry_clear"] == "FAIL"
+
+
+def test_preflight_emits_beside_freeze(kit):
+    rc = KP.main([str(kit)])
+    rec = json.loads((kit / "preflight.json").read_text())
+    assert rec["schema"] == "opentallas.kit_preflight.v2" and set(KC.CHECKS) <= set(rec["checks"])
+    assert all(rec["checks"][c]["verdict"] == "PASS" for c in KC.CHECKS)
+    assert rc == int(rec["verdict"] != "PASS")
+
+
+def test_contract_binding_scope(kit):
+    assert KC.is_core_kit(kit)
+    m_rc(kit)
+    assert any(i.startswith("rc_calibration") for i in KP.check(kit)["issues"])
+    fz = json.loads((kit / "freeze.json").read_text())
+    fz["schema"] = "opentallas.partition_freeze.v1"
+    (kit / "freeze.json").write_text(json.dumps(fz))
+    r = KP.check(kit)
+    assert not r["contract_binding"] and r["contract_advisory"]["rc_calibration"]["verdict"] == "FAIL"
+    assert not any(i.startswith("rc_calibration") for i in r["issues"])
+    assert any(i.startswith("rc_calibration") for i in KP.check(kit, contract=True)["issues"])
