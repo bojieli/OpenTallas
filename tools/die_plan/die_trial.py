@@ -676,6 +676,23 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
     for tp, x, y, part, port, i in tap_ports:
         nd = nodes[i]
         leaf_legs.append((nd["x"], nd["y"], x, y))
+    if tap_rep_um is not None:
+        # In strict reach mode anchors may follow a legal channel around a
+        # macro. Capacity reservations/rendering must cover the emitted wires,
+        # not the pre-siting straight node legs.
+        xy={name:(x,y) for name,x,y in place}
+        segs=[]
+        for child,parent in parent_of.items():
+            if parent not in xy:continue
+            a,b=xy[parent],xy[child]
+            segs.append((*a,*b,0))
+        leaf_legs=[];indices=defaultdict(int)
+        for tp,x,y,part,port,i in tap_ports:
+            ti=indices[i];indices[i]+=1
+            prefix=f"rtap{i}_{ti}_"
+            names=[name for name in xy if name.startswith(prefix)]
+            driver=max(names,key=lambda n:int(n.rsplit("_",1)[1])) if names else node_buf[i]
+            leaf_legs.append((*xy[driver],x,y))
     tcl = [f"read_lef {TECH_LEF}", f"read_lef {SC_LEF}",
            "foreach f [glob $::env(LIBDIR)/*RVT_$::env(CORNER)_nldm*.lib*] { read_liberty $f }",
            "read_verilog /work/clock/ctree.v", "link_design ctree",
