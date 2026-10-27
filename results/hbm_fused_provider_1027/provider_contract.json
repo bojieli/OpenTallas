@@ -70,6 +70,31 @@
   "delivered_reset": {
     "parameter": "DELIVERED_RESET=1",
     "local_release_edges": 3,
-    "implementation": "three kept synchronous relay stages from actual deliveredreset; defaults0 legacy; normal calendar waits actual maxboot+6+padwarm"
-  }
+    "implementation": "three kept synchronous relay stages from actual deliveredreset; defaults0 legacy; normal calendar waits actual maxboot+6+padwarm",
+    "assertion_edges": 3,
+    "minimum_gate": {
+      "unit": "oth-ubuntu-2311725-1793120519",
+      "checks": 221,
+      "errors": 0,
+      "wrong_job_mutant_errors": 22,
+      "normal_calendar_added_cycles": 0,
+      "boot_local_relay_edges": 3
+    }
+  },
+  "proposed_new_plan_instance": "u_mu_fused_program",
+  "boot_ports": {
+    "load_v": 1,
+    "load_addr": 8,
+    "load_entry": 281,
+    "cfg_commit": 1,
+    "cfg_calendar_bound": 1,
+    "cfg_count": 9,
+    "cfg_wsc": 8,
+    "cfg_pk5": 6,
+    "cfg_pb5": 1,
+    "start": 1,
+    "clk": 1,
+    "rst_n": 1
+  },
+  "root_capture_contract": "Provider output register -> physical job path -> native root capture adds1+pathcycles; native status -> physical return path -> provider capture adds pathcycles+1. Programme launch/deadline fields are relative to actual START; compiler requires exact global root capture/done dates."
 }
