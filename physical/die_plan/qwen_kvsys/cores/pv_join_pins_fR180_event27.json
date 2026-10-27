@@ -2,7 +2,7 @@
  "schema": "opentallas.die_plan.core_pins.v1",
  "core": "ot_qwen_tp8_pv_join_t",
  "frame": "core R0, origin (0,0), outline 259.2 x 172.8",
- "source": "physical/ref_tile/qkd_pv_join/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef (closed qkd_pv_join-r4-COMMIT-708845e84, record 32614b386), pin access points (shape centre, or the on-track point inside a wide shape) | KV-PLAN3 v3.9e: M4-M7 pins snapped to the die symmetric tracks (offset pitch/2) | CLOCK-KV-R12 core_pins_orient: data pins mirrored R180 (clock/reset/island pins kept: 2, data pins slid off them: 1, track snaps: 1024) | KV-CORE-SLICE-1 10-27: die clock/reset pins -> 12.8a centre entry island (M5 under the M9->M5 stack) | KV-CORE-SLICE-1 10-27: die clock/reset pins -> 12.8a centre entry island (M5 under the M9->M5 stack) | CODEX PV lot proposal: W259.2 H172.8, numeric bus order, <=60 pins/10um window; clock/reset centre entry and RTL/cycles unchanged",
+ "source": "physical/ref_tile/qkd_pv_join/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t.lef (closed qkd_pv_join-r4-COMMIT-708845e84, record 32614b386), pin access points (shape centre, or the on-track point inside a wide shape) | KV-PLAN3 v3.9e: M4-M7 pins snapped to the die symmetric tracks (offset pitch/2) | CLOCK-KV-R12 core_pins_orient: data pins mirrored R180 (clock/reset/island pins kept: 2, data pins slid off them: 1, track snaps: 1024) | KV-CORE-SLICE-1 10-27: die clock/reset pins -> 12.8a centre entry island (M5 under the M9->M5 stack) | KV-CORE-SLICE-1 10-27: die clock/reset pins -> 12.8a centre entry island (M5 under the M9->M5 stack) | CODEX PV lot proposal: W259.2 H172.8, numeric bus order, <=60 pins/10um window; clock/reset centre entry and RTL/cycles unchanged | KV-CORE-SLICE-1 10-27: die clock/reset pins -> 12.8a centre entry island (M5 under the M9->M5 stack)",
  "pins": [
   {
    "name": "clk",
@@ -25,7 +25,7 @@
   {
    "name": "rst_n",
    "layer": "M5",
-   "x": 130.008,
+   "x": 129.96,
    "y": 86.4
   },
   {
