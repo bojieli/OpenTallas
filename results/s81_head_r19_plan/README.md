@@ -11,7 +11,7 @@ Applies the two COORD 07:47 (HEAD-CORE-R17 ruling 4) APPROVED items, nothing els
     built SIZE (A 317.672 -> 319.68, B 277.652 -> 285.12).
 
 Main had NOT yet: the BQ param, the ft_mstrap_i tap rename, or LEF-derived pin files (main pins = old closed-LEF files with
-). Main's Codex head_native_plan_delta.py (opt-in 40FT) already assumes functional clock port ft_mstrap_i and reads
+`clk`). Main's Codex head_native_plan_delta.py (opt-in 40FT) already assumes functional clock port ft_mstrap_i and reads
 ft_* pins from the same pins_file -> compatible with these pin files.
 
 ## Fixes vs the dead R18 lane (its G0C 0 was STALE: g0c.log 08:04 predates its final pins/delta 08:08-08:10)
@@ -19,9 +19,9 @@ On main the R18 output gave G0C FAIL 30 errors (hard_cores: pins off the plan tr
 1. track_offset_um of the mirrored axes was derived for the old 317.672 outline (mod 0.048 = 0.008 -> 0.028); for 319.68
    it must be 0.036. head_r18_plan_delta.py now recomputes track_offset_um per axis from the pins' core-frame track
    residue (fails closed if not unique), and the tap xy now includes it (origin + track_offset + orient(pin)).
-2. head_pins_from_lef.py: USE POWER/GROUND pins (VDD/VSS strap combs) are excluded (, old closed-LEF files
+2. head_pins_from_lef.py: USE POWER/GROUND pins (VDD/VSS strap combs) are excluded (`excluded_pg`; old closed-LEF files
    never listed PG); multi-track pins (9 centre FT pads 0.192 um + rst_n) are represented by their on-track access
-   point inside the RECT (core residue 0.012), centre kept as  (10 pads per core).
+   point inside the RECT (core residue 0.012), centre kept as `rect_centre` (10 pads per core).
 Pin sources (sha256 in files): A intel1 head-core-r16/elemA_m2 routed abstract LEF (17786be2...); B epyc2
 head-core-r16/elemB routed generate_abstract LEF 08:20 (da3694b4...; pin set canon-identical to the 08:08 GRT abstract
 the dead lane used).
@@ -39,7 +39,7 @@ the dead lane used).
 - G0C PASS 0 errors / 6 warnings, 16/16 types clean (g0c/g0_report.json) CHECKED
 - Strict portbind HEAD_DIE_PORTBIND PASS: module_missing 0, DIE_PORT_BIND PASS (326 inst, params_not_in_rtl 0), tie audit
   PASS 528/0, nested PASS 2203 inst (portbind/) CHECKED
-- gen_rtl emits BQ: portbind/gen/ot_s81hd_mesh_ep.sv:325 ; the one module
+- gen_rtl emits BQ: portbind/gen/ot_s81hd_mesh_ep.sv:325 `ot_s81hd_mesh_ep_core #(.BQ(2)) u_core (`; the one module
   ot_s81hd_mesh_ep is instantiated by mesh7N, mesh0S, mesh7S in the generated top. No gen_rtl change needed. CHECKED
 - master_plan.core_clock_entry_check (main's actual-named-native-pin check) on the 5 hd_tile cores: 5/5 PASS,
   tap_to_native 0.000 um (clock_entry_check.json) CHECKED
