@@ -1,0 +1,208 @@
+{
+ "schema": "opentallas.kv_core_slice.v1",
+ "lane": "KV-CORE-SLICE-1",
+ "plan": "/srv/opentallas-scratch2/claude/wt/codex-pv-pass2-0830/results/codex_pv_wide_slice_1027/input/pd/die_plan.json",
+ "plan_sha256": "26099e2dbfd49297dc547780dc063e68a5d661b0b511c565e90e77bf39531f9b",
+ "census": "/srv/opentallas-scratch2/claude/wt/codex-pv-pass2-0830/results/codex_pv_wide_slice_1027/input/current_census.json",
+ "census_sha256": "3519f5c852459530c2d1d94e37d884936c3b0230ef17b976a2d858da2282e493",
+ "mesh": "/srv/opentallas-scratch2/claude/wt/codex-pv-pass2-0830/results/codex_pv_wide_slice_1027/input/mesh.json",
+ "mesh_sha256": "847af14115e2a7066e98eabf03733a510a0b3f4a2dd717d2574ea4ab71bdf519",
+ "applied_plan_sha256": "26099e2dbfd49297dc547780dc063e68a5d661b0b511c565e90e77bf39531f9b",
+ "common_latency_ps": 250.0,
+ "model": {
+  "A": 86.86,
+  "B": 0.8057,
+  "FF_RATIO": 0.8118,
+  "rms_ps": 4.8,
+  "loo_max_ps": 10.9
+ },
+ "types": {
+  "ot_qwen_tp8_pv_join_t": {
+   "module": "ot_qwen_tp8_pv_join_t",
+   "outline_um": [
+    259.2,
+    172.8
+   ],
+   "instances": 64,
+   "partition_types": [
+    "kv3_pv",
+    "kv3_pv_v1",
+    "kv3_pv_v12",
+    "kv3_pv_v1n",
+    "kv3_pv_v2",
+    "kv3_pv_v2n",
+    "kv3_pv_v3",
+    "kv3_pv_v3n",
+    "kv3_pv_v4",
+    "kv3_pv_v4n",
+    "kv3_pv_v5",
+    "kv3_pv_v5n",
+    "kv3_pv_v6",
+    "kv3_pv_v6n",
+    "kv3_pv_v7",
+    "kv3_pv_v8"
+   ],
+   "pin_views": {
+    "cores/pv_join_pins_fR180_event27.json": 20,
+    "cores/pv_join_pins_fMX_event27.json": 44
+   },
+   "die_clocked": true,
+   "entry": {
+    "xy_um": [
+     129.6,
+     86.4
+    ],
+    "island_um": [
+     125.28,
+     82.08,
+     133.92,
+     90.72
+    ],
+    "layer": "M5",
+    "via_stack": [
+     "VIA89",
+     "VIA78",
+     "VIA67",
+     "VIA56"
+    ],
+    "stack_from": "M9",
+    "pins": [
+     {
+      "pin": "clk",
+      "from_": [
+       "M5",
+       129.624,
+       86.4
+      ],
+      "to": [
+       "M5",
+       129.624,
+       86.4
+      ]
+     },
+     {
+      "pin": "rst_n",
+      "from_": [
+       "M5",
+       130.008,
+       86.4
+      ],
+      "to": [
+       "M5",
+       129.96,
+       86.4
+      ]
+     }
+    ],
+    "rule": "12.8a centre (outline centre on the 4.32 PG lattice)"
+   },
+   "phy_clocks": [],
+   "far_corner_um": 216.0,
+   "core_tree": {
+    "form": "internal H-tree from the entry (12.8b)",
+    "grid": [
+     2,
+     1
+    ],
+    "grid_candidates": [
+     {
+      "leaf_reach_limit_um": 200.0,
+      "grid": [
+       2,
+       1
+      ],
+      "islands": 2,
+      "pred_TT_ps": 221.7
+     },
+     {
+      "leaf_reach_limit_um": 150.0,
+      "grid": [
+       2,
+       2
+      ],
+      "islands": 4,
+      "pred_TT_ps": 195.5
+     },
+     {
+      "leaf_reach_limit_um": 110.0,
+      "grid": [
+       2,
+       2
+      ],
+      "islands": 4,
+      "pred_TT_ps": 195.5
+     }
+    ],
+    "leaf_reach_um": 151.2,
+    "islands": [
+     {
+      "centre_um": [
+       64.8,
+       86.4
+      ],
+      "rect_um": [
+       60.48,
+       82.08,
+       69.12,
+       90.72
+      ]
+     },
+     {
+      "centre_um": [
+       194.4,
+       86.4
+      ],
+      "rect_um": [
+       190.08,
+       82.08,
+       198.72,
+       90.72
+      ]
+     }
+    ],
+    "trunk_um": [
+     64.8,
+     64.8
+    ]
+   },
+   "die_islands": null,
+   "island_conflicts": [],
+   "insertion_model": {
+    "L_max_um": 216.0,
+    "pred_TT_ps": 221.7,
+    "pred_FF_ps": 179.9,
+    "target_TT_ps": 250.0,
+    "htree": {
+     "leaf_TT_ps": 208.7,
+     "leaf_FF_ps": 169.4,
+     "trunk_um": 64.8,
+     "trunk_TT_ps": 13.0,
+     "pred_TT_ps": 221.7,
+     "pred_FF_ps": 179.9,
+     "form": "leaf = core_insertion(leaf reach) + trunk 0.20 ps/um x centre->island Manhattan (MODEL UNCHECKED)"
+    },
+    "in_cal_range": false,
+    "band": "LOW (trunk)",
+    "form": "master_plan.core_insertion (CTS-grown centre-entry fit, MODEL UNCHECKED)",
+    "note": "H-tree cores: plan-built tree, predicted by core_infra_htree at kit time"
+   },
+   "trunk": {
+    "cell": "BUFx4_ASAP7_75t_R",
+    "n": 1,
+    "delay_ps": {
+     "TT": 23.9,
+     "FF": 17.6
+    },
+    "pred_after_ps": {
+     "TT": 245.6,
+     "FF": 197.5
+    },
+    "place": "in the entry island ahead of the CTS root, dont_touch, identical in every instance",
+    "frozen": "with the plan; a miss -> plan model fix + PLAN-DELTA (12.8e), never a post-measurement change"
+   },
+   "m6_m7_pins": {},
+   "outline_delta": null
+  }
+ },
+ "blocked": {}
+}
