@@ -20,6 +20,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shlex
 import subprocess
 import sys
 from pathlib import Path
@@ -53,7 +54,7 @@ def build_xh(work):
                '+define+DV2_XHEAD', '-GMUT=0', f'-GN={N}', '-Mdir', str(obj), str(HERE / 'main2.cpp')] + \
               [str(ROOT / s) for s in B2.SRCS2]
         xv = os.environ.get('DV_LOWER_VFLAGS', '').split()
-        cmd += B2.DEFINES2 + xv + os.environ.get('OT_XH_BUILD_FLAGS', '').split()
+        cmd += B2.DEFINES2 + xv + shlex.split(os.environ.get('OT_XH_BUILD_FLAGS', ''))
         if '-GSU_LT=1' in xv:
             cmd += [str(ROOT / s) for s in B2.XSRCS]
         r = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
@@ -174,6 +175,7 @@ def calibrate(work):
     # sweeps: the smallest passing go_lag (with a generous XPF lead) and xpf_lead (with a generous go lag)
     sweep = dict(go_lag={}, xpf_lead={})
     import os
+import shlex
     g0 = int(os.environ.get('OT_XH_GO_MIN', '-2'))      # TOKd-QW 10-22: widen when -2 still passes (no FAIL edge)
     for g in range(g0, 7):
         rc, st = run_family(work, consumer, plan_free(hr_at, consumer, g, 12, x_tap), f'cal_go{g}')
