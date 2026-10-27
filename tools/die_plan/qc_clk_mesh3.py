@@ -366,11 +366,12 @@ def merge(A, B, ax, et, tag, nodes):
         na0, nb0 = et.nseg(la), et.nseg(lb)
         tot = max(A["S"] + na0, B["S"] + nb0)
         return tot - A["S"], tot - B["S"]
+    _ca, _cb = CORR[0].get(A["tag"], {}), CORR[0].get(B["tag"], {})     # R13 channel x-tree re-solve (empty = r3 behaviour)
     for k in range(steps + 1):
         p = lo + (hi - lo) * k / steps
         la, lb = abs(p - pa) + e, abs(pb - p)
         na, nb = ns(la, lb)
-        d = (A["T"]["TT"] + et.delay(la, "TT", na)) - (B["T"]["TT"] + et.delay(lb, "TT", nb))
+        d = (A["T"]["TT"] + et.delay(la, "TT", na) + _ca.get("TT", 0.0)) - (B["T"]["TT"] + et.delay(lb, "TT", nb) + _cb.get("TT", 0.0))
         sc = (round(abs(d), 2), na + nb, abs(p - (lo + hi) / 2))
         cands.append((sc, p, la, lb, d, na, nb))
     cands.sort(key=lambda r: r[0])
@@ -389,9 +390,10 @@ def merge(A, B, ax, et, tag, nodes):
     xy = (p, A["xy"][1]) if ax == "x" else (A["xy"][0], p)
     for ch, L, n_ in ((A, la, na), (B, lb, nb)):
         ch["parent"], ch["leg"], ch["nseg"], ch["et"] = tag, L, n_, et
-    T = {c: max(A["T"][c] + et.delay(la, c, na), B["T"][c] + et.delay(lb, c, nb)) for c in ("TT", "FF")}
+    T = {c: max(A["T"][c] + et.delay(la, c, na) + _ca.get(c, 0.0), B["T"][c] + et.delay(lb, c, nb) + _cb.get(c, 0.0)) for c in ("TT", "FF")}
     n = dict(tag=tag, xy=xy, kids=[A["tag"], B["tag"]], T=T, S=A["S"] + na,
-             imbalance_TT=r3(d), imbalance_FF=r3((A["T"]["FF"] + et.delay(la, "FF", na)) - (B["T"]["FF"] + et.delay(lb, "FF", nb))))
+             imbalance_TT=r3(d), imbalance_FF=r3((A["T"]["FF"] + et.delay(la, "FF", na) + _ca.get("FF", 0.0))
+                                                 - (B["T"]["FF"] + et.delay(lb, "FF", nb) + _cb.get("FF", 0.0))))
     nodes.append(n)
     return n
 
@@ -488,7 +490,12 @@ def build(a, st):
             r = lift(r, (xc, g), top, tag + "L", nodes)
         return r
     r9 = None
-    if getattr(a, "feed", "mesh3") == "r9":
+    PERIODIC = None
+    if getattr(a, "feed", "mesh3") == "periodic":
+        root, leafxy, colmap, lofg = periodic_feed(a, top, P, cols, gaps, nodes)
+        PERIODIC = (leafxy, colmap, lofg)
+        build.periodic = periodic_feed.info
+    elif getattr(a, "feed", "mesh3") == "r9":
         r9, root = r9_feed(a, top, gaps, scols, xrow, ytree, nodes)
     else:
         # TOP TREE: per gap row an x-tree along the row over the spine columns, then a y-tree over the rows in one free
@@ -512,38 +519,145 @@ def build(a, st):
     BLOCK[0] = None        # column trees: identical topology on every column; buffers over the 276-um core are moved
                            # along their own column wire by legalize() (reported as bumps)
     for gi, g in enumerate(gaps):
-        grow = rows[gi * (2 * m + 1):(gi + 1) * (2 * m + 1)]
+        grow_all = rows[gi * (2 * m + 1):(gi + 1) * (2 * m + 1)]
+        halves = [("", grow_all, None)]
+        if PERIODIC is not None and len(PERIODIC[2][r3(g)]) == 2:      # R13 centre group: two mirrored half trees
+            halves = [("b", grow_all[:m + 1], PERIODIC[2][r3(g)][0]), ("m", grow_all[m:], PERIODIC[2][r3(g)][1])]
         for ci, x in enumerate(cols):
-            # full 2m+1-row tree (same topology / stage count / balance as every other column), then the driver rows on a
-            # hard core of an ADDED channel are pruned with any branch left without a driver (r2 columns keep r2 drivers)
-            leaves = [(x, y) for y in grow]
-            t0 = len(cnodes)
-            r = dtree(leaves, "y", col, f"c{gi:02d}_{ci:02d}_", cnodes)
-            tapxy = (leafx.get((r3(x), r3(g)), x), g)
-            r = lift(r, tapxy, col, f"c{gi:02d}_{ci:02d}_tap", cnodes) if md(r["xy"], tapxy) > 1e-6 else r
-            r["parent"] = None
-            if r3(x) in lattice.added:
-                cut = {n["tag"] for n in cnodes[t0:] if not n["kids"] and incore(n["xy"])}
-                dropped += [tuple(n["xy"]) for n in cnodes[t0:] if n["tag"] in cut]
-                while True:
-                    more = set()
-                    for n in cnodes[t0:]:
-                        if n["tag"] in cut:
-                            continue
-                        if n["kids"]:
-                            n["kids"] = [k for k in n["kids"] if k not in cut]
-                            if not n["kids"]:
-                                more.add(n["tag"])
-                    if not more:
-                        break
-                    cut |= more
-                cnodes[t0:] = [n for n in cnodes[t0:] if n["tag"] not in cut]
-                assert r["tag"] not in cut
-            ctrees.append(dict(g=gi, c=ci, tap=tapxy, root=r["tag"], nodes=cnodes[t0:]))
+            for hs_, grow, ytap in halves:
+                if PERIODIC is not None:
+                    kk, ii = PERIODIC[1][r3(x)]
+                    tapxy = PERIODIC[0][(kk, ii, r3(ytap if ytap is not None else PERIODIC[2][r3(g)][0]))]
+                else:
+                    tapxy = (leafx.get((r3(x), r3(g)), x), g)
+                # full 2m+1-row tree (same topology / stage count / balance as every other column), then the driver rows on
+                # a hard core of an ADDED channel are pruned with any branch left without a driver (r2 columns keep r2 drivers)
+                leaves = [(x, y) for y in grow]
+                t0 = len(cnodes)
+                r = dtree(leaves, "y", col, f"c{gi:02d}{hs_}_{ci:02d}_", cnodes)
+                r = lift(r, tapxy, col, f"c{gi:02d}{hs_}_{ci:02d}_tap", cnodes) if md(r["xy"], tapxy) > 1e-6 else r
+                r["parent"] = None
+                if r3(x) in lattice.added:
+                    cut = {n["tag"] for n in cnodes[t0:] if not n["kids"] and incore(n["xy"])}
+                    dropped += [tuple(n["xy"]) for n in cnodes[t0:] if n["tag"] in cut]
+                    while True:
+                        more = set()
+                        for n in cnodes[t0:]:
+                            if n["tag"] in cut:
+                                continue
+                            if n["kids"]:
+                                n["kids"] = [k for k in n["kids"] if k not in cut]
+                                if not n["kids"]:
+                                    more.add(n["tag"])
+                        if not more:
+                            break
+                        cut |= more
+                    cnodes[t0:] = [n for n in cnodes[t0:] if n["tag"] not in cut]
+                    assert r["tag"] not in cut
+                ctrees.append(dict(g=gi, c=ci, tap=tapxy, root=r["tag"], nodes=cnodes[t0:]))
     return dict(rec=rec, P=P, dtp=dtp, parts=parts, cores=cores, cols=cols, gaps=gaps, rows=rows, m=m, dy=dy,
                 scols=scols, top_nodes=nodes, top_root=root, spine_drv=spine_drv, ctrees=ctrees, cnodes=cnodes,
                 et=dict(top=top, col=col), free=free, incore=incore, added_cols=lattice.added, dropped_rows=dropped, r9=r9,
-                islands=I, groot_x=getattr(build, "groot_x", None))
+                islands=I, groot_x=getattr(build, "groot_x", None),
+                periodic=(build.__dict__.pop("periodic", None) if PERIODIC is not None else None))
+
+
+# ------------------------------------------------------------------------------------------------ R13 periodic feed
+PER_X = 2471.04            # QC partition-array x period (2 partitions = 4 nk columns)
+PER_OFF = (0.0, 622.08, 1235.52, 1848.96)   # column-tap offsets from the period trunk column (template; <= 17.28 um from the strap;
+#   the 4th tap sits 8.64 um inside the ODD partition right edge so the east-edge column 31207.68 is periodic too)
+PER_NUDGE = 8.64           # a gap row on a partition seam -> local row 8.64 um into the partition NEARER the die centre
+
+
+def periodic_feed(a, top, P, cols, gaps, nodes):
+    """INFRA-FIRST-QC-R13 (COORD ruling R12 ASK1, 12.2a1): every partition-hosted top-tree cell is x-PERIODIC with the
+    partition-array period (2471.04 um) and y-MIRRORED about the die centre, so every instance of a type holds the
+    identical cell set (cb types: MX bottom / R0 top; cbx rows 2 and 4 host the same two local rows).  Structure:
+      die root -> CHANNEL x-tree (die-level cells in ONE centre clock channel, the only non-periodic part; 12.2a infra
+      strip) -> 12 period trunk columns (even-partition mid column, core-free r2 driver column) -> per column a y-tree:
+      bottom subtree over 10 local rows, top subtree = exact mirror, root on the centre line -> per local row a 4-leaf
+      local x-tree to the period's 4 column taps.  The centre gap group is split into two mirrored half column trees
+      (taps YC -/+ 8.64; its centre fine-driver row is driven by both halves).  Returns (root, leafxy, local_of)."""
+    H = float(P.H)
+    YC = H / 2
+    rects = [P.rect(n) for n in P.parts]
+    seams = {round(r[1], 3) for r in rects} | {round(r[3], 3) for r in rects}
+    trunk = [c for c in cols if any(abs(c - (cols[0] + PER_X * k)) < 0.5 for k in range(len(cols)))]
+    gb = [g for g in gaps if g < YC - 1]
+    gc = [g for g in gaps if abs(g - YC) < 1e-3]
+    assert len(gc) == 1 and len(gb) * 2 + 1 == len(gaps), (len(gb), gc)
+    lb = [r3(g + PER_NUDGE) if round(g, 3) in seams else g for g in gb] + [r3(YC - PER_NUDGE)]
+    K = len(trunk) // 2
+    x0 = trunk[K]
+    keep = ISLANDS[0], BLOCK[0]
+    if keep[0] is None:
+        BLOCK[0] = None
+    tmpl = []          # template column K: merges / repeaters on the island slots of period K (translated below)
+
+    def local(y, tag):
+        r = dtree([(x0 + o, y) for o in PER_OFF], "x", top, tag, tmpl)
+        if abs(r["xy"][0] - x0) > 1e-6:
+            r = lift(r, (x0, y), top, tag + "L", tmpl)
+        return r
+
+    def yt(items, t):
+        if len(items) == 1:
+            return items[0]
+        h = len(items) // 2
+        return merge(yt(items[:h], t + "0"), yt(items[h:], t + "1"), "y", top, t, tmpl)
+    Bt = yt([local(y, f"t_b{i:02d}_") for i, y in enumerate(sorted(lb))], "T_b")
+    nb = list(tmpl)
+    mir = []
+    for n in nb:
+        q = dict(n, tag=n["tag"].replace("_b", "_m", 1), xy=(n["xy"][0], H - n["xy"][1]), kids=[k.replace("_b", "_m", 1) for k in n["kids"]])
+        if n.get("parent"):
+            q["parent"] = n["parent"].replace("_b", "_m", 1)
+        mir.append(q)
+    tmpl += mir
+    Tm = [n for n in mir if n["tag"] == Bt["tag"].replace("_b", "_m", 1)][0]
+    Lc = abs(YC - Bt["xy"][1])
+    nc = top.nseg(Lc)
+    for ch in (Bt, Tm):
+        ch["parent"], ch["leg"], ch["nseg"], ch["et"] = "H_c", Lc, nc, top
+    tmpl.append(dict(tag="H_c", xy=(x0, YC), kids=[Bt["tag"], Tm["tag"]], S=Bt["S"] + nc,
+                     T={c: Bt["T"][c] + top.delay(Lc, c, nc) for c in ("TT", "FF")}))
+    ISLANDS[0], BLOCK[0] = keep
+    leafxy, croots = {}, []
+    lrows = sorted(lb + [r3(H - y) for y in lb])
+    for k, xt in enumerate(trunk):
+        dx = xt - x0
+        pre = f"{k:02d}"
+        ren = lambda t: (t[0] + pre + t[1:]) if t else t
+        for n in tmpl:
+            q = dict(n, tag=ren(n["tag"]), xy=(r3(n["xy"][0] + dx), n["xy"][1]), kids=[ren(c) for c in n["kids"]])
+            if n.get("parent"):
+                q["parent"] = ren(n["parent"])
+            if q["tag"].startswith("H"):
+                croots.append(q)
+            nodes.append(q)
+            if not n["kids"]:
+                leafxy[(k, PER_OFF.index(r3(n["xy"][0] - x0)), r3(n["xy"][1]))] = q["xy"]
+    for q in croots:
+        q.pop("parent", None)
+    ISLANDS[0], BLOCK[0] = None, None          # channel x-tree: die-level cells in the centre channel (no partition slots)
+    hr = dtree([q["xy"] for q in croots], "x", top, "H", nodes,
+               leafmk=lambda xy, tag: [q for q in croots if abs(q["xy"][0] - xy[0]) < 1e-6][0])
+    hr["parent"] = None
+    ISLANDS[0], BLOCK[0] = keep
+    # every column -> (period, offset index)
+    colmap = {}
+    for c in cols:
+        k, i = min(((k, i) for k in range(len(trunk)) for i in range(len(PER_OFF))), key=lambda ki: abs(trunk[ki[0]] + PER_OFF[ki[1]] - c))
+        assert abs(trunk[k] + PER_OFF[i] - c) <= 17.28 + 1e-6, (c, k, i)
+        colmap[r3(c)] = (k, i)
+    lofg = {r3(gc[0]): (r3(YC - PER_NUDGE), r3(YC + PER_NUDGE))}
+    gt = sorted((g for g in gaps if g > YC + 1), reverse=True)
+    for i_, g in enumerate(sorted(gb)):
+        lofg[r3(g)] = (r3(sorted(lb)[i_]),)
+        lofg[r3(gt[i_])] = (r3(H - sorted(lb)[i_]),)     # top gap i from the edge -> exact mirror of bottom local row i
+    periodic_feed.info = dict(trunk=trunk, local_rows=lrows, template_nodes=len(tmpl), channel_root=hr["xy"], nc=nc,
+                              period_um=PER_X, offsets=PER_OFF)
+    return hr, leafxy, colmap, lofg
 
 
 # ------------------------------------------------------------------------------------------------ R9 global H-tree feed
@@ -686,7 +800,8 @@ def legalize(B, fine_masters=None):
         if n.get("ext") == "r9":
             site_of[("t", n["tag"])] = add("r9_leaf", n["xy"], 0, "x", ("t", n["tag"]), masters=[])
             continue
-        site_of[("t", n["tag"])] = add("top_node", n["xy"], top.m, "v" if n["tag"].startswith("T") else "h", ("t", n["tag"]))
+        site_of[("t", n["tag"])] = add("chan_node" if n["tag"].startswith("H") else "top_node", n["xy"], top.m,
+                                       "v" if n["tag"].startswith("T") else "h", ("t", n["tag"]))
     for ct in B["ctrees"]:
         for n in ct["nodes"]:
             if not n["kids"]:
@@ -709,7 +824,8 @@ def legalize(B, fine_masters=None):
             lane = "h" if abs(p[1] - n["xy"][1]) < 1e-6 and abs(p[0] - n["xy"][0]) > 1e-6 else "v"
             for k in range(1, n["nseg"]):
                 q = (p[0] + (n["xy"][0] - p[0]) * k / n["nseg"], p[1] + (n["xy"][1] - p[1]) * k / n["nseg"])
-                site_of[(kind + "_rep", n["tag"], k)] = add(kind + "_rep", q, et.m, lane, (kind + "_rep", n["tag"], k))
+                ck = "chan_rep" if (kind == "top" and n["tag"].startswith("H")) else kind + "_rep"   # R13 channel x-tree
+                site_of[(kind + "_rep", n["tag"], k)] = add(ck, q, et.m, lane, (kind + "_rep", n["tag"], k))
                 nrep[kind] += 1
     # exact coincidences before the bump (the GEOM-REVIEW-10 metric on the raw tree coordinates)
     from collections import Counter
@@ -750,7 +866,7 @@ def legalize(B, fine_masters=None):
         occ.update(b)
     isl = None
     if I is not None:
-        isl = assign_islands(B, I, cells, TOPK)
+        isl = assign_periodic(B, I, cells, TOPK) if B.get("periodic") else assign_islands(B, I, cells, TOPK)
     B["site_of"] = site_of
     phys = [c for c in cells if c["kind"] != "r9_leaf"]
     post = Counter((r3(c["site"][0]), r3(c["site"][1])) for c in phys)
@@ -834,6 +950,113 @@ def assign_islands(B, I, cells, topk):
                 exact=sum(1 for d in moves if d < 1e-6), moved_gt_1um=sum(1 for d in moves if d > 1.0),
                 max_move_um=r3(max(moves or [0.0])), examples=ex, pitch_um=[I.pitch_x, I.pitch], per_type=T,
                 rule="slot grid identical per type (type frame, symmetric), slots on a core in ANY instance removed")
+
+
+def assign_periodic(B, I, cells, topk):
+    """R13 (12.2a1 identical cell set per type): every partition-hosted top-tree cell takes the island slot NEAREST its
+    plan point in its host's TYPE FRAME, decided once per (type, frame point) CLASS for all instances of the type:
+    a slot is accepted only when it is free and clear of every non-top clock cell in EVERY instance of the type, so
+    each type's instances end with the identical slot set.  A class whose member count != instance count is an
+    identity violation (reported).  Channel cells (chan_*) are die-level and not assigned here."""
+    import numpy as np
+    other = defaultdict(list)
+    for c in cells:
+        if c["kind"] in topk or not c["masters"] or c["kind"].startswith("chan"):
+            continue
+        w = max(LEF_BUF[m][0] for m in c["masters"])
+        bx = (c["site"][0] - w / 2, c["site"][1] - ROW_H / 2, c["site"][0] + w / 2, c["site"][1] - ROW_H / 2 + ROW_H * len(c["masters"]))
+        for ix in range(int(bx[0] // 20), int(bx[2] // 20) + 1):
+            other[ix].append(bx)
+
+    def ov(ox, oy):
+        return any(ox < b[2] and b[0] < ox + I.CW and oy < b[3] and b[1] < oy + I.BH
+                   for ix in range(int(ox // 20) - 1, int((ox + I.CW) // 20) + 2) for b in other.get(ix, ()))
+    P = I.P
+    rects = I.prect
+    bx_ = defaultdict(list)
+    for n, r in rects.items():
+        for ix in range(int(r[0] // 500), int(r[2] // 500) + 1):
+            bx_[ix].append(n)
+
+    def host(x, y):
+        for n in bx_.get(int(x // 500), ()):
+            r = rects[n]
+            if r[0] - 1e-6 <= x < r[2] - 1e-6 and r[1] - 1e-6 <= y < r[3] - 1e-6:
+                return n
+        return None
+
+    def frame(n, x, y):
+        x0, y0, x1, y1 = rects[n]
+        o = P.parts[n].get("orient", "R0")
+        return ((x1 - x) if o in ("MY", "R180") else (x - x0)), ((y1 - y) if o in ("MX", "R180") else (y - y0))
+    insts = defaultdict(list)
+    for n in P.parts:
+        insts[P.parts[n]["type"]].append(n)
+    cls = defaultdict(list)
+    for i, c in enumerate(cells):
+        if c["kind"] not in topk:
+            continue
+        n = host(*c["xy0"])
+        if n is None:
+            raise RuntimeError(f"top cell outside partitions {c['xy0']}")
+        fx, fy = frame(n, *c["xy0"])
+        cls[(P.parts[n]["type"], round(fx), round(fy), c["kind"] == "top_node")].append((i, n))
+    used = defaultdict(set)
+    moves, viol, ex = [], [], []
+    split = []
+    for key in sorted(cls, key=lambda k: (not k[3], k)):
+        t = key[0]
+        per = defaultdict(list)
+        for i, n in cls[key]:
+            per[n].append((i, n))
+        ms = {len(v) for v in per.values()}
+        if len(per) != len(insts[t]) or len(ms) != 1:
+            viol.append(dict(type=t, frame=list(key[1:3]), members=len(cls[key]), instances=len(insts[t]),
+                             hosting=len(per), per_instance=sorted(ms)))
+        for r_ in range(max(ms)):        # coincident plan points (m per instance) -> m classes, r-th member in each
+            split.append((key, [v[r_] for v in per.values() if len(v) > r_]))
+    for key, mem in split:
+        t, fx, fy, _ = key
+        gx, gy, ok = I.tgrid[t]
+        cxs = gx + I.CW / 2
+        cys = gy + ROW_H / 2
+        dxa = np.abs(cxs - fx)
+        dya = np.abs(cys - fy)
+        kk = np.argsort(dxa)[:24]
+        jj = np.argsort(dya)[:24]
+        cand = sorted(((dxa[k] + dya[j], int(k), int(j)) for k in kk for j in jj if ok[k, j]))
+        pick = None
+        for d, k, j in cand:
+            if (k, j) in used[t]:
+                continue
+            sites = [I.to_die(n, float(gx[k]), float(gy[j])) for _, n in mem]
+            if any(ov(ox, oy) for ox, oy in sites):
+                continue
+            pick = (d, k, j, sites)
+            break
+        if pick is None:
+            raise RuntimeError(f"no common slot for class {key}")
+        d, k, j, sites = pick
+        used[t].add((k, j))
+        for (i, n), (ox, oy) in zip(mem, sites):
+            c = cells[i]
+            c["site"] = [ox + LEF_BUF[c["masters"][0]][0] / 2, oy + ROW_H / 2]
+            c["island"] = dict(part=n, type=t, k=k, j=j)
+            I._reg(n, k, j)             # slot -> die image registry (physical export looks slots up by (part, k, j))
+            moves.append(md(c["site"], c["xy0"]))
+    per_type = defaultdict(lambda: defaultdict(set))
+    for c in cells:
+        if "island" in c:
+            per_type[c["island"]["type"]][c["island"]["part"]].add((c["island"]["k"], c["island"]["j"]))
+    T = {}
+    for t, u in per_type.items():
+        sets = {frozenset(v) for v in u.values()}
+        T[t] = dict(instances=len(insts[t]), hosting_instances=len(u), slots_per_instance=sorted({len(v) for v in u.values()}),
+                    distinct_slot_sets=len(sets), identical=len(sets) == 1 and len(u) == len(insts[t]))
+    return dict(mode="periodic", groups_on_slots=len(moves), classes=len(cls), max_move_um=r3(max(moves or [0.0])),
+                moved_gt_1um=sum(1 for d in moves if d > 1.0), identity_violations=viol[:20], n_identity_violations=len(viol),
+                types_hosting=len(T), types_identical=sum(1 for v in T.values() if v["identical"]), per_type=T,
+                rule="one slot per (type, frame point) class, free + clear in every instance -> identical slot set per type")
 
 
 def pin_xy(c, which):
@@ -1584,7 +1807,7 @@ def add_common(p):
     p.add_argument("--sizing", default="d1", choices=["d1", "none"])
     p.add_argument("--no-spine", action="store_true", help="comparison: top tree straight to every column tap")
     p.add_argument("--t-extra", type=float, default=1500.0)
-    p.add_argument("--feed", default="mesh3", choices=["mesh3", "r9"],
+    p.add_argument("--feed", default="mesh3", choices=["mesh3", "r9", "periodic"],
                    help="global tree: mesh3 own top tree (default) or the R9 16-leaf physical H-tree (--r9-dir)")
     p.add_argument("--islands", default="none", choices=["none", "type"],
                    help="R12: type = solve + place the top tree on ONE per-partition-type island lattice (12.2a1/12.2c)")

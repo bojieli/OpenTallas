@@ -1,0 +1,135 @@
+{
+ "a": {
+  "uncovered_frac": 0.0231,
+  "uncovered_x_max_um": 1555.0,
+  "uncovered_y": [
+   4655.0,
+   26265.0
+  ],
+  "farthest_col_tap_x": 31207.68,
+  "unrepeated_gap_um": 29652.7,
+  "reach_um": 450,
+  "verdict": "FAIL (reach)",
+  "stages_needed_in_partitions": 66
+ },
+ "b": {
+  "stage_um": 411.84,
+  "stages_per_period": 6,
+  "stage_ps": {
+   "TT": 89.6,
+   "FF": 72.25
+  },
+  "row_spread_ps": {
+   "TT": 3225.5,
+   "FF": 2600.9
+  },
+  "neighbour_period_skew_ps": {
+   "TT": 537.6,
+   "FF": 433.5
+  },
+  "note": "any per-type-identical in-partition content is x-periodic (12 instances/row at 2471.04 pitch); a periodic chain fed at the row centre arrives linearly in x; per-tap sizing moves a tap by ~10-30 ps",
+  "verdict": "FAIL (nominal spread vs 20 ps target; mesh drivers 6 stages apart short each other)"
+ },
+ "ab": {
+  "trunk_cols": [
+   2177.28,
+   4648.32,
+   7119.36,
+   9590.4,
+   12061.44,
+   14532.48,
+   17003.52,
+   19474.56,
+   21945.6,
+   24416.64,
+   26887.68,
+   29358.72
+  ],
+  "period_um": 2471.04,
+  "col_offsets_um": [
+   0.0,
+   622.08,
+   1235.52,
+   1866.24
+  ],
+  "local_rows": [
+   1313.28,
+   2626.56,
+   3913.92,
+   5235.84,
+   6540.48,
+   7853.76,
+   9141.12,
+   10471.68,
+   11802.24,
+   13124.16,
+   13141.44,
+   14463.36,
+   15793.92,
+   17124.48,
+   18411.84,
+   19725.12,
+   21029.76,
+   22351.68,
+   23639.04,
+   24952.32
+  ],
+  "leaves_per_col": 80,
+  "leaf_stage_hist": {
+   "35": 80
+  },
+  "col_ideal_leaf_spread_ps": {
+   "TT": 0.436,
+   "FF": 0.506
+  },
+  "chan_ideal_spread_ps": {
+   "TT": 0.182,
+   "FF": 0.157
+  },
+  "chan_stages": [
+   32
+  ],
+  "chan_overlap_legs_max": 4,
+  "insertion_root_to_tap_ps": {
+   "TT": 5955.5,
+   "FF": 4801.2
+  },
+  "groups_per_col": 289,
+  "groups_cols_total": 3468,
+  "groups_channel": 119,
+  "identity": {
+   "types_hosting": 74,
+   "violations": {},
+   "nohost": 0,
+   "template_sites_on_core_ISL": 0
+  },
+  "max_leg_um": 436.07,
+  "channel_cells_in_partitions_instead": {
+   "below": {
+    "types_hosting": 28,
+    "types_violating": 14,
+    "examples": [
+     "slw_fw_v1__cl80b8d16f",
+     "slw_fe_v2__clacbd6592",
+     "slw_sc_v1",
+     "slw_stm_v1__cl522749b8",
+     "slw_fe_v1__clcb7b024a",
+     "slw_fw_v2"
+    ]
+   },
+   "above": {
+    "types_hosting": 9,
+    "types_violating": 9,
+    "examples": [
+     "slw_st_a_v1",
+     "slw_st_b_v2",
+     "sle_ctl",
+     "slw_st_b_v1",
+     "slw_st_a_v2",
+     "sle_st_a_v2"
+    ]
+   }
+  },
+  "channel_cells": 119
+ }
+}

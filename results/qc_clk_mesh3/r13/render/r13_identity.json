@@ -1,0 +1,772 @@
+{
+ "label": "UNCHECKED",
+ "periodic": {
+  "trunk": [
+   2177.28,
+   4648.32,
+   7119.36,
+   9590.4,
+   12061.44,
+   14532.48,
+   17003.52,
+   19474.56,
+   21945.6,
+   24416.64,
+   26887.68,
+   29358.72
+  ],
+  "local_rows": [
+   1313.28,
+   2626.56,
+   3913.92,
+   5235.84,
+   6540.48,
+   7853.76,
+   9141.12,
+   10471.68,
+   11802.24,
+   13124.16,
+   13141.44,
+   14463.36,
+   15793.92,
+   17124.48,
+   18411.84,
+   19725.12,
+   21029.76,
+   22351.68,
+   23639.04,
+   24952.32
+  ],
+  "template_nodes": 179,
+  "channel_root": [
+   15767.499991906112,
+   13132.8
+  ],
+  "nc": 14,
+  "period_um": 2471.04,
+  "offsets": [
+   0.0,
+   622.08,
+   1235.52,
+   1848.96
+  ]
+ },
+ "islands": {
+  "mode": "periodic",
+  "groups_on_slots": 4512,
+  "classes": 654,
+  "max_move_um": 18.225,
+  "moved_gt_1um": 3781,
+  "identity_violations": [],
+  "n_identity_violations": 0,
+  "types_hosting": 74,
+  "types_identical": 74,
+  "per_type": {
+   "cbf_q01_s2": {
+    "instances": 1,
+    "hosting_instances": 1,
+    "slots_per_instance": [
+     10
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "cbf_q11": {
+    "instances": 24,
+    "hosting_instances": 24,
+    "slots_per_instance": [
+     6
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "cbf_q00_s2": {
+    "instances": 1,
+    "hosting_instances": 1,
+    "slots_per_instance": [
+     26
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "cbx_q10": {
+    "instances": 48,
+    "hosting_instances": 48,
+    "slots_per_instance": [
+     12
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "cbn_q01": {
+    "instances": 24,
+    "hosting_instances": 24,
+    "slots_per_instance": [
+     24
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "cbn_q11": {
+    "instances": 24,
+    "hosting_instances": 24,
+    "slots_per_instance": [
+     12
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "cbn_q00": {
+    "instances": 24,
+    "hosting_instances": 24,
+    "slots_per_instance": [
+     32
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_su_c__cl77ab230a": {
+    "instances": 4,
+    "hosting_instances": 4,
+    "slots_per_instance": [
+     7
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_su_l0__cl72211ea3": {
+    "instances": 4,
+    "hosting_instances": 4,
+    "slots_per_instance": [
+     3
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_su_l1__clbd68af58": {
+    "instances": 1,
+    "hosting_instances": 1,
+    "slots_per_instance": [
+     12
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_stm_v3": {
+    "instances": 1,
+    "hosting_instances": 1,
+    "slots_per_instance": [
+     8
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_fe_v2__clacbd6592": {
+    "instances": 2,
+    "hosting_instances": 2,
+    "slots_per_instance": [
+     6
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_sc_v3": {
+    "instances": 1,
+    "hosting_instances": 1,
+    "slots_per_instance": [
+     6
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_fw_v3": {
+    "instances": 1,
+    "hosting_instances": 1,
+    "slots_per_instance": [
+     12
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "cbf_q01": {
+    "instances": 23,
+    "hosting_instances": 23,
+    "slots_per_instance": [
+     10
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "cbf_q00": {
+    "instances": 23,
+    "hosting_instances": 23,
+    "slots_per_instance": [
+     26
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_hc1": {
+    "instances": 6,
+    "hosting_instances": 6,
+    "slots_per_instance": [
+     4
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_hc3": {
+    "instances": 12,
+    "hosting_instances": 12,
+    "slots_per_instance": [
+     3
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_hc2": {
+    "instances": 6,
+    "hosting_instances": 6,
+    "slots_per_instance": [
+     3
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_hc0": {
+    "instances": 6,
+    "hosting_instances": 6,
+    "slots_per_instance": [
+     12
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_ctl": {
+    "instances": 12,
+    "hosting_instances": 12,
+    "slots_per_instance": [
+     14
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_st_b_v2": {
+    "instances": 3,
+    "hosting_instances": 3,
+    "slots_per_instance": [
+     6
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_st_a_v2": {
+    "instances": 3,
+    "hosting_instances": 3,
+    "slots_per_instance": [
+     12
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_su_l1__cl766bacee": {
+    "instances": 4,
+    "hosting_instances": 4,
+    "slots_per_instance": [
+     12
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_stm_v1__cl522749b8": {
+    "instances": 2,
+    "hosting_instances": 2,
+    "slots_per_instance": [
+     8
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_fe_v1__clcb7b024a": {
+    "instances": 2,
+    "hosting_instances": 2,
+    "slots_per_instance": [
+     6
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_sc_v1": {
+    "instances": 2,
+    "hosting_instances": 2,
+    "slots_per_instance": [
+     6
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_fw_v1__cl80b8d16f": {
+    "instances": 2,
+    "hosting_instances": 2,
+    "slots_per_instance": [
+     12
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_st_b_v1": {
+    "instances": 3,
+    "hosting_instances": 3,
+    "slots_per_instance": [
+     6
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_st_a_v1": {
+    "instances": 3,
+    "hosting_instances": 3,
+    "slots_per_instance": [
+     12
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_su_l0__cl0cf5548e": {
+    "instances": 1,
+    "hosting_instances": 1,
+    "slots_per_instance": [
+     3
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_stm_v2": {
+    "instances": 2,
+    "hosting_instances": 2,
+    "slots_per_instance": [
+     8
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_fe_v2__cle5354d4d": {
+    "instances": 1,
+    "hosting_instances": 1,
+    "slots_per_instance": [
+     6
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_sc_v2": {
+    "instances": 2,
+    "hosting_instances": 2,
+    "slots_per_instance": [
+     6
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_fw_v2": {
+    "instances": 2,
+    "hosting_instances": 2,
+    "slots_per_instance": [
+     12
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_su_c__clbb0c543d": {
+    "instances": 1,
+    "hosting_instances": 1,
+    "slots_per_instance": [
+     7
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_su_l1__cl8312485b": {
+    "instances": 1,
+    "hosting_instances": 1,
+    "slots_per_instance": [
+     12
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_fw_v1__cl82aac3aa": {
+    "instances": 1,
+    "hosting_instances": 1,
+    "slots_per_instance": [
+     12
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_su_c__cl49a25f5f": {
+    "instances": 1,
+    "hosting_instances": 1,
+    "slots_per_instance": [
+     7
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_su_l0__cle4811ba5": {
+    "instances": 1,
+    "hosting_instances": 1,
+    "slots_per_instance": [
+     3
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_stm_v1__cla56d6dd9": {
+    "instances": 1,
+    "hosting_instances": 1,
+    "slots_per_instance": [
+     8
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_fe_v1__cl8ba3358f": {
+    "instances": 1,
+    "hosting_instances": 1,
+    "slots_per_instance": [
+     6
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "slw_sc_v1r": {
+    "instances": 1,
+    "hosting_instances": 1,
+    "slots_per_instance": [
+     6
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_su_c__cl78b6fe86": {
+    "instances": 2,
+    "hosting_instances": 2,
+    "slots_per_instance": [
+     7
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_su_l0__clad02be3b": {
+    "instances": 2,
+    "hosting_instances": 2,
+    "slots_per_instance": [
+     3
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_su_l1__cl15735621": {
+    "instances": 1,
+    "hosting_instances": 1,
+    "slots_per_instance": [
+     12
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_stm_v1": {
+    "instances": 3,
+    "hosting_instances": 3,
+    "slots_per_instance": [
+     8
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_fe_v1__clfcc50df9": {
+    "instances": 2,
+    "hosting_instances": 2,
+    "slots_per_instance": [
+     6
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_sc_v1": {
+    "instances": 3,
+    "hosting_instances": 3,
+    "slots_per_instance": [
+     6
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_fw_v1__cl3b7cacba": {
+    "instances": 1,
+    "hosting_instances": 1,
+    "slots_per_instance": [
+     12
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_hc1": {
+    "instances": 6,
+    "hosting_instances": 6,
+    "slots_per_instance": [
+     4
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_hc2": {
+    "instances": 6,
+    "hosting_instances": 6,
+    "slots_per_instance": [
+     3
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_hc0": {
+    "instances": 6,
+    "hosting_instances": 6,
+    "slots_per_instance": [
+     12
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_st_b_v1": {
+    "instances": 3,
+    "hosting_instances": 3,
+    "slots_per_instance": [
+     6
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_st_a_v1": {
+    "instances": 3,
+    "hosting_instances": 3,
+    "slots_per_instance": [
+     12
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_su_l1__cl9c71a39d": {
+    "instances": 2,
+    "hosting_instances": 2,
+    "slots_per_instance": [
+     12
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_stm_v2": {
+    "instances": 2,
+    "hosting_instances": 2,
+    "slots_per_instance": [
+     8
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_fe_v2": {
+    "instances": 2,
+    "hosting_instances": 2,
+    "slots_per_instance": [
+     6
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_sc_v2": {
+    "instances": 2,
+    "hosting_instances": 2,
+    "slots_per_instance": [
+     6
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_fw_v2__cl2b5fc15e": {
+    "instances": 1,
+    "hosting_instances": 1,
+    "slots_per_instance": [
+     12
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_st_b_v2": {
+    "instances": 3,
+    "hosting_instances": 3,
+    "slots_per_instance": [
+     6
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_st_a_v2": {
+    "instances": 3,
+    "hosting_instances": 3,
+    "slots_per_instance": [
+     12
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_su_c__cl99d49f55": {
+    "instances": 1,
+    "hosting_instances": 1,
+    "slots_per_instance": [
+     7
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_su_l0__cld14716fc": {
+    "instances": 4,
+    "hosting_instances": 4,
+    "slots_per_instance": [
+     3
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_fe_v1__clad8c146b": {
+    "instances": 1,
+    "hosting_instances": 1,
+    "slots_per_instance": [
+     6
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_fw_v1_e2": {
+    "instances": 1,
+    "hosting_instances": 1,
+    "slots_per_instance": [
+     12
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_su_c__cl3c67a3d5": {
+    "instances": 3,
+    "hosting_instances": 3,
+    "slots_per_instance": [
+     7
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_su_l1__cl3c610c2d": {
+    "instances": 3,
+    "hosting_instances": 3,
+    "slots_per_instance": [
+     12
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_fw_v2__clf90441df": {
+    "instances": 1,
+    "hosting_instances": 1,
+    "slots_per_instance": [
+     12
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_fw_v1__cl39c71cef": {
+    "instances": 1,
+    "hosting_instances": 1,
+    "slots_per_instance": [
+     12
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_stm_v3": {
+    "instances": 1,
+    "hosting_instances": 1,
+    "slots_per_instance": [
+     8
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_fe_v3": {
+    "instances": 1,
+    "hosting_instances": 1,
+    "slots_per_instance": [
+     6
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_sc_v3": {
+    "instances": 1,
+    "hosting_instances": 1,
+    "slots_per_instance": [
+     6
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   },
+   "sle_fw_v3": {
+    "instances": 1,
+    "hosting_instances": 1,
+    "slots_per_instance": [
+     12
+    ],
+    "distinct_slot_sets": 1,
+    "identical": true
+   }
+  },
+  "rule": "one slot per (type, frame point) class, free + clear in every instance -> identical slot set per type"
+ },
+ "legal": {
+  "cells": 22943,
+  "by_kind": {
+   "top_node": 1176,
+   "chan_node": 23,
+   "fine_driver": 8232,
+   "col_node": 7284,
+   "col_tap": 960,
+   "top_rep": 2376,
+   "chan_rep": 108,
+   "col_rep": 2784
+  },
+  "raw_coincident_items": 260,
+  "instances": 34858,
+  "instances_by_master": {
+   "BUFx24": 34858
+  },
+  "coincident_items": 0,
+  "footprint_overlaps": 0,
+  "cells_on_core": 0,
+  "cells_within_ISL_of_core": 8,
+  "cells_within_ISL_note": "r2 fine-driver sites kept as r2 placed them (r2 seam_channel)",
+  "bumped": 108,
+  "max_bump_um": 77.76,
+  "merged_top_leaf_eq_col_tap": 960,
+  "lane_offsets_um": {
+   "dx_tree_lane": 8.64,
+   "dy_top_lane": 4.32,
+   "lanes_left": 25,
+   "lanes_right": 41
+  },
+  "repeaters": {
+   "top": 2484,
+   "col": 2784
+  },
+  "max_net_extra_vs_leg_um": 90.72,
+  "note": "net = Manhattan L between cell sites (ratio 1.0); planned legs differ by <= max_net_extra_vs_leg_um, same on every root->driver path of a level (common, not skew). UNCHECKED"
+ }
+}
