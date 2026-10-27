@@ -71,7 +71,7 @@ class Phase(unittest.TestCase):
             local = G.window_grid(grid, 6462.72, 6462.72)
             self.assertEqual(D.psm_pdn_tcl(G._PG(p, grid)), D.psm_pdn_tcl(G._PG(p, local)))
 
-    def window(self, out, io, core):
+    def window(self, out, io, core, **kwargs):
         p = SimpleNamespace(name='probe', W=10000, H=10000, die={'pg': {'grid': GRID}}, parts={})
         pg = dict(grid=GRID, regions=[], core_w_mm2=1., budget_mv=35,
                   bump_contract=dict(pitch_um=150., pad_um=70.))
@@ -83,7 +83,7 @@ class Phase(unittest.TestCase):
         with patch.object(G, 'load_model', return_value=model), patch.object(G, '_pg_io', return_value=io), \
                 patch.object(G, 'estimate', return_value=({}, 0., {})), \
                 patch.object(D, 'coarse_tracks', return_value=''), patch.object(D, 'bump_grid', side_effect=bump_grid):
-            m = G.window_kit(p, Path(out), pg, Path(out)/'kit', 'probe', [100, 100, 220, 220], tile=43.2)
+            m = G.window_kit(p, Path(out), pg, Path(out)/'kit', 'probe', [100, 100, 220, 220], tile=43.2, **kwargs)
         return m, seen
 
     def test_window_preserves_global_sources_and_translates_pdn(self):
