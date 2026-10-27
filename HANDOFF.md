@@ -1327,3 +1327,5 @@ CODEX: 2026-10-27 08:23 PDT RM36 main00ecb92c4c==origin/main;supersedingKV io_co
 CODEX: 2026-10-27 08:25 PDT FLOW-WATCH READY3400e5da8: helper-only fingerprint bypass fixed for5sharedkit modules,33testsPASS; S81b458 missingunit metadata diagnosed liveDocker40754 notorphan. Combinedab3 placementcohort continues.
 
 CODEX: 2026-10-27 08:26 PDT KV native station sidecar bug fixed f51684c55; actual b53 sources 13 io_cor / 7 hroot station sites preserved, zero added lane cycles; same KV regeneration waits local reset grid + 200 FT/R8 batch.
+
+CODEX: 2026-10-27 08:26 PDT RM37 main0cda17b22f==origin/main;urgentFTsenderIOoverlay79a,45laneTcltestsPASS/defaultsessionunchanged;0deletions.
