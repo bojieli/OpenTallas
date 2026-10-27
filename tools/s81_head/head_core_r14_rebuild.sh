@@ -83,6 +83,12 @@ elif [ "${OT_R14_PATCH_SYNTH:-0}" = 1 ]; then
   # cold rebuild from RTL (elemB, place.sh recipe): orfs_hold_mm patch -> synth -> face_guard_core on the Yosys netlist
   # (fail-closed) -> 12.2a1 pushdown netlist patch (patch_synth.tcl: clk -> ft_* island ports) + post-patch SDC -> place
   TOP=$(sed -n 's/^export DESIGN_NAME = //p' "$OUT/config.mk" | tail -1); SKIP=$(cat "$OUT/face_guard_skip.txt")
+  # the guard runs on the PRE-patch Yosys netlist, whose clock port is still clk (patch_synth turns it into ft_*):
+  # add clk to the kit skip set (the kit set ^(ft_.*|rst_n)$ was written for the patched form).
+  SKIP="^(clk|${SKIP#^(}"
+  # the kit wrapper face_guard_core.py reads G.MAX_CHAIN, which main face_guard.py (49e28f506, unbounded chain trace
+  # with cycle detection) no longer defines; it only bounds the report-only self-loop classification.
+  sed -i 's/G\.MAX_CHAIN + 2/getattr(G, "MAX_CHAIN", 64) + 2/' "$OUT/face_guard_core.py"
   R=/work/run/results/asap7/$NICK/base
   DK place "rc=0; python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts /work/orfs_hold_mm.tcl > /work/orfs_hold_mm.log 2>&1 || rc=\$?; grep -q 'status.: .patched.' /work/orfs_hold_mm.log || rc=3; echo HOLD_MM rc \$rc; [ \$rc = 0 ] || exit \$rc; \
     $M synth; python3 -I /work/face_guard_core.py $R/1_2_yosys.v $TOP '$SKIP' /work/pins.json /work/face_guard.json; echo FACE_GUARD rc \$?; \
