@@ -7,7 +7,8 @@ and calls $finish either way.  This classifier is fail-closed:
         lines exist for layers 0..N-1 and every one says PASS.
 Anything else (missing log, missing verdict line, nonzero exit, any FAIL, missing layer) is FAIL with a reason.
   kv_verdict.py RUNDIR [--layers N] [--expect fail]
---expect fail marks a negative control (mutant): the run is CAUGHT iff the verdict is FAIL; a mutant that PASSes is
+--expect fail marks a negative control (mutant): CAUGHT requires a printed boot/layer FAIL;
+infrastructure errors (missing output, killed/OOM run) remain FAIL; a mutant that PASSes is
 reported as MUTANT_MISSED.  Writes RUNDIR/verdict ("PASS|FAIL|CAUGHT|MUTANT_MISSED <reason>"); exit 0 only for PASS or CAUGHT.
 """
 import argparse, re, sys
@@ -52,7 +53,24 @@ def main(argv=None):
     a = ap.parse_args(argv)
     v, why = classify(a.rundir, a.layers)
     if a.expect == 'fail':
-        v = 'CAUGHT' if v == 'FAIL' else 'MUTANT_MISSED'
+        # A missing result or killed process does not establish that the mutant
+        # exercised its mechanism. Only the bench's explicit functional failure
+        # is a caught negative control.
+        try:
+            txt = (a.rundir / 'sim.log').read_text(errors='replace')
+        except OSError:
+            txt = ''
+        try:
+            completed_rc = int((a.rundir / 'exit').read_text().split()[0])
+        except (OSError, ValueError, IndexError):
+            completed_rc = None
+        observed = completed_rc in (0, 1, 134) and bool(re.search(r'^KVSLICE_BOOT FAIL\b|^FAR_LAYER_SUMMARY layer \d+ .* FAIL\s*$', txt, re.M))
+        if v == 'PASS':
+            v = 'MUTANT_MISSED'
+        elif observed:
+            v = 'CAUGHT'
+        else:
+            why = 'negative control has no functional FAIL verdict; ' + why
     line = f'{v} {why}'
     try:
         (a.rundir / 'verdict').write_text(line + '\n')
