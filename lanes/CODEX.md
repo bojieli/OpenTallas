@@ -1118,3 +1118,6 @@ S81 core 2026-10-27 08:51 PDT: QXproductionPLACEonlyepyc2unit3433661 live; XRT1O
 
 ## QC clock takeover 2026-10-27 09:05 PDT
 INFRA-FIRST/QC-CLK-MESH: current=fullstage physicalclock on native100IO; branch codex/qc-clock-1027@6c038f1fd sourceREADY; own worktree local scratch codex-qc-clock-1027. Jobs: intel2 codex-qc-export-1027/export5_body405_io.otrun.log (child physical_export); inherited intel2 qc-mesh-r25/drc unit1828381. Next=collect real geometry, VIEW image, fix every remainingbody/reach/type-footprint finding, then GRT50/RCX/STA with newmixedwidth rules. No routes yet; previousFAILs preserved and diagnosed above/inQC-CLK-MESH.
+
+## CODEX ROWX-SRAM 2026-10-27 09:15 PDT
+codex/rowx-sram-1027@a925fcac8 READY (currentmain plainmerged): explicit nativeSRAM XMtop, RP prefetch+WB +LC rp_next/empty-lastpush bypass preserve0addeddata/bootcycles. Final nativep192 lockstep640RP/bad0,2mutantscaught105/320, restartbad0; default/nativeTOP lintPASS. Final16owner packed764/alllinks37/J4 PASS2049words/err0, timingfirst22/span3629/hops1365 EXACTgold.7macro p192physicalinventory148883.58um2,492.48x669.6 recipe renderVIEWED48umchannels estimatedutil0.576. Actualimmutable svc5/svc11lotFAIL even1macro, no route. S81planowner constrainedrepack/adjacentlot owns remaining physicalwork. Source/model/receipts results/rowx_sram_1027; allownjobs terminal.
