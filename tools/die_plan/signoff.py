@@ -235,6 +235,7 @@ def require_signoff_bundle():
 # Dependencies of standalone kit hooks.  Existing custom hooks stay byte-identical;
 # their missing shared helpers are shipped by the same bundle as the sign-off tool.
 KIT_TOOL_DEPENDENCIES = {
+    "kit_preflight.py": ("sdc_lint.py", "rtl_lint.py", "master_slice.py", "core_infra.py", "core_infra.tcl", "ft_ports.py"),
     "postcts_gate.tcl": ("pinreg_measure.tcl", "clock_family.tcl"),
     "pinreg_pad.tcl": ("pinreg_measure.tcl", "clock_family.tcl"),
     "tap_balance.tcl": ("clock_family.tcl",),
@@ -1483,6 +1484,11 @@ def cmd_run(a):
     disc["library_config"] = str(Path(a.library_config).resolve()) if getattr(a, "library_config", None) else None
     out = Path(a.out).resolve()
     core_contract = hard_core_latency_contract(disc)
+    # An explicit source-pinned FF reference applies to every kit family.  Keep
+    # it outside the hard-core branch: die-plan kits otherwise reach the FF
+    # session with bound-ff selected but no value, despite a valid CLI request.
+    if getattr(a, "ff_bound_ps", None) is not None:
+        disc["ff_bound_ps"] = float(a.ff_bound_ps)
     bound = None
     if core_contract:
         # COORD ruling 10-24: a hard core carries a core-latency contract -- its measured insertion is published
