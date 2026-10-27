@@ -83,6 +83,32 @@ def pow2(n):
     return n > 0 and (n & (n - 1)) == 0
 
 
+def bisection_congruent(vals, what):
+    """CLOCK-KV-R5 explicit leaf lattice gate: strictly increasing, power-of-two count, and at every index bisection
+    the upper half is a pure translate of the lower half (recursively).  Then every H-tree node sits at the midpoint
+    of its block extremes and sibling legs are equal BY CONSTRUCTION (no balance branch).  A uniform grid passes; so
+    does a grid of congruent groups with gaps between them (one group per partition row, a gap at a hub band)."""
+    v = [float(x) for x in vals]
+    if any(b <= a for a, b in zip(v, v[1:])):
+        raise ValueError(f"--lattice-spec {what}: strictly increasing values")
+    if not pow2(len(v)):
+        raise ValueError(f"--lattice-spec {what}: power-of-two count")
+
+    def rec(a):
+        if len(a) == 1:
+            return
+        h = len(a) // 2
+        t = a[h] - a[0]
+        bad = max(abs(a[h + k] - a[k] - t) for k in range(h))
+        if bad > 1e-3:
+            raise ValueError(f"--lattice-spec {what}: halves of {a[0]:.3f}..{a[-1]:.3f} are not translates "
+                             f"(max deviation {bad:.4f} um): unequal H-tree legs")
+        rec(a[:h])
+        rec(a[h:])
+    rec(v)
+    return True
+
+
 def split_axis(ni, nj, level, axes=""):
     axis = (0 if axes[level] == "x" else 1) if level < len(axes) else (0 if ni >= nj and ni > 1 else 1)
     if (ni if axis == 0 else nj) <= 1:
@@ -869,6 +895,11 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     axes, x_edges, y_edges = "", None, None
     if jm is not None:
         ys = [float(v) for v in lattice["ys_um"]]
+        if lg and lattice.get("xs_um") is not None:   # CLOCK-KV-R5: explicit V strap x (leaf columns), equal by bisection
+            xs = [float(v) for v in lattice["xs_um"]]
+            if len(xs) != nx:
+                raise ValueError("--lattice-spec xs_um: exactly --nx V strap positions")
+            bisection_congruent(xs, "xs_um")
         axes = str(lattice.get("axes", "")).lower()
     drv_rows = set(jm) if jm is not None else set(range(ny))
     nty = len(jm) if jm is not None else ny          # tree index rows
@@ -941,7 +972,16 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                            driverless_rows=[] if lg else [j for j in range(len(ys)) if j not in drv_rows])
         if lg:
             ly = [(j + 0.5) * H / lg["ny"] for j in range(lg["ny"])]
-            out["meta"]["leaf_grid"] = dict(nx=nx, ny=lg["ny"], pitch_um=[round(W / nx, 4), round(H / lg["ny"], 4)],
+            if lattice.get("leaf_ys_um") is not None:   # CLOCK-KV-R5: explicit leaf rows (e.g. partition-row groups)
+                ly = [float(v) for v in lattice["leaf_ys_um"]]
+                if len(ly) != lg["ny"]:
+                    raise ValueError("--lattice-spec leaf_ys_um: exactly ny_leaf rows")
+                bisection_congruent(ly, "leaf_ys_um")
+            px = min(b - a for a, b in zip(xs, xs[1:])) if lattice.get("xs_um") is not None else W / nx
+            py = min(b - a for a, b in zip(ly, ly[1:])) if lattice.get("leaf_ys_um") is not None else H / lg["ny"]
+            out["meta"]["leaf_grid"] = dict(nx=nx, ny=lg["ny"], pitch_um=[round(px, 4), round(py, 4)],
+                                            **({"explicit_xs": True} if lattice.get("xs_um") is not None else {}),
+                                            **({"explicit_leaf_ys": True} if lattice.get("leaf_ys_um") is not None else {}),
                                             drv_reach_um=lg["drv_reach"], drive="V strap (M9) at the leaf y")
             out["pushdown"] = []
     if delta_id:

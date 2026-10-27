@@ -65,3 +65,18 @@ def test_free_toward_and_poly_point():
     assert q is not None and q[0] < 0 and d > 40          # only toward the parent (x < 40)
     assert DM.free_toward(K(), (40.0, 0.0), 0, 100.0, 5.0) == (None, None)
     assert DM.poly_point([(0, 0), (0, 10), (5, 10)], 12) == (2.0, 10.0)
+
+
+def test_bisection_congruent_explicit_leaf_lattice():
+    """CLOCK-KV-R5 leaf_ys_um / xs_um: every bisection's upper half is a translate of the lower half (equal legs by
+    construction); a gap between congruent partition-row groups passes, a non-translate or non-pow2 set fails."""
+    p = 190.08
+    gap = [p / 2 + p * j for j in range(4)] + [1000.0 + p / 2 + p * j for j in range(4)]
+    assert DM.bisection_congruent([p / 2 + p * j for j in range(8)], "u")
+    assert DM.bisection_congruent(gap, "gap")
+    with pytest.raises(ValueError):
+        DM.bisection_congruent(gap[:4] + [1000.0 + p / 2 + p * j for j in (0, 1, 2, 4)], "bad")
+    with pytest.raises(ValueError):
+        DM.bisection_congruent([1.0, 2.0, 3.0], "n3")
+    with pytest.raises(ValueError):
+        DM.bisection_congruent([2.0, 1.0], "order")
