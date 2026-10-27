@@ -1,0 +1,117 @@
+{
+  "die": "qwen_kvsys",
+  "ir_budget_mv": 35.0,
+  "window": "kv_c39_w13",
+  "window_um": [
+    6433.56,
+    6433.56,
+    9430.560000000001,
+    9430.560000000001
+  ],
+  "area_mm2": 8.982,
+  "grid": [
+    {
+      "layer": "M8",
+      "width_um": 0.48,
+      "pitch_um": 4.32,
+      "offset_um": 2.16,
+      "nets": [
+        "VDD",
+        "VSS"
+      ]
+    },
+    {
+      "layer": "M9",
+      "width_um": 12.96,
+      "pitch_um": 39.96,
+      "offset_um": 13.77,
+      "nets": [
+        "VDD",
+        "VSS"
+      ]
+    }
+  ],
+  "power_w": 9.4088,
+  "load_blocks": 4761,
+  "bumps": 400,
+  "bumps_vdd": 200,
+  "bump_pad_um": 70.0,
+  "nets": [
+    "VDD",
+    "VSS"
+  ],
+  "power_map": "region model",
+  "est_regions_mv": {
+    "core": 54.364
+  },
+  "est_worst_mv": 54.364,
+  "est_detail": {
+    "local_mv": 2.08,
+    "coarse_max_mv": 52.284,
+    "rx_ohm_sq": 3.0412,
+    "ry_ohm_sq": 1.0971,
+    "nodes": 1600
+  },
+  "scope": "canonical 150um bumps/70um pads, co-located VDD drop + VSS bounce, measured type map; independent grid candidate, no plan adoption",
+  "plan_src": "/srv/opentallas-scratch2/claude/kv-plan-q5-1027/pd/hm_r26q5b.json",
+  "power_src": "/srv/opentallas-scratch2/claude/pg-act-kvhbm-1027/kv/kv_types_meas.json",
+  "plan_sha256": "99b9d6ddfe8937824efead26687709bbfb1e2cc439555a00d211dde7d732dfa6",
+  "power_sha256": "a88b1701d9e9491743b05372f11f176e02f60ef4b2c8419ba95ee70c3b37dc05",
+  "tracks": {
+    "M8": 0.294,
+    "M9": 0.7461
+  },
+  "stripe_phase": [
+    {
+      "layer": "M8",
+      "global_offset_um": 2.16,
+      "window_origin_um": 6433.56,
+      "local_offset_um": 1.08,
+      "starts_with": "POWER"
+    },
+    {
+      "layer": "M9",
+      "global_offset_um": 13.77,
+      "window_origin_um": 6433.56,
+      "local_offset_um": 13.77,
+      "starts_with": "POWER"
+    }
+  ],
+  "clock_columns_um": [
+    583.2,
+    902.8800000000001,
+    1222.56,
+    1542.24,
+    1861.92,
+    2181.6000000000004,
+    2501.2799999999997,
+    2820.96,
+    3140.6400000000003,
+    3460.3199999999997,
+    3780.0,
+    4099.68,
+    4419.36,
+    4739.04,
+    5058.72,
+    5378.4,
+    5698.08,
+    6017.76,
+    6337.44,
+    6657.12,
+    6976.8,
+    7296.48,
+    7616.16,
+    7935.84,
+    8255.52,
+    8575.2,
+    8894.880000000001,
+    9214.560000000001,
+    9534.240000000002,
+    9853.92,
+    10173.6,
+    10493.28
+  ],
+  "clock_centre_to_pg_edge_um": 3.51,
+  "below_m7_mv": 6.05,
+  "below_m7_basis": "PG-ACTIVITY-KVHBM e1 slice; inherited conservative full-power result, not a new measurement"
+}
