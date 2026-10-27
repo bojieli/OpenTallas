@@ -1,0 +1,534 @@
+{
+ "lane": "QC-SU-PROG-L1 (Claude) 2026-10-26",
+ "base": "claude/model-refit2-1026@3d6754e1f4 (on qc-su-kits3 3585b6bf25)",
+ "numbers": "UNCHECKED (plan model uf_phys)",
+ "step1": {
+  "tools": [
+   "phys_gate.py (uf_phys_predict gating wrapper, guard band TT rise 238..262 / FF early 187.5..217.5 / windows<=20, provenance argv+sha256, textbook+ln2_fit sensitivity)",
+   "su_kit_gate.py r5 (--phys gating P_phys; P_asbuilt INFO only; no trunk under --phys; --size = option (c))",
+   "su_branch_size.py (12.8 d1 per-branch sizing, cells only)",
+   "test_phys_gate.py (7 tests OK, test.log)"
+  ],
+  "regression": {
+   "btab_r4": "248.92 w22.03 / FF 188.91 w18.27 -> P_phys FAIL on predicted TT window (measured 251.71 w17.27 in band)",
+   "prog_r3": "241.62 w25.87 / 182.30 w20.88 FAIL"
+  }
+ },
+ "option_a": {
+  "verdict": "REJECTED by geometry (opt_a/a_reach.txt)",
+  "why": "equal W/E trunk nodes in the y~135 gap lie ON the shortest entry->island paths, so trunk->island spread = entry->island spread (k5 150.1 um, k6 137.1 um at trunk +-30/60/86.4)"
+ },
+ "option_b": {
+  "verdict": "REJECTED (unsized phys)",
+  "why": "equal-reach sites equalise L1 (k6 w2 reach 240.8-244.1) but move islands off their sink mass: TT rise 324-337 (+70 over band), windows 29-46; w0.5 = ls sites",
+  "runs": {
+   "eq_k5_w0": {
+    "TT_rise": {
+     "mean": 258.85,
+     "min": 234.76,
+     "max": 278.73,
+     "window": 43.97
+    },
+    "FF_early": {
+     "mean": 197.53,
+     "min": 178.26,
+     "max": 212.5,
+     "window": 34.24
+    },
+    "gate": "FAIL"
+   },
+   "eq_k5_w1_L3": {
+    "TT_rise": {
+     "mean": 330.42,
+     "min": 307.4,
+     "max": 347.65,
+     "window": 40.26
+    },
+    "FF_early": {
+     "mean": 251.35,
+     "min": 232.22,
+     "max": 266.09,
+     "window": 33.87
+    },
+    "gate": "FAIL"
+   },
+   "eq_k5_w1_S13": {
+    "TT_rise": {
+     "mean": 324.18,
+     "min": 295.55,
+     "max": 341.67,
+     "window": 46.12
+    },
+    "FF_early": {
+     "mean": 246.58,
+     "min": 224.13,
+     "max": 261.39,
+     "window": 37.25
+    },
+    "gate": "FAIL"
+   },
+   "eq_k5_w2_L3": {
+    "TT_rise": {
+     "mean": 337.46,
+     "min": 312.43,
+     "max": 358.32,
+     "window": 45.88
+    },
+    "FF_early": {
+     "mean": 256.87,
+     "min": 237.72,
+     "max": 273.73,
+     "window": 36.01
+    },
+    "gate": "FAIL"
+   },
+   "eq_k5_w2_S13": {
+    "TT_rise": {
+     "mean": 335.15,
+     "min": 310.61,
+     "max": 356.81,
+     "window": 46.2
+    },
+    "FF_early": {
+     "mean": 255.21,
+     "min": 236.19,
+     "max": 272.72,
+     "window": 36.53
+    },
+    "gate": "FAIL"
+   },
+   "eq_k6_w0": {
+    "TT_rise": {
+     "mean": 254.92,
+     "min": 232.01,
+     "max": 276.77,
+     "window": 44.77
+    },
+    "FF_early": {
+     "mean": 194.18,
+     "min": 176.54,
+     "max": 211.57,
+     "window": 35.03
+    },
+    "gate": "FAIL"
+   },
+   "eq_k6_w2_L3": {
+    "TT_rise": {
+     "mean": 329.19,
+     "min": 306.73,
+     "max": 343.12,
+     "window": 36.39
+    },
+    "FF_early": {
+     "mean": 250.52,
+     "min": 232.52,
+     "max": 261.98,
+     "window": 29.45
+    },
+    "gate": "FAIL"
+   },
+   "eq_k6_w2_S13": {
+    "TT_rise": {
+     "mean": 328.8,
+     "min": 306.69,
+     "max": 342.81,
+     "window": 36.12
+    },
+    "FF_early": {
+     "mean": 250.27,
+     "min": 232.5,
+     "max": 261.78,
+     "window": 29.28
+    },
+    "gate": "FAIL"
+   },
+   "eq_k7_w0": {
+    "TT_rise": {
+     "mean": 263.21,
+     "min": 241.3,
+     "max": 290.96,
+     "window": 49.66
+    },
+    "FF_early": {
+     "mean": 200.34,
+     "min": 183.94,
+     "max": 219.96,
+     "window": 36.03
+    },
+    "gate": "FAIL"
+   }
+  }
+ },
+ "option_c": {
+  "runs": {
+   "c_ls_k4_L3": {
+    "verdict": "FAIL",
+    "gates": {
+     "G1_macro_orient": "PASS",
+     "G2_island_rows": "PASS",
+     "G3_cell_rows": "PASS",
+     "G4_detour_sites": "PASS",
+     "G5_sram_structure": "PASS",
+     "P_phys": "FAIL"
+    },
+    "TT_rise": {
+     "mean": 271.31,
+     "min": 261.69,
+     "max": 287.66,
+     "window": 25.97
+    },
+    "FF_early": {
+     "mean": 204.69,
+     "min": 196.53,
+     "max": 217.74,
+     "window": 21.21
+    },
+    "textbook_delta": {
+     "TT_rise_mean": -1.47,
+     "TT_rise_window": 0.45,
+     "FF_early_mean": 6.09,
+     "FF_early_window": 8.37
+    },
+    "unsized": {
+     "J": 63.73,
+     "TT_rise": {
+      "mean": 280.7,
+      "min": 255.54,
+      "max": 309.92,
+      "window": 54.38
+     },
+     "FF_early": {
+      "mean": 213.98,
+      "min": 194.01,
+      "max": 236.25,
+      "window": 42.25
+     },
+     "max_slew": 34.09
+    },
+    "n_resized": 60
+   },
+   "c_ls_k4_S13": {
+    "verdict": "FAIL",
+    "gates": {
+     "G1_macro_orient": "PASS",
+     "G2_island_rows": "PASS",
+     "G3_cell_rows": "PASS",
+     "G4_detour_sites": "PASS",
+     "G5_sram_structure": "PASS",
+     "P_phys": "FAIL"
+    },
+    "TT_rise": {
+     "mean": 265.98,
+     "min": 257.58,
+     "max": 277.99,
+     "window": 20.41
+    },
+    "FF_early": {
+     "mean": 200.7,
+     "min": 193.02,
+     "max": 211.07,
+     "window": 18.05
+    },
+    "textbook_delta": {
+     "TT_rise_mean": -0.97,
+     "TT_rise_window": 9.25,
+     "FF_early_mean": 5.99,
+     "FF_early_window": 8.85
+    },
+    "unsized": {
+     "J": 49.45,
+     "TT_rise": {
+      "mean": 276.64,
+      "min": 255.17,
+      "max": 297.3,
+      "window": 42.13
+     },
+     "FF_early": {
+      "mean": 211.0,
+      "min": 193.75,
+      "max": 226.87,
+      "window": 33.12
+     },
+     "max_slew": 33.55
+    },
+    "n_resized": 65
+   },
+   "c_ls_k5_L3": {
+    "verdict": "FAIL",
+    "gates": {
+     "G1_macro_orient": "PASS",
+     "G2_island_rows": "PASS",
+     "G3_cell_rows": "PASS",
+     "G4_detour_sites": "PASS",
+     "G5_sram_structure": "PASS",
+     "P_phys": "FAIL"
+    },
+    "TT_rise": {
+     "mean": 263.92,
+     "min": 257.94,
+     "max": 270.77,
+     "window": 12.82
+    },
+    "FF_early": {
+     "mean": 198.68,
+     "min": 191.99,
+     "max": 204.8,
+     "window": 12.81
+    },
+    "textbook_delta": {
+     "TT_rise_mean": -5.15,
+     "TT_rise_window": 6.45,
+     "FF_early_mean": 5.5,
+     "FF_early_window": 6.84
+    },
+    "unsized": {
+     "J": 63.35,
+     "TT_rise": {
+      "mean": 276.3,
+      "min": 235.34,
+      "max": 291.54,
+      "window": 56.2
+     },
+     "FF_early": {
+      "mean": 210.57,
+      "min": 178.67,
+      "max": 222.99,
+      "window": 44.32
+     },
+     "max_slew": 48.48
+    },
+    "n_resized": 55
+   },
+   "c_ls_k5_S13": {
+    "verdict": "PASS",
+    "gates": {
+     "G1_macro_orient": "PASS",
+     "G2_island_rows": "PASS",
+     "G3_cell_rows": "PASS",
+     "G4_detour_sites": "PASS",
+     "G5_sram_structure": "PASS",
+     "P_phys": "PASS"
+    },
+    "TT_rise": {
+     "mean": 255.88,
+     "min": 245.14,
+     "max": 262.34,
+     "window": 17.19
+    },
+    "FF_early": {
+     "mean": 193.58,
+     "min": 184.95,
+     "max": 199.28,
+     "window": 14.33
+    },
+    "textbook_delta": {
+     "TT_rise_mean": -2.36,
+     "TT_rise_window": 3.88,
+     "FF_early_mean": 5.43,
+     "FF_early_window": 4.34
+    },
+    "unsized": {
+     "J": 42.32,
+     "TT_rise": {
+      "mean": 258.7,
+      "min": 234.76,
+      "max": 278.73,
+      "window": 43.97
+     },
+     "FF_early": {
+      "mean": 197.42,
+      "min": 178.26,
+      "max": 212.5,
+      "window": 34.24
+     },
+     "max_slew": 34.55
+    },
+    "n_resized": 41
+   },
+   "c_ls_k6_L3": {
+    "verdict": "FAIL",
+    "gates": {
+     "G1_macro_orient": "PASS",
+     "G2_island_rows": "PASS",
+     "G3_cell_rows": "PASS",
+     "G4_detour_sites": "PASS",
+     "G5_sram_structure": "PASS",
+     "P_phys": "FAIL"
+    },
+    "TT_rise": {
+     "mean": 255.72,
+     "min": 238.64,
+     "max": 264.54,
+     "window": 25.9
+    },
+    "FF_early": {
+     "mean": 193.81,
+     "min": 179.71,
+     "max": 201.19,
+     "window": 21.48
+    },
+    "textbook_delta": {
+     "TT_rise_mean": -3.59,
+     "TT_rise_window": -2.49,
+     "FF_early_mean": 4.88,
+     "FF_early_window": 5.67
+    },
+    "unsized": {
+     "J": 51.27,
+     "TT_rise": {
+      "mean": 261.2,
+      "min": 232.19,
+      "max": 283.87,
+      "window": 51.67
+     },
+     "FF_early": {
+      "mean": 199.17,
+      "min": 176.67,
+      "max": 216.32,
+      "window": 39.65
+     },
+     "max_slew": 50.36
+    },
+    "n_resized": 36
+   },
+   "c_ls_k6_S13": {
+    "verdict": "FAIL",
+    "gates": {
+     "G1_macro_orient": "PASS",
+     "G2_island_rows": "PASS",
+     "G3_cell_rows": "PASS",
+     "G4_detour_sites": "FAIL",
+     "G5_sram_structure": "FAIL",
+     "P_phys": "PASS"
+    },
+    "TT_rise": {
+     "mean": 256.06,
+     "min": 247.56,
+     "max": 262.37,
+     "window": 14.81
+    },
+    "FF_early": {
+     "mean": 193.43,
+     "min": 184.98,
+     "max": 199.33,
+     "window": 14.35
+    },
+    "textbook_delta": {
+     "TT_rise_mean": -2.14,
+     "TT_rise_window": 9.21,
+     "FF_early_mean": 5.15,
+     "FF_early_window": 6.01
+    },
+    "unsized": {
+     "J": 40.94,
+     "TT_rise": {
+      "mean": 254.71,
+      "min": 231.96,
+      "max": 276.16,
+      "window": 44.2
+     },
+     "FF_early": {
+      "mean": 194.02,
+      "min": 176.5,
+      "max": 211.03,
+      "window": 34.53
+     },
+     "max_slew": 40.9
+    },
+    "n_resized": 48
+   }
+  },
+  "pick": "c_ls_k5_S13: only plan with G1-G5 (chain) + P_phys PASS",
+  "ref_r3_sized": "r3 plan (not --chain) sized: 252.52 w13.34 / 190.29 w12.74 (reference only)",
+  "build": {
+   "plan": "c_ls_k5_S13 (sized spec sha in kit config)",
+   "kit": "intel1:/srv/opentallas-scratch2/claude/qc-su-prog-l1-1026/kit_l1",
+   "unit": "oth-ubuntu-1143158-1793056677 exit 0",
+   "grt_overflow": 0,
+   "meas": {
+    "TT_rise": {
+     "meas_mean": 263.77,
+     "meas_window": 20.5,
+     "meas_window_incl_macros": 21.52,
+     "pred_mean": 255.88,
+     "pred_window": 17.19,
+     "resid_mean": 7.27,
+     "resid_sd": 2.56,
+     "resid_maxabs": 11.62,
+     "n_leaves": 64,
+     "macros": [
+      250.4,
+      254.2,
+      255.8,
+      255.8
+     ]
+    },
+    "FF_early": {
+     "meas_mean": 198.21,
+     "meas_window": 13.21,
+     "meas_window_incl_macros": 14.24,
+     "pred_mean": 193.58,
+     "pred_window": 14.33,
+     "resid_mean": 4.15,
+     "resid_sd": 1.55,
+     "resid_maxabs": 6.56,
+     "n_leaves": 64,
+     "macros": [
+      189.2,
+      192.0,
+      192.9,
+      191.9
+     ]
+    },
+    "TT_late": {
+     "meas_mean": 277.12,
+     "meas_window": 23.79,
+     "meas_window_incl_macros": 23.79,
+     "pred_mean": 270.6,
+     "pred_window": 17.9,
+     "resid_mean": 5.95,
+     "resid_sd": 3.25,
+     "resid_maxabs": 11.3,
+     "n_leaves": 64,
+     "macros": [
+      263.8,
+      267.3,
+      271.3,
+      270.8
+     ]
+    }
+   },
+   "verdict_12_3": "TT rise mean 263.8 in 250+-20 but tap window 20.5 > 20 -> FAIL (FF early 198.2 w13.2 PASS); DRT/RCX not run",
+   "finding": "uf_phys under-predicts the SIZED tree by +7.3 TT mean (max leaf 11.6 > LOO 7.1); islands with BUFx4/BUFx6f cells (Q1,Q4: +10) worse than those without (Q0,Q3: +5): sizes below BUFx8 are outside the 3-build calibration (all BUFx8..x24) -> sizing extrapolated the model",
+   "geom": "L1 legs of this plan run at x~280 (< 283): violates the COORD 16:xx GEOM-REVIEW-6 rule -> not a route candidate anyway"
+  }
+ },
+ "render": "sweep_c/c_ls_k5_S13.png (viewed)",
+ "option_a_prime": {
+  "rule": "COORD 16:xx: geometry H-tree L1 in the free SRAM gap rows, trunks >= 4 um off the E pin column",
+  "tools": [
+   "su_tree_uf_ht.py (islands fixed by ht_points from geometry)",
+   "ht_l1.py (H-tree L1 replacing the gate's L1 chains + L1 checks + sizing + uf_phys gate)",
+   "render_ht.py"
+  ],
+  "H4": {
+   "struct": "PASS",
+   "trunks": 112.31,
+   "legs": "55.1-57.3",
+   "TT_rise": "275.47 w32.47",
+   "FF_early": "205.06 w24.32",
+   "gate": "FAIL"
+  },
+  "H5": {
+   "struct": "PASS",
+   "trunks": 112.31,
+   "legs": "55.1-57.3 (+E face 57.24)",
+   "xE": 289.44,
+   "TT_rise": "272.73 w24.56",
+   "FF_early": "202.75 w18.56",
+   "gate": "FAIL (TT mean > 262, TT window > 20)",
+   "render": "sweep_h/htl1_H5.png (viewed)"
+  },
+  "why": "equal L1 by construction, but islands at the gap mouths are off the sink mass: L2 level length T2 = 146.9 um (S strip + SRAM-CK column fed from the corner islands) -> mean +20 and window from L2"
+ }
+}

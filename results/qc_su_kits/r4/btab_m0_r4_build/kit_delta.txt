@@ -1,0 +1,24 @@
+
+# ---- QC-SU-KITS-3 (2026-10-26) btab_m0 structural re-plan, CTS+GRT: plan su_tree_uf_ls.py (legal island rects outside the SRAM
+# clock-pin columns) + su_kit_gate r4 --chain (every repeater a legal cell at exact equal-cut shortest distances) k=6, --straight L3;
+# all gates PASS, as-built TT 267.15 w14.72 / FF early 196.89 w13.0 (no trunk). Spec claude/qc-su-kits3-1026 results/qc_su_kits/r4/btab_m0_r4/
+# (sha256 a38c6de7...008f). Same MIF0 3_place.odb as btab_m0. Predict-then-build: no measured input, no pads/trims (ITERS 0, TritonCTS off).
+export PRE_CTS_TCL = /work/pre_cts_m0.tcl
+export OT_MSCTS_SPEC = /work/mscts_spec_r4.tcl
+#!/bin/bash
+# QC-SU-KITS-3: CTS (plan-built H-tree from OT_MSCTS_SPEC, TritonCTS off, ITERS 0 report only) + GRT; no DRT.
+set -uo pipefail
+K=$(cd "$(dirname "$0")" && pwd)
+rc=0; docker run --rm --name qcsuk3-cts-$(basename $K)-$$ --cpus=8 --memory=28g --memory-swap=28g -v "$K":/work -w /OpenROAD-flow-scripts/flow openroad/orfs:asap7lock bash -lc 'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=8 do-cts && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=8 do-5_1_grt' > "$K/cts_grt.log" 2>&1 || rc=$?
+docker run --rm -v "$K":/work openroad/orfs:asap7lock chown -R $(id -u):$(id -g) /work/run
+python3 "$K/../collect_native.py" "$K" || true
+exit $rc
+#!/bin/bash
+# QC-SU-KITS-3: btab_m0_r4 DRT + fill + finish (ORFS RCX 6_final.spef) after CTS+GRT measured in band; clock-latency measurement only
+# (no hold repair stage, no clock edits).  Same image as CTS.
+set -uo pipefail
+K=$(cd "$(dirname "$0")" && pwd)
+docker run --rm --name qcsuk3-rt-$(basename $K)-$$ --cpus=8 --memory=24g --memory-swap=24g -v "$K":/work -w /OpenROAD-flow-scripts/flow openroad/orfs:asap7lock bash -lc 'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; rc=0; for t in do-5_2_route do-5_3_fillcell do-5_route do-5_route.sdc do-6_1_fill do-6_1_fill.sdc do-6_report; do make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=8 $t || { rc=$?; echo STAGE_FAIL $t rc $rc; break; }; done; exit $rc' > "$K/route_r4.log" 2>&1
+rc=$?
+docker run --rm -v "$K":/work openroad/orfs:asap7lock chown -R $(id -u):$(id -g) /work/run
+exit $rc

@@ -1,0 +1,862 @@
+{
+ "TT_rise": {
+  "mean": 263.21,
+  "min": 241.3,
+  "max": 290.96,
+  "window": 49.66
+ },
+ "TT_early": {
+  "mean": 254.11,
+  "min": 234.92,
+  "max": 277.79,
+  "window": 42.87
+ },
+ "TT_late": {
+  "mean": 280.43,
+  "min": 258.86,
+  "max": 310.73,
+  "window": 51.87
+ },
+ "TT_leaf": {
+  "Q0B0L0": {
+   "rise": 273.02,
+   "late": 290.13,
+   "early": 261.98
+  },
+  "Q0B0L1": {
+   "rise": 272.06,
+   "late": 289.14,
+   "early": 261.22
+  },
+  "Q0B0L2": {
+   "rise": 270.63,
+   "late": 287.67,
+   "early": 260.09
+  },
+  "Q0B1L0": {
+   "rise": 267.26,
+   "late": 284.86,
+   "early": 256.67
+  },
+  "Q0B1L1": {
+   "rise": 267.12,
+   "late": 284.73,
+   "early": 256.56
+  },
+  "Q0B1L2": {
+   "rise": 268.13,
+   "late": 285.73,
+   "early": 257.37
+  },
+  "Q0B2L0": {
+   "rise": 267.39,
+   "late": 284.23,
+   "early": 258.01
+  },
+  "Q0B2L1": {
+   "rise": 271.58,
+   "late": 288.4,
+   "early": 261.43
+  },
+  "Q0B2L2": {
+   "rise": 269.78,
+   "late": 286.5,
+   "early": 260.17
+  },
+  "m3": {
+   "rise": 260.7,
+   "late": 278.16,
+   "early": 251.35
+  },
+  "Q1B0L0": {
+   "rise": 245.99,
+   "late": 262.8,
+   "early": 239.97
+  },
+  "Q1B0L1": {
+   "rise": 251.65,
+   "late": 268.15,
+   "early": 245.01
+  },
+  "Q1B0L2": {
+   "rise": 247.49,
+   "late": 264.51,
+   "early": 241.06
+  },
+  "Q1B0L3": {
+   "rise": 247.62,
+   "late": 264.67,
+   "early": 241.14
+  },
+  "Q2B0L0": {
+   "rise": 268.86,
+   "late": 285.61,
+   "early": 258.84
+  },
+  "Q2B0L1": {
+   "rise": 266.06,
+   "late": 283.11,
+   "early": 256.47
+  },
+  "Q2B0L2": {
+   "rise": 270.13,
+   "late": 286.99,
+   "early": 259.76
+  },
+  "m0": {
+   "rise": 259.8,
+   "late": 277.25,
+   "early": 250.52
+  },
+  "Q2B1L0": {
+   "rise": 263.6,
+   "late": 281.04,
+   "early": 253.63
+  },
+  "Q2B1L1": {
+   "rise": 263.94,
+   "late": 281.34,
+   "early": 253.97
+  },
+  "Q2B1L2": {
+   "rise": 263.69,
+   "late": 281.12,
+   "early": 253.72
+  },
+  "Q2B2L0": {
+   "rise": 268.98,
+   "late": 285.93,
+   "early": 258.62
+  },
+  "Q2B2L1": {
+   "rise": 267.66,
+   "late": 284.6,
+   "early": 257.54
+  },
+  "Q2B2L2": {
+   "rise": 266.04,
+   "late": 282.94,
+   "early": 256.28
+  },
+  "Q3B0L0": {
+   "rise": 266.45,
+   "late": 282.09,
+   "early": 257.56
+  },
+  "Q3B0L1": {
+   "rise": 261.89,
+   "late": 277.47,
+   "early": 253.96
+  },
+  "Q3B0L2": {
+   "rise": 262.73,
+   "late": 278.3,
+   "early": 254.66
+  },
+  "Q3B0L3": {
+   "rise": 269.24,
+   "late": 284.88,
+   "early": 259.76
+  },
+  "Q3B1L0": {
+   "rise": 261.36,
+   "late": 277.49,
+   "early": 252.83
+  },
+  "Q3B1L1": {
+   "rise": 261.14,
+   "late": 277.17,
+   "early": 252.83
+  },
+  "Q3B1L2": {
+   "rise": 260.47,
+   "late": 276.56,
+   "early": 252.2
+  },
+  "Q3B2L0": {
+   "rise": 267.58,
+   "late": 283.44,
+   "early": 258.25
+  },
+  "Q3B2L1": {
+   "rise": 260.8,
+   "late": 276.88,
+   "early": 252.39
+  },
+  "Q3B2L2": {
+   "rise": 260.87,
+   "late": 276.97,
+   "early": 252.44
+  },
+  "Q4B0L0": {
+   "rise": 252.88,
+   "late": 269.67,
+   "early": 245.56
+  },
+  "Q4B0L1": {
+   "rise": 252.78,
+   "late": 269.57,
+   "early": 245.46
+  },
+  "Q4B0L2": {
+   "rise": 253.08,
+   "late": 269.89,
+   "early": 245.69
+  },
+  "Q4B1L0": {
+   "rise": 253.73,
+   "late": 270.73,
+   "early": 246.13
+  },
+  "Q4B1L1": {
+   "rise": 253.99,
+   "late": 270.97,
+   "early": 246.39
+  },
+  "Q4B1L2": {
+   "rise": 253.9,
+   "late": 270.9,
+   "early": 246.28
+  },
+  "Q4B2L0": {
+   "rise": 253.66,
+   "late": 270.66,
+   "early": 246.07
+  },
+  "Q4B2L1": {
+   "rise": 253.63,
+   "late": 270.61,
+   "early": 246.08
+  },
+  "Q4B2L2": {
+   "rise": 253.81,
+   "late": 270.83,
+   "early": 246.16
+  },
+  "Q5B0L0": {
+   "rise": 253.46,
+   "late": 269.96,
+   "early": 246.16
+  },
+  "Q5B0L1": {
+   "rise": 254.89,
+   "late": 271.35,
+   "early": 247.35
+  },
+  "Q5B0L2": {
+   "rise": 255.55,
+   "late": 272.06,
+   "early": 247.83
+  },
+  "Q5B0L3": {
+   "rise": 255.31,
+   "late": 271.83,
+   "early": 247.66
+  },
+  "m2": {
+   "rise": 242.52,
+   "late": 259.37,
+   "early": 236.57
+  },
+  "Q5B1L0": {
+   "rise": 257.3,
+   "late": 274.38,
+   "early": 248.91
+  },
+  "Q5B1L1": {
+   "rise": 257.56,
+   "late": 274.59,
+   "early": 249.15
+  },
+  "Q5B1L2": {
+   "rise": 258.88,
+   "late": 275.79,
+   "early": 250.32
+  },
+  "Q5B1L3": {
+   "rise": 255.95,
+   "late": 272.78,
+   "early": 248.01
+  },
+  "Q5B2L0": {
+   "rise": 248.19,
+   "late": 265.24,
+   "early": 241.53
+  },
+  "Q5B2L1": {
+   "rise": 252.32,
+   "late": 269.44,
+   "early": 244.65
+  },
+  "Q5B2L2": {
+   "rise": 252.12,
+   "late": 269.24,
+   "early": 244.51
+  },
+  "m1": {
+   "rise": 241.3,
+   "late": 258.86,
+   "early": 234.92
+  },
+  "Q5B3L0": {
+   "rise": 251.12,
+   "late": 268.57,
+   "early": 243.21
+  },
+  "Q5B3L1": {
+   "rise": 250.38,
+   "late": 267.8,
+   "early": 242.67
+  },
+  "Q5B3L2": {
+   "rise": 250.25,
+   "late": 267.7,
+   "early": 242.49
+  },
+  "Q6B0L0": {
+   "rise": 289.28,
+   "late": 308.84,
+   "early": 276.56
+  },
+  "Q6B0L1": {
+   "rise": 288.59,
+   "late": 308.16,
+   "early": 275.96
+  },
+  "Q6B0L2": {
+   "rise": 290.33,
+   "late": 309.9,
+   "early": 277.39
+  },
+  "Q6B1L0": {
+   "rise": 290.96,
+   "late": 310.73,
+   "early": 277.79
+  },
+  "Q6B1L1": {
+   "rise": 288.74,
+   "late": 308.55,
+   "early": 275.92
+  },
+  "Q6B1L2": {
+   "rise": 290.9,
+   "late": 310.73,
+   "early": 277.63
+  },
+  "Q6B2L0": {
+   "rise": 289.64,
+   "late": 309.42,
+   "early": 276.71
+  },
+  "Q6B2L1": {
+   "rise": 289.75,
+   "late": 309.48,
+   "early": 276.88
+  },
+  "Q6B2L2": {
+   "rise": 289.72,
+   "late": 309.48,
+   "early": 276.8
+  }
+ },
+ "FF_rise": {
+  "mean": 209.3,
+  "min": 190.35,
+  "max": 231.89,
+  "window": 41.55
+ },
+ "FF_early": {
+  "mean": 200.34,
+  "min": 183.94,
+  "max": 219.96,
+  "window": 36.03
+ },
+ "FF_late": {
+  "mean": 218.71,
+  "min": 198.93,
+  "max": 244.76,
+  "window": 45.83
+ },
+ "FF_leaf": {
+  "Q0B0L0": {
+   "rise": 219.06,
+   "late": 228.8,
+   "early": 207.99
+  },
+  "Q0B0L1": {
+   "rise": 218.07,
+   "late": 227.73,
+   "early": 207.21
+  },
+  "Q0B0L2": {
+   "rise": 216.47,
+   "late": 226.09,
+   "early": 205.95
+  },
+  "Q0B1L0": {
+   "rise": 214.55,
+   "late": 224.26,
+   "early": 203.96
+  },
+  "Q0B1L1": {
+   "rise": 214.39,
+   "late": 224.09,
+   "early": 203.83
+  },
+  "Q0B1L2": {
+   "rise": 215.47,
+   "late": 225.18,
+   "early": 204.7
+  },
+  "Q0B2L0": {
+   "rise": 212.24,
+   "late": 221.72,
+   "early": 202.97
+  },
+  "Q0B2L1": {
+   "rise": 216.6,
+   "late": 226.09,
+   "early": 206.51
+  },
+  "Q0B2L2": {
+   "rise": 214.39,
+   "late": 223.79,
+   "early": 204.88
+  },
+  "m3": {
+   "rise": 206.55,
+   "late": 216.41,
+   "early": 197.31
+  },
+  "Q1B0L0": {
+   "rise": 193.26,
+   "late": 201.33,
+   "early": 187.05
+  },
+  "Q1B0L1": {
+   "rise": 198.7,
+   "late": 206.46,
+   "early": 191.83
+  },
+  "Q1B0L2": {
+   "rise": 194.92,
+   "late": 203.25,
+   "early": 188.34
+  },
+  "Q1B0L3": {
+   "rise": 195.05,
+   "late": 203.41,
+   "early": 188.45
+  },
+  "Q2B0L0": {
+   "rise": 215.05,
+   "late": 224.3,
+   "early": 204.95
+  },
+  "Q2B0L1": {
+   "rise": 211.96,
+   "late": 221.63,
+   "early": 202.34
+  },
+  "Q2B0L2": {
+   "rise": 216.48,
+   "late": 225.9,
+   "early": 206.0
+  },
+  "m0": {
+   "rise": 206.12,
+   "late": 216.02,
+   "early": 196.86
+  },
+  "Q2B1L0": {
+   "rise": 211.36,
+   "late": 220.78,
+   "early": 201.32
+  },
+  "Q2B1L1": {
+   "rise": 211.55,
+   "late": 220.95,
+   "early": 201.53
+  },
+  "Q2B1L2": {
+   "rise": 211.41,
+   "late": 220.83,
+   "early": 201.38
+  },
+  "Q2B2L0": {
+   "rise": 215.54,
+   "late": 224.97,
+   "early": 205.09
+  },
+  "Q2B2L1": {
+   "rise": 214.16,
+   "late": 223.55,
+   "early": 203.97
+  },
+  "Q2B2L2": {
+   "rise": 212.35,
+   "late": 221.67,
+   "early": 202.56
+  },
+  "Q3B0L0": {
+   "rise": 211.25,
+   "late": 219.59,
+   "early": 202.4
+  },
+  "Q3B0L1": {
+   "rise": 206.3,
+   "late": 214.56,
+   "early": 198.49
+  },
+  "Q3B0L2": {
+   "rise": 207.14,
+   "late": 215.4,
+   "early": 199.19
+  },
+  "Q3B0L3": {
+   "rise": 214.28,
+   "late": 222.62,
+   "early": 204.81
+  },
+  "Q3B1L0": {
+   "rise": 207.03,
+   "late": 215.56,
+   "early": 198.55
+  },
+  "Q3B1L1": {
+   "rise": 206.46,
+   "late": 214.91,
+   "early": 198.24
+  },
+  "Q3B1L2": {
+   "rise": 205.9,
+   "late": 214.43,
+   "early": 197.7
+  },
+  "Q3B2L0": {
+   "rise": 212.78,
+   "late": 221.28,
+   "early": 203.43
+  },
+  "Q3B2L1": {
+   "rise": 206.12,
+   "late": 214.8,
+   "early": 197.76
+  },
+  "Q3B2L2": {
+   "rise": 206.19,
+   "late": 214.9,
+   "early": 197.8
+  },
+  "Q4B0L0": {
+   "rise": 199.27,
+   "late": 208.12,
+   "early": 192.03
+  },
+  "Q4B0L1": {
+   "rise": 199.19,
+   "late": 208.01,
+   "early": 191.97
+  },
+  "Q4B0L2": {
+   "rise": 199.54,
+   "late": 208.39,
+   "early": 192.23
+  },
+  "Q4B1L0": {
+   "rise": 200.41,
+   "late": 209.42,
+   "early": 192.84
+  },
+  "Q4B1L1": {
+   "rise": 200.63,
+   "late": 209.6,
+   "early": 193.05
+  },
+  "Q4B1L2": {
+   "rise": 200.57,
+   "late": 209.59,
+   "early": 192.98
+  },
+  "Q4B2L0": {
+   "rise": 200.36,
+   "late": 209.36,
+   "early": 192.79
+  },
+  "Q4B2L1": {
+   "rise": 200.27,
+   "late": 209.25,
+   "early": 192.76
+  },
+  "Q4B2L2": {
+   "rise": 200.56,
+   "late": 209.57,
+   "early": 192.92
+  },
+  "Q5B0L0": {
+   "rise": 201.68,
+   "late": 209.86,
+   "early": 194.11
+  },
+  "Q5B0L1": {
+   "rise": 203.18,
+   "late": 211.33,
+   "early": 195.35
+  },
+  "Q5B0L2": {
+   "rise": 203.98,
+   "late": 212.19,
+   "early": 195.94
+  },
+  "Q5B0L3": {
+   "rise": 203.66,
+   "late": 211.9,
+   "early": 195.7
+  },
+  "m2": {
+   "rise": 190.55,
+   "late": 198.93,
+   "early": 184.48
+  },
+  "Q5B1L0": {
+   "rise": 206.01,
+   "late": 214.9,
+   "early": 197.4
+  },
+  "Q5B1L1": {
+   "rise": 206.29,
+   "late": 215.1,
+   "early": 197.62
+  },
+  "Q5B1L2": {
+   "rise": 207.59,
+   "late": 216.27,
+   "early": 198.74
+  },
+  "Q5B1L3": {
+   "rise": 204.29,
+   "late": 212.88,
+   "early": 196.15
+  },
+  "Q5B2L0": {
+   "rise": 196.6,
+   "late": 205.14,
+   "early": 189.87
+  },
+  "Q5B2L1": {
+   "rise": 201.49,
+   "late": 210.03,
+   "early": 193.66
+  },
+  "Q5B2L2": {
+   "rise": 201.24,
+   "late": 209.78,
+   "early": 193.46
+  },
+  "m1": {
+   "rise": 190.35,
+   "late": 199.19,
+   "early": 183.94
+  },
+  "Q5B3L0": {
+   "rise": 201.07,
+   "late": 209.71,
+   "early": 192.98
+  },
+  "Q5B3L1": {
+   "rise": 200.14,
+   "late": 208.75,
+   "early": 192.28
+  },
+  "Q5B3L2": {
+   "rise": 200.19,
+   "late": 208.82,
+   "early": 192.25
+  },
+  "Q6B0L0": {
+   "rise": 229.66,
+   "late": 242.38,
+   "early": 218.38
+  },
+  "Q6B0L1": {
+   "rise": 229.0,
+   "late": 241.69,
+   "early": 217.82
+  },
+  "Q6B0L2": {
+   "rise": 230.83,
+   "late": 243.54,
+   "early": 219.29
+  },
+  "Q6B1L0": {
+   "rise": 231.77,
+   "late": 244.61,
+   "early": 219.95
+  },
+  "Q6B1L1": {
+   "rise": 229.54,
+   "late": 242.38,
+   "early": 218.1
+  },
+  "Q6B1L2": {
+   "rise": 231.89,
+   "late": 244.76,
+   "early": 219.96
+  },
+  "Q6B2L0": {
+   "rise": 230.38,
+   "late": 243.23,
+   "early": 218.81
+  },
+  "Q6B2L1": {
+   "rise": 230.37,
+   "late": 243.16,
+   "early": 218.87
+  },
+  "Q6B2L2": {
+   "rise": 230.42,
+   "late": 243.27,
+   "early": 218.87
+  }
+ },
+ "gate": {
+  "verdict": "FAIL",
+  "checks": {
+   "TT_mean": false,
+   "FF_mean": true,
+   "TT_window": false,
+   "FF_window": false
+  },
+  "band": {
+   "TT_rise_mean": [
+    238.0,
+    262.0
+   ],
+   "FF_early_mean": [
+    187.5,
+    217.5
+   ],
+   "window_max": 20.0
+  },
+  "rule": "build only if predicted TT rise mean in 250+-(20-8), FF early mean in 202.5+-(20-5), both windows <=20 (COORD RULING MODEL-REFIT-2; guard = LOO max per-leaf error 7.1 TT / 4.8 FF)"
+ },
+ "sensitivity": {
+  "textbook": {
+   "params": {
+    "max": {
+     "alpha": 0.0,
+     "beta": 0.6931471805599453,
+     "gslew": 2.1972245773362196,
+     "kleaf": 1.2955
+    },
+    "min": {
+     "alpha": 0.0,
+     "beta": 0.6931471805599453,
+     "gslew": 2.1972245773362196,
+     "kleaf": 1.2955
+    }
+   },
+   "TT_rise": {
+    "mean": 258.56,
+    "min": 237.44,
+    "max": 279.43,
+    "window": 42.0
+   },
+   "FF_early": {
+    "mean": 204.91,
+    "min": 186.02,
+    "max": 223.48,
+    "window": 37.46
+   },
+   "delta_vs_gate": {
+    "TT_rise_mean": -4.65,
+    "TT_rise_window": -7.66,
+    "FF_early_mean": 4.57,
+    "FF_early_window": 1.43
+   },
+   "gate_under_these_params": "FAIL"
+  },
+  "ln2_fit": {
+   "params": {
+    "max": {
+     "alpha": 0.0,
+     "beta": 0.69,
+     "gslew": 3.0,
+     "kleaf": 1.2955
+    },
+    "min": {
+     "alpha": 0.2,
+     "beta": 0.69,
+     "gslew": 2.2,
+     "kleaf": 1.2955
+    }
+   },
+   "TT_rise": {
+    "mean": 262.24,
+    "min": 239.83,
+    "max": 286.43,
+    "window": 46.6
+   },
+   "FF_early": {
+    "mean": 202.22,
+    "min": 184.13,
+    "max": 220.12,
+    "window": 36.0
+   },
+   "delta_vs_gate": {
+    "TT_rise_mean": -0.97,
+    "TT_rise_window": -3.06,
+    "FF_early_mean": 1.88,
+    "FF_early_window": -0.03
+   },
+   "gate_under_these_params": "FAIL"
+  }
+ },
+ "params": {
+  "max": {
+   "alpha": 0.2,
+   "beta": 0.5,
+   "gslew": 5.0,
+   "kleaf": 1.2955
+  },
+  "min": {
+   "alpha": 0.2,
+   "beta": 0.4,
+   "gslew": 4.0,
+   "kleaf": 1.2955
+  },
+  "fit": "claude/model-refit2-1026@3d6754e1f4 uf_phys_predict (frozen)"
+ },
+ "provenance": {
+  "argv": [
+   "/usr/bin/python3",
+   "/srv/opentallas-scratch2/claude/qc-su-prog-l1-1026/code/results/qc_su_prog_l1_1026/phys_gate.py",
+   "eq_k7_w0.5_S13.gate.asbuilt.tcl",
+   "eq_k7_w0.5_S13.gate.asbuilt.json",
+   "/srv/opentallas-scratch2/claude/qc-su-prog-l1-1026/in/r2/prog_m0.geo",
+   "/srv/opentallas-scratch2/claude/qc-su-prog-l1-1026/in/lib",
+   "/tmp/qcpl1_eq_k7_w0.5_S13.unsized.json"
+  ],
+  "cwd": "/srv/opentallas-scratch2/claude/qc-su-prog-l1-1026/sweep_b",
+  "predictor_call": [
+   "phys_gate.predict_file",
+   "eq_k7_w0.5_S13.gate.asbuilt.tcl",
+   "eq_k7_w0.5_S13.gate.asbuilt.json",
+   "/srv/opentallas-scratch2/claude/qc-su-prog-l1-1026/in/r2/prog_m0.geo",
+   "/srv/opentallas-scratch2/claude/qc-su-prog-l1-1026/in/lib"
+  ],
+  "sha256": {
+   "eq_k7_w0.5_S13.gate.asbuilt.tcl": "810288ceb8cc892b5600ac4fd23b3fa5d9701567bff12a04ff271a7067be6bc3",
+   "eq_k7_w0.5_S13.gate.asbuilt.json": "372d91919a9d25ecca0649d5dd5b4170e50ef77699e368e8ee2fa5669b7c61b6",
+   "/srv/opentallas-scratch2/claude/qc-su-prog-l1-1026/in/r2/prog_m0.geo": "73c70c50d7538616979320ad95fdba1b672c73e92f255f12044948f2bb4dba25",
+   "/srv/opentallas-scratch2/claude/qc-su-prog-l1-1026/in/lib/invbuf_tt.lib": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+   "/srv/opentallas-scratch2/claude/qc-su-prog-l1-1026/in/lib/invbuf_ff.lib": "806848fed619856aa96f4965a2e6cc3d5a3b9bb39494bbdad5abd0cc6219ea26",
+   "/srv/opentallas-scratch2/claude/qc-su-prog-l1-1026/code/results/qc_su_prog_l1_1026/phys_gate.py": "6b23a2127c2a518ebb663f6d2579b67da1999306d95e3a69f4195d5d349e95cd",
+   "/srv/opentallas-scratch2/claude/qc-su-prog-l1-1026/code/results/model_refit2_1026/py/uf_phys.py": "d8b7fc02d6f57b34f3aa376d434ebe8f85000b6df4aab44c6958e4cca60aacf8",
+   "/srv/opentallas-scratch2/claude/qc-su-prog-l1-1026/code/results/model_refit2_1026/py/uf_phys_predict.py": "37311b8df3c3b849294a0b1217dc037b3b3fe71e6656e915f424b31ff10bdd94",
+   "/srv/opentallas-scratch2/claude/qc-su-prog-l1-1026/code/results/model_refit2_1026/py/common.py": "9ecbd3cf512a19a8ef090869eef8f803e473b30a0857841a802980cda16c6a7e",
+   "/srv/opentallas-scratch2/claude/qc-su-prog-l1-1026/code/results/model_refit2_1026/py/lib.py": "993fd4175bb75d7f72101ead4c3af9b8abd43a51d90af95651bd0e105682d630"
+  }
+ },
+ "scope": "PLAN MODEL uf_phys (MODEL-REFIT-2), UNCHECKED"
+}
