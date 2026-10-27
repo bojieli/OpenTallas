@@ -2,6 +2,7 @@
 import hashlib
 import json
 import sys
+import pytest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -39,3 +40,11 @@ def test_inline_lef_contract_uses_declared_pins(tmp_path):
     hashes = G._pin_freeze_hashes(tmp_path, lef, [10,10], declared_pins=declared)
     assert hashes["pins_canon_sha256"] == K._canon(declared, [10,10])
     assert hashes["pins_placed_canon_sha256"] != hashes["pins_canon_sha256"]
+
+
+def test_lef_without_declared_inline_rows_does_not_fallback(tmp_path):
+    lef = tmp_path / "child.lef"
+    lef.write_text("MACRO child\nEND child\n")
+    (tmp_path / "io.tcl").write_text("place_pin -pin_name {data} -layer M3 -location {0.042 2.0}\n")
+    with pytest.raises(json.JSONDecodeError):
+        G._pin_freeze_hashes(tmp_path, lef, [10,10])
