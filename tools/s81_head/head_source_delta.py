@@ -8,6 +8,7 @@ Geometry, bus widths and schedule latency are preserved.
 import argparse
 import copy
 import json
+import os
 import re
 from pathlib import Path
 
@@ -65,6 +66,21 @@ def main():
     args = ap.parse_args()
     plan, report = apply(json.loads(args.plan.read_text()), args.root,
                          args.supplement.read_text())
+    # pins_file is relative to the plan directory (sources remain repo-relative).
+    # A candidate exported under results/ must still read the original pin asset.
+    rebased = []
+    for ty in plan['partition_types'].values():
+        for core in ty.get('hard_cores', []):
+            if core.get('pins_file'):
+                old = core['pins_file']
+                asset = (args.plan.parent / old).resolve()
+                asset.relative_to(args.root.resolve())
+                if not asset.is_file():
+                    raise ValueError('missing plan pin asset: ' + str(asset))
+                core['pins_file'] = os.path.relpath(asset, args.out.parent.resolve())
+                if core['pins_file'] != old:
+                    rebased.append([old, core['pins_file']])
+    report['plan_relative_pin_assets'] = rebased
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(plan, indent=2) + '\n')
     if args.report:
