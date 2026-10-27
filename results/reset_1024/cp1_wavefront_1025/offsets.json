@@ -1,0 +1,66 @@
+{
+ "release": "wavefront",
+ "sync_stages": 2,
+ "root": "fW0_p1_b0",
+ "root_type": "col_h10_r0_p1__t1",
+ "hop_um": 405.0,
+ "relay_um": 405.0,
+ "unreachable": [],
+ "max_release": 15,
+ "max_die_hop_um": 378.0,
+ "long_hops": [],
+ "types": {
+  "col_h10_r0_p1__t1": {
+   "in_um": [
+    901.792,
+    8.608
+   ],
+   "outs": [
+    [
+     "rst_o_0",
+     541.088,
+     1218.208
+    ]
+   ],
+   "depth_K": 6,
+   "entry": "sync",
+   "entry_stages": 2,
+   "release_after_pin": 8,
+   "relays": 162,
+   "max_hop_um": 360.7
+  },
+  "col_h10_r1__t1": {
+   "in_um": [
+    901.792,
+    8.608
+   ],
+   "outs": [],
+   "depth_K": 6,
+   "entry": "relayed",
+   "entry_stages": 1,
+   "release_after_pin": 7,
+   "relays": 160,
+   "max_hop_um": 360.7
+  }
+ },
+ "parts": {
+  "fW0_p1_b0": {
+   "type": "col_h10_r0_p1__t1",
+   "parent": null,
+   "entry_stages": 2,
+   "depth_K": 6,
+   "release": 8,
+   "source": "die rst_n (asynchronous: the ONE root synchroniser)"
+  },
+  "fW0_p1_b1": {
+   "type": "col_h10_r1__t1",
+   "parent": "fW0_p1_b0",
+   "entry_stages": 1,
+   "depth_K": 6,
+   "release": 15,
+   "source": "fW0_p1_b0.rst_o_0",
+   "hop_um": 378.0
+  }
+ },
+ "note": "OWNER DECISION 13 (2026-10-24): one root 2-flop synchroniser; neighbour wavefront; release = clocks after die rst_n deasserts at which the partition's taps (and its rst_o) release; the static schedule starts with an explicit start broadcast after reset"
+}

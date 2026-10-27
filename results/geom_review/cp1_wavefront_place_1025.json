@@ -1,0 +1,15 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "CP1 wavefront proof pair placement-only probes; data geometry unchanged from reach405R, current root/neighbor reset changed",
+  "pictures": [
+    "results/reset_1024/cp1_review/R_pair.png",
+    "results/reset_1024/cp1_wavefront_1025/r0_reset.png",
+    "results/reset_1024/cp1_wavefront_1025/r1_reset.png"
+  ],
+  "findings": [
+    "Data face windows and seam alignment remain unchanged; nearest-bus reach-aware proof leaves preserve pipeline ordering. No macros or PHY walls.",
+    "One die-root synchroniser at r0 entry, one registered wavefront output to r1: max die hop378um, interior relay hop360.7um. Root at face; regular 200um clock taps, no macro overlap.",
+    "Published release offsets r0=8,r1=15 cycles; total boot15 matches prior pipelined proof15 (delta0).",
+    "Placement only to inspect density/retained registers; route awaits placed review and GRT hold/DRV. These proof types are not production full dies."
+  ]
+}
