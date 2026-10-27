@@ -154,3 +154,41 @@ def test_d1_failure_is_fail_closed(monkeypatch, tmp_path):
     a = types.SimpleNamespace(trunk_cal=None, replan_cal=None, libtt="t", libff="f", fit="fit.json", libdir="L", d1_steps=1)
     with pytest.raises(SystemExit, match="d1 step failed"):
         F.run_core(fams, "m", tmp_path, tmp_path, a)
+
+
+# R21: sizing and admission must consume the SAME calibrated frozen-plan model.
+def test_refresh_after_d1_uses_calibrated_model_and_retains_raw_info(monkeypatch):
+    monkeypatch.setattr(F.M7, "model_x", _fake_model)
+    name = "canonical-model-test"
+    P = {"nodes": [("L0", None, (0, 0), "BUFx24_ASAP7_75t_R", "leaf")]}
+    F._PLANS[name] = P, {}, 0.0, 0.0, {}
+    rec0 = dict(name=name, model="raw R7", TT={"window": 21}, FF={"window": 21})
+    prediction = {c: dict(mean=250, window=12, sink_min=240, sink_max=260,
+                         leaf_out_slew_max=40, leaf_slew_in_max=30,
+                         model="uf_phys3 v1", basis="GRT") for c in ("TT", "FF")}
+    rec = dict(frozen_masters={"L0":"BUFx24_ASAP7_75t_R"},
+               nodes_xy=[("L0", None, (0, 0), "BUFx24_ASAP7_75t_R", "leaf")],
+               d1_uf3={"prediction": prediction})
+    got = F.refresh_after_d1(rec0, rec)
+    assert got["TT"]["window"] == 12
+    assert got["model_r7_info"]["TT"]["window"] == 21
+    rec["d1_uf3"]["prediction"]["FF"]["basis"] = "wrong"
+    with pytest.raises(SystemExit, match="malformed calibrated"):
+        F.refresh_after_d1(rec0, rec)
+
+
+def test_calibrated_summary_matches_d1_kernel_and_keeps_sink_extrema(monkeypatch):
+    import l0r_r8_uf3 as A
+    # A tiny numeric kernel fixture; details are already calibrated, never raw R7.
+    def predict(plan, lib, corner, edge="rise", detail=None, **params):
+        vals = [10., 20.] if edge == "rise" else [12., 18.]
+        if detail is not None:
+            detail["a"] = dict(sinks=vals, slew_in=2., slew_out=4.)
+            detail["b"] = dict(sinks=[30.], slew_in=3., slew_out=5.)
+        return {"a":sum(vals)/2, "b":30.}, {}
+    monkeypatch.setattr(A.V3, "predict3", predict)
+    q = A.calibrated_summary(None, None, {}, {})
+    assert q["TT"]["window"] == 15. and q["FF"]["window"] == 15.
+    assert q["TT"]["sink_min"] == 10. and q["TT"]["sink_max"] == 30.
+    assert q["FF"]["mean"] == round((10+18+30)/3,2)
+    assert q["FF"]["leaf_out_slew_max"] == 5.
