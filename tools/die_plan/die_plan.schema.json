@@ -2818,7 +2818,8 @@
      "properties": {
       "source": {
        "enum": [
-        "plan"
+        "plan",
+        "die_sta"
        ]
       },
       "pairs": {
@@ -2837,6 +2838,22 @@
       "default_ps": {
        "type": "number",
        "minimum": 0
+      },
+      "file": {
+       "type": "string",
+       "minLength": 1
+      },
+      "sha256": {
+       "type": "string",
+       "pattern": "^[0-9a-f]{64}$"
+      },
+      "gate_json_sha256": {
+       "type": "string",
+       "pattern": "^[0-9a-f]{64}$"
+      },
+      "tool_sha256": {
+       "type": "string",
+       "pattern": "^[0-9a-f]{64}$"
       }
      }
     },

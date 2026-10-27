@@ -621,9 +621,16 @@ SCHEMA = {
             # HOLD-REPAIR 10-26 (12.4a a1, opt-in io_hold plan_demand; gen_phys.hold_demand_ps): plan-declared FF seam
             # hold demand per seam pair (tools/die_plan/hold_demand.py from the plan clock arrival model, source
             # "plan" only); the receiving kit's min input delay = sender guarantee - demand, landed seams keep fallback
+            # CLOCK-KV-R21 (RULING CLOCK-KV-R20 (a)): source "die_sta" = per-port-bit demand measured by the shared
+            # die gate (tools/die_plan/hold_demand_die_sta.py): file + sha256 + gate JSON sha256 + gate tool sha256
+            # (gen_phys.die_sta_hold_demand); source "plan" keeps pairs / landed / default_ps
             "hold_demand": {"type": "object", "required": ["source"], "properties": {
-                "source": {"enum": ["plan"]}, "pairs": {"type": "object", "additionalProperties": _nonneg},
-                "landed": {"type": "array", "items": {"type": "string"}}, "default_ps": _nonneg}},
+                "source": {"enum": ["plan", "die_sta"]}, "pairs": {"type": "object", "additionalProperties": _nonneg},
+                "landed": {"type": "array", "items": {"type": "string"}}, "default_ps": _nonneg,
+                "file": {"type": "string", "minLength": 1},
+                "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+                "gate_json_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+                "tool_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}},
             # CP1 proof harness (COORD 2026-10-25 23:26 ruling (3), CLOCK-RESET): a cut-out proof die keeps, for each
             # die-edge input that the FULL plan drives from a registered partition, an explicit registered upstream
             # driver view {port id: part, type, bus, out_hold_guarantee_ps, basis}; under io_hold sender_min that

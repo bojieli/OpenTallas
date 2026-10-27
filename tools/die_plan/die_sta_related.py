@@ -768,14 +768,23 @@ def map_cores_to_taps(plan, taps):
     return out
 
 
-def build_views(plan, taps, corner, reg, lat, core_views, kits, load_ff, part_delay_ps):
-    """{port: [models]} + coverage record.  core_views {module: dir}; kits {part_or_type: spec}."""
+def build_views(plan, taps, corner, reg, lat, core_views, kits, load_ff, part_delay_ps, match_pins=False):
+    """{port: [models]} + coverage record.  core_views {module: dir}; kits {part_or_type: spec}.
+    match_pins (CLOCK-KV-R21 opt-in): a core view applies only to instances whose plan pins_file is the view's own
+    (provenance kit.pins_file, by file name); other pin views of the module (e.g. an orientation re-pin) are a
+    different physical core and stay budget (listed in pin_view_mismatch)."""
     budget = budget_model(reg, lat)
     views = {p: [budget] for p in taps}
     cmodels = {m: core_view_model(m, d, corner, load_ff, part_delay_ps) for m, d in core_views.items()}
     cmap = map_cores_to_taps(plan, taps) if core_views else {}
     real_inst, real_taps = defaultdict(int), set()
+    mism = defaultdict(int)
     for (n, inst), (mod, port, dist, pins) in cmap.items():
+        if match_pins and mod in cmodels:
+            vp = cmodels[mod]["meta"].get("pins_file")
+            if not vp or not pins or Path(vp).name != Path(pins).name:
+                mism[f"{mod}:{Path(pins).name if pins else None}"] += 1
+                continue
         if mod in cmodels and port:
             if cmodels[mod] not in views[port]:
                 views[port] = views[port] + [cmodels[mod]]
@@ -798,6 +807,8 @@ def build_views(plan, taps, corner, reg, lat, core_views, kits, load_ff, part_de
                core_models={m: dict(c["etm"], meta=c["meta"], part_delay_ps=part_delay_ps) for m, c in cmodels.items()},
                map_distance_max_um=max([v[2] for v in cmap.values() if v[2] is not None] or [0.0]),
                map_distance_real_um=sorted(v[2] for v in cmap.values() if v[0] in cmodels and v[2] is not None)[::32])
+    if match_pins:
+        cov["pin_view_mismatch"] = dict(mism)
     return views, cov
 
 
@@ -845,6 +856,9 @@ def main(argv=None):
                          "common tree node); classes and shared droop still by cppr_node (region)")
     ap.add_argument("--core-view", action="append", default=[], help="MODULE=VIEWDIR signed hard-core view "
                     "(<MODULE>_{tt,ff}.lib ETM + core.json); REAL VIEWS, opt-in")
+    ap.add_argument("--core-view-match-pins", action="store_true",
+                    help="CLOCK-KV-R21 opt-in: apply a --core-view only to instances whose plan pins_file is the view's "
+                         "own (provenance kit.pins_file); default off = output unchanged")
     ap.add_argument("--core-part-delay-ps", type=float, default=0.0,
                     help="partition tap -> core clock pin delay (unbuilt partition = budget; default 0)")
     ap.add_argument("--clock-ocv", choices=("none", "flat", "table"), default="none",
@@ -931,7 +945,8 @@ def main(argv=None):
         if real:
             import schema as S_
             views, rcov = build_views(plan, taps, c, reg, S_.common_latency_ps(S_.Plan(plan), c), core_views, kits,
-                                      a.seam_wire_um * a.wire_ff_per_um, a.core_part_delay_ps)
+                                      a.seam_wire_um * a.wire_ff_per_um, a.core_part_delay_ps,
+                                      match_pins=a.core_view_match_pins)
             cr_real = rcov
         pairs.update(nearest_pairs(d, a.plan, a.clock_tool, taps))
         if a.hold_buffers != "none" and hbbits is None:
