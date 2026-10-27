@@ -1,0 +1,55 @@
+{
+ "mode": "class",
+ "block": 4,
+ "regions": 80,
+ "largest_region_parts": 16,
+ "landed_ports": 679,
+ "landed_bits": 325296,
+ "lanes_with_landing": 390,
+ "lanes_total": 869,
+ "added_lane_cycles_face": 2037,
+ "added_lane_cycles_fwd": 1170,
+ "ring_live_ff": 1629875,
+ "by_class_pair": {
+  "core430->std": {
+   "ports": 6,
+   "bits": 1381
+  },
+  "core520->core640": {
+   "ports": 2,
+   "bits": 1024
+  },
+  "core520->std": {
+   "ports": 7,
+   "bits": 2607
+  },
+  "core640->core520": {
+   "ports": 2,
+   "bits": 1028
+  },
+  "core640->core640": {
+   "ports": 106,
+   "bits": 59940
+  },
+  "core640->std": {
+   "ports": 84,
+   "bits": 11194
+  },
+  "std->core430": {
+   "ports": 6,
+   "bits": 1656
+  },
+  "std->core520": {
+   "ports": 8,
+   "bits": 2870
+  },
+  "std->core640": {
+   "ports": 36,
+   "bits": 32654
+  },
+  "std->std": {
+   "ports": 422,
+   "bits": 210942
+  }
+ }
+}
