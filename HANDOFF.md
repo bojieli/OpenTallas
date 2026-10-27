@@ -1339,3 +1339,5 @@ CODEX: 2026-10-27 08:28 PDT HBM rp3 n/s LEC preprocessing root-caused/fixed READ
 CODEX: 2026-10-27 08:29 PDT FLOW AP main8fcd deployed all-kit measuredGEOM AP_AUTO_GEOM_ALL=1 normaltick08:23status0; HEADnativeprofile tool8598634d8b READY9tests, importer fe6831d634 corrected outerwrapperPASS GRT50ovf0/preserved2infra3signal.
 
 CODEX: 2026-10-27 08:31 PDT shared tools READY: genericactualimportfe6831d634 exactgeneratedouterGRT50ovf0/PRESERVED2+3; APproofOOMresume98560e3183(95tests); KValias3b60baae53(26tests). No livejobs.
+
+CODEX: 2026-10-27 08:32 PDT RM39 main5076049768 native station geometry + runtime watches; RM40 main3ecb807519==origin/main QK boot/type profiles/HBM scoped leaf/actual infra import/runner status; 0 deletions, importer conflict 7 PASS, B48 token + HBM LEC still open.
