@@ -1,0 +1,1 @@
+PVpairR0 physicalclock correction: actualRTLdrives boths0/s1domains but oldmetadata marked s1unused. Both are one related833psclock, samepins/geometry/RTL/cycles. Q6owner adds missing s1deliveredtaprelation. No oldSDCSTA/signedclaim. Newplacement+nativeclockcensus mandatory.

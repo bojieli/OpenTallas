@@ -1,0 +1,13 @@
+{
+ "hard_macros": {
+  "ot_sram_1r1w_32x128_m1": {
+   "lef": "results/kv_pv_dualclk_1351/macros/ot_sram_1r1w_32x128_m1.lef",
+   "libs": [
+    "results/kv_pv_dualclk_1351/macros/ot_sram_1r1w_32x128_m1_tt.lib",
+    "results/kv_pv_dualclk_1351/macros/ot_sram_1r1w_32x128_m1_ss.lib",
+    "results/kv_pv_dualclk_1351/macros/ot_sram_1r1w_32x128_m1_ff.lib"
+   ]
+  }
+ },
+ "defines": []
+}
