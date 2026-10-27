@@ -1,0 +1,125 @@
+{
+ "schema": "opentallas.hbm_arch.core_views.v1",
+ "plan": "planR4/die_plan.json",
+ "plan_sha256": "e876baf4156b28464764965fbc8de764153823644774d1df11afb4f83760c24a",
+ "views": 4,
+ "placed": 953,
+ "modules": 159,
+ "by_family": {
+  "HC": 10,
+  "IDXS": 66,
+  "MISC": 20,
+  "SFU": 3,
+  "LINK": 1,
+  "SM": 2,
+  "SMSVC": 18,
+  "PGS": 55,
+  "COLL": 12,
+  "TKM": 1,
+  "IDX": 6,
+  "VM": 20,
+  "SU": 5
+ },
+ "view_list": [
+  {
+   "view": "ot_hbm_svc_sm_xcal_rel_t@c9130e45565b",
+   "module": "ot_hbm_svc_sm_xcal_rel_t",
+   "outline_um": [
+    241.92,
+    224.64
+   ],
+   "pins_file": "cores/ot_hbm_svc_sm_xcal_rel_t__241.92x224.64__q_spb2_u_xc_Q3.json",
+   "pins_sha256": "c9130e45565b6c2c27320428fa496f9907709a640c774ef814c9d9aa5a88c51b",
+   "pins": 507,
+   "family": "SMSVC",
+   "instances": [
+    "q_spb2.u_xc_Q3"
+   ],
+   "placed": 2,
+   "tables_for_module": 4,
+   "canonical_type": null,
+   "recipe_keys": [
+    "ot_hbm_svc_sm_xcal_rel_t__209.952x210.6"
+   ],
+   "blockers": [
+    "MULTI_TABLE: same module, several pin tables (HBM-ARCH request (a))"
+   ],
+   "note": "TRIAL R4 re-pack outline 241.92x224.64: B2o table stretched (N/S x*1.1667, E/W y*1.0833), snapped to the 0.048 M4/M5 lattice; plan owner re-derives"
+  },
+  {
+   "view": "ot_hbm_svc_sm_xcal_rel_t@a1b87411ee6c",
+   "module": "ot_hbm_svc_sm_xcal_rel_t",
+   "outline_um": [
+    241.92,
+    224.64
+   ],
+   "pins_file": "cores/ot_hbm_svc_sm_xcal_rel_t__241.92x224.64__q_spt0_u_xc_Q1.json",
+   "pins_sha256": "a1b87411ee6c71d1bff593a9315ab91762c77b3a99e8777ca06ce31bf1bf9dda",
+   "pins": 507,
+   "family": "SMSVC",
+   "instances": [
+    "q_spt0.u_xc_Q1"
+   ],
+   "placed": 2,
+   "tables_for_module": 4,
+   "canonical_type": null,
+   "recipe_keys": [
+    "ot_hbm_svc_sm_xcal_rel_t__209.952x210.6"
+   ],
+   "blockers": [
+    "MULTI_TABLE: same module, several pin tables (HBM-ARCH request (a))"
+   ],
+   "note": "TRIAL R4 re-pack outline 241.92x224.64: B2o table stretched (N/S x*1.1667, E/W y*1.0833), snapped to the 0.048 M4/M5 lattice; plan owner re-derives"
+  },
+  {
+   "view": "ot_hbm_svc_sm_xcal_rel_t@7da7a9a3ed47",
+   "module": "ot_hbm_svc_sm_xcal_rel_t",
+   "outline_um": [
+    241.92,
+    224.64
+   ],
+   "pins_file": "cores/ot_hbm_svc_sm_xcal_rel_t__241.92x224.64__q_spb2_u_xc_Q2.json",
+   "pins_sha256": "7da7a9a3ed4724709bc3ce18cfe394369bf7ec469fef3cb53752d7b27f6758f1",
+   "pins": 507,
+   "family": "SMSVC",
+   "instances": [
+    "q_spb2.u_xc_Q2"
+   ],
+   "placed": 2,
+   "tables_for_module": 4,
+   "canonical_type": null,
+   "recipe_keys": [
+    "ot_hbm_svc_sm_xcal_rel_t__209.952x210.6"
+   ],
+   "blockers": [
+    "MULTI_TABLE: same module, several pin tables (HBM-ARCH request (a))"
+   ],
+   "note": "TRIAL R4 re-pack outline 241.92x224.64: B2o table stretched (N/S x*1.1667, E/W y*1.0833), snapped to the 0.048 M4/M5 lattice; plan owner re-derives"
+  },
+  {
+   "view": "ot_hbm_svc_sm_xcal_rel_t@d66b700ee2f0",
+   "module": "ot_hbm_svc_sm_xcal_rel_t",
+   "outline_um": [
+    241.92,
+    224.64
+   ],
+   "pins_file": "cores/ot_hbm_svc_sm_xcal_rel_t__241.92x224.64__q_spt0_u_xc_Q0.json",
+   "pins_sha256": "d66b700ee2f0fa7360cff96c1b0334034f68569c0b058f46ad519238230f17aa",
+   "pins": 507,
+   "family": "SMSVC",
+   "instances": [
+    "q_spt0.u_xc_Q0"
+   ],
+   "placed": 2,
+   "tables_for_module": 4,
+   "canonical_type": null,
+   "recipe_keys": [
+    "ot_hbm_svc_sm_xcal_rel_t__209.952x210.6"
+   ],
+   "blockers": [
+    "MULTI_TABLE: same module, several pin tables (HBM-ARCH request (a))"
+   ],
+   "note": "TRIAL R4 re-pack outline 241.92x224.64: B2o table stretched (N/S x*1.1667, E/W y*1.0833), snapped to the 0.048 M4/M5 lattice; plan owner re-derives"
+  }
+ ]
+}
