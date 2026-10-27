@@ -1,0 +1,34 @@
+[
+{
+"name": "F1h5_s70_ndr_inv_d1",
+"splits": "2,2,4,4,4",
+"wire": {
+"1": "ndr2w",
+"2": "ndr2w",
+"3": "ndr2w",
+"4": "ndr2w",
+"5": "ndr2w"
+},
+"masters": {
+"entry": "BUFx24_ASAP7_75t_R",
+"branch": "INVx13_ASAP7_75t_R",
+"rep": "INVx13_ASAP7_75t_R",
+"leaf": "INVx13_ASAP7_75t_R"
+},
+"d1": 1
+},
+{
+"name": "F2h5_s1000_ndr_buf_d1",
+"splits": "2,2,4,4,4",
+"smax": 1000,
+"wire": {
+"1": "ndr2w",
+"2": "ndr2w",
+"3": "ndr2w",
+"4": "ndr2w",
+"5": "ndr2w"
+},
+"masters": {},
+"d1": 1
+}
+]

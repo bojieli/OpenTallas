@@ -1,0 +1,53 @@
+[
+{
+"name": "s110_ndr_buf24",
+"wire": {
+"1": "ndr2w",
+"2": "ndr2w",
+"3": "ndr2w",
+"4": "ndr2w"
+},
+"masters": {
+"rep": "BUFx24_ASAP7_75t_R"
+},
+"smax": 110
+},
+{
+"name": "s110_ndr_inv_rootbuf",
+"wire": {
+"1": "ndr2w",
+"2": "ndr2w",
+"3": "ndr2w",
+"4": "ndr2w"
+},
+"masters": {
+"entry": "BUFx24_ASAP7_75t_R",
+"branch": "INVx13_ASAP7_75t_R",
+"rep": "INVx13_ASAP7_75t_R",
+"leaf": "INVx13_ASAP7_75t_R"
+},
+"smax": 110
+},
+{
+"name": "s110_ndr_allinv",
+"wire": {
+"1": "ndr2w",
+"2": "ndr2w",
+"3": "ndr2w",
+"4": "ndr2w"
+},
+"masters": {
+"entry": "INVx13_ASAP7_75t_R",
+"branch": "INVx13_ASAP7_75t_R",
+"rep": "INVx13_ASAP7_75t_R",
+"leaf": "INVx13_ASAP7_75t_R"
+},
+"smax": 110
+},
+{
+"name": "s110_std_buf",
+"wire": {},
+"masters": {},
+"smax": 110
+}
+]
