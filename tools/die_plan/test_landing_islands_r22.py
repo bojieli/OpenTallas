@@ -43,3 +43,15 @@ def test_check_rejects_bad_islands():
     big = dict(i, cells={"HB4xp67_ASAP7_75t_R": 30}, demand=dict(i["demand"], bits=10, k=3))
     assert any("capacity 15" in e for e in LI.check(_raw([big])))
     assert any("overlaps landing island" in e for e in LI.check(_raw([i, dict(i, name="dup")])))
+
+
+def test_die_islands_outside_outline_fail_and_clip():
+    import kv_r22.clip_islands as CI
+    raw = _raw([])
+    raw["partition_types"]["kv3_phy_v1"]["clock"]["die_islands_um"] = [[-0.54, 21.87, 1.89, 22.68], [171.18, 21.87, 173.61, 22.68]]
+    errs = LI.check_die_islands(raw)
+    assert len(errs) == 1 and "1 clock.die_islands_um rects outside the outline" in errs[0]
+    assert CI.clip([-0.54, 21.87, 1.89, 22.68], 864.0, 1520.64) == [0.0, 21.87, 1.89, 22.68]
+    assert CI.clip([862.5, 21.87, 864.6, 22.68], 864.0, 1520.64) == [862.5, 21.87, 864.0, 22.68]
+    raw["partition_types"]["kv3_phy_v1"]["clock"]["die_islands_um"][0] = [0.0, 21.87, 1.89, 22.68]
+    assert LI.check_die_islands(raw) == []
