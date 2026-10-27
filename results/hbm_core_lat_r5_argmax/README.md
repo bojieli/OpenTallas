@@ -35,3 +35,17 @@ are never hypothesised and the write/ack/engine-capture cones (cq_d, res_val, re
 fault, engine out_*) stay unproven. Root cause = the synthesis one-hot recode, not a design difference (P1: only 8 codes reachable).
 ## Fix 2 (RTL): `(* fsm_encoding = "none" *) reg [3:0] st;` -- Yosys keeps the RTL binary code (gate st[0..2] $_DFFE_PN0P_, st[3] const 0,
 CHECKED in 1_2_yosys.v). P1/P2/P3 re-proved on the final RTL (SUCCESS). Lockstep sim unaffected (attribute only).
+
+## R5b LEC (both RTL fixes, in-kit run 03:2x): UNPROVEN 13225/13276, 0 differ, 51 unproven (lec_r5b/lec.json, 1657.5 s) CHECKED
+All 13 R4 `differs` (cq_d / res_id) and every FSM cone are now proved. The 51 left are ONLY the closed engine's outputs
+u_e.g_value_leaf.u_native.{out_idx[17:0], out_value[31:0], out_range_fault} (ot_hgi_argmax18_value_m, unchanged closed RTL); each cone's
+only unmatched key pair is the LAST tree level of the 2-D unpacked arrays `ti/tbits [0:LL][0:LP-1]`: gate `ti#t[24][b]` /
+`tbits#t[24][b]` (yosys: outer*LP+inner = level 3, element 0) vs gold `ti[3][126+b]` / `tbits[3][224+b]` (slang: element 0 at the MSB
+word, (LP-1-e)*W). lec.py's slang element re-keying paired 468 gate flops of levels 0-2 but not level 3 (single live element).
+## R5c LEC with 50 untrusted level-3 hints (kit lec_hints.json; lec_h/lec.json, 1762.9 s): UNPROVEN 51, hints applied 50, all
+dropped by the induction (86 dropped incl. dependants) -> my level-3 correspondence is not inductive as given; root cause in the LEC
+pairing of this array is UNCHECKED (the next-state of level 3 depends on level-2 tk/tvl/tnan pairs whose re-keying I did not verify).
+## Verdict: argmax LEC is NOT yet EQUIVALENT -> NO CTS launched (COORD ruling (2)). Placement R5 (3_place.odb, same outline/pins,
+argmax_r5_placed.png viewed: same shape as R4 GEOM-17 PASS-COND) is ready in intel2:/srv/opentallas-scratch2/claude/hbm-core-lat-r5/argmax/kit.
+Next (LEC owner): pair the last element of a 2-D slang-flattened array (lec.py slang_element_keys / slang_flat_word_keys), or the RTL owner
+makes the engine tree arrays 1-D per level; then rerun LEC and launch GOAL=finish (trunk ot_trunk_r4.tcl 6x BUFx8 as planned).
