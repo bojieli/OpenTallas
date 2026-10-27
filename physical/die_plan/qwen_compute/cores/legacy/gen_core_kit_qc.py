@@ -126,8 +126,9 @@ for cls, lst in r["fails"].items():
         bit = f.split(":")[0]
         if cls != "shared" or bit not in port_roots.values():
             other.append(f); continue
-        cur, ff = F.find(bit), None
-        for _ in range(G.MAX_CHAIN + 2):
+        cur, ff, walked = F.find(bit), None, set()
+        while cur not in walked:          # unbounded buffer-chain walk with cycle stop (face_guard 49e28f506 form)
+            walked.add(cur)
             if len(drv[cur]) != 1: break
             ci, pn = drv[cur][0]
             m, path, pp = F.cells[ci]
