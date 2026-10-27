@@ -125,3 +125,13 @@ if __name__ == "__main__":
             n += 1
             print("PASS", k)
     print(f"{n} tests PASS")
+
+
+def test_meshvia_gate_ignores_generator_log_but_keeps_missing_corner_failure(tmp_path):
+    import die_clock_mesh as D
+    (tmp_path / "combo_TT.log").write_text("OT_MESH_VIAS ck_mesh 6\n")
+    (tmp_path / "combo_gen.log").write_text("combo written; no routed DB\n")
+    (tmp_path / "combo_report.log").write_text("diagnostic generator output\n")
+    assert D.routed_mesh_vias(tmp_path)[0] == {"ck_mesh": 6}
+    (tmp_path / "combo_FF.log").write_text("failed before via report\n")
+    assert D.routed_mesh_vias(tmp_path)[0] == {"ck_mesh": 0}

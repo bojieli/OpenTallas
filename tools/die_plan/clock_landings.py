@@ -13,6 +13,25 @@ from collections import defaultdict
 from pathlib import Path
 
 
+_RING_PLAN = {}
+
+
+def ring_taps(plan, tn):
+    """[(x, y)] of the taps whose wavefront relays drive rst_n_t<i> in type tn (type frame): the index space a ring
+    reset node rst_n_t<i> refers to.  A plan clock.taps list of kind 'core' entries (S81 12.8a plan-defined core
+    clock entries) is NOT that index space: the reset tree numbers its relays over schema.tap_grid
+    (reset_tree._taps), so such types use the reset tree's own taps.  Every other type keeps clock.taps."""
+    taps = plan["partition_types"][tn].get("clock", {}).get("taps", [])
+    if not any(x.get("kind") == "core" for x in taps):
+        return [tuple(x["xy"]) for x in taps]
+    import schema
+    import reset_tree as RT
+    e = _RING_PLAN.get(id(plan))
+    if e is None or e[0] is not plan:
+        e = _RING_PLAN[id(plan)] = (plan, schema.Plan(plan))
+    return [(x, y) for _, x, y in RT._taps(e[1], tn)]
+
+
 def network_lane_cycles(plan):
     """Exact nominal data cycles from source-bound physical forwarded edges.
 
@@ -332,12 +351,12 @@ class Landings:
             tw, th = t["outline_um"]
             x, y = (0 if face == "W" else tw, at) if face in "EW" else (at, 0 if face == "S" else th)
             hard_tree = collector_info and (collector_info.get("tree") or {}).get("hard")
-            taps = t.get("clock", {}).get("taps", [])
+            taps = ring_taps(self.plan, key)
             if hard_tree:
                 tap, xy = None, [x, y]
             elif taps:
-                tap = min(range(len(taps)), key=lambda i: abs(taps[i]["xy"][0]-x) + abs(taps[i]["xy"][1]-y))
-                xy = taps[tap]["xy"]
+                tap = min(range(len(taps)), key=lambda i: abs(taps[i][0]-x) + abs(taps[i][1]-y))
+                xy = list(taps[tap])
             else:
                 tap, xy = 0, t.get("clock", {}).get("tap_um", [tw/2, th/2])
             if hard_tree:
