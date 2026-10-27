@@ -1,0 +1,11 @@
+# Native quarter residual with soft replay SRAM
+
+The exact `ot_hnx_idxn_quarter_with_keybuf` wrapper at `ef994fe770` keeps NP4/RS0 replay storage inside the quarter residual. Mapped RVT TT synthesis blackboxed only the existing HCOL and tail masters. It retained 64 HCOL, two tails, and 17 real `ot_sram_1r1w_256x256_m2_r2c2` macros, with no unresolved or ambiguous modules.
+
+The residual contains 227,684 standard cells and 94,263 FFs, below the 400k cap. Standard-cell area is 34,909.31682 um2. The 17 SRAMs occupy 120,646.360512 um2 of LEF area; combined soft standard-cell and SRAM area is 155,555.677332 um2 before placement channels, PG and clock. Hard-child areas are excluded. Current scorer residual is 213,464 standard cells, keybuf contributes 14,219, and the wrapper contributes one OR. The historical split census's 213,320-cell glue figure is retained separately.
+
+`source_binding_profile.json` records exact source hashes, external ports (5,208 input /307 output bits), every hard-child/SRAM instance and connection-vector digest, and cell types. The mapped graph confirms that all hard children and SRAMs use the single top clock, the two HCOL halves share identical key vectors, and every HCOL has its correct HALF and MUT=0 parameters. This is a source-bound census and binding profile, not routed/sign-off evidence.
+
+`key_reach_stages.json` records the existing native register banks. Key ages at HCOL input ports are 3/5/7/9 edges and at internal `key_p` captures are 4/6/8/10. The extra chunk-to-chunk age comes from existing `g_key` E registers and the next chunk's `f_key` W registers. There is no direct SRAM broadcast to all 64 HCOL. Place these actual register banks in legal bays; any extra reach relay adds a model-priced cycle.
+
+Generation used `tools/hbm_die_v15/synth_master.sh`, `HIER=1`, `TP=192`, and blackboxes `ot_hidx_score_hcol,ot_hbm_idx_tail_native`. The source list is saved in `source_files.json`; `export_manifest.py --source-root REPO --run RUN` reproduces the compact report from the mapped JSON and stat. Raw mapped netlist/JSON remain in the fleet run directory. No new RTL, arithmetic, face-shell cycle, physical route, STA, or whole-die simulation was introduced.

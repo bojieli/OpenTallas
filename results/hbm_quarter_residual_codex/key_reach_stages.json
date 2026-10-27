@@ -1,0 +1,77 @@
+{
+  "source_commit": "ef994fe77039661a5530f7838fcda3e9a857639e",
+  "age_origin": "keybuf.key_out value before scorer.kl_r capture edge",
+  "added_cycles": 0,
+  "quarter_capture": "scorer.kl_r <= key_lines (quarter_static_h.sv)",
+  "stages": [
+    {
+      "chunk": 0,
+      "quarter_kl_r_age": 1,
+      "leaf_f_key_age": 2,
+      "leaf_g_key_age": 3,
+      "core_rkey_age": 3,
+      "hcol_input_port_age": 3,
+      "hcol_key_p_age": 4,
+      "source_registers": [
+        "scorer.ge[e].gc[0].leaf.f_key",
+        "scorer.ge[e].gc[0].leaf.g_key",
+        "scorer.ge[e].gc[0].leaf.core.rkey",
+        "scorer.ge[e].gc[0].leaf.core.g_col[k].g_half[h].u_hc.g_rgn[r].key_p"
+      ]
+    },
+    {
+      "chunk": 1,
+      "quarter_kl_r_age": 1,
+      "leaf_f_key_age": 4,
+      "leaf_g_key_age": 5,
+      "core_rkey_age": 5,
+      "hcol_input_port_age": 5,
+      "hcol_key_p_age": 6,
+      "source_registers": [
+        "scorer.ge[e].gc[1].leaf.f_key",
+        "scorer.ge[e].gc[1].leaf.g_key",
+        "scorer.ge[e].gc[1].leaf.core.rkey",
+        "scorer.ge[e].gc[1].leaf.core.g_col[k].g_half[h].u_hc.g_rgn[r].key_p"
+      ]
+    },
+    {
+      "chunk": 2,
+      "quarter_kl_r_age": 1,
+      "leaf_f_key_age": 6,
+      "leaf_g_key_age": 7,
+      "core_rkey_age": 7,
+      "hcol_input_port_age": 7,
+      "hcol_key_p_age": 8,
+      "source_registers": [
+        "scorer.ge[e].gc[2].leaf.f_key",
+        "scorer.ge[e].gc[2].leaf.g_key",
+        "scorer.ge[e].gc[2].leaf.core.rkey",
+        "scorer.ge[e].gc[2].leaf.core.g_col[k].g_half[h].u_hc.g_rgn[r].key_p"
+      ]
+    },
+    {
+      "chunk": 3,
+      "quarter_kl_r_age": 1,
+      "leaf_f_key_age": 8,
+      "leaf_g_key_age": 9,
+      "core_rkey_age": 9,
+      "hcol_input_port_age": 9,
+      "hcol_key_p_age": 10,
+      "source_registers": [
+        "scorer.ge[e].gc[3].leaf.f_key",
+        "scorer.ge[e].gc[3].leaf.g_key",
+        "scorer.ge[e].gc[3].leaf.core.rkey",
+        "scorer.ge[e].gc[3].leaf.core.g_col[k].g_half[h].u_hc.g_rgn[r].key_p"
+      ]
+    }
+  ],
+  "pc_mapping": "PC p supplies lane0/1: e=p//2, k=2*(p%2)+lane; both h=0,1 share the exact same 544-bit key slice in each c=0..3",
+  "key_bit_mapping": "quarter key_lines[(p*1099)+11+lane*544 +:544] -> scorer.kl_r same bits -> ge[e].keys[k*544+:544] -> c-stage leaf.f_key -> core.rkey -> HCOL.key -> key_p",
+  "successive_chunk_hop": "g_key of chunk c (E register) -> f_key of c+1 (W register); two edges per chunk, followed by parallel rkey and g_key capture; no direct SRAM broadcast to all64 HCOL",
+  "layout_requirement": "Place these EXISTING soft capture/forwarding register banks at legal bays so every physical hop meets405um. Any extra relay is a new model-priced cycle, not implicit.",
+  "source_files": [
+    "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv",
+    "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv",
+    "rtl/hbm_next/idxn/ot_hnx_idxn_quarter_with_keybuf.sv"
+  ]
+}
