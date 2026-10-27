@@ -1,0 +1,4 @@
+read_rtlil /srv/opentallas-scratch2/claude/codex-qc-r29-coresu-1351/const_proof/w_mut_induct/cone.il
+select -module proof_w_mut
+sat -seq 16 -prove-skip 15 -prove y 0 -set-init-undef -verify
+sat -seq 16 -tempinduct-inductonly -maxsteps 32 -prove y 0 -set-init-undef -verify

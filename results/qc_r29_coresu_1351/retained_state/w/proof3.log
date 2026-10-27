@@ -1,0 +1,659 @@
+
+-- Executing script file `/srv/opentallas-scratch2/claude/codex-qc-r29-coresu-1351/const_proof/w_induct/proof3.ys' --
+
+1. Executing RTLIL frontend.
+Input filename: /srv/opentallas-scratch2/claude/codex-qc-r29-coresu-1351/const_proof/w_induct/cone.il
+
+2. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Imported 116 cells to SAT database.
+Final init constraint equation: { \dut.u_u_head0.u_h.n_wrom_addr [22] \y [5] \dut.u_u_lrly0.u_od.genblk1.g_line.line [75] \dut.u_u_head0.kv_wdata [18] \dut.u_u_lrly0.odr [214] \dut.u_u_lrly0.u_od.genblk1.g_line.line [71] \dut.u_u_lrly0.odr [39] \dut.u_u_lrly0.odr [45] \dut.u_u_lrly0.u_od.genblk1.g_line.line [67] \dut.u_u_head0.kv_wdata [16] \y [0] \dut.u_u_lrly0.u_od.genblk1.g_line.line [78] \dut.u_u_head0.kv_wdata [17] \y [16] \y [10] \y [8] \y [15:14] \dut.u_u_head0.kv_wdata [13] \dut.u_u_lrly0.odr [44] \dut.u_u_lrly0.u_od.genblk1.g_line.line [63] \dut.u_u_lrly0.odr [34] \dut.u_u_head0.u_h.n_kv_wdata [1] \dut.u_u_head0.u_h.n_kv_wdata [18] \dut.u_u_lrly0.odr [40] \dut.u_u_lrly0.odr [215] \dut.u_u_head0.u_h.n_kv_wdata [2] \dut.u_u_lrly0.u_od.genblk1.g_line.line [68] \dut.u_u_head0.u_h.n_kv_wdata [17] \dut.u_u_head0.u_h.n_wrom_addr [21] \dut.u_u_lrly0.odr [42] \dut.u_u_head0.u_h.n_kv_wdata [8] \y [3] \dut.u_u_lrly0.u_od.genblk1.g_line.line [77] \dut.u_u_head0.u_h.wrom_addr [20] \dut.u_u_lrly0.odr [50] \dut.u_u_lrly0.u_od.genblk1.g_line.line [69] \dut.u_u_head0.kv_wdata [8] \dut.u_u_head0.u_h.n_kv_wdata [12] \dut.u_u_lrly0.u_od.genblk1.g_line.line [76] \y [9] \y [11] \dut.u_u_lrly0.u_od.genblk1.g_line.line [61] \dut.u_u_lrly0.odr [37] \dut.u_u_lrly0.odr [49] \dut.u_u_head0.u_h.n_kv_wdata [0] \dut.u_u_head0.kv_wdata [9] \dut.u_u_lrly0.odr [53] \y [22] \dut.u_u_lrly0.odr [41] \dut.u_u_head0.kv_wdata [6] \dut.u_u_lrly0.odr [46] \dut.u_u_lrly0.odr [43] \dut.u_u_lrly0.u_od.genblk1.g_line.line [66] \dut.u_u_head0.kv_wdata [15] \y [20] \dut.u_u_head0.kv_wdata [1] \y [4] \dut.u_u_head0.kv_wdata [7] \dut.u_u_head0.u_h.n_kv_wdata [16] \dut.u_u_head0.u_h.wrom_addr [22] \dut.u_u_lrly0.u_od.genblk1.g_line.line [72] \dut.u_u_head0.u_h.n_kv_wdata [5] \dut.u_u_head0.u_h.n_kv_wdata [19] \dut.u_u_head0.u_h.n_kv_wdata [10:9] \dut.u_u_head0.kv_wdata [12] \dut.u_u_head0.u_h.n_wrom_addr [20] \dut.u_u_head0.u_h.wrom_addr [21] \dut.u_u_lrly0.u_od.genblk1.g_line.line [73] \dut.u_u_head0.u_h.wrom_addr [23] \dut.u_u_head0.kv_wdata [14] \dut.u_u_lrly0.odr [38] \dut.u_u_lrly0.u_od.genblk1.g_line.line [70] \dut.u_u_lrly0.u_od.genblk1.g_line.line [74] \dut.u_u_head0.u_h.n_kv_wdata [15] \y [21] \y [19] \y [2] \dut.u_u_head0.u_h.n_kv_wdata [14] \dut.u_u_lrly0.odr [35] \y [13] \dut.u_u_lrly0.u_od.genblk1.g_line.line [64] \dut.u_u_head0.kv_wdata [5] \dut.u_u_head0.kv_wdata [11] \dut.u_u_head0.u_h.n_kv_wdata [4] \dut.u_u_lrly0.odr [216] \dut.u_u_head0.kv_wdata [0] \dut.u_u_lrly0.u_od.genblk1.g_line.line [59] \y [6] \y [12] \dut.u_u_head0.kv_wdata [2] \dut.u_u_head0.u_h.n_kv_wdata [11] \dut.u_u_lrly0.u_od.genblk1.g_line.line [60] \y [17] \dut.u_u_lrly0.odr [48] \dut.u_u_head0.kv_wdata [10] \dut.u_u_lrly0.odr [52] \dut.u_u_head0.u_h.n_kv_wdata [13] \dut.u_u_lrly0.u_od.genblk1.g_line.line [62] \dut.u_u_lrly0.u_od.genblk1.g_line.line [65] \dut.u_u_lrly0.odr [51] \dut.u_u_head0.u_h.n_wrom_addr [23] \dut.u_u_head0.kv_wdata [19] \dut.u_u_lrly0.odr [47] \dut.u_u_head0.u_h.n_kv_wdata [3] \dut.u_u_head0.u_h.n_kv_wdata [7] \dut.u_u_head0.kv_wdata [3] \y [1] \dut.u_u_head0.u_h.n_kv_wdata [6] \y [7] \dut.u_u_lrly0.odr [36] \dut.u_u_head0.kv_wdata [4] \dut.u_u_lrly0.odr [217] \y [23] \y [18] } = 116'x
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Imported 116 cells to SAT database.
+
+Setting up time step 3:
+Final constraint equation: { } = { }
+Imported 116 cells to SAT database.
+
+Setting up time step 4:
+Final constraint equation: { } = { }
+Imported 116 cells to SAT database.
+
+Setting up time step 5:
+Final constraint equation: { } = { }
+Imported 116 cells to SAT database.
+
+Setting up time step 6:
+Final constraint equation: { } = { }
+Imported 116 cells to SAT database.
+
+Setting up time step 7:
+Final constraint equation: { } = { }
+Imported 116 cells to SAT database.
+
+Setting up time step 8:
+Final constraint equation: { } = { }
+Imported 116 cells to SAT database.
+
+Setting up time step 9:
+Final constraint equation: { } = { }
+Imported 116 cells to SAT database.
+
+Setting up time step 10:
+Final constraint equation: { } = { }
+Imported 116 cells to SAT database.
+
+Setting up time step 11:
+Final constraint equation: { } = { }
+Imported 116 cells to SAT database.
+
+Setting up time step 12:
+Final constraint equation: { } = { }
+Imported 116 cells to SAT database.
+
+Setting up time step 13:
+Final constraint equation: { } = { }
+Imported 116 cells to SAT database.
+
+Setting up time step 14:
+Final constraint equation: { } = { }
+Imported 116 cells to SAT database.
+
+Setting up time step 15:
+Final constraint equation: { } = { }
+Imported 116 cells to SAT database.
+
+Setting up time step 16:
+Final constraint equation: { } = { }
+Imported 116 cells to SAT database.
+Import proof-constraint: \y = 24'000000000000000000000000
+Final proof equation: \y = 24'000000000000000000000000
+
+Solving problem with 21235 variables and 52720 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+3. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Imported 116 cells to SAT database.
+Import proof-constraint: \y = 24'000000000000000000000000
+Final proof equation: \y = 24'000000000000000000000000
+
+** Trying induction with length 1 **
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Imported 116 cells to SAT database.
+Import proof-constraint: \y = 24'000000000000000000000000
+Final proof equation: \y = 24'000000000000000000000000
+
+[induction step 1] Solving problem with 1722 variables and 3796 clauses..
+Induction step failed. Incrementing induction length.
+
+  Time Signal Name                                               Dec       Hex                         Bin
+  ---- ------------------------------------------------- ----------- --------- ---------------------------
+  init \dut.u_u_head0.kv_wdata [0]                                 0         0                           0
+  init \dut.u_u_head0.kv_wdata [10]                                0         0                           0
+  init \dut.u_u_head0.kv_wdata [11]                                0         0                           0
+  init \dut.u_u_head0.kv_wdata [12]                                0         0                           0
+  init \dut.u_u_head0.kv_wdata [13]                                0         0                           0
+  init \dut.u_u_head0.kv_wdata [14]                                0         0                           0
+  init \dut.u_u_head0.kv_wdata [15]                                0         0                           0
+  init \dut.u_u_head0.kv_wdata [16]                                0         0                           0
+  init \dut.u_u_head0.kv_wdata [17]                                0         0                           0
+  init \dut.u_u_head0.kv_wdata [18]                                0         0                           0
+  init \dut.u_u_head0.kv_wdata [19]                                0         0                           0
+  init \dut.u_u_head0.kv_wdata [1]                                 0         0                           0
+  init \dut.u_u_head0.kv_wdata [2]                                 0         0                           0
+  init \dut.u_u_head0.kv_wdata [3]                                 0         0                           0
+  init \dut.u_u_head0.kv_wdata [4]                                 0         0                           0
+  init \dut.u_u_head0.kv_wdata [5]                                 0         0                           0
+  init \dut.u_u_head0.kv_wdata [6]                                 0         0                           0
+  init \dut.u_u_head0.kv_wdata [7]                                 0         0                           0
+  init \dut.u_u_head0.kv_wdata [8]                                 0         0                           0
+  init \dut.u_u_head0.kv_wdata [9]                                 0         0                           0
+  init \dut.u_u_head0.u_h.n_kv_wdata [0]                           0         0                           0
+  init \dut.u_u_head0.u_h.n_kv_wdata [10:9]                        0         0                          00
+  init \dut.u_u_head0.u_h.n_kv_wdata [11]                          0         0                           0
+  init \dut.u_u_head0.u_h.n_kv_wdata [12]                          0         0                           0
+  init \dut.u_u_head0.u_h.n_kv_wdata [13]                          0         0                           0
+  init \dut.u_u_head0.u_h.n_kv_wdata [14]                          0         0                           0
+  init \dut.u_u_head0.u_h.n_kv_wdata [15]                          0         0                           0
+  init \dut.u_u_head0.u_h.n_kv_wdata [16]                          0         0                           0
+  init \dut.u_u_head0.u_h.n_kv_wdata [17]                          0         0                           0
+  init \dut.u_u_head0.u_h.n_kv_wdata [18]                          0         0                           0
+  init \dut.u_u_head0.u_h.n_kv_wdata [19]                          0         0                           0
+  init \dut.u_u_head0.u_h.n_kv_wdata [1]                           0         0                           0
+  init \dut.u_u_head0.u_h.n_kv_wdata [2]                           0         0                           0
+  init \dut.u_u_head0.u_h.n_kv_wdata [3]                           0         0                           0
+  init \dut.u_u_head0.u_h.n_kv_wdata [4]                           0         0                           0
+  init \dut.u_u_head0.u_h.n_kv_wdata [5]                           0         0                           0
+  init \dut.u_u_head0.u_h.n_kv_wdata [6]                           0         0                           0
+  init \dut.u_u_head0.u_h.n_kv_wdata [7]                           0         0                           0
+  init \dut.u_u_head0.u_h.n_kv_wdata [8]                           0         0                           0
+  init \dut.u_u_head0.u_h.n_wrom_addr [20]                         0         0                           0
+  init \dut.u_u_head0.u_h.n_wrom_addr [21]                         0         0                           0
+  init \dut.u_u_head0.u_h.n_wrom_addr [22]                         0         0                           0
+  init \dut.u_u_head0.u_h.n_wrom_addr [23]                         0         0                           0
+  init \dut.u_u_head0.u_h.wrom_addr [20]                           0         0                           0
+  init \dut.u_u_head0.u_h.wrom_addr [21]                           0         0                           0
+  init \dut.u_u_head0.u_h.wrom_addr [22]                           0         0                           0
+  init \dut.u_u_head0.u_h.wrom_addr [23]                           0         0                           0
+  init \dut.u_u_lrly0.odr [214]                                    1         1                           1
+  init \dut.u_u_lrly0.odr [215]                                    1         1                           1
+  init \dut.u_u_lrly0.odr [216]                                    1         1                           1
+  init \dut.u_u_lrly0.odr [217]                                    1         1                           1
+  init \dut.u_u_lrly0.odr [34]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [35]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [36]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [37]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [38]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [39]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [40]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [41]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [42]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [43]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [44]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [45]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [46]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [47]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [48]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [49]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [50]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [51]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [52]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [53]                                     0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [59]                1         1                           1
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [60]                1         1                           1
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [61]                1         1                           1
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [62]                1         1                           1
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [63]                1         1                           1
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [64]                1         1                           1
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [65]                1         1                           1
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [66]                1         1                           1
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [67]                1         1                           1
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [68]                1         1                           1
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [69]                1         1                           1
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [70]                1         1                           1
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [71]                1         1                           1
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [72]                1         1                           1
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [73]                1         1                           1
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [74]                1         1                           1
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [75]                1         1                           1
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [76]                1         1                           1
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [77]               --        --                           x
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [78]                1         1                           1
+  init \y [0]                                                      0         0                           0
+  init \y [10]                                                     0         0                           0
+  init \y [11]                                                     0         0                           0
+  init \y [12]                                                     0         0                           0
+  init \y [13]                                                     0         0                           0
+  init \y [15:14]                                                  0         0                          00
+  init \y [16]                                                     0         0                           0
+  init \y [17]                                                     0         0                           0
+  init \y [18]                                                     0         0                           0
+  init \y [19]                                                     0         0                           0
+  init \y [1]                                                      0         0                           0
+  init \y [20]                                                     0         0                           0
+  init \y [21]                                                     0         0                           0
+  init \y [22]                                                     0         0                           0
+  init \y [23]                                                     0         0                           0
+  init \y [2]                                                      0         0                           0
+  init \y [3]                                                      0         0                           0
+  init \y [4]                                                      0         0                           0
+  init \y [5]                                                      0         0                           0
+  init \y [6]                                                      0         0                           0
+  init \y [7]                                                      0         0                           0
+  init \y [8]                                                      0         0                           0
+  init \y [9]                                                      0         0                           0
+  ---- ------------------------------------------------- ----------- --------- ---------------------------
+     1 \y                                                          0         0    000000000000000000000000
+  ---- ------------------------------------------------- ----------- --------- ---------------------------
+     2 \y                                                         --        --    11111x111111111111111111
+
+** Trying induction with length 2 **
+
+Setting up time step 3:
+Final constraint equation: { } = { }
+Imported 116 cells to SAT database.
+Import proof-constraint: \y = 24'000000000000000000000000
+Final proof equation: \y = 24'000000000000000000000000
+
+[induction step 2] Solving problem with 5161 variables and 13671 clauses..
+Induction step failed. Incrementing induction length.
+
+  Time Signal Name                                               Dec       Hex                         Bin
+  ---- ------------------------------------------------- ----------- --------- ---------------------------
+  init \dut.u_u_head0.kv_wdata [0]                                 0         0                           0
+  init \dut.u_u_head0.kv_wdata [10]                                1         1                           1
+  init \dut.u_u_head0.kv_wdata [11]                                0         0                           0
+  init \dut.u_u_head0.kv_wdata [12]                                1         1                           1
+  init \dut.u_u_head0.kv_wdata [13]                                0         0                           0
+  init \dut.u_u_head0.kv_wdata [14]                               --        --                           x
+  init \dut.u_u_head0.kv_wdata [15]                               --        --                           x
+  init \dut.u_u_head0.kv_wdata [16]                                1         1                           1
+  init \dut.u_u_head0.kv_wdata [17]                               --        --                           x
+  init \dut.u_u_head0.kv_wdata [18]                                0         0                           0
+  init \dut.u_u_head0.kv_wdata [19]                                1         1                           1
+  init \dut.u_u_head0.kv_wdata [1]                                --        --                           x
+  init \dut.u_u_head0.kv_wdata [2]                                 0         0                           0
+  init \dut.u_u_head0.kv_wdata [3]                                --        --                           x
+  init \dut.u_u_head0.kv_wdata [4]                                 0         0                           0
+  init \dut.u_u_head0.kv_wdata [5]                                --        --                           x
+  init \dut.u_u_head0.kv_wdata [6]                                --        --                           x
+  init \dut.u_u_head0.kv_wdata [7]                                 0         0                           0
+  init \dut.u_u_head0.kv_wdata [8]                                 1         1                           1
+  init \dut.u_u_head0.kv_wdata [9]                                 0         0                           0
+  init \dut.u_u_head0.u_h.n_kv_wdata [0]                           1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [10:9]                        1         1                          01
+  init \dut.u_u_head0.u_h.n_kv_wdata [11]                          1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [12]                          0         0                           0
+  init \dut.u_u_head0.u_h.n_kv_wdata [13]                          1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [14]                          1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [15]                          1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [16]                          1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [17]                          0         0                           0
+  init \dut.u_u_head0.u_h.n_kv_wdata [18]                          1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [19]                          0         0                           0
+  init \dut.u_u_head0.u_h.n_kv_wdata [1]                           0         0                           0
+  init \dut.u_u_head0.u_h.n_kv_wdata [2]                           1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [3]                           0         0                           0
+  init \dut.u_u_head0.u_h.n_kv_wdata [4]                           1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [5]                           0         0                           0
+  init \dut.u_u_head0.u_h.n_kv_wdata [6]                           0         0                           0
+  init \dut.u_u_head0.u_h.n_kv_wdata [7]                           1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [8]                           1         1                           1
+  init \dut.u_u_head0.u_h.n_wrom_addr [20]                        --        --                           x
+  init \dut.u_u_head0.u_h.n_wrom_addr [21]                         1         1                           1
+  init \dut.u_u_head0.u_h.n_wrom_addr [22]                        --        --                           x
+  init \dut.u_u_head0.u_h.n_wrom_addr [23]                        --        --                           x
+  init \dut.u_u_head0.u_h.wrom_addr [20]                           1         1                           1
+  init \dut.u_u_head0.u_h.wrom_addr [21]                           1         1                           1
+  init \dut.u_u_head0.u_h.wrom_addr [22]                           1         1                           1
+  init \dut.u_u_head0.u_h.wrom_addr [23]                           1         1                           1
+  init \dut.u_u_lrly0.odr [214]                                    0         0                           0
+  init \dut.u_u_lrly0.odr [215]                                    0         0                           0
+  init \dut.u_u_lrly0.odr [216]                                    0         0                           0
+  init \dut.u_u_lrly0.odr [217]                                    0         0                           0
+  init \dut.u_u_lrly0.odr [34]                                    --        --                           x
+  init \dut.u_u_lrly0.odr [35]                                     1         1                           1
+  init \dut.u_u_lrly0.odr [36]                                    --        --                           x
+  init \dut.u_u_lrly0.odr [37]                                     1         1                           1
+  init \dut.u_u_lrly0.odr [38]                                     1         1                           1
+  init \dut.u_u_lrly0.odr [39]                                     1         1                           1
+  init \dut.u_u_lrly0.odr [40]                                     1         1                           1
+  init \dut.u_u_lrly0.odr [41]                                    --        --                           x
+  init \dut.u_u_lrly0.odr [42]                                     1         1                           1
+  init \dut.u_u_lrly0.odr [43]                                     1         1                           1
+  init \dut.u_u_lrly0.odr [44]                                     1         1                           1
+  init \dut.u_u_lrly0.odr [45]                                     1         1                           1
+  init \dut.u_u_lrly0.odr [46]                                     1         1                           1
+  init \dut.u_u_lrly0.odr [47]                                    --        --                           x
+  init \dut.u_u_lrly0.odr [48]                                     1         1                           1
+  init \dut.u_u_lrly0.odr [49]                                     1         1                           1
+  init \dut.u_u_lrly0.odr [50]                                    --        --                           x
+  init \dut.u_u_lrly0.odr [51]                                     1         1                           1
+  init \dut.u_u_lrly0.odr [52]                                     1         1                           1
+  init \dut.u_u_lrly0.odr [53]                                     1         1                           1
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [59]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [60]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [61]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [62]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [63]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [64]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [65]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [66]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [67]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [68]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [69]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [70]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [71]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [72]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [73]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [74]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [75]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [76]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [77]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [78]                0         0                           0
+  init \y [0]                                                      0         0                           0
+  init \y [10]                                                     0         0                           0
+  init \y [11]                                                     0         0                           0
+  init \y [12]                                                     0         0                           0
+  init \y [13]                                                     0         0                           0
+  init \y [15:14]                                                  0         0                          00
+  init \y [16]                                                     0         0                           0
+  init \y [17]                                                     0         0                           0
+  init \y [18]                                                     0         0                           0
+  init \y [19]                                                     0         0                           0
+  init \y [1]                                                      0         0                           0
+  init \y [20]                                                     0         0                           0
+  init \y [21]                                                     0         0                           0
+  init \y [22]                                                     0         0                           0
+  init \y [23]                                                     0         0                           0
+  init \y [2]                                                      0         0                           0
+  init \y [3]                                                      0         0                           0
+  init \y [4]                                                      0         0                           0
+  init \y [5]                                                      0         0                           0
+  init \y [6]                                                      0         0                           0
+  init \y [7]                                                      0         0                           0
+  init \y [8]                                                      0         0                           0
+  init \y [9]                                                      0         0                           0
+  ---- ------------------------------------------------- ----------- --------- ---------------------------
+     1 \y                                                          0         0    000000000000000000000000
+  ---- ------------------------------------------------- ----------- --------- ---------------------------
+     2 \y                                                          0         0    000000000000000000000000
+  ---- ------------------------------------------------- ----------- --------- ---------------------------
+     3 \y                                                         --        --    1111111x11x11111x1111x1x
+
+** Trying induction with length 3 **
+
+Setting up time step 4:
+Final constraint equation: { } = { }
+Imported 116 cells to SAT database.
+Import proof-constraint: \y = 24'000000000000000000000000
+Final proof equation: \y = 24'000000000000000000000000
+
+[induction step 3] Solving problem with 9317 variables and 25812 clauses..
+Induction step failed. Incrementing induction length.
+
+  Time Signal Name                                               Dec       Hex                         Bin
+  ---- ------------------------------------------------- ----------- --------- ---------------------------
+  init \dut.u_u_head0.kv_wdata [0]                                --        --                           x
+  init \dut.u_u_head0.kv_wdata [10]                                1         1                           1
+  init \dut.u_u_head0.kv_wdata [11]                                1         1                           1
+  init \dut.u_u_head0.kv_wdata [12]                                1         1                           1
+  init \dut.u_u_head0.kv_wdata [13]                               --        --                           x
+  init \dut.u_u_head0.kv_wdata [14]                               --        --                           x
+  init \dut.u_u_head0.kv_wdata [15]                               --        --                           x
+  init \dut.u_u_head0.kv_wdata [16]                                1         1                           1
+  init \dut.u_u_head0.kv_wdata [17]                                1         1                           1
+  init \dut.u_u_head0.kv_wdata [18]                               --        --                           x
+  init \dut.u_u_head0.kv_wdata [19]                               --        --                           x
+  init \dut.u_u_head0.kv_wdata [1]                                 1         1                           1
+  init \dut.u_u_head0.kv_wdata [2]                                 1         1                           1
+  init \dut.u_u_head0.kv_wdata [3]                                --        --                           x
+  init \dut.u_u_head0.kv_wdata [4]                                --        --                           x
+  init \dut.u_u_head0.kv_wdata [5]                                --        --                           x
+  init \dut.u_u_head0.kv_wdata [6]                                --        --                           x
+  init \dut.u_u_head0.kv_wdata [7]                                --        --                           x
+  init \dut.u_u_head0.kv_wdata [8]                                 1         1                           1
+  init \dut.u_u_head0.kv_wdata [9]                                --        --                           x
+  init \dut.u_u_head0.u_h.n_kv_wdata [0]                           1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [10:9]                       --        --                          x1
+  init \dut.u_u_head0.u_h.n_kv_wdata [11]                          1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [12]                          1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [13]                          1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [14]                          1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [15]                          1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [16]                          1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [17]                          1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [18]                          1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [19]                          1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [1]                          --        --                           x
+  init \dut.u_u_head0.u_h.n_kv_wdata [2]                           1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [3]                           0         0                           0
+  init \dut.u_u_head0.u_h.n_kv_wdata [4]                           1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [5]                           0         0                           0
+  init \dut.u_u_head0.u_h.n_kv_wdata [6]                           1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [7]                           1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [8]                           1         1                           1
+  init \dut.u_u_head0.u_h.n_wrom_addr [20]                        --        --                           x
+  init \dut.u_u_head0.u_h.n_wrom_addr [21]                         1         1                           1
+  init \dut.u_u_head0.u_h.n_wrom_addr [22]                        --        --                           x
+  init \dut.u_u_head0.u_h.n_wrom_addr [23]                         1         1                           1
+  init \dut.u_u_head0.u_h.wrom_addr [20]                           0         0                           0
+  init \dut.u_u_head0.u_h.wrom_addr [21]                           0         0                           0
+  init \dut.u_u_head0.u_h.wrom_addr [22]                           0         0                           0
+  init \dut.u_u_head0.u_h.wrom_addr [23]                           0         0                           0
+  init \dut.u_u_lrly0.odr [214]                                    0         0                           0
+  init \dut.u_u_lrly0.odr [215]                                    0         0                           0
+  init \dut.u_u_lrly0.odr [216]                                    0         0                           0
+  init \dut.u_u_lrly0.odr [217]                                    0         0                           0
+  init \dut.u_u_lrly0.odr [34]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [35]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [36]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [37]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [38]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [39]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [40]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [41]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [42]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [43]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [44]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [45]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [46]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [47]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [48]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [49]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [50]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [51]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [52]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [53]                                     0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [59]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [60]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [61]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [62]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [63]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [64]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [65]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [66]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [67]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [68]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [69]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [70]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [71]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [72]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [73]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [74]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [75]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [76]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [77]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [78]                0         0                           0
+  init \y [0]                                                      0         0                           0
+  init \y [10]                                                     0         0                           0
+  init \y [11]                                                     0         0                           0
+  init \y [12]                                                     0         0                           0
+  init \y [13]                                                     0         0                           0
+  init \y [15:14]                                                  0         0                          00
+  init \y [16]                                                     0         0                           0
+  init \y [17]                                                     0         0                           0
+  init \y [18]                                                     0         0                           0
+  init \y [19]                                                     0         0                           0
+  init \y [1]                                                      0         0                           0
+  init \y [20]                                                     0         0                           0
+  init \y [21]                                                     0         0                           0
+  init \y [22]                                                     0         0                           0
+  init \y [23]                                                     0         0                           0
+  init \y [2]                                                      0         0                           0
+  init \y [3]                                                      0         0                           0
+  init \y [4]                                                      0         0                           0
+  init \y [5]                                                      0         0                           0
+  init \y [6]                                                      0         0                           0
+  init \y [7]                                                      0         0                           0
+  init \y [8]                                                      0         0                           0
+  init \y [9]                                                      0         0                           0
+  ---- ------------------------------------------------- ----------- --------- ---------------------------
+     1 \y                                                          0         0    000000000000000000000000
+  ---- ------------------------------------------------- ----------- --------- ---------------------------
+     2 \y                                                          0         0    000000000000000000000000
+  ---- ------------------------------------------------- ----------- --------- ---------------------------
+     3 \y                                                          0         0    000000000000000000000000
+  ---- ------------------------------------------------- ----------- --------- ---------------------------
+     4 \y                                                         --        --    1x1xxx11xxx111x1xxxxx11x
+
+** Trying induction with length 4 **
+
+Setting up time step 5:
+Final constraint equation: { } = { }
+Imported 116 cells to SAT database.
+Import proof-constraint: \y = 24'000000000000000000000000
+Final proof equation: \y = 24'000000000000000000000000
+
+[induction step 4] Solving problem with 14238 variables and 40363 clauses..
+Induction step failed. Incrementing induction length.
+
+  Time Signal Name                                               Dec       Hex                         Bin
+  ---- ------------------------------------------------- ----------- --------- ---------------------------
+  init \dut.u_u_head0.kv_wdata [0]                                 0         0                           0
+  init \dut.u_u_head0.kv_wdata [10]                                0         0                           0
+  init \dut.u_u_head0.kv_wdata [11]                                0         0                           0
+  init \dut.u_u_head0.kv_wdata [12]                                0         0                           0
+  init \dut.u_u_head0.kv_wdata [13]                                0         0                           0
+  init \dut.u_u_head0.kv_wdata [14]                                0         0                           0
+  init \dut.u_u_head0.kv_wdata [15]                                0         0                           0
+  init \dut.u_u_head0.kv_wdata [16]                                0         0                           0
+  init \dut.u_u_head0.kv_wdata [17]                                0         0                           0
+  init \dut.u_u_head0.kv_wdata [18]                                0         0                           0
+  init \dut.u_u_head0.kv_wdata [19]                                0         0                           0
+  init \dut.u_u_head0.kv_wdata [1]                                 0         0                           0
+  init \dut.u_u_head0.kv_wdata [2]                                 0         0                           0
+  init \dut.u_u_head0.kv_wdata [3]                                 0         0                           0
+  init \dut.u_u_head0.kv_wdata [4]                                 0         0                           0
+  init \dut.u_u_head0.kv_wdata [5]                                 0         0                           0
+  init \dut.u_u_head0.kv_wdata [6]                                 0         0                           0
+  init \dut.u_u_head0.kv_wdata [7]                                 0         0                           0
+  init \dut.u_u_head0.kv_wdata [8]                                 0         0                           0
+  init \dut.u_u_head0.kv_wdata [9]                                 0         0                           0
+  init \dut.u_u_head0.u_h.n_kv_wdata [0]                           1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [10:9]                        3         3                          11
+  init \dut.u_u_head0.u_h.n_kv_wdata [11]                          1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [12]                          1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [13]                          1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [14]                          1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [15]                          1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [16]                          1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [17]                          1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [18]                          1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [19]                          1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [1]                           1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [2]                           1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [3]                           0         0                           0
+  init \dut.u_u_head0.u_h.n_kv_wdata [4]                           1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [5]                           1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [6]                           1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [7]                           1         1                           1
+  init \dut.u_u_head0.u_h.n_kv_wdata [8]                           1         1                           1
+  init \dut.u_u_head0.u_h.n_wrom_addr [20]                         0         0                           0
+  init \dut.u_u_head0.u_h.n_wrom_addr [21]                         0         0                           0
+  init \dut.u_u_head0.u_h.n_wrom_addr [22]                         0         0                           0
+  init \dut.u_u_head0.u_h.n_wrom_addr [23]                         0         0                           0
+  init \dut.u_u_head0.u_h.wrom_addr [20]                           0         0                           0
+  init \dut.u_u_head0.u_h.wrom_addr [21]                           0         0                           0
+  init \dut.u_u_head0.u_h.wrom_addr [22]                           0         0                           0
+  init \dut.u_u_head0.u_h.wrom_addr [23]                           0         0                           0
+  init \dut.u_u_lrly0.odr [214]                                    0         0                           0
+  init \dut.u_u_lrly0.odr [215]                                    0         0                           0
+  init \dut.u_u_lrly0.odr [216]                                    0         0                           0
+  init \dut.u_u_lrly0.odr [217]                                    0         0                           0
+  init \dut.u_u_lrly0.odr [34]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [35]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [36]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [37]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [38]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [39]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [40]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [41]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [42]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [43]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [44]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [45]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [46]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [47]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [48]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [49]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [50]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [51]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [52]                                     0         0                           0
+  init \dut.u_u_lrly0.odr [53]                                     0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [59]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [60]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [61]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [62]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [63]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [64]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [65]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [66]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [67]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [68]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [69]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [70]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [71]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [72]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [73]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [74]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [75]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [76]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [77]                0         0                           0
+  init \dut.u_u_lrly0.u_od.genblk1.g_line.line [78]                0         0                           0
+  init \y [0]                                                      0         0                           0
+  init \y [10]                                                     0         0                           0
+  init \y [11]                                                     0         0                           0
+  init \y [12]                                                     0         0                           0
+  init \y [13]                                                     0         0                           0
+  init \y [15:14]                                                  0         0                          00
+  init \y [16]                                                     0         0                           0
+  init \y [17]                                                     0         0                           0
+  init \y [18]                                                     0         0                           0
+  init \y [19]                                                     0         0                           0
+  init \y [1]                                                      0         0                           0
+  init \y [20]                                                     0         0                           0
+  init \y [21]                                                     0         0                           0
+  init \y [22]                                                     0         0                           0
+  init \y [23]                                                     0         0                           0
+  init \y [2]                                                      0         0                           0
+  init \y [3]                                                      0         0                           0
+  init \y [4]                                                      0         0                           0
+  init \y [5]                                                      0         0                           0
+  init \y [6]                                                      0         0                           0
+  init \y [7]                                                      0         0                           0
+  init \y [8]                                                      0         0                           0
+  init \y [9]                                                      0         0                           0
+  ---- ------------------------------------------------- ----------- --------- ---------------------------
+     1 \y                                                          0         0    000000000000000000000000
+  ---- ------------------------------------------------- ----------- --------- ---------------------------
+     2 \y                                                          0         0    000000000000000000000000
+  ---- ------------------------------------------------- ----------- --------- ---------------------------
+     3 \y                                                          0         0    000000000000000000000000
+  ---- ------------------------------------------------- ----------- --------- ---------------------------
+     4 \y                                                          0         0    000000000000000000000000
+  ---- ------------------------------------------------- ----------- --------- ---------------------------
+     5 \y                                                    1048567     ffff7    000011111111111111110111
+
+** Trying induction with length 5 **
+
+Setting up time step 6:
+Final constraint equation: { } = { }
+Imported 116 cells to SAT database.
+Import proof-constraint: \y = 24'000000000000000000000000
+Final proof equation: \y = 24'000000000000000000000000
+
+[induction step 5] Solving problem with 19924 variables and 57324 clauses..
+Induction step proven: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
