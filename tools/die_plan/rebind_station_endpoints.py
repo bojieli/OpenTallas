@@ -202,9 +202,18 @@ def rebind(pd,out,baseline=None,types=None,endpoint_map=None,route=False,reach=4
     if out.exists():raise ValueError('refusing to overwrite output')
     if out.resolve()==pd.resolve() or pd.resolve() in out.resolve().parents:raise ValueError('output must be outside input')
     raw=json.loads((pd/'die_plan.json').read_text());resolver=Resolver(pd,raw,baseline);new=copy.deepcopy(raw);emap=endpoint_map or {}
-    report=dict(schema='opentallas.station_endpoint_rebind.v1',input=str(pd),baseline=str(baseline) if baseline else None,input_sha256=sha(pd/'die_plan.json'),route=route,rows=[],unresolved=[],route_failures=[],added_cycles=0,changed_stations=0,selected_stations=0,skipped_stations=0)
+    report=dict(schema='opentallas.station_endpoint_rebind.v1',input=str(pd),baseline=str(baseline) if baseline else None,input_sha256=sha(pd/'die_plan.json'),route=route,rows=[],unresolved=[],route_failures=[],added_cycles=0,changed_stations=0,selected_stations=0,skipped_stations=0,orphan_references=[])
     for tn,t in raw['partition_types'].items():
         if types and tn not in types:continue
+        # A baseline narrows changed work; it must not hide legacy references to
+        # nonexistent cores. Declared soft anchors may remain unchanged.
+        for i,s in enumerate(t.get('internal_stations',[])):
+            for field in ['launch','capture']:
+                ref=s.get(field,'')
+                if ref.startswith('face bus ') or split_ref(ref,t.get('hard_cores',[])):continue
+                soft=[c.get('inst','') for c in t.get('contents',[])]
+                if any(n and (ref==n or ref.startswith(n+'.') or ref==baseinst(n) or ref.startswith(baseinst(n)+'.')) for n in soft):continue
+                report['orphan_references'].append(dict(type=tn,station=i,field=field,reference=ref,reason='reference names neither an actual hard core nor a declared soft anchor/face bus'))
         selected=[];pending=[]
         for i,s in enumerate(t.get('internal_stations',[])):
             if baseline and not any(resolver.affected(tn,s.get(f,'')) or f'{tn}:{i}:{f}' in emap for f in ['launch','capture']):report['skipped_stations']+=1;continue
@@ -236,7 +245,7 @@ def rebind(pd,out,baseline=None,types=None,endpoint_map=None,route=False,reach=4
             else:
                 for ss,(i,row,orig) in zip(selected,pending):
                     new['partition_types'][tn]['internal_stations'][i]=ss;row.update(verdict='UNROUTED',new_cycles=len(ss.get('regs_um',[])),added_cycles=0);report['rows'].append(row)
-    report['verdict']='FAIL' if report['unresolved'] or report['route_failures'] else ('PASS' if route or not report['changed_stations'] else 'UNROUTED')
+    report['verdict']='FAIL' if report['unresolved'] or report['route_failures'] or report['orphan_references'] else ('PASS' if route or not report['changed_stations'] else 'UNROUTED')
     report['scope']='model only; added cycles require compiler/model adoption; no route/signoff authorization'
     shutil.copytree(pd,out,symlinks=False,ignore=shutil.ignore_patterns('gates'))
     text=json.dumps(new,indent=1)+'\n';(out/'die_plan.json').write_text(text)
@@ -251,5 +260,5 @@ def main():
     if not 0<a.reach<=405:ap.error('reach must be <=405 um')
     emap=json.loads(Path(a.endpoint_map).read_text()) if a.endpoint_map else None
     r=rebind(a.plan_dir,a.out,a.baseline,set(a.types.split(',')) if a.types else None,emap,a.route,a.reach)
-    print(json.dumps({k:v for k,v in r.items() if k not in ['rows','unresolved','route_failures']}));print('UNRESOLVED',len(r['unresolved']),'ROUTE_FAILURES',len(r['route_failures']));return 0 if r['verdict']=='PASS' else 1
+    print(json.dumps({k:v for k,v in r.items() if k not in ['rows','unresolved','route_failures','orphan_references']}));print('UNRESOLVED',len(r['unresolved']),'ROUTE_FAILURES',len(r['route_failures']),'ORPHAN_REFS',len(r['orphan_references']));return 0 if r['verdict']=='PASS' else 1
 if __name__=='__main__':raise SystemExit(main())

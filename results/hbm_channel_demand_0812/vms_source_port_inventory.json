@@ -1,0 +1,2161 @@
+{
+ "hfd_hgi_vms_glue_nw2_t": {
+  "source_revision": "19cfa3d9c",
+  "source_file": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_ring2_glue.sv",
+  "source_sha256": "1667c5bf4654e96790f7b9d269df0f761a41933dd71892fcf8afcc6bbf922499",
+  "ports": {
+   "clk": {
+    "direction": "input",
+    "width": 1
+   },
+   "rst_n": {
+    "direction": "input",
+    "width": 1
+   },
+   "cq": {
+    "direction": "input",
+    "width": 676
+   },
+   "cr": {
+    "direction": "output",
+    "width": 548
+   },
+   "client_seq": {
+    "direction": "input",
+    "width": 6
+   },
+   "response_enable": {
+    "direction": "input",
+    "width": 3
+   },
+   "response_seq": {
+    "direction": "input",
+    "width": 6
+   },
+   "bank_enable": {
+    "direction": "input",
+    "width": 8
+   },
+   "bank_client": {
+    "direction": "input",
+    "width": 16
+   },
+   "hub_ring_enable": {
+    "direction": "input",
+    "width": 1
+   },
+   "hub_ring_client": {
+    "direction": "input",
+    "width": 2
+   },
+   "cw_in": {
+    "direction": "input",
+    "width": 2224
+   },
+   "ccw_out": {
+    "direction": "output",
+    "width": 2224
+   },
+   "ring_tx_enable": {
+    "direction": "input",
+    "width": 1
+   },
+   "ring_tx_source": {
+    "direction": "input",
+    "width": 3
+   },
+   "replay_enable": {
+    "direction": "input",
+    "width": 1
+   },
+   "b0_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b0_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b0_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b0_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b0_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b0_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b0_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b0_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "b0_flt": {
+    "direction": "input",
+    "width": 1
+   },
+   "b1_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b1_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b1_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b1_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b1_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b1_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b1_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b1_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "b1_flt": {
+    "direction": "input",
+    "width": 1
+   },
+   "b2_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b2_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b2_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b2_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b2_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b2_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b2_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b2_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "b2_flt": {
+    "direction": "input",
+    "width": 1
+   },
+   "b3_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b3_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b3_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b3_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b3_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b3_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b3_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b3_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "b3_flt": {
+    "direction": "input",
+    "width": 1
+   },
+   "b4_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b4_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b4_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b4_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b4_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b4_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b4_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b4_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "b4_flt": {
+    "direction": "input",
+    "width": 1
+   },
+   "b5_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b5_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b5_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b5_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b5_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b5_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b5_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b5_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "b5_flt": {
+    "direction": "input",
+    "width": 1
+   },
+   "b6_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b6_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b6_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b6_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b6_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b6_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b6_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b6_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "b6_flt": {
+    "direction": "input",
+    "width": 1
+   },
+   "b7_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b7_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b7_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b7_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b7_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b7_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b7_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b7_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "b7_flt": {
+    "direction": "input",
+    "width": 1
+   },
+   "hub_status": {
+    "direction": "output",
+    "width": 3
+   },
+   "mirror_busy": {
+    "direction": "output",
+    "width": 2
+   },
+   "vmstat": {
+    "direction": "output",
+    "width": 19
+   },
+   "ring_fault": {
+    "direction": "output",
+    "width": 3
+   }
+  },
+  "port_groups": 92,
+  "pin_bits": 16948,
+  "input_bits": 7453,
+  "output_bits": 9495
+ },
+ "hfd_hgi_vms_static_NE2_glue": {
+  "source_revision": "19cfa3d9c",
+  "source_file": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_ring2_glue.sv",
+  "source_sha256": "1667c5bf4654e96790f7b9d269df0f761a41933dd71892fcf8afcc6bbf922499",
+  "ports": {
+   "clk_hub": {
+    "direction": "input",
+    "width": 1
+   },
+   "clk_ring": {
+    "direction": "input",
+    "width": 2
+   },
+   "clk_replay": {
+    "direction": "input",
+    "width": 1
+   },
+   "rst_n": {
+    "direction": "input",
+    "width": 1
+   },
+   "client_seq": {
+    "direction": "input",
+    "width": 2
+   },
+   "response_enable": {
+    "direction": "input",
+    "width": 1
+   },
+   "response_seq": {
+    "direction": "input",
+    "width": 2
+   },
+   "bank_enable": {
+    "direction": "input",
+    "width": 8
+   },
+   "bank_client": {
+    "direction": "input",
+    "width": 8
+   },
+   "hub_ring_enable": {
+    "direction": "input",
+    "width": 1
+   },
+   "hub_ring_client": {
+    "direction": "input",
+    "width": 1
+   },
+   "ccw_in": {
+    "direction": "input",
+    "width": 2224
+   },
+   "cw_out": {
+    "direction": "output",
+    "width": 2224
+   },
+   "ring_tx_enable": {
+    "direction": "input",
+    "width": 1
+   },
+   "ring_tx_source": {
+    "direction": "input",
+    "width": 3
+   },
+   "replay_enable": {
+    "direction": "input",
+    "width": 1
+   },
+   "bank_status": {
+    "direction": "input",
+    "width": 144
+   },
+   "bk_xq": {
+    "direction": "output",
+    "width": 2208
+   },
+   "bk_xq2": {
+    "direction": "output",
+    "width": 2208
+   },
+   "bk_xq_done": {
+    "direction": "input",
+    "width": 8
+   },
+   "bk_xq2_done": {
+    "direction": "input",
+    "width": 8
+   },
+   "bk_eg": {
+    "direction": "input",
+    "width": 2208
+   },
+   "bk_pq": {
+    "direction": "output",
+    "width": 2280
+   },
+   "bk_pr": {
+    "direction": "input",
+    "width": 2128
+   },
+   "hub_status": {
+    "direction": "output",
+    "width": 3
+   },
+   "mirror_busy": {
+    "direction": "output",
+    "width": 2
+   },
+   "vmstat": {
+    "direction": "output",
+    "width": 19
+   },
+   "ring_fault": {
+    "direction": "output",
+    "width": 3
+   }
+  },
+  "port_groups": 28,
+  "pin_bits": 15700,
+  "input_bits": 6753,
+  "output_bits": 8947
+ },
+ "hfd_hgi_vms_static_SW_glue": {
+  "source_revision": "19cfa3d9c",
+  "source_file": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_glue.sv",
+  "source_sha256": "b3b8d22d21b650e594aaf67fc9b1a556861093685b5ec3c62c116806aeecb028",
+  "ports": {
+   "clk_hub": {
+    "direction": "input",
+    "width": 1
+   },
+   "clk_ring": {
+    "direction": "input",
+    "width": 2
+   },
+   "clk_replay": {
+    "direction": "input",
+    "width": 1
+   },
+   "rst_n": {
+    "direction": "input",
+    "width": 1
+   },
+   "cq": {
+    "direction": "input",
+    "width": 676
+   },
+   "cr": {
+    "direction": "output",
+    "width": 548
+   },
+   "client_seq": {
+    "direction": "input",
+    "width": 6
+   },
+   "response_enable": {
+    "direction": "input",
+    "width": 3
+   },
+   "response_seq": {
+    "direction": "input",
+    "width": 6
+   },
+   "bank_enable": {
+    "direction": "input",
+    "width": 8
+   },
+   "bank_client": {
+    "direction": "input",
+    "width": 16
+   },
+   "hub_ring_enable": {
+    "direction": "input",
+    "width": 2
+   },
+   "hub_ring_client": {
+    "direction": "input",
+    "width": 4
+   },
+   "cw_in": {
+    "direction": "input",
+    "width": 2224
+   },
+   "ccw_in": {
+    "direction": "input",
+    "width": 2224
+   },
+   "cw_out": {
+    "direction": "output",
+    "width": 2224
+   },
+   "ccw_out": {
+    "direction": "output",
+    "width": 2224
+   },
+   "ring_tx_enable": {
+    "direction": "input",
+    "width": 2
+   },
+   "ring_tx_source": {
+    "direction": "input",
+    "width": 6
+   },
+   "replay_enable": {
+    "direction": "input",
+    "width": 1
+   },
+   "replay_source": {
+    "direction": "input",
+    "width": 1
+   },
+   "bank_status": {
+    "direction": "input",
+    "width": 144
+   },
+   "bk_xq": {
+    "direction": "output",
+    "width": 2208
+   },
+   "bk_xq2": {
+    "direction": "output",
+    "width": 2208
+   },
+   "bk_xq_done": {
+    "direction": "input",
+    "width": 8
+   },
+   "bk_xq2_done": {
+    "direction": "input",
+    "width": 8
+   },
+   "bk_eg": {
+    "direction": "input",
+    "width": 2208
+   },
+   "bk_pq": {
+    "direction": "output",
+    "width": 2280
+   },
+   "bk_pr": {
+    "direction": "input",
+    "width": 2128
+   },
+   "hub_status": {
+    "direction": "output",
+    "width": 3
+   },
+   "mirror_busy": {
+    "direction": "output",
+    "width": 2
+   },
+   "vmstat": {
+    "direction": "output",
+    "width": 19
+   },
+   "ring_fault": {
+    "direction": "output",
+    "width": 3
+   }
+  },
+  "port_groups": 33,
+  "pin_bits": 21399,
+  "input_bits": 9680,
+  "output_bits": 11719
+ },
+ "hfd_hgi_vms_static_NW_glue": {
+  "source_revision": "19cfa3d9c",
+  "source_file": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_glue.sv",
+  "source_sha256": "b3b8d22d21b650e594aaf67fc9b1a556861093685b5ec3c62c116806aeecb028",
+  "ports": {
+   "clk_hub": {
+    "direction": "input",
+    "width": 1
+   },
+   "clk_ring": {
+    "direction": "input",
+    "width": 2
+   },
+   "clk_replay": {
+    "direction": "input",
+    "width": 1
+   },
+   "rst_n": {
+    "direction": "input",
+    "width": 1
+   },
+   "client_seq": {
+    "direction": "input",
+    "width": 2
+   },
+   "response_enable": {
+    "direction": "input",
+    "width": 1
+   },
+   "response_seq": {
+    "direction": "input",
+    "width": 2
+   },
+   "bank_enable": {
+    "direction": "input",
+    "width": 8
+   },
+   "bank_client": {
+    "direction": "input",
+    "width": 8
+   },
+   "hub_ring_enable": {
+    "direction": "input",
+    "width": 2
+   },
+   "hub_ring_client": {
+    "direction": "input",
+    "width": 2
+   },
+   "cw_in": {
+    "direction": "input",
+    "width": 2224
+   },
+   "ccw_in": {
+    "direction": "input",
+    "width": 2224
+   },
+   "cw_out": {
+    "direction": "output",
+    "width": 2224
+   },
+   "ccw_out": {
+    "direction": "output",
+    "width": 2224
+   },
+   "ring_tx_enable": {
+    "direction": "input",
+    "width": 2
+   },
+   "ring_tx_source": {
+    "direction": "input",
+    "width": 6
+   },
+   "replay_enable": {
+    "direction": "input",
+    "width": 1
+   },
+   "replay_source": {
+    "direction": "input",
+    "width": 1
+   },
+   "bank_status": {
+    "direction": "input",
+    "width": 144
+   },
+   "bk_xq": {
+    "direction": "output",
+    "width": 2208
+   },
+   "bk_xq2": {
+    "direction": "output",
+    "width": 2208
+   },
+   "bk_xq_done": {
+    "direction": "input",
+    "width": 8
+   },
+   "bk_xq2_done": {
+    "direction": "input",
+    "width": 8
+   },
+   "bk_eg": {
+    "direction": "input",
+    "width": 2208
+   },
+   "bk_pq": {
+    "direction": "output",
+    "width": 2280
+   },
+   "bk_pr": {
+    "direction": "input",
+    "width": 2128
+   },
+   "bk_flt": {
+    "direction": "input",
+    "width": 8
+   },
+   "hub_status": {
+    "direction": "output",
+    "width": 3
+   },
+   "mirror_busy": {
+    "direction": "output",
+    "width": 2
+   },
+   "vmstat": {
+    "direction": "output",
+    "width": 19
+   },
+   "ring_fault": {
+    "direction": "output",
+    "width": 3
+   }
+  },
+  "port_groups": 32,
+  "pin_bits": 20163,
+  "input_bits": 8992,
+  "output_bits": 11171
+ },
+ "hfd_hgi_vms_static_NE_glue": {
+  "source_revision": "19cfa3d9c",
+  "source_file": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_glue.sv",
+  "source_sha256": "b3b8d22d21b650e594aaf67fc9b1a556861093685b5ec3c62c116806aeecb028",
+  "ports": {
+   "clk_hub": {
+    "direction": "input",
+    "width": 1
+   },
+   "clk_ring": {
+    "direction": "input",
+    "width": 2
+   },
+   "clk_replay": {
+    "direction": "input",
+    "width": 1
+   },
+   "rst_n": {
+    "direction": "input",
+    "width": 1
+   },
+   "client_seq": {
+    "direction": "input",
+    "width": 2
+   },
+   "response_enable": {
+    "direction": "input",
+    "width": 1
+   },
+   "response_seq": {
+    "direction": "input",
+    "width": 2
+   },
+   "bank_enable": {
+    "direction": "input",
+    "width": 8
+   },
+   "bank_client": {
+    "direction": "input",
+    "width": 8
+   },
+   "hub_ring_enable": {
+    "direction": "input",
+    "width": 2
+   },
+   "hub_ring_client": {
+    "direction": "input",
+    "width": 2
+   },
+   "cw_in": {
+    "direction": "input",
+    "width": 2224
+   },
+   "ccw_in": {
+    "direction": "input",
+    "width": 2224
+   },
+   "cw_out": {
+    "direction": "output",
+    "width": 2224
+   },
+   "ccw_out": {
+    "direction": "output",
+    "width": 2224
+   },
+   "ring_tx_enable": {
+    "direction": "input",
+    "width": 2
+   },
+   "ring_tx_source": {
+    "direction": "input",
+    "width": 6
+   },
+   "replay_enable": {
+    "direction": "input",
+    "width": 1
+   },
+   "replay_source": {
+    "direction": "input",
+    "width": 1
+   },
+   "bank_status": {
+    "direction": "input",
+    "width": 144
+   },
+   "bk_xq": {
+    "direction": "output",
+    "width": 2208
+   },
+   "bk_xq2": {
+    "direction": "output",
+    "width": 2208
+   },
+   "bk_xq_done": {
+    "direction": "input",
+    "width": 8
+   },
+   "bk_xq2_done": {
+    "direction": "input",
+    "width": 8
+   },
+   "bk_eg": {
+    "direction": "input",
+    "width": 2208
+   },
+   "bk_pq": {
+    "direction": "output",
+    "width": 2280
+   },
+   "bk_pr": {
+    "direction": "input",
+    "width": 2128
+   },
+   "hub_status": {
+    "direction": "output",
+    "width": 3
+   },
+   "mirror_busy": {
+    "direction": "output",
+    "width": 2
+   },
+   "vmstat": {
+    "direction": "output",
+    "width": 19
+   },
+   "ring_fault": {
+    "direction": "output",
+    "width": 3
+   }
+  },
+  "port_groups": 31,
+  "pin_bits": 20155,
+  "input_bits": 8984,
+  "output_bits": 11171
+ },
+ "hfd_hgi_vms_static_SE_glue": {
+  "source_revision": "19cfa3d9c",
+  "source_file": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_glue.sv",
+  "source_sha256": "b3b8d22d21b650e594aaf67fc9b1a556861093685b5ec3c62c116806aeecb028",
+  "ports": {
+   "clk_hub": {
+    "direction": "input",
+    "width": 1
+   },
+   "clk_ring": {
+    "direction": "input",
+    "width": 2
+   },
+   "clk_replay": {
+    "direction": "input",
+    "width": 1
+   },
+   "rst_n": {
+    "direction": "input",
+    "width": 1
+   },
+   "client_seq": {
+    "direction": "input",
+    "width": 2
+   },
+   "response_enable": {
+    "direction": "input",
+    "width": 1
+   },
+   "response_seq": {
+    "direction": "input",
+    "width": 2
+   },
+   "bank_enable": {
+    "direction": "input",
+    "width": 8
+   },
+   "bank_client": {
+    "direction": "input",
+    "width": 8
+   },
+   "hub_ring_enable": {
+    "direction": "input",
+    "width": 2
+   },
+   "hub_ring_client": {
+    "direction": "input",
+    "width": 2
+   },
+   "cw_in": {
+    "direction": "input",
+    "width": 2224
+   },
+   "ccw_in": {
+    "direction": "input",
+    "width": 2224
+   },
+   "cw_out": {
+    "direction": "output",
+    "width": 2224
+   },
+   "ccw_out": {
+    "direction": "output",
+    "width": 2224
+   },
+   "ring_tx_enable": {
+    "direction": "input",
+    "width": 2
+   },
+   "ring_tx_source": {
+    "direction": "input",
+    "width": 6
+   },
+   "replay_enable": {
+    "direction": "input",
+    "width": 1
+   },
+   "replay_source": {
+    "direction": "input",
+    "width": 1
+   },
+   "bank_status": {
+    "direction": "input",
+    "width": 144
+   },
+   "bk_xq": {
+    "direction": "output",
+    "width": 2208
+   },
+   "bk_xq2": {
+    "direction": "output",
+    "width": 2208
+   },
+   "bk_xq_done": {
+    "direction": "input",
+    "width": 8
+   },
+   "bk_xq2_done": {
+    "direction": "input",
+    "width": 8
+   },
+   "bk_eg": {
+    "direction": "input",
+    "width": 2208
+   },
+   "bk_pq": {
+    "direction": "output",
+    "width": 2280
+   },
+   "bk_pr": {
+    "direction": "input",
+    "width": 2128
+   },
+   "hub_status": {
+    "direction": "output",
+    "width": 3
+   },
+   "mirror_busy": {
+    "direction": "output",
+    "width": 2
+   },
+   "vmstat": {
+    "direction": "output",
+    "width": 19
+   },
+   "ring_fault": {
+    "direction": "output",
+    "width": 3
+   }
+  },
+  "port_groups": 31,
+  "pin_bits": 20155,
+  "input_bits": 8984,
+  "output_bits": 11171
+ },
+ "hfd_hgi_vms_glue_nw_t": {
+  "source_revision": "19cfa3d9c",
+  "source_file": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_tiles.sv",
+  "source_sha256": "486a4ad8a06b5bc32d0b55ac13ee1e1c93d1c5a657cebc146a1e9ef05b851ead",
+  "ports": {
+   "clk": {
+    "direction": "input",
+    "width": 1
+   },
+   "rst_n": {
+    "direction": "input",
+    "width": 1
+   },
+   "client_seq": {
+    "direction": "input",
+    "width": 2
+   },
+   "response_enable": {
+    "direction": "input",
+    "width": 1
+   },
+   "response_seq": {
+    "direction": "input",
+    "width": 2
+   },
+   "bank_enable": {
+    "direction": "input",
+    "width": 8
+   },
+   "bank_client": {
+    "direction": "input",
+    "width": 8
+   },
+   "hub_ring_enable": {
+    "direction": "input",
+    "width": 2
+   },
+   "hub_ring_client": {
+    "direction": "input",
+    "width": 2
+   },
+   "cw_in": {
+    "direction": "input",
+    "width": 2224
+   },
+   "ccw_in": {
+    "direction": "input",
+    "width": 2224
+   },
+   "cw_out": {
+    "direction": "output",
+    "width": 2224
+   },
+   "ccw_out": {
+    "direction": "output",
+    "width": 2224
+   },
+   "ring_tx_enable": {
+    "direction": "input",
+    "width": 2
+   },
+   "ring_tx_source": {
+    "direction": "input",
+    "width": 6
+   },
+   "replay_enable": {
+    "direction": "input",
+    "width": 1
+   },
+   "replay_source": {
+    "direction": "input",
+    "width": 1
+   },
+   "b0_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b0_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b0_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b0_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b0_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b0_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b0_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b0_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "b0_flt": {
+    "direction": "input",
+    "width": 1
+   },
+   "b1_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b1_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b1_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b1_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b1_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b1_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b1_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b1_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "b1_flt": {
+    "direction": "input",
+    "width": 1
+   },
+   "b2_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b2_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b2_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b2_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b2_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b2_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b2_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b2_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "b2_flt": {
+    "direction": "input",
+    "width": 1
+   },
+   "b3_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b3_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b3_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b3_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b3_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b3_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b3_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b3_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "b3_flt": {
+    "direction": "input",
+    "width": 1
+   },
+   "b4_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b4_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b4_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b4_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b4_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b4_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b4_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b4_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "b4_flt": {
+    "direction": "input",
+    "width": 1
+   },
+   "b5_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b5_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b5_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b5_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b5_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b5_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b5_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b5_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "b5_flt": {
+    "direction": "input",
+    "width": 1
+   },
+   "b6_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b6_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b6_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b6_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b6_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b6_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b6_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b6_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "b6_flt": {
+    "direction": "input",
+    "width": 1
+   },
+   "b7_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b7_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b7_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b7_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b7_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b7_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b7_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b7_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "b7_flt": {
+    "direction": "input",
+    "width": 1
+   },
+   "hub_status": {
+    "direction": "output",
+    "width": 3
+   },
+   "mirror_busy": {
+    "direction": "output",
+    "width": 2
+   },
+   "vmstat": {
+    "direction": "output",
+    "width": 19
+   },
+   "ring_fault": {
+    "direction": "output",
+    "width": 3
+   }
+  },
+  "port_groups": 93,
+  "pin_bits": 20160,
+  "input_bits": 8989,
+  "output_bits": 11171
+ },
+ "hfd_hgi_vms_glue_sw_t": {
+  "source_revision": "19cfa3d9c",
+  "source_file": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_tiles.sv",
+  "source_sha256": "486a4ad8a06b5bc32d0b55ac13ee1e1c93d1c5a657cebc146a1e9ef05b851ead",
+  "ports": {
+   "clk": {
+    "direction": "input",
+    "width": 1
+   },
+   "rst_n": {
+    "direction": "input",
+    "width": 1
+   },
+   "cq": {
+    "direction": "input",
+    "width": 676
+   },
+   "cr": {
+    "direction": "output",
+    "width": 548
+   },
+   "client_seq": {
+    "direction": "input",
+    "width": 6
+   },
+   "response_enable": {
+    "direction": "input",
+    "width": 3
+   },
+   "response_seq": {
+    "direction": "input",
+    "width": 6
+   },
+   "bank_enable": {
+    "direction": "input",
+    "width": 8
+   },
+   "bank_client": {
+    "direction": "input",
+    "width": 16
+   },
+   "hub_ring_enable": {
+    "direction": "input",
+    "width": 2
+   },
+   "hub_ring_client": {
+    "direction": "input",
+    "width": 4
+   },
+   "cw_in": {
+    "direction": "input",
+    "width": 2224
+   },
+   "ccw_in": {
+    "direction": "input",
+    "width": 2224
+   },
+   "cw_out": {
+    "direction": "output",
+    "width": 2224
+   },
+   "ccw_out": {
+    "direction": "output",
+    "width": 2224
+   },
+   "ring_tx_enable": {
+    "direction": "input",
+    "width": 2
+   },
+   "ring_tx_source": {
+    "direction": "input",
+    "width": 6
+   },
+   "replay_enable": {
+    "direction": "input",
+    "width": 1
+   },
+   "replay_source": {
+    "direction": "input",
+    "width": 1
+   },
+   "b0_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b0_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b0_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b0_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b0_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b0_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b0_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b0_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "b1_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b1_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b1_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b1_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b1_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b1_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b1_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b1_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "b2_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b2_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b2_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b2_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b2_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b2_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b2_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b2_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "b3_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b3_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b3_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b3_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b3_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b3_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b3_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b3_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "b4_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b4_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b4_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b4_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b4_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b4_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b4_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b4_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "b5_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b5_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b5_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b5_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b5_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b5_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b5_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b5_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "b6_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b6_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b6_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b6_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b6_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b6_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b6_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b6_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "b7_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b7_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b7_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b7_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b7_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b7_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b7_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b7_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "hub_status": {
+    "direction": "output",
+    "width": 3
+   },
+   "mirror_busy": {
+    "direction": "output",
+    "width": 2
+   },
+   "vmstat": {
+    "direction": "output",
+    "width": 19
+   },
+   "ring_fault": {
+    "direction": "output",
+    "width": 3
+   }
+  },
+  "port_groups": 87,
+  "pin_bits": 21396,
+  "input_bits": 9677,
+  "output_bits": 11719
+ },
+ "hfd_hgi_vms_glue_e_t": {
+  "source_revision": "19cfa3d9c",
+  "source_file": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_tiles.sv",
+  "source_sha256": "486a4ad8a06b5bc32d0b55ac13ee1e1c93d1c5a657cebc146a1e9ef05b851ead",
+  "ports": {
+   "clk": {
+    "direction": "input",
+    "width": 1
+   },
+   "rst_n": {
+    "direction": "input",
+    "width": 1
+   },
+   "sid": {
+    "direction": "input",
+    "width": 2
+   },
+   "cq": {
+    "direction": "input",
+    "width": 338
+   },
+   "cr": {
+    "direction": "output",
+    "width": 274
+   },
+   "client_seq": {
+    "direction": "input",
+    "width": 4
+   },
+   "response_enable": {
+    "direction": "input",
+    "width": 2
+   },
+   "response_seq": {
+    "direction": "input",
+    "width": 4
+   },
+   "bank_enable": {
+    "direction": "input",
+    "width": 8
+   },
+   "bank_client": {
+    "direction": "input",
+    "width": 8
+   },
+   "hub_ring_enable": {
+    "direction": "input",
+    "width": 2
+   },
+   "hub_ring_client": {
+    "direction": "input",
+    "width": 2
+   },
+   "cw_in": {
+    "direction": "input",
+    "width": 2224
+   },
+   "ccw_in": {
+    "direction": "input",
+    "width": 2224
+   },
+   "cw_out": {
+    "direction": "output",
+    "width": 2224
+   },
+   "ccw_out": {
+    "direction": "output",
+    "width": 2224
+   },
+   "ring_tx_enable": {
+    "direction": "input",
+    "width": 2
+   },
+   "ring_tx_source": {
+    "direction": "input",
+    "width": 6
+   },
+   "replay_enable": {
+    "direction": "input",
+    "width": 1
+   },
+   "replay_source": {
+    "direction": "input",
+    "width": 1
+   },
+   "b0_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b0_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b0_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b0_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b0_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b0_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b0_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b0_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "b1_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b1_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b1_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b1_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b1_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b1_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b1_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b1_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "b2_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b2_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b2_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b2_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b2_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b2_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b2_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b2_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "b3_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b3_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b3_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b3_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b3_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b3_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b3_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b3_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "b4_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b4_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b4_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b4_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b4_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b4_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b4_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b4_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "b5_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b5_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b5_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b5_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b5_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b5_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b5_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b5_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "b6_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b6_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b6_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b6_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b6_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b6_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b6_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b6_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "b7_xq": {
+    "direction": "output",
+    "width": 276
+   },
+   "b7_xq2": {
+    "direction": "output",
+    "width": 276
+   },
+   "b7_xq_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b7_xq2_done": {
+    "direction": "input",
+    "width": 1
+   },
+   "b7_eg": {
+    "direction": "input",
+    "width": 276
+   },
+   "b7_pq": {
+    "direction": "output",
+    "width": 285
+   },
+   "b7_pr": {
+    "direction": "input",
+    "width": 266
+   },
+   "b7_status": {
+    "direction": "input",
+    "width": 18
+   },
+   "hub_status": {
+    "direction": "output",
+    "width": 3
+   },
+   "mirror_busy": {
+    "direction": "output",
+    "width": 2
+   },
+   "vmstat": {
+    "direction": "output",
+    "width": 19
+   },
+   "ring_fault": {
+    "direction": "output",
+    "width": 3
+   }
+  },
+  "port_groups": 88,
+  "pin_bits": 20771,
+  "input_bits": 9326,
+  "output_bits": 11445
+ }
+}
