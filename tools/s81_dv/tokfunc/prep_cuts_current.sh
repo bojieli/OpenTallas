@@ -8,6 +8,7 @@
 #   2. strict tools/die_port_bind.py on that die.v over <wt>/rtl + manifest files/prefer + defines -> port_bind.json
 #   3. tools/s81_dv/tokfunc/prep_cuts.sh HEAD die.v port_bind.json <tree land_plan> <out> (cut + tb + dv_rtl_kit at HEAD)
 # Usage: prep_cuts_current.sh <worktree> <tree> <out> [cut ...]
+# TOK-DS-9: <tree> = tools/s81_dv/tokfunc/mk_vehicle_current.sh output (tree_b178 = main die_b178.v), not tree_fc31.
 set -u
 W=$(realpath $1); T=$(realpath $2); O=$(realpath -m $3); shift 3
 M=physical/die_plan/s81/bind/asbuilt_b178_coll.json
@@ -22,8 +23,10 @@ import json, sys, os
 d = json.load(open(sys.argv[1]))
 a = []
 for f in d['files']:
-    if f.endswith('_bb.v') or f.endswith('s81_asb_models.sv'):
-        continue          # black boxes / as-built lib stubs are not RTL; dv_rtl_kit resolves real macros + cell models
+    if f.endswith('_bb.v'):
+        continue          # macro black boxes are not RTL; dv_rtl_kit resolves the real macro + cell models
+    # TOK-DS-9: s81_asb_models.sv is NOT a stub: it holds the as-built frame band compositions (col_h*_l4_lp_asb_{x,nx}
+    # = r0/r1/r2 plan kits + s81b_fint seams) and s81b_ckrst that the current die top (die_b178.v) instantiates
     a += ['--rtl-file', f]
 for f in d['prefer']:
     a += ['--prefer', f]
