@@ -1,0 +1,15 @@
+HBM-UNIFIED-1 2026-10-26 23:17 PDT (UNCHECKED unless CHECKED)
+(1) LINEAGE CHECKED (die_plan.json compare): R15 planS2/F2 = SU plan B2o, hubs q_hub_nw/ne 8216.64 x 3525.12, 104/102 hard cores,
+    8 native banks/hub (hfd_vms_bank_native_q0_faces), 0 FUSED lanes, 0 tree nodes; die 28399.68 x 17746.56 = 504.0 mm2.
+    a810b810f/3c3dae6bb unified candidate: hubs 8216.64 x 4320, 144/142 hard cores, 16 banks/hub (NEW type hnx_vms_bank_q0_faces 270x403.92)
+    + 16 hnx_fused_lane + 14 ot_hnx_fused_tnode + 2 keybuf per hub; same 91/89 bus names+widths; all 104/102 shared cores at DIFFERENT origins
+    (0 identical). Die at +794.88 um height = 28399.68 x 18541.44 = 526.57 mm2 (arith CHECKED; = Codex 526.571).
+    => R15 is NOT the unified plan (different hub types, bank count 16 vs 32, no FUSED). R15 GRT = SU flow canary only, cannot freeze HBM.
+(2) SU price of the unified candidate hubs (R13 price chain, planU0 = planS2 with candidate hub types swapped in, die NOT re-shifted -> lane part UNCHECKED):
+    ds_ar cycles/token lower/mid/upper 592988.3 / 596530.4 / 640306.3 vs base 576702.4 (loss 2.746/3.324/9.933 %; tok/s 2023.65/2011.63/1874.10)
+    planS2: 581893.3 / 580197.4 / 601893.1 (0.892/0.602/4.185 %). qwen_ar U0 0.254/0.458/2.050 %. tok/s+loss arithmetic CHECKED from price json.
+    at 833.33 ps: base 480.6 us/token; U0 lower 494.2 / upper 533.6 us/token.
+(3) MU quad tile (structural fix for GEOM-13 hub FAIL): mu_quad.json/png, tools: hbm_mu_quad.py. One 2216.16 x 2764.8 tile x4 (NW q0/q1, NE q0/q1 by die MY),
+    2x2 bank-pair cells around the segment's own service column (hb_vms/xl_ctl/dbk/cal/smw/vmdel x4/keybuf = existing __q replicas),
+    symmetric H-tree legs fused->n1 354.24, n1->n2 708.48, n2->n3 935.28 um (max), 0 overlaps, fill 0.683; MU district at the root-facing E end;
+    n3 -> root centre 1950.48 (q1) / 4209.84 (q0) um. Rest of hub NOT packed yet (successor).
