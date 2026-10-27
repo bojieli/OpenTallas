@@ -78,8 +78,7 @@ def allocate(spec, plan, align_inputs=False, exact_jogs=False):
         bucket = round(coord / 8.64) * 8.64
         vals = [d[axis]] + [p[axis] for p in ps]
         # Account for every permitted local-jog displacement before coloring.
-        pad = (.08 if lay == 'M8' else D.C128.STACK_RISER_MAX_UM +
-               (max(len(v) for v in groups.values())-1)*D.ROW_Y + .08) if exact_jogs else 8.64
+        pad = (.08 if lay == 'M8' else 16.0) if exact_jogs else 8.64
         buckets[lay, round(bucket, 3)].append((min(vals)-pad, max(vals)+pad, g))
     targets, counts = {}, {}
     for (lay, bucket), rows in sorted(buckets.items()):
@@ -110,6 +109,28 @@ def allocate(spec, plan, align_inputs=False, exact_jogs=False):
             x = D.snap(targets[gx]['c'] - bar, D.SITE_X)
             for _, cell in cells:
                 cell['origin_um'][0] = x
+    # Vertical-column placement can move a horizontal corner's actual X end.
+    # Recolor H intervals from those final pins; Y movement cannot alter them.
+    hrows = defaultdict(list)
+    hbucket = {g: bucket for (lay,bucket), rows in buckets.items() if lay=='M8' for _,_,g in rows}
+    for g, edges in bydrv.items():
+        if layers[g] != 'M8':
+            continue
+        vals = [pin(g,'Y')[0]] + [pin(e['load'],'A')[0] for e in edges]
+        pad = .08 if exact_jogs else 8.64
+        hrows[hbucket[g]].append((min(vals)-pad,max(vals)+pad,g))
+    for bucket, rows in hrows.items():
+        colors,n = color_intervals(rows); counts[f'M8@{bucket}'] = n
+        pg = grid['M8']; step=pg['pitch_um']/2; phase=pg['offset_um']+pg['pitch_um']/4
+        base=phase+round((bucket-phase)/step)*step
+        for g,c in colors.items():
+            desired=base+(c-n//2)*step; tr=D.DEFAULT_TRACKS['M8']
+            targets[g]=dict(layer='M8',c=round(tr['offset_um']+round((desired-tr['offset_um'])/tr['pitch_um'])*tr['pitch_um'],4),color=c)
+    for g,cells in groups.items():
+        gy=g if layers.get(g)=='M8' else incoming.get(g)
+        if gy in targets and targets[gy]['layer']=='M8':
+            y=D.snap(targets[gy]['c']-len(cells)*D.ROW_Y/2,D.ROW_Y)
+            for k,(_,cell) in enumerate(cells):cell['origin_um'][1]=round(y+k*D.ROW_Y,4)
     corridors = {}
     for g, edges in bydrv.items():
         d = pin(g, 'Y')
