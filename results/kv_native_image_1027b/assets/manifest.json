@@ -1,0 +1,126 @@
+{
+ "status": "CURRENT_NATIVE_COMPONENT_ASSETS_NOT_FULL_BOOT_BUNDLE_OR_G5",
+ "source": {
+  "kv": "codex/kv-native-bind-1027@5c7c40d860 bind4",
+  "qc": "codex/qc-bind-1027 source7a1172e830 candidatebccc2a0b9c fresh_v3"
+ },
+ "native_dcfg_words": 96,
+ "native_boot_age_words": 19,
+ "capacity1": 1,
+ "boot_ages": {
+  "attn": {
+   "PV_LEAD": 38,
+   "F_DLY": 55,
+   "D_QK": 0,
+   "D_RL": 112
+  },
+  "pv": {
+   "0": 132,
+   "1": 132
+  },
+  "vport": {
+   "vport_EN_0": {
+    "RT": 48,
+    "DQ": 15
+   },
+   "vport_EN_1": {
+    "RT": 50,
+    "DQ": 14
+   },
+   "vport_EN_2": {
+    "RT": 50,
+    "DQ": 0
+   },
+   "vport_EN_3": {
+    "RT": 51,
+    "DQ": 15
+   },
+   "vport_ES_0": {
+    "RT": 48,
+    "DQ": 15
+   },
+   "vport_ES_1": {
+    "RT": 50,
+    "DQ": 14
+   },
+   "vport_ES_2": {
+    "RT": 51,
+    "DQ": 0
+   },
+   "vport_ES_3": {
+    "RT": 51,
+    "DQ": 15
+   },
+   "vport_WN_0": {
+    "RT": 49,
+    "DQ": 15
+   },
+   "vport_WN_1": {
+    "RT": 48,
+    "DQ": 15
+   },
+   "vport_WN_2": {
+    "RT": 45,
+    "DQ": 14
+   },
+   "vport_WN_3": {
+    "RT": 47,
+    "DQ": 15
+   },
+   "vport_WS_0": {
+    "RT": 49,
+    "DQ": 15
+   },
+   "vport_WS_1": {
+    "RT": 48,
+    "DQ": 15
+   },
+   "vport_WS_2": {
+    "RT": 45,
+    "DQ": 14
+   },
+   "vport_WS_3": {
+    "RT": 47,
+    "DQ": 15
+   }
+  },
+  "pv_lead_by_pair": [
+   38,
+   38
+  ]
+ },
+ "physical_new_W_pads": 0,
+ "native_contract": "source-derived NRST43/CAP1/AGES1 plus160actual ECTLcfg sink bits",
+ "pair_transport": {
+  "schema": "opentallas.kv.pair_image_txdp.v1",
+  "status": "CURRENT_BOUND_TRANSPORT_ONLY_FULL_PAIR_PROGRAMME_PENDING",
+  "D2D_TXDP_K": [
+   114,
+   4,
+   3,
+   3
+  ],
+  "D2D_TXDP_C": [
+   8,
+   3,
+   1,
+   10
+  ],
+  "sv_literal": "32'h03030472",
+  "XDIE_SEAM_K": "56,56,54,54,54,56,56",
+  "XDIE_DIE_STAGES": "2,2,2,3,2,2/56,56,54,54,54,56,56",
+  "source": {
+   "kv": "codex/kv-native-bind-1027@5c7c40d860 bind4",
+   "qc": "codex/qc-bind-1027 source7a1172e830 candidatebccc2a0b9c fresh_v3"
+  },
+  "formula": "KV byte0 = KS_TXS + codec2 + SK_TXP + pinreg2; other bytes unchanged",
+  "note": "Transport constants only. Both dies must bind the same subsequently qualified programme; oldv7/B48 image is not authority."
+ },
+ "remaining_profile_facts": [
+  "Current QC100 TT/GI source-local qualification (selected u_gi master, input sampling/output producer offsets).",
+  "Current held HEAD_PREP descriptor/cohort source qualification and stage costs through actual QC GEN.",
+  "Current complete pair programme profile (MU/RoPE/admission/embedding/source capabilities) on these exact QC+KV bind facts.",
+  "QC100 collective source mismatch LS376 vs current regen407 must be resolved by ONEQC owner."
+ ],
+ "limits": "Target10 data and transport constants only; no oldprogramme/defaultprofile substitution. Full native bundle and QC+KV token replay remain NOT RUN."
+}
