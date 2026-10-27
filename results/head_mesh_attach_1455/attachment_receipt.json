@@ -1,0 +1,3204 @@
+{
+ "status": "BLOCKED_ATTACHMENT_GEOMETRY",
+ "drivers": 264,
+ "driver_units": 528,
+ "endpoints": 3942,
+ "core_inputs": 1320,
+ "mesh_via89": 11538,
+ "all_graph_vias": 11538,
+ "components": 1,
+ "max_endpoint_jog_um": 0.0,
+ "errors": [
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 0,
+   "max_um": 19.549999999999727
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 1,
+   "max_um": 22.519999999999982
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 2,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 3,
+   "max_um": 19.549999999999727
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 4,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 5,
+   "max_um": 15.230000000000018
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 6,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 7,
+   "max_um": 19.549999999999727
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 8,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 9,
+   "max_um": 15.230000000000018
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 11,
+   "max_um": 6.589999999999691
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 12,
+   "max_um": 6.589999999999691
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 13,
+   "max_um": 15.230000000000018
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 14,
+   "max_um": 15.230000000000018
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 15,
+   "max_um": 19.549999999999727
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 16,
+   "max_um": 6.589999999999691
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 17,
+   "max_um": 15.230000000000018
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 18,
+   "max_um": 15.230000000000018
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 19,
+   "max_um": 19.549999999999727
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 20,
+   "max_um": 15.230000000000018
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 21,
+   "max_um": 22.519999999999982
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 47,
+   "max_um": 19.550000000000182
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 48,
+   "max_um": 22.519999999999982
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 49,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 50,
+   "max_um": 19.550000000000182
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 51,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 52,
+   "max_um": 15.230000000000018
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 53,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 54,
+   "max_um": 19.550000000000182
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 55,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 56,
+   "max_um": 15.230000000000018
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 58,
+   "max_um": 6.5900000000001455
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 59,
+   "max_um": 6.5900000000001455
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 60,
+   "max_um": 15.230000000000018
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 61,
+   "max_um": 15.230000000000018
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 62,
+   "max_um": 19.550000000000182
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 63,
+   "max_um": 6.5900000000001455
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 64,
+   "max_um": 15.230000000000018
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 65,
+   "max_um": 15.230000000000018
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 66,
+   "max_um": 19.550000000000182
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 67,
+   "max_um": 15.230000000000018
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 68,
+   "max_um": 22.519999999999982
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 94,
+   "max_um": 19.550000000000182
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 95,
+   "max_um": 22.520000000000437
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 96,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 97,
+   "max_um": 19.550000000000182
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 98,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 99,
+   "max_um": 15.230000000000473
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 100,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 101,
+   "max_um": 19.550000000000182
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 102,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 103,
+   "max_um": 15.230000000000473
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 105,
+   "max_um": 6.5900000000001455
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 106,
+   "max_um": 6.5900000000001455
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 107,
+   "max_um": 15.230000000000473
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 108,
+   "max_um": 15.230000000000473
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 109,
+   "max_um": 19.550000000000182
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 110,
+   "max_um": 6.5900000000001455
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 111,
+   "max_um": 15.230000000000473
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 112,
+   "max_um": 15.230000000000473
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 113,
+   "max_um": 22.520000000000437
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 114,
+   "max_um": 19.550000000000182
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 115,
+   "max_um": 22.520000000000437
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 141,
+   "max_um": 19.550000000000182
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 142,
+   "max_um": 22.520000000000437
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 143,
+   "max_um": 10.910000000000764
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 144,
+   "max_um": 19.550000000000182
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 145,
+   "max_um": 10.910000000000764
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 146,
+   "max_um": 15.230000000000473
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 147,
+   "max_um": 10.910000000000764
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 148,
+   "max_um": 19.550000000000182
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 149,
+   "max_um": 10.910000000000764
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 150,
+   "max_um": 15.230000000000473
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 152,
+   "max_um": 6.5900000000001455
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 153,
+   "max_um": 6.5900000000001455
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 154,
+   "max_um": 15.230000000000473
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 155,
+   "max_um": 15.230000000000473
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 156,
+   "max_um": 19.550000000000182
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 157,
+   "max_um": 6.5900000000001455
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 158,
+   "max_um": 15.230000000000473
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 159,
+   "max_um": 15.230000000000473
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 160,
+   "max_um": 22.520000000000437
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 161,
+   "max_um": 19.550000000000182
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 162,
+   "max_um": 22.520000000000437
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 188,
+   "max_um": 19.549999999999272
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 189,
+   "max_um": 22.519999999999527
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 190,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 191,
+   "max_um": 19.549999999999272
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 192,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 193,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 194,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 195,
+   "max_um": 19.549999999999272
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 196,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 197,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 199,
+   "max_um": 6.5900000000001455
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 200,
+   "max_um": 6.5900000000001455
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 201,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 202,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 203,
+   "max_um": 19.549999999999272
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 204,
+   "max_um": 6.5900000000001455
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 205,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 206,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 207,
+   "max_um": 19.549999999999272
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 208,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 209,
+   "max_um": 22.519999999999527
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 235,
+   "max_um": 19.51000000000022
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 236,
+   "max_um": 23.829999999999927
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 237,
+   "max_um": 10.86999999999989
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 238,
+   "max_um": 19.51000000000022
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 239,
+   "max_um": 10.86999999999989
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 240,
+   "max_um": 15.1899999999996
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 241,
+   "max_um": 10.86999999999989
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 242,
+   "max_um": 19.51000000000022
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 243,
+   "max_um": 10.86999999999989
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 244,
+   "max_um": 15.1899999999996
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 245,
+   "max_um": 3.0399999999999636
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 246,
+   "max_um": 6.550000000000182
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 247,
+   "max_um": 6.550000000000182
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 248,
+   "max_um": 15.1899999999996
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 249,
+   "max_um": 15.1899999999996
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 250,
+   "max_um": 19.51000000000022
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 251,
+   "max_um": 6.550000000000182
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 252,
+   "max_um": 15.1899999999996
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 253,
+   "max_um": 15.1899999999996
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 254,
+   "max_um": 19.51000000000022
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 255,
+   "max_um": 15.1899999999996
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 256,
+   "max_um": 23.829999999999927
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 282,
+   "max_um": 19.549999999999272
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 283,
+   "max_um": 22.520000000000437
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 284,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 285,
+   "max_um": 19.549999999999272
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 286,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 287,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 288,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 289,
+   "max_um": 19.549999999999272
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 290,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 291,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 293,
+   "max_um": 6.5900000000001455
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 294,
+   "max_um": 6.5900000000001455
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 295,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 296,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 297,
+   "max_um": 19.549999999999272
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 298,
+   "max_um": 6.5900000000001455
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 299,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 300,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 301,
+   "max_um": 22.520000000000437
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 302,
+   "max_um": 19.549999999999272
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 303,
+   "max_um": 22.520000000000437
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 329,
+   "max_um": 19.51000000000022
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 330,
+   "max_um": 23.829999999999927
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 331,
+   "max_um": 10.8700000000008
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 332,
+   "max_um": 19.51000000000022
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 333,
+   "max_um": 10.8700000000008
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 334,
+   "max_um": 15.19000000000051
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 335,
+   "max_um": 10.8700000000008
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 336,
+   "max_um": 19.51000000000022
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 337,
+   "max_um": 10.8700000000008
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 338,
+   "max_um": 15.19000000000051
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 339,
+   "max_um": 3.040000000000873
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 340,
+   "max_um": 6.549999999999272
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 341,
+   "max_um": 6.549999999999272
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 342,
+   "max_um": 15.19000000000051
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 343,
+   "max_um": 15.19000000000051
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 344,
+   "max_um": 19.51000000000022
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 345,
+   "max_um": 6.549999999999272
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 346,
+   "max_um": 15.19000000000051
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 347,
+   "max_um": 15.19000000000051
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 348,
+   "max_um": 23.829999999999927
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 349,
+   "max_um": 19.51000000000022
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 350,
+   "max_um": 23.829999999999927
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 376,
+   "max_um": 19.55000000000109
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 377,
+   "max_um": 22.520000000000437
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 378,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 379,
+   "max_um": 19.55000000000109
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 380,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 381,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 382,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 383,
+   "max_um": 19.55000000000109
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 384,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 385,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 387,
+   "max_um": 6.5900000000001455
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 388,
+   "max_um": 6.5900000000001455
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 389,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 390,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 391,
+   "max_um": 19.55000000000109
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 392,
+   "max_um": 6.5900000000001455
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 393,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 394,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 395,
+   "max_um": 19.55000000000109
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 396,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 397,
+   "max_um": 22.520000000000437
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 423,
+   "max_um": 19.549999999999272
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 424,
+   "max_um": 22.520000000000437
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 425,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 426,
+   "max_um": 19.549999999999272
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 427,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 428,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 429,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 430,
+   "max_um": 19.549999999999272
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 431,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 432,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 434,
+   "max_um": 6.5900000000001455
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 435,
+   "max_um": 6.5900000000001455
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 436,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 437,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 438,
+   "max_um": 19.549999999999272
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 439,
+   "max_um": 6.5900000000001455
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 440,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 441,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 442,
+   "max_um": 22.520000000000437
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 443,
+   "max_um": 19.549999999999272
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 444,
+   "max_um": 22.520000000000437
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 470,
+   "max_um": 19.55000000000109
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 471,
+   "max_um": 22.520000000000437
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 472,
+   "max_um": 10.910000000001673
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 473,
+   "max_um": 19.55000000000109
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 474,
+   "max_um": 10.910000000001673
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 475,
+   "max_um": 15.230000000001382
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 476,
+   "max_um": 10.910000000001673
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 477,
+   "max_um": 19.55000000000109
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 478,
+   "max_um": 10.910000000001673
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 479,
+   "max_um": 15.230000000001382
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 481,
+   "max_um": 6.5900000000001455
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 482,
+   "max_um": 6.5900000000001455
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 483,
+   "max_um": 15.230000000001382
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 484,
+   "max_um": 15.230000000001382
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 485,
+   "max_um": 19.55000000000109
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 486,
+   "max_um": 6.5900000000001455
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 487,
+   "max_um": 15.230000000001382
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 488,
+   "max_um": 15.230000000001382
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 489,
+   "max_um": 22.520000000000437
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 490,
+   "max_um": 19.55000000000109
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 491,
+   "max_um": 22.520000000000437
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 517,
+   "max_um": 19.549999999999272
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 518,
+   "max_um": 22.520000000000437
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 519,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 520,
+   "max_um": 19.549999999999272
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 521,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 522,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 523,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 524,
+   "max_um": 19.549999999999272
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 525,
+   "max_um": 10.909999999999854
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 526,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 528,
+   "max_um": 6.5900000000001455
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 529,
+   "max_um": 6.5900000000001455
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 530,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 531,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 532,
+   "max_um": 19.549999999999272
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 533,
+   "max_um": 6.5900000000001455
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 534,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 535,
+   "max_um": 15.229999999999563
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 536,
+   "max_um": 22.520000000000437
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 537,
+   "max_um": 19.549999999999272
+  },
+  {
+   "kind": "driver_riser_over_2p5",
+   "group": 538,
+   "max_um": 22.520000000000437
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN2",
+   "port": "clk_t16",
+   "xy": [
+    284.04,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN2",
+   "port": "clk_t17",
+   "xy": [
+    644.76,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN2",
+   "port": "clk_t18",
+   "xy": [
+    1005.48,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN2",
+   "port": "clk_t19",
+   "xy": [
+    1366.2,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN2",
+   "port": "clk_t20",
+   "xy": [
+    1726.9200000000003,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN2",
+   "port": "clk_t21",
+   "xy": [
+    2087.64,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN2",
+   "port": "clk_t22",
+   "xy": [
+    2448.36,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN2",
+   "port": "clk_t23",
+   "xy": [
+    2809.08,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN2",
+   "port": "clk_t24",
+   "xy": [
+    284.04,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN2",
+   "port": "clk_t25",
+   "xy": [
+    644.76,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN2",
+   "port": "clk_t26",
+   "xy": [
+    1005.48,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN2",
+   "port": "clk_t27",
+   "xy": [
+    1366.2,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN2",
+   "port": "clk_t28",
+   "xy": [
+    1726.9200000000003,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN2",
+   "port": "clk_t29",
+   "xy": [
+    2087.64,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN2",
+   "port": "clk_t30",
+   "xy": [
+    2448.36,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN2",
+   "port": "clk_t31",
+   "xy": [
+    2809.08,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN1",
+   "port": "clk_t16",
+   "xy": [
+    3169.8,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN1",
+   "port": "clk_t17",
+   "xy": [
+    3530.52,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN1",
+   "port": "clk_t18",
+   "xy": [
+    3891.2400000000002,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN1",
+   "port": "clk_t19",
+   "xy": [
+    4251.96,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN1",
+   "port": "clk_t20",
+   "xy": [
+    4612.68,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN1",
+   "port": "clk_t21",
+   "xy": [
+    4973.4,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN1",
+   "port": "clk_t22",
+   "xy": [
+    5334.120000000001,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN1",
+   "port": "clk_t23",
+   "xy": [
+    5694.84,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN1",
+   "port": "clk_t24",
+   "xy": [
+    3169.8,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN1",
+   "port": "clk_t25",
+   "xy": [
+    3530.52,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN1",
+   "port": "clk_t26",
+   "xy": [
+    3891.2400000000002,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN1",
+   "port": "clk_t27",
+   "xy": [
+    4251.96,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN1",
+   "port": "clk_t28",
+   "xy": [
+    4612.68,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN1",
+   "port": "clk_t29",
+   "xy": [
+    4973.4,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN1",
+   "port": "clk_t30",
+   "xy": [
+    5334.120000000001,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN1",
+   "port": "clk_t31",
+   "xy": [
+    5694.84,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN0",
+   "port": "clk_t16",
+   "xy": [
+    6055.5599999999995,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN0",
+   "port": "clk_t17",
+   "xy": [
+    6416.28,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN0",
+   "port": "clk_t18",
+   "xy": [
+    6777.0,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN0",
+   "port": "clk_t19",
+   "xy": [
+    7137.719999999999,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN0",
+   "port": "clk_t20",
+   "xy": [
+    7498.4400000000005,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN0",
+   "port": "clk_t21",
+   "xy": [
+    7859.16,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN0",
+   "port": "clk_t22",
+   "xy": [
+    8219.880000000001,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN0",
+   "port": "clk_t23",
+   "xy": [
+    8580.6,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN0",
+   "port": "clk_t24",
+   "xy": [
+    6055.5599999999995,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN0",
+   "port": "clk_t25",
+   "xy": [
+    6416.28,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN0",
+   "port": "clk_t26",
+   "xy": [
+    6777.0,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN0",
+   "port": "clk_t27",
+   "xy": [
+    7137.719999999999,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN0",
+   "port": "clk_t28",
+   "xy": [
+    7498.4400000000005,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN0",
+   "port": "clk_t29",
+   "xy": [
+    7859.16,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN0",
+   "port": "clk_t30",
+   "xy": [
+    8219.880000000001,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN0",
+   "port": "clk_t31",
+   "xy": [
+    8580.6,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN3",
+   "port": "clk_t16",
+   "xy": [
+    11466.359999999999,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN3",
+   "port": "clk_t17",
+   "xy": [
+    11105.64,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN3",
+   "port": "clk_t18",
+   "xy": [
+    10744.919999999998,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN3",
+   "port": "clk_t19",
+   "xy": [
+    10384.199999999999,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN3",
+   "port": "clk_t20",
+   "xy": [
+    10023.48,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN3",
+   "port": "clk_t21",
+   "xy": [
+    9662.759999999998,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN3",
+   "port": "clk_t22",
+   "xy": [
+    9302.039999999999,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN3",
+   "port": "clk_t23",
+   "xy": [
+    8941.32,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN3",
+   "port": "clk_t24",
+   "xy": [
+    11466.359999999999,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN3",
+   "port": "clk_t25",
+   "xy": [
+    11105.64,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN3",
+   "port": "clk_t26",
+   "xy": [
+    10744.919999999998,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN3",
+   "port": "clk_t27",
+   "xy": [
+    10384.199999999999,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN3",
+   "port": "clk_t28",
+   "xy": [
+    10023.48,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN3",
+   "port": "clk_t29",
+   "xy": [
+    9662.759999999998,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN3",
+   "port": "clk_t30",
+   "xy": [
+    9302.039999999999,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WN3",
+   "port": "clk_t31",
+   "xy": [
+    8941.32,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN0",
+   "port": "clk_t16",
+   "xy": [
+    14352.119999999999,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN0",
+   "port": "clk_t17",
+   "xy": [
+    13991.4,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN0",
+   "port": "clk_t18",
+   "xy": [
+    13630.68,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN0",
+   "port": "clk_t19",
+   "xy": [
+    13269.96,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN0",
+   "port": "clk_t20",
+   "xy": [
+    12909.24,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN0",
+   "port": "clk_t21",
+   "xy": [
+    12548.52,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN0",
+   "port": "clk_t22",
+   "xy": [
+    12187.8,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN0",
+   "port": "clk_t23",
+   "xy": [
+    11827.08,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN0",
+   "port": "clk_t24",
+   "xy": [
+    14352.119999999999,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN0",
+   "port": "clk_t25",
+   "xy": [
+    13991.4,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN0",
+   "port": "clk_t26",
+   "xy": [
+    13630.68,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN0",
+   "port": "clk_t27",
+   "xy": [
+    13269.96,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN0",
+   "port": "clk_t28",
+   "xy": [
+    12909.24,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN0",
+   "port": "clk_t29",
+   "xy": [
+    12548.52,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN0",
+   "port": "clk_t30",
+   "xy": [
+    12187.8,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN0",
+   "port": "clk_t31",
+   "xy": [
+    11827.08,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN1",
+   "port": "clk_t16",
+   "xy": [
+    17237.88,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN1",
+   "port": "clk_t17",
+   "xy": [
+    16877.16,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN1",
+   "port": "clk_t18",
+   "xy": [
+    16516.44,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN1",
+   "port": "clk_t19",
+   "xy": [
+    16155.72,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN1",
+   "port": "clk_t20",
+   "xy": [
+    15795.0,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN1",
+   "port": "clk_t21",
+   "xy": [
+    15434.279999999999,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN1",
+   "port": "clk_t22",
+   "xy": [
+    15073.56,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN1",
+   "port": "clk_t23",
+   "xy": [
+    14712.84,
+    16992.72
+   ],
+   "nearest_projected_um": 690.1000000000004
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN1",
+   "port": "clk_t24",
+   "xy": [
+    17237.88,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN1",
+   "port": "clk_t25",
+   "xy": [
+    16877.16,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN1",
+   "port": "clk_t26",
+   "xy": [
+    16516.44,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN1",
+   "port": "clk_t27",
+   "xy": [
+    16155.72,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN1",
+   "port": "clk_t28",
+   "xy": [
+    15795.0,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN1",
+   "port": "clk_t29",
+   "xy": [
+    15434.279999999999,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN1",
+   "port": "clk_t30",
+   "xy": [
+    15073.56,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_EN1",
+   "port": "clk_t31",
+   "xy": [
+    14712.84,
+    17299.44
+   ],
+   "nearest_projected_um": 996.8199999999979
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS1",
+   "port": "clk_t16",
+   "xy": [
+    284.04,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS1",
+   "port": "clk_t17",
+   "xy": [
+    644.76,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS1",
+   "port": "clk_t18",
+   "xy": [
+    1005.48,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS1",
+   "port": "clk_t19",
+   "xy": [
+    1366.2,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS1",
+   "port": "clk_t20",
+   "xy": [
+    1726.9200000000003,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS1",
+   "port": "clk_t21",
+   "xy": [
+    2087.64,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS1",
+   "port": "clk_t22",
+   "xy": [
+    2448.36,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS1",
+   "port": "clk_t23",
+   "xy": [
+    2809.08,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS1",
+   "port": "clk_t24",
+   "xy": [
+    284.04,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS1",
+   "port": "clk_t25",
+   "xy": [
+    644.76,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS1",
+   "port": "clk_t26",
+   "xy": [
+    1005.48,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS1",
+   "port": "clk_t27",
+   "xy": [
+    1366.2,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS1",
+   "port": "clk_t28",
+   "xy": [
+    1726.9200000000003,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS1",
+   "port": "clk_t29",
+   "xy": [
+    2087.64,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS1",
+   "port": "clk_t30",
+   "xy": [
+    2448.36,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS1",
+   "port": "clk_t31",
+   "xy": [
+    2809.08,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS0",
+   "port": "clk_t16",
+   "xy": [
+    3169.8,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS0",
+   "port": "clk_t17",
+   "xy": [
+    3530.52,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS0",
+   "port": "clk_t18",
+   "xy": [
+    3891.2400000000002,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS0",
+   "port": "clk_t19",
+   "xy": [
+    4251.96,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS0",
+   "port": "clk_t20",
+   "xy": [
+    4612.68,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS0",
+   "port": "clk_t21",
+   "xy": [
+    4973.4,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS0",
+   "port": "clk_t22",
+   "xy": [
+    5334.120000000001,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS0",
+   "port": "clk_t23",
+   "xy": [
+    5694.84,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS0",
+   "port": "clk_t24",
+   "xy": [
+    3169.8,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS0",
+   "port": "clk_t25",
+   "xy": [
+    3530.52,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS0",
+   "port": "clk_t26",
+   "xy": [
+    3891.2400000000002,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS0",
+   "port": "clk_t27",
+   "xy": [
+    4251.96,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS0",
+   "port": "clk_t28",
+   "xy": [
+    4612.68,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS0",
+   "port": "clk_t29",
+   "xy": [
+    4973.4,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS0",
+   "port": "clk_t30",
+   "xy": [
+    5334.120000000001,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_WS0",
+   "port": "clk_t31",
+   "xy": [
+    5694.84,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST0",
+   "port": "clk_t16",
+   "xy": [
+    6055.5599999999995,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST0",
+   "port": "clk_t17",
+   "xy": [
+    6416.28,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST0",
+   "port": "clk_t18",
+   "xy": [
+    6777.0,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST0",
+   "port": "clk_t19",
+   "xy": [
+    7137.719999999999,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST0",
+   "port": "clk_t20",
+   "xy": [
+    7498.4400000000005,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST0",
+   "port": "clk_t21",
+   "xy": [
+    7859.16,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST0",
+   "port": "clk_t22",
+   "xy": [
+    8219.880000000001,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST0",
+   "port": "clk_t23",
+   "xy": [
+    8580.6,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST0",
+   "port": "clk_t24",
+   "xy": [
+    6055.5599999999995,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST0",
+   "port": "clk_t25",
+   "xy": [
+    6416.28,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST0",
+   "port": "clk_t26",
+   "xy": [
+    6777.0,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST0",
+   "port": "clk_t27",
+   "xy": [
+    7137.719999999999,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST0",
+   "port": "clk_t28",
+   "xy": [
+    7498.4400000000005,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST0",
+   "port": "clk_t29",
+   "xy": [
+    7859.16,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST0",
+   "port": "clk_t30",
+   "xy": [
+    8219.880000000001,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST0",
+   "port": "clk_t31",
+   "xy": [
+    8580.6,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST1",
+   "port": "clk_t16",
+   "xy": [
+    11466.359999999999,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST1",
+   "port": "clk_t17",
+   "xy": [
+    11105.64,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST1",
+   "port": "clk_t18",
+   "xy": [
+    10744.919999999998,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST1",
+   "port": "clk_t19",
+   "xy": [
+    10384.199999999999,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST1",
+   "port": "clk_t20",
+   "xy": [
+    10023.48,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST1",
+   "port": "clk_t21",
+   "xy": [
+    9662.759999999998,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST1",
+   "port": "clk_t22",
+   "xy": [
+    9302.039999999999,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST1",
+   "port": "clk_t23",
+   "xy": [
+    8941.32,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST1",
+   "port": "clk_t24",
+   "xy": [
+    11466.359999999999,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST1",
+   "port": "clk_t25",
+   "xy": [
+    11105.64,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST1",
+   "port": "clk_t26",
+   "xy": [
+    10744.919999999998,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST1",
+   "port": "clk_t27",
+   "xy": [
+    10384.199999999999,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST1",
+   "port": "clk_t28",
+   "xy": [
+    10023.48,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST1",
+   "port": "clk_t29",
+   "xy": [
+    9662.759999999998,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST1",
+   "port": "clk_t30",
+   "xy": [
+    9302.039999999999,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_HOST1",
+   "port": "clk_t31",
+   "xy": [
+    8941.32,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES0",
+   "port": "clk_t16",
+   "xy": [
+    14352.119999999999,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES0",
+   "port": "clk_t17",
+   "xy": [
+    13991.4,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES0",
+   "port": "clk_t18",
+   "xy": [
+    13630.68,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES0",
+   "port": "clk_t19",
+   "xy": [
+    13269.96,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES0",
+   "port": "clk_t20",
+   "xy": [
+    12909.24,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES0",
+   "port": "clk_t21",
+   "xy": [
+    12548.52,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES0",
+   "port": "clk_t22",
+   "xy": [
+    12187.8,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES0",
+   "port": "clk_t23",
+   "xy": [
+    11827.08,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES0",
+   "port": "clk_t24",
+   "xy": [
+    14352.119999999999,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES0",
+   "port": "clk_t25",
+   "xy": [
+    13991.4,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES0",
+   "port": "clk_t26",
+   "xy": [
+    13630.68,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES0",
+   "port": "clk_t27",
+   "xy": [
+    13269.96,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES0",
+   "port": "clk_t28",
+   "xy": [
+    12909.24,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES0",
+   "port": "clk_t29",
+   "xy": [
+    12548.52,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES0",
+   "port": "clk_t30",
+   "xy": [
+    12187.8,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES0",
+   "port": "clk_t31",
+   "xy": [
+    11827.08,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES1",
+   "port": "clk_t16",
+   "xy": [
+    17237.88,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES1",
+   "port": "clk_t17",
+   "xy": [
+    16877.16,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES1",
+   "port": "clk_t18",
+   "xy": [
+    16516.44,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES1",
+   "port": "clk_t19",
+   "xy": [
+    16155.72,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES1",
+   "port": "clk_t20",
+   "xy": [
+    15795.0,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES1",
+   "port": "clk_t21",
+   "xy": [
+    15434.279999999999,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES1",
+   "port": "clk_t22",
+   "xy": [
+    15073.56,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES1",
+   "port": "clk_t23",
+   "xy": [
+    14712.84,
+    563.76
+   ],
+   "nearest_projected_um": 687.98
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES1",
+   "port": "clk_t24",
+   "xy": [
+    17237.88,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES1",
+   "port": "clk_t25",
+   "xy": [
+    16877.16,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES1",
+   "port": "clk_t26",
+   "xy": [
+    16516.44,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES1",
+   "port": "clk_t27",
+   "xy": [
+    16155.72,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES1",
+   "port": "clk_t28",
+   "xy": [
+    15795.0,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES1",
+   "port": "clk_t29",
+   "xy": [
+    15434.279999999999,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES1",
+   "port": "clk_t30",
+   "xy": [
+    15073.56,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  },
+  {
+   "kind": "endpoint_off_mesh_reach",
+   "part": "lk_ES1",
+   "port": "clk_t31",
+   "xy": [
+    14712.84,
+    257.04000000000013
+   ],
+   "nearest_projected_um": 994.6999999999998
+  }
+ ],
+ "scope": "fixed mesh preparation; downstream FT arc/local wires and extraction not signed"
+}
