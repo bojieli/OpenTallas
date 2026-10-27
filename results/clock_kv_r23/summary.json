@@ -1,0 +1,18 @@
+{
+ "lane": "CLOCK-KV-R23",
+ "date": "2026-10-27T05:28:15-07:00",
+ "main": "8810c5e6a4a65ff26e29a1408f22f7e8c81a9790",
+ "tool": {"die_sta_related.py_sha256": "6fb2e9a06abbe519e2ddf5f023b288ced8d4626e7a1bb8c99bde898f6ee98cf7", "mesh_mc18.py_sha256 (finite-gradient fix 78c678c92)": "ee3dbf3edd6c50557698966e6cda5bb9bd21eef27719eb1db47ced97b837f0dd"},
+ "run_dir": "intel1:/srv/opentallas-scratch2/claude/clock-kv-r23-1027",
+ "args": "R19..R22 gate args (plan hm_r12, e1/e5 signed views, --clock-ocv table 0.21%/mm, --mesh-signoff MC, --hold-buffers HB4 per-endpoint, --core-latency-ff 202.5), --core-view-match-pins default ON",
+ "coverage": {"core_instances_real": 424, "core_instances_total": 1628, "taps_with_real_model": 384, "taps_total": 1920},
+ "mc_fix_effect_kv": "r18 mesh re-signed with main mesh_mc18: SUMMARY equal to R18 within 0.01 ps (KV transient linear); gate seam TT 292.87->292.74, FF -200.90 -> -200.90",
+ "runs": {
+  "G23_base (r19 clock, r18 MC re-signed)": {"seam": {"tt": 292.74, "ff": -200.90, "hb4_tt": 64.92, "hb4_ff": 0.0, "real_tt": 292.74, "real_ff": -139.80, "both_real_ff": 19.30, "hb4_cells": 818783}, "intra": {"tt": 366.38, "ff": -174.78, "hb4_tt": 138.86, "real_ff": -25.07}},
+  "G23_u_oldmc (r22u clock, OLD r18 MC = R22 G_r22u)": {"byte_equal_stdout_to_R22_G_r22u": true, "seam": {"tt": 282.03, "ff": -207.73, "real_ff": -150.11, "hb4_cells": 849942}},
+  "G23_u (r22u upstream clock, MATCHING r22u MC) = CURRENT KV real-view gate": {"seam": {"tt": 288.83, "ff": -200.65, "hb4_tt": 65.36, "hb4_ff": 0.0, "hb4_real_tt": 100.37, "real_tt": 288.83, "real_ff": -140.43, "both_real_ff": 14.49, "hb4_cells": 822477, "hb4_mm2": 0.084, "verdict_raw": "FAIL (hold)", "verdict_hb4": "TT>=0, FF>=0"}, "intra": {"tt": 365.89, "ff": -174.47, "hb4_tt": 139.25, "hb4_ff": 0.0, "real_ff": -23.69, "both_real_ff": 67.97}, "mesh_mc": {"TT_nominal": 42.04, "TT_mc_worst": 118.62, "FF_nominal": 38.45, "FF_mc_worst": 115.21}}
+ },
+ "finding": "R22's upstream-slide penalty (seam TT -10.84, real FF seam -10.2) was an artefact of gating the r22u build with the r18-build mesh sign-off; with its own MC the slide costs seam TT -3.9 ps, FF +0.25, real FF seam -0.6, intra real FF +1.4 (better).",
+ "ft0_bit_count": "plan ft0_i width 1 + epoch pin = 2 pins (schema.port_pins_count = width + has_epoch) -> demand 2 bits x k3 = 6 HB4 is consistent",
+ "status": "UNCHECKED (NUMBER-CHECK pending) except byte-equality of G23_u_oldmc vs G_r22u (CHECKED)"
+}
