@@ -332,3 +332,17 @@ def test_core_view_match_pins_compares_content(tmp_path):
     assert R.pins_match(meta_new, "cores/nope.json", tmp_path) == "plan pins_file missing"
     assert R.pins_match(meta_new, None, tmp_path) == "no plan pins_file"
 
+
+def test_hb4_intra_bound_and_abutted_model():
+    """CLOCK-KV-R24: intra HB4 cells = per partition worst k x its hard-core data pins; abutted model sizes k at 37.41."""
+    tt = {("a", "b", "P"): (300.0, 0, False, False), ("b", "a", "P"): (300.0, 0, False, False),
+          ("c", "d", "Q"): (300.0, 0, False, False)}
+    ff = {("a", "b", "P"): (0, -80.0, False, False), ("b", "a", "P"): (0, -10.0, False, False),
+          ("c", "d", "Q"): (0, 5.0, False, False)}
+    r = R.hold_buffer_model(tt, ff, part_bits={"P": 100, "Q": 50})
+    assert r["k_by_part"] == {"P": 2} and r["hb4_cells"] == 200 and r["bits_needing_hb"] == 100
+    r2 = R.hold_buffer_model(tt, ff, hb=R.HB4_ABUTTED, part_bits={"P": 100, "Q": 50})
+    assert r2["k_by_part"] == {"P": 3} and r2["hb4_cells"] == 300
+    assert r2["all"]["tt_setup_after_ps"] == round(300.0 - 3 * 67.67, 2)
+    assert R._DATA_PIN_SKIP.search("g_t_10_u_l8__clk[0]") and R._DATA_PIN_SKIP.search("strap_bsel[1]")
+    assert R._DATA_PIN_SKIP.search("g_t_11_u_stk__rst_n[0]") and not R._DATA_PIN_SKIP.search("i_ck_data[3]")

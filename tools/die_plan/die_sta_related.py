@@ -491,7 +491,39 @@ HB4 = dict(cell="HB4xp67_ASAP7_75t_R", ff_early_ps=44.6, tt_late_ps=83.0, area_u
            basis="HOLD-REPAIR estimate basis (CLOCK-KV-R6/R15 kv_hb_count.py), UNCHECKED")
 
 
-def hold_buffer_model(tt, ff, bits=None, hb=HB4):
+# CLOCK-KV-R24 (NUMBER-CHECK-KV-R23 4b, COORD 10-27 06:0x (c)): the plan HB4 pair (44.6 FF / 83.0 TT) is not one
+# physical form.  Own OpenSTA HB4xp67 chain stage (NC-KV-R23): ABUTTED (0 fF wire) FF min 37.41 / TT max 67.67.
+# --hb4-delay abutted sizes k with the abutted FF minimum (hold holds for ANY placement of the chain, since wire only
+# slows it) and charges the abutted TT stage (the planned island form: the k cells of a bit abut in a landing/hold
+# island beside the capture pin register).  UNCHECKED here: NC-KV-R23 measured values, recheck before default.
+HB4_ABUTTED = dict(HB4, ff_early_ps=37.41, tt_late_ps=67.67,
+                   basis="NUMBER-CHECK-KV-R23 own OpenSTA HB4xp67 4-chain stage h2, abutted (0 fF wire): FF min / TT max")
+_DATA_PIN_SKIP = re.compile(r"(^|_)(clk|ck|rst_n|rst|strap_[a-z]+)(\[|$)|__clk|__rst_n")
+
+
+def intra_bits(plan_path):
+    """{partition: data pins of all its hard cores} (clock/reset/strap pins excluded), the INTRA HB4 cell-count basis:
+    every core pin is registered (pin registers) and its other end is a register of the same partition under the
+    partition glue tap or another core's tap.  Partition-internal glue-to-glue paths are not counted (no netlist)."""
+    import schema as S
+    raw = S.load(plan_path)
+    P = S.Plan(raw)
+    root = Path(plan_path).resolve().parent
+    cache, out = {}, {}
+    for n, p in P.parts.items():
+        tot = 0
+        for h in P.types[p["type"]].get("hard_cores", []) or []:
+            pf = h.get("pins_file")
+            if pf not in cache:
+                f = root / pf if pf else None
+                pins = json.loads(f.read_text()).get("pins", []) if f and f.exists() else []
+                cache[pf] = sum(1 for q in pins if not _DATA_PIN_SKIP.search(str(q.get("name", ""))))
+            tot += cache[pf]
+        out[n] = tot
+    return out
+
+
+def hold_buffer_model(tt, ff, bits=None, hb=HB4, part_bits=None):
     """per ENDPOINT PATH k = ceil(-FF hold / ff_early) HB4 cells on the capture data input (0 when hold >= 0); after
     insertion FF hold += k ff_early, TT setup -= k tt_late, both of THAT path (CLOCK-KV-R19, NUMBER-CHECK-KV-R18: keys
     (a, b, tag, launch_model, capture_model); never size k from one endpoint and charge it to another).
@@ -531,11 +563,15 @@ def hold_buffer_model(tt, ff, bits=None, hb=HB4):
     keys = [k for k in ff if k in tt]
     hist, cells, cbits, fbits, seen = defaultdict(int), 0, 0, 0, set()
     kpair = defaultdict(int)
+    dpart = {}
     for key in keys:
         h_ = ff[key][1]
         k = max(0, _m.ceil(-h_ / hb["ff_early_ps"] - 1e-9)) if h_ < 0 else 0
         hist[k] += 1
         kpair[(key[0], key[1])] = max(kpair[(key[0], key[1])], k)
+        if isinstance(key[2], str) and "->" in key[2]:
+            dpart[(key[0], key[1])] = key[2].split("->", 1)[1]
+    by_dst = defaultdict(int)
     for pk, k in kpair.items():
         if bits is not None and pk not in seen:
             seen.add(pk)       # a tap pair's bits once (INFO keys repeat it per port id / endpoint path)
@@ -544,12 +580,29 @@ def hold_buffer_model(tt, ff, bits=None, hb=HB4):
             if k:              # cell-count bound: every bit of the pair at the pair's worst endpoint-path k
                 fbits += nb
                 cells += k * nb
+                by_dst[dpart.get(pk)] += k * nb
     out = dict(model=hb, all=blk(keys), real_view=blk([k for k in keys if ff[k][2]]),
                both_real=blk([k for k in keys if ff[k][3]]), cells_per_pair_hist=dict(sorted(hist.items())),
                pairs_needing_hb=sum(1 for k in kpair.values() if k), endpoint_paths=len(keys),
                paths_needing_hb=sum(v for k, v in hist.items() if k))
+    if part_bits is not None:
+        # intra: per partition, every hard-core data pin at the partition's worst intra endpoint-path k (bound)
+        kpart = defaultdict(int)
+        for (a_, b_, part), k in ((key[:3], k_) for key, k_ in
+                                   ((key, max(0, _m.ceil(-ff[key][1] / hb["ff_early_ps"] - 1e-9)) if ff[key][1] < 0 else 0)
+                                    for key in keys)):
+            kpart[part] = max(kpart[part], k)
+        icells = sum(k * part_bits.get(pn, 0) for pn, k in kpart.items())
+        ibits = sum(part_bits.get(pn, 0) for pn, k in kpart.items() if k)
+        out.update(bits_counted=sum(part_bits.get(pn, 0) for pn in kpart), bits_needing_hb=ibits, hb4_cells=icells,
+                   hb4_area_um2=round(icells * hb["area_um2"], 1), hb4_area_mm2=round(icells * hb["area_um2"] / 1e6, 4),
+                   hb4_cells_by_part={pn: k * part_bits.get(pn, 0) for pn, k in sorted(kpart.items()) if k},
+                   k_by_part={pn: k for pn, k in sorted(kpart.items()) if k},
+                   count_basis="BOUND: every hard-core data pin of the partition (plan pins files, clk/rst/strap "
+                               "excluded) at the partition's worst intra endpoint-path k; glue-to-glue paths not counted")
     if bits is not None:
-        out.update(bits_counted=cbits, bits_needing_hb=fbits, hb4_cells=cells,
+        out.update(bits_counted=cbits, bits_needing_hb=fbits, hb4_cells=cells, hb4_cells_by_part=dict(sorted(
+                       (str(k_), v_) for k_, v_ in by_dst.items())),
                    hb4_area_um2=round(cells * hb["area_um2"], 1), hb4_area_mm2=round(cells * hb["area_um2"] / 1e6, 4),
                    count_basis="nearest-tap seam bits (DC.seam_pairs: the pin register's own launch/capture taps)")
     return out
@@ -903,6 +956,9 @@ def main(argv=None):
     ap.add_argument("--droop-region", choices=("mesh", "tree"), default="mesh",
                     help="shared-droop region (12.4a b1): mesh = mesh/PDN region (default, R17 fix); tree = pre-R17 rule")
     ap.add_argument("--droop-regions", help="JSON {port: region} override (e.g. PDNSim regions)")
+    ap.add_argument("--hb4-delay", choices=("plan", "abutted"), default="plan",
+                    help="CLOCK-KV-R24: HB4 stage delays for k and the setup charge: plan = 44.6 FF / 83.0 TT (default, "
+                         "unchanged); abutted = 37.41 / 67.67 (NC-KV-R23 OpenSTA abutted chain, hold-safe for any placement)")
     ap.add_argument("--hold-buffers", choices=("none", "HB4"), default="none",
                     help="CLOCK-KV-R18 opt-in: model the planned HB4 data hold-buffer insertion (12.4a a1) per pair and "
                          "report the gate after it (summary.hb4); default none = output unchanged")
@@ -1045,13 +1101,17 @@ def main(argv=None):
                           verdict="PASS" if lt.get("verdict") == "PASS" and lf.get("verdict") == "PASS" else "FAIL")
     if a.hold_buffers != "none" and "TT" in hbrec and "FF" in hbrec:
         hb = {}
+        HBM = HB4_ABUTTED if a.hb4_delay == "abutted" else HB4
+        ibits = intra_bits(a.plan)
         for k in ("intra", "seam", "seam_nearest_INFO"):
             if k in hbrec["TT"] and k in hbrec["FF"]:
                 hb[k] = hold_buffer_model(hbrec["TT"][k], hbrec["FF"][k],
-                                          bits=hbbits if k.startswith("seam") else None)
+                                          bits=hbbits if k.startswith("seam") else None, hb=HBM,
+                                          part_bits=ibits if k == "intra" else None)
         for k in ("intra", "seam"):
             if k in hb:
-                gate[k]["hb4"] = dict(tt_setup_ps=hb[k]["all"].get("tt_setup_after_ps"),
+                gate[k]["hb4"] = dict(cells=hb[k].get("hb4_cells"), delay_model=a.hb4_delay,
+                                      tt_setup_ps=hb[k]["all"].get("tt_setup_after_ps"),
                                       ff_hold_ps=hb[k]["all"].get("ff_hold_after_ps"),
                                       real_tt_setup_ps=hb[k]["real_view"].get("tt_setup_after_ps"),
                                       real_ff_hold_ps=hb[k]["real_view"].get("ff_hold_after_ps"),
