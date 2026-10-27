@@ -190,7 +190,83 @@ def lower_one(r, rx, live):
     return emitted, ledger
 
 
-def lower_dir(source, output):
+def lower_batch_one(r, rx, live):
+    """Keep the original N-row FUSED engine operation and aligned operands.
+
+    Hoist broadcast gain once. Copy only incompatible input buffers, and publish
+    only an incompatible output. POST may retain its nonzero shared bank phase.
+    """
+    from fused_phase_check import check_fused, phase
+    if rx and (rx.rsel or rx.rpl): raise ValueError('FUSED selector/remainder mode unsupported')
+    rows=rx.n if rx else 1; oldrs=rx.rs if rx else {}
+    forbidden=live.copy();mark(forbidden,extents(r,rx,'O'),False)
+    for k in r.desc:
+        if k!='O':mark(forbidden,extents(r,rx,k))
+    native=copy.deepcopy(r);native.wait=WAIT
+    nrx=copy.deepcopy(rx); newrs=dict(oldrs)
+    target_phase=0 if r.op=='HC_PRE_NORM' else phase(max((r.desc[k] for k in 'AB'),key=lambda d:d.n).base)
+    emitted=[]; pending=[]; rowlog={'row':'batch','rows':rows,'buffers':{},'vm_copy_words':0,'hbm_load_words':0}
+    for k in 'ABCO':
+        d=r.desc[k];oldstride=oldrs.get(k,0);align=8 if k=='C' else 256
+        desired_phase=0 if k=='C' else target_phase
+        legal=(d.space=='VM' and d.base%align==desired_phase*8 and oldstride%align==0)
+        if r.op=='HC_PRE_NORM' and k=='B' and oldstride:legal=False
+        if legal:continue
+        stride=math.ceil(d.n/align)*align if oldstride else 0
+        count=rows if oldstride else 1
+        span=(count-1)*stride+d.n
+        # Keep overlap copies forward: a source at/above destination cannot
+        # overwrite an unread later source word, regardless of pipe latency.
+        f=forbidden; start=max(0,d.base if k=='O' else 0)
+        choices=range(desired_phase*8,LIMIT-span+1,align)
+        base=next((a for a in choices if a>=start and not f[a:a+span].any()),None)
+        if base is None:raise ValueError(f'batch {r.op}.{k}: no {span}-word phase{desired_phase} buffer')
+        f[base:base+span]=True
+        target=copy.copy(d);target.space='VM';target.base=base
+        target.lstride=target.l1stride=target.dyn_sel=target.dyn_mul=target.n_sel=target.indexed=0
+        native.desc[k]=target;newrs[k]=stride
+        rowlog['buffers'][k]={'base':base,'words':span,'original_base':d.base,'source_space':d.space,'row_stride':stride}
+        if k!='O':
+            cp=copy_rec(d,target,f'batch {r.op} materialize {k}')
+            cx=IR.RowX(n=rows,slot0=rx.slot0,rs={'A':oldstride,'O':stride}) if rx and oldstride else None
+            cp.slot=(cx.slot0&7) if cx else native.slot
+            emitted.append((cp,cx));rowlog['hbm_load_words' if d.space=='HBM' else 'vm_copy_words']+=d.n*count
+        else:
+            cp=copy_rec(target,d,f'batch {r.op} publish O')
+            cx=IR.RowX(n=rows,slot0=rx.slot0,rs={'A':stride,'O':oldstride}) if rx else None
+            cp.slot=(cx.slot0&7) if cx else native.slot
+            pending.append((cp,cx));rowlog['vm_copy_words']+=d.n*rows
+    if nrx:nrx.rs=newrs
+    if check_fused(native,nrx):raise ValueError('batch native FUSED contract still fails')
+    emitted.append((native,nrx));emitted.extend(pending)
+    return emitted,[rowlog]
+
+
+def lower_batched_chunks(r,rx,live):
+    if not rx:return lower_batch_one(r,rx,live)
+    mask=live.copy();mark(mask,extents(r,rx,'O'),False)
+    for k in r.desc:
+        if k!='O':mark(mask,extents(r,rx,k))
+    start=0;emitted=[];logs=[]
+    while start<rx.n:
+        selected=None
+        for count in range(rx.n-start,0,-1):
+            sub=copy.deepcopy(r);xx=copy.deepcopy(rx);xx.n=count;xx.slot0=rx.slot0+start;sub.slot=xx.slot0&7
+            for k,d in sub.desc.items():d.base+=start*(rx.rs.get(k,0)<<(rx.hsh if d.space=='HBM' else 0))
+            try:selected=lower_batch_one(sub,xx,mask)
+            except ValueError as e:
+                if 'no ' not in str(e) or '-word phase' not in str(e):raise
+                continue
+            break
+        if selected is None:raise ValueError(f'no legal batched FUSED storage at row {start}')
+        part,entries=selected
+        for entry in entries:entry['start_row']=start
+        emitted.extend(part);logs.extend(entries);mark(mask,extents(sub,xx,'O'))
+        start+=count
+    return emitted,logs
+
+
+def lower_dir(source, output, batch=False):
     meta, image, recs, oldviol, _ = IC.run_dir(source)
     original_bytes=len(image)
     rid_base=math.ceil(meta['token']['vm_need_words']/256)*256
@@ -203,7 +279,7 @@ def lower_dir(source, output):
         if publish_pending:
             r=copy.deepcopy(r);r.wait=WAIT;raw=IR.encode(r,rx);publish_pending=False
         if ix in live:
-            lowered, rows = lower_one(r, rx, live[ix]); begin = len(out)
+            lowered, rows = (lower_batched_chunks if batch else lower_one)(r, rx, live[ix]); begin = len(out)
             for rr, xx in lowered: out.extend(IR.encode(rr, xx))
             publish_pending=True
             ledger.append({'original_offset': off, 'offset': begin, 'op':r.op, 'original_rows':rx.n if rx else 1,
@@ -216,7 +292,7 @@ def lower_dir(source, output):
         segment['offset'] = offset_map[oldoff]; segment['bytes'] = offset_map[oldend] - offset_map[oldoff]
     result['token']['bytes'] = len(out)
     result['token']['vm_need_words']=max(result['token']['vm_need_words'],rid_base+8*meta['N'])
-    result['fused_materialization'] = {'source':str(source), 'native_execution':False, 'scheduling':'all-unit drain before each inserted record; row serialization',
+    result['fused_materialization'] = {'source':str(source), 'native_execution':False, 'scheduling':'all-unit drain before inserted records; N-row FUSED preserved' if batch else 'all-unit drain before each inserted record; row serialization',
         'records':ledger, 'rid_materialization':{'base':rid_base,'words':8*meta['N'],'consumers_fixed':rid_fixes}, 'cost_status':'NOT_PRICED; copy/DMA traffic and lost overlap must be charged before adoption',
         'vm_copy_words':sum(x['vm_copy_words'] for l in ledger for x in l['rows']),
         'hbm_load_words':sum(x['hbm_load_words'] for l in ledger for x in l['rows'])}
@@ -233,6 +309,6 @@ def lower_dir(source, output):
 
 
 def main():
-    ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('source',type=Path);ap.add_argument('output',type=Path)
-    a=ap.parse_args();print(json.dumps(lower_dir(a.source,a.output)))
+    ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('source',type=Path);ap.add_argument('output',type=Path);ap.add_argument('--batch',action='store_true')
+    a=ap.parse_args();print(json.dumps(lower_dir(a.source,a.output,a.batch)))
 if __name__=='__main__':main()

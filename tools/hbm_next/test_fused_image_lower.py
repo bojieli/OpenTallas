@@ -80,6 +80,35 @@ class Lower(unittest.TestCase):
             base=r.desc['O'].base+row*5120
             np.testing.assert_array_equal(die.vm[base:base+5120],bits)
 
+    def test_batch_payload_and_broadcast_gain(self):
+        r=pre();rx=IR.RowX(n=2,rs={'A':20480,'C':8,'O':5120})
+        rng=np.random.default_rng(8);h=M.Hbm();gain=rng.uniform(.5,2,5120).astype(np.float32)
+        h.add(r.desc['B'].base,gain.view(np.uint8),'gain')
+        die=M.Die(0,h);machine=M.Machine([die]);original=[]
+        for row,rr in IR.expand(r,rx):
+            a=rng.uniform(-2,2,20480).astype(np.float32);c=rng.uniform(-2,2,4).astype(np.float32)
+            die.vm[rr.desc['A'].base:rr.desc['A'].base+20480]=a.view(np.uint32)
+            die.vm[rr.desc['C'].base:rr.desc['C'].base+4]=c.view(np.uint32)
+            original.append((a,c))
+        emitted,ledger=F.lower_batched_chunks(r,rx,np.zeros(F.LIMIT,bool));expected={}
+        self.assertEqual(sum(rr.unit=='DMA'for rr,xx in emitted),1)
+        self.assertEqual(sum((xx.n if xx else 1) for rr,xx in emitted if rr.unit=='FUSED'),2)
+        for rec,xx in emitted:
+            for row,rr in IR.expand(rec,xx):
+                machine.cur=rr
+                if rr.unit=='SU':M.u_su_vop(machine,rr,0)
+                elif rr.unit=='DMA':M.u_dma_load(machine,rr,0)
+                else:
+                    a,c=original[row]
+                    for key,values in [('A',a),('B',gain),('C',c)]:
+                        base=rr.desc[key].base
+                        np.testing.assert_array_equal(die.vm[base:base+len(values)],values.view(np.uint32))
+                    values=np.arange(5120,dtype=np.float32)+row;expected[row]=values.view(np.uint32)
+                    base=rr.desc['O'].base;die.vm[base:base+5120]=values.view(np.uint32)
+        for row,bits in expected.items():
+            base=r.desc['O'].base+row*5120
+            np.testing.assert_array_equal(die.vm[base:base+5120],bits)
+
     def test_copy_decode_and_phase_mutant(self):
         out,_=F.lower_one(pre(),None,np.zeros(F.LIMIT,bool))
         for r,rx in out:
