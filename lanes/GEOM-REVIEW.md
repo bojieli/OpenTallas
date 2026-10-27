@@ -3904,3 +3904,28 @@ GEOM REQ [INFRA-FIRST-QC-R14] 2026-10-26 23:28 PDT claude/qc-mesh-r14-1026@64abd
   - Conditions:
     (1) The die DRC re-run on the fixed build (combo + DRT DRC) must show 0 M9 spacing markers of the R17 class. It must also show 0 notch/min-step/same-net-spacing markers on the 408 same-net 0.04-um shield gaps, because 0.04 is exactly the LEF minimum.
     (2) If any of those 408 mark, use the structural form: one SHARED VSS shield between adjacent parallel clock nets (clock-shield-clock), not two shields 0.04 apart.
+2026-10-27 07:08 PDT GEOM-REVIEW-24: VERDICT [KV-KITS-4 kv3_hub_Ei place2, intel1 kv-kits-4-1027/render/kv3_hub_Ei.place2.png viewed + own measurements on its place.tsv and 3_place.odb] spine FAIL STRUCTURAL; diagonal bands acceptable.
+  Measurement scripts are copied in /home/ubuntu/.claude/jobs/b7f906df/tmp/geom24/scripts/ and live on intel1:/srv/opentallas-scratch2/claude/geom24/hub/.
+  - Spine x~640 (CHECKED, station-median analysis hub_an.py/hub_cut.py):
+    - 127 of 445 stations (9,276 station flops) have their median x in 625-655. The flops sit in a 15-um column (x 632-650).
+    - That column is the shared Z midpoint of 37 slots (ft1-23, 44-54, 63/64, 68...). Bits running vertically inside the spine peak at 3,187 at y=500-600 (27 slots), with 2,383-2,432 at y=700-800.
+    - Vertical capacity of M3+M5+M7 at 50 % derate is about 32 tracks/um, so the peak needs about 100 um of width against a 15-um column. A further 6,495 bits of hops cross x=640 horizontally.
+    - Cell density itself is fine (max 10-um bin 0.53).
+  - Own GRT probe (docker orfs:asap7lock on intel1, M2-M7, adjust 0.5, clk set special, 5 congestion iterations; DIAGNOSTIC, not a >=50-it gate):
+    - Total overflow 923,164, max V 54 on M3 and 24 on M5; usage is only 11.8 % overall.
+    - The congestion report hit its 20,000-entry cap. ALL listed gcells are at x 550-700, and 16,830 of them at x 600-680. They peak at y 600-700 (6,003) and spread over y 300-900.
+    - So the overflow is the spine, not the corridor.
+  - Diagonal bands: the stations sit on the straight line between their endpoints (L*j/k). That is Manhattan wire-neutral and spreads H/V use, so it is acceptable for a pure-FT corridor, as COORD ruled for io_cor at 05:25. GRT shows no hotspot in them.
+  - Bit-hops (CHECKED, hub_bit.py, 33,284 matched q[i] hops): p50 340, p99 401, max 408.2. 19 are >405 (ft13 8, ft14 5, ft46 5, ft15 1) and 0 are >450.
+  - FIX (structural, same method as the FT plan):
+    - Do not share the Z midpoint. Give every Z-route slot its own vertical lane x, ordered to avoid crossings and sized by bits/(~32 tracks/um x 0.6), spread across the 1278-um corridor. That is ~110 um of lanes for the 3.2k-bit peak; the corridor is almost empty.
+    - Stations stay FIRM at L*j/k along the slot's own L/Z path.
+  - Gate before route: peak vertical demand per 10-um column <= 0.6 of derated capacity; the kit GRT at >=50 iterations shows overflow 0; 0 bit-hops > 405.
+2026-10-27 07:08 PDT GEOM-REVIEW-24: FOLLOW-UP [QC-SU-SRAMHALO 4b0c7c393c, live DRT epyc2 kit_l2h route_halo.log, my parse of 5_route_drc.rpt-15/-20] PASS-COND NOT YET MET.
+  - The strip check is clean (0 cells in strips). The y20-30 corner cluster (70 markers at it15) is gone at it20.
+  - But 119 of 120 markers at it20 are still in the old box, x 264-274 / y 114-130: inside the E halo strip of the 2nd SRAM (macro y 86.4-127.5, strip x 263.5-270.6).
+    - Markers are mostly M3 (105 of 188 at it15), then M2/M4/M5. 221 of the net hits are on u_twd0 nets.
+    - The count is falling: 258 at it15 -> 120 at it20. The pre-fix stall was 55 at it11-52.
+  - So the halo removed the cell wall but not the hotspot. The cause looks like pin-escape demand of the u_twd0 nets at the top of that pin column, not std-cell blockage.
+  - Gate stands: DRT final ~0 in x263-280 y110-140. If it stalls again, next measure the u_twd0 pins in y 114-130 against M3/M5 escape tracks there (any M5 PG strap over the column?) before re-planning.
+  - The generator merge waits for that result.
