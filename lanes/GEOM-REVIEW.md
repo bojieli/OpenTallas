@@ -3130,3 +3130,4 @@ Diagnostic plan level, no build.
   (1) Direct channel lanes per the ruling. No PHY lane may cross an svc row-seam corner. Report per-seam bits/tracks <=0.55-0.60 and corridor site gap <=405 um before GRT.
   (2) The guide-count bin map is INFO only: B5 shows 11,147 bins over the nominal 42 "cap" yet was GRT0, so do not use bins>cap as evidence. Judge on GRT >=50 it and a FULL gcell overflow dump (not congestion.rpt).
   (3) gunit's +7 bit-m and 3084 ft_gunit nets stay a watch item in the PD4 GRT.
+2026-10-26 22:20 PDT COORD spot-check: viewed PATH-S81-PD3 g0fix_vs_b5.png -- AGREE GEOM-14 (new M7 vertical columns x~10-10.5 mm and 20-22 mm low half + M6 svc-seam rows = ft_phy chains; B5 clean there). Viewed HOLD-COLL-R1 taps_before_after.png -- PASS-COND: 52 taps sit on the station bands with local flop spread visibly reduced; NW corner red/blue band (x<50,y>800) still mixed -> check its tap after CTS.
