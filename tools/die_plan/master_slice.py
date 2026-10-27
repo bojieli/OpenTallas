@@ -16,6 +16,20 @@ without a slice is refused; `--trial` kits (not sign-off) stay allowed and are s
   stamp(slice)                       {slice_sha256, master_plan_sha256, type, frozen} for the kit budget
   add_args(ap) / precheck(...)       generator CLI flags (--master-slice DIR, --trial) / early refusal
   kit_apply(...)                     the generator hook: refuse / copy / Tcl / stamp in one call
+  clock_entry_ports(slice)           MULTI-ROOT slices (S81-CORE-LAT-R21): the root pins of "clock_entries"
+
+Multi-root core slices (S81-CORE-LAT-R21, COORD S81-CORE-LAT-R20 ruling (e); the declared multi-root cores of
+gen_core_kit_legacy multi_root_contract, 12.2a/12.8a "one entry / island per root"): instead of the single-root form
+(one island clock_pin + core_clock_port / core_tree) the slice lists one entry PER ROOT PIN:
+  "clock_entries": [{"port": "cr" | "xk[0]", "clock": SDC clock name (optional), "island": <islands[].name>,
+                     "clock_pin": {"layer": "M5", "xy_um": [x, y]},
+                     "latency": {"common_clock_latency_ps": {"TT": 250, "FF": 202.5}, "tol_ps": 40}}, ...]
+Rules (all hard): every port once, every island once and existing, the clock_pin inside the outline AND inside its
+island rect, a per-entry 12.3 latency (TT and FF); no island of a multi-root slice carries its own clock_pin and the
+slice has no core_clock_port / pushdown core_tree (one plan tree per root is not compiled by core_infra yet: refused,
+fail-closed, rather than one tree on the primary root).  The kit consumes every entry like the single clock entry
+(GEOM-21 M5 track snap + full-width shape) and check_kit verifies each, plus the kit's clock_roots.json (pins and
+the per-root 12.3 budget) against the entries.
 """
 import hashlib
 import json
@@ -188,6 +202,9 @@ def validate(sl):
             _rect([x, y, x + cw, y + ch], w, errs, outline)
         else:
             errs.append(f"{w}: origin_um / outline_um required")
+    ents = sl.get("clock_entries")
+    if ents is not None:
+        _validate_clock_entries(sl, ents, outline, errs)
     lat = sl.get("latency")
     if lat is not None:
         cl = lat.get("common_clock_latency_ps") if isinstance(lat, dict) else None
@@ -203,6 +220,60 @@ def validate(sl):
     if not isinstance(g, dict) or any(v not in ("PASS", "FAIL", "NOT RUN") for v in g.values()):
         errs.append("gates: {gate: PASS|FAIL|NOT RUN} required")
     return errs
+
+
+def _validate_clock_entries(sl, ents, outline, errs):
+    if not isinstance(ents, list) or not ents:
+        errs.append("clock_entries: non-empty list required (omit it for a single-root slice)")
+        return
+    isl = {i.get("name"): i for i in sl.get("islands", []) or [] if isinstance(i, dict)}
+    ports, used = {}, {}
+    for i, e in enumerate(ents):
+        w = f"clock_entries[{e.get('port', i) if isinstance(e, dict) else i}]"
+        if not isinstance(e, dict):
+            errs.append(f"{w}: must be an object")
+            continue
+        pt = e.get("port")
+        if not (isinstance(pt, str) and re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*(\[[0-9]+\])?", pt or "")):
+            errs.append(f"{w}: port must be a pin name (bus bits as name[i]), got {pt!r}")
+        elif pt in ports:
+            errs.append(f"{w}: port {pt!r} listed twice")
+        ports[pt] = i
+        nm = e.get("island")
+        if nm not in isl:
+            errs.append(f"{w}: island {nm!r} is not an island of this slice")
+        elif nm in used:
+            errs.append(f"{w}: island {nm!r} also the entry of {used[nm]!r} (one island per root)")
+        used[nm] = pt
+        cp = e.get("clock_pin")
+        if not (isinstance(cp, dict) and isinstance(cp.get("layer"), str)):
+            errs.append(f"{w}: clock_pin {{layer, xy_um}} required")
+        elif _xy(cp.get("xy_um"), w + ".clock_pin", errs, outline) and nm in isl and _num_rect(isl[nm].get("rect_um")):
+            x0, y0, x1, y1 = isl[nm]["rect_um"]
+            x, y = cp["xy_um"]
+            t = OUTLINE_TOL_UM
+            if not (x0 - t <= x <= x1 + t and y0 - t <= y <= y1 + t):
+                errs.append(f"{w}: clock_pin {list(cp['xy_um'])} outside island {nm} {list(isl[nm]['rect_um'])}")
+        cl = (e.get("latency") or {}).get("common_clock_latency_ps") if isinstance(e.get("latency"), dict) else None
+        if not (isinstance(cl, dict) and all(_num(cl.get(c)) for c in ("TT", "FF"))):
+            errs.append(f"{w}: latency.common_clock_latency_ps {{TT, FF}} required (12.3, one budget per root)")
+        if e.get("clock") is not None and not (isinstance(e["clock"], str) and e["clock"]):
+            errs.append(f"{w}: clock must be null or an SDC clock name")
+    for i in isl.values():
+        if i.get("clock_pin"):
+            errs.append(f"islands[{i.get('name')}]: multi-root slice: the entry is clock_entries[], not islands[].clock_pin")
+    if sl.get("core_clock_port") or (sl.get("pushdown") or {}).get("core_tree") or sl.get("core_tree"):
+        errs.append("clock_entries: a multi-root slice has no core_clock_port / core_tree (per-root plan trees are not "
+                    "compiled by core_infra yet: refused)")
+
+
+def _num_rect(r):
+    return isinstance(r, (list, tuple)) and len(r) == 4 and all(_num(x) for x in r)
+
+
+def clock_entry_ports(sl):
+    """root pins of a multi-root slice (clock_entries[].port, slice order); [] for a single-root slice."""
+    return [e["port"] for e in sl.get("clock_entries") or [] if isinstance(e, dict) and e.get("port")]
 
 
 def load(path):
@@ -395,10 +466,17 @@ def kit_apply(kd, name, outline_um, slice_dir=None, plan_raw=None, trial=False, 
         return TRIAL if req else None
     p, sl = resolve(slice_dir, name, outline_um, plan_raw, trial, kind)
     kd = Path(kd)
+    if len([p_ for p_ in (clock_ports or []) if p_]) > 1 and not clock_entry_ports(sl):
+        raise SliceError(f"multi-root kit (root pins {sorted(clock_ports)}) needs a slice with clock_entries[] "
+                         f"(one entry per root), got the single-entry form")
+    if clock_entry_ports(sl):
+        want = sorted(clock_entry_ports(sl))
+        if clock_ports is None or sorted(p_ for p_ in clock_ports if p_) != want:
+            raise SliceError(f"multi-root slice entries {want} != generator root pins {sorted(clock_ports or [])}")
     if sl.get("pushdown"):
         import core_infra
         effective = sl
-        explicit = [p for p in (clock_ports or []) if p]
+        explicit = [p for p in (clock_ports or []) if p] if not clock_entry_ports(sl) else []
         if explicit:
             if len(explicit) != 1:
                 raise SliceError("core infrastructure needs exactly one manifest clock port")
@@ -464,6 +542,8 @@ def slice_pins(sl, clock_port=None):
     entry = next((i["clock_pin"] for i in sl.get("islands", []) or [] if i.get("clock_pin")), None)
     if entry and clock_port and (sl.get("kind") == "core" or sl.get("core_clock_port")):
         want[clock_port] = (entry.get("layer", "M5"), tuple(float(v) for v in entry["xy_um"]))
+    for e in sl.get("clock_entries") or []:                  # multi-root: one M5 entry per root pin
+        want[e["port"]] = (e["clock_pin"].get("layer", "M5"), tuple(float(v) for v in e["clock_pin"]["xy_um"]))
     for p in sl.get("entry_pins", []) or []:
         if p.get("pin"):
             want[p["pin"]] = (p.get("layer", "M7"), tuple(float(v) for v in p["xy_um"]))
@@ -526,8 +606,9 @@ def slice_placements(kd, sl, clock_port=None):
     entry snapped onto its track at CLOCK_PIN_SIZE (GEOM-21), bound entry pins 0.032 x 0.192.  One source for the io
     rewrite (_consume_io) and the generator's plan pin record (gen_phys.plan_pin_records -> freeze.json)."""
     out = {}
+    ckset = set(clock_entry_ports(sl))
     for name, (layer, (x, y)) in slice_pins(sl, clock_port).items():
-        if name == clock_port:
+        if name == clock_port or name in ckset:
             x, y = snap_on_track(kd, layer, x, y)
             out[name] = (layer, x, y, CLOCK_PIN_SIZE)
         else:
@@ -561,7 +642,7 @@ def _consume_io(kd, sl, clock_port):
                 continue
             name = _pin_name(m.group(2))
             # The centre clock entry needs a full M5 routing track, enough length for via access beside the root
-            # driver, and its centre ON that track (GEOM-21) -- slice_placements.
+            # driver, and its centre ON that track (GEOM-21) -- slice_placements (every declared root entry too).
             layer, x, y, wh = place[name]
             size = "%g %g" % wh
             lines[i] = (f"{m.group(1)}{{{name}}} -layer {layer} -location {{{x:.4f} {y:.4f}}} -pin_size {{{size}}}"
@@ -658,6 +739,9 @@ def check_kit(kd, slice_path=None, tol=1e-3):
     entry = next((i["clock_pin"] for i in sl.get("islands", []) or [] if i.get("clock_pin")), None)
     if sl.get("kind") == "core" and entry and not clock_port:
         issues.append("core clock entry in the slice but no core clock port bound (kit cannot place it)")
+    ckset = set(clock_entry_ports(sl))
+    if ckset:
+        issues += _check_clock_roots(kd, sl)
     seen = {}
     for f in sorted(kd.glob("*.tcl")):
         if f.name in _OWN:
@@ -671,7 +755,7 @@ def check_kit(kd, slice_path=None, tol=1e-3):
             xm = re.search(r"-location\s+\{\s*([-\d.eE+]+)\s+([-\d.eE+]+)\s*\}", ln)
             lay, (x, y) = want[n]
             seen[n] = seen.get(n, 0) + 1
-            if n == clock_port:
+            if n == clock_port or n in ckset:
                 try:
                     x, y = snap_on_track(kd, lay, x, y)
                 except ValueError as e:
@@ -690,7 +774,10 @@ def check_kit(kd, slice_path=None, tol=1e-3):
             if not lm or lm.group(1) != lay or not xm or abs(float(xm.group(1)) - x) > tol or abs(float(xm.group(2)) - y) > tol:
                 issues.append(f"{f.name}: {n} placed at {xm.groups() if xm else '?'} {lm.group(1) if lm else '?'}, "
                               f"slice {lay} ({x:g}, {y:g})")
-    checks["slice_pins"] = dict(fixed=len(want), placed_by_kit_io=sum(seen.values()),
+    for n in sorted(ckset):
+        if not seen.get(n):
+            issues.append(f"clock entry {n}: no place_pin in the kit io (multi-root entry not placed)")
+    checks["slice_pins"] = dict(fixed=len(want), placed_by_kit_io=sum(seen.values()), clock_entries=sorted(ckset),
                                 clock_port=clock_port, clock_entry=list(entry["xy_um"]) if entry else None)
     # latency target carried into the kit SDC/budget (12.3)
     lat = (sl.get("latency") or {}).get("common_clock_latency_ps") or {}
@@ -698,6 +785,32 @@ def check_kit(kd, slice_path=None, tol=1e-3):
     issues = list(dict.fromkeys(issues))
     return dict(verdict="FAIL" if issues else "PASS", kit=str(kd), slice=str(sp), slice_sha256=digest(sl),
                 type=sl.get("type"), kind=sl.get("kind"), issues=issues[:50], n_issues=len(issues), checks=checks)
+
+
+def _check_clock_roots(kd, sl, tol=1e-6):
+    """multi-root kit: clock_roots.json (gen_core_kit_legacy multi_root_contract) == the slice entries: same root pins,
+    each root's 12.3 budget (TT / FF) == the entry's latency."""
+    p = Path(kd) / "clock_roots.json"
+    if not p.is_file():
+        return ["multi-root slice but the kit has no clock_roots.json (not a declared multi-root kit)"]
+    cr = json.loads(p.read_text())
+    out = []
+    kp = sorted(e.get("pin") for e in cr.get("entries") or [])
+    sp = sorted(clock_entry_ports(sl))
+    if kp != sp:
+        out.append(f"clock_roots.json root pins {kp} != slice clock_entries {sp}")
+    b = cr.get("budget_ps") or {}
+    for e in sl.get("clock_entries") or []:
+        cl = e["latency"]["common_clock_latency_ps"]
+        lb = {"TT": e.get("budget_tt", b.get("tt")), "FF": e.get("budget_ff", b.get("ff"))}
+        for c in ("TT", "FF"):
+            if lb[c] is None or abs(float(lb[c]) - float(cl[c])) > tol:
+                out.append(f"clock entry {e['port']}: kit {c} budget {lb[c]} != slice latency {cl[c]} (12.3)")
+        if e.get("clock"):
+            kc = next((x.get("clock") for x in cr.get("entries") or [] if x.get("pin") == e["port"]), None)
+            if kc != e["clock"]:
+                out.append(f"clock entry {e['port']}: kit clock {kc} != slice clock {e['clock']}")
+    return out
 
 
 def main(argv=None):

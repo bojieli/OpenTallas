@@ -14,6 +14,16 @@
 `ifndef DSFD_BF_N32
 `define DSFD_BF_N32 0
 `endif
+// S81-CORE-LAT-R21 2026-10-27 (COORD S81-CORE-LAT-R20 ruling b): off unless DSFD_BF_DEADPIN is defined to 1.
+// The 20 input bits x0[281:280] (xs_sv), cfg[52:48] (cfg_d[47:43]) and cfg[46:34] (cfg_d[41:29], s_base) have no
+// reader in this STATIC_PROGRAM=1 front (synthesis drops their pin registers: face_guard class dropped).  No die-level
+// proven-dead declaration exists for them, so each gets its OWN kept face register on its capture root io_clk (the
+// root of x0 / cfg, spec clock_entry_domains south).  No reader, no function, no cycle on any used path; every other
+// pin and every output unchanged.  A future reader of one of these bits adds a second load -> face_guard shared FAIL
+// (fail-closed), never a silent merge.
+`ifndef DSFD_BF_DEADPIN
+`define DSFD_BF_DEADPIN 0
+`endif
 module dsfd_bf_front_roots #(parameter INSTANCE = "") (
     output wire [775:0] c0,
     output wire [775:0] c1,
@@ -3377,4 +3387,10 @@ module dsfd_bf_front_roots #(parameter INSTANCE = "") (
         .f_prog(f_prog),
         .io_clk(io_clk), .io_n(io_n), .io_w(io_w), .io_e(io_e));
     /* verilator lint_on PINCONNECTEMPTY */
+    generate if (`DSFD_BF_DEADPIN != 0) begin : g_deadpin
+        (* keep *) reg [1:0]  dp_x0_q;       // x0[281:280]
+        (* keep *) reg [4:0]  dp_cfg_hi_q;   // cfg[52:48]
+        (* keep *) reg [12:0] dp_cfg_mid_q;  // cfg[46:34]
+        always @(posedge io_clk) begin dp_x0_q <= x0[281:280]; dp_cfg_hi_q <= cfg[52:48]; dp_cfg_mid_q <= cfg[46:34]; end
+    end endgenerate
 endmodule

@@ -142,8 +142,11 @@ def test_generator_kits_declared_crs4(tmp_path):
     assert fz["clocks"] == ["cr", "cr_s", "xk"] and fz["multi_root"]["entries"] == 6
 
 
-def test_generator_refuses_multi_root_master_slice(tmp_path):
+def test_generator_multi_root_master_slice_fail_closed(tmp_path):
+    # R21: multi-root cores now accept a master slice with clock_entries[] (one per root; the kit_apply refusals of
+    # the single-entry form are unit-tested in tools/die_plan/test_master_slice.py). Without a slice: fail closed.
     r = subprocess.run([sys.executable, str(HERE / "gen_core_kit_legacy.py"), "--module", "dsfd_cfifo_crs4",
                         "--out", str(tmp_path), "--suffix", "t", "--master-slice", str(tmp_path)],
                        capture_output=True, text=True)
-    assert r.returncode != 0 and "master slices carry one clock entry" in r.stderr, r.stderr[-1500:]
+    assert r.returncode != 0 and "master-plan slice for 'dsfd_cfifo_crs4' not found" in r.stderr, r.stderr[-1500:]
+    assert "master slices carry one clock entry" not in r.stderr
