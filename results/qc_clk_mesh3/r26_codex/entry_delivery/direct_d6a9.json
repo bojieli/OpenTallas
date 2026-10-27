@@ -1,0 +1,5666 @@
+{
+  "schema": "opentallas.qc_direct_entry_delivery.v1",
+  "taps": [
+    {
+      "part": "c_E0_bf_00",
+      "xy": [
+        17012.160000000003,
+        3922.5600000000004
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        17012.160000000003,
+        3913.92
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E0_bf_01",
+      "xy": [
+        17012.160000000003,
+        1304.64
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        17012.160000000003,
+        1313.28
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E0_bf_10",
+      "xy": [
+        18247.68,
+        3922.5600000000004
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        18247.68,
+        3922.5600000000004
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E0_bf_11",
+      "xy": [
+        18247.68,
+        1304.64
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        18247.68,
+        1304.64
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E0_bn_00",
+      "xy": [
+        17012.160000000003,
+        9149.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        17012.160000000003,
+        9141.12
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E0_bn_01",
+      "xy": [
+        17012.160000000003,
+        6531.84
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        17012.160000000003,
+        6540.48
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E0_bn_10",
+      "xy": [
+        18247.68,
+        9149.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        18247.68,
+        9149.76
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E0_bn_11",
+      "xy": [
+        18247.68,
+        6531.84
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        18247.68,
+        6531.84
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E0_tf_00",
+      "xy": [
+        17012.160000000003,
+        22394.88
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        17012.160000000003,
+        22394.88
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E0_tf_01",
+      "xy": [
+        17012.160000000003,
+        25012.8
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        17012.160000000003,
+        25004.16
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E0_tf_10",
+      "xy": [
+        18247.68,
+        22394.88
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        18247.68,
+        22394.88
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E0_tf_11",
+      "xy": [
+        18247.68,
+        25012.8
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        18247.68,
+        25012.8
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E0_tn_00",
+      "xy": [
+        17012.160000000003,
+        17167.68
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        17012.160000000003,
+        17167.68
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E0_tn_01",
+      "xy": [
+        17012.160000000003,
+        19785.6
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        17012.160000000003,
+        19776.96
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E0_tn_10",
+      "xy": [
+        18247.68,
+        17167.68
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        18247.68,
+        17167.68
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E0_tn_11",
+      "xy": [
+        18247.68,
+        19785.6
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        18247.68,
+        19785.6
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E1_bf_00",
+      "xy": [
+        19483.2,
+        3922.5600000000004
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        19474.56,
+        3922.5600000000004
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E1_bf_01",
+      "xy": [
+        19483.2,
+        1304.64
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        19474.56,
+        1304.64
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E1_bf_10",
+      "xy": [
+        20718.72,
+        3922.5600000000004
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        20718.72,
+        3922.5600000000004
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E1_bf_11",
+      "xy": [
+        20718.72,
+        1304.64
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        20718.72,
+        1304.64
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E1_bn_00",
+      "xy": [
+        19483.2,
+        9149.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        19483.2,
+        9141.12
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E1_bn_01",
+      "xy": [
+        19483.2,
+        6531.84
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        19483.2,
+        6540.48
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E1_bn_10",
+      "xy": [
+        20718.72,
+        9149.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        20718.72,
+        9149.76
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E1_bn_11",
+      "xy": [
+        20718.72,
+        6531.84
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        20718.72,
+        6531.84
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E1_tf_00",
+      "xy": [
+        19483.2,
+        22394.88
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        19483.2,
+        22394.88
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E1_tf_01",
+      "xy": [
+        19483.2,
+        25012.8
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        19483.2,
+        25004.16
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E1_tf_10",
+      "xy": [
+        20718.72,
+        22394.88
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        20718.72,
+        22394.88
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E1_tf_11",
+      "xy": [
+        20718.72,
+        25012.8
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        20718.72,
+        25012.8
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E1_tn_00",
+      "xy": [
+        19483.2,
+        17167.68
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        19483.2,
+        17167.68
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E1_tn_01",
+      "xy": [
+        19483.2,
+        19785.6
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        19483.2,
+        19776.96
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E1_tn_10",
+      "xy": [
+        20718.72,
+        17167.68
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        20718.72,
+        17167.68
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E1_tn_11",
+      "xy": [
+        20718.72,
+        19785.6
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        20718.72,
+        19785.6
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E2_bf_00",
+      "xy": [
+        21954.24,
+        3922.5600000000004
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        21954.24,
+        3913.92
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E2_bf_01",
+      "xy": [
+        21954.24,
+        1304.64
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        21954.24,
+        1313.28
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E2_bf_10",
+      "xy": [
+        23189.760000000002,
+        3922.5600000000004
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        23189.76,
+        3922.5600000000004
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E2_bf_11",
+      "xy": [
+        23189.760000000002,
+        1304.64
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        23189.76,
+        1304.64
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E2_bn_00",
+      "xy": [
+        21954.24,
+        9149.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        21954.24,
+        9141.12
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E2_bn_01",
+      "xy": [
+        21954.24,
+        6531.84
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        21954.24,
+        6540.48
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E2_bn_10",
+      "xy": [
+        23189.760000000002,
+        9149.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        23189.76,
+        9149.76
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E2_bn_11",
+      "xy": [
+        23189.760000000002,
+        6531.84
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        23189.76,
+        6531.84
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E2_tf_00",
+      "xy": [
+        21954.24,
+        22394.88
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        21954.24,
+        22394.88
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E2_tf_01",
+      "xy": [
+        21954.24,
+        25012.8
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        21954.24,
+        25004.16
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E2_tf_10",
+      "xy": [
+        23189.760000000002,
+        22394.88
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        23189.760000000002,
+        22394.88
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E2_tf_11",
+      "xy": [
+        23189.760000000002,
+        25012.8
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        23189.76,
+        25012.8
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E2_tn_00",
+      "xy": [
+        21954.24,
+        17167.68
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        21954.24,
+        17167.68
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E2_tn_01",
+      "xy": [
+        21954.24,
+        19785.6
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        21954.24,
+        19776.96
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E2_tn_10",
+      "xy": [
+        23189.760000000002,
+        17167.68
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        23189.760000000002,
+        17167.68
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E2_tn_11",
+      "xy": [
+        23189.760000000002,
+        19785.6
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        23189.76,
+        19785.6
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E3_bf_00",
+      "xy": [
+        24425.280000000002,
+        3922.5600000000004
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        24425.280000000002,
+        3913.92
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E3_bf_01",
+      "xy": [
+        24425.280000000002,
+        1304.64
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        24425.280000000002,
+        1313.28
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E3_bf_10",
+      "xy": [
+        25660.800000000003,
+        3922.5600000000004
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        25660.8,
+        3922.5600000000004
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E3_bf_11",
+      "xy": [
+        25660.800000000003,
+        1304.64
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        25660.8,
+        1304.64
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E3_bn_00",
+      "xy": [
+        24425.280000000002,
+        9149.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        24425.280000000002,
+        9141.12
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E3_bn_01",
+      "xy": [
+        24425.280000000002,
+        6531.84
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        24425.280000000002,
+        6540.48
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E3_bn_10",
+      "xy": [
+        25660.800000000003,
+        9149.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        25660.8,
+        9149.76
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E3_bn_11",
+      "xy": [
+        25660.800000000003,
+        6531.84
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        25660.8,
+        6531.84
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E3_tf_00",
+      "xy": [
+        24425.280000000002,
+        22394.88
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        24425.280000000002,
+        22394.88
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E3_tf_01",
+      "xy": [
+        24425.280000000002,
+        25012.8
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        24425.280000000002,
+        25004.16
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E3_tf_10",
+      "xy": [
+        25660.800000000003,
+        22394.88
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        25660.800000000003,
+        22394.88
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E3_tf_11",
+      "xy": [
+        25660.800000000003,
+        25012.8
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        25660.8,
+        25012.8
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E3_tn_00",
+      "xy": [
+        24425.280000000002,
+        17167.68
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        24425.280000000002,
+        17167.68
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E3_tn_01",
+      "xy": [
+        24425.280000000002,
+        19785.6
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        24425.280000000002,
+        19776.96
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E3_tn_10",
+      "xy": [
+        25660.800000000003,
+        17167.68
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        25660.800000000003,
+        17167.68
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E3_tn_11",
+      "xy": [
+        25660.800000000003,
+        19785.6
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        25660.8,
+        19785.6
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E4_bf_00",
+      "xy": [
+        26896.320000000003,
+        3922.5600000000004
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        26896.320000000003,
+        3913.92
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E4_bf_01",
+      "xy": [
+        26896.320000000003,
+        1304.64
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        26896.320000000003,
+        1313.28
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E4_bf_10",
+      "xy": [
+        28131.84,
+        3922.5600000000004
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        28123.2,
+        3922.5600000000004
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E4_bf_11",
+      "xy": [
+        28131.84,
+        1304.64
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        28123.2,
+        1304.64
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E4_bn_00",
+      "xy": [
+        26896.320000000003,
+        9149.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        26896.320000000003,
+        9141.12
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E4_bn_01",
+      "xy": [
+        26896.320000000003,
+        6531.84
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        26896.320000000003,
+        6540.48
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E4_bn_10",
+      "xy": [
+        28131.84,
+        9149.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        28131.84,
+        9141.12
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E4_bn_11",
+      "xy": [
+        28131.84,
+        6531.84
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        28131.84,
+        6540.48
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E4_tf_00",
+      "xy": [
+        26896.320000000003,
+        22394.88
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        26896.320000000003,
+        22394.88
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E4_tf_01",
+      "xy": [
+        26896.320000000003,
+        25012.8
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        26896.320000000003,
+        25004.16
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E4_tf_10",
+      "xy": [
+        28131.84,
+        22394.88
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        28131.84,
+        22394.88
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E4_tf_11",
+      "xy": [
+        28131.84,
+        25012.8
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        28131.84,
+        25004.16
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E4_tn_00",
+      "xy": [
+        26896.320000000003,
+        17167.68
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        26896.320000000003,
+        17167.68
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E4_tn_01",
+      "xy": [
+        26896.320000000003,
+        19785.6
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        26896.320000000003,
+        19776.96
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E4_tn_10",
+      "xy": [
+        28131.84,
+        17167.68
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        28131.84,
+        17167.68
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E4_tn_11",
+      "xy": [
+        28131.84,
+        19785.6
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        28131.84,
+        19776.96
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E5_bf_00",
+      "xy": [
+        29367.36,
+        3922.5600000000004
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        29358.72,
+        3922.5600000000004
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E5_bf_01",
+      "xy": [
+        29367.36,
+        1304.64
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        29358.72,
+        1304.64
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E5_bf_10",
+      "xy": [
+        30602.88,
+        3922.5600000000004
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        30594.24,
+        3922.5600000000004
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E5_bf_11",
+      "xy": [
+        30602.88,
+        1304.64
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        30594.24,
+        1304.64
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E5_bn_00",
+      "xy": [
+        29367.36,
+        9149.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        29367.36,
+        9141.12
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E5_bn_01",
+      "xy": [
+        29367.36,
+        6531.84
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        29367.36,
+        6540.48
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E5_bn_10",
+      "xy": [
+        30602.88,
+        9149.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        30602.88,
+        9141.12
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E5_bn_11",
+      "xy": [
+        30602.88,
+        6531.84
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        30602.88,
+        6540.48
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E5_tf_00",
+      "xy": [
+        29367.36,
+        22394.88
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        29367.36,
+        22394.88
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E5_tf_01",
+      "xy": [
+        29367.36,
+        25012.8
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        29367.36,
+        25004.16
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E5_tf_10",
+      "xy": [
+        30602.88,
+        22394.88
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        30602.88,
+        22394.88
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E5_tf_11",
+      "xy": [
+        30602.88,
+        25012.8
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        30602.88,
+        25004.16
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E5_tn_00",
+      "xy": [
+        29367.36,
+        17167.68
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        29367.36,
+        17167.68
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E5_tn_01",
+      "xy": [
+        29367.36,
+        19785.6
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        29367.36,
+        19776.96
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_E5_tn_10",
+      "xy": [
+        30602.88,
+        17167.68
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        30602.88,
+        17167.68
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_E5_tn_11",
+      "xy": [
+        30602.88,
+        19785.6
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        30602.88,
+        19776.96
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W0_bf_00",
+      "xy": [
+        14541.12,
+        3922.5600000000004
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        14541.12,
+        3913.92
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W0_bf_01",
+      "xy": [
+        14541.12,
+        1304.64
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        14541.12,
+        1313.28
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W0_bf_10",
+      "xy": [
+        15776.64,
+        3922.5600000000004
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        15768.0,
+        3922.5600000000004
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W0_bf_11",
+      "xy": [
+        15776.64,
+        1304.64
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        15768.0,
+        1304.64
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W0_bn_00",
+      "xy": [
+        14541.12,
+        9149.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        14541.12,
+        9141.12
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W0_bn_01",
+      "xy": [
+        14541.12,
+        6531.84
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        14541.12,
+        6540.48
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W0_bn_10",
+      "xy": [
+        15776.64,
+        9149.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        15776.64,
+        9141.12
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W0_bn_11",
+      "xy": [
+        15776.64,
+        6531.84
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        15776.64,
+        6540.48
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W0_tf_00",
+      "xy": [
+        14541.12,
+        22394.88
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        14541.12,
+        22394.88
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W0_tf_01",
+      "xy": [
+        14541.12,
+        25012.8
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        14541.12,
+        25004.16
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W0_tf_10",
+      "xy": [
+        15776.64,
+        22394.88
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        15776.64,
+        22394.88
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W0_tf_11",
+      "xy": [
+        15776.64,
+        25012.8
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        15776.64,
+        25004.16
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W0_tn_00",
+      "xy": [
+        14541.12,
+        17167.68
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        14541.12,
+        17167.68
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W0_tn_01",
+      "xy": [
+        14541.12,
+        19785.6
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        14541.12,
+        19776.96
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W0_tn_10",
+      "xy": [
+        15776.64,
+        17167.68
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        15776.64,
+        17167.68
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W0_tn_11",
+      "xy": [
+        15776.64,
+        19785.6
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        15776.64,
+        19776.96
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W1_bf_00",
+      "xy": [
+        12070.08,
+        3922.5600000000004
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        12061.44,
+        3922.5600000000004
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W1_bf_01",
+      "xy": [
+        12070.08,
+        1304.64
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        12061.44,
+        1304.64
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W1_bf_10",
+      "xy": [
+        13305.6,
+        3922.5600000000004
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        13305.6,
+        3922.5600000000004
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W1_bf_11",
+      "xy": [
+        13305.6,
+        1304.64
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        13305.6,
+        1304.64
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W1_bn_00",
+      "xy": [
+        12070.08,
+        9149.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        12070.08,
+        9141.12
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W1_bn_01",
+      "xy": [
+        12070.08,
+        6531.84
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        12070.08,
+        6540.48
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W1_bn_10",
+      "xy": [
+        13305.6,
+        9149.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        13305.6,
+        9149.76
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W1_bn_11",
+      "xy": [
+        13305.6,
+        6531.84
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        13305.6,
+        6531.84
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W1_tf_00",
+      "xy": [
+        12070.08,
+        22394.88
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        12070.08,
+        22394.88
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W1_tf_01",
+      "xy": [
+        12070.08,
+        25012.8
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        12070.08,
+        25004.16
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W1_tf_10",
+      "xy": [
+        13305.6,
+        22394.88
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        13305.6,
+        22394.88
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W1_tf_11",
+      "xy": [
+        13305.6,
+        25012.8
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        13305.6,
+        25012.8
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W1_tn_00",
+      "xy": [
+        12070.08,
+        17167.68
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        12070.08,
+        17167.68
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W1_tn_01",
+      "xy": [
+        12070.08,
+        19785.6
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        12070.08,
+        19776.96
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W1_tn_10",
+      "xy": [
+        13305.6,
+        17167.68
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        13305.6,
+        17167.68
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W1_tn_11",
+      "xy": [
+        13305.6,
+        19785.6
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        13305.6,
+        19785.6
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W2_bf_00",
+      "xy": [
+        9599.039999999999,
+        3922.5600000000004
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        9590.4,
+        3922.5600000000004
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W2_bf_01",
+      "xy": [
+        9599.039999999999,
+        1304.64
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        9590.4,
+        1304.64
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W2_bf_10",
+      "xy": [
+        10834.56,
+        3922.5600000000004
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        10834.56,
+        3922.5600000000004
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W2_bf_11",
+      "xy": [
+        10834.56,
+        1304.64
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        10834.56,
+        1304.64
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W2_bn_00",
+      "xy": [
+        9599.039999999999,
+        9149.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        9599.039999999999,
+        9141.12
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W2_bn_01",
+      "xy": [
+        9599.039999999999,
+        6531.84
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        9599.039999999999,
+        6540.48
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W2_bn_10",
+      "xy": [
+        10834.56,
+        9149.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        10834.56,
+        9149.76
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W2_bn_11",
+      "xy": [
+        10834.56,
+        6531.84
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        10834.56,
+        6531.84
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W2_tf_00",
+      "xy": [
+        9599.039999999999,
+        22394.88
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        9599.039999999999,
+        22394.88
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W2_tf_01",
+      "xy": [
+        9599.039999999999,
+        25012.8
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        9599.039999999999,
+        25004.16
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W2_tf_10",
+      "xy": [
+        10834.56,
+        22394.88
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        10834.56,
+        22394.88
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W2_tf_11",
+      "xy": [
+        10834.56,
+        25012.8
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        10834.56,
+        25012.8
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W2_tn_00",
+      "xy": [
+        9599.039999999999,
+        17167.68
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        9599.039999999999,
+        17167.68
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W2_tn_01",
+      "xy": [
+        9599.039999999999,
+        19785.6
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        9599.039999999999,
+        19776.96
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W2_tn_10",
+      "xy": [
+        10834.56,
+        17167.68
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        10834.56,
+        17167.68
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W2_tn_11",
+      "xy": [
+        10834.56,
+        19785.6
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        10834.56,
+        19785.6
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W3_bf_00",
+      "xy": [
+        7128.0,
+        3922.5600000000004
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        7128.0,
+        3913.92
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W3_bf_01",
+      "xy": [
+        7128.0,
+        1304.64
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        7128.0,
+        1313.28
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W3_bf_10",
+      "xy": [
+        8363.52,
+        3922.5600000000004
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        8363.52,
+        3922.5600000000004
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W3_bf_11",
+      "xy": [
+        8363.52,
+        1304.64
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        8363.52,
+        1304.64
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W3_bn_00",
+      "xy": [
+        7128.0,
+        9149.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        7128.0,
+        9141.12
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W3_bn_01",
+      "xy": [
+        7128.0,
+        6531.84
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        7128.0,
+        6540.48
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W3_bn_10",
+      "xy": [
+        8363.52,
+        9149.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        8363.52,
+        9149.76
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W3_bn_11",
+      "xy": [
+        8363.52,
+        6531.84
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        8363.52,
+        6531.84
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W3_tf_00",
+      "xy": [
+        7128.0,
+        22394.88
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        7128.0,
+        22394.88
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W3_tf_01",
+      "xy": [
+        7128.0,
+        25012.8
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        7128.0,
+        25004.16
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W3_tf_10",
+      "xy": [
+        8363.52,
+        22394.88
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        8363.52,
+        22394.88
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W3_tf_11",
+      "xy": [
+        8363.52,
+        25012.8
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        8363.52,
+        25012.8
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W3_tn_00",
+      "xy": [
+        7128.0,
+        17167.68
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        7128.0,
+        17167.68
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W3_tn_01",
+      "xy": [
+        7128.0,
+        19785.6
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        7128.0,
+        19776.96
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W3_tn_10",
+      "xy": [
+        8363.52,
+        17167.68
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        8363.52,
+        17167.68
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W3_tn_11",
+      "xy": [
+        8363.52,
+        19785.6
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        8363.52,
+        19785.6
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W4_bf_00",
+      "xy": [
+        4656.96,
+        3922.5600000000004
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        4656.96,
+        3913.92
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W4_bf_01",
+      "xy": [
+        4656.96,
+        1304.64
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        4656.96,
+        1313.28
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W4_bf_10",
+      "xy": [
+        5892.48,
+        3922.5600000000004
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        5883.84,
+        3922.5600000000004
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W4_bf_11",
+      "xy": [
+        5892.48,
+        1304.64
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        5883.84,
+        1304.64
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W4_bn_00",
+      "xy": [
+        4656.96,
+        9149.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        4656.96,
+        9141.12
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W4_bn_01",
+      "xy": [
+        4656.96,
+        6531.84
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        4656.96,
+        6540.48
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W4_bn_10",
+      "xy": [
+        5892.48,
+        9149.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        5892.48,
+        9141.12
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W4_bn_11",
+      "xy": [
+        5892.48,
+        6531.84
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        5892.48,
+        6540.48
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W4_tf_00",
+      "xy": [
+        4656.96,
+        22394.88
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        4656.96,
+        22394.88
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W4_tf_01",
+      "xy": [
+        4656.96,
+        25012.8
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        4656.96,
+        25004.16
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W4_tf_10",
+      "xy": [
+        5892.48,
+        22394.88
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        5892.48,
+        22394.88
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W4_tf_11",
+      "xy": [
+        5892.48,
+        25012.8
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        5892.48,
+        25004.16
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W4_tn_00",
+      "xy": [
+        4656.96,
+        17167.68
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        4656.96,
+        17167.68
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W4_tn_01",
+      "xy": [
+        4656.96,
+        19785.6
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        4656.96,
+        19776.96
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W4_tn_10",
+      "xy": [
+        5892.48,
+        17167.68
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        5892.48,
+        17167.68
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W4_tn_11",
+      "xy": [
+        5892.48,
+        19785.6
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        5892.48,
+        19776.96
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W5_bf_00",
+      "xy": [
+        2185.92,
+        3922.5600000000004
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        2177.28,
+        3922.5600000000004
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W5_bf_01",
+      "xy": [
+        2185.92,
+        1304.64
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        2185.92,
+        1313.28
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W5_bf_10",
+      "xy": [
+        3421.44,
+        3922.5600000000004
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        3412.8,
+        3922.5600000000004
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W5_bf_11",
+      "xy": [
+        3421.44,
+        1304.64
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        3421.44,
+        1313.28
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W5_bn_00",
+      "xy": [
+        2185.92,
+        9149.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        2185.92,
+        9141.12
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W5_bn_01",
+      "xy": [
+        2185.92,
+        6531.84
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        2185.92,
+        6540.48
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W5_bn_10",
+      "xy": [
+        3421.44,
+        9149.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        3421.44,
+        9141.12
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W5_bn_11",
+      "xy": [
+        3421.44,
+        6531.84
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        3421.44,
+        6540.48
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W5_tf_00",
+      "xy": [
+        2185.92,
+        22394.88
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        2185.92,
+        22394.88
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W5_tf_01",
+      "xy": [
+        2185.92,
+        25012.8
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        2185.92,
+        25004.16
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W5_tf_10",
+      "xy": [
+        3421.44,
+        22394.88
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        3421.44,
+        22394.88
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W5_tf_11",
+      "xy": [
+        3421.44,
+        25012.8
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        3421.44,
+        25004.16
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W5_tn_00",
+      "xy": [
+        2185.92,
+        17167.68
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        2185.92,
+        17167.68
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W5_tn_01",
+      "xy": [
+        2185.92,
+        19785.6
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        2185.92,
+        19776.96
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "c_W5_tn_10",
+      "xy": [
+        3421.44,
+        17167.68
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        3421.44,
+        17167.68
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "c_W5_tn_11",
+      "xy": [
+        3421.44,
+        19785.6
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        3421.44,
+        19776.96
+      ],
+      "wire_um": 8.64
+    },
+    {
+      "part": "sl_E0_ctl",
+      "xy": [
+        17625.6,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        17625.6,
+        13858.56
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "sl_E0_fe",
+      "xy": [
+        18550.08,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        18550.08,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_E0_fw",
+      "xy": [
+        16701.120000000003,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        16701.120000000003,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_E0_hc0",
+      "xy": [
+        16701.120000000003,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        16701.120000000003,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_E0_hc1",
+      "xy": [
+        17323.2,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        17323.2,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_E0_hc2",
+      "xy": [
+        17936.64,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        17936.64,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_E0_hc3",
+      "xy": [
+        18550.08,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        18550.08,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_E0_sc",
+      "xy": [
+        17936.64,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        17936.64,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_E0_st_a",
+      "xy": [
+        16701.120000000003,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        16701.120000000003,
+        13936.32
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_E0_st_b",
+      "xy": [
+        18550.08,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        18550.08,
+        13936.32
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_E0_stm",
+      "xy": [
+        17323.2,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        17323.2,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_E0_su_c",
+      "xy": [
+        17625.6,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        17625.6,
+        11128.32
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "sl_E0_su_l0",
+      "xy": [
+        18550.08,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        18550.08,
+        11050.56
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_E0_su_l1",
+      "xy": [
+        16701.120000000003,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        16701.120000000003,
+        11050.56
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_E1_ctl",
+      "xy": [
+        20096.64,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        20096.64,
+        13858.56
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "sl_E1_fe",
+      "xy": [
+        21021.120000000003,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        21021.120000000003,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_E1_fw",
+      "xy": [
+        19172.16,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        19172.16,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_E1_hc0",
+      "xy": [
+        19172.16,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        19172.16,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_E1_hc1",
+      "xy": [
+        19794.24,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        19794.24,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_E1_hc2",
+      "xy": [
+        20407.68,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        20407.68,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_E1_hc3",
+      "xy": [
+        21021.120000000003,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        21021.120000000003,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_E1_sc",
+      "xy": [
+        20407.68,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        20407.68,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_E1_st_a",
+      "xy": [
+        19172.16,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        19172.16,
+        13936.32
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_E1_st_b",
+      "xy": [
+        21021.120000000003,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        21021.120000000003,
+        13936.32
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_E1_stm",
+      "xy": [
+        19794.24,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        19794.24,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_E1_su_c",
+      "xy": [
+        20096.64,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        20096.64,
+        11128.32
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "sl_E1_su_l0",
+      "xy": [
+        21021.120000000003,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        21021.120000000003,
+        11050.56
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_E1_su_l1",
+      "xy": [
+        19172.16,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        19172.16,
+        11050.56
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_E2_ctl",
+      "xy": [
+        22567.68,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        22567.68,
+        13858.56
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "sl_E2_fe",
+      "xy": [
+        23492.16,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        23492.16,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_E2_fw",
+      "xy": [
+        21643.2,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        21643.2,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_E2_hc0",
+      "xy": [
+        21643.2,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        21643.2,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_E2_hc1",
+      "xy": [
+        22265.280000000002,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        22265.280000000002,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_E2_hc2",
+      "xy": [
+        22878.72,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        22878.72,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_E2_hc3",
+      "xy": [
+        23492.16,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        23492.16,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_E2_sc",
+      "xy": [
+        22878.72,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        22878.72,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_E2_st_a",
+      "xy": [
+        21643.2,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        21643.2,
+        13936.32
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_E2_st_b",
+      "xy": [
+        23492.16,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        23492.16,
+        13936.32
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_E2_stm",
+      "xy": [
+        22265.280000000002,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        22265.280000000002,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_E2_su_c",
+      "xy": [
+        22567.68,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        22567.68,
+        11128.32
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "sl_E2_su_l0",
+      "xy": [
+        23492.16,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        23492.16,
+        11050.56
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_E2_su_l1",
+      "xy": [
+        21643.2,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        21643.2,
+        11050.56
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_E3_ctl",
+      "xy": [
+        25038.719999999998,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        25038.72,
+        13858.56
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "sl_E3_fe",
+      "xy": [
+        25963.2,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        25963.2,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_E3_fw",
+      "xy": [
+        24114.24,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        24114.24,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_E3_hc0",
+      "xy": [
+        24114.24,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        24114.24,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_E3_hc1",
+      "xy": [
+        24736.32,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        24736.32,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_E3_hc2",
+      "xy": [
+        25349.760000000002,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        25349.760000000002,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_E3_hc3",
+      "xy": [
+        25963.2,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        25963.2,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_E3_sc",
+      "xy": [
+        25349.760000000002,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        25349.760000000002,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_E3_st_a",
+      "xy": [
+        24114.24,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        24114.24,
+        13936.32
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_E3_st_b",
+      "xy": [
+        25963.2,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        25963.2,
+        13936.32
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_E3_stm",
+      "xy": [
+        24736.32,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        24736.32,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_E3_su_c",
+      "xy": [
+        25038.719999999998,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        25038.72,
+        11128.32
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "sl_E3_su_l0",
+      "xy": [
+        25963.2,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        25963.2,
+        11050.56
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_E3_su_l1",
+      "xy": [
+        24114.24,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        24114.24,
+        11050.56
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_E4_ctl",
+      "xy": [
+        27509.76,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        27509.76,
+        13858.56
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "sl_E4_fe",
+      "xy": [
+        28434.24,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        28434.24,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_E4_fw",
+      "xy": [
+        26585.280000000002,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        26585.280000000002,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_E4_hc0",
+      "xy": [
+        26585.280000000002,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        26585.280000000002,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_E4_hc1",
+      "xy": [
+        27207.36,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        27207.36,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_E4_hc2",
+      "xy": [
+        27820.8,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        27820.8,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_E4_hc3",
+      "xy": [
+        28434.24,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        28434.24,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_E4_sc",
+      "xy": [
+        27820.8,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        27820.8,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_E4_st_a",
+      "xy": [
+        26585.280000000002,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        26585.280000000002,
+        13936.32
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_E4_st_b",
+      "xy": [
+        28434.24,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        28434.24,
+        13936.32
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_E4_stm",
+      "xy": [
+        27207.36,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        27207.36,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_E4_su_c",
+      "xy": [
+        27509.76,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        27509.76,
+        11128.32
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "sl_E4_su_l0",
+      "xy": [
+        28434.24,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        28434.24,
+        11050.56
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_E4_su_l1",
+      "xy": [
+        26585.280000000002,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        26585.280000000002,
+        11050.56
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_E5_ctl",
+      "xy": [
+        29980.8,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        29980.8,
+        13858.56
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "sl_E5_fe",
+      "xy": [
+        30905.280000000002,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        30905.280000000002,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_E5_fw",
+      "xy": [
+        29056.32,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        29056.32,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_E5_hc0",
+      "xy": [
+        29056.32,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        29056.32,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_E5_hc1",
+      "xy": [
+        29678.4,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        29678.4,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_E5_hc2",
+      "xy": [
+        30291.84,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        30291.84,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_E5_hc3",
+      "xy": [
+        30905.280000000002,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        30905.280000000002,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_E5_sc",
+      "xy": [
+        30291.84,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        30291.84,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_E5_st_a",
+      "xy": [
+        29056.32,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        29056.32,
+        13936.32
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_E5_st_b",
+      "xy": [
+        30905.280000000002,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        30905.280000000002,
+        13936.32
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_E5_stm",
+      "xy": [
+        29678.4,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        29678.4,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_E5_su_c",
+      "xy": [
+        29980.8,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        29980.8,
+        11128.32
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "sl_E5_su_l0",
+      "xy": [
+        30905.280000000002,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        30905.280000000002,
+        11050.56
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_E5_su_l1",
+      "xy": [
+        29056.32,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        29056.32,
+        11050.56
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_W0_ctl",
+      "xy": [
+        15154.560000000001,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        15154.56,
+        13858.56
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "sl_W0_fe",
+      "xy": [
+        16079.04,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        16079.04,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_W0_fw",
+      "xy": [
+        14230.080000000002,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        14230.080000000002,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_W0_hc0",
+      "xy": [
+        14230.080000000002,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        14230.080000000002,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_W0_hc1",
+      "xy": [
+        14852.160000000002,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        14852.160000000002,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_W0_hc2",
+      "xy": [
+        15465.6,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        15465.6,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_W0_hc3",
+      "xy": [
+        16079.04,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        16079.04,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_W0_sc",
+      "xy": [
+        15465.6,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        15465.6,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_W0_st_a",
+      "xy": [
+        14230.080000000002,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        14230.080000000002,
+        13936.32
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_W0_st_b",
+      "xy": [
+        16079.04,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        16079.04,
+        13936.32
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_W0_stm",
+      "xy": [
+        14852.160000000002,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        14852.160000000002,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_W0_su_c",
+      "xy": [
+        15154.560000000001,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        15154.56,
+        11128.32
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "sl_W0_su_l0",
+      "xy": [
+        16079.04,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        16079.04,
+        11050.56
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_W0_su_l1",
+      "xy": [
+        14230.080000000002,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        14230.080000000002,
+        11050.56
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_W1_ctl",
+      "xy": [
+        12683.52,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        12683.52,
+        13858.56
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "sl_W1_fe",
+      "xy": [
+        13608.0,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        13608.0,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_W1_fw",
+      "xy": [
+        11759.04,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        11759.04,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_W1_hc0",
+      "xy": [
+        11759.04,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        11759.04,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_W1_hc1",
+      "xy": [
+        12381.12,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        12381.12,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_W1_hc2",
+      "xy": [
+        12994.560000000001,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        12994.560000000001,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_W1_hc3",
+      "xy": [
+        13608.0,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        13608.0,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_W1_sc",
+      "xy": [
+        12994.560000000001,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        12994.560000000001,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_W1_st_a",
+      "xy": [
+        11759.04,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        11759.04,
+        13936.32
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_W1_st_b",
+      "xy": [
+        13608.0,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        13608.0,
+        13936.32
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_W1_stm",
+      "xy": [
+        12381.12,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        12381.12,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_W1_su_c",
+      "xy": [
+        12683.52,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        12683.52,
+        11128.32
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "sl_W1_su_l0",
+      "xy": [
+        13608.0,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        13608.0,
+        11050.56
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_W1_su_l1",
+      "xy": [
+        11759.04,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        11759.04,
+        11050.56
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_W2_ctl",
+      "xy": [
+        10212.480000000001,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        10212.48,
+        13858.56
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "sl_W2_fe",
+      "xy": [
+        11136.960000000001,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        11136.960000000001,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_W2_fw",
+      "xy": [
+        9288.0,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        9288.0,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_W2_hc0",
+      "xy": [
+        9288.0,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        9288.0,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_W2_hc1",
+      "xy": [
+        9910.080000000002,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        9910.080000000002,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_W2_hc2",
+      "xy": [
+        10523.52,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        10523.52,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_W2_hc3",
+      "xy": [
+        11136.960000000001,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        11136.960000000001,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_W2_sc",
+      "xy": [
+        10523.52,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        10523.52,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_W2_st_a",
+      "xy": [
+        9288.0,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        9288.0,
+        13936.32
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_W2_st_b",
+      "xy": [
+        11136.960000000001,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        11136.960000000001,
+        13936.32
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_W2_stm",
+      "xy": [
+        9910.080000000002,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        9910.080000000002,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_W2_su_c",
+      "xy": [
+        10212.480000000001,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        10212.48,
+        11128.32
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "sl_W2_su_l0",
+      "xy": [
+        11136.960000000001,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        11136.960000000001,
+        11050.56
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_W2_su_l1",
+      "xy": [
+        9288.0,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        9288.0,
+        11050.56
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_W3_ctl",
+      "xy": [
+        7741.4400000000005,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        7741.44,
+        13858.56
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "sl_W3_fe",
+      "xy": [
+        8665.92,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        8665.92,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_W3_fw",
+      "xy": [
+        6816.96,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        6816.96,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_W3_hc0",
+      "xy": [
+        6816.96,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        6816.96,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_W3_hc1",
+      "xy": [
+        7439.04,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        7439.04,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_W3_hc2",
+      "xy": [
+        8052.48,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        8052.48,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_W3_hc3",
+      "xy": [
+        8665.92,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        8665.92,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_W3_sc",
+      "xy": [
+        8052.48,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        8052.48,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_W3_st_a",
+      "xy": [
+        6816.96,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        6816.96,
+        13936.32
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_W3_st_b",
+      "xy": [
+        8665.92,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        8665.92,
+        13936.32
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_W3_stm",
+      "xy": [
+        7439.04,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        7439.04,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_W3_su_c",
+      "xy": [
+        7741.4400000000005,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        7741.44,
+        11128.32
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "sl_W3_su_l0",
+      "xy": [
+        8665.92,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        8665.92,
+        11050.56
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_W3_su_l1",
+      "xy": [
+        6816.96,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        6816.96,
+        11050.56
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_W4_ctl",
+      "xy": [
+        5270.4,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        5270.4,
+        13858.56
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "sl_W4_fe",
+      "xy": [
+        6194.88,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        6194.88,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_W4_fw",
+      "xy": [
+        4345.92,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        4345.92,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_W4_hc0",
+      "xy": [
+        4345.92,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        4345.92,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_W4_hc1",
+      "xy": [
+        4968.0,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        4968.0,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_W4_hc2",
+      "xy": [
+        5581.44,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        5581.44,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_W4_hc3",
+      "xy": [
+        6194.88,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        6194.88,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_W4_sc",
+      "xy": [
+        5581.44,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        5581.44,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_W4_st_a",
+      "xy": [
+        4345.92,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        4345.92,
+        13936.32
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_W4_st_b",
+      "xy": [
+        6194.88,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        6194.88,
+        13936.32
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_W4_stm",
+      "xy": [
+        4968.0,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        4968.0,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_W4_su_c",
+      "xy": [
+        5270.4,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        5270.4,
+        11128.32
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "sl_W4_su_l0",
+      "xy": [
+        6194.88,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        6194.88,
+        11050.56
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_W4_su_l1",
+      "xy": [
+        4345.92,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        4345.92,
+        11050.56
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_W5_ctl",
+      "xy": [
+        2799.36,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        2799.36,
+        13858.56
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "sl_W5_fe",
+      "xy": [
+        3723.84,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        3723.84,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_W5_fw",
+      "xy": [
+        1874.8799999999999,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        1874.8799999999999,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_W5_hc0",
+      "xy": [
+        1874.8799999999999,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        1874.8799999999999,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_W5_hc1",
+      "xy": [
+        2496.96,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        2496.96,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_W5_hc2",
+      "xy": [
+        3110.4,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        3110.4,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_W5_hc3",
+      "xy": [
+        3723.84,
+        15197.76
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        3723.84,
+        15266.88
+      ],
+      "wire_um": 69.12
+    },
+    {
+      "part": "sl_W5_sc",
+      "xy": [
+        3110.4,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        3110.4,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_W5_st_a",
+      "xy": [
+        1874.8799999999999,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        1874.8799999999999,
+        13936.32
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_W5_st_b",
+      "xy": [
+        3723.84,
+        13858.56
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        3723.84,
+        13936.32
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_W5_stm",
+      "xy": [
+        2496.96,
+        12467.52
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        2496.96,
+        12381.12
+      ],
+      "wire_um": 86.4
+    },
+    {
+      "part": "sl_W5_su_c",
+      "xy": [
+        2799.36,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        2799.36,
+        11128.32
+      ],
+      "wire_um": 0.0
+    },
+    {
+      "part": "sl_W5_su_l0",
+      "xy": [
+        3723.84,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        3723.84,
+        11050.56
+      ],
+      "wire_um": 77.76
+    },
+    {
+      "part": "sl_W5_su_l1",
+      "xy": [
+        1874.8799999999999,
+        11128.32
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M8",
+        1874.8799999999999,
+        11050.56
+      ],
+      "wire_um": 77.76
+    }
+  ],
+  "pending_staged_branches": [
+    {
+      "part": "coll_core",
+      "xy": [
+        1166.4,
+        9227.519999999999
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        1632.96,
+        9227.519999999999
+      ],
+      "wire_um": 466.56
+    },
+    {
+      "part": "coll_f0",
+      "xy": [
+        1166.4,
+        5952.96
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        1632.96,
+        5952.96
+      ],
+      "wire_um": 466.56
+    },
+    {
+      "part": "coll_f1",
+      "xy": [
+        1166.4,
+        6946.5599999999995
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        1632.96,
+        6946.5599999999995
+      ],
+      "wire_um": 466.56
+    },
+    {
+      "part": "coll_f2",
+      "xy": [
+        1166.4,
+        7940.16
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        1632.96,
+        7940.16
+      ],
+      "wire_um": 466.56
+    },
+    {
+      "part": "coll_f3",
+      "xy": [
+        1166.4,
+        10756.8
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        1632.96,
+        10756.8
+      ],
+      "wire_um": 466.56
+    },
+    {
+      "part": "coll_f4",
+      "xy": [
+        1166.4,
+        12009.6
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        1632.96,
+        12009.6
+      ],
+      "wire_um": 466.56
+    },
+    {
+      "part": "coll_f5",
+      "xy": [
+        1166.4,
+        12873.6
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        1632.96,
+        12873.6
+      ],
+      "wire_um": 466.56
+    },
+    {
+      "part": "coll_n",
+      "xy": [
+        1166.4,
+        13668.480000000001
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        1632.96,
+        13668.480000000001
+      ],
+      "wire_um": 466.56
+    },
+    {
+      "part": "coll_s",
+      "xy": [
+        1166.4,
+        5045.759999999999
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        1632.96,
+        5045.759999999999
+      ],
+      "wire_um": 466.56
+    },
+    {
+      "part": "coll_ucie",
+      "xy": [
+        388.8,
+        8424.0
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        1632.96,
+        8424.0
+      ],
+      "wire_um": 1244.16
+    },
+    {
+      "part": "glue",
+      "xy": [
+        388.8,
+        10756.8
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        1632.96,
+        10756.8
+      ],
+      "wire_um": 1244.16
+    },
+    {
+      "part": "io_serdes",
+      "xy": [
+        753.018,
+        14061.48
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        1632.96,
+        14061.48
+      ],
+      "wire_um": 879.942
+    },
+    {
+      "part": "io_serdes_1",
+      "xy": [
+        753.018,
+        4644.12
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        1632.96,
+        4644.12
+      ],
+      "wire_um": 879.942
+    },
+    {
+      "part": "io_serdes_2",
+      "xy": [
+        753.018,
+        2319.96
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        1632.96,
+        2319.96
+      ],
+      "wire_um": 879.942
+    },
+    {
+      "part": "native59",
+      "xy": [
+        388.8,
+        11750.400000000001
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        1632.96,
+        11750.400000000001
+      ],
+      "wire_um": 1244.16
+    },
+    {
+      "part": "tt_ctlm",
+      "xy": [
+        388.8,
+        12268.800000000001
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        1632.96,
+        12268.800000000001
+      ],
+      "wire_um": 1244.16
+    },
+    {
+      "part": "ucie_kv",
+      "xy": [
+        276.396,
+        10022.304
+      ],
+      "terminal_layer": "M9",
+      "source": "declared_partition_entry",
+      "mesh_anchor": [
+        "M9",
+        1632.96,
+        10022.304
+      ],
+      "wire_um": 1356.564
+    }
+  ],
+  "reach_um": 450.0,
+  "partitions": 377,
+  "complete": false,
+  "scope": "declared entry coordinates and layers; direct metal only; pending branches require actual reserved buffers; no local tree or timing qualification"
+}
