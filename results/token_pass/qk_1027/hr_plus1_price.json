@@ -1,0 +1,115 @@
+{
+ "source": "claude/kv-core-slice-1-1027@18c72cf920 results/kv_core_slice_1/hr_price.json (ruling KV-CORE-SLICE-1 00:37 ASK-1)",
+ "plus1_bus_total_listed": 21,
+ "cores": {
+  "qkd_hr_cdc_ch": {
+   "plus1_buses": [],
+   "listed_complete": false,
+   "zero_cycle": true
+  },
+  "qkd_hr_cdc_ci": {
+   "plus1_buses": [
+    "u_ox__rd",
+    "u_ox__rdata",
+    "u_ox__wdata"
+   ],
+   "listed_complete": false,
+   "zero_cycle": false
+  },
+  "qkd_hr_cdc_hi": {
+   "plus1_buses": [
+    "u_cx__rd",
+    "u_cx__rdata",
+    "u_cx__wdata"
+   ],
+   "listed_complete": false,
+   "zero_cycle": false
+  },
+  "qkd_hr_cdc_pc": {
+   "plus1_buses": [],
+   "listed_complete": false,
+   "zero_cycle": true
+  },
+  "qkd_hr_core_guard": {
+   "plus1_buses": [
+    "u_guard__status",
+    "u_native__request_tag"
+   ],
+   "listed_complete": false,
+   "zero_cycle": false
+  },
+  "qkd_hr_core_order": {
+   "plus1_buses": [
+    "u_chain__chain_f",
+    "u_chain__chain_fault",
+    "u_dispatch__fault"
+   ],
+   "listed_complete": false,
+   "zero_cycle": false
+  },
+  "qkd_hr_core_peer": {
+   "plus1_buses": [
+    "u_coordinator__accepted_ranks",
+    "u_coordinator__token_grant_position",
+    "u_coordinator__token_grant_tag"
+   ],
+   "listed_complete": false,
+   "zero_cycle": false
+  },
+  "qkd_hr_core_prompt": {
+   "plus1_buses": [
+    "u_control__fault_src",
+    "u_program__auth_digest"
+   ],
+   "listed_complete": false,
+   "zero_cycle": false
+  },
+  "qkd_hr_core_queue": {
+   "plus1_buses": [
+    "u_bootbarrier__in_d",
+    "u_bootbarrier__in_v"
+   ],
+   "listed_complete": false,
+   "zero_cycle": false
+  },
+  "qkd_hr_core_rx": {
+   "plus1_buses": [
+    "deferred"
+   ],
+   "listed_complete": false,
+   "zero_cycle": false
+  },
+  "qkd_hr_core_tx": {
+   "plus1_buses": [],
+   "listed_complete": false,
+   "zero_cycle": true
+  },
+  "qkd_hr_host_qm": {
+   "plus1_buses": [],
+   "listed_complete": true,
+   "zero_cycle": true
+  },
+  "qkd_hr_ingest_eng": {
+   "status": "NO face_guard (stopped earlier)"
+  },
+  "qkd_hr_phy_adp": {
+   "plus1_buses": [
+    "r_cr"
+   ],
+   "listed_complete": false,
+   "zero_cycle": false
+  },
+  "qkd_hr_phy_pad": {
+   "plus1_buses": [
+    "out_v"
+   ],
+   "listed_complete": false,
+   "zero_cycle": false
+  }
+ },
+ "composer_base": "v7 QCE 296341 cyc/token (claude/tok-qk-price-0130 q_v7ctl): no host-root (KV hub_Wi hr_*) term in the per-layer chain; per-token terms = L0 cold, 35 x chained, LM head 3135, embedding row fetch via KV die 272",
+ "per_layer_delta": 0,
+ "per_layer_reason": "no listed +1 bus is a QC<->KV d2d attention lane (those use sys_c UCIe -> ahub/seq/astk; through hub_Wi only as partition feedthroughs ft0..ft31, not hr core faces); listed buses = host CDC rd/rdata/wdata, guard status, native request_tag, order chain/fault, peer accepted_ranks/token_grant, prompt fault/auth_digest, queue bootbarrier, rx deferred, phy_adp r_cr, phy_pad out_v",
+ "per_token_bound": "<= +21 (each listed bus crossed at most once on the token-start host path) = <= 0.0071 % of 296341",
+ "grade": "UNCHECKED: hr_price listed_complete=false on 13/14 cores (face_guard lists 5 examples per class); qkd_hr_ingest_eng has NO face_guard"
+}
