@@ -101,3 +101,6 @@ SOURCE PHASE FAILURE: original half split0addedcycles, h0key->csout68, h1key->cs
 
 ## CODEX notes 2026-10-27 09:23 PDT
 Current complete canonical coverage/results/jobs/next failures are in HBM-CORE-LAT.md CODEX 2026-10-27 09:23 PDT and codex/hbm-cores-0815 coverage.json. No old failed kits requeued.
+
+## CODEX 2026-10-27 09:56 PDT — exact HCOL native caller and clock connector
+Actual C9b ordinary HCOL native kit generation PASS unit1166188 exit0, kit538a91d390c61376,1216pins, exact clk_pair[0]/[1], no face shell. Source caller codex/hbm-hcol-1027@dc685f66cc. No P&R/STA. Narrow shared connector READY codex/hbm-merged-clock-1027@afdd0a5e6 under FLOW review: optional real tap merged_clock_ports expands both exact scalar pins onto one real833 tap; matching native LEF+Lib clocks/coordinates required; runtime exact ITerm connectivity guard rejects missing bit, wrong source or nonclock. Five focused positive/mutant tests including executable Tcl PASS;14 existing CP2/clat PASS,1 skip after sparse rtl/lib restored. Default unchanged. PLAN carries verified sidecar list onto actual tap rows after schema merge; selected native views remain required.
