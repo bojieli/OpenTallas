@@ -56,6 +56,13 @@ cat $O/hostside.f $O/files.f $O/incdirs.f >> $O/vl.f
 [ "${HIER:-1}" = 1 ] && echo "$O/hier.vlt" >> $O/vl.f
 fi
 cd $O
+# TOK-QK-4/5 10-27: one source per module. -Wno-MODDUP (above) makes Verilator keep the FIRST of two definitions silently
+# (B48: the old vehicle4 qkd_ctrl_pc_nc.sv beside the boot-window copy), so the list is checked before any build or lint;
+# a duplicate fails the build. Identical-text later copies are dropped (same elaborated RTL). MODDUP_ALLOW="m1 m2"
+# exempts COORD-ruled names only (record the ruling at the caller).
+python3 -I $H/check_moddup.py --drop-redundant $O/vl.f --json $O/moddup.json ${MODDUP_ALLOW:+--allow $MODDUP_ALLOW} > $O/moddup.log; mrc=$?
+tail -1 $O/moddup.log
+if [ $mrc != 0 ]; then grep -e "^MODDUP " $O/moddup.log; echo "BUILD rc=4 duplicate module definitions in vl.f (see $O/moddup.log)"; exit 4; fi
 if [ "$MODE" = lint ]; then
   /usr/bin/time -v $VL --lint-only --timing -f vl.f > lint.log 2>&1; rc=$?
   echo "LINT rc=$rc errors $(grep -c '^%Error' lint.log) $(grep 'Maximum resident' lint.log)"; exit $rc
