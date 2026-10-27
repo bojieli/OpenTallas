@@ -500,7 +500,8 @@ g = rd(next(iter(glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base", 
 tot = re.findall(r"^Total\s+.*?(\d+)\s*$", g, re.M)
 out["grt_overflow"] = int(tot[-1]) if tot else None
 out["goal"] = goal
-out["chain"] = jl(os.path.join(K, "autopilot_chain.json"))
+chain_records = glob.glob(os.path.join(K, "autopilot_chain*.json"))
+out["chain"] = jl(max(chain_records, key=os.path.getmtime)) if chain_records else None
 cts = [p for p in glob.glob(os.path.join(K, "run", "results", "asap7", "*", "base", "4_cts.odb")) if os.path.getmtime(p) >= since]
 if cts: out["cts_odb"] = max(cts, key=os.path.getmtime)
 grt = [p for p in glob.glob(os.path.join(K, "run", "results", "asap7", "*", "base", "5_1_grt.odb")) if os.path.getmtime(p) >= since]
@@ -1401,7 +1402,9 @@ def finish(st, j, c, client):
     cls, kind, reasons = classify(c, client)
     if j.get("chain_required") and cls in ("SIGNED", "WAIT-PARENT"):
         chain = c.get("chain") or {}
-        if (chain.get("started", 0) < j.get("started", 0) - 120
+        if chain.get("verdict") == "LEC_OOM":
+            cls, kind, reasons = "CRASH", "proof-oom", str(chain.get("reason"))
+        elif (chain.get("started", 0) < j.get("started", 0) - 120
                 or chain.get("verdict") != "PASS" or chain.get("lec_verdict") != "EQUIVALENT"
                 or chain.get("lec_exit") != 0):
             cls, kind, reasons = "STRUCTURAL", "routed-lec", "autopilot chain incomplete: " + str(chain.get("reason") or "missing current routed LEC")
@@ -1453,7 +1456,9 @@ def after_class(st, j):
                    (j.get("signoff") or {}).get("local_verdict"), j.get("reasons", ""), j.get("lane", "")])
         log(f"KEEP {j['id']} local physical PASS needs actual parent receipt; no release archive or failure cleanup")
     elif cls in ("NEAR-MISS", "STRUCTURAL", "CRASH"):
-        if (j.get("signoff") or {}).get("odb"):
+        if j.get("kind") == "proof-oom":
+            record_failure(st, j)  # proof admission failure; no geometry reroute
+        elif (j.get("signoff") or {}).get("odb"):
             start_review(st, j)
         else:
             record_failure(st, j)
@@ -1600,6 +1605,13 @@ def retry_pending(st):
     for j in list(st["jobs"].values()):
         if j.get("status") == "SIGNED" and not DRY:
             after_class(st, j)                         # trial check (rule 1) before an archive retry
+        elif j.get("status") == "DONE-CRASH" and j.get("kind") == "proof-oom":
+            if hub_procs(j["path"]):
+                continue
+            c = probe_job(j)
+            chain = (c or {}).get("chain") or {}
+            if chain.get("verdict") == "PASS" and chain.get("started", 0) > j.get("finished", 0):
+                finish(st, j, c, {"proof_only_resume": True})
         elif j.get("status") == "WAIT-PARENT":
             if hub_procs(j["path"]):
                 continue

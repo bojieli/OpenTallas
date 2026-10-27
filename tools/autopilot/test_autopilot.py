@@ -86,6 +86,27 @@ class TestQueue(Base):
 
 
 class TestRoutedChainGate(Base):
+    def test_proof_oom_is_distinct_and_never_retries_route(self):
+        j = {"id": "chain", "die": "s81", "type": "t", "chain_required": True, "started": time.time()}
+        c = so("SIGNED", 3, 2, ())
+        c["chain"] = {"started": time.time(), "verdict": "LEC_OOM", "reason": "24GB proof stopped; route retained"}
+        self.ap.after_class = lambda st, j: None
+        self.ap.submit = lambda *a, **kw: self.fail("proof OOM must not reroute")
+        self.ap.finish({"jobs": {}}, j, c, {"exit": 137})
+        self.assertEqual((j["status"], j["kind"]), ("CRASH", "proof-oom"))
+
+    def test_new_proof_only_receipt_resumes_publication(self):
+        j = {"id": "chain", "path": "/kit", "status": "DONE-CRASH", "kind": "proof-oom", "finished": 10}
+        c = so("SIGNED", 3, 2, ())
+        c["chain"]["started"] = 20
+        seen = []
+        self.ap.failure_resolutions = lambda: {}
+        self.ap.hub_procs = lambda path: []
+        self.ap.probe_job = lambda job: c
+        self.ap.finish = lambda st, job, probe, client: seen.append(client)
+        self.ap.retry_pending({"jobs": {"chain": j}})
+        self.assertEqual(seen, [{"proof_only_resume": True}])
+
     def test_signed_record_without_current_equivalence_is_not_archived(self):
         for proof in (None, {"started": time.time(), "verdict": "PASS", "lec_verdict": "NOT EQUIVALENT", "lec_exit": 0},
                       {"started": 1, "verdict": "PASS", "lec_verdict": "EQUIVALENT", "lec_exit": 0}):

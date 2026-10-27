@@ -43,7 +43,7 @@ class ChainTest(unittest.TestCase):
         run, calls = self.runner(k, b)
         self.assertEqual(continue_kit(k, "runner.sh", "route", 48, 8, run), 0)
         self.assertEqual(calls[-1][calls[-1].index("--netlist") + 1], str(b / "6_final.v"))
-        self.assertEqual(json.loads((k / "autopilot_chain.json").read_text())["verdict"], "PASS")
+        self.assertEqual(json.loads(max(k.glob("autopilot_chain*.json")).read_text())["verdict"], "PASS")
 
     def test_missing_signoff_continues_without_reroute(self):
         k, b = self.vehicle()
@@ -56,7 +56,7 @@ class ChainTest(unittest.TestCase):
         k, b = self.vehicle()
         run, _ = self.runner(k, b, verdict="NOT EQUIVALENT")
         self.assertNotEqual(continue_kit(k, "runner.sh", "route", 48, 8, run), 0)
-        self.assertEqual(json.loads((k / "autopilot_chain.json").read_text())["verdict"], "LEC_FAIL")
+        self.assertEqual(json.loads(max(k.glob("autopilot_chain*.json")).read_text())["verdict"], "LEC_FAIL")
 
     def test_synth_netlist_cannot_replace_missing_route_netlist(self):
         k, b = self.vehicle()
@@ -116,6 +116,23 @@ class ChainTest(unittest.TestCase):
         self.assertEqual(continue_kit(k, "runner.sh", "route", 48, 8,
                                       lambda c: self.fail("runner must not start"),
                                       preflight=k / "shared/kit_preflight.py"), 3)
+
+    def test_proof_oom_can_resume_without_rerouting_or_overwriting_failure(self):
+        k, b = self.vehicle()
+        run, calls = self.runner(k, b)
+        def oom(cmd):
+            if "--netlist" in cmd:
+                return 137
+            return run(cmd)
+        self.assertEqual(continue_kit(k, "runner.sh", "route", 24, 8, oom), 137)
+        old = max(k.glob("autopilot_chain*.json"))
+        old_text = old.read_text()
+        self.assertEqual(json.loads(old_text)["verdict"], "LEC_OOM")
+        calls.clear()
+        self.assertEqual(continue_kit(k, "runner.sh", "route", 300, 8, run, proof_only=True), 0)
+        self.assertFalse(any(cmd[0] == "bash" for cmd in calls))
+        self.assertEqual(old.read_text(), old_text)
+        self.assertEqual(len(list(k.glob("autopilot_chain*.json"))), 2)
 
     def test_runner_failure_preserved(self):
         k, _ = self.vehicle()
