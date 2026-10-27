@@ -26,3 +26,8 @@ Status: continuing until explicit reset; all own fleet jobs terminal. No route/S
 
 ## Own worktrees
 Local /srv/opentallas-scratch/claude/wt/codex-tok-ds-0815 currently codex/idxnet-tx-contract-0954; all READY refs pushed GitHub. Separate local codex-rowx-0833 and codex-s81-phy-manifest-0905 trees retain corresponding refs. Remote immutable run-source roots are named above; intel2 own IDX WT /srv/opentallas-scratch2/claude/wt/codex-idxnet-tx-0954 is detacheddf1d18625, all jobs finished.
+
+## Follow-up L0 producer audit (10:08 PDT)
+No additional safe production binding can be emitted from the currently qualified contracts. lower_xs.aproj_capture_contract explicitly has admitted=false and source_to_cap_ages=None; its missing fields are actual frame-to-CAP arrivals/FIN lifetime, registered cfg age and capture-to-consumer addresses/ages. check_fullsix_cap_capture.py proves CAP/CW/VP component only and explicitly leaves consumer read/retirement/deadline open. lower_vpx needs actual a_proj capture-to-end-slice moves for allgather/NEXT, wo_b/down result rows for POST, and those produced coefficient rows for subsequent HCpre. Norm remains one-slice programme without16-slice NX/XQ composition. Existing owner_fold_binding/final_ffn opt-ins require these absent producer/lifetime bindings. No row/calendar guesses or repeat fleet runs were made.
+
+GB next vehicle has an active owner: s81_core coordinates s81_die for current plan-kit band definitions plus actual _asb_x closure, then helper-lowers those to a candidate. Their existing raw epoch-addressed col_h10_l4_lp_gb source cannot be labelled an asbuilt extracted calendar (structural tracer does not time LP landing memories). No rawLP bypass; no production enablement.
