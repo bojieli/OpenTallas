@@ -130,7 +130,59 @@ def straps(PL, tile_cols, st_rows):
             out.append(("M9", x, sd_rows[0], sd_rows[-1], "column_full"))
         else:                                       # corner reserve frames: no strap crosses them
             out.append(("M9", x, ty0 + 8.64, ty1 - 8.64, "column_array"))
+    if SPINE_COLUMNS:
+        # INFRA-FIRST-HEAD-4 / GEOM-REVIEW-18 on HEAD-3: the 1.74-mm spine gap between the tile column groups had
+        # no M9 strap -> fill every column gap > 1.5x the tile column pitch with evenly spaced spine columns (one
+        # continuous mesh, 12.8e1; no mesh-region boundary at the spine).  Same extent as the full columns.
+        cols = sorted(x for L, x, *_ in out if L == "M9")
+        pitch = sorted(b_ - a_ for a_, b_ in zip(cols, cols[1:]))[len(cols) // 2]
+        for a_, b_ in zip(cols, cols[1:]):
+            n = int(round((b_ - a_) / pitch))
+            if b_ - a_ > 1.5 * pitch and n >= 2:
+                for j in range(1, n):
+                    out.append(("M9", r3(a_ + j * (b_ - a_) / n), sd_rows[0], sd_rows[-1], "column_spine"))
     return out, sd_rows
+
+
+SPINE_COLUMNS = False
+
+
+def snap_lanes(S, plan_raw, clk_w=0.64):
+    """INFRA-FIRST-HEAD-4 (opt-in --pg-lanes): move every strap to the nearest legal VSS-locked clock lane of the
+    plan's die PG grid (head_pg_sweep.lanes: lane in a VSS-adjacent half-gap, wide spacing to both stripes).  Returns
+    (snapped straps, per-strap jog um).  The island / driver / tap then reaches its strap through a riser of <= jog."""
+    import head_pg_sweep as HP
+    grid = {g["layer"]: g for g in plan_raw["die"]["pg"]["grid"] if not g.get("region")}
+    out, jog = [], []
+    for L, f, lo, hi, k in S:
+        st = grid[L]
+        ivs, _gap = HP.lanes(st, clk_w)
+        if not ivs:
+            raise SystemExit(f"--pg-lanes: no legal {clk_w}-um clock lane in the {L} grid {st}")
+        p = st["pitch_um"]
+        vss0 = st["offset_um"] + p / 2
+        r = (f - vss0) % p
+        best = None
+        for kk in (-1, 0, 1):
+            for a_, b_ in ivs:
+                lo_, hi_ = a_ + kk * p, b_ + kk * p
+                c = min(max(r, lo_), hi_)
+                if best is None or abs(c - r) < abs(best - r):
+                    best = c
+        nf = r3(f + (best - r))
+        out.append((L, nf, lo, hi, k))
+        jog.append(r3(abs(nf - f)))
+    # strap ends that sat on an end strap of the other layer follow that strap's snap (keeps the mesh one
+    # component); every end is widened to cover the snapped crossing
+    mv = {L: {} for L in ("M8", "M9")}
+    for (L, f, *_), (_, nf, *_) in zip(S, out):
+        mv[L][f] = nf
+    fix = []
+    for L, nf, lo, hi, k in out:
+        other = mv["M9" if L == "M8" else "M8"]
+        lo2, hi2 = other.get(lo, lo), other.get(hi, hi)
+        fix.append((L, nf, r3(min(lo, lo2)), r3(max(hi, hi2)), k))
+    return fix, jog
 
 
 def on_strap(S, xy, tol=0.01):
@@ -340,13 +392,23 @@ def main(argv=None):
     ap.add_argument("--top-m", type=int, default=2)
     ap.add_argument("--reach", type=float, default=450.0)
     ap.add_argument("--stub-max", type=float, default=200.0, help="local-tree reach limit (12.8b core reach analogue)")
+    ap.add_argument("--pg-lanes", action="store_true", help="INFRA-FIRST-HEAD-4: snap straps to the VSS-locked lanes "
+                    "of the plan die.pg.grid (16W)")
+    ap.add_argument("--spine-columns", action="store_true", help="INFRA-FIRST-HEAD-4: M9 straps across the spine gap")
     ap.add_argument("--out", required=True)
     a = ap.parse_args(argv)
     od = Path(a.out)
     od.mkdir(parents=True, exist_ok=True)
     PL = Plan(a.plan)
     drv, tile_cols, st_rows = drive_grid(PL)
+    global SPINE_COLUMNS
+    SPINE_COLUMNS = a.spine_columns
     S, sd_rows = straps(PL, tile_cols, st_rows)
+    lane_jog = None
+    if a.pg_lanes:
+        S, jogs = snap_lanes(S, PL.P)
+        lane_jog = dict(max_um=max(jogs), mean_um=r3(sum(jogs) / len(jogs)), straps=len(jogs),
+                        rule="straps on VSS-locked lanes of die.pg.grid; risers <= max_um from island/driver/tap")
     st = Q.Stage(a.stage)
     et = Q.EdgeType(st, a.top_w, a.top_m, a.reach)
     root = tuple(PL.P["clock"]["spine"]["root_um"])
@@ -372,7 +434,7 @@ def main(argv=None):
                           "on a declared island or channel slot (hd_tile channel row 354.24 / channel cross, spine column, "
                           "station tap row slots); none on a hard core (+1.08 clr), PHY zone, reserve frame or tile glue")
     # ---- mesh gates
-    drv_on = sum(1 for d in drv if on_strap(S, d))
+    drv_on = sum(1 for d in drv if on_strap(S, d, tol=(lane_jog["max_um"] + 0.01) if lane_jog else 0.01))
     comps = mesh_connected(S)
     taps = []
     for p in PL.parts:
@@ -420,7 +482,7 @@ def main(argv=None):
         drivers_on_strap=dict(verdict="PASS" if drv_on == len(drv) else "FAIL", drivers=len(drv), on=drv_on),
         tap_stubs=dict(verdict="PASS" if edge_ok else "FAIL", limit_um=a.stub_max, by_kind=stub_sum,
                        edge_pin_stub_identical_per_inst={k: sorted(v) for k, v in ident.items()}),
-        wire=wire, track_share=share)
+        wire=wire, track_share=share, lane_jog=lane_jog)
     summ = dict(schema="opentallas.head_mesh_r3.v1", plan=a.plan, plan_sha256=__import__("hashlib").sha256(
         Path(a.plan).read_bytes()).hexdigest(), tree=dict(rep, **info), tree_on_islands=tree_gate, mesh=mesh_gate,
         sd_rows=sd_rows, st_rows=st_rows, note="plan model (ngspice stage-table fit); all numbers UNCHECKED")

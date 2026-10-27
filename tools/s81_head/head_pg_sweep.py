@@ -43,7 +43,7 @@ def cmd_power(a):
     for spec in a.rpt:
         name, act, f = spec.split("=", 2)
         r = parse_rpt(f)
-        r.update(core=name, activity=float(act), area_mm2=CORE_UM[name] ** 2 * 1e-6, rpt=f)
+        r.update(core=name, activity=(float(act) if re.fullmatch(r"[0-9.]+", act) else act), area_mm2=CORE_UM[name] ** 2 * 1e-6, rpt=f)
         r["w_mm2"] = r["total_w"] / r["area_mm2"]
         rows.setdefault(act, {})[name] = r
     tile_a = TILE_UM[0] * TILE_UM[1] * 1e-6
@@ -51,7 +51,9 @@ def cmd_power(a):
         "OpenSTA report_power (openroad/orfs:asap7lock), TT RVT NLDM + ot_rom_4096x274_m8_tt.lib, hold2 GRT views "
         "5_1_grt.odb (estimate_parasitics -global_routing, rc_cal 0.8/0.9), propagated clock 833 ps",
         "activity: set_power_activity -global and -input -activity ACT -duty 0.5 (transitions per cycle); clock nets "
-        "toggle every cycle; ROM macros clocked every cycle (worst case: no CE gating credit)",
+        "toggle every cycle; ROM macros clocked every cycle (worst case: no CE gating credit). ACT meas (INFRA-FIRST-HEAD-4, "
+        "OWNER 10-27): register outputs + inputs annotated with the MEASURED per-bit toggle rates of the RTL head pass "
+        "(head_activity_sim.sh / head_activity.py), combinational nets propagated by OpenSTA (head_pg_power_meas.tcl)",
         "hd_tile = 4 x elemA + 1 x elemB hard cores (plan 674a8ac9); glue = tile - cores area",
         "glue ASSUMPTION (no hd_tile glue netlist power): upper bound glue at the 5-core average W/mm2 (S81-HEAD "
         "~1.07M cells/tile vs 0.658M in the cores -> glue ~0.41M cells, i.e. a full-density glue is plausible); "

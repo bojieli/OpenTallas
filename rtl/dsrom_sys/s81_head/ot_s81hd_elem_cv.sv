@@ -39,8 +39,8 @@ module ot_s81hd_elemA_cv #(parameter INSTANCE = "") (
 endmodule
 
 module ot_s81hd_elemB_cv #(parameter INSTANCE = "") (
-    input  wire clk, input wire rst_n, input wire go, input wire [16:0] row0, input wire [255:0] x,
-    input  wire b_v, input wire [31:0] b_d,
+    // HEAD-CORE-R14 10-27: row0/b_v/b_d (proven dead, JOIN 0) removed from the macro, as ot_s81hd_elemB_rb.sv
+    input  wire clk, input wire rst_n, input wire go, input wire [255:0] x,
     output wire o_v, output wire [31:0] o_d,
     output wire fault   // R6 10-26: l_v/l_d/done/best_* removed (unused at the parent), as ot_s81hd_elemB_rb.sv
 );
@@ -57,7 +57,7 @@ module ot_s81hd_elemB_cv #(parameter INSTANCE = "") (
         .d({m_ov, m_od, m_fault}), .q({o_v, o_d, fault}));
     ot_s81hd_elem #(.LV(6), .PAD(2), .JOIN(0), .ROWS(128), .CUT(9'h1ff), .SPLIT9(1), .INSTANCE(INSTANCE), .IOREG(1),
                     .SAFE(1)) u_m (
-        .clk(clk), .rst_n(rst_q), .go(go), .row0(row0), .x(x), .b_v(b_v), .b_d(b_d), .o_v(m_ov), .o_d(m_od), .l_v(m_lv),
+        .clk(clk), .rst_n(rst_q), .go(go), .row0(17'd0), .x(x), .b_v(1'b0), .b_d(32'd0), .o_v(m_ov), .o_d(m_od), .l_v(m_lv),
         .l_d(m_ld), .head_v(nc_hv), .head_d(nc_hd), .head_row(nc_hr), .done(m_done), .best_row(m_row),
         .best_bits(m_bits), .best_key(m_key), .fault(m_fault));
 endmodule
