@@ -24,7 +24,14 @@ HEAD-RTL-5 (10-26): die_port_bind runs --manifest-only: modules resolve ONLY fro
    from the manifest is unresolved (FAIL), a manifest entry that does not exist fails, and two manifest definitions with
    different ports/parameters fail.  The supplement lists the closure modules the plan `sources` omit (to move into the
    plan with the next PLAN-DELTA).
-Exit 0 iff module check 0 missing AND die_port_bind PASS."""
+HEAD-BIND-4 (10-27, COORD ruling on HEAD-CORE-R13 ASK4):
+6. die_port_bind gets --strap-file DIR/straps.json = the plan's partition ID straps [[wrapper module, strap port]]
+   (OWNER 10-25 option B; gen.py rtl DIR/gen/parent_id_straps.json): a literal on a declared strap is recorded, any other
+   tie still fails.  straps.audit_top_ties re-checks every literal on the die top against that manifest (tie_audit.json).
+7. NESTED leaf-pin check (tools/die_plan/port_bind_gate.py nested_check): every instance inside every generated wrapper
+   against its master header (every port bound, no unknown port, widths equal).  die_port_bind sees only the die-top
+   partition pins, so an open leaf pin inside a wrapper (hd_serdes u_phy .rx/.tx only, 10-26) passed it silently.
+Exit 0 iff module check 0 missing AND die_port_bind PASS AND tie audit PASS AND nested check PASS."""
 import argparse, json, re, subprocess, sys
 from pathlib import Path
 
@@ -61,6 +68,18 @@ for im in re.finditer(r'^\s{4}(\w+)(?:\s*#\(.*?\))?\s+(\w+)\s*\((.*?)\n\s{4}\);'
         pads[inst] = dict(master=mst, reason='reset/START wavefront out with no child at this instance '
                           '(reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)',
                           ports={p: [[0, 0]] for p in opn})
+sys.path.insert(0, 'tools/die_plan')
+import straps as STR  # noqa: E402
+import port_bind_gate as PBG  # noqa: E402
+pim = gen / 'parent_id_straps.json'
+pman = json.loads(pim.read_text()) if pim.is_file() else dict(types={}, instances={})
+plan0 = json.loads(Path(a.plan).read_text())
+modof = {tn: ty['module'] for tn, ty in plan0['partition_types'].items()}
+(out / 'straps.json').write_text(json.dumps(dict(straps=sorted([modof[tn], pn] for tn, ps in pman['types'].items()
+                                                                for pn in ps)), indent=1) + '\n')
+aud = STR.audit_top_ties(t2, pman, {m: tn for tn, m in modof.items()})
+(out / 'tie_audit.json').write_text(json.dumps(dict(aud, rows=len(aud['rows'])), indent=1) + '\n')
+print('TIE_AUDIT %s accepted=%d rejected=%d' % (aud['verdict'], len(aud['accepted']), len(aud['rejected'])))
 (out / 'pads.json').write_text(json.dumps({'pads': {}, 'instances': pads}, indent=1) + '\n')
 plan = json.loads(Path(a.plan).read_text())
 src = []
@@ -82,11 +101,18 @@ fl = sorted(str(p) for p in gen.glob('*.sv')) + src + extra
 (out / 'portbind.f').write_text('\n'.join(fl) + '\n')
 print('pads: %d instances, %d open wavefront outs' % (len(pads), sum(len(v['ports']) for v in pads.values())))
 r = subprocess.run([sys.executable, 'tools/die_port_bind.py', str(top), '--top', 's81_head_top', '-f', str(out / 'portbind.f'),
-                    '--pad-file', str(out / 'pads.json'), '--out', str(out / 'port_bind_strict.json'), '--logic-free-stub',
+                    '--pad-file', str(out / 'pads.json'), '--strap-file', str(out / 'straps.json'), '--out', str(out / 'port_bind_strict.json'), '--logic-free-stub',
                     '--manifest-only'],
                    capture_output=True, text=True)
 (out / 'port_bind_strict.txt').write_text(r.stdout + r.stderr)
 print(r.stdout[-3000:], r.stderr[-1000:])
-print('HEAD_DIE_PORTBIND %s module_missing=%s port_bind_rc=%d' % ('PASS' if (missing == 0 and r.returncode == 0) else 'FAIL',
-                                                                 missing, r.returncode))
-sys.exit(0 if (missing == 0 and r.returncode == 0) else 1)
+nest = PBG.nested_check({p.name: p.read_text() for p in sorted(gen.glob('*.sv')) if p.name != 's81_head_top.sv'},
+                        [Path(x).read_text(errors='replace') for x in src + extra])
+(out / 'nested_portbind.json').write_text(json.dumps(nest, indent=1) + '\n')
+print('PORT_BIND_NESTED', nest['verdict'], json.dumps({k: v for k, v in nest.items() if k != 'examples'}))
+for k, v in nest.get('examples', {}).items():
+    print(' ', k, v[:6])
+ok = missing == 0 and r.returncode == 0 and aud['verdict'] == 'PASS' and nest['verdict'] == 'PASS'
+print('HEAD_DIE_PORTBIND %s module_missing=%s port_bind_rc=%d tie_audit=%s nested=%s' % (
+    'PASS' if ok else 'FAIL', missing, r.returncode, aud['verdict'], nest['verdict']))
+sys.exit(0 if ok else 1)

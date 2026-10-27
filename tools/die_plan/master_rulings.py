@@ -220,7 +220,7 @@ def footless_stubs(M):
                      "a plan defect; fix the strap/foot lattice before GRT")
 
 
-def island_ft_inputs(M, islands):
+def island_ft_inputs(M, islands, slot_ties=False):
     """islands: [dict(kind, part, inst, role, rect_um die frame)] for every pushdown island instance."""
     if not M:
         return dict(verdict="NOT RUN", note="no --mesh")
@@ -258,6 +258,7 @@ def island_ft_inputs(M, islands):
         return ok
     feed = defaultdict(int)
     open_ = []
+    ties = []
     for isl in islands:
         r = isl["rect_um"]
         if node_in(r):
@@ -267,9 +268,17 @@ def island_ft_inputs(M, islands):
             feed["core_tap_stub"] += 1
         elif strap_over(r):
             feed["local_strap"] += 1
+        elif slot_ties and isl.get("role") == "clock_slot":
+            # INFRA-FIRST-HEAD-4 (opt-in --declared-slots): a declared clock slot of a replicated type that this
+            # instance does not use holds the type's pushdown cell with NO die-level load (no tree node / mesh
+            # driver in the slot, no strap over it) -> its ft input is proven dead and is a DECLARED TIE (TIELO at
+            # the slot, listed per instance in declared_ties)
+            feed["declared_tie_dead_output"] += 1
+            ties.append(dict(part=isl.get("part"), inst=isl.get("inst"), rect_um=[round(v, 3) for v in r]))
         else:
             open_.append(dict(isl, rect_um=[round(v, 3) for v in r]))
-    return dict(verdict="PASS" if not open_ else "FAIL", islands=len(islands), fed=dict(feed), open=len(open_),
+    extra = dict(declared_ties=ties) if slot_ties else {}
+    return dict(verdict="PASS" if not open_ else "FAIL", islands=len(islands), fed=dict(feed), open=len(open_), **extra,
                 examples=open_[:30],
                 reset="rst_i = die regional reset stack (declared per island; reset plan owner checks the stack)",
                 rule="COORD 06:41: unused island inputs are fed from the island's local strap (identical cells + "

@@ -4,6 +4,7 @@
 #   run_tok.sh BUILDDIR IMGDIR OUT NAME VECDIR [extra plusargs ...]
 #   env: CTX (256)  POST (core cycles after the boot verdict, default 300000)  PRELOAD (1; 0 = empty HBM)
 #        PRELOAD_ARGS (extra kv_preload.py args, e.g. "--mut-kswap phy_WS_0" for mutant m3)  HBM_LOG (16)
+#        LAYERS (N: the verdict also needs FAR_LAYER_SUMMARY PASS for layers 0..N-1)
 set -u
 H=$(cd "$(dirname "$0")" && pwd); R=$(cd $H/../../.. && pwd)
 B=$(readlink -f $1)/obj/Vtb_kvslice; I=$(readlink -f $2); O=$(mkdir -p $3 && readlink -f $3); N=$4; V=$(readlink -f $5); shift 5
@@ -19,6 +20,10 @@ fi
   +FAR=1 +VEC=$V +CTX=$CTX +POST=$POST +HBM_LOG=${HBM_LOG:-16} $PL "$@" > sim.log 2>&1
 sim_rc=$?
 printf "%s\n" "$sim_rc" > exit
-echo "$N exit=$(cat exit) $(cat time) | $(grep -m1 '^KVSLICE_BOOT' sim.log | cut -c1-60) | $(grep -m1 '^FAR_SUMMARY' sim.log)"
-# Keep the simulator result; callers classify expected negative controls explicitly.
-exit "$sim_rc"
+# TOK-QK-3 10-27: exit 0 is not a pass -- the verdict comes from the bench verdict lines (kv_verdict.py, fail-closed).
+V=$(python3 -I $H/kv_verdict.py . ${LAYERS:+--layers $LAYERS})
+echo "$N exit=$(cat exit) $(cat time) VERDICT $V | $(grep -m1 '^KVSLICE_BOOT' sim.log | cut -c1-60) | $(grep -m1 '^FAR_SUMMARY' sim.log)"
+# Keep a nonzero simulator result; a clean exit with a FAIL verdict returns 3.  Callers classify expected negative
+# controls explicitly (kv_verdict.py --expect fail).
+[ "$sim_rc" != 0 ] && exit "$sim_rc"
+case "$V" in PASS*) exit 0 ;; *) exit 3 ;; esac

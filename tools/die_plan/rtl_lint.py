@@ -44,6 +44,9 @@ def script(kit, mount='/work'):
     import glob as _glob
     for _p in sorted(_glob.glob('/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_*.lib*'))[:1]:
         libs.append(f'read_liberty -lib -ignore_miss_func {_p}')
+    # KV-CORES-PV2 10-27: 12.2a1 island ft cells are RTL instances of the platform BUF (BUFx24_ASAP7_75t_R) -> INVBUF too
+    for _p in sorted(_glob.glob('/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_*.lib*'))[:1]:
+        libs.append(f'read_liberty -lib -ignore_miss_func {_p}')
     defines = ['-DSYNTHESIS'] + [v if v.startswith('-D') else '-D'+v for v in cfg.get('VERILOG_DEFINES', [])]
     includes = ['-I'+v for v in cfg.get('VERILOG_INCLUDE_DIRS', []) + cfg.get('SYNTH_INCLUDE_DIRS', [])]
     return '\n'.join(libs + ['verilog_defines ' + ' '.join(dict.fromkeys(defines))] +
