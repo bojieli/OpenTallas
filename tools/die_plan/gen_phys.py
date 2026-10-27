@@ -1647,7 +1647,8 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         with (kd / "face_flops_release.tcl").open("a") as f:
             f.write("\nsource /work/reset_physical_stages_release.tcl\n")
     if rc_cal:
-        shutil.copyfile(Path(__file__).with_name(RC_CAL_FILE), kd / RC_CAL_KIT)
+        import core_flow   # FLOW-RC-1: fail-closed per-class (signal + clock) RC calibration guard
+        core_flow.install_rc(kd, Path(__file__).with_name(RC_CAL_FILE))
     (kd / "clock_binding.json").write_text(json.dumps(dict(type=tn, insertion_ps=dict(tt=ib["tt"], ff=ib["ff"]),
                                                            insertion_tol_ps=ib["tol"], basis=ib["basis"],
                                                            parent_early_tap_ps=ib["early_tap_ps"],
