@@ -944,6 +944,15 @@
         "type": "number",
         "exclusiveMinimum": 0
        },
+       "tap_edge_y_um": {
+        "type": "array",
+        "minItems": 1,
+        "uniqueItems": true,
+        "items": {
+         "type": "number",
+         "minimum": 0
+        }
+       },
        "tap_mode": {
         "enum": [
          "grid",
