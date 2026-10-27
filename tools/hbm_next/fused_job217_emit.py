@@ -2,6 +2,12 @@
 """Emit native217-bit FUSED jobs from real HGI-1R records; fail closed without current4-role calendar."""
 import argparse,hashlib,json,sys,re
 from pathlib import Path
+SELECTED_LOCAL_RELEASE_EDGES={'SW':9,'SE':9,'NW':9,'NE':9,'root':6}
+def earliest_start(delivery,local_release,pad_warm):
+ if set(delivery)!=set(SELECTED_LOCAL_RELEASE_EDGES) or local_release!=SELECTED_LOCAL_RELEASE_EDGES:raise ValueError('selected delivered-reset local ledger SW/SE/NW/NE9/root6 required')
+ if any(type(x) is not int or x<0 for x in delivery.values()):raise ValueError('actual nonnegative delivered-reset offsets required')
+ if type(pad_warm) is not int or pad_warm<32:raise ValueError('actual pad warm at least32 required')
+ return max(delivery[k]+local_release[k] for k in delivery)+pad_warm
 FIELDS=[('post',0,1),('nm1',1,4),('A',5,19),('B',24,19),('C',43,19),('O',62,19),('rsA',81,24),('rsB',105,24),('rsC',129,24),('rsO',153,24),('rgap',177,8),('eps',185,32)]
 def pack(f):
  w=0
@@ -39,7 +45,7 @@ def main():
  missing=[];c={}
  if not a.calendar or not a.calendar.exists():missing.append('current4role_native_calendar: source plan SHA, image offsets/launch/deadline edges, boot/START offsets, WSC/PK5/PB5, root ingress/status cycles')
  else:
-  c=json.loads(a.calendar.read_text());required=['source_plan_commit','programme_image_sha256','roles','boot_release_offsets','root_config','root_ingress_cycles','root_status_return_cycles','controller_fetch_cycles','controller_start_cycles','controller_status_check_cycles','provider_start_cycle','provider_preload_complete_cycle','provider_cfg_commit_cycle','pad_warm_cycles','records'];missing.extend(k for k in required if k not in c)
+  c=json.loads(a.calendar.read_text());required=['source_plan_commit','programme_image_sha256','roles','boot_release_offsets','local_release_edges','root_config','root_ingress_cycles','root_status_return_cycles','controller_fetch_cycles','controller_start_cycles','controller_status_check_cycles','provider_start_cycle','provider_preload_complete_cycle','provider_cfg_commit_cycle','pad_warm_cycles','records'];missing.extend(k for k in required if k not in c)
   if not missing:
    if not re.fullmatch('[0-9a-f]{40}',c['source_plan_commit']):missing.append('exact40hex source plan SHA')
    if c['programme_image_sha256']!=sha:missing.append('image SHA mismatch')
@@ -50,7 +56,9 @@ def main():
    if c['controller_fetch_cycles']!=2 or c['controller_start_cycles']!=1 or c['controller_status_check_cycles']!=2:missing.append('actual controller fetch2/start1/statuscheck2 contract')
    if any(not isinstance(c[k],int) or c[k]<0 for k in ['root_ingress_cycles','root_status_return_cycles']):missing.append('actual nonnegative root path cycles')
  if c and not missing:
-  if c['pad_warm_cycles']<32 or c['provider_start_cycle']<max(c['boot_release_offsets'].values())+6+c['pad_warm_cycles']:missing.append('START after all delivered resets+6 and actual pad warm')
+  try:
+   if c['provider_start_cycle']<earliest_start(c['boot_release_offsets'],c['local_release_edges'],c['pad_warm_cycles']):missing.append('START after each actual delivery+selectedlocalrelease and actual pad warm')
+  except ValueError as e:missing.append(str(e))
   if not c['provider_preload_complete_cycle']<c['provider_cfg_commit_cycle']<c['provider_start_cycle']:missing.append('real preload/commit/START order')
  if not jobs:missing.append('no native FUSED jobs in source image')
  if len(jobs)>256:missing.append('finite provider256entry capacity exceeded')
