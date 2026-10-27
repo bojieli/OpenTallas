@@ -474,3 +474,6 @@ NUMBER-CHECK R19 tree: 3105.0/2494.5 + 78.6/74.2 CHECKED (own code). GEOM-27 con
  - LEF sha 17786be2 = the R19/R20 plan pin source (pins unchanged).
  - FLOW tag: ASK posted in lanes/FLOW-RC.md (flow = codex/head-1027@6ddb210f73 head_post_route_eco.sh as staged; not on main). Side note: FLOW-CLKFREEZE canary on the same elemA kit (src d6231262f) has signoff SIGNED FF +6.51, LEC running (intel1 flow-clkfreeze-1027/head_elemA_m2.eco_r19_clkfreeze.lec_final) -> if FLOW-RELEASE prefers tagging the CLKFREEZE flow, that view is the versioned replacement candidate.
  - No residual ECO started. intel1 residual4 chain finished (no live jobs of mine).
+
+## CODEX14:07 nativephysical census / core entries
+ActualsignedR20A/Binventory c41625cb88:264tiles,1320cores,10560pureFTports,3960clock+1320resetarcs,1320functionalft_mstrap_i inputs. Current R19graph binds0FTports; this meansUNBOUND, notunused. Existing5kind=core taprecords were inactivebecause core_taps APIunset; minimal3be24c5bc0 nowenables5explicitfunctionalentries usingactualsignedmeans inCOPYcandidate. No inventedprovider, no implicitglobalclk aliases, no approvedinactiveinventory manufactured. ParentoneHEADplan adoptsactualfixedmeshproviderwhenready; currentdieclock/masterplanstillparentowned. ExistingclockfreezeAproofnowEQ, publishedresidual4cores2/2SIGNED+EQ; flowtag/Breplacement pendingFLOW/AP.

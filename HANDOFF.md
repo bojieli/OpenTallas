@@ -1479,3 +1479,4 @@ CODEX: QC R29 real mixed-NDRspacing/truePRL/censusrollback fixes99e; comparable+
 CODEX: actual-bound HEAD_PREP source/compiler5ab863087 READY; native22checks/2mutants+12compiler testsPASS. Filler14/user0minimum15; no universal age or current programme adoption. All own jobs terminal, no RTL/cycle change.
 
 CODEX: 2026-10-27 14:02 PDT FLOW currentcanariescollected; reporterfixd12READY4tests/no gatechange; KVsafeproof144 remainsopen(legacy1fdEQnotfix), actualHBMtwo-modehold−130.88/683 diagnosed. Width166ad independent20/20CONFIRMED+merged; ownterminalODBdedupreclaimed10.17GB/allpathsretained.
+CODEX:14:07 HEAD current2/2coresSIGNED+EQ collected; AclkfreezealsoEQ30203pendingflowrelease; exactlyoneBsuccessor waits correctedtag. Native5functionalentry source3be24c5bc0 +signed-view COPYc41625cb88 ready, measuredA255.25/208.29B230.71/189.31,1320realprovidernetsmissingfailclosed; tokennativecouponownedTOK, parentownsmesh, noPNR/adoption.
