@@ -783,13 +783,17 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                 outputs=[b for b in pb if dirs.get(b) == "output"],
                 unc_setup_ps=sdc_lint.POLICY_SETUP_PS, unc_hold_ps=sdc_lint.POLICY_HOLD_PS, time_unit_ps=1.0,
                 io_floor_ps={b: IO_BUDGET * per for b in pb}, port_latency_ps={})
-    # sdc_lint.lint_kit_files passes this file as lint(**ctx): only lint() keywords (F1 FF basis lives in freeze.json flow.f1)
-    (kd / "sdc_lint.json").write_text(json.dumps({k: v for k, v in lctx.items() if k not in ("insertion_ff_ps", "insertion_basis")}, indent=1) + "\n")
+    # sdc_lint.lint_kit_files passes this file as lint(**ctx): only lint() keywords.  HBM-CORES-R6 10-27: insertion_ff_ps
+    # IS a lint() keyword and is the per-corner FF binding signoff.py reads from this file (collar R5 attempt 3 FF hold
+    # was timed against the single TT vclk = ff_ref_missing because it was dropped here); only the basis text stays
+    # out (freeze.json flow.f1).  sdc_lint.lint_kit_files fails closed if it disagrees with config.mk OT_VCLK_FF.
+    lint_ctx = {k: v for k, v in lctx.items() if k != "insertion_basis"}
+    (kd / "sdc_lint.json").write_text(json.dumps(lint_ctx, indent=1) + "\n")
     rst_in = [r for r in rsts if dirs.get(base(r)) != "output"]   # RECIPES2: a reset-named OUTPUT (remainder relay
     if rst_in != rsts:                                               # output) is a data output, never an input delay
         rsts = rst_in
         (kd / "constraint.sdc").write_text(sdc(per, ins, tol, clks, rsts, a.view, common))
-    lerr = sdc_lint.lint((kd / "constraint.sdc").read_text(), **{k: v for k, v in lctx.items() if k not in ("insertion_ff_ps", "insertion_basis")})
+    lerr = sdc_lint.lint((kd / "constraint.sdc").read_text(), **lint_ctx)
     if lerr:
         raise SystemExit(f"{a.view}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
     for f in ("face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
