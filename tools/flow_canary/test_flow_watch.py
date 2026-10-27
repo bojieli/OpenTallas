@@ -63,3 +63,16 @@ def test_new_unknown_implementation_fields_fail_closed():
     after=copy.deepcopy(before)
     after['future_shared_config']={'changed':True}
     assert watch.spec_flow_changed(before, after, 's81_head')
+
+
+def test_shared_kit_helpers_hold_each_dies_flow_until_canary():
+    import json
+    spec = json.loads(Path(__file__).with_name('canaries.json').read_text())
+    changed = [f'tools/die_plan/{name}.py' for name in
+               ('core_flow', 'core_infra', 'master_slice', 'native_bb', 'kit_preflight')]
+    for die in spec['die_plans']:
+        assert watch.flow_paths(changed, spec, die) == sorted(changed)
+    # Adding shared runtime dependencies must not turn unrelated analysis code
+    # or unit-test edits into a production-flow change.
+    assert watch.flow_paths(['tools/die_plan/test_core_infra.py',
+                             'tools/die_plan/render.py'], spec, 's81') == []
