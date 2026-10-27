@@ -4616,3 +4616,9 @@ Packet: handoff/codex-qc-20261026-2102.md. R9 physical tree/stack DRC0+RC connec
 
 ## Handoff to Claude 2026-10-26 21:03 PDT -- token/equivalence group
 Safe parked on explicit reset. Full per-lane branches/results/failures and live B48/P3 jobs: handoff/codex-token-current-20261026.md. Parent branch codex/p3-compiler-2018@e938fd6db clean+pushed; no open merge. Children all finished and notified. Existing jobs continue, no job wait. No new OWNER? items.
+
+## KV / clock handoff 2026-10-26 21:03 PDT
+ExplicitUSERRESET parked safely; all ownjobs done, no mainedit. Fullpacket /home/ubuntu/coord/handoff/codex-kv-clock-park-20261026-2103.md. SharedRCXopens repaired768/3036->0/0;140SPICEdecks complete; legal-lattice mirror candidate geometry/islandPASS, no route/signoff. OWNER? none.
+
+## S81 / HEAD parked for Claude 2026-10-26 21:04 PDT
+Sourcecodex/head-2000@69d379c78: correctedBpins+density/tree closesGRTclockwindow, actualdatahold/LECstillopen. Exactjobs, failures, source refs, all15lanedispositions and nextsteps in handoff/codex_s81_head_20261026_2102.md. Bothchildren explicitlyparked onrootreset; finalchildpackets supplement. OWNER? None new.

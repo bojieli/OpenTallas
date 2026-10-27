@@ -79,3 +79,6 @@ CODEX took over approved19:42 elemA closure on codex/head-a-2025@7186939cb. Actu
 
 ## CODEX PARKED on explicit reset, 2026-10-26 21:0x PDT — elemA
 Packet handoff/codex-head-a-park-20261026.md. Source codex/head-a-2025 (7186939cb,5338856f5 + coupon parking tip). Actual primaryft_mstrap_i/8FT contract, TTsetup+118.468, FFhold-73.678/707 negative (UNCHECKED), interface128checks/64edges PASS, mutant caught,+0cycles. WholeLEC retry active intel1 kit/lec_actual_r2 unit2428351-1793072017/client2001766. Old native repair diagnosed plateau; exact own container7549280a5105 stopped after missing shared HB4 hook diagnosis. Corrected fresh repair_hb4 active unit2546893-1793073679/client3625034. MissingHB4 confirmed, but NOT proved sole plateau cause: scalar coupons close both with1HB4 and4ordinarybuffers. NoDRT/SIGNED/canonicalbind claim. No newjobs after reset.
+
+## CODEX notes 2026-10-26 21:04 PDT PARKED explicit user reset
+BstructuralclockGRT0/TT252.55w12.63/FF196.95w10.58;actualSTA TT+120.552 FFhold-72.327/489EP. Sourcecodex/head-2000@69d379c78. NewqualifiedHB4repairLIVEepyc2:codex-head-2000/elemB_hold_hb4 unit222503-1793073722/client3647142; oldplateau diagnosedmissingHB4hookbutsolecauseUNPROVEN, exactowncontainerstopped. BLECliveunit136229-1793072661/client3042832 noverdict. NoDRT/SIGNED/canonicaladoption. Fullpacket handoff/codex_s81_head_20261026_2102.md.
