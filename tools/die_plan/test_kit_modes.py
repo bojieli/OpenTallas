@@ -159,3 +159,11 @@ def test_ff_grt_step_checks_modes_before_each_session():
     seg = s[j:s.index("elif", j)]
     assert "\\$M grt HOLD_SLACK_MARGIN" in seg and "OT_VCLK_CORNER" not in seg
     assert "orfs_hold_mm.py" in s
+
+
+def test_stage_from_a_kit_copy_fails_closed(tmp_path, monkeypatch):
+    kd = kit(tmp_path)
+    monkeypatch.setattr(kit_modes, "REPO", tmp_path / "norepo")
+    with pytest.raises(kit_modes.Fail, match="repository copy"):
+        kit_modes.stage(kd)
+    assert "OT_HOLD_MM" not in (kd / "config.mk").read_text()

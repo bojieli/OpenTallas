@@ -141,6 +141,10 @@ def stage(kd, write=True):
         if k not in b["v"]:
             raise Fail(f"stage: {k} missing in config.mk")
     if write:
+        missing = [f for f in MM_FILES if not (REPO / "tools" / f).is_file()]
+        if missing:
+            raise Fail(f"stage runs from the repository copy (tools/die_plan/kit_modes.py): {missing} not found under "
+                       f"{REPO / 'tools'}")
         for f in MM_FILES:
             shutil.copyfile(REPO / "tools" / f, kd / f)
         copy_kit_tools(kd)
