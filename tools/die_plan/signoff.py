@@ -1200,6 +1200,54 @@ def ff_reference_problem(rec, cff, requested):
     return None
 
 
+ROUTED_NETLIST = re.compile(r"(^6_|final|route)", re.I)
+
+
+def lec_superset_problems(receipts):
+    """COORD RULING HBM-CORE-LAT-R4 (3) / R5 collar: OT_LEC_SUPERSET_VEC=1 is accepted only with a per-run list of the
+    extra kept gate bits shown unobservable (lec.py superset_vec in lec.json), and the routed LEC must pass the same
+    flag explicitly.  receipts: [(path, lec.json dict)] of one kit.  -> None when no receipt used the flag (no
+    obligation), else the list of problems ([] = PASS)."""
+    used = [(p, r) for p, r in receipts if isinstance(r, dict) and (r.get("superset_vec") or {}).get("enabled")]
+    if not used:
+        return None
+    probs = []
+    for p, r in used:
+        sv = r["superset_vec"]
+        bits = sv.get("extra_bits")
+        if r.get("verdict") != "EQUIVALENT":
+            probs.append(f"{p}: verdict {r.get('verdict')}")
+        if not isinstance(bits, list) or sv.get("n_extra") != len(bits) or \
+                any(not isinstance(e, dict) or "shown" not in e for e in bits):
+            probs.append(f"{p}: no per-bit superset_vec.extra_bits list (lec.py before ROOT-MERGE-30)")
+            continue
+        bad = [e.get("bit") for e in bits if not e["shown"]]
+        if bad or not sv.get("all_shown"):
+            probs.append(f"{p}: {len(bad)} extra bit(s) not shown unobservable (first: {', '.join(map(str, bad[:4]))})")
+    routed = [(p, r) for p, r in receipts if isinstance(r, dict) and
+              ROUTED_NETLIST.search(Path(str(r.get("netlist") or "")).name)]
+    if not routed:
+        probs.append("no routed-netlist LEC receipt (lec.json whose netlist is 6_*.v / *final* / *route*)")
+    for p, r in routed:
+        if not (r.get("superset_vec") or {}).get("enabled"):
+            probs.append(f"{p}: routed LEC did not pass OT_LEC_SUPERSET_VEC=1 explicitly")
+    return probs
+
+
+def kit_lec_receipts(kit):
+    """[(path, dict)] of KIT/lec.json and KIT/*/lec.json (lec, lec_post, lec_routed, ...); unreadable ones as None."""
+    out = []
+    if not kit or not Path(kit).is_dir():
+        return out
+    for p in sorted([Path(kit) / "lec.json"] + list(Path(kit).glob("*/lec.json"))):
+        if p.is_file():
+            try:
+                out.append((str(p), json.loads(p.read_text())))
+            except (OSError, ValueError):
+                out.append((str(p), None))
+    return out
+
+
 def evaluate(rec, insertion_target=None):
     """fills rec['checks'] and rec['verdict'] / rec['reasons'] from rec['corners'] + record checks."""
     C = rec.get("corners", {})
@@ -1355,7 +1403,13 @@ def evaluate(rec, insertion_target=None):
         e = sdc_lint.ft_model_errors(fm.get("declaration") or {}, fm.get("model"), require_characterised=True)
         put("ft_interface", "FAIL" if e else "PASS", errors=e[:10], model=fm.get("path"),
             arcs=(fm.get("model") or {}).get("arcs"))
-    for k in BLOCKING + (("macro_libs",) if "macro_libs" in ch else ()) + (("ft_interface",) if "ft_interface" in ch else ()):
+    # OT_LEC_SUPERSET_VEC obligation (only kits whose LEC receipts used the flag; re-read on every evaluation, so a
+    # 'verdict' re-run sees a routed LEC finished after the corner sessions)
+    lp = lec_superset_problems(kit_lec_receipts((rec.get("inputs") or {}).get("kit")))
+    if lp is not None:
+        put("lec_superset", "FAIL" if lp else "PASS", problems=lp[:10])
+    for k in BLOCKING + (("macro_libs",) if "macro_libs" in ch else ()) + (("ft_interface",) if "ft_interface" in ch else ()) + \
+            (("lec_superset",) if "lec_superset" in ch else ()):
         v = ch[k]["verdict"]
         if v != "PASS":
             reasons.append(f"{k}: {v}" + _detail(k, ch[k]))
@@ -1394,6 +1448,8 @@ def _detail(k, c):
         return f" {c['count']} ({c.get('source')})"
     if k == "macro_libs":
         return f" {c.get('missing')}"
+    if k == "lec_superset" and c.get("problems"):
+        return " " + "; ".join(c["problems"][:3])
     if k == "pg" and c.get("open_terms"):
         return f" {c['open_terms']} of {c.get('pg_terms')} supply terminals unbound (first {c.get('first')})"
     return ""
@@ -1555,11 +1611,21 @@ def main(argv=None):
     v = sub.add_parser("verdict")
     v.add_argument("record")
     v.add_argument("--insertion-target", type=float)
+    lc = sub.add_parser("lec-check", help="OT_LEC_SUPERSET_VEC obligation of one kit's LEC receipts (exit 0 PASS / "
+                                         "no obligation, 1 FAIL)")
+    lc.add_argument("kit")
     b = sub.add_parser("bundle", help="Copy the complete standalone signoff tool bundle")
     b.add_argument("out")
     b.add_argument("--with", dest="extra", action="append", default=[],
                    help="Additional kit hook with its standalone helper dependencies (repeatable)")
     a = ap.parse_args(argv)
+    if a.cmd == "lec-check":
+        lp = lec_superset_problems(kit_lec_receipts(a.kit))
+        print("LEC_SUPERSET " + ("NONE (no receipt used OT_LEC_SUPERSET_VEC)" if lp is None else
+                                 ("PASS" if not lp else "FAIL")))
+        for x in lp or ():
+            print(f"  - {x}")
+        return 1 if lp else 0
     if a.cmd == "bundle":
         print("SIGNOFF_BUNDLE " + " ".join(copy_signoff_bundle(a.out, extra=a.extra)))
         return 0

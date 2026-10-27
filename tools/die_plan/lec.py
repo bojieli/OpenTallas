@@ -981,11 +981,14 @@ class Lec:
         # name match is still a correspondence obligation, so a wrong pairing can only fail, never hide a difference.
         superset_vec = os.environ.get("OT_LEC_SUPERSET_VEC") == "1"
         one_dim = lambda s: all(ix.count("[") == 1 for ix in s)
+        self.superset_extra = []                  # [(gate bit, re-keyed gate key)]: the per-run list (lec.json)
         for b in self.relaid:
             sub = superset_vec and gidx[b] < tidx[b] and one_dim(tidx[b])
             for ix in tidx[b]:
                 if sub and ix in gidx[b]:
                     continue
+                if sub:
+                    self.superset_extra.append((b + ix, f"{b}#t{ix}"))
                 self.tp[f"{b}#t{ix}"] = self.tp.pop(b + ix)
                 self.tc[f"{b}#t{ix}"] = self.tc.pop(b + ix)
         self.matched = sorted(set(self.gp) & set(self.tp))
@@ -3306,6 +3309,57 @@ def run_yosys(script, path, log):
     return r
 
 
+def superset_report(L, m, kind, verdict):
+    """COORD RULING HBM-CORE-LAT-R4 (3) / R5 collar: the per-run list of the gate-only extra bits that
+    OT_LEC_SUPERSET_VEC=1 re-keyed, each with the reason it cannot change a compare point.
+
+    binding  free   the bit is a free input of the miter (no hypothesis): an EQUIVALENT miter proves no compare
+                    point (outputs, matched next states, black-box pins) depends on it, i.e. it is unobservable;
+             const / eq / cube   the bit is bound by a register-correspondence hypothesis that the same induction
+                    proved (the bit equals a constant / a matched register): it carries no independent value;
+             rekeyed / not built   a later pass renamed the key or no miter exists: NOT shown (fail closed).
+    observers  compare / hypothesis outputs whose AIG cone structurally contains the free bit (0 = no fan-out to
+               any compare point at all; > 0 = fan-out that the proof showed is functionally masked).
+    -> dict(enabled, n_extra, all_shown, extra_bits=[...], basis)"""
+    ex = list(getattr(L, "superset_extra", []) or [])
+    free = {k: v for v, (kd, k) in kind.items() if kd == "gate_only"}
+    bit_of = {}
+    for i, (b, k) in enumerate(ex):
+        if k in free:
+            bit_of[free[k]] = i
+    # one forward pass: bitmask of the free extra bits each AIG node depends on (only nodes that depend on one)
+    dep = {v: 1 << i for v, i in bit_of.items()}
+    if dep:
+        ands, base = m.ands, m.ni + 1
+        for k in range(len(ands) // 2):
+            a, b = dep.get(ands[2 * k] >> 1, 0), dep.get(ands[2 * k + 1] >> 1, 0)
+            if a or b:
+                dep[base + k] = a | b
+    obs = collections.defaultdict(list)
+    for o, n in zip(m.outs, m.onames):
+        d = dep.get(o >> 1, 0)
+        while d:
+            low = d & -d
+            obs[low.bit_length() - 1].append(n)
+            d ^= low
+    rows, eq = [], verdict == "EQUIVALENT"
+    for i, (b, k) in enumerate(ex):
+        if k in free:
+            binding = "free"
+        elif k in L.tp and ("gate", k) in L.hyp:
+            binding = L.hyp[("gate", k)][0]
+        elif k in L.tp:
+            binding = "bound"
+        else:
+            binding = "rekeyed"
+        ok = eq and binding in ("free", "const", "eq", "cube")
+        rows.append(dict(bit=b, key=k, binding=binding, observers=len(obs.get(i, ())),
+                         first_observers=obs.get(i, [])[:4], shown=ok))
+    return dict(enabled=True, n_extra=len(rows), all_shown=all(r["shown"] for r in rows), extra_bits=rows,
+                basis=("free bits: free inputs of the proved miter (unobservable); const/eq/cube bits: bound by "
+                       "inductively proved correspondence hypotheses; shown only when the verdict is EQUIVALENT"))
+
+
 def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_map=None, reuse=False, hints=None):
     kit = str(Path(kit).resolve())
     out = Path(out or Path(kit) / "lec")
@@ -3480,6 +3534,13 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
             if rec["x_dont_care_points"]["n"]:
                 rec["note"] += (f"; {rec['x_dont_care_points']['n']} of them reach an RTL X (don't care: equal "
                                 f"wherever the RTL is not X)")
+        if os.environ.get("OT_LEC_SUPERSET_VEC") == "1":
+            rec["superset_vec"] = superset_report(L, m, kind, rec["verdict"])
+            if rec["verdict"] == "EQUIVALENT" and not rec["superset_vec"]["all_shown"]:
+                bad = [e["bit"] for e in rec["superset_vec"]["extra_bits"] if not e["shown"]]
+                rec["verdict"] = "UNPROVEN"
+                rec["reason"] = (f"OT_LEC_SUPERSET_VEC: {len(bad)} extra gate bit(s) not shown unobservable "
+                                 f"(first: " + ", ".join(bad[:6]) + ")")
     except LintFail:
         pass
     except Unproven as e:
@@ -3492,6 +3553,12 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
     if lc is not None and getattr(lc, "cycle_dropped", None):   # hypotheses dropped to break binding cycles
         rec["cycle_dropped"] = dict(n=len(lc.cycle_dropped),
                                     first=[f"{sd}:{k} {list(h)}" for (sd, k), h in lc.cycle_dropped[:40]])
+    if os.environ.get("OT_LEC_SUPERSET_VEC") == "1" and "superset_vec" not in rec:   # the check did not finish
+        ex = list(getattr(lc, "superset_extra", []) or []) if lc is not None else []
+        rec["superset_vec"] = dict(enabled=True, n_extra=len(ex), all_shown=False,
+                                   extra_bits=[dict(bit=b, key=k, binding="not built", observers=None, shown=False)
+                                               for b, k in ex],
+                                   basis=f"not shown: verdict {rec.get('verdict')} before the miter was proved")
     rec["t_total_s"] = round(time.time() - t0, 1)
     rec["provenance"] = _provenance(kit)
     (out / "lec.json").write_text(json.dumps(rec, indent=1) + "\n")
