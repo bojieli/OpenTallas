@@ -124,6 +124,23 @@ def pg_bumps(P, io, pitch=None, phy=True):
     return out
 
 
+def require_typed_phy_pad(bumps, io, pad_um):
+    """A finite C4 pad cannot be applied to retained PHY micro-bumps.
+
+    Check actual retained source tuples, not a PHY bounding-box intersection:
+    a core-only crop can touch an IO region without retaining a PHY source.
+    Point-source legacy mode remains unchanged until a typed PHY pad contract
+    is available; no PHY pad size is inferred from the C4 size.
+    """
+    if pad_um <= 0:
+        return
+    retained = set(bumps)
+    for w in io:
+        micro = _phy_lattice(w["rect_um"], phy_pg_pitch(phy_kind(w.get("iface") or "", w.get("name", ""))))[1]
+        if retained.intersection(micro):
+            raise ValueError("uniform finite C4 pad cannot be used for retained PHY micro-bumps; a typed PHY pad contract is required")
+
+
 def _rect_of(P, n):
     p = P.parts[n]
     w, h = P.types[p["type"]]["outline_um"]
@@ -565,6 +582,25 @@ def _snap(v, q):
     return math.floor(v / q + 1e-9) * q
 
 
+def window_grid(grid, x0, y0):
+    """Translate die-phase PG rows into a window without resetting phase/parity.
+
+    Each layer has its own period and direction. Reduce by the FULL period so
+    the row's net ordering is unchanged; pg_regions.row_spec then selects the
+    first complete stripe and its actual power/ground parity. Work in the same
+    integer DBU lattice as that emitter rather than taking a floating remainder.
+    This translates core grid rows only, not PHY domain rectangles/grids.
+    """
+    import pg_regions
+    out = []
+    for row in grid:
+        origin = x0 if pg_regions.DIRS[row["layer"]] == "V" else y0
+        period = pg_regions._d(row["pitch_um"])
+        offset = (pg_regions._d(row["offset_um"]) - pg_regions._d(origin)) % period
+        out.append(dict(row, offset_um=offset / pg_regions.DBU))
+    return out
+
+
 def default_windows(P, pg, margin=600.0, core_um=1500.0):
     """Verification windows: the worst core spot and every distinct PHY window (with `margin` of core around it)."""
     win = []
@@ -588,6 +624,7 @@ def window_kit(P, plan_dir, pg, out, name, rect, tile=86.4, power=None, phy_w=4.
     x0, y0 = _snap(rect[0], q), _snap(rect[1], q)
     x1, y1 = min(P.W, x0 + _snap(rect[2] - x0, q) or q), min(P.H, y0 + _snap(rect[3] - y0, q) or q)
     w, h = x1 - x0, y1 - y0
+    local_grid = window_grid(pg["grid"], x0, y0)
     Pg = _PG(P, pg["grid"])
     model = load_model(P, plan_dir, power, phy_w, core_w_mm2 if core_w_mm2 is not None else pg.get("core_w_mm2"))
     io = _pg_io(P, plan_dir)
@@ -595,7 +632,11 @@ def window_kit(P, plan_dir, pg, out, name, rect, tile=86.4, power=None, phy_w=4.
     Pg.die["pg"]["bumps"] = bump_cfg
     bp = bump_cfg["pitch_um"]
     allb = pg_bumps(Pg, io, pitch=bp)
-    bumps = [(n, round(x - x0, 3), round(y - y0, 3)) for n, x, y in allb if x0 < x < x1 and y0 < y < y1]
+    retained = [(n, x, y) for n, x, y in allb if x0 < x < x1 and y0 < y < y1]
+    require_typed_phy_pad(retained, io, bump_cfg["pad_um"])
+    bumps = [(n, round(x - x0, 3), round(y - y0, 3)) for n, x, y in retained]
+    Pw = _PG(P, local_grid)
+    Pw.die["pg"]["bumps"] = bump_cfg
     out = Path(out)
     (out / "psm").mkdir(parents=True, exist_ok=True)
     nx_t, ny_t = max(1, int(round(w / tile))), max(1, int(round(h / tile)))
@@ -618,8 +659,8 @@ def window_kit(P, plan_dir, pg, out, name, rect, tile=86.4, power=None, phy_w=4.
             pw = sum(d * _ov(r, lr) for lr, d in model["loads"]) * 1e-6
             blks.append((f"u_b{i}_{j}", i * bw, j * bh, max(0.0, pw)))
     (out / "psm" / "psm.v").write_text("module irwin ();\n" + "".join(f"  irblk {n} ();\n" for n, *_ in blks) + "endmodule\n")
-    (out / "psm" / "pdn.tcl").write_text(D.psm_pdn_tcl(Pg))
-    (out / "psm" / "bumps.tcl").write_text(D.bumps_tcl(Pg, bumps))
+    (out / "psm" / "pdn.tcl").write_text(D.psm_pdn_tcl(Pw))
+    (out / "psm" / "bumps.tcl").write_text(D.bumps_tcl(Pw, bumps))
     t = ["set t0 [clock seconds]", f"read_lef {D.TECH_LEF}", f"read_lef {D.SC_LEF}", "read_lef /work/psm/irblk.lef",
          f"foreach f [glob {D.PLAT}/lib/NLDM/*RVT_TT_nldm*.lib*] {{ read_liberty $f }}",
          "read_verilog /work/psm/psm.v", "link_design irwin",
@@ -647,6 +688,7 @@ def window_kit(P, plan_dir, pg, out, name, rect, tile=86.4, power=None, phy_w=4.
                                                       if _ov(model["rects"][n], [x0, y0, x1, y1]) > 0]))
     est, worst, det = estimate(P, model, pg["grid"], bp, pg.get("vdd", 0.7), domain=(x0, y0, x1, y1), regions=regs)
     meta = dict(die=P.name, ir_budget_mv=pg.get("budget_mv"), window=name, window_um=[x0, y0, x1, y1], area_mm2=round(w * h * 1e-6, 3), grid=pg["grid"],
+                window_grid=local_grid, grid_phase_scope="core grid rows only; PHY domains are not cropped/translated",
                 power_w=round(sum(b[3] for b in blks), 4), load_blocks=len(blks), bumps=len(bumps),
                 bumps_vdd=sum(1 for b in bumps if b[0] == "VDD"), bump_contract=bump_cfg,
                 bump_pitch_um=bp, bump_pad_um=bump_cfg["pad_um"], est_regions_mv=est, est_worst_mv=worst, est_detail=det,
@@ -670,7 +712,9 @@ def die_kit(P, plan_dir, pg, kit, out):
     power = {n: pg["part_w"].get(n, 0.0) for n in P.parts}
     bump_cfg = resolved_bumps(P, pg)
     Pg.die["pg"]["bumps"] = bump_cfg
-    bumps = pg_bumps(Pg, _pg_io(P, plan_dir), pitch=bump_cfg["pitch_um"])
+    io = _pg_io(P, plan_dir)
+    bumps = pg_bumps(Pg, io, pitch=bump_cfg["pitch_um"])
+    require_typed_phy_pad(bumps, io, bump_cfg["pad_um"])
     (out / "psm" / "pdn.tcl").write_text(D.psm_pdn_tcl(Pg))
     (out / "psm" / "bumps.tcl").write_text(D.bumps_tcl(Pg, bumps))
     (out / "psm" / "power.tcl").write_text("\n".join(f"set_pdnsim_inst_power -inst {D.sv(n)} -power {w:.6f}"
