@@ -1272,3 +1272,5 @@ CODEX: 2026-10-27 04:54 PDT HBM takeover: unpushed QUAD5 e91031b844 rescued/push
 CODEX: 2026-10-27 04:57 PDT main bce29bb125 merged canary checker pin fix7689ad5f45 (7 focused PASS). S81 RM29 original face_cover import REGRESSION retained; corrected separate *_checkerfix receipt NO-REGRESSION using exact0f978 source checker and unchanged physical artifacts. Absolute postCTS design FAIL remains.
 
 CODEX: 2026-10-27 05:00 PDT main b2929dab77 plainmerged Qwen approved R21/R22 tool/source package4bd216200 (26 focused PASS); prior96d9fb0471 LEC constant1+witness refinement2f3a46a66c (12 focused incl mutants PASS), RM30 structured superset receipts preserved. HEAD==origin/main. HOLD-COLL-R1 terminal FAIL copied intel1; reset-recovery/FT-output overlay causes assigned Qwen.
+
+CODEX: 2026-10-27 05:01 PDT S81 integration READY b89ee2a33: coreR14/R15 fixes+TOK9b5PASS/10mutants+finite-gradientMC; clock-port-only .048x.48 clears sstn DRT-0255 diagnostic. MC599.56/516.77ps remains structural die clock FAIL; HEAD elemA_eco SIGNED +122.36/+4.43, routedLEC pending.
