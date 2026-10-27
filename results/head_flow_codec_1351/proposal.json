@@ -1,0 +1,24 @@
+{
+ "schema": "opentallas.head_flow_codec_proposal.v1",
+ "status": "PROPOSAL_NOT_TAGGED",
+ "proposed_tag": "flow-20261027-b-head",
+ "candidate": "5a9af69f356cf3d2202d12d17750657bced527e3",
+ "die": "s81_head",
+ "parent_immutable_tag": "flow-20261027-a-head",
+ "watched_differences": [
+  "tools/die_plan/clk_freeze.tcl",
+  "tools/die_plan/test_clk_freeze_native.tcl"
+ ],
+ "watched_file_count": 274,
+ "fingerprint": "7bc2ac36b7c647955411dd925f678ada4341970212de9ec71e76bc916111784c",
+ "qualification": "Existing HEAD A SIGNED and EQ30203; metadata-only codec successor qualified by actual matched HEAD B686 clocks and VMR106 clocks plus POINT/POINT_EXT fixture: strict full-token/geometry encode and fresh-process ODB reload PASS. No timing or routed proof repeated. B physical successor remains held for root approval.",
+ "normal_resolver_existing_A": {
+  "src_commit": "d6231262fd0a2e7d2bc52061fb6156179c014887",
+  "flow_tag": "flow-20261027-a-head"
+ },
+ "normal_resolver_candidate_dry": {
+  "src_commit": "5a9af69f356cf3d2202d12d17750657bced527e3",
+  "flow_tag": "flow-20261027-b-head"
+ },
+ "dry_method": "Only absent proposed tag git diff operand substituted by candidate; normal resolver logic unchanged; no refs written"
+}
