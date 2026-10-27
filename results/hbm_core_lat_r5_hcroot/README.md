@@ -19,3 +19,8 @@ lec.py = tools/die_plan/lec.py of claude/hbm-core-lat-r4-root-1027 aebda01144 wi
 - Progress: chain_r5.status in the kit.
 
 Results: appended below when collected. Every number is UNCHECKED until it is written here.
+
+## Status 2026-10-27 04:02 PDT (fork F1 stops polling here)
+- Synth done 02:45 (1_2_yosys.v). LEC still in correspondence refinement at 04:00: hyp20, failed hypotheses 622 (hyp9) -> about 120 (hyp5-8) -> 6.4 kB list (hyp20), converging (UNCHECKED, no verdict yet).
+- Remaining failing-hypothesis classes in hyp20 (CHECKED from lec/hyp20_failed.txt): u_div r_mb / r_rem vs gate r_rem#t (array-layout naming, gold-only and gate-only), u_div g_rec[].src_q / q / y, dld[228..328] delay-line bits, g_tail[2..3].u_a.s1_small, one xpos bit. The command-register class (nlast_r / nrun_r / nout_r / scale_r cones) no longer appears.
+- To collect: kit lec/lec.json + lec_run.log tail (unit oth-ubuntu-697730-1793093921). If EQUIVALENT, after_synth_r5.sh (intel2 pid 1138617) has started chain_r5.sh through ot-run (chain_r5.otrun.log, chain_r5.status). If NOT EQUIVALENT, the chain is not started (status line "NOT launched"); next step = the u_div r_rem/r_mb correspondence (lec.py naming) and dld/s1_small cones.
