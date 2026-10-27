@@ -316,7 +316,7 @@ def wrapper(P, tn, epochs, rtl_root=None):
             w = s["width"] + (1 if epochs.get((tn, s["name"] + sfx), True) else 0)
             ports.append((f"{d} wire [{w - 1}:0] {sv_id(s['name'] + sfx)}", f"ft slot {s['name']} "
                           f"({s['in_face']} -> {s['out_face']}, {s.get('stations', 1)} station(s))"))
-    taps = S.tap_grid(P, tn)
+    taps = RT.consumer_taps(P, tn) if rtree is not None else S.tap_grid(P, tn)
     if rtree is not None or len(taps) > 1:
         # one local synchroniser per tap region (u_rsync_t<i>, rst_n_t<i>); rst_n = tap 0 (leaves).  Boundary flops and
         # ft stations take the synchroniser of the tap NEAREST their planned site (S81-P9 10-23: the bus's pin centroid;
