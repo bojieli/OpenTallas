@@ -1,0 +1,122 @@
+{
+ "schema": "opentallas.hbm.mu_pins.v1",
+ "lane": "HBM-MU-QUAD-3",
+ "modules": {
+  "hnx_vms_bank_q0_faces": {
+   "rtl_top": "hnx_vms_bank_q0_faces",
+   "rtl_source": "rtl/hbm_next/vm/hnx_vms_bank_q0_faces.sv",
+   "rtl_ref": "claude/hbm-next-units-fushub-1019@451b9e86b",
+   "outline_um": [
+    270.0,
+    403.92
+   ],
+   "pins": 3933,
+   "face_counts": {
+    "E": 1962,
+    "N": 1120,
+    "W": 848,
+    "S": 1
+   },
+   "plan_face_votes": {
+    "rd": {
+     "E": 14,
+     "W": 2
+    },
+    "wr": {
+     "E": 14,
+     "W": 2
+    },
+    "rq": {
+     "E": 14,
+     "W": 2
+    }
+   },
+   "pins_file": "cores/hnx_vms_bank_q0_faces__270x403.92__mu_template.json",
+   "sha256": "f7e280f958e978e51dd9a41b1d01f89f6f959698a3ebff25870ab86ed7165ca6"
+  },
+  "hnx_fused_lane": {
+   "rtl_top": "ot_hnx_fused_lane",
+   "rtl_source": "rtl/hbm_next/fused/ot_hnx_fused_eng.sv",
+   "rtl_ref": "claude/hbm-next-units-fushub-1019@451b9e86b",
+   "outline_um": [
+    345.6,
+    518.4
+   ],
+   "pins": 997,
+   "face_counts": {
+    "N": 40,
+    "W": 687,
+    "E": 268,
+    "S": 0
+   },
+   "plan_face_votes": {
+    "rd": {
+     "W": 32
+    },
+    "wr": {
+     "W": 32
+    },
+    "rq": {
+     "W": 32
+    },
+    "uo": {
+     "E": 32
+    },
+    "dn": {
+     "W": 32
+    }
+   },
+   "pins_file": "cores/hnx_fused_lane__345.6x518.4__mu_template.json",
+   "sha256": "33268ce00983015382be44e1173f36d3bb89d9f4379b027027ef17c79fdc2cc5"
+  },
+  "ot_hnx_fused_tnode": {
+   "rtl_top": "ot_hnx_fused_tnode",
+   "rtl_source": "rtl/hbm_next/fused/ot_hnx_fused_tree.sv",
+   "rtl_ref": "claude/hbm-next-units-fushub-1019@451b9e86b",
+   "outline_um": [
+    172.8,
+    172.8
+   ],
+   "pins": 1341,
+   "face_counts": {
+    "N": 7,
+    "W": 715,
+    "E": 617,
+    "S": 0
+   },
+   "plan_face_votes": {
+    "ua": {
+     "W": 28,
+     "S": 2
+    },
+    "da": {
+     "E": 28,
+     "S": 2
+    },
+    "ub": {
+     "W": 28,
+     "S": 2
+    },
+    "db": {
+     "E": 28,
+     "S": 2
+    },
+    "uo": {
+     "E": 24,
+     "N": 4,
+     "S": 2
+    },
+    "dn": {
+     "W": 24,
+     "N": 4,
+     "S": 2
+    }
+   },
+   "pins_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "sha256": "d85863a998e8779a42aec3977d6d0a692ed7c19cf719060d8a16082af860939a"
+  }
+ },
+ "blockers": {
+  "hnx_idxn_keybuf": "ot_hnx_idxn_keybuf: 17615 port bits on a 324.0x324.0 outline = 0.69 of all 25560 M4/M5 face tracks (> pin_track_max 0.6; 13.6 pins/um > face_pins_per_um 6); first fail: N: 8807 pins > 3070 tracks; needs RTL serialisation of key_in/key_out or a larger outline (plan links: none)"
+ }
+}

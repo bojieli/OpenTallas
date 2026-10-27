@@ -1,0 +1,53 @@
+HBM-MU-QUAD-3 (successor of MU-QUAD-2) 2026-10-27, epyc2 data /srv/opentallas-scratch2/claude/hbm-mu-quad-3-1027
+Numbers: CHECKED = recomputed from the named artifact in this lane; UNCHECKED = model or not independently rerun.
+
+Plan chain (each step a script in this dir, applied in order; data dirs planU3 -> planU3d -> planU3e -> planU3f):
+ planU3  compose3.py + hbm_r11_delta.grow_die_span: planS2 + o5 hub types, ONE growth line Y*=9586.08 (top of hub row,
+         clear of all cores/windows/ports); the 19 partitions spanning it (NW/NE_io, q_b000..q_b013, root) GROW +794.88
+         with their content above local yl; 32 partitions above shift; ft/internal hops >405 re-stationed (<=360 spacing):
+         300 regs added, 0 fails.  Die 28399.68 x 18541.44 = 526.571 mm2 (CHECKED arith).  sha 5266bfd2907b.
+ planU3d delta.py: (b) sk_step0/sk_steady outlines 155.52x172.8 -> x241.92 / x198.72 (fill est 0.586/0.591 from the
+         HBM-CORE-LAT-R3 synth fills 82%/68%; grown into the free gap below the TKM block, no overlap CHECKED by script);
+         (c) pin snap to M2..M9 tracks: 5 tables, 3483 pins, max move 0.024 um, 0 new same-site pairs CHECKED;
+         (a) tail_sink_clk = div-7 generated clock: rest pin -> core:tailN_sk_step0/sk_steady clk, 4 sk die taps removed,
+         generated_clocks.json (create_generated_clock -divide_by 7 -source tailN_rest/clk);
+         lattice: 57 cores snapped + lat2.py 29 rigid/member moves onto 8.64 lattice, 0 fails;
+         fix3.py: root TKM corridor clock buffers centred on their tap column (legs 475 -> 315 um), latency table +4/+5
+         on L9/L9m/L28/L28m/L36/L36m/L63/L63m (the compose re-stations); MU pins (fork, mu_pins/apply_mu_pins.py): 78 of
+         82 cores, 3 template tables on M4/M5, 0 off-track CHECKED.
+ planU3e fst_apply.py: hbm_final_stations.py on both hubs (final-pin station regen, priced count kept): NW 2945 PASS /
+         17 kept original (+200 cyc), NE 2884 / 21 kept (+225 cyc); 3 NW L28_o hops 1339 um L-path re-stationed (+3/+4);
+         max hop NW 404.89 / NE 404.18 um.
+ planU3f svg_face.py: u_svg_Q0 k_{addr,len,rdy,tag,v} re-pinned to the face toward u_vmks_Q0 (partial, see below).
+
+Gates (b1n check.py@8dba47653 + station_model_keys opt-in patch, diag mode = schema errors listed not fatal):
+ planU2 (QUAD-2)  G0 82 err / G0C 994 err
+ planU3           G0 16 / G0C 914        (8 latency table + 8 TKM clock legs; G0C 602 hub station hops)
+ planU3d          G0 0  / G0C 618        CHECKED
+ planU3e/f        G0 0 PASS / G0C 16     CHECKED; schema errors 4 (keybuf pins_file None)
+ Remaining G0C 16 = 4 keybuf "no pins" (2/hub) + 12 core_faces (5 listed + summary per hub: 761 NW / 695 NE core ports
+ face away from partners: hub core pin tables predate the quad repack, 0 of 104/102 cores kept their origin).
+
+Price (R13 chain price3.sh, model UNCHECKED, arithmetic of chain CHECKED by reproduction in QUAD-2):
+ planU2 ds_ar lower/mid/upper 2.39/2.67/7.88 %;  planU3d = planU3e  2.388/2.926/8.402 % (upper 1905.97 tok/s),
+ qwen_ar 0.037/0.241/1.33 %.  +0.52 pp upper vs planU2 = the compose re-station cycles on L9/L28/L36/L63 (+4/+5).
+ Owner-accepted upper 1917 tok/s (planU2); planU3 is 11 tok/s below it -> ASK.
+ SU upper root cause (su_upper/README.txt): SM.*|ATT.* hub legs 12 -> 42 cycles (+3.79 pp): xl_ctl/hb_dbk/hb_vms/
+ calendar at quad bottom vs xq_*/wbk/vmks/ctl_p0x partners at the top (xl_ctl.c_mhi->xq_p0_bfq1 605 -> 3825 um).
+ Fix what-if (move partners + k=1 x-load legs) 4.737 % / 1982.2 tok/s UNCHECKED.  Now OPTIONAL (owner accepts 1917).
+
+Latency package for TOK-HBM: lat_package_planU3f.json (230 lanes, 8 changed, 156 station conns changed, +313 cycles).
+n4 (fork): tools/die_plan/hbm_n4_lanemap.py lane-map verifier (NW=0..15/NE=16..31, golden tree) 7/7 tests PASS CHECKED;
+ root RTL N4EXT variant = n4rtl/n4ext.patch (lint PASS); equivalence UNCHECKED: the fushub bench baseline t0 itself
+ hits the 90k-cycle cap at 451b9e86bc -> follow-up.
+Schema: station_model_keys opt-in (schema.py + test_station_model_keys.py 20 PASS); b1n port = b1n_schema_station_model_keys.diff.
+
+Die GRT incl clock (R15 chain 534fc5ecdb tools: kit -> one continuous mesh 64x32 drop_inside -> combo 50 it TT+FF):
+ RUNNING as PROBE on planU3f (G0C not 0): ot-run unit oth-ubuntu-3192279-1793093005 epyc2,
+ dir /srv/opentallas-scratch2/claude/hbm-mu-quad-3-1027/grt (chain_U3f.log, runU3f/mesh_b/combo_{TT,FF}.log).
+
+Next delta (not in this one): HUB-REPIN + TYPE-REDUCTION together: canonical per-family pin-slot tables on the 0.048
+lattice facing the partners of the repacked quad (clears the 761/695 core_faces) + orientation views; keybuf needs
+RTL serialisation of key_in/key_out (17615 port bits on 324x324 = 0.69 of face tracks, 13.6 pins/um > 6).
+Census (planU3f): 51 partition types / 88 partitions, 1035 placed core instances, 249 distinct (module,outline,
+pins table) core designs over 162 modules CHECKED by script (COORD census 275/83 uses another grouping).

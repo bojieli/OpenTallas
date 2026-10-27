@@ -1,0 +1,24 @@
+[
+ {
+  "name": "tail0_sk_clk",
+  "source": "u_hc_eng_tail0_rest/clk",
+  "pin": "u_hc_eng_tail0_rest/x_g_tail_0_u_t_u_tail_sink_clk",
+  "divide_by": 7,
+  "sinks": [
+   "u_hc_eng_tail0_sk_step0/clk",
+   "u_hc_eng_tail0_sk_steady/clk"
+  ],
+  "sdc": "create_generated_clock -name tail0_sk_clk -source [get_pins u_hc_eng_tail0_rest/clk] -divide_by 7 [get_pins u_hc_eng_tail0_rest/x_g_tail_0_u_t_u_tail_sink_clk]"
+ },
+ {
+  "name": "tail1_sk_clk",
+  "source": "u_hc_eng_tail1_rest/clk",
+  "pin": "u_hc_eng_tail1_rest/x_g_tail_1_u_t_u_tail_sink_clk",
+  "divide_by": 7,
+  "sinks": [
+   "u_hc_eng_tail1_sk_step0/clk",
+   "u_hc_eng_tail1_sk_steady/clk"
+  ],
+  "sdc": "create_generated_clock -name tail1_sk_clk -source [get_pins u_hc_eng_tail1_rest/clk] -divide_by 7 [get_pins u_hc_eng_tail1_rest/x_g_tail_1_u_t_u_tail_sink_clk]"
+ }
+]

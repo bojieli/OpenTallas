@@ -1,0 +1,16 @@
+HNX_TREE q0 links pair 1 g1g0 7 g2g3 9 g0g3 12 hub 12 | pads n1 a2 n2L a14 n2R b18 n3 b20
+HNX_TREE q1 links pair 1 g1g0 9 g2g3 7 g0g3 12 hub 12 | pads n1 a2 n2L a18 n2R b14 n3 b28
+HNX_TREE q2 links pair 1 g1g0 7 g2g3 9 g0g3 12 hub 13 | pads n1 a2 n2L a14 n2R b18 n3 b20
+HNX_TREE q3 links pair 1 g1g0 7 g2g3 9 g0g3 11 hub 12 | pads n1 a2 n2L a14 n2R b18 n3 b18
+HNX_TREE E=2 hub pads t4a 4 t4b 4 t5 2 | scalar round trip 113 (wsc 115), chunk 138, MUT=0
+MISMATCH word 163840: got 00000000 exp bdef0000
+MISMATCH word 163841: got 00000000 exp 3f790000
+MISMATCH word 163842: got 00000000 exp 400c0000
+MISMATCH word 163843: got 00000000 exp 3f900000
+MISMATCH word 163844: got 00000000 exp 3fcf0000
+HNX_FUSED_CYCLES op=pre N=2 rgap=0 KX=4 MUT=0 cycles=-15 done=0 fault=0 reads=5762 writes=0
+HNX_FUSED FAIL op=pre N=2 mism=10240 fault=0 done=0 bankerr=0 writes=0 expect_sectors=1280
+- rtl/hbm_next/fused/tb/tb_hnx_fused_tree.sv:79: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 180us; walltime 1207.315 s; speed 149.171 ns/s
+- Verilator: cpu 1197.461 s on 1 threads; allocated 222 MB

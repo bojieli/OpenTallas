@@ -1,0 +1,131 @@
+diff -ru orig/rtl/hbm_next/fused/ot_hnx_fused_tree.sv bundle/rtl/hbm_next/fused/ot_hnx_fused_tree.sv
+--- orig/rtl/hbm_next/fused/ot_hnx_fused_tree.sv	2026-10-19 12:23:56.000000000 -0700
++++ bundle/rtl/hbm_next/fused/ot_hnx_fused_tree.sv	2026-10-27 01:00:14.929262925 -0700
+@@ -163,7 +163,11 @@
+     parameter integer NMAX = 8,
+     parameter integer MUT  = 0,
+     parameter integer UW   = 271,
+-    parameter integer DW   = 173
++    parameter integer DW   = 173,
++    // N4EXT (HBM-MU-QUAD-3 n4, opt-in, default 0 = unchanged): 1 = levels 4 sit OUTSIDE the hub (one per die hub
++    // partition: NW n4 = (Q0, Q1) = global lanes 0..15, NE n4 = (Q2, Q3) = 16..31); the hub receives ONE input per die hub
++    // on uq0 (NW n4) / uq2 (NE n4) and does only level 5 t5 = (NW, NE); uq1 / uq3 unused, dq0 / dq2 drive the n4 nodes.
++    parameter integer N4EXT = 0
+ ) (
+     input  wire          clk,
+     input  wire          rst_n,
+@@ -206,10 +210,15 @@
+ 
+     // ---- tree levels 4 / 5 and the down fan-out
+     wire [UW-1:0] u4a, u4b, ur; wire [DW-1:0] d5a, d5b, dtop;
++    generate if (N4EXT == 0) begin : g_t4
+     ot_hnx_fused_tnode u_t4a (.clk(clk), .rst_n(rl[3]), .pad_k(pk4a), .pad_b(pb4a), .ua(uq0), .ub(uq1), .uo(u4a),
+         .dn(d5a), .da(dq0), .db(dq1));
+     ot_hnx_fused_tnode u_t4b (.clk(clk), .rst_n(rl[3]), .pad_k(pk4b), .pad_b(pb4b), .ua(uq2), .ub(uq3), .uo(u4b),
+         .dn(d5b), .da(dq2), .db(dq3));
++    end else begin : g_n4ext
++        assign u4a = uq0; assign u4b = uq2;                // per-hub n4 outputs (NW, NE)
++        assign dq0 = d5a; assign dq2 = d5b; assign dq1 = '0; assign dq3 = '0;
++    end endgenerate
+     ot_hnx_fused_tnode u_t5 (.clk(clk), .rst_n(rl[3]), .pad_k(pk5), .pad_b(pb5), .ua(u4a), .ub(u4b), .uo(ur),
+         .dn(dtop), .da(d5a), .db(d5b));
+     wire r_v = ur[270], r_t = ur[269], r_fa = ur[258], r_fo = ur[257], r_fl = ur[256];
+diff -ru orig/rtl/hbm_next/fused/tb/ot_hnx_fused_tree_top.sv bundle/rtl/hbm_next/fused/tb/ot_hnx_fused_tree_top.sv
+--- orig/rtl/hbm_next/fused/tb/ot_hnx_fused_tree_top.sv	2026-10-19 12:23:56.000000000 -0700
++++ bundle/rtl/hbm_next/fused/tb/ot_hnx_fused_tree_top.sv	2026-10-27 01:00:14.929614803 -0700
+@@ -30,7 +30,10 @@
+     parameter integer RL   = 4,                 // unused (ot_hnx_fused_top compatibility)
+     parameter integer NMAX = 8,
+     parameter integer MUT  = 0,
+-    parameter integer E    = 2
++    parameter integer E    = 2,
++    // HBM-MU-QUAD-3: N4EXT 1 = level-4 nodes outside the hub (per die hub, NW = (Q0, Q1), NE = (Q2, Q3)), hub = t5 only;
++    // N4EXT 2 = bench MUTANT: external level 4 pairs across the hubs (Q0, Q2) / (Q1, Q3) -> must FAIL (wrong order)
++    parameter integer N4EXT = 0
+ ) (
+     input  wire              clk,
+     input  wire              rst_n,
+@@ -147,13 +150,28 @@
+         ot_hnx_fused_link #(.W(UW), .N(lk(q, 4))) u_lhu (.clk(clk), .rst_n(rst_n), .d(u3), .q(uq[q]));
+         ot_hnx_fused_link #(.W(DW), .N(lk(q, 4))) u_lhd (.clk(clk), .rst_n(rst_n), .d(dho[q]), .q(dq[q]));
+     end endgenerate
+-    ot_hnx_fused_hub #(.D(D), .RR(RR), .NMAX(NMAX), .MUT((MUT == 4 || MUT == 7) ? MUT : 0)) u_hub (.clk(clk), .rst_n(rst_n),
++    wire [UW-1:0] hu0, hu1, hu2, hu3; wire [DW-1:0] hd0, hd1, hd2, hd3;
++    localparam integer PA = (N4EXT == 2) ? 2 : 1, PB = (N4EXT == 2) ? 1 : 2;   // level-4 partner quadrants
++    generate if (N4EXT == 0) begin : g_hub4
++        assign hu0 = uq[0]; assign hu1 = uq[1]; assign hu2 = uq[2]; assign hu3 = uq[3];
++        assign dho[0] = hd0; assign dho[1] = hd1; assign dho[2] = hd2; assign dho[3] = hd3;
++    end else begin : g_n4
++        // per-die-hub n4 nodes (same tnode, same straps as the hub's t4a / t4b); PA / PB select the pairing
++        wire [UW-1:0] n4a, n4b;
++        ot_hnx_fused_tnode u_n4a (.clk(clk), .rst_n(rst_n), .pad_k(6'(ab(rtq(0), rtq(PA)))), .pad_b(rtq(PA) < rtq(0)),
++            .ua(uq[0]), .ub(uq[PA]), .uo(n4a), .dn(hd0), .da(dho[0]), .db(dho[PA]));
++        ot_hnx_fused_tnode u_n4b (.clk(clk), .rst_n(rst_n), .pad_k(6'(ab(rtq(PB), rtq(3)))), .pad_b(rtq(3) < rtq(PB)),
++            .ua(uq[PB]), .ub(uq[3]), .uo(n4b), .dn(hd2), .da(dho[PB]), .db(dho[3]));
++        assign hu0 = n4a; assign hu2 = n4b; assign hu1 = '0; assign hu3 = '0;
++    end endgenerate
++    ot_hnx_fused_hub #(.D(D), .RR(RR), .NMAX(NMAX), .MUT((MUT == 4 || MUT == 7) ? MUT : 0), .N4EXT(N4EXT ? 1 : 0)) u_hub (
++        .clk(clk), .rst_n(rst_n),
+         .job_v(job_v), .job(job), .done(done), .fault(fault), .busy(busy), .wsc(8'(WSC)),
+         .pk4a(6'(ab(rtq(0), rtq(1)))), .pk4b(6'(ab(rtq(2), rtq(3)))),
+         .pk5(6'(ab(mx(rtq(0), rtq(1)), mx(rtq(2), rtq(3))))),
+         .pb4a(rtq(1) < rtq(0)), .pb4b(rtq(3) < rtq(2)), .pb5(mx(rtq(2), rtq(3)) < mx(rtq(0), rtq(1))),
+-        .uq0(uq[0]), .uq1(uq[1]), .uq2(uq[2]), .uq3(uq[3]),
+-        .dq0(dho[0]), .dq1(dho[1]), .dq2(dho[2]), .dq3(dho[3]));
++        .uq0(hu0), .uq1(hu1), .uq2(hu2), .uq3(hu3),
++        .dq0(hd0), .dq1(hd1), .dq2(hd2), .dq3(hd3));
+ 
+ `ifndef SYNTHESIS
+     // static schedule self-check: every lane's scalar and chunk round trip equal, every pad within the 32-edge ring
+diff -ru orig/rtl/hbm_next/fused/tb/tb_hnx_fused_tree.sv bundle/rtl/hbm_next/fused/tb/tb_hnx_fused_tree.sv
+--- orig/rtl/hbm_next/fused/tb/tb_hnx_fused_tree.sv	2026-10-19 12:23:56.000000000 -0700
++++ bundle/rtl/hbm_next/fused/tb/tb_hnx_fused_tree.sv	2026-10-27 01:00:14.929781246 -0700
+@@ -6,14 +6,14 @@
+ // tools/hbm_next/hnx_fused_vec.py (golden hdc_golden_v41 chunk8).  Run in the case dir: +NVMI= +NVME= (plus.txt).
+ // Prints HNX_FUSED_CYCLES (job launch edge -> done edge) and HNX_FUSED PASS / FAIL (exact words, no fault, every
+ // output sector written once, no bank violation).
+-module tb_hnx_fused_tree #(parameter integer KX = 4, RR = 10, RL = 4, MUT = 0, NMAX = 8, E = 2);
++module tb_hnx_fused_tree #(parameter integer KX = 4, RR = 10, RL = 4, MUT = 0, NMAX = 8, E = 2, N4EXT = 0);
+     reg clk = 1'b0, rst_n = 1'b0;
+     always #1 clk = ~clk;
+     reg job_v = 1'b0; reg [216:0] job;
+     wire done, fault, busy;
+     wire [31:0] rq_v, wq_v; wire [32*16-1:0] rq_s, wq_s; wire [32*256-1:0] wq_d;
+     reg [31:0] rr_v; reg [32*256-1:0] rr_d;
+-    ot_hnx_fused_tree_top #(.KX(KX), .RR(RR), .NMAX(NMAX), .MUT(MUT), .E(E)) dut (.clk(clk), .rst_n(rst_n), .job_v(job_v),
++    ot_hnx_fused_tree_top #(.KX(KX), .RR(RR), .NMAX(NMAX), .MUT(MUT), .E(E), .N4EXT(N4EXT)) dut (.clk(clk), .rst_n(rst_n), .job_v(job_v),
+         .job(job), .done(done), .fault(fault), .busy(busy), .rq_v(rq_v), .rq_s(rq_s), .rr_v(rr_v), .rr_d(rr_d),
+         .wq_v(wq_v), .wq_s(wq_s), .wq_d(wq_d));
+     reg [255:0] vm [0:65535];
+Only in bundle/rtl: hdc
+Only in bundle/rtl: lib
+Only in bundle/rtl: proto
+--- orig/tools/hbm_next/hnx_fushub_bench.sh	2026-10-19 12:23:56.000000000 -0700
++++ bundle/tools/hbm_next/hnx_fushub_bench.sh	2026-10-27 01:11:04.992289999 -0700
+@@ -56,7 +56,7 @@
+       if echo "$r" | grep -q 'fault=1 done=0 bankerr=0 writes=0'; then r="$r PH_REFUSE PASS"; else r="$r PH_REFUSE FAIL"; fi
+     fi
+     V "$t $c: $r $(grep -h MISMATCH run.log | head -1)"
+-    [ "$t" = t0 ] && grep -h '^HNX_TREE' run.log | sort -u >> $O/tree_schedule.txt
++    [ "$t" = t0 -o "$t" = n4 ] && grep -h '^HNX_TREE' run.log | sort -u >> $O/tree_schedule.txt
+     rm -f vmi.mem vme.mem )
+ }
+ case $ST in
+@@ -68,6 +68,17 @@
+        run ref pre 4 0 3 & run ref post 2 0 5 & wait ;;
+   m4|m8|m9) k=${ST#m}; build $ST "-GKX=4 -GMUT=$k"
+        run $ST pre 4 0 0 & wait ;;
++  n4)  build n4 "-GKX=4 -GMUT=0 -GN4EXT=1"      # HBM-MU-QUAD-3: per-hub n4 outside the hub, root = t5 only
++       for op in pre post; do for n in 1 2 3 4 6; do run n4 $op $n 0 0 & done; done; wait ;;
++  n4s) build n4s "-GKX=4 -GMUT=0 -GN4EXT=1"     # n4 seed sweep: HC_PRE_NORM N 8 ph 0, 64 seeds (64 x 8 rows x 20 blocks)
++       for sd in $(seq 1 64); do c=pre_n8_s$sd; od=$O/run_n4s_$c; mkdir -p $od
++         ( python3 tools/hbm_next/hnx_fused_vec.py --op pre --n 8 --seed $sd --out $od > $od.gen.log 2>&1
++           cd $od && $O/obj_n4s/Vn4s $(cat plus.txt) > run.log 2>&1
++           V "n4s $c: $(grep -h 'HNX_FUSED_CYCLES\|HNX_FUSED PASS\|HNX_FUSED FAIL' run.log | tr '\n' ' ')"; rm -f vmi.mem vme.mem ) &
++         [ $((sd % 32)) = 0 ] && wait
++       done; wait ;;
++  n4m) build n4m "-GKX=4 -GMUT=0 -GN4EXT=2"     # mutant: level 4 pairs across hubs -> must FAIL
++       run n4m pre 4 0 0 & run n4m pre 2 0 0 & wait ;;
+   m7)  build m7 "-GKX=4 -GMUT=7"
+        run m7 pre 4 0 3 & run m7 pre 2 0 5 & wait ;;
+ esac
