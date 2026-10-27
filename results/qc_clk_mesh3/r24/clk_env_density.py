@@ -50,10 +50,11 @@ def parse_guide(path, dbu, gc, nx, ny):
             if L not in diff:
                 continue
             x0, y0, x1, y1 = (int(m.group(i)) for i in range(1, 5))
-            i0 = max(0, min(nx - 1, int(x0 / dbu / gc)))
-            i1 = max(0, min(nx - 1, int((x1 / dbu - 1e-6) / gc)))
-            j0 = max(0, min(ny - 1, int(y0 / dbu / gc)))
-            j1 = max(0, min(ny - 1, int((y1 / dbu - 1e-6) / gc)))
+            g = int(round(gc * dbu))            # integer DBU gcell: no float floor error (NUMBER-CHECK-QC-R24b)
+            i0 = max(0, min(nx - 1, x0 // g))
+            i1 = max(0, min(nx - 1, (x1 - 1) // g))
+            j0 = max(0, min(ny - 1, y0 // g))
+            j1 = max(0, min(ny - 1, (y1 - 1) // g))
             d = diff[L]
             d[j0, i0] += 1
             d[j0, i1 + 1] -= 1
@@ -77,25 +78,31 @@ def part_mask(plan, gc, nx, ny):
 
 
 def cross_c(cal_path):
-    """fd2d per-um C (fF/um) of a 16w (0.64 um) M8 clock wire with VSS shields at s, plane below at M7/M6/M5 gap,
-    optional M9 plane above."""
+    """fd2d per-um C (fF/um) of a 16w (0.64 um) clock wire with thin VSS shields (0.04 um at 0.08 um, the stage-table /
+    RC3 basis geometry, NUMBER-CHECK-QC-R24b), one plane below at the given layer gap, optional plane above.
+    Model basis (qc_clk_mesh3 stage table, RC3 16w 0.5022): M8 over a full M7 plane, open top; M9 over a full M8 plane."""
     import fd2d
     cal = json.load(open(cal_path))
     eps = cal["eps_r"]
-    l8 = cal["layers"]["8"]
-    t = l8["t"]
-    w, s = 0.64, 0.32
+    w, sw, sp = 0.64, 0.04, 0.08
+
+    def c(lay, below, top_gap):
+        t = cal["layers"][lay]["t"]
+        rects = [(-w / 2, w / 2, 0.0, t)]
+        for sg in (-1, 1):
+            x = sg * (w / 2 + sp + sw / 2)
+            rects.append((x - sw / 2, x + sw / 2, 0.0, t))
+        gap = cal["layers"][lay]["gap_over"][below]
+        ytop = t + (top_gap if top_gap is not None else 1.5)
+        q, _ = fd2d.solve(rects, -gap, ytop, 3.0, eps, 0, h_fine=0.004, plane_bot=True, plane_top=top_gap is not None)
+        return q[0]
+    g9 = cal["layers"]["8"]["gap_under"]["9"]
     res = {}
-    l9 = cal["layers"]["9"]
-    for below in ("8", "7", "6"):          # M9 16w strap (top metal: open above), plane below at M8/M7/M6 gap
-        cc, fr = fd2d.pattern(w, l9["t"], s, below=l9["gap_over"][below], above=None, neighbours=True, eps_r=eps,
-                              h_fine=0.008)
-        res[f"m9_b{below}"] = 2 * (cc + fr)
+    for below in ("8", "7", "6"):
+        res[f"m9_b{below}"] = c("9", below, None)
     for below in ("7", "6", "5"):
-        for top in (True, False):
-            cc, fr = fd2d.pattern(w, t, s, below=l8["gap_over"][below], above=l8["gap_under"]["9"] if top else None,
-                                  neighbours=True, eps_r=eps, h_fine=0.008)
-            res[f"b{below}_{'t9' if top else 'open'}"] = 2 * (cc + fr)
+        res[f"b{below}_t9"] = c("8", below, g9)
+        res[f"b{below}_open"] = c("8", below, None)
     return res
 
 
@@ -169,7 +176,7 @@ def main():
         r["d_grt_below2"] = round(acc["grt_below2_um"] / acc["um"], 5)
         if C:
             L8, L9 = acc["m8_um"], acc["m9_um"]
-            cm8, cm9 = C["b7_t9"], C["m9_b8"]
+            cm8, cm9 = C["b7_open"], C["m9_b8"]   # model basis = stage table (full plane below, open top)
             for u in us:
                 k8 = k9 = 1.0
                 if L8 > 0:
