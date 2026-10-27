@@ -97,13 +97,55 @@ class TestRules(unittest.TestCase):
         st = {r["rule"]: r["status"] for r in G.judge(m, None, [200, 200], all_kits=True)[0]}
         self.assertEqual((st["cells_on_macros"], st["clock_on_macro"]), ("FAIL", "FAIL"))
 
-    def test_pin_density_per_layer_fails_combined_only_is_info(self):
-        pins = [(k, f"a[{k}]", "INPUT", 0, 50 + k * 0.1) for k in range(80)]          # 8/um on W/M4
+    def test_pin_density_per_layer_is_budget_warn_with_window(self):
+        # COORD 10-27 10:48: METHODOLOGY 5.2 pin window = BUDGET -> WARN naming layer, face, peak and window, not FAIL
+        pins = [(k, f"a[{k}]", "INPUT", 0, 50 + k * 0.1) for k in range(80)]          # 8/um on W/M4 at y 50..58
         p = dump(self.d / "pd.tsv", flops=[(1, 2, 100)], comb=fill_cells(100, 3600), pins=pins,
                  nets=[("SIGNAL", f"p{k}", ["i1"]) for k in range(80)])
         m = G.metrics(str(p), odb="3_place.odb")
         self.assertEqual(m["pin_peak_layer"]["W/M4"], 8.0)
-        self.assertEqual([r["status"] for r in G.judge(m, None, [200, 200])[0] if r["rule"] == "pin_density"], ["FAIL"])
+        self.assertEqual(m["pin_peak_layer_win"]["W/M4"], ["y", 50.0, 60.0])
+        R, v = G.judge(m, None, [200, 200])
+        pd = [r for r in R if r["rule"] == "pin_density"]
+        self.assertEqual([r["status"] for r in pd], ["WARN"])
+        self.assertIn("W/M4 8.0/um at y 50.0-60.0", pd[0]["detail"])
+        self.assertNotIn("pin_density", " ".join(G.reasons(R)))
+        line = G.verdict_line(v, R, "t")
+        self.assertIn("WARN[pin_density: W/M4 8.0/um at y 50.0-60.0]", line)
+        self.assertIn("pin_density=WARN(8.0)", line)
+        m2 = G.metrics(str(dump(self.d / "pe.tsv", flops=[(1, 2, 100)], comb=fill_cells(100, 3600), pins=pins[:50],
+                                nets=[("SIGNAL", f"p{k}", ["i1"]) for k in range(50)])), odb="3_place.odb")
+        self.assertEqual([r["status"] for r in G.judge(m2, None, [200, 200])[0] if r["rule"] == "pin_density"], ["PASS"])
+
+    def test_pin_window_only_excess_passes_with_warn_and_others_still_fail(self):
+        m = G.metrics(str(self.base()), odb="3_place.odb")
+        R, v = G.judge(json.loads(json.dumps(m)), {"metrics": m})
+        self.assertEqual(v, "PASS")
+        m["pin_peak_layer"] = dict(m["pin_peak_layer"], **{"E/M4": 11.6})
+        m["pin_peak_layer_win"] = dict(m["pin_peak_layer_win"], **{"E/M4": ["y", 120.0, 130.0]})
+        m["pin_peak_layer_max"] = 11.6
+        R, v = G.judge(json.loads(json.dumps(m)), {"metrics": json.loads(json.dumps(m))})
+        self.assertEqual(v, "PASS", [r for r in R if r["status"] not in ("PASS", "INFO")])
+        self.assertEqual([r["status"] for r in R if r["rule"] == "pin_density"], ["WARN"])
+        self.assertIn("E/M4 11.6/um at y 120.0-130.0", G.verdict_line(v, R))
+        m["pins_unregistered"] = 1                            # any other check stays fail-closed alongside the WARN
+        R, v = G.judge(m, {"metrics": G.metrics(str(self.base(name="z.tsv")), odb="3_place.odb")})
+        self.assertEqual(v, "FAIL")
+
+    def test_channel_demand_over_one_fails_without_clean_grt(self):
+        flops = [(i, 5, 40 + (i % 120)) for i in range(1, 401)] + [(1000 + i, 195, 40 + (i % 120)) for i in range(1, 401)]
+        nets = [("SIGNAL", f"i{i}", [f"i{1000 + i}"]) for i in range(1, 401)]
+        p = dump(self.d / "cg.tsv", flops=flops, comb=fill_cells(5000, 900), macros=[(500, 20, 10, 180, 200)], nets=nets,
+                 pins=[(0, "clk", "INPUT", 100, 5, "CLOCK")])
+        m = G.metrics(str(p), odb="3_place.odb", grt_log=None)
+        self.assertIsNone(m["grt_overflow"])
+        R, v = G.judge(m, None, [200, 200])
+        self.assertEqual(v, "FAIL")
+        self.assertEqual([r["status"] for r in R if r["rule"] == "channel_h"], ["FAIL"])
+        for val, grt, want in ((1.02, None, "FAIL"), (1.02, 5, "FAIL"), (0.97, 0, "WARN"), (0.97, None, "FAIL")):
+            m2 = dict(m, channel_h_max=val, grt_overflow=grt)
+            self.assertEqual([r["status"] for r in G.judge(m2, None, [200, 200])[0] if r["rule"] == "channel_h"], [want],
+                             (val, grt))
 
     def test_channel_demand_detours_around_macro_column(self):
         # 400 W<->E nets at y 40..160 across a full-height-minus-strip macro column: all detour through the S strip

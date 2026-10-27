@@ -26,7 +26,8 @@ Rules (id: limit -- source):
               buffers, data and reset pins) <= 405 um -- METHODOLOGY 1.3 / 4.2 (reach 405 per cycle; reset relays every
               <= 405 um); GEOM-REVIEW 10-24 g3k5 FAIL "u_s0->u_t0.c0 905 um"; results/geom_review/s81_head_kits_1025
               hk_ana.py rr_gt405
-  pin_density: peak pins in any 10-um face window <= 6 pins/um (covers partial-face pin clusters) -- METHODOLOGY 5.2;
+  pin_density: peak pins in any 10-um face window <= 6 pins/um per layer and face -- METHODOLOGY 5.2; a BUDGET (COORD
+              10-27 10:48): an excess is WARN (layer, face, peak, window in the verdict line / GEOM REQ), not FAIL;
               memory tile-review-pin-clustering-1017 (bf_cl_fp 9/um, pegress 10/um partial faces)
   pin_table : pins (name, face, layer, position +-0.05 um) == template pin table up to strap_* pins -- METHODOLOGY 1.5
               (one type = one view; replica shares the lattice) + owner 10-25 template rule ("same pin table up to
@@ -265,18 +266,23 @@ def pin_metrics(D, strap_re):
         if p["sig"] in ("POWER", "GROUND") or p.get("face", "area") == "area":
             continue
         lpos[(p["face"], p["layer"])].append(p["x"] if p["face"] in "NS" else p["y"])
-    lpeak = {}
+    lpeak, lwin = {}, {}
     for fl, v in lpos.items():
         v.sort()
-        j = best = 0
+        j = best = bj = 0
         for i in range(len(v)):
             while v[i] - v[j] > 10.0:
                 j += 1
-            best = max(best, i - j + 1)
-        lpeak[f"{fl[0]}/{fl[1]}"] = round(best / 10.0, 2)
+            if i - j + 1 > best:
+                best, bj = i - j + 1, j
+        key = f"{fl[0]}/{fl[1]}"
+        lpeak[key] = round(best / 10.0, 2)
+        if v:                                         # the peak 10-um window, die-relative, along the face axis
+            o = X0 if fl[0] in "NS" else Y0
+            lwin[key] = ["x" if fl[0] in "NS" else "y", round(v[bj] - o, 2), round(v[bj] - o + 10.0, 2)]
     flen = {"N": W, "S": W, "E": H, "W": H}
     span = {f: round((max(v) - min(v)) / flen[f], 3) for f, v in pos.items() if f != "area" and v and flen[f] > 0}
-    return dict(pins_per_face=dict(faces), pin_peak_per_um_10um=peak, pin_peak_layer=lpeak,
+    return dict(pins_per_face=dict(faces), pin_peak_per_um_10um=peak, pin_peak_layer=lpeak, pin_peak_layer_win=lwin,
                 pin_peak_layer_max=max(lpeak.values()) if lpeak else 0.0, face_span=span, pin_table=sorted(table))
 
 
@@ -928,6 +934,27 @@ TOL_REL = 0.02            # replica vs template: numerical noise of a re-place o
 TOL_CLOCK = 0.10          # clock-tree shape vs the template's tree (CTS is less repeatable than placement)
 
 
+def pin_window_excess(m):
+    """[(face/layer, peak, axis, lo, hi)] for every layer-face whose peak 10-um window exceeds PIN_WIN_MAX, worst first"""
+    win = m.get("pin_peak_layer_win") or {}
+    out = [(k, v) + tuple(win.get(k) or ("?", None, None)) for k, v in (m.get("pin_peak_layer") or {}).items()
+           if v > PIN_WIN_MAX]
+    return sorted(out, key=lambda e: (-e[1], e[0]))
+
+
+def pin_density_rule(m, add):
+    src = "METHODOLOGY 5.2 per layer+face BUDGET (COORD 10-27 10:48); route (pin-access DRC / GRT0) decides"
+    ex = pin_window_excess(m)
+    if m.get("pin_peak_layer") is None:
+        add("pin_density", "NA", None, f"<={PIN_WIN_MAX}", src, "not measurable")
+    elif ex:
+        add("pin_density", "WARN", m.get("pin_peak_layer_max"), f"<={PIN_WIN_MAX} budget", src,
+            "; ".join(f"{k} {v}/um at {a} {lo}-{hi}" for k, v, a, lo, hi in ex))
+    else:
+        add("pin_density", "PASS", m.get("pin_peak_layer_max"), f"<={PIN_WIN_MAX}", src,
+            f"per layer {m.get('pin_peak_layer')}")
+
+
 def judge(m, template=None, outline=None, all_kits=False):
     """[rule dicts], verdict.  Absolute limit first; with a template (the visually passed part), a value outside the
     absolute limit still passes ONLY when the template carried the same violation through its visual PASS and the
@@ -996,11 +1023,10 @@ def judge(m, template=None, outline=None, all_kits=False):
     if t is not None and "_pin_peak" not in t:
         tp = t.get("pin_peak_per_um_10um") or {}
         t["_pin_peak"] = max(tp.values()) if tp else 0.0
-    # METHODOLOGY 5.2 "<= 2 layers per face ... <= 6 pins/um per 10-um window": a single layer above 6/um fails under
-    # every reading (CODEX 10-27 10:05 KV e0 S/M5 6.4); the combined-face reading is an open OWNER scope question
-    # (CODEX-LOG 09:19 S81 qbank/sstn), so combined > 6 with every layer <= 6 is reported, not failed.
-    lim("pin_density", "pin_peak_layer_max", PIN_WIN_MAX, "METHODOLOGY 5.2 per layer; tile-review-pin-clustering-1017",
-        detail=f"per layer {m.get('pin_peak_layer')}; combined {pk}")
+    # METHODOLOGY 5.2 "<= 6 pins/um per 10-um window" (per layer and per face) is a BUDGET (COORD 10-27 10:48 GEOM-AUTO-2
+    # ruling, 10:4x PIN-DENSITY): an excess is a WARN naming layer, face, peak and window; the measured route (pin-access
+    # DRC / GRT0 at >= 50 it, already a required rule) decides.  The combined-face reading stays INFO.
+    pin_density_rule(m, add)
     if m["_pin_peak"] > PIN_WIN_MAX and m.get("pin_peak_layer_max", 0) <= PIN_WIN_MAX:
         add("pin_density_face", "INFO", m["_pin_peak"], f"<={PIN_WIN_MAX} combined (OWNER scope open)",
             "METHODOLOGY 5.2 combined-face reading", str(pk))
@@ -1171,7 +1197,9 @@ def verdict_line(verdict, rules, title=""):
     order = {"FAIL": 0, "NA": 0, "WARN": 1, "PASS": 2}
     parts = [f"{r['rule']}={short[r['status']]}({r['value'] if not isinstance(r['value'], dict) else max(r['value'].values() or [0])})"
              for r in sorted((r for r in rules if r["status"] != "INFO"), key=lambda r: order[r["status"]])]
-    return f"AUTO-GEOM {verdict}" + (f" {title}" if title else "") + " " + " ".join(parts)
+    warn = "; ".join(f"{r['rule']}: {r['detail'] or r['value']}" for r in rules if r["status"] == "WARN")
+    return (f"AUTO-GEOM {verdict}" + (f" {title}" if title else "") + (f" WARN[{warn}]" if warn else "") + " "
+            + " ".join(parts))
 
 
 def main(argv=None):
@@ -1194,7 +1222,8 @@ def main(argv=None):
     rules, verdict = judge(m, tmpl, outline, a.all_kits)
     line = verdict_line(verdict, rules, a.title)
     out = dict(schema="opentallas.auto_geom.v2", dump=a.dump, verdict=verdict, line=line, rules=rules, metrics=m,
-               reasons=reasons(rules), warns=[r["rule"] for r in rules if r["status"] == "WARN"])
+               reasons=reasons(rules), warns=[r["rule"] for r in rules if r["status"] == "WARN"],
+               warn_detail=[f"{r['rule']}: {r['detail'] or r['value']}" for r in rules if r["status"] == "WARN"])
     if a.json:
         with open(a.json, "w") as fh:
             json.dump(out, fh, indent=1)
