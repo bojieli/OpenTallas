@@ -308,7 +308,7 @@ def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=Fa
             x,y=pin(g,'Y');anchor=targets[g]['c']
             py=[D.C128.pin_xy({'c':dict(x=c['origin_um'][0],y=c['origin_um'][1],orient=c['orient'])},'c','Y',D.ROW_Y)[1] for _,c in groups[g]]
             if max(abs(anchor-yy) for yy in py)>D.C128.STACK_RISER_MAX_UM:
-                raise ValueError('mesh driver pin stair exceeds actual island window')
+                raise ValueError(f'mesh driver {g} pin stair exceeds actual island window: pins={py}, anchor={anchor}, target={targets[g]}')
             binds.append(dict(group=g,xy=[x,anchor],units=[u for u,c in groups[g]],max_m7_riser_um=max(abs(anchor-yy) for yy in py)))
         out['summary']['mesh_driver_boundaries']=binds
         out['summary']['must_attach_explicit_mesh_before_route']=True
