@@ -61,3 +61,10 @@ def test_ft_union_preserves_free_holes_between_scattered_bit_sites():
  r=DM.rect_union_strips([(0.,0.,5.,5.),(10.,0.,15.,5.),(0.,3.,5.,8.)])
  assert sorted(r)==[[0.,0.,5.,8.],[10.,0.,15.,5.]]
  assert all(not(x0<7.<x1) for x0,y0,x1,y1 in r)
+
+
+def test_actual_hop_guard_uses_exported_pin_bars_not_average_leg_length():
+ c={'a':dict(x=0.,y=0.),'b':dict(x=405.,y=0.)}
+ assert not DM.actual_clock_hop_violations(c,[dict(drv='a',loads=['b'])],405.)
+ bad=DM.actual_clock_hop_violations(c,[dict(drv='b',loads=['a'])],405.)
+ assert bad==[dict(drv='b',load='a',span_um=406.566)]

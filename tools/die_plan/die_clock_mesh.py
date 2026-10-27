@@ -606,6 +606,21 @@ def placement_overlaps(cells):
     return out
 
 
+def actual_clock_hop_violations(cells, nets, limit):
+    """Cell Y -> cell A spans using the same real pin bars as physical export."""
+    bad = []
+    for net in nets:
+        drv = net["drv"]
+        if drv not in cells:continue
+        a = C128.pin_xy(cells,drv,"Y",ROW_Y)
+        for load in net["loads"]:
+            if load not in cells:continue
+            b = C128.pin_xy(cells,load,"A",ROW_Y)
+            span = abs(a[0]-b[0])+abs(a[1]-b[1])
+            if span > limit + 1e-6:bad.append(dict(drv=drv,load=load,span_um=round(span,6)))
+    return bad
+
+
 def rect_union_strips(rects):
     """Exact union as disjoint horizontal strips, coalesced vertically where possible."""
     events = defaultdict(list)
@@ -1960,13 +1975,25 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                         poly = p2
                         out.setdefault("alt_l_legs", []).append(dict(tag=tag, level=level + 1, corner=[round(c2[0], 3), round(c2[1], 3)],
                                                                     first_axis="x" if inc == 0 else "y"))
+            def rep_budget(pt, k):
+                if not lg.get("actual_leaf_slack"):return True
+                # Prior repeater and destination node are real placed cells. A
+                # remaining-distance lower bound prevents spending their reach.
+                pc = cells[prev or drv_cell]
+                py = C128.pin_xy(cells,prev or drv_cell,"Y",ROW_Y)
+                qc = dict(x=snap(pt[0]-BUF_W/2,SITE_X),y=snap(pt[1]-ROW_Y/2,ROW_Y))
+                ca = C128.pin_xy({"q":qc},"q","A",ROW_Y)
+                cy = C128.pin_xy({"q":qc},"q","Y",ROW_Y)
+                na = C128.pin_xy(cells,nb,"A",ROW_Y)
+                return (abs(py[0]-ca[0])+abs(py[1]-ca[1]) <= lg["hop_reach"]+1e-6 and
+                        abs(cy[0]-na[0])+abs(cy[1]-na[1]) <= (n_seg-k)*lg["hop_reach"]+1e-6)
             for k in range(1, n_seg):
                 s0 = L * k / n_seg
                 rq, rd = None, None
                 for kk in range(0, int(L / n_seg / 2 / STEP_UM) + 1):
                     for sg in ((1,) if kk == 0 else (1, -1)):
                         pt = poly_point(poly, s0 + sg * kk * STEP_UM)
-                        if not hitf(K, pt):
+                        if not hitf(K, pt) and rep_budget(pt,k):
                             rq, rd = pt, kk * STEP_UM
                             break
                     if rq is not None:
@@ -1977,7 +2004,9 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                     # stay <= hop_reach (checked: ideal sub-hop L/n_seg plus twice the jog)
                     jl = max(0.0, (lg["hop_reach"] - L / n_seg) / 2)
                     if jl > 0:
-                        rq, rd = free_near(K, poly_point(poly, s0), limit=jl, step=STEP_UM * 2)
+                        rq, rd = free_near(K, poly_point(poly, s0),
+                                           limit=max(jl,lg["hop_reach"]) if lg.get("actual_leaf_slack") else jl,
+                                           step=STEP_UM * 2, accept=(lambda z: rep_budget(z,k)) if lg.get("actual_leaf_slack") else None)
                         if rq is not None:
                             out.setdefault("off_core_resites", []).append(dict(role="leg_rep", name=f"ckm_r{level + 1}_{tag}_{k}",
                                                                                d_um=round(rd, 2)))
@@ -2293,6 +2322,11 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     out["clock_cell_overlaps"] = overlaps
     out["clock_hard_keepout_violations"] = hard_keepout_violations(
         P, cells, (islands if fp is not None else None) or [tuple(w) for w in out.get("island_windows", [])] or None)
+    if lg and lg.get("actual_leaf_slack"):
+        hop_bad = actual_clock_hop_violations(cells,nets,lg["hop_reach"])
+        out["clock_actual_hop_violations"] = hop_bad
+        out["meta"]["clock_actual_hop_violations"] = len(hop_bad)
+        perr += [dict(kind="clock_actual_hop",name=v["drv"]+"->"+v["load"],role="clock_cell",detail=v) for v in hop_bad]
     if ft_keepouts:
         ft_bad = _body_keepout_violations(DC.KeepIndex(ft_keepouts), W, H, cells)
         out["clock_ft_keepout_violations"] = ft_bad
