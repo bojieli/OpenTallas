@@ -9,6 +9,11 @@
 #   corners step used to read 'make print-X' as 'X = ...' but ORFS prints 'X: ...' -> empty libs -> STA-0453 -> rc+100
 #   -> signoff skipped on every finished kit).
 set -uo pipefail
+# HBM-CORES-R11 2026-10-27 (COORD 10:37 ruling 2, SIGNOFF-MODES-2 tools/die_plan/kit_modes.py): ONE TIMING MODE PER
+# CORNER.  A kit staged two-mode (OT_HOLD_MM=1: the generator default) patches the disposable container with
+# orfs_hold_mm.py before any stage; post_cts_setup.tcl repairs TT setup after the balanced tree; the GRT step repairs
+# TT setup (scene tc, vclk OT_VCLK_TT) + FF hold (scene BC, vclk OT_VCLK_FF) in one two-mode session.  Unstaged kits
+# keep the FF-only GRT hold repair.  kit_modes.py checks the session first: GRT fails closed (rc 9), CTS advisory.
 # HBM-CORES3 10-25 (COORD KIT-CENSUS): sdc_lint / SELRANGE / port-bind / face_guard FAIL = STOP before floorplan
 # (marker /work/FAIL_PREFLOOR, rc 3); post-CTS FF hold gate (hold_gate.tcl: WNS < -100 ps or > 2000 endpoints = STOP,
 # marker /work/FAIL_POSTCTS, rc 4: a structural plan/RTL issue, not repaired).
@@ -19,6 +24,9 @@ NAME=hbmcore-$(basename "$K" | tr -c 'A-Za-z0-9_.-' _ | cut -c1-60)-$$
 $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
   -e HUID=$(id -u) -e HGID=$(id -g) -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; \
+  rc=0; MM=\$(grep -c '^override export OT_HOLD_MM = 1' /work/config.mk); \
+  if [ \$MM != 0 ]; then python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts /work/orfs_hold_mm.tcl > /work/orfs_hold_mm.log 2>&1 \
+    || { cat /work/orfs_hold_mm.log; echo 'KIT_MODES FAIL orfs_hold_mm patch'; chown -R \$HUID:\$HGID /work; exit 9; }; fi; \
   rc=0; if [ $GOAL != post ]; then rm -f /work/FAIL_PREFLOOR /work/FAIL_POSTCTS; \
   python3 -I /work/rtl_lint.py /work > /work/rtl_lint.log 2>&1 || { tail -3 /work/rtl_lint.log; echo 'FAIL_PREFLOOR rtl_lint (FAIL or NOT RUN)' | tee -a /work/FAIL_PREFLOOR; chown -R \$HUID:\$HGID /work; exit 8; }; \
   python3 -I /work/sdc_lint.py /work --liberty \$(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_*.lib* 2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\$?; tail -2 /work/sdc_lint.log; \
@@ -44,7 +52,13 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
         openroad -exit /work/hold_gate.tcl > /work/hold_gate.log 2>&1; hgrc=\$?; grep OT_HOLD_GATE /work/hold_gate.log; \
       if [ \$hgrc != 0 ] || ! grep -q 'OT_HOLD_GATE PASS' /work/hold_gate.log; then grep OT_HOLD_GATE /work/hold_gate.log | sed 's/^/FAIL_POSTCTS /' | tee /work/FAIL_POSTCTS; rc=4; fi; fi; fi; \
   HM=\$(sed -n 's/^export OT_HOLD_FF_MARGIN = //p' /work/config.mk); \
-  if [ \$rc = 0 ] && [ -n \"\$HM\" ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then OT_VCLK_CORNER=ff \$M grt CORNER=BC CORNERS=bc HOLD_SLACK_MARGIN=\$HM; rc=\$?; fi; \
+  if [ \$rc = 0 ] && [ -n \"\$HM\" ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \
+    python3 -I /work/kit_modes.py check /work --step cts > /work/kit_modes_cts.log 2>&1 || echo 'KIT_MODES ADVISORY cts (QoR only)'; cat /work/kit_modes_cts.log; \
+    if [ \$MM != 0 ]; then python3 -I /work/kit_modes.py check /work --step grt --session 'tc bc' --hold-repair || rc=9; \
+      if [ \$rc = 0 ]; then \$M grt HOLD_SLACK_MARGIN=\$HM; rc=\$?; fi; \
+    else python3 -I /work/kit_modes.py check /work --step grt --session bc --vclk-corner ff --hold-repair || rc=9; \
+      if [ \$rc = 0 ]; then OT_VCLK_CORNER=ff \$M grt CORNER=BC CORNERS=bc HOLD_SLACK_MARGIN=\$HM; rc=\$?; fi; fi; \
+    if [ \$rc = 9 ]; then echo 'FAIL_POSTCTS kit_modes grt (one timing mode per corner)' | tee -a /work/FAIL_POSTCTS; fi; fi; \
   if [ \$rc = 0 ] && [ -n \"\$HM\" ]; then grep -hiE \"hold buffer|RSZ-00(32|46)\" /work/run/logs/asap7/*/base/5_1_grt.log > /work/hold_census.txt 2>/dev/null; echo \"OT_HOLD_CENSUS \$(cat /work/hold_census.txt | tr \"\\n\" \" \")\"; fi; \
   if [ \$rc = 0 ] && [ -n \"\$HM\" ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then O5=\$(ls /work/run/results/asap7/*/base/5_1_grt.odb | tail -1); \
     for c in TT FF; do OT_POSTCTS_GRT=1 OT_CORNER=\$c ODB=\$O5 openroad -exit /work/postcts_gate.tcl > /work/postcts_gate_\$c.log 2>&1; \

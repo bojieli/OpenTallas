@@ -60,3 +60,21 @@ def test_retarget_refuses_missing_instance():
         parts = {"x": {"type": "a"}}
     with pytest.raises(ValueError):
         T.retarget_shared_modules(_P, "module top();\nendmodule\n", T.standin_module_names(_P))
+
+
+@pytest.mark.parametrize("plan", [p for p in PLANS if p.is_file()], ids=lambda p: p.parent.name)
+def test_pad_and_strap_ports_are_carried_without_arcs(plan):
+    """STANDIN-PADPORT 10-27: off-die PHY pads (types[].pads) and ID straps (types[].id_straps) are stand-in ports of
+    their declared direction and width, with no face flop / contract cell on them (no timing arc, never tied)."""
+    P = S.Plan(S.load(plan), plan)
+    for tn, t in P.types.items():
+        free = [(gen_rtl.sv_id(pd["name"]), pd["dir"], pd["width"]) for pd in t.get("pads", []) or []] + \
+            [(sp["name"], "in", sp["width"]) for sp in t.get("id_straps", []) or []]
+        if not free:
+            continue
+        v, _ = T.standin_netlist(P, tn)
+        ports = _ports(v)
+        for n, d, w in free:
+            assert n in ports
+            assert f"  {'input' if d == 'in' else 'output'} [{w - 1}:0] {n};" in v
+            assert not re.search(r"\(\s*" + re.escape(n) + r"\s*(\[|\))", v), (tn, n)   # no cell pin touches it
