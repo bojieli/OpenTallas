@@ -1,0 +1,228 @@
+{
+ "ds_ar": {
+  "total_lower": 4.377,
+  "ops": {
+   "SU.*": {
+    "lane_cyc": -23,
+    "cc_cyc": 7,
+    "parallel": false,
+    "n_kernels": 1,
+    "lane_loss": -3.541,
+    "cc_loss": 1.158,
+    "both": -2.532
+   },
+   "ARGMAX.*": {
+    "lane_cyc": -23,
+    "cc_cyc": 4,
+    "parallel": false,
+    "n_kernels": 1,
+    "lane_loss": 0.0,
+    "cc_loss": 0.0,
+    "both": 0.0
+   },
+   "SFU.*": {
+    "lane_cyc": -14,
+    "cc_cyc": 0,
+    "parallel": false,
+    "n_kernels": 0,
+    "lane_loss": 0.0,
+    "cc_loss": 0.0,
+    "both": 0.0
+   },
+   "HC.*|FUSED.HC_*": {
+    "lane_cyc": 8,
+    "cc_cyc": 5,
+    "parallel": false,
+    "n_kernels": 3,
+    "lane_loss": 0.22,
+    "cc_loss": 0.138,
+    "both": 0.357
+   },
+   "FUSED.QDQ*": {
+    "lane_cyc": 0,
+    "cc_cyc": 0,
+    "parallel": false,
+    "n_kernels": 1,
+    "lane_loss": 0.0,
+    "cc_loss": 0.0,
+    "both": 0.0
+   },
+   "FUSED.*": {
+    "lane_cyc": -23,
+    "cc_cyc": 4,
+    "parallel": false,
+    "n_kernels": 0,
+    "lane_loss": 0.0,
+    "cc_loss": 0.0,
+    "both": 0.0
+   },
+   "IDX.TOPK": {
+    "lane_cyc": -17,
+    "cc_cyc": 3,
+    "parallel": false,
+    "n_kernels": 1,
+    "lane_loss": -0.118,
+    "cc_loss": 0.021,
+    "both": -0.097
+   },
+   "IDX.*": {
+    "lane_cyc": -17,
+    "cc_cyc": 8,
+    "parallel": false,
+    "n_kernels": 1,
+    "lane_loss": -0.024,
+    "cc_loss": 0.011,
+    "both": -0.012
+   },
+   "COLL.TOPK_MERGE": {
+    "lane_cyc": 57,
+    "cc_cyc": 13,
+    "parallel": false,
+    "n_kernels": 1,
+    "lane_loss": 0.089,
+    "cc_loss": 0.02,
+    "both": 0.109
+   },
+   "COLL.*": {
+    "lane_cyc": 57,
+    "cc_cyc": 13,
+    "parallel": false,
+    "n_kernels": 4,
+    "lane_loss": 4.817,
+    "cc_loss": 1.049,
+    "both": 5.915
+   },
+   "SM.*|ATT.*": {
+    "lane_cyc": -9,
+    "cc_cyc": 14,
+    "parallel": true,
+    "n_kernels": 3,
+    "lane_loss": 0.0,
+    "cc_loss": 0.0,
+    "both": 0.0
+   },
+   "DMA.*": {
+    "lane_cyc": 24,
+    "cc_cyc": 6,
+    "parallel": false,
+    "n_kernels": 3,
+    "lane_loss": 0.269,
+    "cc_loss": 0.052,
+    "both": 0.354
+   }
+  }
+ },
+ "qwen_ar": {
+  "total_lower": -0.052,
+  "ops": {
+   "SU.*": {
+    "lane_cyc": -23,
+    "cc_cyc": 7,
+    "parallel": false,
+    "n_kernels": 1,
+    "lane_loss": -0.659,
+    "cc_loss": 0.199,
+    "both": -0.457
+   },
+   "ARGMAX.*": {
+    "lane_cyc": -23,
+    "cc_cyc": 4,
+    "parallel": false,
+    "n_kernels": 1,
+    "lane_loss": 0.0,
+    "cc_loss": 0.0,
+    "both": 0.0
+   },
+   "SFU.*": {
+    "lane_cyc": -14,
+    "cc_cyc": 0,
+    "parallel": false,
+    "n_kernels": 1,
+    "lane_loss": -0.04,
+    "cc_loss": 0.0,
+    "both": -0.04
+   },
+   "HC.*|FUSED.HC_*": {
+    "lane_cyc": 8,
+    "cc_cyc": 5,
+    "parallel": false,
+    "n_kernels": 0,
+    "lane_loss": 0.0,
+    "cc_loss": 0.0,
+    "both": 0.0
+   },
+   "FUSED.QDQ*": {
+    "lane_cyc": 0,
+    "cc_cyc": 0,
+    "parallel": false,
+    "n_kernels": 0,
+    "lane_loss": 0.0,
+    "cc_loss": 0.0,
+    "both": 0.0
+   },
+   "FUSED.*": {
+    "lane_cyc": -23,
+    "cc_cyc": 4,
+    "parallel": false,
+    "n_kernels": 1,
+    "lane_loss": -0.263,
+    "cc_loss": 0.046,
+    "both": -0.218
+   },
+   "IDX.TOPK": {
+    "lane_cyc": -17,
+    "cc_cyc": 3,
+    "parallel": false,
+    "n_kernels": 0,
+    "lane_loss": 0.0,
+    "cc_loss": 0.0,
+    "both": 0.0
+   },
+   "IDX.*": {
+    "lane_cyc": -17,
+    "cc_cyc": 8,
+    "parallel": false,
+    "n_kernels": 0,
+    "lane_loss": 0.0,
+    "cc_loss": 0.0,
+    "both": 0.0
+   },
+   "COLL.TOPK_MERGE": {
+    "lane_cyc": 57,
+    "cc_cyc": 13,
+    "parallel": false,
+    "n_kernels": 0,
+    "lane_loss": 0.0,
+    "cc_loss": 0.0,
+    "both": 0.0
+   },
+   "COLL.*": {
+    "lane_cyc": 57,
+    "cc_cyc": 13,
+    "parallel": false,
+    "n_kernels": 2,
+    "lane_loss": 0.327,
+    "cc_loss": 0.075,
+    "both": 0.401
+   },
+   "SM.*|ATT.*": {
+    "lane_cyc": -9,
+    "cc_cyc": 14,
+    "parallel": true,
+    "n_kernels": 3,
+    "lane_loss": 0.0,
+    "cc_loss": 0.0,
+    "both": 0.0
+   },
+   "DMA.*": {
+    "lane_cyc": 24,
+    "cc_cyc": 6,
+    "parallel": false,
+    "n_kernels": 3,
+    "lane_loss": 0.206,
+    "cc_loss": 0.052,
+    "both": 0.257
+   }
+  }
+ }
+}

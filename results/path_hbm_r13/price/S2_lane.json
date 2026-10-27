@@ -1,0 +1,2407 @@
+{
+ "schema": "opentallas.hbm_b1_lane_price.v1",
+ "status": "CONDITIONAL_MODEL_NOT_ADOPTED",
+ "source_commit": "a51deba7299305ce4dbcd7b7abfebbc75df0bf9f",
+ "baseline": {
+  "plan": "/srv/opentallas-scratch2/claude/path-hbm-r8-1026/t_banks/die_plan.json",
+  "sha256": "0e83c52e3400246b8c04e4cb8071ffc1c41f33c6d7e3778157ea037168bbc482",
+  "core_conns_sha256": "bc859d5b7f1b02468d1de49f5ee791106edc105858d017deedb5d5bdbf60490a"
+ },
+ "candidate": {
+  "plan": "/srv/opentallas-scratch2/claude/path-hbm-r13-1026/planS2/die_plan.json",
+  "sha256": "9e154039a4c3eb2019b6c2b552f44e1ec4e8bc5aaac6aba38eb34b66c4c098df",
+  "core_conns_sha256": "bc859d5b7f1b02468d1de49f5ee791106edc105858d017deedb5d5bdbf60490a"
+ },
+ "changed_lanes": {
+  "L0m": {
+   "baseline": 51,
+   "candidate": 47,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NE_hub",
+   "dst": "NE_su01",
+   "width": 2999,
+   "on_critical_leg": []
+  },
+  "L100": {
+   "baseline": 23,
+   "candidate": 12,
+   "families": [
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NW_hub",
+   "dst": "NW_sm3",
+   "width": 22,
+   "on_critical_leg": []
+  },
+  "L100m": {
+   "baseline": 21,
+   "candidate": 14,
+   "families": [
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NE_hub",
+   "dst": "NE_sm3",
+   "width": 22,
+   "on_critical_leg": []
+  },
+  "L101m": {
+   "baseline": 36,
+   "candidate": 38,
+   "families": [
+    "COLL"
+   ],
+   "bound": "BOTH",
+   "src": "NE_hub",
+   "dst": "NE_io",
+   "width": 21,
+   "on_critical_leg": [
+    "COLL"
+   ]
+  },
+  "L102": {
+   "baseline": 48,
+   "candidate": 31,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NW_hub",
+   "dst": "NW_su00",
+   "width": 21,
+   "on_critical_leg": []
+  },
+  "L102m": {
+   "baseline": 48,
+   "candidate": 32,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NE_hub",
+   "dst": "NE_su00",
+   "width": 21,
+   "on_critical_leg": []
+  },
+  "L103": {
+   "baseline": 35,
+   "candidate": 21,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NW_hub",
+   "dst": "NW_su11",
+   "width": 21,
+   "on_critical_leg": []
+  },
+  "L103m": {
+   "baseline": 39,
+   "candidate": 26,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NE_hub",
+   "dst": "NE_su11",
+   "width": 21,
+   "on_critical_leg": []
+  },
+  "L104": {
+   "baseline": 36,
+   "candidate": 20,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NW_hub",
+   "dst": "NW_su20",
+   "width": 21,
+   "on_critical_leg": []
+  },
+  "L104m": {
+   "baseline": 37,
+   "candidate": 20,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NE_hub",
+   "dst": "NE_su20",
+   "width": 21,
+   "on_critical_leg": []
+  },
+  "L105": {
+   "baseline": 32,
+   "candidate": 18,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NW_hub",
+   "dst": "NW_su31",
+   "width": 21,
+   "on_critical_leg": []
+  },
+  "L105m": {
+   "baseline": 33,
+   "candidate": 15,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NE_hub",
+   "dst": "NE_su31",
+   "width": 21,
+   "on_critical_leg": []
+  },
+  "L110": {
+   "baseline": 41,
+   "candidate": 27,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NW_hub",
+   "dst": "NW_su01",
+   "width": 16,
+   "on_critical_leg": []
+  },
+  "L110m": {
+   "baseline": 41,
+   "candidate": 29,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NE_hub",
+   "dst": "NE_su01",
+   "width": 16,
+   "on_critical_leg": []
+  },
+  "L111": {
+   "baseline": 34,
+   "candidate": 32,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NW_hub",
+   "dst": "NW_su10",
+   "width": 16,
+   "on_critical_leg": []
+  },
+  "L111m": {
+   "baseline": 37,
+   "candidate": 22,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NE_hub",
+   "dst": "NE_su10",
+   "width": 16,
+   "on_critical_leg": []
+  },
+  "L112": {
+   "baseline": 30,
+   "candidate": 19,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NW_hub",
+   "dst": "NW_su21",
+   "width": 16,
+   "on_critical_leg": []
+  },
+  "L112m": {
+   "baseline": 30,
+   "candidate": 19,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NE_hub",
+   "dst": "NE_su21",
+   "width": 16,
+   "on_critical_leg": []
+  },
+  "L113": {
+   "baseline": 29,
+   "candidate": 27,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NW_hub",
+   "dst": "NW_su30",
+   "width": 16,
+   "on_critical_leg": []
+  },
+  "L113m": {
+   "baseline": 27,
+   "candidate": 17,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NE_hub",
+   "dst": "NE_su30",
+   "width": 16,
+   "on_critical_leg": []
+  },
+  "L114": {
+   "baseline": 52,
+   "candidate": 33,
+   "families": [
+    "CTL"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "PHY_N",
+   "dst": "NW_hub",
+   "width": 16,
+   "on_critical_leg": []
+  },
+  "L114m": {
+   "baseline": 53,
+   "candidate": 33,
+   "families": [
+    "CTL"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "PHY_N",
+   "dst": "NE_hub",
+   "width": 16,
+   "on_critical_leg": []
+  },
+  "L12": {
+   "baseline": 40,
+   "candidate": 41,
+   "families": [
+    "IDX"
+   ],
+   "bound": "BOTH",
+   "src": "root",
+   "dst": "NW_hub",
+   "width": 2996,
+   "on_critical_leg": []
+  },
+  "L120": {
+   "baseline": 31,
+   "candidate": 17,
+   "families": [
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NW_sm0",
+   "dst": "NW_hub",
+   "width": 9,
+   "on_critical_leg": []
+  },
+  "L120m": {
+   "baseline": 33,
+   "candidate": 29,
+   "families": [
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NE_sm0",
+   "dst": "NE_hub",
+   "width": 9,
+   "on_critical_leg": []
+  },
+  "L121": {
+   "baseline": 37,
+   "candidate": 27,
+   "families": [
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NW_sm1",
+   "dst": "NW_hub",
+   "width": 9,
+   "on_critical_leg": []
+  },
+  "L121m": {
+   "baseline": 39,
+   "candidate": 20,
+   "families": [
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NE_sm1",
+   "dst": "NE_hub",
+   "width": 9,
+   "on_critical_leg": []
+  },
+  "L123": {
+   "baseline": 21,
+   "candidate": 16,
+   "families": [
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NW_sm3",
+   "dst": "NW_hub",
+   "width": 9,
+   "on_critical_leg": []
+  },
+  "L123m": {
+   "baseline": 19,
+   "candidate": 13,
+   "families": [
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NE_sm3",
+   "dst": "NE_hub",
+   "width": 9,
+   "on_critical_leg": []
+  },
+  "L126m": {
+   "baseline": 36,
+   "candidate": 37,
+   "families": [
+    "COLL"
+   ],
+   "bound": "BOTH",
+   "src": "NE_io",
+   "dst": "NE_hub",
+   "width": 5,
+   "on_critical_leg": []
+  },
+  "L12m": {
+   "baseline": 44,
+   "candidate": 45,
+   "families": [
+    "IDX"
+   ],
+   "bound": "BOTH",
+   "src": "root",
+   "dst": "NE_hub",
+   "width": 2996,
+   "on_critical_leg": [
+    "IDX"
+   ]
+  },
+  "L13": {
+   "baseline": 36,
+   "candidate": 33,
+   "families": [
+    "IDX"
+   ],
+   "bound": "BOTH",
+   "src": "root",
+   "dst": "NW_hub",
+   "width": 2628,
+   "on_critical_leg": []
+  },
+  "L131": {
+   "baseline": 30,
+   "candidate": 22,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NW_su31",
+   "dst": "NW_hub",
+   "width": 4,
+   "on_critical_leg": []
+  },
+  "L131m": {
+   "baseline": 32,
+   "candidate": 19,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NE_su31",
+   "dst": "NE_hub",
+   "width": 4,
+   "on_critical_leg": []
+  },
+  "L134": {
+   "baseline": 50,
+   "candidate": 28,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NW_su00",
+   "dst": "NW_hub",
+   "width": 3,
+   "on_critical_leg": []
+  },
+  "L134m": {
+   "baseline": 50,
+   "candidate": 26,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NE_su00",
+   "dst": "NE_hub",
+   "width": 3,
+   "on_critical_leg": []
+  },
+  "L135": {
+   "baseline": 33,
+   "candidate": 21,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NW_su11",
+   "dst": "NW_hub",
+   "width": 3,
+   "on_critical_leg": []
+  },
+  "L135m": {
+   "baseline": 38,
+   "candidate": 24,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NE_su11",
+   "dst": "NE_hub",
+   "width": 3,
+   "on_critical_leg": []
+  },
+  "L136": {
+   "baseline": 36,
+   "candidate": 21,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NW_su20",
+   "dst": "NW_hub",
+   "width": 3,
+   "on_critical_leg": []
+  },
+  "L136m": {
+   "baseline": 36,
+   "candidate": 23,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NE_su20",
+   "dst": "NE_hub",
+   "width": 3,
+   "on_critical_leg": []
+  },
+  "L137": {
+   "baseline": 13,
+   "candidate": 11,
+   "families": [
+    "IDX",
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NW_b100",
+   "dst": "NW_hub",
+   "width": 2,
+   "on_critical_leg": [
+    "IDX",
+    "SM"
+   ]
+  },
+  "L137m": {
+   "baseline": 13,
+   "candidate": 11,
+   "families": [
+    "IDX",
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NE_b100",
+   "dst": "NE_hub",
+   "width": 2,
+   "on_critical_leg": []
+  },
+  "L2": {
+   "baseline": 31,
+   "candidate": 33,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NW_hub",
+   "dst": "NW_su21",
+   "width": 2999,
+   "on_critical_leg": []
+  },
+  "L22": {
+   "baseline": 69,
+   "candidate": 63,
+   "families": [
+    "CTL"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "PHY_N",
+   "dst": "NW_hub",
+   "width": 2048,
+   "on_critical_leg": []
+  },
+  "L22m": {
+   "baseline": 71,
+   "candidate": 70,
+   "families": [
+    "CTL"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "PHY_N",
+   "dst": "NE_hub",
+   "width": 2048,
+   "on_critical_leg": []
+  },
+  "L23": {
+   "baseline": 27,
+   "candidate": 11,
+   "families": [
+    "SFU"
+   ],
+   "bound": "BOTH",
+   "src": "NW_b110",
+   "dst": "NW_hub",
+   "width": 1792,
+   "on_critical_leg": [
+    "SFU"
+   ]
+  },
+  "L23m": {
+   "baseline": 26,
+   "candidate": 11,
+   "families": [
+    "SFU"
+   ],
+   "bound": "BOTH",
+   "src": "NE_b110",
+   "dst": "NE_hub",
+   "width": 1792,
+   "on_critical_leg": []
+  },
+  "L24": {
+   "baseline": 42,
+   "candidate": 43,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NW_su01",
+   "dst": "NW_hub",
+   "width": 1719,
+   "on_critical_leg": [
+    "SU"
+   ]
+  },
+  "L25": {
+   "baseline": 35,
+   "candidate": 32,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NW_su10",
+   "dst": "NW_hub",
+   "width": 1719,
+   "on_critical_leg": []
+  },
+  "L25m": {
+   "baseline": 35,
+   "candidate": 32,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NE_su10",
+   "dst": "NE_hub",
+   "width": 1719,
+   "on_critical_leg": []
+  },
+  "L26": {
+   "baseline": 31,
+   "candidate": 37,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NW_su21",
+   "dst": "NW_hub",
+   "width": 1719,
+   "on_critical_leg": []
+  },
+  "L26m": {
+   "baseline": 31,
+   "candidate": 32,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NE_su21",
+   "dst": "NE_hub",
+   "width": 1719,
+   "on_critical_leg": []
+  },
+  "L27": {
+   "baseline": 26,
+   "candidate": 25,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NW_su30",
+   "dst": "NW_hub",
+   "width": 1719,
+   "on_critical_leg": []
+  },
+  "L28": {
+   "baseline": 49,
+   "candidate": 48,
+   "families": [
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NW_hub",
+   "dst": "NW_sm0",
+   "width": 1615,
+   "on_critical_leg": []
+  },
+  "L28m": {
+   "baseline": 52,
+   "candidate": 51,
+   "families": [
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NE_hub",
+   "dst": "NE_sm0",
+   "width": 1615,
+   "on_critical_leg": [
+    "SM"
+   ]
+  },
+  "L29": {
+   "baseline": 34,
+   "candidate": 31,
+   "families": [
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NW_hub",
+   "dst": "NW_sm0",
+   "width": 1615,
+   "on_critical_leg": []
+  },
+  "L29m": {
+   "baseline": 37,
+   "candidate": 34,
+   "families": [
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NE_hub",
+   "dst": "NE_sm0",
+   "width": 1615,
+   "on_critical_leg": []
+  },
+  "L2m": {
+   "baseline": 32,
+   "candidate": 31,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NE_hub",
+   "dst": "NE_su21",
+   "width": 2999,
+   "on_critical_leg": []
+  },
+  "L3": {
+   "baseline": 28,
+   "candidate": 25,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NW_hub",
+   "dst": "NW_su30",
+   "width": 2999,
+   "on_critical_leg": []
+  },
+  "L32": {
+   "baseline": 25,
+   "candidate": 20,
+   "families": [
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NW_hub",
+   "dst": "NW_sm2",
+   "width": 1615,
+   "on_critical_leg": []
+  },
+  "L32m": {
+   "baseline": 25,
+   "candidate": 17,
+   "families": [
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NE_hub",
+   "dst": "NE_sm2",
+   "width": 1615,
+   "on_critical_leg": []
+  },
+  "L33": {
+   "baseline": 25,
+   "candidate": 20,
+   "families": [
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NW_hub",
+   "dst": "NW_sm2",
+   "width": 1615,
+   "on_critical_leg": []
+  },
+  "L34": {
+   "baseline": 27,
+   "candidate": 28,
+   "families": [
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NW_hub",
+   "dst": "NW_sm3",
+   "width": 1615,
+   "on_critical_leg": []
+  },
+  "L35": {
+   "baseline": 28,
+   "candidate": 29,
+   "families": [
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NW_hub",
+   "dst": "NW_sm3",
+   "width": 1615,
+   "on_critical_leg": []
+  },
+  "L36": {
+   "baseline": 58,
+   "candidate": 39,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NW_hub",
+   "dst": "NW_su00",
+   "width": 1329,
+   "on_critical_leg": []
+  },
+  "L36m": {
+   "baseline": 58,
+   "candidate": 39,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NE_hub",
+   "dst": "NE_su00",
+   "width": 1329,
+   "on_critical_leg": []
+  },
+  "L37": {
+   "baseline": 36,
+   "candidate": 22,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NW_hub",
+   "dst": "NW_su11",
+   "width": 1329,
+   "on_critical_leg": []
+  },
+  "L37m": {
+   "baseline": 39,
+   "candidate": 27,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NE_hub",
+   "dst": "NE_su11",
+   "width": 1329,
+   "on_critical_leg": []
+  },
+  "L38": {
+   "baseline": 37,
+   "candidate": 20,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NW_hub",
+   "dst": "NW_su20",
+   "width": 1329,
+   "on_critical_leg": []
+  },
+  "L38m": {
+   "baseline": 38,
+   "candidate": 21,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NE_hub",
+   "dst": "NE_su20",
+   "width": 1329,
+   "on_critical_leg": []
+  },
+  "L39": {
+   "baseline": 32,
+   "candidate": 29,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NW_hub",
+   "dst": "NW_su31",
+   "width": 1329,
+   "on_critical_leg": []
+  },
+  "L39m": {
+   "baseline": 33,
+   "candidate": 24,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NE_hub",
+   "dst": "NE_su31",
+   "width": 1329,
+   "on_critical_leg": []
+  },
+  "L3m": {
+   "baseline": 25,
+   "candidate": 20,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NE_hub",
+   "dst": "NE_su30",
+   "width": 2999,
+   "on_critical_leg": []
+  },
+  "L40": {
+   "baseline": 20,
+   "candidate": 22,
+   "families": [
+    "SM"
+   ],
+   "bound": "BOTH",
+   "src": "NW_spb2",
+   "dst": "NW_hub",
+   "width": 1064,
+   "on_critical_leg": []
+  },
+  "L40m": {
+   "baseline": 21,
+   "candidate": 23,
+   "families": [
+    "SM"
+   ],
+   "bound": "BOTH",
+   "src": "NE_spb2",
+   "dst": "NE_hub",
+   "width": 1064,
+   "on_critical_leg": []
+  },
+  "L42": {
+   "baseline": 20,
+   "candidate": 25,
+   "families": [
+    "HC"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NW_hub",
+   "dst": "NW_b002",
+   "width": 788,
+   "on_critical_leg": []
+  },
+  "L42m": {
+   "baseline": 20,
+   "candidate": 23,
+   "families": [
+    "HC"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NE_hub",
+   "dst": "NE_b002",
+   "width": 788,
+   "on_critical_leg": []
+  },
+  "L43": {
+   "baseline": 18,
+   "candidate": 22,
+   "families": [
+    "HC"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NW_hub",
+   "dst": "NW_b011",
+   "width": 788,
+   "on_critical_leg": []
+  },
+  "L43m": {
+   "baseline": 18,
+   "candidate": 20,
+   "families": [
+    "HC"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NE_hub",
+   "dst": "NE_b011",
+   "width": 788,
+   "on_critical_leg": []
+  },
+  "L49": {
+   "baseline": 26,
+   "candidate": 27,
+   "families": [
+    "SM"
+   ],
+   "bound": "BOTH",
+   "src": "NW_hub",
+   "dst": "NW_spb2",
+   "width": 618,
+   "on_critical_leg": []
+  },
+  "L49m": {
+   "baseline": 26,
+   "candidate": 28,
+   "families": [
+    "SM"
+   ],
+   "bound": "BOTH",
+   "src": "NE_hub",
+   "dst": "NE_spb2",
+   "width": 618,
+   "on_critical_leg": []
+  },
+  "L4m": {
+   "baseline": 22,
+   "candidate": 21,
+   "families": [
+    "COLL",
+    "VM"
+   ],
+   "bound": "BOTH",
+   "src": "NE_hub",
+   "dst": "NW_hub",
+   "width": 2816,
+   "on_critical_leg": []
+  },
+  "L51": {
+   "baseline": 32,
+   "candidate": 33,
+   "families": [
+    "COLL"
+   ],
+   "bound": "BOTH",
+   "src": "NW_hub",
+   "dst": "NW_io",
+   "width": 612,
+   "on_critical_leg": []
+  },
+  "L51m": {
+   "baseline": 34,
+   "candidate": 35,
+   "families": [
+    "COLL"
+   ],
+   "bound": "BOTH",
+   "src": "NE_hub",
+   "dst": "NE_io",
+   "width": 612,
+   "on_critical_leg": []
+  },
+  "L52m": {
+   "baseline": 35,
+   "candidate": 37,
+   "families": [
+    "COLL"
+   ],
+   "bound": "BOTH",
+   "src": "NE_io",
+   "dst": "NE_hub",
+   "width": 612,
+   "on_critical_leg": [
+    "COLL"
+   ]
+  },
+  "L55": {
+   "baseline": 49,
+   "candidate": 28,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NW_su00",
+   "dst": "NW_hub",
+   "width": 514,
+   "on_critical_leg": []
+  },
+  "L55m": {
+   "baseline": 49,
+   "candidate": 33,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NE_su00",
+   "dst": "NE_hub",
+   "width": 514,
+   "on_critical_leg": []
+  },
+  "L57": {
+   "baseline": 33,
+   "candidate": 25,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NW_su11",
+   "dst": "NW_hub",
+   "width": 514,
+   "on_critical_leg": []
+  },
+  "L57m": {
+   "baseline": 38,
+   "candidate": 26,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NE_su11",
+   "dst": "NE_hub",
+   "width": 514,
+   "on_critical_leg": []
+  },
+  "L59": {
+   "baseline": 36,
+   "candidate": 21,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NW_su20",
+   "dst": "NW_hub",
+   "width": 514,
+   "on_critical_leg": []
+  },
+  "L59m": {
+   "baseline": 37,
+   "candidate": 22,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NE_su20",
+   "dst": "NE_hub",
+   "width": 514,
+   "on_critical_leg": []
+  },
+  "L6": {
+   "baseline": 20,
+   "candidate": 15,
+   "families": [
+    "IDX",
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NW_hub",
+   "dst": "NW_b100",
+   "width": 2484,
+   "on_critical_leg": []
+  },
+  "L61": {
+   "baseline": 31,
+   "candidate": 22,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NW_su31",
+   "dst": "NW_hub",
+   "width": 514,
+   "on_critical_leg": []
+  },
+  "L61m": {
+   "baseline": 32,
+   "candidate": 19,
+   "families": [
+    "SU"
+   ],
+   "bound": "BOTH",
+   "src": "NE_su31",
+   "dst": "NE_hub",
+   "width": 514,
+   "on_critical_leg": []
+  },
+  "L62": {
+   "baseline": 43,
+   "candidate": 23,
+   "families": [
+    "IDX"
+   ],
+   "bound": "BOTH",
+   "src": "root",
+   "dst": "NW_hub",
+   "width": 324,
+   "on_critical_leg": []
+  },
+  "L62m": {
+   "baseline": 45,
+   "candidate": 23,
+   "families": [
+    "IDX"
+   ],
+   "bound": "BOTH",
+   "src": "root",
+   "dst": "NE_hub",
+   "width": 330,
+   "on_critical_leg": []
+  },
+  "L63": {
+   "baseline": 54,
+   "candidate": 45,
+   "families": [
+    "CTL"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NW_hub",
+   "dst": "PHY_N",
+   "width": 336,
+   "on_critical_leg": []
+  },
+  "L63m": {
+   "baseline": 56,
+   "candidate": 48,
+   "families": [
+    "CTL"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NE_hub",
+   "dst": "PHY_N",
+   "width": 336,
+   "on_critical_leg": []
+  },
+  "L65": {
+   "baseline": 9,
+   "candidate": 14,
+   "families": [
+    "HC"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NW_hub",
+   "dst": "NW_b000",
+   "width": 304,
+   "on_critical_leg": []
+  },
+  "L65m": {
+   "baseline": 9,
+   "candidate": 10,
+   "families": [
+    "HC"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NE_hub",
+   "dst": "NE_b000",
+   "width": 304,
+   "on_critical_leg": []
+  },
+  "L67": {
+   "baseline": 32,
+   "candidate": 16,
+   "families": [
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NW_sm0",
+   "dst": "NW_hub",
+   "width": 268,
+   "on_critical_leg": []
+  },
+  "L67m": {
+   "baseline": 34,
+   "candidate": 29,
+   "families": [
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NE_sm0",
+   "dst": "NE_hub",
+   "width": 268,
+   "on_critical_leg": []
+  },
+  "L68": {
+   "baseline": 38,
+   "candidate": 30,
+   "families": [
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NW_sm1",
+   "dst": "NW_hub",
+   "width": 268,
+   "on_critical_leg": [
+    "SM"
+   ]
+  },
+  "L68m": {
+   "baseline": 41,
+   "candidate": 22,
+   "families": [
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NE_sm1",
+   "dst": "NE_hub",
+   "width": 268,
+   "on_critical_leg": []
+  },
+  "L6m": {
+   "baseline": 20,
+   "candidate": 16,
+   "families": [
+    "IDX",
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NE_hub",
+   "dst": "NE_b100",
+   "width": 2484,
+   "on_critical_leg": [
+    "IDX",
+    "SM"
+   ]
+  },
+  "L7": {
+   "baseline": 13,
+   "candidate": 16,
+   "families": [
+    "IDX",
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NW_hub",
+   "dst": "NW_b100",
+   "width": 2484,
+   "on_critical_leg": []
+  },
+  "L70": {
+   "baseline": 22,
+   "candidate": 17,
+   "families": [
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NW_sm3",
+   "dst": "NW_hub",
+   "width": 268,
+   "on_critical_leg": []
+  },
+  "L70m": {
+   "baseline": 20,
+   "candidate": 14,
+   "families": [
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NE_sm3",
+   "dst": "NE_hub",
+   "width": 268,
+   "on_critical_leg": []
+  },
+  "L73": {
+   "baseline": 31,
+   "candidate": 36,
+   "families": [
+    "HC"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NW_hub",
+   "dst": "NW_b013",
+   "width": 274,
+   "on_critical_leg": [
+    "HC"
+   ]
+  },
+  "L73m": {
+   "baseline": 31,
+   "candidate": 32,
+   "families": [
+    "HC"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NE_hub",
+   "dst": "NE_b013",
+   "width": 274,
+   "on_critical_leg": []
+  },
+  "L74": {
+   "baseline": 18,
+   "candidate": 39,
+   "families": [
+    "TOPK"
+   ],
+   "bound": "BOTH",
+   "src": "NW_hub",
+   "dst": "root",
+   "width": 1171,
+   "on_critical_leg": [
+    "TOPK"
+   ]
+  },
+  "L7m": {
+   "baseline": 13,
+   "candidate": 14,
+   "families": [
+    "IDX",
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NE_hub",
+   "dst": "NE_b100",
+   "width": 2484,
+   "on_critical_leg": []
+  },
+  "L8": {
+   "baseline": 82,
+   "candidate": 74,
+   "families": [
+    "CTL"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NW_hub",
+   "dst": "PHY_N",
+   "width": 2456,
+   "on_critical_leg": []
+  },
+  "L81": {
+   "baseline": 27,
+   "candidate": 11,
+   "families": [
+    "SFU"
+   ],
+   "bound": "BOTH",
+   "src": "NW_b110",
+   "dst": "NW_hub",
+   "width": 161,
+   "on_critical_leg": []
+  },
+  "L81m": {
+   "baseline": 27,
+   "candidate": 11,
+   "families": [
+    "SFU"
+   ],
+   "bound": "BOTH",
+   "src": "NE_b110",
+   "dst": "NE_hub",
+   "width": 161,
+   "on_critical_leg": []
+  },
+  "L82": {
+   "baseline": 55,
+   "candidate": 54,
+   "families": [
+    "CTL"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NW_mcb",
+   "dst": "NW_hub",
+   "width": 140,
+   "on_critical_leg": []
+  },
+  "L83": {
+   "baseline": 26,
+   "candidate": 27,
+   "families": [
+    "SM"
+   ],
+   "bound": "BOTH",
+   "src": "NW_hub",
+   "dst": "NW_spb2",
+   "width": 99,
+   "on_critical_leg": []
+  },
+  "L83m": {
+   "baseline": 26,
+   "candidate": 28,
+   "families": [
+    "SM"
+   ],
+   "bound": "BOTH",
+   "src": "NE_hub",
+   "dst": "NE_spb2",
+   "width": 99,
+   "on_critical_leg": []
+  },
+  "L87": {
+   "baseline": 20,
+   "candidate": 22,
+   "families": [
+    "SM"
+   ],
+   "bound": "BOTH",
+   "src": "NW_spb2",
+   "dst": "NW_hub",
+   "width": 68,
+   "on_critical_leg": []
+  },
+  "L87m": {
+   "baseline": 20,
+   "candidate": 23,
+   "families": [
+    "SM"
+   ],
+   "bound": "BOTH",
+   "src": "NE_spb2",
+   "dst": "NE_hub",
+   "width": 68,
+   "on_critical_leg": []
+  },
+  "L88m": {
+   "baseline": 45,
+   "candidate": 44,
+   "families": [
+    "SM"
+   ],
+   "bound": "BOTH",
+   "src": "NE_spt0",
+   "dst": "NE_hub",
+   "width": 68,
+   "on_critical_leg": []
+  },
+  "L89": {
+   "baseline": 36,
+   "candidate": 30,
+   "families": [
+    "IDX"
+   ],
+   "bound": "BOTH",
+   "src": "NW_hub",
+   "dst": "root",
+   "width": 2,
+   "on_critical_leg": []
+  },
+  "L89m": {
+   "baseline": 38,
+   "candidate": 12,
+   "families": [
+    "IDX"
+   ],
+   "bound": "BOTH",
+   "src": "NE_hub",
+   "dst": "root",
+   "width": 1,
+   "on_critical_leg": []
+  },
+  "L8m": {
+   "baseline": 84,
+   "candidate": 83,
+   "families": [
+    "CTL"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NE_hub",
+   "dst": "PHY_N",
+   "width": 2456,
+   "on_critical_leg": []
+  },
+  "L9": {
+   "baseline": 60,
+   "candidate": 62,
+   "families": [
+    "CTL"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NW_hub",
+   "dst": "PHY_N",
+   "width": 2456,
+   "on_critical_leg": []
+  },
+  "L91": {
+   "baseline": 14,
+   "candidate": 9,
+   "families": [
+    "IDX",
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NW_hub",
+   "dst": "NW_b100",
+   "width": 54,
+   "on_critical_leg": []
+  },
+  "L91m": {
+   "baseline": 14,
+   "candidate": 8,
+   "families": [
+    "IDX",
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NE_hub",
+   "dst": "NE_b100",
+   "width": 54,
+   "on_critical_leg": []
+  },
+  "L96": {
+   "baseline": 20,
+   "candidate": 18,
+   "families": [
+    "COLL",
+    "VM"
+   ],
+   "bound": "BOTH",
+   "src": "NW_hub",
+   "dst": "NE_hub",
+   "width": 22,
+   "on_critical_leg": []
+  },
+  "L96m": {
+   "baseline": 20,
+   "candidate": 17,
+   "families": [
+    "COLL",
+    "VM"
+   ],
+   "bound": "BOTH",
+   "src": "NE_hub",
+   "dst": "NW_hub",
+   "width": 22,
+   "on_critical_leg": []
+  },
+  "L97": {
+   "baseline": 33,
+   "candidate": 30,
+   "families": [
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NW_hub",
+   "dst": "NW_sm0",
+   "width": 22,
+   "on_critical_leg": []
+  },
+  "L97m": {
+   "baseline": 35,
+   "candidate": 32,
+   "families": [
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NE_hub",
+   "dst": "NE_sm0",
+   "width": 22,
+   "on_critical_leg": []
+  },
+  "L99": {
+   "baseline": 23,
+   "candidate": 18,
+   "families": [
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NW_hub",
+   "dst": "NW_sm2",
+   "width": 22,
+   "on_critical_leg": []
+  },
+  "L99m": {
+   "baseline": 23,
+   "candidate": 14,
+   "families": [
+    "SM"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NE_hub",
+   "dst": "NE_sm2",
+   "width": 22,
+   "on_critical_leg": []
+  },
+  "L9m": {
+   "baseline": 52,
+   "candidate": 47,
+   "families": [
+    "CTL"
+   ],
+   "bound": "ONE_SIDE",
+   "src": "NE_hub",
+   "dst": "PHY_N",
+   "width": 2456,
+   "on_critical_leg": []
+  }
+ },
+ "op_deltas": [
+  {
+   "op": "SU.*",
+   "families": [
+    "SU",
+    "SU_BANK"
+   ],
+   "delta_cycles": -14,
+   "parallel": false,
+   "detail": {
+    "SU": {
+     "baseline": 108,
+     "candidate": 94,
+     "delta": -14,
+     "legs_changed": {
+      "hub->su": [
+       [
+        58,
+        "L36"
+       ],
+       [
+        51,
+        "L0"
+       ]
+      ],
+      "su->hub": [
+       [
+        50,
+        "L134"
+       ],
+       [
+        43,
+        "L24"
+       ]
+      ]
+     },
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    },
+    "SU_BANK": {
+     "baseline": 0,
+     "candidate": 0,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "ARGMAX.*",
+   "families": [
+    "SU",
+    "ARGMAX"
+   ],
+   "delta_cycles": -14,
+   "parallel": false,
+   "detail": {
+    "SU": {
+     "baseline": 108,
+     "candidate": 94,
+     "delta": -14,
+     "legs_changed": {
+      "hub->su": [
+       [
+        58,
+        "L36"
+       ],
+       [
+        51,
+        "L0"
+       ]
+      ],
+      "su->hub": [
+       [
+        50,
+        "L134"
+       ],
+       [
+        43,
+        "L24"
+       ]
+      ]
+     },
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    },
+    "ARGMAX": {
+     "baseline": 0,
+     "candidate": 0,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "SFU.*",
+   "families": [
+    "SFU"
+   ],
+   "delta_cycles": -16,
+   "parallel": false,
+   "detail": {
+    "SFU": {
+     "baseline": 77,
+     "candidate": 61,
+     "delta": -16,
+     "legs_changed": {
+      "sfuc->hub": [
+       [
+        27,
+        "L23"
+       ],
+       [
+        11,
+        "L23"
+       ]
+      ]
+     },
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "HC.*|FUSED.HC_*",
+   "families": [
+    "HC"
+   ],
+   "delta_cycles": 5,
+   "parallel": false,
+   "detail": {
+    "HC": {
+     "baseline": 201,
+     "candidate": 206,
+     "delta": 5,
+     "legs_changed": {
+      "hub->hcb": [
+       [
+        31,
+        "L73"
+       ],
+       [
+        36,
+        "L73"
+       ]
+      ]
+     },
+     "chain": [
+      [
+       145,
+       [
+        "L14",
+        "L15",
+        "L10",
+        "L16",
+        "L18",
+        "L17",
+        "L11"
+       ]
+      ],
+      [
+       145,
+       [
+        "L14",
+        "L15",
+        "L10",
+        "L16",
+        "L18",
+        "L17",
+        "L11"
+       ]
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "FUSED.QDQ*",
+   "families": [
+    "QUANT"
+   ],
+   "delta_cycles": 0,
+   "parallel": false,
+   "detail": {
+    "QUANT": {
+     "baseline": 0,
+     "candidate": 0,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "FUSED.*",
+   "families": [
+    "SU"
+   ],
+   "delta_cycles": -14,
+   "parallel": false,
+   "detail": {
+    "SU": {
+     "baseline": 108,
+     "candidate": 94,
+     "delta": -14,
+     "legs_changed": {
+      "hub->su": [
+       [
+        58,
+        "L36"
+       ],
+       [
+        51,
+        "L0"
+       ]
+      ],
+      "su->hub": [
+       [
+        50,
+        "L134"
+       ],
+       [
+        43,
+        "L24"
+       ]
+      ]
+     },
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "IDX.TOPK",
+   "families": [
+    "IDX",
+    "TOPK"
+   ],
+   "delta_cycles": 15,
+   "parallel": false,
+   "detail": {
+    "IDX": {
+     "baseline": 138,
+     "candidate": 132,
+     "delta": -6,
+     "legs_changed": {
+      "idx->hub": [
+       [
+        13,
+        "L137"
+       ],
+       [
+        11,
+        "L137"
+       ]
+      ],
+      "hub->idx": [
+       [
+        20,
+        "L6"
+       ],
+       [
+        16,
+        "L6m"
+       ]
+      ]
+     },
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    },
+    "TOPK": {
+     "baseline": 18,
+     "candidate": 39,
+     "delta": 21,
+     "legs_changed": {
+      "hub->root": [
+       [
+        18,
+        "L74"
+       ],
+       [
+        39,
+        "L74"
+       ]
+      ]
+     },
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "IDX.*",
+   "families": [
+    "IDX",
+    "COLL_INJ"
+   ],
+   "delta_cycles": -6,
+   "parallel": false,
+   "detail": {
+    "IDX": {
+     "baseline": 138,
+     "candidate": 132,
+     "delta": -6,
+     "legs_changed": {
+      "idx->hub": [
+       [
+        13,
+        "L137"
+       ],
+       [
+        11,
+        "L137"
+       ]
+      ],
+      "hub->idx": [
+       [
+        20,
+        "L6"
+       ],
+       [
+        16,
+        "L6m"
+       ]
+      ]
+     },
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    },
+    "COLL_INJ": {
+     "baseline": 0,
+     "candidate": 0,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "COLL.TOPK_MERGE",
+   "families": [
+    "COLL",
+    "TOPK"
+   ],
+   "delta_cycles": 23,
+   "parallel": false,
+   "detail": {
+    "COLL": {
+     "baseline": 94,
+     "candidate": 96,
+     "delta": 2,
+     "legs_changed": {
+      "io->hub": [
+       [
+        36,
+        "L126"
+       ],
+       [
+        37,
+        "L52m"
+       ]
+      ],
+      "hub->io": [
+       [
+        36,
+        "L101"
+       ],
+       [
+        38,
+        "L101m"
+       ]
+      ],
+      "hub->hub": [
+       [
+        22,
+        "L4m"
+       ],
+       [
+        21,
+        "L4"
+       ]
+      ]
+     },
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    },
+    "TOPK": {
+     "baseline": 18,
+     "candidate": 39,
+     "delta": 21,
+     "legs_changed": {
+      "hub->root": [
+       [
+        18,
+        "L74"
+       ],
+       [
+        39,
+        "L74"
+       ]
+      ]
+     },
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "COLL.*",
+   "families": [
+    "COLL",
+    "COLL_INJ"
+   ],
+   "delta_cycles": 2,
+   "parallel": false,
+   "detail": {
+    "COLL": {
+     "baseline": 94,
+     "candidate": 96,
+     "delta": 2,
+     "legs_changed": {
+      "io->hub": [
+       [
+        36,
+        "L126"
+       ],
+       [
+        37,
+        "L52m"
+       ]
+      ],
+      "hub->io": [
+       [
+        36,
+        "L101"
+       ],
+       [
+        38,
+        "L101m"
+       ]
+      ],
+      "hub->hub": [
+       [
+        22,
+        "L4m"
+       ],
+       [
+        21,
+        "L4"
+       ]
+      ]
+     },
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    },
+    "COLL_INJ": {
+     "baseline": 0,
+     "candidate": 0,
+     "delta": 0,
+     "legs_changed": {},
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "SM.*|ATT.*",
+   "families": [
+    "SM"
+   ],
+   "delta_cycles": -18,
+   "parallel": true,
+   "detail": {
+    "SM": {
+     "baseline": 226,
+     "candidate": 208,
+     "delta": -18,
+     "legs_changed": {
+      "idx->hub": [
+       [
+        13,
+        "L137"
+       ],
+       [
+        11,
+        "L137"
+       ]
+      ],
+      "sm->hub": [
+       [
+        41,
+        "L68m"
+       ],
+       [
+        30,
+        "L68"
+       ]
+      ],
+      "hub->sm": [
+       [
+        52,
+        "L28m"
+       ],
+       [
+        51,
+        "L28m"
+       ]
+      ],
+      "hub->idx": [
+       [
+        20,
+        "L6"
+       ],
+       [
+        16,
+        "L6m"
+       ]
+      ]
+     },
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "op": "DMA.*",
+   "families": [
+    "VM"
+   ],
+   "delta_cycles": -1,
+   "parallel": false,
+   "detail": {
+    "VM": {
+     "baseline": 22,
+     "candidate": 21,
+     "delta": -1,
+     "legs_changed": {
+      "hub->hub": [
+       [
+        22,
+        "L4m"
+       ],
+       [
+        21,
+        "L4"
+       ]
+      ]
+     },
+     "chain": [
+      [
+       0,
+       []
+      ],
+      [
+       0,
+       []
+      ]
+     ]
+    }
+   }
+  }
+ ],
+ "excluded_families": [],
+ "unbound_changed": [],
+ "family_latency": {
+  "ARGMAX": {
+   "baseline": 0,
+   "candidate": 0
+  },
+  "COLL": {
+   "baseline": 94,
+   "candidate": 96
+  },
+  "COLL_INJ": {
+   "baseline": 0,
+   "candidate": 0
+  },
+  "HC": {
+   "baseline": 201,
+   "candidate": 206
+  },
+  "IDX": {
+   "baseline": 138,
+   "candidate": 132
+  },
+  "QUANT": {
+   "baseline": 0,
+   "candidate": 0
+  },
+  "SFU": {
+   "baseline": 77,
+   "candidate": 61
+  },
+  "SM": {
+   "baseline": 226,
+   "candidate": 208
+  },
+  "SU": {
+   "baseline": 108,
+   "candidate": 94
+  },
+  "SU_BANK": {
+   "baseline": 0,
+   "candidate": 0
+  },
+  "TOPK": {
+   "baseline": 18,
+   "candidate": 39
+  },
+  "VM": {
+   "baseline": 22,
+   "candidate": 21
+  }
+ }
+}

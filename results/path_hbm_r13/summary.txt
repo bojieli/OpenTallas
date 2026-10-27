@@ -1,0 +1,61 @@
+PATH-HBM-R13 (2026-10-26) -- on claude/path-hbm-r12-1026@a51deba729 (R11 planA2 tools). Plan arithmetic; numbers UNCHECKED
+unless marked CHECKED (= own independent recompute). New opt-in tool tools/die_plan/hbm_r13_mcast.py + test (5/5; r10/r11
+tests still pass); no existing tool changed (it swaps hbm_r10.resolve_lanes / hbm_r9.plan_quadrants / hbm_r11.spread_place
+only inside one run() and restores them). Base: R8 t_banks; all variants at planA2 geometry: H 3525.12, bounds nw 3957.12 /
+ne 3002.4, cc_k 2, --grow-die --grow-row-types (die growth 604.8 um, die 28.40 x 17.75 mm = 504.0 mm2, SAME as planA2).
+
+(1) MULTICAST + DIRECTION lane model (hbm_r13_mcast.resolve_lanes_mcast):
+    - pin direction from RTL (r18h5 bind bundle + rtl/hbm_accel; split cores -> base module). Known: nw 69.3k of 73.7k pin
+      bits, ne 56.3k of 68.1k; no RTL for ot_hbm_hc_subtree32_core, ot_hfd_coll_q2n2_body/vm_core (dir_unknown nw 4.4k /
+      ne 11.8k bits keep the R10 direction-blind group).
+    - cover (each pin once, legal-direction buses only), then every out-bus short of width is filled from its legal
+      output pins = MULTICAST copy as a sink of the SAME source net (one bundle per direction, branches toward the face
+      crossings): nw 16,074 / ne 16,994 copy bits; in-bus surplus wired as fan-out nw 2,282 / ne 1,133; soft hub glue
+      (L42/L43/L65/L73_o, no hard pin) wired face -> nearest hc root 2,154 b/hub. Residual unused out bits nw 3,332 /
+      ne 2,554 (pins narrower than the bus).  R10 left 21,195 / 20,617 unused.
+(2) CUTS (per-sink blocked, R11 model):
+    planM0  (multicast only):        nw k4 x 0.595 y 0.452 seg (0.534,0.542)(0.601,0.477) -> seg1 x 0.601 > 0.6 FAIL (marginal)
+                                     ne k2 x 0.578 y 0.490 seg (0.548,0.567)(0.579,0.538) PASS
+    planMsep0 (each copy own net, R12-style upper bound): identical cut numbers (the bundle sharing does not touch the max
+                                     cut lines); R12 face-sourced what-if was 0.620.
+(3) NW STRUCTURAL FIX = FACE-AFFINE replicated copies (--face-affine): R9 split every W/E-face leg of a replicated module
+    over ALL its segment copies by N/S lane share, so the far copy (NW u_hb_vms_Q copy at x~3060, u_hb_coll_Q_edge copy at
+    x 4692; NE coll_q2n2 copy x 3076, vms/ring x 2449-2922) needed a hub-wide 5-8 mm leg to the face. Now W/E face legs land
+    on the face-end segment copy at full width (W->seg0, E->seg1). Zero area, zero cells, no new serialisation.
+    planF2 (multicast + face-affine + joint pins; sha e1e94bc9):
+      nw k4 x 0.584 y 0.452 seg (0.522,0.542)(0.589,0.476)  ALL <= 0.6
+      ne k2 x 0.563 y 0.497 seg (0.536,0.569)(0.564,0.538)  ALL <= 0.6
+      NUMBER-CHECK (R12 cut_check.py, independent): whole nw 0.584/0.452, ne 0.563/0.497 EXACT; segments mine <= report
+      (nw seg1 x 0.576 vs 0.589, ne 0.527/0.552 vs 0.536/0.564) -> "all <= 0.6" CHECKED.
+    AREA CHANGE vs planA2: 0 (same H 3525.12, same 604.8 um die growth, 504.0 mm2). Hub replication / corridor / die
+    growth NOT needed. Inter-segment k rises nw 3 -> 4 (+1 beat on nw inter-segment slices), ne 1 -> 2.
+    planS2 (planF2 + 1 affinity re-place iteration, sha 9e154039): nw k3 x 0.581 y 0.452 seg (0.538,0.531)(0.587,0.541);
+      ne k3 x 0.596 y 0.395 seg (0.520,0.415)(0.596,0.458) ALL <= 0.6 (ne x tight); cc > 4 mm nw 154 -> 126 (max 8.13 ->
+      6.73 mm), ne 131 -> 125 (max 7.58 -> 5.99 mm), cc serialised nw 1346 -> 1104. 4 iterations (planS) broke nw seg1 y
+      0.701 -> rejected. Price of planS2 running (collect price/S2_price.json).
+(4) DIE GRT PROBE R12 planA2 (epyc1:/srv/opentallas-scratch2/claude/path-hbm-r12-1026/grt_A2): GRT rc=0, 50 it, GRT-0113/0114
+    count 0, Total overflow 0/0/0, usage 3.45% (M4 3.0, M5 6.2, M6 7.0, M7 7.0, M8 1.0, M9 0.6 %), 320,523 nets, WL 487.7 m.
+    CAVEATS: (a) "Found 0 clock nets" -> NOT the freeze GRT0 (needs clock); (b) KIT rc=1: die_trial kit failed AFTER writing
+    grt/ in the STA stand-in step: "type q_hub_ne: core tap u_sfup_Q names no hard_cores[] inst" (R9 quadrant copies renamed
+    u_sfup_Q -> u_sfup_Q__q0/__q1 but clock_entries/core taps still name u_sfup_Q) = real plan defect for STA/clock;
+    (c) both hubs map to ONE LEF master hbm_arch_q_hub (read twice) though nw/ne pins now differ -> one hub's die pins are
+    the other's; (d) hubs are abstracts, so hub-internal corridor hotspots (model worst M4 15.05 at NW E-side bundle) are
+    outside this probe: no die-level hotspot at all, nothing to compare -> hub-internal GRT owed (hub-level probe).
+(5) PRICE (R12 chain: b1_lane_traversal + cc_price + combine, S2 schedule, r25gq; ds_ar tok/s loss):
+    planA2 (R12): lower 4.38 / mid 4.71 / upper 11.75 %.  Decomposition (decomp_A2.json, marginal per op, lower):
+      COLL.* lane +57 cyc (L96/L4 hub<->hub 20-22 -> 42-46, L51/L126/L101 NW_io<->hub 32-36 -> 51-54) = 4.82 %, + cc 1.05 %
+      -> COLL 5.92 %; DMA (L96) 0.35 %; HC 0.36 %; SU gains -3.54 % lane / +1.16 % cc. Root cause = the far-copy legs above.
+    planM0 (multicast only): lower 7.04 / mid 7.30 / upper 14.02 %  (multicast makes it worse: COLL lane +61, DMA +28).
+    planF (= planF2 cuts; sha 1d5148aa): lower 0.91 % / mid 1.34 % / upper 9.46 %; qwen_ar -0.20 / -0.06 / 1.42 %.
+      COLL.* lane -1, DMA -1, HC +20 lane; cc part unchanged (cc_only_lower 2.49 %, upper SM.* 66 = long cc chain).
+      -> design total (r25gq accepted 11.414 %) + 0.91 = 12.32 % lower / 12.76 % mid (target 15 %, owner: target not cap).
+      Upper 9.46 % still > 5 %/unit: driven by the longest hub cc module chain (SM.* upper 66) = GEOM cond 1 (affinity).
+GEOM-REVIEW-10 conditions:
+  c1 affinity re-place: PARTIAL (planS2: cc>4 mm 154->126 / 131->125, max 6.73 / 5.99 mm); not closed.
+  c2 NW E-face serial bundle: face-affine moves the E-face VM/ring legs onto the E copy (L4/L96 legs 15-18 -> 3-6 regs);
+     W/E chain slices nw 206 (planM0) -> 159 (planF2) / 144 (planS2), ne 124 -> 100 / 108; GRT probe cannot see inside the hub (see 4d).
+  c3 NE S-face 39/um: the peak (now 52.5/um span model) is ONE bus, L74_o at x 7491-7579 -> NE_b101: 2,474 assigned bits on a
+     279-bit bus (broadcast, pin_frac 0.11); the span metric counts assigned bits, not pins. Real pins 279 over the 86 um
+     cluster = 3.2 /um (CHECKED arithmetic) <= 6; interval 726 um. Metric fix (count width for broadcast buses) owed.
+Scratch epyc1:/srv/opentallas-scratch2/claude/path-hbm-r13-1026 (planM0 planF planF2 planS2 planMsep0; planM = default-height
+search run still live, diagnostic only). Render viewed: r13_planF2.png.

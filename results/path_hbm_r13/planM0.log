@@ -1,0 +1,9 @@
+q_hub_nw: H 3525.12 b 3957.12 k 1 x 0.8 y 0.503 seg y [0.616, 0.574]
+q_hub_nw: H 3525.12 b 3957.12 k 2 x 0.679 y 0.475 seg y [0.579, 0.521]
+q_hub_nw: H 3525.12 b 3957.12 k 3 x 0.623 y 0.46 seg y [0.555, 0.492]
+q_hub_nw: H 3525.12 b 3957.12 k 4 x 0.595 y 0.452 seg y [0.542, 0.477]
+q_hub_ne: H 3525.12 b 3002.4 k 1 x 0.671 y 0.51 seg y [0.662, 0.576]
+q_hub_ne: H 3525.12 b 3002.4 k 2 x 0.578 y 0.49 seg y [0.567, 0.538]
+q_hub_nw: b 3957.12 H 3525.12 k 4 cut x 0.595 y 0.452 segments [(0.534, 0.542), (0.601, 0.477)] cc_serialised 1346 mcast 16074 in_surplus 2282 soft_glue 2154 unused 3332 dir_unknown 4354
+q_hub_ne: b 3002.4 H 3525.12 k 2 cut x 0.578 y 0.49 segments [(0.548, 0.567), (0.579, 0.538)] cc_serialised 1202 mcast 16994 in_surplus 1133 soft_glue 2154 unused 2554 dir_unknown 11750
+die_growth_um 604.8 plan_sha256 89f59319b2b6bb9693592fd90b41e06942245ce3078bcf66fb47919a1c1f225c

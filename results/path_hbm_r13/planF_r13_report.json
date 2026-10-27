@@ -1,0 +1,390 @@
+{
+ "schema": "opentallas.hbm_r11_delta.v1",
+ "source_plan_sha256": "0e83c52e3400246b8c04e4cb8071ffc1c41f33c6d7e3778157ea037168bbc482",
+ "pins_per_um": 6.0,
+ "spread_pins_per_um": 3.0,
+ "cc_serial_k": 2,
+ "cc_min_um": 1000.0,
+ "hubs": {
+  "q_hub_nw": {
+   "S": 2,
+   "bound_um": 3957.12,
+   "height_um": 3525.12,
+   "hub_growth_y_um": 604.8,
+   "k": 4,
+   "k_table": [
+    {
+     "k": 1,
+     "cut_x": 0.751,
+     "cut_y": 0.494,
+     "seg_y": [
+      0.612,
+      0.552
+     ]
+    },
+    {
+     "k": 2,
+     "cut_x": 0.656,
+     "cut_y": 0.472,
+     "seg_y": [
+      0.579,
+      0.514
+     ]
+    },
+    {
+     "k": 3,
+     "cut_x": 0.608,
+     "cut_y": 0.459,
+     "seg_y": [
+      0.555,
+      0.489
+     ]
+    },
+    {
+     "k": 4,
+     "cut_x": 0.584,
+     "cut_y": 0.452,
+     "seg_y": [
+      0.542,
+      0.476
+     ]
+    }
+   ],
+   "lanes": {
+    "old_face_bits_S": 222879,
+    "old_face_bits_N": 206854,
+    "old_face_bits_W": 36570,
+    "old_face_bits_E": 78754,
+    "dir_out_pin_bits": 40387,
+    "dir_in_pin_bits": 28940,
+    "dir_unknown_pin_bits": 4354,
+    "cover_unused_out_bits": 18879,
+    "cover_unused_in_bits": 2809,
+    "mcast_bits": 16074,
+    "in_surplus_bits": 2282,
+    "new_face_bits_N": 26000,
+    "new_face_bits_S": 36704,
+    "new_face_bits_W": 10721,
+    "new_face_bits_E": 18612,
+    "soft_glue_bits": 2154,
+    "core_pins": 631,
+    "core_pin_bits": 73681,
+    "bus_supply_bits": 84746,
+    "unused_bus_bits": 3332,
+    "broadcast_bits": 10623,
+    "lane_slices": 815,
+    "old_face_stations": 3365,
+    "mcast_separate": 0
+   },
+   "cut_per_sink_blocked": {
+    "x": {
+     "cuts": 1901,
+     "max_use": 0.584,
+     "at_um": 5097.6,
+     "bits": 36875,
+     "face_bits": 13329,
+     "tracks": 63180,
+     "core_core_max_use": 0.459,
+     "cuts_over_0p6": 0
+    },
+    "y": {
+     "cuts": 815,
+     "max_use": 0.452,
+     "at_um": 1304.64,
+     "bits": 56623,
+     "face_bits": 19349,
+     "tracks": 125280,
+     "core_core_max_use": 0.315,
+     "cuts_over_0p6": 0
+    }
+   },
+   "segments": [
+    {
+     "x_um": [
+      0.0,
+      3957.12
+     ],
+     "cut_x": 0.521,
+     "cut_y": 0.542,
+     "at_y": 2747.52
+    },
+    {
+     "x_um": [
+      3957.12,
+      8216.64
+     ],
+     "cut_x": 0.589,
+     "cut_y": 0.476,
+     "at_y": 1265.76
+    }
+   ],
+   "stations": {
+    "stations": 2848,
+    "inter_segment": 344,
+    "serialised": 344,
+    "regs_old": 24150,
+    "regs_new": 25874,
+    "latency_up": 785,
+    "failed": 0,
+    "chain_links": 1,
+    "latency_up_hist": {
+     "1": 124,
+     "2": 206,
+     "3": 159,
+     "4": 76,
+     "5": 62,
+     "6": 28,
+     "7": 36,
+     "8": 20,
+     "9": 35,
+     "10": 19,
+     "11": 19,
+     "12": 1
+    }
+   },
+   "we_chain": 159,
+   "cc_serialised": 1346,
+   "pin_peak_bits_per_um": {
+    "N": 571.759,
+    "S": 567.361
+   },
+   "segment_fill": [
+    0.477,
+    0.519
+   ],
+   "latency_cycles": {
+    "inter_segment_and_we": 3,
+    "cc": 1,
+    "note": "each serialised slice: +k-1 cycles per traversal and 1/k of its parallel bandwidth; route registers in stations.latency_up_hist"
+   }
+  },
+  "q_hub_ne": {
+   "S": 2,
+   "bound_um": 3002.4,
+   "height_um": 3525.12,
+   "hub_growth_y_um": 604.8,
+   "k": 2,
+   "k_table": [
+    {
+     "k": 1,
+     "cut_x": 0.648,
+     "cut_y": 0.513,
+     "seg_y": [
+      0.648,
+      0.576
+     ]
+    },
+    {
+     "k": 2,
+     "cut_x": 0.563,
+     "cut_y": 0.497,
+     "seg_y": [
+      0.569,
+      0.538
+     ]
+    }
+   ],
+   "lanes": {
+    "old_face_bits_S": 194225,
+    "old_face_bits_N": 180100,
+    "old_face_bits_W": 27840,
+    "old_face_bits_E": 67488,
+    "dir_out_pin_bits": 29784,
+    "dir_in_pin_bits": 26526,
+    "dir_unknown_pin_bits": 11750,
+    "cover_unused_out_bits": 19021,
+    "cover_unused_in_bits": 1660,
+    "mcast_bits": 16994,
+    "in_surplus_bits": 1133,
+    "new_face_bits_N": 25444,
+    "new_face_bits_S": 36352,
+    "new_face_bits_W": 9494,
+    "new_face_bits_E": 14897,
+    "soft_glue_bits": 2154,
+    "core_pins": 618,
+    "core_pin_bits": 68060,
+    "bus_supply_bits": 78491,
+    "unused_bus_bits": 2554,
+    "broadcast_bits": 10250,
+    "lane_slices": 792,
+    "old_face_stations": 3287,
+    "mcast_separate": 0
+   },
+   "cut_per_sink_blocked": {
+    "x": {
+     "cuts": 1901,
+     "max_use": 0.563,
+     "at_um": 6760.8,
+     "bits": 32685,
+     "face_bits": 7335,
+     "tracks": 58087,
+     "core_core_max_use": 0.442,
+     "cuts_over_0p6": 0
+    },
+    "y": {
+     "cuts": 815,
+     "max_use": 0.497,
+     "at_um": 1416.96,
+     "bits": 66039,
+     "face_bits": 26358,
+     "tracks": 132958,
+     "core_core_max_use": 0.298,
+     "cuts_over_0p6": 0
+    }
+   },
+   "segments": [
+    {
+     "x_um": [
+      0.0,
+      3002.4
+     ],
+     "cut_x": 0.536,
+     "cut_y": 0.569,
+     "at_y": 1442.88
+    },
+    {
+     "x_um": [
+      3002.4,
+      8216.64
+     ],
+     "cut_x": 0.564,
+     "cut_y": 0.538,
+     "at_y": 704.16
+    }
+   ],
+   "stations": {
+    "stations": 2791,
+    "inter_segment": 409,
+    "serialised": 409,
+    "regs_old": 25481,
+    "regs_new": 25875,
+    "latency_up": 599,
+    "failed": 0,
+    "chain_links": 1,
+    "latency_up_hist": {
+     "1": 263,
+     "2": 118,
+     "3": 113,
+     "4": 33,
+     "5": 37,
+     "6": 10,
+     "7": 10,
+     "8": 10,
+     "9": 1,
+     "12": 2,
+     "13": 2
+    }
+   },
+   "we_chain": 100,
+   "cc_serialised": 1202,
+   "pin_peak_bits_per_um": {
+    "N": 571.759,
+    "S": 571.759
+   },
+   "segment_fill": [
+    0.549,
+    0.471
+   ],
+   "latency_cycles": {
+    "inter_segment_and_we": 1,
+    "cc": 1,
+    "note": "each serialised slice: +k-1 cycles per traversal and 1/k of its parallel bandwidth; route registers in stations.latency_up_hist"
+   }
+  }
+ },
+ "note": "plan arithmetic, UNCHECKED until NUMBER-CHECK (12.9f); lane transport = hbm_r10 plan MODEL of the core_conns cross-product (needs the hub glue bit map to confirm 1:1)",
+ "die_growth_um": 604.8,
+ "die_growth": {
+  "dH_um": 604.8,
+  "insertion_y_um": 8856.0,
+  "hub_row_y_um": [
+   6065.28,
+   8985.6
+  ],
+  "grown_types": [
+   "root"
+  ],
+  "row_types_grown": [
+   "NE_io",
+   "NW_io",
+   "q_b000",
+   "q_b001",
+   "q_b002",
+   "q_b003",
+   "q_b010",
+   "q_b011",
+   "q_b012",
+   "q_b013"
+  ],
+  "windows_moved": 1,
+  "hub_row_unchanged": [
+   "NW_b000",
+   "NW_b001",
+   "NW_b002",
+   "NW_b003",
+   "NW_b010",
+   "NW_b011",
+   "NW_b012",
+   "NW_b013",
+   "NW_io",
+   "NE_b000",
+   "NE_b001",
+   "NE_b002",
+   "NE_b003",
+   "NE_b010",
+   "NE_b011",
+   "NE_b012",
+   "NE_b013",
+   "NE_io"
+  ],
+  "hub_row_gap_rects_um": [],
+  "die_outline_um": [
+   28399.68,
+   17746.56
+  ]
+ },
+ "plan_sha256": "1d5148aa3e45707d310a613233f24e2ca9f002955cb69f00a4ce94054afd39d8",
+ "r13": {
+  "multicast": true,
+  "direction": true,
+  "separate": false,
+  "face_affine": true,
+  "affinity_iters": 0,
+  "joint_pins": true,
+  "joint_pins_last": [
+   [
+    24,
+    {
+     "N": 571.759,
+     "S": 571.759
+    }
+   ],
+   [
+    22,
+    {
+     "N": 571.759,
+     "S": 571.759
+    }
+   ],
+   [
+    22,
+    {
+     "N": 571.759,
+     "S": 571.759
+    }
+   ],
+   [
+    22,
+    {
+     "N": 571.759,
+     "S": 571.759
+    }
+   ]
+  ],
+  "modules_without_rtl": [
+   "ot_hbm_hc_subtree32_core",
+   "ot_hfd_coll_q2n2_body_core",
+   "ot_hfd_coll_q2n2_vm_core"
+  ]
+ }
+}
