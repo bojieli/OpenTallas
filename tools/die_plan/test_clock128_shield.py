@@ -133,7 +133,74 @@ def test_shield_merge_tcl_is_one_proc_and_call_on_the_shield_net():
     assert L[0].count("{") == L[0].count("}")
 
 
-def test_combo_merge_shields_flag_is_opt_in():
+def test_combo_merge_shields_is_the_default():
+    """COORD 10-26 21:28: --merge-shields is the DEFAULT for die_clock_mesh combo; --no-merge-shields keeps the
+    pre-R10 shapes; an args object without the attribute (programmatic callers) also merges"""
     src = (Path(__file__).resolve().parent / "die_clock_mesh.py").read_text()
-    assert '"--merge-shields", action="store_true"' in src
-    assert 'if getattr(a, "merge_shields", False):' in src
+    assert '"--merge-shields", action=argparse.BooleanOptionalAction, default=True' in src
+    assert 'merge_sh = bool(getattr(a, "merge_shields", True))' in src
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--merge-shields", action=argparse.BooleanOptionalAction, default=True)
+    assert ap.parse_args([]).merge_shields is True
+    assert ap.parse_args(["--no-merge-shields"]).merge_shields is False
+
+
+def _boxes(stripes, nd):
+    """shield stripe centre lines -> shield_union boxes (layer, vertical, c_lo, c_hi, a_lo, a_hi) in integer nm"""
+    hw = nd["width"] / 2
+    nm = lambda v: int(round(v * 1000))
+    out = []
+    for lay, x0, y0, x1, y1 in stripes:
+        if lay == "M8":
+            out.append((lay, False, nm(y0 - hw), nm(y0 + hw), nm(min(x0, x1)), nm(max(x0, x1))))
+        else:
+            out.append((lay, True, nm(x0 - hw), nm(x0 + hw), nm(min(y0, y1)), nm(max(y0, y1))))
+    return out
+
+
+def _coverage(boxes):
+    """the covered metal: per (layer, direction, track) the union of the along-axis intervals"""
+    g = {}
+    for b in boxes:
+        g.setdefault(tuple(b[:4]), []).append((b[4], b[5]))
+    cov = {}
+    for k, iv in g.items():
+        runs = []
+        for lo, hi in sorted(iv):
+            if runs and lo <= runs[-1][1]:
+                runs[-1][1] = max(runs[-1][1], hi)
+            else:
+                runs.append([lo, hi])
+        cov[k] = [tuple(r) for r in runs]
+    return cov
+
+
+def test_merge_default_changes_only_shield_shape_count_not_metal():
+    """regression for the default flip: old default (no merge) vs new default (merge) on a trunk + the H-tree leg
+    that retraces it on the same track + an unrelated strap -- identical covered metal on every track, fewer shapes,
+    and every box that overlapped nothing is passed through unchanged"""
+    segs = [("M9", 10.0, 0.0, 10.0, 100.0), ("M9", 10.0, 40.0, 10.0, 160.0),   # trunk + retracing leg (same x)
+            ("M9", 10.0, 160.0, 10.0, 200.0),                                    # abutting continuation
+            ("M9", 30.0, 0.0, 30.0, 50.0), ("M8", 0.0, 70.0, 60.0, 70.0),        # untouched tracks
+            ("M8", 20.0, 90.0, 50.0, 90.0), ("M8", 45.0, 90.0, 80.0, 90.0)]      # M8 overlap
+    old = _boxes(C.shield_stripes(segs, ND), ND)
+    new, nmerged = C.shield_union(old)
+    assert _coverage(new) == _coverage(old)                      # same metal on every track
+    assert len(new) < len(old) and nmerged > 0                   # only the shape count changes
+    single = [b for b in old if sum(1 for c in old if c[:4] == b[:4] and c[4] <= b[5] and b[4] <= c[5]) == 1]
+    assert set(single) <= set(new)                               # non-overlapping shapes pass through unchanged
+    # 2 stripes per segment: M9 x=10 (3 segs -> 1 run each side), M8 y=90 (2 segs -> 1 run each side)
+    assert len(old) == 14 and len(new) == 8
+
+
+def test_shield_union_is_coverage_preserving_on_random_boxes():
+    import random
+    rnd = random.Random(1026)
+    for _ in range(200):
+        boxes = [(rnd.choice(("M8", "M9")), rnd.random() < 0.5, c, c + 160, lo, lo + rnd.randint(1, 400))
+                 for c in (rnd.choice((0, 240, 480)) for _ in range(rnd.randint(1, 12)))
+                 for lo in (rnd.randint(0, 1000),)]
+        new, _ = C.shield_union(boxes)
+        assert _coverage(new) == _coverage(boxes)
+        assert len(new) == sum(len(r) for r in _coverage(boxes).values())
