@@ -235,7 +235,7 @@ def _scale_row(kind, layer, label, row, W, cal, cache, prov):
     if kind == "DIAGUNDER":
         return [s, cc, fr, r2]
     nb = cc > 0
-    key = (layer, label, s, nb)
+    key = (layer, label, s, nb, W)
     if key not in cache:
         c0, f0 = solve_row(cal, layer, label, W0, s, nb)
         c1, f1 = solve_row(cal, layer, label, W, s, nb)
