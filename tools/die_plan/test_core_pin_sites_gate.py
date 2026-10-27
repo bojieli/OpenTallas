@@ -47,3 +47,11 @@ def test_cli_exit_codes(tmp_path):
     cmd = [sys.executable, "-I", str(HERE / "core_pin_sites_gate.py"), "--outline", "10", "10", "--pins"]
     assert subprocess.run(cmd + [str(bad)], capture_output=True).returncode == 1
     assert subprocess.run(cmd + [str(good)], capture_output=True).returncode == 0
+
+
+def test_declared_interior_island_ports_pass_undeclared_fail():   # D-QC-A0-R3B: 22 plan island feed ports per A0 core
+    isl = [dict(P(f'ck_isl_{i}', 20.0 + i, 40.0, 'M5'), face='C') for i in range(3)]
+    assert m.check_pins(isl, 100, 100)['verdict'] == 'PASS'
+    assert m.check_pins([P('ck_isl_x', 20.0, 40.0, 'M5')], 100, 100)['counts']['off_face'] == 1
+    dup = [dict(P('ck_isl_a', 20.0, 40.0, 'M5'), face='C'), dict(P('ck_isl_b', 20.0, 40.0, 'M5'), face='C')]
+    assert m.check_pins(dup, 100, 100)['counts']['dup_site'] == 1

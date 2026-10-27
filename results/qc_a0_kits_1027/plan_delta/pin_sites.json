@@ -1,0 +1,47 @@
+{
+ "schema": "opentallas.core_pin_sites_gate.v1",
+ "min_pitch_um": {
+  "M2": 0.036,
+  "M3": 0.036,
+  "M4": 0.048,
+  "M5": 0.048,
+  "M6": 0.064,
+  "M7": 0.064
+ },
+ "face_tol_um": 2.5,
+ "cores": {
+  "cores/a0_nk_pins.json@457.92x1157.76": {
+   "pins": 2605,
+   "counts": {
+    "dup_site": 0,
+    "pitch": 0
+   },
+   "stacked_pins": 0,
+   "verdict": "PASS",
+   "examples": {},
+   "module": "qfd_tile_nk_a0c",
+   "outline_um": [
+    457.92,
+    1157.76
+   ]
+  },
+  "cores/a0_nl_pins.json@457.92x1157.76": {
+   "pins": 1063,
+   "counts": {
+    "dup_site": 0,
+    "pitch": 0
+   },
+   "stacked_pins": 0,
+   "verdict": "PASS",
+   "examples": {},
+   "module": "qfd_tile_nl_a0c",
+   "outline_um": [
+    457.92,
+    1157.76
+   ]
+  }
+ },
+ "verdict": "PASS",
+ "n_cores": 2,
+ "n_fail": 0
+}

@@ -57,7 +57,8 @@ def check_pins(pins, w, h, interior_ok=("clk",)):
     for p in pins:
         f = face(p, w, h)
         if f == "C":
-            if p["name"] not in interior_ok:
+            # D-QC-A0-R3B: a pin the plan table itself declares face "C" is a plan island entry (12.2a1 multi-island cores)
+            if p["name"] not in interior_ok and p.get("face") != "C":
                 errs["off_face"].append(dict(name=p["name"], x=p["x"], y=p["y"]))
             continue
         a = p["y"] if f in "WE" else p["x"]
