@@ -48,6 +48,7 @@ module ot_v41_spine_pq_static_w17w10 #(
     parameter integer GAP = 12,
     parameter integer GUARD = 180,
     parameter integer GSLACK = 6,
+    parameter integer QX_GO_BOUNDARY = 0, // GB737 only: raw GO -1, stream/CFG dates unchanged; all active QX must opt in
     parameter integer BW = 1 + PHW + 3 + 1 + 1 + 2 + 1 + 8 + 3 + 2 + 256 + 10 + 256 + 10 + 3 + 3 + 1 + 3 + 4 + 32 + 1024
 ) (
     input  wire              clk,
@@ -270,6 +271,15 @@ module ot_v41_spine_pq_static_w17w10 #(
                      ((PQ != 0 && s_np[ist] == 3'd0 && !inflight_mtp) ? 1'b1 : (!inflight && !sm_run));
     wire can_go = ist_st == I_CFG && cfg_cnt >= 6'(CW + 1 + GSLACK) && !sm_run &&
                   ((PQ != 0) ? (since1 >= 16'(GAP) && since2 >= 16'(GUARD)) : 1'b1);
+    // The original can_go edge remains the stream/next-CFG commit edge. For
+    // GB737 QX phases only, the extra core GO capture cancels this earlier raw
+    // broadcast. GAP>=2 ensures a previous stream cannot finish in this one-edge
+    // lookahead window; BF phases continue to use the original branch.
+    wire can_go_gb = ist_st == I_CFG && cfg_cnt >= 6'(CW + GSLACK) && !sm_run &&
+                     ((PQ != 0) ? (since1 >= 16'(GAP-1) && since2 >= 16'(GUARD-1)) : 1'b1);
+    reg go_pending;
+    initial if (QX_GO_BOUNDARY != 0 && (GSLACK < 1 || GAP < 2 || GUARD < 2))
+        $fatal(1, "QX GO boundary requires source-qualified lookahead margins");
     // beat assembly
     reg         bt_xs_v, bt_xb_v;
     reg [7:0]   bt_p;
@@ -357,6 +367,7 @@ module ot_v41_spine_pq_static_w17w10 #(
         if (!rst_n) begin
             ld_more <= 1'b0; bt_np <= 3'd0;
             fault <= 1'b0; bt_go <= 1'b0; bt_gobf <= 1'b0; bt_cfg <= 1'b0; bt_tag <= 2'd0; bt_ph <= '0;
+            go_pending <= 1'b0;
             ld_run <= 1'b0; rq_v <= 1'b0; sm_run <= 1'b0; sw_v <= 1'b0; x_re <= 1'b0;
             have[0] <= 15'd0; have[1] <= 15'd0; w_we <= {R{1'b0}}; phase_cycles <= 32'd0; cyc <= 32'd0;
             acc <= 2'd0; ldt <= 2'd0; ist <= 2'd0; ist_st <= I_IDLE; since1 <= 16'hFFFF; since2 <= 16'hFFFF;
@@ -385,7 +396,23 @@ module ot_v41_spine_pq_static_w17w10 #(
                 end
                 I_CFG: begin
                     if (cfg_cnt != 6'h3F) cfg_cnt <= cfg_cnt + 6'd1;
-                    if (can_go) begin
+                    if (QX_GO_BOUNDARY != 0 && !s_pw[ist][0]) begin
+                        if (go_pending) begin
+                            // Exactly the former can_go edge: do not advance
+                            // stream start, issuer state, or the next CFG.
+                            go_pending <= 1'b0;
+                            ist_st <= I_IDLE;
+                            sm_run <= 1'b1; sm_tag <= ist; sm_pos <= 3'd0; sm_i <= 16'd0; sw_v <= 1'b0;
+                            ist <= ist + 2'd1;
+`ifndef SYNTHESIS
+                            if (!can_go) $fatal(1, "GB GO lookahead did not predict the original commit edge");
+`endif
+                        end else if (can_go_gb) begin
+                            bt_go <= 1'b1; bt_gobf <= 1'b0; bt_tag <= ist;
+                            ev_go <= 1'b1; ev_tag <= ist;
+                            go_pending <= 1'b1;
+                        end
+                    end else if (can_go) begin
                         bt_go <= 1'b1; bt_gobf <= s_pw[ist][0]; bt_tag <= ist; ist_st <= I_IDLE;
                         ev_go <= 1'b1; ev_tag <= ist;
                         sm_run <= 1'b1; sm_tag <= ist; sm_pos <= 3'd0; sm_i <= 16'd0; sw_v <= 1'b0;
