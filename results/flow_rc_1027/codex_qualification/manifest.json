@@ -1,0 +1,146 @@
+[
+ {
+  "die": "hbm",
+  "kit": "/srv/opentallas-scratch2/claude/codex-rc-canary-1027/ab/runs/hbm_ab3ae7c3a_1027_081901_659397/gen/ot_hgi_coll_tkm_m_tp192__tile0_e77e9f31fd71",
+  "source": "ab3ae7c3ab8a",
+  "time": "2026-10-27T08:48:51.739689-07:00",
+  "qualification_rc": 1,
+  "qualification": [
+   "KIT_PREFLIGHT FAIL issues 1",
+   "  - staged_tools: missing rtl_lint.py"
+  ],
+  "automatic_pre_docker_markers": [],
+  "automatic_scope": "core runner; qualified post-admission",
+  "sha256": {
+   "config.mk": "61c5a84a93a63092c62188e7f5a3b5a4242470e4d48afff8167d02b0977357b6",
+   "constraint.sdc": "abaef26bbf8d29afc0e798342e0e9c9e722a630dfbd22e69ac413a09eaa9499d",
+   "sdc_lint.json": "19b26645bfa14f1cceb6a7f4f11006e1629f436e81f3b1e8bf71022fd249e435",
+   "pins.json": "708a4e146f915c8a6a5b1e9a6134bb683c2de952f9842be0618b42da973a5e60",
+   "freeze.json": "b5984bdcb3151a98b40d291dc4ebd918b4239ae58577d742b1f1f7c86e3beb88"
+  }
+ },
+ {
+  "die": "hbm_sram",
+  "kit": "/srv/opentallas-scratch2/claude/codex-rc-canary-1027/ab/runs/hbm_sram_ab3ae7c3a_1027_081901_659397/gen/hfd_hgi_vm_calendar_f20_dd5b84a9fbfa",
+  "source": "ab3ae7c3ab8a",
+  "time": "2026-10-27T08:48:51.877515-07:00",
+  "qualification_rc": 1,
+  "qualification": [
+   "KIT_PREFLIGHT FAIL issues 1",
+   "  - staged_tools: missing rtl_lint.py"
+  ],
+  "automatic_pre_docker_markers": [],
+  "automatic_scope": "core runner; qualified post-admission",
+  "sha256": {
+   "config.mk": "2b51f4cd99ea5949a1171721f8173d0c93e5e78b1ff0e5bfd6226a8f38924036",
+   "constraint.sdc": "1e0dae746de923c6591cb9db5fcd3541a68b1884a492a5e06575a87f01e1b2b3",
+   "sdc_lint.json": "870bcf07d58795f5fa22fbff58456896955fae0b87cf017b15e2828ec3c2bf8f",
+   "pins.json": "d270121c9e38149747460d24696609ba78eeb5d5cde403c718a9b2de44256bae",
+   "freeze.json": "84e3a93dec86366c140206b5b9664e4e28520d64a041a954acc37bad5c5f88c9"
+  }
+ },
+ {
+  "die": "qwen_compute",
+  "kit": "/srv/opentallas-scratch2/claude/codex-rc-canary-1027/ab/runs/qwen_compute_ab3ae7c3a_1027_081901_659397/gen/coll_ftm",
+  "source": "ab3ae7c3ab8a",
+  "time": "2026-10-27T08:48:52.027746-07:00",
+  "qualification_rc": 0,
+  "qualification": [
+   "KIT_PREFLIGHT PASS issues 0"
+  ],
+  "automatic_pre_docker_markers": [
+   "KIT_PREFLIGHT PASS issues 0"
+  ],
+  "automatic_scope": "gen_phys RUN_KIT only",
+  "sha256": {
+   "config.mk": "6f75eed25fe468d37fac90c54652e41a26c5d78aba30072ce49e5dc2a0e6f2e1",
+   "constraint.sdc": "06fb46543a89260ab5f9d6e0cc50de731d8cc2f6a8c4489aa0acac2182b4b1fb",
+   "sdc_lint.json": "3392a7f7a7f3ff7018d50728ab89a05841f1d3f7adc960c0c07e2915021b8d67",
+   "pins.json": "003eaeee31cbebe7397cf629458b778b939495343b81b222169554833015f831",
+   "clock_binding.json": "8259a3067880a21cbd74710be4ae099557cf60efa372c8f0d3f740ec94fc53f0"
+  }
+ },
+ {
+  "die": "qwen_kvsys",
+  "kit": "/srv/opentallas-scratch2/claude/codex-rc-canary-1027/ab/runs/qwen_kvsys_ab3ae7c3a_1027_081901_659397/gen/kv3_io_ft",
+  "source": "ab3ae7c3ab8a",
+  "time": "2026-10-27T08:48:52.168063-07:00",
+  "qualification_rc": 0,
+  "qualification": [
+   "KIT_PREFLIGHT PASS issues 0"
+  ],
+  "automatic_pre_docker_markers": [
+   "KIT_PREFLIGHT PASS issues 0"
+  ],
+  "automatic_scope": "gen_phys RUN_KIT only",
+  "sha256": {
+   "config.mk": "3e185460afe48a92fd57b215dbec6faa8a7fadfe63c41e2e2b41e9e5c14b5d0f",
+   "constraint.sdc": "8b0906fe59ad9ba4f823fdc5dddd7b33444ea4da13b4906b4896e5a81664f9dd",
+   "sdc_lint.json": "ad7b504c74d872bb85ac8f243ed4a26efd28a2fa5b2e4413dbce38120fb92c14",
+   "pins.json": "cbeda249e4360a3651a177f634528f80315b1aed0a9e70c4bd2db9eb750feef6",
+   "clock_binding.json": "ffd657ade737708785baf88799b918f2daa62b4692dff3ff45bc308491c6e760"
+  }
+ },
+ {
+  "die": "qwen_kvsys_core",
+  "kit": "/srv/opentallas-scratch2/claude/codex-rc-canary-1027/ab/runs/qwen_kvsys_core_ab3ae7c3a_1027_081901_659397/gen/kv3_head_eighth_e1__216x216",
+  "source": "ab3ae7c3ab8a",
+  "time": "2026-10-27T08:48:52.410897-07:00",
+  "qualification_rc": 0,
+  "qualification": [
+   "KIT_PREFLIGHT PASS issues 0"
+  ],
+  "automatic_pre_docker_markers": [],
+  "automatic_scope": "core runner; qualified post-admission",
+  "sha256": {
+   "config.mk": "40c76d4557a88bf7ffcf76d3afdef33fcb83acb46dd0535773e7ed7baf75f278",
+   "constraint.sdc": "4a6078c857359620e777e9273992f58b552d6ea57ff53c6105c85415846d5484",
+   "sdc_lint.json": "8bb3f4b08e8a9f1f8333efad3fb973804557ac8547cab53698c3ea7a75a26a6b",
+   "pins.json": "71feb329edb60291fe4eb8bdf61b1af6520e6953e8eba85463884c62b4aa0bf3",
+   "clock_binding.json": "a49e7f1f1aae0163ceba4ec1dc25112eccb71c420a66e98f16cc08f6de7e3faa",
+   "freeze.json": "05a613e7fec220539671ba2a1db8059299acfb010ac9a006bf9682f3724917c7"
+  }
+ },
+ {
+  "die": "s81",
+  "kit": "/srv/opentallas-scratch2/claude/codex-rc-canary-1027/ab/runs/s81_ab3ae7c3a_1027_081901_659397/gen/slice_station__t12",
+  "source": "ab3ae7c3ab8a",
+  "time": "2026-10-27T08:48:52.519494-07:00",
+  "qualification_rc": 0,
+  "qualification": [
+   "KIT_PREFLIGHT PASS issues 0"
+  ],
+  "automatic_pre_docker_markers": [
+   "KIT_PREFLIGHT PASS issues 0"
+  ],
+  "automatic_scope": "gen_phys RUN_KIT only",
+  "sha256": {
+   "config.mk": "064aa8ab2e38a68bb529c8f0739354a24343ce7e3f827d20cfbcf33282fec2f1",
+   "constraint.sdc": "ec92e3d9d6c5888c551b8cfd98da4e18f1a9cdf70e008dfe8d28be5878644575",
+   "sdc_lint.json": "e4b2cf6a30bee750ac547457abafb27fa75647a2014d9491e3530633bc7b9923",
+   "pins.json": "ca7ca4c0dc84963ed36d05c6dfe612801825658100aef9d573829422336b475d",
+   "clock_binding.json": "a99d7f6486169774c78fb40970b8b17ec076c0cdef2faa6c72a01e785fd9f3d6"
+  }
+ },
+ {
+  "die": "s81_head",
+  "kit": "/srv/opentallas-scratch2/claude/codex-rc-canary-1027/ab/runs/s81_head_ab3ae7c3a_1027_081901_659397/gen/hd_turn_a",
+  "source": "ab3ae7c3ab8a",
+  "time": "2026-10-27T08:48:52.613133-07:00",
+  "qualification_rc": 0,
+  "qualification": [
+   "KIT_PREFLIGHT PASS issues 0"
+  ],
+  "automatic_pre_docker_markers": [
+   "KIT_PREFLIGHT PASS issues 0"
+  ],
+  "automatic_scope": "gen_phys RUN_KIT only",
+  "sha256": {
+   "config.mk": "2989589ea2b74464e75518bfeb1a2e1e205f96bbd3d0bc484041a317c5f4c5c1",
+   "constraint.sdc": "95fd38429f91714ca46ea383a739039ef35282afb35d19e3ea3ca7a35f83b4b6",
+   "sdc_lint.json": "d0197e2a5868c06f1ddc123e94935df7b43b95492fcef8c32edb25761528c4a0",
+   "pins.json": "ce035a0c979b668e9c9f88291ed31b67c6607646687332a5d8ff8c83ec435051",
+   "clock_binding.json": "c5f8bb78d8c730f3dfd502e1f3f9878cb4e9e0e9fdccf8b14118655adce17698"
+  }
+ }
+]

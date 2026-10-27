@@ -1,0 +1,31 @@
+{
+ "schema": "opentallas.kit_preflight.v1",
+ "kit": "/srv/opentallas-scratch2/claude/codex-rc-canary-1027/ab/runs/qwen_kvsys_ab3ae7c3a_1027_081901_659397/gen/kv3_io_ft",
+ "verdict": "PASS",
+ "checks": {
+  "staged_tools": {
+   "verdict": "PASS",
+   "errors": []
+  },
+  "staged_inputs": {
+   "verdict": "PASS",
+   "errors": []
+  },
+  "sdc_and_ff_binding": {
+   "verdict": "PASS",
+   "errors": []
+  },
+  "yosys_cast_forms": {
+   "verdict": "PASS",
+   "errors": []
+  }
+ },
+ "issues": [],
+ "deferred": [
+  "RTL elaboration/SELRANGE",
+  "synthesis face/fanout/port binding/LEC",
+  "placed and routed PG",
+  "TT setup / FF hold",
+  "routed LEC"
+ ]
+}

@@ -1,0 +1,61 @@
+Startpoint: start_i (input port clocked by vclk)
+Endpoint: u_run_in/q$_DFF_P_ (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+Fanout      Cap     Slew    Delay     Time   Description                          Src Attr
+-------------------------------------------------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                          202.500  202.500   clock network delay (ideal)
+                          -40.000  162.500 v input external delay
+     1    0.492    6.403    0.446  162.946 v start_i (in)
+                                             start_i (net)
+                   6.403    0.000  162.946 v input2396/A (BUFx2_ASAP7_75t_R)
+     1    0.724    5.182   12.748  175.694 v input2396/Y (BUFx2_ASAP7_75t_R)
+                                             net2395 (net)
+                   5.184    0.040  175.734 v u_run_in/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+                                   175.734   data arrival time
+
+                            0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock source latency
+     1   15.291    0.000    0.000    0.000 ^ clk_t18 (in)
+                                             clk_t18 (net)
+                  48.668   15.353   15.353 ^ wire27269/A (BUFx10_ASAP7_75t_R)
+     1   15.170   12.267   26.573   41.926 ^ wire27269/Y (BUFx10_ASAP7_75t_R)
+                                             net27268 (net)
+                  52.978   16.107   58.034 ^ clkbuf_0_clk_t18/A (BUFx24_ASAP7_75t_R)
+     2    9.381   10.341   28.248   86.281 ^ clkbuf_0_clk_t18/Y (BUFx24_ASAP7_75t_R)
+                                             clknet_0_clk_t18 (net)
+                  18.221    4.986   91.267 ^ clkbuf_1_1_0_clk_t18/A (BUFx24_ASAP7_75t_R)
+     1    7.899    8.522   20.491  111.757 ^ clkbuf_1_1_0_clk_t18/Y (BUFx24_ASAP7_75t_R)
+                                             clknet_1_1_0_clk_t18 (net)
+                  15.941    4.487  116.245 ^ clkbuf_1_1_1_clk_t18/A (BUFx24_ASAP7_75t_R)
+     2   10.721    9.811   20.420  136.665 ^ clkbuf_1_1_1_clk_t18/Y (BUFx24_ASAP7_75t_R)
+                                             clknet_1_1_1_clk_t18 (net)
+                  10.156    0.825  137.490 ^ clkbuf_2_2_0_clk_t18/A (BUFx24_ASAP7_75t_R)
+     2   23.760   12.475   19.866  157.356 ^ clkbuf_2_2_0_clk_t18/Y (BUFx24_ASAP7_75t_R)
+                                             clknet_2_2_0_clk_t18 (net)
+                  21.011    5.319  162.676 ^ wire27272/A (BUFx16f_ASAP7_75t_R)
+     3   24.447    8.087   18.251  180.926 ^ wire27272/Y (BUFx16f_ASAP7_75t_R)
+                                             net27271 (net)
+                  54.930   16.297  197.223 ^ max_length27271/A (BUFx12_ASAP7_75t_R)
+     1   17.524   12.829   29.809  227.032 ^ max_length27271/Y (BUFx12_ASAP7_75t_R)
+                                             net27270 (net)
+                  68.885   21.265  248.296 ^ wire27270/A (BUFx12f_ASAP7_75t_R)
+     1   16.147   10.757   23.273  271.570 ^ wire27270/Y (BUFx12f_ASAP7_75t_R)
+                                             net27269 (net)
+                  58.393   18.024  289.593 ^ clkbuf_leaf_16_clk_t18/A (BUFx24_ASAP7_75t_R)
+     3    8.325   10.840   29.527  319.121 ^ clkbuf_leaf_16_clk_t18/Y (BUFx24_ASAP7_75t_R)
+                                             clknet_leaf_16_clk_t18 (net)
+                  10.857    0.357  319.478 ^ u_run_in/q$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+                           12.500  331.978   inter-clock uncertainty
+                            0.000  331.978   clock reconvergence pessimism
+                           11.416  343.394   library hold time
+                                   343.394   data required time
+-------------------------------------------------------------------------------------------------------------------------
+                                   343.394   data required time
+                                  -175.734   data arrival time
+-------------------------------------------------------------------------------------------------------------------------
+                                  -167.660   slack (VIOLATED)
+
+

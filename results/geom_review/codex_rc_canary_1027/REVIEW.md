@@ -23,3 +23,7 @@ Viewed s81_head.actual_place.png from candidate ab3ae7c3a hd_turn_a3_place.odb. 
 ## KV type actual placement, 08:38 PDT
 
 Viewed qwen_kvsys.actual_place.png from ab3ae7c3a kv3_io_ft3_place.odb. Two straight east-west feedthrough bands have aligned face/station columns and more closely spaced parallel repeater columns; open vertical access remains, no macros/walls or pin crossings. The12tap grid is regular. PG273790terms/0open. Shared60um repair121997->136895cells (+14898,12.2%). Verdict PASS-COND for one diagnostic CTS/route continuation; the ruled80ps clock-window/IO-hold model is unchanged and native hold/insertion gates remain active.
+
+## S81 actual placement, 08:52 PDT
+
+Viewed s81.actual_place.png from ab3ae7c3a slice_station__t12 3_place.odb. North/south pin groups align with two vertical station/repeater strips; remaining routing area and clock-grid access are open, with no macros/new walls or overlaps.16 clock entries remain on the reference lattice. PG315024terms/0open; shared60um repair146766->157512cells (+10746). Verdict PASS-COND for one diagnostic CTS/route continuation, retaining the known reference insertion/hold checks.

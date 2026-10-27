@@ -1,0 +1,35 @@
+{
+ "schema": "opentallas.kit_preflight.v1",
+ "kit": "/srv/opentallas-scratch2/claude/codex-rc-canary-1027/ab/runs/hbm_ab3ae7c3a_1027_081901_659397/gen/ot_hgi_coll_tkm_m_tp192__tile0_e77e9f31fd71",
+ "verdict": "FAIL",
+ "checks": {
+  "staged_tools": {
+   "verdict": "FAIL",
+   "errors": [
+    "missing rtl_lint.py"
+   ]
+  },
+  "staged_inputs": {
+   "verdict": "PASS",
+   "errors": []
+  },
+  "sdc_and_ff_binding": {
+   "verdict": "PASS",
+   "errors": []
+  },
+  "yosys_cast_forms": {
+   "verdict": "PASS",
+   "errors": []
+  }
+ },
+ "issues": [
+  "staged_tools: missing rtl_lint.py"
+ ],
+ "deferred": [
+  "RTL elaboration/SELRANGE",
+  "synthesis face/fanout/port binding/LEC",
+  "placed and routed PG",
+  "TT setup / FF hold",
+  "routed LEC"
+ ]
+}
