@@ -887,3 +887,10 @@ HBM plan/MU/clock/PG: codex/hbm-1027 from QUAD5 e91031b844; U5e_r snapshot copie
 
 ## Qwen PARKED 2026-10-27 05:12 PDT
 ExplicitClaude reset; handoff/codex_qwen_20261027_0511.md. Jobscontinue; no newengineering.
+
+## CODEX HBM takeover 2026-10-27 08:11 PDT
+- PATH-HBM / HBM-ARCH / HBM-MU-AUDIT: QUAD6 planU6d G0 0/G0C3 phantom partner-face errors, PORTS/CLK/OUTL/EP/HUBPIN outputs collecting (/root/hbm/plan); next compose geometry fixes including vmquery y growth. No GRT before review.
+- HBM-CORE-LAT / HBM-CORES / HBM-KITS: R7/R8 jobs collecting (/root/hbm/cores), intel2 hbm-cores-r7 and hbm-cores-r8; collar a5 SIGNED TT+31.56/FF+0.03 EQ9393 READY prior lane; HC pair_first/subtree place0, opstore_b EQ34853. vms_glue LEC exit2 diagnosing. vmquery 50it FAIL3819 -> plan geometry.
+- HBM RTL/LEC: Q2n2/argmax/hcp/gq/ctlx pending proofs collecting (/root/hbm/lec); no duplicate active proof launched.
+- HBM-PG: PDN-ONE shared emission already merged; historical old-r8 clock invalidated by corrected PG; next current-unified plan PG sizing/rebuild. Historical PHY IR5/5 PASS20.993..28.842mV is not current freeze evidence.
+- ELEM-HBM / TRIAL-HBM: old physical and near-miss records superseded by current unified plan interfaces; inherited all-M5 GRT0 probe retained, not freeze. No obsolete B2l rerun. Current work consolidated above.
