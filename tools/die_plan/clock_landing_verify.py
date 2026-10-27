@@ -145,8 +145,9 @@ class Verification:
         if geom is None:raise ValueError('landing verify: missing planned ring geometry '+part+'.'+bus)
         face=geom['face'];at=sum(geom['window_um'])/2;w,h=t['outline_um']
         x,y=(0 if face=='W' else w,at) if face in 'EW' else (at,0 if face=='S' else h)
-        taps=t.get('clock',{}).get('taps',[])
-        tap=min(range(len(taps)),key=lambda i:abs(taps[i]['xy'][0]-x)+abs(taps[i]['xy'][1]-y)) if taps else 0
+        from clock_landings import ring_taps
+        taps=ring_taps(self.raw,self.parts[part]['type'])
+        tap=min(range(len(taps)),key=lambda i:abs(taps[i][0]-x)+abs(taps[i][1]-y)) if taps else 0
         return f'rst_n_t{tap}'
 
     def _check_all(self):

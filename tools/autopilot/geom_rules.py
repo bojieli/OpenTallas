@@ -2,7 +2,8 @@
 """geom_rules.py -- AUTO-GEOM rule check of a placed / CTS checkpoint (OWNER 2026-10-25 ~20:25).
 
 Owner decision: a part built from a template that already has a visual GEOM PASS may pass on automated rule checks,
-with visual review sampled ~1 in 10; new templates, failures and die-level items stay visual.  This module judges the
+with visual review sampled 1 in 5. Owner 2026-10-27 08:02 extends this to new kits on measured absolute
+checks (--all-kits); every FAIL requests visual review, and die assemblies stay in their separate review flow.  This module judges the
 geom_dump.tcl dump of the replica's 3_place / 4_cts ODB with the rules the visual reviewers already enforce.  Every
 threshold below names its source; nothing here is a new gate.  A rule that cannot be evaluated is NA (never PASS by
 default for a required rule: a required NA makes the verdict FAIL -> visual review).
@@ -507,13 +508,15 @@ TOL_REL = 0.02            # replica vs template: numerical noise of a re-place o
 TOL_CLOCK = 0.10          # clock-tree shape vs the template's tree (CTS is less repeatable than placement)
 
 
-def judge(m, template=None, outline=None):
+def judge(m, template=None, outline=None, all_kits=False):
     """[rule dicts], verdict.  Absolute limit first; with a template (the visually passed part), a value outside the
     absolute limit still passes ONLY when the template carried the same violation through its visual PASS and the
     replica is not worse than the template (TOL_REL) -- the layout_review.py principle that a GEOM-REVIEW PASS for the
     reviewed content excuses low fill / far pin registers, narrowed to 'no worse than what the reviewer saw'."""
     R = []
     t = template["metrics"] if template else None
+    if all_kits and template:
+        raise ValueError("all-kits uses absolute measured limits, never template exceptions")
 
     def add(rule, status, value, limit, src, detail=""):
         R.append(dict(rule=rule, status=status, value=value, limit=limit, source=src, detail=detail))
@@ -600,6 +603,16 @@ def judge(m, template=None, outline=None):
                 ok = v <= tv * (1 + TOL_CLOCK) + 1 if key != "clock_cells" else abs(v - tv) <= tv * TOL_CLOCK + 1
                 add("clk_" + key, "PASS" if ok else "FAIL", v, f"template {tv} +{int(TOL_CLOCK * 100)}%",
                     "GEOM-REVIEW E5-CTS01 / ASTK3 FAIL (tap loads, trunk legs, branch length)")
+    elif all_kits:
+        # Template equality is a replica rule, not a requirement to invent a template for a new
+        # kit.  Registration/density, macro-band continuity and root reach are measured above.
+        add("interface", "INFO", len(m["pin_table"]), "kit pin contract", "OWNER 2026-10-27 08:02",
+            "new kit: parent interface checks stay in shared preflight; no replica equality asserted")
+        lim("comb_loops", "comb_loop_cells", 0, "complete r2r reach census (acyclic combinational graph)")
+        lim("clock_rooted", "unrooted_sinks", 0, "all sequential sinks trace to a clock input")
+        lim("clock_sinks", "clock_sinks", 1, "measured clock topology required", higher_bad=False)
+        if not m["pin_table"]:
+            add("pins", "NA", 0, ">0", "measured pin registration required")
     else:
         for r in ("pin_table", "macros", "tap_set", "stage"):
             add(r, "NA", "", "template", "owner 10-25 template rule", "no template metrics")
@@ -665,6 +678,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("dump")
     ap.add_argument("--json")
+    ap.add_argument("--all-kits", action="store_true", help="owner 10-27: independent absolute checks without a template")
     ap.add_argument("--template", help="the template checkpoint's auto_geom.json (metrics of the visually passed part)")
     ap.add_argument("--outline", help="parent slot WxH (um)")
     ap.add_argument("--strap-re", default=STRAP_RE_DEFAULT)
@@ -674,7 +688,7 @@ def main(argv=None):
     m = metrics(a.dump, a.strap_re, a.odb)
     tmpl = json.load(open(a.template)) if a.template else None
     outline = [float(x) for x in a.outline.lower().split("x")] if a.outline else None
-    rules, verdict = judge(m, tmpl, outline)
+    rules, verdict = judge(m, tmpl, outline, a.all_kits)
     line = verdict_line(verdict, rules, a.title)
     out = dict(schema="opentallas.auto_geom.v1", dump=a.dump, verdict=verdict, line=line, rules=rules, metrics=m)
     if a.json:
