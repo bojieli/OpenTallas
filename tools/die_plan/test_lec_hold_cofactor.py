@@ -3,7 +3,8 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import lec
-from test_lec_unwritten_x import _seq, _mux, _sim_prove
+from test_lec_unwritten_x import _seq, _mux
+from test_lec import _exact_prove
 
 
 def _case(tmp_path, mutant=False):
@@ -22,7 +23,7 @@ def test_relaid_hold_pair_proved(tmp_path):
     L=_case(tmp_path)
     assert lec.structural_cofactor_pairs(L,[])==2
     m,_=L.build(with_compare=False,with_hyp=True)
-    assert set(_sim_prove(m).values())=={'proved'}
+    assert set(_exact_prove(m).values())=={'proved'}
 
 
 def test_refuted_hold_pair_not_retried(tmp_path):
@@ -36,7 +37,7 @@ def test_wrong_data_pair_still_fails(tmp_path):
     L=_case(tmp_path,mutant=True)
     L.hyp[('gate','ff:u_dut.array#t[1]')]=('eq','gold','ff:u_dut.array[1][0]',0)
     m,_=L.build(with_compare=False,with_hyp=True)
-    assert 'differs' in _sim_prove(m).values()
+    assert 'differs' in _exact_prove(m).values()
 
 
 def test_refuted_twin_is_not_readded_in_refinement(tmp_path):
@@ -50,4 +51,4 @@ def test_refuted_twin_is_not_readded_in_refinement(tmp_path):
     assert not L.hyp
     assert lec.structural_twin_closure(L,[])==1
     m,_=L.build(with_compare=True,with_hyp=True)
-    assert set(_sim_prove(m).values())=={'proved'}
+    assert set(_exact_prove(m).values())=={'proved'}
