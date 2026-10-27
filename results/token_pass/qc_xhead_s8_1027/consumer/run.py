@@ -1,0 +1,79 @@
+import json,os,subprocess,sys
+from pathlib import Path
+E=Path('/srv/opentallas-scratch2/claude/codex-xh-consumer-1027');T=Path('/srv/opentallas-scratch2/claude/codex-qc-xhead-1027/tree')
+sys.path[:0]=[str(T/'rtl/test/qwen_dv'),str(T/'tools/qwen_layerbench')]
+import xhead_bench as X
+
+def logread(p):
+ d={}
+ for line in p.read_text().splitlines():
+  c,n,h=line.split();d.setdefault(n,[]).append((int(c),int(h,16)))
+ return d
+base=logread(E/'fixtures/baseline.log')
+streams={}
+for family,filename in [('resid','baseline.log'),('silu','silu.log'),('attn','attn.log')]:
+ l=logread(E/'fixtures'/filename);ev=[];ea=set()
+ for c,(s,a,data) in X.VB.e5_words(l).items():
+  # Existing compiler law: ST_HOP4, targetSID0, measured tap+1.
+  cyc=c-4*(11-s)+4*s+1
+  ev.append((cyc,1,(a<<1024)|data));ea.update(range(a,a+64))
+ streams[family]=(sorted(ev),ea)
+assert [(c,v>>1024) for c,_,v in streams['resid'][0]]==base['S0XT'],'captured XT law does not match full-row baseline'
+fields={name:X.X.dv_fields(X.X.me_ops()[name],streams[X.FAMILY[name]][1]) for name in X.FAMILY}
+(E/'runs').mkdir(exist_ok=True)
+def run(name,g=None,L=None,baseline=False,isa=False,tag=None):
+ ev,ea=streams[X.FAMILY[name]];f=dict(fields[name])
+ if isa:f['me_xbase']=f['isa_xbase']
+ if baseline:
+  hr=[]
+  for line in (E/'fixtures/baseline.ev').read_text().splitlines():
+   c,p,w=line.split()
+   if int(p)==42:hr.append((int(c),2,int(w,16)))
+ else:
+  first,last=ev[0][0],ev[-1][0]
+  hr=[(first-L,2,X.X.hr_word(xpf72=X.X.pack_xpf72(f))),(last+g,2,X.X.hr_word(go=1,ib=X.X.pack_ib(f)))]
+ tag='pins3_'+(tag or f'{name}_g{g}_L{L}_isa{int(isa)}');p=E/'runs'/f'{tag}.ev';out=E/'runs'/f'{tag}.log'
+ p.write_text(''.join(f'{c} {port} {v:x}\n' for c,port,v in sorted(ev+hr)))
+ n=max(c for c,_,_ in hr)+X.X.read_span(f)+256
+ pin=E/'runs'/f'{tag}.pins'
+ r=subprocess.run([str(E/'obj/Vtb_pins'),f'+EV={p}',f'+LOG={out}',f'+NCYC={n}','+SID=0',f'+PINLOG={pin}'],stdout=subprocess.DEVNULL,stderr=subprocess.PIPE,text=True)
+ rc=r.returncode
+ pins=[tuple(map(int,line.split())) for line in pin.read_text().splitlines()] if pin.exists() else []
+ hr_go=[c for c,hr,head,xf in pins if hr];head_go=[c for c,hr,head,xf in pins if head];xf_edges=[c for c,hr,head,xf in pins if xf]
+ want_go=[c+1 for c,_,v in hr if (v>>452)&1];want_xf=[c+1 for c,_,v in hr if (v>>1)&1]
+ assert hr_go==want_go and xf_edges==want_xf,(tag,'actual control pins differ',hr_go,want_go,xf_edges,want_xf)
+ l=logread(out) if out.exists() else {};ok=rc==0 and not l.get('S0HF') and bool(l.get('S0CW')) and l['S0CW'][0][1]==255 and bool(head_go)
+ return dict(ok=ok,returncode=rc,hf=l.get('S0HF'),cw=l.get('S0CW'),xl=l.get('S0XL'),hr_go=hr_go,actual_head_go=head_go,xpf=xf_edges,stderr=r.stderr[-1000:])
+r=run('gu',baseline=True,tag='actual_full_baseline_replay')
+assert r['cw']==base['S0CW'] and r['xl']==base['S0XL'] and r['ok'],('carved baseline differs',r['cw'],base['S0CW'],r['hf'])
+res=dict(scope='Exact bound S8 x-delivery component, SID0 four columns and32leaves; captured producer streams. Not a full-row/whole-token pass.',baseline_match=True,full_producer='numeric rc0 and12/12heads clean, x_tap1/d_head21',consumers={})
+for name in ('gu','qkv','o','down'):
+ gs={g:run(name,g,16)['ok'] for g in range(-12,13)}
+ ls={}
+ def boundary(d,axis):
+  def point(k):return run(name,k,16)['ok'] if axis=='g' else run(name,g,k)['ok']
+  lo=min(d)
+  while d[lo]:
+   lo=lo*2 if lo<0 else -1
+   assert streams[X.FAMILY[name]][0][-1][0]+lo>16,('go search before boot',name,lo)
+   d[lo]=point(lo)
+  hi=min(k for k in d if d[k])
+  while hi-lo>1:
+   mid=(lo+hi)//2;d[mid]=point(mid)
+   if d[mid]:hi=mid
+   else:lo=mid
+  assert d[hi] and not d[lo]
+  return hi
+ g=boundary(gs,'g')
+ ls={L:run(name,g,L)['ok'] for L in range(-4,13)}
+ L=boundary(ls,'L')
+ nominal=run(name,g,L,tag=f'{name}_nominal')
+ goearly=run(name,g-1,L,tag=f'{name}_goearly')
+ xpflate=run(name,g,L-1,tag=f'{name}_xpflate')
+ isaxbase=run(name,g,L,isa=True,tag=f'{name}_isaxbase')
+ ok=nominal['ok'] and not any(x['ok'] for x in (goearly,xpflate,isaxbase))
+ res['consumers'][name]=dict(verdict='PASS' if ok else 'FAIL',go_lag=g,xpf_lead=L,sweep_go=gs,sweep_xpf=ls,nominal=nominal,mutants=dict(goearly=goearly,xpflate=xpflate,isaxbase=isaxbase))
+ (E/'result_partial_final_pins.json').write_text(json.dumps(res,indent=1)+'\n')
+ print('ACTUAL_S8_XHEAD_CONSUMER',name,res['consumers'][name]['verdict'],g,L,flush=True)
+res['verdict']='PASS' if all(x['verdict']=='PASS' for x in res['consumers'].values()) else 'FAIL'
+(E/'result_final_pins.json').write_text(json.dumps(res,indent=1)+'\n');raise SystemExit(0 if res['verdict']=='PASS' else 1)
