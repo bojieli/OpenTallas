@@ -22,6 +22,17 @@ class T(unittest.TestCase):
         self.assertEqual(leg['sends'][0]['dst_row'], 640)
         self.assertEqual(len(leg['sends']), 40)
 
+
+    def test_xr7_config_slot_is_lov1_free(self):
+        """TOK-DS-9: ot_s81sl_xr.sv:558 faults tg[4] && |lov1; every config decode edge must miss every packer pair edge"""
+        leg = LV.leg_program(0, 'W', 14, LV.a_rows(0), t0=100)
+        cfg = {c['cycle'] + LV.CFG_AT for c in leg['ctl'] if c['target'] == 4}
+        lov1 = {c['cycle'] + LV.CFG_AT + LV.LO_AFTER_CTL + LV.LO_PACK + j for c in leg['ctl'] if c['target'] == 0
+                for j in range(4)}
+        self.assertFalse(cfg & lov1)
+        pins = [c['cycle'] for c in leg['ctl']]
+        self.assertEqual(len(pins), len(set(pins)))
+        self.assertEqual(LV.beat_period(), 6)
     def test_placements_fit_and_disjoint(self):
         """on one die (rank d): every rank's gathered a / router rows, the 4 partial quarters and d's 3 RS slots are
         disjoint leaf rows inside 5 leaves x 1024 rows"""
