@@ -33,7 +33,16 @@ def strap_of(t):
 taps = [dict(name=t.get("inst") or t["part"], part=t["part"], tap=t["kind"] + ":" + (t.get("inst") or "").split(".")[-1],
              xy=t["xy"], foot=t["strap_pt"], stub_um=t["stub_um"], stub=dict(um=t["stub_um"], layer="M7/M8 pushdown",
              kind=t["kind"]), strap=strap_of(t), early_ps=0.0) for t in T]
-M = dict(meta=dict(ndr="8w", pitch_um=[177.12, 259.2], regions_depth=0, trunk_um=0.0, form="head_mesh_r3 continuous"),
+pitch = [177.12, 259.2]          # R3-R15 lattice (M9 177.12 / M8 rows 1036.8 / 4 per tile row)
+if "--pitch-from-straps" in sys.argv:
+    # HEAD-CORE-R17: mean mesh pitch from the built straps (densified M8 rows): M9 = median column gap, M8 = mean gap
+    # between consecutive tile-array rows (kinds tile_row / tile_row_dense), the K_PITCH input of master_plan's pair model
+    gx = sorted(b - a for a, b in zip(xs, xs[1:]))
+    ty = sorted({s[1] for s in S if s[0] == "M8" and s[4] in ("tile_row", "tile_row_dense")})
+    gy = [b - a for a, b in zip(ty, ty[1:])]
+    pitch = [round(gx[len(gx) // 2], 3), round(sum(gy) / len(gy), 3)]
+    print("pitch_um from straps", pitch, "max M8 gap", round(max(gy), 3))
+M = dict(meta=dict(ndr="8w", pitch_um=pitch, regions_depth=0, trunk_um=0.0, form="head_mesh_r3 continuous"),
          htree=ht, drivers=drv, taps=taps, xs=xs, ys=ys)
 (d / "mesh.json").write_text(json.dumps(M))
 print(len(ht), "edges", len(drv), "drivers", len(taps), "taps", len(xs), "xs", len(ys), "ys")
