@@ -16,13 +16,21 @@ KEYWORDS = {'module', 'input', 'output', 'wire', 'reg', 'assign', 'always', 'if'
             'generate', 'localparam', 'parameter', 'function', 'task', 'case', 'endmodule'}
 
 
-def defined(rev, name, cache={}):
-    if name in cache: return cache[name]
-    r = subprocess.run(['git', '-C', str(ROOT), 'grep', '-l', '-E', rf'^\s*(\(\*.*\*\)\s*)?module\s+{name}\b', rev, '--',
-                        '*.sv', '*.v', ':!results/**', ':!*_bb.v', ':!docs/**'], capture_output=True, text=True)
-    files = [l.split(':', 1)[1] for l in r.stdout.split() if ':' in l]
-    cache[name] = files
-    return files
+_DEFS = {}
+
+
+def defined(rev, name):
+    """One git grep of all module definitions in REV (cached), never one grep per module."""
+    if rev not in _DEFS:
+        r = subprocess.run(['git', '-C', str(ROOT), 'grep', '-n', '-E', r'^\s*(\(\*.*\*\)\s*)?module\s+[A-Za-z_]\w*', rev, '--',
+                            '*.sv', '*.v', ':!results/**', ':!*_bb.v', ':!docs/**'], capture_output=True, text=True)
+        d = {}
+        for line in r.stdout.splitlines():
+            _, path, _, text = line.split(':', 3)
+            m = re.search(r'module\s+([A-Za-z_]\w*)', text)
+            if m: d.setdefault(m.group(1), []).append(path)
+        _DEFS[rev] = d
+    return _DEFS[rev].get(name, [])
 
 
 def main(argv=None):
