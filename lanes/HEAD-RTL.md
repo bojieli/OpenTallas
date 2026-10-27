@@ -102,3 +102,10 @@ READY codex/head-host-2000@bceaec7caf includes HOSTc24cb818b4 and CTL825fe511a7.
 
 ## CODEX notes 2026-10-26 20:54 PDT integrated/clean
 HEAD ctl8b18e51e8a +HOSTbceaec7caf both merged mainf795e41b9a. Ownmergedctlworktreecleanremoved; no livejobs. Full source/failure/gate/remainingpacket handoff/codex-head-ctl-20261026-2055.md; HOSTpacket handoff/codex-head-host-20261026-2049.md. Canonicalplan/physical/token gates remainopen, no ownerquestions.
+
+## [HEAD-RTL-3 2026-10-26 22:20 PDT] strict die bind on main f795e41b9a; mesh replay test finds a real burst overwrite
+Branch claude/head-rtl3-1026@fe797a6b46 (epyc1 wt/head-rtl3-1026), evidence results/arch/head_rtl3_1026/README.md. CHECKED.
+- Codex closed on main: real hd_ctl (ot_s81hd_ctl_core) + hd_host (ot_s81hd_host_ep_core), lep0N noidx, START bootstrap, H4 tl/ca/cb removed (no consumer -> plan delta), MTP 5-step fix. Canonical plan NOT adopted: module check canonical 4 missing, candidate (head_provider_plan_delta) 0 missing/0 unresolved.
+- NEW tools/s81_head/head_die_portbind.py (module check + leaf bind + die_port_bind, repo-relative filelist). Candidate: PASS, 326 inst, unbound/stub/input_unconnected/input_tied/undriven/multi_driven/unread/output_open all 0. Open inputs = 0, undriven net bits = 0. Only declared exceptions: 1660 reset/START wavefront outs with no child (per-instance pads).
+- Gap found in die_port_bind: canonical also PASSes, because the wrappers instantiate themselves as u_core and count as real. The wrapper therefore requires the module check too.
+- hd_mesh forced-CRC replay test (ruling 19:35): the old windows replayed one direction only (retx 0). With stronger windows (1 beat/16 cyc): 4 CRC errors, 4 replays, 25 retx flits, then copy B lost 6/401 records with sticky ep_fault bit 10 (OVERWRITE). Root cause: after a replay the lane delivers the backlog back-to-back (lsc_r0m credit = li_v registered), but the 1-entry copy slot drains 1 word / 2 edges. The fault is detected, not silent. The X->Y window gave 0 CRC errors (bits [339:300] apparently not CRC-visible; to investigate). Mutants 1-6 FAIL (5 NOREPLAY, 6 NOCRC new). Production bench FAILS until fixed.
