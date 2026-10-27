@@ -166,7 +166,6 @@ module ot_hgi_argmax18_value_m #(
     reg [31:0] tbits [0:LL][0:LP-1];
     reg          tvl [0:LL][0:LP-1];
     reg          tnan [0:LL];
-    integer lv, e;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             tv <= 0; out_v <= 1'b0;
@@ -175,25 +174,33 @@ module ot_hgi_argmax18_value_m #(
             out_v <= tv[LL];
         end
     end
-    // level 0 = the lane bests; level l+1 = pairwise winners of level l
-    always @(posedge clk) begin
-        if (fin) begin
-            for (e = 0; e < LP; e = e + 1) begin
-                tbits[0][e] <= bv_bits[e]; tk[0][e] <= bk[e]; ti[0][e] <= bi[e]; tvl[0][e] <= seen[e];
+    // Constant-index stage processes keep every array element's next state local.
+    // This is the same registered tree and tie-breaking rule as the procedural loop.
+    genvar tl, te;
+    generate
+        for (te = 0; te < LP; te = te + 1) begin : g_tree_capture
+            always @(posedge clk) if (fin) begin
+                tbits[0][te] <= bv_bits[te]; tk[0][te] <= bk[te];
+                ti[0][te] <= bi[te]; tvl[0][te] <= seen[te];
             end
-            tnan[0] <= nan_row;
         end
-        for (lv = 0; lv < LL; lv = lv + 1) begin
-            for (e = 0; e < (LP >> (lv + 1)); e = e + 1) begin
-                if (!tvl[lv][2*e+1] || (tvl[lv][2*e] && (tk[lv][2*e] > tk[lv][2*e+1] ||
-                    (tk[lv][2*e] == tk[lv][2*e+1] && ti[lv][2*e] < ti[lv][2*e+1])))) begin
-                    tbits[lv+1][e] <= tbits[lv][2*e]; tk[lv+1][e] <= tk[lv][2*e]; ti[lv+1][e] <= ti[lv][2*e]; tvl[lv+1][e] <= tvl[lv][2*e];
-                end else begin
-                    tbits[lv+1][e] <= tbits[lv][2*e+1]; tk[lv+1][e] <= tk[lv][2*e+1]; ti[lv+1][e] <= ti[lv][2*e+1]; tvl[lv+1][e] <= tvl[lv][2*e+1];
+        for (tl = 0; tl < LL; tl = tl + 1) begin : g_tree_level
+            for (te = 0; te < (LP >> (tl + 1)); te = te + 1) begin : g_pair
+                wire take_left = !tvl[tl][2*te+1] || (tvl[tl][2*te] &&
+                    (tk[tl][2*te] > tk[tl][2*te+1] ||
+                    (tk[tl][2*te] == tk[tl][2*te+1] && ti[tl][2*te] < ti[tl][2*te+1])));
+                always @(posedge clk) begin
+                    tbits[tl+1][te] <= take_left ? tbits[tl][2*te] : tbits[tl][2*te+1];
+                    tk[tl+1][te] <= take_left ? tk[tl][2*te] : tk[tl][2*te+1];
+                    ti[tl+1][te] <= take_left ? ti[tl][2*te] : ti[tl][2*te+1];
+                    tvl[tl+1][te] <= take_left ? tvl[tl][2*te] : tvl[tl][2*te+1];
                 end
             end
-            tnan[lv+1] <= tnan[lv];
         end
+    endgenerate
+    always @(posedge clk) begin
+        if (fin) tnan[0] <= nan_row;
+        for (integer nl = 0; nl < LL; nl = nl + 1) tnan[nl+1] <= tnan[nl];
         out_value <= tbits[LL][0]; out_idx <= (OFFSET_W+1)'(ti[LL][0])+{1'b0,global_offset};
         out_range_fault <= (((OFFSET_W+1)'(ti[LL][0])+{1'b0,global_offset}) >= 26'd262144);
         out_nan <= tnan[LL];
