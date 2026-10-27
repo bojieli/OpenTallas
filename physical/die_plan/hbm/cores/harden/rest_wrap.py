@@ -93,6 +93,12 @@ def main():
     ports = single
     for nm, d, w in ports:
         c = clean(topname.get(nm, nm))
+        # two core ports on bits of the same master port (NLINK 2: one per link) would both take the master name:
+        # uniquify as the bus groups do (HBM-CORES-RTL 10-26; the q2n2 plan pin files carry retry_requested_)
+        if not (d == "output" and nm in unused) and not (d == "input" and nm in use and not use[nm]):
+            while c in used_names:
+                c += "_"
+            used_names.add(c)
         ref = nm if not nm.startswith('\\') else nm + ' '
         if d == 'output' and nm in unused:
             conns.append(f'.{ref}()')
