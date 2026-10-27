@@ -4,18 +4,88 @@
  "numbers": "UNCHECKED (lane STA, meas_ck.tcl + resid.py; native OT_MSCTS_TAP records agree to 0.1 ps)",
  "prog_m0_r3": {
   "plan": "results/qc_su_kits/r3/out/prog_m0_r3.gate.asbuilt.tcl sha256 b5ceabb9..7a33 (31 plan repeaters, no trunk), built unmodified on intel1:/srv/opentallas-scratch2/claude/qc-su-kits2-1026/prog_m0_r3 (same MIF0 3_place.odb as prog_m0, ITERS 0, TritonCTS off, no pads)",
-  "pred_asbuilt": {"TT_avg": [254.45, 15.91], "FF_early": [191.28, 15.19], "FF_late": [195.79, 15.32]},
-  "meas_grt": {"TT_rise_max": {"mean": 239.25, "tap_window": 23.07}, "FF_early": {"mean": 183.76, "tap_window": 19.46}, "grt_overflow": 0},
-  "resid_per_leaf_TT_rise_vs_avg_model": {"mean": -15.16, "sd": 4.39}, "resid_FF_early_mean": -7.52,
+  "pred_asbuilt": {
+   "TT_avg": [
+    254.45,
+    15.91
+   ],
+   "FF_early": [
+    191.28,
+    15.19
+   ],
+   "FF_late": [
+    195.79,
+    15.32
+   ]
+  },
+  "meas_grt": {
+   "TT_rise_max": {
+    "mean": 239.25,
+    "tap_window": 23.07
+   },
+   "FF_early": {
+    "mean": 183.76,
+    "tap_window": 19.46
+   },
+   "grt_overflow": 0
+  },
+  "resid_per_leaf_TT_rise_vs_avg_model": {
+   "mean": -15.16,
+   "sd": 4.39
+  },
+  "resid_FF_early_mean": -7.52,
   "verdict": "12.3 FAIL: TT window 23.1 > 20 (means in band) -> DRT/RCX NOT run; W islands (long pinned west detour Q1, S-strip W Q3) measured 20-25 ps below prediction, E islands 6-16 below"
  },
  "btab_m0_r4": {
   "plan": "su_tree_uf_ls.py (k-means clusters, island = nearest legal 8.64 rect outside macro row halo + SRAM clock-pin columns) + su_kit_gate r4 --chain --straight L3 k=6 (every repeater a legal cell at exact equal-cut shortest distances; L1 3x59.4 um all islands, L2 4 segments)",
   "gates": "G1-G5 + P_asbuilt PASS (66 repeaters, 0 nodes in pin columns, 0 legs across SRAM)",
-  "pred_asbuilt": {"TT_avg": [267.15, 14.72], "FF_early": [196.89, 13.0]},
-  "meas_grt": {"TT_rise_max": {"mean": 251.77, "tap_window": 17.27}, "FF_early": {"mean": 190.93, "tap_window": 16.09}, "grt_overflow": 0},
-  "resid_per_leaf_TT_rise_vs_avg_model": {"mean": -15.43, "sd": 3.66}, "resid_FF_early_mean": -5.96,
-  "verdict": "CTS+GRT in band (TT 251.8 w17.3, FF early 190.9 w16.1) -> DRT+fill+finish/RCX launched (route_r4.sh)"
+  "pred_asbuilt": {
+   "TT_avg": [
+    267.15,
+    14.72
+   ],
+   "FF_early": [
+    196.89,
+    13.0
+   ]
+  },
+  "meas_grt": {
+   "TT_rise_max": {
+    "mean": 251.77,
+    "tap_window": 17.27
+   },
+   "FF_early": {
+    "mean": 190.93,
+    "tap_window": 16.09
+   },
+   "grt_overflow": 0
+  },
+  "resid_per_leaf_TT_rise_vs_avg_model": {
+   "mean": -15.43,
+   "sd": 3.66
+  },
+  "resid_FF_early_mean": -5.96,
+  "verdict": "CTS+GRT in band (TT 251.8 w17.3, FF early 190.9 w16.1) -> DRT+fill+finish/RCX launched (route_r4.sh)",
+  "meas_rcx": {
+   "TT_rise_max": {
+    "mean": 262.05,
+    "tap_window": 53.65
+   },
+   "FF_early": {
+    "mean": 200.57,
+    "tap_window": 47.17
+   },
+   "drt_final_violations": 5,
+   "rcx_minus_grt_TT_per_island_mean": {
+    "Q0_SE": 26.7,
+    "Q5_E": 21.9,
+    "Q3_NE": 10.8,
+    "Q1_W": -5.3,
+    "Q2_SW": -8.4,
+    "Q4_farE": -4.2
+   },
+   "verdict": "RCX 12.3 FAIL window 53.7 (GRT 17.3): islands whose legs run in the x224-240 SRAM clock-pin column slow +11..+27 after DRT; hypothesis (UNCHECKED) = clock legs pushed to M2/M3 / detoured in the congested pin column; no hold-repair stage was run"
+  }
  },
  "rejected": "su_tree_uf_er.py equal-reach islands: windows 31-72 (sweep/sweep_er_equal_reach_summary.txt); r3 planner + chain with su_tree_uf_pc islands: L1 unpinnable (killed)"
 }
