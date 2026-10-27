@@ -1,0 +1,55 @@
+{
+ "odb": "/srv/opentallas-scratch2/claude/qccores4-1027/romleaf/kits/ot_qwen_tile_romleaf_a0r3b/run/results/asap7/kq_ot_qwen_tile_romleaf_a0r3b/base/3_place.odb",
+ "die": [
+  172.8,
+  110.16
+ ],
+ "macros": 1,
+ "seq": 2200,
+ "icg": 0,
+ "seq_masters": {
+  "DFFHQNx1_ASAP7_75t_R": 2196,
+  "DFFASRHQNx1_ASAP7_75t_R": 4
+ },
+ "timed_inputs": 2208,
+ "r2r_pairs": 6476,
+ "r2r_max_um": 172.098,
+ "r2r_over405": 0,
+ "loops": 0,
+ "worst": [],
+ "bterm_in": 15,
+ "pin2reg_max_um": 44.211,
+ "pin2reg_worst": [
+  "rst_n",
+  "u_lg.sel_c$_DFF_PN0_"
+ ],
+ "pins": {
+  "W": {
+   "n": 527,
+   "combined_peak_per_um": 10.5,
+   "at": [
+    1.212,
+    11.196,
+    "r_q[337]"
+   ],
+   "per_layer": {
+    "M4": {
+     "n": 527,
+     "peak_per_um": 10.5,
+     "at": [
+      1.212,
+      11.196,
+      "r_q[337]"
+     ]
+    }
+   }
+  },
+  "I": {
+   "n": 1
+  }
+ },
+ "core_cells": 7612,
+ "row_orient_bad": 0,
+ "off_row": 0,
+ "bad_ex": []
+}

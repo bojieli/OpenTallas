@@ -1,0 +1,75 @@
+{
+ "odb": "/srv/opentallas-scratch2/claude/codex-qc-btab-0828/btab_m0_r10_ff/run/results/asap7/kq_qfd_dv_s8x_btab_mif0r7/base/5_1_grt.odb",
+ "die": [
+  354.24,
+  259.2
+ ],
+ "macros": 4,
+ "seq": 3442,
+ "icg": 0,
+ "seq_masters": {
+  "DFFHQNx1_ASAP7_75t_R": 3438,
+  "DFFASRHQNx1_ASAP7_75t_R": 4
+ },
+ "timed_inputs": 3450,
+ "r2r_pairs": 3235,
+ "r2r_max_um": 366.768,
+ "r2r_over405": 0,
+ "loops": 0,
+ "worst": [],
+ "bterm_in": 1061,
+ "pin2reg_max_um": 27.687,
+ "pin2reg_worst": [
+  "tw_data[99]",
+  "ptw_data\\[99\\]$_DFF_P_"
+ ],
+ "pins": {
+  "E": {
+   "n": 281,
+   "combined_peak_per_um": 5.3,
+   "at": [
+    104.652,
+    114.636,
+    "bs_q[0]"
+   ],
+   "per_layer": {
+    "M4": {
+     "n": 281,
+     "peak_per_um": 5.3,
+     "at": [
+      104.652,
+      114.636,
+      "bs_q[0]"
+     ]
+    }
+   }
+  },
+  "I": {
+   "n": 5
+  },
+  "S": {
+   "n": 1036,
+   "combined_peak_per_um": 5.0,
+   "at": [
+    64.812,
+    74.748,
+    "tw_data[0]"
+   ],
+   "per_layer": {
+    "M5": {
+     "n": 1036,
+     "peak_per_um": 5.0,
+     "at": [
+      64.812,
+      74.748,
+      "tw_data[0]"
+     ]
+    }
+   }
+  }
+ },
+ "core_cells": 11678,
+ "row_orient_bad": 0,
+ "off_row": 0,
+ "bad_ex": []
+}

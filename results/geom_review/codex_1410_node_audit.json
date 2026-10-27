@@ -1,0 +1,76 @@
+{
+ "odb": "/srv/opentallas-scratch2/claude/qccores4-1027/node/kits/ot_qwen_tile_node_a0r3/run/results/asap7/kq_ot_qwen_tile_node_a0r3/base/3_place.odb",
+ "die": [
+  47.52,
+  432.0
+ ],
+ "macros": 0,
+ "seq": 12102,
+ "icg": 0,
+ "seq_masters": {
+  "DFFHQNx1_ASAP7_75t_R": 11405,
+  "DFFASRHQNx1_ASAP7_75t_R": 576,
+  "DFFHQNx2_ASAP7_75t_R": 121
+ },
+ "timed_inputs": 13254,
+ "r2r_pairs": 133874,
+ "r2r_max_um": 393.174,
+ "r2r_over405": 0,
+ "loops": 0,
+ "worst": [],
+ "bterm_in": 1539,
+ "pin2reg_max_um": 41.451,
+ "pin2reg_worst": [
+  "rst_n",
+  "u_rr.rst_n\\[0\\]$_SDFF_PN0_"
+ ],
+ "pins": {
+  "W": {
+   "n": 2051,
+   "combined_peak_per_um": 5.2,
+   "at": [
+    10.908,
+    20.796,
+    "a[0]"
+   ],
+   "per_layer": {
+    "M4": {
+     "n": 2051,
+     "peak_per_um": 5.2,
+     "at": [
+      10.908,
+      20.796,
+      "a[0]"
+     ]
+    }
+   }
+  },
+  "I": {
+   "n": 1
+  },
+  "E": {
+   "n": 515,
+   "combined_peak_per_um": 5.2,
+   "at": [
+    211.98,
+    221.916,
+    "t_d[0]"
+   ],
+   "per_layer": {
+    "M4": {
+     "n": 515,
+     "peak_per_um": 5.2,
+     "at": [
+      211.98,
+      221.916,
+      "t_d[0]"
+     ]
+    }
+   }
+  }
+ },
+ "core_cells": 58403,
+ "row_orient_bad": 0,
+ "off_row": 0,
+ "bad_ex": []
+}
