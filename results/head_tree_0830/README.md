@@ -1,0 +1,11 @@
+# HEAD fixed-wire corridor planning — FAIL, 2026-10-27
+
+Source helper head_tree_corridors.py at fb8c2ba80 preserves balanced tree topology and real buffer banks. It interval-colors long M8/M9 trunks before local jog routing, includes leaf stubs, orients westbound banks MY, aligns capture inputs with legal M9 PG-gap columns, reserves exact short local jogs and rejects reserve overflow. No relaxed routing limits or physical adoption.
+
+Current shared tool snapshot is intel2:/srv/opentallas-scratch2/claude/codex-head-tree-0830/shared_8fcd/tools/die_plan from main8fcd97ac44. Set HEAD_TREE_SHARED_TOOLS to this path: the branch's inherited C128 is older and must not be used for current comparisons.
+
+Best terminal result physical_interval_my_8fcd is FAIL57:38no_clock_track and19no_pin_stack, preserved in physical_interval_my_errors.json. Original current-source exact plan had1393failures; FLOW replay found no legal alternate track at all1027 original stack failures under the same constraints. Failures are structural competition, not a demonstrated shared-router defect. Results and all prior failed attempts remain at intel2:/srv/opentallas-scratch2/claude/codex-head-tree-0830/. No OpenROAD, routing or STA was launched by this helper.
+
+Independent planning review codex/head-1027@d745f04d48, results/geom_review/head_ft_halo_1002 proves this candidate also fails reconstructed face-flop geometry:624potential2um-halo pairs/216clockcells and74overlap pairs in spine/end. These are documented face-row planning witnesses, not actual placed-cell collision claims; centroid-only internal banks remain unqualified. Next structural change is directional horizontal bank placement in the lower gap: lower core top328.32 requires bankbottom>=330.32; first face FF354.78 requires banktop<=352.78. The current symmetric bank colors occupy face rows. Repair this before route and confirm actual generated FT sites. Tree leaves also still require an actual continuous mesh terminal and native FT buffer replacement, not double-buffering.
+
+Local pg_only_mesh.json and overlap visualization are diagnostics only (omit full inter-clock constraints, picture colors do not encode PG layer correctly); they are deliberately not published as a physical PASS. Canonical HEAD plan is unchanged.
