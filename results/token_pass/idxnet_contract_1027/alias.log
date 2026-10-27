@@ -1,0 +1,4 @@
+IDXNET_TX_HEADER physical_lane2 quarter2
+[1200000] %Fatal: tb_idxnet_tx_contract.sv:17: Assertion failed in tb_idxnet_tx_contract.unnamedblk1: IDXNET_SCORE_ALIAS position0 expected3f80 got4000 poison1 fault0
+%Error: tools/s81_dv/layer_prog/tb_idxnet_tx_contract.sv:17: Verilog $stop
+Aborting...

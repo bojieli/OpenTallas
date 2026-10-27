@@ -1,0 +1,11 @@
+# Native IDXNET TX mechanism constraints
+
+Selected source: `physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_l20s.sv` on compiler/source base `cc0ede342`. This diagnostic instantiates the actual `dsdv_idx_tx_n32` at D8192/IB64/SRAM_MACRO1, its real SRAM macro models, and an833ps clock. It makes no RTL changes.
+
+The baseline transmits16 BF16 scores correctly, with status fault0 and completion at859cycles. Metadata runs show that the same programmed `j_l` sets both physical V-lane and HDR quarter: lane2/quarter2, and lane0/quarter0. The selected TP endpoint requires physical lane2. Thus an unmodified sender cannot independently select an arbitrary global quarter while satisfying that TP header constraint.
+
+The second run writes a legal score window at position0 with value3f80, then another window at131072 with value4000. Native TX retransmission for index0 returns4000 while status fault remains0. This reproduces the address mechanism: D8192 windows x16 positions =131072 positions; the AW13 address truncates the higher global-index bits. The expected failure is preserved in alias.log. The script reports that the alias was reproduced, **not** that a token/RTL correctness gate passed.
+
+This is deliberately a mechanism probe. It does **not** establish that the current programme allows this two-window interleaving. D8192 may intentionally represent a rank-local address domain; actual producer bounds, global-to-local mapping, capture phase and forwarding ownership must be proved before selecting a fix. L2 fixture score shape is524288, L20 is1048576; merely expanding D to the full aggregate shape would not establish the intended ownership or physical cost. Root assigned the producer-contract-first follow-up to TOK-DS; no larger D, remap, filter, lane rewrite, new collective or plan adoption has been selected here.
+
+Reproduce via ot-run from a pinned checkout using `tools/s81_dv/layer_prog/idxnet_contract_bench.sh results/token_pass/<fresh-directory>`. It refuses an existing output directory. Native TX built in17.604seconds, allocated57.645MB; unit `oth-ubuntu-1207526-1793119323` completed the diagnostic on intel2. Generated positive, lane0 and alias logs are included. No added data/control cycles, no physical or whole-token qualification.
