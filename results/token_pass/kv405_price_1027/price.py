@@ -65,7 +65,7 @@ def model(per_layer,embed):
 result=dict(status='PENDING_CANDIDATE_INCREMENTAL_PRICE_NOT_ADOPTED',source='codex/kv-kits-1027b@b4a705f520',
  raw_lanes=len(raw['lanes']),raw_added_edge_sum=sum(x['added_cycles'] for x in raw['lanes'].values()),
  r8=dict(changed=len(shift['changed']),landed_delta_histogram=dict(Counter(x['landed'][1]-x['landed'][0] for x in shift['changed'])),
- pv_changed=len(pvchanges),pv_calendar_added_cycles=0,inbound_bundle_added_cycles=0,attention_tx_added_cycles=direct),
+ pv_changed=len(pvchanges),pv_calendar_added_cycles=0,inbound_bundle_added_cycles=0,attention_tx_added_cycles=direct, D2D_TXDP_K_byte0_added_cycles=direct),
  vport=ports,required_fia_without_extra_W_pads={k:4+v+1 for k,v in maxima.items()},
  direct_transport_model=model(direct,0),
  serial_family_sensitivity=model(direct+sum(interior.values()),3),
@@ -76,6 +76,6 @@ result=dict(status='PENDING_CANDIDATE_INCREMENTAL_PRICE_NOT_ADOPTED',source='cod
  'Reprice OUT attention payload+valid bundle +1/layer; incoming RX/KVN source fields stay aligned at56.',
  'Recompute EXP_START/ACAL per WN/WS (+1 AM/cal delivery), programme prg/xs/fan (+1/+1 legs), hroot_WN boot/embedding return (+1), EST embedding fan(+2). These overlap; final static compiler decides critical exposure.',
  'No ECTL Kreq/Krsp,QK_ISSUE_AGE,AHUB AP_OFS/FR_OFS,KVN_A0,or PV TRUNK_D/FLAG_D source rule leg moved in this incremental ledger.',
- 'Recompile final native boot image and pair calendar only after final bind; do not retain old image constants. No duplicatebind/fullsim launched.'])
+ 'SK_TXV/SK_TXP+1 requires D2D_TXDP_K byte0+1 (other bytes unchanged); recompile one pair image and bind it on BOTH QC/KV. Final native boot image and pair calendar wait final bind; do not retain stale constants. Direct transport cost is lane-class sensitivity; final schedule can hide it in link slack. No duplicatebind/fullsim launched.'])
 a.out.write_text(json.dumps(result,indent=1)+'\n')
 print(json.dumps({k:result[k] for k in ('r8','required_fia_without_extra_W_pads','direct_transport_model','serial_family_sensitivity')},indent=1))

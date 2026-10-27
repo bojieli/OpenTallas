@@ -13,7 +13,8 @@
   "pv_changed": 89,
   "pv_calendar_added_cycles": 0,
   "inbound_bundle_added_cycles": 0,
-  "attention_tx_added_cycles": 1
+  "attention_tx_added_cycles": 1,
+  "D2D_TXDP_K_byte0_added_cycles": 1
  },
  "vport": {
   "vport_EN_0": {
@@ -306,6 +307,6 @@
   "Reprice OUT attention payload+valid bundle +1/layer; incoming RX/KVN source fields stay aligned at56.",
   "Recompute EXP_START/ACAL per WN/WS (+1 AM/cal delivery), programme prg/xs/fan (+1/+1 legs), hroot_WN boot/embedding return (+1), EST embedding fan(+2). These overlap; final static compiler decides critical exposure.",
   "No ECTL Kreq/Krsp,QK_ISSUE_AGE,AHUB AP_OFS/FR_OFS,KVN_A0,or PV TRUNK_D/FLAG_D source rule leg moved in this incremental ledger.",
-  "Recompile final native boot image and pair calendar only after final bind; do not retain old image constants. No duplicatebind/fullsim launched."
+  "SK_TXV/SK_TXP+1 requires D2D_TXDP_K byte0+1 (other bytes unchanged); recompile one pair image and bind it on BOTH QC/KV. Final native boot image and pair calendar wait final bind; do not retain stale constants. Direct transport cost is lane-class sensitivity; final schedule can hide it in link slack. No duplicatebind/fullsim launched."
  ]
 }
