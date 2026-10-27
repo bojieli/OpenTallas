@@ -493,6 +493,7 @@ SCHEMA = {
                     "contents": {"type": "array", "items": {
                         "type": "object", "required": ["inst", "module", "status"], "additionalProperties": False,
                         "properties": {"inst": _name, "module": _name, "status": {"enum": list(STATUS)},
+                                       "physical_inst": _name, "physical_master": _name,
                                        "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"},
                                        "bump_ports": _bump_ports,
                                        "kit": {"type": "string"}, "geom_pass": {"type": "string"},
