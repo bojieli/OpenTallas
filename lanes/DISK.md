@@ -135,3 +135,9 @@ Deleted (size_kb path reason):
 - 2164404 codex-s81-bind-1309/vp_emit/bind_sinks.json (old 10-25 bind output json >50MB, superseded by later binds; bind_latency.json + logs kept)
 - 229 Verilator build dirs (>24h, outside keep/Codex/live lists; only V*/.o/.d/.a/.gch/.mk/.cpp/.h/.dat files deleted, logs/results kept), total 99030980 kb, incl s81-portfix/flt kits 58.5G; s81-cores2-la/lec_l4_sim/obj skipped (root-owned)
 KEPT notable: flow-canary (live writer, 44 SIGNED in ab), proto1025/kits_s81_178 99G (<24h), tok-qk-xd/path-kv (<24h/live), codex-s81-split + wt/codex-s81-kits-1713 (SIGNED), all wt/*-1026 worktrees (<24h).
+
+2026-10-26 18:45 PDT ARCHIVE-SIGNED-EPYC2: 3 signed-off epyc2 kit routes archived via closed_archive/_tools/archive.py archive_job (wrapper /home/ubuntu/.claude/jobs/b7f906df/tmp/archive_kits/archive_kit.py: synthetic in-memory CLOSED job, scope=kit-signoff, whole kit dir, no dedupe; daemon state untouched; INDEX rebuilt 3227 jobs). Verified CHECKED: per-file sha256 on epyc2 vs archive (zst decompressed) vs manifest, member counts equal, 0 mismatch, 0 extra:
+- epyc2:/srv/opentallas-scratch2/claude/s81-kits/c3/dsdv_eng_rr_h1_c (2.94 GB, 199 files) -> closed_archive/dsdv_eng_rr_h1/kit-dsdv_eng_rr_h1_c-c3-epyc2 (0.62 GB) PASS
+- epyc2:/srv/opentallas-scratch2/claude/codex-s81-cores/c4/ot_dsrom_su_hcpost_lane_pr_c (0.91 GB, 184) -> closed_archive/ot_dsrom_su_hcpost_lane_pr/kit-ot_dsrom_su_hcpost_lane_pr_c-c4-epyc2 (0.18 GB) PASS
+- epyc2:/srv/opentallas-scratch2/claude/codex-qc-cores/crh_i291_m5 (0.44 GB, 137) -> closed_archive/qfd_dv_s8x_crh/kit-crh_i291_m5-qc-epyc2 (0.06 GB) PASS
+Sources NOT deleted; now SAFE TO PRUNE (~4.3 GB on epyc2). GDS not generated (gds=pending; 6_final.odb/def archived).
