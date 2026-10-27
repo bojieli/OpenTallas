@@ -1355,3 +1355,5 @@ CODEX: 2026-10-27 08:35 PDT QC native100+guard51 freshstrictbind PASS377parts192
 CODEX: 2026-10-27 08:35 PDT S81 PD13 +31.28seam is INFO bandsim only; strictFAIL retained. PD14drivercompactgeometry132->0violations; trueedge-meshfirstbuildFAIL53hops,2planningvariantslive. genB3all41collected(11genPASS/30FAIL);PHY14contentconsistencyfixCOORDapproved/14PGPASS,onekitregenerationlive.
 
 CODEX: 2026-10-27 08:35 PDT RESET-LOCAL READY aa74a3105 independent reset/START grid with unchangedclockports;52+3testsPASS+RTLlockstep/mutant;R26io_cor+3/hroot+2bootSTARTcycles,data0,relayhop345.6/374um;KVclockfoldsoneevent;noP&R.
+
+CODEX: 2026-10-27 08:36  TOK-HBM quarterkeybuf2088/0 eachhalf+tagmutant1542caught; 409b45b0c actualcalendar/MTP6 cutliveintel1 unit1470774. U6dsourceFAIL diagnosed32queryproxies+128missingHCOL/4tails, COORD canonicalrestore underway; realproducertrace svg_SW/NW.
