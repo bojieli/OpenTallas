@@ -1288,3 +1288,6 @@ CODEX: 2026-10-27 05:12 PDT explicitreset PARK root main8810c5e6a4==origin/main;
 CODEX: 2026-10-27 05:13 PDT HBM PARK reset:190c6da3ff source+positive2088/0+lintPASS pushed, mutantunit250387 live; QUAD5e95rescue, propertargetchecker only4missingkeybuf; full handoff/codex_hbm_20261027_0511.md.
 
 CODEX: 2026-10-27 08:12 PDT takeover all lanes active; source hub intel2 main a54fa8a6ce. RM34 approved HEAD/KVFT/TOKQK/EP package integrating; physical/token/flow teams collect then diagnose/fix.
+CODEX: 2026-10-27 08:25 PDT KV adopted R26 clock canonical-body RCX refresh launched intel1 via ot-run client intel2 PID333473; fresh continuity gate + MC before related-pair STA, codex/kv-clock-1027.
+
+CODEX: 2026-10-27 08:13 PDT LEC closure/noreset convergence fixed c337ef681; 27 focused PASS. Q2n2b memory repaired(~4GB), Q2n2c live; argmax34diff delegated HBM RTL diagnosis; KV reset BMC12 PASS/48 live, not EQ.
