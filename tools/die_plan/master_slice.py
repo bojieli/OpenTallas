@@ -485,9 +485,10 @@ _MKTRACK = re.compile(r"^\s*make_tracks\s+(\S+)\s+-x_offset\s+([-\d.]+)\s+-x_pit
 
 
 def _layer_tracks(kd, layer):
-    """(x_offset, x_pitch, y_offset, y_pitch, source) of LAYER: the kit's own make_tracks.tcl, else the ASAP7 platform."""
-    f = Path(kd) / "make_tracks.tcl"
-    if f.is_file():
+    """(x_offset, x_pitch, y_offset, y_pitch, source) of LAYER: the kit's own make_tracks.tcl, else the ASAP7 platform
+    (also when no kit dir is given: a plan-only caller)."""
+    f = Path(kd) / "make_tracks.tcl" if kd is not None else None
+    if f is not None and f.is_file():
         rows = [m for m in _MKTRACK.finditer(f.read_text()) if m.group(1) == layer]
         if len(rows) == 1:
             return tuple(float(v) for v in rows[0].groups()[1:]) + ("kit make_tracks.tcl",)
@@ -499,9 +500,9 @@ def _layer_tracks(kd, layer):
 
 
 def _die_origin(kd):
-    cfg = Path(kd) / "config.mk"
+    cfg = Path(kd) / "config.mk" if kd is not None else None
     m = re.search(r"^\s*export\s+DIE_AREA\s*:?=\s*([-\d.eE+]+)\s+([-\d.eE+]+)", cfg.read_text(), re.M) \
-        if cfg.is_file() else None
+        if cfg is not None and cfg.is_file() else None
     return (float(m.group(1)), float(m.group(2))) if m else (0.0, 0.0)
 
 
@@ -567,6 +568,33 @@ def _kit_outline(kd):
     return (x1 - x0, y1 - y0)
 
 
+_CI_ENTRY = re.compile(r"^\s*ot_ci_clock_entry\s+(\{[^}]*\}|\S+)\s+([-\d.eE+]+)\s+([-\d.eE+]+)(?:\s+([-\d.eE+]+)\s+([-\d.eE+]+))?\s*$")
+
+
+def clock_pin_settings(kd, clock_port):
+    """Every statement in the kit's Tcl files that sets CLOCK_PORT's pin shape: literal `place_pin -pin_name <port>`
+    (any file, the shared/owned ones included) and the core-infra `ot_ci_clock_entry <port> x y [w h]` call.
+    Returns [{file, line, via, layer, x, y, w, h}] (w/h None when the statement gives no size)."""
+    out = []
+    for f in sorted(Path(kd).glob("*.tcl")):
+        for k, ln in enumerate(f.read_text().split("\n"), 1):
+            m = _PLACE.match(ln)
+            if m and _pin_name(m.group(2)) == clock_port:
+                lm = re.search(r"-layer\s+(\S+)", ln)
+                xm = re.search(r"-location\s+\{\s*([-\d.eE+]+)\s+([-\d.eE+]+)\s*\}", ln)
+                sm = re.search(r"-pin_size\s+\{\s*([-\d.eE+]+)\s+([-\d.eE+]+)\s*\}", ln)
+                out.append(dict(file=f.name, line=k, via="place_pin", layer=lm.group(1) if lm else None,
+                                x=float(xm.group(1)) if xm else float("nan"), y=float(xm.group(2)) if xm else float("nan"),
+                                w=float(sm.group(1)) if sm else None, h=float(sm.group(2)) if sm else None))
+                continue
+            m = _CI_ENTRY.match(ln)
+            if m and _pin_name(m.group(1)) == clock_port:
+                out.append(dict(file=f.name, line=k, via="ot_ci_clock_entry", layer="M5",
+                                x=float(m.group(2)), y=float(m.group(3)),
+                                w=float(m.group(4)) if m.group(4) else None, h=float(m.group(5)) if m.group(5) else None))
+    return out
+
+
 def check_kit(kd, slice_path=None, tol=1e-3):
     """Static kit-vs-slice gate (12.7c GEOM-REVIEW part 1).  Every finding is a FAIL; returns a report dict."""
     kd = Path(kd)
@@ -605,7 +633,7 @@ def check_kit(kd, slice_path=None, tol=1e-3):
                 want = ft_ports.from_core_infra_plan(json.loads(json.dumps(plan)))
                 if not fp.is_file() or json.loads(fp.read_text()).get("sha256") != want["sha256"]:
                     issues.append("ft_ports.json missing or not the slice ft declaration (12.2a1 die-timed ports)")
-            if (kd / "master_core_infra.tcl").read_text() != CI.emit_tcl(eff):
+            if (kd / "master_core_infra.tcl").read_text() != CI.emit_tcl(eff, kd):
                 issues.append("master_core_infra.tcl not generated from this slice")
             impl = (kd / "core_infra_impl.tcl").read_text()
             if impl != (Path(__file__).with_name("core_infra.tcl")).read_text():
@@ -669,8 +697,44 @@ def check_kit(kd, slice_path=None, tol=1e-3):
             if not lm or lm.group(1) != lay or not xm or abs(float(xm.group(1)) - x) > tol or abs(float(xm.group(2)) - y) > tol:
                 issues.append(f"{f.name}: {n} placed at {xm.groups() if xm else '?'} {lm.group(1) if lm else '?'}, "
                               f"slice {lay} ({x:g}, {y:g})")
+    # EVERY place in the kit that sets the clock pin (S81-CORE-LAT-R18): the io step above AND the shared core-infra
+    # step (master_core_infra.tcl ot_ci_clock_entry runs after io.tcl and wins), plus any other literal place_pin of
+    # the clock port in any kit Tcl file: each must be the slice centre snapped on track with the full GEOM-21 shape,
+    # and all of them must set one identical shape.
+    settings = clock_pin_settings(kd, clock_port) if clock_port and clock_port in want else []
+    if clock_port and clock_port in want:
+        lay, (x0, y0) = want[clock_port]
+        try:
+            sx, sy = snap_on_track(kd, lay, x0, y0)
+        except ValueError as e:
+            issues.append(f"clock entry {clock_port}: {e}")
+            sx, sy = x0, y0
+        for st in settings:
+            where = f"{st['file']}:{st['line']} ({st['via']})"
+            if st["layer"] != lay:
+                issues.append(f"{where}: clock entry {clock_port} on {st['layer']}, slice {lay}")
+            if abs(st["x"] - sx) > tol or abs(st["y"] - sy) > tol:
+                issues.append(f"{where}: clock entry {clock_port} centre ({st['x']:g}, {st['y']:g}) != slice centre "
+                              f"snapped on track ({sx:g}, {sy:g}) (GEOM-21)")
+            try:
+                if not on_track(kd, st["layer"], st["x"], st["y"]):
+                    issues.append(f"{where}: clock entry {clock_port} centre ({st['x']:g}, {st['y']:g}) is off the "
+                                  f"{st['layer']} routing track (GEOM-21)")
+            except ValueError as e:
+                issues.append(f"{where}: clock entry {clock_port}: {e}")
+            if st["w"] is None or st["w"] < CLOCK_PIN_SIZE[0] - 1e-6 or st["h"] < CLOCK_PIN_SIZE[1] - 1e-6:
+                issues.append(f"{where}: clock entry {clock_port} pin_size ({st['w']}, {st['h']}) < "
+                              f"{CLOCK_PIN_SIZE[0]}x{CLOCK_PIN_SIZE[1]} (GEOM-21)")
+        if len({(st["layer"], st["x"], st["y"], st["w"], st["h"]) for st in settings}) > 1:
+            issues.append(f"clock entry {clock_port} is set {len(settings)} times with different shapes: "
+                          + "; ".join(f"{st['file']}:{st['line']}" for st in settings))
+        if (kd / "master_core_infra.tcl").is_file() and not any(st["file"] == "master_core_infra.tcl" for st in settings) \
+                and "ot_ci_clock_entry" in (kd / "master_core_infra.tcl").read_text():
+            issues.append("master_core_infra.tcl ot_ci_clock_entry not parsed (unknown form)")
     checks["slice_pins"] = dict(fixed=len(want), placed_by_kit_io=sum(seen.values()),
-                                clock_port=clock_port, clock_entry=list(entry["xy_um"]) if entry else None)
+                                clock_port=clock_port, clock_entry=list(entry["xy_um"]) if entry else None,
+                                clock_settings=[f"{st['file']}:{st['line']} {st['via']} {st['x']:g} {st['y']:g} "
+                                                f"{st['w']}x{st['h']}" for st in settings])
     # latency target carried into the kit SDC/budget (12.3)
     lat = (sl.get("latency") or {}).get("common_clock_latency_ps") or {}
     checks["latency"] = lat
