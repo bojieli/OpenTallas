@@ -30,6 +30,11 @@ test ! -e "$OUT" || { echo "head_post_route_eco: $OUT exists (never relaunch int
 RS=$(ls -d "$KIT"/run/results/asap7/*/base); NICK=$(basename "$(dirname "$RS")")
 for f in 5_2_route.odb 6_final.spef; do test -s "$RS/$f" || { echo "head_post_route_eco: $RS/$f missing"; exit 2; }; done
 for f in config.mk lec.py rtl macros; do test -e "$GOLD/$f" || { echo "head_post_route_eco: gold $GOLD lacks $f"; exit 2; }; done
+# A routed kit is not self-contained without its signoff family.  Detect missing
+# tools before expensive ECO routing; old B kits carried only a .pre_r12 copy.
+for f in signoff.py sdc_lint.py face_guard.py io_hold_qualification.py pair_skew.tcl clock_family.tcl; do
+  test -s "$KIT/$f" || { echo "head_post_route_eco: kit $KIT lacks signoff bundle member $f (stage the complete qualified bundle first)"; exit 2; }
+done
 mkdir -p "$OUT"; OUT=$(realpath "$OUT")
 exec >> "$OUT/eco_chain.log" 2>&1
 echo "HEAD_ECO_CHAIN start $(date -Is) kit $(hostname):$KIT nick $NICK gold $GOLD"
