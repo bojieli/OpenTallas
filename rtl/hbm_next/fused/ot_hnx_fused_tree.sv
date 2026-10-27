@@ -81,7 +81,22 @@ module ot_hnx_fused_pad #(parameter integer WC = 15) (
 endmodule
 
 // one tree node (hardened once: hnx_fused_tnode_1019, x28 on the die; straps tied by the die binder)
-module ot_hnx_fused_tnode #(parameter integer LA = 6, parameter integer UW = 271, parameter integer DW = 173) (
+// The input is already the die's synchronously delivered reset. Three timed
+// local relay edges preserve the legacy two-sync-plus-one-tree RELEASE date.
+// Assertion is pipelined too: clock runs at boot; START/job_v waits for every
+// delivered/local reset and pad warm-up. No local CDC or false path is legal.
+module ot_hnx_fused_delivered_reset #(parameter integer REGIONS = 4) (
+    input wire clk, rst_n_in,
+    output wire [REGIONS-1:0] rst_n
+);
+    for (genvar r = 0; r < REGIONS; r = r + 1) begin : g_region
+        (* keep = "true", dont_touch = "true" *) reg [2:0] pipe;
+        always @(posedge clk) pipe <= {pipe[1:0], rst_n_in};
+        assign rst_n[r] = pipe[2];
+    end
+endmodule
+
+module ot_hnx_fused_tnode #(parameter integer LA = 6, parameter integer UW = 271, parameter integer DW = 173, parameter integer DELIVERED_RESET = 0) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire [5:0]    pad_k,      // strap: pad depth (edges)
@@ -94,7 +109,11 @@ module ot_hnx_fused_tnode #(parameter integer LA = 6, parameter integer UW = 271
     output wire [DW-1:0] db          // down to child b
 );
     wire [3:0] rl;
-    ot_rst_relay #(.REGIONS(4)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rl));
+    generate if (DELIVERED_RESET != 0) begin : g_delivered_reset
+        ot_hnx_fused_delivered_reset #(.REGIONS(4)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rl));
+    end else begin : g_legacy_reset
+        ot_rst_relay #(.REGIONS(4)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rl));
+    end endgenerate
     // ---- up: pin flops (control reset, data not)
     reg [14:0] iac, ibc; reg [255:0] iad, ibd;
     always @(posedge clk or negedge rl[0])
@@ -167,7 +186,8 @@ module ot_hnx_fused_hub #(
     // N4EXT (HBM-MU-QUAD-3 n4, opt-in, default 0 = unchanged): 1 = levels 4 sit OUTSIDE the hub (one per die hub
     // partition: NW n4 = (Q0, Q1) = global lanes 0..15, NE n4 = (Q2, Q3) = 16..31); the hub receives ONE input per die hub
     // on uq0 (NW n4) / uq2 (NE n4) and does only level 5 t5 = (NW, NE); uq1 / uq3 unused, dq0 / dq2 drive the n4 nodes.
-    parameter integer N4EXT = 0
+    parameter integer N4EXT = 0,
+    parameter integer DELIVERED_RESET = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -205,21 +225,25 @@ module ot_hnx_fused_hub #(
         ot_hnx_fused_D_must_be_a_multiple_of_256 u_trap ();
     end endgenerate
     wire [3:0] rl;
-    ot_rst_relay #(.REGIONS(4)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rl));
+    generate if (DELIVERED_RESET != 0) begin : g_delivered_reset
+        ot_hnx_fused_delivered_reset #(.REGIONS(4)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rl));
+    end else begin : g_legacy_reset
+        ot_rst_relay #(.REGIONS(4)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rl));
+    end endgenerate
     wire rs = rl[0];
 
     // ---- tree levels 4 / 5 and the down fan-out
     wire [UW-1:0] u4a, u4b, ur; wire [DW-1:0] d5a, d5b, dtop;
     generate if (N4EXT == 0) begin : g_t4
-    ot_hnx_fused_tnode u_t4a (.clk(clk), .rst_n(rl[3]), .pad_k(pk4a), .pad_b(pb4a), .ua(uq0), .ub(uq1), .uo(u4a),
+    ot_hnx_fused_tnode #(.DELIVERED_RESET(DELIVERED_RESET)) u_t4a (.clk(clk), .rst_n(rl[3]), .pad_k(pk4a), .pad_b(pb4a), .ua(uq0), .ub(uq1), .uo(u4a),
         .dn(d5a), .da(dq0), .db(dq1));
-    ot_hnx_fused_tnode u_t4b (.clk(clk), .rst_n(rl[3]), .pad_k(pk4b), .pad_b(pb4b), .ua(uq2), .ub(uq3), .uo(u4b),
+    ot_hnx_fused_tnode #(.DELIVERED_RESET(DELIVERED_RESET)) u_t4b (.clk(clk), .rst_n(rl[3]), .pad_k(pk4b), .pad_b(pb4b), .ua(uq2), .ub(uq3), .uo(u4b),
         .dn(d5b), .da(dq2), .db(dq3));
     end else begin : g_n4ext
         assign u4a = uq0; assign u4b = uq2;                // per-hub n4 outputs (NW, NE)
         assign dq0 = d5a; assign dq2 = d5b; assign dq1 = '0; assign dq3 = '0;
     end endgenerate
-    ot_hnx_fused_tnode u_t5 (.clk(clk), .rst_n(rl[3]), .pad_k(pk5), .pad_b(pb5), .ua(u4a), .ub(u4b), .uo(ur),
+    ot_hnx_fused_tnode #(.DELIVERED_RESET(DELIVERED_RESET)) u_t5 (.clk(clk), .rst_n(rl[3]), .pad_k(pk5), .pad_b(pb5), .ua(u4a), .ub(u4b), .uo(ur),
         .dn(dtop), .da(d5a), .db(d5b));
     wire r_v = ur[270], r_t = ur[269], r_fa = ur[258], r_fo = ur[257], r_fl = ur[256];
     wire [9:0] r_x = ur[268:259]; wire [255:0] r_d = ur[255:0];
