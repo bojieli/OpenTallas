@@ -618,11 +618,31 @@ def latch_to_wire(src, dst, side):
             raise Unproven(f"latch {side}: {cn}.{p} is not a single bit")
         return b[0]
 
+    def const_mux(cn):                    # $_MUX_ / $_NMUX_ with constant data pins = a BUF / NOT of S, else None
+        c = cells[cn]
+        if c["type"] not in ("$_MUX_", "$_NMUX_"):
+            return None
+        a, b = c["connections"].get("A", [None])[0], c["connections"].get("B", [None])[0]
+        if (a, b) not in (("0", "1"), ("1", "0")):
+            return None
+        return (a == "1") ^ (c["type"] == "$_NMUX_")      # Y = S ? B : A: inverted when A = 1 (MUX) / A = 0 (NMUX)
+
     def through(b, inv=False):            # through $_BUF_ (and $_NOT_ when inv): -> (bit, inverted)
+        # also through a constant-data $_MUX_ / $_NMUX_: the RTL frontend's unoptimised "!clk" (S ? 1'b0 : 1'b1) on
+        # an always_latch enable (S81 R21b u_view c_lk, LEC-FPREG-4 10-27)
         neg = False
-        while isinstance(b, int) and b in drv and cells[drv[b][0]]["type"] in (("$_BUF_", "$_NOT_") if inv else ("$_BUF_",)):
-            neg ^= cells[drv[b][0]]["type"] == "$_NOT_"
-            b = cells[drv[b][0]]["connections"]["A"][0]
+        while isinstance(b, int) and b in drv:
+            cn = drv[b][0]
+            t = cells[cn]["type"]
+            if t in (("$_BUF_", "$_NOT_") if inv else ("$_BUF_",)):
+                neg ^= t == "$_NOT_"
+                b = cells[cn]["connections"]["A"][0]
+                continue
+            cm = const_mux(cn)
+            if cm is None or (cm and not inv):
+                break
+            neg ^= cm
+            b = cells[cn]["connections"]["S"][0]
         return b, neg
 
     stub = re.compile(r"(^|\.)lec_(bbo|bbi|po)_")
@@ -646,13 +666,32 @@ def latch_to_wire(src, dst, side):
     for cn in lats:
         clock_bits.add(through(one(cn, "E"), True)[0])
 
+    # The RTL frontend writes always_latch if (!clk) q = d as D = $_MUX_(S = clk, A = d, B = x / q): a latch only
+    # reads D while transparent, so the branch S selects in the transparent phase IS the latch data (S81 R21b
+    # u_view c_lk, LEC-FPREG-4 10-27).  Only a $_MUX_ driving D directly whose select is this latch's own enable
+    # clock (through BUF / NOT) is resolved; any other select stays in the data cone (a clock read -> Unproven).
+    dsel = {}                            # latch -> its transparent-phase data bit (phase mux resolved)
+    for cn in lats:
+        d_in = one(cn, "D")
+        if isinstance(d_in, int) and d_in in drv and cells[drv[d_in][0]]["type"] == "$_MUX_":
+            mc = cells[drv[d_in][0]]["connections"]
+            sb, sneg = through(mc["S"][0], True)
+            if sb == through(one(cn, "E"), True)[0]:   # transparent while E's clock = 0: S = sneg -> B (1) / A (0)
+                dsel[cn] = mc["B" if sneg else "A"][0]
+    # Latch chains (S81 R21b: io_clk go lockup latch -> core logic -> ck seam lockup latch, LEC-FPREG-4 10-27): every
+    # latch here is transparent-low on a primary-input clock (each is checked in its own iteration, and any failure
+    # refuses the whole netlist), so in the low phase of one cycle the data of a rising-edge flop passes the whole
+    # chain and the rising-edge readers sample it: the chain is a wire like one latch.  The data cone therefore
+    # passes through another latch to its (phase-resolved) D, the Q fan-out through another latch's D to its Q; a
+    # chain that returns to the latch itself is a combinational loop after the abstraction -> Unproven.
     for cn in sorted(lats):
         c = cells[cn]
         t = c["type"]
         e, neg = through(one(cn, "E"), True)
         if t not in ("$_DLATCH_N_", "$_DLATCH_P_") or e not in pis or e not in ff_clocks or (t == "$_DLATCH_P_") != neg:
             raise Unproven(f"latch {side}: {t} {cn} is not a transparent-low latch on a primary-input clock")
-        seen, todo, srcs = set(), [one(cn, "D")], 0
+        d_in = dsel.get(cn, one(cn, "D"))
+        seen, todo, srcs = set(), [d_in], 0
         while todo:                        # data cone
             b = todo.pop()
             if not isinstance(b, int) or b in seen:
@@ -664,6 +703,11 @@ def latch_to_wire(src, dst, side):
                 srcs += 1
                 continue
             dn, dp = drv[b]
+            if dn in lats:                 # chained latch: its own transparent-phase data
+                if dn == cn:
+                    raise Unproven(f"latch {side}: {cn} data reaches its own Q (latch loop)")
+                todo.append(dsel.get(dn, one(dn, "D")))
+                continue
             if FF_TYPE.match(cells[dn]["type"]):
                 if not rise_ff(dn):
                     raise Unproven(f"latch {side}: {cn} data reads {cells[dn]['type']} {dn} (not a rising-edge flop "
@@ -686,6 +730,11 @@ def latch_to_wire(src, dst, side):
                 raise Unproven(f"latch {side}: {cn} Q reaches module output {name_of.get(b, b)}")
             for ln, lp, li in loads.get(b, ()):
                 lt = cells[ln]["type"]
+                if ln in lats and lp == "D":   # chained latch: continue from its Q
+                    if ln == cn:
+                        raise Unproven(f"latch {side}: {cn} Q reaches its own D (latch loop)")
+                    todo.append(one(ln, "Q"))
+                    continue
                 f = FF_TYPE.match(lt)
                 if f:
                     ok = rise_ff(ln) and (lp in ("D", "E") or (lp == "R" and f[1].startswith("SDFF")))
@@ -701,12 +750,14 @@ def latch_to_wire(src, dst, side):
                          if cells[ln].get("port_directions", {}).get(p) == "output" for x in bits]
         if q in clock_bits:
             raise Unproven(f"latch {side}: {cn} Q is a clock net")
-        st["per_latch"][cn] = dict(type=t, clk=name_of.get(e, str(e)), data_sources=srcs, sinks=sinks)
+        st["per_latch"][cn] = dict(type=t, clk=name_of.get(e, str(e)), data_sources=srcs, sinks=sinks,
+                                   phase_mux=cn in dsel)
+    st["phase_mux"] = len(dsel)
     for cn in sorted(lats):               # all checked first: then each latch -> $_BUF_ D -> Q
         c = cells[cn]
         cells[cn] = {"hide_name": c.get("hide_name", 1), "type": "$_BUF_", "parameters": {}, "attributes": {},
                      "port_directions": {"A": "input", "Y": "output"},
-                     "connections": {"A": [one(cn, "D")], "Y": [one(cn, "Q")]}}
+                     "connections": {"A": [dsel.get(cn, one(cn, "D"))], "Y": [one(cn, "Q")]}}
         st["to_wire"] += 1
     Path(dst).write_text(json.dumps(d))
     return st
