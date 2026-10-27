@@ -26,6 +26,7 @@ for part in raw['partitions']:parts_by_type[part['type']].add(part['name'])
 
 connection_cache={}
 alias_directions={}
+alias_binding_failures={}
 cache={}
 def lookup(config,tn,inst):
  for key in [f'{tn}:{inst}',f'{tn}:{baseinst(inst)}',f'{original_types.get(tn,tn)}:{inst}',f'{original_types.get(tn,tn)}:{baseinst(inst)}']:
@@ -103,6 +104,7 @@ def connections(tn,t,h):
    from parent_alias_binding import bind
    ports,alias_failures=bind(mapping,n,{p:bits(e) for p,e in d.insts[n]['conns'].items()})
    alias_directions[key]=mapping['directions']
+   if alias_failures:alias_binding_failures[f'{tn}:{h["inst"]}']=alias_failures
   for port,labels in mapping.get('buses',{}).items():
    vv=[];complete=True
    for label in labels:
@@ -151,7 +153,7 @@ if a.core_graph:
    for port,peers in ports.items():target.setdefault(inst,{}).setdefault(port,set()).update(peers)
  aggregate={tn:{inst:{port:sorted(peers) for port,peers in ports.items()} for inst,ports in cores.items()} for tn,cores in aggregate.items()}
  for edge in edges:edge['partition']=edge['type'];edge['type']=original_types[edge['type']]
- gr.update(native=a.native,plan=str(pd),role_map=a.role_map,split_maps=a.split_maps,instance_types=original_types,aggregation='Union of exact per-physical-partition edges only; no replica source aliases inferred.')
+ gr.update(alias_binding_failures=alias_binding_failures,native=a.native,plan=str(pd),role_map=a.role_map,split_maps=a.split_maps,instance_types=original_types,aggregation='Union of exact per-physical-partition edges only; no replica source aliases inferred.')
  (out/'core_conns_by_instance.json').write_text(json.dumps(cc,indent=1)+'\n')
  (out/'core_conns.json').write_text(json.dumps(aggregate,indent=1)+'\n')
  (out/'core_edges.json').write_text(json.dumps(edges,indent=1)+'\n')
@@ -199,5 +201,6 @@ for entry in report['unresolved']:
   except (ValueError,KeyError,TypeError,IndexError) as e:row.update(verdict='FAIL',reason=str(e))
   rows.append(row)
 meta=dict(schema='opentallas.native_station_map.v1',plan=str(pd),plan_sha256=hashlib.sha256((pd/'die_plan.json').read_bytes()).hexdigest(),native=str(a.native),native_sha256=hashlib.sha256(Path(a.native).read_bytes()).hexdigest(),maps=len(emap),mapped_bare_endpoints=sum(r['verdict']=='PASS' for r in rows),failed=sum(r['verdict']=='FAIL' for r in rows),rows=rows,asbuilt_map=str(amap_path),split_maps=a.split_maps,role_map=a.role_map,method='Exact native variable-bit identity after real transport resolution; source/target identity uses generated role map + current census assignment, not template as-built annotations; Native used bits must fit existing reserved parallel width, which is never reduced; exact source and target bit subsets supplied. Clone/split binding on the current unified native top remains an independent requirement.')
+meta['alias_binding_failures']=alias_binding_failures
 meta['verdict']='FAIL' if meta['failed'] else 'PASS';meta['scope']='Exact endpoint map construction on the supplied source vehicle; current unified full native binding and physical gates remain required.'
 (out/'endpoint_map.json').write_text(json.dumps(emap,indent=1)+'\n');(out/'report.json').write_text(json.dumps(meta,indent=1)+'\n');print('EXACT_MAPS',len(emap),'FAILED',meta['failed'],'VERDICT',meta['verdict']);print(collections.Counter(r.get('reason','PASS') for r in rows));sys.exit(1 if meta['failed'] else 0)

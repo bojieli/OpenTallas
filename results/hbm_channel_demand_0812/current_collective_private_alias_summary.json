@@ -1,0 +1,117 @@
+{
+ "maps": [
+  {
+   "path": "/srv/opentallas-scratch2/claude/codex-hbm-channels-0812/q2n2_body_alias_map.json",
+   "sha256": "1ce5056f0cf67f766a4db853e0bc878d511714dca1e10a66d72b59f3c4a3c78b",
+   "module": "ot_hfd_coll_q2n2_body_core",
+   "variant": {
+    "nlink": 2
+   },
+   "gold_source": "/srv/opentallas-scratch2/claude/lec-tool4-1027/q2n2c/out/gold.aliases.json",
+   "gold_source_sha256": "7af9ed2226793b2d88cc7c15c3f96f2bd5926143ca5dd35970a9900d0a17aebf",
+   "ports": 80,
+   "pins": 12131,
+   "verdict": "PASS",
+   "sources": {
+    "/srv/opentallas-scratch2/claude/hbm-cores-r8/recipes_work/q2n2/ot_hfd_coll_q2n2_body_core.sv": "975f07db91a77fa4213805aec87249ec9fa1546b042757292431b537e289dcb4",
+    "/srv/opentallas-scratch2/claude/codex-hbm-channels-0812/q2n2_wrap_gold.v": "3db4c0528e383562204ecdcf43030d67883dac1b3813923930aaa6159c4194d5"
+   }
+  },
+  {
+   "path": "/srv/opentallas-scratch2/claude/codex-hbm-channels-0812/q2n2_ring_alias_map.json",
+   "sha256": "7a13f3f6dd593658ae8dd2e3bcf20bd9bf48a568a7d8961b93c0d51c89b18f05",
+   "module": "ot_hfd_coll_q2_hard_v8g__ring_ag",
+   "variant": {
+    "nlink": 2
+   },
+   "gold_source": "/srv/opentallas-scratch2/claude/lec-tool4-1027/q2n2c/out/gold.aliases.json",
+   "gold_source_sha256": "7af9ed2226793b2d88cc7c15c3f96f2bd5926143ca5dd35970a9900d0a17aebf",
+   "ports": 45,
+   "pins": 2244,
+   "verdict": "PASS",
+   "sources": {
+    "/srv/opentallas-scratch2/claude/wt/codex-hbm-channels-0812/physical/die_plan/hbm_arch_cores/wrappers/ot_hfd_coll_q2_hard_v8g__ring_ag.sv": "f03326d736b11c5384689d63b8574c6cae0160a74bf9b9c802b8d959d7b90bc0",
+    "/srv/opentallas-scratch2/claude/wt/codex-hbm-channels-0812/rtl/hbm_accel/cores_split/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_ring_ag_core.sv": "063f094596f872bcda88d71de4df8de2a78a1e2ce42082c4950cd7d437bf0e13",
+    "/srv/opentallas-scratch2/claude/codex-hbm-channels-0812/q2n2_wrap_gold.v": "3db4c0528e383562204ecdcf43030d67883dac1b3813923930aaa6159c4194d5"
+   }
+  },
+  {
+   "path": "/srv/opentallas-scratch2/claude/codex-hbm-channels-0812/q2n2_reduce_alias_map.json",
+   "sha256": "947c0c8463a565698cafeb9e7b72d090dfb0dfa0c9401ea7c84a4949c2e311a8",
+   "module": "ot_hfd_coll_q2_hard_v8g__reduce",
+   "variant": {
+    "nlink": 2
+   },
+   "gold_source": "/srv/opentallas-scratch2/claude/lec-tool4-1027/q2n2c/out/gold.aliases.json",
+   "gold_source_sha256": "7af9ed2226793b2d88cc7c15c3f96f2bd5926143ca5dd35970a9900d0a17aebf",
+   "ports": 20,
+   "pins": 1175,
+   "verdict": "PASS",
+   "sources": {
+    "/srv/opentallas-scratch2/claude/wt/codex-hbm-channels-0812/physical/die_plan/hbm_arch_cores/wrappers/ot_hfd_coll_q2_hard_v8g__reduce.sv": "d6b1507b65f5579595fb16b58bd4943e8290dba9bbc70d2bcc19635ffda88690",
+    "/srv/opentallas-scratch2/claude/wt/codex-hbm-channels-0812/rtl/hbm_accel/cores_split/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_reduce_core.sv": "20dc2fbc0f0d77464e838f506c1a2152846905e6bd02e9b163339b072ef10c5b",
+    "/srv/opentallas-scratch2/claude/codex-hbm-channels-0812/q2n2_wrap_gold.v": "3db4c0528e383562204ecdcf43030d67883dac1b3813923930aaa6159c4194d5"
+   }
+  },
+  {
+   "path": "/srv/opentallas-scratch2/claude/codex-hbm-channels-0812/q3_body_alias_map.json",
+   "sha256": "56c913ffd59660a497ef70c06aff883792d7e7eaaaf02e84f3962fb798fa20b9",
+   "module": "ot_hfd_coll_q3_body_core",
+   "variant": {
+    "nlink": 3
+   },
+   "gold_source": "/srv/opentallas-scratch2/claude/codex-hbm-q3-alias-1001/parent.v",
+   "gold_source_sha256": "42e42a0b1383e143a1d4e96562df2038ba97152979d35fb9b7fef89230779726",
+   "ports": 93,
+   "pins": 16032,
+   "verdict": "PASS",
+   "sources": {
+    "/srv/opentallas-scratch2/claude/wt/codex-hbm-channels-0812/rtl/hbm_accel/cores_split/ot_hfd_coll_q3_vmface2/ot_hfd_coll_q3_body_core.sv": "4d3bb176f321e51fbbd7c0cef6e3936cb407455a210d352b9d71d3de34005e21"
+   }
+  },
+  {
+   "path": "/srv/opentallas-scratch2/claude/codex-hbm-channels-0812/q3_ring_ag_cell_alias_map.json",
+   "sha256": "065cead8c2faec490d3a7eb29899518b979de70ebe5d5e4198b25d8d1325772d",
+   "module": "ot_hfd_coll_q2_hard_v8g__ring_ag",
+   "variant": {
+    "nlink": 3
+   },
+   "gold_source": "/srv/opentallas-scratch2/claude/codex-hbm-q3-alias-1001/parent.v",
+   "gold_source_sha256": "42e42a0b1383e143a1d4e96562df2038ba97152979d35fb9b7fef89230779726",
+   "ports": 45,
+   "pins": 2244,
+   "verdict": "PASS",
+   "sources": {
+    "/srv/opentallas-scratch2/claude/wt/codex-hbm-channels-0812/physical/die_plan/hbm_arch_cores/wrappers/ot_hfd_coll_q2_hard_v8g__ring_ag.sv": "f03326d736b11c5384689d63b8574c6cae0160a74bf9b9c802b8d959d7b90bc0",
+    "/srv/opentallas-scratch2/claude/wt/codex-hbm-channels-0812/rtl/hbm_accel/cores_split/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_ring_ag_core.sv": "063f094596f872bcda88d71de4df8de2a78a1e2ce42082c4950cd7d437bf0e13"
+   }
+  },
+  {
+   "path": "/srv/opentallas-scratch2/claude/codex-hbm-channels-0812/q3_reduce_cell_alias_map.json",
+   "sha256": "1fe92a571055d0bcaa5215cfe80be9db1572b24e3d7269af91202131ab552bc4",
+   "module": "ot_hfd_coll_q2_hard_v8g__reduce",
+   "variant": {
+    "nlink": 3
+   },
+   "gold_source": "/srv/opentallas-scratch2/claude/codex-hbm-q3-alias-1001/parent.v",
+   "gold_source_sha256": "42e42a0b1383e143a1d4e96562df2038ba97152979d35fb9b7fef89230779726",
+   "ports": 20,
+   "pins": 1175,
+   "verdict": "PASS",
+   "sources": {
+    "/srv/opentallas-scratch2/claude/wt/codex-hbm-channels-0812/physical/die_plan/hbm_arch_cores/wrappers/ot_hfd_coll_q2_hard_v8g__reduce.sv": "d6b1507b65f5579595fb16b58bd4943e8290dba9bbc70d2bcc19635ffda88690",
+    "/srv/opentallas-scratch2/claude/wt/codex-hbm-channels-0812/rtl/hbm_accel/cores_split/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_reduce_core.sv": "20dc2fbc0f0d77464e838f506c1a2152846905e6bd02e9b163339b072ef10c5b"
+   }
+  }
+ ],
+ "native_maps": "/srv/opentallas-scratch2/claude/codex-hbm-channels-0812/native_b1_full_alias_maps3",
+ "mapped_bare_endpoints": 420,
+ "remaining_failures": 142,
+ "remaining_categories": {
+  "constant-only source": 2,
+  "exact source/target alias intersection empty": 94,
+  "four-role VMS source/master mismatch": 44,
+  "explicit r9 tree contract required": 2
+ },
+ "scope": "Exact retained parent wire aliases and wrapper composition; no current unified native functional, latency or physical signoff is claimed."
+}

@@ -100,10 +100,11 @@ def main():
    for x,y in zip(pb,cb):uf.join(x,y)
   for port,e in instance(c,a.primitive).items():
    name=a.gold_path+'.'+port
+   actual=nets.get(name,{}).get('bits',gold.get('cells',{}).get(a.gold_path,{}).get('connections',{}).get(port))
    for k,wire in enumerate(expr(e,cw,'canonical')):
-    if name not in nets:failed.append(dict(primitive_port=port,reason='actual primitive alias absent: '+name));continue
-    if k>=len(nets[name]['bits']):failed.append(dict(primitive_port=port,bit=k,reason='actual primitive alias shorter'));continue
-    associations[wire].add(nets[name]['bits'][k])
+    if actual is None:failed.append(dict(primitive_port=port,reason='actual primitive alias absent: '+name));continue
+    if k>=len(actual):failed.append(dict(primitive_port=port,bit=k,reason='actual primitive alias shorter'));continue
+    associations[wire].add(actual[k])
  collapsed=collections.defaultdict(set)
  for wire,ids in associations.items():collapsed[uf.root(wire)].update(ids)
  for wire in list(uf.p):
