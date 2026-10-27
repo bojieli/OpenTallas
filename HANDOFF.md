@@ -1268,3 +1268,5 @@ CODEX: 2026-10-26 21:04 PDT PD2 parked; R864sourcecomposed21band/G024/7faces; ex
 2026-10-27 01:45 PDT COORD: INFRA-FIRST-HEAD-1 started (head infra-first plan event had no owner; holds all 16 head types).
 
 CODEX: 2026-10-27 04:54 PDT HBM takeover: unpushed QUAD5 e91031b844 rescued/pushed codex/hbm-1027; U3f GRT kit stale tap diagnosed; collarR5 NOTSIGNED TT+16.06/FF-22.31/slew65+41, routedLEC9393EQ; q2n2gate2 OOM300G needs proof strategy fix.
+
+CODEX: 2026-10-27 04:57 PDT main bce29bb125 merged canary checker pin fix7689ad5f45 (7 focused PASS). S81 RM29 original face_cover import REGRESSION retained; corrected separate *_checkerfix receipt NO-REGRESSION using exact0f978 source checker and unchanged physical artifacts. Absolute postCTS design FAIL remains.
