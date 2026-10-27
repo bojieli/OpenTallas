@@ -43,3 +43,10 @@ Branch claude/fallback-head-2-1026@ba603056a (base eb56dcd125). All numbers UNCH
   - So a port-bind PASS is impossible without stubs (banned). The hd_ctl observer ports also stay OPEN.
   - r6 elemB 352-pin abstract is inside hd_tile, whose RTL exists, so it is not the blocker.
 - (4) Not submitted: kits without the bind carry no rings.
+
+## [FALLBACK-HEAD-3 2026-10-26 19:04 PDT] main merged into fallback-head-2; READY for ROOT-MERGE
+- claude/fallback-head-3-1026@982a208cfa = merge (not rebase) of origin/main d398138f3f into ba603056a (which builds on eb56dcd125). Only conflict: compose() in tools/die_plan/clock_landing_plan.py.
+- Resolution: compose(plan,table,plan_path,observer_part,observer=None,monitor="reset"). Reset mode = main unchanged (QC_OBSERVER default + spec validation). monitor="dataflow" (opt-in) keeps the ring/strict-bind recipe; an explicit observer spec is validated and recorded, None stays OPEN (fails closed). Unknown monitor raises.
+- Also regenerated tools/die_plan/die_plan.schema.json: branch ba603056a added reserved_sites_um to schema.py without dumping it (test_schema_file_in_sync failed on the branch, passed on main).
+- Tests CHECKED: 111 passed + 47 subtests (test_clock_landings, landing_collector, clock_landing_verify/latency, reserved_sites, tools/s81_head/*, test_schema, mesh_profile_schema, ref_tile reset-landing x4).
+- Bind still BLOCKED on HEAD-RTL (ot_s81hd_ctl/mesh_ep/host_ep); not touched here. No jobs submitted.
