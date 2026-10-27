@@ -55,3 +55,6 @@ ssh intel2 python3 /srv/opentallas-scratch2/claude/codex-rc-canary-1027/status.p
 - Keep current clock/hold/insertion gates unchanged. Do not blanket loosen target-band checks from old failing reference kits; only escalate a concrete otherwise-valid current core with its explicit clock-binding/IO contract.
 
 OWNER? None.
+
+## CODEX 10:09 collection update
+Combined S81 ab3 is now terminal NO-REGRESSION: insertion TT224.30/FF180.66ps vs226.54/183.35; FF hold−81.96ps/691EP vs−76.73/691, overflow0/DRV0. Absolute insertion gate remains FAIL (deviation25.70/21.84ps vs20ps); no physical signoff. Combined cohort now4NO-REGRESSION,1QC REGRESSION,2active. Four active total including exact5b andQCtrial. Exact5b progresses GRT hold iter760/1379buffers, WNS−30.772ps/TNS−5379.527ps; QC7fd GRT setup repair586EP/WNS−11.441ps; HBMab3 GRT holditer780/WNS−240.638ps; KVcoreab3 CTS holditer6520/7066buffers,WNS−80.701ps. No new jobs or active-kit mutations.
