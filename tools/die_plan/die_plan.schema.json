@@ -16,6 +16,9 @@
   "schema": {
    "const": "opentallas.die_plan.v1"
   },
+  "station_model_keys": {
+   "type": "boolean"
+  },
   "note": {
    "type": "string"
   },
@@ -1660,6 +1663,21 @@
          },
          "minItems": 2,
          "maxItems": 2
+        },
+        "pin_select": {
+         "type": "object",
+         "additionalProperties": {
+          "type": "string"
+         }
+        },
+        "unused_pins": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "unused_pins_policy": {
+         "type": "string"
         },
         "pins": {
          "type": "array",

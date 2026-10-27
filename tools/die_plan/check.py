@@ -155,6 +155,36 @@ def check_ft_macro_sites(P, R):
     return count
 
 
+def check_station_in_core(P, R, eps=0.5):
+    """COORD GEOM HBM planU4f B1/B2 (2026-10-27): a hard core is OBS M1-M5 and holds no std cells, so every
+    internal_stations regs_um register and every ft_slots regs_um stage point must lie outside every hard-core
+    outline of its type (track_offset applied; strictly inside by more than eps um = ERROR)."""
+    out = dict(stations=0, ft_regs=0)
+    for tn, t in P.types.items():
+        boxes = []
+        for c in t.get("hard_cores", []) or []:
+            if "origin_um" not in c or "outline_um" not in c:
+                continue
+            x, y = c["origin_um"]; w, h = c["outline_um"]; dx, dy = c.get("track_offset_um", [0.0, 0.0])
+            boxes.append((c["inst"], (x + dx, y + dy, x + dx + w, y + dy + h)))
+        if not boxes:
+            continue
+        for key, what, label in (("internal_stations", "stations", "conn"), ("ft_slots", "ft_regs", "name")):
+            hits = []
+            for e in t.get(key, []) or []:
+                for j, p in enumerate(e.get("regs_um", []) or []):
+                    for inst, (x0, y0, x1, y1) in boxes:
+                        if x0 + eps < p[0] < x1 - eps and y0 + eps < p[1] < y1 - eps:
+                            hits.append((e.get(label), j, p, inst)); break
+            out[what] += len(hits)
+            for nm, j, p, inst in hits[:5]:
+                R.err("station_in_core", f"type {tn} {key} {nm} reg {j} at ({p[0]:.3f},{p[1]:.3f}) is inside hard core {inst} "
+                      "(no std cells inside a hard core: re-station onto a street)", type=tn)
+            if len(hits) > 5:
+                R.err("station_in_core", f"type {tn}: {len(hits)} {key} registers inside hard cores ({len(hits) - 5} more not listed)", type=tn)
+    return out
+
+
 def check_geometry(P, R):
     g = P.grid
     for nm, base in [("ORFS base lattice", S.BASE_LATTICE_UM)] + \
@@ -1165,8 +1195,9 @@ def check_core_faces(P, R, plan_dir=None, conns_file=None, max_msgs=5, per_core=
             ports = {}
             for lp, tg in mine:
                 ports.setdefault(lp, []).extend(tg)
+            sel = hc.get("pin_select", {})     # superset-face master: the pin group this instance binds (G0C ruling 2b)
             for lp, tg in ports.items():
-                faces = by_base.get(lp)
+                faces = by_base.get(sel.get(lp, lp))
                 if not faces:
                     continue
                 pts = []
@@ -1586,6 +1617,7 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
                                           side=load_core_conns(plan_dir, core_conns))
     summ["g0c"] = g0c_summary(P, R)
     summ["geometry"] = check_geometry(P, R)
+    summ["station_in_core"] = check_station_in_core(P, R)
     import landing_islands as LI
     li_errs = LI.check(raw)
     for e in li_errs:

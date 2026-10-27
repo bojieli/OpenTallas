@@ -169,6 +169,9 @@ SCHEMA = {
     "additionalProperties": False,
     "properties": {
         "schema": {"const": SCHEMA_ID},
+        # HBM-MU-QUAD-3 (opt-in, default absent/false = strict internal_stations): accept the PATH-HBM R8-R13
+        # station-model keys on internal_stations[] (STATION_MODEL_PROPS below; consistency in validate_structure)
+        "station_model_keys": {"type": "boolean"},
         "note": {"type": "string"},
         "die": {
             "type": "object", "required": ["name", "outline_um", "period_ps", "reach_um"],
@@ -440,6 +443,12 @@ SCHEMA = {
                                        "bump_ports": _bump_ports,
                                        "orient": {"enum": list(ORIENTS)},
                                        "track_offset_um": _xy,      # added to origin_um (lattice) at placement
+                                       # G0C ruling 2b (COORD 10-26 06:01): superset-face master. pin_select = the
+                                       # pin group (port copy on another face) this instance binds per port;
+                                       # unused_pins = superset groups it leaves unbound (registered, declared)
+                                       "pin_select": {"type": "object", "additionalProperties": {"type": "string"}},
+                                       "unused_pins": {"type": "array", "items": {"type": "string"}},
+                                       "unused_pins_policy": {"type": "string"},
                                        "pins": {"type": "array", "items": {   # core frame (R0, origin 0)
                                            "type": "object", "required": ["name", "layer", "xy"],
                                            "additionalProperties": False,
@@ -784,9 +793,61 @@ def _check(v, s, path, errs):
             errs.append(f"{path}: {v} <= {s['exclusiveMinimum']}")
 
 
+# HBM-MU-QUAD-3: PATH-HBM R8-R13 station-model keys (hbm_r11_delta / hbm_mu_quad pack), accepted only with the
+# top-level opt-in "station_model_keys": true.  serial_k = registered beats of one word (bits = ceil(bits_parallel /
+# serial_k), the serialised wire count); r9_segments = hub segment of the two ends; r9_share = face share;
+# r10 = face-pin interval record; r10_we_chain / r11_cc_serial / r13_face_affine = model flags; r13 = R13 class.
+STATION_MODEL_PROPS = {
+    "serial_k": {"type": "integer", "minimum": 1},
+    "bits_parallel": {"type": "integer", "minimum": 1},
+    "r9_segments": {"type": "array", "items": {"type": "integer", "minimum": 0}, "minItems": 2, "maxItems": 2},
+    "r9_share": {"type": "number", "minimum": 0, "maximum": 1},
+    "r10": {"type": "object", "required": ["face", "fend", "bus"], "additionalProperties": False,
+            "properties": {"face": {"enum": list(FACES)}, "fend": {"enum": ["from", "to"]}, "bus": {"type": "string"},
+                           "ivx": _win, "ivy": _win, "pin_frac": {"type": "number", "minimum": 0, "maximum": 1},
+                           "bcast": {"type": "boolean"}}},
+    "r10_we_chain": {"type": "boolean"},
+    "r11_cc_serial": {"type": "boolean"},
+    "r13": {"enum": ["mcast", "in_surplus", "soft_glue"]},
+    "r13_face_affine": {"type": "boolean"},
+}
+_SCHEMA_STATION_MODEL = None
+
+
+def _schema_station_model():
+    """SCHEMA with STATION_MODEL_PROPS added to partition_types.*.internal_stations[] (built once)."""
+    global _SCHEMA_STATION_MODEL
+    if _SCHEMA_STATION_MODEL is None:
+        import copy
+        sc = copy.deepcopy(SCHEMA)
+        it = sc["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]
+        it["properties"].update(copy.deepcopy(STATION_MODEL_PROPS))
+        _SCHEMA_STATION_MODEL = sc
+    return _SCHEMA_STATION_MODEL
+
+
+def station_model_errors(obj):
+    """Consistency of the opt-in station-model keys: serial_k and bits_parallel come together and
+    bits == ceil(bits_parallel / serial_k) (the serialised beats carry exactly the parallel word)."""
+    errs = []
+    for tn, t in obj.get("partition_types", {}).items():
+        for i, e in enumerate(t.get("internal_stations", [])):
+            k, bp = e.get("serial_k"), e.get("bits_parallel")
+            if (k is None) != (bp is None):
+                errs.append(f"partition type {tn}: internal_stations[{i}]: serial_k and bits_parallel must be given "
+                            "together")
+            elif k is not None and "bits" in e and e["bits"] != -(-bp // k):
+                errs.append(f"partition type {tn}: internal_stations[{i}]: bits {e['bits']} != ceil(bits_parallel "
+                            f"{bp} / serial_k {k}) = {-(-bp // k)}")
+    return errs
+
+
 def validate_structure(obj):
     errs = []
-    _check(obj, SCHEMA, "$", errs)
+    opt = isinstance(obj, dict) and obj.get("station_model_keys") is True
+    _check(obj, _schema_station_model() if opt else SCHEMA, "$", errs)
+    if opt and not errs:
+        errs += station_model_errors(obj)
     id_types = {tn: t for tn, t in obj.get("partition_types", {}).items()
                 if any(d.get("parent_id_straps") or d.get("straps") for d in t.get("contents", []) + t.get("hard_cores", []))} if not errs else {}
     if id_types:
