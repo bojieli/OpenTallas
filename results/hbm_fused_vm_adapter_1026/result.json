@@ -1,0 +1,30 @@
+{
+ "source": "d7660db8bb7c32dc5763037590b604c3173920e4",
+ "rtl": "rtl/hbm_next/fused/ot_hnx_fused_vm_native_adapter.sv",
+ "bench": "tools/hbm_next/tb_fused_vm_native_adapter.sv",
+ "added_cycles": 0,
+ "scope": "wire mapping only; no bank sharing, timing, or signoff claim",
+ "results": [
+  {
+   "name": "positive",
+   "verdict": "PASS",
+   "simulation_exit": 0
+  },
+  {
+   "name": "mut_high_address",
+   "verdict": "PASS",
+   "simulation_exit": 1
+  },
+  {
+   "name": "mut_data",
+   "verdict": "PASS",
+   "simulation_exit": 1
+  },
+  {
+   "name": "mut_word_mask",
+   "verdict": "PASS",
+   "simulation_exit": 1
+  }
+ ],
+ "verdict": "PASS"
+}
