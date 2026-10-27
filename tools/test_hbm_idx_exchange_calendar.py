@@ -37,6 +37,13 @@ class ExchangeCalendar(unittest.TestCase):
             self.assertEqual(Counter((w>>lo)&mask for w in a if (w>>lo)&mask),
                              Counter((w>>lo)&mask for w in b if (w>>lo)&mask),field)
 
+    def test_native_vm_ii2_exceeds_real_calendar_capacity(self):
+        # Planned bank k4 plus the existing native operand-fetch II2 needs
+        # 2129 instructions. Keep the hardware 2048 limit; never truncate.
+        with self.assertRaises(AssertionError) as fail:
+            compile_program(vm_period=2,query_period=4,key_period=4)
+        self.assertEqual(str(fail.exception), '2129')
+
     def test_invalid_service_period_refused(self):
         for k in (0,-1,1.5):
             with self.assertRaises(ValueError):compile_program(key_period=k)

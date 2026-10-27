@@ -18,7 +18,7 @@
       "file": "tools/hgi_sim/ds_mtp_verify.py",
       "line": 147,
       "fact": "HBM_RATIO=136/98.96",
-      "consequence": "Measured old geometry line-rate/HBM-share ratio. Same4HBM stacks and8SM changes HBM share per SM; recompute compute/memory overlap before applying RPL/MU gains"
+      "consequence": "Fixed98.96B/cycle per-SM share; calibrationtotal3166.7/32=98.96, from an older32SM costbasis despite plane_compiler NSM16. Re-derive physical8SM bandwidth share and RPL overlap rather than treating the preserved constants as one uniform measured16SM basis."
     }
   ],
   "unsupported_claims": [
