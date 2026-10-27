@@ -1,0 +1,16 @@
+{
+  "verdict": "PASS-COND placement-only trial",
+  "image": "outline_trials.png",
+  "source": "codex/hbm-cores-0815@44c483ba95",
+  "findings": [
+    "Five content-sized outlines preserve face/order and track positions, reduced long empty strips; native edge pin counts determine xq dimensions despite low cell fill.",
+    "Central clock entry island clear of all macros; wr_q SRAM remains in lower band with accessible side pin channels.",
+    "No macro wall in four macro-free cores. wr_q single SRAM does not divide entire outline.",
+    "Analytic max centre-to-corner spans below405um; actual r2r reach, pin escape/congestion and PDN continuity require placed trial review."
+  ],
+  "conditions": [
+    "Placement only authorized; no route/STA.",
+    "Use final composing plan pin tables after QUAD6 approval.",
+    "Actual placement density and native r2r reach review before route."
+  ]
+}
