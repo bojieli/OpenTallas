@@ -31,10 +31,24 @@ def apply_kit(kit):
         if re.search(r'\bmodule\s+qkd_static_kv_pc_path_fan_nc_b_head_p\b', text):
             # This generated PC-identity variant remains the same module/ports.
             # Add the optin parameter and forward it to its actual u_pce child.
-            text, n = re.subn(r'(module\s+qkd_static_kv_pc_path_fan_nc_b_head_p\s*#\s*\()', r'\1parameter integer CORE_CLOCK = 0,\n', text)
-            if n != 1: raise ValueError('head-p module parameter census')
-            text, n = re.subn(r'(qkd_static_kv_pc_path_emb_nc_b\s*#\s*\()(?=\.MU\(MU\))', r'\1.CORE_CLOCK(CORE_CLOCK),', text)
-            if n != 1: raise ValueError('head-p u_pce parameter census')
+            header = re.search(r'module\s+qkd_static_kv_pc_path_fan_nc_b_head_p\s*#\s*\((.*?)\)\s*\(', text, re.S)
+            if header is None:
+                raise ValueError('head-p module parameter census')
+            declared = len(re.findall(r'\bparameter\s+(?:integer\s+)?CORE_CLOCK\b', header.group(1)))
+            if declared > 1:
+                raise ValueError('head-p duplicate CORE_CLOCK parameter')
+            if not declared:
+                pos = header.start(1)
+                text = text[:pos] + 'parameter integer CORE_CLOCK = 0,\n' + text[pos:]
+            child = re.search(r'qkd_static_kv_pc_path_emb_nc_b\s*#\s*\((.*?)\)\s+u_pce\s*\(', text, re.S)
+            if child is None:
+                raise ValueError('head-p u_pce parameter census')
+            forwarded = len(re.findall(r'\.CORE_CLOCK\s*\(', child.group(1)))
+            if forwarded > 1:
+                raise ValueError('head-p duplicate u_pce CORE_CLOCK assignment')
+            if not forwarded:
+                pos = child.start(1)
+                text = text[:pos] + '.CORE_CLOCK(CORE_CLOCK),' + text[pos:]
         # Actual physical PC/PC-head leaf, including private-port renamed copies.
         pattern = r'(qkd_static_kv_pc_path_fan_nc_b(?:_head_p)?\s*#\s*\()(?=\.MU\(1\))'
         text, count = re.subn(pattern, r'\1.CORE_CLOCK(1),', text)
