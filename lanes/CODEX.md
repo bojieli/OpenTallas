@@ -1127,3 +1127,6 @@ Current: native exact-width selection 20/20 PASS; generator W-cache bug fixed. L
 
 ### Mixed-width RCX completion 2026-10-27 09:22 PDT
 Source codex/rcx-mixed-1027@166adab391 READY; field and native jobs terminal PASS. Physical table 20/20 controls, independent check pending. QC clock owner now consumes committed table/receipt before full STA. No live child jobs; initial generator TypeError fixed and preserved.
+
+## HBM cores coverage 2026-10-27 09:23 PDT
+HBM-CORE-LAT/HBM-CORES/HBM-KITS taken over codex/hbm-cores-0815;77canonical designs assigned (coverage.json). 5placement trials collected (pretreeCOND/4pin6FAIL); ctlx/VMSproof gaps CLOSED; SM4nativechild hierarchy max84055/residual58218/38853 cells; HC first/subtree source gates live; SKprovider508/emit509 exact gated +5cycles, quartergeometry nowactive. Jobs and source shas in HBM-CORE-LAT notes.

@@ -94,3 +94,6 @@ CODEX consolidated active work under PATH-HBM/HBM-CORE-LAT; retained ROOT actual
 
 ## CODEX notes 2026-10-27 08:35 PDT
 Current core/kit continuation is HBM-CORE-LAT.md CODEX08:35: own codex/hbm-cores-0815 + proof codex/hbm-lec-0820, R7/R8 jobs collected, vm_query failed route withdrawn, DMA structural placement trial live; legacy jobs never requeued.
+
+## CODEX notes 2026-10-27 09:23 PDT
+Current complete canonical coverage/results/jobs/next failures are in HBM-CORE-LAT.md CODEX 2026-10-27 09:23 PDT and codex/hbm-cores-0815 coverage.json. No old failed kits requeued.

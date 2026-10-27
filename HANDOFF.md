@@ -1423,3 +1423,5 @@ CODEX: 2026-10-27 09:22 PDT mixed-width RCX READY166adab391: physical .16/.32/.6
 CODEX: 2026-10-27 09:23 PDT ROOT-priority thinLEC7b97aa307 on mainf108 only: properreset/cycle1basecase +_pinpolarity +closureprogress;171focusedPASS/2skip, actualBFp0lemmaPROVED. No22b/Q2/arrayancestry. READY root.
 
 CODEX: 2026-10-27 09:23 PDT RM53 main b61dbfa6d4 == origin/main; HBM RX iterator fix + SAT-reproved ctlx/VMS hints, positives/mutants PASS; diagnostic scope only, 0 deletions.
+
+CODEX: 2026-10-27 09:23 PDT HBM cores: ctlxEQ42320/VMS107998 source gaps closed; nativeSM4hard hierarchy13children max84055,parent58218/38853,noaddededges;5placedG1/full582503pairs0>405,pretreeCOND/4pin6FAIL retained; HCcallerREADY3c51+2sourcejobs live; SK508tail/emit509 exact provider+5cycles, quartergeometry active.
