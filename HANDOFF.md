@@ -1314,3 +1314,5 @@ CODEX: 2026-10-27 08:20 PDT TOKEN: KV B48 mixed-source rootcause28inlinePC vs4hi
 CODEX: 2026-10-27 08:20 PDT RM34 main8fcd97ac44==origin/main: approvedHEADplan/modes+KVFT+TOKverdict+FFbound+AProutedLEC/GEOMauto; HEADG0C0E6W/AP110PASS,0deletions; supplementary sparse-fixture checks live.
 
 CODEX: 2026-10-27 08:21 PDT GEOM6fccae733: e1/e5/q3 reviewed route-cleared (e5/q3 normalDRTconditions); pv_join existingGRT0 route-cleared. e2 originalimagePASS correctedFAIL by fullr2rcensus409.536um/4over405; exactrowwithdrawn, KVownsuccessorDPLlive (fourS-facec_incapturesinward). HBMvmquery50it3819overflowFAIL collected+withdrawn byHBM.
+
+CODEX: 2026-10-27 08:21 PDT RM34 main8fcd97ac44 pushed HEAD/KVFT/tokenverdict/FFbound/AP+GEOMAUTO, HEADG0C0E6W/AP110PASS. KV e2/io_cor/hroot withdrawn after fullr2rFAIL; native station sidecar omission/reset coverage fix active.
