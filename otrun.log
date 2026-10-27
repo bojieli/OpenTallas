@@ -1,0 +1,20 @@
+ot-run: intel2         admits   621 GB (avail 777, reserve 0, fresh 65, peak 26.9, headroom 0, waiters 0/0 GB) load 74/112 running 21 disk 2266 GB 
+ot-run: -> intel2
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-2689683-1792924276 after 1 s
+S8_MEMALIGN_SFU checked=6336 outputs=320 mismatches=0 cls_counts=64,64,64,64,64 requests=128,128,64
+S8_MEMALIGN_SFU PASS
+- /srv/opentallas-scratch2/claude/codex-s8-crom-sfu-1025/tb_s8_memalign_sfu.sv:294: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 65us; walltime 0.766 s; speed 84.352 us/s
+- Verilator: cpu 0.766 s on 1 threads; allocated 10 MB
+ALIGN data/fault mismatch cycle301 cls0 ref030000001f40b57e0000020 got030000001f40b5c00000020
+ALIGN data/fault mismatch cycle302 cls0 ref030000001f40b62a0000020 got030000001f40b66c0000020
+ALIGN data/fault mismatch cycle303 cls0 ref030000001f40b6d60000020 got030000001f40b7178000020
+ALIGN data/fault mismatch cycle304 cls0 ref030000001f40b7818000020 got030000001f40b7c38000020
+S8_MEMALIGN_SFU checked=6336 outputs=320 mismatches=480 cls_counts=64,64,64,64,64 requests=128,128,64
+S8_MEMALIGN_SFU FAIL
+- /srv/opentallas-scratch2/claude/codex-s8-crom-sfu-1025/tb_s8_memalign_sfu.sv:294: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 65us; walltime 0.804 s; speed 80.363 us/s
+- Verilator: cpu 0.804 s on 1 threads; allocated 10 MB
+ot-run: RAN on intel2 (unit oth-ubuntu-2689683-1792924276): exit 0
