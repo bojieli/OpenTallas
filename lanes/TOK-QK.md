@@ -66,3 +66,4 @@ CODEX took over collection of live KVL and B48 sims. Latest QCL compute259/259 r
 
 ## CODEX notes 2026-10-27 05:04 PDT
 KVL build remains active unit231395-1793092035 (otrun_build.log only TOP_FRONTEND, no terminal marker), vec_real ready, chain.sh already waiting. No duplicate job. B48 nominal exit0 collected (mut_frame exit not yet located); final FAR_LAYER_SUMMARY still owed.
+- 2026-10-27 05:35 PDT TOK-ALL-1 (successor): tok-qk-b48 (epyc1) NOT rerun: stalled frames_sent 0 at 29.6M/21.6M cyc, deterministic, superseded. b48r4 nominal = KVSLICE_BOOT FAIL (exit 0 is not PASS): errors 7354, host die_rst_n never released (first error cyc 2063), setup_ready never, ends cyc 59,977 (CHECKED). KVL top make 478/9984 obj; its 12 sims use the same failing boot libs -> ASK COORD. Table: lanes/TOK-ALL.md.

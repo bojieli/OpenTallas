@@ -63,9 +63,9 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 - [ ] HBM.SU SU latency qual: ds_ar on planU2; OWNER 10-27 accepts 1917 tok/s (upper) -> priced PASS; measured SU bench PR0/PR1 rerun on main LIVE intel1 · TOK-HBM · RUNNING
 
 ## TOKEN · Token-pass gate per design
-- [ ] TOK.DS DeepSeek ROM token pass (S81 array + head) · TOK-DS-6 · RUNNING · L14 27/57/8; idx scan 3-die shard; S81 all-rows MTP 3,655 tok/s > 3,000 floor (AR 1,260), 17.0% ledger ACCEPTED (owner 10-26) → S81.BIND, → HEAD.BIND
-- [ ] TOK.QW Qwen ROM token pass (compute + KV) · TOK · RUNNING · QK vehicle on KV rebased bind; prices landed seams + FE stations → KV.BIND, → QC.INFRA
-- [ ] TOK.HDS / TOK.HQ HBM token passes (unified SU/MTP/MU, SU latency first) · TOK · RUNNING · SU programme-path fault (pgslice lw, side_pipe rsq) being root-caused
+- [ ] TOK.DS DeepSeek ROM token pass (S81 47 users + head) · TOK-ALL · BLOCKED · 0/6 layer types on current die; main die_b178.v strict bind FAIL (5 ports/1 stub/656 undriven, TOK-ALL 10-27); priced MTP 3,655 / AR 1,260 tok/s (UNCHECKED); was: L14 27/57/8; idx scan 3-die shard; S81 all-rows MTP 3,655 tok/s > 3,000 floor (AR 1,260), 17.0% ledger ACCEPTED (owner 10-26) → S81.BIND, → HEAD.BIND
+- [ ] TOK.QW Qwen ROM token pass (QC + KV, 4 users) · TOK-ALL · BLOCKED · QC 36/36 PASS (CHECKED); KV 0/36: B48 boot FAIL, host die_rst_n never released (r4 10-27); composer 4,051 tok/s (UNCHECKED); was: QK vehicle on KV rebased bind; prices landed seams + FE stations → KV.BIND, → QC.INFRA
+- [ ] TOK.HDS / TOK.HQ HBM token passes (unified SU/MTP/MU, SU latency first) · TOK-ALL · RUNNING · planU3f 1,906 tok/s OWNER-accepted; SU PR0/PR1 PASS on main, 0/41 segments (no unified die top); was: SU programme-path fault (pgslice lw, side_pipe rsq) being root-caused
 - [ ] TOK.E2E End-to-end token pass: NOT PASSED on any of 5 dies (components only; QC whole-die waits QC.INFRA, KV B48 boot verdict ~01:00-03:00, S81 L14 10 GAP ops, HEAD full G5, HBM no RTL token replay) · TOK lanes · RUNNING
 - [ ] TOK.FREEZE Final evidence run at freeze · COORD · WAITS · → TOK.DS, → TOK.QW
 - [ ] MU.CURVE Latency-throughput curve vs A100 80GB · COORD · WAITS · → TOK.FREEZE

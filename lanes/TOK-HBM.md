@@ -353,3 +353,4 @@ Actual L0/MTP6 producer-aligned emitter42d0caba4 completed:85records,0errors,VMn
 
 ## CODEX notes 2026-10-27 05:06 PDT
 Collected current-main native multirate PR0 PASS on intel1:512lanes, programme7116serial/9489stream edges (compiled delta0), reads32768,writes135184,scalars9. Positive.log final at55us/4888s runtime. PR1 still running, no duplicate. This is the existing stage gate, not unified-layer G5.
+- 2026-10-27 05:35 PDT TOK-ALL-1 (successor): PR0 PASS 7116/9489, tick 27,652 (=9,217 core cyc); PR1 PASS 7120/9495, tick 27,668 (=9,223 cyc); throughput_qualified=false (CHECKED). mut_DATA mutants LIVE (units 1184282/1184281). P3 MTP producer-aligned lower 3,916 rec I1-I7 PASS, native_execution=false (CHECKED). planU3f ds_ar 1,905.97 tok/s OWNER-accepted (UNCHECKED model). 0/41 segments on current die (no unified die top). Table: lanes/TOK-ALL.md.
