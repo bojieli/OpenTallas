@@ -22,6 +22,7 @@ def replace_once(text, pattern, value, description):
 
 
 def prepare(root, plan_path, manifest, out):
+    root, plan_path, manifest, out = [p.resolve() for p in (root, plan_path, manifest, out)]
     plan = json.loads(plan_path.read_text())
     out.mkdir(parents=True, exist_ok=False)
     src = list(dict.fromkeys(s.strip() for s in manifest.read_text().splitlines() if s.strip()))

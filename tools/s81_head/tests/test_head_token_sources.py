@@ -1,4 +1,5 @@
 import json
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -27,6 +28,13 @@ class NativeWeightIdentity(unittest.TestCase):
    self.assertIn('.INSTANCE("tile0")',(r/'native/s81_head_top.sv').read_text())
    self.assertIn('.INSTANCE("tile1")',(r/'native/s81_head_top.sv').read_text())
    for s,t in original.items():self.assertEqual((r/s).read_text(),t)
+ def test_repo_relative_cli_paths(self):
+  with tempfile.TemporaryDirectory() as d:
+   r=Path(d);self.setup_tree(r);before=Path.cwd()
+   try:
+    os.chdir(r);res=prepare(r,Path("plan.json"),Path("physical.f"),Path("native"))
+   finally:os.chdir(before)
+   self.assertEqual(res["unique_weight_images"],20)
  def test_missing_tile_mutant_is_rejected(self):
   with tempfile.TemporaryDirectory() as d:
    r=Path(d);self.setup_tree(r);p=r/'gen/s81_head_top.sv';p.write_text(p.read_text().replace('tile1','lost_tile'))
