@@ -1,0 +1,8 @@
+BEGIN cyc 10 target 10 pw 96 dw 0 -> loader state 0
+PROGRAM_FAULT cyc 11 state 0 replay_target 0
+IMAGE 0 target 0 ready 0 fault 1/0 digest 0000000000000000 epoch 0
+HOSTLOAD FAIL at frame 98 images_ok 0
+- /srv/opentallas-scratch2/claude/kvtok-hostload-1026/repo/results/rtl/kv_host_boot_abi_1026/tb_hostload.sv:38: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 171ns; walltime 0.045 s; speed 3.818 us/s
+- Verilator: cpu 0.045 s on 1 threads; allocated 7 MB

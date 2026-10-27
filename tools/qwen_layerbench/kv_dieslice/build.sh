@@ -22,8 +22,13 @@ if [ "${HIER:-1}" = 1 ]; then
 fi
 { echo '`verilator_config'; for m in $(grep -ho '^module kv3_[A-Za-z0-9_]*' $RD/kv3_*.sv | awk '{print $2}' | sort -u); do
     case $m in kv3_phy*|kv3_sys_SD*|kv3_sys_c_part) ;; *) echo "hier_block -module \"$m\"";; esac; done; } > $O/hier.vlt
-python3 $H/bind_tb_clocks.py "$TOPF" "$H/tb_kvslice.sv" "$O/tb_kvslice.sv" || exit 2
+TB="$H/tb_kvslice.sv"
+[ "${NATIVE_BOOT:-0}" = 0 ] || TB="$H/tb_kvslice_native.sv"
+printf "%s\n" "${NATIVE_BOOT:-0}" > "$O/native_boot.profile"
+python3 $H/bind_tb_clocks.py "$TOPF" "$TB" "$O/tb_kvslice.sv" || exit 2
 R=$(cd $H/../../.. && pwd)
+JOIN_SRC=
+[ "${NATIVE_BOOT:-0}" = 0 ] || JOIN_SRC="$R/rtl/physical/ot_fdi_join2.sv"
 IMGD=${D2D_IMG:-$R/physical/die_plan/qwen_kvsys/boot_v36/image_kv41}   # the pair image the KV boot image carries
 cat > $O/vl.f <<EOF
 -Wno-fatal
@@ -39,6 +44,7 @@ $H/kvs_link_phy_models.sv
 $H/qkd_pll_analog_model_bench.sv
 $H/qkd_hbm3e_phy_pc4_bench.sv
 $H/kvs_compute_end.sv
+$JOIN_SRC
 $R/rtl/qwen_split/qfd_kvn_static_transport.sv
 $R/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv
 $R/rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv
@@ -50,6 +56,13 @@ cat $O/hostside.f $O/files.f $O/incdirs.f >> $O/vl.f
 [ "${HIER:-1}" = 1 ] && echo "$O/hier.vlt" >> $O/vl.f
 fi
 cd $O
+# TOK-QK-4/5 10-27: one source per module. -Wno-MODDUP (above) makes Verilator keep the FIRST of two definitions silently
+# (B48: the old vehicle4 qkd_ctrl_pc_nc.sv beside the boot-window copy), so the list is checked before any build or lint;
+# a duplicate fails the build. Identical-text later copies are dropped (same elaborated RTL). MODDUP_ALLOW="m1 m2"
+# exempts COORD-ruled names only (record the ruling at the caller).
+python3 -I $H/check_moddup.py --drop-redundant $O/vl.f --json $O/moddup.json ${MODDUP_ALLOW:+--allow $MODDUP_ALLOW} > $O/moddup.log; mrc=$?
+tail -1 $O/moddup.log
+if [ $mrc != 0 ]; then grep -e "^MODDUP " $O/moddup.log; echo "BUILD rc=4 duplicate module definitions in vl.f (see $O/moddup.log)"; exit 4; fi
 if [ "$MODE" = lint ]; then
   /usr/bin/time -v $VL --lint-only --timing -f vl.f > lint.log 2>&1; rc=$?
   echo "LINT rc=$rc errors $(grep -c '^%Error' lint.log) $(grep 'Maximum resident' lint.log)"; exit $rc
