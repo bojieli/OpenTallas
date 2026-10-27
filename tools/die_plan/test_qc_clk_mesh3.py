@@ -159,3 +159,56 @@ def test_islands_row_uses_one_slot_row_per_partition():
     I.et = et
     n = M.nseg_snap(I, et, "x", 500.0, xs[0], xs[-1])
     assert I.chain_max_seg("x", 500.0, xs[0], xs[-1], n) <= 450.0 - I.margin + 1e-6
+
+
+# ------------------------------------------------------------------------------------------------ INFRA-FIRST-HEAD-2
+def test_qc_defaults_unchanged():
+    """the QC lattice constants stay the defaults; set_lattice() with no per-die flag restores exactly them."""
+    import argparse
+    assert M.QC_LATTICE == dict(PER_X=2471.04, PER_OFF=(0.0, 622.08, 1235.52, 1848.96), CHAN_HC=2,
+                                CHAN_LANES=(0, 4, 1, 3), PER_NUDGE=8.64, ROW_GROUP=19)
+    got = M.set_lattice(argparse.Namespace())
+    assert got == M.QC_LATTICE
+    assert (M.PER_X, M.PER_OFF, M.CHAN_HC, M.CHAN_LANES, M.PER_NUDGE, M.ROW_GROUP) == tuple(M.QC_LATTICE.values())
+
+
+def test_qc_defaults_explicit_flags_parse_identical():
+    """the QC values passed explicitly as CLI strings parse to the identical constants (types included)."""
+    p = M.argparse.ArgumentParser()
+    M.add_common(p)
+    a = p.parse_args(["--r2", "x", "--stage", "y", "--per-x", "2471.04", "--per-off", "0.0,622.08,1235.52,1848.96",
+                      "--chan-hc", "2", "--chan-lanes", "0,4,1,3", "--per-nudge", "8.64", "--row-group", "19"])
+    got = M.set_lattice(a)
+    assert got == M.QC_LATTICE and all(type(got[k]) is type(v) for k, v in M.QC_LATTICE.items())
+    assert all(type(x) is float for x in got["PER_OFF"]) and all(type(x) is int for x in got["CHAN_LANES"])
+    a2 = p.parse_args(["--r2", "x", "--stage", "y", "--per-x", "1000"])
+    assert M.set_lattice(a2)["PER_X"] == 1000.0
+    M.set_lattice(M.argparse.Namespace())          # restore QC
+    assert M.PER_X == 2471.04
+
+
+def test_grid_tree_non_power_of_two_balanced():
+    """head form: 11 x 12 drivers per half (22 x 12 die rows), not a power of two -> one stage count and zero
+    nominal skew by construction (linear stage model)."""
+    st = FakeStage()
+    et = M.EdgeType(st, "16w", 2, 450.0)
+    xs = [354.24 + 708.48 * i for i in range(11)]
+    xs += [17521.92 - x for x in xs]                 # E half = mirror of the W half about the die centre
+    ys = [876.96 + 1036.8 * j for j in range(12)]
+    drv = [(x, y) for y in ys for x in xs]
+    nodes, root, info = M.grid_tree(drv, et, root=(8760.96, 8778.24))
+    rep, arr = M.grid_report(nodes, root)
+    assert rep["drivers"] == 264 and info["rows"] == 12 and info["cols_per_row"] == [22] and not info["lifted_rows"]
+    assert len(rep["stages"]) == 1
+    assert rep["arrival_ps"]["TT"]["skew"] <= 0.5, rep["arrival_ps"]       # 1-um node step resolution x depth
+    assert rep["all_straight"]
+
+
+def test_grid_tree_odd_counts():
+    """3 x 5 grid (odd both ways): every driver reached, equal stages, balanced."""
+    st = FakeStage()
+    et = M.EdgeType(st, "16w", 2, 450.0)
+    drv = [(100.0 * i, 200.0 * j) for i in range(3) for j in range(5)]
+    nodes, root, info = M.grid_tree(drv, et)
+    rep, _ = M.grid_report(nodes, root)
+    assert rep["drivers"] == 15 and len(rep["stages"]) == 1 and rep["arrival_ps"]["TT"]["skew"] <= 0.5

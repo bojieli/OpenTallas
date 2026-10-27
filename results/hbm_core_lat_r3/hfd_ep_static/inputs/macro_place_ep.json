@@ -1,0 +1,41 @@
+{
+ "note": "HBM-CORE-LAT-R3 hfd_ep_static: one aligned SRAM column (common x 38.88 = centred, W/E strips 34.6/36.1 um for the W+E SRAM pin edges), pairs on a 78.03 (289-row) pitch, centre band 173.09-202.77 holds the 12.8a centre clock entry (125.28, 187.92); bands S/N 12.96/13.0 um; same RTLMP order (block/mem) as the unconstrained placement",
+ "macro_placement": [
+  {
+   "k": "u_rxb.g_block[0].u_block.g_mem[1].u_mem.u_sram",
+   "macro": "ot_sram_1r1w_64x512_m1_r2c2",
+   "origin_um": [
+    38.88,
+    17.28
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_rxb.g_block[1].u_block.g_mem[1].u_mem.u_sram",
+   "macro": "ot_sram_1r1w_64x512_m1_r2c2",
+   "origin_um": [
+    38.88,
+    95.31
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_rxb.g_block[1].u_block.g_mem[0].u_mem.u_sram",
+   "macro": "ot_sram_1r1w_64x512_m1_r2c2",
+   "origin_um": [
+    38.88,
+    202.77
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_rxb.g_block[0].u_block.g_mem[0].u_mem.u_sram",
+   "macro": "ot_sram_1r1w_64x512_m1_r2c2",
+   "origin_um": [
+    38.88,
+    280.8
+   ],
+   "orient": "R0"
+  }
+ ]
+}

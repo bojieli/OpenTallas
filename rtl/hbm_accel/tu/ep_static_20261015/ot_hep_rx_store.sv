@@ -52,8 +52,13 @@ module ot_hep_rx_block #(parameter integer MUT = 0) (
     output wire [9:0]    pin_vr,        // replicated copies of pin_v, one per 64-b slice (the pingpong merge selects)
     output reg  [611:0]  pin_flit,
     output reg           fault,
-    output reg  [4:0]    fault_cause
+    output wire [4:0]    fault_cause
 );
+    // fault_cause[4:3] are reserved (never written here or in the H-COLL template): constant 0 wires, not reset-only
+    // flops.  HBM-CORE-LAT-R4 10-27, declared dead bits (COORD 10-25 dead-inputs rule): a reset-only self-holding flop
+    // is sequentially constant, synthesis folds it, and LEC (no init assumption) cannot prove the fold -> 2/16312 NEQ.
+    reg [2:0] fc;
+    assign fault_cause = {2'b00, fc};
     localparam integer SL = 64, NSL = 10;
     localparam [2:0] EMPTY = 0, FILL = 1, SEAL = 2, READY = 3, DRAIN = 4, FLUSH = 5;
     reg [2:0] state;
@@ -81,15 +86,15 @@ module ot_hep_rx_block #(parameter integer MUT = 0) (
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             state <= EMPTY; count <= 0; words <= 0; issued <= 0; seal_age <= 0; flush_age <= 0;
-            ra <= 0; vp <= 0; vp2r <= 0; pvr <= 0; pin_v <= 0; fault <= 0; fault_cause <= 0;
+            ra <= 0; vp <= 0; vp2r <= 0; pvr <= 0; pin_v <= 0; fault <= 0; fc <= 0;
         end else begin
             vp <= {vp[0], issue};
             vp2r <= {NSL{vp[1]}};
             pvr <= vp2r; pin_v <= vp2r[0];
             if (issue) ra <= slot_index;
-            if (arm_v && (state != EMPTY || block_words == 0 || block_words > 64)) begin fault <= 1; fault_cause[0] <= 1; end
-            if (release_v && !block_ready) begin fault <= 1; fault_cause[1] <= 1; end
-            if (slot_v && !issue) begin fault <= 1; fault_cause[2] <= 1; end
+            if (arm_v && (state != EMPTY || block_words == 0 || block_words > 64)) begin fault <= 1; fc[0] <= 1; end
+            if (release_v && !block_ready) begin fault <= 1; fc[1] <= 1; end
+            if (slot_v && !issue) begin fault <= 1; fc[2] <= 1; end
             if (arm_v && state == EMPTY && block_words >= 1 && block_words <= 64) begin
                 state <= FILL; count <= 0; words <= block_words; issued <= 0;
             end
