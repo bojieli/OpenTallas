@@ -950,11 +950,14 @@ class Lec:
         # name match is still a correspondence obligation, so a wrong pairing can only fail, never hide a difference.
         superset_vec = os.environ.get("OT_LEC_SUPERSET_VEC") == "1"
         one_dim = lambda s: all(ix.count("[") == 1 for ix in s)
+        self.superset_extra = []                  # gate-only extra bits of superset vectors (recorded in lec.json)
         for b in self.relaid:
             sub = superset_vec and gidx[b] < tidx[b] and one_dim(tidx[b])
             for ix in tidx[b]:
                 if sub and ix in gidx[b]:
                     continue
+                if sub:
+                    self.superset_extra.append(b + ix)
                 self.tp[f"{b}#t{ix}"] = self.tp.pop(b + ix)
                 self.tc[f"{b}#t{ix}"] = self.tc.pop(b + ix)
         self.matched = sorted(set(self.gp) & set(self.tp))
@@ -3461,6 +3464,13 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
     if lc is not None and getattr(lc, "cycle_dropped", None):   # hypotheses dropped to break binding cycles
         rec["cycle_dropped"] = dict(n=len(lc.cycle_dropped),
                                     first=[f"{sd}:{k} {list(h)}" for (sd, k), h in lc.cycle_dropped[:40]])
+    if os.environ.get("OT_LEC_SUPERSET_VEC") == "1":   # COORD RULING HBM-CORE-LAT-R4 (3): per-run list of the extra kept bits
+        ex = list(getattr(lc, "superset_extra", []) or []) if lc is not None else []
+        rec["superset_vec"] = dict(
+            enabled=True, n_extra=len(ex), extra_bits=ex,
+            unobservable=("PROVED" if rec.get("verdict") == "EQUIVALENT" else "NOT SHOWN"),
+            basis=("each extra gate-only bit is an unmatched gate key point, i.e. a free input of the miter; an "
+                   "EQUIVALENT verdict proves no compare point (outputs, matched registers) depends on it"))
     rec["t_total_s"] = round(time.time() - t0, 1)
     rec["provenance"] = _provenance(kit)
     (out / "lec.json").write_text(json.dumps(rec, indent=1) + "\n")
