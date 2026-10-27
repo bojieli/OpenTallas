@@ -55,8 +55,8 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
   - [ ] S81.TILES Tile sign-offs · PATH-S81 / CORES-KITS · RUNNING · 4/171 types, 16/52 hard cores signed
 
 ## DIE hbm · HBM UNIFIED SU/MTP/MU one design (OWNER 10-26 23:1x; SU latency qualified first) · plan D-HBM-B1 (5fa3c6e64838)
-- [ ] HBM.B1 Unified plan of record = planU2 (55ea5ec620f5, 526.571 mm2 CHECKED) hubs H4320 + quad v2 · HBM-MU-QUAD-3 · FAIL G0/G0C (compose fix running) · claude/hbm-mu-quad-2-1026@03d5f0266f: NW 0.594/NE 0.586 k3 PASS (CHECKED), n4 order model PASS; G0C: +794.88 shift leaves 4 straddling cols unabutted (8 abutment, L28/L125/L9/L63 hops), MU cores no pins_file → compose fix (move straddlers/fill relays) + pin tables
-- [ ] HBM.GRT Die GRT0 incl clock on the UNIFIED plan · PATH-HBM · WAITS · R15 S2/F2 = SU plan (H3525, 16 banks), flow canary only, collect; unified GRT after HBM.B1 + views
+- [ ] HBM.B1 Unified plan = planU4f (30113b293491, 526.571 mm2; types 224->78 CHECKED) · HBM-MU-QUAD-5 · FAIL COORD GEOM 10-27 04:21: 33 station + 83 ft regs inside hard cores, soft-region overlaps (hub 135/138); fixes + new check.py rule in QUAD-5; then G0/G0C 0 + COORD re-review
+- [ ] HBM.GRT Die GRT0 incl clock on the UNIFIED plan · PATH-HBM · HOLD (OWNER 10-27: visual geometry review + fixes before GRT) · after HBM.B1 re-review PASS
 - [ ] HBM.CLK Mesh clock 12.8 on unified plan · CLOCK-128 · FAIL/INVALID · r7/r8 on old plan; rebuild after HBM.B1, 4 new types need islands (bank/fused/tnode/keybuf); core-lat R3: 11/28 types gate-PASS, 0 built past place, xcal/ep need structure ruling
 - [ ] HBM.BIND Native B2 one-clock bind · PATH-HBM / HC-NATIVE · RUNNING · 98 unread outputs classified (svg redundant views, sm.request/expected check w/o comparator, xl y, ordinals); no open inputs
 - [ ] HBM.STA Die related-pair STA real routed clock (TT setup/FF hold) · DIE-PROTO · WAITS · → HBM.GRT; SU latency qualified first (HBM.SU)
