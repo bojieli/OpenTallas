@@ -31,3 +31,7 @@ Actual TT.fab faultpath landed9; selectedflat causaltrace reaches31cells/34nets 
 
 ## HEAD
 QK ownsproductionbootrecipe/authority only; s81_head/head ownsnative40FT/provider/physicalintegration. Prior actualtransport fa34757d2 remains historicalcomponent. No newacceptedproductionHOSTstage/rank/clock-reset/header/commit/STARTauthority found; prior combinedOWNER? remains plainCODEX-LOG. Sourcecompiler staysfailclosed, no fixturedatepromotion. IndependentQCproducer/KVsourcefailures advanced meanwhile.
+
+## 14:55 delta — reader READY, still ACTIVE
+Reader/capsule PUSHED codex/qk-native-1351@c67719662d (includes184). qk_cores owns review/fold; KVclock owner reservedONEq6. APIcheck_selected/CLI andactualrecipe selection example committed; 8guards/actual4membercomponent only, PV/vportextraspreserved, no globalr8.pychange. Generated provider face/selectedsource bytes are pinned in source_profile; materialize actual496curatedsources in normalq6prep. Rootinterimmaincheck384c0e75c838 didNOTcontain184; intake may advance, query currentmain.
+Exactclockownerq6 fullwavefront: ONLYsys_c95→97(+2); allotheroffsets andparenthgi_WN_0 unchanged; globalmax95→97. HHPREOPEN additionally requiresfirstnewbootwrite afternewOWNassert: prove currentHOLDmargin>=1 oradd1BOOTonlyHOLDedge; BOOT_ENDfirstembeddingissue likewiseguarded. No blanketglobal+3, no data/tokencycles. Priceledgerfollowupcommitting. All own heavy/collector jobs terminal. No further tests launched.
