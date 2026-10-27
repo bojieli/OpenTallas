@@ -829,7 +829,24 @@ def a0_form(a, rec, parts, cores):
     for v in adj.values():
         hist[str(v)] += 1
     info["adj_driver_cols_hist"] = dict(sorted(hist.items()))
-    return dict(H8=H8, V9=V9, drivers=drv, drops=drops, bands=bands, kx=kx, ky=ky, dropx=dropx, dropy=dropy, info=info)
+    extension_taps=[]
+    if getattr(a,"mesh_extension",None):
+        extension=json.loads(Path(a.mesh_extension).read_text())
+        if extension.get("ndr","8w") != getattr(a,"fine_w","8w"):
+            raise ValueError("mesh extension NDR must match the continuous fine mesh model")
+        for row in extension.get("M8",[]):
+            y,x0,x1=map(float,(row["y"],row["x0"],row["x1"]))
+            if x1<=x0:raise ValueError("nonpositive mesh extension M8 segment")
+            H8.append((y,x0,x1))
+        for row in extension.get("M9",[]):
+            x,y0,y1=map(float,(row["x"],row["y0"],row["y1"]))
+            if y1<=y0:raise ValueError("nonpositive mesh extension M9 segment")
+            V9.append((x,y0,y1))
+        extension_taps=list(extension.get("taps",[]))
+        info["m8"],info["m9_segments"]=len(H8),len(V9)
+        info["extension"]=dict(source=a.mesh_extension,M8=len(extension.get("M8",[])),M9=len(extension.get("M9",[])),
+                                taps=len(extension_taps),rule="continuous mesh RC and MC; no new cell or stage")
+    return dict(extension_taps=extension_taps,H8=H8, V9=V9, drivers=drv, drops=drops, bands=bands, kx=kx, ky=ky, dropx=dropx, dropy=dropy, info=info)
 
 
 def stree(subs, ax, et, tag, nodes):
@@ -2573,14 +2590,15 @@ def cmd_solve(a):
             xy = B["cells"][B["site_of"][("b", leaf)]]["site"] if legal else (d["x"], d["y"])
             bxy.append((r3(xy[0]), r3(xy[1])))
         dtaps = [d["xy"] for d in A0["drops"]]
-        NF = mesh_seg(hs_a, vs_a, fdrv + bxy, taps + dtaps, fw, (RC3[a.stub_w], a.stub_um),
+        xtaps = [t["terminal_access_xy"] for t in A0.get("extension_taps",[])]
+        NF = mesh_seg(hs_a, vs_a, fdrv + bxy, taps + dtaps + xtaps, fw, (RC3[a.stub_w], a.stub_um),
                       wire_rel=sg.get("wire_rel", 0.0) if s else 0.0, rnd=rnd, jog_um=a.a0_tap_jog)
         for q, t_ in zip(bxy, barr):
             farr[q] = t_
         if a.a0_size == "drive":
             # plan-computed drive target (12.8 c/d1): Voronoi strap C of the NOMINAL plan netlist (no wire MC), so the
             # sizing is identical in every sample
-            N0 = NF if not s else mesh_seg(hs_a, vs_a, fdrv + bxy, taps + dtaps, fw, (RC3[a.stub_w], a.stub_um), jog_um=a.a0_tap_jog)
+            N0 = NF if not s else mesh_seg(hs_a, vs_a, fdrv + bxy, taps + dtaps + xtaps, fw, (RC3[a.stub_w], a.stub_um), jog_um=a.a0_tap_jog)
             cv0 = voronoi_c(N0)[len(fdrv):]
             ref_f = float(np.median(voronoi_c(N0)[:len(fdrv)]))
             # target: the band/W driver sees the same R_th * C per BUFx24 unit as the median fine driver of its base
@@ -2614,6 +2632,10 @@ def cmd_solve(a):
     if A0 is not None:
         nt = len(taps)
         darr = {d["name"]: r3(v) for d, v in zip(A0["drops"], t_ent[nt:])}
+        extension_arrivals={t["part"]:dict(mesh_access_ps=r3(v),mesh_access_slew_ps=r3(sl),
+              terminal_access_xy=t["terminal_access_xy"],terminal_xy=t["xy"],terminal_layer=t["terminal_layer"],
+              scope="dense mesh arrival through extension; final lower-metal normal escape requires extracted RC")
+              for t,v,sl in zip(A0.get("extension_taps",[]),t_ent[nt+len(A0["drops"]):],sl_ent[nt+len(A0["drops"]):])}
         t_ent, sl_ent = t_ent[:nt], sl_ent[:nt]
         bi = defaultdict(list)
         for d in A0["drops"]:
@@ -2634,8 +2656,9 @@ def cmd_solve(a):
         mh = defaultdict(int)
         for d in A0["drivers"]:
             mh[str(d["mult"])] += 1
-        a0_out = dict(info=A0["info"], band_trees=A0["band_trees"], crossings=NF["crossings"], vias=NF["vias"], via_check="PASS",
+        a0_out = dict(extension_arrivals=extension_arrivals,info=A0["info"], band_trees=A0["band_trees"], crossings=NF["crossings"], vias=NF["vias"], via_check="PASS",
                       tap_jogs=NF["jogs"], c_total_pf=r3(sum(NF["C"].values()) / 1000.0),
+                      continuous_mesh_switching_w=r3(sum(NF["C"].values())*1e-15*VDD[c]**2*F_CLK),
                       band_driver_arr_spread_ps=r3(float(ba.max() - ba.min())), band_vs_column_gate=gate10,
                       band_mult_hist=dict(sorted(mh.items())),
                       drop_skew_ps=r3(max(dv) - min(dv)),
@@ -3063,6 +3086,7 @@ def add_common(p):
     p.add_argument("--a0-mesh", default=None,
                    help="R26 opt-in: A0 drop-lattice mesh form (a0_clk_r3b.json): per-row drop M9 segments, band drivers, "
                         "W-edge column, adjcol x2, VIA89 fail-closed check, balanced band trees (COORD R25 ruling (a))")
+    p.add_argument("--mesh-extension",default=None,help="opt-in continuous mesh M8/M9 conductor extension and actual entry access taps; all metal enters dense RC/MC/power")
     p.add_argument("--a0-lattice", default="R23_d51_candidate", help="lattice key in the --a0-mesh file")
     p.add_argument("--a0-wedge-x", type=float, default=1632.96, help="W-edge driver column x (1650.24 - 2 x 8.64)")
     p.add_argument("--a0-size", default="adjcol", choices=["drive", "adjcol", "none"],

@@ -285,6 +285,7 @@ def export(B):
         mesh['ndr'] = B.get('mesh_ndr','8w')
         mesh['partition_taps'] = [dict(t) for t in B['rec']['taps']]
         mesh['core_drops'] = [dict(d) for d in B['a0']['drops']]
+        mesh['entry_extensions'] = [dict(t) for t in B['a0'].get('extension_taps',[])]
         # Parent attach_mesh consumes this same complete graph; the standalone
         # artifact remains useful for independent geometry review.
         for d in mesh['drivers']:

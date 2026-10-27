@@ -125,3 +125,13 @@ def test_west_column_feed_crosses_macro_only_in_free_row_band():
         for k in range(1,n['nseg']+1):
             q=tuple(a[j]+(b[j]-a[j])*k/n['nseg'] for j in (0,1))
             assert not blocked(q)
+
+
+def test_continuous_extension_adds_real_mesh_rc_and_crossing():
+    hs=[(0.,10.,20.),(10.,10.,20.)];vs=[(10.,0.,10.),(20.,0.,10.)]
+    base=M.mesh_seg(hs,vs,[(10.,0.)],[(20.,10.)],M.RC3['8w'],(M.RC3['8w'],0.))
+    extended=M.mesh_seg(hs+[(5.,0.,10.)],vs,[(10.,0.)],[(20.,10.),(0.,5.)],M.RC3['8w'],(M.RC3['8w'],0.))
+    assert extended['vias']==base['vias']+1
+    assert sum(extended['C'].values())>sum(base['C'].values())
+    assert (0.,5.) in extended['xy']
+    assert len(extended['tn'])==2
