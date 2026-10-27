@@ -2795,11 +2795,18 @@ def raw_constant_bases(L, work, conflicts, log):
     """
     cache = L.__dict__.setdefault("raw_constant_status", {})
     batch = L.__dict__.get("_raw_constant_batch", 0)
+    if not hasattr(L, "rst_val"):
+        noreset_classify(L)
+    # LEC-FPREG-3 10-27 (KV core 112 differ): also every constant the reset state does not give.  An adder MSB that
+    # is 0 for every operand (qwen nearhbm_prod s1_e[9] = ea + ek + 5 < 512) is X in the ternary reset state when its
+    # operand registers have no reset, and the reload rule refuses it when an operand register carries an equality
+    # hypothesis; the universal proof (everything free) needs neither.
     for side, d, points in (("gold", L.gold, L.gc), ("gate", L.gate, L.tc)):
         candidates = sorted({(k, h[1]) for (sd, k), h in L.hyp.items()
                              if h[0] == "const" and sd in (side, "both")
                              and (side, k, h[1]) not in cache
-                             and latch_cone(L, side, k) is None})
+                             and (latch_cone(L, side, k) is None
+                                  or L.rst_val.get((side, k), (None, None))[0] != h[1])})
         if not candidates:
             continue
         m = Aig()
@@ -3531,9 +3538,21 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     # while the time budget lasts (s81 hd_tile: false copies along 60-stage skew delay lines peel one stage
     # per round -- stopping at 64 rounds freed every unmatched flop and left 83 points differing)
     t_ref, budget = time.time(), float(os.environ.get("OT_LEC_REFINE_S", "3600"))
+    # LEC-FPREG-3 10-27 (SYS_C 4,561 differ): when the budget expires, refinement used to clear EVERY hypothesis
+    # (6 false counter constants peeling one bit per SAT round wiped ~5,490 valid relations).  It now finishes
+    # monotonically instead: each failing hypothesis is dropped together with every hypothesis whose raw next state
+    # (no assumption applied) reads a dropped register, transitively, and the smaller set is proved again.  Dropping
+    # only removes assumptions, the loop still returns only on a fully proved (inductive) set, so this is sound;
+    # OT_LEC_REFINE_MONOTONE=0 restores the old clear-all.
+    expired, sup = False, {}
     for rnd in range(rounds + 1000):
         if rnd >= rounds + 40 and time.time() - t_ref > budget:
-            break
+            if os.environ.get("OT_LEC_REFINE_MONOTONE", "1") == "0":
+                break
+            if not expired:
+                log.append(f"correspondence: refine budget {budget:.0f} s spent at round {rnd}; monotone finish "
+                           f"(failures + raw-next-state fanout dropped) with {len(L.hyp)} hypotheses")
+            expired = True
         adding = rnd < rounds           # then refine only: drop what fails until the set is inductive
         before = dict(L.hyp)
         if adding:
@@ -3887,6 +3906,9 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                 return
             continue
         drop_failed(L, [n for n in bad if n.startswith("cons:")])
+        if expired and any(hk not in sup for hk in L.hyp):
+            sup.update(raw_support(L, [hk for hk in L.hyp if hk not in sup]))
+        gone = set()
         for n in bad:
             if n.startswith("cons:"):
                 continue
@@ -3895,15 +3917,60 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             h = L.hyp.pop((side, k), None)
             if h is None:
                 continue
+            gone.add(k)
             # Equality candidates are looked up with an integer polarity. Keep
             # that key unchanged when recording rejection, or they are retried
             # in every adding round. FSM cube tuples keep their textual key.
             tried[(side, k, "c") if h[0] == "const" else
                   (side, k, h[2], h[3]) if h[0] == "eq" else
                   (side, k, str(h[2]), str(h[3]))] += 1
+        if expired and gone:
+            n0 = len(L.hyp)
+            cascade_drop(L, sup, gone)
+            log.append(f"correspondence round {rnd}: monotone finish dropped {n0 - len(L.hyp)} dependent "
+                       f"hypotheses, {len(L.hyp)} left")
     L.hyp.clear()                             # refinement did not converge: no assumptions at all
     L.cons.clear()
     log.append("correspondence: refinement did not converge; all unmatched flops free")
+
+
+def raw_support(L, keys):
+    """{(side, key): register keys read by the RAW next state of each hypothesis (and of its 'eq' partner)}, built
+    with no hypothesis applied, so a constant's dependence on another hypothesised register stays visible."""
+    saved = L.hyp
+    L.hyp = {}
+    try:
+        m, kind = L.build(with_compare=False, with_hyp=False)
+        out = {}
+        for hk in keys:
+            side, k = hk
+            h = saved.get(hk)
+            lits = [L.dlit.get((sd, k)) for sd in (("gold", "gate") if side == "both" else (side,))]
+            if h and h[0] == "eq":
+                lits += [L.dlit.get((h[1], h[2])), L.dlit.get(("gold", h[2]))]
+            reads = set()
+            for lit in lits:
+                if lit is not None:
+                    reads |= {kind[v][1] for v in m.cone_inputs(lit) if v in kind}
+            out[hk] = reads
+        return out
+    finally:
+        L.hyp = saved
+
+
+def cascade_drop(L, sup, gone):
+    """drop, transitively, every hypothesis whose raw next state reads a register in `gone` (its own hypothesis
+    was dropped, so that register is free).  Removes assumptions only.  -> keys dropped."""
+    gone, out, changed = set(gone), [], True
+    while changed:
+        changed = False
+        for hk in list(L.hyp):
+            if sup.get(hk, set()) & gone:
+                L.hyp.pop(hk)
+                gone.add(hk[1])
+                out.append(hk)
+                changed = True
+    return out
 
 
 def apply_hints(L, hints, work, conflicts, log, rounds=40):
