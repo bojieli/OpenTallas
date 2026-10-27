@@ -1,0 +1,17 @@
+{
+ "verdict": "PASS-COND",
+ "scope": "Trial clock dry placement only; no P&R/STA/freeze",
+ "image": "results/qc_clk_mesh3/codex_r26_export/export8/all_tree_geometry.png",
+ "viewed": true,
+ "findings": [
+  "W vertical spine with free-band crossings; all exported cells row-compatible R0/MX",
+  "0 host/core/body/overlap errors; max actual model stage448.524um",
+  "Actual native masterPG proof PASS for adjacentR0/MX; wrongR0/R0 negative confirmed"
+ ],
+ "conditions": [
+  "Full PG/shield/stair geometry dry importer census",
+  "Real entry delivery360+17, actual fourPHY M5 endpoints",
+  "Type-uniform clock reservations/kit rebuild before freeze",
+  "Related-pair TT/FF extracted-clock STA"
+ ]
+}
