@@ -1,3 +1,4 @@
+SUPERSEDED 2026-10-27 04:06 PDT by COORD: keybuf becomes 8 key-line slices of one core type, 0 added cycles (owner HBM-MU-QUAD-5). NB=3 serialiser REJECTED (row II 232 -> 573); kept as reference only, not for the plan.
 HBM-MU-QUAD-4 task 4: keybuf time-serialisation (hnx_idxn_keybuf, 4 instances u_mu_keybuf_0__q0/q1 in q_hub_nw/ne, 324x324)
 Date 2026-10-27. Host epyc2. Numbers: CHECKED = recomputed from the named log/artifact here; UNCHECKED = analytic/estimate.
 
