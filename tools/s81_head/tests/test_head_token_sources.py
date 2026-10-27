@@ -52,6 +52,13 @@ endmodule''',
    self.assertIn('s81_head_top.tile1.u_core.u_b.g_cvb.u_eB.u_m.u_rom1.viamap.hex',res['required_scope_images'])
    self.assertIn('HEAD missing scope image',(r/'native/ot_rom_4096x274_m8_scope.sv').read_text())
    self.assertEqual(res['unique_weight_images'],20)
+ def test_shared_hierarchical_type_uses_actual_runtime_scope(self):
+  with tempfile.TemporaryDirectory() as d:
+   r=Path(d);self.setup_tree(r)
+   res=prepare(r,r/'plan.json',r/'physical.f',r/'native','scope',True)
+   self.assertIn('/*verilator hier_block*/',(r/'native/ot_s81hd_tile_p.sv').read_text())
+   self.assertIn('s81_head_top.tile1.ot_s81hd_tile_p.u_core.u_b.g_cvb.u_eB.u_m.u_rom1.viamap.hex',res['required_scope_images'])
+   self.assertEqual(res['added_cycles'],0)
  def test_missing_tile_mutant_is_rejected(self):
   with tempfile.TemporaryDirectory() as d:
    r=Path(d);self.setup_tree(r);p=r/'gen/s81_head_top.sv';p.write_text(p.read_text().replace('tile1','lost_tile'))

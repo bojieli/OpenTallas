@@ -47,7 +47,9 @@ def scope_rom_model(text):
     return text.replace(anchor, branch+'\n'+anchor, 1)
 
 
-def prepare(root, plan_path, manifest, out, rom_load='parameters'):
+def prepare(root, plan_path, manifest, out, rom_load='parameters', hierarchical=False):
+    if hierarchical and rom_load != 'scope':
+        raise ValueError('hierarchical sharing requires runtime scope image loading')
     root, plan_path, manifest, out = [p.resolve() for p in (root, plan_path, manifest, out)]
     plan = json.loads(plan_path.read_text())
     out.mkdir(parents=True, exist_ok=False)
@@ -90,6 +92,8 @@ def prepare(root, plan_path, manifest, out, rom_load='parameters'):
                             'module '+wrapper+' #(parameter INSTANCE = "") (', 'tile wrapper header')
     # Keep all existing physical content parameters verbatim.
         text = replace_once(text, r'(\bot_s81hd_tile\s*#\s*\()', r'\1.INSTANCE(INSTANCE), ', 'tile content parameter list')
+    if hierarchical:
+        text = replace_once(text, r'(?s)(\bmodule\s+'+re.escape(wrapper)+r'\s*\(.*?\);)', r'\1\n/*verilator hier_block*/', 'shared tile module')
     target = out/(wrapper+'.sv'); target.write_text(text)
     models[models.index(s)] = str(target.relative_to(root))
     tops = [s for s in models if Path(s).name == 's81_head_top.sv']
@@ -118,9 +122,13 @@ def prepare(root, plan_path, manifest, out, rom_load='parameters'):
     include_dirs = sorted({str(Path(s).parent) for s in models})
     (out/'native.f').write_text('\n'.join(['+define+'+d for d in defines]+['+incdir+'+d for d in include_dirs]+models)+'\n')
     image_names = [name+core+'_'+str(bank)+'.viamap.hex' for name in names for core in ('a0','a1','a2','a3','b') for bank in (0,1)]
+    scope_images = []
+    for path, _ in bindings:
+        part, rest = path.split('.',1)
+        scope_images.append('s81_head_top.'+part+'.'+(wrapper+'.' if hierarchical else '')+rest[:-4]+'.viamap.hex')
     report = dict(schema='opentallas.head.native_sources.v1', replacements=aliases,
         defines=defines, include_dirs=include_dirs, tile_instances=len(names), required_weight_images=image_names,
-        unique_weight_images=len(set(image_names)), rom_load=rom_load, image_bindings=bindings, required_scope_images=['s81_head_top.'+p[:-4]+'.viamap.hex' for p,_ in bindings] if rom_load == 'scope' else [], added_cycles=0,
+        unique_weight_images=len(set(image_names)), rom_load=rom_load, hierarchical=hierarchical, image_bindings=bindings, required_scope_images=scope_images if rom_load == 'scope' else [], added_cycles=0,
         source_sha256={s: hashlib.sha256((root/s).read_bytes()).hexdigest() for s in models},
         qualification='source staging only; current physical-view equivalence, boot schedule and real numerical token execution pending')
     (out/'source_contract.json').write_text(json.dumps(report,indent=2)+'\n')
@@ -131,7 +139,8 @@ def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('plan',type=Path); ap.add_argument('manifest',type=Path); ap.add_argument('out',type=Path)
     ap.add_argument('--rom-load',choices=['parameters','scope'],default='parameters')
+    ap.add_argument('--hierarchical',action='store_true')
     a=ap.parse_args(); root=Path.cwd()
-    report=prepare(root, a.plan, a.manifest, a.out, a.rom_load)
+    report=prepare(root, a.plan, a.manifest, a.out, a.rom_load, a.hierarchical)
     print('HEAD_NATIVE_SOURCES tiles=%d unique_images=%d cycles_added=0' % (report['tile_instances'],report['unique_weight_images']))
 if __name__=='__main__':main()
