@@ -68,7 +68,7 @@ def main():
         for d in range(4):
             if a.fx == 'declared':
                 fx_ok = True
-                L['fixture_identity'][f'die{d}'] = 'not applicable: declared history ' + sha(a.history_manifest)
+                L['fixture_identity'][f'die{d}'] = 'not applicable: history-seeded, history manifest ' + sha(a.history_manifest)
             else:
                 fx = Path(a.fx)
                 fx_ok = (pdir / f'L{n:02d}_die{d}_x.hex').read_bytes() == (fx / f'L{n:02d}_die{d}_x.hex').read_bytes() and \

@@ -58,3 +58,19 @@ layer L. The parallel axis is therefore the 8 TP8 KV heads × the mutants. Each 
 whole set covers 288 layer-head pairs.
 
 Results: see the lane line in `~/coord/lanes/TOK-QK.md` (filled in when the units finish).
+
+## Real prefill history (COORD 10-27): the final verdict uses it
+
+The verdict vectors are `vec_real`. They are built from the real 36-layer prefill K/V history, not the declared FP8 pattern (`kvl_history.py`, now smoke/debug only).
+
+**Caveat (record in the receipt):** the history is NOT bit-exact chip arithmetic.
+- The prefill of tokens 0..8190 uses HF BF16 CPU arithmetic (`kvl_prefill_hist.py`, `qwen3_deployment_quality.Qwen3(..., "gpu", "w8", "fp8", fold=True)`).
+- The weights are the chip's norm-folded W8 ROM codes, prep-checked against fx/tp4.
+- The K/V rounding is golden FP8.
+- Only the decode at P8191 is the bit-exact TP4 ISA golden (`qwen_hbmacc_position_oracle_gpu --kv-history hist_real`).
+- A bit-exact golden prefill would take ~76 h, over the 48 h rule.
+- `kvl_hist_check.py` compares rows 0..15 against the golden's own 16-position prefill (`hist_check.json`). This checks layout and head/die mapping and gives an agreement figure.
+
+Chain: `real_post.sh` on epyc2 (`/srv/opentallas-scratch2/claude/tok-qk-kvh`, log `post.log`).
+- Steps: prefill container `kvh-prefill` -> `hist_real/` -> check -> `gold_real` -> `vec_real` (kv.hex, the format `kv_preload.py --as-layer` reads) -> rsync to `intel2:/srv/opentallas-scratch2/claude/tok-qk-kvl/vec_real` (+`.done`/`.failed`).
+- `chain.sh` launches the 12 sims on `vec_real` once the build and `vec_real/.done` both exist.
