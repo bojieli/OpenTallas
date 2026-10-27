@@ -11,7 +11,7 @@ go() { local n=$1; shift; cd $K/client; nohup ~/.local/bin/ot-run --mem $MEM --t
 for d in 0 1 2 3; do for g in 0 1; do h=d${d}_g${g}
   go nom_$h POST=300000 $K/run_kvl.sh $B $K/vec $K/runs nom_$h $h; done; done
 go m1_cmdlate POST=40000 $K/run_kvl.sh $B $K/vec $K/runs m1_cmdlate d0_g0 +MUT_CMD_LATE
-go m3_kswap POST=40000 PRELOAD_ARGS='--mut-kswap phy_WS_0' $K/run_kvl.sh $B $K/vec $K/runs m3_kswap d0_g0
+go m3_kswap POST=40000 MUT_KSWAP=phy_WS_0 $K/run_kvl.sh $B $K/vec $K/runs m3_kswap d0_g0
 go m4_qswap POST=40000 $K/run_kvl.sh $B $K/vec $K/runs m4_qswap d0_g0 +MUT_QSWAP
 go m5_l01 POST=40000 MUT_L01=1 $K/run_kvl.sh $B $K/vec $K/runs m5_l01 d0_g0
 sleep 30; grep -h admitted $K/runs/*.otrun.log

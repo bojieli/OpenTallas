@@ -4,7 +4,7 @@
 # own q / new K,V row / gold and its own HBM history (kv_preload.py per layer, --skip-last: row T-1 arrives over KVN).
 #   run_kvl.sh BIN VEC OUT NAME HEAD [plusargs ...]     HEAD = d<d>_g<g> (the KV head this KV die serves, TP8)
 #   env: CTX (8192)  POST (300000 core cycles after the boot verdict)  MUT_L01 (1: preload layers 0,1 swapped, m5)
-#        PRELOAD_ARGS (extra kv_preload.py args, e.g. "--mut-kswap phy_WS_0", m3)
+#        MUT_KSWAP (partition, e.g. phy_WS_0: mutant m3)  PRELOAD_ARGS (extra kv_preload.py args)
 set -u
 H=$(cd "$(dirname "$0")" && pwd)
 B=$1; V=$2; O=$3; N=$4; HD=$5; shift 5
@@ -20,7 +20,7 @@ for n in $(seq 0 35); do
   sed -n "${CTX}p;$((2 * CTX))p" $S/kv.hex > $D/kvn.hex
   AS=$n; [ "${MUT_L01:-0}" = 1 ] && [ $n -lt 2 ] && AS=$((n ^ 1))
   /usr/bin/python3 $H/kv_preload.py --kv $S/kv.hex --ctx $CTX --asbuilt $PHYS/die_plan/qwen_kvsys/bind/asbuilt_map.json \
-    --layers $n --as-layer $AS --skip-last ${PRELOAD_ARGS:-} >> preload.txt 2>> preload.log || exit 2
+    --layers $n --as-layer $AS --skip-last ${MUT_KSWAP:+--mut-kswap $MUT_KSWAP} ${PRELOAD_ARGS:-} >> preload.txt 2>> preload.log || exit 2
 done
 sha256sum preload.txt vecl/L*/kvn.hex > inputs.sha256
 /usr/bin/time -v stdbuf -oL $B +PHASE=boot +FRAMES=$I/frames.hex +EXPECT=$I/expect.txt +EPOCH=$(cat $I/epoch.txt) +START_AFTER_SETUP \
