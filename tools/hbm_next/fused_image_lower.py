@@ -89,8 +89,15 @@ def live_at_fused(recs):
     outside expert loops; their output becomes live only after it is materialized.
     """
     # Derive indexed score-gather ranges from their actual TOPK id producer.
-    tables = {}; selector_tables = {}
+    tables = {}; selector_tables = {}; row_table_regions = {}
     for _, r, rx, _ in recs:
+        if r.unit=='IDX' and r.op in ('UNION','KVUNION'):
+            regions=extents(r,rx,'R')
+            if len(regions)!=1: raise ValueError('noncontiguous row table producer')
+            row_table_regions[r.desc['R'].base]=regions[0]
+        if rx and rx.rsel:
+            if rx.rtab not in row_table_regions: raise ValueError('row selector has no actual table producer')
+            r._row_table_region=row_table_regions[rx.rtab]
         if rx and rx.rsel and rx.emask:
             if rx.rtab not in selector_tables: raise ValueError("RSEL has no preceding UNION producer")
             r._selector_rows = rx.n * selector_tables[rx.rtab]
@@ -132,7 +139,7 @@ def live_at_fused(recs):
             if not writes(r, k): mark(live, extents(r, rx, k))
         if r.unit == 'CTL' and r.op == 'LOOP' and r.param & (1 << 17):
             mark(live, [(r.imm_a, r.imm_a + 1)])
-        if rx and rx.rsel: mark(live, [(rx.rtab, rx.rtab + 32 * 6 * rx.n)])
+        if rx and rx.rsel: mark(live, [r._row_table_region])
     return result
 
 

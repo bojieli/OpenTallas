@@ -117,6 +117,17 @@ class Lower(unittest.TestCase):
         native=next(rr for rr,rx in out if rr.unit=='FUSED');native.desc['O'].base+=8
         self.assertTrue(check_fused(native,None))
 
+    def test_hidden_attention_plan_extent_from_actual_producer(self):
+        producer=R.Rec('IDX','KVUNION',desc={'R':R.MDesc(base=250000,n=128,m=32,stride=128,fmt='U32')})
+        att=R.Rec('ATT','QK',desc={'A':R.MDesc(base=60000,n=16)})
+        rows=IR.RowX(n=2,rsel=1,rtab=250000)
+        recs=[(0,producer,None,b''),(1,pre(),None,b''),(2,att,rows,b'')]
+        live=F.live_at_fused(recs)[1]
+        self.assertTrue(live[250000:254096].all())
+        self.assertFalse(live[254096])
+        recs[2][2].rtab+=10000
+        with self.assertRaises(ValueError):F.live_at_fused(recs)
+
     def test_rid_copy_precedes_actual_users(self):
         topk=R.Rec('IDX','TOPK',param=4102,desc={'A':R.MDesc(base=1000,n=384),'O':R.MDesc(base=2000,n=6,fmt='U32')})
         union=R.Rec('IDX','UNION',imm_a=384,imm_b=7,desc={'A':R.MDesc(base=9000,n=6,m=2,stride=8,fmt='U32')})
