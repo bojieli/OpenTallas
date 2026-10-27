@@ -458,6 +458,7 @@ def phase_plan(die_frame_master, lk, pairs, off, mat, x, nseg, iters, assign=Non
     if kx is not None and not all(n in kx['slot_extra'] for n in range(1, kslot + 1)):
         kx = None      # a slot count without a measurement: unmeasured
     plan = P.plan_phase(LX.base_master(die_frame_master), pairs, mat, x, nseg, iters=iters, land_e=LX.land_e(lk),
+                        frame_schedule=LX.source_frame_schedule(die_frame_master),
                         seg_extra=sx, assign=assign, kslot=kslot, nsr=nsr, stretch=stretch,
                         slot_extra=_prov_slot(kslot) if kx is None else {int(n): v for n, v in kx['slot_extra'].items()})
     plan['assign_slots'] = [(i + off, R, sg) for i, R, sg in plan['assign_slots']]
@@ -504,7 +505,7 @@ def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
     import frame_bench as B
     import v41_die_images_w17w10 as I
     sl, g, j = frame_slot(die, frame)
-    master, lk = die.inst[frame]['master'], die.strap(frame, 'lk')
+    master, lk = die.inst[frame]['master'], LX.frame_lk(die, frame)
     q, bf = B.frame_pairs(LX.base_master(master))
     fxa = LX.load_fixture(fixd)
     fx = Fix(fixd)
@@ -1028,7 +1029,7 @@ def lower_placed(die, op, ctx):
         import xs_wqb_die as WD
         fr0 = die.frames_of(sl)[0]
         ops_, phase_, stream_, plist_, _ = WD.layer_field(fx, ctx.get('layer', 'L0'), die.inst[fr0]['master'],
-                                                          die.strap(fr0, 'lk'))
+                                                          LX.frame_lk(die, fr0))
         mode_ = ctx.get('wqb_calendar') or 'pipeline'
         cal_ = WD.wqb_calendar(phase_, stream_, list(range(len(plist_))), slc=g, mode=mode_)
         crec = dict(WD.calendar_record(cal_), schema='opentallas.s81_dv.xs_wqb_calendar.v1', layer=ctx.get('layer'),
@@ -1083,7 +1084,7 @@ def lower_placed_bf(die, op, ctx, rec, fx, sl, g):
     frames = []
     unm = set()
     for j, fr in enumerate(die.frames_of(sl)):
-        master, E = LX.base_master(die.inst[fr]['master']), LX.land_e(die.strap(fr, 'lk'))
+        master, E = LX.base_master(die.inst[fr]['master']), LX.land_e(LX.frame_lk(die, fr))
         fv = XB.frame_variant(die.inst[fr]['master'])
         _, bfp = B.frame_pairs(master)
         key = XB.shape_key(master, E, fv)

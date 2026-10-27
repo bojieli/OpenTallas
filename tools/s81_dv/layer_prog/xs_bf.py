@@ -205,7 +205,13 @@ def shape_key(master, land_e, frame=None):
 def frame_variant(die_master):
     """'lp' for a landed-parent die frame (master *_lp, or OT_XS_BF_FRAME=lp while the die of record binds _l4), else None"""
     import os
+    import lower_xs
     v = os.environ.get('OT_XS_BF_FRAME', '').strip() or None
+    if lower_xs.is_asbuilt(die_master):
+        actual = die_master.split('_l4_lp_', 1)[1]
+        if v is not None and v != actual:
+            raise ValueError('as-built BF frame cannot use an older frame calendar: ' + str(v))
+        return actual
     if v is None and die_master.endswith('_lp'):
         v = 'lp'
     assert v in (None, 'lp', 'l4'), ('OT_XS_BF_FRAME', v)
@@ -219,11 +225,12 @@ def frame_topology(master, frame=None):
     whose measured return latency differs carries a MEASURED correction (measure record 'leaf_ret_corr', added to its
     partial edge before composing): vgcs col_h9 e4w / e4e -3, e8w -6; col_h10 none."""
     import frame_return_plan as P
-    if frame != 'lp':
+    if frame not in ('lp', 'asb_x', 'asb_nx'):
         return P.load_topology(master)
     import hashlib
     import lower_xs
-    sch = json.loads(lower_xs.source_frame_schedule(master + '_l4_lp').read_text())
+    selected = master + '_l4_lp' + ('_' + frame if frame in ('asb_x', 'asb_nx') else '')
+    sch = json.loads(lower_xs.source_frame_schedule(selected).read_text())
     for f, sha in sch['source_sha256'].items():
         assert hashlib.sha256((ROOT / f).read_bytes()).hexdigest() == sha, f'stale landed schedule: {f}'
     assert sch['topology']['master'] == master
@@ -441,7 +448,7 @@ def main(argv=None):
     m.add_argument('--log', required=True)
     m.add_argument('--vec', required=True)
     m.add_argument('--out', default=None)
-    m.add_argument('--frame', choices=('lp',), default=None, help='frame variant measured (default the _l4 frame)')
+    m.add_argument('--frame', choices=('lp', 'asb_x', 'asb_nx'), default=None, help='frame variant measured (default the _l4 frame)')
     m.add_argument('--lk', type=int, default=None, help='bench lane strap E when it differs from the vector die frame')
     a = ap.parse_args(argv)
     return {'measure': cmd_measure}[a.cmd](a)
