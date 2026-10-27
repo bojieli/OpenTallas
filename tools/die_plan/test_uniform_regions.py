@@ -80,3 +80,23 @@ def test_bisection_congruent_explicit_leaf_lattice():
         DM.bisection_congruent([1.0, 2.0, 3.0], "n3")
     with pytest.raises(ValueError):
         DM.bisection_congruent([2.0, 1.0], "order")
+
+
+def test_band_plan_equal_structure():
+    """CLOCK-KV-R6 band trees: taps outside the leaf-group cover go to the nearest group-edge leaf row on their nearest
+    V strap; one h for every tree = half the deepest tap depth (site-rounded); a band too deep for one level fails."""
+    p = 190.08
+    ly = [p / 2 + p * j for j in range(4)] + [2000.0 + p / 2 + p * j for j in range(4)]
+    xs = [100.0, 446.14]
+    taps = [(110.0, 300.0), (120.0, 1200.0), (440.0, 1500.0), (430.0, 2650.0), (100.0, 2900.0)]
+    B = DM.band_plan(ly, xs, taps, 480.0)
+    assert set(B["taps"]) == {1, 2, 4}                       # 0 and 3 inside a group cover
+    t1, t2, t4 = B["taps"][1], B["taps"][2], B["taps"][4]
+    assert (t1["i"], t1["dir"], round(t1["edge_y"], 2)) == (0, 1, round(ly[3], 2))
+    assert (t2["i"], t2["dir"], round(t2["edge_y"], 2)) == (1, -1, round(ly[4], 2))
+    assert t4["dir"] == 1 and round(t4["edge_y"], 2) == round(ly[7], 2)
+    dmax = max(v["depth"] for v in B["taps"].values())
+    assert dmax / 2 <= B["h_um"] < dmax / 2 + DM.STEP_UM
+    assert DM.band_plan(ly, xs, [taps[0], taps[3]], 480.0) is None
+    with pytest.raises(ValueError):
+        DM.band_plan(ly, xs, taps, 100.0)
