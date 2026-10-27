@@ -1,0 +1,138 @@
+{
+ "old": {
+  "structural_only": true,
+  "source": "/srv/opentallas-scratch2/claude/core-lat-r17-1027/kits/dsdv_gunit_l0r_c17/run/results/asap7/kl_dsdv_gunit_l0r_c17/base/1_2_yosys.v",
+  "cells_parsed": 115511,
+  "start": "bgh[1]",
+  "end": "rs[33][11]/D",
+  "levels": 22,
+  "path": [
+   {
+    "cell": "_119505_",
+    "type": "INVx1_ASAP7_75t_R"
+   },
+   {
+    "cell": "_216205_",
+    "type": "HAxp5_ASAP7_75t_R"
+   },
+   {
+    "cell": "_122225_",
+    "type": "INVx1_ASAP7_75t_R"
+   },
+   {
+    "cell": "_216195_",
+    "type": "FAx1_ASAP7_75t_R"
+   },
+   {
+    "cell": "_121806_",
+    "type": "OA21x2_ASAP7_75t_R"
+   },
+   {
+    "cell": "_121807_",
+    "type": "OA21x2_ASAP7_75t_R"
+   },
+   {
+    "cell": "_121808_",
+    "type": "XNOR2x2_ASAP7_75t_R"
+   },
+   {
+    "cell": "_216233_",
+    "type": "HAxp5_ASAP7_75t_R"
+   },
+   {
+    "cell": "_122315_",
+    "type": "INVx1_ASAP7_75t_R"
+   },
+   {
+    "cell": "_216197_",
+    "type": "FAx1_ASAP7_75t_R"
+   },
+   {
+    "cell": "_122337_",
+    "type": "BUFx2_ASAP7_75t_R"
+   },
+   {
+    "cell": "_122490_",
+    "type": "INVx1_ASAP7_75t_R"
+   },
+   {
+    "cell": "_122491_",
+    "type": "BUFx2_ASAP7_75t_R"
+   },
+   {
+    "cell": "_122492_",
+    "type": "AO31x2_ASAP7_75t_R"
+   },
+   {
+    "cell": "_134715_",
+    "type": "NAND2x1_ASAP7_75t_R"
+   },
+   {
+    "cell": "_134731_",
+    "type": "AND3x1_ASAP7_75t_R"
+   },
+   {
+    "cell": "_134786_",
+    "type": "INVx1_ASAP7_75t_R"
+   },
+   {
+    "cell": "_134787_",
+    "type": "OA21x2_ASAP7_75t_R"
+   },
+   {
+    "cell": "_134788_",
+    "type": "BUFx2_ASAP7_75t_R"
+   },
+   {
+    "cell": "_135353_",
+    "type": "BUFx2_ASAP7_75t_R"
+   },
+   {
+    "cell": "_135367_",
+    "type": "OA21x2_ASAP7_75t_R"
+   },
+   {
+    "cell": "_135371_",
+    "type": "AOI21x1_ASAP7_75t_R"
+   }
+  ]
+ },
+ "static": {
+  "structural_only": true,
+  "source": "/srv/opentallas-scratch2/claude/codex-s81-core-1027/kits/dsdv_gunit_l0r_c19s/run/results/asap7/kl_dsdv_gunit_l0r_c19s/base/1_2_yosys.v",
+  "cells_parsed": 58774,
+  "start": "bgh[1]",
+  "end": "rs[33][11]/D",
+  "levels": 7,
+  "path": [
+   {
+    "cell": "_067483_",
+    "type": "BUFx2_ASAP7_75t_R"
+   },
+   {
+    "cell": "_067485_",
+    "type": "AND4x1_ASAP7_75t_R"
+   },
+   {
+    "cell": "_067494_",
+    "type": "BUFx2_ASAP7_75t_R"
+   },
+   {
+    "cell": "_067495_",
+    "type": "BUFx2_ASAP7_75t_R"
+   },
+   {
+    "cell": "_067890_",
+    "type": "BUFx2_ASAP7_75t_R"
+   },
+   {
+    "cell": "_067955_",
+    "type": "AO32x1_ASAP7_75t_R"
+   },
+   {
+    "cell": "_067956_",
+    "type": "OAI22x1_ASAP7_75t_R"
+   }
+  ]
+ }
+}
