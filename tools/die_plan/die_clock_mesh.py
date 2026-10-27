@@ -2104,8 +2104,11 @@ def build_lattice(P, dtp, plan_sha, rep_um=450.0, ndr="4w", pg_shapes=None, trac
     router = C128.TrackRouter(NDR[ndr], sh, track_profile or DEFAULT_TRACKS, TRACK_MOVE_UM,
                               **(dict(wide_merge_um=C128.WIDE_MERGE_UM) if stack_r8 else {}))
     router.reserve(C128.pg_shapes(pgr))
-    wires = C128.fixed_wires(out, cells, nets, BUF_W, ROW_Y, router=router, pin_stack=pin_stack,
+    stack_offset = lat.get("stack_track_offset_um", C128.TREE_OFF_UM)
+    wires = C128.fixed_wires(out, cells, nets, BUF_W, ROW_Y, off=stack_offset, router=router, pin_stack=pin_stack,
                              **(dict(port_on_trunk=True) if stack_r8 else {}))
+    if "stack_track_offset_um" in lat:
+        out["meta"]["lattice_tree"]["stack_track_offset_um"] = stack_offset
     if stack_r8:    # CLOCK-128-R8: clock_routed encodes every downward via as a junction split (see clock_routed)
         for w in wires:
             if w.get("pin_stack"):
