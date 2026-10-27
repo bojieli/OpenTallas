@@ -15,6 +15,10 @@ foreach i [$ff_blk getInsts] {
  set b [$i getBBox]
  cland_occupy [$b xMin] [$b yMin] [expr {[$b xMax]-[$b xMin]}] [expr {[$b yMax]-[$b yMin]}]
 }
+# Opt-in (gen_phys reserved_sites_um): die clock-tree reservations are occupied space for ring/status cells.
+if {[info exists ::cland_avoid_rects]} {
+ foreach r $::cland_avoid_rects { lassign $r ra rb rc rd; cland_occupy $ra $rb [expr {$rc-$ra}] [expr {$rd-$rb}] }
+}
 set cland_fh [open $::env(RESULTS_DIR)/ot_face_flops.txt a]
 proc cland_put {i rect tag} {
  global ff_x0 ff_y0 ff_x1 ff_y1 ff_rh ff_sw ff_dbu ff_orient cland_occ cland_done cland_n cland_fh

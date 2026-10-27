@@ -21,9 +21,15 @@ liberty files before synthesis):
              (lint(straps=...) / sdc_lint.json "straps" / kit straps.json, strap_* inputs) -- required on every declared strap, refused on any other port.
              The owner reset rule also permits exactly the two unique whole-die asynchronous root RESETN pins;
              root_async_reset context is generated from the wavefront plan, never from a signal-name match.
+  ft         (COORD 10-26 12:55, 12.2a1) ports in the kit's ft declaration (ft_ports.json, sha256-checked) are
+             DIE-TIMED feed-throughs: no input/output delay, load or driving cell on them (all_inputs / all_outputs
+             select them in the built core, so the SDC must name core IO explicitly), never a clock source; every
+             declared arc must exist in the kit interface model ft_interface.json.  No new exception: set_false_path
+             stays banned; an undeclared port is core IO (delays required) or does not resolve.
 """
 import argparse
 import gzip
+import hashlib
 import json
 import re
 import sys
@@ -38,6 +44,10 @@ UNIT_PS = {"1ps": 1.0, "1ns": 1000.0, "10ps": 10.0, "100ps": 100.0, "1fs": 0.001
 EPS = 1e-3
 # AGENTS.md sign-off policy (user decision 2026-09-30), held HERE and not read from the generator under test
 POLICY_SETUP_PS, POLICY_HOLD_PS = 60.0, 25.0
+# seam hold contract floor (die tap skew bound 20 ps + routed-RCX error 5 ps, gen_phys.SEAM_HOLD_MIN_PS), held HERE:
+# kits ship this linter without gen_phys.py (CLOCK-KV-R3 canary e444b9df7: ModuleNotFoundError gen_phys at sdc_lint).
+# test_sdc_lint.py asserts it equals the generator constant.
+SEAM_HOLD_MIN_PS = 25.0
 
 # Standalone kits copy this linter without gen_phys.py; the allowed policy is independent of the generator.
 ROOT_RESET_FALSE_PATH = (
@@ -64,6 +74,66 @@ def liberty_time_unit_ps(path):
             if i > 2000:
                 break
     raise SdcLintError(f"{path}: no time_unit in the header")
+
+
+# ---- 12.2a1 declared pushdown feed-through ports (COORD 10-26 12:55 ruling QC-SU-BTAB ASK) --------------------------
+# Kept here (not in ft_ports.py) because kits / the sign-off bundle copy this linter standalone.
+FT_SCHEMA = "opentallas.ft_ports.v1"
+FT_MODEL_SCHEMA = "opentallas.ft_interface_model.v1"
+FT_KINDS = ("clock", "reset")
+
+
+def ft_digest(ports, arcs):
+    body = dict(ports=sorted(ports, key=lambda p: p["name"]), arcs=sorted(arcs, key=lambda a: (a["source"], a["sink"])))
+    return hashlib.sha256(json.dumps(body, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+
+
+def ft_verify(decl):
+    """-> [errors] for a loaded declaration (schema, hash, ports == arc ends)."""
+    err = []
+    if not isinstance(decl, dict) or decl.get("schema") != FT_SCHEMA:
+        return [f"ft declaration schema != {FT_SCHEMA}"]
+    P, A = decl.get("ports") or [], decl.get("arcs") or []
+    if ft_digest(P, A) != decl.get("sha256"):
+        err.append("ft declaration sha256 does not match its port/arc list (edited or stale)")
+    names = {p.get("name") for p in P}
+    ends = {a.get(k) for a in A for k in ("source", "sink")}
+    if names != ends:
+        err.append(f"ft ports without a declared arc / arc ends not declared: {sorted(names ^ ends)}")
+    d = {p.get("name"): p.get("direction") for p in P}
+    for a in A:
+        if a.get("kind") not in FT_KINDS:
+            err.append(f"ft arc {a.get('source')}->{a.get('sink')}: kind {a.get('kind')!r}")
+        if d.get(a.get("source")) != "INPUT" or d.get(a.get("sink")) != "OUTPUT":
+            err.append(f"ft arc {a.get('source')}->{a.get('sink')}: direction")
+    return err
+
+
+def ft_model_errors(decl, model, require_characterised=False):
+    """the interface model must carry every declared arc (same kind), for this declaration hash."""
+    if not isinstance(model, dict) or model.get("schema") != FT_MODEL_SCHEMA:
+        return ["ft interface model missing or wrong schema (kit fails: arc must exist in the interface model)"]
+    err = []
+    if model.get("ft_sha256") != decl.get("sha256"):
+        err.append("ft interface model is for a different ft declaration (sha256)")
+    have = {(a.get("source"), a.get("sink")): a for a in model.get("arcs") or []}
+    for a in decl.get("arcs") or []:
+        m = have.get((a["source"], a["sink"]))
+        if m is None:
+            err.append(f"ft arc {a['source']}->{a['sink']} missing from the interface model")
+            continue
+        if m.get("kind") != a["kind"]:
+            err.append(f"ft arc {a['source']}->{a['sink']}: model kind {m.get('kind')} != declared {a['kind']}")
+        if require_characterised:
+            for c in ("tt_ps", "ff_ps"):
+                v = m.get(c)
+                if not isinstance(v, dict) or not all(isinstance(v.get(k), (int, float)) and v[k] >= 0
+                                                       for k in ("min", "max")):
+                    err.append(f"ft arc {a['source']}->{a['sink']}: {c} not characterised")
+    extra = set(have) - {(a["source"], a["sink"]) for a in decl.get("arcs") or []}
+    if extra:
+        err.append(f"ft interface model has undeclared arcs {sorted(extra)}")
+    return err
 
 
 # ---- a tiny evaluator for the generator's SDC subset --------------------------------------------------------------
@@ -117,9 +187,11 @@ def _words(s):
 
 
 class Ctx:
-    def __init__(self, inputs, outputs, clock_ports):
+    def __init__(self, inputs, outputs, clock_ports, ft_in=(), ft_out=()):
         self.inputs, self.outputs, self.clock_ports = list(inputs), list(outputs), list(clock_ports)
-        self.allp = self.inputs + self.outputs + self.clock_ports
+        # declared 12.2a1 ft ports exist in the built core: all_inputs / all_outputs select them too
+        self.ft_in, self.ft_out = list(ft_in), list(ft_out)
+        self.allp = self.inputs + self.outputs + self.clock_ports + self.ft_in + self.ft_out
         self.vars = {}
         self.clocks = {}
 
@@ -150,12 +222,12 @@ def _eval_obj(ctx, w):
     c = a[0]
     if c == "all_inputs":
         if a[1:] == ["-no_clocks"]:
-            return ("ports", list(ctx.inputs))
+            return ("ports", ctx.inputs + ctx.ft_in)
         if len(a) != 1:
             raise SdcLintError(f"unsupported all_inputs options: {w}")
-        return ("ports", ctx.inputs + ctx.clock_ports)
+        return ("ports", ctx.inputs + ctx.clock_ports + ctx.ft_in)
     if c == "all_outputs":
-        return ("ports", list(ctx.outputs))
+        return ("ports", ctx.outputs + ctx.ft_out)
     if c == "all_clocks":
         return ("clocks", list(ctx.clocks))
     if c == "get_ports":
@@ -201,14 +273,22 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
          unc_setup_ps=60.0, unc_hold_ps=25.0, time_unit_ps=1.0, liberty_unit_ps=None,
          io_floor_ps=None, port_latency_ps=None, port_period_mult=None, insertion_ff_ps=None, straps=None,
          hold_in_min_ps=None, hold_out_min_ps=None, seam_hold_ps=None, hold_in_min_ports_ps=None,
-         reset_pad_pins=None, root_async_reset=False):
+         reset_pad_pins=None, root_async_reset=False, ft_ports=None, ft_interface=None,
+         ft_require_characterised=False, tap_window_ps=None):
     """lint an SDC.  inputs / outputs: non-clock port (bus) names; clock_ports: the tap ports.  io_floor_ps
     {port: (min_max_delay_ps)}: the declared IO budget per port (max delay must not be below it).  port_latency_ps
     {tap port: ps}: the plan's CP2 early core taps (source latency = -early on exactly those ports).
     hold_in_min_ps / hold_out_min_ps / seam_hold_ps: the plan's opt-in seam hold contract (gen_phys.seam_hold);
     absent = legacy (min input <= -insertion_tol, min output <= 0).  hold_in_min_ports_ps {input port: ps}: IO-HOLD
     option A per-port min input delay limits (gen_phys.input_hold_min: the sender's guaranteed output-min) replacing
-    the contract limit on exactly those ports.  -> [errors]"""
+    the contract limit on exactly those ports.  ft_ports: the kit's 12.2a1 ft declaration (ft_ports.json: ports + arcs +
+    sha256): exactly those ports are die-timed -- no IO delay / load / driving cell on them, never a clock source; any
+    other port is core IO as before.  ft_interface: the kit interface model (ft_interface.json), which must carry
+    every declared arc (characterised when ft_require_characterised).
+    tap_window_ps: the plan's per-tap latency window W (gen_phys
+    .tap_window_ps, COORD 11:24): every non-core clock port then carries source -early -W / -late 0, input max delays
+    may sit W below their IO budget and output min delays W above the contract limit (the exact IO shift of the
+    early tap); without it no -early / -late source latency is allowed.  -> [errors]"""
     err = []
     u = time_unit_ps
     in_lim = -float(insertion_tol_ps) if hold_in_min_ps is None else float(hold_in_min_ps)
@@ -216,21 +296,34 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     if out_lim > EPS:
         err.append(f"hold: contract min output delay {out_lim:g} ps > 0 (sender hold check waived)")
     if hold_in_min_ps is not None or hold_out_min_ps is not None:
-        import gen_phys
         if seam_hold_ps is None or abs((-out_lim - in_lim) - float(seam_hold_ps)) > EPS \
-                or float(seam_hold_ps) < gen_phys.SEAM_HOLD_MIN_PS - EPS:
+                or float(seam_hold_ps) < SEAM_HOLD_MIN_PS - EPS:
             err.append(f"hold: seam hold contract sender {-out_lim:g} + receiver {-in_lim:g} ps != seam "
-                       f"{seam_hold_ps} ps or below {gen_phys.SEAM_HOLD_MIN_PS:g} ps")
+                       f"{seam_hold_ps} ps or below {SEAM_HOLD_MIN_PS:g} ps")
     # FLOW 10-25 (ruling 9.7 / 5e): the SDC vclk carries the TT-bound insertion; the FF-bound one (FF-only flow steps,
     # vclk_corner.tcl) must be a positive insertion not above TT
     if insertion_ff_ps is not None and not (0 < float(insertion_ff_ps) <= float(insertion_ps) + EPS):
         err.append(f"clocks: bound FF insertion {insertion_ff_ps} ps not in (0, TT {insertion_ps:g}]")
     if liberty_unit_ps is not None and abs(liberty_unit_ps - u) > EPS:
         err.append(f"units: liberty time_unit {liberty_unit_ps:g} ps but the SDC is written in {u:g} ps units")
-    ctx = Ctx(inputs, outputs, clock_ports)
+    ft_in, ft_out = [], []
+    if ft_ports is not None:
+        err += [f"ft: {e}" for e in ft_verify(ft_ports)]
+        for p_ in ft_ports.get("ports") or []:
+            (ft_in if p_.get("direction") == "INPUT" else ft_out).append(p_.get("name"))
+        clash = set(ft_in + ft_out) & set(list(inputs) + list(outputs) + list(clock_ports))
+        if clash:
+            err.append(f"ft: declared ft ports also listed as core IO / clock ports {sorted(clash)}")
+        err += [f"ft: {e}" for e in ft_model_errors(ft_ports, ft_interface, ft_require_characterised)]
+    elif ft_interface is not None:
+        err.append("ft: interface model ft arcs without an ft declaration")
+    ctx = Ctx(inputs, outputs, clock_ports, ft_in, ft_out)
+    ft_env = set()                    # ft ports reached by set_load / set_driving_cell
     clk_src = {}                      # port -> clock
     latency = {}                      # clock -> source latency (ps)
     port_lat = {}                     # clock port -> source latency (ps) (CP2 early core taps)
+    port_win = {}                     # clock port -> {"early"|"late": ps} (plan clock.tap_window)
+    tw = float(tap_window_ps or 0.0)
     unc = {}                          # (kind, from, to) -> ps ; from/to None = global
     idly = {p: {} for p in ctx.allp}  # port -> {"max": (clk, ps), "min": ...}
     odly = {p: {} for p in ctx.allp}
@@ -340,6 +433,13 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
                 k, cl = _eval_obj(ctx, w[-1])
                 if len(v) != 1:
                     raise SdcLintError(f"set_clock_latency: {cmd}")
+                if k == "ports" and ("-early" in w or "-late" in w):     # plan clock.tap_window
+                    el = "early" if "-early" in w else "late"
+                    if "-early" in w and "-late" in w:
+                        raise SdcLintError(f"set_clock_latency: both -early and -late: {cmd}")
+                    for x in cl:
+                        port_win.setdefault(x, {})[el] = _num(v[0], "latency") * u
+                    continue
                 if k == "ports":         # CP2 early core tap: -source -clock clk <-early> [get_ports tap]
                     for x in cl:
                         port_lat[x] = _num(v[0], "latency") * u
@@ -407,11 +507,19 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
                     for m in mm:
                         tab[p][m] = (ck, val)
                 continue
-            # set_load / set_driving_cell: evaluate the object (it must resolve), nothing to check
-            _eval_obj(ctx, w[-1])
+            # set_load / set_driving_cell: evaluate the object (it must resolve); never on a declared ft port
+            _k, _ps = _eval_obj(ctx, w[-1])
+            ft_env.update(x for x in _ps if x in ctx.ft_in or x in ctx.ft_out)
         except (SdcLintError, IndexError) as e:
             err.append(f"parse (fail-closed): {e} [{cmd}]")
     # ---- checks
+    for p in ctx.ft_in + ctx.ft_out:
+        if idly[p] or odly[p]:
+            err.append(f"ft: declared die-timed ft port {p} has a core IO delay (12.2a1 ruling: no core IO budget)")
+        if p in clk_src:
+            err.append(f"ft: declared ft port {p} is a clock source in the core SDC")
+    for p in sorted(ft_env):
+        err.append(f"ft: set_load / set_driving_cell reaches declared ft port {p} (IO environment is die-owned)")
     for x in strap_l:
         if x not in strap_fp:
             err.append(f"straps: declared strap {x} has no set_false_path -from (quasi-static ID input)")
@@ -439,6 +547,18 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     for p_ in want:
         if p_ not in port_lat:
             err.append(f"clocks: plan early core tap {p_} has no source latency")
+    wports = [p_ for p_ in ctx.clock_ports if p_ not in want]
+    for p_, d in port_win.items():
+        if not tw:
+            err.append(f"clocks: source -early/-late window on port {p_} without a plan clock.tap_window")
+        elif p_ not in wports:
+            err.append(f"clocks: tap window on {p_}, which is not a window clock port")
+    if tw:
+        for p_ in wports:
+            d = port_win.get(p_, {})
+            if abs(d.get("early", 1e9) + tw) > EPS or abs(d.get("late", 1e9)) > EPS:
+                err.append(f"clocks: clock port {p_} window early {d.get('early')} / late {d.get('late')} ps, plan "
+                           f"clock.tap_window -{tw:g} / 0")
     for n in latency:
         if n not in virt:
             err.append(f"clocks: source latency on real clock {n} (only the virtual IO clock carries the budget)")
@@ -457,12 +577,12 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
         for m in ("max", "min"):
             if m not in odly[p]:
                 err.append(f"ports: output {p} has no {m} output delay")
-        if "min" in odly[p] and odly[p]["min"][1] > out_lim + EPS:
-            err.append(f"hold: output {p} min output delay {odly[p]['min'][1]:g} ps > {out_lim:g} ps "
+        if "min" in odly[p] and odly[p]["min"][1] > out_lim + tw + EPS:
+            err.append(f"hold: output {p} min output delay {odly[p]['min'][1]:g} ps > {out_lim + tw:g} ps "
                        "(sender hold check waived)")
     for p, fl in (io_floor_ps or {}).items():
         tab = idly if p in ctx.inputs else odly
-        if "max" in tab.get(p, {}) and tab[p]["max"][1] < fl - EPS:
+        if "max" in tab.get(p, {}) and tab[p]["max"][1] < fl - (tw if p in ctx.inputs else 0.0) - EPS:
             err.append(f"relaxation: {p} max delay {tab[p]['max'][1]:g} ps below its IO budget {fl:g} ps")
     full = {"setup": unc_setup_ps, "hold": unc_hold_ps}
     for kk, fv in full.items():
@@ -528,6 +648,7 @@ def kit_context(P, tn):
                 unc_setup_ps=POLICY_SETUP_PS, unc_hold_ps=POLICY_HOLD_PS,
                 time_unit_ps=gen_phys.LIB_TIME_UNIT_PS, io_floor_ps=floor, port_latency_ps=plat,
                 port_period_mult=edge, **_seam_ctx(P), **_io_hold_ctx(P, tn),
+                **({"tap_window_ps": gen_phys.tap_window_ps(P)} if gen_phys.tap_window_ps(P) else {}),
                 **({"root_async_reset": True} if gen_phys.root_async_reset(P, tn) else {}))
 
 
@@ -561,6 +682,14 @@ def lint_kit_files(kitdir, liberties=()):
         lu = v if lu is None else lu
     if liberties and lu is None:
         err.append("units: no liberty time_unit found")
+    if ctx.get("ft_ports") is not None or (kd / "ft_ports.json").is_file():
+        # 12.2a1 ft declaration: the kit file and the lint context must be the same declaration
+        fp = json.loads((kd / "ft_ports.json").read_text()) if (kd / "ft_ports.json").is_file() else None
+        if fp is None or ctx.get("ft_ports") is None or fp.get("sha256") != ctx["ft_ports"].get("sha256"):
+            err.append("ft: kit ft_ports.json and sdc_lint.json ft_ports differ or one is missing")
+        ctx["ft_ports"] = ctx.get("ft_ports") or fp
+        mp = kd / "ft_interface.json"
+        ctx["ft_interface"] = json.loads(mp.read_text()) if mp.is_file() else None
     if not ctx.get("straps") and (kd / "straps.json").is_file():
         d = json.loads((kd / "straps.json").read_text())   # OWNER 10-25 option B: the kit's declared ID straps
         ctx["straps"] = list(d.get("straps", []) if isinstance(d, dict) else d)

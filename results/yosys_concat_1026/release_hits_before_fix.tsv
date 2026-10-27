@@ -1,0 +1,21 @@
+die	file:line	rule	member
+s81	rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg2.sv:575	YC1	gk_wb + 16'(wc)
+s81	rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3.sv:620	YC1	gk_wb + 16'(wc)
+s81	rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3_nq_native.sv:628	YC1	gk_wb + 16'(wc)
+s81	rtl/dsrom_sys/s81_dv/ot_s81dv_finish_sram.sv:1305	YC1	en?5'(slot>>1):5'd0
+hbm	rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:489	YC1	base_q[sq][12:0] + 13'(i) + ((MUT == 3) ? 13'd1 : 13'd0)
+hbm	rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:496	YC1	base_q[q_id][12:0] + 13'(i)
+hbm	rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv:164	YC1	x[23:16]+8'(&x[15:0])
+hbm	rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv:164	YC1	x[31:24]+8'(&x[23:0])
+hbm	rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv:165	YC1	x[15:8]+8'(&x[7:0])
+hbm	rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:80	YC1	current[79:64]+16'(beat*4)
+hbm	rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv:81	YC1	current[63:48]+16'(beat*4)+(MUT==1?16'd1:16'd0)
+hbm	rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:126	YC1	{cmd_src[15:3],cmd_src_lo[b*3+:3]}+16'(kr)
+hbm	rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg.sv:165	YC1	2'(incoming[1:0]+b)^incoming[16:15]
+hbm	rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv:213	YC1	2'(incoming[1:0]+b)^incoming[16:15]
+hbm	rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv:251	YC1	2'(incoming[1:0]+b)^incoming[16:15]
+hbm	rtl/hbm_accel/sm/ot_hbm_accel_smh_gu.sv:142	YC1	31'({8'd0, t3_sq}) + 31'(t3_rinc)
+qwen_compute	rtl/qwen_dv/mu/qfd_dv_amax_mu.sv:75	YC1	r_addr + 24'(q)
+qwen_compute	rtl/qwen_split/qfd_native59_svc_obs1.sv:815	YC1	(k3==7'd64)?6'd0:((k3>7'd64)?6'(k3-7'(ROPE_FIRST)):k3[5:0])
+qwen_kvsys	rtl/qwen_sys/kv_bootage_20261019/qkd_attn_cal_gen_b.sv:167	YC1	STRETCH?k_rl-((MUT==4)?16'd1:16'd0)-pv8:16'(po0_8)
+qwen_kvsys	rtl/qwen_sys/split_20261014/qkd_attn_cal_gen.sv:137	YC1	STRETCH?16'(RLINK-((MUT==4)?1:0))-pv8:16'(po0_8)

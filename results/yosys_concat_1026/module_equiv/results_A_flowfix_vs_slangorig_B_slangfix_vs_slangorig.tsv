@@ -1,0 +1,59 @@
+NEQ	A	rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg2.sv	dsdv_idx_rg2	Found 4837998 unproven $equiv cells (69488 groups) in eq:
+ERR	B	rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg2.sv	dsdv_idx_rg2	
+EQ	A	rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg2.sv	dsdv_idx_rg2_fadd	Found 2045 unproven $equiv cells (159 groups) in eq:
+EQ	B	rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg2.sv	dsdv_idx_rg2_fadd	Found 3774 unproven $equiv cells (178 groups) in eq:
+EQ	A	rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg2.sv	dsdv_idx_rg2_m1k	Found 262656 unproven $equiv cells (1026 groups) in eq:
+EQ	B	rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg2.sv	dsdv_idx_rg2_m1k	Found 262656 unproven $equiv cells (1026 groups) in eq:
+EQ	A	rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg2.sv	dsdv_idx_rg2_tail	Found 7213 unproven $equiv cells (529 groups) in eq:
+EQ	B	rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg2.sv	dsdv_idx_rg2_tail	Found 11893 unproven $equiv cells (565 groups) in eq:
+ERR	A	rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3.sv	dsdv_idx_rg3	
+NEQ	B	rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3.sv	dsdv_idx_rg3	Found 5641889 unproven $equiv cells (72973 groups) in eq:
+NEQ	A	rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3_nq_native.sv	dsdv_idx_rg3_nq_native	Found 4846650 unproven $equiv cells (69535 groups) in eq:
+ERR	A	rtl/dsrom_sys/s81_dv/ot_s81dv_finish_sram.sv	ot_s81dv_eng_finish_sram	
+ERR	B	rtl/dsrom_sys/s81_dv/ot_s81dv_finish_sram.sv	ot_s81dv_eng_finish_sram	
+NEQ	A	rtl/dsrom_sys/s81_dv/ot_s81dv_finish_sram.sv	ot_s81dv_finish_banks	Found 2762 unproven $equiv cells in module eq:ERROR: No SAT model available for cell g_bank[0].g_leaf.u_w.g_payload[0].u_d_gate ($paramod$1994f8a7a1271e6927c183bae067
+EQ	B	rtl/dsrom_sys/s81_dv/ot_s81dv_finish_sram.sv	ot_s81dv_finish_banks	Found 37543 unproven $equiv cells (1616 groups) in eq:
+NEQ	A	rtl/dsrom_sys/s81_dv/ot_s81dv_finish_sram.sv	ot_s81dv_finish_leafw	Found 64 unproven $equiv cells in module eq:ERROR: No SAT model available for cell g_payload[0].u_d_gate ($paramod$1994f8a7a1271e6927c183bae067659877331d7e\ot_s81dv
+EQ	B	rtl/dsrom_sys/s81_dv/ot_s81dv_finish_sram.sv	ot_s81dv_finish_leafw	Found 1378 unproven $equiv cells (33 groups) in eq:
+EQ	A	rtl/dsrom_sys/s81_dv/ot_s81dv_finish_sram.sv	ot_s81dv_finish_reset2	Found 131 unproven $equiv cells (66 groups) in eq:
+EQ	B	rtl/dsrom_sys/s81_dv/ot_s81dv_finish_sram.sv	ot_s81dv_finish_reset2	Found 131 unproven $equiv cells (66 groups) in eq:
+ERR	A	rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv	ot_hgi_coll_gq	ERROR: Design elaboration failed; see full log for details
+ERR	B	rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv	ot_hgi_coll_gq	ERROR: Design elaboration failed; see full log for details
+ERR	A	rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv	ot_hgi_coll_gq_issue	ERROR: Design elaboration failed; see full log for details
+ERR	B	rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv	ot_hgi_coll_gq_issue	ERROR: Design elaboration failed; see full log for details
+NEQ	A	rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv	ot_hgi_coll_gq_land	Found 8 unproven $equiv cells in 'equiv_status -assert'ERROR: Found 8 unproven $equiv cells in 'equiv_status -assert'.
+EQ	B	rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv	ot_hgi_coll_gq_land	Found 6 unproven $equiv cells in module eq:
+EQ	A	rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv	ot_hgi_coll_kq_share2	Found 18049 unproven $equiv cells (131 groups) in eq:
+EQ	B	rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv	ot_hgi_coll_kq_share2	Found 18053 unproven $equiv cells (135 groups) in eq:
+EQ	A	rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv	ot_hgi_coll_kq_share2_leaf	Found 2823 unproven $equiv cells (28 groups) in eq:
+EQ	B	rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv	ot_hgi_coll_kq_share2_leaf	Found 2824 unproven $equiv cells (29 groups) in eq:
+ERR	A	rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv	ot_hgi_dma_back_static_vp4_banks	
+ERR	B	rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv	ot_hgi_dma_back_static_vp4_banks	
+NEQ	A	rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv	ot_hgi_dma_back_static_vp4_controller	Found 164 unproven $equiv cells in 'equiv_status -assert'ERROR: Found 164 unproven $equiv cells in 'equiv_status -assert'.
+EQ	B	rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv	ot_hgi_dma_back_static_vp4_controller	Found 206 unproven $equiv cells in module eq:
+EQ	A	rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv	ot_hgi_qdq_record_calendar	Found 1156 unproven $equiv cells (37 groups) in eq:
+NEQ	B	rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv	ot_hgi_qdq_record_calendar	Found 236 unproven $equiv cells in module eq:ERROR: No SAT model available for cell u_program_gate (ot_sram_1r1w_1024x256_m2_r2c2).
+ERR	A	rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv	ot_hgi_qdq_static_transport_split_r4	ERROR: Design elaboration failed; see full log for details
+ERR	B	rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv	ot_hgi_qdq_static_transport_split_r4	ERROR: Design elaboration failed; see full log for details
+ERR	A	rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv	ot_hgi_qdq_transport_ctl_r4	ERROR: Design elaboration failed; see full log for details
+ERR	B	rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv	ot_hgi_qdq_transport_ctl_r4	ERROR: Design elaboration failed; see full log for details
+ERR	A	rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv	ot_hgi_qdq_transport_ctl_s4	ERROR: Design elaboration failed; see full log for details
+ERR	B	rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv	ot_hgi_qdq_transport_ctl_s4	ERROR: Design elaboration failed; see full log for details
+EQ	A	rtl/hbm_accel/sm/ot_hbm_accel_smh_gu.sv	ot_hbm_accel_smh_bmul_gu	Found 492 unproven $equiv cells (61 groups) in eq:
+EQ	B	rtl/hbm_accel/sm/ot_hbm_accel_smh_gu.sv	ot_hbm_accel_smh_bmul_gu	Found 719 unproven $equiv cells (64 groups) in eq:
+EQ	A	rtl/hbm_accel/sm/ot_hbm_accel_smh_gu.sv	ot_hbm_accel_smh_tcl_gu	Found 38729 unproven $equiv cells (2197 groups) in eq:
+EQ	B	rtl/hbm_accel/sm/ot_hbm_accel_smh_gu.sv	ot_hbm_accel_smh_tcl_gu	Found 54293 unproven $equiv cells (2342 groups) in eq:
+EQ	A	rtl/qwen_dv/mu/qfd_dv_amax_mu.sv	qfd_dv_amax_mu	Found 1887 unproven $equiv cells (14 groups) in eq:
+EQ	B	rtl/qwen_dv/mu/qfd_dv_amax_mu.sv	qfd_dv_amax_mu	Found 1887 unproven $equiv cells (14 groups) in eq:
+NEQ	A	rtl/qwen_split/qfd_native59_svc_obs1.sv	qfd_native59_svc_obs1	Found 992 unproven $equiv cells in module eq:ERROR: No SAT model available for cell g_slot[0].u_service.g_obs_tag[0].u_tag_gate ($paramod\qfd_status_obs_hold_chunk\W
+EQ	B	rtl/qwen_split/qfd_native59_svc_obs1.sv	qfd_native59_svc_obs1	Found 48675 unproven $equiv cells (646 groups) in eq:
+EQ	A	rtl/qwen_sys/kv_bootage_20261019/qkd_attn_cal_gen_b.sv	qkd_attn_cal_gen_b	Found 1487 unproven $equiv cells (115 groups) in eq:
+EQ	B	rtl/qwen_sys/kv_bootage_20261019/qkd_attn_cal_gen_b.sv	qkd_attn_cal_gen_b	Found 1487 unproven $equiv cells (115 groups) in eq:
+EQ	A	rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_native_posted.sv	ot_qfd_su_kv_native_credit	Found 536 unproven $equiv cells (10 groups) in eq:
+EQ	B	rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_native_posted.sv	ot_qfd_su_kv_native_credit	Found 536 unproven $equiv cells (10 groups) in eq:
+NEQ	A	rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_native_posted.sv	ot_qfd_su_kv_native_posted	Found 2 unproven $equiv cells in 'equiv_status -assert'ERROR: Found 2 unproven $equiv cells in 'equiv_status -assert'.
+EQ	B	rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_native_posted.sv	ot_qfd_su_kv_native_posted	Found 2928 unproven $equiv cells (16 groups) in eq:
+NEQ	A	rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv	ot_qfd_su_kv_static_posted	Found 2 unproven $equiv cells in 'equiv_status -assert'ERROR: Found 2 unproven $equiv cells in 'equiv_status -assert'.
+EQ	B	rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv	ot_qfd_su_kv_static_posted	Found 3030 unproven $equiv cells (21 groups) in eq:
+EQ	A	rtl/qwen_sys/split_20261014/qkd_attn_cal_gen.sv	qkd_attn_cal_gen	Found 1447 unproven $equiv cells (112 groups) in eq:
+EQ	B	rtl/qwen_sys/split_20261014/qkd_attn_cal_gen.sv	qkd_attn_cal_gen	Found 1447 unproven $equiv cells (112 groups) in eq:

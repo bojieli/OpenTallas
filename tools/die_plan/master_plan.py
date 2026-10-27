@@ -1518,18 +1518,71 @@ def tree_balance(M, stub_tol=20.0, leg_tol=1.0):
 
 
 # ------------------------------------------------------------------------------------------------------ clock model
-# 12.9d plan-level analytic core insertion model, calibrated ONCE (not per run) on the measured QC SU trials
-# (QC-SU-LAT results/qc_su_lat/trials_1026.json @ claude/qc-su-lat-1026 ad22ae2b28, variant B = structured BUFx16f
-# trunks SEG 110 um, GRT RC): insertion_TT = K_PS_PER_UM x L_max, L_max = entry -> farthest core corner (Manhattan);
-# routed RCX = RCX_FACTOR x GRT (trial basis note: vmr_s6kc 386.5 routed vs 409.9 GRT).  FF = FF_RATIO x TT
-# (same trials, mean FF/TT).  Calibration points (L_max from the S-face centre pin of the trial kits):
-CAL_POINTS = [("qfd_dv_s8x_vmr", 406.08, 341.8, 271.8), ("qfd_dv_s8x_prog", 436.32, 419.4, 337.1),
-              ("qfd_dv_s8x_btab", 436.32, 384.9, 308.1)]
-K_PS_PER_UM = sum(t for _, _, t, _ in CAL_POINTS) / sum(L for _, L, _, _ in CAL_POINTS)
-FF_RATIO = sum(f / t for _, _, t, f in CAL_POINTS) / len(CAL_POINTS)
+# 12.9d plan-level analytic core insertion model (MODEL-REFIT 10-26, COORD ruling NUMBER-CHECK-3 (4): intercept + slope).
+# Scope: a CTS-grown core tree (TritonCTS or count/regional-tap H-tree) from a CENTRE clock entry (12.8a), predicted before
+# any tree is designed.  TT_GRT = CAL_A + CAL_B x L_max, L_max = entry -> farthest core corner (Manhattan); FF = FF_RATIO x TT.
+# Basis = global-route RC (GRT), the basis of every calibration point; routed RCX is ~5.7 % lower on the one measured pair
+# (vmr_s6kc 386.5 vs 409.9 GRT) -> RCX_FACTOR is reported only, not applied (the high-side FAIL stays conservative).
+# Fitted ONCE on every measured centre-entry GRT trial across dies (all-sink mean insertion, 0 pads):
+#   (name, L_max um, TT mean ps, FF mean ps, source)
+# Rejected forms (results/model_refit_1026): K x L through the origin (+77.6 ps bias on these points); one line over
+# edge + centre + placement-RC points (PL->GRT delta varies 10-45 ps, LOO rms 23-71); log2(sinks) term (no gain).
+# Edge entries are not calibrated (12.8a bans them).  Plan-BUILT trees (core_infra_htree / su_tree_model: TritonCTS not
+# run) are predicted by their own NLDM tree model + PLAN_TREE_OFFSETS below, not by this line.
+CAL_POINTS = [("hbm:ot_hgi_coll_gq_issue centre", 241.92, 272.8, 219.4, "PATH-HBM b1d calibration_centre_entry.json"),
+              ("hbm:pc_ctrl_leaf_cfg_h9b centre", 181.44, 231.2, 185.3, "PATH-HBM b1d calibration_centre_entry.json"),
+              ("s81:dsdv_gunit_l0 r3rt42 4x2", 259.2, 294.74, 240.52, "core-lat-r3 kits ins_probe_{tt,ff}.json"),
+              ("s81:dsdv_gunit_l0 r3rt41 4x1", 259.2, 299.90, 247.81, "core-lat-r3 kits ins_probe_{tt,ff}.json"),
+              ("s81:dsdv_gunit_l2 r3rt42 4x2", 259.2, 297.51, 243.92, "core-lat-r3 kits ins_probe_{tt,ff}.json"),
+              ("s81:dsdv_gunit_l4 cl26rt 4x1", 207.36, 259.69, 208.55, "NUMBER-CHECK 06:59")]
+
+
+def _line_fit(pts):
+    n = len(pts)
+    mx = sum(L for _, L, _, _, _ in pts) / n
+    my = sum(t for _, _, t, _, _ in pts) / n
+    b = sum((L - mx) * (t - my) for _, L, t, _, _ in pts) / sum((L - mx) ** 2 for _, L, _, _, _ in pts)
+    return my - b * mx, b
+
+
+CAL_A, CAL_B = _line_fit(CAL_POINTS)
+FF_RATIO = sum(f / t for _, _, t, f, _ in CAL_POINTS) / len(CAL_POINTS)
 RCX_FACTOR = 386.5 / 409.9
-CAL_ERR = [round(K_PS_PER_UM * L - t, 1) for _, L, t, _ in CAL_POINTS]
+CAL_ERR = [round(CAL_A + CAL_B * L - t, 1) for _, L, t, _, _ in CAL_POINTS]
 CAL_RMS_PS = round(math.sqrt(sum(e * e for e in CAL_ERR) / len(CAL_ERR)), 1)
+
+
+def _loo(pts):
+    out = []
+    for i, (_, L, t, _, _) in enumerate(pts):
+        a, b = _line_fit(pts[:i] + pts[i + 1:])
+        out.append(round(a + b * L - t, 1))     # pred - meas, as CAL_ERR
+    return out
+
+
+CAL_LOO_ERR = _loo(CAL_POINTS)
+CAL_LOO_MAX_PS = max(abs(e) for e in CAL_LOO_ERR)
+CAL_RANGE_UM = (min(L for _, L, _, _, _ in CAL_POINTS), max(L for _, L, _, _, _ in CAL_POINTS))
+
+# Plan-built core trees: measured = raw tree-model prediction + offset, per MODEL (offsets are model-specific; one
+# model's offset must never be applied to another).  meas - model, GRT RC, btab (QC SU) calibration builds:
+PLAN_TREE_OFFSETS = {
+    "core_infra_htree_nldm": dict(TT=-12.8, FF=-24.5, points="btab R5 TT 279.8 vs 292.3 (-12.5); R6 TT 260.8/FF 200.5 vs "
+                                  "273.9/225.0 (-13.1/-24.5); FF from R6 only"),
+    "su_tree_model_nldm": dict(TT=1.9, FF=-5.1, points="btab R5 279.8/221.6 vs su_tree_model 277.88/226.72 "
+                               "(val100_btab_r5.tcl.json); one point"),
+}
+
+
+def core_insertion(far_um):
+    tt = CAL_A + CAL_B * far_um
+    return round(tt, 1), round(tt * FF_RATIO, 1)
+
+
+def plan_tree_insertion(raw_tt, raw_ff, model):
+    """measured-basis (GRT) mean insertion of a plan-built core tree from that tree model's raw prediction."""
+    o = PLAN_TREE_OFFSETS[model]
+    return round(raw_tt + o["TT"], 1), round(raw_ff + o["FF"], 1)
 
 
 # 12.9d die related-pair skew per clock region, CPPR at the last common tree node (= the region root for same-mesh
@@ -1562,11 +1615,6 @@ def pair_skew_pred(M, corner, core_term=0.0):
                 below_root_um=round(total - above, 1), regions=len(meta.get("regions") or [1]))
 
 
-def core_insertion(far_um):
-    tt = RCX_FACTOR * K_PS_PER_UM * far_um
-    return round(tt, 1), round(tt * FF_RATIO, 1)
-
-
 # ------------------------------------------------------------------------------------------------------ IR
 def static_ir(files):
     if not files:
@@ -1593,7 +1641,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         reach=None, detour=405.0, core_obs_top="M5", lower_pg_frac=0.25, fill_max=0.6, bay_fill=0.5,
         track_max=0.6, core_reach_um=200.0, entry_tol=0.5, core_tol_ps=20.0, skew_gate_ps=80.0, render=True, log=print,
         core_islands=None, tree_lattice=None, tree_comm_form="die", onramp_bays=False, drop_mesh_early=False,
-        tree_roads=False):
+        tree_roads=False, region_dist=False):
     reach = float(reach or P.reach)
     out = Path(out)
     (out / "slices").mkdir(parents=True, exist_ok=True)
@@ -1965,7 +2013,8 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         far = max(abs(cx - x) + abs(cy - y) for cx in (0, w) for cy in (0, h))
         tt, ff = core_insertion(far)
         row = dict(module=mod, entry_um=entry[mod]["xy"], farthest_um=r3(far), pred_TT_ps=tt, pred_FF_ps=ff,
-                   target_TT_ps=common, tol_ps=core_tol_ps)
+                   target_TT_ps=common, tol_ps=core_tol_ps,
+                   in_cal_range=CAL_RANGE_UM[0] - 1e-6 <= far <= CAL_RANGE_UM[1] + 1e-6)
         ins_rows.append(row)
         if abs(tt - common) > core_tol_ps + 1e-6 and tt > common:
             ins_fail.append(row)
@@ -2075,6 +2124,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
                 isl_inst.append(dict(kind="core", part=part, inst=f"{part}/{h['inst']}", role="tree_leaf",
                                      rect_um=IS.rect_pts(P, part, core_to_type(h, q["rect_um"]))))
     # MASTER-PLAN-R3 task 2: the die tree planned on the per-type island lattice (sites = declared islands)
+    region_gates = {}
     t_sites, t_leaves = [], []
     for k, q in enumerate(isl_inst):
         r = q["rect_um"]
@@ -2122,10 +2172,50 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
             lat_gate["commensurate"] = comm
             if axes is None:
                 lat_gate["verdict"] = "FAIL"
+        if comm_mode and mesh_dir:
+            # CLOCK-128-R4 (opt-in --tree-lattice cNXxNY only): the lattice nodes ARE plan-declared partition pushdown
+            # islands (binding new_partition_island / existing_island, 8.64 island at the node), so the clock-site gates
+            # judge the die clock against them too; tree_commensurate takes the per-axis core-array repeat
+            # (commensurate_axis) instead of core_lattice(), which finds no single leaf pitch on a mixed core set.
+            lat_isl = [entry_island(tuple(n_["xy_um"])) for n_ in lat_nodes
+                       if n_.get("binding") in ("new_partition_island", "existing_island")]
+            isl_all = isl_decl + [tuple(r_) for r_ in lat_isl]
+            sites = clock_sites(M, isl_all, glue_parts, macros_die)
+            isl_lat = island_lattice(M, [((r_[0] + r_[2]) / 2, (r_[1] + r_[3]) / 2) for r_ in isl_all],
+                                     macros_die[:n_core_macros])
+            sites["lattice_islands"] = isl_lat["lattice_islands"] = len(lat_isl)
+            ok_ax = {a_: bool(v_.get("leaves_um")) and v_.get("verdict") != "FAIL" for a_, v_ in (comm or {}).items()}
+            mm = M.get("xs") or M.get("ys")
+            tree_comm = dict(tree_comm, verdict="PASS" if ok_ax and all(ok_ax.values()) and lat_gate["verdict"] == "PASS"
+                             and not mm else "FAIL", basis="commensurate_axis (--tree-lattice c): core-array repeat per "
+                             "axis, node arms = multiples of repeat/2, root arm bridge declared", axes_ok=ok_ax,
+                             mesh_straps_present=bool(mm), core_lattice_verdict=tree_comm["verdict"])
         dtp = json.loads((out / "die_tree_plan.json").read_text())
         dtp["lattice"] = dict(gate=lat_gate, nodes=lat_nodes)
         dtp["consume"] = ("CLOCK-128: build the die H-tree from lattice.nodes (xy_um, binding); island_tree 'nodes' "
                           "kept as the R3 diagnostic")
+        if comm_mode and region_dist:
+            # QC-MP-REGION (opt-in --region-dist, needs --tree-lattice cNXxNY): declare the distribution below the
+            # lattice leaves (regional tree per leaf to every partition centre entry, nodes on 8.64 pushdown islands,
+            # partition-bay leg repeaters, plan-computed stage count + detour balance) + the root trunk repeater sites,
+            # with the 12.9d prediction (leaf -> entry, die input -> entry + 12.3 core latency) and a related-pair
+            # non-common estimate.  Plan geometry only.
+            import region_clock as RC
+            rc = RC.analyse(P, dtp, parts_die, cores_die, plan_sha, out / "region",
+                            dict(plan=str(P.path), plan_sha256=plan_sha, die_tree_plan="this master-plan run (lattice)"),
+                            render=render, argv=list(sys.argv))
+            RD = rc["region_distribution"]
+            dtp["regions"] = dict(gate=rc["gate"], stage_model=RD["stage_model"], die_target_tt_ps=RD["die_target_tt_ps"],
+                                  basis=RD["basis"], topology=RD["topology"], regions=RD["regions"], nodes=RD["nodes"],
+                                  legs=RD["legs"], repeater_sites=RD["repeater_sites"], entries=RD["entries"],
+                                  prediction=rc["die_path"], pairs=rc["pairs"]["summary"])
+            dtp["lattice"]["trunk"] = rc["trunk"]
+            dtp["consume"] += ("; regions (QC-MP-REGION): build each region tree from regions.nodes/legs (polyline, n_seg, "
+                               "repeater_sites = partition_bay cuts, detour = plan U) to regions.entries (partition "
+                               "clock.tap_um, M9); trunk cuts = lattice.trunk.sites (ckm_t_k)")
+            region_gates["region_distribution"] = rc["gate"]
+            region_gates["trunk_sites"] = dict(verdict=rc["trunk"]["verdict"], sites=rc["trunk"]["sites"],
+                                               len_um=rc["trunk"]["len_um"], n_seg=rc["trunk"]["n_seg"])
         (out / "die_tree_plan.json").write_text(json.dumps(dtp, indent=None) + "\n")
     if not t_leaves:
         tree_plan = dict(verdict="NOT RUN", note="no declared islands")
@@ -2198,9 +2288,11 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         tree_balance=bal,
         core_insertion_model=dict(
             verdict="PASS" if not ins_fail else "FAIL", fails=len(ins_fail), cores=len(ins_rows),
-            model=dict(form="TT = RCX x K x L_max(entry -> farthest corner); FF = FF_RATIO x TT", K_ps_per_um=round(
-                K_PS_PER_UM, 4), RCX=round(RCX_FACTOR, 4), FF_RATIO=round(FF_RATIO, 4), calibration=CAL_POINTS,
-                calibration_err_ps=CAL_ERR, calibration_rms_ps=CAL_RMS_PS,
+            model=dict(form="TT_GRT = A + B x L_max(entry -> farthest corner); FF = FF_RATIO x TT (centre entry, CTS-grown tree)",
+                A_ps=round(CAL_A, 2), B_ps_per_um=round(CAL_B, 4), FF_RATIO=round(FF_RATIO, 4), basis="GRT",
+                RCX_FACTOR_info=round(RCX_FACTOR, 4), calibration=CAL_POINTS, calibration_err_ps=CAL_ERR,
+                calibration_rms_ps=CAL_RMS_PS, loo_err_ps=CAL_LOO_ERR, loo_max_ps=CAL_LOO_MAX_PS,
+                calibrated_L_um=list(CAL_RANGE_UM), plan_tree_offsets=PLAN_TREE_OFFSETS,
                 note="shallow cores (pred < target) pad up with a designed fixed trunk (12.8c): not a FAIL"),
             examples=ins_fail[:40], all=ins_rows),
         die_pair_skew_model=skew_model,
@@ -2211,6 +2303,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         **(dict(tree_lattice=lat_gate) if lat_gate is not None else {}),
         infra_sites=sites_gate,
         **rulings,
+        **region_gates,
     )
     verdict = "PASS" if all(g["verdict"] == "PASS" for g in gates.values() if not g.get("diagnostic_only")) else "FAIL"
 
@@ -2497,6 +2590,9 @@ def add_args(p):
     p.add_argument("--core-reach-um", type=float, default=200.0)
     p.add_argument("--no-render", action="store_true")
     p.add_argument("--core-islands", help="core_islands.py JSON {core module: SRAM-aware sited in-core islands}")
+    p.add_argument("--region-dist", action="store_true",
+                   help="QC-MP-REGION (with --tree-lattice cNXxNY): declare + gate the regional distribution below the "
+                        "lattice leaves and the root trunk repeater sites (die_tree_plan.json regions / lattice.trunk)")
     p.add_argument("--tree-lattice", default=None, help="opt-in die H-tree lattice (die_tree_plan.json lattice + gate "
                                                          "tree_lattice): NXxNY regular bbox lattice (R4) or cNXxNY = "
                                                          "channel-cross lattice, pitch = core-array multiple (R5)")
@@ -2532,7 +2628,7 @@ def cmd(a):
                     core_islands=json.loads(Path(a.core_islands).read_text()) if a.core_islands else None,
                     tree_lattice=parse_tree_lattice(a.tree_lattice) if a.tree_lattice else None,
                     tree_comm_form=a.tree_commensurate, onramp_bays=a.onramp_bays, drop_mesh_early=a.drop_mesh_early,
-                    tree_roads=a.tree_roads)
+                    tree_roads=a.tree_roads, region_dist=a.region_dist)
     print(json.dumps(dict(die=mp["die"], verdict=mp["verdict"], gates=mp["gates"], census=mp["census"]), indent=1))
     return 0 if mp["verdict"] == "PASS" else 1
 

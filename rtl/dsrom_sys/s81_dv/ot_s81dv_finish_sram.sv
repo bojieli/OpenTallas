@@ -1302,7 +1302,7 @@ module ot_s81dv_finish_leafw #(parameter integer NV=80,K=5,P=3,TREES=1,PB=0,R=0)
    en=iv[PB] && it[PB*2+:2]<TREES && (bp%K)==0 && ix<NV;
    slot=6'(it[PB*2+:2]*16+bp/5);
   end
-  wp={en,en?5'(slot>>1):5'd0,en?slot[0]:1'b0,data};
+  wp={en,en?slot[5:1]:5'd0,en?slot[0]:1'b0,data};   // YOSYS-CONCAT 10-26: was 5'(slot>>1) (yosys YC1 mis-size)
  end
  for(genvar g=0;g<2;g=g+1)begin:g_payload
    ot_s81dv_finish_leafdata16 #(.NV(NV),.K(K),.P(P),.TREES(TREES),.PB(PB),.R(R),.LO(g*16)) u_d(.iv(iv),.it(it),.ib(ib),.id(id),.y(data[g*16+:16]));

@@ -385,7 +385,8 @@ def kit_budget(gen_phys, P=None):
     sh = gen_phys.ft_hop_in_share(P) if P is not None else gen_phys.FT_HOP_IN_SHARE
     return dict(io=float(gen_phys.IO_BUDGET), ft_in_share=float(sh),
                 hold_out_min_ps=float(gen_phys.hold_out_min_ps(P) if P is not None else gen_phys.HOLD_OUT_MIN_PS),
-                seam_hold_ps=float(gen_phys.seam_hold(P)["seam_ps"]) if P is not None else None)
+                seam_hold_ps=float(gen_phys.seam_hold(P)["seam_ps"]) if P is not None else None,
+                io_hold_mode=gen_phys.io_hold_mode(P) if P is not None else "legacy")
 
 
 def standin(seam_cls, P, m, kb):
@@ -416,6 +417,13 @@ def standin(seam_cls, P, m, kb):
         basis = "R2 face-flop estimate (kit IO budget 0.2T+0.2T does not compose)"
     # -O_min - I_min: legacy 0 - (-tol); CLOCK-RESET IO-HOLD seam_hold: sender + receiver = seam_ps
     hold = kb["seam_hold_ps"] if kb.get("seam_hold_ps") is not None else tol - kb["hold_out_min_ps"]
+    if kb.get("io_hold_mode", "legacy") != "legacy":
+        return dict(cls=seam_cls, basis=basis, setup_policy_ps=round(setup, 1), hold_policy_ps=None,
+                    margin_setup_ps=round(m_setup, 1), margin_hold_ps=round(m_hold, 1),
+                    setup_ps=round(setup - m_setup, 1), hold_ps=None,
+                    hold_status="NEEDS_PARENT", io_hold_mode=kb["io_hold_mode"],
+                    hold_basis="sender guarantee and plan demand require real-view parent FF hold/CPPR; "
+                               "no legacy stand-in hold budget")
     return dict(cls=seam_cls, basis=basis, setup_policy_ps=round(setup, 1), hold_policy_ps=round(hold, 1),
                 margin_setup_ps=round(m_setup, 1), margin_hold_ps=round(m_hold, 1),
                 setup_ps=round(setup - m_setup, 1), hold_ps=round(hold - m_hold, 1))
@@ -700,9 +708,9 @@ def gate_sta(repo, die, plan, work, views, views_root, margins, threads=8):
                standin={c: dict(v, ports=sum(1 for s in rest if s["cls"] == c)) for c, v in si.items()},
                # gate view = the agreed policy (TT/FF, 60/25); margined stand-ins are INFO until the owner rules
                standin_worst_setup_ps=min((r["setup_policy_ps"] for r in si_rows), default=None),
-               standin_worst_hold_ps=min((r["hold_policy_ps"] for r in si_rows), default=None),
+               standin_worst_hold_ps=min((r["hold_policy_ps"] for r in si_rows if r["hold_policy_ps"] is not None), default=None),
                standin_worst_margined_info_setup_ps=min((r["setup_ps"] for r in si_rows), default=None),
-               standin_worst_margined_info_hold_ps=min((r["hold_ps"] for r in si_rows), default=None),
+               standin_worst_margined_info_hold_ps=min((r["hold_ps"] for r in si_rows if r["hold_ps"] is not None), default=None),
                views={tn: str(d) for tn, d in have.items()}, views_unavailable=missing_views,
                xtalk=xtalk_ps(margins, float(P.budgets.get("pin_reg_p90_um", 30.0))), derates=derates(margins),
                ir=dict(zip(("factor", "sensitivity", "drop_frac"), ir_factor(margins)),

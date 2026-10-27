@@ -911,16 +911,55 @@
          "maxItems": 4
         }
        },
+       "reserved_sites_um": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "required": [
+          "rect_um",
+          "kind"
+         ],
+         "properties": {
+          "rect_um": {
+           "type": "array",
+           "items": {
+            "type": "number"
+           },
+           "minItems": 4,
+           "maxItems": 4
+          },
+          "kind": {
+           "enum": [
+            "die_clock_tree",
+            "landing_ring_bank"
+           ]
+          },
+          "ref": {
+           "type": "string"
+          }
+         }
+        }
+       },
        "tap_pitch_um": {
         "type": "number",
         "exclusiveMinimum": 0
+       },
+       "tap_edge_y_um": {
+        "type": "array",
+        "minItems": 1,
+        "uniqueItems": true,
+        "items": {
+         "type": "number",
+         "minimum": 0
+        }
        },
        "tap_mode": {
         "enum": [
          "grid",
          "grid+sinks",
          "sinks",
-         "density"
+         "density",
+         "explicit"
         ]
        },
        "tap_radius_um": {
@@ -2265,6 +2304,9 @@
         }
        }
       }
+     },
+     "landing_base_type": {
+      "type": "string"
      }
     }
    }
@@ -2683,6 +2725,22 @@
      "type": "number",
      "exclusiveMinimum": 0
     },
+    "tap_window": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "window_ps"
+     ],
+     "properties": {
+      "window_ps": {
+       "type": "number",
+       "minimum": 0
+      },
+      "note": {
+       "type": "string"
+      }
+     }
+    },
     "seam_hold": {
      "type": "object",
      "additionalProperties": false,
@@ -2707,8 +2765,39 @@
     "io_hold": {
      "enum": [
       "legacy",
-      "sender_min"
+      "sender_min",
+      "plan_demand"
      ]
+    },
+    "hold_demand": {
+     "type": "object",
+     "required": [
+      "source"
+     ],
+     "properties": {
+      "source": {
+       "enum": [
+        "plan"
+       ]
+      },
+      "pairs": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "number",
+        "minimum": 0
+       }
+      },
+      "landed": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "default_ps": {
+       "type": "number",
+       "minimum": 0
+      }
+     }
     },
     "io_hold_driver_views": {
      "type": "object",
@@ -3032,6 +3121,10 @@
         "type": "integer"
        },
        "pad": {
+        "type": "integer",
+        "minimum": 0
+       },
+       "clock_landing": {
         "type": "integer",
         "minimum": 0
        },

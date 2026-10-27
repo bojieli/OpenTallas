@@ -190,6 +190,8 @@ def test_postcts_helpers_have_global_scope_inside_orfs_proc(tmp_path):
                                  ("leaf_affinity.tcl", "la_d", "data")):
         (tmp_path / filename).write_text(
             f"set {var} {value}\nproc read_{var} {{}} {{ global {var}; return ${{{var}}} }}\n")
+    # FLOW 10-26 PG: cts_post ends with the supply binding + hard check (pg_connect.tcl), stubbed here
+    (tmp_path / "pg_connect.tcl").write_text("proc ot_pg_connect_all {w} { return 0 }\nproc ot_pg_require_bound {w} { return 1 }\n")
     script = f"proc orfs_postcts {{}} {{ source {{{tmp_path / 'cts_post.tcl'}}} }}\norfs_postcts\nputs [read_tb_state]\nputs [read_la_d]\n"
     result = subprocess.run(["tclsh"], input=script, text=True, capture_output=True)
     assert result.returncode == 0 and not result.stderr, result.stderr

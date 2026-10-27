@@ -1,0 +1,14 @@
+RX_LAND ex rank 5
+RX_LAND ex rank 42
+RX_LAND ex rank 43
+RX_LAND ex rank 71
+RX_LAND ex rank 79
+RX_LAND ex rank 84
+RX_LAND ex rank 116
+RX_LAND ex rank 132
+ROWX_TIMING rowx_hdr 1448 first_word 1546 offset 98 (gd 16 + xo 8 + pvs 70) words 40 held ex 40 rx 34 decoys 113
+ROWX build P1 nxw 40 xo 8 held_ex 40 held_rx 34 export_words 40 err 41 neg29 0 neg25 1 mut 7 verdict=FAIL
+- /srv/opentallas-scratch2/claude/wt/s81-rowx-1026/rtl/dsrom_sys/s81_dv/svc_rs/test/tb_dsdv_svc_rowx.sv:210: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 63.426 s; speed 26.291 ns/s
+- Verilator: cpu 63.425 s on 1 threads; allocated 348 MB

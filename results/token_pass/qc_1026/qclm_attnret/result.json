@@ -1,0 +1,30 @@
+{
+ "stage": "attnret",
+ "vehicle": "bound s8 slice row (QCLM obj_n12, main b272ba0ec, FACE 3, CROM align 3)",
+ "verdict": "PASS",
+ "measured_span_edges": 149,
+ "compiled_span_edges": 149,
+ "cases": {
+  "pos/0": {
+   "verdict": "PASS",
+   "span": 149,
+   "compiled": 149
+  },
+  "pos/ddwin": {
+   "verdict": "FAIL",
+   "span": 149,
+   "compiled": 149
+  },
+  "pos/ddbase": {
+   "verdict": "FAIL",
+   "span": 149,
+   "compiled": 149
+  }
+ },
+ "failures": [],
+ "compare": {
+  "slice2_10_24_measured": 98,
+  "composer_fallback_compiled": 137
+ },
+ "span_rule": "first dr word at the dvs_W5 return pin -> last o_proj x word at E5 (QW-ATTNRET)"
+}

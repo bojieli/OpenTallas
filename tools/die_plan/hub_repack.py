@@ -157,7 +157,7 @@ def _pack_shelf(cores, sh, lane):
     return cols, lane + sum(col["w"] + lane for col in cols)
 
 
-def pack_hub(W, H, cores, lanes=(51.84, 43.2, 34.56, 25.92, 17.28), shelves=(2, 3, 4), conns=None, reach=360.0):
+def _pack_hub_uncached(W, H, cores, lanes=(51.84, 43.2, 34.56, 25.92, 17.28), shelves=(2, 3, 4), conns=None, reach=360.0):
     """regular shelf/column/stack lattice.  cores: [{inst, w, h, ocx, ocy}] -> (placement {inst: (x, y)},
     info).  Search: widest street first, then (with conns) the fewest estimated added station registers
     (sum over stations of max(0, ceil(manhattan / reach) - 1 - n_old), endpoints following their cores), then
@@ -185,14 +185,21 @@ def pack_hub(W, H, cores, lanes=(51.84, 43.2, 34.56, 25.92, 17.28), shelves=(2, 
         return float(np.maximum(0.0, np.ceil(L / reach - 1e-9) - 1 - nold).sum())
     for lane in lanes:
         best = None
+        interval_heights, interval_packs = {}, {}
         for K in shelves:
             for cuts in itertools.combinations(range(1, n), K - 1):
                 b = [0] + list(cuts) + [n]
-                sh = [C[b[i]:b[i + 1]] for i in range(K)]
-                hs = [ce(max(c["h"] for c in s)) for s in sh]
+                intervals = [(b[i], b[i + 1]) for i in range(K)]
+                for lo, hi in intervals:
+                    if (lo, hi) not in interval_heights:
+                        interval_heights[lo, hi] = ce(max(c["h"] for c in C[lo:hi]))
+                hs = [interval_heights[key] for key in intervals]
                 if lane + sum(h + lane for h in hs) > H + 1e-6:
                     continue
-                packed = [_pack_shelf(s, h, lane) for s, h in zip(sh, hs)]
+                for key, h in zip(intervals, hs):
+                    if key not in interval_packs:
+                        interval_packs[key] = _pack_shelf(C[key[0]:key[1]], h, lane)
+                packed = [interval_packs[key] for key in intervals]
                 if max(p[1] for p in packed) > W + 1e-6:
                     continue
                 place, streets = _realise(W, H, hs, packed, lane)
@@ -249,6 +256,23 @@ def pack_hub(W, H, cores, lanes=(51.84, 43.2, 34.56, 25.92, 17.28), shelves=(2, 
                                est_added_regs=r3(xr), local_search_moves=moves,
                                displacement_um_total=r3(disp), displacement_um_mean=r3(disp / n), streets=streets)
     raise ValueError("hub cores do not fit the outline on any street width")
+
+
+from functools import lru_cache
+
+
+@lru_cache(maxsize=64)
+def _pack_hub_geometry(W, H, cores_json, lanes, shelves, reach):
+    return _pack_hub_uncached(W, H, json.loads(cores_json), lanes, shelves, None, reach)
+
+
+def pack_hub(W, H, cores, lanes=(51.84, 43.2, 34.56, 25.92, 17.28), shelves=(2, 3, 4), conns=None, reach=360.0):
+    """Same deterministic shelf search; reuse exact no-connection geometry across serialisation candidates.
+    Connected searches retain their station-dependent scoring and are never shared with geometry-only searches.
+    """
+    if conns:
+        return _pack_hub_uncached(W, H, cores, lanes, shelves, conns, reach)
+    return copy.deepcopy(_pack_hub_geometry(W, H, json.dumps(cores, sort_keys=True), tuple(lanes), tuple(shelves), reach))
 
 
 def _realise(W, H, hs, packed, lane):

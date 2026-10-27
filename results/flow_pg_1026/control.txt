@@ -1,0 +1,16 @@
+FLOW 2026-10-26 PG real-tool control (openroad/orfs:latest, intel2, read-only copy of the signed s8b ODB)
+ODB: intel2:/srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8x_prog__s8b__6aa7f1fc4d/base/6_final.odb
+signoff.py session census block : SO PG 408482 216 ot_ms_m3_leaf/VDD
+pg_connect.tcl ot_pg_require_bound: FAIL OT_PG_OPEN before open_pg_terms=216 of 408482 first=ot_ms_m3_leaf(BUFx8_ASAP7_75t_R dont_touch=1)
+pg_connect.tcl ot_pg_connect_all  : OT_PG_CONNECT ctl rules=2 protected_rebound=108
+ot_pg_require_bound after         : OT_PG_BOUND after pg_terms=408482 open=0
+dont_touch 108 -> 108 ; signal ITerm state IDENTICAL (52013 terms, hash 238857551) ; insts 204241 -> 204241 ; nets 24044 -> 24044
+second ot_pg_connect_all          : protected_rebound=0 (idempotent)
+OT_PG_STRICT=1                    : skipped (native_pg_binding owns binding)
+
+SCREEN 2026-10-26 12:40 PDT pg_screen.tsv (ODB probe = ground truth; ODB-0383 grep also hits protected cells that ARE bound):
+ signed records (42 unique name+time): AFFECTED 3 (kq_qfd_dv_s8x_prog_pd40a0 216 terms/108 ot_ms_* dt; ot_nhb_zh 1110/555 CTS clkbuf dt; ot_qkh_recip_leaf 2553136/1276568, legacy reuse), CLEAN 26, UNVERIFIABLE 13 rows (12 names, no ODB survives anywhere)
+ closed_archive local 2054 ODBs: AFFECTED 1871 CLEAN 172 UNPROBED 11 ; offloaded (155.103.253.53 frozen) 1136: AFFECTED 985 CLEAN 141 UNPROBED 10
+ legacy cause mostly ot_inhold_*/ot_outhold_* dont_touch hold buffers + dont_touch CTS bufs; a few multi-M-inst cluster ODBs have nearly every inst open (no global_connect at all)
+ fleet closed: autopilot s8b AFFECTED; rp1_f62, qc/closed su8_rst3 + s8x_crh CLEAN
+CANARY 775dde5a9 (own root epyc1:/srv/opentallas-scratch2/claude/flow-pg-1026/canary, baselines copied): qwen_compute coll_ftm NO-REGRESSION, s81_head hd_turn_a NO-REGRESSION (both stop at the baseline's own design gate, identical metrics; OT_PG_BOUND cts_post open=0); s81 t12 + qwen_kvsys_core e1 still running at report time

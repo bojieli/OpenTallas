@@ -617,7 +617,7 @@ module dsdv_idx_rg3 #(
         jpd[11:0]  <= gatk[0] ? {gs_j[12:5], gs_j[3:0]} : {gg[8:1], 4'd0};
         jpd[23:12] <= gatk[3] ? {1'b1, g_sl, g_cl, gs_j[15:13]} : {1'b0, sa[gg[0]], 4'd0, gg[11:9]};
         // items: scan {u, slot, cell, w, lane, lw, v, idx}; gather A / B
-        ipd_s <= {wr, wq, wsl, wc, gk_wb + 16'(wc), ({me[3:1], wr} ^ gk_hg ^ wc) ^ ((MUT == 1) ? 4'd1 : 4'd0),
+        ipd_s <= {wr, wq, wsl, wc, gk_wb + {12'd0, wc}, ({me[3:1], wr} ^ gk_hg ^ wc) ^ ((MUT == 1) ? 4'd1 : 4'd0),
                   wr, !((gk_fg && wc == gk_cs && (({me[3:1], wr} ^ gk_hg ^ wc) < jb[3:0])) ||
                         (gk_lg && wc == gk_ce && (({me[3:1], wr} ^ gk_hg ^ wc) > je[3:0]))),
                   wc[2:0] ^ ((MUT == 3) ? 3'd1 : 3'd0)};

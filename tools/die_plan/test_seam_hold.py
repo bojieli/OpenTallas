@@ -75,3 +75,43 @@ def test_signoff_overlay():
     assert "set_input_delay -min 0 " in t and "set_output_delay -min -25 " in t
     with pytest.raises(ValueError):
         signoff.session_tcl("ff", [], "x.spef", hold_in_min=-40, hold_out_min=5)
+
+
+def test_floor_constant_matches_generator():
+    assert sdc_lint.SEAM_HOLD_MIN_PS == gen_phys.SEAM_HOLD_MIN_PS
+
+
+def _standalone(kd):
+    import subprocess
+    import sys
+    return subprocess.run([sys.executable, "-I", str(kd / "sdc_lint.py"), str(kd)], cwd=kd, capture_output=True,
+                          text=True)
+
+
+def test_kit_linter_runs_standalone_with_seam_hold(tmp_path):
+    """CLOCK-KV-R3 canary e444b9df7: the kit ships sdc_lint.py without gen_phys.py; with clock.seam_hold set the
+    kit lint must run self-contained (it crashed with ModuleNotFoundError gen_phys)."""
+    import copy
+    import json
+    import shutil
+    from pathlib import Path
+    import schema
+    raw = copy.deepcopy(json.loads((Path(__file__).with_name("examples") / "tiny_plan.json").read_text()))
+    raw["clock"]["seam_hold"] = dict(sender_ps=25, seam_ps=25)
+    P = schema.Plan(raw)
+    kd = gen_phys.write_type_kit(P, "src", tmp_path / "gen", [])
+    ctx = json.loads((kd / "sdc_lint.json").read_text())
+    assert ctx["seam_hold_ps"] == 25.0 and ctx["hold_out_min_ps"] == -25.0
+    kit = tmp_path / "work"                       # kit-like dir: only the shipped linter + its inputs, no generator
+    kit.mkdir()
+    for f in ("sdc_lint.py", "sdc_lint.json", "constraint.sdc") + tuple(
+            f for f in ("ft_ports.json", "ft_interface.json", "straps.json") if (kd / f).is_file()):
+        shutil.copyfile(kd / f, kit / f)
+    assert not (kit / "gen_phys.py").exists()
+    r = _standalone(kit)
+    assert r.returncode == 0 and "SDC_LINT PASS" in r.stdout, r.stdout + r.stderr
+    ctx["seam_hold_ps"] = 15.0                    # below the floor: a lint ERROR, not a crash
+    ctx["hold_in_min_ps"] = 10.0
+    (kit / "sdc_lint.json").write_text(json.dumps(ctx))
+    r = _standalone(kit)
+    assert r.returncode == 1 and "below 25 ps" in r.stdout and "Traceback" not in r.stderr, r.stdout + r.stderr

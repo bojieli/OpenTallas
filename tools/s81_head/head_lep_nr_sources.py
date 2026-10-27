@@ -23,6 +23,11 @@ def derive(root):
  core=core.replace('ot_sram_oldread_wreg #(', 'ot_sram_oldread_wreg_nr #(')
  core=core.replace('ot_sram_showahead_1r1w #(', 'ot_sram_showahead_1r1w_head_nr #(')
  idx=module(src[0],'ot_s81sl_lep_mu_ab_idx').replace('module ot_s81sl_lep_mu_ab_idx','module ot_s81hd_lep_idx_nr',1).replace('ot_s81sl_lep_core #(', 'ot_s81hd_lep_core_nr #(')
+ # Expose the wrapper's existing mode as an explicit opt-in. Default1 keeps
+ # every prior caller identical; the current head no-index leaf selects0.
+ idx=idx.replace('IN_PIPE = 0, parameter integer NATIVE32 = 0',
+                 'IN_PIPE = 0, parameter integer NATIVE32 = 0, parameter integer IDX_EN = 1')
+ idx=idx.replace('.IDX_EN(1)) u', '.IDX_EN(IDX_EN)) u')
  mem=module(src[1],'ot_sram_oldread_wreg').replace('module ot_sram_oldread_wreg','module ot_sram_oldread_wreg_nr',1)
  mem=mem.replace('ot_sram_1r1w_512x128_m4_r2c2 u_m','ot_sram_1r1w_512x128_m4_r0c0 u_m')
  old=".w_mask_in({128{1'b1}}),\n     .rr_en(2'b00),.rr_addr(14'd0),.cr_en(2'b00),.cr_sel(14'd0));"

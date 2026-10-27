@@ -189,11 +189,11 @@ module ot_v41_bf_col #(
     wire i2_v = 1'b0, i2_bk = 1'b0, i2_bf = 1'b0, i2x_v = 1'b0, i2x_bk = 1'b0, fam = 1'b0, rst_n = 1'b0, rst_q = 1'b0, gclk = 1'b0;
     wire [TW-1:0] i2_t = '0;
     wire [12:0] rom_addr = '0;
-    wire [15:0] s_row_c [0:NSEG-1];
-    wire [4:0] s_idx [0:NSEG-1];
-    wire [4:0] s_n [0:NSEG-1];
+    // S81-BFCOL-RTL 10-26: no live segment tables (s_row_c / s_idx / s_n) in the column -- the q-element's QK = 0
+    // branch read them, but the column only has the registered shadow copies (so_row_c / b_so_idx / b_so_n, from its
+    // so_* ports), so the column requires QK != 0 (QP_P1 = 1, guarded below) and reads only those.
 `ifndef SYNTHESIS
-    initial if (!(FAST != 0 && QPIPE != 0 && QZ != 0 && QY != 0 && PP != 0 && BF16 != 0 && QBF >= 2 && BP == 0 && QP_CAP == 0 && TCG != 0 && QZE != 0))
+    initial if (!(FAST != 0 && QPIPE != 0 && QZ != 0 && QY != 0 && PP != 0 && BF16 != 0 && QBF >= 2 && BP == 0 && QP_CAP == 0 && QP_P1 != 0 && TCG != 0 && QZE != 0))
         $fatal(1, "ot_v41_bf_col: unsupported configuration");
 `endif
     // TCG: this macro column's clock tile (local enable copy + gate); else the element clock
@@ -669,17 +669,11 @@ module ot_v41_bf_col #(
     wire [SW-1:0] t_seg = t_tree[SW-1:0];
     always @(posedge gclk_tr or negedge rst_mt) begin
         if (!rst_mt) o_v <= 1'b0;
-        else o_v <= t_v && !(QK != 0 ? so_row_c[t_seg][15] : s_row_c[t_seg][15]);   // row bit 15: an idle half of a pair emits nothing
+        else o_v <= t_v && !so_row_c[t_seg][15];   // row bit 15: an idle half of a pair emits nothing
     end
     always @(posedge gclk_tr) begin
         o_val <= t_val; o_err <= t_err;
-`ifdef QP_MUTANT_SHADOW
-        if (0) begin                                                           // negative control: live tables
-`else
-        if (QK != 0) begin
-`endif
-            o_row <= so_row_c[t_seg]; o_seg <= b_so_idx[t_seg]; o_n <= b_so_n[t_seg]; end
-        else begin o_row <= s_row_c[t_seg]; o_seg <= s_idx[t_seg]; o_n <= s_n[t_seg]; end
+        o_row <= so_row_c[t_seg]; o_seg <= b_so_idx[t_seg]; o_n <= b_so_n[t_seg];
         o_pos <= (MTP != 0) ? t_pos : 3'd0;
     end
     assign pv = o_v; assign pval = o_val; assign prow = o_row;

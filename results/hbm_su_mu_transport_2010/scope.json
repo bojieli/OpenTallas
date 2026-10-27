@@ -1,0 +1,17 @@
+{
+  "baseline": "R13 planS2 9e154039",
+  "current_incremental_price_ds_loss_pct": {
+    "lower": 0.892,
+    "mid_sm_serial": 0.602,
+    "upper": 4.185
+  },
+  "price_scope": "R13 hub incremental latency relative to t_banks, with original r25gq schedule baseline",
+  "unpriced": [
+    "R8 bank idx k4 serialization service (already in t_banks baseline)",
+    "hub per-connection serialized burst service",
+    "MU changes pending complete candidate"
+  ],
+  "current_plan_serialized_logical_connection_groups_without_launch_trace": 5771,
+  "conclusion": "SU latency preservation under MU is not established; compare exact transport contracts and complete static link launches first",
+  "test": "6 focused tests pass including low-mean-duty conflicting burst negative control"
+}

@@ -1,0 +1,807 @@
+{
+ "schema": "opentallas.qxpq_cgr_plan.v1",
+ "model": "PLAN-ICG-MODEL open_subtree + ICGx1 NLDM; uniform sink density per RTL region (PRE-PLACEMENT), UNCHECKED",
+ "regions": "physical/die_plan/s81/core_lat/qxpq_w10_regions.json",
+ "rows": [
+  {
+   "grid": "1x1",
+   "n_leaves": 16,
+   "design_levels": 3,
+   "envelope": {
+    "max_sinks": 1472,
+    "max_levels": 3,
+    "max_reach_um": 224.5,
+    "max_outline_fraction": 0.35,
+    "max_nested_gates": 0
+   },
+   "corners": {
+    "TT": {
+     "icg_arc_ps": 26.38,
+     "leaf_mean_ps": 176.98,
+     "leaf_mean_spread_ps": 2.4,
+     "window_ps": 45.84,
+     "entry_tree_budget_ps": 73.02
+    },
+    "FF": {
+     "icg_arc_ps": 19.3,
+     "leaf_mean_ps": 138.23,
+     "leaf_mean_spread_ps": 1.96,
+     "window_ps": 40.94,
+     "entry_tree_budget_ps": 64.27
+    }
+   },
+   "envelope_out": [
+    [
+     "r0_00",
+     [
+      "1807 sinks > calibrated 1472"
+     ]
+    ],
+    [
+     "u0_00",
+     [
+      "1533 sinks > calibrated 1472"
+     ]
+    ],
+    [
+     "r1_00",
+     [
+      "4010 sinks > calibrated 1472"
+     ]
+    ],
+    [
+     "u1_00",
+     [
+      "1533 sinks > calibrated 1472"
+     ]
+    ],
+    [
+     "r2_00",
+     [
+      "6270 sinks > calibrated 1472"
+     ]
+    ],
+    [
+     "u2_00",
+     [
+      "1533 sinks > calibrated 1472"
+     ]
+    ],
+    [
+     "r3_00",
+     [
+      "6141 sinks > calibrated 1472"
+     ]
+    ],
+    [
+     "u3_00",
+     [
+      "1533 sinks > calibrated 1472"
+     ]
+    ],
+    [
+     "r4_00",
+     [
+      "6817 sinks > calibrated 1472"
+     ]
+    ],
+    [
+     "u4_00",
+     [
+      "1533 sinks > calibrated 1472"
+     ]
+    ],
+    [
+     "r5_00",
+     [
+      "6141 sinks > calibrated 1472"
+     ]
+    ],
+    [
+     "u5_00",
+     [
+      "1533 sinks > calibrated 1472"
+     ]
+    ],
+    [
+     "r6_00",
+     [
+      "1807 sinks > calibrated 1472"
+     ]
+    ],
+    [
+     "u6_00",
+     [
+      "1533 sinks > calibrated 1472"
+     ]
+    ],
+    [
+     "r7_00",
+     [
+      "4010 sinks > calibrated 1472"
+     ]
+    ],
+    [
+     "u7_00",
+     [
+      "1533 sinks > calibrated 1472"
+     ]
+    ]
+   ],
+   "valid": false,
+   "in_band": false,
+   "leaves_sample": [
+    {
+     "name": "r0_00",
+     "kind": "gated",
+     "gate_of": "u_e.g_cgr.u_cg_r0",
+     "rect_um": [
+      0.0,
+      0.0,
+      129.6,
+      112.32
+     ],
+     "sinks": 1807,
+     "levels": 3,
+     "reach_um": 120.96,
+     "pad_stages": 0,
+     "envelope": "OUT"
+    },
+    {
+     "name": "u0_00",
+     "kind": "ungated",
+     "rect_um": [
+      0.0,
+      0.0,
+      129.6,
+      112.32
+     ],
+     "sinks": 1533,
+     "levels": 3,
+     "reach_um": 120.96,
+     "pad_stages": 0,
+     "envelope": "OUT"
+    },
+    {
+     "name": "r1_00",
+     "kind": "gated",
+     "gate_of": "u_e.g_cgr.u_cg_r1",
+     "rect_um": [
+      0.0,
+      112.32,
+      129.6,
+      221.4
+     ],
+     "sinks": 4010,
+     "levels": 3,
+     "reach_um": 119.34,
+     "pad_stages": 0,
+     "envelope": "OUT"
+    },
+    {
+     "name": "u1_00",
+     "kind": "ungated",
+     "rect_um": [
+      0.0,
+      112.32,
+      129.6,
+      221.4
+     ],
+     "sinks": 1533,
+     "levels": 3,
+     "reach_um": 119.34,
+     "pad_stages": 0,
+     "envelope": "OUT"
+    }
+   ],
+   "sinks_range": [
+    1807,
+    6817
+   ],
+   "reach_max_um": 120.96,
+   "pad_stage_leaves": 0
+  },
+  {
+   "grid": "2x2",
+   "n_leaves": 64,
+   "design_levels": 3,
+   "envelope": {
+    "max_sinks": 1472,
+    "max_levels": 3,
+    "max_reach_um": 224.5,
+    "max_outline_fraction": 0.35,
+    "max_nested_gates": 0
+   },
+   "corners": {
+    "TT": {
+     "icg_arc_ps": 26.38,
+     "leaf_mean_ps": 139.08,
+     "leaf_mean_spread_ps": 1.2,
+     "window_ps": 22.92,
+     "entry_tree_budget_ps": 110.92
+    },
+    "FF": {
+     "icg_arc_ps": 19.3,
+     "leaf_mean_ps": 107.35,
+     "leaf_mean_spread_ps": 0.98,
+     "window_ps": 20.47,
+     "entry_tree_budget_ps": 95.15
+    }
+   },
+   "envelope_out": [
+    [
+     "r2_00",
+     [
+      "1568 sinks > calibrated 1472"
+     ]
+    ],
+    [
+     "r2_01",
+     [
+      "1568 sinks > calibrated 1472"
+     ]
+    ],
+    [
+     "r2_10",
+     [
+      "1568 sinks > calibrated 1472"
+     ]
+    ],
+    [
+     "r2_11",
+     [
+      "1568 sinks > calibrated 1472"
+     ]
+    ],
+    [
+     "r3_00",
+     [
+      "1536 sinks > calibrated 1472"
+     ]
+    ],
+    [
+     "r3_01",
+     [
+      "1536 sinks > calibrated 1472"
+     ]
+    ],
+    [
+     "r3_10",
+     [
+      "1536 sinks > calibrated 1472"
+     ]
+    ],
+    [
+     "r3_11",
+     [
+      "1536 sinks > calibrated 1472"
+     ]
+    ],
+    [
+     "r4_00",
+     [
+      "1705 sinks > calibrated 1472"
+     ]
+    ],
+    [
+     "r4_01",
+     [
+      "1705 sinks > calibrated 1472"
+     ]
+    ],
+    [
+     "r4_10",
+     [
+      "1705 sinks > calibrated 1472"
+     ]
+    ],
+    [
+     "r4_11",
+     [
+      "1705 sinks > calibrated 1472"
+     ]
+    ],
+    [
+     "r5_00",
+     [
+      "1536 sinks > calibrated 1472"
+     ]
+    ],
+    [
+     "r5_01",
+     [
+      "1536 sinks > calibrated 1472"
+     ]
+    ],
+    [
+     "r5_10",
+     [
+      "1536 sinks > calibrated 1472"
+     ]
+    ],
+    [
+     "r5_11",
+     [
+      "1536 sinks > calibrated 1472"
+     ]
+    ]
+   ],
+   "valid": false,
+   "in_band": false,
+   "leaves_sample": [
+    {
+     "name": "r0_00",
+     "kind": "gated",
+     "gate_of": "u_e.g_cgr.u_cg_r0",
+     "rect_um": [
+      0.0,
+      0.0,
+      64.8,
+      56.16
+     ],
+     "sinks": 452,
+     "levels": 2,
+     "reach_um": 60.48,
+     "pad_stages": 1,
+     "envelope": "IN"
+    },
+    {
+     "name": "u0_00",
+     "kind": "ungated",
+     "rect_um": [
+      0.0,
+      0.0,
+      64.8,
+      56.16
+     ],
+     "sinks": 384,
+     "levels": 2,
+     "reach_um": 60.48,
+     "pad_stages": 1,
+     "envelope": "IN"
+    },
+    {
+     "name": "r0_01",
+     "kind": "gated",
+     "gate_of": "u_e.g_cgr.u_cg_r0",
+     "rect_um": [
+      0.0,
+      56.16,
+      64.8,
+      112.32
+     ],
+     "sinks": 452,
+     "levels": 2,
+     "reach_um": 60.48,
+     "pad_stages": 1,
+     "envelope": "IN"
+    },
+    {
+     "name": "u0_01",
+     "kind": "ungated",
+     "rect_um": [
+      0.0,
+      56.16,
+      64.8,
+      112.32
+     ],
+     "sinks": 384,
+     "levels": 2,
+     "reach_um": 60.48,
+     "pad_stages": 1,
+     "envelope": "IN"
+    }
+   ],
+   "sinks_range": [
+    452,
+    1705
+   ],
+   "reach_max_um": 60.48,
+   "pad_stage_leaves": 40
+  },
+  {
+   "grid": "2x3",
+   "n_leaves": 96,
+   "design_levels": 3,
+   "envelope": {
+    "max_sinks": 1472,
+    "max_levels": 3,
+    "max_reach_um": 224.5,
+    "max_outline_fraction": 0.35,
+    "max_nested_gates": 0
+   },
+   "corners": {
+    "TT": {
+     "icg_arc_ps": 26.38,
+     "leaf_mean_ps": 133.21,
+     "leaf_mean_spread_ps": 1.03,
+     "window_ps": 19.39,
+     "entry_tree_budget_ps": 116.79
+    },
+    "FF": {
+     "icg_arc_ps": 19.3,
+     "leaf_mean_ps": 102.58,
+     "leaf_mean_spread_ps": 0.84,
+     "window_ps": 17.31,
+     "entry_tree_budget_ps": 99.92
+    }
+   },
+   "envelope_out": [],
+   "valid": true,
+   "in_band": true,
+   "leaves_sample": [
+    {
+     "name": "r0_00",
+     "kind": "gated",
+     "gate_of": "u_e.g_cgr.u_cg_r0",
+     "rect_um": [
+      0.0,
+      0.0,
+      64.8,
+      37.44
+     ],
+     "sinks": 302,
+     "levels": 2,
+     "reach_um": 51.12,
+     "pad_stages": 1,
+     "envelope": "IN"
+    },
+    {
+     "name": "u0_00",
+     "kind": "ungated",
+     "rect_um": [
+      0.0,
+      0.0,
+      64.8,
+      37.44
+     ],
+     "sinks": 256,
+     "levels": 2,
+     "reach_um": 51.12,
+     "pad_stages": 1,
+     "envelope": "IN"
+    },
+    {
+     "name": "r0_01",
+     "kind": "gated",
+     "gate_of": "u_e.g_cgr.u_cg_r0",
+     "rect_um": [
+      0.0,
+      37.44,
+      64.8,
+      74.88
+     ],
+     "sinks": 302,
+     "levels": 2,
+     "reach_um": 51.12,
+     "pad_stages": 1,
+     "envelope": "IN"
+    },
+    {
+     "name": "u0_01",
+     "kind": "ungated",
+     "rect_um": [
+      0.0,
+      37.44,
+      64.8,
+      74.88
+     ],
+     "sinks": 256,
+     "levels": 2,
+     "reach_um": 51.12,
+     "pad_stages": 1,
+     "envelope": "IN"
+    }
+   ],
+   "sinks_range": [
+    302,
+    1137
+   ],
+   "reach_max_um": 51.12,
+   "pad_stage_leaves": 60
+  },
+  {
+   "grid": "3x3",
+   "n_leaves": 144,
+   "design_levels": 3,
+   "envelope": {
+    "max_sinks": 1472,
+    "max_levels": 3,
+    "max_reach_um": 224.5,
+    "max_outline_fraction": 0.35,
+    "max_nested_gates": 0
+   },
+   "corners": {
+    "TT": {
+     "icg_arc_ps": 26.38,
+     "leaf_mean_ps": 126.44,
+     "leaf_mean_spread_ps": 0.8,
+     "window_ps": 15.28,
+     "entry_tree_budget_ps": 123.56
+    },
+    "FF": {
+     "icg_arc_ps": 19.3,
+     "leaf_mean_ps": 97.06,
+     "leaf_mean_spread_ps": 0.65,
+     "window_ps": 13.65,
+     "entry_tree_budget_ps": 105.44
+    }
+   },
+   "envelope_out": [],
+   "valid": true,
+   "in_band": true,
+   "leaves_sample": [
+    {
+     "name": "r0_00",
+     "kind": "gated",
+     "gate_of": "u_e.g_cgr.u_cg_r0",
+     "rect_um": [
+      0.0,
+      0.0,
+      43.199999999999996,
+      37.44
+     ],
+     "sinks": 201,
+     "levels": 2,
+     "reach_um": 40.32,
+     "pad_stages": 1,
+     "envelope": "IN"
+    },
+    {
+     "name": "u0_00",
+     "kind": "ungated",
+     "rect_um": [
+      0.0,
+      0.0,
+      43.199999999999996,
+      37.44
+     ],
+     "sinks": 171,
+     "levels": 2,
+     "reach_um": 40.32,
+     "pad_stages": 1,
+     "envelope": "IN"
+    },
+    {
+     "name": "r0_01",
+     "kind": "gated",
+     "gate_of": "u_e.g_cgr.u_cg_r0",
+     "rect_um": [
+      0.0,
+      37.44,
+      43.199999999999996,
+      74.88
+     ],
+     "sinks": 201,
+     "levels": 2,
+     "reach_um": 40.32,
+     "pad_stages": 1,
+     "envelope": "IN"
+    },
+    {
+     "name": "u0_01",
+     "kind": "ungated",
+     "rect_um": [
+      0.0,
+      37.44,
+      43.199999999999996,
+      74.88
+     ],
+     "sinks": 171,
+     "levels": 2,
+     "reach_um": 40.32,
+     "pad_stages": 1,
+     "envelope": "IN"
+    }
+   ],
+   "sinks_range": [
+    201,
+    758
+   ],
+   "reach_max_um": 40.32,
+   "pad_stage_leaves": 108
+  },
+  {
+   "grid": "3x4",
+   "n_leaves": 192,
+   "design_levels": 2,
+   "envelope": {
+    "max_sinks": 1472,
+    "max_levels": 3,
+    "max_reach_um": 224.5,
+    "max_outline_fraction": 0.35,
+    "max_nested_gates": 0
+   },
+   "corners": {
+    "TT": {
+     "icg_arc_ps": 26.38,
+     "leaf_mean_ps": 98.58,
+     "leaf_mean_spread_ps": 0.72,
+     "window_ps": 13.51,
+     "entry_tree_budget_ps": 151.42
+    },
+    "FF": {
+     "icg_arc_ps": 19.3,
+     "leaf_mean_ps": 75.61,
+     "leaf_mean_spread_ps": 0.58,
+     "window_ps": 12.07,
+     "entry_tree_budget_ps": 126.89
+    }
+   },
+   "envelope_out": [],
+   "valid": true,
+   "in_band": true,
+   "leaves_sample": [
+    {
+     "name": "r0_00",
+     "kind": "gated",
+     "gate_of": "u_e.g_cgr.u_cg_r0",
+     "rect_um": [
+      0.0,
+      0.0,
+      43.199999999999996,
+      28.08
+     ],
+     "sinks": 151,
+     "levels": 2,
+     "reach_um": 35.64,
+     "pad_stages": 0,
+     "envelope": "IN"
+    },
+    {
+     "name": "u0_00",
+     "kind": "ungated",
+     "rect_um": [
+      0.0,
+      0.0,
+      43.199999999999996,
+      28.08
+     ],
+     "sinks": 128,
+     "levels": 2,
+     "reach_um": 35.64,
+     "pad_stages": 0,
+     "envelope": "IN"
+    },
+    {
+     "name": "r0_01",
+     "kind": "gated",
+     "gate_of": "u_e.g_cgr.u_cg_r0",
+     "rect_um": [
+      0.0,
+      28.08,
+      43.199999999999996,
+      56.16
+     ],
+     "sinks": 151,
+     "levels": 2,
+     "reach_um": 35.64,
+     "pad_stages": 0,
+     "envelope": "IN"
+    },
+    {
+     "name": "u0_01",
+     "kind": "ungated",
+     "rect_um": [
+      0.0,
+      28.08,
+      43.199999999999996,
+      56.16
+     ],
+     "sinks": 128,
+     "levels": 2,
+     "reach_um": 35.64,
+     "pad_stages": 0,
+     "envelope": "IN"
+    }
+   ],
+   "sinks_range": [
+    151,
+    569
+   ],
+   "reach_max_um": 35.64,
+   "pad_stage_leaves": 0
+  },
+  {
+   "grid": "4x4",
+   "n_leaves": 256,
+   "design_levels": 2,
+   "envelope": {
+    "max_sinks": 1472,
+    "max_levels": 3,
+    "max_reach_um": 224.5,
+    "max_outline_fraction": 0.35,
+    "max_nested_gates": 0
+   },
+   "corners": {
+    "TT": {
+     "icg_arc_ps": 26.38,
+     "leaf_mean_ps": 95.19,
+     "leaf_mean_spread_ps": 0.6,
+     "window_ps": 11.46,
+     "entry_tree_budget_ps": 154.81
+    },
+    "FF": {
+     "icg_arc_ps": 19.3,
+     "leaf_mean_ps": 72.86,
+     "leaf_mean_spread_ps": 0.49,
+     "window_ps": 10.24,
+     "entry_tree_budget_ps": 129.64
+    }
+   },
+   "envelope_out": [],
+   "valid": true,
+   "in_band": true,
+   "leaves_sample": [
+    {
+     "name": "r0_00",
+     "kind": "gated",
+     "gate_of": "u_e.g_cgr.u_cg_r0",
+     "rect_um": [
+      0.0,
+      0.0,
+      32.4,
+      28.08
+     ],
+     "sinks": 113,
+     "levels": 2,
+     "reach_um": 30.24,
+     "pad_stages": 0,
+     "envelope": "IN"
+    },
+    {
+     "name": "u0_00",
+     "kind": "ungated",
+     "rect_um": [
+      0.0,
+      0.0,
+      32.4,
+      28.08
+     ],
+     "sinks": 96,
+     "levels": 2,
+     "reach_um": 30.24,
+     "pad_stages": 0,
+     "envelope": "IN"
+    },
+    {
+     "name": "r0_01",
+     "kind": "gated",
+     "gate_of": "u_e.g_cgr.u_cg_r0",
+     "rect_um": [
+      0.0,
+      28.08,
+      32.4,
+      56.16
+     ],
+     "sinks": 113,
+     "levels": 2,
+     "reach_um": 30.24,
+     "pad_stages": 0,
+     "envelope": "IN"
+    },
+    {
+     "name": "u0_01",
+     "kind": "ungated",
+     "rect_um": [
+      0.0,
+      28.08,
+      32.4,
+      56.16
+     ],
+     "sinks": 96,
+     "levels": 2,
+     "reach_um": 30.24,
+     "pad_stages": 0,
+     "envelope": "IN"
+    }
+   ],
+   "sinks_range": [
+    113,
+    427
+   ],
+   "reach_max_um": 30.24,
+   "pad_stage_leaves": 0
+  }
+ ]
+}

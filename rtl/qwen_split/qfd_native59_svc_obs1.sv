@@ -776,6 +776,7 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  wire emb_read=emb_act&&(emb_k<=7'd64||(ROPE!=0&&emb_k>=7'(ROPE_FIRST)));
  wire[23:0]rope_addr=24'd9723904+{3'd0,emb_tok,3'd0}+24'(emb_k-7'(ROPE_FIRST));
  reg e1,e2,e3;reg[6:0]k1,k2,k3;
+ wire[6:0] k3_rel=k3-7'(ROPE_FIRST);   // YOSYS-CONCAT 10-26: 6'(k3-7'(ROPE_FIRST)) inside the dr_o concat was mis-sized by yosys (YC1)
  (* keep = "true" *) reg e3b;(* keep = "true" *) reg[6:0]k3b;   // R3g: == e3 / k3 (half of the e4c / k4c copies)
  // R3e: 3 kept copies of emb_act (the same set / clear statements, so ea_c[k] == emb_act on every edge): [0] code
  // address / re, [1] scale address / re, [2] emb_tok start.  LOCAL32 0: the original.
@@ -812,7 +813,7 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
    else begin
     dr_tag<=vm_write_tag;dr_s<=(NS>1)?s_vm_write_v[NS-1]:1'b0;
     dr_o<=g0?{1'b1,1'b0,1'b0,vm_write_beat,vm_write_data}:
-          g1?{1'b1,1'b1,(k3==7'd64)?6'd0:((k3>7'd64)?6'(k3-7'(ROPE_FIRST)):k3[5:0]),(k3==7'd64)?{496'd0,p_esq}:p_ecq}:520'd0;
+          g1?{1'b1,1'b1,(k3==7'd64)?6'd0:((k3>7'd64)?k3_rel[5:0]:k3[5:0]),(k3==7'd64)?{496'd0,p_esq}:p_ecq}:520'd0;
    end
  for(genvar k=0;k<6;k=k+1)begin:g_emd
   assign emit_beat_pub[k]=dr_o[516:512];

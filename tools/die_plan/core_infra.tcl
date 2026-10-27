@@ -5,7 +5,7 @@ proc ot_ci_begin {} {
   set ::ot_ci_u [[ord::get_db_tech] getDbUnitsPerMicron]
   set ::ot_ci_cells {}; set ::ot_ci_ports {}; set ::ot_ci_arcs {}
   set ::ot_ci_fixed {}; set ::ot_ci_tree_expected {}; set ::ot_ci_tree_seen {}
-  set ::ot_ci_tree_out [dict create]
+  set ::ot_ci_tree_out [dict create]; set ::ot_ci_tree_open {}
 }
 proc ot_ci_net {name} {
   set n [$::ot_ci_b findNet $name]
@@ -138,6 +138,82 @@ proc ot_ci_tree_sink {node path} {
   }
   lappend ::ot_ci_tree_seen $it
 }
+# ICG-aware tree (12.8b): an existing RTL clock gate is a planned stage. Its CLK pin moves from the core clock net
+# (census-checked) to its plan parent; it is placed at the plan region root; its gated output net keeps every
+# original gated sink (count asserted against the plan census) and is left open for the local CTS tree.
+proc ot_ci_tree_gate {inst master parent clk_pin out_pin x y rect} {
+  set i [$::ot_ci_b findInst $inst]
+  if {$i eq "NULL"} {error "OT_CORE_INFRA_GATE_INSTANCE $inst"}
+  if {[[$i getMaster] getName] ne $master} {error "OT_CORE_INFRA_GATE_MASTER $inst [[$i getMaster] getName] != $master"}
+  set ck [$i findITerm $clk_pin]; set go [$i findITerm $out_pin]
+  if {$ck eq "NULL" || $go eq "NULL"} {error "OT_CORE_INFRA_GATE_PIN $inst"}
+  set target [dict get $::ot_ci_tree_out $parent]
+  if {[$ck getNet] ne $target} {
+    if {[lsearch -exact $::ot_ci_tree_expected $ck] < 0} {error "OT_CORE_INFRA_GATE_NOT_ON_CORE_CLOCK $inst"}
+    set protected [$i isDoNotTouch]
+    if {$protected} {$i setDoNotTouch 0}
+    try {$ck disconnect; $ck connect $target} finally {if {$protected} {$i setDoNotTouch 1}}
+  }
+  lappend ::ot_ci_tree_seen $ck
+  set n [$go getNet]
+  if {$n eq "NULL"} {error "OT_CORE_INFRA_GATE_NO_DOMAIN $inst"}
+  $n setSigType CLOCK
+  ot_ci_place $i $x $y $rect
+  lappend ::ot_ci_fixed $i
+  dict set ::ot_ci_tree_out $inst $n
+}
+# CLOCK-GATE COPY (S81-CORE-LAT-R7): a new ICG of the original's master; every enable pin reads the SAME net as the
+# original's pin (same registered enable), CLK from the plan parent, own GCLK net; the named members move from the
+# original's gated domain (each must be on it now). Exact membership: the domain census equals the member count.
+proc ot_ci_tree_gate_copy {inst master orig parent clk_pin out_pin x y rect pins members} {
+  set o [$::ot_ci_b findInst $orig]
+  if {$o eq "NULL" || ![dict exists $::ot_ci_tree_out $orig]} {error "OT_CORE_INFRA_GATE_COPY_ORIG $inst $orig"}
+  if {[[$o getMaster] getName] ne $master} {error "OT_CORE_INFRA_GATE_COPY_MASTER $inst"}
+  if {[$::ot_ci_b findInst $inst] ne "NULL"} {error "OT_CORE_INFRA_GATE_COPY_EXISTS $inst"}
+  set m [[ord::get_db] findMaster $master]
+  set i [odb::dbInst_create $::ot_ci_b $m $inst]
+  foreach p $pins {
+    set n [[$o findITerm $p] getNet]
+    if {$n eq "NULL"} {error "OT_CORE_INFRA_GATE_COPY_ENABLE_UNCONNECTED $orig/$p"}
+    [$i findITerm $p] connect $n
+  }
+  [$i findITerm $clk_pin] connect [dict get $::ot_ci_tree_out $parent]
+  set og [dict get $::ot_ci_tree_out $orig]
+  set n [ot_ci_net ${inst}_gclk]; $n setSigType CLOCK
+  [$i findITerm $out_pin] connect $n
+  foreach path $members {
+    set cut [string last / $path]
+    set s [$::ot_ci_b findInst [string range $path 0 [expr {$cut-1}]]]
+    if {$cut < 1 || $s eq "NULL"} {error "OT_CORE_INFRA_GATE_COPY_MEMBER $path"}
+    set it [$s findITerm [string range $path [expr {$cut+1}] end]]
+    if {$it eq "NULL" || [$it getNet] ne $og} {error "OT_CORE_INFRA_GATE_COPY_MEMBER_NOT_IN_DOMAIN $path $orig"}
+    set protected [$s isDoNotTouch]
+    if {$protected} {$s setDoNotTouch 0}
+    try {$it disconnect; $it connect $n} finally {if {$protected} {$s setDoNotTouch 1}}
+  }
+  ot_ci_place $i $x $y $rect
+  lappend ::ot_ci_cells $i
+  dict set ::ot_ci_tree_out $inst $n
+  puts "OT_CORE_INFRA_GATE_COPY $inst of=$orig members=[llength $members]"
+}
+proc ot_ci_lec_netlist {path} {
+  write_verilog $path
+  puts "OT_CORE_INFRA_LEC_NETLIST $path (gate copies: kit LEC must run lec.py --netlist on it)"
+}
+proc ot_ci_tree_domain {inst expected} {
+  set n [dict get $::ot_ci_tree_out $inst]
+  set k 0
+  foreach it [$n getITerms] {if {[$it isInputSignal]} {incr k}}
+  # plan census is a pre-synthesis estimate; the gated domain must exist and stay within 10% of it
+  if {$k < 1 || abs($k - $expected) > 0.10 * $expected + 1} {
+    error "OT_CORE_INFRA_GATE_DOMAIN_CENSUS $inst sinks=$k plan=$expected"
+  }
+  lappend ::ot_ci_tree_open $n
+  puts "OT_CORE_INFRA_GATE $inst domain_sinks=$k plan=$expected"
+}
+proc ot_ci_tree_open {node} {
+  lappend ::ot_ci_tree_open [dict get $::ot_ci_tree_out $node]
+}
 proc ot_ci_tree_finish {} {
   # On a repeated hook the original clock root now drives only planned nodes;
   # these are excluded from the source census, while leaves stay checked by name.
@@ -209,6 +285,7 @@ proc ot_ci_finish {} {
   ot_pg_bind_batch_before_protect $::ot_ci_b $::ot_ci_cells
   foreach i [concat $::ot_ci_cells $::ot_ci_fixed] {$i setDoNotTouch 1}
   foreach p $::ot_ci_ports {[[ $::ot_ci_b findBTerm $p] getNet] setDoNotTouch 1}
-  dict for {node net} $::ot_ci_tree_out {$net setDoNotTouch 1}
+  # CTS-open leaf / gated-domain nets stay buildable: the local tree below the planned stage is CTS-built.
+  dict for {node net} $::ot_ci_tree_out {if {[lsearch -exact $::ot_ci_tree_open $net] < 0} {$net setDoNotTouch 1}}
   puts "OT_CORE_INFRA cells=[llength $::ot_ci_cells] ports=[llength $::ot_ci_ports] bay_cells=[llength $::ot_ci_fixed] added_data_cycles=0 added_reset_cycles=0"
 }

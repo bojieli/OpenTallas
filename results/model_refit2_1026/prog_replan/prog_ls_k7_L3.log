@@ -1,0 +1,12 @@
+7 [490, 185, 469, 514, 467, 714, 452] [3, 1, 3, 3, 3, 4, 3] {'T1': 270.0, 'T2': 69.12, 'T3': 31.86} {'mean': 273.06, 'min': 261.15, 'max': 278.44, 'window': 17.29} {'mean': 216.86, 'min': 207.84, 'max': 221.7, 'window': 13.86}
+BEST 7 {'TT': {'mean': 273.06, 'min': 261.15, 'max': 278.44, 'window': 17.29}, 'FF': {'mean': 216.86, 'min': 207.84, 'max': 221.7, 'window': 13.86}}
+CHAIN L1 K 5 unpinned ['Q5', 'Q6']
+CHAIN L2 K 3 unpinned []
+CHAIN L3 K 1 unpinned []
+prog_ls_k7_L3 VERDICT FAIL {'G1_macro_orient': 'PASS', 'G2_island_rows': 'PASS', 'G3_cell_rows': 'PASS', 'G4_detour_sites': 'FAIL', 'G5_sram_structure': 'FAIL', 'P_asbuilt': 'FAIL'}
+ pred {'TT': {'mean': 274.96, 'window': 17.29}, 'FF': {'mean': 211.76, 'window': 13.86}} trunk None None 0 None
+ asbuilt {'verdict': 'FAIL', 'TT': {'mean_raw': 295.04, 'mean': 296.94, 'min': 270.56, 'max': 307.5, 'window': 36.94}, 'FF': {'mean_raw': 229.24, 'mean': 224.14, 'min': 207.84, 'max': 240.48, 'window': 32.64}, 'FF_early': {'mean_raw': 225.06, 'mean': 219.96, 'min': 203.6, 'max': 236.35, 'window': 32.75}, 'FF_late': {'mean_raw': 230.87, 'mean': 225.77, 'min': 210.03, 'max': 241.84, 'window': 31.82}, 'TT_early': {'mean_raw': 286.48, 'mean': 288.38, 'min': 261.75, 'max': 299.13, 'window': 37.38}, 'TT_late': {'mean_raw': 299.18, 'mean': 301.08, 'min': 276.11, 'max': 310.98, 'window': 34.87}, 'band': 'TT mean 250 +- 20 (rise/fall-average model), TT window <= 20, FF EARLY window <= 20'}
+ G5 FAIL nodes_in_pin_column 2 legs_across 0
+  G2_island_rows PASS {'max_disp_um': 0.0} fail 0
+  G3_cell_rows PASS {'n_sites': 84} fail 0
+  G4_detour_sites FAIL {'n_edges': 91, 'repeaters_per_edge': {'L1': 4, 'L2': 2, 'L3': 0}, 'n_straight': 64, 'n_length_not_fixed': 0, 'n_repeaters': 68, 'n_detours': 24, 'max_shift_um': 2.16} fail 1

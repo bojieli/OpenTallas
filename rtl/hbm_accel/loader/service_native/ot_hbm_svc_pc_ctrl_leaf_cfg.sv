@@ -162,7 +162,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg #(
             if(i_v&&!legal)sticky<=1;
             if(accepted)begin
                 for(integer b=0;b<4;b=b+1)if(b<length)
-                    queue[5'(wp+b)]<={i_we,incoming[14:12]^incoming[19:17],(2'(incoming[1:0]+b)^incoming[16:15]),incoming[11:7],i_tag,4'(b),i_wstrb};
+                    queue[5'(wp+b)]<={i_we,incoming[14:12]^incoming[19:17],((incoming[1:0]+b[1:0])^incoming[16:15]),incoming[11:7],i_tag,4'(b),i_wstrb};
                 wp<=wp+5'(length);
                 if(state==IDLE || !same_row)begin active_row<=incoming_row;state<=DESC;end
             end

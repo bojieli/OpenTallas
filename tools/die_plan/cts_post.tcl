@@ -11,3 +11,8 @@ if {[info exists ::env(OT_RESET_PAIR_FIXED)] && $::env(OT_RESET_PAIR_FIXED) eq "
   uplevel #0 [list source [file join $cp_dir reset_pair_place.tcl]]
   ot_reset_pair_verify_hops [ord::get_db_block] 405
 }
+# FLOW 2026-10-26 PG: every clock/pad/leaf cell created up to here gets its supplies before 4_1_cts.odb is written
+# (global_connect skips dont_touch cells: s8b ot_ms_* spine buffers), then a hard check (OT_PG_OPEN fails CTS).
+uplevel #0 [list source [file join $cp_dir pg_connect.tcl]]
+ot_pg_connect_all cts_post
+ot_pg_require_bound cts_post

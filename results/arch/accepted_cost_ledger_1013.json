@@ -1660,6 +1660,148 @@
   },
   {
    "design": "s81",
+   "unit": "S81.IDX_SCAN_RG3_K3 L2/L8/L14 (877 dsdv_idx_rg3 P=3 reader law at option D k=3, 43,691 keys a die; TOK-DS-4 L14 bench 25103 at 131,072 keys)",
+   "group": "S81.IDX_SCAN_RG3_K3",
+   "measured": 10649.0,
+   "price": 5654.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.8834,
+   "e2e_loss_pct": 1.776,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 828866.4,
+     "cycles": 843851.4,
+     "added_cycles": 14985.0,
+     "runs_per_token": 3,
+     "critical_runs": 3,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 14985.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 1.776
+    },
+    "mtp": {
+     "model": "token-path longest path",
+     "base_cycles": 1177516.1,
+     "cycles": 1192501.1,
+     "added_cycles": 14985.0,
+     "runs_per_token": 3,
+     "critical_runs": 3,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 14985.0,
+     "wave_positions": 5,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 1.257
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/s81_l14_idx_1026/check.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-26",
+   "status": "proposed",
+   "note": "TOK-DS-5 2026-10-26: incremental over S81.SCAN_STACKS_P4L (option D k=3, coordinator 0iq), which charges L2/L8/L14 attn.idx.score at 5654 = OLD W11 1-stack reader 3724 at 43,691 keys + 116 adders + 1814 legs/12x512 merge. Root cause of the 2951 price: 2835 = the 10-09 W11 reader at 131,072 keys on 4 HBM stacks a die (s81_scanchk_1018 measured_4stack L2_reader) + 116 adders; p4l/877 has 1 stack a die (SCANCHK), and the bound reader dsdv_idx_rg3 runs P=3 (16/3 = 5.33 keys/cycle/die, 46 % of the stack; P=2 fails closed, HBM-outstanding bound). Measured: TOK-DS-4 rg3 L14 rank-3 k=1 quarter (131,072 keys) hdr_to_last 25103 = law 3N/16+511 (25087) +16 (results/rtl/s81_l14_idx_1026/check.json); same law at the plan shape k=3 (43,691 keys a die, lower_bk SHARD_K L2/L8/L14 = 3) = 8703 (+16 rg3 offset = 8719; dsdv_idx_rg sweep_1019 sw_l2_p3 measured 8702). Node delta 8719 - 3724 = +4995 on L2/L8/L14 (all 3 critical, AR and MTP verify); L20 is in S81.L20_SPLIT, re-index L24-36 NOT in this row (shape UNCHECKED). The k=1 scan TOK-DS-4 lowered (lower_idx, rank quarter on one die) would cost +22268 a layer = 7.459 % AR (over the 5 % unit limit): the compiler must lower the scan at SHARD_K. MTP assumes one shared 6-position read (rg3 has one query store: UNCHECKED). Relief (not built): P=2 via 2x reader outstanding (DQR/RFD 24->48) -> 0.813 %; stack-rate (2 score chains, P~1.41) -> 0.235 %.",
+   "share_basis": "modelled"
+  },
+  {
+   "design": "s81",
+   "unit": "S81.IDX_TOPK_TREE_K3 L2/L8/L14 (static k=3 rank tree as the die RTL runs it: lower_bk job_rank_tree_rd span 14730 + rg3 bench offset 16 + 116 adders, vs DAG score 10649 + topk_local 2176)",
+   "group": "S81.IDX_TOPK_TREE_K3",
+   "measured": 14862.0,
+   "price": 12825.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.1588,
+   "e2e_loss_pct": 0.732,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 828866.4,
+     "cycles": 834977.4,
+     "added_cycles": 6111.0,
+     "runs_per_token": 3,
+     "critical_runs": 3,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 6111.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.732
+    },
+    "mtp": {
+     "model": "token-path longest path",
+     "base_cycles": 1177516.1,
+     "cycles": 1183627.1,
+     "added_cycles": 6111.0,
+     "runs_per_token": 3,
+     "critical_runs": 3,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 6111.0,
+     "wave_positions": 5,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.516
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/s81_l14_idx_k3_1026/pricing_1026.json",
+   "evidence_grade": "interim_log",
+   "date": "2026-10-26",
+   "status": "proposed",
+   "note": "TOK-DS-6 2026-10-26 (COORD tok-ds-5 ruling 2): the k=3 shard scan feeds a static rank tree (lower_bk SHARD_K, S81-L20DIE die-RTL form job_rank_tree_rd): L14 fixture ranks 0-3 root last egress 14728/14730/14728/14730 from the score start (reader law 3N/16+511 at 43,691 keys = 8704, children 1/2 last egress 10157/10154, child 512-sets land on root lanes 2/3 at 10816-12416 and 12417-14017: 1600 cycles each, serial, then the root select tail ~713). The DAG after S81.SCAN_STACKS_P4L + S81.IDX_SCAN_RG3_K3 charges score 10649 (8719 rg3 + 116 adders + 1814 legs / 12x512 merge) + topk_local 2176 = 12825 for the same span; the tree replaces score + topk_local + the 12x512 merge (topk_final stays 4 x 512). Delta +2037 a layer (rd 14730 + 16 rg3 measured offset (bench 8720 vs law 8704) + 116 adders - 12825), charged on the topk_local node of L2/L8/L14, all critical. Grade: compiler plan (static edges from bench-proven rung rates), not a die run. Root cause = the children candidate transfer (2 x 1600 serial on the root ingress), not the scan: k=6 (no-RTL, as L20) gives 14334 (-396 a layer only). MTP: rg3 has one query store; the token-path wavefront already scans each verify position in its stage (no shared read assumed in this basis); composite check with all S81 rows: V.S020 42.8k < V.S029 45.2k (S029 stays the wave stage), hand-computed."
+  },
+  {
+   "design": "s81",
+   "unit": "S81.REIDX_GATHER_RG3 L24/L28/L32/L36 (877 dsdv_idx_rg3 IDX_G at the static worst case 2048 candidate blocks = 16,384 keys on one die, P=4 T0=1500: 5850 measured + 116 adders, vs charged 1656)",
+   "group": "S81.REIDX_GATHER_RG3",
+   "measured": 5966.0,
+   "price": 1656.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 3.6027,
+   "e2e_loss_pct": 2.038,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 828866.4,
+     "cycles": 846106.4,
+     "added_cycles": 17240.0,
+     "runs_per_token": 4,
+     "critical_runs": 4,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 17240.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 2.038
+    },
+    "mtp": {
+     "model": "token-path longest path",
+     "base_cycles": 1177516.1,
+     "cycles": 1194756.1,
+     "added_cycles": 17240.0,
+     "runs_per_token": 4,
+     "critical_runs": 4,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 17240.0,
+     "wave_positions": 5,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 1.443
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/s81_l14_idx_k3_1026/pricing_1026.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-26",
+   "status": "proposed",
+   "note": "TOK-DS-6 2026-10-26 (COORD tok-ds-5 ruling 2): the re-index layers score L20 index keys (kv_of 20) at the 2048 candidate blocks of L20 (candidate_topk_blocks, global top over block maxima: NOT balanced over the TP4 ranks). Charged 1656 = 873 (4-stack W11 kgather real rank-1 worst 757 + 116) + 783 (SCANCHK 1-stack modelled). The static schedule has no data-dependent window, so the compiled IDX_G window must hold the worst case: all 2048 blocks (16,384 keys) in one rank quarter on one die. Measured on the current rg3 (tb_dsdv_idx_rg3 base build of this branch, synthetic +GATHER, Verilator 5.050, intel1): 16,384 keys P=4 T0=1500 PASS hdr_to_last 5850 (T0 900 / 500 FAIL closed, nopen 0; P=3 fails rate since S81-IDX3R); the real golden distribution (dsrom_reindex_candidates_20261004: ranks 485/541/517/505 blocks) worst rank 541 blocks = 4,328 keys P=4 T0=1500 PASS 2744 (T0 900 FAIL) -> +1204 a layer = 0.578 % AR if a data-dependent window were allowed (it is not under the static rule). T0 grid 900/1500 only: the minimum passing T0 is between (UNCHECKED); key placement of the L20 keys for the L24 dies (copy vs remote) UNCHECKED; topk_local tail at 16,384 candidates (230 priced) not in this row (UNCHECKED)."
+  },
+  {
+   "design": "s81",
    "unit": "S81.VSW_LR1 (ot_s81sl_vsw LR=1 default, main 8d6af30b15: +1 output edge a SW/SWR command in every S81 slice; lower_vs SW16 191->192, SWR 195->196; L14 span 28081.9->28082.9)",
    "group": "S81.VSW_LR1 (ot_s81sl_vsw LR=1 default, main 8d6af30b15: +1 output edge a SW/SWR command in every S81 slice; lower_vs SW16 191->192, SWR 195->196; L14 span 28081.9->28082.9)",
    "measured": 40.0,
@@ -3030,6 +3172,124 @@
   },
   {
    "design": "r25gq",
+   "unit": "HBM.D4G_B1_FT_OVERLAY",
+   "group": "HBM.D4G_B1_FT_OVERLAY",
+   "measured": 2.0,
+   "price": 0.0,
+   "unit_of_measure": "cycles a record (max over ops)",
+   "unit_ratio": null,
+   "e2e_loss_pct": 0.499,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "S2 schedule, fixed cycles added to every record of each op (one schedule)",
+     "base_cycles": 576702.4,
+     "cycles": 579595.5,
+     "added_cycles": 2893.1,
+     "terms": [
+      [
+       "ARGMAX.LOCAL",
+       2.0
+      ],
+      [
+       "COLL.ALL_GATHER",
+       2.0
+      ],
+      [
+       "COLL.ARGMAX_MERGE",
+       2.0
+      ],
+      [
+       "COLL.GROUP_REDUCE_MCAST",
+       2.0
+      ],
+      [
+       "COLL.ROW_GATHER",
+       2.0
+      ],
+      [
+       "COLL.TOPK_MERGE",
+       2.0
+      ],
+      [
+       "FUSED.HC_POST",
+       1.0
+      ],
+      [
+       "FUSED.HC_PRE_NORM",
+       1.0
+      ],
+      [
+       "HC.HC_MIX_POST",
+       1.0
+      ],
+      [
+       "SU.VOP",
+       2.0
+      ]
+     ],
+     "program_records": {
+      "ARGMAX.LOCAL": 1,
+      "COLL.ALL_GATHER": 584,
+      "COLL.ARGMAX_MERGE": 1,
+      "COLL.GROUP_REDUCE_MCAST": 40,
+      "COLL.ROW_GATHER": 8,
+      "COLL.TOPK_MERGE": 9,
+      "FUSED.HC_POST": 80,
+      "FUSED.HC_PRE_NORM": 81,
+      "HC.HC_MIX_POST": 80,
+      "SU.VOP": 1356
+     },
+     "e2e_loss_pct": 0.499
+    },
+    "qwen_ar": {
+     "model": "S2 schedule, fixed cycles added to every record of each op (one schedule)",
+     "base_cycles": 1269120.1,
+     "cycles": 1270278.1,
+     "added_cycles": 1158.0,
+     "terms": [
+      [
+       "ARGMAX.LOCAL",
+       2.0
+      ],
+      [
+       "COLL.ALL_REDUCE_SUM",
+       2.0
+      ],
+      [
+       "COLL.ARGMAX_MERGE",
+       2.0
+      ],
+      [
+       "FUSED.ROW_NORM",
+       2.0
+      ],
+      [
+       "SU.VOP",
+       2.0
+      ]
+     ],
+     "program_records": {
+      "ARGMAX.LOCAL": 1,
+      "COLL.ALL_REDUCE_SUM": 2,
+      "COLL.ARGMAX_MERGE": 1,
+      "FUSED.ROW_NORM": 5,
+      "SU.VOP": 12
+     },
+     "e2e_loss_pct": 0.091
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/token_pass/hbm_b1_lane_map_1026/price_request.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-26",
+   "status": "accepted",
+   "note": "D-HBM-B1 FT-overlay lane stations (native_cut_bands_r3 0552ecf2 -> b1n6 60d58330; b1e 43fb3b14 keeps the same 230 live-lane latencies): fixed cycles per record SU.VOP/ARGMAX.LOCAL/COLL.*/FUSED.ROW_NORM +2 (L36 hub->su, L101/L126 ctl), HC.HC_MIX_POST/FUSED.HC_* +1 (L15 bank chain); L93/L119/L146(+m) dead (removed in b1e). Price = plan lane latency (Plan.lane_latency), not a bench; MTP not priced (no r25gq MTP basis).",
+   "accepted_date": "2026-10-26",
+   "acceptance_note": "COORD 2026-10-26 11:33 PDT accepted under the accepted-cost rule pending NUMBER-CHECK; NUMBER-CHECK confirmed 11:48 PDT (COORD-REVIEW-QUEUE); filed by TOK-HBM"
+  },
+  {
+   "design": "r25gq",
    "unit": "HC.HC_MIX_POST",
    "group": "HC.HC_MIX_POST",
    "measured": 692.3,
@@ -3516,11 +3776,11 @@
   },
   "s81": {
    "accepted_pct": 3.502,
-   "proposed_pct": 8.997,
-   "accepted_plus_proposed_pct": 12.499,
+   "proposed_pct": 13.543,
+   "accepted_plus_proposed_pct": 17.045,
    "limit_pct": 15.0,
    "accepted_rows": 4,
-   "proposed_rows": 12,
+   "proposed_rows": 15,
    "headroom_pct": 11.498,
    "owner_exception_rows": 1,
    "over_limit_by_owner_exception": false,
@@ -3528,13 +3788,13 @@
    "superseded_pct_not_counted": 24.435
   },
   "r25gq": {
-   "accepted_pct": 10.915,
+   "accepted_pct": 11.414,
    "proposed_pct": 190.176,
-   "accepted_plus_proposed_pct": 201.091,
+   "accepted_plus_proposed_pct": 201.59,
    "limit_pct": 15.0,
-   "accepted_rows": 4,
+   "accepted_rows": 5,
    "proposed_rows": 28,
-   "headroom_pct": 4.085,
+   "headroom_pct": 3.586,
    "owner_exception_rows": 2,
    "over_limit_by_owner_exception": false,
    "superseded_rows": 4,

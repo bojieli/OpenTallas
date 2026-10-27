@@ -1,0 +1,23 @@
+	Command being timed: "verilator --cc --exe --build -O1 -j 48 --build-jobs 48 --output-split 20000 --output-split-cfuncs 10000 --output-groups 192 -CFLAGS -O0 -MAKEFLAGS OPT_FAST=-O0 OPT_SLOW=-O0 OPT_GLOBAL=-O0 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT --x-assign 0 --x-initial 0 +define+OT_STATION_REGIONAL +define+OT_S5_HARD +define+OT_S6_SIM +define+OT_S8_SIM +define+OT_QFD_UP4_CK_ENTRIES +define+OT_S8_CROM_ALIGN --top-module tb_qfd_dv2 --prefix Vtb -GMUT=0 -GN=12 -GMU_NU=4 -GFACE=3 -Mdir SCRATCH/tok-qk-qclm/die/build/obj_n12 SCRATCH/tok-qk-qclm/tree/rtl/test/qwen_dv/main2.cpp -f SCRATCH/tok-qk-qclm/eq/sources_main.f"
+	User time (seconds): 7145.85
+	System time (seconds): 1618.34
+	Percent of CPU this job got: 264%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 55:10.88
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 117032580
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 13
+	Minor (reclaiming a frame) page faults: 578897240
+	Voluntary context switches: 18175
+	Involuntary context switches: 20335
+	Swaps: 0
+	File system inputs: 96
+	File system outputs: 43732128
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

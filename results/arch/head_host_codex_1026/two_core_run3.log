@@ -1,0 +1,4 @@
+HEAD_HOST_AGE peer_frame_to_HBC_input=29 measured_edges TEST_LOAD_arrival=501
+[5580000] %Fatal: tb_s81hd_host_ctl_boot.sv:50: Assertion failed in tb_s81hd_host_ctl_boot: ordinary HFWD full512 payload mismatch
+%Error: rtl/dsrom_sys/s81_head/test/tb_s81hd_host_ctl_boot.sv:50: Verilog $stop
+Aborting...

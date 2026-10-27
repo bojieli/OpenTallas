@@ -1,0 +1,27 @@
+{
+ "lane": "MODEL-REFIT-2 (Claude) 2026-10-26",
+ "base": "claude/qc-su-kits3-1026@3585b6bf25",
+ "numbers": "UNCHECKED (lane STA + plan model); re-measured sink TSVs for prog r3 / btab r4 reproduce the QC-SU-KITS-3 TSVs byte-for-byte (sorted diff empty)",
+ "data": "per-leaf (64 x 3 builds) mean CK arrival, meas_ck.tcl on each 5_1_grt.odb (GRT RC rc_cal 0.8,0.9, propagated clk) + meas_stage.tcl stage dump (every ot_ms_* A/Y arrival+slew, report_net wire/pin cap); prog r1 re-measured with meas_ck (was native records)",
+ "findings_physical": {
+  "T1_star_vs_steiner": "uf_asbuilt loads a fo>1 driver with the SUM of branch wires; GRT builds one Steiner tree: root fo6 480 um modelled vs 27.2 fF / 0.154 = ~176 um measured (prog), 357 vs ~139 um (btab). Iterated 1-Steiner (Hanan) reproduces measured multi-pin net wire cap to 1.05x mean (0.97-1.13; one 1.65 outlier prog r1)",
+  "T2_macro_leaf_load": "mscts_h hangs a BUFx24 macro-leaf stage + 9.35 fF SRAM clk pin on the B net; not in uf_asbuilt",
+  "T3_root_slew": "ot_ms_root/A slew 0.36 ps (SDC), uf_asbuilt assumes 20",
+  "T4_leaf_net": "leaf net wire cap = 1.2955 x c(M2/M3) x MST (GRT pin-access/gcell overhead); register CLK pin cap 0.4132 TT / 0.4634 FF per sink (uf_asbuilt 0.4747/0.5220)",
+  "min_vs_max_analysis": "OpenSTA min analysis on the same GRT parasitics: wire delay 0.86-0.89 x max, cell 0.95-0.96 x max -> FF early basis needs its own wire terms (old model used one + offset)"
+ },
+ "model": "py/uf_phys.py (T1-T4 + Ceff shielding ALPHA + wire delay BETA x Elmore + wire slew sqrt(s^2+(GSLEW Elmore)^2)); frozen gate predictor py/uf_phys_predict.py; NO constant offset",
+ "fit": {
+  "max_analysis_TT_rise": {"params": {"alpha": 0.2, "beta": 0.5, "gslew": 5.0, "kleaf": 1.2955}, "in_sample_TT": {"prog_r1": [-2.34, 2.21, 5.97], "prog_r3": [-2.43, 2.01, 5.86], "btab_r4": [2.52, 2.31, 5.97]},
+                           "LOO_TT_mean_sd_maxabs": {"prog_r1": [-2.27, 2.2, 5.74], "prog_r3": [-2.53, 2.04, 6.0], "btab_r4": [3.67, 2.27, 7.09]}, "file": "fit_max_grid.json"},
+  "min_analysis_FF_early": {"params": {"alpha": 0.2, "beta": 0.4, "gslew": 4.0, "kleaf": 1.2955},
+                           "LOO_FF_mean_sd_maxabs": {"prog_r1": [1.38, 1.48, 4.75], "prog_r3": [1.29, 1.66, 4.67], "btab_r4": [1.64, 1.67, 4.21]}, "file": "fit_ext_grid.json"},
+  "note": "per-leaf, meas - pred, ps. Old uf_asbuilt (+1.9/-5.1 offsets): TT -16.6/-15.2/-15.4 mean, max|err| 27.7 (r1). Target <=5 TT max|err| NOT fully met: LOO TT max 5.7-7.1; residual build split prog -2.4 / btab +2.5 (more repeater stages in btab). beta/gslew sit at grid edges and trade against each other -> semi-physical (beta=ln2, gslew=ln9 physical defaults give LOO TT max 5.8-8.5, fit_ln2.json)"
+ },
+ "gate_level_refit_vs_meas": "evalgate.txt: TT rise mean err +2.1/+2.3/-2.8, window over-predicted +4.8/+2.8/+4.8 (conservative); FF early mean -1.5/-1.5/-2.0, window +1.7/+1.4/+2.2",
+ "prog_replan": {
+  "cmd": "tools/sweep_prog.sh (su_kit_gate r4 --chain --trunk 250 [--straight L3 | L1,L3], su_tree_uf_ls, k 4-7) on epyc1:/srv/opentallas-scratch2/claude/model-refit2-1026/plan/sweep",
+  "result": "ALL 10 variants FAIL P (old model) and refit: best k6 --straight L1,L3 TT 254.7 w44.2 / FF early 194.0 w34.5; k6 L3 261.2 w51.7. Chain cannot pin L1 for 2-3 islands at every k (prog_ls_k6: Q1 W island 108 um, Q5 E island 127 um vs T1 244 um) -> short unpinned legs 35 ps early. Built r3 plan (refit 241.6 w25.9, meas 239.3 w23.1) is still the best prog plan. NOT BUILT (12.9).",
+  "render_viewed": "prog_replan/prog_ls_k6_L3.png: entry at (177,135) in the y~135 SRAM gap; W/SW islands reached by ~180-240 um L1 runs west through the gap; E islands next to the SRAM pin column"
+ }
+}

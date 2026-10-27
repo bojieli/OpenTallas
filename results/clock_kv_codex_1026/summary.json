@@ -1,0 +1,26 @@
+{
+  "status": "FIX_MEASURED",
+  "scope": "clock_routed.routed_tcl standard (non pin_stack) fixed dbWire encoder",
+  "failure": "Opposite drops at one trunk coordinate emitted coincident VIA89 independently. OpenRCX left3036 inputs on768 nets outside the driver resistor component.",
+  "fix": "One shared VIA89, capture its drop-layer junction, branch both drops from that junction. All4406clocknets connected after re-extraction.",
+  "before": "rcx_open_before.json",
+  "after": "rcx_open_after.json",
+  "tests": "14 test_clock_routed* tests PASS",
+  "runs": {
+    "before": "epyc1:/srv/opentallas-scratch2/claude/clock-kv-r9-1026/rcx",
+    "after": "epyc1:/srv/opentallas-scratch2/claude/codex-kv-clock-2001/rcx_repair",
+    "extraction_unit": "oth-ubuntu-1465001-1793071191",
+    "sta_unit": "oth-ubuntu-1578716-1793071367"
+  },
+  "driver_input_ps": {
+    "native_TT_spread": 24.678,
+    "native_FF_spread": 20.713,
+    "old_open_RCX_TT_spread": 206.386,
+    "old_open_RCX_FF_spread": 180.623,
+    "connected_RCX_TT_spread": 174.364,
+    "connected_RCX_FF_spread": 152.625
+  },
+  "remaining": "RCX capacitance changes tree imbalance. Recompute mesh MC and die STA on connected RCX. Native R8 per-pair uncertainty cannot be reused. Type island identity and band internal trees still open.",
+  "checked": "UNCHECKED numbers; no SIGNED/FROZEN claim",
+  "added_data_cycles": 0
+}

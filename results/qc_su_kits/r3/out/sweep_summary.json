@@ -1,0 +1,329 @@
+{
+ "scope": "r3 sweep k 4-6 x {pin all detours, L3 straight, L2+L3 straight}; pre early/late + pre no-trunk-option code (P verdict there applied a trunk unconditionally); UNCHECKED",
+ "runs": {
+  "btab_m0_k4_L2L3": {
+   "verdicts": {
+    "G1_macro_orient": "PASS",
+    "G2_island_rows": "PASS",
+    "G3_cell_rows": "PASS",
+    "G4_detour_sites": "FAIL",
+    "G5_sram_structure": "FAIL",
+    "P_asbuilt": "FAIL"
+   },
+   "asbuilt_TT": {
+    "mean": 209.89,
+    "window": 36.87
+   },
+   "asbuilt_FF_avg": {
+    "mean": 157.37,
+    "window": 35.87
+   }
+  },
+  "btab_m0_k4_L3": {
+   "verdicts": {
+    "G1_macro_orient": "PASS",
+    "G2_island_rows": "PASS",
+    "G3_cell_rows": "PASS",
+    "G4_detour_sites": "FAIL",
+    "G5_sram_structure": "FAIL",
+    "P_asbuilt": "FAIL"
+   },
+   "asbuilt_TT": {
+    "mean": 231.95,
+    "window": 33.65
+   },
+   "asbuilt_FF_avg": {
+    "mean": 175.33,
+    "window": 34.48
+   }
+  },
+  "btab_m0_k4_pin": {
+   "verdicts": {
+    "G1_macro_orient": "PASS",
+    "G2_island_rows": "PASS",
+    "G3_cell_rows": "PASS",
+    "G4_detour_sites": "FAIL",
+    "G5_sram_structure": "FAIL",
+    "P_asbuilt": "FAIL"
+   },
+   "asbuilt_TT": {
+    "mean": 258.05,
+    "window": 35.81
+   },
+   "asbuilt_FF_avg": {
+    "mean": 195.55,
+    "window": 36.12
+   }
+  },
+  "btab_m0_k5_L2L3": {
+   "verdicts": {
+    "G1_macro_orient": "PASS",
+    "G2_island_rows": "PASS",
+    "G3_cell_rows": "PASS",
+    "G4_detour_sites": "FAIL",
+    "G5_sram_structure": "FAIL",
+    "P_asbuilt": "FAIL"
+   },
+   "asbuilt_TT": {
+    "mean": 195.32,
+    "window": 46.17
+   },
+   "asbuilt_FF_avg": {
+    "mean": 146.48,
+    "window": 43.25
+   }
+  },
+  "btab_m0_k5_L3": {
+   "verdicts": {
+    "G1_macro_orient": "PASS",
+    "G2_island_rows": "PASS",
+    "G3_cell_rows": "PASS",
+    "G4_detour_sites": "FAIL",
+    "G5_sram_structure": "FAIL",
+    "P_asbuilt": "FAIL"
+   },
+   "asbuilt_TT": {
+    "mean": 219.61,
+    "window": 42.55
+   },
+   "asbuilt_FF_avg": {
+    "mean": 165.34,
+    "window": 39.76
+   }
+  },
+  "btab_m0_k5_pin": {
+   "verdicts": {
+    "G1_macro_orient": "PASS",
+    "G2_island_rows": "PASS",
+    "G3_cell_rows": "PASS",
+    "G4_detour_sites": "FAIL",
+    "G5_sram_structure": "FAIL",
+    "P_asbuilt": "FAIL"
+   },
+   "asbuilt_TT": {
+    "mean": 240.48,
+    "window": 39.16
+   },
+   "asbuilt_FF_avg": {
+    "mean": 181.05,
+    "window": 37.03
+   }
+  },
+  "btab_m0_k6_L2L3": {
+   "verdicts": {
+    "G1_macro_orient": "PASS",
+    "G2_island_rows": "FAIL",
+    "G3_cell_rows": "PASS",
+    "G4_detour_sites": "FAIL",
+    "G5_sram_structure": "FAIL",
+    "P_asbuilt": "FAIL"
+   },
+   "asbuilt_TT": {
+    "mean": 198.73,
+    "window": 37.88
+   },
+   "asbuilt_FF_avg": {
+    "mean": 149.62,
+    "window": 35.29
+   }
+  },
+  "btab_m0_k6_L3": {
+   "verdicts": {
+    "G1_macro_orient": "PASS",
+    "G2_island_rows": "FAIL",
+    "G3_cell_rows": "PASS",
+    "G4_detour_sites": "FAIL",
+    "G5_sram_structure": "FAIL",
+    "P_asbuilt": "FAIL"
+   },
+   "asbuilt_TT": {
+    "mean": 219.52,
+    "window": 32.63
+   },
+   "asbuilt_FF_avg": {
+    "mean": 165.57,
+    "window": 32.48
+   }
+  },
+  "btab_m0_k6_pin": {
+   "verdicts": {
+    "G1_macro_orient": "PASS",
+    "G2_island_rows": "FAIL",
+    "G3_cell_rows": "PASS",
+    "G4_detour_sites": "FAIL",
+    "G5_sram_structure": "FAIL",
+    "P_asbuilt": "FAIL"
+   },
+   "asbuilt_TT": {
+    "mean": 240.23,
+    "window": 33.9
+   },
+   "asbuilt_FF_avg": {
+    "mean": 181.16,
+    "window": 33.27
+   }
+  },
+  "prog_m0_k4_L2L3": {
+   "verdicts": {
+    "G1_macro_orient": "PASS",
+    "G2_island_rows": "PASS",
+    "G3_cell_rows": "PASS",
+    "G4_detour_sites": "FAIL",
+    "G5_sram_structure": "PASS",
+    "P_asbuilt": "FAIL"
+   },
+   "asbuilt_TT": {
+    "mean": 244.91,
+    "window": 45.97
+   },
+   "asbuilt_FF_avg": {
+    "mean": 184.58,
+    "window": 40.77
+   }
+  },
+  "prog_m0_k4_L3": {
+   "verdicts": {
+    "G1_macro_orient": "PASS",
+    "G2_island_rows": "PASS",
+    "G3_cell_rows": "PASS",
+    "G4_detour_sites": "PASS",
+    "G5_sram_structure": "PASS",
+    "P_asbuilt": "FAIL"
+   },
+   "asbuilt_TT": {
+    "mean": 257.31,
+    "window": 54.93
+   },
+   "asbuilt_FF_avg": {
+    "mean": 194.76,
+    "window": 48.44
+   }
+  },
+  "prog_m0_k4_pin": {
+   "verdicts": {
+    "G1_macro_orient": "PASS",
+    "G2_island_rows": "PASS",
+    "G3_cell_rows": "PASS",
+    "G4_detour_sites": "FAIL",
+    "G5_sram_structure": "FAIL",
+    "P_asbuilt": "FAIL"
+   },
+   "asbuilt_TT": {
+    "mean": 280.25,
+    "window": 48.29
+   },
+   "asbuilt_FF_avg": {
+    "mean": 212.3,
+    "window": 43.0
+   }
+  },
+  "prog_m0_k5_L2L3": {
+   "verdicts": {
+    "G1_macro_orient": "PASS",
+    "G2_island_rows": "PASS",
+    "G3_cell_rows": "PASS",
+    "G4_detour_sites": "PASS",
+    "G5_sram_structure": "PASS",
+    "P_asbuilt": "FAIL"
+   },
+   "asbuilt_TT": {
+    "mean": 238.65,
+    "window": 28.71
+   },
+   "asbuilt_FF_avg": {
+    "mean": 183.88,
+    "window": 26.8
+   }
+  },
+  "prog_m0_k5_L3": {
+   "verdicts": {
+    "G1_macro_orient": "PASS",
+    "G2_island_rows": "PASS",
+    "G3_cell_rows": "PASS",
+    "G4_detour_sites": "PASS",
+    "G5_sram_structure": "PASS",
+    "P_asbuilt": "FAIL"
+   },
+   "asbuilt_TT": {
+    "mean": 259.53,
+    "window": 20.63
+   },
+   "asbuilt_FF_avg": {
+    "mean": 199.91,
+    "window": 17.58
+   }
+  },
+  "prog_m0_k5_pin": {
+   "verdicts": {
+    "G1_macro_orient": "PASS",
+    "G2_island_rows": "PASS",
+    "G3_cell_rows": "PASS",
+    "G4_detour_sites": "FAIL",
+    "G5_sram_structure": "FAIL",
+    "P_asbuilt": "FAIL"
+   },
+   "asbuilt_TT": {
+    "mean": 279.15,
+    "window": 18.14
+   },
+   "asbuilt_FF_avg": {
+    "mean": 214.63,
+    "window": 16.27
+   }
+  },
+  "prog_m0_k6_L2L3": {
+   "verdicts": {
+    "G1_macro_orient": "PASS",
+    "G2_island_rows": "PASS",
+    "G3_cell_rows": "PASS",
+    "G4_detour_sites": "PASS",
+    "G5_sram_structure": "PASS",
+    "P_asbuilt": "FAIL"
+   },
+   "asbuilt_TT": {
+    "mean": 234.69,
+    "window": 22.18
+   },
+   "asbuilt_FF_avg": {
+    "mean": 179.53,
+    "window": 19.51
+   }
+  },
+  "prog_m0_k6_L3": {
+   "verdicts": {
+    "G1_macro_orient": "PASS",
+    "G2_island_rows": "PASS",
+    "G3_cell_rows": "PASS",
+    "G4_detour_sites": "PASS",
+    "G5_sram_structure": "PASS",
+    "P_asbuilt": "FAIL"
+   },
+   "asbuilt_TT": {
+    "mean": 254.45,
+    "window": 15.91
+   },
+   "asbuilt_FF_avg": {
+    "mean": 194.58,
+    "window": 15.25
+   }
+  },
+  "prog_m0_k6_pin": {
+   "verdicts": {
+    "G1_macro_orient": "PASS",
+    "G2_island_rows": "PASS",
+    "G3_cell_rows": "PASS",
+    "G4_detour_sites": "PASS",
+    "G5_sram_structure": "PASS",
+    "P_asbuilt": "FAIL"
+   },
+   "asbuilt_TT": {
+    "mean": 274.3,
+    "window": 13.5
+   },
+   "asbuilt_FF_avg": {
+    "mean": 209.52,
+    "window": 13.14
+   }
+  }
+ }
+}
