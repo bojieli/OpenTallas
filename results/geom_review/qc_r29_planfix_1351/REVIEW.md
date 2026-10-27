@@ -23,3 +23,5 @@ Stale A0 PROTO findings need final-event scan, not new changes to existingbanks.
 Initial fullG0C had3missing-PHY-lib errors and111warnings from sparsecontext;
 FAILreport preserved. Exact18c views nowmaterialized; freshfullcheckrunning.
 No other G0Cerrors oninitialpass. No freeze/release claim.
+
+Fresh corrected-context fullG0C completed unit4088418 EXIT0:0errors/111warnings, same warning count asR28base. Exact18c twoPHYlibs resolve all3sparse-context errors. Bank audit and personallyviewed geometry remain unchanged. This qualifies FTbatchcontent, not finalclock/PG/masterplanfreeze.
