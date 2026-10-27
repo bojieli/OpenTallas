@@ -31,14 +31,19 @@ def _scalar(t, name, direction, xy, kind, *, shift=0):
                 window_um=[round(at-.216,6),round(at+.216,6)], layers=[layer], order="lsb_low")
 
 
+# QC default observer (unchanged): the sys-face controller's two real inputs.
+QC_OBSERVER=dict(module="qfd_sys_face_lctx3_wrapped",instance_suffix="u_sys_face",
+                 fault_port="obs_fault",ready_port="seq_cfg_image_ready")
+
+
 def _bus_geom(t, bus):
     if bus in t.get("_cland_geom",{}):return t["_cland_geom"][bus]
     for b in t.get("buses",[]):
-        if b["name"] == bus:
+        if b["name"] == bus and "window_um" in b and "face" in b:
             return b
     for s in t.get("ft_slots",[]):
         for suffix,face,window in (("_i","in_face","in_window_um"),("_o","out_face","out_window_um")):
-            if s["name"]+suffix == bus:
+            if s["name"]+suffix == bus and window in s:
                 return dict(name=bus,face=s[face],window_um=s[window],width=s["width"])
     raise ValueError(f"landing bus geometry missing: {bus}")
 
@@ -79,6 +84,86 @@ def _fill_ft_windows(raw,path):
         # order at the seam, changing448 existing valid port contracts.
         raw["partition_types"][tn].setdefault("_cland_geom",{})[name+suffix]=dict(
             name=name+suffix,face=face,window_um=vals[0],width=slot["width"])
+
+
+def _fill_port_windows(raw,path,table):
+    """Type-local face/window for landing buses whose geometry lives on the PORT.
+
+    Plans such as KV declare bus geometry only on the die-frame port (face =
+    source face, destination uses the opposite face). Placed replicas may be
+    mirrored/rotated (MX/MY/R180), so each endpoint is mapped back to the TYPE
+    frame from the port's die window and the replica's orient. One window set
+    per type: every replica carrying the bus must map to the same type-local
+    window, else the compose fails (no per-instance pins on a shared type).
+    Buses that already declare type geometry are left untouched.
+    """
+    P=S.Plan(raw,path);need=set();ports={p["id"]:p for p in raw["ports"]}
+    for r in table["ports"]:
+        pr=ports[r["port"]]
+        for side in ("src","dst"):
+            pn=pr[side]["part"]
+            if pn in P.parts:need.add((P.parts[pn]["type"],pr[side]["bus"]))
+    inferred=defaultdict(list)
+    for pr in raw["ports"]:
+        if not all(k in pr for k in ("face","window_um")):continue
+        for side in ("src","dst"):
+            pn=pr[side]["part"]
+            if pn not in P.parts:continue
+            tn=P.parts[pn]["type"];bus=pr[side]["bus"]
+            if (tn,bus) not in need:continue
+            t=raw["partition_types"][tn]
+            if bus in t.get("_cland_geom",{}) or _has_type_geom(t,bus):continue
+            df=pr["face"] if side=="src" or pr["src"]["part"]==S.DIE_PART else S.OPP[pr["face"]]
+            tf=P.type_face(pn,df);x0,y0,x1,y1=P.rect(pn);lo,hi=pr["window_um"]
+            pts=([(x0 if df=="W" else x1,v) for v in (lo,hi)] if df in "EW" else
+                 [(v,y0 if df=="S" else y1) for v in (lo,hi)])
+            axis=1 if tf in "EW" else 0
+            vals=sorted(round(P.to_type(pn,xy)[axis],6) for xy in pts)
+            inferred[(tn,bus)].append((tf,vals,pn))
+    for (tn,bus),rows in inferred.items():
+        tf,vals,_=rows[0]
+        bad=[(f,v,pn) for f,v,pn in rows[1:] if f!=tf or max(abs(a-b) for a,b in zip(vals,v))>1e-4]
+        if bad:raise ValueError(f"nonuniform type-local landing window {tn}.{bus}: {rows[0]} vs {bad[:3]}")
+        width=next((b.get("width") for b in raw["partition_types"][tn].get("buses",[]) if b["name"]==bus),None)
+        raw["partition_types"][tn].setdefault("_cland_geom",{})[bus]=dict(
+            name=bus,face=tf,window_um=vals,width=width,source="port window -> type frame (orient-aware)",
+            replicas=len(rows))
+
+
+def _has_type_geom(t,bus):
+    try:_bus_geom(t,bus);return True
+    except ValueError:return False
+
+
+def _hard(raw,tn):
+    return bool(raw["partition_types"][tn].get("hard"))
+
+
+def _reset_entry_xy(W,raw,tn):
+    """Reset entry of a type: generated wavefront entry, or a hard partition's delivered-reset tap."""
+    if tn in W["types"] and "in_um" in W["types"][tn]:return W["types"][tn]["in_um"]
+    t=raw["partition_types"][tn]
+    return list(t.get("reset",{}).get("tap_um",[t["outline_um"][0]/2,t["outline_um"][1]/2]))
+
+
+def _hard_tree(entry,point,reach=405-2.16):
+    """Registered monitor chain inside a hard partition's SOFT wrapper.
+
+    The hard IP has no generated reset tree. Its landing ring sits at the
+    received window (digital edge); ready/fault return to the delivered-reset
+    entry (the reset-neighbour edge) through registered collector stages <=
+    reach apart along the L path. Boot-time only: zero data cycles.
+    """
+    (ex,ey),(px,py)=entry,point;total=abs(px-ex)+abs(py-ey)
+    n=max(0,math.ceil(total/reach)-1);nodes=[]
+    for i in range(1,n+1):
+        d=total*i/(n+1);dx=min(d,abs(px-ex));dy=d-dx
+        nodes.append([round(ex+math.copysign(dx,px-ex),3),round(ey+math.copysign(dy,py-ey),3)])
+    relays=[];prev="rst_root_n"
+    for i,xy in enumerate(nodes):
+        q=f"cland_h{i}";relays.append(dict(q=q,d=prev,xy=xy,name="u_cland_collect_"+q));prev=q
+    return dict(hard=True,root=list(entry),relays=relays,n_clock_taps=0,leaf_node=prev,
+                max_hop_um=round(total/(n+1),3))
 
 
 def _storage_band(t,bus,width,used,*,has_epoch=True):
@@ -155,14 +240,27 @@ def _collector_graph(P,W,root):
     return parent
 
 
-def _monitor_endpoints(P,W,src,dst):
-    """Local terminal nodes on an unchanged physical reset-neighbor edge."""
+def _monitor_endpoints(P,W,src,dst,hard_xy=None):
+    """Local terminal nodes on an unchanged physical reset-neighbor edge.
+
+    A hard partition (no generated reset tree, e.g. a hard PHY) is only ever a
+    reset LEAF: its monitor root is the one registered collector in its soft
+    wrapper (digital edge), at hard_xy(part); it can never be a monitor parent.
+    """
     if W["parts"][src]["parent"]==dst:
         k=int(W["parts"][src]["source"].rsplit("_",1)[1])
-        st,dt=RT.for_type(P,P.parts[src]["type"]),RT.for_type(P,P.parts[dst]["type"])
-        return dict(src_node="rst_root_n",src_xy=W["types"][P.parts[src]["type"]]["in_um"],
+        if P.types[P.parts[dst]["type"]].get("hard"):
+            raise ValueError(f"monitor edge {src}->{dst}: a hard partition cannot collect monitor children")
+        dt=RT.for_type(P,P.parts[dst]["type"])
+        if P.types[P.parts[src]["type"]].get("hard"):
+            if hard_xy is None:raise ValueError(f"monitor edge {src}->{dst}: hard source needs its wrapper collector site")
+            sxy=hard_xy(src)
+        else:sxy=W["types"][P.parts[src]["type"]]["in_um"]
+        return dict(src_node="rst_root_n",src_xy=sxy,
                     dst_node=f"rst_n_t{dt['n_clock_taps']+k}",dst_xy=W["types"][P.parts[dst]["type"]]["outs"][k][1:])
     if W["parts"][dst]["parent"]==src:
+        if P.types[P.parts[src]["type"]].get("hard"):
+            raise ValueError(f"monitor edge {src}->{dst}: a hard partition cannot collect monitor children")
         k=int(W["parts"][dst]["source"].rsplit("_",1)[1])
         st=RT.for_type(P,P.parts[src]["type"])
         return dict(src_node=f"rst_n_t{st['n_clock_taps']+k}",src_xy=W["types"][P.parts[src]["type"]]["outs"][k][1:],
@@ -170,9 +268,15 @@ def _monitor_endpoints(P,W,src,dst):
     raise ValueError(f"monitor edge {src}->{dst} is not an existing reset-neighbor edge")
 
 
-def compose(plan,table,plan_path=None,observer_part="glue"):
+def compose(plan,table,plan_path=None,observer_part="glue",observer=None):
+    """observer: {module, instance_suffix, fault_port, ready_port} of the real
+    one-bit fault/ready inputs gated in observer_part (default QC_OBSERVER)."""
+    observer=dict(QC_OBSERVER if observer is None else observer)
+    missing=[k for k in ("module","instance_suffix","fault_port","ready_port") if not observer.get(k)]
+    if missing:raise ValueError(f"clock landing observer spec missing {missing}")
     original=copy.deepcopy(plan);raw=copy.deepcopy(plan)
     _fill_ft_windows(raw,plan_path)
+    _fill_port_windows(raw,plan_path,table)
     base_type={p["name"]:p["type"] for p in raw["partitions"]}
     req=CL.requirements(raw,table)
     pports={p["id"]:p for p in raw["ports"]}
@@ -191,7 +295,12 @@ def compose(plan,table,plan_path=None,observer_part="glue"):
     # Parent/child graph can refine after OUT-site cohorts shrink, so repeat the
     # exact active-child hardware partition until no further type splits occur.
     P=S.Plan(raw,plan_path);W=RT.wf_plan(P)
-    raw.setdefault("reset",{}).setdefault("in_sites",{}).update({tn:t["in_um"] for tn,t in W["types"].items()})
+    raw.setdefault("reset",{}).setdefault("in_sites",{}).update({tn:t["in_um"] for tn,t in W["types"].items() if "in_um" in t})
+    def hard_xy(pn):
+        # Hard partition: the ring lands at the digital edge (soft wrapper,
+        # received window); the monitor leaves at the delivered-reset entry.
+        if not ins[pn]:raise ValueError(f"hard partition {pn} is active without a local landing")
+        return _reset_entry_xy(W,raw,P.parts[pn]["type"])
     for _ in range(len(raw["partitions"])+1):
         P=S.Plan(raw,plan_path);W=RT.wf_plan(P)
         monitor_parent=_collector_graph(P,W,observer_part)
@@ -204,12 +313,12 @@ def compose(plan,table,plan_path=None,observer_part="glue"):
         for pn in sorted(active):
             par=monitor_parent[pn]
             if par is not None:
-                end=_monitor_endpoints(P,W,pn,par)
+                end=_monitor_endpoints(P,W,pn,par,hard_xy)
                 children[par].append(dict(part=pn,node=end["dst_node"],xy_um=end["dst_xy"],seam=region[pn]!=region[par]))
         signatures={}
         for pn,p in P.parts.items():
             ch=sorted(children[pn],key=lambda c:(c["xy_um"],c["seam"],c["part"]))
-            up=_monitor_endpoints(P,W,pn,monitor_parent[pn]) if pn in active and monitor_parent[pn] is not None else None
+            up=_monitor_endpoints(P,W,pn,monitor_parent[pn],hard_xy) if pn in active and monitor_parent[pn] is not None else None
             signatures[pn]=dict(inputs=sorted(ins[pn]),outputs=sorted(outs[pn]),active=pn in active,observer=pn==observer_part,
                 up_xy=up["src_xy"] if up else None,
                 up_seam=pn in active and monitor_parent[pn] is not None and region[pn]!=region[monitor_parent[pn]],
@@ -222,10 +331,10 @@ def compose(plan,table,plan_path=None,observer_part="glue"):
             split=True;old=raw["partition_types"].pop(tn)
             for sig,names in cohorts.items():
                 base=base_type[names[0]];name=base+"__cl"+hashlib.sha256((tn+sig).encode()).hexdigest()[:8]
-                clone=copy.deepcopy(old);clone["module"]=name
+                clone=copy.deepcopy(old);clone["module"]=name;clone["landing_base_type"]=base
                 clone["note"]=clone.get("note","")+f";clock landing cohort from{base} (exact local monitor children)"
                 raw["partition_types"][name]=clone
-                raw["reset"]["in_sites"][name]=W["types"][tn]["in_um"]
+                if "in_um" in W["types"].get(tn,{}):raw["reset"]["in_sites"][name]=W["types"][tn]["in_um"]
                 for p in raw["partitions"]:
                     if p["name"] in names:p["type"]=name
         if not split:break
@@ -235,31 +344,49 @@ def compose(plan,table,plan_path=None,observer_part="glue"):
     bytype={};placement_failures=[];monitor_edges=[]
     for tn,t in raw["partition_types"].items():
         pn=next(pn for pn,p in P.parts.items() if p["type"]==tn)
-        sig=signatures[pn];tree=RT.for_type(P,tn) if pn in active else None
+        sig=signatures[pn];hard=bool(t.get("hard"))
+        if hard and children[pn]:raise ValueError(f"hard partition type {tn} would collect monitor children")
+        # Hard partitions carry no generated reset tree: the landing ring and
+        # its one collector live in the soft wrapper on the delivered reset
+        # (the same reset the wrapper's own ft stations use).
+        if pn in active and hard:
+            if len(ins[pn])!=1:raise ValueError(f"hard partition {pn}: exactly one landing per hard wrapper supported, got {sorted(ins[pn])}")
+            tree=_hard_tree(hard_xy(pn),_bus_xy(t,next(iter(ins[pn]))))
+        else:tree=RT.for_type(P,tn) if pn in active else None
         info=dict(base_type=base_type[pn],mask=sig,tree=tree,local_sources=[],children=[],up_parent=monitor_parent[pn] if pn in active else None,
                   reset_entry_um=W["types"].get(tn,{}).get("in_um"),bands={},bus_geometry=copy.deepcopy(t.get("_cland_geom",{})))
         used=[]
         for bus,r in sorted(ins[pn].items()):
             point=_bus_xy(t,bus)
-            tapxy={int(r["q"].split("rst_n_t")[1]):r["xy"] for r in tree["relays"] if r["q"].startswith("rst_n_t")}
-            tap=min(range(tree["n_clock_taps"]),key=lambda i:abs(tapxy[i][0]-point[0])+abs(tapxy[i][1]-point[1]))
+            if hard:tap=None
+            else:
+                tapxy={int(r["q"].split("rst_n_t")[1]):r["xy"] for r in tree["relays"] if r["q"].startswith("rst_n_t")}
+                tap=min(range(tree["n_clock_taps"]),key=lambda i:abs(tapxy[i][0]-point[0])+abs(tapxy[i][1]-point[1]))
             try:band=_storage_band(t,bus,int(r["width"]),used);used.append(band["rect_um"])
             except ValueError as e:
                 placement_failures.append(dict(type=tn,bus=bus,error=str(e)));band=dict(placement="FAIL",rect_um=None)
             band["instance"]="u_cland_"+bus
             info["bands"][bus]=band
+            status=None
+            if not hard and band.get("rect_um") and abs(tapxy[tap][0]-point[0])+abs(tapxy[tap][1]-point[1])>405:
+                # The ring's ready/fault flops sit in its band, not at the pin.
+                # Only when the pin is beyond reach of every tap (QC never is)
+                # the collector tap is chosen from the band centre instead.
+                x0,y0,x1,y1=band["rect_um"];status=[round((x0+x1)/2,3),round((y0+y1)/2,3)]
+                tap=min(range(tree["n_clock_taps"]),key=lambda i:abs(tapxy[i][0]-status[0])+abs(tapxy[i][1]-status[1]))
             info["local_sources"].append(dict(name=bus,ready="landing_ready_"+bus,fault="landing_fault_"+bus,tap=tap,
-                xy_um=point,band=band))
+                xy_um=status or point,pin_xy_um=point,band=band,**(dict(node=tree["leaf_node"],reset="delivered") if hard else {})))
             b=_scalar(t,"fclk_in_"+bus,"in",point,"clock");t["buses"].append(b)
             t.setdefault("clock",{}).setdefault("edge_clocks",[]).append(dict(port=b["name"],tap_um=point,period_mult=1,
                 note="source-forwarded ring write clock; actual source-export/window STA required"))
         for bus in sorted(outs[pn]):t["buses"].append(_scalar(t,"fclk_out_"+bus,"out",_bus_xy(t,bus),"clock"))
         if pn in active:
+            if monitor_parent[pn] is None and hard:raise ValueError(f"hard partition {pn} cannot be the monitor root")
             if monitor_parent[pn] is None:
                 tap=RT.leaf_tap(P,tn);node=f"rst_n_t{tap}"
                 point=next(r["xy"] for r in tree["relays"] if r["q"]==node)
             else:
-                end=_monitor_endpoints(P,W,pn,monitor_parent[pn]);node=end["src_node"];point=end["src_xy"]
+                end=_monitor_endpoints(P,W,pn,monitor_parent[pn],hard_xy);node=end["src_node"];point=end["src_xy"]
                 for j,kind in enumerate(("ready","fault")):
                     t["buses"].append(_scalar(t,"cland_up_"+kind,"out",point,"ctl",shift=2.16*(j+2)))
                 if sig["up_seam"]:t["buses"].append(_scalar(t,"fclk_out_cland_up","out",point,"clock",shift=2.16))
@@ -298,13 +425,12 @@ def compose(plan,table,plan_path=None,observer_part="glue"):
         seam=region[pn]!=region[par]
         if seam:raw["ports"].append(dict(id="cland_mon_clk__"+pn,src=dict(part=pn,bus="fclk_out_cland_up"),
             dst=dict(part=par,bus=f"fclk_in_cland_dn_{i}"),width=1,kind="clock",epoch=False))
-        end=_monitor_endpoints(P,W,pn,par);a=P.to_die(pn,end["src_xy"]);b=P.to_die(par,end["dst_xy"])
+        end=_monitor_endpoints(P,W,pn,par,hard_xy);a=P.to_die(pn,end["src_xy"]);b=P.to_die(par,end["dst_xy"])
         monitor_edges.append(dict(src=pn,dst=par,dst_index=i,seam=seam,hop_um=abs(a[0]-b[0])+abs(a[1]-b[1]),
             data_cycles_added=0,boot_transport_extra_cycles=3 if seam else 0))
     root=observer_part
     side=copy.deepcopy(table);side["added_cycles_per_crossing"]=3
-    side["collector"]=dict(root=root,observer=dict(part=root,module="qfd_sys_face_lctx3_wrapped",instance_suffix="u_sys_face",
-        fault_port="obs_fault",ready_port="seq_cfg_image_ready"),
+    side["collector"]=dict(root=root,observer=dict(part=root,**{k:observer[k] for k in ("module","instance_suffix","fault_port","ready_port")}),
         parts={pn:dict(type=P.parts[pn]["type"],parent=monitor_parent[pn],active=pn in active)
         for pn in P.parts},types=bytype,edges=monitor_edges,base_type_by_part=base_type,
         reset_max_release=W["max_release"],max_die_hop_um=max([e["hop_um"] for e in monitor_edges]or[0]),
@@ -316,6 +442,7 @@ def compose(plan,table,plan_path=None,observer_part="glue"):
     deadlines={};local_depths={}
     for pn in sorted(active):
         inf=bytype[P.parts[pn]["type"]];tree=inf["tree"];rootnode=inf["collector_root_node"]
+        if tree.get("hard"):local_depths[pn]=len(tree["relays"])+1;continue
         adj=defaultdict(list)
         for r in tree["relays"]:adj[r["q"]].append(r["d"]);adj[r["d"]].append(r["q"])
         distances={rootnode:0};todo=[rootnode]

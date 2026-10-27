@@ -32,6 +32,14 @@ class PlanCells:
         self.B = B
         self.doc = json.loads(Path(path).read_text())
         self.T = self.doc["types"]
+        # Clock-landing cohort types (clock_landing_plan.compose, landing_base_type) are exact copies of their base
+        # plan type plus landing pins: they carry the base type's plan cells unchanged.  A base fully replaced by
+        # its cohorts is no longer a plan type.
+        pts = B.plan["partition_types"]
+        alias = {tn: t["landing_base_type"] for tn, t in pts.items()
+                 if tn not in self.T and t.get("landing_base_type") in self.T}
+        if alias:
+            self.T = {**{tn: t for tn, t in self.T.items() if tn in pts}, **{tn: self.T[b] for tn, b in alias.items()}}
         self.ptype0 = {p["name"]: p["type"] for p in B.plan["partitions"]}       # plan type before any split
         self.bus_dir = {tn: {b["name"]: b["dir"] for b in t.get("buses", [])} for tn, t in B.plan["partition_types"].items()}
         self.bus_w = {tn: {b["name"]: int(b["width"]) for b in t.get("buses", [])} for tn, t in B.plan["partition_types"].items()}
