@@ -1,0 +1,19 @@
+{
+  "scope": "actualMODE3/noFP1 flatLSL candidate",
+  "picture": "results/qc_a0_2157/m3flat/m3flat_floorplan.png",
+  "verdict": "PASS-COND for <=400k-cell placement-only vehicle; noCTS/route",
+  "findings": [
+    "Viewed picture: tenROMs keep inward-facing columns and56.6um halo-clear central channel.",
+    "Eight originalLSL bodies become standard cells, not invented hardviews; mirrored upper regions free a right-side node band. NKnode moves[22.464,688.656]R0->[387.936,688.656]MY, preserving original22.368um outerface wire distance to all wide pins.",
+    "Move current Wwidecoreports(n_a/n_b/n_y/t_out) toE at samey/layer; leftR0/rightMY parentcores now face inward across155um channel. No newpipeline stages. Eexistingtap/control561..674 doesnot overlapwide699..1103.",
+    "Clockpins42/41 areexplicit planned interface; correctedNKck_t29x441 clearsmovednodehalo. ActualflattenedLSL adds~94560FF, so >=90 internal localtapsunder42/41entries maybeneeded; no clockload/RC claim beforeactualODB/cohort+matchedCTS.",
+    "RegularROMrowchannels and upper softregions leavePG continuity space; actualPDN/native-pin and everyreg-to-reg405um hop mustbechecked afterplacement.",
+    "Runmapped-cellsizer first; reject>400kcells beforeanyOpenROAD and structurallypartition instead. Timinggate remains833TTsetup/FFhold60/25, not relaxed."
+  ],
+  "permissions": {
+    "synthesis": true,
+    "placement_after_actual_cell_cap": true,
+    "CTS": false,
+    "route": false
+  }
+}

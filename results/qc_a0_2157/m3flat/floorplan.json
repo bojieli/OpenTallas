@@ -1,0 +1,453 @@
+{
+  "nk": {
+    "status": "CANDIDATE size-first, no additional RTL cycles or fault/boot contract",
+    "hard_children": [
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].u_leaf",
+        "at": [
+          22.464,
+          22.176
+        ],
+        "orient": "MY",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[0].u_leaf",
+        "at": [
+          22.464,
+          152.352
+        ],
+        "orient": "MY",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[0].u_leaf",
+        "at": [
+          22.464,
+          282.528
+        ],
+        "orient": "MY",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[0].u_leaf",
+        "at": [
+          22.464,
+          542.88
+        ],
+        "orient": "MY",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[0].u_leaf",
+        "at": [
+          22.464,
+          412.704
+        ],
+        "orient": "MY",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+        "at": [
+          262.656,
+          22.176
+        ],
+        "orient": "R0",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[1].u_leaf",
+        "at": [
+          262.656,
+          152.352
+        ],
+        "orient": "R0",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+        "at": [
+          262.656,
+          282.528
+        ],
+        "orient": "R0",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[1].u_leaf",
+        "at": [
+          262.656,
+          542.88
+        ],
+        "orient": "R0",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[1].u_leaf",
+        "at": [
+          262.656,
+          412.704
+        ],
+        "orient": "R0",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/qw_a0_rc14_children/node_nb1/ot_qwen_tile_node",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.genblk5.g_ndh.u_node",
+        "at": [
+          387.936,
+          688.656
+        ],
+        "orient": "MY",
+        "at_exact": true
+      }
+    ],
+    "soft_LSL_regions": [
+      {
+        "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh",
+        "at": [
+          257.472,
+          673.92
+        ],
+        "orient": "SOFT",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh",
+        "at": [
+          257.472,
+          834.432
+        ],
+        "orient": "SOFT",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh",
+        "at": [
+          257.472,
+          994.944
+        ],
+        "orient": "SOFT",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh",
+        "at": [
+          157.67999999999998,
+          834.432
+        ],
+        "orient": "SOFT",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
+        "at": [
+          157.67999999999998,
+          994.944
+        ],
+        "orient": "SOFT",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh",
+        "at": [
+          22.464000000000027,
+          673.92
+        ],
+        "orient": "SOFT",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh",
+        "at": [
+          22.464000000000027,
+          834.432
+        ],
+        "orient": "SOFT",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh",
+        "at": [
+          22.464000000000027,
+          994.944
+        ],
+        "orient": "SOFT",
+        "at_exact": true
+      }
+    ],
+    "wide_pin_face": "E, original y/layer values retained",
+    "outline_um": [
+      457.92,
+      1157.76
+    ],
+    "clock_entry_count": 42,
+    "clock_tree_requirement": "actual+~94560 LSL FF means >=90 internal local taps may be needed under42/41 external entries; cap1000-1500sinks/localtap and measuredRC/bothcornercontract beforeCTS",
+    "generic_reset_wrapper": "DISABLED: preserve actualsource reset/control edges, no extra stages",
+    "openroad_cell_limit": 400000,
+    "clock_ps": 833,
+    "uncertainty_ps": {
+      "setup": 60,
+      "hold": 25
+    },
+    "PDN": "regularROMrowchannels and upper softregion leave continuous PG paths; actualPDN/native-pincheck required beforephysicalroute"
+  },
+  "nl": {
+    "status": "CANDIDATE size-first, no additional RTL cycles or fault/boot contract",
+    "hard_children": [
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].u_leaf",
+        "at": [
+          22.464,
+          22.176
+        ],
+        "orient": "MY",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[0].u_leaf",
+        "at": [
+          22.464,
+          152.352
+        ],
+        "orient": "MY",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[0].u_leaf",
+        "at": [
+          22.464,
+          282.528
+        ],
+        "orient": "MY",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[0].u_leaf",
+        "at": [
+          22.464,
+          542.88
+        ],
+        "orient": "MY",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[0].u_leaf",
+        "at": [
+          22.464,
+          412.704
+        ],
+        "orient": "MY",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+        "at": [
+          262.656,
+          22.176
+        ],
+        "orient": "R0",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[1].u_leaf",
+        "at": [
+          262.656,
+          152.352
+        ],
+        "orient": "R0",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+        "at": [
+          262.656,
+          282.528
+        ],
+        "orient": "R0",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[1].u_leaf",
+        "at": [
+          262.656,
+          542.88
+        ],
+        "orient": "R0",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[1].u_leaf",
+        "at": [
+          262.656,
+          412.704
+        ],
+        "orient": "R0",
+        "at_exact": true
+      }
+    ],
+    "soft_LSL_regions": [
+      {
+        "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh",
+        "at": [
+          257.472,
+          673.92
+        ],
+        "orient": "SOFT",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh",
+        "at": [
+          257.472,
+          834.432
+        ],
+        "orient": "SOFT",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh",
+        "at": [
+          257.472,
+          994.944
+        ],
+        "orient": "SOFT",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh",
+        "at": [
+          157.67999999999998,
+          834.432
+        ],
+        "orient": "SOFT",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
+        "at": [
+          157.67999999999998,
+          994.944
+        ],
+        "orient": "SOFT",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh",
+        "at": [
+          22.464000000000027,
+          673.92
+        ],
+        "orient": "SOFT",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh",
+        "at": [
+          22.464000000000027,
+          834.432
+        ],
+        "orient": "SOFT",
+        "at_exact": true
+      },
+      {
+        "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+        "count": 1,
+        "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh",
+        "at": [
+          22.464000000000027,
+          994.944
+        ],
+        "orient": "SOFT",
+        "at_exact": true
+      }
+    ],
+    "wide_pin_face": "E, original y/layer values retained",
+    "outline_um": [
+      457.92,
+      1157.76
+    ],
+    "clock_entry_count": 41,
+    "clock_tree_requirement": "actual+~94560 LSL FF means >=90 internal local taps may be needed under42/41 external entries; cap1000-1500sinks/localtap and measuredRC/bothcornercontract beforeCTS",
+    "generic_reset_wrapper": "DISABLED: preserve actualsource reset/control edges, no extra stages",
+    "openroad_cell_limit": 400000,
+    "clock_ps": 833,
+    "uncertainty_ps": {
+      "setup": 60,
+      "hold": 25
+    },
+    "PDN": "regularROMrowchannels and upper softregion leave continuous PG paths; actualPDN/native-pincheck required beforephysicalroute"
+  }
+}

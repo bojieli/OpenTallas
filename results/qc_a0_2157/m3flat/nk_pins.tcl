@@ -2611,7 +2611,7 @@ place_pin -pin_name {ck_t25} -layer M7 -location {214.992000 759.632000} -pin_si
 place_pin -pin_name {ck_t26} -layer M7 -location {309.840000 760.720000} -pin_size {0.032 0.768}
 place_pin -pin_name {ck_t27} -layer M7 -location {262.672000 760.976000} -pin_size {0.032 0.768}
 place_pin -pin_name {ck_t28} -layer M7 -location {16.912000 778.000000} -pin_size {0.032 0.768}
-place_pin -pin_name {ck_t29} -layer M7 -location {440.656000 785.296000} -pin_size {0.032 0.768}
+place_pin -pin_name {ck_t29} -layer M7 -location {441.000000 785.296000} -pin_size {0.032 0.768}
 place_pin -pin_name {ck_t30} -layer M7 -location {89.168000 793.936000} -pin_size {0.032 0.768}
 place_pin -pin_name {ck_t31} -layer M7 -location {311.696000 856.464000} -pin_size {0.032 0.768}
 place_pin -pin_name {ck_t32} -layer M7 -location {87.952000 935.312000} -pin_size {0.032 0.768}
