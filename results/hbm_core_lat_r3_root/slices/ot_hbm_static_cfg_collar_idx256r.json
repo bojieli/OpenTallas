@@ -1,0 +1,50 @@
+{
+ "schema": "opentallas.master_plan_slice.v1",
+ "kind": "core",
+ "die": "hbm",
+ "type": "ot_hbm_static_cfg_collar_idx256r",
+ "module": "ot_hbm_static_cfg_collar_idx256r",
+ "master_plan_sha256": "e876baf4156b28464764965fbc8de764153823644774d1df11afb4f83760c24a",
+ "frozen": false,
+ "note": "HBM-CORE-LAT-R3 2026-10-27: hand slice from planS2 clock_entries.json (B2o/unified HBM plan, NOT frozen): 12.8a centre entry on the 4.32 PG lattice, M9->M5 stack island; latency 12.3 target",
+ "instances": [
+  "root.u_col_idx"
+ ],
+ "outline_um": [
+  108.0,
+  108.0
+ ],
+ "keepouts": [],
+ "islands": [
+  {
+   "name": "clk_entry",
+   "rect_um": [
+    47.52,
+    47.52,
+    56.16,
+    56.16
+   ],
+   "centre_um": [
+    51.84,
+    51.84
+   ],
+   "clock_pin": {
+    "layer": "M5",
+    "xy_um": [
+     51.84,
+     51.84
+    ]
+   }
+  }
+ ],
+ "bays": [],
+ "entry_pins": [],
+ "latency": {
+  "common_clock_latency_ps": {
+   "TT": 250.0,
+   "FF": 202.5
+  }
+ },
+ "gates": {},
+ "core_clock_port": "clk"
+}

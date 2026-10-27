@@ -1,0 +1,65 @@
+{
+ "schema": "opentallas.hbm_arch.core_freeze.v1",
+ "view": "ot_hbm_argmax_static_sw_vm_r2__b2o",
+ "module": "ot_hbm_argmax_static_sw_vm_r2",
+ "design": "ot_hbm_argmax_static_sw_vm_r2",
+ "rtl_top": "ot_hbm_argmax_static_sw_vm_r2",
+ "recipe_key": "ot_hbm_argmax_static_sw_vm_r2__118.8x118.8",
+ "recipe_sha256": "b1b5569b9335da7c26970f69814efbf32b4c786daf7d2953e46eff5f861514a5",
+ "canonical_type": null,
+ "wrapper": {
+  "hand_wrapper": "/srv/opentallas-scratch2/claude/wt/hbm-core-lat-r3-root/results/hbm_core_lat_r3_root/argmax_wrap.sv"
+ },
+ "outline_um": [
+  118.8,
+  118.8
+ ],
+ "plan": "/srv/opentallas-scratch2/claude/hbm-core-lat-r3-root/planS2/die_plan.json",
+ "plan_sha256": "e876baf4156b28464764965fbc8de764153823644774d1df11afb4f83760c24a",
+ "pins_file": "cores/ot_hbm_argmax_static_sw_vm_r2__118.8x118.8__root_u_hb_argmax.json",
+ "pins_sha256": "aff6391e13ad35b1ef7813180ad38f9f775131d8205df61efd6e5278b8f229e0",
+ "pins": 1519,
+ "clocks": [
+  "clk"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "period_ps": 833.0,
+ "common_latency_ps": 250.0,
+ "corner": "TC",
+ "plan_common_latency_ps": 250.0,
+ "core_clock_contract": null,
+ "orfs_var_overrides": [],
+ "sdc_lint": "PASS (gen)",
+ "macros": [],
+ "face_shell": {
+  "core": "ot_hbm_argmax_static_sw_vm_r2__fcore",
+  "in_cycles": 1,
+  "out_cycles": 1,
+  "face_flops": 1517,
+  "dropped": 0,
+  "unread_kept": 264,
+  "const_out_bits": 0,
+  "dup_out_bits": 272,
+  "plan_pins": 1519
+ },
+ "kit_hash": "63f18fcda37ee78f",
+ "flow_defaults": {
+  "rc_cal": true,
+  "f1": {
+   "io_tt_ps": 250.0,
+   "io_ff_ps": 202.5,
+   "mechanism": "vclk_corner FF-only GRT + gates",
+   "basis": "FF_TT_INSERTION_RATIO 0.81 x TT"
+  },
+  "f4": true,
+  "rule": "FLOW 2026-10-25 F1/F2/F4 (HBM-KITS port to core kits)"
+ },
+ "master_plan": {
+  "slice_sha256": "3897a10364bc0bd3626b1c3e1c1e367d7e72f3d14ecade290cbc5a677392585e",
+  "master_plan_sha256": "e876baf4156b28464764965fbc8de764153823644774d1df11afb4f83760c24a",
+  "type": "ot_hbm_argmax_static_sw_vm_r2",
+  "frozen": false
+ }
+}
