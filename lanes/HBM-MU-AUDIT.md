@@ -35,3 +35,6 @@ Explicitreset; finalnative32VM/32FUSED/28treebuddy model3c3dae6bb, correctedNE_M
 
 ## CODEX notes 2026-10-27 08:13 PDT
 Current unified plan work consolidated /root/hbm/plan on codex/hbm-plan-0815 from QUAD6@568934d32a; collects five paused PORTS/CLK/OUTL/EP/HUBPIN results then folds one plan event. Current U6d G0 0/G0C3 phantom partner-face errors. New vmquery50it GRT FAIL3819 -> height/capacity fix before route.
+
+## CODEX notes 2026-10-27 10:08 PDT
+Native canonical4quarter/4role source remains selected; bare16slice+2facecycles proxy rejected as physical view. Packedsoftquarter17SRAM/quarter=68whole, keycostledger b2b95296c11628writes/58140reads; old80 diagnostic explicit. Quarter key/query reach model7d63a06a91 worst401.339um/0errors; actualoutput1056sources now modeled existing9/7/5/3hops, no new cycles, fullcrosshalf/controlgraph+hubfit stillopen. ActualFUSEDjob217provider has161decodedrecords/0rejects, control221/0+mutant, but actual unified4rolecalendar/bootloader/STARTauthority MISSING, no executableROM. TOK owns failclosedprovider; no old149bit job substitution.
