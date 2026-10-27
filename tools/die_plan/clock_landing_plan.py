@@ -308,13 +308,13 @@ def _monitor_endpoints(P,W,src,dst,hard_xy=None):
             sxy=hard_xy(src)
         else:sxy=W["types"][P.parts[src]["type"]]["in_um"]
         return dict(src_node="rst_root_n",src_xy=sxy,
-                    dst_node=f"rst_n_t{dt['n_clock_taps']+k}",dst_xy=W["types"][P.parts[dst]["type"]]["outs"][k][1:])
+                    dst_node=f"rst_n_t{RT.consumer_count(dt)+k}",dst_xy=W["types"][P.parts[dst]["type"]]["outs"][k][1:])
     if W["parts"][dst]["parent"]==src:
         if P.types[P.parts[src]["type"]].get("hard"):
             raise ValueError(f"monitor edge {src}->{dst}: a hard partition cannot collect monitor children")
         k=int(W["parts"][dst]["source"].rsplit("_",1)[1])
         st=RT.for_type(P,P.parts[src]["type"])
-        return dict(src_node=f"rst_n_t{st['n_clock_taps']+k}",src_xy=W["types"][P.parts[src]["type"]]["outs"][k][1:],
+        return dict(src_node=f"rst_n_t{RT.consumer_count(st)+k}",src_xy=W["types"][P.parts[src]["type"]]["outs"][k][1:],
                     dst_node="rst_root_n",dst_xy=W["types"][P.parts[dst]["type"]]["in_um"])
     raise ValueError(f"monitor edge {src}->{dst} is not an existing reset-neighbor edge")
 
@@ -524,7 +524,7 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
             if hard:tap=None
             else:
                 tapxy={int(r["q"].split("rst_n_t")[1]):r["xy"] for r in tree["relays"] if r["q"].startswith("rst_n_t")}
-                tap=min(range(tree["n_clock_taps"]),key=lambda i:abs(tapxy[i][0]-point[0])+abs(tapxy[i][1]-point[1]))
+                tap=min(range(RT.consumer_count(tree)),key=lambda i:abs(tapxy[i][0]-point[0])+abs(tapxy[i][1]-point[1]))
             try:band=_storage_band(t,bus,int(r["width"]),used);used.append(band["rect_um"])
             except ValueError as e:
                 placement_failures.append(dict(type=tn,bus=bus,error=str(e)));band=dict(placement="FAIL",rect_um=None)
@@ -536,7 +536,7 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
                 # Only when the pin is beyond reach of every tap (QC never is)
                 # the collector tap is chosen from the band centre instead.
                 x0,y0,x1,y1=band["rect_um"];status=[round((x0+x1)/2,3),round((y0+y1)/2,3)]
-                tap=min(range(tree["n_clock_taps"]),key=lambda i:abs(tapxy[i][0]-status[0])+abs(tapxy[i][1]-status[1]))
+                tap=min(range(RT.consumer_count(tree)),key=lambda i:abs(tapxy[i][0]-status[0])+abs(tapxy[i][1]-status[1]))
             info["local_sources"].append(dict(name=bus,ready="landing_ready_"+bus,fault="landing_fault_"+bus,tap=tap,
                 xy_um=status or point,pin_xy_um=point,band=band,**(dict(node=tree["leaf_node"],reset="delivered") if hard else {})))
             b=_scalar(t,"fclk_in_"+bus,"in",point,"clock");t.setdefault("buses",[]).append(b)

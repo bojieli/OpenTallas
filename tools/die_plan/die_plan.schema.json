@@ -1798,6 +1798,17 @@
         "minItems": 2,
         "maxItems": 2
        },
+       "local_taps_um": {
+        "type": "array",
+        "items": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 2,
+         "maxItems": 2
+        }
+       },
        "depth": {
         "type": "integer",
         "minimum": 1

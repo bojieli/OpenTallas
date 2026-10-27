@@ -479,6 +479,8 @@ SCHEMA = {
                         "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2},
                         # planned leaf-logic region: reset_tree.leaf_tap binds the leaf rst_n to the tap nearest it
                         "leaf_um": _xy,
+                        # Local synchronous reset/START consumers; clock entry pins are unchanged.
+                        "local_taps_um": {"type": "array", "items": _xy},
                         # hard partition, reset wavefront: clocks from its arst_n pin to its release (pin reg incl.)
                         "depth": {"type": "integer", "minimum": 1},
                         # reset.start = broadcast plans (reset_tree.start_roles): "mission" (default) = control state

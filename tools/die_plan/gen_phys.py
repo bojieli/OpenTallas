@@ -1551,7 +1551,12 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
         if f == "reset_taps.tcl" and (RT.pipelined(P) or RT.wavefront(P)):
             hook = kd / f
-            hook.write_text(f"set rt_leaf_tap {RT.leaf_tap(P, tn)}\n" + hook.read_text())
+            reset_prefix = f"set rt_leaf_tap {RT.leaf_tap(P, tn)}\n"
+            if t.get("reset", {}).get("local_taps_um"):
+                # These are terminal relay sites, not additional clock BTerms.
+                reset_prefix += "set rt_consumer_taps_um {" + " ".join(
+                    f"{{{i} {x:.5f} {y:.5f}}}" for i, (_, x, y) in enumerate(RT.consumer_taps(P, tn))) + "}\n"
+            hook.write_text(reset_prefix + hook.read_text())
     islands = die_islands_tcl(P, tn)
     if islands:
         (kd / "die_islands.tcl").write_text(islands)
