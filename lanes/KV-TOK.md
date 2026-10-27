@@ -332,3 +332,10 @@ Independent B33 build9 completed exit0, native boot now LIVE epyc1:codex-kv-boot
   - Spec docs/QWEN_KV_HOST_BOOT_ABI.md: send(BEGIN n+1) >= send(AUTH n) + HOST_LINK_LAT_MAX 160 (DECLARED bound; measured 122 CHECKED) + pw + dw + 16.
 - READY claude/kv-tok-join2-1026@d07fa0d88: join2 + the same static pacing in the main kv_dieslice tb.
 - ASK PATH-KV: the bind of record must re-stage with the new prepare_native_mission, or apply native_host_boot_abi obsx()/c45() + .BOOT_AGES(1) to the staged tree, so that hub_Wi u_host carries BOOT_AGES(1). Also run the check in the vehicle build.
+
+## KV-BOOT-SETUP 2026-10-26 17:28 PDT (run6 setup_ready=0 root cause; claude/kv-boot-setup-1026@89ff87dcfd)
+- ROOT CAUSE (RTL, CHECKED by hub_C/pc probes): kvs_ctl dispatcher held in die reset all run -> die_rst_n never released -> all 128 HBM boot checks TIMEOUT (done 1 ok 0 at cyc 20718-20873) -> the kvpc controller never issues the check WR because a static column needs a calendar reservation that only the boot image (after die reset) provides. Boot-order deadlock; fix B (865fd8826, 10-24) was never merged.
+- FIX: d28fc3d800 = fix B controller boot window ported to main + kvpc_s clones regenerated; lockstep gate vs main 63f0898a3 PASS (12 eq + 2 dis 0 mismatches, never-close mutant FAIL). 3825a70e25 = PHY bench model WL=5 (13a3c79b9). 89ff87dcfd = tb: first host frame >= link up + DIE_READY_CORE 1024 (declared, measured 562) + fail-closed on boot_pr word in die reset (the t10 replay overlapped die_rst_n release at cyc 1093 -> dispatcher fault_code[3]).
+- Targeted whole-die sim (CHECKED): 128/128 slices done&ok by cyc 1061, die_rst_n 1 at 1093, t10 accepted (dcfg_done 1, sealed 1, fault 0), tgt 1 loading.
+- run7 (full boot, default setup wait) RUNNING: epyc1:/srv/opentallas-scratch2/claude/kv-boot-setup-1026/run7/sim.log (~1.5-2 h). Collect: KVSLICE_BOOT line (setup_ready, cycle), KVSLICE_FAIL count, KVBS final fault code.
+- B48 gate3 (tb6, as-built kvpc) will hit the same stop; it needs these three commits. kvpc tile RTL changed -> kvpc closed views must be re-hardened.
