@@ -2044,6 +2044,12 @@ def cmd_combo(a):
     regs = M["meta"].get("regions") or ([] if M["meta"].get("lattice_tree") else
                                         [dict(k=None, i0=0, i1=len(xs), j0=0, j1=len(ys))])
     vias_meta, cross_meta = {}, {}
+    if getattr(a, "routed_clock", False) and regs:
+        # CLOCK-128-R5: only the fixed tree nets (mesh.json fixed_wires) are converted to FIXED regular dbWire; region
+        # mesh straps are still special SBox nets that RCX skips -> fail closed instead of mixing extracted and
+        # non-extracted clock metal.  A region plan that declares sub-trees lands in fixed_wires and needs nothing here.
+        raise SystemExit("die_clock_mesh combo --routed-clock: region mesh straps are not converted yet "
+                         f"({len(regs)} regions); route them as fixed tree nets or extend clock_routed")
     shield_segs_all = []      # every shielded clock segment (straps, jogs, fixed tree wires): VSS ties below
     for g in regs:      # one special net per clock region (the whole strap grid without --regions)
         rx, ry = xs[g["i0"]:g["i1"]], ys[g["j0"]:g["j1"]]
@@ -2130,7 +2136,26 @@ def cmd_combo(a):
     if C128.enabled(M):   # 12.7a/12.8: every tree net is a fixed, shielded pre-route; its RC is that geometry
         # the build's PG-aware shielded tracks (CLOCK-128 shield lane) are the geometry; older builds recompute
         wires = M.get("fixed_wires") or C128.fixed_wires(M, cells, data["nets"], BUF_W, ROW_Y)
-        L += C128.combo_tcl(wires, nd, M["meta"]["rule_12_8"]["shield_net"])
+        if getattr(a, "routed_clock", False):
+            # CLOCK-128-R5: the same legs as REGULAR CLOCK nets with one FIXED dbWire each (+ plan-computed pin-access
+            # stacks), shields + obstructions unchanged; GRT/DRT keep them, RCX extracts them (clock_routed.py)
+            import clock_routed as CR
+            L.append(f"create_ndr -name ot_mesh_ndr -width {{M8 {nd['width']} M9 {nd['width']}}} "
+                     f"-spacing {{M8 {nd['space']} M9 {nd['space']}}}")
+            L += CR.shield_only_tcl(C128.combo_tcl(wires, nd, M["meta"]["rule_12_8"]["shield_net"]))
+            ports_ = {t_["port"]: dict(layer=t_.get("layer", M["meta"].get("tap_layer", "M7")), xy=t_["xy"])
+                      for t_ in M["taps"]}
+            ports_["root"] = dict(layer="M9", xy=list(M["meta"]["root_um"]))
+            rl, rrec = CR.routed_tcl(wires, cells, ports_, BUF, "ot_mesh_ndr")
+            L += rl
+            sh_ = CR.stair_census(CR.stair_shapes(wires, cells, ports_, BUF))
+            rrec["stair_census"] = sh_
+            (d / "clock_routed.json").write_text(json.dumps(rrec) + "\n")
+            if sh_["shorts"] or sh_["spacing"]:
+                raise SystemExit(f"die_clock_mesh combo --routed-clock: pin-access census {sh_['shorts']} shorts / "
+                                 f"{sh_['spacing']} spacing: {sh_['short_list'][:3]} {sh_['spacing_list'][:3]}")
+        else:
+            L += C128.combo_tcl(wires, nd, M["meta"]["rule_12_8"]["shield_net"])
         sp = C128.spef(wires, cells, BUF, nd, DC.LAYER_RC, DC.VIA_KOHM)
         for c_ in ("TT", "FF"):
             (d / f"native_{c_}.spef").write_text(sp)
@@ -2187,8 +2212,9 @@ def cmd_combo(a):
           "set_routing_layers -signal M4-M9 -clock M8-M9"]
     L += [f"set_global_routing_layer_adjustment M{k} 0.75" for k in (4, 5, 6, 7)]
     L += ["set_global_routing_layer_adjustment M8 0.4", "set_global_routing_layer_adjustment M9 0.4",
-          f"create_ndr -name ot_mesh_ndr -width {{M8 {nd['width']} M9 {nd['width']}}} "
-          f"-spacing {{M8 {nd['space']} M9 {nd['space']}}}",
+          ("# ot_mesh_ndr created with the routed clock" if getattr(a, "routed_clock", False) else
+           f"create_ndr -name ot_mesh_ndr -width {{M8 {nd['width']} M9 {nd['width']}}} "
+           f"-spacing {{M8 {nd['space']} M9 {nd['space']}}}"),
           "set ndr [$blk findNonDefaultRule ot_mesh_ndr]", "set nn 0"]
     (d / "clock_nets.txt").write_text("\n".join(clock_nets) + "\n")
     L += ["set fh [open /clock/clock_nets.txt r]",
@@ -2198,6 +2224,8 @@ def cmd_combo(a):
           "global_route -congestion_iterations 50 -allow_congestion -verbose -congestion_report_file "
           "/out/congestion_$::env(CORNER).rpt",
           "write_guides /out/route_$::env(CORNER).guide",
+          *(["puts \"OT_CLK_OBS_REMOVED [llength $::ot_clk_obs]\"",
+             "foreach o $::ot_clk_obs { odb::dbObstruction_destroy $o }"] if getattr(a, "routed_clock", False) else []),
           "source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl",
           f"set_layer_rc -layer M8 -resistance 8.44765e-3 -capacitance [expr {{.103962*{nd['cf']}}}]",
           f"set_layer_rc -layer M9 -resistance 8.89556e-3 -capacitance [expr {{.0928446*{nd['cf']}}}]",
@@ -2945,6 +2973,8 @@ def main(argv=None):
     c.add_argument("--mesh-vias", action="store_true",
                    help="emit an M8-M9 VIA89 at every mesh strap crossing (mesh = one connected net in the DB); "
                         "mesh-node CPPR stays INFO only (METHODOLOGY v4 12.4b)")
+    c.add_argument("--routed-clock", action="store_true",
+                   help="CLOCK-128-R5: 12.8 fixed tree as regular nets with FIXED dbWire (RCX-extractable), see clock_routed.py")
     m = sub.add_parser("mesh")
     m.add_argument("dir")
     m.add_argument("--corner", default="TT")
