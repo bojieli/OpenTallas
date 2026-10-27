@@ -3960,25 +3960,92 @@ def lca(a, b):
     return a[:k]
 
 
-def mesh_connected(M, d=None):
-    """{region k: bool}: True when region k's mesh is ONE connected net in the emitted geometry: the crossings carry
-    emitted M8-M9 vias (meta.mesh_vias, written by combo --mesh-vias, >= every strap crossing) and, given the run dir,
-    the routed-DB count (OT_MESH_VIAS in combo_<corner>.log, min over corners) agrees.  INFO input only (v4 12.4b)."""
-    vias = M["meta"].get("mesh_vias") or {}
-    db = {}
-    for lg in sorted(Path(d).glob("combo_*.log")) if d else []:
-        for m_ in re.finditer(r"^OT_MESH_VIAS (\S+) (\d+)", lg.read_text(errors="replace"), re.M):
-            db[m_.group(1)] = min(db.get(m_.group(1), 1 << 60), int(m_.group(2)))
-    out = {}
-    for g in M["meta"].get("regions") or []:
-        nh, nv = g["j1"] - g["j0"], g["i1"] - g["i0"]
-        # macro-clipped straps (--clock-floorplan holes): the need is the emitted crossing count; else the full grid
-        need = max(1, int(vias.get(str(g["k"]), 0))) if M["meta"].get("macro_holes") else nh * nv
-        ok = nh > 0 and nv > 0 and int(vias.get(str(g["k"]), 0)) >= need
-        if d is not None:
-            ok = ok and db.get(mesh_net(g["k"]), 0) >= need
-        out[g["k"]] = bool(ok)
+def mesh_regions(M):
+    """the mesh regions of a build; a continuous (regionless) mesh is ONE region k=None spanning the grid."""
+    return (M.get("meta") or {}).get("regions") or [dict(k=None, i0=0, i1=len(M.get("xs") or []), j0=0, j1=len(M.get("ys") or []))]
+
+
+def mesh_crossings(M, g):
+    """strap crossings of region g that carry a VIA89 when the mesh is one connected net: every M8 row x M9 column
+    crossing where both (possibly macro-clipped, --clock-floorplan) straps exist -- the same rule combo emits."""
+    xs, ys = M.get("xs") or [], M.get("ys") or []
+    if not (xs and ys):     # index-only record (no strap coordinates, no clipping): the full region grid
+        return max(0, g["i1"] - g["i0"]) * max(0, g["j1"] - g["j0"])
+    rx, ry = xs[g["i0"]:g["i1"]], ys[g["j0"]:g["j1"]]
+    hsp = [(y, strap_span(M, g, xs, ys, 0, j)) for j, y in zip(range(g["j0"], g["j1"]), ry)]
+    vsp = [(x, strap_span(M, g, xs, ys, 1, i)) for i, x in zip(range(g["i0"], g["i1"]), rx)]
+    n = 0
+    for y, sh in hsp:
+        if not sh:
+            continue
+        for x, sv in vsp:
+            if sv and sh[0] - 1e-6 <= x <= sh[1] + 1e-6 and sv[0] - 1e-6 <= y <= sv[1] + 1e-6:
+                n += 1
+    return n
+
+
+def routed_mesh_vias(d):
+    """{mesh net: min over corners of OT_MESH_VIAS in DIR/combo_<corner>.log}, and the combo logs read.  Fail closed:
+    a net reported by one corner's log but absent from another's counts 0 there (that corner's DB had no vias)."""
+    per, logs = [], sorted(Path(d).glob("combo_*.log")) if d else []
+    for lg in logs:
+        per.append({m_.group(1): int(m_.group(2)) for m_ in
+                    re.finditer(r"^OT_MESH_VIAS (\S+) (\d+)", lg.read_text(errors="replace"), re.M)})
+    nets = set().union(*per) if per else set()
+    return {n: min(p.get(n, 0) for p in per) for n in nets}, logs
+
+
+def mesh_via_findings(M, d=None):
+    """FAIL-CLOSED mesh continuity (COORD PATH-S81-PD12 ruling A, 10-27; 12.8e1 continuous mesh): a die clock mesh is
+    ONE connected net only with an M8-M9 VIA89 at EVERY strap crossing.  Findings (empty = continuous):
+      - meta.mesh_vias absent (combo run without vias, e.g. --no-mesh-vias or a pre-default build);
+      - emitted vias of a region below its crossing count (mesh_crossings);
+      - given the run dir with routed combo logs: OT_MESH_VIAS of the region's net missing or below the crossing count.
+    A build with no strap crossings has no mesh and no findings.  The transient (cmd_mesh) and the mesh MC model
+    every crossing as a shorted node, so a build without these vias does not match its own sign-off model."""
+    out = []
+    vias = (M.get("meta") or {}).get("mesh_vias")
+    logs_db, logs = routed_mesh_vias(d) if d is not None else ({}, [])
+    for g in mesh_regions(M):
+        need = mesh_crossings(M, g)
+        if need == 0:
+            continue
+        net = mesh_net(g["k"])
+        if vias is None:
+            out.append(f"{net}: no M8-M9 vias at its {need} strap crossings (meta.mesh_vias absent: combo run without "
+                       f"vias); the straps are not one connected net")
+            continue
+        got = int(vias.get(str(g["k"]), 0))
+        if got < need:
+            out.append(f"{net}: {got} emitted M8-M9 vias < {need} strap crossings")
+        if logs:
+            nd_ = logs_db.get(net)
+            if nd_ is None:
+                out.append(f"{net}: routed DB via count missing (no OT_MESH_VIAS line in {', '.join(p.name for p in logs)})")
+            elif nd_ < need:
+                out.append(f"{net}: routed DB has {nd_} M8-M9 vias < {need} strap crossings")
     return out
+
+
+def mesh_connected(M, d=None):
+    """{region k: bool}: True when region k's mesh is ONE connected net in the emitted geometry (mesh_via_findings:
+    a VIA89 at every strap crossing, emitted and, given the run dir, in the routed DB).  A continuous (regionless)
+    mesh is region None."""
+    out = {}
+    for g in mesh_regions(M):
+        sub = dict(M, meta=dict(M["meta"], regions=[g])) if (M.get("meta") or {}).get("regions") else M
+        out[g["k"]] = mesh_crossings(M, g) > 0 and not mesh_via_findings(sub, d)
+    return out
+
+
+def cmd_meshvias(a):
+    """die_clock_mesh.py meshvias DIR: the fail-closed continuity check on its own (exit 1 on any finding)."""
+    M = json.loads((Path(a.dir) / "mesh.json").read_text())
+    f_ = mesh_via_findings(M, a.dir)
+    rows = [dict(region=g["k"], net=mesh_net(g["k"]), crossings=mesh_crossings(M, g)) for g in mesh_regions(M)]
+    print(json.dumps(dict(dir=str(a.dir), continuous=not f_, regions=rows, emitted=M["meta"].get("mesh_vias"),
+                          routed=routed_mesh_vias(a.dir)[0], findings=f_), indent=1))
+    return 1 if f_ else 0
 
 
 def sink_arrivals(M, arr, corner, early_by_plan):
@@ -4219,6 +4286,11 @@ def cmd_report(a):
     if blocker:
         rep["qualification"]["blockers"].append(blocker)
         rep["qualification"]["release_verdict"] = "BLOCKED"
+    mv_ = mesh_via_findings(M, d)     # fail closed: a mesh without a VIA89 at every crossing is not one net (PD12 A)
+    rep["mesh_continuity"] = dict(continuous=not mv_, findings=mv_)
+    if mv_:
+        rep["qualification"]["blockers"].append("mesh not continuous: " + "; ".join(mv_[:4]))
+        rep["qualification"]["release_verdict"] = "BLOCKED"
     (d / "clock_report.json").write_text(json.dumps(rep, indent=1) + "\n")
     print(json.dumps({c: {k: v for k, v in r.items() if k != "worst"} for c, r in rep["corners"].items()}, indent=1))
     return 0
@@ -4402,14 +4474,20 @@ def main(argv=None):
     c.add_argument("dir")
     c.add_argument("--kit", required=True)
     c.add_argument("--plan", help="pinned physical plan for the all-clock-cell hard-keepout census")
-    c.add_argument("--mesh-vias", action="store_true",
-                   help="emit an M8-M9 VIA89 at every mesh strap crossing (mesh = one connected net in the DB); "
-                        "mesh-node CPPR stays INFO only (METHODOLOGY v4 12.4b)")
+    c.add_argument("--mesh-vias", dest="mesh_vias", action="store_true", default=True,
+                   help="DEFAULT (COORD PATH-S81-PD12 ruling A, 10-27): emit an M8-M9 VIA89 at every mesh strap crossing "
+                        "(mesh = one connected net in the DB); kept for old scripts; mesh-node CPPR stays INFO only "
+                        "(METHODOLOGY v4 12.4b)")
+    c.add_argument("--no-mesh-vias", dest="mesh_vias", action="store_false",
+                   help="DIAGNOSTIC ONLY: straps without crossing vias; the build then FAILS mesh_via_findings "
+                        "(check.py --clock-build, die_sta_related --mesh-signoff, report)")
     c.add_argument("--merge-shields", action=argparse.BooleanOptionalAction, default=True,
                    help="CLOCK-KV-R10 (default ON, COORD 10-26 21:28): union overlapping/abutting same-track shield "
                         "boxes after the ties (same metal, fewer shapes); --no-merge-shields = the pre-R10 shapes")
     c.add_argument("--routed-clock", action="store_true",
                    help="CLOCK-128-R5: 12.8 fixed tree as regular nets with FIXED dbWire (RCX-extractable), see clock_routed.py")
+    mv = sub.add_parser("meshvias", help="fail-closed mesh continuity check: a VIA89 at every strap crossing")
+    mv.add_argument("dir")
     m = sub.add_parser("mesh")
     m.add_argument("dir")
     m.add_argument("--corner", default="TT")
@@ -4442,7 +4520,7 @@ def main(argv=None):
     a = ap.parse_args(argv)
     if a.cmd == "report" and not a.corner:
         a.corner = ["TT", "FF"]
-    return dict(build=cmd_build, balance=cmd_balance, stubtrim=cmd_stubtrim, combo=cmd_combo, mesh=cmd_mesh, stubsta=cmd_stubsta, report=cmd_report,
+    return dict(build=cmd_build, balance=cmd_balance, stubtrim=cmd_stubtrim, combo=cmd_combo, mesh=cmd_mesh, meshvias=cmd_meshvias, stubsta=cmd_stubsta, report=cmd_report,
                 render=cmd_render)[a.cmd](a)
 
 
