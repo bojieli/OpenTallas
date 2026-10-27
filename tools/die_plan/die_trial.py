@@ -400,7 +400,7 @@ class SiteMap:
         return None
 
 
-def build_htree(P, taps, leaf_um=600.0, full_depth=False):
+def build_htree(P, taps, leaf_um=600.0, full_depth=False, regions=None):
     """explicit H-tree: nodes {id: dict(x, y, parent, level, kids, taps)} rooted at the spine root.  Region bisection
     along the longer axis at the region midpoint; the child node sits at the child region centre (the leg runs along
     the split axis, so every node-to-node leg is a straight M8 (H) or M9 (V) run).  The first leg goes from the spine
@@ -410,6 +410,7 @@ def build_htree(P, taps, leaf_um=600.0, full_depth=False):
     W, H = P.W, P.H
     root = P.clock.get("spine", {}).get("root_um") or [W / 2, H / 2]
     nodes = {}
+    fd_now = [full_depth]
 
     def mk(x, y, parent, level, region):
         i = len(nodes)
@@ -421,7 +422,7 @@ def build_htree(P, taps, leaf_um=600.0, full_depth=False):
 
     def rec(nid, region, tlist):
         x0, y0, x1, y1 = region
-        if max(x1 - x0, y1 - y0) <= leaf_um or (len(tlist) <= 1 and not full_depth):
+        if max(x1 - x0, y1 - y0) <= leaf_um or (len(tlist) <= 1 and not fd_now[0]):
             nodes[nid]["taps"] = tlist
             return
         if x1 - x0 >= y1 - y0:
@@ -445,7 +446,40 @@ def build_htree(P, taps, leaf_um=600.0, full_depth=False):
                 c = mk(cx, cy, nid, nodes[nid]["level"] + 1, reg)
             rec(c, reg, tl)
     r = mk(root[0], root[1], None, 0, (0, 0, W, H))
-    rec(r, (0.0, 0.0, W, H), list(taps))
+    if not regions:
+        rec(r, (0.0, 0.0, W, H), list(taps))
+        return nodes
+    # FALLBACK-S81-2 10-26 (opt-in --region-trees): landed-region fallback clock.  A die reference tree (same
+    # bisection) reaches one ROOT per clock region (region bbox centre); below it an equal-depth local tree
+    # (full-depth bisection of the region bbox, leaf_um) feeds that region's partition entries.  Same-region pairs share
+    # the region root; every cross-region port is a landed crossing (|d| <= P/2 window), so the reference tree needs no
+    # balance.  No pads, trims or post-measurement values.
+    rt = defaultdict(list)
+    for t in taps:
+        rt[regions[t[0]]].append(t)
+    box = {}
+    for rn, tl in rt.items():
+        rs = [(P.parts[n]["origin_um"][0], P.parts[n]["origin_um"][1],
+               P.parts[n]["origin_um"][0] + P.types[P.parts[n]["type"]]["outline_um"][0],
+               P.parts[n]["origin_um"][1] + P.types[P.parts[n]["type"]]["outline_um"][1]) for n in {t[0] for t in tl}]
+        box[rn] = (min(a[0] for a in rs), min(a[1] for a in rs), max(a[2] for a in rs), max(a[3] for a in rs))
+    pseudo = [(rn, "__region_root__", (b[0] + b[2]) / 2, (b[1] + b[3]) / 2) for rn, b in sorted(box.items())]
+    rec(r, (0.0, 0.0, W, H), pseudo)
+    for nid in [i for i, nd in nodes.items() if nd["taps"] and nd["taps"][0][1] == "__region_root__"]:
+        ps, nodes[nid]["taps"] = nodes[nid]["taps"], []
+        for rn, _, cx, cy in ps:
+            px, py = nodes[nid]["x"], nodes[nid]["y"]
+            lv = nodes[nid]["level"] + 1
+            if abs(px - cx) > 1e-6 and abs(py - cy) > 1e-6:
+                mid = mk(cx, py, nid, lv, box[rn])
+                nodes[mid]["corner"] = True
+                c = mk(cx, cy, mid, lv, box[rn])
+            else:
+                c = mk(cx, cy, nid, lv, box[rn])
+            nodes[c]["region_root"] = rn
+            fd_now[0] = True
+            rec(c, box[rn], rt[rn])
+            fd_now[0] = full_depth
     return nodes
 
 
@@ -503,11 +537,11 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None):
     return "\n".join(v) + "\n", place, tap_ports, node_buf, parent_of
 
 
-def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_slide=False):
+def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_slide=False, regions=None):
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     taps = clock_taps(P)
-    nodes = build_htree(P, taps, leaf_um, full_depth)
+    nodes = build_htree(P, taps, leaf_um, full_depth, regions)
     site = None
     slid_fallback = 0
     if site_slide:          # opt-in: slide each buffer back along its OWN incoming leg (equal length by construction)
@@ -584,7 +618,8 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
             "report_checks -path_delay max -group_path_count 1 -format full -fields {cap slew fanout}",
             "puts OT_DONE"]
     (out / "ctree.tcl").write_text("\n".join(tcl) + "\n")
-    meta = dict(leaf_um=leaf_um, rep_um=rep_um, **({"full_depth": True} if full_depth else {}), buffer=BUF, wire_r_kohm_um=WIRE_R, wire_c_ff_um=WIRE_C,
+    meta = dict(leaf_um=leaf_um, rep_um=rep_um, **({"full_depth": True} if full_depth else {}),
+                **({"region_trees": len({n.get("region_root") for n in nodes.values()} - {None})} if regions else {}), buffer=BUF, wire_r_kohm_um=WIRE_R, wire_c_ff_um=WIRE_C,
                 tap_load_ff=TAP_LOAD_FF, nodes=len(nodes), leaves=sum(1 for n in nodes.values() if n["taps"]),
                 repeaters=sum(1 for i, *_ in place if i.startswith("r")), taps=len(tap_ports),
                 wire_um=round(sum(abs(a - c) + abs(b - d) for a, b, c, d, _ in segs) +
@@ -1272,7 +1307,7 @@ exit $rc
 
 
 def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.72, density=0.15, island_sites=None,
-              island_margin=ISLAND_MARGIN_UM, full_depth=False, site_legal=False, site_slide=False):
+              island_margin=ISLAND_MARGIN_UM, full_depth=False, site_legal=False, site_slide=False, regions=None):
     raw = S.load(plan_path)
     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
     plan_dir = Path(plan_path).parent
@@ -1335,7 +1370,8 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     meta["die_io"] = [dict(name=w["name"], part=w.get("part"), iface=w.get("iface"), rect_um=w["rect_um"],
                            sites=w.get("sites"), signals=w.get("signals"), host=w.get("host", False)) for w in io]
     # clock
-    nodes, segs, leaf_legs, cm = clock_kit(P, out / "clock", leaf_um, rep_um, full_depth, site_legal, site_slide)
+    nodes, segs, leaf_legs, cm = clock_kit(P, out / "clock", leaf_um, rep_um, full_depth, site_legal, site_slide,
+                                           json.loads(Path(regions).read_text())["part_region"] if regions else None)
     (out / "clock" / "make_tracks.tcl").write_text(gen_phys.make_tracks_tcl(P))
     meta["clock_tree"] = cm
     reserve = reserve_rects(segs, leaf_legs, P)
@@ -1883,6 +1919,8 @@ def main(argv=None):
     k.add_argument("--tree-site-slide", action="store_true",
                    help="opt-in: like --tree-site-legal, but each buffer slides back along its own incoming leg "
                         "(root->entry Manhattan lengths unchanged = equal length kept by construction)")
+    k.add_argument("--region-trees", help="fallback regions.json (part_region): die reference tree to one root per "
+                   "region + equal-depth local tree per region (FALLBACK-S81-2, opt-in)")
     k.add_argument("--coarse-um", type=float, default=0.72)
     k.add_argument("--density", type=float, default=0.15, help="die power density W/mm2 for PDNSim")
     k.add_argument("--island-sites", nargs="+", help="CLOCK-128-R7 opt-in: die_tree_plan.json / ot_clock_sites/1 / "
@@ -1946,7 +1984,7 @@ def main(argv=None):
     if a.cmd == "kit":
         m = write_kit(a.plan, a.out, a.views, a.leaf_um, a.rep_um, a.coarse_um, a.density, a.island_sites,
                       a.island_margin_um, full_depth=a.htree_full_depth, site_legal=a.tree_site_legal,
-                      site_slide=a.tree_site_slide)
+                      site_slide=a.tree_site_slide, regions=a.region_trees)
         print(json.dumps({k: m[k] for k in ("die", "parts", "types", "closed_views", "hard_cores", "clock_tree", "grt",
                                              "psm", "sta")}, indent=1))
     elif a.cmd == "report":
