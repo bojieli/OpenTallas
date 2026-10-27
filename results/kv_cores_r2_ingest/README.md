@@ -27,3 +27,4 @@ Outcome: rtl_lint UNBLOCKED; face pin-register gate still FAIL (boundary obligat
    rd_data = declared dead-input pin drop candidate (0 cycles) if PATH-KV confirms the read port unused.
 No timing, P&R or sign-off claim.
    emitted_v round-trip proof was still running at commit time (eq_rc.txt has post/mut only); kit RTL for a build is the hr-face-ports output only after eq_rc = post rc=0 mut rc=1 emitted_v rc=0.
+   UPDATE: emitted_v proof hit the 2400 s docker timeout (no rc line; eq_rc = post rc=0 mut rc=1 only) -> the generator refuses --hr-face-ports on this DIR; rerun hr_face_ports.sh with a longer limit (>=2 h) before a recut build.
