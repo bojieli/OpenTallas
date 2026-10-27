@@ -694,7 +694,10 @@ def window_kit(P, plan_dir, pg, out, name, rect, tile=86.4, power=None, phy_w=4.
     regs = [r for r in model["regions"] if r["kind"] == "phy" and _ov(r["rect_um"], [x0, y0, x1, y1]) > 0]
     regs.append(dict(name="core", kind="core", parts=[n for n in model["core_parts"]
                                                       if _ov(model["rects"][n], [x0, y0, x1, y1]) > 0]))
-    est, worst, det = estimate(P, model, pg["grid"], bp, pg.get("vdd", 0.7), domain=(x0, y0, x1, y1), regions=regs)
+    if loads is None:
+        est, worst, det = estimate(P, model, pg["grid"], bp, pg.get("vdd", 0.7), domain=(x0, y0, x1, y1), regions=regs)
+    else:
+        est, worst, det = {}, None, dict(status="NOT RUN", reason="explicit loads replace the region model; legacy estimate not applicable")
     meta = dict(die=P.name, ir_budget_mv=pg.get("budget_mv"), window=name, window_um=[x0, y0, x1, y1], area_mm2=round(w * h * 1e-6, 3), grid=pg["grid"],
                 window_grid=local_grid, grid_phase_scope="core grid rows only; PHY domains are not cropped/translated",
                 power_w=round(sum(b[3] for b in blks), 4), load_blocks=len(blks), bumps=len(bumps),
@@ -703,8 +706,9 @@ def window_kit(P, plan_dir, pg, out, name, rect, tile=86.4, power=None, phy_w=4.
                 supply_metric="requires co-located VDD drop + VSS bounce collector" if set(nets) == {"VDD", "VSS"}
                 else "single-net diagnostic; combined supply NOT RUN",
                 bump_pitch_um=bp, bump_pad_um=bump_cfg["pad_um"], est_regions_mv=est, est_worst_mv=worst, est_detail=det,
-                scope="window PDNSim: window edges open (no feed from outside), window-local bumps; the estimate "
-                      "above is the same model on the same domain")
+                scope="window PDNSim: window edges open (no feed from outside), window-local bumps; " +
+                      ("the estimate above is the same model on the same domain" if loads is None else
+                       "legacy region-model estimate NOT RUN for explicit loads"))
     (out / "irwin.json").write_text(json.dumps(meta, indent=1) + "\n")
     return meta
 
