@@ -1,0 +1,11 @@
+F4G_STAGE F4G chain start lock none input 5_1_grt_f4f_posthold.odb sha256 a9cc04572297929f 2026-10-26T22:20:19-07:00
+F4G_NDR OT_CK_M6_2S spacing M2 0.018 M3 0.018 M4 0.024 M5 0.024 M6 0.096 M7 0.032 :: M6 w 32 s 96
+F4G_B1 clock_nets 113 tree_nets_ndr 44 signal_nets_guides_removed 15292
+F4G_B1_DONE clock_unrouted 0 signal_routed 0
+F4G_B1_DRC [INFO DRT-0199]   Number of violations = 0.
+F4G_B1_WFP WFP clk_nets 113 clk_sha 7dd6b0487c2a3d97 sig_nets 15292 sig_routed 0 M6_shapes {'clk': 97, 'sig': 0}
+F4G_B1_TREE TL_TOTAL {'M2': 4.1, 'M3': 15.4, 'M4': 25.3, 'M5': 606.2, 'M6': 1060.8, 'via': 796} M5_horiz_total 0.0
+M6_STRIP tree_nets_with_M6 40 tree_M6_shapes 292 spacing_dbu 32 side 64 end 160 obstructions 729
+F4G_STAGE F4G signal DRT start (5_1_grt.odb := 5_1_grt_f4g_clk.odb) 2026-10-26T22:21:33-07:00
+F4G_STAGE F4G signal DRT FAIL rc 137 2026-10-26T22:31:39-07:00
+try5 (side 64, NDR cleared, clock guides cleared) STOPPED by lane 22:31: DRT stuck 128-641 violations, 380 obstruction-vs-locked-tree spacing-table markers
