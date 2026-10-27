@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/codex-kv-clock-1027/prep_fallback.py", line 23, in <module>
+    raw,side=CP.compose(P,table,plan_path=R/'pd/hm_r26.json',observer_part='hub_C',observer=dict(module='qkd_seq_core_static_s',instance_suffix='u_seq_u_core',fault_port='hf',ready_port='lp_run'))
+             ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/codex-kv-clock-1027/tools/die_plan/clock_landing_plan.py", line 516, in compose
+    if len(ins[pn])!=1:raise ValueError(f"hard partition {pn}: exactly one landing per hard wrapper supported, got {sorted(ins[pn])}")
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: hard partition phy_EN_0: exactly one landing per hard wrapper supported, got ['i_host_hbm_rst_n', 'i_kvpc_Q_N_pc__po', 'i_kvpc_Q_N_pc__po_d1', 'i_kvpc_Q_N_pc__po_d2', 'i_kvpc_Q_N_pc__po_d3']

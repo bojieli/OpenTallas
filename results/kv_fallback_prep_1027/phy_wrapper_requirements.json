@@ -1,0 +1,532 @@
+[
+ {
+  "type": "kv3_phy_v1",
+  "instances": 28,
+  "outline_um": [
+   864.0,
+   1520.64
+  ],
+  "reset_entry_um": [
+   842.4,
+   760.32
+  ],
+  "branches": [
+   {
+    "bus": "ft0_i",
+    "width": 1,
+    "point_um": [
+     431.9601,
+     1520.64
+    ],
+    "registered_collector": {
+     "hard": true,
+     "root": [
+      842.4,
+      760.32
+     ],
+     "relays": [
+      {
+       "q": "cland_h0",
+       "d": "rst_root_n",
+       "xy": [
+        452.147,
+        760.32
+       ],
+       "name": "u_cland_collect_cland_h0"
+      },
+      {
+       "q": "cland_h1",
+       "d": "cland_h0",
+       "xy": [
+        431.96,
+        1130.387
+       ],
+       "name": "u_cland_collect_cland_h1"
+      }
+     ],
+     "n_clock_taps": 0,
+     "leaf_node": "cland_h1",
+     "max_hop_um": 390.253
+    },
+    "bank": {
+     "rect_um": [
+      427.6401,
+      1455.84,
+      436.2801,
+      1503.36
+     ],
+     "width": 1,
+     "ring_width": 64,
+     "live_data_storage_flops": 10,
+     "padded_data_storage_flops": 320,
+     "clock_roles": {
+      "forwarded_write_flops": 256,
+      "local_read_flops": 64
+     },
+     "max_pin_to_band_hop_um": 69.12,
+     "area_reserve_um2": 396.576,
+     "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+    }
+   },
+   {
+    "bus": "i_kvpc_Q_N_pc__po",
+    "width": 328,
+    "point_um": [
+     864.0,
+     58.084799999999994
+    ],
+    "registered_collector": {
+     "hard": true,
+     "root": [
+      842.4,
+      760.32
+     ],
+     "relays": [
+      {
+       "q": "cland_h0",
+       "d": "rst_root_n",
+       "xy": [
+        864.0,
+        420.002
+       ],
+       "name": "u_cland_collect_cland_h0"
+      }
+     ],
+     "n_clock_taps": 0,
+     "leaf_node": "cland_h0",
+     "max_hop_um": 361.918
+    },
+    "bank": {
+     "rect_um": [
+      812.16,
+      30.6608,
+      846.72,
+      85.5088
+     ],
+     "width": 328,
+     "ring_width": 384,
+     "live_data_storage_flops": 1645,
+     "padded_data_storage_flops": 1920,
+     "clock_roles": {
+      "forwarded_write_flops": 1536,
+      "local_read_flops": 384
+     },
+     "max_pin_to_band_hop_um": 79.264,
+     "area_reserve_um2": 1796.256,
+     "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+    }
+   },
+   {
+    "bus": "i_kvpc_Q_N_pc__po_d1",
+    "width": 328,
+    "point_um": [
+     864.0,
+     137.6096
+    ],
+    "registered_collector": {
+     "hard": true,
+     "root": [
+      842.4,
+      760.32
+     ],
+     "relays": [
+      {
+       "q": "cland_h0",
+       "d": "rst_root_n",
+       "xy": [
+        864.0,
+        459.765
+       ],
+       "name": "u_cland_collect_cland_h0"
+      }
+     ],
+     "n_clock_taps": 0,
+     "leaf_node": "cland_h0",
+     "max_hop_um": 322.155
+    },
+    "bank": {
+     "rect_um": [
+      812.16,
+      110.1856,
+      846.72,
+      165.0336
+     ],
+     "width": 328,
+     "ring_width": 384,
+     "live_data_storage_flops": 1645,
+     "padded_data_storage_flops": 1920,
+     "clock_roles": {
+      "forwarded_write_flops": 1536,
+      "local_read_flops": 384
+     },
+     "max_pin_to_band_hop_um": 79.264,
+     "area_reserve_um2": 1796.256,
+     "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+    }
+   },
+   {
+    "bus": "i_kvpc_Q_N_pc__po_d2",
+    "width": 328,
+    "point_um": [
+     864.0,
+     217.1344
+    ],
+    "registered_collector": {
+     "hard": true,
+     "root": [
+      842.4,
+      760.32
+     ],
+     "relays": [
+      {
+       "q": "cland_h0",
+       "d": "rst_root_n",
+       "xy": [
+        864.0,
+        499.527
+       ],
+       "name": "u_cland_collect_cland_h0"
+      }
+     ],
+     "n_clock_taps": 0,
+     "leaf_node": "cland_h0",
+     "max_hop_um": 282.393
+    },
+    "bank": {
+     "rect_um": [
+      812.16,
+      189.7104,
+      846.72,
+      244.5584
+     ],
+     "width": 328,
+     "ring_width": 384,
+     "live_data_storage_flops": 1645,
+     "padded_data_storage_flops": 1920,
+     "clock_roles": {
+      "forwarded_write_flops": 1536,
+      "local_read_flops": 384
+     },
+     "max_pin_to_band_hop_um": 79.264,
+     "area_reserve_um2": 1796.256,
+     "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+    }
+   },
+   {
+    "bus": "i_kvpc_Q_N_pc__po_d3",
+    "width": 328,
+    "point_um": [
+     864.0,
+     296.6592
+    ],
+    "registered_collector": {
+     "hard": true,
+     "root": [
+      842.4,
+      760.32
+     ],
+     "relays": [
+      {
+       "q": "cland_h0",
+       "d": "rst_root_n",
+       "xy": [
+        864.0,
+        539.29
+       ],
+       "name": "u_cland_collect_cland_h0"
+      }
+     ],
+     "n_clock_taps": 0,
+     "leaf_node": "cland_h0",
+     "max_hop_um": 242.63
+    },
+    "bank": {
+     "rect_um": [
+      812.16,
+      269.2352,
+      846.72,
+      324.0832
+     ],
+     "width": 328,
+     "ring_width": 384,
+     "live_data_storage_flops": 1645,
+     "padded_data_storage_flops": 1920,
+     "clock_roles": {
+      "forwarded_write_flops": 1536,
+      "local_read_flops": 384
+     },
+     "max_pin_to_band_hop_um": 79.264,
+     "area_reserve_um2": 1796.256,
+     "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+    }
+   }
+  ],
+  "needed_local_rings": 5,
+  "collector_plan": "Independent registered reverse chains to the one delivered-reset entry; merge ready by AND and fault by OR at a registered root. Existing generator supports only one chain; extension + proof needed before build."
+ },
+ {
+  "type": "kv3_phy",
+  "instances": 4,
+  "outline_um": [
+   864.0,
+   1520.64
+  ],
+  "reset_entry_um": [
+   842.4,
+   760.32
+  ],
+  "branches": [
+   {
+    "bus": "i_host_hbm_rst_n",
+    "width": 1,
+    "point_um": [
+     431.9601,
+     1520.64
+    ],
+    "registered_collector": {
+     "hard": true,
+     "root": [
+      842.4,
+      760.32
+     ],
+     "relays": [
+      {
+       "q": "cland_h0",
+       "d": "rst_root_n",
+       "xy": [
+        452.147,
+        760.32
+       ],
+       "name": "u_cland_collect_cland_h0"
+      },
+      {
+       "q": "cland_h1",
+       "d": "cland_h0",
+       "xy": [
+        431.96,
+        1130.387
+       ],
+       "name": "u_cland_collect_cland_h1"
+      }
+     ],
+     "n_clock_taps": 0,
+     "leaf_node": "cland_h1",
+     "max_hop_um": 390.253
+    },
+    "bank": {
+     "rect_um": [
+      427.6401,
+      1455.84,
+      436.2801,
+      1503.36
+     ],
+     "width": 1,
+     "ring_width": 64,
+     "live_data_storage_flops": 10,
+     "padded_data_storage_flops": 320,
+     "clock_roles": {
+      "forwarded_write_flops": 256,
+      "local_read_flops": 64
+     },
+     "max_pin_to_band_hop_um": 69.12,
+     "area_reserve_um2": 396.576,
+     "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+    }
+   },
+   {
+    "bus": "i_kvpc_Q_N_pc__po",
+    "width": 328,
+    "point_um": [
+     864.0,
+     58.084799999999994
+    ],
+    "registered_collector": {
+     "hard": true,
+     "root": [
+      842.4,
+      760.32
+     ],
+     "relays": [
+      {
+       "q": "cland_h0",
+       "d": "rst_root_n",
+       "xy": [
+        864.0,
+        420.002
+       ],
+       "name": "u_cland_collect_cland_h0"
+      }
+     ],
+     "n_clock_taps": 0,
+     "leaf_node": "cland_h0",
+     "max_hop_um": 361.918
+    },
+    "bank": {
+     "rect_um": [
+      812.16,
+      30.6608,
+      846.72,
+      85.5088
+     ],
+     "width": 328,
+     "ring_width": 384,
+     "live_data_storage_flops": 1645,
+     "padded_data_storage_flops": 1920,
+     "clock_roles": {
+      "forwarded_write_flops": 1536,
+      "local_read_flops": 384
+     },
+     "max_pin_to_band_hop_um": 79.264,
+     "area_reserve_um2": 1796.256,
+     "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+    }
+   },
+   {
+    "bus": "i_kvpc_Q_N_pc__po_d1",
+    "width": 328,
+    "point_um": [
+     864.0,
+     137.6096
+    ],
+    "registered_collector": {
+     "hard": true,
+     "root": [
+      842.4,
+      760.32
+     ],
+     "relays": [
+      {
+       "q": "cland_h0",
+       "d": "rst_root_n",
+       "xy": [
+        864.0,
+        459.765
+       ],
+       "name": "u_cland_collect_cland_h0"
+      }
+     ],
+     "n_clock_taps": 0,
+     "leaf_node": "cland_h0",
+     "max_hop_um": 322.155
+    },
+    "bank": {
+     "rect_um": [
+      812.16,
+      110.1856,
+      846.72,
+      165.0336
+     ],
+     "width": 328,
+     "ring_width": 384,
+     "live_data_storage_flops": 1645,
+     "padded_data_storage_flops": 1920,
+     "clock_roles": {
+      "forwarded_write_flops": 1536,
+      "local_read_flops": 384
+     },
+     "max_pin_to_band_hop_um": 79.264,
+     "area_reserve_um2": 1796.256,
+     "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+    }
+   },
+   {
+    "bus": "i_kvpc_Q_N_pc__po_d2",
+    "width": 328,
+    "point_um": [
+     864.0,
+     217.1344
+    ],
+    "registered_collector": {
+     "hard": true,
+     "root": [
+      842.4,
+      760.32
+     ],
+     "relays": [
+      {
+       "q": "cland_h0",
+       "d": "rst_root_n",
+       "xy": [
+        864.0,
+        499.527
+       ],
+       "name": "u_cland_collect_cland_h0"
+      }
+     ],
+     "n_clock_taps": 0,
+     "leaf_node": "cland_h0",
+     "max_hop_um": 282.393
+    },
+    "bank": {
+     "rect_um": [
+      812.16,
+      189.7104,
+      846.72,
+      244.5584
+     ],
+     "width": 328,
+     "ring_width": 384,
+     "live_data_storage_flops": 1645,
+     "padded_data_storage_flops": 1920,
+     "clock_roles": {
+      "forwarded_write_flops": 1536,
+      "local_read_flops": 384
+     },
+     "max_pin_to_band_hop_um": 79.264,
+     "area_reserve_um2": 1796.256,
+     "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+    }
+   },
+   {
+    "bus": "i_kvpc_Q_N_pc__po_d3",
+    "width": 328,
+    "point_um": [
+     864.0,
+     296.6592
+    ],
+    "registered_collector": {
+     "hard": true,
+     "root": [
+      842.4,
+      760.32
+     ],
+     "relays": [
+      {
+       "q": "cland_h0",
+       "d": "rst_root_n",
+       "xy": [
+        864.0,
+        539.29
+       ],
+       "name": "u_cland_collect_cland_h0"
+      }
+     ],
+     "n_clock_taps": 0,
+     "leaf_node": "cland_h0",
+     "max_hop_um": 242.63
+    },
+    "bank": {
+     "rect_um": [
+      812.16,
+      269.2352,
+      846.72,
+      324.0832
+     ],
+     "width": 328,
+     "ring_width": 384,
+     "live_data_storage_flops": 1645,
+     "padded_data_storage_flops": 1920,
+     "clock_roles": {
+      "forwarded_write_flops": 1536,
+      "local_read_flops": 384
+     },
+     "max_pin_to_band_hop_um": 79.264,
+     "area_reserve_um2": 1796.256,
+     "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+    }
+   }
+  ],
+  "needed_local_rings": 5,
+  "collector_plan": "Independent registered reverse chains to the one delivered-reset entry; merge ready by AND and fault by OR at a registered root. Existing generator supports only one chain; extension + proof needed before build."
+ }
+]

@@ -1,0 +1,9 @@
+import json,collections,hashlib,sys
+from pathlib import Path
+R=Path(__file__).resolve().parent;O=R/'fallback';P=json.loads((R/'pd/hm_r26.json').read_text());T=json.loads((O/'wrapper_land_crossings.json').read_text());Q=json.loads((O/'wrapper_land_requirements.json').read_text());by=collections.Counter(r['lane'] for r in T['ports']);lm={x['id']:x for x in P['lanes']};rows=[]
+for lid,n in sorted(by.items()):
+ v=P['latency']['lanes'][lid];ln=lm[lid];rows.append(dict(lane=lid,src=ln.get('src'),dst=ln.get('dst'),ports=ln['ports'],landed_faces=n,added_cycles=3*n,original_cycles=v['cycles'],candidate_cycles=v['cycles']+3*n,original_natural=v['natural'],candidate_natural=v['natural']+3*n,original_pad=v.get('pad',0)))
+D=dict(schema='opentallas.kv_fallback_lane_delta.v1',status='PLAN ONLY; no fallback build; R8/compiler rebase required before implementation',source_plan_sha256=hashlib.sha256((R/'pd/hm_r26.json').read_bytes()).hexdigest(),cycles_per_landing=3,interpretation='Every crossed partition face lands; FT stations retain receiving partition local clock. No asynchronous face is treated as a same-cycle hop.',lanes=rows)
+(O/'lane_delta.json').write_text(json.dumps(D,indent=1)+'\n')
+S=dict(regions=T['regions_count'],landed_ports=len(T['ports']),landed_bits=T['bits'],scalar_clock_status_pins=Q['required_new_scalar_pins'],live_ring_data_ff=Q['added_live_data_storage_flops'],types_before=Q['type_count_before'],landing_mask_cohorts=Q['type_count_after'],split_types=len(Q['split_types']),lanes_with_delta=len(rows),added_lane_cycle_sum=sum(r['added_cycles'] for r in rows),added_lane_cycles_histogram=dict(collections.Counter(r['added_cycles'] for r in rows)),added_cycles_max=max(r['added_cycles'] for r in rows),token_price='NOT COMPOSED on current B48/R26 calendar; ledger is per-lane only, not a token-price sum')
+(O/'preparation_summary.json').write_text(json.dumps(S,indent=1)+'\n');print(json.dumps(S,indent=1))
