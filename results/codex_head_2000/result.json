@@ -1,0 +1,63 @@
+{
+  "scope": "HEAD B actual standalone GRT diagnostic, not SIGNED, canonical HEAD binding OPEN",
+  "source": "codex/head-2000@f69e7d148; unchanged f11f3cc47 legacy arithmetic; R6 elemB wrapper and R7 pins",
+  "model": "unchanged uf_phys3_v1 MODEL-REFIT-3 GRT",
+  "clock": {
+    "primary": "ft_mstrap_i actual, not declared FT",
+    "real_FT_ports": 8,
+    "canonical_adoption": false,
+    "cycles_added": 0
+  },
+  "grt": {
+    "corner": "TT and FF measured on same GRT DB",
+    "overflow": 0,
+    "routed_nets": 102722,
+    "wirelength_um": 541429,
+    "TT_leaf_mean_ps": 252.55,
+    "TT_leaf_window_ps": 12.63,
+    "FF_leaf_mean_ps": 196.95,
+    "FF_leaf_window_ps": 10.58
+  },
+  "before": {
+    "TT_leaf_window_ps": 19.5,
+    "FF_leaf_window_ps": 16.4,
+    "root_cause": "old pins and density0.50 created large central logic void and one anomalous routed subtree; fixed actual pins+density0.30 and count-balanced tree"
+  },
+  "standalone_TT": {
+    "corner": "TT",
+    "setup_ps": 120.552069,
+    "hold_ps": -76.290211,
+    "setup_endpoints": 0,
+    "hold_endpoints": 258
+  },
+  "standalone_FF": {
+    "corner": "FF",
+    "setup_ps": 237.304677,
+    "hold_ps": -72.327103,
+    "setup_endpoints": 0,
+    "hold_endpoints": 489
+  },
+  "data_repair": {
+    "host": "epyc2",
+    "path": "/srv/opentallas-scratch2/claude/codex-head-2000/elemB_hold_repair",
+    "client": 2283664,
+    "unit": "oth-ubuntu-116719-1793072470",
+    "status": "RUNNING; inherited repair margin15 includes13733 endpoints vs489 actually negative",
+    "no_clock_ECO": true
+  },
+  "LEC": {
+    "host": "epyc2",
+    "path": "/srv/opentallas-scratch2/claude/codex-head-2000/elemB_actual_contract/lec_actual_r2",
+    "client": 3042832,
+    "unit": "oth-ubuntu-136229-1793072661",
+    "tool_sha256": "0b650fe626086893d76d17781a13257e34e98ab1de2e3e0480fcd009dbb4a058",
+    "status": "RUNNING; exact6771 portless TAPs removed functional export only"
+  },
+  "remaining": [
+    "post-repair TT setup / FF hold, windows, PG and clock preservation",
+    "whole-core LEC EQUIVALENT; no hint assumed",
+    "DRT only after actual gates and review; signoff.py on routed real8FT+primary contract",
+    "canonical HEAD infra event reconciles phantomclk versus actual primary name",
+    "die GRT/STA and token pass remain OPEN"
+  ]
+}

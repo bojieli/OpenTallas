@@ -1,0 +1,52 @@
+{
+  "basis": "Actual GRT parasitics TT, no DRT/SPEF; node_TT_r4.tsv",
+  "N1_1": [
+    {
+      "node": "N1_1_0",
+      "net_delay": "5.926390999999995",
+      "cell_delay": "32.070908"
+    },
+    {
+      "node": "N1_1_1",
+      "net_delay": "6.134658000000002",
+      "cell_delay": "32.011368000000004"
+    },
+    {
+      "node": "N1_1_2",
+      "net_delay": "6.138442999999995",
+      "cell_delay": "31.915161000000012"
+    },
+    {
+      "node": "N1_1_3",
+      "net_delay": "5.552687999999989",
+      "cell_delay": "32.286911"
+    }
+  ],
+  "N1_2": [
+    {
+      "node": "N1_2_0",
+      "net_delay": "7.3688049999999805",
+      "cell_delay": "33.534302000000025"
+    },
+    {
+      "node": "N1_2_1",
+      "net_delay": "7.19280999999998",
+      "cell_delay": "33.31485000000001"
+    },
+    {
+      "node": "N1_2_2",
+      "net_delay": "7.545333999999997",
+      "cell_delay": "33.64691099999999"
+    },
+    {
+      "node": "N1_2_3",
+      "net_delay": "7.998900999999989",
+      "cell_delay": "33.535461999999995"
+    }
+  ],
+  "clock_pg": "689cells/1378supplypins connected; PG logical only; not IR",
+  "tool_failures": [
+    "Initial arrival query segfaulted before graph construction; added report_worst_slack to construct graph",
+    "report_net unsupported -connections flag then expected string not get_nets object; corrected literal net names; finalr4exit0"
+  ]
+}
