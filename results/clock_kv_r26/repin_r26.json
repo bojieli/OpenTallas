@@ -1,0 +1,297 @@
+{
+ "schema": "opentallas.clock_kv_r26.repin.v1",
+ "delta": "D-KV-CENTRE-R26 + D-KV-HEAD-TR(A) e5",
+ "files": {
+  "kv3_head_eighth_e1_pins_r26": {
+   "base": "kv3_head_eighth_e1_pins.json",
+   "moved": [
+    {
+     "pin": "g_t_2_u_l8__clk[0]",
+     "from_": [
+      12.744,
+      215.904
+     ],
+     "to": [
+      108.024,
+      108.0
+     ],
+     "why": "12.8a centre entry"
+    },
+    {
+     "pin": "g_t_2_u_stin__clk[0]",
+     "from_": [
+      33.912,
+      215.904
+     ],
+     "to": [
+      108.408,
+      108.0
+     ],
+     "why": "12.8a centre entry"
+    },
+    {
+     "pin": "g_t_2_u_stk__clk[0]",
+     "from_": [
+      76.248,
+      215.904
+     ],
+     "to": [
+      107.64,
+      108.0
+     ],
+     "why": "12.8a centre entry"
+    },
+    {
+     "pin": "g_t_3_u_l8__clk[0]",
+     "from_": [
+      118.584,
+      215.904
+     ],
+     "to": [
+      108.792,
+      108.0
+     ],
+     "why": "12.8a centre entry"
+    },
+    {
+     "pin": "g_t_3_u_stin__clk[0]",
+     "from_": [
+      139.752,
+      215.904
+     ],
+     "to": [
+      107.256,
+      108.0
+     ],
+     "why": "12.8a centre entry"
+    },
+    {
+     "pin": "g_t_3_u_stk__clk[0]",
+     "from_": [
+      182.088,
+      215.904
+     ],
+     "to": [
+      109.176,
+      108.0
+     ],
+     "why": "12.8a centre entry"
+    }
+   ],
+   "centre_row": [
+    [
+     "g_t_3_u_stin__clk[0]",
+     107.256
+    ],
+    [
+     "g_t_2_u_stk__clk[0]",
+     107.64
+    ],
+    [
+     "g_t_2_u_l8__clk[0]",
+     108.024
+    ],
+    [
+     "g_t_2_u_stin__clk[0]",
+     108.408
+    ],
+    [
+     "g_t_3_u_l8__clk[0]",
+     108.792
+    ],
+    [
+     "g_t_3_u_stk__clk[0]",
+     109.176
+    ]
+   ],
+   "pins": 546,
+   "sha256": "cd0fc778a6bc7ced16bcd8e6b556660a3e23392a8718e03a5acd88256b727715"
+  },
+  "kv3_head_eighth_e5_pins_r26": {
+   "base": "kv3_head_eighth_e5_pins_r25.json",
+   "moved": [
+    {
+     "pin": "g_t_10_u_l8__clk[0]",
+     "from_": [
+      3.528,
+      0.096
+     ],
+     "to": [
+      108.024,
+      108.0
+     ],
+     "why": "12.8a centre entry"
+    },
+    {
+     "pin": "g_t_10_u_stin__clk[0]",
+     "from_": [
+      6.216,
+      0.096
+     ],
+     "to": [
+      108.408,
+      108.0
+     ],
+     "why": "12.8a centre entry"
+    },
+    {
+     "pin": "g_t_10_u_stin__rst_n[0]",
+     "from_": [
+      108.024,
+      108.0
+     ],
+     "to": [
+      107.928,
+      108.0
+     ],
+     "why": "off clock site; = e6 g_t_12_u_stin__rst_n[0] site"
+    },
+    {
+     "pin": "g_t_10_u_stk__clk[0]",
+     "from_": [
+      11.64,
+      0.096
+     ],
+     "to": [
+      107.64,
+      108.0
+     ],
+     "why": "12.8a centre entry"
+    },
+    {
+     "pin": "g_t_10_u_stk__rst_n[0]",
+     "from_": [
+      108.12,
+      108.0
+     ],
+     "to": [
+      108.216,
+      108.0
+     ],
+     "why": "off clock site; = e6 g_t_12_u_stk__rst_n[0] site"
+    },
+    {
+     "pin": "g_t_11_u_l8__clk[0]",
+     "from_": [
+      109.368,
+      0.096
+     ],
+     "to": [
+      108.792,
+      108.0
+     ],
+     "why": "12.8a centre entry"
+    },
+    {
+     "pin": "g_t_11_u_stin__clk[0]",
+     "from_": [
+      112.056,
+      0.096
+     ],
+     "to": [
+      107.256,
+      108.0
+     ],
+     "why": "12.8a centre entry"
+    },
+    {
+     "pin": "g_t_11_u_stin__rst_n[0]",
+     "from_": [
+      107.928,
+      108.0
+     ],
+     "to": [
+      107.832,
+      108.0
+     ],
+     "why": "off clock site; = e6 g_t_13_u_stin__rst_n[0] site"
+    },
+    {
+     "pin": "g_t_11_u_stk__clk[0]",
+     "from_": [
+      117.48,
+      0.096
+     ],
+     "to": [
+      109.176,
+      108.0
+     ],
+     "why": "12.8a centre entry"
+    },
+    {
+     "pin": "g_t_11_u_stk__rst_n[0]",
+     "from_": [
+      108.216,
+      108.0
+     ],
+     "to": [
+      108.312,
+      108.0
+     ],
+     "why": "off clock site; = e6 g_t_13_u_stk__rst_n[0] site"
+    }
+   ],
+   "centre_row": [
+    [
+     "g_t_11_u_stin__clk[0]",
+     107.256
+    ],
+    [
+     "g_t_10_u_stk__clk[0]",
+     107.64
+    ],
+    [
+     "g_t_11_u_stin__rst_n[0]",
+     107.832
+    ],
+    [
+     "g_t_10_u_stin__rst_n[0]",
+     107.928
+    ],
+    [
+     "g_t_10_u_l8__clk[0]",
+     108.024
+    ],
+    [
+     "g_t_10_u_stk__rst_n[0]",
+     108.216
+    ],
+    [
+     "g_t_11_u_stk__rst_n[0]",
+     108.312
+    ],
+    [
+     "g_t_10_u_stin__clk[0]",
+     108.408
+    ],
+    [
+     "g_t_11_u_l8__clk[0]",
+     108.792
+    ],
+    [
+     "g_t_11_u_stk__clk[0]",
+     109.176
+    ]
+   ],
+   "pins": 546,
+   "sha256": "ad60de2275b438402ddd163371b92e8b79b266b8c619872881b0462d136c42ec"
+  },
+  "kv3_head_eighth_e5_pins_fMX_r26": {
+   "non_image_pins": 0,
+   "pins": 546,
+   "sha256": "ec2de8326f6a51ca94e50d5502831c8cbab6979b6988dff96b35eb0c19b2367d"
+  }
+ },
+ "taps": {
+  "moved": 112,
+  "added": 24
+ },
+ "hard_core_entries": {
+  "e1": 68,
+  "e5_R0": 34,
+  "e5_canonMX": 10,
+  "e5_fMX_to_R0": 24
+ },
+ "plan_in_sha256": "113a1664325961b00b7afacd71febb8490a1f021904f366f3a78ee210d8b9173",
+ "plan_out_sha256": "568fc66e254de0538cea3cc37fe8c2886ec42022874eababb6e243cbf382d2da"
+}
