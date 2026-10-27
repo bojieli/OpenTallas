@@ -6,11 +6,12 @@ sys.path.insert(0,str(Path(__file__).resolve().parent))
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'hbm_b2'))
 from b2_top import Die,parse_expr
 from rebind_station_endpoints import split_ref,baseinst
-ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('plan_dir');ap.add_argument('rebind_report');ap.add_argument('native');ap.add_argument('asbuilt');ap.add_argument('out');ap.add_argument('--asbuilt-map',help='generated native instance -> local role map (paired with plan census_map)');ap.add_argument('--split-maps',help='explicit type:base-instance -> native_parent, expected_module, cut_map for external master ports only');a=ap.parse_args()
+ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('plan_dir');ap.add_argument('rebind_report');ap.add_argument('native');ap.add_argument('asbuilt');ap.add_argument('out');ap.add_argument('--role-map',help='explicit per-instance logical native roles with expected_plan_master');ap.add_argument('--asbuilt-map',help='generated native instance -> local role map (paired with plan census_map)');ap.add_argument('--split-maps',help='explicit type:base-instance -> native_parent, expected_module, cut_map for external master ports only');a=ap.parse_args()
 pd=Path(a.plan_dir);raw=json.load(open(pd/'die_plan.json'));report=json.load(open(a.rebind_report));cfg=json.load(open(a.asbuilt));d=Die(a.native,cfg['transport']);out=Path(a.out)
 if out.exists():raise SystemExit('refusing existing output')
 out.mkdir(parents=True)
 split_maps=json.load(open(a.split_maps)) if a.split_maps else {}
+role_maps=json.load(open(a.role_map)).get('role_map',{}) if a.role_map else {}
 amap_path=Path(a.asbuilt_map) if a.asbuilt_map else Path(__file__).resolve().parents[2]/'physical/die_plan/hbm/bind/asbuilt_map.json'
 amap=json.load(open(amap_path))['parts'] if amap_path.is_file() else {}
 census_path=pd/'census_map.json';census=json.load(open(census_path))['parts'] if census_path.is_file() else {}
@@ -35,6 +36,13 @@ def choose(t,s,field):
  return cand[0]
 
 def native(t,h,tn):
+ override=role_maps.get(f"{tn}:{h['inst']}")
+ if override:
+  if h['module']!=override['expected_plan_master']:raise ValueError(f"logical native role requires plan master {override['expected_plan_master']}, current {h['module']}")
+  n=override['native_instance']
+  if n not in d.insts:raise ValueError('logical native role is absent from supplied native source vehicle')
+  if d.insts[n]['master']!=override['expected_plan_master']:raise ValueError('supplied native source vehicle has the wrong master for explicit logical role')
+  return n
  bn=baseinst(h['inst']);role=bn[2:] if bn.startswith('u_') else bn
  # as-built notes identify a source template, not its physical quadrant. The
  # generated role map plus CURRENT census assignment selects the actual native instance.
@@ -59,12 +67,20 @@ def connections(tn,t,h):
   spec=split_maps.get(f"{tn}:{baseinst(h['inst'])}")
   if not spec:raise
   if h['module']!=spec['expected_module']:raise ValueError('split-map module contract differs from actual core')
-  receipt=json.load(open(spec['abi_receipt']));hook=receipt['subcores'][spec['subcore']]
-  if hook.get('equal_ignoring_whitespace') is not True:raise ValueError('current q2/q3 public subcore hookup ABI is not verified')
-  allowed=set(re.findall(r'[A-Za-z_$][\w$]*',hook['source_connections']))
+  current_map=json.load(open(spec['cut_map']))
+  if current_map.get('public_identity_only'):
+   if hashlib.sha256(Path(current_map['source']).read_bytes()).hexdigest()!=current_map['source_sha256']:raise ValueError('current public wrapper source changed since exact map extraction')
+   allowed=set(current_map['identity_public_widths'])
+  else:
+   receipt=json.load(open(spec['abi_receipt']));hook=receipt['subcores'][spec['subcore']]
+   if hook.get('equal_ignoring_whitespace') is not True:raise ValueError('current q2/q3 public subcore hookup ABI is not verified')
+   allowed=set(re.findall(r'[A-Za-z_$][\w$]*',hook['source_connections']))
   n=spec['native_parent']
   if n not in d.insts:raise ValueError('split-map parent absent in native die')
   mapping=json.load(open(spec['cut_map']))
+  if mapping.get('public_identity_only'):
+   declared=re.search(r'\.NLINK\((\d+)\)',d.insts[n]['params'])
+   if not declared or int(declared[1])!=mapping['variant']['nlink']:raise ValueError('current public wrapper NLINK differs from actual native parent')
   if mapping['module']!=h['module']:raise ValueError('cut map module differs from actual core')
   ports={}
   for port,labels in mapping['buses'].items():
@@ -72,7 +88,9 @@ def connections(tn,t,h):
    for label in labels:
     m=re.fullmatch(r'([A-Za-z_$][\w$]*)(?:\[(\d+)\])?',label)
     if not m or m[1] not in allowed or m[1] not in d.insts[n]['conns']:complete=False;break
-    vect=bits(d.insts[n]['conns'][m[1]]);bit=int(m[2]) if m[2] is not None else 0
+    vect=bits(d.insts[n]['conns'][m[1]])
+    if mapping.get('public_identity_only') and len(vect)!=mapping['identity_public_widths'][m[1]]:complete=False;break
+    bit=int(m[2]) if m[2] is not None else 0
     if bit>=len(vect):complete=False;break
     vv.append(vect[bit])
    if complete:ports[port]=vv
@@ -114,10 +132,10 @@ for entry in report['unresolved']:
     actual=source_physical if len(sourcevector)==1 and source_physical in sourcepins else f'{source_physical}[{k}]'
     if actual not in sourcepins:raise ValueError(f'exact source native pin {actual} is absent from current table')
     source_selected.append(logical)
-   emap[key]=dict(core=target['inst'],ports=selected,expected_reference=s[field],expected_conn=s.get('conn'),expected_r9_segments=s.get('r9_segments'))
-   emap[f'{tn}:{i}:{other}']=dict(core=source['inst'],ports=source_selected,expected_reference=s[other],expected_conn=s.get('conn'),expected_r9_segments=s.get('r9_segments'))
+   emap[key]=dict(core=target['inst'],ports=selected,expected_plan_module=target['module'],expected_reference=s[field],expected_conn=s.get('conn'),expected_r9_segments=s.get('r9_segments'))
+   emap[f'{tn}:{i}:{other}']=dict(core=source['inst'],ports=source_selected,expected_plan_module=source['module'],expected_reference=s[other],expected_conn=s.get('conn'),expected_r9_segments=s.get('r9_segments'))
    row.update(verdict='PASS',source_native=sn,source_port=sp,source_plan_module=source['module'],target_native=tnative,target_plan_module=target['module'],unique_native_bits=len(matched),reserved_parallel_bits=expected,unused_reserved_bits=expected-len(matched),source_pin_bits=len(source_selected),target_pin_bits=len(selected),matches=matches,map_key=key)
   except (ValueError,KeyError,TypeError,IndexError) as e:row.update(verdict='FAIL',reason=str(e))
   rows.append(row)
-meta=dict(schema='opentallas.native_station_map.v1',plan=str(pd),plan_sha256=hashlib.sha256((pd/'die_plan.json').read_bytes()).hexdigest(),native=str(a.native),native_sha256=hashlib.sha256(Path(a.native).read_bytes()).hexdigest(),maps=len(emap),mapped_bare_endpoints=sum(r['verdict']=='PASS' for r in rows),failed=sum(r['verdict']=='FAIL' for r in rows),rows=rows,asbuilt_map=str(amap_path),split_maps=a.split_maps,method='Exact native variable-bit identity after real transport resolution; source/target identity uses generated role map + current census assignment, not template as-built annotations; Native used bits must fit existing reserved parallel width, which is never reduced; exact source and target bit subsets supplied. Clone/split binding on the current unified native top remains an independent requirement.')
+meta=dict(schema='opentallas.native_station_map.v1',plan=str(pd),plan_sha256=hashlib.sha256((pd/'die_plan.json').read_bytes()).hexdigest(),native=str(a.native),native_sha256=hashlib.sha256(Path(a.native).read_bytes()).hexdigest(),maps=len(emap),mapped_bare_endpoints=sum(r['verdict']=='PASS' for r in rows),failed=sum(r['verdict']=='FAIL' for r in rows),rows=rows,asbuilt_map=str(amap_path),split_maps=a.split_maps,role_map=a.role_map,method='Exact native variable-bit identity after real transport resolution; source/target identity uses generated role map + current census assignment, not template as-built annotations; Native used bits must fit existing reserved parallel width, which is never reduced; exact source and target bit subsets supplied. Clone/split binding on the current unified native top remains an independent requirement.')
 (out/'endpoint_map.json').write_text(json.dumps(emap,indent=1)+'\n');(out/'report.json').write_text(json.dumps(meta,indent=1)+'\n');print('EXACT_MAPS',len(emap),'FAILED',meta['failed']);print(collections.Counter(r.get('reason','PASS') for r in rows))

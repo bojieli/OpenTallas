@@ -107,6 +107,7 @@ class Resolver:
                 if mk in override and override[mk]!=actual:raise ValueError(f'explicit endpoint map {mk} does not match station')
             hits=[h for h in cores if h['inst']==override.get('core')]
             if len(hits)!=1:raise ValueError('explicit map core is not one actual instance')
+            if 'expected_plan_module' in override and hits[0]['module']!=override['expected_plan_module']:raise ValueError('explicit endpoint map plan master has changed')
             ports=override.get('ports')
             if not isinstance(ports,list) or not ports:raise ValueError('explicit bundle map needs nonempty ports')
             entries=[self.group(hits[0],p) for p in ports]
