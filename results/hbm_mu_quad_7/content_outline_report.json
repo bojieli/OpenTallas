@@ -1,0 +1,585 @@
+{
+ "status": "TRIAL: repack/restation/G0/G1 still required",
+ "cores": [
+  {
+   "type": "q_su00",
+   "inst": "u_su_Q0_pretree",
+   "module": "ot_hbm_su_static_pgslice_lg__pretree",
+   "old_outline": [
+    164.16,
+    457.92
+   ],
+   "outline": [
+    164.16,
+    241.92
+   ],
+   "std_area_um2": 18169.39188,
+   "macro_area_um2": 0,
+   "free_fill": 0.5008,
+   "growth_needs_neighbour_check": false,
+   "pins_file": "cores/ot_hbm_su_static_pgslice_lg__pretree__164.16x241.92__content_trial.json",
+   "entry": {
+    "xy_um": [
+     82.104,
+     120.984
+    ],
+    "island_um": [
+     77.784,
+     116.664,
+     86.424,
+     125.304
+    ],
+    "port": "clk_ctl",
+    "merged_clock_ports": [],
+    "tap": "u_su_Q0_pretree.clk_ctl",
+    "source": "CODEX measured-content structural outline trial, centre channel",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hbm_su_static_pgslice_lg__pretree"
+   }
+  },
+  {
+   "type": "q_su10",
+   "inst": "u_su_Q1_pretree",
+   "module": "ot_hbm_su_static_pgslice_lg__pretree",
+   "old_outline": [
+    164.16,
+    457.92
+   ],
+   "outline": [
+    164.16,
+    241.92
+   ],
+   "std_area_um2": 18169.39188,
+   "macro_area_um2": 0,
+   "free_fill": 0.5008,
+   "growth_needs_neighbour_check": false,
+   "pins_file": "cores/ot_hbm_su_static_pgslice_lg__pretree__164.16x241.92__content_trial.json",
+   "entry": {
+    "xy_um": [
+     82.104,
+     120.984
+    ],
+    "island_um": [
+     77.784,
+     116.664,
+     86.424,
+     125.304
+    ],
+    "port": "clk_ctl",
+    "merged_clock_ports": [],
+    "tap": "u_su_Q1_pretree.clk_ctl",
+    "source": "CODEX measured-content structural outline trial, centre channel",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hbm_su_static_pgslice_lg__pretree"
+   }
+  },
+  {
+   "type": "q_su20",
+   "inst": "u_su_Q2_pretree",
+   "module": "ot_hbm_su_static_pgslice_lg__pretree",
+   "old_outline": [
+    164.16,
+    457.92
+   ],
+   "outline": [
+    164.16,
+    241.92
+   ],
+   "std_area_um2": 18169.39188,
+   "macro_area_um2": 0,
+   "free_fill": 0.5008,
+   "growth_needs_neighbour_check": false,
+   "pins_file": "cores/ot_hbm_su_static_pgslice_lg__pretree__164.16x241.92__content_trial.json",
+   "entry": {
+    "xy_um": [
+     82.104,
+     120.984
+    ],
+    "island_um": [
+     77.784,
+     116.664,
+     86.424,
+     125.304
+    ],
+    "port": "clk_ctl",
+    "merged_clock_ports": [],
+    "tap": "u_su_Q2_pretree.clk_ctl",
+    "source": "CODEX measured-content structural outline trial, centre channel",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hbm_su_static_pgslice_lg__pretree"
+   }
+  },
+  {
+   "type": "q_su30",
+   "inst": "u_su_Q3_pretree",
+   "module": "ot_hbm_su_static_pgslice_lg__pretree",
+   "old_outline": [
+    164.16,
+    457.92
+   ],
+   "outline": [
+    164.16,
+    241.92
+   ],
+   "std_area_um2": 18169.39188,
+   "macro_area_um2": 0,
+   "free_fill": 0.5008,
+   "growth_needs_neighbour_check": false,
+   "pins_file": "cores/ot_hbm_su_static_pgslice_lg__pretree__164.16x241.92__content_trial.json",
+   "entry": {
+    "xy_um": [
+     82.104,
+     120.984
+    ],
+    "island_um": [
+     77.784,
+     116.664,
+     86.424,
+     125.304
+    ],
+    "port": "clk_ctl",
+    "merged_clock_ports": [],
+    "tap": "u_su_Q3_pretree.clk_ctl",
+    "source": "CODEX measured-content structural outline trial, centre channel",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hbm_su_static_pgslice_lg__pretree"
+   }
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_xq_Q_p0_eg",
+   "module": "ot_hgi_sm_xload_xq_pegress",
+   "old_outline": [
+    369.36,
+    369.36
+   ],
+   "outline": [
+    181.44,
+    276.48
+   ],
+   "std_area_um2": 6032.92698,
+   "macro_area_um2": 0,
+   "free_fill": 0.1303,
+   "growth_needs_neighbour_check": false,
+   "pins_file": "cores/ot_hgi_sm_xload_xq_pegress__181.44x276.48__content_trial.json",
+   "entry": {
+    "xy_um": [
+     90.744,
+     138.264
+    ],
+    "island_um": [
+     86.424,
+     133.944,
+     95.064,
+     142.584
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_c",
+     "clk_e",
+     "clk_s",
+     "clk_w"
+    ],
+    "tap": "u_xq_Q_p0_eg",
+    "source": "CODEX measured-content structural outline trial, centre channel",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hgi_sm_xload_xq_pegress"
+   }
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_xq_Q_p1_eg",
+   "module": "ot_hgi_sm_xload_xq_pegress",
+   "old_outline": [
+    369.36,
+    369.36
+   ],
+   "outline": [
+    181.44,
+    276.48
+   ],
+   "std_area_um2": 6032.92698,
+   "macro_area_um2": 0,
+   "free_fill": 0.1303,
+   "growth_needs_neighbour_check": false,
+   "pins_file": "cores/ot_hgi_sm_xload_xq_pegress__181.44x276.48__content_trial.json",
+   "entry": {
+    "xy_um": [
+     90.744,
+     138.264
+    ],
+    "island_um": [
+     86.424,
+     133.944,
+     95.064,
+     142.584
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_c",
+     "clk_e",
+     "clk_s",
+     "clk_w"
+    ],
+    "tap": "u_xq_Q_p1_eg",
+    "source": "CODEX measured-content structural outline trial, centre channel",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hgi_sm_xload_xq_pegress"
+   }
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_hb_idx__op_Q__q0",
+   "module": "ot_hbm_idx_vm_query_static_n12",
+   "old_outline": [
+    216.0,
+    108.0
+   ],
+   "outline": [
+    216.0,
+    138.24
+   ],
+   "std_area_um2": 11404.53432,
+   "macro_area_um2": 0,
+   "free_fill": 0.4244,
+   "growth_needs_neighbour_check": true,
+   "pins_file": "cores/ot_hbm_idx_vm_query_static_n12__216x138.24__content_trial.json",
+   "entry": null
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_hb_idx__op_Q__q1",
+   "module": "ot_hbm_idx_vm_query_static_n12",
+   "old_outline": [
+    216.0,
+    108.0
+   ],
+   "outline": [
+    216.0,
+    138.24
+   ],
+   "std_area_um2": 11404.53432,
+   "macro_area_um2": 0,
+   "free_fill": 0.4244,
+   "growth_needs_neighbour_check": true,
+   "pins_file": "cores/ot_hbm_idx_vm_query_static_n12__216x138.24__content_trial.json",
+   "entry": null
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_smw_Q__q0",
+   "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+   "old_outline": [
+    142.56,
+    388.8
+   ],
+   "outline": [
+    142.56,
+    216.0
+   ],
+   "std_area_um2": 6203.51298,
+   "macro_area_um2": 3893.851,
+   "free_fill": 0.2598,
+   "growth_needs_neighbour_check": false,
+   "pins_file": "cores/ot_hbm_sm_vm_wr_q_t_lanes4__142.56x216__content_trial.json",
+   "entry": null
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_smw_Q__q1",
+   "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+   "old_outline": [
+    142.56,
+    388.8
+   ],
+   "outline": [
+    142.56,
+    216.0
+   ],
+   "std_area_um2": 6203.51298,
+   "macro_area_um2": 3893.851,
+   "free_fill": 0.2598,
+   "growth_needs_neighbour_check": false,
+   "pins_file": "cores/ot_hbm_sm_vm_wr_q_t_lanes4__142.56x216__content_trial.json",
+   "entry": null
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_cij_Q__q0",
+   "module": "ot_hgi_coll_inj_idx_join_rg",
+   "old_outline": [
+    211.68,
+    315.36
+   ],
+   "outline": [
+    211.68,
+    207.36
+   ],
+   "std_area_um2": 9690.0138,
+   "macro_area_um2": 0,
+   "free_fill": 0.2402,
+   "growth_needs_neighbour_check": false,
+   "pins_file": "cores/ot_hgi_coll_inj_idx_join_rg__211.68x207.36__content_trial.json",
+   "entry": null
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_cij_Q__q1",
+   "module": "ot_hgi_coll_inj_idx_join_rg",
+   "old_outline": [
+    211.68,
+    315.36
+   ],
+   "outline": [
+    211.68,
+    207.36
+   ],
+   "std_area_um2": 9690.0138,
+   "macro_area_um2": 0,
+   "free_fill": 0.2402,
+   "growth_needs_neighbour_check": false,
+   "pins_file": "cores/ot_hgi_coll_inj_idx_join_rg__211.68x207.36__content_trial.json",
+   "entry": null
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_xq_Q_p0_eg",
+   "module": "ot_hgi_sm_xload_xq_pegress",
+   "old_outline": [
+    369.36,
+    369.36
+   ],
+   "outline": [
+    181.44,
+    276.48
+   ],
+   "std_area_um2": 6032.92698,
+   "macro_area_um2": 0,
+   "free_fill": 0.1303,
+   "growth_needs_neighbour_check": false,
+   "pins_file": "cores/ot_hgi_sm_xload_xq_pegress__181.44x276.48__content_trial.json",
+   "entry": {
+    "xy_um": [
+     90.744,
+     138.264
+    ],
+    "island_um": [
+     86.424,
+     133.944,
+     95.064,
+     142.584
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_c",
+     "clk_e",
+     "clk_s",
+     "clk_w"
+    ],
+    "tap": "u_xq_Q_p0_eg",
+    "source": "CODEX measured-content structural outline trial, centre channel",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hgi_sm_xload_xq_pegress"
+   }
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_xq_Q_p1_eg",
+   "module": "ot_hgi_sm_xload_xq_pegress",
+   "old_outline": [
+    369.36,
+    369.36
+   ],
+   "outline": [
+    181.44,
+    276.48
+   ],
+   "std_area_um2": 6032.92698,
+   "macro_area_um2": 0,
+   "free_fill": 0.1303,
+   "growth_needs_neighbour_check": false,
+   "pins_file": "cores/ot_hgi_sm_xload_xq_pegress__181.44x276.48__content_trial.json",
+   "entry": {
+    "xy_um": [
+     90.744,
+     138.264
+    ],
+    "island_um": [
+     86.424,
+     133.944,
+     95.064,
+     142.584
+    ],
+    "port": null,
+    "merged_clock_ports": [
+     "clk",
+     "clk_c",
+     "clk_e",
+     "clk_s",
+     "clk_w"
+    ],
+    "tap": "u_xq_Q_p1_eg",
+    "source": "CODEX measured-content structural outline trial, centre channel",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hgi_sm_xload_xq_pegress"
+   }
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_hb_idx__op_Q__q0",
+   "module": "ot_hbm_idx_vm_query_static_n12",
+   "old_outline": [
+    216.0,
+    108.0
+   ],
+   "outline": [
+    216.0,
+    138.24
+   ],
+   "std_area_um2": 11404.53432,
+   "macro_area_um2": 0,
+   "free_fill": 0.4244,
+   "growth_needs_neighbour_check": true,
+   "pins_file": "cores/ot_hbm_idx_vm_query_static_n12__216x138.24__content_trial.json",
+   "entry": null
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_hb_idx__op_Q__q1",
+   "module": "ot_hbm_idx_vm_query_static_n12",
+   "old_outline": [
+    216.0,
+    108.0
+   ],
+   "outline": [
+    216.0,
+    138.24
+   ],
+   "std_area_um2": 11404.53432,
+   "macro_area_um2": 0,
+   "free_fill": 0.4244,
+   "growth_needs_neighbour_check": true,
+   "pins_file": "cores/ot_hbm_idx_vm_query_static_n12__216x138.24__content_trial.json",
+   "entry": null
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_smw_Q__q0",
+   "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+   "old_outline": [
+    142.56,
+    388.8
+   ],
+   "outline": [
+    142.56,
+    216.0
+   ],
+   "std_area_um2": 6203.51298,
+   "macro_area_um2": 3893.851,
+   "free_fill": 0.2598,
+   "growth_needs_neighbour_check": false,
+   "pins_file": "cores/ot_hbm_sm_vm_wr_q_t_lanes4__142.56x216__content_trial.json",
+   "entry": null
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_smw_Q__q1",
+   "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+   "old_outline": [
+    142.56,
+    388.8
+   ],
+   "outline": [
+    142.56,
+    216.0
+   ],
+   "std_area_um2": 6203.51298,
+   "macro_area_um2": 3893.851,
+   "free_fill": 0.2598,
+   "growth_needs_neighbour_check": false,
+   "pins_file": "cores/ot_hbm_sm_vm_wr_q_t_lanes4__142.56x216__content_trial.json",
+   "entry": null
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_cij_Q__q0",
+   "module": "ot_hgi_coll_inj_idx_join_rg",
+   "old_outline": [
+    211.68,
+    315.36
+   ],
+   "outline": [
+    211.68,
+    207.36
+   ],
+   "std_area_um2": 9690.0138,
+   "macro_area_um2": 0,
+   "free_fill": 0.2402,
+   "growth_needs_neighbour_check": false,
+   "pins_file": "cores/ot_hgi_coll_inj_idx_join_rg__211.68x207.36__content_trial.json",
+   "entry": null
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_cij_Q__q1",
+   "module": "ot_hgi_coll_inj_idx_join_rg",
+   "old_outline": [
+    211.68,
+    315.36
+   ],
+   "outline": [
+    211.68,
+    207.36
+   ],
+   "std_area_um2": 9690.0138,
+   "macro_area_um2": 0,
+   "free_fill": 0.2402,
+   "growth_needs_neighbour_check": false,
+   "pins_file": "cores/ot_hgi_coll_inj_idx_join_rg__211.68x207.36__content_trial.json",
+   "entry": null
+  }
+ ]
+}
