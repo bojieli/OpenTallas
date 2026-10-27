@@ -19,6 +19,7 @@ sinks.  Deterministic (farthest-point seeding from the sink nearest the outline 
 nearest the plan's clock.tap_um (the die spine's partition root), the rest 'clk_t<i>' in (y, x) order.
 """
 import math
+from pathlib import Path
 
 TAP_MARGIN_UM = 17.28          # keep the interior tap pins off the face pin bands
 FACE_INSET_UM = 2.0            # a face register sits just inside its pin
@@ -178,7 +179,8 @@ def report(P, tn):
 
 # ------------------------------------------------------------------------- CLK-STD density taps (owner 10-23 fix 2)
 DENSITY_FLOP_FRACTION = 0.12   # flops per estimated std cell for the interior sink estimate (clock.flop_fraction)
-DENSITY_CAP = 1500             # max expected sinks per tap (clock.tap_max_sinks): a cell over it splits 2 x 2
+DENSITY_CAP = 1000             # max expected sinks per tap (clock.tap_max_sinks): a cell over it splits 2 x 2
+                               # (CP1 r9d 10-24, GRT RC: 1.5-1.8k-sink trees 300-333 ps, 0.6-0.9k 255-275)
 DENSITY_MIN_SPLIT = 4          # a cell is split at most down to pitch / 4 (100 um at the 400-um R4 pitch)
 DENSITY_SAMPLES = 16           # free-area sampling per cell side (centroid and macro coverage)
 _DCACHE = {}
@@ -210,6 +212,29 @@ def _inside(px, py, b):
     return b[0] <= px < b[2] and b[1] <= py < b[3]
 
 
+def load_sink_map(P, tn):
+    """clock.sink_map: a placed clock-sink map of the type (`x_um y_um ...` per line, type frame; clock_taps.tcl writes
+    RESULTS_DIR/ot_sink_xy.tsv) from a prototype kit run.  Path absolute, or relative to the plan file / repo root.
+    None when not set."""
+    f = (P.types[tn].get("clock", {}) or {}).get("sink_map")
+    if not f:
+        return None
+    cand = [Path(f)]
+    if getattr(P, "path", None):
+        cand.append(Path(P.path).parent / f)
+    cand.append(Path(__file__).resolve().parents[2] / f)
+    src = next((c for c in cand if c.is_file()), None)
+    if src is None:
+        raise FileNotFoundError(f"type {tn}: clock.sink_map {f} not found")
+    pts = []
+    for line in src.read_text().splitlines():
+        if not line.strip() or line.startswith("#"):
+            continue
+        a = line.split()
+        pts.append((float(a[0]), float(a[1])))
+    return pts
+
+
 def density_taps(P, tn):
     """CLK-STD fix 2: [(port, x, y, expected_sinks)] in the type frame.
 
@@ -217,7 +242,7 @@ def density_taps(P, tn):
     registers, ft stations: planned_sinks) + the interior flops (flop_fraction x the type's estimated cells, minus the
     planned sinks; a soft content region with origin/outline/cells keeps its share inside its box, the rest spreads
     over the free (non-macro) area) + one per hard-core box centre in it.  A cell whose estimate exceeds the cap
-    (clock.tap_max_sinks, 1500) splits 2 x 2 (down to pitch / 4); a cell with an estimate below clock.tap_min_sinks
+    (clock.tap_max_sinks, 1000) splits 2 x 2 (down to pitch / 4); a cell with an estimate below clock.tap_min_sinks
     (default 1) -- empty, or covered by macros -- gets NO tap.  The tap sits at the cell's sink centroid (planned
     sinks + free-area centroid weighted by the interior share), moved off macros (schema.tap_clear).  Tap 'clk' is the
     one nearest clock.tap_um; the rest clk_t<i> in (y, x) order.  Deterministic; cached per plan object and type."""
@@ -234,11 +259,14 @@ def density_taps(P, tn):
     mn = float(ck.get("tap_min_sinks", 1))
     macros, soft = _boxes(t)
     planned = [(x, y) for x, y, _ in planned_sinks(P, tn)]
+    smap = load_sink_map(P, tn)
+    if smap is not None:        # measured placement (prototype kit): the real sinks replace the estimate
+        planned, soft = smap, []
     cells = t.get("cells")
     if cells is None:
         cells = sum(int(c.get("cells", 0)) for c in t.get("contents", []) or [])
     soft_cells = sum(c for _, c in soft)
-    rest = max(0.0, ff * float(cells) - len(planned) - ff * soft_cells)
+    rest = 0.0 if smap is not None else max(0.0, ff * float(cells) - len(planned) - ff * soft_cells)
     core_pts = [((b[0] + b[2]) / 2.0, (b[1] + b[3]) / 2.0) for b in macros]
 
     def samples(x0, y0, x1, y1):

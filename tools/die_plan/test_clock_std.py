@@ -113,7 +113,7 @@ def test_kit_and_assembly_carry_clock_std():
         kd = kits[0]
         cfg = (kd / "config.mk").read_text()
         assert "export OT_TAP_WINDOW_PS = 20" in cfg and "export OT_TAP_RC = grt" in cfg
-        assert "export OT_TAP_MAX_SINKS = 1500" in cfg
+        assert "export OT_TAP_MAX_SINKS = 1000" in cfg
         assert (kd / "tap_wire.tcl").is_file()
         bud = json.loads((kd / "budget.json").read_text())
         assert bud["clock"]["tap_mode"] == "density" and bud["clock"]["density_taps"]["n"] >= 1
@@ -144,3 +144,17 @@ def test_clock_tcl_complete_and_keys():
     assert "estimate_parasitics -global_routing" in tb and "OT_TAP_RC" in tb and ": 20.0}]" in tb
     tw = (HERE / "tap_wire.tcl").read_text()
     assert "arrival_max_rise" in tw and "slew_max_rise" in tw
+
+
+def test_density_taps_from_sink_map():
+    """clock.sink_map (prototype kit's placed sinks) replaces the planned/uniform estimate: a cluster over the cap splits."""
+    with tempfile.TemporaryDirectory() as d:
+        f = Path(d) / "sinks.tsv"
+        pts = [f"{10 + (i % 40) * 7.0:.2f} {10 + (i // 40) * 4.5:.2f} r{i}" for i in range(2400)]
+        f.write_text("# x y inst\n" + "\n".join(pts) + "\n")
+        raw = _plan(tap_mode="density")
+        raw["partition_types"]["src"].setdefault("clock", {})["sink_map"] = str(f)
+        P = S.Plan(raw)
+        tl = taps.density_taps(P, "src")
+        assert len(tl) >= 2                       # 2400 real sinks over the 1000 cap
+        assert taps.load_sink_map(P, "src")[0] == (10.0, 10.0)

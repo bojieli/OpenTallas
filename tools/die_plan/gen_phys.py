@@ -233,7 +233,7 @@ UNC_SPLIT = 0.5
 
 
 def _tap_cap(t, mode="grid"):
-    """OT_TAP_MAX_SINKS: the plan's clock.tap_max_sinks, else 1500 for density taps (CLK-STD) / 3000 (COORD 10-23)."""
+    """OT_TAP_MAX_SINKS: the plan's clock.tap_max_sinks, else 1000 for density taps (CLK-STD) / 3000 (COORD 10-23)."""
     return int(t.get("clock", {}).get("tap_max_sinks", T.DENSITY_CAP if mode == "density" else 3000))
 
 

@@ -229,6 +229,14 @@ if {[llength $ct_taps] < 2} {
     if {$ct_sub} { detailed_placement }
   }
   if {[info exists ::env(RESULTS_DIR)]} {
+    # the placed clock-sink map (um, type frame): feeds the next plan revision's density taps (clock.sink_map)
+    set fh [open $::env(RESULTS_DIR)/ot_sink_xy.tsv w]
+    puts $fh "# x_um y_um inst   (CLK-STD: placed clock sinks before CTS; plan clock.sink_map)"
+    foreach s $ct_s {
+      set b [[[lindex $s 0] getInst] getBBox]
+      puts $fh "[format %.2f [expr {([$b xMin] + [$b xMax]) / 2.0 / $ct_dbu}]] [format %.2f [expr {([$b yMin] + [$b yMax]) / 2.0 / $ct_dbu}]] [[[lindex $s 0] getInst] getName]"
+    }
+    close $fh
     set fh [open $::env(RESULTS_DIR)/ot_tap_sinks.tsv w]
     foreach a $ct_asg { puts $fh "[[[lindex $a 0] getInst] getName]\t[lindex $ct_taps [lindex $a 1] 0]" }
     close $fh

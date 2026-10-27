@@ -1065,7 +1065,7 @@ if [ "{CTS}" = 1 ]; then
   fi
   python3 tools/closure_loop/ck_insertion.py --base $B --all-clocks --raw-source --output $R/ck.json > $R/ck.log 2>&1; echo "GATE_CK_RC=$?"
   python3 -c "import json;d=json.load(open('$R/ck.json'));print('GATE_CK '+'; '.join(c+' insertion all '+str(d[c]['all']['min'])+'..'+str(d[c]['all']['max'])+' ps (spread '+str(round(d[c]['all']['max']-d[c]['all']['min'],1))+'), boundary mean '+str(d[c]['boundary']['mean']) for c in ('ss','tt','ff') if isinstance(d.get(c),dict) and d[c].get('all'))+'; macro_clk flag '+str((d.get('macro_clk') or {{}}).get('flag')))" 2>/dev/null
-  python3 -c "import json;d=json.load(open('$R/ck.json'));[print('GATE_CK_DOMAIN '+json.dumps({{'source':pin,'clock':r.get('clock'),'tt':r.get('tt'),'ff':{{k:(r.get('ff') or {{}}).get(k) for k in ('boundary','all','child_flop','macros')}}}})) for pin,r in d.get('clock_measurements',{{}}).items()]" 2>/dev/null
+  python3 -c "import json;d=json.load(open('$R/ck.json'));[print('GATE_CK_DOMAIN '+json.dumps({{'source':pin,'clock':r.get('clock'),'tt':r.get('tt'),'ff':{{k:(r.get('ff') or {{}}).get(k) for k in ('boundary','all','child_flop','macros','pair_skew')}},**{{c+k:r.get(c+k) for c in ('tt_','ff_') for k in ('pair_skew_ps','pair_skew_p99_ps','pair_skew_pair')}}}})) for pin,r in d.get('clock_measurements',{{}}).items()]" 2>/dev/null
   docker run --rm -e OT_GATE_SIGNOFF_SDC=/src/{KIT}/signoff.sdc -v $R/src:/src:ro -v $C:/work {IMG} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /src/tools/ref_tile/path_classes.tcl > $R/pc.log 2>&1
   grep -E "^GATE_(PC|XCLK)" $R/pc.log
   ot_layout $NB/4_1_cts.odb placed
@@ -1889,7 +1889,7 @@ def clock_record(out: str, cts: bool, spec: dict | None = None) -> dict:
            "tt_pin_spread_ps": None, "ff_insertion_ps": None, "ff_spread_ps": None, "ff_pin_spread_ps": None,
            "declared_clock": (spec or {}).get("clock"),
            "limits": {"sinks": TL.CLK_ROOT_SINKS_MAX, "insertion_ps": TL.CLK_INSERTION_MAX_PS,
-                      "spread_ps": TL.CLK_SPREAD_MAX_PS}}
+                      "spread_ps": TL.CLK_SPREAD_MAX_PS, "pair_skew_ps": TL.CLK_PAIR_SKEW_MAX_PS}}
     m = re.search(r"textbook_lint: INFO clock_roots max_root_sinks=(\d+) root=(\S+)", out)
     if m:
         rec["max_root_sinks"], rec["root"] = int(m.group(1)), m.group(2)
@@ -1973,13 +1973,19 @@ def clock_record(out: str, cts: bool, spec: dict | None = None) -> dict:
             lv = [r["verdict"] for r in per_root]
             rec["verdict"] = "WARN" if "WARN" in lv else "PASS"
             rec["text"] = "per root: " + "; ".join(f"{r['source']} " + ", ".join(
-                f"{c.upper()} {r.get(c + '_pin_spread_ps')} ps ({r.get(c + '_pin_spread_basis', 'pin-flop')})"
-                for c in ("tt", "ff")) for r in per_root) + f" (limit {TL.CLK_SPREAD_MAX_PS:g} per root)" + "".join(
+                f"{c.upper()} pair skew {r.get(c + '_pair_skew_ps')} ps, spread {r.get(c + '_pin_spread_ps')} ps "
+                f"({r.get(c + '_pin_spread_basis', 'pin-flop')}, info)"
+                for c in ("tt", "ff")) for r in per_root) + f" (pair skew limit {TL.CLK_PAIR_SKEW_MAX_PS:g} per root)" + "".join(
                 f"; {r['source']} WARN: {r['text'].split('WARN: ', 1)[-1]}" for r in per_root if r["verdict"] == "WARN")
             for c in ("tt", "ff"):
                 vals = [r[f"{c}_pin_spread_ps"] for r in per_root if r.get(f"{c}_pin_spread_ps") is not None]
                 if vals:
                     rec[f"{c}_pin_spread_ps"], rec[f"{c}_pin_spread_basis"] = max(vals), "per_root"
+                pk = [r for r in per_root if TL._num(r.get(f"{c}_pair_skew_ps"))]
+                if pk:
+                    w = max(pk, key=lambda r: r[f"{c}_pair_skew_ps"])
+                    rec[f"{c}_pair_skew_ps"] = w[f"{c}_pair_skew_ps"]
+                    rec[f"{c}_pair_skew_pair"] = w.get(f"{c}_pair_skew_pair")
         if issues:
             rec["verdict"], rec["text"] = "REFUSE", "; ".join(issues)
     return rec
@@ -2000,11 +2006,13 @@ def other_roots(rec: dict, domains: list, spec: dict | None) -> dict:
         if id(d) in skip:
             continue
         m = corner_spreads({}, with_child_flops(d, spec))
-        ev = {k: v for k, v in m.items() if k.endswith(("_pin_spread_ps", "_pin_spread_basis", "_insertion_ps"))}
+        ev = {k: v for k, v in m.items() if k.endswith(("_pin_spread_ps", "_pin_spread_basis", "_insertion_ps",
+                                                         "_pair_skew_ps", "_pair_skew_p99_ps", "_pair_skew_pair"))}
         n = ((d.get("tt") or {}).get("all") or {}).get("n")
         row = dict(source=d.get("source"), clock=d.get("clock"), sinks=n,
-                   **{k: ev.get(k) for k in ("tt_pin_spread_ps", "ff_pin_spread_ps", "tt_insertion_ps", "ff_insertion_ps")})
-        if not any(TL._num(ev.get(f"{c}_pin_spread_ps")) for c in ("tt", "ff")):
+                   **{k: ev.get(k) for k in ("tt_pin_spread_ps", "ff_pin_spread_ps", "tt_insertion_ps", "ff_insertion_ps",
+                                             "tt_pair_skew_ps", "ff_pair_skew_ps")})
+        if not any(TL._num(ev.get(f"{c}_{k}")) for c in ("tt", "ff") for k in ("pin_spread_ps", "pair_skew_ps")):
             row.update(verdict="INFO", text="no pin-flop (boundary register) arrivals on this root: not judged")
         else:
             level, why = TL.clock_rule_eval(n if isinstance(n, int) else None, ev)
@@ -2467,7 +2475,8 @@ def root_child_flops(domain: dict, spec: dict | None, graph: dict | None) -> dic
 
 def corner_spreads(rec: dict, domain: dict) -> dict:
     """TT and FF insertion (latest register arrival), all-register leaf spread and pin-flop (boundary register) spread
-    of one ck_insertion clock record (owner 10-17 0dq: the rule is the pin-flop spread at TT AND FF)."""
+    (reported only since the owner's 10-23 gate) and the related flop-pair skew with CPPR ("<c>_pair_skew_ps",
+    "_p99_ps", "_pair": the gated numbers) of one ck_insertion clock record."""
     for c in ("tt", "ff"):
         cr = domain.get(c) or {}
         al, bd = cr.get("all") or {}, cr.get("boundary") or {}
@@ -2486,6 +2495,10 @@ def corner_spreads(rec: dict, domain: dict) -> dict:
             rec[f"{c}_pin_spread_basis"] = "child_flop"
         elif bd.get("min") is not None and bd.get("max") is not None:
             rec[f"{c}_pin_spread_ps"] = round(float(bd["max"]) - float(bd["min"]), 1)
+        # CLK-STD (owner 10-23 gate): the related flop-pair skew with CPPR that ck_insertion.py measured (pair_skew.tcl)
+        for k in ("pair_skew_ps", "pair_skew_p99_ps", "pair_skew_pair"):
+            if domain.get(f"{c}_{k}") is not None:
+                rec[f"{c}_{k}"] = domain[f"{c}_{k}"]
     return rec
 
 

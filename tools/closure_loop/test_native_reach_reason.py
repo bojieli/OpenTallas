@@ -73,7 +73,7 @@ class NativeReach(unittest.TestCase):
  def test_new_reason_does_not_waive_clock_source_binding(self):
   import source_binding as SB
   self.assertEqual(self.check()['verdict'],'PASS')
-  ok,_=SB.relaxed_rule_requirement(['clock_pin_spread'],{'tt_pin_spread_ps':81,'ff_pin_spread_ps':50},gate={'spec':self.sp})
+  ok,_=SB.relaxed_rule_requirement(['clock_pin_spread'],{'tt_pin_spread_ps':81,'ff_pin_spread_ps':50,'tt_pair_skew_ps':81,'ff_pair_skew_ps':50},gate={'spec':self.sp})
   self.assertFalse(ok)
 
  def test_every_reported_offending_path_is_checked(self):

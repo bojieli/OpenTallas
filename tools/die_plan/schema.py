@@ -206,9 +206,11 @@ SCHEMA = {
                         # 4.5-5.7k sinks piled on one tap, spread 133 ps)
                         # CLK-STD "density": taps.density_taps -- the pitch grid pruned (no tap over a hard core /
                         # macro or in an empty cell) and split where a cell's expected sinks exceed tap_max_sinks
-                        # (default 1500); flop_fraction = flops per estimated cell for the interior estimate
+                        # (default 1000); flop_fraction = flops per estimated cell for the interior estimate
                         "tap_mode": {"enum": ["grid", "grid+sinks", "sinks", "density"]}, "tap_radius_um": _pos,
                         "flop_fraction": _pos, "tap_min_sinks": {"type": "integer", "minimum": 0},
+                        # placed clock-sink map of a prototype kit run (ot_sink_xy.tsv): density taps count real sinks
+                        "sink_map": {"type": "string"},
                         "tap_max_sinks": {"type": "integer", "minimum": 1},
                         # CP2: "early" turns the kind 'core' taps[] into kit clock ports clk_c<k> (core_taps()): the
                         # core's clock pins hang on their own tap, which the spine delivers (insertion_ps - common

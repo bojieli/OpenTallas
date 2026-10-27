@@ -156,12 +156,24 @@ class LandedRoots(unittest.TestCase):
         self.assertEqual(rec["verdict"], "WARN", rec["text"])   # insertion > 300: guidance only
 
     def test_linked_pair_over_80_on_one_root_fails_at_ff(self):
+        # OWNER 10-23: the linked-pair spread is reported (110 ps alone never fails); the measured related flop-pair
+        # skew with CPPR (ck_insertion "<c>_pair_skew_ps") over 80 on that root REFUSES
         bad = copy.deepcopy(ARR)
         bad["ck_rb"]["ff"][0]["u2"] = 200.0                          # u2 FF 370..400 vs u1 450..480: 110
         rec = G.clock_record(gate_out(bad), True, self.spec)
-        self.assertEqual(rec["verdict"], "REFUSE")
+        self.assertNotEqual(rec["verdict"], "REFUSE", rec["text"])
         self.assertEqual(self.roots(rec)["ck_rb"]["ff_pin_spread_ps"], 110.0)
+        skew = dict(ff_pair_skew_ps=110.0, ff_pair_skew_p99_ps=95.0, ff_pair_skew_pair=["u2/r_reg", "u1/r_reg"],
+                    tt_pair_skew_ps=40.0)
+        out = "\n".join(ln if '"source": "ck_rb"' not in ln else
+                        "GATE_CK_DOMAIN " + json.dumps(dict(json.loads(ln.split(" ", 1)[1]), **skew))
+                        for ln in gate_out(bad).splitlines()) + "\n"
+        rec = G.clock_record(out, True, self.spec)
+        self.assertEqual(rec["verdict"], "REFUSE")
+        r = self.roots(rec)["ck_rb"]
+        self.assertEqual((r["ff_pair_skew_ps"], r["ff_pair_skew_pair"]), (110.0, ["u2/r_reg", "u1/r_reg"]))
         self.assertIn("ck_rb", rec["text"])
+        self.assertIn("FF pair skew 110.0 ps > 80", rec["text"])
         self.assertEqual(self.roots(rec)["ck_ra"]["verdict"], "WARN")
 
     def test_unlanded_cross_region_link_fails(self):

@@ -1,4 +1,6 @@
-"""HANDOFF 0ga 2026-10-18: a recorded per-pair clock_rule excess <= 2 ps becomes a printed WARN; anything else FAILs."""
+"""HANDOFF 0ga 2026-10-18: a recorded per-pair clock_rule excess <= 2 ps becomes a printed WARN; anything else FAILs.
+OWNER 10-23: the waiver judges the related flop-pair skew with CPPR ("<c>_pair_skew_ps", worst pair "<c>_pair_skew_pair");
+spreads are information only."""
 import sys
 from pathlib import Path
 
@@ -12,9 +14,12 @@ W = {"pair": "ddly-dsyn", "ff_ps": 80.5, "limit_ps": 80, "by": "coordinator 0ga 
 
 def run(waiver, ff=80.5, pairs=PAIRS):
     g = PRG.Gate()
+    worst = max((p for p in pairs if p["corner"] == "ff"), key=lambda p: p["ps"])
     g.clock = {"evidence": {"tt_pin_spread_ps": 68.5, "ff_pin_spread_ps": ff, "tt_pin_spread_basis": "child_pair",
-                            "ff_pin_spread_basis": "child_pair", "child_pairs": pairs}}
-    g.add("FAIL", "clock_rule", "FF pin-flop spread > 80")
+                            "ff_pin_spread_basis": "child_pair", "child_pairs": pairs,
+                            "tt_pair_skew_ps": 68.5, "ff_pair_skew_ps": ff,
+                            "ff_pair_skew_pair": [f"{worst['a']}/q_reg", f"{worst['b']}/d_reg"]}}
+    g.add("FAIL", "clock_rule", "FF pair skew > 80")
     PRG.apply_clock_rule_waiver(g, {"clock_rule_waiver": waiver} if waiver else {})
     return [i for i in g.items if i["check"] == "clock_rule"][0]
 
@@ -42,7 +47,15 @@ def test_value_above_recorded():
 
 
 def test_other_pair_over():
-    assert run(W, pairs=PAIRS + [{"corner": "ff", "a": "u_chn", "b": "u_out", "ps": 80.2}])["severity"] == "FAIL"
+    # the measured worst pair is not the waiver's named pair
+    assert run(W, pairs=[PAIRS[1], {"corner": "ff", "a": "u_chn", "b": "u_out", "ps": 80.5}])["severity"] == "FAIL"
+
+
+def test_spread_over_with_pair_skew_in_limit_needs_no_waiver():
+    ev = {"max_root_sinks": 4, "tt_pin_spread_ps": 68.5, "ff_pin_spread_ps": 95.0, "tt_pair_skew_ps": 60.0,
+          "ff_pair_skew_ps": 79.9}
+    assert PRG.TL.clock_rule_eval(4, ev)[0] == "PASS"
+    assert PRG.TL.clock_rule_eval(4, dict(ev, ff_pair_skew_ps=80.1))[0] == "FAIL"
 
 
 # COORD 10-20 19:25: SCOPED_CLOCK_WAIVER_CAPS (qkd_pv_fin_s32 only, TT 88.4 / FF 84.6)
@@ -52,8 +65,8 @@ PV = {"pair": "port:ck-root", "tt_ps": 88.4, "ff_ps": 84.6, "limit_ps": 80, "by"
 
 def run_pv(waiver, block="qkd_pv_fin_s32", tt=88.4, ff=84.6):
     g = PRG.Gate()
-    g.clock = {"evidence": {"tt_pin_spread_ps": tt, "ff_pin_spread_ps": ff}}
-    g.add("FAIL", "clock_rule", "pin-flop spread > 80")
+    g.clock = {"evidence": {"tt_pin_spread_ps": tt, "ff_pin_spread_ps": ff, "tt_pair_skew_ps": tt, "ff_pair_skew_ps": ff}}
+    g.add("FAIL", "clock_rule", "pair skew > 80")
     PRG.apply_clock_rule_waiver(g, {"block": block, "clock_rule_waiver": waiver})
     return [i for i in g.items if i["check"] == "clock_rule"][0]
 

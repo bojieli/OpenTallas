@@ -211,8 +211,9 @@ if {$tb_ronly} {
   puts "OT_TAP_RC sink insertion [format %.0f $lo]..[format %.0f $hi] ps (partition skew [format %.0f [expr {$hi - $lo}]]; limit [format %.0f [expr {$tb_target + $tb_win}]])"
   if {[llength $tb_cores]} { tb_core_report $tb_target }
 } else {
-set tb_plan {placement placement placement placement}
-if {$tb_rcmode eq "grt"} { lappend tb_plan grt grt grt }
+# GRT mode balances on GRT RC only: padding decided on placement RC overshot once routed (CP1 r9d 10-24: trees padded
+# to 250 on placement RC read 255-275 on GRT RC, and padding cannot be taken back)
+set tb_plan [expr {$tb_rcmode eq "grt" ? {grt grt grt grt} : {placement placement placement placement}}]
 set tb_step {}
 set tb_prev {}
 for {set it 0} {$it < [llength $tb_plan]} {incr it} {

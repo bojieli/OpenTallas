@@ -171,7 +171,7 @@ Clock flow (CLK-STD, `tools/die_plan`):
    default on every die) takes each tap's branch latency from it (equal; early core taps shifted).
 2. Taps (`clock.tap_mode` "density", per type or die-wide): the pitch grid pruned and sized by expected sinks
    (`taps.density_taps`): planned face / ft sinks + interior flops (`clock.flop_fraction` x cells), no tap over a hard
-   core / macro or in an empty cell, a cell over `clock.tap_max_sinks` (1500) splits 2 x 2.
+   core / macro or in an empty cell, a cell over `clock.tap_max_sinks` (1000; `clock.sink_map` = a prototype kit's ot_sink_xy.tsv replaces the estimate) splits 2 x 2.
 3. Sink -> tap assignment by distance AND load (`clock_taps.tcl`): regret-ordered capacitated assignment within half a
    pitch extra distance, light taps (< `OT_TAP_MIN_SINKS`, 32) merged, empty taps dropped; `ot_tap_sinks.tsv`.
 4. Balance (`tap_balance.tcl`): each tap tree's mean to the common latency +/- `OT_TAP_WINDOW_PS` (20) with delay

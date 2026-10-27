@@ -526,8 +526,8 @@ def child_flop_reference_macros(root, kit):
 
 def relaxed_rule_requirement(needs, clock, gate=None, root=None, *, pg_strict=None):
     """(ok, [{"requires", "ok", "text", ...}]): the relaxed rules' own conditions, judged from the existing gate report.
-    clock_pin_spread (0dq): pin-flop spread <= 80 ps at TT (required); FF too when reported, else left to the routed
-    native audit.
+    clock_pin_spread (owner 10-23, was 0dq): related flop-pair skew with CPPR <= 80 ps at TT and FF when measured
+    (waiver as the gate's); the pin-flop spread is information only; no measured clock at all fails.
     trial_grt (ROOT-0330-GRT 10-18, the gate runs a trial global route for EVERY kit): a gate result without a
     "trial_route" record predates the rule and stays valid (its verdict already holds the parent / cluster trial, which
     is unchanged); a gate that ran it must show overflow 0.  Without the gate result the strict refusal stands."""
@@ -697,25 +697,36 @@ def relaxed_rule_requirement(needs, clock, gate=None, root=None, *, pg_strict=No
                 f"other root(s) over {CLOCK_PIN_SPREAD_MAX_PS:.0f} ps: {bad[:4]} (FAIL)")))
             continue
         if n == "clock_pin_spread":
-            sp = gate_pin_spreads(clock if isinstance(clock, dict) else {})
+            # CLK-STD (OWNER DECISION 2026-10-23): the gated clock number is the related launch/capture flop-pair skew
+            # with CPPR ("<c>_pair_skew_ps") <= 80 ps at TT and FF; the pin-flop spread is reported only.  An older
+            # gate holds unless its measured pair skew is over 80 (and not covered by the recorded waiver); a gate
+            # without pair skew keeps its measured spread record (information) and the strict re-check is left to
+            # the routed propagated STA.  A gate with no measured clock at all still cannot be judged.
+            import sys
+            sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+            import textbook_lint as TL
+            ck = clock if isinstance(clock, dict) else {}
+            sp = gate_pin_spreads(ck)
             tt, ff = sp.get("tt"), sp.get("ff")
-            ok = tt is not None and tt[0] <= CLOCK_PIN_SPREAD_MAX_PS and (ff is None or ff[0] <= CLOCK_PIN_SPREAD_MAX_PS)
+            pk = TL.clock_pair_skews(ck)
+            over = {c: v for c, v in pk.items() if v > TL.CLK_PAIR_SKEW_MAX_PS}
+            ok = bool(pk or tt) and not over
             waived = ""
-            w = clock.get("clock_rule_waiver") if isinstance(clock, dict) else None
-            if not ok and tt is not None and isinstance(w, dict):
+            w = ck.get("clock_rule_waiver")
+            if over and isinstance(w, dict):
                 # S81-DEC5 10-18: the kit job's recorded per-pair waiver (HANDOFF 0ga), the same rule as the gate's
-                import sys
-                sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-                import textbook_lint as TL
-                ok, note, _ = TL.clock_waiver_eval(clock, w)
+                ok, note, _ = TL.clock_waiver_eval(ck, w)
                 waived = f" -- WAIVED: {note}" if ok else ""
-            text = ("0dq: no TT spread in the gate report" if tt is None else
-                    f"0dq: TT {tt[1]} spread {tt[0]:.1f} ps" + (f", FF {ff[1]} spread {ff[0]:.1f} ps" if ff else
-                                                               ", FF not reported (left to the routed audit)")
-                    + (waived if waived else f" <= {CLOCK_PIN_SPREAD_MAX_PS:.0f}" if ok
-                       else f" (limit {CLOCK_PIN_SPREAD_MAX_PS:.0f}: FAIL)"))
+            info = "; ".join(f"{c.upper()} {v[1]} spread {v[0]:.1f} ps (info)" for c, v in sp.items())
+            text = ("clock: no measured clock tree in the gate report" if not (pk or tt) else
+                    "clock: " + (", ".join(f"{c.upper()} pair skew {v:.1f} ps" for c, v in pk.items())
+                                 if pk else "pair skew not measured (spread information only; routed STA judges)")
+                    + (waived if waived else
+                       f" <= {TL.CLK_PAIR_SKEW_MAX_PS:.0f}" if ok and pk else
+                       f" (limit {TL.CLK_PAIR_SKEW_MAX_PS:.0f}: FAIL)" if over else "")
+                    + (f"; {info}" if info else ""))
             rows.append(dict(requires=n, ok=ok, text=text, tt=tt and list(tt), ff=ff and list(ff),
-                             ff_left_to_routed_audit=ff is None))
+                             pair_skew=pk, ff_left_to_routed_audit=ff is None and "ff" not in pk))
         else:
             rows.append(dict(requires=n, ok=False, text=f"unknown relaxed-rule requirement {n!r}"))
     return all(r["ok"] for r in rows), rows

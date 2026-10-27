@@ -596,6 +596,9 @@
         "type": "integer",
         "minimum": 0
        },
+       "sink_map": {
+        "type": "string"
+       },
        "tap_max_sinks": {
         "type": "integer",
         "minimum": 1
