@@ -88,7 +88,7 @@ def test_measured_selection_mirrors_signoff():
                 "get_fanout -from $din -flat -endpoints_only -trace_arcs all",
                 "get_fanin -to [all_outputs] -flat -startpoints_only -trace_arcs all",
                 "ot_cf_wire $p [lindex $cl 0]", "get_property $p arrival_max_rise", "ot_cf_refresh"):
-        assert key in m, key
+        assert key.rstrip("]") in m, key
         assert key.replace("$din", "$so_din") in signoff.FF_VCLK_TCL, key
     assert "set_clock_latency -source $mean" in m
     assert re.search(r"abs\(\$mean - \$ffb\) > \$tol", m)            # band check, fail closed

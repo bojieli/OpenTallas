@@ -59,7 +59,7 @@ proc ot_vmh_pinreg_mean {} {
     set a ""
     if {[llength $cl] == 1} {
       dict set clocks [get_full_name [lindex $cl 0]] 1
-      if {[llength [info commands ot_cf_wire]]} { catch {set a [ot_cf_wire $p [lindex $cl 0]]} }
+      if {[llength [info commands ot_cf_wire]]} { catch {set a [ot_cf_wire $p [lindex $cl 0] [expr {[info exists ::ot_ioref_scene] ? $::ot_ioref_scene : ""}]]} }
       if {$a eq ""} { catch {set a [get_property $p arrival_max_rise]} }
     }
     if {![string is double -strict $a] || [regexp -nocase {inf|nan} $a]} { incr bad; continue }
@@ -68,7 +68,7 @@ proc ot_vmh_pinreg_mean {} {
   return [list [expr {$n ? $sum / $n : "nan"}] $n $bad [dict size $clocks]]
 }
 
-proc ot_vclk_measured_hold {} {
+proc ot_vclk_measured_bind {} {
   lassign [ot_vmh_reference] ref ffb tol
   if {$ref ne "rebind"} { puts "OT_VCLK_MEASURED_HOLD skip ref $ref (sign-off frame = bound / sdc, already repaired)"; return }
   set vc {}
@@ -83,9 +83,16 @@ proc ot_vclk_measured_hold {} {
     error "OT_VCLK_MEASURED_HOLD: FF pin-register mean [format %.3f $mean] outside bound $ffb +- $tol (sign-off band FAIL; fix the clock, not the hold)"
   }
   set_clock_latency -source $mean [lindex $vc 0]
+  puts "OT_VCLK_MEASURED_BIND clock [get_full_name [lindex $vc 0]] measured [format %.6f $mean] bound $ffb tol $tol samples $n"
+  return $mean
+}
+
+proc ot_vclk_measured_hold {} {
+  set mean [ot_vclk_measured_bind]
+  if {$mean eq ""} { return }
   set hm 0
   foreach k {OT_HOLD_FF_MARGIN HOLD_SLACK_MARGIN} { if {[info exists ::env($k)] && [string is double -strict $::env($k)]} { set hm $::env($k); break } }
-  puts "OT_VCLK_MEASURED_HOLD ref rebind clock [get_full_name [lindex $vc 0]] measured [format %.6f $mean] bound $ffb tol $tol samples $n hold_margin $hm"
+  puts "OT_VCLK_MEASURED_HOLD ref rebind measured $mean hold_margin $hm"
   set before [llength [get_cells -quiet -hierarchical hold*]]
   global_route -start_incremental
   repair_timing -hold -hold_margin $hm -max_buffer_percent 100
