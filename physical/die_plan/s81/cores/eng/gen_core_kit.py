@@ -8,7 +8,7 @@ Adapted from CORE-HBM physical/die_plan/hbm/cores/harden/gen_core_kit.py (claude
     keeps the platform make_tracks and every M4/M5 pin is checked on 0.012 + k 0.048;
   * S81 clock: period 833 ps (die period_ps), IO clock at the plan common latency 250 ps (clock.common_latency_ps);
   * SRAM / ROM views from physical/asap7_memory_macros or _v2 (TT lib), explicit sites (place_macro -exact).
-    python3 gen_core_kit.py --cores cores_eng.json --core lk|xq --out kits [--repo REPO] [--tool PT4/tools/die_plan]
+    python3 gen_core_kit.py --cores cores_eng.json --core lk|xq --out kits [--repo REPO] [--tool TOOLDIR, default REPO/tools/die_plan]
 """
 import argparse
 import hashlib
@@ -133,11 +133,12 @@ def main():
     ap.add_argument("--core", required=True)
     ap.add_argument("--out", default=str(HERE / "kits"))
     ap.add_argument("--repo", default=str(HERE.parents[4]))
-    ap.add_argument("--tool", default="/home/ubuntu/scratch/core-s81-1023/pt4/tools/die_plan")
+    ap.add_argument("--tool", default=None, help="plan tool dir (default: REPO/tools/die_plan, this checkout)")
     MS = _ms()
     MS.add_args(ap)   # 12.7c: --master-slice DIR (opt-in), --trial
     a = ap.parse_args()
-    repo, tool = Path(a.repo), Path(a.tool)
+    repo = Path(a.repo)
+    tool = Path(a.tool) if a.tool else repo / "tools/die_plan"
     cj = json.load(open(a.cores))
     c = next(x for x in cj["cores"] if x["name"] == a.core)
     w, h = c["outline_um"]
@@ -178,8 +179,11 @@ def main():
     (kd / "pdn.tcl").write_text(PDN + (PDN_MACRO if c["macros"] else ""))
     skip = "^(" + "|".join(re.escape(n) for n in clks + rsts) + ")$"
     ff = (tool / "face_flops.tcl").read_text()
-    ff = ff.replace("set ff_skip_re {^(clk(_t[0-9]+)?|arst_n)$}", "set ff_skip_re {" + skip + "}")
-    assert ("set ff_skip_re {" + skip + "}") in ff, "face_flops.tcl skip regex anchor changed"
+    # the skip line = exactly one "set ff_skip_re {...}" line, replaced whole (main 6c39897574 10-24 widened it with
+    # rst_o_<k>/start_* + a trailing comment; same anchor as s81/cores/legacy/gen_core_kit_legacy.py)
+    anchor = re.findall(r"^set ff_skip_re \{.*$", ff, re.M)
+    assert len(anchor) == 1, "face_flops.tcl skip regex anchor changed"
+    ff = ff.replace(anchor[0], "set ff_skip_re {" + skip + "}")
     ff = ff.replace("set ff_out [open $::env(RESULTS_DIR)/ot_face_flops.txt w]",
                     "set ff_out [open $::env(RESULTS_DIR)/ot_face_flops.txt w]\n"
                     "set ff_unreg [open $::env(RESULTS_DIR)/ot_unreg_pins.txt w]")
