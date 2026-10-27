@@ -4782,3 +4782,5 @@ Main8fcd97ac44 -> ac0ac5bf5e==origin/main (plain merge under actualintel2merge.l
 
 ## OWNER?
 OWNER? 2026-10-27 08:23 PDT: QC SU lane has24 RTL-constant output bits: c_o[49:68] (kv_wdata[0:19]) and c_o[297:300] (wrom_addr[20:23] from {4'h0,cura[23:4]}). Synthesis correctly combines them onto one TIELO; face_guard requires private registers. Should the ONEQC plan event drop proven-unused pins, or retain used constant pins with an explicit LEC-proved constant-output contract? The specific HBM tkm constant ruling does not automatically authorize a QC-wide class. Parent Qwen plan lead is preparing consumer inventory/candidates; no adoption or blocking wait.
+
+- 2026-10-27 08:23 PDT CODEX ROOT-MERGE-36: mainac0ac5bf5e ->00ecb92c4c==origin/main underactualintel2lock,plainmerge,0deletions. Approvedcoveragee27bb0da8 puregeometryevidence: historicalFT-onlyPASS retained; superseding fullr2rFAIL io_cor1135.67um/1640captureFF>405,hroot1407.24um/2257captureFF>405. PhysicalQwen owns fixes; no newtests (evidence-only). Readyfornextapprovedsource; RC/preflight/snapcanarycohortstillheld.
