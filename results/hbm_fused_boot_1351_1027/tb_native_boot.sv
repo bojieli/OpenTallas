@@ -14,7 +14,7 @@ module tb_native_boot;
  wire disabled_load,disabled_start,disabled_commit;
  ot_hnx_fused_host_boot #(.TARGET(0)) disabled(.clk(clk),.rst_n(rst_n),.cfg_v(lcv),.cfg_target(ltarget),.cfg_addr(laddr),.cfg_data(ldata),.desc_v(ldv),.desc_base(lbase),.desc_limit(llimit),.desc_loops(lloops),.launch_v(llv),.load_v(disabled_load),.load_addr(),.load_entry(),.cfg_commit(disabled_commit),.cfg_calendar_bound(),.cfg_count(),.cfg_wsc(),.cfg_pk5(),.cfg_pb5(),.start(disabled_start),.provider_armed(1'b0),.provider_busy(1'b0),.provider_done(1'b0),.provider_fault(1'b0),.ready(),.active(),.fault());
  integer cc=0,start_edge=0,leaf_launch_edge=0,checks=0,errors=0,jobs=0,loads=0,traces=0,rootdones=0,progdone=0,scalars=0,finwait=0;reg measuring=0;
- always @(posedge clk)begin cc<=cc+1;if(programme.start)begin start_edge<=cc;if(measuring&&cc-leaf_launch_edge!=2)begin errors=errors+1;$display("START_CAPTURE_PHASE %0d",cc-leaf_launch_edge);end endif(llv)leaf_launch_edge<=cc;end
+ always @(posedge clk)begin cc<=cc+1;if(programme.start)begin start_edge<=cc;if(measuring&&cc-leaf_launch_edge!=2)begin errors=errors+1;$display("START_CAPTURE_PHASE %0d",cc-leaf_launch_edge);end end if(llv)leaf_launch_edge<=cc;end
  always @(negedge clk)begin
   if(disabled_load||disabled_start||disabled_commit)$fatal(1,"unbound TARGET0 emitted traffic");
   if(measuring)begin
