@@ -1,0 +1,46 @@
+{
+  "ar": {
+    "schema": "opentallas.p3.materialization_cost.v1",
+    "input_image": "/tmp/codex-p3-probe-ar",
+    "status": "CONDITIONAL_EXISTING_MODEL_UNIT_WORK_NOT_TOKEN_RATE",
+    "scope": "selected cohort cost; FUSED row overlap, all-unit drain delays, physical replay and eight-SM model not included",
+    "instructions_selected": 644,
+    "rowx_instructions_expanded_serially": 0,
+    "records_per_unit": {
+      "SU.VOP": 563,
+      "DMA.LOAD": 81
+    },
+    "cycles_per_unit": {
+      "SU.VOP": 44628.0,
+      "DMA.LOAD": 13483.851327880775
+    },
+    "unit_work_serial_sum_cycles": 58111.85132788077,
+    "vm_copy_words": 5761924,
+    "hbm_load_words": 414720,
+    "HBM_bytes_per_cycle": 3166.7,
+    "HBM_traffic_floor_cycles": 523.8513278807592
+  },
+  "mtp": {
+    "schema": "opentallas.p3.materialization_cost.v1",
+    "input_image": "/tmp/codex-p3-probe-mtp",
+    "status": "CONDITIONAL_EXISTING_MODEL_UNIT_WORK_NOT_TOKEN_RATE",
+    "scope": "selected cohort cost; FUSED row overlap, all-unit drain delays, physical replay and eight-SM model not included",
+    "instructions_selected": 3904,
+    "rowx_instructions_expanded_serially": 40,
+    "records_per_unit": {
+      "SU.VOP": 3618,
+      "DMA.LOAD": 486
+    },
+    "cycles_per_unit": {
+      "SU.VOP": 282168.0,
+      "DMA.LOAD": 80903.10796728419
+    },
+    "unit_work_serial_sum_cycles": 363071.10796728416,
+    "vm_copy_words": 34572984,
+    "hbm_load_words": 2488320,
+    "HBM_bytes_per_cycle": 3166.7,
+    "HBM_traffic_floor_cycles": 3143.107967284555
+  },
+  "provisional_lost_fused_row_overlap_cycles": 168015,
+  "mu_headline_status": "old4159aggregate/1039per-user rates are not qualified by these image repairs"
+}
