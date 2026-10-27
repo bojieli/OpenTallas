@@ -161,5 +161,6 @@ def test_qc_hold_chain_runs_its_hook_on_routed_kits():
     t = (lg / "mk_hold_qc.sh").read_text()
     assert "override export POST_GLOBAL_ROUTE_TCL = /work/hold_route.tcl" in t
     assert "override export PRE_GLOBAL_ROUTE_TCL = /work/eco_pre_grt.tcl" in t and "OT_KIT_PRE_GRT = $KPRE" in t
+    assert "override export PRE_DETAIL_ROUTE_TCL =\n" in t and "override export POST_DETAIL_ROUTE_TCL =\n" in t
     p = (lg / "eco_pre_grt.tcl").read_text()
     assert "![grt::have_routes]" in p and "read_spef $s" in p and "source $::env(OT_KIT_PRE_GRT)" in p

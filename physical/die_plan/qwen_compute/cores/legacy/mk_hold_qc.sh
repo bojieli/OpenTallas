@@ -23,6 +23,11 @@ cat >> $O/config.mk <<CFG
 override export POST_GLOBAL_ROUTE_TCL = /work/hold_route.tcl
 override export PRE_GLOBAL_ROUTE_TCL = /work/eco_pre_grt.tcl
 export OT_KIT_PRE_GRT = $KPRE
+# the kit's PRE/POST_DETAIL_ROUTE hooks are the ORIGINAL route's clock-tree aids (e.g. f4d tree-net M5/M6 guide rewrite +
+# M6 keep-out, which errors 'no tree M6 guide' once the tree is FIXED and has no GRT guide -- canary 10-27 12:03);
+# the ECO never re-routes a clock net, so they do not run in the ECO's DRT
+override export PRE_DETAIL_ROUTE_TCL =
+override export POST_DETAIL_ROUTE_TCL =
 CFG
 printf "OT_HOLD_MARGIN=$MG\nOT_HOLD_ALLOW_SETUP=1\nOT_HOLD_MAXBUF=40\nROUTE_CORNERS='CORNER=BC CORNERS=bc'\n" > $O/variant.env
 # FF-only session in the FF vclk frame when the kit binds one (SIGNOFF-MODES-2 finding; same as KV mk_eco variant b)
