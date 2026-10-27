@@ -1276,3 +1276,5 @@ CODEX: 2026-10-27 05:00 PDT main b2929dab77 plainmerged Qwen approved R21/R22 to
 CODEX: 2026-10-27 05:01 PDT S81 integration READY b89ee2a33: coreR14/R15 fixes+TOK9b5PASS/10mutants+finite-gradientMC; clock-port-only .048x.48 clears sstn DRT-0255 diagnostic. MC599.56/516.77ps remains structural die clock FAIL; HEAD elemA_eco SIGNED +122.36/+4.43, routedLEC pending.
 
 CODEX: 2026-10-27 05:04 PDT Qwen: rst3 corrected core SIGNED100.89/2.86+routedLECEQ; QC51.84guard candidate5ce987747 dry266stacks0outside/imagePASS-COND/fullGRTlive; approvedQwen tools mergedb2929dab7; sys_c native-BB canonicalizer gapfixed9a584b617/re-synthlive.
+
+CODEX: 2026-10-27 05:06 PDT HBM PR0 native stage PASS7116/9489edges delta0. Keybuf declared324² lot impossible34realSRAMs; exact8slice successor+mutant live, needs0.5685mm²/oldkeybuf and real8792-bit nativebinding (currentcore_conns absent). Correct U5e_r targetedchecker only4missingkeybuf.
