@@ -10,14 +10,25 @@ R=Path(__file__).resolve().parents[2]
 p=argparse.ArgumentParser(description=__doc__)
 p.add_argument('--out',type=Path,required=True)
 p.add_argument('--analog-shape',choices=('original','area_square'),default='original')
+p.add_argument('--physical-pin-profile',action='store_true',help='Use explicit legacy pin-stage model plus actual digital-view aliases')
 a=p.parse_args()
 O=a.out;O.mkdir(parents=True,exist_ok=False)
 (O/'macros').mkdir(exist_ok=True);(O/'rtl').mkdir(exist_ok=True)
 models=[]
+profile=None
+if a.physical_pin_profile:
+ from phy_physical_profile import prepare
+ profile=prepare(R,O)
+ top=profile['top']
+else: top='ot_pdie_serdes_col'
 for name,kit in [(f'ot_s81_kp4_{x}',f's81lk_kp4_{x}') for x in ('dsyn','ddly','dchn','dout','enc')]+[('ot_s81_rate_match','s81lk_rate_match')]:
  d=R/'physical/ref_tile'/kit/'views'/name
  lef=(d/(name+'.lef')).read_text();w,h=map(float,re.search(r'\bSIZE\s+([\d.]+)\s+BY\s+([\d.]+)',lef).groups())
- for c in ('.lef','_tt.lib','_ff.lib'):shutil.copyfile(d/(name+c),O/'macros'/(name+c))
+ alias=(profile['aliases'].get(name,name) if profile else name)
+ for c in ('.lef','_tt.lib','_ff.lib'):
+  text=(d/(name+c)).read_text().replace(name,alias)
+  if c=='.lef': text=text.replace('FOREIGN '+alias+' ', 'FOREIGN '+name+' ')
+  (O/'macros'/(alias+c)).write_text(text)
  models.append(dict(module=name,kind='real routed digital view, legacy qualification pending',outline_um=[w,h],area_um2=w*h,source=str(d.relative_to(R))))
 # Analog-only model: reshape on the same43.2um lattice, EXACT original area.
 sys.path.insert(0,str(R/'tools/mem_compiler'));import s81_pma_gen as P
@@ -40,13 +51,13 @@ for name,ports in P.macros()[0].items():
  models.append(dict(module=leaf,kind='ANALOG ONLY model, assumed timing and footprint',outline_um=[P.W_UM,P.H_UM],area_um2=P.W_UM*P.H_UM,basis='Existing129.6x2246.4PMA area preserved exactly; shape is an unqualified planning assumption, LAT4 model'))
 (O/'rtl/analog_wrappers.sv').write_text('\n'.join(wrappers))
 col=(R/'rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col.sv').read_text();col=col[:col.index('endmodule')+len('endmodule')]+'\n'
-(O/'rtl/ot_pdie_serdes_col.sv').write_text(col)
+if not profile: (O/'rtl/ot_pdie_serdes_col.sv').write_text(col)
 for src in ('rtl/dsrom_sys/s81_link/lp/ot_s81_kp4_dec_native_flat_lp.sv','rtl/common/landed_parent/ot_pl_land.sv','rtl/common/ot_dp_clk_landing.sv','rtl/common/ot_meso_fifo.sv'):
- shutil.copyfile(R/src,O/'rtl'/Path(src).name)
+ if not (profile and '/lp/' in src): shutil.copyfile(R/src,O/'rtl'/Path(src).name)
 W,H=3318.0,1013.0
 (O/'constraint.sdc').write_text('create_clock -name clk -period833 [get_ports clk]\n'.replace('-period833','-period 833')+'create_clock -name rck -period 833 [get_ports pma_rck]\nset_clock_groups -asynchronous -group clk -group rck\nset_clock_uncertainty -setup 60 [all_clocks]\nset_clock_uncertainty -hold 25 [all_clocks]\n')
-config=['export PLATFORM = asap7','export DESIGN_NAME = ot_pdie_serdes_col','export VERILOG_FILES = $(wildcard /work/rtl/*.sv)','export SDC_FILE = /work/constraint.sdc','export ADDITIONAL_LEFS = $(wildcard /work/macros/*.lef)','export ADDITIONAL_LIBS = $(wildcard /work/macros/*_tt.lib)','export DIE_AREA = 0 0 3318 1013','export CORE_AREA = 8.64 8.64 3309.36 1004.36','export CORE_UTILIZATION = 40','export SYNTH_HIERARCHICAL = 0','export SYNTH_MINIMUM_KEEP_SIZE = 1','export SYNTH_MEMORY_MAX_BITS = 65536','export NUM_CORES = 8']
+config=['export PLATFORM = asap7','export DESIGN_NAME = '+top,'export VERILOG_FILES = $(wildcard /work/rtl/*.sv)','export SDC_FILE = /work/constraint.sdc','export ADDITIONAL_LEFS = $(wildcard /work/macros/*.lef)','export ADDITIONAL_LIBS = $(wildcard /work/macros/*_tt.lib)','export DIE_AREA = 0 0 3318 1013','export CORE_AREA = 8.64 8.64 3309.36 1004.36','export CORE_UTILIZATION = 40','export SYNTH_HIERARCHICAL = 0','export SYNTH_MINIMUM_KEEP_SIZE = 1','export SYNTH_MEMORY_MAX_BITS = 65536','export NUM_CORES = 8']
 (O/'config.mk').write_text('\n'.join(config)+'\n')
-summary=dict(analog_shape=a.analog_shape,analog_physical_qualified=False,analog_original_fits_window=False,top='ot_pdie_serdes_col',window_um=[W,H],model_before_build=dict(area_um2=sum(x['area_um2'] for x in models),window_um2=W*H,macro_fill=sum(x['area_um2'] for x in models)/(W*H)),macros=models,source_sha256={str(p.relative_to(R)):hashlib.sha256(p.read_bytes()).hexdigest() for p in (R/'rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col.sv',R/'rtl/dsrom_sys/s81_link/lp/ot_s81_kp4_dec_native_flat_lp.sv')},source_contract='TXL2 and RX+8 unchanged; actual native LP and6real digital tiles, ONLY2analog-modeled leaves; no whole-PHY blackbox; no current SIGNED claim')
+summary=dict(analog_shape=a.analog_shape,analog_physical_qualified=False,analog_original_fits_window=False,top=top,physical_pin_profile=bool(profile),window_um=[W,H],model_before_build=dict(area_um2=sum(x['area_um2'] for x in models),window_um2=W*H,macro_fill=sum(x['area_um2'] for x in models)/(W*H)),macros=models,source_sha256={str(p.relative_to(R)):hashlib.sha256(p.read_bytes()).hexdigest() for p in (R/'rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col.sv',R/'rtl/dsrom_sys/s81_link/lp/ot_s81_kp4_dec_native_flat_lp.sv')},source_contract='TXL2 and RX+8 unchanged; actual native LP and6real digital tiles, ONLY2analog-modeled leaves; no whole-PHY blackbox; no current SIGNED claim')
 (O/'sizing.json').write_text(json.dumps(summary,indent=1)+'\n')
 print(json.dumps(summary['model_before_build']))

@@ -36,3 +36,27 @@ Run data: intel1:/srv/opentallas-scratch2/claude/codex-s81-phy-digital-1027
 Use `tools/s81_link/phy_native_parent_trial.py` only as a synthesis-sizing
 preparation tool; it defaults to the original analog shape and labels both
 choices unqualified. It does not modify a die plan or released RTL.
+
+The explicit physical pin-stage profile is now tested on the existing two-PHY
+component vehicle with exact833ps core and833.250ps peer(~300.120ppm), random
+correctable channel bit errors, and all6000 payload beats exact/in order,
+both endpoints live/no fault. Landing0-bypass mutant produces4483 bad beats
+and FAIL (6000 sent,4483 received). Default RTL and die plans are unchanged.
+
+The raw-PMA global+2 encoder miter FAIL remains recorded: encoder input+1 and
+output+1 must be simulated separately because reset/frame phase is stateful.
+On a common real encoded stream all24,990 decoder field comparisons match the
+per-field +6/+2/+4 delays. The rate matcher has no extra pin-stage wrapper.
+
+`phy_physical_profile.py` reads the real per-port latency metadata and refuses
+unsupported stage counts. It emits simulation-only pin wrappers separately
+from the P&R parent. `phy_native_parent_trial.py --physical-pin-profile` uses
+renamed copies of the actual legacy digital LEF/Liberty views (FOREIGN retains
+the original physical master) so their modeled pin FFs are not inserted again.
+The profile parent synthesizes with the same823,107um2 area. Canonical fanout
+check passes12,115 FFs, zero over64 loads. These remain legacy trial views,
+with current hardening/sign-off and analog shape/orientation still open.
+
+The rotation drawing is an area/dataflow planning candidate only. It preserves
+original analog dimensions but uses an UNDECLARED R270 orientation, so is not
+approved for P&R and does not establish full pin-to-pin reach/timing.
