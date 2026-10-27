@@ -729,7 +729,11 @@ def consumer_taps(P, tn):
 
 
 def consumer_count(T):
-    return T.get("n_reset_consumers", T.get("n_clock_taps", len(T["taps"])))
+    if "n_reset_consumers" in T:
+        return T["n_reset_consumers"]
+    if "n_clock_taps" in T:
+        return T["n_clock_taps"]
+    return len(T["taps"])
 
 
 def _plan_taps(P, tn):
@@ -773,9 +777,12 @@ def _type_tree0(P, tn, depth, reach):
                                                                            h - CLEAR_UM), walls=walls(P, tn),
                                               avoid_cores=bool(P.reset.get("relay_avoid_cores")))
     t = P.types[tn]; w, h = t["outline_um"]
-    return assign(cache[("topo", tn, reach)], depth,
-                  pad_spread=bool(P.reset.get("relay_pad_spread")), boxes=blockages(t),
-                  box_out=(CLEAR_UM, CLEAR_UM, w-CLEAR_UM, h-CLEAR_UM), walls=walls(P, tn))
+    T = assign(cache[("topo", tn, reach)], depth,
+               pad_spread=bool(P.reset.get("relay_pad_spread")), boxes=blockages(t),
+               box_out=(CLEAR_UM, CLEAR_UM, w-CLEAR_UM, h-CLEAR_UM), walls=walls(P, tn))
+    if t.get("reset", {}).get("local_taps_um"):
+        T.update(n_clock_taps=len(_taps(P, tn)), n_reset_consumers=len(consumer_taps(P, tn)), local_reset_taps=True)
+    return T
 
 
 def part_depth(P):
@@ -1919,7 +1926,7 @@ def render(P, tn, png):
         ax.plot([x0, x1], [y0, y1], "-", color="#c33" if RT_hop(x0, y0, x1, y1) > T["reach_um"] else "#888", lw=0.6)
     for r in T["relays"]:
         ax.plot(*r["xy"], "o", ms=3 if r["kind"] == "pad" else 5, color=cm(r["depth"] / max(1, T["depth"])))
-    for i, (_, x, y) in enumerate(_taps(P, tn)):
+    for i, (_, x, y) in enumerate(consumer_taps(P, tn)):
         ax.plot(x, y, "+", color="b", ms=7)
     ax.plot(*T["root"], "s", color="r", ms=9)
     ax.set_title(f"{tn}: reset entry {T['entry']} (red square) -> depth {T['depth']} to {len(T['taps'])} taps (+), "
