@@ -10,14 +10,14 @@
 // fault_o0 is LIVE and needs a return lane to ctl in the head plan batch.
 // No pin/physical/timing or whole-head binding claim is made by this source.
 module ot_s81hd_lep0N_core #(
- parameter [3:0] CH_B=4'b1111
+ parameter [3:0] CH_B=4'b1111, parameter integer IDX_EN=1
 )(
  input wire ck,rst_n,
  input wire[513:0]coll_i0,coll_i1,coll_i2,coll_i3,
  output wire[511:0]coll_o0,coll_o1,coll_o2,coll_o3,
  input wire[1103:0]lepk_i0,output wire[1103:0]lepk_o0,
  input wire lepf_i0,input wire[44:0]unit_i0,
- output wire[31:0]ctrl_o0,output wire fault_o0,
+ output wire[31:0]ctrl_o0,output wire fault_o0,output reg[10:0]lw_o,
  input wire[275:0]tl_i,output wire[275:0]ca_o,cb_o
 );
  wire[3:0]kv,kr,kiv,kir,lv,lr,liv,lir,krx,lrx;
@@ -29,8 +29,12 @@ module ot_s81hd_lep0N_core #(
  assign coll_o0=coll_o[0];assign coll_o1=coll_o[1];
  assign coll_o2=coll_o[2];assign coll_o3=coll_o[3];
  wire mwv,mrv,mf;wire[1103:0]mwd,mrd;
+ // Actual LEP landing acceptance, same user field as dsdv_mu_land_head_nr.
+ // The controller counts these notifications before issuing its replay command.
+ always@(posedge ck or negedge rst_n)
+  if(!rst_n)lw_o<=0;else lw_o<={mwd[1056:1047],mwv};
  ot_s81hd_lep_idx_nr #(.DT(512),.DR(12),.CRED(12),.SRAM(1),
-  .NB(80),.RX_SRAM(1),.IN_PIPE(1),.NATIVE32(1))u_lep(
+  .NB(80),.RX_SRAM(1),.IN_PIPE(1),.NATIVE32(1),.IDX_EN(IDX_EN))u_lep(
   .clk(ck),.rst_n(rst_n),.ro(lepk_i0),.ri(lepk_o0),
   .lo0_v(kv[0]),.lo0_r(kr[0]),.lo0_d(kd[0]),
   .lo1_v(kv[1]),.lo1_r(kr[1]),.lo1_d(kd[1]),
@@ -64,5 +68,22 @@ module ot_s81hd_lep0N_core #(
    .tx(coll_o[i]),.lo_v(lv[i]),.lo_r(lr[i]),.lo_d(ld[i]),
    .li_v(liv[i]),.li_r(lir[i]),.li_d(lid[i]),.flt(lf[i]));
  end endgenerate
+endmodule
+// Head-specific no-index provider. IDX_EN=0 structurally omits g_itx/g_irx in
+// generated/ot_s81hd_lep_nr.sv, so tl is parameter-proven unread and ca/cb are
+// parameter-proven constant dead outputs. The generic provider default stays1.
+module ot_s81hd_lep0N_noidx_core #(parameter[3:0]CH_B=4'b1111)(
+ input wire ck,rst_n,
+ input wire[513:0]coll_i0,coll_i1,coll_i2,coll_i3,
+ output wire[511:0]coll_o0,coll_o1,coll_o2,coll_o3,
+ input wire[1103:0]lepk_i0,output wire[1103:0]lepk_o0,
+ input wire lepf_i0,input wire[44:0]unit_i0,
+ output wire[31:0]ctrl_o0,output wire fault_o0,output wire[10:0]lw_o
+);
+ ot_s81hd_lep0N_core #(.CH_B(CH_B),.IDX_EN(0))u(
+ .ck(ck),.rst_n(rst_n),.coll_i0(coll_i0),.coll_i1(coll_i1),.coll_i2(coll_i2),.coll_i3(coll_i3),
+ .coll_o0(coll_o0),.coll_o1(coll_o1),.coll_o2(coll_o2),.coll_o3(coll_o3),
+ .lepk_i0(lepk_i0),.lepk_o0(lepk_o0),.lepf_i0(lepf_i0),.unit_i0(unit_i0),
+ .ctrl_o0(ctrl_o0),.fault_o0(fault_o0),.lw_o(lw_o),.tl_i(276'd0),.ca_o(),.cb_o());
 endmodule
 `default_nettype wire
