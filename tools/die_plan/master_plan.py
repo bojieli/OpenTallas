@@ -159,6 +159,7 @@ def census(P):
                         layers = list(b.get("layers", []))
             length = sum(IS.seg_len(a, b) for a, b in zip(pts, pts[1:]))
             paths.append(dict(id=f"{part}:istn{k}", kind="internal", bits=bits, ports=0, src=f"{part}.{st.get('conn')}",
+                              group=f"{part}|{st.get('launch')}|{st['from_um'][0]},{st['from_um'][1]}",
                               dst=f"{part}.{st.get('capture', '')}", length_um=r3(length),
                               legs=[dict(part=part, slot=f"istn{k}", pts=pts, band_um=band, layers=layers,
                                          bit_sites=None)]))
@@ -1517,18 +1518,71 @@ def tree_balance(M, stub_tol=20.0, leg_tol=1.0):
 
 
 # ------------------------------------------------------------------------------------------------------ clock model
-# 12.9d plan-level analytic core insertion model, calibrated ONCE (not per run) on the measured QC SU trials
-# (QC-SU-LAT results/qc_su_lat/trials_1026.json @ claude/qc-su-lat-1026 ad22ae2b28, variant B = structured BUFx16f
-# trunks SEG 110 um, GRT RC): insertion_TT = K_PS_PER_UM x L_max, L_max = entry -> farthest core corner (Manhattan);
-# routed RCX = RCX_FACTOR x GRT (trial basis note: vmr_s6kc 386.5 routed vs 409.9 GRT).  FF = FF_RATIO x TT
-# (same trials, mean FF/TT).  Calibration points (L_max from the S-face centre pin of the trial kits):
-CAL_POINTS = [("qfd_dv_s8x_vmr", 406.08, 341.8, 271.8), ("qfd_dv_s8x_prog", 436.32, 419.4, 337.1),
-              ("qfd_dv_s8x_btab", 436.32, 384.9, 308.1)]
-K_PS_PER_UM = sum(t for _, _, t, _ in CAL_POINTS) / sum(L for _, L, _, _ in CAL_POINTS)
-FF_RATIO = sum(f / t for _, _, t, f in CAL_POINTS) / len(CAL_POINTS)
+# 12.9d plan-level analytic core insertion model (MODEL-REFIT 10-26, COORD ruling NUMBER-CHECK-3 (4): intercept + slope).
+# Scope: a CTS-grown core tree (TritonCTS or count/regional-tap H-tree) from a CENTRE clock entry (12.8a), predicted before
+# any tree is designed.  TT_GRT = CAL_A + CAL_B x L_max, L_max = entry -> farthest core corner (Manhattan); FF = FF_RATIO x TT.
+# Basis = global-route RC (GRT), the basis of every calibration point; routed RCX is ~5.7 % lower on the one measured pair
+# (vmr_s6kc 386.5 vs 409.9 GRT) -> RCX_FACTOR is reported only, not applied (the high-side FAIL stays conservative).
+# Fitted ONCE on every measured centre-entry GRT trial across dies (all-sink mean insertion, 0 pads):
+#   (name, L_max um, TT mean ps, FF mean ps, source)
+# Rejected forms (results/model_refit_1026): K x L through the origin (+77.6 ps bias on these points); one line over
+# edge + centre + placement-RC points (PL->GRT delta varies 10-45 ps, LOO rms 23-71); log2(sinks) term (no gain).
+# Edge entries are not calibrated (12.8a bans them).  Plan-BUILT trees (core_infra_htree / su_tree_model: TritonCTS not
+# run) are predicted by their own NLDM tree model + PLAN_TREE_OFFSETS below, not by this line.
+CAL_POINTS = [("hbm:ot_hgi_coll_gq_issue centre", 241.92, 272.8, 219.4, "PATH-HBM b1d calibration_centre_entry.json"),
+              ("hbm:pc_ctrl_leaf_cfg_h9b centre", 181.44, 231.2, 185.3, "PATH-HBM b1d calibration_centre_entry.json"),
+              ("s81:dsdv_gunit_l0 r3rt42 4x2", 259.2, 294.74, 240.52, "core-lat-r3 kits ins_probe_{tt,ff}.json"),
+              ("s81:dsdv_gunit_l0 r3rt41 4x1", 259.2, 299.90, 247.81, "core-lat-r3 kits ins_probe_{tt,ff}.json"),
+              ("s81:dsdv_gunit_l2 r3rt42 4x2", 259.2, 297.51, 243.92, "core-lat-r3 kits ins_probe_{tt,ff}.json"),
+              ("s81:dsdv_gunit_l4 cl26rt 4x1", 207.36, 259.69, 208.55, "NUMBER-CHECK 06:59")]
+
+
+def _line_fit(pts):
+    n = len(pts)
+    mx = sum(L for _, L, _, _, _ in pts) / n
+    my = sum(t for _, _, t, _, _ in pts) / n
+    b = sum((L - mx) * (t - my) for _, L, t, _, _ in pts) / sum((L - mx) ** 2 for _, L, _, _, _ in pts)
+    return my - b * mx, b
+
+
+CAL_A, CAL_B = _line_fit(CAL_POINTS)
+FF_RATIO = sum(f / t for _, _, t, f, _ in CAL_POINTS) / len(CAL_POINTS)
 RCX_FACTOR = 386.5 / 409.9
-CAL_ERR = [round(K_PS_PER_UM * L - t, 1) for _, L, t, _ in CAL_POINTS]
+CAL_ERR = [round(CAL_A + CAL_B * L - t, 1) for _, L, t, _, _ in CAL_POINTS]
 CAL_RMS_PS = round(math.sqrt(sum(e * e for e in CAL_ERR) / len(CAL_ERR)), 1)
+
+
+def _loo(pts):
+    out = []
+    for i, (_, L, t, _, _) in enumerate(pts):
+        a, b = _line_fit(pts[:i] + pts[i + 1:])
+        out.append(round(a + b * L - t, 1))     # pred - meas, as CAL_ERR
+    return out
+
+
+CAL_LOO_ERR = _loo(CAL_POINTS)
+CAL_LOO_MAX_PS = max(abs(e) for e in CAL_LOO_ERR)
+CAL_RANGE_UM = (min(L for _, L, _, _, _ in CAL_POINTS), max(L for _, L, _, _, _ in CAL_POINTS))
+
+# Plan-built core trees: measured = raw tree-model prediction + offset, per MODEL (offsets are model-specific; one
+# model's offset must never be applied to another).  meas - model, GRT RC, btab (QC SU) calibration builds:
+PLAN_TREE_OFFSETS = {
+    "core_infra_htree_nldm": dict(TT=-12.8, FF=-24.5, points="btab R5 TT 279.8 vs 292.3 (-12.5); R6 TT 260.8/FF 200.5 vs "
+                                  "273.9/225.0 (-13.1/-24.5); FF from R6 only"),
+    "su_tree_model_nldm": dict(TT=1.9, FF=-5.1, points="btab R5 279.8/221.6 vs su_tree_model 277.88/226.72 "
+                               "(val100_btab_r5.tcl.json); one point"),
+}
+
+
+def core_insertion(far_um):
+    tt = CAL_A + CAL_B * far_um
+    return round(tt, 1), round(tt * FF_RATIO, 1)
+
+
+def plan_tree_insertion(raw_tt, raw_ff, model):
+    """measured-basis (GRT) mean insertion of a plan-built core tree from that tree model's raw prediction."""
+    o = PLAN_TREE_OFFSETS[model]
+    return round(raw_tt + o["TT"], 1), round(raw_ff + o["FF"], 1)
 
 
 # 12.9d die related-pair skew per clock region, CPPR at the last common tree node (= the region root for same-mesh
@@ -1561,11 +1615,6 @@ def pair_skew_pred(M, corner, core_term=0.0):
                 below_root_um=round(total - above, 1), regions=len(meta.get("regions") or [1]))
 
 
-def core_insertion(far_um):
-    tt = RCX_FACTOR * K_PS_PER_UM * far_um
-    return round(tt, 1), round(tt * FF_RATIO, 1)
-
-
 # ------------------------------------------------------------------------------------------------------ IR
 def static_ir(files):
     if not files:
@@ -1591,7 +1640,8 @@ def static_ir(files):
 def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entries=None, sites_json=None,
         reach=None, detour=405.0, core_obs_top="M5", lower_pg_frac=0.25, fill_max=0.6, bay_fill=0.5,
         track_max=0.6, core_reach_um=200.0, entry_tol=0.5, core_tol_ps=20.0, skew_gate_ps=80.0, render=True, log=print,
-        core_islands=None, tree_lattice=None, tree_comm_form="die", onramp_bays=False, drop_mesh_early=False):
+        core_islands=None, tree_lattice=None, tree_comm_form="die", onramp_bays=False, drop_mesh_early=False,
+        tree_roads=False):
     reach = float(reach or P.reach)
     out = Path(out)
     (out / "slices").mkdir(parents=True, exist_ok=True)
@@ -1644,10 +1694,21 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
 
     # ---- roads + rest stops
     segs_all = []                         # (bits, path, leg index, a, b, band, layers, part)
+    seg_group = {}                        # segs_all index -> multi-sink tree group (PATH-HBM-R8 --tree-roads)
     bays_die = []                         # dict(part, xy, kind, bits, horiz, band, path, rect)
     gap_fail, in_core = [], []
     gap_max = (0.0, None)
     route_cache = {}
+    seen_stop = set()                     # PATH-HBM-R8 --tree-roads: one rest stop per (tree, site)
+
+    def _dup_stop(pth, xy):
+        if not tree_roads or not pth.get("group"):
+            return False
+        key = (pth["group"], round(xy[0], 1), round(xy[1], 1))
+        if key in seen_stop:
+            return True
+        seen_stop.add(key)
+        return False
     for pth in paths:
         for li, lg in enumerate(pth["legs"]):
             part = lg["part"]
@@ -1661,7 +1722,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
                 # station register at a (k > 0) -> station bay
                 if 0 < k:
                     grp, face = station_sites(P, part, a, lg["bit_sites"])
-                    if not face:          # a face register is the partition's registered pin (rest stop, no bay)
+                    if not face and not _dup_stop(pth, a):   # face register = registered pin (no bay)
                         bays_die.append(dict(part=part, xy=a, kind="station", bits=pth["bits"], band=band,
                                              horiz=abs(b[1] - a[1]) < abs(b[0] - a[0]), path=pth["id"],
                                              sites=grp))
@@ -1693,6 +1754,8 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
                             horiz = abs(p1[1] - p0[1]) < 1e-9
                             break
                         acc += L
+                    if _dup_stop(pth, xy):
+                        continue
                     bays_die.append(dict(part=part, xy=xy, kind="repeater", bits=pth["bits"], band=band,
                                          horiz=horiz, path=pth["id"], sites=None))
                 gap_max = max(gap_max, (T - prev, pth["id"]))
@@ -1713,13 +1776,18 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
                 for p0, p1 in zip(route, route[1:]):
                     if IS.seg_len(p0, p1) > 1e-6:
                         segs_all.append((pth["bits"], pth["id"], li, p0, p1, band, lg["layers"], part))
+                        seg_group[len(segs_all) - 1] = pth.get("group")
     log(f"roads: {len(segs_all)} segments, {len(bays_die)} rest stops, {len(gap_fail)} reach gaps")
 
     # ---- layer assignment (greedy by bits)
     roads = []
     m89_segs = []
     blocked = []
-    for bits, pid, li, a, b, band, decl, part in sorted(segs_all, key=lambda s: -s[0]):
+    tree_cells = {}                       # (group, layer) -> set of flat gcell ids already carrying that tree
+    order = sorted(range(len(segs_all)), key=lambda k: -segs_all[k][0])
+    for kseg in order:
+        bits, pid, li, a, b, band, decl, part = segs_all[kseg]
+        grp = seg_group.get(kseg) if tree_roads else None
         sl, horiz = grid.band(a, b, band)
         d = "H" if horiz else "V"
         top = lnum(P.type_top_layer(P.parts[part]["type"]))
@@ -1732,6 +1800,12 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
             add = grid.load(L, sl, horiz, bits)
             if add is None:
                 continue
+            if grp is not None and (grp, L) in tree_cells:     # a tree branch shares the gcells it already uses
+                i0, j0, i1, j1 = sl
+                jj, ii = grid.np.mgrid[j0:j1, i0:i1]
+                fl_ = (jj * grid.nx + ii).ravel()
+                have = grid.np.isin(fl_, grid.np.fromiter(tree_cells[(grp, L)], dtype=grid.np.int64))
+                add = grid.np.where(have.reshape(add.shape), 0.0, add).astype(grid.np.float32)
             u = grid.worst(L, sl, add)
             if best is None or (u <= track_max and best[1] > track_max) or (u < best[1] and best[1] > track_max):
                 best = (L, u, add)
@@ -1742,6 +1816,10 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
             continue
         L, u, add = best
         grid.commit(L, sl, add)
+        if grp is not None:
+            i0, j0, i1, j1 = sl
+            jj, ii = grid.np.nonzero(add > 0)
+            tree_cells.setdefault((grp, L), set()).update(((jj + j0) * grid.nx + (ii + i0)).tolist())
         roads.append(dict(path=pid, part=part, layer=L, bits=bits, a=[r3(v) for v in a], b=[r3(v) for v in b],
                           band_um=r3(band), leg=li))
         if lnum(L) >= 8:
@@ -1935,7 +2013,8 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         far = max(abs(cx - x) + abs(cy - y) for cx in (0, w) for cy in (0, h))
         tt, ff = core_insertion(far)
         row = dict(module=mod, entry_um=entry[mod]["xy"], farthest_um=r3(far), pred_TT_ps=tt, pred_FF_ps=ff,
-                   target_TT_ps=common, tol_ps=core_tol_ps)
+                   target_TT_ps=common, tol_ps=core_tol_ps,
+                   in_cal_range=CAL_RANGE_UM[0] - 1e-6 <= far <= CAL_RANGE_UM[1] + 1e-6)
         ins_rows.append(row)
         if abs(tt - common) > core_tol_ps + 1e-6 and tt > common:
             ins_fail.append(row)
@@ -2168,9 +2247,11 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
         tree_balance=bal,
         core_insertion_model=dict(
             verdict="PASS" if not ins_fail else "FAIL", fails=len(ins_fail), cores=len(ins_rows),
-            model=dict(form="TT = RCX x K x L_max(entry -> farthest corner); FF = FF_RATIO x TT", K_ps_per_um=round(
-                K_PS_PER_UM, 4), RCX=round(RCX_FACTOR, 4), FF_RATIO=round(FF_RATIO, 4), calibration=CAL_POINTS,
-                calibration_err_ps=CAL_ERR, calibration_rms_ps=CAL_RMS_PS,
+            model=dict(form="TT_GRT = A + B x L_max(entry -> farthest corner); FF = FF_RATIO x TT (centre entry, CTS-grown tree)",
+                A_ps=round(CAL_A, 2), B_ps_per_um=round(CAL_B, 4), FF_RATIO=round(FF_RATIO, 4), basis="GRT",
+                RCX_FACTOR_info=round(RCX_FACTOR, 4), calibration=CAL_POINTS, calibration_err_ps=CAL_ERR,
+                calibration_rms_ps=CAL_RMS_PS, loo_err_ps=CAL_LOO_ERR, loo_max_ps=CAL_LOO_MAX_PS,
+                calibrated_L_um=list(CAL_RANGE_UM), plan_tree_offsets=PLAN_TREE_OFFSETS,
                 note="shallow cores (pred < target) pad up with a designed fixed trunk (12.8c): not a FAIL"),
             examples=ins_fail[:40], all=ins_rows),
         die_pair_skew_model=skew_model,
@@ -2203,7 +2284,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
     write_slices.extra = dict(phy=phy, die_tree=tree_comm, clock_reps=rep_by_type, reach=reach)
     write_slices(P, out / "slices", bays, pins, roads, islands, entry, core_types, in_core, gates, common,
                  plan_sha, mp_sha)
-    (out / "master_plan.json").write_text(json.dumps(dict(mp, paths=[{k: v for k, v in p.items() if k != "legs"}
+    (out / "master_plan.json").write_text(json.dumps(dict(mp, paths=[{k: v for k, v in p.items() if k not in ("legs", "group")}
                                                                     for p in paths]), indent=1, default=str))
     (out / "gates.json").write_text(json.dumps(dict(die=P.name, verdict=verdict, plan_sha256=plan_sha,
                                                     master_plan_sha256=mp_sha, gates=gates), indent=1, default=str))
@@ -2473,6 +2554,8 @@ def add_args(p):
     p.add_argument("--onramp-bays", action="store_true", help="opt-in R4 12.7a on-ramp repeater bays on M8/M9 legs")
     p.add_argument("--drop-mesh-early", action="store_true", help="opt-in R4 12.8: drop input-mesh early tap offsets "
                                                                   "from the plan (listed for the clock owner)")
+    p.add_argument("--tree-roads", action="store_true", help="opt-in PATH-HBM-R8: route each multi-sink internal "
+                   "station group (one launch) as ONE tree: shared gcells counted once per layer, one rest stop per site")
     p.add_argument("--tree-commensurate", default="die", choices=("die", "regional"),
                    help="tree_commensurate gate form: die-wide core lattice (R5 default) or REGIONAL (MASTER-PLAN-R6, "
                         "COORD 13:05: per clock region tree lattice == region island lattice)")
@@ -2499,7 +2582,8 @@ def cmd(a):
                     render=not a.no_render,
                     core_islands=json.loads(Path(a.core_islands).read_text()) if a.core_islands else None,
                     tree_lattice=parse_tree_lattice(a.tree_lattice) if a.tree_lattice else None,
-                    tree_comm_form=a.tree_commensurate, onramp_bays=a.onramp_bays, drop_mesh_early=a.drop_mesh_early)
+                    tree_comm_form=a.tree_commensurate, onramp_bays=a.onramp_bays, drop_mesh_early=a.drop_mesh_early,
+                    tree_roads=a.tree_roads)
     print(json.dumps(dict(die=mp["die"], verdict=mp["verdict"], gates=mp["gates"], census=mp["census"]), indent=1))
     return 0 if mp["verdict"] == "PASS" else 1
 
