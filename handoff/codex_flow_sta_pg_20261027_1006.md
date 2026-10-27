@@ -127,3 +127,11 @@ still FAIL: unchanged digital glue485.370mV SW /493.047mV SE. Their
 infra_pg_domains.make uses direct uncaught check/analyze, with explicit PG_OK
 for all3 nets and real CSV minima, so no false process-success claim there.
 See handoff/codex-kv-clock-interim-1027.md; correction remains KV-owned.
+
+## Explicit reset / parked 2026-10-27 10:14 PDT
+Parent delivered explicit reset. All owned source worktrees are clean, all own
+heavy jobs are terminal, and all candidate tips are pushed to GitHub+intel2 hub.
+No jobs killed, no half-written file or merge. No macro-area guard edit made.
+Read-only final retired DIE-CI observation: g2part-3989734 remains running,
+oom=false, PID3989782; GRT reached extra iteration20/30. This is another
+retired lane job, not an owned live job; left running and parent notified.
