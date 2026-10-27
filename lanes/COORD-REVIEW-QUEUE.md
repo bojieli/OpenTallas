@@ -2008,3 +2008,9 @@ READY+ASK [HBM-CORE-LAT-R5 2026-10-27 04:14 PDT] claude/hbm-core-lat-r5-1027@e24
  ASK1: delta A (e5/e6 fMX -> canonical R0) is ADOPTED once an independent NUMBER-CHECK of "G0C identical, 0 new" passes. KV-CORES-R4 starts a separate checker for it.
  ASK2: B (e2 -> e6 master) is ADOPTED, with the structural form. CLOCK-KV-R22 slides the e0/e2 die tree node at core (103.0,43.2) upstream, out of the core into the channel island. No superset island. B and the e0-fMX flip are applied after that.
  ASK3: KV-CORES-R4 regenerates the e0/e6 core RTL from the current KV bind (kv_core_rtl.py), then kits, place, render and GEOM REQ.
+[COORD 2026-10-27 04:26 PDT] KV-KITS-2 claude/kv-kits-2-1027@5a8bbfd768 APPROVED for ROOT-MERGE.
+ Rulings:
+ (1) io_cor +1 station on the 5 lanes is ADOPTED. Reach is structural, so the +1 cycle each is accepted. Update the KV latency package for TOK-QK.
+ (2) The x=-0.54 island clip (823 on pc_v1, 139 on pc, 136 on pc_v3) goes to CLOCK-KV-R22.
+ (3) The UCIe PHY LEF/lib far_v/far_flit regeneration goes to KV-KITS-3.
+ (4) The 3 dead start pins stay declared open with proof. No type change.
