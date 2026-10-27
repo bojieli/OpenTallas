@@ -54,7 +54,7 @@ def _on(rect, p, tol=0.5):
     return None
 
 
-def plan_quadrants(t, S, tree_re=r"coll_q\w*_body", tree_bits=2470, bounds=None, dist_by_x=False):
+def plan_quadrants(t, S, tree_re=r"coll_q\w*_body", tree_bits=2470, bounds=None, dist_by_x=False, named_ends=False):
     """topology only: replicate / distribute, segment assignment, rewritten station list with abstract ends.
     bounds (PATH-HBM-R10 opt-in): S-1 interior segment boundaries (x um) instead of W/S equal widths.
     dist_by_x (PATH-HBM-R10 opt-in): a distributed instance starts in the segment of its own centre x (its lanes were
@@ -74,14 +74,18 @@ def plan_quadrants(t, S, tree_re=r"coll_q\w*_body", tree_bits=2470, bounds=None,
     dist = [i for i, h in hc.items() if cnt[h["module"]] >= S]
     st0 = t["internal_stations"]
 
-    def end(p):
+    def end(p, label=None):
+        if named_ends and isinstance(label, str):
+            names = [i for i in hc if label == i or label.startswith(i + ".")]
+            if names:
+                return ("C", max(names, key=len))
         i = _on(rect, p)
         if i:
             return ("C", i)
         if p[1] <= 0.5 or p[1] >= H - 0.5:
             return ("F", seg(p[0]))
         return ("F", 0 if p[0] <= W / 2 else S - 1)
-    ends = [(end(s["from_um"]), end(s["to_um"])) for s in st0]
+    ends = [(end(s["from_um"], s.get("launch")), end(s["to_um"], s.get("capture"))) for s in st0]
     isrep = lambda e: e[0] == "C" and cnt[hc[e[1]]["module"]] < S  # noqa: E731
     # distributed assignment: x order, count/S per segment, then pairwise swaps
     segof = {}
