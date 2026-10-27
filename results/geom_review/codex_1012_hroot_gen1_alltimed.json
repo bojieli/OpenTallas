@@ -1,0 +1,61 @@
+{
+  "flops": 9115,
+  "timed_input_pins": 10949,
+  "input_scope": "all DFF non-clock inputs including SET/RESET/scan/enable",
+  "pairs": 15819,
+  "max_manhattan_um": 1407.672,
+  "over405": 2544,
+  "combinational_loops": 0,
+  "worst": [
+    [
+      1407.672,
+      "u_bound.u_bin_i_idsrc_Q_y/q\\[1\\]$_DFF_P_",
+      "u_bound.u_bout_o_idhr_Q_y/q\\[1\\]$_DFF_P_"
+    ],
+    [
+      1407.402,
+      "u_bound.u_bin_i_idsrc_Q_y/q\\[0\\]$_DFF_P_",
+      "u_bound.u_bout_o_idhr_Q_y/q\\[0\\]$_DFF_P_"
+    ],
+    [
+      1318.842,
+      "u_bound.u_bin_i_fch_pc_Q_N_q/eq$_DFF_PN0_",
+      "u_bound.u_u_efault.fault$_DFF_PN0_"
+    ],
+    [
+      1262.682,
+      "u_bound.u_bin_i_kvpc_Q_N_pc__fo/eq$_DFF_PN0_",
+      "u_bound.u_u_efault.fault$_DFF_PN0_"
+    ],
+    [
+      1244.592,
+      "u_bound.u_bin_i_slg_Q_N_o_ctl/eq$_DFF_PN0_",
+      "u_bound.u_u_efault.fault$_DFF_PN0_"
+    ],
+    [
+      1223.802,
+      "u_bound.u_kvs_hroot.u_rly.g_c\\[73\\]$_DFF_P_",
+      "u_bound.u_kvs_hroot.u_rly.g\\[73\\]$_DFF_P_"
+    ],
+    [
+      1217.268,
+      "u_bound.u_kvs_hroot.u_rly.g_c\\[57\\]$_DFF_P_",
+      "u_bound.u_kvs_hroot.u_rly.g\\[57\\]$_DFF_P_"
+    ],
+    [
+      1214.622,
+      "u_bound.u_kvs_hroot.u_rly.g_c\\[104\\]$_DFF_P_",
+      "u_bound.u_kvs_hroot.u_rly.g\\[104\\]$_DFF_P_"
+    ],
+    [
+      1214.028,
+      "u_bound.u_kvs_hroot.u_rly.g_c\\[141\\]$_DFF_P_",
+      "u_bound.u_kvs_hroot.u_rly.g\\[141\\]$_DFF_P_"
+    ],
+    [
+      1213.65,
+      "u_bound.u_kvs_hroot.u_rly.g_c\\[100\\]$_DFF_P_",
+      "u_bound.u_kvs_hroot.u_rly.g\\[100\\]$_DFF_P_"
+    ]
+  ]
+}

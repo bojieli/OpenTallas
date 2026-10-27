@@ -1,0 +1,58 @@
+{
+  "pins": 4320,
+  "pin_entries": 4320,
+  "duplicate_names": {},
+  "counts_by_face": {
+    "area": 7,
+    "E": 2222,
+    "S": 2091
+  },
+  "layers_by_face": {
+    "area": {
+      "M7": 7
+    },
+    "E": {
+      "M4": 1117,
+      "M6": 1105
+    },
+    "S": {
+      "M5": 1051,
+      "M7": 1040
+    }
+  },
+  "peaks": {
+    "E": {
+      "pins_per_um": 6.3,
+      "window_pins": 63,
+      "interval_um": [
+        261.672,
+        271.656
+      ],
+      "first_names": [
+        "ft2_i[52]",
+        "ft2_i[51]",
+        "ft2_i[53]",
+        "ft2_i[55]",
+        "ft2_i[54]"
+      ]
+    },
+    "S": {
+      "pins_per_um": 11.1,
+      "window_pins": 111,
+      "interval_um": [
+        877.536,
+        887.52
+      ],
+      "first_names": [
+        "ft2_o[43]",
+        "ft2_o[45]",
+        "ft2_o[50]",
+        "ft2_o[47]",
+        "ft2_o[49]"
+      ]
+    }
+  },
+  "max_pins_per_um": 11.1,
+  "verdict": "FAIL",
+  "missing_shapes": []
+}
