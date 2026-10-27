@@ -1,0 +1,19 @@
+{
+ "scope": "QC-SU-KITS-2 2026-10-26: MIF0 (canonical) synth+place, plan re-run on the MIF0 placement, CTS+GRT where the gate model was in band. All numbers UNCHECKED (NUMBER-CHECK requested). GRT RC only, no DRT, NOT signed off.",
+ "prog_m0": {
+  "kit": "intel1:/srv/opentallas-scratch2/claude/qc-su-kits2-1026/prog_m0 (MIF0, prog4b floorplan, 3291 sinks)",
+  "plan": "su_tree_uf k=6 (adopted prog4b k; a free k-search on MIF0 picks k=5) + su_kit_gate: G1-G4 PASS",
+  "pred_gate_model_equalT": {"TT": {"mean": 248.58, "window": 10.57}, "FF": {"mean": 190.15, "window": 8.7}},
+  "pred_asbuilt_shortest_segments": {"TT": {"mean": 230.02, "window": 26.87}, "FF": {"mean": 175.23, "window": 23.34}},
+  "measured_grt_rc": {"TT": {"mean": 213.4, "min": 199.8, "max": 224.4, "tap_window": 20.4}, "FF": {"mean": 163.4, "min": 151.8, "max": 173.0, "tap_window": 17.5}, "grt_overflow": 0, "clock_cells": "37 nodes + 64 taps + 4 macro leaves"},
+  "verdict_12_3": "FAIL (TT mean -36.6 vs 250, FF mean -39.1 vs 202.5, TT window 20.4 > 20)",
+  "residual_meas_minus_pred": "equalT TT -35.1 sd4.4 / FF -26.7 sd3.4; asbuilt TT -16.6 sd3.6 / FF -11.8 sd2.9"
+ },
+ "btab_m0": {
+  "kit": "intel2:/srv/opentallas-scratch2/claude/qc-su-kits2-1026/btab_m0 (MIF0, R6 floorplan, 3442 sinks; placed with GPL_ROUTABILITY_DRIVEN 0 after a routability loop)",
+  "plan": "core_infra_htree --r6 R6 structure (4 ring islands, nb 4,4,6,6, leaf 6, cap-balance, SRAM-CK keepout) re-derived on MIF0 placement; R6 args reconstructed (receipt has no command line): on the R4b geo the reconstruction gives 273.43 w17.9 vs committed 273.9 w14.71",
+  "pred_raw_nldm": {"TT": {"mean": 288.91, "window": 20.05}, "FF": {"mean": 235.57, "window": 18.97}},
+  "pred_with_R6_calibration_offsets_-13.1_-24.5": {"TT": {"mean": 275.8, "window": 20.05}, "FF": {"mean": 211.1, "window": 18.97}},
+  "verdict": "OUT OF BAND (TT mean > 270, TT window > 20) -> NOT BUILT (12.9 predict-before-build)"
+ }
+}
