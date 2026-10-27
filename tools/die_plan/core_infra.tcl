@@ -12,10 +12,19 @@ proc ot_ci_net {name} {
   if {$n eq "NULL"} {set n [odb::dbNet_create $::ot_ci_b $name]}
   return $n
 }
-proc ot_ci_clock_entry {name x y} {
+# Clock entry: the generator emits the track-snapped centre and the full GEOM-21 shape (core_infra.clock_entry_shape);
+# this proc refuses a smaller shape or a centre off the block's own M5 track grid (fail-closed, no relocation).
+proc ot_ci_clock_entry {name x y w h} {
   set bt [$::ot_ci_b findBTerm $name]
   if {$bt eq "NULL" || [$bt getIoType] ne "INPUT"} {error "OT_CORE_INFRA_CLOCK_ENTRY_PORT $name"}
-  place_pin -pin_name $name -layer M5 -location [list $x $y] -pin_size {0.032 0.192}
+  if {$w < 0.048 - 1e-6 || $h < 0.48 - 1e-6} {error "OT_CORE_INFRA_CLOCK_ENTRY_SIZE $name $w $h < 0.048 0.48"}
+  set ly [[ord::get_db_tech] findLayer M5]
+  set tg [$::ot_ci_b findTrackGrid $ly]
+  if {$tg ne "NULL"} {
+    set xi [expr {round($x * $::ot_ci_u)}]
+    if {[lsearch -exact -integer [$tg getGridX] $xi] < 0} {error "OT_CORE_INFRA_CLOCK_ENTRY_OFF_TRACK $name x $x"}
+  }
+  place_pin -pin_name $name -layer M5 -location [list $x $y] -pin_size [list $w $h]
 }
 proc ot_ci_port {name direction x y} {
   set bt [$::ot_ci_b findBTerm $name]

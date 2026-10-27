@@ -40,7 +40,8 @@ def test_core_kit_consumes_clock_entry_and_passes_check(tmp_path):
                                         "place_pin -pin_name {d[0]} -layer M4 -location {0.0160 110.0000}"])
     io = (kd / "io.tcl").read_text()  # clock centre snapped to the M5 track (GEOM-21, 51646a5c4d)
     assert "-pin_name {clk} -layer M5 -location {432.0120 432.0000}" in io and "{d[0]} -layer M4" in io
-    assert "ot_ci_clock_entry {clk} 432 432" in (kd / "master_core_infra.tcl").read_text()
+    # S81-CORE-LAT-R18: the core-infra step (runs after io.tcl) sets the SAME snapped full-width shape as io.tcl
+    assert "ot_ci_clock_entry {clk} 432.0120 432.0000 0.048 0.48" in (kd / "master_core_infra.tcl").read_text()
     assert "placement blockage: keepout clock_entry_island" not in (kd / "master_slice.tcl").read_text()
     rep = MS.check_kit(kd)
     assert rep["verdict"] == "PASS", rep["issues"]
@@ -153,3 +154,63 @@ def test_core_trunk_refused_without_pg_model_and_over_sram_pg():
     s["pg_obstructions_um"] = {"M5": [[590, 300, 610, 700]], "M4": []}   # route via x=430 vertical is clear
     assert "ot_ci_tree_begin" in CI.emit_tcl(s)
     assert CI.trunk_pg_clearance(s, CI.compile_slice(s))["verdict"] == "PASS"
+
+
+# ---------------------------------------------------------------- S81-CORE-LAT-R18: every clock-pin setter checked
+def test_core_infra_clock_entry_is_snapped_full_shape_from_kit_tracks(tmp_path):
+    """The shared core-infra emitter uses the io step's snap (kit make_tracks.tcl + DIE_AREA origin) and size."""
+    sl = _core_slice()
+    plan = CI.compile_slice(sl)
+    assert CI.clock_entry_shape(plan) == (432.012, 432.0, 0.048, 0.48)          # ASAP7 platform M5 grid
+    kd = tmp_path / "k"
+    kd.mkdir()
+    (kd / "make_tracks.tcl").write_text("make_tracks M5 -x_offset 0.036 -x_pitch 0.048 -y_offset 0.012 -y_pitch 0.048\n")
+    assert CI.clock_entry_shape(plan, kd)[:2] == MS.snap_on_track(kd, "M5", 432, 432) == (431.988, 432.0)
+    assert "ot_ci_clock_entry {clk} 431.9880 432.0000 0.048 0.48" in CI.emit_tcl(sl, kd)
+
+
+def test_check_kit_fails_unsnapped_core_infra_clock_entry(tmp_path):
+    """The qbank/sstn c16 form: io.tcl snapped, master_core_infra.tcl re-places the pin at the unsnapped plan centre
+    with the small shape.  The old check_kit compared master_core_infra.tcl to the (old) emitter and only looked at
+    io.tcl -> PASS; now every clock-pin setter is checked."""
+    kd = _kit(tmp_path, _core_slice(), ["place_pin -pin_name {clk} -layer M4 -location {0.0160 100.0000} "
+                                        "-pin_size {0.032 0.192}"])
+    rep = MS.check_kit(kd)
+    assert rep["verdict"] == "PASS", rep["issues"]
+    assert [c.split()[1] for c in rep["checks"]["slice_pins"]["clock_settings"]] == ["place_pin", "ot_ci_clock_entry"]
+    f = kd / "master_core_infra.tcl"
+    good = f.read_text()
+    f.write_text(good.replace("ot_ci_clock_entry {clk} 432.0120 432.0000 0.048 0.48", "ot_ci_clock_entry {clk} 432 432"))
+    iss = MS.check_kit(kd)["issues"]
+    assert any("master_core_infra.tcl" in i and "off the M5 routing track" in i for i in iss), iss
+    assert any("master_core_infra.tcl" in i and "pin_size" in i for i in iss), iss
+    assert any("different shapes" in i for i in iss), iss
+    # a third setter anywhere in the kit (also in owned files) is seen too
+    f.write_text(good)
+    (kd / "extra_hook.tcl").write_text("place_pin -pin_name clk -layer M5 -location {432.0120 432.0000} -pin_size {0.032 0.192}\n")
+    iss = MS.check_kit(kd)["issues"]
+    assert any("extra_hook.tcl" in i and "pin_size" in i for i in iss), iss
+
+
+def test_core_infra_tcl_clock_entry_refuses_small_or_off_track(tmp_path):
+    import subprocess
+    from pathlib import Path
+    stub = """
+namespace eval ord { proc get_db_tech {} { return ftech } }
+proc ftech {cmd args} { return fM5 }
+proc fblk {cmd args} { switch -- $cmd { findBTerm { return fbt } findTrackGrid { return ftg } } }
+proc fbt {cmd args} { return INPUT }
+proc ftg {cmd args} { return {12 60 108} }
+proc place_pin {args} { puts "PLACED $args" }
+set ::ot_ci_b fblk; set ::ot_ci_u 1000
+foreach c {{clk 0.060 1 0.048 0.48} {clk 0.048 1 0.048 0.48} {clk 0.060 1 0.032 0.192} {clk 0.060 1}} {
+  if {[catch {ot_ci_clock_entry {*}$c} e]} { puts "ERR $e" }
+}
+"""
+    lib = Path(CI.__file__).with_suffix(".tcl").read_text()
+    p = subprocess.run(["tclsh"], input=lib + stub, text=True, capture_output=True)
+    out = p.stdout.splitlines()
+    assert out[0] == "PLACED -pin_name clk -layer M5 -location {0.060 1} -pin_size {0.048 0.48}", p.stdout + p.stderr
+    assert out[1].startswith("ERR OT_CORE_INFRA_CLOCK_ENTRY_OFF_TRACK")
+    assert out[2].startswith("ERR OT_CORE_INFRA_CLOCK_ENTRY_SIZE")
+    assert out[3].startswith("ERR wrong # args")

@@ -314,12 +314,15 @@ def compile_slice(sl):
         raise InfraError("core clock entry must terminate on M5")
     if entry:
         xy(entry.get("xy_um"), "clock entry", outline)
-    pin_shapes = [(p["name"], p["xy_um"]) for p in ports]
+    # (name, centre, (w, h)): ft ports are 0.032 x 0.192; the clock entry is the full CLOCK_PIN_SIZE shape and may move
+    # by up to half an M5 pitch when it is snapped onto its track (clock_entry_shape), so it is checked that much wider
+    pin_shapes = [(p["name"], p["xy_um"], (.032, .192)) for p in ports]
     if entry:
-        pin_shapes.append((clock_port, entry["xy_um"]))
-    for k, (name, loc) in enumerate(pin_shapes):
-        for other, q in pin_shapes[:k]:
-            if abs(loc[0] - q[0]) < .032 - 1e-9 and abs(loc[1] - q[1]) < .192 - 1e-9:
+        cw, ch = _clock_pin_size()
+        pin_shapes.append((clock_port, entry["xy_um"], (cw + .048, ch)))
+    for k, (name, loc, (w, h)) in enumerate(pin_shapes):
+        for other, q, (w2, h2) in pin_shapes[:k]:
+            if abs(loc[0] - q[0]) < (w + w2) / 2 - 1e-9 and abs(loc[1] - q[1]) < (h + h2) / 2 - 1e-9:
                 raise InfraError(f"M5 planned pin shapes overlap: {name}, {other}; revise the slice")
     placements = sl.get("cell_placements", {})
     if placements:
@@ -428,7 +431,32 @@ def trunk_pg_clearance(sl, plan):
                 blocked_edges=len(bad), examples=bad[:10])
 
 
-def emit_tcl(sl):
+def _ms():
+    import sys
+    if str(HERE) not in sys.path:
+        sys.path.insert(0, str(HERE))
+    import master_slice
+    return master_slice
+
+
+def _clock_pin_size():
+    return tuple(_ms().CLOCK_PIN_SIZE)
+
+
+def clock_entry_shape(plan, kd=None):
+    """(x, y, w, h) of the core clock entry as BUILT: the plan centre snapped onto its layer's routing track and the
+    full-width GEOM-21 shape -- the same master_slice.snap_on_track / CLOCK_PIN_SIZE the kit io.tcl step uses
+    (clock-port-track 51646a5c4d), so every place that sets the clock pin sets the same shape (S81-CORE-LAT-R18:
+    the unsnapped 0.032 x 0.192 re-placement here was the qbank/sstn DRT-0255).  kd = kit dir (its make_tracks.tcl +
+    config.mk DIE_AREA origin); None = ASAP7 platform tracks, origin 0."""
+    e = plan["clock_entry"]
+    ms = _ms()
+    x, y = ms.snap_on_track(kd, e.get("layer", "M5"), float(e["xy_um"][0]), float(e["xy_um"][1]))
+    w, h = ms.CLOCK_PIN_SIZE
+    return x, y, w, h
+
+
+def emit_tcl(sl, kd=None):
     plan = compile_slice(sl)
     tree = plan.get("core_tree")
     pgc = trunk_pg_clearance(sl, plan)
@@ -459,8 +487,8 @@ def emit_tcl(sl):
     if band_info:
         lines[1:1] = band_info
     if plan["clock_entry"]:
-        x, y = plan["clock_entry"]["xy_um"]
-        lines.append(f"ot_ci_clock_entry {word(plan['core_clock_port'])} {x:g} {y:g}")
+        x, y, w, h = clock_entry_shape(plan, kd)
+        lines.append(f"ot_ci_clock_entry {word(plan['core_clock_port'])} {x:.4f} {y:.4f} {w:g} {h:g}")
     for p in plan["ports"]:
         x, y = p["xy_um"]
         lines.append(f"ot_ci_port {word(p['name'])} {p['direction']} {x:g} {y:g}")
@@ -695,7 +723,7 @@ def install(kd, sl):
     if sl.get("kind") not in ("core", "partition") or not sl.get("pushdown"):
         return False
     kd = Path(kd)
-    script = emit_tcl(sl)  # refuse incomplete plan BEFORE writing kit files
+    script = emit_tcl(sl, kd)  # refuse incomplete plan BEFORE writing kit files
     wrapper = None
     if sl.get("logic_module") is not None or sl.get("logic_ports") is not None:
         if not sl.get("logic_module") or not sl.get("logic_ports"):
