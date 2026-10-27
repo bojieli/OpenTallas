@@ -77,15 +77,20 @@ for s in range(a.samples + 1):
     samples.append(tp)
     print(json.dumps(dict(sample=s, nodes=N['nodes'], drivers=len(N['drv']), loads=len(tp),
                           skew=round(max(tp.values()) - min(tp.values()), 3), sec=round(dt, 1))), flush=True)
+# Solve at the physical gradient.  A unit gradient means 100 %/mm and
+# can move a large die's driver edge by hundreds of ns, far outside the
+# transient horizon.  Normalize the measured response for the existing
+# per-unit output contract instead of driving that unphysical stimulus.
+grad_solve_scale = g if g != 0.0 else 0.0021
 for ax in (0, 1):
     r2 = copy.deepcopy(rec)
     for n in r2['nodes']:
         if n['driver']:
-            n['arr'][C] += G[n['tag']][ax]       # unit g (1.0 per mm) -> shift per unit gradient
+            n['arr'][C] += grad_solve_scale * G[n['tag']][ax]
     tp, N, dt = run(r2, 0, sig)
     for b in rec['band']:
-        tp[b['root']] = b['arr'][C] + band_G(b)[ax]
-    grad[ax] = {k: tp[k] - samples[0][k] for k in tp}
+        tp[b['root']] = b['arr'][C] + grad_solve_scale * band_G(b)[ax]
+    grad[ax] = {k: (tp[k] - samples[0][k]) / grad_solve_scale for k in tp}
     print('grad axis', ax, 'shift range per unit g', round(min(grad[ax].values()), 1), round(max(grad[ax].values()), 1), flush=True)
 rt = {k: v['late'] for k, v in json.load(open(a.routed))['stubs'].items()}
 loads = sorted(samples[0])
