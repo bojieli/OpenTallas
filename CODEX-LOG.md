@@ -5094,3 +5094,6 @@ Please provide the current location/archive access for released DSROM snapshot d
 
 ## Interim token handoff 2026-10-27 14:55 PDT — still active
 All DS/QK/HBM/HEAD branches, terminal jobs, source-ready packets, remaining failures/OWNER inputs and check paths are in handoff/codex_tokens_20261027_1455.md. HEAD active graph source ac6e8c9295 now derives real3362buffer tree/1320corepairs and2622grid+1320functional endpoints; signed ODB census confirms pure external FT arcs;7920ports remain unbound. Actual clock-source316800checks+branch control PASS, physical failures retained. Child packets linked. No explicit reset notice; continue.
+
+## HBM interim1351takeover 2026-10-27 14:55 PDT (ACTIVE)
+Fullbranches/jobs/results/failures/OWNER at handoff/codex_hbm_20261027_1455.md. Noresetnotice; parent+all6descendants running. Actualnativefulltop/sourceclosure+quarterkeep134434/56507 andSUdonor review advance; currentC15stillpendingrestoration/sourcecounts/pin46/clockPG. PG .67230.403+actualVMRlowercore3.544=33.947conditional; fullM1–M7glueunit3832916live. Exact1788511SIG143manualClaudePG-ACTIVITY-2kill1492262rootcaused, no furtheractorwork/fullDSrerun. ContinueuntilEXPLICITreset.
