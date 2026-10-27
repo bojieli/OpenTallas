@@ -496,3 +496,39 @@ def test_empty_grid_taps_dropped_at_assembly():
         assert f".{grid[3]}(clk)" in top and ".clk(clk)" in top
         dr = json.loads((Path(kd) / "clock_taps.json").read_text())["dropped"]
         assert dr == {"fa": sorted(grid[1:3])}                  # fb: all empty -> nothing dropped
+
+
+def test_ft_route_layers_kit_hook():
+    """KV-P8-SEAM 10-23 (FT-PLAN, KV-P7 22:04): die.layer_budget.ft_route_layers puts the ft station hops of a type with
+    ft slots on the ft layers: PRE_DETAIL_ROUTE ft_route.tcl + env, the die PG bands of the ft layers obstructed in the
+    partition, MAX_ROUTING_LAYER unchanged (GRT keeps every other net below); opt-in (no key -> kit unchanged)."""
+    import copy
+    import gen_phys
+    import pytest
+    P0 = schema.Plan(PAIR)
+    raw = copy.deepcopy(PAIR)
+    raw["die"]["layer_budget"]["ft_route_layers"] = ["M9", "M8"]
+    P = schema.Plan(raw)
+    assert gen_phys.ft_route_layers(P0, "fa") == [] and gen_phys.ft_route_layers(P, "fb") == []
+    assert gen_phys.ft_route_layers(P, "fa") == ["M8", "M9"]
+    with tempfile.TemporaryDirectory() as d0, tempfile.TemporaryDirectory() as d1:
+        k0 = gen_phys.write_type_kit(P0, "fa", d0, [])
+        k1 = gen_phys.write_type_kit(P, "fa", d1, [])
+        c0, c1 = (k0 / "config.mk").read_text(), (k1 / "config.mk").read_text()
+        assert "ft_route" not in c0 and not (k0 / "ft_route.tcl").exists()
+        add = [ln for ln in c1.splitlines() if ln not in c0.splitlines()]
+        assert add == ["export PRE_DETAIL_ROUTE_TCL = /work/ft_route.tcl", "export OT_FT_ROUTE_LAYERS = M8-M9",
+                       f"export OT_FT_ROUTE_MIN_UM = {gen_phys.FT_ROUTE_MIN_UM:g}"]
+        assert "export MAX_ROUTING_LAYER = M7" in c1
+        assert (k1 / "ft_route.tcl").read_text() == (HERE / "ft_route.tcl").read_text()
+        p0, p1 = (k0 / "pdn.tcl").read_text(), (k1 / "pdn.tcl").read_text()
+        assert p1.startswith(p0) and "dbObstruction_create" not in p0
+        for ln in ("M8", "M9"):
+            assert f"ft_route_layers M8/M9: obstruct the die {ln} PG bands" in p1
+        assert json.loads((k1 / "budget.json").read_text())["ft_route_layers"] == ["M8", "M9"]
+        for f in ("io.tcl", "pins.json", "ft_stations.txt", "constraint.sdc"):    # layer-only delta
+            assert (k0 / f).read_text() == (k1 / f).read_text()
+    bad = copy.deepcopy(PAIR)
+    bad["die"]["layer_budget"]["ft_route_layers"] = ["M7", "M8"]
+    with pytest.raises(ValueError):
+        gen_phys.ft_route_layers(schema.Plan(bad), "fa")

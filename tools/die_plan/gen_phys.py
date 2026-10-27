@@ -35,6 +35,23 @@ CORE_MARGIN_UM = 4.32        # multiple of row 0.27 and site 0.054
 IO_BUDGET = 0.2
 PIN_LEN_UM = 0.192
 LAYER_W = dict(M2=0.018, M3=0.018, M4=0.024, M5=0.024, M6=0.032, M7=0.032, M8=0.04, M9=0.04)
+# ft hops shorter than this stay on the GRT layers (owner M4-M7 reach 405 um; a face-to-face hop needs no M8/M9)
+FT_ROUTE_MIN_UM = 100.0
+
+
+def ft_route_layers(P, tn):
+    """ft layers the type's ft station hops route on: die.layer_budget.ft_route_layers (explicit opt-in; reach.py's
+    implicit M8/M9 default stays check-only), sorted bottom-up, only for a type with ft slots."""
+    ftl = P.layer_budget.get("ft_route_layers") or []
+    if not ftl or not P.types[tn].get("ft_slots"):
+        return []
+    ftl = sorted(set(ftl), key=lambda ln: int(ln[1:]))
+    lo, hi = int(ftl[0][1:]), int(ftl[-1][1:])
+    if hi - lo + 1 != len(ftl):
+        raise ValueError(f"type {tn}: ft_route_layers {ftl} must be a contiguous layer range")
+    if lo <= int(P.layer_budget["partition_signal_max"][1:]):
+        raise ValueError(f"type {tn}: ft_route_layers {ftl} must lie above partition_signal_max")
+    return ftl
 
 
 def type_pins(P, tn):
@@ -304,18 +321,21 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
     pins = type_pins(P, tn)
     (kd / "io.tcl").write_text(io_tcl(P, tn, pins))
     top = P.type_top_layer(tn)
+    ftl = ft_route_layers(P, tn)
+    otop = max([top] + ftl, key=lambda ln: int(ln[1:]))
     pdn = PDN
-    if int(top[1:]) > int(P.layer_budget["partition_signal_max"][1:]):
-        # face_layers raised this type to M8: keep its own M8 wiring off the die M8 PG bands (schema.PART_PG_BANDS),
-        # so the die grid's M8 stripes run over the partition without shorts
+    if int(otop[1:]) > int(P.layer_budget["partition_signal_max"][1:]):
+        # face_layers raised this type to M8 (or its ft hops route on ft_route_layers): keep its own M8/M9 wiring off
+        # the die PG bands (schema.PART_PG_BANDS), so the die grid's stripes run over the partition without shorts
         obs = ["", "set blk [ord::get_db_block]", "set dbu [$blk getDbUnitsPerMicron]"]
         smax = int(P.layer_budget["partition_signal_max"][1:])
-        for li in range(smax + 1, int(top[1:]) + 1):
+        for li in range(smax + 1, int(otop[1:]) + 1):
             ln = f"M{li}"
             pitch, cen, half = S.PART_PG_BANDS[ln]
             horiz = P.layers[ln]["dir"] == "H"       # H layer: stripes along x -> y bands; V layer -> x bands
             ext, oth = (h, w) if horiz else (w, h)
-            obs += [f"# face_layers {top}: obstruct the die {ln} PG bands in the partition (die stripes cross it)",
+            why = f"face_layers {top}" if int(top[1:]) >= li else f"ft_route_layers {'/'.join(ftl)}"
+            obs += [f"# {why}: obstruct the die {ln} PG bands in the partition (die stripes cross it)",
                     f"set lay [[ord::get_db_tech] findLayer {ln}]"]
             k = math.floor((0 - cen) / pitch)
             while cen + k * pitch - half < ext:
@@ -376,6 +396,12 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
            # S81-P9 10-23: landing reset forest leaves re-clustered to identical branch flops by location after GPL
            # (forest_recluster.tcl; only kits whose sources hold ot_pl_land_reset_forest)
            *(["export POST_GLOBAL_PLACE_TCL = /work/forest_recluster.tcl"] if forest else []),
+           # KV-P8-SEAM 10-23 (FT-PLAN, KV-P7 22:04): ft station-to-station hops on the reserved ft layers. GRT keeps
+           # every net on M2..MAX_ROUTING_LAYER; ft_route.tcl (before DRT) global-routes the ft hop nets again on the
+           # ft layers only and opens DRT to them (no per-net layer range in OpenROAD 26Q3)
+           *(["export PRE_DETAIL_ROUTE_TCL = /work/ft_route.tcl",
+              f"export OT_FT_ROUTE_LAYERS = {ftl[0]}-{ftl[-1]}",
+              f"export OT_FT_ROUTE_MIN_UM = {FT_ROUTE_MIN_UM:g}"] if ftl else []),
            *([f"export ADDITIONAL_LEFS = {' '.join(mlef)}", f"export ADDITIONAL_LIBS = {' '.join(mlib)}",
               "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl"] if macros else [])]
     if macros:
@@ -385,6 +411,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
     if forest:
         shutil.copyfile(Path(__file__).with_name("forest_recluster.tcl"), kd / "forest_recluster.tcl")
+    if ftl:
+        shutil.copyfile(Path(__file__).with_name("ft_route.tcl"), kd / "ft_route.tcl")
     if macros:     # S81-P8 10-23: soft relay stations on their source-sink lines (relay_mid.tcl, after face_flops)
         shutil.copyfile(Path(__file__).with_name("relay_mid.tcl"), kd / "relay_mid.tcl")
     # R3: ft station table for face_flops.tcl: slot, stations, in face (route leg order), optional regs_um sites
@@ -396,7 +424,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None):
     (kd / "ft_stations.txt").write_text("\n".join(ft) + "\n")
     bud = dict(schema="opentallas.die_plan.partition_budget.v1", die=P.name, type=tn, module=t["module"],
                outline_um=[w, h], period_ps=P.die["period_ps"], pins=len(pins),
-               signal_max=top,
+               signal_max=top, **({"ft_route_layers": ftl} if ftl else {}),
                clock=dict(tap_um=t.get("clock", {}).get("tap_um"), insertion_ps=P.clock["insertion_ps"],
                           insertion_tol_ps=P.clock["insertion_tol_ps"],
                           # one clock port per tap (snapped): the R4 grid first, then any ADDED sink-anchored taps
