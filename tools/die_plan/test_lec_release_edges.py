@@ -99,6 +99,24 @@ def test_within_window_chain_unchanged(tmp_path, monkeypatch):
     assert st == "proved" and lec.noreset_report(L)["n_release"] == 0
 
 
+@pytest.mark.parametrize("side", ["gold", "gate"])
+def test_side_specific_matched_hint_cannot_move_its_base(tmp_path, side):
+    # apply_hints accepts side-specific constants on name-matched registers,
+    # not only ('both', key) constants. Every matched Q stays a compare point.
+    ks = [f"k{i}" for i in range(1, 7)]
+
+    def nxt(m, l):
+        return {k: 0 if i == 0 else l[ks[i - 1]] for i, k in enumerate(ks)}
+
+    g, gm = _seq(tmp_path, "matched", ["rn"], ks, nxt)
+    L = lec.Lec(g, gm, g, gm)
+    L.hyp = {(side, f"ff:u_dut.{k}"): ("const", 0) for k in ks}
+    ok = lec.noreset_sound(L)
+    assert ok[(side, "ff:u_dut.k4")] == 4
+    assert (side, "ff:u_dut.k5") not in ok
+    assert (side, "ff:u_dut.k6") not in ok
+
+
 def test_primary_output_reader_blames_the_register():
     # q (var 2) delayed to edge 6, read by output o = q & a; r (var 3) reads q but is forced 0 (and with const 0)
     m = lec.Aig()
