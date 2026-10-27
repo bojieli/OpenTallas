@@ -111,6 +111,32 @@ LAYER_ORDER = ("M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9")
 _JD = [0]
 
 
+# QC-MESH-R25 DRC (COORD 10-27 12:34, owner INFRA-FIRST-QC-R28): 24 M8 Min Step on 12 W-stub nets ckm_w_ckt_*: a
+# 0.187 um M8 branch from the VIA89 array (M8 enclosure +-0.265 um) to the VIA78 junction; the R19 +0.08 um end
+# extension put the wire end 2 nm past the array's M8 edge -> 2-nm step.  When the array's M8 edge lies past the
+# junction and within FLUSH_TOL_UM of the extended wire end, the end extension is snapped flush to the array edge
+# (DRT check_drc on the R25 routed odb: base 2 markers, flush 0; plan geometry moves by the mismatch only).
+# Set per routed_tcl call / per NDR piece: {"x": half, "y": half} of the array M8 enclosure, None = tech VIA89.
+_V89_M8_HALF = [None]
+# only the DRC-marked sub-step class (R25: 2 nm); the 0.058 / 0.102 um mismatches of other branches gave no marker in
+# the R25 DRC and stay unchanged (84 snaps at STEP width vs 12 nets x 2 markers)
+FLUSH_TOL_UM = 0.01
+_V89_SNAPS = [0]
+
+
+def _array_flush_ext(x0, y0, x1, y1, ext):
+    h = _V89_M8_HALF[0]
+    if not h or ext is None:
+        return ext
+    horiz_step = abs(y1 - y0) < 1e-9
+    length = abs(x1 - x0) if horiz_step else abs(y1 - y0)
+    gap = (h["x"] if horiz_step else h["y"]) - length      # array M8 edge beyond the junction point
+    if gap > 1e-9 and 1e-9 < abs(gap - ext) <= FLUSH_TOL_UM + 1e-9:
+        _V89_SNAPS[0] += 1
+        return round(gap, 4)
+    return ext
+
+
 def _emit_steps(L, pts, final_junction=False, split_down=False, m8_end_ext=None):
     """encoder calls for a vertex list (as from stair): via on a layer change, a point on a move.
     The clock NDR (0.16 um) applies on M8/M9 only: an encoder path keeps the rule it was opened with, so the path is
@@ -145,7 +171,11 @@ def _emit_steps(L, pts, final_junction=False, split_down=False, m8_end_ext=None)
                 # R19 DRC: the wide M8 drop ends ON the VIA78 (stair riser); its default end extension left the
                 # VIA78 M8 enclosure (+-0.027) 5 nm outside the wire end -> Min Step @ M8.  Extend the wire end to
                 # m8_end_ext (flush with the 0.16 um junction pad), plan geometry unchanged otherwise.
-                L.append(f"$e addPoint {q(x1)} {q(y1)} {q(m8_end_ext)}")
+                prev = steps[k - 1] if k else None
+                e_ = m8_end_ext
+                if prev and prev[0][0] == "M9" and prev[1][0] == "M8" and (prev[1][1], prev[1][2]) == (x0, y0):
+                    e_ = _array_flush_ext(x0, y0, x1, y1, m8_end_ext)     # QC-MESH-R25: M8 branch out of the array
+                L.append(f"$e addPoint {q(x1)} {q(y1)} {q(e_)}")
             else:
                 L.append(f"$e addPoint {q(x1)} {q(y1)}")
     if final_junction:
@@ -520,6 +550,15 @@ def stack_shapes(w):
     return out
 
 
+def via89_m8_half(spec):
+    """{x, y} half-size (um) of a via89 array spec's M8 enclosure box (via_array_tcl), None for no array"""
+    if not spec:
+        return None
+    r, c, cut, pit = spec["rows"], spec["cols"], spec["cut"], spec["pitch"]
+    e8 = spec.get("enc_m8", 0.0)
+    return dict(x=pit * (c - 1) / 2 + cut / 2 + e8, y=pit * (r - 1) / 2 + cut / 2 + e8)
+
+
 def via_array_tcl(spec, name="ot_via89_arr", var="ot_v89"):
     """R12 (16w NDR): Tcl creating the block via `name` (unless present) = a rows x cols V8 cut array of the LEF
     VIARULE M9_M8 GENERATE geometry (cut `cut`, centre pitch `pitch`) with its M8 / M9 enclosure rects, as explicit
@@ -573,6 +612,7 @@ def routed_tcl(wires, cells, ports, buf, ndr_name, via89=None):
          "proc BT {p} { global blk; set t [$blk findBTerm $p]; if {$t == \"NULL\"} { error \"no bterm $p\" }; return $t }",
          "set e [odb::dbWireEncoder]"]
     rec = dict(nets=0, pin_stairs=0, port_joins=0, extra_top=[])
+    _V89_M8_HALF[0], _V89_SNAPS[0] = via89_m8_half(via89), 0
 
     def cell_pts(inst, pin, at, layer):
         px, py = pin_point(cells, inst, pin, cells[inst].get("lib", buf))
@@ -600,6 +640,7 @@ def routed_tcl(wires, cells, ports, buf, ndr_name, via89=None):
                         L+=via_array_tcl(nd["via89"],name="ot_via89_arr_"+ndr,var="ot_v89_"+ndr)
                     v2_arrays.add(ndr)
                 L.append(f"set ot_ndr [$blk findNonDefaultRule {nm}]")
+                _V89_M8_HALF[0] = via89_m8_half(nd.get("via89"))
                 begin=len(L)
                 _stack_net_tcl(L,piece,ports,rec,start=j==0,end=j==len(pieces)-1,net_ctx=ctx)
                 repl=(f"addVia $ot_v89_{ndr}" if nd.get("via89") else "addTechVia [V {VIA89}]")
@@ -695,6 +736,7 @@ def routed_tcl(wires, cells, ports, buf, ndr_name, via89=None):
         h = L.index("set e [odb::dbWireEncoder]") + 1
         L = L[:h] + via_array_tcl(via89) + [l_.replace("addTechVia [V VIA89]", "addVia $ot_v89") for l_ in L[h:]]
         rec["via89_array"] = dict(spec=via89, instances=k)
+    rec["m8_array_flush_ext"] = _V89_SNAPS[0]
     L.append(f"puts \"OT_ROUTED_CLOCK nets {rec['nets']} pin_stairs {rec['pin_stairs']} port_joins {rec['port_joins']}\"")
     return L, rec
 

@@ -61,3 +61,20 @@ def test_router_wide_pg_spacing():
     assert not ix.hits(("M8", "ck", "clk", 12.92, 13.24, 0.0, 50.0), first=True)     # 1.00
     assert not ix.hits(("M8", "ck", "clk", 12.5, 12.82, 0.0, 1.5), first=True)       # PRL 1.5 < 1.8
     assert not ix.hits(("M8", "ck", "clk", 19.6, 19.92, 0.0, 50.0), first=True)      # 0.08 to a 0.48 stripe
+
+
+def test_m8_branch_flush_with_via89_array():
+    """QC-MESH-R25 Min Step: a 0.187 um M8 branch out of the 6x6 VIA89 array (M8 +-0.265) ends flush with the array
+    edge (ext 0.078, was 0.08 -> 2-nm step); larger mismatches (no DRC marker in R25) keep the R19 extension."""
+    import clock_routed as CR
+    CR._V89_M8_HALF[0] = CR.via89_m8_half(dict(rows=6, cols=6, cut=0.04, pitch=0.098, enc_m8=0.0))
+    try:
+        L = []
+        CR._emit_steps(L, [("M9", 2204.44, 10749.24), ("M8", 2204.44, 10749.24), ("M8", 2204.253, 10749.24),
+                           ("M7", 2204.253, 10749.24)], m8_end_ext=0.08)
+        assert "$e addPoint 2204253 10749240 78" in L
+        L = []
+        CR._emit_steps(L, [("M9", 0.0, 0.0), ("M8", 0.0, 0.0), ("M8", 0.243, 0.0), ("M7", 0.243, 0.0)], m8_end_ext=0.08)
+        assert "$e addPoint 243 0 80" in L
+    finally:
+        CR._V89_M8_HALF[0] = None
