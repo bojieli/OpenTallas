@@ -50,6 +50,7 @@ import gzip
 import json
 import math
 import re
+import os
 import sys
 import time
 from collections import defaultdict
@@ -2740,6 +2741,7 @@ def _explicit_v2_wires(out, cells, nets, groups, router, off, r8, exact, default
             proxy[u].update(x=xc-BUF_W/2,lib=BUF)
         hetero[rep]=us
     wires=[]
+    collect=os.environ.get("OT_V2_COLLECT_PLAN_ERRORS")=="1"; collected=[]
     for n in nets:
         pieces=[]
         conns=n.get("plan_connections")
@@ -2757,13 +2759,21 @@ def _explicit_v2_wires(out, cells, nets, groups, router, off, r8, exact, default
             router.nd=nd
             router.wide_merge_um=nd.get("wide_merge_um",C128.WIDE_MERGE_UM) if r8 else None
             router.ix.space=max(router.ix.space,nd["space"])
-            pp=C128.fixed_wires(out,proxy,[n0],BUF_W,ROW_Y,off=off,router=router,pin_stack=True,
-                port_on_trunk=r8,ties=ties,l_drops=True,exact_reserve=exact)
+            try:
+                pp=C128.fixed_wires(out,proxy,[n0],BUF_W,ROW_Y,off=off,router=router,pin_stack=True,
+                    port_on_trunk=r8,ties=ties,l_drops=True,exact_reserve=exact)
+            except C128.PlanError as e:
+                # INFRA-FIRST-QC-R27 opt-in census (OT_V2_COLLECT_PLAN_ERRORS=1): record every failing edge and keep
+                # going, so one dry build lists ALL plan errors; the build still fails closed with the full list.
+                if not collect: raise
+                collected.extend(dict(r, edge=n0.get("physical_edge")) for r in e.rows); continue
             if len(pp)!=1: raise RuntimeError("one edge must produce one physical wire piece")
             w=pp[0]
             expected=n0.get("physical_layer")
             if expected and expected != ("M8" if w["horiz"] else "M9"):
-                raise C128.PlanError([dict(kind="net_trunk_layer",name=n0["name"],detail=f"edge {n0.get('physical_edge')}: planned {expected} disagrees with actual pin geometry")])
+                row=dict(kind="net_trunk_layer",name=n0["name"],detail=f"edge {n0.get('physical_edge')}: planned {expected} disagrees with actual pin geometry")
+                if not collect: raise C128.PlanError([row])
+                collected.append(dict(row, edge=n0.get("physical_edge"))); continue
             w.update(ndr=ndr,enc="r8" if r8 else "r7",clock_topology_version=2,physical_edge=n0.get("physical_edge"))
             for st in w["stacks"]:
                 st["short_stack"]=True
@@ -2790,6 +2800,8 @@ def _explicit_v2_wires(out, cells, nets, groups, router, off, r8, exact, default
                     st["tie"]["heterogeneous"]=True
                     st["entry_xy"]=next(p[1:] for p in pts if p[0]==st["entry"])
             pieces.append(w)
+        if not pieces:
+            continue
         if len(pieces)==1:
             wires.append(pieces[0]); continue
         # Downstream emits these pieces into a single dbWire. Aggregate arrays
@@ -2801,6 +2813,8 @@ def _explicit_v2_wires(out, cells, nets, groups, router, off, r8, exact, default
         w["loads"]=list(n["loads"])
         w["wire_um"]=round(sum(p["wire_um"] for p in pieces),3)
         wires.append(w)
+    if collected:
+        raise C128.PlanError(collected)
     out["meta"]["ndr_rules"]={k:dict(NDR[k]) for k in sorted({p["ndr"] for w in wires for p in w.get("pieces",[w])})}
     return wires
 
