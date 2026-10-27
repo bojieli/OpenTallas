@@ -32,7 +32,9 @@ module ot_hbm_host_cfg_leaf #(
     parameter integer NCP = 2,           // replicated output copies (sink groups)
     parameter integer NT  = 18,          // per-target ready / active bits carried
     parameter integer NF  = 28,          // per-target fault bits carried
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    // Already-synchronous die input: timed assertion/release each three edges.
+    parameter integer DELIVERED_RESET = 0
 )(
     input  wire clk, rst_n,
     // from the ingress (or its lane)
@@ -63,7 +65,11 @@ module ot_hbm_host_cfg_leaf #(
 );
     localparam integer PW = 8 + 12 + 256 + 12 + 13 + 16;   // unreset payload width = 317
     wire [1:0] rr;
-    ot_rst_relay #(.REGIONS(2), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
+    generate if (DELIVERED_RESET) begin:g_delivered_reset
+        ot_rst_delivered3 #(.REGIONS(2)) u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
+    end else begin:g_legacy_reset
+        ot_rst_relay #(.REGIONS(2), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
+    end endgenerate
 
     // ---- stage 1: pin flops
     reg cv_p, dv_p, lv_p;
@@ -119,7 +125,7 @@ endmodule
 `default_nettype none
 // Hardened master (hdie_host_cfg_leaf_r1): ot_hbm_host_cfg_leaf at NCP 2 with each copy group on its own ports, so the
 // kit puts copy A on the W face and copy B on the E face (each to its own half of the quadrant's targets).
-module ot_hbm_host_cfg_leaf2 #(parameter integer NT = 20, parameter integer NF = 32, parameter integer MUT = 0) (
+module ot_hbm_host_cfg_leaf2 #(parameter integer NT = 20, parameter integer NF = 32, parameter integer MUT = 0, parameter integer DELIVERED_RESET = 0) (
     input  wire clk, rst_n,
     input  wire cfg_v, input wire [7:0] cfg_target, input wire [11:0] cfg_addr, input wire [255:0] cfg_data,
     input  wire desc_v, input wire [11:0] desc_base, input wire [12:0] desc_limit, input wire [15:0] desc_loops,
@@ -133,7 +139,7 @@ module ot_hbm_host_cfg_leaf2 #(parameter integer NT = 20, parameter integer NF =
     input  wire [NT-1:0] t_ready, t_active, input wire [NF-1:0] t_fault,
     output wire [NT-1:0] s_ready, s_active, output wire [NF-1:0] s_fault
 );
-    ot_hbm_host_cfg_leaf #(.NCP(2), .NT(NT), .NF(NF), .MUT(MUT)) u (.clk(clk), .rst_n(rst_n),
+    ot_hbm_host_cfg_leaf #(.NCP(2), .NT(NT), .NF(NF), .MUT(MUT), .DELIVERED_RESET(DELIVERED_RESET)) u (.clk(clk), .rst_n(rst_n),
         .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v),
         .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v),
         .o_cfg_v({b_cfg_v, a_cfg_v}), .o_cfg_target({b_cfg_target, a_cfg_target}), .o_cfg_addr({b_cfg_addr, a_cfg_addr}),

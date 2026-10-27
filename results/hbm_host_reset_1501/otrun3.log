@@ -1,0 +1,7 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-hbm-host-reset-1501
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-hbm-host-reset-1501
+ot-run: localhost      admits   576 GB (avail 794, reserve 0, fresh 105.9, peak 48, headroom 0, waiters 0/0 GB) load 43/112 running 26 disk 285 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-437066-1793138233 after 1 s
+HOST_RESET_MUTANT3 CAUGHT rc1
+ot-run: RAN on localhost (unit oth-ubuntu-437066-1793138233): exit 0

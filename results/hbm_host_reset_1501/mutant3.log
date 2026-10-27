@@ -1,0 +1,5 @@
+OUTPUT leaf age4
+OUTPUT join age4
+HOST_RESET checks=1165 errors=53
+FATAL: mutant3/tb.sv:196: reset mismatch
+       Time: 1201100  Scope: tb_host_delivered_reset

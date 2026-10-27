@@ -31,7 +31,8 @@ module ot_hbm_status_join_fa #(
     parameter integer NA=4,                 // fault-tree region roots
     parameter [7:0] FCLR=8'd125,            // F20 target id of the fault clear
     parameter integer FMUT=0,
-    parameter integer RRELAY=0
+    parameter integer RRELAY=0,
+    parameter integer DELIVERED_RESET=0
 )(
     input  wire clk, rst_n,
     input  wire cfg_v, desc_v, launch_v,
@@ -46,7 +47,7 @@ module ot_hbm_status_join_fa #(
     output reg  [NA-1:0] a_cause
 );
     wire jb, jd;
-    ot_hbm_status_join #(.NT(NT), .NF(NF), .NH(NH), .TGTS(TGTS), .GUARD(GUARD), .MUT(MUT), .RRELAY(RRELAY)) join_core (
+    ot_hbm_status_join #(.NT(NT), .NF(NF), .NH(NH), .TGTS(TGTS), .GUARD(GUARD), .MUT(MUT), .RRELAY(RRELAY), .DELIVERED_RESET(DELIVERED_RESET)) join_core (
         .clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .desc_v(desc_v), .launch_v(launch_v), .cfg_target(cfg_target),
         .t_ready(t_ready), .t_active(t_active), .t_fault(t_fault), .h_fault(h_fault),
         .block_ready(jb), .program_active(program_active), .program_fault(program_fault), .die_fault(jd), .irq(irq));
@@ -56,9 +57,16 @@ module ot_hbm_status_join_fa #(
     wire fclr = cv_q && ct_q == FCLR && FMUT != 2;
     always @(posedge clk) ct_q <= cfg_target;
     wire fa_rst_n;
+    // Delivered input is synchronous; three timed edges preserve release and
+    // assertion takes three edges. Direct mode cannot silently add a relay.
+    initial if (DELIVERED_RESET && RRELAY == 0) $fatal(1,"DELIVERED_RESET requires RRELAY1");
     generate if (RRELAY != 0) begin : g_frr
         wire [0:0] frr;
+        if (DELIVERED_RESET) begin:g_delivered_reset
+            ot_rst_delivered3 #(.REGIONS(1)) u_delivered(.clk(clk),.rst_n_in(rst_n),.rst_n(frr));
+        end else begin:g_legacy_reset
         ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_frr (.clk(clk), .rst_n_in(rst_n), .rst_n(frr));
+        end
         assign fa_rst_n = frr[0];
     end else begin : g_frr0
         assign fa_rst_n = rst_n;

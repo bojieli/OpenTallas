@@ -1,0 +1,7 @@
+OUTPUT ing age2
+OUTPUT ing age3
+OUTPUT ing age4
+OUTPUT ing age5
+HOST_RESET checks=1165 errors=419
+FATAL: mutant/tb.sv:196: reset mismatch
+       Time: 1201100  Scope: tb_host_delivered_reset

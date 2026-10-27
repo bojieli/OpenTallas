@@ -26,7 +26,8 @@ module ot_hbm_status_join #(
     // stage: assert immediate, release +3 edges, configuration-only latency); region 0 = pin flops cv/dv/lv/rdy/act,
     // 1 = fault pin flops, 2 = participation/guard/output state. All regions release on the same edge, so the tile is
     // cycle-exact with RRELAY=0 driven by the relayed reset (tb_hbm_status_join_relay). Default 0 = r1 behaviour.
-    parameter integer RRELAY=0
+    parameter integer RRELAY=0,
+    parameter integer DELIVERED_RESET=0
 )(
     input  wire clk, rst_n,
     input  wire cfg_v, desc_v, launch_v,
@@ -37,8 +38,15 @@ module ot_hbm_status_join #(
     output reg  block_ready, program_active, program_fault, die_fault, irq
 );
     wire [2:0] rr;
+    // Delivered input is synchronous; three timed edges preserve release and
+    // assertion takes three edges. Direct mode cannot silently add a relay.
+    initial if (DELIVERED_RESET && RRELAY == 0) $fatal(1,"DELIVERED_RESET requires RRELAY1");
     generate if (RRELAY != 0) begin : g_rr
+        if (DELIVERED_RESET) begin:g_delivered_reset
+            ot_rst_delivered3 #(.REGIONS(3)) u_delivered(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
+        end else begin:g_legacy_reset
         ot_rst_relay #(.REGIONS(3), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
+        end
     end else begin : g_rr0
         assign rr = {3{rst_n}};
     end endgenerate

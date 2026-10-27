@@ -1,0 +1,61 @@
+{
+  "schema": "opentallas.hbm.host_delivered_reset.v1",
+  "base_commit": "384c0e75c8380da5bd24e106e58ec38ddb4827d7",
+  "source_files": [
+    "rtl/lib/ot_rst_delivered2.sv",
+    "rtl/lib/ot_rst_delivered3.sv",
+    "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress_obs.sv",
+    "rtl/hbm_accel/host_static_20261015/ot_hbm_host_cfg_leaf.sv",
+    "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join.sv",
+    "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join_fa.sv"
+  ],
+  "sha256": {
+    "rtl/lib/ot_rst_delivered2.sv": "2ae57453dc9dff13058f2216d878d7ce54f50f68b6568b0096fea16309bf1d1a",
+    "rtl/lib/ot_rst_delivered3.sv": "ed2e4b9579d497e6264f60669aeba9a2d9003e46a413d6b56126387533cd34df",
+    "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress_obs.sv": "355f5b5bd66e0acbc9dc7c2aba2144d21c3d4505028bf9cd80db635a534365b2",
+    "rtl/hbm_accel/host_static_20261015/ot_hbm_host_cfg_leaf.sv": "e5c5a2ef68600cc0ad653eef91d693301b55d18acd8ec4933c66bf3995d0670d",
+    "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join.sv": "026f5fef7c87696fcbbd6af669ded27de061a974c9702cfa066465738525c5b9",
+    "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join_fa.sv": "25e709785510b467ee6e8db8824c1e1c64d573ccedd088d4f08cd4e6a9237e43"
+  },
+  "selected_profiles": {
+    "host_cp_ingress": {
+      "module": "ot_hbm_host_static_ingress_obs",
+      "DELIVERED_RESET": 1,
+      "release_edges": 2,
+      "timed_assertion_edges": 2
+    },
+    "hleaf_NW_NE": {
+      "module": "ot_hbm_host_cfg_leaf2",
+      "DELIVERED_RESET": 1,
+      "release_edges": 3,
+      "timed_assertion_edges": 3
+    },
+    "host_status": {
+      "module": "ot_hbm_status_join_fa",
+      "DELIVERED_RESET": 1,
+      "RRELAY": 1,
+      "release_edges": 3,
+      "timed_assertion_edges": 3
+    }
+  },
+  "default": "DELIVERED_RESET0 preserves legacy asynchronous assertion/synchronizers",
+  "gates": {
+    "actual_host_reset_control_positive": {
+      "checks": 1165,
+      "errors": 0
+    },
+    "two_edge_early_release_mutant": {
+      "checks": 1165,
+      "errors": 419,
+      "rc": 1
+    },
+    "three_edge_early_release_mutant": {
+      "checks": 1165,
+      "errors": 53,
+      "rc": 1
+    }
+  },
+  "unresolved": "Full-top delivered reset inputs and actual wavefront/boot binding remain MISSING. These profile parameters are opt-in candidates, not automatically adopted.",
+  "runtime": "/srv/opentallas-scratch2/claude/codex-hbm-host-reset-1501",
+  "source_origin_obs": "Exact current pinned r18h5_bundle obs module restored at main RTL path; only reset implementation/parameter changed."
+}
