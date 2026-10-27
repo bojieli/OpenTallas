@@ -68,18 +68,72 @@ def spread_rows(spec):
     return out
 
 
+def colored_rows(spec):
+    """Reserve distinct horizontal corridors for adjacent clock stages.
+
+    This candidate needs a new per-type island census before adoption: unlike
+    spread_rows, it intentionally uses adjacent channel sites outside old slots.
+    It never enlarges the shared pin-stack or track-search limits.
+    """
+    out = mirrored(spec)
+    groups = defaultdict(list)
+    for cell in out['cell_sites'].values():
+        groups['g' + str(cell['group'])].append(cell)
+    children = defaultdict(list)
+    incoming = set()
+    horizontal = set()
+    for net in out['nets']:
+        children[net['drv']].append(net['load'])
+        incoming.add(net['load'])
+        if net['layer'] == 'M8':
+            horizontal.update((net['drv'], net['load']))
+    root, = set(groups) - incoming
+    depth, order = {root: 0}, [root]
+    for g in order:
+        for child in children[g]:
+            if child not in depth:
+                depth[child] = depth[g] + 1
+                order.append(child)
+    shifts = []
+    for g in sorted(horizontal):
+        cells = sorted(groups[g], key=lambda c: c['origin_um'][1])
+        phase = ((depth[g] % 3) - 1) * 3.24
+        for cell in cells:
+            cell['origin_um'][1] = round(cell['origin_um'][1] + phase, 4)
+        shifts.append(dict(group=g, depth=depth[g], phase_um=phase))
+    # Recompute short corner legs from actual pins. Long trunks keep their axis.
+    reps = {g: sorted(cs, key=lambda c: c['origin_um'][1])[0] for g, cs in groups.items()}
+    def pin(g, name):
+        cell = reps[g]
+        return D.C128.pin_xy({'c': dict(x=cell['origin_um'][0], y=cell['origin_um'][1],
+            orient=cell['orient'])}, 'c', name, D.ROW_Y)
+    layers = {}
+    for g, kids in children.items():
+        if not kids:
+            continue
+        d = pin(g, 'Y')
+        ps = [pin(child, 'A') for child in kids]
+        layers[g] = 'M8' if max(abs(p[0]-d[0]) for p in ps) >= max(abs(p[1]-d[1]) for p in ps) else 'M9'
+    for net in out['nets']:
+        net['layer'] = layers[net['drv']]
+    out['summary']['corridor_rows'] = shifts
+    out['summary']['requires_new_island_census'] = True
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('plan', type=Path)
     ap.add_argument('spec', type=Path)
     ap.add_argument('out', type=Path)
-    ap.add_argument('--only', choices=['exact', 'mirror_exact', 'spread_rows', 'pg_only_DIAGNOSTIC'], action='append')
+    ap.add_argument('--only', choices=['exact', 'mirror_exact', 'spread_rows', 'colored_rows', 'pg_only_DIAGNOSTIC'], action='append')
     args = ap.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
     plan = S.Plan(S.load(args.plan))
     original = json.loads(args.spec.read_text())
     report = {}
     for label, spec in [('exact', copy.deepcopy(original)), ('mirror_exact', mirrored(original)), ('spread_rows', spread_rows(original)),
+                        ('colored_rows', colored_rows(original)),
                         ('pg_only_DIAGNOSTIC', mirrored(original))]:
         if args.only and label not in args.only:
             continue
