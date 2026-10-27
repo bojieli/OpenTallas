@@ -2476,6 +2476,219 @@ def trace_constant_closure(L, log, tried):
     return n
 
 
+# ------------------------------------------------------------------------------------------------ no-reset constants
+RESET_PORT = re.compile(r"^(?:\w+_)?(?:rst|reset|rn|rstn|nrst|arst|srst)(?:_?n|_ni|_b|_l)?(?:_pin)?$", re.I)
+
+
+def reset_vars(d, pis):
+    """{var: asserted value} of the reset ports of one side (pi keys; OT_LEC_RESET_PORTS=a,b overrides the name
+    pattern).  Active low when the name ends in n / _ni / _b / _l (rst_n, rn, core_rst_n)."""
+    names = [n for n in os.environ.get("OT_LEC_RESET_PORTS", "").split(",") if n]
+    R = {}
+    for k, lit in pis.items():
+        if not k.startswith("pi:"):
+            continue
+        base = re.sub(r"\[\d+\]$", "", k[3:]).split(".")[-1]
+        if not (base in names if names else RESET_PORT.match(base)):
+            continue
+        stem = re.sub(r"_pin$", "", base, flags=re.I)
+        low = bool(re.search(r"(n|_ni|_b|_l)$", stem, re.I))
+        R[lit >> 1] = (0 if low else 1) ^ (lit & 1)
+    return R
+
+
+def reset_state(d, R, cycles):
+    """Ternary constant propagation of one side's AIG with every reset port asserted for `cycles` clock edges from
+    an all-unknown power-up state -> {latch var: 0 / 1} for the registers whose value is then a proved constant (a
+    register with a reset, a reset synchroniser, a register reloaded every cycle from those), plus {latch var: the
+    edge it first became constant}.  Pure constant propagation (AND with a definite 0 is 0): no assumption on any
+    unknown value, so a register that only holds itself until a load stays unknown."""
+    I, Lc, a = d["I"], d["L"], d["ands"]
+    base = I + Lc + 1
+    st, first = {}, {}
+    for cyc in range(1, cycles + 1):
+        val = [None] * (base + d["A"])
+        val[0] = 0
+        for v, b in R.items():
+            val[v] = b
+        for v, b in st.items():
+            val[v] = b
+        for k in range(d["A"]):
+            r0, r1 = a[2 * k], a[2 * k + 1]
+            x, y = val[r0 >> 1], val[r1 >> 1]
+            x = None if x is None else x ^ (r0 & 1)
+            y = None if y is None else y ^ (r1 & 1)
+            val[base + k] = 0 if (x == 0 or y == 0) else 1 if (x == 1 and y == 1) else None
+        nst = {}
+        for i, nxt in enumerate(d["latches"]):
+            x = val[nxt >> 1]
+            if x is not None:
+                nst[I + 1 + i] = x ^ (nxt & 1)
+        for v, b in nst.items():
+            if st.get(v) != b:
+                first[v] = cyc
+        st = nst
+    return st, first
+
+
+def noreset_classify(L):
+    """per side: the reset-state value of every register (reset_state, OT_LEC_RESET_CYCLES edges, default 4) ->
+    L.rst_val[(side, key)] = (value or None, first edge)."""
+    cycles = int(os.environ.get("OT_LEC_RESET_CYCLES", "4"))
+    L.rst_val, L.rst_ports = {}, {}
+    for side, d, p in (("gold", L.gold, L.gp), ("gate", L.gate, L.tp)):
+        R = reset_vars(d, p)
+        L.rst_ports[side] = sorted(k for k, lit in p.items() if (lit >> 1) in R and k.startswith("pi:"))
+        st, first = reset_state(d, R, cycles)
+        for k, lit in p.items():
+            if k.startswith("ff:"):
+                v = lit >> 1
+                L.rst_val[(side, k)] = (None if v not in st else st[v] ^ (lit & 1), first.get(v))
+
+
+def latch_cone(L, side, k, cap=200000):
+    """The registers in D(k)'s own-side cone. Unknown/X sources, anonymous
+    state or a cone over cap return None: none can establish a base case.
+    Cached because the AIGs never change."""
+    cache = L.__dict__.setdefault("_latch_cone", {})
+    if (side, k) in cache:
+        return cache[(side, k)]
+    d, c = (L.gold, L.gc) if side == "gold" else (L.gate, L.tc)
+    if "_qkey" not in L.__dict__:
+        L._qkey = {sd: {lit >> 1: kk for kk, lit in p.items() if kk.startswith("ff:")}
+                   for sd, p in (("gold", L.gp), ("gate", L.tp))}
+    I, Lc, a = d["I"], d["L"], d["ands"]
+    if "_noreset_xvars" not in L.__dict__:
+        L._noreset_xvars = {"gold": {v >> 1 for v in L.gx}, "gate": {v >> 1 for v in L.tx}}
+    xvars = L._noreset_xvars[side]
+    seen, stack, regs, n = set(), [c[k] >> 1], set(), 0
+    while stack:
+        v = stack.pop()
+        if v == 0 or v in seen:
+            continue
+        seen.add(v)
+        if v <= I + Lc:
+            if v in xvars:
+                cache[(side, k)] = None   # X-masked induction is not a constant's base case
+                return None
+            if v > I:
+                if v not in L._qkey[side]:
+                    cache[(side, k)] = None   # anonymous state: no untracked base-case assumptions
+                    return None
+                regs.add(L._qkey[side][v])
+            continue
+        n += 1
+        if n > cap:
+            cache[(side, k)] = None
+            return None
+        q = v - I - Lc - 1
+        stack += (a[2 * q] >> 1, a[2 * q + 1] >> 1)
+    cache[(side, k)] = frozenset(regs)
+    return cache[(side, k)]
+
+
+def noreset_sound(L):
+    """{(side, key): first edge} of the constant hypotheses that hold in the reset state (base case), by a fixpoint
+    over OT_LEC_RESET_CYCLES edges: a hypothesis holds from edge e when the reset state gives the constant
+    (reset_state), or when D(k) does not read k and every constant-hypothesised register in its cone holds from
+    edge e - 1 (D(k) == c is proved by the induction for every value of the other, free, registers).
+    Unestablished equality/FSM hypotheses cannot supply that base case."""
+    if not hasattr(L, "rst_val"):
+        noreset_classify(L)
+    cycles = int(os.environ.get("OT_LEC_RESET_CYCLES", "4"))
+    consts = {(sd, k): h[1] for (sd, k), h in L.hyp.items() if h[0] == "const"}
+    sides = lambda sd: ("gold", "gate") if sd == "both" else (sd,)
+    held = {}                                 # (side, key) -> edge, per side
+    for (sd, k), c in consts.items():
+        for s in sides(sd):
+            v, e = L.rst_val.get((s, k), (None, None))
+            if v == c:
+                held[(s, k)] = e or 1
+    hyp_side = lambda s, j: (("both", j) in consts) or ((s, j) in consts)
+    for e in range(1, cycles + 1):
+        new = {}
+        for (sd, k), c in consts.items():
+            for s in sides(sd):
+                if (s, k) in held:
+                    continue
+                cone = latch_cone(L, s, k)
+                if cone is None or k in cone:
+                    continue
+                dc, qp = (L.gc, L.gp) if s == "gold" else (L.tc, L.tp)
+                if any(dc.get(j) == qp[j] for j in cone):
+                    continue     # an unwritten register's X rail cannot seed another constant
+                # Equality/FSM hypotheses can be inductive without being true in
+                # the power-up state. They are not a base case for a constant.
+                if any(h is not None and h[0] != "const" for j in cone
+                       for h in (L.hyp.get(("both", j)), L.hyp.get((s, j)))):
+                    continue
+                if any(cs in (s, "both") and set(ks) & cone for cs, ks, _ in L.cons):
+                    continue
+                if all((s, j) in held and held[(s, j)] < e for j in cone if hyp_side(s, j)):
+                    new[(s, k)] = e
+        if not new:
+            break
+        held.update(new)
+    out = {}
+    for (sd, k) in consts:
+        es = [held.get((s, k)) for s in sides(sd)]
+        if all(x is not None for x in es):
+            out[(sd, k)] = max(es)
+    return out
+
+
+def noreset_filter(L, log, tried):
+    """Constant hypotheses on registers that are not that constant in the reset state (LEC-TOOL-4 10-27, COORD
+    ruling on no-reset constants).  The correspondence induction proves Q == c -> D(Q) == c; its base case is the
+    reset state.  A register with no reset (an X power-up, e.g. hcp_sys1 db <= nf_r on rs_take, argmax ti) that only
+    holds itself until its first load is X there, and binding it to c would assume X == c for every output that can
+    observe it before that load.  A constant hypothesis is kept only when noreset_sound shows it holds within
+    OT_LEC_RESET_CYCLES edges of reset (the register resets to c, or is reloaded every cycle from registers that
+    do); the others are dropped and never re-proposed (the register stays a free input, so an observable difference
+    is reported, never assumed away). There is no switch to assume an unknown
+    power-up value equals a constant. -> number dropped."""
+    total = 0
+    while True:                     # dropping one can unseat a register reloaded from it
+        ok = noreset_sound(L)
+        bad = [(sd, k, h[1]) for (sd, k), h in L.hyp.items() if h[0] == "const" and (sd, k) not in ok]
+        if not bad:
+            break
+        L.noreset_dropped = getattr(L, "noreset_dropped", {})
+        for sd, k, c in bad:
+            del L.hyp[(sd, k)]
+            tried[(sd, k, "c")] += 6
+            tried[("tc", sd, k)] += 1
+            L.noreset_dropped[(sd, k)] = c
+        total += len(bad)
+        log.append(f"no-reset constants: {len(bad)} constant hypotheses dropped (not that constant in the reset "
+                   f"state: X power-up until a load) {[f'{s}:{k}={c}' for s, k, c in bad[:6]]}")
+    return total
+
+
+def noreset_report(L):
+    """lec.json 'noreset_constants': every constant hypothesis kept, with the reset-state basis, and every one
+    dropped by noreset_filter."""
+    if not hasattr(L, "rst_val"):
+        noreset_classify(L)
+    kept = []
+    ok = noreset_sound(L)
+    for (sd, k), h in sorted(L.hyp.items()):
+        if h[0] != "const":
+            continue
+        edge = ok.get((sd, k), -1)
+        kept.append(dict(register=k, side=sd, value=h[1], basis="reset" if edge <= 1 else "reloaded", edge=edge))
+    dropped = [dict(register=k, side=sd, value=c) for (sd, k), c in sorted(getattr(L, "noreset_dropped", {}).items())
+               if (sd, k) not in L.hyp]
+    return dict(enabled=True, reset_ports=L.rst_ports, reset_cycles=int(os.environ.get("OT_LEC_RESET_CYCLES", "4")),
+                n_kept=len(kept), n_reloaded=sum(1 for e in kept if e["basis"] == "reloaded"),
+                n_dropped=len(dropped), reloaded=[e for e in kept if e["basis"] == "reloaded"][:500],
+                dropped=dropped[:500],
+                basis=("a constant hypothesis is kept only when the reset state (every reset port asserted for "
+                       "reset_cycles edges from an all-unknown power-up) gives that constant, or an acyclic "
+                       "reload is inductively constant from already established constants; equality/FSM "
+                       "assumptions never establish a constant's base case"))
+
+
 def slang_elements(aliases_file):
     """slang lays an unpacked array out as one flat vector (`reg [3:0] x [0:N-1]`: element 0 at the MSB) and drives
     each element from its own cell `$driver$x[i]` (the aldff / dff of that element).  -> {gold key 'ff:<scope>x[f]':
@@ -3448,6 +3661,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                 matched_copy_closure(L, log, traces, tried)     # (each pair / register at most once: no loop)
             if os.environ.get("OT_LEC_TRACE_CONST", "1") != "0":
                 trace_constant_closure(L, log, tried)
+        noreset_filter(L, log, tried)
         if not L.hyp:
             return
         m, kind = L.build(with_compare=False, with_hyp=True)
@@ -3457,15 +3671,27 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
         log.append(f"correspondence round {rnd}: {len(st)} hypotheses, {len(bad)} failed "
                    f"({sum(st[n] == 'undecided' for n in bad)} undecided) {bad[:6]}")
         if not bad:
-            if structural_constant_closure(L, log) or structural_twin_closure(L, log):
-                continue     # prove the new constants before returning
+            # A closure can re-propose a constant rejected by the reset-state check.
+            # Only surviving changes need another proof round; otherwise empty
+            # rounds repeat until the time budget discards valid correspondence.
+            snap = dict(L.hyp)
+
+            def surviving_change():
+                noreset_filter(L, log, tried)
+                return L.hyp != snap
+
+            if structural_constant_closure(L, log) and surviving_change():
+                continue     # prove the new surviving relations before returning
+            if structural_twin_closure(L, log) and surviving_change():
+                continue     # rejected constants must not starve the twin closure
             if traces is None:
                 traces = seq_traces(L, log)
             if os.environ.get("OT_LEC_COPY_CLOSURE", "1") != "0":
-                if matched_copy_closure(L, log, traces, tried):
-                    continue     # prove the matched copy relations before returning
-            if os.environ.get("OT_LEC_TRACE_CONST", "1") != "0" and trace_constant_closure(L, log, tried):
-                continue         # prove the constant-from-reset candidates before returning
+                if matched_copy_closure(L, log, traces, tried) and surviving_change():
+                    continue
+            if os.environ.get("OT_LEC_TRACE_CONST", "1") != "0" and trace_constant_closure(L, log, tried) \
+                    and surviving_change():
+                continue
             if L.hyp == before or not adding:
                 return
             continue
@@ -3546,6 +3772,7 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40):
                 L.hyp[(side, k)] = ("eq", osd, c, inv)
                 rec["anon"] += 1
     for rnd in range(rounds):
+        noreset_filter(L, log, collections.Counter())
         m, _ = L.build(with_compare=False, with_hyp=True)
         st = prove(m, work, conflicts, log, tag=f"hint{rnd}")
         bad = [n for n, s in st.items() if s != "proved"]
@@ -3798,6 +4025,8 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
             rec["hints"]["dropped"] = dict(n=len(rec["hints"]["dropped"]), first=rec["hints"]["dropped"][:40])
         elif hints:
             raise LecError(f"hints file {hints} not found")
+        noreset_filter(L, log, collections.Counter())
+        rec["noreset_constants"] = noreset_report(L)
         (out / "hyp.json").write_text(json.dumps([[sd, k, list(h)] for (sd, k), h in sorted(L.hyp.items())]) + "\n")
         m, kind = L.build(with_compare=True, with_hyp=True)
         rec["t_corr_s"] = round(time.time() - t1, 1)
