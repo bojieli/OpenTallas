@@ -4756,3 +4756,10 @@ HBM codex/hbm-keybuf-main-1027@190c6da3ff PUSHED: positive2088/0+lintPASS, mutan
 
 ## Takeover 2026-10-27 08:12 PDT
 All lanes assigned active owners: qwen (QC/KV physical); s81_head (S81/HEAD physical); hbm (HBM plan/cores); tokens (all G5); flow (shared flow/canary/LEC/STA + preflight/autopilot); coverage (all-lane census/geometry/fallback/ops); merge (approved RM34). Actual Git hub intel2 main a54fa8a6ce; local OpenTallas checkout stale and left untouched. Existing jobs collected before successors, no duplicate runs. Latest METHODOLOGY section12 supersedes older spread/skew/clock-residual summaries.
+
+## CODEX coordinator design calls 2026-10-27 08:13 PDT
+- HBM QUAD6: channels sized from actual crossing demand <=0.6 plus pin access. Abutted SRAMs may act as one block only with no internal-seam crossing demand and legal external escape. No new blanket 10.8um gate. vmdel 142.56x112.32 and host_ep distinct type/table approved as routine plan corrections; mixed input copies follow one RTL port plus declared FT pairs. ONE batched plan event, render/review before GRT.
+- HEAD R18: e87c46dce two hashed elemA views admitted to data-hold repair with max2200 endpoints, I2R only, unchanged -100ps admission floor, TT250/FF202.5 and die IO contract. RCX FF means205.858/216.676ps meet existing182.5..222.5 condition; RCX hold-76.52/-88.91ps. Same boundary-input cause as approved07:47; actual signoff still zero-negative TTsetup/FFhold, no relaxed clock or IO. Not a generic2500 allowance. Agent must verify actual path classes before repair.
+
+OWNER?
+2026-10-27 08:25 PDT KV-KITS: may the ONE KV plan delta add one station (+1 cycle) to each of the 200 unsited FT slots across21types (plus sys_c ft1 if needed)? ca77c7e90 what-if ledger sites all761slots/max402.8um; current fixed-count floor9slots exceed403um even before detours,191fail placement/core-wall detours. Requires R8/calendar regeneration and token repricing in same delta. Candidate remains unadopted; io_cor/hroot unchanged-cycle work continues.
