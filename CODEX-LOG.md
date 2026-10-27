@@ -4870,3 +4870,6 @@ TOK-HBM interim 2026-10-27 10:05 PDT: packet handoff/codex_tok_hbm_20261027_1005
 
 ## Coverage interim handoff 2026-10-27 10:05 PDT
 Full concise per-lane/source/job/disposition packet: handoff/codex_coverage_interim_20261027_1005.md. LatestHBM keep+DELIVERED_RESET1 synthesisPASS0 actual185933STD/20845.95912um²,30326FF+3SRAM;888/888actualDFFanchors0OPEN,0shareddowncopies. Unitoth-ubuntu-2297458-1793120477 terminal; no ownliveheavyunit. Sourceclean03577be294; rootrecipe/linkbranchcodex/hbm-n4-links-1027 latesttip pendingrootreview. NativeGEN/preflight next, placement+routeheld onprovider/R2/reset/PG/clock. ContinueuntilEXPLICITresetnotice.
+
+## Interim token takeover 2026-10-27 10:06 PDT
+All-token packet: handoff/codex_tokens_interim_20261027_1006.md. HEAD19e6900918 hierarchical image/type method+exact tile token positive; both flat full attemptsOOM200/256GiB, no third. DS L0zeroGAP/current four compiles+GB/ROWX/IDX lane guards READY; producer/rack scopes remain explicit. QK65939aa source+corrected B48 live, current imagec2d data-only, HEADfa347 transport/recipe BLOCKED2. HBM079ad45e1d urgent actual pad source+complete gate receipts READY; current217 provider failclosed on real missing calendar. Continuing until explicit reset notification.
