@@ -16,21 +16,14 @@
 // never reads them; flattened yosys no-fanout proof results/head_core_lat_r6_1026/elemB/dead_inputs.json) are REMOVED
 // from the macro (50 ports; the parent ties go too).  The element's row0/b_v/b_d inputs are constant 0 inside the
 // wrapper, i.e. the value the parent tied before: LEC vs the r11 RTL / its proven netlist (head_core_r14 README).
-// HEAD-CORE-R14: this file now carries the kit's 12.2a1 pushdown island feed-through ports (ft_*; clk = ft_mstrap_i),
-// byte-for-byte as the head-core-r10 elemB_hold2 kit RTL, which the repo copy lacked.
+// Synthesis source: the kit's 12.2a1 pushdown patch (patch_synth.tcl on 1_synth.odb) replaces clk by the ft_* island
+// ports after synthesis; the kit LEC gold wrapper carries those ft_* ports (clk = ft_mstrap_i).
 // ---------------------------------------------------------------------------
 module ot_s81hd_elemB_cv (
-    input wire ft_ck0_i, input wire ft_ck1_i, input wire ft_mesh_i, input wire ft_rst_i,
-    output wire ft_ck0_o, output wire ft_ck1_o, output wire ft_mesh_o, output wire ft_rst_o,
-    input  wire ft_mstrap_i, input wire rst_n, input wire go, input wire [255:0] x,
+    input  wire clk, input wire rst_n, input wire go, input wire [255:0] x,
     output wire o_v, output wire [31:0] o_d,
     output wire fault
 );
-    wire clk = ft_mstrap_i;
-    assign ft_ck0_o = ft_ck0_i;
-    assign ft_ck1_o = ft_ck1_i;
-    assign ft_mesh_o = ft_mesh_i;
-    assign ft_rst_o = ft_rst_i;
     // OWNER RESET RULE 2026-10-24: the delivered reset is a SYNCHRONOUS signal (die relay chain); one local relay flop
     // here, then the element's flops use it with normal timed recovery / removal (c7: rst_n port -> 28.7k async pins was
     // the only TT setup failure, recovery -71 ps).  +1 cycle of reset latency.

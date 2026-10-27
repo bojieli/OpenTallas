@@ -79,6 +79,19 @@ TCL
   fi
   echo "R14RB warm start from the kit 3_place $(date -Is)"
   CTS_T=do-cts
+elif [ "${OT_R14_PATCH_SYNTH:-0}" = 1 ]; then
+  # cold rebuild from RTL (elemB, place.sh recipe): orfs_hold_mm patch -> synth -> face_guard_core on the Yosys netlist
+  # (fail-closed) -> 12.2a1 pushdown netlist patch (patch_synth.tcl: clk -> ft_* island ports) + post-patch SDC -> place
+  TOP=$(sed -n 's/^export DESIGN_NAME = //p' "$OUT/config.mk" | tail -1); SKIP=$(cat "$OUT/face_guard_skip.txt")
+  R=/work/run/results/asap7/$NICK/base
+  DK place "rc=0; python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts /work/orfs_hold_mm.tcl > /work/orfs_hold_mm.log 2>&1 || rc=\$?; grep -q 'status.: .patched.' /work/orfs_hold_mm.log || rc=3; echo HOLD_MM rc \$rc; [ \$rc = 0 ] || exit \$rc; \
+    $M synth; python3 -I /work/face_guard_core.py $R/1_2_yosys.v $TOP '$SKIP' /work/pins.json /work/face_guard.json; echo FACE_GUARD rc \$?; \
+    ODB_IN=$R/1_synth.odb openroad -exit /work/patch_synth.tcl; cp /work/constraint_pd.sdc $R/1_synth.sdc; touch $R/1_synth.odb $R/1_synth.sdc; \
+    $M place" > "$OUT/r14_place.log" 2>&1; rc=$?
+  grep -h '^HOLD_MM\|^FACE_GUARD\|^PS ' "$OUT/r14_place.log"
+  grep -q '^FACE_GUARD rc 0' "$OUT/r14_place.log" || { echo "R14RB FAIL face_guard"; exit 3; }
+  echo "R14RB synth+patch+place rc=$rc $(date -Is)"; [ $rc = 0 ] || exit 3
+  CTS_T=cts
 else
   DK place "$M place" > "$OUT/r14_place.log" 2>&1; rc=$?
   echo "R14RB place rc=$rc $(date -Is)"; [ $rc = 0 ] || exit 3

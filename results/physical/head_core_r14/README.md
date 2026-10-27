@@ -59,7 +59,8 @@ R14:
 
 ## 4. elemB (ASK2 a)
 - RTL: `rtl/dsrom_sys/s81_head/ot_s81hd_elemB_rb.sv` removes the 50 proven-dead input ports row0[16:0], b_v and b_d[31:0]. Inside the wrapper the element inputs are constant 0, the same value the parent tied before.
-  - The file now carries the kit's 12.2a1 ft_* island ports, which the repo copy lacked. It is byte-for-byte the head-core-r10 kit RTL except for this change.
+  - The repo file stays the SYNTHESIS source (clk port). The kit's 12.2a1 pushdown patch (patch_synth.tcl on 1_synth.odb) adds the ft_* island ports after synthesis.
+    The LEC gold wrapper (epyc2 `head-core-r14/elemB_rtl_lec/rtl`) is the kit's ft_* form with the same three edits.
   - The sim model `ot_s81hd_elem_cv.sv`, the black box `ot_s81hd_elem_cv_bb.v` and the bundle `ot_s81hd_bundle.sv` drop the ports and the parent ties too.
 - LEC: lec.py with gold = the NEW RTL (r11 CY_COPY element RTL + new wrapper) and gate = the hold2 export `actual_functional.v`.
   - That export is already proven EQUIVALENT 27498/27498 to the r11 RTL (R12).
@@ -70,7 +71,7 @@ R14:
   - io.tcl: 341 -> 291 place_pin;
   - pins.json: 343 -> 293;
   - constraint.sdc: `non_clk_in = {go rst_n x}`.
-- Rebuild: `head-core-r14/elemB_rb` with the same plan options as the built tree (`--entry 142.56,142.56 --seg 405 --fanouts 2,4,4,4,4 --balance 0 --halo 4.32`). It re-synthesises from rtl and was in floorplan at 04:15.
+- Rebuild: `head-core-r14/elemB_rb` with the same plan options as the built tree (`--entry 142.56,142.56 --seg 405 --fanouts 2,4,4,4,4 --balance 0 --halo 4.32`). It re-synthesises from rtl (`OT_R14_PATCH_SYNTH=1`: orfs_hold_mm -> synth -> face_guard_core -> patch_synth -> place), relaunched at 04:20. The first try failed PPL-0061 because it had no patch step; that data was deleted.
 - The elemB clock pin ft_mstrap_i is at (144.72,146.16) (routed LEF, CHECKED). It is near the centre, not on the W edge. The edge "clk" pin belonged to the old closed view.
 
 ## Collect
