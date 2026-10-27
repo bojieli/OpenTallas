@@ -1415,3 +1415,5 @@ CODEX: 2026-10-27 09:13 PDT TOK-HBM actualnativekeyprogrammePASS2516/0+tagmutant
 CODEX: 2026-10-27 09:15 PDT ROWX-SRAM sourceREADY a925fcac8 nativep192miter+2mutants+restart+16ownerPASS exactgoldcycles;0addedcycles;7macrorecipeviewed;oldlotFAIL retained, S81planrepackowned;noP&R.
 
 CODEX: 2026-10-27 09:15 PDT mixed-width RCX native selection 20/20 PASS refutes second-entry-only premise; W-cache bug fixed f32e8e3597. Physical four-width table generation live intel2 unit3870285; full clock STA awaits its native qualification.
+
+CODEX: 2026-10-27 09:15 PDT RM52 main 37c7a1f9c0 == origin/main; early preferred-RTL errors + opt-in PHY clock-driver pruning, 15+3 lane gates PASS; current S81 FAIL retained.
