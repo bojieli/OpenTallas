@@ -137,7 +137,7 @@ def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=Fa
             hrows[hbucket[g]].append((min(vals)-pad,max(vals)+pad,g))
         for bucket, rows in hrows.items():
             colors,n = color_intervals(rows); counts[f'M8@{bucket}'] = n
-            pg = grid['M8']; step=pg['pitch_um']/2; phase=pg['offset_um']+pg['pitch_um']/4
+            pg = grid['M8']; step=pg['pitch_um'] if separate_drops else pg['pitch_um']/2; phase=pg['offset_um']+pg['pitch_um']/4
             base=phase+round((bucket-phase)/step)*step
             for g,c in colors.items():
                 desired=base+(c-n//2)*step; tr=D.DEFAULT_TRACKS['M8']
@@ -162,6 +162,7 @@ def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=Fa
                         else:limits.append((oy+lowbody+half,oy+highbody-half))
                     if limits:
                         low=max(q[0] for q in limits);high=min(q[1] for q in limits)
+                        if separate_drops:low-=2.0;high+=2.0
                         import math
                         first=phase+math.ceil((low-phase)/step)*step
                         desired=first+c*step
@@ -173,6 +174,19 @@ def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=Fa
             gy=g if layers.get(g)=='M8' else incoming.get(g)
             if gy in targets and targets[gy]['layer']=='M8':
                 y=D.snap(targets[gy]['c']-len(cells)*D.ROW_Y/2,D.ROW_Y)
+                if separate_drops and lower_face_gap:
+                    pp=plan.parts[cells[0][1]['part']];typ=pp['type'];oy=pp['origin_um'][1]
+                    height=plan.types[typ]['outline_um'][1];cy=cells[0][1]['origin_um'][1]-oy
+                    flip=pp.get('orient','R0') in ('MX','R180')
+                    local=height-cy if flip else cy
+                    band=1036.8 if typ in ('hd_spn','hd_spn_end') and 1365.12<=local<=1416.8 else 0
+                    if typ in ('hd_tile','hd_spn','hd_spn_end') and 328.32<=local-band<=380:
+                        import math
+                        lo,hi=(oy+height-352.78-band,oy+height-330.32-band) if flip else (oy+330.32+band,oy+352.78+band)
+                        yl=math.ceil((lo-1e-7)/D.ROW_Y)*D.ROW_Y
+                        yh=math.floor((hi-len(cells)*D.ROW_Y+1e-7)/D.ROW_Y)*D.ROW_Y
+                        if yl>yh:raise ValueError('face bank body capacity')
+                        y=min(max(y,yl),yh)
                 for k,(_,cell) in enumerate(cells):cell['origin_um'][1]=round(y+k*D.ROW_Y,4)
     recolor_horizontal()
     if separate_drops:
