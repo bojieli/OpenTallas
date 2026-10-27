@@ -1,0 +1,51 @@
+{
+ "schema": "opentallas.master_plan_slice.v1",
+ "kind": "core",
+ "die": "qwen_compute",
+ "type": "ot_qwen_tile_node",
+ "module": "ot_qwen_tile_node",
+ "master_plan_sha256": "a0-child-contract:qc-cores-1027-a0clk-r3@f217587b2 (no frozen QC master plan yet)",
+ "frozen": false,
+ "outline_um": [
+  47.52,
+  432.0
+ ],
+ "islands": [
+  {
+   "name": "node_ck_entry",
+   "rect_um": [
+    23.49,
+    215.73,
+    24.03,
+    216.27
+   ],
+   "centre_um": [
+    23.76,
+    216.0
+   ],
+   "clock_pin": {
+    "layer": "M5",
+    "xy_um": [
+     23.76,
+     216.0
+    ]
+   },
+   "note": "12.8a centre clock entry (QC-CORES-2 R2/R3 child entry (23.76,216.0)); fed by the A0 parent island leg on M6/M7"
+  }
+ ],
+ "keepouts": [],
+ "bays": [],
+ "entry_pins": [],
+ "latency": {
+  "common_clock_latency_ps": {
+   "tt": 201.0,
+   "ff": 161.5
+  }
+ },
+ "gates": {},
+ "core_clock_port": "clk",
+ "pushdown": {
+  "islands": [],
+  "note": "no in-core die feed-through island in the node child: the A0 parent R3b island leg drives the centre entry; pushdown section only so the entry is not a strip blockage (12.2a1)"
+ }
+}

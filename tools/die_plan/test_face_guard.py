@@ -123,6 +123,80 @@ def test_one_station_ft_slot_shares_its_register(tmp_path):
     assert face_guard.guard(cross, ft1={"ft0", "ft1"})["verdict"] == "FAIL"
 
 
+NET_PAIR = r"""
+module top(clk, t_d, t_out, t_vd, t_vout);
+  input clk; input [1:0] t_d; output [1:0] t_out; input t_vd; output t_vout;
+  DFFHQNx1_ASAP7_75t_R \t_out[0]$_DFF_P_  (.CLK(clk), .D(t_d[0]), .QN(t_out[0]));
+  DFFHQNx1_ASAP7_75t_R \t_out[1]$_DFF_P_  (.CLK(clk), .D(t_d[1]), .QN(t_out[1]));
+  DFFHQNx1_ASAP7_75t_R \t_vout$_DFF_P_  (.CLK(clk), .D(t_vd), .QN(t_vout));
+endmodule
+"""
+
+
+def test_declared_core_bus_pair_shares_its_register(tmp_path):
+    """gen_core_kit_qc ft1_pairs: `pair I O` lines make bit k of I and bit k of O one register (QC-A0 node TOREG)."""
+    (tmp_path / "ft_stations.txt").write_text("# core kit\npair t_d t_out\npair t_vd t_vout\n")
+    ft1 = face_guard.read_ft1(tmp_path / "ft_stations.txt")
+    assert ft1 == {"t_d>t_out", "t_vd>t_vout"}
+    assert face_guard.guard(NET_PAIR)["fail_counts"] == {"merged": 6}            # undeclared: merged
+    r = face_guard.guard(NET_PAIR, ft1=ft1)
+    assert r["verdict"] == "PASS" and r["ok"] == 6 and r["ft1_stations"] == 3, r
+    assert face_guard.guard(NET_PAIR, ft1={"t_d>t_out"})["fail_counts"] == {"merged": 2}
+    assert face_guard.guard(NET_PAIR, ft1={"t_out>t_d"})["verdict"] == "FAIL"   # direction is part of the pair
+    cross = NET_PAIR.replace(".D(t_d[0]), .QN(t_out[0])", ".D(t_d[1]), .QN(t_out[0])").replace(
+        ".D(t_d[1]), .QN(t_out[1])", ".D(t_d[0]), .QN(t_out[1])")
+    assert face_guard.guard(cross, ft1=ft1)["verdict"] == "FAIL"                  # bit k must pair with bit k
+    assert r["pairs_verified"] == {"t_d>t_out": 2, "t_vd>t_vout": 1}
+
+
+def _fg_pair(net, ft1=("t_d>t_out", "t_vd>t_vout")):
+    return face_guard.guard(net, ft1=set(ft1))
+
+
+def test_declared_pair_reversed_direction_fails():
+    """the declaration names input>output; 'pair t_out t_d' (reversed) exempts nothing and is itself a pair FAIL."""
+    r = _fg_pair(NET_PAIR, ft1=("t_out>t_d", "t_vout>t_vd"))
+    assert r["verdict"] == "FAIL" and r["fail_counts"]["merged"] == 6 and r["fail_counts"]["pair"] == 2, r
+
+
+def test_declared_pair_mutant_extra_fanout_fails():
+    """MUTANT: the pair flop's output also feeds a second flop (t_out[0] net has another load) -> FAIL."""
+    m = NET_PAIR.replace("endmodule", "  DFFHQNx1_ASAP7_75t_R \\x$_DFF_P_  (.CLK(clk), .D(t_out[0]), .QN(xq));\nendmodule")
+    m = m.replace("input t_vd; output t_vout;", "input t_vd; output t_vout; wire xq;")
+    r = _fg_pair(m)
+    assert r["verdict"] == "FAIL" and "shared" in r["fail_counts"] and "pair" in r["fail_counts"], r
+
+
+def test_declared_pair_mutant_input_fanout_fails():
+    """MUTANT: t_d[1] also loads a second flop (input fanout 2) -> FAIL."""
+    m = NET_PAIR.replace("endmodule", "  DFFHQNx1_ASAP7_75t_R \\y$_DFF_P_  (.CLK(clk), .D(t_d[1]), .QN(yq));\nendmodule")
+    m = m.replace("input t_vd; output t_vout;", "input t_vd; output t_vout; wire yq;")
+    r = _fg_pair(m)
+    assert r["verdict"] == "FAIL" and "shared" in r["fail_counts"] and "pair" in r["fail_counts"], r
+
+
+def test_declared_pair_mutant_two_stations_fails():
+    """MUTANT: t_d[1] -> flop A -> flop B -> t_out[1] (two stations: +1 cycle).  Each bit then has its own register, so
+    the plain face check passes; the declared one-station pair must FAIL."""
+    m = NET_PAIR.replace("DFFHQNx1_ASAP7_75t_R \\t_out[1]$_DFF_P_  (.CLK(clk), .D(t_d[1]), .QN(t_out[1]));",
+                         "DFFHQNx1_ASAP7_75t_R \\a$_DFF_P_  (.CLK(clk), .D(t_d[1]), .QN(aq));\n"
+                         "  DFFHQNx1_ASAP7_75t_R \\b$_DFF_P_  (.CLK(clk), .D(aq), .QN(t_out[1]));")
+    m = m.replace("input t_vd; output t_vout;", "input t_vd; output t_vout; wire aq;")
+    assert "\\a$_DFF_P_" in m
+    assert face_guard.guard(m)["fail_counts"] == {"merged": 4}                  # t_d/t_out[1] not merged any more
+    r = _fg_pair(m)
+    assert r["verdict"] == "FAIL" and r["fail_counts"] == {"pair": 1}, r
+    assert r["pairs_verified"] == {"t_d>t_out": 1, "t_vd>t_vout": 1}
+
+
+def test_declared_pair_mutant_width_and_missing_port_fail():
+    """MUTANT declarations: a pair naming a port that is absent, or buses of different width -> FAIL."""
+    r = _fg_pair(NET_PAIR, ft1=("t_d>t_out", "t_vd>t_vout", "t_x>t_out"))
+    assert r["verdict"] == "FAIL" and r["fail_counts"] == {"pair": 1}, r
+    r = _fg_pair(NET_PAIR, ft1=("t_d>t_out", "t_vd>t_vout", "t_vd>t_out"))
+    assert r["verdict"] == "FAIL" and r["fail_counts"] == {"pair": 1}, r
+
+
 def test_portless_type_passes_with_empty_pin_table():
     net = "module top(clk);\n  input clk;\nendmodule\n"
     assert face_guard.guard(net, pins=[])["verdict"] == "PASS"
