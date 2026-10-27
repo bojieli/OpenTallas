@@ -81,14 +81,18 @@ module dsdv_gunit_l0r #(
         localparam integer WO = (gw == 1 || gw == 6 || gw == 9) ? 1 : (gw == 3) ? ((MUT == 6) ? 2 : 1) :
                                 (gw == 4) ? ((MUT == 6) ? 1 : 2) : (gw == 7) ? 2 : 0;
         for (gk = 0; gk < 4; gk = gk + 1) begin : g_rb
-            wire [8*33-1:0] acc;                        // OR chain over the 32 constant-address terms
-            assign acc[7:0] = 8'd0;
-            genvar ge;
-            for (ge = 0; ge < 32; ge = ge + 1) begin : g_t
-                localparam integer A = 192 * (ge / 16) + 12 * (4 * (ge % 4) + WS) + 6 * ((ge / 8) % 2) + 3 * ((ge / 4) % 2) + WO;
-                assign acc[8 * (ge + 1) +: 8] = acc[8 * ge +: 8] | ({8{ohs[32 * (4 * gw + gk) + ge]}} & rs[A][8 * gk +: 8]);
+            // R14: AND-OR over the 32 constant-address terms as one combinational loop (unrolled at elaboration: every
+            // store index is a constant per term).  R13 built it as a self-referencing packed vector (acc[8(e+1)+:8] =
+            // acc[8e+:8] | ...), which Verilator 5.032 flags UNOPTFLAT and then aborts on (V3Ast Rollover, bench build
+            // MUT=0); same function, same terms, same OR order.
+            reg [7:0] v;
+            integer e;
+            always @* begin
+                v = 8'd0;
+                for (e = 0; e < 32; e = e + 1)
+                    v = v | ({8{ohs[32 * (4 * gw + gk) + e]}} &
+                             rs[192 * (e / 16) + 12 * (4 * (e % 4) + WS) + 6 * ((e / 8) % 2) + 3 * ((e / 4) % 2) + WO][8 * gk +: 8]);
             end
-            wire [7:0] v = acc[8 * 32 +: 8];
             assign rdn[32 * gw + 8 * gk +: 8] = v;
         end
     end endgenerate

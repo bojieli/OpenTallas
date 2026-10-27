@@ -1,0 +1,26 @@
+{
+ "dsdv_gunit_l1c": {
+  "built_TT": 192.6,
+  "built_FF": 145.8,
+  "plan_TT": 181.47,
+  "plan_FF": 142.52,
+  "basis": "built R13 finish kit dsdv_gunit_l1c_r13 4_cts.odb, probe GRT (global_route M2-M5 adj 0.25) + kit setRC_rcx.tcl + estimate_parasitics -global_routing; TT arrival_max_rise / FF arrival_min_rise mean over 4806 sinks (r14probe/l1c_meas_*.tsv); UNCHECKED",
+  "source": "intel2:/srv/opentallas-scratch2/claude/core-lat-r13-1027/r14probe/l1c_probe.out"
+ },
+ "dsfd_qbank_S": {
+  "built_TT": 125.7,
+  "built_FF": 93.1,
+  "plan_TT": 122.64,
+  "plan_FF": 93.22,
+  "basis": "built R14 finish kit dsfd_qbank_S_r14 4_cts.odb (intel1), probe GRT (global_route M2-M5 adj 0.25) + kit setRC_rcx.tcl + estimate_parasitics -global_routing; TT arrival_max_rise / FF arrival_min_rise mean; UNCHECKED",
+  "source": "intel1:/srv/opentallas-scratch2/claude/core-lat-r13-1027/r14probe/qbS_probe.out"
+ },
+ "ot_s81_sstn_base566": {
+  "built_TT": 136.0,
+  "built_FF": 101.8,
+  "plan_TT": 130.32,
+  "plan_FF": 99.91,
+  "basis": "built R14 finish kit ot_s81_sstn_base566_r14 4_cts.odb (intel1), probe GRT (global_route M2-M5 adj 0.25) + kit setRC_rcx.tcl + estimate_parasitics -global_routing; TT arrival_max_rise / FF arrival_min_rise mean; UNCHECKED",
+  "source": "intel1:/srv/opentallas-scratch2/claude/core-lat-r13-1027/r14probe/sstn_probe.out"
+ }
+}
