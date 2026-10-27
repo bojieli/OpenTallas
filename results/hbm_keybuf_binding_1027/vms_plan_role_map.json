@@ -29,5 +29,35 @@
   },
   "scope": "Explicit per-instance logical source roles for unified four-role graph. Current U6d all-NW masters must be corrected; matching port width alone is insufficient because NW has hardcoded sid2.",
   "clock_policy": "One833pscore domain; multiple clock aliases on static_SE/NE_glue must bind the same die clock with explicit actual port names. No domain relaxation or generic pin mapping.",
-  "legacy_two_stop": "Historical B2 NW2/NE2 source is a separate vehicle; do not apply its remaster/drop_ports to this graph."
+  "legacy_two_stop": "Historical B2 NW2/NE2 source is a separate vehicle; do not apply its remaster/drop_ports to this graph.",
+  "calendar_role_map": {
+    "q_hub_nw:u_calendar_Q__q0": {
+      "native_instance": "calendar_SW",
+      "native_role": "SW",
+      "logical_sid": 0,
+      "expected_plan_master": "hfd_hgi_vm_calendar_f20",
+      "role": "matching VM calendar; source module ABI is universal but role programme/bit slices must match VMS role"
+    },
+    "q_hub_ne:u_calendar_Q__q0": {
+      "native_instance": "calendar_SE",
+      "native_role": "SE",
+      "logical_sid": 1,
+      "expected_plan_master": "hfd_hgi_vm_calendar_f20",
+      "role": "matching VM calendar; source module ABI is universal but role programme/bit slices must match VMS role"
+    },
+    "q_hub_nw:u_calendar_Q__q1": {
+      "native_instance": "calendar_NW",
+      "native_role": "NW",
+      "logical_sid": 2,
+      "expected_plan_master": "hfd_hgi_vm_calendar_f20",
+      "role": "matching VM calendar; source module ABI is universal but role programme/bit slices must match VMS role"
+    },
+    "q_hub_ne:u_calendar_Q__q1": {
+      "native_instance": "calendar_NE",
+      "native_role": "NE",
+      "logical_sid": 3,
+      "expected_plan_master": "hfd_hgi_vm_calendar_f20",
+      "role": "matching VM calendar; source module ABI is universal but role programme/bit slices must match VMS role"
+    }
+  }
 }
