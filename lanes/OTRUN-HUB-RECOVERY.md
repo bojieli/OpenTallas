@@ -1,5 +1,14 @@
 # ot-run hub recovery (INFRA2, 2026-10-24)
 
+**2026-10-26 23:45 PDT EPYC1-RETIRE: CUTOVER DONE -- the hub is now intel2 (tolerant-swine, 185.8.106.226).** epyc1 is held
+and is deleted 10-27 ~05:25 (owner). Clients: `ssh -o ControlPath=none intel2 ~/.local/bin/ot-run ...` (rtx-pro
+`~/.local/bin/ot-run` forwards there). On intel2: ot-run/ot-sizes-sync retargeted (`otrun-hub-retarget.py ... intel2 epyc1`,
+epyc1 kept as a HELD worker until deletion), cron ot-sizes-sync */10 + otrun-hub-backup 02:15, `~/coord` = worktree
+/srv/opentallas-scratch2/claude/hub-coord (coord/state) with merge.lock, `~/OpenTallas` (scratch2 symlink) origin = GitHub,
+user timers autopilot/stall-watch/release-task-watch/flow-canary/die-ci-nightly with drop-in OT_HUB_NAME=intel2 (+ pinned
+tools claude/epyc1-retire-hub-1026@211fb91d6e until ROOT-MERGE lands it). epyc2/intel1 `hub` alias -> intel2. Standby for
+intel2 = none yet (intel1 is the natural twin). Details: lanes/EPYC1-RETIRE.md. Everything below is history.
+
 The fleet job launcher `ot-run` runs on ONE hub: **epyc1 (= tender-ray, 84.32.71.203)**. Since 10-24 its root md0 is a
 1-disk RAID1 (nvme0n1p2 only; nvme1n1 became /srv/opentallas-scratch2). If epyc1 dies, no new heavy job can be launched
 until another host is made the hub. Standby = **intel2 (tolerant-swine, 185.8.106.226)**: 2x Xeon Gold 6330 112 threads (AVX-512, so NOT in NO_AVX512), 1 TB RAM, root 468 GB, scratch2 3.5 TB (2.3 TB free) -- chosen 2026-10-25 by INFRA2 after the owner retired epyc3 (eternal-dove) ~20:15: most free scratch of the three workers; epyc2 is the last Zen-3 die-level host with only 207 GB scratch2 free; intel1 = identical twin (second choice).
@@ -13,7 +22,7 @@ until another host is made the hub. Standby = **intel2 (tolerant-swine, 185.8.10
 | launcher state | `~/.local/state/ot-run/{spill_pending/,signals.log,loadspill_no/}`, `~/.config/ot-run/held_hosts` (absent = none held), `~/.local/state/closure_loop/jobs` | spill_pending records = jobs whose outputs still sit on a spill host (`ot-run --spill-sweep` copies them back) |
 | EDA tools on PATH for ot-heavy | `~/.local/opentallas-tools/bin` (yosys-0.68, opensta, verilator-5.050; 316 MB) | present on intel2 |
 | docker | `openroad/orfs:asap7lock` = `:latest` = 16470cea1d34 | present on intel2 |
-| ssh | `~/.ssh/config` aliases epyc2/intel1/intel2 (IPs; epyc3 renamed `epyc3-RETIRED-1025` 10-25); private key `~/.ssh/id_ed25519` (ubuntu@epyc1) -- **never copied**; `ssh localhost` must work (own key in own authorized_keys) | workers do NOT call back to the hub (their ot-* tools use no ssh) |
+| ssh | `~/.ssh/config` aliases epyc2/intel1/intel2 (IPs; epyc3 renamed `epyc3-RETIRED-1025` 10-25); GitHub user key (ubuntu@epyc1, SHA256:DpVRx...) -- COPIED to intel2 `~/.ssh/id_ed25519_github_epyc1` (Host github.com entry) on the OWNER decision of 2026-10-26 23:4x (EPYC1-RETIRE option b); `ssh localhost` must work (own key in own authorized_keys) | workers do NOT call back to the hub (their ot-* tools use no ssh) |
 | clients | agents on rtx-pro: `ssh epyc1 ~/.local/bin/ot-run ...` (rtx-pro key `~/.ssh/agidock_ot`, alias `epyc1`/`tender-ray`) | each running job's client is an ssh child of an ot-run process on the hub |
 
 **"localhost" semantics:** in ot-run and ot-sizes-sync, `"localhost"` = the hub itself (reached by `ssh localhost`).
