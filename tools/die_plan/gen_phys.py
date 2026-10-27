@@ -99,8 +99,9 @@ def plan_pin_records(P, tn, pins, bump_sites=()):
 
 
 def write_partition_freeze(P, tn, kd, recs):
-    """plan_pins.json (plan pin centres) + freeze.json (schema partition_freeze: outline, pins_file, pins_sha256,
-    pins_canon_sha256) for kit_contract.pins_canonical; refuses the kit when io.tcl is not that pin set."""
+    """plan_pins.json (die-plan pin centres) + freeze.json (schema partition_freeze: outline, pins_file, pins_sha256,
+    pins_canon_sha256 of the die-plan pins) for kit_contract.pins_canonical; refuses the kit when io.tcl is not that
+    pin set with the consumed master-plan slice applied (kit_contract.slice_expected)."""
     import hashlib
     import kit_contract as KC
     kd = Path(kd)
@@ -109,9 +110,12 @@ def write_partition_freeze(P, tn, kd, recs):
                            source="gen_phys.plan_pin_records (die plan)", pins=recs), indent=1) + "\n"
     (kd / "plan_pins.json").write_text(body)
     canon = KC._canon(recs, [w, h])
+    # 12.7c: a kit that consumed its master-plan slice places the slice-fixed pins where the slice says
+    # (master_slice.slice_placements); every other pin is the die-plan pin
+    expect = KC._canon(KC.slice_expected(kd, recs), [w, h])
     placed = KC._canon(KC.placed_pins(kd), [w, h])
-    if placed != canon:
-        raise ValueError(f"type {tn}: io.tcl placed pins canonical {placed[:12]} != plan pins {canon[:12]}")
+    if placed != expect:
+        raise ValueError(f"type {tn}: io.tcl placed pins canonical {placed[:12]} != plan pins (+ slice) {expect[:12]}")
     fz = dict(schema="opentallas.partition_freeze.v1", die=P.name, type=tn, outline_um=[w, h],
               pins_file="plan_pins.json", pins_sha256=hashlib.sha256(body.encode()).hexdigest(),
               pins_canon_sha256=canon, pins=len(recs))

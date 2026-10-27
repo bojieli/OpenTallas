@@ -521,8 +521,33 @@ def on_track(kd, layer, x, y, tol=1e-4):
     return abs(sx - x) <= tol and abs(sy - y) <= tol
 
 
+def slice_placements(kd, sl, clock_port=None):
+    """{pin: (layer, x, y, (w, h))} where the kit places every slice-fixed pin: the slice position, the core clock
+    entry snapped onto its track at CLOCK_PIN_SIZE (GEOM-21), bound entry pins 0.032 x 0.192.  One source for the io
+    rewrite (_consume_io) and the generator's plan pin record (gen_phys.plan_pin_records -> freeze.json)."""
+    out = {}
+    for name, (layer, (x, y)) in slice_pins(sl, clock_port).items():
+        if name == clock_port:
+            x, y = snap_on_track(kd, layer, x, y)
+            out[name] = (layer, x, y, CLOCK_PIN_SIZE)
+        else:
+            out[name] = (layer, x, y, (0.032, 0.192))
+    return out
+
+
+def kit_slice_placements(kd):
+    """slice_placements of a kit that consumed a slice (master_slice.json staged), else {}."""
+    kd = Path(kd)
+    p = kd / "master_slice.json"
+    if not p.is_file():
+        return {}
+    sl = json.loads(p.read_text())
+    return slice_placements(kd, sl, _clock_port(kd, sl))
+
+
 def _consume_io(kd, sl, clock_port):
     want = slice_pins(sl, clock_port)
+    place = slice_placements(kd, sl, clock_port)
     done = {}
     if not want:
         return done
@@ -535,14 +560,10 @@ def _consume_io(kd, sl, clock_port):
             if not m or _pin_name(m.group(2)) not in want:
                 continue
             name = _pin_name(m.group(2))
-            layer, (x, y) = want[name]
             # The centre clock entry needs a full M5 routing track, enough length for via access beside the root
-            # driver, and its centre ON that track (GEOM-21).
-            if name == clock_port:
-                x, y = snap_on_track(kd, layer, x, y)
-                size = "%g %g" % CLOCK_PIN_SIZE
-            else:
-                size = "0.032 0.192"
+            # driver, and its centre ON that track (GEOM-21) -- slice_placements.
+            layer, x, y, wh = place[name]
+            size = "%g %g" % wh
             lines[i] = (f"{m.group(1)}{{{name}}} -layer {layer} -location {{{x:.4f} {y:.4f}}} -pin_size {{{size}}}"
                         f"   ;# master-plan slice (was:{m.group(3).strip()[:80]})")
             done.setdefault(name, []).append(f.name)

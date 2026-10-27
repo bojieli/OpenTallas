@@ -534,6 +534,22 @@ def placed_pins(kd):
     return list(pins.values())
 
 
+def slice_expected(kd, recs):
+    """plan pin records with the kit's consumed master-plan slice applied (12.7c, master_slice.kit_slice_placements):
+    slice-fixed pins (core clock entry, bound M7 entry pins) sit where the slice says; a kit without a slice: recs."""
+    import master_slice as MS
+    over = MS.kit_slice_placements(kd)
+    if not over:
+        return list(recs)
+    out = []
+    for r in _kit_pins(recs if isinstance(recs, list) else dict(recs)):
+        o = over.get(r["name"])
+        if o:
+            r = dict(r, layer=o[0], x=round(float(o[1]), 4), y=round(float(o[2]), 4))
+        out.append(r)
+    return out
+
+
 def pins_canonical(kd, plan_dir=None):
     """GATE-PINS-2: freeze.json pins_canon_sha256 recorded; the kit's placed pin set (io.tcl centres, plan form) has
     that canonical sha; a reachable plan pin file (whole-file sha = freeze pins_sha256) has it too."""
@@ -552,9 +568,12 @@ def pins_canonical(kd, plan_dir=None):
         outline = [float(m.group(1)), float(m.group(2))] if m else None
     want = F.get("pins_canon_sha256")
     kit_c = _canon(placed_pins(kd), outline)
-    info = dict(applies=True, kit_canon=kit_c, recorded=want, plan_file=None, plan_canon=None)
+    sliced = (kd / "master_slice.json").is_file()
+    info = dict(applies=True, kit_canon=kit_c, recorded=want, plan_file=None, plan_canon=None, slice=sliced)
     if not want:
         err.append("freeze.json has no pins_canon_sha256 (GATE-PINS-2 canonical pin hash not recorded)")
+    elif sliced:
+        pass        # 12.7c: kit pins = recorded plan pins + slice placements, judged against the plan file below
     elif kit_c != want:
         err.append(f"kit placed pins (io.tcl) canonical sha {kit_c[:12]} != freeze pins_canon_sha256 {want[:12]} "
                    "(kit pin set is not the plan pin file)")
@@ -571,13 +590,21 @@ def pins_canonical(kd, plan_dir=None):
             b = c.read_bytes()
             if F.get("pins_sha256") and hashlib.sha256(b).hexdigest() != F["pins_sha256"]:
                 continue
-            pc = _canon(json.loads(b), outline)
+            doc = json.loads(b)
+            pc = _canon(doc, outline)
             info.update(plan_file=str(c), plan_canon=pc)
-            if pc != kit_c:
-                err.append(f"kit placed pins canonical sha {kit_c[:12]} != plan pin file {c.name} {pc[:12]}")
+            ref = pc
+            if sliced:
+                ref = _canon(slice_expected(kd, doc.get("pins", []) if isinstance(doc, dict) else doc), outline)
+                info.update(plan_slice_canon=ref)
+            if ref != kit_c:
+                err.append(f"kit placed pins canonical sha {kit_c[:12]} != plan pin file {c.name}"
+                           f"{' + master slice' if sliced else ''} {ref[:12]}")
             if want and pc != want:
                 err.append(f"plan pin file {c.name} canonical sha {pc[:12]} != recorded {want[:12]}")
             break
+    if sliced and info["plan_file"] is None:
+        err.append("slice kit: plan pin file (freeze pins_file) not reachable -- cannot judge slice-placed pins")
     return err, info
 
 
