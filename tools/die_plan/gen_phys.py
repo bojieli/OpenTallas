@@ -83,9 +83,11 @@ def io_tcl(P, tn, pins):
         lines.append(f"place_pin -pin_name {{{bus}[{bit}]}} -layer {ln} -location {{{cx:.4f} {cy:.4f}}} "
                      f"-pin_size {{{size[0]:.4f} {size[1]:.4f}}}")
     top = P.layer_budget["partition_signal_max"]
+    edge_layers = {e["port"]: e.get("layer", top) for e in t.get("clock", {}).get("edge_clocks", [])}
     for name, x, y in tap_pins(P, tn):
-        lines.append(f"place_pin -pin_name {name} -layer {top} -location {{{x:.4f} {y:.4f}}} "
-                     f"-pin_size {{{LAYER_W.get(top, 0.04):.4f} {4 * PIN_LEN_UM:.4f}}}   ;# interior: die spine tap")
+        ln = edge_layers.get(name, top)
+        lines.append(f"place_pin -pin_name {name} -layer {ln} -location {{{x:.4f} {y:.4f}}} "
+                     f"-pin_size {{{LAYER_W.get(ln, 0.04):.4f} {4 * PIN_LEN_UM:.4f}}}   ;# interior: die spine tap")
     for name, x, y in reset_out_pins(P, tn):
         lines.append(f"place_pin -pin_name {name} -layer {top} -location {{{x:.4f} {y:.4f}}} "
                      f"-pin_size {{{LAYER_W.get(top, 0.04):.4f} {4 * PIN_LEN_UM:.4f}}}   ;# interior: reset wavefront out")
@@ -100,14 +102,14 @@ def io_tcl(P, tn, pins):
 RELAY_MID_RE = r"^(.*[.]u_y_[A-Za-z0-9_]+)[.]"
 
 
-def _snap_tap(P, x, y, pg_legal=True):
+def _snap_tap(P, x, y, pg_legal=True, layer=None):
     """Interior tap at a crossing of the top two routing layers, clear of both layers' PG access bands.
 
     Partition stripes are offset from CORE_AREA (CORE_MARGIN_UM); the face-pin band policy also includes the
     zero-origin phase. Keeping access clear at both phases protects the pin rectangle AND its lower-layer via.
     Hard partition interfaces retain their declared LEF coordinates (pg_legal=False); their owner fixes the view.
     """
-    top = P.layer_budget["partition_signal_max"]
+    top = layer or P.layer_budget["partition_signal_max"]
     L = P.layers[top]
     below = f"M{int(top[1:]) - 1}"
     Lb = P.layers.get(below, L)
@@ -205,9 +207,31 @@ def core_tap_ff_sdc(P, tn):
 
 
 def edge_clock_pins(P, tn):
-    """[(port, x, y, period_mult)]: the type's PHY-edge clocks (schema clock.edge_clocks), snapped like taps."""
-    return [(e["port"],) + _snap_tap(P, *e["tap_um"]) + (int(e.get("period_mult", 1)),)
-            for e in P.types[tn].get("clock", {}).get("edge_clocks", [])]
+    """Explicit edge-clock periods; legacy integer multipliers remain unchanged."""
+    out = []
+    for e in P.types[tn].get("clock", {}).get("edge_clocks", []):
+        if "period_ps" in e and "period_mult" in e:
+            raise ValueError("edge clock period_ps and period_mult are exclusive")
+        ps = e.get("period_ps")
+        if ps is not None and (isinstance(ps, bool) or not isinstance(ps, (int, float)) or not math.isfinite(ps) or ps <= 0):
+            raise ValueError("edge clock period_ps must be positive and finite")
+        if e.get("cdc_contract") and (e["cdc_contract"] != "ot_fdi_phy_cdc" or ps is None):
+            raise ValueError("ot_fdi_phy_cdc requires an explicit period_ps")
+        mult = ps / P.die["period_ps"] if ps is not None else int(e.get("period_mult", 1))
+        out.append((e["port"],) + _snap_tap(P, *e["tap_um"], layer=e.get("layer")) + (mult,))
+    return out
+
+
+def edge_clock_sdc(P, tn):
+    out = ""
+    entries = P.types[tn].get("clock", {}).get("edge_clocks", [])
+    for e, (n, _x, _y, mult) in zip(entries, edge_clock_pins(P, tn)):
+        ps = e.get("period_ps", mult * P.die["period_ps"])
+        out += f"# Explicit PHY-edge clock; source period {ps:g} ps\ncreate_clock -name {n} -period {t_lib(ps):.4f} [get_ports {n}]\n"
+        if e.get("cdc_contract"):
+            out += Path(__file__).with_name("fdi_phy_cdc.tcl").read_text() + "\n"
+            out += f"ot_fdi_phy_cdc_constraints clk {n} {t_lib(P.die['period_ps']):.4f} {t_lib(ps):.4f} {t_lib(60):.4f}\n"
+    return out
 
 
 def tap_pins(P, tn):
@@ -911,9 +935,7 @@ def sdc(P, tn, pins):
            f"create_clock -name clk -period {per:.4f} [get_ports {{{' '.join(cks)}}}]\n"
            f"# neighbour boundary flops run on the bound insertion (TT {ib['tt']:g} ps here; FF {ib['ff']:g} ps via "
            f"the FF-only flow steps; ruling 9.7 / decision 5e): virtual IO clock\n"
-           + "".join(f"# PHY-edge clock (plan clock.edge_clocks): synchronous with clk, period {m} x T\n"
-                     f"create_clock -name {n} -period {m * per:.4f} [get_ports {n}]\n"
-                     for n, _x, _y, m in edge_clock_pins(P, tn)) +
+           + edge_clock_sdc(P, tn) +
            f"create_clock -name vclk -period {per:.4f}\n"
            f"set_clock_latency -source {lat:.4f} [get_clocks vclk]\n"
            + (f"# plan clock.tap_window (COORD 11:24): die tap-to-tap arrival window {tap_window_ps(P):g} ps on every "
@@ -2281,9 +2303,13 @@ def mock_lef(P, tn):
              "N": (x - lw, y - PIN_LEN_UM, x + lw, y), "S": (x - lw, y, x + lw, y + PIN_LEN_UM)}[f]
         L += pin(f"{bus}[{bit}]", dirs.get(bus, "INPUT"), "SIGNAL", [(ln, *r)])
     tw = LAYER_W.get(top, 0.032) / 2
+    edge_layers = {e["port"]: e.get("layer", top) for e in t.get("clock", {}).get("edge_clocks", [])}
     for name, x, y in tap_pins(P, tn):
+        ln = edge_layers.get(name, top)
+        tw = LAYER_W.get(ln, 0.032) / 2
         L += pin(name, "INPUT", "SIGNAL" if name in ("arst_n", "start_i") else "CLOCK",
-                 [(top, x - tw, y - 2 * PIN_LEN_UM, x + tw, y + 2 * PIN_LEN_UM)])
+                 [(ln, x - tw, y - 2 * PIN_LEN_UM, x + tw, y + 2 * PIN_LEN_UM)])
+    tw = LAYER_W.get(top, 0.032) / 2
     for name, x, y in reset_out_pins(P, tn):
         L += pin(name, "OUTPUT", "SIGNAL", [(top, x - tw, y - 2 * PIN_LEN_UM, x + tw, y + 2 * PIN_LEN_UM)])
     # PG: the kit's M5 / M6 / M7 stripes (gen_phys.PDN; VSS one width + spacing after VDD)
