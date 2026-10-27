@@ -30,6 +30,8 @@ def main():
  ap.add_argument('--mutant',action='store_true'); a=ap.parse_args(); a.out.mkdir(parents=True,exist_ok=True)
  new='\n'.join((ROOT/f).read_text() for f in FILES)
  old='\n'.join(subprocess.check_output(['git','-C',str(ROOT),'show',a.base+':'+f],text=True) for f in FILES)
+ normalized=new.replace(', parameter integer ROWX = 0','').replace('.ROWX(ROWX), ','')
+ assert normalized == old, 'wrapper edit exceeds the declared default-off parameter propagation'
  names={m.group(1) for m in B.MOD_RE.finditer(B._strip(old))}
  old=re.sub(r'\b(?:'+ '|'.join(map(re.escape,sorted(names,key=len,reverse=True)))+r')\b',lambda m:m[0]+'_before',old)
  if a.mutant:
