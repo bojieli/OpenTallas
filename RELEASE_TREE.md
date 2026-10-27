@@ -30,7 +30,7 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 
 ## DIE s81_head · S81 head die · rev UNFROZEN d7b8d1eb · after QC
 - [ ] HEAD.INFRA Infra-first plan event (+ HEAD8 batch 187b63494b if approved) · INFRA-FIRST · WAITS · PENDING-DELTA D-INFRA-FIRST-HEAD holds all 16 type routes → IF.TOOL
-- [ ] HEAD.CLK elemA/elemB · HEAD-CORE-R11 -> R12 · RUNNING · LEC r11 reruns (B ~23:15 epyc2, A ~00:00 intel1) + hold2 -> route; burst FIFO HEAD-RTL-4 ce0713f99f READY after portbind canon FAIL/cand PASS · ETA freeze est 10-29..30 (after QC tooling)
+- [ ] HEAD.CLK elemA/elemB · HEAD-CORE-R12 · RUNNING · LEC r11 EQ both; elemA hold2 signed off (TT +93.06/FF +0.99); elemB sign-off + repaired-export LEC + route · ETA freeze est 10-29..30
 - [ ] HEAD.GRT Die GRT0 incl. clock on the infra-first plan · INFRA-FIRST · WAITS · old d7b8d1eb signal GRT0 no longer counts → HEAD.INFRA
 - [ ] HEAD.BIND Whole-head as-built bind · CODEX / PATH-S81 · WAITS · source d0eb3d3d01; host/mesh/rank-row contract = spec item (no owner input)
 - [ ] HEAD.STA Die STA on real views · DIE-PROTO · WAITS · → HEAD.CLK, → HEAD.TILES
@@ -38,12 +38,12 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 
 ## DIE qwen_kvsys · Qwen KV · rev batch claude/path-kv-batch-0115@650841e1ef (rebase 5665cd3386 + FT reserve + D-KV-CLKMESH)
 - [ ] KV.BIND Strict bind of the batch · PATH-KV · RUNNING · B31 a8c24031c strict PASS 160 parts/51 types + R8 0 unequal + full verify 2553368/2553368; final batch (8-region landings, q2 rename, B32 PV) needs one re-bind
-- [ ] KV.CLK Clock under 12.8 (gate = related-pair STA) · CLOCK-KV-R13 · RUNNING · merge-shields + in-core islands 52.9/50.7; headmirror G0C 0; island census FAIL 4 modules + 11 ps via offset being fixed, then kit/GRT/RCX/STA · ETA freeze est 10-28
+- [ ] KV.CLK Clock under 12.8 (gate = related-pair STA) · CLOCK-KV-R16 · RUNNING · R15 band feed: seam FF kit-contract hold +5.8, TT setup +88 (budget, UNCHECKED); now FIRST real-view die STA (e1/e5 real + rest budget) + GRT>=50 · ETA freeze est 10-28
 - [ ] KV.INFRA PG from IR + pre-routed PG/clock/reset via shared tool · PATH-KV · RUNNING · die_infra reset 287 nets max hop 377um PASS; signal GRT50 M4-M9 w/ clock reservation ovf0; PG needs KV power figure (0.15 W/mm2 fallback) → IF.TOOL
 - [ ] KV.GRT GRT0 incl. clock on the batch · PATH-KV · PASS · batch 650841e1ef one global_route signals M4-M7 + mesh M8-M9: ovf 0 TT+FF; freeze waits KV.BIND + D-INFRA-FIRST PG/pre-route
 - [ ] KV.STA Die STA on real views · PATH-KV · FAIL · TT setup +216.6 hold -334.1 (CHECKED; worst = reset seam hub_C->hgi_EN_7), FF rerun (report corrupted); classification of hold pairs running; shielded clock must be rebuilt on corrected PG model (PDN-ONE)
   - [ ] KV.TILES Tile sign-offs · PATH-KV / KV-CORES · BLOCKED · KV-CORES-R1 gate 0/24 core types buildable: no 12.8a centre entry + R1-R7 islands in plan hm_r12 96e6d1cb; signed only head e1/e5 → KV.CORE-SLICE
-  - [ ] KV.CORE-SLICE One KV core slice (centre entries, in-core islands, M7 entry pins; hr face recut price, q2 rename, phy_pad outline) · CLOCK-KV-R15 / PATH-KV · COORD · ASK posted → KV.CLK
+  - [ ] KV.CORE-SLICE One KV core slice (centre entries, in-core islands, M7 entry pins; hr recut, q2 rename, phy_pad outline) · KV-CORE-SLICE-1 · RUNNING → KV-CORES-R2 → KV.CLK
 
 ## DIE s81 · S81 (DeepSeek ROM layer die) · rev main · B2 batch
 - [ ] S81.B2 One plan event D-S81-B2: A25 + stations v4 + PHY pins + leaf pins + eng SRAM r0c0 + FT alignment/corridors + D-S81-PHY + infra-first · PATH-S81 · RUNNING · gate: lateral jog <5M bit-um → GRT0 → skew
