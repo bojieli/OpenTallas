@@ -725,6 +725,10 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
             "close $fh",
             "report_checks -path_delay max -group_path_count 1 -format full -fields {cap slew fanout}",
             "puts OT_DONE"]
+    if tap_rep_um is not None:
+        # Strict candidate models use the release clock exactly, including the
+        # period-minus-slack arrival conversion. Legacy diagnostics unchanged.
+        tcl=[line.replace("833.333","833.000") for line in tcl]
     (out / "ctree.tcl").write_text("\n".join(tcl) + "\n")
     meta = dict(leaf_um=leaf_um, rep_um=rep_um, **({"full_depth": True} if full_depth else {}),
                 **({"tap_rep_um": tap_rep_um, "tap_repeaters": sum(i.startswith("rtap") for i, *_ in place)}
