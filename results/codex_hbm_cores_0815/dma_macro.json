@@ -1,0 +1,95 @@
+{
+  "schema": "opentallas.macro_placement.v1",
+  "macro_placement": [
+    {
+      "k": "u_cp.g_tab[0].u_tab",
+      "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+      "origin_um": [
+        17.28,
+        17.28
+      ],
+      "orient": "R0"
+    },
+    {
+      "k": "u_cp.g_tab[1].u_tab",
+      "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+      "origin_um": [
+        17.28,
+        58.59
+      ],
+      "orient": "R0"
+    },
+    {
+      "k": "u_dbk.L[0].u_bank.landing",
+      "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+      "origin_um": [
+        17.28,
+        99.9
+      ],
+      "orient": "R0"
+    },
+    {
+      "k": "u_dbk.L[1].u_bank.landing",
+      "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+      "origin_um": [
+        17.28,
+        141.21
+      ],
+      "orient": "R0"
+    },
+    {
+      "k": "u_dbk.L[2].u_bank.landing",
+      "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+      "origin_um": [
+        17.28,
+        182.52
+      ],
+      "orient": "R0"
+    },
+    {
+      "k": "u_dbk.L[3].u_bank.landing",
+      "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+      "origin_um": [
+        129.6,
+        17.28
+      ],
+      "orient": "R0"
+    },
+    {
+      "k": "u_dbk.L[4].u_bank.landing",
+      "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+      "origin_um": [
+        129.6,
+        58.59
+      ],
+      "orient": "R0"
+    },
+    {
+      "k": "u_dbk.L[5].u_bank.landing",
+      "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+      "origin_um": [
+        129.6,
+        99.9
+      ],
+      "orient": "R0"
+    },
+    {
+      "k": "u_dbk.L[6].u_bank.landing",
+      "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+      "origin_um": [
+        129.6,
+        141.21
+      ],
+      "orient": "R0"
+    },
+    {
+      "k": "u_dbk.L[7].u_bank.landing",
+      "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+      "origin_um": [
+        129.6,
+        182.52
+      ],
+      "orient": "R0"
+    }
+  ]
+}
