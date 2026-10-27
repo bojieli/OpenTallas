@@ -4,6 +4,9 @@ P2 = 833.0 / 2
 
 def parse_spec(p):
     t = open(p).read()
+    entry = re.search(r"set\s+ot_h_entry_n\s+(\d+)", t)
+    if entry and int(entry.group(1)):
+        raise ValueError("uf_phys cannot price ot_h_entry_n: encode the common entry trunk as explicit tree nodes")
     root = tuple(map(float, re.search(r"set ot_ms_root \{([\d.]+) ([\d.]+)\}", t).groups()))
     tree = {}
     blk = t.split("set ot_ms_tree {")[1].split("\n}")[0]
