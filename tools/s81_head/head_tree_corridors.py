@@ -164,7 +164,13 @@ def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=Fa
                         low=max(q[0] for q in limits);high=min(q[1] for q in limits)
                         if separate_drops:low-=2.0;high+=2.0
                         import math
-                        first=phase+math.ceil((low-phase)/step)*step
+                        phases=[phase,phase+step/2] if separate_drops else [phase]
+                        starts=[ph+math.ceil((low-ph)/step)*step for ph in phases]
+                        starts=[st for st in starts if st+(n-1)*step<=high+1e-6
+                                and all(not any(ss[0]=='M8' and abs(ss[1]-(st+j*step))<1.0
+                                                    for ss in mesh_straps) for j in range(n))]
+                        if not starts:raise D.C128.PlanError([dict(kind='face_landing_lane_capacity',name=str(bucket),detail=dict(colors=n,allowed=[low,high]))])
+                        first=min(starts,key=lambda st:abs(st+(n-1)*step/2-(low+high)/2))
                         desired=first+c*step
                         if desired>high+1e-6:
                             raise D.C128.PlanError([dict(kind='face_gap_capacity',name=str(bucket),
