@@ -1,24 +1,25 @@
 {
  "schema": "opentallas.kv.pair_image_txdp.v1",
+ "status": "CURRENT_BOUND_TRANSPORT_ONLY_FULL_PAIR_PROGRAMME_PENDING",
  "D2D_TXDP_K": [
-  113,
+  114,
   4,
   3,
   3
  ],
- "sv_literal": "32'h03030471",
- "XDIE_SEAM_K": "56,56,54,54,54,55,55",
- "seam_inputs": {
-  "KS_RXV": 56,
-  "KS_RXP": 56,
-  "KS_TXS": 54,
-  "KS_TXK": 54,
-  "KS_TXB": 54,
-  "SK_TXV": 55,
-  "SK_TXP": 55
+ "D2D_TXDP_C": [
+  8,
+  3,
+  1,
+  10
+ ],
+ "sv_literal": "32'h03030472",
+ "XDIE_SEAM_K": "56,56,54,54,54,56,56",
+ "XDIE_DIE_STAGES": "2,2,2,3,2,2/56,56,54,54,54,56,56",
+ "source": {
+  "kv": "codex/kv-native-bind-1027@5c7c40d860 bind4",
+  "qc": "codex/qc-bind-1027 source7a1172e830 candidatebccc2a0b9c fresh_v3"
  },
- "formula": "[KS_TXS + KV_CODEC(2) + SK_TXP, 2 + host, 1, 1] + PINREG_EXT (d2d_link_calendar producer_txd); the compute die must bind the same pair image",
- "source": "tools/die_plan/regen_constants.py --die qwen_kvsys --bound <b23 strict bind of record> (claude/tok-qk-kvimg19-1025@c2e5e30c3c version)",
- "commit": "c20ef315085346b2fcd2e0b4e8294bd45d795a93",
- "note": "QC<->KV pair calendar image KV TXDP; the compute die binds the same image (regen_constants --peer). PATH-KV 2026-10-26."
+ "formula": "KV byte0 = KS_TXS + codec2 + SK_TXP + pinreg2; other bytes unchanged",
+ "note": "Transport constants only. Both dies must bind the same subsequently qualified programme; oldv7/B48 image is not authority."
 }
