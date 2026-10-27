@@ -100,6 +100,23 @@ class ChainTest(unittest.TestCase):
         self.assertEqual(rec["verdict"], "LOCAL_PASS_NEEDS_PARENT")
         self.assertIn("--netlist", calls[-1])
 
+    def test_external_preflight_covers_kit_without_copying_tools(self):
+        k, b = self.vehicle()
+        source = k / "shared/kit_preflight.py"
+        source.parent.mkdir()
+        source.touch()
+        run, calls = self.runner(k, b)
+        self.assertEqual(continue_kit(k, "runner.sh", "route", 48, 8, run,
+                                      preflight=source), 0)
+        self.assertEqual(calls[0][1], str(source))
+        self.assertFalse((k / "kit_preflight.py").exists())
+
+    def test_missing_explicit_shared_preflight_stops_before_runner(self):
+        k, _ = self.vehicle()
+        self.assertEqual(continue_kit(k, "runner.sh", "route", 48, 8,
+                                      lambda c: self.fail("runner must not start"),
+                                      preflight=k / "shared/kit_preflight.py"), 3)
+
     def test_runner_failure_preserved(self):
         k, _ = self.vehicle()
         self.assertEqual(continue_kit(k, "runner.sh", "route", 48, 8, lambda c: 17), 17)

@@ -19,12 +19,15 @@ def load(path):
         return {}
 
 
-def continue_kit(kit, runner, goal, mem, threads, run=subprocess.call):
+def continue_kit(kit, runner, goal, mem, threads, run=subprocess.call, preflight=None):
     kit = Path(kit).resolve()
     started = time.time()
     prior = {str(p): (p.stat().st_mtime_ns, p.stat().st_size)
              for p in kit.glob("signoff*/signoff.json")}
-    preflight = kit / "kit_preflight.py"
+    preflight = Path(preflight) if preflight else kit / "kit_preflight.py"
+    if not preflight.is_file() and preflight != kit / "kit_preflight.py":
+        print("KIT_PREFLIGHT FAIL: staged source tool missing", flush=True)
+        return 3
     if preflight.is_file():
         rc = run([sys.executable, str(preflight), str(kit), "--out",
                   str(kit / ("preflight_autopilot_" + str(time.time_ns()) + ".json"))])
@@ -86,13 +89,14 @@ def continue_kit(kit, runner, goal, mem, threads, run=subprocess.call):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--preflight", help="separately staged shared tool, including its source helpers")
     ap.add_argument("runner")
     ap.add_argument("kit")
     ap.add_argument("goal")
     ap.add_argument("mem", type=int)
     ap.add_argument("threads", type=int)
     a = ap.parse_args()
-    return continue_kit(a.kit, a.runner, a.goal, a.mem, a.threads)
+    return continue_kit(a.kit, a.runner, a.goal, a.mem, a.threads, preflight=a.preflight)
 
 
 if __name__ == "__main__":

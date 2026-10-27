@@ -822,7 +822,10 @@ def submit(st, j, attempt_note=""):
         argv += ["--stage", runner]
     if j["goal"] not in ("cts", "grt"):
         chain = str(Path(__file__).with_name("signoff_chain.py").resolve())
-        argv += ["--stage", chain, "--", "python3", chain, runner, kit, j["goal"], str(mem), str(thr)]
+        preflight_dir = str(Path(__file__).resolve().parents[1] / "die_plan")
+        preflight = str(Path(preflight_dir) / "kit_preflight.py")
+        argv += ["--stage", chain, "--stage", preflight_dir, "--", "python3", chain,
+                 "--preflight", preflight, runner, kit, j["goal"], str(mem), str(thr)]
         j["chain_required"] = True
     else:
         argv += ["--", "bash", runner, kit, j["goal"], str(mem), str(thr)]
