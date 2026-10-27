@@ -73,3 +73,16 @@ def test_complete_mesh_export_keeps_original_fine_driver_outputs():
     assert len(m['drivers'])==2
     assert {d['kind'] for d in m['drivers']}=={'fine','band'}
     assert {d['group'] for d in m['drivers']}=={'g2','g3'}
+
+
+def test_touching_seam_uses_exact_odb_units_not_float_equality():
+    # The real export5 case: binary float may put the sum a fraction of one
+    # DBU past the partition edge. It is exactly abutting in the actual ODB.
+    assert E.body_inside((1563.84,0.,2799.36,1000.),2798.172,737.1,1.188,.27)
+    assert not E.body_inside((1563.84,0.,2799.36,1000.),2798.173,737.1,1.188,.27)
+    assert not E.body_inside((0.,0.,10.,10.),-.001,0.,1.62,.27)
+
+
+def test_macro_touch_is_legal_but_one_dbu_overlap_is_not():
+    assert not E.body_overlap((10.,0.,20.,10.),8.38,1.,1.62,.27)
+    assert E.body_overlap((10.,0.,20.,10.),8.381,1.,1.62,.27)
