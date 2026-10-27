@@ -1363,3 +1363,5 @@ CODEX: 2026-10-27 08:36 PDT RM42 main b6efb4c2e0 == origin/main; native HEAD sou
 CODEX: 2026-10-27 08:37 PDT RM43 main 769a723236 == origin/main; functional mutant parser + true-quarter key replay, targeted positives/mutant PASS; HBM scorer/cardinality still open, 0 deletions.
 
 CODEX: 2026-10-27 08:38  HEAD m2/m12 I2R-onlyallowance caught real1857/1873R2R; exactm2MMR2R-28.53 shortdata diagnosed, scopedperclassrepair6ddb210f73+evidence9fcaa92193 (30tests) launchedintel1unit1453681; finalsignoff/LECpending. HEADR18physicaltree312fc40f54 fails167tracks/1279stacks underdensePG; parentownsfix.
+
+CODEX: 2026-10-27 08:39 PDT RM44 urgent main 8dd6e9874d == origin/main; AP cross-host missing-helper dispatch fixed, actual existing-host proof PASS; flow notified, 0 deletions.
