@@ -1,0 +1,28 @@
+{
+ "qkd_hr_ingest_eng": {
+  "checked": 1394,
+  "ok": 1,
+  "fail_counts": {
+   "unregistered": 290,
+   "shared": 797,
+   "dropped": 306
+  },
+  "bits_by_fix": {
+   "unregistered": 5,
+   "in_fanout": 5,
+   "dropped": 5
+  },
+  "private_q_ff": 0,
+  "pin_drops": 5,
+  "plus1_buses": 4,
+  "plus1_bits": 10,
+  "plus1_bus_list": [
+   "busy",
+   "d_data",
+   "in_rdy",
+   "w_addr"
+  ],
+  "zero_cycle": false,
+  "listed_complete": false
+ }
+}

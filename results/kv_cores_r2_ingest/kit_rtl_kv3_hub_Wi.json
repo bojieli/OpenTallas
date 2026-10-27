@@ -1,0 +1,13 @@
+{
+ "hard_macros": {
+  "ot_sram_1r1w_32x128_m1": {
+   "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.lef",
+   "libs": [
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_tt.lib",
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_ff.lib",
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_ss.lib"
+   ]
+  }
+ },
+ "note": "KV-CORES-R2/INGEST minimal: macro views from repo (md5 = 10-26 kvhr kit copies)"
+}

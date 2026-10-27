@@ -1,0 +1,54 @@
+{
+ "verdict": "FAIL",
+ "top": "qkd_hr_ingest_eng",
+ "checked": 1394,
+ "ok": 1,
+ "fail_counts": {
+  "unregistered": 290,
+  "shared": 797,
+  "dropped": 306
+ },
+ "fails": {
+  "unregistered": [
+   "busy[0]: driven by NAND2x1_ASAP7_75t_R _218077_",
+   "in_rdy[0]: driven by AO21x1_ASAP7_75t_R _218076_",
+   "w_addr[31]: driven by AO221x1_ASAP7_75t_R _218255_",
+   "w_addr[30]: driven by OA21x2_ASAP7_75t_R _121946_",
+   "w_addr[29]: driven by OA21x2_ASAP7_75t_R _122168_"
+  ],
+  "shared": [
+   "d_data[255]: 4 loads on d_data[255]",
+   "d_data[254]: 4 loads on d_data[254]",
+   "d_data[253]: 4 loads on d_data[253]",
+   "d_data[252]: 4 loads on d_data[252]",
+   "d_data[251]: 4 loads on d_data[251]"
+  ],
+  "dropped": [
+   "d_data[239]: no load on d_data[239] (register removed)",
+   "d_data[238]: no load on d_data[238] (register removed)",
+   "d_data[237]: no load on d_data[237] (register removed)",
+   "d_data[223]: no load on d_data[223] (register removed)",
+   "d_data[222]: no load on d_data[222] (register removed)"
+  ]
+ },
+ "netlist": "/work/run/results/asap7/hc_qkd_hr_ingest_eng__362_88x362_88/base/1_2_yosys.v",
+ "pins": "/work/pins.json",
+ "boundary_context": {
+  "manifest": "/work/boundary_guard_context.json",
+  "source_core_json": "/work/core.json",
+  "controls": [
+   "ck",
+   "rst_n"
+  ]
+ },
+ "one_station_ft_slots": [],
+ "port_gate": {
+  "verdict": "PASS",
+  "io_pins": 1396,
+  "netlist_ports": 1396,
+  "io_only": 0,
+  "net_only": 0,
+  "io_only_first": [],
+  "net_only_first": []
+ }
+}
