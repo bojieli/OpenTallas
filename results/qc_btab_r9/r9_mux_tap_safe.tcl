@@ -39,7 +39,9 @@ foreach line [split $bounds \n] {
  lassign $best X Y
  set orient "";foreach row [$mb getRows] {if {[lindex [$row getOrigin] 1]==$Y} {set orient [$row getOrient];break}}
  if {$orient eq ""} {error "R9_MUX missing row $Y"}
+ $i setPlacementStatus PLACED
  $i setOrient $orient;$i setLocation $X $Y
+ $i setPlacementStatus FIRM
  puts "R9_MUX_TAP_MOVE $n [expr {$x/double($mu)}] [expr {$y/double($mu)}] -> [expr {$X/double($mu)}] [expr {$Y/double($mu)}]"
  incr changed
  cm_index $mb
