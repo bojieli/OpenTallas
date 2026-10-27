@@ -500,7 +500,14 @@ OPMAP = [
      ('ot_s81sl_vp', 'POST a0 (coefficient rows) / a1 (y rows)', 'POST is a static template; the coefficient rows are '
       'written by the gunit L5 CTL rows (target 5) at their scheduled edge')),
     (r'substage_hop\d+$|head\.hop$', 'end-slice lep stage hop (h ring to the edge link)', 'GAP', GAP_XDIE),
-    (r'^eng\.knorm$', 'Engram key RMSNorm (no die unit)', 'GAP', GAP_KV_UNIT),
+    (r'^eng\.knorm$', 'existing slice.u_eg.u_nh / u_nk Engram RMSNorm', 'GAP',
+     ('ot_s81sl_eg (ot_s81_engram_norm u_nh / u_nk)', 'real chunk8 hh/kk partials -> norm -> gate',
+      'the D5120 epsilon1e-20 norm units already exist. Missing: actual producer chunk sums and XFIN ENG go / '
+      'gate fan-out calendar, including current registered path ages; no additional RMSNorm hardware is required')),
+    (r'^eng\.gate$', 'existing ot_s81sl_xfin ENG / ot_s81sl_eg gate composition', 'GAP',
+     ('ot_s81sl_xfin / ot_s81sl_eg', 'CTL target1 ENG go, hh/kk/dd partial roots, g_v fan-out',
+      'lower_vs emits op14 REDUCE and ADD words; the static all-slice partial-root arrival, ENG go and gate '
+      'fan-out dates are not composed. The slice bench uses waits and does not qualify a production calendar')),
     (r'eng\.', 'slice vs op 14 ENG + ve + xfin ENG + eg (Engram mix)', 'GAP',
      ('ot_s81sl_vs', 'op 14 REDUCE / ADD words (tb_s81sl_slice_eng)', 'encoder exists only inside the slice bench; HBM '
       'Engram rows via svc not lowered')),
