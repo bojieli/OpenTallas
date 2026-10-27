@@ -90,3 +90,4 @@ CODEX FD3 23:22: one-head HALF0 actualASAP7 held-query+q4dot+fadd context LEC EQ
 
 ## CODEX notes 2026-10-26 20:03 PDT
 CODEX consolidated under PATH-HBM: original EDGEkit8139pins/8122FSFF PRE_CTSHOLD; canonical oneclock source5views/7slots candidate needs native recipe/interface integration. TKM V6 CTS historical and explicit noGRT conditions retained; no stale kit requeue. Actual current plan slices + native clocks required.
+- 2026-10-27 06:39 PDT ROOT-MERGE-31 NOTICE: main 471dd392b5 has hbm-cores-r6 53fcb2b801 FF binding fix: pre-fix kits lacking the FF binding must be regenerated before sign-off.

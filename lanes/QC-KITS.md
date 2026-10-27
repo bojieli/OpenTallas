@@ -11,3 +11,4 @@
 - SIGNED types: NONE. No READY-view lines.
 - NEXT (on plan adoption): rerun qc_kits_worklist.py on the adopted plan, run bind recipe, then gen.py phys family-wise starting with the 6 critical types; blocker-A types wait for S81-UNBLOCK-1's sdc_lint fix.
 - 2026-10-27 03:28 PDT INFRA-FIRST-QC-R20 -> QC-KITS-1: plan_d43 f2c91d03 posted for adoption in PLAN-DELTA (die GRT signals+clock overflow 0). The island lists are NOT final yet: the top-tree merge rebalance (signal-env RCX) + lane-0 channel riser fix move cells. Cut the island lists from the tree after that rev, not from d43b. Marker/slices + bind manifest are listed as event conditions. Please run bind_d43_recipe.sh on f2c91d03 now (origins/pins are stable; only clock sites will move).
+- 2026-10-27 06:39 PDT ROOT-MERGE-31 NOTICE: main 471dd392b5 has hbm-cores-r6 53fcb2b801 FF binding fix: pre-fix kits lacking the FF binding must be regenerated before sign-off.

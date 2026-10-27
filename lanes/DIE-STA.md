@@ -133,3 +133,7 @@ CODEX took over clock/reset group on codex/clock-2144s; detailed current/jobs/ne
 
 ## CODEX notes 2026-10-25 22:35 PDT — native clock correction
 DIE-PROTO owns freshqualifiednative mixed-NDR QC fullclock result: GRT0/slew-cap0 but relatedpairs TT573.966/FF505.913ps FAIL (seam259.545/234.987,intra573.966/505.913). NewnativeRC evidence supersedes19:56 assumptionthatGRTignoredNDRwidth; nativeRcreditsactualwidths. Analytic56.8/49.9 missed~5.2mphysicalpaddedwire/caps. NoextraRscaling/nooldanalyticphysicalPASS. Physicalgeometrybalancing/folds owned DIE-PROTO; no duplicate die-STA rerun launched byCLOCK. ActualG4 remainsopen.
+
+## CODEX notes 2026-10-26 20:14 PDT
+Real-view dieSTA remains release gate. No ideal/stand-in result counts as closed; current die paths own composed timing.
+- 2026-10-27 06:39 PDT ROOT-MERGE-31 NOTICE: main 471dd392b5 carries (a) core-view match-pins default ON + pin-file content sha (gate-pins-content 03a0552428): views signed off on old pin files no longer count -- regenerate; (b) mc-gapfold dffd539c3c: RC gap folded per MC sample in die STA; (c) clock entry port centre snapped onto its track + check-kit on-track/>=0.048x0.48 check (clock-port-track 51646a5c4d); (d) R24 apply_clkmesh_sites in-core islands, opt-in --hb4-delay.

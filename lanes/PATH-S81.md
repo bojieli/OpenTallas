@@ -739,3 +739,4 @@ CODEX 2026-10-27 05:01 PDT MC gradient fix completed TT+FF24 samples each (own a
   Drivers already sit 28-250 um from the lines, so extra split-line drivers cannot remove unshared tree delay. Not done.
 - (3) claude/mc-gapfold-1027@dffd539c3c is READY for ROOT-MERGE (queued). It affects all dies. S81 PD9 TT p50 24.9 -> 21.06, p99 156.1 -> 152.05, max 278.38 unchanged (CHECKED).
 - Live jobs of mine: none.
+- 2026-10-27 06:39 PDT ROOT-MERGE-31 NOTICE: main 471dd392b5 carries (a) core-view match-pins default ON + pin-file content sha (gate-pins-content 03a0552428): views signed off on old pin files no longer count -- regenerate; (b) mc-gapfold dffd539c3c: RC gap folded per MC sample in die STA; (c) clock entry port centre snapped onto its track + check-kit on-track/>=0.048x0.48 check (clock-port-track 51646a5c4d); (d) R24 apply_clkmesh_sites in-core islands, opt-in --hb4-delay.

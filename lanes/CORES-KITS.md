@@ -174,3 +174,4 @@ Current HC/N59 proofs assigned token/LEC agent. Raw KVHR face recuts assigned KV
 
 ## 2026-10-27 04:42 PDT HBM-KITS-1 (HBM hard cores on planU4f; lane file lanes/HBM-CORE-LAT.md)
 - Scope: the 205/221 HBM NEEDS-KIT items (OWNERS.tsv, which still reads old plan names) mapped onto the 78 QUAD-4 canonical designs; kits only for designs whose outline + pin table are unchanged in the QUAD-5 delta. Per-design table + skips in lanes/HBM-CORE-LAT.md.
+- 2026-10-27 06:39 PDT ROOT-MERGE-31 NOTICE: main 471dd392b5 has hbm-cores-r6 53fcb2b801 FF binding fix: pre-fix kits lacking the FF binding must be regenerated before sign-off.
