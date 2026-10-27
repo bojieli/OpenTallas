@@ -59,3 +59,16 @@ def test_disconnected_segment_has_no_fake_mesh_continuity():
 def test_driver_off_strap_is_not_rounded_onto_mesh():
     b=mesh(); b['drivers'][0]['x']=3.; b['drivers'][0]['y']=7.
     with pytest.raises(E.ExportError,match='no physical strap'): E.mesh_geometry(b)
+
+
+def test_complete_mesh_export_keeps_original_fine_driver_outputs():
+    b=graph()
+    b['P']=SimpleNamespace(W=100.,H=100.,parts={'p':{'type':'T','orient':'R0'}},die={},rect=lambda n:(0.,0.,100.,100.))
+    b['cores']=[]
+    b['a0']=mesh()
+    b['bleaf']={0:(b['btrees'][0],'bf')}
+    b['ctrees']=[dict(nodes=[dict(tag='cr',kids=['f']),dict(tag='f',kids=[],xy=(20.,0.))])]
+    _,m=E.export(b)
+    assert len(m['drivers'])==2
+    assert {d['kind'] for d in m['drivers']}=={'fine','band'}
+    assert {d['group'] for d in m['drivers']}=={'g2','g3'}

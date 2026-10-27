@@ -154,6 +154,7 @@ def export(B):
     P, cells = B['P'], B['cells']
     part_rects = {n:P.rect(n) for n in P.parts}
     site_rows, errors, examples = {}, Counter(), defaultdict(list)
+    adapter_constraints = Counter()
     islands = defaultdict(set)
     widths = {}
     for k in sorted(used):
@@ -162,7 +163,7 @@ def export(B):
             errors['empty_cell_group'] += 1
             continue
         if len(set(c['masters'])) != 1:
-            errors['mixed_master_stack'] += 1
+            adapter_constraints['mixed_master_stack_needs_general_pin_tie'] += 1
         # Keep the model's R0 pin geometry; no unmodelled orientation changes.
         orient = c.get('orient','R0')
         if orient != 'R0': errors['pin_model_orientation_not_R0'] += 1
@@ -206,40 +207,151 @@ def export(B):
         examples['physical_cell_overlap'] = ov[:5]
     ndrs = sorted({e['ndr'] for e in edges})
     adapter_reasons = []
+    if adapter_constraints: adapter_reasons.append('explicit adapter constraints: '+str(dict(adapter_constraints)))
     if len(ndrs) != 1: adapter_reasons.append('die_clock_mesh.build_explicit accepts one NDR per build; this tree selects '+','.join(ndrs))
     if errors: adapter_reasons.append('physical geometry gate fails')
     if B.get('a0'): adapter_reasons.append('continuous mesh conductor manifest still needs dbWire/pin-stack import; tree-only build is incomplete')
     driver_groups = {}
+    mesh_form = None
     if B.get('a0'):
-        for k,(bt,leaf) in B['bleaf'].items(): driver_groups[k] = f'g{B["site_of"][("b",leaf)]}'
+        mesh_form = dict(B['a0'])
+        mesh_form['drivers'] = [dict(d) for d in B['a0']['drivers']]
+        for k,(bt,leaf) in B['bleaf'].items():
+            driver_groups[k] = f'g{B["site_of"][("b",leaf)]}'
+        # Fine column outputs are mesh drivers too.  Omitting them would export
+        # only the new band feeds while silently discarding the original mesh.
+        for ct in B['ctrees']:
+            for n in ct['nodes']:
+                if n['kids']: continue
+                idx = B['site_of'][('c',n['tag'])]
+                c = cells[idx]
+                k = len(mesh_form['drivers'])
+                mesh_form['drivers'].append(dict(kind='fine',x=M.r3(n['xy'][0]),y=M.r3(n['xy'][1]),
+                                                 mult=sum(M.BUF_STRENGTH[m] for m in c['masters'])))
+                driver_groups[k] = f'g{idx}'
+        for k,d in enumerate(mesh_form['drivers']):
+            idx = int(driver_groups[k][1:])
+            d['physical_site'] = list(cells[idx]['site'])
+            d['physical_Y_pin'] = list(M.pin_xy(cells[idx],'Y')[0])
     spec = dict(summary=dict(schema='opentallas.qc_mesh3_all_tree_sites.v1',
                              geometry_verdict='PASS' if not errors else 'FAIL',errors=dict(errors),examples=dict(examples),
+                             adapter_constraints=dict(adapter_constraints),
                              groups=len(used),instances=len(site_rows),nets=len(edges),edge_coverage=coverage,root=root,
                              ndrs=ndrs,declared_timing='NOT RUN',declared_clock_signoff='NOT RUN'),
                 cell_sites=site_rows,nets=edges,channel_hosts=True,exact_reserve=True,
                 build_adapter=dict(verdict='BLOCKED' if adapter_reasons else 'READY',reasons=adapter_reasons,
                                    policy='No edge/NDR is discarded or substituted; no route admission from this export.'),
                 per_type_island_footprints={t:[list(q) for q in sorted(v)] for t,v in sorted(islands.items())})
-    mesh = mesh_geometry(B['a0'],driver_groups) if B.get('a0') else None
+    mesh = mesh_geometry(mesh_form,driver_groups) if mesh_form else None
+    if mesh is not None:
+        for a,d in zip(mesh['drivers'],mesh_form['drivers']):
+            a['physical_site'] = d['physical_site']
+            a['physical_Y_pin'] = d['physical_Y_pin']
     return spec,mesh
+
+
+def prepare_legal(B, a):
+    """Use precisely the nominal fine-driver sizing of cmd_solve --geometry legal."""
+    if B.get('a0') and a.a0_size == 'drive':
+        raise ExportError('model-only a0-size drive has no legalized physical contract')
+    rec = B['rec']
+    xs, ys = [M.r3(x) for x in rec['xs']], [M.r3(y) for y in rec['ys']]
+    taps = [(M.r3(t['tap'][0]), M.r3(t['tap'][1])) for t in rec['taps']]
+    fd0 = sorted({(M.r3(n['xy'][0]), M.r3(n['xy'][1])) for ct in B['ctrees'] for n in ct['nodes'] if not n['kids']})
+    N0 = M.mesh([(y,xs[0],xs[-1]) for y in ys], [(x,ys[0],ys[-1]) for x in xs],
+                fd0,taps,M.RC3[a.fine_w],(M.RC3[a.stub_w],a.stub_um))
+    m0 = M.size(M.voronoi_c(N0),a.fine_m,a.sizing)
+    B['cells'], stats = M.legalize(B,{q:M.decompose(float(m)) for q,m in zip(fd0,m0)})
+    return stats
+
+
+def render(B, spec, path):
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    from matplotlib.patches import Rectangle
+    fig,ax=plt.subplots(figsize=(15,13))
+    for q in B['cores']:
+        ax.add_patch(Rectangle((q[0],q[1]),q[2]-q[0],q[3]-q[1],fc='#eeeeee',ec='none'))
+    for n in B['P'].parts:
+        q=B['P'].rect(n)
+        ax.add_patch(Rectangle((q[0],q[1]),q[2]-q[0],q[3]-q[1],fc='none',ec='#bbbbbb',lw=.2))
+    cells=B['cells']
+    for e in spec['nets']:
+        u,v=cells[int(e['drv'][1:])]['site'],cells[int(e['load'][1:])]['site']
+        ax.plot([u[0],v[0]],[u[1],v[1]],c='#c65b22' if e['namespace']=='b' else '#1b6d9b',lw=.25,alpha=.65)
+    for k,col in [('band_driver','#b3003c'),('band_node','#ed9b00'),('band_rep','#7c3000')]:
+        q=[c['site'] for c in cells if c['kind']==k]
+        if q: ax.scatter([p[0] for p in q],[p[1] for p in q],s=2,c=col,label=k)
+    for k,ex in spec['summary']['examples'].items():
+        q=[x['origin_um'] for x in ex if isinstance(x,dict) and 'origin_um' in x]
+        if q: ax.scatter([p[0] for p in q],[p[1] for p in q],s=30,facecolors='none',edgecolors='magenta')
+    ax.set_aspect('equal'); ax.set_xlim(0,B['P'].W); ax.set_ylim(0,B['P'].H)
+    ax.legend(loc='upper left',fontsize=7)
+    ax.set_title('QC R26 all tree stages: '+spec['summary']['geometry_verdict']+' '+str(spec['summary']['errors']))
+    fig.savefig(path,dpi=130,bbox_inches='tight'); plt.close(fig)
+
+
+def failed_placement(B, path, error):
+    """Keep a useful raw-geometry failure artifact if placement cannot complete."""
+    rows=[]
+    for ns,nodes in (('t',B['top_nodes']),('c',B['cnodes']),('b',B.get('bnodes',[]))):
+        by={n['tag']:n for n in nodes}
+        for n in nodes:
+            if not n.get('parent'): continue
+            p=by[n['parent']]['xy']
+            for k in range(1,n['nseg']+1):
+                q=[p[j]+(n['xy'][j]-p[j])*k/n['nseg'] for j in (0,1)]
+                hit=any(c[0]<q[0]<c[2] and c[1]<q[1]<c[3] for c in B['cores'])
+                rows.append(dict(namespace=ns,tag=n['tag'],stage=k,xy=q,on_core=hit,
+                                 plan_stage_reach_um=M.md(p,n['xy'])/n['nseg']))
+    rec=dict(verdict='FAIL',stage='legalization',error=str(error),
+             raw_buffer_sites=len(rows),raw_sites_on_hard_core=sum(r['on_core'] for r in rows),
+             raw_stage_reach_over_450=sum(r['plan_stage_reach_um']>450.0001 for r in rows),sites=rows)
+    (path/'placement_failure.json').write_text(json.dumps(rec,indent=1)+'\n')
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    from matplotlib.patches import Rectangle
+    fig,ax=plt.subplots(figsize=(15,13))
+    for q in B['cores']:
+        ax.add_patch(Rectangle((q[0],q[1]),q[2]-q[0],q[3]-q[1],fc='#eeeeee',ec='none'))
+    for ns,col in [('t','#1b6d9b'),('c','#9e9e9e'),('b','#c65b22')]:
+        pts=[r['xy'] for r in rows if r['namespace']==ns]
+        if pts: ax.scatter([q[0] for q in pts],[q[1] for q in pts],s=1,c=col,label=ns)
+    pts=[r['xy'] for r in rows if r['on_core']]
+    if pts: ax.scatter([q[0] for q in pts],[q[1] for q in pts],s=8,c='magenta',label='raw site on hard core')
+    ax.set_aspect('equal'); ax.legend(fontsize=8)
+    ax.set_title('QC R26 legalization FAIL: raw candidate sites (not legal placement)')
+    fig.savefig(path/'placement_failure.png',dpi=130,bbox_inches='tight'); plt.close(fig)
+    return rec
 
 
 def main(argv=None):
     ap=argparse.ArgumentParser(description=__doc__)
     M.add_common(ap); ap.add_argument('--out',required=True)
+    ap.add_argument('--thev'); ap.add_argument('--slew-sens')
     a=ap.parse_args(argv)
     B=M.build(a,M.Stage(a.stage))
+    out=Path(a.out); out.mkdir(parents=True,exist_ok=True)
     # The parent planner owns plan-computed sizing and legalization.  This tool
     # refuses to infer or substitute missing band driver sizing/placement.
     if B.get('a0') and not hasattr(M,'legalize'):
         raise ExportError('planner has no physical legalization')
-    B['cells'],stats=M.legalize(B)
+    try:
+        stats=prepare_legal(B,a)
+    except (RuntimeError,ExportError) as error:
+        rec=failed_placement(B,out,error)
+        print(json.dumps({k:v for k,v in rec.items() if k!='sites'},indent=1))
+        return 2
     spec,mesh=export(B)
     spec['summary']['planner_legalization']=stats
     spec['summary']['tool_sha256']=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+    spec['summary']['planner_tool_sha256']=hashlib.sha256(Path(M.__file__).read_bytes()).hexdigest()
     out=Path(a.out); out.mkdir(parents=True,exist_ok=True)
     (out/'all_tree_sites.json').write_text(json.dumps(spec,indent=1)+'\n')
     if mesh is not None: (out/'mesh_conductors.json').write_text(json.dumps(mesh,indent=1)+'\n')
+    render(B,spec,out/'all_tree_geometry.png')
     print(json.dumps(dict(summary=spec['summary'],build_adapter=spec['build_adapter']),indent=1))
     return 0 if spec['summary']['geometry_verdict']=='PASS' else 2
 
