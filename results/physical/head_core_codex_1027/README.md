@@ -1,0 +1,7 @@
+HEAD m2 boundary-only attribution was incomplete. The I2R-only successor correctly stopped on 1,857 negative R2R paths; no buffers were inserted. Original failed logs remain in intel1 codex-head-1027/elemA_m2.eco_r18 and m12 counterpart.
+
+The official two-mode read-only RCX probe reproduces the actual stage: 308 I2R endpoints, worst -76.522820 ps; 1,857 R2R endpoints, worst -28.534689 ps. The worst R2R is a short FP32 forwarding stage QN -> INVx1 -> D: launch clock183.81, capture215.70, data45.56, uncertainty25, library hold17.27, CPPR0.06 ps. This is ordinary short-data hold with31.89ps leaf skew. The independent single-FF diagnostic has slightly different library capacitance modeling (1,597 R2R, worst-29.53); it is retained as diagnostic, not the official gate count.
+
+Viewed r2r_paths.png over actual R16 placed-register geometry: short local arrows in open south logic, separated north ROM pair, no macro-crossing or long reach failure. PASS-COND for HB4-only data padding with clock unchanged. The initial diagram overlay using inherited r2_dump.json was discarded before recording: it was a stale R10 placement. The corrected plot uses r14.geo from this R16 rebuild.
+
+COORD CODEX admits ONLY this hashed m2 view for data hold repair: I2R floor-100/cap308; R2R floor-35/cap1900; total2200; FF insertion205.858 within182.5..222.5; fixed TT250/FF202.5/inputmin-40. No m12 mixed-class allowance is adopted. Final signoff still requires actual TT setup and FF hold >=0 and routed LEC. Per-class gate/deep-R2R/unlisted-class mutants:30 focused tests PASS.
