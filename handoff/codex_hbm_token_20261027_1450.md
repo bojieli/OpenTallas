@@ -1,0 +1,21 @@
+# HBM token takeover interim packet — 2026-10-27 14:50 PDT
+
+Active until explicit Claude reset; this packet does not park the worker.
+
+READY source: codex/hbm-host-boot-clean-1351 @ 1b90666eff609e2103d04ec96e63ccac76c6c045, thin parent currentmain d9973ea4579a8c0cd58a0d8478102cf9a7ddcd79. Own broad implementation branch codex/hbm-native-1351-1027 @ cbbabb750; own clean worktree /srv/opentallas-scratch/claude/wt/codex-hbm-native-1351-1027. Root owns merge. Passed RTL bytes first at 8c3de2793; final compiler/status receipts included in thin source.
+
+Actual native MMIO ingress→cfg leaf→opt-in boot target→two-SRAM217 provider→native root gate1332/0; cold/warm4jobs4rootdone2programme done,2coldprogramme writes/zero warm writes, DATA and malformed HIGH controls caught. Default target0 disabled, premature globalSTART refused. Coverage/LEC audited225 free and Coverage owns COPY binding/TARGET_MASK/appendnewreturnslot+guard. Fixture224 is unit-only. Exact interfaces results/hbm_fused_boot_1351_1027/source_binding.json. Native control integration now concrete; it does not supply fake schedule dates.
+
+Compiler real bug fixed: root_done output captured one edge later, consumed by FSM another edge later. Completion needs rootdone+2+physicalreturn, prior compiler+1 incorrect. Minimum gate rootdone30/deadline32PASS, old31caught. Source date observer links existing passed model objects, no proof rebuild: cold actual ingress START423→provider428→job438/738→rootdone506/806→programme done928; warm984→989→999/1299→1067/1367→1489. START source path5edges excluding physical relays. Adapter909state bits, FFonly estimate344.177um2 from existing provider; newlogic/physical area unmeasured, no routine newarea gate.
+
+Source finite programme161jobs needs323cfg256frames/2589MMIO writes includingSTART; warm descriptor+START3writes. Existing MMIO ABI unchanged. Host boot emitter intentionally does not emit START without actual authority. Per-programme startup/rearm not zero missioncost. Real current4-role calendar, 5deliveredresetoffsets/START epoch, physical job/status paths, selected top and actual native hostfrontend reset profile still MISSING. No native numeric whole-token/G5/physical signoff claim.
+
+All inherited intel1 tok-hbm-su-main-1027/pr0/pr1 jobs now COMPLETE RC0. Source262d07038 only. PR0serial7116/stream9489, PR1 7120/9495; bridge_leaf PASSboth512lanes/3072storeSRAM/32nativeVMbanks/96VM_SRAM/378programmeSRAM/32768reads/135184writes/9scalars. ControlsDATA14/14,ADDR6170/6172,RF1498/1500,RED4102/4102,CAL20820/20829,EPOCH191827/191828 caught. No own liveheavyjob.
+
+C15 exact stationprice receipt f46cd61ee (ownbranch), results/hbm_c15_token_1351; actual22chains/1608FFbits beyond C14. Existing busmax traversal sees0 lane-total increment but omits6corecore chains: not zero overall cost. Conditional frozenS2 sensitivity only, not currentnative/updated1906rate. HBMplan owns adoption/currentcalendar.
+
+Current SU2 thin-source owner /root/coverage/geom_auto, LECreview. Found exact retained donor receipt818651e99:results/arch/hbm_arch_1024/b2_native_bind_rtl.json source7994e6a60: qcore20000/0 plus MUTW1 priorityswap2947caught; NLEG4 285840/0,NLEG2 71460/0 plusmutants1-4; PARTS4 569189/0,PARTS2 419266/0 plusmutants1-4. No rerun needed if exactsourceidentity holds. InputNW0→originalwriter2,NE1→writer3,NE priority,0addedcycles; PR0/PR1 labels do NOT prove thiswrapper.
+
+Failures diagnosed: first bootstrap build concatenation endif typo corrected before positive1332; first statuslauncher missing script/cwd exit127 corrected successor; oldstatusdeadline31 is actual required negative. No hidden RTL failure or live job remains. Current bootstrap compile/composition owned Coverage, currentreset/HCPcmd_nf owned HBM/LEC; no overlapping source edits.
+
+Bookkeeping timestamp correction: prior appended lane heading says14:55 but actual publication was14:49–14:50 PDT.
