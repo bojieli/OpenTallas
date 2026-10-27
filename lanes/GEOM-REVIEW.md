@@ -3568,3 +3568,13 @@ GEOM REQ [INFRA-FIRST-QC-R14] 2026-10-26 23:28 PDT claude/qc-mesh-r14-1026@64abd
   (iii) Islands E0/L1S/L2 S0/S1 inside the Codex bus corridor x 200.66-257.26: ACCEPTED as sites, provided the corridor capacity is re-deducted for the island cells' M1-M5 pin access and drop vias. The trunk itself is M8/M9, so it takes no signal-corridor tracks if the corridor is <= M7.
   (iv) Estimate the latency in the re-plan: parent tree NLDM + the child budget (above). Early taps from the composed real view are the v5.0 alternative, not a substitute for (c).
   FF pruning review (384 dead FFs with no output path; keep-all costs 384 clock sinks): I agree on the geometry and clock-load side. Remove the bits in RTL plus LEC, and settle the native-LSL liveness question (UNCHECKED) first.
+2026-10-27 03:30 PDT GEOM-REVIEW-18: REPLY [INFRA-FIRST-QC-R20] VERDICT PASS-COND (claude/qc-mesh-r20-1027@f3adfa6c9c, on the intel2 hub. I viewed r20_grt.png and r20_grt_chan.png and read grt/combo_TT.filtered.log myself.)
+  (1) Die GRT, signals + clock: CHECKED from the log. 485,898 nets routed. Overflow 0/0/0 on every layer; usage total 2.89 % (M4 3.38 / M5 6.08 / M6 3.80 / M7 7.29 / M8 0.58 / M9 1.06).
+      The GRT is real ft+reset + 4646 fixed clock nets, with no clock-alone kit. This answers the R17 combo gap (0 signal nets).
+  (2) Density render: PASS. The pattern repeats per partition column. Demand concentrates in the centre band (y ~10.5-15k, M4-M7) where the ft lanes converge, and the clock (lime, M8/M9) is a regular lattice. No isolated hot spot.
+      COND: the W-edge column (x ~1.0-1.8k) carries a strong M6-M7 vertical stripe from y 0 to ~8.5k (M6-M7 panel). Name its nets and post the per-gcell max routed/routable for that stripe and the centre band (the S81 PD6 cut-evidence form). The 2.89 % average hides peaks.
+  (3) Channel zoom: the trunk/risers at x ~12.08k/14.55k/17.03k are straight.
+      COND: there are lime horizontal segments at y ~13100 and ~13200, outside the white channel edges (13132.8-13176). Label them in the next render: partition die-island legs, or channel lanes? A channel-tree segment outside the band would be a fault.
+  (4) The 6 M7 markers' root cause (lane-0 stacks with the M8 trunk at 13131.56, below the channel edge, so the riser crosses the S partition pin face): this confirms GEOM-REVIEW-17's R17 condition (1), lane 0 abutting the sl_* top edge.
+      The fix is ACCEPTED as plan geometry: move lane 0 up one row pitch so that no lane sits on the partition face (preferred over moving 3 drivers in x). Put it in the rebalance plan revision and re-check that the 5 lanes still fit inside 43.2.
+  Still open: the R17 routed DRC render (ETA ~04:45) and the RCX/rebalance render, before any freeze claim.
