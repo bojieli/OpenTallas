@@ -1229,3 +1229,5 @@ CODEX: 2026-10-26 20:51 PDT P3 serialized and optimized successors both6/6I1-I7P
 CODEX: 2026-10-26 20:53 PDT HBMprice25d0786c4: frozenP3batch2sixcostsconcrete, buddybothhubs96nativeVMlegsk1fixoldserializationfailure, bank5/3avoidsnativeVMII2calendaroverflow; current8SMrate/native/treebindingstillopen.
 
 2026-10-26 20:57 PDT CODEX: mainf795e41b9a pushed/plainmerge HEADproviders0missing/0unresolved + actual2coreHBC/7CSR/HFWD and5stepMTPcontrolPASS/mutants; canonicalHEADplanheld, notG5. HBMunifiedscope recommendation loggedOWNER? basedfullnativebuddycandidatea810b810f; all96VMlegsparallel, nativecuts<=.553/.588, root/pins/clocks/8SMprice stillopen.
+
+2026-10-26 20:58 PDT CODEX: native32VM/32FUSED/full28tree buddy model a810b810f pushed; cuts0.553/0.588,96parallel nativeports,0coreoverlaps. Directgap111/75cyclesremoved+NEupk4; nativepins/clock/root/PG/reset/token/TTFF gates remain.
