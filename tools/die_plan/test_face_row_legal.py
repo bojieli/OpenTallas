@@ -3,9 +3,9 @@ from pathlib import Path
 import subprocess
 
 
-def test_q1_fragment_taps_and_shared_occupancy():
+def test_q1_fragment_taps_and_shared_occupancy(tmp_path):
     code=Path(__file__).with_name('face_flops.tcl').read_text()
-    code=code.split('# BEGIN legal-row allocator',1)[1].split('# END legal-row allocator',1)[0]
+    code=code.split('# BEGIN legal-row allocator',1)[1].split('# END legal-row allocator',1)[0].split('\n',1)[1]
     script=code+'''\nset ff_x0 4320;set ff_y0 4320;set ff_x1 211680;set ff_y1 168480
 set ff_sw 54;set ff_rh 270;set ff_cpitch 2160
 set ff_legal_rows [dict create 152820 {{4320 6588} {103464 112104} {206928 211680}} 153090 {{4320 6588}}]
@@ -27,5 +27,6 @@ if {![ff_site_legal z 4320 153090 1080 270]} {error adjacent_row}
 if {[ff_site_legal z 4320 153090 1080 540]} {error missing_second_row}
 puts PASS
 '''
-    p=subprocess.run(['tclsh'],input=script,text=True,capture_output=True)
-    assert p.returncode==0 and p.stdout.strip()=='PASS',p.stdout+p.stderr
+    fixture=tmp_path/'allocator.tcl';fixture.write_text(script)
+    p=subprocess.run(['tclsh',str(fixture)],text=True,capture_output=True)
+    assert p.returncode==0 and not p.stderr and p.stdout.strip()=='PASS',p.stdout+p.stderr
