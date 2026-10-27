@@ -1305,3 +1305,5 @@ CODEX: 2026-10-27 08:15 PDT AUTOPILOT-SIGNOFF-1 READY ee05d9ad37: automate final
 CODEX: 2026-10-27 08:16 PDT QC F4I DRC0 TT+117.85 FF-10.83/35 LEC5342EQ; local internal RCX residual diagnosed/reviewed, own F4J sparse data ECO queued autopilot554dfd4c5bc8 on codex/qc-cores-0815@0f8c059aab; BTABr8/prog halo live.
 
 CODEX: 2026-10-27 08:16 PDT GEOM-AUTO-1 READY98156863a allkit measured rules+1in5audit;159testsPASS1skip. RealKVe2 FAILreach409.54um/5captures; qwen+GEOMdiagnosing; serviceflag notenabled.
+
+CODEX: 2026-10-27 08:19 PDT FLOW combined ab3ae7c3a RC2bbe+60um37d9+preflightb56/FFbound9529+snap5b2: seven PLACE-only AB refs launched intel2 codex-rc-canary-1027/ab/runs; actualimage-before-route enforced. KVtype COORD constraint rebaseline applied preserving old+unrelated metrics.
