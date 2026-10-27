@@ -1,0 +1,95 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-lec-relay-2002
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-lec-relay-2002
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/codex-lec-relay-2002
+ot-run: localhost      admits   266 GB (avail 412, reserve 0, fresh 0, peak 81.5, headroom 0, waiters 0/0 GB) load 46/256 running 12 disk 813 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tender-ray as oth-ubuntu-161362-1793070207 after 0 s
+loaded 7811
+closures 0 0
+statuses {'proved': 64452, 'differs': 85}
+BAD ff:u_dut.u_e.g_cgr.u_ze_r0.q
+BAD ff:u_dut.u_e.g_cgr.u_ze_r1.q
+BAD ff:u_dut.u_e.g_cgr.u_ze_r2.q
+BAD ff:u_dut.u_e.g_cgr.u_ze_r3.q
+BAD ff:u_dut.u_e.g_cgr.u_ze_r4.q
+BAD ff:u_dut.u_e.g_cgr.u_ze_r5.q
+BAD ff:u_dut.u_e.g_cgr.u_ze_r6.q
+BAD ff:u_dut.u_e.g_cgr.u_ze_r7.q
+BAD ff:u_dut.u_e.g_mac[0].g_ch3.u_c1.u_add.err[1]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[0][0]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[0][10]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[0][11]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[0][12]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[0][13]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[0][14]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[0][15]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[0][1]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[0][2]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[0][3]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[0][4]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[0][5]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[0][6]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[0][7]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[0][8]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[0][9]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[1][0]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[1][10]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[1][11]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[1][12]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[1][13]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[1][14]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[1][15]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[1][1]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[1][2]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[1][3]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[1][4]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[1][5]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[1][6]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[1][7]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[1][8]
+BAD ff:u_dut.u_e.g_mac[0].g_l3.u_l1.pa_sg[1][9]
+BAD ff:u_dut.u_e.g_mac[0].g_pa2.u_pair.err[1]
+BAD ff:u_dut.u_e.g_mac[0].g_tr5.u_tree.u_add.err[1]
+BAD ff:u_dut.u_e.g_mac[1].g_ch3.u_c0.g_fw[0].u_f.q[0]
+BAD ff:u_dut.u_e.g_mac[1].g_ch3.u_c0.g_fw[1].u_f.q[0]
+BAD ff:u_dut.u_e.g_mac[1].g_ch3.u_c0.g_fw[2].u_f.q[0]
+BAD ff:u_dut.u_e.g_mac[1].g_ch3.u_c0.g_fw[3].u_f.q[0]
+BAD ff:u_dut.u_e.g_mac[1].g_ch3.u_c0.u_add.valid_out
+BAD ff:u_dut.u_e.g_mac[1].g_ch3.u_c0.u_t.g_line.line[68]
+BAD ff:u_dut.u_e.g_mac[1].g_ch3.u_c1.g_fw[0].u_f.q[0]
+BAD ff:u_dut.u_e.g_mac[1].g_ch3.u_c1.g_fw[1].u_f.q[0]
+BAD ff:u_dut.u_e.g_mac[1].g_ch3.u_c1.g_fw[2].u_f.q[0]
+BAD ff:u_dut.u_e.g_mac[1].g_ch3.u_c1.g_fw[3].u_f.q[0]
+BAD ff:u_dut.u_e.g_mac[1].g_ch3.u_c1.u_add.err[1]
+BAD ff:u_dut.u_e.g_mac[1].g_ch3.u_c1.u_add.valid_out
+BAD ff:u_dut.u_e.g_mac[1].g_ch3.u_c1.u_t.g_line.line[68]
+BAD ff:u_dut.u_e.g_mac[1].g_l3.g_pl.r_t[10]
+BAD ff:u_dut.u_e.g_mac[1].g_l3.g_pl.r_t[11]
+BAD ff:u_dut.u_e.g_mac[1].g_l3.g_pl.r_t[12]
+BAD ff:u_dut.u_e.g_mac[1].g_l3.g_pl.r_t[13]
+BAD ff:u_dut.u_e.g_mac[1].g_l3.g_pl.r_t[14]
+BAD ff:u_dut.u_e.g_mac[1].g_l3.g_pl.r_t[15]
+BAD ff:u_dut.u_e.g_mac[1].g_l3.g_pl.r_t[16]
+BAD ff:u_dut.u_e.g_mac[1].g_l3.g_pl.r_t[3]
+BAD ff:u_dut.u_e.g_mac[1].g_l3.g_pl.r_t[4]
+BAD ff:u_dut.u_e.g_mac[1].g_l3.g_pl.r_t[5]
+BAD ff:u_dut.u_e.g_mac[1].g_l3.g_pl.r_t[6]
+BAD ff:u_dut.u_e.g_mac[1].g_l3.g_pl.r_t[7]
+BAD ff:u_dut.u_e.g_mac[1].g_l3.g_pl.r_t[8]
+BAD ff:u_dut.u_e.g_mac[1].g_l3.g_pl.r_v0
+BAD ff:u_dut.u_e.g_mac[1].g_l3.g_pl.r_v1
+BAD ff:u_dut.u_e.g_mac[1].g_mi.g_ns[0].u_s.q[1]
+BAD ff:u_dut.u_e.g_mac[1].g_mi.g_ns[1].u_s.q[1]
+BAD ff:u_dut.u_e.g_mac[1].g_mi.g_ns[2].u_s.q[1]
+BAD ff:u_dut.u_e.g_mac[1].g_mi.g_ns[3].u_s.q[1]
+BAD ff:u_dut.u_e.g_mac[1].g_mi.g_ns[4].u_s.q[1]
+BAD ff:u_dut.u_e.g_mac[1].g_mi.g_ns[5].u_s.q[1]
+BAD ff:u_dut.u_e.g_mac[1].g_mi.g_ns[6].u_s.q[1]
+BAD ff:u_dut.u_e.g_mac[1].g_mi.g_ns[7].u_s.q[1]
+BAD ff:u_dut.u_e.g_mac[1].g_pa2.u_pair.err[1]
+BAD ff:u_dut.u_e.g_mac[1].g_tr5.u_tree.u_add.err[1]
+BAD ff:u_dut.u_e.g_qo.busy_d[0]
+BAD ff:u_dut.u_e.g_qt_cg.en_r
+BAD ff:u_dut.u_e.g_wen.g_k[0].u_we.q
+BAD ff:u_dut.u_e.g_wen.g_k[1].u_we.q
+ot-run: RAN on localhost (unit oth-ubuntu-161362-1793070207): exit 0

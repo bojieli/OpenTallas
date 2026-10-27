@@ -1,0 +1,9 @@
+{
+  "candidate": "hold-cofactor discovery",
+  "verdict": "REJECTED_NO_IMPROVEMENT",
+  "baseline": {"proved": 64452, "compare_differs": 85, "hypothesis_differs": 0},
+  "candidate_round0": {"proposed": 103, "proved": 64467, "compare_differs": 85, "hypothesis_differs": 88},
+  "accepted_hypotheses_identical": true,
+  "hyp_sha256": "5d3a5b52801cd177511f6d140644f21da5e847138d9b21534ff57ad02b630452",
+  "disposition": "Removed ineffective helper and default completion hook. Experimental source remains in branch history 22d2da330. Bounded twin refinement remains candidate; no equivalence promoted."
+}
