@@ -17,3 +17,6 @@
 
 ## CODEX notes 2026-10-27 04:54 PDT
 Collected rst3_k0 corrected K=0 build: hold_b signoff SIGNED at04:52, TT+100.89 FF+2.86, skew37.9/35.9, DRC0 ant0, sdc/face PASS (UNCHECKED-independent). Routed LEC pending collection. btab_r7 CTS_GRT rc0 at04:30; DRT remains data-only (9% detour exceeds sparse residual guideline), next structural branch-sizing plan required.
+
+## CODEX notes 2026-10-27 05:04 PDT
+rst3 corrected K0 hold_b SIGNED confirmed plus routed LEC EQUIVALENT (generated11:52UTC): TT100.89 FF2.86; recommend autopilot adopt source478883e62a. btab_r7 DRT still live/data-only; no-pad sizing redesign next. NK generic keep-DFF canonicalizer unresolved, unchanged.

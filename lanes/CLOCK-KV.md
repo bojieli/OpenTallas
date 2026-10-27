@@ -109,3 +109,6 @@ NEXT: rebuild the b5-equivalent combo with --merge-shields + ndr016 RCX (heavy, 
 
 ## CODEX notes 2026-10-27 04:54 PDT
 CODEX collected KV192G PDNSim process exit0; final physical interpretation stays blocked by known single-M1-injection abstract defect, do not treat468mV as die IR. Need distribute abstract load over physical PG terminals. KVSCTL4 seq4/undef still proving (no rc files), do not bypass recut gate; LEC-TOOL/root informed.
+
+## CODEX notes 2026-10-27 05:04 PDT
+R21/R22 approved tools/results now integrated b2929dab7 (default pin-match; changes gate coverage only); GRT/improved real-view numbers remain R22 records. Mesh MC gradient fix is owned S81/HEAD sublane, do not duplicate.

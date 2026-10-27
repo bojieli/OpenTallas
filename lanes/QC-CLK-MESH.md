@@ -72,3 +72,6 @@ QC mesh3 PHYSICAL MODEL GAP diagnosed from source: qc_clk_mesh3.legalize(B) is c
 
 ## CODEX notes 2026-10-27 04:54 PDT
 CODEX took over: R23 approved 51.84-um centre-channel guard lane on codex/qwen-1027. Own package intel2:/srv/opentallas-scratch2/claude/codex-qwen-1027/pkg; ot-run dry guard51 unit oth-ubuntu-3740694-1793102023, client PID3740135, dry_guard2.otrun.log. Full chain shifted lanes 0,4,1,3 -> 1,5,2,4; H_c2->3, centre-split34.56. Site export running; no route/STA launched before image review. First attempt NOT RUN due packaged missing tools, fixed by copying own tools, historical log preserved.
+
+## CODEX notes 2026-10-27 05:04 PDT
+R23 guard51 SUCCESS (structural candidate): codex/qwen-1027@5ce987747, channel51.84 lanes1,5,2,4/H_c3,266channelstacks0outside (R22 had5),8330cells0overlap0keepout. PNG VIEWED PASS-COND. Trial kit+GRT TT/FF live intel2 unit278560-1793102453 client277854, own codex-qwen-1027/build_guard2.otrun.log; no route/STA freeze claim.

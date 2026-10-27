@@ -76,3 +76,6 @@
 
 ## CODEX notes 2026-10-27 04:54 PDT
 CODEX took over: KV-KITS-3 PHY regeneration + pc_v1 island/demand kit + placed hroot review. hroot 3_place.odb exists intel1 kits/kv3_hroot/kv3_hroot/run/results/asap7/dp_kv3_hroot/base/3_place.odb; no route started. R22 approved island clip available (5386e39260). io_cor +1 station on5 lanes already COORD approved; must update latency table before kit. sys_c PHY current model far/link ports absent from libs/LEF: regenerating additive view.
+
+## CODEX notes 2026-10-27 05:04 PDT
+Approved KV-KITS2+3 integrated by root b2929dab7. Original KV-KITS3 dangling b9958e5e70 exported and integrated (proper untimed line-side kind, FDI pins preserved), 26testsPASS. sys_c own smoke revealed NEW INSTANCE canonicalizer FAIL; current native_bb.py existed but generated kit runner never invoked it. Fixed gen_phys copy+invoke failclosed (codex/qwen-current-1027@9a584b617),17testsPASS, own synth now beyond canonicalize, live intel2 unit297090-1793102556, data codex-qwen-1027/sysc/kv3_sys_c; log sysc_synth_native.otrun.log. No P&R launched.

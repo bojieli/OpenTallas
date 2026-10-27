@@ -63,3 +63,6 @@ B33 run7 boot now PASS (KV-TOK collection); B48 build3 DONErc0 but inherited asi
 
 ## CODEX notes 2026-10-27 04:54 PDT
 CODEX took over collection of live KVL and B48 sims. Latest QCL compute259/259 remains valid component result. KVL build path currently locating chain (directory name differs brief); no whole-token PASS claimed.
+
+## CODEX notes 2026-10-27 05:04 PDT
+KVL build remains active unit231395-1793092035 (otrun_build.log only TOP_FRONTEND, no terminal marker), vec_real ready, chain.sh already waiting. No duplicate job. B48 nominal exit0 collected (mut_frame exit not yet located); final FAR_LAYER_SUMMARY still owed.
