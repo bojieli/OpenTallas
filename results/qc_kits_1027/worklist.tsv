@@ -1,0 +1,89 @@
+type	main_type	instances	hard_cores	main_to_d43	cand_to_d43	plan_islands	d43b_tree_windows	overlap	landing_clock_pins	s81_blocker	untouched	critical_seam
+cbn_q00	cbn_q00	24	4	cells,clock,contents	same	664	69	0	0		no	c_E0_tn_00: worst FF zero-logic hold pair (c_E0_tn_00->sl_E0_hc0)
+cbx_q10	cbx_q10	48	4	cells,clock,contents	same	1551	33	0	0		no	c_W1_bn_10: worst kit-contract hold pair d43b (sl_W1_su_c->c_W1_bn_10)
+sle_hc0	sle_hc0	6	0	cells,clock	same	65	6	0	0		no	sl_E0_hc0: worst TT setup + FF zero-logic hold pair (c_E0_tn_00<->sl_E0_hc0)
+slw_su_c__cl77ab230a	slw_su_c	4	8	split:cells,clock,module,note	same	153	12	0	0		no	sl_W1_su_c: worst kit-contract hold pair d43b (sl_W1_su_c->c_W1_bn_10)
+slw_su_c__clbb0c543d	slw_su_c	1	8	split:cells,clock,module,note	same	62	12	0	0		no	sl_W2_su_c: kit-contract core-view FAIL -1.89 (sl_W2_su_c->sl_W2_su_l1)
+slw_su_l1__cl8312485b	slw_su_l1	1	4	split:cells,clock,ft_slots,hard_cores,module,note	same	21	6	0	1	A	no	sl_W2_su_l1: kit-contract core-view FAIL -1.89 (sl_W2_su_c->sl_W2_su_l1)
+cbf_q00	cbf_q00	23	4	cells,clock,contents	same	643	55	0	0		no	
+cbf_q00_s2	cbf_q00_s2	1	4	cells,clock,contents	same	78	55	0	0		no	
+cbf_q01	cbf_q01	23	4	cells,clock,contents	same	648	17	0	0		no	
+cbf_q01_s2	cbf_q01_s2	1	4	cells,clock,contents	same	75	17	0	0		no	
+cbf_q11	cbf_q11	24	4	cells,clock,contents	same	885	11	0	0		no	
+cbn_q01	cbn_q01	24	4	cells,clock,contents	same	757	35	0	0		no	
+cbn_q11	cbn_q11	24	4	cells,clock,contents	same	952	11	0	0		no	
+coll_core	coll_core	1	0	cells,clock	same	29	0	0	0		no	
+coll_ft	coll_ft	3	0	cells,clock	same	63	0	0	0		no	
+coll_ftc	coll_ftc	1	0	cells,clock	same	40	0	0	0		no	
+coll_ftm	coll_ftm	1	0	cells,clock	same	47	0	0	0		no	
+coll_ftn	coll_ftn	1	0	cells,clock	same	10	0	0	0		no	
+coll_n	coll_n	1	0	cells,clock,contents	same	17	0	0	0		no	
+coll_s	coll_s	1	0	cells,clock	same	19	0	0	0		no	
+coll_ucie	coll_ucie	1	0	cells,clock	same	23	0	0	0		no	
+glue	glue	1	0	cells,clock	same	21	0	0	0		no	
+native59	native59	1	0	cells,clock	same	8	0	0	0		no	
+phy_serdes	phy_serdes	2	0	cells,clock	same	109	0	0	0		no	
+phy_serdes_b	phy_serdes_b	1	0	cells,clock	same	58	0	0	0		no	
+phy_ucie_kv	phy_ucie_kv	1	0	cells,clock	same	5	0	0	0		no	
+sle_ctl	sle_ctl	12	0	cells,clock	same	213	38	0	0		no	
+sle_fe_v1__clad8c146b	sle_fe_v1	1	0	split:cells,clock,internal_stations,module,note,reset	same	22	8	0	23	A	no	
+sle_fe_v1__clfcc50df9	sle_fe_v1	2	0	split:cells,clock,internal_stations,module,note,reset	same	46	8	0	0		no	
+sle_fe_v2	sle_fe_v2	2	0	cells,clock,internal_stations,reset	same	48	8	0	0		no	
+sle_fe_v3	sle_fe_v3	1	0	cells,clock,internal_stations	same	19	8	0	0		no	
+sle_fw_v1__cl39c71cef	sle_fw_v1	1	0	split:buses,cells,clock,module,note	same	30	8	0	0		no	
+sle_fw_v1__cl3b7cacba	sle_fw_v1	1	0	split:buses,cells,clock,module,note	same	20	8	0	22	A	no	
+sle_fw_v1_e2	sle_fw_v1	1	0	split:buses,cells,clock,module,note	same	22	8	0	0		no	
+sle_fw_v2__cl2b5fc15e	sle_fw_v2	1	0	split:buses,cells,clock,module,note	same	30	8	0	0		no	
+sle_fw_v2__clf90441df	sle_fw_v2	1	0	split:buses,cells,clock,module,note	same	21	8	0	23	A	no	
+sle_fw_v3	sle_fw_v3	1	0	buses,cells,clock	same	19	8	0	0		no	
+sle_hc1	sle_hc1	6	0	cells,clock	same	67	12	0	0		no	
+sle_hc2	sle_hc2	6	0	cells,clock	same	67	0	0	0		no	
+sle_sc_v1	sle_sc_v1	3	0	cells,clock	same	69	14	0	0		no	
+sle_sc_v2	sle_sc_v2	2	0	cells,clock	same	43	14	0	0		no	
+sle_sc_v3	sle_sc_v3	1	0	cells,clock	same	28	14	0	0		no	
+sle_st_a_v1	sle_st_a_v1	3	0	buses,cells,clock,contents	same	62	8	0	0		no	
+sle_st_a_v2	sle_st_a_v2	3	0	buses,cells,clock,contents	same	62	8	0	0		no	
+sle_st_b_v1	sle_st_b_v1	3	0	cells,clock,contents	same	62	8	0	0		no	
+sle_st_b_v2	sle_st_b_v2	3	0	cells,clock,contents	same	62	8	0	0		no	
+sle_stm_v1	sle_stm_v1	3	0	cells,clock,contents	same	71	24	0	0		no	
+sle_stm_v2	sle_stm_v2	2	0	cells,clock,contents	same	51	24	0	0		no	
+sle_stm_v3	sle_stm_v3	1	0	cells,clock,contents	same	19	24	0	0		no	
+sle_su_c__cl3c67a3d5	sle_su_c	3	8	split:cells,clock,module,note	same	136	12	0	0		no	
+sle_su_c__cl78b6fe86	sle_su_c	2	8	split:cells,clock,module,note	same	96	12	0	0		no	
+sle_su_c__cl99d49f55	sle_su_c	1	8	split:cells,clock,module,note	same	63	12	0	0		no	
+sle_su_l0__clad02be3b	sle_su_l0	2	4	split:cells,clock,hard_cores,module,note	same	53	0	0	0		no	
+sle_su_l0__cld14716fc	sle_su_l0	4	4	split:cells,clock,hard_cores,module,note	same	68	0	0	0		no	
+sle_su_l1__cl15735621	sle_su_l1	1	4	split:cells,clock,ft_slots,hard_cores,module,note	same	21	6	0	1	A	no	
+sle_su_l1__cl3c610c2d	sle_su_l1	3	4	split:cells,clock,ft_slots,hard_cores,module,note	same	67	6	0	0		no	
+sle_su_l1__cl9c71a39d	sle_su_l1	2	4	split:cells,clock,ft_slots,hard_cores,module,note	same	53	6	0	0		no	
+slw_fe_v1__cl8ba3358f	slw_fe_v1	1	0	split:cells,clock,internal_stations,module,note,reset	same	20	8	0	23	A	no	
+slw_fe_v1__clcb7b024a	slw_fe_v1	2	0	split:cells,clock,internal_stations,module,note,reset	same	49	8	0	0		no	
+slw_fe_v2__clacbd6592	slw_fe_v2	2	0	split:cells,clock,internal_stations,module,note	same	47	8	0	0		no	
+slw_fe_v2__cle5354d4d	slw_fe_v2	1	0	split:cells,clock,internal_stations,module,note	same	20	8	0	23	A	no	
+slw_fw_v1__cl80b8d16f	slw_fw_v1	2	0	split:buses,cells,clock,module,note	same	40	8	0	0		no	
+slw_fw_v1__cl82aac3aa	slw_fw_v1	1	0	split:buses,cells,clock,module,note	same	23	8	0	23	A	no	
+slw_fw_v2	slw_fw_v2	2	0	buses,cells,clock	same	47	8	0	0		no	
+slw_fw_v3	slw_fw_v3	1	0	buses,cells,clock	same	19	8	0	0		no	
+slw_hc0	slw_hc0	6	0	cells,clock	same	110	6	0	0		no	
+slw_hc1	slw_hc1	6	0	cells,clock	same	111	12	0	0		no	
+slw_hc2	slw_hc2	6	0	cells,clock	same	114	0	0	0		no	
+slw_hc3	slw_hc3	12	0	cells,clock	same	118	0	0	0		no	
+slw_sc_v1	slw_sc_v1	2	0	cells,clock	same	41	14	0	0		no	
+slw_sc_v1r	slw_sc_v1	1	0	split:cells,clock,note	same	30	14	0	0		no	
+slw_sc_v2	slw_sc_v2	2	0	cells,clock	same	43	14	0	0		no	
+slw_sc_v3	slw_sc_v3	1	0	cells,clock	same	22	14	0	0		no	
+slw_st_a_v1	slw_st_a_v1	3	0	buses,cells,clock,contents	same	51	8	0	0		no	
+slw_st_a_v2	slw_st_a_v2	3	0	buses,cells,clock,contents	same	56	8	0	0		no	
+slw_st_b_v1	slw_st_b_v1	3	0	cells,clock,contents	same	61	8	0	0		no	
+slw_st_b_v2	slw_st_b_v2	3	0	cells,clock,contents	same	62	8	0	0		no	
+slw_stm_v1__cl522749b8	slw_stm_v1	2	0	split:cells,clock,contents,module,note	same	48	24	0	0		no	
+slw_stm_v1__cla56d6dd9	slw_stm_v1	1	0	split:cells,clock,contents,module,note	same	20	24	0	0		no	
+slw_stm_v2	slw_stm_v2	2	0	cells,clock,contents	same	43	24	0	0		no	
+slw_stm_v3	slw_stm_v3	1	0	cells,clock,contents	same	16	24	0	0		no	
+slw_su_c__cl49a25f5f	slw_su_c	1	8	split:cells,clock,module,note	same	63	12	0	0		no	
+slw_su_l0__cl0cf5548e	slw_su_l0	1	4	split:cells,clock,hard_cores,module,note	same	21	0	0	1	A	no	
+slw_su_l0__cl72211ea3	slw_su_l0	4	4	split:cells,clock,hard_cores,module,note	same	100	0	0	0		no	
+slw_su_l0__cle4811ba5	slw_su_l0	1	4	split:cells,clock,hard_cores,module,note	same	20	0	0	0		no	
+slw_su_l1__cl766bacee	slw_su_l1	4	4	split:cells,clock,ft_slots,hard_cores,module,note	same	84	6	0	0		no	
+slw_su_l1__clbd68af58	slw_su_l1	1	4	split:cells,clock,ft_slots,hard_cores,module,note	same	23	6	0	0		no	
+tt_ctlm	tt_ctlm	1	0	cells,clock	same	9	0	0	0		no	

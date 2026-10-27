@@ -1,0 +1,47 @@
+{
+ "types_d43": 88,
+ "types_main": 68,
+ "untouched": 0,
+ "main_types_absent_in_d43": [
+  "sle_fe_v1",
+  "sle_fw_v1",
+  "sle_fw_v2",
+  "sle_su_c",
+  "sle_su_l0",
+  "sle_su_l1",
+  "slw_fe_v1",
+  "slw_fe_v2",
+  "slw_fw_v1",
+  "slw_stm_v1",
+  "slw_su_c",
+  "slw_su_l0",
+  "slw_su_l1"
+ ],
+ "cand_to_d43_changed": 0,
+ "d43b_windows_not_in_plan": 66,
+ "blocker_A": [
+  "sle_fe_v1__clad8c146b",
+  "sle_fw_v1__cl3b7cacba",
+  "sle_fw_v2__clf90441df",
+  "sle_su_l1__cl15735621",
+  "slw_fe_v1__cl8ba3358f",
+  "slw_fe_v2__cle5354d4d",
+  "slw_fw_v1__cl82aac3aa",
+  "slw_su_l0__cl0cf5548e",
+  "slw_su_l1__cl8312485b"
+ ],
+ "critical": [
+  "cbn_q00",
+  "cbx_q10",
+  "sle_hc0",
+  "slw_su_c__cl77ab230a",
+  "slw_su_c__clbb0c543d",
+  "slw_su_l1__cl8312485b"
+ ],
+ "sha": {
+  "main": "54a1aeb5",
+  "cand": "e4829ce2",
+  "d43": "f2c91d03",
+  "win": "0fb327fa"
+ }
+}
