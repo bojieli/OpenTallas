@@ -527,6 +527,8 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
         D = pin_xy(cells, n["drv"], "Y", row_y) if dcell else port_xy(n["drv"])
         Ls = [(ld, port_xy(ld) if ld.startswith("port:") else pin_xy(cells, ld, "A", row_y)) for ld in n["loads"]]
         horiz = max(abs(p[0] - D[0]) for _, p in Ls) >= max(abs(p[1] - D[1]) for _, p in Ls)
+        if M.get("meta", {}).get("plan_trunk_layers") and n.get("physical_layer") in ("M8","M9"):
+            horiz=n["physical_layer"]=="M8"
         segs, modes, exts, branches, stacks = [], [], [], [], []
 
         def add(seg, mode):

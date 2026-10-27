@@ -86,3 +86,13 @@ def test_mixed_spacing_keeps_wide_pairs_without_poisoning_later_narrow_pairs():
     assert not ix.hits(('M8','narrow1','tree',22.29,22.45,0.,100.))
     ix.add(('M8','VDD','pg',30.,31.92,0.,100.),space=.04)
     assert ix.hits(('M8','narrow1','tree',32.7,32.86,0.,100.))[0][1]=='wide_spacing'
+
+
+def test_v2_realizes_declared_trunk_layer_even_for_short_off_axis_leg():
+    s=branching()
+    s['nets'][0]['layer']='M9'  # valid Manhattan L whose intended trunk is vertical
+    cells,nets,ports,m=build(s)
+    wire=next(w for w in m['fixed_wires'] if w['name']=='ckm_w_ckt_0_0')
+    piece=next(p for p in wire['pieces'] if p['physical_edge']=='e0')
+    assert piece['horiz'] is False
+    assert piece['physical_edge']=='e0'
