@@ -1,0 +1,6 @@
+CALENDAR_KEYBUF_MISMATCH cycle=451 row=1 beat=0
+CALENDAR_KEYBUF_MISMATCH cycle=452 row=1 beat=1
+CALENDAR_KEYBUF_MISMATCH cycle=453 row=1 beat=2
+NATIVE_CALENDAR_QUAD_KEYBUF checks=2516 errors=855 live=171 replay=855 done_cycle=2477 length=1315 pitch=232 rows=6 clock_ps=833
+FATAL: results/hbm_keybuf_binding_1027/tb_calendar_quad.sv:59: FAIL
+       Time: 2239937  Scope: tb_calendar_quad

@@ -19,3 +19,10 @@ wrong-half strap mutant. It exercises171addresses, three replay rows, random liv
 inputs during replay, invalid reads and live/replay collision fault behavior.
 Reference source is preserved from origin/codex/p3-compiler-2018@e938fd6db;
 its NP4,RS0 implementation is the canonical quarter key storage equation.
+
+Actual native programme cut completed on intel1 unit1470774: calendar_positive.log
+2516checks0errors,171live855replay,6rows,rowII232,F1315,issuerdone2477,833psclock.
+calendar_mutant.log samebinary wrongPCstrap caught855mismatches. The sourceissuer
+and SRAMstorage are exercised by the real registered programme. This cut does
+not include scorer/selector/nativeTX/physicalstations/unifiedtop. Bare slice
+live pass-through is combinational; R2registeredphysicalfaces remain tocompose.
