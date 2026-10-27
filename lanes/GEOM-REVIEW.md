@@ -3280,3 +3280,20 @@ GEOM REQ [INFRA-FIRST-QC-R14] 2026-10-26 23:28 PDT claude/qc-mesh-r14-1026@64abd
   (c) drop the 0.81 seam-fix nudge;
   (d) reach dry 0/0 before any physical build.
 2026-10-27 00:38 PDT GEOM REQ [PATH-S81-PD5] claude/path-s81-pd5-1026@6d6e8b34f9 results/path_s81_pd5_1026/{pd5_delta.png (3 zooms: NW frame row, NE frame row, s_0S column above gunit; red = PD5 route, grey dashed = PD4 route, pink = 5 new b1 frame types), g0_pd5_die_plan.png (G0 13 errors = B5 set), tree_regions_pd5.png (169 equal-level region roots after 3 region merges)}. I viewed all three myself. Ask: (1) the b1-row detour (W 7 transits, E 6) is acceptable vs the 0.62-0.69 frame cuts it removes (now <= 0.57); (2) s_0S_L2 h8250 at 0.596 with the gunit lane down s_0S_x05..x00 instead; (3) the 3 new region merges (fW5_p1/p2_b1+b2, fE5_p1/p2_b1+b2, fW5_p3/p4_b0+lk_WN1) on the tree render. Combo GRT incl clock overflow 0 TT/FF.
+2026-10-27 00:40 PDT GEOM-REVIEW-16: REPLY [PATH-S81-PD5] VERDICT PASS (1) b1-row detours / PASS-COND (2) s_0S_L2 0.596 and (3) region merges (claude/path-s81-pd5-1026@6d6e8b34f9, on origin. I viewed pd5_delta.png and tree_regions_pd5.png myself, plus 2x crops of the NW/NE top band. I read combo_TT/FF_summary, tree_summary.json, pd5_routes.json and the lane's PD5 section.)
+  (1) b1-row detour: PASS, CHECKED visually. Both new routes are monotone (no back-track):
+      W: s_0N_LP N to x05, W along the b1 row (fW5_p1/p2/p3_b1), N in fW5_p3_b0, then to lk_WN1.
+      E: s_7N_LP N to x15, E along fE5_p1/p2_b1, N in fE5_p2_b0, then to lk_EN1.
+      Each has the same Manhattan length as the PD4 b0-row route between the same end points. The cost is one extra transit each (W 7 / E 6) and +1,024 FT bits (lane CHECKED). The 0.62-0.69 frame cuts go to <= 0.57 (lane CHECKED).
+      Max station hop 393.9 <= 405 (file value).
+      Condition: the 5 per-instance frame clones (pink) erode replica identity. Merge the 3 near-duplicates (fW5_p1_b1, fW5_p2_b1, fE5_p1_b1) into one type now, and keep the clones as declared type variants of col_h9_r1__t1, not per-instance types.
+  (2) s_0S_L2 h8250 0.596: PASS-COND. It is under the 0.6 gate with 0.004 headroom.
+      The gunit lane now runs s_3S_C -> s_2S_C -> L0 row -> down the s_0S_x05..x00 column to gunit. It is monotone, with 10 transits as in PD4 (CHECKED visually).
+      Condition: treat s_0S_L2 as full. No further lane or width may enter it. Any later delta that touches the s_0S column must re-run G0 on L2 and on the x column, which now carries the gunit lane plus the existing column lanes.
+  (3) Region merges: PASS-COND.
+      CHECKED in tree_summary.json: 169 roots, all at level 15 (equal die depth by construction); 0 illegal sites; tap_repeaters 0.
+      The 3 merges follow from the new frame transits crossing region edges (hard-merge inputs). In the crop, the merged NW/NE top-band regions look like their neighbours: 2-column blocks, root near the block centre, local tree inside the block. The merges add no visible long leg.
+      Local depth is uneven: 6:30 / 7:84 / 8:52 / 9:2 / 10:1 regions. Condition: report which regions are at depth 9-10 (whether they are the merged ones). Then run the related-pair STA across every merged-region boundary with the real routed clock before freeze (12.4a).
+      The GEOM-15 note on an irregular region lattice (10 region sizes, root legs up to 195 um) still stands as the lane's open ruling ask.
+  GRT: combo incl clock, TT and FF overflow 0/0, 535,472 nets (30,325 clock), M7 8.58 %, M8 1.12 %, M9 1.08 % (CHECKED from both summaries). Per the lane, the initial route had 0 overflow, so it used 0 of the 50 iterations. The 17 storage-band FAILs remain, so this is still a probe, not a freeze candidate (lane's own label agrees).
+  Note on the 13 B5-identical G0 cuts (COORD ruling, not mine): GRT0 alone does not show that the static model over-estimates. svc_1 h5000 1.02 is about 1.7x the gate. Back the claim per cut with the GRT gcell usage along each of the 13 segments (combo TT has it), before COORD rules.
