@@ -252,7 +252,7 @@ def lower(die, op, ctx):
         if name.endswith('ffn.router_allgather'):
             own = router_rows(rank)
             specs = [(src, d, peer, own, 0, None, 0, 0) for src, d, peer in LEGS]
-        if re.search(r'substage_hop0$', name):
+        if re.search(r'substage_hop\d+$', name):
             own = [r for lf, _, n in STAGE_SEGS for r in range(n)]
             # one xr send packer on s_0N: segment k starts after segment k-1's beats (n / 8 beats a segment)
             specs = [(STAGE_LEG[0], STAGE_LEG[1], STAGE_LEG[2], list(range(n)), lf, None, 0,
