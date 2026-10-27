@@ -16,7 +16,7 @@ module ot_s81hd_static_issue #(parameter integer MUT_MODE=0)(
  wire due=run_i && ((first&&issue_offset==0)||(started&&age==next_date));
  assign due_o=due;
  assign issue_o=(MUT_MODE==1 ? (run_i&&loaded_ready&&!replay_busy&&!job_active_o) : due)
-                &&loaded_ready&&!replay_busy&&(!job_active_o||token_retire);
+                &&loaded_ready&&!replay_busy&&(!job_active_o||token_retire)&&issue_period!=0&&merge_deadline!=0&&!fault_o;
  always@(posedge ck or negedge rn)
   if(!rn)begin started<=0;age<=0;next_date<=0;job_active_o<=0;fault_o<=0;waiting_merge<=0;merge_left<=0;end
   else begin
