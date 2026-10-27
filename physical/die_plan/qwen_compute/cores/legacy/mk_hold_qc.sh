@@ -15,9 +15,13 @@ ROOT=$(cd "$HERE/../../../../.." && pwd)
 for f in clk_freeze.tcl clk_dump_db.tcl clk_geom_diff.py clk_freeze_check.sh; do cp "$ROOT/tools/die_plan/$f" $O/; done
 cat >> $O/config.mk <<CFG
 # QC-CORES warm hold ECO (ELEM-QK recipe b: FF-only, hold margin $MG)
-export POST_GLOBAL_ROUTE_TCL = /work/hold_route.tcl
+# FLOW-CLKFREEZE 2026-10-27: 'override' (as KV mk_eco FLOW-TAG 10-26): QC kits set 'override export POST_GLOBAL_ROUTE_TCL'
+# (core_flow / s5 hooks), which beat a plain export, so this hold ECO (and its clock lock) never ran
+override export POST_GLOBAL_ROUTE_TCL = /work/hold_route.tcl
 CFG
 printf "OT_HOLD_MARGIN=$MG\nOT_HOLD_ALLOW_SETUP=1\nOT_HOLD_MAXBUF=40\nROUTE_CORNERS='CORNER=BC CORNERS=bc'\n" > $O/variant.env
+# FF-only session in the FF vclk frame when the kit binds one (SIGNOFF-MODES-2 finding; same as KV mk_eco variant b)
+[ -f $O/vclk_corner.tcl ] && echo "OT_VCLK_CORNER=ff" >> $O/variant.env
 python3 -I "$O/signoff.py" bundle "$O/so/tools/die_plan" || exit 1
 printf '{"source_kit": "%s", "source_route": "%s/5_2_route.odb", "recipe": "ELEM-QK hold_eco b", "margin_ps": %s}\n' $K $RS $MG > $O/HOLD_ECO.json
 echo "ready $O"
