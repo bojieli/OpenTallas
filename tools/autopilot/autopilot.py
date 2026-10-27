@@ -813,6 +813,48 @@ def runner_goal(goal, p):
     return goal
 
 
+ADMISSION_BOOTSTRAP = r'''
+import base64,json,os,shlex,subprocess,sys,tempfile
+from pathlib import Path
+meta=json.loads(base64.b64decode(sys.argv[1]))
+dest=Path(meta["dir"])
+def ready():
+    try:
+        return json.loads((dest/"BUNDLE.json").read_text())["sha256"] == meta["sha256"]
+    except (OSError,ValueError,KeyError):
+        return False
+try:
+    if not ready():
+        if dest.exists():
+            raise RuntimeError("existing admission bundle is incomplete or differs; retained for diagnosis")
+        if not str(dest).startswith("/srv/opentallas-scratch") or "/claude/" not in str(dest):
+            raise RuntimeError("admission bundle must be under an owned scratch lane")
+        dest.parent.mkdir(parents=True,exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix=".fetch-",dir=dest.parent) as temporary:
+            target=Path(temporary)/"bundle";target.mkdir()
+            command="tar -C "+shlex.quote(str(dest))+" -cf - ."
+            source=subprocess.Popen(["ssh","-o","BatchMode=yes","-o","ControlPath=none",meta["source_host"],command],
+                                    stdin=subprocess.DEVNULL,stdout=subprocess.PIPE)
+            try:
+                extracted=subprocess.run(["tar","-C",str(target),"-xf","-"],stdin=source.stdout)
+            finally:
+                source.stdout.close()
+            if source.wait() or extracted.returncode:
+                raise RuntimeError("admission tool transfer failed; physical runner not started")
+            manifest=json.loads((target/"BUNDLE.json").read_text())
+            if manifest.get("sha256") != meta["sha256"]:
+                raise RuntimeError("admission tool version differs; physical runner not started")
+            if not dest.exists():target.rename(dest)
+        if not ready():raise RuntimeError("admission tool installation incomplete")
+    print("ADMISSION_TOOLS READY "+meta["sha256"],flush=True)
+    os.execv(sys.executable,[sys.executable,str(dest/"signoff_chain.py"),"--preflight",
+                           str(dest/"die_plan/kit_preflight.py")]+sys.argv[2:])
+except Exception as error:
+    print("ADMISSION_TOOLS FAIL: "+str(error),flush=True)
+    sys.exit(3)
+'''
+
+
 def stage_admission_tools(source_chain=None, source_tools=None, root=None):
     """Own immutable scratch bundle: never rsync tools into another repo checkout."""
     import hashlib
@@ -859,9 +901,14 @@ def submit(st, j, attempt_note=""):
     if not runner.startswith(kit + "/"):
         argv += ["--stage", runner]
     if j["goal"] not in ("cts", "grt"):
+        import base64
         bundle = stage_admission_tools()
-        argv += ["--stage", bundle["dir"], "--", "python3", bundle["chain"],
-                 "--preflight", bundle["preflight"], runner, kit, j["goal"], str(mem), str(thr)]
+        bundle["source_host"] = os.environ.get("AP_ADMISSION_HUB", "hub")
+        encoded = base64.b64encode(json.dumps(bundle).encode()).decode()
+        # --stage is spill-only. Fetch the immutable tool bundle on the
+        # actual selected worker before executing any frozen kit runner.
+        argv += ["--", "python3", "-c", ADMISSION_BOOTSTRAP, encoded,
+                 runner, kit, j["goal"], str(mem), str(thr)]
         j.update(chain_required=True, admission_tools_sha256=bundle["sha256"])
     else:
         argv += ["--", "bash", runner, kit, j["goal"], str(mem), str(thr)]
