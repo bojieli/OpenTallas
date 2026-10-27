@@ -61,7 +61,7 @@ def materialize(binder, tn, frame):
         if target is None:
             raise BoundGroupError('group has no planned reset target '+hc['inst'])
         lane=int(re.fullmatch(r'u_lane(\d+)',hc['inst'])[1])
-        rtl,new,report=C.cut(text,lane,hc['module'],memory_alignment=c['memory_alignment'])
+        rtl,new,report=C.cut(text,lane,hc['module'],memory_alignment=c['memory_alignment'],constant_outputs=c.get('constant_outputs'))
         actual={(x['instance'].replace('u_u_','u_',1),x['module']) for x in report['leaves']}
         expected={(x['inst'],x['module']) for x in c['members']}
         net=f"rst_n_t{target['tap']}"

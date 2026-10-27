@@ -375,6 +375,27 @@
            "type": "string",
            "minLength": 1
           }
+         },
+         "net_holes_um": {
+          "type": "object",
+          "additionalProperties": {
+           "type": "array",
+           "items": {
+            "type": "array",
+            "items": {
+             "type": "number"
+            },
+            "minItems": 4,
+            "maxItems": 4
+           }
+          }
+         },
+         "net_holes_note": {
+          "type": "string"
+         },
+         "pair_spacing_um": {
+          "type": "number",
+          "exclusiveMinimum": 0
          }
         }
        }
@@ -1846,6 +1867,11 @@
           "memory_alignment": {
            "minimum": 0,
            "type": "integer"
+          },
+          "constant_outputs": {
+           "enum": [
+            "su_lane0_zero24"
+           ]
           },
           "reset_pin": {
            "const": "rst_n"

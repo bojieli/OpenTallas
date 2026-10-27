@@ -40,7 +40,7 @@ def concat(bits):
     return '{' + ', '.join(f'{n}[{b}]' if w > 1 else n for n, b, w in reversed(bits)) + '}'
 
 
-def cut(source, lane, module=None, memory_alignment=None):
+def cut(source, lane, module=None, memory_alignment=None, constant_outputs=None):
     module = module or f'qfd_qc_su_lane_w_l{lane}'
     if len(re.findall(r'\bendmodule\b', source)) != 1:
         raise ValueError('expected one bound partition module')
@@ -74,6 +74,21 @@ def cut(source, lane, module=None, memory_alignment=None):
     def ordered(mapping):
         return [(n, b, widths[n]) for n in sorted(mapping) for b in sorted(mapping[n])]
     ib, ob = ordered(inputs), ordered(outputs)
+    removed = []
+    old_ob = list(ob)
+    if constant_outputs is not None:
+        if constant_outputs != "su_lane0_zero24" or lane != 0 or module not in ("qfd_qc_su_lane_e_l0", "qfd_qc_su_lane_w_l0"):
+            raise ValueError("constant output contract is only the approved SU lane0 zero24")
+        indices = set(range(49,69)) | set(range(297,301))
+        if len(ob) != 302:
+            raise ValueError("SU lane0 narrowing requires the exact302-bit original interface")
+        for i in sorted(indices):
+            n,bit,w = ob[i]
+            if not ((n.endswith("_kv_wdata") and bit == i-49 and 49<=i<=68) or
+                    (n.endswith("_wrom_addr") and bit == i-277 and 297<=i<=300)):
+                raise ValueError("SU lane0 constant semantic/index mapping differs")
+            removed.append((n,bit,w))
+        ob = [x for i,x in enumerate(ob) if i not in indices]
     decls = ['    wire ' + (f'[{widths[n]-1}:0] ' if widths[n] > 1 else '') + n + ';'
              for n in sorted(selected) if n not in ('clk', 'rst_n', reset_source)]
     # The bit assignments are wiring only, and never tie an unused bit or add a register.
@@ -86,7 +101,10 @@ def cut(source, lane, module=None, memory_alignment=None):
                      f'    input wire [{len(ib)-1}:0] c_i, output wire [{len(ob)-1}:0] c_o);',
                      *decls, *assigns, re.sub(r'\b'+re.escape(reset_source)+r'\b','rst_n',body), 'endmodule', '`default_nettype wire', ''])
     replacement = f'    {module} u_lane{lane} (.clk(clk), .rst_n({reset_source}), .c_i({concat(ib)}), .c_o({concat(ob)}));\n'
-    frame = remainder.replace('endmodule', replacement + 'endmodule')
+    # Removed consumers retain their original named net, now the explicitly proved zero.
+    zeroes = ''.join(f"    assign {n}[{b}] = 1'b0;\n" if w>1 else f"    assign {n} = 1'b0;\n"
+                     for n,b,w in removed)
+    frame = remainder.replace('endmodule', zeroes + replacement + 'endmodule')
     # Remove only wires fully private to the cut; external wires retain their original declaration.
     private = owned - outputs.keys()
     frame = WIRE.sub(lambda m: '' if m[2] in private else m[0], frame)
@@ -98,6 +116,11 @@ def cut(source, lane, module=None, memory_alignment=None):
                   outputs=[dict(name=n, bit=b) for n,b,_ in ob],
                   input_bits=len(ib), output_bits=len(ob),
                   boundary='Raw exact cut; dedicated face-register and placement gates still required.')
+    if removed:
+        keep_indices = [i for i,x in enumerate(old_ob) if x not in removed]
+        report["narrowing"] = dict(contract=constant_outputs, old_width=302, new_width=278,
+           removed=[dict(name=n,bit=b,value=0) for n,b,w in removed],
+           old_to_new={str(i):k for k,i in enumerate(keep_indices)}, added_cycles=0)
     return rtl, frame, report
 
 

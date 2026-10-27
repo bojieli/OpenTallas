@@ -800,6 +800,7 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["h
                             'minItems': 5,
                             'type': 'array'},
                 'memory_alignment': {'minimum': 0, 'type': 'integer'},
+                'constant_outputs': {'enum': ['su_lane0_zero24']},
                 'reset_pin': {'const': 'rst_n'}},
  'required': ['kind', 'reset_pin', 'memory_alignment', 'members'],
  'type': 'object'}
