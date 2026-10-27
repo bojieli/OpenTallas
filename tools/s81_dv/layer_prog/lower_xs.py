@@ -303,6 +303,11 @@ def land_e(lk):
 
 def source_frame_schedule(master):
     """LP models are immutable source-qualified inputs, never inferred flat timing."""
+    if re.search(r'_l4_lp_asb_n?x$', master):
+        # TOK-DS-10 (10-27): an as-built band frame (r0/r1/r2 plan kits + 2-flop seams, frame_lp/plan/*_plan_map.json
+        # latency_edges: x_i0_to_xo_o0 2 vs LP 1, seam K+1, +1 writer/fault stations) is NOT the LP rf3r frame, so
+        # neither the LP schedule nor flat timing may stand in for it: fail closed until its own source schedule exists.
+        raise ValueError('as-built band frame needs its own source-extracted frame schedule (none yet): ' + master)
     if not master.endswith('_lp'):
         return None
     directory = Path(os.environ.get('OT_XS_FRAME_SCHEDULE_DIR',
