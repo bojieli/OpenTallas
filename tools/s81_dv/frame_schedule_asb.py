@@ -366,6 +366,12 @@ def measure(yjs, top):
                                   if p in cells[cn]['connections']}
         elif m == 'dsfd_cfifo_crs4':
             res['root'] = sorted(pin_labels(cells, labels, cn, 'ri', -1))
+            lk = cells[cn]['connections'].get('lk')
+            if lk is not None:
+                assert len(lk) == 12 and all(b in ('0', '1') for b in lk), ('landing lk is not constant', cn, lk)
+                value = sum(int(b) << k for k, b in enumerate(lk))
+                assert 'landing_lk' not in res or res['landing_lk'] == value, ('landing lk differs', cn)
+                res['landing_lk'] = value
             for p in ('xl0', 'xl1', 'xl2', 'xl3', 'cr'):
                 if p in cells[cn]['connections']:
                     res['links'][f'x->{inst}.{p}'] = sorted(pin_labels(cells, labels, cn, p))
@@ -540,6 +546,7 @@ def schedule(meas_v, meas_t, meas_ab, lp_sched, plan_map, master, var, src_sha):
             prow(f'seam lpl_{mm.group(1)} {mm.group(2)[2:]}->{mm.group(3)} (writer data to reader station)', v,
                  [le['seam_K_plus_1']], f'{PLAN_MAP.format(m=master)} latency_edges.seam_K_plus_1')
     sched = dict(schema='opentallas.s81.frame_schedule.v1', source_sha256=src_sha,
+                 landing_lk=meas_ab.get('landing_lk'),
                  spec=lp_sched['spec'], added_edges_per_crossing=lp_sched['added_edges_per_crossing'],
                  station_inputs=st_out, topology=topo,
                  asbuilt=dict(master=f'{master}_l4_lp_asb_{var}', lp_schedule=LP_SCHED.format(m=master),
