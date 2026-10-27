@@ -32,3 +32,13 @@ def test_bad_cuts():
         DM.uniform_region_boxes(xs, ys, 400.0, 400.0, dict(x_cuts_um=[10.0]))      # empty interval
     with pytest.raises(ValueError):
         DM.uniform_region_boxes(xs, ys, 400.0, 400.0, dict(x_cuts_um=[300.0, 200.0]))
+
+
+def test_lattice_spec_validation():
+    """CLOCK-KV-R3 --lattice-spec: power-of-two sorted driver rows, one continuous mesh (no region modes)."""
+    with pytest.raises(ValueError):
+        DM.build(None, nx=4, lattice=dict(ys_um=[1.0, 2.0, 3.0], driver_rows=[0, 1, 2]))
+    with pytest.raises(ValueError):
+        DM.build(None, nx=4, lattice=dict(ys_um=[1.0, 2.0, 3.0], driver_rows=[1, 0]))
+    with pytest.raises(ValueError):
+        DM.build(None, nx=4, regions=1, lattice=dict(ys_um=[1.0, 2.0, 3.0], driver_rows=[0, 2]))

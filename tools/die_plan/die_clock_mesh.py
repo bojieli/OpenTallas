@@ -761,7 +761,7 @@ def part_regions(P, R):
 def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, hop_max=480.0, leg_mode="slide", sites="any",
           regions=0, delta_id=None, region_edge_straps=False, reserve_sites=False, pg_shapes=None, track_profile=None,
           region_spec=None, trunk_repeaters=False, driver_pair_span_um=0.0, split_yfirst=False, floorplan=None,
-          rule128=None, plan_sites=None, uniform_regions=None):
+          rule128=None, plan_sites=None, uniform_regions=None, lattice=None):
     """opt-in PATH-KV 10-26 site fixes (defaults keep the prior QC/S81 builds unchanged): trunk_repeaters = equal-cut
     BUFx24 repeaters on a root->ckm_n0 trunk > 750 um; driver_pair_span_um > 0 = a leaf driver pair whose nearest sites
     span more than this takes the shortest-span candidate combination; split_yfirst = split_long also tries the y-first L.
@@ -772,7 +772,21 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     error (no slide, no free-site search).  Under 12.8 dead branches are pruned by construction and every unplaced /
     off-site cell or loadless net is a plan error: the build raises C128.PlanError unless rule128["allow_plan_errors"]
     (diagnostic only; the report then never qualifies)."""
-    assert pow2(nx) and pow2(ny), "nx, ny must be powers of two (complete H-tree)"
+    # lattice (--lattice-spec, CLOCK-KV-R3, opt-in, METHODOLOGY 12.8e/12.8e1 continuous mesh): explicit strap rows
+    # ys_um (commensurate pitch, any count) of ONE continuous die mesh; mesh drivers (global-tree leaves) only on the
+    # declared driver_rows (a power-of-two count); tree = index bisection over the driver rows in the declared split
+    # order `axes` (y-first keeps the upper levels on the single-instance centre column), equal by construction when
+    # the driver rows are mirror-symmetric.  Rows not in driver_rows are driverless mesh straps (fed by the mesh).
+    jm = None
+    if lattice is not None:
+        if regions or region_spec is not None or floorplan is not None or uniform_regions is not None:
+            raise ValueError("--lattice-spec is one continuous mesh: no --regions/--region-spec/--clock-floorplan/"
+                             "--uniform-regions")
+        jm = [int(k) for k in lattice["driver_rows"]]
+        if not pow2(len(jm)) or jm != sorted(set(jm)) or jm[-1] >= len(lattice["ys_um"]):
+            raise ValueError("--lattice-spec driver_rows: sorted unique strap-row indices, power-of-two count")
+        ny = len(lattice["ys_um"])
+    assert pow2(nx) and (jm is not None or pow2(ny)), "nx, ny must be powers of two (complete H-tree)"
     SI, perr = None, []
     if plan_sites is not None:
         if rule128 is None:
@@ -797,6 +811,12 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     xs = [(i + 0.5) * W / nx for i in range(nx)]
     ys = [(j + 0.5) * H / ny for j in range(ny)]
     axes, x_edges, y_edges = "", None, None
+    if jm is not None:
+        ys = [float(v) for v in lattice["ys_um"]]
+        axes = str(lattice.get("axes", "")).lower()
+    drv_rows = set(jm) if jm is not None else set(range(ny))
+    nty = len(jm) if jm is not None else ny          # tree index rows
+    jt = jm if jm is not None else list(range(ny))   # tree row index -> strap row index
     if region_spec is not None:
         axes = region_spec["split_axes"].lower()
         if not axes or set(axes) - {"x", "y"} or regions not in (0, len(axes)):
@@ -860,6 +880,9 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     out["meta"]["tap_pin_size_um"] = [GP.LAYER_W.get(out["meta"]["tap_layer"], .04), 4 * GP.PIN_LEN_UM]
     if region_spec is not None:
         out["meta"].update(region_spec=region_spec, region_axes=axes)
+    if jm is not None:
+        out["meta"].update(lattice_spec=dict(lattice, ys_um=None, rows=len(ys)), tree_axes=axes,
+                           driverless_rows=[j for j in range(len(ys)) if j not in drv_rows])
     if delta_id:
         out["meta"]["delta_id"] = delta_id
     if fp is not None:
@@ -918,6 +941,8 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         cand = {}
         for i, x in enumerate(xs):
             for j, y in enumerate(ys):
+                if j not in drv_rows:
+                    continue
                 g = R[reg_ij[(i, j)]]
                 cs = []
                 if fp is not None:
@@ -948,6 +973,8 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         out["meta"]["driver_pair_fixes"] = pair_fix
         for i, x in enumerate(xs):
             for j, y in enumerate(ys):
+                if j not in drv_rows:
+                    continue
                 g = R[reg_ij[(i, j)]]
                 rk = dict(region=g["k"]) if regions else {}
                 if cand[(i, j)] is None:      # --clock-floorplan macro hole: driverless, recorded in pass 1
@@ -993,6 +1020,8 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         out["meta"]["driver_pair_fixes"] = []
         for i, x in enumerate(xs):
             for j, y in enumerate(ys):
+                if j not in drv_rows:
+                    continue
                 g = R[reg_ij[(i, j)]]
                 rk = dict(region=g["k"]) if regions else {}
                 if fp is not None:
@@ -1017,10 +1046,10 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         if region_spec is not None:
             # Mean children give equal sibling leg lengths even for unequal physical cohort widths.
             return (sum(xs[i0:i1])/(i1-i0), sum(ys[j0:j1])/(j1-j0))
-        return ((xs[i0] + xs[i1 - 1]) / 2, (ys[j0] + ys[j1 - 1]) / 2)
+        return ((xs[i0] + xs[i1 - 1]) / 2, (ys[jt[j0]] + ys[jt[j1 - 1]]) / 2)
 
     def live(i0, i1, j0, j1):
-        return any(f"{i}_{j}" in out["drivers"] for i in range(i0, i1) for j in range(j0, j1))
+        return any(f"{i}_{jt[j]}" in out["drivers"] for i in range(i0, i1) for j in range(j0, j1))
 
     def rec(i0, i1, j0, j1, level, drv_cell, path, kids=None, here=None):
         """drv_cell drives the branch point of this region (already at node_xy).  kids/here (--clock-floorplan
@@ -1052,7 +1081,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
             leaf = (kr[1] - kr[0]) * (kr[3] - kr[2]) == 1
             if leaf:
                 assert n_seg == 1, f"leaf leg {L:.0f} um > rep_um: use a finer mesh"
-                d = out["drivers"].get(f"{kr[0]}_{kr[2]}")
+                d = out["drivers"].get(f"{kr[0]}_{jt[kr[2]]}")
                 loads += d["cells"] if d else []
                 out["htree"].append(dict(level=level + 1, tag=tag, a=list(here), b=list(kp), len_um=round(L, 2),
                                          n_seg=1, reps=[], leaf=True))
@@ -1115,7 +1144,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         nets.append(dict(name=f"ckm_w_{drv_cell}" if not drv_cell.startswith("port:") else "root",
                          drv=drv_cell, loads=loads, level=level))
 
-    c0 = node_xy(0, nx, 0, ny)
+    c0 = node_xy(0, nx, 0, nty)
     sp = P.clock.get("spine", {}) or {}
     root = tuple(sp.get("die_root_um") or sp.get("root_um") or c0)
     if pg_shapes is not None:
@@ -1179,7 +1208,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     if fp is not None:
         rec(0, nx, 0, ny, 0, n0, "h", kids=[(g["i0"], g["i1"], g["j0"], g["j1"]) for g in R], here=c0)
     else:
-        rec(0, nx, 0, ny, 0, n0, "h")
+        rec(0, nx, 0, nty, 0, n0, "h")
     # --- stubs: every partition tap
     taps = DC.plan_taps(P)
     early_c = DC.plan_tap_early(P)
@@ -1463,6 +1492,8 @@ def cmd_build(a):
                                   rule128=(dict(libdir=a.libdir, tap_slew_max_ps=a.tap_slew_max_ps,
                                                 allow_plan_errors=getattr(a, "allow_plan_errors", False))
                                            if getattr(a, "rule_12_8", False) else None), plan_sites=plan_sites,
+                                  lattice=(json.loads(Path(a.lattice_spec).read_text())
+                                           if getattr(a, "lattice_spec", None) else None),
                                   uniform_regions=(json.loads(Path(a.uniform_regions).read_text())
                                                    if getattr(a, "uniform_regions", None) else None))
     except C128.PlanError as e:
@@ -2748,6 +2779,9 @@ def main(argv=None):
                    "edges); regions = strap boxes on the UNIFORM nx x ny lattice, H-tree = whole-grid bisection "
                    "independent of the cuts, CPPR node per region = lowest common tree node of its intersections, "
                    "gate: every partition inside one box, every tap within 750 um of its own region strap")
+    b.add_argument("--lattice-spec", help="opt-in JSON (CLOCK-KV-R3, 12.8e1 continuous mesh): ys_um (all strap rows, "
+                   "any count), driver_rows (power-of-two list of strap-row indices carrying mesh drivers), axes "
+                   "(tree split order, e.g. yyyyxxxxxyy); other rows are driverless straps of the same mesh")
     b.add_argument("--allow-plan-errors", action="store_true",
                    help="DIAGNOSTIC: write the build despite plan errors (never qualifies; combo refuses it)")
     b.add_argument("--clock-floorplan", help="opt-in JSON: x_cuts_um (region seams on partition edges) + region_nx "
