@@ -1307,3 +1307,8 @@ CODEX: 2026-10-27 08:16 PDT QC F4I DRC0 TT+117.85 FF-10.83/35 LEC5342EQ; local i
 CODEX: 2026-10-27 08:16 PDT GEOM-AUTO-1 READY98156863a allkit measured rules+1in5audit;159testsPASS1skip. RealKVe2 FAILreach409.54um/5captures; qwen+GEOMdiagnosing; serviceflag notenabled.
 
 CODEX: 2026-10-27 08:19 PDT FLOW combined ab3ae7c3a RC2bbe+60um37d9+preflightb56/FFbound9529+snap5b2: seven PLACE-only AB refs launched intel2 codex-rc-canary-1027/ab/runs; actualimage-before-route enforced. KVtype COORD constraint rebaseline applied preserving old+unrelated metrics.
+
+CODEX: 2026-10-27 08:20 PDT KV kvs_ctl readback PROVED92037/92037 with undef modeling (4h inherited job collected); prior37FAIL preserved, Qwen adopts canonical proof+mutant. No RTL defect established.
+CODEX: 2026-10-27 08:40 PDT TOKEN: KV B48 mixed-source rootcause28inlinePC vs4hierPC boot_win; overlay rebuild queued. HEAD native315c5ba17a real-model+264uniqueimageprefix helper2testsPASS; strictleaf326/nested2217PASS, exactgit correction+lint liveepyc2unit1917224. HBM nativebinding and DSmeasuredschedule fixes active.
+
+CODEX: 2026-10-27 08:20 PDT RM34 main8fcd97ac44==origin/main: approvedHEADplan/modes+KVFT+TOKverdict+FFbound+AProutedLEC/GEOMauto; HEADG0C0E6W/AP110PASS,0deletions; supplementary sparse-fixture checks live.
