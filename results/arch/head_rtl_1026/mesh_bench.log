@@ -1,0 +1,7 @@
+Verilator 5.050 2026-07-01 rev v5.050
+mut0 expect=PASS got=PASS OK | MESH_STATS sent=400/401 copyA=400/401 copyB=400/401 max_latency=40/42 errors=0 phase1_fault=0 epf=100/000 rf=0/0 MESH_EP PASS records 400/401 x 2 copies exact, in-band fault delivered 
+mut1 expect=FAIL got=FAIL OK | MESH_STATS sent=400/401 copyA=800/802 copyB=0/0 max_latency=9240/0 errors=3181 phase1_fault=0 epf=100/000 rf=0/0 MESH_EP FAIL data: errors 3181 
+mut2 expect=FAIL got=FAIL OK | MESH_STATS sent=400/401 copyA=400/401 copyB=400/401 max_latency=40/42 errors=801 phase1_fault=0 epf=100/000 rf=0/0 MESH_EP FAIL data: errors 801 
+mut3 expect=FAIL got=FAIL OK | MESH_STATS sent=400/401 copyA=400/401 copyB=0/0 max_latency=40/0 errors=0 phase1_fault=0 epf=100/000 rf=0/0 MESH_EP FAIL data: errors 0 
+mut4 expect=FAIL got=FAIL OK | MESH_STATS sent=400/401 copyA=400/401 copyB=400/401 max_latency=40/42 errors=0 phase1_fault=0 epf=000/000 rf=0/0 MESH_EP FAIL m_tx decode fault not delivered in-band (epf X 000) 
+MESH_EP_BENCH rc=0

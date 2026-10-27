@@ -1264,6 +1264,18 @@ def _grid_taps(P, tn):
     if moved and t.get("clock", {}).get("tap_recentre") == "sinks":
         import taps
         out = taps.recentre_displaced(P, tn, out, moved)
+    edge = t.get("clock", {}).get("tap_edge_y_um")
+    if edge:
+        # CLOCK-KV-R8 (opt-in, COORD RULING CLOCK-KV-R7 (3) option a): a band partition outside the driven die-mesh rows
+        # takes its die clock entries on the array-facing edge(s) only: every grid column keeps one tap per listed
+        # type-frame y (plan-computed from the die mesh cover), the partition CTS reaches the interior (12.3 target).
+        xs_ = sorted({round((i + 0.5) * w / nx, 6) for i in range(nx)})
+        new = []
+        for ey in edge:
+            for cx in xs_:
+                x, y = tap_clear(t, cx, float(ey), [(a, b) for _, a, b in new])
+                new.append(("clk" if not new else f"clk_t{len(new)}", x, y))
+        out = new
     return out
 
 

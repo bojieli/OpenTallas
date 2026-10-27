@@ -100,3 +100,22 @@ def test_band_plan_equal_structure():
     assert DM.band_plan(ly, xs, [taps[0], taps[3]], 480.0) is None
     with pytest.raises(ValueError):
         DM.band_plan(ly, xs, taps, 100.0)
+
+
+def test_tap_edge_y_um_edge_entries():
+    """CLOCK-KV-R8 option (a): clock.tap_edge_y_um replaces the type's tap grid by one tap per grid column on each
+    listed type-frame y (band partitions take die clock entries on the array-facing edge); absent = grid unchanged."""
+    import copy
+    import schema as S
+    t = {"outline_um": [1000.0, 1600.0], "clock": {"tap_pitch_um": 400.0}}
+    P = type("P", (), {})()
+    P.types = {"b": t}
+    P.budgets = {}
+    g = S.tap_grid(P, "b")
+    assert len(g) == 3 * 4
+    t2 = copy.deepcopy(t)
+    t2["clock"]["tap_edge_y_um"] = [21.6, 1578.4]
+    P.types = {"b": t2}
+    e = S.tap_grid(P, "b")
+    assert len(e) == 3 * 2 and {round(y, 1) for _, _, y in e} == {21.6, 1578.4}
+    assert [n for n, _, _ in e][:2] == ["clk", "clk_t1"]
