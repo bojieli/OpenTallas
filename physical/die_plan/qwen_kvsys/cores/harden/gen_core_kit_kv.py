@@ -1293,7 +1293,7 @@ def main():
     # pairs re-hung onto one clock leaf after CTS (leaf_affinity.tcl; e6 worst FF = s1_exp -> g_hs.u_hc split leaves).
     flow_basis = not a.stock_flow
     if flow_basis:
-        shutil.copyfile(tool / "setRC_rcx_asap7.tcl", kd / "setRC_rcx.tcl")
+        core_flow.install_rc(kd, tool / "setRC_rcx_asap7.tcl")   # FLOW-RC-1 fail-closed signal+clock RC guard
         shutil.copyfile(tool / "leaf_affinity.tcl", kd / "leaf_affinity.tcl")
         # Match the sign-off fanout ceiling at every repair_design stage. A tighter cap of 24
         # split timing-critical decode broadcasts into serial weak-buffer chains (FLOW-FANOUT).
