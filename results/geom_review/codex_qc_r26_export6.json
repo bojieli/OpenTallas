@@ -1,0 +1,19 @@
+{
+ "design": "QC R26 native100_io export6, vertical W-column feed",
+ "verdict": "PASS-COND",
+ "scope": "TRIAL PLACEMENT ONLY; no route/STA/sign-off or freeze claim",
+ "picture_viewed": "results/qc_clk_mesh3/codex_r26_export/export6/all_tree_geometry.png",
+ "receipt": "results/qc_clk_mesh3/codex_r26_export/export6/review_summary.json",
+ "findings": [
+  "The W-edge feed is now a regular vertical spine, with its horizontal crossings in clear row bands. The former diagonal/through-core feed is absent.",
+  "The complete top, column and band tree export has33417groups,50149actual cells and33416stage nets. Exact OpenDB-unit body checks report0geometry errors,0cell overlaps and0bodies on hard cores.",
+  "The longest planned physical stage is447.848um;0stages exceed450um. The selected4w/8w/16w/2x16w NDRs are preserved.",
+  "Actual master/footprint sets match in29of86hosting partition types. This does not establish a uniform hardened implementation; the top-owned hole unions must be reflected in the plan slices and kits before freeze."
+ ],
+ "conditions": [
+  "Build the PG-aware fixed clock geometry and inspect its shield/via/keepout census before P&R or STA.",
+  "Consume the qualified mixed-width RCX rules for0.16/0.32/0.64/1.28um conductors.",
+  "Deliver the mesh clock to real partition/core entry pins with legal clock stations; mesh-foot boundaries alone do not qualify those local paths.",
+  "Propagated TT setup/FF hold and related-pair timing, including the actual local/core trees, remain NOT RUN."
+ ]
+}

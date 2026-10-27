@@ -1,0 +1,2024 @@
+{
+ "summary": {
+  "schema": "opentallas.qc_mesh3_all_tree_sites.v1",
+  "geometry_verdict": "PASS",
+  "errors": {},
+  "examples": {},
+  "adapter_constraints": {
+   "mixed_master_stack_needs_general_pin_tie": 15
+  },
+  "groups": 33417,
+  "instances": 50149,
+  "nets": 33416,
+  "edge_coverage": {
+   "t": 2158,
+   "c": 15516,
+   "b": 7856
+  },
+  "root": "g1198",
+  "ndrs": [
+   "16w",
+   "2x16w",
+   "4w",
+   "8w"
+  ],
+  "post_legal_reach": {
+   "max_um": 447.848,
+   "over_450": 0,
+   "worst": [
+    {
+     "edge": "t:H0:17",
+     "pin_to_pin_um": 447.848
+    },
+    {
+     "edge": "t:H1:17",
+     "pin_to_pin_um": 446.032
+    },
+    {
+     "edge": "t:H00:8",
+     "pin_to_pin_um": 439.152444
+    },
+    {
+     "edge": "t:H10:8",
+     "pin_to_pin_um": 439.152444
+    },
+    {
+     "edge": "t:H01:8",
+     "pin_to_pin_um": 437.447556
+    },
+    {
+     "edge": "t:H11:8",
+     "pin_to_pin_um": 437.447556
+    },
+    {
+     "edge": "t:T00_b11:1",
+     "pin_to_pin_um": 433.448
+    },
+    {
+     "edge": "t:T00_m11:1",
+     "pin_to_pin_um": 433.448
+    }
+   ],
+   "status": "PLAN_GEOMETRY; track jogs and extracted RC still required"
+  },
+  "per_type_placement": {
+   "cbf_q01_s2": {
+    "instances": 1,
+    "hosting": 1,
+    "distinct_footprint_master_sets": 1,
+    "identical": true,
+    "union_sites": 274
+   },
+   "cbf_q11_na22d3": {
+    "instances": 18,
+    "hosting": 18,
+    "distinct_footprint_master_sets": 18,
+    "identical": false,
+    "union_sites": 557
+   },
+   "cbf_q00_s2": {
+    "instances": 1,
+    "hosting": 1,
+    "distinct_footprint_master_sets": 1,
+    "identical": true,
+    "union_sites": 262
+   },
+   "cbx_q10": {
+    "instances": 36,
+    "hosting": 36,
+    "distinct_footprint_master_sets": 36,
+    "identical": false,
+    "union_sites": 758
+   },
+   "cbn_q01_nb12d10": {
+    "instances": 18,
+    "hosting": 18,
+    "distinct_footprint_master_sets": 18,
+    "identical": false,
+    "union_sites": 648
+   },
+   "cbn_q11_na22d3": {
+    "instances": 18,
+    "hosting": 18,
+    "distinct_footprint_master_sets": 18,
+    "identical": false,
+    "union_sites": 554
+   },
+   "cbn_q00_xb00d1_xb10d0_na00d15": {
+    "instances": 6,
+    "hosting": 6,
+    "distinct_footprint_master_sets": 6,
+    "identical": false,
+    "union_sites": 409
+   },
+   "cbx_q10_xb30d2": {
+    "instances": 6,
+    "hosting": 6,
+    "distinct_footprint_master_sets": 6,
+    "identical": false,
+    "union_sites": 288
+   },
+   "slw_stm_v3": {
+    "instances": 1,
+    "hosting": 1,
+    "distinct_footprint_master_sets": 1,
+    "identical": true,
+    "union_sites": 41
+   },
+   "slw_fe_v2__clacbd6592": {
+    "instances": 2,
+    "hosting": 2,
+    "distinct_footprint_master_sets": 2,
+    "identical": false,
+    "union_sites": 74
+   },
+   "slw_sc_v3": {
+    "instances": 1,
+    "hosting": 1,
+    "distinct_footprint_master_sets": 1,
+    "identical": true,
+    "union_sites": 33
+   },
+   "slw_su_c__cl77ab230a": {
+    "instances": 4,
+    "hosting": 4,
+    "distinct_footprint_master_sets": 4,
+    "identical": false,
+    "union_sites": 119
+   },
+   "cbf_q01_nb12d10": {
+    "instances": 17,
+    "hosting": 17,
+    "distinct_footprint_master_sets": 17,
+    "identical": false,
+    "union_sites": 656
+   },
+   "cbf_q00_na00d15": {
+    "instances": 17,
+    "hosting": 17,
+    "distinct_footprint_master_sets": 17,
+    "identical": false,
+    "union_sites": 739
+   },
+   "cbn_q00_xb10d0_na00d15": {
+    "instances": 12,
+    "hosting": 12,
+    "distinct_footprint_master_sets": 12,
+    "identical": false,
+    "union_sites": 440
+   },
+   "sle_ctl_r8p03": {
+    "instances": 3,
+    "hosting": 3,
+    "distinct_footprint_master_sets": 2,
+    "identical": false,
+    "union_sites": 77
+   },
+   "slw_st_b_v2": {
+    "instances": 3,
+    "hosting": 3,
+    "distinct_footprint_master_sets": 2,
+    "identical": false,
+    "union_sites": 68
+   },
+   "slw_hc1": {
+    "instances": 6,
+    "hosting": 6,
+    "distinct_footprint_master_sets": 6,
+    "identical": false,
+    "union_sites": 69
+   },
+   "cbf_q01": {
+    "instances": 6,
+    "hosting": 6,
+    "distinct_footprint_master_sets": 6,
+    "identical": false,
+    "union_sites": 357
+   },
+   "cbf_q11": {
+    "instances": 6,
+    "hosting": 6,
+    "distinct_footprint_master_sets": 6,
+    "identical": false,
+    "union_sites": 270
+   },
+   "cbf_q00": {
+    "instances": 6,
+    "hosting": 6,
+    "distinct_footprint_master_sets": 6,
+    "identical": false,
+    "union_sites": 306
+   },
+   "cbn_q01": {
+    "instances": 6,
+    "hosting": 6,
+    "distinct_footprint_master_sets": 6,
+    "identical": false,
+    "union_sites": 294
+   },
+   "cbn_q11": {
+    "instances": 6,
+    "hosting": 6,
+    "distinct_footprint_master_sets": 6,
+    "identical": false,
+    "union_sites": 260
+   },
+   "cbn_q00": {
+    "instances": 6,
+    "hosting": 6,
+    "distinct_footprint_master_sets": 6,
+    "identical": false,
+    "union_sites": 293
+   },
+   "slw_stm_v1__cl522749b8": {
+    "instances": 2,
+    "hosting": 2,
+    "distinct_footprint_master_sets": 2,
+    "identical": false,
+    "union_sites": 44
+   },
+   "slw_fe_v1__clcb7b024a": {
+    "instances": 2,
+    "hosting": 2,
+    "distinct_footprint_master_sets": 2,
+    "identical": false,
+    "union_sites": 65
+   },
+   "slw_sc_v1": {
+    "instances": 2,
+    "hosting": 2,
+    "distinct_footprint_master_sets": 2,
+    "identical": false,
+    "union_sites": 68
+   },
+   "sle_ctl_r8p02": {
+    "instances": 3,
+    "hosting": 3,
+    "distinct_footprint_master_sets": 3,
+    "identical": false,
+    "union_sites": 92
+   },
+   "slw_st_b_v1": {
+    "instances": 3,
+    "hosting": 3,
+    "distinct_footprint_master_sets": 3,
+    "identical": false,
+    "union_sites": 75
+   },
+   "slw_stm_v2": {
+    "instances": 2,
+    "hosting": 2,
+    "distinct_footprint_master_sets": 2,
+    "identical": false,
+    "union_sites": 43
+   },
+   "slw_fe_v2__cle5354d4d": {
+    "instances": 1,
+    "hosting": 1,
+    "distinct_footprint_master_sets": 1,
+    "identical": true,
+    "union_sites": 40
+   },
+   "slw_sc_v2": {
+    "instances": 2,
+    "hosting": 2,
+    "distinct_footprint_master_sets": 2,
+    "identical": false,
+    "union_sites": 46
+   },
+   "slw_su_c__clbb0c543d": {
+    "instances": 1,
+    "hosting": 1,
+    "distinct_footprint_master_sets": 1,
+    "identical": true,
+    "union_sites": 69
+   },
+   "slw_stm_v1__cla56d6dd9": {
+    "instances": 1,
+    "hosting": 1,
+    "distinct_footprint_master_sets": 1,
+    "identical": true,
+    "union_sites": 24
+   },
+   "slw_fe_v1__cl8ba3358f": {
+    "instances": 1,
+    "hosting": 1,
+    "distinct_footprint_master_sets": 1,
+    "identical": true,
+    "union_sites": 43
+   },
+   "slw_sc_v1r": {
+    "instances": 1,
+    "hosting": 1,
+    "distinct_footprint_master_sets": 1,
+    "identical": true,
+    "union_sites": 49
+   },
+   "slw_su_c__cl49a25f5f": {
+    "instances": 1,
+    "hosting": 1,
+    "distinct_footprint_master_sets": 1,
+    "identical": true,
+    "union_sites": 75
+   },
+   "cbx_q10_xb30d1": {
+    "instances": 6,
+    "hosting": 6,
+    "distinct_footprint_master_sets": 6,
+    "identical": false,
+    "union_sites": 291
+   },
+   "sle_stm_v1": {
+    "instances": 3,
+    "hosting": 3,
+    "distinct_footprint_master_sets": 2,
+    "identical": false,
+    "union_sites": 46
+   },
+   "sle_fe_v1__clfcc50df9": {
+    "instances": 2,
+    "hosting": 2,
+    "distinct_footprint_master_sets": 2,
+    "identical": false,
+    "union_sites": 65
+   },
+   "sle_sc_v1": {
+    "instances": 3,
+    "hosting": 3,
+    "distinct_footprint_master_sets": 2,
+    "identical": false,
+    "union_sites": 46
+   },
+   "sle_su_c__cl78b6fe86": {
+    "instances": 2,
+    "hosting": 2,
+    "distinct_footprint_master_sets": 2,
+    "identical": false,
+    "union_sites": 75
+   },
+   "sle_ctl": {
+    "instances": 3,
+    "hosting": 3,
+    "distinct_footprint_master_sets": 3,
+    "identical": false,
+    "union_sites": 89
+   },
+   "sle_st_b_v1": {
+    "instances": 3,
+    "hosting": 3,
+    "distinct_footprint_master_sets": 3,
+    "identical": false,
+    "union_sites": 57
+   },
+   "sle_hc1": {
+    "instances": 6,
+    "hosting": 6,
+    "distinct_footprint_master_sets": 6,
+    "identical": false,
+    "union_sites": 95
+   },
+   "sle_stm_v2": {
+    "instances": 2,
+    "hosting": 2,
+    "distinct_footprint_master_sets": 2,
+    "identical": false,
+    "union_sites": 56
+   },
+   "sle_fe_v2": {
+    "instances": 2,
+    "hosting": 2,
+    "distinct_footprint_master_sets": 1,
+    "identical": true,
+    "union_sites": 53
+   },
+   "sle_sc_v2": {
+    "instances": 2,
+    "hosting": 2,
+    "distinct_footprint_master_sets": 2,
+    "identical": false,
+    "union_sites": 46
+   },
+   "sle_ctl_r8p01": {
+    "instances": 3,
+    "hosting": 3,
+    "distinct_footprint_master_sets": 3,
+    "identical": false,
+    "union_sites": 98
+   },
+   "sle_st_b_v2": {
+    "instances": 3,
+    "hosting": 3,
+    "distinct_footprint_master_sets": 2,
+    "identical": false,
+    "union_sites": 70
+   },
+   "sle_fe_v1__clad8c146b": {
+    "instances": 1,
+    "hosting": 1,
+    "distinct_footprint_master_sets": 1,
+    "identical": true,
+    "union_sites": 56
+   },
+   "sle_su_c__cl99d49f55": {
+    "instances": 1,
+    "hosting": 1,
+    "distinct_footprint_master_sets": 1,
+    "identical": true,
+    "union_sites": 71
+   },
+   "sle_su_c__cl3c67a3d5": {
+    "instances": 3,
+    "hosting": 3,
+    "distinct_footprint_master_sets": 3,
+    "identical": false,
+    "union_sites": 126
+   },
+   "sle_stm_v3": {
+    "instances": 1,
+    "hosting": 1,
+    "distinct_footprint_master_sets": 1,
+    "identical": true,
+    "union_sites": 43
+   },
+   "sle_fe_v3": {
+    "instances": 1,
+    "hosting": 1,
+    "distinct_footprint_master_sets": 1,
+    "identical": true,
+    "union_sites": 67
+   },
+   "sle_sc_v3": {
+    "instances": 1,
+    "hosting": 1,
+    "distinct_footprint_master_sets": 1,
+    "identical": true,
+    "union_sites": 27
+   },
+   "slw_su_l1__clbd68af58": {
+    "instances": 1,
+    "hosting": 1,
+    "distinct_footprint_master_sets": 1,
+    "identical": true,
+    "union_sites": 48
+   },
+   "slw_su_l0__cl72211ea3": {
+    "instances": 4,
+    "hosting": 4,
+    "distinct_footprint_master_sets": 4,
+    "identical": false,
+    "union_sites": 91
+   },
+   "slw_su_l1__cl766bacee": {
+    "instances": 4,
+    "hosting": 4,
+    "distinct_footprint_master_sets": 4,
+    "identical": false,
+    "union_sites": 88
+   },
+   "slw_su_l0__cl0cf5548e": {
+    "instances": 1,
+    "hosting": 1,
+    "distinct_footprint_master_sets": 1,
+    "identical": true,
+    "union_sites": 40
+   },
+   "slw_su_l1__cl8312485b": {
+    "instances": 1,
+    "hosting": 1,
+    "distinct_footprint_master_sets": 1,
+    "identical": true,
+    "union_sites": 76
+   },
+   "slw_su_l0__cle4811ba5": {
+    "instances": 1,
+    "hosting": 1,
+    "distinct_footprint_master_sets": 1,
+    "identical": true,
+    "union_sites": 44
+   },
+   "sle_su_l1__cl15735621": {
+    "instances": 1,
+    "hosting": 1,
+    "distinct_footprint_master_sets": 1,
+    "identical": true,
+    "union_sites": 77
+   },
+   "sle_su_l0__clad02be3b": {
+    "instances": 2,
+    "hosting": 2,
+    "distinct_footprint_master_sets": 2,
+    "identical": false,
+    "union_sites": 54
+   },
+   "sle_su_l1__cl9c71a39d": {
+    "instances": 2,
+    "hosting": 2,
+    "distinct_footprint_master_sets": 2,
+    "identical": false,
+    "union_sites": 75
+   },
+   "sle_su_l0__cld14716fc": {
+    "instances": 4,
+    "hosting": 4,
+    "distinct_footprint_master_sets": 4,
+    "identical": false,
+    "union_sites": 103
+   },
+   "sle_su_l1__cl3c610c2d": {
+    "instances": 3,
+    "hosting": 3,
+    "distinct_footprint_master_sets": 3,
+    "identical": false,
+    "union_sites": 78
+   },
+   "slw_fw_v3": {
+    "instances": 1,
+    "hosting": 1,
+    "distinct_footprint_master_sets": 1,
+    "identical": true,
+    "union_sites": 75
+   },
+   "slw_fw_v1__cl80b8d16f": {
+    "instances": 2,
+    "hosting": 2,
+    "distinct_footprint_master_sets": 2,
+    "identical": false,
+    "union_sites": 74
+   },
+   "slw_fw_v2": {
+    "instances": 2,
+    "hosting": 2,
+    "distinct_footprint_master_sets": 2,
+    "identical": false,
+    "union_sites": 75
+   },
+   "slw_fw_v1__cl82aac3aa": {
+    "instances": 1,
+    "hosting": 1,
+    "distinct_footprint_master_sets": 1,
+    "identical": true,
+    "union_sites": 72
+   },
+   "sle_fw_v1__cl3b7cacba": {
+    "instances": 1,
+    "hosting": 1,
+    "distinct_footprint_master_sets": 1,
+    "identical": true,
+    "union_sites": 72
+   },
+   "sle_fw_v2__cl2b5fc15e": {
+    "instances": 1,
+    "hosting": 1,
+    "distinct_footprint_master_sets": 1,
+    "identical": true,
+    "union_sites": 62
+   },
+   "sle_fw_v1_e2": {
+    "instances": 1,
+    "hosting": 1,
+    "distinct_footprint_master_sets": 1,
+    "identical": true,
+    "union_sites": 62
+   },
+   "sle_fw_v2__clf90441df": {
+    "instances": 1,
+    "hosting": 1,
+    "distinct_footprint_master_sets": 1,
+    "identical": true,
+    "union_sites": 62
+   },
+   "sle_fw_v1__cl39c71cef": {
+    "instances": 1,
+    "hosting": 1,
+    "distinct_footprint_master_sets": 1,
+    "identical": true,
+    "union_sites": 59
+   },
+   "sle_fw_v3": {
+    "instances": 1,
+    "hosting": 1,
+    "distinct_footprint_master_sets": 1,
+    "identical": true,
+    "union_sites": 62
+   },
+   "slw_st_a_v2": {
+    "instances": 3,
+    "hosting": 3,
+    "distinct_footprint_master_sets": 3,
+    "identical": false,
+    "union_sites": 112
+   },
+   "slw_st_a_v1": {
+    "instances": 3,
+    "hosting": 3,
+    "distinct_footprint_master_sets": 2,
+    "identical": false,
+    "union_sites": 69
+   },
+   "sle_st_a_v1": {
+    "instances": 3,
+    "hosting": 3,
+    "distinct_footprint_master_sets": 3,
+    "identical": false,
+    "union_sites": 72
+   },
+   "sle_st_a_v2": {
+    "instances": 3,
+    "hosting": 3,
+    "distinct_footprint_master_sets": 3,
+    "identical": false,
+    "union_sites": 62
+   },
+   "slw_hc0": {
+    "instances": 6,
+    "hosting": 6,
+    "distinct_footprint_master_sets": 6,
+    "identical": false,
+    "union_sites": 128
+   },
+   "slw_hc2": {
+    "instances": 6,
+    "hosting": 6,
+    "distinct_footprint_master_sets": 5,
+    "identical": false,
+    "union_sites": 72
+   },
+   "slw_hc3": {
+    "instances": 12,
+    "hosting": 12,
+    "distinct_footprint_master_sets": 10,
+    "identical": false,
+    "union_sites": 132
+   },
+   "sle_hc0": {
+    "instances": 6,
+    "hosting": 6,
+    "distinct_footprint_master_sets": 6,
+    "identical": false,
+    "union_sites": 91
+   },
+   "sle_hc2": {
+    "instances": 6,
+    "hosting": 6,
+    "distinct_footprint_master_sets": 5,
+    "identical": false,
+    "union_sites": 58
+   }
+  },
+  "declared_timing": "NOT RUN",
+  "declared_clock_signoff": "NOT RUN",
+  "planner_legalization": {
+   "cells": 33417,
+   "body_sites": {
+    "moved": 4762,
+    "max_move_um": 0.945,
+    "examples": [
+     {
+      "kind": "fine_driver",
+      "from_xy": [
+       2799.36,
+       737.28
+      ],
+      "to_xy": [
+       2798.766,
+       737.235
+      ],
+      "distance_um": 0.639,
+      "host": "c_W5_bf_01"
+     },
+     {
+      "kind": "fine_driver",
+      "from_xy": [
+       2799.36,
+       881.28
+      ],
+      "to_xy": [
+       2800.17,
+       881.145
+      ],
+      "distance_um": 0.945,
+      "host": "c_W5_bf_11"
+     },
+     {
+      "kind": "fine_driver",
+      "from_xy": [
+       2799.36,
+       1025.28
+      ],
+      "to_xy": [
+       2800.17,
+       1025.325
+      ],
+      "distance_um": 0.855,
+      "host": "c_W5_bf_11"
+     },
+     {
+      "kind": "fine_driver",
+      "from_xy": [
+       2799.36,
+       1169.28
+      ],
+      "to_xy": [
+       2800.17,
+       1169.235
+      ],
+      "distance_um": 0.855,
+      "host": "c_W5_bf_11"
+     },
+     {
+      "kind": "fine_driver",
+      "from_xy": [
+       2799.36,
+       1313.28
+      ],
+      "to_xy": [
+       2800.17,
+       1313.415
+      ],
+      "distance_um": 0.945,
+      "host": "c_W5_bf_11"
+     },
+     {
+      "kind": "fine_driver",
+      "from_xy": [
+       2799.36,
+       1457.28
+      ],
+      "to_xy": [
+       2800.17,
+       1457.325
+      ],
+      "distance_um": 0.855,
+      "host": "c_W5_bf_11"
+     },
+     {
+      "kind": "fine_driver",
+      "from_xy": [
+       2799.36,
+       1601.28
+      ],
+      "to_xy": [
+       2800.17,
+       1601.235
+      ],
+      "distance_um": 0.855,
+      "host": "c_W5_bf_11"
+     },
+     {
+      "kind": "fine_driver",
+      "from_xy": [
+       2799.36,
+       1745.28
+      ],
+      "to_xy": [
+       2800.17,
+       1745.145
+      ],
+      "distance_um": 0.945,
+      "host": "c_W5_bf_11"
+     },
+     {
+      "kind": "fine_driver",
+      "from_xy": [
+       2799.36,
+       1889.28
+      ],
+      "to_xy": [
+       2800.17,
+       1889.325
+      ],
+      "distance_um": 0.855,
+      "host": "c_W5_bf_11"
+     },
+     {
+      "kind": "col_node",
+      "from_xy": [
+       4034.88,
+       809.28
+      ],
+      "to_xy": [
+       4035.69,
+       809.325
+      ],
+      "distance_um": 0.855,
+      "host": "c_W4_bf_01"
+     },
+     {
+      "kind": "col_node",
+      "from_xy": [
+       4034.88,
+       1097.28
+      ],
+      "to_xy": [
+       4035.69,
+       1097.145
+      ],
+      "distance_um": 0.945,
+      "host": "c_W4_bf_01"
+     },
+     {
+      "kind": "col_node",
+      "from_xy": [
+       4034.88,
+       953.28
+      ],
+      "to_xy": [
+       4035.69,
+       953.235
+      ],
+      "distance_um": 0.855,
+      "host": "c_W4_bf_01"
+     }
+    ],
+    "rule": "whole buffer group in one host, actual masters, no overlap and 4.32um core halo; reprice actual edges"
+   },
+   "by_kind": {
+    "top_node": 1176,
+    "chan_node": 23,
+    "fine_driver": 8232,
+    "col_node": 7284,
+    "col_tap": 960,
+    "top_rep": 2376,
+    "chan_rep": 110,
+    "col_rep": 2784,
+    "band_driver": 3620,
+    "band_rep": 2616,
+    "band_node": 4236
+   },
+   "raw_coincident_items": 120,
+   "instances": 50149,
+   "instances_by_master": {
+    "BUFx24": 49627,
+    "BUFx16f": 522
+   },
+   "coincident_items": 0,
+   "footprint_overlaps": 0,
+   "cells_on_core": 0,
+   "cells_within_ISL_of_core": 32,
+   "cells_within_ISL_note": "r2 fine-driver sites kept as r2 placed them (r2 seam_channel)",
+   "bumped": 24,
+   "max_bump_um": 77.76,
+   "merged_top_leaf_eq_col_tap": 960,
+   "lane_offsets_um": {
+    "dx_tree_lane": 8.64,
+    "dy_top_lane": 4.32,
+    "lanes_left": 201,
+    "lanes_right": 112
+   },
+   "repeaters": {
+    "top": 2486,
+    "col": 2784
+   },
+   "max_net_extra_vs_leg_um": 90.72,
+   "islands": {
+    "mode": "periodic",
+    "slot_search": "all valid sites in L1 order",
+    "groups_on_slots": 11364,
+    "classes": 2701,
+    "max_move_um": 13.635,
+    "moved_gt_1um": 7067,
+    "identity_violations": [
+     {
+      "type": "cbf_q00",
+      "frame": [
+       6,
+       9
+      ],
+      "members": 2,
+      "instances": 6,
+      "hosting": 2,
+      "per_instance": [
+       1
+      ]
+     },
+     {
+      "type": "cbf_q00",
+      "frame": [
+       6,
+       1313
+      ],
+      "members": 2,
+      "instances": 6,
+      "hosting": 2,
+      "per_instance": [
+       1
+      ]
+     },
+     {
+      "type": "cbf_q00",
+      "frame": [
+       56,
+       9
+      ],
+      "members": 2,
+      "instances": 6,
+      "hosting": 2,
+      "per_instance": [
+       1
+      ]
+     },
+     {
+      "type": "cbf_q00",
+      "frame": [
+       56,
+       1313
+      ],
+      "members": 2,
+      "instances": 6,
+      "hosting": 2,
+      "per_instance": [
+       1
+      ]
+     },
+     {
+      "type": "cbf_q00",
+      "frame": [
+       60,
+       9
+      ],
+      "members": 4,
+      "instances": 6,
+      "hosting": 4,
+      "per_instance": [
+       1
+      ]
+     },
+     {
+      "type": "cbf_q00",
+      "frame": [
+       60,
+       1313
+      ],
+      "members": 4,
+      "instances": 6,
+      "hosting": 4,
+      "per_instance": [
+       1
+      ]
+     },
+     {
+      "type": "cbf_q00",
+      "frame": [
+       255,
+       9
+      ],
+      "members": 4,
+      "instances": 6,
+      "hosting": 4,
+      "per_instance": [
+       1
+      ]
+     },
+     {
+      "type": "cbf_q00",
+      "frame": [
+       255,
+       1313
+      ],
+      "members": 4,
+      "instances": 6,
+      "hosting": 4,
+      "per_instance": [
+       1
+      ]
+     },
+     {
+      "type": "cbf_q00",
+      "frame": [
+       372,
+       9
+      ],
+      "members": 2,
+      "instances": 6,
+      "hosting": 2,
+      "per_instance": [
+       1
+      ]
+     },
+     {
+      "type": "cbf_q00",
+      "frame": [
+       372,
+       1313
+      ],
+      "members": 2,
+      "instances": 6,
+      "hosting": 2,
+      "per_instance": [
+       1
+      ]
+     },
+     {
+      "type": "cbf_q00",
+      "frame": [
+       483,
+       9
+      ],
+      "members": 2,
+      "instances": 6,
+      "hosting": 2,
+      "per_instance": [
+       1
+      ]
+     },
+     {
+      "type": "cbf_q00",
+      "frame": [
+       483,
+       1313
+      ],
+      "members": 2,
+      "instances": 6,
+      "hosting": 2,
+      "per_instance": [
+       1
+      ]
+     },
+     {
+      "type": "cbf_q00",
+      "frame": [
+       484,
+       9
+      ],
+      "members": 2,
+      "instances": 6,
+      "hosting": 2,
+      "per_instance": [
+       1
+      ]
+     },
+     {
+      "type": "cbf_q00",
+      "frame": [
+       484,
+       1313
+      ],
+      "members": 2,
+      "instances": 6,
+      "hosting": 2,
+      "per_instance": [
+       1
+      ]
+     },
+     {
+      "type": "cbf_q00",
+      "frame": [
+       493,
+       9
+      ],
+      "members": 2,
+      "instances": 6,
+      "hosting": 2,
+      "per_instance": [
+       1
+      ]
+     },
+     {
+      "type": "cbf_q00",
+      "frame": [
+       493,
+       1313
+      ],
+      "members": 2,
+      "instances": 6,
+      "hosting": 2,
+      "per_instance": [
+       1
+      ]
+     },
+     {
+      "type": "cbf_q00",
+      "frame": [
+       614,
+       9
+      ],
+      "members": 2,
+      "instances": 6,
+      "hosting": 2,
+      "per_instance": [
+       1
+      ]
+     },
+     {
+      "type": "cbf_q00",
+      "frame": [
+       614,
+       1313
+      ],
+      "members": 2,
+      "instances": 6,
+      "hosting": 2,
+      "per_instance": [
+       1
+      ]
+     },
+     {
+      "type": "cbf_q00",
+      "frame": [
+       631,
+       1313
+      ],
+      "members": 2,
+      "instances": 6,
+      "hosting": 2,
+      "per_instance": [
+       1
+      ]
+     },
+     {
+      "type": "cbf_q00",
+      "frame": [
+       632,
+       9
+      ],
+      "members": 2,
+      "instances": 6,
+      "hosting": 2,
+      "per_instance": [
+       1
+      ]
+     }
+    ],
+    "n_identity_violations": 1543,
+    "types_hosting": 86,
+    "types_identical": 53,
+    "per_type": {
+     "cbf_q01_s2": {
+      "instances": 1,
+      "hosting_instances": 1,
+      "slots_per_instance": [
+       95
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "cbf_q11_na22d3": {
+      "instances": 18,
+      "hosting_instances": 18,
+      "slots_per_instance": [
+       34,
+       35,
+       36,
+       42,
+       45,
+       46,
+       54
+      ],
+      "distinct_slot_sets": 10,
+      "identical": false
+     },
+     "cbf_q00_s2": {
+      "instances": 1,
+      "hosting_instances": 1,
+      "slots_per_instance": [
+       88
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "cbx_q10": {
+      "instances": 36,
+      "hosting_instances": 36,
+      "slots_per_instance": [
+       51,
+       52,
+       53,
+       58,
+       61
+      ],
+      "distinct_slot_sets": 16,
+      "identical": false
+     },
+     "cbn_q01_nb12d10": {
+      "instances": 18,
+      "hosting_instances": 18,
+      "slots_per_instance": [
+       39,
+       40,
+       42,
+       43,
+       47,
+       48,
+       68,
+       70
+      ],
+      "distinct_slot_sets": 15,
+      "identical": false
+     },
+     "cbn_q11_na22d3": {
+      "instances": 18,
+      "hosting_instances": 18,
+      "slots_per_instance": [
+       32,
+       33,
+       34,
+       38,
+       39
+      ],
+      "distinct_slot_sets": 10,
+      "identical": false
+     },
+     "cbn_q00_xb00d1_xb10d0_na00d15": {
+      "instances": 6,
+      "hosting_instances": 6,
+      "slots_per_instance": [
+       52,
+       54,
+       85
+      ],
+      "distinct_slot_sets": 6,
+      "identical": false
+     },
+     "cbx_q10_xb30d2": {
+      "instances": 6,
+      "hosting_instances": 6,
+      "slots_per_instance": [
+       39,
+       40
+      ],
+      "distinct_slot_sets": 5,
+      "identical": false
+     },
+     "slw_stm_v3": {
+      "instances": 1,
+      "hosting_instances": 1,
+      "slots_per_instance": [
+       14
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "slw_fe_v2__clacbd6592": {
+      "instances": 2,
+      "hosting_instances": 2,
+      "slots_per_instance": [
+       6
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "slw_sc_v3": {
+      "instances": 1,
+      "hosting_instances": 1,
+      "slots_per_instance": [
+       8
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "slw_su_c__cl77ab230a": {
+      "instances": 4,
+      "hosting_instances": 4,
+      "slots_per_instance": [
+       18,
+       20,
+       21
+      ],
+      "distinct_slot_sets": 4,
+      "identical": false
+     },
+     "cbf_q01_nb12d10": {
+      "instances": 17,
+      "hosting_instances": 17,
+      "slots_per_instance": [
+       53,
+       55,
+       60,
+       62,
+       70,
+       71,
+       75,
+       79
+      ],
+      "distinct_slot_sets": 14,
+      "identical": false
+     },
+     "cbf_q00_na00d15": {
+      "instances": 17,
+      "hosting_instances": 17,
+      "slots_per_instance": [
+       49,
+       52,
+       56,
+       58,
+       62,
+       64,
+       65,
+       66,
+       86
+      ],
+      "distinct_slot_sets": 14,
+      "identical": false
+     },
+     "cbn_q00_xb10d0_na00d15": {
+      "instances": 12,
+      "hosting_instances": 12,
+      "slots_per_instance": [
+       56,
+       61,
+       63,
+       68,
+       94
+      ],
+      "distinct_slot_sets": 9,
+      "identical": false
+     },
+     "sle_ctl_r8p03": {
+      "instances": 3,
+      "hosting_instances": 3,
+      "slots_per_instance": [
+       20
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "slw_st_b_v2": {
+      "instances": 3,
+      "hosting_instances": 3,
+      "slots_per_instance": [
+       6
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "slw_hc1": {
+      "instances": 6,
+      "hosting_instances": 6,
+      "slots_per_instance": [
+       11,
+       12,
+       14,
+       15
+      ],
+      "distinct_slot_sets": 5,
+      "identical": false
+     },
+     "cbf_q01": {
+      "instances": 6,
+      "hosting_instances": 6,
+      "slots_per_instance": [
+       70,
+       71,
+       75,
+       81
+      ],
+      "distinct_slot_sets": 5,
+      "identical": false
+     },
+     "cbf_q11": {
+      "instances": 6,
+      "hosting_instances": 6,
+      "slots_per_instance": [
+       45,
+       46
+      ],
+      "distinct_slot_sets": 5,
+      "identical": false
+     },
+     "cbf_q00": {
+      "instances": 6,
+      "hosting_instances": 6,
+      "slots_per_instance": [
+       52,
+       56,
+       58,
+       62
+      ],
+      "distinct_slot_sets": 5,
+      "identical": false
+     },
+     "cbn_q01": {
+      "instances": 6,
+      "hosting_instances": 6,
+      "slots_per_instance": [
+       42,
+       43,
+       47,
+       48
+      ],
+      "distinct_slot_sets": 5,
+      "identical": false
+     },
+     "cbn_q11": {
+      "instances": 6,
+      "hosting_instances": 6,
+      "slots_per_instance": [
+       32,
+       33
+      ],
+      "distinct_slot_sets": 4,
+      "identical": false
+     },
+     "cbn_q00": {
+      "instances": 6,
+      "hosting_instances": 6,
+      "slots_per_instance": [
+       52,
+       54,
+       57
+      ],
+      "distinct_slot_sets": 5,
+      "identical": false
+     },
+     "slw_stm_v1__cl522749b8": {
+      "instances": 2,
+      "hosting_instances": 2,
+      "slots_per_instance": [
+       12
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "slw_fe_v1__clcb7b024a": {
+      "instances": 2,
+      "hosting_instances": 2,
+      "slots_per_instance": [
+       6
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "slw_sc_v1": {
+      "instances": 2,
+      "hosting_instances": 2,
+      "slots_per_instance": [
+       8
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "sle_ctl_r8p02": {
+      "instances": 3,
+      "hosting_instances": 3,
+      "slots_per_instance": [
+       20
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "slw_st_b_v1": {
+      "instances": 3,
+      "hosting_instances": 3,
+      "slots_per_instance": [
+       6
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "slw_stm_v2": {
+      "instances": 2,
+      "hosting_instances": 2,
+      "slots_per_instance": [
+       12
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "slw_fe_v2__cle5354d4d": {
+      "instances": 1,
+      "hosting_instances": 1,
+      "slots_per_instance": [
+       6
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "slw_sc_v2": {
+      "instances": 2,
+      "hosting_instances": 2,
+      "slots_per_instance": [
+       8
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "slw_su_c__clbb0c543d": {
+      "instances": 1,
+      "hosting_instances": 1,
+      "slots_per_instance": [
+       17
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "slw_stm_v1__cla56d6dd9": {
+      "instances": 1,
+      "hosting_instances": 1,
+      "slots_per_instance": [
+       12
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "slw_fe_v1__cl8ba3358f": {
+      "instances": 1,
+      "hosting_instances": 1,
+      "slots_per_instance": [
+       6
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "slw_sc_v1r": {
+      "instances": 1,
+      "hosting_instances": 1,
+      "slots_per_instance": [
+       8
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "slw_su_c__cl49a25f5f": {
+      "instances": 1,
+      "hosting_instances": 1,
+      "slots_per_instance": [
+       20
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "cbx_q10_xb30d1": {
+      "instances": 6,
+      "hosting_instances": 6,
+      "slots_per_instance": [
+       39,
+       40,
+       41
+      ],
+      "distinct_slot_sets": 5,
+      "identical": false
+     },
+     "sle_stm_v1": {
+      "instances": 3,
+      "hosting_instances": 3,
+      "slots_per_instance": [
+       12
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "sle_fe_v1__clfcc50df9": {
+      "instances": 2,
+      "hosting_instances": 2,
+      "slots_per_instance": [
+       6
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "sle_sc_v1": {
+      "instances": 3,
+      "hosting_instances": 3,
+      "slots_per_instance": [
+       8
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "sle_su_c__cl78b6fe86": {
+      "instances": 2,
+      "hosting_instances": 2,
+      "slots_per_instance": [
+       17,
+       20
+      ],
+      "distinct_slot_sets": 2,
+      "identical": false
+     },
+     "sle_ctl": {
+      "instances": 3,
+      "hosting_instances": 3,
+      "slots_per_instance": [
+       20
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "sle_st_b_v1": {
+      "instances": 3,
+      "hosting_instances": 3,
+      "slots_per_instance": [
+       6
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "sle_hc1": {
+      "instances": 6,
+      "hosting_instances": 6,
+      "slots_per_instance": [
+       11,
+       12,
+       14,
+       15,
+       26
+      ],
+      "distinct_slot_sets": 5,
+      "identical": false
+     },
+     "sle_stm_v2": {
+      "instances": 2,
+      "hosting_instances": 2,
+      "slots_per_instance": [
+       12
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "sle_fe_v2": {
+      "instances": 2,
+      "hosting_instances": 2,
+      "slots_per_instance": [
+       6
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "sle_sc_v2": {
+      "instances": 2,
+      "hosting_instances": 2,
+      "slots_per_instance": [
+       8
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "sle_ctl_r8p01": {
+      "instances": 3,
+      "hosting_instances": 3,
+      "slots_per_instance": [
+       20
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "sle_st_b_v2": {
+      "instances": 3,
+      "hosting_instances": 3,
+      "slots_per_instance": [
+       6
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "sle_fe_v1__clad8c146b": {
+      "instances": 1,
+      "hosting_instances": 1,
+      "slots_per_instance": [
+       6
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "sle_su_c__cl99d49f55": {
+      "instances": 1,
+      "hosting_instances": 1,
+      "slots_per_instance": [
+       18
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "sle_su_c__cl3c67a3d5": {
+      "instances": 3,
+      "hosting_instances": 3,
+      "slots_per_instance": [
+       20,
+       21,
+       25
+      ],
+      "distinct_slot_sets": 3,
+      "identical": false
+     },
+     "sle_stm_v3": {
+      "instances": 1,
+      "hosting_instances": 1,
+      "slots_per_instance": [
+       12
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "sle_fe_v3": {
+      "instances": 1,
+      "hosting_instances": 1,
+      "slots_per_instance": [
+       6
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "sle_sc_v3": {
+      "instances": 1,
+      "hosting_instances": 1,
+      "slots_per_instance": [
+       8
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "slw_fw_v3": {
+      "instances": 1,
+      "hosting_instances": 1,
+      "slots_per_instance": [
+       23
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "slw_fw_v1__cl80b8d16f": {
+      "instances": 2,
+      "hosting_instances": 2,
+      "slots_per_instance": [
+       5
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "slw_fw_v2": {
+      "instances": 2,
+      "hosting_instances": 2,
+      "slots_per_instance": [
+       5
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "slw_fw_v1__cl82aac3aa": {
+      "instances": 1,
+      "hosting_instances": 1,
+      "slots_per_instance": [
+       5
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "sle_fw_v1__cl3b7cacba": {
+      "instances": 1,
+      "hosting_instances": 1,
+      "slots_per_instance": [
+       5
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "sle_fw_v2__cl2b5fc15e": {
+      "instances": 1,
+      "hosting_instances": 1,
+      "slots_per_instance": [
+       5
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "sle_fw_v1_e2": {
+      "instances": 1,
+      "hosting_instances": 1,
+      "slots_per_instance": [
+       5
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "sle_fw_v2__clf90441df": {
+      "instances": 1,
+      "hosting_instances": 1,
+      "slots_per_instance": [
+       5
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "sle_fw_v1__cl39c71cef": {
+      "instances": 1,
+      "hosting_instances": 1,
+      "slots_per_instance": [
+       5
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "sle_fw_v3": {
+      "instances": 1,
+      "hosting_instances": 1,
+      "slots_per_instance": [
+       5
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "slw_st_a_v2": {
+      "instances": 3,
+      "hosting_instances": 3,
+      "slots_per_instance": [
+       5,
+       25
+      ],
+      "distinct_slot_sets": 2,
+      "identical": false
+     },
+     "slw_st_a_v1": {
+      "instances": 3,
+      "hosting_instances": 3,
+      "slots_per_instance": [
+       5
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "sle_st_a_v1": {
+      "instances": 3,
+      "hosting_instances": 3,
+      "slots_per_instance": [
+       5
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "sle_st_a_v2": {
+      "instances": 3,
+      "hosting_instances": 3,
+      "slots_per_instance": [
+       5
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "slw_su_l1__clbd68af58": {
+      "instances": 1,
+      "hosting_instances": 1,
+      "slots_per_instance": [
+       8
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "slw_hc0": {
+      "instances": 6,
+      "hosting_instances": 6,
+      "slots_per_instance": [
+       8,
+       10,
+       21
+      ],
+      "distinct_slot_sets": 4,
+      "identical": false
+     },
+     "slw_su_l1__cl766bacee": {
+      "instances": 4,
+      "hosting_instances": 4,
+      "slots_per_instance": [
+       8,
+       10
+      ],
+      "distinct_slot_sets": 3,
+      "identical": false
+     },
+     "slw_su_l1__cl8312485b": {
+      "instances": 1,
+      "hosting_instances": 1,
+      "slots_per_instance": [
+       8
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "sle_su_l1__cl15735621": {
+      "instances": 1,
+      "hosting_instances": 1,
+      "slots_per_instance": [
+       8
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "sle_hc0": {
+      "instances": 6,
+      "hosting_instances": 6,
+      "slots_per_instance": [
+       8,
+       10
+      ],
+      "distinct_slot_sets": 4,
+      "identical": false
+     },
+     "sle_su_l1__cl9c71a39d": {
+      "instances": 2,
+      "hosting_instances": 2,
+      "slots_per_instance": [
+       8,
+       10
+      ],
+      "distinct_slot_sets": 2,
+      "identical": false
+     },
+     "sle_su_l1__cl3c610c2d": {
+      "instances": 3,
+      "hosting_instances": 3,
+      "slots_per_instance": [
+       8,
+       10
+      ],
+      "distinct_slot_sets": 3,
+      "identical": false
+     },
+     "slw_su_l0__cl72211ea3": {
+      "instances": 4,
+      "hosting_instances": 4,
+      "slots_per_instance": [
+       6
+      ],
+      "distinct_slot_sets": 4,
+      "identical": false
+     },
+     "slw_su_l0__cl0cf5548e": {
+      "instances": 1,
+      "hosting_instances": 1,
+      "slots_per_instance": [
+       6
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "slw_su_l0__cle4811ba5": {
+      "instances": 1,
+      "hosting_instances": 1,
+      "slots_per_instance": [
+       6
+      ],
+      "distinct_slot_sets": 1,
+      "identical": true
+     },
+     "sle_su_l0__clad02be3b": {
+      "instances": 2,
+      "hosting_instances": 2,
+      "slots_per_instance": [
+       6
+      ],
+      "distinct_slot_sets": 2,
+      "identical": false
+     },
+     "sle_su_l0__cld14716fc": {
+      "instances": 4,
+      "hosting_instances": 4,
+      "slots_per_instance": [
+       6,
+       15
+      ],
+      "distinct_slot_sets": 4,
+      "identical": false
+     },
+     "slw_hc2": {
+      "instances": 6,
+      "hosting_instances": 6,
+      "slots_per_instance": [
+       4,
+       6
+      ],
+      "distinct_slot_sets": 3,
+      "identical": false
+     },
+     "slw_hc3": {
+      "instances": 12,
+      "hosting_instances": 12,
+      "slots_per_instance": [
+       6,
+       9
+      ],
+      "distinct_slot_sets": 6,
+      "identical": false
+     },
+     "sle_hc2": {
+      "instances": 6,
+      "hosting_instances": 6,
+      "slots_per_instance": [
+       4,
+       6,
+       9
+      ],
+      "distinct_slot_sets": 3,
+      "identical": false
+     }
+    },
+    "rule": "one slot per (type, frame point) class, free + clear in every instance -> identical slot set per type"
+   },
+   "note": "net = Manhattan L between cell sites (ratio 1.0); planned legs differ by <= max_net_extra_vs_leg_um, same on every root->driver path of a level (common, not skew). UNCHECKED"
+  },
+  "tool_sha256": "7a1cbd86a11e22fb02aff9773cc3ed31ea8a8a428c7d0fac142746077fc1009a",
+  "planner_tool_sha256": "1c55341d9b8202269b5f626a3803fa9130e9a5772f5b8708bf6b4f1644c216cd"
+ },
+ "build_adapter": {
+  "verdict": "READY",
+  "reasons": [],
+  "required_features": [
+   "explicit_clock_v2",
+   "per_edge_ndr",
+   "heterogeneous_M7_ties",
+   "complete_continuous_mesh"
+  ],
+  "policy": "No edge/NDR is discarded or substituted; no route admission from this export."
+ },
+ "spec_sha256": "d1a1f02ae25e0bd515906c7affb7aac18be3496560d87a95d4cd7e33f376f2bb",
+ "mesh_sha256": "63fe1290b1196e9222f954ed86b9a65f026abcb5a12abb8a3525ad7498bb8b75",
+ "geometry_scope": "trial placement and DB topology only; timing and extraction sign-off NOT RUN"
+}
