@@ -1,0 +1,22 @@
+{
+  "status": "FAIL_CALENDAR_CAPACITY",
+  "bank_query_period": 4,
+  "bank_key_period": 4,
+  "vm_period": 2,
+  "calendar_capacity_instructions": 2048,
+  "results": [
+    {
+      "score_chain": 0,
+      "required_length": 2129
+    },
+    {
+      "score_chain": 4,
+      "required_length": 2133
+    },
+    {
+      "score_chain": 16,
+      "required_length": 2145
+    }
+  ],
+  "diagnosis": "2000fit applies onlyvm_period1. Existing nativeII2 operand retrieval plus plannedk4exchanges exceeds2048calendar. No limit relaxed. Requires actual storagegrowth or source-qualified structural schedule overlap; no arbitrarygap reduction."
+}

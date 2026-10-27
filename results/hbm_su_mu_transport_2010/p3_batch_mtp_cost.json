@@ -1,0 +1,61 @@
+{
+  "schema": "opentallas.p3.materialization_cost.v1",
+  "input_image": "/tmp/codex-p3-batch-mtp",
+  "status": "CONDITIONAL_EXISTING_MODEL_UNIT_WORK_NOT_TOKEN_RATE",
+  "scope": "selected cohort cost; FUSED row overlap, all-unit drain delays, physical replay and eight-SM model not included",
+  "instructions_selected": 468,
+  "rowx_instructions_expanded_serially": 387,
+  "records_per_unit": {
+    "DMA.LOAD": 81,
+    "SU.VOP": 1686
+  },
+  "cycles_per_unit": {
+    "DMA.LOAD": 13483.851327880775,
+    "SU.VOP": 124254.0
+  },
+  "unit_work_serial_sum_cycles": 137737.85132788078,
+  "vm_copy_words": 12329760,
+  "hbm_load_words": 414720,
+  "hbm_load_bytes": 1658880,
+  "HBM_bytes_per_cycle": 3166.7,
+  "HBM_traffic_floor_cycles": 523.8513278807592,
+  "fused_chunk_model": {
+    "firstrow_II": {
+      "HC_PRE_NORM": [
+        404.0,
+        81.0
+      ],
+      "HC_POST": [
+        196.0,
+        103.0
+      ]
+    },
+    "original_cycles": 122409.0,
+    "lowered_cycles": 127338.0,
+    "added_cycles": 4929.0,
+    "chunks": [
+      {
+        "op": "HC_POST",
+        "rows": 1,
+        "count": 53
+      },
+      {
+        "op": "HC_POST",
+        "rows": 5,
+        "count": 53
+      },
+      {
+        "op": "HC_POST",
+        "rows": 6,
+        "count": 27
+      },
+      {
+        "op": "HC_PRE_NORM",
+        "rows": 6,
+        "count": 81
+      }
+    ],
+    "scope": "explicit supplied first-row/II model; no selected native or eight-SM claim"
+  },
+  "extra_serial_unit_work_cycles": 142666.85132788078
+}
