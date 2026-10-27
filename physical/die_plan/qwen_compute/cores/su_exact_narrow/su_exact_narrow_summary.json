@@ -1,0 +1,148 @@
+{
+ "source": "6db53f3977:physical/die_plan/qwen_compute/cores/su_exact",
+ "const_bits": [
+  49,
+  50,
+  51,
+  52,
+  53,
+  54,
+  55,
+  56,
+  57,
+  58,
+  59,
+  60,
+  61,
+  62,
+  63,
+  64,
+  65,
+  66,
+  67,
+  68,
+  297,
+  298,
+  299,
+  300
+ ],
+ "const_value": 0,
+ "const_roles": {
+  "c_o[49..68]": "kv_wdata[0..19]",
+  "c_o[297..300]": "wrom_addr[20..23]"
+ },
+ "tables": {
+  "sle_su_l0_u_lane0_pins.json": {
+   "core": "qfd_qc_su_lane_e_l0",
+   "pins_old": 1064,
+   "pins_new": 1040,
+   "c_o_new": 278,
+   "narrowed": true
+  },
+  "sle_su_l0_u_lane1_pins.json": {
+   "core": "qfd_qc_su_lane_e_l1",
+   "pins_old": 1010,
+   "pins_new": 1010,
+   "c_o_new": 248,
+   "narrowed": false
+  },
+  "sle_su_l0_u_lane2_pins.json": {
+   "core": "qfd_qc_su_lane_e_l2",
+   "pins_old": 1010,
+   "pins_new": 1010,
+   "c_o_new": 248,
+   "narrowed": false
+  },
+  "sle_su_l0_u_lane3_pins.json": {
+   "core": "qfd_qc_su_lane_e_l3",
+   "pins_old": 1010,
+   "pins_new": 1010,
+   "c_o_new": 248,
+   "narrowed": false
+  },
+  "sle_su_l1_u_lane4_pins.json": {
+   "core": "qfd_qc_su_lane_e_l4",
+   "pins_old": 1010,
+   "pins_new": 1010,
+   "c_o_new": 248,
+   "narrowed": false
+  },
+  "sle_su_l1_u_lane5_pins.json": {
+   "core": "qfd_qc_su_lane_e_l5",
+   "pins_old": 1010,
+   "pins_new": 1010,
+   "c_o_new": 248,
+   "narrowed": false
+  },
+  "sle_su_l1_u_lane6_pins.json": {
+   "core": "qfd_qc_su_lane_e_l6",
+   "pins_old": 1010,
+   "pins_new": 1010,
+   "c_o_new": 248,
+   "narrowed": false
+  },
+  "sle_su_l1_u_lane7_pins.json": {
+   "core": "qfd_qc_su_lane_e_l7",
+   "pins_old": 1010,
+   "pins_new": 1010,
+   "c_o_new": 248,
+   "narrowed": false
+  },
+  "slw_su_l0_u_lane0_pins.json": {
+   "core": "qfd_qc_su_lane_w_l0",
+   "pins_old": 1064,
+   "pins_new": 1040,
+   "c_o_new": 278,
+   "narrowed": true
+  },
+  "slw_su_l0_u_lane1_pins.json": {
+   "core": "qfd_qc_su_lane_w_l1",
+   "pins_old": 1010,
+   "pins_new": 1010,
+   "c_o_new": 248,
+   "narrowed": false
+  },
+  "slw_su_l0_u_lane2_pins.json": {
+   "core": "qfd_qc_su_lane_w_l2",
+   "pins_old": 1010,
+   "pins_new": 1010,
+   "c_o_new": 248,
+   "narrowed": false
+  },
+  "slw_su_l0_u_lane3_pins.json": {
+   "core": "qfd_qc_su_lane_w_l3",
+   "pins_old": 1010,
+   "pins_new": 1010,
+   "c_o_new": 248,
+   "narrowed": false
+  },
+  "slw_su_l1_u_lane4_pins.json": {
+   "core": "qfd_qc_su_lane_w_l4",
+   "pins_old": 1010,
+   "pins_new": 1010,
+   "c_o_new": 248,
+   "narrowed": false
+  },
+  "slw_su_l1_u_lane5_pins.json": {
+   "core": "qfd_qc_su_lane_w_l5",
+   "pins_old": 1010,
+   "pins_new": 1010,
+   "c_o_new": 248,
+   "narrowed": false
+  },
+  "slw_su_l1_u_lane6_pins.json": {
+   "core": "qfd_qc_su_lane_w_l6",
+   "pins_old": 1010,
+   "pins_new": 1010,
+   "c_o_new": 248,
+   "narrowed": false
+  },
+  "slw_su_l1_u_lane7_pins.json": {
+   "core": "qfd_qc_su_lane_w_l7",
+   "pins_old": 1010,
+   "pins_new": 1010,
+   "c_o_new": 248,
+   "narrowed": false
+  }
+ }
+}
