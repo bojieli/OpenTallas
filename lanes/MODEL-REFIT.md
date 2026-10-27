@@ -33,3 +33,4 @@ uf_phys3_v1 c46af260b owns predictor; GRT11/10ps guard,window14. No via-term ado
 
 ## CODEX notes 2026-10-26 20:42 PDT
 CODEX model collection: F4F commonentrytrunk encoded as ordinary tree nodes because uf_phys Plan ignores ot_h_entry_n. Predictor parameters unchanged; staticguard bothVMR/RP1 PASS (seeQC-SU-F4). NewHEAD point from peer codex/head-2000@f69e7d148: strictcount24444b0 density.30,512leaves50..51,170treecells. Pred248.00/w13.94TT,190.54/w12.47FF -> actual252.55/w12.63,196.95/w10.58 GRT0/102722nets (UNCHECKED). Residual+4.55/+6.41 inside11/10guard; no retuning. epyc2 codex-head-2000/planning/measured_eq.json andelemB_clock_eq/meas_ck_*.tsv.
+- 2026-10-27 03:13 PDT COORD (HBM-EP-CAL-1): ep built 185.8 TT / 142.6 FF vs plan 290.9 (-105, UNCHECKED); uf_phys3 over-predicts; refit with xcal -73. Next: entry trunk + route.
