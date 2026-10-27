@@ -1392,3 +1392,5 @@ CODEX: 2026-10-27 08:52 PDT HBM CE source READY d02f055a42: native40/40+mutant a
 CODEX: 2026-10-27 08:57 PDT FLOW staticguardmainb56; realAPENOENTfixed1895 andtimerrestored; modernQCtypeIO d17READY32tests; Q1faceallocator973trial; KVSCTLcomposedfullproof+SATmutantapproved; QC60regressionrootcauseclock+29.57ps notRC.
 
 CODEX: 2026-10-27 08:57 PDT LEC rst_n_pin reset-detection fix05992df62,30focusedPASS; actualBFp0_fp4 resetbase+constantinductionPROVED(noRTLchange). Strandedargmax_nr/hcp4 processabsence diagnosed; canonicalargmaxcurrenttoolrecoverylive.
+
+CODEX: 2026-10-27 08:58 PDT RM50 main fa02b11f4b == origin/main; QC physical hooks + per-type IO contracts, 24+32 lane gates PASS, prior guards retained, 0 deletions.
