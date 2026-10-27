@@ -1,0 +1,23 @@
+{
+ "mode": "class",
+ "block": 2,
+ "regions": 171,
+ "largest_region_parts": 8,
+ "landed_ports": 1210,
+ "landed_bits": 559382,
+ "lanes_with_landing": 570,
+ "lanes_total": 873,
+ "added_lane_cycles_face": 3630,
+ "added_lane_cycles_fwd": 1710,
+ "ring_live_ff": 2802960,
+ "core": "tap",
+ "lanes_with_core_landing": 0,
+ "added_lane_cycles_core": 0,
+ "legacy_core_partitions": 218,
+ "by_class_pair": {
+  "std->std": {
+   "ports": 1210,
+   "bits": 559382
+  }
+ }
+}

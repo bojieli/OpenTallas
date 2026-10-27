@@ -1,0 +1,2411 @@
+{
+ "source": "60e920f87",
+ "basis": "Ideal Manhattan topology, before legal siting, no ps/timing claim",
+ "nodes": 29700,
+ "taps": 9209,
+ "root_path_min_um": 28152.900000000005,
+ "root_path_max_um": 28340.280000000006,
+ "root_stages_min": 79,
+ "root_stages_max": 79,
+ "tap_stages_min": 85,
+ "tap_stages_max": 102,
+ "max_unrepeated_tap_um": 220.22000000000116,
+ "roots": [
+  {
+   "region": "std_b0_0_2",
+   "root_path_um": 28211.626000000004,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b0_0_1",
+   "root_path_um": 28260.766000000003,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b0_0_0",
+   "root_path_um": 28315.574000000004,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b0_1_0",
+   "root_path_um": 28216.890000000007,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b1_0_1",
+   "root_path_um": 28258.876,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b1_0_0",
+   "root_path_um": 28276.29,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b2_0_0",
+   "root_path_um": 28257.796000000002,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b1_1_0",
+   "root_path_um": 28205.010000000002,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b2_1_0",
+   "root_path_um": 28186.516000000003,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b0_2_1",
+   "root_path_um": 28219.726000000002,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b0_3_0",
+   "root_path_um": 28257.930000000004,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b0_2_0",
+   "root_path_um": 28274.534000000003,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b1_2_1",
+   "root_path_um": 28262.654,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b0_3_2",
+   "root_path_um": 28245.646,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b0_4_0",
+   "root_path_um": 28232.010000000006,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b0_3_1",
+   "root_path_um": 28300.453999999998,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b1_3_2",
+   "root_path_um": 28288.574,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b1_2_0",
+   "root_path_um": 28207.843999999997,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b1_3_0",
+   "root_path_um": 28246.05,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b2_2_1",
+   "root_path_um": 28189.35,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b2_3_0",
+   "root_path_um": 28227.556,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b1_3_1",
+   "root_path_um": 28233.763999999996,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b1_4_0",
+   "root_path_um": 28220.13,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b2_3_2",
+   "root_path_um": 28215.269999999997,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b2_4_0",
+   "root_path_um": 28201.636000000002,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b3_0_0",
+   "root_path_um": 28310.716000000004,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b3_0_1",
+   "root_path_um": 28228.5,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b3_1_0",
+   "root_path_um": 28262.79000000001,
+   "root_stages": 79
+  },
+  {
+   "region": "std_bg_0_0",
+   "root_path_um": 28180.576,
+   "root_stages": 79
+  },
+  {
+   "region": "std_bg_1_0",
+   "root_path_um": 28277.91,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b2_2_0",
+   "root_path_um": 28244.160000000007,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b3_2_0",
+   "root_path_um": 28293.03000000001,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b3_2_1",
+   "root_path_um": 28204.74,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b3_3_0",
+   "root_path_um": 28309.904000000002,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b2_3_1",
+   "root_path_um": 28270.08,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b3_4_0",
+   "root_path_um": 28250.504,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b4_2_0",
+   "root_path_um": 28152.900000000005,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b4_3_0",
+   "root_path_um": 28230.660000000003,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b4_4_0",
+   "root_path_um": 28171.26,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b0_5_1",
+   "root_path_um": 28204.606,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b0_6_0",
+   "root_path_um": 28273.050000000003,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b0_5_0",
+   "root_path_um": 28259.413999999997,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b1_5_1",
+   "root_path_um": 28247.534,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b0_6_2",
+   "root_path_um": 28230.526,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b0_7_0",
+   "root_path_um": 28247.130000000005,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b0_6_1",
+   "root_path_um": 28285.334000000003,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b1_6_2",
+   "root_path_um": 28273.453999999998,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b1_5_0",
+   "root_path_um": 28192.723999999995,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b1_6_0",
+   "root_path_um": 28261.17,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b2_5_1",
+   "root_path_um": 28174.229999999996,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b2_6_0",
+   "root_path_um": 28242.676,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b1_6_1",
+   "root_path_um": 28218.643999999997,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b1_7_0",
+   "root_path_um": 28235.25,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b2_6_2",
+   "root_path_um": 28200.149999999998,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b2_7_0",
+   "root_path_um": 28216.756,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b0_8_1",
+   "root_path_um": 28189.486000000008,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b0_8_0",
+   "root_path_um": 28244.29400000001,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b1_8_1",
+   "root_path_um": 28232.414000000008,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b0_9_0",
+   "root_path_um": 28288.17000000001,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b0_9_1",
+   "root_path_um": 28211.626000000004,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b1_8_0",
+   "root_path_um": 28177.604000000007,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b2_8_1",
+   "root_path_um": 28159.110000000008,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b1_9_0",
+   "root_path_um": 28276.290000000008,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b1_9_1",
+   "root_path_um": 28258.876,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b2_9_0",
+   "root_path_um": 28257.79600000001,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b2_5_0",
+   "root_path_um": 28229.04,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b3_5_0",
+   "root_path_um": 28250.504,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b2_6_1",
+   "root_path_um": 28254.96,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b3_6_0",
+   "root_path_um": 28309.904,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b3_7_0",
+   "root_path_um": 28265.624,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b4_5_0",
+   "root_path_um": 28171.259999999995,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b5_5_0",
+   "root_path_um": 28253.475999999995,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b4_6_0",
+   "root_path_um": 28230.659999999996,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b4_7_0",
+   "root_path_um": 28186.379999999997,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b5_6_0",
+   "root_path_um": 28312.875999999997,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b2_8_0",
+   "root_path_um": 28213.92000000001,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b3_8_1",
+   "root_path_um": 28262.79000000001,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b3_8_0",
+   "root_path_um": 28207.98000000001,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b3_9_0",
+   "root_path_um": 28238.35400000001,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b4_8_0",
+   "root_path_um": 28153.170000000006,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b4_8_1",
+   "root_path_um": 28183.54400000001,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b4_9_1",
+   "root_path_um": 28224.450000000004,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b4_9_2",
+   "root_path_um": 28254.824000000008,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b4_9_0",
+   "root_path_um": 28229.986000000008,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b5_9_0",
+   "root_path_um": 28216.214000000004,
+   "root_stages": 79
+  },
+  {
+   "region": "hard_phy_hbm",
+   "root_path_um": 28309.636000000002,
+   "root_stages": 79
+  },
+  {
+   "region": "std_bg_2_0",
+   "root_path_um": 28277.91,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b7_0_1",
+   "root_path_um": 28322.190000000006,
+   "root_stages": 79
+  },
+  {
+   "region": "std_bg_3_0",
+   "root_path_um": 28180.576,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b7_1_0",
+   "root_path_um": 28262.790000000008,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b5_2_0",
+   "root_path_um": 28262.520000000008,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b5_3_0",
+   "root_path_um": 28340.280000000006,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b6_2_0",
+   "root_path_um": 28152.900000000012,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b6_3_0",
+   "root_path_um": 28230.66000000001,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b5_4_0",
+   "root_path_um": 28280.88000000001,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b6_4_0",
+   "root_path_um": 28171.260000000017,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b7_2_0",
+   "root_path_um": 28265.625999999997,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b7_3_0",
+   "root_path_um": 28309.905999999995,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b8_2_0",
+   "root_path_um": 28244.160000000003,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b7_4_0",
+   "root_path_um": 28250.505999999998,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b8_3_1",
+   "root_path_um": 28270.08,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b8_0_1",
+   "root_path_um": 28243.62,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b8_0_0",
+   "root_path_um": 28257.795999999995,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b8_1_0",
+   "root_path_um": 28186.515999999996,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b9_1_0",
+   "root_path_um": 28205.010000000002,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b9_0_0",
+   "root_path_um": 28202.039999999997,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b10_0_0",
+   "root_path_um": 28315.574,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b10_0_2",
+   "root_path_um": 28188.406000000003,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b10_0_1",
+   "root_path_um": 28260.764000000003,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b10_1_0",
+   "root_path_um": 28216.889999999996,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b8_2_1",
+   "root_path_um": 28189.350000000002,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b8_3_0",
+   "root_path_um": 28227.555999999997,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b9_2_0",
+   "root_path_um": 28207.84400000001,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b9_3_0",
+   "root_path_um": 28246.050000000003,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b8_3_2",
+   "root_path_um": 28215.270000000004,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b8_4_0",
+   "root_path_um": 28201.636000000002,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b9_3_1",
+   "root_path_um": 28233.76400000001,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b9_4_0",
+   "root_path_um": 28220.130000000005,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b9_2_1",
+   "root_path_um": 28262.656000000003,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b10_2_0",
+   "root_path_um": 28274.534000000003,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b10_2_1",
+   "root_path_um": 28219.724000000006,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b10_3_0",
+   "root_path_um": 28257.929999999997,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b9_3_2",
+   "root_path_um": 28288.576,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b10_3_1",
+   "root_path_um": 28300.453999999998,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b10_3_2",
+   "root_path_um": 28245.644,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b10_4_0",
+   "root_path_um": 28232.01,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b5_5_1",
+   "root_path_um": 28253.476000000002,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b6_5_0",
+   "root_path_um": 28198.666000000012,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b6_5_1",
+   "root_path_um": 28168.290000000008,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b5_6_1",
+   "root_path_um": 28312.876000000004,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b5_7_0",
+   "root_path_um": 28296.000000000007,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b6_6_0",
+   "root_path_um": 28230.660000000014,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b6_7_0",
+   "root_path_um": 28186.380000000016,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b7_5_0",
+   "root_path_um": 28223.1,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b7_5_1",
+   "root_path_um": 28277.91000000001,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b8_5_0",
+   "root_path_um": 28229.04,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b7_6_0",
+   "root_path_um": 28309.90599999999,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b7_7_0",
+   "root_path_um": 28265.625999999997,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b8_6_1",
+   "root_path_um": 28254.960000000006,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b5_8_0",
+   "root_path_um": 28265.76000000001,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b6_8_0",
+   "root_path_um": 28156.140000000014,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b6_9_0",
+   "root_path_um": 28254.826000000012,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b6_9_1",
+   "root_path_um": 28198.260000000006,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b7_8_0",
+   "root_path_um": 28235.386,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b8_8_0",
+   "root_path_um": 28213.920000000006,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b7_9_0",
+   "root_path_um": 28271.296000000006,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b8_5_1",
+   "root_path_um": 28174.230000000003,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b8_6_0",
+   "root_path_um": 28242.676,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b9_5_0",
+   "root_path_um": 28192.72400000001,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b9_6_0",
+   "root_path_um": 28261.170000000006,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b8_6_2",
+   "root_path_um": 28200.150000000005,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b8_7_0",
+   "root_path_um": 28216.756,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b9_6_1",
+   "root_path_um": 28218.64400000001,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b9_7_0",
+   "root_path_um": 28235.250000000007,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b9_5_1",
+   "root_path_um": 28247.536,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b10_5_0",
+   "root_path_um": 28259.413999999997,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b10_5_1",
+   "root_path_um": 28204.604,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b10_6_0",
+   "root_path_um": 28273.049999999996,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b9_6_2",
+   "root_path_um": 28273.456000000002,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b10_6_1",
+   "root_path_um": 28285.334000000003,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b10_6_2",
+   "root_path_um": 28230.524,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b10_7_0",
+   "root_path_um": 28247.129999999997,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b8_8_1",
+   "root_path_um": 28159.110000000004,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b9_8_0",
+   "root_path_um": 28177.60400000001,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b8_9_0",
+   "root_path_um": 28300.589999999997,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b9_9_0",
+   "root_path_um": 28276.290000000005,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b9_8_1",
+   "root_path_um": 28232.416000000005,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b10_8_0",
+   "root_path_um": 28244.294000000005,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b10_8_1",
+   "root_path_um": 28189.484000000008,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b10_9_1",
+   "root_path_um": 28243.349999999995,
+   "root_stages": 79
+  },
+  {
+   "region": "std_b10_9_0",
+   "root_path_um": 28288.17,
+   "root_stages": 79
+  }
+ ],
+ "regions": [
+  {
+   "region": "std_b0_0_2",
+   "taps": 36,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30452.49,
+   "path_max_um": 30547.738000000005,
+   "max_unrepeated_tap_um": 183.40200000000004
+  },
+  {
+   "region": "std_b0_0_1",
+   "taps": 22,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29442.854000000007,
+   "path_max_um": 29595.142000000007,
+   "max_unrepeated_tap_um": 166.356
+  },
+  {
+   "region": "std_b0_0_0",
+   "taps": 22,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29497.662000000008,
+   "path_max_um": 29649.950000000008,
+   "max_unrepeated_tap_um": 166.356
+  },
+  {
+   "region": "std_b0_1_0",
+   "taps": 88,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30733.858000000007,
+   "path_max_um": 30886.146000000008,
+   "max_unrepeated_tap_um": 166.35600000000022
+  },
+  {
+   "region": "std_b1_0_1",
+   "taps": 36,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30499.739999999998,
+   "path_max_um": 30594.987999999998,
+   "max_unrepeated_tap_um": 183.40200000000004
+  },
+  {
+   "region": "std_b1_0_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30171.242000000002,
+   "path_max_um": 30332.106000000007,
+   "max_unrepeated_tap_um": 166.35600000000045
+  },
+  {
+   "region": "std_b2_0_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30152.74800000001,
+   "path_max_um": 30313.61200000001,
+   "max_unrepeated_tap_um": 166.35600000000068
+  },
+  {
+   "region": "std_b1_1_0",
+   "taps": 90,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30715.562000000005,
+   "path_max_um": 30874.266000000007,
+   "max_unrepeated_tap_um": 166.35600000000068
+  },
+  {
+   "region": "std_b2_1_0",
+   "taps": 90,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30697.06800000001,
+   "path_max_um": 30855.772000000008,
+   "max_unrepeated_tap_um": 166.35600000000068
+  },
+  {
+   "region": "std_b0_2_1",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30015.254000000004,
+   "path_max_um": 30167.54200000001,
+   "max_unrepeated_tap_um": 166.35600000000022
+  },
+  {
+   "region": "std_b0_3_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30198.090000000007,
+   "path_max_um": 30313.746000000006,
+   "max_unrepeated_tap_um": 166.3559999999993
+  },
+  {
+   "region": "std_b0_2_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30070.062000000005,
+   "path_max_um": 30222.350000000006,
+   "max_unrepeated_tap_um": 166.35600000000022
+  },
+  {
+   "region": "std_b1_2_1",
+   "taps": 46,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30049.606,
+   "path_max_um": 30210.47,
+   "max_unrepeated_tap_um": 166.3559999999993
+  },
+  {
+   "region": "std_b0_3_2",
+   "taps": 22,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29427.734000000004,
+   "path_max_um": 29580.022000000004,
+   "max_unrepeated_tap_um": 166.35600000000113
+  },
+  {
+   "region": "std_b0_4_0",
+   "taps": 88,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30748.97800000001,
+   "path_max_um": 30901.26600000001,
+   "max_unrepeated_tap_um": 166.35600000000113
+  },
+  {
+   "region": "std_b0_3_1",
+   "taps": 22,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29482.542,
+   "path_max_um": 29634.83,
+   "max_unrepeated_tap_um": 166.35600000000113
+  },
+  {
+   "region": "std_b1_3_2",
+   "taps": 22,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29462.086000000007,
+   "path_max_um": 29622.950000000004,
+   "max_unrepeated_tap_um": 166.35600000000113
+  },
+  {
+   "region": "std_b1_2_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30003.372,
+   "path_max_um": 30155.660000000003,
+   "max_unrepeated_tap_um": 166.35600000000068
+  },
+  {
+   "region": "std_b1_3_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30145.258,
+   "path_max_um": 30301.866,
+   "max_unrepeated_tap_um": 166.35600000000022
+  },
+  {
+   "region": "std_b2_2_1",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 29984.878,
+   "path_max_um": 30137.166000000005,
+   "max_unrepeated_tap_um": 166.35600000000068
+  },
+  {
+   "region": "std_b2_3_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30126.764000000003,
+   "path_max_um": 30283.372000000003,
+   "max_unrepeated_tap_um": 166.35600000000068
+  },
+  {
+   "region": "std_b1_3_1",
+   "taps": 22,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29415.852,
+   "path_max_um": 29568.14,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b1_4_0",
+   "taps": 90,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30730.682000000008,
+   "path_max_um": 30889.386000000006,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b2_3_2",
+   "taps": 22,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29397.358,
+   "path_max_um": 29549.646,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b2_4_0",
+   "taps": 90,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30712.18800000001,
+   "path_max_um": 30870.892000000007,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b3_0_0",
+   "taps": 53,
+   "stages_min": 91,
+   "stages_max": 91,
+   "path_min_um": 31137.116000000005,
+   "path_max_um": 31260.268000000007,
+   "max_unrepeated_tap_um": 183.40199999999913
+  },
+  {
+   "region": "std_b3_0_1",
+   "taps": 16,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29441.9,
+   "path_max_um": 29441.916,
+   "max_unrepeated_tap_um": 151.23599999999988
+  },
+  {
+   "region": "std_b3_1_0",
+   "taps": 136,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30068.094000000012,
+   "path_max_um": 30211.094000000016,
+   "max_unrepeated_tap_um": 166.8440000000005
+  },
+  {
+   "region": "std_bg_0_0",
+   "taps": 84,
+   "stages_min": 93,
+   "stages_max": 93,
+   "path_min_um": 31980.176,
+   "path_max_um": 32077.176000000007,
+   "max_unrepeated_tap_um": 166.82000000000062
+  },
+  {
+   "region": "std_bg_1_0",
+   "taps": 56,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30850.629999999997,
+   "path_max_um": 30947.630000000005,
+   "max_unrepeated_tap_um": 166.82000000000062
+  },
+  {
+   "region": "std_b2_2_0",
+   "taps": 46,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30031.11200000001,
+   "path_max_um": 30191.97600000001,
+   "max_unrepeated_tap_um": 166.35599999999977
+  },
+  {
+   "region": "std_b3_2_0",
+   "taps": 96,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30134.646000000015,
+   "path_max_um": 30237.638000000014,
+   "max_unrepeated_tap_um": 163.14800000000105
+  },
+  {
+   "region": "std_b3_2_1",
+   "taps": 16,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29539.100000000002,
+   "path_max_um": 29539.116000000005,
+   "max_unrepeated_tap_um": 166.35600000000068
+  },
+  {
+   "region": "std_b3_3_0",
+   "taps": 165,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30874.36800000001,
+   "path_max_um": 30979.648000000012,
+   "max_unrepeated_tap_um": 166.84400000000005
+  },
+  {
+   "region": "std_b2_3_1",
+   "taps": 22,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29443.592000000008,
+   "path_max_um": 29604.456000000006,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b3_4_0",
+   "taps": 64,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30832.22400000001,
+   "path_max_um": 30919.76000000001,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b4_2_0",
+   "taps": 32,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30137.964000000007,
+   "path_max_um": 30208.716000000008,
+   "max_unrepeated_tap_um": 166.35600000000068
+  },
+  {
+   "region": "std_b4_3_0",
+   "taps": 64,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30813.54800000001,
+   "path_max_um": 30899.916000000012,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b4_4_0",
+   "taps": 64,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30751.972,
+   "path_max_um": 30840.516000000003,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b0_5_1",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30000.134,
+   "path_max_um": 30152.422000000006,
+   "max_unrepeated_tap_um": 166.35600000000113
+  },
+  {
+   "region": "std_b0_6_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30213.210000000003,
+   "path_max_um": 30328.866,
+   "max_unrepeated_tap_um": 166.35600000000113
+  },
+  {
+   "region": "std_b0_5_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30054.941999999995,
+   "path_max_um": 30207.230000000003,
+   "max_unrepeated_tap_um": 166.35600000000113
+  },
+  {
+   "region": "std_b1_5_1",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30043.061999999998,
+   "path_max_um": 30195.350000000006,
+   "max_unrepeated_tap_um": 166.35600000000113
+  },
+  {
+   "region": "std_b0_6_2",
+   "taps": 22,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29412.61400000001,
+   "path_max_um": 29564.902000000006,
+   "max_unrepeated_tap_um": 166.35600000000113
+  },
+  {
+   "region": "std_b0_7_0",
+   "taps": 88,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30764.09800000001,
+   "path_max_um": 30916.38600000001,
+   "max_unrepeated_tap_um": 166.35600000000113
+  },
+  {
+   "region": "std_b0_6_1",
+   "taps": 22,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29467.42200000001,
+   "path_max_um": 29619.710000000006,
+   "max_unrepeated_tap_um": 166.35600000000113
+  },
+  {
+   "region": "std_b1_6_2",
+   "taps": 22,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29455.542000000005,
+   "path_max_um": 29607.83,
+   "max_unrepeated_tap_um": 166.35600000000113
+  },
+  {
+   "region": "std_b1_5_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 29988.251999999993,
+   "path_max_um": 30140.54,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b1_6_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30201.329999999998,
+   "path_max_um": 30316.986000000004,
+   "max_unrepeated_tap_um": 166.35600000000113
+  },
+  {
+   "region": "std_b2_5_1",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 29969.757999999994,
+   "path_max_um": 30122.046000000002,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b2_6_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30182.836,
+   "path_max_um": 30298.492000000006,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b1_6_1",
+   "taps": 22,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29400.732000000004,
+   "path_max_um": 29553.02,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b1_7_0",
+   "taps": 88,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30752.218000000004,
+   "path_max_um": 30904.50600000001,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b2_6_2",
+   "taps": 22,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29382.238000000005,
+   "path_max_um": 29534.526000000005,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b2_7_0",
+   "taps": 88,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30733.724000000002,
+   "path_max_um": 30886.01200000001,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b0_8_1",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 29985.01400000001,
+   "path_max_um": 30137.302000000014,
+   "max_unrepeated_tap_um": 166.35600000000113
+  },
+  {
+   "region": "std_b0_8_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30039.82200000001,
+   "path_max_um": 30192.110000000015,
+   "max_unrepeated_tap_um": 166.35600000000113
+  },
+  {
+   "region": "std_b1_8_1",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30027.94200000001,
+   "path_max_um": 30180.230000000014,
+   "max_unrepeated_tap_um": 166.35600000000113
+  },
+  {
+   "region": "std_b0_9_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30228.330000000013,
+   "path_max_um": 30343.98600000001,
+   "max_unrepeated_tap_um": 166.35600000000113
+  },
+  {
+   "region": "std_b0_9_1",
+   "taps": 36,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30452.489999999998,
+   "path_max_um": 30547.738000000005,
+   "max_unrepeated_tap_um": 183.40200000000095
+  },
+  {
+   "region": "std_b1_8_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 29973.132000000005,
+   "path_max_um": 30125.420000000013,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b2_8_1",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 29954.638000000006,
+   "path_max_um": 30106.926000000014,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b1_9_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30216.45000000001,
+   "path_max_um": 30332.106000000014,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b1_9_1",
+   "taps": 36,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30499.73999999999,
+   "path_max_um": 30594.988,
+   "max_unrepeated_tap_um": 183.40200000000095
+  },
+  {
+   "region": "std_b2_9_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30197.956000000013,
+   "path_max_um": 30313.612000000016,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b2_5_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30024.568,
+   "path_max_um": 30176.856000000007,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b3_5_0",
+   "taps": 64,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30759.288000000008,
+   "path_max_um": 30919.76000000001,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b2_6_1",
+   "taps": 22,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29437.048000000006,
+   "path_max_um": 29589.336000000003,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b3_6_0",
+   "taps": 64,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30818.224,
+   "path_max_um": 30979.160000000003,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b3_7_0",
+   "taps": 118,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30827.192000000003,
+   "path_max_um": 30934.880000000005,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b4_5_0",
+   "taps": 64,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30761.620000000003,
+   "path_max_um": 30840.516000000003,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b5_5_0",
+   "taps": 32,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30097.628,
+   "path_max_um": 30201.292,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b4_6_0",
+   "taps": 64,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30788.076,
+   "path_max_um": 30899.916000000005,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b4_7_0",
+   "taps": 64,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30786.515999999996,
+   "path_max_um": 30855.636000000006,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b5_6_0",
+   "taps": 32,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30260.675999999992,
+   "path_max_um": 30260.692000000003,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b2_8_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30009.44800000001,
+   "path_max_um": 30161.73600000002,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b3_8_1",
+   "taps": 102,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30097.33400000001,
+   "path_max_um": 30205.374000000018,
+   "max_unrepeated_tap_um": 161.12400000000162
+  },
+  {
+   "region": "std_b3_8_0",
+   "taps": 32,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30001.35600000002,
+   "path_max_um": 30155.796000000017,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b3_9_0",
+   "taps": 142,
+   "stages_min": 91,
+   "stages_max": 91,
+   "path_min_um": 31569.12200000001,
+   "path_max_um": 31787.674000000014,
+   "max_unrepeated_tap_um": 220.22000000000116
+  },
+  {
+   "region": "std_b4_8_0",
+   "taps": 32,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30021.562000000005,
+   "path_max_um": 30100.98600000001,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b4_8_1",
+   "taps": 32,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 29991.456000000006,
+   "path_max_um": 30131.360000000015,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b4_9_1",
+   "taps": 12,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29476.450000000004,
+   "path_max_um": 29528.449999999997,
+   "max_unrepeated_tap_um": 135.97999999999774
+  },
+  {
+   "region": "std_b4_9_2",
+   "taps": 18,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29496.696000000004,
+   "path_max_um": 29571.64000000001,
+   "max_unrepeated_tap_um": 148.7960000000021
+  },
+  {
+   "region": "std_b4_9_0",
+   "taps": 36,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30470.85,
+   "path_max_um": 30566.09800000001,
+   "max_unrepeated_tap_um": 183.40200000000186
+  },
+  {
+   "region": "std_b5_9_0",
+   "taps": 66,
+   "stages_min": 91,
+   "stages_max": 91,
+   "path_min_um": 31015.182,
+   "path_max_um": 31165.766000000007,
+   "max_unrepeated_tap_um": 183.40200000000186
+  },
+  {
+   "region": "hard_phy_hbm",
+   "taps": 185,
+   "stages_min": 102,
+   "stages_max": 102,
+   "path_min_um": 35020.224,
+   "path_max_um": 35199.51600000001,
+   "max_unrepeated_tap_um": 193.40800000000183
+  },
+  {
+   "region": "std_bg_2_0",
+   "taps": 56,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30850.63,
+   "path_max_um": 30947.630000000005,
+   "max_unrepeated_tap_um": 166.8199999999988
+  },
+  {
+   "region": "std_b7_0_1",
+   "taps": 62,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30136.142000000007,
+   "path_max_um": 30263.526000000013,
+   "max_unrepeated_tap_um": 159.87600000000293
+  },
+  {
+   "region": "std_bg_3_0",
+   "taps": 84,
+   "stages_min": 93,
+   "stages_max": 93,
+   "path_min_um": 31980.176,
+   "path_max_um": 32077.17600000001,
+   "max_unrepeated_tap_um": 166.82000000000244
+  },
+  {
+   "region": "std_b7_1_0",
+   "taps": 106,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30104.998000000007,
+   "path_max_um": 30205.95,
+   "max_unrepeated_tap_um": 161.699999999998
+  },
+  {
+   "region": "std_b5_2_0",
+   "taps": 32,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30247.58400000001,
+   "path_max_um": 30318.33600000001,
+   "max_unrepeated_tap_um": 166.35600000000068
+  },
+  {
+   "region": "std_b5_3_0",
+   "taps": 64,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30848.600000000006,
+   "path_max_um": 31009.536000000015,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b6_2_0",
+   "taps": 32,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30107.708000000017,
+   "path_max_um": 30208.716000000022,
+   "max_unrepeated_tap_um": 166.3560000000025
+  },
+  {
+   "region": "std_b6_3_0",
+   "taps": 64,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30779.468000000023,
+   "path_max_um": 30899.916000000023,
+   "max_unrepeated_tap_um": 166.3560000000025
+  },
+  {
+   "region": "std_b5_4_0",
+   "taps": 64,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30811.280000000013,
+   "path_max_um": 30950.136000000013,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b6_4_0",
+   "taps": 64,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30741.65200000001,
+   "path_max_um": 30840.51600000003,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b7_2_0",
+   "taps": 105,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30798.978,
+   "path_max_um": 30934.88200000001,
+   "max_unrepeated_tap_um": 166.3560000000025
+  },
+  {
+   "region": "std_b7_3_0",
+   "taps": 153,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30847.105999999992,
+   "path_max_um": 30979.649999999998,
+   "max_unrepeated_tap_um": 166.84400000000005
+  },
+  {
+   "region": "std_b8_2_0",
+   "taps": 46,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30031.112000000005,
+   "path_max_um": 30191.976000000002,
+   "max_unrepeated_tap_um": 166.35599999999795
+  },
+  {
+   "region": "std_b7_4_0",
+   "taps": 88,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30829.594,
+   "path_max_um": 30919.762000000002,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b8_3_1",
+   "taps": 22,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29443.592,
+   "path_max_um": 29604.456000000006,
+   "max_unrepeated_tap_um": 166.35599999999977
+  },
+  {
+   "region": "std_b8_0_1",
+   "taps": 36,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30484.484,
+   "path_max_um": 30579.732000000004,
+   "max_unrepeated_tap_um": 183.40200000000095
+  },
+  {
+   "region": "std_b8_0_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30152.747999999996,
+   "path_max_um": 30313.612000000005,
+   "max_unrepeated_tap_um": 166.35600000000227
+  },
+  {
+   "region": "std_b8_1_0",
+   "taps": 90,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30697.067999999996,
+   "path_max_um": 30855.772000000004,
+   "max_unrepeated_tap_um": 166.3560000000025
+  },
+  {
+   "region": "std_b9_1_0",
+   "taps": 90,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30715.561999999994,
+   "path_max_um": 30874.26600000001,
+   "max_unrepeated_tap_um": 166.3560000000025
+  },
+  {
+   "region": "std_b9_0_0",
+   "taps": 80,
+   "stages_min": 91,
+   "stages_max": 91,
+   "path_min_um": 31248.152000000006,
+   "path_max_um": 31431.464,
+   "max_unrepeated_tap_um": 200.02400000000034
+  },
+  {
+   "region": "std_b10_0_0",
+   "taps": 22,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29497.662000000004,
+   "path_max_um": 29649.950000000008,
+   "max_unrepeated_tap_um": 166.35600000000227
+  },
+  {
+   "region": "std_b10_0_2",
+   "taps": 16,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29522.766000000003,
+   "path_max_um": 29522.78200000001,
+   "max_unrepeated_tap_um": 166.3560000000025
+  },
+  {
+   "region": "std_b10_0_1",
+   "taps": 22,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29442.852000000006,
+   "path_max_um": 29595.14000000001,
+   "max_unrepeated_tap_um": 166.35600000000227
+  },
+  {
+   "region": "std_b10_1_0",
+   "taps": 88,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30733.857999999993,
+   "path_max_um": 30886.146,
+   "max_unrepeated_tap_um": 166.3560000000025
+  },
+  {
+   "region": "std_b8_2_1",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 29984.878000000004,
+   "path_max_um": 30137.16600000001,
+   "max_unrepeated_tap_um": 166.3560000000025
+  },
+  {
+   "region": "std_b8_3_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30126.763999999996,
+   "path_max_um": 30283.372000000003,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b9_2_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30003.37200000001,
+   "path_max_um": 30155.660000000014,
+   "max_unrepeated_tap_um": 166.3560000000025
+  },
+  {
+   "region": "std_b9_3_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30145.257999999994,
+   "path_max_um": 30301.86600000001,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b8_3_2",
+   "taps": 22,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29397.358000000007,
+   "path_max_um": 29549.64600000001,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b8_4_0",
+   "taps": 90,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30712.188000000002,
+   "path_max_um": 30870.89200000001,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b9_3_1",
+   "taps": 22,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29415.852000000014,
+   "path_max_um": 29568.140000000018,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b9_4_0",
+   "taps": 90,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30730.681999999997,
+   "path_max_um": 30889.386000000017,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b9_2_1",
+   "taps": 46,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30049.607999999997,
+   "path_max_um": 30210.472,
+   "max_unrepeated_tap_um": 166.35599999999795
+  },
+  {
+   "region": "std_b10_2_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30070.062000000005,
+   "path_max_um": 30222.35000000001,
+   "max_unrepeated_tap_um": 166.3560000000025
+  },
+  {
+   "region": "std_b10_2_1",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30015.252000000008,
+   "path_max_um": 30167.54000000001,
+   "max_unrepeated_tap_um": 166.3560000000025
+  },
+  {
+   "region": "std_b10_3_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30198.089999999993,
+   "path_max_um": 30313.746,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b9_3_2",
+   "taps": 22,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29462.08799999999,
+   "path_max_um": 29622.952000000005,
+   "max_unrepeated_tap_um": 166.35599999999977
+  },
+  {
+   "region": "std_b10_3_1",
+   "taps": 22,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29482.542,
+   "path_max_um": 29634.830000000005,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b10_3_2",
+   "taps": 22,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29427.732000000004,
+   "path_max_um": 29580.020000000008,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b10_4_0",
+   "taps": 88,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30748.977999999996,
+   "path_max_um": 30901.266000000007,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b5_5_1",
+   "taps": 32,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30136.492000000006,
+   "path_max_um": 30201.29200000001,
+   "max_unrepeated_tap_um": 166.35599999999977
+  },
+  {
+   "region": "std_b6_5_0",
+   "taps": 32,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 29986.010000000017,
+   "path_max_um": 30146.482000000018,
+   "max_unrepeated_tap_um": 166.35599999999977
+  },
+  {
+   "region": "std_b6_5_1",
+   "taps": 32,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30051.306000000004,
+   "path_max_um": 30116.106000000018,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b5_6_1",
+   "taps": 32,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30148.85200000001,
+   "path_max_um": 30260.69200000001,
+   "max_unrepeated_tap_um": 166.35599999999977
+  },
+  {
+   "region": "std_b5_7_0",
+   "taps": 64,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30866.392000000007,
+   "path_max_um": 30965.256000000016,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b6_6_0",
+   "taps": 64,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30738.980000000014,
+   "path_max_um": 30899.916000000023,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b6_7_0",
+   "taps": 64,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30767.092000000022,
+   "path_max_um": 30855.636000000028,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b7_5_0",
+   "taps": 32,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30092.019999999993,
+   "path_max_um": 30170.91600000001,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b7_5_1",
+   "taps": 46,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30152.01400000001,
+   "path_max_um": 30208.958000000013,
+   "max_unrepeated_tap_um": 149.58799999999974
+  },
+  {
+   "region": "std_b8_5_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30024.568,
+   "path_max_um": 30176.856000000007,
+   "max_unrepeated_tap_um": 166.35599999999977
+  },
+  {
+   "region": "std_b7_6_0",
+   "taps": 91,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30886.31399999999,
+   "path_max_um": 30979.162,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b7_7_0",
+   "taps": 130,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30828.938,
+   "path_max_um": 30934.88200000001,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b8_6_1",
+   "taps": 22,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29437.04800000001,
+   "path_max_um": 29589.33600000001,
+   "max_unrepeated_tap_um": 166.35599999999977
+  },
+  {
+   "region": "std_b5_8_0",
+   "taps": 64,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30774.54400000001,
+   "path_max_um": 30935.016000000018,
+   "max_unrepeated_tap_um": 166.3560000000016
+  },
+  {
+   "region": "std_b6_8_0",
+   "taps": 64,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30745.972000000016,
+   "path_max_um": 30825.396000000026,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b6_9_0",
+   "taps": 49,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30838.658000000018,
+   "path_max_um": 31032.08200000001,
+   "max_unrepeated_tap_um": 211.4459999999999
+  },
+  {
+   "region": "std_b6_9_1",
+   "taps": 36,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30439.124,
+   "path_max_um": 30534.37200000001,
+   "max_unrepeated_tap_um": 183.40200000000186
+  },
+  {
+   "region": "std_b7_8_0",
+   "taps": 162,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30750.20200000001,
+   "path_max_um": 30904.64200000001,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b8_8_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30009.448000000004,
+   "path_max_um": 30161.73600000001,
+   "max_unrepeated_tap_um": 166.35599999999977
+  },
+  {
+   "region": "std_b7_9_0",
+   "taps": 156,
+   "stages_min": 91,
+   "stages_max": 91,
+   "path_min_um": 31271.472000000012,
+   "path_max_um": 31461.08800000001,
+   "max_unrepeated_tap_um": 196.84200000000055
+  },
+  {
+   "region": "std_b8_5_1",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 29969.758,
+   "path_max_um": 30122.04600000001,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b8_6_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30182.835999999996,
+   "path_max_um": 30298.492000000006,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b9_5_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 29988.252000000008,
+   "path_max_um": 30140.540000000015,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b9_6_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30201.33,
+   "path_max_um": 30316.986000000015,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b8_6_2",
+   "taps": 22,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29382.23800000001,
+   "path_max_um": 29534.526000000013,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b8_7_0",
+   "taps": 88,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30733.724000000002,
+   "path_max_um": 30886.01200000001,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b9_6_1",
+   "taps": 22,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29400.732000000018,
+   "path_max_um": 29553.02000000002,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b9_7_0",
+   "taps": 88,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30752.218,
+   "path_max_um": 30904.50600000002,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b9_5_1",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30043.06399999999,
+   "path_max_um": 30195.352000000006,
+   "max_unrepeated_tap_um": 166.35599999999977
+  },
+  {
+   "region": "std_b10_5_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30054.941999999995,
+   "path_max_um": 30207.230000000003,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b10_5_1",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30000.131999999998,
+   "path_max_um": 30152.420000000006,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b10_6_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30213.209999999992,
+   "path_max_um": 30328.865999999998,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b9_6_2",
+   "taps": 22,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29455.543999999998,
+   "path_max_um": 29607.832000000006,
+   "max_unrepeated_tap_um": 166.35599999999977
+  },
+  {
+   "region": "std_b10_6_1",
+   "taps": 22,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29467.422000000006,
+   "path_max_um": 29619.71000000001,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b10_6_2",
+   "taps": 22,
+   "stages_min": 85,
+   "stages_max": 85,
+   "path_min_um": 29412.61200000001,
+   "path_max_um": 29564.90000000001,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b10_7_0",
+   "taps": 88,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30764.097999999998,
+   "path_max_um": 30916.386000000006,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b8_8_1",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 29954.638000000003,
+   "path_max_um": 30106.926000000014,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b9_8_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 29973.132000000012,
+   "path_max_um": 30125.42000000002,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b8_9_0",
+   "taps": 80,
+   "stages_min": 91,
+   "stages_max": 91,
+   "path_min_um": 31565.949999999997,
+   "path_max_um": 31760.925999999996,
+   "max_unrepeated_tap_um": 204.1359999999986
+  },
+  {
+   "region": "std_b9_9_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30216.450000000004,
+   "path_max_um": 30332.106000000014,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b9_8_1",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30027.943999999996,
+   "path_max_um": 30180.23200000001,
+   "max_unrepeated_tap_um": 166.35599999999977
+  },
+  {
+   "region": "std_b10_8_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30039.822000000004,
+   "path_max_um": 30192.110000000015,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b10_8_1",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 29985.01200000001,
+   "path_max_um": 30137.300000000017,
+   "max_unrepeated_tap_um": 166.3560000000034
+  },
+  {
+   "region": "std_b10_9_1",
+   "taps": 36,
+   "stages_min": 89,
+   "stages_max": 89,
+   "path_min_um": 30484.21399999999,
+   "path_max_um": 30579.461999999996,
+   "max_unrepeated_tap_um": 183.40200000000186
+  },
+  {
+   "region": "std_b10_9_0",
+   "taps": 44,
+   "stages_min": 87,
+   "stages_max": 87,
+   "path_min_um": 30228.329999999998,
+   "path_max_um": 30343.986000000004,
+   "max_unrepeated_tap_um": 166.3560000000034
+  }
+ ]
+}

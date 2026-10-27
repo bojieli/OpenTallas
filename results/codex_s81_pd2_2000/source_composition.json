@@ -1,0 +1,179 @@
+{
+ "status": "CANDIDATE_NOT_BUILDABLE",
+ "source_rev": "12a0c04f0a2d2f66de850e327a09e52e684db684",
+ "source_plan": "physical/die_plan/s81/b2d3_0733/die_plan_b2d3.json.gz",
+ "source_sha256": "fe92a223f60635a022902d4a9c2cbe931aec4fff8f0c17d92f1ba529d00aba2e",
+ "parts": 398,
+ "types": 210,
+ "bank_q_outline_um": [
+  864,
+  483.84
+ ],
+ "phy_clock": {
+  "status": "CANDIDATE_NOT_ADOPTED",
+  "types": 14,
+  "changes": {
+   "serdes__t15_phy1026_lk_WS0": {
+    "part": "lk_WS0",
+    "rect_um": [
+     63.64,
+     213.88,
+     3381.64,
+     1226.88
+    ],
+    "clock_interface_changed": true
+   },
+   "serdes__t16_phy1026_lk_WS1": {
+    "part": "lk_WS1",
+    "rect_um": [
+     63.64,
+     213.88,
+     3381.64,
+     1226.88
+    ],
+    "clock_interface_changed": true
+   },
+   "serdes__t3_phy1026_lk_WN0": {
+    "part": "lk_WN0",
+    "rect_um": [
+     63.64,
+     213.88,
+     3381.64,
+     1226.88
+    ],
+    "clock_interface_changed": true
+   },
+   "serdes__t1_phy1026_lk_WN1": {
+    "part": "lk_WN1",
+    "rect_um": [
+     63.64,
+     213.88,
+     3381.64,
+     1226.88
+    ],
+    "clock_interface_changed": true
+   },
+   "serdes__t2_phy1026_lk_WN2": {
+    "part": "lk_WN2",
+    "rect_um": [
+     63.64,
+     213.88,
+     3381.64,
+     1226.88
+    ],
+    "clock_interface_changed": true
+   },
+   "serdes__t4_phy1026_lk_WN3": {
+    "part": "lk_WN3",
+    "rect_um": [
+     63.64,
+     213.88,
+     3381.64,
+     1226.88
+    ],
+    "clock_interface_changed": true
+   },
+   "serdes__t1_phy1026_lk_ES0": {
+    "part": "lk_ES0",
+    "rect_um": [
+     65.72,
+     0.0,
+     3383.72,
+     1013.0
+    ],
+    "clock_interface_changed": true
+   },
+   "serdes__t2_phy1026_lk_ES1": {
+    "part": "lk_ES1",
+    "rect_um": [
+     65.72,
+     0.0,
+     3383.72,
+     1013.0
+    ],
+    "clock_interface_changed": true
+   },
+   "serdes__t15_phy1026_lk_EN0": {
+    "part": "lk_EN0",
+    "rect_um": [
+     65.72,
+     213.88,
+     3383.72,
+     1226.88
+    ],
+    "clock_interface_changed": true
+   },
+   "serdes__t16_phy1026_lk_EN1": {
+    "part": "lk_EN1",
+    "rect_um": [
+     65.72,
+     213.88,
+     3383.72,
+     1226.88
+    ],
+    "clock_interface_changed": true
+   },
+   "serdes__t14_phy1026_lk_WS2": {
+    "part": "lk_WS2",
+    "rect_um": [
+     63.64,
+     213.88,
+     3381.64,
+     1226.88
+    ],
+    "clock_interface_changed": true
+   },
+   "serdes__t12_phy1026_lk_WS3": {
+    "part": "lk_WS3",
+    "rect_um": [
+     63.64,
+     0.0,
+     3381.64,
+     1013.0
+    ],
+    "clock_interface_changed": true
+   },
+   "serdes__t13_phy1026_lk_EN2": {
+    "part": "lk_EN2",
+    "rect_um": [
+     65.72,
+     213.88,
+     3383.72,
+     1226.88
+    ],
+    "clock_interface_changed": true
+   },
+   "serdes__t14_phy1026_lk_EN3": {
+    "part": "lk_EN3",
+    "rect_um": [
+     65.72,
+     213.88,
+     3383.72,
+     1226.88
+    ],
+    "clock_interface_changed": true
+   }
+  },
+  "data_cycles_added": 0,
+  "requires": "sink census, render, reset/START regeneration, bind and combined delta"
+ },
+ "preserved_blockers": {
+  "remaining_g0c_failures": {
+   "measured_errors": 7,
+   "scope": "Correct b2d1 core-conns run before last +3.24um bank minimax shift/exact-bank metadata; final full rerun not performed. Connectivity and lane count unchanged.",
+   "items": [
+    "bk_sel.u_c.vd 367b E->W re-pin owed in core rebuild",
+    "gunit 114 face-away groups (5 examples + summary: l5 ct_b/ct_v/cw_a/cw_d/cw_v N->S); full spec gunit_repin_spec_b2d2.json, clock rebuild must consume all faces"
+   ]
+  },
+  "epoch_source_blocker": "INCOMPLETE: generated source ea=rst_n; local delivered-reset leaf at bank1 must come from master-plan reset slice, not the vo_s data pins.",
+  "capacity_blocker": "Actual M5/M7 PG/via-field/corridor traffic check still required before P&R.",
+  "additional_open_work": [
+   "Final single-event native bind with internal_stations_types includes bk_sel variant and fixed_cycles=2 at source; port-cycle ledger then token reprice, no summed +457/-140 claim.",
+   "Quarter q physical864x483.84 rebuild; gunit/uc re-pin + centre clock/250target; common master-plan PG/clock/reset slices still fail.",
+   "Local reset leaf must drive stage0 EA, whose native source is rst_n; first epoch-source reach is not proven from vo_s data pins.",
+   "Before any build confirm exact277-bit banks helper51f9bd78a is current released flow and consumed; TT/FF final actual reach/signoff still required."
+  ]
+ },
+ "cycles": "B2d3 existing +2 bank source edges preserved; PD2 landings and ROWX transport still require reprice"
+}

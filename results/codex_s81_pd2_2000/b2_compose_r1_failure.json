@@ -1,0 +1,8 @@
+{
+ "verdict": "FAIL_SOURCE_SCHEMA",
+ "unit": "oth-ubuntu-2009719-1793072029",
+ "observed_error": "unknown internal_station keys bit_sites_um/bit_site_cell_um/face_bit_sites_um",
+ "cause": "51f9bd78a exact-bank source consumer missing from current main",
+ "fix": "0765b6c59 cherry-pick source, eb4d11ab0 regenerated schema; tests13PASS+schema15PASS",
+ "raw_launcher_log": "epyc1:/srv/opentallas-scratch2/claude/codex-s81-pd2-2000/b2_compose.otrun.log"
+}

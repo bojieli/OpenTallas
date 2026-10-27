@@ -1,0 +1,14 @@
+{
+ "schema":"opentallas.s81.combined_delta.v1",
+ "id":"D-S81-PD2",
+ "status":"PROPOSED_NOT_BUILDABLE",
+ "base_plan_runtime":"epyc1:/srv/opentallas-scratch2/claude/path-s81-taps-1026/src/physical/die_plan/s81/die_plan_phyfit_g0fix.json",
+ "regions":{"tool":"fallback_regions.py --block 2 --core tap --groups svc_groups.json --hard-merge inputs","region_count":171,"landed_ports":1210,"landed_bits":559382,"phy_members":["phy_hbm","eng","svc_2","svc_4","svc_6","svc_8","svc_10","svc_12"],"phy_bbox_um":[11646.72,103.68,21746.88,3784.32],"note":"Input-driving members are excluded from residual svc groups; no whole-group transitive merge."},
+ "bands":{"thin_bank_search":true,"residual_strip_policy":"Only after this region recompose, exact failures pending. bk_sel S 25.92um authorized if still necessary; no blanket svc strips."},
+ "svc_content":{"module":"dsdv_svc_rs","params_delta":{"ROWX":1},"source_candidate":"claude/s81-rowx2-1026@feaec58ef0","config_fix":"CFG DP must carry actual DIE_ID per die, not default0","configuration_status":"PROVISIONAL: token owner evaluating NP14/NXW20/XP320 or NP16/NXW16/XP256 so each export pass fits nw160 landing; old NP7/NXW40/XP320 overfills storage.","rebuild_policy":"Rebuild affected15svc types once after source/protocol gates and full delta adoption, no routes now."},
+ "gunit_content":{"source":"claude/s81-core-lat-r9-1026@87cf8d2204","outline_change":false,"note":"Straight L3 legs and <=40um leaves, builds now R10 inherited. No svc outline impact."},
+ "clock":{"structural_requirements":["Reference-tree roots equal-delay by structure, not dominant padding","Common region-stage/driver-load plan before build","Repeat leaf-to-tap legs as well as inter-node legs every<=405um; use opt-in --tap-rep-um405","View model geometry then run GRT>=50TT+FF and landed-window check"],"status":"MODEL_RUNNING_NO_ROUTE_AUTHORIZATION"},
+ "g0":{"prior_thin_11_errors":"INVALID_COMPARISON: missing LEF obstruction inventory inflates capacity; exact same-plan cut18750 real5639.0625vs absent8347.5tracks","base_failures":24,"authoritative_rerun":"Pending composed plan with all50available realLEFs;2candidateLEFs absent from pinnedcommit are still explicit limitations"},
+ "adoption":"No die/kit/flow freeze; no RTL modified by this packet, data cycles only future declared3perlandedcrossing+pricedROWXtransport.",
+ "owner_questions":[]
+}
