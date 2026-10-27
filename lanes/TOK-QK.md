@@ -50,3 +50,4 @@ B33 run7 boot now PASS (KV-TOK collection); B48 build3 DONErc0 but inherited asi
     3. kv_attn_vectors -> vec_real (36 layers x 8 heads, kv.hex in the format kv_preload.py --as-layer consumes);
     4. rsync to intel2:/srv/opentallas-scratch2/claude/tok-qk-kvl/vec_real (+.done or .failed).
   - intel2 chain.sh (re-armed) now waits for both the build and vec_real/.done, then launches the 12 sims on vec_real. The declared vec stays for smoke/debug only.
+- 10-27 02:59 TOK-QK-KVL: committed claude/tok-qk-kvl-1027@edaf7dc1f (kvl_prefill_hist.py, kvl_hist_check.py, fold kwarg, real_post.sh, chain on vec_real). Receipt caveat: HF-CPU prefill history + bit-exact ISA decode at P8191. Verdict still pending: post.log DONE then runs/*/sim.log.
