@@ -40,12 +40,13 @@ def test_nearest_baseline_and_tie_refusal(tmp_path):
     with pytest.raises(ValueError,match='tied'):rr.resolve('t',s,0,0)
 
 
-def test_bare_peer_ambiguous_ports_refused_then_unique_allowed(tmp_path):
+def test_bare_peer_refused_even_when_heuristic_peer_graph_is_unique(tmp_path):
     rr=fixture(tmp_path,[hc('u_a'),hc('u_b',x=200)],cc={'u_b':{'d':['core:u_a'],'other':['core:u_a']}})
     s=dict(launch='u_a.d',capture='u_b',from_um=[0,12],to_um=[200,12])
-    with pytest.raises(ValueError,match='2 candidate ports'):rr.resolve('t',s,1,0)
+    with pytest.raises(ValueError,match='2 peer-graph diagnostic candidate ports'):rr.resolve('t',s,1,0)
     rr.cc={'t':{'u_b':{'d':['core:u_a']}}}
-    assert rr.resolve('t',s,1,0)[1]['method']=='unique_inverse_core_connection'
+    with pytest.raises(ValueError,match='1 peer-graph diagnostic candidate ports'):rr.resolve('t',s,1,0)
+    assert rr.resolve('t',s,1,0,dict(core='u_b',ports=['d']))[1]['method']=='explicit_bundle'
 
 
 def test_multiface_port_refuses_average_inside_macro(tmp_path):

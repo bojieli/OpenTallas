@@ -5,8 +5,8 @@ IN is the current plan directory; --baseline is the pre-delta plan. Only station
 incident on changed core geometry/pin content are selected with a baseline.
 Explicit --endpoint-map keys TYPE:STATION:launch|capture map to a reference string
 or {core: actual_instance, ports: [physical_or_logical_ports]} for declared bundles.
-No input alias or port-name similarity heuristic is used. Bare peers resolve only
-when the core-conns inverse has exactly one port. Use --route to run the existing
+No input alias or port-name similarity heuristic is used. Bare peers require an explicit native port/bit map; the peer-only core-conns
+graph is diagnostic and never establishes a port binding. Use --route to run the existing
 hbm_final_stations regeneration on fully resolved selected stations; old priced
 counts are preserved and additions listed. Failed/unresolved stations retain their
 complete source record. A candidate with unresolved or failed stations is FAIL.
@@ -151,8 +151,7 @@ class Resolver:
             for key in [h['inst'],baseinst(h['inst'])]:
                 for p,ends in cc.get(key,{}).items():
                     if any(e.startswith('core:') and (e[5:] in peers or baseinst(e[5:]) in peers) for e in ends):ports[p]=ends
-            if len(ports)!=1:raise ValueError(f'bare peer has {len(ports)} candidate ports: {sorted(ports)}; explicit native endpoint map required')
-            port=next(iter(ports));method='unique_inverse_core_connection'
+            raise ValueError(f'bare peer requires exact native endpoint map; {len(ports)} peer-graph diagnostic candidate ports: {sorted(ports)}')
         xy,detail=self.group(h,port);detail.update(method=method,reference=ref)
         return xy,detail
 
