@@ -60,3 +60,24 @@ This proves the initial COPY native contents and40ports. Later c41625cb88 five e
 - (2) HHP c708 guard+bench PASS (CHECKED, iverilog logs; single author): claude/tok14-hhp-1027@73127eda0 (hub + github), off main 542a4f321 + c708836e35 helper files only. Typed guard tools/qwen_kv_die/hhp_phase_guard.py (writer>=BOOT_END+2, slice first write>=REOPEN+1, emb issue->return>=2); directed bench on REAL qkd_static_kv_pc_es_merge_b + endpoint, 64 boundary cases/RTL: exact edge model == RTL (main d0 and c708 d1), RTL no-phase mutant caught, guard sound, tight on all 3 bounds, W/S/E guard mutants caught. Optional N-face FF included (+1 FF -> +5 FF total, 0 cycles): restores writer fault at REOPEN+1. Price unchanged +1 edge BOOT_END/REOPEN, 0 token cycles. Not done: guard hook into a KV boot calendar emitter (none on main) / gen_core_kit_kv.py hook (codex/kv-cores-1351 only).
 - (3) GB full composition on tb_dense_xs_cap: NOT started (time). Needs per Codex DS packet: selected _asb_x ck_r0/ck_r1/ck_r2 instead of col_h9_l4_lp_b, actual frame/capture membership (not L13/W2), fresh extraction of asbuilt_b178_gb_image_candidate_1450.json, Q issue advance1; dense_xs_program.py h9/landE2 asserts to update. Next lane.
 - Raw: intel1:/srv/opentallas-scratch2/claude/tok14-head-fw (keep until merge). Worktree intel1 .../wt/claude-tok14-1027 (sparse, pushed).
+
+## CLAUDE TOK-ALL-15 2026-10-27 16:47 PDT
+- (1) HEAD NUMBER-CHECK: TOK-14's 9,196 is NOT confirmed; the corrected figure is 9,224 cyc (7.69 us). Branch claude/tok15-head-1027@c4147504b5 (hub only), evidence results/token_pass/head_die_spine_1027.
+  - SIMULATED die path (CHECKED, sim logs): the die top was generated from main die_plan s81_head with tools/die_plan/gen.py rtl. All 264 tile_p (native glue), 6 spine nodes, 24 turns, every st_* partition, the ctl wrapper and the reset/START wavefront are real generated RTL.
+  - Substitutions: ctl LEAF -> sno_q-format x driver. Each tile's bundle -> measured view: LB 8,419, result = the tile's TOK-14 RTL argmax. LB was checked by lock-step vs the real reference tile on real ROM: PASS at 8,419; 8,420/8,421 FAIL. Off-path leaves (serdes/mesh/host/lep0N) stubbed.
+  - Result: ctl core GO -> b_i result = 8,691 cyc on 2/2 positions, golden 21946/4173a558 over all 253 tiles. LB +-1 -> 8,690/8,692.
+  - Controls: tile GO_DROP CAUGHT. Deepest-W tile boost (tW5o0) -> 28167 @ 8,691 = PASS, and CAUGHT under the golden expectation. SPR_EARLY = equivalent mutant (W/E chains symmetric).
+  - The paper rows for the same span sum to 8,663, so the measured path is +28.
+  - Per token: 162 + 8,691 + 361 + 6 + 4 = 9,224 cyc (7.69 us); calendar window 10,357, slack 1,133. xb_ingress, rank_merge and mtp/out stay composed.
+  - rank_merge re-derived from the plan lanes (UNCHECKED): worst ring m7S_tx 46 + ES1 12 + D 251 + WS1 13 + m0S_rx 51 = 373 vs model 361. Lower bound >= 9,237 cyc (7.70 us), slack <= 1,120, before the best64 codec and mesh_ep internals.
+  - Raw: intel1:/srv/opentallas-scratch2/claude/tok15-head-die.
+- (2) GB composition (sub-lane): POSITIVE FAIL, no per-layer cycles. Branch claude/tok15-gb-1027@016ee4c160 (hub + GitHub), evidence results/token_pass/gb_composition_tok15_1027.
+  - Fresh extraction of asbuilt_b178_gb_image_candidate_1450 (CHECKED): 4/4 masters PASS. h10_x: 171/171 validation, 38/38 plan, 12 GB stations, LK 0x492. The committed schedules on main FAIL.
+  - Membership comes from die_b178 + manifest: u_f_0L01 = u_s_0S lane W0, capture rows 224..227, 14 return words.
+  - Q advance 1 (CHECKED): XS go at 452 vs 453.
+  - Failure point (CHECKED with probes): cfg and go reach every ot_s81_cfg7_seq, but go_e never rises, because act needs a loaded class-valid config word (cfg7_seq.sv:298).
+  - Open (UNCHECKED): either the phase-0 seq config image lacks class-valid, or the PQ load is held on bank_free/sh_free.
+  - Controls are not counted while the positive fails.
+  - Bench-only admission flag OT_XS_GB_PROVIDER_UNDER_TEST=1; the default guard is unchanged.
+- (3) HHP guard -> KV boot calendar hook: NOT started (time). No KV-CORES line claims it. It needs codex/kv-cores-1351 gen_core_kit_kv.py or a main KV calendar emitter.
+- NEXT: (a) trace cfg7_seq class-valid/ef in the GB bench (intel1 tok15-gb run2 obj has probes), then measured GB cycles. (b) Per COORD: RTL replay of DS L0. (c) Simulate rank merge (mesh_ep + best64 + ctl final) on the generated top: the mesh lanes are already in this die bench.
