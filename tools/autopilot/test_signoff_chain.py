@@ -1,4 +1,5 @@
 import json
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -15,26 +16,31 @@ class ChainTest(unittest.TestCase):
         b.mkdir(parents=True)
         for n in ("6_final.odb", "6_final.spef", "6_final.v"):
             (b / n).touch()
+            os.utime(b / n, (1e9, 1e9))
         (k / "lec.py").touch()
         (k / "signoff.py").touch()
         return k, b
 
-    def runner(self, k, b, verdict="EQUIVALENT", route_record=True):
+    def runner(self, k, b, verdict="EQUIVALENT", route_record=True, all_shown=True, gates=None):
         calls = []
-        def run(cmd):
+        checks = {g: {"verdict": "PASS"} for g in ("setup_tt", "hold_ff", "drv", "clock", "drc", "antenna", "pg")}
+        checks.update(gates or {})
+        def run(cmd, **kw):
             calls.append(cmd)
             if cmd[0] == "bash" and route_record:
                 p = k / "signoff/signoff.json"
                 p.parent.mkdir()
-                p.write_text(json.dumps({"verdict": "SIGNED", "inputs": {"base": str(b)}}))
+                p.write_text(json.dumps({"verdict": "SIGNED", "inputs": {"base": str(b)}, "checks": checks}))
             elif "run" in cmd and "--base" in cmd:
                 p = Path(cmd[cmd.index("--out") + 1]) / "signoff.json"
                 p.parent.mkdir()
-                p.write_text(json.dumps({"verdict": "SIGNED", "inputs": {"base": str(b)}}))
+                p.write_text(json.dumps({"verdict": "SIGNED", "inputs": {"base": str(b)}, "checks": checks}))
             elif "--netlist" in cmd:
                 p = Path(cmd[cmd.index("--out") + 1]) / "lec.json"
                 p.parent.mkdir()
-                p.write_text(json.dumps({"verdict": verdict}))
+                p.write_text(json.dumps({"verdict": verdict, "superset_vec": {"all_shown": all_shown}}))
+                (p.parent / "lec.log").write_text("log")
+                self.lec_env = kw.get("env", {})
             return 0
         return run, calls
 
@@ -70,7 +76,7 @@ class ChainTest(unittest.TestCase):
         k, _ = self.vehicle()
         calls = []
         self.assertEqual(continue_kit(k, "runner.sh", "grt", 48, 8,
-                                      lambda c: calls.append(c) or 0), 0)
+                                      lambda c, **kw: calls.append(c) or 0), 0)
         self.assertEqual(len(calls), 1)
         self.assertFalse((k / "autopilot_chain.json").exists())
 
@@ -79,15 +85,15 @@ class ChainTest(unittest.TestCase):
         (k / "kit_preflight.py").touch()
         calls = []
         self.assertEqual(continue_kit(k, "runner.sh", "route", 48, 8,
-                                      lambda c: calls.append(c) or 5), 5)
+                                      lambda c, **kw: calls.append(c) or 5), 5)
         self.assertEqual(len(calls), 1)
         self.assertNotEqual(calls[0][0], "bash")
 
     def test_provisional_signoff_exit_one_gets_lec_without_publication(self):
         k, b = self.vehicle()
         run, calls = self.runner(k, b)
-        def pending(cmd):
-            result = run(cmd)
+        def pending(cmd, **kw):
+            result = run(cmd, **kw)
             if cmd[0] == "bash":
                 p = k / "signoff/signoff.json"
                 rec = json.loads(p.read_text())
@@ -114,16 +120,16 @@ class ChainTest(unittest.TestCase):
     def test_missing_explicit_shared_preflight_stops_before_runner(self):
         k, _ = self.vehicle()
         self.assertEqual(continue_kit(k, "runner.sh", "route", 48, 8,
-                                      lambda c: self.fail("runner must not start"),
+                                      lambda c, **kw: self.fail("runner must not start"),
                                       preflight=k / "shared/kit_preflight.py"), 3)
 
     def test_proof_oom_can_resume_without_rerouting_or_overwriting_failure(self):
         k, b = self.vehicle()
         run, calls = self.runner(k, b)
-        def oom(cmd):
+        def oom(cmd, **kw):
             if "--netlist" in cmd:
                 return 137
-            return run(cmd)
+            return run(cmd, **kw)
         self.assertEqual(continue_kit(k, "runner.sh", "route", 24, 8, oom), 137)
         old = max(k.glob("autopilot_chain*.json"))
         old_text = old.read_text()
@@ -136,7 +142,48 @@ class ChainTest(unittest.TestCase):
 
     def test_runner_failure_preserved(self):
         k, _ = self.vehicle()
-        self.assertEqual(continue_kit(k, "runner.sh", "route", 48, 8, lambda c: 17), 17)
+        self.assertEqual(continue_kit(k, "runner.sh", "route", 48, 8, lambda c, **kw: 17), 17)
+
+    def test_main_lec_tool_used_with_superset_check(self):
+        k, b = self.vehicle()
+        tool = k / "bundle/lec.py"
+        tool.parent.mkdir()
+        tool.touch()
+        run, calls = self.runner(k, b)
+        self.assertEqual(continue_kit(k, "runner.sh", "route", 48, 8, run, lec=tool), 0)
+        self.assertEqual(calls[-1][1], str(tool))
+        self.assertEqual(self.lec_env.get("OT_LEC_SUPERSET_VEC"), "1")
+        rec = json.loads(max(k.glob("autopilot_chain*.json")).read_text())
+        self.assertEqual(rec["gates"]["routed_lec"], "PASS")
+
+    def test_equivalent_without_all_shown_fails(self):
+        k, b = self.vehicle()
+        run, _ = self.runner(k, b, all_shown=False)
+        self.assertEqual(continue_kit(k, "runner.sh", "route", 48, 8, run), 1)
+        self.assertEqual(json.loads(max(k.glob("autopilot_chain*.json")).read_text())["verdict"], "LEC_FAIL")
+
+    def test_proof_not_newer_than_route_fails(self):
+        k, b = self.vehicle()
+        run, _ = self.runner(k, b)
+        def stale(cmd, **kw):
+            r = run(cmd, **kw)
+            if "--netlist" in cmd:
+                out = Path(cmd[cmd.index("--out") + 1])
+                for n in ("lec.json", "lec.log"):
+                    os.utime(out / n, (1e8, 1e8))
+            return r
+        self.assertEqual(continue_kit(k, "runner.sh", "route", 48, 8, stale), 1)
+        rec = json.loads(max(k.glob("autopilot_chain*.json")).read_text())
+        self.assertIn("stale", rec["reason"])
+
+    def test_signed_record_missing_gate_is_not_signed(self):
+        k, b = self.vehicle()
+        run, calls = self.runner(k, b, gates={"pg": {"verdict": "NOT RUN"}, "drv": None})
+        self.assertEqual(continue_kit(k, "runner.sh", "route", 48, 8, run), 1)
+        rec = json.loads(max(k.glob("autopilot_chain*.json")).read_text())
+        self.assertEqual(rec["verdict"], "NOT_SIGNED")
+        self.assertIn("pg=NOT RUN", rec["reason"])
+        self.assertFalse(any("--netlist" in c for c in calls))
 
 
 if __name__ == "__main__":
