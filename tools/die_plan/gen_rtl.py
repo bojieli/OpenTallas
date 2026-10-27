@@ -543,7 +543,7 @@ def die_top(P, epochs, dropped=None, rtl_root=None):
             if Path(f).is_absolute() or not (base / f).resolve().is_relative_to(base):
                 raise GenError("infrastructure provider source must stay repo-relative")
         ih = leaf_headers(dict(sources=srcs), rtl_root)
-        provider_ports = lambda mod: parse_leaf_ports(ih, mod)
+        provider_ports = lambda mod: IR.provider_ports(ih, mod, parse_leaf_ports)
     iw, ii, ic = IR.die_lines(P, provider_ports)
     wires += iw
     insts += ii

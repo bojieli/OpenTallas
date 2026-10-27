@@ -56,3 +56,10 @@ def test_actual_clock_entry_override_only(monkeypatch):
  assert ('ctap0','infra_b') in I.die_lines(p)[2]['p']
  p.raw['infrastructure']['clock_tap_bindings'][0]['port']='made_up_pin'
  with pytest.raises(ValueError,match='clock-entry'):I.die_lines(p)
+
+
+def test_real_clock_exporter_non_ansi_header():
+ text='module die_ctree(root,t_g0);input root;output t_g0;BUFx24 b(.A(root),.Y(t_g0));endmodule'
+ assert I.provider_ports(text,'die_ctree',lambda t,m:{})=={'root':('input',''),'t_g0':('output','')}
+ with pytest.raises(ValueError,match='direction missing'):
+  I.provider_ports(text.replace('output t_g0;',''),'die_ctree',lambda t,m:{})
