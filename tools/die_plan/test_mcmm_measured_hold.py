@@ -35,3 +35,20 @@ def test_mm_binds_before_repair_in_bc_shim():
     assert body.index("ot_mm_scene_shim 1") < body.index("ot_vclk_measured_bind") < body.index("ot_mm_scene_shim 0")
     assert body.index("set_mode ff") < body.index("ot_vclk_measured_bind") < body.index("set_mode ss",body.index("ot_vclk_measured_bind"))
 
+
+def test_measured_mm_preflight_and_incomplete_controls(tmp_path):
+    import kit_modes
+    import sdc_lint
+    from test_kit_modes import kit
+    kd=kit(tmp_path)
+    assert kit_modes.main(["stage", str(kd), "--measured-hold"]) == 0
+    assert not (kd/"grt_post.tcl").exists()
+    assert sdc_lint.measured_frame_errors(kd) == []
+    mm=kd/"orfs_hold_mm.tcl"
+    text=mm.read_text()
+    mm.write_text(text.replace("ot_vclk_measured_bind", "missing_bind"))
+    assert "incomplete" in sdc_lint.measured_frame_errors(kd)[0]
+    mm.write_text(text)
+    (kd/"config.mk").write_text((kd/"config.mk").read_text().replace("override export OT_HOLD_MM = 1", "override export OT_HOLD_MM = 0"))
+    assert "incomplete" in sdc_lint.measured_frame_errors(kd)[0]
+

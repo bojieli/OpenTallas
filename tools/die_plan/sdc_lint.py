@@ -902,6 +902,26 @@ def measured_frame_errors(kitdir):
     if ref != "rebind":
         return []
     miss = [f for f in ("vclk_measured_hold.tcl", "vclk_ref.py") if not (kd / f).is_file()]
+    # Coupled GRT repairs bind the same measured mean in BC during ot_mm_sync,
+    # before setup/hold repair; they intentionally have no standalone FF pass.
+    try:
+        import kit_modes
+        cfg = kit_modes.mk_vars((kd / "config.mk").read_text())
+    except Exception as e:
+        return [f"clocks: measured MM configuration undecidable ({e})"]
+    if cfg.get("OT_MM_MEASURED_HOLD") == "1":
+        try:
+            if not kit_modes.mm_state(kd, kit_modes.binding(kd)):
+                raise ValueError("measured hold requires an active two-mode session")
+            mm = (kd / "orfs_hold_mm.tcl").read_text()
+            vm = (kd / "vclk_measured_hold.tcl").read_text()
+            if "ot_vclk_measured_bind" not in mm or "OT_MM_MEASURED_HOLD" not in mm or "proc ot_vclk_measured_bind" not in vm:
+                raise ValueError("measured BC binding hook missing")
+            if miss:
+                raise ValueError(", ".join(miss))
+        except Exception as e:
+            return [f"clocks: measured MM hold repair is incomplete ({e}); regenerate the staged kit"]
+        return []
     gp = kd / "grt_post.tcl"
     if not gp.is_file() or "ot_vclk_measured_hold" not in gp.read_text(errors="replace"):
         miss.append("grt_post.tcl with ot_vclk_measured_hold")
