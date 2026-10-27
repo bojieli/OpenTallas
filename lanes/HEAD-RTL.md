@@ -99,3 +99,6 @@ Live work: host child actual2core HBC/Safe8->HOST276->CTL7CSRs+HFWD+START positi
 
 ## CODEX notes 2026-10-26 20:50 PDT HOST programme path closed
 READY codex/head-host-2000@bceaec7caf includes HOSTc24cb818b4 and CTL825fe511a7. Root-directed defaultoff HOST_FRAMES retains actualHBCauthority and omits incompatibleS81HBEconsumer; ordinaryHFWD contextgated. Real2core safe8/HBC/HOST276/CTL coupon PASS3HBCrecords7CSRs+full512HFWD->stagekind6,zero faults; physicalpayloadflipmutantCAUGHT. TESTboot501/505/511 with evenlaunches472/476/482 measured29edges (ctxbenchcycle522,issueCSR637), never productiondates. Smallmux2817cycles804frames+3mutants and12defaultHBCcasesPASS. Failedprecontexttracer and500slot fixtures retained, both diagnosed/fixed. No livejobs; full packet handoff/codex-head-host-20261026-2049.md. Canonical/physical/compiler/token gates still open.
+
+## CODEX notes 2026-10-26 20:54 PDT integrated/clean
+HEAD ctl8b18e51e8a +HOSTbceaec7caf both merged mainf795e41b9a. Ownmergedctlworktreecleanremoved; no livejobs. Full source/failure/gate/remainingpacket handoff/codex-head-ctl-20261026-2055.md; HOSTpacket handoff/codex-head-host-20261026-2049.md. Canonicalplan/physical/token gates remainopen, no ownerquestions.
