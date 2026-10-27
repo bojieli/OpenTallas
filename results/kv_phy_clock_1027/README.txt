@@ -1,0 +1,4 @@
+Source clock period: pinned4ce8ecabf6 rtl/qwen_sys/split_20261014/qkd_pll_analog_model.sv PHY_HALF=0.521500ns =>1043ps. Nativebind3 mission lines99241/99246 PLL.pll_phy->serdes_host.clk_phy; boundtop clk_clk_phy->sysSW/SE.
+Actual W522 SD synthesized source4ce/alias9b66 stopped beforefloorplan on missingclockABI (preserved failure); 10525mappedDFF cellnames fed unchanged Tclselectors, rxptr10/txptr8/rxmem4176/txmem4176/level1/reset2. This checks actual cell-name class coverage, not STA geometry or timing. Scalar online/reset duplicates may merge between RX/TX; no assumption of one physical copy per source name.
+Ten focused tests pass including exact fence budgets416.5/773/983ps, unrelated/second-stage exclusions, missing-classfailclosed and old6x behavior.
+Physical distribution PLL->SDPHYclock remainsOPEN. No clockgroups, no pin waiver, no new state or cycle change. Planinsertion is event-owner work; this is thin shared-source opt-in only.
