@@ -195,7 +195,8 @@ def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=Fa
                         y=min(max(y,yl),yh)
                 for k,(_,cell) in enumerate(cells):cell['origin_um'][1]=round(y+k*D.ROW_Y,4)
     recolor_horizontal()
-    if separate_drops:
+    original_ax={g:pin(g,'A')[0] for g in groups}
+    def allocate_capture_columns():
         # Distinct clock nets cannot share a local "M9" capture drop. Allocate
         # physical capture columns before routing, bounded by real host and
         # actual pin-to-pin clock repeater reach; no extra logic stages.
@@ -245,7 +246,17 @@ def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=Fa
             for _,cell in cc:cell["origin_um"][0]=xx
             used.append((col,lo,hi,parent));assigned.append(dict(group=g,column=col,dx=round(xx-old,4)))
         out["summary"]["capture_columns"]=assigned
-        recolor_horizontal()
+    if separate_drops:
+        seen=set()
+        while True:
+            before=tuple(tuple(c['origin_um']) for c in out['cell_sites'].values())
+            if before in seen:raise D.C128.PlanError([dict(kind='capture_allocation_cycle',name='tree',detail='capture columns and trunk interval coloring do not converge')])
+            seen.add(before)
+            allocate_capture_columns()
+            recolor_horizontal()
+            after=tuple(tuple(c['origin_um']) for c in out['cell_sites'].values())
+            if after==before:break
+        out['summary']['capture_allocation_passes']=len(seen)
     corridors = {}
     for g, edges in bydrv.items():
         d = pin(g, 'Y')
