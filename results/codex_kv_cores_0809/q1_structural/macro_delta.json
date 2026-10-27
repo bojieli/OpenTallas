@@ -1,0 +1,75 @@
+{
+ "module": "qkd_ectlk_q1",
+ "outline_um": [
+  216,
+  172.8
+ ],
+ "pin_moves": [
+  {
+   "before": {
+    "name": "ck[0]",
+    "layer": "M5",
+    "x": 108.024,
+    "y": 86.4
+   },
+   "after": {
+    "name": "ck[0]",
+    "layer": "M5",
+    "x": 116.664,
+    "y": 86.4
+   }
+  },
+  {
+   "before": {
+    "name": "rst_n[0]",
+    "layer": "M5",
+    "x": 108.408,
+    "y": 86.4
+   },
+   "after": {
+    "name": "rst_n[0]",
+    "layer": "M5",
+    "x": 117.048,
+    "y": 86.4
+   }
+  }
+ ],
+ "macro_width_um": 94.824,
+ "macro_height_um": 41.064,
+ "macros": [
+  {
+   "name": "u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.g_data.g_macro\\[0\\].u_s",
+   "x": 112.104,
+   "y": 127.404,
+   "orient": "R0"
+  },
+  {
+   "name": "u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.g_data.g_macro\\[1\\].u_s",
+   "x": 8.64,
+   "y": 127.404,
+   "orient": "R0"
+  },
+  {
+   "name": "u_ref.u_leaf.u_b.u.g_static_rows.u_rows.g_data.g_macro\\[0\\].u_s",
+   "x": 12.961,
+   "y": 73.98,
+   "orient": "MY"
+  },
+  {
+   "name": "u_ref.u_leaf.u_b.u.g_static_rows.u_rows.g_data.g_macro\\[1\\].u_s",
+   "x": 12.961,
+   "y": 32.892,
+   "orient": "R180"
+  }
+ ],
+ "cycles_added": 0,
+ "clock_island_um": [
+  112.32000000000001,
+  82.08,
+  120.96,
+  90.72
+ ],
+ "macro_E_pin_halo_um": 4.32,
+ "clock_island_to_body_gap_um": 4.535,
+ "lower_S_capture_band_um": 32.892
+}
