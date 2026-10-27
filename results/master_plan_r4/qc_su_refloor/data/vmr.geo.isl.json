@@ -1,0 +1,97 @@
+{
+ "method": "core_islands.site (SRAM-aware maze, equal-load, entry <= max_entry_um)",
+ "k": 4,
+ "max_entry_um": 110.0,
+ "entry_um": [
+  129.6,
+  168.808
+ ],
+ "sinks": 4310,
+ "sampled": 1500,
+ "islands": [
+  {
+   "centre_um": [
+    77.76,
+    164.16
+   ],
+   "rect_um": [
+    73.44,
+    159.84,
+    82.08,
+    168.48
+   ],
+   "entry_maze_um": 56.16,
+   "load_frac": 0.25,
+   "reach_um": {
+    "mean": 196.7,
+    "p95": 282.9,
+    "max": 293.8
+   }
+  },
+  {
+   "centre_um": [
+    95.04,
+    164.16
+   ],
+   "rect_um": [
+    90.72,
+    159.84,
+    99.36,
+    168.48
+   ],
+   "entry_maze_um": 38.88,
+   "load_frac": 0.25,
+   "reach_um": {
+    "mean": 200.3,
+    "p95": 297.0,
+    "max": 308.9
+   }
+  },
+  {
+   "centre_um": [
+    43.2,
+    168.48
+   ],
+   "rect_um": [
+    38.88,
+    164.16,
+    47.52,
+    172.8
+   ],
+   "entry_maze_um": 86.4,
+   "load_frac": 0.25,
+   "reach_um": {
+    "mean": 92.1,
+    "p95": 248.4,
+    "max": 261.4
+   }
+  },
+  {
+   "centre_um": [
+    203.04,
+    164.16
+   ],
+   "rect_um": [
+    198.72,
+    159.84,
+    207.36,
+    168.48
+   ],
+   "entry_maze_um": 77.76,
+   "load_frac": 0.25,
+   "reach_um": {
+    "mean": 157.2,
+    "p95": 217.1,
+    "max": 225.7
+   }
+  }
+ ],
+ "entry_maze_um": {
+  "min": 38.88,
+  "max": 86.4
+ },
+ "leaf_reach_um": 297.0,
+ "equal_path_um": 395.3,
+ "floor_entry_to_sink_maze_um": 343.4,
+ "verdict": "PASS"
+}
