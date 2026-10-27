@@ -34,7 +34,7 @@ def color_intervals(rows):
     return result, count
 
 
-def allocate(spec, plan):
+def allocate(spec, plan, align_inputs=False):
     out = copy.deepcopy(spec)
     groups, bydrv, incoming = defaultdict(list), defaultdict(list), {}
     for name, cell in out['cell_sites'].items():
@@ -91,6 +91,20 @@ def allocate(spec, plan):
             oldx = cells[0][1]['origin_um'][0]
             bar = pin(g, p)[0] - oldx
             x = D.snap(targets[gx]['c'] - bar, D.SITE_X)
+            for _, cell in cells:
+                cell['origin_um'][0] = x
+        elif align_inputs:
+            # Horizontal branch captures need a short vertical drop. Put the
+            # actual A pin on a PG-gap column before routing, rather than
+            # asking a long M8 local jog to reach a distant free M9 track.
+            pg = grid['M9']; step = pg['pitch_um']/2
+            phase = pg['offset_um'] + pg['pitch_um']/4
+            ax = pin(g, 'A')[0]
+            desired = phase + round((ax-phase)/step)*step
+            tr = D.DEFAULT_TRACKS['M9']
+            desired = tr['offset_um'] + round((desired-tr['offset_um'])/tr['pitch_um'])*tr['pitch_um']
+            bar = ax - cells[0][1]['origin_um'][0]
+            x = D.snap(desired-bar, D.SITE_X)
             for _, cell in cells:
                 cell['origin_um'][0] = x
     corridors = {}
@@ -150,9 +164,10 @@ def main():
     ap.add_argument('plan', type=Path)
     ap.add_argument('spec', type=Path)
     ap.add_argument('out', type=Path)
+    ap.add_argument('--align-inputs', action='store_true')
     a = ap.parse_args(); a.out.mkdir(parents=True, exist_ok=True)
     plan = S.Plan(S.load(a.plan))
-    spec, corridors = allocate(json.loads(a.spec.read_text()), plan)
+    spec, corridors = allocate(json.loads(a.spec.read_text()), plan, align_inputs=a.align_inputs)
     (a.out/'explicit_tree.json').write_text(json.dumps(spec, indent=1)+'\n')
     (a.out/'corridors.json').write_text(json.dumps(corridors, indent=1)+'\n')
     try:
