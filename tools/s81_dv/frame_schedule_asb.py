@@ -367,8 +367,8 @@ def measure(yjs, top):
         elif m == 'dsfd_cfifo_crs4':
             res['root'] = sorted(pin_labels(cells, labels, cn, 'ri', -1))
             lk = cells[cn]['connections'].get('lk')
-            if lk is not None:
-                assert len(lk) == 12 and all(b in ('0', '1') for b in lk), ('landing lk is not constant', cn, lk)
+            if lk is not None and all(b in ('0', '1') for b in lk):
+                assert len(lk) == 12, ('landing lk width differs', cn, lk)
                 value = sum(int(b) << k for k, b in enumerate(lk))
                 assert 'landing_lk' not in res or res['landing_lk'] == value, ('landing lk differs', cn)
                 res['landing_lk'] = value
@@ -602,6 +602,7 @@ def main():
     js_ab, sha_ab = elaborate(ab_top, True, work, a.mem_gb)
     meas_t = measure(json.loads(js_t.read_text()), lp_top)
     meas_ab = measure(json.loads(js_ab.read_text()), ab_top)
+    assert 'landing_lk' in meas_ab, ('as-built landing lk is not constant', ab_top)
     for nm, me in (('validate_' + lp_top, meas_v), (lp_top, meas_t), (ab_top, meas_ab)):
         (work / f'{nm}.meas.json').write_text(json.dumps(me, indent=1))
     src = dict(sha_ab)
