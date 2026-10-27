@@ -1406,3 +1406,4 @@ CODEX: 2026-10-27 09:05 PDT QCclock source6c038f1fd READY66tests; actualfullmesh
 CODEX: 2026-10-27 09:07 PDT FLOW QC29.4psregressiondiagnosed3extraCTSstages, RC-onlyeffect0.002ps; actualreference54a1lackscontrol_sinks/Qwen100trialownsfix. Shared60held. HBMlintpackaging/runtime READY53db0772b 4controlsPASS. Exact5bS81urgentcanaryplacementlive; combined3NOreg/1reg,5/7barrierscleared.
 
 CODEX: 2026-10-27 09:08 PDT RM51 main f108b501fd == origin/main; HBM pre-synth lint + immutable AP admission bundles,149compositionPASS; LEC thin patch excluded on missing-parent dependency, flow deployment notified.
+CODEX: 2026-10-27 09:08 PDT QC BTABR9e placement+alltimedreachPASS max366.174/0over405 and3442rowPASS; clockmodelnext. VMR72DATA-buffer ECO resumedasF4K afterM6-gridcrash diagnosis; progPG-clipped fullstripGRTqueued after64/80boxskipfound. No newSIGNEDclaim.
