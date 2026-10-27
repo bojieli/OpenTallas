@@ -20,6 +20,8 @@ Static only (no synth, no place): each check is one bug class seen on 10-26/10-2
   macro_channels       every macro column has a >= MIN_CHANNEL_UM routing channel on both sides (vertical) and every
                        stacked column an interior horizontal channel
   clock_entry_clear    no clock entry lies over a macro
+  island_macro_clear   no macro (+ MACRO_PLACE_HALO) over a plan island_ft rect: static sites clear, or the core_flow
+                       island_macro_guard hooks staged for rtl_macro_placer (COORD 10-27)
 """
 import json
 import re
@@ -691,8 +693,52 @@ def clock_entry_clear(kd, entries=None):
     return list(dict.fromkeys(err)), dict(applies=True, entries=len(pts), macros=len(boxes))
 
 
+def _island_rects(kd):
+    p = Path(kd) / "island_ft.json"
+    if not p.is_file():
+        return []
+    return [[float(v) for v in a["rect_um"]] for a in json.loads(p.read_text()).get("arcs", [])]
+
+
+def island_macro_clear(kd):
+    """COORD 10-27 (KV-CORES-R9): no macro or macro halo over a plan clock island.  Static macro sites: every
+    MACRO_PLACE_HALO-grown macro box clear of every island_ft rect.  rtl_macro_placer: the island_macro_guard hooks
+    (PRE_MACRO_PLACE blockages + PRE_TAPCELL check) staged with every island rect."""
+    kd = Path(kd)
+    cfg = _mk(kd)
+    isl = _island_rects(kd)
+    if not isl or not _lef_sizes(kd, cfg):
+        return [], dict(applies=False, reason="no island_ft rects" if not isl else "no macros")
+    halo = max([_num(t) or 0.0 for t in cfg.get("MACRO_PLACE_HALO", "0").split()] or [0.0])
+    err = []
+    boxes, prob = macro_boxes(kd) if cfg.get("MACRO_PLACEMENT_TCL") else (None, "rtlmp")
+    if boxes:
+        for b in boxes:
+            g = (b[1] - halo, b[2] - halo, b[3] + halo, b[4] + halo)
+            for r in isl:
+                if g[0] < r[2] - TOL and r[0] < g[2] - TOL and g[1] < r[3] - TOL and r[1] < g[3] - TOL:
+                    err.append(f"macro {b[0]} {[round(v, 3) for v in b[1:]]} + halo {halo:g} over island rect {r}")
+        return err, dict(applies=True, mode="static", macros=len(boxes), islands=len(isl), halo_um=halo)
+    if prob != "rtlmp":
+        return [prob], dict(applies=True)
+    gj = kd / "island_macro_guard.json"
+    if cfg.get("PRE_MACRO_PLACE_TCL") != "/work/island_macro_guard_pre.tcl" or \
+            cfg.get("PRE_TAPCELL_TCL") != "/work/island_macro_guard_post.tcl" or not gj.is_file() or \
+            not (kd / "island_macro_guard_pre.tcl").is_file() or not (kd / "island_macro_guard_post.tcl").is_file():
+        return [f"{len(isl)} island rect(s), macros placed by rtl_macro_placer, but no island_macro_guard "
+                "(PRE_MACRO_PLACE_TCL/PRE_TAPCELL_TCL) staged"], dict(applies=True, mode="rtlmp")
+    g = json.loads(gj.read_text())
+    have = [[float(v) for v in r] for r in g.get("rects_um", [])]
+    for r in isl:
+        if not any(all(abs(a - b) < TOL for a, b in zip(r, h)) for h in have):
+            err.append(f"island rect {r} not in island_macro_guard.json")
+    if float(g.get("halo_um", 0)) + TOL < halo:
+        err.append(f"guard halo {g.get('halo_um')} < MACRO_PLACE_HALO {halo:g}")
+    return err, dict(applies=True, mode="rtlmp+guard", islands=len(isl), halo_um=halo)
+
+
 CHECKS = ("corner_modes", "ff_binding", "clock_pin_geometry", "rc_calibration", "duplicate_modules", "keep_hook",
-          "pins_canonical", "mesh_vias", "macro_channels", "clock_entry_clear")
+          "pins_canonical", "mesh_vias", "macro_channels", "clock_entry_clear", "island_macro_clear")
 
 
 def is_core_kit(kd):
