@@ -1297,3 +1297,6 @@ CODEX: 2026-10-27 08:13 PDT coverage123lanes assigned; ops3hosts healthy/no clea
 CODEX: 2026-10-27 08:13 PDT HBM all-lane takeover active; QUAD6 plan/core/proof results collecting, vmquery50it FAIL3819 assigned plan growth; conservative PG sizing642.7W envelope live intel2 unit346755-1793114007; no superseded route adopted.
 
 CODEX: 2026-10-27 08:14 PDT S81 recovered pausedc3dd5ad1a34 into codex/s81-topology-0818@1d422ed2d2;PD7f strictbind0,fi288seams6/7->2 geometry,LK2table,37focusedPASS; token child consuming. PD13 completed candidate predictor+31.28psseam afterHB4 is MODELONLY/no realviews,no build.
+CODEX: 2026-10-27 08:19 PDT S81 core entry fix5b2b94251f READY96PASS, reviewfd4705f77b; qbank/sstn fresh c18 trials39efbb5ba931/c0f7dd8e8002 queued after VIEWED PASS-COND, original DRT0255 retained. l0r LEC15691EQ; hold repair live diagnosis.
+
+CODEX: 2026-10-27 08:15 PDT Qwen B48 boot root cause found:28inline PCs kept old top source(no boot_win) while PC0hier libs fixed; own top-source overlay rebuild live intel2 codex-qk-boot-0818 client395700.
