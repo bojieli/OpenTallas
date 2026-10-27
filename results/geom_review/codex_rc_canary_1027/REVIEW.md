@@ -19,3 +19,7 @@ Viewed qwen_compute.actual_place.png from candidate ab3ae7c3a coll_ftm 3_place.o
 ## HEAD actual placement, 08:33 PDT
 
 Viewed s81_head.actual_place.png from candidate ab3ae7c3a hd_turn_a3_place.odb. Left and south pin bands connect through diagonal turn/station rows, with open routing area and no macro wall. Repeaters follow the turns; clock entries remain the three inherited central sites (the northmost region is mostly empty). No new placement overlap/channel blockage. PG55740terms/0open. Shared60um repair24037->27870cells (+3833,15.9%). Verdict PASS-COND for one diagnostic CTS/route continuation; the known reference clock-insertion/FT-setup failures remain gates.
+
+## KV type actual placement, 08:38 PDT
+
+Viewed qwen_kvsys.actual_place.png from ab3ae7c3a kv3_io_ft3_place.odb. Two straight east-west feedthrough bands have aligned face/station columns and more closely spaced parallel repeater columns; open vertical access remains, no macros/walls or pin crossings. The12tap grid is regular. PG273790terms/0open. Shared60um repair121997->136895cells (+14898,12.2%). Verdict PASS-COND for one diagnostic CTS/route continuation; the ruled80ps clock-window/IO-hold model is unchanged and native hold/insertion gates remain active.
