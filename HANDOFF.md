@@ -1477,3 +1477,5 @@ CODEX:13:58 RM62 main e73f458550==origin/main HEADfoldedPGplan9d1 +isolatedS81sl
 CODEX: QC R29 real mixed-NDRspacing/truePRL/censusrollback fixes99e; comparable+correctedDRYcensusesliveintel2/intel1. Light+cutkept, no route/STA.
 
 CODEX: actual-bound HEAD_PREP source/compiler5ab863087 READY; native22checks/2mutants+12compiler testsPASS. Filler14/user0minimum15; no universal age or current programme adoption. All own jobs terminal, no RTL/cycle change.
+
+CODEX: 2026-10-27 14:02 PDT FLOW currentcanariescollected; reporterfixd12READY4tests/no gatechange; KVsafeproof144 remainsopen(legacy1fdEQnotfix), actualHBMtwo-modehold−130.88/683 diagnosed. Width166ad independent20/20CONFIRMED+merged; ownterminalODBdedupreclaimed10.17GB/allpathsretained.

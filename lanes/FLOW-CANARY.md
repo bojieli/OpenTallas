@@ -165,3 +165,6 @@ Oldcombinedab3KVcore terminal REGRESSION NOTSIGNED TT+18.39/FF−3.44/7EP; short
 
 ## CODEX correction 2026-10-27 13:58 PDT — KV safe-proof failure remains OPEN
 The earlier note calling KVcore441 LEC failure superseded by1fd EQ is withdrawn. Actual copiedruntime differs:441 lec.py SHA256prefix1adee251af26 usesreset-base/drop1899/reload12,29456/29600proved/144diff;1fd lec.py prefix3c30f45094fd isolderalgorithmwith34inductiveconstants/no noreset audit,29610EQ. The1fd QoR NO-REGRESSION receipt remainsimmutable but isnotproofthat144failureisfixed. Current5b prooflive; LECtoolowner ownsactualmiter/hyp/rootcauseinspection, no duplicatefullproof.
+
+## CODEX notes 2026-10-27 14:02 PDT — RC width and disk closure
+Mixed-widthqualification isCONFIRMED byNUMBER-CHECK09:33 (20/20native SPEF tuples+normalizedvalues+rulesSHA732a3...);166ad ancestorcurrent5bmain, assetscommitted. No orphanwidthjob/no rerun. Actualcodeassets .rules/.qualification.json/.rules.provenance.json retained. Rootscratchurgent: ownterminalcanaryODBs byte-identicaldeduplicated36paths/reclaimed10,169,737,612bytes; allpaths/bytes/receipts retained, activeHBM/sourceinputsuntouched. Manifestintel2:/srv/opentallas-scratch2/claude/codex-rc-canary-1027/terminal_odb_dedup_1351.json. CompletedhardlinkedODBs mustremainimmutable.
