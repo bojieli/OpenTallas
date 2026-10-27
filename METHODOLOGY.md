@@ -1,4 +1,4 @@
-# OpenTallas design methodology (FROZEN v4.9, 2026-10-26 17:3x; v4.8 17:4x; v4.7 17:3x; v4.6 17:0x; v4.5 16:5x; v4.4 06:39; v4.3 06:33; v4.2 06:15; v4.1 06:11; v4 06:07; v3 05:58; v2 earlier 10-26; v1 2026-10-24 21:40 PDT)
+# OpenTallas design methodology (FROZEN v5.0, 2026-10-26 18:4x; v4.9 17:3x; v4.8 17:4x; v4.7 17:3x; v4.6 17:0x; v4.5 16:5x; v4.4 06:39; v4.3 06:33; v4.2 06:15; v4.1 06:11; v4 06:07; v3 05:58; v2 earlier 10-26; v1 2026-10-24 21:40 PDT)
 
 One rule set for every lane (Claude, Codex, sub-agents) on all four release dies (S81, Qwen compute, Qwen KV, HBM).
 Build to these rules; do not re-derive them per lane. Precedence: latest OWNER decision > this file > AGENTS.md >
@@ -281,8 +281,12 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
      bay outside the core cannot close the gap.
   c. The die H-tree lattice is snapped to the partition lattice so tree nodes land on island sites (report max node displacement).
 - 12.3 CLOCK LATENCY. One common per-die clock-latency target at every hard-core clock pin (default 250 ps TT; FF stated per die); deep cores
-  restructure their CTS to meet it, shallow cores pad up. No early taps by design. Cores are rebuilt in parallel to it, signed cores included
-  (owner 10-26). Early-tap branches are RETIRED (12.8): diagnostic evidence only, never a closure path.
+  restructure their CTS to meet it, shallow cores pad up. v5.0 (OWNER 10-26 18:4x, "remove the ban rule and keep aligned with industry
+  flows"): EARLY TAPS ARE ALLOWED as standard macro insertion-delay balancing. A hard core's clock insertion delay is taken from its
+  signed-off (or current real) view, annotated as the core clock pin's latency, and the die CTS taps that core earlier by exactly that
+  delay. The core's internal tree is then unshared clock path and is charged by the 12.4a b1 AOCV table like any other clock path. The
+  common target stays a DESIGN TARGET for new/rebuilt cores (it keeps unshared delay small), but a signed core is no longer rebuilt only
+  for latency; the die related-pair STA (12.4a) decides.
   12.3a (OWNER 10-26 16:5x) The core band (250 +-20 TT / 202.5 +-20 FF, tap window <= 20 ps) is a DESIGN TARGET, not a pass/fail gate:
   every core is planned and predicted to it, but a core measured slightly outside it proceeds to sign-off and the die related-pair STA
   (12.4a, real core numbers) decides. Still banned: trims/pads/post-measurement edits (12.8); a core far out of band is restructured.
@@ -306,7 +310,9 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
      the flat clock-path cell 1.05/0.95 + net 1.03/0.97 of die_ci_margins.json. Derate per clock path = f(stage count from the last
      common point, bounding-box distance of launch/capture), random part scaling ~1/sqrt(depth) plus a non-averaging systematic part.
      The table is built from ASAP7 device-model Monte Carlo if the models carry variation statistics, else from cited published 7 nm
-     data; every assumption documented. Owner reviews the table before it gates. Data paths keep flat derates. IR droop (OWNER
+     data; every assumption documented. Owner reviews the table before it gates. (OWNER 10-26 18:4x: table APPROVED to gate,
+     distance gradient g = 0.21 %/mm interim, until a published FinFET within-die gradient replaces it; claude/clk-aocv-1026@b0c11ff91e,
+     NUMBER-CHECK-AOCV CHECKED.) Data paths keep flat derates. IR droop (OWNER
      10-26 17:5x): droop is SHARED between launch and capture clocks -- the stated 5 % drop (+5.1 % late) still applies to the data
      path, but on the clock only the DIFFERENTIAL droop between the two clock branches is charged: 0 for branches in the same mesh /
      PDN region; for branches in different regions the full one-sided +5.1 % stays until a PDNSim/region-droop result gives the
@@ -340,6 +346,8 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
   - 10-26 17:4x OWNER: "replace the flat clock margin with a depth- and distance-based table, the standard practice" (12.4a b1) = CURRENT. Supersedes flat 5 %/3 % clock derates (die CI lane choice 10-24, never an owner decision). Gates after owner review of the table.
   - 10-26 17:5x OWNER: supply droop treated as SHARED between the two clocks (12.4a b1) = CURRENT: clock charged only differential droop (0 within one mesh/PDN region; full +5.1 % one-sided across regions until PDNSim); data path keeps +5.1 % late. (COORD first misread the owner as keeping the one-sided margin; corrected same minute.)
   - 10-26 ~17:3x OWNER: "approve automatic hold-buffer insertion on data paths" (12.4a a1) = CURRENT. Supersedes reading "hold safe by structure, never padding" as a ban on data-path hold buffers; clock padding stays banned. Trigger: QC-MP-REGION-2 zero-logic seam hold budget 10.9 ps FF < >=29.5 ps flat-OCV pessimism (UNCHECKED).
+  - 10-26 18:4x OWNER: "use 0.21% per mm" (12.4a b1) = CURRENT: AOCV clock table approved to gate with distance gradient 0.21 %/mm (interim; the 0.42 %/mm corner-derived bound was global variation, NUMBER-CHECK-AOCV).
+  - 10-26 18:4x OWNER: "remove the ban rule and keep aligned with industry flows" (12.3, 12.8d/d1/f) = CURRENT: early taps allowed as macro insertion-delay balancing from the core's own signed/real view; unshared core-internal delay charged by the AOCV table. Supersedes 12.8 (06:07) early-tap ban and 12.3 "no early taps by design". Still banned: per-tap trims, useful-skew offsets, post-CTS clock ECO padding, mesh-node CPPR on unsigned meshes.
 
 - 12.7 MASTER PLAN FIRST -- CITY-PLANNING MODEL (OWNER 2026-10-26 05:58, "yes, do all of them on all dies"). Supersedes/extends 12.1-12.4 where stricter.
   Utilities (PG) -> transit (clock, reset, with islands as stations) -> roads (die-level routing corridors) with rest stops (repeater bays) and
@@ -378,9 +386,12 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
   c. Shallow cores reach the target with a designed fixed trunk delay at the entry (same cell chain per type), not per-sink padding.
   d. The die clock is balanced by construction: H-tree snapped to the partition lattice, equal-length branches, equal load per tap (density
      taps), regional meshes with landed seams. NOT allowed as closure means: early-tap offsets/branches, per-tap stub trims or useful-skew
-     offsets, post-CTS ECO padding/buffer swaps on the clock, mesh-node CPPR credit, gate-number relaxations.
+     offsets, post-CTS ECO padding/buffer swaps on the clock, mesh-node CPPR credit, gate-number relaxations. (v5.0: early-tap
+     offsets/branches REMOVED from this list -- allowed per 12.3 v5.0 as macro insertion-delay balancing.)
   d1. (OWNER 10-26 06:11) ALLOWED as design: per-tap driver/stub sizing COMPUTED BY THE PLAN TOOL from plan geometry and loads BEFORE any
      block is built, deterministic, recorded and frozen with the plan. BANNED: any value chosen after a measurement (trims, offsets, ECOs).
+     Exception (v5.0): a hard core's annotated insertion delay from its own signed/real view (industry macro latency annotation) is an
+     input to die CTS, not a trim.
   e. (OWNER 10-26 17:0x, MSCTS die clock) Die clocks are built as industry MSCTS: (1) top-metal (M8/M9) shielded global H-tree with
      large drivers, equal branches by construction, NO balance-detour padding; (2) one regional mesh per lattice region, driven at many
      points from islands (12.2a1); (3) short local trees from the mesh to each partition/core entry. Mesh sign-off = circuit simulation
@@ -393,7 +404,8 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
      otherwise per-region meshes (e) are the fallback.
      A measured miss goes back to the structure/plan model (12.8e), then the plan is re-frozen as one PLAN-DELTA.
   e. A measured failure goes back to the structure (plan or core architecture), recorded with its root cause before any rebuild.
-  f. Existing results obtained with the banned means (QC early-tap 154/143, any stub-trimmed mesh result incl. KV c3t 63.95/54.71) are
+  f. Existing results obtained with the banned means (any stub-trimmed mesh result incl. KV c3t 63.95/54.71; v5.0: QC early-tap 154/143
+     is no longer banned-means but still needs the 12.4a real-clock related-pair gate) are
      re-measured on the 12.8 structure with the 12.4b gate number before they count.
 
 - 12.9 EXECUTION RULES (OWNER 2026-10-26 06:15, "yes, go with them").
