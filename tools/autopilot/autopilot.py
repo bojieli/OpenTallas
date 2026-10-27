@@ -609,6 +609,10 @@ print("AP_JSON " + json.dumps(out))
 def classify(c, client):
     """pure function: (classify-probe result, client outcome) -> (class, kind, reasons)
     class: SIGNED | NEAR-MISS | STRUCTURAL | CRASH ; kind refines it (infra / tool / ...)"""
+    if client.get("admission_tools_fail"):
+        return "CRASH", "admission-tools", client["admission_tools_fail"]
+    if client.get("preflight_fail"):
+        return "STRUCTURAL", "preflight", client["preflight_fail"]
     so = c.get("signoff")
     if c.get("goal") == "grt" and (so or c.get("route_odb")):
         return "STRUCTURAL", "diagnostic-overrun", "GRT-only runner produced detailed-route/signoff output; no release scope"
@@ -677,6 +681,12 @@ INFRA_KINDS = ("infra-oom", "infra-lost", "infra-notrun", "infra-orphan")
 def parse_client_log(text):
     """ot-run client log (+ our AP_RC line) -> outcome dict"""
     o = {}
+    for key, prefix in (("admission_tools_fail", "ADMISSION_TOOLS FAIL:"), ("preflight_fail", "KIT_PREFLIGHT FAIL")):
+        lines = text.splitlines()
+        for index, line in enumerate(lines):
+            if line.startswith(prefix):
+                o[key] = "\n".join(lines[index:index+6])[:600]
+                break
     m = re.findall(r"ot-run: RAN on ([^\s:(]+)(?: \(unit [^)]*\))?:? exit (\d+)", text)
     if m:
         o["ran_on"], o["exit"] = m[-1][0], int(m[-1][1])
