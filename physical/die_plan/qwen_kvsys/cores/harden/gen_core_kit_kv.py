@@ -804,6 +804,7 @@ def main():
                     help="COORD ruling 2 (10-25): drop the constant LMAX head-group bit g (am[1]) from qkd_ahub am0..3 and the "
                          "ASTK am input (+ its qo[537] copy); ASTK ctl AM_G_PIN=0/G_CONST=0; plan pins renamed compactly "
                          "(old b -> b-1 above the dropped bit) in memory until the KV-PLAN3 delta lands (am_g_drop.py)")
+    ap.add_argument("--kvspc-own-regions", action="store_true", help="opt-in zero-cycle ES ownership copies per control/output/embedding region")
     ap.add_argument("--kvspc-face-ports", action="store_true", help="kvs_pc / kvs_pc_h_head_p boundary recut: one clock (hck + HBM data clocks := ck), dead-pin drop (land_er[258:1]; head ki[30:21]/[14:1]) as an in-memory plan delta until KV-PLAN3 lands it, ki/ko split (+1 hclk per kc station), fi landing (+1 fault edge), po / land_es private port flops (0 cycles); miter results/kvspc_face_1025")
     ap.add_argument("--kvspc-private-ports", action="store_true", help="with --kvspc-face-ports: private output ports (kvspc_private_ports.py, PATH-KV-PC 10-25): return actual_* port flops with internal hold copy + actual_valid kept (0 cycles), o_grp[296:289] status pin flops (+1 fault/drain observation edge; o_grp[294] no longer a pc__fo feedthrough), o_prev private launch (+1 edge per o_prev hop, non-head), pi[0] single capture, pc/cfg_stack single landing (chain station reads the landed copy), head upo kept pin flops (0 cycles)")
     ap.add_argument("--kvspc-core-clock", action="store_true", help="explicit common833ps controller profile at actual PC u_pc, including physical-minimum timing/counter widths and current canonical RTL; requires --kvspc-face-ports")
@@ -845,6 +846,8 @@ def main():
         if cj["module"].startswith("kv3_astk_") and not a.astk_face_ports:
             raise SystemExit("--am-g-drop on ASTK needs --astk-face-ports (repo qkd_astk_static_leaves.sv carries AM_G_PIN)")
         am_g_drop.core_json(cj)
+    if a.kvspc_own_regions and cj["module"] not in ("qkd_kvs_pc", "qkd_kvs_pc_h_head_p"):
+        raise SystemExit("--kvspc-own-regions requires a KV PC core")
     if a.kvspc_core_clock and not a.kvspc_face_ports:
         raise SystemExit("--kvspc-core-clock requires --kvspc-face-ports")
     if a.kvspc_face_ports:
@@ -1049,6 +1052,13 @@ def main():
         (kd / "ectlk_clock_delta.json").write_text(json.dumps(dict(
             source_ports=["ck[0]", "ck[1]", "ck[2]"], related_clock="one die clock, all edges co-timed",
             clock_period_ps=833, added_cycles=0, pin_geometry="unchanged plan pins"), indent=1) + "\n")
+    if a.kvspc_own_regions:
+        import kvspc_own_regions
+        kvspc_own_regions.apply_kit(kd / "rtl")
+        (kd / "kvspc_own_regions.json").write_text(json.dumps(dict(
+            source="kvspc_own_regions.py", added_cycles=0,
+            regions=["control/fault", "HOST return face", "embedding endpoint"],
+            copies=3, original_copies=1), indent=1)+"\n")
     if a.kvspc_face_ports:
         KVSPC.apply_kit(kd / "rtl", mod)
         if a.kvspc_private_ports:
