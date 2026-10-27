@@ -1,0 +1,28 @@
+PATH-KV-BIND 2026-10-25 KV STRICT BIND b12 = PASS (0 errors, 0 TYPE_SPLIT; unbound/tied/undriven/multiply_bound 0; POR gate PASS;
+parent-ID straps + strap tie audit PASS; 2404/2404 plan lanes carry bits, 0 unused, 0 unplanned, 0 dead, 0 narrow).
+Run: ot-run unit oth-ubuntu-3524409-1792988080 on epyc1, out epyc1:/srv/opentallas-scratch2/claude/path-kv-bind/b12 (summaries in b12/ here).
+Inputs: ALL repo-relative at this commit (lane tree = rsync of this worktree; recipe_b3.json has no absolute path, mk_recipe_b3.py checks).
+Reproduce: bash physical/die_plan/qwen_kvsys/bind/kvbind1025/regen_b3.sh <parent die_plan.json>  (plan + recipe), then
+  bind.py elab|bind|verify physical/die_plan/qwen_kvsys/die_plan.json --asbuilt physical/die_plan/qwen_kvsys/bind/kvbind1025/recipe_b3.json --out OUT --mem 48 [--strict]
+Base: TOK-SCHED b2 (kvtok1025: 13 TYPE_SPLIT) -> this lane:
+ P  source-station relocation (native_istations, 0 cycles): internal_stations_types = every type with planned OUT stations (30) + kv3_sys_c;
+    the hroot->ectl cfg daisy o_kvs_hroot_Q_o_cN (pass-through, no face register) keeps receiver padding (internal_stations_skip_buses).
+    Fixed: kv3_hg (vo_d1 pads 5/7), kv3_hg_v3 (acal 5/4), kv3_hroot (host die/hbm rst 3/6).  kit_istations: a bound face register narrower than
+    the plan bus (live bits only, e.g. N-column pv 267/268) gets stations of its live width (wider = error).
+ I  bind.py inner_uniform [kv3_pc, kv3_pc_v1, kv3_pc_v3]: per-instance as-built slg<->kvpc_k relay depth landed at the type max
+    (2775 edges, 36497 bits, max +7 stages); every changed bit is an INNER group in b12/bus_groups.json.gz "internal" (151 groups) for TOK-QK pricing.
+ S  explicit priced splits (explicit_split.py, 0 cycles, +11 kits, KV 40 -> 51 types): kv3_pv_v1..v6 N/S mirror (pv_N_k -> kv3_pv_v<k>n, like the
+    existing row-0 pair kv3_pv_v8/kv3_pv); kv3_hg_v1 positions 2..6 -> kv3_hg_v1p<k> (each position takes a different 5-b slice of the cfg daisy).
+    INTERIM for hg_v1: preferred fix = ectl cfg ID strap (cfg = {group,stack} pure identity) -> daisy removed, 6 types merge back (COORD proposal).
+ Plan (KV pin delta): live_width_cleanup.py removed 12 dead pv row-0 lanes (o_vport_{E,W}_N_vo/_d2/_d3 of pv_N_0/pv_S_0 -> hgi ft1/3/4 -> hg) with their
+    buses/stations/ft slots; narrowed pv row-0 vo_d1 396 -> 48 (4 lanes + hgi ft2) and the cfg daisy per position (35..5 of 40, 28 lanes).
+    head_clk_merge.py: one clock pin per head-eighth core (GEOM m6 cond 3): dropped 6/7/5 unloaded per-member __clk pins on e0..e7 tables
+    (all members are on one native net n_clk_core_<Q>, checked), compose spec merged accordingly (composition_heads_astk_1clk.json.gz;
+    source spec = TOK-SCHED compose2 composition_heads_astk.json sha256 84ca55ef832af56e073225dd93a410b95c67809a2cc035c5e1eb82199eb99406).
+ ASTK5 zn0 read-select +1 landing edge (claude/path-kv-astk5-1025@7f37eb202a) is in the native source: rtl/qwen_sys/kv_plan_leaves_1025/qkd_astk_zn_head_p.sv (recipe prefer; b12/bind.f).
+ Bind tool fixes: bind_plancells drops plan-driven pins from the uncapped TIED_TOTAL list (main 4cdc5e350 counted them: 1928 false tied bits);
+    bind_compose reads a gzipped spec.
+Bind inputs not previously in git (copied from the TOK-SCHED tree, md5 = epyc3 b2 tree): bind/kv45/{die_bound_native_mission.v.gz, plan_cells_1309.json,
+    port_map_kv45.json, *.sv}, bind/kv44/{plan_rewires_kv44.json, rtl/...}, bind/inputs/kv_bound_rtl6/kv_hard_models.sv, rtl/physical/ot_fdi_*.sv,
+    rtl/qwen_sys/static_kv_die_20261017/{qkd_kvs_ctl_nc32,qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_nc32}.sv. ASAP7 cell models = results/arch/s81_hb1_cell_semantics_1019/official (md5-identical).
+Pre-existing (as b2, not errors): 42 open outputs = astk owner_7 chain-tail next_*/response_* outputs.

@@ -2,7 +2,7 @@
  "schema": "opentallas.die_plan.core_pins.v1",
  "core": "kv3_astk",
  "frame": "core R0, origin (0,0), outline 190.08 x 181.44",
- "source": "KV-PLAN3F 10-25: ASTK strap master kit table (/srv/opentallas-scratch2/claude/kv-cores-1025r/astk/M/kv3_astk__190.08x181.44/pins.json); pins also in kv3_astk_EN keep the EN plan coordinate",
+ "source": "KV-PLAN3F 10-25: ASTK strap master kit table (/srv/opentallas-scratch2/claude/kv-cores-1025r/astk/M/kv3_astk__190.08x181.44/pins.json); pins also in kv3_astk_EN keep the EN plan coordinate | KV-CORE-SLICE-1 10-27: die clock/reset pins -> 12.8a centre entry island (M5 under the M9->M5 stack) | KV-CORE-SLICE-1 10-27: die clock/reset pins -> 12.8a centre entry island (M5 under the M9->M5 stack)",
  "pins": [
   {
    "name": "u_strip_u_strip_g_zn_0_u_zn__tc[0]",
@@ -10134,16 +10134,16 @@
   },
   {
    "name": "ck[None]",
-   "layer": "M4",
-   "x": 0.0,
-   "y": 90.696,
+   "layer": "M5",
+   "x": 95.064,
+   "y": 90.72,
    "face": "W"
   },
   {
    "name": "rst_n[None]",
-   "layer": "M4",
-   "x": 0.0,
-   "y": 90.792,
+   "layer": "M5",
+   "x": 95.448,
+   "y": 90.72,
    "face": "W"
   },
   {

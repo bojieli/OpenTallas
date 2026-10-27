@@ -2,7 +2,7 @@
  "schema": "opentallas.die_plan.core_pins.v1",
  "core": "qkd_hr_cdc_hi",
  "frame": "core R0, origin (0,0), outline 224.64 x 224.64",
- "source": "KVG3-WI 10-24 top-down pin assignment (core_pins_hr.py): boundary bits of the real instance members of the host-root cluster child inside the bound hub_Wi leaf u_host (qkd_host_root_admission_obsx, binder kv41, RTL e33504a6f); glue:* members stay partition glue; face = best facing to partners (other cores, host-leaf port -> partition bus windows) over all instances; even spread on the plan tracks | KV-PLAN2 v3.9d core_reface.py (core re-placed in hub_Wi) | native HR clocks from kv_core_rtl.py --hr-elab, data pins unchanged",
+ "source": "KVG3-WI 10-24 top-down pin assignment (core_pins_hr.py): boundary bits of the real instance members of the host-root cluster child inside the bound hub_Wi leaf u_host (qkd_host_root_admission_obsx, binder kv41, RTL e33504a6f); glue:* members stay partition glue; face = best facing to partners (other cores, host-leaf port -> partition bus windows) over all instances; even spread on the plan tracks | KV-PLAN2 v3.9d core_reface.py (core re-placed in hub_Wi) | native HR clocks from kv_core_rtl.py --hr-elab, data pins unchanged | KV-CORE-SLICE-1 10-27: die clock/reset pins -> 12.8a centre entry island (M5 under the M9->M5 stack) | KV-CORE-SLICE-1 10-27: die clock/reset pins -> 12.8a centre entry island (M5 under the M9->M5 stack)",
  "faces": {
   "S": {
    "pins": 517,
@@ -7060,7 +7060,7 @@
    "name": "ck[0]",
    "layer": "M5",
    "x": 112.344,
-   "y": 224.64
+   "y": 112.32
   }
  ]
 }

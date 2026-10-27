@@ -1,0 +1,72 @@
+{
+ "modules": 73,
+ "full_files": 3,
+ "lib_files": 37,
+ "ambiguous": {},
+ "undefined": [],
+ "substituted": [
+  {
+   "orig": "qkd_hbm3e_phy_pc",
+   "module": "qkd_hbm3e_phy_pc_s8",
+   "unconnected_inputs": [],
+   "open_outputs": [],
+   "orig_ports_unmapped": [],
+   "reason": "plan v3.2 slices each quadrant HBM PHY abstract into 8 x 4-PC partitions phy_<Q>_0..7 (one 1.5-mm clock region per slice; census phy_<Q>__s<k>)"
+  }
+ ],
+ "aliased": {},
+ "hard_params": {
+  "files": [],
+  "masters": {}
+ },
+ "json": "RUN:b3/asbuilt.json",
+ "script": "RUN:b3/asbuilt.ys",
+ "top": "qfd_die",
+ "tops": [
+  "RUN:b3/die_bound_native_mission.v"
+ ],
+ "full": [
+  "RUN:b3/shim_qkd_hbm3e_phy_pc.sv",
+  "physical/die_plan/qwen_kvsys/bind/models/kv_phy_slices.sv",
+  "physical/die_plan/qwen_kvsys/bind/kv45/serdes_c45.sv"
+ ],
+ "lib": [
+  "rtl/qwen_sys/split_20261014/qkh_head_stages.sv",
+  "rtl/qwen_sys/split_20261014/qkh_head_gather_stage.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv",
+  "rtl/qwen_sys/split_20261014/qkd_rst_region_pr_h273.sv",
+  "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv",
+  "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
+  "rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv",
+  "rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv",
+  "rtl/qwen_sys/kv_bootage_20261019/qkd_pv16_vport_b.sv",
+  "rtl/qwen_sys/split_20261014/qkd_pll_analog_model.sv",
+  "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_nc32.sv",
+  "physical/die_plan/qwen_kvsys/bind/kv45/group_r2c_native.sv",
+  "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_ctl_nc32.sv",
+  "rtl/lib/face_land/qkd_kvs_attn_fl_r17.sv",
+  "rtl/qwen_sys/kv_health_20261019/qkd_hp_or2.sv",
+  "physical/die_plan/qwen_kvsys/bind/kv45/qkd_host_root_admission_obsx_bo1_c45.sv",
+  "rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv",
+  "physical/die_plan/qwen_kvsys/bind/inputs/kv_bound_rtl6/kv_hard_models.sv",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embgw_boot_s.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_ectl_st.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv",
+  "physical/die_plan/qwen_kvsys/bind/kv44/rtl/qkd_d2d_cal_seq_bc4_pair1024.sv",
+  "rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv",
+  "rtl/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv",
+  "rtl/lib/face_land/qkd_astk_rly_296_fl.sv",
+  "rtl/qwen_sys/split_20261014/qkd_astk_phys.sv",
+  "rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv",
+  "rtl/qwen_sys/split_20261014/qkd_astk_er_owner_st.sv",
+  "rtl/hdc/nearhbm/qkd_ahub_static_dw.sv",
+  "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tbf.sv",
+  "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv",
+  "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_bb.v",
+  "rtl/hdc/nearhbm/ot_qkh_subtiles.sv",
+  "rtl/hdc/nearhbm/ot_qkh_ktree_lk.sv",
+  "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r3.sv",
+  "rtl/qwen_sys/split_20261014/ot_qkh_head_native.sv",
+  "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv"
+ ]
+}
