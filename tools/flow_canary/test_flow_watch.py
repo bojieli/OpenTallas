@@ -69,7 +69,7 @@ def test_shared_kit_helpers_hold_each_dies_flow_until_canary():
     import json
     spec = json.loads(Path(__file__).with_name('canaries.json').read_text())
     changed = [f'tools/die_plan/{name}.py' for name in
-               ('core_flow', 'core_infra', 'master_slice', 'native_bb', 'kit_preflight')]
+               ('core_flow', 'core_infra', 'master_slice', 'native_bb', 'kit_preflight', 'adder_map_dontuse')]
     for die in spec['die_plans']:
         assert watch.flow_paths(changed, spec, die) == sorted(changed)
     # Adding shared runtime dependencies must not turn unrelated analysis code
