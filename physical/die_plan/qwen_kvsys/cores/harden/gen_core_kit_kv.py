@@ -37,7 +37,8 @@ OFFS = dict(M4=0.024, M5=0.024, M6=0.032, M7=0.032)
 KEEP = 2.16
 IO_BUDGET = 0.2
 UNC_SETUP_PS, UNC_HOLD_PS, UNC_SPLIT, IO_LOAD_FF = 60.0, 25.0, 0.5, 2.0
-RST_RE = r"(^|__)(rst_n|arst_n|hrst_n|[a-z0-9_]*_rst_n)$"
+# KVHR2 10-26: + rrst_n / wrst_n (CDC read/write-domain reset pins of ot_qwen_die_cdc_ch, hr cdc cores)
+RST_RE = r"(^|__)(rst_n|arst_n|hrst_n|rrst_n|wrst_n|[a-z0-9_]*_rst_n)$"
 
 M123_TRACKS = """make_tracks M3 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.009 -y_pitch 0.036
 make_tracks M2 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.045 -y_pitch 0.270
@@ -436,7 +437,7 @@ def reached_modules(files, top):
         if m in seen:
             continue
         seen.add(m)
-        for mm in re.finditer(r"^\s*([A-Za-z_]\w*)\s*(?:#\s*\((?:[^()]|\((?:[^()]|\([^()]*\))*\))*\))?\s*([A-Za-z_]\w*)\s*\(",
+        for mm in re.finditer(r"^\s*([A-Za-z_]\w*)\s*(?:#\s*\((?:[^()]|\((?:[^()]|\([^()]*\))*\))*\))?\s*(?:[A-Za-z_]\w*|\\\S+\s)\s*\(",
                               body.get(m, ""), re.M):
             if mm.group(1) not in kw:
                 todo.append(mm.group(1))
@@ -495,6 +496,15 @@ def astk_zone_fences(kd, cfg, w, h, m, face_taps=False):
         region_kind="INCLUSIVE GPL guide, released before DPL", taps="one per zone (zn_0..3) + rest (ctl/strap/fault)",
         cts_args="-sink_clustering_enable -repair_clock_nets -balance_levels", added_cycles=0), indent=1) + "\n")
     return out
+
+
+def _ms():
+    """METHODOLOGY 12.7c master-plan slice helper (this repo's tools/die_plan/master_slice.py, loaded by path)."""
+    import importlib.util
+    sp = importlib.util.spec_from_file_location("master_slice", REPO / "tools/die_plan/master_slice.py")
+    m = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(m)
+    return m
 
 
 def main():
@@ -580,7 +590,12 @@ def main():
                     help="bound TT pin-register insertion (ps, measured); default: plan clock common latency")
     ap.add_argument("--io-ff-ps", type=float, default=None,
                     help="bound FF pin-register insertion (ps, measured); default: plan clock insertion_ff_ps, else 0.81 x TT")
+    ap.add_argument("--hr-face-ports", metavar="DIR", help="KVHR2 10-26: qkd_hr_* zero-cycle face recut: kit RTL = DIR/<core>.v "
+                    "from hr_face_ports.sh (private port flop copies of shared output flops, merged identical input "
+                    "capture flops; equiv proof + mutant in DIR/eq_rc.txt) + the macro black boxes of the core json")
     ap.add_argument("--hold-ff-margin", type=float, default=5.0, help="FF-only GRT hold repair margin (ps)")
+    MS = _ms()
+    MS.add_args(ap)   # 12.7c: --master-slice DIR (opt-in), --trial
     a = ap.parse_args()
     cj = json.load(open(a.core_json))
     if a.am_g_drop:
@@ -647,11 +662,20 @@ def main():
         if not k.startswith("_") and k.endswith("*") and mod.startswith(k[:-1]):
             rec.update(v)
     kd = Path(a.out) / tid
+    MS.precheck(a.master_slice, a.trial, plan, mod)
     if kd.exists():
         shutil.rmtree(kd)
     (kd / "rtl").mkdir(parents=True)
     srcs = []
     files = list(cj["files"])
+    if a.hr_face_ports:
+        if not mod.startswith("qkd_hr_"):
+            raise SystemExit("--hr-face-ports only applies to qkd_hr_* cores")
+        fpd = Path(a.hr_face_ports)
+        rc = (fpd / "eq_rc.txt").read_text().split()
+        if rc != ["post", "rc=0", "mut", "rc=1", "emitted_v", "rc=0"]:
+            raise SystemExit(f"--hr-face-ports: proof not clean in {fpd}/eq_rc.txt: {rc}")
+        files = [str(fpd / f"{mod}.v")] + [f for f in files if f.endswith("_bb.v")]
     if a.astk_face_ports and not any(Path(f).name == "qkd_astk_static_leaves.sv" for f in files):
         files.append(str(REPO / "rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv"))
     for f in files:
@@ -756,6 +780,13 @@ def main():
             strap_port=astk_strap_master.STRAP, values=astk_strap_master.CORNER_STRAP,
             bound=["ctl st", "zn_1..3 zc[1:0]"], landing="one kept 2-b register (strap_q)", sdc="set_false_path -from [get_ports strap_*]",
             added_cycles=0, settle="+1 edge after power-up (quasi-static)"), indent=1) + "\n")
+    if a.hr_face_ports:
+        fr = json.load(open(Path(a.hr_face_ports) / "hr_face_ports.json"))
+        (kd / "hr_face_delta.json").write_text(json.dumps(dict(
+            transform="physical/die_plan/qwen_kvsys/cores/harden/hr_face_ports.py (hr_face_ports.sh)",
+            added_cycles=0, private_port_flops=len(fr["private_out"]), merged_input_captures=len(fr["merged_in"]),
+            listed_not_changed={k: fr["n_" + k] for k in ("unregistered_out", "feedthrough", "dropped_in", "logic_in", "multi_in", "const_out")},
+            proof="equiv_make/equiv_simple -seq 2/equiv_induct/equiv_status -assert: post PASS, emitted .v PASS, mutant FAIL (caught)"), indent=1) + "\n")
     if a.ectlk_face_ports:
         if mod != "qkd_ectlk":
             raise SystemExit("--ectlk-face-ports only applies to qkd_ectlk")
@@ -793,6 +824,21 @@ def main():
         (kd / "astk_face_delta.json").write_text(json.dumps(dict(
             extra_flops_estimate=78, command_cycles=0, local_fault_cycles=0, external_fault_cycles=1,
             nominal_token_cycles=0, note="include extra external-fault edge in collection AGE budget"), indent=1) + "\n")
+    # Explicit zero-cycle arithmetic constant-table implementation. Preserve the
+    # canonical math file; normalize only the kit copy named by this recipe.
+    if rec.get("constant_case_luts"):
+        import sys
+        sys.path.insert(0, str(a.tool))
+        import constant_case_lut
+        lut_records = []
+        for item in rec["constant_case_luts"]:
+            path = kd / "rtl" / item["file"]
+            if path.name != item["file"] or not path.is_file():
+                raise SystemExit("constant LUT recipe must name an existing kit source basename")
+            text, record = constant_case_lut.rewrite(path.read_text(), item["function"])
+            path.write_text(text)
+            lut_records.append(dict(file=path.name, **record))
+        (kd / "constant_case_luts.json").write_text(json.dumps(lut_records, indent=1) + "\n")
     # memory macros (black boxes in kit_rtl.f) reached by the core's members
     kj = json.load(open(Path(a.kit_rtl) / cj["type"] / "kit_rtl.json"))
     hier = reached_modules([kd / "rtl" / Path(f).name for f in files], mod)
@@ -945,11 +991,22 @@ def main():
         text = (tool / name).read_text()
         text = text.replace("u_(bin|bout|ft)_[^/]*[/.]", "(u_(bin|bout|ft)_[^/]*[/.]|u_ric[/.])")
         (kd / name).write_text(text)
-    skip = "^(" + "|".join(re.escape(n) for n in clks + rsts) + ")$"
+    # Core headers commonly use one-bit vectors, so ODB calls the control pin
+    # ck[0]/rst_n[0] even though the contract names its bus ck/rst_n.  Without
+    # the suffix, face_flops treats CLK/reset loads as data and steals a real
+    # data flop's anchor before its own port is visited.
+    skip = "^(" + "|".join(re.escape(n) for n in clks + rsts) + r")(\[[0-9]+\])?$"
     ff = (tool / "face_flops.tcl").read_text()
     ff, replacements = re.subn(r"^set ff_skip_re \{[^}\n]*\}",
                                lambda _: "set ff_skip_re {" + skip + "}", ff, flags=re.M)
     assert replacements == 1, "face_flops.tcl must declare exactly one skip regex"
+    # Planned edge pins may extend beyond the standard-cell core margin.  A
+    # south/north pin at x2.136 in a core starting at x4.32 otherwise selects
+    # column -2; all three candidate columns stay negative and no anchor is
+    # emitted (ECTLK rsp_epoch[0]).  Snap its search to the legal core band.
+    old_col = "set col [expr {($px - $ff_x0) / $ff_cpitch}]"
+    assert ff.count(old_col) == 1, "face_flops.tcl column search changed"
+    ff = ff.replace(old_col, "set col [expr {max(0, ($px - $ff_x0) / $ff_cpitch)}]")
     ff = ff.replace("set ff_out [open $::env(RESULTS_DIR)/ot_face_flops.txt w]",
                     "set ff_out [open $::env(RESULTS_DIR)/ot_face_flops.txt w]\n"
                     "set ff_unreg [open $::env(RESULTS_DIR)/ot_unreg_pins.txt w]")
@@ -967,10 +1024,11 @@ def main():
     if flow_basis:
         shutil.copyfile(tool / "setRC_rcx_asap7.tcl", kd / "setRC_rcx.tcl")
         shutil.copyfile(tool / "leaf_affinity.tcl", kd / "leaf_affinity.tcl")
-        # design-rule fit (PV-PC fd4_mc in-flow recipe, now the core default): fanout cap 24 for every repair_design
-        # (ASTK B: 134 nets > 64, max 162 -> ~1100 routed slew pins) + 20 % slew / cap margin for the routed RC
-        (kd / "max_fanout.tcl").write_text("# KV 10-25 core flow basis: fanout cap 24 for every repair_design (in-flow, not in the golden SDC)\n"
-                                           "set_max_fanout 24 [current_design]\nputs \"KVCORES max_fanout 24\"\n")
+        # Match the sign-off fanout ceiling at every repair_design stage. A tighter cap of 24
+        # split timing-critical decode broadcasts into serial weak-buffer chains (FLOW-FANOUT).
+        # Keep the routed slew/cap margins; timing-driven repair chooses the buffer tree.
+        (kd / "max_fanout.tcl").write_text("# KV 10-25 core flow basis: fanout cap 64 for every repair_design (in-flow, not in the golden SDC)\n"
+                                           "set_max_fanout 64 [current_design]\nputs \"KVCORES max_fanout 64\"\n")
     mcmm = flow_basis and (not lefs or all(libs_ff))
     for f in ("pin_audit_core.py", "corners.tcl", "run_kit_kv.sh", "core_preflight.py", "core_keep.tcl", "core_keep_release.tcl"):
         shutil.copyfile(HERE / f, kd / f)
@@ -1045,6 +1103,10 @@ def main():
         cfg = astk_zone_fences(kd, cfg, w, h, CORE_MARGIN_UM, face_taps=a.astk_face_taps)
     elif a.astk_face_taps:
         raise SystemExit("--astk-face-taps needs --astk-zone-fences")
+    # MASTER PLAN 12.7c (opt-in --master-slice DIR): slice -> master_slice.json/.tcl, sourced at PRE_GLOBAL_PLACE
+    # (face_flops.tcl: after io placement, before GPL); refused without a slice once required unless --trial
+    ms = MS.kit_apply(kd, hc["module"], [w, h], a.master_slice, plan, a.trial, kind="core",
+                      gpl_hook=kd / "face_flops.tcl")
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     fz = dict(schema="opentallas.kv.core_freeze.v1", type=tid, module=mod, outline_um=[w, h],
               plan_sha256=sha(a.plan), pins_file=hc["pins_file"], pins_sha256=sha(plandir / hc["pins_file"]),
@@ -1055,7 +1117,13 @@ def main():
               head_lane_taps=bool(a.head_lane_taps), head_strap_master=bool(a.head_strap_master),
               head_lane_s3copy=bool(a.head_lane_s3copy),
               kit_hash=kit_hash(kd))
+    import lec as LEC
+    source_provenance = LEC._repo_provenance(REPO)
+    fz["source_commit"] = source_provenance.get("commit")
+    if ms is not None:
+        fz["master_plan"] = ms
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
+    LEC.write_kit_provenance(kd, REPO, provenance=source_provenance)
     print(json.dumps(dict(kit=str(kd), pins=len(allp), added=[p["name"] for p in added], clocks=clks, resets=len(rsts),
                           macros=macros, kit_hash=fz["kit_hash"])))
 

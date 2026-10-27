@@ -1199,7 +1199,10 @@ def main_hr_plan(a, plan, pdir, t):
                    pins_check=dict(pins_file=h.get('pins_file'), plan_pin_bits=len(pins), rtl_pin_bits=len(rtlbits),
                                    removed=grp(removed), added=grp(added), n_removed=len(removed), n_added=len(added),
                                    verdict='MATCH' if not removed and not added else 'RE-PIN NEEDED (KV-PLAN3)'),
-                   files=json.dumps([str(cp_)] + fl))
+                   # gen_core_kit_kv.py reads report.added / report.straps (same keys as the kv41 cores)
+                   report=dict(added=[dict(pin=n, why='hr-elab 16a pin not in the plan pins file') for n in sorted(added)],
+                               straps=[], gap_bits=[]),
+                   files=[str(cp_)] + fl)
         if not a.hr_no_lint:
             rec['lint'] = lint([cp_] + fl, mod)
         (cdir / f'{mod}_core.json').write_text(json.dumps(rec, indent=1) + '\n')

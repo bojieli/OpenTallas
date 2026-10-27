@@ -2,7 +2,7 @@
  "schema": "opentallas.die_plan.core_pins.v1",
  "core": "qkd_kvs_pc",
  "frame": "core R0, origin (0,0), outline 397.44 x 362.88",
- "source": "KV-P6-PINS 10-23 top-down pin assignment (core_pins_v37p.py): boundary bits of the bound partition netlist (binder3 kv39), face = best facing to partners over all instances, even spread on the plan tracks | KV-PLAN3F v3.9f: KV-CORE-RTL 07:09 dead-pin drop + split remnants",
+ "source": "KV-P6-PINS 10-23 top-down pin assignment (core_pins_v37p.py): boundary bits of the bound partition netlist (binder3 kv39), face = best facing to partners over all instances, even spread on the plan tracks | KV-PLAN3F v3.9f: KV-CORE-RTL 07:09 dead-pin drop + split remnants | KV-CORE-SLICE-1 10-27: die clock/reset pins -> 12.8a centre entry island (M5 under the M9->M5 stack)",
  "faces": {
   "N": {
    "pins": 1108,
@@ -6675,8 +6675,8 @@
   {
    "name": "ck[0]",
    "layer": "M5",
-   "x": 2.28,
-   "y": 0.096
+   "x": 198.744,
+   "y": 181.44
   },
   {
    "name": "hrst_n[0]",
@@ -16113,8 +16113,8 @@
   {
    "name": "rst_n[0]",
    "layer": "M5",
-   "x": 395.16,
-   "y": 0.096
+   "x": 199.128,
+   "y": 181.44
   },
   {
    "name": "i_prev[0]",

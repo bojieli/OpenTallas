@@ -14,8 +14,7 @@ if [ "${1:-}" = --stage ]; then
   VR=$2; REPO=$3; H=$REPO/physical/die_plan/qwen_kvsys/cores/harden
   mkdir -p $VR/chain/so/tools/die_plan
   cp $H/run_kit_kv.sh $H/corners.tcl $H/pin_audit_core.py $VR/chain/
-  cp $REPO/tools/die_plan/signoff.py $REPO/tools/die_plan/face_guard.py $REPO/tools/die_plan/sdc_lint.py \
-     $REPO/tools/die_plan/pair_skew.tcl $VR/chain/so/tools/die_plan/
+  python3 -I "$REPO/tools/die_plan/signoff.py" bundle "$VR/chain/so/tools/die_plan" || exit 1
   cp "$0" $VR/chain/run_kit_chain.sh
   exit 0
 fi
