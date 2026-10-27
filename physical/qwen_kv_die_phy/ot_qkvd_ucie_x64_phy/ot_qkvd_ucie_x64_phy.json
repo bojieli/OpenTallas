@@ -3,7 +3,8 @@
     "boundary_timing": "registered FDI pins: ASAP7 flop clk->q / setup + 3 FO4",
     "fdi_clock": "1.2 GHz, the local core clock of each die (both dies run off the KV-die PLL; the macro's receiver retimes the forwarded lane clock into it)",
     "footprint": "777.6 x 777.6 um (0.60 mm2), as ot_qfd_ucie_x64_phy: two 388.8 um module widths of shoreline (bump field + D2D adapter); 777.6 um of die edge on each die",
-    "latency_worst": "9 cycles (7.5 ns): 2x the measured figure, covering a slower PHY / longer reach; a D2D retry (CRC NAK + replay, ~2 x 5 + 2 cycles) is an error event, not the latency budget"
+    "latency_worst": "9 cycles (7.5 ns): 2x the measured figure, covering a slower PHY / longer reach; a D2D retry (CRC NAK + replay, ~2 x 5 + 2 cycles) is an error event, not the latency budget",
+    "line_side": "link_v/link_flit out, far_v/far_flit in (583-bit word) = the bump lanes to the far die, M5 pins on the top edge right of the FDI block; untimed in the LIB (forwarded-clock lanes retimed inside the macro)"
   },
   "claim_boundary": "a placement / connection / timing abstract of licensed IP: no PHY design, no GDS, no SI or bump-map analysis; footprint and boundary timing ASSUMED as stated",
   "derived": {
@@ -30,6 +31,12 @@
   "generator": "tools/qwen_kv_die/phy_gen.py",
   "name": "ot_qkvd_ucie_x64_phy",
   "pins": {
+    "line_pin_block_x_um": [
+      501.984,
+      726.24
+    ],
+    "line_pin_edge": "top, right of the FDI block (declared bump_ports; untimed line side)",
+    "line_pins": 1168,
     "pin_block_x_um": [
       276.384,
       501.216
@@ -117,11 +124,11 @@
     }
   },
   "views": {
-    "ot_qkvd_ucie_x64_phy.lef": "f4a2b22a7479ebcbca2a9dbe676e36b20d933d28ae13aff4b15f8b66c7280f66",
-    "ot_qkvd_ucie_x64_phy_bb.v": "c9699325c5e7134940f41f21b9c8c5d2a65f396f4201ca2d148b1b4d9204c7be",
-    "ot_qkvd_ucie_x64_phy_ff.lib": "a93f474f35cc1b3a72a0e99c6473196d5c30a65c8448230a820861be4585e262",
+    "ot_qkvd_ucie_x64_phy.lef": "b6cae26293fe9265ed000e134d5044b0c04933ecafc38a897dac973cbd06f9d6",
+    "ot_qkvd_ucie_x64_phy_bb.v": "e7149e816801a2c40154a2da62f11ea42362575ecce61c53750469495966e234",
+    "ot_qkvd_ucie_x64_phy_ff.lib": "f71162d6a463cddb616da6b1832e62a8c973136619c0ca7b10cbf45594b43059",
     "ot_qkvd_ucie_x64_phy_model.sv": "ed5a1aed0051c38ef6c2335d30fa59b951afb8f331d5a6785e15a45924f067e4",
-    "ot_qkvd_ucie_x64_phy_ss.lib": "3a2cff90556b744aa79d7564e47fe1560c8fd5ad1a921a5f99b2a798eafac954",
-    "ot_qkvd_ucie_x64_phy_tt.lib": "4537813c653458ff6a9c35be6f3fb4671dc98c124e49be2de00910341c6347dc"
+    "ot_qkvd_ucie_x64_phy_ss.lib": "63065c61fc9e8a94228eaa354bd25c98c8cc0913d4994c8fbb28dab2a9eee778",
+    "ot_qkvd_ucie_x64_phy_tt.lib": "537f8ff84c45c96ac72b3080080fa955505636f96a9016061b9860155f1b52cb"
   }
 }
