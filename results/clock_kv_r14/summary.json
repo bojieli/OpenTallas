@@ -1,0 +1,72 @@
+{
+ "lane": "CLOCK-KV-R14",
+ "host": "intel1 (epyc1 retiring)",
+ "run_dir": "intel1:/srv/opentallas-scratch2/claude/clock-kv-r14-1026",
+ "plan": "hm_r12.json sha 96e6d1cb (unchanged)",
+ "lattice": "lat_r14.json = R13 lattice + band_trees + band_root_reach_um 200 + strap_cover",
+ "stub_root_cause": "128 slow stubs sat on mesh straps with NO driver: uniform 71-row M8 strap lattice vs 128 explicit leaf rows with a hub gap (12070-13936) and the top strip (>25911): M8 straps j32-35, j68-70 undriven; also bottom leaf row y=95.04 sat 172 um below the V strap end (267.08) in the routed DB",
+ "fix": "(1) band_trees on: 96 band taps (hub_*, hroot_*, sys_*, io_E5/E6/W2/W3) fed by 90 equal band trees (root on driven mesh -> trunk h 58.32 um -> branch -> comb <=60.5 um); 4 roots slide 54 um along their strap past pv_N_0 core edges (new opt-in band_root_reach_um); (2) strap_cover: M8 straps outside the driven leaf cover removed (7), M9 spans 95.04-25911.36 (continuous across the hub gap)",
+ "mesh_stub_input_slew_ps": {
+  "r13": {
+   "TT_max": 553.44,
+   "over_120": 128
+  },
+  "r14": {
+   "TT_max": 105.75,
+   "FF_max": 90.68,
+   "over_120": 0,
+   "inputs": 1914
+  }
+ },
+ "tap_slew_ps_stubsta_native": {
+  "TT_max": 84.04,
+  "FF_max": 79.15,
+  "over_120": 0,
+  "taps": 1920
+ },
+ "combo_grt_TT": {
+  "overflow": "0/0/0",
+  "usage_pct": 3.76,
+  "extra_iterations": 2
+ },
+ "rcx": "4546/4546 nets driven, 0 disconnected, 0 unreachable",
+ "tree_sta_rcx": {
+  "TT_D_spread": 33.5,
+  "FF_D_spread": 30.3,
+  "levels_TT": "L1:0.6 L2:9.7 L3:16.1 L4:18.8 L5:26.7 L6:25.5 L7:27.3 L8:27.0 L9:55.3 L10:29.9 L99:33.5"
+ },
+ "L9": "55.5 ps is a measurement-point artifact: the 128 e6 L9 upstream nodes (d 116.64 um) are timed at their buffer Y, 116.64 um BEFORE the branch point; L8->L9 stage 116.5-117.8 ps (upstream) vs 143.9-145.8 ps (others), bimodal 28 ps. At L10 inputs the two classes differ by 5.0 ps mean (4562.2 vs 4567.2 TT, ranges overlap), L10 spread 29.9. No residual tool used.",
+ "tap_window_ps": {
+  "TT": [
+   4724.59,
+   4833.1
+  ],
+  "FF": [
+   3895.26,
+   3985.54
+  ],
+  "band_minus_mesh_median": {
+   "TT": 68.8,
+   "FF": 50.2
+  }
+ },
+ "die_sta_related_declared_budget_no_clock_ocv": {
+  "TT": {
+   "intra_setup": 595.11,
+   "intra_hold": -61.85,
+   "seam_setup": 539.39,
+   "seam_hold": -117.57
+  },
+  "FF": {
+   "intra_hold": -60.71,
+   "seam_hold": -103.4,
+   "intra_kit_contract_hold": 20.7,
+   "seam_kit_contract_hold": -21.99,
+   "seam_kit_contract_neg_pairs": 875
+  },
+  "worst": "pv_S_7 t3 -> hub_C t6 (band capture), clock damage 127.9 TT / 102.0 FF",
+  "note": "blocks = declared-budget model (kits_found 0), NOT real views; --clock-ocv table blocked: fold report stage_depths cannot walk through the multi-driver mesh (ckm_s_0 no driver path); HB4 count not run"
+ },
+ "IR": "NOT RUN: die psm kit fails PDN-0233 (160/160 partition grids no shapes or vias at add_pdn_connect M7 M8), intel2 run 1:13 min; hgi_v6/v7/v8 M7 PG straps unchanged (R13 CHECKED) so the band cannot change partition IR",
+ "residual_tools": "none"
+}

@@ -1338,6 +1338,32 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
 
         def span(axis, idx, g=None):
             return strap_span(out, g, xs, ys, axis, idx)
+    elif lattice and lattice.get("strap_cover") and lg and not regions:
+        # CLOCK-KV-R14 (opt-in lattice strap_cover, one die mesh): the mesh metal covers exactly the DRIVEN area.
+        # Leaf rows form groups (gap > 1.5 pitch, as band_plan); an M8 strap whose y lies outside every group cover
+        # [first - p/2, last + p/2] has no driver near it and is removed (taps there are band-tree taps); every M9
+        # strap spans from the lowest to the highest driver row / kept M8 strap, so every leaf driver sits ON its
+        # strap (the uniform ys lattice left the bottom leaf row 172 um below the strap end) and nothing dangles past
+        # the last driver.  M9 stays one continuous strap across a band gap (12.8e1 continuous mesh).
+        p_ = min(b - a for a, b in zip(ly, ly[1:]))
+        grp, g0_ = [], ly[0]
+        for a_, b_ in zip(ly, ly[1:]):
+            if b_ - a_ > 1.5 * p_:
+                grp.append((g0_, a_))
+                g0_ = b_
+        grp.append((g0_, ly[-1]))
+        cov = [(a_ - p_ / 2, b_ + p_ / 2) for a_, b_ in grp]
+        keep = [j for j, y in enumerate(ys) if any(lo - 1e-6 <= y <= hi + 1e-6 for lo, hi in cov)]
+        vlo, vhi = min([ly[0]] + [ys[j] for j in keep]), max([ly[-1]] + [ys[j] for j in keep])
+        spans = {f"H:{j}:None": ([xs[0], xs[-1]] if j in keep else None) for j in range(len(ys))}
+        spans.update({f"V:{i}:None": [vlo, vhi] for i in range(len(xs))})
+        out["strap_spans"] = spans
+        out["meta"]["strap_cover"] = dict(cover_um=[[round(a_, 3), round(b_, 3)] for a_, b_ in cov],
+                                          m8_removed=[j for j in range(len(ys)) if j not in keep],
+                                          m9_span_um=[round(vlo, 3), round(vhi, 3)])
+
+        def span(axis, idx, g=None):
+            return strap_span(out, dict(k=None), xs, ys, axis, idx)
 
     def cell(name, x, y, kind, **kw):
         cells[name] = dict(x=snap(x - BUF_W / 2, SITE_X), y=snap(y - ROW_Y / 2, ROW_Y), kind=kind, **kw)
@@ -1845,7 +1871,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
             fq, fd, axis, i, j = stub_foot(K, xs, ys, x, y, 4 * max_move,
                                            box=(g["i0"], g["i1"], g["j0"], g["j1"]) if regions else None,
                                            extent=g.get("strap_box_um"),
-                                           span=(lambda ax_, k_, g=g: span(ax_, k_, g)) if fp is not None else None)
+                                           span=(lambda ax_, k_, g=g: span(ax_, k_, g)) if span is not None else None)
         if fp is not None and any(in_rect(h["rect_um"], x, y) and h["name"] != part for h in holes):
             out["unplaced"].append([tp, "tap inside a declared macro hole"])
         if fq is None:
@@ -1924,7 +1950,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                        htree_wire_mm=round(sum(h["len_um"] for h in out["htree"]) / 1e3 + trunk / 1e3, 2),
                        mesh_wire_mm=round(sum((g["j1"] - g["j0"]) * (strap_bounds(g, xs, ys, 0)[1] - strap_bounds(g, xs, ys, 0)[0]) +
                                               (g["i1"] - g["i0"]) * (strap_bounds(g, xs, ys, 1)[1] - strap_bounds(g, xs, ys, 1)[0]) for g in R) / 1e3, 2)
-                       if fp is None else round(sum(s_[1] - s_[0] for s_ in out["strap_spans"].values() if s_) / 1e3, 2),
+                       if "strap_spans" not in out else round(sum(s_[1] - s_[0] for s_ in out["strap_spans"].values() if s_) / 1e3, 2),
                        stub_wire_mm=round(sum(t["stub_um"] for t in tap_rows) / 1e3, 2))
     if fp is not None:
         sh = fp.get("shield_net")
