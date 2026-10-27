@@ -1,0 +1,159 @@
+{
+ "plan": "die_plan.json",
+ "view_list": [
+  {
+   "view": "ot_hbm_hc_root_static__hcp_sys1@eeab1883a31b",
+   "module": "ot_hbm_hc_root_static__hcp_sys1",
+   "outline_um": [
+    155.52,
+    172.8
+   ],
+   "pins_file": "cores/ot_hbm_hc_root_static__hcp_sys1__155.52x172.8__root_u_hc_eng_hcp_sys1.json",
+   "pins_sha256": "eeab1883a31bd831cf009c5ce201ba9daf214ef3bc449b8e841f43a2af07ac1d",
+   "pins": 244,
+   "family": "HC",
+   "canonical_type": "hc_hcp_sys1",
+   "recipe_keys": [
+    "ot_hbm_hc_root_static__hcp_sys1__155.52x172.8"
+   ],
+   "blockers": [],
+   "instances": [
+    "root.u_hc_eng_hcp_sys1"
+   ],
+   "placed": 1,
+   "replicas": 1
+  },
+  {
+   "view": "ot_hbm_hc_root_static__tail0_rest@644dac33bc0c",
+   "module": "ot_hbm_hc_root_static__tail0_rest",
+   "outline_um": [
+    155.52,
+    172.8
+   ],
+   "pins_file": "cores/ot_hbm_hc_root_static__tail0_rest__155.52x172.8__root_u_hc_eng_tail0_rest.json",
+   "pins_sha256": "644dac33bc0cc11e33db00ae38ec77508eed0d30082498899f75d6f09ce460fc",
+   "pins": 3434,
+   "family": "HC",
+   "canonical_type": "hc_tail_rest",
+   "recipe_keys": [
+    "ot_hbm_hc_root_static__tail0_rest__155.52x172.8"
+   ],
+   "blockers": [],
+   "instances": [
+    "root.u_hc_eng_tail0_rest"
+   ],
+   "placed": 1,
+   "replicas": 1
+  },
+  {
+   "view": "ot_hbm_hc_root_static__tail0_sk_steady@064989ede319",
+   "module": "ot_hbm_hc_root_static__tail0_sk_steady",
+   "outline_um": [
+    155.52,
+    172.8
+   ],
+   "pins_file": "cores/ot_hbm_hc_root_static__tail0_sk_steady__155.52x172.8__root_u_hc_eng_tail0_sk_steady.json",
+   "pins_sha256": "064989ede3199ffe6caa0b69b9724d49b2052f66d91ee77e37d905193894b0c7",
+   "pins": 1036,
+   "family": "HC",
+   "canonical_type": "hc_sk_steady",
+   "recipe_keys": [
+    "ot_hbm_hc_root_static__tail0_sk_steady__155.52x172.8"
+   ],
+   "blockers": [],
+   "instances": [
+    "root.u_hc_eng_tail0_sk_steady"
+   ],
+   "placed": 1,
+   "replicas": 1
+  },
+  {
+   "view": "ot_hbm_hc_root_static__tail0_sk_step0@981c29e57810",
+   "module": "ot_hbm_hc_root_static__tail0_sk_step0",
+   "outline_um": [
+    155.52,
+    172.8
+   ],
+   "pins_file": "cores/ot_hbm_hc_root_static__tail0_sk_step0__155.52x172.8__root_u_hc_eng_tail0_sk_step0.json",
+   "pins_sha256": "981c29e5781073577712642cd3b95fc1194e6d233990a8b96a6728838f9b08d8",
+   "pins": 1030,
+   "family": "HC",
+   "canonical_type": "hc_sk_step0",
+   "recipe_keys": [
+    "ot_hbm_hc_root_static__tail0_sk_step0__155.52x172.8"
+   ],
+   "blockers": [],
+   "instances": [
+    "root.u_hc_eng_tail0_sk_step0"
+   ],
+   "placed": 1,
+   "replicas": 1
+  },
+  {
+   "view": "ot_hbm_hc_root_static__tail1_rest@65a9ff6994aa",
+   "module": "ot_hbm_hc_root_static__tail1_rest",
+   "outline_um": [
+    155.52,
+    172.8
+   ],
+   "pins_file": "cores/ot_hbm_hc_root_static__tail1_rest__155.52x172.8__root_u_hc_eng_tail1_rest.json",
+   "pins_sha256": "65a9ff6994aa3c73cb7dda73497afc5df51414032952f74e2b366555a59909ab",
+   "pins": 3434,
+   "family": "HC",
+   "canonical_type": "hc_tail_rest",
+   "recipe_keys": [
+    "ot_hbm_hc_root_static__tail1_rest__155.52x172.8"
+   ],
+   "blockers": [],
+   "instances": [
+    "root.u_hc_eng_tail1_rest"
+   ],
+   "placed": 1,
+   "replicas": 1
+  },
+  {
+   "view": "ot_hbm_hc_root_static__tail1_sk_steady@1b26a94e37e6",
+   "module": "ot_hbm_hc_root_static__tail1_sk_steady",
+   "outline_um": [
+    155.52,
+    172.8
+   ],
+   "pins_file": "cores/ot_hbm_hc_root_static__tail1_sk_steady__155.52x172.8__root_u_hc_eng_tail1_sk_steady.json",
+   "pins_sha256": "1b26a94e37e68def750a77f926bae4747655f29dba9320468d5727ec11aed6d9",
+   "pins": 1036,
+   "family": "HC",
+   "canonical_type": "hc_sk_steady",
+   "recipe_keys": [
+    "ot_hbm_hc_root_static__tail1_sk_steady__155.52x172.8"
+   ],
+   "blockers": [],
+   "instances": [
+    "root.u_hc_eng_tail1_sk_steady"
+   ],
+   "placed": 1,
+   "replicas": 1
+  },
+  {
+   "view": "ot_hbm_hc_root_static__tail1_sk_step0@94fab56e1053",
+   "module": "ot_hbm_hc_root_static__tail1_sk_step0",
+   "outline_um": [
+    155.52,
+    172.8
+   ],
+   "pins_file": "cores/ot_hbm_hc_root_static__tail1_sk_step0__155.52x172.8__root_u_hc_eng_tail1_sk_step0.json",
+   "pins_sha256": "94fab56e10534c5a7304b0803ed4ee11a5c27bcc9a7b7ee8b2af186a30f58a7a",
+   "pins": 1030,
+   "family": "HC",
+   "canonical_type": "hc_sk_step0",
+   "recipe_keys": [
+    "ot_hbm_hc_root_static__tail1_sk_step0__155.52x172.8"
+   ],
+   "blockers": [],
+   "instances": [
+    "root.u_hc_eng_tail1_sk_step0"
+   ],
+   "placed": 1,
+   "replicas": 1
+  }
+ ]
+}
