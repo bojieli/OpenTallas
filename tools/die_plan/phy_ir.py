@@ -68,15 +68,16 @@ def _window_kit(plan_path, out, rect, density=0.15, name="win", tile=86.4):
          f"source {D.PLAT}/setRC.tcl"]
     t += [f"set_pdnsim_inst_power -inst {n} -power {pw / len(blks):.8f}" for n, _, _ in blks]
     t += [
-         "foreach n {VDD VSS} { if {[catch {check_power_grid -net $n} e]} { puts \"OT_PG_CHECK_FAIL $n $e\" } "
+         "foreach n {VDD VSS} { if {[catch {check_power_grid -net $n} e]} { puts \"OT_PG_CHECK_FAIL $n $e\"; error $e } "
          "else { puts \"OT_PG_CHECK_OK $n\" } }",
          "if {[catch {analyze_power_grid -net VDD -error_file /work/psm/psm_VDD.rpt -voltage_file /work/psm/ir_VDD.csv} e]} "
-         "{ puts \"OT_PSM_FAIL $e\" } else { puts OT_PSM_OK }",
+         "{ puts \"OT_PSM_FAIL $e\"; error $e } else { puts OT_PSM_OK }",
          "puts \"OT_T psm [expr {[clock seconds]-$t0}]\"", "puts OT_DONE"]
     (out / "psm" / "tracks.tcl").write_text(D.coarse_tracks(P, 0.72))
     (out / "psm" / "psm.tcl").write_text("\n".join(t) + "\n")
-    (out / "run_psm.sh").write_text(D.run_sh("psm", 64, 8, "/usr/bin/time -v openroad -no_init -threads 8 -exit "
-                                                       "/work/psm/psm.tcl > /work/psm/psm.log 2>&1; echo EXIT \\$? >> /work/psm/psm.log"))
+    psm_cmd = D.logged_stages([("/usr/bin/time -v openroad -no_init -threads 8 -exit /work/psm/psm.tcl",
+                                "/work/psm/psm.log")])
+    (out / "run_psm.sh").write_text(D.run_sh("psm", 64, 8, psm_cmd))
     os.chmod(out / "run_psm.sh", 0o755)
     meta = dict(plan=str(plan_path), die=P.name, name=name, window_um=[x0, y0, x1, y1], area_mm2=round(w * h * 1e-6, 3),
                 density_w_mm2=density, power_w=round(pw, 4), load_blocks=len(blks), block_um=[round(bw, 3), round(bh, 3)], bumps=len(bumps), bumps_vdd=sum(1 for b in bumps if b[0] == "VDD"),

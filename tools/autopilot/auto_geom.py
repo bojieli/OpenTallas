@@ -45,7 +45,7 @@ AG_HEAD = "time\tid\tdie\ttype\tkit\ttemplate\tcheckpoint\tverdict\tsampled\tlin
 AG_ROOT = "/srv/opentallas-scratch2/claude/autopilot/auto_geom"
 SAMPLE_MOD = 5
 CHECK_MEM_GB = 24
-CHECK_TIMEOUT_S = 2 * 3600
+CHECK_TIMEOUT_S = 3 * 3600      # GEOM-AUTO-2: includes the >= 50-iteration GRT probe
 
 # remote probe: kit signature (read-only).  args: {"kit": path}
 PROBE_SIG = r'''
@@ -272,7 +272,8 @@ def launch(ap, st, r, a, t, odb, sig):
     host = ap.ssh_host(r["host"])
     out = f"{AG_ROOT}/{rid}"
     th, tp = t["metrics"].split(":", 1) if ":" in t["metrics"] else (host, t["metrics"])
-    tools = [HERE / "geom_check.sh", HERE / "geom_dump.tcl", HERE / "geom_rules.py"]
+    tools = [HERE / "geom_check.sh", HERE / "geom_dump.tcl", HERE / "geom_rules.py", HERE / "geom_grt.tcl",
+             HERE / "geom_png.py"]
     rc, _, err = ap.rbash(host, f"mkdir -p {shlex.quote(out)}/tools", timeout=60)
     ok = rc == 0
     for f in tools:
@@ -325,9 +326,10 @@ def poll(ap, st, r, a):
     smp = verdict == "PASS" and sampled(rid)
     stamp = time.strftime("%Y-%m-%d %H:%M %Z")
     host_out = a["out"]
-    head = (f"{stamp} AUTOPILOT: " + (f"GEOM REQ [AUTO-GEOM {rid}] " if verdict == "FAIL" or smp else "")
+    tag = "FAIL" if verdict == "FAIL" else "SAMPLE" if smp else ""
+    head = (f"{stamp} AUTOPILOT: " + (f"GEOM REQ [AUTO-GEOM {rid}] {tag} " if tag else "")
             + f"{line} | {r['die']}/{r['type']} kit {r['kit']} src {r['src']} checkpoint {a['odb']} template "
-              f"{a['template']} ({a['template_ref']}) rules {host_out}/auto_geom.json")
+              f"{a['template']} ({a['template_ref']}) rules {host_out}/auto_geom.json image {host_out}/auto_geom.png")
     head += (" | visual review requested: rule FAIL (reviewers: REPLY [AUTO-GEOM " + rid + "] naming the type)"
              if verdict == "FAIL" else " | 1-in-5 visual audit sample; routing proceeds on the AUTO PASS" if smp else "")
     a.update(state="DONE", verdict=verdict, sampled=smp, line=line, t_done=time.time(),

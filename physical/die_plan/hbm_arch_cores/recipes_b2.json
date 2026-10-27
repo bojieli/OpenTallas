@@ -652,5 +652,106 @@
    "physical/die_plan/hbm_arch_cores/rtl/hnx_rp4lp4_leaf_selfcontained.sv": "4673cf757e"
   },
   "preprocessor_fix": "Only leaf macro scope changes; body byte-identical to pinned source; Slang and read_verilog get the same reset-edge expression."
+ },
+ "ot_hgi_sfu_split3_lane_core__idpin": {
+  "top": "ot_hgi_sfu_split3_lane_core",
+  "files": [
+   "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv",
+   "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv",
+   "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv",
+   "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_vec_side_c12.sv",
+   "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_delay.sv",
+   "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fpu.sv",
+   "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_sfu.sv",
+   "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fdiv.sv",
+   "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_softplus.sv",
+   "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fastfp.sv",
+   "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fastfp_lat_c12.sv",
+   "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_f12.sv",
+   "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+   "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+   "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fsqrt_c12.sv",
+   "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fsqrt.sv",
+   "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_prefix.sv",
+   "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_delay_ring.sv",
+   "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_vec_red_c12.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lane_map.sv",
+   "rtl/hbm_accel/generic/peers/sfu_sp2/ot_su12_sfu_sp2.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_lane_core.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [],
+  "synth_memory_max_bits": 16384,
+  "source": "HBM-CORES-R8 10-27: planU6b recipes_master_ids.json ot_hgi_sfu_split3_lane_core__idpin__388.8x345.6 (common lane core, map_lane_j ID is a real face input); rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_arithmetic_grid_sp2.sv g_lane[j] (g_mono u_map + u_sfu; the twin _sp2 lane = RDX 2, store-side pin registers priced by HBM-P5); plan pins (30 buses) == RTL top ports by name/width",
+  "source_commit": "ada22d9fe4"
+ },
+ "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap": {
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [],
+  "source": "HBM-CORES-R8 10-27: planU6b recipes_master_ids.json ot_hgi_coll_tkm_tp192_tile_core__idpin__319.68x345.6; rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk); plan pins (11 buses) == RTL top ports by name/width (noid tile: no ID pin)",
+  "source_commit": "ada22d9fe4"
+ },
+ "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap": {
+  "top": "ot_hgi_coll_tkm_tp192_tile_core",
+  "files": [
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+   "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+   "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [],
+  "source": "HBM-CORES-R8 10-27: planU6b recipes_master_ids.json ot_hgi_coll_tkm_tp192_tile_core__idpin__319.68x345.6; rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk); hand wrapper wrappers/ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap.sv: up_in = as-built constant up[NT]=0, ovf open (8 plan buses)",
+  "source_commit": "ada22d9fe4"
+ },
+ "ot_hfd_coll_q2n2_vm_core": {
+  "top": "ot_hfd_coll_q2n2_vm_core",
+  "files": [
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_slice_v7.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6_physical.sv",
+   "rtl/hbm_accel/cores_split/ot_hfd_coll_q2n2_hard_v8g/ot_hfd_coll_q2n2_vm_core.sv"
+  ],
+  "files_at": {
+   "rtl/hbm_accel/cores_split/ot_hfd_coll_q2n2_hard_v8g/ot_hfd_coll_q2n2_vm_core.sv": "97b0810d615ae4f7847fed52d3a4a286456ee2a9"
+  },
+  "defines": [
+   "OT_COLL_ISSUER256_NATIVE32"
+  ],
+  "params": {},
+  "macros": [],
+  "source": "HBM-CORES-R8 10-27: NE-hub q2n2 vm cut rtl/hbm_accel/cores_split/ot_hfd_coll_q2n2_hard_v8g/ot_hfd_coll_q2n2_vm_core.sv @97b0810d61 (HBM-CORES-RTL, origin/claude/hbm-cores-rtl-1026, not on this base): gen_vm_core.py from ot_hfd_coll_q3_vm_core, members u_vmasm = ot_hgi_coll_vmasm_sliced_v7, u_writer = ot_hgi_coll_static_vmwrite_roots_v6_physical of ot_hfd_coll_q2_hard_v8g_s #(NLINK 2, TP 192, AR_ITER 1, ROWS 256, VM_RT 81) -DOT_COLL_ISSUER256_NATIVE32; closure (yosys hierarchy -check: vm_core, vmasm_sliced_v7, vmasm_slice16, vmwrite_roots_v6_physical, vmwrite_roots_v6; no SRAM macros) = these 4 files, generic files identical at 97b0810d61 and this base; plan pins (40 buses, 8661 bits) == RTL ports",
+  "source_commit": "97b0810d615ae4f7847fed52d3a4a286456ee2a9"
+ },
+ "ot_hfd_coll_q2n2_body_core": {
+  "top": "ot_hfd_coll_q2n2_body_core",
+  "files": [
+   "rtl/hbm_accel/cores_split/ot_hfd_coll_q2n2_hard_v8g/ot_hfd_coll_q2n2_body_core.sv"
+  ],
+  "files_at": {
+   "rtl/hbm_accel/cores_split/ot_hfd_coll_q2n2_hard_v8g/ot_hfd_coll_q2n2_body_core.sv": "97b0810d615ae4f7847fed52d3a4a286456ee2a9"
+  },
+  "defines": [],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2",
+   "ot_sram_1r1w_64x512_m1_r2c2",
+   "ot_sram_1rw_256x64_m4_r2c2"
+  ],
+  "source": "HBM-CORES-R8 10-27: NE-hub q2n2 body cut rtl/hbm_accel/cores_split/ot_hfd_coll_q2n2_hard_v8g/ot_hfd_coll_q2n2_body_core.sv @97b0810d61 (rest.sh: rest_extract + rest_wrap of ot_hfd_coll_q2_hard_v8g_s #(NLINK 2, TP 192, AR_ITER 1, ROWS 256, VM_RT 81) -DOT_COLL_ISSUER256_NATIVE32 minus u_ring/u_reduce/u_vmasm/u_writer; flat: 2 modules + 6x 1r1w_256x256, 8x 1r1w_64x512, 5x 1rw_256x64 SRAMs); 80 RTL buses == the planU6b pins except the 6 superset-face input copies (*__E)",
+  "source_commit": "97b0810d615ae4f7847fed52d3a4a286456ee2a9"
  }
 }

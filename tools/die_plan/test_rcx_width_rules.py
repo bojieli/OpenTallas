@@ -72,6 +72,17 @@ class RulesTest(unittest.TestCase):
         self.assertTrue(any(x.startswith("WIDTH Table 0 entries:") for x in L))
         self.assertEqual(L.count("WIDTH Table 1 entries:  0.018"), 1)
 
+    def test_multiple_widths_use_distinct_field_solver_ratios(self):
+        from unittest import mock
+        cache, provenance = {}, {"samples": []}
+        # Width dependence is the mechanism under test, not a numerical solver fit.
+        with mock.patch.object(RW, "solve_row", side_effect=lambda cal, layer, label, w, s, neighbours: (w, w)):
+            first = RW._scale_row("OVER", 8, "Metal 8 OVER 7", [0.08, 1, 2, 4], .16, {}, cache, provenance)
+            second = RW._scale_row("OVER", 8, "Metal 8 OVER 7", [0.08, 1, 2, 4], .64, {}, cache, provenance)
+        self.assertEqual(first[1:3], [4, 8])
+        self.assertEqual(second[1:3], [16, 32])
+        self.assertEqual(len(cache), 2)
+
     def test_shipped_rules_have_016_entry_and_provenance(self):
         p = HERE / "rcx" / "asap7_rcx_ndr016.rules"
         t = p.read_text()

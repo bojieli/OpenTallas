@@ -1,4 +1,4 @@
-`timescale 1ns/1ps
+`timescale 1ps/1fs
 // tb_s81_pdie_col (TW-S81/SERDES 2026-10-19): the landed COLUMN SerDes ot_pdie_serdes_col in the two-die link bench of
 // tb_s81_pdie_link (die B 300 ppm slow, one random bit error in about every second PMA word A -> B, corrected by KP4).
 // MODE 0: column <-> column; MODE 1: column A -> flat reference ot_pdie_serdes B; MODE 2: reference A -> column B
@@ -9,8 +9,22 @@
 module tb_s81_pdie_col;
     parameter integer MODE = 0, MUT = 0, NB = 6000;
     reg ca = 0, cb = 0, rst = 0;
-    always #0.41667 ca = ~ca;
-    always #0.41679 cb = ~cb;
+    always #416.5 ca = ~ca;
+    always #416.62495 cb = ~cb;
+    // Check the achieved periods: precision quantization must not erase the CDC offset.
+    realtime measured_core_ps, measured_peer_ps, measured_ppm;
+    initial begin
+        @(posedge ca); measured_core_ps = $realtime;
+        @(posedge ca); measured_core_ps = $realtime - measured_core_ps;
+        @(posedge cb); measured_peer_ps = $realtime;
+        @(posedge cb); measured_peer_ps = $realtime - measured_peer_ps;
+        measured_ppm = (measured_peer_ps / measured_core_ps - 1.0) * 1.0e6;
+        $display("TB_S81_PDIE_CLOCK core_ps=%0.3f peer_ps=%0.3f ppm=%0.3f",
+                 measured_core_ps, measured_peer_ps, measured_ppm);
+        if (measured_core_ps < 832.999 || measured_core_ps > 833.001 ||
+            measured_ppm < 299.0 || measured_ppm > 301.0)
+            $fatal(1, "PHY clock-period/CDC-offset fixture failed");
+    end
     reg [511:0] txa = 512'd2; wire [511:0] rxb, rxa; wire [1:0] sta, stb;
     wire [543:0] pa, pb; wire tca, tcb; reg [543:0] pa_e;
     generate if (MODE == 2) begin : g_a_ref

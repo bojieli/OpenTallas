@@ -47,6 +47,14 @@ def script(kit, mount='/work'):
     # KV-CORES-PV2 10-27: 12.2a1 island ft cells are RTL instances of the platform BUF (BUFx24_ASAP7_75t_R) -> INVBUF too
     for _p in sorted(_glob.glob('/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_*.lib*'))[:1]:
         libs.append(f'read_liberty -lib -ignore_miss_func {_p}')
+    # QC-A0-KITS 10-27: a mapped-netlist source (a split child carried as its yosys netlist, e.g. rawleaf TIEHIx1)
+    # instantiates any platform cell: read EVERY ASAP7 RVT TT liberty as interface-only cells, and fail closed when a
+    # mapped source names a cell no such liberty defines (hierarchy -check also rejects it).
+    if mapped_cells(_kit_sources(kit)):
+        for _p in platform_libs():
+            line = f'read_liberty -lib -ignore_miss_func {_p}'
+            if line not in libs:
+                libs.append(line)
     defines = ['-DSYNTHESIS'] + [v if v.startswith('-D') else '-D'+v for v in cfg.get('VERILOG_DEFINES', [])]
     includes = ['-I'+v for v in cfg.get('VERILOG_INCLUDE_DIRS', []) + cfg.get('SYNTH_INCLUDE_DIRS', [])]
     return '\n'.join(libs + ['verilog_defines ' + ' '.join(dict.fromkeys(defines))] +
@@ -282,6 +290,49 @@ def _kit_sources(kit):
     return out
 
 
+PLATFORM_LIB_GLOB = '/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*_RVT_TT_nldm_*.lib*'
+_CELL_INST = re.compile(r'^[ \t]*([A-Za-z_][A-Za-z0-9_]*_ASAP7_75t_[A-Za-z0-9_]+)[ \t]+[\\A-Za-z_]', re.M)
+
+
+def platform_libs(pattern=None):
+    import glob as _glob
+    return sorted(_glob.glob(pattern or PLATFORM_LIB_GLOB))
+
+
+def mapped_cells(paths):
+    """{cell type: count} of ASAP7 platform cells instantiated in the readable sources (empty -> RTL only)"""
+    out = {}
+    for p in paths:
+        p = Path(p)
+        if p.suffix in ('.v', '.sv') and p.is_file():
+            for c in _CELL_INST.findall(p.read_text(errors='replace')):
+                out[c] = out.get(c, 0) + 1
+    return out
+
+
+def liberty_cells(paths):
+    import gzip
+    cells = set()
+    for p in paths:
+        p = str(p)
+        text = (gzip.open(p, 'rt', errors='replace') if p.endswith('.gz') else open(p, errors='replace')).read()
+        cells.update(re.findall(r'\bcell\s*\(\s*"?([A-Za-z_][A-Za-z0-9_]*)"?\s*\)', text))
+    return cells
+
+
+def mapped_cell_errors(kit, pattern=None):
+    """fail-closed check: every platform cell a mapped source instantiates is defined by an RVT TT liberty"""
+    used = mapped_cells(_kit_sources(kit))
+    if not used:
+        return []
+    libs = platform_libs(pattern)
+    if not libs:
+        return [f'ERROR: mapped-netlist source but no ASAP7 RVT TT liberty matches {pattern or PLATFORM_LIB_GLOB}']
+    known = liberty_cells(libs)
+    return [f'ERROR: mapped-netlist cell {c} ({n} instances) is not defined by any ASAP7 RVT TT liberty'
+            for c, n in sorted(used.items()) if c not in known]
+
+
 def run(kit, yosys='yosys'):
     out = kit / 'rtl_lint.json'
     try:
@@ -293,7 +344,10 @@ def run(kit, yosys='yosys'):
         cast = yosys_cast_scan(_kit_sources(kit))
         cast_errors = [f'{p}:{ln}: ERROR: {rule} yosys read_verilog -sv mis-elaborates this cast form '
                        f'(put the cast in its own named sized wire): {sn}' for p, hs in sorted(cast.items()) for ln, rule, sn in hs]
+        cell_errors = mapped_cell_errors(kit)
+        cast_errors = cell_errors + cast_errors
         record = dict(verdict='PASS' if result.returncode == 0 and not cast_errors else 'FAIL', rc=result.returncode,
+                      mapped_cell_types=len(mapped_cells(_kit_sources(kit))),
                       top_params=config(kit).get('VERILOG_TOP_PARAMS', []),
                       errors=re.findall(r'^.*\bERROR:.*$', log, re.M) + cast_errors, yosys_cast=len(cast_errors),
                       command=[yosys, '-q', '-s', str(ys)])

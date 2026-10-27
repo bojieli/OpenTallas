@@ -1946,7 +1946,18 @@ def sim_refine(L, log, tried, words=8, quiet=3, seed=4242):
     dropped, still, it = 0, 0, 0
     while still < quiet:
         it += 1
-        ivals = {v: rnd.getrandbits(W) for v in range(1, m.ni + 1)}
+        ivals = {v: (rnd.getrandbits(W) & ~3) | 2 for v in range(1, m.ni + 1)}
+        # Keep two concrete lanes with free inputs all-zero/all-one. Random
+        # states almost never carry through a wide counter's low bits, so a
+        # false constant otherwise peels one bit per expensive SAT round.
+        # Give these lanes a legal FSM seed; the existing validity mask below
+        # still checks every hypothesis and constraint before anything drops.
+        for sd, keys, allowed in L.cons:
+            if allowed:
+                for k, bit in zip(keys, allowed[0]):
+                    v = var(sd, k)
+                    if v is not None:
+                        ivals[v] = (ivals[v] & ~3) | (3 if bit else 0)
         items = sorted(L.hyp.items())
 
         def src(h):

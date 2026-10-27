@@ -247,3 +247,14 @@ def test_ff_grt_step_runs_cts_in_kit_corners_first():
     # FLOW-CANARY 10-25: MCMM KV kits run the GRT step in the kit corners (TT setup repaired after GRT), else FF-only
     assert "GC='CORNER=BC CORNERS=bc'; if grep -q '^export CORNERS = tc bc' /work/config.mk; then GC=''; fi" in kv
     assert "OT_VCLK_CORNER=ff \\$M grt \\$GC HOLD_SLACK_MARGIN" in kv
+
+
+def test_ff_grt_step_also_runs_for_goal_grt():
+    """S81-CORE-LAT-R18: a GRT-only kit run (autopilot goal grt) repairs FF hold in the FF vclk frame too; without the
+    step `make grt` timed FF hold against the TT vclk latency (l0 c16 RSZ-0060, 1781 IO endpoints)."""
+    import core_flow
+    s = core_flow.FF_GRT_STEP
+    gates = [seg for seg in s.split("if [ ")[1:] if "GOAL" in seg]
+    # SIGNOFF-MODES-2 (ROOT-MERGE-36): 4 goal gates = kit_modes cts check, kit-corner cts, two-mode GRT, FF-only GRT
+    assert len(gates) == 4 and all("[ $GOAL = grt ]" in g and "[ $GOAL = finish ]" in g and "[ $GOAL = route ]" in g
+                                   for g in gates)

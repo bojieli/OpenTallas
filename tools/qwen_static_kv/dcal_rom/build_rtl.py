@@ -6,6 +6,34 @@ ROOT = Path(__file__).resolve().parents[3]
 D = ROOT / "rtl/qwen_sys/d2d_static_20261015"
 
 
+def drop_auto_go(core):
+    """KV-KITS-5 10-27 (COORD sys_c LEC ruling): auto_go and tok_start have the same next state (both cleared every
+    edge, both set at e == E_TOK - GO_OFS - 2 and at pcnt == rom_period under AUTO && eact && !halt) and the same reset
+    value; synthesis merged auto_go into tok_start, so the kit LEC saw a gold-only flop.  The design keeps ONE flop:
+    go_in reads tok_start, the auto_go register and its next-state block are removed (function unchanged)."""
+    rep = [("    reg          auto_go, prun;\n", "    reg          prun;\n"),
+           ("    wire         go_in = AUTO ? auto_go : tok_go;", "    wire         go_in = AUTO ? tok_start : tok_go;"),
+           ("    reg [0:0] auto_go_next;\n", ""), ("    reg [0:0] auto_go_part0;\n", "")]
+    for a, b in rep:
+        assert core.count(a) == 1, a
+        core = core.replace(a, b)
+    blk = re.search(r"    always @\* begin\n        auto_go_part0 = auto_go;\n.*?        auto_go_next\[0:0\] = auto_go_part0\[0:0\];\n    end\n",
+                    core, flags=re.S)
+    tok = re.search(r"    always @\* begin\n        tok_start_part0 = tok_start;\n.*?        tok_start_next\[0:0\] = tok_start_part0\[0:0\];\n    end\n",
+                    core, flags=re.S)
+    assert blk and tok and blk.group(0).count("always") == 1 and tok.group(0).count("always") == 1
+    # the two next-state blocks must be the same statement for statement (names aside)
+    norm = lambda t, n: re.sub(r"[ ;]+", " ", t.replace(n, "X"))
+    assert norm(blk.group(0), "auto_go") == norm(tok.group(0), "tok_start"), "auto_go / tok_start next state differ"
+    core = core.replace(blk.group(0), "")
+    ff = re.search(r"    always @\(posedge ck or negedge rst_bank_n\[(\d+)\]\)\n        if \(!rst_bank_n\[\1\]\) auto_go <= 1'b0;\n"
+                   r"        else auto_go <= auto_go_next;\n", core)
+    assert ff and re.search(r"if \(!rst_bank_n\[\d+\]\) tok_start <= 1'b0;", core)
+    core = core.replace(ff.group(0), "")
+    assert "auto_go" not in core
+    return core
+
+
 def build():
     core = (D / "ot_qwen_d2d_cal_seq_bc4.sv").read_text()
     core = core.replace("ot_qwen_d2d_cal_seq_bc4", "ot_qwen_d2d_cal_seq_rom64_core")
@@ -20,6 +48,7 @@ def build():
     core = re.sub(r"    wire \[19:0\] nxt = .*?;", "    wire [19:0] nxt = rom_start;\n    assign profile_li = li;", core)
     core = re.sub(r"(cfg_data_part\d+\[\d+ \+: 8\]\s*=)[^;]*;", r"\1 8'b0;", core)
     assert not re.search(r"\b(?:START|TX_IMG|RX_IMG)\[", re.sub(r"//[^\n]*", "", core)), "unconverted profile table"
+    core = drop_auto_go(core)
     top = (D / "qkd_d2d_cal_seq_bc4.sv").read_text()
     top = top.replace("module qkd_d2d_cal_seq_pin_bc4 #(", "module qkd_d2d_cal_seq_pin_rom64 #(parameter VIAMAP = \"\", parameter INSTANCE = \"kv_dcal\", ")
     top = re.sub(r"    `include \"d2d_cal_image_mu.svh\"\n", "", top)
