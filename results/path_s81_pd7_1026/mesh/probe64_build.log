@@ -1,0 +1,25 @@
+die_clock_mesh build: PLAN ERROR 51 plan error(s): unplaced 51 -> probe5/plan_errors.json
+  {"kind": "unplaced", "name": "ckm_n9_h000000000:ckm_n10_h0000000000", "role": "tree", "detail": ["ckm_n9_h000000000", "ckm_n10_h0000000000", "STRUCTURAL clock span exceeds 750 um", 1010.61]}
+  {"kind": "unplaced", "name": "ckm_n9_h000000001:ckm_n10_h0000000010", "role": "tree", "detail": ["ckm_n9_h000000001", "ckm_n10_h0000000010", "STRUCTURAL clock span exceeds 750 um", 1019.25]}
+  {"kind": "unplaced", "name": "ckm_n9_h000000100:ckm_n10_h0000001000", "role": "tree", "detail": ["ckm_n9_h000000100", "ckm_n10_h0000001000", "STRUCTURAL clock span exceeds 750 um", 1019.25]}
+  {"kind": "unplaced", "name": "ckm_n9_h000010000:ckm_n10_h0000100000", "role": "tree", "detail": ["ckm_n9_h000010000", "ckm_n10_h0000100000", "STRUCTURAL clock span exceeds 750 um", 1019.25]}
+  {"kind": "unplaced", "name": "ckm_n9_h000010001:ckm_n10_h0000100010", "role": "tree", "detail": ["ckm_n9_h000010001", "ckm_n10_h0000100010", "STRUCTURAL clock span exceeds 750 um", 1019.25]}
+  {"kind": "unplaced", "name": "ckm_r9_h000010100_1:ckm_n9_h000010100", "role": "tree", "detail": ["ckm_r9_h000010100_1", "ckm_n9_h000010100", "STRUCTURAL clock span exceeds 750 um", 793.53]}
+  {"kind": "unplaced", "name": "ckm_n9_h000010100:ckm_n10_h0000101000", "role": "tree", "detail": ["ckm_n9_h000010100", "ckm_n10_h0000101000", "STRUCTURAL clock span exceeds 750 um", 1019.25]}
+  {"kind": "unplaced", "name": "ckm_r9_h000010101_1:ckm_n9_h000010101", "role": "tree", "detail": ["ckm_r9_h000010101_1", "ckm_n9_h000010101", "STRUCTURAL clock span exceeds 750 um", 776.358]}
+  {"kind": "unplaced", "name": "ckm_n9_h000010101:ckm_n10_h0000101010", "role": "tree", "detail": ["ckm_n9_h000010101", "ckm_n10_h0000101010", "STRUCTURAL clock span exceeds 750 um", 1019.25]}
+  {"kind": "unplaced", "name": "ckm_n9_h001000000:ckm_n10_h0010000000", "role": "tree", "detail": ["ckm_n9_h001000000", "ckm_n10_h0010000000", "STRUCTURAL clock span exceeds 750 um", 1019.25]}
+  {"kind": "unplaced", "name": "ckm_n9_h001000001:ckm_n10_h0010000010", "role": "tree", "detail": ["ckm_n9_h001000001", "ckm_n10_h0010000010", "STRUCTURAL clock span exceeds 750 um", 1019.25]}
+  {"kind": "unplaced", "name": "ckm_n9_h001010000:ckm_n10_h0010100000", "role": "tree", "detail": ["ckm_n9_h001010000", "ckm_n10_h0010100000", "STRUCTURAL clock span exceeds 750 um", 1235.25]}
+  {"kind": "unplaced", "name": "ckm_n9_h001010001:ckm_n10_h0010100010", "role": "tree", "detail": ["ckm_n9_h001010001", "ckm_n10_h0010100010", "STRUCTURAL clock span exceeds 750 um", 1235.25]}
+  {"kind": "unplaced", "name": "ckm_n9_h001010100:ckm_n10_h0010101000", "role": "tree", "detail": ["ckm_n9_h001010100", "ckm_n10_h0010101000", "STRUCTURAL clock span exceeds 750 um", 1235.25]}
+  {"kind": "unplaced", "name": "ckm_n9_h001010101:ckm_n10_h0010101010", "role": "tree", "detail": ["ckm_n9_h001010101", "ckm_n10_h0010101010", "STRUCTURAL clock span exceeds 750 um", 1235.25]}
+  {"kind": "unplaced", "name": "ckm_n9_h010101010:ckm_n10_h0101010101", "role": "tree", "detail": ["ckm_n9_h010101010", "ckm_n10_h0101010101", "STRUCTURAL clock span exceeds 750 um", 1010.61]}
+  {"kind": "unplaced", "name": "ckm_n9_h010101011:ckm_n10_h0101010111", "role": "tree", "detail": ["ckm_n9_h010101011", "ckm_n10_h0101010111", "STRUCTURAL clock span exceeds 750 um", 1019.25]}
+  {"kind": "unplaced", "name": "ckm_n9_h010101110:ckm_n10_h0101011101", "role": "tree", "detail": ["ckm_n9_h010101110", "ckm_n10_h0101011101", "STRUCTURAL clock span exceeds 750 um", 1019.25]}
+  {"kind": "unplaced", "name": "ckm_n9_h010111010:ckm_n10_h0101110101", "role": "tree", "detail": ["ckm_n9_h010111010", "ckm_n10_h0101110101", "STRUCTURAL clock span exceeds 750 um", 1019.25]}
+  {"kind": "unplaced", "name": "ckm_n9_h010111011:ckm_n10_h0101110111", "role": "tree", "detail": ["ckm_n9_h010111011", "ckm_n10_h0101110111", "STRUCTURAL clock span exceeds 750 um", 1019.25]}
+
+real	3m19.922s
+user	3m25.432s
+sys	0m1.345s

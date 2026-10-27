@@ -1,0 +1,163 @@
+{
+ "col_h10_r1__t1": {
+  "shift_um": [
+   8.64,
+   0.0
+  ],
+  "moved": {
+   "hard_cores": 77,
+   "core_taps": 77,
+   "tap_um": 1,
+   "internal_stations": 4
+  },
+  "instances": [
+   "fE0_p1_b1",
+   "fE0_p4_b1",
+   "fE1_p1_b1",
+   "fE1_p4_b1",
+   "fE2_p1_b1",
+   "fE2_p4_b1",
+   "fW0_p1_b1",
+   "fW0_p4_b1",
+   "fW1_p1_b1",
+   "fW1_p4_b1",
+   "fW2_p1_b1",
+   "fW2_p4_b1"
+  ]
+ },
+ "dsdv_slice_c1x_C__t5_phy1026_s_4N_C": {
+  "shift_um": [
+   0.0,
+   8.64
+  ],
+  "moved": {
+   "hard_cores": 4,
+   "core_taps": 0,
+   "tap_um": 1,
+   "internal_stations": 0
+  },
+  "instances": [
+   "s_4N_C"
+  ]
+ },
+ "gunit__t1_phy1026_gunit": {
+  "shift_um": [
+   -8.64,
+   -25.92
+  ],
+  "moved": {
+   "hard_cores": 10,
+   "core_taps": 10,
+   "tap_um": 1,
+   "internal_stations": 0
+  },
+  "instances": [
+   "gunit"
+  ]
+ },
+ "svc_hi_dsdv_svc_pvso_entry__t1_phy1026_svc_5": {
+  "shift_um": [
+   8.64,
+   25.92
+  ],
+  "moved": {
+   "hard_cores": 72,
+   "core_taps": 0,
+   "tap_um": 1,
+   "internal_stations": 0
+  },
+  "instances": [
+   "svc_5"
+  ]
+ },
+ "svc_hi_dsdv_svc_pvso_entry__t2": {
+  "shift_um": [
+   17.28,
+   8.64
+  ],
+  "moved": {
+   "hard_cores": 72,
+   "core_taps": 0,
+   "tap_um": 1,
+   "internal_stations": 0
+  },
+  "instances": [
+   "svc_11"
+  ]
+ },
+ "svc_hi_dsdv_svc_rs__t2_phy1026_svc_3": {
+  "shift_um": [
+   0.0,
+   17.28
+  ],
+  "moved": {
+   "hard_cores": 72,
+   "core_taps": 0,
+   "tap_um": 1,
+   "internal_stations": 0
+  },
+  "instances": [
+   "svc_3"
+  ]
+ },
+ "svc_hi_dsdv_svc_rs__t3_phy1026_svc_7": {
+  "shift_um": [
+   -17.28,
+   34.56
+  ],
+  "moved": {
+   "hard_cores": 72,
+   "core_taps": 0,
+   "tap_um": 1,
+   "internal_stations": 0
+  },
+  "instances": [
+   "svc_7"
+  ]
+ },
+ "svc_hi_dsdv_svc_rs__t4": {
+  "shift_um": [
+   0.0,
+   17.28
+  ],
+  "moved": {
+   "hard_cores": 72,
+   "core_taps": 0,
+   "tap_um": 1,
+   "internal_stations": 0
+  },
+  "instances": [
+   "svc_9"
+  ]
+ },
+ "svc_hi_dsdv_svc_rs__t6_phy1026_svc_15": {
+  "shift_um": [
+   0.0,
+   -8.64
+  ],
+  "moved": {
+   "hard_cores": 72,
+   "core_taps": 0,
+   "tap_um": 1,
+   "internal_stations": 0
+  },
+  "instances": [
+   "svc_15"
+  ]
+ },
+ "svc_lo_dsdv_svc_rs_w__t1_phy1026_svc_0": {
+  "shift_um": [
+   -8.64,
+   0.0
+  ],
+  "moved": {
+   "hard_cores": 72,
+   "core_taps": 0,
+   "tap_um": 1,
+   "internal_stations": 0
+  },
+  "instances": [
+   "svc_0"
+  ]
+ }
+}
