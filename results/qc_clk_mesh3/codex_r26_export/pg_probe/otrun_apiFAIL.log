@@ -1,0 +1,23 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/qc-export-pg-proof
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/qc-export-pg-proof
+ot-run: localhost      admits   520 GB (avail 732, reserve 0, fresh 90.8, peak 56.8, headroom 0, waiters 0/0 GB) load 42/112 running 32 disk 807 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-1386805-1793119884 after 1 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+Traceback (most recent call last):
+  File "/w/check.py", line 5, in <module>
+    t=master.findMTerm(name);rails[name]=[g.getBox() for g in t.getMPins()[0].getGeometry() if g.getTechLayer().getName()=='M1']
+  File "/w/check.py", line 5, in <listcomp>
+    t=master.findMTerm(name);rails[name]=[g.getBox() for g in t.getMPins()[0].getGeometry() if g.getTechLayer().getName()=='M1']
+  File "odb_py.py", line 1653, in getBox
+TypeError: Wrong number or type of arguments for overloaded function 'dbBox_getBox'.
+  Possible C/C++ prototypes are:
+    odb::dbBox::getBox() const
+    odb::dbBox::getBox(odb::dbBlock *,uint32_t)
+    odb::dbBox::getBox(odb::dbTech *,uint32_t)
+    odb::dbBox::getBox(odb::dbMaster *,uint32_t)
+
+ot-run: RAN on localhost (unit oth-ubuntu-1386805-1793119884): exit 1
