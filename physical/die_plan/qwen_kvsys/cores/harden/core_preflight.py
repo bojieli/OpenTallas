@@ -71,13 +71,16 @@ def island_ft_gate(netlist, module, arcs):
         return dict(verdict="FAIL", reason=f"module {module} not in {netlist}")
     body = t[m.end():t.find("\nendmodule", m.end())]
     body = re.sub(r"\(\*.*?\*\)", " ", body, flags=re.S)
-    ports = {a["source"] for a in arcs} | {a["sink"] for a in arcs}
+    par = {f"{a['sink']}__p{j}": a["sink"] for a in arcs for j in range(1, len(a["cells"]))}   # parallel driver nets
+    ports = {a["source"] for a in arcs} | {a["sink"] for a in arcs} | set(par)
     uses = {p: [] for p in ports}
     for cm in re.finditer(r"^\s*(\\?\S+)\s+(\\?\S+)\s*\((.*?)\);", body, re.M | re.S):
         master, inst, conns = cm[1], cm[2].lstrip("\\"), cm[3]
         for pm in re.finditer(r"\.(\w+)\s*\(\s*\\?([^\s()]+)\s*\)", conns):
             if pm[2] in ports:
                 uses[pm[2]].append((inst, master, pm[1]))
+    for pn, s in par.items():                  # driver j >= 1 on its own logical net <sink>__p<j> = on the sink
+        uses[s] += uses.pop(pn)
     bad = []
     for a in arcs:
         want_i = sorted((c["name"], a["master"], "A") for c in a["cells"])
