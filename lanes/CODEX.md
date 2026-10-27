@@ -1124,3 +1124,6 @@ codex/rowx-sram-1027@a925fcac8 READY (currentmain plainmerged): explicit nativeS
 
 ### Flow child mixed-width RCX 2026-10-27 09:15 PDT
 Current: native exact-width selection 20/20 PASS; generator W-cache bug fixed. Live: intel2 field unit3870285, /srv/opentallas-scratch2/claude/codex-rcx-mixed-1027/field. Next: physical multi/single-width extraction controls, qualified rules to QC owner. Failure: initial tuple/list generator TypeError fixed in fresh coupon2; no unhandled extraction failure.
+
+### Mixed-width RCX completion 2026-10-27 09:22 PDT
+Source codex/rcx-mixed-1027@166adab391 READY; field and native jobs terminal PASS. Physical table 20/20 controls, independent check pending. QC clock owner now consumes committed table/receipt before full STA. No live child jobs; initial generator TypeError fixed and preserved.
