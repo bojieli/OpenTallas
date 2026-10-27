@@ -11,7 +11,7 @@ def bind(mapping, native_parent, native_ports):
    invalid.update(x for x in labels if isinstance(x,int));continue
   for label,value in zip(labels,vector):
    if isinstance(label,int):public[label].add(value)
- domain=native_parent+'::alias::'+mapping['gold_source_sha256']
+ domain=native_parent+'::alias::'+mapping.get('alias_space_sha256',mapping['gold_source_sha256'])
  ports={};failures={}
  for port,labels in mapping['parent_alias_bits'].items():
   vector=[]

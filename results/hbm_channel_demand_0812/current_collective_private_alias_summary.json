@@ -15,7 +15,8 @@
    "sources": {
     "/srv/opentallas-scratch2/claude/hbm-cores-r8/recipes_work/q2n2/ot_hfd_coll_q2n2_body_core.sv": "975f07db91a77fa4213805aec87249ec9fa1546b042757292431b537e289dcb4",
     "/srv/opentallas-scratch2/claude/codex-hbm-channels-0812/q2n2_wrap_gold.v": "3db4c0528e383562204ecdcf43030d67883dac1b3813923930aaa6159c4194d5"
-   }
+   },
+   "alias_space_sha256": "7af9ed2226793b2d88cc7c15c3f96f2bd5926143ca5dd35970a9900d0a17aebf"
   },
   {
    "path": "/srv/opentallas-scratch2/claude/codex-hbm-channels-0812/q2n2_ring_alias_map.json",
@@ -33,7 +34,8 @@
     "/srv/opentallas-scratch2/claude/wt/codex-hbm-channels-0812/physical/die_plan/hbm_arch_cores/wrappers/ot_hfd_coll_q2_hard_v8g__ring_ag.sv": "f03326d736b11c5384689d63b8574c6cae0160a74bf9b9c802b8d959d7b90bc0",
     "/srv/opentallas-scratch2/claude/wt/codex-hbm-channels-0812/rtl/hbm_accel/cores_split/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_ring_ag_core.sv": "063f094596f872bcda88d71de4df8de2a78a1e2ce42082c4950cd7d437bf0e13",
     "/srv/opentallas-scratch2/claude/codex-hbm-channels-0812/q2n2_wrap_gold.v": "3db4c0528e383562204ecdcf43030d67883dac1b3813923930aaa6159c4194d5"
-   }
+   },
+   "alias_space_sha256": "7af9ed2226793b2d88cc7c15c3f96f2bd5926143ca5dd35970a9900d0a17aebf"
   },
   {
    "path": "/srv/opentallas-scratch2/claude/codex-hbm-channels-0812/q2n2_reduce_alias_map.json",
@@ -51,11 +53,12 @@
     "/srv/opentallas-scratch2/claude/wt/codex-hbm-channels-0812/physical/die_plan/hbm_arch_cores/wrappers/ot_hfd_coll_q2_hard_v8g__reduce.sv": "d6b1507b65f5579595fb16b58bd4943e8290dba9bbc70d2bcc19635ffda88690",
     "/srv/opentallas-scratch2/claude/wt/codex-hbm-channels-0812/rtl/hbm_accel/cores_split/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_reduce_core.sv": "20dc2fbc0f0d77464e838f506c1a2152846905e6bd02e9b163339b072ef10c5b",
     "/srv/opentallas-scratch2/claude/codex-hbm-channels-0812/q2n2_wrap_gold.v": "3db4c0528e383562204ecdcf43030d67883dac1b3813923930aaa6159c4194d5"
-   }
+   },
+   "alias_space_sha256": "7af9ed2226793b2d88cc7c15c3f96f2bd5926143ca5dd35970a9900d0a17aebf"
   },
   {
    "path": "/srv/opentallas-scratch2/claude/codex-hbm-channels-0812/q3_body_alias_map.json",
-   "sha256": "56c913ffd59660a497ef70c06aff883792d7e7eaaaf02e84f3962fb798fa20b9",
+   "sha256": "92a8986c6d25eaea3cb11f51c0a80427f052d7c197d34f4baa256410f89d04c0",
    "module": "ot_hfd_coll_q3_body_core",
    "variant": {
     "nlink": 3
@@ -67,11 +70,12 @@
    "verdict": "PASS",
    "sources": {
     "/srv/opentallas-scratch2/claude/wt/codex-hbm-channels-0812/rtl/hbm_accel/cores_split/ot_hfd_coll_q3_vmface2/ot_hfd_coll_q3_body_core.sv": "4d3bb176f321e51fbbd7c0cef6e3936cb407455a210d352b9d71d3de34005e21"
-   }
+   },
+   "alias_space_sha256": "214ff05ea14ee34b37e5e89ef4b25bd2ccaf14f5b8fff1de61f89a69176f7582"
   },
   {
    "path": "/srv/opentallas-scratch2/claude/codex-hbm-channels-0812/q3_ring_ag_cell_alias_map.json",
-   "sha256": "065cead8c2faec490d3a7eb29899518b979de70ebe5d5e4198b25d8d1325772d",
+   "sha256": "b681bb977c019a731e578dec8148eaad0d1a4131526244c650b0a53c35ceba11",
    "module": "ot_hfd_coll_q2_hard_v8g__ring_ag",
    "variant": {
     "nlink": 3
@@ -84,11 +88,12 @@
    "sources": {
     "/srv/opentallas-scratch2/claude/wt/codex-hbm-channels-0812/physical/die_plan/hbm_arch_cores/wrappers/ot_hfd_coll_q2_hard_v8g__ring_ag.sv": "f03326d736b11c5384689d63b8574c6cae0160a74bf9b9c802b8d959d7b90bc0",
     "/srv/opentallas-scratch2/claude/wt/codex-hbm-channels-0812/rtl/hbm_accel/cores_split/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_ring_ag_core.sv": "063f094596f872bcda88d71de4df8de2a78a1e2ce42082c4950cd7d437bf0e13"
-   }
+   },
+   "alias_space_sha256": "214ff05ea14ee34b37e5e89ef4b25bd2ccaf14f5b8fff1de61f89a69176f7582"
   },
   {
    "path": "/srv/opentallas-scratch2/claude/codex-hbm-channels-0812/q3_reduce_cell_alias_map.json",
-   "sha256": "1fe92a571055d0bcaa5215cfe80be9db1572b24e3d7269af91202131ab552bc4",
+   "sha256": "6c35e06600a31799f1755e357a718f3d779242640fe0a08db916504caadd0817",
    "module": "ot_hfd_coll_q2_hard_v8g__reduce",
    "variant": {
     "nlink": 3
@@ -101,7 +106,8 @@
    "sources": {
     "/srv/opentallas-scratch2/claude/wt/codex-hbm-channels-0812/physical/die_plan/hbm_arch_cores/wrappers/ot_hfd_coll_q2_hard_v8g__reduce.sv": "d6b1507b65f5579595fb16b58bd4943e8290dba9bbc70d2bcc19635ffda88690",
     "/srv/opentallas-scratch2/claude/wt/codex-hbm-channels-0812/rtl/hbm_accel/cores_split/ot_hfd_coll_q2_hard_v8g/ot_hfd_coll_q2_reduce_core.sv": "20dc2fbc0f0d77464e838f506c1a2152846905e6bd02e9b163339b072ef10c5b"
-   }
+   },
+   "alias_space_sha256": "214ff05ea14ee34b37e5e89ef4b25bd2ccaf14f5b8fff1de61f89a69176f7582"
   }
  ],
  "native_maps": "/srv/opentallas-scratch2/claude/codex-hbm-channels-0812/native_b1_full_alias_maps3",
