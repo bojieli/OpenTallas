@@ -595,7 +595,7 @@ def check_kit(kd, slice_path=None, tol=1e-3):
         import core_infra as CI
         try:
             eff = dict(sl, core_clock_port=clock_port) if clock_port else sl
-            plan = CI.compile_slice(eff)
+            plan = CI.compile_slice(eff, kd)
             got = json.loads((kd / "core_infra_plan.json").read_text())
             if got != json.loads(json.dumps(plan)):
                 issues.append("core_infra_plan.json differs from compile_slice(slice)")
@@ -605,7 +605,7 @@ def check_kit(kd, slice_path=None, tol=1e-3):
                 want = ft_ports.from_core_infra_plan(json.loads(json.dumps(plan)))
                 if not fp.is_file() or json.loads(fp.read_text()).get("sha256") != want["sha256"]:
                     issues.append("ft_ports.json missing or not the slice ft declaration (12.2a1 die-timed ports)")
-            if (kd / "master_core_infra.tcl").read_text() != CI.emit_tcl(eff):
+            if (kd / "master_core_infra.tcl").read_text() != CI.emit_tcl(eff, kd):
                 issues.append("master_core_infra.tcl not generated from this slice")
             impl = (kd / "core_infra_impl.tcl").read_text()
             if impl != (Path(__file__).with_name("core_infra.tcl")).read_text():
