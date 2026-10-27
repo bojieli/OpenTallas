@@ -1,0 +1,6 @@
+ot-run: intel2         admits     8 GB (avail 822, reserve 0, fresh 719.5, peak 29.5, headroom 0, waiters 12/192 GB) load 86/112 running 54 disk 2305 GB 
+ot-run: -> intel2 (will queue: admits 8 GB < 12 GB)
+ot-heavy: waiting for memory on tolerant-swine: need 0.7 x 12 = 8 GB, admissible 9 GB: available 821 GB, growth charged 723 GB (v16 measured reserve (legacy figure, not the admission: see the v17 invariant), running growth cap 0 % of available, settled floor 0 GB; pending 723 GB at x1), young 421 GB, floor 50 GB; invariant: committed 935 GB (in use 186, other 30, units max(now, peak) 185, + reserve 0 + fresh 719) vs physical - 64 = 943 GB -> headroom 9 GB
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-2675997-1792921634 after 63 s
+DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1306 < previous results 1307)
+ot-run: RAN on intel2 (unit oth-ubuntu-2675997-1792921634): exit 1

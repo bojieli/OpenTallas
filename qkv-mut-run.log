@@ -1,0 +1,5 @@
+ot-run: intel2         admits     7 GB (avail 813, reserve 0, fresh 712.7, peak 29.5, headroom 0, waiters 13/188 GB) load 96/112 running 56 disk 2305 GB 
+ot-run: -> intel2 (will queue: admits 7 GB < 12 GB)
+ot-heavy: waiting for memory on tolerant-swine: need 0.7 x 12 = 8 GB, admissible 7 GB: available 813 GB, growth charged 715 GB (v16 measured reserve (legacy figure, not the admission: see the v17 invariant), running growth cap 0 % of available, settled floor 0 GB; pending 715 GB at x1), young 419 GB, floor 50 GB; invariant: committed 937 GB (in use 194, other 38, units max(now, peak) 185, + reserve 0 + fresh 713) vs physical - 64 = 943 GB -> headroom 7 GB
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-2714011-1792921669 after 42 s
+ot-run: interrupted (signal 15 from pid 2356950 (python3 /home/ubuntu/.local/bin/ot-run --cancel --work qkv_drop_last_k; parent 2356947 (sshd-session: ubuntu@notty))); the command is STILL RUNNING on intel2 (unit oth-ubuntu-2714011-1792921669): NOT COMPLETED

@@ -1,0 +1,15 @@
+ot-run: intel2         admits   559 GB (avail 882, reserve 0, fresh 232.8, peak 26, headroom 0, waiters 0/0 GB) load 64/112 running 25 disk 2313 GB 
+ot-run: -> intel2
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-3781167-1792921355 after 0 s
+DV_LOWER_MAT od FAIL 515/515 mutant=0 arf=1 fixture=L0_mat_od.npz {"span_cycles": 1555, "isa_gold": "TP8-gold-only (TP8 partial, split 256; no TP4 value)", "collisions": {"o": 0, "down": 0}, "collective_contract": [{"message": "o", "cmd_tag": 0, "words": 256, "tag_mismatch": 0, "last_set": 1, "last_on_final": 1}, {"message": "down", "cmd_tag": 1, "words": 256, "tag_mismatch": 0, "last_set": 1, "last_on_final": 1}], "stn": {"o": 32, "down": 32}}
+    S0ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    S10ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    S11ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    S1ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    S2ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    S3ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    S4ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    S5ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    S6ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    S7ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+ot-run: RAN on intel2 (unit oth-ubuntu-3781167-1792921355): exit 1
