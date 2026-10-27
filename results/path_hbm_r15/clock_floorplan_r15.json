@@ -1,0 +1,11 @@
+{
+ "note": "PATH-HBM-R15 10-26: R14 floorplan (ONE continuous die mesh, 64 cols, PHY_N not a hole so H straps stay single segments) + io_macro_drivers=drop_inside: intersections inside the HBM PHY macro are driverless by ideal point (no slide to the macro edge), so no tree subtree is built over the PHY (R14 S2 n10->n11 1048 um jog).",
+ "x_cuts_um": [],
+ "region_nx": [
+  64
+ ],
+ "macro_holes": [],
+ "hard_core_drivers": "drop",
+ "io_macro_drivers": "drop_inside",
+ "shield_net": "VSS"
+}

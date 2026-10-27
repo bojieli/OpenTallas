@@ -1207,6 +1207,17 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                         out["hole_drivers"].append([i, j, "macro_hole", mh])
                         cand[(i, j)] = None
                         continue
+                    if fp.get("io_macro_drivers") == "drop_inside":
+                        # PATH-HBM-R15: an intersection INSIDE a die PHY io macro is driverless (straps pass over on
+                        # M8/M9; the macro has no clock-cell sites).  Sliding its driver out to the macro edge (<= max-move)
+                        # kept a live subtree over the macro whose nodes then free-site-jogged up to ~410 um apart
+                        # (S2 n10->n11 1048 um > 750 reach).  Dropping by ideal point prunes those branches by
+                        # construction (live()); the continuous mesh feeds the macro from its edges.
+                        im = next((r[4] for r in ko if str(r[4]).startswith("io/") and in_rect(r, x, y)), None)
+                        if im is not None:
+                            out["hole_drivers"].append([i, j, "io_macro_inside", im])
+                            cand[(i, j)] = None
+                            continue
                 for axis in (0, 1):
                     bnd = strap_bounds(g, xs, ys, axis) if fp is None else span(axis, j if axis == 0 else i, g)
                     if bnd is None:
@@ -1260,7 +1271,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                         continue
                 if best is None:
                     hc = next((c[4] for c in cores if in_rect(c, x, y)), None) if fp is not None else None
-                    if hc is None and fp is not None and fp.get("io_macro_drivers") == "drop":
+                    if hc is None and fp is not None and fp.get("io_macro_drivers") in ("drop", "drop_inside"):
                         hc = next((r[4] for r in ko if str(r[4]).startswith("io/") and in_rect(r, x, y)), None)
                     if hc is not None:
                         out["hole_drivers"].append([i, j, "io_macro" if hc.startswith("io/") else "hard_core", hc])
