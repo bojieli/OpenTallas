@@ -1,0 +1,134 @@
+{
+ "model": "NLDM lumped load + Elmore star wire, plan geometry (cell sites, Manhattan pin-to-pin), wire R/C per um calibrated globally (12.8 d1); no per-branch measured input",
+ "r_kohm_per_um": 0.0021679012499999997,
+ "c_ff_per_um": 0.17909400599999997,
+ "sizes": [
+  "BUFx24_ASAP7_75t_R",
+  "BUFx16f_ASAP7_75t_R",
+  "BUFx12f_ASAP7_75t_R",
+  "BUFx10_ASAP7_75t_R",
+  "BUFx8_ASAP7_75t_R",
+  "BUFx6f_ASAP7_75t_R",
+  "BUFx5_ASAP7_75t_R",
+  "BUFx4_ASAP7_75t_R",
+  "BUFx3_ASAP7_75t_R"
+ ],
+ "slew_max_ps": 320.0,
+ "levels": {
+  "6": {
+   "legs": 64,
+   "target_ps": 1411.71,
+   "legs_sized": 63,
+   "T_full_range_ps": [
+    1085.07,
+    1411.71
+   ],
+   "T_sized_range_ps": [
+    1299.65,
+    1431.8
+   ]
+  },
+  "5": {
+   "legs": 32,
+   "target_ps": 1968.04,
+   "legs_sized": 31,
+   "T_full_range_ps": [
+    1779.01,
+    1968.04
+   ],
+   "T_sized_range_ps": [
+    1920.79,
+    1974.59
+   ]
+  },
+  "4": {
+   "legs": 16,
+   "target_ps": 2684.28,
+   "legs_sized": 15,
+   "T_full_range_ps": [
+    2612.44,
+    2684.28
+   ],
+   "T_sized_range_ps": [
+    2678.71,
+    2689.3
+   ]
+  },
+  "3": {
+   "legs": 8,
+   "target_ps": 3794.25,
+   "legs_sized": 7,
+   "T_full_range_ps": [
+    3755.85,
+    3794.25
+   ],
+   "T_sized_range_ps": [
+    3793.71,
+    3801.47
+   ]
+  },
+  "2": {
+   "legs": 4,
+   "target_ps": 5311.67,
+   "legs_sized": 3,
+   "T_full_range_ps": [
+    5302.67,
+    5311.67
+   ],
+   "T_sized_range_ps": [
+    5311.21,
+    5311.86
+   ]
+  },
+  "1": {
+   "legs": 2,
+   "target_ps": 7198.25,
+   "legs_sized": 0,
+   "T_full_range_ps": [
+    7198.19,
+    7198.25
+   ],
+   "T_sized_range_ps": [
+    7198.19,
+    7198.25
+   ]
+  }
+ },
+ "hist": {
+  "BUFx10_ASAP7_75t_R": 62,
+  "BUFx12f_ASAP7_75t_R": 45,
+  "BUFx16f_ASAP7_75t_R": 2,
+  "BUFx3_ASAP7_75t_R": 18,
+  "BUFx4_ASAP7_75t_R": 89,
+  "BUFx5_ASAP7_75t_R": 84,
+  "BUFx6f_ASAP7_75t_R": 47,
+  "BUFx8_ASAP7_75t_R": 19
+ },
+ "model_endpoint_spread_full_ps": 501.418,
+ "model_endpoint_spread_sized_ps": 467.947,
+ "model_driver_input_spread_full_ps": 485.86,
+ "model_driver_input_spread_sized_ps": 359.219,
+ "model_neighbour_driver_dmax_ps": {
+  "full": [
+   18.82,
+   232.93,
+   414.72
+  ],
+  "sized": [
+   17.98,
+   184.98,
+   280.93
+  ]
+ },
+ "model_insertion_full_ps": [
+  6750.43,
+  7251.85
+ ],
+ "model_insertion_sized_ps": [
+  7099.6,
+  7567.55
+ ],
+ "model_tree_slew_max_ps": 314.44,
+ "cells_resized": 366,
+ "sec": 1.3
+}

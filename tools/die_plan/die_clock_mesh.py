@@ -1253,6 +1253,15 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                       # PATH-S81-PD9 (opt-in): a leg repeater with no die-top site on its leg L takes the alternate L
                       # orientation of the same leg (same length, same stage count) before any in-core pushdown
                       alt_l=bool(lattice.get("off_core_alt_l", False)),
+                      # PATH-S81-PD11 (opt-in, COORD RULING PD11 (1)): SYMMETRIC (mirror) re-site.  A node whose ideal point
+                      # (or whose sibling's) is on a hard core moves PERPENDICULAR to its own children's line, so its two
+                      # child legs stay equal, and its sibling mirrors the move, so the two parent legs stay equal; leaf
+                      # mesh drivers are re-sited pairwise the same way (both on their strap).  Plan geometry only (12.8 d1).
+                      # value true, or {"min_level": L (tree nodes above L keep the PD9 re-site), "toward_only": bool,
+                      # "drivers": bool (pairwise leaf drivers, default true)}
+                      mirror=(dict(min_level=1, toward_only=False, drivers=True) if lattice.get("off_core_mirror") is True
+                              else dict(dict(min_level=1, toward_only=False, drivers=True), **lattice["off_core_mirror"])
+                              if isinstance(lattice.get("off_core_mirror"), dict) else None),
                       # CLOCK-KV-R11 (opt-in): {module: [[u, v], ...]} canonical in-core island sites in the CORE frame
                       # (origin + track_offset, core orient); a pushdown driver in such a core snaps onto the nearest
                       # site within canon_tol_um so every instance of the module carries one identical island
@@ -1647,6 +1656,101 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                           for c_ in P.ptype(pn).get("hard_cores", [])})
         return _imod.get(isl or "", isl)
 
+    def _unreserve(name):
+        c_ = cells[name]
+        release_cell_reservation(K, (c_["x"], c_["y"], c_["x"] + cell_width(c_), c_["y"] + ROW_Y, "clock:" + name))
+
+    def _mirror_search(pts, here, mv, ax, lim, tow, ok):
+        """smallest |d| (TOWARD the parent first at equal |d| when mv == ax: root->leaf length kept) such that every
+        point moved along mv by its mirrored d (sign toward here when mv == ax, identical shift otherwise) is free and
+        ok().  Smallest |d| first: a large move eats the downstream hop slack of the whole subtree."""
+        sg = [(1.0 if here[mv] >= p_[mv] else -1.0) if mv == ax else 1.0 for p_ in pts]
+        ds = [k * STEP_UM for k in range(0, int(min(lim, tow) / STEP_UM) + 1)]
+        if not (mv == ax and lg["mirror"]["toward_only"]):
+            ds += [-k * STEP_UM for k in range(1, int(lim / STEP_UM) + 1)]
+        ds = sorted(ds, key=lambda v_: (abs(v_), v_ < 0))
+        for d_ in ds:
+            qs = []
+            for p_, s_ in zip(pts, sg):
+                q_ = list(p_)
+                q_[mv] = p_[mv] + s_ * d_
+                qs.append(tuple(q_))
+            if all(not hitf(K, q_) for q_ in qs) and ok(qs):
+                return qs, abs(d_)
+        return None, None
+
+    def mirror_kids(kids, here, ax, level):
+        """PATH-S81-PD11 symmetric re-site of the two children of one H-tree node (see lg mirror)."""
+        leaf = [(kr[1] - kr[0]) * (kr[3] - kr[2]) == 1 for kr in kids]
+        if all(leaf):
+            if not lg["mirror"]["drivers"]:
+                return {}
+            dv = [out["drivers"].get(f"{kr[0]}_{kr[2]}") for kr in kids]
+            if any(v is None or v.get("pushdown") or v.get("island") for v in dv) or not any(v["move_um"] for v in dv):
+                return {}
+            for v in dv:
+                for n_ in v["cells"]:
+                    _unreserve(n_)
+            ideals = [tuple(v["ideal"]) for v in dv]
+            tow = min(abs(p_[ax] - here[ax]) for p_ in ideals)
+            best = None
+            for a_, nm, lo, hi in ((1, "M9", 0.0, H), (0, "M8", 0.0, W)):
+                if a_ == 0 and not lg.get("off_core"):
+                    continue
+                qs, d_ = _mirror_search(ideals, here, a_, ax, lg["drv_reach"], tow if a_ == ax else 1e9,
+                                        lambda qs_: all(lo - 1e-6 <= q_[a_] <= hi + 1e-6 and
+                                                        abs(q_[0] - here[0]) + abs(q_[1] - here[1]) <= lg["hop_reach"] + 1e-6
+                                                        for q_ in qs_))
+                if qs is not None and (best is None or d_ < best[1]):
+                    best = (qs, d_, nm)
+            if best is None:
+                for v in dv:   # keep the independent sites
+                    for n_ in v["cells"]:
+                        reserve_cell(K, n_, cells[n_])
+                out.setdefault("mirror_fail", []).append(dict(role="mesh_driver_pair", names=[f"ckm_d_{v['i']}_{v['j']}" for v in dv]))
+                return {}
+            for v, q_ in zip(dv, best[0]):
+                for k_, n_ in enumerate(v["cells"]):
+                    cell(n_, q_[0] + (k_ - (len(v["cells"]) - 1) / 2) * BUF_W, q_[1], "drv", i=v["i"], j=v["j"])
+                old = v["move_um"]
+                v.update(site=[round(q_[0], 3), round(q_[1], 3)], move_um=round(best[1], 2), strap=best[2], mirror=True)
+                out.setdefault("mirror_resites", []).append(dict(role="mesh_driver", name=f"ckm_d_{v['i']}_{v['j']}",
+                                                                 d_um=round(best[1], 2), was_um=old, strap=best[2]))
+            return {}
+        if any(leaf) or (level + 1) in lg["wire_levels"] or lg["in_core"] != "slide" or level + 1 < lg["mirror"]["min_level"]:
+            return {}
+        kps = [node_xy(*kr) for kr in kids]
+        if not any(hitf(K, kp_) for kp_ in kps):
+            return {}
+        caxs = {split_axis(kr[1] - kr[0], kr[3] - kr[2], level + 1, axes) for kr in kids}
+        if len(caxs) != 1:
+            out.setdefault("mirror_fail", []).append(dict(role="tree_node_pair", level=level + 1, why="unequal child axes"))
+            return {}
+        mv = 1 - caxs.pop()
+        lim = min(max(0.0, hop_slack(kr, level + 1)) for kr in kids)
+        tow = min(abs(kp_[ax] - here[ax]) for kp_ in kps) if mv == ax else 1e9
+        ip = node_xy(min(k_[0] for k_ in kids), max(k_[1] for k_ in kids), min(k_[2] for k_ in kids), max(k_[3] for k_ in kids))
+        nseg = [max(1, math.ceil((abs(kp_[0] - ip[0]) + abs(kp_[1] - ip[1])) / rep_um - 1e-9)) for kp_ in kps]
+        qs, d_ = _mirror_search(kps, here, mv, ax, lim, tow,
+                                lambda qs_: all((abs(q_[0] - here[0]) + abs(q_[1] - here[1])) / n_ <= lg["hop_reach"] + 1e-6
+                                                for q_, n_ in zip(qs_, nseg)))
+        if qs is None:
+            # partial: each child on its own along mv only (its own two child legs stay equal; the two parent legs
+            # differ by the move difference, recorded); a child with no such site keeps the independent re-site
+            part = {}
+            for c_, (kp_, n_) in enumerate(zip(kps, nseg)):
+                if not hitf(K, kp_):
+                    continue
+                q1, d1 = _mirror_search([kp_], here, mv, ax, lim, tow,
+                                        lambda qs_: (abs(qs_[0][0] - here[0]) + abs(qs_[0][1] - here[1])) / n_ <= lg["hop_reach"] + 1e-6)
+                if q1 is not None:
+                    part[c_] = (q1[0], d1)
+            out.setdefault("mirror_fail", []).append(dict(role="tree_node_pair", level=level + 1, lim_um=round(lim, 2),
+                                                          kp=[[round(v_, 2) for v_ in kp_] for kp_ in kps],
+                                                          partial={str(k_): round(v_[1], 2) for k_, v_ in part.items()}))
+            return part
+        return {c_: (q_, d_) for c_, q_ in enumerate(qs)}
+
     def rec_lg(i0, i1, j0, j1, level, drv_cell, path, here, plen, wire_pt=False):
         """CLOCK-KV-R4 leaf-grid H-tree: same bisection as rec(), actual positions carried down (see build doc).
         wire_pt: this node level is in lattice wire_levels = a wire Steiner point of the parent's net (no buffer,
@@ -1655,6 +1759,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         h = (i0 + i1) // 2 if ax == 0 else (j0 + j1) // 2
         kids = [(i0, h, j0, j1), (h, i1, j0, j1)] if ax == 0 else [(i0, i1, j0, h), (i0, i1, h, j1)]
         loads = []
+        mir = mirror_kids(kids, here, ax, level) if lg.get("mirror") else {}
         for c, kr in enumerate(kids):
             tag = f"{path}{c}"
             kp = node_xy(*kr)
@@ -1710,6 +1815,11 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                     out["pushdown"].append(dict(role="tree_node", name=f"ckm_n{level + 1}_{tag}", level=level + 1,
                                                 xy=[round(q[0], 3), round(q[1], 3)], core=isl, level_slide_um=d,
                                                 same_axis_split=cax == inc))
+            elif c in mir:
+                q, d = mir[c]
+                if d:
+                    out.setdefault("mirror_resites", []).append(dict(role="tree_node", name=f"ckm_n{level + 1}_{tag}",
+                                                                     level=level + 1, d_um=round(d, 2), axis="x" if cax == 1 else "y"))
             elif hitf(K, kp):
                 q = None
                 if cax != inc and lg["in_core"] not in ("pushdown", "upstream"):
@@ -2010,7 +2120,8 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     import numpy as np
     xa, ya = np.array(xs), np.array(ys)
     # band tree nets are TREE nets: bounded like the leaf-grid H-tree hops (lattice hop_reach_um), not by split_long
-    BT = band_plan(ly, xs, [(t_[2], t_[3]) for t_ in taps], lg["hop_reach"]) if lg and lattice.get("band_trees") else None
+    BT = band_plan(ly, xs, [(t_[2], t_[3]) for t_ in taps],
+                   float(lattice.get("band_hop_reach_um", lg["hop_reach"])) if lg else None) if lg and lattice.get("band_trees") else None   # PATH-S81-PD11 opt-in band_hop_reach_um (diagnostic)
     for part, port, x, y, early in taps:
         tp = f"t_{DC.sv(part)}__{port}"
         ports.append(("output", tp))

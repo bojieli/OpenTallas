@@ -1,0 +1,20 @@
+{
+ "lane": "PATH-S81-PD11", "date": "2026-10-27 06:14 PDT", "base": "claude/path-s81-pd10-1027@c3bb3c44cb",
+ "verdict": "PREDICT FAIL -> NOT rebuilt/GRT/RCX/MC/STA (COORD (1): rebuild only if the calibrated model is in band). Symmetric re-site does not reduce the H-tree spread; GEOM-22 405-um cap is infeasible on the current lattice without a structural tree change.",
+ "tool": "die_clock_mesh.py opt-in lattice off_core_mirror (true | {min_level, toward_only, drivers}): node moves perpendicular to its children line, sibling mirrors; leaf drivers pairwise; partial fallback (each child along its own perpendicular) then PD9 re-site. Opt-in band_hop_reach_um (diagnostic). Default build unchanged.",
+ "model": "branch_sizing NLDM+Elmore, PD10 calibration kr 1.0 kc 1.4 (PD9 RCX residual sd 13.2), driver-input spread TT, full -> sized L1-L6; neighbour <=1mm [p50,p99,max] after sizing. UNCHECKED (own model)",
+ "variants_TT": {
+  "PD9 me1 (baseline)": "215.5 -> 164.7; nbr max 154 -> 105",
+  "f: full mirror (nodes all levels + drivers, |d| order)": "485.9 -> 359.2; nbr [18.0,185.0,280.9]; mirror moves up to 456 (L2), 508 (L5), 706 (L8): sibling-pair-free sites need large d",
+  "A: drivers only": "208.3 -> 174.1; nbr [11.7,80.9,119.0]",
+  "B: nodes toward-only + drivers": "200.7 -> 211.6; 13 plan errors (hop > reach)",
+  "C: nodes L>=10 + drivers": "311.1 -> 289.7",
+  "D: nodes L>=10 toward-only + drivers": "194.8 -> 160.4; nbr [10.6,76.9,133.6]; 13 plan errors"},
+ "root_cause": "pairwise sibling symmetry does not give cousin symmetry: the free die-top sites in the S81 ROM/bf_col core arrays are periodic, so a mirrored pair needs d >> the PD9 single-node slide, and each subtree gets a different d. The spread is set by WHERE free sites exist, not by leg asymmetry within a pair.",
+  "geom22_cap": {"PD9 me1 max hop per level (um)": {"1":437.8,"2":436.0,"3":445.2,"4":413.5,"5":438.5,"6":407.7,"7":402.5,"8":573.5,"9":366.1,"10":596.2,"11":589.7,"12":555.1}, "hops > 405": 380, "RCX tree slew max TT": "345.1 ps at ckm_d_37_46_1 (CHECKED, me1/tree_TT.txt)",
+   "cap trial (--rep-um 405, hop_reach 405)": "band trees STRUCTURAL: band half-depth 481.68 > 405 (needs one more equal band-tree level); with band trees kept at 600: 48 plan errors (32 re-sited legs > reach, 16 band nets) AND 545 in-core pushdowns (PD9 had 0) -> infeasible on this lattice"},
+ "mesh_continuity": {"straps": "ck_mesh one SWire, 64 M8 + 64 M9 single unbroken boxes across x 15,973 and y 12,377 (CHECKED, combo.tcl + strap_spans; render me1_split_zoom.png viewed)",
+   "short": "NOT SHORTED IN THE DB: combo generated without --mesh-vias -> 0 VIA89 on ck_mesh at the 4,096 crossings, meta.mesh_vias absent, no OT_MESH_VIAS in combo logs (CHECKED). Transient/MC assumed shorted crossings. Fix = next combo with --mesh-vias (continuity is the rule, not a change).",
+   "split-line pairs TT (<=1mm)": "x-line 562 pairs U p50 190 / max 261: gradient p50 114 (unshared), nominal p50 11.5; y-line 797 pairs U p50 157 / max 278: nominal up to 138 at the die edges (x 459, 31,484); nearest drivers already 28-250 um from the lines -> extra split-line drivers would not change the unshared tree delay (CHECKED, fork script cont/split_pairs.py)"},
+ "item3": "claude/mc-gapfold-1027@dffd539c3c READY ROOT-MERGE (RC gap folded per sample; S81 PD9 TT p50 24.9 -> 21.06, p99 156.1 -> 152.05, max 278.38 unchanged; 17/17 tests)"
+}
