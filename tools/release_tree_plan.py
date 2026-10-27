@@ -33,6 +33,21 @@ PLANS = [('s81', 's81'), ('s81_head', 's81_head'), ('qwen_compute', 'qwen_comput
          ('hbm', 'hbm_arch/B2n')]
 HOSTS = ['local', 'epyc1', 'epyc2', 'intel1', 'intel2']
 SCAN_ROOTS = '/srv/opentallas-scratch /srv/opentallas-scratch2'
+# RETIRED sign-offs (HEAD-CORE-R13 2026-10-27): a SIGNED record of a superseded build (older RTL / flow) that must not
+# count for the current design. One line per record: '<scan_host>:<path>\t<date>\t<lane>\t<reason>' ('#' = comment).
+# Matching records are dropped from signed_records / signed_* and listed in retired_records (visible, not deleted).
+RETIRED = pathlib.Path(__file__).resolve().parent.parent / 'RETIRED_SIGNOFFS.tsv'
+
+
+def retired_refs():
+    try: lines = RETIRED.read_text().splitlines()
+    except Exception: return {}
+    out = {}
+    for ln in lines:
+        if not ln.strip() or ln.startswith('#'): continue
+        f = ln.split('\t')
+        out[f[0].strip()] = '\t'.join(f[1:]).strip()
+    return out
 PROV_PY = r'''
 def prov(p, d, load):
     if d.get('src_commit') and d.get('flow_tag'):
@@ -213,6 +228,10 @@ def refresh(log=lambda *a: None):
         cutoff = first_flow_tag_ts(); res['first_flow_tag_ts'] = cutoff
         for r_ in recs:
             r_['legacy'] = is_legacy(r_, cutoff)
+        ret = retired_refs()
+        res['retired_records'] = [dict(r_, retired=ret[r_['scan_host'] + ':' + r_['path']]) for r_ in recs
+                                  if r_['scan_host'] + ':' + r_['path'] in ret]
+        recs = [r_ for r_ in recs if r_['scan_host'] + ':' + r_['path'] not in ret]
         res['signed_records'] = recs; res['scanned'] = scanned
         # match SIGNED records to plan types / hard cores
         for d, ent in res['plans'].items():
