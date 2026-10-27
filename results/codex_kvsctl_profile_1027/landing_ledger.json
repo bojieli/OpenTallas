@@ -1,0 +1,23 @@
+{
+ "rule": "COORD 2026-10-27 02:35 RULING KV kvs_ctl bb6d423642 (a)+(c)",
+ "plan": "results/codex_kvsctl_profile_1027/proof_src/results/kv_cores_r2/kvsctl2/landing_plan.json",
+ "retime_0cyc": {
+  "layer_o/layer_oe (o_hroot x4 + lp)": 54,
+  "auth pd_q/pe_q + bd_q/be_q": 80,
+  "i_hroot fault cf2 IN_LAND": 32,
+  "total": 166
+ },
+ "plus1": {
+  "dcfg age_vport/age_pv/age_attn/fused_program_capability": 305,
+  "boot__setup_ready": 1
+ },
+ "sender_owner": {
+  "embgw__bw[0]": "left through logic (use_b precompute); owner of the embgw sender lands it one edge earlier"
+ },
+ "reset_added": [
+  "u_lprg.w_data[31:0]",
+  "u_lprg.w_zero",
+  "u_lprg.w_one"
+ ],
+ "token": "boot visibility +1 edge (setup_ready, sealed config); KV latency table unchanged"
+}
