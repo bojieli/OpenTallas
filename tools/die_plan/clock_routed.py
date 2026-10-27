@@ -1056,6 +1056,19 @@ def rules_width_check(rules_text, ndr):
     return dict(ndr=ndr, ndr_width_um=w, selected_width_um=sel, ok=ok)
 
 
+def actual_ndr_widths(M):
+    """Every physical width, including per-edge V2 pieces and the fine mesh."""
+    from die_clock_mesh import NDR
+    widths=set()
+    for w in M.get("fixed_wires", []):
+        for p in w.get("pieces", [w]):
+            key=p.get("ndr", w.get("ndr", M["meta"].get("ndr")))
+            if key not in NDR:
+                raise ValueError(f"unmodelled physical clock NDR {key}")
+            widths.add(NDR[key]["width"])
+    return sorted(widths)
+
+
 def write_route(d, kit, image="openroad/orfs:latest", mem=64, rcx_rules="stock", width_mismatch_ok=False):
     import json
     from pathlib import Path
@@ -1066,6 +1079,11 @@ def write_route(d, kit, image="openroad/orfs:latest", mem=64, rcx_rules="stock",
     ports["root"] = dict(layer="M9", xy=list(M["meta"]["root_um"]))
     rules_text = None
     width_check = None
+    physical_widths = actual_ndr_widths(M)
+    if len(physical_widths) > 1 and not width_mismatch_ok:
+        raise ValueError("mixed-width clock extraction is not qualified by a single-NDR RCX receipt: "
+                         f"actual widths {physical_widths}; qualify per-segment width extraction first "
+                         "(the old top-only 0.64-um calibration does not cover the full clock)")
     if rcx_rules != "stock":
         rules_text = Path(rcx_rules).read_text()
         width_check = rules_width_check(rules_text, M["meta"].get("ndr"))

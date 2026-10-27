@@ -840,26 +840,62 @@ def stree(subs, ax, et, tag, nodes):
     return merge(stree(subs[:h], ax, et, tag + "0", nodes), stree(subs[h:], ax, et, tag + "1", nodes), ax, et, tag, nodes)
 
 
-def band_tree(leaves, xc, tap, et, tag, S_target):
-    """one band tree: leaves [(x, y)] -> per band row x-tree + straight leg to the feed column xc -> y-tree on xc -> leg
-    to the column-tree tap with extra repeaters up to S_target stages (equal levels).  Returns (nodes, root)."""
-    nodes = []
-    byrow = defaultdict(list)
-    for x, y in leaves:
-        byrow[r3(y)].append(r3(x))
-    subs = []
-    for k, (y, xs_) in enumerate(sorted(byrow.items())):
-        r = dtree([(x, y) for x in sorted(xs_)], "x", et, f"{tag}r{k:02d}_", nodes)
-        if abs(r["xy"][0] - xc) > 1e-6:
-            r = lift(r, (xc, y), et, f"{tag}r{k:02d}_L", nodes)
+def orthogonal_lift(r, tap, et, tag, nodes, S_target, blocked=None):
+    """Plan an explicit Manhattan elbow; never interpolate buffers diagonally.
+
+    Evaluate both physical elbows before choosing; each node and repeater must
+    be clear of the same hard-core keepouts as the top tree. Extra stages are
+    allocated by planned leg length, then timed on those actual legs.
+    """
+    tap=tuple(tap)
+    start=tuple(r["xy"])
+    if abs(start[0]-tap[0]) <= 1e-6 or abs(start[1]-tap[1]) <= 1e-6:
+        length=md(start,tap)
+        if length <= 1e-6 and r["S"] >= S_target:
+            return r
+        n=max(et.nseg(length), S_target-r["S"])
+        points=[tuple(start[j]+(tap[j]-start[j])*k/n for j in (0,1)) for k in range(1,n+1)]
+        if blocked and any(blocked(q) for q in points):
+            return None
+        return lift(r,tap,et,tag,nodes,n=n)
+    options=[]
+    for elbow in ((start[0],tap[1]),(tap[0],start[1])):
+        l1,l2=md(start,elbow),md(elbow,tap)
+        n1,n2=et.nseg(l1),et.nseg(l2)
+        extra=max(0,S_target-r["S"]-n1-n2)
+        # Balance the actual segment lengths within the fixed total stage count.
+        for _ in range(extra):
+            if l1/n1 >= l2/n2:n1+=1
+            else:n2+=1
+        points=[]
+        for a,b,n in ((start,elbow,n1),(elbow,tap,n2)):
+            points += [tuple(a[j]+(b[j]-a[j])*k/n for j in (0,1)) for k in range(1,n+1)]
+        if blocked and any(blocked(q) for q in points):
+            continue
+        delay=et.delay(l1,"TT",n1)+et.delay(l2,"TT",n2)
+        options.append((delay,elbow,n1,n2))
+    if not options:return None
+    _,elbow,n1,n2=min(options)
+    r=lift(r,elbow,et,tag+"_elbow",nodes,n=n1)
+    return lift(r,tap,et,tag,nodes,n=n2)
+
+
+def band_tree(leaves, xc, tap, et, tag, S_target, blocked=None):
+    """DME row trees, column merge, and an explicit orthogonal upstream feed."""
+    nodes=[]
+    byrow=defaultdict(list)
+    for x,y in leaves:byrow[r3(y)].append(r3(x))
+    subs=[]
+    for k,(y,xs_) in enumerate(sorted(byrow.items())):
+        r=dtree([(x,y) for x in sorted(xs_)],"x",et,f"{tag}r{k:02d}_",nodes)
+        if abs(r["xy"][0]-xc)>1e-6:
+            r=lift(r,(xc,y),et,f"{tag}r{k:02d}_L",nodes)
         subs.append(r)
-    r = stree(subs, "y", et, f"{tag}y", nodes)
-    if md(r["xy"], tap) > 1e-6 or r["S"] < S_target:
-        n = et.nseg(md(r["xy"], tap)) if md(r["xy"], tap) > 1e-6 else 1
-        n = max(n, S_target - r["S"])
-        r = lift(r, tuple(tap), et, f"{tag}tap", nodes, n=n)
-    r["parent"] = None
-    return nodes, r
+    r=stree(subs,"y",et,f"{tag}y",nodes)
+    if md(r["xy"],tap)>1e-6 or r["S"]<S_target:
+        r=orthogonal_lift(r,tap,et,f"{tag}tap",nodes,S_target,blocked)
+    if r is not None:r["parent"]=None
+    return nodes,r
 
 
 def band_trees(B, st, a):
@@ -914,8 +950,8 @@ def band_trees(B, st, a):
                     continue
                 et = EdgeType(st, w, mm, float(a.col_reach))
                 tag = f"b{ct['g']:02d}_{ct['c']:02d}_{len(out):03d}_"
-                nodes, r = band_tree(leaves, xc, anc, et, tag, Sc)
-                if r["S"] != Sc:
+                nodes, r = band_tree(leaves, xc, anc, et, tag, Sc, B["incore"])
+                if r is None or r["S"] != Sc:
                     continue           # equal levels is a hard rule; a deeper band tree is not a candidate
                 d = r["T"]["TT"] - Tc["TT"]
                 dff = r["T"]["FF"] - Tc["FF"]
@@ -1768,6 +1804,19 @@ def assign_islands(B, I, cells, topk):
                 rule="slot grid identical per type (type frame, symmetric), slots on a core in ANY instance removed")
 
 
+def valid_slot_candidates(gx, gy, ok, fx, fy, cw, row_h=ROW_H):
+    """Search valid slots in geometric order, including across masked bands.
+
+    Restricting each axis to its 24 nearest coordinates can return an empty
+    product even when thousands of legal sites exist immediately beyond a macro.
+    """
+    import numpy as np
+    kk, jj = np.nonzero(ok)
+    distance = np.abs(gx[kk] + cw / 2 - fx) + np.abs(gy[jj] + row_h / 2 - fy)
+    order = np.lexsort((jj, kk, distance))
+    return ((float(distance[q]), int(kk[q]), int(jj[q])) for q in order)
+
+
 def assign_periodic(B, I, cells, topk):
     """R13 (12.2a1 identical cell set per type): every partition-hosted top-tree cell takes the island slot NEAREST its
     plan point in its host's TYPE FRAME, decided once per (type, frame point) CLASS for all instances of the type:
@@ -1837,13 +1886,7 @@ def assign_periodic(B, I, cells, topk):
     for key, mem in split:
         t, fx, fy, _ = key
         gx, gy, ok = I.tgrid[t]
-        cxs = gx + I.CW / 2
-        cys = gy + ROW_H / 2
-        dxa = np.abs(cxs - fx)
-        dya = np.abs(cys - fy)
-        kk = np.argsort(dxa)[:24]
-        jj = np.argsort(dya)[:24]
-        cand = sorted(((dxa[k] + dya[j], int(k), int(j)) for k in kk for j in jj if ok[k, j]))
+        cand = valid_slot_candidates(gx, gy, ok, fx, fy, I.CW)
         pick = None
         for d, k, j in cand:
             if (k, j) in used[t]:
@@ -1872,7 +1915,7 @@ def assign_periodic(B, I, cells, topk):
         sets = {frozenset(v) for v in u.values()}
         T[t] = dict(instances=len(insts[t]), hosting_instances=len(u), slots_per_instance=sorted({len(v) for v in u.values()}),
                     distinct_slot_sets=len(sets), identical=len(sets) == 1 and len(u) == len(insts[t]))
-    return dict(mode="periodic", groups_on_slots=len(moves), classes=len(cls), max_move_um=r3(max(moves or [0.0])),
+    return dict(mode="periodic", slot_search="all valid sites in L1 order", groups_on_slots=len(moves), classes=len(cls), max_move_um=r3(max(moves or [0.0])),
                 moved_gt_1um=sum(1 for d in moves if d > 1.0), identity_violations=viol[:20], n_identity_violations=len(viol),
                 types_hosting=len(T), types_identical=sum(1 for v in T.values() if v["identical"]), per_type=T,
                 rule="one slot per (type, frame point) class, free + clear in every instance -> identical slot set per type")

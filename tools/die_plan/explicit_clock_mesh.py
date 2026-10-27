@@ -346,3 +346,57 @@ def native_spef(wires,cells,buf,nd,layer_rc,via_kohm):
         sec += ['*RES']+[f'{i} {a} {b} {r:.9f}' for i,(a,b,r) in enumerate(res,1)]+['*END','']
         sections.append('\n'.join(sec))
     return header+'\n'.join(sections)+'\n'
+
+
+def mixed_shield_analysis(wires,pgr,shield):
+    """Use each wire's actual metal width for shield ties and spacing.
+
+    Per-piece PG qualification is conservative: it does not assume that another
+    piece's shield connection will rescue an untied stripe.
+    """
+    import die_clock_128 as C
+    from die_clock_mesh import NDR
+    pieces=[p for w in wires for p in w.get('pieces',[w])]
+    shapes=[];spaces=[];allstripes=[];unflanked=[];flanked=0
+    pg=C.pg_shapes(pgr)
+    for shape in pg:
+        width=shape[4]-shape[3]
+        spaces.append(1.0 if width>=.99975 else .5 if width>=.49975 else .04)
+        shapes.append(shape)
+    ties=dict(grid_vias=[],shield_vias=[],untied=[],shorts=[],used_grid=set(),stripes=0,
+              stripes_with_grid_via=0,stripes_grid_contact=0,net=shield)
+    for p in pieces:
+        nd=NDR[p['ndr']];ss=C.tree_segs([p])
+        cs=C.clock_shapes(ss,nd,shield)
+        shapes+=cs;spaces += [nd['space']]*len(cs)
+        unflanked += C.flank_census(pgr,ss,nd)
+        flanked += sum(len(r)>7 and r[7]==C.FLANK for r in ss)
+        segs=[tuple(r[:5])+(r[8],) for r in ss if r[7]==C.DRAWN]
+        stripes=C.shield_stripes(segs,nd)
+        t=C.shield_ties(stripes,pgr,nd['width'],net=shield)
+        offset=len(allstripes)
+        allstripes+=stripes
+        ties['grid_vias']+=t['grid_vias'];ties['shield_vias']+=t['shield_vias']
+        ties['untied'] += [offset+k for k in t['untied']]
+        ties['shorts'] += [(offset+k,n) for k,n in t['shorts']]
+        ties['used_grid'] |= t['used_grid']
+        for key in ('stripes','stripes_with_grid_via','stripes_grid_contact'):
+            ties[key]+=t.get(key,0)
+    ties['grid_vias']=sorted(set(ties['grid_vias']));ties['shield_vias']=sorted(set(ties['shield_vias']))
+    ix=C.MetalIndex(max(spaces or [.04]));shorts=defaultdict(int);spacing=defaultdict(int);rows=[]
+    for i,s in enumerate(shapes):
+        for k,_ in ix.hits(s):
+            t=ix.shapes[k]
+            if s[2]==t[2]=='pg':continue
+            required=max(spaces[i],spaces[k])
+            gp=max(t[3]-s[4],s[3]-t[4]);ga=max(t[5]-s[6],s[5]-t[6])
+            if gp>=required-1e-6 or ga>=required-1e-6:continue
+            what='short' if gp<1e-6 and ga<1e-6 else 'spacing'
+            key='-'.join(sorted((s[2],t[2])))
+            (shorts if what=='short' else spacing)[key]+=1
+            if len(rows)<200:rows.append(dict(what=what,a=list(s),b=list(t),required_space_um=required))
+        ix.add(s)
+    census=dict(shorts=sum(shorts.values()),spacing=sum(spacing.values()),shorts_by_kind=dict(shorts),
+                spacing_by_kind=dict(spacing),rows=rows,shapes=len(shapes),unflanked=unflanked,
+                flank_mode_segments=flanked,rule='pair spacing=max(actual per-edge NDR classes); actual shield widths')
+    return allstripes,ties,census

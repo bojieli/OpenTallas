@@ -3635,14 +3635,20 @@ def cmd_combo(a):
         pg_src = M["meta"].get("pg_source")
         grid_ = C128.pg_grid(Pp, pg_src)         # core grid (IR-sized pg.json or plan) + die.pg.domains, one model
         pgr = DI.pg_rects(Pp, grid_)
-        stripes = C128.shield_stripes(shield_segs_all, nd)
-        ties = C128.shield_ties(stripes, pgr, nd["width"], net=shield_net)
-        # same-layer legality of everything drawn on M8/M9 (PG grid, straps, jogs, tree wires, shields): no two nets
-        # closer than the NDR space; any short / spacing violation blocks freeze evidence
-        msegs = mesh_segments(M) + (C128.tree_segs(wires) if C128.enabled(M) else [])
-        census = C128.metal_census(C128.pg_shapes(pgr) + C128.clock_shapes(msegs, nd, shield_net), nd["space"])
-        census["unflanked"] = C128.flank_census(pgr, msegs, nd)
-        census["flank_mode_segments"] = sum(1 for r_ in msegs if len(r_) > 7 and r_[7] == C128.FLANK)
+        if any(w.get("pieces") or w.get("explicit_mesh") for w in wires):
+            if mesh_segments(M):
+                raise SystemExit("mixed-width explicit clock plus a separate regional mesh is not qualified")
+            from explicit_clock_mesh import mixed_shield_analysis
+            stripes, ties, census = mixed_shield_analysis(wires, pgr, shield_net)
+        else:
+            stripes = C128.shield_stripes(shield_segs_all, nd)
+            ties = C128.shield_ties(stripes, pgr, nd["width"], net=shield_net)
+            # same-layer legality of everything drawn on M8/M9: no two nets
+            # closer than the NDR space; any violation blocks freeze evidence.
+            msegs = mesh_segments(M) + (C128.tree_segs(wires) if C128.enabled(M) else [])
+            census = C128.metal_census(C128.pg_shapes(pgr) + C128.clock_shapes(msegs, nd, shield_net), nd["space"])
+            census["unflanked"] = C128.flank_census(pgr, msegs, nd)
+            census["flank_mode_segments"] = sum(1 for r_ in msegs if len(r_) > 7 and r_[7] == C128.FLANK)
         L += [f"set tn [$blk findNet {shield_net}]",
               f"if {{$tn eq \"NULL\"}} {{ set tn [odb::dbNet_create $blk {shield_net}] }}",
               "$tn setSpecial", "$tn setSigType GROUND", "set tsw [odb::dbSWire_create $tn ROUTED]"]
@@ -3652,7 +3658,11 @@ def cmd_combo(a):
         if merge_sh:
             # CLOCK-KV-R10 (COORD 10-26 21:28: DEFAULT for every new die clock build): one shape per overlapping
             # same-track shield run -- the same metal; RCX double-counted coincident shield shapes
-            L += C128.shield_merge_tcl(shield_net, nd)
+            if any(w.get("pieces") or w.get("explicit_mesh") for w in wires):
+                for key in sorted({p["ndr"] for w in wires for p in w.get("pieces", [w])}):
+                    L += C128.shield_merge_tcl(shield_net, NDR[key])
+            else:
+                L += C128.shield_merge_tcl(shield_net, nd)
         cs = M["meta"].get("clock_shield") or {}
         cs["shield_merge"] = merge_sh
         cs.update(C128.tie_record(ties))

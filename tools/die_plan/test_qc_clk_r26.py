@@ -49,3 +49,40 @@ def test_segmented_mesh_rejects_unconnected_tap():
     with pytest.raises(SystemExit, match='not on a strap'):
         M.mesh_seg([(0., 0., 20.)], [(10., 0., 10.)], [(10., 0.)], [(25., 25.)],
                    M.RC3['8w'], (M.RC3['8w'], 0.))
+
+
+def test_upstream_feed_elbow_has_no_diagonal_repeater_interpolation():
+    B=tiny(False);et=B['et']['col'];nodes=[]
+    r=dict(tag='leaf',xy=(0.,0.),kids=[],S=0,T={'TT':0.,'FF':0.})
+    nodes.append(r)
+    out=M.orthogonal_lift(r,(900.,900.),et,'feed',nodes,4)
+    assert out is not None and out['S']==4
+    by={n['tag']:n for n in nodes}
+    for n in nodes:
+        if not n.get('parent'):continue
+        p=by[n['parent']]['xy'];q=n['xy']
+        assert p[0]==q[0] or p[1]==q[1]
+        assert n['leg']/n['nseg']<=450.
+
+
+def test_upstream_feed_rejects_both_blocked_elbows():
+    B=tiny(False);et=B['et']['col'];nodes=[]
+    r=dict(tag='leaf',xy=(0.,0.),kids=[],S=0,T={'TT':0.,'FF':0.})
+    nodes.append(r)
+    assert M.orthogonal_lift(r,(900.,900.),et,'feed',nodes,4,
+                            lambda q:q in ((0.,900.),(900.,0.))) is None
+
+
+def test_valid_slot_search_crosses_masked_band_without_enlarging_islands():
+    import numpy as np
+    gx=np.arange(4,dtype=float)*8.64
+    gy=np.arange(80,dtype=float)*8.64
+    ok=np.ones((4,80),dtype=bool)
+    ok[:,20:60]=False
+    target=(10.,40*8.64)
+    # The former nearest24 y rows lie entirely inside the mask.
+    nearest=np.argsort(abs(gy+M.ROW_H/2-target[1]))[:24]
+    assert not ok[:,nearest].any()
+    d,k,j=next(M.valid_slot_candidates(gx,gy,ok,*target,1.62))
+    assert ok[k,j] and j==60
+    assert d==pytest.approx(abs(gx[k]+.81-target[0])+abs(gy[j]+M.ROW_H/2-target[1]))

@@ -89,3 +89,20 @@ def test_native_mesh_rc_keeps_all_drivers_and_boundary_ports():
     s=E.mesh_spef_section(w,cells,'BUFx24_ASAP7_75t_R',DC.LAYER_RC,DC.VIA_KOHM)
     assert '*I a:Y O' in s and '*I b:Y O' in s and '*P tap0 O' in s
     assert s.count('*D_NET ')==1 and s.count('*END')==1
+
+
+def test_rcx_width_inventory_includes_all_pieces_and_mesh():
+    import clock_routed as C
+    M=dict(meta=dict(ndr='16w'),fixed_wires=[dict(pieces=[dict(ndr='4w'),dict(ndr='2x16w')]),
+                                         dict(ndr='8w',explicit_mesh=True)])
+    assert C.actual_ndr_widths(M)==[.16,.32,1.28]
+
+
+def test_mixed_shield_census_uses_wide_segment_actual_spacing_class():
+    wires=[dict(name='narrow',ndr='4w',segs=[('M8',0.,0.,10.,0.)],clock_topology_version=2),
+           dict(name='wide',ndr='2x16w',segs=[('M8',0.,3.5,10.,3.5)],clock_topology_version=2)]
+    stripes,ties,census=E.mixed_shield_analysis(wires,[],'VSS')
+    assert len(stripes)==4 and ties['stripes']==4
+    assert census['spacing']>0
+    assert any(r['required_space_um']==1.0 for r in census['rows'])
+    assert ties['untied'] # no PG grid was supplied; it cannot qualify shield continuity
