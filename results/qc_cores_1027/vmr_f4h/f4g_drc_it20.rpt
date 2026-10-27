@@ -1,0 +1,18 @@
+violation type: Short
+	srcs: net:_02281_ net:ot_ms_Q4B1L1_clk
+	bbox = (83.7670, 13.4100) - (83.8670, 13.4280) on Layer M2
+violation type: Short
+	srcs: net:_02289_ net:ot_ms_Q4B1L0_clk
+	bbox = (93.3340, 10.8720) - (93.3710, 10.8900) on Layer M2
+violation type: Short
+	srcs: net:net1183 net:ot_ms_Q7B1L2_clk
+	bbox = (204.8350, 12.6360) - (204.8630, 12.6540) on Layer M2
+violation type: Metal Spacing
+	srcs: net:_04805_ net:VDD
+	bbox = (118.9410, 15.3730) - (118.9440, 15.4070) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VDD net:g_ws\[5\].lw\[6\]
+	bbox = (118.9410, 16.4530) - (118.9440, 16.4870) on Layer M3
+violation type: Metal Spacing
+	srcs: net:VDD net:g_ws\[6\].lw\[7\]
+	bbox = (118.8440, 17.0220) - (118.9480, 17.0400) on Layer M4
