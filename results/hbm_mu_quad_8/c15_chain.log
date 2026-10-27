@@ -1,0 +1,78 @@
+old {'name': 'clk_ctl', 'layer': 'M5', 'x': 164.141, 'y': 120.984}
+clk_ctl set 1
+cores re-offset 6
+  ('q_hub_nw', 'u_svg_Q0', 6431, [-0.0, -0.024], np.int64(0), np.int64(0))
+  ('q_hub_nw', 'u_svg_Q1', 6431, [-0.0, -0.024], np.int64(0), np.int64(0))
+  ('q_hub_nw', 'u_hb_dbk_Q__q1', 2744, [-0.024, -0.0], np.int64(0), np.int64(0))
+  ('q_hub_ne', 'u_svg_Q0', 6431, [-0.0, -0.024], np.int64(0), np.int64(0))
+  ('q_hub_ne', 'u_svg_Q1', 6431, [-0.0, -0.024], np.int64(0), np.int64(0))
+  ('q_hub_ne', 'u_hb_dbk_Q__q1', 2744, [-0.024, -0.0], np.int64(0), np.int64(0))
+pins snapped 347 [('cores/ot_hgi_coll_tkm_m_tp192__root__chain.json', 'x_u_u_g_tiles_0_e86_u_tile_conv', 9.288, 9.297), ('cores/ot_hgi_coll_tkm_m_tp192__root__chain.json', 'x_u_u_g_tiles_0_e86_u_tile_ins_b[0]', 10.104, 10.089), ('cores/ot_hgi_coll_tkm_m_tp192__root__chain.json', 'x_u_u_g_tiles_0_e86_u_tile_ins_b[1]', 10.92, 10.917), ('cores/ot_hgi_coll_tkm_m_tp192__root__chain.json', 'x_u_u_g_tiles_0_e86_u_tile_ins_b[2]', 11.736, 11.745), ('cores/ot_hgi_coll_tkm_m_tp192__root__chain.json', 'x_u_u_g_tiles_0_e86_u_tile_ins_b[3]', 12.552, 12.537), ('cores/ot_hgi_coll_tkm_m_tp192__root__chain.json', 'x_u_u_g_tiles_0_e86_u_tile_ins_b[4]', 13.368, 13.365), ('cores/ot_hgi_coll_tkm_m_tp192__root__chain.json', 'x_u_u_g_tiles_0_e86_u_tile_ins_b[5]', 14.232, 14.229), ('cores/ot_hgi_coll_tkm_m_tp192__root__chain.json', 'x_u_u_g_tiles_0_e86_u_tile_ins_b[6]', 15.048, 15.057), ('cores/ot_hgi_coll_tkm_m_tp192__root__chain.json', 'x_u_u_g_tiles_0_e86_u_tile_ins_b[7]', 15.864, 15.849), ('cores/ot_hgi_coll_tkm_m_tp192__root__chain.json', 'x_u_u_g_tiles_0_e86_u_tile_ins_b[8]', 16.68, 16.677), ('cores/ot_hgi_coll_tkm_m_tp192__root__chain.json', 'x_u_u_g_tiles_0_e86_u_tile_ins_b[9]', 17.496, 17.505), ('cores/ot_hgi_coll_tkm_m_tp192__root__chain.json', 'x_u_u_g_tiles_0_e86_u_tile_ins_b[10]', 18.312, 18.297)]
+{'before': {'N': 2051, 'E': 3131, 'W': 2}, 'after': {'N': 2053, 'W': 1298, 'E': 1081, 'S': 752}, 'avg_pins_per_um': {'N': 11.32, 'W': 4.69, 'E': 3.91, 'S': 4.14}, 'NW': 1296}
+{'port_not_found': 1201, 'endpoints': 14223, 'off_pin_not_selected': 10637, 'on_pin': 3546, 'off_pin': 40, 'fixed': 40}
+worst [(2858.4, 'root', 'u_hb_argmax', 'nan_flag'), (2443.4, 'root', 'u_hc_eng_tail0_sk_steady', 'fault'), (2335.7, 'root', 'u_hc_eng_tail1_sk_steady', 'fault'), (1919.1, 'q_su11', 'u_su_Q1_lanes_plain12_15', 'clk_bank'), (1919.1, 'q_su11', 'u_su_Q1_lanes_plain12_15', 'clk_bank'), (1919.1, 'q_su11', 'u_su_Q1_lanes_plain12_15', 'clk_bank'), (1919.1, 'q_su11', 'u_su_Q1_lanes_plain12_15', 'clk_bank'), (1919.1, 'q_su11', 'u_su_Q1_lanes_plain12_15', 'clk_bank'), (1919.1, 'q_su11', 'u_su_Q1_lanes_plain12_15', 'clk_bank'), (1919.1, 'q_su11', 'u_su_Q1_lanes_plain12_15', 'clk_bank'), (1919.1, 'q_su11', 'u_su_Q1_lanes_plain12_15', 'clk_bank'), (1914.4, 'q_su11', 'u_su_Q1_lanes_plain12_15', 'rst_lane_n')]
+per core [(('q_b101', 'u_hb_idx__s_Q_r0c3_k2h1'), 114), (('q_b101_nw', 'u_hb_idx__s_Q_r0c3_k2h1'), 114), (('q_b100', 'u_hb_idx__s_Q_r0c1_k2h1'), 107), (('q_b100', 'u_hb_idx__s_Q_r0c1_k3h1'), 107), (('q_b101', 'u_hb_idx__s_Q_r0c2_k0h0'), 105), (('q_b101_nw', 'u_hb_idx__s_Q_r0c2_k0h0'), 105), (('q_b102', 'u_hb_idx__s_Q_r1c0_k0h1'), 104), (('q_b102', 'u_hb_idx__s_Q_r1c0_k3h0'), 104), (('q_b101', 'u_hb_idx__s_Q_r1c0_k0h0'), 100), (('q_b101_nw', 'u_hb_idx__s_Q_r1c0_k0h0'), 100), (('q_b100', 'u_hb_idx__s_Q_r0c0_k0h0'), 97), (('q_b101', 'u_hb_idx__s_Q_r0c2_k0h1'), 97), (('q_hub_nw', 'u_vmks_Q2'), 97), (('q_b101_nw', 'u_hb_idx__s_Q_r0c2_k0h1'), 97), (('q_hub_ne', 'u_vmks_Q2'), 97), (('q_b101', 'u_hb_idx__s_Q_r0c2_k1h0'), 96), (('q_b101', 'u_hb_idx__s_Q_r0c3_k1h0'), 96), (('q_b101_nw', 'u_hb_idx__s_Q_r0c2_k1h0'), 96), (('q_b101_nw', 'u_hb_idx__s_Q_r0c3_k1h0'), 96), (('q_b102', 'u_hb_idx__s_Q_r1c1_k2h0'), 94), (('q_b102', 'u_hb_idx__s_Q_r1c1_k3h0'), 94), (('q_b100', 'u_hb_idx__s_Q_r0c0_k0h1'), 88), (('q_b100', 'u_hb_idx__s_Q_r0c0_k1h0'), 87), (('q_b100', 'u_hb_idx__s_Q_r0c1_k1h1'), 87), (('q_b102', 'u_hb_idx__s_Q_r1c0_k1h0'), 87)]
+{'port_not_found': 1201, 'endpoints': 14223, 'off_pin': 10637, 'on_pin': 3586}
+worst [(2858.4, 'root', 'u_hb_argmax', 'nan_flag'), (2443.4, 'root', 'u_hc_eng_tail0_sk_steady', 'fault'), (2335.7, 'root', 'u_hc_eng_tail1_sk_steady', 'fault'), (1919.1, 'q_su11', 'u_su_Q1_lanes_plain12_15', 'clk_bank'), (1919.1, 'q_su11', 'u_su_Q1_lanes_plain12_15', 'clk_bank'), (1919.1, 'q_su11', 'u_su_Q1_lanes_plain12_15', 'clk_bank'), (1919.1, 'q_su11', 'u_su_Q1_lanes_plain12_15', 'clk_bank'), (1919.1, 'q_su11', 'u_su_Q1_lanes_plain12_15', 'clk_bank'), (1919.1, 'q_su11', 'u_su_Q1_lanes_plain12_15', 'clk_bank'), (1919.1, 'q_su11', 'u_su_Q1_lanes_plain12_15', 'clk_bank'), (1919.1, 'q_su11', 'u_su_Q1_lanes_plain12_15', 'clk_bank'), (1914.4, 'q_su11', 'u_su_Q1_lanes_plain12_15', 'rst_lane_n')]
+per core [(('q_b101', 'u_hb_idx__s_Q_r0c3_k2h1'), 114), (('q_b101_nw', 'u_hb_idx__s_Q_r0c3_k2h1'), 114), (('q_b100', 'u_hb_idx__s_Q_r0c1_k2h1'), 107), (('q_b100', 'u_hb_idx__s_Q_r0c1_k3h1'), 107), (('q_b101', 'u_hb_idx__s_Q_r0c2_k0h0'), 105), (('q_b101_nw', 'u_hb_idx__s_Q_r0c2_k0h0'), 105), (('q_b102', 'u_hb_idx__s_Q_r1c0_k0h1'), 104), (('q_b102', 'u_hb_idx__s_Q_r1c0_k3h0'), 104), (('q_b101', 'u_hb_idx__s_Q_r1c0_k0h0'), 100), (('q_b101_nw', 'u_hb_idx__s_Q_r1c0_k0h0'), 100), (('q_b100', 'u_hb_idx__s_Q_r0c0_k0h0'), 97), (('q_b101', 'u_hb_idx__s_Q_r0c2_k0h1'), 97), (('q_hub_nw', 'u_vmks_Q2'), 97), (('q_b101_nw', 'u_hb_idx__s_Q_r0c2_k0h1'), 97), (('q_hub_ne', 'u_vmks_Q2'), 97), (('q_b101', 'u_hb_idx__s_Q_r0c2_k1h0'), 96), (('q_b101', 'u_hb_idx__s_Q_r0c3_k1h0'), 96), (('q_b101_nw', 'u_hb_idx__s_Q_r0c2_k1h0'), 96), (('q_b101_nw', 'u_hb_idx__s_Q_r0c3_k1h0'), 96), (('q_b102', 'u_hb_idx__s_Q_r1c1_k2h0'), 94), (('q_b102', 'u_hb_idx__s_Q_r1c1_k3h0'), 94), (('q_b100', 'u_hb_idx__s_Q_r0c0_k0h1'), 88), (('q_b100', 'u_hb_idx__s_Q_r0c0_k1h0'), 87), (('q_b100', 'u_hb_idx__s_Q_r0c1_k1h1'), 87), (('q_b102', 'u_hb_idx__s_Q_r1c0_k1h0'), 87)]
+q_hub_nw {'bad': 63, 'kept': 53, 'added': 0, 'failing': 10}
+q_hub_ne {'bad': 72, 'kept': 56, 'added': 0, 'failing': 16}
+bad_before 135 kept 109 added 0 failing 26
+  ('q_hub_nw', 'u_hb_coll_Q_body_core.u_body_g_qout_13_g3_w_o_u_out_u_dst_d|u_hb_coll_Q_reduce', 2, 1755.9, 410.4, 440.6)
+  ('q_hub_nw', 'u_vmb_Q1.rq2|u_xl_Q_ctl', 4, 2079.6, 410.4, 349.9)
+  ('q_hub_nw', 'bus:L12_i', 18, 7909.4, 656.6, 397.4)
+  ('q_hub_nw', 'bus:L12_i', 18, 7909.8, 656.6, 397.4)
+  ('q_hub_nw', 'bus:L12_i', 18, 7904.2, 656.6, 397.4)
+  ('q_hub_nw', 'bus:L12_i', 18, 7903.8, 656.6, 397.4)
+  ('q_hub_nw', 'bus:L12_i', 11, 4842.5, 622.1, 375.8)
+  ('q_hub_nw', 'bus:L12_i', 11, 4843.1, 509.8, 375.8)
+  ('q_hub_nw', 'bus:L12_i', 11, 4852.1, 626.4, 375.8)
+  ('q_hub_nw', 'bus:L12_i', 11, 4851.7, 626.4, 375.8)
+  ('q_hub_ne', 'u_hb_coll_Q_body_n2.u_body_g_qout_3_g2_w_o_u_out_u_dst_d|u_hb_coll_Q_reduce', 2, 1737.4, 434.6, 436.3)
+  ('q_hub_ne', 'u_hb_coll_Q_body_n2.u_body_g_qout_10_g2_w_o_u_out_u_dst_d|u_hb_coll_Q_reduce', 2, 1557.7, 655.4, 388.8)
+  ('q_hub_ne', 'u_hb_coll_Q_body_n2.u_body_g_qout_8_g2_w_o_u_out_u_dst_d|u_hb_coll_Q_reduce', 1, 1526.1, 627.0, 509.8)
+  ('q_hub_ne', 'u_hb_coll_Q_body_n2.u_body_g_qout_6_g2_w_o_u_out_u_dst_d|u_hb_coll_Q_reduce', 1, 1532.0, 580.5, 509.8)
+  ('q_hub_ne', 'u_hb_coll_Q_body_n2.u_body_g_qout_5_g2_w_o_u_out_u_dst_d|u_hb_coll_Q_reduce', 1, 1558.7, 534.0, 522.7)
+  ('q_hub_ne', 'u_hb_coll_Q_body_n2.u_body_g_qout_13_g2_w_o_u_out_u_dst_d|u_hb_coll_Q_vm', 3, 2174.4, 418.0, 436.3)
+  ('q_hub_ne', 'u_hb_coll_Q_body_n2.u_body_g_qout_0_g2_w_o_u_out_u_dst_v|u_hb_coll_Q_reduce', 2, 1743.0, 446.4, 436.3)
+  ('q_hub_ne', 'u_vmb_Q1.rq2|u_xl_Q_ctl', 4, 2079.6, 410.4, 349.9)
+  ('q_hub_ne', 'bus:L12_i', 18, 7874.5, 656.6, 397.4)
+  ('q_hub_ne', 'bus:L12_i', 18, 7878.6, 656.6, 397.4)
+q_hub_nw u_hb_coll_Q_body_core.u_body_g_qout_13_g3_w_o_u_out_u_dst_d|u_hb_coll_ 2 -> 3 410.4 -> 397.4
+q_hub_nw u_vmb_Q1.rq2|u_xl_Q_ctl 4 -> 5 410.4 -> 397.4
+q_hub_nw bus:L12_i 18 -> 19 656.6 -> 398.2
+q_hub_nw bus:L12_i 18 -> 19 656.6 -> 397.4
+q_hub_nw bus:L12_i 18 -> 19 656.6 -> 397.4
+q_hub_nw bus:L12_i 18 -> 19 656.6 -> 397.4
+q_hub_nw bus:L12_i 11 -> 12 622.1 -> 398.0
+q_hub_nw bus:L12_i 11 -> 12 509.8 -> 399.8
+q_hub_nw bus:L12_i 11 -> 12 626.4 -> 399.1
+q_hub_nw bus:L12_i 11 -> 12 626.4 -> 397.4
+q_hub_ne u_hb_coll_Q_body_n2.u_body_g_qout_3_g2_w_o_u_out_u_dst_d|u_hb_coll_Q_r 2 -> 2 434.6 -> 397.4
+q_hub_ne u_hb_coll_Q_body_n2.u_body_g_qout_10_g2_w_o_u_out_u_dst_d|u_hb_coll_Q_ 2 -> 3 655.4 -> 397.4
+q_hub_ne u_hb_coll_Q_body_n2.u_body_g_qout_6_g2_w_o_u_out_u_dst_d|u_hb_coll_Q_r 1 -> 2 580.5 -> 397.4
+q_hub_ne u_hb_coll_Q_body_n2.u_body_g_qout_5_g2_w_o_u_out_u_dst_d|u_hb_coll_Q_r 1 -> 2 534.0 -> 397.4
+q_hub_ne u_hb_coll_Q_body_n2.u_body_g_qout_0_g2_w_o_u_out_u_dst_v|u_hb_coll_Q_r 2 -> 2 446.4 -> 397.4
+q_hub_ne u_vmb_Q1.rq2|u_xl_Q_ctl 4 -> 5 410.4 -> 397.4
+q_hub_ne bus:L12_i 18 -> 19 656.6 -> 398.2
+q_hub_ne bus:L12_i 18 -> 19 656.6 -> 397.4
+q_hub_ne bus:L12_i 18 -> 19 656.6 -> 397.4
+q_hub_ne bus:L12_i 18 -> 19 656.6 -> 397.4
+q_hub_ne bus:L12_i 11 -> 12 522.7 -> 398.0
+q_hub_ne bus:L12_i 11 -> 12 622.1 -> 399.8
+q_hub_ne bus:L12_i 11 -> 12 496.8 -> 399.1
+q_hub_ne bus:L12_i 11 -> 12 496.8 -> 397.4
+step2 kept 2 added 22 failing [('q_hub_ne', 'u_hb_coll_Q_body_n2.u_body_g_qout_8_g2_w_o_u_out_u_dst_d|u_hb_coll_Q_reduce', 1, 3, 627.0), ('q_hub_ne', 'u_hb_coll_Q_body_n2.u_body_g_qout_13_g2_w_o_u_out_u_dst_d|u_hb_coll_Q_vm', 3, 5, 418.0)] total added 22
+{'port_not_found': 1201, 'endpoints': 14223, 'off_pin_not_selected': 10635, 'on_pin': 3586, 'off_pin': 2, 'fixed': 2}
+bad_before 1 kept 1 added 0 failing 0
+step2 kept 0 added 0 failing [] total added 0
+q_hub_nw u_cij_Q ot_hgi_coll_inj_idx_join_rg [103.68, 155.52] -> [103.68, 103.68]
+q_hub_nw u_smw_Q ot_hbm_sm_vm_wr_q_t_lanes4 [69.12, 194.4] -> [69.12, 108.0]
+q_hub_nw u_hb_idx__op_Q ot_hbm_idx_vm_query_static_n12 [108.0, 51.84] -> [108.0, 69.12]
+q_hub_ne u_cij_Q ot_hgi_coll_inj_idx_join_rg [103.68, 155.52] -> [103.68, 103.68]
+q_hub_ne u_smw_Q ot_hbm_sm_vm_wr_q_t_lanes4 [69.12, 194.4] -> [69.12, 108.0]
+q_hub_ne u_hb_idx__op_Q ot_hbm_idx_vm_query_static_n12 [108.0, 51.84] -> [108.0, 69.12]
+entries re-sited 6
+grid [{'layer': 'M8', 'width_um': 0.48, 'pitch_um': 4.32, 'offset_um': 2.16, 'nets': ['VDD', 'VSS']}, {'layer': 'M9', 'width_um': 12.96, 'pitch_um': 34.56, 'offset_um': 17.28, 'nets': ['VDD', 'VSS']}]
+{'cols': 189, 'rows': 123, 'first_col_um': 99.84, 'first_row_um': 120.72}
+3a73d67be12d429eb3a7c8da4a464cfcb7ad00af0d51c3e09348de92417eaeaa  c15/die_plan.json

@@ -1,0 +1,37 @@
+{
+ "schema": "opentallas.core_bumps.v1",
+ "rule": "EDGE-FILL (pg_meas_psm.py --edge-margin 60): n=floor((L-2M)/pitch)+1 per axis, centred",
+ "pitch_um": 150.0,
+ "edge_margin_um": 60.0,
+ "pad_um": 70.0,
+ "size_um": 60.0,
+ "cols": 189,
+ "rows": 123,
+ "first_col_um": 99.84,
+ "first_row_um": 120.72,
+ "nets": "VDD/VSS checkerboard (i+j even = VDD)",
+ "skip": "die.channels + io windows (die_trial.bump_grid); PHY domains keep their 45-um rows",
+ "source": "COORD 2026-10-27 12:19 PG-ACTIVITY-KVHBM ruling; claude/pg-act-kvhbm-1027@48f939873f",
+ "grid_old": [
+  {
+   "layer": "M8",
+   "width_um": 0.48,
+   "pitch_um": 8.64,
+   "offset_um": 4.32,
+   "nets": [
+    "VDD",
+    "VSS"
+   ]
+  },
+  {
+   "layer": "M9",
+   "width_um": 0.48,
+   "pitch_um": 8.64,
+   "offset_um": 4.32,
+   "nets": [
+    "VDD",
+    "VSS"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,23 @@
+{
+ "target_um": 400.0,
+ "gate_um": 405.0,
+ "chains_bad_before": 1,
+ "replaced_count_kept": 1,
+ "added_one_reg": [],
+ "still_failing": [],
+ "per_type": {
+  "q_hub_ne": {
+   "bad": 1,
+   "kept": 1,
+   "added": 0,
+   "failing": 0
+  }
+ },
+ "added_chains": 0,
+ "added_bits_x_cycles": 0,
+ "step2_min_hop": {
+  "kept": 0,
+  "added": [],
+  "failing": []
+ }
+}
