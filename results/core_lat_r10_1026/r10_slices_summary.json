@@ -1,0 +1,106 @@
+{
+ "std": {
+  "model_qualification": {
+   "measured_timing_used": false,
+   "source": "F2_std_straight_d1_strip_uf3d1",
+   "model": "uf_phys3 v1 (GRT basis) via record adapter, leaf means; d1 sizing under uf_phys3; PLAN MODEL, UNCHECKED",
+   "corners": {
+    "TT": {
+     "leaf_min": 264.17,
+     "leaf_max": 275.85,
+     "leaf_window": 11.67,
+     "slew_max": 50.6,
+     "mean": 270.02
+    },
+    "FF": {
+     "leaf_min": 197.75,
+     "leaf_max": 208.91,
+     "leaf_window": 11.16,
+     "slew_max": 38.6,
+     "mean": 203.73
+    }
+   },
+   "band_policy": "info"
+  },
+  "plan_conversion": {
+   "source": "F2_std_straight_d1_strip_uf3d1",
+   "calibration": false,
+   "masters_outside_envelope": [],
+   "cells": 629,
+   "sinks": 13238,
+   "leaves": 272,
+   "displacement_um": {
+    "max": 1.053,
+    "mean": 0.1616,
+    "over_2um": 0
+   },
+   "site_rule": "row by y, site-grid x, no overlap with planned/fixed cells, centre x off M5 straps",
+   "trunk_pg_clearance": {
+    "verdict": "PASS",
+    "layers": [
+     "M4",
+     "M5"
+    ],
+    "edges": 629,
+    "blocked_edges": 0
+   }
+  },
+  "clock_ndr": null
+ },
+ "ndr": {
+  "model_qualification": {
+   "measured_timing_used": false,
+   "source": "F1_ndr_straight_d1_strip_uf3d1",
+   "model": "uf_phys3 v1 (GRT basis) via record adapter, leaf means; d1 sizing under uf_phys3; PLAN MODEL, UNCHECKED",
+   "corners": {
+    "TT": {
+     "leaf_min": 262.21,
+     "leaf_max": 271.59,
+     "leaf_window": 9.37,
+     "slew_max": 50.6,
+     "mean": 266.89
+    },
+    "FF": {
+     "leaf_min": 196.27,
+     "leaf_max": 205.66,
+     "leaf_window": 9.39,
+     "slew_max": 38.6,
+     "mean": 201.31
+    }
+   },
+   "band_policy": "info"
+  },
+  "plan_conversion": {
+   "source": "F1_ndr_straight_d1_strip_uf3d1",
+   "calibration": false,
+   "masters_outside_envelope": [],
+   "cells": 629,
+   "sinks": 13238,
+   "leaves": 272,
+   "displacement_um": {
+    "max": 1.053,
+    "mean": 0.1626,
+    "over_2um": 0
+   },
+   "site_rule": "row by y, site-grid x, no overlap with planned/fixed cells, centre x off M5 straps",
+   "trunk_pg_clearance": {
+    "verdict": "PASS",
+    "layers": [
+     "M4",
+     "M5"
+    ],
+    "edges": 629,
+    "blocked_edges": 0
+   }
+  },
+  "clock_ndr": {
+   "name": "ot_core_ck_2w2s",
+   "layers": [
+    "M4",
+    "M5"
+   ],
+   "width_multiplier": 2,
+   "spacing_multiplier": 2
+  }
+ }
+}
