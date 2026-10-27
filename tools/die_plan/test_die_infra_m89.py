@@ -83,6 +83,22 @@ class GrtLayers(unittest.TestCase):
             self.assertIn("verify_import.py", shell)
             compile((out/"verify_import.py").read_text(), "verify_import.py", "exec")
             self.assertIn("actual_fixed_import", (out/"grt_meta.json").read_text())
+            # Execute the GENERATED outer shell with a docker argv recorder;
+            # bash -n alone cannot catch a backslash followed by spaces.
+            import os, subprocess
+            bindir = root/"bin"; bindir.mkdir()
+            docker = bindir/"docker"
+            docker.write_text("#!/usr/bin/env python3\nimport json,sys\nprint(json.dumps(sys.argv[1:]))\n")
+            docker.chmod(0o755)
+            (root/"kit/abstracts").mkdir()
+            result = subprocess.run(["bash", str(out/"run_grt.sh")], text=True, capture_output=True,
+                env={**os.environ, "PATH": str(bindir)+":"+os.environ["PATH"]}, check=True)
+            argv = json.loads(result.stdout)
+            self.assertTrue(all(arg and arg == arg.strip() for arg in argv))
+            self.assertEqual(argv.count("-v"), 5)
+            self.assertIn("HUID="+str(os.getuid()), argv)
+            self.assertEqual(argv[-3:], ["openroad/orfs:latest", "bash", "/out/run_import_inside.sh"])
+
 
     def test_actual_import_requires_complete_pair_and_inventory(self):
         with tempfile.TemporaryDirectory() as td:

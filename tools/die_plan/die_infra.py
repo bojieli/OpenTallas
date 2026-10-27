@@ -957,7 +957,7 @@ docker run --rm --name dinfra-grt-$(basename $D)-$$ --cpus=${{CPUS:-16}} --memor
 # Launch with ot-run; stage this out dir, kit, and the exact infrastructure ODB path.
 D=$(cd $(dirname $0) && pwd); K={kit}; PRE={pre}
 INFRA={shlex.quote(str(source))}
-docker run --rm --name dinfra-import-$(basename $D)-$$ --cpus=${{CPUS:-16}} --memory=${{MEM:-{a.mem}}}g --memory-swap=${{MEM:-{a.mem}}}g \  -e HUID=$(id -u) -e HGID=$(id -g) -e CPUS=${{CPUS:-16}} \  -v $K:/work:ro -v $(readlink -f $K/abstracts):/work/abstracts:ro -v $PRE:/pre:ro -v $D:/out \  -v "$INFRA:/infra/source.odb:ro" openroad/orfs:latest bash /out/run_import_inside.sh
+docker run --rm --name dinfra-import-$(basename $D)-$$ --cpus=${{CPUS:-16}} --memory=${{MEM:-{a.mem}}}g --memory-swap=${{MEM:-{a.mem}}}g -e HUID=$(id -u) -e HGID=$(id -g) -e CPUS=${{CPUS:-16}} -v "$K:/work:ro" -v "$(readlink -f $K/abstracts):/work/abstracts:ro" -v "$PRE:/pre:ro" -v "$D:/out" -v "$INFRA:/infra/source.odb:ro" openroad/orfs:latest bash /out/run_import_inside.sh
 """)
     (out / "run_grt.sh").chmod(0o755)
     print("grt written", out / "grt.tcl")
