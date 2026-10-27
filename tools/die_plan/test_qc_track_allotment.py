@@ -32,3 +32,17 @@ def test_unavailable_gap_reports_witness_and_never_calls_it_full_build_pass():
     assert got['status']=='TRUNK_ONLY_INCOMPLETE'
     assert got['failures'][0]['static_candidates']==0
     assert 'NOT CHECKED' in got['scope']
+
+
+def test_real_explicit_v2_net_schema_and_branches_remain_intact():
+    from test_explicit_clock_v2 import branching
+    from test_clock128_r12 import build
+    cells,nets,_,_=build(branching())
+    before=deepcopy(nets)
+    ordered=A.order_nets(nets,cells,D.NDR,'16w')
+    assert nets==before
+    assert {n['name'] for n in ordered}=={n['name'] for n in nets}
+    for n in ordered:
+        original=next(v for v in nets if v['name']==n['name'])
+        assert n['drv']==original['drv'] and n['loads']==original['loads']
+        assert sorted(n.get('plan_connections',[]),key=str)==sorted(original.get('plan_connections',[]),key=str)
