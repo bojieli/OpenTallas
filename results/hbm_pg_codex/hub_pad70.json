@@ -1,0 +1,27 @@
+{
+ "source_plan": "95a333dbcd1f9230219ec7e9de3c52e2c5f577ecda0ee25a2d01621761b34aee",
+ "tool_source": "claude/infra-head5-1027@e5f4fb2cd1",
+ "power_basis": "conservative historical642.7W envelope charged to non-PHY area; separately modelled PHY absent from this core-only coupon",
+ "window_um": [
+  7983.360000000001,
+  6497.280000000001,
+  10990.080000000002,
+  9469.44
+ ],
+ "power_w": 11.357,
+ "bump_pad_um": 70.0,
+ "status": "MEASURED",
+ "reasons": [],
+ "interior_blocks": 2450,
+ "below_m7_mv": null,
+ "full_ir_gate": "INCOMPLETE: lower-stack and actual activity power owed",
+ "scope": "Core-only structural coupon. PHY and actual unified native composition not covered.",
+ "colocated_above_m7_mv": 23.395999999999923,
+ "worst_instance": "u_b13_40",
+ "worst_local_xy": [
+  580.183,
+  1744.528
+ ],
+ "above_m7_verdict": "PASS",
+ "remaining_to_35_mv": 11.604000000000077
+}
