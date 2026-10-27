@@ -3185,3 +3185,5 @@ Diagnostic plan level, no build.
   (3) Pin views stay OPEN: the per-orient re-pin is not adopted (G0C 60 core_faces errors). My R12 ask-2 condition stands: count the flipped views as core variants, or mirror partner windows.
   (4) The NUMBER-CHECK is still owed for the odd-even 3.99 ps max and the RCX spread 33.4 TT / 30.3 FF. The M7 0.5 band IR is UNCHECKED: run IR before freeze (12.4e).
   Combo GRT 0/0/0 (file value) is acceptable as the GRT evidence for this plan.
+
+GEOM REQ [INFRA-FIRST-QC-R14] 2026-10-26 23:28 PDT claude/qc-mesh-r14-1026@64abd96fb3 results/qc_clk_mesh3/r14/probe/r14_lane_probe.png (viewed): period-0 local row x-tree (x 2176-4025, y 3922-3950) in per-level 8.64 um lanes. Check that every M8 trunk flanks a VSS stripe (blue), that the M9 L-drops between lanes are clear, that no lane folds back, and that the max riser is 1.375 um. Probe only (UNCHECKED), not the full die.
