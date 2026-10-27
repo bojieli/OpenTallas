@@ -29,6 +29,11 @@ module ot_v41_fadd #(
     // copies (one per 6-8 loads), step 9a forms the normalised mantissa / exponent / subnormal / overflow terms into a
     // register, step 9b encodes and selects. Bit-identical.
     parameter integer SPLIT9 = 0,
+    // CY_COPY (default 1; HEAD-CORE-R11 2026-10-26): with SPLIT9, the round carry leaves u_c8 as four KEPT copies.
+    // 0 = no kept copies: cyk is the registered round carry rnd9[24] itself (same value, same edge as every copy, so
+    // bit-identical for any operands).  For an adder whose operand the instantiating generate ties to a constant (the
+    // chain head of ot_dsrom_head_elem: a = +0), where the copies are dead kept flops by construction.
+    parameter integer CY_COPY = 1,
     parameter integer LATENCY = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9
 ) (
     input  wire        clk,
@@ -204,7 +209,7 @@ module ot_v41_fadd #(
     initial if (SPLIT9 && !CUT[8]) $fatal(1, "SPLIT9 needs CUT[8] (the round carry copies sit in the u_c8 stage)");
 `endif
     wire [3:0]  cyk;                       // the round carry, one copy per load group
-    if (SPLIT9) begin : g_cy_copy
+    if (SPLIT9 && CY_COPY) begin : g_cy_copy
         (* keep = 1 *) reg [3:0] cyq;
         always @(posedge clk) cyq <= {4{r8[24]}};
         assign cyk = cyq;
