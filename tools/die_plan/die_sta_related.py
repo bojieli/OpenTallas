@@ -91,6 +91,12 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
+# ROOT-MERGE-29 (COORD-ruled correction 10-27, RULING CLOCK-KV-R17 01:19): default clock AOCV table = the
+# OWNER-approved 0.21 %/mm gate table (METHODOLOGY v5.0 12.4a b1, 10-26 18:4x).  clk_aocv_table.json keeps the 0.42 %/mm
+# DRAFT (global-variation bound, NUMBER-CHECK-AOCV); R16 gate numbers used it by mistake.  Same names as CLOCK-KV-R18.
+APPROVED_AOCV_TABLE = "clk_aocv_table_g021.json"
+APPROVED_G_PER_MM = 0.0021
+
 PERIOD_PS = 833.333
 UNC_SETUP_PS = 60.0
 UNC_HOLD_PS = 25.0
@@ -172,6 +178,23 @@ def arr4(A, B, node):
         return (A.get("abs_late_ps", A["late_ps"]), A.get("abs_early_ps", A["early_ps"]),
                 B.get("abs_late_ps", B["late_ps"]), B.get("abs_early_ps", B["early_ps"]))
     return A["late_ps"], A["early_ps"], B["late_ps"], B["early_ps"]
+
+
+CPPR_LCA = False   # PATH-S81-PD6 opt-in --cppr-lca (default off = unchanged output)
+
+
+def pair_node(A, B):
+    """last common clock node of a pair.  Default: the shared cppr_node (region root) else the die root 'h'.
+    --cppr-lca (opt-in, PATH-S81-PD6): taps carry 'tree_path' (root 'h' + one child-index char per tree level, so a
+    prefix is an ancestor); the node is the longest common prefix = the true last common tree node (12.4b), which for
+    cross-region pairs is the H-tree node above both region roots instead of the die root."""
+    if CPPR_LCA and "tree_path" in A and "tree_path" in B:
+        x, y = A["tree_path"], B["tree_path"]
+        n = 0
+        while n < min(len(x), len(y)) and x[n] == y[n]:
+            n += 1
+        return x[:max(1, n)]
+    return A["cppr_node"] if A["cppr_node"] == B["cppr_node"] else "h"
 
 
 def credit(rng, node, la, ea, lc, ec):
@@ -261,7 +284,7 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
     mds = mdh = float('-inf')
     for a, b, tag in pairs:
         A, B = taps[a], taps[b]
-        node = A["cppr_node"] if A["cppr_node"] == B["cppr_node"] else "h"
+        node = pair_node(A, B)
         la, ea, lc, ec = arr4(A, B, node)
         cr = credit(rng, node, la, ea, lc, ec)
         dmg_s, dmg_h = la - ec - cr, lc - ea - cr
@@ -342,7 +365,7 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
         hd = []
         for a, b, tag in pairs:
             A, B = taps[a], taps[b]
-            node = A["cppr_node"] if A["cppr_node"] == B["cppr_node"] else "h"
+            node = pair_node(A, B)
             la, ea, lc, ec = arr4(A, B, node)
             cr = credit(rng, node, la, ea, lc, ec)
             hd.append((lc - ea - cr, a, b, tag))
@@ -376,7 +399,7 @@ def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_pat
     region None = --droop-region tree, the pre-R17 rule) uses its tree region (cppr_node != 'h')."""
     import clk_aocv as CA
     here = Path(__file__).resolve().parent
-    T = CA.load(table_path or here / "clk_aocv_table.json")
+    T = CA.load(table_path or here / APPROVED_AOCV_TABLE)
     m = json.loads(Path(margins_path or here / "die_ci_margins.json").read_text())
     need = [k for k in ("node_stages", "node_xy_um", "node_late_ps", "node_early_ps") if k not in meta]
     tneed = sum(1 for r in taps.values() if "stages_from_root" not in r or "xy_um" not in r)
@@ -397,8 +420,8 @@ def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_pat
 
     def fn(a, b, check):
         A_, B_ = taps[a], taps[b]
-        node = A_["cppr_node"] if A_["cppr_node"] == B_["cppr_node"] else "h"
-        same = node != "h"
+        node = pair_node(A_, B_)
+        same = (A_["cppr_node"] == B_["cppr_node"]) if CPPR_LCA else node != "h"   # droop shared = same region
         if region is not None:
             ra = region.get(a, A_["cppr_node"] if A_["cppr_node"] != "h" else None)
             rb = region.get(b, B_["cppr_node"] if B_["cppr_node"] != "h" else None)
@@ -452,7 +475,12 @@ def mesh_signoff(proof_dir, taps, meta, corner, so_path, band_mode="tree"):
         else:
             load[t["port"]] = t["stub"]
     load = {p: l for p, l in load.items() if l in idx and l in rtj}
-    m0 = sorted(rtj[l]["late"] for l in set(load.values()))
+    # reference = median routed late of the normal mesh stubs (band mesh_in loads excluded so M0 is the same for
+    # --mesh-band tree|sim; M0 is a common offset and cancels in every pair slack).  ROOT-MERGE-29: the R17 own test
+    # test_mesh_signoff_rereference_and_unc FAILED at 51b46381db on this line; fix = CLOCK-KV-R18 WIP hunk (intel1 wt).
+    band_in = {t["mesh_in"] for t in M["taps"] if t.get("mesh_in")}
+    m0 = sorted(rtj[l]["late"] for l in set(load.values()) if l not in band_in) \
+        or sorted(rtj[l]["late"] for l in set(load.values()))
     m0 = m0[len(m0) // 2]
     arr_stub = [r["stages_from_root"] for p, r in taps.items() if p in load and not p.startswith("~")
                 and load[p].startswith("ckm_s_")] if all("stages_from_root" in r for r in taps.values()) else []
@@ -698,6 +726,9 @@ def main(argv=None):
                          "window_ps, else 0 = the one-ideal-clock kit SDC)")
     ap.add_argument("--kit", action="append", default=[], help="part_or_type=kit.json partition interface model "
                     "(REAL VIEWS, opt-in; see docstring)")
+    ap.add_argument("--cppr-lca", action="store_true",
+                    help="opt-in (PATH-S81-PD6): CPPR/AOCV node = longest common prefix of the taps' tree_path (true last "
+                         "common tree node); classes and shared droop still by cppr_node (region)")
     ap.add_argument("--core-view", action="append", default=[], help="MODULE=VIEWDIR signed hard-core view "
                     "(<MODULE>_{tt,ff}.lib ETM + core.json); REAL VIEWS, opt-in")
     ap.add_argument("--core-part-delay-ps", type=float, default=0.0,
@@ -708,7 +739,8 @@ def main(argv=None):
     ap.add_argument("--clock-droop", choices=("stated", "shared"),
                     help="clock droop with --clock-ocv: stated +5.1 %% always, or shared (0 in one region); default "
                          "shared for table, stated for flat")
-    ap.add_argument("--clock-aocv-table", help="clock_aocv block (default tools/die_plan/clk_aocv_table.json)")
+    ap.add_argument("--clock-aocv-table", help="clock_aocv block (default tools/die_plan/clk_aocv_table_g021.json = APPROVED 0.21 %%/mm; "
+                    "clk_aocv_table.json = 0.42 %%/mm DRAFT)")
     ap.add_argument("--clock-ocv-cell-share", type=float, help="cell share of the die branch (default: table class A)")
     ap.add_argument("--pair-unc", help="opt-in per related pair clock uncertainty (qc_clk_mesh3 sta-export pair_unc.json: "
                     "U[corner]['partA|partB'], signed-mesh MC + approved AOCV below the mesh), subtracted from setup and "
@@ -721,6 +753,12 @@ def main(argv=None):
     ap.add_argument("--mesh-band", choices=("tree", "sim"), default="tree",
                     help="leaf-fed band taps: tree = strict CPPR at h (default); sim = sign-off pseudo loads (INFO)")
     a = ap.parse_args(argv)
+    if a.mesh_signoff and a.pair_unc:
+        raise SystemExit("--pair-unc and --mesh-signoff are exclusive (both price the signed-mesh per-pair uncertainty)")
+    if a.mesh_signoff and a.cppr_lca:
+        raise SystemExit("--cppr-lca and --mesh-signoff are exclusive (--mesh-signoff puts the common point at the mesh)")
+    global CPPR_LCA
+    CPPR_LCA = bool(a.cppr_lca)
     corners = a.corner or ["TT", "FF"]
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)

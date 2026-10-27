@@ -202,3 +202,46 @@ def test_mesh_signoff_rereference_and_unc(tmp_path):
                   early_ps=v["abs_early_ps"] if "abs_early_ps" in v else v["early_ps"], cppr_node="h") for k, v in taps.items()}
     U2, rec2 = R.mesh_signoff(tmp_path, t2, {"cppr_node_range_ps": {}}, "TT", tmp_path / "so.json", "sim")
     assert rec2["taps_on_mesh"] == 3 and t2["c"]["cppr_node"] == "m" and t2["c"]["late_ps"] == 4610.0 + 150.0
+
+
+def test_cppr_lca_opt_in():
+    """PATH-S81-PD6 --cppr-lca: node = longest common tree_path prefix; default keeps the region/die-root form."""
+    import die_sta_related as D
+    A = dict(cppr_node="h01", tree_path="h0110")
+    B = dict(cppr_node="h00", tree_path="h0011")
+    C = dict(cppr_node="h01", tree_path="h0101")
+    old = D.CPPR_LCA
+    try:
+        D.CPPR_LCA = False
+        assert D.pair_node(A, B) == "h" and D.pair_node(A, C) == "h01"
+        D.CPPR_LCA = True
+        assert D.pair_node(A, B) == "h0" and D.pair_node(A, C) == "h01" and D.pair_node(A, A) == "h0110"
+        assert D.pair_node(dict(cppr_node="x"), dict(cppr_node="x")) == "x"   # no tree_path -> default form
+    finally:
+        D.CPPR_LCA = old
+
+
+def test_default_aocv_table_is_approved_g021():
+    """ROOT-MERGE-29 COORD-ruled correction 10-27: --clock-ocv table defaults to the approved 0.21 %/mm table."""
+    import json
+    from pathlib import Path
+    here = Path(R.__file__).resolve().parent
+    assert R.APPROVED_AOCV_TABLE == "clk_aocv_table_g021.json"
+    T = json.loads((here / R.APPROVED_AOCV_TABLE).read_text())["clock_aocv"]
+    D = json.loads((here / "clk_aocv_table.json").read_text())["clock_aocv"]
+    g = lambda t: [v["g_per_mm"] for v in t.values() if isinstance(v, dict) and "g_per_mm" in v]
+    assert g(T) == [R.APPROVED_G_PER_MM] and g(D) == [0.004163]
+    t, meta = _ocv_taps()
+    dflt = R.clock_ocv_fn("table", "stated", meta, t, 250.0)
+    appr = R.clock_ocv_fn("table", "stated", meta, t, 250.0, here / "clk_aocv_table_g021.json")
+    draft = R.clock_ocv_fn("table", "stated", meta, t, 250.0, here / "clk_aocv_table.json")
+    for chk in ("setup", "hold"):
+        assert dflt("a", "b", chk) == appr("a", "b", chk) < draft("a", "b", chk)
+
+
+def test_exclusive_flags(tmp_path):
+    import pytest
+    for extra in (["--pair-unc", "x.json"], ["--cppr-lca"]):
+        with pytest.raises(SystemExit) as e:
+            R.main([str(tmp_path), "--plan", "p.json", "--out", str(tmp_path / "o"), "--mesh-signoff", "TT=a,FF=b"] + extra)
+        assert "exclusive" in str(e.value)
