@@ -4012,7 +4012,9 @@ def cmd_kit_rtl(a):
     # leaf sources: the as-built RTL closure of the bound module's leaves (the same index + closure the verify lint uses)
     ab0 = raw["asbuilt"]
     base = plan_base(a.plan, raw)
-    idx = E.module_index(ab0.get("rtl_roots", ["rtl"]), ab0.get("files", []), base)
+    # The bind's own extra library (the clock-landing cells ot_dp_clk_landing / ot_dp_landing_collect added when a
+    # landing table is selected) is a source of the bound leaves too, not only a tie-breaker.
+    idx = E.module_index(ab0.get("rtl_roots", ["rtl"]), list(ab0.get("files", [])) + list(rep.get("extra_lib", [])), base)
     prefer = [str(Path(base) / f) if not Path(f).is_absolute() else f for f in ab0.get("prefer", [])] + \
         rep.get("extra_lib", []) + bindf_prefer(out, base)
     leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", btxt, re.M)) -
