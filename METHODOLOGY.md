@@ -301,9 +301,11 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
      the flat clock-path cell 1.05/0.95 + net 1.03/0.97 of die_ci_margins.json. Derate per clock path = f(stage count from the last
      common point, bounding-box distance of launch/capture), random part scaling ~1/sqrt(depth) plus a non-averaging systematic part.
      The table is built from ASAP7 device-model Monte Carlo if the models carry variation statistics, else from cited published 7 nm
-     data; every assumption documented. Owner reviews the table before it gates. Data paths keep flat derates. IR droop: OWNER
-     10-26 17:5x keeps the stated +5 % supply-droop margin (+5.1 % late cell delay, as in die_ci_margins.json) on top of the table;
-     it is replaced only by a real PDNSim worst-drop result.
+     data; every assumption documented. Owner reviews the table before it gates. Data paths keep flat derates. IR droop (OWNER
+     10-26 17:5x): droop is SHARED between launch and capture clocks -- the stated 5 % drop (+5.1 % late) still applies to the data
+     path, but on the clock only the DIFFERENTIAL droop between the two clock branches is charged: 0 for branches in the same mesh /
+     PDN region; for branches in different regions the full one-sided +5.1 % stays until a PDNSim/region-droop result gives the
+     real differential. PDNSim replaces the stated values when it exists.
   c. Site sufficiency: max gap between legal station/repeater sites along each die net corridor <= 405 um; corridor track use <= 0.6;
      via-field porosity + per-gcell pin-stack limit on every M8/M9 -> bay drop and every island stack; bay fill <= 60 %; mesh-driver
      power density / EM in islands.
@@ -331,7 +333,7 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
   - 10-26 17:0x OWNER: MSCTS die clock (12.8e) = CURRENT: M8/M9 global H-tree + regional meshes signed off by variation sim (mesh = common point, sim skew as uncertainty) + short local trees; landed crossings only for remaining seams. Supersedes the 06:07 blanket ban on mesh-node CPPR credit for SIGNED meshes only (unsigned: still banned).
   - 10-26 17:3x OWNER: "if continuous mesh can work, switch to it" (12.8e1) = CURRENT: continuous die mesh cut only at landed crossings is the preferred form; per-region meshes = fallback when the continuous mesh fails its evaluation. Reason: seam pairs between separate regional meshes still see unshared global-tree delay (~1.5-2 ns, UNCHECKED estimate).
   - 10-26 17:4x OWNER: "replace the flat clock margin with a depth- and distance-based table, the standard practice" (12.4a b1) = CURRENT. Supersedes flat 5 %/3 % clock derates (die CI lane choice 10-24, never an owner decision). Gates after owner review of the table.
-  - 10-26 17:5x OWNER: "go with the +5% supply droop margin" = CURRENT: stated +5 % droop margin kept with the AOCV table (no shared-droop credit); PDNSim result replaces it when one exists.
+  - 10-26 17:5x OWNER: supply droop treated as SHARED between the two clocks (12.4a b1) = CURRENT: clock charged only differential droop (0 within one mesh/PDN region; full +5.1 % one-sided across regions until PDNSim); data path keeps +5.1 % late. (COORD first misread the owner as keeping the one-sided margin; corrected same minute.)
 
 - 12.7 MASTER PLAN FIRST -- CITY-PLANNING MODEL (OWNER 2026-10-26 05:58, "yes, do all of them on all dies"). Supersedes/extends 12.1-12.4 where stricter.
   Utilities (PG) -> transit (clock, reset, with islands as stations) -> roads (die-level routing corridors) with rest stops (repeater bays) and
