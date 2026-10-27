@@ -48,7 +48,7 @@
     "physical_job_route": "MISSING",
     "physical_status_route": "MISSING"
   },
-  "start_guard": "all five delivered reset offsets +6 local relay release +actual pad warm; require pad warm>=32 and actual sequential preload/commit beforeSTART",
+  "start_guard": "max(actual delivery[role]+local_release_edges[role])+actual pad warm, with quarterSW/SE/NW/NE9 and centralroot6; root delivery bound must also cover both externalN4 delivery+3. Actual offsets/START remainMISSING; sequential preload/commit required.",
   "fail_closed": "uncommitted, unbound, incomplete or nonsequential preload cannot arm; no job output on unarmed START; malformed launch/deadline, unexpected busy or absent/faulted native completion halts programme",
   "unit_fixture": "First actual HC_POST record byteoffset5760, MTP6; synthetic WSC24/PK50/PB50 and helper scalar/fin responses exercise control only. Not current physicalcalendar, leaves, VM or token.",
   "whole_kernel_qualified": false,
@@ -70,7 +70,7 @@
   "delivered_reset": {
     "parameter": "DELIVERED_RESET=1",
     "local_release_edges": 3,
-    "implementation": "three kept synchronous relay stages from actual deliveredreset; defaults0 legacy; normal calendar waits actual maxboot+6+padwarm",
+    "implementation": "three kept synchronous provider relay stages from actual deliveredreset, defaults0 legacy; unified START uses explicit quarter9/centralroot6 ledger, with both externalN4 local3 included in physical bound",
     "assertion_edges": 3,
     "minimum_gate": {
       "unit": "oth-ubuntu-2311725-1793120519",
@@ -97,5 +97,6 @@
     "rst_n": 1
   },
   "root_capture_contract": "Provider output -> native root capture adds1+physical job route. Native root status -> provider input capture adds1+physical return route; FSM consumes captured status one further edge later. Compiler completion deadline therefore requires root_done+2+physical return route.",
-  "controller_status_check_cycles": 2
+  "controller_status_check_cycles": 2,
+  "status_endpoint_total_edges": 2
 }
