@@ -95,23 +95,92 @@ def report(out):
     for name,values in data['marker_multi'].items():
         denominator=data['marker_single064'][name]['c_ff_per_um']
         ratios[name]=values['c_ff_per_um']/denominator if denominator else None
-    # In correctly selected multi-width tables: .16/.64=.25, .32/.64=.5,
-    # .64/.64=1 and 1.28/.64=2. Constant .25 diagnoses the known second-entry clamp.
-    wide=[ratio for name,ratio in ratios.items() if any('_'+tag in name for tag in ('w32','w64','w128'))]
-    clamped=bool(wide) and all(r is not None and abs(r-.25)<.02 for r in wide)
+    expected={}
+    for layer in P.LAYERS:
+        for name,width,_space in CASES:
+            # A single .64 table uses stock below .64 and its .64 entry
+            # at/above .64. The full table has an exact entry for each width.
+            expected[layer+'_'+name]=(width/.04 if width>.04 else 1)/(16 if width>=.64 else 1)
+    checks={}
+    for name, ratio in expected.items():
+        observed=data['marker_multi'][name]['c_ff_per_um']
+        control=data['marker_single064'][name]['c_ff_per_um']
+        # report() rounds C to five decimals: propagate that quantisation.
+        checks[name]=abs(observed-ratio*control) <= (1+ratio)*.5e-5+1e-12
+    passed=all(checks.values())
     result=dict(scope='native OpenRCX table-selection mechanism only; marker C is synthetic',
-        verdict='FAIL' if clamped else 'REVIEW',mixed_width_qualified=False,
-        root_cause='second width entry used for every wider wire' if clamped else 'inspect native selection ratios',
-        modes=data,marker_multi_over_single064_cap=ratios)
-    (out/'summary.json').write_text(json.dumps(result,indent=1)+'\n');print(json.dumps(result,indent=1))
+        verdict='PASS' if passed else 'FAIL',mixed_width_qualified=False,
+        finding='all four exact width entries selected; generator cache omitted W' if passed else 'inspect native selection ratios',
+        modes=data,marker_multi_over_single064_cap=ratios,expected_ratios=expected,checks=checks)
+    (out/'selection_report.json').write_text(json.dumps(result,indent=1)+'\n');print(json.dumps(result,indent=1))
+
+
+
+def single_width_table(text, width):
+    """Keep stock plus one exact width from an already calibrated multi table."""
+    lines=text.splitlines();out=[];layer=None;index=0
+    while index<len(lines):
+        line=lines[index]
+        match=re.match(r'^Metal (\d+) [A-Z]+$',line)
+        if match:layer=int(match.group(1))
+        if layer in (8,9) and line.startswith('WIDTH Table'):
+            entries=[float(x) for x in line.split('entries:',1)[1].split()]
+            if entries:
+                if not any(abs(x-width)<1e-9 for x in entries):raise ValueError(f'width {width} missing')
+                line=f'WIDTH Table 2 entries:  0.04 {width:g}'
+        if layer in (8,9) and line.startswith('DIST count'):
+            match=re.search(r'width ([0-9.]+)',line)
+            if match and not any(abs(float(match.group(1))-x)<1e-9 for x in (.04,width)):
+                while index<len(lines) and not lines[index].startswith('END DIST'):index+=1
+                index+=1;continue
+        out.append(line);index+=1
+    return '\n'.join(out)+'\n'
+
+
+def physical(out, rules_path):
+    import shutil
+    out=Path(out);text=Path(rules_path).read_text()
+    (out/'physical_multi.rules').write_text(text)
+    for width in WIDTHS:
+        tag=f'physical_single{round(width*1000):04}'
+        (out/(tag+'.rules')).write_text(single_width_table(text,width))
+    rsq=R.rpersq(text)
+    for tag in ['physical_multi']+[f'physical_single{round(w*1000):04}' for w in WIDTHS]:
+        lines=['read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef',
+               'read_def /out/probe.def','set tech [ord::get_db_tech]']
+        lines += [f'[$tech findLayer {layer}] setResistance {value:.8g}' for layer,value in sorted(rsq.items())]
+        lines += [f'extract_parasitics -ext_model_file /out/{tag}.rules -lef_res',f'write_spef /out/rcx_{tag}.spef']
+        (out/('extract_'+tag+'.tcl')).write_text('\n'.join(lines)+'\n')
+    (out/'run_physical.sh').write_text('#!/bin/bash\nset -e\nsource /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1\ntrap \'chown -R "$HUID:$HGID" /out\' EXIT\nfor mode in physical_multi physical_single0160 physical_single0320 physical_single0640 physical_single1280; do\n  openroad -no_init -threads 2 -exit "/out/extract_$mode.tcl" > "/out/extract_$mode.log" 2>&1\ndone\n')
+
+
+def physical_report(out):
+    import hashlib
+    out=Path(out);data=P.report(str(out));checks={}
+    for layer in P.LAYERS:
+        for name,width,_space in CASES:
+            net=layer+'_'+name
+            control=data[f'physical_single{round(max(width,.16)*1000):04}'][net]
+            actual=data['physical_multi'][net]
+            checks[net]=dict(verdict='PASS' if actual==control else 'FAIL',width_um=width,multi=actual,single=control)
+    passed=all(x['verdict']=='PASS' for x in checks.values())
+    result=dict(schema='opentallas.rcx_mixed_width_qualification.v1',verdict='PASS' if passed else 'FAIL',
+        native_pass=passed,widths_um=list(WIDTHS),layers=list(P.LAYERS),
+        rules_sha256=hashlib.sha256((out/'physical_multi.rules').read_bytes()).hexdigest(),
+        checks=checks,scope='native exact-width table selection versus independent single-width extraction',
+        calibration='existing ASAP7 field-solver calibration; R(sheet)/width, no flow default changes',
+        die_timing_qualified=False)
+    (out/'physical_qualification.json').write_text(json.dumps(result,indent=1)+'\n');print(json.dumps(result,indent=1))
 
 
 def main():
-    ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('command',choices=('gen','rules','render','report'));ap.add_argument('out');ap.add_argument('--stock')
+    ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('command',choices=('gen','rules','render','report','physical','physical-report'));ap.add_argument('out');ap.add_argument('--stock');ap.add_argument('--rules')
     a=ap.parse_args()
     if a.command=='gen':geometry(a.out)
     elif a.command=='rules':rules(a.out,a.stock)
     elif a.command=='render':render(a.out)
+    elif a.command=='physical':physical(a.out,a.rules)
+    elif a.command=='physical-report':physical_report(a.out)
     else:report(a.out)
 
 if __name__=='__main__':main()
