@@ -1,0 +1,7 @@
+{
+  "verdict": "PASS",
+  "positive": "actual generated TXcurrent26b accepts UID92==8hex5C and alltrueRTLdefaults; emittedonlySRAM_MACRO1",
+  "negative": "tryingtoomitSRAM_MACRO1(default0) REJECTED",
+  "RTL": "UNCHANGED",
+  "old_failed_lint": "Yosys -chparam matchingdefault causesmoduleduplicateassert; preservedcurrent26"
+}
