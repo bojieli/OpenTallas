@@ -717,9 +717,9 @@ def free_along(K, p, axis, limit, step=STEP_UM, bounds=None):
     return None, None
 
 
-def free_near(K, p, limit=1500.0, step=4.32):
+def free_near(K, p, limit=1500.0, step=4.32, accept=None):
     """nearest free point to p in any direction (Manhattan rings), <= limit; (None, None) if none."""
-    if not hitf(K, p):
+    if not hitf(K, p) and (accept is None or accept(p)):
         return p, 0.0
     r = 1
     while r * step <= limit:
@@ -727,7 +727,7 @@ def free_near(K, p, limit=1500.0, step=4.32):
         for dx in range(-r, r + 1):
             for dy in {r - abs(dx), -(r - abs(dx))}:
                 q = (p[0] + dx * step, p[1] + dy * step)
-                if not hitf(K, q):
+                if not hitf(K, q) and (accept is None or accept(q)):
                     best = q
                     break
             if best:
@@ -1976,6 +1976,18 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                 if q is None:
                     q, d = kp, -1.0
                     out["unplaced"].append([tag, "node"])
+            if lg.get("actual_leaf_slack") and isl is None:
+                # A parent can already have moved. Choose a free point satisfying
+                # its real incoming budget as well as the downstream slide bound.
+                ip_ = node_xy(i0, i1, j0, j1)
+                ns_ = max(1, math.ceil((abs(kp[0] - ip_[0]) + abs(kp[1] - ip_[1])) / rep_um - 1e-9))
+                cap_ = ns_ * lg["hop_reach"]
+                if abs(q[0] - here[0]) + abs(q[1] - here[1]) > cap_ + 1e-6:
+                    lim_ = max(0.0, hop_slack(kr, level + 1))
+                    q_, d_ = free_near(K, kp, limit=lim_, step=STEP_UM * 2,
+                                      accept=lambda z: abs(z[0]-here[0]) + abs(z[1]-here[1]) <= cap_ + 1e-6)
+                    if q_ is not None:
+                        q, d = q_, d_
             nb = cell(f"ckm_n{level + 1}_{tag}", q[0], q[1], "node", level=level + 1)
             first = None
             prev = None

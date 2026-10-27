@@ -15,3 +15,10 @@ def test_actual_leaf_positions_allow_node_to_escape_core_without_extra_stages():
  assert not new['unplaced']
  assert len(old['htree'])==len(new['htree'])
  assert all(x['n_seg']==y['n_seg'] for x,y in zip(old['htree'],new['htree']))
+
+
+def test_nearest_free_search_keeps_actual_incoming_reach_bound():
+    # A geometrically free point may lie outside its already placed parent's
+    # reach. Search must keep going, including when the ideal point is free.
+    q, _ = DM.free_near(SimpleNamespace(hit=lambda *a, **k: False), (0., 0.), limit=4., step=1., accept=lambda z: z[0]>=2.)
+    assert q == (2., 0.)
