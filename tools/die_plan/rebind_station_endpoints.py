@@ -206,8 +206,8 @@ def rebind(pd,out,baseline=None,types=None,endpoint_map=None,route=False,reach=4
             if errors:
                 row.update(verdict='FAIL',errors=errors);report['unresolved'].append(dict(type=tn,station=i,errors=errors));report['rows'].append(row);continue
             changed=any(md(ss[k],s[k])>1e-6 for k in ['from_um','to_um']);row['geometry_changed']=changed
-            if not changed:row.update(verdict='PASS',new_cycles=row['old_cycles'],added_cycles=0);report['rows'].append(row);continue
-            selected.append(ss);pending.append((i,row,s));report['changed_stations']+=1
+            if not changed and not route:row.update(verdict='PASS',new_cycles=row['old_cycles'],added_cycles=0);report['rows'].append(row);continue
+            selected.append(ss);pending.append((i,row,s));report['changed_stations']+=int(changed)
         if selected:
             if route:
                 trial=copy.deepcopy(t);trial['internal_stations']=selected;fixed,rr=FS.regenerate(trial,reach=reach)
