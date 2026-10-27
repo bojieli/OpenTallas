@@ -345,6 +345,7 @@ so_timing STD
 
 # F4J: residual DATA hold ECO from exact F4I signoff FF scene (TT checked after RCX).
 set block [ord::get_db_block]
+remove_fillers
 set orig {}; set n0 0
 foreach i [$block getInsts] {
  set name [$i getName]; dict set orig $name 1
@@ -372,7 +373,9 @@ write_db /out/repaired.odb
 write_guides /out/repair.guide
 # Existing clean clock wires and cells remain fixed; only edited data nets reroute.
 detailed_route -output_drc /out/eco_drc.rpt -verbose 1
+filler_placement {FILLERxp5_ASAP7_75t_R FILLER_ASAP7_75t_R}
 global_connect
+check_antennas -report_file /out/antenna.rpt
 extract_parasitics -ext_model_file /OpenROAD-flow-scripts/flow/platforms/asap7/rcx_patterns.rules
 write_spef /out/6_final.spef
 write_db /out/6_final.odb
