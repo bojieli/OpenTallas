@@ -907,8 +907,8 @@ def main():
     srcs = []
     files = list(cj["files"])
     if a.hr_face_ports:
-        if not mod.startswith("qkd_hr_"):
-            raise SystemExit("--hr-face-ports only applies to qkd_hr_* cores")
+        if not (mod.startswith("qkd_hr_") or mod == "qkd_kvs_ctl"):
+            raise SystemExit("--hr-face-ports only applies to qkd_hr_* cores and qkd_kvs_ctl")
         fpd = Path(a.hr_face_ports)
         rc = (fpd / "eq_rc.txt").read_text().split()
         if rc != ["post", "rc=0", "mut", "rc=1", "emitted_v", "rc=0"]:
