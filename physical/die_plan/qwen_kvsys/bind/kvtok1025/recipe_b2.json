@@ -15,7 +15,8 @@
  "files": [
   "physical/die_plan/qwen_kvsys/bind/models/kv_phy_slices.sv",
   "physical/die_plan/qwen_kvsys/bind/inputs/kv_bound_rtl6/kv_hard_models.sv",
-  "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_bb.v",
+  "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_line.sv",
+  "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv",
   "physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy/ot_qfd_serdes_112g_x12_phy_bb.v",
   "/srv/opentallas-scratch2/claude/codex-kv45/asap7_cells/asap7sc7p5t_AO_RVT_TT_201020.v",
   "/srv/opentallas-scratch2/claude/codex-kv45/asap7_cells/asap7sc7p5t_INVBUF_RVT_TT_201020.v",
@@ -34,7 +35,8 @@
   "physical/die_plan/qwen_kvsys/bind/kv45/qkd_astk_ctl_s_g0.sv"
  ],
  "prefer": [
-  "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_bb.v",
+  "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_line.sv",
+  "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv",
   "physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy/ot_qfd_serdes_112g_x12_phy_bb.v",
   "rtl/hdc/nearhbm/qkd_ahub_static_dw.sv",
   "rtl/lib/face_land/qkd_kvs_attn_fl_r17.sv",
@@ -4537,5 +4539,6 @@
   "kv3_sys_c"
  ],
  "pack_by_sink": true,
- "type_canon": true
+ "type_canon": true,
+ "ucie_line_view_note": "TOK-SCHED 10-25: the plan binds ucie_rom die line pins (link_*/far_*) as bump ports; the FDI-only _bb.v cannot elaborate them, so verify/lint/sim use the functional line view (LAT5/UP16 model)"
 }

@@ -32,7 +32,10 @@ VERIFY_RULES = {
     ],
     "reducers": [{"module": "ot_dp_or", "out": "y"}, {"module": "ot_dp_and", "out": "y", "op": "and"}],
     "sources": [{"module": "ot_reset_sync|ot_dp_rsync_s[23]", "kind": "reset", "outputs": {"sync_rst_n": "low"},
-                 "drop_in": ["clk", "async_rst_n"]}],
+                 "drop_in": ["clk", "async_rst_n"]},
+                # POR seam (1fc02fae9): the PLL-lock-qualified root release u_rst_lockq IS the die reset root that the
+                # wavefront carries (d = root synchroniser, locked = PLL lock; neither is a functional source)
+                {"module": "ot_dp_lockq", "kind": "reset", "outputs": {"q": "low"}, "drop_in": ["clk", "d", "locked"]}],
 }
 
 
@@ -141,6 +144,12 @@ def cmd_verify(a):
         if pn.startswith("clk_"):
             clk_top[pn] = pn[4:]
 
+    por_port = "rst_n"
+    if raw.get("reset", {}).get("release") == "wavefront":
+        import schema
+        import reset_tree as RT
+        por_port = RT.die_reset_port(schema.Plan(raw, Path(a.plan)))   # the declared die reset pad's port, else rst_n
+
     def gdesc(s):
         k = s[0]
         if k == "pin":
@@ -150,6 +159,8 @@ def cmd_verify(a):
         if k == "top":
             if s[1] in clk_top:
                 return ["clk", clk_top[s[1]]]
+            if raw.get("reset", {}).get("release") == "wavefront" and s[1] == por_port and por_port != "rst_n":
+                return ["rootpad"]  # declared die reset pad: only analog loads (+ the dropped root sync) may see it
             if raw.get("reset", {}).get("release") == "wavefront" and s[1] == "rst_n":
                 return ["rst", "low"]  # native hard-partition delivered reset; timing checked by offsets
             return ["top", s[1]]
@@ -226,7 +237,8 @@ def cmd_verify(a):
     from bind import plan_base
     ab0 = raw["asbuilt"]
     base = plan_base(a.plan, raw)
-    idx = E.module_index(ab0.get("rtl_roots", ["rtl"]), ab0.get("files", []), base)
+    # bind-generated leaf masters (bind_compose composed hard cores, ...) live outside the RTL roots: index them too
+    idx = E.module_index(ab0.get("rtl_roots", ["rtl"]), ab0.get("files", []) + rep.get("extra_lib", []), base)
     prefer = [str(Path(base) / f) if not Path(f).is_absolute() else f for f in ab0.get("prefer", [])]
     leafm = sorted({c.module for ci, c in enumerate(F.cells) if G.kind[ci] == "leaf"})
     prefer += rep.get("extra_lib", [])
