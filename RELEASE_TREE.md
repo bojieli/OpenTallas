@@ -6,10 +6,8 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
 - Line form: `- [ ] ID task · OWNER · STATUS · current fact → DEP.ID` ; "→ X" means this item waits on X (each → is a link).
 - Gate ids per die are PFX.INFRA / PFX.GRT / PFX.CLK / PFX.BIND / PFX.STA.
-- DIE METHOD = METHODOLOGY s12 v4.9 (OWNER 10-26, frozen; change only on measured failure + owner decision): 12.7 MASTER PLAN FIRST per die (census -> corridors <=0.6 -> bays <=405 um every path/layer -> M7 entry pins -> worst-case PG, PG-shielded clock, islands clock/reset only, one core latency) + static plan gates incl. analytic predictor BEFORE any block build; kits carry a plan slice. 12.8 clock by construction: plan-defined centre clock entry per core, 250 ps TT, structured core trees; NO early taps / post-measurement trims / clock ECOs / mesh-node CPPR (plan-computed per-tap sizing OK). Freeze = GRT0 incl clock (>=50 it) + DIE STA with the real clock on related pairs (TT setup, FF hold; CPPR to last tree node); 80 ps skew = design target only. v4.6-4.9: MSCTS H-tree->ONE continuous mesh (signed mesh = CPPR point)->short local trees; clock OCV = depth/distance table (draft, owner review); droop shared (clock charged differential only); data hold buffers allowed. 12.9: one owner per die plan/clock (lanes/OWNERS-DIE.md); gate numbers via NUMBER-CHECK.
-- [ ] OWNER: CLK-AOCV table + distance gradient (rec. 0.21%/mm interim) · claude/clk-aocv-1026@b0c11ff91e · NUMBER-CHECK-AOCV running
-- [ ] OWNER: S81 rank-order row export slots w/ B=80 fallback (~18% ledger while used) · S81-ROWX
-- [ ] OWNER: early tap for legacy cores in S81 fallback only? (12.8 bans; COORD ruled land/rebuild) · FALLBACK-S81-2
+- DIE METHOD = METHODOLOGY s12 v5.1 (v5.0: early taps = macro insertion balancing, AOCV 0.21%/mm gates; v5.1: trims/useful skew/pads sparse <=~5% + CLOCK-RESIDUAL ledger after structural fix; 5%/15% cost = targets) (OWNER 10-26, frozen; change only on measured failure + owner decision): 12.7 MASTER PLAN FIRST per die (census -> corridors <=0.6 -> bays <=405 um every path/layer -> M7 entry pins -> worst-case PG, PG-shielded clock, islands clock/reset only, one core latency) + static plan gates incl. analytic predictor BEFORE any block build; kits carry a plan slice. 12.8 clock by construction: plan-defined centre clock entry per core, 250 ps TT, structured core trees; NO early taps / post-measurement trims / clock ECOs / mesh-node CPPR (plan-computed per-tap sizing OK). Freeze = GRT0 incl clock (>=50 it) + DIE STA with the real clock on related pairs (TT setup, FF hold; CPPR to last tree node); 80 ps skew = design target only. v4.6-4.9: MSCTS H-tree->ONE continuous mesh (signed mesh = CPPR point)->short local trees; clock OCV = depth/distance table (draft, owner review); droop shared (clock charged differential only); data hold buffers allowed. 12.9: one owner per die plan/clock (lanes/OWNERS-DIE.md); gate numbers via NUMBER-CHECK.
+- [ ] OWNER: HBM scope -- single-user this release vs multi-user done once (owner leans once) · HBM-MU-SIZE RUNNING (area/cut/timing vs reticle ~858 mm2; B2n ~504)
 - Release gate = die STA on real views + token pass.
 - Status words: RUNNING WAITS TODO NEW COORD OWNER FAIL PASS FROZEN BLOCKED NOT RUN.
 
@@ -56,7 +54,7 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 - [ ] S81.STA Die STA on real views · DIE-PROTO · WAITS · → S81.GRT, → S81.CLK, → S81.TILES
   - [ ] S81.TILES Tile sign-offs · PATH-S81 / CORES-KITS · RUNNING · 4/171 types, 16/52 hard cores signed
 
-## DIE hbm · HBM B2n (next release) · plan D-HBM-B1 (5fa3c6e64838)
+## DIE hbm · HBM B2n (single-user in release; MU scope at OWNER) · plan D-HBM-B1 (5fa3c6e64838)
 - [ ] HBM.B1 Plan event (native b1n4 39b34ade; G0C 36 core-face open) + 12.7 master plan (corridors/bays/M7 entry/PG/shield gates) + CORE-LAT strips + 250 ps zero-early · PATH-HBM · RUNNING · hub cut FAIL: R8 distributed + R9 replicated-segment (S=2 x 2.14/y 1.32, UNCHECKED); banks k=4/4 PASS 0.50-0.55 → R10 top-down hub face pins over consumers + equal-lane segments + W/E serial chain
 - [ ] HBM.GRT Die GRT0 · PATH-HBM · PASS DIAGNOSTIC incl clock (r7 combo 50 it TT/FF overflow 0, native plan) → HBM.B1 freeze
 - [ ] HBM.CLK Mesh clock + skew under 12.8 · CLOCK-128 · FAIL/INVALID · r7 980/800 used early offsets; r8 build legal (183 island drivers, straps shielded) → IF.CLK128, → HBM-CORE-LAT-R2 (19 types >290 ps restructure)
@@ -66,7 +64,7 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 ## TOKEN · Token-pass gate per design
 - [ ] TOK.DS DeepSeek ROM token pass (S81 array + head) · TOK-DS-6 · RUNNING · L14 27/57/8; idx scan 3-die shard; S81 all-rows MTP 3,655 tok/s > 3,000 floor (AR 1,260), 17.0% ledger ACCEPTED (owner 10-26) → S81.BIND, → HEAD.BIND
 - [ ] TOK.QW Qwen ROM token pass (compute + KV) · TOK · RUNNING · QK vehicle on KV rebased bind; prices landed seams + FE stations → KV.BIND, → QC.INFRA
-- [ ] TOK.HDS / TOK.HQ HBM token passes (next release) · TOK · RUNNING · SU programme-path fault (pgslice lw, side_pipe rsq) being root-caused
+- [ ] TOK.HDS / TOK.HQ HBM token passes (single-user in release) · TOK · RUNNING · SU programme-path fault (pgslice lw, side_pipe rsq) being root-caused
 - [ ] TOK.FREEZE Final evidence run at freeze · COORD · WAITS · → TOK.DS, → TOK.QW
 - [ ] MU.CURVE Latency-throughput curve vs A100 80GB · COORD · WAITS · → TOK.FREEZE
 
