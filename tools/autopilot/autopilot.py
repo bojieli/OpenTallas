@@ -2005,7 +2005,7 @@ def write_loop_gaps(st, rows, geom_text):
     gaps += LG.gaps_review(trows, lane_texts, geom_text, now)
     gaps += LG.gaps_ready(read_coord("lanes/COORD-REVIEW-QUEUE.md"), now)
     gaps += LG.gaps_geom_ambiguous(geom_text, geom_groups(rows), now)
-    gaps += AG.gaps(st, now)
+    gaps += AG.gaps(st, now, geom_text)
     cleared = LG.geom_fail_cleared(read_coord("autopilot/resolved.tsv"), read_coord("lanes/COORD-REVIEW-QUEUE.md"))
     for j in jobs:                                     # oldest-first render; keeps the line while the run is live
         if j["id"] in cleared and (cleared[j["id"]] is None or cleared[j["id"]] >= (j.get("geom_fail_alert_t") or 0)
