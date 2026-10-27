@@ -57,6 +57,10 @@ def cut(source, lane, module=None, memory_alignment=None):
     if memory_alignment is not None and alignment != memory_alignment:
         raise ValueError(f'lane {lane}: bound MEMORY_ALIGNMENT={alignment}, required {memory_alignment}; regenerate the canonical bind')
     body = '\n'.join(m['body'] for m in chosen)
+    reset_args=re.findall(r'\.rst_n\(([^()]+)\)',body)
+    if len(reset_args)!=5 or len(set(reset_args))!=1 or not re.fullmatch(r'rst_n(?:_t\d+)?',reset_args[0]):
+        raise ValueError('five-leaf group requires one exact delivered reset net')
+    reset_source=reset_args[0]
     selected = refs(body, widths)
     remainder = source
     for m in reversed(chosen):
@@ -64,14 +68,14 @@ def cut(source, lane, module=None, memory_alignment=None):
     # Declarations are not uses. This census is of actual instance/assign references.
     outside = refs(WIRE.sub('', remainder), widths)
     owned = {n for n in selected if re.match(rf'w_u_(?:exp|rsq|head|rcp|lrly){lane}_', n)}
-    inputs = {n: bits for n, bits in selected.items() if n not in owned and n not in ('clk', 'rst_n')}
+    inputs = {n: bits for n, bits in selected.items() if n not in owned and n not in ('clk', 'rst_n', reset_source)}
     outputs = {n: selected[n] & outside.get(n, set()) for n in owned}
     outputs = {n: bits for n, bits in outputs.items() if bits}
     def ordered(mapping):
         return [(n, b, widths[n]) for n in sorted(mapping) for b in sorted(mapping[n])]
     ib, ob = ordered(inputs), ordered(outputs)
     decls = ['    wire ' + (f'[{widths[n]-1}:0] ' if widths[n] > 1 else '') + n + ';'
-             for n in sorted(selected) if n not in ('clk', 'rst_n')]
+             for n in sorted(selected) if n not in ('clk', 'rst_n', reset_source)]
     # The bit assignments are wiring only, and never tie an unused bit or add a register.
     assigns = [f'    assign {n}[{b}] = c_i[{i}];' if w > 1 else f'    assign {n} = c_i[{i}];'
                for i, (n, b, w) in enumerate(ib)]
@@ -80,15 +84,15 @@ def cut(source, lane, module=None, memory_alignment=None):
     rtl = '\n'.join(['// Generated exact grouping of five bind.py leaves; zero added cycles.', '`default_nettype none',
                      f'module {module} (input wire clk, input wire rst_n,',
                      f'    input wire [{len(ib)-1}:0] c_i, output wire [{len(ob)-1}:0] c_o);',
-                     *decls, *assigns, body, 'endmodule', '`default_nettype wire', ''])
-    replacement = f'    {module} u_lane{lane} (.clk(clk), .rst_n(rst_n), .c_i({concat(ib)}), .c_o({concat(ob)}));\n'
+                     *decls, *assigns, re.sub(r'\b'+re.escape(reset_source)+r'\b','rst_n',body), 'endmodule', '`default_nettype wire', ''])
+    replacement = f'    {module} u_lane{lane} (.clk(clk), .rst_n({reset_source}), .c_i({concat(ib)}), .c_o({concat(ob)}));\n'
     frame = remainder.replace('endmodule', replacement + 'endmodule')
     # Remove only wires fully private to the cut; external wires retain their original declaration.
     private = owned - outputs.keys()
     frame = WIRE.sub(lambda m: '' if m[2] in private else m[0], frame)
     report = dict(schema='opentallas.qc_su_lane_cut.v1', lane=lane, module=module,
                   source_sha256=hashlib.sha256(source.encode()).hexdigest(), added_cycles=0,
-                  memory_alignment=alignment,
+                  memory_alignment=alignment, reset_source=reset_source,
                   leaves=[dict(instance=m['inst'], module=m['module']) for m in chosen],
                   inputs=[dict(name=n, bit=b) for n,b,_ in ib],
                   outputs=[dict(name=n, bit=b) for n,b,_ in ob],

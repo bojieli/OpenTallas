@@ -32,3 +32,19 @@ def test_explicit_local_leaf_mapping_is_exact():
     assert set(type_parent_id_straps({'contents':[d]}))=={'u_t[0][0]'}
     d['parent_id_leaf']=''
     with pytest.raises(ValueError):type_parent_id_straps({'contents':[d]})
+
+
+def test_partial_bound_id_preserves_internal_low_bits_and_rejects_unknown():
+    from tools.die_plan.parent_id_straps import validate_bound_id_bits
+    # Native CB: the upper twelve ID bits are literals; low four remain
+    # connected to the original tile-local tie cells, not this parameter.
+    bits={i:[str((0x180>>i)&1),str((0x2b0>>i)&1)] for i in range(4,16)}
+    assert validate_bound_id_bits(bits,16,0x180)==0x180
+    with pytest.raises(ValueError):validate_bound_id_bits(bits,16,0x181)
+    bits[15][1]='x'
+    with pytest.raises(ValueError):validate_bound_id_bits(bits,16,0x180)
+
+
+def test_sidx_width_is_exact():
+    assert validate_parent_id_straps({'parent_id_straps':{'sidx':dict(width=3,value=7)}},{'sidx':3})
+    with pytest.raises(ValueError):validate_parent_id_straps({'parent_id_straps':{'sidx':dict(width=4,value=7)}})

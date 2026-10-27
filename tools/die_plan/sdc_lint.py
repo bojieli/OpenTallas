@@ -793,7 +793,7 @@ def kit_context(P, tn):
                 insertion_tol_ps=float(P.clock["insertion_tol_ps"]), clock_ports=cks, inputs=ins, outputs=outs,
                 unc_setup_ps=POLICY_SETUP_PS, unc_hold_ps=POLICY_HOLD_PS,
                 time_unit_ps=gen_phys.LIB_TIME_UNIT_PS, io_floor_ps=floor, port_latency_ps=plat,
-                port_period_mult=edge, **_seam_ctx(P), **_io_hold_ctx(P, tn),
+                port_period_mult=edge, **_seam_ctx(P, tn), **_io_hold_ctx(P, tn),
                 **({"tap_window_ps": gen_phys.tap_window_ps(P)} if gen_phys.tap_window_ps(P) else {}),
                 **({"root_async_reset": True} if gen_phys.root_async_reset(P, tn) else {}),
                 **({"straps": ids} if ids else {}), **_landing_ctx(P, tn))
@@ -814,13 +814,16 @@ def _io_hold_ctx(P, tn):
     return dict(hold_in_min_ports_ps={p: d["in_min_ps"] for p, d in sorted(m.items())}) if m else {}
 
 
-def _seam_ctx(P):
-    """opt-in seam hold contract fields of the lint context (none for the legacy contract: byte-identical json)."""
+def _seam_ctx(P, tn=None):
+    """Keep the sender's checked output-min consistent in lint and sign-off."""
     import gen_phys
-    if not P.clock.get("seam_hold"):
+    checked = gen_phys.out_hold_check_ps(P, tn) if tn is not None else None
+    if not P.clock.get("seam_hold") and checked is None:
         return {}
     sh = gen_phys.seam_hold(P)
-    return dict(hold_in_min_ps=sh["in_min_ps"], hold_out_min_ps=sh["out_min_ps"], seam_hold_ps=sh["seam_ps"])
+    out_min = gen_phys.hold_out_min_ps(P, tn)
+    return dict(hold_in_min_ps=sh["in_min_ps"], hold_out_min_ps=out_min,
+                seam_hold_ps=sh["seam_ps"] if checked is None else round(-out_min-sh["in_min_ps"], 6))
 
 
 def lint_kit_files(kitdir, liberties=()):
