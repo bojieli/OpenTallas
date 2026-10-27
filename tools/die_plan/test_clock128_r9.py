@@ -28,3 +28,9 @@ def test_missing_or_illegal_sites_fail():
         D.apply_lattice_cell_sites(copy.deepcopy(cells),[],[],{"a":dict(origin_um=[.001,0],part="p")},lambda xy:("p",None))
     with pytest.raises(C.PlanError,match="cell_site_host"):
         D.apply_lattice_cell_sites(copy.deepcopy(cells),[],[],{"a":dict(origin_um=[0,0],part="p")},lambda xy:(None,"on_hard_keepout"))
+
+
+def test_cell_body_cannot_cross_partition_seam():
+    with pytest.raises(C.PlanError,match="cell_site_seam"):
+        D.apply_lattice_cell_sites({"a":dict(x=0,y=0)},[],[],
+            {"a":dict(origin_um=[0,0],part="p")},lambda xy:("p",None),{"p":(0,0,1,1)})

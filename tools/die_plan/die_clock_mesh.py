@@ -1354,7 +1354,7 @@ def write_verilog(cells, nets, ports, path):
 LAT_TOL_UM = 0.01            # plan coordinates are r3-rounded: equal-cut / midpoint checks to 0.01 um
 
 
-def apply_lattice_cell_sites(cells, nets, taps, declared, host):
+def apply_lattice_cell_sites(cells, nets, taps, declared, host, part_rects=None):
     """Consume plan-declared physical cell origins after the ideal balanced tree is constructed.
 
     Sites are lower-left row coordinates, not clock delay corrections. Every generated
@@ -1373,6 +1373,10 @@ def apply_lattice_cell_sites(cells, nets, taps, declared, host):
         part, why = host((x + BUF_W/2, y + ROW_Y/2))
         if why or part != site.get("part"):
             errors.append(dict(kind="cell_site_host", name=name, detail=f"{part}/{why} vs {site.get('part')}"))
+        if part_rects is not None and part in part_rects:
+            r = part_rects[part]
+            if not (r[0] <= x and r[1] <= y and x + BUF_W <= r[2] and y + ROW_Y <= r[3]):
+                errors.append(dict(kind="cell_site_seam", name=name, detail=f"cell body leaves host {part}"))
         v.update(x=x, y=y)
     txy = {"port:"+t["port"]: t["xy"] for t in taps}
     for n in nets:
@@ -1573,7 +1577,7 @@ def build_lattice(P, dtp, plan_sha, rep_um=450.0, ndr="4w", pg_shapes=None, trac
                          detail=f"{n_t} partition clock taps: the plan declares no distribution (regional mesh drivers / "
                                 f"sub-tree islands) below the {len(lv)} lattice leaves; MASTER-PLAN must declare it"))
     if lat.get("cell_sites") is not None:
-        apply_lattice_cell_sites(cells, nets, tap_rows, lat["cell_sites"], host)
+        apply_lattice_cell_sites(cells, nets, tap_rows, lat["cell_sites"], host, dict(parts))
         out["meta"]["lattice_tree"]["cell_sites"] = dict(
             count=len(cells), mirrored=sum(c.get("orient") == "MY" for c in cells.values()),
             source="lattice.cell_sites (lower-left origins, per-cell host)",
