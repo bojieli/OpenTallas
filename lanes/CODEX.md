@@ -1395,3 +1395,5 @@ CODEX14:02 R29notch child READYbb194f129; NC3actual24same-net20nm gaps repaired4
 
 ### HBM fresh takeover 2026-10-27 14:08 PDT
 Alllanesreclaimed via plan/cores/LEC children. FreshC15G0PASS/G0C20 (C14was200),quarterrestore/nativegraph/47pin6/12clockstillopen. NativefulltopemitternowCoverageparentowner,TOKrealbootstrap/LECcompositionreview; old142B1a2stopdiagnosticnotC15truth. Corescollectedaq_r12t1056FAIL→existingadditiverevert05a nowmain;EP50FAIL513723,Q3GP.989lotfailure,topk+steadyABC99.9CPUactive no kills/dups. Nativequartercapacity NW30/30NE26/26fitsunchangedhubMODELonly; actual405/clock/PGpending. NativeDELIVEREDresetbd6dmergedRM65,actual2clockadaptereffeREADYroot. PG-ACTIVITY-2ownedparentabove; no10amoldtrialassumedlive.
+
+CODEX14:10 QK/QW: B48BOOTPASS butnativecalendarFAIL explicitly split; existingmutantfault4037live. READYa1f75ff088 source-law2WEfixreservedq6,0tokencycles. ActualHOSTprepareprogramme childREADY1fba735f2 (37checks+2mutants/16tests), externalHOSTpublicationdate remains absent; GENexporter failclosedfix inprogress. HEAD bootproductionauthority remains priorOWNER?; physicalprovider ownerHEADteam.

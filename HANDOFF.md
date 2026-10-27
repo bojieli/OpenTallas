@@ -1484,3 +1484,5 @@ CODEX:14:07 HEAD current2/2coresSIGNED+EQ collected; AclkfreezealsoEQ30203pendin
 CODEX:14:07 RM65 main00d9d370a4==origin/main qualifiedclockfreeze+freshdumpguard, restrictedS81multiroot/model, HBMdeliveredreset/default0 and face-clockguard.17focusedPASS; BF/halfcycle/QCwarmsegmentout, no physicaladoptionclaim.
 
 CODEX: 2026-10-27 14:07 PDT HEAD native40FT real partition PASS a83b322b56:128rows5120dims/golden21946,8429cycles/9003lockstep+180420FT checks, row/FT controls caught,0cycles; old264hier generation PASS305s/13.7GB. No fullHEAD token/images/productionSTART claim.
+
+CODEX: 2026-10-27 14:10 PDT QK existingB48BOOTPASS7404/14/setup37981; nativecalendarFAIL27998 separatelyretained. Exactcurrentproducer/R8minreplay provesWE−1STALE, equalPASS; a1f75ff088 precise2WE+1bootedge/0tokencyclesREADYq6, existingframe-mutantstilllive.
