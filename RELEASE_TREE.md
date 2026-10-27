@@ -21,8 +21,8 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 ## DIE qwen_compute · Qwen compute · rev UNFROZEN 54a1aeb5 · PROTOTYPE of infra-first
 - [ ] QC.PATH CRITICAL PATH end to end (12.9b): 12.7b plan gates -> core rebuilds (12.8) -> die clock (12.8) -> GRT0 -> skew gate -> die STA · INFRA-FIRST · RUNNING · dated ETA checklist in lanes/INFRA-FIRST.md
 - [ ] QC.INFRA One QC plan event: infra-first PG/clock/reset + batch 2 (STM ROMs, SRAM, DEAD-FAULT) + D-QC-FE-REACH stations (all FE variants) + COLLFTM-CTL + CB ID straps + SCROOT + vmr_s6kc · INFRA-FIRST + PATH-QC · RUNNING · PENDING-DELTA D-INFRA-FIRST-QC holds all 68 type routes
-- [ ] QC.CLK Clock 12.8 (gate = related-pair STA) · INFRA-FIRST-QC-R12 · RUNNING · R10 legal mesh STA TT +563.51 / FF hold -94.25 (997 pairs) -> HB4 2.73M/0.279 mm2 fits; R9 4-row feed rejected; R12 builds mesh3 top tree w/ R9 tools (16W NDR, per-type lattice)
-- [ ] QC.SU 4 SU core types rebuilt to 250+-20 · QC-SU-F4G · RUNNING · F4F RP1 SIGNED OFF 21:5x (TT +234.29/FF +6.37/LEC 3703, RCX 247.5/196.0, window 33.8 = target miss, accepted -> die STA); VMR tail live; F4G trunk spacing + tree-first route
+- [ ] QC.CLK Clock 12.8 (gate = related-pair STA) · INFRA-FIRST-QC-R14 · RUNNING · R13 74/74 types identical, nominal 48.5/39.6, STA TT +537 / kit hold +6.2 (UNCHECKED); dry build 3147 err (M7 risers) -> trunks on M8 tracks + slot rows; centre channel APPROVED, centre row split · ETA freeze est 10-28..29
+- [ ] QC.SU 4 SU core types · QC-SU-F4G · DONE-RP1 · F4G RP1 ADOPTED (TT +236.87/FF +5.92/LEC 3703, window 23.2/20.3 CHECKED); F4F = fallback; F4G VMR live (epyc2 unit 714733)
 - [ ] QC.GRT Die GRT0 incl. clock on the infra-first plan · INFRA-FIRST · WAITS · → QC.INFRA
 - [ ] QC.BIND Strict bind on the QC plan event (wavefront reset/START, CB16 phase classes) · PATH-QC · WAITS · → QC.INFRA
 - [ ] QC.STA Die STA on real views · DIE-PROTO · WAITS · → QC.GRT, → QC.TILES
@@ -30,7 +30,7 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 
 ## DIE s81_head · S81 head die · rev UNFROZEN d7b8d1eb · after QC
 - [ ] HEAD.INFRA Infra-first plan event (+ HEAD8 batch 187b63494b if approved) · INFRA-FIRST · WAITS · PENDING-DELTA D-INFRA-FIRST-HEAD holds all 16 type routes → IF.TOOL
-- [ ] HEAD.CLK elemA/elemB · HEAD-CORE-R11 · RUNNING · GRT0, in band (B 252.6/197.0); LEC 30144/27595 EQ but KEEP FAIL (8 dead carry copies -> RTL fix); hold2 reruns ~23:20 then route
+- [ ] HEAD.CLK elemA/elemB · HEAD-CORE-R11 -> R12 · RUNNING · LEC r11 reruns (B ~23:15 epyc2, A ~00:00 intel1) + hold2 -> route; burst FIFO HEAD-RTL-4 ce0713f99f READY after portbind canon FAIL/cand PASS
 - [ ] HEAD.GRT Die GRT0 incl. clock on the infra-first plan · INFRA-FIRST · WAITS · old d7b8d1eb signal GRT0 no longer counts → HEAD.INFRA
 - [ ] HEAD.BIND Whole-head as-built bind · CODEX / PATH-S81 · WAITS · source d0eb3d3d01; host/mesh/rank-row contract = spec item (no owner input)
 - [ ] HEAD.STA Die STA on real views · DIE-PROTO · WAITS · → HEAD.CLK, → HEAD.TILES
@@ -46,7 +46,7 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 
 ## DIE s81 · S81 (DeepSeek ROM layer die) · rev main · B2 batch
 - [ ] S81.B2 One plan event D-S81-B2: A25 + stations v4 + PHY pins + leaf pins + eng SRAM r0c0 + FT alignment/corridors + D-S81-PHY + infra-first · PATH-S81 · RUNNING · gate: lateral jog <5M bit-um → GRT0 → skew
-- [ ] S81.GRT Die GRT0 · PATH-S81-PD4 · RUNNING · g0fix c6b5e29a 50-it = 2.24M overflow (14 ft_phy chains through svc seams, PD3); PD4 restores B5 channel lanes + regions (ii), then GRT incl clock >=50 it
+- [ ] S81.GRT Die GRT0 incl clock · PATH-S81-PD5 · RUNNING · PD4 GRT(A) clock-incl due ~23:30-23:50; 6 PD4-only G0 cuts FAIL-IN-PLAN being fixed; GRT(B) signal-only = diagnostic · ETA freeze est 10-29..31
 - [ ] S81.PHY 14 SerDes windows · PATH-S81 · RUNNING · zero-area fit 14/14; gunit R180 re-plan PASS-COND (GEOM-17); bk_sel option B re-cut 864x483.84 APPROVED (rebuild quarter tile) → S81.B2
 - [ ] S81.CLK Clock under 12.8 · PATH-S81 · NOT RUN · replace early taps (gunit u_l5 520, bk_sel u_c 430) with centre entries; cores → S81-CORE-LAT → IF.CLK128
 - [ ] S81.BIND Strict bind on main · TOK-DS · PASS on 877cfdeb2 (0 tied, 10,352 straps) → re-run after S81.B2
@@ -55,7 +55,7 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 
 ## DIE hbm · HBM UNIFIED SU/MTP/MU one design (OWNER 10-26 23:1x; SU latency qualified first) · plan D-HBM-B1 (5fa3c6e64838)
 - [ ] HBM.B1 Plan event (native b1n4 39b34ade; G0C 36 core-face open) + 12.7 master plan (corridors/bays/M7 entry/PG/shield gates) + CORE-LAT strips + 250 ps zero-early · PATH-HBM · RUNNING · hub cut FAIL: R8 distributed + R9 replicated-segment (S=2 x 2.14/y 1.32, UNCHECKED); banks k=4/4 PASS 0.50-0.55 → R10 top-down hub face pins over consumers + equal-lane segments + W/E serial chain
-- [ ] HBM.GRT Die GRT0 incl clock · PATH-HBM-R15 · RUNNING · R14 taps fixed (0 stale/0 untapped) but S2/F2 chains FAILED: clock span 1048>750 um plan error -> structural fix + rerun
+- [ ] HBM.GRT Die GRT0 incl clock · PATH-HBM-R15 + HBM-UNIFIED-1 · RUNNING · pin tables + drop_inside PHY fixed (max edge 732.8 um); S2/F2 GRT live; lineage vs unified a810b810f being checked · ETA freeze est >=11-01 (low confidence)
 - [ ] HBM.CLK Mesh clock + skew under 12.8 · CLOCK-128 · FAIL/INVALID · r7 980/800 used early offsets; r8 build legal (183 island drivers, straps shielded) → IF.CLK128, → HBM-CORE-LAT-R2 (19 types >290 ps restructure)
 - [ ] HBM.BIND Native B2 one-clock bind · PATH-HBM / HC-NATIVE · RUNNING · 98 unread outputs classified (svg redundant views, sm.request/expected check w/o comparator, xl y, ordinals); no open inputs
 - [ ] HBM.STA Die STA on real views · DIE-PROTO · WAITS · → HBM.GRT
@@ -64,6 +64,7 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 - [ ] TOK.DS DeepSeek ROM token pass (S81 array + head) · TOK-DS-6 · RUNNING · L14 27/57/8; idx scan 3-die shard; S81 all-rows MTP 3,655 tok/s > 3,000 floor (AR 1,260), 17.0% ledger ACCEPTED (owner 10-26) → S81.BIND, → HEAD.BIND
 - [ ] TOK.QW Qwen ROM token pass (compute + KV) · TOK · RUNNING · QK vehicle on KV rebased bind; prices landed seams + FE stations → KV.BIND, → QC.INFRA
 - [ ] TOK.HDS / TOK.HQ HBM token passes (unified SU/MTP/MU, SU latency first) · TOK · RUNNING · SU programme-path fault (pgslice lw, side_pipe rsq) being root-caused
+- [ ] TOK.E2E End-to-end token pass: NOT PASSED on any of 5 dies (components only; QC whole-die waits QC.INFRA, KV B48 boot verdict ~01:00-03:00, S81 L14 10 GAP ops, HEAD full G5, HBM no RTL token replay) · TOK lanes · RUNNING
 - [ ] TOK.FREEZE Final evidence run at freeze · COORD · WAITS · → TOK.DS, → TOK.QW
 - [ ] MU.CURVE Latency-throughput curve vs A100 80GB · COORD · WAITS · → TOK.FREEZE
 
