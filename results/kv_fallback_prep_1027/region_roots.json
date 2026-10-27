@@ -1,0 +1,2178 @@
+[
+ {
+  "region": "hard_phy_EN_7",
+  "parts": [
+   "hroot_EN",
+   "pc_EN_0",
+   "pc_EN_1",
+   "pc_EN_2",
+   "pc_EN_3",
+   "pc_EN_4",
+   "pc_EN_5",
+   "pc_EN_6",
+   "pc_EN_7",
+   "phy_EN_0",
+   "phy_EN_1",
+   "phy_EN_2",
+   "phy_EN_3",
+   "phy_EN_4",
+   "phy_EN_5",
+   "phy_EN_6",
+   "phy_EN_7"
+  ],
+  "bounds_um": [
+   9175.68,
+   13003.2,
+   11076.48,
+   26006.399999999998
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "pc_EN_4",
+   "port": "clk_t3",
+   "layer": "M7",
+   "xy_um": [
+    10040.16,
+    19353.568
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hard_phy_ES_7",
+  "parts": [
+   "hroot_ES",
+   "pc_ES_0",
+   "pc_ES_1",
+   "pc_ES_2",
+   "pc_ES_3",
+   "pc_ES_4",
+   "pc_ES_5",
+   "pc_ES_6",
+   "pc_ES_7",
+   "phy_ES_0",
+   "phy_ES_1",
+   "phy_ES_2",
+   "phy_ES_3",
+   "phy_ES_4",
+   "phy_ES_5",
+   "phy_ES_6",
+   "phy_ES_7"
+  ],
+  "bounds_um": [
+   9175.68,
+   0.0,
+   11076.48,
+   13003.2
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "pc_ES_4",
+   "port": "clk_t3",
+   "layer": "M7",
+   "xy_um": [
+    10040.16,
+    6652.832
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hard_phy_WN_7",
+  "parts": [
+   "hroot_WN",
+   "pc_WN_0",
+   "pc_WN_1",
+   "pc_WN_2",
+   "pc_WN_3",
+   "pc_WN_4",
+   "pc_WN_5",
+   "pc_WN_6",
+   "pc_WN_7",
+   "phy_WN_0",
+   "phy_WN_1",
+   "phy_WN_2",
+   "phy_WN_3",
+   "phy_WN_4",
+   "phy_WN_5",
+   "phy_WN_6",
+   "phy_WN_7"
+  ],
+  "bounds_um": [
+   0.0,
+   13003.2,
+   1900.8,
+   26006.399999999998
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "pc_WN_4",
+   "port": "clk_t3",
+   "layer": "M7",
+   "xy_um": [
+    1036.32,
+    19353.568
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hard_phy_WS_7",
+  "parts": [
+   "hroot_WS",
+   "pc_WS_0",
+   "pc_WS_1",
+   "pc_WS_2",
+   "pc_WS_3",
+   "pc_WS_4",
+   "pc_WS_5",
+   "pc_WS_6",
+   "pc_WS_7",
+   "phy_WS_0",
+   "phy_WS_1",
+   "phy_WS_2",
+   "phy_WS_3",
+   "phy_WS_4",
+   "phy_WS_5",
+   "phy_WS_6",
+   "phy_WS_7"
+  ],
+  "bounds_um": [
+   0.0,
+   0.0,
+   1900.8,
+   13003.2
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "pc_WS_4",
+   "port": "clk_t3",
+   "layer": "M7",
+   "xy_um": [
+    1036.32,
+    6652.832
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_EN_0",
+  "parts": [
+   "hg_EN_0"
+  ],
+  "bounds_um": [
+   7896.96,
+   24485.76,
+   9175.68,
+   26006.399999999998
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_EN_0",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    8375.968,
+    25436.127999999997
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_EN_1",
+  "parts": [
+   "hg_EN_1"
+  ],
+  "bounds_um": [
+   7896.96,
+   22965.12,
+   9175.68,
+   24485.76
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_EN_1",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    8375.968,
+    23915.487999999998
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_EN_2",
+  "parts": [
+   "hg_EN_2"
+  ],
+  "bounds_um": [
+   7896.96,
+   21444.48,
+   9175.68,
+   22965.12
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_EN_2",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    8375.968,
+    22394.847999999998
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_EN_3",
+  "parts": [
+   "hg_EN_3"
+  ],
+  "bounds_um": [
+   7896.96,
+   19923.84,
+   9175.68,
+   21444.48
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_EN_3",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    8375.968,
+    20874.208
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_EN_4",
+  "parts": [
+   "hg_EN_4"
+  ],
+  "bounds_um": [
+   7896.96,
+   18403.2,
+   9175.68,
+   19923.84
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_EN_4",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    8375.968,
+    19353.568
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_EN_5",
+  "parts": [
+   "hg_EN_5"
+  ],
+  "bounds_um": [
+   7896.96,
+   16882.56,
+   9175.68,
+   18403.2
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_EN_5",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    8375.968,
+    17832.928
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_EN_6",
+  "parts": [
+   "hg_EN_6"
+  ],
+  "bounds_um": [
+   7896.96,
+   15361.92,
+   9175.68,
+   16882.56
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_EN_6",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    8375.968,
+    16312.288
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_EN_7",
+  "parts": [
+   "hg_EN_7"
+  ],
+  "bounds_um": [
+   7896.96,
+   13841.28,
+   9175.68,
+   15361.92
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_EN_7",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    8375.968,
+    14791.648000000001
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_ES_0",
+  "parts": [
+   "hg_ES_0"
+  ],
+  "bounds_um": [
+   7896.96,
+   0.0,
+   9175.68,
+   1520.64
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_ES_0",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    8375.968,
+    570.272
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_ES_1",
+  "parts": [
+   "hg_ES_1"
+  ],
+  "bounds_um": [
+   7896.96,
+   1520.64,
+   9175.68,
+   3041.28
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_ES_1",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    8375.968,
+    2090.9120000000003
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_ES_2",
+  "parts": [
+   "hg_ES_2"
+  ],
+  "bounds_um": [
+   7896.96,
+   3041.28,
+   9175.68,
+   4561.92
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_ES_2",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    8375.968,
+    3611.552
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_ES_3",
+  "parts": [
+   "hg_ES_3"
+  ],
+  "bounds_um": [
+   7896.96,
+   4561.92,
+   9175.68,
+   6082.56
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_ES_3",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    8375.968,
+    5132.192
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_ES_4",
+  "parts": [
+   "hg_ES_4"
+  ],
+  "bounds_um": [
+   7896.96,
+   6082.56,
+   9175.68,
+   7603.200000000001
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_ES_4",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    8375.968,
+    6652.832
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_ES_5",
+  "parts": [
+   "hg_ES_5"
+  ],
+  "bounds_um": [
+   7896.96,
+   7603.2,
+   9175.68,
+   9123.84
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_ES_5",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    8375.968,
+    8173.472
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_ES_6",
+  "parts": [
+   "hg_ES_6"
+  ],
+  "bounds_um": [
+   7896.96,
+   9123.84,
+   9175.68,
+   10644.48
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_ES_6",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    8375.968,
+    9694.112000000001
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_ES_7",
+  "parts": [
+   "hg_ES_7"
+  ],
+  "bounds_um": [
+   7896.96,
+   10644.48,
+   9175.68,
+   12165.119999999999
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_ES_7",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    8375.968,
+    11214.752
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_WN_0",
+  "parts": [
+   "hg_WN_0"
+  ],
+  "bounds_um": [
+   1900.8,
+   24485.76,
+   3179.52,
+   26006.399999999998
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_WN_0",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    2379.808,
+    25436.127999999997
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_WN_1",
+  "parts": [
+   "hg_WN_1"
+  ],
+  "bounds_um": [
+   1900.8,
+   22965.12,
+   3179.52,
+   24485.76
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_WN_1",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    2379.808,
+    23915.487999999998
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_WN_2",
+  "parts": [
+   "hg_WN_2"
+  ],
+  "bounds_um": [
+   1900.8,
+   21444.48,
+   3179.52,
+   22965.12
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_WN_2",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    2379.808,
+    22394.847999999998
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_WN_3",
+  "parts": [
+   "hg_WN_3"
+  ],
+  "bounds_um": [
+   1900.8,
+   19923.84,
+   3179.52,
+   21444.48
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_WN_3",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    2379.808,
+    20874.208
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_WN_4",
+  "parts": [
+   "hg_WN_4"
+  ],
+  "bounds_um": [
+   1900.8,
+   18403.2,
+   3179.52,
+   19923.84
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_WN_4",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    2379.808,
+    19353.568
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_WN_5",
+  "parts": [
+   "hg_WN_5"
+  ],
+  "bounds_um": [
+   1900.8,
+   16882.56,
+   3179.52,
+   18403.2
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_WN_5",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    2379.808,
+    17832.928
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_WN_6",
+  "parts": [
+   "hg_WN_6"
+  ],
+  "bounds_um": [
+   1900.8,
+   15361.92,
+   3179.52,
+   16882.56
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_WN_6",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    2379.808,
+    16312.288
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_WN_7",
+  "parts": [
+   "hg_WN_7"
+  ],
+  "bounds_um": [
+   1900.8,
+   13841.28,
+   3179.52,
+   15361.92
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_WN_7",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    2379.808,
+    14791.648000000001
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_WS_0",
+  "parts": [
+   "hg_WS_0"
+  ],
+  "bounds_um": [
+   1900.8,
+   0.0,
+   3179.52,
+   1520.64
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_WS_0",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    2379.808,
+    570.272
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_WS_1",
+  "parts": [
+   "hg_WS_1"
+  ],
+  "bounds_um": [
+   1900.8,
+   1520.64,
+   3179.52,
+   3041.28
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_WS_1",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    2379.808,
+    2090.9120000000003
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_WS_2",
+  "parts": [
+   "hg_WS_2"
+  ],
+  "bounds_um": [
+   1900.8,
+   3041.28,
+   3179.52,
+   4561.92
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_WS_2",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    2379.808,
+    3611.552
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_WS_3",
+  "parts": [
+   "hg_WS_3"
+  ],
+  "bounds_um": [
+   1900.8,
+   4561.92,
+   3179.52,
+   6082.56
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_WS_3",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    2379.808,
+    5132.192
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_WS_4",
+  "parts": [
+   "hg_WS_4"
+  ],
+  "bounds_um": [
+   1900.8,
+   6082.56,
+   3179.52,
+   7603.200000000001
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_WS_4",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    2379.808,
+    6652.832
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_WS_5",
+  "parts": [
+   "hg_WS_5"
+  ],
+  "bounds_um": [
+   1900.8,
+   7603.2,
+   3179.52,
+   9123.84
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_WS_5",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    2379.808,
+    8173.472
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_WS_6",
+  "parts": [
+   "hg_WS_6"
+  ],
+  "bounds_um": [
+   1900.8,
+   9123.84,
+   3179.52,
+   10644.48
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_WS_6",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    2379.808,
+    9694.112000000001
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hg_WS_7",
+  "parts": [
+   "hg_WS_7"
+  ],
+  "bounds_um": [
+   1900.8,
+   10644.48,
+   3179.52,
+   12165.119999999999
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hg_WS_7",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    2379.808,
+    11214.752
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_EN_0",
+  "parts": [
+   "hgi_EN_0"
+  ],
+  "bounds_um": [
+   6618.24,
+   24485.76,
+   7896.96,
+   26006.399999999998
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_EN_0",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    7417.951999999999,
+    25436.127999999997
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_EN_1",
+  "parts": [
+   "hgi_EN_1"
+  ],
+  "bounds_um": [
+   6618.24,
+   22965.12,
+   7896.96,
+   24485.76
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_EN_1",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    7417.951999999999,
+    23915.487999999998
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_EN_2",
+  "parts": [
+   "hgi_EN_2"
+  ],
+  "bounds_um": [
+   6618.24,
+   21444.48,
+   7896.96,
+   22965.12
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_EN_2",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    7417.951999999999,
+    22394.847999999998
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_EN_3",
+  "parts": [
+   "hgi_EN_3"
+  ],
+  "bounds_um": [
+   6618.24,
+   19923.84,
+   7896.96,
+   21444.48
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_EN_3",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    7417.951999999999,
+    20874.208
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_EN_4",
+  "parts": [
+   "hgi_EN_4"
+  ],
+  "bounds_um": [
+   6618.24,
+   18403.2,
+   7896.96,
+   19923.84
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_EN_4",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    7417.951999999999,
+    19353.568
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_EN_5",
+  "parts": [
+   "hgi_EN_5"
+  ],
+  "bounds_um": [
+   6618.24,
+   16882.56,
+   7896.96,
+   18403.2
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_EN_5",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    7417.951999999999,
+    17832.928
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_EN_6",
+  "parts": [
+   "hgi_EN_6"
+  ],
+  "bounds_um": [
+   6618.24,
+   15361.92,
+   7896.96,
+   16882.56
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_EN_6",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    7417.951999999999,
+    16312.288
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_EN_7",
+  "parts": [
+   "hgi_EN_7"
+  ],
+  "bounds_um": [
+   6618.24,
+   13841.28,
+   7896.96,
+   15361.92
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_EN_7",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    7417.951999999999,
+    14791.648000000001
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_ES_0",
+  "parts": [
+   "hgi_ES_0"
+  ],
+  "bounds_um": [
+   6618.24,
+   0.0,
+   7896.96,
+   1520.64
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_ES_0",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    7417.951999999999,
+    570.272
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_ES_1",
+  "parts": [
+   "hgi_ES_1"
+  ],
+  "bounds_um": [
+   6618.24,
+   1520.64,
+   7896.96,
+   3041.28
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_ES_1",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    7417.951999999999,
+    2090.9120000000003
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_ES_2",
+  "parts": [
+   "hgi_ES_2"
+  ],
+  "bounds_um": [
+   6618.24,
+   3041.28,
+   7896.96,
+   4561.92
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_ES_2",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    7417.951999999999,
+    3611.552
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_ES_3",
+  "parts": [
+   "hgi_ES_3"
+  ],
+  "bounds_um": [
+   6618.24,
+   4561.92,
+   7896.96,
+   6082.56
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_ES_3",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    7417.951999999999,
+    5132.192
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_ES_4",
+  "parts": [
+   "hgi_ES_4"
+  ],
+  "bounds_um": [
+   6618.24,
+   6082.56,
+   7896.96,
+   7603.200000000001
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_ES_4",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    7417.951999999999,
+    6652.832
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_ES_5",
+  "parts": [
+   "hgi_ES_5"
+  ],
+  "bounds_um": [
+   6618.24,
+   7603.2,
+   7896.96,
+   9123.84
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_ES_5",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    7417.951999999999,
+    8173.472
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_ES_6",
+  "parts": [
+   "hgi_ES_6"
+  ],
+  "bounds_um": [
+   6618.24,
+   9123.84,
+   7896.96,
+   10644.48
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_ES_6",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    7417.951999999999,
+    9694.112000000001
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_ES_7",
+  "parts": [
+   "hgi_ES_7"
+  ],
+  "bounds_um": [
+   6618.24,
+   10644.48,
+   7896.96,
+   12165.119999999999
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_ES_7",
+   "port": "clk_t5",
+   "layer": "M7",
+   "xy_um": [
+    7417.951999999999,
+    11214.752
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_WN_0",
+  "parts": [
+   "hgi_WN_0"
+  ],
+  "bounds_um": [
+   3179.52,
+   24485.76,
+   4458.24,
+   26006.399999999998
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_WN_0",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    3979.232,
+    25436.127999999997
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_WN_1",
+  "parts": [
+   "hgi_WN_1"
+  ],
+  "bounds_um": [
+   3179.52,
+   22965.12,
+   4458.24,
+   24485.76
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_WN_1",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    3979.232,
+    23915.487999999998
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_WN_2",
+  "parts": [
+   "hgi_WN_2"
+  ],
+  "bounds_um": [
+   3179.52,
+   21444.48,
+   4458.24,
+   22965.12
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_WN_2",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    3979.232,
+    22394.847999999998
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_WN_3",
+  "parts": [
+   "hgi_WN_3"
+  ],
+  "bounds_um": [
+   3179.52,
+   19923.84,
+   4458.24,
+   21444.48
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_WN_3",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    3979.232,
+    20874.208
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_WN_4",
+  "parts": [
+   "hgi_WN_4"
+  ],
+  "bounds_um": [
+   3179.52,
+   18403.2,
+   4458.24,
+   19923.84
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_WN_4",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    3979.232,
+    19353.568
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_WN_5",
+  "parts": [
+   "hgi_WN_5"
+  ],
+  "bounds_um": [
+   3179.52,
+   16882.56,
+   4458.24,
+   18403.2
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_WN_5",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    3979.232,
+    17832.928
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_WN_6",
+  "parts": [
+   "hgi_WN_6"
+  ],
+  "bounds_um": [
+   3179.52,
+   15361.92,
+   4458.24,
+   16882.56
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_WN_6",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    3979.232,
+    16312.288
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_WN_7",
+  "parts": [
+   "hgi_WN_7"
+  ],
+  "bounds_um": [
+   3179.52,
+   13841.28,
+   4458.24,
+   15361.92
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_WN_7",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    3979.232,
+    14791.648000000001
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_WS_0",
+  "parts": [
+   "hgi_WS_0"
+  ],
+  "bounds_um": [
+   3179.52,
+   0.0,
+   4458.24,
+   1520.64
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_WS_0",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    3979.232,
+    570.272
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_WS_1",
+  "parts": [
+   "hgi_WS_1"
+  ],
+  "bounds_um": [
+   3179.52,
+   1520.64,
+   4458.24,
+   3041.28
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_WS_1",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    3979.232,
+    2090.9120000000003
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_WS_2",
+  "parts": [
+   "hgi_WS_2"
+  ],
+  "bounds_um": [
+   3179.52,
+   3041.28,
+   4458.24,
+   4561.92
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_WS_2",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    3979.232,
+    3611.552
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_WS_3",
+  "parts": [
+   "hgi_WS_3"
+  ],
+  "bounds_um": [
+   3179.52,
+   4561.92,
+   4458.24,
+   6082.56
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_WS_3",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    3979.232,
+    5132.192
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_WS_4",
+  "parts": [
+   "hgi_WS_4"
+  ],
+  "bounds_um": [
+   3179.52,
+   6082.56,
+   4458.24,
+   7603.200000000001
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_WS_4",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    3979.232,
+    6652.832
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_WS_5",
+  "parts": [
+   "hgi_WS_5"
+  ],
+  "bounds_um": [
+   3179.52,
+   7603.2,
+   4458.24,
+   9123.84
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_WS_5",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    3979.232,
+    8173.472
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_WS_6",
+  "parts": [
+   "hgi_WS_6"
+  ],
+  "bounds_um": [
+   3179.52,
+   9123.84,
+   4458.24,
+   10644.48
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_WS_6",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    3979.232,
+    9694.112000000001
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hgi_WS_7",
+  "parts": [
+   "hgi_WS_7"
+  ],
+  "bounds_um": [
+   3179.52,
+   10644.48,
+   4458.24,
+   12165.119999999999
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hgi_WS_7",
+   "port": "clk_t6",
+   "layer": "M7",
+   "xy_um": [
+    3979.232,
+    11214.752
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hub_C",
+  "parts": [
+   "hub_C"
+  ],
+  "bounds_um": [
+   4458.24,
+   12165.12,
+   6618.24,
+   13841.28
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hub_C",
+   "port": "clk_t2",
+   "layer": "M7",
+   "xy_um": [
+    5358.24,
+    12186.720000000001
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hub_Ei",
+  "parts": [
+   "hub_Ei"
+  ],
+  "bounds_um": [
+   6618.24,
+   12165.12,
+   7896.96,
+   13841.28
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hub_Ei",
+   "port": "clk_t2",
+   "layer": "M7",
+   "xy_um": [
+    7417.951999999999,
+    12186.720000000001
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hub_Eo",
+  "parts": [
+   "hub_Eo"
+  ],
+  "bounds_um": [
+   7896.96,
+   12165.12,
+   9175.68,
+   13841.28
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hub_Eo",
+   "port": "clk_t1",
+   "layer": "M7",
+   "xy_um": [
+    8375.968,
+    12186.720000000001
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hub_Wi",
+  "parts": [
+   "hub_Wi"
+  ],
+  "bounds_um": [
+   3179.52,
+   12165.12,
+   4458.24,
+   13841.28
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hub_Wi",
+   "port": "clk_t2",
+   "layer": "M7",
+   "xy_um": [
+    3979.232,
+    12186.720000000001
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "hub_Wo",
+  "parts": [
+   "hub_Wo"
+  ],
+  "bounds_um": [
+   1900.8,
+   12165.12,
+   3179.52,
+   13841.28
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "hub_Wo",
+   "port": "clk_t1",
+   "layer": "M7",
+   "xy_um": [
+    2379.808,
+    12186.720000000001
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "io_E5",
+  "parts": [
+   "io_E5"
+  ],
+  "bounds_um": [
+   6618.24,
+   26006.4,
+   7896.96,
+   27043.2
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "io_E5",
+   "port": "clk_t1",
+   "layer": "M7",
+   "xy_um": [
+    7417.951999999999,
+    26028.0
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "io_E6",
+  "parts": [
+   "io_E6"
+  ],
+  "bounds_um": [
+   7896.96,
+   26006.4,
+   9175.68,
+   27043.2
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "io_E6",
+   "port": "clk_t2",
+   "layer": "M7",
+   "xy_um": [
+    8375.968,
+    26028.0
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "io_W2",
+  "parts": [
+   "io_W2"
+  ],
+  "bounds_um": [
+   1900.8,
+   26006.4,
+   3179.52,
+   27043.2
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "io_W2",
+   "port": "clk_t1",
+   "layer": "M7",
+   "xy_um": [
+    2379.808,
+    26028.0
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "io_W3",
+  "parts": [
+   "io_W3"
+  ],
+  "bounds_um": [
+   3179.52,
+   26006.4,
+   4458.24,
+   27043.2
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "io_W3",
+   "port": "clk_t2",
+   "layer": "M7",
+   "xy_um": [
+    3979.232,
+    26028.0
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "pv_N_0",
+  "parts": [
+   "pv_N_0"
+  ],
+  "bounds_um": [
+   4458.24,
+   24485.76,
+   6618.24,
+   26006.399999999998
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "pv_N_0",
+   "port": "clk_t8",
+   "layer": "M7",
+   "xy_um": [
+    5358.24,
+    25436.127999999997
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "pv_N_1",
+  "parts": [
+   "pv_N_1"
+  ],
+  "bounds_um": [
+   4458.24,
+   22965.12,
+   6618.24,
+   24485.76
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "pv_N_1",
+   "port": "clk_t8",
+   "layer": "M7",
+   "xy_um": [
+    5358.24,
+    23915.487999999998
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "pv_N_2",
+  "parts": [
+   "pv_N_2"
+  ],
+  "bounds_um": [
+   4458.24,
+   21444.48,
+   6618.24,
+   22965.12
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "pv_N_2",
+   "port": "clk_t8",
+   "layer": "M7",
+   "xy_um": [
+    5358.24,
+    22394.847999999998
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "pv_N_3",
+  "parts": [
+   "pv_N_3"
+  ],
+  "bounds_um": [
+   4458.24,
+   19923.84,
+   6618.24,
+   21444.48
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "pv_N_3",
+   "port": "clk_t8",
+   "layer": "M7",
+   "xy_um": [
+    5358.24,
+    20874.208
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "pv_N_4",
+  "parts": [
+   "pv_N_4"
+  ],
+  "bounds_um": [
+   4458.24,
+   18403.2,
+   6618.24,
+   19923.84
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "pv_N_4",
+   "port": "clk_t8",
+   "layer": "M7",
+   "xy_um": [
+    5358.24,
+    19353.568
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "pv_N_5",
+  "parts": [
+   "pv_N_5"
+  ],
+  "bounds_um": [
+   4458.24,
+   16882.56,
+   6618.24,
+   18403.2
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "pv_N_5",
+   "port": "clk_t8",
+   "layer": "M7",
+   "xy_um": [
+    5358.24,
+    17832.928
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "pv_N_6",
+  "parts": [
+   "pv_N_6"
+  ],
+  "bounds_um": [
+   4458.24,
+   15361.92,
+   6618.24,
+   16882.56
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "pv_N_6",
+   "port": "clk_t8",
+   "layer": "M7",
+   "xy_um": [
+    5358.24,
+    16312.288
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "pv_N_7",
+  "parts": [
+   "pv_N_7"
+  ],
+  "bounds_um": [
+   4458.24,
+   13841.28,
+   6618.24,
+   15361.92
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "pv_N_7",
+   "port": "clk_t8",
+   "layer": "M7",
+   "xy_um": [
+    5358.24,
+    14791.648000000001
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "pv_S_0",
+  "parts": [
+   "pv_S_0"
+  ],
+  "bounds_um": [
+   4458.24,
+   0.0,
+   6618.24,
+   1520.64
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "pv_S_0",
+   "port": "clk_t8",
+   "layer": "M7",
+   "xy_um": [
+    5358.24,
+    570.272
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "pv_S_1",
+  "parts": [
+   "pv_S_1"
+  ],
+  "bounds_um": [
+   4458.24,
+   1520.64,
+   6618.24,
+   3041.28
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "pv_S_1",
+   "port": "clk_t8",
+   "layer": "M7",
+   "xy_um": [
+    5358.24,
+    2090.9120000000003
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "pv_S_2",
+  "parts": [
+   "pv_S_2"
+  ],
+  "bounds_um": [
+   4458.24,
+   3041.28,
+   6618.24,
+   4561.92
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "pv_S_2",
+   "port": "clk_t8",
+   "layer": "M7",
+   "xy_um": [
+    5358.24,
+    3611.552
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "pv_S_3",
+  "parts": [
+   "pv_S_3"
+  ],
+  "bounds_um": [
+   4458.24,
+   4561.92,
+   6618.24,
+   6082.56
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "pv_S_3",
+   "port": "clk_t8",
+   "layer": "M7",
+   "xy_um": [
+    5358.24,
+    5132.192
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "pv_S_4",
+  "parts": [
+   "pv_S_4"
+  ],
+  "bounds_um": [
+   4458.24,
+   6082.56,
+   6618.24,
+   7603.200000000001
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "pv_S_4",
+   "port": "clk_t8",
+   "layer": "M7",
+   "xy_um": [
+    5358.24,
+    6652.832
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "pv_S_5",
+  "parts": [
+   "pv_S_5"
+  ],
+  "bounds_um": [
+   4458.24,
+   7603.2,
+   6618.24,
+   9123.84
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "pv_S_5",
+   "port": "clk_t8",
+   "layer": "M7",
+   "xy_um": [
+    5358.24,
+    8173.472
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "pv_S_6",
+  "parts": [
+   "pv_S_6"
+  ],
+  "bounds_um": [
+   4458.24,
+   9123.84,
+   6618.24,
+   10644.48
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "pv_S_6",
+   "port": "clk_t8",
+   "layer": "M7",
+   "xy_um": [
+    5358.24,
+    9694.112000000001
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "pv_S_7",
+  "parts": [
+   "pv_S_7"
+  ],
+  "bounds_um": [
+   4458.24,
+   10644.48,
+   6618.24,
+   12165.119999999999
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "pv_S_7",
+   "port": "clk_t8",
+   "layer": "M7",
+   "xy_um": [
+    5358.24,
+    11214.752
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "sys_SE",
+  "parts": [
+   "sys_SE"
+  ],
+  "bounds_um": [
+   9175.68,
+   26006.4,
+   11076.48,
+   27043.2
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "sys_SE",
+   "port": "clk_t2",
+   "layer": "M7",
+   "xy_um": [
+    10126.56,
+    26028.0
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "sys_SW",
+  "parts": [
+   "sys_SW"
+  ],
+  "bounds_um": [
+   0.0,
+   26006.4,
+   1900.8,
+   27043.2
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "sys_SW",
+   "port": "clk_t2",
+   "layer": "M7",
+   "xy_um": [
+    949.92,
+    26028.0
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ },
+ {
+  "region": "sys_c",
+  "parts": [
+   "sys_c"
+  ],
+  "bounds_um": [
+   4458.24,
+   26006.4,
+   6618.24,
+   27043.2
+  ],
+  "proposed_existing_clock_entry": {
+   "part": "sys_c",
+   "port": "clk_t2",
+   "layer": "M7",
+   "xy_um": [
+    5358.24,
+    26028.0
+   ]
+  },
+  "local_tree": "PLAN ONLY: size/root local tree after fallback trigger; no new cell sites assigned"
+ }
+]

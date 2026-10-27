@@ -1,0 +1,28 @@
+{
+ "regions": 160,
+ "landed_ports": 3915,
+ "landed_bits": 599111,
+ "scalar_clock_status_pins": 15660,
+ "live_ring_data_ff": 3015130,
+ "types_before": 51,
+ "landing_mask_cohorts": 51,
+ "split_types": 0,
+ "lanes_with_delta": 2404,
+ "added_lane_cycle_sum": 11745,
+ "added_lane_cycles_histogram": {
+  "6": 115,
+  "3": 1970,
+  "9": 102,
+  "24": 30,
+  "33": 21,
+  "30": 23,
+  "12": 75,
+  "18": 16,
+  "15": 32,
+  "21": 16,
+  "39": 1,
+  "27": 3
+ },
+ "added_cycles_max": 39,
+ "token_price": "NOT COMPOSED on current B48/R26 calendar; ledger is per-lane only, not a token-price sum"
+}
