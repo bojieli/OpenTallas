@@ -5,7 +5,13 @@ W,O=map(Path,sys.argv[1:]);D=json.load(open(O/'die_plan_phy_contents.json'));typ
 args=[];receipts=[]
 B=Path('/srv/opentallas-scratch2/claude/s81-unblock-1027/b3/out/kit_rtl')
 for tn in types:
- src=B/tn/'kit_rtl.f';t=O/'phy_rtl'/tn;t.mkdir(parents=True,exist_ok=True);fs=[]
+ src=B/tn/'kit_rtl.f'
+ if not src.is_file():
+  k=O/'missing_kit_rtl'/tn
+  cmd=[sys.executable,'-I',str(W/'tools/die_plan/bind.py'),'kit-rtl',str(O/'die_plan_phy_contents.json'),'--out',str(B.parent),'--type',tn,'--kit',str(k),'--asbuilt','physical/die_plan/s81/bind/asbuilt_b178_coll_pd7d.json']
+  with (O/('kit_'+tn+'.log')).open('w') as log:subprocess.run(cmd,cwd=W,stdout=log,stderr=subprocess.STDOUT,check=True)
+  src=k/'kit_rtl.f'
+ t=O/'phy_rtl'/tn;t.mkdir(parents=True,exist_ok=True);fs=[]
  for f in src.read_text().splitlines():
   if not f.strip():continue
   p=Path(f);dest=t/p.name
