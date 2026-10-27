@@ -1151,6 +1151,11 @@ def run_face_guard(disc, clock_ports=()):
     except Exception as e:
         return dict(verdict="FAIL", reason=f"invalid boundary control context: {e}", fail_counts={"context": 1})
     skip = sorted(set(clock_ports) | set(typed_controls) | {"arst_n", "rst_n"})
+    # 12.2a1 (COORD 10-26 12:55): declared die-timed ft ports (kit ft_ports.json) are not core IO, so not face registers;
+    # their structure (port -> fixed BUF -> port) is checked by the kit's own ft gate (KV core_preflight island_ft)
+    ftp = Path(disc["kit"]) / "ft_ports.json" if disc.get("kit") else None
+    if ftp is not None and ftp.is_file():
+        skip = sorted(set(skip) | {p["name"] for p in json.loads(ftp.read_text()).get("ports", [])})
     # Keep the guard's canonical clock/reset contract (including registered wavefront rst_o_<k>
     # controls). Supplying the native-clock override must not turn reset-tree fanout into a data-face failure.
     skip_re = r"(?:" + face_guard.SKIP_RE + r")|^(?:" + "|".join(re.escape(x) for x in skip) + r")$"
