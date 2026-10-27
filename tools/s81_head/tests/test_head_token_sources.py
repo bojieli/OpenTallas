@@ -76,6 +76,15 @@ endmodule''',
    self.assertIn('ot_s81hd_tile_native #(.INSTANCE(INSTANCE), .CV(1)',(r/'native/ot_s81hd_tile_p.sv').read_text())
    del t['simulation_substitutions'];p.write_text(json.dumps(plan))
    with self.assertRaisesRegex(ValueError,'explicit functional substitution'):prepare(r,p,f,r/'mut_missing_native_model')
+ def test_partition_only_never_manufactures_a_die_provider(self):
+  with tempfile.TemporaryDirectory() as d:
+   r=Path(d);self.setup_tree(r);f=r/'physical.f'
+   f.write_text('\n'.join(line for line in f.read_text().splitlines() if not line.endswith('s81_head_top.sv')))
+   res=prepare(r,r/'plan.json',f,r/'partition',partition_only=True)
+   self.assertFalse(res['generated_die_top'])
+   self.assertFalse((r/'partition/s81_head_top.sv').exists())
+   self.assertIn('parameter INSTANCE',(r/'partition/ot_s81hd_tile_p.sv').read_text())
+   with self.assertRaisesRegex(ValueError,'exactly one generated die top'):prepare(r,r/'plan.json',f,r/'mut_no_provider')
  def test_missing_tile_mutant_is_rejected(self):
   with tempfile.TemporaryDirectory() as d:
    r=Path(d);self.setup_tree(r);p=r/'gen/s81_head_top.sv';p.write_text(p.read_text().replace('tile1','lost_tile'))
