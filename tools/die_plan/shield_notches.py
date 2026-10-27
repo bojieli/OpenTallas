@@ -42,6 +42,7 @@ def tcl(shield,width_um,gap_um=.04):
  if {![info exists ::ot_clock_shield_swires]} {error "shield provenance missing before notch trim"}
  set n [$blk findNet $netname]; if {$n eq "NULL"} {error "missing shield net $netname"}
  array set q {};array set objs {};array set owners {};array set lays {};array set ax {};array set eligible {};array set bins {};array set dirty {}
+ array set provenance {};foreach sw $::ot_clock_shield_swires {set provenance($sw) 1}
  set count 0
  foreach sw [$n getSWires] {foreach b [$sw getWires] {
   if {[$b isVia]} {continue};set l [$b getTechLayer];set name [$l getName]
@@ -49,7 +50,7 @@ def tcl(shield,width_um,gap_um=.04):
   set i $count;incr count;set a [expr {$name eq "M8" ? 1 : 0}]
   set box [list [$b xMin] [$b yMin] [$b xMax] [$b yMax]]
   set q($i) $box;set objs($i) $b;set owners($i) $sw;set lays($i) $l;set ax($i) $a
-  set eligible($i) [expr {$sw in $::ot_clock_shield_swires && [lindex $box [expr {$a+2}]]-[lindex $box $a]==$wdbu}]
+  set eligible($i) [expr {[info exists provenance($sw)] && [lindex $box [expr {$a+2}]]-[lindex $box $a]==$wdbu}]
   lappend bins($name,[expr {[lindex $box $a]/$gap}]) $i
  }}
  set fixes 0
