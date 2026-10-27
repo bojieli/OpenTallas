@@ -1,0 +1,29 @@
+PATH-HBM-R11 (2026-10-26) -- plan arithmetic, numbers UNCHECKED unless marked (NUMBER-CHECK 12.9f)
+Base: R8 t_banks (epyc1:/srv/opentallas-scratch2/claude/path-hbm-r8-1026/t_banks) + R10 lane transport (hbm_r10_delta, unchanged).
+Tool: tools/die_plan/hbm_r11_delta.py (new, opt-in) + test_hbm_r11_delta.py (4/4; r10 tests 4/4). No existing tool changed.
+R10 reproduction (CHECKED, own rerun): lane-bound 2531.52 at H4320 k8 -> nw x 0.559 y 0.634 seg (0.395,0.872)(0.559,0.55).
+
+1) RE-SPLIT BY Y DEMAND / WIDTH, NO SERIALISATION (sweep_resplit_k8.txt, sweep_resplit_and_cc2.txt, planB):
+   nw: y-balanced boundary ~3550-3650 (seg y 0.59/0.59 at H4320) but x then 0.74 -> needs H 5184 (x 0.587 k4, y 0.514, seg0 y 0.634 FAIL).
+   ne: no boundary gets whole y <= 0.6 at H 5184 with spread pins (best b3175 y 0.637); seg0 y >= 0.70 at every boundary.
+   => re-split alone does NOT close both hubs; needs H 5184 (+2.26 mm die) and still fails ne. planB sha 5dded156.
+2) OPTION (a) serialise hub core-core > 1 mm by 2 + y-demand split, at the packing-minimum height (planA2, CHOSEN):
+   common H 3525.12 (= nw packing minimum; ne min 3412.8), die growth 604.8 um (die 28.40 x 17.75 mm).
+   nw b 3957.12 k 3: whole x 0.580 y 0.431, seg (0.507,0.524) (0.580,0.459)   ALL <= 0.6
+   ne b 3002.4  k 1: whole x 0.591 y 0.444, seg (0.591,0.535) (0.570,0.516)   ALL <= 0.6 (no inter-segment serialiser)
+   cc links serialised x2: nw 1343 (178.0k parallel bits), ne 1323 (175.7k) -> cc_links_planA2.tsv.
+   inter-segment serialised k3: nw 394 links; ne 0 (k1). W/E chain: nw 233 slices at k3, ne 0.
+   route registers added (latency_up): nw 856 stations, ne 660 (hist in report).
+3) FACE PINS spread (legalise at max(3/um, need) instead of 6/um): span-model um of face over 6 pins/um vs R10 s2h4320:
+   nw N 158 (378) S 139 (660); ne N 152 (442) S 173 (883); peaks 22.5-39/um remain where buses without a partner
+   interval (whole-face group) overlap partner groups (pin_span_*.txt).  master-plan entry_pins PASS (35/gcell).
+4) DIE GROWTH: insertion line y 8856.0 (root cores not cut), parts above +604.8, root type +604.8, hub-row banks/io
+   types grown by dH (--grow-row-types) so no empty die strip lies on their N links (without it reach_gap FAIL 604.9 um
+   on L28/L125, gates_A_nogrowrow.json).
+5) MASTER-PLAN GATES on planA2 (sha 1eb7ee48, --tree-commensurate regional --tree-roads) vs R10 S=1:
+   reach PASS 404.726; entry_pins PASS; lot_fit PASS; early_taps PASS;
+   corridor_tracks FAIL: gcells over 0.6 M4 72.6k (93.3k) M6 158.8k (207.1k) M7 186.7k (179.8k); worst M4 15.05 in NW hub
+   at die (12226, 8262) = hub E-side inter-segment/WE serial bundle (street road model; plan_cut area bound passes);
+   bay_fill FAIL 3442/64,520 bays; clock_entry 619, core_reach, core_insertion_model 59/159, tree_commensurate 69/88,
+   tree_on_islands 367, clock_sites, infra_sites FAIL (not touched by this delta).
+6) CENSUS: 21.2k (nw) / 20.6k (ne) face bus bits have no core sink in core_conns (unchanged from R10) -> HBM-ARCH.

@@ -1,0 +1,48 @@
+reach_gap 
+  R10s1 {"verdict": "PASS", "max_gap_um": 404.771, "worst_path": "NW_hub:istn2206", "fails": 0, "in_core_bays_proposed": 0} 
+  R11A  {"verdict": "PASS", "max_gap_um": 404.726, "worst_path": "L50", "fails": 0, "in_core_bays_proposed": 0}
+bay_fill 
+  R10s1 {"verdict": "FAIL", "bays": 48465, "max_fill": 0.957, "bay_fails": 3153, "partition_fill_fails": 0} 
+  R11A  {"verdict": "FAIL", "bays": 64520, "max_fill": 0.957, "bay_fails": 3442, "partition_fill_fails": 0}
+corridor_tracks 
+  R10s1 {"verdict": "FAIL", "limit": 0.6, "blocked_sections": 792, "m89_roads": 698} 
+  R11A  {"verdict": "FAIL", "limit": 0.6, "blocked_sections": 570, "m89_roads": 671}
+entry_pins 
+  R10s1 {"verdict": "PASS", "pins": 1246048, "max_per_gcell": 35, "unplaced": 0, "failed_drops": 0, "max_drop_reach_um": 405.0, "limit_per_gcell": 35} 
+  R11A  {"verdict": "PASS", "pins": 1272600, "max_per_gcell": 35, "unplaced": 0, "failed_drops": 0, "max_drop_reach_um": 405.0, "limit_per_gcell": 35}
+clock_shield 
+static_ir 
+lot_fit 
+  R10s1 {"verdict": "PASS", "n": 0} 
+  R11A  {"verdict": "PASS", "n": 0}
+clock_entry 
+  R10s1 {"verdict": "FAIL", "cores": 578, "fails": 574} 
+  R11A  {"verdict": "FAIL", "cores": 623, "fails": 619}
+core_reach 
+  R10s1 {"verdict": "FAIL", "limit_um": 200.0} 
+  R11A  {"verdict": "FAIL", "limit_um": 200.0}
+early_taps 
+  R10s1 {"verdict": "PASS", "mesh_taps_early": 0} 
+  R11A  {"verdict": "PASS", "mesh_taps_early": 0}
+tree_balance 
+core_insertion_model 
+  R10s1 {"verdict": "FAIL", "fails": 59, "cores": 159} 
+  R11A  {"verdict": "FAIL", "fails": 59, "cores": 159}
+die_pair_skew_model 
+tree_commensurate 
+  R10s1 {"verdict": "FAIL", "form": "regional", "regions": 88, "regions_fail": 69, "regions_from": "partition instance (one region per partition)", "regions_with_tree_points": 88, "regions_irregular_islands": 3, "inter_region_lanes": 58,  
+  R11A  {"verdict": "FAIL", "form": "regional", "regions": 88, "regions_fail": 69, "regions_from": "partition instance (one region per partition)", "regions_with_tree_points": 88, "regions_irregular_islands": 3, "inter_region_lanes": 58, 
+clock_sites 
+  R10s1 {"verdict": "FAIL", "note": "no --mesh"} 
+  R11A  {"verdict": "FAIL", "note": "no --mesh"}
+island_lattice 
+tree_on_islands 
+  R10s1 {"verdict": "FAIL", "leaves": 1002, "nodes": 2003, "internal_nodes": 1001, "nodes_off_island": 0, "spread_tol_um": 20.0, "legs": 2002, "leg_repeater_gap_fails": 396, "worst_leg_island_gap_um": 4052.16, "rule": "12.2a1/12.2c: die t 
+  R11A  {"verdict": "FAIL", "leaves": 1047, "nodes": 2093, "internal_nodes": 1046, "nodes_off_island": 0, "spread_tol_um": 20.0, "legs": 2092, "leg_repeater_gap_fails": 367, "worst_leg_island_gap_um": 3892.32, "rule": "12.2a1/12.2c: die t
+infra_sites 
+  R10s1 {"verdict": "FAIL", "source": "infra_sites.run (INFRA-FIRST-R2)", "error": null, "islands": 51} 
+  R11A  {"verdict": "FAIL", "source": "infra_sites.run (INFRA-FIRST-R2)", "error": null, "islands": 51}
+clock_rep_sites 
+tap_region_containment 
+footless_stubs 
+island_ft_inputs 
