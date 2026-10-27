@@ -1,0 +1,1538 @@
+{
+ "lane": "PATH-S81-PD8",
+ "bands_d": {
+  "storage_band_fail": 1,
+  "rows": [
+   {
+    "type": "svc_hi_dsdv_svc_rs__t5_phy1026_svc_13",
+    "bus": "attn_i0",
+    "error": "no macro-free clock landing storage band forattn_i0, required depth21.60um"
+   }
+  ],
+  "c_count": 8,
+  "g0_errors": 13,
+  "g0_set_equal_pd5": true,
+  "g0_composed_errors": 13,
+  "g0_composed_set_equal_pd5": true,
+  "composed_sha256": "34a2d1685fcc057c17343ecca0d36fe8c1eb21ac9a5f4b44140108cf88a58060",
+  "verdict": "ADOPT d"
+ },
+ "mesh": {
+  "md1_lattice_c": {
+   "plan": "/srv/opentallas-scratch2/claude/path-s81-pd7-1026/d/src/die_plan_pd7_composed.json",
+   "plan_sha256": "34a2d1685fcc057c17343ecca0d36fe8c1eb21ac9a5f4b44140108cf88a58060",
+   "lattice": {
+    "ys_um": null,
+    "leaf_ys_um": [
+     1218.24,
+     1572.48,
+     1926.72,
+     2280.96,
+     2635.2,
+     2989.44,
+     3343.68,
+     3697.92,
+     4052.16,
+     4406.4,
+     4760.64,
+     5114.88,
+     5469.12,
+     5823.36,
+     6177.6,
+     6531.84,
+     6886.08,
+     7240.32,
+     7594.56,
+     7948.8,
+     8303.04,
+     8657.28,
+     9011.52,
+     9365.76,
+     9720.0,
+     10074.24,
+     10428.48,
+     10782.72,
+     11136.96,
+     11491.2,
+     11845.44,
+     12199.68,
+     12553.92,
+     12908.16,
+     13262.4,
+     13616.64,
+     13970.88,
+     14325.12,
+     14679.36,
+     15033.6,
+     15387.84,
+     15742.08,
+     16096.32,
+     16450.56,
+     16804.8,
+     17159.04,
+     17513.28,
+     17867.52,
+     18221.76,
+     18576.0,
+     18930.24,
+     19284.48,
+     19638.72,
+     19992.96,
+     20347.2,
+     20701.44,
+     21055.68,
+     21409.92,
+     21764.16,
+     22118.4,
+     22472.64,
+     22826.88,
+     23181.12,
+     23535.36
+    ],
+    "xs_um": [
+     457.92,
+     950.4,
+     1442.88,
+     1935.36,
+     2427.84,
+     2920.32,
+     3412.8,
+     3905.28,
+     4397.76,
+     4890.24,
+     5382.72,
+     5875.2,
+     6367.68,
+     6860.16,
+     7352.64,
+     7845.12,
+     8337.6,
+     8830.08,
+     9322.56,
+     9815.04,
+     10307.52,
+     10800.0,
+     11292.48,
+     11784.96,
+     12277.44,
+     12769.92,
+     13262.4,
+     13754.88,
+     14247.36,
+     14739.84,
+     15232.32,
+     15724.8,
+     16217.28,
+     16709.76,
+     17202.24,
+     17694.72,
+     18187.2,
+     18679.68,
+     19172.16,
+     19664.64,
+     20157.12,
+     20649.6,
+     21142.08,
+     21634.56,
+     22127.04,
+     22619.52,
+     23112.0,
+     23604.48,
+     24096.96,
+     24589.44,
+     25081.92,
+     25574.4,
+     26066.88,
+     26559.36,
+     27051.84,
+     27544.32,
+     28036.8,
+     28529.28,
+     29021.76,
+     29514.24,
+     30006.72,
+     30499.2,
+     30991.68,
+     31484.16
+    ],
+    "leaf_grid": [
+     64,
+     64
+    ],
+    "axes": "",
+    "drv_reach_um": 200.0,
+    "split_drops": true,
+    "strap_cover": true,
+    "band_trees": true,
+    "band_root_reach_um": 200.0,
+    "band_feed": "leaf",
+    "note": "PATH-S81-PD8 lattice c = lat_pd7b + band_root_depth balance (leaf-fed band roots at the plan-computed depth on their own V strap; same stage count)",
+    "band_root_depth": "balance",
+    "rows": 64
+   },
+   "unplaced": 0,
+   "overlaps": 0,
+   "hard_keepout_cells": 428,
+   "pushdown": {
+    "mesh_driver": 8,
+    "leg_rep": 106,
+    "tree_node": 306
+   },
+   "pushdown_rows": null,
+   "off_core_resites": {},
+   "off_core_max_um": 0,
+   "band_trees": {
+    "trees": 8,
+    "taps": 36,
+    "trunk_um": [
+     552.96,
+     568.08
+    ],
+    "comb_max_um": 568.08,
+    "input_um": [
+     553.59,
+     568.73
+    ],
+    "stages_below_leaf_node": 2,
+    "root_depth": "balance"
+   },
+   "band_roots": [
+    {
+     "tree": "d1218.24_21",
+     "i": 21,
+     "edge_y": 1218.24,
+     "dir": -1,
+     "root": "ckm_br_0",
+     "branch": null,
+     "feed": "leaf",
+     "leaf_driver": "21_0",
+     "foot": [
+      10801.4,
+      809.504
+     ],
+     "strap": [
+      "M9",
+      21
+     ],
+     "root_slide_um": 0.0,
+     "branch_slide_um": 0.0,
+     "trunk_um": 552.96,
+     "comb_max_um": 552.96,
+     "comb_span_um": 615.6,
+     "taps": 6,
+     "input_um": 553.59,
+     "node_move_um": 88.56,
+     "root_depth": "balance"
+    },
+    {
+     "tree": "d1218.24_22",
+     "i": 22,
+     "edge_y": 1218.24,
+     "dir": -1,
+     "root": "ckm_br_1",
+     "branch": null,
+     "feed": "leaf",
+     "leaf_driver": "22_0",
+     "foot": [
+      11291.08,
+      809.504
+     ],
+     "strap": [
+      "M9",
+      22
+     ],
+     "root_slide_um": 0.0,
+     "branch_slide_um": 0.0,
+     "trunk_um": 552.96,
+     "comb_max_um": 552.96,
+     "comb_span_um": 615.6,
+     "taps": 6,
+     "input_um": 553.6,
+     "node_move_um": 168.48,
+     "root_depth": "balance"
+    },
+    {
+     "tree": "d1218.24_41",
+     "i": 41,
+     "edge_y": 1218.24,
+     "dir": -1,
+     "root": "ckm_br_2",
+     "branch": null,
+     "feed": "leaf",
+     "leaf_driver": "41_0",
+     "foot": [
+      20648.2,
+      809.504
+     ],
+     "strap": [
+      "M9",
+      41
+     ],
+     "root_slide_um": 0.0,
+     "branch_slide_um": 0.0,
+     "trunk_um": 552.96,
+     "comb_max_um": 552.96,
+     "comb_span_um": 615.6,
+     "taps": 6,
+     "input_um": 553.6,
+     "node_move_um": 166.32,
+     "root_depth": "balance"
+    },
+    {
+     "tree": "d1218.24_42",
+     "i": 42,
+     "edge_y": 1218.24,
+     "dir": -1,
+     "root": "ckm_br_3",
+     "branch": null,
+     "feed": "leaf",
+     "leaf_driver": "42_0",
+     "foot": [
+      21143.48,
+      809.504
+     ],
+     "strap": [
+      "M9",
+      42
+     ],
+     "root_slide_um": 0.0,
+     "branch_slide_um": 0.0,
+     "trunk_um": 552.96,
+     "comb_max_um": 552.96,
+     "comb_span_um": 613.44,
+     "taps": 3,
+     "input_um": 553.6,
+     "node_move_um": 86.4,
+     "root_depth": "balance"
+    },
+    {
+     "tree": "d1218.24_43",
+     "i": 43,
+     "edge_y": 1218.24,
+     "dir": -1,
+     "root": "ckm_br_4",
+     "branch": null,
+     "feed": "leaf",
+     "leaf_driver": "43_0",
+     "foot": [
+      21635.96,
+      809.504
+     ],
+     "strap": [
+      "M9",
+      43
+     ],
+     "root_slide_um": 0.0,
+     "branch_slide_um": 0.0,
+     "trunk_um": 552.96,
+     "comb_max_um": 552.96,
+     "comb_span_um": 613.44,
+     "taps": 3,
+     "input_um": 553.6,
+     "node_move_um": 116.64,
+     "root_depth": "balance"
+    },
+    {
+     "tree": "d1218.24_61",
+     "i": 61,
+     "edge_y": 1218.24,
+     "dir": -1,
+     "root": "ckm_br_5",
+     "branch": null,
+     "feed": "leaf",
+     "leaf_driver": "61_0",
+     "foot": [
+      30500.6,
+      824.624
+     ],
+     "strap": [
+      "M9",
+      61
+     ],
+     "root_slide_um": 0.0,
+     "branch_slide_um": 0.0,
+     "trunk_um": 568.08,
+     "comb_max_um": 568.08,
+     "comb_span_um": 615.6,
+     "taps": 6,
+     "input_um": 568.72,
+     "node_move_um": 2.16,
+     "root_depth": "balance"
+    },
+    {
+     "tree": "d1218.24_62",
+     "i": 62,
+     "edge_y": 1218.24,
+     "dir": -1,
+     "root": "ckm_br_6",
+     "branch": null,
+     "feed": "leaf",
+     "leaf_driver": "62_0",
+     "foot": [
+      30993.08,
+      824.624
+     ],
+     "strap": [
+      "M9",
+      62
+     ],
+     "root_slide_um": 0.0,
+     "branch_slide_um": 0.0,
+     "trunk_um": 568.08,
+     "comb_max_um": 568.08,
+     "comb_span_um": 613.44,
+     "taps": 3,
+     "input_um": 568.72,
+     "node_move_um": 2.16,
+     "root_depth": "balance"
+    },
+    {
+     "tree": "d1218.24_63",
+     "i": 63,
+     "edge_y": 1218.24,
+     "dir": -1,
+     "root": "ckm_br_7",
+     "branch": null,
+     "feed": "leaf",
+     "leaf_driver": "63_0",
+     "foot": [
+      31484.84,
+      824.624
+     ],
+     "strap": [
+      "M9",
+      63
+     ],
+     "root_slide_um": 0.0,
+     "branch_slide_um": 0.0,
+     "trunk_um": 568.08,
+     "comb_max_um": 568.08,
+     "comb_span_um": 613.44,
+     "taps": 3,
+     "input_um": 568.73,
+     "node_move_um": 2.18,
+     "root_depth": "balance"
+    }
+   ],
+   "band_node_resites": [
+    {
+     "node": "ckm_n11_h00100010001",
+     "tree": "d1218.24_21",
+     "dx_um": 88.556
+    },
+    {
+     "node": "ckm_n11_h00100010100",
+     "tree": "d1218.24_22",
+     "dx_um": 168.476
+    },
+    {
+     "node": "ckm_n11_h10001000001",
+     "tree": "d1218.24_41",
+     "dx_um": 166.324
+    },
+    {
+     "node": "ckm_n11_h10001000100",
+     "tree": "d1218.24_42",
+     "dx_um": 86.404
+    },
+    {
+     "node": "ckm_n11_h10001000101",
+     "tree": "d1218.24_43",
+     "dx_um": 116.636
+    },
+    {
+     "node": "ckm_n11_h10101010001",
+     "tree": "d1218.24_61",
+     "dx_um": 2.164
+    },
+    {
+     "node": "ckm_n11_h10101010100",
+     "tree": "d1218.24_62",
+     "dx_um": 2.164
+    },
+    {
+     "node": "ckm_n11_h10101010101",
+     "tree": "d1218.24_63",
+     "dx_um": 2.182
+    }
+   ],
+   "leaf_path_um": [
+    26496.509,
+    26863.709
+   ],
+   "hop_max_um": 596.16,
+   "drivers": 4096,
+   "driver_straps": {
+    "M9": 4096
+   },
+   "taps": 7481,
+   "htree_wire_mm": 2538.71,
+   "mesh_wire_mm": 3413.97,
+   "stub_max_um": 251.21
+  },
+  "md2_lattice_d_nodes_reps": {
+   "plan": "/srv/opentallas-scratch2/claude/path-s81-pd7-1026/d/src/die_plan_pd7_composed.json",
+   "plan_sha256": "34a2d1685fcc057c17343ecca0d36fe8c1eb21ac9a5f4b44140108cf88a58060",
+   "lattice": {
+    "ys_um": null,
+    "leaf_ys_um": [
+     1218.24,
+     1572.48,
+     1926.72,
+     2280.96,
+     2635.2,
+     2989.44,
+     3343.68,
+     3697.92,
+     4052.16,
+     4406.4,
+     4760.64,
+     5114.88,
+     5469.12,
+     5823.36,
+     6177.6,
+     6531.84,
+     6886.08,
+     7240.32,
+     7594.56,
+     7948.8,
+     8303.04,
+     8657.28,
+     9011.52,
+     9365.76,
+     9720.0,
+     10074.24,
+     10428.48,
+     10782.72,
+     11136.96,
+     11491.2,
+     11845.44,
+     12199.68,
+     12553.92,
+     12908.16,
+     13262.4,
+     13616.64,
+     13970.88,
+     14325.12,
+     14679.36,
+     15033.6,
+     15387.84,
+     15742.08,
+     16096.32,
+     16450.56,
+     16804.8,
+     17159.04,
+     17513.28,
+     17867.52,
+     18221.76,
+     18576.0,
+     18930.24,
+     19284.48,
+     19638.72,
+     19992.96,
+     20347.2,
+     20701.44,
+     21055.68,
+     21409.92,
+     21764.16,
+     22118.4,
+     22472.64,
+     22826.88,
+     23181.12,
+     23535.36
+    ],
+    "xs_um": [
+     457.92,
+     950.4,
+     1442.88,
+     1935.36,
+     2427.84,
+     2920.32,
+     3412.8,
+     3905.28,
+     4397.76,
+     4890.24,
+     5382.72,
+     5875.2,
+     6367.68,
+     6860.16,
+     7352.64,
+     7845.12,
+     8337.6,
+     8830.08,
+     9322.56,
+     9815.04,
+     10307.52,
+     10800.0,
+     11292.48,
+     11784.96,
+     12277.44,
+     12769.92,
+     13262.4,
+     13754.88,
+     14247.36,
+     14739.84,
+     15232.32,
+     15724.8,
+     16217.28,
+     16709.76,
+     17202.24,
+     17694.72,
+     18187.2,
+     18679.68,
+     19172.16,
+     19664.64,
+     20157.12,
+     20649.6,
+     21142.08,
+     21634.56,
+     22127.04,
+     22619.52,
+     23112.0,
+     23604.48,
+     24096.96,
+     24589.44,
+     25081.92,
+     25574.4,
+     26066.88,
+     26559.36,
+     27051.84,
+     27544.32,
+     28036.8,
+     28529.28,
+     29021.76,
+     29514.24,
+     30006.72,
+     30499.2,
+     30991.68,
+     31484.16
+    ],
+    "leaf_grid": [
+     64,
+     64
+    ],
+    "axes": "",
+    "drv_reach_um": 200.0,
+    "split_drops": true,
+    "strap_cover": true,
+    "band_trees": true,
+    "band_root_reach_um": 200.0,
+    "band_feed": "leaf",
+    "note": "PATH-S81-PD8 lattice d = lattice c + off_core_resite (H-tree nodes / leg repeaters whose ideal point is on a hard core take the nearest free die-top site within hop slack; 12.2a1 island identity cannot hold on the S81 multi-instance core arrays)",
+    "band_root_depth": "balance",
+    "off_core_resite": true,
+    "rows": 64
+   },
+   "unplaced": 0,
+   "overlaps": 0,
+   "hard_keepout_cells": 17,
+   "pushdown": {
+    "mesh_driver": 8,
+    "leg_rep": 1
+   },
+   "pushdown_rows": [
+    {
+     "role": "mesh_driver",
+     "name": "ckm_d_20_46",
+     "xy": [
+      10306.12,
+      17513.28
+     ],
+     "ideal": [
+      10306.12,
+      17513.28
+     ],
+     "core": "s_0N_C/u_c.u_cap"
+    },
+    {
+     "role": "mesh_driver",
+     "name": "ckm_d_32_60",
+     "xy": [
+      16218.68,
+      22472.64
+     ],
+     "ideal": [
+      16218.68,
+      22472.64
+     ],
+     "core": "bk_sel/u_bk_sel.u_tx"
+    },
+    {
+     "role": "mesh_driver",
+     "name": "ckm_d_33_60",
+     "xy": [
+      16708.36,
+      22472.64
+     ],
+     "ideal": [
+      16708.36,
+      22472.64
+     ],
+     "core": "bk_sel/u_bk_sel.u_sel.g_q[0].u_q"
+    },
+    {
+     "role": "mesh_driver",
+     "name": "ckm_d_34_60",
+     "xy": [
+      17203.64,
+      22472.64
+     ],
+     "ideal": [
+      17203.64,
+      22472.64
+     ],
+     "core": "bk_sel/u_bk_sel.u_sel.g_q[0].u_q"
+    },
+    {
+     "role": "mesh_driver",
+     "name": "ckm_d_35_60",
+     "xy": [
+      17696.12,
+      22472.64
+     ],
+     "ideal": [
+      17696.12,
+      22472.64
+     ],
+     "core": "bk_sel/u_bk_sel.u_sel.g_q[1].u_q"
+    },
+    {
+     "role": "mesh_driver",
+     "name": "ckm_d_36_60",
+     "xy": [
+      18188.6,
+      22472.64
+     ],
+     "ideal": [
+      18188.6,
+      22472.64
+     ],
+     "core": "bk_sel/u_bk_sel.u_sel.g_q[1].u_q"
+    },
+    {
+     "role": "mesh_driver",
+     "name": "ckm_d_37_46",
+     "xy": [
+      18681.08,
+      17513.28
+     ],
+     "ideal": [
+      18681.08,
+      17513.28
+     ],
+     "core": "s_5N_C/u_c.u_cap"
+    },
+    {
+     "role": "mesh_driver",
+     "name": "ckm_d_40_46",
+     "xy": [
+      20155.72,
+      17513.28
+     ],
+     "ideal": [
+      20155.72,
+      17513.28
+     ],
+     "core": "s_6N_C/u_c.u_cap"
+    },
+    {
+     "role": "leg_rep",
+     "name": "ckm_r9_h110101011_1",
+     "level": 9,
+     "xy": [
+      17161.52,
+      23004.0
+     ],
+     "core": "bk_sel/u_bk_sel.u_sel.g_q[2].u_q"
+    }
+   ],
+   "off_core_resites": {
+    "leg_rep": 87,
+    "tree_node": 306
+   },
+   "off_core_max_um": 151.2,
+   "band_trees": {
+    "trees": 8,
+    "taps": 36,
+    "trunk_um": [
+     552.96,
+     568.08
+    ],
+    "comb_max_um": 568.08,
+    "input_um": [
+     553.59,
+     568.73
+    ],
+    "stages_below_leaf_node": 2,
+    "root_depth": "balance"
+   },
+   "band_roots": [
+    {
+     "tree": "d1218.24_21",
+     "i": 21,
+     "edge_y": 1218.24,
+     "dir": -1,
+     "root": "ckm_br_0",
+     "branch": null,
+     "feed": "leaf",
+     "leaf_driver": "21_0",
+     "foot": [
+      10801.4,
+      809.504
+     ],
+     "strap": [
+      "M9",
+      21
+     ],
+     "root_slide_um": 0.0,
+     "branch_slide_um": 0.0,
+     "trunk_um": 552.96,
+     "comb_max_um": 552.96,
+     "comb_span_um": 615.6,
+     "taps": 6,
+     "input_um": 553.59,
+     "node_move_um": 88.56,
+     "root_depth": "balance"
+    },
+    {
+     "tree": "d1218.24_22",
+     "i": 22,
+     "edge_y": 1218.24,
+     "dir": -1,
+     "root": "ckm_br_1",
+     "branch": null,
+     "feed": "leaf",
+     "leaf_driver": "22_0",
+     "foot": [
+      11291.08,
+      809.504
+     ],
+     "strap": [
+      "M9",
+      22
+     ],
+     "root_slide_um": 0.0,
+     "branch_slide_um": 0.0,
+     "trunk_um": 552.96,
+     "comb_max_um": 552.96,
+     "comb_span_um": 615.6,
+     "taps": 6,
+     "input_um": 553.6,
+     "node_move_um": 168.48,
+     "root_depth": "balance"
+    },
+    {
+     "tree": "d1218.24_41",
+     "i": 41,
+     "edge_y": 1218.24,
+     "dir": -1,
+     "root": "ckm_br_2",
+     "branch": null,
+     "feed": "leaf",
+     "leaf_driver": "41_0",
+     "foot": [
+      20648.2,
+      809.504
+     ],
+     "strap": [
+      "M9",
+      41
+     ],
+     "root_slide_um": 0.0,
+     "branch_slide_um": 0.0,
+     "trunk_um": 552.96,
+     "comb_max_um": 552.96,
+     "comb_span_um": 615.6,
+     "taps": 6,
+     "input_um": 553.6,
+     "node_move_um": 166.32,
+     "root_depth": "balance"
+    },
+    {
+     "tree": "d1218.24_42",
+     "i": 42,
+     "edge_y": 1218.24,
+     "dir": -1,
+     "root": "ckm_br_3",
+     "branch": null,
+     "feed": "leaf",
+     "leaf_driver": "42_0",
+     "foot": [
+      21143.48,
+      809.504
+     ],
+     "strap": [
+      "M9",
+      42
+     ],
+     "root_slide_um": 0.0,
+     "branch_slide_um": 0.0,
+     "trunk_um": 552.96,
+     "comb_max_um": 552.96,
+     "comb_span_um": 613.44,
+     "taps": 3,
+     "input_um": 553.6,
+     "node_move_um": 86.4,
+     "root_depth": "balance"
+    },
+    {
+     "tree": "d1218.24_43",
+     "i": 43,
+     "edge_y": 1218.24,
+     "dir": -1,
+     "root": "ckm_br_4",
+     "branch": null,
+     "feed": "leaf",
+     "leaf_driver": "43_0",
+     "foot": [
+      21635.96,
+      809.504
+     ],
+     "strap": [
+      "M9",
+      43
+     ],
+     "root_slide_um": 0.0,
+     "branch_slide_um": 0.0,
+     "trunk_um": 552.96,
+     "comb_max_um": 552.96,
+     "comb_span_um": 613.44,
+     "taps": 3,
+     "input_um": 553.6,
+     "node_move_um": 116.64,
+     "root_depth": "balance"
+    },
+    {
+     "tree": "d1218.24_61",
+     "i": 61,
+     "edge_y": 1218.24,
+     "dir": -1,
+     "root": "ckm_br_5",
+     "branch": null,
+     "feed": "leaf",
+     "leaf_driver": "61_0",
+     "foot": [
+      30500.6,
+      824.624
+     ],
+     "strap": [
+      "M9",
+      61
+     ],
+     "root_slide_um": 0.0,
+     "branch_slide_um": 0.0,
+     "trunk_um": 568.08,
+     "comb_max_um": 568.08,
+     "comb_span_um": 615.6,
+     "taps": 6,
+     "input_um": 568.72,
+     "node_move_um": 2.16,
+     "root_depth": "balance"
+    },
+    {
+     "tree": "d1218.24_62",
+     "i": 62,
+     "edge_y": 1218.24,
+     "dir": -1,
+     "root": "ckm_br_6",
+     "branch": null,
+     "feed": "leaf",
+     "leaf_driver": "62_0",
+     "foot": [
+      30993.08,
+      824.624
+     ],
+     "strap": [
+      "M9",
+      62
+     ],
+     "root_slide_um": 0.0,
+     "branch_slide_um": 0.0,
+     "trunk_um": 568.08,
+     "comb_max_um": 568.08,
+     "comb_span_um": 613.44,
+     "taps": 3,
+     "input_um": 568.72,
+     "node_move_um": 2.16,
+     "root_depth": "balance"
+    },
+    {
+     "tree": "d1218.24_63",
+     "i": 63,
+     "edge_y": 1218.24,
+     "dir": -1,
+     "root": "ckm_br_7",
+     "branch": null,
+     "feed": "leaf",
+     "leaf_driver": "63_0",
+     "foot": [
+      31484.84,
+      824.624
+     ],
+     "strap": [
+      "M9",
+      63
+     ],
+     "root_slide_um": 0.0,
+     "branch_slide_um": 0.0,
+     "trunk_um": 568.08,
+     "comb_max_um": 568.08,
+     "comb_span_um": 613.44,
+     "taps": 3,
+     "input_um": 568.73,
+     "node_move_um": 2.18,
+     "root_depth": "balance"
+    }
+   ],
+   "band_node_resites": [
+    {
+     "node": "ckm_n11_h00100010001",
+     "tree": "d1218.24_21",
+     "dx_um": 88.556
+    },
+    {
+     "node": "ckm_n11_h00100010100",
+     "tree": "d1218.24_22",
+     "dx_um": 168.476
+    },
+    {
+     "node": "ckm_n11_h10001000001",
+     "tree": "d1218.24_41",
+     "dx_um": 166.324
+    },
+    {
+     "node": "ckm_n11_h10001000100",
+     "tree": "d1218.24_42",
+     "dx_um": 86.404
+    },
+    {
+     "node": "ckm_n11_h10001000101",
+     "tree": "d1218.24_43",
+     "dx_um": 116.636
+    },
+    {
+     "node": "ckm_n11_h10101010001",
+     "tree": "d1218.24_61",
+     "dx_um": 2.164
+    },
+    {
+     "node": "ckm_n11_h10101010100",
+     "tree": "d1218.24_62",
+     "dx_um": 2.164
+    },
+    {
+     "node": "ckm_n11_h10101010101",
+     "tree": "d1218.24_63",
+     "dx_um": 2.182
+    }
+   ],
+   "leaf_path_um": [
+    26377.709,
+    27068.909
+   ],
+   "hop_max_um": 596.16,
+   "drivers": 4096,
+   "driver_straps": {
+    "M9": 4096
+   },
+   "taps": 7481,
+   "htree_wire_mm": 2547.58,
+   "mesh_wire_mm": 3413.97,
+   "stub_max_um": 251.21
+  },
+  "md3_lattice_d_final": {
+   "plan": "/srv/opentallas-scratch2/claude/path-s81-pd7-1026/d/src/die_plan_pd7_composed.json",
+   "plan_sha256": "34a2d1685fcc057c17343ecca0d36fe8c1eb21ac9a5f4b44140108cf88a58060",
+   "lattice": {
+    "ys_um": null,
+    "leaf_ys_um": [
+     1218.24,
+     1572.48,
+     1926.72,
+     2280.96,
+     2635.2,
+     2989.44,
+     3343.68,
+     3697.92,
+     4052.16,
+     4406.4,
+     4760.64,
+     5114.88,
+     5469.12,
+     5823.36,
+     6177.6,
+     6531.84,
+     6886.08,
+     7240.32,
+     7594.56,
+     7948.8,
+     8303.04,
+     8657.28,
+     9011.52,
+     9365.76,
+     9720.0,
+     10074.24,
+     10428.48,
+     10782.72,
+     11136.96,
+     11491.2,
+     11845.44,
+     12199.68,
+     12553.92,
+     12908.16,
+     13262.4,
+     13616.64,
+     13970.88,
+     14325.12,
+     14679.36,
+     15033.6,
+     15387.84,
+     15742.08,
+     16096.32,
+     16450.56,
+     16804.8,
+     17159.04,
+     17513.28,
+     17867.52,
+     18221.76,
+     18576.0,
+     18930.24,
+     19284.48,
+     19638.72,
+     19992.96,
+     20347.2,
+     20701.44,
+     21055.68,
+     21409.92,
+     21764.16,
+     22118.4,
+     22472.64,
+     22826.88,
+     23181.12,
+     23535.36
+    ],
+    "xs_um": [
+     457.92,
+     950.4,
+     1442.88,
+     1935.36,
+     2427.84,
+     2920.32,
+     3412.8,
+     3905.28,
+     4397.76,
+     4890.24,
+     5382.72,
+     5875.2,
+     6367.68,
+     6860.16,
+     7352.64,
+     7845.12,
+     8337.6,
+     8830.08,
+     9322.56,
+     9815.04,
+     10307.52,
+     10800.0,
+     11292.48,
+     11784.96,
+     12277.44,
+     12769.92,
+     13262.4,
+     13754.88,
+     14247.36,
+     14739.84,
+     15232.32,
+     15724.8,
+     16217.28,
+     16709.76,
+     17202.24,
+     17694.72,
+     18187.2,
+     18679.68,
+     19172.16,
+     19664.64,
+     20157.12,
+     20649.6,
+     21142.08,
+     21634.56,
+     22127.04,
+     22619.52,
+     23112.0,
+     23604.48,
+     24096.96,
+     24589.44,
+     25081.92,
+     25574.4,
+     26066.88,
+     26559.36,
+     27051.84,
+     27544.32,
+     28036.8,
+     28529.28,
+     29021.76,
+     29514.24,
+     30006.72,
+     30499.2,
+     30991.68,
+     31484.16
+    ],
+    "leaf_grid": [
+     64,
+     64
+    ],
+    "axes": "",
+    "drv_reach_um": 200.0,
+    "split_drops": true,
+    "strap_cover": true,
+    "band_trees": true,
+    "band_root_reach_um": 200.0,
+    "band_feed": "leaf",
+    "note": "PATH-S81-PD8 lattice d = lattice c + off_core_resite (H-tree nodes / leg repeaters whose ideal point is on a hard core take the nearest free die-top site within hop slack; 12.2a1 island identity cannot hold on the S81 multi-instance core arrays)",
+    "band_root_depth": "balance",
+    "off_core_resite": true,
+    "rows": 64
+   },
+   "unplaced": 0,
+   "overlaps": 0,
+   "hard_keepout_cells": 5,
+   "pushdown": {
+    "mesh_driver": 2,
+    "leg_rep": 1
+   },
+   "pushdown_rows": [
+    {
+     "role": "mesh_driver",
+     "name": "ckm_d_32_60",
+     "xy": [
+      16218.68,
+      22472.64
+     ],
+     "ideal": [
+      16218.68,
+      22472.64
+     ],
+     "core": "bk_sel/u_bk_sel.u_tx"
+    },
+    {
+     "role": "mesh_driver",
+     "name": "ckm_d_34_60",
+     "xy": [
+      17203.64,
+      22472.64
+     ],
+     "ideal": [
+      17203.64,
+      22472.64
+     ],
+     "core": "bk_sel/u_bk_sel.u_sel.g_q[0].u_q"
+    },
+    {
+     "role": "leg_rep",
+     "name": "ckm_r9_h110101011_1",
+     "level": 9,
+     "xy": [
+      17161.52,
+      23004.0
+     ],
+     "core": "bk_sel/u_bk_sel.u_sel.g_q[2].u_q"
+    }
+   ],
+   "off_core_resites": {
+    "mesh_driver": 6,
+    "leg_rep": 87,
+    "tree_node": 306
+   },
+   "off_core_max_um": 194.4,
+   "band_trees": {
+    "trees": 8,
+    "taps": 36,
+    "trunk_um": [
+     552.96,
+     568.08
+    ],
+    "comb_max_um": 568.08,
+    "input_um": [
+     553.59,
+     568.73
+    ],
+    "stages_below_leaf_node": 2,
+    "root_depth": "balance"
+   },
+   "band_roots": [
+    {
+     "tree": "d1218.24_21",
+     "i": 21,
+     "edge_y": 1218.24,
+     "dir": -1,
+     "root": "ckm_br_0",
+     "branch": null,
+     "feed": "leaf",
+     "leaf_driver": "21_0",
+     "foot": [
+      10801.4,
+      809.504
+     ],
+     "strap": [
+      "M9",
+      21
+     ],
+     "root_slide_um": 0.0,
+     "branch_slide_um": 0.0,
+     "trunk_um": 552.96,
+     "comb_max_um": 552.96,
+     "comb_span_um": 615.6,
+     "taps": 6,
+     "input_um": 553.59,
+     "node_move_um": 88.56,
+     "root_depth": "balance"
+    },
+    {
+     "tree": "d1218.24_22",
+     "i": 22,
+     "edge_y": 1218.24,
+     "dir": -1,
+     "root": "ckm_br_1",
+     "branch": null,
+     "feed": "leaf",
+     "leaf_driver": "22_0",
+     "foot": [
+      11291.08,
+      809.504
+     ],
+     "strap": [
+      "M9",
+      22
+     ],
+     "root_slide_um": 0.0,
+     "branch_slide_um": 0.0,
+     "trunk_um": 552.96,
+     "comb_max_um": 552.96,
+     "comb_span_um": 615.6,
+     "taps": 6,
+     "input_um": 553.6,
+     "node_move_um": 168.48,
+     "root_depth": "balance"
+    },
+    {
+     "tree": "d1218.24_41",
+     "i": 41,
+     "edge_y": 1218.24,
+     "dir": -1,
+     "root": "ckm_br_2",
+     "branch": null,
+     "feed": "leaf",
+     "leaf_driver": "41_0",
+     "foot": [
+      20648.2,
+      809.504
+     ],
+     "strap": [
+      "M9",
+      41
+     ],
+     "root_slide_um": 0.0,
+     "branch_slide_um": 0.0,
+     "trunk_um": 552.96,
+     "comb_max_um": 552.96,
+     "comb_span_um": 615.6,
+     "taps": 6,
+     "input_um": 553.6,
+     "node_move_um": 166.32,
+     "root_depth": "balance"
+    },
+    {
+     "tree": "d1218.24_42",
+     "i": 42,
+     "edge_y": 1218.24,
+     "dir": -1,
+     "root": "ckm_br_3",
+     "branch": null,
+     "feed": "leaf",
+     "leaf_driver": "42_0",
+     "foot": [
+      21143.48,
+      809.504
+     ],
+     "strap": [
+      "M9",
+      42
+     ],
+     "root_slide_um": 0.0,
+     "branch_slide_um": 0.0,
+     "trunk_um": 552.96,
+     "comb_max_um": 552.96,
+     "comb_span_um": 613.44,
+     "taps": 3,
+     "input_um": 553.6,
+     "node_move_um": 86.4,
+     "root_depth": "balance"
+    },
+    {
+     "tree": "d1218.24_43",
+     "i": 43,
+     "edge_y": 1218.24,
+     "dir": -1,
+     "root": "ckm_br_4",
+     "branch": null,
+     "feed": "leaf",
+     "leaf_driver": "43_0",
+     "foot": [
+      21635.96,
+      809.504
+     ],
+     "strap": [
+      "M9",
+      43
+     ],
+     "root_slide_um": 0.0,
+     "branch_slide_um": 0.0,
+     "trunk_um": 552.96,
+     "comb_max_um": 552.96,
+     "comb_span_um": 613.44,
+     "taps": 3,
+     "input_um": 553.6,
+     "node_move_um": 116.64,
+     "root_depth": "balance"
+    },
+    {
+     "tree": "d1218.24_61",
+     "i": 61,
+     "edge_y": 1218.24,
+     "dir": -1,
+     "root": "ckm_br_5",
+     "branch": null,
+     "feed": "leaf",
+     "leaf_driver": "61_0",
+     "foot": [
+      30500.6,
+      824.624
+     ],
+     "strap": [
+      "M9",
+      61
+     ],
+     "root_slide_um": 0.0,
+     "branch_slide_um": 0.0,
+     "trunk_um": 568.08,
+     "comb_max_um": 568.08,
+     "comb_span_um": 615.6,
+     "taps": 6,
+     "input_um": 568.72,
+     "node_move_um": 2.16,
+     "root_depth": "balance"
+    },
+    {
+     "tree": "d1218.24_62",
+     "i": 62,
+     "edge_y": 1218.24,
+     "dir": -1,
+     "root": "ckm_br_6",
+     "branch": null,
+     "feed": "leaf",
+     "leaf_driver": "62_0",
+     "foot": [
+      30993.08,
+      824.624
+     ],
+     "strap": [
+      "M9",
+      62
+     ],
+     "root_slide_um": 0.0,
+     "branch_slide_um": 0.0,
+     "trunk_um": 568.08,
+     "comb_max_um": 568.08,
+     "comb_span_um": 613.44,
+     "taps": 3,
+     "input_um": 568.72,
+     "node_move_um": 2.16,
+     "root_depth": "balance"
+    },
+    {
+     "tree": "d1218.24_63",
+     "i": 63,
+     "edge_y": 1218.24,
+     "dir": -1,
+     "root": "ckm_br_7",
+     "branch": null,
+     "feed": "leaf",
+     "leaf_driver": "63_0",
+     "foot": [
+      31484.84,
+      824.624
+     ],
+     "strap": [
+      "M9",
+      63
+     ],
+     "root_slide_um": 0.0,
+     "branch_slide_um": 0.0,
+     "trunk_um": 568.08,
+     "comb_max_um": 568.08,
+     "comb_span_um": 613.44,
+     "taps": 3,
+     "input_um": 568.73,
+     "node_move_um": 2.18,
+     "root_depth": "balance"
+    }
+   ],
+   "band_node_resites": [
+    {
+     "node": "ckm_n11_h00100010001",
+     "tree": "d1218.24_21",
+     "dx_um": 88.556
+    },
+    {
+     "node": "ckm_n11_h00100010100",
+     "tree": "d1218.24_22",
+     "dx_um": 168.476
+    },
+    {
+     "node": "ckm_n11_h10001000001",
+     "tree": "d1218.24_41",
+     "dx_um": 166.324
+    },
+    {
+     "node": "ckm_n11_h10001000100",
+     "tree": "d1218.24_42",
+     "dx_um": 86.404
+    },
+    {
+     "node": "ckm_n11_h10001000101",
+     "tree": "d1218.24_43",
+     "dx_um": 116.636
+    },
+    {
+     "node": "ckm_n11_h10101010001",
+     "tree": "d1218.24_61",
+     "dx_um": 2.164
+    },
+    {
+     "node": "ckm_n11_h10101010100",
+     "tree": "d1218.24_62",
+     "dx_um": 2.164
+    },
+    {
+     "node": "ckm_n11_h10101010101",
+     "tree": "d1218.24_63",
+     "dx_um": 2.182
+    }
+   ],
+   "leaf_path_um": [
+    26377.709,
+    27068.909
+   ],
+   "hop_max_um": 596.16,
+   "drivers": 4096,
+   "driver_straps": {
+    "M9": 4090,
+    "M8": 6
+   },
+   "taps": 7481,
+   "htree_wire_mm": 2547.23,
+   "mesh_wire_mm": 3413.97,
+   "stub_max_um": 251.21
+  }
+ }
+}

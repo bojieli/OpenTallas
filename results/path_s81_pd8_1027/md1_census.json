@@ -1,0 +1,735 @@
+{
+ "roles": {
+  "mesh_driver": 8,
+  "leg_rep": 106,
+  "tree_node": 306
+ },
+ "fail": [
+  "dsfd_cfifo_crs4",
+  "ot_v41_rom_elem_q_qxpq_w10",
+  "ot_v41_bf_col",
+  "ot_s81sl_vn_b",
+  "ot_s81sl_vn_a",
+  "ot_s81sl_capc5r",
+  "ot_s81sl_xrt1",
+  "ot_s81dv_xfin",
+  "dsdv_bksel_q"
+ ],
+ "modules": {
+  "dsfd_qbank_N": {
+   "instances": 864,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     864
+    ]
+   ]
+  },
+  "dsfd_qbank_S": {
+   "instances": 864,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     864
+    ]
+   ]
+  },
+  "dsfd_cfifo_crs4": {
+   "instances": 72,
+   "patterns": 3,
+   "with_islands": 2,
+   "top": [
+    [
+     [],
+     70
+    ],
+    [
+     [
+      [
+       243.212,
+       21.588,
+       "n"
+      ]
+     ],
+     1
+    ]
+   ]
+  },
+  "ot_v41_rom_elem_q_qxpq_w10": {
+   "instances": 864,
+   "patterns": 200,
+   "with_islands": 263,
+   "top": [
+    [
+     [],
+     601
+    ],
+    [
+     [
+      [
+       332.852,
+       194.388,
+       "n"
+      ]
+     ],
+     4
+    ]
+   ]
+  },
+  "dsfd_bf_front_roots": {
+   "instances": 228,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     228
+    ]
+   ]
+  },
+  "ot_v41_bf_col": {
+   "instances": 456,
+   "patterns": 70,
+   "with_islands": 85,
+   "top": [
+    [
+     [],
+     371
+    ],
+    [
+     [
+      [
+       155.116,
+       107.988,
+       "n"
+      ]
+     ],
+     2
+    ]
+   ]
+  },
+  "dsfd_node_LLfu": {
+   "instances": 516,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     516
+    ]
+   ]
+  },
+  "dsfd_node_NNfu": {
+   "instances": 504,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     504
+    ]
+   ]
+  },
+  "dsfd_node_LLfd": {
+   "instances": 504,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     504
+    ]
+   ]
+  },
+  "dsfd_node_NNfd": {
+   "instances": 516,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     516
+    ]
+   ]
+  },
+  "dsfd_rstg": {
+   "instances": 216,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     216
+    ]
+   ]
+  },
+  "ot_s81_cfg7_seq": {
+   "instances": 864,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     864
+    ]
+   ]
+  },
+  "ot_s81_cfg7_seq_bfp": {
+   "instances": 228,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     228
+    ]
+   ]
+  },
+  "ot_s81_sstn_base566": {
+   "instances": 660,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     660
+    ]
+   ]
+  },
+  "ot_s81_sstn_payload536": {
+   "instances": 660,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     660
+    ]
+   ]
+  },
+  "ot_rom_4096x72_m8": {
+   "instances": 7644,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     7644
+    ]
+   ]
+  },
+  "dsfd_node_LLd": {
+   "instances": 72,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     72
+    ]
+   ]
+  },
+  "ot_s81c_attn_hcore": {
+   "instances": 1024,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     1024
+    ]
+   ]
+  },
+  "dsdv_svc_sx_hrow": {
+   "instances": 128,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     128
+    ]
+   ]
+  },
+  "ot_s81sl_ve_m": {
+   "instances": 75,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     75
+    ]
+   ]
+  },
+  "ot_s81sl_ve_s": {
+   "instances": 75,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     75
+    ]
+   ]
+  },
+  "ot_s81sl_vsw": {
+   "instances": 75,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     75
+    ]
+   ]
+  },
+  "ot_s81sl_vn_b": {
+   "instances": 75,
+   "patterns": 4,
+   "with_islands": 3,
+   "top": [
+    [
+     [],
+     72
+    ],
+    [
+     [
+      [
+       38.772,
+       82.068,
+       "n"
+      ]
+     ],
+     1
+    ]
+   ]
+  },
+  "ot_s81sl_vs": {
+   "instances": 75,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     75
+    ]
+   ]
+  },
+  "ot_s81sl_vn_a": {
+   "instances": 75,
+   "patterns": 8,
+   "with_islands": 7,
+   "top": [
+    [
+     [],
+     68
+    ],
+    [
+     [
+      [
+       152.732,
+       142.596,
+       "n"
+      ]
+     ],
+     1
+    ]
+   ]
+  },
+  "dsfd_su_t_rxsb": {
+   "instances": 75,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     75
+    ]
+   ]
+  },
+  "dsfd_su_t_rxsf": {
+   "instances": 75,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     75
+    ]
+   ]
+  },
+  "ot_s81sl_vq": {
+   "instances": 75,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     75
+    ]
+   ]
+  },
+  "ot_dsrom_su_hcpost_lane_pr": {
+   "instances": 1200,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     1200
+    ]
+   ]
+  },
+  "ot_sram_1r1w_512x128_m4_r2c2": {
+   "instances": 150,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     150
+    ]
+   ]
+  },
+  "ot_s81sl_capc5r": {
+   "instances": 16,
+   "patterns": 6,
+   "with_islands": 5,
+   "top": [
+    [
+     [],
+     11
+    ],
+    [
+     [
+      [
+       67.612,
+       198.708,
+       "d"
+      ],
+      [
+       67.612,
+       375.828,
+       "n"
+      ],
+      [
+       315.252,
+       375.828,
+       "n"
+      ]
+     ],
+     1
+    ]
+   ]
+  },
+  "ot_s81sl_xrt1": {
+   "instances": 14,
+   "patterns": 4,
+   "with_islands": 3,
+   "top": [
+    [
+     [],
+     11
+    ],
+    [
+     [
+      [
+       274.972,
+       71.316,
+       "n"
+      ]
+     ],
+     1
+    ]
+   ]
+  },
+  "ot_s81sl_eg": {
+   "instances": 16,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     16
+    ]
+   ]
+  },
+  "ot_s81dv_xfin": {
+   "instances": 16,
+   "patterns": 2,
+   "with_islands": 1,
+   "top": [
+    [
+     [],
+     15
+    ],
+    [
+     [
+      [
+       137.752,
+       298.068,
+       "n"
+      ]
+     ],
+     1
+    ]
+   ]
+  },
+  "ot_s81sl_xrt3": {
+   "instances": 2,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     2
+    ]
+   ]
+  },
+  "dsdv_gunit_l5": {
+   "instances": 1,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     1
+    ]
+   ]
+  },
+  "dsdv_gunit_l1": {
+   "instances": 1,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     1
+    ]
+   ]
+  },
+  "dsdv_gunit_l1c": {
+   "instances": 1,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     1
+    ]
+   ]
+  },
+  "dsdv_gunit_l0": {
+   "instances": 1,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     1
+    ]
+   ]
+  },
+  "dsdv_gunit_l2": {
+   "instances": 1,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     1
+    ]
+   ]
+  },
+  "dsdv_gunit_l3": {
+   "instances": 1,
+   "patterns": 1,
+   "with_islands": 1,
+   "top": [
+    [
+     [
+      [
+       217.689,
+       56.196,
+       "n"
+      ]
+     ],
+     1
+    ]
+   ]
+  },
+  "dsdv_gunit_l0r": {
+   "instances": 1,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     1
+    ]
+   ]
+  },
+  "dsdv_gunit_l5f": {
+   "instances": 1,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     1
+    ]
+   ]
+  },
+  "dsdv_gunit_l4r": {
+   "instances": 1,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     1
+    ]
+   ]
+  },
+  "dsdv_gunit_l4": {
+   "instances": 1,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     1
+    ]
+   ]
+  },
+  "dsdv_bksel_q": {
+   "instances": 4,
+   "patterns": 4,
+   "with_islands": 3,
+   "top": [
+    [
+     [
+      [
+       76.36,
+       276.48,
+       "d"
+      ],
+      [
+       325.4,
+       99.36,
+       "n"
+      ],
+      [
+       571.64,
+       276.48,
+       "d"
+      ],
+      [
+       571.64,
+       453.6,
+       "n"
+      ]
+     ],
+     1
+    ],
+    [
+     [
+      [
+       180.04,
+       276.48,
+       "d"
+      ],
+      [
+       672.52,
+       276.48,
+       "d"
+      ]
+     ],
+     1
+    ]
+   ]
+  },
+  "dsdv_idx_tx_n32": {
+   "instances": 1,
+   "patterns": 1,
+   "with_islands": 1,
+   "top": [
+    [
+     [
+      [
+       234.572,
+       220.308,
+       "d"
+      ],
+      [
+       234.572,
+       397.428,
+       "n"
+      ]
+     ],
+     1
+    ]
+   ]
+  },
+  "dsdv_bksel_c": {
+   "instances": 1,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     1
+    ]
+   ]
+  },
+  "dsdv_bk_g": {
+   "instances": 1,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     1
+    ]
+   ]
+  },
+  "dsdv_eng_rr_e": {
+   "instances": 1,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     1
+    ]
+   ]
+  },
+  "dsdv_eng_rr_h0": {
+   "instances": 1,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     1
+    ]
+   ]
+  },
+  "dsdv_eng_rr_h1": {
+   "instances": 1,
+   "patterns": 1,
+   "with_islands": 0,
+   "top": [
+    [
+     [],
+     1
+    ]
+   ]
+  }
+ }
+}
