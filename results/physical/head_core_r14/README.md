@@ -16,7 +16,7 @@ These prove the flow path only: both R12b netlists are NOT SIGNED.
   the **unscaled** platform setRC (not on rc_cal 0.8/0.9), with slew/cap margin >= 20 %. The kit RC is then restored for hold repair and the reports.
   Calls made before GRT pass through unchanged.
   - Second root cause found: the R10 GRT repair (`actual_head_grt_repair.sh`) ran `do-5_1_grt CORNER=BC CORNERS=bc`, which is FF only.
-    The TT slew cone was therefore never visible to repair_design. The R14 rebuild runs GRT MCMM (`CORNER=TC CORNERS="tc bc"`).
+    The TT slew cone was therefore never visible to repair_design. The R14 rebuild runs GRT MCMM with the kit config corners (elemA `tc bc`, elemB `tc BC`). A command-line `CORNERS='tc bc'` override broke the elemB floorplan (STA-0102 "bc is not the name of a scene" in report_power), so it was removed (75f964343).
 - `tools/s81_head/head_eco_post.tcl` + `head_post_route_eco.sh` (warm post-route ECO). It follows the KV-CORES eco_route.tcl recipe, which signed KV e1/e5/e7:
   1. Read the routed RCX SPEF, then run repair_design (fanout 24, margin 20 %).
   2. Run repair_timing -setup (margin 10).
@@ -36,7 +36,10 @@ These prove the flow path only: both R12b netlists are NOT SIGNED.
   - Hold: 267 endpoints, 263 HB4 inserted, then R10_HOLD_DONE WNS +10.02 / 0.
   - POST (GRT estimate): setup +118.47/0, hold +4.49/0, slew 0, cap 0.
   - HB4 total 16242.
-  - DRT was running at 04:15. The sign-off and routed-LEC verdicts are pending.
+  - DRT + finish rc 0 at 04:27 (6_final.v 04:23:02).
+  - Sign-off (rerun 04:35:51, newer than 6_final.v; the chain's first call had rc 2 because the staging rsync excluded `signoff*`, which dropped signoff.py; fixed in d3d53ecb1):
+    **SIGNED | TT setup 122.36 | FF hold 4.43 | pair skew TT/FF 29.6/27.0 | DRC 0 ant 0 | sdc_lint PASS face_guard PASS**; RCX slew 0 / cap 0 at TT and FF (`signoff_actual/signoff.json`). CHECKED (raw signoff log + json).
+  - Routed LEC (`elemA_eco.lec_final`): running since 04:28 (~50 min). If EQUIVALENT, the canary output is a complete sign-off of the R12b elemA view (old pin at (162.00,163.44), R12b tree, not the R14 centre-pin rebuild).
 
 ## 3. elemA rebuild (ASK1): centre pin + balanced trunk
 Finding (CHECKED, from the routed abstract LEF and io.tcl):
@@ -57,6 +60,12 @@ R14:
 - Band prediction: UNCHECKED, no plan-model number. The mirror lengthens the two short north legs, which moves the TT mean (228.5) up toward 250.
 - Slew cone: handled structurally by GRT repair_design on unscaled RC, which sizes the driver or buffers the net (121-146 um, well under the 405 um reach).
 
+### elemA m2 post-CTS render (GEOM REQ)
+`elemA_m2_4cts_floorplan.png`, `elemA_m2_4cts_density.png` (layout_dump.tcl + layout_png.py on m2 4_cts.odb), viewed:
+- ft_mstrap_i at (159.744..159.936) = centre (CHECKED, dump).
+- Two ROM macros along the N edge, 20 um channel between them. Std-cell blob mid/south at density ~0.5; fill 0.309.
+- One hot bin (~1.0) at the E edge, y ~205, at the E pin cluster. Otherwise the placement is the unchanged R12b 3_place (warm start).
+
 ## 4. elemB (ASK2 a)
 - RTL: `rtl/dsrom_sys/s81_head/ot_s81hd_elemB_rb.sv` removes the 50 proven-dead input ports row0[16:0], b_v and b_d[31:0]. Inside the wrapper the element inputs are constant 0, the same value the parent tied before.
   - The repo file stays the SYNTHESIS source (clk port). The kit's 12.2a1 pushdown patch (patch_synth.tcl on 1_synth.odb) adds the ft_* island ports after synthesis.
@@ -71,7 +80,7 @@ R14:
   - io.tcl: 341 -> 291 place_pin;
   - pins.json: 343 -> 293;
   - constraint.sdc: `non_clk_in = {go rst_n x}`.
-- Rebuild: `head-core-r14/elemB_rb` with the same plan options as the built tree (`--entry 142.56,142.56 --seg 405 --fanouts 2,4,4,4,4 --balance 0 --halo 4.32`). It re-synthesises from rtl (`OT_R14_PATCH_SYNTH=1`: orfs_hold_mm -> synth -> face_guard_core -> patch_synth -> place), relaunched at 04:20. The first try failed PPL-0061 because it had no patch step; that data was deleted.
+- Rebuild: `head-core-r14/elemB_rb` with the same plan options as the built tree (`--entry 142.56,142.56 --seg 405 --fanouts 2,4,4,4,4 --balance 0 --halo 4.32`). It re-synthesises from rtl (`OT_R14_PATCH_SYNTH=1`: orfs_hold_mm -> synth -> face_guard_core -> patch_synth -> place), relaunched at 04:38:51 from `repo/tools/s81_head_r14b/` (75f964343). Earlier tries, data deleted: PPL-0061 (no patch step); face_guard (kit skip set lacked the pre-patch `clk`; kit wrapper used `G.MAX_CHAIN`, gone from main face_guard.py) -> fixed 7383a1825, the probe then gave FACE_GUARD PASS 291/291; floorplan STA-0102 (CORNERS override) -> fixed 75f964343.
 - The elemB clock pin ft_mstrap_i is at (144.72,146.16) (routed LEF, CHECKED). It is near the centre, not on the W edge. The edge "clk" pin belonged to the old closed view.
 
 ## Collect
