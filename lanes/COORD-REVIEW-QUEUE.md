@@ -2193,3 +2193,5 @@ READY [AUTOPILOT PREFLIGHT ALL 2026-10-27 08:21 PDT] codex/autopilot-signoff-102
 READY [CODEX FLOW 2026-10-27 08:23 PDT] codex/ft-overlay-1027@79a0cfe0a: signoff per-port sender demand+die-timedFT exclusion after expansion,45focusedPASS inclmutant,6default-byte-identical; sourceonactualintel2main8fcd97ac44; noRTL/physicalchange.
 
 READY [CODEX FLOW-WATCH 2026-10-27 08:25 PDT] codex/flow-watch-1027@3400e5da8: explicit core_flow/core_infra/master_slice/native_bb/kit_preflight watch paths close helper-only fingerprint bypass;33focusedwatch/trigger/canary testsPASS incl3oldempty-sourcefixtures fixed aftercheckerpin7689. Dispatch/test-only; no physicalcanary rerun needed; no unreadyRC60um ancestry.
+
+READY [CODEX DIE-PROTO 2026-10-27 08:25 PDT] codex/ft-overlay-1027@ced7b8d2d: shared trial GRT/clock exactexit propagation,5actualshellcontrolsPASS; standalonecommit afterFTfix79a0cfe0a; noRTL/physicalchange.
