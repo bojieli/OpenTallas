@@ -1,0 +1,27 @@
+{
+  "status": "SOURCE_CALENDAR_CAPACITY_FIT; PHYSICAL_PLAN_ADOPTION_OWNED_HBM",
+  "source_alternative": "R8bank(q,k)=(5,3) cutmodel0.529..0.576<=0.6",
+  "query_period": 5,
+  "key_period": 3,
+  "vm_period": 2,
+  "results": [
+    {
+      "score_chain": 0,
+      "length": 1990
+    },
+    {
+      "score_chain": 4,
+      "length": 1994
+    },
+    {
+      "score_chain": 16,
+      "length": 2006
+    },
+    {
+      "score_chain": 48,
+      "length": 2038
+    }
+  ],
+  "calendar_capacity": 2048,
+  "scope": "Avoids nativeVMII2 k4/k4 overflow via an existing cut-feasible structural alternative, no storage or timing limit relaxed. Actual bankserializer RTL/currentboundcalendar replay and completepipeline latency remainopen."
+}

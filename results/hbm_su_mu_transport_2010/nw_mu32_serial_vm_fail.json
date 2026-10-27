@@ -1,0 +1,806 @@
+{
+  "source_candidate": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_balanced_named_l4/materialized_NW_H4320_k3/candidate_type.json",
+  "scope": "NW materialized full native MU32 candidate versus current SUplanS2; NE not yet compared; no route/native replay or tokenrate claim",
+  "transport": "DELTA_REQUIRES_SU_PRICE",
+  "changed_existing_logical_groups": 1692,
+  "added_logical_groups": 110,
+  "change_dispositions": {
+    "REPRICE_OR_PROVE_SU_SLOTS": 1692
+  },
+  "new_mu_connections": 112,
+  "new_mu_k_hist": {
+    "2": 53,
+    "1": 57,
+    "3": 2
+  },
+  "new_mu_serialized_links": [
+    {
+      "conn": "u_vmb_Q0.rd|u_mu_fused_0",
+      "wires": 129,
+      "payload": 257,
+      "k": 2,
+      "pipeline_stations": 4
+    },
+    {
+      "conn": "u_mu_fused_0.wr|u_vmb_Q0",
+      "wires": 141,
+      "payload": 282,
+      "k": 2,
+      "pipeline_stations": 3
+    },
+    {
+      "conn": "u_mu_fused_0.rq|u_vmb_Q0",
+      "wires": 9,
+      "payload": 18,
+      "k": 2,
+      "pipeline_stations": 3
+    },
+    {
+      "conn": "u_vmb_Q0_mu1.rd|u_mu_fused_1",
+      "wires": 129,
+      "payload": 257,
+      "k": 2,
+      "pipeline_stations": 3
+    },
+    {
+      "conn": "u_vmb_Q1.rd|u_mu_fused_2",
+      "wires": 129,
+      "payload": 257,
+      "k": 2,
+      "pipeline_stations": 6
+    },
+    {
+      "conn": "u_mu_fused_2.wr|u_vmb_Q1",
+      "wires": 141,
+      "payload": 282,
+      "k": 2,
+      "pipeline_stations": 4
+    },
+    {
+      "conn": "u_mu_fused_2.rq|u_vmb_Q1",
+      "wires": 9,
+      "payload": 18,
+      "k": 2,
+      "pipeline_stations": 4
+    },
+    {
+      "conn": "u_vmb_Q1_mu1.rd|u_mu_fused_3",
+      "wires": 129,
+      "payload": 257,
+      "k": 2,
+      "pipeline_stations": 4
+    },
+    {
+      "conn": "u_vmb_Q2.rd|u_mu_fused_4",
+      "wires": 129,
+      "payload": 257,
+      "k": 2,
+      "pipeline_stations": 7
+    },
+    {
+      "conn": "u_mu_fused_4.wr|u_vmb_Q2",
+      "wires": 141,
+      "payload": 282,
+      "k": 2,
+      "pipeline_stations": 5
+    },
+    {
+      "conn": "u_mu_fused_4.rq|u_vmb_Q2",
+      "wires": 9,
+      "payload": 18,
+      "k": 2,
+      "pipeline_stations": 5
+    },
+    {
+      "conn": "u_vmb_Q3.rd|u_mu_fused_6",
+      "wires": 129,
+      "payload": 257,
+      "k": 2,
+      "pipeline_stations": 5
+    },
+    {
+      "conn": "u_mu_fused_6.wr|u_vmb_Q3",
+      "wires": 141,
+      "payload": 282,
+      "k": 2,
+      "pipeline_stations": 3
+    },
+    {
+      "conn": "u_mu_fused_6.rq|u_vmb_Q3",
+      "wires": 9,
+      "payload": 18,
+      "k": 2,
+      "pipeline_stations": 3
+    },
+    {
+      "conn": "u_vmb_Q4.rd|u_mu_fused_8",
+      "wires": 129,
+      "payload": 257,
+      "k": 2,
+      "pipeline_stations": 6
+    },
+    {
+      "conn": "u_mu_fused_8.wr|u_vmb_Q4",
+      "wires": 141,
+      "payload": 282,
+      "k": 2,
+      "pipeline_stations": 3
+    },
+    {
+      "conn": "u_mu_fused_8.rq|u_vmb_Q4",
+      "wires": 9,
+      "payload": 18,
+      "k": 2,
+      "pipeline_stations": 3
+    },
+    {
+      "conn": "u_vmb_Q4_mu1.rd|u_mu_fused_9",
+      "wires": 129,
+      "payload": 257,
+      "k": 2,
+      "pipeline_stations": 4
+    },
+    {
+      "conn": "u_vmb_Q5.rd|u_mu_fused_10",
+      "wires": 129,
+      "payload": 257,
+      "k": 2,
+      "pipeline_stations": 3
+    },
+    {
+      "conn": "u_vmb_Q6.rd|u_mu_fused_12",
+      "wires": 129,
+      "payload": 257,
+      "k": 2,
+      "pipeline_stations": 4
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n1_q0_0.da|u_mu_fused_0",
+      "wires": 87,
+      "payload": 173,
+      "k": 2,
+      "pipeline_stations": 5
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n1_q0_0.db|u_mu_fused_1",
+      "wires": 87,
+      "payload": 173,
+      "k": 2,
+      "pipeline_stations": 4
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_2.uo|u_mu_fused_n1_q0_1",
+      "wires": 136,
+      "payload": 271,
+      "k": 2,
+      "pipeline_stations": 5
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n1_q0_1.da|u_mu_fused_2",
+      "wires": 87,
+      "payload": 173,
+      "k": 2,
+      "pipeline_stations": 6
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_3.uo|u_mu_fused_n1_q0_1",
+      "wires": 136,
+      "payload": 271,
+      "k": 2,
+      "pipeline_stations": 3
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n1_q0_1.db|u_mu_fused_3",
+      "wires": 87,
+      "payload": 173,
+      "k": 2,
+      "pipeline_stations": 5
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n1_q0_2.da|u_mu_fused_4",
+      "wires": 87,
+      "payload": 173,
+      "k": 2,
+      "pipeline_stations": 4
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n1_q0_2.db|u_mu_fused_5",
+      "wires": 87,
+      "payload": 173,
+      "k": 2,
+      "pipeline_stations": 3
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_6.uo|u_mu_fused_n1_q0_3",
+      "wires": 136,
+      "payload": 271,
+      "k": 2,
+      "pipeline_stations": 3
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n1_q0_3.da|u_mu_fused_6",
+      "wires": 87,
+      "payload": 173,
+      "k": 2,
+      "pipeline_stations": 5
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n1_q0_3.db|u_mu_fused_7",
+      "wires": 87,
+      "payload": 173,
+      "k": 2,
+      "pipeline_stations": 3
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n1_q0_0.uo|u_mu_fused_n2L_q0",
+      "wires": 136,
+      "payload": 271,
+      "k": 2,
+      "pipeline_stations": 5
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n2L_q0.da|u_mu_fused_n1_q0_0",
+      "wires": 87,
+      "payload": 173,
+      "k": 2,
+      "pipeline_stations": 3
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n1_q0_2.uo|u_mu_fused_n2R_q0",
+      "wires": 136,
+      "payload": 271,
+      "k": 2,
+      "pipeline_stations": 7
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n2R_q0.da|u_mu_fused_n1_q0_2",
+      "wires": 87,
+      "payload": 173,
+      "k": 2,
+      "pipeline_stations": 6
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n2L_q0.uo|u_mu_fused_n3_q0",
+      "wires": 136,
+      "payload": 271,
+      "k": 2,
+      "pipeline_stations": 3
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n3_q0.da|u_mu_fused_n2L_q0",
+      "wires": 87,
+      "payload": 173,
+      "k": 2,
+      "pipeline_stations": 4
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n2R_q0.uo|u_mu_fused_n3_q0",
+      "wires": 136,
+      "payload": 271,
+      "k": 2,
+      "pipeline_stations": 6
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n3_q0.db|u_mu_fused_n2R_q0",
+      "wires": 87,
+      "payload": 173,
+      "k": 2,
+      "pipeline_stations": 8
+    },
+    {
+      "conn": "mu_tree_root:0:up",
+      "wires": 91,
+      "payload": 271,
+      "k": 3,
+      "pipeline_stations": 14
+    },
+    {
+      "conn": "mu_tree_root:0:down",
+      "wires": 58,
+      "payload": 173,
+      "k": 3,
+      "pipeline_stations": 15
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_10.uo|u_mu_fused_n1_q1_1",
+      "wires": 136,
+      "payload": 271,
+      "k": 2,
+      "pipeline_stations": 3
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n1_q1_1.da|u_mu_fused_10",
+      "wires": 87,
+      "payload": 173,
+      "k": 2,
+      "pipeline_stations": 4
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n1_q1_1.db|u_mu_fused_11",
+      "wires": 87,
+      "payload": 173,
+      "k": 2,
+      "pipeline_stations": 4
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_12.uo|u_mu_fused_n1_q1_2",
+      "wires": 136,
+      "payload": 271,
+      "k": 2,
+      "pipeline_stations": 3
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n1_q1_2.da|u_mu_fused_12",
+      "wires": 87,
+      "payload": 173,
+      "k": 2,
+      "pipeline_stations": 4
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n1_q1_2.db|u_mu_fused_13",
+      "wires": 87,
+      "payload": 173,
+      "k": 2,
+      "pipeline_stations": 3
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n1_q1_3.da|u_mu_fused_14",
+      "wires": 87,
+      "payload": 173,
+      "k": 2,
+      "pipeline_stations": 3
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n2L_q1.da|u_mu_fused_n1_q1_0",
+      "wires": 87,
+      "payload": 173,
+      "k": 2,
+      "pipeline_stations": 3
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n1_q1_2.uo|u_mu_fused_n2R_q1",
+      "wires": 136,
+      "payload": 271,
+      "k": 2,
+      "pipeline_stations": 6
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n2R_q1.da|u_mu_fused_n1_q1_2",
+      "wires": 87,
+      "payload": 173,
+      "k": 2,
+      "pipeline_stations": 5
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n1_q1_3.uo|u_mu_fused_n2R_q1",
+      "wires": 136,
+      "payload": 271,
+      "k": 2,
+      "pipeline_stations": 6
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n2R_q1.db|u_mu_fused_n1_q1_3",
+      "wires": 87,
+      "payload": 173,
+      "k": 2,
+      "pipeline_stations": 5
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n2L_q1.uo|u_mu_fused_n3_q1",
+      "wires": 136,
+      "payload": 271,
+      "k": 2,
+      "pipeline_stations": 3
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n3_q1.da|u_mu_fused_n2L_q1",
+      "wires": 87,
+      "payload": 173,
+      "k": 2,
+      "pipeline_stations": 4
+    }
+  ],
+  "new_mu_parallel_links": [
+    {
+      "conn": "u_mu_fused_1.wr|u_vmb_Q0_mu1",
+      "wires": 282,
+      "payload": 282,
+      "k": 1,
+      "pipeline_stations": 1
+    },
+    {
+      "conn": "u_mu_fused_1.rq|u_vmb_Q0_mu1",
+      "wires": 18,
+      "payload": 18,
+      "k": 1,
+      "pipeline_stations": 1
+    },
+    {
+      "conn": "u_mu_fused_3.wr|u_vmb_Q1_mu1",
+      "wires": 282,
+      "payload": 282,
+      "k": 1,
+      "pipeline_stations": 1
+    },
+    {
+      "conn": "u_mu_fused_3.rq|u_vmb_Q1_mu1",
+      "wires": 18,
+      "payload": 18,
+      "k": 1,
+      "pipeline_stations": 1
+    },
+    {
+      "conn": "u_vmb_Q2_mu1.rd|u_mu_fused_5",
+      "wires": 257,
+      "payload": 257,
+      "k": 1,
+      "pipeline_stations": 3
+    },
+    {
+      "conn": "u_mu_fused_5.wr|u_vmb_Q2_mu1",
+      "wires": 282,
+      "payload": 282,
+      "k": 1,
+      "pipeline_stations": 0
+    },
+    {
+      "conn": "u_mu_fused_5.rq|u_vmb_Q2_mu1",
+      "wires": 18,
+      "payload": 18,
+      "k": 1,
+      "pipeline_stations": 0
+    },
+    {
+      "conn": "u_vmb_Q3_mu1.rd|u_mu_fused_7",
+      "wires": 257,
+      "payload": 257,
+      "k": 1,
+      "pipeline_stations": 3
+    },
+    {
+      "conn": "u_mu_fused_7.wr|u_vmb_Q3_mu1",
+      "wires": 282,
+      "payload": 282,
+      "k": 1,
+      "pipeline_stations": 0
+    },
+    {
+      "conn": "u_mu_fused_7.rq|u_vmb_Q3_mu1",
+      "wires": 18,
+      "payload": 18,
+      "k": 1,
+      "pipeline_stations": 0
+    },
+    {
+      "conn": "u_mu_fused_9.wr|u_vmb_Q4_mu1",
+      "wires": 282,
+      "payload": 282,
+      "k": 1,
+      "pipeline_stations": 1
+    },
+    {
+      "conn": "u_mu_fused_9.rq|u_vmb_Q4_mu1",
+      "wires": 18,
+      "payload": 18,
+      "k": 1,
+      "pipeline_stations": 1
+    },
+    {
+      "conn": "u_mu_fused_10.wr|u_vmb_Q5",
+      "wires": 282,
+      "payload": 282,
+      "k": 1,
+      "pipeline_stations": 1
+    },
+    {
+      "conn": "u_mu_fused_10.rq|u_vmb_Q5",
+      "wires": 18,
+      "payload": 18,
+      "k": 1,
+      "pipeline_stations": 1
+    },
+    {
+      "conn": "u_vmb_Q5_mu1.rd|u_mu_fused_11",
+      "wires": 257,
+      "payload": 257,
+      "k": 1,
+      "pipeline_stations": 3
+    },
+    {
+      "conn": "u_mu_fused_11.wr|u_vmb_Q5_mu1",
+      "wires": 282,
+      "payload": 282,
+      "k": 1,
+      "pipeline_stations": 0
+    },
+    {
+      "conn": "u_mu_fused_11.rq|u_vmb_Q5_mu1",
+      "wires": 18,
+      "payload": 18,
+      "k": 1,
+      "pipeline_stations": 0
+    },
+    {
+      "conn": "u_mu_fused_12.wr|u_vmb_Q6",
+      "wires": 282,
+      "payload": 282,
+      "k": 1,
+      "pipeline_stations": 2
+    },
+    {
+      "conn": "u_mu_fused_12.rq|u_vmb_Q6",
+      "wires": 18,
+      "payload": 18,
+      "k": 1,
+      "pipeline_stations": 2
+    },
+    {
+      "conn": "u_vmb_Q6_mu1.rd|u_mu_fused_13",
+      "wires": 257,
+      "payload": 257,
+      "k": 1,
+      "pipeline_stations": 3
+    },
+    {
+      "conn": "u_mu_fused_13.wr|u_vmb_Q6_mu1",
+      "wires": 282,
+      "payload": 282,
+      "k": 1,
+      "pipeline_stations": 0
+    },
+    {
+      "conn": "u_mu_fused_13.rq|u_vmb_Q6_mu1",
+      "wires": 18,
+      "payload": 18,
+      "k": 1,
+      "pipeline_stations": 0
+    },
+    {
+      "conn": "u_vmb_Q7.rd|u_mu_fused_14",
+      "wires": 257,
+      "payload": 257,
+      "k": 1,
+      "pipeline_stations": 0
+    },
+    {
+      "conn": "u_mu_fused_14.wr|u_vmb_Q7",
+      "wires": 282,
+      "payload": 282,
+      "k": 1,
+      "pipeline_stations": 3
+    },
+    {
+      "conn": "u_mu_fused_14.rq|u_vmb_Q7",
+      "wires": 18,
+      "payload": 18,
+      "k": 1,
+      "pipeline_stations": 3
+    },
+    {
+      "conn": "u_vmb_Q7_mu1.rd|u_mu_fused_15",
+      "wires": 257,
+      "payload": 257,
+      "k": 1,
+      "pipeline_stations": 2
+    },
+    {
+      "conn": "u_mu_fused_15.wr|u_vmb_Q7_mu1",
+      "wires": 282,
+      "payload": 282,
+      "k": 1,
+      "pipeline_stations": 2
+    },
+    {
+      "conn": "u_mu_fused_15.rq|u_vmb_Q7_mu1",
+      "wires": 18,
+      "payload": 18,
+      "k": 1,
+      "pipeline_stations": 2
+    },
+    {
+      "conn": "u_hb_idx__q_Q.kin|u_mu_keybuf_0",
+      "wires": 256,
+      "payload": 256,
+      "k": 1,
+      "pipeline_stations": 2
+    },
+    {
+      "conn": "u_hb_idx__q_Q.kin|u_mu_keybuf_0",
+      "wires": 256,
+      "payload": 256,
+      "k": 1,
+      "pipeline_stations": 1
+    },
+    {
+      "conn": "u_mu_keybuf_0.kout|u_hb_idx__q_Q",
+      "wires": 256,
+      "payload": 256,
+      "k": 1,
+      "pipeline_stations": 1
+    },
+    {
+      "conn": "u_mu_keybuf_0.kout|u_hb_idx__q_Q",
+      "wires": 256,
+      "payload": 256,
+      "k": 1,
+      "pipeline_stations": 1
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_0.uo|u_mu_fused_n1_q0_0",
+      "wires": 271,
+      "payload": 271,
+      "k": 1,
+      "pipeline_stations": 4
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_1.uo|u_mu_fused_n1_q0_0",
+      "wires": 271,
+      "payload": 271,
+      "k": 1,
+      "pipeline_stations": 2
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_4.uo|u_mu_fused_n1_q0_2",
+      "wires": 271,
+      "payload": 271,
+      "k": 1,
+      "pipeline_stations": 3
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_5.uo|u_mu_fused_n1_q0_2",
+      "wires": 271,
+      "payload": 271,
+      "k": 1,
+      "pipeline_stations": 1
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_7.uo|u_mu_fused_n1_q0_3",
+      "wires": 271,
+      "payload": 271,
+      "k": 1,
+      "pipeline_stations": 2
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n1_q0_1.uo|u_mu_fused_n2L_q0",
+      "wires": 271,
+      "payload": 271,
+      "k": 1,
+      "pipeline_stations": 2
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n2L_q0.db|u_mu_fused_n1_q0_1",
+      "wires": 173,
+      "payload": 173,
+      "k": 1,
+      "pipeline_stations": 1
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n1_q0_3.uo|u_mu_fused_n2R_q0",
+      "wires": 271,
+      "payload": 271,
+      "k": 1,
+      "pipeline_stations": 2
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n2R_q0.db|u_mu_fused_n1_q0_3",
+      "wires": 173,
+      "payload": 173,
+      "k": 1,
+      "pipeline_stations": 2
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_8.uo|u_mu_fused_n1_q1_0",
+      "wires": 271,
+      "payload": 271,
+      "k": 1,
+      "pipeline_stations": 1
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n1_q1_0.da|u_mu_fused_8",
+      "wires": 173,
+      "payload": 173,
+      "k": 1,
+      "pipeline_stations": 2
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_9.uo|u_mu_fused_n1_q1_0",
+      "wires": 271,
+      "payload": 271,
+      "k": 1,
+      "pipeline_stations": 1
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n1_q1_0.db|u_mu_fused_9",
+      "wires": 173,
+      "payload": 173,
+      "k": 1,
+      "pipeline_stations": 2
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_11.uo|u_mu_fused_n1_q1_1",
+      "wires": 271,
+      "payload": 271,
+      "k": 1,
+      "pipeline_stations": 1
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_13.uo|u_mu_fused_n1_q1_2",
+      "wires": 271,
+      "payload": 271,
+      "k": 1,
+      "pipeline_stations": 2
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_14.uo|u_mu_fused_n1_q1_3",
+      "wires": 271,
+      "payload": 271,
+      "k": 1,
+      "pipeline_stations": 2
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_15.uo|u_mu_fused_n1_q1_3",
+      "wires": 271,
+      "payload": 271,
+      "k": 1,
+      "pipeline_stations": 0
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n1_q1_3.db|u_mu_fused_15",
+      "wires": 173,
+      "payload": 173,
+      "k": 1,
+      "pipeline_stations": 2
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n1_q1_0.uo|u_mu_fused_n2L_q1",
+      "wires": 271,
+      "payload": 271,
+      "k": 1,
+      "pipeline_stations": 2
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n1_q1_1.uo|u_mu_fused_n2L_q1",
+      "wires": 271,
+      "payload": 271,
+      "k": 1,
+      "pipeline_stations": 1
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n2L_q1.db|u_mu_fused_n1_q1_1",
+      "wires": 173,
+      "payload": 173,
+      "k": 1,
+      "pipeline_stations": 1
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n2R_q1.uo|u_mu_fused_n3_q1",
+      "wires": 271,
+      "payload": 271,
+      "k": 1,
+      "pipeline_stations": 1
+    },
+    {
+      "conn": "mu_tree:u_mu_fused_n3_q1.db|u_mu_fused_n2R_q1",
+      "wires": 173,
+      "payload": 173,
+      "k": 1,
+      "pipeline_stations": 1
+    },
+    {
+      "conn": "mu_tree_root:1:up",
+      "wires": 271,
+      "payload": 271,
+      "k": 1,
+      "pipeline_stations": 6
+    },
+    {
+      "conn": "mu_tree_root:1:down",
+      "wires": 173,
+      "payload": 173,
+      "k": 1,
+      "pipeline_stations": 6
+    }
+  ],
+  "unmeasured_serial_groups": 6161,
+  "status": "NATIVE_II1_SERVICE_CONFLICT_REQUIRES_RETIMER"
+}

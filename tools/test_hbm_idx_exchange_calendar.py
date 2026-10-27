@@ -37,6 +37,14 @@ class ExchangeCalendar(unittest.TestCase):
             self.assertEqual(Counter((w>>lo)&mask for w in a if (w>>lo)&mask),
                              Counter((w>>lo)&mask for w in b if (w>>lo)&mask),field)
 
+    def test_existing_five_three_bank_alternative_fits_native_vm(self):
+        # R8's already-feasible cut alternative spends more query beats and
+        # fewer key beats, avoiding the 2048-store overflow without a waiver.
+        p,m=compile_program(vm_period=2,query_period=5,key_period=3,score_chain=16)
+        self.assertEqual(len(p),2006)
+        self.assertEqual(set(b-a for a,b in zip(events(p,'head'),events(p,'head')[1:])),{5})
+        self.assertEqual(set(b-a for a,b in zip(events(p,'beat'),events(p,'beat')[1:])),{3})
+
     def test_native_vm_ii2_exceeds_real_calendar_capacity(self):
         # Planned bank k4 plus the existing native operand-fetch II2 needs
         # 2129 instructions. Keep the hardware 2048 limit; never truncate.
