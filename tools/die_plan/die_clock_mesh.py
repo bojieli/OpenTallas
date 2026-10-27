@@ -2758,7 +2758,7 @@ def _explicit_v2_wires(out, cells, nets, groups, router, off, r8, exact, default
             # is conservative for narrow pieces; no pre-existing shape is lost.
             router.nd=nd
             router.wide_merge_um=nd.get("wide_merge_um",C128.WIDE_MERGE_UM) if r8 else None
-            router.ix.space=max(router.ix.space,nd["space"])
+            router.ix.space=nd["space"] if router.ix.pairwise else max(router.ix.space,nd["space"])
             try:
                 pp=C128.fixed_wires(out,proxy,[n0],BUF_W,ROW_Y,off=off,router=router,pin_stack=True,
                     port_on_trunk=r8,ties=ties,l_drops=True,exact_reserve=exact)
@@ -3010,6 +3010,7 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
     sh = "VSS"
     router = C128.TrackRouter(nd, sh, track_profile or DEFAULT_TRACKS, TRACK_MOVE_UM,
                               **(dict(wide_merge_um=nd.get("wide_merge_um", C128.WIDE_MERGE_UM)) if stack_r8 else {}))
+    router.ix.pairwise = v2
     router.reserve(C128.pg_shapes(pgr))
     mesh_driver_units = set()
     if v2 and spec.get("mesh"):

@@ -693,11 +693,17 @@ class MetalIndex:
     def __init__(self, space, bin_um=1.0):
         self.space, self.B = space, bin_um
         self.shapes = []
+        self.pairwise = False
+        self.shape_spaces = []
+        self.max_shape_space = 0.
         self.bins = {"M8": defaultdict(list), "M9": defaultdict(list)}
 
-    def add(self, s):
+    def add(self, s, space=None):
         k = len(self.shapes)
         self.shapes.append(s)
+        pair_space=self.space if space is None else space
+        self.shape_spaces.append(pair_space)
+        self.max_shape_space=max(self.max_shape_space,pair_space)
         b = self.bins[s[0]]
         for i in range(int(math.floor(s[3] / self.B)), int(math.floor(s[4] / self.B)) + 1):
             b[i].append(k)
@@ -708,7 +714,7 @@ class MetalIndex:
         lay, net, _, plo, phi, alo, ahi = s
         sp, eps = self.space, 1e-6
         b, seen, out = self.bins[lay], set(), []
-        reach = max(sp, WIDE_SPACING_ROWS[0][1])
+        reach = max(sp, self.max_shape_space if self.pairwise else 0., WIDE_SPACING_ROWS[0][1])
         for i in range(int(math.floor((plo - reach) / self.B)), int(math.floor((phi + reach) / self.B)) + 1):
             for k in b.get(i, ()):
                 if k in seen:
@@ -719,7 +725,8 @@ class MetalIndex:
                     continue
                 gp = max(t[3] - phi, plo - t[4])
                 ga = max(t[5] - ahi, alo - t[6])
-                if gp < sp - eps and ga < sp - eps:
+                pair_space=max(sp,self.shape_spaces[k]) if self.pairwise else sp
+                if gp < pair_space - eps and ga < pair_space - eps:
                     out.append((k, "short" if gp < eps and ga < eps else "spacing"))
                     if first:
                         return out
@@ -779,7 +786,13 @@ class TrackRouter:
 
     def reserve(self, shapes):
         for s in shapes:
-            self.ix.add(s)
+            # The V2 router uses each conductor's own NDR when checking a
+            # later mixed-width pair. PG table spacing remains checked in hits.
+            reserve_space=None
+            if self.ix.pairwise and s[2] in ("pg","mesh"):
+                w=s[4]-s[3]
+                reserve_space=1. if abs(w-1.28)<1e-6 else .5 if abs(w-.64)<1e-6 else .08 if abs(w-.32)<1e-6 or abs(w-.16)<1e-6 else .04
+            self.ix.add(s,space=reserve_space)
             if s[2] == "pg":
                 self.pg.add(s)
                 if s[1] == self.shield:

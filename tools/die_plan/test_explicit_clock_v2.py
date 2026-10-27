@@ -72,3 +72,17 @@ def test_mixed_tie_has_actual_lateral_m7_shape_and_true_pin_pads():
 def test_v2_wrong_row_orientation_fails_before_encoding():
     s=branching();s['cell_sites']['ckt_0_1']['orient']='R0'
     with pytest.raises(C.PlanError,match='tie_stack'):build(s)
+
+
+def test_mixed_spacing_keeps_wide_pairs_without_poisoning_later_narrow_pairs():
+    import die_clock_128 as C
+    ix=C.MetalIndex(.08);ix.pairwise=True
+    ix.add(('M8','wide','tree',20.,21.28,0.,100.),space=1.)
+    ix.add(('M8','narrow0','tree',10.,10.16,0.,100.),space=.08)
+    assert not ix.hits(('M8','narrow1','tree',10.26,10.42,0.,100.))
+    assert ix.hits(('M8','narrow1','tree',10.23,10.39,0.,100.))
+    # A narrow query still sees the distant-wide conductor's full1um rule.
+    assert ix.hits(('M8','narrow1','tree',21.9,22.06,0.,100.))
+    assert not ix.hits(('M8','narrow1','tree',22.29,22.45,0.,100.))
+    ix.add(('M8','VDD','pg',30.,31.92,0.,100.),space=.04)
+    assert ix.hits(('M8','narrow1','tree',32.7,32.86,0.,100.))[0][1]=='wide_spacing'
