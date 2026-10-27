@@ -1,0 +1,87 @@
+{
+  "basis_plan_sha256": "3a73d67be12d429eb3a7c8da4a464cfcb7ad00af0d51c3e09348de92417eaeaa",
+  "source_basis": "e41772821a + main5b3f0f6b2; owned integration1bbd7db768",
+  "C15_result": {
+    "G0_errors": 0,
+    "G0C_errors": 20,
+    "G0C_error_categories": {
+      "core_faces": 20
+    },
+    "types_clean": 47,
+    "types_total": 51,
+    "pin6_violations": 47,
+    "unique_pin_views": 129
+  },
+  "physical_instance_counts": {
+    "hard_cores": 1063,
+    "HCOL": 128,
+    "idx_tail": 4,
+    "invalid_keybuf_proxies": 32,
+    "after_restoration_top_hardcores": 1163,
+    "added_HCOL_outline_mm2": 5.245872242688,
+    "added_HCOL_and_tail_outline_mm2": 5.4098057502720005,
+    "selected_native_quarter_SRAM": 68
+  },
+  "quarter_repack": {
+    "NW_movers": 30,
+    "NE_movers": 26,
+    "unplaced": 0,
+    "quarter_box_um": [
+      3974.4,
+      829.44,
+      1816.992,
+      2347.488
+    ],
+    "fixed_VM_FUSED_preserved": true,
+    "query_qctl_logic_preserved": true,
+    "qualification": "capacity only; actual native composition/bit graph and moved stations/clock/PG remain required"
+  },
+  "xq": {
+    "outline_um": [
+      362.88,
+      276.48
+    ],
+    "native_pins": 5184,
+    "clock_ports": [
+      "clk",
+      "clk_c",
+      "clk_e",
+      "clk_s",
+      "clk_w"
+    ],
+    "clock_window_width_height_um": [
+      0.048,
+      0.48
+    ],
+    "clock_centres_x_um": [
+      181.368,
+      181.416,
+      181.464,
+      181.512,
+      181.56
+    ],
+    "clock_centres_y_um": 138.264,
+    "source_common_phase_contract": "8470c76cbf results/hbm_source_1351/xq_common_clock.json",
+    "actual_LEF_Lib_qualification": "PENDING",
+    "pin6": "PASS",
+    "other_pin6_violations": 46,
+    "body_collisions": 0,
+    "data_faces_changed": 0,
+    "added_cycles": 0
+  },
+  "integration_checks": {
+    "existing_core_channels_mesh_vias_tests": 17,
+    "verdict": "PASS",
+    "pytest_module": "unavailable onintel2; called existing test functions incltmp_path andoptionalfixture defaults directly"
+  },
+  "holds": [
+    "No canonical plan adoption/P&R/STA from this package",
+    "Coverage owns actual native fulltop and source bit graph; old142edge ledger diagnostic only",
+    "Joint native quarter cell-bay packing and final channels pending",
+    "All relocated clocks/reset/PG/405 paths must be recomposed in ONEevent",
+    "NativeSM13hardchild profile must replace flattened invalidmonolith build",
+    "C15 22chain additions1608FF need native capture coherence and source price; lane modeldelta0 alone insufficient",
+    "Vmdel Wpin proposal not frozen; actualSRAM W/E livebit producer mapping changing",
+    "EP sourceFFpins and calendar actualclockwindow/nativeanchors pending"
+  ]
+}

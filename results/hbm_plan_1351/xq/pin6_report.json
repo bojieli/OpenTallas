@@ -1,0 +1,73 @@
+{
+  "basis": "C15 xq truepartner face assignments retained, all data pins same names/directions/layers/face and order; 5 native scalar clock pins at declared central island; no native port split or alias",
+  "old_outline_um": [
+    181.44,
+    276.48
+  ],
+  "outline_um": [
+    362.88,
+    276.48
+  ],
+  "clock_contract": "SOURCE COMMON PHASE CONFIRMED: native pair parent ties five scalar ports toclk_eg; actual kit/LEF still required",
+  "low_fill_reason": "pin-limited bq_d2048 must fit north face at6pins/um; actual contentstdarea6033um2",
+  "instances": [
+    {
+      "type": "q_hub_nw",
+      "inst": "u_xq_Q_p0_eg",
+      "old_origin": [
+        2358.72,
+        3792.96
+      ],
+      "origin": [
+        2263.68,
+        3792.96
+      ],
+      "colliders": []
+    },
+    {
+      "type": "q_hub_nw",
+      "inst": "u_xq_Q_p1_eg",
+      "old_origin": [
+        1347.84,
+        1460.16
+      ],
+      "origin": [
+        1252.8,
+        1460.16
+      ],
+      "colliders": []
+    },
+    {
+      "type": "q_hub_ne",
+      "inst": "u_xq_Q_p0_eg",
+      "old_origin": [
+        2358.72,
+        3792.96
+      ],
+      "origin": [
+        2263.68,
+        3792.96
+      ],
+      "colliders": []
+    },
+    {
+      "type": "q_hub_ne",
+      "inst": "u_xq_Q_p1_eg",
+      "old_origin": [
+        1347.84,
+        1460.16
+      ],
+      "origin": [
+        1252.8,
+        1460.16
+      ],
+      "colliders": []
+    }
+  ],
+  "body_collisions": [],
+  "pins": 5184,
+  "renamed_pins": 0,
+  "data_face_changed": 0,
+  "clock_face_changed": 5,
+  "not_qualified": "stations/clock/PG and neighbor relocation not yet regenerated"
+}

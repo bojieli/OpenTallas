@@ -1,0 +1,1013 @@
+{
+  "basis": "C15 3a73d67be12d; native quarter71648; geometry capacity candidate only; no native/station rebinding or route qualification",
+  "quarter_box_um": [
+    3974.4,
+    829.44,
+    1816.992,
+    2347.488
+  ],
+  "hubs": {
+    "q_hub_nw": {
+      "removed_proxy_geometry": [
+        "u_mu_keybuf_0_s0__q0",
+        "u_mu_keybuf_0_s1__q0",
+        "u_mu_keybuf_0_s2__q0",
+        "u_mu_keybuf_0_s3__q0",
+        "u_mu_keybuf_0_s4__q0",
+        "u_mu_keybuf_0_s5__q0",
+        "u_mu_keybuf_0_s6__q0",
+        "u_mu_keybuf_0_s7__q0",
+        "u_mu_keybuf_0_s0__q1",
+        "u_mu_keybuf_0_s1__q1",
+        "u_mu_keybuf_0_s2__q1",
+        "u_mu_keybuf_0_s3__q1",
+        "u_mu_keybuf_0_s4__q1",
+        "u_mu_keybuf_0_s5__q1",
+        "u_mu_keybuf_0_s6__q1",
+        "u_mu_keybuf_0_s7__q1"
+      ],
+      "moves": [
+        {
+          "inst": "u_pgp_Q__q1",
+          "old_origin_um": [
+            4933.44,
+            1105.92
+          ],
+          "origin_um": [
+            5037.12,
+            3533.76
+          ],
+          "outline_um": [
+            939.6,
+            760.32
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 2531.5200000000004
+        },
+        {
+          "inst": "u_hb_coll_Q_body_core__q1",
+          "old_origin_um": [
+            4328.64,
+            1105.92
+          ],
+          "origin_um": [
+            4224.96,
+            3222.72
+          ],
+          "outline_um": [
+            578.88,
+            1054.08
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 2220.48
+        },
+        {
+          "inst": "u_sfup_Q__q1",
+          "old_origin_um": [
+            4207.68,
+            3551.04
+          ],
+          "origin_um": [
+            4207.68,
+            43.2
+          ],
+          "outline_um": [
+            574.56,
+            738.72
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 3507.84
+        },
+        {
+          "inst": "u_wbk_Q__q1",
+          "old_origin_um": [
+            5400.0,
+            3006.72
+          ],
+          "origin_um": [
+            7205.76,
+            172.8
+          ],
+          "outline_um": [
+            475.2,
+            475.2
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 4639.68
+        },
+        {
+          "inst": "u_hb_coll_Q_edge__q1",
+          "old_origin_um": [
+            4034.88,
+            25.92
+          ],
+          "origin_um": [
+            4026.24,
+            3188.16
+          ],
+          "outline_um": [
+            190.08,
+            1054.08
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 3170.88
+        },
+        {
+          "inst": "u_vmks_Q3",
+          "old_origin_um": [
+            4510.08,
+            2998.08
+          ],
+          "origin_um": [
+            2928.96,
+            3110.4
+          ],
+          "outline_um": [
+            354.24,
+            453.6
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 1693.44
+        },
+        {
+          "inst": "u_cxij_Q_q__q1",
+          "old_origin_um": [
+            3991.68,
+            3006.72
+          ],
+          "origin_um": [
+            3058.56,
+            3576.96
+          ],
+          "outline_um": [
+            250.56,
+            449.28
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 1503.3600000000001
+        },
+        {
+          "inst": "u_xq_Q_p0_bfq0",
+          "old_origin_um": [
+            5486.4,
+            3551.04
+          ],
+          "origin_um": [
+            5486.4,
+            3222.72
+          ],
+          "outline_um": [
+            302.4,
+            298.08
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 328.32000000000016
+        },
+        {
+          "inst": "u_xq_Q_p0_bfq1",
+          "old_origin_um": [
+            5071.68,
+            3551.04
+          ],
+          "origin_um": [
+            5106.24,
+            3222.72
+          ],
+          "outline_um": [
+            302.4,
+            298.08
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 362.87999999999965
+        },
+        {
+          "inst": "u_xq_Q_p0_bfq2",
+          "old_origin_um": [
+            5451.84,
+            2678.4
+          ],
+          "origin_um": [
+            6583.68,
+            3110.4
+          ],
+          "outline_um": [
+            302.4,
+            298.08
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 1563.8400000000001
+        },
+        {
+          "inst": "u_xq_Q_p0_bfq3",
+          "old_origin_um": [
+            5814.72,
+            3551.04
+          ],
+          "origin_um": [
+            6929.28,
+            4017.6
+          ],
+          "outline_um": [
+            302.4,
+            298.08
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 1581.1199999999994
+        },
+        {
+          "inst": "u_xq_Q_p1_bfq0",
+          "old_origin_um": [
+            5123.52,
+            2462.4
+          ],
+          "origin_um": [
+            5209.92,
+            414.72
+          ],
+          "outline_um": [
+            302.4,
+            298.08
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 2134.08
+        },
+        {
+          "inst": "u_xq_Q_p1_bfq1",
+          "old_origin_um": [
+            4795.2,
+            2462.4
+          ],
+          "origin_um": [
+            3715.2,
+            4000.32
+          ],
+          "outline_um": [
+            302.4,
+            298.08
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 2617.92
+        },
+        {
+          "inst": "u_xq_Q_p1_bfq2",
+          "old_origin_um": [
+            5581.44,
+            3879.36
+          ],
+          "origin_um": [
+            7439.04,
+            4017.6
+          ],
+          "outline_um": [
+            302.4,
+            298.08
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 1995.8400000000001
+        },
+        {
+          "inst": "u_hb_quant_Q__u_dec__q1",
+          "old_origin_um": [
+            3991.68,
+            2462.4
+          ],
+          "origin_um": [
+            3291.84,
+            2669.76
+          ],
+          "outline_um": [
+            260.0,
+            260.0
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 907.1999999999998
+        },
+        {
+          "inst": "u_hcollgi_Q__q1",
+          "old_origin_um": [
+            4285.44,
+            2462.4
+          ],
+          "origin_um": [
+            3317.76,
+            1961.28
+          ],
+          "outline_um": [
+            237.6,
+            237.6
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 1468.7999999999995
+        },
+        {
+          "inst": "u_hb_coll_Q_reduce__q1",
+          "old_origin_um": [
+            4069.44,
+            1105.92
+          ],
+          "origin_um": [
+            3965.76,
+            587.52
+          ],
+          "outline_um": [
+            233.28,
+            233.28
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 622.0799999999999
+        },
+        {
+          "inst": "u_hb_coll_Q_ring_ag__q1",
+          "old_origin_um": [
+            5641.92,
+            2419.2
+          ],
+          "origin_um": [
+            6307.2,
+            2669.76
+          ],
+          "outline_um": [
+            233.28,
+            233.28
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 915.8400000000001
+        },
+        {
+          "inst": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_0",
+          "old_origin_um": [
+            4898.88,
+            3006.72
+          ],
+          "origin_um": [
+            3430.08,
+            3499.2
+          ],
+          "outline_um": [
+            220.32,
+            220.32
+          ],
+          "halo_um": 8.64,
+          "displacement_l1_um": 1961.2800000000002
+        },
+        {
+          "inst": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_1",
+          "old_origin_um": [
+            4579.2,
+            276.48
+          ],
+          "origin_um": [
+            3931.2,
+            276.48
+          ],
+          "outline_um": [
+            220.32,
+            220.32
+          ],
+          "halo_um": 8.64,
+          "displacement_l1_um": 648.0
+        },
+        {
+          "inst": "u_hc_Q.u_cen.ot_hbm_hc_subtree32_2",
+          "old_origin_um": [
+            4579.2,
+            25.92
+          ],
+          "origin_um": [
+            3931.2,
+            25.92
+          ],
+          "outline_um": [
+            220.32,
+            220.32
+          ],
+          "halo_um": 8.64,
+          "displacement_l1_um": 648.0
+        },
+        {
+          "inst": "u_sucore_Q__q1",
+          "old_origin_um": [
+            4017.6,
+            1365.12
+          ],
+          "origin_um": [
+            3335.04,
+            1330.56
+          ],
+          "outline_um": [
+            224.64,
+            207.36
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 717.1199999999999
+        },
+        {
+          "inst": "u_cij_Q__q1",
+          "old_origin_um": [
+            4294.08,
+            77.76
+          ],
+          "origin_um": [
+            3706.56,
+            25.92
+          ],
+          "outline_um": [
+            211.68,
+            207.36
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 639.36
+        },
+        {
+          "inst": "u_ctl_Q_p13",
+          "old_origin_um": [
+            4285.44,
+            3006.72
+          ],
+          "origin_um": [
+            4812.48,
+            3706.56
+          ],
+          "outline_um": [
+            177.984,
+            177.984
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 1226.88
+        },
+        {
+          "inst": "u_ctl_Q_p14",
+          "old_origin_um": [
+            5088.96,
+            3879.36
+          ],
+          "origin_um": [
+            4812.48,
+            3896.64
+          ],
+          "outline_um": [
+            177.984,
+            177.984
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 293.7600000000002
+        },
+        {
+          "inst": "u_ctl_Q_p15",
+          "old_origin_um": [
+            4285.44,
+            3214.08
+          ],
+          "origin_um": [
+            4812.48,
+            4086.72
+          ],
+          "outline_um": [
+            177.984,
+            177.984
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 1399.6799999999998
+        },
+        {
+          "inst": "u_hcollgl_Q__q1",
+          "old_origin_um": [
+            4043.52,
+            2756.16
+          ],
+          "origin_um": [
+            3006.72,
+            2842.56
+          ],
+          "outline_um": [
+            142.56,
+            207.36
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 1123.2000000000003
+        },
+        {
+          "inst": "u_hb_idx__q_Q__q1",
+          "old_origin_um": [
+            5356.8,
+            734.4
+          ],
+          "origin_um": [
+            5806.08,
+            1365.12
+          ],
+          "outline_um": [
+            170.64,
+            164.16
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 1079.9999999999995
+        },
+        {
+          "inst": "u_xl_Q_aqhi",
+          "old_origin_um": [
+            5184.0,
+            3006.72
+          ],
+          "origin_um": [
+            5806.08,
+            2842.56
+          ],
+          "outline_um": [
+            183.6,
+            108.0
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 786.2399999999998
+        },
+        {
+          "inst": "u_xl_Q_aqlo",
+          "old_origin_um": [
+            5685.12,
+            2280.96
+          ],
+          "origin_um": [
+            5806.08,
+            2082.24
+          ],
+          "outline_um": [
+            183.6,
+            108.0
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 319.6800000000003
+        }
+      ],
+      "unplaced": [],
+      "fixed": 113,
+      "remaining_station_clock_rebind": "REQUIRED; moved origins not propagated"
+    },
+    "q_hub_ne": {
+      "removed_proxy_geometry": [
+        "u_mu_keybuf_0_s0__q0",
+        "u_mu_keybuf_0_s1__q0",
+        "u_mu_keybuf_0_s2__q0",
+        "u_mu_keybuf_0_s3__q0",
+        "u_mu_keybuf_0_s4__q0",
+        "u_mu_keybuf_0_s5__q0",
+        "u_mu_keybuf_0_s6__q0",
+        "u_mu_keybuf_0_s7__q0",
+        "u_mu_keybuf_0_s0__q1",
+        "u_mu_keybuf_0_s1__q1",
+        "u_mu_keybuf_0_s2__q1",
+        "u_mu_keybuf_0_s3__q1",
+        "u_mu_keybuf_0_s4__q1",
+        "u_mu_keybuf_0_s5__q1",
+        "u_mu_keybuf_0_s6__q1",
+        "u_mu_keybuf_0_s7__q1"
+      ],
+      "moves": [
+        {
+          "inst": "u_pgp_Q__q1",
+          "old_origin_um": [
+            4933.44,
+            1105.92
+          ],
+          "origin_um": [
+            5037.12,
+            3533.76
+          ],
+          "outline_um": [
+            939.6,
+            760.32
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 2531.5200000000004
+        },
+        {
+          "inst": "u_hb_coll_Q_body_n2__q1",
+          "old_origin_um": [
+            4121.28,
+            1261.44
+          ],
+          "origin_um": [
+            2583.36,
+            3490.56
+          ],
+          "outline_um": [
+            786.24,
+            743.04
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 3767.0399999999995
+        },
+        {
+          "inst": "u_wbk_Q__q1",
+          "old_origin_um": [
+            5400.0,
+            3006.72
+          ],
+          "origin_um": [
+            1874.88,
+            3490.56
+          ],
+          "outline_um": [
+            475.2,
+            475.2
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 4008.96
+        },
+        {
+          "inst": "u_vmks_Q0",
+          "old_origin_um": [
+            3965.76,
+            3067.2
+          ],
+          "origin_um": [
+            3965.76,
+            293.76
+          ],
+          "outline_um": [
+            354.24,
+            453.6
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 2773.4399999999996
+        },
+        {
+          "inst": "u_vmks_Q3",
+          "old_origin_um": [
+            4510.08,
+            2998.08
+          ],
+          "origin_um": [
+            3386.88,
+            371.52
+          ],
+          "outline_um": [
+            354.24,
+            453.6
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 3749.7599999999998
+        },
+        {
+          "inst": "u_cxij_Q_q__q1",
+          "old_origin_um": [
+            3991.68,
+            2592.0
+          ],
+          "origin_um": [
+            3948.48,
+            3188.16
+          ],
+          "outline_um": [
+            250.56,
+            449.28
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 639.3599999999997
+        },
+        {
+          "inst": "u_sfus_Q__q1",
+          "old_origin_um": [
+            5270.4,
+            665.28
+          ],
+          "origin_um": [
+            6471.36,
+            501.12
+          ],
+          "outline_um": [
+            336.96,
+            328.32
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 1365.12
+        },
+        {
+          "inst": "u_xq_Q_p0_bfq1",
+          "old_origin_um": [
+            5071.68,
+            3551.04
+          ],
+          "origin_um": [
+            5106.24,
+            3222.72
+          ],
+          "outline_um": [
+            302.4,
+            298.08
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 362.87999999999965
+        },
+        {
+          "inst": "u_xq_Q_p0_bfq2",
+          "old_origin_um": [
+            5451.84,
+            2678.4
+          ],
+          "origin_um": [
+            5451.84,
+            3188.16
+          ],
+          "outline_um": [
+            302.4,
+            298.08
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 509.75999999999976
+        },
+        {
+          "inst": "u_xq_Q_p0_bfq3",
+          "old_origin_um": [
+            5814.72,
+            3551.04
+          ],
+          "origin_um": [
+            6583.68,
+            3231.36
+          ],
+          "outline_um": [
+            302.4,
+            298.08
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 1088.6399999999999
+        },
+        {
+          "inst": "u_xq_Q_p1_bfq0",
+          "old_origin_um": [
+            5123.52,
+            2462.4
+          ],
+          "origin_um": [
+            4544.64,
+            3188.16
+          ],
+          "outline_um": [
+            302.4,
+            298.08
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 1304.6399999999999
+        },
+        {
+          "inst": "u_xq_Q_p1_bfq1",
+          "old_origin_um": [
+            4795.2,
+            2462.4
+          ],
+          "origin_um": [
+            2980.8,
+            2842.56
+          ],
+          "outline_um": [
+            302.4,
+            298.08
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 2194.5599999999995
+        },
+        {
+          "inst": "u_xq_Q_p1_bfq2",
+          "old_origin_um": [
+            5581.44,
+            3879.36
+          ],
+          "origin_um": [
+            6929.28,
+            4017.6
+          ],
+          "outline_um": [
+            302.4,
+            298.08
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 1486.08
+        },
+        {
+          "inst": "u_hb_quant_Q__u_dec__q1",
+          "old_origin_um": [
+            3991.68,
+            2298.24
+          ],
+          "origin_um": [
+            3248.64,
+            1961.28
+          ],
+          "outline_um": [
+            260.0,
+            260.0
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 1079.9999999999998
+        },
+        {
+          "inst": "u_hcollgi_Q__q1",
+          "old_origin_um": [
+            4285.44,
+            2462.4
+          ],
+          "origin_um": [
+            3300.48,
+            2669.76
+          ],
+          "outline_um": [
+            237.6,
+            237.6
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 1192.3199999999997
+        },
+        {
+          "inst": "u_hb_coll_Q_reduce__q1",
+          "old_origin_um": [
+            4622.4,
+            1002.24
+          ],
+          "origin_um": [
+            4328.64,
+            587.52
+          ],
+          "outline_um": [
+            233.28,
+            233.28
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 708.4799999999993
+        },
+        {
+          "inst": "u_hb_coll_Q_ring_ag__q1",
+          "old_origin_um": [
+            5641.92,
+            2419.2
+          ],
+          "origin_um": [
+            6307.2,
+            2669.76
+          ],
+          "outline_um": [
+            233.28,
+            233.28
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 915.8400000000001
+        },
+        {
+          "inst": "u_sucore_Q__q1",
+          "old_origin_um": [
+            4017.6,
+            1028.16
+          ],
+          "origin_um": [
+            3335.04,
+            1252.8
+          ],
+          "outline_um": [
+            224.64,
+            207.36
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 907.1999999999998
+        },
+        {
+          "inst": "u_ctl_Q_p04",
+          "old_origin_um": [
+            5019.84,
+            4086.72
+          ],
+          "origin_um": [
+            3767.04,
+            4112.64
+          ],
+          "outline_um": [
+            177.984,
+            177.984
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 1278.7200000000007
+        },
+        {
+          "inst": "u_ctl_Q_p13",
+          "old_origin_um": [
+            4285.44,
+            2859.84
+          ],
+          "origin_um": [
+            3067.2,
+            3153.6
+          ],
+          "outline_um": [
+            177.984,
+            177.984
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 1511.9999999999995
+        },
+        {
+          "inst": "u_ctl_Q_p14",
+          "old_origin_um": [
+            5088.96,
+            3879.36
+          ],
+          "origin_um": [
+            3525.12,
+            3879.36
+          ],
+          "outline_um": [
+            177.984,
+            177.984
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 1563.8400000000001
+        },
+        {
+          "inst": "u_ctl_Q_p15",
+          "old_origin_um": [
+            4492.8,
+            2790.72
+          ],
+          "origin_um": [
+            2773.44,
+            3110.4
+          ],
+          "outline_um": [
+            177.984,
+            177.984
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 2039.0400000000004
+        },
+        {
+          "inst": "u_hcollgl_Q__q1",
+          "old_origin_um": [
+            4043.52,
+            2064.96
+          ],
+          "origin_um": [
+            3162.24,
+            1278.72
+          ],
+          "outline_um": [
+            142.56,
+            207.36
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 1667.5200000000002
+        },
+        {
+          "inst": "u_hb_idx__q_Q__q1",
+          "old_origin_um": [
+            5633.28,
+            734.4
+          ],
+          "origin_um": [
+            5503.68,
+            656.64
+          ],
+          "outline_um": [
+            170.64,
+            164.16
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 207.35999999999945
+        },
+        {
+          "inst": "u_xl_Q_aqhi",
+          "old_origin_um": [
+            5184.0,
+            3006.72
+          ],
+          "origin_um": [
+            5806.08,
+            2842.56
+          ],
+          "outline_um": [
+            183.6,
+            108.0
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 786.2399999999998
+        },
+        {
+          "inst": "u_xl_Q_aqlo",
+          "old_origin_um": [
+            5685.12,
+            2280.96
+          ],
+          "origin_um": [
+            5806.08,
+            2082.24
+          ],
+          "outline_um": [
+            183.6,
+            108.0
+          ],
+          "halo_um": 4.32,
+          "displacement_l1_um": 319.6800000000003
+        }
+      ],
+      "unplaced": [],
+      "fixed": 115,
+      "remaining_station_clock_rebind": "REQUIRED; moved origins not propagated"
+    }
+  }
+}
