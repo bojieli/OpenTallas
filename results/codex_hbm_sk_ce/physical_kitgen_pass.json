@@ -1,0 +1,77 @@
+{
+  "verdict": "PASS4/4",
+  "kits": [
+    {
+      "kit": "ot_hbm_hc_root_static__tailx_sk_steady_61ace215c286-cephys",
+      "source_top": null,
+      "face_flops": 1035,
+      "dropped": [],
+      "phase": {
+        "schema": "opentallas.hbm.ce_phase_contract.v1",
+        "contract": "land1-cap3",
+        "core": "ot_hbm_hc_root_static__tailx_sk_steady",
+        "period_ps": 833,
+        "enable_period_edges": 7,
+        "step0_phase_after_steady_edges": 2,
+        "native_tail_latency_edges": 503,
+        "physical_tail_latency_edges": 508,
+        "status": "FUNCTIONAL_PASS",
+        "route_hold": "CE timing contract awaiting OWNER; no multicycle exception applied"
+      }
+    },
+    {
+      "kit": "ot_hbm_hc_root_static__tailx_sk_step0_7ec50d167c90-cephys",
+      "source_top": null,
+      "face_flops": 1030,
+      "dropped": [],
+      "phase": {
+        "schema": "opentallas.hbm.ce_phase_contract.v1",
+        "contract": "land1-cap3",
+        "core": "ot_hbm_hc_root_static__tailx_sk_step0",
+        "period_ps": 833,
+        "enable_period_edges": 7,
+        "step0_phase_after_steady_edges": 2,
+        "native_tail_latency_edges": 503,
+        "physical_tail_latency_edges": 508,
+        "status": "FUNCTIONAL_PASS",
+        "route_hold": "CE timing contract awaiting OWNER; no multicycle exception applied"
+      }
+    },
+    {
+      "kit": "ot_hbm_hc_root_static__tailx_rest__v6bc7f2_883ac5a8b4ac-cephys",
+      "source_top": null,
+      "face_flops": 3432,
+      "dropped": [],
+      "phase": {
+        "schema": "opentallas.hbm.ce_phase_contract.v1",
+        "contract": "land1-cap3",
+        "core": "ot_hbm_hc_root_static__tailx_rest__v6bc7f2",
+        "period_ps": 833,
+        "enable_period_edges": 7,
+        "step0_phase_after_steady_edges": 2,
+        "native_tail_latency_edges": 503,
+        "physical_tail_latency_edges": 508,
+        "status": "FUNCTIONAL_PASS",
+        "route_hold": "CE timing contract awaiting OWNER; no multicycle exception applied"
+      }
+    },
+    {
+      "kit": "ot_hbm_hc_root_static__tailx_rest__v4f4566_da71b54f3102-cephys",
+      "source_top": null,
+      "face_flops": 3432,
+      "dropped": [],
+      "phase": {
+        "schema": "opentallas.hbm.ce_phase_contract.v1",
+        "contract": "land1-cap3",
+        "core": "ot_hbm_hc_root_static__tailx_rest__v4f4566",
+        "period_ps": 833,
+        "enable_period_edges": 7,
+        "step0_phase_after_steady_edges": 2,
+        "native_tail_latency_edges": 503,
+        "physical_tail_latency_edges": 508,
+        "status": "FUNCTIONAL_PASS",
+        "route_hold": "CE timing contract awaiting OWNER; no multicycle exception applied"
+      }
+    }
+  ]
+}
