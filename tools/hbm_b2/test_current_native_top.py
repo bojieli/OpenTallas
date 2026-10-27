@@ -20,12 +20,13 @@ def fixture():
 
 
 class CompositionTest(unittest.TestCase):
-    def run_compose(self, text):
+    def run_compose(self, text, preserve=False, transport=None):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             (root/'original.v').write_text(text)
             (root/'base.v').write_text('module base (clk);\ninput clk;\nendmodule\n')
-            report = compose(root/'original.v', root/'base.v', {'transport':[]}, root/'out')
+            report = compose(root/'original.v', root/'base.v', {'transport':transport or []}, root/'out', preserve)
+            report['_history_contract'] = json.loads((root/'out/transport_history_contract.json').read_text())
             return report, (root/'out/hbm_current_native_top.sv').read_text(), json.loads((root/'out/native_instance_manifest.json').read_text())
 
     def test_real_roles_and_explicit_controls(self):
@@ -38,6 +39,17 @@ class CompositionTest(unittest.TestCase):
             self.assertIn('input wire [' + str(obligation['width']-1) + ':0] ' + obligation['net'] + ';',rtl)
         self.assertEqual(instances['u_mu_fused_root']['ports']['up_nw']['segments'],[['n','u_mu_fused_n4_nw__uo',0,270]])
         self.assertEqual(instances['u_mu_fused_n4_ne']['ports']['dn']['segments'],[['n','u_mu_fused_root__down_ne',0,172]])
+
+    def test_preserved_history_keeps_actual_relay_and_original_hookup(self):
+        text = fixture().replace('input rst;', 'input rst;\nwire relay__o;\n  history_relay relay (\n    .clk(clk),\n    .i(clk),\n    .o(relay__o)\n  );')
+        text = text.replace(".half(1'd0)", ".beat_v(relay__o),\n    .half(1'd0)",1)
+        report, rtl, instances = self.run_compose(text, True, [dict(module='history_relay', map={'o':'i'}, stages=2)])
+        self.assertEqual(report['retained_transport_instances'],['relay'])
+        self.assertEqual(instances['hb_idx__s_SW']['ports']['beat_v']['segments'],[['n','relay__o',0,0]])
+        self.assertEqual(report['_history_contract']['transport_instances']['relay']['stages'],2)
+        self.assertEqual(report['_history_contract']['transport_instances']['relay']['conns']['clk'],'clk')
+        self.assertIn('history_relay relay',rtl)
+        self.assertEqual(report['original_history_realization'],'ORIGINAL_TRANSPORT_RTL_RETAINED')
 
     def test_wrong_vms_role_mutant_is_rejected(self):
         with self.assertRaisesRegex(ValueError,'VMS role/master'):

@@ -1,0 +1,429 @@
+{
+  "status": "FAIL_DIAGNOSED_NOT_QUALIFIED",
+  "source_commit": "ee405a63ca8b283a4ce8a15e92a99c64de868535",
+  "summary": {
+    "masters": 97,
+    "instances": 356,
+    "unbound_masters": 13,
+    "stub_masters": 0,
+    "ambiguous_masters": 0,
+    "port_not_in_rtl": 0,
+    "width_mismatch": 7,
+    "input_unconnected": 0,
+    "input_tied": 38,
+    "unparsed_connections": 0,
+    "duplicate_port_connections": 0,
+    "undriven_net_bits": 14245,
+    "multi_driven_net_bits": 0,
+    "unread_net_bits": 16546,
+    "output_open_ports": 0,
+    "top_assigns": 0,
+    "params_not_in_rtl": 3,
+    "strap_ports": 0,
+    "pad_bits": 0,
+    "spare_out_bits": 0,
+    "unresolved_children": 15,
+    "ambiguous_children": 4,
+    "variant_children": 9
+  },
+  "unbound_masters": [
+    "hbfd_qdq_split_and",
+    "hbfd_qdq_split_or",
+    "hfd_ckgen_nolink",
+    "hfd_ep_host_vc",
+    "hfd_ep_static_vc2",
+    "hfd_hgi_vm_calendar_f20_role",
+    "ot_hbm3e_phy_rc_e8p5",
+    "ot_hbm_host_static_ingress_obs",
+    "ot_hbm_idx_selector_static_sel",
+    "ot_hbm_kqs_fault_or4",
+    "ot_hbm_obs_leaf",
+    "ot_hbm_su_static_qcore_r13_w2",
+    "ot_hbm_su_stree_root2"
+  ],
+  "closure_fix": "Use actual asbuilt r18h5 bundle/module-file preferences, current selected quarter/FUSED overlay, actual SRAM models and source defines. Tree-only run omitted these sources.",
+  "width_mismatches": {
+    "ot_hbm_su_programme_root_h5": {
+      "p_fault": [
+        [
+          2,
+          4
+        ]
+      ],
+      "r_bank": [
+        [
+          32,
+          64
+        ]
+      ],
+      "r_we": [
+        [
+          2,
+          4
+        ]
+      ]
+    },
+    "ot_hbm_su_stree_leaf": {
+      "dn_i": [
+        [
+          82,
+          164
+        ]
+      ],
+      "rf_wa": [
+        [
+          16,
+          32
+        ]
+      ],
+      "rf_wd": [
+        [
+          64,
+          128
+        ]
+      ],
+      "rf_wv": [
+        [
+          2,
+          4
+        ]
+      ]
+    }
+  },
+  "width_causes": {
+    "su_programme_root_PARTS": "Actual r18h5 bundle preferred source supports PARTS2; main-tree file has old4wide interface.",
+    "stree_leaf_NLEG": "Actual source thinport926aa43b adds reviewed optional NLEG2/root2; no width padding permitted."
+  },
+  "reviewed_identity_strap_fields": [
+    {
+      "master": "hfd_hgi_vm_calendar_f20",
+      "port": "tgt",
+      "instances": 2
+    },
+    {
+      "master": "hfd_vms_bank_native_q0_faces",
+      "port": "bid",
+      "instances": 16
+    },
+    {
+      "master": "hfd_vms_bank_native_q0_faces",
+      "port": "sid",
+      "instances": 16
+    },
+    {
+      "master": "ot_hbm_hc_qhub_static",
+      "port": "tgt",
+      "instances": 2
+    },
+    {
+      "master": "ot_hbm_hc_root_static",
+      "port": "tgt",
+      "instances": 1
+    },
+    {
+      "master": "ot_hbm_idx_qctl_static",
+      "port": "slot",
+      "instances": 4
+    },
+    {
+      "master": "ot_hbm_idx_vm_query_static_n12",
+      "port": "sid",
+      "instances": 4
+    },
+    {
+      "master": "ot_hbm_pc_refresh_cfg",
+      "port": "tgt",
+      "instances": 2
+    },
+    {
+      "master": "ot_hbm_sm_vm_wr_q_t_lanes4",
+      "port": "lbase",
+      "instances": 2
+    },
+    {
+      "master": "ot_hbm_sm_vm_wr_q_t_lanes4",
+      "port": "quad",
+      "instances": 2
+    },
+    {
+      "master": "ot_hbm_sm_vm_wr_q_t_lanes4",
+      "port": "tgt",
+      "instances": 2
+    },
+    {
+      "master": "ot_hbm_static_cfg_collar",
+      "port": "tgt",
+      "instances": 3
+    },
+    {
+      "master": "ot_hbm_static_cfg_collar_idx256r",
+      "port": "tgt",
+      "instances": 1
+    },
+    {
+      "master": "ot_hbm_su_static_sfustore_hw",
+      "port": "qid",
+      "instances": 2
+    },
+    {
+      "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+      "port": "pc_id",
+      "instances": 32
+    },
+    {
+      "master": "ot_hbm_svc_sm_group_rel_id",
+      "port": "id_sm",
+      "instances": 8
+    },
+    {
+      "master": "ot_hbm_svc_sm_group_rel_id",
+      "port": "id_stack",
+      "instances": 8
+    },
+    {
+      "master": "ot_hbm_svc_sm_xcal_rel_t",
+      "port": "tgt",
+      "instances": 8
+    },
+    {
+      "master": "ot_hbm_svc_vm_kshare_splitstrap",
+      "port": "sm_hbm",
+      "instances": 8
+    },
+    {
+      "master": "ot_hbm_svc_vm_kshare_splitstrap",
+      "port": "sm_stream",
+      "instances": 8
+    },
+    {
+      "master": "ot_hbm_svc_vmdel_lane_n",
+      "port": "bank_id",
+      "instances": 16
+    },
+    {
+      "master": "ot_hbm_svc_wb_kport_q",
+      "port": "quad",
+      "instances": 2
+    },
+    {
+      "master": "ot_hbm_svc_wb_kport_q",
+      "port": "stk",
+      "instances": 2
+    },
+    {
+      "master": "ot_hfd_coll_q2_hard_v8g",
+      "port": "qid",
+      "instances": 1
+    },
+    {
+      "master": "ot_hfd_coll_q3_hard_v8x",
+      "port": "qid",
+      "instances": 1
+    },
+    {
+      "master": "ot_hgi_coll_gq_issue",
+      "port": "qid",
+      "instances": 2
+    },
+    {
+      "master": "ot_hgi_coll_gq_issue",
+      "port": "tgt",
+      "instances": 2
+    },
+    {
+      "master": "ot_hgi_coll_gq_land",
+      "port": "qid",
+      "instances": 2
+    },
+    {
+      "master": "ot_hgi_coll_ring_b_stop",
+      "port": "qid",
+      "instances": 2
+    },
+    {
+      "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+      "port": "stk",
+      "instances": 2
+    },
+    {
+      "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+      "port": "tgt",
+      "instances": 2
+    },
+    {
+      "master": "ot_hgi_qdq_transport_ctl_r4",
+      "port": "rl_cfg",
+      "instances": 1
+    },
+    {
+      "master": "ot_hgi_qdq_transport_ctl_r4",
+      "port": "wc_cfg",
+      "instances": 1
+    },
+    {
+      "master": "ot_hgi_sm_xload_cl2_ctlx",
+      "port": "tgt",
+      "instances": 2
+    },
+    {
+      "master": "ot_hnx_idxn_quarter_with_keybuf",
+      "port": "first_ord",
+      "instances": 4
+    },
+    {
+      "master": "ot_hnx_idxn_quarter_with_keybuf",
+      "port": "half",
+      "instances": 4
+    },
+    {
+      "master": "ot_static_run_target",
+      "port": "tgt",
+      "instances": 8
+    }
+  ],
+  "unreviewed_constant_fields": [
+    {
+      "master": "ot_hgi_qdq_lg_port_group_r2",
+      "port": "wq_i",
+      "instances": 4
+    }
+  ],
+  "constant_cause": "37 fields match existing original identity/position strap review; QDQ wq_i remains source-declared R7 open and cannot be admitted as a strap.",
+  "missing_child_sources": {
+    "ot_hbm_accel_smh_fc_b": [
+      "ot_smh_static_front"
+    ],
+    "ot_hbm_accel_smh_fc_t": [
+      "ot_smh_static_front"
+    ],
+    "ot_hbm_accel_smh_fc_xl": [
+      "ot_smh_static_front"
+    ],
+    "ot_hbm_accel_smh_fc_xr": [
+      "ot_smh_static_front"
+    ],
+    "ot_hbm_xp_aq_tree13": [
+      "ot_hbm_xp_aq_tree13_fmt",
+      "ot_hgi_coll_gq_issue"
+    ],
+    "ot_hfd_actquant_m": [
+      "ot_hgi_quant_decode"
+    ],
+    "ot_hfd_lane_ring": [
+      "ot_hgi_quant_decode"
+    ],
+    "ot_hgi_argmax18_m": [
+      "ot_hbm_argmax_static_sw_vm_r2"
+    ],
+    "ot_sram_1r1w2c_32x64_m1": [
+      "ot_hnx_fused_pad"
+    ],
+    "ot_sram_1r1w2c_64x546_m1": [
+      "ot_s81_kp4_ddly"
+    ],
+    "ot_sram_1r1w_1024x256_m2_r2c2": [
+      "ot_hbm_hc_eng_seq_static",
+      "ot_hbm_hc_root_static",
+      "ot_hgi_coll_tkm_buffer",
+      "ot_hgi_qdq_record_calendar",
+      "ot_smh_calendar_static_x",
+      "ot_vms_bank_q0_faces_body",
+      "ot_vms_calendar_static",
+      "ot_vms_calendar_static_xcap"
+    ],
+    "ot_sram_1r1w_256x256_m2_r2c2": [
+      "ot_hbm_host_landing256",
+      "ot_hbm_idx_calendar_static",
+      "ot_hbm_svc_sm8_landing_bank",
+      "ot_hgi_coll_static_program_bank256",
+      "ot_hnx_idxn_keybuf"
+    ],
+    "ot_sram_1r1w_32x546_m1": [
+      "ot_s81_kp4_dout"
+    ],
+    "ot_sram_1r1w_64x512_m1_r2c2_p192_mir": [
+      "ot_sram_1r1w_64x512_m1_r2c2"
+    ],
+    "ot_sram_1rw_256x64_m4_r2c2": [
+      "ot_hgi_coll_static_issuer_v7",
+      "ot_hgi_coll_static_program_target"
+    ]
+  },
+  "ambiguous_child_sources": {
+    "ot_hdc_fp32_mul_lat": {
+      "chosen": "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "by": "first",
+      "differ": [
+        "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/qwen_sys/combined/nearhbm/ot_hdc_fp32_mul_lat.sv"
+      ],
+      "iface_differ": [
+        "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/qwen_sys/combined/nearhbm/ot_hdc_fp32_mul_lat.sv"
+      ]
+    },
+    "ot_hdc_fsqrt": {
+      "chosen": "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/hdc/v41/ot_hdc_fsqrt.sv",
+      "by": "first",
+      "differ": [
+        "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/hdc/v41/ot_hdc_fsqrt_prefix_round.sv",
+        "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/hdc/v41/ot_hdc_fsqrt_prefix_round_selected_flat.sv"
+      ],
+      "iface_differ": [
+        "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/hdc/v41/ot_hdc_fsqrt_prefix_round.sv",
+        "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/hdc/v41/ot_hdc_fsqrt_prefix_round_selected_flat.sv"
+      ]
+    },
+    "ot_hdc_v41x_ins": {
+      "chosen": "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/hbm_accel/su/div64_candidate/ot_hdc_v41x_sfu_c12.sv",
+      "by": "first",
+      "differ": [
+        "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_sfu_f12.sv",
+        "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+        "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv"
+      ],
+      "iface_differ": [
+        "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_sfu_f12.sv",
+        "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv"
+      ]
+    },
+    "ot_hdc_v41x_vec_lane": {
+      "chosen": "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/hbm_accel/su/div64_candidate/ot_hdc_v41x_vec_lane_c12.sv",
+      "by": "first",
+      "differ": [
+        "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv",
+        "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv",
+        "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv",
+        "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_kr.sv",
+        "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_kr_capture_split.sv",
+        "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_kr_capture_split_selected_flat.sv",
+        "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/hdc/v41x/phys/ot_hdc_su_ctl_c13_phys.sv",
+        "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/hdc/v41x/phys/ot_hdc_v41x_vec_ctl_stubs_c12.sv",
+        "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/hdc/v41x/s81_kvt_stride/ot_hdc_v41x_vec_lane.sv"
+      ],
+      "iface_differ": [
+        "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/hbm_accel/su/pinned_native/ot_hdc_v41x_vec_lane_f12.sv",
+        "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv",
+        "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv",
+        "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_kr.sv",
+        "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_kr_capture_split.sv",
+        "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_kr_capture_split_selected_flat.sv",
+        "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/hdc/v41x/phys/ot_hdc_su_ctl_c13_phys.sv",
+        "/srv/opentallas-scratch2/claude/codex-hbm-native-bays-1351/current_rtl_ee405a63/rtl/hdc/v41x/s81_kvt_stride/ot_hdc_v41x_vec_lane.sv"
+      ]
+    }
+  },
+  "child_cause": "Missing actual hard models/wrapper definitions and unresolved variant selection. Use source-of-record preference, never choose by matching width or add stubs.",
+  "params_not_in_rtl": [
+    "ot_hbm_idx_rootctl_static_am: ['FAN32', 'RSTL']",
+    "ot_hbm_su_stree_leaf: ['NLEG']",
+    "ot_hbm_su_programme_root_h5: ['PARTS']"
+  ],
+  "params_cause": "rootctl FAN32/RSTL and programme PARTS require actual bundled definitions; stree NLEG requires reviewed thin source port.",
+  "net_cause": "Unbound/incorrect selected definitions suppress driver/read analysis, including PHY8192,selector2368,host ingress256 andSU outputs. Re-evaluate after actual closure; no global waiver or invented external data tie.",
+  "remaining_authorities": [
+    "Production calendar/transport epoch ledger",
+    "8 delivered reset endpoints",
+    "Missing original upstream providers including8SVG/16VMSbanks/2calendars",
+    "Actual native lower FUSED tree bindings",
+    "Current physical slot/pin/clock/PG/hold adoption"
+  ]
+}

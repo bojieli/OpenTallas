@@ -25,7 +25,7 @@ def expr(segments):
     return terms[0] if len(terms) == 1 else '{' + ', '.join(terms) + '}'
 
 
-def compose(original, base, config, out):
+def compose(original, base, config, out, preserve_history=False, fused_target=None, target_audit=None):
     source = Die(original, config['transport'])
     vehicle = Die(base, config['transport'])
     selected = {name for name in source.insts if name.startswith('hb_idx__') or name == 'hb_argmax' or name in {f'hb_vms_{q}' for q in ('SW', 'SE', 'NW', 'NE')}}
@@ -35,12 +35,27 @@ def compose(original, base, config, out):
     for q, master in expected_roles.items():
         if source.insts[f'hb_vms_{q}']['master'] != master:
             raise ValueError('original VMS role/master contract differs: ' + q)
+    history_cone = set()
+    pending = list(selected)
+    seen = set()
+    while pending:
+        name = pending.pop()
+        if name in seen: continue
+        seen.add(name)
+        for raw in source.insts[name]['conns'].values():
+            for segment in parse_expr(raw, source.widths):
+                if segment[0] != 'n': continue
+                driver = source.driver.get(segment[1])
+                if driver and source.is_transport(driver[0]) and driver[0] != name:
+                    history_cone.add(driver[0])
+                    pending.append(driver[0])
+    transport_cone = history_cone if preserve_history else set()
     instances = {}
     stages = []
     # Classify outputs by the source netlist's explicit native driver identity.
-    for die, names in ((vehicle, set(vehicle.insts) - selected), (source, selected)):
+    for die, names in ((vehicle, set(vehicle.insts) - selected), (source, selected | transport_cone)):
         for name in sorted(names):
-            if die.is_transport(name):
+            if die.is_transport(name) and name not in transport_cone:
                 continue
             spec = die.insts[name]
             ports = {}
@@ -50,12 +65,12 @@ def compose(original, base, config, out):
                     lo, hi = die.widths[net]
                     ports[port] = dict(direction='output', width=hi - lo + 1, segments=[('n', net, lo, hi)])
                 else:
-                    resolved = die.resolve(parse_expr(raw, die.widths))
-                    segments = [segment for segment, _ in resolved]
+                    resolved = [(segment, None) for segment in parse_expr(raw, die.widths)] if name in transport_cone else die.resolve(parse_expr(raw, die.widths))
+                    segments = parse_expr(raw, die.widths) if preserve_history and die is source else [segment for segment, _ in resolved]
                     ports[port] = dict(direction='input', segments=segments)
                     stages.append(dict(instance=name, port=port, segments=resolved))
             instances[name] = dict(master=spec['master'], params=spec['params'], ports=ports,
-                                   origin='released_quad' if name in selected else 'B1_existing_leaf_scaffold')
+                                   origin='released_quad' if name in selected else ('original_transport_history' if name in transport_cone else 'B1_existing_leaf_scaffold'))
     obligations = []
     original_reset_provenance = {}
     def required(name, port, width, reason):
@@ -101,6 +116,14 @@ def compose(original, base, config, out):
             node[port] = output(name, port, width)
         instances[name] = dict(master='ot_hnx_fused_tnode', params='.LA(6), .UW(271), .DW(173), .DELIVERED_RESET(1)', ports=node, origin='native_FUSED_contract')
     instances[root] = dict(master='ot_hnx_fused_hub_n4ext', params='.DELIVERED_RESET(1)', ports=ports, origin='native_FUSED_contract')
+    bootstrap = None
+    if fused_target is not None:
+        if target_audit is None: raise ValueError('explicit native target requires its namespace audit')
+        if json.loads(Path(target_audit).read_text()).get('source_graph') != hashlib.sha256(Path(original).read_bytes()).hexdigest():
+            raise ValueError('namespace review differs from actual released source graph')
+        from native_bootstrap_bind import attach
+        bootstrap = attach(instances, fused_target, target_audit, required, output)
+        obligations = [entry for entry in obligations if instances[entry['instance']]['ports'][entry['port']]['segments'] == [('n', entry['net'], 0, entry['width']-1)]]
     driven = {}
     for name, obj in instances.items():
         for port, spec in obj['ports'].items():
@@ -146,20 +169,35 @@ def compose(original, base, config, out):
         instances=len(instances), selected_released_instances=sorted(selected), vms_roles=expected_roles, quarter_count=4,
         quarter_sram_count=68, fused_packet_links=4, fused_packet_bits=888, unresolved_boundary=unresolved,
         transport_history_obligations=history, current_plan_station_binding_ledger=[],
+        original_history_realization='ORIGINAL_TRANSPORT_RTL_RETAINED' if preserve_history else 'COLLAPSED_HISTORY_MISSING',
+        retained_transport_instances=sorted(transport_cone),
         original_parameters_provenance={name: instances[name]['params'] for name in sorted(selected)},
-        obligations=obligations, original_reset_provenance=original_reset_provenance, unconsumed_native_outputs=sorted(exposed_outputs),
+        native_bootstrap_binding=bootstrap, obligations=obligations, original_reset_provenance=original_reset_provenance, unconsumed_native_outputs=sorted(exposed_outputs),
         scope='Source candidate only. Existing non-IDX/VMS B1 leaves remain historical scaffold pending current full-native review. No geometry, boot, LEC, P&R or timing qualification.')
     (out / 'composition.json').write_text(json.dumps(report, indent=2) + '\n')
     (out / 'resolved_source_paths.json').write_text(json.dumps(stages) + '\n')
     (out / 'native_instance_manifest.json').write_text(json.dumps(instances, indent=2) + '\n')
+    history_nets = {segment[1] for name in selected | history_cone for raw in source.insts[name]['conns'].values() for segment in parse_expr(raw, source.widths) if segment[0] == 'n'}
+    history_contract = dict(schema='opentallas.hbm.native_transport_history.v1',
+        source_sha256=report['original_sha256'], status='ORIGINAL_SOURCE_CONTRACT_NOT_CURRENT_CALENDAR',
+        source_module=source.top, current_plan_binding_ledger=[],
+        selected_original_instances={name: source.insts[name] for name in sorted(selected)},
+        transport_instances={name: dict(source.insts[name], stages=source.stages(name), rule=source.trule(name)) for name in sorted(history_cone)},
+        widths={net: source.widths[net] for net in sorted(history_nets)},
+        drivers={net: source.driver.get(net) for net in sorted(history_nets)},
+        authority='Original clock/reset expressions and forwarded clock ports are retained literally; current delivered-reset/epoch bindings remain separate obligations.')
+    (out / 'transport_history_contract.json').write_text(json.dumps(history_contract, indent=2) + '\n')
     return report
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     for p in ('original', 'base', 'asbuilt', 'out'): ap.add_argument(p, type=Path)
+    ap.add_argument('--preserve-history', action='store_true', help='retain exact original transport RTL cone for selected imported inputs; still no current-plan/calendar qualification')
+    ap.add_argument('--fused-target', type=lambda value: int(value,0), help='explicit reviewed target byte; omitted means bootstrap remains unbound')
+    ap.add_argument('--target-audit', type=Path, help='exact namespace review required with --fused-target')
     a = ap.parse_args()
-    report = compose(a.original, a.base, json.loads(a.asbuilt.read_text()), a.out)
+    report = compose(a.original, a.base, json.loads(a.asbuilt.read_text()), a.out, a.preserve_history, a.fused_target, a.target_audit)
     print(json.dumps({k: report[k] for k in ('status', 'instances', 'quarter_count', 'quarter_sram_count', 'fused_packet_bits')}))
     print('EXPLICIT_BOUNDARY_PORTS', len(report['unresolved_boundary']))
 
