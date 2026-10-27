@@ -340,3 +340,18 @@ HCPLseparateoneDRTtrialrowe5576679ac45 publishedsource6599f6761a, currentbatch4m
 Legacy head contracts superseded approvedHEAD-RTL2 mapping; existing library/indexed/tagged helper evidence retained. No fullHEADG5 until provider/bind.
 
 2026-10-27 01:43 PDT HEAD-KITS-1: the 16 s81_head partition types (hd_tile hd_turn_a hd_turn_b hd_spn hd_spn_end hd_serdes hd_st_turn hd_st_str hd_st_n3 hd_st_n4 hd_st_m hd_st_k5 hd_mesh hd_lep0N hd_ctl hd_host) are ALL held by PENDING-DELTA D-INFRA-FIRST-HEAD (lanes/PLAN-DELTA.md:229, RELEASE_TREE HEAD.INFRA WAITS; ctl/host/mesh/lep0N also carry the provider bus delta ruled 22:21 into the next HEAD PLAN-DELTA) -> none kitted, none run (task rule: skip pending-delta types). They need the head infra-first plan event first. Hard cores: see lanes/HEAD-CORE-LAT.md HEAD-KITS-1.
+
+2026-10-27 02:04 PDT INFRA-FIRST-HEAD-1 R1 RESULT. Branch claude/infra-head-1027@a80ab81733, on main 262d070384. Evidence: results/infra_first_head_r1/README.md. Run dir: intel2:/srv/opentallas-scratch2/claude/infra-head-1027. The plan is untouched (d7b8d1eb). All numbers are own-tool and UNCHECKED-independent (NUMBER-CHECK owed). The plan event is NOT complete: there is no mesh build and no GRT yet, so D-INFRA-FIRST-HEAD stays PENDING and the 16 types are NOT released.
+(1) PG (die_infra pg, analytic, 35 mV): the plan grid 0.48@8.64 gives 87.4 mV FAIL. The minimum feasible grid is M8 0.48@4.32 + M9 0.48@1.728 at 34.34 mV, which takes M8 29.4% / M9 70.1% of the tracks. The basis is borrowed (S81 84.1 W -> 0.3257 W/mm2), the sweep only varies pitch, and PDNSim has not run.
+(2) Reset wavefront: root sp3, 326 nets, max hop 378.0 <= 405, 0 long, 0 unreachable.
+(3) G0: PASS, 0 errors / 6 warnings, G0C 16/16 clean, on the current plan.
+(4) Master-plan baseline (no mesh): the data roads PASS (reach 401.742, bay 0.496, corridors M5 0.498, entry pins, lot_fit). The clock gates FAIL as expected: clock_entry 5/5, early_taps 5, core_reach (old 317.672 outline), core_insertion_model, clock_sites (serdes taps inside PHY), tree_on_islands. The mesh gates are NOT RUN.
+(5) Island-lattice R1 (tools/s81_head/head_island_lattice.py; render isl_r1_zoom.png, viewed):
+- With the rebuilt outlines elemA 319.68 / elemB 285.12 plus ONE plan-delta move (eB origin x 216.00 -> 211.68), the 5 core-centre islands per hd_tile are MY-invariant (asym 8.64 -> 0.000).
+- The 264 tiles then form one lattice: 33 columns per half at a 177.12 pitch, and 36 rows (3 per tile row).
+- Decision: one continuous mesh (12.8e1).
+  - M9 straps run on every island column (+ turn/spine columns). M8 straps run on every island row (+ station-row frame-y 613.44 row + serdes strip row). Every island therefore lies on a strap with a 0-length stub.
+  - Mesh drivers sit at the eB island of every tile, 11x12 per half.
+  - That grid is not a power of two, so die_clock_mesh's bisection lattice (KV form) cannot build it. The head needs the QC delay-balanced merge tree + VSS lanes (qc_clk_mesh3), generalised from its QC constants (PER_X/seam set/centre channel) -> R2.
+- Open structural items: (a) the hd_serdes taps are inside VDDPHY and need a PHY-side entry in the 150-um strip; (b) M9 PG at 1.728 leaves 1.248 gaps (4W OK, 16W trunk needs VSS-phase lanes); (c) the core taps move to the centre entries, with the R12 cores' real insertion replacing 'early 415.6'.
+NEXT (R2): generalise qc_clk_mesh3 for the head lattice -> plan delta (outlines, eB -4.32, entries, islands per type, serdes strip entry) -> G0/G0C + master-plan with --mesh -> combo GRT >= 50 iterations via ot-run -> mesh MC -> related-pair STA.
