@@ -1,0 +1,322 @@
+{
+  "source": "4cb3339f16",
+  "status": "CONDITIONAL_EXISTING_COHORT_UNIT_WORK_NOT_8SM_RATE",
+  "images": {
+    "ar_N1": {
+      "schema": "opentallas.p3.materialization_cost.v1",
+      "input_image": "/srv/opentallas-scratch2/claude/codex-p3-compiler-2018/batch2/ar_N1",
+      "status": "CONDITIONAL_EXISTING_MODEL_UNIT_WORK_NOT_TOKEN_RATE",
+      "scope": "selected cohort cost; FUSED row overlap, all-unit drain delays, physical replay and eight-SM model not included",
+      "instructions_selected": 322,
+      "rowx_instructions_expanded_serially": 0,
+      "records_per_unit": {
+        "DMA.LOAD": 81,
+        "SU.VOP": 241
+      },
+      "cycles_per_unit": {
+        "DMA.LOAD": 13483.851327880775,
+        "SU.VOP": 15549.0
+      },
+      "unit_work_serial_sum_cycles": 29032.851327880773,
+      "vm_copy_words": 621360,
+      "hbm_load_words": 414720,
+      "hbm_load_bytes": 1658880,
+      "HBM_bytes_per_cycle": 3166.7,
+      "HBM_traffic_floor_cycles": 523.8513278807592,
+      "fused_chunk_model": {
+        "firstrow_II": {
+          "HC_PRE_NORM": [
+            404,
+            81
+          ],
+          "HC_POST": [
+            196,
+            103
+          ]
+        },
+        "original_cycles": 48404,
+        "lowered_cycles": 48404,
+        "added_cycles": 0,
+        "chunks": [
+          {
+            "op": "HC_POST",
+            "rows": 1,
+            "count": 80
+          },
+          {
+            "op": "HC_PRE_NORM",
+            "rows": 1,
+            "count": 81
+          }
+        ],
+        "scope": "explicit supplied first-row/II model; no selected native or eight-SM claim"
+      },
+      "extra_serial_unit_work_cycles": 29032.851327880773
+    },
+    "mtp_N6": {
+      "schema": "opentallas.p3.materialization_cost.v1",
+      "input_image": "/srv/opentallas-scratch2/claude/codex-p3-compiler-2018/batch2/mtp_N6",
+      "status": "CONDITIONAL_EXISTING_MODEL_UNIT_WORK_NOT_TOKEN_RATE",
+      "scope": "selected cohort cost; FUSED row overlap, all-unit drain delays, physical replay and eight-SM model not included",
+      "instructions_selected": 468,
+      "rowx_instructions_expanded_serially": 387,
+      "records_per_unit": {
+        "DMA.LOAD": 81,
+        "SU.VOP": 1686
+      },
+      "cycles_per_unit": {
+        "DMA.LOAD": 13483.851327880775,
+        "SU.VOP": 124254.0
+      },
+      "unit_work_serial_sum_cycles": 137737.85132788078,
+      "vm_copy_words": 12329760,
+      "hbm_load_words": 414720,
+      "hbm_load_bytes": 1658880,
+      "HBM_bytes_per_cycle": 3166.7,
+      "HBM_traffic_floor_cycles": 523.8513278807592,
+      "fused_chunk_model": {
+        "firstrow_II": {
+          "HC_PRE_NORM": [
+            404,
+            81
+          ],
+          "HC_POST": [
+            196,
+            103
+          ]
+        },
+        "original_cycles": 122409,
+        "lowered_cycles": 127338,
+        "added_cycles": 4929,
+        "chunks": [
+          {
+            "op": "HC_POST",
+            "rows": 1,
+            "count": 53
+          },
+          {
+            "op": "HC_POST",
+            "rows": 5,
+            "count": 53
+          },
+          {
+            "op": "HC_POST",
+            "rows": 6,
+            "count": 27
+          },
+          {
+            "op": "HC_PRE_NORM",
+            "rows": 6,
+            "count": 81
+          }
+        ],
+        "scope": "explicit supplied first-row/II model; no selected native or eight-SM claim"
+      },
+      "extra_serial_unit_work_cycles": 142666.85132788078
+    },
+    "mu_N1": {
+      "schema": "opentallas.p3.materialization_cost.v1",
+      "input_image": "/srv/opentallas-scratch2/claude/codex-p3-compiler-2018/batch2/mu_N1",
+      "status": "CONDITIONAL_EXISTING_MODEL_UNIT_WORK_NOT_TOKEN_RATE",
+      "scope": "selected cohort cost; FUSED row overlap, all-unit drain delays, physical replay and eight-SM model not included",
+      "instructions_selected": 322,
+      "rowx_instructions_expanded_serially": 0,
+      "records_per_unit": {
+        "DMA.LOAD": 81,
+        "SU.VOP": 241
+      },
+      "cycles_per_unit": {
+        "DMA.LOAD": 13483.851327880775,
+        "SU.VOP": 15549.0
+      },
+      "unit_work_serial_sum_cycles": 29032.851327880773,
+      "vm_copy_words": 621360,
+      "hbm_load_words": 414720,
+      "hbm_load_bytes": 1658880,
+      "HBM_bytes_per_cycle": 3166.7,
+      "HBM_traffic_floor_cycles": 523.8513278807592,
+      "fused_chunk_model": {
+        "firstrow_II": {
+          "HC_PRE_NORM": [
+            404,
+            81
+          ],
+          "HC_POST": [
+            196,
+            103
+          ]
+        },
+        "original_cycles": 48404,
+        "lowered_cycles": 48404,
+        "added_cycles": 0,
+        "chunks": [
+          {
+            "op": "HC_POST",
+            "rows": 1,
+            "count": 80
+          },
+          {
+            "op": "HC_PRE_NORM",
+            "rows": 1,
+            "count": 81
+          }
+        ],
+        "scope": "explicit supplied first-row/II model; no selected native or eight-SM claim"
+      },
+      "extra_serial_unit_work_cycles": 29032.851327880773
+    },
+    "mu_N2": {
+      "schema": "opentallas.p3.materialization_cost.v1",
+      "input_image": "/srv/opentallas-scratch2/claude/codex-p3-compiler-2018/batch2/mu_N2",
+      "status": "CONDITIONAL_EXISTING_MODEL_UNIT_WORK_NOT_TOKEN_RATE",
+      "scope": "selected cohort cost; FUSED row overlap, all-unit drain delays, physical replay and eight-SM model not included",
+      "instructions_selected": 362,
+      "rowx_instructions_expanded_serially": 281,
+      "records_per_unit": {
+        "DMA.LOAD": 81,
+        "SU.VOP": 562
+      },
+      "cycles_per_unit": {
+        "DMA.LOAD": 13483.851327880775,
+        "SU.VOP": 41418.0
+      },
+      "unit_work_serial_sum_cycles": 54901.85132788077,
+      "vm_copy_words": 4109920,
+      "hbm_load_words": 414720,
+      "hbm_load_bytes": 1658880,
+      "HBM_bytes_per_cycle": 3166.7,
+      "HBM_traffic_floor_cycles": 523.8513278807592,
+      "fused_chunk_model": {
+        "firstrow_II": {
+          "HC_PRE_NORM": [
+            404,
+            81
+          ],
+          "HC_POST": [
+            196,
+            103
+          ]
+        },
+        "original_cycles": 63205,
+        "lowered_cycles": 63205,
+        "added_cycles": 0,
+        "chunks": [
+          {
+            "op": "HC_POST",
+            "rows": 2,
+            "count": 80
+          },
+          {
+            "op": "HC_PRE_NORM",
+            "rows": 2,
+            "count": 81
+          }
+        ],
+        "scope": "explicit supplied first-row/II model; no selected native or eight-SM claim"
+      },
+      "extra_serial_unit_work_cycles": 54901.85132788077
+    },
+    "mu_N3": {
+      "schema": "opentallas.p3.materialization_cost.v1",
+      "input_image": "/srv/opentallas-scratch2/claude/codex-p3-compiler-2018/batch2/mu_N3",
+      "status": "CONDITIONAL_EXISTING_MODEL_UNIT_WORK_NOT_TOKEN_RATE",
+      "scope": "selected cohort cost; FUSED row overlap, all-unit drain delays, physical replay and eight-SM model not included",
+      "instructions_selected": 362,
+      "rowx_instructions_expanded_serially": 281,
+      "records_per_unit": {
+        "DMA.LOAD": 81,
+        "SU.VOP": 843
+      },
+      "cycles_per_unit": {
+        "DMA.LOAD": 13483.851327880775,
+        "SU.VOP": 62127.0
+      },
+      "unit_work_serial_sum_cycles": 75610.85132788078,
+      "vm_copy_words": 6164880,
+      "hbm_load_words": 414720,
+      "hbm_load_bytes": 1658880,
+      "HBM_bytes_per_cycle": 3166.7,
+      "HBM_traffic_floor_cycles": 523.8513278807592,
+      "fused_chunk_model": {
+        "firstrow_II": {
+          "HC_PRE_NORM": [
+            404,
+            81
+          ],
+          "HC_POST": [
+            196,
+            103
+          ]
+        },
+        "original_cycles": 78006,
+        "lowered_cycles": 78006,
+        "added_cycles": 0,
+        "chunks": [
+          {
+            "op": "HC_POST",
+            "rows": 3,
+            "count": 80
+          },
+          {
+            "op": "HC_PRE_NORM",
+            "rows": 3,
+            "count": 81
+          }
+        ],
+        "scope": "explicit supplied first-row/II model; no selected native or eight-SM claim"
+      },
+      "extra_serial_unit_work_cycles": 75610.85132788078
+    },
+    "mu_N4": {
+      "schema": "opentallas.p3.materialization_cost.v1",
+      "input_image": "/srv/opentallas-scratch2/claude/codex-p3-compiler-2018/batch2/mu_N4",
+      "status": "CONDITIONAL_EXISTING_MODEL_UNIT_WORK_NOT_TOKEN_RATE",
+      "scope": "selected cohort cost; FUSED row overlap, all-unit drain delays, physical replay and eight-SM model not included",
+      "instructions_selected": 362,
+      "rowx_instructions_expanded_serially": 281,
+      "records_per_unit": {
+        "DMA.LOAD": 81,
+        "SU.VOP": 1124
+      },
+      "cycles_per_unit": {
+        "DMA.LOAD": 13483.851327880775,
+        "SU.VOP": 82836.0
+      },
+      "unit_work_serial_sum_cycles": 96319.85132788078,
+      "vm_copy_words": 8219840,
+      "hbm_load_words": 414720,
+      "hbm_load_bytes": 1658880,
+      "HBM_bytes_per_cycle": 3166.7,
+      "HBM_traffic_floor_cycles": 523.8513278807592,
+      "fused_chunk_model": {
+        "firstrow_II": {
+          "HC_PRE_NORM": [
+            404,
+            81
+          ],
+          "HC_POST": [
+            196,
+            103
+          ]
+        },
+        "original_cycles": 92807,
+        "lowered_cycles": 92807,
+        "added_cycles": 0,
+        "chunks": [
+          {
+            "op": "HC_POST",
+            "rows": 4,
+            "count": 80
+          },
+          {
+            "op": "HC_PRE_NORM",
+            "rows": 4,
+            "count": 81
+          }
+        ],
+        "scope": "explicit supplied first-row/II model; no selected native or eight-SM claim"
+      },
+      "extra_serial_unit_work_cycles": 96319.85132788078
+    }
+  }
+}
