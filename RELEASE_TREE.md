@@ -54,11 +54,12 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
   - [ ] S81.TILES Tile sign-offs · PATH-S81 / CORES-KITS · RUNNING · 4/171 types, 16/52 hard cores signed
 
 ## DIE hbm · HBM UNIFIED SU/MTP/MU one design (OWNER 10-26 23:1x; SU latency qualified first) · plan D-HBM-B1 (5fa3c6e64838)
-- [ ] HBM.B1 Plan event (native b1n4 39b34ade; G0C 36 core-face open) + 12.7 master plan (corridors/bays/M7 entry/PG/shield gates) + CORE-LAT strips + 250 ps zero-early · PATH-HBM · RUNNING · hub cut FAIL: R8 distributed + R9 replicated-segment (S=2 x 2.14/y 1.32, UNCHECKED); banks k=4/4 PASS 0.50-0.55 → R10 top-down hub face pins over consumers + equal-lane segments + W/E serial chain
-- [ ] HBM.GRT Die GRT0 incl clock · PATH-HBM-R15 + HBM-UNIFIED-1 · RUNNING · pin tables + drop_inside PHY fixed (max edge 732.8 um); S2/F2 GRT live; lineage vs unified a810b810f being checked · ETA freeze est >=11-01 (low confidence)
-- [ ] HBM.CLK Mesh clock + skew under 12.8 · CLOCK-128 · FAIL/INVALID · r7 980/800 used early offsets; r8 build legal (183 island drivers, straps shielded) → IF.CLK128, → HBM-CORE-LAT-R2 (19 types >290 ps restructure)
+- [ ] HBM.B1 Unified plan of record = codex/hbm-2001@3c3dae6bb hubs H4320 (32 VM+32 FUSED, ~526.6 mm2) · PATH-HBM / HBM-UNIFIED-1 · RUNNING · hub geometry FAIL STRUCTURAL → MU quad tile proposed (claude/hbm-unified-1-1026@98825ecc09), pack rest of hub + cuts + root in root partition next
+- [ ] HBM.GRT Die GRT0 incl clock on the UNIFIED plan · PATH-HBM · WAITS · R15 S2/F2 = SU plan (H3525, 16 banks), flow canary only, collect; unified GRT after HBM.B1 + views
+- [ ] HBM.CLK Mesh clock 12.8 on unified plan · CLOCK-128 · FAIL/INVALID · r7/r8 on old plan; rebuild after HBM.B1, 4 new types need islands (bank/fused/tnode/keybuf)
 - [ ] HBM.BIND Native B2 one-clock bind · PATH-HBM / HC-NATIVE · RUNNING · 98 unread outputs classified (svg redundant views, sm.request/expected check w/o comparator, xl y, ordinals); no open inputs
-- [ ] HBM.STA Die STA on real views · DIE-PROTO · WAITS · → HBM.GRT
+- [ ] HBM.STA Die related-pair STA real routed clock (TT setup/FF hold) · DIE-PROTO · WAITS · → HBM.GRT; SU latency qualified first (HBM.SU)
+- [ ] HBM.SU SU latency qual: ds_ar cycles/token on unified plan (target hub Δ<=5%, design <=15%, owner-accepted ~1973 tok/s) · TOK-HBM · RUNNING · model U0 2.75-9.93% (2024-1874 tok/s) UNCHECKED, quad fix to cut upper
 
 ## TOKEN · Token-pass gate per design
 - [ ] TOK.DS DeepSeek ROM token pass (S81 array + head) · TOK-DS-6 · RUNNING · L14 27/57/8; idx scan 3-die shard; S81 all-rows MTP 3,655 tok/s > 3,000 floor (AR 1,260), 17.0% ledger ACCEPTED (owner 10-26) → S81.BIND, → HEAD.BIND
