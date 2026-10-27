@@ -1130,3 +1130,5 @@ Source codex/rcx-mixed-1027@166adab391 READY; field and native jobs terminal PAS
 
 ## HBM cores coverage 2026-10-27 09:23 PDT
 HBM-CORE-LAT/HBM-CORES/HBM-KITS taken over codex/hbm-cores-0815;77canonical designs assigned (coverage.json). 5placement trials collected (pretreeCOND/4pin6FAIL); ctlx/VMSproof gaps CLOSED; SM4nativechild hierarchy max84055/residual58218/38853 cells; HC first/subtree source gates live; SKprovider508/emit509 exact gated +5cycles, quartergeometry nowactive. Jobs and source shas in HBM-CORE-LAT notes.
+
+TOK-HBM 09:31: native171key/MTP6 calendar cut PASS2516/0 plus wrong-tag855; quarter64HCOL+2tail+17SRAM source/census staged. Four-role VMS role+ring bitgraph delivered plan. Historical2stop gate PASS separately. Main PR1RF CAUGHT1500; RED still live. N4minimum moved-node miter+wrongpair live intel2unit714881; inherited fulltree protocol failures remain explicit and under diagnosis.
