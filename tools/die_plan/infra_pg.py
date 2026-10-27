@@ -98,7 +98,23 @@ def phy_pg_pitch(kind):
     return round(UBUMP_UM / math.sqrt(PHY_PG_SHARE[kind]), 3)
 
 
-def pg_bumps(P, io, pitch=150.0, phy=True):
+def resolved_bumps(P, pg=None, pitch_um=None):
+    """Explicit sizing argument, else recorded resolved contract, else plan/default.
+
+    Old grid JSON's implicit 150-um field cannot override a new plan contract.
+    For plans without that contract it retains its historical meaning.
+    """
+    from types import SimpleNamespace
+    pg = pg or {}
+    cfg = dict(pg.get("bump_contract") or D.bump_contract(P))
+    if pitch_um is not None:
+        cfg["pitch_um"] = pitch_um
+    elif "bump_contract" not in pg and not P.die.get("pg", {}).get("bumps") and "bump_pitch_um" in pg:
+        cfg["pitch_um"] = pg["bump_pitch_um"]
+    return D.bump_contract(SimpleNamespace(die={"pg": {"bumps": cfg}}))
+
+
+def pg_bumps(P, io, pitch=None, phy=True):
     """Core C4 power bumps (die_trial.bump_grid) + every PHY window's own PG micro-bump lattice (VDD/VSS by parity).
     The plan uses every 150-um site of a PHY window for signals, so without these a PHY window has no supply at all."""
     out = list(D.bump_grid(P, io, pitch=pitch))
@@ -106,6 +122,23 @@ def pg_bumps(P, io, pitch=150.0, phy=True):
         for w in io:
             out += _phy_lattice(w["rect_um"], phy_pg_pitch(phy_kind(w.get("iface") or "", w.get("name", ""))))[1]
     return out
+
+
+def require_typed_phy_pad(bumps, io, pad_um):
+    """A finite C4 pad cannot be applied to retained PHY micro-bumps.
+
+    Check actual retained source tuples, not a PHY bounding-box intersection:
+    a core-only crop can touch an IO region without retaining a PHY source.
+    Point-source legacy mode remains unchanged until a typed PHY pad contract
+    is available; no PHY pad size is inferred from the C4 size.
+    """
+    if pad_um <= 0:
+        return
+    retained = set(bumps)
+    for w in io:
+        micro = _phy_lattice(w["rect_um"], phy_pg_pitch(phy_kind(w.get("iface") or "", w.get("name", ""))))[1]
+        if retained.intersection(micro):
+            raise ValueError("uniform finite C4 pad cannot be used for retained PHY micro-bumps; a typed PHY pad contract is required")
 
 
 def _rect_of(P, n):
@@ -472,10 +505,12 @@ def tracks_of(P, grid):
 
 # --------------------------------------------------------------------------------------------------------- sizing
 def size_grid(P, plan_dir, power=None, ir_budget_frac=0.05, vdd=0.7, phy_w_per_macro=4.37, core_w_mm2=None,
-              m8_max_frac=0.5, m9_max_frac=0.85, bump_pitch_um=150.0, gate="all", core_watts=None):
+              m8_max_frac=0.5, m9_max_frac=0.85, bump_pitch_um=None, gate="all", core_watts=None):
     """Smallest M8 share (then M9) whose worst per-region VDD IR <= ir_budget_frac x vdd.
     gate="all": every region (core + PHY windows) must meet the budget; "core": only the core region (PHY windows
     reported, to be met by a PHY-local grid / domain)."""
+    bump_cfg = resolved_bumps(P, pitch_um=bump_pitch_um)
+    bump_pitch_um = bump_cfg["pitch_um"]
     model = load_model(P, plan_dir, power, phy_w_per_macro, core_w_mm2, core_watts)
     budget = ir_budget_frac * vdd * 1e3
     opts = []
@@ -530,7 +565,7 @@ def size_grid(P, plan_dir, power=None, ir_budget_frac=0.05, vdd=0.7, phy_w_per_m
                 feasible=chosen is not None, budget_mv=round(budget, 3), worst_mv=best["worst_mv"],
                 model=dict(local_mv=best["local_mv"], coarse_max_mv=best["coarse_max_mv"], rx_ohm_sq=best["rx_ohm_sq"],
                            ry_ohm_sq=best["ry_ohm_sq"], nodes=best["nodes"]),
-                bump_pitch_um=bump_pitch_um, vdd=vdd, ir_budget_frac=ir_budget_frac,
+                bump_pitch_um=bump_pitch_um, bump_contract=bump_cfg, vdd=vdd, ir_budget_frac=ir_budget_frac,
                 part_w={k: round(v, 6) for k, v in model["part_w"].items()},
                 candidates=[{k: c[k] for k in ("label", "tracks", "worst_mv", "regions_mv", "grid")} for c in cands])
 
@@ -545,6 +580,25 @@ class _PG:
 
 def _snap(v, q):
     return math.floor(v / q + 1e-9) * q
+
+
+def window_grid(grid, x0, y0):
+    """Translate die-phase PG rows into a window without resetting phase/parity.
+
+    Each layer has its own period and direction. Reduce by the FULL period so
+    the row's net ordering is unchanged; pg_regions.row_spec then selects the
+    first complete stripe and its actual power/ground parity. Work in the same
+    integer DBU lattice as that emitter rather than taking a floating remainder.
+    This translates core grid rows only, not PHY domain rectangles/grids.
+    """
+    import pg_regions
+    out = []
+    for row in grid:
+        origin = x0 if pg_regions.DIRS[row["layer"]] == "V" else y0
+        period = pg_regions._d(row["pitch_um"])
+        offset = (pg_regions._d(row["offset_um"]) - pg_regions._d(origin)) % period
+        out.append(dict(row, offset_um=offset / pg_regions.DBU))
+    return out
 
 
 def default_windows(P, pg, margin=600.0, core_um=1500.0):
@@ -570,12 +624,19 @@ def window_kit(P, plan_dir, pg, out, name, rect, tile=86.4, power=None, phy_w=4.
     x0, y0 = _snap(rect[0], q), _snap(rect[1], q)
     x1, y1 = min(P.W, x0 + _snap(rect[2] - x0, q) or q), min(P.H, y0 + _snap(rect[3] - y0, q) or q)
     w, h = x1 - x0, y1 - y0
+    local_grid = window_grid(pg["grid"], x0, y0)
     Pg = _PG(P, pg["grid"])
     model = load_model(P, plan_dir, power, phy_w, core_w_mm2 if core_w_mm2 is not None else pg.get("core_w_mm2"))
     io = _pg_io(P, plan_dir)
-    bp = pg.get("bump_pitch_um", 150.0)
-    allb = pg_bumps(P, io, pitch=bp)
-    bumps = [(n, round(x - x0, 3), round(y - y0, 3)) for n, x, y in allb if x0 < x < x1 and y0 < y < y1]
+    bump_cfg = resolved_bumps(P, pg)
+    Pg.die["pg"]["bumps"] = bump_cfg
+    bp = bump_cfg["pitch_um"]
+    allb = pg_bumps(Pg, io, pitch=bp)
+    retained = [(n, x, y) for n, x, y in allb if x0 < x < x1 and y0 < y < y1]
+    require_typed_phy_pad(retained, io, bump_cfg["pad_um"])
+    bumps = [(n, round(x - x0, 3), round(y - y0, 3)) for n, x, y in retained]
+    Pw = _PG(P, local_grid)
+    Pw.die["pg"]["bumps"] = bump_cfg
     out = Path(out)
     (out / "psm").mkdir(parents=True, exist_ok=True)
     nx_t, ny_t = max(1, int(round(w / tile))), max(1, int(round(h / tile)))
@@ -598,8 +659,8 @@ def window_kit(P, plan_dir, pg, out, name, rect, tile=86.4, power=None, phy_w=4.
             pw = sum(d * _ov(r, lr) for lr, d in model["loads"]) * 1e-6
             blks.append((f"u_b{i}_{j}", i * bw, j * bh, max(0.0, pw)))
     (out / "psm" / "psm.v").write_text("module irwin ();\n" + "".join(f"  irblk {n} ();\n" for n, *_ in blks) + "endmodule\n")
-    (out / "psm" / "pdn.tcl").write_text(D.psm_pdn_tcl(Pg))
-    (out / "psm" / "bumps.tcl").write_text(D.bumps_tcl(Pg, bumps))
+    (out / "psm" / "pdn.tcl").write_text(D.psm_pdn_tcl(Pw))
+    (out / "psm" / "bumps.tcl").write_text(D.bumps_tcl(Pw, bumps))
     t = ["set t0 [clock seconds]", f"read_lef {D.TECH_LEF}", f"read_lef {D.SC_LEF}", "read_lef /work/psm/irblk.lef",
          f"foreach f [glob {D.PLAT}/lib/NLDM/*RVT_TT_nldm*.lib*] {{ read_liberty $f }}",
          "read_verilog /work/psm/psm.v", "link_design irwin",
@@ -627,8 +688,10 @@ def window_kit(P, plan_dir, pg, out, name, rect, tile=86.4, power=None, phy_w=4.
                                                       if _ov(model["rects"][n], [x0, y0, x1, y1]) > 0]))
     est, worst, det = estimate(P, model, pg["grid"], bp, pg.get("vdd", 0.7), domain=(x0, y0, x1, y1), regions=regs)
     meta = dict(die=P.name, ir_budget_mv=pg.get("budget_mv"), window=name, window_um=[x0, y0, x1, y1], area_mm2=round(w * h * 1e-6, 3), grid=pg["grid"],
+                window_grid=local_grid, grid_phase_scope="core grid rows only; PHY domains are not cropped/translated",
                 power_w=round(sum(b[3] for b in blks), 4), load_blocks=len(blks), bumps=len(bumps),
-                bumps_vdd=sum(1 for b in bumps if b[0] == "VDD"), est_regions_mv=est, est_worst_mv=worst, est_detail=det,
+                bumps_vdd=sum(1 for b in bumps if b[0] == "VDD"), bump_contract=bump_cfg,
+                bump_pitch_um=bp, bump_pad_um=bump_cfg["pad_um"], est_regions_mv=est, est_worst_mv=worst, est_detail=det,
                 scope="window PDNSim: window edges open (no feed from outside), window-local bumps; the estimate "
                       "above is the same model on the same domain")
     (out / "irwin.json").write_text(json.dumps(meta, indent=1) + "\n")
@@ -647,7 +710,11 @@ def die_kit(P, plan_dir, pg, kit, out):
     Pg = _PG(P, pg["grid"])
     lefs = sorted(f.name for f in (out / "abstracts").glob("*.lef"))
     power = {n: pg["part_w"].get(n, 0.0) for n in P.parts}
-    bumps = pg_bumps(P, _pg_io(P, plan_dir), pitch=pg.get("bump_pitch_um", 150.0))
+    bump_cfg = resolved_bumps(P, pg)
+    Pg.die["pg"]["bumps"] = bump_cfg
+    io = _pg_io(P, plan_dir)
+    bumps = pg_bumps(Pg, io, pitch=bump_cfg["pitch_um"])
+    require_typed_phy_pad(bumps, io, bump_cfg["pad_um"])
     (out / "psm" / "pdn.tcl").write_text(D.psm_pdn_tcl(Pg))
     (out / "psm" / "bumps.tcl").write_text(D.bumps_tcl(Pg, bumps))
     (out / "psm" / "power.tcl").write_text("\n".join(f"set_pdnsim_inst_power -inst {D.sv(n)} -power {w:.6f}"
@@ -657,6 +724,7 @@ def die_kit(P, plan_dir, pg, kit, out):
                                                         "/work/psm/psm.tcl > /work/psm/psm.log 2>&1"))
     os.chmod(out / "run_psm.sh", 0o755)
     meta = dict(die=P.name, ir_budget_mv=pg.get("budget_mv"), mode="die", grid=pg["grid"], total_w=round(sum(power.values()), 3), bumps=len(bumps),
+                bump_contract=bump_cfg, bump_pitch_um=bump_cfg["pitch_um"], bump_pad_um=bump_cfg["pad_um"],
                 est_regions_mv={r["name"]: r["ir_est_mv"] for r in pg["regions"]}, est_worst_mv=pg["worst_mv"])
     (out / "irwin.json").write_text(json.dumps(meta, indent=1) + "\n")
     return meta
@@ -705,7 +773,7 @@ def main(argv=None):
     s.add_argument("--vdd", type=float, default=0.7)
     s.add_argument("--m8-max-frac", type=float, default=0.5)
     s.add_argument("--m9-max-frac", type=float, default=0.85)
-    s.add_argument("--bump-pitch", type=float, default=150.0)
+    s.add_argument("--bump-pitch", type=float, default=None)
     s.add_argument("--power", help="JSON {core_w_mm2, types: {type: W/mm2}}")
     s.add_argument("--gate", choices=("all", "core"), default="all")
     p = sub.add_parser("psm")

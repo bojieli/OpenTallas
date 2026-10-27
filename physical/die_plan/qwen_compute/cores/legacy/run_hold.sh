@@ -10,7 +10,7 @@ DK=docker; docker ps >/dev/null 2>&1 || DK="sudo docker"
 NAME=elemqk-hold-$(basename $(dirname $D))-$(basename $D)-$$
 $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$D":/work \
   -e HUID=$(id -u) -e HGID=$(id -g) -e OT_HOLD_MARGIN=$OT_HOLD_MARGIN -e OT_HOLD_ALLOW_SETUP=$OT_HOLD_ALLOW_SETUP \
-  -e OT_HOLD_MAXBUF=$OT_HOLD_MAXBUF -e OT_HOLD_DRV=${OT_HOLD_DRV:-0} -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
+  -e OT_HOLD_MAXBUF=$OT_HOLD_MAXBUF -e OT_HOLD_DRV=${OT_HOLD_DRV:-0} -e OT_VCLK_CORNER=${OT_VCLK_CORNER:-} -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; \
   \$M do-route $ROUTE_CORNERS SKIP_INCREMENTAL_REPAIR=1; rc=\$?; \
   if [ \$rc = 0 ]; then \$M do-finish; rc=\$?; fi; \
@@ -19,9 +19,16 @@ rc=$?
 $DK run --rm -v "$D":/work "$IMAGE" chown -R $(id -u):$(id -g) /work >/dev/null 2>&1
 echo "route_finish_rc=$rc" > $D/rc.txt
 grep -h "ELEMQK_HOLD\|RSZ-00[0-9]*\|Inserted\|hold" $D/run/logs/asap7/*/base/5_1_grt.log 2>/dev/null | tail -n 8
+# FLOW-CLKFREEZE 2026-10-27: BLOCKING clock-net geometry diff (ECO input route vs final DB); change -> rc 5, no sign-off
+if [ $rc = 0 ]; then
+  bash $D/clk_freeze_check.sh $D $IMAGE > $D/clk_freeze_check.log 2>&1; ck=$?
+  grep -h '^CLK_GEOM_DIFF' $D/clk_freeze_check.log | head -n 6; echo "clk_freeze_check_rc=$ck" >> $D/rc.txt
+  [ $ck = 0 ] || rc=5
+fi
 if [ $rc = 0 ]; then
   SIGNOFF_DOCKER="$DK" python3 -I $D/so/tools/die_plan/signoff.py run --run-dir $D/run --kit $D --out $D/signoff \
     --corners tt,ff --image "$IMAGE" > $D/signoff.log 2>&1
   echo "signoff_rc=$?" >> $D/rc.txt
   grep -E '^SIGNOFF|^  - ' $D/signoff.log | head -12
 fi
+exit $rc

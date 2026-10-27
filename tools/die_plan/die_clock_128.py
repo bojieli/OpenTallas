@@ -314,15 +314,19 @@ def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None, pin_
     mm = router.max_move if router is not None else 0.0
     last_ext = [None]
 
-    def trunk_ext(layer, c, lo, hi, mode, e_res, name):
+    def trunk_ext(layer, c, lo, hi, mode, e_res, name, reserved_span):
         """the drawn trunk is shorter than its reservation (span widened by max_move): re-derive its shield tie
         extension on the actual span; the drawn shields must stay inside the reserved ones"""
         if router is None or mode != DRAWN or e_res is None:
             return e_res
         e = router.tie_ext(layer, c, lo, hi)
-        if e is None or e > e_res + mm + 1e-6:
+        outside = e is not None and (lo - e < reserved_span[0] - e_res - 1e-6 or hi + e > reserved_span[1] + e_res + 1e-6)
+        if (outside and getattr(router, "tie_reach_um", 0) > router.max_move
+                and router.extend_shield_reservation(layer, c, lo, hi, name, e)):
+            return e
+        if e is None or outside:
             errs.append(dict(kind="shield_tie", name=name, detail=f"trunk {layer} {c:.3f} {lo:.3f}..{hi:.3f}: shield "
-                             "tie extension outside the reserved shield footprint"))
+                             f"tie extension outside the reserved shield footprint (required={e}, reserved={e_res}, track_move={mm})"))
             return e_res
         return e
     for n in nets:
@@ -335,8 +339,9 @@ def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None, pin_
         nm = n["name"]
         if horiz:
             # the trunk is reserved over its widest possible extent (drops move <= max_move)
-            ty, tm = track("M8", D[1] + off, min([D[0]] + [p[0] + off for _, p in Ls]) - mm,
-                           max([D[0]] + [p[0] + off for _, p in Ls]) + mm, nm, "trunk")
+            reserved_span = (min([D[0]] + [p[0] + off for _, p in Ls]) - mm,
+                             max([D[0]] + [p[0] + off for _, p in Ls]) + mm)
+            ty, tm = track("M8", D[1] + off, *reserved_span, nm, "trunk")
             te = last_ext[0]
             xs_, modes, exts = [], [], []
             used = []
@@ -357,14 +362,15 @@ def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None, pin_
                 xs_.append(bx)
             xlo, xhi = min([D[0]] + xs_), max([D[0]] + xs_)
             if xhi > xlo:
-                te = trunk_ext("M8", ty, xlo, xhi, tm, te, nm)
+                te = trunk_ext("M8", ty, xlo, xhi, tm, te, nm, reserved_span)
                 segs.insert(0, ("M8", xlo, ty, xhi, ty))
                 modes.insert(0, tm)
                 exts.insert(0, te)
             tap0 = (D[0], ty)
         else:
-            tx, tm = track("M9", D[0] + off, min([D[1]] + [p[1] + off for _, p in Ls]) - mm,
-                           max([D[1]] + [p[1] + off for _, p in Ls]) + mm, nm, "trunk")
+            reserved_span = (min([D[1]] + [p[1] + off for _, p in Ls]) - mm,
+                             max([D[1]] + [p[1] + off for _, p in Ls]) + mm)
+            tx, tm = track("M9", D[0] + off, *reserved_span, nm, "trunk")
             te = last_ext[0]
             ys_, modes, exts = [], [], []
             used = []
@@ -385,7 +391,7 @@ def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None, pin_
                 ys_.append(by)
             ylo, yhi = min([D[1]] + ys_), max([D[1]] + ys_)
             if yhi > ylo:
-                te = trunk_ext("M9", tx, ylo, yhi, tm, te, nm)
+                te = trunk_ext("M9", tx, ylo, yhi, tm, te, nm, reserved_span)
                 segs.insert(0, ("M9", tx, ylo, tx, yhi))
                 modes.insert(0, tm)
                 exts.insert(0, te)
@@ -681,11 +687,17 @@ class MetalIndex:
     def __init__(self, space, bin_um=1.0):
         self.space, self.B = space, bin_um
         self.shapes = []
+        self.pairwise = False
+        self.shape_spaces = []
+        self.max_shape_space = 0.
         self.bins = {"M8": defaultdict(list), "M9": defaultdict(list)}
 
-    def add(self, s):
+    def add(self, s, space=None):
         k = len(self.shapes)
         self.shapes.append(s)
+        pair_space=self.space if space is None else space
+        self.shape_spaces.append(pair_space)
+        self.max_shape_space=max(self.max_shape_space,pair_space)
         b = self.bins[s[0]]
         for i in range(int(math.floor(s[3] / self.B)), int(math.floor(s[4] / self.B)) + 1):
             b[i].append(k)
@@ -696,7 +708,8 @@ class MetalIndex:
         lay, net, _, plo, phi, alo, ahi = s
         sp, eps = self.space, 1e-6
         b, seen, out = self.bins[lay], set(), []
-        for i in range(int(math.floor((plo - sp) / self.B)), int(math.floor((phi + sp) / self.B)) + 1):
+        reach = max(sp, self.max_shape_space if self.pairwise else 0., WIDE_SPACING_ROWS[0][1])
+        for i in range(int(math.floor((plo - reach) / self.B)), int(math.floor((phi + reach) / self.B)) + 1):
             for k in b.get(i, ()):
                 if k in seen:
                     continue
@@ -706,11 +719,33 @@ class MetalIndex:
                     continue
                 gp = max(t[3] - phi, plo - t[4])
                 ga = max(t[5] - ahi, alo - t[6])
-                if gp < sp - eps and ga < sp - eps:
+                pair_space=max(sp,self.shape_spaces[k]) if self.pairwise else sp
+                if gp < pair_space - eps and ga < pair_space - eps:
                     out.append((k, "short" if gp < eps and ga < eps else "spacing"))
                     if first:
                         return out
+                elif t[2] == "pg" and ga < -eps and gp < wide_spacing(max(phi - plo, t[4] - t[3]), max(0.,min(ahi,t[6])-max(alo,t[5]))) - eps:
+                    out.append((k, "wide_spacing"))
+                    if first:
+                        return out
         return out
+
+
+# INFRA-FIRST-QC-R28 (COORD 10-27 PG ruling: wide coarse-pitch PG stripes, e.g. QC M8 1.92 / M9 2.26 um): the ASAP7
+# M8/M9 SPACINGTABLE width rows (asap7_tech_1x_201209.lef, = die_infra.PG_SPACING_TABLE) apply to a clock wire next to
+# a WIDE shape: 0.5 um at width >= 0.49975, 1.0 um at width >= 0.99975, both at PRL >= 1.8 um.  The NDR space alone
+# (0.08 um at 8w) let the router put a strap 0.08 um from a 1.92 um PG stripe.  NDRs whose space already covers their
+# own width row (16w 0.5, 2x16w 1.0) are unchanged; 0.48 um PG grids are below the first row (unchanged).  Scoped to
+# die PG shapes (kind "pg") so clock-vs-clock reservations on every other die are byte-identical.
+WIDE_SPACING_ROWS = ((0.99975, 1.0), (0.49975, 0.5))
+WIDE_SPACING_PRL = 1.79975
+
+
+def wide_spacing(w, prl):
+    """wide-metal spacing (um) for the wider shape width w at parallel run length prl (0 below the table rows)"""
+    if prl < WIDE_SPACING_PRL:
+        return 0.0
+    return next((v for t, v in WIDE_SPACING_ROWS if w >= t), 0.0)
 
 
 VIA_HALF = 0.02     # ASAP7 1x VIA89 cut half-size (asap7_tech_1x_201209.lef RECT -0.02 -0.02 0.02 0.02)
@@ -731,8 +766,11 @@ class TrackRouter:
     only option on a PG grid too dense for drawn stripes, e.g. KV M9 0.48 um every 0.864 um).  Chosen segments are
     reserved for the following ones."""
 
-    def __init__(self, nd, shield, tracks, max_move=8.64, space=None, wide_merge_um=None):
+    def __init__(self, nd, shield, tracks, max_move=8.64, space=None, wide_merge_um=None, tie_reach_um=None):
         self.nd, self.shield, self.tracks, self.max_move = nd, shield, tracks, max_move
+        self.tie_reach_um = max_move if tie_reach_um is None else float(tie_reach_um)
+        if not math.isfinite(self.tie_reach_um) or self.tie_reach_um < 0:
+            raise ValueError("shield tie reach must be finite and nonnegative")
         # CLOCK-128-R8 opt-in: a drawn VSS shield may touch a same-net PG stripe only while the merged VSS shape stays
         # narrower than the layer's wide-metal spacing row (ASAP7 M8/M9 SPACINGTABLE WIDTH 0.49975 -> 0.5 um at
         # PRL >= 1.8 um); None = R7 behaviour (any overlap allowed)
@@ -745,7 +783,13 @@ class TrackRouter:
 
     def reserve(self, shapes):
         for s in shapes:
-            self.ix.add(s)
+            # The V2 router uses each conductor's own NDR when checking a
+            # later mixed-width pair. PG table spacing remains checked in hits.
+            reserve_space=None
+            if self.ix.pairwise and s[2] in ("pg","mesh"):
+                w=s[4]-s[3]
+                reserve_space=1. if abs(w-1.28)<1e-6 else .5 if abs(w-.64)<1e-6 else .08 if abs(w-.32)<1e-6 or abs(w-.16)<1e-6 else .04
+            self.ix.add(s,space=reserve_space)
             if s[2] == "pg":
                 self.pg.add(s)
                 if s[1] == self.shield:
@@ -755,7 +799,7 @@ class TrackRouter:
     def tie_ext(self, layer, c, a0, a1):
         """shield end extension past the clock metal so each drawn shield crosses >= 1 perpendicular shield-net grid
         stripe centre (a VIA89 tie, cut half-size VIA_HALF): shield_geom ext, or longer for a short segment; None
-        when no grid stripe lies within max_move."""
+        when no grid stripe lies within tie_reach_um."""
         import bisect
         P = "M9" if layer == "M8" else "M8"
         if self.vss_c[P] is None:
@@ -765,16 +809,29 @@ class TrackRouter:
         lo, hi = min(a0, a1), max(a0, a1)
         cs, rows = self.vss_c[P], self.vss[P]
         best = None
-        for q in rows[bisect.bisect_left(cs, lo - e0 - self.max_move):bisect.bisect_right(cs, hi + e0 + self.max_move)]:
+        for q in rows[bisect.bisect_left(cs, lo - e0 - self.tie_reach_um):bisect.bisect_right(cs, hi + e0 + self.tie_reach_um)]:
             if not (q[1] - 1e-6 <= c <= q[2] + 1e-6):
                 continue
             need = max(e0, (lo - q[0]) + VIA_HALF if q[0] < lo else (q[0] - hi) + VIA_HALF if q[0] > hi else e0)
             best = need if best is None else min(best, need)
             if best <= e0:
                 break
-        if best is None or best > e0 + self.max_move:
+        if best is None or best > e0 + self.tie_reach_um:
             return None
         return round(max(e0, best), 4)
+
+    def extend_shield_reservation(self, layer, c, lo, hi, net, extension):
+        """Reserve the actual shield after drop-track rounding, only if its
+        complete physical shape clears all previously reserved other nets.
+        The clock segment and its track are unchanged; this is ground metal.
+        """
+        shapes = seg_shapes(layer, c, lo, hi, net, self.nd, self.shield, ext=extension)[1:]
+        if any(self.ix.hits(shape, first=True) for shape in shapes):
+            return False
+        self.reserve(shapes)
+        self.__dict__.setdefault("shield_reservation_extensions", []).append(
+            dict(net=net, layer=layer, centre_um=c, span_um=[lo, hi], end_extension_um=extension))
+        return True
 
     def place(self, layer, ideal, a0, a1, net, avoid=(), keep=None, dry=False):
         """(centre, mode) of the nearest legal track, or (None, None).  avoid: track centres this segment must not
@@ -1019,7 +1076,7 @@ def combo_tcl(wires, nd, shield):
     hw, off, ext = shield_geom(nd)
     ob = hw + 2 * nd["space"] + nd["width"]
     L = [f"set pn [$blk findNet {shield}]", f"if {{$pn eq \"NULL\"}} {{ set pn [odb::dbNet_create $blk {shield}] }}",
-         "$pn setSpecial", "$pn setSigType GROUND", "set fsw [odb::dbSWire_create $pn ROUTED]",
+         "$pn setSpecial", "$pn setSigType GROUND", "set fsw [odb::dbSWire_create $pn ROUTED]", "lappend ::ot_clock_shield_swires $fsw",
          "proc fwnet {nm} { global blk; set n [$blk findNet $nm]; if {$n == \"NULL\"} { error \"missing fixed clock "
          "net $nm\" }; $n setSpecial; $n setSigType CLOCK; foreach it [$n getITerms] { $it setSpecial }; "
          "return [odb::dbSWire_create $n ROUTED] }",
@@ -1027,13 +1084,13 @@ def combo_tcl(wires, nd, shield):
          f"set hw {hw}; set off {off}; set ob {ob}; set ext {ext}; set sw2 {nd['width'] / 2}; "
          "if {$ex ne \"\"} { set ext $ex; if {$ext + $hw > $ob} { set ob [expr {$ext + $hw}] } }; "
          "if {$L == 8} { odb::dbSBox_create $sw $l [um [expr {$x0-$hw}]] [um [expr {$y0-$hw}]] [um [expr {$x1+$hw}]] "
-         "[um [expr {$y0+$hw}]] STRIPE; if {$sh} { foreach s {-1 1} { set yy [expr {$y0+$s*$off}]; odb::dbSBox_create $fsw $l "
-         "[um [expr {$x0-$ext}]] [um [expr {$yy-$sw2}]] [um [expr {$x1+$ext}]] [um [expr {$yy+$sw2}]] STRIPE } }; "
+         "[um [expr {$y0+$hw}]] STRIPE; if {$sh} { foreach s {-1 1} { set yy [expr {$y0+$s*$off}]; ot_shield_box $fsw $l "
+         "[um [expr {$x0-$ext}]] [um [expr {$yy-$sw2}]] [um [expr {$x1+$ext}]] [um [expr {$yy+$sw2}]] [expr {$s==1?3:1}] [um [expr {2*$sw2}]] } }; "
          "odb::dbObstruction_create $blk $l [um [expr {$x0-$ob}]] [um [expr {$y0-$ob}]] [um [expr {$x1+$ob}]] "
          "[um [expr {$y0+$ob}]] } else { odb::dbSBox_create $sw $l [um [expr {$x0-$hw}]] [um [expr {$y0-$hw}]] "
          "[um [expr {$x0+$hw}]] [um [expr {$y1+$hw}]] STRIPE; if {$sh} { foreach s {-1 1} { set xx [expr {$x0+$s*$off}]; "
-         "odb::dbSBox_create $fsw $l [um [expr {$xx-$sw2}]] [um [expr {$y0-$ext}]] [um [expr {$xx+$sw2}]] "
-         "[um [expr {$y1+$ext}]] STRIPE } }; odb::dbObstruction_create $blk $l [um [expr {$x0-$ob}]] [um [expr {$y0-$ob}]] "
+         "ot_shield_box $fsw $l [um [expr {$xx-$sw2}]] [um [expr {$y0-$ext}]] [um [expr {$xx+$sw2}]] "
+         "[um [expr {$y1+$ext}]] [expr {$s==1?2:0}] [um [expr {2*$sw2}]] } }; odb::dbObstruction_create $blk $l [um [expr {$x0-$ob}]] [um [expr {$y0-$ob}]] "
          "[um [expr {$x0+$ob}]] [um [expr {$y1+$ob}]] } }"]
     nseg = 0
     for w in wires:
@@ -1045,7 +1102,8 @@ def combo_tcl(wires, nd, shield):
                      (" 0" if m_ != DRAWN else f" 1 {e_:.4f}" if e_ is not None else ""))
             nseg += 1
     L.append(f"puts \"OT_FIXED_CLOCK nets {len(wires)} segs {nseg}\"")
-    return L
+    from shield_notches import provenance_tcl
+    return provenance_tcl()+L
 
 
 def shield_union(boxes):
@@ -1076,6 +1134,7 @@ def shield_merge_tcl(shield, nd):
     """CLOCK-KV-R10 (opt-in, die_clock_mesh combo --merge-shields): Tcl post-pass, run after every shield / tie shape
     exists, that replaces the shield net's overlapping or abutting same-track M8/M9 boxes of shield width by their
     union (shield_union in Tcl: the same metal, one shape per run, so extraction sees one neighbour)."""
+    from shield_notches import tcl as notch_tcl
     return [
         "proc ot_merge_shields {netname wdbu} { global blk; set n [$blk findNet $netname]; array set g {}; "
         "foreach sw [$n getSWires] { foreach b [$sw getWires] { if {[$b isVia]} { continue }; "
@@ -1093,11 +1152,16 @@ def shield_merge_tcl(shield, nd):
         "lset cur 2 [concat [lindex $cur 2] [list $b]] } "
         "else { if {[llength $cur]} { lappend runs $cur }; set cur [list $lo $hi [list $b] $sw] } }; lappend runs $cur; "
         "foreach r $runs { lassign $r lo hi bs sw; if {[llength $bs] < 2} { continue }; incr nin [llength $bs]; "
-        "incr nout; foreach b $bs { odb::dbSBox_destroy $b }; "
-        "if {$dir eq \"V\"} { odb::dbSBox_create $sw $l $c0 $lo $c1 $hi STRIPE } "
-        "else { odb::dbSBox_create $sw $l $lo $c0 $hi $c1 STRIPE } } }; "
+        "incr nout; set face {}; set nominal {}; set safe 1; foreach b $bs { "
+        "if {![info exists ::ot_clock_shield_outer($b)] || ![info exists ::ot_clock_shield_nominal($b)]} {set safe 0} "
+        "elseif {$face eq {}} {set face $::ot_clock_shield_outer($b);set nominal $::ot_clock_shield_nominal($b)} "
+        "elseif {$face ne $::ot_clock_shield_outer($b) || $nominal ne $::ot_clock_shield_nominal($b)} {set safe 0}; "
+        "unset -nocomplain ::ot_clock_shield_outer($b) ::ot_clock_shield_nominal($b);odb::dbSBox_destroy $b }; "
+        "if {$dir eq \"V\"} { set merged [odb::dbSBox_create $sw $l $c0 $lo $c1 $hi STRIPE] } "
+        "else { set merged [odb::dbSBox_create $sw $l $lo $c0 $hi $c1 STRIPE] }; "
+        "if {$safe} {set ::ot_clock_shield_outer($merged) $face;set ::ot_clock_shield_nominal($merged) $nominal} } }; "
         "puts \"OT_SHIELD_MERGE in $nin out $nout\" }",
-        f"ot_merge_shields {shield} [expr {{round({nd['width']}*[[ord::get_db_block] getDbUnitsPerMicron])}}]"]
+        f"ot_merge_shields {shield} [expr {{round({nd['width']}*[[ord::get_db_block] getDbUnitsPerMicron])}}]"] + notch_tcl(shield,nd['width'])
 
 
 def shield_stripes(segs, nd):

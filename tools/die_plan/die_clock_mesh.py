@@ -1508,6 +1508,26 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         old_xs, old_ys = xs, ys
 
         def axis(v, layer, ax, span):
+            reference = (lattice or {}).get("pg_axis_reference", {}).get(layer)
+            if reference is not None:
+                reference = list(map(float, reference))
+                if (len(reference) != len(v) or any(not math.isfinite(x) for x in reference)
+                        or any(a >= b for a, b in zip(reference, reference[1:]))
+                        or any(abs(a - b) > pg_mm + 1e-9 for a, b in zip(reference, v))):
+                    raise ValueError(f"pg_axis_reference {layer}: ordered finite coordinates matching the plan axis required")
+                # Preserve a previously planned physical axis only when it remains
+                # legal on the CURRENT PG grid and CURRENT native routing tracks.
+                # Never silently snap the reference or relax a canonical island.
+                if shielded:
+                    try:
+                        r_ = pg_free_axis(reference, pg_shapes, layer, ax, span, track_profile[layer],
+                                          shield_foot, NDR[ndr]["space"], 1e-5)
+                        strap_mode[layer] = C128.DRAWN
+                        return r_
+                    except ValueError:
+                        strap_mode[layer] = C128.FLANK
+                return pg_free_axis(reference, pg_shapes, layer, ax, span, track_profile[layer],
+                                    NDR[ndr]["width"] / 2, NDR[ndr]["space"], 1e-5)
             if shielded:
                 try:
                     r_ = pg_free_axis(v, pg_shapes, layer, ax, span, track_profile[layer], shield_foot, NDR[ndr]["space"],
@@ -2425,7 +2445,8 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         else:
             import die_infra as DI
             pgr = DI.pg_rects(P, C128.pg_grid(P)) if getattr(P, "die", None) is not None else []
-        router = C128.TrackRouter(NDR[ndr], sh, track_profile or DEFAULT_TRACKS, TRACK_MOVE_UM)
+        router = C128.TrackRouter(NDR[ndr], sh, track_profile or DEFAULT_TRACKS, TRACK_MOVE_UM,
+                                  tie_reach_um=(lattice or {}).get("shield_tie_reach_um"))
         router.reserve(C128.pg_shapes(pgr))
         msegs = mesh_segments(out, jogs=False)
         bad = C128.flank_census(pgr, msegs, NDR[ndr])
@@ -2460,6 +2481,9 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
             move_max_um=round(max(router.moves or [0.0]), 4),
             net_wire_delta_max_um=round(max(dl or [0.0]), 4), pg_rects=len(pgr),
             pg_source="--pg-json" if pg_shapes is not None else "plan die.pg.grid")
+        if router.tie_reach_um != router.max_move:
+            out["meta"]["tree_tracks"].update(shield_tie_reach_um=router.tie_reach_um,
+                shield_reservation_extensions=getattr(router, "shield_reservation_extensions", []))
         straps = (sum(1 for v in out["strap_spans"].values() if v) if fp is not None else
                   sum((g["i1"] - g["i0"]) + (g["j1"] - g["j0"]) for g in R))
         out["meta"]["clock_shield"] = C128.shield_record(wires, sh, straps,
@@ -2916,7 +2940,7 @@ def _explicit_v2_wires(out, cells, nets, groups, router, off, r8, exact, default
             # is conservative for narrow pieces; no pre-existing shape is lost.
             router.nd=nd
             router.wide_merge_um=nd.get("wide_merge_um",C128.WIDE_MERGE_UM) if r8 else None
-            router.ix.space=max(router.ix.space,nd["space"])
+            router.ix.space=nd["space"] if router.ix.pairwise else max(router.ix.space,nd["space"])
             try:
                 pp=C128.fixed_wires(out,proxy,[n0],BUF_W,ROW_Y,off=off,router=router,pin_stack=True,
                     port_on_trunk=r8,ties=ties,l_drops=True,exact_reserve=exact)
@@ -3158,6 +3182,7 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
     sh = "VSS"
     router = C128.TrackRouter(nd, sh, track_profile or DEFAULT_TRACKS, TRACK_MOVE_UM,
                               **(dict(wide_merge_um=nd.get("wide_merge_um", C128.WIDE_MERGE_UM)) if stack_r8 else {}))
+    router.ix.pairwise = v2
     router.reserve(C128.pg_shapes(pgr))
     ties = {us[0]: list(us) for us in groups.values() if len(us) > 1}
     if chan_rects and spec.get("channel_keep", False):   # opt-in: R20 found no legal in-channel track for lane 0
@@ -3749,7 +3774,8 @@ def cmd_combo(a):
             _, off, ext = C128.shield_geom(nd)
             L += [f"set pn [$blk findNet {shield}]",
                   f"if {{$pn eq \"NULL\"}} {{ set pn [odb::dbNet_create $blk {shield}] }}",
-                  "$pn setSpecial", "$pn setSigType GROUND", "set psw [odb::dbSWire_create $pn ROUTED]"]
+                  "$pn setSpecial", "$pn setSigType GROUND", "set psw [odb::dbSWire_create $pn ROUTED]",
+                  "lappend ::ot_clock_shield_swires $psw"]
             segs = [("M8", xlo, y, xhi, y) for y, (xlo, xhi) in hsp] + [("M9", x, ylo, x, yhi) for x, (ylo, yhi) in vsp]
             sw2 = nd["width"] / 2
             smode = M["meta"].get("strap_shield") or {}     # a 'pg' layer: the PG stripes are the shields, none drawn

@@ -175,3 +175,75 @@ def test_contract_binding_scope(kit):
     assert not r["contract_binding"] and r["contract_advisory"]["rc_calibration"]["verdict"] == "FAIL"
     assert not any(i.startswith("rc_calibration") for i in r["issues"])
     assert any(i.startswith("rc_calibration") for i in KP.check(kit, contract=True)["issues"])
+
+
+# ---------------------------------------------------------------- COORD 10-27 KV-KITS-7 rulings 2+3 (partition kits)
+def _partition(kd):
+    """the fixture as a gen_phys PARTITION kit: M7 die-clock on-ramp at its plan tap, partition freeze from plan pins."""
+    import master_slice as MS
+    x, y = MS.snap_on_track(kd, "M7", 50.4, 60.0)
+    _sub(kd / "io.tcl", "place_pin -pin_name {clk} -layer M5 -location {50.4120 60.0000} -pin_size {0.0480 0.4800}\n",
+         f"place_pin -pin_name clk -layer M7 -location {{{x:.4f} {y:.4f}}} -pin_size {{0.0320 0.7680}}   ;# interior: die spine tap\n")
+    (kd / "pins.json").write_text(json.dumps([dict(bus="a", bit=None, layer="M4", x=0.0, y=20.016, face="W")]))
+    (kd / "budget.json").write_text(json.dumps(dict(
+        schema="opentallas.die_plan.partition_budget.v1", type="tp", outline_um=[100.0, 100.0], signal_max="M7",
+        clock=dict(taps=[dict(name="clk", xy=[50.4, 60.0], kind="grid")], taps_snapped=[dict(name="clk", xy=[x, y])]))))
+    recs = [dict(name="a", layer="M4", x=0.096, y=20.016), dict(name="y", layer="M4", x=99.904, y=20.016),
+            dict(name="clk", layer="M7", x=round(x, 4), y=round(y, 4))]
+    (kd / "plan_pins.json").write_text(json.dumps(dict(pins=recs)))
+    import hashlib
+    (kd / "freeze.json").write_text(json.dumps(dict(
+        schema="opentallas.partition_freeze.v1", outline_um=[100.0, 100.0], pins_file="plan_pins.json",
+        pins_sha256=hashlib.sha256((kd / "plan_pins.json").read_bytes()).hexdigest(),
+        pins_canon_sha256=KC._canon(recs, [100.0, 100.0]))))
+    return x, y
+
+
+def test_partition_m7_clock_on_plan_tap_passes(kit):
+    _partition(kit)
+    assert not KC.is_core_kit(kit) and KC.partition_budget(kit)
+    r = KC.run_all(kit)
+    assert r["clock_pin_geometry"]["verdict"] == "PASS", r["clock_pin_geometry"]["errors"]
+    assert r["clock_pin_geometry"]["info"]["kind"] == "partition"
+    assert r["pins_canonical"]["verdict"] == "PASS", r["pins_canonical"]["errors"]
+
+
+def test_partition_clock_off_plan_tap_or_layer_fails(kit):
+    x, y = _partition(kit)
+    t = (kit / "io.tcl").read_text()
+    (kit / "io.tcl").write_text(t.replace("-layer M7", "-layer M5"))
+    assert verdicts(kit)["clock_pin_geometry"] == "FAIL"
+    (kit / "io.tcl").write_text(t.replace(f"{{{x:.4f} {y:.4f}}}", f"{{{x:.4f} {y + 4.32:.4f}}}"))
+    v = verdicts(kit)
+    assert v["clock_pin_geometry"] == "FAIL" and v["pins_canonical"] == "FAIL"
+
+
+def test_core_kit_keeps_geom21_for_m7_clock(kit):
+    _partition(kit)
+    (kit / "budget.json").unlink()                 # no partition budget -> the core GEOM-21 rule
+    assert verdicts(kit)["clock_pin_geometry"] == "FAIL"
+
+
+def test_gen_phys_partition_freeze_from_plan_pins(tmp_path, monkeypatch):
+    import gen_phys as G
+    from types import SimpleNamespace
+    P = SimpleNamespace(name="tp_plan", types={"tp": dict(outline_um=[100.0, 100.0])},
+                        layer_budget=dict(partition_signal_max="M7"))
+    monkeypatch.setattr(G, "tap_pins", lambda P_, tn: [("clk", 50.4, 60.0)])
+    monkeypatch.setattr(G, "reset_out_pins", lambda P_, tn: [])
+    pins = [("a", 0, "M4", 0.0, 20.016, "W"), ("y", 0, "M4", 100.0, 20.016, "E"), ("n", 0, "M5", 30.0, 100.0, "N")]
+    recs = G.plan_pin_records(P, "tp", pins)
+    assert {r["name"]: (r["x"], r["y"]) for r in recs} == {
+        "a[0]": (0.096, 20.016), "y[0]": (99.904, 20.016), "n[0]": (30.0, 99.904), "clk": (50.4, 60.0)}
+    kd = tmp_path / "tp"
+    kd.mkdir()
+    (kd / "io.tcl").write_text("".join(
+        f"place_pin -pin_name {{{r['name']}}} -layer {r['layer']} -location {{{r['x']:.4f} {r['y']:.4f}}} "
+        "-pin_size {0.1920 0.0240}\n" for r in recs))
+    fz = G.write_partition_freeze(P, "tp", kd, recs)
+    assert fz["schema"] == "opentallas.partition_freeze.v1" and "core" not in fz["schema"]
+    errors, info = KC.pins_canonical(kd)
+    assert not errors and info["plan_canon"] == fz["pins_canon_sha256"]
+    (kd / "io.tcl").write_text((kd / "io.tcl").read_text().replace("{99.9040 20.0160}", "{99.9040 20.2560}"))
+    with pytest.raises(ValueError):
+        G.write_partition_freeze(P, "tp", kd, recs)

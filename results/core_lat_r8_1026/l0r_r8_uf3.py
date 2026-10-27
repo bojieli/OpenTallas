@@ -65,6 +65,35 @@ def summ(v):
     return dict(mean=round(st.mean(v), 2), min=round(min(v), 2), max=round(max(v), 2), window=round(max(v) - min(v), 2))
 
 
+def calibrated_summary(plan, L, pmax, pmin):
+    """Frozen plan through the SAME calibrated kernel/analyses used by d1.
+    Preserve individual sink extrema and output slew; no R7 number is substituted.
+    """
+    out = {}
+    for corner, params, edges in (("TT", pmax, ("rise",)), ("FF", pmin, ("rise", "fall"))):
+        runs = []
+        for edge in edges:
+            detail = {}
+            means, _ = V3.predict3(plan, L, corner, edge=edge, detail=detail, **params)
+            runs.append((means, detail))
+        leaves = runs[0][0]
+        leafmeans = {n: min(run[0][n] for run in runs) for n in leaves}
+        sinks = []
+        for n in leaves:
+            for k in range(len(runs[0][1][n]["sinks"])):
+                sinks.append(min(run[1][n]["sinks"][k] for run in runs))
+        out[corner] = dict(mean=round(sum(sinks) / len(sinks), 2),
+                           leaf_mean_min=round(min(leafmeans.values()), 2),
+                           leaf_mean_max=round(max(leafmeans.values()), 2),
+                           window=round(max(leafmeans.values()) - min(leafmeans.values()), 2),
+                           sink_min=round(min(sinks), 2), sink_max=round(max(sinks), 2),
+                           leaf_slew_in_max=round(max(run[1][n]["slew_in"] for run in runs for n in leaves), 2),
+                           leaf_out_slew_max=round(max(run[1][n]["slew_out"] for run in runs for n in leaves), 2),
+                           analysis="max_rise" if corner == "TT" else "min_rise_fall",
+                           basis="GRT", model="uf_phys3 v1")
+    return out
+
+
 def predict(plan, L, pmax, pmin):
     tt = V3.basis_leaf(plan, L, "TT", "max", pmax)
     ffr, _ = V3.predict3(plan, L, "FF", edge="rise", **pmin)

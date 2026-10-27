@@ -13,6 +13,8 @@
 #  3 signoff.py tt,ff RCX (FF bound 202.5, same call as actual_head_route.sh); its exit code is RECORDED, not fatal.
 #  4 routed LEC of 6_final.v vs GOLD: runs whenever a 6_final.v exists, whatever the sign-off verdict (R13 root cause 4:
 #    set -e skipped it on NOT SIGNED).  Export removes only portless TAPCELL/FILLER/DECAP; refuses any with ports.
+# FLOW-CLKFREEZE 2026-10-27: eco_route.tcl locks the clock network (clk_freeze.tcl) and step 2b clk_freeze_check.sh
+#   diffs the clock-net geometry of the ECO input vs the final DB: any change blocks the sign-off (exit 4).
 # Log: OUT/eco_chain.log, lines HEAD_ECO_CHAIN_* (grep '^HEAD_ECO_\|^SIGNOFF').
 # HEAD-CORE-R17 2026-10-27 (same fix as R16 for head_core_r14_rebuild.sh): the ECO session is PER MODE -- scene tc
 #   (mode ss) TT setup under constraint.sdc (vclk 250), scene BC (mode ff) FF hold with vclk_ff.sdc (vclk = OT_VCLK_FF
@@ -42,6 +44,8 @@ for f in 6_final.spef 1_2_yosys.v 1_synth.v 1_synth.sdc clock_period.txt mem.jso
 rsync -a "$KIT/run/objects/asap7/$NICK/base/" "$OUT/run/objects/asap7/$NICK/base/" 2>/dev/null || true
 { cat "$OUT/constraint.sdc"; echo 'set_propagated_clock [all_clocks]'; } > "$B/4_cts.sdc"
 cp "$HERE/head_eco_post.tcl" "$HERE/../../physical/die_plan/qwen_kvsys/cores/harden/eco/eco_route.tcl" "$HERE/../orfs_hold_mm.py" "$HERE/../orfs_hold_mm.tcl" "$OUT/"
+# FLOW-CLKFREEZE 2026-10-27: clock lock (sourced by eco_route.tcl) + the blocking clock-net geometry diff
+for f in clk_freeze.tcl clk_dump_db.tcl clk_geom_diff.py clk_freeze_check.sh; do cp "$HERE/../die_plan/$f" "$OUT/" || exit 2; done
 grep -q 'hold_pad_hb4.tcl' "$OUT/bind_ff_actual.tcl" || { echo "HEAD_ECO_CHAIN FAIL: bind_ff_actual.tcl lacks the HB4-only hold wrapper"; exit 2; }
 # R17 per-mode binding (fail closed); FFB = the FF bound signoff.py uses, taken from the kit and checked against it
 MODES=$(python3 -I "$HERE/head_eco_modes.py" "$OUT" --ff-bound-ps "${OT_ECO_FF_BOUND_PS:-202.5}"); echo "$MODES"
@@ -73,8 +77,15 @@ rrc=$?
 docker run --rm -v "$OUT":/work "$IMAGE" chown -R "$(id -u):$(id -g)" /work >/dev/null 2>&1
 echo "HEAD_ECO_CHAIN route rc=$rrc $(date -Is)"
 grep -h '^HEAD_ECO_\|KVCORES_ECO\|R10_HOLD_DONE\|OT_HB4PAD: after\|OT_HOLD_MM\|OT_HOLD_STRUCTURAL' "$OUT"/run/logs/asap7/"$NICK"/base/5_1_grt.log 2>/dev/null | tail -n 20
-src=NA
+# FLOW-CLKFREEZE: BLOCKING clock-net geometry diff (ECO input route vs final DB); any change -> no sign-off, exit 4
+ckf=NA
 if [ "$rrc" = 0 ]; then
+  bash "$OUT/clk_freeze_check.sh" "$OUT" "$IMAGE" > "$OUT/clk_freeze_check.log" 2>&1; ckf=$?
+  grep -h '^CLK_GEOM_DIFF\|^OT_CLK_FREEZE' "$OUT/clk_freeze_check.log" "$OUT"/run/logs/asap7/"$NICK"/base/5_1_grt.log 2>/dev/null | head -n 12
+  echo "HEAD_ECO_CHAIN clk_freeze_check rc=$ckf $(date -Is)"
+fi
+src=NA
+if [ "$rrc" = 0 ] && [ "$ckf" = 0 ]; then
   python3 -I "$OUT/signoff.py" run --kit "$OUT" --run-dir "$OUT/run" --corners tt,ff \
     --ff-vclk bound-ff --ff-bound-ps "$FFB" \
     --ff-vclk-contract 'HEAD actual standalone clock contract: actual_contract.json; primary ft_mstrap_i; zero source offset' \
@@ -108,3 +119,4 @@ o = Path(sys.argv[1]); d = json.loads((o/'lec.json').read_text()); kr = d.get('k
 print('HEAD_ECO_POSTROUTE_LEC verdict', d['verdict'], d.get('counts'), 'kept missing', kr.get('missing', {}).get('n'))
 PY
 echo "HEAD_ECO_CHAIN done $(date -Is)"
+if [ "$rrc" = 0 ] && [ "$ckf" != 0 ]; then echo "HEAD_ECO_CHAIN FAIL clock-net geometry changed (clk_geom_diff.json)"; exit 4; fi

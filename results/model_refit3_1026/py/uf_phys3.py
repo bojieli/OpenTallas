@@ -74,7 +74,7 @@ def net_name(drv):
 
 
 def predict3(plan, LIBS, corner, alpha=0.0, beta=1.0, kleaf=1.25, s_root=0.0, edge="rise", gslew=U.LN9, kstage=0.0,
-             basis="GRT", kr=1.0, kc=1.0, kvia=1.0, vias=None, bleaf=None):
+             basis="GRT", kr=1.0, kc=1.0, kvia=1.0, vias=None, bleaf=None, detail=None):
     """uf_phys.predict with T7-T10 (bleaf None = beta, i.e. uf_phys).  vias: dict net name -> routed/planned via count (RCX basis only)."""
     L = LIBS[corner]
     dk, sk = (("rise", "trise") if edge == "rise" else ("fall", "tfall"))
@@ -106,7 +106,11 @@ def predict3(plan, LIBS, corner, alpha=0.0, beta=1.0, kleaf=1.25, s_root=0.0, ed
             sh = U._shield(Lc, dk, s0, Cw + Cp, Rw)
             C = Cp + Cw * (1 - alpha * sh)
             d = U.interp(Lc[dk], s0, C) + kstage
-            out[n] = t0 + d + (beta if bleaf is None else bleaf) * sum(el[k] for k in range(1, len(P))) / (len(P) - 1)
+            sink_arrivals = [t0 + d + (beta if bleaf is None else bleaf) * el[k] for k in range(1, len(P))]
+            out[n] = sum(sink_arrivals) / len(sink_arrivals)
+            if detail is not None:
+                detail[n] = dict(sinks=sink_arrivals, slew_in=s0,
+                                 slew_out=U.interp(Lc[sk], s0, C))
             continue
         net = plan.nets[n]
         pts, E = net["pts"], net["edges"]

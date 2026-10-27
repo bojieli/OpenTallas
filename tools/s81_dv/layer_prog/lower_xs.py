@@ -196,7 +196,7 @@ def placement(die, sl, fx=None):
     frames = die.frames_of(sl)
     g = slice_index(die, sl)
     if dense_split2() == 'X':
-        return g, [dict(frame=f, master=die.inst[f]['master'], lk=die.strap(f, 'lk'), rows=[]) for f in frames]
+        return g, [dict(frame=f, master=die.inst[f]['master'], lk=frame_lk(die, f), rows=[]) for f in frames]
     if aproj_topology_enabled():
         # One real phase on EVERY real frame: preserve tensor row order, keep
         # wq_a/wkv in separate frames, and never exceed the measured four rows.
@@ -255,12 +255,12 @@ def placement(die, sl, fx=None):
         assert fi == sum(counts) and row0 == (total if own is None else own[1])
         for frame in all_frames:
             assigned.setdefault(frame, [])
-        return g, [dict(frame=f, master=die.inst[f]['master'], lk=die.strap(f, 'lk'), rows=assigned[f]) for f in frames]
+        return g, [dict(frame=f, master=die.inst[f]['master'], lk=frame_lk(die, f), rows=assigned[f]) for f in frames]
     out = []
     for j, f in enumerate(frames):
         r0 = ROWS_PER_SLICE * g + ROWS_PER_FRAME * j
         rows = list(range(r0, r0 + ROWS_PER_FRAME)) if ROWS_PER_FRAME * (j + 1) <= ROWS_PER_SLICE else []
-        out.append(dict(frame=f, master=die.inst[f]['master'], lk=die.strap(f, 'lk'), rows=rows))
+        out.append(dict(frame=f, master=die.inst[f]['master'], lk=frame_lk(die, f), rows=rows))
     return g, out
 
 
@@ -308,11 +308,32 @@ def land_e(lk):
     return ks.pop()
 
 
-def qualify_frame_source(schedule, master, source_root):
+def frame_lk(die, frame):
+    """Use the actual cfifo constant of an as-built wrapper which has no parent lk pin."""
+    master = die.inst[frame]['master']
+    value = die.strap(frame, 'lk')
+    if is_asbuilt(master):
+        path = source_frame_schedule(master)
+        measured = json.loads(path.read_text()).get('landing_lk')
+        if type(measured) is not int or not 0 <= measured < 4096:
+            raise ValueError('as-built frame schedule lacks its measured cfifo lk: ' + master)
+        if value is not None and value != measured:
+            raise ValueError('as-built frame parent lk differs from measured cfifo lk: ' + frame)
+        return measured
+    return value
+
+
+def qualify_frame_source(schedule, master, source_root, selected_manifest=None):
     """A bound receipt qualifies its exact selected sources and GO interface, not just a filename."""
     hashes = schedule.get('source_sha256')
     if not isinstance(hashes, dict) or not hashes:
         raise ValueError('as-built frame schedule lacks exact source hashes: ' + master)
+    if selected_manifest is not None:
+        root = Path(source_root).resolve()
+        manifest = Path(selected_manifest)
+        manifest = manifest.resolve() if manifest.is_absolute() else (root / manifest).resolve()
+        if not manifest.is_relative_to(root) or manifest.relative_to(root).as_posix() not in hashes:
+            raise ValueError('as-built frame schedule does not bind the selected manifest: ' + str(selected_manifest))
     for name, expected in hashes.items():
         path = Path(source_root) / name
         if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != expected:
@@ -350,7 +371,9 @@ def source_frame_schedule(master):
         if not path.is_file() or c.get('schedule_sha256') != hashlib.sha256(path.read_bytes()).hexdigest():
             raise ValueError('as-built frame plan check is not bound to this schedule: ' + str(path))
         qualify_frame_source(json.loads(path.read_text()), master,
-                             Path(os.environ.get('OT_S81_SELECTED_SOURCE_ROOT', str(ROOT))))
+                             Path(os.environ.get('OT_S81_SELECTED_SOURCE_ROOT', str(ROOT))),
+                             os.environ.get('OT_S81_SELECTED_ASBUILT_MANIFEST',
+                                            'physical/die_plan/s81/bind/asbuilt_b178_coll.json'))
         return path
     if not master.endswith('_lp'):
         return None

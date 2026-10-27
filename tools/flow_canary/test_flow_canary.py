@@ -280,3 +280,28 @@ def test_kv_runtime_packages_eco_siblings(tmp_path, capsys):
     C.main(['submit', '--src', str(tmp_path), '--root', str(tmp_path / 'runs'), '--dry', '--die', 'qwen_kvsys_core'])
     launch = capsys.readouterr().out
     assert '{run_kit_kv.sh,corners.tcl,pin_audit_core.py}' in launch
+
+
+def test_runtime_structural_hold_reports_gate_failure_not_tcl_crash(tmp_path):
+    kit = tmp_path / "kit"
+    logs = kit / "run/logs/asap7/d/base"
+    logs.mkdir(parents=True)
+    (kit / "config.mk").write_text("export LAYER_PARASITICS_FILE = /work/setRC_rcx.tcl\n")
+    (tmp_path / "canary_meta.json").write_text(json.dumps(dict(
+        kit=str(kit), spec=dict(die="hbm_sram", item="calendar", grt_gate=False))))
+    guard = ("OT_HOLD_STRUCTURAL stage=grt: FF hold ws -130.88 ps, 683 true failing endpoints "
+             "(limits: ws >= -100 ps, endpoints <= 2000); revise plan/RTL/boundary before repair")
+    log = logs / "5_1_grt.log"
+    log.write_text(guard + "\nError: global_route.tcl, 175 " + guard + "\n")
+    result = C.check_run(tmp_path)
+    assert result["stages"]["grt_gate"]["verdict"] == "FAIL"
+    assert "-130.88" in result["stages"]["grt_gate"]["why"]
+    assert result["stages"]["tcl_errors"]["verdict"] == "PASS"
+    assert result["verdict"] == "FAIL"
+    log.write_text(log.read_text() + 'Error: global_route.tcl, 176 can\'t read "missing": no such variable\n')
+    assert C.check_run(tmp_path)["stages"]["tcl_errors"]["verdict"] == "FAIL"
+
+
+def test_unavailable_ff_scene_is_a_runtime_error():
+    text = "Error: global_route.tcl, 175 OT_HOLD_STRUCTURAL: synchronized FF scene BC unavailable"
+    assert not C.GATE_ERR_RE.search(text)
