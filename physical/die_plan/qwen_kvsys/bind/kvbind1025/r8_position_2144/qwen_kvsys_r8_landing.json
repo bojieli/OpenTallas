@@ -6486,8 +6486,8 @@
 "source": "host.d2d_boot_begin",
 "asbuilt": 7,
 "bound": 46,
-"pad": 7,
-"landed": 53,
+"pad": 8,
+"landed": 54,
 "lane": "L643"
 },
 {
@@ -6505,8 +6505,8 @@
 "source": "host.host_interface_idle",
 "asbuilt": 0,
 "bound": 41,
-"pad": 5,
-"landed": 46,
+"pad": 6,
+"landed": 47,
 "lane": "L708"
 },
 {
@@ -6523,9 +6523,9 @@
 ],
 "source": "host.host_link_reset_req",
 "asbuilt": 0,
-"bound": 46,
+"bound": 47,
 "pad": 0,
-"landed": 46,
+"landed": 47,
 "lane": "L749"
 },
 {
@@ -6542,9 +6542,9 @@
 ],
 "source": "host.host_recovery_clear",
 "asbuilt": 0,
-"bound": 46,
+"bound": 47,
 "pad": 0,
-"landed": 46,
+"landed": 47,
 "lane": "L749"
 },
 {
@@ -6562,8 +6562,8 @@
 "source": "host.record_tx",
 "asbuilt": 0,
 "bound": 45,
-"pad": 1,
-"landed": 46,
+"pad": 2,
+"landed": 47,
 "lane": "L751"
 },
 {
@@ -6581,8 +6581,8 @@
 "source": "host.record_tx_observed_v",
 "asbuilt": 0,
 "bound": 45,
-"pad": 1,
-"landed": 46,
+"pad": 2,
+"landed": 47,
 "lane": "L751"
 },
 {
@@ -6600,8 +6600,8 @@
 "source": "host.token_epoch",
 "asbuilt": 2,
 "bound": 47,
-"pad": 1,
-"landed": 48,
+"pad": 2,
+"landed": 49,
 "lane": "L752"
 },
 {
@@ -6694,9 +6694,9 @@
 ],
 "source": "host.program_begin_v",
 "asbuilt": 2,
-"bound": 48,
+"bound": 49,
 "pad": 0,
-"landed": 48,
+"landed": 49,
 "lane": "L750"
 },
 {
@@ -14617,9 +14617,9 @@
 ],
 "source": "serdes_host.u_sub.u_W.rx_flit",
 "asbuilt": 4,
-"bound": 52,
+"bound": 53,
 "pad": 0,
-"landed": 52,
+"landed": 53,
 "lane": "L2048"
 },
 {
@@ -14636,9 +14636,9 @@
 ],
 "source": "serdes_host.u_sub.u_W.rx_v",
 "asbuilt": 4,
-"bound": 52,
+"bound": 53,
 "pad": 0,
-"landed": 52,
+"landed": 53,
 "lane": "L2048"
 },
 {
@@ -14656,8 +14656,8 @@
 "source": "d2d_kv.abort_drained",
 "asbuilt": 1,
 "bound": 39,
-"pad": 15,
-"landed": 54,
+"pad": 16,
+"landed": 55,
 "lane": "L344"
 },
 {
@@ -14675,8 +14675,8 @@
 "source": "d2d_kv.abort_drained",
 "asbuilt": 1,
 "bound": 39,
-"pad": 15,
-"landed": 54,
+"pad": 16,
+"landed": 55,
 "lane": "L347"
 },
 {
@@ -14694,8 +14694,8 @@
 "source": "d2d_kv.abort_drained",
 "asbuilt": 1,
 "bound": 39,
-"pad": 15,
-"landed": 54,
+"pad": 16,
+"landed": 55,
 "lane": "L348"
 },
 {
@@ -14712,9 +14712,9 @@
 ],
 "source": "d2d_kv.abort_drained",
 "asbuilt": 1,
-"bound": 54,
+"bound": 55,
 "pad": 0,
-"landed": 54,
+"landed": 55,
 "lane": "L2047"
 },
 {
@@ -14732,8 +14732,8 @@
 "source": "d2d_kv.engine_result_cause",
 "asbuilt": 1,
 "bound": 38,
-"pad": 16,
-"landed": 54,
+"pad": 17,
+"landed": 55,
 "lane": "L349"
 },
 {
@@ -14751,8 +14751,8 @@
 "source": "d2d_kv.engine_result_cycles",
 "asbuilt": 1,
 "bound": 38,
-"pad": 16,
-"landed": 54,
+"pad": 17,
+"landed": 55,
 "lane": "L349"
 },
 {
@@ -14770,8 +14770,8 @@
 "source": "d2d_kv.engine_result_cycles",
 "asbuilt": 1,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -14789,8 +14789,8 @@
 "source": "d2d_kv.engine_result_done",
 "asbuilt": 1,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -14808,8 +14808,8 @@
 "source": "d2d_kv.engine_result_gen",
 "asbuilt": 1,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -14827,8 +14827,8 @@
 "source": "d2d_kv.engine_result_tag",
 "asbuilt": 1,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -14846,8 +14846,8 @@
 "source": "d2d_kv.engine_result_token",
 "asbuilt": 1,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -14865,8 +14865,8 @@
 "source": "d2d_kv.engine_result_v",
 "asbuilt": 1,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -14884,8 +14884,8 @@
 "source": "d2d_kv.engine_result_value",
 "asbuilt": 1,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -14903,8 +14903,8 @@
 "source": "d2d_kv.execution_active",
 "asbuilt": 1,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -14922,8 +14922,8 @@
 "source": "d2d_kv.link_up",
 "asbuilt": 0,
 "bound": 46,
-"pad": 7,
-"landed": 53,
+"pad": 8,
+"landed": 54,
 "lane": "L350"
 },
 {
@@ -14941,8 +14941,8 @@
 "source": "d2d_kv.native_admit_ready",
 "asbuilt": 1,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -14960,8 +14960,8 @@
 "source": "d2d_kv.native_collective_busy",
 "asbuilt": 1,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -14979,8 +14979,8 @@
 "source": "d2d_kv.native_collective_drained",
 "asbuilt": 1,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -14998,8 +14998,8 @@
 "source": "d2d_kv.native_host_drained",
 "asbuilt": 1,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -15017,8 +15017,8 @@
 "source": "d2d_kv.native_kv_drained",
 "asbuilt": 1,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -15036,8 +15036,8 @@
 "source": "d2d_kv.native_kv_flush",
 "asbuilt": 1,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -15055,8 +15055,8 @@
 "source": "d2d_kv.native_link_reset_seen",
 "asbuilt": 1,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -15074,8 +15074,8 @@
 "source": "d2d_kv.native_links_drained",
 "asbuilt": 1,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -15093,8 +15093,8 @@
 "source": "d2d_kv.native_retrained",
 "asbuilt": 1,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -15112,8 +15112,8 @@
 "source": "d2d_kv.native_vm_drained",
 "asbuilt": 1,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -15131,8 +15131,8 @@
 "source": "d2d_kv.recovery_cycles",
 "asbuilt": 0,
 "bound": 46,
-"pad": 7,
-"landed": 53,
+"pad": 8,
+"landed": 54,
 "lane": "L350"
 },
 {
@@ -15226,8 +15226,8 @@
 "source": "d2d_kv.record_rx",
 "asbuilt": 1,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -15245,8 +15245,8 @@
 "source": "d2d_kv.record_rx",
 "asbuilt": 1,
 "bound": 48,
-"pad": 6,
-"landed": 54,
+"pad": 7,
+"landed": 55,
 "lane": "L354"
 },
 {
@@ -15264,8 +15264,8 @@
 "source": "d2d_kv.record_rx_v",
 "asbuilt": 1,
 "bound": 48,
-"pad": 6,
-"landed": 54,
+"pad": 7,
+"landed": 55,
 "lane": "L354"
 },
 {
@@ -15283,8 +15283,8 @@
 "source": "d2d_kv.record_send_kind",
 "asbuilt": 1,
 "bound": 48,
-"pad": 6,
-"landed": 54,
+"pad": 7,
+"landed": 55,
 "lane": "L354"
 },
 {
@@ -15302,8 +15302,8 @@
 "source": "d2d_kv.record_witness_slot",
 "asbuilt": 1,
 "bound": 48,
-"pad": 6,
-"landed": 54,
+"pad": 7,
+"landed": 55,
 "lane": "L354"
 },
 {
@@ -36296,9 +36296,9 @@
 ],
 "source": "d2d_kv.emb_tx_slot",
 "asbuilt": 1,
-"bound": 46,
+"bound": 47,
 "pad": 5,
-"landed": 51,
+"landed": 52,
 "lane": "L356"
 },
 {
@@ -36316,8 +36316,8 @@
 "source": "d2d_kv.abort_drained",
 "asbuilt": 4,
 "bound": 39,
-"pad": 15,
-"landed": 54,
+"pad": 16,
+"landed": 55,
 "lane": "L344"
 },
 {
@@ -36335,8 +36335,8 @@
 "source": "d2d_kv.abort_drained",
 "asbuilt": 4,
 "bound": 39,
-"pad": 15,
-"landed": 54,
+"pad": 16,
+"landed": 55,
 "lane": "L347"
 },
 {
@@ -36354,8 +36354,8 @@
 "source": "d2d_kv.abort_drained",
 "asbuilt": 4,
 "bound": 39,
-"pad": 15,
-"landed": 54,
+"pad": 16,
+"landed": 55,
 "lane": "L348"
 },
 {
@@ -36372,9 +36372,9 @@
 ],
 "source": "d2d_kv.abort_drained",
 "asbuilt": 4,
-"bound": 54,
+"bound": 55,
 "pad": 0,
-"landed": 54,
+"landed": 55,
 "lane": "L2047"
 },
 {
@@ -36392,8 +36392,8 @@
 "source": "d2d_kv.engine_result_cause",
 "asbuilt": 4,
 "bound": 38,
-"pad": 16,
-"landed": 54,
+"pad": 17,
+"landed": 55,
 "lane": "L349"
 },
 {
@@ -36411,8 +36411,8 @@
 "source": "d2d_kv.engine_result_cycles",
 "asbuilt": 4,
 "bound": 38,
-"pad": 16,
-"landed": 54,
+"pad": 17,
+"landed": 55,
 "lane": "L349"
 },
 {
@@ -36430,8 +36430,8 @@
 "source": "d2d_kv.engine_result_cycles",
 "asbuilt": 4,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -36449,8 +36449,8 @@
 "source": "d2d_kv.engine_result_done",
 "asbuilt": 4,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -36468,8 +36468,8 @@
 "source": "d2d_kv.engine_result_gen",
 "asbuilt": 4,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -36487,8 +36487,8 @@
 "source": "d2d_kv.engine_result_tag",
 "asbuilt": 4,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -36506,8 +36506,8 @@
 "source": "d2d_kv.engine_result_token",
 "asbuilt": 4,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -36525,8 +36525,8 @@
 "source": "d2d_kv.engine_result_v",
 "asbuilt": 4,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -36544,8 +36544,8 @@
 "source": "d2d_kv.engine_result_value",
 "asbuilt": 4,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -36563,8 +36563,8 @@
 "source": "d2d_kv.execution_active",
 "asbuilt": 4,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -36582,8 +36582,8 @@
 "source": "d2d_kv.native_admit_ready",
 "asbuilt": 4,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -36601,8 +36601,8 @@
 "source": "d2d_kv.native_collective_busy",
 "asbuilt": 4,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -36620,8 +36620,8 @@
 "source": "d2d_kv.native_collective_drained",
 "asbuilt": 4,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -36639,8 +36639,8 @@
 "source": "d2d_kv.native_host_drained",
 "asbuilt": 4,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -36658,8 +36658,8 @@
 "source": "d2d_kv.native_kv_drained",
 "asbuilt": 4,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -36677,8 +36677,8 @@
 "source": "d2d_kv.native_kv_flush",
 "asbuilt": 4,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -36696,8 +36696,8 @@
 "source": "d2d_kv.native_link_reset_seen",
 "asbuilt": 4,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -36715,8 +36715,8 @@
 "source": "d2d_kv.native_links_drained",
 "asbuilt": 4,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -36734,8 +36734,8 @@
 "source": "d2d_kv.native_retrained",
 "asbuilt": 4,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -36753,8 +36753,8 @@
 "source": "d2d_kv.native_vm_drained",
 "asbuilt": 4,
 "bound": 46,
-"pad": 8,
-"landed": 54,
+"pad": 9,
+"landed": 55,
 "lane": "L350"
 },
 {
@@ -108957,5 +108957,1141 @@
 "landed": 12,
 "lane": "L2207"
 }
+],
+"lane_shift": {
+"tool": "physical/die_plan/qwen_kvsys/r8/r8_lane_shift.py",
+"lane_delta": {
+"L356": 1,
+"L749": 1,
+"L750": 1,
+"L2047": 1,
+"L2048": 1
+},
+"moved_members": 8,
+"class_members": 66,
+"changed": [
+{
+"id": "d2d_kv.host_boot_begin[0:0]<-host.d2d_boot_begin@7",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L643",
+"bound": [
+46,
+46
+],
+"pad": [
+7,
+8
+],
+"landed": [
+53,
+54
 ]
+},
+{
+"id": "d2d_kv.host_drained_local[0:0]<-host.host_interface_idle@0",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L708",
+"bound": [
+41,
+41
+],
+"pad": [
+5,
+6
+],
+"landed": [
+46,
+47
+]
+},
+{
+"id": "d2d_kv.host_link_reset_req[0:0]<-host.host_link_reset_req@0",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L749",
+"bound": [
+46,
+47
+],
+"pad": [
+0,
+0
+],
+"landed": [
+46,
+47
+]
+},
+{
+"id": "d2d_kv.host_recovery_clear[0:0]<-host.host_recovery_clear@0",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L749",
+"bound": [
+46,
+47
+],
+"pad": [
+0,
+0
+],
+"landed": [
+46,
+47
+]
+},
+{
+"id": "d2d_kv.record_tx[0:547]<-host.record_tx@0",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L751",
+"bound": [
+45,
+45
+],
+"pad": [
+1,
+2
+],
+"landed": [
+46,
+47
+]
+},
+{
+"id": "d2d_kv.record_tx_observed_v[0:0]<-host.record_tx_observed_v@0",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L751",
+"bound": [
+45,
+45
+],
+"pad": [
+1,
+2
+],
+"landed": [
+46,
+47
+]
+},
+{
+"id": "d2d_kv.status_epoch16[0:15]<-host.token_epoch@2",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L752",
+"bound": [
+47,
+47
+],
+"pad": [
+1,
+2
+],
+"landed": [
+48,
+49
+]
+},
+{
+"id": "dcal.reload[0:0]<-host.program_begin_v@2",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L750",
+"bound": [
+48,
+49
+],
+"pad": [
+0,
+0
+],
+"landed": [
+48,
+49
+]
+},
+{
+"id": "host.phy_rx_flit[0:521]<-serdes_host.u_sub.u_W.rx_flit@4",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L2048",
+"bound": [
+52,
+53
+],
+"pad": [
+0,
+0
+],
+"landed": [
+52,
+53
+]
+},
+{
+"id": "host.phy_rx_v_w[0:0]<-serdes_host.u_sub.u_W.rx_v@4",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L2048",
+"bound": [
+52,
+53
+],
+"pad": [
+0,
+0
+],
+"landed": [
+52,
+53
+]
+},
+{
+"id": "host.abort_drained[1:1]<-d2d_kv.abort_drained@1",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L344",
+"bound": [
+39,
+39
+],
+"pad": [
+15,
+16
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "host.abort_drained[2:2]<-d2d_kv.abort_drained@1",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L347",
+"bound": [
+39,
+39
+],
+"pad": [
+15,
+16
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "host.abort_drained[3:3]<-d2d_kv.abort_drained@1",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L348",
+"bound": [
+39,
+39
+],
+"pad": [
+15,
+16
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "host.abort_drained[0:0]<-d2d_kv.abort_drained@1",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L2047",
+"bound": [
+54,
+55
+],
+"pad": [
+0,
+0
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "host.engine_result_cause[0:3]<-d2d_kv.engine_result_cause@1",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L349",
+"bound": [
+38,
+38
+],
+"pad": [
+16,
+17
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "host.engine_result_cycles[0:27]<-d2d_kv.engine_result_cycles@1",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L349",
+"bound": [
+38,
+38
+],
+"pad": [
+16,
+17
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "host.engine_result_cycles[28:31]<-d2d_kv.engine_result_cycles@1",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "host.engine_result_done[0:0]<-d2d_kv.engine_result_done@1",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "host.engine_result_gen[0:1]<-d2d_kv.engine_result_gen@1",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "host.engine_result_tag[0:58]<-d2d_kv.engine_result_tag@1",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "host.engine_result_token[0:17]<-d2d_kv.engine_result_token@1",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "host.engine_result_v[0:0]<-d2d_kv.engine_result_v@1",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "host.engine_result_value[0:31]<-d2d_kv.engine_result_value@1",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "host.execution_active[0:0]<-d2d_kv.execution_active@1",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "host.link_up[0:1]<-d2d_kv.link_up@0",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+7,
+8
+],
+"landed": [
+53,
+54
+]
+},
+{
+"id": "host.native_admit_ready[0:0]<-d2d_kv.native_admit_ready@1",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "host.native_collective_busy[0:0]<-d2d_kv.native_collective_busy@1",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "host.native_collective_drained[0:0]<-d2d_kv.native_collective_drained@1",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "host.native_host_drained[0:0]<-d2d_kv.native_host_drained@1",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "host.native_kv_drained[0:0]<-d2d_kv.native_kv_drained@1",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "host.native_kv_flush[0:0]<-d2d_kv.native_kv_flush@1",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "host.native_link_reset_seen[0:0]<-d2d_kv.native_link_reset_seen@1",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "host.native_links_drained[0:0]<-d2d_kv.native_links_drained@1",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "host.native_retrained[0:0]<-d2d_kv.native_retrained@1",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "host.native_vm_drained[0:0]<-d2d_kv.native_vm_drained@1",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "host.obs_d2d_recovery_cycles[0:31]<-d2d_kv.recovery_cycles@0",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+7,
+8
+],
+"landed": [
+53,
+54
+]
+},
+{
+"id": "host.record_rx[0:384]<-d2d_kv.record_rx@1",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "host.record_rx[385:547]<-d2d_kv.record_rx@1",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L354",
+"bound": [
+48,
+48
+],
+"pad": [
+6,
+7
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "host.record_rx_v[0:0]<-d2d_kv.record_rx_v@1",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L354",
+"bound": [
+48,
+48
+],
+"pad": [
+6,
+7
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "host.record_send_kind[0:1]<-d2d_kv.record_send_kind@1",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L354",
+"bound": [
+48,
+48
+],
+"pad": [
+6,
+7
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "host.record_witness_slot[0:0]<-d2d_kv.record_witness_slot@1",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L354",
+"bound": [
+48,
+48
+],
+"pad": [
+6,
+7
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "kvs_emb.d2d__emb_tx_slot[0:0]<-d2d_kv.emb_tx_slot@1",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L356",
+"bound": [
+46,
+47
+],
+"pad": [
+5,
+5
+],
+"landed": [
+51,
+52
+]
+},
+{
+"id": "kvs_emb.d2d__svc[12:12]<-d2d_kv.abort_drained@4",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L344",
+"bound": [
+39,
+39
+],
+"pad": [
+15,
+16
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "kvs_emb.d2d__svc[13:13]<-d2d_kv.abort_drained@4",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L347",
+"bound": [
+39,
+39
+],
+"pad": [
+15,
+16
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "kvs_emb.d2d__svc[14:14]<-d2d_kv.abort_drained@4",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L348",
+"bound": [
+39,
+39
+],
+"pad": [
+15,
+16
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "kvs_emb.d2d__svc[11:11]<-d2d_kv.abort_drained@4",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L2047",
+"bound": [
+54,
+55
+],
+"pad": [
+0,
+0
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "kvs_emb.d2d__svc[27:30]<-d2d_kv.engine_result_cause@4",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L349",
+"bound": [
+38,
+38
+],
+"pad": [
+16,
+17
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "kvs_emb.d2d__svc[142:169]<-d2d_kv.engine_result_cycles@4",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L349",
+"bound": [
+38,
+38
+],
+"pad": [
+16,
+17
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "kvs_emb.d2d__svc[170:173]<-d2d_kv.engine_result_cycles@4",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "kvs_emb.d2d__svc[25:25]<-d2d_kv.engine_result_done@4",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "kvs_emb.d2d__svc[90:91]<-d2d_kv.engine_result_gen@4",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "kvs_emb.d2d__svc[31:89]<-d2d_kv.engine_result_tag@4",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "kvs_emb.d2d__svc[92:109]<-d2d_kv.engine_result_token@4",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "kvs_emb.d2d__svc[24:24]<-d2d_kv.engine_result_v@4",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "kvs_emb.d2d__svc[110:141]<-d2d_kv.engine_result_value@4",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "kvs_emb.d2d__svc[23:23]<-d2d_kv.execution_active@4",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "kvs_emb.d2d__svc[21:21]<-d2d_kv.native_admit_ready@4",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "kvs_emb.d2d__svc[19:19]<-d2d_kv.native_collective_busy@4",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "kvs_emb.d2d__svc[17:17]<-d2d_kv.native_collective_drained@4",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "kvs_emb.d2d__svc[18:18]<-d2d_kv.native_host_drained@4",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "kvs_emb.d2d__svc[15:15]<-d2d_kv.native_kv_drained@4",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "kvs_emb.d2d__svc[20:20]<-d2d_kv.native_kv_flush@4",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "kvs_emb.d2d__svc[9:9]<-d2d_kv.native_link_reset_seen@4",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "kvs_emb.d2d__svc[8:8]<-d2d_kv.native_links_drained@4",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "kvs_emb.d2d__svc[10:10]<-d2d_kv.native_retrained@4",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+},
+{
+"id": "kvs_emb.d2d__svc[16:16]<-d2d_kv.native_vm_drained@4",
+"table": "qwen_kvsys_r8_landing.json",
+"lane": "L350",
+"bound": [
+46,
+46
+],
+"pad": [
+8,
+9
+],
+"landed": [
+54,
+55
+]
+}
+]
+}
 }
