@@ -2117,6 +2117,39 @@
          "enum": [
           "per_bit"
          ]
+        },
+        "bit_sites_um": {
+         "type": "array",
+         "items": {
+          "type": "array",
+          "items": {
+           "type": "array",
+           "items": {
+            "type": "number"
+           },
+           "minItems": 2,
+           "maxItems": 2
+          }
+         }
+        },
+        "bit_site_cell_um": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 2,
+         "maxItems": 2
+        },
+        "face_bit_sites_um": {
+         "type": "array",
+         "items": {
+          "type": "array",
+          "items": {
+           "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2
+         }
         }
        }
       }
