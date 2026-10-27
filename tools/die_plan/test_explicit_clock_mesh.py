@@ -203,3 +203,19 @@ def test_terminal_rc_basis_is_explicit_measured_file_and_retains_top_rc():
         E.terminal_rc_basis(dict(terminal_rc_tcl='/tmp/no.tcl'),{}, {},{'M5'},set())
     with pytest.raises(ValueError,match='missing:'):
         E.terminal_rc_basis(dict(terminal_rc_tcl='missing.tcl'),{}, {},{'M5'},set())
+
+
+def test_terminal_stack_draws_actual_landing_pads_with_lower_default_width():
+    import clock_routed as C
+    m=mesh();m['taps']=[dict(xy=[3.,7.852],terminal_access_xy=[3.,10.],terminal_layer='M5')]
+    g=E.conductor_graph(m)
+    for d in g['drivers']:d['units']=[]
+    g['taps'][0]['port']='pin'
+    w=dict(name='ck_mesh_explicit',ndr='8w',mesh_graph=g)
+    lines=[];E.routed_mesh_tcl(lines,w,{}, {},'BUFx24_ASAP7_75t_R',{})
+    txt='\n'.join(lines)
+    assert '[RL M5]' not in txt and '[RL M6]' not in txt and '[RL M7]' not in txt
+    assert '$e addRect -35 -16 35 16' in txt # M6 minimum-area pad
+    assert g['terminal_pads']==[['M5',3.,10.],['M6',3.,10.],['M7',3.,10.]]
+    shapes=E.access_shapes(w,{},'BUFx24_ASAP7_75t_R')
+    assert any(layer=='M6' and abs((x1-x0)*(y1-y0)-.07*.032)<1e-9 for _,layer,x0,y0,x1,y1 in shapes)

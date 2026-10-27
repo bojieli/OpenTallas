@@ -114,6 +114,11 @@ def conductor_graph(mesh):
         for a,b in zip(p,p[1:]): edge(point('M9',x,a), point('M9',x,b))
     for x,y in geometric: edge(point('M8',x,y), point('M9',x,y))
     for a,b in tap_jogs: edge(a,b)
+    # Canonical minimum-area landing pads on every declared lower-terminal
+    # via node. They are real metal in both encoding and cross-net census.
+    import clock_routed as C
+    pads=C._stack_pad()
+    terminal_pads=sorted({p for a,b in tap_jogs if a[0]!=b[0] for p in (a,b) if p[0] in pads and int(p[0][1:])<8})
     graph = defaultdict(list)
     for a,b in edges: graph[a].append(b); graph[b].append(a)
     seen, todo = set(), [next(iter(graph))]
@@ -122,7 +127,7 @@ def conductor_graph(mesh):
         seen.add(a); todo.extend(b for b in graph[a] if b not in seen)
     if len(seen) != len(graph): raise ValueError('explicit mesh has disconnected physical conductors')
     return dict(nodes=[list(n) for n in sorted(graph)], edges=[[list(a),list(b)] for a,b in sorted(edges)],
-                drivers=drivers, taps=taps, tap_jog_segments=[[list(a),list(b)] for a,b in tap_jogs if a[0]==b[0]],
+                drivers=drivers, taps=taps, terminal_pads=[list(p) for p in terminal_pads], tap_jog_segments=[[list(a),list(b)] for a,b in tap_jogs if a[0]==b[0]],
                 strap_crossings=len(geometric),
                 vias=sum(a[0]!=b[0] for a,b in edges), connected_components=1)
 
@@ -217,7 +222,7 @@ def routed_mesh_tcl(L, w, cells, ports, buf, rec):
     start=min(graph); seen={start}; todo=deque([start]); emitted=set()
     jid={start:'emj0'}
     L.extend([f'set w [rnet {w["name"]}]','$e begin $w',
-              f'$e newPath [LY {start[0]}] FIXED [RL {start[0]}]',
+              f'$e newPath [LY {start[0]}] FIXED'+(f' [RL {start[0]}]' if start[0] in ('M8','M9') else ''),
               f'set emj0 [$e addPoint {C.q(start[1])} {C.q(start[2])}]'])
     nv=0
     while todo:
@@ -226,7 +231,7 @@ def routed_mesh_tcl(L, w, cells, ports, buf, rec):
             e=tuple(sorted((a,b)))
             if e in emitted: continue
             emitted.add(e)
-            L.append(f'$e newPath ${jid[a]} FIXED [RL {a[0]}]')
+            L.append(f'$e newPath ${jid[a]} FIXED'+(f' [RL {a[0]}]' if a[0] in ('M8','M9') else ''))
             fresh=b not in seen
             target=f'emj{len(jid)}' if fresh else f'emch{len(emitted)}'
             if a[0]!=b[0]:
@@ -238,6 +243,10 @@ def routed_mesh_tcl(L, w, cells, ports, buf, rec):
             if fresh:
                 seen.add(b);jid[b]=target;todo.append(b)
     if len(seen)!=len(graph) or nv!=g['vias']: raise ValueError('mesh encoder omitted conductor/via')
+    for pp in g.get('terminal_pads',[]):
+        p=tuple(pp);hx,hy=C._stack_pad()[p[0]]
+        L.extend([f'$e newPath ${jid[p]} FIXED',
+                  f'$e addRect {-C.q(hx)} {-C.q(hy)} {C.q(hx)} {C.q(hy)}'])
     for d in g['drivers']:
         at=tuple(d['anchor'])
         for u in d['units']:
@@ -257,7 +266,7 @@ def routed_mesh_tcl(L, w, cells, ports, buf, rec):
             rec['pin_stairs']=rec.get('pin_stairs',0)+1
     for t in g['taps']:
         at=tuple(t['port_node']);pn=t['port']
-        L.extend([f'$e newPath ${jid[at]} FIXED [RL {at[0]}]',
+        L.extend([f'$e newPath ${jid[at]} FIXED'+(f' [RL {at[0]}]' if at[0] in ('M8','M9') else ''),
                   f'$e addPoint {C.q(at[1])} {C.q(at[2])}',f'$e addBTerm [BT {pn}]'])
         rec['port_joins']=rec.get('port_joins',0)+1
     L.extend(['$e end', 'set ot_ndr $em_saved_ndr'])
@@ -289,6 +298,9 @@ def access_shapes(w,cells,buf):
             elif (x0,y0)!=(x1,y1) and l0 not in ('M8','M9'):
                 h=C.WIDTH[l0]/2
                 out.append((w['name'],l0,min(x0,x1)-h,min(y0,y1)-h,max(x0,x1)+h,max(y0,y1)+h))
+    for layer,x,y in w['mesh_graph'].get('terminal_pads',[]):
+        hx,hy=C._stack_pad()[layer]
+        out.append((w['name'],layer,x-hx,y-hy,x+hx,y+hy))
     return out
 
 
