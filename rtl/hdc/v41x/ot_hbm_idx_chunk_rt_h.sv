@@ -16,7 +16,8 @@
 // MUT 0 every column binds the same two masters (HALF 0: 195,127 / HALF 1: 186,410 Yosys cells, r18h5 flags).
 module ot_hidx_score_hcol #(
     parameter integer HALF = 0,
-    parameter integer MUT  = 0           // bench mutant (the parent passes it to column 0 only)
+    parameter integer MUT  = 0,          // bench mutant (the parent passes it to column 0 only)
+    parameter integer DELIVERED_RESET = 0
 ) (
     input  wire [1:0]      clk_pair,     // regions 2*HALF, 2*HALF+1 of this column
     input  wire            rst_col,      // rr[g] of the glue (column reset relay output)
@@ -40,7 +41,11 @@ module ot_hidx_score_hcol #(
         localparam integer RR = 2 * HALF + r;            // region within the column (0..3)
         wire ck = clk_pair[r];
         wire [0:0] srr; wire rs = srr[0];
-        ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(ck), .rst_n_in(rst_col), .rst_n(srr));
+        if(DELIVERED_RESET!=0)begin:g_delivered_reset
+            ot_rst_delivered3 #(.REGIONS(1)) u_rr(.clk(ck),.rst_n_in(rst_col),.rst_n(srr));
+        end else begin:g_legacy_reset
+            ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(ck), .rst_n_in(rst_col), .rst_n(srr));
+        end
         reg rn_p, onl;
         always @(posedge ck) rn_p <= rs;
         always @(posedge ck or negedge rs) if (!rs) onl <= 1'b0; else onl <= rs && rn_p;
@@ -112,7 +117,8 @@ endmodule
 
 module ot_hbm_idx_chunk_rt_h #(
     parameter integer QLATE = 0,
-    parameter integer MUT   = 0          // bench mutant (ot_hidx_score_hcol MUT)
+    parameter integer MUT   = 0,         // bench mutant (ot_hidx_score_hcol MUT)
+    parameter integer DELIVERED_RESET = 0
 ) (
     input  wire                  clk, input wire [15:0] clk_pair,
     input  wire                  rst_n,
@@ -148,7 +154,11 @@ module ot_hbm_idx_chunk_rt_h #(
       if (!rst_n) begin rdy1 <= 0; rdy2 <= 0; online <= 0; end
       else begin rdy1 <= prdy; rdy2 <= rdy1; online <= (&rdy2); end
     wire [NKT:0] rr;
+    generate if(DELIVERED_RESET!=0)begin:g_delivered_reset
+        ot_rst_delivered3 #(.REGIONS(NKT+1)) u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
+    end else begin:g_legacy_reset
     ot_rst_relay #(.REGIONS(NKT + 1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
+    end endgenerate
     wire rn = rr[NKT];
     reg rql_v; reg [QW-1:0] rq; reg rv; reg [NKT-1:0] rkv; reg [NKT*KW-1:0] rkey; reg [7:0] hb_p; reg [7:0] hid [0:HC-1];
     integer i;
@@ -175,7 +185,7 @@ module ot_hbm_idx_chunk_rt_h #(
             wire [31:0] cs [0:2]; wire cf [0:2];
             assign cs[0] = 32'd0; assign cf[0] = 1'b0;
             for (hf = 0; hf < 2; hf = hf + 1) begin : g_half
-                ot_hidx_score_hcol #(.HALF(hf), .MUT((g == 0) ? MUT : 0)) u_hc (.clk_pair(clk_pair[4*g + 2*hf +: 2]), .rst_col(rr[g]),
+                ot_hidx_score_hcol #(.HALF(hf), .DELIVERED_RESET(DELIVERED_RESET), .MUT((g == 0) ? MUT : 0)) u_hc (.clk_pair(clk_pair[4*g + 2*hf +: 2]), .rst_col(rr[g]),
                     .qv_b(qv_b), .q_b(q_b), .key(rkey[g*KW +: KW]), .hid4(hidv[32*hf +: 32]),
                     .cs_in(cs[hf]), .cf_in(cf[hf]), .cs_out(cs[hf+1]), .cf_out(cf[hf+1]), .prdy(prdy[4*g + 2*hf +: 2]));
             end
