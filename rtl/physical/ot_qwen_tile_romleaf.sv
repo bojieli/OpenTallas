@@ -65,14 +65,16 @@ module ot_qwen_romleaf_logic #(
         begin lead1 = 0; for (i = 0; i < 8; i = i + 1) if (m[i]) lead1 = i[2:0]; end
     endfunction
     ot_qwen_mpr_reg u_r0 (.clk(clk), .rst_n(rst_n), .d({ce_d, ad_d}), .q(req_m));
-    //: the row's copy of its request enable and of "any row enabled" (== rom_ce[b], |rom_ce of the flat pipeline)
-    (* keep *) reg ce_q, any_q;
+    //: "any row enabled" (|rom_ce of the flat pipeline).  QC-CORES-4 2026-10-27: the row's request enable is the MPR's
+    //: req_m[12] (same D = ce_d, same async reset to 0) -- the former duplicate enable register made face pin ce_d drive 2 flops;
+    //: one register per face bit now (face_guard), behaviour unchanged.
+    (* keep *) reg any_q;
     reg sel_1, sel_c, sel_c2;
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin ce_q <= 1'b0; any_q <= 1'b0; sel_1 <= 1'b0; sel_c <= 1'b0; sel_c2 <= 1'b0; end
+        if (!rst_n) begin any_q <= 1'b0; sel_1 <= 1'b0; sel_c <= 1'b0; sel_c2 <= 1'b0; end
         else begin
-            ce_q <= ce_d; any_q <= any_d;
-            if (any_q) sel_1 <= ce_q;
+            any_q <= any_d;
+            if (any_q) sel_1 <= req_m[12];
             sel_c <= sel_1;
             sel_c2 <= sel_c;
         end
