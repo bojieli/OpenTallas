@@ -35,7 +35,8 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-REPO = HERE.parents[1]
+# a kit copy runs as /work/kit_modes.py (no repository parent): REPO is only needed by `stage` (repository copy)
+REPO = HERE.parents[1] if len(HERE.parents) > 1 else HERE
 # head_eco_modes.py LAT_RE, generalised to any single IO virtual clock name
 LAT_RE = re.compile(r"^\s*set_clock_latency\s+-source\s+([0-9.+-eE]+)\s+\[get_clocks\s+\{?([A-Za-z_][\w]*)\}?\]\s*$")
 MARK = "# ---- SIGNOFF-MODES-1 per-mode binding (tools/die_plan/kit_modes.py stage)"
