@@ -1,0 +1,28 @@
+{
+ "nets": 4,
+ "pin_stairs": 8,
+ "port_joins": 3,
+ "extra_top": [],
+ "ties": 4,
+ "explicit_mesh": [
+  {
+   "name": "ck_mesh_explicit",
+   "nodes": 8,
+   "edges": 8,
+   "vias": 4,
+   "driver_units": 2,
+   "taps": 2
+  }
+ ],
+ "via89_array": {
+  "spec": {
+   "rows": 6,
+   "cols": 6,
+   "cut": 0.04,
+   "pitch": 0.098,
+   "enc_m8": 0.0,
+   "enc_m9": 0.02
+  },
+  "instances": 0
+ }
+}

@@ -1,0 +1,9 @@
+{
+ "adapter_commit": "cbcbf55e6",
+ "snapshot_hashes": {
+  "tools/die_plan/die_clock_mesh.py": "bcbe86642bf6aab69d6ee6cc57abbf5170236807d43da572799ae4d6ef4a3989",
+  "tools/die_plan/clock_routed.py": "6ec43e464f99b9a5679b72627dd245eab4289aa1a81738fc4faa7be0266c5ac6",
+  "tools/die_plan/explicit_clock_mesh.py": "4492ba1189ed2d16ea5243fd0696e8095fc79d8345ea162e95b94bd95a0bde20"
+ },
+ "note": "write_verilog alias helper and explicit_clock_mesh.py are parent lane source snapshots; joint generated Tcl is retained. Fixed-wire encoding and DB readback only, no P&R/STA/signoff."
+}
