@@ -308,8 +308,30 @@ def land_e(lk):
     return ks.pop()
 
 
+def qualify_frame_source(schedule, master, source_root):
+    """A bound receipt qualifies its exact selected sources and GO interface, not just a filename."""
+    hashes = schedule.get('source_sha256')
+    if not isinstance(hashes, dict) or not hashes:
+        raise ValueError('as-built frame schedule lacks exact source hashes: ' + master)
+    for name, expected in hashes.items():
+        path = Path(source_root) / name
+        if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != expected:
+            raise ValueError('as-built frame schedule differs from selected source: ' + name)
+    stations = schedule.get('station_inputs', {})
+    gb = [s for s in stations.values() if s.get('go_boundary_edges', 0) == 1]
+    if gb:
+        if len(gb) != len(stations):
+            raise ValueError('mixed legacy/GB QX stations cannot use a global GO advance: ' + master)
+        if any(s.get('required_go_issue_advance_edges') != 1 or
+               s.get('native_provider_qualified') is not True for s in gb):
+            raise ValueError('GB frame requires its qualified one-edge-early GO/TAG provider: ' + master)
+
+
 def source_frame_schedule(master):
     """LP models are immutable source-qualified inputs, never inferred flat timing."""
+    if master.endswith('_gb'):
+        raise ValueError('GB frame requires its own extracted schedule and qualified GO/TAG provider; '
+                         'legacy frame calendars cannot qualify it: ' + master)
     if is_asbuilt(master):
         # TOK-DS-11 (10-27): an as-built band frame (r0/r1/r2 plan kits + 2-flop fint seams) is NOT the LP rf3r frame:
         # its schedule is extracted from its own elaborated RTL (tools/s81_dv/frame_schedule_asb.py, validated link by
@@ -327,6 +349,8 @@ def source_frame_schedule(master):
                              + ', '.join(c.get('fails', [])[:8]))
         if not path.is_file() or c.get('schedule_sha256') != hashlib.sha256(path.read_bytes()).hexdigest():
             raise ValueError('as-built frame plan check is not bound to this schedule: ' + str(path))
+        qualify_frame_source(json.loads(path.read_text()), master,
+                             Path(os.environ.get('OT_S81_SELECTED_SOURCE_ROOT', str(ROOT))))
         return path
     if not master.endswith('_lp'):
         return None

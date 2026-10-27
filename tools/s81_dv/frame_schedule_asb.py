@@ -56,7 +56,7 @@ LP_SCHED = 'results/arch/s81_dv_1016/frame_l4_cluster/compiler/{m}_schedule.json
 # RTL realises crossings as epoch-addressed landing memories, which a structural trace cannot time)
 LP_TWIN = 'rtl/dsrom_sys/s81_dv/frame_lp/vgcs/{m}_l4_lp_rf3r.sv'
 PLAN_MAP = 'rtl/dsrom_sys/s81_dv/frame_lp/plan/{m}_l4_lp_plan_map.json'
-ENDPOINT_RE = re.compile(r'^(ot_v41_rom_elem_q_qxpq_w10|dsfd_bf_col|dsfd_bf_front_roots|dsfd_node_\w+|dsfd_cfifo_crs4|'
+ENDPOINT_RE = re.compile(r'^(ot_v41_rom_elem_q_qxpq_w10(?:_gb)?|dsfd_bf_col|dsfd_bf_front_roots|dsfd_node_\w+|dsfd_cfifo_crs4|'
                          r'ot_s81_cfg7_seq\w*|ot_rom_\w+)$')
 FF = {'$dff', '$dffe', '$adff', '$adffe', '$sdff', '$sdffe', '$sdffce', '$dffsr', '$dffsre', '$aldff', '$aldffe',
       '$_DFF_P_', '$_DFF_N_'}
@@ -133,6 +133,10 @@ def HARD_PARAMS(_c={}):
     if 'v' not in _c:
         ab = json.loads((ROOT / MANIFEST).read_text())
         _c['v'] = bind_elab.load_hard_params(ab.get('hard_params', []), (ROOT / MANIFEST).parent / ab.get('base', '.'))
+        # Approved R5 opt-in primitive: retain every actual legacy shape parameter.
+        if 'ot_v41_rom_elem_q_qxpq_w10' in _c['v']:
+            _c['v'].setdefault('ot_v41_rom_elem_q_qxpq_w10_gb', dict(
+                _c['v']['ot_v41_rom_elem_q_qxpq_w10'], GO_BOUNDARY=1, CGR=8))
     return _c['v']
 
 
@@ -274,7 +278,7 @@ def trace(yjs, top):
                 if dirs[cn].get(port) != 'output' or m.startswith('ot_s81_cfg7_seq'):
                     continue
                 for k, b in enumerate(bits):
-                    if m == 'ot_v41_rom_elem_q_qxpq_w10':
+                    if m in ('ot_v41_rom_elem_q_qxpq_w10', 'ot_v41_rom_elem_q_qxpq_w10_gb'):
                         # frame_schedule.py: an element return word is two rows, MSB half r1, LSB half r0 (Yosys bit
                         # index 0 = LSB); odd-width outputs are not return words
                         w = len(bits)
@@ -353,13 +357,15 @@ def measure(yjs, top):
     res = dict(stations={}, nodes={}, root=None, links={})
     for cn, m in kind.items():
         inst = inst_name(cn)
-        if m == 'ot_v41_rom_elem_q_qxpq_w10':
+        if m in ('ot_v41_rom_elem_q_qxpq_w10', 'ot_v41_rom_elem_q_qxpq_w10_gb'):
             ins = {}
             for port in cells[cn]['connections']:
                 if port.startswith('xs_'):
                     ins[port] = sorted(pin_labels(cells, labels, cn, port))
             ctl = {p: sorted(pin_labels(cells, labels, cn, p, -1)) for p in ('go', 'cfg_v')}
             res['stations'][inst] = dict(inputs=ins, control=ctl)
+            if m.endswith('_gb'):
+                res['stations'][inst]['go_boundary_edges'] = 1
         elif m.startswith('dsfd_node'):
             res['nodes'][inst] = {p: sorted(pin_labels(cells, labels, cn, p)) for p in ('a', 'b')
                                   if p in cells[cn]['connections']}
@@ -488,6 +494,9 @@ def schedule(meas_v, meas_t, meas_ab, lp_sched, plan_map, master, var, src_sha):
         add_lp, = st['added_edges']
         deltas, inputs = set(), {}
         for pin, pv in st['inputs'].items():
+            # GB737 removes only the unused xs_sv input; preserve legacy receipts.
+            if pin == 'xs_sv' and meas_ab['stations'][e].get('go_boundary_edges') == 1:
+                continue
             p_, = pv['paths']
             tot = p_['flat_link_edges'] + p_['added_edges']
             v0, vt, va = (pick_src(m_['stations'][e]['inputs'][pin], p_['source'], f'{e}.{pin}')
@@ -509,6 +518,10 @@ def schedule(meas_v, meas_t, meas_ab, lp_sched, plan_map, master, var, src_sha):
             rows.append(dict(kind='control', link=f"{cv['source']} -> {e}.{pin}", lp_schedule=cv['link_edges'],
                              twin_head=cv['link_edges'] + vt - v0, asbuilt=cv['link_edges'] + va - v0))
         st_out[e] = dict(inputs=inputs, control=control, added_edges=[add_lp + dx], all_x_inputs_equal_added_edges=True)
+        if meas_ab['stations'][e].get('go_boundary_edges') == 1:
+            st_out[e]['go_boundary_edges'] = 1
+            st_out[e]['required_go_issue_advance_edges'] = 1
+            st_out[e]['native_provider_qualified'] = False
     # ---------------- plan consistency: every frame link the die plan declares
     le = plan_map['latency_edges']
     plan = []
