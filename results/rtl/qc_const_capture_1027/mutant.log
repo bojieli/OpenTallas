@@ -1,0 +1,320 @@
+
+-- Running command `read_verilog -sv const.sv ff_model.v hookout2/mut.v; hierarchy -check; proc; memory; flatten; opt_clean; equiv_make bothkeep gate miter; hierarchy -top miter; equiv_simple; equiv_induct -undef -seq 3; equiv_status -assert' --
+
+1. Executing Verilog-2005 frontend: const.sv
+Parsing SystemVerilog input from `const.sv' to AST representation.
+Generating RTLIL representation for module `\plain'.
+Generating RTLIL representation for module `\wirekeep'.
+Generating RTLIL representation for module `\processkeep'.
+Generating RTLIL representation for module `\bothkeep'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: ff_model.v
+Parsing SystemVerilog input from `ff_model.v' to AST representation.
+Generating RTLIL representation for module `\DFFHQNx2_ASAP7_75t_R'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: hookout2/mut.v
+Parsing SystemVerilog input from `hookout2/mut.v' to AST representation.
+Generating RTLIL representation for module `\gate'.
+Successfully finished Verilog frontend.
+
+4. Executing HIERARCHY pass (managing design hierarchy).
+
+5. Executing PROC pass (convert processes to netlists).
+
+5.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+5.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 5 assignments to connections.
+
+5.4. Executing PROC_INIT pass (extract init attributes).
+
+5.5. Executing PROC_ARST pass (detect async resets in processes).
+
+5.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+5.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\DFFHQNx2_ASAP7_75t_R.$proc$ff_model.v:1$5'.
+Creating decoders for process `\bothkeep.$proc$const.sv:4$4'.
+Creating decoders for process `\processkeep.$proc$const.sv:3$3'.
+Creating decoders for process `\wirekeep.$proc$const.sv:2$2'.
+Creating decoders for process `\plain.$proc$const.sv:1$1'.
+
+5.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+5.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\DFFHQNx2_ASAP7_75t_R.\QN' using process `\DFFHQNx2_ASAP7_75t_R.$proc$ff_model.v:1$5'.
+  created $dff cell `$procdff$7' with positive edge clock.
+Creating register for signal `\bothkeep.\r' using process `\bothkeep.$proc$const.sv:4$4'.
+  created $dff cell `$procdff$8' with positive edge clock.
+Creating register for signal `\processkeep.\q' using process `\processkeep.$proc$const.sv:3$3'.
+  created $dff cell `$procdff$9' with positive edge clock.
+Creating register for signal `\wirekeep.\r' using process `\wirekeep.$proc$const.sv:2$2'.
+  created $dff cell `$procdff$10' with positive edge clock.
+Creating register for signal `\plain.\q' using process `\plain.$proc$const.sv:1$1'.
+  created $dff cell `$procdff$11' with positive edge clock.
+
+5.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+5.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `DFFHQNx2_ASAP7_75t_R.$proc$ff_model.v:1$5'.
+Removing empty process `bothkeep.$proc$const.sv:4$4'.
+Removing empty process `processkeep.$proc$const.sv:3$3'.
+Removing empty process `wirekeep.$proc$const.sv:2$2'.
+Removing empty process `plain.$proc$const.sv:1$1'.
+Cleaned up 0 empty switches.
+
+5.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gate.
+Optimizing module DFFHQNx2_ASAP7_75t_R.
+Optimizing module bothkeep.
+Optimizing module processkeep.
+Optimizing module wirekeep.
+Optimizing module plain.
+
+6. Executing MEMORY pass.
+
+6.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+6.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+6.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+6.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+6.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+6.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gate..
+Finding unused cells or wires in module \DFFHQNx2_ASAP7_75t_R..
+Finding unused cells or wires in module \bothkeep..
+Finding unused cells or wires in module \processkeep..
+Finding unused cells or wires in module \wirekeep..
+Finding unused cells or wires in module \plain..
+Removed 0 unused cells and 5 unused wires.
+<suppressed ~5 debug messages>
+
+6.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+6.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+6.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gate..
+Finding unused cells or wires in module \DFFHQNx2_ASAP7_75t_R..
+Finding unused cells or wires in module \bothkeep..
+Finding unused cells or wires in module \processkeep..
+Finding unused cells or wires in module \wirekeep..
+Finding unused cells or wires in module \plain..
+
+6.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+6.11. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+7. Executing FLATTEN pass (flatten design).
+<suppressed ~24 debug messages>
+
+8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gate..
+Finding unused cells or wires in module \DFFHQNx2_ASAP7_75t_R..
+Finding unused cells or wires in module \bothkeep..
+Finding unused cells or wires in module \processkeep..
+Finding unused cells or wires in module \wirekeep..
+Finding unused cells or wires in module \plain..
+
+9. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: r_gold (\r_gold), r_gate ({ \_00_.QN_gate \_23_.QN_gate \_22_.QN_gate \_21_.QN_gate \_20_.QN_gate \_19_.QN_gate \_18_.QN_gate \_17_.QN_gate \_16_.QN_gate \_15_.QN_gate \_14_.QN_gate \_13_.QN_gate \_12_.QN_gate \_11_.QN_gate \_10_.QN_gate \_09_.QN_gate \_08_.QN_gate \_07_.QN_gate \_06_.QN_gate \_05_.QN_gate \_04_.QN_gate \_03_.QN_gate \_02_.QN_gate \_01_.QN_gate }) -> r
+Presumably equivalent wires: q_gold (\r_gold), q_gate ({ \_00_.QN_gate \_23_.QN_gate \_22_.QN_gate \_21_.QN_gate \_20_.QN_gate \_19_.QN_gate \_18_.QN_gate \_17_.QN_gate \_16_.QN_gate \_15_.QN_gate \_14_.QN_gate \_13_.QN_gate \_12_.QN_gate \_11_.QN_gate \_10_.QN_gate \_09_.QN_gate \_08_.QN_gate \_07_.QN_gate \_06_.QN_gate \_05_.QN_gate \_04_.QN_gate \_03_.QN_gate \_02_.QN_gate \_01_.QN_gate }) -> q
+Presumably equivalent wires: clk_gold (\clk_gold), clk_gate (\clk_gate) -> clk
+
+10. Executing HIERARCHY pass (managing design hierarchy).
+
+10.1. Analyzing design hierarchy..
+Top module:  \miter
+
+10.2. Analyzing design hierarchy..
+Top module:  \miter
+Removing unused module `\gate'.
+Removing unused module `\DFFHQNx2_ASAP7_75t_R'.
+Removing unused module `\bothkeep'.
+Removing unused module `\processkeep'.
+Removing unused module `\wirekeep'.
+Removing unused module `\plain'.
+Removed 6 unused modules.
+
+11. Executing EQUIV_SIMPLE pass.
+Found 48 unproven $equiv cells (2 groups) in miter:
+ Grouping SAT models for \q:
+  Trying to prove $equiv for \q [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \q [1]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \q [2]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \q [3]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \q [4]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \q [5]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \q [6]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \q [7]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \q [8]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \q [9]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \q [10]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \q [11]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \q [12]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \q [13]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \q [14]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \q [15]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \q [16]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \q [17]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \q [18]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \q [19]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \q [20]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \q [21]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \q [22]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \q [23]:ezsat
+ezsat
+ failed.
+ Grouping SAT models for \r:
+  Trying to prove $equiv for \r [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \r [1]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \r [2]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \r [3]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \r [4]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \r [5]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \r [6]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \r [7]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \r [8]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \r [9]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \r [10]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \r [11]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \r [12]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \r [13]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \r [14]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \r [15]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \r [16]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \r [17]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \r [18]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \r [19]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \r [20]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \r [21]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \r [22]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \r [23]:ezsat
+ezsat
+ failed.
+Proved 46 previously unproven $equiv cells.
+
+12. Executing EQUIV_INDUCT pass.
+Found 2 unproven $equiv cells in module miter:
+  Undef modelling: force def on 48 initial reg values and 1 inputs.
+  Proving existence of base case for step 1. (2080 clauses over 896 variables)
+  Proving induction step 1. (5480 clauses over 2270 variables)
+  Proof for induction step failed. Extending to next time step.
+  Proving existence of base case for step 2. (5481 clauses over 2270 variables)
+  Proof for base case failed. Circuit inherently diverges!
+Proved 0 previously unproven $equiv cells.
+
+13. Executing EQUIV_STATUS pass.
+Found 48 $equiv cells in miter:
+  Of those cells 46 are proven and 2 are unproven.
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$83: \q_gold [23] \q_gate [23]
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$59: \r_gold [23] \r_gate [23]
+Found a total of 2 unproven $equiv cells.
+ERROR: Found 2 unproven $equiv cells in 'equiv_status -assert'.

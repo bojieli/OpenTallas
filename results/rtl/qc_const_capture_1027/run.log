@@ -1,0 +1,8 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-qc-const-1027
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-qc-const-1027
+ot-run: localhost      admits   304 GB (avail 692, reserve 0, fresh 258.7, peak 64.5, headroom 0, waiters 0/0 GB) load 56/112 running 43 disk 606 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-3871379-1793116960 after 1 s
+....                                                                     [100%]
+HOOK_FULL_SYNTH24_FF_PASS
+ot-run: RAN on localhost (unit oth-ubuntu-3871379-1793116960): exit 0

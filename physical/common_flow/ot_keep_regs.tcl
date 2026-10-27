@@ -73,6 +73,11 @@ yosys setattr -set keep 1 {*}{@ot_kc}
 set ot_kr_n [llength [split [string trim [yosys tee -q -s result.string select -list {*}{@ot_kc}]] "\n"]]
 puts "OT_KEEP_REGS: keep set on $ot_kr_n register cells driving keep wires"
 yosys select -clear
+# Preserve only explicitly enumerated original constant-D captures before opt_dff folds them.
+# Unset = byte-identical execution; the spec is fail-closed and never adds state.
+if {[info exists ::env(OT_CONST_DFF_SPEC)] && $::env(OT_CONST_DFF_SPEC) ne ""} {
+  source [file join [file dirname [file normalize [info script]]] ot_const_dff_keep.tcl]
+}
 # KV-RELAYGEN 2026-10-19: regional reset relay copies (<= OT_RST_COPIES_MAX loads each; physical/common_flow/ot_rst_copies.tcl).
 # Unset / empty / 0 = nothing below runs (every other kit unchanged).
 if {[info exists ::env(OT_RST_COPIES_MAX)] && [string is integer -strict $::env(OT_RST_COPIES_MAX)] && $::env(OT_RST_COPIES_MAX) > 0} {

@@ -1,0 +1,27 @@
+{
+ "status": "MECHANISM_PASS_NOT_KIT_SIGNOFF",
+ "rtl_body_changed": false,
+ "added_state": 0,
+ "added_cycles": 0,
+ "existing_capture_ffs": 24,
+ "final_real_ffs": 24,
+ "physical_master": "DFFHQNx2_ASAP7_75t_R",
+ "clock": "original rising edge preserved",
+ "proof": {
+  "proven": 48,
+  "unproven": 0
+ },
+ "wrong_D_mutant": {
+  "proven": 46,
+  "unproven": 2,
+  "caught": true
+ },
+ "guards": 4,
+ "baseline_plain_wirekeep_processkeep_bothkeep": "ALL_FOLD_TO_ZERO_FFS",
+ "source_semantics": "517b37f882be5250449dc790e3efea741cf3e4f6:results/arch/s81_hb1_cell_semantics_1019/official/asap7sc7p5t_SEQ_RVT_TT_220101.v DFFHQNx2 QN=!D",
+ "requirements_before_actual_adoption": [
+  "Exact original capture module/wire/bit inventory",
+  "Post-Yosys and ORFS actual port/clock/FF census",
+  "Actual kit LEC+TT setup/FF hold"
+ ]
+}
