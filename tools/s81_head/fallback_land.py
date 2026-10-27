@@ -181,8 +181,9 @@ def cmd_compose(a):
         (out / "compose_report.json").write_text(json.dumps(rep, indent=1) + "\n")
         print(json.dumps(rep, indent=1))
         return 1
-    # HEAD observer: the real local controller is hd_ctl (module ot_s81hd_ctl).  Its fault/ready observation inputs
-    # are NOT declared yet (open item), so the sidecar names the part and leaves the ports explicitly OPEN.
+    # Historical plans keep an explicit OPEN observer. A current provider can
+    # declare its actual one-bit inputs; clock_landings validates that binding
+    # against the emitted native body before it can instantiate any ring.
     obs = dict(part=a.observer, **observer) if observer else dict(part=a.observer, module=plan["partition_types"][next(p["type"] for p in plan["partitions"]
                                                                     if p["name"] == a.observer)]["module"],
                instance_suffix="OPEN", fault_port="OPEN", ready_port="OPEN")

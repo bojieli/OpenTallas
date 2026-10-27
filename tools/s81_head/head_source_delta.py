@@ -25,7 +25,7 @@ def apply(plan, root, supplement):
     report = dict(sources={}, copy_b=[], taps=[])
     assigned = set()
     for tn, ty in out['partition_types'].items():
-        sources = ty.setdefault('sources', [])
+        sources = list(ty.get('sources', []))
         added = []
         while True:
             text = '\n'.join((root / s).read_text() for s in sources)
@@ -37,6 +37,7 @@ def apply(plan, root, supplement):
             sources.extend(newly)
             added.extend(newly)
         if added:
+            ty['sources'] = sources
             report['sources'][tn] = added
         assigned.update(s for s in extras if s in sources)
         for c in ty.get('contents', []):
