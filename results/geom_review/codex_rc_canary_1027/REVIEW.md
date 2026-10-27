@@ -11,3 +11,7 @@ Verdict: PASS-COND for generation and placement-only diagnostic canaries. Every 
 ## HBM SRAM actual placement, 08:28 PDT
 
 Viewed hbm_sram.actual_place.png from candidate ab3ae7c3a 3_place.odb. One large central SRAM leaves continuous standard-cell strips (about17um south/east,28um north,46um west), with no overlapping cells or macro wall. Registered pins remain on the east/south faces and clock entries on the rim. Buffers/logic spread around the macro; no newly created strip is cut off. PG binder reports36574 supply terminals,0 open. Shared60um repair adds1112 cells (17175->18287). The four inherited clock entry sites remain the reference geometry; insertion/timing remain measured gates. Verdict PASS-COND for one diagnostic canary continuation through CTS/route, preserving the old insertion/design failures and requiring final native timing/DRV checks.
+
+## QC actual placement, 08:31 PDT
+
+Viewed qwen_compute.actual_place.png from candidate ab3ae7c3a coll_ftm 3_place.odb. Four station bands align east-west, and the intervening parallel repeater rows leave open vertical access; no macros, overlaps or enclosed channels. Clock entries remain on the reference's station lattice. The main data/pin bands stay aligned. PG348168terms/0open. Shared60um repair126648->174084cells (+47436,37.5%): material buffer cost, to be reported with the timing result; outline remains sparse. Verdict PASS-COND for one diagnostic CTS/route continuation. This does not cure or waive the inherited control-input hold failure.
