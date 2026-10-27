@@ -1,0 +1,11 @@
+F4G_STAGE F4G chain start lock none input 5_1_grt_f4f_posthold.odb sha256 0ac7a4fbbd7703a8 2026-10-26T21:52:48-07:00
+F4G_NDR OT_CK_M6_2S spacing M2 0.018 M3 0.018 M4 0.024 M5 0.024 M6 0.096 M7 0.032 :: M6 w 32 s 96
+F4G_B1 clock_nets 106 tree_nets_ndr 37 signal_nets_guides_removed 24858
+F4G_B1_DONE clock_unrouted 0 signal_routed 0
+F4G_B1_DRC [INFO DRT-0199]   Number of violations = 0.
+F4G_B1_WFP WFP clk_nets 106 clk_sha cb0ee6a5c27ce891 sig_nets 24858 sig_routed 0 M6_shapes {'clk': 94, 'sig': 0}
+F4G_B1_TREE TL_TOTAL {'M2': 8.8, 'M3': 15.8, 'M4': 23.9, 'M5': 566.7, 'M6': 803.2, 'via': 730} M5_horiz_total 0.0
+M6_STRIP tree_nets_with_M6 33 tree_M6_shapes 279 spacing_dbu 32 side 80 end 160 obstructions 685
+F4G_STAGE F4G signal DRT start (5_1_grt.odb := 5_1_grt_f4g_clk.odb) 2026-10-26T21:54:48-07:00
+F4G_STAGE F4G signal DRT FAIL rc 137 2026-10-26T22:01:20-07:00
+VMR try1 note: signal DRT stopped by lane (docker stop) after the rp1 try1 FAIL diagnosis, rc 137 = deliberate stop, not a tool failure

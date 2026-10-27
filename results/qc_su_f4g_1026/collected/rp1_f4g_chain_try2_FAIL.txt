@@ -1,0 +1,22 @@
+F4G_STAGE F4G chain start lock none input 5_1_grt_f4f_posthold.odb sha256 a9cc04572297929f 2026-10-26T22:02:02-07:00
+F4G_NDR OT_CK_M6_2S spacing M2 0.018 M3 0.018 M4 0.024 M5 0.024 M6 0.096 M7 0.032 :: M6 w 32 s 96
+F4G_B1 clock_nets 113 tree_nets_ndr 44 signal_nets_guides_removed 15292
+F4G_B1_DONE clock_unrouted 0 signal_routed 0
+F4G_B1_DRC [INFO DRT-0199]   Number of violations = 0.
+F4G_B1_WFP WFP clk_nets 113 clk_sha 7dd6b0487c2a3d97 sig_nets 15292 sig_routed 0 M6_shapes {'clk': 97, 'sig': 0}
+F4G_B1_TREE TL_TOTAL {'M2': 4.1, 'M3': 15.4, 'M4': 25.3, 'M5': 606.2, 'M6': 1060.8, 'via': 796} M5_horiz_total 0.0
+M6_STRIP tree_nets_with_M6 40 tree_M6_shapes 292 spacing_dbu 32 side 80 end 160 obstructions 701
+F4G_STAGE F4G signal DRT start (5_1_grt.odb := 5_1_grt_f4g_clk.odb) 2026-10-26T22:03:11-07:00
+F4G_SIG_PRE clock_nets_prerouted 113 ndr_cleared 44 lock none m6_obstructions 701
+F4G_SIG_POST m6_obstructions_removed 701 clock_nets_unlocked 0
+F4G_B2 "detailedroute__route__drc_errors": 0 M6_CENSUS nets_on_M6 {'other': 12, 'tree': 40} M6_um {'other': 22.0, 'tree': 1060.7} non_tree_examples ['_1712_', '_1751_', '_1863_', 'g_cext\\[2\\].oh0\\[5\\]', 'g_cext\\[2\\].oh0\\[6\\]']
+F4G_B2_WFP WFP clk_nets 113 clk_sha 61f2f5223d9cf5e7 sig_nets 15292 sig_routed 15292 M6_shapes {'clk': 97, 'sig': 13}
+F4G_LOCK SOFT clock wires changed by the signal route (7dd6b0487c2a3d97 -> 61f2f5223d9cf5e7); per-net diff:
+CLKDIFF changed_nets 5 of 113
+CLKDIFF ot_ms_Q0B1_n removed [('M3', 45648, 196362, 45666, 196389), ('M4', 45645, 196368, 45672, 196392), ('M5', 45648, 196356, 45672, 196392), ('M6', 40412, 196352, 45676, 196384)] added [('M2', 45648, 196362, 45846, 196380), ('M3', 45828, 196362, 45846, 196389), ('M4', 45600, 196368, 45849, 196392), ('M5', 45600, 196356, 45624, 196392)] 8 9
+CLKDIFF ot_ms_Q1B0L3_clk removed [('M2', 77328, 185796, 78282, 185814), ('M2', 77544, 186786, 78642, 186804), ('M2', 78192, 185670, 78282, 185688), ('M2', 78192, 186336, 78282, 186354)] added [('M2', 77292, 185868, 77454, 185886), ('M2', 77436, 186786, 77562, 186804), ('M2', 77544, 186786, 78210, 186804), ('M2', 78192, 186786, 78642, 186804)] 32 55
+CLKDIFF ot_ms_Q1B1L1_clk removed [('M2', 85428, 187866, 85878, 187884), ('M2', 87516, 187596, 87876, 187614), ('M2', 87516, 187992, 87678, 188010), ('M3', 85428, 187596, 85446, 187884)] added [('M2', 85860, 187596, 85950, 187614), ('M2', 87516, 187866, 87642, 187884), ('M2', 87516, 188100, 87678, 188118), ('M2', 87624, 187596, 87876, 187614)] 12 15
+CLKDIFF ot_ms_Q4B0L2_clk removed [('M2', 7740, 170712, 8910, 170730), ('M2', 8280, 167850, 8910, 167868), ('M2', 8892, 170712, 9738, 170730), ('M2', 9396, 169596, 9702, 169614)] added [('M2', 7740, 170712, 8082, 170730), ('M2', 8856, 167742, 8910, 167760), ('M2', 8892, 170712, 9342, 170730), ('M2', 9252, 168552, 9450, 168570)] 58 104
+CLKDIFF ot_ms_Q6B0L2_clk removed [('M2', 24876, 10710, 25974, 10728), ('M2', 25344, 9090, 27054, 9108), ('M2', 25956, 11376, 27126, 11394), ('M2', 27036, 9216, 27234, 9234)] added [('M2', 24876, 10710, 25002, 10728), ('M2', 25344, 9054, 25830, 9072), ('M2', 27036, 9252, 27198, 9270), ('M2', 27180, 9216, 28314, 9234)] 23 41
+F4G_B2_TREE TL_TOTAL {'M2': 4.3, 'M3': 15.4, 'M4': 25.5, 'M5': 606.2, 'M6': 1060.7, 'via': 796} M5_horiz_total 0.0
+F4G_STAGE F4G LAYER_SEP FAIL: non-tree net on M6 after the one signal route 2026-10-26T22:07:43-07:00
