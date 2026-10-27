@@ -358,7 +358,14 @@
   "source": "d4g as-built die_r18h5.v instance hb_vms_NW (module hfd_hgi_vms_glue_nw_t); files = closure of hfd_hgi_vms_glue_nw_t at d34578d6f",
   "source_commit": "d34578d6f",
   "read_at_commit": true,
-  "asbuilt_inst": "hb_vms_NW"
+  "asbuilt_inst": "hb_vms_NW",
+  "lec_hints_basis": "Source expected[0][i] Q bits map Slang expected[9-3*i], versus gate expected#t[i][0]; each source-geometry candidate is independently proved by lec.py",
+  "lec_hints": [
+   ["gate", "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected#t[0][0]", ["eq", "gold", "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected[9]", 0]],
+   ["gate", "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected#t[1][0]", ["eq", "gold", "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected[6]", 0]],
+   ["gate", "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected#t[2][0]", ["eq", "gold", "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected[3]", 0]],
+   ["gate", "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected#t[3][0]", ["eq", "gold", "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected[0]", 0]]
+  ]
  },
  "hfd_vms_bank_native_q0_faces": {
   "top": "hfd_vms_bank_native_q0_faces",
