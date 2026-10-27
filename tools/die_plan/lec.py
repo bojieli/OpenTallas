@@ -2798,10 +2798,15 @@ def _noreset_held(L, consts, sides, cycles, extra, banned):
     for (sd, k), c in consts.items():
         for s in sides(sd):
             v, e = L.rst_val.get((s, k), (None, None))
+            edges = [e or 1] if v == c else []
             if getattr(L, "raw_constant_status", {}).get((s, k, c)) == "proved":
-                held[(s, k)] = 1           # D == c for ALL inputs/state, including every RTL X
-            elif v == c:
-                held[(s, k)] = e or 1
+                edges.append(1)           # D == c for ALL inputs/state, including every RTL X
+            prefix = getattr(L, "raw_prefix_edges", {}).get((s, k, c))
+            if prefix is not None and (prefix <= cycles or
+                    (sd != "both" and k not in matched and (s, k) not in banned)):
+                edges.append(prefix)
+            if edges:
+                held[(s, k)] = min(edges)
     hyp_side = lambda s, j: (("both", j) in consts) or ((s, j) in consts)
     for e in range(1, cycles + extra + 1):
         new = {}
@@ -2866,6 +2871,87 @@ def raw_constant_bases(L, work, conflicts, log):
     L._raw_constant_batch = batch
 
 
+def raw_prefix_miter(d, roots, steps):
+    """Unroll raw source literals after `steps` clocks from entirely free state.
+
+    Each source PI (including RTL X) is fresh at EACH edge. Latches at time
+    zero are independent inputs. Only the requested time-expanded cones are
+    copied; shared state aliases and within-edge PI correlations are preserved.
+    No reset, hypothesis, X mask or state constraint enters this AIG.
+    Roots are logical next-state literals, so frame steps-1 is state at steps.
+    """
+    if not isinstance(steps, int) or steps < 1:
+        raise ValueError("raw prefix steps must be a positive integer")
+    roots = list(roots)
+    I, N, a = d["I"], d["L"], d["ands"]
+    base = I + N + 1
+    order, seen, leaves = [], set(), set()
+    stack = [(steps - 1, lit >> 1, False) for lit in roots]
+    while stack:
+        t, v, done = stack.pop()
+        key = (t, v)
+        if v == 0 or key in seen:
+            continue
+        if v <= I or (v < base and t == 0):
+            seen.add(key)
+            leaves.add(key)
+        elif done:
+            seen.add(key)
+            order.append(key)
+        else:
+            stack.append((t, v, True))
+            if v < base:
+                stack.append((t - 1, d["latches"][v - I - 1] >> 1, False))
+            else:
+                j = 2 * (v - base)
+                stack.extend(((t, a[j] >> 1, False), (t, a[j + 1] >> 1, False)))
+    m = Aig()
+    vals = {key: m.add_input(f"raw_t{key[0]}_v{key[1]}") for key in sorted(leaves)}
+
+    def value(t, lit):
+        return (vals[(t, lit >> 1)] if lit >> 1 else 0) ^ (lit & 1)
+
+    for t, v in order:
+        if v < base:
+            vals[(t, v)] = value(t - 1, d["latches"][v - I - 1])
+        else:
+            j = 2 * (v - base)
+            vals[(t, v)] = m.AND(value(t, a[j]), value(t, a[j + 1]))
+    m.outs = [value(steps - 1, lit) for lit in roots]
+    return m
+
+
+def raw_prefix_bases(L, candidates, steps, work, conflicts, log):
+    """Prove requested constant bases after an exact finite prefix, unconditionally.
+
+    This is opt-in proof work, not a duration contract: all initial state and
+    every time-step input remain free. Late bases still pass release_unmasked
+    before use; final induction proves preservation. SAT/undecided prove no base.
+    """
+    cache = L.__dict__.setdefault("raw_prefix_status", {})
+    edges = L.__dict__.setdefault("raw_prefix_edges", {})
+    for side, d, points in (("gold", L.gold, L.gc), ("gate", L.gate, L.tc)):
+        todo = sorted({(k, c) for s, k, c in candidates if s == side
+                       and (s, k, c, steps) not in cache})
+        if not todo:
+            continue
+        if any(k not in points or c not in (0, 1) for k, c in todo):
+            raise LecError("invalid raw prefix base candidate")
+        m = raw_prefix_miter(d, [points[k] for k, c in todo], steps)
+        m.outs = [lit ^ c for lit, (k, c) in zip(m.outs, todo)]
+        m.onames = [f"raw-prefix:{side}:{k}:{c}:{steps}" for k, c in todo]
+        batch = L.__dict__.get("_raw_prefix_batch", 0)
+        status = prove(m, work, conflicts, log, tag=f"rawprefix{batch}_{side}_{steps}")
+        L._raw_prefix_batch = batch + 1
+        for (k, c), name in zip(todo, m.onames):
+            result = status.get(name, "undecided")
+            cache[(side, k, c, steps)] = result
+            if result == "proved":
+                edges[(side, k, c)] = min(steps, edges.get((side, k, c), steps))
+        log.append(f"universal raw prefix {side} at edge {steps}: "
+                   f"{sum(status.get(n) == 'proved' for n in m.onames)} / {len(todo)} bases")
+
+
 def noreset_filter(L, log, tried, work=None, conflicts=1000):
     """Constant hypotheses on registers that are not that constant in the reset state (LEC-TOOL-4 10-27, COORD
     ruling on no-reset constants).  The correspondence induction proves Q == c -> D(Q) == c; its base case is the
@@ -2878,6 +2964,12 @@ def noreset_filter(L, log, tried, work=None, conflicts=1000):
     power-up value equals a constant. -> number dropped."""
     if work is not None:
         raw_constant_bases(L, work, conflicts, log)
+        steps = int(os.environ.get("OT_LEC_RAW_BASE_STEPS", "0"))
+        if steps > 1:
+            ok = noreset_sound(L)
+            candidates = [(s, k, h[1]) for (sd, k), h in L.hyp.items() if h[0] == "const" and (sd, k) not in ok
+                          for s in (("gold", "gate") if sd == "both" else (sd,))]
+            raw_prefix_bases(L, candidates, steps, work, conflicts, log)
     total = 0
     while True:                     # dropping one can unseat a register reloaded from it
         ok = noreset_sound(L)
@@ -2910,8 +3002,10 @@ def noreset_report(L):
         cyc = int(os.environ.get("OT_LEC_RESET_CYCLES", "4"))
         sides = ("gold", "gate") if sd == "both" else (sd,)
         raw = all(getattr(L, "raw_constant_status", {}).get((s, k, h[1])) == "proved" for s in sides)
+        prefix = all(getattr(L, "raw_prefix_edges", {}).get((s, k, h[1])) == edge for s in sides)
         kept.append(dict(register=k, side=sd, value=h[1], edge=edge,
                          basis="universal_raw_D" if raw else
+                               "universal_raw_prefix" if prefix else
                                "reset" if edge <= 1 else "reloaded" if edge <= cyc else "release"))
     dropped = [dict(register=k, side=sd, value=c) for (sd, k), c in sorted(getattr(L, "noreset_dropped", {}).items())
                if (sd, k) not in L.hyp]
@@ -2921,6 +3015,9 @@ def noreset_report(L):
                 release=[e for e in kept if e["basis"] == "release"][:500],
                 n_universal_raw_D=sum(1 for e in kept if e["basis"] == "universal_raw_D"),
                 universal_raw_D=[e for e in kept if e["basis"] == "universal_raw_D"][:500],
+                raw_base_steps=int(os.environ.get("OT_LEC_RAW_BASE_STEPS", "0")),
+                n_universal_raw_prefix=sum(1 for e in kept if e["basis"] == "universal_raw_prefix"),
+                universal_raw_prefix=[e for e in kept if e["basis"] == "universal_raw_prefix"][:500],
                 n_kept=len(kept), n_reloaded=sum(1 for e in kept if e["basis"] == "reloaded"),
                 n_dropped=len(dropped), reloaded=[e for e in kept if e["basis"] == "reloaded"][:500],
                 dropped=dropped[:500],
@@ -4433,6 +4530,8 @@ def via_docker(args, image, mem):
     # optional XOR-aware SAT backend: OT_LEC_SOLVER = a host dir holding pycryptosat for the image's python (cp310)
     if os.environ.get("OT_LEC_SUPERSET_VEC") == "1":
         cmd += ["-e", "OT_LEC_SUPERSET_VEC=1"]
+    if "OT_LEC_RAW_BASE_STEPS" in os.environ:
+        cmd += ["-e", f"OT_LEC_RAW_BASE_STEPS={os.environ['OT_LEC_RAW_BASE_STEPS']}"]
     sol = os.environ.get("OT_LEC_SOLVER", "")
     if sol and os.path.isdir(sol):
         cmd += ["-v", f"{os.path.abspath(sol)}:/lecsolver:ro", "-e", "LEC_SOLVER_PATH=/lecsolver"]
