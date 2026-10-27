@@ -30,7 +30,7 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
 
 ## DIE s81_head · S81 head die · rev UNFROZEN d7b8d1eb · after QC
 - [ ] HEAD.INFRA Infra-first plan event (+ HEAD8 batch 187b63494b if approved) · INFRA-FIRST · WAITS · PENDING-DELTA D-INFRA-FIRST-HEAD holds all 16 type routes → IF.TOOL
-- [ ] HEAD.CLK elemA/elemB · HEAD-CORE-R12 · RUNNING · LEC r11 EQ both; elemA hold2 signed off (TT +93.06/FF +0.99); elemB sign-off + repaired-export LEC + route · ETA freeze est 10-29..30
+- [ ] HEAD.CLK elemA/elemB · HEAD-CORE-R12 · RUNNING · hold2 GRT A/B TT +118.5/+120.6, FF hold +10.6/+10.7 (0 viol); neither signed off yet (A 'SIGNED' log was stale 10-25); repaired-export LEC -> route+signoff chains live intel1/epyc2 (10-27 00:27) · ETA freeze est 10-29..30
 - [ ] HEAD.GRT Die GRT0 incl. clock on the infra-first plan · INFRA-FIRST · WAITS · old d7b8d1eb signal GRT0 no longer counts → HEAD.INFRA
 - [ ] HEAD.BIND Whole-head as-built bind · CODEX / PATH-S81 · WAITS · source d0eb3d3d01; host/mesh/rank-row contract = spec item (no owner input)
 - [ ] HEAD.STA Die STA on real views · DIE-PROTO · WAITS · → HEAD.CLK, → HEAD.TILES
