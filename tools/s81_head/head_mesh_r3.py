@@ -492,6 +492,97 @@ def build_tree_sym(drv, st_rows, et, root, trunk_x, mult):
     return nodes, top, info, moves
 
 
+def build_tree_r18(drv, st_rows, et, root, trunk_x, mult, xoff=4.32):
+    """HEAD-CORE-R18 (COORD R17 ruling 5): shorten the R17 equal-leg H (17.49 mm unshared path vs 14.00 mm Manhattan
+    bound) without giving up sibling balance.  Two structural changes, no meander / trim:
+      (1) OUTER-ANCHORED half lattices.  R17 centred each binary lattice on its leaf set, so a 16-slot lattice holding
+          11 columns (x) or 14 rows (y) wasted the unused end slots on BOTH sides.  Here each half (x: left/right of the
+          spine; y: below/above the die centre row) gets its own binary lattice whose OUTERMOST leaf sits on the
+          extreme slot; the pruned slots are on the spine/centre side, so the root->leaf path equals the Manhattan
+          distance to the farthest leaf (the bound) in both axes.
+      (2) station rows carry no tree drivers: their M8 straps are continuous-mesh rows fed through the M9 columns, like
+          the serdes-strip rows (sd_rows) already are.  R17 re-sited them onto lattice slots off every declared island
+          (36 drivers + their x-trees = the clock_sites FAIL).  12 tile rows = 6 per half on an 8-slot lattice.
+    Islands: x-lattice nodes would sit on tile boundaries (outline crossing, ROOT-MERGE-32 snap_inside); every x-tree
+    (nodes AND leaves) of a half is translated by xoff toward the half's outside... (uniform translation: legs unchanged,
+    nodes on the snapped edge islands 4.32 / 704.16, drivers at tile channel x 354.24 +- xoff).  y nodes fall on the
+    spine channel-midpoint rows (spine frame 872.64 / 1909.44).  d1 sizing as R17.  Returns (nodes, top, info, {})."""
+    st_set = set(st_rows)
+    rows = defaultdict(list)
+    for x, y in drv:
+        if r3(y) in st_set:
+            continue
+        rows[r3(y)].append(float(x))
+    ys = sorted(rows)
+    py = sorted(b - a for a, b in zip(ys, ys[1:]))[len(ys) // 2]
+    yc = (ys[0] + ys[-1]) / 2
+    lo = [y for y in ys if y < yc]
+    hi = [y for y in ys if y > yc]
+    allx = sorted({x for xs in rows.values() for x in xs})
+    left = [x for x in allx if x < trunk_x]
+    right = [x for x in allx if x > trunk_x]
+    px = sorted(b - a for a, b in zip(left, left[1:]))[(len(left) - 1) // 2]
+    mir = [r3(2 * trunk_x - x) for x in right]
+    if any(min(abs(m - l) for l in left) > 0.05 for m in mir) or len(lo) != len(hi):
+        raise SystemExit("--r18: drivers not mirror-symmetric")
+
+    def anchor(vals, pitch, outer_sign):
+        n = round(abs(vals[-1] - vals[0]) / pitch) + 1
+        L = 1
+        while 2 ** L < n:
+            L += 1
+        outer = vals[0] if outer_sign < 0 else vals[-1]
+        return outer - outer_sign * (2 ** (L - 1) - 0.5) * pitch, L
+    cl, Lx = anchor(left, px, -1)
+    cl += xoff
+    cr = 2 * trunk_x - cl
+    nodes, rroots = [], {}
+    for i, y in enumerate(ys):
+        lv = {}
+        for x in sorted(rows[y]):
+            xs_ = x + (xoff if x < trunk_x else -xoff)
+            n = dict(tag=f"r{i:02d}_{x:.0f}", xy=(r3(xs_), y), kids=[], T={"TT": 0.0, "FF": 0.0}, S=0, et=et, drive_mult=mult)
+            nodes.append(n)
+            lv[xs_] = n
+        hl = _h1d(nodes, et, f"r{i:02d}_L", "x", y, cl, 2 ** (Lx - 1), px, {x: n for x, n in lv.items() if x < trunk_x}, mult)
+        hr = _h1d(nodes, et, f"r{i:02d}_R", "x", y, cr, 2 ** (Lx - 1), px, {x: n for x, n in lv.items() if x > trunk_x}, mult)
+        kids = [k for k in (hl, hr) if k is not None]
+        leg = abs(trunk_x - cl)
+        rn = dict(tag=f"r{i:02d}_", xy=(r3(trunk_x), y), kids=[k["tag"] for k in kids], T={"TT": 0.0, "FF": 0.0}, S=0,
+                  et=et, drive_mult=mult * len(kids), level_leg_um=r3(leg))
+        for k in kids:
+            k["parent"], k["leg"], k["nseg"], k["et"] = rn["tag"], leg, et.nseg(leg), et
+        nodes.append(rn)
+        rroots[y] = rn
+    cu, Ly = anchor(hi, py, +1)
+    cd = 2 * yc - cu
+    hu = _h1d(nodes, et, "YU", "y", trunk_x, cu, 2 ** (Ly - 1), py, {y: rroots[y] for y in hi}, mult)
+    hd = _h1d(nodes, et, "YD", "y", trunk_x, cd, 2 ** (Ly - 1), py, {y: rroots[y] for y in lo}, mult)
+    leg = abs(cu - yc)
+    top = dict(tag="Y", xy=(r3(trunk_x), r3(yc)), kids=[hu["tag"], hd["tag"]], T={"TT": 0.0, "FF": 0.0}, S=0, et=et,
+               drive_mult=mult * 2, level_leg_um=r3(leg))
+    for k in (hu, hd):
+        k["parent"], k["leg"], k["nseg"], k["et"] = "Y", leg, et.nseg(leg), et
+    nodes.append(top)
+    lost = [n["tag"] for n in nodes if not n["kids"] and not n.get("parent")]
+    if lost:
+        raise SystemExit(f"--r18: {len(lost)} drivers not on the tree (e.g. {lost[:3]})")
+    if Q.md(top["xy"], root) > 1e-6:
+        top = Q.lift(top, tuple(root), et, "SRC", nodes)
+    top["parent"] = None
+    for n in nodes:
+        n["T"] = {"TT": 0.0, "FF": 0.0}
+        n["S"] = 0
+    info = dict(form="outer-anchored half-lattice binary H (R18)", trunk_x=r3(trunk_x), x_island_offset_um=xoff,
+                row_lattice=dict(centre=r3(yc), half_centres=[r3(cd), r3(cu)], pitch=r3(py), levels=Ly),
+                col_lattice=dict(left_centre=r3(cl), right_centre=r3(cr), pitch=r3(px), levels=Lx),
+                station_rows="mesh rows without tree drivers (fed through M9 columns, as sd_rows)",
+                sizing=dict(rule="12.8 d1: drive_mult = base x children (as R17)", base_mult=mult,
+                            nodes_half_drive=sum(1 for n in nodes if n.get("kids") and len(n["kids"]) == 1)),
+                lifted_rows=[])
+    return nodes, top, info, {}
+
+
 def edge_pins(PL, pins):
     """die-frame position of every real-core clock pin (R12 kit pins.json), rebuilt outline, plan origin + orient."""
     out = []
@@ -565,6 +656,8 @@ def main(argv=None):
                     "of the plan die.pg.grid (16W)")
     ap.add_argument("--spine-columns", action="store_true", help="INFRA-FIRST-HEAD-4: M9 straps across the spine gap")
     ap.add_argument("--symmetric", action="store_true", help="HEAD-CORE-R17: equal-leg binary H re-site (build_tree_sym)")
+    ap.add_argument("--r18", action="store_true", help="HEAD-CORE-R18: outer-anchored half lattices, no station tree drivers (build_tree_r18)")
+    ap.add_argument("--r18-xoff", type=float, default=4.32, help="R18 x-tree translation onto the snapped edge islands (um)")
     ap.add_argument("--m8-max-pitch", type=float, default=0.0, help="HEAD-CORE-R17: densify tile-array M8 rows to <= this pitch (um)")
     ap.add_argument("--out", required=True)
     a = ap.parse_args(argv)
@@ -585,7 +678,10 @@ def main(argv=None):
     st = Q.Stage(a.stage)
     et = Q.EdgeType(st, a.top_w, a.top_m, a.reach)
     root = tuple(PL.P["clock"]["spine"]["root_um"])
-    if a.symmetric:
+    if a.r18:
+        nodes, top, info, _ = build_tree_r18(drv, st_rows, et, root, TRUNK_X, a.top_m, a.r18_xoff)
+        drv = sorted({(r3(n["xy"][0]), r3(n["xy"][1])) for n in nodes if not n["kids"]})
+    elif a.symmetric:
         nodes, top, info, moves = build_tree_sym(drv, st_rows, et, root, TRUNK_X, a.top_m)
         if moves:   # station driver rows re-sited onto lattice slots: one M8 strap per new row over the station band
             sx0 = min(p["rect"][0] for p in PL.parts if p["type"] in STATIONS)
