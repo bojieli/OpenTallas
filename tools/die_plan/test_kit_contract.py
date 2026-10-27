@@ -261,3 +261,26 @@ def test_island_macro_clear_mutants(kit):
     assert verdicts(kit)["island_macro_clear"] == "FAIL"           # rtl_macro_placer without the island guard
     (kit / "island_ft.json").unlink()
     assert verdicts(kit)["island_macro_clear"] == "NA"
+
+
+def test_pins_canonical_plan_table_with_dir(tmp_path):
+    """QK-CORES-6 (QC btab profile1713): a plan pin table carrying netlist "dir" per pin (opentallas.core_pins.v1) is
+    judged on placement only (io.tcl has no direction); a moved pin still FAILs."""
+    import hashlib
+    kd = tmp_path / "k"
+    kd.mkdir()
+    rows = [dict(name="a[0]", layer="M5", x=10.02, y=0.042, face="S", dir="in"),
+            dict(name="q[0]", layer="M4", x=99.958, y=20.016, face="E", dir="out")]
+    doc = dict(schema="opentallas.core_pins.v1", core="k", pins=rows)
+    b = json.dumps(doc).encode()
+    (kd / "plan_pins.json").write_bytes(b)
+    (kd / "io.tcl").write_text("".join(f"place_pin -pin_name {{{r[name]}}} -layer {r[layer]} -location "
+                                       f"{{{r[x]:.4f} {r[y]:.4f}}} -pin_size {{0.024 0.084}}\n" for r in rows))
+    (kd / "freeze.json").write_text(json.dumps(dict(
+        outline_um=[100.0, 100.0], pins_file="cores/x/k_pins.json", pins_sha256=hashlib.sha256(b).hexdigest(),
+        pins_canon_sha256=KC._canon(doc, [100.0, 100.0]))))
+    errors, info = KC.pins_canonical(kd)
+    assert not errors and info["plan_file"].endswith("plan_pins.json")
+    (kd / "io.tcl").write_text((kd / "io.tcl").read_text().replace("{10.0200 0.0420}", "{10.0680 0.0420}"))
+    errors, _ = KC.pins_canonical(kd)
+    assert errors and "plan pin file" in errors[0]
