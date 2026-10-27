@@ -403,9 +403,13 @@ def pin_xy(cells, c, pin, row_y, buf="BUFx24_ASAP7_75t_R"):
     lib = v.get("lib", buf)
     if lib not in PIN_BAR_X:
         raise PlanError([dict(kind="no_pin_stack", name=c, detail=f"no pin-bar model for {lib}")])
-    if v.get("orient", "R0") not in ("R0", "MX"):
+    if v.get("orient", "R0") not in ("R0", "MX", "MY", "R180"):
         raise PlanError([dict(kind="no_pin_stack", name=c, detail=f"orient {v.get('orient')} not modelled")])
-    return round(v["x"] + PIN_BAR_X[lib][pin], 4), round(v["y"] + row_y / 2, 4)
+    bar = PIN_BAR_X[lib][pin]
+    if v.get("orient") in ("MY", "R180"):
+        # ASAP7 buffer footprint is the Y-bar x plus the 0.027-um edge margin.
+        bar = PIN_BAR_X[lib]["Y"] + PIN_BAR_X[lib]["A"] - bar
+    return round(v["x"] + bar, 4), round(v["y"] + row_y / 2, 4)
 
 
 def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False):
