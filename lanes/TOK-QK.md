@@ -41,3 +41,12 @@ B33 run7 boot now PASS (KV-TOK collection); B48 build3 DONErc0 but inherited asi
     - smoke on the r4 binary (L0 d0_g0, old far end) oth-ubuntu-365470-1793092993.
   - Limitation: the 36 layers cannot be 36 independent sims, because the calendar runs L0..L35 back to back in one token. Each layer-L sim would replay boot plus L0..L-1. The parallel axis is therefore heads x mutants.
   - Collect from /srv/opentallas-scratch2/claude/tok-qk-kvl/{chain.log,runs/*/sim.log,smoke_old/sim.log}.
+- 10-27 02:52 TOK-QK-KVL real history (COORD: the final verdict uses the real prefill history, not the declared pattern). UNCHECKED until post.log DONE.
+  - Prefill: epyc2 docker kvh-prefill (-m 220g, 96 cpu), running kvl_prefill_hist.py. It uses the released Qwen3-8B HF snapshot (W8 folded = the chip ROM codes, prep-checked vs fx/tp4; FP8 KV), on tokens 0..8190.
+  - Output: epyc2:/srv/opentallas-scratch2/claude/tok-qk-kvh/hist_real/L<n>_die<d>.bin + manifest.json. This is the same u32 layout as the declared history.
+  - Chain: epyc2 tok-qk-kvh/real_post.sh, log post.log. Steps:
+    1. check rows 0..15 vs the ISA golden's own prefill (pf16) -> hist_check.json;
+    2. history-seeded ISA golden decode at P8191 -> gold_real;
+    3. kv_attn_vectors -> vec_real (36 layers x 8 heads, kv.hex in the format kv_preload.py --as-layer consumes);
+    4. rsync to intel2:/srv/opentallas-scratch2/claude/tok-qk-kvl/vec_real (+.done or .failed).
+  - intel2 chain.sh (re-armed) now waits for both the build and vec_real/.done, then launches the 12 sims on vec_real. The declared vec stays for smoke/debug only.
