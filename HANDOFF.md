@@ -1446,3 +1446,5 @@ CODEX: 2026-10-27 09:46 PDT SYS_C4561FAIL diagnosed as timebudget-clearedallH af
 CODEX: 2026-10-27 09:46 PDT CODEX HEAD bootstrap QUALIFIED: a480f95d1 + actual coupon fa34757d2/459ad0359; 3 pre-START HOST276 payload frames in old/new, new raw epochs and PHY reset correct, mission leaves held; 201 post-START equal comparisons, zero added source cycles. Native PHY packet/token and production authority remain open.
 
 2026-10-27 09:46 PDT CODEX: QC R6 PG FAIL diagnosed (all-R0 stacks short actual LEF rails); no route. Canonical row/pin+dieedge fix0a3c806f9 READY,21focusedPASS; exporter successor8 running next. R25 inherited DRC stilllive.
+
+CODEX: 2026-10-27 09:49 PDT HEAD transport coupon PASS fa34757d2:3 real HOST276 frames move pre-START in old/new payload, candidate epochs/PHY reset1 vs0, mission cores0;201 post-START comparisons equal. Production recipe still BLOCKED2 on actual HBC/START authority.
