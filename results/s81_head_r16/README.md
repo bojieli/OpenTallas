@@ -51,3 +51,10 @@ on every data input, and output min 0. The sign-off FF hold uses bound-ff 202.5 
 ## Ruling 2: strap LEC
 intel2 pid 3013060 was already gone at 06:0x. The monolithic run had FINISHED at 05:41 with `HEAD_STRAP_LEC EQUIVALENT
 instances=264 ... 1682472 proven, 0 unproven` (hb4_lec/all/lec.txt, CHECKED). It agrees with the chunked 264/264.
+
+### First R16 GRT read (06:4x PDT, from the 5_1_grt.tmp.log; own tool, UNCHECKED-independent)
+- The per-mode sessions are live. elemA m2: `OT_HOLD_MM sync: SS setup ws 122.88 / FF hold ws -102.82 ps`. m12: 123.12 / -102.96.
+- So the TRUE FF requirement at the worst input pin register is about 103 ps (GRT RC). That is roughly 3 HB4 there.
+- The R14 tree delivers FF clock about 25 ps later than hold2 (hold2 RCX FF 184.8), which adds about 25 ps of
+  contract padding to every input pin register (in_min -40 vs vclk 202.5). That is the in-band cost of the centre
+  entry, not a bug. The TT phantom is gone.
