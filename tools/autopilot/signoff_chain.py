@@ -5,6 +5,7 @@ Runs inside the same ot-run allocation as the physical runner. Diagnostic CTS/GR
 goals remain diagnostics. Existing runner corner/hold policy takes precedence.
 """
 import argparse
+import hashlib
 import json
 import subprocess
 import sys
@@ -19,7 +20,7 @@ def load(path):
         return {}
 
 
-def continue_kit(kit, runner, goal, mem, threads, run=subprocess.call, preflight=None, proof_only=False):
+def continue_kit(kit, runner, goal, mem, threads, run=subprocess.call, preflight=None, proof_only=False, netlist=None):
     kit = Path(kit).resolve()
     started = time.time()
     prior = {str(p): (p.stat().st_mtime_ns, p.stat().st_size)
@@ -75,7 +76,30 @@ def continue_kit(kit, runner, goal, mem, threads, run=subprocess.call, preflight
     if physical.get("verdict") not in ("SIGNED", "LOCAL_PASS_NEEDS_PARENT"):
         return done(1, "NOT_SIGNED", "physical signoff did not pass")
     base = Path((physical.get("inputs") or {}).get("base", ""))
-    netlist = base / "6_final.v"
+    if netlist and (goal != "collect" or Path(netlist).name != netlist or not netlist.endswith(".v")):
+        return done(3, "LEC_MISSING", "explicit logical export requires collect and a routed-base .v basename")
+    netlist = base / (netlist or "6_final.v")
+    if netlist.name != "6_final.v":
+        exported = load(netlist.with_suffix(netlist.suffix + ".export.json"))
+        odb = base / "6_final.odb"
+        def sha(path):
+            h = hashlib.sha256()
+            with path.open("rb") as source:
+                for chunk in iter(lambda: source.read(1 << 20), b""):
+                    h.update(chunk)
+            return h.hexdigest()
+        if (not netlist.is_file() or not odb.is_file() or
+                exported.get("odb_sha256") != sha(odb) or
+                exported.get("netlist_sha256") != sha(netlist) or
+                not isinstance(exported.get("command"), str) or
+                "write_verilog" not in exported["command"] or
+                not isinstance(exported.get("excluded_masters"), list) or
+                not exported["excluded_masters"] or
+                not all(isinstance(m, str) and m for m in exported["excluded_masters"]) or
+                type(exported.get("excluded_signal_iterms")) is not int or
+                exported["excluded_signal_iterms"] != 0):
+            return done(3, "LEC_MISSING", "logical export requires paired ODB/netlist hashes, export command and zero excluded signal ITerms")
+        receipt["logical_export"] = exported
     if not netlist.is_file() or not (kit / "lec.py").is_file():
         return done(3, "LEC_MISSING", "routed 6_final.v and staged lec.py required")
     proof = kit / ("lec_routed_autopilot_" + str(time.time_ns()))
@@ -94,6 +118,7 @@ def continue_kit(kit, runner, goal, mem, threads, run=subprocess.call, preflight
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--proof-only", action="store_true", help="resume proof of an existing signed route, never reroute")
+    ap.add_argument("--netlist", help="collect-only logical export basename in the signed routed base")
     ap.add_argument("--preflight", help="separately staged shared tool, including its source helpers")
     ap.add_argument("runner")
     ap.add_argument("kit")
@@ -101,7 +126,7 @@ def main():
     ap.add_argument("mem", type=int)
     ap.add_argument("threads", type=int)
     a = ap.parse_args()
-    return continue_kit(a.kit, a.runner, a.goal, a.mem, a.threads, preflight=a.preflight, proof_only=a.proof_only)
+    return continue_kit(a.kit, a.runner, a.goal, a.mem, a.threads, preflight=a.preflight, proof_only=a.proof_only, netlist=a.netlist)
 
 
 if __name__ == "__main__":

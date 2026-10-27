@@ -26,8 +26,9 @@ Columns (TAB separated; '#' lines are comments):
   src     branch@sha the kit was generated from
   geom    PASS | PASS-COND (GEOM-REVIEW verdict; anything else waits) ; geom_ref = where the verdict is recorded
   mem_gb  honest ot-run --mem (peak of a comparable run + margin) ; cells = expected std cells (<= 400000)
-  goal    route (default for run_kit.sh) | finish (default for run_kit_kv.sh / run_kit_hbm.sh)
+  goal    route (default for run_kit.sh) | finish (default for run_kit_kv.sh / run_kit_hbm.sh) | collect (explicit collector only)
   runner  path of the run script on the kit host (default: KIT/run_kit*.sh, else KIT/../run_kit*.sh)
+  routed_netlist collect-only optional logical export basename, with paired ODB/export receipt
 The last row for an id wins (id = sha1(kit|src|goal)); a new src for the same kit is a new job.
 
 Outputs (hub ~/coord/autopilot/, rsynced to rtx-pro): log.txt, state.json, signed.tsv, review.tsv, structural.tsv,
@@ -94,7 +95,7 @@ KIT_RE = re.compile(r"^([A-Za-z0-9_.-]+):(/srv/opentallas-scratch2?/claude/[A-Za
 SRC_RE = re.compile(r"^[A-Za-z0-9_./-]+@[0-9a-f]{7,40}$")
 GEOM_OK = ("PASS", "PASS-COND")
 QCOLS = ["die", "type", "kit", "src", "geom", "geom_ref", "mem_gb", "cells", "lane", "goal", "runner", "threads", "mode", "canary_fix",
-         "flow"]
+         "flow", "routed_netlist"]
 # PER-DIE FLOW RELEASES (METHODOLOGY 12.9e, OWNER 2026-10-26): flow-YYYYMMDD-a|b covers every die;
 # flow-YYYYMMDD-a|b-<die tag> covers only that die (route holds / provenance lift per die; a die whose canary is
 # pending keeps its previous tag).
@@ -301,10 +302,15 @@ def validate_row(r):
         return "cells not a number (expected std cells required)"
     if c > CELL_CAP:
         return f"cells {int(c)} > {CELL_CAP} (OpenROAD cap per run)"
-    if r["goal"] not in ("", "auto", "route", "finish", "cts", "grt"):
-        return "goal must be route|finish|auto|cts|grt"
+    if r["goal"] not in ("", "auto", "route", "finish", "cts", "grt", "collect"):
+        return "goal must be route|finish|auto|cts|grt|collect"
     if r["goal"] in ("cts", "grt") and not r["runner"]:
         return f"{r['goal']} diagnostic goal requires an explicit {r['goal'].upper()}-only runner"
+    if r["goal"] == "collect" and (not r["runner"] or Path(r["runner"]).name.startswith("run_kit")):
+        return "collect requires an explicit collector runner, never a run_kit physical runner"
+    if r.get("routed_netlist") and (r["goal"] != "collect" or
+            Path(r["routed_netlist"]).name != r["routed_netlist"] or not r["routed_netlist"].endswith(".v")):
+        return "routed_netlist requires collect and a .v basename within the signed routed base"
     if r["threads"] and not r["threads"].isdigit():
         return "threads not an integer"
     if r["runner"] and not r["runner"].startswith("/"):
@@ -809,12 +815,33 @@ def default_goal(runner):
     return "route" if os.path.basename(runner) == "run_kit.sh" else "finish"
 
 
+def kit_admission_error(r, p):
+    """Only explicit collection can continue an existing routed checkpoint."""
+    if not p["exists"]:
+        return "kit dir missing"
+    if not p.get("config"):
+        return "no config.mk"
+    if r.get("goal") == "collect":
+        if not r.get("runner") or Path(r["runner"]).name.startswith("run_kit"):
+            return "collect requires an explicit collector runner"
+        if not p.get("routed"):
+            return "collect requires an existing routed checkpoint"
+    elif p.get("routed") or p.get("signoff_dirs"):
+        return (f"kit already routed / signed off ({', '.join(p.get('routed', []) + p.get('signoff_dirs', []))}); "
+                "enqueue a fresh kit or explicit collect continuation")
+    if p.get("fail_marks"):
+        return f"kit carries {'+'.join(p['fail_marks'])} from an earlier run; enqueue a fresh kit"
+    if not p.get("runner"):
+        return "no run_kit*.sh runner found"
+    return ""
+
+
 def runner_goal(goal, p):
     """CRASH-TRIAGE 10-25: the goal the runner actually signs off on.  gq_rk19 ran GOAL=route through run_kit_hbm.sh
     (sign-off only on finish/post) -> 'flow exit 0 but no signoff.json'; elemB_cv / s81sl_vq ran GOAL=finish = ORFS
     'make finish' = GDS merge of macro LEFs without GDS -> crash after the route.  cts stays cts."""
     sg = p.get("signoff_goals") or []
-    if goal in ("cts", "grt") or not sg:
+    if goal in ("cts", "grt", "collect") or not sg:
         return goal
     if goal == "finish" and p.get("gds_gap") and "route" in sg and p.get("route_runs_finish"):
         return "route"
@@ -917,7 +944,8 @@ def submit(st, j, attempt_note=""):
         encoded = base64.b64encode(json.dumps(bundle).encode()).decode()
         # --stage is spill-only. Fetch the immutable tool bundle on the
         # actual selected worker before executing any frozen kit runner.
-        argv += ["--", "python3", "-c", ADMISSION_BOOTSTRAP, encoded,
+        chain_options = (["--netlist", j["routed_netlist"]] if j.get("routed_netlist") else [])
+        argv += ["--", "python3", "-c", ADMISSION_BOOTSTRAP, encoded] + chain_options + [
                  runner, kit, j["goal"], str(mem), str(thr)]
         j.update(chain_required=True, admission_tools_sha256=bundle["sha256"])
     else:
@@ -1394,13 +1422,9 @@ def admit_new(st, rows):
             log(f"HOLD {rid}: kit probe on {r['host']} failed ({p['error'][:200]}); retry next tick")
             continue
         # a placed kit (GEOM review is done on 3_place) continues in its run dir: run_kit.sh's make is incremental.
-        # A kit that already routed, signed off or failed a gate is never relaunched: that needs a fresh kit.
+        # Existing routed state is admitted only for an explicit collector; failed hard gates stay rejected.
         la = p.get("log_age_s")
-        why = ("kit dir missing" if not p["exists"] else "no config.mk" if not p.get("config") else
-               f"kit already routed / signed off ({', '.join(p.get('routed', []) + p.get('signoff_dirs', []))}); "
-               "enqueue a fresh kit" if p.get("routed") or p.get("signoff_dirs") else
-               f"kit carries {'+'.join(p['fail_marks'])} from an earlier run; enqueue a fresh kit"
-               if p.get("fail_marks") else "no run_kit*.sh runner found" if not p.get("runner") else "")
+        why = kit_admission_error(r, p)
         if not why and p.get("signoff_missing") and r.get("goal") not in ("cts", "grt"):
             why = (f"kit signoff.py lacks {', '.join(p['signoff_missing'])} (sign-off would crash after the route); "
                    "stage the whole bundle: tools/die_plan/signoff.py copy_signoff_bundle(kit)")
