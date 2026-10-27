@@ -45,7 +45,10 @@ class ExitStatus(unittest.TestCase):
   with tempfile.TemporaryDirectory() as td:
    d=Path(td)
    self.assertEqual(kv_verdict.main([str(d),'--expect','fail']),1)
+   (d/'sim.log').write_text('KVSLICE_BOOT FAIL errors 1\n')
+   self.assertEqual(kv_verdict.main([str(d),'--expect','fail']),1)
    (d/'exit').write_text('137\n')
+   self.assertEqual(kv_verdict.main([str(d),'--expect','fail']),1)
    (d/'sim.log').write_text('KVSLICE_BOOT PASS x\n')
    self.assertEqual(kv_verdict.main([str(d),'--expect','fail']),1)
    self.assertTrue((d/'verdict').read_text().startswith('FAIL'))

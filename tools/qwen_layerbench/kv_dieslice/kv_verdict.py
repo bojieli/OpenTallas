@@ -60,7 +60,11 @@ def main(argv=None):
             txt = (a.rundir / 'sim.log').read_text(errors='replace')
         except OSError:
             txt = ''
-        observed = bool(re.search(r'^KVSLICE_BOOT FAIL\b|^FAR_LAYER_SUMMARY layer \d+ .* FAIL\s*$', txt, re.M))
+        try:
+            completed_rc = int((a.rundir / 'exit').read_text().split()[0])
+        except (OSError, ValueError, IndexError):
+            completed_rc = None
+        observed = completed_rc in (0, 1, 134) and bool(re.search(r'^KVSLICE_BOOT FAIL\b|^FAR_LAYER_SUMMARY layer \d+ .* FAIL\s*$', txt, re.M))
         if v == 'PASS':
             v = 'MUTANT_MISSED'
         elif observed:
