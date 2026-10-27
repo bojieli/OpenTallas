@@ -18,3 +18,7 @@ verilator --binary --timing -O1 -j 4 -Wno-fatal -Wno-lint -Wno-style -Wno-MULTID
 "$OUT/obj/native" > "$OUT/positive.log" 2>&1
 cat "$OUT/positive.log"
 if "$OUT/obj/native" +MUT_PAIR > "$OUT/mutant.log" 2>&1;then echo MUTANT_ESCAPED;exit 1;else echo MUTANT_CAUGHT;fi
+
+"$OUT/obj/native" +PADS > "$OUT/padded_positive.log" 2>&1
+cat "$OUT/padded_positive.log"
+if "$OUT/obj/native" +PADS +MUT_PAIR > "$OUT/padded_mutant.log" 2>&1;then echo PADDED_MUTANT_ESCAPED;exit 1;else echo PADDED_MUTANT_CAUGHT;fi
