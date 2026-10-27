@@ -326,6 +326,9 @@
          "type": "string",
          "minLength": 1
         }
+       },
+       "clock_channel": {
+        "type": "boolean"
        }
       }
      }
@@ -1415,6 +1418,16 @@
        },
        "landing_contract": {
         "type": "object"
+       },
+       "out_hold_check_ps": {
+        "minimum": 0,
+        "type": "number"
+       },
+       "io_hold": {
+        "enum": [
+         "legacy",
+         "sender_min"
+        ]
        }
       }
      },
@@ -1585,6 +1598,24 @@
            }
           },
           "lane_lane_id": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "minimum": 1
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0
+            }
+           }
+          },
+          "sidx": {
            "type": "object",
            "required": [
             "width",
@@ -1778,6 +1809,55 @@
         },
         "note": {
          "type": "string"
+        },
+        "bound_group": {
+         "additionalProperties": false,
+         "properties": {
+          "kind": {
+           "const": "exact_post_bind_group"
+          },
+          "members": {
+           "items": {
+            "additionalProperties": false,
+            "properties": {
+             "inst": {
+              "minLength": 1,
+              "type": "string"
+             },
+             "module": {
+              "minLength": 1,
+              "type": "string"
+             },
+             "reset_pin": {
+              "const": "rst_n"
+             }
+            },
+            "required": [
+             "inst",
+             "module",
+             "reset_pin"
+            ],
+            "type": "object"
+           },
+           "maxItems": 5,
+           "minItems": 5,
+           "type": "array"
+          },
+          "memory_alignment": {
+           "minimum": 0,
+           "type": "integer"
+          },
+          "reset_pin": {
+           "const": "rst_n"
+          }
+         },
+         "required": [
+          "kind",
+          "reset_pin",
+          "memory_alignment",
+          "members"
+         ],
+         "type": "object"
         }
        }
       }
@@ -1806,6 +1886,17 @@
         "minItems": 2,
         "maxItems": 2
        },
+       "local_taps_um": {
+        "type": "array",
+        "items": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 2,
+         "maxItems": 2
+        }
+       },
        "depth": {
         "type": "integer",
         "minimum": 1
@@ -1824,6 +1915,38 @@
           "mission"
          ]
         }
+       },
+       "physical_stages": {
+        "items": {
+         "additionalProperties": false,
+         "properties": {
+          "selector": {
+           "minLength": 1,
+           "type": "string"
+          },
+          "xy_um": {
+           "items": {
+            "type": "number"
+           },
+           "maxItems": 2,
+           "minItems": 2,
+           "type": "array"
+          }
+         },
+         "required": [
+          "selector",
+          "xy_um"
+         ],
+         "type": "object"
+        },
+        "type": "array"
+       },
+       "keep_modules": {
+        "items": {
+         "minLength": 1,
+         "type": "string"
+        },
+        "type": "array"
        }
       }
      },
@@ -1912,6 +2035,24 @@
            }
           },
           "lane_lane_id": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "minimum": 1
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0
+            }
+           }
+          },
+          "sidx": {
            "type": "object",
            "required": [
             "width",
@@ -2201,7 +2342,8 @@
         },
         "bit_route": {
          "enum": [
-          "per_bit"
+          "per_bit",
+          "chain"
          ]
         },
         "bit_sites_um": {
@@ -2236,6 +2378,9 @@
           "minItems": 2,
           "maxItems": 2
          }
+        },
+        "core_glob": {
+         "type": "string"
         }
        }
       }

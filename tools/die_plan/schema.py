@@ -135,7 +135,7 @@ _parent_id_straps = {"type": "object", "additionalProperties": False, "propertie
                                    else {"type": "integer", "minimum": 1}),
                           "value": {"type": "integer", "minimum": 0,
                                     **({"maximum": (1 << _physical_id_widths[name])-1} if name in _physical_id_widths else {})}}}
-    for name in ("tile_id", "tile_tid", "map_lane_j", "lane_lane_id", *_physical_id_widths)}}
+    for name in ("tile_id", "tile_tid", "map_lane_j", "lane_lane_id", "sidx", *_physical_id_widths)}}
 
 # Exact identity ports only. G0's semantic validator enforces each port's width;
 # allOf gives full JSON-Schema consumers the same cross-field restriction.
@@ -483,6 +483,8 @@ SCHEMA = {
                         "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2},
                         # planned leaf-logic region: reset_tree.leaf_tap binds the leaf rst_n to the tap nearest it
                         "leaf_um": _xy,
+                        # Local synchronous reset/START consumers; clock entry pins are unchanged.
+                        "local_taps_um": {"type": "array", "items": _xy},
                         # hard partition, reset wavefront: clocks from its arst_n pin to its release (pin reg incl.)
                         "depth": {"type": "integer", "minimum": 1},
                         # reset.start = broadcast plans (reset_tree.start_roles): "mission" (default) = control state
@@ -761,6 +763,39 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["l
 # CLOCK-KV-R22: declared die-top data landing islands (landing_islands.py; hold cells for hard->hard seams)
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["landing_islands"] = {
     "type": "array", "items": {"type": "object", "required": ["name", "port", "rect_um", "cells", "owner", "demand"]}}
+
+
+# QC event: exact opt-in schema fields carried from native100 af589e572a.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]['clock']["properties"]['out_hold_check_ps'] = {'minimum': 0, 'type': 'number'}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]['clock']["properties"]['io_hold'] = {'enum': ['legacy', 'sender_min']}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]['reset']["properties"]['physical_stages'] = {'items': {'additionalProperties': False,
+           'properties': {'selector': {'minLength': 1, 'type': 'string'},
+                          'xy_um': {'items': {'type': 'number'},
+                                    'maxItems': 2,
+                                    'minItems': 2,
+                                    'type': 'array'}},
+           'required': ['selector', 'xy_um'],
+           'type': 'object'},
+ 'type': 'array'}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]['reset']["properties"]['keep_modules'] = {'items': {'minLength': 1, 'type': 'string'}, 'type': 'array'}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["bound_group"] = {'additionalProperties': False,
+ 'properties': {'kind': {'const': 'exact_post_bind_group'},
+                'members': {'items': {'additionalProperties': False,
+                                      'properties': {'inst': {'minLength': 1, 'type': 'string'},
+                                                     'module': {'minLength': 1, 'type': 'string'},
+                                                     'reset_pin': {'const': 'rst_n'}},
+                                      'required': ['inst', 'module', 'reset_pin'],
+                                      'type': 'object'},
+                            'maxItems': 5,
+                            'minItems': 5,
+                            'type': 'array'},
+                'memory_alignment': {'minimum': 0, 'type': 'integer'},
+                'reset_pin': {'const': 'rst_n'}},
+ 'required': ['kind', 'reset_pin', 'memory_alignment', 'members'],
+ 'type': 'object'}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["bit_route"]["enum"].append("chain")
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["core_glob"] = {"type":"string"}
+SCHEMA["properties"]["die"]["properties"]["channels"]["items"]["properties"]["clock_channel"] = {"type":"boolean"}
 
 
 def _check(v, s, path, errs):
