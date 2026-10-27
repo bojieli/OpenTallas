@@ -27,6 +27,7 @@ import argparse
 import json
 import math
 import random
+import os
 import sys
 import zlib
 from collections import defaultdict
@@ -152,9 +153,10 @@ class Islands:
     ONE slot row per partition (the one nearest the row), a vertical leg ONE slot column per partition."""
     CW, BH, EDGE, CLR = 1.62, 0.54, 8.64, 1.08
 
-    def __init__(self, P, cores, pitch=19.3, pitch_x=4.86, margin=2):
+    def __init__(self, P, cores, pitch=19.3, pitch_x=4.86, margin=2, vss=False):
         import numpy as np
         self.np = np
+        self.vss = vss
         self.P, self.pitch, self.pitch_x = P, pitch, pitch_x
         self.margin = margin * pitch_x       # reach margin for slot conflicts (a taken slot -> the next one, +-pitch_x)
         bt = defaultdict(list)
@@ -168,7 +170,9 @@ class Islands:
             r0 = P.rect(insts[0])
             w, h = r0[2] - r0[0], r0[3] - r0[1]
             gx = np.array(self.grid(w, self.CW, 0.054, pitch_x))
-            gy = np.array(self.grid(h, self.BH, 0.27, pitch))
+            # R15 (COORD ruling INFRA-FIRST-QC-R14): slot rows VSS-phase locked -- type-frame y = k * 8.64 (partition
+            # origins and heights are 8.64 multiples, M8 VSS stripes at 8.64k): R0 cell origin / MX body top on a VSS stripe
+            gy = np.array(self.vss_grid(h, self.BH) if vss else self.grid(h, self.BH, 0.27, pitch))
             ok = np.ones((len(gx), len(gy)), bool)
             for n in insts:
                 x0, y0, x1, y1 = P.rect(n)
@@ -196,6 +200,10 @@ class Islands:
         mid = round(round(((L - body) / 2) / q) * q, 4)
         half[-1] = mid
         return sorted(set(half + [round(L - body - v, 4) for v in half]))
+
+    def vss_grid(self, L, body):
+        """R15: slot rows on the VSS phase (type frame k * ISL), inside [EDGE, L - EDGE - body]."""
+        return [round(ISL * k, 4) for k in range(1, int((L - self.EDGE - body) / ISL + 1e-9) + 1) if ISL * k >= self.EDGE - 1e-9]
 
     def to_die(self, part, sx, sy):
         x0, y0, x1, y1 = self.prect[part]
@@ -418,6 +426,123 @@ def lift(r, xy, et, tag, nodes, n=None):
     return n
 
 
+# ------------------------------------------------------------------------------------------------ R15 per-level lanes
+LANE = [None]     # R15: dict(step=8.64) -> every tree node level on its own lane (COORD ruling INFRA-FIRST-QC-R14)
+
+
+def lane_pts(I, ax, fixed, p0, p1, n):
+    """along-axis stage points of an n-stage leg ON THE DRIVING NODE'S LANE `fixed` (repeaters snapped to slots)."""
+    mid = [p0 + (p1 - p0) * k / n for k in range(1, n)]
+    if I is not None and getattr(I, "vss", False) and ax == "y":
+        # vertical leg: repeaters on the die VSS row grid (8.64k, mirror-symmetric: H = 3040 x 8.64) so the mirrored
+        # half lands on the same type-frame slot row (slot centres R0 / MX differ by 0.27 um)
+        mid = [r3(round(v / ISL) * ISL) for v in mid]
+    elif I is not None:
+        mid = [I.snap_axis(ax, fixed, v) for v in mid]
+    return [p0] + mid + [p1]
+
+
+def lane_segs(I, ax, fixed, p0, p1, n, e):
+    """segment lengths of the leg: n-1 repeaters on the driver lane, the last segment carries the lane jog e (M9 drop)."""
+    pts = lane_pts(I, ax, fixed, p0, p1, n)
+    L = [abs(b - a) for a, b in zip(pts, pts[1:])]
+    L[-1] += e
+    return L
+
+
+def nseg_lane(I, et, ax, fixed, p0, p1, e):
+    marg = I.margin if I is not None else 0.0
+    n = et.nseg(abs(p1 - p0) + e)
+    while n < et.nseg(abs(p1 - p0) + e) + 6 and max(lane_segs(I, ax, fixed, p0, p1, n, e)) > et.reach - marg + 1e-6:
+        n += 1
+    return n
+
+
+def lane_delay(I, et, c, ax, fixed, p0, p1, n, e):
+    return sum(et.st.seg(et.w, et.m, c, L) for L in lane_segs(I, ax, fixed, p0, p1, n, e))
+
+
+def merge_lane(A, B, ax, et, tag, nodes, perp):
+    """R15 merge: the node sits on ITS lane `perp` (one lane before its children); each child leg runs along the node
+    lane (repeaters there) and drops to the child lane at its end.  Equal stage count (r2 rule) and zero TT difference by
+    the node position (no detour); every leg is priced with its real snapped segments + jog (plan computation)."""
+    I = ISLANDS[0] if (ISLANDS[0] is not None and et is ISLANDS[0].et) else None
+    i = 0 if ax == "x" else 1
+    pa, pb = A["xy"][i], B["xy"][i]
+    ea, eb = abs(A["xy"][1 - i] - perp), abs(B["xy"][1 - i] - perp)
+    lo, hi = min(pa, pb), max(pa, pb)
+    if I is not None:
+        L = (I.row_x(perp) if ax == "x" else I.col_y(perp))[0]
+        cand_p = [p for p in L if lo - 1e-6 <= p <= hi + 1e-6]
+    else:
+        cand_p = []
+    if not cand_p:
+        steps = max(1, int((hi - lo) / 1.0))
+        cand_p = [lo + (hi - lo) * k / steps for k in range(steps + 1)]
+    ca, cb = CORR[0].get(A["tag"], {}), CORR[0].get(B["tag"], {})
+    cands = []
+    for p in cand_p:
+        na0, nb0 = nseg_lane(I, et, ax, perp, p, pa, ea), nseg_lane(I, et, ax, perp, p, pb, eb)
+        tot = max(A["S"] + na0, B["S"] + nb0)
+        na, nb = tot - A["S"], tot - B["S"]
+        dl = {c: (A["T"][c] + lane_delay(I, et, c, ax, perp, p, pa, na, ea) + ca.get(c, 0.0),
+                  B["T"][c] + lane_delay(I, et, c, ax, perp, p, pb, nb, eb) + cb.get(c, 0.0)) for c in ("TT", "FF")}
+        d = dl["TT"][0] - dl["TT"][1]
+        cands.append(((round(abs(d), 2), na + nb, abs(p - (lo + hi) / 2)), p, na, nb, dl))
+    cands.sort(key=lambda r: r[0])
+    best = None
+    for cnd in cands:
+        xy_ = (cnd[1], perp) if ax == "x" else (perp, cnd[1])
+        if BLOCK[0] is None or not BLOCK[0](xy_):
+            best = cnd
+            break
+    best = best or cands[0]
+    _, p, na, nb, dl = best
+    xy = (p, perp) if ax == "x" else (perp, p)
+    for ch, n_, e_ in ((A, na, ea), (B, nb, eb)):
+        ch["parent"], ch["leg"], ch["nseg"], ch["et"], ch["lane_ax"] = tag, abs(ch["xy"][i] - p) + e_, n_, et, ax
+    T = {c: max(dl[c]) for c in ("TT", "FF")}
+    n = dict(tag=tag, xy=xy, kids=[A["tag"], B["tag"]], T=T, S=A["S"] + na,
+             imbalance_TT=r3(dl["TT"][0] - dl["TT"][1]), imbalance_FF=r3(dl["FF"][0] - dl["FF"][1]))
+    nodes.append(n)
+    return n
+
+
+def lift_lane(r, xy, et, tag, nodes, ax):
+    """R15 lift: node at xy (its lane), child r one lane past; along ax on the node lane, jog to r's lane at the end."""
+    I = ISLANDS[0] if (ISLANDS[0] is not None and et is ISLANDS[0].et) else None
+    i = 0 if ax == "x" else 1
+    fixed, p0, p1, e = xy[1 - i], xy[i], r["xy"][i], abs(r["xy"][1 - i] - xy[1 - i])
+    n_ = nseg_lane(I, et, ax, fixed, p0, p1, e)
+    r["parent"], r["leg"], r["nseg"], r["et"], r["lane_ax"] = tag, abs(p1 - p0) + e, n_, et, ax
+    T = {c: r["T"][c] + lane_delay(I, et, c, ax, fixed, p0, p1, n_, e) + CORR[0].get(r["tag"], {}).get(c, 0.0)
+         for c in ("TT", "FF")}
+    n = dict(tag=tag, xy=xy, kids=[r["tag"]], T=T, S=r["S"] + n_)
+    nodes.append(n)
+    return n
+
+
+def tree_depths(n, d=0):
+    """leaf depths of the binary split tree over n items (split h = n // 2, as dtree / yt)."""
+    if n == 1:
+        return [d]
+    h = n // 2
+    return tree_depths(h, d + 1) + tree_depths(n - h, d + 1)
+
+
+def dtree_lane(leaves, ax, et, tag, nodes, lane_of, depth=0, leafT=None):
+    """R15 binary delay-balanced tree with per-level lanes: node at depth d on lane_of(d); leaves already on their
+    lane (lane_of(depth of the leaf)); leafT = initial arrival offset of the leaves (downstream plan delay)."""
+    if len(leaves) == 1:
+        n = dict(tag=tag, xy=leaves[0], kids=[], T=dict(leafT or {"TT": 0.0, "FF": 0.0}), S=0)
+        nodes.append(n)
+        return n
+    h = len(leaves) // 2
+    A = dtree_lane(leaves[:h], ax, et, tag + "0", nodes, lane_of, depth + 1, leafT)
+    B = dtree_lane(leaves[h:], ax, et, tag + "1", nodes, lane_of, depth + 1, leafT)
+    return merge_lane(A, B, ax, et, tag, nodes, lane_of(depth))
+
+
 # ------------------------------------------------------------------------------------------------ plan
 def lattice(a):
     """r2 fine lattice (same columns / gaps / rows as r2_plan_m4f) + the r2 plan record."""
@@ -464,7 +589,7 @@ def build(a, st):
     I = None
     ISLANDS[0] = None
     if getattr(a, "islands", "none") == "type":
-        I = Islands(P, cores, pitch=a.island_pitch, pitch_x=a.island_pitch_x)
+        I = Islands(P, cores, pitch=a.island_pitch, pitch_x=a.island_pitch_x, vss=getattr(a, "lanes", "none") == "vss")
         CORR[0] = json.loads(Path(a.island_corr).read_text())["corr"] if getattr(a, "island_corr", None) else {}
         I.et = top
         ISLANDS[0] = I
@@ -491,8 +616,9 @@ def build(a, st):
         return r
     r9 = None
     PERIODIC = None
+    LANE[0] = dict(step=ISL, split=getattr(a, "centre_split", ISL)) if getattr(a, "lanes", "none") == "vss" else None
     if getattr(a, "feed", "mesh3") == "periodic":
-        root, leafxy, colmap, lofg = periodic_feed(a, top, P, cols, gaps, nodes)
+        root, leafxy, colmap, lofg = periodic_feed(a, top, P, cols, gaps, nodes, rows=rows, m=m, col=col, cores=cores)
         PERIODIC = (leafxy, colmap, lofg)
         build.periodic = periodic_feed.info
     elif getattr(a, "feed", "mesh3") == "r9":
@@ -523,6 +649,9 @@ def build(a, st):
         halves = [("", grow_all, None)]
         if PERIODIC is not None and len(PERIODIC[2][r3(g)]) == 2:      # R13 centre group: two mirrored half trees
             halves = [("b", grow_all[:m + 1], PERIODIC[2][r3(g)][0]), ("m", grow_all[m:], PERIODIC[2][r3(g)][1])]
+            if LANE[0] is not None:     # R15 (COORD R13 ASK-2): centre fine row split at the seam, one driver per half
+                gb_, gm_ = centre_rows(grow_all, m, LANE[0]["split"])
+                halves = [("b", gb_, PERIODIC[2][r3(g)][0]), ("m", gm_, PERIODIC[2][r3(g)][1])]
         for ci, x in enumerate(cols):
             for hs_, grow, ytap in halves:
                 if PERIODIC is not None:
@@ -569,7 +698,28 @@ PER_OFF = (0.0, 622.08, 1235.52, 1848.96)   # column-tap offsets from the period
 PER_NUDGE = 8.64           # a gap row on a partition seam -> local row 8.64 um into the partition NEARER the die centre
 
 
-def periodic_feed(a, top, P, cols, gaps, nodes):
+def centre_rows(grow_all, m, split):
+    """R15: the centre gap group's fine rows per half; the shared centre row (index m, on the seam) is split into
+    YC - split (bottom half only) and YC + split (top half only): one driver per half, no two-driver net."""
+    yc = grow_all[m]
+    return list(grow_all[:m]) + [r3(yc - split)], [r3(yc + split)] + list(grow_all[m + 1:])
+
+
+def col_down(col, ys, x, tap, cores=None):
+    """R15 plan computation: downstream delay of one column tree (tap leg + tree to its fine drivers) per corner,
+    built exactly as build() builds it (dtree over the rows on column x, straight lift to the tap)."""
+    keep = ISLANDS[0], BLOCK[0]
+    ISLANDS[0], BLOCK[0] = None, None
+    try:
+        tmp = []
+        r = dtree([(x, y) for y in ys], "y", col, "z", tmp)
+        L = md(r["xy"], tap)
+        return {c: r["T"][c] + (col.delay(L, c) if L > 1e-6 else 0.0) for c in ("TT", "FF")}
+    finally:
+        ISLANDS[0], BLOCK[0] = keep
+
+
+def periodic_feed(a, top, P, cols, gaps, nodes, rows=None, m=None, col=None, cores=None):
     """INFRA-FIRST-QC-R13 (COORD ruling R12 ASK1, 12.2a1): every partition-hosted top-tree cell is x-PERIODIC with the
     partition-array period (2471.04 um) and y-MIRRORED about the die centre, so every instance of a type holds the
     identical cell set (cb types: MX bottom / R0 top; cbx rows 2 and 4 host the same two local rows).  Structure:
@@ -593,6 +743,9 @@ def periodic_feed(a, top, P, cols, gaps, nodes):
     if keep[0] is None:
         BLOCK[0] = None
     tmpl = []          # template column K: merges / repeaters on the island slots of period K (translated below)
+    LN = LANE[0]
+    if LN is not None:
+        return periodic_feed_lanes(a, top, P, cols, gaps, nodes, rows, m, col, cores, H, YC, trunk, gb, gc, lb, K, x0, keep, tmpl)
 
     def local(y, tag):
         r = dtree([(x0 + o, y) for o in PER_OFF], "x", top, tag, tmpl)
@@ -658,6 +811,137 @@ def periodic_feed(a, top, P, cols, gaps, nodes):
     periodic_feed.info = dict(trunk=trunk, local_rows=lrows, template_nodes=len(tmpl), channel_root=hr["xy"], nc=nc,
                               period_um=PER_X, offsets=PER_OFF)
     return hr, leafxy, colmap, lofg
+
+
+def periodic_feed_lanes(a, top, P, cols, gaps, nodes, rows, m, col, cores, H, YC, trunk, gb, gc, lb, K, x0, keep, tmpl):
+    """INFRA-FIRST-QC-R15 (COORD ruling INFRA-FIRST-QC-R14): the R13 periodic structure with ONE 8.64-um lane per tree
+    level, every lane on the VSS phase.  A node / leaf sits one lane past its parent node; repeaters stay on the lane of
+    the node driving their edge; the lane step is the leg's end jog (M9 drop).  Local row x-trees step in y (toward the
+    die centre: lanes stay in the nudged partition; the centre rows step away from the centre), the column y-trees step
+    in x on M9 lanes (side away from the column-tree lane).  Leaves start with their downstream column-tree delay
+    (plan-computed), so the y-tree merges re-balance the 25.92-um leaf offset and the split centre halves."""
+    st = LANE[0]["step"]
+    split = LANE[0]["split"]
+    gi_of = {r3(g): gi for gi, g in enumerate(gaps)}
+    # column-tree lane side of the trunk column (legalize lane_sign) -> y-tree M9 lanes on the other side
+    Lc_ = max([c[2] for c in cores if c[2] <= x0 + 1e-6] or [-1e9])
+    Rc_ = min([c[0] for c in cores if c[0] >= x0 - 1e-6] or [1e9])
+    sx = -1.0 if Rc_ - x0 >= x0 - Lc_ else 1.0
+    free_lanes = int(((x0 - Lc_) if sx < 0 else (Rc_ - x0)) // st) - 1
+    srows = sorted(lb)
+    ndep = tree_depths(len(srows), 1)          # y-tree leaf depth (H_c = 0, half-tree root = 1)
+    lane_x = lambda d: r3(x0 + sx * st * d)
+    info_rows = []
+
+    def grows(i):
+        """fine rows of the gap group of local row i (bottom half) -> (ys, centre?)"""
+        if i == len(gb):
+            g = gc[0]
+            gi = gi_of[r3(g)]
+            return centre_rows(rows[gi * (2 * m + 1):(gi + 1) * (2 * m + 1)], m, split)[0], True
+        g = sorted(gb)[i]
+        gi = gi_of[r3(g)]
+        return rows[gi * (2 * m + 1):(gi + 1) * (2 * m + 1)], False
+
+    def local(i, y, tag):
+        ys, centre = grows(i)
+        dy = -1.0 if centre else 1.0           # toward the die centre (bottom half: +y); centre rows away from it
+        lane_y = lambda d: r3(y + dy * st * d)
+        dl = tree_depths(len(PER_OFF), 1)       # dtree root = lane 1 (local root = lane 0)
+        lv = [(x0 + o, lane_y(d)) for o, d in zip(PER_OFF, dl)]
+        # downstream plan delay: column tree of THIS row's gap group on the template column (identical per period)
+        down = [col_down(col, ys, x0 + o, xy) for o, xy in zip(PER_OFF, lv)]
+        if os.environ.get("QC_R15_NO_LEAF_T"):     # diagnostic only: leaves without the downstream plan delay
+            down = [{"TT": 0.0, "FF": 0.0} for _ in down]
+        lt = {c: max(d_[c] for d_ in down) for c in ("TT", "FF")}
+        info_rows.append(dict(row=y, centre=centre, leaf_y=lv[0][1], down_TT=r3(lt["TT"]), down_FF=r3(lt["FF"]),
+                              down_spread_TT=r3(max(d_["TT"] for d_ in down) - min(d_["TT"] for d_ in down))))
+        # leaf T = its downstream delay, so the balance includes it (plan computation, no trim)
+        r = dtree_lane_T(lv, "x", top, tag, tmpl, lambda d: lane_y(d + 1), down, y)
+        xr = lane_x(ndep[i])
+        return lift_lane(r, (xr, r3(y)), top, tag + "L", tmpl, "x")
+
+    def yt(items, t, d):
+        if len(items) == 1:
+            return items[0]
+        h = len(items) // 2
+        return merge_lane(yt(items[:h], t + "0", d + 1), yt(items[h:], t + "1", d + 1), "y", top, t, tmpl, lane_x(d))
+    Bt = yt([local(i, y, f"t_b{i:02d}_") for i, y in enumerate(srows)], "T_b", 1)
+    nb = list(tmpl)
+    mir = []
+    for n in nb:
+        q = dict(n, tag=n["tag"].replace("_b", "_m", 1), xy=(n["xy"][0], r3(H - n["xy"][1])), kids=[k.replace("_b", "_m", 1) for k in n["kids"]])
+        if n.get("parent"):
+            q["parent"] = n["parent"].replace("_b", "_m", 1)
+        if "row_y" in n:
+            q["row_y"] = r3(H - n["row_y"])
+        mir.append(q)
+    tmpl += mir
+    Tm = [n for n in mir if n["tag"] == Bt["tag"].replace("_b", "_m", 1)][0]
+    hc = dict(tag="H_c", xy=(lane_x(0), YC), kids=[Bt["tag"], Tm["tag"]])
+    I = ISLANDS[0] if (ISLANDS[0] is not None and top is ISLANDS[0].et) else None
+    e = abs(Bt["xy"][0] - lane_x(0))
+    nc = nseg_lane(I, top, "y", lane_x(0), YC, Bt["xy"][1], e)
+    for ch in (Bt, Tm):
+        ch["parent"], ch["leg"], ch["nseg"], ch["et"], ch["lane_ax"] = "H_c", abs(YC - Bt["xy"][1]) + e, nc, top, "y"
+    hc.update(S=Bt["S"] + nc, T={c: Bt["T"][c] + lane_delay(I, top, c, "y", lane_x(0), YC, Bt["xy"][1], nc, e) for c in ("TT", "FF")})
+    tmpl.append(hc)
+    ISLANDS[0], BLOCK[0] = keep
+    leafxy, croots = {}, []
+    lrows = sorted(lb + [r3(H - y) for y in lb])
+    for k, xt in enumerate(trunk):
+        dx = xt - x0
+        pre = f"{k:02d}"
+        ren = lambda t: (t[0] + pre + t[1:]) if t else t
+        for n in tmpl:
+            q = dict(n, tag=ren(n["tag"]), xy=(r3(n["xy"][0] + dx), n["xy"][1]), kids=[ren(c) for c in n["kids"]])
+            if n.get("parent"):
+                q["parent"] = ren(n["parent"])
+            if q["tag"].startswith("H"):
+                croots.append(q)
+            nodes.append(q)
+            if not n["kids"]:
+                leafxy[(k, PER_OFF.index(r3(n["xy"][0] - x0)), r3(n["row_y"]))] = q["xy"]
+    for q in croots:
+        q.pop("parent", None)
+    ISLANDS[0], BLOCK[0] = None, None          # channel x-tree: die-level cells in the centre channel (no partition slots)
+    hr = dtree([q["xy"] for q in croots], "x", top, "H", nodes,
+               leafmk=lambda xy, tag: [q for q in croots if abs(q["xy"][0] - xy[0]) < 1e-6][0])
+    hr["parent"] = None
+    ISLANDS[0], BLOCK[0] = keep
+    colmap = {}
+    for c in cols:
+        k, i = min(((k, i) for k in range(len(trunk)) for i in range(len(PER_OFF))), key=lambda ki: abs(trunk[ki[0]] + PER_OFF[ki[1]] - c))
+        assert abs(trunk[k] + PER_OFF[i] - c) <= 17.28 + 1e-6, (c, k, i)
+        colmap[r3(c)] = (k, i)
+    PN = PER_NUDGE
+    lofg = {r3(gc[0]): (r3(YC - PN), r3(YC + PN))}
+    gt = sorted((g for g in gaps if g > YC + 1), reverse=True)
+    for i_, g in enumerate(sorted(gb)):
+        lofg[r3(g)] = (r3(srows[i_]),)
+        lofg[r3(gt[i_])] = (r3(H - srows[i_]),)
+    tl = [n for n in tmpl if n["kids"]]
+    periodic_feed.info = dict(trunk=trunk, local_rows=lrows, template_nodes=len(tmpl), channel_root=hr["xy"], nc=nc,
+                              period_um=PER_X, offsets=PER_OFF, lanes=dict(step_um=st, ytree_side=sx, ytree_lanes=max(ndep) + 1,
+                              ytree_free_lanes=free_lanes, local_lanes=1 + max(tree_depths(len(PER_OFF), 1)),
+                              centre_split_um=split, rows=info_rows,
+                              template_imbalance_TT_max=r3(max(abs(n.get("imbalance_TT", 0.0)) for n in tl)),
+                              template_imbalance_FF_max=r3(max(abs(n.get("imbalance_FF", 0.0)) for n in tl))))
+    return hr, leafxy, colmap, lofg
+
+
+def dtree_lane_T(lv, ax, et, tag, nodes, lane_of, down, row_y, depth=0, idx=None):
+    """dtree_lane whose leaves carry their own downstream plan delay (down[k]) and the local row y (leafxy key)."""
+    idx = list(range(len(lv))) if idx is None else idx
+    if len(idx) == 1:
+        k = idx[0]
+        n = dict(tag=tag, xy=lv[k], kids=[], T=dict(down[k]), S=0, row_y=r3(row_y))
+        nodes.append(n)
+        return n
+    h = len(idx) // 2
+    A = dtree_lane_T(lv, ax, et, tag + "0", nodes, lane_of, down, row_y, depth + 1, idx[:h])
+    B = dtree_lane_T(lv, ax, et, tag + "1", nodes, lane_of, down, row_y, depth + 1, idx[h:])
+    return merge_lane(A, B, ax, et, tag, nodes, lane_of(depth))
 
 
 # ------------------------------------------------------------------------------------------------ R9 global H-tree feed
@@ -785,6 +1069,8 @@ def legalize(B, fine_masters=None):
 
     def add(kind, xy, units, lane, ref=None, masters=None):
         dx, dy = (DX_LANE * lane_sign(xy[0]), 0.0) if lane == "v" else ((0.0, DY_LANE) if lane == "h" else (0.0, 0.0))
+        if LANE[0] is not None and kind.startswith("chan"):
+            dx = dy = 0.0       # R15: centre-channel cells on the VSS lane at YC (the split centre fine rows left it free)
         if kind == "r9_leaf":
             dx = dy = 0.0       # the R9 leaf buffer is already placed by the R9 tree (DRC-clean); no new cell
         masters = masters if masters is not None else ["BUFx24"] * int(units)
@@ -822,8 +1108,16 @@ def legalize(B, fine_masters=None):
                 continue
             p = by[n["parent"]]["xy"]
             lane = "h" if abs(p[1] - n["xy"][1]) < 1e-6 and abs(p[0] - n["xy"][0]) > 1e-6 else "v"
+            lax = n.get("lane_ax")
+            if lax:                     # R15: repeaters on the DRIVING node's lane (snapped as the solver priced them)
+                lane = "h" if lax == "x" else "v"
+                I_ = B.get("islands") if (B.get("islands") is not None and et is B["islands"].et) else None
+                i_ = 0 if lax == "x" else 1
+                pts = lane_pts(I_, lax, p[1 - i_], p[i_], n["xy"][i_], n["nseg"])
             for k in range(1, n["nseg"]):
                 q = (p[0] + (n["xy"][0] - p[0]) * k / n["nseg"], p[1] + (n["xy"][1] - p[1]) * k / n["nseg"])
+                if lax:
+                    q = (pts[k], p[1]) if lax == "x" else (p[0], pts[k])
                 ck = "chan_rep" if (kind == "top" and n["tag"].startswith("H")) else kind + "_rep"   # R13 channel x-tree
                 site_of[(kind + "_rep", n["tag"], k)] = add(ck, q, et.m, lane, (kind + "_rep", n["tag"], k))
                 nrep[kind] += 1
@@ -1000,6 +1294,9 @@ def assign_periodic(B, I, cells, topk):
         if n is None:
             raise RuntimeError(f"top cell outside partitions {c['xy0']}")
         fx, fy = frame(n, *c["xy0"])
+        if getattr(I, "vss", False):    # R15: class by the VSS slot row (R0 / MX slot centres differ by 0.27 um in frame)
+            gy_ = I.tgrid[P.parts[n]["type"]][1]
+            fy = float(gy_[int(np.argmin(np.abs(gy_ + ROW_H / 2 - fy)))]) + ROW_H / 2
         cls[(P.parts[n]["type"], round(fx), round(fy), c["kind"] == "top_node")].append((i, n))
     used = defaultdict(set)
     moves, viol, ex = [], [], []
@@ -1815,6 +2112,10 @@ def add_common(p):
     p.add_argument("--island-corr", default=None,
                    help="R12 re-solve: json {corr: {edge_tag: {TT, FF}}} = legal - model edge delay of the previous placement")
     p.add_argument("--island-pitch-x", type=float, default=4.86, help="island slot pitch um, x (type frame; 3 BUFx24 widths)")
+    p.add_argument("--lanes", default="none", choices=["none", "vss"],
+                   help="R15 (opt-in, --feed periodic --islands type): VSS-phase slot rows + one 8.64-um lane per tree level, "
+                        "leaves re-balanced by their plan-computed downstream delay, centre fine row split at the seam")
+    p.add_argument("--centre-split", type=float, default=ISL, help="R15: centre fine row split -> YC -/+ this (um)")
     p.add_argument("--r9-dir", default=str(HERE.parent.parent / "results/qc_clk_mesh3/r10_inputs"),
                    help="r9_lattice.json + r9_tree5_tree_{TT,FF}_rcx.txt")
 
