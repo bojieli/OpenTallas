@@ -38,10 +38,10 @@ def test_raw_transport_has_same_depth_and_mission_gate_survives():
 def test_wrapper_uses_raw_only_for_declared_transport_and_content(tmp_path):
     p = mixed()
     gen_rtl.write_rtl(p, tmp_path)
-    mid = (tmp_path/'tiny_mid.sv').read_text()
+    mid = (tmp_path/(p['partition_types']['mid']['module']+'.sv')).read_text()
     assert re.search(r'u_ft_fx_s0.*?\.rst_n\(rst_boot_t', mid)
     assert re.search(r'u_ft_fr_s0.*?\.rst_n\(rst_n_t', mid)
-    src = (tmp_path/'tiny_src.sv').read_text()
+    src = (tmp_path/(p['partition_types']['src']['module']+'.sv')).read_text()
     assert re.search(r'\.rst_n\(rst_boot_t', src)
     assert 'wire rst_n = rst_n_t' in src
 
