@@ -453,3 +453,22 @@ class TestAutopilotAutoGeom(TickBase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class GapsAnswered(unittest.TestCase):
+    """FLOW-SHARED-4 10-27 (COORD): an AUTO-GEOM FAIL / sample leaves LOOP-GAPS once GEOM-REVIEW.md answers its tag."""
+    ST = {"auto_geom": {"r1": {"state": "DONE", "verdict": "FAIL", "t_done": 1.0, "line": "AUTO-GEOM FAIL r1"},
+                        "r2": {"state": "DONE", "verdict": "PASS", "sampled": True, "t_done": 2.0, "line": "s"},
+                        "r3": {"state": "DONE", "verdict": "PASS", "t_done": 3.0, "line": "p"}}}
+
+    def ids(self, text):
+        return sorted(l.split(":")[0].split()[-1] for _, l in AG.gaps(self.ST, 10.0, text))
+
+    def test_unanswered_listed_control(self):
+        self.assertEqual(self.ids(""), ["r1", "r2"])
+        # a REQ (not an answer) or another row's reply does not clear it
+        self.assertEqual(self.ids("- GEOM REQ [AUTO-GEOM r1] please view\n- REPLY [AUTO-GEOM r10] PASS"), ["r1", "r2"])
+
+    def test_reply_or_verdict_clears(self):
+        self.assertEqual(self.ids("- [GEOM-REVIEW-31 17:02] REPLY [AUTO-GEOM r1] FAIL viewed type x"), ["r2"])
+        self.assertEqual(self.ids("VERDICT [AUTO-GEOM r2] PASS\nREPLY [AUTO-GEOM r1] PASS-COND"), [])
