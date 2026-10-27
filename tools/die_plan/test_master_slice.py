@@ -331,3 +331,20 @@ def test_kit_check_clock_entry_on_track_and_size(tmp_path):
     assert any("pin_size" in i and "GEOM-21" in i for i in iss) and not any("off the" in i for i in iss), iss
     # signal entry pins keep their size and are not snapped
     assert MS.slice_pins(sl, "clk")["din[0]"] == ("M7", (0.0, 210.0))
+
+
+def test_consume_io_syncs_audited_pins_json(tmp_path):
+    """S81-ECO-2 (qbank_S / sstn c18 PIN_AUDIT ck[0] M4 vs placed M5): the slice-placed clock entry is also the
+    audited pin (interior face 'island'), and check_kit FAILs a kit whose pins.json still carries the stale face pin."""
+    kd, sl = _clock_kit(tmp_path)
+    stale = [{"bus": "clk", "bit": None, "layer": "M4", "x": 0.042, "y": 17.292, "face": "W"},
+             {"bus": "d", "bit": 0, "layer": "M3", "x": 2.3, "y": 0.019, "face": "S"}]
+    (kd / "pins.json").write_text(json.dumps(stale))
+    (kd / "io.tcl").write_text("place_pin -pin_name {clk} -layer M4 -location {0.042 17.292} -pin_size {0.084 0.024}\n")
+    MS._consume_io(kd, sl, "clk")
+    pins = json.loads((kd / "pins.json").read_text())
+    assert pins[0] == {"bus": "clk", "bit": None, "layer": "M5", "x": 432.012, "y": 432.0, "face": "island"}
+    assert pins[1] == stale[1]
+    assert not [i for i in MS.check_kit(kd)["issues"] if "pins.json" in i]
+    (kd / "pins.json").write_text(json.dumps(stale))
+    assert [i for i in MS.check_kit(kd)["issues"] if "pins.json clk" in i]

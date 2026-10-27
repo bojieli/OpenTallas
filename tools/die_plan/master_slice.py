@@ -549,10 +549,70 @@ def _consume_io(kd, sl, clock_port):
             hit = True
         if hit:
             f.write_text("\n".join(lines))
+    placed = {}
+    for name in done:
+        layer, (x, y) = want[name]
+        placed[name] = (layer, snap_on_track(kd, layer, x, y) if name == clock_port else (x, y))
+    _sync_pins_json(kd, placed)
     (Path(kd) / "master_slice_io.json").write_text(json.dumps(dict(
         rewritten={k: v for k, v in sorted(done.items())},
         slice_pins={k: dict(layer=v[0], xy_um=list(v[1])) for k, v in sorted(want.items())}), indent=1) + "\n")
     return done
+
+
+def _pin_key(p):
+    return p["bus"] if p.get("bit") is None else f"{p['bus']}[{p['bit']}]"
+
+
+def _face_of(x, y, outline, tol=1e-3):
+    """plan face of a pin centre on a W x H kit: N/E/S/W when on that edge, else 'island' (interior, pin_audit)."""
+    if outline:
+        W, H = outline
+        for f, hit in (("W", abs(x) <= tol), ("E", abs(x - W) <= tol), ("S", abs(y) <= tol), ("N", abs(y - H) <= tol)):
+            if hit:
+                return f
+    return "island"
+
+
+def _sync_pins_json(kd, placed):
+    """S81-ECO-2 10-27 (qbank_S / sstn_base566 c18 PIN_AUDIT ck[0] M4 vs placed M5): the slice rewrites io placement,
+    so the kit's audited pin table (pins.json, PIN_AUDIT / face checks) must carry the SAME pins -- else the routed
+    audit compares the slice pin with the generator's stale face pin.  Rewrites matching entries in place."""
+    pj = Path(kd) / "pins.json"
+    if not placed or not pj.is_file():
+        return []
+    raw = json.loads(pj.read_text())
+    rows = raw.get("pins") if isinstance(raw, dict) else raw
+    ol, changed = _kit_outline(kd), []
+    for r in rows:
+        k = _pin_key(r)
+        if k in placed:
+            layer, (x, y) = placed[k]
+            new = dict(layer=layer, x=round(x, 4), y=round(y, 4), face=_face_of(x, y, ol))
+            if any(r.get(a) != b for a, b in new.items()):
+                r.update(new)
+                changed.append(k)
+    if changed:
+        pj.write_text(json.dumps(raw))
+    return changed
+
+
+def pins_json_errors(kd, placed):
+    """kit pins.json entries that disagree with the slice-placed pins -> [errors] (check_kit)."""
+    pj = Path(kd) / "pins.json"
+    if not placed or not pj.is_file():
+        return []
+    raw = json.loads(pj.read_text())
+    rows = {_pin_key(r): r for r in (raw.get("pins") if isinstance(raw, dict) else raw)}
+    err = []
+    for k, (layer, (x, y)) in sorted(placed.items()):
+        r = rows.get(k)
+        if r is None:
+            continue
+        if r.get("layer") != layer or abs(float(r["x"]) - x) > 1e-3 or abs(float(r["y"]) - y) > 1e-3:
+            err.append(f"pins.json {k} {r.get('layer')} ({r.get('x')}, {r.get('y')}) != slice-placed {layer} "
+                       f"({x:.4f}, {y:.4f}): PIN_AUDIT would audit a stale pin")
+    return err
 
 
 def _kit_outline(kd):
@@ -669,6 +729,15 @@ def check_kit(kd, slice_path=None, tol=1e-3):
             if not lm or lm.group(1) != lay or not xm or abs(float(xm.group(1)) - x) > tol or abs(float(xm.group(2)) - y) > tol:
                 issues.append(f"{f.name}: {n} placed at {xm.groups() if xm else '?'} {lm.group(1) if lm else '?'}, "
                               f"slice {lay} ({x:g}, {y:g})")
+    # S81-ECO-2: the audited pin table must be the slice-placed pins too (PIN_AUDIT ck[0] M4 vs M5, qbank_S/sstn c18)
+    placed = {}
+    for n in seen:
+        lay, (x, y) = want[n]
+        try:
+            placed[n] = (lay, snap_on_track(kd, lay, x, y) if n == clock_port else (x, y))
+        except ValueError:
+            continue
+    issues += pins_json_errors(kd, placed)
     checks["slice_pins"] = dict(fixed=len(want), placed_by_kit_io=sum(seen.values()),
                                 clock_port=clock_port, clock_entry=list(entry["xy_um"]) if entry else None)
     # latency target carried into the kit SDC/budget (12.3)
