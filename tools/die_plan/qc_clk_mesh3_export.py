@@ -156,6 +156,7 @@ def export(B):
     site_rows, errors, examples = {}, Counter(), defaultdict(list)
     adapter_constraints = Counter()
     islands = defaultdict(set)
+    inst_footprints = defaultdict(lambda: defaultdict(set))
     widths = {}
     for k in sorted(used):
         c = cells[k]
@@ -199,18 +200,35 @@ def export(B):
                 # Bounding box transformed into the master frame: reserved island
                 # footprint is the union, shared by every instance of the type.
                 p0,p1 = frame_xy(P,host,x,y),frame_xy(P,host,x+w,y+ROW_Y)
-                islands[P.parts[host]['type']].add((min(p0[0],p1[0]),min(p0[1],p1[1]),max(p0[0],p1[0]),max(p0[1],p1[1])))
+                fp=(min(p0[0],p1[0]),min(p0[1],p1[1]),max(p0[0],p1[0]),max(p0[1],p1[1]))
+                islands[P.parts[host]['type']].add(fp)
+                inst_footprints[P.parts[host]['type']][host].add(fp+(m,))
     from die_clock_mesh import placement_overlaps
     ov = placement_overlaps({n:dict(x=v['origin_um'][0],y=v['origin_um'][1],lib=v['master']) for n,v in site_rows.items()})
     if ov:
         errors['physical_cell_overlap'] = len(ov)
         examples['physical_cell_overlap'] = ov[:5]
     ndrs = sorted({e['ndr'] for e in edges})
+    reach = sorted(edges,key=lambda e:-e['pin_to_pin_um'])
+    reach_summary = dict(max_um=reach[0]['pin_to_pin_um'] if reach else 0,over_450=sum(e['pin_to_pin_um']>450.0001 for e in edges),
+                         worst=[dict(edge=e['edge'],pin_to_pin_um=e['pin_to_pin_um']) for e in reach[:8]],
+                         status='PLAN_GEOMETRY; track jogs and extracted RC still required')
+    identity = {}
+    for t,members in inst_footprints.items():
+        allparts=[n for n,d in P.parts.items() if d['type']==t]
+        sets={frozenset(members.get(n,set())) for n in allparts}
+        identity[t]=dict(instances=len(allparts),hosting=len(members),distinct_footprint_master_sets=len(sets),
+                         identical=len(sets)==1,union_sites=len(islands[t]))
     adapter_reasons = []
-    if adapter_constraints: adapter_reasons.append('V2 heterogeneous pin-tie import required: '+str(dict(adapter_constraints)))
+    if adapter_constraints:
+        import die_clock_mesh as D
+        if not hasattr(D,'_explicit_v2_wires'): adapter_reasons.append('V2 heterogeneous pin-tie importer missing')
     if any(n not in {'4w','8w','16w'} for n in ndrs): adapter_reasons.append('physical NDR not yet modelled: '+','.join(n for n in ndrs if n not in {'4w','8w','16w'}))
     if errors: adapter_reasons.append('physical geometry gate fails')
-    if B.get('a0'): adapter_reasons.append('continuous mesh conductor manifest still needs dbWire/pin-stack import; tree-only build is incomplete')
+    if B.get('a0'):
+        import importlib.util
+        if importlib.util.find_spec('explicit_clock_mesh') is None:
+            adapter_reasons.append('continuous mesh dbWire/pin-stack importer missing; tree-only build is incomplete')
     driver_groups = {}
     mesh_form = None
     if B.get('a0'):
@@ -237,9 +255,11 @@ def export(B):
                              geometry_verdict='PASS' if not errors else 'FAIL',errors=dict(errors),examples=dict(examples),
                              adapter_constraints=dict(adapter_constraints),
                              groups=len(used),instances=len(site_rows),nets=len(edges),edge_coverage=coverage,root=root,
-                             ndrs=ndrs,declared_timing='NOT RUN',declared_clock_signoff='NOT RUN'),
+                             ndrs=ndrs,post_legal_reach=reach_summary,per_type_placement=identity,
+                             declared_timing='NOT RUN',declared_clock_signoff='NOT RUN'),
                 cell_sites=site_rows,nets=edges,channel_hosts=True,exact_reserve=True,
                 build_adapter=dict(verdict='BLOCKED' if adapter_reasons else 'READY',reasons=adapter_reasons,
+                                   required_features=['explicit_clock_v2','per_edge_ndr','heterogeneous_M7_ties','complete_continuous_mesh'],
                                    policy='No edge/NDR is discarded or substituted; no route admission from this export.'),
                 per_type_island_footprints={t:[list(q) for q in sorted(v)] for t,v in sorted(islands.items())})
     mesh = mesh_geometry(mesh_form,driver_groups) if mesh_form else None
