@@ -295,7 +295,7 @@ module qkd_ctrl_kc #(
     (* keep *) reg hr_q;
     (* keep *) reg rs_q;
     always @(posedge pll_hbm) hr_q <= hrst;
-    always @(posedge ck)      rs_q <= rsi;
+    (* keep *) always @(posedge ck) rs_q <= rsi;  // KV-KITS-2 10-27: keep on the process: not merged with a twin pin reset flop
     (* keep *) reg        kv_q;
     (* keep *) reg [31:0] kd_q;
     always @(posedge ck or negedge rs_q) if (!rs_q) kv_q <= 1'b0; else kv_q <= kc[0];

@@ -1459,6 +1459,45 @@ def wf_die_start(P, ind="    "):
     return lines, sin, souts
 
 
+def wf_open_outs(P):
+    """KV-KITS-2 (COORD 10-27 03:41): the registered wavefront outs a soft INSTANCE leaves unconnected, with the plan
+    proof.  rst_o_<k> / start_o_<k> are uniform per TYPE (out_pins: every out site ANY instance of the type uses), so an
+    instance whose wavefront children (wf_solve parent table) do not use site k leaves rst_o_<k> open, and start_o_<k>
+    is open when no SOFT child uses it (hard partitions take the raw reset only, no start pin).  Each such output is
+    driven only by its own pin relay flop (ot_dp_rrelay q -> port; face_guard 'shared' check on the kit), so an
+    unloaded port is functionally dead on that instance.  -> {part: {port: reason}} (soft parts only)."""
+    if not wavefront(P):
+        return {}
+    W = wf_plan(P)
+    used, soft_used = {}, {}
+    for p, r in W["parts"].items():
+        if r["parent"] is None:
+            continue
+        q, port = r["source"].split(".")
+        used.setdefault(q, set()).add(port)
+        if r["type"] in W["types"]:
+            soft_used.setdefault(q, set()).add(port.replace("rst_o_", "start_o_"))
+    res = {}
+    for p, r in W["parts"].items():
+        tn = r["type"]
+        if tn not in W["types"]:
+            continue
+        o = {}
+        for n, _x, _y in out_pins(P, tn):
+            if n not in used.get(p, set()):
+                o[n] = (f"reset wavefront: {tn} out site {n} is used by another instance of the type; {p} has no "
+                        "wavefront child on it (wf_solve parent table); driver = its own pin relay flop only")
+        for n, _x, _y in start_out_pins(P, tn):
+            if n not in soft_used.get(p, set()):
+                why = ("no wavefront child" if n.replace("start_o_", "rst_o_") not in used.get(p, set())
+                       else "only HARD children (raw reset, no start_i)")
+                o[n] = (f"START broadcast: {p} has {why} on {n} (wf_solve parent table); driver = its own run relay "
+                        "flop only")
+        if o:
+            res[p] = o
+    return res
+
+
 # ----------------------------------------------------------------------------------------------- RTL / TCL
 def relay_sv():
     """the ot_dp_rrelay module text (held in gen_rtl.CELLS, the one copy of the kit cells)."""
