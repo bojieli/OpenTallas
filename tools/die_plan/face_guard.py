@@ -368,6 +368,33 @@ def kit_bump_list(kitdir):
     return [(x["port"], x["dir"], int(x["width"])) for x in json.loads(b.read_text()).get("bump_ports") or []]
 
 
+DEAD_SCHEMA = "opentallas.kit_dead_inputs.v1"
+_DEAD_BIT = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*(\[[0-9]+\])?$")
+
+
+def dead_input_list(doc):
+    """QK-CORES-5 10-27 (COORD ruling: 'declare dead only with a proof receipt'): a kit dead_inputs.json names input
+    pin bits that are provably unobservable in this core's parameterisation (no flop to register them: synthesis
+    removes their whole cone).  Fail-closed: schema, unique exact bit names (no regex), and a proof record with
+    verdict PASS, a method and a receipt are required; anything else -> ValueError."""
+    if not isinstance(doc, dict) or doc.get("schema") != DEAD_SCHEMA:
+        raise ValueError(f"dead_inputs.json: schema must be {DEAD_SCHEMA}")
+    bits = doc.get("bits")
+    if not isinstance(bits, list) or not bits or len(set(bits)) != len(bits) or \
+            not all(isinstance(b, str) and _DEAD_BIT.match(b) for b in bits):
+        raise ValueError(f"dead_inputs.json: bits must be unique exact port bit names: {bits}")
+    pr = doc.get("proof")
+    if not isinstance(pr, dict) or pr.get("verdict") != "PASS" or not pr.get("method") or not pr.get("receipt"):
+        raise ValueError("dead_inputs.json: proof needs verdict PASS + method + receipt")
+    return list(bits)
+
+
+def kit_dead_list(kitdir):
+    """the kit's declared proven-dead input bits (dead_inputs.json), [] when none."""
+    f = Path(kitdir) / "dead_inputs.json"
+    return dead_input_list(json.loads(f.read_text())) if f.is_file() else []
+
+
 def _std_cell(master):
     return "_ASAP7_" in master.upper() or master.startswith("$")
 
@@ -381,7 +408,7 @@ def sdc_clock_ports(text):
     return out
 
 
-def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(), clocks=(), land=None):
+def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(), clocks=(), land=None, dead=()):
     """straps: declared ID strap ports (OWNER 10-25 option B, straps.py): quasi-static strap_* inputs tied at the
     parent need no pin register -> exempt (recorded in the result); any other name is refused (ValueError).
     bumps: declared hard-IP line-side ports [(port, dir, width)] (plan bump_ports, KV-KITS-4 10-27): the bump IS the
@@ -392,7 +419,10 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
     distinct flop (no buffer, no logic: the slots are the face registers), the D flops clocked by D DISTINCT integrated
     clock gates (one ICG* per slot; its GCLK net feeds flop clock pins only), all D ICGs gated from ONE clock net (the
     lane's forwarded clock).  Anything else
-    fails class "land_slot"; a declared bus that is not an input port fails too."""
+    fails class "land_slot"; a declared bus that is not an input port fails too.
+    dead: declared proven-dead input bits (kit dead_inputs.json, dead_input_list): each must be an input port bit
+    whose net has NO load and no driver in the netlist -- then it is recorded (dead_declared), not a face register;
+    a declared bit that is not an input port bit, or that still loads anything, fails class "dead"."""
     # QC-KITS-R1 10-27: extra clock roles of a bound partition (e.g. coll clk_coll / clk_serdes) are clock ports, not
     # face data: the kit SDC create_clock list (generated from the plan) exempts them like clk / clk_tN.
     clocks = [c for c in (clocks or ()) if not re.fullmatch(skip_re, c)]
@@ -432,6 +462,9 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
     for b, r in port_root.items():
         roots_ports[r].append(b)
     res = dict(top=top, checked=0, ok=0, fails=defaultdict(list), flops={}, straps_exempt=sorted(straps or ()))
+    dead = set(dead or ())
+    dead_seen = set()
+    res["dead_declared"] = []
     claimed = defaultdict(list)
 
     def fail(cls, b, why):
@@ -513,6 +546,13 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                 continue
             if r.startswith("CONST_"):
                 fail("const", b, f"tied {r}")
+                continue
+            if b in dead:
+                dead_seen.add(b)
+                if d != "input" or loads[r] or drv[r]:
+                    fail("dead", b, f"declared dead but {d} with {len(loads[r])} load(s) / {len(drv[r])} driver(s)")
+                else:
+                    res["dead_declared"].append(b)
                 continue
             if d == "output":
                 cur, chain, ff = r, [], None
@@ -612,6 +652,8 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
             claimed[ff[0]].append(b)
             res["flops"][b] = ff[1]
             res["ok"] += 1
+    for b in sorted(dead - dead_seen):
+        fail("dead", b, "declared dead bit is not a checked port bit of this netlist")
     pair_ok = set()
     for ci, bs in claimed.items():
         if len(bs) > 1 and _ft1_pair(bs, ft1, T.dirs):
@@ -688,7 +730,8 @@ def main(argv=None):
     ck = sdc_clock_ports(Path(sdc).read_text()) if sdc and Path(sdc).exists() else []
     lf = a.land or (str(Path(a.pins).with_name("land_slots.json")) if a.pins else None)
     land = kit_land(lf) if lf and Path(lf).exists() else None
-    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl, bumps=bl, clocks=ck, land=land)
+    dl = kit_dead_list(Path(a.pins).parent) if a.pins else []
+    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl, bumps=bl, clocks=ck, land=land, dead=dl)
     r["netlist"] = a.netlist
     if a.out:
         Path(a.out).write_text(json.dumps(r, indent=1) + "\n")
