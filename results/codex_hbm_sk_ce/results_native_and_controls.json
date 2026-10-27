@@ -1,0 +1,28 @@
+{
+  "native_split": {
+    "positive": "PASS40 results/21263 edges/0 errors",
+    "mutant_early_enable": "FAIL expected20763 errors"
+  },
+  "physical_default": {
+    "LAND": 1,
+    "CAP": 296,
+    "verdict": "FAIL",
+    "errors": 20762,
+    "root_cause": "Two face stages delay steady.load pulse past same-phase step0 enable; fixed CAP also captures before returned out_valid"
+  },
+  "calendar_only": {
+    "LAND": 1,
+    "CAP": 299,
+    "verdict": "FAIL",
+    "errors": 20759,
+    "root_cause": "Capture shift alone does not repair missed load pulse"
+  },
+  "fix": "Phase step0 CE2 coreedges after steady; measure paired CAP adjustments. NOT ADOPTED until full shell miter PASS.",
+  "kit_generation": {
+    "tail_rest_0": "PASS",
+    "tail_rest_1": "PASS",
+    "sk_step0": "PASS",
+    "sk_steady": "BLOCKED busy__W plan duplicate output absent native top; PORTS owner notified"
+  },
+  "timing": "833ps TT/FF policy unchanged; CE-qualified multicycle timing contract unanswered, no exception applied"
+}
