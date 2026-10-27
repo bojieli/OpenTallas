@@ -44,3 +44,8 @@ export OT_TAP_PITCH_UM = 600
 export SKIP_CTS_REPAIR_TIMING = 1
 export POST_CTS_TCL = /work/cts_post.tcl
 export PRE_CTS_TCL = /work/hold_budget.tcl
+# S81-ECO-1 2026-10-27 (COORD RETIME-VIEWS-2 ruling): FF hold repair in the FF vclk frame (METHODOLOGY 12.3: TT 250 / FF 202.5)
+export OT_VCLK_TT = 250.0000
+export OT_VCLK_FF = 202.5000
+override export PRE_GLOBAL_ROUTE_TCL = /work/eco_grt_pre.tcl
+override export POST_GLOBAL_ROUTE_TCL = /work/eco_grt_post.tcl
