@@ -1,0 +1,7 @@
+{
+ "verdict": "FAIL",
+ "source_recipe": "1149fea184 E2 / earlier E6 copies",
+ "reason": "Initialsitehookchangedrowwithouttargetorientation; nativeauditfoundMXcapturesonR0rows evenwhenDPLpassed; oldrouteswithdrawnbeforelaunch",
+ "preserved_reach_results": "E2 404.298 PASS; E6try2 399.303 PASS; these do not waive the PGorientationfailure",
+ "replacement": "head_face_reach_orient.tcl whole16capturebank atactualroworientation; finalindependentall28988FFaudit0mismatches"
+}
