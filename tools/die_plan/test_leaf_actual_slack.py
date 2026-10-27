@@ -2,14 +2,14 @@ from types import SimpleNamespace
 from unittest.mock import patch
 import die_clock_mesh as DM
 
-def vehicle(exact, generic=False, segments=None, ft=None):
+def vehicle(exact, generic=False, segments=None, ft=None, keepouts=None):
  P=SimpleNamespace(W=800.,H=800.,clock={},types={'T':{}},layer_budget={'partition_signal_max':'M7'},parts={'p':{'type':'T'}},rect=lambda n:(0.,0.,800.,800.),to_die=lambda n,xy:xy)
  lat=dict(ys_um=[200.,600.],leaf_ys_um=[200.,600.],xs_um=[200.,600.],leaf_grid=[2,2],drv_reach_um=200.,off_core_resite=True,off_core_drop_driver=True,off_core_alt_l=True,hop_reach_um=405.,actual_leaf_slack=exact)
  if ft is not None:
   P.types['T']['ft_slots']=[dict(name='a',bit_site_cell_um=[1.404,.27],bit_sites_um=[[[200.,200.]]],regs_um=[])]
   lat['avoid_ft_halos']=ft
  if segments is not None:lat['min_level_segments']=segments
- with patch.object(DM.DC,'keepouts',return_value=[(150.,300.,250.,500.,'p/core')]),patch.object(DM.DC,'plan_taps',return_value=[('p','clk',600.,600.,0.)]),patch.object(DM.DC,'plan_tap_early',return_value={}):
+ with patch.object(DM.DC,'keepouts',return_value=keepouts if keepouts is not None else [(150.,300.,250.,500.,'p/core')]),patch.object(DM.DC,'plan_taps',return_value=[('p','clk',600.,600.,0.)]),patch.object(DM.DC,'plan_tap_early',return_value={}):
   return DM.build(P,2,2,m=1,max_move=0.,rep_um=405.,hop_max=405.,lattice=None if generic else lat)
 
 def test_actual_leaf_positions_allow_node_to_escape_core_without_extra_stages():
@@ -68,3 +68,13 @@ def test_actual_hop_guard_uses_exported_pin_bars_not_average_leg_length():
  assert not DM.actual_clock_hop_violations(c,[dict(drv='a',loads=['b'])],405.)
  bad=DM.actual_clock_hop_violations(c,[dict(drv='b',loads=['a'])],405.)
  assert bad==[dict(drv='b',load='a',span_um=406.566)]
+
+
+def test_final_leaf_diamonds_allow_directional_move_beyond_scalar_radius():
+ ko=[(100.,300.,300.,500.,'p/core'),(150.,30.,250.,380.,'p/core2')]
+ _,_,_,old=vehicle(False,keepouts=ko)
+ _,_,_,new=vehicle(True,keepouts=ko)
+ assert old['pushdown']
+ assert not new['pushdown']
+ assert not new['clock_actual_hop_violations']
+ assert not new['clock_hard_keepout_violations']

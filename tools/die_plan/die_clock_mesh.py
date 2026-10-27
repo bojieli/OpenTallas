@@ -1946,6 +1946,26 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                                       accept=lambda z: abs(z[0]-here[0]) + abs(z[1]-here[1]) <= cap_ + 1e-6)
                     if q_ is not None:
                         q, d = q_, d_
+            if lg.get("actual_leaf_slack") and (kr[1]-kr[0])*(kr[3]-kr[2]) == 2:
+                # The scalar slide radius is only a sufficient bound. The real
+                # feasible region is the intersection of both live leaf diamonds;
+                # moving toward the farther child can increase available freedom.
+                children = [cn for ii in range(kr[0],kr[1]) for jj in range(kr[2],kr[3])
+                            for cn in out["drivers"].get(f"{ii}_{jj}",{}).get("cells",[])]
+                ip_ = node_xy(i0,i1,j0,j1)
+                cap_ = lg_segments(abs(kp[0]-ip_[0])+abs(kp[1]-ip_[1]),level+1)*lg["hop_reach"]
+                py_ = C128.pin_xy(cells,drv_cell,"Y",ROW_Y)
+                child_pins = [C128.pin_xy(cells,cn,"A",ROW_Y) for cn in children]
+                def leaf_ok(pt):
+                    cc = {"q":dict(x=snap(pt[0]-BUF_W/2,SITE_X),y=snap(pt[1]-ROW_Y/2,ROW_Y))}
+                    qa = C128.pin_xy(cc,"q","A",ROW_Y);qy = C128.pin_xy(cc,"q","Y",ROW_Y)
+                    return (abs(py_[0]-qa[0])+abs(py_[1]-qa[1]) <= cap_+1e-6 and
+                            all(abs(qy[0]-cp[0])+abs(qy[1]-cp[1]) <= lg["hop_reach"]+1e-6 for cp in child_pins))
+                if children and (hitf(K,q) or not leaf_ok(q)):
+                    qq,dd = free_near(K,kp,limit=lg["hop_reach"],step=STEP_UM*2,accept=leaf_ok)
+                    if qq is not None:
+                        q,d,isl = qq,dd,None
+                        out["pushdown"] = [r for r in out["pushdown"] if r["name"] != f"ckm_n{level+1}_{tag}"]
             nb = cell(f"ckm_n{level + 1}_{tag}", q[0], q[1], "node", level=level + 1)
             corner = list(q)
             corner[inc] = here[inc]
