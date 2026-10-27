@@ -61,6 +61,30 @@ class GrtLayers(unittest.TestCase):
             out, _ = self._run(td, pg_ir="FAIL", pg_ir_open_trial=True)
             self.assertTrue(json.loads((out / "grt_meta.json").read_text())["trial"])
 
+    def test_capacity_only_never_freezes_even_with_passing_clock_and_grt(self):
+        with tempfile.TemporaryDirectory() as td:
+            out, _ = self._run(td)
+            (out / "grt.log").write_text("Final congestion report\n M4 100 1 1.0% 0 / 0 / 0\n"
+                                         " Total 100 1 1.0% 0 / 0 / 0\nEXIT 0\n")
+            d = Path(td)
+            clk = d / "clock"
+            clk.mkdir()
+            (clk / "clock_report.json").write_text(json.dumps({"corners": {
+                c: {"verdict": "PASS", "related_pair_max_ps": 10} for c in ("TT", "FF")}}))
+            a = SimpleNamespace(pre=str(d / "pre"), grt=[str(out)], clock=str(clk), clock_post=str(clk),
+                                pg=None, sites=None, out=str(d / "report.json"))
+            for extra, expected in (({}, "FAIL"), ({"connected_preroutes": False}, "FAIL"),
+                                    ({"connected_preroutes": True, "qualification": "CAPACITY_RESERVATION_ONLY"}, "FAIL"),
+                                    ({"connected_preroutes": True, "qualification": "CONNECTED_FIXED_ROUTES"}, "PASS")):
+                pre = {"tracks_taken": {"M8": {"all": 0.1}}, **extra}
+                (d / "pre/preroute.json").write_text(json.dumps(pre))
+                DI.cmd_report(a)
+                gate = json.loads((d / "report.json").read_text())["freeze_gate"]
+                self.assertTrue(gate["signal_grt0"])
+                self.assertTrue(gate["clock_alone"])
+                self.assertTrue(gate["clock_post_signal"])
+                self.assertEqual(gate["verdict"], expected)
+
     def test_pg_growth_after_grt_and_post_signal_skew_gate(self):
         with tempfile.TemporaryDirectory() as td:
             out, pg = self._run(td)

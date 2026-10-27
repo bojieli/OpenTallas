@@ -941,8 +941,15 @@ def cmd_report(a):
         bool(rep.get("clock_post_signal"))
     grt_ok = bool(rep.get("grt")) and all(g_["verdict"] == "PASS" and g_.get("freeze_evidence", True)
                                           for g_ in rep["grt"].values())
+    connected_ok = (pre.get("connected_preroutes") is True and
+                    pre.get("qualification") != "CAPACITY_RESERVATION_ONLY")
     rep["freeze_gate"] = dict(rule="METHODOLOGY 12.4a/d/e", clock_alone=clk_ok, clock_post_signal=post_ok,
-                              signal_grt0=grt_ok, verdict="PASS" if clk_ok and post_ok and grt_ok else "FAIL")
+                              signal_grt0=grt_ok, connected_preroutes=connected_ok,
+                              verdict="PASS" if clk_ok and post_ok and grt_ok and connected_ok else "FAIL")
+    if not connected_ok:
+        rep["freeze_gate"]["reasons"] = [
+            "capacity reservations do not import fixed wires/vias/terminals into the signal design"]
+        rep["missing_implementation"] = pre.get("missing_implementation", [])
     if a.pg:
         pg = json.loads(Path(a.pg).read_text())
         rep["pg"] = {k: pg.get(k) for k in ("grid", "tracks", "regions", "psm")}
