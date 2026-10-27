@@ -1386,3 +1386,5 @@ CODEX: 2026-10-27 08:48 PDT Qwen native source cohort READY4ca93bed6f: bootwindo
 CODEX: 2026-10-27 08:50 PDT RM48 clock zero-load pruning; RM49 main 961b7c0a97 == origin/main reviewed QC actual clock export + static preflight, 29 composition PASS; physical QC FAIL/RC+snap holds retained, 0 deletions.
 CODEX: 2026-10-27 08:50 PDT PV join pass2 on826ff576d6: approved1BUF trunk CTS PASS,15763sinks; placement TT+2.27/FFhold+1.22, oldclockmodelmiss retained; route trial next. Shared entrypinshape fixd0a96a8a53 READY; fR180CTS live intel2 codex-pv-pass2-0830/fr180_cts.otrun.log.
 CODEX: 2026-10-27 08:51 PDT S81 mostreplicatedQX737pin4ROMPLACEtrialLIVEepyc2unit3433661; XRT1/3+XFINOOM20/24/12GBrootcauses→64GBproofretries. BFresetport_rst_n_pin_omission→sharedLECfix. H1oldviewFF202.5SIGNED34.75/0.87,currentcentreentryreuseFAIL.3smallcorePLACEtrialsadvancewhileexact5bcanaryruns.
+
+CODEX: 2026-10-27 08:52 PDT HBM CE source READY d02f055a42: native40/40+mutant and physical508edge contract40/40 PASS;4current-view kits PASS; narrowload pulse fixed bystep0enablephase2+CAP299; LAND0 rejected; timing-contract OWNER? no exception/route.
