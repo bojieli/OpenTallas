@@ -701,11 +701,379 @@ def build(a, st):
                     cnodes[t0:] = [n for n in cnodes[t0:] if n["tag"] not in cut]
                     assert r["tag"] not in cut
                 ctrees.append(dict(g=gi, c=ci, tap=tapxy, root=r["tag"], nodes=cnodes[t0:]))
-    return dict(rec=rec, P=P, dtp=dtp, parts=parts, cores=cores, cols=cols, gaps=gaps, rows=rows, m=m, dy=dy,
+    B_ = dict(rec=rec, P=P, dtp=dtp, parts=parts, cores=cores, cols=cols, gaps=gaps, rows=rows, m=m, dy=dy,
                 scols=scols, top_nodes=nodes, top_root=root, spine_drv=spine_drv, ctrees=ctrees, cnodes=cnodes,
                 et=dict(top=top, col=col), free=free, incore=incore, added_cols=lattice.added, dropped_rows=dropped, r9=r9,
                 islands=I, groot_x=getattr(build, "groot_x", None),
                 periodic=(build.__dict__.pop("periodic", None) if PERIODIC is not None else None))
+    if getattr(a, "a0_mesh", None):        # R26 opt-in: A0 drop-lattice mesh form + balanced band trees
+        B_["a0"] = a0_form(a, rec, parts, cores)
+        B_["btrees"], B_["bleaf"], B_["a0"]["band_trees"] = band_trees(B_, st, a)
+    return B_
+
+
+# ------------------------------------------------------------------------------------------------ R26 A0 drop-lattice mesh
+# INFRA-FIRST-QC-R26 (COORD ruling INFRA-FIRST-QC-R25 a764d022ff (a): form ADOPTED).  Opt-in (--a0-mesh R3B.json); without
+# it nothing changes (test_qc_defaults_*).  The fine mesh over the A0 field becomes the R25 form:
+#   * straps: r2 straps outside the A0 field + every driver column + the R3b drop straps (M9 x0+U per A0 column, M8
+#     y0+V | y0+H-V per A0 row); M8 straps start at the W-edge column;
+#   * drop M9 SEGMENTED per A0 row (band below -> band above), no full-height interior strap;
+#   * BAND DRIVERS: one BUFx24 ON every drop M9 in every A0 row band (site = the kept M8 strap nearest the band centre,
+#     else the 8.64 lane; fail-closed: never on a hard core (+4.32) or a partition seam);
+#   * W-EDGE driver column at --a0-wedge-x (1632.96) with a driver at every M8 y off the cores;
+#   * plan-computed x2 (12.8 d1) on the band drivers of every A0 column with < 2 adjacent driver columns (--a0-size adjcol);
+#   * VIA89 at EVERY M9 x M8 crossing: fail-closed (geometric crossings == shared netlist nodes, else exit 2);
+#   * BALANCED BAND TREES (12.8 c/d1, no trims): every band / W-edge driver is a leaf of a band tree hung from the SAME
+#     spine/top tap as the column tree of its feed column and gap group: x-tree along the band row (zero-skew merge, node
+#     on the straight segment), straight leg to the feed column, y-tree over the band rows on that column, leg to the tap.
+#     merge() gives equal stage count on every root->leaf path; the final leg gets the extra repeaters that make the band
+#     tree's stage count EQUAL to the column tree's (equal levels); the band tree wire/drive (EdgeType w, m) is chosen per
+#     tree by the plan from the candidate set so its TT delay matches the column tree's (12.8 d1 plan-computed sizing).
+#     The remaining TT difference is recorded as the residual and stays in the solve (no trim, no pad).
+A0_CW, A0_CH = 457.92, 1157.76
+BAND_ETS = (("4w", 1), ("4w", 2), ("8w", 1), ("8w", 2), ("16w", 1), ("16w", 2), ("2x16w", 1), ("2x16w", 2), ("2x16w", 3))
+
+
+def a0_form(a, rec, parts, cores):
+    """R25 drop-lattice form on the r2 record (plan geometry only): straps, segments, band / W-edge drivers, drop loads."""
+    R3 = json.loads(Path(a.a0_mesh).read_text())
+    L = R3["lattices"][a.a0_lattice]
+    U, V = R3["type_lattice"]["m9_u"], R3["type_lattice"]["m8_v"]
+    inst = L["per_instance"]
+    WX = r3(a.a0_wedge_x)
+    cols0 = sorted({q["x0"] for q in inst})
+    rows0 = sorted({q["y0"] for q in inst})
+    H = rec["H"]
+    over_x = lambda x: any(c - 1e-6 <= x <= c + A0_CW + 1e-6 for c in cols0)
+    over_y = lambda y: any(r - 1e-6 <= y <= r + A0_CH + 1e-6 for r in rows0)
+    incore = lambda x, y, m=ISL: any(c[0] - m < x < c[2] + m and c[1] - m < y < c[3] + m for c in cores)
+    pseam = lambda x, y: any(p[0] <= x <= p[2] and (abs(y - p[1]) < ISL / 2 or abs(y - p[3]) < ISL / 2) for p in parts)
+    dcol = sorted({r3(x) for x in rec["driver_columns"]})
+    kx = sorted({r3(x) for x in rec["xs"] if not over_x(x) or r3(x) in set(dcol)})
+    ky = sorted({r3(y) for y in rec["ys"] if not over_y(y)})
+    dropx = sorted({r3(c + u) for c in cols0 for u in U})
+    dropy = sorted({r3(q["y0"] + (A0_CH - v if q["mx"] else v)) for q in inst for v in V})
+    bands = []
+    for i, y0 in enumerate(rows0):
+        lo = rows0[i - 1] + A0_CH if i and rows0[i - 1] + A0_CH < y0 + 1e-6 and y0 - (rows0[i - 1] + A0_CH) < 400 else max(0.0, y0 - 160.0)
+        bands.append((r3(lo), r3(y0)))
+        hi_next = rows0[i + 1] if i + 1 < len(rows0) else H
+        top = y0 + A0_CH
+        if hi_next - top >= 400 or i + 1 == len(rows0):
+            bands.append((r3(top), r3(min(H, top + 160.0))))
+    bands = sorted(set(bands))
+
+    def band_y(lo, hi, x):
+        yc = (lo + hi) / 2
+        cand = sorted([y for y in ky if lo + ISL <= y <= hi - ISL], key=lambda y: abs(y - yc))
+        cand += sorted([r3(k * ISL) for k in range(int(lo // ISL) + 1, int(hi // ISL) + 1) if lo + ISL / 2 <= k * ISL <= hi - ISL / 2],
+                       key=lambda y: abs(y - yc))
+        for y in cand:
+            if not pseam(x, y) and not incore(x, y, ISL / 2):
+                return r3(y)
+        return None
+    yall = sorted(set(ky) | set(dropy))
+    xmin, xmax = WX, max(kx + dropx)
+    H8 = [(y, xmin, xmax) for y in yall]
+    V9 = [(x, yall[0], yall[-1]) for x in kx] + [(WX, yall[0], yall[-1])]
+    band_drv = []
+    for x in dropx:
+        ybs = {}
+        for b in bands:
+            yb = band_y(b[0], b[1], x)
+            if yb is None:
+                raise SystemExit(f"a0_form: no band driver site at x {x} band {b}")
+            ybs[b] = yb
+        for y0 in rows0:
+            below = [b for b in bands if abs(b[1] - y0) < 1e-6][0]
+            above = [b for b in bands if abs(b[0] - (y0 + A0_CH)) < 1e-6 or (b[0] <= y0 + A0_CH + 1e-6 and b[1] >= y0 + A0_CH)][0]
+            V9.append((x, ybs[below], ybs[above]))
+        for b, yb in ybs.items():
+            band_drv.append((x, yb, b))
+    V9 = sorted(set(V9))
+    adj = {}
+    dc = set(dcol) | {WX}
+    for c in cols0:
+        adj[c] = sum(1 for s0, s1 in ((c - 200.0, c), (c + A0_CW, c + A0_CW + 200.0)) if any(s0 <= x <= s1 for x in dc))
+    drv = []
+    for x, y, b in band_drv:
+        c = max(q for q in cols0 if q <= x)
+        drv.append(dict(kind="band", x=x, y=y, mult=2.0 if a.a0_size == "adjcol" and adj[c] < 2 else 1.0, band=list(b)))
+    skipped, wseam = 0, []
+    for y in yall:
+        if incore(WX, y, ISL / 2):
+            skipped += 1
+            continue
+        if pseam(WX, y):          # NUMBER-CHECK-QCR25 (4): W-column drivers on a partition seam are not island sites -> skipped
+            wseam.append(y)
+            continue
+        drv.append(dict(kind="wedge", x=WX, y=y, mult=1.0))
+    bad = [d for d in drv if incore(d["x"], d["y"], ISL / 2)]
+    seam = [d for d in drv if pseam(d["x"], d["y"])]
+    if bad or seam:
+        raise SystemExit(f"a0_form FAIL-CLOSED: {len(bad)} drivers on a hard core (+4.32), {len(seam)} band/W drivers on a seam")
+    drops = []
+    for q in inst:
+        for n, t in sorted(R3["islands"].items()):
+            u, v = t["drop_core_frame"]
+            drops.append(dict(name=f"drop:{q['n']}:{n}", part=q["n"].split("/")[0], inst=q["n"],
+                              xy=(r3(q["x0"] + u), r3(q["y0"] + (A0_CH - v if q["mx"] else v)))))
+    info = dict(a0_cols=len(cols0), a0_rows=len(rows0), kept_m9=len(kx), kept_m8=len(ky), drop_m9=len(dropx), drop_m8=len(dropy),
+                m9_segments=len(V9), m8=len(H8), bands=len(bands), band_drivers=len(band_drv), wedge_x=WX,
+                wedge_drivers=sum(1 for d in drv if d["kind"] == "wedge"), wedge_skipped_on_core=skipped,
+                wedge_skipped_on_seam=len(wseam), wedge_seam_y=wseam,
+                size_rule=a.a0_size, band_x2=sum(1 for d in drv if d["mult"] == 2.0),
+                drops=len(drops), new_on_core=0, band_on_seam=0)
+    hist = defaultdict(int)
+    for v in adj.values():
+        hist[str(v)] += 1
+    info["adj_driver_cols_hist"] = dict(sorted(hist.items()))
+    return dict(H8=H8, V9=V9, drivers=drv, drops=drops, bands=bands, kx=kx, ky=ky, dropx=dropx, dropy=dropy, info=info)
+
+
+def stree(subs, ax, et, tag, nodes):
+    """zero-skew merge (merge(): equal stages + node on the straight segment) over subtree roots sorted along ax."""
+    if len(subs) == 1:
+        return subs[0]
+    h = len(subs) // 2
+    return merge(stree(subs[:h], ax, et, tag + "0", nodes), stree(subs[h:], ax, et, tag + "1", nodes), ax, et, tag, nodes)
+
+
+def band_tree(leaves, xc, tap, et, tag, S_target):
+    """one band tree: leaves [(x, y)] -> per band row x-tree + straight leg to the feed column xc -> y-tree on xc -> leg
+    to the column-tree tap with extra repeaters up to S_target stages (equal levels).  Returns (nodes, root)."""
+    nodes = []
+    byrow = defaultdict(list)
+    for x, y in leaves:
+        byrow[r3(y)].append(r3(x))
+    subs = []
+    for k, (y, xs_) in enumerate(sorted(byrow.items())):
+        r = dtree([(x, y) for x in sorted(xs_)], "x", et, f"{tag}r{k:02d}_", nodes)
+        if abs(r["xy"][0] - xc) > 1e-6:
+            r = lift(r, (xc, y), et, f"{tag}r{k:02d}_L", nodes)
+        subs.append(r)
+    r = stree(subs, "y", et, f"{tag}y", nodes)
+    if md(r["xy"], tap) > 1e-6 or r["S"] < S_target:
+        n = et.nseg(md(r["xy"], tap)) if md(r["xy"], tap) > 1e-6 else 1
+        n = max(n, S_target - r["S"])
+        r = lift(r, tuple(tap), et, f"{tag}tap", nodes, n=n)
+    r["parent"] = None
+    return nodes, r
+
+
+def band_trees(B, st, a):
+    """R26: the balanced band trees for every band / W-edge driver (see the section comment)."""
+    F = B["a0"]
+    cols, rows, m = B["cols"], B["rows"], B["m"]
+    ng = len(B["gaps"])
+    span = []
+    for gi in range(ng):
+        g = rows[gi * (2 * m + 1):(gi + 1) * (2 * m + 1)]
+        span.append((min(g), max(g)))
+    by = defaultdict(list)
+    for k, d in enumerate(F["drivers"]):
+        xc = min(cols, key=lambda c: (abs(c - d["x"]), c))
+        ci = cols.index(xc)
+        gi = min(range(ng), key=lambda i: (0.0 if span[i][0] - 1e-6 <= d["y"] <= span[i][1] + 1e-6
+                                           else min(abs(d["y"] - span[i][0]), abs(d["y"] - span[i][1])), i))
+        cands = [t for t in B["ctrees"] if t["g"] == gi and t["c"] == ci]
+        if not cands:
+            raise SystemExit(f"band_trees: no column tree for group {gi} column {xc}")
+        if len(cands) > 1:     # R13 centre group halves: the half whose rows hold y (else the nearer one)
+            def dist(t):
+                ys = [n["xy"][1] for n in t["nodes"] if not n["kids"]]
+                return 0.0 if min(ys) - 1e-6 <= d["y"] <= max(ys) + 1e-6 else min(abs(d["y"] - min(ys)), abs(d["y"] - max(ys)))
+            cands.sort(key=dist)
+        by[(id(cands[0]), r3(d["y"]) if d["kind"] == "band" else "w")].append(k)     # one band tree per (column tree, band row)
+        d["feed"] = dict(g=gi, c=ci, x=xc)
+    ct_of = {id(t): t for t in B["ctrees"]}
+    # NUMBER-CHECK-QCR25 (1): band trees branch off the TOP TREE upstream of the column tap (never off a column driver
+    # output).  Anchor = the column tap (j = 0) or its j-th top-tree ancestor; the band tree must then have the column
+    # tree's stage count PLUS the j skipped top edges (equal levels) and their TT delay (plan-computed match).
+    tpath, tby = paths(B["top_nodes"])
+    tleaf = {(r3(n["xy"][0]), r3(n["xy"][1])): n["tag"] for n in B["top_nodes"] if not n["kids"]}
+    if not a.no_spine:
+        raise SystemExit("band_trees: --a0-mesh needs --no-spine (the band tree anchors on top-tree nodes)")
+    out, res = [], []
+    for key, ks in sorted(by.items(), key=lambda kv: (ct_of[kv[0][0]]["g"], ct_of[kv[0][0]]["c"], ct_of[kv[0][0]]["tap"], str(kv[0][1]))):
+        ct = ct_of[key[0]]
+        croot = [n for n in ct["nodes"] if n["tag"] == ct["root"]][0]
+        ch = tpath[tleaf[(r3(ct["tap"][0]), r3(ct["tap"][1]))]]
+        leaves = [(F["drivers"][k]["x"], F["drivers"][k]["y"]) for k in ks]
+        xc = cols[ct["c"]]
+        best = None
+        for j in range(0, min(a.a0_band_up, len(ch)) + 1):
+            anc = tuple(ct["tap"]) if j == 0 else tuple(tby[ch[j - 1]["parent"]]["xy"])
+            Sc = croot["S"] + sum(e["nseg"] for e in ch[:j])
+            Tc = {c: croot["T"][c] + sum(e["et"].delay(e["leg"], c, e["nseg"]) for e in ch[:j]) for c in ("TT", "FF")}
+            for w, mm in BAND_ETS:
+                if (w, mm, "TT") not in st.fit:
+                    continue
+                et = EdgeType(st, w, mm, float(a.col_reach))
+                tag = f"b{ct['g']:02d}_{ct['c']:02d}_{len(out):03d}_"
+                nodes, r = band_tree(leaves, xc, anc, et, tag, Sc)
+                if r["S"] != Sc:
+                    continue           # equal levels is a hard rule; a deeper band tree is not a candidate
+                d = r["T"]["TT"] - Tc["TT"]
+                dff = r["T"]["FF"] - Tc["FF"]
+                imb = max([abs(n.get("imbalance_TT", 0.0)) for n in nodes] + [0.0])
+                worst = max(abs(d), abs(dff))       # TT setup and FF hold both see the band tree: match both corners
+                ok10 = worst <= 10.0
+                sc = (not ok10, j if ok10 else 0, round(worst, 1), round(imb, 1), BAND_ETS.index((w, mm)))
+                if best is None or sc < best[0]:
+                    best = (sc, et, nodes, r, d, j, Sc, Tc)
+        if best is None:
+            raise SystemExit(f"band_trees: no anchor/EdgeType reaches equal levels for column tree {ct['g']},{ct['c']}")
+        _, et, nodes, r, d, j, Sc, Tc = best
+        for n in nodes:
+            n.setdefault("et", et)
+        out.append(dict(ct=ct, nodes=nodes, root=r["tag"], leaves=ks, et=(et.w, et.m), S=r["S"], S_col=Sc, anchor_up=j,
+                        skip_edges=ch[:j], resid_TT=r3(d), resid_FF=r3(r["T"]["FF"] - Tc["FF"]), T=r["T"]))
+        res.append(d)
+    leafk = {}
+    for bt in out:
+        lv = {(r3(n["xy"][0]), r3(n["xy"][1])): n["tag"] for n in bt["nodes"] if not n["kids"]}
+        for k in bt["leaves"]:
+            dd = F["drivers"][k]
+            leafk[k] = (bt, lv[(r3(dd["x"]), r3(dd["y"]))])
+    rr = sorted(abs(v) for v in res)
+    cnt = defaultdict(int)
+    for bt in out:
+        cnt[f"{bt['et'][0]}_m{bt['et'][1]}"] += 1
+    oncore = sum(1 for bt in out for n in bt["nodes"] if B["incore"](n["xy"]))
+    ah = defaultdict(int)
+    for bt in out:
+        ah[str(bt["anchor_up"])] += 1
+    summ = dict(trees=len(out), leaves=sum(len(bt["leaves"]) for bt in out), equal_levels=all(bt["S"] == bt["S_col"] for bt in out),
+                anchor_levels_above_tap_hist=dict(sorted(ah.items())),
+                stages=sorted({bt["S"] for bt in out}), et_hist=dict(sorted(cnt.items())),
+                resid_TT_ps=dict(med=r3(rr[len(rr) // 2]), p90=r3(rr[int(0.9 * (len(rr) - 1))]), max=r3(rr[-1])),
+                resid_FF_ps=dict(min=r3(min(bt["resid_FF"] for bt in out)), max=r3(max(bt["resid_FF"] for bt in out))),
+                nodes=sum(len(bt["nodes"]) for bt in out), nodes_within_ISL_of_core=oncore,
+                rule="12.8 c/d1: equal stage count to the column tree + plan-chosen (w, m) per tree; residual kept (no trim)")
+    return out, leafk, summ
+
+
+def mesh_seg(hs, vs, drivers, taps, wtab, stub, seg_um=54.0, wire_rel=0.0, rnd=None, jog_um=0.0):
+    """mesh() for SEGMENTED straps (several M9 segments on one x): nodes keyed by coordinate, one wire chain per
+    segment, every geometric M9-segment x M8 crossing joined (VIA89).  FAIL-CLOSED: exit 2 when a geometric crossing
+    is not one shared node of both straps.  Points off every strap join the nearest strap by one perpendicular jog
+    <= jog_um (stub RC), reported."""
+    H = [list(s) + [set()] for s in hs]
+    Vv = [list(s) + [set()] for s in vs]
+    for s in H:
+        s[3] |= {s[1], s[2]}
+    for s in Vv:
+        s[3] |= {s[1], s[2]}
+    hy, vx = defaultdict(list), defaultdict(list)
+    for i, s in enumerate(H):
+        hy[s[0]].append(i)
+    for j, s in enumerate(Vv):
+        vx[s[0]].append(j)
+    import bisect
+    hys = sorted(hy)
+    geo = set()
+    for s in Vv:
+        lo, hi = bisect.bisect_left(hys, s[1] - 1e-6), bisect.bisect_right(hys, s[2] + 1e-6)
+        for y in hys[lo:hi]:
+            for i in hy[y]:
+                if H[i][1] - 1e-6 <= s[0] <= H[i][2] + 1e-6:
+                    H[i][3].add(s[0])
+                    s[3].add(y)
+                    geo.add((r3(s[0]), r3(y)))
+    jogs = []
+
+    def attach(q):
+        for i in hy.get(q[1], ()):
+            if H[i][1] - 1e-6 <= q[0] <= H[i][2] + 1e-6:
+                H[i][3].add(q[0])
+                return 0.0
+        for j in vx.get(q[0], ()):
+            if Vv[j][1] - 1e-6 <= q[1] <= Vv[j][2] + 1e-6:
+                Vv[j][3].add(q[1])
+                return 0.0
+        best = None
+        if jog_um > 0:
+            k0, k1 = bisect.bisect_left(hys, q[1] - jog_um - 1e-6), bisect.bisect_right(hys, q[1] + jog_um + 1e-6)
+            for y in hys[k0:k1]:
+                for i in hy[y]:
+                    if H[i][1] - 1e-6 <= q[0] <= H[i][2] + 1e-6 and (best is None or abs(y - q[1]) < best[0]):
+                        best = (abs(y - q[1]), "h", i, (q[0], y))
+            for x in vx:
+                if abs(x - q[0]) <= jog_um + 1e-6:
+                    for j in vx[x]:
+                        if Vv[j][1] - 1e-6 <= q[1] <= Vv[j][2] + 1e-6 and (best is None or abs(x - q[0]) < best[0]):
+                            best = (abs(x - q[0]), "v", j, (x, q[1]))
+        if best is None:
+            raise SystemExit(f"mesh_seg: point {q} not on a strap (jog limit {jog_um})")
+        dist, kind, idx, at = best
+        if kind == "h":
+            H[idx][3].add(at[0])
+        else:
+            Vv[idx][3].add(at[1])
+        jogs.append((at, tuple(q), "M9" if kind == "h" else "M8"))
+        return dist
+    jd = [attach(tuple(q)) for q in taps]
+    for q in drivers:
+        if attach(tuple(q)) > 0:
+            raise SystemExit(f"mesh_seg: driver {q} not on a strap")
+    dset = {tuple(q) for q in drivers}
+    nid, xy = {}, []
+
+    def node(q):
+        k = (round(q[0], 3), round(q[1], 3))
+        if k not in nid:
+            nid[k] = len(nid)
+            xy.append(k)
+        return nid[k]
+    R, C = [], defaultdict(float)
+    sw, sl = stub
+
+    def wire(a_, b_, layer, wt=None):
+        L = md(a_, b_)
+        n = max(1, int(math.ceil(L / seg_um)))
+        prev = node(a_)
+        for q in range(1, n + 1):
+            f0, f1 = (q - 1) / n, q / n
+            cur = node((a_[0] + (b_[0] - a_[0]) * f1, a_[1] + (b_[1] - a_[1]) * f1))
+            mid0 = L * (f0 + f1) / 2
+            near = (tuple(a_) in dset and mid0 <= sl) or (tuple(b_) in dset and L - mid0 <= sl)
+            r, c = (sw if near else (wt or wtab))[layer]
+            f = rnd.gauss(1.0, wire_rel) if (wire_rel and rnd) else 1.0
+            R.append((prev, cur, r * L / n * f))
+            C[prev] += c * L / n / 2 * f
+            C[cur] += c * L / n / 2 * f
+            prev = cur
+    for y, x0, x1, pts in H:
+        p = sorted(pts)
+        for u, w in zip(p, p[1:]):
+            if w - u > 1e-9:
+                wire((u, y), (w, y), "M8")
+    for x, y0, y1, pts in Vv:
+        p = sorted(pts)
+        for u, w in zip(p, p[1:]):
+            if w - u > 1e-9:
+                wire((x, u), (x, w), "M9")
+    for at, q, lay in sorted(set(jogs)):
+        wire(at, q, lay, wt=sw)
+    # FAIL-CLOSED via check: every geometric crossing is a node that both straps' wire chains end on
+    ends = defaultdict(int)
+    for y, x0, x1, pts in H:
+        for x in pts:
+            if (r3(x), r3(y)) in geo:
+                ends[(r3(x), r3(y))] |= 1
+    for x, y0, y1, pts in Vv:
+        for y in pts:
+            if (r3(x), r3(y)) in geo:
+                ends[(r3(x), r3(y))] |= 2
+    miss = [k for k in geo if ends.get(k) != 3 or (round(k[0], 3), round(k[1], 3)) not in nid]
+    if miss:
+        print(json.dumps(dict(via_check="FAIL", missing=len(miss), example=miss[:3])), flush=True)
+        sys.exit(2)
+    dn = [nid[(round(q[0], 3), round(q[1], 3))] for q in drivers]
+    tn = [nid[(round(q[0], 3), round(q[1], 3))] for q in taps]
+    return dict(R=R, C=C, xy=xy, dn=dn, tn=tn, n=len(nid), crossings=len(geo), vias=len(geo),
+                jogs=dict(n=len(jogs), max_um=r3(max(jd)) if jd else 0.0))
 
 
 # ------------------------------------------------------------------------------------------------ R13 periodic feed
@@ -2008,17 +2376,95 @@ def cmd_solve(a):
     # 4) fine mesh (r2 lattice, straps over the r2 extents) + partition entry taps; LEGAL: drivers attach at their
     #    legal sites on their own column strap, strength = the real cells of the group
     fdrv = sorted(farr)
-    NF = mesh(hs_f, vs_f, fdrv, taps, fw, (RC3[a.stub_w], a.stub_um), wire_rel=sg.get("wire_rel", 0.0) if s else 0.0, rnd=rnd)
+    A0 = B.get("a0")
+    if A0 is None:
+        NF = mesh(hs_f, vs_f, fdrv, taps, fw, (RC3[a.stub_w], a.stub_um), wire_rel=sg.get("wire_rel", 0.0) if s else 0.0, rnd=rnd)
+    else:
+        # R26: A0 drop-lattice form.  Band / W-edge driver arrivals = their column tree's tap arrival + the balanced band
+        # tree path (stage model on the planned legs, per-edge MC sigma + gradient like the ideal-geometry edges)
+        kct = {id(ct): k for k, ct in enumerate(B["ctrees"])}
+        bpath = {id(bt["ct"]): paths(bt["nodes"]) for bt in B["btrees"]}
+        barr = []
+        for k, d in enumerate(A0["drivers"]):
+            bt, leaf = B["bleaf"][k]
+            kk = kct[id(bt["ct"])]
+            tt = t_tap[kk] + sens.get(c, {}).get("sens_ps_per_ps", 0.0) * (sl_tap[kk] - sref)
+            for e in bt["skip_edges"]:      # anchor upstream: remove the top edges below the anchor (same MC draws)
+                tt -= edge_var(e["tag"], by[e["parent"]]["xy"], e["xy"], e["leg"], e["et"], e["nseg"], ns="t")
+            bp, bb = bpath[id(bt["ct"])]
+            for e in bp[leaf]:
+                tt += edge_var(e["tag"], bb[e["parent"]]["xy"], e["xy"], e["leg"], e["et"], e["nseg"], ns="b") if not legal else \
+                    (lambda d_, e_: d_ + (seeded("e", s, e_["tag"]).gauss(0.0, e_["et"].sigma(e_["leg"], c, e_["nseg"]) * sg.get("tree", 1.0))
+                                          if s and sg.get("tree", 1.0) else 0.0)
+                     + (d_ * g_mm * (((bb[e_["parent"]]["xy"][0] + e_["xy"][0]) / 2 - cx) * u[0]
+                                     + ((bb[e_["parent"]]["xy"][1] + e_["xy"][1]) / 2 - cy) * u[1]) / 1000.0 if g_mm else 0.0))(
+                        e["et"].delay(e["leg"], c, e["nseg"]), e)
+            barr.append(tt)
+        hs_a = list(A0["H8"])
+        vs_a = list(A0["V9"])
+        bxy = [(d["x"], d["y"]) for d in A0["drivers"]]
+        dtaps = [d["xy"] for d in A0["drops"]]
+        NF = mesh_seg(hs_a, vs_a, fdrv + bxy, taps + dtaps, fw, (RC3[a.stub_w], a.stub_um),
+                      wire_rel=sg.get("wire_rel", 0.0) if s else 0.0, rnd=rnd, jog_um=a.a0_tap_jog)
+        for q, t_ in zip(bxy, barr):
+            farr[q] = t_
+        if a.a0_size == "drive":
+            # plan-computed drive target (12.8 c/d1): Voronoi strap C of the NOMINAL plan netlist (no wire MC), so the
+            # sizing is identical in every sample
+            N0 = NF if not s else mesh_seg(hs_a, vs_a, fdrv + bxy, taps + dtaps, fw, (RC3[a.stub_w], a.stub_um), jog_um=a.a0_tap_jog)
+            cv0 = voronoi_c(N0)[len(fdrv):]
+            ref_f = float(np.median(voronoi_c(N0)[:len(fdrv)]))
+            # target: the band/W driver sees the same R_th * C per BUFx24 unit as the median fine driver of its base
+            # strength (fine_m units): mult = fine_m * C / C_med(fine), quantised to MULT_SET x 1
+            ms = np.array(MULT_SET)
+            want = a.fine_m * cv0 / ref_f
+            bm = ms[np.abs(ms[None, :] - want[:, None]).argmin(axis=1)]
+            for d, m_ in zip(A0["drivers"], bm):
+                d["mult"] = float(m_)
     cvor = voronoi_c(NF)
     if legal:
         fm_at = {(r3(B["cells"][B["site_of"][("c", n["tag"])]]["site"][0]), r3(B["cells"][B["site_of"][("c", n["tag"])]]["site"][1])):
                  B["cells"][B["site_of"][("c", n["tag"])]]["masters"] for ct in B["ctrees"] for n in ct["nodes"] if not n["kids"]}
         fmult = np.array([sum(BUF_STRENGTH[m] for m in fm_at[q]) for q in fdrv])
     else:
-        fmult = size(cvor, a.fine_m, a.sizing)
+        fmult = size(cvor[:len(fdrv)], a.fine_m, a.sizing)
+    if A0 is not None:
+        fmult = np.concatenate([fmult, np.array([d["mult"] for d in A0["drivers"]], float)])
+        fdrv = fdrv + bxy
     fdvt = [(seeded("vf", s, k).gauss(0, sg["vt_mV"]) + seeded("vf2", s, k).gauss(0, sg["vt_mV"])) / 2 / math.sqrt(max(1.0, fmult[k]))
             if s else 0.0 for k in range(len(fdrv))]
     t_ent, sl_ent = solve(NF, [farr[q] for q in fdrv], fmult, fdvt, th, c, t_extra=a.t_extra)
+    a0_out = None
+    if A0 is not None:
+        nt = len(taps)
+        darr = {d["name"]: r3(v) for d, v in zip(A0["drops"], t_ent[nt:])}
+        t_ent, sl_ent = t_ent[:nt], sl_ent[:nt]
+        bi = defaultdict(list)
+        for d in A0["drops"]:
+            bi[d["inst"]].append(darr[d["name"]])
+        sp = sorted((max(v) - min(v), k) for k, v in bi.items())
+        dv = list(darr.values())
+        ba = np.array(barr)
+        # NUMBER-CHECK-QCR25 (1) gate: band/W leaf arrival within +-10 ps of the fine drivers of the column tree it hangs off
+        cfa = {}
+        for k, ct in enumerate(B["ctrees"]):
+            v = [farr[(r3(B["cells"][B["site_of"][("c", n["tag"])]]["site"][0]), r3(B["cells"][B["site_of"][("c", n["tag"])]]["site"][1]))]
+                 if legal else farr[(r3(n["xy"][0]), r3(n["xy"][1]))] for n in ct["nodes"] if not n["kids"]]
+            cfa[k] = sum(v) / len(v)
+        dlt = np.array([barr[k] - cfa[kct[id(B["bleaf"][k][0]["ct"])]] for k in range(len(barr))])
+        gate10 = dict(rule="band/W leaf arrival - mean arrival of its column tree's fine drivers, |d| <= 10 ps",
+                      min=r3(float(dlt.min())), max=r3(float(dlt.max())), n_over=int((np.abs(dlt) > 10.0).sum()), n=len(dlt),
+                      verdict="PASS" if (np.abs(dlt) <= 10.0).all() else "FAIL")
+        mh = defaultdict(int)
+        for d in A0["drivers"]:
+            mh[str(d["mult"])] += 1
+        a0_out = dict(info=A0["info"], band_trees=A0["band_trees"], crossings=NF["crossings"], vias=NF["vias"], via_check="PASS",
+                      tap_jogs=NF["jogs"], c_total_pf=r3(sum(NF["C"].values()) / 1000.0),
+                      band_driver_arr_spread_ps=r3(float(ba.max() - ba.min())), band_vs_column_gate=gate10,
+                      band_mult_hist=dict(sorted(mh.items())),
+                      drop_skew_ps=r3(max(dv) - min(dv)),
+                      in_core_drop_spread_ps=dict(n=len(sp), median=r3(sp[len(sp) // 2][0]), p90=r3(sp[int(len(sp) * 0.9)][0]),
+                                                  max=r3(sp[-1][0]), worst=sp[-1][1]))
     parts = [t["part"] for t in rec["taps"]]
     tap_arr = {p: r3(v) for p, v in zip(parts, t_ent)}
     fa = np.array([farr[q] for q in fdrv])
@@ -2051,12 +2497,16 @@ def cmd_solve(a):
         R = B["r9"]
         out["r9_feed"] = dict(source=R["source"], regions=R["regions"], region_nominal_spread_TT_ps=R["region_nominal_spread_TT_ps"],
                               leaf_arr_ps={k: r3(v) for k, v in r9arr.items()})
+    if a0_out is not None:
+        out["a0"] = a0_out
+        out["drop_arr_ps"] = darr
+        out["all_tap_skew_ps"] = r3(max(float(np.nanmax(t_ent)), max(darr.values())) - min(float(np.nanmin(t_ent)), min(darr.values())))
     if a.dump_loads:
         out["fine_drivers"] = [[q[0], q[1], r3(cvor[k]), float(fmult[k])] for k, q in enumerate(fdrv)]
         out["spine_tap_ps"] = [[ct["tap"][0], ct["tap"][1], r3(t_tap[k]), r3(sl_tap[k])] for k, ct in enumerate(B["ctrees"])]
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     Path(a.out).write_text(json.dumps(out, indent=1))
-    print(json.dumps({k: v for k, v in out.items() if k not in ("tap_arr_ps", "fine_drivers", "spine_tap_ps")}), flush=True)
+    print(json.dumps({k: v for k, v in out.items() if k not in ("tap_arr_ps", "fine_drivers", "spine_tap_ps", "drop_arr_ps")}), flush=True)
     return 0
 
 
@@ -2069,6 +2519,8 @@ def cmd_collect(a):
     summ = dict(corner=rows[0]["corner"], samples=len(mc), nominal_tap_skew_ps=nom[0]["tap_skew_ps"] if nom else None,
                 mc_worst_tap_skew_ps=max(r["tap_skew_ps"] for r in mc) if mc else None,
                 mc_mean_tap_skew_ps=r3(sum(r["tap_skew_ps"] for r in mc) / len(mc)) if mc else None,
+                mc_tap_skew_mean_plus_3sd_ps=(r3(sum(r["tap_skew_ps"] for r in mc) / len(mc) + 3 * (sum((r["tap_skew_ps"] - sum(q["tap_skew_ps"] for q in mc) / len(mc)) ** 2 for r in mc) / (len(mc) - 1)) ** 0.5)
+                                              if len(mc) >= 2 else None),
                 insertion_ps=dict(min=min(r["insertion_ps"]["min"] for r in rows), max=max(r["insertion_ps"]["max"] for r in rows)),
                 nominal=nom[0] if nom else None)
     summ["nominal"] = {k: v for k, v in (summ["nominal"] or {}).items() if k != "tap_arr_ps"}
@@ -2079,7 +2531,21 @@ def cmd_collect(a):
         raise SystemExit("collect: a solve json does not state mc_includes_stub (pre-R20 solver); re-run the solve")
     if len(flags) != 1:
         raise SystemExit("collect: solves disagree on mc_includes_stub")
-    out = dict(summary=summ, samples=[dict(sample=r["sample"], tap_skew_ps=r["tap_skew_ps"], tap_arr_ps=r["tap_arr_ps"]) for r in rows],
+    if "a0" in rows[0]:            # R26 A0 form: per-sample drop arrivals + MC summary of the A0 numbers
+        summ["a0_mc"] = {k: dict(nominal=(nom[0]["a0"][k] if nom else None), mc_worst=max((r["a0"][k] for r in mc), default=None))
+                         for k in ("drop_skew_ps", "band_driver_arr_spread_ps")}
+        summ["a0_mc"]["in_core_drop_spread_max_ps"] = dict(nominal=nom[0]["a0"]["in_core_drop_spread_ps"]["max"] if nom else None,
+                                                           mc_worst=max((r["a0"]["in_core_drop_spread_ps"]["max"] for r in mc), default=None))
+        import statistics as _S
+        for k_, f_ in (("drop_skew_ps", lambda r: r["a0"]["drop_skew_ps"]), ("in_core_drop_spread_max_ps", lambda r: r["a0"]["in_core_drop_spread_ps"]["max"]),
+                       ("band_driver_arr_spread_ps", lambda r: r["a0"]["band_driver_arr_spread_ps"])):
+            if len(mc) >= 2:
+                v_ = [f_(r) for r in mc]
+                summ["a0_mc"].setdefault(k_, {})["mean_plus_3sd"] = r3(_S.mean(v_) + 3 * _S.stdev(v_))
+        summ["a0_mc"]["in_core_drop_spread_p90_ps"] = dict(nominal=nom[0]["a0"]["in_core_drop_spread_ps"]["p90"] if nom else None,
+                                                           mc_worst=max((r["a0"]["in_core_drop_spread_ps"]["p90"] for r in mc), default=None))
+    out = dict(summary=summ, samples=[dict(sample=r["sample"], tap_skew_ps=r["tap_skew_ps"], tap_arr_ps=r["tap_arr_ps"],
+                                           **({"drop_arr_ps": r["drop_arr_ps"]} if "drop_arr_ps" in r else {})) for r in rows],
                mc_includes_stub=flags.pop(), checked="UNCHECKED")
     Path(a.out).write_text(json.dumps(out, indent=1))
     print(json.dumps({k: v for k, v in summ.items() if k != "nominal"}, indent=1))
@@ -2418,6 +2884,19 @@ def add_common(p):
     p.add_argument("--row-group", default=None, help="r2 driver rows per gap group (default QC 19)")
     p.add_argument("--r9-dir", default=str(HERE.parent.parent / "results/qc_clk_mesh3/r10_inputs"),
                    help="r9_lattice.json + r9_tree5_tree_{TT,FF}_rcx.txt")
+    p.add_argument("--a0-mesh", default=None,
+                   help="R26 opt-in: A0 drop-lattice mesh form (a0_clk_r3b.json): per-row drop M9 segments, band drivers, "
+                        "W-edge column, adjcol x2, VIA89 fail-closed check, balanced band trees (COORD R25 ruling (a))")
+    p.add_argument("--a0-lattice", default="R23_d51_candidate", help="lattice key in the --a0-mesh file")
+    p.add_argument("--a0-wedge-x", type=float, default=1632.96, help="W-edge driver column x (1650.24 - 2 x 8.64)")
+    p.add_argument("--a0-size", default="drive", choices=["drive", "adjcol", "none"],
+                   help="12.8 c/d1 band/W driver sizing: drive = computed drive target (each driver's L1-Voronoi strap C on "
+                        "the NOMINAL plan netlist / median, quantised to MULT_SET; NUMBER-CHECK-QCR25 (2)); adjcol = R25 x2 "
+                        "on A0 columns with < 2 adjacent driver columns")
+    p.add_argument("--a0-band-up", type=int, default=4,
+                   help="R26: max top-tree levels above the column tap a band tree may anchor on (equal levels incl. the skipped edges)")
+    p.add_argument("--a0-tap-jog", type=float, default=0.0,
+                   help="R26: partition taps off every strap of the A0 form join the nearest strap by one jog <= this (um, stub RC)")
 
 
 def main(argv=None):
