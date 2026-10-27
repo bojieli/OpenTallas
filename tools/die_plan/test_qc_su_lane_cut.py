@@ -64,3 +64,23 @@ def test_bound_head_alignment_contract():
         cut(source.replace('MEMORY_ALIGNMENT(3)','MEMORY_ALIGNMENT(0)'),0,memory_alignment=3)
     with pytest.raises(ValueError,match='regenerate the canonical bind'):
         cut(fixture(),0,memory_alignment=3)
+
+def test_scalar_selected_net_remains_indexable_and_lockstep(tmp_path):
+    # Yosys emitted bodies index one-bit wires. Bare scalar declarations make
+    # Verilator reject the otherwise exact generated source.
+    source=fixture().replace("[7:0]", "[0:0]")
+    source=source.replace(".x(x_q)", ".x(x_q[0])")
+    rtl, frame, report=cut(source,0)
+    assert "wire [0:0] x_q;" in rtl
+    assert ".x(x_q[0])" in rtl
+    if not shutil.which("iverilog"):
+        pytest.skip("iverilog unavailable")
+    leaf="module leaf(input clk,rst_n,input [0:0] x,output reg [0:0] y); always @(posedge clk) if(!rst_n)y<=0;else y<=~x; endmodule\n"
+    tb="module tb;reg clk=0,rst_n=0,x=0;wire a,b; original ref0(clk,rst_n,x,a);grouped dut(clk,rst_n,x,b);always #5 clk=~clk;integer i;initial begin repeat(3)@(negedge clk);rst_n=1;for(i=0;i<32;i=i+1)begin x=i;@(negedge clk);if(a!==b)$fatal(1,\"scalar cut differs\");end $finish;end endmodule"
+    def run(core,name):
+        f=tmp_path/(name+".sv");f.write_text(leaf+source+frame.replace("module original(", "module grouped(")+core+tb)
+        exe=tmp_path/name
+        subprocess.run(["iverilog","-g2012","-s","tb","-o",str(exe),str(f)],check=True,capture_output=True,text=True)
+        return subprocess.run(["vvp",str(exe)],capture_output=True,text=True)
+    assert run(rtl,"good").returncode==0
+    assert run(rtl.replace("assign x_q = c_i[0];","assign x_q = ~c_i[0];"),"bad").returncode!=0

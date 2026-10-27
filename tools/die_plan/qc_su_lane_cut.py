@@ -74,7 +74,7 @@ def cut(source, lane, module=None, memory_alignment=None):
     def ordered(mapping):
         return [(n, b, widths[n]) for n in sorted(mapping) for b in sorted(mapping[n])]
     ib, ob = ordered(inputs), ordered(outputs)
-    decls = ['    wire ' + (f'[{widths[n]-1}:0] ' if widths[n] > 1 else '') + n + ';'
+    decls = ['    wire ' + f'[{widths[n]-1}:0] ' + n + ';'
              for n in sorted(selected) if n not in ('clk', 'rst_n', reset_source)]
     # The bit assignments are wiring only, and never tie an unused bit or add a register.
     assigns = [f'    assign {n}[{b}] = c_i[{i}];' if w > 1 else f'    assign {n} = c_i[{i}];'
