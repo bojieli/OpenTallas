@@ -981,15 +981,51 @@ def pins_match(view_meta, pins, plan_dir, outline_um=None, extra=()):
     return pins_relation(view_meta, pins, plan_dir, outline_um, extra)[1]
 
 
+def parse_core_views(specs):
+    """Keep repeated module=dir arguments; retain the single-view mapping ABI."""
+    out = {}
+    for spec in specs:
+        module, directory = spec.split("=", 1)
+        current = out.setdefault(module, [])
+        if directory not in current:
+            current.append(directory)
+    return {module: paths[0] if len(paths) == 1 else paths for module, paths in out.items()}
+
+
+def select_core_view(module, models, pins, plan_dir, outline, plan_pins, match_pins):
+    """A signed canonical view takes precedence over mirror compatibility; ties fail closed."""
+    if not match_pins:
+        if len(models) != 1:
+            raise ValueError(f"{module}: multiple core views require pin matching")
+        return models[0], None, None
+    matches, reasons = [], []
+    for model in models:
+        how, reason = pins_relation(model["meta"], pins, plan_dir, outline, plan_pins)
+        if reason:
+            reasons.append(reason)
+        elif how:
+            matches.append((model, how))
+    canonical = [m for m in matches if m[1] == "canonical"]
+    choices = canonical or matches
+    if len(choices) > 1:
+        raise ValueError(f"{module}: ambiguous signed core views for {pins}: "
+                         + ", ".join(str(m[0]["meta"].get("view_dir")) for m in choices))
+    if choices:
+        return choices[0][0], choices[0][1], None
+    return None, None, "; ".join(sorted(set(reasons))) or "no matching signed view"
+
+
 def build_views(plan, taps, corner, reg, lat, core_views, kits, load_ff, part_delay_ps, match_pins=False, plan_dir=None):
-    """{port: [models]} + coverage record.  core_views {module: dir}; kits {part_or_type: spec}.
+    """{port: [models]} + coverage record.  core_views {module: dir or [dirs]}; kits {part_or_type: spec}.
     match_pins (CLOCK-KV-R21; gate default ON since CLOCK-KV-R22; CONTENT match since CLOCK-KV-R24): a core view
     applies only to instances whose plan pins_file (resolved under plan_dir) has the sha256 the view was signed on
     (provenance kit.pins_sha256); other pin views of the module (an orientation re-pin, an added strap pin) are a
     different physical core and stay budget (listed in pin_view_mismatch, by reason in pin_view_mismatch_reason)."""
     budget = budget_model(reg, lat)
     views = {p: [budget] for p in taps}
-    cmodels = {m: core_view_model(m, d, corner, load_ff, part_delay_ps) for m, d in core_views.items()}
+    cmodels = {m: [core_view_model(m, d, corner, load_ff, part_delay_ps)
+                   for d in dict.fromkeys(ds if isinstance(ds, (list, tuple)) else [ds])]
+               for m, ds in core_views.items()}
     cmap = map_cores_to_taps(plan, taps) if core_views else {}
     real_inst, real_taps = defaultdict(int), set()
     mism = defaultdict(int)
@@ -997,17 +1033,19 @@ def build_views(plan, taps, corner, reg, lat, core_views, kits, load_ff, part_de
     how = defaultdict(int)
     olines, plan_pins = core_outlines(plan), sorted({v[3] for v in cmap.values() if v[3]})
     for (n, inst), (mod, port, dist, pins) in cmap.items():
-        if match_pins and mod in cmodels:
-            hw, r = pins_relation(cmodels[mod]["meta"], pins, plan_dir, olines.get((n, inst)), plan_pins)
-            if hw:
-                how[f"{mod}:{hw}"] += 1
-            if r:
-                mism[f"{mod}:{Path(pins).name if pins else None}"] += 1
-                why[f"{mod}:{r}"] += 1
-                continue
-        if mod in cmodels and port:
-            if cmodels[mod] not in views[port]:
-                views[port] = views[port] + [cmodels[mod]]
+        if mod not in cmodels:
+            continue
+        model, hw, reason = select_core_view(mod, cmodels[mod], pins, plan_dir,
+                                            olines.get((n, inst)), plan_pins, match_pins)
+        if reason:
+            mism[f"{mod}:{Path(pins).name if pins else None}"] += 1
+            why[f"{mod}:{reason}"] += 1
+            continue
+        if hw:
+            how[f"{mod}:{hw}"] += 1
+        if port:
+            if model not in views[port]:
+                views[port] = views[port] + [model]
             real_inst[mod] += 1
             real_taps.add(port)
     ptype = {x["name"]: x["type"] for x in plan["partitions"]}
@@ -1024,7 +1062,8 @@ def build_views(plan, taps, corner, reg, lat, core_views, kits, load_ff, part_de
     cov = dict(core_instances_total=sum(tot.values()) if cmap else None,
                core_instances_real=sum(real_inst.values()), real_by_module=dict(real_inst),
                taps_total=len(taps), taps_with_real_model=len(real_taps), kit_partitions=sorted(kit_parts),
-               core_models={m: dict(c["etm"], meta=c["meta"], part_delay_ps=part_delay_ps) for m, c in cmodels.items()},
+               core_models={m: dict(c["etm"], meta=c["meta"], part_delay_ps=part_delay_ps) for module, models in cmodels.items() for i, c in enumerate(models)
+                            for m in [module if len(models) == 1 else f"{module}@{i + 1}"]},
                map_distance_max_um=max([v[2] for v in cmap.values() if v[2] is not None] or [0.0]),
                map_distance_real_um=sorted(v[2] for v in cmap.values() if v[0] in cmodels and v[2] is not None)[::32])
     if match_pins:
@@ -1140,7 +1179,7 @@ def main(argv=None):
     for k in a.kit:
         n, f = k.split("=", 1)
         kits[n] = json.loads(Path(f).read_text())
-    core_views = dict(k.split("=", 1) for k in a.core_view)
+    core_views = parse_core_views(a.core_view)
     real = bool(kits or core_views)
     period = a.period_ps
     window = a.landing_window_ps if a.landing_window_ps else period / 2
