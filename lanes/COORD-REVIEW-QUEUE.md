@@ -2207,3 +2207,5 @@ READY [CODEX INFRA IMPORT 2026-10-27 08:31 PDT] codex/infra-gate-1027@fe6831d634
 READY [AUTOPILOT PROOF RESOURCES 2026-10-27 08:31 PDT] codex/autopilot-signoff-1027@98560e3183 includesf4aa: proofOOM distinct, no reroute, measuredmem --proof-only resume; immutable failure receipts; 95focusedPASS.
 
 READY [CANARY KV ALIAS 2026-10-27 08:31 PDT] codex/canary-alias-1027@3b60baae53: kv->qwen_kvsys then core/typecanaryselect, matchingflowunchanged; 26focusedPASS.
+
+READY [CODEX RESET-LOCAL 2026-10-27 08:35 PDT] codex/reset-local-1027@aa74a3105: explicit type.reset.local_taps_um independent synchronous reset/START consumers, preserves clock ports; native station geometry selects nearest relay; output-index and G2/landing consumers updated. 52 focused +3 G2 tests PASS incl emittedRTL lockstep +bypass mutant. Planning R26 io_cor release3->6(+3boot/START), hroot6->8(+2), data0; maxrelayhop345.6/374um, verify0errors. Grid package d6844af1c viewed. Apply in kv_clock oneevent; regenerate offsets/compiler boot/start before physical trial. No route submitted.
