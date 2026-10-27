@@ -30,3 +30,5 @@ No result was available at this initial source checkpoint. Raw failed results
 are retained. Existing PG-ACT2 L8 light-M8 candidate was collected: same-load
 drop+bounce42.868mV +6.05 below =48.918mV FAIL (independent number review
 outstanding); therefore this candidate retains the stronger4.32um M8 pitch.
+
+TERMINAL: nativeEXIT0/1558.25s/peak22122284KiB, CHECKEDFAIL44.546mVco-located +6.05below=50.596mV. Independent review attached; original unreviewed result.json preserved. Native sourcepads400/70um, bothPGchecksPASS,4761matchedloads. Worstbottomrow/source-localy gap91.323um and exclusion-onlydiagnostic inedge_diagnosis.json; NOedgewaiver/no secondsolve. Whole-diePG NOTRUN: currentnativePHY/glue provider remainsblocked. RerunRVToroldanalogmodelnotadopted. H8/L8 activity leftovers collected and steady-state1.0156758 scaling supplied separately.

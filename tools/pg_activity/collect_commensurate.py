@@ -45,6 +45,8 @@ for name, r in values['VDD'].items():
 worst = max(samples, key=lambda s:s['sum_mv'])
 total = worst['sum_mv'] + m['below_m7_mv']
 r = dict(verdict='PASS' if total <= m['ir_budget_mv'] else 'FAIL',
+         qualification='INTERIOR_CORE_COUPON_ONLY',
+         whole_die_pg='NOT RUN: current native PHY footprint and digital-glue supply vehicle remain blocked; no PHY result is implied',
          review='UNCHECKED: independent NUMBER-CHECK required before owner gate claim',
          kit=str(a.kit.resolve()), grid=m['grid'], matched_loads=len(samples),
          power_w=m['power_w'], window_um=m['window_um'], bump_pad_um=m['bump_pad_um'],

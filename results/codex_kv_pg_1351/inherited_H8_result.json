@@ -1,0 +1,56 @@
+{
+  "verdict": "PASS",
+  "review": "UNCHECKED: independent NUMBER-CHECK required before owner gate claim",
+  "kit": "/srv/opentallas-scratch2/claude/codex-sta-pg-1351/inherited_H8",
+  "grid": [
+    {
+      "layer": "M8",
+      "width_um": 0.96,
+      "pitch_um": 4.32,
+      "offset_um": 2.16,
+      "nets": [
+        "VDD",
+        "VSS"
+      ]
+    },
+    {
+      "layer": "M9",
+      "width_um": 12.96,
+      "pitch_um": 34.56,
+      "offset_um": 17.28,
+      "nets": [
+        "VDD",
+        "VSS"
+      ]
+    }
+  ],
+  "matched_loads": 4761,
+  "power_w": 9.2758,
+  "window_um": [
+    6462.72,
+    6462.72,
+    9434.880000000001,
+    9434.880000000001
+  ],
+  "bump_pad_um": 70.0,
+  "bumps": 380,
+  "co_located_worst": {
+    "instance": "u_b42_0",
+    "vdd_drop_mv": 12.75599999999999,
+    "vss_bounce_mv": 8.138,
+    "sum_mv": 20.89399999999999,
+    "global_vdd_xy_um": [
+      8293.269,
+      6484.2570000000005
+    ]
+  },
+  "above_m7_mv": 20.89399999999999,
+  "below_m7_mv": 6.05,
+  "total_mv": 26.943999999999992,
+  "budget_mv": 35.0,
+  "below_m7_basis": "Inherited e1 below-M7 full-power slice; PG-ACTIVITY-KVHBM",
+  "vdd_separate_worst_mv": 14.06099999999999,
+  "vss_separate_worst_mv": 14.198,
+  "co_location": "same physical43um load instance, its distinct VDD/VSS PG terminals",
+  "no_plan_adoption": true
+}

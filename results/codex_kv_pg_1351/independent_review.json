@@ -1,0 +1,16 @@
+{
+  "review": "INDEPENDENT_CSV_RECOMPUTE",
+  "matched": 4761,
+  "instance": "u_b36_0",
+  "vdd_drop_mv": 19.96299999999995,
+  "vss_bounce_mv": 24.583000000000002,
+  "above_m7_mv": 44.54599999999995,
+  "below_m7_mv": 6.05,
+  "total_mv": 50.59599999999995,
+  "budget_mv": 35,
+  "verdict": "FAIL",
+  "sources": {
+    "ir_VDD.csv": "4c375b734699cf2a4bb0ccb7c1aa1e0016a9fd3d0625da8db3d680f273796c57",
+    "ir_VSS.csv": "d421cc91ee7e72b112e9b3d0a292e7b99dbb76b3d2a83e088c3882c2efee9889"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "source": "/srv/opentallas-scratch2/claude/pg-act-2-1027/kv/pw_e1_ss.log",
+  "vectorless_W": 0.2014671,
+  "accepted_full_window_measured_W": 0.1167979,
+  "steady_state_measured_W": 0.1186288,
+  "steady_to_full_ratio": 1.0156757955408446,
+  "steady_to_vectorless_ratio": 0.5888246765849113,
+  "interpretation": "Unreviewed power update; uniform scaling of every canonical load by the e1 increase is a conservative sensitivity. Preserve native result, no solver restart. PV unchanged; other-type mean-ratio increase is smaller.",
+  "below_m7": "Inherited6.05mV was at full/vectorless e1 power, so retained unchanged conservatively.",
+  "review": "UNCHECKED independent NUMBER-CHECK required",
+  "native_above_m7_mv": 44.54599999999995,
+  "native_total_mv": 50.59599999999995,
+  "all_load_scaled_total_mv": 51.29429398816241,
+  "scope": "Sensitivity only; native failure remains unchanged."
+}

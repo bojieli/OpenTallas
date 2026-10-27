@@ -1,0 +1,58 @@
+{
+  "verdict": "FAIL",
+  "qualification": "INTERIOR_CORE_COUPON_ONLY",
+  "whole_die_pg": "NOT RUN: current native PHY footprint and digital-glue supply vehicle remain blocked; no PHY result is implied",
+  "review": "UNCHECKED: independent NUMBER-CHECK required before owner gate claim",
+  "kit": "/srv/opentallas-scratch2/claude/codex-sta-pg-1351/kv_c39_w13",
+  "grid": [
+    {
+      "layer": "M8",
+      "width_um": 0.48,
+      "pitch_um": 4.32,
+      "offset_um": 2.16,
+      "nets": [
+        "VDD",
+        "VSS"
+      ]
+    },
+    {
+      "layer": "M9",
+      "width_um": 12.96,
+      "pitch_um": 39.96,
+      "offset_um": 13.77,
+      "nets": [
+        "VDD",
+        "VSS"
+      ]
+    }
+  ],
+  "matched_loads": 4761,
+  "power_w": 9.4088,
+  "window_um": [
+    6433.56,
+    6433.56,
+    9430.560000000001,
+    9430.560000000001
+  ],
+  "bump_pad_um": 70.0,
+  "bumps": 400,
+  "co_located_worst": {
+    "instance": "u_b36_0",
+    "vdd_drop_mv": 19.96299999999995,
+    "vss_bounce_mv": 24.583000000000002,
+    "sum_mv": 44.54599999999995,
+    "global_vdd_xy_um": [
+      8018.620000000001,
+      6455.277
+    ]
+  },
+  "above_m7_mv": 44.54599999999995,
+  "below_m7_mv": 6.05,
+  "total_mv": 50.59599999999995,
+  "budget_mv": 35.0,
+  "below_m7_basis": "PG-ACTIVITY-KVHBM e1 slice; inherited conservative full-power result, not a new measurement",
+  "vdd_separate_worst_mv": 26.283999999999974,
+  "vss_separate_worst_mv": 28.165,
+  "co_location": "same physical43um load instance, its distinct VDD/VSS PG terminals",
+  "no_plan_adoption": true
+}
