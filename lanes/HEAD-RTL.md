@@ -145,3 +145,5 @@ Fail-closed production recipe tools/s81_head/head_boot_recipe.py now consumes ex
 
 ## CODEX notes 2026-10-27 09:52 PDT — actual provider header support
 Native FT source followup e25676d2da accepts actual non-ANSI D.write_verilog provider root/tap headers while checking every declared direction/scalarwidth;11focusedtestsPASS. Actual continuous unbuffered meshterminal still required: native ft_mesh_i→ft_mesh_o replaces external localstub, never adds a secondstub; clock_tap_bindings connects its actualoutput to real coretap. Parent balancedtree provider remains deliberately tree-only. Bootstrap qualified source a480f95d1 composes separately into ONE finalHEADdelta; no dummy rootclock/reset ties or canonical adoption.
+
+CODEX 2026-10-27 10:13: HEADfixedclock lower/upperfacegap allocation19faf0c75 (codex/head-tree-0830; receipt29076dddb) clears independentreconstructedface2um witness624→312→0pairs/overlaps across3362actualbankbodies. No actualplacedFT/internalcentroidqualification; fixedwirebuilderstill57FAIL (38M9drops/19Astacks), no route. Pureplangeometryonly, topology/cycles/outlineunchanged. Fullinterimhandoff handoff/codex_s81_head_20261027_1004.md.
