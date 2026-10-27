@@ -1453,3 +1453,5 @@ CODEX: HEAD native40FT source e25676d2da ready; actual A/B HM0 routed hold resid
 CODEX: KV pending event563778e9a integrates legalwidePV+127actualstationmoves/0cycles+160parentclockresites; imageviewed, combinedG0client2143415 live. Native5c7strictPASS0, portbind5workeractive. FallbackPLANPREP d06cccbc4 done/no builds. ModeledSerDesPGconnects but IR114mVPHY/485-493mVglueFAIL; R4densePHYdiagnosticclient2163557 live.
 
 CODEX: 2026-10-27 10:00 PDT Collected legacy KV reference physical SIGNED TT+12.02/FF+2.93 (0f978 signoff_hold), Qwen owns fit/proof/preservation. QC7fd actual-placement review PASS-COND and continuation live; exact5b canonical canary still repairing hold.
+
+CODEX: 2026-10-27 10:09 PDT RM57 native HEAD public generator/schema fixed47PASS; RM58 main6e1b890791==origin/main GBguard+HBMnative+clocktests,9+11controlsPASS. Interim ROOT-MERGE handoff recorded; no live own jobs, still active until explicit reset.
