@@ -79,7 +79,12 @@ class Resolver:
         if bm:physical=h.get('pin_select',{}).get(port[:bm.start()],port[:bm.start()])+bm[0]
         cachekey=(h['pins_file'],physical,bool(bm))
         if not hasattr(self,'groupcache'):self.groupcache={}
-        if cachekey not in self.groupcache:self.groupcache[cachekey]=[p for p in pp if p.get('name')==physical] if bm else [p for p in pp if logical(p.get('name',''))==physical]
+        if not hasattr(self,'pinindex'):self.pinindex={};self.portindex={}
+        pf=h['pins_file']
+        if pf not in self.pinindex:
+            self.pinindex[pf]={p['name']:p for p in pp};self.portindex[pf]=collections.defaultdict(list)
+            for p in pp:self.portindex[pf][logical(p['name'])].append(p)
+        if cachekey not in self.groupcache:self.groupcache[cachekey]=([self.pinindex[pf][physical]] if physical in self.pinindex[pf] else []) if bm else self.portindex[pf].get(physical,[])
         selected=self.groupcache[cachekey]
         if not selected:raise ValueError(f'no actual pins for logical {port} / physical {physical}')
         w,hh=h['outline_um'];faces=set()
@@ -89,13 +94,17 @@ class Resolver:
             faces.add(face)
         if len(faces)!=1:raise ValueError(f'port {physical} spans faces {sorted(faces)}; declare exact bit/subgroup endpoint')
         point=[sum(p[k] for p in selected)/len(selected) for k in ['x','y']]
-        return transform(h,point),dict(core=h['inst'],logical_port=port,physical_group=physical,pins=len(selected),face_core=next(iter(faces)),pins_file=h['pins_file'],pins_sha256=sha(self.pd/h['pins_file']),pin_group_extremes_um=[transform(h,[min(p['x'] for p in selected),min(p['y'] for p in selected)]),transform(h,[max(p['x'] for p in selected),max(p['y'] for p in selected)])])
+        if not hasattr(self,'shacache'):self.shacache={}
+        if h['pins_file'] not in self.shacache:self.shacache[h['pins_file']]=sha(self.pd/h['pins_file'])
+        return transform(h,point),dict(core=h['inst'],logical_port=port,physical_group=physical,pins=len(selected),face_core=next(iter(faces)),pins_file=h['pins_file'],pins_sha256=self.shacache[h['pins_file']],pin_group_extremes_um=[transform(h,[min(p['x'] for p in selected),min(p['y'] for p in selected)]),transform(h,[max(p['x'] for p in selected),max(p['y'] for p in selected)])])
 
     def resolve(self,tn,station,side,index,override=None):
         field='launch' if side==0 else 'capture';coord='from_um' if side==0 else 'to_um';ref=station.get(field,'')
         if not ref:raise ValueError('missing endpoint reference')
         cores=self.types[tn].get('hard_cores',[]);oldpoint=station[coord]
         if isinstance(override,dict):
+            for mk,actual in [('expected_reference',ref),('expected_conn',station.get('conn')),('expected_r9_segments',station.get('r9_segments'))]:
+                if mk in override and override[mk]!=actual:raise ValueError(f'explicit endpoint map {mk} does not match station')
             hits=[h for h in cores if h['inst']==override.get('core')]
             if len(hits)!=1:raise ValueError('explicit map core is not one actual instance')
             ports=override.get('ports')
@@ -104,7 +113,9 @@ class Resolver:
             faces={e[1]['face_core'] for e in entries}
             if len(faces)!=1:raise ValueError('declared bundle spans multiple physical faces')
             n=sum(e[1]['pins'] for e in entries)
-            return [sum(e[0][a]*e[1]['pins'] for e in entries)/n for a in [0,1]],dict(method='explicit_bundle',groups=[e[1] for e in entries],pin_group_extremes_um=[p for e in entries for p in e[1]['pin_group_extremes_um']])
+            extremes=[p for e in entries for p in e[1]['pin_group_extremes_um']]
+            bounds=[[min(p[0] for p in extremes),min(p[1] for p in extremes)],[max(p[0] for p in extremes),max(p[1] for p in extremes)]]
+            return [sum(e[0][a]*e[1]['pins'] for e in entries)/n for a in [0,1]],dict(method='explicit_bundle',groups=[e[1] for e in entries],pin_group_extremes_um=bounds)
         if isinstance(override,str):ref=override
         if self.old and override is None and not self.affected(tn,ref):return list(oldpoint),dict(method='unchanged_baseline_anchor',ref=ref)
         if ref.startswith('face bus '):
