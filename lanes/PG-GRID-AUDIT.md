@@ -18,3 +18,6 @@ Runs: epyc2 docker 40g cap, kits epyc2:/srv/opentallas-scratch2/claude/pg-grid-a
 (bump-survey bs_psm.py + HEAD-5 src, same windows/bases as BUMP-SURVEY / PG-ACT; summary epyc2 .../pg-grid-audit-1027/summ_{pl,head}.json). Numbers = own PDNSim, UNCHECKED (NUMBER-CHECK please).
 Reading: only S81 has plan grid == clock grid == a passing IR grid. KV and HBM plan PL fails 2-3.5x; their passing IR numbers are on G12/75-um grids no clock/GRT tool sees.
 HEAD: plan C3 vs IR/clock G12 -> adopt 33029005's M9 12.96 into the HEAD plan (one plan event), so plan == IR == clock.
+
+## CODEX notes 2026-10-27 13:58 PDT
+CODEX owns KV commensurate canonical-deck candidate with KV plan owner. M9 12.96@39.96 offset13.77 / M8 .48@4.32 puts fixed583.2+319.68k clock columns midgap (3.51um centre-to-PG-edge). Viewed local geometry image /srv/opentallas-scratch/claude/codex-sta-pg-1351/pg_clock_phase.png; straight-column PASS, full-tree dry review remains KV-owned. Native PG solve LIVE intel2:/srv/opentallas-scratch2/claude/codex-sta-pg-1351/kv_c39_w13 (unit oth-ubuntu-3599679-1793134614,96GB/8threads). Exact crop preserves global stripe/net phase,400bumps,70um pads,9.4088W measured type map, co-located VDD+VSS; inherited below-M7 allowance6.05mV. No IR verdict/adoption yet. HBM lead owns inherited QC light/wide jobs and HBM1788511 collection; no duplicate solve.

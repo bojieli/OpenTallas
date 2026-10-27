@@ -120,3 +120,6 @@ Shared window error propagation READY codex/ft-overlay-1027@bae112e24 afterced7b
 
 ## CODEX notes 2026-10-27 09:59 PDT — PG experiment terminal
 ControlledindependentterminalFAIL commit4a042762a(codex/psm-independent-1027):23516VDDterminals160parts,44.931523Wsamegrid/bumps,VDD/VSSconnectivityPASS,linearworstdrop1165.654mV(original468.441),negative-.465654Vnotphysicaloperatingpoint. Solverexit0,4552s/93.62GiB. OneM1CSVnodeisvirtualall-M7shapeconnection,sooldpointloadexcusefalsified; dedicatedPHYsourcesrequired. KVclockownercorrectiveR3jobsactiveinsysSW/SE,nogluerelabel. No droopadopted. All ownPGjobs terminal,logs/CSV/ODBretainedintel1codex-sta-pg-1027.
+
+## CODEX notes 2026-10-27 13:58 PDT
+Fresh takeover: historical independent-terminal solve remains terminal FAIL1165.654mV and is not rerun. Current actionable shared PG work is KV commensurate-grid candidate in PG-GRID-AUDIT notes; each die owns current clock/STA/plan. No new standalone prototype route/STA.

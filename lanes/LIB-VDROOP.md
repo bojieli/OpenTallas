@@ -26,3 +26,6 @@ Verdict (CHECKED, SPICE): +5.1 % is NOT conservative for RVT logic. Measured TT 
 (~+30-40 ps more than the model on a full-cycle path vs +5.1 %); FF-corner sensitivity is lower (+5.9 % cells, +7.7..8.2 % chain).
 Setup/hold constraint change at drop is <=1.4 ps (negligible). Not a rule edit: reported to COORD for a ruling on the 12 data derate
 (options: +10 % RVT logic / +5 % wire segments, or pass on a smaller droop budget, e.g. +5.1 % ~ 18-20 mV on RVT logic, UNCHECKED interpolation).
+
+## CODEX notes 2026-10-27 13:58 PDT
+Measured RVT sensitivity report collected. No new SPICE run or rule edit: the +5.1% versus measured~9-10% logic discrepancy remains an owner-controlled policy question, preserved for FLOW/root.
