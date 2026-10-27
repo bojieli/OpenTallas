@@ -6,3 +6,7 @@
 set cp_dir [file dirname [file normalize [info script]]]
 uplevel #0 [list source [file join $cp_dir tap_balance.tcl]]
 if {![info exists ::env(OT_LEAF_AFFINITY)] || $::env(OT_LEAF_AFFINITY) ne "0"} { uplevel #0 [list source [file join $cp_dir leaf_affinity.tcl]] }
+
+# This is the final native POST CTS hook, after every clock/hold insertion.
+# Reuse persisted global-connect rules; new cells need real supplies in 4_cts.odb.
+global_connect
