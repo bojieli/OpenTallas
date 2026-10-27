@@ -1,0 +1,63 @@
+WARN exact (155, 211) (253, 208) 52.92 2 0 1.62
+{
+"n_sinks": 9034,
+"splits": [
+2,
+2,
+4,
+4,
+4
+],
+"leaf_load": [
+35,
+36
+],
+"level_len_um": [
+58.32000000000001,
+37.800000000000004,
+52.92,
+37.800000000000004,
+32.400000000000006
+],
+"repeaters_per_edge": [
+1,
+1,
+1,
+1,
+0
+],
+"trunk": {
+"cell": "BUFx4_ASAP7_75t_R",
+"n": 0,
+"island": "entry island (8.64 x 8.64 um at the centre)",
+"dont_touch": true,
+"firm": true
+},
+"pred": {
+"TT": {
+"trunk_ps": 0.0,
+"trunk_out_slew_ps": 20.0,
+"trunk_stage_ps": [],
+"mean": 296.0,
+"window": 7.18,
+"sink_min": 293.68,
+"sink_max": 302.89,
+"tree_mean": 296.0
+},
+"FF": {
+"trunk_ps": 0.0,
+"trunk_out_slew_ps": 20.0,
+"trunk_stage_ps": [],
+"mean": 230.86,
+"window": 6.8,
+"sink_min": 228.64,
+"sink_max": 237.83,
+"tree_mean": 230.86
+}
+},
+"in_band": {
+"TT": false,
+"FF": false
+},
+"window_ok": true
+}
