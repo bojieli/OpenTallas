@@ -1,0 +1,18 @@
+{
+  "source": "ba255b8c9",
+  "pass": true,
+  "lockstep_edges": 2101,
+  "added_cycles": 0,
+  "collision_controls": [
+    "normal q valid during booked idle edge",
+    "XM valid outside booking",
+    "sticky fault retained until reset"
+  ],
+  "unit": "1926257-1793119306",
+  "payload_mutant_unit": "1928906-1793119324",
+  "payload_mutant_caught": 40,
+  "limits": [
+    "standalone source adapter; production entry q binding and static booking not adopted",
+    "no producer can coexist during a booked interval; collision faults rather than arbitrates"
+  ]
+}
