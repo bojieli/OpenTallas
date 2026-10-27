@@ -1,0 +1,13 @@
+{
+ "verdict": "PASS-COND",
+ "scope": "EP macro plan only; no route authorization until folded plan gates and independent review",
+ "picture": "/srv/opentallas-scratch2/claude/hbm-mu-quad-6-1027/sub_ep/png_ep/ep_macro_plan_NW_io_u_ep_N0.png",
+ "findings": [
+  "Viewed all4 SRAM logic edges face66.3um east standard-cell strip and2248 E-face data pins; no SRAM wall blocks that interface.",
+  "Horizontal gaps12.936/19.416/12.936um break stack; central clock island181.44..190.08 lies in175.524..194.94 channel with4.86um minimum clearance.",
+  "Demand model M4 S-band0.452<=0.6; otherchannels<=0.149. This is a model, not local pin-access/routability evidence.",
+  "M5 core PDN/clock direction continuous over M1-M4 SRAM OBS; routed PG connectivity and slew still unmeasured.",
+  "Full physical run must use MY macros and revised E pin table; old rp2 placement is superseded and cannot validate this pack."
+ ],
+ "next": "fresh placement then GRT>=50it, projected clocks, postplace image/reach census before route"
+}

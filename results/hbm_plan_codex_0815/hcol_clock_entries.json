@@ -1,0 +1,72 @@
+{
+ "ot_hbm_idx_score_hcol_h0": {
+  "outline_um": [
+   218.592,
+   187.488
+  ],
+  "entry": {
+   "xy_um": [
+    107.976,
+    95.04
+   ],
+   "island_um": [
+    103.68,
+    90.72,
+    112.32,
+    99.36
+   ],
+   "port": null,
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ],
+   "tap": "u_hb_idx__s_Q_r0c0_k0h0.clk_pair",
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)",
+   "stack": [
+    "M9",
+    "M5"
+   ],
+   "latency_target_tt_ps": 250.0,
+   "latency_target_ff_ps": 202.5,
+   "module": "ot_hbm_idx_score_hcol_h0",
+   "native_module": "ot_hbm_idx_score_quarter_static__r0c0_k0h0",
+   "clock_bind_contract": "one source domain ef994fe77, both separate ports preserved"
+  },
+  "pins_sha256": "1d7cafe8798bd3f0e2c3961deb6236531583627019557b525db54d264ec1e3a2"
+ },
+ "ot_hbm_idx_score_hcol_h1": {
+  "outline_um": [
+   218.592,
+   187.488
+  ],
+  "entry": {
+   "xy_um": [
+    107.976,
+    95.04
+   ],
+   "island_um": [
+    103.68,
+    90.72,
+    112.32,
+    99.36
+   ],
+   "port": null,
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ],
+   "tap": "u_hb_idx__s_Q_r0c0_k0h1.clk_pair",
+   "source": "master plan centre entry on the 4.32 PG lattice (12.8a, D-HBM-B1)",
+   "stack": [
+    "M9",
+    "M5"
+   ],
+   "latency_target_tt_ps": 250.0,
+   "latency_target_ff_ps": 202.5,
+   "module": "ot_hbm_idx_score_hcol_h1",
+   "native_module": "ot_hbm_idx_score_quarter_static__r0c0_k0h1",
+   "clock_bind_contract": "one source domain ef994fe77, both separate ports preserved"
+  },
+  "pins_sha256": "b40863b2e7f7651b845f9c22a78db92b3612e79eaec375dd01e2fb2e9a969f97"
+ }
+}

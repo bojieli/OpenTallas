@@ -1,0 +1,488 @@
+{
+ "schema": "opentallas.hbm_q6_clk.v1",
+ "inp": "/srv/opentallas-scratch2/claude/codex-hbm-plan-0815/c6b",
+ "out": "/srv/opentallas-scratch2/claude/codex-hbm-plan-0815/c7b",
+ "macros": "/srv/opentallas-scratch2/claude/codex-hbm-plan-0815/core_macros_merged_current.json",
+ "halo_um": 0.0,
+ "renamed": [],
+ "created": [],
+ "port_fixed": [],
+ "moved": [
+  {
+   "module": "hfd_hgi_vm_calendar_f20",
+   "instances": [
+    "u_calendar_Q__q0",
+    "u_calendar_Q__q1",
+    "u_calendar_Q__q0",
+    "u_calendar_Q__q1"
+   ],
+   "was": {
+    "xy_um": [
+     120.96,
+     60.48
+    ],
+    "island_um": [
+     116.64,
+     56.16,
+     125.28,
+     64.8
+    ]
+   },
+   "now": {
+    "xy_um": [
+     120.936,
+     95.04
+    ],
+    "island_um": [
+     116.64,
+     90.72,
+     125.28,
+     99.36
+    ]
+   },
+   "over_macros": [
+    "u_fcore.u_calendar.u_programme.u_program"
+   ],
+   "basis": "4.32 lattice",
+   "move_um": 34.56,
+   "macro_basis": "placed"
+  },
+  {
+   "module": "ot_hbm_su_static_qcore_r13",
+   "instances": [
+    "u_sucore_Q__q0",
+    "u_sucore_Q__q1",
+    "u_sucore_Q__q0",
+    "u_sucore_Q__q1"
+   ],
+   "was": {
+    "xy_um": [
+     151.2,
+     138.24
+    ],
+    "island_um": [
+     146.88,
+     133.92,
+     155.52,
+     142.56
+    ]
+   },
+   "now": {
+    "xy_um": [
+     151.176,
+     112.32
+    ],
+    "island_um": [
+     146.88,
+     108.0,
+     155.52,
+     116.64
+    ]
+   },
+   "over_macros": [
+    "u_fcore.u_red.mb"
+   ],
+   "basis": "4.32 lattice",
+   "move_um": 25.92,
+   "macro_basis": "placed"
+  },
+  {
+   "module": "ot_hbm_su_static_sfustore_hw",
+   "instances": [
+    "u_sfus_Q__q0",
+    "u_sfus_Q__q1",
+    "u_sfus_Q__q0",
+    "u_sfus_Q__q1"
+   ],
+   "was": {
+    "xy_um": [
+     168.48,
+     164.16
+    ],
+    "island_um": [
+     164.16,
+     159.84,
+     172.8,
+     168.48
+    ]
+   },
+   "now": {
+    "xy_um": [
+     168.456,
+     151.2
+    ],
+    "island_um": [
+     164.16,
+     146.88,
+     172.8,
+     155.52
+    ]
+   },
+   "over_macros": [
+    "u_fcore.g_bank[10].u_bank.u_data.g_read[0].u_m"
+   ],
+   "basis": "4.32 lattice",
+   "move_um": 12.96,
+   "macro_basis": "placed"
+  }
+ ],
+ "not_unique": [],
+ "unknown_macros": [
+  {
+   "module": "hnx_fused_lane",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "hnx_rp3lp3h_n",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "hnx_rp3lp3h_s",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "hnx_vms_bank_q0_faces__vec6293",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "hnx_vms_bank_q0_faces__vecd4ae",
+   "why": "recipe macros ['ot_sram_1r1w_1024x256_m2_r2c2'], no placement evidence at the plan outline"
+  },
+  {
+   "module": "ot_hbm_hc_root_static__tailx_rest__v4f4566",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hbm_hc_root_static__tailx_rest__v6bc7f2",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hbm_hc_root_static__tailx_sk_steady",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hbm_hc_root_static__tailx_sk_step0",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hbm_host_cp_rxs",
+   "why": "recipe macros ['ot_sram_1r1w_256x256_m2_r2c2', 'ot_sram_1r1w_64x512_m1_r2c2'], no placement evidence at the plan outline"
+  },
+  {
+   "module": "ot_hbm_idx_score_hcol_h0",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hbm_idx_score_hcol_h1",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__tailx__v36d446",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__tailx__v3fcb6a",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hbm_idx_selector_static_sel",
+   "why": "recipe macros ['ot_sram_1r1w_256x256_m2_r2c2'], no placement evidence at the plan outline"
+  },
+  {
+   "module": "ot_hbm_idx_topk_link_static",
+   "why": "recipe macros ['ot_sram_1r1w_64x512_m1_r2c2'], no placement evidence at the plan outline"
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lanes8_11",
+   "why": "recipe macros ['ot_sram_1r1w_128x256_m1_r2c2'], no placement evidence at the plan outline"
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "why": "recipe macros ['ot_sram_1r1w_128x256_m1_r2c2'], no placement evidence at the plan outline"
+  },
+  {
+   "module": "ot_hbm_svc_sm_group_rel_id",
+   "why": "recipe macros ['ot_sram_1r1w_1024x256_m2_r2c2', 'ot_sram_1r1w_128x256_m1_r2c2', 'ot_sram_1r1w_256x256_m2_r2c2'], no placement evidence at the plan outline"
+  },
+  {
+   "module": "ot_hbm_svc_vm_kshare_splitstrap__v700685",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hbm_svc_vm_kshare_splitstrap__v8e478a",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hbm_svc_wb_kport_q",
+   "why": "recipe macros ['ot_sram_1r1w_128x256_m1_r2c2'], no placement evidence at the plan outline"
+  },
+  {
+   "module": "ot_hfd_coll_q2n2_body_core",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hfd_coll_q2n2_vm_core",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hfd_coll_q3_body_core",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hfd_coll_q3_edge_core",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hfd_coll_q3_vm_core",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hgi_coll_tkm_m_tp192__root",
+   "why": "recipe macros ['ot_sram_1r1w_1024x256_m2_r2c2'], no placement evidence at the plan outline"
+  },
+  {
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "why": "recipe macros ['ot_sram_1r1w_128x256_m1_r2c2'], no placement evidence at the plan outline"
+  },
+  {
+   "module": "ot_hgi_sfu_core_split3__opstore_a",
+   "why": "recipe macros ['ot_sram_1r1w_128x256_m1_r2c2', 'ot_sram_1r1w_256x256_m2_r2c2', 'ot_sram_1r1w_1024x256_m2_r2c2'], no placement evidence at the plan outline"
+  },
+  {
+   "module": "ot_hgi_sfu_core_split3__opstore_b",
+   "why": "recipe macros ['ot_sram_1r1w_128x256_m1_r2c2', 'ot_sram_1r1w_256x256_m2_r2c2', 'ot_sram_1r1w_1024x256_m2_r2c2'], no placement evidence at the plan outline"
+  },
+  {
+   "module": "ot_hgi_sfu_programme_store_r10",
+   "why": "recipe macros ['ot_sram_1r1w_512x256_m1_r2c2'], no placement evidence at the plan outline"
+  },
+  {
+   "module": "ot_hgi_sfu_split3_lane_core__idpin",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hnx_fused_tnode",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hnx_idxn_keybuf_slice",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_pdie_serdes",
+   "why": "recipe macros ['ot_sram_1r1w2c_64x546_m1', 'ot_sram_1r1w_32x546_m1'], no placement evidence at the plan outline"
+  }
+ ],
+ "taps_moved": [
+  {
+   "type": "q_hub_nw",
+   "name": "u_calendar_Q__q0",
+   "was": [
+    3032.64,
+    1153.44
+   ],
+   "now": [
+    3032.616,
+    1118.88
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "name": "u_calendar_Q__q1",
+   "was": [
+    7283.52,
+    1153.44
+   ],
+   "now": [
+    7283.544,
+    1118.88
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "name": "u_sucore_Q__q0",
+   "was": [
+    1404.0,
+    976.32
+   ],
+   "now": [
+    1403.976,
+    950.4
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "name": "u_sucore_Q__q1",
+   "was": [
+    4091.04,
+    1503.36
+   ],
+   "now": [
+    4091.064,
+    1477.44
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "name": "u_sfus_Q__q0",
+   "was": [
+    2682.72,
+    198.72
+   ],
+   "now": [
+    2682.696,
+    185.76
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "name": "u_sfus_Q__q1",
+   "was": [
+    5438.88,
+    190.08
+   ],
+   "now": [
+    5438.904,
+    177.12
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "name": "u_calendar_Q__q0",
+   "was": [
+    3032.64,
+    1153.44
+   ],
+   "now": [
+    3032.616,
+    1118.88
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "name": "u_calendar_Q__q1",
+   "was": [
+    7283.52,
+    1153.44
+   ],
+   "now": [
+    7283.496,
+    1118.88
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "name": "u_sucore_Q__q0",
+   "was": [
+    1404.0,
+    976.32
+   ],
+   "now": [
+    1403.976,
+    950.4
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "name": "u_sucore_Q__q1",
+   "was": [
+    4091.04,
+    1166.4
+   ],
+   "now": [
+    4091.064,
+    1140.48
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "name": "u_sfus_Q__q0",
+   "was": [
+    3564.0,
+    198.72
+   ],
+   "now": [
+    3563.976,
+    185.76
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "name": "u_sfus_Q__q1",
+   "was": [
+    5438.88,
+    829.44
+   ],
+   "now": [
+    5438.904,
+    816.48
+   ]
+  }
+ ],
+ "taps_added": [],
+ "tap_formula_mismatch_before": [
+  [
+   "q_hub_nw",
+   "u_vmb_Q3",
+   [
+    3425.784,
+    2410.56
+   ],
+   [
+    3425.688,
+    2410.56
+   ]
+  ],
+  [
+   "q_hub_ne",
+   "u_vmb_Q3",
+   [
+    3425.784,
+    2410.56
+   ],
+   [
+    3425.688,
+    2410.56
+   ]
+  ]
+ ],
+ "stale_not_regenerated": [
+  "clock_taps_die.json",
+  "clock_htree.json",
+  "entries.json",
+  "clock_entry_report.json",
+  "die_plan.sha256 (rewritten)"
+ ],
+ "not_unique_final": [],
+ "modules_changed": [
+  "hfd_hgi_vm_calendar_f20",
+  "ot_hbm_su_static_qcore_r13",
+  "ot_hbm_su_static_sfustore_hw"
+ ],
+ "counts": {
+  "renamed": 0,
+  "created": 0,
+  "port_fixed": 0,
+  "moved": 3,
+  "not_unique": 0,
+  "unknown_macros": 39,
+  "taps_moved": 12,
+  "taps_added": 0,
+  "tap_formula_mismatch_before": 2,
+  "stale_not_regenerated": 5,
+  "not_unique_final": 0,
+  "modules_changed": 3
+ }
+}

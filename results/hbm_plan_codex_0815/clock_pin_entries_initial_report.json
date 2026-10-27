@@ -1,0 +1,981 @@
+{
+ "changed": [
+  {
+   "table": "cores/ot_hgi_sm_xload_xq_pegress__369.36x369.36__canon.json",
+   "pin": "clk",
+   "old": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 123.96,
+    "y": 0.019
+   },
+   "new": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 185.544,
+    "y": 185.76
+   }
+  },
+  {
+   "table": "cores/ot_hgi_sm_xload_xq_pegress__369.36x369.36__canon.json",
+   "pin": "clk_c",
+   "old": {
+    "name": "clk_c",
+    "layer": "M5",
+    "x": 367.176,
+    "y": 0.019
+   },
+   "new": {
+    "name": "clk_c",
+    "layer": "M5",
+    "x": 185.64,
+    "y": 185.76
+   }
+  },
+  {
+   "table": "cores/ot_hgi_sm_xload_xq_pegress__369.36x369.36__canon.json",
+   "pin": "clk_e",
+   "old": {
+    "name": "clk_e",
+    "layer": "M5",
+    "x": 306.36,
+    "y": 0.019
+   },
+   "new": {
+    "name": "clk_e",
+    "layer": "M5",
+    "x": 185.736,
+    "y": 185.76
+   }
+  },
+  {
+   "table": "cores/ot_hgi_sm_xload_xq_pegress__369.36x369.36__canon.json",
+   "pin": "clk_s",
+   "old": {
+    "name": "clk_s",
+    "layer": "M5",
+    "x": 245.64,
+    "y": 0.019
+   },
+   "new": {
+    "name": "clk_s",
+    "layer": "M5",
+    "x": 185.88,
+    "y": 185.76
+   }
+  },
+  {
+   "table": "cores/ot_hgi_sm_xload_xq_pegress__369.36x369.36__canon.json",
+   "pin": "clk_w",
+   "old": {
+    "name": "clk_w",
+    "layer": "M5",
+    "x": 184.824,
+    "y": 0.019
+   },
+   "new": {
+    "name": "clk_w",
+    "layer": "M5",
+    "x": 185.976,
+    "y": 185.76
+   }
+  },
+  {
+   "table": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon.json",
+   "pin": "clk",
+   "old": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 266.28,
+    "y": 313.181
+   },
+   "new": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 133.56,
+    "y": 155.52
+   }
+  },
+  {
+   "table": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon.json",
+   "pin": "clk_e",
+   "old": {
+    "name": "clk_e",
+    "layer": "M4",
+    "x": 269.981,
+    "y": 311.064
+   },
+   "new": {
+    "name": "clk_e",
+    "layer": "M5",
+    "x": 133.656,
+    "y": 155.52
+   }
+  },
+  {
+   "table": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon.json",
+   "pin": "clk_macro0",
+   "old": {
+    "name": "clk_macro0",
+    "layer": "M4",
+    "x": 0.019,
+    "y": 294.504
+   },
+   "new": {
+    "name": "clk_macro0",
+    "layer": "M5",
+    "x": 133.752,
+    "y": 155.52
+   }
+  },
+  {
+   "table": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon.json",
+   "pin": "clk_macro1",
+   "old": {
+    "name": "clk_macro1",
+    "layer": "M4",
+    "x": 0.019,
+    "y": 300.024
+   },
+   "new": {
+    "name": "clk_macro1",
+    "layer": "M5",
+    "x": 133.848,
+    "y": 155.52
+   }
+  },
+  {
+   "table": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon.json",
+   "pin": "clk_macro2",
+   "old": {
+    "name": "clk_macro2",
+    "layer": "M4",
+    "x": 0.019,
+    "y": 305.544
+   },
+   "new": {
+    "name": "clk_macro2",
+    "layer": "M5",
+    "x": 133.944,
+    "y": 155.52
+   }
+  },
+  {
+   "table": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon.json",
+   "pin": "clk_n",
+   "old": {
+    "name": "clk_n",
+    "layer": "M5",
+    "x": 266.52,
+    "y": 313.181
+   },
+   "new": {
+    "name": "clk_n",
+    "layer": "M5",
+    "x": 134.04,
+    "y": 155.52
+   }
+  },
+  {
+   "table": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon.json",
+   "pin": "clk_s",
+   "old": {
+    "name": "clk_s",
+    "layer": "M5",
+    "x": 135.0,
+    "y": 0.019
+   },
+   "new": {
+    "name": "clk_s",
+    "layer": "M5",
+    "x": 134.136,
+    "y": 155.52
+   }
+  },
+  {
+   "table": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon.json",
+   "pin": "clk_w",
+   "old": {
+    "name": "clk_w",
+    "layer": "M4",
+    "x": 0.019,
+    "y": 311.064
+   },
+   "new": {
+    "name": "clk_w",
+    "layer": "M5",
+    "x": 134.232,
+    "y": 155.52
+   }
+  },
+  {
+   "table": "cores/ot_hgi_sm_xload_cl2_bdring__86.4x302.4__canon.json",
+   "pin": "clk",
+   "old": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 43.224,
+    "y": 302.381
+   },
+   "new": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 43.224,
+    "y": 151.2
+   }
+  },
+  {
+   "table": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon.json",
+   "pin": "clk",
+   "old": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 294.696,
+    "y": 0.019
+   },
+   "new": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 150.264,
+    "y": 146.88
+   }
+  },
+  {
+   "table": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon.json",
+   "pin": "clk_ctrl",
+   "old": {
+    "name": "clk_ctrl",
+    "layer": "M5",
+    "x": 295.464,
+    "y": 0.019
+   },
+   "new": {
+    "name": "clk_ctrl",
+    "layer": "M5",
+    "x": 150.36,
+    "y": 146.88
+   }
+  },
+  {
+   "table": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon.json",
+   "pin": "clk_l0",
+   "old": {
+    "name": "clk_l0",
+    "layer": "M5",
+    "x": 298.056,
+    "y": 0.019
+   },
+   "new": {
+    "name": "clk_l0",
+    "layer": "M5",
+    "x": 150.456,
+    "y": 146.88
+   }
+  },
+  {
+   "table": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon.json",
+   "pin": "clk_l1",
+   "old": {
+    "name": "clk_l1",
+    "layer": "M5",
+    "x": 298.296,
+    "y": 0.019
+   },
+   "new": {
+    "name": "clk_l1",
+    "layer": "M5",
+    "x": 150.552,
+    "y": 146.88
+   }
+  },
+  {
+   "table": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon.json",
+   "pin": "clk_l2",
+   "old": {
+    "name": "clk_l2",
+    "layer": "M5",
+    "x": 298.536,
+    "y": 0.019
+   },
+   "new": {
+    "name": "clk_l2",
+    "layer": "M5",
+    "x": 150.648,
+    "y": 146.88
+   }
+  },
+  {
+   "table": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon.json",
+   "pin": "clk_l3",
+   "old": {
+    "name": "clk_l3",
+    "layer": "M5",
+    "x": 298.824,
+    "y": 0.019
+   },
+   "new": {
+    "name": "clk_l3",
+    "layer": "M5",
+    "x": 150.744,
+    "y": 146.88
+   }
+  },
+  {
+   "table": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon.json",
+   "pin": "clk_l4",
+   "old": {
+    "name": "clk_l4",
+    "layer": "M5",
+    "x": 299.064,
+    "y": 0.019
+   },
+   "new": {
+    "name": "clk_l4",
+    "layer": "M5",
+    "x": 150.84,
+    "y": 146.88
+   }
+  },
+  {
+   "table": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon.json",
+   "pin": "clk_l5",
+   "old": {
+    "name": "clk_l5",
+    "layer": "M5",
+    "x": 299.304,
+    "y": 0.019
+   },
+   "new": {
+    "name": "clk_l5",
+    "layer": "M5",
+    "x": 150.936,
+    "y": 146.88
+   }
+  },
+  {
+   "table": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon.json",
+   "pin": "clk_l6",
+   "old": {
+    "name": "clk_l6",
+    "layer": "M5",
+    "x": 299.544,
+    "y": 0.019
+   },
+   "new": {
+    "name": "clk_l6",
+    "layer": "M5",
+    "x": 151.032,
+    "y": 146.88
+   }
+  },
+  {
+   "table": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon.json",
+   "pin": "clk_l7",
+   "old": {
+    "name": "clk_l7",
+    "layer": "M5",
+    "x": 299.832,
+    "y": 0.019
+   },
+   "new": {
+    "name": "clk_l7",
+    "layer": "M5",
+    "x": 151.128,
+    "y": 146.88
+   }
+  },
+  {
+   "table": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon.json",
+   "pin": "clk_m0",
+   "old": {
+    "name": "clk_m0",
+    "layer": "M5",
+    "x": 295.704,
+    "y": 0.019
+   },
+   "new": {
+    "name": "clk_m0",
+    "layer": "M5",
+    "x": 151.224,
+    "y": 146.88
+   }
+  },
+  {
+   "table": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon.json",
+   "pin": "clk_m1",
+   "old": {
+    "name": "clk_m1",
+    "layer": "M5",
+    "x": 296.28,
+    "y": 0.019
+   },
+   "new": {
+    "name": "clk_m1",
+    "layer": "M5",
+    "x": 151.32,
+    "y": 146.88
+   }
+  },
+  {
+   "table": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon.json",
+   "pin": "clk_m2",
+   "old": {
+    "name": "clk_m2",
+    "layer": "M5",
+    "x": 296.52,
+    "y": 0.019
+   },
+   "new": {
+    "name": "clk_m2",
+    "layer": "M5",
+    "x": 151.416,
+    "y": 146.88
+   }
+  },
+  {
+   "table": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon.json",
+   "pin": "clk_m3",
+   "old": {
+    "name": "clk_m3",
+    "layer": "M5",
+    "x": 296.76,
+    "y": 0.019
+   },
+   "new": {
+    "name": "clk_m3",
+    "layer": "M5",
+    "x": 151.512,
+    "y": 146.88
+   }
+  },
+  {
+   "table": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon.json",
+   "pin": "clk_m4",
+   "old": {
+    "name": "clk_m4",
+    "layer": "M5",
+    "x": 297.048,
+    "y": 0.019
+   },
+   "new": {
+    "name": "clk_m4",
+    "layer": "M5",
+    "x": 151.608,
+    "y": 146.88
+   }
+  },
+  {
+   "table": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon.json",
+   "pin": "clk_m5",
+   "old": {
+    "name": "clk_m5",
+    "layer": "M5",
+    "x": 297.288,
+    "y": 0.019
+   },
+   "new": {
+    "name": "clk_m5",
+    "layer": "M5",
+    "x": 151.704,
+    "y": 146.88
+   }
+  },
+  {
+   "table": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon.json",
+   "pin": "clk_m6",
+   "old": {
+    "name": "clk_m6",
+    "layer": "M5",
+    "x": 297.528,
+    "y": 0.019
+   },
+   "new": {
+    "name": "clk_m6",
+    "layer": "M5",
+    "x": 151.8,
+    "y": 146.88
+   }
+  },
+  {
+   "table": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon.json",
+   "pin": "clk_m7",
+   "old": {
+    "name": "clk_m7",
+    "layer": "M5",
+    "x": 297.768,
+    "y": 0.019
+   },
+   "new": {
+    "name": "clk_m7",
+    "layer": "M5",
+    "x": 151.896,
+    "y": 146.88
+   }
+  },
+  {
+   "table": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon.json",
+   "pin": "clk_n",
+   "old": {
+    "name": "clk_n",
+    "layer": "M5",
+    "x": 294.936,
+    "y": 0.019
+   },
+   "new": {
+    "name": "clk_n",
+    "layer": "M5",
+    "x": 151.992,
+    "y": 146.88
+   }
+  },
+  {
+   "table": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon.json",
+   "pin": "clk_s",
+   "old": {
+    "name": "clk_s",
+    "layer": "M5",
+    "x": 295.224,
+    "y": 0.019
+   },
+   "new": {
+    "name": "clk_s",
+    "layer": "M5",
+    "x": 152.088,
+    "y": 146.88
+   }
+  },
+  {
+   "table": "cores/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b__177.984x177.984__canon.json",
+   "pin": "clk",
+   "old": {
+    "name": "clk",
+    "layer": "M4",
+    "x": 0.019,
+    "y": 2.184
+   },
+   "new": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 90.744,
+    "y": 90.72
+   }
+  },
+  {
+   "table": "cores/ot_hbm_svc_vm_kshare_splitstrap__v700685__354.24x453.6__canon.json",
+   "pin": "hbm_clk",
+   "old": {
+    "name": "hbm_clk",
+    "layer": "M4",
+    "x": 354.221,
+    "y": 267.24
+   },
+   "new": {
+    "name": "hbm_clk",
+    "layer": "M5",
+    "x": 177.048,
+    "y": 224.64
+   }
+  },
+  {
+   "table": "cores/ot_hbm_svc_vm_kshare_splitstrap__v700685__354.24x453.6__canon.json",
+   "pin": "stream_clk",
+   "old": {
+    "name": "stream_clk",
+    "layer": "M4",
+    "x": 354.221,
+    "y": 267.384
+   },
+   "new": {
+    "name": "stream_clk",
+    "layer": "M5",
+    "x": 177.144,
+    "y": 224.64
+   }
+  },
+  {
+   "table": "cores/ot_hbm_svc_vm_kshare_splitstrap__354.24x453.6__q_hub_u_vmks_Q1.json",
+   "pin": "hbm_clk",
+   "old": {
+    "name": "hbm_clk",
+    "layer": "M4",
+    "x": 354.221,
+    "y": 442.392
+   },
+   "new": {
+    "name": "hbm_clk",
+    "layer": "M5",
+    "x": 177.048,
+    "y": 224.64
+   }
+  },
+  {
+   "table": "cores/ot_hbm_svc_vm_kshare_splitstrap__354.24x453.6__q_hub_u_vmks_Q1.json",
+   "pin": "stream_clk",
+   "old": {
+    "name": "stream_clk",
+    "layer": "M4",
+    "x": 354.221,
+    "y": 443.4
+   },
+   "new": {
+    "name": "stream_clk",
+    "layer": "M5",
+    "x": 177.144,
+    "y": 224.64
+   }
+  },
+  {
+   "table": "cores/ot_hbm_svc_vmdel_lane_n__142.56x108__canon.json",
+   "pin": "clk",
+   "old": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 137.64,
+    "y": 0.019
+   },
+   "new": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 17.304,
+    "y": 51.84
+   }
+  },
+  {
+   "table": "cores/ot_hbm_xp_aq_tree13_fmt__183.6x108__canon.json",
+   "pin": "clk",
+   "old": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 181.032,
+    "y": 0.019
+   },
+   "new": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 90.744,
+    "y": 51.84
+   }
+  },
+  {
+   "table": "cores/ot_hbm_hc_subtree32_core__220.32x220.32__canon.json",
+   "pin": "clk",
+   "old": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 110.136,
+    "y": 220.301
+   },
+   "new": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 108.024,
+    "y": 108.0
+   }
+  },
+  {
+   "table": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon.json",
+   "pin": "clk",
+   "old": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 134.952,
+    "y": 403.901
+   },
+   "new": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 133.512,
+    "y": 155.52
+   }
+  },
+  {
+   "table": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon.json",
+   "pin": "clk_e",
+   "old": {
+    "name": "clk_e",
+    "layer": "M4",
+    "x": 269.981,
+    "y": 118.68
+   },
+   "new": {
+    "name": "clk_e",
+    "layer": "M5",
+    "x": 133.608,
+    "y": 155.52
+   }
+  },
+  {
+   "table": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon.json",
+   "pin": "clk_macro0",
+   "old": {
+    "name": "clk_macro0",
+    "layer": "M4",
+    "x": 0.019,
+    "y": 260.568
+   },
+   "new": {
+    "name": "clk_macro0",
+    "layer": "M5",
+    "x": 133.704,
+    "y": 155.52
+   }
+  },
+  {
+   "table": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon.json",
+   "pin": "clk_macro1",
+   "old": {
+    "name": "clk_macro1",
+    "layer": "M4",
+    "x": 0.019,
+    "y": 261.0
+   },
+   "new": {
+    "name": "clk_macro1",
+    "layer": "M5",
+    "x": 133.8,
+    "y": 155.52
+   }
+  },
+  {
+   "table": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon.json",
+   "pin": "clk_macro2",
+   "old": {
+    "name": "clk_macro2",
+    "layer": "M4",
+    "x": 0.019,
+    "y": 261.48
+   },
+   "new": {
+    "name": "clk_macro2",
+    "layer": "M5",
+    "x": 133.896,
+    "y": 155.52
+   }
+  },
+  {
+   "table": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon.json",
+   "pin": "clk_macro3",
+   "old": {
+    "name": "clk_macro3",
+    "layer": "M4",
+    "x": 0.019,
+    "y": 261.912
+   },
+   "new": {
+    "name": "clk_macro3",
+    "layer": "M5",
+    "x": 133.992,
+    "y": 155.52
+   }
+  },
+  {
+   "table": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon.json",
+   "pin": "clk_n",
+   "old": {
+    "name": "clk_n",
+    "layer": "M5",
+    "x": 200.664,
+    "y": 403.901
+   },
+   "new": {
+    "name": "clk_n",
+    "layer": "M5",
+    "x": 134.088,
+    "y": 155.52
+   }
+  },
+  {
+   "table": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon.json",
+   "pin": "clk_s",
+   "old": {
+    "name": "clk_s",
+    "layer": "M5",
+    "x": 135.0,
+    "y": 0.019
+   },
+   "new": {
+    "name": "clk_s",
+    "layer": "M5",
+    "x": 134.184,
+    "y": 155.52
+   }
+  },
+  {
+   "table": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon.json",
+   "pin": "clk_w",
+   "old": {
+    "name": "clk_w",
+    "layer": "M4",
+    "x": 0.019,
+    "y": 260.088
+   },
+   "new": {
+    "name": "clk_w",
+    "layer": "M5",
+    "x": 134.28,
+    "y": 155.52
+   }
+  },
+  {
+   "table": "cores/hnx_fused_lane__345.6x518.4__mu_template.json",
+   "pin": "clk",
+   "old": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 172.728,
+    "y": 518.381
+   },
+   "new": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 172.776,
+    "y": 259.2
+   }
+  },
+  {
+   "table": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+   "pin": "clk",
+   "old": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 86.328,
+    "y": 172.781
+   },
+   "new": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 86.376,
+    "y": 86.4
+   }
+  },
+  {
+   "table": "cores/ot_hnx_idxn_keybuf_slice__241.92x293.76__canon.json",
+   "pin": "clk",
+   "old": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 120.984,
+    "y": 146.88
+   },
+   "new": {
+    "name": "clk",
+    "layer": "M5",
+    "x": 120.936,
+    "y": 146.88
+   }
+  }
+ ],
+ "unresolved": [
+  {
+   "table": "cores/ot_hgi_sfu_core_split3__ctl__669.6x626.4__canon.json",
+   "ports": [
+    "clk",
+    "clk_lg",
+    "clk_pe",
+    "clk_pw"
+   ],
+   "reason": "base bus requires explicit same-domain bit contract; no automatic collapse"
+  },
+  {
+   "table": "cores/ot_hbm_su_static_pgslice_lg__lane_exp0__440.64x207.36__q_su00_u_su_Q0_lane_exp0.json",
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "reason": "base bus requires explicit same-domain bit contract; no automatic collapse"
+  },
+  {
+   "table": "cores/ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691__440.64x207.36__canon.json",
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "reason": "base bus requires explicit same-domain bit contract; no automatic collapse"
+  },
+  {
+   "table": "cores/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__440.64x457.92__canon.json",
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "reason": "base bus requires explicit same-domain bit contract; no automatic collapse"
+  },
+  {
+   "table": "cores/ot_hbm_su_static_pgslice_lg__side_softplus__440.64x457.92.json",
+   "ports": [
+    "clk_side"
+   ],
+   "reason": "base bus requires explicit same-domain bit contract; no automatic collapse"
+  },
+  {
+   "table": "cores/ot_hbm_su_static_pgslice_lg__side_rest__440.64x457.92.json",
+   "ports": [
+    "clk_side"
+   ],
+   "reason": "base bus requires explicit same-domain bit contract; no automatic collapse"
+  },
+  {
+   "table": "cores/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__760.32x725.76__canon.json",
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "reason": "base bus requires explicit same-domain bit contract; no automatic collapse"
+  },
+  {
+   "table": "cores/ot_hbm_su_static_pgslice_lg__lanes8_11__760.32x725.76__canon.json",
+   "ports": [
+    "clk_bank",
+    "clk_bank_macro",
+    "clk_insert",
+    "clk_lane"
+   ],
+   "reason": "base bus requires explicit same-domain bit contract; no automatic collapse"
+  },
+  {
+   "table": "cores/ot_hbm_idx_topk_link_static__650.16x500.04__root_u_hb_idx__link.json",
+   "ports": [
+    "clk",
+    "clk_mem"
+   ],
+   "reason": "base bus requires explicit same-domain bit contract; no automatic collapse"
+  },
+  {
+   "table": "cores/ot_hbm_idx_selector_static_sel__600.048x450.36__root_u_hb_idx__selector.json",
+   "ports": [
+    "clk_ctl",
+    "clk_mem",
+    "clk_q"
+   ],
+   "reason": "base bus requires explicit same-domain bit contract; no automatic collapse"
+  },
+  {
+   "table": "cores/ot_hbm_static_cfg_collar_idx256r__86.4x86.4__r5.json",
+   "ports": [
+    "clk",
+    "clk_in"
+   ],
+   "reason": "base bus requires explicit same-domain bit contract; no automatic collapse"
+  },
+  {
+   "table": "cores/ot_hbm_svc_sm_group_rel_id__776.304x646.92__canon.json",
+   "ports": [
+    "hbm_clk",
+    "hbm_fifo_clk",
+    "hbm_pc_clk",
+    "stream_bank_clk",
+    "stream_clk"
+   ],
+   "reason": "base bus requires explicit same-domain bit contract; no automatic collapse"
+  }
+ ],
+ "hcol_contract": "ef994fe77: scorer clk_hslice={256{clk}}; preserve clk_pair[0:1] ports, no bus collapse"
+}

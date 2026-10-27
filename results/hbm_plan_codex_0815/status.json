@@ -1,0 +1,114 @@
+{
+ "verdict": "NOT_ROUTE_READY",
+ "source_branch": "codex/hbm-plan-0815",
+ "base": "568934d32a",
+ "candidate": "intel2:/srv/opentallas-scratch2/claude/codex-hbm-plan-0815/c9b",
+ "before_pin_windows": {
+  "records": 129,
+  "violations": 58,
+  "errors": 0
+ },
+ "after_pin_windows": {
+  "records": 129,
+  "violations": 47,
+  "errors": 0
+ },
+ "fixed_core_views": [
+  {
+   "type": "ot_hbm_idx_score_hcol_h0",
+   "pins_file": "cores/ot_hbm_idx_score_hcol_h0__218.592x187.488__canon.json",
+   "old_peak": 6.1,
+   "new_peak": 5.9
+  },
+  {
+   "type": "ot_hbm_idx_score_hcol_h1",
+   "pins_file": "cores/ot_hbm_idx_score_hcol_h1__218.592x187.488__canon.json",
+   "old_peak": 6.1,
+   "new_peak": 5.9
+  },
+  {
+   "type": "hfd_ep_static",
+   "pins_file": "cores/hfd_ep_static__250.56x375.84__NW_io_u_host_ep.json",
+   "old_peak": 9.7,
+   "new_peak": 4.6
+  },
+  {
+   "type": "ot_hbm_hc_root_static__tailx_sk_steady",
+   "pins_file": "cores/ot_hbm_hc_root_static__tailx_sk_steady__155.52x198.72__canon.json",
+   "old_peak": 10.5,
+   "new_peak": 3.8
+  },
+  {
+   "type": "ot_hbm_idx_rootctl_static_am",
+   "pins_file": "cores/ot_hbm_idx_rootctl_static_am__475.2x259.2__canon.json",
+   "old_peak": 9.9,
+   "new_peak": 5.4
+  },
+  {
+   "type": "ot_hbm_argmax_static_sw_vm_r2",
+   "pins_file": "cores/ot_hbm_argmax_static_sw_vm_r2__118.8x118.8__canon.json",
+   "old_peak": 8.0,
+   "new_peak": 4.0
+  },
+  {
+   "type": "ot_hbm_svc_sm_group_rel_id",
+   "pins_file": "cores/ot_hbm_svc_sm_group_rel_id__776.304x646.92__canon.json",
+   "old_peak": 10.4,
+   "new_peak": 5.8
+  },
+  {
+   "type": "hnx_vms_bank_q0_faces__vecd4ae",
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon.json",
+   "old_peak": 15.4,
+   "new_peak": 5.6
+  },
+  {
+   "type": "ot_hgi_sm_xload_cl2_bfqg",
+   "pins_file": "cores/ot_hgi_sm_xload_cl2_bfqg__302.4x298.08__canon.json",
+   "old_peak": 10.5,
+   "new_peak": 3.8
+  },
+  {
+   "type": "ot_hbm_su_static_qcore_r13",
+   "pins_file": "cores/ot_hbm_su_static_qcore_r13__224.64x207.36__canon.json",
+   "old_peak": 10.5,
+   "new_peak": 4.0
+  },
+  {
+   "type": "ot_hfd_coll_q2_hard_v8g__ring_ag",
+   "pins_file": "cores/ot_hfd_coll_q2_hard_v8g__ring_ag__233.28x233.28__q_hub_u_hb_coll_Q_ring_ag__oneclk.json",
+   "old_peak": 10.4,
+   "new_peak": 5.3
+  }
+ ],
+ "clock_macro_overlap_fixes": 3,
+ "hcol_pin_window_peak": 5.9,
+ "hcol_source_contract": "ef994fe77",
+ "native_quarter_residual_contract": "44a5cccc2d",
+ "native_quarter_std_cells": 227684,
+ "native_quarter_sram_macros": 17,
+ "native_quarter_ff": 94263,
+ "restoration": {
+  "existing_hcol": 128,
+  "required_hcol": 256,
+  "existing_tails": 4,
+  "required_tails": 8,
+  "logical_quarters": [
+   "SW",
+   "SE",
+   "NW",
+   "NE"
+  ],
+  "no_die_growth": true
+ },
+ "failures": [
+  "47 pin-window violations remain (31coreviews insufficient current-face capacity +16partitionviews); original58 failure retained",
+  "FREEPACK G1 FAIL: new quarter key fanout fragmented over~3mm; source-aware regular layout worker owns revision",
+  "Legacy core_conns uses name heuristics; exact source/cut mapper owns replacement, no topology proof claimed",
+  "Old32 hard keybuf query proxies have no native semantics; canonical17SRAM soft quarter replaces them",
+  "Merged clock-entry bits need actual physical die adapter consumption; source vectors are tied but metadata alone is not a wire",
+  "FUSED root lot and271/173bit physical links absent; coverage +nativeLEC own implementation",
+  "Current plan G0/G0C/GRT/STA/token gates NOT RUN/PASSED on this source package"
+ ],
+ "scope": "opt-in source helpers and diagnostic records only; no main plan/default/RTL/route changes"
+}
