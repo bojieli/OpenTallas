@@ -805,14 +805,13 @@ set ot_cut 0; set ot_via 0
 foreach sw [$n getSWires] {
   set mk {}
   foreach sb [$sw getWires] {
-    set ly [$sb getTechLayer]
-    if {$ly eq "NULL"} {
+    if {[$sb isVia]} {
       # a via: drop it when its centre lies in a hole of either layer it joins
       set x [expr {([$sb xMin]+[$sb xMax])/2.0/$dbu}]; set y [expr {([$sb yMin]+[$sb yMax])/2.0/$dbu}]
       foreach h $ot_holes { lassign $h L x0 y0 x1 y1
         if {$x > $x0 && $x < $x1 && $y > $y0 && $y < $y1} { lappend mk [list via $sb]; break } }
       continue }
-    set L [$ly getName]; if {$L ne "M8" && $L ne "M9"} continue
+    set L [[$sb getTechLayer] getName]; if {$L ne "M8" && $L ne "M9"} continue
     set bx [list [$sb xMin] [$sb yMin] [$sb xMax] [$sb yMax]]
     lassign [lmap q $bx {expr {$q/double($dbu)}}] x0 y0 x1 y1
     set V [expr {($x1-$x0) < ($y1-$y0)}]

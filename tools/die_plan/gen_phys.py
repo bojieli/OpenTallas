@@ -1976,6 +1976,13 @@ def write_assembly(raw, out, views, rtl_root=None, plan_path=None, pg_map=None):
                                                    indent=1) + "\n")
     (kd / "macro_place.tcl").write_text(macro_place_tcl(P))
     (kd / "pdn.tcl").write_text(die_pdn_tcl(P, domain_loads))
+    # INFRA-FIRST-QC-R28: per-net PG cut-outs (die.pg.grid net_holes_um, e.g. VSS under the clock-mesh straps) are cut
+    # from the pdngen result by a POST_PDN step (ORFS source_step_tcl POST PDN), same holes as die_infra.pg_rects
+    pg_cut = [g for g in P.die.get("pg", {}).get("grid", []) if g.get("net_holes_um")]
+    if pg_cut:
+        import pg_mesh_cut
+        (kd / "post_pdn.tcl").write_text("".join(pg_mesh_cut.cut_tcl(pg_cut, n)
+                                                 for n in sorted({n for g in pg_cut for n in g["net_holes_um"]})))
     if domain_loads is not None:
         (kd / "pg_bindings.json").write_text(json.dumps(domain_loads, indent=1) + "\n")
     (kd / "make_tracks.tcl").write_text(make_tracks_tcl(P))
@@ -2031,6 +2038,8 @@ def write_assembly(raw, out, views, rtl_root=None, plan_path=None, pg_map=None):
            "export SYNTH_HIERARCHICAL = 0",
            "export LEC_CHECK = 0",
            "export SKIP_LAST_GASP = 1"]
+    if pg_cut:
+        cfg.append("export POST_PDN_TCL = /work/post_pdn.tcl")
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     import spine
     br = spine.branch_table(P, dropped)

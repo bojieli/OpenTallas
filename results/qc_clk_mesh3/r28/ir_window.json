@@ -1,0 +1,58 @@
+{
+ "schema": "opentallas.qc_r28_ir.v1",
+ "deck": "copy of intel1:/srv/opentallas-scratch2/claude/qc-pg-wc-1026/core_wc (QC-PG-WC window core_centre 864x864 um at die (15171.84,12700.8), 0.5666 W = 0.759 W/mm2 worst-case uncapped AR, 64 window-local bumps, window edges open); only pdn.tcl stripes (+ -starts_with POWER = pg_regions.core_stripes_tcl), the R28 VSS cut (post-pdngen, same holes as die_plan.json net_holes_um clipped to the window: 4 M8 + 1 M9 straps) and an added VSS analyze_power_grid changed; image openroad/orfs:asap7lock",
+ "gate_mV": 35.45,
+ "runs": {
+  "plan_uncut": {
+   "VSS_worst_mV": 111.0,
+   "VSS_avg_mV": 68.6,
+   "VDD_worst_mV": 111.0,
+   "VDD_avg_mV": 66.3,
+   "cut": null,
+   "pdn": [
+    "add_pdn_stripe -grid {top} -layer {M8} -width {0.48} -pitch {8.64} -offset {4.32} -spacing {3.84} -starts_with POWER\n",
+    "add_pdn_stripe -grid {top} -layer {M9} -width {0.48} -pitch {8.64} -offset {4.32} -spacing {3.84} -starts_with POWER\n"
+   ]
+  },
+  "plan_cut": {
+   "VSS_worst_mV": 113.0,
+   "VSS_avg_mV": 71.8,
+   "VDD_worst_mV": 111.0,
+   "VDD_avg_mV": 66.3,
+   "cut": {
+    "stripes": 5,
+    "vias": 891
+   },
+   "pdn": [
+    "add_pdn_stripe -grid {top} -layer {M8} -width {0.48} -pitch {8.64} -offset {4.32} -spacing {3.84} -starts_with POWER\n",
+    "add_pdn_stripe -grid {top} -layer {M9} -width {0.48} -pitch {8.64} -offset {4.32} -spacing {3.84} -starts_with POWER\n"
+   ]
+  },
+  "dense_uncut": {
+   "VSS_worst_mV": 33.2,
+   "VSS_avg_mV": 21.3,
+   "VDD_worst_mV": 33.8,
+   "VDD_avg_mV": 21.5,
+   "cut": null,
+   "pdn": [
+    "add_pdn_stripe -grid {top} -layer {M8} -width {0.48} -pitch {2.16} -offset {1.08} -spacing {0.6} -starts_with POWER\n",
+    "add_pdn_stripe -grid {top} -layer {M9} -width {0.48} -pitch {1.728} -offset {0.864} -spacing {0.384} -starts_with POWER\n"
+   ]
+  },
+  "dense_cut": {
+   "VSS_worst_mV": 33.3,
+   "VSS_avg_mV": 21.5,
+   "VDD_worst_mV": 33.8,
+   "VDD_avg_mV": 21.5,
+   "cut": {
+    "stripes": 5,
+    "vias": 2791
+   },
+   "pdn": [
+    "add_pdn_stripe -grid {top} -layer {M8} -width {0.48} -pitch {2.16} -offset {1.08} -spacing {0.6} -starts_with POWER\n",
+    "add_pdn_stripe -grid {top} -layer {M9} -width {0.48} -pitch {1.728} -offset {0.864} -spacing {0.384} -starts_with POWER\n"
+   ]
+  }
+ },
+ "status": "own runs (UNCHECKED, NUMBER-CHECK pending)"
+}
