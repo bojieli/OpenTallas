@@ -75,7 +75,14 @@ NDR = {"4w": dict(width=0.16, space=0.08, rf=0.25, cf=1.3), "8w": dict(width=0.3
        # grid; 5 x 0.098 + 0.04 + 2 x 0.02 = 0.57 <= 0.64).  VIA78 stays the single tech via: its M7 side is the
        # 0.032-um default-width pin riser of the R7 straight stack.
        "16w": dict(width=0.64, space=0.5, rf=0.0625, cf=2.2, wide_merge_um=0.99975,
-                   via89=dict(rows=6, cols=6, cut=0.04, pitch=0.098, enc_m8=0.0, enc_m9=0.02))}
+                   via89=dict(rows=6, cols=6, cut=0.04, pitch=0.098, enc_m8=0.0, enc_m9=0.02)),
+       # R26 band-tree stage table includes 2x16w. The physical 1.28-um conductor
+       # exceeds the LEF WIDTH0.99975 row: long-PRL spacing is 1.0um. M8 MAXWIDTH
+       # is2.0um; a merged shield must stay below it. 13V8 cuts fit:12*.098+.04
+       # plus .02 enclosure on both M9 sides =1.256um <=1.28um. Native C is a
+       # diagnostic continuation of the stage-table model; routed RC must qualify it.
+       "2x16w": dict(width=1.28, space=1.0, rf=0.03125, cf=4.4, wide_merge_um=1.99975,
+                     via89=dict(rows=13, cols=13, cut=0.04, pitch=0.098, enc_m8=0.0, enc_m9=0.02))}
 VDD = {"TT": 0.70, "FF": 0.77}
 SITE_X, ROW_Y = 0.054, 0.27
 # Actual current ORFS asap7sc7p5t_28_R_1x_220121a.lef SIZE, not the obsolete 25-site estimate.
@@ -2244,10 +2251,14 @@ def write_verilog(cells, nets, ports, path):
         if a is None or y is None:
             raise SystemExit(f"die_clock_mesh: unconnected cell {c} A={a} Y={y}")
         L.append(f"  {cells[c].get('lib', BUF)} {c} (.A({a}), .Y({y}));")
+    for n in nets:
+        for pn in n.get("port_aliases", []):
+            L.append(f"  assign {pn} = {n['name']};")
     L.append("endmodule")
     txt = "\n".join(L) + "\n"
     # a net that drives a tap port IS that port (no assign statements in the GRT netlist)
-    ren = {n["name"]: ld[5:] for n in nets for ld in n["loads"] if ld.startswith("port:")}
+    ren = {n["name"]: ld[5:] for n in nets if not n.get("port_aliases")
+           for ld in n["loads"] if ld.startswith("port:")}
     txt = re.sub(r"\b(ckm_w_[A-Za-z0-9_]+)\b", lambda q: ren.get(q.group(1), q.group(1)), txt)
     txt = "\n".join(l for l in txt.split("\n") if not re.match(r"\s*wire t_", l)) + "\n"
     Path(path).write_text(txt)
@@ -3476,7 +3487,12 @@ def cmd_combo(a):
                                  f"{sh_['spacing']} spacing: {sh_['short_list'][:3]} {sh_['spacing_list'][:3]}")
         else:
             L += C128.combo_tcl(wires, nd, M["meta"]["rule_12_8"]["shield_net"])
-        sp = C128.spef(wires, cells, BUF, nd, DC.LAYER_RC, DC.VIA_KOHM)
+        if any(w.get("pieces") or w.get("explicit_mesh") for w in wires):
+            from explicit_clock_mesh import native_spef
+            sp = native_spef(wires, cells, BUF, nd, DC.LAYER_RC, DC.VIA_KOHM)
+            M["meta"]["native_rc_basis"] = "diagnostic width-aware ladder; lumped pin stacks; extracted RC gates timing"
+        else:
+            sp = C128.spef(wires, cells, BUF, nd, DC.LAYER_RC, DC.VIA_KOHM)
         for c_ in ("TT", "FF"):
             (d / f"native_{c_}.spef").write_text(sp)
         shield_segs_all += [tuple(r_[:5]) + (r_[8],) for r_ in C128.tree_segs(wires) if r_[7] == C128.DRAWN]

@@ -851,6 +851,10 @@ def stair_shapes(wires, cells, ports, buf):
     vr = via_rects()
     out = []
     for w in wires:
+        if w.get("explicit_mesh"):
+            from explicit_clock_mesh import access_shapes
+            out += access_shapes(w, cells, buf)
+            continue
         if w.get("pin_stack"):
             out += stack_shapes(w)
             continue
