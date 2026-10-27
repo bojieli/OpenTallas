@@ -1,0 +1,334 @@
+{
+ "schema": "qc_cores_1027.a0_gap_capacity.v1",
+ "assumptions": "QC-CORES-2 A0-CLK-R3 (GEOM-19 (4)): signal-gap / corridor track capacity re-deducted for the island footprints.\nIsland = 8.64 x 8.64 um, blocks M1-M5 (driver cells + M5->M1 stack); M9->M5 drop stack through M6/M7 taken as a 1.0-um via column\n(assumption); clock legs = M7 vertical / M6 horizontal, NDR 2W2S taken as 3 tracks per leg (assumption).  ASAP7 pitches\nM2/M3 0.036, M4/M5 0.048, M6/M7 0.064 um.  Capacity is per cross-section at the island; demand is listed only where a\nnumber exists (labelled).  usage: a0_gap_capacity.py R3PLAN OUT.json",
+ "rows": [
+  {
+   "region": "bottom margin y0-22.176",
+   "dir": "H",
+   "width_um": 22.176,
+   "islands": [
+    "EF0"
+   ],
+   "n_islands": 1,
+   "tracks": {
+    "M2": {
+     "full": 616,
+     "at_island": 375,
+     "frac": 0.609
+    },
+    "M4": {
+     "full": 461,
+     "at_island": 281,
+     "frac": 0.61
+    },
+    "M6": {
+     "full": 346,
+     "at_island": 327,
+     "frac": 0.945
+    }
+   },
+   "total_full": 1423,
+   "total_at_island": 983,
+   "usable_at_0p6": 589
+  },
+  {
+   "region": "ROM gap 0-1",
+   "dir": "H",
+   "width_um": 20.016,
+   "islands": [
+    "EF1",
+    "ME01",
+    "MW01",
+    "R0"
+   ],
+   "n_islands": 4,
+   "tracks": {
+    "M2": {
+     "full": 556,
+     "at_island": 315,
+     "frac": 0.567
+    },
+    "M4": {
+     "full": 416,
+     "at_island": 236,
+     "frac": 0.567
+    },
+    "M6": {
+     "full": 312,
+     "at_island": 294,
+     "frac": 0.942
+    }
+   },
+   "total_full": 1284,
+   "total_at_island": 845,
+   "usable_at_0p6": 507
+  },
+  {
+   "region": "ROM gap 1-2",
+   "dir": "H",
+   "width_um": 20.016,
+   "islands": [
+    "EF2",
+    "R1"
+   ],
+   "n_islands": 2,
+   "tracks": {
+    "M2": {
+     "full": 556,
+     "at_island": 315,
+     "frac": 0.567
+    },
+    "M4": {
+     "full": 416,
+     "at_island": 236,
+     "frac": 0.567
+    },
+    "M6": {
+     "full": 312,
+     "at_island": 294,
+     "frac": 0.942
+    }
+   },
+   "total_full": 1284,
+   "total_at_island": 845,
+   "usable_at_0p6": 507
+  },
+  {
+   "region": "ROM gap 2-3",
+   "dir": "H",
+   "width_um": 20.016,
+   "islands": [
+    "EF3",
+    "ME23",
+    "MW23",
+    "R2"
+   ],
+   "n_islands": 4,
+   "tracks": {
+    "M2": {
+     "full": 556,
+     "at_island": 315,
+     "frac": 0.567
+    },
+    "M4": {
+     "full": 416,
+     "at_island": 236,
+     "frac": 0.567
+    },
+    "M6": {
+     "full": 312,
+     "at_island": 294,
+     "frac": 0.942
+    }
+   },
+   "total_full": 1284,
+   "total_at_island": 845,
+   "usable_at_0p6": 507
+  },
+  {
+   "region": "ROM gap 3-4",
+   "dir": "H",
+   "width_um": 20.016,
+   "islands": [
+    "EF4",
+    "R3"
+   ],
+   "n_islands": 2,
+   "tracks": {
+    "M2": {
+     "full": 556,
+     "at_island": 315,
+     "frac": 0.567
+    },
+    "M4": {
+     "full": 416,
+     "at_island": 236,
+     "frac": 0.567
+    },
+    "M6": {
+     "full": 312,
+     "at_island": 294,
+     "frac": 0.942
+    }
+   },
+   "total_full": 1284,
+   "total_at_island": 845,
+   "usable_at_0p6": 507
+  },
+  {
+   "region": "ROM/LSL strip",
+   "dir": "H",
+   "width_um": 20.88,
+   "islands": [
+    "EF5",
+    "ME4",
+    "MW4",
+    "R4"
+   ],
+   "n_islands": 4,
+   "tracks": {
+    "M2": {
+     "full": 580,
+     "at_island": 340,
+     "frac": 0.586
+    },
+    "M4": {
+     "full": 434,
+     "at_island": 254,
+     "frac": 0.585
+    },
+    "M6": {
+     "full": 326,
+     "at_island": 307,
+     "frac": 0.942
+    }
+   },
+   "total_full": 1340,
+   "total_at_island": 901,
+   "usable_at_0p6": 540
+  },
+  {
+   "region": "LSL gap 0-1",
+   "dir": "H",
+   "width_um": 20.112,
+   "islands": [
+    "EN1"
+   ],
+   "n_islands": 1,
+   "tracks": {
+    "M2": {
+     "full": 558,
+     "at_island": 318,
+     "frac": 0.57
+    },
+    "M4": {
+     "full": 418,
+     "at_island": 238,
+     "frac": 0.569
+    },
+    "M6": {
+     "full": 314,
+     "at_island": 295,
+     "frac": 0.939
+    }
+   },
+   "total_full": 1290,
+   "total_at_island": 851,
+   "usable_at_0p6": 510
+  },
+  {
+   "region": "LSL gap 1-2",
+   "dir": "H",
+   "width_um": 20.112,
+   "islands": [
+    "EN2",
+    "G0",
+    "G1",
+    "G2"
+   ],
+   "n_islands": 4,
+   "tracks": {
+    "M2": {
+     "full": 558,
+     "at_island": 318,
+     "frac": 0.57
+    },
+    "M4": {
+     "full": 418,
+     "at_island": 238,
+     "frac": 0.569
+    },
+    "M6": {
+     "full": 314,
+     "at_island": 295,
+     "frac": 0.939
+    }
+   },
+   "total_full": 1290,
+   "total_at_island": 851,
+   "usable_at_0p6": 510,
+   "demand": {
+    "bits": 250,
+    "src": "fault raw flags converging on fault_q hub (191.5,984.888): <=5 E-side leaves x 50 flags crossing G1 (UNCHECKED bound)"
+   },
+   "use_at_island": 0.294,
+   "use_full": 0.194,
+   "verdict_0p6": "PASS"
+  },
+  {
+   "region": "bus corridor x200.664-257.256 (y<=658.44)",
+   "dir": "V",
+   "width_um": 56.592,
+   "islands": [
+    "R0",
+    "R1",
+    "R2",
+    "R3"
+   ],
+   "n_islands": 4,
+   "tracks": {
+    "M3": {
+     "full": 1572,
+     "at_island": 1332,
+     "frac": 0.847
+    },
+    "M5": {
+     "full": 1179,
+     "at_island": 998,
+     "frac": 0.846
+    },
+    "M7": {
+     "full": 884,
+     "at_island": 865,
+     "frac": 0.979
+    }
+   },
+   "total_full": 3635,
+   "total_at_island": 3195,
+   "usable_at_0p6": 1917,
+   "demand": {
+    "bits": 1024,
+    "src": "Codex A0 parent plan corridor budget (MODE9 historical, UNCHECKED)"
+   },
+   "use_at_island": 0.321,
+   "use_full": 0.282,
+   "verdict_0p6": "PASS"
+  },
+  {
+   "region": "E strip x440.856-457.92",
+   "dir": "V",
+   "width_um": 17.064,
+   "islands": [
+    "EF0",
+    "EF1",
+    "EF2",
+    "EF3",
+    "EF4",
+    "EF5",
+    "EN1",
+    "EN2"
+   ],
+   "n_islands": 8,
+   "tracks": {
+    "M3": {
+     "full": 474,
+     "at_island": 234,
+     "frac": 0.494
+    },
+    "M5": {
+     "full": 355,
+     "at_island": 175,
+     "frac": 0.493
+    },
+    "M7": {
+     "full": 266,
+     "at_island": 248,
+     "frac": 0.932
+    }
+   },
+   "total_full": 1095,
+   "total_at_island": 657,
+   "usable_at_0p6": 394
+  }
+ ]
+}

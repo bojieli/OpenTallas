@@ -73,3 +73,40 @@ All numbers PLAN MODEL, UNCHECKED-model (NLDM RVT TT/FF + Elmore, M5/M6 setRC x0
 - (i) re-kit clk pins (child frame, centre): romleaf (86.4,55.08), rawleaf (57.672,70.2), node (23.76,216.0); child OBS <= M5 (romleaf LEF CHECKED M1-M5; rawleaf/node UNCHECKED).
 - (ii) no legs in row gaps (islands only, stub); legs over children on M6/M7; 0 legs / 0 islands in pin-face columns; 0 islands in child halo.
 - (iii) islands R0-R4 in bus corridor (channel cross, 12.2a site) -> capacity re-deduction for 5 x 8.64 um island footprint + M1-M5 drop vias.
+
+## Clock R3 (QC-CORES-2, answers GEOM-REVIEW-19 PASS-COND (2)-(5) + COORD ruling A0-CLK-R2) — PLAN ONLY, no P&R
+Scripts: `a0_clk_r3.py LIBDIR OUT` (plan + renders `clk_r3/a0_clk_r3_{nk,nl}.png`, both viewed), `a0_lattice_snap.py`, `a0_gap_capacity.py`.
+Lattice source: **R22 `strap_lattice_d43.json` = PROVISIONAL** (INFRA-FIRST-QC-R24 51.84-um lattice not yet published). Cross-check on the
+Codex R23 guard51 candidate (`inputs/d51`, plan sha 37937a86…) gives identical results (`clk_r3/a0_lattice_snap_r23_d51.json`).
+Die plan inputs (not committed, intel2 codex-qwen-1027/pkg/inputs): d43 plan f2c91d03…/r2 40cbbf8c…; d51 plan 37937a86…/r2 42d1c717….
+- **(2) Snap to the R22 strap crossings is IMPOSSIBLE (CHECKED, all 768 instances).**
+  - The lattice is incommensurate with the A0 type: 5 distinct M9 phase sets and 8 distinct M8 phase sets in the core frame
+    (A0 columns alternate 604.8/622.08 um, M9 pitch 207.36/198.72/216; A0 rows 1296-1313 um, M8 pitch 146.88/138.24).
+  - Crossings per core: 16 (658 cores), 8 (94), **0 (16 cores, W column x0 1650.24 lies W of the first strap 2177.28)**; 110 cores
+    stick out of the strap span. A core needs 22 islands.
+  - **0 of the 105 distinct core-frame crossing points is a legal island site**: every one lies inside a hard child + 5.4 halo.
+  - Distance island -> nearest R22 crossing (R3 sites, 658 interior cores): median 94.9, max 126.4 um (dx<=108, dy<=66.7); all
+    768: max 641.6 um. R2 sites: median 98.7, max 665.1. 0 sites coincide (<=0.5 um).
+  - So per 12.2a1 ("the die tree/mesh lattice is chosen to coincide with the per-type island lattice") and 12.2c, R3 fixes a
+    **type drop lattice** and asks the die clock owner for the plan delta: M9 drop straps at x0 + {108.864, 228.96, 349.056, 452.0}
+    and M8 drop straps at y0 + {11.088, 142.344, 272.52, 402.696, 532.872, 663.48, 824.376, 984.888} (MX rows: y0 + 1157.76 - v).
+    That is 192 M9 + 128 M8 drop straps (`plan_delta_drop_straps` in the snap json, full lists); M9 gaps 102.9-278.9 um; the die owner
+    keeps/adds its own straps in the inter-row bands (M8 gap 339 um between A0 rows) and outside A0 for mesh density.
+- **R3 islands: 22 per core, all on lattice crossings at legal parent sites** (0 in child halo, 0 in pin-face columns, 0 legs in
+  pin-face columns; NK and NL identical, NL has no node leg). R2 26 -> 22: L00/L20 merged into MW4/ME4, A into R4, EN0 into EF5;
+  R0-R4 moved from ROM row centres to the gap above; EF to x 452; G0-G2 to the lattice columns. Leaves keep R2 positions.
+  Model (UNCHECKED-model, same stage model as R2, reads ~15 ps high TT): child-entry P TT 48.93 (window 12.05) / FF 40.93 (11.27);
+  max leg 115.8 um (R2 80.6); slew <= 46.2. Window 12 ps < 20 ps design target; the ROM branches already sit at BUFx8 (smallest).
+- **(5) B reconciled: B_child = 206.2 TT / 163.8 FF was right in R2 (child-only mean); 212.56 averaged child AND parent taps (wrong
+  field, removed).** R3 numbers: **B_child = 201.07 TT / 161.57 FF (NK), 201.32 / 161.87 (NL)** -> one value 201 TT / 161.5 FF into
+  the child re-kits (NK/NL differ 0.25 ps). Parent roots each get their own B_par (TT 196.5-219.3). Renders now draw the 18 parent
+  roots (labelled triangles). Per-root FF counts need the parent placement (16,592 NK / 15,561 NL FF, avg ~920/root UNCHECKED).
+- **(3) Layers.** romleaf LEF OBS M1-M5 (CHECKED, main). node LEF OBS M1-M5 (CHECKED, but PROVISIONAL view). **rawleaf FAILS
+  today**: Codex leaf_kit `MAX_ROUTING_LAYER = M6` and 224 of 506 pins on M6 (CHECKED, b7da9afaa leaf_kit/config.mk, io.tcl).
+  Re-kit rule: rawleaf ceiling M5, the 224 M6 E-face pins to M4/M5; face_guard/LEF check OBS <= M5 on all three masters.
+  The A0 parent's own M6/M7 signals must keep out of the 22 leg corridors (clock NDR pre-route), to be checked at parent GRT.
+- **(4) Capacity re-deducted** (`clk_r3/a0_gap_capacity.json`; island blocks M1-M5 8.64 um, 1.0-um via column on M6/M7, 3 tracks NDR
+  per leg; assumptions labelled): ROM/LSL row gaps keep M2 315/556, M4 236/416, M6 294/312 at an island. Bus corridor at R0-R3:
+  M3 1332/1572, M5 998/1179, M7 865/884; Codex 1024-bit budget (UNCHECKED, historical) -> use 0.55 on M5+M7 (0.32 incl. M3) <= 0.6.
+  LSL gap 1-2 fault flags <= 250 (UNCHECKED bound) -> 0.29. E strip (8 islands, A0 wide E pin face) keeps M5 175/355: the A0 E-face
+  pin positions are not checked against EF0-5/EN1-2 yet (open).
