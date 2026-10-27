@@ -110,8 +110,127 @@ def core_obs(t):
     return out
 
 
-def abstract_lef(P, tn, slots_only_pins=False):
-    """partition abstract (see module doc).  Returns (lef text, stats)."""
+# ------------------------------------------------------------------------ CLOCK-128-R7: island windows (12.2a / 12.2a1)
+# Opt-in (kit --island-sites).  A die clock cell (H-tree node / leg or trunk repeater) on a partition island site is a
+# top-owned placement hole + M9->M1 stack (12.2a): the partition abstract must NOT carry solid M1-M3 OBS (nor its M7
+# PG stripes) over it.  Windows are plan-computed from the declared site coordinates only (never from a placement):
+# site centre +- (cell footprint / 2 + the plan-site snap + margin), snapped OUTWARD to the type's site/row grid,
+# transformed into the TYPE frame and united over every instance of the type -> one abstract per type, the SAME
+# windows in every instance (12.2a1 type identity).  A window over a planned hard core is NOT opened (the core's
+# OBS stays): that site needs an in-core pushdown island (12.2a1), reported as island_in_core.
+ISLAND_CELL_UM = (1.62, 0.27)     # BUFx24_ASAP7_75t_R footprint (die_clock_mesh BUF_W x ROW_Y)
+ISLAND_SNAP_UM = 0.5              # die_clock_128.SITE_SNAP_UM: plan site -> placed cell
+ISLAND_MARGIN_UM = 0.25           # pin stack pads (M2 0.019) + OBS spacing, rounded up
+ISLAND_GRID_UM = (0.054, 0.27)    # site width / row height (ASAP7 7.5T)
+ISLAND_PG_CUT = ("M7",)           # abstract PG pin layers cut at a window (the pin stack's M7 riser runs there)
+
+
+def load_island_sites(paths):
+    """[(xy, source)] die-frame island sites from: a die_tree_plan.json (lattice.nodes + lattice.gate.
+    leg_repeater_sites), an ot_clock_sites/1 file (sites[] of kind partition), or a die_clock_mesh build mesh.json
+    (meta.derived_trunk_sites: the root trunk repeaters the plan has not declared yet)."""
+    out = []
+    for p in paths:
+        d = json.loads(Path(p).read_text())
+        tag = Path(p).name
+        if isinstance(d.get("lattice"), dict):
+            for n in d["lattice"].get("nodes", []):
+                out.append((tuple(n["xy_um"]), f"{tag}:node:{n.get('tag')}"))
+            for k, r in enumerate(d["lattice"].get("gate", {}).get("leg_repeater_sites", [])):
+                out.append((tuple(r["xy_um"]), f"{tag}:leg:{r.get('leg')}:{k}"))
+        elif d.get("schema") == "ot_clock_sites/1":
+            for s in d.get("sites", []):
+                if s.get("kind", "partition") == "partition":
+                    out.append((tuple(s["xy_um"]), f"{tag}:{s.get('name')}"))
+        elif isinstance(d.get("meta"), dict) and "derived_trunk_sites" in d["meta"]:
+            for s in d["meta"]["derived_trunk_sites"]:
+                out.append((tuple(s["xy_um"]), f"{tag}:trunk:{s.get('cell')}"))
+        else:
+            raise SystemExit(f"die_trial kit --island-sites: {p}: not a die_tree_plan / ot_clock_sites/1 / mesh.json")
+    return out
+
+
+def _snap_out(v, g, up):
+    k = v / g
+    return round((math.ceil(k - 1e-6) if up else math.floor(k + 1e-6)) * g, 4)
+
+
+def island_windows(P, sites, cell=ISLAND_CELL_UM, snap=ISLAND_SNAP_UM, margin=ISLAND_MARGIN_UM, grid=ISLAND_GRID_UM):
+    """{type: [type-frame rect]} (union over instances, deduplicated) + per-site record list"""
+    hx = cell[0] / 2 + snap + margin
+    hy = cell[1] + snap + margin          # the cell row may lie above or below the site's row line
+    rects = {n: P.rect(n) for n in P.parts}
+    by_type, recs = defaultdict(set), []
+    for (x, y), src in sites:
+        w = (x - hx, y - hy, x + hx, y + hy)
+        hit = []
+        for n, r in rects.items():
+            a, b, c, d = max(w[0], r[0]), max(w[1], r[1]), min(w[2], r[2]), min(w[3], r[3])
+            if c <= a + 1e-9 or d <= b + 1e-9:
+                continue
+            tn = P.parts[n]["type"]
+            tw, th = P.types[tn]["outline_um"]
+            (u0, v0), (u1, v1) = P.to_type(n, (a, b)), P.to_type(n, (c, d))
+            u0, u1 = sorted((u0, u1))
+            v0, v1 = sorted((v0, v1))
+            tr = (max(0.0, _snap_out(u0, grid[0], False)), max(0.0, _snap_out(v0, grid[1], False)),
+                  min(tw, _snap_out(u1, grid[0], True)), min(th, _snap_out(v1, grid[1], True)))
+            core = [m for (x0, y0, x1, y1, _, m, _) in core_obs(P.types[tn])
+                    if x0 < tr[2] and x1 > tr[0] and y0 < tr[3] and y1 > tr[1]]
+            hit.append(dict(part=n, type=tn, rect=list(tr), in_core=core))
+            if not core:
+                by_type[tn].add(tr)
+        recs.append(dict(source=src, xy_um=[x, y], parts=hit))
+    return {k: sorted(v) for k, v in by_type.items()}, recs
+
+
+def rect_minus(W, H, holes):
+    """[(x0, y0, x1, y1)] covering (0, 0, W, H) minus the union of holes: horizontal bands between hole edges,
+    vertically merged where the free x-intervals repeat"""
+    ys = sorted({0.0, float(H)} | {min(max(v, 0.0), H) for h in holes for v in (h[1], h[3])})
+    bands = []
+    for ya, yb in zip(ys, ys[1:]):
+        if yb - ya < 1e-9:
+            continue
+        cov = sorted((h[0], h[2]) for h in holes if h[1] < yb - 1e-9 and h[3] > ya + 1e-9)
+        free, cur = [], 0.0
+        for a, b in cov:
+            if a > cur + 1e-9:
+                free.append((cur, min(a, W)))
+            cur = max(cur, b)
+        if cur < W - 1e-9:
+            free.append((cur, float(W)))
+        bands.append((ya, yb, tuple(free)))
+    out, prev = [], None
+    for ya, yb, fr in bands:
+        if prev is not None and prev[2] == fr and abs(prev[1] - ya) < 1e-9:
+            prev = (prev[0], yb, fr)
+            continue
+        if prev is not None:
+            out += [(a, prev[0], b, prev[1]) for a, b in prev[2]]
+        prev = (ya, yb, fr)
+    if prev is not None:
+        out += [(a, prev[0], b, prev[1]) for a, b in prev[2]]
+    return out
+
+
+def _cut_vertical(rect, holes):
+    """split a vertical PG stripe rect (layer of preferred direction y) around the holes it crosses"""
+    x0, y0, x1, y1 = rect
+    cuts = sorted((h[1], h[3]) for h in holes if h[0] < x1 and h[2] > x0 and h[1] < y1 and h[3] > y0)
+    out, cur = [], y0
+    for a, b in cuts:
+        if a > cur + 1e-9:
+            out.append((x0, cur, x1, a))
+        cur = max(cur, b)
+    if cur < y1 - 1e-9:
+        out.append((x0, cur, x1, y1))
+    return out
+
+
+def abstract_lef(P, tn, slots_only_pins=False, islands=None):
+    """partition abstract (see module doc).  Returns (lef text, stats).  islands (CLOCK-128-R7, opt-in): type-frame
+    island windows: no M1-M3 OBS and no ISLAND_PG_CUT PG stripe inside them."""
     t = P.types[tn]
     w, h = t["outline_um"]
     top = P.layer_budget["partition_signal_max"]
@@ -147,9 +266,18 @@ def abstract_lef(P, tn, slots_only_pins=False):
         while c + 0.144 < w:
             rects.append(("M7", c - 0.144, 0.0, c + 0.144, h))
             c += 8.64
+        if islands and "M7" in ISLAND_PG_CUT:
+            rects = [("M7", *r) for _, *q in rects for r in _cut_vertical(tuple(q), islands)]
         L += pin(net, "INOUT", "POWER" if net == "VDD" else "GROUND", rects)
     cores = core_obs(t)
-    L += ["  OBS"] + [f"    LAYER M{i} ;\n      RECT 0 0 {w:.4f} {h:.4f} ;" for i in (1, 2, 3)]
+    if islands:
+        free = rect_minus(w, h, islands)
+        L += ["  OBS"]
+        for i in (1, 2, 3):
+            L.append(f"    LAYER M{i} ;")
+            L += [f"      RECT {a:.4f} {b:.4f} {c:.4f} {d:.4f} ;" for a, b, c, d in free]
+    else:
+        L += ["  OBS"] + [f"    LAYER M{i} ;\n      RECT 0 0 {w:.4f} {h:.4f} ;" for i in (1, 2, 3)]
     by_layer = defaultdict(list)
     for x0, y0, x1, y1, tl, _, _ in cores:
         for i in range(4, min(int(tl[1:]), int(top[1:])) + 1):
@@ -161,6 +289,8 @@ def abstract_lef(P, tn, slots_only_pins=False):
     st = dict(pins=npins, cores=len(cores), cores_with_view=sum(1 for c in cores if c[6]),
               core_area_um2=round(sum((c[2] - c[0]) * (c[3] - c[1]) for c in cores), 1),
               core_top_layers=sorted({c[4] for c in cores}))
+    if islands:
+        st["island_windows"] = len(islands)
     return "\n".join(L), st
 
 
@@ -1001,7 +1131,8 @@ exit $rc
 """
 
 
-def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.72, density=0.15):
+def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.72, density=0.15, island_sites=None,
+              island_margin=ISLAND_MARGIN_UM):
     raw = S.load(plan_path)
     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
     plan_dir = Path(plan_path).parent
@@ -1016,13 +1147,36 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     # abstracts
     lefs, ab = [], {}
     type_bits = {}
+    iw = {}
+    if island_sites:     # CLOCK-128-R7 opt-in: plan-computed island windows (absent -> kit unchanged)
+        sites = load_island_sites(island_sites)
+        iw, irec = island_windows(P, sites, margin=island_margin)
+        own = defaultdict(lambda: defaultdict(set))     # type -> instance -> windows holding one of ITS sites
+        for r in irec:
+            for h in r["parts"]:
+                if not h["in_core"]:
+                    own[h["type"]][h["part"]].add(tuple(h["rect"]))
+        inst_n = defaultdict(int)
+        for p_ in P.parts.values():
+            inst_n[p_["type"]] += 1
+        in_core = [dict(source=r["source"], xy_um=r["xy_um"], part=h["part"], cores=h["in_core"])
+                   for r in irec for h in r["parts"] if h["in_core"]]
+        meta_iw = dict(sources=[str(x) for x in island_sites], sites=len(sites), margin_um=island_margin,
+                       cell_um=list(ISLAND_CELL_UM), snap_um=ISLAND_SNAP_UM, grid_um=list(ISLAND_GRID_UM),
+                       pg_cut=list(ISLAND_PG_CUT), types=len(iw), windows=sum(len(v) for v in iw.values()),
+                       instance_windows=sum(len(v) * inst_n[k] for k, v in iw.items()),
+                       instance_windows_used=sum(len(x) for v in own.values() for x in v.values()),
+                       island_in_core=len(in_core), island_in_core_list=in_core[:50],
+                       sites_outside_partitions=sum(1 for r in irec if not r["parts"]))
+        (out / "island_windows.json").write_text(json.dumps(dict(schema="ot_island_windows/1", meta=meta_iw,
+                                                                 windows=iw, sites=irec), indent=1) + "\n")
     for tn, t in sorted(P.types.items()):
         v = Path(views) / tn / f"{t['module']}.lef" if views else None
         if v and v.is_file():
             (out / "abstracts" / v.name).write_text(v.read_text())
             ab[tn] = dict(source="closed view", path=str(v))
         else:
-            txt, st = abstract_lef(P, tn)
+            txt, st = abstract_lef(P, tn, islands=iw.get(tn))
             (out / "abstracts" / f"{t['module']}.lef").write_text(txt)
             ab[tn] = dict(source="plan abstract", **st)
         lefs.append(f"{t['module']}.lef")
@@ -1031,6 +1185,8 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
             bits[bus] = max(bits[bus], bit + 1)
         type_bits[tn] = dict(bits)
     meta["abstracts"] = ab
+    if island_sites:
+        meta["island_windows"] = meta_iw
     meta["closed_views"] = sum(1 for a in ab.values() if a["source"] == "closed view")
     meta["hard_cores"] = sum(len(P.types[p["type"]].get("hard_cores", []) or []) for p in P.parts.values())
     meta["hard_cores_with_view"] = sum(ab[p["type"]].get("cores_with_view", 0) for p in P.parts.values())
@@ -1582,6 +1738,10 @@ def main(argv=None):
     k.add_argument("--rep-um", type=float, default=450.0)
     k.add_argument("--coarse-um", type=float, default=0.72)
     k.add_argument("--density", type=float, default=0.15, help="die power density W/mm2 for PDNSim")
+    k.add_argument("--island-sites", nargs="+", help="CLOCK-128-R7 opt-in: die_tree_plan.json / ot_clock_sites/1 / "
+                   "mesh.json (derived trunk sites): open plan-computed island windows (no M1-M3 OBS, M7 PG cut) in "
+                   "every partition abstract, identical per type; island_windows.json lists them")
+    k.add_argument("--island-margin-um", type=float, default=ISLAND_MARGIN_UM)
     r = sub.add_parser("report")
     r.add_argument("dir")
     r.add_argument("--plan")
@@ -1637,7 +1797,8 @@ def main(argv=None):
         print(json.dumps(dict(cell=die_sta.bhold_cell(a.tol_ps), types=len(tot), input_bits=sum(tot.values())), indent=1))
         return 0
     if a.cmd == "kit":
-        m = write_kit(a.plan, a.out, a.views, a.leaf_um, a.rep_um, a.coarse_um, a.density)
+        m = write_kit(a.plan, a.out, a.views, a.leaf_um, a.rep_um, a.coarse_um, a.density, a.island_sites,
+                      a.island_margin_um)
         print(json.dumps({k: m[k] for k in ("die", "parts", "types", "closed_views", "hard_cores", "clock_tree", "grt",
                                              "psm", "sta")}, indent=1))
     elif a.cmd == "report":

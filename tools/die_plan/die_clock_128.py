@@ -269,7 +269,7 @@ def load_plan_sites(path, plan_sha256=None):
 
 
 # ------------------------------------------------------------------------------------------------ fixed wires
-def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None):
+def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None, pin_stack=False):
     """every tree net (root, H-tree legs/nodes/leaves, split tails, stubs) as a fixed comb pre-route: one trunk on the
     net's dominant axis (M8 horizontal / M9 vertical), offset `off` from the driver pin line, plus one perpendicular
     drop per load, offset `off` from the load pin line.  Returns [dict(name, drv, pins, segs, rc_nodes)].
@@ -286,6 +286,8 @@ def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None):
     empty = [n["name"] for n in nets if not n["loads"]]
     if empty:   # CLOCK-128-R2: the build prunes dead branches by construction; a loadless net here is a plan error
         raise PlanError([dict(kind="empty_tree_net", name=x, detail="tree net without loads") for x in empty])
+    if pin_stack:   # CLOCK-128-R7 opt-in: straight pin stacks (the default path below is unchanged)
+        return _fixed_wires_stack(M, cells, nets, row_y, off, router)
     out, errs = [], []
 
     def track(layer, ideal, a0, a1, name, what):
@@ -372,6 +374,148 @@ def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None):
     if errs:
         raise PlanError(errs)
     return out
+
+# ------------------------------------------------------------------ CLOCK-128-R7: straight pin stacks (opt-in)
+# Every clock-cell pin is reached by ONE bar column (rule from CLOCK-128-R6, lanes/CLOCK-128.md 18:03): the M8 end of
+# the net (trunk junction or drop end) sits exactly over the pin's M1 bar; there a VIA78 drops into an M7 riser that
+# runs along the bar column (M7 is vertical) to the pin row (cell y + row/2, on the bar for R0 and MX), and a straight
+# VIA67..VIA12 stack lands on the bar.  Every layer M2..M6 carries one centred rectangle (the via enclosures extended
+# along the preferred direction to the LEF minimum area); M7 / M8 are the riser / trunk wires themselves.  So no layer
+# steps sideways, every shape is a rectangle (RECTONLY M2-M7), and nothing of the pin access lies on M8 / M9 except
+# the planned shielded legs (no M8 pad under a die PG stripe, no M9 drop under one).  The M7 riser is short
+# (TREE_OFF_UM + the trunk's track move) and lies inside the partition's island window (die_trial kit --island-sites:
+# no M1-M3 OBS, M7 PG cut there), so it needs no shield ("shields cut at the drop end").
+#   horizontal trunk (M8 at ty): driver Y and every load A join the trunk at their bar x (junction on the trunk).
+#   vertical trunk (M9 at tx): driver = M8 jog (PG-aware track, one track pair off the pin row toward the loads)
+#     from the Y bar to tx; load = M8 drop (PG-aware track, one track pair off toward the driver) from tx to the A bar.
+PIN_BAR_X = {f"BUFx{k}_ASAP7_75t_R": {"A": 0.027, "Y": yx}
+             for k, yx in (("4", 0.348), ("6f", 0.513), ("8", 0.621), ("12f", 0.945), ("16f", 1.161), ("24", 1.593))}
+# centred pad half-sizes (x, y) per layer: the larger via enclosure, extended along the preferred direction to the
+# LEF AREA (asap7_tech_1x_201209.lef: M2/M3 0.000666, M4/M5 0.002, M6 0.0021875)
+STACK_PAD = {"M2": (0.019, 0.009), "M3": (0.009, 0.020), "M4": (0.043, 0.012), "M5": (0.012, 0.043),
+             "M6": (0.035, 0.016)}
+STACK_RISER_MAX_UM = 2.5     # longest M7 riser (TREE_OFF_UM + track move) the island window is sized for
+
+
+def pin_xy(cells, c, pin, row_y, buf="BUFx24_ASAP7_75t_R"):
+    """(x, y) of cell c's pin stack: the M1 bar centre x, the row centre y (R0 / MX)"""
+    v = cells[c]
+    lib = v.get("lib", buf)
+    if lib not in PIN_BAR_X:
+        raise PlanError([dict(kind="no_pin_stack", name=c, detail=f"no pin-bar model for {lib}")])
+    if v.get("orient", "R0") not in ("R0", "MX"):
+        raise PlanError([dict(kind="no_pin_stack", name=c, detail=f"orient {v.get('orient')} not modelled")])
+    return round(v["x"] + PIN_BAR_X[lib][pin], 4), round(v["y"] + row_y / 2, 4)
+
+
+def _fixed_wires_stack(M, cells, nets, row_y, off, router):
+    txy = {t["port"]: tuple(t["xy"]) for t in M["taps"]}
+    root = tuple(M["meta"]["root_um"])
+    errs, out, last_ext = [], [], [None]
+    mm = router.max_move if router is not None else 0.0
+
+    def port_xy(p):
+        return root if p == "port:root" else txy[p[5:]]
+
+    def track(layer, ideal, a0, a1, name, what):
+        if router is None:
+            last_ext[0] = None
+            return ideal, DRAWN
+        c, mode, e = router.place(layer, ideal, a0, a1, name)
+        last_ext[0] = e
+        if c is None:
+            errs.append(dict(kind="no_clock_track", name=name, detail=f"{what} {layer} ideal {ideal:.3f}"))
+            return ideal, DRAWN
+        return c, mode
+
+    def stack(cell, pin, pxy, junction):
+        r = abs(junction[1] - pxy[1])
+        if r > STACK_RISER_MAX_UM + 1e-9:
+            errs.append(dict(kind="no_pin_stack", name=cell, detail=f"{pin} M7 riser {r:.3f} um > "
+                             f"STACK_RISER_MAX_UM {STACK_RISER_MAX_UM} (outside the island window)"))
+        return dict(cell=cell, pin=pin, xy=list(pxy), riser_from=[pxy[0], junction[1]], riser_um=round(r, 4))
+
+    for n in nets:
+        nm = n["name"]
+        dcell = not n["drv"].startswith("port:")
+        D = pin_xy(cells, n["drv"], "Y", row_y) if dcell else port_xy(n["drv"])
+        Ls = [(ld, port_xy(ld) if ld.startswith("port:") else pin_xy(cells, ld, "A", row_y)) for ld in n["loads"]]
+        horiz = max(abs(p[0] - D[0]) for _, p in Ls) >= max(abs(p[1] - D[1]) for _, p in Ls)
+        segs, modes, exts, branches, stacks = [], [], [], [], []
+
+        def add(seg, mode):
+            segs.append(seg)
+            modes.append(mode)
+            exts.append(last_ext[0])
+        if horiz:
+            xs_all = [D[0]] + [p[0] + (off if ld.startswith("port:") else 0.0) for ld, p in Ls]
+            ty, tm = track("M8", D[1] + off, min(xs_all) - mm, max(xs_all) + mm, nm, "trunk")
+            te = last_ext[0]
+            xs_ = []
+            if dcell:
+                stacks.append(stack(n["drv"], "Y", D, (D[0], ty)))
+            for ld, p in Ls:
+                if ld.startswith("port:"):           # port loads: as the default comb (drop one track pair off)
+                    if abs(p[1] - ty) > 1e-6:
+                        bx, bm = track("M9", p[0] + off, ty, p[1], nm, f"drop {ld}")
+                        add(("M9", bx, min(ty, p[1]), bx, max(ty, p[1])), bm)
+                    else:
+                        bx = p[0] + off
+                    branches.append((ld, bx, p[1]))
+                    xs_.append(bx)
+                    continue
+                stacks.append(stack(ld, "A", p, (p[0], ty)))
+                branches.append((ld, p[0], ty))
+                xs_.append(p[0])
+            xlo, xhi = min([D[0]] + xs_), max([D[0]] + xs_)
+            if xhi > xlo:
+                if router is not None and tm == DRAWN and te is not None:
+                    e2 = router.tie_ext("M8", ty, xlo, xhi)
+                    te = e2 if e2 is not None and e2 <= te + mm + 1e-6 else te
+                segs.insert(0, ("M8", xlo, ty, xhi, ty))
+                modes.insert(0, tm)
+                exts.insert(0, te)
+            tap0 = (D[0], ty)
+        else:
+            ys_all = [D[1]] + [p[1] + off for _, p in Ls]
+            tx, tm = track("M9", D[0] + off, min(ys_all) - mm, max(ys_all) + mm, nm, "trunk")
+            te = last_ext[0]
+            yd = D[1]
+            if dcell:      # driver jog one track pair off the pin row toward the loads, Y bar -> trunk
+                sg = 1.0 if sum(p[1] for _, p in Ls) / len(Ls) >= D[1] else -1.0
+                yd, jm = track("M8", D[1] + sg * off, D[0], tx, nm, "driver jog")
+                add(("M8", min(D[0], tx), yd, max(D[0], tx), yd), jm)
+                stacks.append(stack(n["drv"], "Y", D, (D[0], yd)))
+            ys_ = []
+            for ld, p in Ls:
+                port = ld.startswith("port:")
+                if port and abs(p[0] - tx) <= 1e-6:
+                    by = p[1] + off
+                else:
+                    sg = 1.0 if port or D[1] >= p[1] else -1.0     # drop row on the trunk (driver) side
+                    by, bm = track("M8", p[1] + sg * off, tx, p[0], nm, f"drop {ld}")
+                    add(("M8", min(tx, p[0]), by, max(tx, p[0]), by), bm)
+                branches.append((ld, p[0], by))
+                ys_.append(by)
+                if not port:
+                    stacks.append(stack(ld, "A", p, (p[0], by)))
+            ylo, yhi = min([yd] + ys_), max([yd] + ys_)
+            if yhi > ylo:
+                if router is not None and tm == DRAWN and te is not None:
+                    e2 = router.tie_ext("M9", tx, ylo, yhi)
+                    te = e2 if e2 is not None and e2 <= te + mm + 1e-6 else te
+                segs.insert(0, ("M9", tx, ylo, tx, yhi))
+                modes.insert(0, tm)
+                exts.insert(0, te)
+            tap0 = (tx, yd)
+        out.append(dict(name=nm, drv=n["drv"], loads=n["loads"], horiz=horiz, drv_xy=list(D), trunk_tap=tap0,
+                        branches=branches, segs=segs, pin_stack=True, stacks=stacks,
+                        **(dict(shield_modes=modes, shield_ext=exts) if router is not None else {}),
+                        wire_um=round(sum(abs(s[3] - s[1]) + abs(s[4] - s[2]) for s in segs), 3)))
+    if errs:
+        raise PlanError(errs)
+    return out
+
 
 # ------------------------------------------------------------------ PG-aware shielded tracks (CLOCK-128 shield lane)
 # Every shielded clock segment occupies, on its layer, the clock metal (width w, centre c) plus one VSS shield stripe
@@ -1063,10 +1207,65 @@ def gate(M, P, pairs, late, early, rng, regd, mesh_stubs, tree_D, early_rows):
                 verdict="FAIL" if fails else "PASS", fails=fails)
 
 
-def write_tap_arrivals(path, M, corner, arr, rng, regd):
+def stage_depths(nets):
+    """{cell: buffer stages from the die root port up to and including the cell} over nets.json nets (drv may be one
+    name or a list for a multi-driver mesh net: the deepest driver counts)"""
+    by_load = defaultdict(list)
+    for n in nets:
+        for d in (n["drv"] if isinstance(n["drv"], list) else [n["drv"]]):
+            for ld in n["loads"]:
+                by_load[ld].append(d)
+    memo = {}
+
+    def depth(c, seen=()):
+        if c.startswith("port:"):
+            return 0 if not by_load.get(c) else max(depth(d, seen + (c,)) for d in by_load[c])
+        if c in memo:
+            return memo[c]
+        if c in seen or not by_load.get(c):
+            raise ValueError(f"stage_depths: {c} has no driver path to the root")
+        memo[c] = 1 + max(depth(d, seen + (c,)) for d in by_load[c])
+        return memo[c]
+    out = {}
+    for n in nets:
+        for c in [n["drv"]] if not isinstance(n["drv"], list) else n["drv"]:
+            if not c.startswith("port:"):
+                out[c] = depth(c)
+        for c in n["loads"]:
+            if not c.startswith("port:"):
+                out[c] = depth(c)
+    return out, by_load
+
+
+def aocv_fold_fields(M, nets, place, nodes_arr):
+    """CLK-AOCV table-mode inputs (opt-in, die_clock_mesh report --aocv-fold): per tap 'stages_from_root' (buffers
+    from the die root up to the cell driving the tap) + 'xy_um'; per CPPR node ('h' = die root node ckm_n0, else the
+    region root ckm_n<l>_<tag>) 'node_stages', 'node_xy_um' and the node cell's output arrival 'node_late_ps' /
+    'node_early_ps' (tree STA at this corner)."""
+    dep, by_load = stage_depths(nets)
+    taps = {}
+    for t in M["taps"]:
+        drv = by_load.get(f"port:{t['port']}")
+        if not drv:
+            raise ValueError(f"aocv_fold_fields: tap {t['port']} has no driving clock net")
+        taps[t["port"]] = dict(stages_from_root=max(dep[d] for d in drv), xy_um=[round(v, 4) for v in t["xy"]])
+    nodes = {}
+    for name, (late, early, _) in nodes_arr.items():
+        m_ = re.match(r"ckm_n\d+_(\w+)$", name)       # lattice / H-tree node cells: ckm_n<level>_<tag>
+        tag = "h" if name == "ckm_n0" else (m_.group(1) if m_ else None)
+        if tag is None or name not in dep:
+            continue
+        v = place[name]
+        nodes[tag] = dict(stages=dep[name], xy=[round(v["x"], 4), round(v["y"], 4)], late=round(late, 3),
+                          early=round(early, 3))
+    return taps, nodes
+
+
+def write_tap_arrivals(path, M, corner, arr, rng, regd, fold=None):
     """12.4a v4.3 export for die STA: per-tap PROPAGATED arrivals on routed RC (late/early 50 %, slew) at this corner
     plus the last-common-tree-node range for CPPR.  `spine_late` / `spine_early` = {part: {tap_port: ps}} (the die_sta
-    spine layout: set_clock_latency -source -late / -early per tap port)."""
+    spine layout: set_clock_latency -source -late / -early per tap port).  fold (opt-in, aocv_fold_fields output) adds
+    the CLK-AOCV fields; None = the file is unchanged."""
     import json
     tags = {g["k"]: g["tag"] for g in (M["meta"].get("regions") or [])}
     late, early, rows = defaultdict(dict), defaultdict(dict), []
@@ -1078,10 +1277,23 @@ def write_tap_arrivals(path, M, corner, arr, rng, regd):
         early[t["part"]][t["tap"]] = round(ev, 3)
         node = tags.get(t.get("region"), "h") if regd else "h"
         rows.append(dict(part=t["part"], tap=t["tap"], port=t["port"], late_ps=round(lv, 3), early_ps=round(ev, 3),
-                         slew_ps=round(sv, 3), region=t.get("region"), cppr_node=node))
+                         slew_ps=round(sv, 3), region=t.get("region"), cppr_node=node,
+                         **(fold[0][t["port"]] if fold else {})))
     out = dict(corner=corner, basis="routed RC (fixed-geometry tree SPEF + mesh transient + stub STA), raw (no offsets)",
                cppr="credit only at the last common tree node: region root (same region) else die root 'h'",
                cppr_node_range_ps={k: round(v, 3) for k, v in rng.items() if k == "h" or k in tags.values()},
                spine_late=late, spine_early=early, taps=rows)
+    if fold:
+        used = {"h"} | {r["cppr_node"] for r in rows}
+        miss = sorted(used - set(fold[1]))
+        if miss:
+            raise ValueError(f"write_tap_arrivals --aocv-fold: no tree arrival for CPPR node(s) {miss}")
+        nd = {k: v for k, v in fold[1].items() if k in used}
+        out.update(node_stages={k: v["stages"] for k, v in nd.items()},
+                   node_xy_um={k: v["xy"] for k, v in nd.items()},
+                   node_late_ps={k: v["late"] for k, v in nd.items()},
+                   node_early_ps={k: v["early"] for k, v in nd.items()},
+                   aocv_fold="CLK-AOCV opt-in: stages = buffers from the die root up to and including the cell "
+                             "(tap: its driving cell, node: the node cell); node_*_ps = node cell output arrival")
     Path(path).write_text(json.dumps(out) + "\n")
     return out

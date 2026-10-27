@@ -191,6 +191,170 @@ def _port_join(L, layer_at, at, pin_layer, pxy, entering):
     return pts
 
 
+def _stack_pad():
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import die_clock_128 as C128
+    return C128.STACK_PAD
+
+
+def stack_down(s):
+    """vertices of one CLOCK-128-R7 pin stack (die_clock_128 stacks[] entry) from the M8 junction over the bar down to
+    M1: VIA78 at the junction, the M7 riser along the bar column to the pin row, then VIA67..VIA12 straight down"""
+    x, py = round(s["xy"][0], 4), round(s["xy"][1], 4)
+    jy = round(s["riser_from"][1], 4)
+    pts = [("M8", x, jy), ("M7", x, jy)]
+    if jy != py:
+        pts.append(("M7", x, py))
+    return pts + [(L_, x, py) for L_ in ("M6", "M5", "M4", "M3", "M2", "M1")]
+
+
+def stack_pad_layers(s):
+    """{(x, y): set(layers)} of the min-area pads of one stack (M2..M6 at the pin row)"""
+    return {(round(s["xy"][0], 4), round(s["xy"][1], 4)): {"M2", "M3", "M4", "M5", "M6"}}
+
+
+def _emit_stack(L, pts, pads, final_junction=False):
+    """_emit_steps + one centred min-area pad (dbWireEncoder addRect) after every via that lands on a pad layer at a
+    stack point.  pads: {(x, y): set(layers)}."""
+    P = _stack_pad()
+    tmp = []
+    _emit_steps(tmp, pts, final_junction=final_junction)
+    # re-walk the vertices to know where each via op lands
+    vs = [(l_, round(a, 4), round(b, 4)) for l_, a, b in pts]
+    lands = [(l1, (x1, y1)) for (l0, x0, y0), (l1, x1, y1) in zip(vs, vs[1:]) if l0 != l1]
+    k = 0
+    for s in tmp:
+        L.append(s)
+        if "addTechVia" in s:
+            l1, xy = lands[k]
+            k += 1
+            if l1 in pads.get(xy, ()) and not s.startswith("set jt"):
+                hx, hy = P[l1]
+                L.append(f"$e addRect {-q(hx)} {-q(hy)} {q(hx)} {q(hy)}")
+    # a pad emitted between 'set jv [VIA78]' and its 'newPath $jv' belongs after the new path is opened
+    # move pads that were emitted between 'set jv [VIA78]' and its 'newPath $jv' after the newPath
+    i = 0
+    while i < len(L) - 2:
+        if L[i].startswith("set jv [") and L[i + 1].startswith("$e addRect") and L[i + 2].startswith("$e newPath $jv"):
+            L[i + 1], L[i + 2] = L[i + 2], L[i + 1]
+            i += 3
+        else:
+            i += 1
+
+
+def _stack_net_tcl(L, w, ports, rec):
+    """one pin-stack wire (die_clock_128._fixed_wires_stack) -> encoder Tcl appended to L"""
+    nm = w["name"]
+    horiz = w["horiz"]
+    tl, bl = ("M8", "M9") if horiz else ("M9", "M8")
+    t0 = tuple(w["trunk_tap"])
+    st = {(s["cell"], s["pin"]): s for s in w["stacks"]}
+    pads = defaultdict(set)
+    for s in w["stacks"]:
+        for k, v in stack_pad_layers(s).items():
+            pads[k] |= v
+    rec["nets"] += 1
+    L.append(f"set w [rnet {nm}]")
+    L.append("$e begin $w")
+    # 1. driver -> trunk tap (junction $jt)
+    if w["drv"].startswith("port:"):
+        pn = w["drv"][5:]
+        pt = ports[pn]
+        pts = _port_join(L, tl, t0, pt["layer"], tuple(pt["xy"]), entering=True)
+        L.append(f"$e newPath [LY {pt['layer']}] FIXED [RL {pt['layer']}]")
+        L.append(f"$e addPoint {q(pts[0][1])} {q(pts[0][2])}")
+        L.append(f"$e addBTerm [BT {pn}]")
+        rec["port_joins"] += 1
+        _emit_steps(L, pts, final_junction=True)
+        for (l0, x0, y0), (l1, x1, y1) in zip(pts, pts[1:]):
+            if l0 == l1 and l0 in ("M8", "M9") and (x0, y0) != (x1, y1):
+                rec["extra_top"].append((nm, l0, x0, y0, x1, y1))
+    else:
+        s = st[(w["drv"], "Y")]
+        pts = stack_down(s)[::-1]                  # M1 .. M8 at the bar, junction row
+        if not horiz:                              # M8 jog to the M9 trunk
+            pts += [("M8", t0[0], t0[1]), ("M9", t0[0], t0[1])]
+        L.append("$e newPath [LY M1] FIXED")
+        L.append(f"$e addPoint {q(pts[0][1])} {q(pts[0][2])}")
+        L.append(f"$e addITerm [IT {w['drv']} Y]")
+        rec["pin_stairs"] += 1
+        _emit_stack(L, pts, pads, final_junction=True)
+    # 2. trunk
+    ax = 0 if horiz else 1
+    tapv = round(t0[ax], 4)
+    trunk = [g for g in w["segs"] if g[0] == tl and ((g[2] == g[4] == t0[1]) if horiz else (g[1] == g[3] == t0[0]))]
+    if trunk:
+        g = trunk[0]
+        lo, hi = (min(g[1], g[3]), max(g[1], g[3])) if horiz else (min(g[2], g[4]), max(g[2], g[4]))
+    else:
+        lo = hi = tapv
+    roots = sorted({round(bx if horiz else by, 4) for _, bx, by in w["branches"]})
+    jn = {tapv: "$jt"}
+
+    def tp(v):
+        return (v, t0[1]) if horiz else (t0[0], v)
+    for side, stop in (("lo", lo), ("hi", hi)):
+        vals = sorted([v for v in roots if (v < tapv - 1e-6 if side == "lo" else v > tapv + 1e-6)], reverse=(side == "lo"))
+        if abs(stop - tapv) < 1e-6:
+            continue
+        if (vals[-1] if vals else None) != round(stop, 4):
+            vals.append(round(stop, 4))
+        L.append(f"$e newPath $jt FIXED [RL {tl}]")
+        for k, v in enumerate(vals):
+            x_, y_ = tp(v)
+            L.append(f"set j{side}{k} [$e addPoint {q(x_)} {q(y_)}]")
+            jn[v] = f"$j{side}{k}"
+    # 3. loads
+    for ld, bx, by in w["branches"]:
+        v = round(bx if horiz else by, 4)
+        root = tp(v)
+        if v not in jn:
+            raise ValueError(f"clock_routed: {nm}: drop root {root} not on the trunk")
+        L.append(f"$e newPath {jn[v]} FIXED [RL {tl}]")
+        pts = [(tl, root[0], root[1])]
+        if ld.startswith("port:"):
+            pn = ld[5:]
+            pt = ports[pn]
+            lay = tl
+            if abs(root[0] - bx) + abs(root[1] - by) > 1e-6:
+                pts += [(bl, root[0], root[1]), (bl, bx, by)]
+                lay = bl
+            pj = _port_join(L, lay, (bx, by), pt["layer"], tuple(pt["xy"]), entering=False)
+            pts += pj[1:]
+            _emit_steps(L, pts)
+            L.append(f"$e addBTerm [BT {pn}]")
+            for (l0, x0, y0), (l1, x1, y1) in zip(pj, pj[1:]):
+                if l0 == l1 and l0 in ("M8", "M9") and (x0, y0) != (x1, y1):
+                    rec["extra_top"].append((nm, l0, x0, y0, x1, y1))
+            rec["port_joins"] += 1
+            continue
+        s = st[(ld, "A")]
+        if not horiz:                              # M9 trunk -> M8 drop to the bar
+            pts += [("M8", root[0], root[1])]
+        pts += stack_down(s)[1:] if (pts[-1][0], pts[-1][1], pts[-1][2]) == stack_down(s)[0] else stack_down(s)
+        _emit_stack(L, pts, pads)
+        L.append(f"$e addITerm [IT {ld} A]")
+        rec["pin_stairs"] += 1
+    L.append("$e end")
+
+
+def stack_shapes(w):
+    """pad rectangles (M2..M8) of a pin-stack wire, for the cross-net census: (net, layer, x0, y0, x1, y1)"""
+    P = _stack_pad()
+    out = []
+    for s in w["stacks"]:
+        for (x, y), lays in stack_pad_layers(s).items():
+            for L_ in sorted(lays):
+                hx, hy = P[L_]
+                out.append((w["name"], L_, x - hx, y - hy, x + hx, y + hy))
+        x, py, jy = s["xy"][0], s["xy"][1], s["riser_from"][1]
+        h = WIDTH["M7"] / 2                          # M7 riser on the bar column
+        out.append((w["name"], "M7", x - h, min(py, jy) - h, x + h, max(py, jy) + h))
+    return out
+
+
 def routed_tcl(wires, cells, ports, buf, ndr_name):
     """Tcl that turns every fixed tree net into a regular CLOCK net with one FIXED dbWire under NDR `ndr_name`.
     Needs $blk, $tech and the NDR already created.  Returns (lines, record) where record lists every pin-access
@@ -218,6 +382,9 @@ def routed_tcl(wires, cells, ports, buf, ndr_name):
             if l0 == l1 and l0 in ("M8", "M9") and (x0, y0) != (x1, y1):
                 rec["extra_top"].append((name, l0, x0, y0, x1, y1))
     for w in wires:
+        if w.get("pin_stack"):       # CLOCK-128-R7: straight pin stacks (die_clock_128._fixed_wires_stack)
+            _stack_net_tcl(L, w, ports, rec)
+            continue
         N = net_plan(w, cells, ports, buf)
         nm = N["name"]
         rec["nets"] += 1
@@ -439,6 +606,9 @@ def stair_shapes(wires, cells, ports, buf):
     vr = via_rects()
     out = []
     for w in wires:
+        if w.get("pin_stack"):
+            out += stack_shapes(w)
+            continue
         N = net_plan(w, cells, ports, buf)
         ends = []
         if N["drv"][0] == "cell":
@@ -724,12 +894,18 @@ def report(d):
     open_ = [n for n in names if n in rc and rc[n]["conn"] != want_conn[n]]
     chk = plan_check((d / "routed.def").read_text(), wires, rec, cells)
     drc, kinds, nbox = 0, defaultdict(int), 0
+    uniq = {}       # CLOCK-128-R7: overlapping check boxes report one marker several times
     for p in sorted((d / "drc").glob("box_*.rpt")):
         nbox += 1
         txt = p.read_text()
         for m in re.finditer(r"violation type: (.*)\n(?:.*\n)*?\s*bbox = .* on Layer (\S+)", txt):
             kinds[f"{m.group(1).strip()} @ {m.group(2)}"] += 1
+        for m in re.finditer(r"violation type: (.*)\n\s*srcs: (.*)\n\s*bbox = (.*) on Layer (\S+)", txt):
+            uniq[(m.group(1).strip(), m.group(4), m.group(3).strip(), " ".join(sorted(m.group(2).split())))] = 1
         drc += txt.count("violation type")
+    ukinds = defaultdict(int)
+    for k in uniq:
+        ukinds[f"{k[0]} @ {k[1]}"] += 1
     tab = {}
     for c in ("TT", "FF"):
         for b in ("native", "rcx"):
@@ -769,7 +945,9 @@ def report(d):
                  c_ratio_min=ratio_c[0] if ratio_c else None, c_ratio_max=ratio_c[-1] if ratio_c else None,
                  r_ratio_min=ratio_r[0] if ratio_r else None, r_ratio_max=ratio_r[-1] if ratio_r else None,
                  r_ohm_per_leg_um_med_rcx=med(rpu), r_ohm_per_leg_um_med_native=med(npu), nets_over_50um=len(rpu)),
-        plan_check={k: v for k, v in chk.items()}, drt_check_drc=dict(boxes_checked=nbox, total=drc, by_kind=dict(kinds)),
+        plan_check={k: v for k, v in chk.items()}, drt_check_drc=dict(boxes_checked=nbox, total=drc, by_kind=dict(kinds), unique=len(uniq),
+                                                               unique_by_kind=dict(ukinds),
+                                                               unique_examples=[list(k) for k in list(uniq)[:40]]),
         latency={k: {kk: vv for kk, vv in v.items() if kk != "per_leaf"} for k, v in tab.items()},
         per_leaf={k: v["per_leaf"] for k, v in tab.items()}, rcx_minus_native=delta,
         per_net_rc={n: dict(rcx=rc.get(n), native=nat.get(n)) for n in names},
