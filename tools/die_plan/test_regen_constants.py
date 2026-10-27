@@ -291,3 +291,31 @@ def test_kv_pc833_uniform_and_image(tmp_path):
     assert c0["PC_IMAGE_PROFILE"]["status"] == "ERROR" and _v(d0, "PC_HBM_RL") == 23
 
 
+
+
+def _native_vport_fixture(tmp_path, added_landed=0):
+    dst = tmp_path / "native_vport"
+    shutil.copytree(FX / "kv39", dst)
+    path = dst / "bus_groups.json.gz"
+    bg = json.load(gzip.open(path, "rt"))
+    actual = json.loads((FX / "kv_vport_native_landed.json").read_text())
+    for group in actual["landing"]:
+        for member in group["members"]:
+            if member["source"] == "vport_EN_0.vq0_valid":
+                member["landed_stages"] += added_landed
+    bg["landing"].extend(actual["landing"])
+    json.dump(bg, gzip.open(path, "wt"))
+    return dst
+
+
+def test_vport_rt_uses_landed_request_age(tmp_path):
+    after = RC.run("qwen_kvsys", _native_vport_fixture(tmp_path, 1))
+    # Actual native EN0: request19 (+one test shift) + response20 + landing9.
+    assert _v(after, "VPORT_RT")["vport_EN_0"] == 49
+
+
+def test_vport_rt_capacity_is_63(tmp_path):
+    after = RC.run("qwen_kvsys", _native_vport_fixture(tmp_path, 15))
+    record = after["constants"]["VPORT_RT"]
+    assert record["value"]["vport_EN_0"] == 63
+    assert record["status"] == "OK"
