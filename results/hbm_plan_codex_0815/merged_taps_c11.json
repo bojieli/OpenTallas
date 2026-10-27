@@ -1,0 +1,736 @@
+{
+ "types": 5,
+ "taps": 81,
+ "rows": [
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c0_k0h0",
+   "tap": "u_hb_idx__s_Q_r0c0_k0h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c0_k0h1",
+   "tap": "u_hb_idx__s_Q_r0c0_k0h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c0_k1h0",
+   "tap": "u_hb_idx__s_Q_r0c0_k1h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c0_k1h1",
+   "tap": "u_hb_idx__s_Q_r0c0_k1h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c0_k2h0",
+   "tap": "u_hb_idx__s_Q_r0c0_k2h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c0_k2h1",
+   "tap": "u_hb_idx__s_Q_r0c0_k2h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c0_k3h0",
+   "tap": "u_hb_idx__s_Q_r0c0_k3h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c0_k3h1",
+   "tap": "u_hb_idx__s_Q_r0c0_k3h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c1_k0h0",
+   "tap": "u_hb_idx__s_Q_r0c1_k0h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c1_k0h1",
+   "tap": "u_hb_idx__s_Q_r0c1_k0h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c1_k1h0",
+   "tap": "u_hb_idx__s_Q_r0c1_k1h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c1_k1h1",
+   "tap": "u_hb_idx__s_Q_r0c1_k1h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c1_k2h0",
+   "tap": "u_hb_idx__s_Q_r0c1_k2h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c1_k2h1",
+   "tap": "u_hb_idx__s_Q_r0c1_k2h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c1_k3h0",
+   "tap": "u_hb_idx__s_Q_r0c1_k3h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b100",
+   "inst": "u_hb_idx__s_Q_r0c1_k3h1",
+   "tap": "u_hb_idx__s_Q_r0c1_k3h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c2_k0h0",
+   "tap": "u_hb_idx__s_Q_r0c2_k0h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c2_k0h1",
+   "tap": "u_hb_idx__s_Q_r0c2_k0h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c2_k1h0",
+   "tap": "u_hb_idx__s_Q_r0c2_k1h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c2_k1h1",
+   "tap": "u_hb_idx__s_Q_r0c2_k1h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c2_k2h0",
+   "tap": "u_hb_idx__s_Q_r0c2_k2h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c2_k2h1",
+   "tap": "u_hb_idx__s_Q_r0c2_k2h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c2_k3h0",
+   "tap": "u_hb_idx__s_Q_r0c2_k3h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c2_k3h1",
+   "tap": "u_hb_idx__s_Q_r0c2_k3h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c3_k0h0",
+   "tap": "u_hb_idx__s_Q_r0c3_k0h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c3_k0h1",
+   "tap": "u_hb_idx__s_Q_r0c3_k0h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c3_k1h0",
+   "tap": "u_hb_idx__s_Q_r0c3_k1h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c3_k1h1",
+   "tap": "u_hb_idx__s_Q_r0c3_k1h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c3_k2h0",
+   "tap": "u_hb_idx__s_Q_r0c3_k2h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c3_k2h1",
+   "tap": "u_hb_idx__s_Q_r0c3_k2h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c3_k3h0",
+   "tap": "u_hb_idx__s_Q_r0c3_k3h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r0c3_k3h1",
+   "tap": "u_hb_idx__s_Q_r0c3_k3h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101",
+   "inst": "u_hb_idx__s_Q_r1c0_k0h0",
+   "tap": "u_hb_idx__s_Q_r1c0_k0h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c0_k0h1",
+   "tap": "u_hb_idx__s_Q_r1c0_k0h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c0_k1h0",
+   "tap": "u_hb_idx__s_Q_r1c0_k1h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c0_k1h1",
+   "tap": "u_hb_idx__s_Q_r1c0_k1h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c0_k2h0",
+   "tap": "u_hb_idx__s_Q_r1c0_k2h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c0_k2h1",
+   "tap": "u_hb_idx__s_Q_r1c0_k2h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c0_k3h0",
+   "tap": "u_hb_idx__s_Q_r1c0_k3h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c0_k3h1",
+   "tap": "u_hb_idx__s_Q_r1c0_k3h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c1_k0h0",
+   "tap": "u_hb_idx__s_Q_r1c1_k0h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c1_k0h1",
+   "tap": "u_hb_idx__s_Q_r1c1_k0h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c1_k1h0",
+   "tap": "u_hb_idx__s_Q_r1c1_k1h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c1_k1h1",
+   "tap": "u_hb_idx__s_Q_r1c1_k1h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c1_k2h0",
+   "tap": "u_hb_idx__s_Q_r1c1_k2h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c1_k2h1",
+   "tap": "u_hb_idx__s_Q_r1c1_k2h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c1_k3h0",
+   "tap": "u_hb_idx__s_Q_r1c1_k3h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c1_k3h1",
+   "tap": "u_hb_idx__s_Q_r1c1_k3h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b102",
+   "inst": "u_hb_idx__s_Q_r1c2_k0h0",
+   "tap": "u_hb_idx__s_Q_r1c2_k0h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_r1c2_k0h1",
+   "tap": "u_hb_idx__s_Q_r1c2_k0h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_r1c2_k1h0",
+   "tap": "u_hb_idx__s_Q_r1c2_k1h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_r1c2_k1h1",
+   "tap": "u_hb_idx__s_Q_r1c2_k1h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_r1c2_k2h0",
+   "tap": "u_hb_idx__s_Q_r1c2_k2h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_r1c2_k2h1",
+   "tap": "u_hb_idx__s_Q_r1c2_k2h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_r1c2_k3h0",
+   "tap": "u_hb_idx__s_Q_r1c2_k3h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_r1c2_k3h1",
+   "tap": "u_hb_idx__s_Q_r1c2_k3h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_r1c3_k0h0",
+   "tap": "u_hb_idx__s_Q_r1c3_k0h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_r1c3_k0h1",
+   "tap": "u_hb_idx__s_Q_r1c3_k0h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_r1c3_k1h0",
+   "tap": "u_hb_idx__s_Q_r1c3_k1h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_r1c3_k1h1",
+   "tap": "u_hb_idx__s_Q_r1c3_k1h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_r1c3_k2h0",
+   "tap": "u_hb_idx__s_Q_r1c3_k2h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_r1c3_k2h1",
+   "tap": "u_hb_idx__s_Q_r1c3_k2h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_r1c3_k3h0",
+   "tap": "u_hb_idx__s_Q_r1c3_k3h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b103",
+   "inst": "u_hb_idx__s_Q_r1c3_k3h1",
+   "tap": "u_hb_idx__s_Q_r1c3_k3h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c2_k0h0",
+   "tap": "u_hb_idx__s_Q_r0c2_k0h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c2_k0h1",
+   "tap": "u_hb_idx__s_Q_r0c2_k0h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c2_k1h0",
+   "tap": "u_hb_idx__s_Q_r0c2_k1h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c2_k1h1",
+   "tap": "u_hb_idx__s_Q_r0c2_k1h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c2_k2h0",
+   "tap": "u_hb_idx__s_Q_r0c2_k2h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c2_k2h1",
+   "tap": "u_hb_idx__s_Q_r0c2_k2h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c2_k3h0",
+   "tap": "u_hb_idx__s_Q_r0c2_k3h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c2_k3h1",
+   "tap": "u_hb_idx__s_Q_r0c2_k3h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c3_k0h0",
+   "tap": "u_hb_idx__s_Q_r0c3_k0h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c3_k0h1",
+   "tap": "u_hb_idx__s_Q_r0c3_k0h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c3_k1h0",
+   "tap": "u_hb_idx__s_Q_r0c3_k1h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c3_k1h1",
+   "tap": "u_hb_idx__s_Q_r0c3_k1h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c3_k2h0",
+   "tap": "u_hb_idx__s_Q_r0c3_k2h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c3_k2h1",
+   "tap": "u_hb_idx__s_Q_r0c3_k2h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c3_k3h0",
+   "tap": "u_hb_idx__s_Q_r0c3_k3h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r0c3_k3h1",
+   "tap": "u_hb_idx__s_Q_r0c3_k3h1.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  },
+  {
+   "type": "q_b101_nw",
+   "inst": "u_hb_idx__s_Q_r1c0_k0h0",
+   "tap": "u_hb_idx__s_Q_r1c0_k0h0.clk_pair",
+   "merged_clock_ports": [
+    "clk_pair[0]",
+    "clk_pair[1]"
+   ]
+  }
+ ],
+ "physical_coverage": "PENDING actual selected LEF+Lib; source-only metadata cannot qualify physical kit"
+}
