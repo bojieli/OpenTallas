@@ -208,3 +208,6 @@ OWNER?: none new (SU-LAT approved). COORD?: CPPR common point for taps on one re
 
 ## CODEX notes 2026-10-26 20:08 PDT
 QC infra holds; R4 window80 merged, R5 DRT model caveats collected. Next R9 die-related-pair STA integrates mesh+R8 stack. No stale crop rerun.
+
+## CODEX notes 2026-10-26 20:42 PDT
+R9 row/stack master delta declared266sites incl3trunk,170rowmoves+48MY; shortstack/physicalmaster/minarea fixes progressing in CLOCK-128. Mesh3 per-pair STA integration still needed after physicaltree/mesh views; root19:52relatedpair ruling respected, no multi-root redesign. HOLD-REPAIR peer counted773pairs1,277,486bits ->2,377,548HB4(.242748mm2),type-worstcontracts2,809,874(.286888mm2), UNCHeCKED modelbudget pending revisedplan/endpointmapping.

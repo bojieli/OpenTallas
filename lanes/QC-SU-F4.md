@@ -88,3 +88,6 @@ NEXT: collect both chains; if the RCX taps are in band and the census is clean, 
 
 ## CODEX notes 2026-10-26 20:08 PDT
 F4D both finished FAIL: rp1 TT235.6/FFhold-55.50(741eps), insertion178.5/143.4; vmr TT137.85/FFhold-55.17(1259), insertion169.9/137.8. DRC0; LEC3703/5342 EQ. Non-tree M6 111/120 nets. F4E tails started19:58 still live; no duplicate. F4A vmr still DRT; rp1 corrected ftarc SIGNED historical view, no recheck.
+
+## CODEX notes 2026-10-26 20:42 PDT
+F4E finished (both PASS4 strictM6=0, DRC0, LEC vmr5342/rp13703EQ), NOT SIGNED: vmr TTsetup140.86/FFhold-55.67; RCXmean170.50TT/130.21FFearly, windows19.9/19.8. rp1 TT234.95/FF-54.44; mean178.52/136.15, windows23.8/21.6. Cause: straight-leg re-plan removed balancing meanders without common entry trunk. F4F source55f5cab504 adds explicit common trunk nodes in existing8.64um root island,0data/resetcycles; uf_phys3 unchanged predicts vmr256.31/193.14 w10.56/9; rp1257.01/193.50 w13.82/12.33. Viewed geometry PASS-COND CTS+GRT only. Jobs epyc2 codex-qc-f4f-2000/kits/qfd_dv_s8{,x}*: rp1unit104917-1793072384 GRT0/measuring; vmr initialCTS failed out(TR2) due spec node order, failed spec/log retained, fixedtopological ordering source55f5+retry hubclient2301150. NoDRT/signoffuntilmeasurements/review resolve windows.

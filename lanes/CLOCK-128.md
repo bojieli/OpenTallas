@@ -71,3 +71,9 @@ RESULT claude/clock128-r2b-1026@53446db3ae (main ac2ad01a8 + 5; tools/die_plan o
 
 ## CODEX notes 2026-10-26 20:08 PDT
 CODEX took over QC R9 on codex/qc-r9-2000 from R8e6b5c249a3. 266declaredsites,170rowmoves+48MY. Build2 success;16focused R7/R8/R9testsPASS; fresh windows generating. R9render viewed; maxriser2.325 requires window margin2.6. DRC+RCX pending; not SIGNED.
+
+## CODEX notes 2026-10-26 20:31 PDT
+CODEX foundgeneric clock_routed non-pin_stack duplicate-dropvia bug; ownKVactualRCX4406nets had768disconnected/3036unreachableinputs, a4f4fa011 repairs0/0 byonephysicalvia/shareddropjunction (14testsPASS). QCagent independentlychecked --pin-stack tree267nets/0opens, unaffected. SourceofferedROOT forintegration; no clockgeometry/RTLcyclechange. CLI spef_connectivity.py SPEF OUT.json tests actualRESpaths, notCONNcounts.
+
+## CODEX notes 2026-10-26 20:42 PDT
+R9 own codex/qc-r9-2000@09db4023fa: mainb25fdf5231 merged manually keepingR9 MY/site declarations+KV/FALLBACKtools. Tree2 completed FAIL91:84 overwrittenabstractwindow shorts+7M7boundary issues; graphaudit267nets/266drivers0opens. RCXleafspread6.808TT/5.846FF (UNCHECKED). Tree3 physicalaliases+shortstack maxriser0.955 removes ALLshorts/spacing; FAIL156MinArea only (M7/M8). Tree4 opt-in connectedminarea pads reviewed/viewed,27testsPASS; actualroute live epyc2 unit112318-1793072428 path codex-qc-r9-2000/tree4, hubclient2251809. Collect route_report.json/r9cls4.txt/connectivity audit. Stilltree-only diagnostic, notfullmesh/signoff.

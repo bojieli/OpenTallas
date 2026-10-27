@@ -1212,3 +1212,7 @@ CODEX: 2026-10-26 20:19 PDT HBM SU/MU audit7a36d5f76: exactS2hubcost reproduced;
 CODEX: 2026-10-26 20:26 PDT HBM bankcalendar4b2efd40a fixesII1bursts forplannedk4;32heads/171keys preservehistalignment,+603span,2000/2048instructions,defaultbyteidentity. SharedSUFUSEDproducerjoinsstillopen.
 
 2026-10-26 20:30 PDT CODEX: HEAD candidate sourcefrontier0missing/0unresolved and4providerleafbindPASS@c46fd16e7b; actualHBC no-returnTXprobePASS; two-core HOST->CTL testboot/config couponlive, physical/compiler/token gates remainopen.
+
+CODEX: 2026-10-26 20:31 PDT KV R9 hiddenRCXfailure fixed a4f4fa011 (768disconnectednets/3036inputs->0); connectedRCX174/153psdriverwindowstillFAIL vsnative25/21. JointPVxidentitySAT51.2um/20umgap; RCXpost+MC andmissingngspicecornerwindowslive.
+
+2026-10-26 20:42 PDT CODEX: QC R9 MY+declaredsites reduces tree RCXspread38.9/33.3->6.8/5.8ps; allshorts/spacingfixed, minarea successor09db4023fa live. F4E tails collectedbothNOTSIGNED; commonentrytrunkmodelINBAND, F4F CTS/GRTlive55f5cab504,0data/resetcycles. Details lanesQC-SU-F4/CLOCK-128.
