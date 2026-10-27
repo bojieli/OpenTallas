@@ -94,3 +94,6 @@ F4E finished (both PASS4 strictM6=0, DRC0, LEC vmr5342/rp13703EQ), NOT SIGNED: v
 
 ## CODEX notes 2026-10-26 20:57 PDT
 F4F own actual FFdatahold PASS after common-entry-trunk calibrated GRT: RP1 -75.01/1008ep -> +10.08/0,4870dataholdbuffers,110clockcells fingerprint442644225 unchanged; VMR -57.65/1480 -> +5.53/0,8696buffers,103clockcells fingerprint979757378 unchanged. Current timestamps03:52:58/03:56:18UTC. Both DRT->strictM6strip->RCX/signoff live, no SIGNED claim. Source codex/qc-f4f-2000@2ba4742886 (GRTspec55f5cab504); epyc2 codex-qc-f4f-2000/kits/qfd_dv_s8{,x}*, hub clients3104453/3104454. Copied predecessor markers renamed *.inherited_stale to avoid falsecurrentPASS. New model guard fails closed on nonzero hidden ot_h_entry_n; explicitnodes remain supported.
+
+## CODEX PARKED 2026-10-26 21:02 PDT
+F4F branch2ba4742886 bothGRTinband+freshFFholdPASS; tails live epyc2 codex-qc-f4f-2000/kits/{qfd_dv_s8x_vmr_f4d,qfd_dv_s8_crh_rp1_f4d}, units154876/154880-1793072774; collect current signoff_main/lec_final/RCX windows. NoSIGNEDclaim. Fullpacket handoff/codex-qc-20261026-2102.md.

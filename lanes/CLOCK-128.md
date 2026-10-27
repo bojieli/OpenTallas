@@ -77,3 +77,6 @@ CODEX foundgeneric clock_routed non-pin_stack duplicate-dropvia bug; ownKVactual
 
 ## CODEX notes 2026-10-26 20:42 PDT
 R9 own codex/qc-r9-2000@09db4023fa: mainb25fdf5231 merged manually keepingR9 MY/site declarations+KV/FALLBACKtools. Tree2 completed FAIL91:84 overwrittenabstractwindow shorts+7M7boundary issues; graphaudit267nets/266drivers0opens. RCXleafspread6.808TT/5.846FF (UNCHECKED). Tree3 physicalaliases+shortstack maxriser0.955 removes ALLshorts/spacing; FAIL156MinArea only (M7/M8). Tree4 opt-in connectedminarea pads reviewed/viewed,27testsPASS; actualroute live epyc2 unit112318-1793072428 path codex-qc-r9-2000/tree4, hubclient2251809. Collect route_report.json/r9cls4.txt/connectivity audit. Stilltree-only diagnostic, notfullmesh/signoff.
+
+## CODEX PARKED 2026-10-26 21:02 PDT
+R9 READY c540e671da: tree5 DRC0/all852boxes,267RCnets connected, graph0opens; finalTT/FFspreads21.697/18.542ps, AOCVfields exported. Fullmesh/dieSTA open. Packet handoff/codex-qc-20261026-2102.md.
