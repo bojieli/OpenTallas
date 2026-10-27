@@ -7,7 +7,7 @@ Successor of HEAD-CORE-R13 (claude/head-core-r13-1027@148ff6a840). It follows CO
 | core | verdict | compare points | kept missing | label |
 |---|---|---|---|---|
 | elemB | **EQUIVALENT** | 27498/27498 proved, 0 differ | 0 | CHECKED (raw epyc2 `elemB_hold2.lec_final/lec/lec.json`, 03:55) |
-| elemA | still running at 04:15 (intel1 unit oth-ubuntu-1585112-1793095018) | -- | -- | collect `intel1:.../head-core-r10/elemA_hold2.lec_final/lec/lec.json` |
+| elemA | **EQUIVALENT** | 30203/30203 proved, 0 differ | 0 | CHECKED (raw intel1 `elemA_hold2.lec_final/lec/lec.json` + R12B_POSTROUTE_LEC line) |
 
 These prove the flow path only: both R12b netlists are NOT SIGNED.
 
