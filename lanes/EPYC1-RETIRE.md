@@ -19,6 +19,14 @@ Why intel2, not epyc2: epyc2 scratch2 has ~150-200 GB free vs intel2 2.26 TB; in
 - Closed evidence archived: AGIdock /archive/epyc1-retire-1026 (46,160 files, 3.30 GB, verified).
 - Kits/live dirs: bulk copy to intel1/intel2 same paths (~1.5 TB, ~1 GB/s, ETA ~01:00) -> DATA-MANIFEST.tsv.
 
+## Jobs on epyc1 (JOBS.tsv/JOBS.md in intel2:/srv/opentallas-scratch2/claude/epyc1-retire/, ETAs UNCHECKED)
+- KILLED 23:29: GRT(B) path-s81-pd4-1026 signal-only (COORD-approved; GRT(A) untouched).
+- RERUN now: flow-canary qwen_kvsys_core_278c7c4e8 (intel1 unit 3261682-1793084050) and hbm_a90c886f6 (intel1 unit 3360501-1793084188), same run paths; TOPK link_static LEC (intel2 unit 3427267-1793083036; may stall in the same ABC cone -> PATH-HBM picks a LEC strategy); rm26 SVCROWX miter/mut6/7/8 HEDGE on intel2 (units 3465812/3465642/3465821/3465822-1793083196), epyc1 original ETA ~02:30.
+- LEAVE + COLLECT before 05:25: hold-coll-r1 coll_ftc route (ETA ~00:30-01:30, copy hold-coll-r1 to intel1 after it ends), rm26 epyc1 original (~02:30), docker dtrial-grt-647494 ft-m89-probe/hbm/base50 (no owner; collect grt.log ~02:00 or drop).
+- NOT rerun (stuck/superseded, evidence in JOBS.tsv; die with epyc1 unless COORD objects): mu32_r13 probes, rq0_kvpool synth (31 h OPT_DFF loop), qx LEC r2, master-plan b1n6, tok-qk-b48 boot sims, docker kvhr2_fp_core_peer.
+- Clients on epyc1 for units on other hosts (die at 05:25, units keep running, outputs local to workers; no open spill records): see JOBS.md. die-ci client 2d11h on intel2 (>48 h rule) -> COORD.
+- Canary follow-up: when the intel1 canaries end, copy runs/<two>/canary.json + logs to intel2 flow-canary/runs (canary home); delete intel1 flow-canary.spillcopy-stale-20261026 and intel2 wt/rm26 partial tree after ROOT-MERGE-27 collects.
+
 ## Remaining steps (deadline 05:25)
 1. JOBS: rerun on intel1/intel2 every epyc1 job that would run past 04:30 (JOBS.tsv); GRT(B) may be killed.
 2. Finish/verify bulk copies (DATA-MANIFEST.tsv: files+bytes src=dst), final rsync pass of live dirs ~04:45.
