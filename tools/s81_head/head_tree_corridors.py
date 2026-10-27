@@ -243,6 +243,25 @@ def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=Fa
 
 
 def route(spec, corridors, plan, exact_jogs=False, mesh_straps=None):
+    groups=defaultdict(list)
+    for unit,cell in spec['cell_sites'].items():groups['g'+str(cell['group'])].append((unit,cell))
+    for us in groups.values():us.sort(key=lambda q:q[1]['origin_um'][1])
+    children=defaultdict(list)
+    for edge in spec['nets']:children[edge['drv']].append(edge['load'])
+    netgroups={'ckm_w_'+us[0][0]:g for g,us in groups.items()}
+    def pin_window(net,ideal,a0,a1):
+        g=netgroups.get(net)
+        if g is None:return None
+        candidates=[]
+        for gg,p in [(g,'Y')]+[(ld,'A') for ld in children[g]]:
+            units=groups[gg];pts=[]
+            for unit,cell in units:
+                model=dict(x=cell['origin_um'][0],y=cell['origin_um'][1],orient=cell['orient'])
+                pts.append(D.C128.pin_xy({unit:model},unit,p,D.ROW_Y))
+            if abs(ideal-pts[0][1])<=D.C128.TREE_OFF_UM+.01 and min(a0,a1)-.1<=pts[0][0]<=max(a0,a1)+.1:
+                candidates.append((abs(ideal-pts[0][1]),min(y for x,y in pts)-D.C128.STACK_RISER_MAX_UM,
+                                   max(y for x,y in pts)+D.C128.STACK_RISER_MAX_UM))
+        return min(candidates)[1:] if candidates else None
     original = D.C128.TrackRouter
     class CorridorRouter(original):
         def __init__(self, *a, **kw):
@@ -276,6 +295,11 @@ def route(spec, corridors, plan, exact_jogs=False, mesh_straps=None):
                     raise D.C128.PlanError([dict(kind='corridor_pin_reach', name=net,
                         detail=f'{c} vs ideal {ideal}, bound {self.max_move}')])
                 return c, mode, ext
+            if layer=='M8' and net in self.used:
+                window=pin_window(net,ideal,a0,a1)
+                if window:
+                    existing=kw.get('keep')
+                    kw['keep']=(max(window[0],existing[0]),min(window[1],existing[1])) if existing else window
             if exact_jogs and net in self.used and corridors[net]['layer'] == 'M8':
                 if layer == 'M8' and abs(abs(a1-a0)-2*self.max_move) < 1e-5:
                     # Local drop is anchored to the already-aligned capture A
