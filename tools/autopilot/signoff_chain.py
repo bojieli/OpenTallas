@@ -43,11 +43,14 @@ def continue_kit(kit, runner, goal, mem, threads, run=subprocess.call):
         out.write_text(json.dumps(receipt, indent=1) + "\n")
         return code
 
-    # A failed physical runner is never converted to a success by a later step.
-    if rc:
-        return done(rc, "RUNNER_FAIL", "physical runner did not complete")
     records = [p for p in kit.glob("signoff*/signoff.json")
                if prior.get(str(p)) != (p.stat().st_mtime_ns, p.stat().st_size)]
+    # signoff.py returns 1 for local-PASS-needs-parent. It is a valid
+    # provisional result, so prove the route while preserving WAIT-PARENT.
+    pending_parent = (rc == 1 and records and
+                      load(max(records, key=lambda p: p.stat().st_mtime)).get("verdict") == "LOCAL_PASS_NEEDS_PARENT")
+    if rc and not pending_parent:
+        return done(rc, "RUNNER_FAIL", "physical runner did not complete")
     if not records:
         # Recover the historical route-only runner gap without routing again.
         # Only an actual final ODB+SPEF is sufficient for per-corner sign-off.

@@ -83,6 +83,23 @@ class ChainTest(unittest.TestCase):
         self.assertEqual(len(calls), 1)
         self.assertNotEqual(calls[0][0], "bash")
 
+    def test_provisional_signoff_exit_one_gets_lec_without_publication(self):
+        k, b = self.vehicle()
+        run, calls = self.runner(k, b)
+        def pending(cmd):
+            result = run(cmd)
+            if cmd[0] == "bash":
+                p = k / "signoff/signoff.json"
+                rec = json.loads(p.read_text())
+                rec["verdict"] = "LOCAL_PASS_NEEDS_PARENT"
+                p.write_text(json.dumps(rec))
+                return 1
+            return result
+        self.assertEqual(continue_kit(k, "runner.sh", "route", 48, 8, pending), 0)
+        rec = json.loads((k / "signoff/signoff.json").read_text())
+        self.assertEqual(rec["verdict"], "LOCAL_PASS_NEEDS_PARENT")
+        self.assertIn("--netlist", calls[-1])
+
     def test_runner_failure_preserved(self):
         k, _ = self.vehicle()
         self.assertEqual(continue_kit(k, "runner.sh", "route", 48, 8, lambda c: 17), 17)
