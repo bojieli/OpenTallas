@@ -1,12 +1,6 @@
 {
  "schema": "opentallas.ref_tile.reset_landing.v1",
  "top": "ot_hnx_fused_hub_n4ext",
- "enable": true,
- "stages": 2,
- "clock": "clk",
- "reset_ports": [
-  "rst_n"
- ],
- "rule": "ROOT-RST 2026-10-19: every reset input lands at its face in 2 registered stages, then equal-depth fan-out; reset release latency is a scheduled constant",
- "reset_release_cycles": 2
+ "enable": false,
+ "reason": "Exact delivered-reset source03577be294: u_native.g_delivered_reset.u_rst +u_native.u_t5.g_delivered_reset.u_rst already implement3synchronousreleaseedges perrelay,6nested; primitive112/0 andnative0/4/4/2component721/0. Genericextra2stage landing would addunpricedbootlatency. Noasyncfalsepath."
 }

@@ -145,6 +145,7 @@
   "physical/common_flow/grt_macro_top_layer.tcl",
   "physical/qwen_die_masters/sram_edge_guard.tcl",
   "physical/common_flow/macro_edge_via_guard.tcl",
+  "physical/ref_tile/ot_hnx_fused_hub_n4ext/io_pins.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",

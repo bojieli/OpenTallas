@@ -8,5 +8,8 @@
   "findings": [],
   "macro_offtrack": 0,
   "generated_kit_path": "/srv/opentallas-scratch/claude/codex-hbm-n4-links-1027/gen_source/physical/ref_tile/ot_hnx_fused_hub_n4ext",
-  "status": "PASS static generation; physicalR2/reset/provider/PG/CTS gatesremainopen"
+  "status": "PASS static generation; physicalR2/reset/provider/PG/CTS gatesremainopen",
+  "final_pin_plan": "physical/ref_tile/ot_hnx_fused_hub_n4ext/io_pins.tcl",
+  "reset_landing": "enablefalse; exactDELIVERED_RESET1native3+3relays, no extra generic2bootedges",
+  "final_pin_review_status": "PARKED BEFORE IMAGE REVIEW; exactIOTcl generated/staticallyaccepted only, no placement/P&R"
 }

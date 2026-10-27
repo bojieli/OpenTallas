@@ -128,5 +128,10 @@
   "clock": "cts",
   "layer_cap": "M5",
   "inhold": false,
-  "outhold": false
+  "outhold": false,
+  "io_tcl": "physical/ref_tile/ot_hnx_fused_hub_n4ext/io_pins.tcl",
+  "reset_landing": {
+    "enable": false,
+    "reason": "Exact delivered-reset source03577be294: u_native.g_delivered_reset.u_rst +u_native.u_t5.g_delivered_reset.u_rst already implement3synchronousreleaseedges perrelay,6nested; primitive112/0 andnative0/4/4/2component721/0. Genericextra2stage landing would addunpricedbootlatency. Noasyncfalsepath."
+  }
 }
