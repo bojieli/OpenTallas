@@ -54,6 +54,8 @@ def build_xh(work):
                '+define+DV2_XHEAD', '-GMUT=0', f'-GN={N}', '-Mdir', str(obj), str(HERE / 'main2.cpp')] + \
               [str(ROOT / s) for s in B2.SRCS2]
         xv = os.environ.get('DV_LOWER_VFLAGS', '').split()
+        if os.environ.get('DV2_S8DIE') == '1' and '-GFACE=3' not in xv:
+            raise SystemExit('S8 xhead needs the bound-row build profile (-GFACE=3)')
         cmd += B2.DEFINES2 + xv + shlex.split(os.environ.get('OT_XH_BUILD_FLAGS', ''))
         if '-GSU_LT=1' in xv:
             cmd += [str(ROOT / s) for s in B2.XSRCS]
@@ -327,6 +329,8 @@ def main():
     ap.add_argument('--xpf-lead', type=int)
     ap.add_argument('--merge', help='fold the pt_*.json of --work into --ages -> this file (ages[consumer])')
     a = ap.parse_args()
+    if os.environ.get('DV2_S8DIE') == '1' and not a.vec_ages and not a.merge:
+        ap.error('bound s8 xhead requires --vec-ages measured on the selected profile')
     global VEC_AGES
     VEC_AGES = VB.V.load_ages(a.vec_ages) if a.vec_ages else None
     work = Path(a.work)
