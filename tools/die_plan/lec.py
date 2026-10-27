@@ -953,6 +953,8 @@ class Lec:
         self.tonly = sorted(k for k in set(self.tp) - set(self.gp))
         # hypotheses on unmatched flops: key -> ('const', c) | ('eq', side, other_key, inv)
         self.hyp = {}
+        self.refuted = set()               # (side, k, partner, inv) relations a counterexample refuted
+        self.undecided = collections.Counter()
         # state-encoding constraints (FSM recoding): (side, keys, allowed value tuples) assumed on the current state
         # and proved on the next state together with the hypotheses (an inductive invariant like the others)
         self.cons = []
@@ -2064,7 +2066,7 @@ def structural_twin_closure(L, log):
     """
     total = 0
     while True:
-        L.build(with_compare=False, with_hyp=False)
+        m, kind = L.build(with_compare=False, with_hyp=False)
         new = []
         for side, keys in (("gold", L.gonly), ("gate", L.tonly)):
             paired_roots = {h[2] for (sd,k),h in L.hyp.items()
@@ -2078,7 +2080,8 @@ def structural_twin_closure(L, log):
                 d = L.dlit.get((side, k), 0)
                 if not k.startswith("ff:") or (side, k) in L.hyp or k in paired_roots or d <= 1:
                     continue
-                choices = twins.get(d >> 1, [])
+                choices = [(c, dc) for c, dc in twins.get(d >> 1, [])
+                           if (side, k, c, (d ^ dc) & 1) not in L.refuted]
                 if choices:
                     c, dc = min(choices)
                     new.append(((side, k), ("eq", side, c, (d ^ dc) & 1)))
@@ -2094,11 +2097,13 @@ def structural_twin_closure(L, log):
             d = L.dlit.get(("gate", k), 0)
             if not k.startswith("ff:") or ("gate", k) in L.hyp or d <= 1:
                 continue
-            choices = gold.get(d >> 1, [])
+            choices = [(q, dq) for q, dq in gold.get(d >> 1, []) if ("gate", k, q, (d ^ dq) & 1) not in L.refuted]
             if choices:
                 c = closest(k, [q for q, _ in choices])[0]
                 dc = dict(choices)[c]
                 new.append((("gate", k), ("eq", "gold", c, (d ^ dc) & 1)))
+        if not new:
+            new = state_twin_proposals(L, m, kind)
         if not new:
             break
         L.hyp.update(new)
@@ -2106,6 +2111,91 @@ def structural_twin_closure(L, log):
     if total:
         log.append(f"structural twin closure: {total} relations proposed")
     return total
+
+
+def state_twin_proposals(L, m, kind, words=8, seed=4242, max_keys=4096, max_cone=200000):
+    """Self-holding duplicates (LEC-ICG-2 / BLEC-2 10-26): a register whose next state reads its own state (load
+    enable: k <= en ? f : k) is never an exact twin, because D(k) and D(c) contain k and c.  It is the merged copy
+    of c when D(k) with k := c is D(c): qxpq gbcgr8 w_cgt[1] <= en ? qx_gt(x)[1] : w_cgt[1] where qx_gt(x)[1] == x[0]
+    and w_coh[0] <= en ? x[0] : w_coh[0] (synthesis keeps only w_coh[0]).  Candidates come from one random
+    simulation: the cone of D(k) is re-simulated with k at 0 and at 1 (S0, S1), and c fits when
+    sim(D(c)) == c ? S1 : S0 (or the complement, for k == ~c).  Proposals only: each one enters the next
+    simultaneous induction proof, a refuted relation is never proposed again (L.refuted)."""
+    val, mask = m.simulate(words, seed=seed)
+    qvar = {}
+    for v, kd in kind.items():
+        if kd[0] in ("matched", "gold_only", "gate_only"):
+            qvar[(kd[0], kd[1])] = v
+    ni, a = m.ni, m.ands
+
+    def cofactors(d, v):
+        """(S0, S1): sim of literal d with input variable v forced 0 / 1, or None if d does not read v."""
+        cone, stack, seen = [], [d >> 1], set()
+        while stack:
+            x = stack.pop()
+            if x <= ni or x in seen:
+                continue
+            seen.add(x)
+            if len(seen) > max_cone:
+                return None
+            cone.append(x)
+            i = x - ni - 1
+            stack.append(a[2 * i] >> 1)
+            stack.append(a[2 * i + 1] >> 1)
+        cone.sort()
+        out = []
+        for b in (0, mask):
+            loc = {v: b}
+            dep = False
+            for x in cone:
+                i = x - ni - 1
+                r0, r1 = a[2 * i], a[2 * i + 1]
+                if (r0 >> 1) in loc or (r1 >> 1) in loc:
+                    dep = True
+                    x0 = loc.get(r0 >> 1, val[r0 >> 1]) ^ (mask if r0 & 1 else 0)
+                    x1 = loc.get(r1 >> 1, val[r1 >> 1]) ^ (mask if r1 & 1 else 0)
+                    loc[x] = x0 & x1
+            if not dep or (d >> 1) == v:
+                return None                   # no own-state read, or a never-written hold (an X source)
+            out.append(loc.get(d >> 1, val[d >> 1]) ^ (mask if d & 1 else 0))
+        return out
+
+    new = []
+    for side in ("gold", "gate"):
+        bound = {h[2] for (sd, k), h in L.hyp.items() if h[0] == "eq" and h[1] == side}
+        cands = []
+        for c in sorted(set(L.matched) | {h[2] for (sd, k), h in L.hyp.items()
+                                          if h[0] == "eq" and h[1] == side and sd != side}):
+            v = qvar.get(("matched", c)) or qvar.get((side + "_only", c))
+            dc = L.dlit.get((side, c), 0)
+            if c.startswith("ff:") and v and dc > 1 and (side, c) not in L.hyp:
+                cands.append((c, val[v], lit_val(val, mask, dc)))
+        keys = [k for k in (L.gonly if side == "gold" else L.tonly)
+                if k.startswith("ff:") and (side, k) not in L.hyp and k not in bound]
+        for k in keys[:max_keys]:
+            v, d = qvar.get((side + "_only", k)), L.dlit.get((side, k), 0)
+            if not v or d <= 1:
+                continue
+            cf = cofactors(d, v)
+            if cf is None or cf[0] == cf[1]:
+                continue                      # does not read its own state: exact twins cover it
+            s0, s1 = cf
+            hit = []
+            for c, rc, sc in cands:
+                if c == k:
+                    continue
+                if sc == (rc & s1) | (~rc & mask & s0):
+                    inv = 0
+                elif sc ^ mask == (~rc & mask & s1) | (rc & s0):
+                    inv = 1
+                else:
+                    continue
+                if (side, k, c, inv) not in L.refuted:
+                    hit.append((c, inv))
+            if hit:
+                c = closest(k, [q for q, _ in hit])[0]
+                new.append(((side, k), ("eq", side, c, dict(hit)[c])))
+    return new
 
 
 
@@ -2725,6 +2815,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     # while the time budget lasts (s81 hd_tile: false copies along 60-stage skew delay lines peel one stage
     # per round -- stopping at 64 rounds freed every unmatched flop and left 83 points differing)
     t_ref, budget = time.time(), float(os.environ.get("OT_LEC_REFINE_S", "3600"))
+    added_at, last_drop = {}, -1       # (key, relation) -> round first proved in; last round that dropped any
     for rnd in range(rounds + 1000):
         if rnd >= rounds + 40 and time.time() - t_ref > budget:
             break
@@ -3027,8 +3118,12 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             # State relations rejected before aliases/copies settled can become
             # inductive later; retry while candidates are still being added.
             fsm_proposals(L, log)
+        if not L.hyp and not adding and not (structural_constant_closure(L, log) or structural_twin_closure(L, log)):
+            return                            # (refinement may have emptied the set: twins can still come back)
         if not L.hyp:
             return
+        for key, h in L.hyp.items():
+            added_at.setdefault((key, h), rnd)
         m, kind = L.build(with_compare=False, with_hyp=True)
         st = prove(m, work, conflicts, log, tag=f"hyp{rnd}")
         bad = [n for n, s in st.items() if s != "proved"]
@@ -3050,12 +3145,24 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             h = L.hyp.pop((side, k), None)
             if h is None:
                 continue
+            if h[0] == "eq":
+                # Refuted = a counterexample while every relation it may rest on was still assumed (nothing
+                # dropped since it was proposed): closures never propose it again.  A relation that fails after
+                # a drop (its support may be gone: elemB g_ch[1] valid twins after an upstream drop) or stays
+                # undecided is not refuted; closures may re-propose it, at most 3 times (so refinement ends).
+                rel = (side, k, h[2], h[3])
+                clean = added_at.get(((side, k), h), -1) > last_drop
+                L.undecided[rel] += 1
+                if (st[n] == "differs" and clean) or L.undecided[rel] >= 3:
+                    L.refuted.add(rel)
             # Equality candidates are looked up with an integer polarity. Keep
             # that key unchanged when recording rejection, or they are retried
             # in every adding round. FSM cube tuples keep their textual key.
             tried[(side, k, "c") if h[0] == "const" else
                   (side, k, h[2], h[3]) if h[0] == "eq" else
                   (side, k, str(h[2]), str(h[3]))] += 1
+        last_drop = rnd
+        added_at = {kh: r for kh, r in added_at.items() if L.hyp.get(kh[0]) == kh[1]}
     L.hyp.clear()                             # refinement did not converge: no assumptions at all
     L.cons.clear()
     log.append("correspondence: refinement did not converge; all unmatched flops free")
