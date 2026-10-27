@@ -1,0 +1,25 @@
+read_json /srv/opentallas-scratch2/claude/kvsctl-r2/fp2/pre.json
+memory_share
+memory_map
+setattr -mod -unset keep_hierarchy
+flatten
+rename qkd_kvs_ctl gold
+design -stash g
+read_verilog -sv /srv/opentallas-scratch2/claude/kvsctl-r2/fp3/qkd_kvs_ctl.v
+read_verilog -sv -DSYNTHESIS /srv/opentallas-scratch2/claude/kvsctl-r2/fp3/bb/ot_sram_1r1w_128x256_m1_r2c2_bb.v /srv/opentallas-scratch2/claude/kvsctl-r2/fp3/bb/ctl_sram_1r1w_64x128_p192_bb.v
+hierarchy -top qkd_kvs_ctl
+proc
+memory_collect
+memory_share
+memory_map
+setattr -mod -unset keep_hierarchy
+flatten
+rename qkd_kvs_ctl gate
+design -copy-from g -as gold gold
+equiv_make gold gate eq
+hierarchy -top eq
+expose -evert eq/t:ot_sram_1r1w_128x256_m1_r2c2 eq/t:ctl_sram_1r1w_64x128_p192
+async2sync
+equiv_simple -seq 2
+equiv_induct -seq 2
+equiv_status -assert
