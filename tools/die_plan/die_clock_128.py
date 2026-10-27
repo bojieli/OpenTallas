@@ -269,13 +269,21 @@ def load_plan_sites(path, plan_sha256=None):
 
 
 # ------------------------------------------------------------------------------------------------ fixed wires
-def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None, pin_stack=False, port_on_trunk=False):
+DROP_SPLIT_UM = 0.48   # CLOCK-KV-R13: one shielded clock track pair (4W NDR wire + VSS shields) between split drops
+
+
+def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None, pin_stack=False, port_on_trunk=False,
+                split_drops=False, ties=None, l_drops=False):
     """every tree net (root, H-tree legs/nodes/leaves, split tails, stubs) as a fixed comb pre-route: one trunk on the
     net's dominant axis (M8 horizontal / M9 vertical), offset `off` from the driver pin line, plus one perpendicular
     drop per load, offset `off` from the load pin line.  Returns [dict(name, drv, pins, segs, rc_nodes)].
     router (TrackRouter, CLOCK-128 shield lane): each trunk / drop goes on the nearest PG-aware routing track whose
     clock metal + both VSS shields clear every same-layer shape of another net (die PG grid, mesh straps + shields,
-    earlier tree wires + shields); a segment with no legal track within router.max_move is a plan error."""
+    earlier tree wires + shields); a segment with no legal track within router.max_move is a plan error.
+    split_drops (CLOCK-KV-R13, opt-in; default unchanged): two drops of one net that leave the trunk at the same
+    point toward opposite sides (a leaf-row pair: one shared VIA89 / VIA78 junction feeding both drops) are put on
+    their own tracks DROP_SPLIT_UM apart, so each drop has its own trunk via (OpenRCX resolved the shared-via node
+    asymmetrically: +11.2 ps odd/even leaf offset, CLOCK-KV-R12)."""
     txy = {t["port"]: tuple(t["xy"]) for t in M["taps"]}
     root = tuple(M["meta"]["root_um"])
 
@@ -287,13 +295,14 @@ def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None, pin_
     if empty:   # CLOCK-128-R2: the build prunes dead branches by construction; a loadless net here is a plan error
         raise PlanError([dict(kind="empty_tree_net", name=x, detail="tree net without loads") for x in empty])
     if pin_stack:   # CLOCK-128-R7 opt-in: straight pin stacks (the default path below is unchanged)
-        return _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=port_on_trunk)
+        return _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=port_on_trunk,
+                                  **(dict(ties=ties, l_drops=l_drops) if ties or l_drops else {}))
     out, errs = [], []
 
-    def track(layer, ideal, a0, a1, name, what):
+    def track(layer, ideal, a0, a1, name, what, avoid=()):
         if router is None:
             return ideal, DRAWN
-        c, mode, e = router.place(layer, ideal, a0, a1, name)
+        c, mode, e = router.place(layer, ideal, a0, a1, name, avoid=avoid)
         last_ext[0] = e
         if c is None:
             errs.append(dict(kind="no_clock_track", name=name, detail=f"{what} {layer} ideal {ideal:.3f} span "
@@ -329,9 +338,15 @@ def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None, pin_
                            max([D[0]] + [p[0] + off for _, p in Ls]) + mm, nm, "trunk")
             te = last_ext[0]
             xs_, modes, exts = [], [], []
+            used = []
             for ld, p in Ls:
                 if abs(p[1] - ty) > 1e-6:
-                    bx, bm = track("M9", p[0] + off, ty, p[1], nm, f"drop {ld}")
+                    ix = p[0] + off
+                    av = [ux for ux, uy in used if (uy - ty) * (p[1] - ty) < 0] if split_drops else []
+                    if any(abs(u_ - ix) < DROP_SPLIT_UM - 1e-6 for u_ in av):
+                        ix += DROP_SPLIT_UM
+                    bx, bm = track("M9", ix, ty, p[1], nm, f"drop {ld}", avoid=av)
+                    used.append((bx, p[1]))
                     segs.append(("M9", bx, min(ty, p[1]), bx, max(ty, p[1])))
                     modes.append(bm)
                     exts.append(last_ext[0])
@@ -351,9 +366,15 @@ def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None, pin_
                            max([D[1]] + [p[1] + off for _, p in Ls]) + mm, nm, "trunk")
             te = last_ext[0]
             ys_, modes, exts = [], [], []
+            used = []
             for ld, p in Ls:
                 if abs(p[0] - tx) > 1e-6:
-                    by, bm = track("M8", p[1] + off, tx, p[0], nm, f"drop {ld}")
+                    iy = p[1] + off
+                    av = [uy for uy, ux in used if (ux - tx) * (p[0] - tx) < 0] if split_drops else []
+                    if any(abs(u_ - iy) < DROP_SPLIT_UM - 1e-6 for u_ in av):
+                        iy += DROP_SPLIT_UM
+                    by, bm = track("M8", iy, tx, p[0], nm, f"drop {ld}", avoid=av)
+                    used.append((by, p[0]))
                     segs.append(("M8", min(tx, p[0]), by, max(tx, p[0]), by))
                     modes.append(bm)
                     exts.append(last_ext[0])
@@ -413,7 +434,12 @@ def pin_xy(cells, c, pin, row_y, buf="BUFx24_ASAP7_75t_R"):
     return round(v["x"] + bar, 4), round(v["y"] + row_y / 2, 4)
 
 
-def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False):
+def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, ties=None, l_drops=False):
+    """ties (INFRA-FIRST-QC-R12): {representative cell: [unit cells, row order]} of stacked parallel-buffer groups; the
+    pin stack of such a cell carries a `tie` (M7 strap along the shared bar column through every unit's pin row, the
+    straight VIA67..VIA12 stack of each unit hangs off it) and enters at the unit nearest the junction.
+    l_drops (R12): a horizontal-trunk cell load farther than STACK_RISER_MAX_UM from the trunk gets an M9 drop on a
+    PG-aware track at its bar column, then an M8 jog at the load row (an L net) instead of a plan error."""
     txy = {t["port"]: tuple(t["xy"]) for t in M["taps"]}
     root = tuple(M["meta"]["root_um"])
     errs, out, last_ext = [], [], [None]
@@ -435,11 +461,30 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False):
         return c, mode
 
     def stack(cell, pin, pxy, junction):
+        if ties and len(ties.get(cell, ())) > 1:
+            return tie_stack(cell, pin, junction)
         r = abs(junction[1] - pxy[1])
         if r > STACK_RISER_MAX_UM + 1e-9:
             errs.append(dict(kind="no_pin_stack", name=cell, detail=f"{pin} M7 riser {r:.3f} um > "
                              f"STACK_RISER_MAX_UM {STACK_RISER_MAX_UM} (outside the island window)"))
         return dict(cell=cell, pin=pin, xy=list(pxy), riser_from=[pxy[0], junction[1]], riser_um=round(r, 4))
+
+    def tie_stack(cell, pin, junction):
+        us = ties[cell]
+        pts = [(u, pin_xy(cells, u, pin, row_y)) for u in us]
+        if len({p[0] for _, p in pts}) != 1:
+            errs.append(dict(kind="tie_column", name=cell, detail=f"{pin} bars of {us} not in one column"))
+        k = min(range(len(pts)), key=lambda i: abs(pts[i][1][1] - junction[1]))
+        x, py = pts[k][1]
+        r = abs(junction[1] - py)
+        ys = [p[1] for _, p in pts]
+        span = max(ys + [junction[1]]) - min(ys + [junction[1]])
+        if r > STACK_RISER_MAX_UM + 1e-9 or span > STACK_RISER_MAX_UM + (len(us) - 1) * row_y + 1e-9:
+            errs.append(dict(kind="no_pin_stack", name=cell, detail=f"{pin} tie: M7 riser {r:.3f} um / M7 extent "
+                             f"{span:.3f} um outside the island window"))
+        return dict(cell=cell, pin=pin, xy=[x, py], riser_from=[x, junction[1]], riser_um=round(r, 4), entry=pts[k][0],
+                    tie=dict(layer="M7", x=x, units=[[u, p[1]] for u, p in pts], y_lo=min(ys), y_hi=max(ys),
+                             strap_um=round(max(ys) - min(ys), 4)))
 
     for n in nets:
         nm = n["name"]
@@ -476,6 +521,20 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False):
                     else:
                         bx = p[0] + off
                     branches.append((ld, bx, p[1]))
+                    xs_.append(bx)
+                    continue
+                if l_drops and abs(p[1] - ty) > STACK_RISER_MAX_UM:
+                    # R12 L net: M9 drop at the bar column, M8 jog one track pair off the load row toward the trunk
+                    sg = 1.0 if ty >= p[1] else -1.0
+                    by, jm = track("M8", p[1] + sg * off, p[0] - mm, p[0] + mm, nm, f"jog {ld}")
+                    bx, bm = track("M9", p[0], ty, by, nm, f"drop {ld}")
+                    add(("M9", bx, min(ty, by), bx, max(ty, by)), bm)
+                    if abs(bx - p[0]) > 1e-6:
+                        add(("M8", min(bx, p[0]), by, max(bx, p[0]), by), jm)
+                    s_ = stack(ld, "A", p, (p[0], by))
+                    s_["drop"] = dict(layer="M9", x=bx, y0=ty, y1=by)
+                    stacks.append(s_)
+                    branches.append((ld, bx, ty))
                     xs_.append(bx)
                     continue
                 stacks.append(stack(ld, "A", p, (p[0], ty)))
@@ -681,8 +740,9 @@ class TrackRouter:
             return None
         return round(max(e0, best), 4)
 
-    def place(self, layer, ideal, a0, a1, net):
-        """(centre, mode) of the nearest legal track, or (None, None)"""
+    def place(self, layer, ideal, a0, a1, net, avoid=()):
+        """(centre, mode) of the nearest legal track, or (None, None).  avoid: track centres this segment must not
+        take (CLOCK-KV-R13 split_drops: the opposite drop of the same junction, within DROP_SPLIT_UM)"""
         tr = self.tracks[layer]
         pitch, offs = tr["pitch_um"], tr["offset_um"]
         k0 = round((ideal - offs) / pitch)
@@ -692,6 +752,8 @@ class TrackRouter:
             for k in ks:
                 c = round(offs + k * pitch, 4)
                 if abs(c - ideal) > self.max_move + 1e-9:
+                    continue
+                if any(abs(c - v) < DROP_SPLIT_UM - 1e-6 for v in avoid):
                     continue
                 e = self.tie_ext(layer, c, a0, a1)
                 sh = seg_shapes(layer, c, a0, a1, net, self.nd, self.shield, ext=e)

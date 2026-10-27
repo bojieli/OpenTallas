@@ -64,7 +64,18 @@ import die_clock_128 as C128  # noqa: E402
 BUF = DC.BUF
 STEP_UM = 2.16
 MAX_MOVE_UM = 250.0             # COORD 23:53: driver-site moves within 250 um
-NDR = {"4w": dict(width=0.16, space=0.08, rf=0.25, cf=1.3), "8w": dict(width=0.32, space=0.08, rf=0.125, cf=1.6)}
+NDR = {"4w": dict(width=0.16, space=0.08, rf=0.25, cf=1.3), "8w": dict(width=0.32, space=0.08, rf=0.125, cf=1.6),
+       # INFRA-FIRST-QC-R12 (mesh3 top tree, 16W M8/M9).  width = 16 x the 0.04 LEF WIDTH; rf = 0.04 / width as for
+       # 4w/8w; cf = the 4w->8w model slope (+0.3 per 0.16 um) carried to 0.64 (UNCHECKED: replace by the ndr064 RCX).
+       # space: 4w/8w keep 2S = 0.08, but a 0.64-um wire sits in the asap7_tech_1x_201209.lef M8/M9 SPACINGTABLE row
+       # WIDTH 0.49975 (0.5 um at PRL >= 1.79975), so every clock / shield clearance is 0.5.  Its drawn shields are 0.64
+       # wide too: a shield merged with same-net PG is only a NEW spacing class at the 0.99975 row (1.0 um), so the R8
+       # wide-merge gate threshold is 0.99975 for 16w.  VIA89 at a 16w M8 x M9 junction: a 6 x 6 V8 array (LEF
+       # VIARULE M9_M8 GENERATE: cut 0.04, pitch >= 0.097, M9 enclosure 0.02; pitch 0.098 keeps the cuts on the 1x DBU
+       # grid; 5 x 0.098 + 0.04 + 2 x 0.02 = 0.57 <= 0.64).  VIA78 stays the single tech via: its M7 side is the
+       # 0.032-um default-width pin riser of the R7 straight stack.
+       "16w": dict(width=0.64, space=0.5, rf=0.0625, cf=2.2, wide_merge_um=0.99975,
+                   via89=dict(rows=6, cols=6, cut=0.04, pitch=0.098, enc_m8=0.0, enc_m9=0.02))}
 VDD = {"TT": 0.70, "FF": 0.77}
 SITE_X, ROW_Y = 0.054, 0.27
 # Actual current ORFS asap7sc7p5t_28_R_1x_220121a.lef SIZE, not the obsolete 25-site estimate.
@@ -366,6 +377,144 @@ def free_toward(K, p, axis, target, limit, step=None):
     return None, None
 
 
+def level_slides(lg, nx, nty, axes, node_xy, hop_slack, K, root_here, step=None):
+    """CLOCK-KV-R11 in_core "level" (plan-computed before any node is placed): per H-tree level, the ideal node
+    points (parent at its ideal point; the parent's own slide is along the other axis, so the child's slide target is
+    unchanged) and ONE slide d toward the parent for the whole level: the smallest multiple of STEP_UM <= the level's
+    reach/geometry limit that leaves the fewest nodes on a keep-out (0 if none is hit at the ideal points or the level
+    splits on the incoming axis).  Every leg of the level then has one length (ideal + d upstream, ideal + d on both
+    child legs), i.e. sibling pairs are mirror images.  Returns ({level: d}, {level: record})."""
+    step = step or STEP_UM
+    per = defaultdict(list)
+
+    def pre(i0, i1, j0, j1, level, here):
+        ax = split_axis(i1 - i0, j1 - j0, level, axes)
+        h = (i0 + i1) // 2 if ax == 0 else (j0 + j1) // 2
+        for kr in ([(i0, h, j0, j1), (h, i1, j0, j1)] if ax == 0 else [(i0, i1, j0, h), (i0, i1, h, j1)]):
+            if (kr[1] - kr[0]) * (kr[3] - kr[2]) == 1:
+                continue
+            kp = node_xy(*kr)
+            if level + 1 not in lg["wire_levels"]:
+                per[level + 1].append((kp, here, ax, split_axis(kr[1] - kr[0], kr[3] - kr[2], level + 1, axes), kr))
+            pre(*kr, level + 1, kp)
+
+    pre(0, nx, 0, nty, 0, root_here)
+
+    def mv(r, d):
+        kp, here, inc = r[0], r[1], r[2]
+        sg = 1.0 if here[inc] >= kp[inc] else -1.0
+        return (kp[0] + sg * d, kp[1]) if inc == 0 else (kp[0], kp[1] + sg * d)
+
+    sl, rec = {}, {}
+    for lv, rows in sorted(per.items()):
+        h0 = sum(1 for r in rows if hitf(K, r[0]))
+        best, lim = (h0, 0.0), 0.0
+        if h0 and all(r[3] != r[2] for r in rows):
+            lim = min(min(abs(r[0][r[2]] - r[1][r[2]]), max(0.0, hop_slack(r[4], lv))) for r in rows)
+            k = 1
+            while k * step <= lim + 1e-9 and best[0]:
+                nh = sum(1 for r in rows if hitf(K, mv(r, k * step)))
+                if nh < best[0]:
+                    best = (nh, k * step)
+                k += 1
+        sl[lv] = round(best[1], 4)
+        rec[str(lv)] = dict(nodes=len(rows), hit_at_ideal=h0, slide_um=round(best[1], 4), hit_at_slide=best[0],
+                            limit_um=round(lim, 2))
+    return sl, rec
+
+
+def upstream_slides(lg, nx, nty, axes, node_xy, K, rep_um, root_here, step=None, ko=None, inst_module=None):
+    """CLOCK-KV-R13 in_core "upstream" (plan-computed before placement): for every level in lg["upstream_levels"],
+    ONE distance d (multiple of STEP_UM) by which every node BUFFER of the level moves back along its incoming leg
+    (toward the parent); the branch point itself stays at its ideal point (the buffer drives it through the d-long
+    stem), so child legs and root->leaf lengths are unchanged.  d = the smallest value with the fewest nodes of the
+    level on a keep-out, bounded by the shortest incoming leg cut and by the first child hop (d + child cut <= hop
+    reach).  Levels whose child splits on the incoming axis (the stem would be retraced) are refused."""
+    step = step or STEP_UM
+    per = defaultdict(list)
+
+    def pre(i0, i1, j0, j1, level, here):
+        ax = split_axis(i1 - i0, j1 - j0, level, axes)
+        h = (i0 + i1) // 2 if ax == 0 else (j0 + j1) // 2
+        for kr in ([(i0, h, j0, j1), (h, i1, j0, j1)] if ax == 0 else [(i0, i1, j0, h), (i0, i1, h, j1)]):
+            if (kr[1] - kr[0]) * (kr[3] - kr[2]) == 1:
+                continue
+            kp = node_xy(*kr)
+            cax = split_axis(kr[1] - kr[0], kr[3] - kr[2], level + 1, axes)
+            ch = node_xy(*((kr[0], (kr[0] + kr[1]) // 2, kr[2], kr[3]) if cax == 0 else
+                           (kr[0], kr[1], kr[2], (kr[2] + kr[3]) // 2)))
+            lc = abs(ch[0] - kp[0]) + abs(ch[1] - kp[1])
+            cut = lc / max(1, math.ceil(lc / rep_um - 1e-9))
+            li = abs(kp[0] - here[0]) + abs(kp[1] - here[1])
+            sel = level + 1 in lg["upstream_levels"]
+            if sel and level + 1 in lg["upstream_types"]:
+                sel = inst_module(core_at(ko, kp)) in lg["upstream_types"][level + 1]
+            if sel:
+                per[level + 1].append((kp, here, ax, cax, cut, li / max(1, math.ceil(li / rep_um - 1e-9))))
+            pre(*kr, level + 1, kp)
+
+    pre(0, nx, 0, nty, 0, root_here)
+
+    def mv(r, d):
+        kp, here, inc = r[0], r[1], r[2]
+        sg = 1.0 if here[inc] >= kp[inc] else -1.0
+        return (kp[0] + sg * d, kp[1]) if inc == 0 else (kp[0], kp[1] + sg * d)
+
+    sl, rec = {}, {}
+    for lv, rows in sorted(per.items()):
+        if any(r[3] == r[2] for r in rows):
+            raise ValueError(f"upstream level {lv}: child split on the incoming axis (stem retrace)")
+        h0 = sum(1 for r in rows if hitf(K, r[0]))
+        best = (h0, 0.0)
+        # the buffer stays strictly inside the incoming leg's last cut (one STEP short of the parent / last repeater)
+        lim = min(min(r[5] - step, lg["hop_reach"] - r[4]) for r in rows)
+        k = 1
+        while k * step <= lim + 1e-9 and best[0]:
+            nh = sum(1 for r in rows if hitf(K, mv(r, k * step)))
+            if nh < best[0]:
+                best = (nh, k * step)
+            k += 1
+        sl[lv] = round(best[1], 4)
+        rec[str(lv)] = dict(nodes=len(rows), hit_at_ideal=h0, upstream_um=round(best[1], 4), hit_at_d=best[0],
+                            limit_um=round(lim, 2))
+    return sl, rec
+
+
+def core_frame(P, part, core, pt, inverse=False):
+    """die point <-> hard-core frame (origin_um + track_offset_um, core orient; the four orients are involutions)."""
+    w, h = core["outline_um"]
+    ox, oy = (a + b for a, b in zip(core["origin_um"], core.get("track_offset_um") or [0.0, 0.0]))
+    o = core.get("orient", "R0")
+    if not inverse:
+        x, y = P.to_type(part, pt)
+        u, v = x - ox, y - oy
+        return (w - u if o in ("MY", "R180") else u, h - v if o in ("MX", "R180") else v)
+    u, v = pt
+    u, v = (w - u if o in ("MY", "R180") else u, h - v if o in ("MX", "R180") else v)
+    return P.to_die(part, (u + ox, v + oy))
+
+
+def canon_island_point(P, isl, q, canon, tol):
+    """CLOCK-KV-R11: snap a pushdown driver point q (die frame) inside core isl ('part/inst') onto its module's
+    canonical core-frame island site.  Returns (point, displacement um); (q, 0.0) when the module has no canon entry;
+    (q, None) when no canonical site lies within tol."""
+    if not isl or "/" not in isl:
+        return q, 0.0
+    part, inst = isl.split("/", 1)
+    if part not in P.parts:
+        return q, 0.0
+    core = next((c for c in P.ptype(part).get("hard_cores", []) if c["inst"] == inst), None)
+    if core is None or core["module"] not in canon:
+        return q, 0.0
+    u, v = core_frame(P, part, core, q)
+    best = min(canon[core["module"]], key=lambda s_: abs(s_[0] - u) + abs(s_[1] - v))
+    dd = abs(best[0] - u) + abs(best[1] - v)
+    if dd > tol + 1e-9:
+        return q, None
+    p = core_frame(P, part, core, best, inverse=True)
+    return (round(p[0], 4), round(p[1], 4)), dd
+
+
 def poly_point(pts, s):
     """point at arc length s along the Manhattan polyline pts (clamped to its ends)."""
     s = max(0.0, s)
@@ -430,7 +579,8 @@ def placement_overlaps(cells):
 def hard_keepout_violations(P, cells, islands=None):
     """Check actual cell bodies, including split repeaters, against every hard/PHY clock keepout.  islands (12.2a /
     12.7, --clock-floorplan island_windows): a clock DRIVER body wholly inside a declared in-core island window of
-    that very core is legal (the core is built with the island)."""
+    that very core is legal (the core is built with the island).  CLOCK-KV-R11: an H-tree node buffer (kind "node",
+    12.2a: island = die clock drivers incl. H-tree) is a driver too -- legal only wholly inside its declared window."""
     K = DC.KeepIndex(DC.keepouts(P), die=(P.W, P.H))
     bad = []
     for name, c in cells.items():
@@ -446,7 +596,7 @@ def hard_keepout_violations(P, cells, islands=None):
                         continue
                     seen.add(tuple(r))
                     if x0 < r[2] and x1 > r[0] and y0 < r[3] and y1 > r[1]:
-                        if islands and c.get("kind") in ("drv", "broot", "bnode") and any(
+                        if islands and c.get("kind") in ("drv", "broot", "bnode", "node") and any(
                                 w[4] == r[4] and w[0] <= x0 and x1 <= w[2] and w[1] <= y0 and y1 <= w[3] for w in islands):
                             continue
                         bad.append(dict(cell=name, keepout=r[4], rect_um=[x0, y0, x1, y1], keepout_um=list(r[:4])))
@@ -997,11 +1147,30 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                       # CLOCK-KV-R8 (opt-in): "pushdown" = no driver/node slide at all; every lattice point that falls in
                       # a hard core stays at its ideal point as a 12.2a1 in-core PUSHDOWN island (type-identical coords
                       # checked by the census), so every root->driver path keeps its equal-structure legs by construction
-                      in_core=str(lattice.get("in_core", "slide")))
+                      in_core=str(lattice.get("in_core", "slide")),
+                      # CLOCK-KV-R11 (opt-in): {module: [[u, v], ...]} canonical in-core island sites in the CORE frame
+                      # (origin + track_offset, core orient); a pushdown driver in such a core snaps onto the nearest
+                      # site within canon_tol_um so every instance of the module carries one identical island
+                      canon={k: [tuple(map(float, s_)) for s_ in v] for k, v in (lattice.get("island_canon") or {}).items()},
+                      canon_tol=float(lattice.get("island_canon_tol_um", 0.05)),
+                      # CLOCK-KV-R13 (opt-in, in_core "upstream"): levels whose node BUFFER moves upstream along the
+                      # incoming leg by ONE level-wide distance d (plan-computed, fewest keep-out hits); the branch point
+                      # stays at its ideal point and the node drives it through the d-long stem, so every root->leaf
+                      # Manhattan length and every child leg are unchanged (12.2a1 option (b): no in-core node island)
+                      upstream_levels={int(v) for v in lattice.get("upstream_levels", [])},
+                      # {level: [module, ...]}: on these levels only nodes whose IDEAL point lies in a core of a listed
+                      # module move upstream (one d for them, the smallest that frees all of them); the other nodes of
+                      # the level stay at their ideal points (a node on a core there = a pushdown island that must be
+                      # used by every instance, checked by the census).  12.2a1 per-type choice (COORD R12 ruling).
+                      upstream_types={int(k): set(v) for k, v in (lattice.get("upstream_types") or {}).items()})
             # "drivers": only the mesh drivers stay at their ideal points (pushdown), tree nodes keep the
             # path-length-preserving re-site toward the parent
-            if lg["in_core"] not in ("slide", "pushdown", "drivers"):
-                raise ValueError("--lattice-spec in_core: slide | pushdown | drivers")
+            # CLOCK-KV-R11 "level": drivers as "drivers"; every tree node of a level takes ONE level-wide slide toward its
+            # parent (plan-computed before placement, the smallest slide that frees the most nodes of the level), so
+            # every leg of a level keeps one length (mirror-symmetric sibling pairs); a node still on a core at that
+            # slide becomes a pushdown island at the slid point (never an individual re-site)
+            if lg["in_core"] not in ("slide", "pushdown", "drivers", "level", "upstream"):
+                raise ValueError("--lattice-spec in_core: slide | pushdown | drivers | level | upstream")
             if lg["nx"] != nx or not pow2(lg["ny"]):
                 raise ValueError("--lattice-spec leaf_grid: [nx, ny_leaf] with nx = --nx (leaves on the V straps), "
                                  "ny_leaf a power of two")
@@ -1187,13 +1356,22 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         for i, x in enumerate(xs):
             for j, y in enumerate(ly):
                 q, d = free_along(K, (x, y), 1, lg["drv_reach"], bounds=(0.0, H))
-                if lg["in_core"] in ("pushdown", "drivers") and d:
+                if lg["in_core"] in ("pushdown", "drivers", "level", "upstream") and d:
                     q = None   # CLOCK-KV-R8: no slide, pushdown island at the ideal point
                 isl = None
                 if q is None:
                     q, d, isl = (x, y), 0.0, core_at(ko, (x, y))
-                    out["pushdown"].append(dict(role="mesh_driver", name=f"ckm_d_{i}_{j}", xy=[round(x, 3), round(y, 3)],
-                                                core=isl))
+                    if lg.get("canon"):
+                        q, dc = canon_island_point(P, isl, q, lg["canon"], lg["canon_tol"])
+                        if dc is None:
+                            out["unplaced"].append([f"ckm_d_{i}_{j}", "STRUCTURAL driver in a canon-island module "
+                                                    "core but no canonical site within tolerance", isl])
+                            q = (x, y)
+                        elif dc:
+                            out["meta"].setdefault("canon_snaps", []).append([f"ckm_d_{i}_{j}", isl, round(dc, 4)])
+                    # CLOCK-KV-R13: the island is where the driver sits (canonical site), not the pre-snap ideal point
+                    out["pushdown"].append(dict(role="mesh_driver", name=f"ckm_d_{i}_{j}", xy=[round(q[0], 3), round(q[1], 3)],
+                                                ideal=[round(x, 3), round(y, 3)], core=isl))
                 names = [cell(f"ckm_d_{i}_{j}_{k}", q[0] + (k - (m - 1) / 2) * BUF_W, q[1], "drv", i=i, j=j)
                          for k in range(m)]
                 out["drivers"][f"{i}_{j}"] = dict(i=i, j=j, ideal=[x, y], site=[round(q[0], 3), round(q[1], 3)],
@@ -1213,6 +1391,17 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                         out["hole_drivers"].append([i, j, "macro_hole", mh])
                         cand[(i, j)] = None
                         continue
+                    if fp.get("io_macro_drivers") == "drop_inside":
+                        # PATH-HBM-R15: an intersection INSIDE a die PHY io macro is driverless (straps pass over on
+                        # M8/M9; the macro has no clock-cell sites).  Sliding its driver out to the macro edge (<= max-move)
+                        # kept a live subtree over the macro whose nodes then free-site-jogged up to ~410 um apart
+                        # (S2 n10->n11 1048 um > 750 reach).  Dropping by ideal point prunes those branches by
+                        # construction (live()); the continuous mesh feeds the macro from its edges.
+                        im = next((r[4] for r in ko if str(r[4]).startswith("io/") and in_rect(r, x, y)), None)
+                        if im is not None:
+                            out["hole_drivers"].append([i, j, "io_macro_inside", im])
+                            cand[(i, j)] = None
+                            continue
                 for axis in (0, 1):
                     bnd = strap_bounds(g, xs, ys, axis) if fp is None else span(axis, j if axis == 0 else i, g)
                     if bnd is None:
@@ -1266,7 +1455,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                         continue
                 if best is None:
                     hc = next((c[4] for c in cores if in_rect(c, x, y)), None) if fp is not None else None
-                    if hc is None and fp is not None and fp.get("io_macro_drivers") == "drop":
+                    if hc is None and fp is not None and fp.get("io_macro_drivers") in ("drop", "drop_inside"):
                         hc = next((r[4] for r in ko if str(r[4]).startswith("io/") and in_rect(r, x, y)), None)
                     if hc is not None:
                         out["hole_drivers"].append([i, j, "io_macro" if hc.startswith("io/") else "hard_core", hc])
@@ -1330,6 +1519,15 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
             return hop_slack(ch, lvl + 1) - L
         return max(1, math.ceil(L / rep_um - 1e-9)) * lg["hop_reach"] - L
 
+    _imod = {}
+
+    def inst_module(isl):
+        """module of a 'part/inst' keep-out name (CLOCK-KV-R13 upstream_types; built on first use)"""
+        if not _imod:
+            _imod.update({f"{pn}/{c_['inst']}": c_["module"] for pn in P.parts
+                          for c_ in P.ptype(pn).get("hard_cores", [])})
+        return _imod.get(isl or "", isl)
+
     def rec_lg(i0, i1, j0, j1, level, drv_cell, path, here, plen, wire_pt=False):
         """CLOCK-KV-R4 leaf-grid H-tree: same bisection as rec(), actual positions carried down (see build doc).
         wire_pt: this node level is in lattice wire_levels = a wire Steiner point of the parent's net (no buffer,
@@ -1364,9 +1562,33 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                 loads += rec_lg(*kr, level + 1, drv_cell, tag, tuple(kp), plen + L, wire_pt=True)
                 continue
             q, d, isl = kp, 0.0, None
-            if hitf(K, kp):
+            up = lg["in_core"] == "upstream" and (level + 1) in lg["upstream_levels"]
+            if up and (level + 1) in lg["upstream_types"]:
+                # a node not selected falls through to the pushdown branch below (island at its ideal point)
+                up = inst_module(core_at(ko, kp)) in lg["upstream_types"][level + 1]
+            if up:
+                d = lvl_slide.get(level + 1, 0.0)
+                if d:
+                    sg_ = 1.0 if here[inc] >= kp[inc] else -1.0
+                    q = (kp[0] + sg_ * d, kp[1]) if inc == 0 else (kp[0], kp[1] + sg_ * d)
+                if hitf(K, q):
+                    isl = core_at(ko, q)
+                    out["pushdown"].append(dict(role="tree_node", name=f"ckm_n{level + 1}_{tag}", level=level + 1,
+                                                xy=[round(q[0], 3), round(q[1], 3)], core=isl, upstream_um=d,
+                                                same_axis_split=cax == inc))
+            elif lg["in_core"] == "level":
+                d = lvl_slide.get(level + 1, 0.0)
+                if d:
+                    sg_ = 1.0 if here[inc] >= kp[inc] else -1.0
+                    q = (kp[0] + sg_ * d, kp[1]) if inc == 0 else (kp[0], kp[1] + sg_ * d)
+                if hitf(K, q):
+                    isl = core_at(ko, q)
+                    out["pushdown"].append(dict(role="tree_node", name=f"ckm_n{level + 1}_{tag}", level=level + 1,
+                                                xy=[round(q[0], 3), round(q[1], 3)], core=isl, level_slide_um=d,
+                                                same_axis_split=cax == inc))
+            elif hitf(K, kp):
                 q = None
-                if cax != inc and lg["in_core"] != "pushdown":
+                if cax != inc and lg["in_core"] not in ("pushdown", "upstream"):
                     # the re-site lengthens both child legs by the slide: keep their hops within reach
                     lim = min(abs(kp[inc] - here[inc]), max(0.0, hop_slack(kr, level + 1)))
                     q, d = free_toward(K, kp, inc, here[inc], lim)
@@ -1417,8 +1639,12 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                 loads.append(nb)
             out["htree"].append(dict(level=level + 1, tag=tag, a=list(here), b=list(q), len_um=round(L, 2),
                                      n_seg=n_seg, reps=reps, node=nb, node_move_um=round(d, 2), leaf=False,
-                                     **(dict(pushdown=isl) if isl else {})))
-            rec_lg(*kr, level + 1, nb, tag, tuple(q), plen + L)
+                                     **(dict(pushdown=isl) if isl else {}), **(dict(upstream_um=d, branch=list(kp)) if up else {})))
+            if up and d:
+                # the node buffer drives its ideal branch point through the d-long stem (comb drops in fixed_wires)
+                rec_lg(*kr, level + 1, nb, tag, tuple(kp), plen + L + d)
+            else:
+                rec_lg(*kr, level + 1, nb, tag, tuple(q), plen + L)
         if wire_pt:
             return loads
         nets.append(dict(name=f"ckm_w_{drv_cell}", drv=drv_cell, loads=loads, level=level))
@@ -1581,6 +1807,16 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     if fp is not None:
         rec(0, nx, 0, ny, 0, n0, "h", kids=[(g["i0"], g["i1"], g["j0"], g["j1"]) for g in R], here=c0)
     elif lg:
+        lvl_slide = {}
+        if lg["in_core"] == "level":
+            lvl_slide, lvl_rec = level_slides(lg, nx, nty, axes, node_xy, hop_slack, K,
+                                              (cells[n0]["x"] + BUF_W / 2, cells[n0]["y"] + ROW_Y / 2))
+            out["meta"]["level_slides"] = lvl_rec
+        elif lg["in_core"] == "upstream":
+            lvl_slide, lvl_rec = upstream_slides(lg, nx, nty, axes, node_xy, K, rep_um,
+                                                 (cells[n0]["x"] + BUF_W / 2, cells[n0]["y"] + ROW_Y / 2),
+                                                 ko=ko, inst_module=inst_module)
+            out["meta"]["upstream_slides"] = lvl_rec
         rec_lg(0, nx, 0, nty, 0, n0, "h", (cells[n0]["x"] + BUF_W / 2, cells[n0]["y"] + ROW_Y / 2), 0.0)
         pl = [dv["path_um"] for dv in out["drivers"].values()]
         pd = out["pushdown"]
@@ -1661,6 +1897,22 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         erows = C128.early_offset_taps(P, tap_rows, early_c)
         out["rule_12_8"] = dict(early_offset_taps=erows, early_offset_cores=C128.summarize_early(erows),
                                 stub_sizing=sizing)
+    if lg and (lg.get("upstream_levels") or lg.get("split_drops")) and out.get("pushdown"):
+        # CLOCK-KV-R13 (opt-in with the R13 lattice keys): every 12.2a1 pushdown record declares its in-core island
+        # window (the cell bodies it holds, + one site), so the hard-keepout census / combo accept exactly the
+        # declared islands and nothing else.  The census (identical core-frame pattern per type) is separate.
+        for r_ in out["pushdown"]:
+            if not r_.get("core"):
+                continue
+            nm_ = r_["name"]
+            cs_ = [cells[nm_]] if nm_ in cells else [c_ for k_, c_ in cells.items() if k_.startswith(nm_ + "_")
+                                                      and k_[len(nm_) + 1:].isdigit()]
+            if not cs_:
+                continue
+            out.setdefault("island_windows", []).append([
+                round(min(c_["x"] for c_ in cs_) - SITE_X, 4), round(min(c_["y"] for c_ in cs_) - 1e-3, 4),
+                round(max(c_["x"] + cell_width(c_) for c_ in cs_) + SITE_X, 4),
+                round(max(c_["y"] for c_ in cs_) + ROW_Y + 1e-3, 4), r_["core"]])
     overlaps = placement_overlaps(cells)
     out["clock_cell_overlaps"] = overlaps
     out["clock_hard_keepout_violations"] = hard_keepout_violations(
@@ -1757,9 +2009,11 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
             dv.update(jog_c=c_, jog_mode=m_, jog_ext=e_)
         if jerr:
             raise C128.PlanError(jerr)
-        wires = C128.fixed_wires(out, cells, nets, BUF_W, ROW_Y, router=router)
+        # CLOCK-KV-R13 opt-in (lattice "split_drops"): every opposite drop pair gets its own trunk via / track
+        spl = bool((lattice or {}).get("split_drops"))
+        wires = C128.fixed_wires(out, cells, nets, BUF_W, ROW_Y, router=router, split_drops=spl)
         out["fixed_wires"] = wires
-        free = C128.fixed_wires(out, cells, nets, BUF_W, ROW_Y)
+        free = C128.fixed_wires(out, cells, nets, BUF_W, ROW_Y, split_drops=spl)
         dl = [abs(a_["wire_um"] - b_["wire_um"]) for a_, b_ in zip(wires, free)]
         out["meta"]["tree_tracks"] = dict(
             method="C128.TrackRouter: nearest PG-aware track, clock metal + VSS shields clear of PG/clock/shields by "
@@ -1835,6 +2089,8 @@ def write_verilog(cells, nets, ports, path):
     drv_net, in_net = {}, {}
     for n in nets:
         drv_net[n["drv"]] = n["name"]
+        for u in n.get("drv_units", ()):     # R12 stacked-buffer group: every parallel unit drives the group net
+            drv_net[u] = n["name"]
         for ld in n["loads"]:
             if not ld.startswith("port:"):
                 in_net[ld] = n["name"]
@@ -2154,6 +2410,241 @@ def build_lattice(P, dtp, plan_sha, rep_um=450.0, ndr="4w", pg_shapes=None, trac
     return cells, nets, ports, out
 
 
+EXPLICIT_KINDS = {"top_node": "node", "top_rep": "rep", "col_tap": "node"}
+
+
+def _body_keepout_violations(K, W, H, cells):
+    """cell bodies outside the die or overlapping a hard / PHY keep-out rect of index K (hard_keepout_violations
+    without the plan object)"""
+    bad = []
+    for name, c in cells.items():
+        x0, y0 = c["x"], c["y"]
+        x1, y1 = x0 + cell_width(c), y0 + ROW_Y
+        if x0 < 0 or y0 < 0 or x1 > W or y1 > H:
+            bad.append(dict(cell=name, keepout="outside die", rect_um=[x0, y0, x1, y1]))
+            continue
+        seen = set()
+        for i in range(int(x0 // K.b), int(x1 // K.b) + 1):
+            for j in range(int(y0 // K.b), int(y1 // K.b) + 1):
+                for r in K.g.get((i, j), []):
+                    if tuple(r) in seen:
+                        continue
+                    seen.add(tuple(r))
+                    if x0 < r[2] and x1 > r[0] and y0 < r[3] and y1 > r[1]:
+                        bad.append(dict(cell=name, keepout=r[4], rect_um=[x0, y0, x1, y1], keepout_um=list(r[:4])))
+    return bad
+
+
+def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, die=None, parts=None, keepouts=None,
+                   root_um=None, leaf_stub_um=8.64, stack_offset=0.0, stack_r8=True):
+    """INFRA-FIRST-QC-R12: the die clock tree from an EXPLICIT cell + net list (the planner's delay-balanced mesh3 top
+    tree, results/qc_clk_mesh3/r11/r11_top_sites.json format) instead of build_lattice's binary / midpoint / equal-cut
+    H-tree.  No midpoint, equal-cut, arity or path-spread check (the planner balanced the delays); kept fail-closed
+    geometry checks: every cell on the site/row grid, its full body in exactly its declared host partition and clear of
+    every hard keep-out and of every other clock cell, a stacked group = consecutive rows in one column (same x,
+    orient, master), every net Manhattan (straight leg, or L = trunk + one perpendicular drop) on the declared trunk
+    layer, every group driven once, one root.
+
+    spec: {cell_sites: {name: dict(origin_um=[x, y] lower-left, part, master, orient, group, kind[, w])},
+           nets: [dict(drv="g<i>", load="g<j>", layer="M8"|"M9", ndr="16w", edge=...)]}
+    A net's drv / load are GROUPS; a group of k > 1 BUFx24 units (stacked rows) is one driver: the R7 pin stack of the
+    unit nearest the junction is extended by an M7 TIE strap along the bar column through every unit's pin row, with
+    a straight VIA67..VIA12 stack + min-area pads onto each unit's bar (A tie on the upstream net, Y tie on the group
+    net; die_clock_128._fixed_wires_stack ties=, clock_routed._stack_net_tcl).  Nets of one driver group merge into
+    one net (its loads = every unit of every load group).  The group without a driver is fed by port 'root'
+    (root_um, default leaf_stub_um west / east of its A bar); every group without loads drives one output port
+    t_<group> leaf_stub_um beside its Y bar on the M8 track grid (R8 port_on_trunk).
+    P: the die plan (hosts, keep-outs, PG); or die=(W, H), parts={name: rect}, keepouts=[(x0, y0, x1, y1, tag)].
+    Returns (cells, nets, ports, M) as build_lattice does (M.fixed_wires: R7 pin-stack wires, short-stack pads)."""
+    nd = NDR[ndr]
+    if P is not None:
+        W, H = float(P.W), float(P.H)
+        ko = DC.keepouts(P)
+        prt = [(n_, P.rect(n_)) for n_ in P.parts]
+    else:
+        W, H = map(float, die)
+        ko = list(keepouts or [])
+        prt = list((parts or {}).items())
+    K = DC.KeepIndex(ko, die=(W, H))
+    part_rects = dict(prt)
+
+    def host(xy, half):
+        for dx in (-half[0], half[0]):
+            for dy in (-half[1], half[1]):
+                if K.hit(xy[0] + dx, xy[1] + dy, m=0.0):
+                    return None, "on_hard_keepout"
+        for name, r in prt:
+            if r[0] <= xy[0] <= r[2] and r[1] <= xy[1] <= r[3]:
+                return name, None
+        return None, "outside_partitions"
+    perr, cells, groups = [], {}, defaultdict(list)
+    for name, v in sorted((spec.get("cell_sites") or {}).items()):
+        master = v.get("master", BUF)
+        if master not in BUF_WIDTHS or master not in C128.PIN_BAR_X:
+            perr.append(dict(kind="cell_model", name=name, detail=f"no width / pin-bar model for {master}"))
+            continue
+        w = BUF_WIDTHS[master]
+        x, y = map(float, v["origin_um"])
+        if abs(snap(x, SITE_X) - x) > 1e-6 or abs(snap(y, ROW_Y) - y) > 1e-6:
+            perr.append(dict(kind="cell_site_off_row", name=name, detail=str([x, y])))
+        if v.get("w") is not None and abs(float(v["w"]) - w) > 1e-6:
+            perr.append(dict(kind="cell_width", name=name, detail=f"declared w {v['w']} != {master} {w}"))
+        part, why = host((x + w / 2, y + ROW_Y / 2), (w / 2, ROW_Y / 2))
+        if why or part != v.get("part"):
+            perr.append(dict(kind="cell_site_host", name=name, detail=f"{part}/{why} vs {v.get('part')}"))
+        r = part_rects.get(part)
+        if r is not None and not (r[0] <= x and r[1] <= y and x + w <= r[2] and y + ROW_Y <= r[3]):
+            perr.append(dict(kind="cell_site_seam", name=name, detail=f"cell body leaves host {part}"))
+        orient = v.get("orient", "R0")
+        if orient not in ("R0", "MX", "MY", "R180"):
+            perr.append(dict(kind="cell_orient", name=name, detail=str(orient)))
+        c = dict(x=x, y=y, kind=EXPLICIT_KINDS.get(v.get("kind"), "node"), orient=orient, group=v.get("group"),
+                 plan_kind=v.get("kind"), part=v.get("part"))
+        if master != BUF:
+            c["lib"] = master
+        cells[name] = c
+        groups[f"g{v.get('group')}"].append(name)
+    for g, us in groups.items():
+        us.sort(key=lambda u: cells[u]["y"])
+        c0 = cells[us[0]]
+        for i, u in enumerate(us):
+            c = cells[u]
+            if abs(c["x"] - c0["x"]) > 1e-6 or c["orient"] != c0["orient"] or c.get("lib") != c0.get("lib") or \
+                    abs(c["y"] - (c0["y"] + i * ROW_Y)) > 1e-6:
+                perr.append(dict(kind="tie_stack", name=u, detail=f"group {g}: units must stack in consecutive rows of "
+                                 "one column (same x, orient, master)"))
+    rep_of = {u: us[0] for us in groups.values() for u in us}
+    by_drv, loaded = defaultdict(list), defaultdict(int)
+    for n in spec.get("nets") or []:
+        bad = [k for k in ("drv", "load") if n.get(k) not in groups]
+        if bad:
+            perr.append(dict(kind="net_group", name=str(n.get("edge")), detail=f"unknown {bad}: {n.get('drv')}->{n.get('load')}"))
+            continue
+        if n.get("ndr", ndr) != ndr:
+            perr.append(dict(kind="net_ndr", name=str(n.get("edge")), detail=f"net ndr {n.get('ndr')} != build {ndr}"))
+        if n.get("layer") not in ("M8", "M9"):
+            perr.append(dict(kind="net_layer", name=str(n.get("edge")), detail=str(n.get("layer"))))
+        by_drv[n["drv"]].append(n)
+        loaded[n["load"]] += 1
+    for g, k in loaded.items():
+        if k > 1:
+            perr.append(dict(kind="multi_driven", name=g, detail=f"{k} driver nets"))
+    roots = sorted(g for g in groups if g not in loaded)
+    if len(roots) != 1:
+        perr.append(dict(kind="tree_root", name="explicit", detail=f"{len(roots)} undriven groups {roots[:5]}"))
+    if perr:
+        raise C128.PlanError(perr)
+    rt = roots[0]
+    trk = (track_profile or DEFAULT_TRACKS)["M8"]
+
+    def on_m8(y):
+        return round(trk["offset_um"] + round((y - trk["offset_um"]) / trk["pitch_um"]) * trk["pitch_um"], 4)
+    r0 = groups[rt][0]
+    if root_um is None:
+        ax, ay = C128.pin_xy(cells, r0, "A", ROW_Y, cells[r0].get("lib", BUF))
+        root_um = (round(ax + (leaf_stub_um if cells[r0]["orient"] in ("MY", "R180") else -leaf_stub_um), 4), on_m8(ay))
+    ports, nets, tap_rows, lv = [("input", "root")], [], [], {rt: 0}
+    nets.append(dict(name="root", drv="port:root", loads=list(groups[rt]), level=-1))
+    order, seen = [rt], {rt}
+    for g in order:                       # breadth-first: level = driver depth
+        for n in by_drv.get(g, []):
+            if n["load"] not in seen:
+                seen.add(n["load"])
+                lv[n["load"]] = lv[g] + 1
+                order.append(n["load"])
+    unreached = sorted(set(groups) - seen)
+    if unreached:
+        raise C128.PlanError([dict(kind="unreached_group", name=g, detail="not reached from the root") for g in unreached[:50]])
+    for g in order:
+        us, r_ = groups[g], groups[g][0]
+        ns = by_drv.get(g, [])
+        if ns:
+            loads = [u for n in ns for u in groups[n["load"]]]
+            nets.append(dict(name=f"ckm_w_{r_}", drv=r_, drv_units=list(us), loads=loads, level=lv[g],
+                             plan_layers=sorted({n["layer"] for n in ns}), plan_edges=[n.get("edge") for n in ns]))
+            continue
+        yx, yy = C128.pin_xy(cells, r_, "Y", ROW_Y, cells[r_].get("lib", BUF))
+        west = cells[r_]["orient"] in ("MY", "R180")
+        tp = f"t_{g}"
+        ports.append(("output", tp))
+        pxy = [round(yx - leaf_stub_um if west else yx + leaf_stub_um, 4), on_m8(yy)]
+        nets.append(dict(name=f"ckm_w_{r_}", drv=r_, drv_units=list(us), loads=["port:" + tp], level=99))
+        tap_rows.append(dict(part=cells[r_]["part"], tap="explicit_leaf", port=tp, xy=pxy, layer="M8",
+                             pin_size_um=[round(2 * nd["width"], 4), nd["width"]], group=g, early_ps=0.0, stub=r_,
+                             foot=[yx, yy], strap=None, slide_um=0.0, stub_um=leaf_stub_um))
+    # Manhattan legs on the declared trunk layer (same axis rule as die_clock_128.fixed_wires: dominant extent)
+    for n in nets:
+        if n["drv"].startswith("port:") or not n.get("plan_layers"):
+            continue
+        D = C128.pin_xy(cells, n["drv"], "Y", ROW_Y, cells[n["drv"]].get("lib", BUF))
+        Ls = [C128.pin_xy(cells, ld, "A", ROW_Y, cells[ld].get("lib", BUF)) for ld in n["loads"]]
+        horiz = max(abs(p[0] - D[0]) for p in Ls) >= max(abs(p[1] - D[1]) for p in Ls)
+        if n["plan_layers"] != ["M8" if horiz else "M9"]:
+            perr.append(dict(kind="net_trunk_layer", name=n["name"], detail=f"plan {n['plan_layers']} vs trunk "
+                             f"{'M8' if horiz else 'M9'} (dominant extent)"))
+    overlaps = placement_overlaps(cells)
+    kov = _body_keepout_violations(K, W, H, cells)
+    if overlaps:
+        perr.append(dict(kind="cell_overlap", name="cells", detail=str(overlaps[:3])))
+    if kov:
+        perr.append(dict(kind="hard_keepout", name="cells", detail=str(kov[:3])))
+    if perr:
+        raise C128.PlanError(perr)
+    out = dict(meta=dict(nx=0, ny=0, m=0, rep_um=None, ndr=ndr, sites="explicit_cells", W=W, H=H,
+                         root_um=list(root_um), tap_layer="M8", tap_pin_size_um=[round(2 * nd["width"], 4), nd["width"]],
+                         explicit_tree=dict(source=spec.get("summary", {}).get("schema", "explicit cells"),
+                                            groups=len(groups), units=len(cells),
+                                            stacked_groups=sum(1 for us in groups.values() if len(us) > 1),
+                                            plan_nets=len(spec.get("nets") or []), nets=len(nets), leaves=len(tap_rows),
+                                            checks="geometry only (sites, host, seam, keep-out, overlap, tie column, "
+                                                   "Manhattan trunk layer); no midpoint / equal-cut (planner-balanced)")),
+               xs=[], ys=[], drivers={}, htree=[], stubs=[], unplaced=[], taps=tap_rows,
+               clock_cell_overlaps=overlaps, clock_hard_keepout_violations=kov)
+    if pg_shapes is not None:
+        pgr = pg_shapes
+    elif P is not None:
+        import die_infra as DI
+        pgr = DI.pg_rects(P, C128.pg_grid(P))
+    else:
+        pgr = []
+    sh = "VSS"
+    router = C128.TrackRouter(nd, sh, track_profile or DEFAULT_TRACKS, TRACK_MOVE_UM,
+                              **(dict(wide_merge_um=nd.get("wide_merge_um", C128.WIDE_MERGE_UM)) if stack_r8 else {}))
+    router.reserve(C128.pg_shapes(pgr))
+    ties = {us[0]: list(us) for us in groups.values() if len(us) > 1}
+    # physical view: one pin stack per GROUP (the tie reaches the other units); logical nets keep every unit
+    phys = [dict(n, loads=[ld for ld in n["loads"] if ld.startswith("port:") or rep_of[ld] == ld]) for n in nets]
+    wires = C128.fixed_wires(out, cells, phys, BUF_W, ROW_Y, off=stack_offset, router=router, pin_stack=True,
+                             port_on_trunk=stack_r8, ties=ties, l_drops=True)
+    for w in wires:
+        w["ndr"] = ndr
+        for s_ in w.get("stacks", []):
+            s_["short_stack"] = True
+        if stack_r8:
+            w["enc"] = "r8"
+    out["fixed_wires"] = wires
+    out["meta"]["tree_tracks"] = dict(
+        method="C128.TrackRouter: nearest PG-aware track, clock metal + VSS shields clear of PG/clock/shields by the NDR "
+               "space", tracks=track_profile or DEFAULT_TRACKS, max_move_um=TRACK_MOVE_UM, segments=len(router.moves),
+        moved=sum(1 for v in router.moves if v > 1e-6), modes=dict(router.modes),
+        move_max_um=round(max(router.moves or [0.0]), 4), pg_rects=len(pgr),
+        pin_stack=dict(rule="R7 straight stacks + short-stack pads; stacked groups: M7 tie strap along the bar column "
+                            "through every unit pin row (A tie / Y tie), L nets = trunk + one M9 (M8) drop + M8 jog",
+                       stacks=sum(len(w["stacks"]) for w in wires),
+                       ties=sum(1 for w in wires for s_ in w["stacks"] if s_.get("tie")),
+                       l_drops=sum(1 for w in wires for s_ in w["stacks"] if s_.get("drop")), pads=C128.STACK_PAD,
+                       **(dict(r8=dict(wide_merge_um=nd.get("wide_merge_um", C128.WIDE_MERGE_UM))) if stack_r8 else {})))
+    out["meta"]["clock_shield"] = C128.shield_record(wires, sh, 0, 0)
+    out["rule_12_8"] = dict(early_offset_taps=[], early_offset_cores={}, stub_sizing=None)
+    out["meta"]["rule_12_8"] = dict(methodology="v5.1 12.8 (explicit planner tree)", shield_net=sh,
+                                    sizing="BUFx24 groups (planner)", early_offset_taps=0)
+    out["meta"].update(cells=len(cells), nodes=sum(1 for c in cells.values() if c["kind"] == "node"),
+                       reps=sum(1 for c in cells.values() if c["kind"] == "rep"), stubs=len(tap_rows),
+                       clock_cell_overlap_pairs=0, clock_hard_keepout_violations=0, unplaced=0,
+                       tree_wire_mm=round(sum(w["wire_um"] for w in wires) / 1e3, 3))
+    return cells, nets, ports, out
+
+
 def cmd_build(a):
     P = S.Plan(S.load(a.plan))
     if getattr(a, "rule_12_8", False):
@@ -2191,7 +2682,11 @@ def cmd_build(a):
         plan_sites["source"] = str(a.plan_sites)
         plan_sites["sha256"] = hashlib.sha256(Path(a.plan_sites).read_bytes()).hexdigest()
     try:
-        if getattr(a, "tree_plan", None):
+        if getattr(a, "explicit_cells", None):     # INFRA-FIRST-QC-R12: planner cells + nets (r11_top_sites format)
+            cells, nets, ports, M = build_explicit(json.loads(Path(a.explicit_cells).read_text()), P, a.ndr, pg_shapes,
+                                                   tracks, root_um=a.explicit_root, stack_r8=not a.explicit_r7)
+            M["meta"]["explicit_tree"]["file"] = str(a.explicit_cells)
+        elif getattr(a, "tree_plan", None):
             import hashlib
             rule = dict(libdir=a.libdir, tap_slew_max_ps=a.tap_slew_max_ps) if getattr(a, "rule_12_8", False) else None
             cells, nets, ports, M = build_lattice(P, json.loads(Path(a.tree_plan).read_text()),
@@ -2723,7 +3218,8 @@ def cmd_combo(a):
             ports_ = {t_["port"]: dict(layer=t_.get("layer", M["meta"].get("tap_layer", "M7")), xy=t_["xy"])
                       for t_ in M["taps"]}
             ports_["root"] = dict(layer="M9", xy=list(M["meta"]["root_um"]))
-            rl, rrec = CR.routed_tcl(wires, cells, ports_, BUF, "ot_mesh_ndr")
+            rl, rrec = CR.routed_tcl(wires, cells, ports_, BUF, "ot_mesh_ndr",
+                                     **(dict(via89=nd["via89"]) if nd.get("via89") else {}))
             L += rl
             sh_ = CR.stair_census(CR.stair_shapes(wires, cells, ports_, BUF))
             rrec["stair_census"] = sh_
@@ -3575,6 +4071,13 @@ def main(argv=None):
     b.add_argument("--stack-r8", action="store_true", help="CLOCK-128-R8 (implies --pin-stack): shields never merge "
                    "with same-net PG into a wide (>= 0.49975 um) VSS shape, leaf ports on the M8 trunk end, downward vias "
                    "encoded as junction splits; default off = R7 output unchanged")
+    b.add_argument("--explicit-cells", help="INFRA-FIRST-QC-R12: build from an explicit cell + group-net list "
+                   "(results/qc_clk_mesh3/r11/r11_top_sites.json format; use with --ndr 16w): geometry checks only, "
+                   "R7 pin stacks + R8 encoding, M7 A/Y tie straps for stacked groups")
+    b.add_argument("--explicit-root", type=float, nargs=2, metavar=("X", "Y"),
+                   help="with --explicit-cells: die clock input xy (default 8.64 um beside the root group's A bar)")
+    b.add_argument("--explicit-r7", action="store_true", help="with --explicit-cells: R7 encoding (no R8 wide-merge "
+                   "gate / port_on_trunk / junction splits)")
     b.add_argument("--tree-only", action="store_true", help="with --tree-plan: build only the plan-declared die tree "
                    "(root -> lattice leaves, one region-entry port per leaf); diagnostic, never freeze evidence")
     b.add_argument("--allow-plan-errors", action="store_true",

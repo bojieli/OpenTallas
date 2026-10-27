@@ -178,6 +178,9 @@ def nearest_pairs(d, plan_path, tool, taps):
     except Exception as e:  # noqa: BLE001
         print(f"nearest-tap INFO classes skipped ({e})", file=sys.stderr)
         return {}
+    if not (d / "mesh.json").exists():          # e.g. a qc_clk_mesh3 sta-export proof (one entry tap per partition)
+        print("nearest-tap INFO classes skipped (no mesh.json)", file=sys.stderr)
+        return {}
     M = json.loads((d / "mesh.json").read_text())
     tb = defaultdict(list)
     for t in M["taps"]:
@@ -348,6 +351,9 @@ def main(argv=None):
                          "shared for table, stated for flat")
     ap.add_argument("--clock-aocv-table", help="clock_aocv block (default tools/die_plan/clk_aocv_table.json)")
     ap.add_argument("--clock-ocv-cell-share", type=float, help="cell share of the die branch (default: table class A)")
+    ap.add_argument("--pair-unc", help="opt-in per related pair clock uncertainty (qc_clk_mesh3 sta-export pair_unc.json: "
+                    "U[corner]['partA|partB'], signed-mesh MC + approved AOCV below the mesh), subtracted from setup and "
+                    "hold of every pair; replaces --clock-ocv")
     a = ap.parse_args(argv)
     corners = a.corner or ["TT", "FF"]
     out = Path(a.out)
@@ -393,7 +399,18 @@ def main(argv=None):
         pairs.update(nearest_pairs(d, a.plan, a.clock_tool, taps))
         cr = dict(basis=meta.get("basis"), tap_slew_max_ps=round(slew, 2), register=reg, classes={})
         ocv = None
-        if a.clock_ocv != "none":
+        if a.pair_unc:
+            if a.clock_ocv != "none":
+                raise SystemExit("--pair-unc and --clock-ocv are exclusive (both price the non-common clock)")
+            PU = json.loads(Path(a.pair_unc).read_text())["U"][c]
+
+            def ocv(x, y, check, PU=PU):
+                k = "|".join(sorted((taps[x]["part"], taps[y]["part"])))
+                if k not in PU:
+                    raise SystemExit(f"--pair-unc: no uncertainty for pair {k}")
+                return float(PU[k])
+            cr["clock_ocv"] = dict(mode="pair-unc", file=str(Path(a.pair_unc).resolve()), status="UNCHECKED")
+        elif a.clock_ocv != "none":
             droop = a.clock_droop or ("shared" if a.clock_ocv == "table" else "stated")
             ocv = clock_ocv_fn(a.clock_ocv, droop, dict(meta, corner=c), taps, lat[c], a.clock_aocv_table,
                                cell_share=a.clock_ocv_cell_share)
