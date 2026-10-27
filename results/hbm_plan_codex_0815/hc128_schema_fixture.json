@@ -1,0 +1,31 @@
+{
+ "actual_hc_instance": "u_hcb_Q0.ot_hbm_hc_bank128_pair0",
+ "actual_parent": "u_hcb_Q0",
+ "actual_cut": "ot_hbm_hc_bank128_pair0",
+ "actual_halo_um": 8.64,
+ "actual_fixture": "PASS",
+ "negative_controls": [
+  {
+   "field": "halo_um",
+   "value": -1,
+   "errors": [
+    "-1 is less than the minimum of 0"
+   ]
+  },
+  {
+   "field": "parent_instance",
+   "value": 23,
+   "errors": [
+    "23 is not of type 'string'"
+   ]
+  },
+  {
+   "field": "cut_instance",
+   "value": null,
+   "errors": [
+    "None is not of type 'string'"
+   ]
+  }
+ ],
+ "scope": "typed compatibility only; geometry/source identity/hard-closure gates are unchanged"
+}
