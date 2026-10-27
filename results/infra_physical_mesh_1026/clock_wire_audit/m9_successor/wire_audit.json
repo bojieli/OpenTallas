@@ -1,0 +1,183 @@
+{
+  "schema": "opentallas.clock_wire_audit.v1",
+  "source": "m89_ports/shared_audited_r1/infra.odb",
+  "regular_layer_lengths_um": {
+    "M3": 0.672,
+    "M4": 0.36,
+    "M5": 0.208,
+    "M6": 0.152,
+    "M7": 0.232,
+    "M8": 85.016,
+    "M9": 153.68
+  },
+  "mesh_special_centerline_lengths_um": {
+    "M8": 125.756,
+    "M9": 120.68
+  },
+  "nets": {
+    "clk": {
+      "decoded_regular_lengths_um": {
+        "M3": 0.42,
+        "M4": 0.312,
+        "M5": 0.096,
+        "M6": 0.104,
+        "M7": 0.128,
+        "M8": 60.104,
+        "M9": 134.48
+      },
+      "lower_centerline_outside_um": 0,
+      "max_lower_centerline_distance_outside_um": 0,
+      "violations": [],
+      "decoded_vs_native_length_mismatches": [
+        [
+          "M9",
+          [
+            50036,
+            80276
+          ],
+          [
+            50036,
+            94996
+          ],
+          14720,
+          14700
+        ]
+      ]
+    },
+    "o0": {
+      "decoded_regular_lengths_um": {
+        "M3": 0.063,
+        "M4": 0.009,
+        "M5": 0.036,
+        "M6": 0.02,
+        "M7": 0.052,
+        "M8": 6.148,
+        "M9": 4.64
+      },
+      "lower_centerline_outside_um": 0,
+      "max_lower_centerline_distance_outside_um": 0,
+      "violations": [],
+      "decoded_vs_native_length_mismatches": [
+        [
+          "M9",
+          [
+            30036,
+            20356
+          ],
+          [
+            30036,
+            24996
+          ],
+          4640,
+          4620
+        ]
+      ]
+    },
+    "o1": {
+      "decoded_regular_lengths_um": {
+        "M3": 0.003,
+        "M4": 0.015,
+        "M5": 0.02,
+        "M6": 0.004,
+        "M7": 0.012,
+        "M8": 6.308,
+        "M9": 4.96
+      },
+      "lower_centerline_outside_um": 0,
+      "max_lower_centerline_distance_outside_um": 0,
+      "violations": [],
+      "decoded_vs_native_length_mismatches": [
+        [
+          "M9",
+          [
+            90036,
+            20036
+          ],
+          [
+            90036,
+            24996
+          ],
+          4960,
+          4940
+        ]
+      ]
+    },
+    "o2": {
+      "decoded_regular_lengths_um": {
+        "M3": 0.171,
+        "M4": 0.009,
+        "M5": 0.02,
+        "M6": 0.02,
+        "M7": 0.02,
+        "M8": 6.148,
+        "M9": 4.64
+      },
+      "lower_centerline_outside_um": 0,
+      "max_lower_centerline_distance_outside_um": 0,
+      "violations": [],
+      "decoded_vs_native_length_mismatches": [
+        [
+          "M9",
+          [
+            30036,
+            80356
+          ],
+          [
+            30036,
+            84996
+          ],
+          4640,
+          4620
+        ]
+      ]
+    },
+    "o3": {
+      "decoded_regular_lengths_um": {
+        "M3": 0.015,
+        "M4": 0.015,
+        "M5": 0.036,
+        "M6": 0.004,
+        "M7": 0.02,
+        "M8": 6.308,
+        "M9": 4.96
+      },
+      "lower_centerline_outside_um": 0,
+      "max_lower_centerline_distance_outside_um": 0,
+      "violations": [],
+      "decoded_vs_native_length_mismatches": [
+        [
+          "M9",
+          [
+            90036,
+            80036
+          ],
+          [
+            90036,
+            84996
+          ],
+          4960,
+          4940
+        ]
+      ]
+    },
+    "ck_mesh": {
+      "decoded_regular_lengths_um": {},
+      "lower_centerline_outside_um": 0,
+      "max_lower_centerline_distance_outside_um": 0,
+      "violations": [],
+      "decoded_vs_native_length_mismatches": []
+    }
+  },
+  "access_regions": "access_regions.json",
+  "verdict": "PASS",
+  "method": "Exactnative dbWirePathItr point deltas; fixedspecialnets fromnativeDEFcenterlinecoordinates; explicitcell4x1.4um/nativeBPinaccessregions",
+  "freeze_qualified": false,
+  "postroute_basic_clearance": {
+    "schema": "opentallas.infra_basic_clearance.v1",
+    "verdict": "PASS",
+    "violations": [],
+    "actual_rectangles": 404,
+    "mesh_spacing_um": 0.08,
+    "note": "Actual metal/via nominal technology/NDR rectangular clearance; full DRC/timing/IR remain separate"
+  }
+}

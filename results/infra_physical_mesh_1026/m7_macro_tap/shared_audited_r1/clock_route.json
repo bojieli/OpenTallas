@@ -1,0 +1,55 @@
+{
+  "schema": "opentallas.infra_clock_route.v1",
+  "source": "/work/mesh_connected_shared.odb",
+  "out": "/work/shared_audited_r1",
+  "verdict": "CONNECTED_DRC0",
+  "freeze_qualified": false,
+  "stages": {
+    "preconnected": "PASS",
+    "grt": "PASS",
+    "clock_layers": "PASS",
+    "detailed_route": "PASS",
+    "connectivity": "PASS"
+  },
+  "iterations": 50,
+  "signal_layers": "M1-M7",
+  "clock_layers": "M8-M9",
+  "reservations": {
+    "actual_shapes": 138,
+    "new_obstructions": 122,
+    "layers": {
+      "M2": 22,
+      "M1": 16,
+      "M7": 16,
+      "M8": 14,
+      "M6": 16,
+      "M5": 16,
+      "M4": 16,
+      "M3": 16,
+      "M9": 6
+    },
+    "kinds": {
+      "special_wire": 10,
+      "via_enclosure": 128
+    },
+    "clearance": "max(technology spacing, net NDR spacing, explicit extra clearance)",
+    "extra_clearance_um": 0.0
+  },
+  "locked_cells": [
+    "drv0",
+    "drv1",
+    "drv2",
+    "drv3",
+    "stub0",
+    "stub1",
+    "stub2",
+    "stub3",
+    "tap0"
+  ],
+  "detailed_routing_layers": [
+    "M1",
+    "M9"
+  ],
+  "drc_violations": 0,
+  "note": "Actual routed infrastructure only; timing, CPPR skew, slew, IR and die freeze remain unqualified"
+}

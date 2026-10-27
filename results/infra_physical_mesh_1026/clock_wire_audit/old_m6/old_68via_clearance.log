@@ -1,0 +1,6 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+OLD_68VIA_BAD_PINLANDINGS_REJECTED 8 [{'nets': ['ck_mesh', 'VDD'], 'layer': 'M1', 'rectangles_dbu': [(19361, 80143, 19379, 80165), (18414, 80181, 20034, 80199)], 'required_spacing_dbu': 18, 'actual_gap_dbu': [0, 16]}, {'nets': ['ck_mesh', 'VDD'], 'layer': 'M1', 'rectangles_dbu': [(19361, 80143, 19379, 80165), (5000, 80181, 95000, 80199)], 'required_spacing_dbu': 18, 'actual_gap_dbu': [0, 16]}]

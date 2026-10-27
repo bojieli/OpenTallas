@@ -1,0 +1,161 @@
+{
+  "schema": "opentallas.infra_mesh_connect.v1",
+  "verdict": "CONNECTED",
+  "source": "/work/mesh_straps.odb",
+  "output": "/work/mesh_connected_sharedfit.odb",
+  "mesh": {
+    "ck_mesh": {
+      "access_width_um": 0.16,
+      "native_vias_added": 60,
+      "access_segments_added": 0,
+      "landings": [
+        {
+          "terminal": "drv0.Y",
+          "pin_layer": "M1",
+          "pin_rule": "native bottom-via enclosure fully inside actual pin",
+          "pin_dbu": [
+            20007,
+            20115
+          ],
+          "strap_dbu": [
+            20007,
+            20115
+          ]
+        },
+        {
+          "terminal": "stub0.A",
+          "pin_layer": "M1",
+          "pin_rule": "native bottom-via enclosure fully inside actual pin",
+          "pin_dbu": [
+            22491,
+            20115
+          ],
+          "strap_dbu": [
+            22491,
+            20115
+          ]
+        },
+        {
+          "terminal": "drv1.Y",
+          "pin_layer": "M1",
+          "pin_rule": "native bottom-via enclosure fully inside actual pin",
+          "pin_dbu": [
+            80001,
+            20115
+          ],
+          "strap_dbu": [
+            80001,
+            20115
+          ]
+        },
+        {
+          "terminal": "stub1.A",
+          "pin_layer": "M1",
+          "pin_rule": "native bottom-via enclosure fully inside actual pin",
+          "pin_dbu": [
+            82485,
+            20115
+          ],
+          "strap_dbu": [
+            82485,
+            20115
+          ]
+        },
+        {
+          "terminal": "drv2.Y",
+          "pin_layer": "M1",
+          "pin_rule": "native bottom-via enclosure fully inside actual pin",
+          "pin_dbu": [
+            20007,
+            80055
+          ],
+          "strap_dbu": [
+            20007,
+            80055
+          ]
+        },
+        {
+          "terminal": "stub2.A",
+          "pin_layer": "M1",
+          "pin_rule": "native bottom-via enclosure fully inside actual pin",
+          "pin_dbu": [
+            22491,
+            80055
+          ],
+          "strap_dbu": [
+            22491,
+            80055
+          ]
+        },
+        {
+          "terminal": "drv3.Y",
+          "pin_layer": "M1",
+          "pin_rule": "native bottom-via enclosure fully inside actual pin",
+          "pin_dbu": [
+            80001,
+            80055
+          ],
+          "strap_dbu": [
+            80001,
+            80055
+          ]
+        },
+        {
+          "terminal": "stub3.A",
+          "pin_layer": "M1",
+          "pin_rule": "native bottom-via enclosure fully inside actual pin",
+          "pin_dbu": [
+            82485,
+            80055
+          ],
+          "strap_dbu": [
+            82485,
+            80055
+          ]
+        }
+      ]
+    }
+  },
+  "connectivity": {
+    "schema": "opentallas.infra_connectivity.v1",
+    "database": "/work/mesh_connected_sharedfit.odb",
+    "verdict": "CONNECTED",
+    "nets": {
+      "ck_mesh": {
+        "verdict": "CONNECTED",
+        "route_objects": 64,
+        "terminals": 8,
+        "physical_3d_components": 1,
+        "errors": []
+      },
+      "VDD": {
+        "verdict": "CONNECTED",
+        "route_objects": 5,
+        "terminals": 9,
+        "physical_3d_components": 1,
+        "errors": []
+      },
+      "VSS": {
+        "verdict": "CONNECTED",
+        "route_objects": 5,
+        "terminals": 9,
+        "physical_3d_components": 1,
+        "errors": []
+      }
+    },
+    "failures": {},
+    "cross_net_overlaps": [],
+    "freeze_qualified": false,
+    "note": "Actual routing-layer metal/via and transformed terminal geometry only; no DRC/timing/IR qualification"
+  },
+  "basic_clearance": {
+    "schema": "opentallas.infra_basic_clearance.v1",
+    "verdict": "PASS",
+    "violations": [],
+    "actual_rectangles": 184,
+    "mesh_spacing_um": 0.08,
+    "note": "Actual metal/via nominal technology/NDR rectangular clearance; full DRC/timing/IR remain separate"
+  },
+  "freeze_qualified": false,
+  "note": "Native mesh vias/pin-access only; review before route; DRC/timing/skew/IR remain separate"
+}

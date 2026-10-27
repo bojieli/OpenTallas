@@ -1,0 +1,222 @@
+{
+  "schema": "opentallas.infra_clock_audit.v1",
+  "verdict": "FAIL",
+  "clock_layers": "M8-M9",
+  "nets": {
+    "clk": {
+      "regular_segments": 30,
+      "decoded_centerline_length_um": {
+        "M8": 60.132,
+        "M7": 0.776,
+        "M6": 0.088,
+        "M5": 0.136,
+        "M4": 0.072,
+        "M3": 0.33,
+        "M9": 133.76
+      },
+      "lower_layer_shapes": 78,
+      "access_endpoints": [
+        "drv0/A",
+        "drv1/A",
+        "drv2/A",
+        "drv3/A",
+        "PORT/clk"
+      ]
+    },
+    "o0": {
+      "regular_segments": 9,
+      "decoded_centerline_length_um": {
+        "M8": 6.152,
+        "M7": 0.512,
+        "M3": 0.015,
+        "M4": 0.009,
+        "M5": 0.02,
+        "M6": 0.02,
+        "M9": 4.16
+      },
+      "lower_layer_shapes": 22,
+      "access_endpoints": [
+        "stub0/Y",
+        "PORT/o0"
+      ]
+    },
+    "o1": {
+      "regular_segments": 9,
+      "decoded_centerline_length_um": {
+        "M8": 6.344,
+        "M7": 0.408,
+        "M6": 0.004,
+        "M5": 0.02,
+        "M4": 0.015,
+        "M3": 0.003,
+        "M9": 4.48
+      },
+      "lower_layer_shapes": 22,
+      "access_endpoints": [
+        "stub1/Y",
+        "PORT/o1"
+      ]
+    },
+    "o2": {
+      "regular_segments": 9,
+      "decoded_centerline_length_um": {
+        "M3": 0.027,
+        "M4": 0.009,
+        "M5": 0.036,
+        "M6": 0.02,
+        "M7": 0.16,
+        "M8": 6.08,
+        "M9": 4.64
+      },
+      "lower_layer_shapes": 22,
+      "access_endpoints": [
+        "stub2/Y",
+        "PORT/o2"
+      ]
+    },
+    "o3": {
+      "regular_segments": 9,
+      "decoded_centerline_length_um": {
+        "M7": 0.032,
+        "M6": 0.004,
+        "M5": 0.036,
+        "M4": 0.015,
+        "M3": 0.015,
+        "M8": 6.272,
+        "M9": 4.96
+      },
+      "lower_layer_shapes": 22,
+      "access_endpoints": [
+        "stub3/Y",
+        "PORT/o3"
+      ]
+    },
+    "ck_mesh": {
+      "regular_segments": 0,
+      "decoded_centerline_length_um": {},
+      "lower_layer_shapes": 104,
+      "access_endpoints": [
+        "drv0/Y",
+        "stub0/A",
+        "drv1/Y",
+        "stub1/A",
+        "drv2/Y",
+        "stub2/A",
+        "drv3/Y",
+        "stub3/A"
+      ]
+    }
+  },
+  "violations": [
+    {
+      "net": "clk",
+      "layer": "M7",
+      "kind": "wire",
+      "rect_dbu": [
+        49920,
+        94660,
+        49952,
+        94944
+      ],
+      "reason": "outside explicit own-endpoint access islands/pins"
+    },
+    {
+      "net": "clk",
+      "layer": "M7",
+      "kind": "via_enclosure",
+      "rect_dbu": [
+        49920,
+        94649,
+        49952,
+        94703
+      ],
+      "reason": "outside explicit own-endpoint access islands/pins"
+    },
+    {
+      "net": "clk",
+      "layer": "M7",
+      "kind": "via_enclosure",
+      "rect_dbu": [
+        49920,
+        94901,
+        49952,
+        94955
+      ],
+      "reason": "outside explicit own-endpoint access islands/pins"
+    },
+    {
+      "net": "o0",
+      "layer": "M7",
+      "kind": "wire",
+      "rect_dbu": [
+        30016,
+        24500,
+        30048,
+        24928
+      ],
+      "reason": "outside explicit own-endpoint access islands/pins"
+    },
+    {
+      "net": "o0",
+      "layer": "M7",
+      "kind": "via_enclosure",
+      "rect_dbu": [
+        30016,
+        24489,
+        30048,
+        24543
+      ],
+      "reason": "outside explicit own-endpoint access islands/pins"
+    },
+    {
+      "net": "o0",
+      "layer": "M7",
+      "kind": "via_enclosure",
+      "rect_dbu": [
+        30016,
+        24885,
+        30048,
+        24939
+      ],
+      "reason": "outside explicit own-endpoint access islands/pins"
+    },
+    {
+      "net": "o1",
+      "layer": "M7",
+      "kind": "wire",
+      "rect_dbu": [
+        89984,
+        24500,
+        90016,
+        24928
+      ],
+      "reason": "outside explicit own-endpoint access islands/pins"
+    },
+    {
+      "net": "o1",
+      "layer": "M7",
+      "kind": "via_enclosure",
+      "rect_dbu": [
+        89984,
+        24489,
+        90016,
+        24543
+      ],
+      "reason": "outside explicit own-endpoint access islands/pins"
+    },
+    {
+      "net": "o1",
+      "layer": "M7",
+      "kind": "via_enclosure",
+      "rect_dbu": [
+        89984,
+        24885,
+        90016,
+        24939
+      ],
+      "reason": "outside explicit own-endpoint access islands/pins"
+    }
+  ],
+  "freeze_qualified": false,
+  "note": "Decoded actual clock metal; lower layers only in explicit own-endpoint placement islands/native pins"
+}

@@ -1,0 +1,12 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+CLOCK_WIRE_AUDIT PASS {'M3': 0.672, 'M4': 0.36, 'M5': 0.208, 'M6': 0.152, 'M7': 0.232, 'M8': 85.016, 'M9': 153.68}
+clk outside_um 0 maxdistance 0 regions []
+o0 outside_um 0 maxdistance 0 regions []
+o1 outside_um 0 maxdistance 0 regions []
+o2 outside_um 0 maxdistance 0 regions []
+o3 outside_um 0 maxdistance 0 regions []
+ck_mesh outside_um 0 maxdistance 0 regions []

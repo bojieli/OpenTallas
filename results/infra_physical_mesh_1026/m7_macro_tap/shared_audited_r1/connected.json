@@ -1,0 +1,67 @@
+{
+  "schema": "opentallas.infra_connectivity.v1",
+  "database": "/work/shared_audited_r1/infra.odb",
+  "verdict": "CONNECTED",
+  "nets": {
+    "ck_mesh": {
+      "verdict": "CONNECTED",
+      "route_objects": 64,
+      "terminals": 8,
+      "physical_3d_components": 1,
+      "errors": []
+    },
+    "VDD": {
+      "verdict": "CONNECTED",
+      "route_objects": 5,
+      "terminals": 9,
+      "physical_3d_components": 1,
+      "errors": []
+    },
+    "VSS": {
+      "verdict": "CONNECTED",
+      "route_objects": 5,
+      "terminals": 9,
+      "physical_3d_components": 1,
+      "errors": []
+    },
+    "clk": {
+      "verdict": "CONNECTED",
+      "route_objects": 70,
+      "terminals": 5,
+      "physical_3d_components": 1,
+      "errors": []
+    },
+    "o0": {
+      "verdict": "CONNECTED",
+      "route_objects": 18,
+      "terminals": 2,
+      "physical_3d_components": 1,
+      "errors": []
+    },
+    "o1": {
+      "verdict": "CONNECTED",
+      "route_objects": 15,
+      "terminals": 2,
+      "physical_3d_components": 1,
+      "errors": []
+    },
+    "o2": {
+      "verdict": "CONNECTED",
+      "route_objects": 15,
+      "terminals": 2,
+      "physical_3d_components": 1,
+      "errors": []
+    },
+    "o3": {
+      "verdict": "CONNECTED",
+      "route_objects": 15,
+      "terminals": 2,
+      "physical_3d_components": 1,
+      "errors": []
+    }
+  },
+  "failures": {},
+  "cross_net_overlaps": [],
+  "freeze_qualified": false,
+  "note": "Actual routing-layer metal/via and transformed terminal geometry only; no DRC/timing/IR qualification"
+}

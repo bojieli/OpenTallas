@@ -1,0 +1,38 @@
+{
+  "verdict": "ACTUAL_M8_M9_ROUTED_CONNECTED_DRC0_AUDIT_PASS",
+  "freeze_qualified": false,
+  "source": "m89_ports/mesh_connected_sharedfit.odb",
+  "route": "m89_ports/shared_audited_r1/infra.odb",
+  "route_unit": "epyc1:oth-ubuntu-3024988-1793011395",
+  "exact_audit_unit": "epyc1:oth-ubuntu-3218703-1793011752",
+  "source_native_pin_vias": 60,
+  "source_fixed_clearance": "PASS",
+  "postroute_all_infrastructure_clearance": "PASS",
+  "GRT_iterations_requested": 50,
+  "DRC_violations": 0,
+  "physical_connectivity": "all8infrastructure netsCONNECTED",
+  "decoded_centerline_lengths_um": {
+    "M7": 0.232,
+    "M6": 0.152,
+    "M5": 0.208,
+    "M4": 0.36,
+    "M3": 0.672,
+    "M8": 85.016,
+    "M9": 153.68
+  },
+  "access_contract": "predeclared4x1.4umactualBUF24cellislands; portsEXACTnativeM9BPinboxes",
+  "lower_layer_violations": 0,
+  "negative_controls": {
+    "old_M6_ports": "FAIL9lower-metalshapesoutsideports; centerlineoutsideclk.236um,o0.380um,o1.380um; allcellpathsinsideislands",
+    "old_68via_largest_pin_landing": "FAIL8M1clearancepairs,16nmgapvs18nmrequired"
+  },
+  "length_semantics": "Nativepath-pointdeltas; getLength() undercounts5BTERM-endingM9segments20nmeach becausezeroendcapextension; rawfirstauditretained, exact_centerline_audit.json corrects100nm total",
+  "not_claimed": [
+    "CPPRskew",
+    "setup/holdSTA",
+    "slew",
+    "IR",
+    "clockpower",
+    "die freeze"
+  ]
+}

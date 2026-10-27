@@ -1,0 +1,14 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "passive8x8partitionabstractM7ITerm32x768nmpinaccessregressionbeforeGRT/DRT",
+  "picture": "review.png",
+  "source_basis": "gen_phys.LAYER_W[M7]=.032;tapheight4*PIN_LEN_UM=.768;freshQCclockkittracksM7.032/.064andM8M9.04/.08",
+  "findings": [
+    "tap0/clk actualM7ITerm32x768nm can fully enclose nativeVIA78M7metal32x54nm.",
+    "Opaque8x8passiveBLOCKwithfullM1-M7OBS mirrorsgen_physpartitionabstract; all8topBUF24cellbboxesoutsideit.",
+    "Fixtureprovesmacroclockpinaccess only, NOTembeddedhardtypeclockownership.",
+    "ActualQC M7x.032+.064k; M8crossgridy.040+.080k(+8nmfromtapcenter); sourceM9root/othertapsunchanged.",
+    "ActualBUF24cellislands4x1.4um publishedbefore route; o0accessregionEXACTnativeM7box, nohalo.",
+    "Open channels and unchanged PG; anylower-layerescape is FAIL, no timing/skew/IR/freezeclaim."
+  ]
+}

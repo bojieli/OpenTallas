@@ -1,0 +1,150 @@
+{
+  "schema": "opentallas.clock_wire_audit.v1",
+  "source": "shared_m89_r3/infra.odb",
+  "regular_layer_lengths_um": {
+    "M3": 0.39,
+    "M4": 0.12,
+    "M5": 0.248,
+    "M6": 0.136,
+    "M7": 1.888,
+    "M8": 84.98,
+    "M9": 152.0
+  },
+  "mesh_special_centerline_lengths_um": {
+    "M8": 127.11,
+    "M9": 121.716
+  },
+  "nets": {
+    "clk": {
+      "decoded_regular_lengths_um": {
+        "M3": 0.33,
+        "M4": 0.072,
+        "M5": 0.136,
+        "M6": 0.088,
+        "M7": 0.776,
+        "M8": 60.132,
+        "M9": 133.76
+      },
+      "lower_centerline_outside_um": 0.236,
+      "max_lower_centerline_distance_outside_um": 0.236,
+      "violations": [
+        {
+          "layer": "M7",
+          "a_um": [
+            49.936,
+            94.676
+          ],
+          "b_um": [
+            49.936,
+            94.912
+          ],
+          "length_um": 0.236,
+          "max_linf_outside_um": 0.236,
+          "nearest_declared_region": "port:clk"
+        }
+      ],
+      "decoded_vs_native_length_mismatches": []
+    },
+    "o0": {
+      "decoded_regular_lengths_um": {
+        "M3": 0.015,
+        "M4": 0.009,
+        "M5": 0.02,
+        "M6": 0.02,
+        "M7": 0.512,
+        "M8": 6.152,
+        "M9": 4.16
+      },
+      "lower_centerline_outside_um": 0.38,
+      "max_lower_centerline_distance_outside_um": 0.38,
+      "violations": [
+        {
+          "layer": "M7",
+          "a_um": [
+            30.032,
+            24.516
+          ],
+          "b_um": [
+            30.032,
+            24.896
+          ],
+          "length_um": 0.38,
+          "max_linf_outside_um": 0.38,
+          "nearest_declared_region": "port:o0"
+        }
+      ],
+      "decoded_vs_native_length_mismatches": []
+    },
+    "o1": {
+      "decoded_regular_lengths_um": {
+        "M3": 0.003,
+        "M4": 0.015,
+        "M5": 0.02,
+        "M6": 0.004,
+        "M7": 0.408,
+        "M8": 6.344,
+        "M9": 4.48
+      },
+      "lower_centerline_outside_um": 0.38,
+      "max_lower_centerline_distance_outside_um": 0.38,
+      "violations": [
+        {
+          "layer": "M7",
+          "a_um": [
+            90.0,
+            24.516
+          ],
+          "b_um": [
+            90.0,
+            24.896
+          ],
+          "length_um": 0.38,
+          "max_linf_outside_um": 0.38,
+          "nearest_declared_region": "port:o1"
+        }
+      ],
+      "decoded_vs_native_length_mismatches": []
+    },
+    "o2": {
+      "decoded_regular_lengths_um": {
+        "M3": 0.027,
+        "M4": 0.009,
+        "M5": 0.036,
+        "M6": 0.02,
+        "M7": 0.16,
+        "M8": 6.08,
+        "M9": 4.64
+      },
+      "lower_centerline_outside_um": 0,
+      "max_lower_centerline_distance_outside_um": 0,
+      "violations": [],
+      "decoded_vs_native_length_mismatches": []
+    },
+    "o3": {
+      "decoded_regular_lengths_um": {
+        "M3": 0.015,
+        "M4": 0.015,
+        "M5": 0.036,
+        "M6": 0.004,
+        "M7": 0.032,
+        "M8": 6.272,
+        "M9": 4.96
+      },
+      "lower_centerline_outside_um": 0,
+      "max_lower_centerline_distance_outside_um": 0,
+      "violations": [],
+      "decoded_vs_native_length_mismatches": []
+    },
+    "ck_mesh": {
+      "decoded_regular_lengths_um": {},
+      "lower_centerline_outside_um": 0,
+      "max_lower_centerline_distance_outside_um": 0,
+      "violations": [],
+      "decoded_vs_native_length_mismatches": []
+    }
+  },
+  "access_regions": "access_regions.json",
+  "verdict": "FAIL",
+  "method": "Exactnative dbWirePathItr point deltas; fixedspecialnets fromnativeDEFcenterlinecoordinates; explicitcell4x1.4um/nativeBPinaccessregions",
+  "freeze_qualified": false
+}

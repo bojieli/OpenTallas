@@ -1,0 +1,13 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "M8/M9 production-clock metal mechanism with predeclared4x1.4umendpointislands beforeGRT/DRT only",
+  "picture": "review.png",
+  "findings": [
+    "Four actual BUFx24 driver/stub pairs on legal54nm sites and270nm rows; driver outputs and stub inputs lie on each M8strap.",
+    "M8/M9 mesh intersections have VIA89; eight M1pinaccess stacks each carry VIA12..VIA78.",
+    "PG M1 rails share cellVDD/VSSfaces and join separated M2trunks only with same-netVIA12.",
+    "Rootdriverinputs and stuboutputs terminate on nativeM9BTERMboxes atcanonicalM9/M8crossgrid; no arbitraryporthalo.",
+    "Green4x1.4umclockcellislands publishedfrompre-routeactualBUF24bboxes, independentlyofwires.",
+    "No setup/skew/IR/freezeclaim."
+  ]
+}

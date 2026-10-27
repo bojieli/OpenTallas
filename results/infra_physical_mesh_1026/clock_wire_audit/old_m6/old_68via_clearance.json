@@ -1,0 +1,217 @@
+{
+  "schema": "opentallas.infra_basic_clearance.v1",
+  "verdict": "FAIL",
+  "violations": [
+    {
+      "nets": [
+        "ck_mesh",
+        "VDD"
+      ],
+      "layer": "M1",
+      "rectangles_dbu": [
+        [
+          19361,
+          80143,
+          19379,
+          80165
+        ],
+        [
+          18414,
+          80181,
+          20034,
+          80199
+        ]
+      ],
+      "required_spacing_dbu": 18,
+      "actual_gap_dbu": [
+        0,
+        16
+      ]
+    },
+    {
+      "nets": [
+        "ck_mesh",
+        "VDD"
+      ],
+      "layer": "M1",
+      "rectangles_dbu": [
+        [
+          19361,
+          80143,
+          19379,
+          80165
+        ],
+        [
+          5000,
+          80181,
+          95000,
+          80199
+        ]
+      ],
+      "required_spacing_dbu": 18,
+      "actual_gap_dbu": [
+        0,
+        16
+      ]
+    },
+    {
+      "nets": [
+        "ck_mesh",
+        "VDD"
+      ],
+      "layer": "M1",
+      "rectangles_dbu": [
+        [
+          19361,
+          20203,
+          19379,
+          20225
+        ],
+        [
+          18414,
+          20241,
+          20034,
+          20259
+        ]
+      ],
+      "required_spacing_dbu": 18,
+      "actual_gap_dbu": [
+        0,
+        16
+      ]
+    },
+    {
+      "nets": [
+        "ck_mesh",
+        "VDD"
+      ],
+      "layer": "M1",
+      "rectangles_dbu": [
+        [
+          19361,
+          20203,
+          19379,
+          20225
+        ],
+        [
+          5000,
+          20241,
+          95000,
+          20259
+        ]
+      ],
+      "required_spacing_dbu": 18,
+      "actual_gap_dbu": [
+        0,
+        16
+      ]
+    },
+    {
+      "nets": [
+        "ck_mesh",
+        "VDD"
+      ],
+      "layer": "M1",
+      "rectangles_dbu": [
+        [
+          79355,
+          80143,
+          79373,
+          80165
+        ],
+        [
+          78408,
+          80181,
+          80028,
+          80199
+        ]
+      ],
+      "required_spacing_dbu": 18,
+      "actual_gap_dbu": [
+        0,
+        16
+      ]
+    },
+    {
+      "nets": [
+        "ck_mesh",
+        "VDD"
+      ],
+      "layer": "M1",
+      "rectangles_dbu": [
+        [
+          79355,
+          80143,
+          79373,
+          80165
+        ],
+        [
+          5000,
+          80181,
+          95000,
+          80199
+        ]
+      ],
+      "required_spacing_dbu": 18,
+      "actual_gap_dbu": [
+        0,
+        16
+      ]
+    },
+    {
+      "nets": [
+        "ck_mesh",
+        "VDD"
+      ],
+      "layer": "M1",
+      "rectangles_dbu": [
+        [
+          79355,
+          20203,
+          79373,
+          20225
+        ],
+        [
+          78408,
+          20241,
+          80028,
+          20259
+        ]
+      ],
+      "required_spacing_dbu": 18,
+      "actual_gap_dbu": [
+        0,
+        16
+      ]
+    },
+    {
+      "nets": [
+        "ck_mesh",
+        "VDD"
+      ],
+      "layer": "M1",
+      "rectangles_dbu": [
+        [
+          79355,
+          20203,
+          79373,
+          20225
+        ],
+        [
+          5000,
+          20241,
+          95000,
+          20259
+        ]
+      ],
+      "required_spacing_dbu": 18,
+      "actual_gap_dbu": [
+        0,
+        16
+      ]
+    }
+  ],
+  "actual_rectangles": 206,
+  "mesh_spacing_um": 0.08,
+  "note": "Actual metal/via nominal technology/NDR rectangular clearance; full DRC/timing/IR remain separate"
+}

@@ -1,0 +1,113 @@
+{
+  "schema": "opentallas.infra_clock_audit.v1",
+  "verdict": "PASS",
+  "clock_layers": "M8-M9",
+  "nets": {
+    "clk": {
+      "regular_segments": 29,
+      "decoded_centerline_length_um": {
+        "M7": 0.128,
+        "M6": 0.104,
+        "M5": 0.096,
+        "M4": 0.312,
+        "M3": 0.42,
+        "M8": 60.104,
+        "M9": 134.48
+      },
+      "lower_layer_shapes": 72,
+      "access_endpoints": [
+        "drv0/A",
+        "drv1/A",
+        "drv2/A",
+        "drv3/A",
+        "PORT/clk"
+      ]
+    },
+    "o0": {
+      "regular_segments": 7,
+      "decoded_centerline_length_um": {
+        "M7": 0.052,
+        "M6": 0.02,
+        "M5": 0.036,
+        "M4": 0.009,
+        "M3": 0.063,
+        "M9": 4.64,
+        "M8": 6.148
+      },
+      "lower_layer_shapes": 18,
+      "access_endpoints": [
+        "stub0/Y",
+        "PORT/o0"
+      ]
+    },
+    "o1": {
+      "regular_segments": 7,
+      "decoded_centerline_length_um": {
+        "M7": 0.012,
+        "M6": 0.004,
+        "M5": 0.02,
+        "M4": 0.015,
+        "M3": 0.003,
+        "M9": 4.96,
+        "M8": 6.308
+      },
+      "lower_layer_shapes": 18,
+      "access_endpoints": [
+        "stub1/Y",
+        "PORT/o1"
+      ]
+    },
+    "o2": {
+      "regular_segments": 7,
+      "decoded_centerline_length_um": {
+        "M7": 0.02,
+        "M6": 0.02,
+        "M5": 0.02,
+        "M4": 0.009,
+        "M3": 0.171,
+        "M9": 4.64,
+        "M8": 6.148
+      },
+      "lower_layer_shapes": 18,
+      "access_endpoints": [
+        "stub2/Y",
+        "PORT/o2"
+      ]
+    },
+    "o3": {
+      "regular_segments": 7,
+      "decoded_centerline_length_um": {
+        "M7": 0.02,
+        "M6": 0.004,
+        "M5": 0.036,
+        "M4": 0.015,
+        "M3": 0.015,
+        "M9": 4.96,
+        "M8": 6.308
+      },
+      "lower_layer_shapes": 18,
+      "access_endpoints": [
+        "stub3/Y",
+        "PORT/o3"
+      ]
+    },
+    "ck_mesh": {
+      "regular_segments": 0,
+      "decoded_centerline_length_um": {},
+      "lower_layer_shapes": 104,
+      "access_endpoints": [
+        "drv0/Y",
+        "stub0/A",
+        "drv1/Y",
+        "stub1/A",
+        "drv2/Y",
+        "stub2/A",
+        "drv3/Y",
+        "stub3/A"
+      ]
+    }
+  },
+  "violations": [],
+  "freeze_qualified": false,
+  "note": "Decoded actual clock metal; lower layers only in explicit own-endpoint placement islands/native pins"
+}
