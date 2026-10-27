@@ -23,6 +23,10 @@ def main(entry_f, r8_f, out_f):
     R = json.loads(Path(r8_f).read_text())
     rm = {m["id"]: m for m in R["members"]}
     tm = {m["id"]: m for m in T["members"]}
+    # An exempt sticky-fault member can be covered by the PV entry table with
+    # zero residual pad and absent from generic R8. Its original record still
+    # defines the actual source/bits; never invent or silently drop that member.
+    covered = {m["id"]: m for m in T.get("covered_records", [])}
     ent = {}
     for e in T["entries"]:
         for i in e["covers"]:
@@ -31,7 +35,7 @@ def main(entry_f, r8_f, out_f):
     keys = ("id", "sink", "sink_part", "src_part", "sink_port", "sink_bits", "source", "asbuilt", "bound", "lane")
     mem, flops = [], 0
     for i in T["covered_ids"]:
-        base = tm.get(i) or rm[i]
+        base = tm.get(i) or rm.get(i) or covered[i]
         pad = ent.get(i, 0) + (tm[i]["pad"] if i in tm else 0)
         m = {k: base[k] for k in keys}
         m.update(pad=pad, landed=base["bound"] + pad, entry_pad=ent.get(i, 0), residual_pad=tm[i]["pad"] if i in tm else 0)
