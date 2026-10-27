@@ -93,7 +93,10 @@ module ot_v41_elem_pq_tags #(
         wire [TRW-1:0] tt = t_tree[TRW*mb +: TRW];
         wire [SW-1:0]  ts = tt[SW-1:0];
         wire           bk = (PQ != 0) && ((MTP != 0) ? (tt[TRW-1] ^ t_pos[3*mb]) : 1'b0);
-        wire [15:0]    r = s_row[{bk, RW'(mb * NSEG) + RW'(ts)}];
+        // row index in its own sized wire (rtl_lint YC1: an operator expression with a variable cast must not be a
+        // concat member); the same RW-bit value the self-determined concat member had
+        wire [RW-1:0]  ra = RW'(mb * NSEG) + RW'(ts);
+        wire [15:0]    r = s_row[{bk, ra}];
         assign q_idle[mb] = r[15];
         assign q_row[16*mb +: 16] = (PQ != 0) ? {otag[bk], r[13:0]} : r;
         assign q_idx[5*mb +: 5] = s_idx[{bk, ts}];
