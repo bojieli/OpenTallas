@@ -520,6 +520,26 @@ def check_pg_domains(P, R):
 
     def inside(a, b, e=0.01):
         return a[0] >= b[0] - e and a[1] >= b[1] - e and a[2] <= b[2] + e and a[3] <= b[3] + e
+    def exact_leaf_window(d, w):
+        # An IO signal field may include digital glue. Only an explicitly declared,
+        # physically placed LEF leaf can define a smaller independent supply region.
+        mac = d.get("phy_macro_um")
+        pn = w.get("part")
+        if not mac or pn not in P.parts or not inside(mac, w["rect_um"]) or not inside(w["rect_um"], P.rect(pn)):
+            return False
+        if not (inside(mac, d["rect_um"]) and inside(d["rect_um"], mac)):
+            return False
+        for c in P.ptype(pn).get("contents", []):
+            if not c.get("lef") or "origin_um" not in c or "outline_um" not in c:
+                continue
+            if c.get("orient", "R0") != "R0":
+                continue
+            x, y = c["origin_um"]; cw, ch = c["outline_um"]
+            a, b = P.to_die(pn, (x, y)), P.to_die(pn, (x + cw, y + ch))
+            box = [min(a[0], b[0]), min(a[1], b[1]), max(a[0], b[0]), max(a[1], b[1])]
+            if inside(box, mac) and inside(mac, box):
+                return True
+        return False
     covered = set()
     for d in doms:
         r = d["rect_um"]
@@ -529,7 +549,7 @@ def check_pg_domains(P, R):
                 R.err("pg_domain", f"pg domain {d['name']}: io window {n} not in die.io")
                 continue
             covered.add(n)
-            if not inside(w["rect_um"], r):
+            if not inside(w["rect_um"], r) and not exact_leaf_window(d, w):
                 R.err("pg_domain", f"pg domain {d['name']}: rect {r} does not cover io window {n} {w['rect_um']}")
             b = d["bumps"]["rect_um"]
             if not (b[0] < w["rect_um"][2] and b[2] > w["rect_um"][0] and b[1] < w["rect_um"][3] and b[3] > w["rect_um"][1]):
@@ -556,7 +576,7 @@ def check_pg_domains(P, R):
                 R.err("pg_domain", f"pg domain {d['name']}: phy_macro_um {mac} outside the domain rect {r}")
             for n in d["io"]:
                 w = io.get(n)
-                if w is not None and not inside(w["rect_um"], mac):
+                if w is not None and not inside(w["rect_um"], mac) and not exact_leaf_window(d, w):
                     R.err("pg_domain", f"pg domain {d['name']}: io window {n} {w['rect_um']} not on the PHY macro {mac}")
                 pn = (w or {}).get("part")
                 if pn in P.parts and not inside(r, P.rect(pn)):
