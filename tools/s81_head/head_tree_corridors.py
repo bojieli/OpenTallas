@@ -107,6 +107,14 @@ def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=Fa
             tr = D.DEFAULT_TRACKS[lay]
             targets[g] = dict(layer=lay, c=round(tr['offset_um'] +
                 round((desired-tr['offset_um'])/tr['pitch_um']) * tr['pitch_um'], 4), color=c)
+    if separate_drops:
+        for g in set(groups)-set(incoming):
+            if targets[g]['layer']=='M9':
+                # Root input and output are distinct nets in one PG half-gap.
+                # Leave one NDR width for the input lane rather than centring
+                # the output where it would block both sides of the gap.
+                direction=1 if pin(g,'Y')[0]>pin(g,'A')[0] else -1
+                targets[g]['c']=round(targets[g]['c']+direction*D.NDR['16w']['width'],4)
     for g, cells in groups.items():
         # The producing stage owns its outgoing corridor. Leaves follow their
         # incoming corridor, keeping the local mesh driver on the same row.
