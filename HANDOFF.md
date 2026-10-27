@@ -1195,3 +1195,4 @@ CODEX: 2026-10-26 07:42 PDT HBM VM status orphan fixed in D-HBM-B1 candidate bb3
 2026-10-26 20:05 PDT CODEX: main5ad3d04c55 pushed plainmerge HEAD mesh provider+approved QC/KV mesh/landing tools+LEC unwritten-X+empty-param lintfix;59focusedtestsPASS,0deletions,HEAD==origin. All physical plan/freeze holds retained. KVrun7 7404frames/14imagesPASS collected;B48 eightundrivenregionclocks rootcause underfix.
 
 CODEX: 2026-10-26 20:07 PDT token takeover B33run7BOOTPASS14/14 setup37950; B48zero-frame defect=8missingregionalclockbenchinputs, adapter91c5d3c1d; LEC85correspondence and DSROWXcompiler active, inherited jobs untouched.
+CODEX: 2026-10-26 20:12 PDT TOK-DS ROWX payload compiler READY4b08bbdc9 (17PASS); diagnosed pvrd160word wrap requires streaming XR evacuation before overwrite; actualdie-link programme stillGAP. L14 inherited build terminal94/95libs,no binary; no duplicate.
