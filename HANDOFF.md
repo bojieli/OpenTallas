@@ -1333,3 +1333,5 @@ CODEX: 2026-10-27 08:26 PDT RM37 main0cda17b22f==origin/main;urgentFTsenderIOove
 CODEX: 2026-10-27 08:26 PDT KV200FTslotreachdelta b4a705f520 prepared (761slotsmax402.84um,125lanes+1..4/R8coherent); io_cor/hrootfullR2RFAIL supersedesFT-onlyPASS, trialrowswithdrawn; nativeistationTCLlossrootcaused f51684c55+resetcoveragefixownedcoverage.
 
 CODEX: 2026-10-27 08:27 PDT RM38 mainf08282d25c==origin/main;requestedclockreachfix+privateKVsourceoverlayonly,3+2focusedPASS;0deletions.
+
+CODEX: 2026-10-27 08:28 PDT HBM rp3 n/s LEC preprocessing root-caused/fixed READY380d546462; scopedSlanglintPASS/body240linesidentical/0cycles; fullLEC pending, ctlx/VMS correspondenceproofs live.
