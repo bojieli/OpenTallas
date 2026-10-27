@@ -33,6 +33,9 @@ def census(q):
     if any(min(x+w,r[2])>max(x,r[0])+1e-6 and min(y+h,r[3])>max(y,r[1])+1e-6 for r in boxes.values()):hits.append([f['name'],j,bit])
  return dict(maxhop_um=hops,ft_macro_body_hits=len(hits),examples=hits[:3])
 r=dict(status='GEOMETRY_CANDIDATE_NOT_PHYSICALLY_QUALIFIED',type=tn,source_plan_sha256=hashlib.sha256(raw).hexdigest(),added_cycles=0,outline_unchanged=t['outline_um']==old['outline_um'],before=census(old),after=census(t),landing_band=band,storage_failures_remaining=0)
+for f in t['ft_slots']:
+ w,h=f['bit_site_cell_um'];W,H=t['outline_um']
+ assert all(4.32<=x and 4.32<=y and x+w<=W-4.32 and y+h<=H-4.32 for b in f['bit_sites_um'] for x,y in b),f['name']
 assert r['after']['ft_macro_body_hits']==0,r
 assert max(r['after']['maxhop_um'].values())<=405,r
 assert min(x['origin_um'][0] for x in t['hard_cores'])>=4.32
