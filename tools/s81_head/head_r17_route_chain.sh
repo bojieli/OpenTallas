@@ -34,7 +34,9 @@ DK() { docker run --rm --name "hd-r17-$NICK-$$-$1" --memory="${MEM}g" --memory-s
 M="make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=\$CPUS"
 if [ ! -s "$B/5_1_grt.odb" ]; then
   grep -q 'OT_HOLD_STRUCTURAL stage=grt' "$KIT/r14_grt.log" 2>/dev/null && echo "R17C prior GRT: $(grep -h 'OT_HOLD_STRUCTURAL stage=grt' "$KIT/r14_grt.log" | head -1)"
-  DK grt "$M do-5_1_grt SKIP_INCREMENTAL_REPAIR=1" > "$KIT/r17_grt.log" 2>&1; rc=$?
+  # the kit config.mk carries 'override export SKIP_INCREMENTAL_REPAIR = 0' (R14 block), which beats a command-line value
+  grep -q '^# R17 chain: no GRT hold repair' "$KIT/config.mk" || printf '\n# R17 chain: no GRT hold repair (data hold = post-route ECO, R15 ruling)\noverride export SKIP_INCREMENTAL_REPAIR = 1\n' >> "$KIT/config.mk"
+  DK grt "$M do-5_1_grt" > "$KIT/r17_grt.log" 2>&1; rc=$?
   echo "R17C grt (no GRT hold repair) rc=$rc $(date -Is)"
   grep -h 'HD_GRT_DRV\|GRT-0303\|overflow' "$KIT/r17_grt.log" | tail -n 6
   [ $rc = 0 ] || exit 3
