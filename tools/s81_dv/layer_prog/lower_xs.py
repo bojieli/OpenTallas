@@ -480,6 +480,19 @@ def field_images(field, qa, q, bf, inst, out, rank_rows=None):
     return names, tmp
 
 
+def frame_image_material(field, qa, q, bf, inst, rank_rows=None):
+    """Production files from the same native writer as cmd_gen; no synthetic values or new placement."""
+    import tempfile
+    if not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', inst):
+        raise ValueError('native frame image identity must be an exact die instance name')
+    with tempfile.TemporaryDirectory(prefix='ot-frame-images-') as td:
+        names, _ = field_images(field, qa, q, bf, inst, td, rank_rows)
+        if len(names) != len(set(names)):
+            raise ValueError('duplicate native frame image identity')
+        material = {name: (Path(td) / name).read_text() for name in names}
+    return material
+
+
 def xs_roms(tmp, out):
     """slice xs ROM images (ot_s81sl_xs.sv:164-172): pq_phase0 = phase words, pq_stream0..3 = stream words"""
     from pq_calendar import viamap
@@ -527,6 +540,7 @@ def lower(die, op, ctx):
     native_error = None
     capture = aproj_capture_contract(die, sl, fx, 1) if native and any(p['rows'] for p in pl) else None
     frames = []
+    frame_image_files = {}
     for p in pl:
         if not p['rows']:
             frames.append(dict(p, phase=None, note='idle actual frame: no a_proj rows in selected ownership map'))
@@ -537,6 +551,12 @@ def lower(die, op, ctx):
         if native:
             from layer_prog.aproj_native import phase_material
             material = phase_material(field)
+            image_prefix = f'prog/xs/native/{op["id"]}/{sl}/frame_images'
+            for name, text in frame_image_material(field, qa, q, bf, p['frame'], p['rows']).items():
+                target = image_prefix + '/' + name
+                if target in frame_image_files:
+                    raise ValueError('duplicate production frame image path: ' + target)
+                frame_image_files[target] = text
             if shared_phase is None:
                 shared_phase = material
             elif material != shared_phase:
@@ -569,12 +589,14 @@ def lower(die, op, ctx):
         except ValueError as exc:
             return dict(rec, status='GAP', gap=dict(module='aproj_native', port='current source XS/CAP native programme',
                                                    missing=str(exc)))
+        rec['files'].update(frame_image_files)
         rec['files'].update(lowered.pop('files'))
+        rec['frame_image_files'] = {name: sha(text.encode()) for name, text in frame_image_files.items()}
         rec.update(lowered)
         rec['unit'] = 'actual frame cfg7/MAT + XS phase/stream/calendar ROMs + native XR target2/3 command rows'
         return dict(rec, status='PARTIAL', gap=dict(module='selected XS4/frame/cap5r native programme',
             port='actual VQ/rstopt_xo/ring gather ownership and aggregate CAP fixed retirement',
-            missing='Real target2/3 command rows, rank-tag cfg words and XS calendar ROMs are emitted. '
+            missing='Real target2/3 command rows, per-frame MAT/rank-tag CFG files and XS calendar ROMs are emitted. '
                     'Sealed programme is held: incoming gather producer, all-frame FIN/clock retirement, '
                     'per-instance MAT image binding and whole A/B schedule adoption remain unqualified.'))
     return dict(rec, status='PARTIAL', gap=gap_rest)
