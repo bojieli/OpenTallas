@@ -66,6 +66,63 @@ def type_pins(P, tn):
     return out
 
 
+def plan_pin_records(P, tn, pins, bump_sites=()):
+    """[{name, layer, x, y}] pin CENTRES of every pin io.tcl places for type tn, computed from the plan: type_pins edge
+    points moved PIN_LEN_UM/2 inward, native infrastructure ports, clock/reset taps, reset outs, landing pins and bump
+    sites.  The single source of freeze.json pins_canon_sha256 (COORD 10-27 KV-KITS-7 ruling 3)."""
+    t = P.types[tn]
+    recs = {}
+
+    def add(n, ln, x, y):
+        recs[n] = dict(name=n, layer=ln, x=round(float(x), 4), y=round(float(y), 4))
+
+    for bus, bit, ln, x, y, f in sorted(pins, key=lambda p: (p[0], p[1])):
+        if f in "EW":
+            x = x - PIN_LEN_UM / 2 if f == "E" else x + PIN_LEN_UM / 2
+        else:
+            y = y - PIN_LEN_UM / 2 if f == "N" else y + PIN_LEN_UM / 2
+        add(f"{bus}[{bit}]", ln, x, y)
+    import infra_rtl as IR
+    for ip in IR.type_ports(t):
+        add(ip["name"], ip["layer"], *ip["xy_um"])
+    top = P.layer_budget["partition_signal_max"]
+    for name, x, y in tap_pins(P, tn) + reset_out_pins(P, tn):
+        add(name, top, x, y)
+    c = t.get("clock", {}).get("landing_contract") or {}
+    edge_in = {e["port"] for e in t.get("clock", {}).get("edge_clocks", [])}
+    for p in c.get("pins", []):
+        if p["name"] not in edge_in:
+            add(p["name"], p["layer"], *p["xy_um"])
+    for port, i, ln, cx, cy, pw, ph in bump_sites:
+        add(f"{port}[{i}]", ln, cx, cy)
+    return list(recs.values())
+
+
+def write_partition_freeze(P, tn, kd, recs):
+    """plan_pins.json (die-plan pin centres) + freeze.json (schema partition_freeze: outline, pins_file, pins_sha256,
+    pins_canon_sha256 of the die-plan pins) for kit_contract.pins_canonical; refuses the kit when io.tcl is not that
+    pin set with the consumed master-plan slice applied (kit_contract.slice_expected)."""
+    import hashlib
+    import kit_contract as KC
+    kd = Path(kd)
+    w, h = P.types[tn]["outline_um"]
+    body = json.dumps(dict(schema="opentallas.die_plan.partition_plan_pins.v1", die=P.name, type=tn,
+                           source="gen_phys.plan_pin_records (die plan)", pins=recs), indent=1) + "\n"
+    (kd / "plan_pins.json").write_text(body)
+    canon = KC._canon(recs, [w, h])
+    # 12.7c: a kit that consumed its master-plan slice places the slice-fixed pins where the slice says
+    # (master_slice.slice_placements); every other pin is the die-plan pin
+    expect = KC._canon(KC.slice_expected(kd, recs), [w, h])
+    placed = KC._canon(KC.placed_pins(kd), [w, h])
+    if placed != expect:
+        raise ValueError(f"type {tn}: io.tcl placed pins canonical {placed[:12]} != plan pins (+ slice) {expect[:12]}")
+    fz = dict(schema="opentallas.partition_freeze.v1", die=P.name, type=tn, outline_um=[w, h],
+              pins_file="plan_pins.json", pins_sha256=hashlib.sha256(body.encode()).hexdigest(),
+              pins_canon_sha256=canon, pins=len(recs))
+    (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
+    return fz
+
+
 def io_tcl(P, tn, pins):
     t = P.types[tn]
     w, h = t["outline_um"]
@@ -1790,6 +1847,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         (kd / "infra_ports.json").write_text(json.dumps(infra, indent=1) + "\n")
         bud["native_infrastructure"] = dict(pins=len(infra), arcs=len(decl["arcs"]), data_cycles_added=0, timing="die-timed FT interfaces; actual characterisation required")
         (kd / "budget.json").write_text(json.dumps(bud, indent=1) + "\n")
+    write_partition_freeze(P, tn, kd, plan_pin_records(P, tn, pins, bump_sites))
     return kd
 
 
