@@ -31,3 +31,11 @@ Viewed s81.actual_place.png from ab3ae7c3a slice_station__t12 3_place.odb. North
 ## Exact5b critical S81 canary placement, 09:09 PDT
 
 Viewed exact5b_s81.actual_place.png from source5b2b94251fc5 (noRC60/preflight additions), same canonical plan9101a4f12c38d784151db6392afe2ed401e9cc8888df249c8566f45e231092f9. Two north/south station strips and aligned face pins leave open routing area; no macros, added walls or overlaps.16clock-grid entries retain the canonical geometry. Verdict PASS-COND for exact-source diagnostic CTS/route, preserving original insertion/hold gates. This t12 vehicle contains no12.7core slice; the core-pin-snap mechanism is separately covered by96tests and the core-owner actual probe. Final receipt is canonical solely to release matching5b core-kit flow, never the combinedRC60flow.
+
+## HBM TKM actual placement, 09:12 PDT
+
+Viewed hbm.actual_place.png from ab3ae7c3a TKMtile0 3_place.odb. Registered pin bands surround an east-weighted logic cluster, with open west access and no macros/enclosed channels; the south/east corner tile_clk pin is the unchanged legacy reference (its known deep-CTS insertion failure remains active). Shared60um repair189431->195424cells (+5993); area22056->23063um² (21->22%util); PG390848terms/0open. Verdict PASS-COND for one diagnostic reference CTS/route, not adoption of that legacy corner-clock floorplan or a physical sign-off.
+
+## KV core actual placement, 09:12 PDT
+
+Viewed qwen_kvsys_core.actual_place.png from ab3ae7c3a head_e1 3_place.odb. Logic clusters retain open intervening routes; west/north pin bands and the north clock input remain in the legacy reference positions, no macros or new walls/overlaps. Shared60um repair135610->135999cells (+389); area17501->17561um² (41%util); PG271998terms/0open. Verdict PASS-COND for one diagnostic CTS/route, retaining native setup/hold/DRV and required standard hold-step checks. All seven combined placements have now been viewed before routing.
