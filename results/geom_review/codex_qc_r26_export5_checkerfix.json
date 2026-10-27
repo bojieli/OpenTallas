@@ -1,0 +1,13 @@
+{
+ "design": "QC R26 native100_io export5",
+ "verdict": "FAIL",
+ "body_verdict": "PASS",
+ "same_artifact_receipt": "results/qc_clk_mesh3/codex_r26_export/export5/body_checkerfix_receipt.json",
+ "findings": [
+  "The solver's full-body fix removes real seam and die-edge violations. All305 reported remaining seam failures were binary floating-point boundary comparisons; exact1000DBU/um comparisons give0 violations on the unchanged physical artifact. The original export5 verdict remains unchanged.",
+  "112 band-tree stage pieces still exceed450um, maximum481.94um. The worst W-edge feed crosses an A0 core horizontally: its planned midpoint(1905.12,414.72) lies in the core, so generic legalization pushes it to x2113.452 and leaves a long unbuffered leg to the W column at x1632.96.",
+  "Fix the W-edge feed as a vertical tree on its existing off-core column, with the main-tree crossing only in a free row band. No physical site is hand-edited by the exporter."
+ ],
+ "route_admission": "HOLD",
+ "timing_and_signoff": "NOT RUN"
+}

@@ -32,6 +32,21 @@ def snap(v, q):
     return round(round(v / q) * q, 6)
 
 
+def dbu(x):
+    """ASAP7 1x OpenDB integer grid, matching clock_routed.q()."""
+    return int(round(float(x)*1000))
+
+
+def body_inside(rect,x,y,w,h):
+    a,b,c,d=map(dbu,rect[:4]); xx,yy=map(dbu,(x,y))
+    return a<=xx and xx+dbu(w)<=c and b<=yy and yy+dbu(h)<=d
+
+
+def body_overlap(rect,x,y,w,h):
+    a,b,c,d=map(dbu,rect[:4]); xx,yy=map(dbu,(x,y))
+    return xx<c and a<xx+dbu(w) and yy<d and b<yy+dbu(h)
+
+
 def tree_groups(B):
     """Every physical group edge, including band roots sharing a top-tree cell."""
     cells, sites = B['cells'], B['site_of']
@@ -168,7 +183,7 @@ def export(B):
         # Keep the model's R0 pin geometry; no unmodelled orientation changes.
         orient = c.get('orient','R0')
         if orient != 'R0': errors['pin_model_orientation_not_R0'] += 1
-        host = (c.get('island') or {}).get('part')
+        host = (c.get('island') or {}).get('part') or c.get('body_host')
         yc = c['site'][1] - ROW_Y/2
         if c['kind'].startswith('chan'): yc = c['site'][1]
         y0 = snap(yc, ROW_Y)
@@ -176,20 +191,20 @@ def export(B):
             w = M.LEF_BUF[m][0]
             widths[m] = w
             x, y = snap(c['site'][0]-w/2,SITE_X), round(y0+u*ROW_Y,6)
-            hs = [n for n,r in part_rects.items() if r[0] <= x+w/2 <= r[2] and r[1] <= y+ROW_Y/2 <= r[3]]
+            hs = [n for n,r in part_rects.items() if dbu(r[0])<=dbu(x+w/2)<=dbu(r[2]) and dbu(r[1])<=dbu(y+ROW_Y/2)<=dbu(r[3])]
             if host is None: host = hs[0] if hs else None
             r = part_rects.get(host)
             why = []
             if r is None:
                 channels = [ch['rect_um'] for ch in P.die.get('channels',[]) if ch.get('clock_channel')]
-                if not c['kind'].startswith('chan') or not any(q[0]<=x and x+w<=q[2] and q[1]<=y and y+ROW_Y<=q[3] for q in channels):
+                if not c['kind'].startswith('chan') or not any(body_inside(q,x,y,w,ROW_Y) for q in channels):
                     why.append('no_host')
-            elif not (r[0] <= x and x+w <= r[2] and r[1] <= y and y+ROW_Y <= r[3]):
+            elif not body_inside(r,x,y,w,ROW_Y):
                 why.append('body_crosses_host_seam')
             for q in B['cores']:
-                if x < q[2] and q[0] < x+w and y < q[3] and q[1] < y+ROW_Y:
+                if body_overlap(q,x,y,w,ROW_Y):
                     why.append('body_on_hard_core'); break
-            if x<0 or y<0 or x+w>P.W or y+ROW_Y>P.H: why.append('body_outside_die')
+            if not body_inside((0,0,P.W,P.H),x,y,w,ROW_Y): why.append('body_outside_die')
             nm = f'ckt_{k}_{u}'
             for e in why:
                 errors[e] += 1
@@ -210,9 +225,12 @@ def export(B):
         examples['physical_cell_overlap'] = ov[:5]
     ndrs = sorted({e['ndr'] for e in edges})
     reach = sorted(edges,key=lambda e:-e['pin_to_pin_um'])
-    reach_summary = dict(max_um=reach[0]['pin_to_pin_um'] if reach else 0,over_450=sum(e['pin_to_pin_um']>450.0001 for e in edges),
+    reach_summary = dict(max_um=reach[0]['pin_to_pin_um'] if reach else 0,over_450=sum(dbu(e['pin_to_pin_um'])>450000 for e in edges),
                          worst=[dict(edge=e['edge'],pin_to_pin_um=e['pin_to_pin_um']) for e in reach[:8]],
                          status='PLAN_GEOMETRY; track jogs and extracted RC still required')
+    if reach_summary['over_450']:
+        errors['clock_stage_over_450_um']=reach_summary['over_450']
+        examples['clock_stage_over_450_um']=reach_summary['worst']
     identity = {}
     for t,members in inst_footprints.items():
         allparts=[n for n,d in P.parts.items() if d['type']==t]
@@ -220,10 +238,11 @@ def export(B):
         identity[t]=dict(instances=len(allparts),hosting=len(members),distinct_footprint_master_sets=len(sets),
                          identical=len(sets)==1,union_sites=len(islands[t]))
     adapter_reasons = []
+    import die_clock_mesh as D
     if adapter_constraints:
         import die_clock_mesh as D
         if not hasattr(D,'_explicit_v2_wires'): adapter_reasons.append('V2 heterogeneous pin-tie importer missing')
-    if any(n not in {'4w','8w','16w'} for n in ndrs): adapter_reasons.append('physical NDR not yet modelled: '+','.join(n for n in ndrs if n not in {'4w','8w','16w'}))
+    if any(n not in D.NDR for n in ndrs): adapter_reasons.append('physical NDR not yet modelled: '+','.join(n for n in ndrs if n not in D.NDR))
     if errors: adapter_reasons.append('physical geometry gate fails')
     if B.get('a0'):
         import importlib.util
