@@ -4,6 +4,13 @@
 #   OT_HOLD_MARGIN (ps), OT_HOLD_ALLOW_SETUP (1 = FF-only run may break FF setup; final TT setup is still gated),
 #   OT_HOLD_MAXBUF (max_buffer_percent).  No RTL / cycle / clock / SDC change; final verdict = signoff.py TT/FF.
 read_spef $::env(RESULTS_DIR)/6_final.spef
+# FLOW-CLKFREEZE 2026-10-27: lock the routed clock network (FIXED wires, FIXED + dont_touch clock-net instances)
+# before any repair, so incremental GRT / DRT never re-route a clock net (tools/die_plan/clk_freeze.tcl; blocking
+# geometry diff = tools/die_plan/clk_freeze_check.sh in the chain).  Staged next to this file by every ECO chain.
+set _ckf [file join [file dirname [info script]] clk_freeze.tcl]
+if {![file exists $_ckf]} { error "OT_CLK_FREEZE FAIL: $_ckf not staged (ECO refuses to run without the clock lock)" }
+source $_ckf
+ot_clk_freeze
 global_route -start_incremental
 if {[info exists ::env(OT_HOLD_DRV)] && $::env(OT_HOLD_DRV) == 1} { puts "QCCORES_HOLD repair_design -slew_margin 40 -cap_margin 20"; repair_design -slew_margin 40 -cap_margin 20 }
 set args [list -hold -hold_margin $::env(OT_HOLD_MARGIN) -max_buffer_percent $::env(OT_HOLD_MAXBUF)]
@@ -12,5 +19,6 @@ puts "ELEMQK_HOLD repair_timing $args"
 repair_timing {*}$args
 detailed_placement
 global_route -end_incremental
+ot_clk_freeze_assert post_grt
 estimate_parasitics -global_routing
 write_guides $::env(RESULTS_DIR)/route.guide

@@ -19,9 +19,16 @@ rc=$?
 $DK run --rm -v "$D":/work "$IMAGE" chown -R $(id -u):$(id -g) /work >/dev/null 2>&1
 echo "route_finish_rc=$rc" > $D/rc.txt
 grep -h "ELEMQK_HOLD\|RSZ-00[0-9]*\|Inserted\|hold" $D/run/logs/asap7/*/base/5_1_grt.log 2>/dev/null | tail -n 8
+# FLOW-CLKFREEZE 2026-10-27: BLOCKING clock-net geometry diff (ECO input route vs final DB); change -> rc 5, no sign-off
+if [ $rc = 0 ]; then
+  bash $D/clk_freeze_check.sh $D $IMAGE > $D/clk_freeze_check.log 2>&1; ck=$?
+  grep -h '^CLK_GEOM_DIFF' $D/clk_freeze_check.log | head -n 6; echo "clk_freeze_check_rc=$ck" >> $D/rc.txt
+  [ $ck = 0 ] || rc=5
+fi
 if [ $rc = 0 ]; then
   SIGNOFF_DOCKER="$DK" python3 -I $D/so/tools/die_plan/signoff.py run --run-dir $D/run --kit $D --out $D/signoff \
     --corners tt,ff --image "$IMAGE" > $D/signoff.log 2>&1
   echo "signoff_rc=$?" >> $D/rc.txt
   grep -E '^SIGNOFF|^  - ' $D/signoff.log | head -12
 fi
+exit $rc

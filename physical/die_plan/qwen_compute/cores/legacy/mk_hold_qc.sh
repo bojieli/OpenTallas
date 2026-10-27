@@ -10,6 +10,9 @@ cp $RS/5_2_route.odb $B/4_cts.odb; cp $RS/6_final.spef $RS/1_2_yosys.v $RS/1_syn
 rsync -a $K/run/objects/asap7/$NICK/base/ $O/run/objects/asap7/$NICK/base/
 { cat $O/constraint.sdc; echo 'set_propagated_clock [get_clocks clk]'; } > $B/4_cts.sdc
 cp $HERE/hold_route.tcl $O/
+# FLOW-CLKFREEZE 2026-10-27: clock lock sourced by hold_route.tcl + blocking clock-net geometry check (run_hold.sh)
+ROOT=$(cd "$HERE/../../../../.." && pwd)
+for f in clk_freeze.tcl clk_dump_db.tcl clk_geom_diff.py clk_freeze_check.sh; do cp "$ROOT/tools/die_plan/$f" $O/; done
 cat >> $O/config.mk <<CFG
 # QC-CORES warm hold ECO (ELEM-QK recipe b: FF-only, hold margin $MG)
 export POST_GLOBAL_ROUTE_TCL = /work/hold_route.tcl
