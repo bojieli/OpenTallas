@@ -1,0 +1,152 @@
+{
+  "public_ABI_corrections": [
+    {
+      "lane": "unit__svc_14__eng",
+      "before": 268,
+      "after": 264,
+      "epoch_bit": 264
+    },
+    {
+      "lane": "unit__eng__svc_14",
+      "before": 43,
+      "after": 39,
+      "epoch_bit": 39
+    }
+  ],
+  "latency_changes": {
+    "unit__svc_14__eng": {
+      "old_cycles": 2,
+      "new_cycles": 4
+    },
+    "xtier__s_6S_C__eng": {
+      "old_cycles": 39,
+      "new_cycles": 40
+    },
+    "unit__eng__svc_14": {
+      "old_cycles": 2,
+      "new_cycles": 3
+    },
+    "unit__seqhost__eng": {
+      "old_cycles": 41,
+      "new_cycles": 42
+    },
+    "flt__eng__svc_14": {
+      "old_cycles": 2,
+      "new_cycles": 3
+    }
+  },
+  "status": "PLANNING candidate; no bind/STA/signoff adoption",
+  "pins": 2690,
+  "moved": 364,
+  "parent_data_census": [
+    {
+      "core_port": "pci",
+      "bus": "unit_i0",
+      "bits": 264,
+      "max_hop_um": 290.388,
+      "over405": 0
+    },
+    {
+      "core_port": "rco",
+      "bus": "unit_o0",
+      "bits": 39,
+      "max_hop_um": 231.886,
+      "over405": 0
+    },
+    {
+      "core_port": "f_ks",
+      "bus": "unit_i1",
+      "bits": 53,
+      "max_hop_um": 207.79,
+      "over405": 0
+    },
+    {
+      "core_port": "vi_s",
+      "bus": "xtier_i0",
+      "bits": 276,
+      "max_hop_um": 209.504,
+      "over405": 0
+    },
+    {
+      "core_port": "vo_s",
+      "bus": "xtier_o0",
+      "bits": 276,
+      "max_hop_um": 361.59,
+      "over405": 0
+    },
+    {
+      "core_port": "vo_n",
+      "bus": "xtier_o1",
+      "bits": 276,
+      "max_hop_um": 366.966,
+      "over405": 0
+    },
+    {
+      "core_port": "vi_n",
+      "bus": "xtier_i1",
+      "bits": 276,
+      "max_hop_um": 319.382,
+      "over405": 0
+    }
+  ],
+  "old_station_counts": {
+    "bus:unit_i0": 2,
+    "bus:unit_o0": 1
+  },
+  "new_station_counts": {
+    "bus:unit_i0": 2,
+    "bus:unit_o0": 1,
+    "bus:unit_i1": 1,
+    "bus:xtier_i0": 1,
+    "bus:flt_o0": 1
+  },
+  "cycle_delta": {
+    "core_RTL": 0,
+    "parent_xtier_i0": 1,
+    "parent_unit_i1": 1,
+    "geometry_added_cycles": 2,
+    "geometry_added_bit_cycles": 329,
+    "historical_unpriced_PCI_cycles": 2,
+    "historical_unpriced_RCO_cycles": 1,
+    "word_stage_cycles_vs_raw_plan": 5,
+    "parallel_RCO_valid_stage": 1,
+    "sum_per_lane_fixed_cycles": 6
+  },
+  "priced_lanes": [
+    {
+      "lane": "unit__svc_14__eng",
+      "bus": "unit_i0",
+      "old_fixed": 0,
+      "new_fixed": 2
+    },
+    {
+      "lane": "unit__eng__svc_14",
+      "bus": "unit_o0",
+      "old_fixed": 0,
+      "new_fixed": 1
+    },
+    {
+      "lane": "unit__seqhost__eng",
+      "bus": "unit_i1",
+      "old_fixed": 0,
+      "new_fixed": 1
+    },
+    {
+      "lane": "xtier__s_6S_C__eng",
+      "bus": "xtier_i0",
+      "old_fixed": 0,
+      "new_fixed": 1
+    },
+    {
+      "lane": "flt__eng__svc_14",
+      "bus": "flt_o0",
+      "old_fixed": 0,
+      "new_fixed": 1
+    }
+  ],
+  "wrapper_mapping": "Exact877 generated parent: PCI264 identity; core RCO[1..38]\u2192unit_o0[0..37], cfgfault\u2192unit_o0[38], core RCO[0]\u2192flt_o0[0]; FKS53 and VI_S276 identity. cfgfault soft-source placement requires actual parent trial.",
+  "remaining": [
+    "Materialize PCI2/RCOdata1/FKS1/VI_S1 plus parallel matching RCOvalid1 in bound RTL; lockstep/mutant and price actual causal graph. cfgfault must follow the same RCO word stage.",
+    "R5 engine core placement/route/signoff remains owned PATH-S81/head_eng; candidate LEF is not a signed view."
+  ]
+}

@@ -1,0 +1,1968 @@
+{
+  "used_types": 210,
+  "status": "CONNECTED GEOMETRY PROTOTYPE: stations/per-bit placement and all gates pending",
+  "variants": {
+    "bk_sel": "bk_sel__t2_phy1026_bk_sel",
+    "fE0_p1_b2": "col_h10_r2__t1_phy1026_fE0_p1_b2",
+    "fE0_p2_b2": "col_h9_r2__t1_phy1026_fE0_p2_b2",
+    "fE0_p3_b2": "col_h9_r2__t1_phy1026_fE0_p3_b2",
+    "fE5_p1_b0": "col_h9_r0_p1__t1_phy1026_fE5_p1_b0",
+    "fE5_p2_b0": "col_h9_r0_p2__t1_phy1026_fE5_p2_b0",
+    "fE5_p3_b0": "col_h9_r0_p3__t1_phy1026_fE5_p3_b0",
+    "fE5_p4_b0": "col_h9_r0_p4__t1_phy1026_fE5_p4_b0",
+    "fW0_p1_b2": "col_h10_r2__t1_phy1026_fW0_p1_b2",
+    "fW0_p2_b2": "col_h9_r2__t1_phy1026_fW0_p2_b2",
+    "fW0_p3_b2": "col_h9_r2__t1_phy1026_fW0_p3_b2",
+    "fW0_p4_b2": "col_h10_r2__t1_phy1026_fW0_p4_b2",
+    "fW5_p1_b0": "col_h9_r0_p1__t1_phy1026_fW5_p1_b0",
+    "fW5_p2_b0": "col_h9_r0_p2__t1_phy1026_fW5_p2_b0",
+    "fW5_p3_b0": "col_h9_r0_p3__t1_phy1026_fW5_p3_b0",
+    "fW5_p4_b0": "col_h9_r0_p4__t1_phy1026_fW5_p4_b0",
+    "gunit": "gunit__t1_phy1026_gunit",
+    "iqf": "iqf__t1_phy1026_iqf",
+    "lk_EN0": "serdes__t15_phy1026_lk_EN0",
+    "lk_EN1": "serdes__t16_phy1026_lk_EN1",
+    "lk_EN2": "serdes__t13_phy1026_lk_EN2",
+    "lk_EN3": "serdes__t14_phy1026_lk_EN3",
+    "lk_ES0": "serdes__t1_phy1026_lk_ES0",
+    "lk_ES1": "serdes__t2_phy1026_lk_ES1",
+    "lk_WN0": "serdes__t3_phy1026_lk_WN0",
+    "lk_WN1": "serdes__t1_phy1026_lk_WN1",
+    "lk_WN2": "serdes__t2_phy1026_lk_WN2",
+    "lk_WN3": "serdes__t4_phy1026_lk_WN3",
+    "lk_WS0": "serdes__t15_phy1026_lk_WS0",
+    "lk_WS1": "serdes__t16_phy1026_lk_WS1",
+    "lk_WS2": "serdes__t14_phy1026_lk_WS2",
+    "lk_WS3": "serdes__t12_phy1026_lk_WS3",
+    "phy_hbm": "phy__t1_phy1026_phy_hbm",
+    "s_0N_C": "dsdv_slice_lepw_mu_C__t1_phy1026_s_0N_C",
+    "s_0N_L0": "ot_s81sl_leaf__t7_phy1026_s_0N_L0",
+    "s_0N_L1": "ot_s81sl_leaf__t8_phy1026_s_0N_L1",
+    "s_0N_L2": "ot_s81sl_leaf__t6_phy1026_s_0N_L2",
+    "s_0N_L3": "ot_s81sl_leaf__t9_phy1026_s_0N_L3",
+    "s_0N_L4": "ot_s81sl_leaf__t10_phy1026_s_0N_L4",
+    "s_0N_LP": "dsdv_slice_lepw_mu_LP__t2_phy1026_s_0N_LP",
+    "s_0N_x00": "slice_station__t6_phy1026_s_0N_x00",
+    "s_0N_x01": "slice_station__t7_phy1026_s_0N_x01",
+    "s_0N_x03": "slice_station__t41_phy1026_s_0N_x03",
+    "s_0N_x04": "slice_station__t42_phy1026_s_0N_x04",
+    "s_0N_x05": "slice_station__t42_phy1026_s_0N_x05",
+    "s_0N_x06": "slice_station__t43_phy1026_s_0N_x06",
+    "s_0N_x16": "slice_station__t44_phy1026_s_0N_x16",
+    "s_0S_C": "dsdv_slice_lepw_mus_C__t1_phy1026_s_0S_C",
+    "s_0S_L0": "ot_s81sl_leaf__t2_phy1026_s_0S_L0",
+    "s_0S_L1": "ot_s81sl_leaf__t3_phy1026_s_0S_L1",
+    "s_0S_L2": "ot_s81sl_leaf__t1_phy1026_s_0S_L2",
+    "s_0S_L3": "ot_s81sl_leaf__t4_phy1026_s_0S_L3",
+    "s_0S_L4": "ot_s81sl_leaf__t5_phy1026_s_0S_L4",
+    "s_0S_LP": "dsdv_slice_lepw_mus_LP__t2_phy1026_s_0S_LP",
+    "s_0S_x00": "slice_station__t49_phy1026_s_0S_x00",
+    "s_0S_x01": "slice_station__t36_phy1026_s_0S_x01",
+    "s_0S_x02": "slice_station__t50_phy1026_s_0S_x02",
+    "s_0S_x03": "slice_station__t50_phy1026_s_0S_x03",
+    "s_0S_x04": "slice_station__t37_phy1026_s_0S_x04",
+    "s_0S_x05": "slice_station__t38_phy1026_s_0S_x05",
+    "s_0S_x07": "slice_station__t6_phy1026_s_0S_x07",
+    "s_0S_x08": "slice_station__t7_phy1026_s_0S_x08",
+    "s_0S_x09": "slice_station__t7_phy1026_s_0S_x09",
+    "s_0S_x13": "slice_station__t8_phy1026_s_0S_x13",
+    "s_1N_C": "dsdv_slice_c1x_C__t10_phy1026_s_1N_C",
+    "s_1N_L0": "ot_s81sl_leaf__t17_phy1026_s_1N_L0",
+    "s_1N_x06": "slice_station__t45_phy1026_s_1N_x06",
+    "s_1S_C": "dsdv_slice_c1x_C__t1_phy1026_s_1S_C",
+    "s_1S_L4": "ot_s81sl_leaf__t11_phy1026_s_1S_L4",
+    "s_2N_C": "dsdv_slice_c1x_C__t4_phy1026_s_2N_C",
+    "s_2N_L0": "ot_s81sl_leaf__t27_phy1026_s_2N_L0",
+    "s_2N_L1": "ot_s81sl_leaf__t28_phy1026_s_2N_L1",
+    "s_2N_L2": "ot_s81sl_leaf__t26_phy1026_s_2N_L2",
+    "s_2N_L3": "ot_s81sl_leaf__t29_phy1026_s_2N_L3",
+    "s_2N_L4": "ot_s81sl_leaf__t30_phy1026_s_2N_L4",
+    "s_2N_x06": "slice_station__t46_phy1026_s_2N_x06",
+    "s_2S_C": "dsdv_slice_c1x_C__t3_phy1026_s_2S_C",
+    "s_2S_L1": "ot_s81sl_leaf__t23_phy1026_s_2S_L1",
+    "s_2S_L3": "ot_s81sl_leaf__t24_phy1026_s_2S_L3",
+    "s_2S_L4": "ot_s81sl_leaf__t25_phy1026_s_2S_L4",
+    "s_2S_x00": "slice_station__t14_phy1026_s_2S_x00",
+    "s_3N_C": "dsdv_slice_kv512_C__t1_phy1026_s_3N_C",
+    "s_3N_L0": "ot_s81sl_kv_leaf__t2_phy1026_s_3N_L0",
+    "s_3N_L1": "ot_s81sl_kv_leaf__t3_phy1026_s_3N_L1",
+    "s_3N_L2": "ot_s81sl_kv_leaf__t1_phy1026_s_3N_L2",
+    "s_3N_L3": "ot_s81sl_kv_leaf__t4_phy1026_s_3N_L3",
+    "s_3N_L4": "ot_s81sl_kv_leaf__t5_phy1026_s_3N_L4",
+    "s_3N_x06": "slice_station__t47_phy1026_s_3N_x06",
+    "s_3S_C": "dsdv_slice_iq_C__t1_phy1026_s_3S_C",
+    "s_3S_L0": "ot_s81sl_leaf__t32_phy1026_s_3S_L0",
+    "s_3S_L1": "ot_s81sl_leaf__t33_phy1026_s_3S_L1",
+    "s_3S_L2": "ot_s81sl_leaf__t31_phy1026_s_3S_L2",
+    "s_3S_L3": "ot_s81sl_leaf__t34_phy1026_s_3S_L3",
+    "s_3S_L4": "ot_s81sl_leaf__t35_phy1026_s_3S_L4",
+    "s_4N_C": "dsdv_slice_c1x_C__t5_phy1026_s_4N_C",
+    "s_4N_L0": "ot_s81sl_leaf__t42_phy1026_s_4N_L0",
+    "s_4N_L1": "ot_s81sl_leaf__t43_phy1026_s_4N_L1",
+    "s_4N_L2": "ot_s81sl_leaf__t41_phy1026_s_4N_L2",
+    "s_4N_L3": "ot_s81sl_leaf__t44_phy1026_s_4N_L3",
+    "s_4N_L4": "ot_s81sl_leaf__t40_phy1026_s_4N_L4",
+    "s_4N_x06": "slice_station__t48_phy1026_s_4N_x06",
+    "s_4S_C": "dsdv_slice_c3x_C__t1_phy1026_s_4S_C",
+    "s_4S_L0": "ot_s81sl_leaf__t38_phy1026_s_4S_L0",
+    "s_4S_L1": "ot_s81sl_leaf__t39_phy1026_s_4S_L1",
+    "s_4S_L2": "ot_s81sl_leaf__t37_phy1026_s_4S_L2",
+    "s_4S_L3": "ot_s81sl_leaf__t40_phy1026_s_4S_L3",
+    "s_4S_L4": "ot_s81sl_leaf__t36_phy1026_s_4S_L4",
+    "s_4S_x06": "slice_station__t17_phy1026_s_4S_x06",
+    "s_5N_C": "dsdv_slice_c1x_C__t7_phy1026_s_5N_C",
+    "s_5N_L0": "ot_s81sl_leaf__t51_phy1026_s_5N_L0",
+    "s_5N_L1": "ot_s81sl_leaf__t52_phy1026_s_5N_L1",
+    "s_5N_L2": "ot_s81sl_leaf__t50_phy1026_s_5N_L2",
+    "s_5N_L3": "ot_s81sl_leaf__t53_phy1026_s_5N_L3",
+    "s_5N_L4": "ot_s81sl_leaf__t54_phy1026_s_5N_L4",
+    "s_5S_C": "dsdv_slice_c1x_C__t6_phy1026_s_5S_C",
+    "s_5S_L1": "ot_s81sl_leaf__t47_phy1026_s_5S_L1",
+    "s_5S_L3": "ot_s81sl_leaf__t44_phy1026_s_5S_L3",
+    "s_5S_L4": "ot_s81sl_leaf__t40_phy1026_s_5S_L4",
+    "s_5S_x00": "slice_station__t18_phy1026_s_5S_x00",
+    "s_6N_C": "dsdv_slice_c1x_C__t9_phy1026_s_6N_C",
+    "s_6N_L0": "ot_s81sl_leaf__t61_phy1026_s_6N_L0",
+    "s_6N_L1": "ot_s81sl_leaf__t62_phy1026_s_6N_L1",
+    "s_6N_L2": "ot_s81sl_leaf__t60_phy1026_s_6N_L2",
+    "s_6N_L3": "ot_s81sl_leaf__t24_phy1026_s_6N_L3",
+    "s_6N_L4": "ot_s81sl_leaf__t25_phy1026_s_6N_L4",
+    "s_6N_x06": "slice_station__t21_phy1026_s_6N_x06",
+    "s_6S_C": "dsdv_slice_c1x_C__t8_phy1026_s_6S_C",
+    "s_6S_L0": "ot_s81sl_leaf__t57_phy1026_s_6S_L0",
+    "s_6S_L1": "ot_s81sl_leaf__t58_phy1026_s_6S_L1",
+    "s_6S_L2": "ot_s81sl_leaf__t56_phy1026_s_6S_L2",
+    "s_6S_L3": "ot_s81sl_leaf__t59_phy1026_s_6S_L3",
+    "s_6S_L4": "ot_s81sl_leaf__t55_phy1026_s_6S_L4",
+    "s_6S_x06": "slice_station__t20_phy1026_s_6S_x06",
+    "s_7N_C": "dsdv_slice_lepe_mu_C__t1_phy1026_s_7N_C",
+    "s_7N_L0": "ot_s81sl_leaf__t71_phy1026_s_7N_L0",
+    "s_7N_L1": "ot_s81sl_leaf__t72_phy1026_s_7N_L1",
+    "s_7N_L2": "ot_s81sl_leaf__t70_phy1026_s_7N_L2",
+    "s_7N_L3": "ot_s81sl_leaf__t73_phy1026_s_7N_L3",
+    "s_7N_L4": "ot_s81sl_leaf__t74_phy1026_s_7N_L4",
+    "s_7N_LP": "dsdv_slice_lepe_mu_LP__t2_phy1026_s_7N_LP",
+    "s_7N_x06": "slice_station__t31_phy1026_s_7N_x06",
+    "s_7N_x10": "slice_station__t29_phy1026_s_7N_x10",
+    "s_7N_x11": "slice_station__t30_phy1026_s_7N_x11",
+    "s_7N_x13": "slice_station__t51_phy1026_s_7N_x13",
+    "s_7N_x14": "slice_station__t40_phy1026_s_7N_x14",
+    "s_7N_x15": "slice_station__t40_phy1026_s_7N_x15",
+    "s_7N_x16": "slice_station__t52_phy1026_s_7N_x16",
+    "s_7S_C": "dsdv_slice_lepe_nh_mus_C__t1_phy1026_s_7S_C",
+    "s_7S_L0": "ot_s81sl_leaf__t66_phy1026_s_7S_L0",
+    "s_7S_L1": "ot_s81sl_leaf__t67_phy1026_s_7S_L1",
+    "s_7S_L2": "ot_s81sl_leaf__t65_phy1026_s_7S_L2",
+    "s_7S_L3": "ot_s81sl_leaf__t68_phy1026_s_7S_L3",
+    "s_7S_L4": "ot_s81sl_leaf__t69_phy1026_s_7S_L4",
+    "s_7S_LP": "dsdv_slice_lepe_nh_mus_LP__t1_phy1026_s_7S_LP",
+    "s_7S_x05": "slice_station__t22_phy1026_s_7S_x05",
+    "s_7S_x10": "slice_station__t23_phy1026_s_7S_x10",
+    "s_7S_x11": "slice_station__t24_phy1026_s_7S_x11",
+    "s_7S_x110": "slice_station__t30_phy1026_s_7S_x110",
+    "s_7S_x111": "slice_station__t30_phy1026_s_7S_x111",
+    "s_7S_x12": "slice_station__t24_phy1026_s_7S_x12",
+    "s_7S_x13": "slice_station__t25_phy1026_s_7S_x13",
+    "s_7S_x14": "slice_station__t24_phy1026_s_7S_x14",
+    "s_7S_x15": "slice_station__t26_phy1026_s_7S_x15",
+    "s_7S_x16": "slice_station__t27_phy1026_s_7S_x16",
+    "s_7S_x17": "slice_station__t28_phy1026_s_7S_x17",
+    "s_7S_x19": "slice_station__t29_phy1026_s_7S_x19",
+    "seqhost": "seqhost__t1_phy1026_seqhost",
+    "svc_0": "svc_lo_dsdv_svc_rs_w__t1_phy1026_svc_0",
+    "svc_1": "svc_hi_dsdv_svc_rs__t1_phy1026_svc_1",
+    "svc_12": "svc_lo_dsdv_svc_rs__t6_phy1026_svc_12",
+    "svc_13": "svc_hi_dsdv_svc_rs__t5_phy1026_svc_13",
+    "svc_14": "svc_lo_dsdv_svc_rs__t7_phy1026_svc_14",
+    "svc_15": "svc_hi_dsdv_svc_rs__t6_phy1026_svc_15",
+    "svc_2": "svc_lo_dsdv_svc_rs__t1_phy1026_svc_2",
+    "svc_3": "svc_hi_dsdv_svc_rs__t2_phy1026_svc_3",
+    "svc_4": "svc_lo_dsdv_svc_rs__t2_phy1026_svc_4",
+    "svc_6": "svc_lo_dsdv_svc_rs__t3_phy1026_svc_6",
+    "s_1S_L3": "ot_s81sl_leaf__t15_phy1026_s_1S_L3",
+    "svc_7": "svc_hi_dsdv_svc_rs__t3_phy1026_svc_7",
+    "svc_5": "svc_hi_dsdv_svc_pvso_entry__t1_phy1026_svc_5",
+    "fE0_p4_b2": "col_h10_r2__t1_phy1026_fE0_p4_b2",
+    "s_1N_L1": "ot_s81sl_leaf__t75_phy1026_s_1N_L1",
+    "s_2S_L0": "ot_s81sl_leaf__t22_phy1026_s_2S_L0",
+    "s_1S_L0": "ot_s81sl_leaf__t13_phy1026_s_1S_L0",
+    "s_2S_L2": "ot_s81sl_leaf__t21_phy1026_s_2S_L2"
+  },
+  "source_types": {
+    "bk_sel__t2_phy1026_bk_sel": "bk_sel__t2",
+    "col_h10_r2__t1_phy1026_fE0_p1_b2": "col_h10_r2__t1",
+    "col_h9_r2__t1_phy1026_fE0_p2_b2": "col_h9_r2__t1",
+    "col_h9_r2__t1_phy1026_fE0_p3_b2": "col_h9_r2__t1",
+    "col_h9_r0_p1__t1_phy1026_fE5_p1_b0": "col_h9_r0_p1__t1",
+    "col_h9_r0_p2__t1_phy1026_fE5_p2_b0": "col_h9_r0_p2__t1",
+    "col_h9_r0_p3__t1_phy1026_fE5_p3_b0": "col_h9_r0_p3__t1",
+    "col_h9_r0_p4__t1_phy1026_fE5_p4_b0": "col_h9_r0_p4__t1",
+    "col_h10_r2__t1_phy1026_fW0_p1_b2": "col_h10_r2__t1",
+    "col_h9_r2__t1_phy1026_fW0_p2_b2": "col_h9_r2__t1",
+    "col_h9_r2__t1_phy1026_fW0_p3_b2": "col_h9_r2__t1",
+    "col_h10_r2__t1_phy1026_fW0_p4_b2": "col_h10_r2__t1",
+    "col_h9_r0_p1__t1_phy1026_fW5_p1_b0": "col_h9_r0_p1__t1",
+    "col_h9_r0_p2__t1_phy1026_fW5_p2_b0": "col_h9_r0_p2__t1",
+    "col_h9_r0_p3__t1_phy1026_fW5_p3_b0": "col_h9_r0_p3__t1",
+    "col_h9_r0_p4__t1_phy1026_fW5_p4_b0": "col_h9_r0_p4__t1",
+    "gunit__t1_phy1026_gunit": "gunit__t1",
+    "iqf__t1_phy1026_iqf": "iqf__t1",
+    "serdes__t15_phy1026_lk_EN0": "serdes__t15",
+    "serdes__t16_phy1026_lk_EN1": "serdes__t16",
+    "serdes__t13_phy1026_lk_EN2": "serdes__t13",
+    "serdes__t14_phy1026_lk_EN3": "serdes__t14",
+    "serdes__t1_phy1026_lk_ES0": "serdes__t1",
+    "serdes__t2_phy1026_lk_ES1": "serdes__t2",
+    "serdes__t3_phy1026_lk_WN0": "serdes__t3",
+    "serdes__t1_phy1026_lk_WN1": "serdes__t1",
+    "serdes__t2_phy1026_lk_WN2": "serdes__t2",
+    "serdes__t4_phy1026_lk_WN3": "serdes__t4",
+    "serdes__t15_phy1026_lk_WS0": "serdes__t15",
+    "serdes__t16_phy1026_lk_WS1": "serdes__t16",
+    "serdes__t14_phy1026_lk_WS2": "serdes__t14",
+    "serdes__t12_phy1026_lk_WS3": "serdes__t12",
+    "phy__t1_phy1026_phy_hbm": "phy__t1",
+    "dsdv_slice_lepw_mu_C__t1_phy1026_s_0N_C": "dsdv_slice_lepw_mu_C__t1",
+    "ot_s81sl_leaf__t7_phy1026_s_0N_L0": "ot_s81sl_leaf__t7",
+    "ot_s81sl_leaf__t8_phy1026_s_0N_L1": "ot_s81sl_leaf__t8",
+    "ot_s81sl_leaf__t6_phy1026_s_0N_L2": "ot_s81sl_leaf__t6",
+    "ot_s81sl_leaf__t9_phy1026_s_0N_L3": "ot_s81sl_leaf__t9",
+    "ot_s81sl_leaf__t10_phy1026_s_0N_L4": "ot_s81sl_leaf__t10",
+    "dsdv_slice_lepw_mu_LP__t2_phy1026_s_0N_LP": "dsdv_slice_lepw_mu_LP__t2",
+    "slice_station__t6_phy1026_s_0N_x00": "slice_station__t6",
+    "slice_station__t7_phy1026_s_0N_x01": "slice_station__t7",
+    "slice_station__t41_phy1026_s_0N_x03": "slice_station__t41",
+    "slice_station__t42_phy1026_s_0N_x04": "slice_station__t42",
+    "slice_station__t42_phy1026_s_0N_x05": "slice_station__t42",
+    "slice_station__t43_phy1026_s_0N_x06": "slice_station__t43",
+    "slice_station__t44_phy1026_s_0N_x16": "slice_station__t44",
+    "dsdv_slice_lepw_mus_C__t1_phy1026_s_0S_C": "dsdv_slice_lepw_mus_C__t1",
+    "ot_s81sl_leaf__t2_phy1026_s_0S_L0": "ot_s81sl_leaf__t2",
+    "ot_s81sl_leaf__t3_phy1026_s_0S_L1": "ot_s81sl_leaf__t3",
+    "ot_s81sl_leaf__t1_phy1026_s_0S_L2": "ot_s81sl_leaf__t1",
+    "ot_s81sl_leaf__t4_phy1026_s_0S_L3": "ot_s81sl_leaf__t4",
+    "ot_s81sl_leaf__t5_phy1026_s_0S_L4": "ot_s81sl_leaf__t5",
+    "dsdv_slice_lepw_mus_LP__t2_phy1026_s_0S_LP": "dsdv_slice_lepw_mus_LP__t2",
+    "slice_station__t49_phy1026_s_0S_x00": "slice_station__t49",
+    "slice_station__t36_phy1026_s_0S_x01": "slice_station__t36",
+    "slice_station__t50_phy1026_s_0S_x02": "slice_station__t50",
+    "slice_station__t50_phy1026_s_0S_x03": "slice_station__t50",
+    "slice_station__t37_phy1026_s_0S_x04": "slice_station__t37",
+    "slice_station__t38_phy1026_s_0S_x05": "slice_station__t38",
+    "slice_station__t6_phy1026_s_0S_x07": "slice_station__t6",
+    "slice_station__t7_phy1026_s_0S_x08": "slice_station__t7",
+    "slice_station__t7_phy1026_s_0S_x09": "slice_station__t7",
+    "slice_station__t8_phy1026_s_0S_x13": "slice_station__t8",
+    "dsdv_slice_c1x_C__t10_phy1026_s_1N_C": "dsdv_slice_c1x_C__t10",
+    "ot_s81sl_leaf__t17_phy1026_s_1N_L0": "ot_s81sl_leaf__t17",
+    "slice_station__t45_phy1026_s_1N_x06": "slice_station__t45",
+    "dsdv_slice_c1x_C__t1_phy1026_s_1S_C": "dsdv_slice_c1x_C__t1",
+    "ot_s81sl_leaf__t11_phy1026_s_1S_L4": "ot_s81sl_leaf__t11",
+    "dsdv_slice_c1x_C__t4_phy1026_s_2N_C": "dsdv_slice_c1x_C__t4",
+    "ot_s81sl_leaf__t27_phy1026_s_2N_L0": "ot_s81sl_leaf__t27",
+    "ot_s81sl_leaf__t28_phy1026_s_2N_L1": "ot_s81sl_leaf__t28",
+    "ot_s81sl_leaf__t26_phy1026_s_2N_L2": "ot_s81sl_leaf__t26",
+    "ot_s81sl_leaf__t29_phy1026_s_2N_L3": "ot_s81sl_leaf__t29",
+    "ot_s81sl_leaf__t30_phy1026_s_2N_L4": "ot_s81sl_leaf__t30",
+    "slice_station__t46_phy1026_s_2N_x06": "slice_station__t46",
+    "dsdv_slice_c1x_C__t3_phy1026_s_2S_C": "dsdv_slice_c1x_C__t3",
+    "ot_s81sl_leaf__t23_phy1026_s_2S_L1": "ot_s81sl_leaf__t23",
+    "ot_s81sl_leaf__t24_phy1026_s_2S_L3": "ot_s81sl_leaf__t24",
+    "ot_s81sl_leaf__t25_phy1026_s_2S_L4": "ot_s81sl_leaf__t25",
+    "slice_station__t14_phy1026_s_2S_x00": "slice_station__t14",
+    "dsdv_slice_kv512_C__t1_phy1026_s_3N_C": "dsdv_slice_kv512_C__t1",
+    "ot_s81sl_kv_leaf__t2_phy1026_s_3N_L0": "ot_s81sl_kv_leaf__t2",
+    "ot_s81sl_kv_leaf__t3_phy1026_s_3N_L1": "ot_s81sl_kv_leaf__t3",
+    "ot_s81sl_kv_leaf__t1_phy1026_s_3N_L2": "ot_s81sl_kv_leaf__t1",
+    "ot_s81sl_kv_leaf__t4_phy1026_s_3N_L3": "ot_s81sl_kv_leaf__t4",
+    "ot_s81sl_kv_leaf__t5_phy1026_s_3N_L4": "ot_s81sl_kv_leaf__t5",
+    "slice_station__t47_phy1026_s_3N_x06": "slice_station__t47",
+    "dsdv_slice_iq_C__t1_phy1026_s_3S_C": "dsdv_slice_iq_C__t1",
+    "ot_s81sl_leaf__t32_phy1026_s_3S_L0": "ot_s81sl_leaf__t32",
+    "ot_s81sl_leaf__t33_phy1026_s_3S_L1": "ot_s81sl_leaf__t33",
+    "ot_s81sl_leaf__t31_phy1026_s_3S_L2": "ot_s81sl_leaf__t31",
+    "ot_s81sl_leaf__t34_phy1026_s_3S_L3": "ot_s81sl_leaf__t34",
+    "ot_s81sl_leaf__t35_phy1026_s_3S_L4": "ot_s81sl_leaf__t35",
+    "dsdv_slice_c1x_C__t5_phy1026_s_4N_C": "dsdv_slice_c1x_C__t5",
+    "ot_s81sl_leaf__t42_phy1026_s_4N_L0": "ot_s81sl_leaf__t42",
+    "ot_s81sl_leaf__t43_phy1026_s_4N_L1": "ot_s81sl_leaf__t43",
+    "ot_s81sl_leaf__t41_phy1026_s_4N_L2": "ot_s81sl_leaf__t41",
+    "ot_s81sl_leaf__t44_phy1026_s_4N_L3": "ot_s81sl_leaf__t44",
+    "ot_s81sl_leaf__t40_phy1026_s_4N_L4": "ot_s81sl_leaf__t40",
+    "slice_station__t48_phy1026_s_4N_x06": "slice_station__t48",
+    "dsdv_slice_c3x_C__t1_phy1026_s_4S_C": "dsdv_slice_c3x_C__t1",
+    "ot_s81sl_leaf__t38_phy1026_s_4S_L0": "ot_s81sl_leaf__t38",
+    "ot_s81sl_leaf__t39_phy1026_s_4S_L1": "ot_s81sl_leaf__t39",
+    "ot_s81sl_leaf__t37_phy1026_s_4S_L2": "ot_s81sl_leaf__t37",
+    "ot_s81sl_leaf__t40_phy1026_s_4S_L3": "ot_s81sl_leaf__t40",
+    "ot_s81sl_leaf__t36_phy1026_s_4S_L4": "ot_s81sl_leaf__t36",
+    "slice_station__t17_phy1026_s_4S_x06": "slice_station__t17",
+    "dsdv_slice_c1x_C__t7_phy1026_s_5N_C": "dsdv_slice_c1x_C__t7",
+    "ot_s81sl_leaf__t51_phy1026_s_5N_L0": "ot_s81sl_leaf__t51",
+    "ot_s81sl_leaf__t52_phy1026_s_5N_L1": "ot_s81sl_leaf__t52",
+    "ot_s81sl_leaf__t50_phy1026_s_5N_L2": "ot_s81sl_leaf__t50",
+    "ot_s81sl_leaf__t53_phy1026_s_5N_L3": "ot_s81sl_leaf__t53",
+    "ot_s81sl_leaf__t54_phy1026_s_5N_L4": "ot_s81sl_leaf__t54",
+    "dsdv_slice_c1x_C__t6_phy1026_s_5S_C": "dsdv_slice_c1x_C__t6",
+    "ot_s81sl_leaf__t47_phy1026_s_5S_L1": "ot_s81sl_leaf__t47",
+    "ot_s81sl_leaf__t44_phy1026_s_5S_L3": "ot_s81sl_leaf__t44",
+    "ot_s81sl_leaf__t40_phy1026_s_5S_L4": "ot_s81sl_leaf__t40",
+    "slice_station__t18_phy1026_s_5S_x00": "slice_station__t18",
+    "dsdv_slice_c1x_C__t9_phy1026_s_6N_C": "dsdv_slice_c1x_C__t9",
+    "ot_s81sl_leaf__t61_phy1026_s_6N_L0": "ot_s81sl_leaf__t61",
+    "ot_s81sl_leaf__t62_phy1026_s_6N_L1": "ot_s81sl_leaf__t62",
+    "ot_s81sl_leaf__t60_phy1026_s_6N_L2": "ot_s81sl_leaf__t60",
+    "ot_s81sl_leaf__t24_phy1026_s_6N_L3": "ot_s81sl_leaf__t24",
+    "ot_s81sl_leaf__t25_phy1026_s_6N_L4": "ot_s81sl_leaf__t25",
+    "slice_station__t21_phy1026_s_6N_x06": "slice_station__t21",
+    "dsdv_slice_c1x_C__t8_phy1026_s_6S_C": "dsdv_slice_c1x_C__t8",
+    "ot_s81sl_leaf__t57_phy1026_s_6S_L0": "ot_s81sl_leaf__t57",
+    "ot_s81sl_leaf__t58_phy1026_s_6S_L1": "ot_s81sl_leaf__t58",
+    "ot_s81sl_leaf__t56_phy1026_s_6S_L2": "ot_s81sl_leaf__t56",
+    "ot_s81sl_leaf__t59_phy1026_s_6S_L3": "ot_s81sl_leaf__t59",
+    "ot_s81sl_leaf__t55_phy1026_s_6S_L4": "ot_s81sl_leaf__t55",
+    "slice_station__t20_phy1026_s_6S_x06": "slice_station__t20",
+    "dsdv_slice_lepe_mu_C__t1_phy1026_s_7N_C": "dsdv_slice_lepe_mu_C__t1",
+    "ot_s81sl_leaf__t71_phy1026_s_7N_L0": "ot_s81sl_leaf__t71",
+    "ot_s81sl_leaf__t72_phy1026_s_7N_L1": "ot_s81sl_leaf__t72",
+    "ot_s81sl_leaf__t70_phy1026_s_7N_L2": "ot_s81sl_leaf__t70",
+    "ot_s81sl_leaf__t73_phy1026_s_7N_L3": "ot_s81sl_leaf__t73",
+    "ot_s81sl_leaf__t74_phy1026_s_7N_L4": "ot_s81sl_leaf__t74",
+    "dsdv_slice_lepe_mu_LP__t2_phy1026_s_7N_LP": "dsdv_slice_lepe_mu_LP__t2",
+    "slice_station__t31_phy1026_s_7N_x06": "slice_station__t31",
+    "slice_station__t29_phy1026_s_7N_x10": "slice_station__t29",
+    "slice_station__t30_phy1026_s_7N_x11": "slice_station__t30",
+    "slice_station__t51_phy1026_s_7N_x13": "slice_station__t51",
+    "slice_station__t40_phy1026_s_7N_x14": "slice_station__t40",
+    "slice_station__t40_phy1026_s_7N_x15": "slice_station__t40",
+    "slice_station__t52_phy1026_s_7N_x16": "slice_station__t52",
+    "dsdv_slice_lepe_nh_mus_C__t1_phy1026_s_7S_C": "dsdv_slice_lepe_nh_mus_C__t1",
+    "ot_s81sl_leaf__t66_phy1026_s_7S_L0": "ot_s81sl_leaf__t66",
+    "ot_s81sl_leaf__t67_phy1026_s_7S_L1": "ot_s81sl_leaf__t67",
+    "ot_s81sl_leaf__t65_phy1026_s_7S_L2": "ot_s81sl_leaf__t65",
+    "ot_s81sl_leaf__t68_phy1026_s_7S_L3": "ot_s81sl_leaf__t68",
+    "ot_s81sl_leaf__t69_phy1026_s_7S_L4": "ot_s81sl_leaf__t69",
+    "dsdv_slice_lepe_nh_mus_LP__t1_phy1026_s_7S_LP": "dsdv_slice_lepe_nh_mus_LP__t1",
+    "slice_station__t22_phy1026_s_7S_x05": "slice_station__t22",
+    "slice_station__t23_phy1026_s_7S_x10": "slice_station__t23",
+    "slice_station__t24_phy1026_s_7S_x11": "slice_station__t24",
+    "slice_station__t30_phy1026_s_7S_x110": "slice_station__t30",
+    "slice_station__t30_phy1026_s_7S_x111": "slice_station__t30",
+    "slice_station__t24_phy1026_s_7S_x12": "slice_station__t24",
+    "slice_station__t25_phy1026_s_7S_x13": "slice_station__t25",
+    "slice_station__t24_phy1026_s_7S_x14": "slice_station__t24",
+    "slice_station__t26_phy1026_s_7S_x15": "slice_station__t26",
+    "slice_station__t27_phy1026_s_7S_x16": "slice_station__t27",
+    "slice_station__t28_phy1026_s_7S_x17": "slice_station__t28",
+    "slice_station__t29_phy1026_s_7S_x19": "slice_station__t29",
+    "seqhost__t1_phy1026_seqhost": "seqhost__t1",
+    "svc_lo_dsdv_svc_rs_w__t1_phy1026_svc_0": "svc_lo_dsdv_svc_rs_w__t1",
+    "svc_hi_dsdv_svc_rs__t1_phy1026_svc_1": "svc_hi_dsdv_svc_rs__t1",
+    "svc_lo_dsdv_svc_rs__t6_phy1026_svc_12": "svc_lo_dsdv_svc_rs__t6",
+    "svc_hi_dsdv_svc_rs__t5_phy1026_svc_13": "svc_hi_dsdv_svc_rs__t5",
+    "svc_lo_dsdv_svc_rs__t7_phy1026_svc_14": "svc_lo_dsdv_svc_rs__t7",
+    "svc_hi_dsdv_svc_rs__t6_phy1026_svc_15": "svc_hi_dsdv_svc_rs__t6",
+    "svc_lo_dsdv_svc_rs__t1_phy1026_svc_2": "svc_lo_dsdv_svc_rs__t1",
+    "svc_hi_dsdv_svc_rs__t2_phy1026_svc_3": "svc_hi_dsdv_svc_rs__t2",
+    "svc_lo_dsdv_svc_rs__t2_phy1026_svc_4": "svc_lo_dsdv_svc_rs__t2",
+    "svc_lo_dsdv_svc_rs__t3_phy1026_svc_6": "svc_lo_dsdv_svc_rs__t3",
+    "ot_s81sl_leaf__t15_phy1026_s_1S_L3": "ot_s81sl_leaf__t15",
+    "svc_hi_dsdv_svc_rs__t3_phy1026_svc_7": "svc_hi_dsdv_svc_rs__t3",
+    "svc_hi_dsdv_svc_pvso_entry__t1_phy1026_svc_5": "svc_hi_dsdv_svc_pvso_entry__t1",
+    "col_h10_r2__t1_phy1026_fE0_p4_b2": "col_h10_r2__t1",
+    "ot_s81sl_leaf__t75_phy1026_s_1N_L1": "ot_s81sl_leaf__t75",
+    "ot_s81sl_leaf__t22_phy1026_s_2S_L0": "ot_s81sl_leaf__t22",
+    "ot_s81sl_leaf__t13_phy1026_s_1S_L0": "ot_s81sl_leaf__t13",
+    "ot_s81sl_leaf__t21_phy1026_s_2S_L2": "ot_s81sl_leaf__t21"
+  },
+  "new_slots": {
+    "svc_lo_dsdv_svc_rs__t1_phy1026_svc_2": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "svc_lo_dsdv_svc_rs__t2_phy1026_svc_4": [
+      "ft_phy0"
+    ],
+    "svc_lo_dsdv_svc_rs__t3_phy1026_svc_6": [
+      "ft_phy0"
+    ],
+    "slice_station__t52_phy1026_s_7N_x16": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3",
+      "ft_phy4",
+      "ft_phy5",
+      "ft_phy6",
+      "ft_phy7",
+      "ft_phy8"
+    ],
+    "slice_station__t40_phy1026_s_7N_x15": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3",
+      "ft_phy4",
+      "ft_phy5",
+      "ft_phy6",
+      "ft_phy7",
+      "ft_phy8",
+      "ft_phy9"
+    ],
+    "slice_station__t40_phy1026_s_7N_x14": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3",
+      "ft_phy4",
+      "ft_phy5",
+      "ft_phy6",
+      "ft_phy7",
+      "ft_phy8",
+      "ft_phy9"
+    ],
+    "slice_station__t51_phy1026_s_7N_x13": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3",
+      "ft_phy4",
+      "ft_phy5",
+      "ft_phy6",
+      "ft_phy7",
+      "ft_phy8",
+      "ft_phy9"
+    ],
+    "col_h9_r0_p1__t1_phy1026_fE5_p1_b0": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3"
+    ],
+    "slice_station__t31_phy1026_s_7N_x06": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2"
+    ],
+    "col_h9_r0_p4__t1_phy1026_fE5_p4_b0": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "col_h9_r0_p3__t1_phy1026_fE5_p3_b0": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "col_h9_r0_p2__t1_phy1026_fE5_p2_b0": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "slice_station__t23_phy1026_s_7S_x10": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "slice_station__t24_phy1026_s_7S_x11": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3"
+    ],
+    "slice_station__t24_phy1026_s_7S_x12": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3"
+    ],
+    "slice_station__t25_phy1026_s_7S_x13": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3"
+    ],
+    "slice_station__t24_phy1026_s_7S_x14": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3"
+    ],
+    "slice_station__t26_phy1026_s_7S_x15": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3"
+    ],
+    "slice_station__t27_phy1026_s_7S_x16": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3"
+    ],
+    "slice_station__t28_phy1026_s_7S_x17": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3"
+    ],
+    "col_h9_r2__t1_phy1026_fE0_p3_b2": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "col_h9_r2__t1_phy1026_fE0_p2_b2": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "col_h10_r2__t1_phy1026_fE0_p1_b2": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "slice_station__t43_phy1026_s_0N_x06": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3",
+      "ft_phy4",
+      "ft_phy5"
+    ],
+    "slice_station__t42_phy1026_s_0N_x05": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3",
+      "ft_phy4",
+      "ft_phy5"
+    ],
+    "slice_station__t42_phy1026_s_0N_x04": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3",
+      "ft_phy4",
+      "ft_phy5"
+    ],
+    "slice_station__t41_phy1026_s_0N_x03": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3",
+      "ft_phy4",
+      "ft_phy5",
+      "ft_phy6",
+      "ft_phy7",
+      "ft_phy8"
+    ],
+    "col_h9_r0_p2__t1_phy1026_fW5_p2_b0": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3"
+    ],
+    "col_h9_r0_p1__t1_phy1026_fW5_p1_b0": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3"
+    ],
+    "col_h9_r0_p4__t1_phy1026_fW5_p4_b0": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "col_h9_r0_p3__t1_phy1026_fW5_p3_b0": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "slice_station__t44_phy1026_s_0N_x16": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "ot_s81sl_leaf__t10_phy1026_s_0N_L4": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "ot_s81sl_leaf__t9_phy1026_s_0N_L3": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "ot_s81sl_leaf__t8_phy1026_s_0N_L1": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2"
+    ],
+    "gunit__t1_phy1026_gunit": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3",
+      "ft_phy4",
+      "ft_phy5"
+    ],
+    "slice_station__t49_phy1026_s_0S_x00": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3",
+      "ft_phy4",
+      "ft_phy5",
+      "ft_phy6",
+      "ft_phy7",
+      "ft_phy8",
+      "ft_phy9",
+      "ft_phy10",
+      "ft_phy11",
+      "ft_phy12",
+      "ft_phy13"
+    ],
+    "slice_station__t36_phy1026_s_0S_x01": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3",
+      "ft_phy4",
+      "ft_phy5",
+      "ft_phy6",
+      "ft_phy7",
+      "ft_phy8",
+      "ft_phy9",
+      "ft_phy10",
+      "ft_phy11",
+      "ft_phy12",
+      "ft_phy13"
+    ],
+    "slice_station__t50_phy1026_s_0S_x02": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3",
+      "ft_phy4",
+      "ft_phy5",
+      "ft_phy6",
+      "ft_phy7",
+      "ft_phy8"
+    ],
+    "slice_station__t50_phy1026_s_0S_x03": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3",
+      "ft_phy4",
+      "ft_phy5",
+      "ft_phy6",
+      "ft_phy7",
+      "ft_phy8"
+    ],
+    "slice_station__t37_phy1026_s_0S_x04": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3",
+      "ft_phy4",
+      "ft_phy5",
+      "ft_phy6",
+      "ft_phy7",
+      "ft_phy8"
+    ],
+    "slice_station__t38_phy1026_s_0S_x05": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3",
+      "ft_phy4",
+      "ft_phy5",
+      "ft_phy6",
+      "ft_phy7"
+    ],
+    "col_h9_r2__t1_phy1026_fW0_p2_b2": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3"
+    ],
+    "col_h10_r2__t1_phy1026_fW0_p1_b2": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3"
+    ],
+    "col_h10_r2__t1_phy1026_fW0_p4_b2": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "col_h9_r2__t1_phy1026_fW0_p3_b2": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "slice_station__t47_phy1026_s_3N_x06": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3",
+      "ft_phy4"
+    ],
+    "ot_s81sl_kv_leaf__t5_phy1026_s_3N_L4": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3",
+      "ft_phy4",
+      "ft_phy5",
+      "ft_phy6"
+    ],
+    "ot_s81sl_kv_leaf__t4_phy1026_s_3N_L3": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3",
+      "ft_phy4",
+      "ft_phy5",
+      "ft_phy6"
+    ],
+    "ot_s81sl_kv_leaf__t3_phy1026_s_3N_L1": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3",
+      "ft_phy4",
+      "ft_phy5",
+      "ft_phy6"
+    ],
+    "dsdv_slice_kv512_C__t1_phy1026_s_3N_C": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3",
+      "ft_phy4",
+      "ft_phy5"
+    ],
+    "ot_s81sl_kv_leaf__t2_phy1026_s_3N_L0": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3",
+      "ft_phy4",
+      "ft_phy5"
+    ],
+    "ot_s81sl_kv_leaf__t1_phy1026_s_3N_L2": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3",
+      "ft_phy4"
+    ],
+    "ot_s81sl_leaf__t35_phy1026_s_3S_L4": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3",
+      "ft_phy4"
+    ],
+    "ot_s81sl_leaf__t34_phy1026_s_3S_L3": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3",
+      "ft_phy4"
+    ],
+    "ot_s81sl_leaf__t24_phy1026_s_2S_L3": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2"
+    ],
+    "ot_s81sl_leaf__t15_phy1026_s_1S_L3": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "ot_s81sl_leaf__t4_phy1026_s_0S_L3": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2"
+    ],
+    "ot_s81sl_leaf__t3_phy1026_s_0S_L1": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "dsdv_slice_lepw_mus_C__t1_phy1026_s_0S_C": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "ot_s81sl_leaf__t32_phy1026_s_3S_L0": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3",
+      "ft_phy4",
+      "ft_phy5"
+    ],
+    "ot_s81sl_leaf__t31_phy1026_s_3S_L2": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3",
+      "ft_phy4",
+      "ft_phy5"
+    ],
+    "seqhost__t1_phy1026_seqhost": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2"
+    ],
+    "svc_hi_dsdv_svc_rs__t3_phy1026_svc_7": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3"
+    ],
+    "svc_hi_dsdv_svc_pvso_entry__t1_phy1026_svc_5": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3",
+      "ft_phy4"
+    ],
+    "svc_hi_dsdv_svc_rs__t2_phy1026_svc_3": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3",
+      "ft_phy4",
+      "ft_phy5"
+    ],
+    "svc_hi_dsdv_svc_rs__t1_phy1026_svc_1": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3",
+      "ft_phy4",
+      "ft_phy5",
+      "ft_phy6"
+    ],
+    "svc_lo_dsdv_svc_rs_w__t1_phy1026_svc_0": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3"
+    ],
+    "slice_station__t7_phy1026_s_0N_x01": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "slice_station__t6_phy1026_s_0N_x00": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "slice_station__t7_phy1026_s_0S_x09": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "slice_station__t7_phy1026_s_0S_x08": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2"
+    ],
+    "slice_station__t6_phy1026_s_0S_x07": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2"
+    ],
+    "dsdv_slice_lepw_mus_LP__t2_phy1026_s_0S_LP": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "ot_s81sl_leaf__t5_phy1026_s_0S_L4": [
+      "ft_phy0"
+    ],
+    "ot_s81sl_leaf__t6_phy1026_s_0N_L2": [
+      "ft_phy0"
+    ],
+    "ot_s81sl_leaf__t7_phy1026_s_0N_L0": [
+      "ft_phy0"
+    ],
+    "ot_s81sl_leaf__t17_phy1026_s_1N_L0": [
+      "ft_phy0"
+    ],
+    "ot_s81sl_leaf__t27_phy1026_s_2N_L0": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "col_h10_r2__t1_phy1026_fE0_p4_b2": [
+      "ft_phy0"
+    ],
+    "dsdv_slice_lepw_mu_C__t1_phy1026_s_0N_C": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "dsdv_slice_c1x_C__t10_phy1026_s_1N_C": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "dsdv_slice_c1x_C__t4_phy1026_s_2N_C": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2"
+    ],
+    "ot_s81sl_leaf__t40_phy1026_s_4N_L4": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2",
+      "ft_phy3",
+      "ft_phy4"
+    ],
+    "svc_lo_dsdv_svc_rs__t6_phy1026_svc_12": [
+      "ft_phy0"
+    ],
+    "svc_hi_dsdv_svc_rs__t5_phy1026_svc_13": [
+      "ft_phy0"
+    ],
+    "ot_s81sl_leaf__t55_phy1026_s_6S_L4": [
+      "ft_phy0"
+    ],
+    "ot_s81sl_leaf__t56_phy1026_s_6S_L2": [
+      "ft_phy0"
+    ],
+    "ot_s81sl_leaf__t57_phy1026_s_6S_L0": [
+      "ft_phy0"
+    ],
+    "dsdv_slice_c1x_C__t8_phy1026_s_6S_C": [
+      "ft_phy0"
+    ],
+    "ot_s81sl_leaf__t58_phy1026_s_6S_L1": [
+      "ft_phy0"
+    ],
+    "ot_s81sl_leaf__t59_phy1026_s_6S_L3": [
+      "ft_phy0"
+    ],
+    "slice_station__t20_phy1026_s_6S_x06": [
+      "ft_phy0"
+    ],
+    "ot_s81sl_leaf__t60_phy1026_s_6N_L2": [
+      "ft_phy0"
+    ],
+    "ot_s81sl_leaf__t61_phy1026_s_6N_L0": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "dsdv_slice_c1x_C__t9_phy1026_s_6N_C": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "ot_s81sl_leaf__t62_phy1026_s_6N_L1": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "ot_s81sl_leaf__t24_phy1026_s_6N_L3": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "ot_s81sl_leaf__t25_phy1026_s_6N_L4": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2"
+    ],
+    "ot_s81sl_leaf__t54_phy1026_s_5N_L4": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "ot_s81sl_leaf__t28_phy1026_s_2N_L1": [
+      "ft_phy0"
+    ],
+    "ot_s81sl_leaf__t75_phy1026_s_1N_L1": [
+      "ft_phy0"
+    ],
+    "slice_station__t21_phy1026_s_6N_x06": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "ot_s81sl_leaf__t71_phy1026_s_7N_L0": [
+      "ft_phy0"
+    ],
+    "slice_station__t30_phy1026_s_7N_x11": [
+      "ft_phy0"
+    ],
+    "slice_station__t29_phy1026_s_7N_x10": [
+      "ft_phy0"
+    ],
+    "slice_station__t30_phy1026_s_7S_x111": [
+      "ft_phy0"
+    ],
+    "slice_station__t30_phy1026_s_7S_x110": [
+      "ft_phy0"
+    ],
+    "slice_station__t29_phy1026_s_7S_x19": [
+      "ft_phy0"
+    ],
+    "ot_s81sl_leaf__t74_phy1026_s_7N_L4": [
+      "ft_phy0"
+    ],
+    "ot_s81sl_leaf__t44_phy1026_s_4N_L3": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2"
+    ],
+    "ot_s81sl_leaf__t43_phy1026_s_4N_L1": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2"
+    ],
+    "dsdv_slice_c1x_C__t5_phy1026_s_4N_C": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2"
+    ],
+    "ot_s81sl_leaf__t42_phy1026_s_4N_L0": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2"
+    ],
+    "ot_s81sl_leaf__t41_phy1026_s_4N_L2": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2"
+    ],
+    "slice_station__t17_phy1026_s_4S_x06": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2"
+    ],
+    "ot_s81sl_leaf__t40_phy1026_s_4S_L3": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2"
+    ],
+    "ot_s81sl_leaf__t39_phy1026_s_4S_L1": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2"
+    ],
+    "ot_s81sl_leaf__t33_phy1026_s_3S_L1": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2"
+    ],
+    "dsdv_slice_iq_C__t1_phy1026_s_3S_C": [
+      "ft_phy0",
+      "ft_phy1",
+      "ft_phy2"
+    ],
+    "ot_s81sl_leaf__t2_phy1026_s_0S_L0": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "ot_s81sl_leaf__t1_phy1026_s_0S_L2": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "slice_station__t8_phy1026_s_0S_x13": [
+      "ft_phy0"
+    ],
+    "dsdv_slice_c1x_C__t3_phy1026_s_2S_C": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "ot_s81sl_leaf__t22_phy1026_s_2S_L0": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "ot_s81sl_leaf__t13_phy1026_s_1S_L0": [
+      "ft_phy0"
+    ],
+    "ot_s81sl_leaf__t38_phy1026_s_4S_L0": [
+      "ft_phy0"
+    ],
+    "dsdv_slice_c3x_C__t1_phy1026_s_4S_C": [
+      "ft_phy0"
+    ],
+    "ot_s81sl_leaf__t21_phy1026_s_2S_L2": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "slice_station__t14_phy1026_s_2S_x00": [
+      "ft_phy0",
+      "ft_phy1"
+    ],
+    "ot_s81sl_leaf__t11_phy1026_s_1S_L4": [
+      "ft_phy0"
+    ],
+    "ot_s81sl_leaf__t23_phy1026_s_2S_L1": [
+      "ft_phy0"
+    ],
+    "ot_s81sl_leaf__t25_phy1026_s_2S_L4": [
+      "ft_phy0"
+    ],
+    "ot_s81sl_leaf__t26_phy1026_s_2N_L2": [
+      "ft_phy0"
+    ]
+  },
+  "routes": [
+    {
+      "lane": "dfi__svc_0__phy_hbm",
+      "parts": [
+        "svc_0",
+        "svc_2",
+        "svc_4",
+        "svc_6",
+        "phy_hbm"
+      ],
+      "width": 1368
+    },
+    {
+      "lane": "hbmrd__phy_hbm__svc_0",
+      "parts": [
+        "phy_hbm",
+        "svc_2",
+        "svc_0"
+      ],
+      "width": 1120
+    },
+    {
+      "lane": "coll__lk_EN0__s_7N_LP",
+      "parts": [
+        "lk_EN0",
+        "s_7N_x16",
+        "s_7N_x15",
+        "s_7N_x14",
+        "s_7N_x13",
+        "s_7N_LP"
+      ],
+      "width": 514
+    },
+    {
+      "lane": "coll__lk_EN1__s_7N_LP",
+      "parts": [
+        "lk_EN1",
+        "fE5_p1_b0",
+        "s_7N_x16",
+        "s_7N_x15",
+        "s_7N_x14",
+        "s_7N_x13",
+        "s_7N_LP"
+      ],
+      "width": 514
+    },
+    {
+      "lane": "coll__lk_EN2__s_7N_LP",
+      "parts": [
+        "lk_EN2",
+        "s_7N_x06",
+        "s_7N_x16",
+        "s_7N_x15",
+        "s_7N_x14",
+        "s_7N_x13",
+        "s_7N_LP"
+      ],
+      "width": 514
+    },
+    {
+      "lane": "coll__lk_EN3__s_7N_LP",
+      "parts": [
+        "lk_EN3",
+        "fE5_p4_b0",
+        "fE5_p3_b0",
+        "fE5_p2_b0",
+        "fE5_p1_b0",
+        "s_7N_x16",
+        "s_7N_x15",
+        "s_7N_x14",
+        "s_7N_x13",
+        "s_7N_LP"
+      ],
+      "width": 514
+    },
+    {
+      "lane": "coll__lk_ES0__s_7S_LP",
+      "parts": [
+        "lk_ES0",
+        "s_7S_x10",
+        "s_7S_x11",
+        "s_7S_x12",
+        "s_7S_x13",
+        "s_7S_x14",
+        "s_7S_x15",
+        "s_7S_x16",
+        "s_7S_x17",
+        "s_7S_LP"
+      ],
+      "width": 514
+    },
+    {
+      "lane": "coll__lk_ES1__s_7S_LP",
+      "parts": [
+        "lk_ES1",
+        "fE0_p3_b2",
+        "fE0_p2_b2",
+        "fE0_p1_b2",
+        "s_7S_x11",
+        "s_7S_x12",
+        "s_7S_x13",
+        "s_7S_x14",
+        "s_7S_x15",
+        "s_7S_x16",
+        "s_7S_x17",
+        "s_7S_LP"
+      ],
+      "width": 514
+    },
+    {
+      "lane": "coll__lk_WN0__s_0N_LP",
+      "parts": [
+        "lk_WN0",
+        "s_0N_x06",
+        "s_0N_x05",
+        "s_0N_x04",
+        "s_0N_x03",
+        "s_0N_LP"
+      ],
+      "width": 514
+    },
+    {
+      "lane": "coll__lk_WN1__s_0N_LP",
+      "parts": [
+        "lk_WN1",
+        "fW5_p2_b0",
+        "fW5_p1_b0",
+        "s_0N_x06",
+        "s_0N_x05",
+        "s_0N_x04",
+        "s_0N_x03",
+        "s_0N_LP"
+      ],
+      "width": 514
+    },
+    {
+      "lane": "coll__lk_WN2__s_0N_LP",
+      "parts": [
+        "lk_WN2",
+        "fW5_p4_b0",
+        "fW5_p3_b0",
+        "fW5_p2_b0",
+        "fW5_p1_b0",
+        "s_0N_x06",
+        "s_0N_x05",
+        "s_0N_x04",
+        "s_0N_x03",
+        "s_0N_LP"
+      ],
+      "width": 514
+    },
+    {
+      "lane": "coll__lk_WN3__s_0N_LP",
+      "parts": [
+        "lk_WN3",
+        "s_0N_x16",
+        "s_0N_L4",
+        "s_0N_L3",
+        "s_0N_L1",
+        "s_0N_x03",
+        "s_0N_LP"
+      ],
+      "width": 514
+    },
+    {
+      "lane": "coll__lk_WS0__s_0S_LP",
+      "parts": [
+        "lk_WS0",
+        "gunit",
+        "s_0S_x00",
+        "s_0S_x01",
+        "s_0S_x02",
+        "s_0S_x03",
+        "s_0S_x04",
+        "s_0S_x05",
+        "s_0S_LP"
+      ],
+      "width": 514
+    },
+    {
+      "lane": "coll__lk_WS1__s_0S_LP",
+      "parts": [
+        "lk_WS1",
+        "fW0_p2_b2",
+        "fW0_p1_b2",
+        "gunit",
+        "s_0S_x00",
+        "s_0S_x01",
+        "s_0S_x02",
+        "s_0S_x03",
+        "s_0S_x04",
+        "s_0S_x05",
+        "s_0S_LP"
+      ],
+      "width": 514
+    },
+    {
+      "lane": "coll__lk_WS2__s_0S_LP",
+      "parts": [
+        "lk_WS2",
+        "fW0_p4_b2",
+        "fW0_p3_b2",
+        "fW0_p2_b2",
+        "fW0_p1_b2",
+        "gunit",
+        "s_0S_x00",
+        "s_0S_x01",
+        "s_0S_x02",
+        "s_0S_x03",
+        "s_0S_x04",
+        "s_0S_x05",
+        "s_0S_LP"
+      ],
+      "width": 514
+    },
+    {
+      "lane": "coll__lk_WS3__s_0S_LP",
+      "parts": [
+        "lk_WS3",
+        "s_3N_x06",
+        "s_3N_L4",
+        "s_3N_L3",
+        "s_3N_L1",
+        "s_3N_C",
+        "s_3N_L0",
+        "s_3N_L2",
+        "s_3S_L4",
+        "s_3S_L3",
+        "s_2S_L3",
+        "s_1S_L3",
+        "s_0S_L3",
+        "s_0S_L1",
+        "s_0S_C",
+        "s_0S_LP"
+      ],
+      "width": 514
+    },
+    {
+      "lane": "idx__iqf__svc_0",
+      "parts": [
+        "iqf",
+        "svc_0"
+      ],
+      "width": 513
+    },
+    {
+      "lane": "idx__s_3S_C__iqf",
+      "parts": [
+        "s_3S_C",
+        "s_3S_L0",
+        "s_3S_L2",
+        "seqhost",
+        "svc_7",
+        "svc_5",
+        "svc_3",
+        "svc_1",
+        "svc_0",
+        "iqf"
+      ],
+      "width": 513
+    },
+    {
+      "lane": "ql__s_0N_LP__iqf",
+      "parts": [
+        "s_0N_LP",
+        "s_0N_x01",
+        "s_0N_x00",
+        "s_0S_x09",
+        "s_0S_x08",
+        "s_0S_x07",
+        "s_0S_LP",
+        "s_0S_x05",
+        "s_0S_x04",
+        "s_0S_x03",
+        "s_0S_x02",
+        "s_0S_x01",
+        "s_0S_x00",
+        "svc_0",
+        "iqf"
+      ],
+      "width": 513
+    },
+    {
+      "lane": "coll__s_0N_LP__lk_WN0",
+      "parts": [
+        "s_0N_LP",
+        "s_0N_x03",
+        "s_0N_x04",
+        "s_0N_x05",
+        "s_0N_x06",
+        "lk_WN0"
+      ],
+      "width": 512
+    },
+    {
+      "lane": "coll__s_0N_LP__lk_WN1",
+      "parts": [
+        "s_0N_LP",
+        "s_0N_x03",
+        "s_0N_x04",
+        "s_0N_x05",
+        "s_0N_x06",
+        "fW5_p1_b0",
+        "fW5_p2_b0",
+        "lk_WN1"
+      ],
+      "width": 512
+    },
+    {
+      "lane": "coll__s_0N_LP__lk_WN2",
+      "parts": [
+        "s_0N_LP",
+        "s_0N_x03",
+        "s_0N_x04",
+        "s_0N_x05",
+        "s_0N_x06",
+        "fW5_p1_b0",
+        "fW5_p2_b0",
+        "fW5_p3_b0",
+        "fW5_p4_b0",
+        "lk_WN2"
+      ],
+      "width": 512
+    },
+    {
+      "lane": "coll__s_0N_LP__lk_WN3",
+      "parts": [
+        "s_0N_LP",
+        "s_0N_x03",
+        "s_0N_L1",
+        "s_0N_L3",
+        "s_0N_L4",
+        "s_0N_x16",
+        "lk_WN3"
+      ],
+      "width": 512
+    },
+    {
+      "lane": "coll__s_0S_LP__lk_WS0",
+      "parts": [
+        "s_0S_LP",
+        "s_0S_x05",
+        "s_0S_x04",
+        "s_0S_x03",
+        "s_0S_x02",
+        "s_0S_x01",
+        "s_0S_x00",
+        "gunit",
+        "lk_WS0"
+      ],
+      "width": 512
+    },
+    {
+      "lane": "coll__s_0S_LP__lk_WS1",
+      "parts": [
+        "s_0S_LP",
+        "s_0S_x05",
+        "s_0S_x04",
+        "s_0S_x03",
+        "s_0S_x02",
+        "s_0S_x01",
+        "s_0S_x00",
+        "gunit",
+        "fW0_p1_b2",
+        "fW0_p2_b2",
+        "lk_WS1"
+      ],
+      "width": 512
+    },
+    {
+      "lane": "coll__s_0S_LP__lk_WS2",
+      "parts": [
+        "s_0S_LP",
+        "s_0S_x05",
+        "s_0S_x04",
+        "s_0S_x03",
+        "s_0S_x02",
+        "s_0S_x01",
+        "s_0S_x00",
+        "gunit",
+        "fW0_p1_b2",
+        "fW0_p2_b2",
+        "fW0_p3_b2",
+        "fW0_p4_b2",
+        "lk_WS2"
+      ],
+      "width": 512
+    },
+    {
+      "lane": "coll__s_0S_LP__lk_WS3",
+      "parts": [
+        "s_0S_LP",
+        "s_0S_x07",
+        "s_0S_x08",
+        "s_0S_L3",
+        "s_0S_L4",
+        "s_0N_L2",
+        "s_0N_L0",
+        "s_1N_L0",
+        "s_2N_L0",
+        "s_3N_L0",
+        "s_3N_C",
+        "s_3N_L1",
+        "s_3N_L3",
+        "s_3N_L4",
+        "s_3N_x06",
+        "lk_WS3"
+      ],
+      "width": 512
+    },
+    {
+      "lane": "coll__s_7N_LP__lk_EN0",
+      "parts": [
+        "s_7N_LP",
+        "s_7N_x13",
+        "s_7N_x14",
+        "s_7N_x15",
+        "s_7N_x16",
+        "lk_EN0"
+      ],
+      "width": 512
+    },
+    {
+      "lane": "coll__s_7N_LP__lk_EN1",
+      "parts": [
+        "s_7N_LP",
+        "s_7N_x13",
+        "s_7N_x14",
+        "s_7N_x15",
+        "s_7N_x16",
+        "fE5_p1_b0",
+        "lk_EN1"
+      ],
+      "width": 512
+    },
+    {
+      "lane": "coll__s_7N_LP__lk_EN2",
+      "parts": [
+        "s_7N_LP",
+        "s_7N_x13",
+        "s_7N_x14",
+        "s_7N_x15",
+        "s_7N_x16",
+        "s_7N_x06",
+        "lk_EN2"
+      ],
+      "width": 512
+    },
+    {
+      "lane": "coll__s_7N_LP__lk_EN3",
+      "parts": [
+        "s_7N_LP",
+        "s_7N_x13",
+        "s_7N_x14",
+        "s_7N_x15",
+        "s_7N_x16",
+        "fE5_p1_b0",
+        "fE5_p2_b0",
+        "fE5_p3_b0",
+        "fE5_p4_b0",
+        "lk_EN3"
+      ],
+      "width": 512
+    },
+    {
+      "lane": "coll__s_7S_LP__lk_ES0",
+      "parts": [
+        "s_7S_LP",
+        "s_7S_x17",
+        "s_7S_x16",
+        "s_7S_x15",
+        "s_7S_x14",
+        "s_7S_x13",
+        "s_7S_x12",
+        "s_7S_x11",
+        "s_7S_x10",
+        "lk_ES0"
+      ],
+      "width": 512
+    },
+    {
+      "lane": "coll__s_7S_LP__lk_ES1",
+      "parts": [
+        "s_7S_LP",
+        "s_7S_x17",
+        "s_7S_x16",
+        "s_7S_x15",
+        "s_7S_x14",
+        "s_7S_x13",
+        "s_7S_x12",
+        "s_7S_x11",
+        "fE0_p1_b2",
+        "fE0_p2_b2",
+        "fE0_p3_b2",
+        "fE0_p4_b2",
+        "lk_ES1"
+      ],
+      "width": 512
+    },
+    {
+      "lane": "ca__s_0N_LP__bk_sel",
+      "parts": [
+        "s_0N_LP",
+        "s_0N_C",
+        "s_1N_C",
+        "s_2N_C",
+        "s_3N_C",
+        "s_3N_L1",
+        "s_3N_L3",
+        "s_3N_L4",
+        "s_4N_L4",
+        "bk_sel"
+      ],
+      "width": 276
+    },
+    {
+      "lane": "cb__s_0N_LP__bk_sel",
+      "parts": [
+        "s_0N_LP",
+        "s_0N_C",
+        "s_1N_C",
+        "s_2N_C",
+        "s_3N_C",
+        "s_3N_L1",
+        "s_3N_L3",
+        "s_3N_L4",
+        "s_4N_L4",
+        "bk_sel"
+      ],
+      "width": 276
+    },
+    {
+      "lane": "idx__svc_14__bk_sel",
+      "parts": [
+        "svc_14",
+        "svc_12",
+        "svc_13",
+        "s_6S_L4",
+        "s_6S_L2",
+        "s_6S_L0",
+        "s_6S_C",
+        "s_6S_L1",
+        "s_6S_L3",
+        "s_6S_x06",
+        "s_6N_L2",
+        "s_6N_L0",
+        "s_6N_C",
+        "s_6N_L1",
+        "s_6N_L3",
+        "s_6N_L4",
+        "s_5N_L4",
+        "bk_sel"
+      ],
+      "width": 276
+    },
+    {
+      "lane": "tl__bk_sel__s_0N_LP",
+      "parts": [
+        "bk_sel",
+        "s_3N_x06",
+        "s_3N_L4",
+        "s_3N_L3",
+        "s_3N_L1",
+        "s_2N_L1",
+        "s_1N_L1",
+        "s_0N_L1",
+        "s_0N_x03",
+        "s_0N_LP"
+      ],
+      "width": 276
+    },
+    {
+      "lane": "tp__bk_sel__s_7N_LP",
+      "parts": [
+        "bk_sel",
+        "s_6N_x06",
+        "s_7N_x06",
+        "s_7N_x16",
+        "s_7N_x15",
+        "s_7N_x14",
+        "s_7N_x13",
+        "s_7N_LP"
+      ],
+      "width": 276
+    },
+    {
+      "lane": "tp__bk_sel__s_7S_LP",
+      "parts": [
+        "bk_sel",
+        "s_6N_x06",
+        "s_6N_L4",
+        "s_6N_L3",
+        "s_6N_L1",
+        "s_6N_C",
+        "s_6N_L0",
+        "s_7N_L0",
+        "s_7N_x11",
+        "s_7N_x10",
+        "s_7S_x111",
+        "s_7S_x110",
+        "s_7S_x19",
+        "s_7S_LP"
+      ],
+      "width": 276
+    },
+    {
+      "lane": "tp__s_7N_LP__bk_sel",
+      "parts": [
+        "s_7N_LP",
+        "s_7N_x13",
+        "s_7N_x14",
+        "s_7N_x15",
+        "s_7N_L4",
+        "s_6N_L4",
+        "s_5N_L4",
+        "bk_sel"
+      ],
+      "width": 276
+    },
+    {
+      "lane": "xtier__bk_sel__s_4S_C",
+      "parts": [
+        "bk_sel",
+        "s_4N_L4",
+        "s_4N_L3",
+        "s_4N_L1",
+        "s_4N_C",
+        "s_4N_L0",
+        "s_4N_L2",
+        "s_4S_x06",
+        "s_4S_L3",
+        "s_4S_L1",
+        "s_4S_C"
+      ],
+      "width": 276
+    },
+    {
+      "lane": "xtier__bk_sel__seqhost",
+      "parts": [
+        "bk_sel",
+        "s_3N_x06",
+        "s_3N_L4",
+        "s_3N_L3",
+        "s_3N_L1",
+        "s_3N_C",
+        "s_3N_L0",
+        "s_3N_L2",
+        "s_3S_L4",
+        "s_3S_L3",
+        "s_3S_L1",
+        "s_3S_C",
+        "s_3S_L0",
+        "s_3S_L2",
+        "seqhost"
+      ],
+      "width": 276
+    },
+    {
+      "lane": "xtier__gunit__s_3N_C",
+      "parts": [
+        "gunit",
+        "s_0S_x00",
+        "s_0S_x01",
+        "svc_1",
+        "svc_3",
+        "svc_5",
+        "svc_7",
+        "seqhost",
+        "s_3S_L2",
+        "s_3S_L0",
+        "s_3S_C",
+        "s_3S_L1",
+        "s_3S_L3",
+        "s_3S_L4",
+        "s_3N_L2",
+        "s_3N_L0",
+        "s_3N_C"
+      ],
+      "width": 276
+    },
+    {
+      "lane": "xtier__gunit__s_3S_C",
+      "parts": [
+        "gunit",
+        "s_0S_x00",
+        "s_0S_x01",
+        "svc_1",
+        "svc_3",
+        "svc_5",
+        "svc_7",
+        "seqhost",
+        "s_3S_L2",
+        "s_3S_L0",
+        "s_3S_C"
+      ],
+      "width": 276
+    },
+    {
+      "lane": "xtier__s_3N_C__gunit",
+      "parts": [
+        "s_3N_C",
+        "s_3N_L0",
+        "s_3N_L2",
+        "s_3S_L4",
+        "s_3S_L3",
+        "s_2S_L3",
+        "s_1S_L3",
+        "s_0S_L3",
+        "s_0S_L1",
+        "s_0S_C",
+        "s_0S_L0",
+        "s_0S_L2",
+        "s_0S_x13",
+        "svc_1",
+        "s_0S_x01",
+        "s_0S_x00",
+        "gunit"
+      ],
+      "width": 276
+    },
+    {
+      "lane": "xtier__s_3S_C__gunit",
+      "parts": [
+        "s_3S_C",
+        "s_2S_C",
+        "s_2S_L0",
+        "s_1S_L0",
+        "s_0S_L0",
+        "s_0S_L2",
+        "s_0S_x04",
+        "s_0S_x03",
+        "s_0S_x02",
+        "s_0S_x01",
+        "s_0S_x00",
+        "gunit"
+      ],
+      "width": 276
+    },
+    {
+      "lane": "xtier__s_4S_C__bk_sel",
+      "parts": [
+        "s_4S_C",
+        "s_4S_L1",
+        "s_4S_L3",
+        "s_4S_x06",
+        "s_4N_L2",
+        "s_4N_L0",
+        "s_4N_C",
+        "s_4N_L1",
+        "s_4N_L3",
+        "s_4N_L4",
+        "bk_sel"
+      ],
+      "width": 276
+    },
+    {
+      "lane": "xtier__seqhost__bk_sel",
+      "parts": [
+        "seqhost",
+        "s_3S_L2",
+        "s_3S_L0",
+        "s_4S_L0",
+        "s_4S_C",
+        "s_4S_L1",
+        "s_4S_L3",
+        "s_4S_x06",
+        "s_4N_L2",
+        "s_4N_L0",
+        "s_4N_C",
+        "s_4N_L1",
+        "s_4N_L3",
+        "s_4N_L4",
+        "bk_sel"
+      ],
+      "width": 276
+    },
+    {
+      "lane": "unit__seqhost__gunit",
+      "parts": [
+        "seqhost",
+        "svc_7",
+        "svc_5",
+        "svc_3",
+        "svc_1",
+        "s_0S_x01",
+        "s_0S_x00",
+        "gunit"
+      ],
+      "width": 267
+    },
+    {
+      "lane": "qc__iqf__s_0N_LP",
+      "parts": [
+        "iqf",
+        "svc_0",
+        "s_0S_x00",
+        "s_0S_x01",
+        "s_0S_x02",
+        "s_0S_x03",
+        "s_0S_x04",
+        "s_0S_x05",
+        "s_0S_LP",
+        "s_0S_x07",
+        "s_0S_x08",
+        "s_0S_x09",
+        "s_0N_x00",
+        "s_0N_x01",
+        "s_0N_LP"
+      ],
+      "width": 258
+    },
+    {
+      "lane": "flt__bk_sel__gunit",
+      "parts": [
+        "bk_sel",
+        "s_3N_x06",
+        "s_3N_L4",
+        "s_3N_L3",
+        "s_3N_L1",
+        "s_3N_C",
+        "s_3N_L0",
+        "s_3N_L2",
+        "s_3S_L4",
+        "s_3S_L3",
+        "s_3S_L1",
+        "s_3S_C",
+        "s_3S_L0",
+        "s_3S_L2",
+        "s_2S_L2",
+        "s_2S_x00",
+        "s_1S_L4",
+        "svc_3",
+        "svc_1",
+        "svc_0",
+        "gunit"
+      ],
+      "width": 1
+    },
+    {
+      "lane": "flt__gunit__s_3N_C",
+      "parts": [
+        "gunit",
+        "s_0S_x00",
+        "s_0S_x01",
+        "svc_1",
+        "svc_3",
+        "svc_5",
+        "s_2S_x00",
+        "s_2S_L2",
+        "s_2S_L0",
+        "s_2S_C",
+        "s_2S_L1",
+        "s_2S_L3",
+        "s_2S_L4",
+        "s_2N_L2",
+        "s_2N_L0",
+        "s_2N_C",
+        "s_3N_C"
+      ],
+      "width": 1
+    },
+    {
+      "lane": "flt__iqf__svc_0",
+      "parts": [
+        "iqf",
+        "svc_0"
+      ],
+      "width": 1
+    }
+  ],
+  "preserved_field_children": true,
+  "pending": [
+    "Allocate every new FT station bit off hard cores; regenerate full G0C/latency and price all changed cycles.",
+    "TX candidate view not signed; all new wrapper variants need actual trial placement.",
+    "Independent image review + shared infra-first PG/clock/reset precede die route."
+  ]
+}
