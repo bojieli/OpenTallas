@@ -576,7 +576,22 @@ def _foreach_lists(txt):
     return out
 
 
-def macro_boxes(kd):
+def _plan_contents(kd, plan_dir):
+    """{instance: contents entry} of this partition kit's type from plan_dir/die_plan.json (budget.json type)."""
+    if not plan_dir:
+        return None
+    pf = Path(plan_dir) / "die_plan.json"
+    bj = Path(kd) / "budget.json"
+    if not pf.is_file() or not bj.is_file():
+        return None
+    typ = json.loads(bj.read_text()).get("type")
+    pt = json.loads(pf.read_text()).get("partition_types", {}).get(typ)
+    if not pt:
+        return None
+    return {e["inst"]: e for e in pt.get("contents", []) if isinstance(e, dict) and e.get("inst") and e.get("outline_um")}
+
+
+def macro_boxes(kd, plan_dir=None):
     """(boxes [(name, x0, y0, x1, y1)], problem or None) from the kit's static macro placement."""
     kd = Path(kd)
     cfg = _mk(kd)
@@ -609,9 +624,28 @@ def macro_boxes(kd):
                 if o in ("R90", "R270", "MXR90", "MYR90"):
                     w, h = h, w
                 boxes.append((f"{master}#{len(boxes)}", x, y, x + w, y + h))
-    for m in re.finditer(r"place_macro\s+-macro_name\s+(\S+)\s+-location\s+\{\s*" + _NUM + r"\s+" + _NUM +
-                         r"\s*\}(?:\s+-orientation\s+(\S+))?", txt):
-        return None, "place_macro by instance name: master size not static here (extend kit_contract)"
+    pm = list(re.finditer(r"place_macro\s+-macro_name\s+(\S+)\s+-location\s+\{\s*" + _NUM + r"\s+" + _NUM +
+                          r"\s*\}(?:\s+-orientation\s+(\S+))?", txt))
+    if pm:
+        # gen.py phys partition form: instance names at plan sites. KV-KITS-7: master + outline come from the plan's
+        # partition_types[type].contents entry of that instance (plan_dir/die_plan.json, type from budget.json); a
+        # staged LEF SIZE of the master must agree. No plan -> fail closed.
+        inst = _plan_contents(kd, plan_dir)
+        if inst is None:
+            return None, "place_macro by instance name: no plan contents (pass --plan-dir) to resolve macro masters"
+        for m in pm:
+            name = m.group(1).strip("{}").replace("\\[", "[").replace("\\]", "]")
+            x, y, o = float(m.group(2)), float(m.group(3)), (m.group(4) or "R0")
+            ent = inst.get(name)
+            if ent is None:
+                return None, f"place_macro {name}: not a contents macro of this type in the plan"
+            w, h = map(float, ent["outline_um"])
+            master = ent.get("module")
+            if master in sizes and (abs(sizes[master][0] - w) > 1e-3 or abs(sizes[master][1] - h) > 1e-3):
+                return None, f"macro {master}: LEF SIZE {sizes[master]} != plan outline {(w, h)}"
+            if o in ("R90", "R270", "MXR90", "MYR90"):
+                w, h = h, w
+            boxes.append((f"{master}#{len(boxes)}", x, y, x + w, y + h))
     if not boxes:
         return None, f"{mp.name}: no macro sites parsed"
     return boxes, None
@@ -638,8 +672,8 @@ def _clusters(boxes, a0, a1):
     return out
 
 
-def macro_channels(kd, min_um=MIN_CHANNEL_UM):
-    boxes, prob = macro_boxes(kd)
+def macro_channels(kd, plan_dir=None, min_um=MIN_CHANNEL_UM):
+    boxes, prob = macro_boxes(kd, plan_dir)
     if boxes == [] and prob is None:
         return [], dict(applies=False, reason="no macros")
     if prob:
@@ -666,8 +700,8 @@ def macro_channels(kd, min_um=MIN_CHANNEL_UM):
                      min_channel_note="10.8 um = 2x4.32 halo + 8 rows, HBM-MU-QUAD-6 ASK pending COORD ruling")
 
 
-def clock_entry_clear(kd, entries=None):
-    boxes, prob = macro_boxes(kd)
+def clock_entry_clear(kd, plan_dir=None, entries=None):
+    boxes, prob = macro_boxes(kd, plan_dir)
     if boxes == [] and prob is None:
         return [], dict(applies=False, reason="no macros")
     if prob:
@@ -716,7 +750,7 @@ def run_all(kd, plan_dir=None):
     for name in CHECKS:
         fn = globals()[name]
         try:
-            errors, info = fn(kd, plan_dir) if name == "pins_canonical" else fn(kd)
+            errors, info = fn(kd, plan_dir) if name in ("pins_canonical", "macro_channels", "clock_entry_clear") else fn(kd)
         except Exception as error:      # fail closed: a check that cannot run is a FAIL, never a skip
             errors, info = [f"check could not run: {type(error).__name__}: {error}"], dict(applies=True)
         verdict = "FAIL" if errors else ("PASS" if info.get("applies", True) else "NA")
