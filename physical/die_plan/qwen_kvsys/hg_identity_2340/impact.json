@@ -1,0 +1,25 @@
+{
+ "candidate_only": true,
+ "removed_types": [
+  "kv3_hg_v1p2",
+  "kv3_hg_v1p3",
+  "kv3_hg_v1p4",
+  "kv3_hg_v1p5",
+  "kv3_hg_v1p6"
+ ],
+ "types_after": 46,
+ "ports": 36,
+ "old_port_bits": 880,
+ "new_port_bits": 72,
+ "added_registers": 0,
+ "added_cycles": 0,
+ "obligations": [
+  "strict bind/R8",
+  "startup identity arrival vs config readiness",
+  "bootcfg/fault contract",
+  "render and G0C before route"
+ ],
+ "sidecars": [
+  "die_io.json"
+ ]
+}

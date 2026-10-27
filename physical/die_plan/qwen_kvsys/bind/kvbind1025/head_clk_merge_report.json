@@ -1,0 +1,77 @@
+{
+ "schema": "opentallas.kv.head_clk_merge.v1",
+ "kept": {
+  "kv3_head_eighth_e0": "g_front_0_u_front__clk",
+  "kv3_head_eighth_e1": "g_t_2_u_l8__clk",
+  "kv3_head_eighth_e2": "g_front_1_u_front__clk",
+  "kv3_head_eighth_e3": "g_t_6_u_l8__clk",
+  "kv3_head_eighth_e4": "g_front_2_u_front__clk",
+  "kv3_head_eighth_e5": "g_t_10_u_l8__clk",
+  "kv3_head_eighth_e6": "g_front_3_u_front__clk",
+  "kv3_head_eighth_e7": "g_t_14_u_l8__clk"
+ },
+ "removed": {
+  "kv3_head_eighth_e0": [
+   "g_t_0_u_l8__clk",
+   "g_t_0_u_stin__clk",
+   "g_t_0_u_stk__clk",
+   "g_t_1_u_l8__clk",
+   "g_t_1_u_stin__clk",
+   "g_t_1_u_stk__clk",
+   "u_kt__clk"
+  ],
+  "kv3_head_eighth_e1": [
+   "g_t_2_u_stin__clk",
+   "g_t_2_u_stk__clk",
+   "g_t_3_u_l8__clk",
+   "g_t_3_u_stin__clk",
+   "g_t_3_u_stk__clk"
+  ],
+  "kv3_head_eighth_e2": [
+   "g_t_4_u_l8__clk",
+   "g_t_4_u_stin__clk",
+   "g_t_4_u_stk__clk",
+   "g_t_5_u_l8__clk",
+   "g_t_5_u_stin__clk",
+   "g_t_5_u_stk__clk"
+  ],
+  "kv3_head_eighth_e3": [
+   "g_t_6_u_stin__clk",
+   "g_t_6_u_stk__clk",
+   "g_t_7_u_l8__clk",
+   "g_t_7_u_stin__clk",
+   "g_t_7_u_stk__clk"
+  ],
+  "kv3_head_eighth_e4": [
+   "g_t_8_u_l8__clk",
+   "g_t_8_u_stin__clk",
+   "g_t_8_u_stk__clk",
+   "g_t_9_u_l8__clk",
+   "g_t_9_u_stin__clk",
+   "g_t_9_u_stk__clk"
+  ],
+  "kv3_head_eighth_e5": [
+   "g_t_10_u_stin__clk",
+   "g_t_10_u_stk__clk",
+   "g_t_11_u_l8__clk",
+   "g_t_11_u_stin__clk",
+   "g_t_11_u_stk__clk"
+  ],
+  "kv3_head_eighth_e6": [
+   "g_t_12_u_l8__clk",
+   "g_t_12_u_stin__clk",
+   "g_t_12_u_stk__clk",
+   "g_t_13_u_l8__clk",
+   "g_t_13_u_stin__clk",
+   "g_t_13_u_stk__clk"
+  ],
+  "kv3_head_eighth_e7": [
+   "g_t_14_u_stin__clk",
+   "g_t_14_u_stk__clk",
+   "g_t_15_u_l8__clk",
+   "g_t_15_u_stin__clk",
+   "g_t_15_u_stk__clk"
+  ]
+ },
+ "composites_merged": 1024
+}

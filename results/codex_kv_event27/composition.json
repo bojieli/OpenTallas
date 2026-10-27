@@ -1,0 +1,1485 @@
+{
+ "source_r26": "38c1ed8519",
+ "ft_baseline": "ca77c7e90",
+ "capsule": "b4a705f520",
+ "q2_delta": "qkd_ectlk_q2 si[283..536] -> si_283[283..536], xy/layer unchanged",
+ "baseline_slot_changes": [
+  {
+   "type": "kv3_hg_v3",
+   "slot": "ft0",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hg_v3",
+   "slot": "ft1",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hg_v3",
+   "slot": "ft2",
+   "old_stations": 6,
+   "new_stations": 6
+  },
+  {
+   "type": "kv3_hg_v3",
+   "slot": "ft3",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "slot": "ft0",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "slot": "ft1",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "slot": "ft2",
+   "old_stations": 6,
+   "new_stations": 6
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "slot": "ft0",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "slot": "ft1",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "slot": "ft2",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "slot": "ft3",
+   "old_stations": 6,
+   "new_stations": 6
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft0",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft1",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft2",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft3",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft4",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft5",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft6",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft7",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft8",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft9",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft10",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft11",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft12",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft13",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft14",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft15",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft16",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft17",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft18",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft19",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft20",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft21",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft22",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft23",
+   "old_stations": 6,
+   "new_stations": 6
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "slot": "ft24",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft0",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft2",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft5",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft6",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft7",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft8",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft9",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft10",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft11",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft12",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft13",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft14",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft15",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft16",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft17",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft18",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft19",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft20",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft21",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft22",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft23",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft24",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft26",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft27",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft28",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "slot": "ft29",
+   "old_stations": 7,
+   "new_stations": 7
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft0",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft1",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft2",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft3",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft4",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft5",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft6",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft7",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft8",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft9",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft10",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft11",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft12",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft13",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft14",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft15",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft16",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft17",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft18",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft19",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft20",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft22",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft23",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft24",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "slot": "ft25",
+   "old_stations": 6,
+   "new_stations": 6
+  },
+  {
+   "type": "kv3_hroot",
+   "slot": "ft0",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hroot",
+   "slot": "ft1",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hroot",
+   "slot": "ft2",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hroot",
+   "slot": "ft3",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hroot",
+   "slot": "ft4",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hroot",
+   "slot": "ft5",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hroot",
+   "slot": "ft6",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hroot",
+   "slot": "ft7",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hroot",
+   "slot": "ft8",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hroot",
+   "slot": "ft9",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hroot",
+   "slot": "ft10",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hroot",
+   "slot": "ft11",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hroot",
+   "slot": "ft12",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hroot",
+   "slot": "ft13",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft0",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft1",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft2",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft3",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft4",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft5",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft6",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft7",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft8",
+   "old_stations": 3,
+   "new_stations": 3
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft9",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft10",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft11",
+   "old_stations": 3,
+   "new_stations": 3
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft12",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft13",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft14",
+   "old_stations": 3,
+   "new_stations": 3
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft15",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft16",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft17",
+   "old_stations": 3,
+   "new_stations": 3
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft18",
+   "old_stations": 7,
+   "new_stations": 7
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft19",
+   "old_stations": 7,
+   "new_stations": 7
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft20",
+   "old_stations": 7,
+   "new_stations": 7
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft21",
+   "old_stations": 7,
+   "new_stations": 7
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft22",
+   "old_stations": 7,
+   "new_stations": 7
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft23",
+   "old_stations": 7,
+   "new_stations": 7
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft24",
+   "old_stations": 7,
+   "new_stations": 7
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft25",
+   "old_stations": 8,
+   "new_stations": 8
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft26",
+   "old_stations": 7,
+   "new_stations": 7
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft27",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft28",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft29",
+   "old_stations": 7,
+   "new_stations": 7
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft30",
+   "old_stations": 7,
+   "new_stations": 7
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "slot": "ft31",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft0",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft1",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft2",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft3",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft4",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft5",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft6",
+   "old_stations": 4,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft7",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft9",
+   "old_stations": 5,
+   "new_stations": 6
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft10",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft11",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft12",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft13",
+   "old_stations": 4,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft14",
+   "old_stations": 4,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft15",
+   "old_stations": 3,
+   "new_stations": 3
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft16",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft17",
+   "old_stations": 3,
+   "new_stations": 3
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft18",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_io_cor",
+   "slot": "ft19",
+   "old_stations": 4,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft0",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft1",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft2",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft3",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft4",
+   "old_stations": 6,
+   "new_stations": 6
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft5",
+   "old_stations": 6,
+   "new_stations": 6
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft6",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft7",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft8",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft9",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft10",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft11",
+   "old_stations": 8,
+   "new_stations": 8
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft12",
+   "old_stations": 6,
+   "new_stations": 6
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft13",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft14",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft15",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft16",
+   "old_stations": 6,
+   "new_stations": 6
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft17",
+   "old_stations": 6,
+   "new_stations": 6
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft18",
+   "old_stations": 6,
+   "new_stations": 6
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft19",
+   "old_stations": 6,
+   "new_stations": 6
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft20",
+   "old_stations": 6,
+   "new_stations": 6
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft21",
+   "old_stations": 6,
+   "new_stations": 6
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft22",
+   "old_stations": 6,
+   "new_stations": 6
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft23",
+   "old_stations": 8,
+   "new_stations": 8
+  },
+  {
+   "type": "kv3_io_cor_v1",
+   "slot": "ft24",
+   "old_stations": 6,
+   "new_stations": 6
+  },
+  {
+   "type": "kv3_io_ft",
+   "slot": "ft0",
+   "old_stations": 6,
+   "new_stations": 6
+  },
+  {
+   "type": "kv3_io_ft",
+   "slot": "ft1",
+   "old_stations": 6,
+   "new_stations": 6
+  },
+  {
+   "type": "kv3_io_ft",
+   "slot": "ft2",
+   "old_stations": 6,
+   "new_stations": 6
+  },
+  {
+   "type": "kv3_io_ft",
+   "slot": "ft3",
+   "old_stations": 6,
+   "new_stations": 6
+  },
+  {
+   "type": "kv3_io_ft_v1",
+   "slot": "ft0",
+   "old_stations": 6,
+   "new_stations": 6
+  },
+  {
+   "type": "kv3_io_ft_v1",
+   "slot": "ft1",
+   "old_stations": 6,
+   "new_stations": 6
+  },
+  {
+   "type": "kv3_io_ft_v1",
+   "slot": "ft2",
+   "old_stations": 6,
+   "new_stations": 6
+  },
+  {
+   "type": "kv3_io_ft_v1",
+   "slot": "ft3",
+   "old_stations": 6,
+   "new_stations": 6
+  },
+  {
+   "type": "kv3_pc_v3",
+   "slot": "ft0",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_pc_v3",
+   "slot": "ft1",
+   "old_stations": 7,
+   "new_stations": 7
+  },
+  {
+   "type": "kv3_phy_v1",
+   "slot": "ft0",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_pv",
+   "slot": "ft0",
+   "old_stations": 8,
+   "new_stations": 8
+  },
+  {
+   "type": "kv3_pv",
+   "slot": "ft1",
+   "old_stations": 10,
+   "new_stations": 10
+  },
+  {
+   "type": "kv3_pv",
+   "slot": "ft2",
+   "old_stations": 9,
+   "new_stations": 9
+  },
+  {
+   "type": "kv3_pv",
+   "slot": "ft3",
+   "old_stations": 6,
+   "new_stations": 6
+  },
+  {
+   "type": "kv3_pv",
+   "slot": "ft4",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_pv",
+   "slot": "ft5",
+   "old_stations": 6,
+   "new_stations": 6
+  },
+  {
+   "type": "kv3_pv_v8",
+   "slot": "ft0",
+   "old_stations": 8,
+   "new_stations": 8
+  },
+  {
+   "type": "kv3_pv_v8",
+   "slot": "ft1",
+   "old_stations": 8,
+   "new_stations": 8
+  },
+  {
+   "type": "kv3_pv_v8",
+   "slot": "ft2",
+   "old_stations": 8,
+   "new_stations": 8
+  },
+  {
+   "type": "kv3_pv_v8",
+   "slot": "ft3",
+   "old_stations": 6,
+   "new_stations": 6
+  },
+  {
+   "type": "kv3_pv_v8",
+   "slot": "ft4",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_pv_v8",
+   "slot": "ft5",
+   "old_stations": 6,
+   "new_stations": 6
+  },
+  {
+   "type": "kv3_hg_v1",
+   "slot": "ft0",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hg_v1",
+   "slot": "ft1",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hg_v1",
+   "slot": "ft2",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hg_v1",
+   "slot": "ft3",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_pc_v1",
+   "slot": "ft0",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_pc_v1",
+   "slot": "ft1",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_pv_v1",
+   "slot": "ft0",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_pv_v1",
+   "slot": "ft1",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_pv_v1",
+   "slot": "ft2",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_pv_v1",
+   "slot": "ft3",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_pv_v1",
+   "slot": "ft4",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_pv_v1",
+   "slot": "ft5",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_pv_v1",
+   "slot": "ft6",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_pv_v1",
+   "slot": "ft7",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_pv_v1",
+   "slot": "ft8",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_pv_v1n",
+   "slot": "ft0",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_pv_v1n",
+   "slot": "ft1",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_pv_v1n",
+   "slot": "ft2",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_pv_v1n",
+   "slot": "ft3",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_pv_v1n",
+   "slot": "ft4",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_pv_v1n",
+   "slot": "ft5",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_pv_v1n",
+   "slot": "ft6",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_pv_v1n",
+   "slot": "ft7",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_pv_v1n",
+   "slot": "ft8",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "slot": "ft0",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "slot": "ft1",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "slot": "ft2",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "slot": "ft3",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "slot": "ft0",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "slot": "ft1",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "slot": "ft2",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "slot": "ft3",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "slot": "ft0",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "slot": "ft1",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "slot": "ft2",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "slot": "ft3",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "slot": "ft0",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "slot": "ft1",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "slot": "ft2",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "slot": "ft3",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "slot": "ft0",
+   "old_stations": 4,
+   "new_stations": 4
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "slot": "ft1",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "slot": "ft2",
+   "old_stations": 5,
+   "new_stations": 5
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "slot": "ft3",
+   "old_stations": 4,
+   "new_stations": 4
+  }
+ ],
+ "baseline_added_station_slots": 5,
+ "capsule_added_station_slots": 200,
+ "clock_and_non_ft_type_keys_unchanged": true,
+ "compiler_lane_bases_match_capsule": 2404,
+ "source_plan_sha256": "06302eb67ac8fd99467cfe73c24e725e671c8f63753340af73ffa19fc323cc05",
+ "reset_local_grid_source": "d6844af1c",
+ "reset_local_release_delta_cycles": {
+  "kv3_io_cor": 3,
+  "kv3_hroot": 2
+ },
+ "reset_grid_data_cycles_added": 0,
+ "full_wavefront_regeneration": "PENDING feature source import",
+ "g0_initial_35_R8_errors": "Wrong extra overwrite of historical generic R8 table with native position2144 table; restored separate historical generic pair, native actual recipe pair retains new205station tables."
+}
