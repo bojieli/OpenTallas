@@ -452,3 +452,15 @@ PLAN R19 claude/head-r19-plan-1027@df038a2a04 (on main 60b5ddf52; plan sha 5a61d
  - ft_mstrap_i taps from the built LEFs; main's clock-entry check PASS on 5/5 cores.
  - G0 0E/6W; G0C 0E (16/16); strict portbind PASS 326 inst.
  - Fixed: the dead lane's "G0C 0" was stale (30 off-track pin errors). Mirrored track offsets were recomputed for the 319.68 outline and VDD/VSS were dropped from the pin files; 6 new tests pass.
+
+2026-10-27 12:52 PDT HEAD-CORE-R20 RESULT. Branch claude/head-r20-plan-1027@bde8765399 (worktree intel2:/srv/opentallas-scratch2/claude/wt/head-r19-plan-1027). Evidence results/s81_head_r20_plan/README.md + checks/, results/physical/head_core_r20/elemB_signed/.
+CORES (signoff.py = tool output; LEC/mtimes CHECKED):
+| view | signoff | TT setup | FF hold (bound 202.5) / raw sdc | HB4 | FF ins mean | pair TT/FF | DRC/ant | routed LEC |
+| B residual4 epyc2 head-core-r19/elemB.eco_residual4 | SIGNED 11:36:49 | +101.04 | +3.51 / -31.87 | 13470 | 189.3 | 36.0/35.6 | 0/0 | EQUIVALENT 27594/27594, kept missing 0, 12:17:37 |
+| A m2 r19_residual4 intel1 head-core-r19/elemA_m2.eco_r19_residual4 | SIGNED 11:41:34 | +121.07 | +1.80 / -18.35 | 15248 | 208.3 | 39.8/37.0 | 0/0 | RUNNING (hyp19 at 12:49) |
+| A m2 residual2_clean_residual3 intel1 (backup) | NOT SIGNED | +121.17 | -8.35 / 11 ep | 14677 | - | 41.4/37.1 | 0/0 | stopped; data deleted, receipts head-core-r19/failed_receipts/ |
+ - elemB_cv SIGNED (signoff SIGNED + routed LEC EQUIVALENT; sign-off 11:36:49 and LEC 12:17:37 newer than 6_final 11:28:40; final_functional.v = 6_final.v cell/HB4 count 112704/13470). PROVENANCE.json in the run dir; src_commit/flow_tag null (no flow release tag covers the per-mode head_post_route_eco flow) -> registry counts it SIGNED-UNVERSIONED until a flow tag. LEF sha da3694b4 = the pin source of the R19 plan pins file (pins unchanged).
+ - elemA: COLLECT intel1 elemA_m2.eco_r19_residual4.lec_final/lec/lec.json (+ eco_chain.log HEAD_ECO_POSTROUTE_LEC); if EQUIVALENT -> publish like elemB (tools: head-core-r19/mkprov_r20.py on intel1 needs a copy from epyc2) and HEAD = 2/2 core types.
+ - No new residual round started. FLOW-CLKFREEZE not READY yet; rerun a core on it only if A's LEC fails.
+PLAN R20 (READY ROOT-MERGE-37): 26 declared slots + clock.spine.trunk M9 lane 8769.6 / riser 8.64; G0 0E, G0C 0E (CHECKED); plan sha 20a6805a.
+NUMBER-CHECK R19 tree: 3105.0/2494.5 + 78.6/74.2 CHECKED (own code). GEOM-27 cond 1 CONFIRMED (32 shorted = 32 re-snapped), cond 2 M9 demand re-probe PASS (0.7% of free worst window).
