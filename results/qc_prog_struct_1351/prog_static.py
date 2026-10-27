@@ -44,7 +44,7 @@ for b in sorted(w['cohort'],key=lambda z:z['piny']):
  writer_report.append(dict(bit=b['bit'],pin_y=b['piny'],row_y=y,column=col,pin_to_pair_y=abs(y+.135-b['piny'])))
 # Pack unique 3-gate read mux groups into the empty producer->output corridor.
 rows={round(z['origin'][1],6):z for z in m['candidate_rows']}
-for out in sorted(m['outputs'],key=lambda z:(z['ff']['box'][1],z['ff']['name'])):
+for oi,out in enumerate(sorted(m['outputs'],key=lambda z:(z['ff']['box'][1],z['ff']['name']))):
  gates=sorted([core[n] for n in out['comb'] if n in core],key=lambda c:c['master'])
  assert len(gates)==3
  width=sum(c['box'][2]-c['box'][0] for c in gates)+.108
@@ -53,7 +53,7 @@ for out in sorted(m['outputs'],key=lambda z:(z['ff']['box'][1],z['ff']['name']))
   if abs(y-out['ff']['box'][1])>4.32:continue
   for xi in range(math.ceil(300/.054),math.floor((320-width)/.054)+1,2):
    x=round(xi*.054,6)
-   if free([x,y,x+width,y+.27]):opts.append((abs(y-out['ff']['box'][1])*10+abs(x-310),x,y,row['orient']))
+   if free([x,y,x+width,y+.27]):opts.append((abs(y-out['ff']['box'][1])*10+abs(x-(300+2.16*(oi%9))),x,y,row['orient']))
  assert opts,('mux capacity',out['ff']['name'])
  _,x,y,o=min(opts)
  for c in gates:
