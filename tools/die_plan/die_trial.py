@@ -176,11 +176,13 @@ def clock_taps(P):
     return out
 
 
-def build_htree(P, taps, leaf_um=600.0):
+def build_htree(P, taps, leaf_um=600.0, full_depth=False):
     """explicit H-tree: nodes {id: dict(x, y, parent, level, kids, taps)} rooted at the spine root.  Region bisection
     along the longer axis at the region midpoint; the child node sits at the child region centre (the leg runs along
     the split axis, so every node-to-node leg is a straight M8 (H) or M9 (V) run).  The first leg goes from the spine
-    root to the first child centre (root need not be the centre).  Regions without taps are pruned."""
+    root to the first child centre (root need not be the centre).  Regions without taps are pruned.
+    full_depth (opt-in, FALLBACK-HEAD 10-26): keep bisecting a single-tap region down to leaf_um, so every leaf sits at
+    the same depth (equal-length H-tree by construction) and the leaf->tap leg is <= ~leaf_um (default unchanged)."""
     W, H = P.W, P.H
     root = P.clock.get("spine", {}).get("root_um") or [W / 2, H / 2]
     nodes = {}
@@ -195,7 +197,7 @@ def build_htree(P, taps, leaf_um=600.0):
 
     def rec(nid, region, tlist):
         x0, y0, x1, y1 = region
-        if max(x1 - x0, y1 - y0) <= leaf_um or len(tlist) <= 1:
+        if max(x1 - x0, y1 - y0) <= leaf_um or (len(tlist) <= 1 and not full_depth):
             nodes[nid]["taps"] = tlist
             return
         if x1 - x0 >= y1 - y0:
@@ -275,11 +277,11 @@ def tree_netlist(nodes, taps, rep_um=450.0):
     return "\n".join(v) + "\n", place, tap_ports, node_buf, parent_of
 
 
-def clock_kit(P, out, leaf_um, rep_um):
+def clock_kit(P, out, leaf_um, rep_um, full_depth=False):
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     taps = clock_taps(P)
-    nodes = build_htree(P, taps, leaf_um)
+    nodes = build_htree(P, taps, leaf_um, full_depth)
     v, place, tap_ports, node_buf, parent_of = tree_netlist(nodes, taps, rep_um)
     (out / "ctree.v").write_text(v)
     segs = []
@@ -323,7 +325,7 @@ def clock_kit(P, out, leaf_um, rep_um):
             "report_checks -path_delay max -group_path_count 1 -format full -fields {cap slew fanout}",
             "puts OT_DONE"]
     (out / "ctree.tcl").write_text("\n".join(tcl) + "\n")
-    meta = dict(leaf_um=leaf_um, rep_um=rep_um, buffer=BUF, wire_r_kohm_um=WIRE_R, wire_c_ff_um=WIRE_C,
+    meta = dict(leaf_um=leaf_um, rep_um=rep_um, **({"full_depth": True} if full_depth else {}), buffer=BUF, wire_r_kohm_um=WIRE_R, wire_c_ff_um=WIRE_C,
                 tap_load_ff=TAP_LOAD_FF, nodes=len(nodes), leaves=sum(1 for n in nodes.values() if n["taps"]),
                 repeaters=sum(1 for i, *_ in place if i.startswith("r")), taps=len(tap_ports),
                 wire_um=round(sum(abs(a - c) + abs(b - d) for a, b, c, d, _ in segs) +
@@ -1001,7 +1003,7 @@ exit $rc
 """
 
 
-def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.72, density=0.15):
+def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.72, density=0.15, full_depth=False):
     raw = S.load(plan_path)
     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
     plan_dir = Path(plan_path).parent
@@ -1039,7 +1041,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     meta["die_io"] = [dict(name=w["name"], part=w.get("part"), iface=w.get("iface"), rect_um=w["rect_um"],
                            sites=w.get("sites"), signals=w.get("signals"), host=w.get("host", False)) for w in io]
     # clock
-    nodes, segs, leaf_legs, cm = clock_kit(P, out / "clock", leaf_um, rep_um)
+    nodes, segs, leaf_legs, cm = clock_kit(P, out / "clock", leaf_um, rep_um, full_depth)
     (out / "clock" / "make_tracks.tcl").write_text(gen_phys.make_tracks_tcl(P))
     meta["clock_tree"] = cm
     reserve = reserve_rects(segs, leaf_legs, P)
@@ -1580,6 +1582,8 @@ def main(argv=None):
     k.add_argument("--views")
     k.add_argument("--leaf-um", type=float, default=600.0)
     k.add_argument("--rep-um", type=float, default=450.0)
+    k.add_argument("--htree-full-depth", action="store_true",
+                   help="opt-in: bisect single-tap regions to --leaf-um (equal-depth leaves; FALLBACK-HEAD one-entry plans)")
     k.add_argument("--coarse-um", type=float, default=0.72)
     k.add_argument("--density", type=float, default=0.15, help="die power density W/mm2 for PDNSim")
     r = sub.add_parser("report")
@@ -1637,7 +1641,7 @@ def main(argv=None):
         print(json.dumps(dict(cell=die_sta.bhold_cell(a.tol_ps), types=len(tot), input_bits=sum(tot.values())), indent=1))
         return 0
     if a.cmd == "kit":
-        m = write_kit(a.plan, a.out, a.views, a.leaf_um, a.rep_um, a.coarse_um, a.density)
+        m = write_kit(a.plan, a.out, a.views, a.leaf_um, a.rep_um, a.coarse_um, a.density, full_depth=a.htree_full_depth)
         print(json.dumps({k: m[k] for k in ("die", "parts", "types", "closed_views", "hard_cores", "clock_tree", "grt",
                                              "psm", "sta")}, indent=1))
     elif a.cmd == "report":

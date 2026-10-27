@@ -1,0 +1,160 @@
+{
+ "method": "FB1 one entry per partition; every plan port landed; phase offset of region roots on the GRT-RC routed die clock (combined die global_route, signals M4-M7 + clock M8-M9, 50 congestion it)",
+ "budget_ps": 416.5,
+ "tree_meta": {
+  "leaf_um": 600.0,
+  "rep_um": 450.0,
+  "buffer": "BUFx24_ASAP7_75t_R",
+  "wire_r_kohm_um": 0.0043358024999999994,
+  "wire_c_ff_um": 0.10824363000000001,
+  "tap_load_ff": 3.0,
+  "nodes": 763,
+  "leaves": 326,
+  "repeaters": 662,
+  "taps": 326,
+  "wire_um": 539115.5,
+  "levels": 10
+ },
+ "crossings": 428,
+ "corners": {
+  "TT": {
+   "entries": 326,
+   "insertion_min_ps": 5336.7,
+   "insertion_max_ps": 5985.9,
+   "insertion_spread_ps": 649.3,
+   "entry_slew_max_ps": 786.2,
+   "entry_slew_over_320": 42,
+   "landed_phase_max_abs_ps": 444.36,
+   "landed_over_budget": 4,
+   "landed_margin_ps": -27.86,
+   "worst": [
+    {
+     "port": "coll_EN1_u__0",
+     "src": "lk_EN1",
+     "dst": "nst10",
+     "width": 514,
+     "d_TT": 444.36,
+     "d_FF": 390.53,
+     "drift_ps": 53.83
+    },
+    {
+     "port": "coll_EN1_d__2",
+     "src": "nst10",
+     "dst": "lk_EN1",
+     "width": 512,
+     "d_TT": -444.36,
+     "d_FF": -390.53,
+     "drift_ps": 53.83
+    },
+    {
+     "port": "coll_ES1_u__0",
+     "src": "lk_ES1",
+     "dst": "sst10",
+     "width": 514,
+     "d_TT": 438.99,
+     "d_FF": 386.05,
+     "drift_ps": 52.94
+    },
+    {
+     "port": "coll_ES1_d__2",
+     "src": "sst10",
+     "dst": "lk_ES1",
+     "width": 512,
+     "d_TT": -438.99,
+     "d_FF": -386.05,
+     "drift_ps": 52.94
+    },
+    {
+     "port": "coll_WN2_u__0",
+     "src": "lk_WN2",
+     "dst": "nst1",
+     "width": 514,
+     "d_TT": 412.19,
+     "d_FF": 358.31,
+     "drift_ps": 53.88
+    },
+    {
+     "port": "coll_WN2_d__4",
+     "src": "nst1",
+     "dst": "lk_WN2",
+     "width": 512,
+     "d_TT": -412.19,
+     "d_FF": -358.31,
+     "drift_ps": 53.88
+    }
+   ]
+  },
+  "FF": {
+   "entries": 326,
+   "insertion_min_ps": 4645.2,
+   "insertion_max_ps": 5213.6,
+   "insertion_spread_ps": 568.5,
+   "entry_slew_max_ps": 780.9,
+   "entry_slew_over_320": 42,
+   "landed_phase_max_abs_ps": 390.53,
+   "landed_over_budget": 0,
+   "landed_margin_ps": 25.97,
+   "worst": [
+    {
+     "port": "coll_EN1_u__0",
+     "src": "lk_EN1",
+     "dst": "nst10",
+     "width": 514,
+     "d_TT": 444.36,
+     "d_FF": 390.53,
+     "drift_ps": 53.83
+    },
+    {
+     "port": "coll_EN1_d__2",
+     "src": "nst10",
+     "dst": "lk_EN1",
+     "width": 512,
+     "d_TT": -444.36,
+     "d_FF": -390.53,
+     "drift_ps": 53.83
+    },
+    {
+     "port": "coll_ES1_u__0",
+     "src": "lk_ES1",
+     "dst": "sst10",
+     "width": 514,
+     "d_TT": 438.99,
+     "d_FF": 386.05,
+     "drift_ps": 52.94
+    },
+    {
+     "port": "coll_ES1_d__2",
+     "src": "sst10",
+     "dst": "lk_ES1",
+     "width": 512,
+     "d_TT": -438.99,
+     "d_FF": -386.05,
+     "drift_ps": 52.94
+    },
+    {
+     "port": "coll_WN2_u__0",
+     "src": "lk_WN2",
+     "dst": "nst1",
+     "width": 514,
+     "d_TT": 412.19,
+     "d_FF": 358.31,
+     "drift_ps": 53.88
+    },
+    {
+     "port": "coll_WN2_d__4",
+     "src": "nst1",
+     "dst": "lk_WN2",
+     "width": 512,
+     "d_TT": -412.19,
+     "d_FF": -358.31,
+     "drift_ps": 53.88
+    }
+   ]
+  }
+ },
+ "drift_max_ps": 53.88,
+ "verdict": {
+  "landing_window": "FAIL",
+  "scope": "die clock landing window only; NOT the 12.4a freeze gate (needs partition views with landing rings, ring-window STA, real-view die STA)"
+ }
+}
