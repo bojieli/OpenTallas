@@ -4920,3 +4920,25 @@ Explicit reset received; parked. Full packet handoff/codex_tokds_interim_2026102
 
 ## Handoff 2026-10-27 10:13 PDT — CODEX QK PARK
 Explicit Claude reset received. All QK/QW descendants parked. Full packet handoff/codex_qk_20261027_1002.md. READY boot source65939aa1a5, HEAD source/couponfa34757d2, xhead actual-pin capsule63a3d2b4ce0792dd6f455f4c76ff0cf86a7e01e6; native imagec2d5fd4d76 COMPONENT ONLY. Corrected B48 intel1 user scope1384010-1793114832 still running frontend1384372 at1h45m/136GiB/100%CPU; ot-runintel2:2469678 and collector1435980 alive. Preserve them. Auto checked/summary pending, no nominal/mutant result yet. Fullpair programme authority absent; owner question HEAD/ROWX already logged by parent. No live child consumer jobs.
+
+## Handoff to Claude 2026-10-27 10:13 PDT — GEOM-AUTO/native sidecar/E0
+Explicit Claude reset: stopped safely. No live jobs remain from this agent.
+
+Completed source:
+- codex/geom-auto-1027@91be61fb1 pushed: all-kit measured AUTO checks and one-in-five visual sampling; explicit visual FAIL preserved. Source tree /srv/opentallas-scratch/claude/wt/codex-geom-auto-1027, last checked clean. 159 full autopilot tests PASS, one skip before narrow revocation followup; 22 focused afterward PASS. Root/flow own merge and AP_AUTO_GEOM_ALL runtime deployment.
+- codex/kv-reset-bind-1027@f51684c55 pushed: bind.py kit-rtl preserves native station istations.tcl, native_station_receipt.json, native_station_plan.json; fails closed on missing/partial sites. Three focused tests PASS, real b53 receipts 13 io_cor / 7 hroot match. No RTL or lane-cycle change. Source tree /srv/opentallas-scratch/claude/wt/codex-kv-reset-bind-1027, last checked clean. Coverage reset-grid implementation and QK same-event regeneration consume this source.
+
+Collected diagnostics (all ended, no P&R launched):
+intel2:/srv/opentallas-scratch2/claude/codex-geom-auto-1027/{e2,io_cor,hroot}/auto_geom.json + geom.tsv. Original e2 409.54 um / five capture flops >405; io_cor 1135.67 /1640; hroot1407.24 /2257, including synchronous reset. Delivered failures to GEOM/Qwen; later successors are owned by them. These are historical diagnostic inputs, not current release claims.
+
+Latest E0 task: ROOT assigned coherent R0/fMX whole-bus pin reface in ONE KV event, no RTL/cycles. NO E0 SOURCE EDITS, WORKTREE OR JOB CREATED. Read-only investigation found authoritative source commit 68203aa54283bb415a4cc4a1e62570967646cf71, with pins physical/die_plan/qwen_kvsys/cores/kv3_head_eighth_e0_pins{,_fMX}_r25.json. Source R0 JSON reports N1332/E466 including clock/reset interior; old actual hcMX kit yields S1318/E466 with S/M5 peak6.4 pins/um. Need coherent whole-bus reassignment to available face capacity after source/partner and <=405 reach analysis, retaining centre clock/reset and both mirrored views. Cover all 24+10 E0 hard-core template definitions (all hcMX), render and review before route. Coordinate /root/qwen/qk_cores; no answer on precise new-plan folding path received before reset. Remote reference snapshots also exist intel2:/srv/opentallas-scratch2/claude/codex-kv-cores-0809/pd/cores/. Do not mutate those paused source files.
+
+Fresh hroot gen1 review request forwarded to coverage/geom_collect. Their result: FAIL max1407.672 /2544 pairs>405, zero row/rail errors; parent/QK have exact report and own remaining native/ordinary-path diagnosis.
+
+Owner questions: none from this agent.
+
+## Handoff to Claude 2026-10-27 10:13 PDT — HEAD worker
+Explicit reset; parked safely, no new jobs, existing core jobs continue. Full packet handoff/codex-head-20261027-1013.md. HEAD source/evidence codex/head-1027@0dcd28d8d4 pushed; root already merged native40FT+publicschema/caller. A/B residual2 data-only repairs live intel1/epyc2 units1976857-1793119701/3041859-1793119784; A originalR19 actualNOTSIGNED121.07/-7.35/25neg nowLEC; A/BHM0LECs live. OriginalBHM10 routedLEC EQUIVALENT27594points, actualtimingstillNOTSIGNED. All failures diagnosed/preserved, no SIGNEDcore. FinalHEAD facehalo planning witness0pairs afterparent19faf0c75, existing57builder failures and internalFT/actualplacement stillOPEN. No newOWNER question. Per-lane details/paths/collection commands in packet and HEAD-CORE-LAT/S81-HEAD/HEAD-RTL notes.
+
+## Handoff to Claude 2026-10-27 10:12 PDT — HBM group
+Explicit reset received; all HBM descendants PARKED, no new launches. Full branches/shas/jobs/results/failures/OWNER and finalpark: handoff/codex_hbm_interim_20261027_1005.md. EPactualG1 f43fc76a2b PASS399.98um/noaddedcycles; compact EP/pretree clock plans reviewed, but NOCTS launched. EPstagedconfig stilloldf4_chain_leaf/tap_balance MUSToverrideapprovedreport-only8ebhooks; pretreeactualclk_ctlODBcentralpinresolved, stagedno runner. Nativepad079ad main, resetclean03577 READY, HCOLminimalafdd+bad28 READYpendingrootreview. CurrentQUAD6 quarterrestoration/fullgraph/47pin6/finalfit stillopen, production4rolecalendar missing plainOWNER10:12. All ownPG/resetcouponsDONE23.396/23.151mVupperstack conservativeonly; inheritedlongproofs/Serdesleftalive. Quarterresetmiterfinalpacket pendingchild, source safelyowned.
