@@ -440,6 +440,7 @@ def lift(r, xy, et, tag, nodes, n=None):
 
 
 # ------------------------------------------------------------------------------------------------ R15 per-level lanes
+CHAN_L1 = [None]  # R22: dict(yb, step) -> lane-0 channel node + its leg-end repeaters sit on lane 1 (yb + ISL)
 LANE = [None]     # R15: dict(step=8.64) -> every tree node level on its own lane (COORD ruling INFRA-FIRST-QC-R14)
 
 
@@ -990,14 +991,26 @@ def periodic_feed_lanes(a, top, P, cols, gaps, nodes, rows, m, col, cores, H, YC
         # R17: channel x-tree with one channel VSS lane per level (COORD R14 lanes rule inside the R15 (a) 5-lane channel):
         # leaves (the 12 H_c) on lane CHAN_HC, node depth d on CHAN_LANES[d]; legs on the node lane, M9 drop at the end
         yb = YC - CC / 2
+        L0 = float(getattr(a, "chan_lane0_um", 0.0) or 0.0)
+        if not 0.0 <= L0 < ISL:
+            raise SystemExit(f"--chan-lane0-um {L0}: must be in [0, {ISL}) (lane 1 sits at +{ISL})")
 
         def ht(items, tag, d):
             if len(items) == 1:
                 return items[0]
             h_ = len(items) // 2
+            # R21 (COORD RULING INFRA-FIRST-QC-R20 ASK1 (a), plan geometry): --chan-lane0-um lifts the channel BOTTOM
+            # lane (lane 0, on the channel edge) so the M8 trunks of its cells land inside the channel (R20: lane-0
+            # risers crossed the partition M7 pin face at y 13132.935); 0 = R17-R20 geometry
             return merge_lane(ht(items[:h_], tag + "0", d + 1), ht(items[h_:], tag + "1", d + 1), "x", top, tag, nodes,
-                              r3(yb + ISL * CHAN_LANES[d]))
+                              r3(yb + ISL * CHAN_LANES[d] + (L0 if CHAN_LANES[d] == 0 else 0.0)))
         hr = ht(sorted(croots, key=lambda q: q["xy"][0]), "H", 0)
+        # R22 (COORD RULING INFRA-FIRST-QC-R21 lane-0 = (a)): lane 0 sits on the channel bottom edge, and the 16w M8
+        # trunks of the nets that also carry a vertical element (root M9 drop, lane-0 -> child-lane jog) find no legal
+        # in-channel track next to the yb VSS strap.  Those 5 cells (the lane-0 node + the first and last repeater of
+        # each of its legs) move to lane 1 (yb + ISL) with the full 16w NDR; lane 1 is free at their x (depth-2 runs
+        # are in the quarter spans).  Opt-in, default off = R17-R21 geometry.
+        CHAN_L1[0] = dict(yb=r3(yb), step=ISL) if getattr(a, "chan_l0_ends_lane1", False) else None
     else:
         hr = dtree([q["xy"] for q in croots], "x", top, "H", nodes,
                    leafmk=lambda xy, tag: [q for q in croots if abs(q["xy"][0] - xy[0]) < 1e-6][0])
@@ -1217,6 +1230,22 @@ def legalize(B, fine_masters=None):
                 ck = "chan_rep" if (kind == "top" and n["tag"].startswith("H")) else kind + "_rep"   # R13 channel x-tree
                 site_of[(kind + "_rep", n["tag"], k)] = add(ck, q, et.m, lane, (kind + "_rep", n["tag"], k))
                 nrep[kind] += 1
+    if CHAN_L1[0] is not None:          # R22: lane-0 channel node + leg-end repeaters -> lane 1 (see build)
+        yb0, st0 = CHAN_L1[0]["yb"], CHAN_L1[0]["step"]
+        tby0 = {n["tag"]: n for n in B["top_nodes"]}
+        mv = set()
+        for n in B["top_nodes"]:
+            if n["tag"].startswith("H") and n["kids"] and abs(n["xy"][1] - yb0) < 1e-3:
+                mv.add(site_of[("t", n["tag"])])
+                for kt in n["kids"]:
+                    kn = tby0[kt]
+                    if kn.get("nseg", 0) >= 2:
+                        mv.add(site_of[("top_rep", kt, 1)])
+                        mv.add(site_of[("top_rep", kt, kn["nseg"] - 1)])
+        for i_ in sorted(mv):
+            cells[i_]["site"][1] = r3(cells[i_]["site"][1] + st0)
+            cells[i_]["chan_l1"] = True
+        B["chan_l1_moved"] = len(mv)
     # exact coincidences before the bump (the GEOM-REVIEW-10 metric on the raw tree coordinates)
     from collections import Counter
     raw = Counter((r3(c["site"][0]), r3(c["site"][1])) for c in cells if c["kind"] != "r9_leaf")
@@ -2377,6 +2406,10 @@ def add_common(p):
                    help="R17 (with --lanes vss): local-root lift node lane: own y-tree leaf depth (R15/R16) or the deepest leaf "
                         "lane for every row (identical lift legs per type, 12.2a1)")
     p.add_argument("--centre-split", type=float, default=ISL, help="R15: centre fine row split -> YC -/+ this (um)")
+    p.add_argument("--chan-l0-ends-lane1", action="store_true",
+                   help="R22: move the lane-0 channel node + its leg-end repeaters to lane 1 (yb+8.64), full NDR (default off)")
+    p.add_argument("--chan-lane0-um", type=float, default=0.0,
+                   help="R21: lift of the centre-channel bottom lane (lane 0) in um (plan geometry; default 0 = R17-R20)")
     p.add_argument("--per-x", default=None, help="periodic feed x period um (default QC 2471.04)")
     p.add_argument("--per-off", default=None, help="periodic column-tap offsets, comma list (default QC 0,622.08,1235.52,1848.96)")
     p.add_argument("--chan-hc", default=None, help="centre channel H_c lane index (default QC 2)")
