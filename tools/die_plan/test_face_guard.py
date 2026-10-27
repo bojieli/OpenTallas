@@ -1,5 +1,6 @@
 """face_guard (CP1-R10, COORD 10-24): every planned face register survives Yosys as its own flop.
     python3 -m pytest -q tools/die_plan/test_face_guard.py"""
+import json
 import shutil
 import subprocess
 import sys
@@ -326,3 +327,26 @@ def test_main_reads_sdc_beside_pins(tmp_path):
     (tmp_path / "constraint.sdc").write_text("create_clock -name clk_coll -period 833 [get_ports clk_coll]\n")
     assert face_guard.main([str(tmp_path / "net.v"), "--pins", str(tmp_path / "pins.json"),
                             "--out", str(tmp_path / "fg.json")]) == 0
+
+
+def test_declared_dead_input_needs_no_load_and_a_proof(tmp_path):
+    """QK-CORES-5 10-27 (COORD: declare dead only with a proof receipt): core_tx package_abort / por_n class."""
+    dropped = NET_OK.replace(".D(a[1])", ".D(q[0])")             # a[1] loads nothing
+    assert "dropped" in face_guard.guard(dropped)["fail_counts"]
+    r = face_guard.guard(dropped, dead=["a[1]"])
+    assert "dropped" not in r.get("fail_counts", {}) and r["dead_declared"] == ["a[1]"], r
+    r = face_guard.guard(NET_OK, dead=["a[1]"])                   # a live (registered) bit declared dead -> FAIL
+    assert r["fail_counts"].get("dead") == 1 and r["verdict"] == "FAIL"
+    r = face_guard.guard(dropped, dead=["a[1]", "o[0]"])          # an output can never be declared dead
+    assert r["fail_counts"].get("dead") == 1
+    r = face_guard.guard(dropped, dead=["a[1]", "zz[0]"])         # a bit that is not a port
+    assert r["fail_counts"].get("dead") == 1
+    ok = dict(schema=face_guard.DEAD_SCHEMA, bits=["a[1]"], proof=dict(verdict="PASS", method="yosys equiv", receipt="x"))
+    assert face_guard.dead_input_list(ok) == ["a[1]"]
+    for bad in (dict(ok, schema="v0"), dict(ok, bits=["a[.*]"]), dict(ok, bits=["a[1]", "a[1]"]), dict(ok, bits=[]),
+                dict(ok, proof=dict(verdict="FAIL", method="m", receipt="x")), dict(ok, proof=dict(verdict="PASS"))):
+        with pytest.raises(ValueError):
+            face_guard.dead_input_list(bad)
+    assert face_guard.kit_dead_list(tmp_path) == []
+    (tmp_path / "dead_inputs.json").write_text(json.dumps(ok))
+    assert face_guard.kit_dead_list(tmp_path) == ["a[1]"]
