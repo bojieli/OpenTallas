@@ -1,0 +1,58 @@
+{
+ "table": {
+  "a|377.6": {
+   "x_ns": 377.6,
+   "ar_cycles": 680674.6,
+   "ar_tok_s": 1763.0,
+   "mtp_step_cycles": 1651326.3,
+   "mtp_design_tok_s": 3022.3
+  },
+  "b|377.6": {
+   "x_ns": 377.6,
+   "ar_cycles": 606563.8,
+   "ar_tok_s": 1978.4,
+   "mtp_step_cycles": 1480624.1,
+   "mtp_design_tok_s": 3370.7
+  },
+  "c_L2|377.6": {
+   "x_ns": 377.6,
+   "ar_cycles": 862824.1,
+   "ar_tok_s": 1390.8,
+   "mtp_step_cycles": 2088827.6,
+   "mtp_design_tok_s": 2389.3
+  },
+  "c_L4|377.6": {
+   "x_ns": 377.6,
+   "ar_cycles": 718221.3,
+   "ar_tok_s": 1670.8,
+   "mtp_step_cycles": 1757301.5,
+   "mtp_design_tok_s": 2840.0
+  }
+ },
+ "qwen": {
+  "a": {
+   "cycles": 1285337.8,
+   "tok_s": 933.6
+  },
+  "b": {
+   "cycles": 1256329.6,
+   "tok_s": 955.2
+  },
+  "c_L2": {
+   "cycles": 1325442.5,
+   "tok_s": 905.4
+  },
+  "c_L4": {
+   "cycles": 1321118.8,
+   "tok_s": 908.3
+  },
+  "c_qwen_tp8": {
+   "cycles": 2257865.6,
+   "tok_s": 531.5
+  },
+  "c_qwen_tp16_noX": {
+   "cycles": 1259740.1,
+   "tok_s": 952.6
+  }
+ }
+}

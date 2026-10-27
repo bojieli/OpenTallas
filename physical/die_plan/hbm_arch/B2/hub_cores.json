@@ -1,0 +1,1050 @@
+{
+ "rule": "Hub as hard cores (COORD 10-23 B2 review item 4: the flat 6.26M-cell hub probe peaked at 132 GB; OpenROAD cap 400k",
+ "cap": 400000,
+ "target": 360000,
+ "pinreg_cells_per_bit": 2.5,
+ "hub_leaf_cells": 6264951,
+ "hub_ext_bits": 88603,
+ "hub_internal_bits": 132557,
+ "cores": [
+  {
+   "core": "u_hcl00",
+   "cells": 359395,
+   "leaf_share": [
+    [
+     "hb_dbk_NW",
+     1
+    ],
+    [
+     "wbk_NW",
+     1
+    ]
+   ],
+   "leaf_cells": 359395,
+   "leaves": [
+    "hb_dbk_NW",
+    "wbk_NW"
+   ],
+   "ext_bits": 0,
+   "hub_int_bits": 8382,
+   "core_int_bits": 2619,
+   "origin_um": [
+    207.36,
+    311.04
+   ],
+   "outline_um": [
+    414.72,
+    812.16
+   ]
+  },
+  {
+   "core": "u_hcl01",
+   "cells": 355860,
+   "leaf_share": [
+    [
+     "xl_NW_aqhi",
+     1
+    ],
+    [
+     "xl_NW_aqlo",
+     1
+    ],
+    [
+     "xq_NW_p1_bd",
+     1
+    ],
+    [
+     "xq_NW_p1_bfq1",
+     1
+    ],
+    [
+     "xq_NW_p1_bfq2",
+     1
+    ],
+    [
+     "xq_NW_p1_eg",
+     1
+    ]
+   ],
+   "leaf_cells": 345465,
+   "leaves": [
+    "xl_NW_aqhi",
+    "xl_NW_aqlo",
+    "xq_NW_p1_bd",
+    "xq_NW_p1_bfq1",
+    "xq_NW_p1_bfq2",
+    "xq_NW_p1_eg"
+   ],
+   "ext_bits": 4158,
+   "hub_int_bits": 5666,
+   "core_int_bits": 3132,
+   "origin_um": [
+    829.44,
+    250.56
+   ],
+   "outline_um": [
+    475.2,
+    933.12
+   ]
+  },
+  {
+   "core": "u_hcl02",
+   "cells": 354743,
+   "leaf_share": [
+    [
+     "fr_NW",
+     1
+    ],
+    [
+     "fs_NW",
+     1
+    ],
+    [
+     "hb_vms_NW",
+     1
+    ],
+    [
+     "hcollks_NW_p2",
+     1
+    ],
+    [
+     "vmb_NW4",
+     1
+    ],
+    [
+     "vmb_NW5",
+     1
+    ],
+    [
+     "vmb_NW6",
+     1
+    ],
+    [
+     "vmm_NW4",
+     1
+    ]
+   ],
+   "leaf_cells": 339111,
+   "leaves": [
+    "fr_NW",
+    "fs_NW",
+    "hb_vms_NW",
+    "hcollks_NW_p2",
+    "vmb_NW4",
+    "vmb_NW5",
+    "vmb_NW6",
+    "vmm_NW4"
+   ],
+   "ext_bits": 6253,
+   "hub_int_bits": 14032,
+   "core_int_bits": 5169,
+   "origin_um": [
+    172.8,
+    2920.32
+   ],
+   "outline_um": [
+    509.76,
+    1002.24
+   ]
+  },
+  {
+   "core": "u_hcl03",
+   "cells": 354356,
+   "leaf_share": [
+    [
+     "svg_NW0",
+     1
+    ],
+    [
+     "vmdel_NW0",
+     1
+    ],
+    [
+     "vmks_NW0",
+     1
+    ],
+    [
+     "wbc_NW",
+     1
+    ]
+   ],
+   "leaf_cells": 346869,
+   "leaves": [
+    "svg_NW0",
+    "vmdel_NW0",
+    "vmks_NW0",
+    "wbc_NW"
+   ],
+   "ext_bits": 2995,
+   "hub_int_bits": 7196,
+   "core_int_bits": 3677,
+   "origin_um": [
+    864.0,
+    2859.84
+   ],
+   "outline_um": [
+    570.24,
+    1123.2
+   ]
+  },
+  {
+   "core": "u_hcl04",
+   "cells": 353579,
+   "leaf_share": [
+    [
+     "svg_NW1",
+     1
+    ],
+    [
+     "vmdel_NW4",
+     1
+    ],
+    [
+     "vmks_NW1",
+     1
+    ]
+   ],
+   "leaf_cells": 346092,
+   "leaves": [
+    "svg_NW1",
+    "vmdel_NW4",
+    "vmks_NW1"
+   ],
+   "ext_bits": 2995,
+   "hub_int_bits": 6983,
+   "core_int_bits": 3606,
+   "origin_um": [
+    129.6,
+    1503.36
+   ],
+   "outline_um": [
+    570.24,
+    1123.2
+   ]
+  },
+  {
+   "core": "u_hcl05",
+   "cells": 353579,
+   "leaf_share": [
+    [
+     "svg_NW2",
+     1
+    ],
+    [
+     "vmdel_NW1",
+     1
+    ],
+    [
+     "vmks_NW2",
+     1
+    ]
+   ],
+   "leaf_cells": 346092,
+   "leaves": [
+    "svg_NW2",
+    "vmdel_NW1",
+    "vmks_NW2"
+   ],
+   "ext_bits": 2995,
+   "hub_int_bits": 7391,
+   "core_int_bits": 3606,
+   "origin_um": [
+    1615.68,
+    2859.84
+   ],
+   "outline_um": [
+    570.24,
+    1123.2
+   ]
+  },
+  {
+   "core": "u_hcl06",
+   "cells": 353579,
+   "leaf_share": [
+    [
+     "svg_NW3",
+     1
+    ],
+    [
+     "vmdel_NW5",
+     1
+    ],
+    [
+     "vmks_NW3",
+     1
+    ]
+   ],
+   "leaf_cells": 346092,
+   "leaves": [
+    "svg_NW3",
+    "vmdel_NW5",
+    "vmks_NW3"
+   ],
+   "ext_bits": 2995,
+   "hub_int_bits": 7391,
+   "core_int_bits": 3606,
+   "origin_um": [
+    1512.0,
+    155.52
+   ],
+   "outline_um": [
+    570.24,
+    1123.2
+   ]
+  },
+  {
+   "core": "u_hcl07",
+   "cells": 343215,
+   "leaf_share": [
+    [
+     "xl_NW_ctl",
+     1
+    ],
+    [
+     "xq_NW_p0_bd",
+     1
+    ],
+    [
+     "xq_NW_p0_bfq0",
+     1
+    ],
+    [
+     "xq_NW_p0_bfq1",
+     1
+    ],
+    [
+     "xq_NW_p0_bfq2",
+     1
+    ],
+    [
+     "xq_NW_p0_bfq3",
+     1
+    ],
+    [
+     "xq_NW_p0_eg",
+     1
+    ],
+    [
+     "xq_NW_p1_bfq0",
+     1
+    ]
+   ],
+   "leaf_cells": 332820,
+   "leaves": [
+    "xl_NW_ctl",
+    "xq_NW_p0_bd",
+    "xq_NW_p0_bfq0",
+    "xq_NW_p0_bfq1",
+    "xq_NW_p0_bfq2",
+    "xq_NW_p0_bfq3",
+    "xq_NW_p0_eg",
+    "xq_NW_p1_bfq0"
+   ],
+   "ext_bits": 4158,
+   "hub_int_bits": 9230,
+   "core_int_bits": 9015,
+   "origin_um": [
+    2358.72,
+    2782.08
+   ],
+   "outline_um": [
+    699.84,
+    1270.08
+   ]
+  },
+  {
+   "core": "u_hcl08",
+   "cells": 334066,
+   "leaf_share": [
+    [
+     "hb_idx__nwsh",
+     1
+    ],
+    [
+     "hb_idx__op_NW",
+     1
+    ],
+    [
+     "hb_idx__q_NW",
+     1
+    ],
+    [
+     "hb_idx__qctl_NW",
+     1
+    ],
+    [
+     "hb_quant_NW__quant_NW0_lg",
+     1
+    ],
+    [
+     "hb_quant_NW__quant_NW1_lg",
+     1
+    ],
+    [
+     "hb_quant_NW__quant_NW2_lg",
+     1
+    ],
+    [
+     "hb_quant_NW__quant_NW3_lg",
+     1
+    ],
+    [
+     "hb_quant_NW__quant_NW_xp_ctl",
+     1
+    ],
+    [
+     "hb_quant_NW__quant_NW_xp_slice_0__rslice",
+     1
+    ],
+    [
+     "hb_quant_NW__quant_NW_xp_slice_0__wslice",
+     1
+    ],
+    [
+     "hb_quant_NW__quant_NW_xp_slice_1__rslice",
+     1
+    ],
+    [
+     "hb_quant_NW__quant_NW_xp_slice_1__wslice",
+     1
+    ],
+    [
+     "hb_quant_NW__quant_NW_xp_slice_2__rslice",
+     1
+    ],
+    [
+     "hb_quant_NW__quant_NW_xp_slice_2__wslice",
+     1
+    ],
+    [
+     "hb_quant_NW__quant_NW_xp_slice_3__rslice",
+     1
+    ],
+    [
+     "hb_quant_NW__quant_NW_xp_slice_3__wslice",
+     1
+    ],
+    [
+     "vmb_NW1",
+     1
+    ],
+    [
+     "vmm_NW1",
+     1
+    ]
+   ],
+   "leaf_cells": 329609,
+   "leaves": [
+    "hb_idx__nwsh",
+    "hb_idx__op_NW",
+    "hb_idx__q_NW",
+    "hb_idx__qctl_NW",
+    "hb_quant_NW__quant_NW0_lg",
+    "hb_quant_NW__quant_NW1_lg",
+    "hb_quant_NW__quant_NW2_lg",
+    "hb_quant_NW__quant_NW3_lg",
+    "hb_quant_NW__quant_NW_xp_ctl",
+    "hb_quant_NW__quant_NW_xp_slice_0__rslice",
+    "hb_quant_NW__quant_NW_xp_slice_0__wslice",
+    "hb_quant_NW__quant_NW_xp_slice_1__rslice",
+    "hb_quant_NW__quant_NW_xp_slice_1__wslice",
+    "hb_quant_NW__quant_NW_xp_slice_2__rslice",
+    "hb_quant_NW__quant_NW_xp_slice_2__wslice",
+    "hb_quant_NW__quant_NW_xp_slice_3__rslice",
+    "hb_quant_NW__quant_NW_xp_slice_3__wslice",
+    "vmb_NW1",
+    "vmm_NW1"
+   ],
+   "ext_bits": 1783,
+   "hub_int_bits": 8707,
+   "core_int_bits": 10147,
+   "origin_um": [
+    829.44,
+    1641.6
+   ],
+   "outline_um": [
+    440.64,
+    855.36
+   ]
+  },
+  {
+   "core": "u_hcl09",
+   "cells": 332640,
+   "leaf_share": [
+    [
+     "hc_NW",
+     1
+    ]
+   ],
+   "leaf_cells": 305805,
+   "leaves": [
+    "hc_NW"
+   ],
+   "ext_bits": 10734,
+   "hub_int_bits": 468,
+   "core_int_bits": 0,
+   "origin_um": [
+    1408.32,
+    1512.0
+   ],
+   "outline_um": [
+    561.6,
+    1114.56
+   ]
+  },
+  {
+   "core": "u_hcl10",
+   "cells": 331487,
+   "leaf_share": [
+    [
+     "calendar_NW",
+     1
+    ],
+    [
+     "col_sfu_NW",
+     1
+    ],
+    [
+     "epcal_NW",
+     1
+    ],
+    [
+     "fcx_NW",
+     1
+    ],
+    [
+     "hb_quant_NW__hbfd_qdq_split_and",
+     1
+    ],
+    [
+     "hb_quant_NW__hbfd_qdq_split_or",
+     1
+    ],
+    [
+     "hb_quant_NW__program_leaf",
+     1
+    ],
+    [
+     "hleaf_NW",
+     1
+    ],
+    [
+     "obs_NW",
+     1
+    ],
+    [
+     "sfup_NW",
+     1
+    ],
+    [
+     "smw_NW",
+     1
+    ],
+    [
+     "vmb_NW2",
+     1
+    ],
+    [
+     "vmdel_NW2",
+     1
+    ],
+    [
+     "vmdel_NW6",
+     1
+    ],
+    [
+     "vmfc_NW",
+     1
+    ],
+    [
+     "vmm_NW2",
+     1
+    ],
+    [
+     "vmm_NW5",
+     1
+    ],
+    [
+     "vmm_NW6",
+     1
+    ]
+   ],
+   "leaf_cells": 308755,
+   "leaves": [
+    "calendar_NW",
+    "col_sfu_NW",
+    "epcal_NW",
+    "fcx_NW",
+    "hb_quant_NW__hbfd_qdq_split_and",
+    "hb_quant_NW__hbfd_qdq_split_or",
+    "hb_quant_NW__program_leaf",
+    "hleaf_NW",
+    "obs_NW",
+    "sfup_NW",
+    "smw_NW",
+    "vmb_NW2",
+    "vmdel_NW2",
+    "vmdel_NW6",
+    "vmfc_NW",
+    "vmm_NW2",
+    "vmm_NW5",
+    "vmm_NW6"
+   ],
+   "ext_bits": 9093,
+   "hub_int_bits": 10452,
+   "core_int_bits": 5445,
+   "origin_um": [
+    2289.6,
+    77.76
+   ],
+   "outline_um": [
+    1252.8,
+    1270.08
+   ]
+  },
+  {
+   "core": "u_hcl11",
+   "cells": 324952,
+   "leaf_share": [
+    [
+     "hcollb_NW",
+     1
+    ],
+    [
+     "hcollgi_NW",
+     1
+    ],
+    [
+     "hcollgl_NW",
+     1
+    ],
+    [
+     "hcollks_NW",
+     1
+    ],
+    [
+     "hcollks_NW_p0",
+     1
+    ],
+    [
+     "hcollks_NW_p1",
+     1
+    ],
+    [
+     "hcollks_NW_p3",
+     1
+    ],
+    [
+     "hcollrs_NW",
+     1
+    ],
+    [
+     "vmb_NW0",
+     1
+    ],
+    [
+     "vmm_NW0",
+     1
+    ]
+   ],
+   "leaf_cells": 320992,
+   "leaves": [
+    "hcollb_NW",
+    "hcollgi_NW",
+    "hcollgl_NW",
+    "hcollks_NW",
+    "hcollks_NW_p0",
+    "hcollks_NW_p1",
+    "hcollks_NW_p3",
+    "hcollrs_NW",
+    "vmb_NW0",
+    "vmm_NW0"
+   ],
+   "ext_bits": 1584,
+   "hub_int_bits": 13505,
+   "core_int_bits": 6152,
+   "origin_um": [
+    2099.52,
+    1658.88
+   ],
+   "outline_um": [
+    414.72,
+    812.16
+   ]
+  },
+  {
+   "core": "u_hcl12",
+   "cells": 323612,
+   "leaf_share": [
+    [
+     "hb_quant_NW__u_dec",
+     1
+    ],
+    [
+     "vmb_NW3",
+     1
+    ],
+    [
+     "vmb_NW7",
+     1
+    ],
+    [
+     "vmdel_NW3",
+     1
+    ],
+    [
+     "vmdel_NW7",
+     1
+    ],
+    [
+     "vmm_NW3",
+     1
+    ],
+    [
+     "vmm_NW7",
+     1
+    ]
+   ],
+   "leaf_cells": 320647,
+   "leaves": [
+    "hb_quant_NW__u_dec",
+    "vmb_NW3",
+    "vmb_NW7",
+    "vmdel_NW3",
+    "vmdel_NW7",
+    "vmm_NW3",
+    "vmm_NW7"
+   ],
+   "ext_bits": 1186,
+   "hub_int_bits": 10178,
+   "core_int_bits": 1144,
+   "origin_um": [
+    3749.76,
+    302.4
+   ],
+   "outline_um": [
+    423.36,
+    829.44
+   ]
+  },
+  {
+   "core": "u_hcl13",
+   "cells": 305458,
+   "leaf_share": [
+    [
+     "cxrc_NW_q",
+     1
+    ],
+    [
+     "cxrc_NW_s",
+     1
+    ],
+    [
+     "pgp_NW",
+     1
+    ],
+    [
+     "stl_NW",
+     1
+    ],
+    [
+     "subr_NW",
+     1
+    ],
+    [
+     "sucore_NW",
+     1
+    ]
+   ],
+   "leaf_cells": 276561,
+   "leaves": [
+    "cxrc_NW_q",
+    "cxrc_NW_s",
+    "pgp_NW",
+    "stl_NW",
+    "subr_NW",
+    "sucore_NW"
+   ],
+   "ext_bits": 11559,
+   "hub_int_bits": 561,
+   "core_int_bits": 2855,
+   "origin_um": [
+    2652.48,
+    1434.24
+   ],
+   "outline_um": [
+    872.64,
+    1270.08
+   ]
+  },
+  {
+   "core": "u_hcl14",
+   "cells": 268340,
+   "leaf_share": [
+    [
+     "cic_NW",
+     1
+    ],
+    [
+     "cij_NW",
+     1
+    ],
+    [
+     "ctl_NW_p13",
+     1
+    ],
+    [
+     "ctl_NW_p14",
+     1
+    ],
+    [
+     "cxij_NW_q",
+     1
+    ],
+    [
+     "cxij_NW_s",
+     1
+    ]
+   ],
+   "leaf_cells": 247585,
+   "leaves": [
+    "cic_NW",
+    "cij_NW",
+    "ctl_NW_p13",
+    "ctl_NW_p14",
+    "cxij_NW_q",
+    "cxij_NW_s"
+   ],
+   "ext_bits": 8302,
+   "hub_int_bits": 3260,
+   "core_int_bits": 3636,
+   "origin_um": [
+    3240.0,
+    3024.0
+   ],
+   "outline_um": [
+    397.44,
+    786.24
+   ]
+  },
+  {
+   "core": "u_hcl15",
+   "cells": 260066,
+   "leaf_share": [
+    [
+     "ctl_NW_p01",
+     1
+    ],
+    [
+     "ctl_NW_p02",
+     1
+    ],
+    [
+     "ctl_NW_p03",
+     1
+    ],
+    [
+     "ctl_NW_p04",
+     1
+    ]
+   ],
+   "leaf_cells": 254036,
+   "leaves": [
+    "ctl_NW_p01",
+    "ctl_NW_p02",
+    "ctl_NW_p03",
+    "ctl_NW_p04"
+   ],
+   "ext_bits": 2412,
+   "hub_int_bits": 3628,
+   "core_int_bits": 0,
+   "origin_um": [
+    3818.88,
+    3179.52
+   ],
+   "outline_um": [
+    241.92,
+    475.2
+   ]
+  },
+  {
+   "core": "u_hcl16",
+   "cells": 260066,
+   "leaf_share": [
+    [
+     "ctl_NW_p05",
+     1
+    ],
+    [
+     "ctl_NW_p06",
+     1
+    ],
+    [
+     "ctl_NW_p07",
+     1
+    ],
+    [
+     "ctl_NW_p08",
+     1
+    ]
+   ],
+   "leaf_cells": 254036,
+   "leaves": [
+    "ctl_NW_p05",
+    "ctl_NW_p06",
+    "ctl_NW_p07",
+    "ctl_NW_p08"
+   ],
+   "ext_bits": 2412,
+   "hub_int_bits": 3628,
+   "core_int_bits": 0,
+   "origin_um": [
+    4380.48,
+    475.2
+   ],
+   "outline_um": [
+    241.92,
+    475.2
+   ]
+  },
+  {
+   "core": "u_hcl17",
+   "cells": 260066,
+   "leaf_share": [
+    [
+     "ctl_NW_p09",
+     1
+    ],
+    [
+     "ctl_NW_p10",
+     1
+    ],
+    [
+     "ctl_NW_p11",
+     1
+    ],
+    [
+     "ctl_NW_p12",
+     1
+    ]
+   ],
+   "leaf_cells": 254036,
+   "leaves": [
+    "ctl_NW_p09",
+    "ctl_NW_p10",
+    "ctl_NW_p11",
+    "ctl_NW_p12"
+   ],
+   "ext_bits": 2412,
+   "hub_int_bits": 4008,
+   "core_int_bits": 0,
+   "origin_um": [
+    3654.72,
+    1831.68
+   ],
+   "outline_um": [
+    241.92,
+    475.2
+   ]
+  },
+  {
+   "core": "u_hcl18",
+   "cells": 238102,
+   "leaf_share": [
+    [
+     "hb_coll_NW",
+     2
+    ]
+   ],
+   "leaf_cells": 232509,
+   "leaves": [
+    "hb_coll_NW_s0"
+   ],
+   "ext_bits": 2237,
+   "hub_int_bits": 4715,
+   "core_int_bits": 0,
+   "origin_um": [
+    4034.88,
+    1805.76
+   ],
+   "outline_um": [
+    267.84,
+    518.4
+   ]
+  },
+  {
+   "core": "u_hcl19",
+   "cells": 238102,
+   "leaf_share": [
+    [
+     "hb_coll_NW",
+     2
+    ]
+   ],
+   "leaf_cells": 232509,
+   "leaves": [
+    "hb_coll_NW_s1"
+   ],
+   "ext_bits": 2237,
+   "hub_int_bits": 4715,
+   "core_int_bits": 0,
+   "origin_um": [
+    4432.32,
+    1805.76
+   ],
+   "outline_um": [
+    267.84,
+    518.4
+   ]
+  },
+  {
+   "core": "u_hcl20",
+   "cells": 181190,
+   "leaf_share": [
+    [
+     "ctl_NW_p00",
+     1
+    ],
+    [
+     "ctl_NW_p15",
+     1
+    ],
+    [
+     "sfus_NW",
+     1
+    ],
+    [
+     "xq_NW_p1_bfq3",
+     1
+    ]
+   ],
+   "leaf_cells": 165935,
+   "leaves": [
+    "ctl_NW_p00",
+    "ctl_NW_p15",
+    "sfus_NW",
+    "xq_NW_p1_bfq3"
+   ],
+   "ext_bits": 6102,
+   "hub_int_bits": 3400,
+   "core_int_bits": 0,
+   "origin_um": [
+    4242.24,
+    3006.72
+   ],
+   "outline_um": [
+    414.72,
+    820.8
+   ]
+  }
+ ],
+ "n_cores": 21,
+ "max_core_cells": 359395,
+ "channel_bits": 68748,
+ "bits_kept_inside_cores": 63809,
+ "chan_um": {
+  "rows": 3,
+  "row_gap": 82.9,
+  "min_core_gap": 133.4
+ }
+}

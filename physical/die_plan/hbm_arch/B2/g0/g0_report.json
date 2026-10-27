@@ -4,7 +4,7 @@
  "verdict": "PASS",
  "mode": "G0",
  "errors": 0,
- "warnings": 563,
+ "warnings": 463,
  "summary": {
   "die": "hbm_arch_B2",
   "partitions": 88,
@@ -22,7 +22,7 @@
   "bits": 613915,
   "taps_cores": {
    "taps": 0,
-   "hard_cores": 208,
+   "hard_cores": 108,
    "core_pins": 0,
    "core_pins_off_track": 0,
    "types_no_cells": 0,
@@ -36,8 +36,8 @@
    "pins": 0,
    "pins_away": 0,
    "types_away": 0,
-   "cores": 208,
-   "cores_unchecked": 208
+   "cores": 108,
+   "cores_unchecked": 108
   },
   "complete": {
    "cells": 0,
@@ -117,7 +117,7 @@
      "hard_cores": 1
     },
     "q_hub": {
-     "hard_cores": 121
+     "hard_cores": 21
     },
     "NW_io": {
      "hard_cores": 4
@@ -3872,7 +3872,7 @@
    "total_types": 49
   },
   "xdie_counts": {
-   "hard_cores": 208,
+   "hard_cores": 108,
    "core_faces": 0,
    "complete": 0,
    "die_io_plan": 0,
@@ -4013,847 +4013,147 @@
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_sfup_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "msg": "[G0C] type q_hub core u_hcl00: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
    "type": "q_hub",
    "g0c": true
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_pgp_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "msg": "[G0C] type q_hub core u_hcl01: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
    "type": "q_hub",
    "g0c": true
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hc_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "msg": "[G0C] type q_hub core u_hcl06: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
    "type": "q_hub",
    "g0c": true
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_svg_Q0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "msg": "[G0C] type q_hub core u_hcl10: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
    "type": "q_hub",
    "g0c": true
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_svg_Q1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "msg": "[G0C] type q_hub core u_hcl12: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
    "type": "q_hub",
    "g0c": true
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_svg_Q2: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "msg": "[G0C] type q_hub core u_hcl16: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
    "type": "q_hub",
    "g0c": true
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_svg_Q3: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "msg": "[G0C] type q_hub core u_hcl04: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
    "type": "q_hub",
    "g0c": true
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hb_coll_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "msg": "[G0C] type q_hub core u_hcl08: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
    "type": "q_hub",
    "g0c": true
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_wbk_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "msg": "[G0C] type q_hub core u_hcl09: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
    "type": "q_hub",
    "g0c": true
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_cij_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "msg": "[G0C] type q_hub core u_hcl11: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
    "type": "q_hub",
    "g0c": true
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_cxrc_Q_q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "msg": "[G0C] type q_hub core u_hcl13: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
    "type": "q_hub",
    "g0c": true
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_cxrc_Q_s: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "msg": "[G0C] type q_hub core u_hcl17: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
    "type": "q_hub",
    "g0c": true
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hb_vms_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "msg": "[G0C] type q_hub core u_hcl18: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
    "type": "q_hub",
    "g0c": true
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_cxij_Q_q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "msg": "[G0C] type q_hub core u_hcl19: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
    "type": "q_hub",
    "g0c": true
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_cxij_Q_s: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "msg": "[G0C] type q_hub core u_hcl02: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
    "type": "q_hub",
    "g0c": true
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_smw_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "msg": "[G0C] type q_hub core u_hcl03: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
    "type": "q_hub",
    "g0c": true
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_xl_Q_ctl: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "msg": "[G0C] type q_hub core u_hcl05: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
    "type": "q_hub",
    "g0c": true
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_xq_Q_p0_eg: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "msg": "[G0C] type q_hub core u_hcl07: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
    "type": "q_hub",
    "g0c": true
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_xq_Q_p1_eg: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "msg": "[G0C] type q_hub core u_hcl14: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
    "type": "q_hub",
    "g0c": true
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_vmb_Q0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "msg": "[G0C] type q_hub core u_hcl15: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
    "type": "q_hub",
    "g0c": true
   },
   {
    "level": "WARN",
    "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_vmb_Q1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_vmb_Q2: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_vmb_Q3: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_vmb_Q4: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_vmb_Q5: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_vmb_Q6: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_vmb_Q7: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_xq_Q_p0_bd: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_xq_Q_p1_bd: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_xq_Q_p0_bfq0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_xq_Q_p0_bfq1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_xq_Q_p0_bfq2: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_xq_Q_p0_bfq3: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_xq_Q_p1_bfq0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_xq_Q_p1_bfq1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_xq_Q_p1_bfq2: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_xq_Q_p1_bfq3: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_sucore_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_sfus_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hb_quant_Q__u_dec: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hb_dbk_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hcollgi_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hcollgl_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_vmfc_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hb_idx__qctl_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hb_quant_Q__quant_Q0_lg: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hb_quant_Q__quant_Q1_lg: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hb_quant_Q__quant_Q2_lg: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hb_quant_Q__quant_Q3_lg: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hb_idx__q_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_ctl_Q_p00: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_ctl_Q_p01: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_ctl_Q_p02: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_ctl_Q_p03: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_ctl_Q_p04: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_ctl_Q_p05: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_ctl_Q_p06: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_ctl_Q_p07: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_ctl_Q_p08: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_ctl_Q_p09: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_ctl_Q_p10: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_ctl_Q_p11: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_ctl_Q_p12: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_ctl_Q_p13: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_ctl_Q_p14: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_ctl_Q_p15: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_vmks_Q0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_vmks_Q1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_vmks_Q2: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_vmks_Q3: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hb_idx__nwsh: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hcollrs_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hb_quant_Q__program_leaf: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hb_quant_Q__quant_Q_xp_ctl: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hcollb_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hcollks_Q_p0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hcollks_Q_p1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hcollks_Q_p2: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hcollks_Q_p3: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_calendar_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_epcal_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hb_idx__op_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_vmdel_Q0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_vmdel_Q1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_vmdel_Q2: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_vmdel_Q3: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_vmdel_Q4: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_vmdel_Q5: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_vmdel_Q6: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_vmdel_Q7: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_xl_Q_aqhi: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_xl_Q_aqlo: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hb_quant_Q__quant_Q_xp_slice_0__rslice: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hb_quant_Q__quant_Q_xp_slice_1__rslice: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hb_quant_Q__quant_Q_xp_slice_2__rslice: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hb_quant_Q__quant_Q_xp_slice_3__rslice: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hleaf_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_vmm_Q0: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_vmm_Q1: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_vmm_Q2: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_vmm_Q3: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_vmm_Q4: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_vmm_Q5: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_vmm_Q6: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_vmm_Q7: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_col_sfu_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hb_quant_Q__quant_Q_xp_slice_0__wslice: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hb_quant_Q__quant_Q_xp_slice_1__wslice: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hb_quant_Q__quant_Q_xp_slice_2__wslice: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hb_quant_Q__quant_Q_xp_slice_3__wslice: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hcollks_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_stl_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_cic_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hb_quant_Q__hbfd_qdq_split_and: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_hb_quant_Q__hbfd_qdq_split_or: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_fcx_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_obs_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_fr_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_fs_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_wbc_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
-   "type": "q_hub",
-   "g0c": true
-  },
-  {
-   "level": "WARN",
-   "check": "hard_cores",
-   "msg": "[G0C] type q_hub core u_subr_Q: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
+   "msg": "[G0C] type q_hub core u_hcl20: no pins listed (pins / pins_file): the core pins must be proven on the kit tracks",
    "type": "q_hub",
    "g0c": true
   },
@@ -5453,7 +4753,7 @@
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type q_hub: 121/121 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "msg": "type q_hub: 21/21 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
    "type": "q_hub"
   },
   {

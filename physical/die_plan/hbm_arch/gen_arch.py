@@ -58,7 +58,7 @@ VAR = {
     # B2 (COORD 10-23 22:xx review): HBM access (svg / vmks / ctl) in the hub; SFU core 2x2 W and IDX score 2x2 E of the
     # hub (each a full hub face), hc ring 4 + 4 at the band ends; narrower seam; 3-layer endpoint faces where the M8 / M9
     # budget allows; NE = MY mirror of NW (one master per tile partition); SerDes S1 on the S edge (vsN0)
-    'B2': dict(smw=584, smh=520, nq=2, phyh=240, bandh=240, hubw=560, seamv=160, dsu=40, band2='ringE', sp=210, spuhub=True,
+    'B2': dict(smw=584, smh=520, nq=2, phyh=240, bandh=240, hubw=560, seamv=160, dsu=40, band2='ringE', sp=210, spuhub=True, hubcl=True,
                mirror=True, l3=True, label='B2: P=3 SM, 8 SM / 2 mirrored quad tiles, 1 HBM3E stack'),
 }
 SIDE = 96          # side column width
@@ -692,6 +692,67 @@ def plan_json(T, lanes, ports, lane_out, buses, slots, R, M, census, outdir):
                              if T['var'] != 'Ac' else 'current SM as 2 x 2 QSPLIT quarters'))
             hcs.append(dict(inst='u_sm', module=sm_mod, origin_um=[0.0, 0.0], outline_um=[w, h], track_offset_um=[0.0, 0.0]))
             used = w * h
+        elif p['kind'] == 'hub' and T['V'].get('hubcl'):
+            # COORD 10-23 item 4: hub = channel partition of hard CLUSTER cores <= 360k cells (hub_cores.py: traffic
+            # agglomeration of the 121 as-built leaves; widest internal buses stay inside one core); the hub top holds
+            # only the cores, boundary pin registers live in the core that owns the bus, repeaters in the channels
+            import hub_cores as HC
+            hc_ = HC.compute(T, census, M, n)
+            T['hub_cores'] = hc_
+            area = {}
+            for i in insts:
+                b = blocks.get(i)
+                if b:
+                    area[i] = b['w'] * b['h']
+            CH_ = 3 * G                     # channel between cores (M6 / M7 over-the-core routing is kept free)
+            boxes = []
+            for c in hc_['cores']:
+                a = sum(area.get(l.split('#')[0], 0) / l_k for l, l_k in c['leaf_share']) * 1.15
+                sd = math.sqrt(a)
+                boxes.append((c, math.ceil(sd / G) * G, math.ceil(a / (math.ceil(sd / G) * G) / G) * G))
+            # even core grid: NR rows of equal height, cores balanced over the rows by area and re-shaped to the row
+            # height (cluster cores are soft-shaped: aspect 0.4..2.5); free space shared equally as channels (uniform
+            # channel width = uniform hub-top load).  NR maximises the narrowest channel.
+            best_ = None
+            for NR in range(2, 8):
+                rows = [[] for _ in range(NR)]
+                for bx in sorted(boxes, key=lambda r: -r[1] * r[2]):
+                    min(rows, key=lambda r_: sum(q[1] * q[2] for q in r_)).append(bx)
+                gy = max(CH_, 0.06 * h / NR)
+                hh = (h - (NR + 1) * gy) / NR
+                hh = math.floor(hh / G) * G
+                lay, ok, gmin = [], True, 1e9
+                for r_ in rows:
+                    # core height = row height capped at aspect 2 (h / w <= 2); a big core may go wide up to w / h <= 2
+                    hs = [math.floor(min(hh, math.sqrt(2.0 * q[1] * q[2])) / G) * G for q in r_]
+                    ws = [math.ceil(q[1] * q[2] / hq / G) * G for q, hq in zip(r_, hs)]
+                    ok &= all(0.5 <= wq / hq <= 2.0 for wq, hq in zip(ws, hs))
+                    gx = (w - sum(ws)) / (len(r_) + 1)
+                    gmin = min(gmin, gx)
+                    lay.append((sorted(zip(r_, ws, hs), key=lambda z: z[0][0]['core']), gx))
+                sc = (ok, min(gmin, gy))
+                if best_ is None or sc > best_[0]:
+                    best_ = (sc, NR, gy, hh, lay)
+            (_, gmin), NR, gy, hh, lay = best_
+            if gmin < CH_:
+                fit.setdefault(n, []).append('hub channels')
+            y_ = gy
+            for r_, gx in lay:
+                x_ = gx
+                for (c, _bw, _bh), bw_, bhq in r_:
+                    ox = math.floor(x_ / G) * G; oy = math.floor((y_ + (hh - bhq) / 2) / G) * G
+                    c['origin_um'] = [round(ox, 4), round(oy, 4)]; c['outline_um'] = [round(bw_, 4), round(bhq, 4)]
+                    cont.append(dict(inst=c['core'], module=f"hbm_arch_hub_{c['core'][2:]}", status='rework',
+                                     cells=int(c['cells']), origin_um=c['origin_um'], outline_um=c['outline_um'],
+                                     note='hard cluster of as-built leaves: ' + ' '.join(l for l, _ in c['leaf_share'])))
+                    hcs.append(dict(inst=c['core'], module=f"hbm_arch_hub_{c['core'][2:]}", origin_um=c['origin_um'],
+                                    track_offset_um=[0.0, 0.0], outline_um=c['outline_um']))
+                    used += bw_ * bhq
+                    x_ += bw_ + gx
+                y_ += hh + gy
+            rows = [[z[0] for z in r_] for r_, _ in lay]
+            T['hub_chan_um'] = dict(rows=NR, row_gap=round(gy, 1), min_core_gap=round(min(gx for _, gx in lay), 1))
+            cells = sum(c['cells'] for c in hc_['cores'])
         else:
             # as-built blocks (reused leaves); a block shared by k partitions is split into k cores of area/k
             rects = []
@@ -789,7 +850,8 @@ def main():
     if T['V'].get('mirror'):
         import emit_mirror as EM, clock_htree as CH
         rects = {n: tuple(u(v) for v in p['rect']) for n, p in T['parts'].items()}
-        hsegs, hleaves, hres = CH.build(u(T['W']), u(T['H']), rects)
+        hsegs, hleaves, hres, hstats = CH.build(u(T['W']), u(T['H']), rects,
+                                                hard={n for n, p in T['parts'].items() if p['kind'] in ('sm', 'phy')})
         lanes, ports, lane_out, buses, slots, errs, unrouted, R = EM.emit_mirror(
             T, bundles, G, u, adjacency, shortest, plen, OPPF, HL, VL, LAYERS, FT_UM, LANE_MAX, DETOUR, REACH, reserve=hres)
     else:
@@ -809,12 +871,13 @@ def main():
                     tracks[f"{pt['name']}.{ln}"] = r
         json.dump(dict(rule=CH.__doc__, ndr_tracks=CH.NDR_TRACKS, root_um=[u(T['W']) / 2, u(T['H']) / 2],
                        segments=[dict(xy=[s_[0], s_[1], s_[2], s_[3]], level=s_[4], layer=s_[5]) for s_ in hsegs],
-                       leaves=hleaves, reserved_tracks=tracks,
+                       ends=hleaves, stats=hstats, reserved_tracks=tracks,
                        hard_core_comp='SM / PHY clock pin: leaf delay = common latency 250 - core lib insertion',
                        gate='related-pair skew with CPPR <= 80 ps at TT and FF (seam pairs share the trunk)'),
                   open(os.path.join(a.out, 'clock_htree.json'), 'w'), indent=0)
         CH.render(plan, hsegs, hleaves, os.path.join(a.out, 'clock_htree.png'),
-                  f"{plan['die']['name']}: MSCTS H-tree, seam trunk M9 + mirrored M8/M9 ribs, {len(hleaves)} tap drivers, "
+                  f"{plan['die']['name']}: MSCTS binary H-tree (seam trunk root->2->4, W/E ribs ->8 ... ), {hstats['taps']} tap drivers + "
+                  f"{hstats['hard_pins']} hard-block clock pins, "
                   f"NDR {CH.NDR_TRACKS} tracks/wire reserved in ft_budget")
     # ft stations from the checker's own route geometry (zroute between the slot's in / out windows): <= 850 um apart
     import check as CK
@@ -863,6 +926,11 @@ def main():
                 face_occ_top=[list(x) for x in T.get('focc', [])[:25]], ft_top=[list(x) for x in T.get('ftu', [])[:25]],
                 mirror_errs=T.get('mirror_errs', []), master_superset=T.get('master_superset', {}), types=len(plan['partition_types']), need3=len(T.get('need3', ())))
     json.dump(summ, open(os.path.join(a.out, 'gen_summary.json'), 'w'), indent=1)
+    if T.get('hub_cores'):
+        T['hub_cores']['chan_um'] = T.get('hub_chan_um')
+        json.dump(T['hub_cores'], open(os.path.join(a.out, 'hub_cores.json'), 'w'), indent=1)
+        import hub_cores as HC
+        HC.render(plan, T['hub_cores'], os.path.join(a.out, 'hub_cores.png'))
     print(json.dumps({k: v for k, v in summ.items() if k not in ('errs',)}, indent=1)[:3000])
     for e in errs[:20]:
         print('ERR', e)
