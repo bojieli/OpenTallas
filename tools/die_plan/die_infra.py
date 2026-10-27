@@ -923,6 +923,11 @@ def cmd_grt(a):
         t = re.sub(r"set_global_routing_layer_adjustment M[89] [0-9.]+\n", "", t)
         t = t.replace("global_route ", "set_global_routing_layer_adjustment M8 0\nset_global_routing_layer_adjustment "
                                        "M9 0\nglobal_route ", 1)
+    # Record only a request that this generated Tcl actually makes.
+    logical_tcl = t.replace("\\\n", " ")
+    route_commands = re.findall(r"(?m)^global_route\b[^\n]*", logical_tcl)
+    if len(route_commands) != 1 or not re.search(r"-congestion_iterations\s+\d+\b", route_commands[0]):
+        raise ValueError("die_infra grt: expected one global_route with explicit -congestion_iterations; no request recorded")
     # METHODOLOGY 12.4e: PG IR is closed BEFORE signal GRT; the PG used is recorded so a later PG growth forces a re-route
     pgq = pg_ir_state(pg)
     if pgq["ir"] != "PASS" and not a.pg_ir_open_trial:
