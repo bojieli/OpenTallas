@@ -335,7 +335,13 @@ def check_faces(P, R, face_pins):
         # budget, COORD 10-23 07:43) gets the per-layer budget on each layer: face_pins_per_um * n / face_pin_layers
         fl = P.ptype(part).get("face_layers", {}).get(P.type_face(part, df))
         nl = max(B["face_pin_layers"], len(fl) if fl else 0)
-        lim = B["face_pins_per_um"] * nl / B["face_pin_layers"] * win + 2 * nl
+        # per-type budget (G2-proven, KV RULING 10-25 (a)) where the type declares one, never above the hard cap
+        tb = P.ptype(part).get("face_pins_per_um")
+        per = min(float(tb), S.FACE_PINS_HARD_CAP) if tb else B["face_pins_per_um"]
+        if tb and not P.ptype(part).get("face_budget_g2"):
+            R.err("faces", f"{part}: type face_pins_per_um {tb:g} without face_budget_g2 (the G2 probe that proves "
+                  "it)", part=part)
+        lim = per * nl / B["face_pin_layers"] * win + 2 * nl
         cs = sorted(c for c, _, _ in pins)
         mx, at = 0, None
         for i, c in enumerate(cs):
@@ -345,7 +351,7 @@ def check_faces(P, R, face_pins):
         worst.append((mx / win, part, df))
         if mx > lim + EPS:
             R.err("faces", f"{part}.{df}: {mx} pins in the {win:g}-um window at {at:.2f} "
-                  f"({mx / win:.2f}/um > {B['face_pins_per_um']:g})", part=part)
+                  f"({mx / win:.2f}/um > {per:g})", part=part)
     for pid, pr in P.ports.items():
         if len(pr["layers"]) > B["face_pin_layers"]:
             ends = [(pr[k]["part"], pr["face"] if k == "src" else OPP[pr["face"]]) for k in ("src", "dst")

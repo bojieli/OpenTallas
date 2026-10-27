@@ -167,6 +167,33 @@ def _free(p, boxes, box_out):
     return not any(a < x < c and b < y < d for a, b, c, d in boxes)
 
 
+def _seg_hits(p, q, boxes):
+    """the axis-parallel segment p-q passes through the interior of a blockage"""
+    (xa, ya), (xb, yb) = p, q
+    for a, b, c, d in boxes:
+        if abs(ya - yb) < 1e-9 and b < ya < d and max(xa, xb) > a and min(xa, xb) < c:
+            return True
+        if abs(xa - xb) < 1e-9 and a < xa < c and max(ya, yb) > b and min(ya, yb) < d:
+            return True
+    return False
+
+
+def _edge_ok(p, q, boxes):
+    """one of the two L routes p -> q stays outside every blockage (a relay hop is a wire: a hard core obstructs it)"""
+    for m in ((q[0], p[1]), (p[0], q[1])):
+        if not _seg_hits(p, m, boxes) and not _seg_hits(m, q, boxes):
+            return True
+    return False
+
+
+def _crosses(nodes, root, boxes):
+    for nd in nodes:
+        u = nd["par"]
+        if not _edge_ok(root if u is None or u < 0 else nodes[u]["xy"], nd["xy"], boxes):
+            return True
+    return False
+
+
 def push_off(p, boxes, box_out, step=2.16):
     """nearest point outside every blockage and inside box_out: candidates are the projections onto the faces of the
     boxes holding the point (repeated while a projection lands in another box), nearest free one wins."""
@@ -239,7 +266,9 @@ def topology(taps, root_xy, reach=REACH_UM, margin=MARGIN_UM, boxes=(), box_out=
         pts = sites
     plan_reach = reach - margin
     nodes, method = _topo_taps(pts, root, plan_reach, boxes, box_out), "taps"
-    if _maxhop(nodes, root) > reach + 1e-6 and boxes:
+    # KV-PLAN2 10-25: a hop whose both L routes cross a hard core is not a hop (G2 kv3_pc: rrl_13 -> rrl_14 straight
+    # through kvpc0, 1272 M3 overflow); the grid search keeps every hop outside the blockages
+    if boxes and (_maxhop(nodes, root) > reach + 1e-6 or _crosses(nodes, root, boxes)):
         nodes, method = _topo_grid(pts, root, plan_reach, boxes, box_out), "grid"
     return dict(nodes=nodes, root=root, ntap=len(pts), reach=reach, plan_reach=plan_reach, method=method,
                 taps=[n for n, _, _ in taps], tap_offset_um=round(off, 1))
@@ -332,7 +361,7 @@ def _topo_grid(pts, root, reach, boxes, box_out, pitch=None):
         for dx in (-1, 0, 1):
             for dy in (-1, 0, 1):
                 for k in buckets.get((cx + dx, cy + dy), ()):
-                    if _man(q, allp[k]) <= reach:
+                    if _man(q, allp[k]) <= reach and _edge_ok(q, allp[k], boxes):
                         yield k
     dist = {}
     par = {}
