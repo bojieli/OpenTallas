@@ -1,0 +1,22 @@
+[
+  {
+    "source": "/work/inputs/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+    "module": "ot_sram_1r1w_256x256_m2_r2c2",
+    "abi": "module ot_sram_1r1w_256x256_m2_r2c2 (\n    input  wire clk,\n    input  wire r_ce_in,\n    input  wire [7:0] r_addr_in,\n    output reg  [255:0] rd_out,\n    input  wire w_ce_in,\n    input  wire [7:0] w_addr_in,\n    input  wire [255:0] wd_in,\n    input  wire [255:0] w_mask_in,\n    input  wire [1:0] rr_en,\n    input  wire [13:0] rr_addr,\n    input  wire [1:0] cr_en,\n    input  wire [15:0] cr_sel\n);"
+  },
+  {
+    "source": "/work/inputs/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+    "module": "ot_sram_1r1w_1024x256_m2_r2c2",
+    "abi": "module ot_sram_1r1w_1024x256_m2_r2c2 (\n    input  wire clk,\n    input  wire r_ce_in,\n    input  wire [9:0] r_addr_in,\n    output reg  [255:0] rd_out,\n    input  wire w_ce_in,\n    input  wire [9:0] w_addr_in,\n    input  wire [255:0] wd_in,\n    input  wire [255:0] w_mask_in,\n    input  wire [1:0] rr_en,\n    input  wire [17:0] rr_addr,\n    input  wire [1:0] cr_en,\n    input  wire [15:0] cr_sel\n);"
+  },
+  {
+    "source": "/work/inputs/physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v",
+    "module": "ot_sram_1r1w_32x64_m1",
+    "abi": "module ot_sram_1r1w_32x64_m1 (\n    input  wire clk,\n    input  wire r_ce_in,\n    input  wire [4:0] r_addr_in,\n    output reg  [63:0] rd_out,\n    input  wire w_ce_in,\n    input  wire [4:0] w_addr_in,\n    input  wire [63:0] wd_in,\n    input  wire [63:0] w_mask_in\n);"
+  },
+  {
+    "source": "/work/inputs/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1.v",
+    "module": "ot_sram_1r1w2c_128x64_m1",
+    "abi": "module ot_sram_1r1w2c_128x64_m1 (\n    input  wire wclk,\n    input  wire rclk,\n    input  wire r_ce_in,\n    input  wire [6:0] r_addr_in,\n    output reg  [63:0] rd_out,\n    input  wire w_ce_in,\n    input  wire [6:0] w_addr_in,\n    input  wire [63:0] wd_in,\n    input  wire [63:0] w_mask_in\n);"
+  }
+]
