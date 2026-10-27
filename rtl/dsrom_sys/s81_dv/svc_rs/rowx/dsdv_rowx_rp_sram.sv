@@ -40,7 +40,7 @@ module dsdv_rowx_rp_sram #(parameter integer MUT = 0, parameter integer MUT_BYPA
     // throughout the following cycle, exactly when the original combinational
     // array would feed the unchanged output register. First read0 is ci40.
     wire first_read = in_act && ci == 12'd40;
-    wire [6:0] next_n = first_read ? 7'd0 : n == 7'd79 ? 7'd0 : n + 7'd1;
+    wire [6:0] next_n = out_act ? (n == 7'd79 ? 7'd0 : n + 7'd1) : 7'd0;
     wire [5:0] pre_addr = (next_n < 7'd40) ? next_n[5:0] : 6'(next_n - 7'd40);
     wire rd_en = first_read || out_act;
     wire wa0 = in_act && !kk[0] && !apar;
