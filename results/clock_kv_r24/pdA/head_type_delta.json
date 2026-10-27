@@ -1,0 +1,361 @@
+{
+ "schema": "opentallas.kv_cores_r3.head_type_delta.v1",
+ "plan": "pd/hm_r24.json",
+ "plan_sha256": "53cc76e3c9e8c821c49fed59d06b458aa243f7cf9c8faf2ec20923d81a49997c",
+ "modules": [
+  "kv3_head_eighth_e5"
+ ],
+ "checks": {
+  "cores/kv3_head_eighth_e5_pins_fMX.json": {
+   "canonical": "cores/kv3_head_eighth_e5_pins.json",
+   "mx_image_pins": 542,
+   "kept_reset_pins": [
+    "g_t_10_u_stin__rst_n[0]",
+    "g_t_10_u_stk__rst_n[0]",
+    "g_t_11_u_stin__rst_n[0]",
+    "g_t_11_u_stk__rst_n[0]"
+   ]
+  }
+ },
+ "changed": [
+  {
+   "type": "kv3_hg",
+   "inst": "head0_e5",
+   "module": "kv3_head_eighth_e5",
+   "n": 4,
+   "orient": [
+    "MX",
+    "R0"
+   ],
+   "pins_file": [
+    "cores/kv3_head_eighth_e5_pins_fMX.json",
+    "cores/kv3_head_eighth_e5_pins.json"
+   ]
+  },
+  {
+   "type": "kv3_hg",
+   "inst": "head1_e5",
+   "module": "kv3_head_eighth_e5",
+   "n": 4,
+   "orient": [
+    "MX",
+    "R0"
+   ],
+   "pins_file": [
+    "cores/kv3_head_eighth_e5_pins_fMX.json",
+    "cores/kv3_head_eighth_e5_pins.json"
+   ]
+  },
+  {
+   "type": "kv3_hg_v3",
+   "inst": "head0_e5",
+   "module": "kv3_head_eighth_e5",
+   "n": 4,
+   "orient": [
+    "MX",
+    "R0"
+   ],
+   "pins_file": [
+    "cores/kv3_head_eighth_e5_pins_fMX.json",
+    "cores/kv3_head_eighth_e5_pins.json"
+   ]
+  },
+  {
+   "type": "kv3_hg_v3",
+   "inst": "head1_e5",
+   "module": "kv3_head_eighth_e5",
+   "n": 4,
+   "orient": [
+    "MX",
+    "R0"
+   ],
+   "pins_file": [
+    "cores/kv3_head_eighth_e5_pins_fMX.json",
+    "cores/kv3_head_eighth_e5_pins.json"
+   ]
+  },
+  {
+   "type": "kv3_hgi",
+   "inst": "head2_e5",
+   "module": "kv3_head_eighth_e5",
+   "n": 2,
+   "orient": [
+    "MX",
+    "R0"
+   ],
+   "pins_file": [
+    "cores/kv3_head_eighth_e5_pins_fMX.json",
+    "cores/kv3_head_eighth_e5_pins.json"
+   ]
+  },
+  {
+   "type": "kv3_hgi",
+   "inst": "head3_e5",
+   "module": "kv3_head_eighth_e5",
+   "n": 2,
+   "orient": [
+    "MX",
+    "R0"
+   ],
+   "pins_file": [
+    "cores/kv3_head_eighth_e5_pins_fMX.json",
+    "cores/kv3_head_eighth_e5_pins.json"
+   ]
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "inst": "head2_e5",
+   "module": "kv3_head_eighth_e5",
+   "n": 12,
+   "orient": [
+    "MX",
+    "R0"
+   ],
+   "pins_file": [
+    "cores/kv3_head_eighth_e5_pins_fMX.json",
+    "cores/kv3_head_eighth_e5_pins.json"
+   ]
+  },
+  {
+   "type": "kv3_hgi_v1",
+   "inst": "head3_e5",
+   "module": "kv3_head_eighth_e5",
+   "n": 12,
+   "orient": [
+    "MX",
+    "R0"
+   ],
+   "pins_file": [
+    "cores/kv3_head_eighth_e5_pins_fMX.json",
+    "cores/kv3_head_eighth_e5_pins.json"
+   ]
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "inst": "head2_e5",
+   "module": "kv3_head_eighth_e5",
+   "n": 2,
+   "orient": [
+    "MX",
+    "R0"
+   ],
+   "pins_file": [
+    "cores/kv3_head_eighth_e5_pins_fMX.json",
+    "cores/kv3_head_eighth_e5_pins.json"
+   ]
+  },
+  {
+   "type": "kv3_hgi_v2",
+   "inst": "head3_e5",
+   "module": "kv3_head_eighth_e5",
+   "n": 2,
+   "orient": [
+    "MX",
+    "R0"
+   ],
+   "pins_file": [
+    "cores/kv3_head_eighth_e5_pins_fMX.json",
+    "cores/kv3_head_eighth_e5_pins.json"
+   ]
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "inst": "head2_e5",
+   "module": "kv3_head_eighth_e5",
+   "n": 1,
+   "orient": [
+    "MX",
+    "R0"
+   ],
+   "pins_file": [
+    "cores/kv3_head_eighth_e5_pins_fMX.json",
+    "cores/kv3_head_eighth_e5_pins.json"
+   ]
+  },
+  {
+   "type": "kv3_hgi_v3",
+   "inst": "head3_e5",
+   "module": "kv3_head_eighth_e5",
+   "n": 1,
+   "orient": [
+    "MX",
+    "R0"
+   ],
+   "pins_file": [
+    "cores/kv3_head_eighth_e5_pins_fMX.json",
+    "cores/kv3_head_eighth_e5_pins.json"
+   ]
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "inst": "head2_e5",
+   "module": "kv3_head_eighth_e5",
+   "n": 6,
+   "orient": [
+    "MX",
+    "R0"
+   ],
+   "pins_file": [
+    "cores/kv3_head_eighth_e5_pins_fMX.json",
+    "cores/kv3_head_eighth_e5_pins.json"
+   ]
+  },
+  {
+   "type": "kv3_hgi_v4",
+   "inst": "head3_e5",
+   "module": "kv3_head_eighth_e5",
+   "n": 6,
+   "orient": [
+    "MX",
+    "R0"
+   ],
+   "pins_file": [
+    "cores/kv3_head_eighth_e5_pins_fMX.json",
+    "cores/kv3_head_eighth_e5_pins.json"
+   ]
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "inst": "head2_e5",
+   "module": "kv3_head_eighth_e5",
+   "n": 1,
+   "orient": [
+    "MX",
+    "R0"
+   ],
+   "pins_file": [
+    "cores/kv3_head_eighth_e5_pins_fMX.json",
+    "cores/kv3_head_eighth_e5_pins.json"
+   ]
+  },
+  {
+   "type": "kv3_hgi_v5",
+   "inst": "head3_e5",
+   "module": "kv3_head_eighth_e5",
+   "n": 1,
+   "orient": [
+    "MX",
+    "R0"
+   ],
+   "pins_file": [
+    "cores/kv3_head_eighth_e5_pins_fMX.json",
+    "cores/kv3_head_eighth_e5_pins.json"
+   ]
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "inst": "head2_e5",
+   "module": "kv3_head_eighth_e5",
+   "n": 1,
+   "orient": [
+    "MX",
+    "R0"
+   ],
+   "pins_file": [
+    "cores/kv3_head_eighth_e5_pins_fMX.json",
+    "cores/kv3_head_eighth_e5_pins.json"
+   ]
+  },
+  {
+   "type": "kv3_hgi_v6",
+   "inst": "head3_e5",
+   "module": "kv3_head_eighth_e5",
+   "n": 1,
+   "orient": [
+    "MX",
+    "R0"
+   ],
+   "pins_file": [
+    "cores/kv3_head_eighth_e5_pins_fMX.json",
+    "cores/kv3_head_eighth_e5_pins.json"
+   ]
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "inst": "head2_e5",
+   "module": "kv3_head_eighth_e5",
+   "n": 6,
+   "orient": [
+    "MX",
+    "R0"
+   ],
+   "pins_file": [
+    "cores/kv3_head_eighth_e5_pins_fMX.json",
+    "cores/kv3_head_eighth_e5_pins.json"
+   ]
+  },
+  {
+   "type": "kv3_hgi_v7",
+   "inst": "head3_e5",
+   "module": "kv3_head_eighth_e5",
+   "n": 6,
+   "orient": [
+    "MX",
+    "R0"
+   ],
+   "pins_file": [
+    "cores/kv3_head_eighth_e5_pins_fMX.json",
+    "cores/kv3_head_eighth_e5_pins.json"
+   ]
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "inst": "head2_e5",
+   "module": "kv3_head_eighth_e5",
+   "n": 1,
+   "orient": [
+    "MX",
+    "R0"
+   ],
+   "pins_file": [
+    "cores/kv3_head_eighth_e5_pins_fMX.json",
+    "cores/kv3_head_eighth_e5_pins.json"
+   ]
+  },
+  {
+   "type": "kv3_hgi_v8",
+   "inst": "head3_e5",
+   "module": "kv3_head_eighth_e5",
+   "n": 1,
+   "orient": [
+    "MX",
+    "R0"
+   ],
+   "pins_file": [
+    "cores/kv3_head_eighth_e5_pins_fMX.json",
+    "cores/kv3_head_eighth_e5_pins.json"
+   ]
+  },
+  {
+   "type": "kv3_hg_v1",
+   "inst": "head0_e5",
+   "module": "kv3_head_eighth_e5",
+   "n": 4,
+   "orient": [
+    "MX",
+    "R0"
+   ],
+   "pins_file": [
+    "cores/kv3_head_eighth_e5_pins_fMX.json",
+    "cores/kv3_head_eighth_e5_pins.json"
+   ]
+  },
+  {
+   "type": "kv3_hg_v1",
+   "inst": "head1_e5",
+   "module": "kv3_head_eighth_e5",
+   "n": 4,
+   "orient": [
+    "MX",
+    "R0"
+   ],
+   "pins_file": [
+    "cores/kv3_head_eighth_e5_pins_fMX.json",
+    "cores/kv3_head_eighth_e5_pins.json"
+   ]
+  }
+ ],
+ "e2_on_e6": null,
+ "out_plan_sha256": "be1bcb076bc377f6724f154b59773c37fc933aa8b0d124e5e1715a2942ca6cdd",
+ "instances_changed": 88
+}

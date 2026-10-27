@@ -1,0 +1,261 @@
+{
+ "kv3_pv_pair_pins": {
+  "variant": "kv3_pv_pair_pins_fMX",
+  "op": "MX",
+  "moved": [
+   {
+    "pin": "s0__rst_n[0]",
+    "from_": [
+     73.464,
+     189.984
+    ],
+    "to": [
+     190.296,
+     95.04
+    ]
+   },
+   {
+    "pin": "s1__rst_n[0]",
+    "from_": [
+     261.384,
+     189.984
+    ],
+    "to": [
+     190.392,
+     95.04
+    ]
+   }
+  ],
+  "non_image_pins_after": 0,
+  "pins": 1652,
+  "sha256": {
+   "kv3_pv_pair_pins": "3ee6523795527731cc52762758d058fc95e70cf76957438623099d45bd284683",
+   "kv3_pv_pair_pins_fMX": "4ce815918ac6c016e69bdda71593796a04f0b72a87437d184af83eea38021016"
+  }
+ },
+ "kv3_head_eighth_e0_pins": {
+  "variant": "kv3_head_eighth_e0_pins_fMX",
+  "op": "MX",
+  "moved": [
+   {
+    "pin": "g_front_0_u_front__rst_n[0]",
+    "from_": [
+     130.824,
+     215.904
+    ],
+    "to": [
+     108.216,
+     108.0
+    ]
+   },
+   {
+    "pin": "g_t_0_u_stin__rst_n[0]",
+    "from_": [
+     131.304,
+     215.904
+    ],
+    "to": [
+     108.312,
+     108.0
+    ]
+   },
+   {
+    "pin": "g_t_0_u_stk__rst_n[0]",
+    "from_": [
+     131.592,
+     215.904
+    ],
+    "to": [
+     108.12,
+     108.0
+    ]
+   },
+   {
+    "pin": "g_t_1_u_stin__rst_n[0]",
+    "from_": [
+     132.072,
+     215.904
+    ],
+    "to": [
+     108.504,
+     108.0
+    ]
+   },
+   {
+    "pin": "g_t_1_u_stk__rst_n[0]",
+    "from_": [
+     132.408,
+     215.904
+    ],
+    "to": [
+     107.928,
+     108.0
+    ]
+   },
+   {
+    "pin": "u_kt__rst_n[0]",
+    "from_": [
+     208.536,
+     215.904
+    ],
+    "to": [
+     108.6,
+     108.0
+    ]
+   }
+  ],
+  "non_image_pins_after": 0,
+  "pins": 1802,
+  "sha256": {
+   "kv3_head_eighth_e0_pins": "47a296becb690d907258c63da7f0bdd1ced920c20388bac1f24285615fd4ebec",
+   "kv3_head_eighth_e0_pins_fMX": "a7dba628c674e7f320ebb12a25573e68e41c65b737aa8ad7a3f6730c9a8aa248"
+  }
+ },
+ "kv3_head_eighth_e5_pins": {
+  "variant": "kv3_head_eighth_e5_pins_fMX",
+  "op": "MX",
+  "moved": [
+   {
+    "pin": "g_t_10_u_stin__rst_n[0]",
+    "from_": [
+     8.952,
+     0.096
+    ],
+    "to": [
+     108.024,
+     108.0
+    ]
+   },
+   {
+    "pin": "g_t_10_u_stk__rst_n[0]",
+    "from_": [
+     106.632,
+     0.096
+    ],
+    "to": [
+     108.12,
+     108.0
+    ]
+   },
+   {
+    "pin": "g_t_11_u_stin__rst_n[0]",
+    "from_": [
+     114.792,
+     0.096
+    ],
+    "to": [
+     107.928,
+     108.0
+    ]
+   },
+   {
+    "pin": "g_t_11_u_stk__rst_n[0]",
+    "from_": [
+     212.472,
+     0.096
+    ],
+    "to": [
+     108.216,
+     108.0
+    ]
+   }
+  ],
+  "non_image_pins_after": 0,
+  "pins": 546,
+  "sha256": {
+   "kv3_head_eighth_e5_pins": "64be496be7ff4546faf6ae1d977dfd6595ffe79486581a42370c14a819df59fa",
+   "kv3_head_eighth_e5_pins_fMX": "26b779d2b933f011fe51ebef879ffb8a2782b9f41805335a59f912bd02c34e55"
+  }
+ },
+ "kv3_head_eighth_e6_pins": {
+  "variant": "kv3_head_eighth_e6_pins_fMX",
+  "op": "MX",
+  "moved": [
+   {
+    "pin": "g_front_3_u_front__rst_n[0]",
+    "from_": [
+     195.144,
+     0.096
+    ],
+    "to": [
+     108.12,
+     108.0
+    ]
+   },
+   {
+    "pin": "g_t_12_u_stin__rst_n[0]",
+    "from_": [
+     195.864,
+     0.096
+    ],
+    "to": [
+     107.928,
+     108.0
+    ]
+   },
+   {
+    "pin": "g_t_12_u_stk__rst_n[0]",
+    "from_": [
+     204.408,
+     0.096
+    ],
+    "to": [
+     108.216,
+     108.0
+    ]
+   },
+   {
+    "pin": "g_t_13_u_stin__rst_n[0]",
+    "from_": [
+     205.128,
+     0.096
+    ],
+    "to": [
+     107.832,
+     108.0
+    ]
+   },
+   {
+    "pin": "g_t_13_u_stk__rst_n[0]",
+    "from_": [
+     213.72,
+     0.096
+    ],
+    "to": [
+     108.312,
+     108.0
+    ]
+   }
+  ],
+  "non_image_pins_after": 0,
+  "pins": 1358,
+  "sha256": {
+   "kv3_head_eighth_e6_pins": "d99d23ed643edc392f3639f5e2df9f2aacdfff6be2f048e2f04766b968e97a06",
+   "kv3_head_eighth_e6_pins_fMX": "04f90163b295287dcbecd31516f5a19bbac80ce4ef1a55fbb6aff25fd9e6a0d9"
+  }
+ },
+ "qkd_kvs_pc_h_head_p_pins_fMY": {
+  "variant": "qkd_kvs_pc_h_head_p_pins",
+  "op": "MY",
+  "moved": [
+   {
+    "pin": "ck[0]",
+    "note": "R0 view (unused) now the image of the plan fMY view"
+   },
+   {
+    "pin": "pc__hes[287]",
+    "note": "R0 view (unused) now the image of the plan fMY view"
+   },
+   {
+    "pin": "rst_n[0]",
+    "note": "R0 view (unused) now the image of the plan fMY view"
+   }
+  ],
+  "non_image_pins_after": 0,
+  "pins": 2987,
+  "sha256": {
+   "qkd_kvs_pc_h_head_p_pins_fMY": "efd6826ed79520e54901bc37194590dcfa2d86c64eb9d743d825589e97b5cbaf",
+   "qkd_kvs_pc_h_head_p_pins": "b887c9f3905aaa700049a3eea7ce5b3c4747889120db51ea9159269e4db86cc7"
+  }
+ }
+}

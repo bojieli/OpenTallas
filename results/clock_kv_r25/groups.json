@@ -1,0 +1,172 @@
+{
+ "kv3_pv_pair": {
+  "instances_with_pushdown": 256,
+  "plan_instances": 256,
+  "patterns": 1,
+  "groups": [
+   {
+    "role": "mesh_driver",
+    "bbox": [
+     107.46,
+     138.24,
+     110.7,
+     138.51
+    ],
+    "cells": 2,
+    "masters": [
+     "BUFx24_ASAP7_75t_R"
+    ]
+   },
+   {
+    "role": "tree_node",
+    "bbox": [
+     268.11,
+     43.2,
+     269.73,
+     43.47
+    ],
+    "cells": 1,
+    "masters": [
+     "BUFx24_ASAP7_75t_R"
+    ]
+   }
+  ],
+  "pins_files": {
+   "cores/kv3_pv_pair_pins_fMX.json|R180": 20,
+   "cores/kv3_pv_pair_pins.json|MY": 44,
+   "cores/kv3_pv_pair_pins.json|R180": 44,
+   "cores/kv3_pv_pair_pins_fMX.json|MY": 20,
+   "cores/kv3_pv_pair_pins_fMX.json|MX": 20,
+   "cores/kv3_pv_pair_pins.json|R0": 44,
+   "cores/kv3_pv_pair_pins.json|MX": 44,
+   "cores/kv3_pv_pair_pins_fMX.json|R0": 20
+  },
+  "distinct_nets_per_group": 512
+ },
+ "qkd_ectlk_q0": {
+  "instances_with_pushdown": 32,
+  "plan_instances": 32,
+  "patterns": 1,
+  "groups": [
+   {
+    "role": "tree_node",
+    "bbox": [
+     102.168,
+     8.64,
+     103.788,
+     8.91
+    ],
+    "cells": 1,
+    "masters": [
+     "BUFx24_ASAP7_75t_R"
+    ]
+   }
+  ],
+  "pins_files": {
+   "cores/qkd_ectlk_q0_pins.json|R0": 32
+  },
+  "distinct_nets_per_group": 32
+ },
+ "qkd_ectlk_q2": {
+  "instances_with_pushdown": 32,
+  "plan_instances": 32,
+  "patterns": 1,
+  "groups": [
+   {
+    "role": "tree_node",
+    "bbox": [
+     102.168,
+     8.64,
+     103.788,
+     8.91
+    ],
+    "cells": 1,
+    "masters": [
+     "BUFx24_ASAP7_75t_R"
+    ]
+   }
+  ],
+  "pins_files": {
+   "cores/qkd_ectlk_q2_pins.json|R0": 32
+  },
+  "distinct_nets_per_group": 32
+ },
+ "qkd_kvs_pc": {
+  "instances_with_pushdown": 124,
+  "plan_instances": 124,
+  "patterns": 1,
+  "groups": [
+   {
+    "role": "mesh_driver",
+    "bbox": [
+     123.39,
+     86.4,
+     126.63,
+     86.67
+    ],
+    "cells": 2,
+    "masters": [
+     "BUFx24_ASAP7_75t_R"
+    ]
+   },
+   {
+    "role": "mesh_driver",
+    "bbox": [
+     123.39,
+     276.48,
+     126.63,
+     276.75
+    ],
+    "cells": 2,
+    "masters": [
+     "BUFx24_ASAP7_75t_R"
+    ]
+   }
+  ],
+  "pins_files": {
+   "cores/qkd_kvs_pc_pins.json|MY": 12,
+   "cores/qkd_kvs_pc_pins.json|R180": 48,
+   "cores/qkd_kvs_pc_pins.json|R0": 16,
+   "cores/qkd_kvs_pc_pins_fMX.json|MX": 24,
+   "cores/qkd_kvs_pc_pins.json|MX": 24
+  },
+  "distinct_nets_per_group": 128
+ },
+ "qkd_kvs_pc_h_head_p": {
+  "instances_with_pushdown": 4,
+  "plan_instances": 4,
+  "patterns": 1,
+  "groups": [
+   {
+    "role": "mesh_driver",
+    "bbox": [
+     123.39,
+     86.4,
+     126.63,
+     86.67
+    ],
+    "cells": 2,
+    "masters": [
+     "BUFx24_ASAP7_75t_R"
+    ]
+   },
+   {
+    "role": "mesh_driver",
+    "bbox": [
+     123.39,
+     276.48,
+     126.63,
+     276.75
+    ],
+    "cells": 2,
+    "masters": [
+     "BUFx24_ASAP7_75t_R"
+    ]
+   }
+  ],
+  "pins_files": {
+   "cores/qkd_kvs_pc_h_head_p_pins_fMY.json|MY": 4
+  },
+  "distinct_nets_per_group": 8
+ }
+}

@@ -1,0 +1,24 @@
+{
+ "schema": "opentallas.kv_cores_r3.head_type_delta.v1",
+ "plan": "pd/hm_r24.json",
+ "plan_sha256": "53cc76e3c9e8c821c49fed59d06b458aa243f7cf9c8faf2ec20923d81a49997c",
+ "modules": [
+  "kv3_head_eighth_e5"
+ ],
+ "checks": {
+  "cores/kv3_head_eighth_e5_pins_fMX.json": {
+   "canonical": "cores/kv3_head_eighth_e5_pins.json",
+   "mx_image_pins": 542,
+   "kept_reset_pins": [
+    "g_t_10_u_stin__rst_n[0]",
+    "g_t_10_u_stk__rst_n[0]",
+    "g_t_11_u_stin__rst_n[0]",
+    "g_t_11_u_stk__rst_n[0]"
+   ]
+  }
+ },
+ "e2_on_e6": null,
+ "out_plan_sha256": "be1bcb076bc377f6724f154b59773c37fc933aa8b0d124e5e1715a2942ca6cdd",
+ "instances_changed": 88
+}
+changed rows 24 instances 88

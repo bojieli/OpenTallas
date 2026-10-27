@@ -1,0 +1,162 @@
+{
+ "mesh": {
+  "nx": 32,
+  "ny": 71,
+  "m": 2,
+  "rep_um": 450.0,
+  "ndr": "4w",
+  "pitch_um": [
+   346.14,
+   380.89014084507045
+  ],
+  "delta": "D-KV-CLK-R22",
+  "layers": {
+   "straps_h": "M8",
+   "straps_v": "M9"
+  },
+  "tool": "tools/die_plan/die_clock_mesh.py build",
+  "sites_file": "clock_mesh_sites_r24.json",
+  "sites_sha256": "0760d4df7054860497f5b6d51c941fe5769c61758e2149f91da022f73c5b9c25",
+  "cells": 12563,
+  "core_islands": {
+   "kv3_pv_pair": {
+    "rule": "12.2a1 pushdown (in the core netlist, fixed, dont_touch; die-owned ft ports)",
+    "instances": 256,
+    "rects_um": [
+     [
+      107.46,
+      138.24,
+      109.08,
+      138.51
+     ],
+     [
+      109.08,
+      138.24,
+      110.7,
+      138.51
+     ],
+     [
+      268.11,
+      43.2,
+      269.73,
+      43.47
+     ]
+    ],
+    "frame": "core R0 master"
+   },
+   "qkd_ectlk_q0": {
+    "rule": "12.2a1 pushdown (in the core netlist, fixed, dont_touch; die-owned ft ports)",
+    "instances": 32,
+    "rects_um": [
+     [
+      102.168,
+      8.64,
+      103.788,
+      8.91
+     ]
+    ],
+    "frame": "core R0 master"
+   },
+   "qkd_ectlk_q2": {
+    "rule": "12.2a1 pushdown (in the core netlist, fixed, dont_touch; die-owned ft ports)",
+    "instances": 32,
+    "rects_um": [
+     [
+      102.168,
+      8.64,
+      103.788,
+      8.91
+     ]
+    ],
+    "frame": "core R0 master"
+   },
+   "qkd_kvs_pc": {
+    "rule": "12.2a1 pushdown (in the core netlist, fixed, dont_touch; die-owned ft ports)",
+    "instances": 124,
+    "rects_um": [
+     [
+      123.39,
+      86.4,
+      125.01,
+      86.67
+     ],
+     [
+      123.39,
+      276.48,
+      125.01,
+      276.75
+     ],
+     [
+      125.01,
+      86.4,
+      126.63,
+      86.67
+     ],
+     [
+      125.01,
+      276.48,
+      126.63,
+      276.75
+     ]
+    ],
+    "frame": "core R0 master"
+   },
+   "qkd_kvs_pc_h_head_p": {
+    "rule": "12.2a1 pushdown (in the core netlist, fixed, dont_touch; die-owned ft ports)",
+    "instances": 4,
+    "rects_um": [
+     [
+      123.39,
+      86.4,
+      125.01,
+      86.67
+     ],
+     [
+      123.39,
+      276.48,
+      125.01,
+      276.75
+     ],
+     [
+      125.01,
+      86.4,
+      126.63,
+      86.67
+     ],
+     [
+      125.01,
+      276.48,
+      126.63,
+      276.75
+     ]
+    ],
+    "frame": "core R0 master"
+   }
+  }
+ },
+ "ft0": [
+  {
+   "name": "ft0_i_hold",
+   "port": "ft0_i",
+   "rect_um": [
+    430.704,
+    1519.29,
+    433.134,
+    1520.1
+   ],
+   "cells": {
+    "HB4xp67_ASAP7_75t_R": 6
+   },
+   "owner": "die_top",
+   "demand": {
+    "source": "die_sta hold demand (CLOCK-KV-R21 hold_demand_die_sta.py, unplaced kv3_phy_v1 ft0)",
+    "sha256": "46f1488105a63ab5b542558764a3f02fad78d1074c1f892e92a6978f9af8c82f",
+    "ff_hold_ps": -109.606,
+    "demand_ps": 109.606,
+    "bits": 2,
+    "k": 3
+   },
+   "note": "CLOCK-KV-R22 declared landing island (COORD RULING CLOCK-KV-R21 ASK1): die-top HB4 data hold cells for the hard->hard seam into this input (no P&R kit on either side); type-hardened"
+  }
+ ]
+}

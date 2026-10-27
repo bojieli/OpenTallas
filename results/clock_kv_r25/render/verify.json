@@ -1,0 +1,30 @@
+{
+ "instances": {
+  "qkd_kvs_pc_h_head_p": 4,
+  "qkd_kvs_pc": 124,
+  "kv3_pv_pair": 256,
+  "qkd_ectlk_q0": 32,
+  "qkd_ectlk_q2": 32
+ },
+ "ports_checked": 1664,
+ "bad": 0,
+ "bad_examples": [],
+ "views": [
+  "kv3_pv_pair|cores/kv3_pv_pair_pins_fMX_r25.json|MX",
+  "kv3_pv_pair|cores/kv3_pv_pair_pins_fMX_r25.json|MY",
+  "kv3_pv_pair|cores/kv3_pv_pair_pins_fMX_r25.json|R0",
+  "kv3_pv_pair|cores/kv3_pv_pair_pins_fMX_r25.json|R180",
+  "kv3_pv_pair|cores/kv3_pv_pair_pins_r25.json|MX",
+  "kv3_pv_pair|cores/kv3_pv_pair_pins_r25.json|MY",
+  "kv3_pv_pair|cores/kv3_pv_pair_pins_r25.json|R0",
+  "kv3_pv_pair|cores/kv3_pv_pair_pins_r25.json|R180",
+  "qkd_ectlk_q0|cores/qkd_ectlk_q0_pins_r25.json|R0",
+  "qkd_ectlk_q2|cores/qkd_ectlk_q2_pins_r25.json|R0",
+  "qkd_kvs_pc_h_head_p|cores/qkd_kvs_pc_h_head_p_pins_fMY_r25.json|MY",
+  "qkd_kvs_pc|cores/qkd_kvs_pc_pins_fMX_r25.json|MX",
+  "qkd_kvs_pc|cores/qkd_kvs_pc_pins_r25.json|MX",
+  "qkd_kvs_pc|cores/qkd_kvs_pc_pins_r25.json|MY",
+  "qkd_kvs_pc|cores/qkd_kvs_pc_pins_r25.json|R0",
+  "qkd_kvs_pc|cores/qkd_kvs_pc_pins_r25.json|R180"
+ ]
+}
