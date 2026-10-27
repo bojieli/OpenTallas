@@ -29,14 +29,14 @@ stage-table 0.5022 -> k x0.62); both FIXED here, the numbers below are the fixed
   values; the fixed tool reproduces 3.047 / 2.802 / 1.755). So the real environment is set by the PARTITION-internal M6/M7
   routing, which the die GRT cannot see; u brackets it.
 - fd2d C (fF/um), basis geometry: M8 over full M7 plane, open top 0.5026 (= stage table 0.5022, model basis); M8 M7+M9 planes 0.829;
-  M8 over M5 open 0.275 (clock-alone); M9 over M8 plane 0.494 (RC3 0.4938). UNCHECKED (fixed run).
-- per-net k median 0.619 / 0.799 / 0.963 at u = 0 / 0.5 / 1 (checker's independent fixed-basis estimate 0.517 / 0.746 / 0.952 with
+  M8 over M5 open 0.275 (clock-alone); M9 over M8 plane 0.494 (RC3 0.4938). CHECKED (R24c).
+- per-net k median 0.619 / 0.799 / 0.963 (CHECKED R24c: 0.6186/0.7990/0.9629) at u = 0 / 0.5 / 1 (checker's independent fixed-basis estimate 0.517 / 0.746 / 0.952 with
   its own geometry choices). UNCHECKED.
 - Fold `r24_envfold.py` (qc_clk_mesh3 --top-edge-corr format): stage_env = D0 + (seg - D0) * k_net on every legal stage
   (2,158 top edges, 4,644 stages, 0 unmatched); edge k median 0.796 / 0.893 / 0.980. fold_env_u*.json.gz.
   Approximation: wire-load part scales with C; stage table not re-simulated (next step).
 
-## 3. Effect on the clock (nominal, solve sample 0, legal geometry) -- UNCHECKED (fixed run)
+## 3. Effect on the clock (nominal, solve sample 0, legal geometry) -- CHECKED (R24c, values vs files)
 | variant | tap skew TT / FF | insertion TT |
 |---|---|---|
 | model (full M7 plane) | 22.97 / 21.06 (CHECKED) | 6672-6695 |
@@ -48,7 +48,7 @@ per column/branch (regional, column-level offsets: c_E3/c_W1 bn early, sl_E1/E2 
 nearly independent of u = it is the GRT part). STRUCTURAL REBALANCE (task 3) NOT DONE: needs the plan tool to balance merges on the
 env fold (12.8 d1: plan-computed from plan geometry + measured die-top density, before any build).
 
-## 4/5. MC (13 + nominal) + main die_sta_related (shared model, 997 seam pairs, AOCV 0.21 %/mm, droop shared) -- UNCHECKED except model
+## 4/5. MC (13 + nominal) + main die_sta_related (shared model, 997 seam pairs, AOCV 0.21 %/mm, droop shared) -- CHECKED (R24c: values vs files, FF hold recomputed all 4 runs)
 | run | MC worst tap skew TT/FF | TT setup | FF hold (zero-logic) | kit W40 plain / core views |
 |---|---|---|---|---|
 | model | 329.1 / 284.7 | +540.09 | -115.32 (CHECKED recompute) | +29.36 / +14.39 PASS |
@@ -97,11 +97,12 @@ above the centre channel moves +8.64 um (centre gap 336.96 -> 345.60), x unchang
   shape. Regression test `test_clock128_r8.py::test_wide_merge_counts_other_clock_nets_drawn_shields` fails without the fix and passes
   with it; r8 5/5 and shield 11/11 tests pass.
 - guard51 dry build re-run with the fix ($S/dryfix/dry, 8.2 s, the same plan sha 37937a86): proxy check `wide_vss_check.py` gives
-  baseline 24 wide M9 VSS pairs / 48 metal violations (= the R17 count; columns x 2176, 4647, ...), fixed 0 / 0.
+  baseline 48 wide M9 VSS merges (24 at 1.16 um -> the 48 violations = the R17 count; 24 more at exactly 1.000 um, borderline at
+  PRL 1.78), fixed 0 / 0 on M8+M9, no new shorts / diff-net gaps < 0.5 -- CHECKED (NUMBER-CHECK-QC-R24c, nc-qc24c/m9drc.py).
   Render dryfix/fix_w2176.png (viewed): leg 85_0 moves 2175.72 -> 2175.56; its shield now ends 0.04 um from the 98_0 trunk shield
   (same net VSS, two 0.64 shapes; the LEF wide row has no SAMENET, min 0.04 met exactly -> legal but marginal, confirm in die DRC).
-  48 nets move by one 0.08-um track; tree wire 1562.338 -> 1562.348 mm; 120 M9:wide_merge_skip. UNCHECKED (NUMBER-CHECK-QC-R24c
-  running). A die DRC re-run on the fixed build is owed (combo + DRT DRC, >30 min).
+  48 nets move: 24 by one 0.08 track (1.000 class), 24 legs by 0.16 (1.16 class); tree wire 1562.338 -> 1562.348 mm (CHECKED).
+  Same-net 0.04 gaps 384 -> 408 (class already present in R17, not flagged by its DRC). A die DRC re-run on the fixed build is owed (combo + DRT DRC, >30 min).
 ### (1) A0-CLK-R3b strap re-phase adopted in the R24 lattice + mesh RC with the 16,896 drop loads -- FAIL as specified
 - `r24_rephase.py` keeps the R23 straps outside the A0 field (channels, inter-row and centre bands) and every driver column. It
   replaces every M9 over an A0 column and every M8 over an A0 row by the R3b drop straps. The W-column extension is included:
@@ -115,8 +116,8 @@ above the centre channel moves +8.64 um (centre gap 336.96 -> 345.60), x unchang
 | re-phase (R3b) | 3081.8 | 363.96 | 336.41 | 63.3 / 149.3 / 217.1 |
 | keep R23 + add drop straps (R3b alt) | 4660.5 | 418.84 | 365.10 | 51.1 / 138.0 / 209.2 |
 - CAUSE (structural): (a) the 192 drop M9 straps lie inside the cores and run the full die height. They are fed only through M8
-  crossings from the channel driver columns. (b) The W column (x0 1650.24) has no driver column W of it (first one 2177.28), so its
-  4 drop straps are driven from 400 um away; the worst cores are c_W5_*_01/11. MC samples were not run because the nominal already
+  crossings from the channel driver columns. (b) lateness tracks the drop-strap distance to the nearest driver column (worst 527 um -> ~411 ps die-wide, W3/E0 too);
+  the missing W-edge driver column adds ~+29 ps (worst c_W5_bf_01/u_t13 439.9 ps). All rephase numbers CHECKED (R24c re-run). MC samples were not run because the nominal already
   fails; droop is not re-run (mesh C +37 % -> switching current +37 % into the shared droop model).
 - NEXT (plan tool, 12.8 d1): re-plan the mesh drivers on the A0-commensurate lattice. Put drivers ON the drop straps: one driver
   per drop M9 per A0 row band, fed from the tree like the R23 row drivers, plus a W-edge driver column at x 1650.24-8.64. Segment the
