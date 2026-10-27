@@ -11,3 +11,5 @@ Known5release mis-elaboration source fixes/lint already ready47aa9825d and upstr
 
 ## CODEX notes 2026-10-27 08:13 PDT
 Tool/source correction DONE historical 47aa9825d; owner-approved upstream issue already filed. No live job or new source work required here; corrected release sources flow into physical owners' current kits. No new issue or redundant proof launched.
+
+CODEX 2026-10-27 10:14 PDT PARKED on explicit root reset. LEC proof jobs continue; no kills/merges. Full packet handoff/codex_flow_lec_20261027_1007.md includes latest PC alias rejection and KVSCTL physical-helper diagnosis. YOSYS-CONCAT remains historical DONE; no reopening.
