@@ -1333,6 +1333,9 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                       # site within canon_tol_um so every instance of the module carries one identical island
                       canon={k: [tuple(map(float, s_)) for s_ in v] for k, v in (lattice.get("island_canon") or {}).items()},
                       canon_tol=float(lattice.get("island_canon_tol_um", 0.05)),
+                      # A widened core cannot acquire instance-dependent mesh-driver islands. Those modules
+                      # retain a legal on-strap die site rather than the otherwise uniform pushdown policy.
+                      driver_slide_modules=set(lattice.get("driver_slide_modules", [])),
                       # CLOCK-KV-R13 (opt-in, in_core "upstream"): levels whose node BUFFER moves upstream along the
                       # incoming leg by ONE level-wide distance d (plan-computed, fewest keep-out hits); the branch point
                       # stays at its ideal point and the node drives it through the d-long stem, so every root->leaf
@@ -1547,8 +1550,22 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         for i, x in enumerate(xs):
             for j, y in enumerate(ly):
                 q, d = free_along(K, (x, y), 1, lg["drv_reach"], bounds=(0.0, H))
-                if lg["in_core"] in ("pushdown", "drivers", "level", "upstream") and d:
+                slide_module = None
+                if lg["driver_slide_modules"]:
+                    key = core_at(ko, (x, y))
+                    if key:
+                        pn_, ci_ = key.split("/", 1)
+                        hc_ = next(c_ for c_ in P.ptype(pn_).get("hard_cores", []) if c_["inst"] == ci_)
+                        if hc_["module"] in lg["driver_slide_modules"]:
+                            slide_module = hc_["module"]
+                if lg["in_core"] in ("pushdown", "drivers", "level", "upstream") and d and not slide_module:
                     q = None   # CLOCK-KV-R8: no slide, pushdown island at the ideal point
+                if slide_module:
+                    if q is None:
+                        out["unplaced"].append([f"ckm_d_{i}_{j}", "STRUCTURAL no legal on-strap site outside non-pushdown core", slide_module])
+                        continue
+                    out["meta"].setdefault("driver_module_slides", []).append(dict(name=f"ckm_d_{i}_{j}",
+                        module=slide_module, move_um=round(d, 3), site=list(q)))
                 dstrap = "M9"
                 if q is None and lg.get("off_core"):
                     # PATH-S81-PD8 off_core_resite: no free site on the V strap within drv_reach -> slide along the M8

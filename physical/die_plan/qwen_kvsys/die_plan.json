@@ -1183741,11 +1183741,11 @@
      "inst": "pv__u_g0_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      103.68,
+      60.48,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1183753,8 +1183753,8 @@
       -1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fR180.json",
-     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fR180_event27.json",
+     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg1_p0",
@@ -1183836,11 +1183836,11 @@
      "inst": "pv__u_g1_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      708.48,
+      665.28,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1183848,8 +1183848,8 @@
       0.0,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fR180.json",
-     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fR180_event27.json",
+     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg2_p0",
@@ -1183931,11 +1183931,11 @@
      "inst": "pv__u_g2_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1244.16,
+      1200.96,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1183943,8 +1183943,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fMX.json",
-     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fMX_event27.json",
+     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg3_p0",
@@ -1184026,11 +1184026,11 @@
      "inst": "pv__u_g3_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1883.52,
+      1840.32,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1184038,8 +1184038,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fMX.json",
-     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fMX_event27.json",
+     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     }
    ],
    "internal_stations": [
@@ -1241866,11 +1241866,11 @@
      "inst": "pv__u_g0_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      103.68,
+      60.48,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1241878,8 +1241878,8 @@
       -1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fR180.json",
-     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fR180_event27.json",
+     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg1_p0",
@@ -1241961,11 +1241961,11 @@
      "inst": "pv__u_g1_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      708.48,
+      665.28,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1241973,8 +1241973,8 @@
       0.0,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fR180.json",
-     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fR180_event27.json",
+     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg2_p0",
@@ -1242056,11 +1242056,11 @@
      "inst": "pv__u_g2_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1244.16,
+      1200.96,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1242068,8 +1242068,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fMX.json",
-     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fMX_event27.json",
+     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg3_p0",
@@ -1242151,11 +1242151,11 @@
      "inst": "pv__u_g3_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1883.52,
+      1840.32,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1242163,8 +1242163,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fMX.json",
-     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fMX_event27.json",
+     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     }
    ],
    "internal_stations": [
@@ -1301919,11 +1301919,11 @@
      "inst": "pv__u_g0_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      103.68,
+      60.48,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1301931,8 +1301931,8 @@
       -1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fR180.json",
-     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fR180_event27.json",
+     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg1_p0",
@@ -1302014,11 +1302014,11 @@
      "inst": "pv__u_g1_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      708.48,
+      665.28,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1302026,8 +1302026,8 @@
       0.0,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fR180.json",
-     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fR180_event27.json",
+     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg2_p0",
@@ -1302109,11 +1302109,11 @@
      "inst": "pv__u_g2_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1244.16,
+      1200.96,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1302121,8 +1302121,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fMX.json",
-     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fMX_event27.json",
+     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg3_p0",
@@ -1302204,11 +1302204,11 @@
      "inst": "pv__u_g3_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1883.52,
+      1840.32,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1302216,8 +1302216,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fMX.json",
-     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fMX_event27.json",
+     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     }
    ],
    "internal_stations": [
@@ -1368004,11 +1368004,11 @@
      "inst": "pv__u_g0_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      103.68,
+      60.48,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1368016,8 +1368016,8 @@
       -1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fR180.json",
-     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fR180_event27.json",
+     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg1_p0",
@@ -1368099,11 +1368099,11 @@
      "inst": "pv__u_g1_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      708.48,
+      665.28,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1368111,8 +1368111,8 @@
       0.0,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fR180.json",
-     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fR180_event27.json",
+     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg2_p0",
@@ -1368194,11 +1368194,11 @@
      "inst": "pv__u_g2_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1244.16,
+      1200.96,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1368206,8 +1368206,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fMX.json",
-     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fMX_event27.json",
+     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg3_p0",
@@ -1368289,11 +1368289,11 @@
      "inst": "pv__u_g3_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1883.52,
+      1840.32,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1368301,8 +1368301,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fMX.json",
-     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fMX_event27.json",
+     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     }
    ],
    "internal_stations": [
@@ -1376761,11 +1376761,11 @@
      "inst": "pv__u_g0_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      103.68,
+      60.48,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1376773,8 +1376773,8 @@
       -1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fR180.json",
-     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fR180_event27.json",
+     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg1_p0",
@@ -1376856,11 +1376856,11 @@
      "inst": "pv__u_g1_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      708.48,
+      665.28,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1376868,8 +1376868,8 @@
       0.0,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fR180.json",
-     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fR180_event27.json",
+     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg2_p0",
@@ -1376951,11 +1376951,11 @@
      "inst": "pv__u_g2_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1244.16,
+      1200.96,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1376963,8 +1376963,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fMX.json",
-     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fMX_event27.json",
+     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg3_p0",
@@ -1377046,11 +1377046,11 @@
      "inst": "pv__u_g3_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1883.52,
+      1840.32,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1377058,8 +1377058,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fMX.json",
-     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fMX_event27.json",
+     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     }
    ],
    "internal_stations": [
@@ -1430816,11 +1430816,11 @@
      "inst": "pv__u_g0_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      103.68,
+      60.48,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1430828,8 +1430828,8 @@
       -1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fR180.json",
-     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fR180_event27.json",
+     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg1_p0",
@@ -1430911,11 +1430911,11 @@
      "inst": "pv__u_g1_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      708.48,
+      665.28,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1430923,8 +1430923,8 @@
       0.0,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fR180.json",
-     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fR180_event27.json",
+     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg2_p0",
@@ -1431006,11 +1431006,11 @@
      "inst": "pv__u_g2_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1244.16,
+      1200.96,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1431018,8 +1431018,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fMX.json",
-     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fMX_event27.json",
+     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg3_p0",
@@ -1431101,11 +1431101,11 @@
      "inst": "pv__u_g3_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1883.52,
+      1840.32,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1431113,8 +1431113,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fMX.json",
-     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fMX_event27.json",
+     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     }
    ],
    "internal_stations": [
@@ -1449440,11 +1449440,11 @@
      "inst": "pv__u_g0_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      103.68,
+      60.48,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1449452,8 +1449452,8 @@
       -1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fR180.json",
-     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fR180_event27.json",
+     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg1_p0",
@@ -1449535,11 +1449535,11 @@
      "inst": "pv__u_g1_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      708.48,
+      665.28,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1449547,8 +1449547,8 @@
       0.0,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fR180.json",
-     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fR180_event27.json",
+     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg2_p0",
@@ -1449630,11 +1449630,11 @@
      "inst": "pv__u_g2_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1244.16,
+      1200.96,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1449642,8 +1449642,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fMX.json",
-     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fMX_event27.json",
+     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg3_p0",
@@ -1449725,11 +1449725,11 @@
      "inst": "pv__u_g3_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1883.52,
+      1840.32,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1449737,8 +1449737,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fMX.json",
-     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fMX_event27.json",
+     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     }
    ],
    "internal_stations": [
@@ -1449783,7 +1449783,7 @@
       ],
       [
        755.266,
-       613.125
+       603.72
       ],
       [
        1132.899,
@@ -1494432,11 +1494432,11 @@
      "inst": "pv__u_g0_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      103.68,
+      60.48,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1494444,8 +1494444,8 @@
       -1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fR180.json",
-     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fR180_event27.json",
+     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg1_p0",
@@ -1494527,11 +1494527,11 @@
      "inst": "pv__u_g1_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      708.48,
+      665.28,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1494539,8 +1494539,8 @@
       0.0,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fR180.json",
-     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fR180_event27.json",
+     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg2_p0",
@@ -1494622,11 +1494622,11 @@
      "inst": "pv__u_g2_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1244.16,
+      1200.96,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1494634,8 +1494634,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fMX.json",
-     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fMX_event27.json",
+     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg3_p0",
@@ -1494717,11 +1494717,11 @@
      "inst": "pv__u_g3_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1883.52,
+      1840.32,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1494729,8 +1494729,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fMX.json",
-     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fMX_event27.json",
+     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     }
    ],
    "internal_stations": [
@@ -1498899,11 +1498899,11 @@
      "inst": "pv__u_g0_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      103.68,
+      60.48,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1498911,8 +1498911,8 @@
       -1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fR180.json",
-     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fR180_event27.json",
+     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg1_p0",
@@ -1498994,11 +1498994,11 @@
      "inst": "pv__u_g1_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      708.48,
+      665.28,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1499006,8 +1499006,8 @@
       0.0,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fR180.json",
-     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fR180_event27.json",
+     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg2_p0",
@@ -1499089,11 +1499089,11 @@
      "inst": "pv__u_g2_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1244.16,
+      1200.96,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1499101,8 +1499101,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fMX.json",
-     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fMX_event27.json",
+     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg3_p0",
@@ -1499184,11 +1499184,11 @@
      "inst": "pv__u_g3_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1883.52,
+      1840.32,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1499196,8 +1499196,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fMX.json",
-     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fMX_event27.json",
+     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     }
    ],
    "internal_stations": [
@@ -1506068,11 +1506068,11 @@
      "inst": "pv__u_g0_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      103.68,
+      60.48,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1506080,8 +1506080,8 @@
       -1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fR180.json",
-     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fR180_event27.json",
+     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg1_p0",
@@ -1506163,11 +1506163,11 @@
      "inst": "pv__u_g1_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      708.48,
+      665.28,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1506175,8 +1506175,8 @@
       0.0,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fR180.json",
-     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fR180_event27.json",
+     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg2_p0",
@@ -1506258,11 +1506258,11 @@
      "inst": "pv__u_g2_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1244.16,
+      1200.96,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1506270,8 +1506270,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fMX.json",
-     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fMX_event27.json",
+     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg3_p0",
@@ -1506353,11 +1506353,11 @@
      "inst": "pv__u_g3_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1883.52,
+      1840.32,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1506365,8 +1506365,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins_fMX.json",
-     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_fMX_event27.json",
+     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     }
    ],
    "internal_stations": [
@@ -1509401,11 +1509401,11 @@
      "inst": "pv__u_g0_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      103.68,
+      60.48,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1509413,8 +1509413,8 @@
       -1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins.json",
-     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_event27.json",
+     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg1_p0",
@@ -1509496,11 +1509496,11 @@
      "inst": "pv__u_g1_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      708.48,
+      665.28,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1509508,8 +1509508,8 @@
       0.0,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins.json",
-     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_event27.json",
+     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg2_p0",
@@ -1509591,11 +1509591,11 @@
      "inst": "pv__u_g2_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1244.16,
+      1200.96,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1509603,8 +1509603,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins.json",
-     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_event27.json",
+     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg3_p0",
@@ -1509686,11 +1509686,11 @@
      "inst": "pv__u_g3_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1883.52,
+      1840.32,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1509698,8 +1509698,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins.json",
-     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_event27.json",
+     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     }
    ],
    "internal_stations": [
@@ -1567982,11 +1567982,11 @@
      "inst": "pv__u_g0_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      103.68,
+      60.48,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1567994,8 +1567994,8 @@
       -1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins.json",
-     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_event27.json",
+     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg1_p0",
@@ -1568077,11 +1568077,11 @@
      "inst": "pv__u_g1_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      708.48,
+      665.28,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1568089,8 +1568089,8 @@
       0.0,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins.json",
-     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_event27.json",
+     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg2_p0",
@@ -1568172,11 +1568172,11 @@
      "inst": "pv__u_g2_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1244.16,
+      1200.96,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1568184,8 +1568184,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins.json",
-     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_event27.json",
+     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg3_p0",
@@ -1568267,11 +1568267,11 @@
      "inst": "pv__u_g3_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1883.52,
+      1840.32,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1568279,8 +1568279,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins.json",
-     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_event27.json",
+     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     }
    ],
    "internal_stations": [
@@ -1572649,11 +1572649,11 @@
      "inst": "pv__u_g0_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      103.68,
+      60.48,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1572661,8 +1572661,8 @@
       -1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins.json",
-     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_event27.json",
+     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg1_p0",
@@ -1572744,11 +1572744,11 @@
      "inst": "pv__u_g1_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      708.48,
+      665.28,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1572756,8 +1572756,8 @@
       0.0,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins.json",
-     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_event27.json",
+     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg2_p0",
@@ -1572839,11 +1572839,11 @@
      "inst": "pv__u_g2_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1244.16,
+      1200.96,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1572851,8 +1572851,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins.json",
-     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_event27.json",
+     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg3_p0",
@@ -1572934,11 +1572934,11 @@
      "inst": "pv__u_g3_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1883.52,
+      1840.32,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1572946,8 +1572946,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins.json",
-     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_event27.json",
+     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     }
    ],
    "internal_stations": [
@@ -1632738,11 +1632738,11 @@
      "inst": "pv__u_g0_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      103.68,
+      60.48,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1632750,8 +1632750,8 @@
       -1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins.json",
-     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_event27.json",
+     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg1_p0",
@@ -1632833,11 +1632833,11 @@
      "inst": "pv__u_g1_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      708.48,
+      665.28,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1632845,8 +1632845,8 @@
       0.0,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins.json",
-     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_event27.json",
+     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg2_p0",
@@ -1632928,11 +1632928,11 @@
      "inst": "pv__u_g2_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1244.16,
+      1200.96,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1632940,8 +1632940,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins.json",
-     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_event27.json",
+     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg3_p0",
@@ -1633023,11 +1633023,11 @@
      "inst": "pv__u_g3_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1883.52,
+      1840.32,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1633035,8 +1633035,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins.json",
-     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_event27.json",
+     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     }
    ],
    "internal_stations": [
@@ -1639863,11 +1639863,11 @@
      "inst": "pv__u_g0_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      103.68,
+      60.48,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1639875,8 +1639875,8 @@
       -1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins.json",
-     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_event27.json",
+     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg1_p0",
@@ -1639958,11 +1639958,11 @@
      "inst": "pv__u_g1_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      708.48,
+      665.28,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1639970,8 +1639970,8 @@
       0.0,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins.json",
-     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_event27.json",
+     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg2_p0",
@@ -1640053,11 +1640053,11 @@
      "inst": "pv__u_g2_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1244.16,
+      1200.96,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1640065,8 +1640065,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins.json",
-     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_event27.json",
+     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg3_p0",
@@ -1640148,11 +1640148,11 @@
      "inst": "pv__u_g3_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1883.52,
+      1840.32,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1640160,8 +1640160,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins.json",
-     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_event27.json",
+     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     }
    ],
    "internal_stations": [
@@ -1705960,11 +1705960,11 @@
      "inst": "pv__u_g0_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      103.68,
+      60.48,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1705972,8 +1705972,8 @@
       -1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins.json",
-     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_event27.json",
+     "note": "pv group 0 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg1_p0",
@@ -1706055,11 +1706055,11 @@
      "inst": "pv__u_g1_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      708.48,
+      665.28,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1706067,8 +1706067,8 @@
       0.0,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins.json",
-     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_event27.json",
+     "note": "pv group 1 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg2_p0",
@@ -1706150,11 +1706150,11 @@
      "inst": "pv__u_g2_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1244.16,
+      1200.96,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1706162,8 +1706162,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins.json",
-     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_event27.json",
+     "note": "pv group 2 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     },
     {
      "inst": "pvg3_p0",
@@ -1706245,11 +1706245,11 @@
      "inst": "pv__u_g3_j",
      "module": "ot_qwen_tp8_pv_join_t",
      "origin_um": [
-      1883.52,
+      1840.32,
       604.8
      ],
      "outline_um": [
-      172.8,
+      259.2,
       172.8
      ],
      "orient": "MX",
@@ -1706257,8 +1706257,8 @@
       1.296,
       0.0
      ],
-     "pins_file": "cores/pv_join_pins.json",
-     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap)"
+     "pins_file": "cores/pv_join_pins_event27.json",
+     "note": "pv group 3 join; REUSE-CLOSED qkd_pv_join-r4-COMMIT-708845e84 (record 32614b386); later closed runs rstpin_r5 / sfe_r6 have the same 172.8 outline (CORE-KS lefcmp decides the master); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | v3.8w moved +155.52 um y (KVG3-CORES review: pin gap) | PENDING CODEX PV lot/pin repair259.2x172.8; numeric face packing, 0cycles; parentclock islands MUST be re-sited before route"
     }
    ],
    "internal_stations": [
