@@ -1,0 +1,93 @@
+{
+ "type": "cbf_q00_na00d15",
+ "failed_class": [
+  "cbf_q00_na00d15",
+  341,
+  216,
+  false
+ ],
+ "members": [
+  "c_W5_tf_00"
+ ],
+ "bounded_candidates": {},
+ "all_valid_slots": {
+  "used": 36,
+  "free": 24175,
+  "blocked": 40
+ },
+ "nearest_free_slots": [
+  {
+   "k": 69,
+   "j": 7,
+   "x": 344.412,
+   "y": 69.12,
+   "state": "free",
+   "d": 150.96699999999998,
+   "blocked_by_instances": []
+  },
+  {
+   "k": 67,
+   "j": 7,
+   "x": 334.692,
+   "y": 69.12,
+   "state": "free",
+   "d": 152.243,
+   "blocked_by_instances": []
+  },
+  {
+   "k": 70,
+   "j": 7,
+   "x": 349.272,
+   "y": 69.12,
+   "state": "free",
+   "d": 155.827,
+   "blocked_by_instances": []
+  },
+  {
+   "k": 68,
+   "j": 6,
+   "x": 339.552,
+   "y": 60.48,
+   "state": "free",
+   "d": 156.02299999999997,
+   "blocked_by_instances": []
+  },
+  {
+   "k": 66,
+   "j": 7,
+   "x": 329.832,
+   "y": 69.12,
+   "state": "free",
+   "d": 157.103,
+   "blocked_by_instances": []
+  },
+  {
+   "k": 69,
+   "j": 6,
+   "x": 344.412,
+   "y": 60.48,
+   "state": "free",
+   "d": 159.60699999999997,
+   "blocked_by_instances": []
+  },
+  {
+   "k": 71,
+   "j": 7,
+   "x": 354.186,
+   "y": 69.12,
+   "state": "free",
+   "d": 160.74099999999999,
+   "blocked_by_instances": []
+  },
+  {
+   "k": 67,
+   "j": 6,
+   "x": 334.692,
+   "y": 60.48,
+   "state": "free",
+   "d": 160.88299999999998,
+   "blocked_by_instances": []
+  }
+ ],
+ "rule": "same site must be unused and clear in every member; no island growth or placement change"
+}
