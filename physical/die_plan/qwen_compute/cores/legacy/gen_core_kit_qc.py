@@ -643,8 +643,19 @@ def main():
     ib = core_insertion(rec, plan)       # FLOW 10-25: bound IO vclk insertion per corner
     ins, tol = ib["tt"], ib["tol"]
     pins = hc["pins"] if "pins" in hc else json.load(open(Path(a.plan).parent / hc["pins_file"]))["pins"]
-    dirs = lef_dirs(REPO / hc["lef"])
-    shapes = lef_pin_rects(REPO / hc["lef"])
+    if hc.get("lef"):
+        dirs = lef_dirs(REPO / hc["lef"])
+        shapes = lef_pin_rects(REPO / hc["lef"])
+    else:
+        # QK-CORES-6 (10-27): a NEW-aspect plan core (e.g. btab profile1713) has no closed LEF of its outline; the plan
+        # pin table (opentallas.core_pins.v1) is then the only pin contract: direction + layer per pin, every pin required.
+        if not rec.get("plan_pins_contract"):
+            raise SystemExit(f"{hc[module]}: no plan LEF; set recipe plan_pins_contract to use the plan pin table")
+        nod = [q["name"] for q in pins if q.get("dir") not in ("in", "out")]
+        if nod:
+            raise SystemExit(f"{hc[module]}: {len(nod)} plan pins without dir in/out: {nod[:4]}")
+        dirs = {q["name"]: {"in": "INPUT", "out": "OUTPUT"}[q["dir"]] for q in pins}
+        shapes = {q["name"]: (q["layer"],) for q in pins}
     suffix = rec.get("suffix", "c")
     kd = Path(a.out) / f"{mod}_{suffix}"
     MS.precheck(a.master_slice, a.trial, plan, mod)
@@ -958,7 +969,7 @@ def main():
     fz = dict(schema="opentallas.qc.core_freeze.v1", kit=f"{mod}_{suffix}", module=mod, plan_type=ptype,
               outline_um=[w, h], ref_tile=rec.get("ref_tile"), spec=spec_src or f"{rec['ref_tile']}/spec.json",
               spec_sha256=hashlib.sha256(json.dumps(spec, sort_keys=True).encode()).hexdigest(),
-              pins_file=hc["pins_file"], pins_sha256=sha(REPO / hc["pins_file"] if "pins" in hc else Path(a.plan).parent / hc["pins_file"]), pins=len(pins), plan_lef=hc["lef"],
+              pins_file=hc["pins_file"], pins_sha256=sha(REPO / hc["pins_file"] if "pins" in hc else Path(a.plan).parent / hc["pins_file"]), pins=len(pins), plan_lef=hc.get("lef") or "plan pin table (plan_pins_contract)",
               clocks=clks, resets=rsts,
               recipe_sha256=hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest(),
               period_ps=per, insertion_ps=ins, insertion_ff_ps=ib["ff"], insertion_basis=ib["basis"],
@@ -971,6 +982,14 @@ def main():
                            for f, pt in patches.items()], kit_hash=kit_hash(kd))
     if ms is not None:
         fz["master_plan"] = ms
+    if "pins" not in hc:
+        # GATE-PINS-2 (QK-CORES-6 10-27): declared plan pin set (byte copy beside the kit, sha = pins_sha256) and its
+        # canonical hash; the placed set is recorded separately (slice moves are judged by kit_contract.pins_canonical)
+        import kit_contract
+        ppf = Path(a.plan).parent / hc["pins_file"]
+        shutil.copyfile(ppf, kd / "plan_pins.json")
+        fz["pins_canon_sha256"] = kit_contract._canon(json.loads(ppf.read_text()), [w, h])
+        fz["pins_placed_canon_sha256"] = kit_contract._canon(kit_contract.placed_pins(kd), [w, h])
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     print(json.dumps(dict(kit=str(kd), pins=len(pins), clocks=clks, resets=rsts, ins=len(buses_in),
                           outs=len(buses_out), macros=sum(len(v) for v in mplace.values()), kit_hash=fz["kit_hash"])))
