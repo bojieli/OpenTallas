@@ -269,13 +269,21 @@ def load_plan_sites(path, plan_sha256=None):
 
 
 # ------------------------------------------------------------------------------------------------ fixed wires
-def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None, pin_stack=False, port_on_trunk=False):
+DROP_SPLIT_UM = 0.48   # CLOCK-KV-R13: one shielded clock track pair (4W NDR wire + VSS shields) between split drops
+
+
+def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None, pin_stack=False, port_on_trunk=False,
+                split_drops=False):
     """every tree net (root, H-tree legs/nodes/leaves, split tails, stubs) as a fixed comb pre-route: one trunk on the
     net's dominant axis (M8 horizontal / M9 vertical), offset `off` from the driver pin line, plus one perpendicular
     drop per load, offset `off` from the load pin line.  Returns [dict(name, drv, pins, segs, rc_nodes)].
     router (TrackRouter, CLOCK-128 shield lane): each trunk / drop goes on the nearest PG-aware routing track whose
     clock metal + both VSS shields clear every same-layer shape of another net (die PG grid, mesh straps + shields,
-    earlier tree wires + shields); a segment with no legal track within router.max_move is a plan error."""
+    earlier tree wires + shields); a segment with no legal track within router.max_move is a plan error.
+    split_drops (CLOCK-KV-R13, opt-in; default unchanged): two drops of one net that leave the trunk at the same
+    point toward opposite sides (a leaf-row pair: one shared VIA89 / VIA78 junction feeding both drops) are put on
+    their own tracks DROP_SPLIT_UM apart, so each drop has its own trunk via (OpenRCX resolved the shared-via node
+    asymmetrically: +11.2 ps odd/even leaf offset, CLOCK-KV-R12)."""
     txy = {t["port"]: tuple(t["xy"]) for t in M["taps"]}
     root = tuple(M["meta"]["root_um"])
 
@@ -290,10 +298,10 @@ def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None, pin_
         return _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=port_on_trunk)
     out, errs = [], []
 
-    def track(layer, ideal, a0, a1, name, what):
+    def track(layer, ideal, a0, a1, name, what, avoid=()):
         if router is None:
             return ideal, DRAWN
-        c, mode, e = router.place(layer, ideal, a0, a1, name)
+        c, mode, e = router.place(layer, ideal, a0, a1, name, avoid=avoid)
         last_ext[0] = e
         if c is None:
             errs.append(dict(kind="no_clock_track", name=name, detail=f"{what} {layer} ideal {ideal:.3f} span "
@@ -329,9 +337,15 @@ def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None, pin_
                            max([D[0]] + [p[0] + off for _, p in Ls]) + mm, nm, "trunk")
             te = last_ext[0]
             xs_, modes, exts = [], [], []
+            used = []
             for ld, p in Ls:
                 if abs(p[1] - ty) > 1e-6:
-                    bx, bm = track("M9", p[0] + off, ty, p[1], nm, f"drop {ld}")
+                    ix = p[0] + off
+                    av = [ux for ux, uy in used if (uy - ty) * (p[1] - ty) < 0] if split_drops else []
+                    if any(abs(u_ - ix) < DROP_SPLIT_UM - 1e-6 for u_ in av):
+                        ix += DROP_SPLIT_UM
+                    bx, bm = track("M9", ix, ty, p[1], nm, f"drop {ld}", avoid=av)
+                    used.append((bx, p[1]))
                     segs.append(("M9", bx, min(ty, p[1]), bx, max(ty, p[1])))
                     modes.append(bm)
                     exts.append(last_ext[0])
@@ -351,9 +365,15 @@ def fixed_wires(M, cells, nets, buf_w, row_y, off=TREE_OFF_UM, router=None, pin_
                            max([D[1]] + [p[1] + off for _, p in Ls]) + mm, nm, "trunk")
             te = last_ext[0]
             ys_, modes, exts = [], [], []
+            used = []
             for ld, p in Ls:
                 if abs(p[0] - tx) > 1e-6:
-                    by, bm = track("M8", p[1] + off, tx, p[0], nm, f"drop {ld}")
+                    iy = p[1] + off
+                    av = [uy for uy, ux in used if (ux - tx) * (p[0] - tx) < 0] if split_drops else []
+                    if any(abs(u_ - iy) < DROP_SPLIT_UM - 1e-6 for u_ in av):
+                        iy += DROP_SPLIT_UM
+                    by, bm = track("M8", iy, tx, p[0], nm, f"drop {ld}", avoid=av)
+                    used.append((by, p[0]))
                     segs.append(("M8", min(tx, p[0]), by, max(tx, p[0]), by))
                     modes.append(bm)
                     exts.append(last_ext[0])
@@ -681,8 +701,9 @@ class TrackRouter:
             return None
         return round(max(e0, best), 4)
 
-    def place(self, layer, ideal, a0, a1, net):
-        """(centre, mode) of the nearest legal track, or (None, None)"""
+    def place(self, layer, ideal, a0, a1, net, avoid=()):
+        """(centre, mode) of the nearest legal track, or (None, None).  avoid: track centres this segment must not
+        take (CLOCK-KV-R13 split_drops: the opposite drop of the same junction, within DROP_SPLIT_UM)"""
         tr = self.tracks[layer]
         pitch, offs = tr["pitch_um"], tr["offset_um"]
         k0 = round((ideal - offs) / pitch)
@@ -692,6 +713,8 @@ class TrackRouter:
             for k in ks:
                 c = round(offs + k * pitch, 4)
                 if abs(c - ideal) > self.max_move + 1e-9:
+                    continue
+                if any(abs(c - v) < DROP_SPLIT_UM - 1e-6 for v in avoid):
                     continue
                 e = self.tie_ext(layer, c, a0, a1)
                 sh = seg_shapes(layer, c, a0, a1, net, self.nd, self.shield, ext=e)

@@ -11,7 +11,11 @@ One pins_file per (module, D): every instance of a module that needs the same va
 view per (module, D)); D = R0 keeps the original file.  Ties keep R0.  Faces only: the core outline, origin and orient
 are unchanged; on-track: N/S pins keep x (y -> ch - y), E/W pins keep y (x -> cw - x) on symmetric tracks.
 
-    core_pins_orient.py PLAN_IN PLAN_DIR PLAN_OUT REPORT [--types a,b]   (PLAN_OUT is written into PLAN_DIR's tree)
+    core_pins_orient.py PLAN_IN PLAN_DIR PLAN_OUT REPORT [--types a,b] [--per-orient]
+
+--per-orient (CLOCK-KV-R13, COORD R12 ruling ASK3; opt-in, default unchanged): ONE variant D per (module, plan
+orient) -- the D minimising the summed away groups/pins over every instance of that module in that orientation -- so
+a module has at most one pin view per orientation (never a per-instance choice).
 """
 import argparse, copy, json, re, sys
 from pathlib import Path
@@ -114,12 +118,29 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("plan"); ap.add_argument("plan_dir"); ap.add_argument("out"); ap.add_argument("report")
     ap.add_argument("--types")
+    ap.add_argument("--per-orient", action="store_true")
     a = ap.parse_args()
     raw = json.loads(Path(a.plan).read_text())
     types = set(a.types.split(",")) if a.types else None
     sc = {d: score(raw, a.plan_dir, d, types) for d in FLIP}
     layers = S.Plan(copy.deepcopy(raw), Path(a.plan_dir) / "die_plan.json").layers
     choice, files, before, after = {}, {}, [0, 0], [0, 0]
+    grp = None
+    if a.per_orient:
+        tot = {}
+        for tn, t in raw["partition_types"].items():
+            if types and tn not in types:
+                continue
+            for hc in t.get("hard_cores", []):
+                k = (tn, hc["inst"])
+                if k not in sc["R0"] or not hc.get("pins_file") or hc.get("orient", "R0") not in FLIP:
+                    continue
+                g = (hc["module"], hc.get("orient", "R0"))
+                for d in FLIP:
+                    v = sc[d].get(k, sc["R0"][k])
+                    t_ = tot.setdefault(g, {}).setdefault(d, [0, 0])
+                    t_[0] += v[1]; t_[1] += v[0]
+        grp = {g: min(FLIP, key=lambda d: (tv[d][0], tv[d][1], d != "R0")) for g, tv in tot.items()}
     for tn, t in raw["partition_types"].items():
         if types and tn not in types:
             continue
@@ -128,10 +149,13 @@ def main():
             if k not in sc["R0"] or not hc.get("pins_file") or hc.get("orient", "R0") not in FLIP:
                 continue
             base = sc["R0"][k]
-            best = min(FLIP, key=lambda d: (sc[d].get(k, base)[1], sc[d].get(k, base)[0], d != "R0"))
+            if grp is not None:
+                best = grp[(hc["module"], hc.get("orient", "R0"))]
+            else:
+                best = min(FLIP, key=lambda d: (sc[d].get(k, base)[1], sc[d].get(k, base)[0], d != "R0"))
             v = sc[best].get(k, base)
             before[0] += base[1]; before[1] += base[0]; after[0] += v[1]; after[1] += v[0]
-            if best == "R0" or v[1] >= base[1] and v[0] >= base[0]:
+            if best == "R0" or (grp is None and v[1] >= base[1] and v[0] >= base[0]):
                 continue
             src = hc["pins_file"]
             stem = re.sub(r"(_f(MX|MY|R180))?\.json$", "", src)
@@ -145,7 +169,8 @@ def main():
                                                 groups_away=[base[1], v[1]], pins_away=[base[0], v[0]])
     raw["note"] = "CLOCK-KV-R12 core_pins_orient (top-down re-pin after mirror flips) <- " + raw.get("note", "")[:200]
     Path(a.out).write_text(json.dumps(raw) + "\n")
-    rep = dict(cores_repinned=len(choice), pin_files=files, groups_away=[before[0], after[0]],
+    rep = dict(cores_repinned=len(choice), pin_files=files, per_orient=({f"{m}@{o}": d for (m, o), d in sorted(grp.items())}
+                                                                     if grp is not None else None), groups_away=[before[0], after[0]],
                pins_away=[before[1], after[1]], cores=choice)
     Path(a.report).write_text(json.dumps(rep, indent=1) + "\n")
     print(f"re-pinned {len(choice)} cores, {len(files)} pin variants; away groups {before[0]} -> {after[0]}, "
