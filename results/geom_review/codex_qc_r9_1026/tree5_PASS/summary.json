@@ -1,0 +1,26 @@
+{
+ "source": "de9cf91b5e",
+ "verdict": "PASS tree/stack physical canary only",
+ "drc_unique": 0,
+ "extracted_nets": 267,
+ "graph_disconnected": 0,
+ "corners": {
+  "TT": {
+   "leaves": 16,
+   "late_min_ps": 5194.605469,
+   "late_max_ps": 5216.302246,
+   "spread_ps": 21.69677700000011,
+   "max_tree_slew_ps": 105.038078
+  },
+  "FF": {
+   "leaves": 16,
+   "late_min_ps": 4296.159668,
+   "late_max_ps": 4314.70166,
+   "spread_ps": 18.541991999999482,
+   "max_tree_slew_ps": 78.568039
+  }
+ },
+ "full_mesh": "NOT BUILT",
+ "full_die_sta": "NOT RUN",
+ "checked": "UNCHECKED"
+}
