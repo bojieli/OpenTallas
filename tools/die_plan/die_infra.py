@@ -41,6 +41,7 @@ Pre-route geometry model (one list, three consumers):
 GRT does not derate special wires (die_clock_mesh combo note), so every pre-route also goes in as an obstruction.
 """
 import argparse
+import hashlib
 import bisect
 import json
 import math
@@ -776,7 +777,8 @@ def cmd_freeze(a):
     # into the same design and check their actual connections.
     rep = dict(qualification="CAPACITY_RESERVATION_ONLY", connected_preroutes=False,
                missing_implementation=["via_and_terminal_routes", "fixed_route_import_into_signal_design"],
-               plan=str(a.plan), pg=str(a.pg) if a.pg else "plan die.pg.grid", pg_file=str(Path(a.pg).resolve()) if a.pg else None, shapes=len(shapes), obstructions=len(obs),
+               plan=str(Path(a.plan).resolve()), plan_sha256=hashlib.sha256(Path(a.plan).read_bytes()).hexdigest(),
+               pg=str(a.pg) if a.pg else "plan die.pg.grid", pg_file=str(Path(a.pg).resolve()) if a.pg else None, shapes=len(shapes), obstructions=len(obs),
                tracks_taken=tracks, **meta)
     (out / "preroute_shapes.json").write_text(json.dumps(shapes) + "\n")
     (out / "preroute.json").write_text(json.dumps(rep, indent=1) + "\n")
@@ -929,7 +931,10 @@ def cmd_grt(a):
     (out / "grt_meta.json").write_text(json.dumps(dict(
         signal_layers="M4-M7" if a.m47_only else "M4-M9 (leftover M8/M9 after pre-routes)",
         rule="METHODOLOGY 12.1c" if not a.m47_only else "LEGACY 9.3 diagnostic (--m47-only), not freeze evidence",
-        pg=pgq, pre=str(pre), trial=bool(a.pg_ir_open_trial and pgq["ir"] != "PASS")), indent=1) + "\n")
+        pg=pgq, pre=str(pre), plan=str(Path(a.plan).resolve()),
+        plan_sha256=hashlib.sha256(Path(a.plan).read_bytes()).hexdigest(),
+        congestion_iterations_requested=a.iterations,
+        trial=bool(a.pg_ir_open_trial and pgq["ir"] != "PASS")), indent=1) + "\n")
     t = re.sub(r"-congestion_iterations \d+", f"-congestion_iterations {a.iterations}", t)
     t = t.replace("/work/grt/congestion.rpt", "/out/congestion.rpt").replace("/work/grt/route.guide", "/out/route.guide")
     (out / "grt.tcl").write_text(t)
@@ -982,6 +987,81 @@ def parse_grt(log):
                 verdict="PASS" if complete and tot == 0 else "FAIL" if complete or rc not in (None, "0") else "NOT RUN")
 
 
+def related_sta_state(path, pre, post_clock=None):
+    """Consume the existing die_sta_related receipt; never promote skew or HB4 estimates."""
+    out = dict(file=str(path) if path else None, verdict="NOT RUN", checks={}, reasons=[])
+    def stop(verdict, reason):
+        out.update(verdict=verdict); out["reasons"].append(reason); return out
+    if not path:
+        return stop("NOT RUN", "--related-sta is required for the 12.4a freeze gate")
+    try:
+        rec = json.loads(Path(path).read_text())
+    except (OSError, ValueError) as error:
+        return stop("NOT RUN", f"related STA receipt unavailable: {error}")
+    expected, measured = pre.get("plan_sha256"), rec.get("plan_sha256")
+    if not all(isinstance(x, str) and re.fullmatch(r"[0-9a-f]{64}", x) for x in (expected, measured)):
+        return stop("NOT RUN", "plan SHA missing from preroute or related STA receipt; legacy paths are not plan identity")
+    out["plan_sha256"] = measured
+    if post_clock:
+        if not rec.get("proof"):
+            return stop("NOT RUN", "related STA has no clock proof directory")
+        if Path(rec["proof"]).resolve() != Path(post_clock).resolve():
+            return stop("FAIL", "related STA did not time the post-signal clock proof")
+    if expected != measured:
+        return stop("FAIL", "related STA and preroute plans differ")
+    try:
+        if hashlib.sha256(Path(pre["plan"]).read_bytes()).hexdigest() != expected:
+            return stop("FAIL", "preroute plan file changed since infrastructure generation")
+    except (OSError, KeyError) as error:
+        return stop("NOT RUN", f"preroute plan unavailable: {error}")
+    if any(rec.get(k) != v for k, v in (("period_ps", 833), ("unc_setup_ps", 60), ("unc_hold_ps", 25))):
+        return stop("FAIL", "related STA must use 833 ps and 60/25 ps uncertainty")
+    corners = rec.get("corners", {})
+    if not all(c in corners for c in ("TT", "FF")):
+        return stop("NOT RUN", "related STA needs both TT and FF corners")
+    if not all(str(corners[c].get("basis", "")).startswith("routed RC") for c in ("TT", "FF")):
+        return stop("NOT RUN", "related STA clock basis is not the routed-RC export")
+    classes = [corners[c].get("classes", {}) for c in ("TT", "FF")]
+    required = {"intra", "intra_cross_region", "seam", "landed"}
+    if not all(required <= set(x) for x in classes):
+        return stop("NOT RUN", "related STA pair classes are incomplete")
+    coverage = rec.get("coverage") or {}
+    if "uncovered_bits" not in coverage:
+        return stop("NOT RUN", "related STA coverage census missing")
+    if coverage["uncovered_bits"].get("no_taps", 0):
+        return stop("FAIL", "related STA has connected partition bits without clock taps")
+    total = 0
+    for name in sorted(set(classes[0]) | set(classes[1])):
+        if name.upper().endswith("_INFO"):
+            continue
+        tt, ff = (x.get(name, {}) for x in classes)
+        count = tt.get("pairs")
+        if not isinstance(count, int) or isinstance(count, bool) or count < 0 or ff.get("pairs") != count:
+            return stop("NOT RUN", f"{name}: missing or mismatched TT/FF pair census")
+        total += count
+        if not count:
+            out["checks"][name] = dict(pairs=0, verdict="PASS")
+            continue
+        if name.startswith("landed"):
+            st, ht = tt.get("plan_landing", {}), ff.get("plan_landing", {})
+            setup, hold = st.get("setup_margin_ps"), ht.get("hold_margin_ps")
+            passed = st.get("verdict") == ht.get("verdict") == "PASS"
+        else:
+            setup, hold = tt.get("worst_setup_slack_ps"), ff.get("worst_hold_slack_ps")
+            passed = tt.get("setup_neg_pairs") == ff.get("hold_neg_pairs") == 0
+        if not all(isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v) for v in (setup, hold)):
+            return stop("NOT RUN", f"{name}: actual TT setup / FF hold result missing")
+        passed = passed and setup >= 0 and hold >= 0
+        out["checks"][name] = dict(pairs=count, tt_setup_ps=setup, ff_hold_ps=hold,
+                                    verdict="PASS" if passed else "FAIL")
+    if not total:
+        return stop("NOT RUN", "related STA contains no timed related pairs")
+    out["block_model"] = rec.get("block_model", {})
+    out["timed_dir"] = rec.get("timed_dir")
+    out["verdict"] = "PASS" if all(x["verdict"] == "PASS" for x in out["checks"].values()) else "FAIL"
+    return out
+
+
 def cmd_report(a):
     rep = {}
     pre = json.loads((Path(a.pre) / "preroute.json").read_text())
@@ -996,9 +1076,18 @@ def cmd_report(a):
         if gm.exists():                       # METHODOLOGY 12.4e: PG growth after signal GRT -> signal GRT is stale
             m_ = json.loads(gm.read_text())
             r_["meta"] = m_
+            r_["freeze_evidence"] = True
+            requested = m_.get("congestion_iterations_requested")
+            if not isinstance(requested, int) or isinstance(requested, bool) or requested < 50:
+                r_["freeze_evidence"] = False
+                r_["qualification_reason"] = "missing recorded request for >=50 routing iterations"
+            if m_.get("plan_sha256") != pre.get("plan_sha256") or not pre.get("plan_sha256"):
+                r_["freeze_evidence"] = False
+                r_["qualification_reason"] = "GRT/preroute plan identity missing or different"
             now = pg_ir_state(m_["pg"]["file"]) if m_["pg"].get("file") else m_["pg"]
             r_["pg_unchanged_since_grt"] = now.get("sha256") == m_["pg"].get("sha256")
-            if not r_["pg_unchanged_since_grt"] or m_.get("trial"):
+            if (not r_["pg_unchanged_since_grt"] or m_.get("trial") or
+                    m_["pg"].get("ir") != "PASS" or now.get("ir") != "PASS"):
                 r_["freeze_evidence"] = False
             if m_.get("actual_fixed_import"):
                 receipt = Path(g) / "import_receipt.json"
@@ -1011,6 +1100,9 @@ def cmd_report(a):
                     preserved_signals=kept.get("signals"), freeze_qualified=False)
                 if not imported:
                     r_["freeze_evidence"] = False
+        else:
+            r_["freeze_evidence"] = False
+            r_["qualification_reason"] = "GRT request metadata missing"
         rep.setdefault("grt", {})[str(g)] = r_
     if a.clock:
         cr = json.loads((Path(a.clock) / "clock_report.json").read_text())
@@ -1023,16 +1115,24 @@ def cmd_report(a):
         rep["clock_post_signal"] = {c: {k: r[k] for k in ("related_pair_max_ps", "verdict", "pairs_over_80",
                                                           "region_root_related_pair_max_ps", "insertion_ps")
                                         if k in r} for c, r in cp["corners"].items()}
-    clk_ok = all(v.get("verdict") == "PASS" for v in rep.get("clock", {}).values()) and bool(rep.get("clock"))
-    post_ok = all(v.get("verdict") == "PASS" for v in rep.get("clock_post_signal", {}).values()) and \
-        bool(rep.get("clock_post_signal"))
-    grt_ok = bool(rep.get("grt")) and all(g_["verdict"] == "PASS" and g_.get("freeze_evidence", True)
+    # 80 ps skew is a design target. Preserve clock verdicts as diagnostics;
+    # the propagated related-pair STA receipt supplies the actual freeze gate.
+    clk_ok = all(c in rep.get("clock", {}) for c in ("TT", "FF"))
+    post_ok = all(c in rep.get("clock_post_signal", {}) for c in ("TT", "FF"))
+    grt_ok = bool(rep.get("grt")) and all(g_["verdict"] == "PASS" and g_.get("freeze_evidence", False)
                                           for g_ in rep["grt"].values())
     connected_ok = (pre.get("connected_preroutes") is True and
                     pre.get("qualification") != "CAPACITY_RESERVATION_ONLY")
+    sta = related_sta_state(getattr(a, "related_sta", None), pre, a.clock_post)
+    rep["related_sta"] = sta
+    known_fail = (not connected_ok or sta["verdict"] == "FAIL" or
+                  any(g_["verdict"] == "FAIL" for g_ in rep.get("grt", {}).values()))
+    ready = connected_ok and clk_ok and post_ok and grt_ok and sta["verdict"] == "PASS"
+    if ready:
+        rep["infrastructure_freeze"] = "PASS"
     rep["freeze_gate"] = dict(rule="METHODOLOGY 12.4a/d/e", clock_alone=clk_ok, clock_post_signal=post_ok,
-                              signal_grt0=grt_ok, connected_preroutes=connected_ok,
-                              verdict="PASS" if clk_ok and post_ok and grt_ok and connected_ok else "FAIL")
+        clock_skew_role="DIAGNOSTIC target only", signal_grt0=grt_ok, connected_preroutes=connected_ok,
+        related_pair_sta=sta["verdict"], verdict="PASS" if ready else "FAIL" if known_fail else "NOT RUN")
     if not connected_ok:
         rep["freeze_gate"]["reasons"] = [
             "capacity reservations do not import fixed wires/vias/terminals into the signal design"]
@@ -1205,6 +1305,7 @@ def main(argv=None):
     q.add_argument("--grt", action="append")
     q.add_argument("--clock")
     q.add_argument("--clock-post", help="clock report dir re-run AFTER signal GRT (METHODOLOGY 12.4d)")
+    q.add_argument("--related-sta", help="die_sta_related.json on the same plan, TT setup / FF hold (12.4a)")
     q.add_argument("--pg")
     q.add_argument("--sites")
     q.add_argument("--out", required=True)
