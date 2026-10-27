@@ -104,3 +104,7 @@ Claude reset order: stopped new engineering/jobs/merges. Complete ready77b2eec49
 (b) codex/dieproto-complete-2313@77b2eec49: READY forward line posted in COORD-REVIEW-QUEUE (merges cleanly onto main; its die_trial/g2 change = conservative core union).
 LIVE: none. Worktree epyc1 wt/die-proto-2325 removed after push; data epyc1 /srv/opentallas-scratch2/claude/die-proto-2325.
 OWNER? none.
+
+## CODEX notes 2026-10-26 20:14 PDT
+Budget stand-in old failures preserved; current physical ownership QC/KV/HBM/S81 paths. IO-HOLD optimized input no fabricated legacy delay on e1f718f079.
+2026-10-27 03:32 PDT ASK from CLOCK-KV-R20 (COORD RULING CLOCK-KV-R19 ASK3): KV PDNSim on die_trial plan abstracts (intel1:/srv/opentallas-scratch2/claude/kv-pdn-m78-1026/kitC, dtrial-psm-3852148) puts each partition instance's power at ONE M1 VDD terminal (psm/ir_VDD.csv = 160 rows, one per instance, layer M1) although the abstracts carry 101-251 M7 VDD rects. Worst IR 468.4 mV is that point load, not the grid. Please emit distributed PG for the KV plan abstracts that PSM loads as distributed current (e.g. per-row/per-strap PG pins down to the partition's lowest grid layer, or PSM per-region current sources), then re-run kitC PSM. CLOCK-KV sets no droop regions until then.
