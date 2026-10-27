@@ -235,7 +235,7 @@ def _scale_row(kind, layer, label, row, W, cal, cache, prov):
     if kind == "DIAGUNDER":
         return [s, cc, fr, r2]
     nb = cc > 0
-    key = (layer, label, s, nb)
+    key = (layer, label, s, nb, W)
     if key not in cache:
         c0, f0 = solve_row(cal, layer, label, W0, s, nb)
         c1, f1 = solve_row(cal, layer, label, W, s, nb)
@@ -257,9 +257,10 @@ def main(argv):
         json.dump(cal, open(argv[2], "w"), indent=1)
         print(json.dumps(cal, indent=1))
     elif argv[0] == "write":
-        # 0.16 only: the OpenRCX build of openroad/orfs (26Q3) picks the SECOND width entry for both 0.16 and 0.32
-        # wires (probe CLOCK-128-R6: a 0.32 entry is never selected), so a 0.32 entry would be dead data; 8W wires
-        # extract with the 0.16 C (under by ~13 %, field solver) -- the die clock NDR is 4W (0.16).
+        # Keep the historical single-width default. Native rcx_mixed_probe
+        # controls show exact entries ARE selected in a complete mixed table;
+        # the old multi-width C alias came from _scale_row caching without W.
+        # Explicit --widths must cover every actual M8/M9 clock wire width.
         widths = [0.16]
         if "--widths" in argv:
             widths = [float(v) for v in argv[argv.index("--widths") + 1].split(",")]
