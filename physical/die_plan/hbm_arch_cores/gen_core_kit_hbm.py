@@ -822,7 +822,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         for f in ("core_density_taps.tcl", "core_tap_align.tcl"):
             shutil.copyfile(HERE / f, kd / f)
     if not a.stock_rc:
-        shutil.copyfile(TOOL / "setRC_rcx_asap7.tcl", kd / "setRC_rcx.tcl")
+        sys.path.insert(0, str(TOOL)); import core_flow   # FLOW-RC-1 fail-closed signal+clock RC guard
+        core_flow.install_rc(kd, TOOL / "setRC_rcx_asap7.tcl")
     if not a.no_f4:
         shutil.copyfile(HERE / "f4_chain_leaf.tcl", kd / "f4_chain_leaf.tcl")
     (kd / "post_synth_actual.tcl").write_text("source /work/face_keep_release.tcl\n# Preserve the actual post-eliminate_dead_logic graph for face_guard.\nwrite_verilog $::env(RESULTS_DIR)/1_synth.v\n")
