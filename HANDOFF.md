@@ -1394,3 +1394,5 @@ CODEX: 2026-10-27 08:57 PDT FLOW staticguardmainb56; realAPENOENTfixed1895 andti
 CODEX: 2026-10-27 08:57 PDT LEC rst_n_pin reset-detection fix05992df62,30focusedPASS; actualBFp0_fp4 resetbase+constantinductionPROVED(noRTLchange). Strandedargmax_nr/hcp4 processabsence diagnosed; canonicalargmaxcurrenttoolrecoverylive.
 
 CODEX: 2026-10-27 08:58 PDT RM50 main fa02b11f4b == origin/main; QC physical hooks + per-type IO contracts, 24+32 lane gates PASS, prior guards retained, 0 deletions.
+
+CODEX: 2026-10-27 08:58 PDT HEADfullnative parameterlintOOM200GiB diagnosed/preserved; source6c345836a9 runtime-scope image path avoids typeclones, real2bankmiter8196checks+wrongbank/missingfilecontrolsPASS. Scopefullsuccessor256GB liveepyc2 WTcodex-head-scope-0857 client3786686; no wholeHEADpass.
