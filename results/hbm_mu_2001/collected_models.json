@@ -1,0 +1,1048 @@
+[
+ {
+  "snapshot": "mu_r13",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu_r13/h4043_ne.otrun.log",
+  "verdict": "RUNNING_OR_INCOMPLETE"
+ },
+ {
+  "snapshot": "mu_r13",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu_r13/h4043_nw.otrun.log",
+  "H": 4043.52,
+  "hub": "q_hub_nw",
+  "raw": {
+   "error": "ValueError('hub cores do not fit the outline on any street width')",
+   "add": {
+    "coll_bits": 9697,
+    "vm_bits": 1793,
+    "fused_bits": 4456,
+    "idxn_bits": 512,
+    "area_um2": 2366784.2304000002,
+    "core_area_mm2_after": 12.257
+   }
+  },
+  "verdict": "FAIL_MODEL_PACK",
+  "qualification": "PROXY ONLY: incomplete shape and/or geometric endpoint identity; not native MU evidence"
+ },
+ {
+  "snapshot": "mu_r13",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu_r13/h4320_ne.otrun.log",
+  "H": 4320.0,
+  "hub": "q_hub_ne",
+  "raw": {
+   "bound": 3002.4,
+   "k": 2,
+   "x": 0.576,
+   "y": 0.449,
+   "seg": [
+    [
+     0.433,
+     0.476
+    ],
+    [
+     0.576,
+     0.551
+    ]
+   ],
+   "fill": [
+    0.484,
+    0.486
+   ],
+   "cc": 1308,
+   "add": {
+    "coll_bits": 6759,
+    "vm_bits": 1792,
+    "fused_bits": 4456,
+    "idxn_bits": 512,
+    "area_um2": 2369583.5904,
+    "core_area_mm2_after": 12.269
+   },
+   "ok": true
+  },
+  "max_axis": 0.576,
+  "verdict": "PASS_MODEL_CUT",
+  "qualification": "PROXY ONLY: incomplete shape and/or geometric endpoint identity; not native MU evidence"
+ },
+ {
+  "snapshot": "mu_r13",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu_r13/h4320_nw.otrun.log",
+  "H": 4320.0,
+  "hub": "q_hub_nw",
+  "raw": {
+   "bound": 3957.12,
+   "k": 4,
+   "x": 0.587,
+   "y": 0.421,
+   "seg": [
+    [
+     0.395,
+     0.5
+    ],
+    [
+     0.587,
+     0.43
+    ]
+   ],
+   "fill": [
+    0.416,
+    0.548
+   ],
+   "cc": 1284,
+   "add": {
+    "coll_bits": 9697,
+    "vm_bits": 1793,
+    "fused_bits": 4456,
+    "idxn_bits": 512,
+    "area_um2": 2366784.2304000002,
+    "core_area_mm2_after": 12.257
+   },
+   "ok": true
+  },
+  "max_axis": 0.587,
+  "verdict": "PASS_MODEL_CUT",
+  "qualification": "PROXY ONLY: incomplete shape and/or geometric endpoint identity; not native MU evidence"
+ },
+ {
+  "snapshot": "mu32_r13",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_r13/h4320_ne.otrun.log",
+  "verdict": "RUNNING_OR_INCOMPLETE"
+ },
+ {
+  "snapshot": "mu32_r13",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_r13/h4320_nw.otrun.log",
+  "H": 4320.0,
+  "hub": "q_hub_nw",
+  "raw": {
+   "error": "ValueError('hub cores do not fit the outline on any street width')",
+   "add": {
+    "coll_bits": 9697,
+    "vm_bits": 1793,
+    "fused_bits": 8912,
+    "idxn_bits": 512,
+    "area_um2": 3800056.5504000005,
+    "core_area_mm2_after": 13.69
+   }
+  },
+  "verdict": "FAIL_MODEL_PACK",
+  "qualification": "PROXY ONLY: incomplete shape and/or geometric endpoint identity; not native MU evidence"
+ },
+ {
+  "snapshot": "mu32_r13",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_r13/h4665_ne.otrun.log",
+  "H": 4665.6,
+  "hub": "q_hub_ne",
+  "raw": {
+   "bound": 3002.4,
+   "k": 1,
+   "x": 0.591,
+   "y": 0.446,
+   "seg": [
+    [
+     0.428,
+     0.483
+    ],
+    [
+     0.601,
+     0.545
+    ]
+   ],
+   "fill": [
+    0.448,
+    0.509
+   ],
+   "cc": 1431,
+   "add": {
+    "coll_bits": 6759,
+    "vm_bits": 1792,
+    "fused_bits": 8912,
+    "idxn_bits": 512,
+    "area_um2": 3802855.9104000004,
+    "core_area_mm2_after": 13.702
+   },
+   "ok": true
+  },
+  "max_axis": 0.601,
+  "verdict": "FAIL_MODEL_CUT",
+  "qualification": "PROXY ONLY: incomplete shape and/or geometric endpoint identity; not native MU evidence"
+ },
+ {
+  "snapshot": "mu32_r13",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_r13/h4665_nw.otrun.log",
+  "verdict": "RUNNING_OR_INCOMPLETE"
+ },
+ {
+  "snapshot": "mu32_banklocal",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_banklocal/h3525_ne.otrun.log",
+  "H": 3525.12,
+  "hub": "q_hub_ne",
+  "raw": {
+   "error": "ValueError('hub cores do not fit the outline on any street width')",
+   "add": {
+    "coll_bits": 6759,
+    "vm_bits": 1792,
+    "fused_bits": 8752,
+    "idxn_bits": 512,
+    "area_um2": 3802855.9104000004,
+    "core_area_mm2_after": 13.702
+   }
+  },
+  "verdict": "FAIL_MODEL_PACK",
+  "qualification": "PROXY ONLY: incomplete shape and/or geometric endpoint identity; not native MU evidence"
+ },
+ {
+  "snapshot": "mu32_banklocal",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_banklocal/h3525_nw.otrun.log",
+  "H": 3525.12,
+  "hub": "q_hub_nw",
+  "raw": {
+   "error": "ValueError('hub cores do not fit the outline on any street width')",
+   "add": {
+    "coll_bits": 9697,
+    "vm_bits": 1793,
+    "fused_bits": 8752,
+    "idxn_bits": 512,
+    "area_um2": 3800056.5504000005,
+    "core_area_mm2_after": 13.69
+   }
+  },
+  "verdict": "FAIL_MODEL_PACK",
+  "qualification": "PROXY ONLY: incomplete shape and/or geometric endpoint identity; not native MU evidence"
+ },
+ {
+  "snapshot": "mu32_banklocal",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_banklocal/h4320_ne.otrun.log",
+  "H": 4320.0,
+  "hub": "q_hub_ne",
+  "raw": {
+   "bound": 3002.4,
+   "k": 3,
+   "x": 0.527,
+   "y": 0.449,
+   "seg": [
+    [
+     0.427,
+     0.435
+    ],
+    [
+     0.527,
+     0.587
+    ]
+   ],
+   "fill": [
+    0.512,
+    0.534
+   ],
+   "cc": 1408,
+   "add": {
+    "coll_bits": 6759,
+    "vm_bits": 1792,
+    "fused_bits": 8752,
+    "idxn_bits": 512,
+    "area_um2": 3802855.9104000004,
+    "core_area_mm2_after": 13.702
+   },
+   "ok": true
+  },
+  "max_axis": 0.587,
+  "verdict": "PASS_MODEL_CUT",
+  "qualification": "PROXY ONLY: incomplete shape and/or geometric endpoint identity; not native MU evidence"
+ },
+ {
+  "snapshot": "mu32_banklocal",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_banklocal/h4320_nw.otrun.log",
+  "H": 4320.0,
+  "hub": "q_hub_nw",
+  "raw": {
+   "bound": 3957.12,
+   "k": 2,
+   "x": 0.59,
+   "y": 0.466,
+   "seg": [
+    [
+     0.485,
+     0.565
+    ],
+    [
+     0.59,
+     0.496
+    ]
+   ],
+   "fill": [
+    0.437,
+    0.607
+   ],
+   "cc": 1361,
+   "add": {
+    "coll_bits": 9697,
+    "vm_bits": 1793,
+    "fused_bits": 8752,
+    "idxn_bits": 512,
+    "area_um2": 3800056.5504000005,
+    "core_area_mm2_after": 13.69
+   },
+   "ok": true
+  },
+  "max_axis": 0.59,
+  "verdict": "PASS_MODEL_CUT",
+  "qualification": "PROXY ONLY: incomplete shape and/or geometric endpoint identity; not native MU evidence"
+ },
+ {
+  "snapshot": "mu32_vm32_banklocal",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_vm32_banklocal/h3525_ne.otrun.log",
+  "H": 3525.12,
+  "hub": "q_hub_ne",
+  "raw": {
+   "error": "NameError(\"name 'inst' is not defined\")",
+   "add": null
+  },
+  "verdict": "FAIL_NOTRUN",
+  "qualification": "PROXY ONLY: incomplete shape and/or geometric endpoint identity; not native MU evidence"
+ },
+ {
+  "snapshot": "mu32_vm32_banklocal",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_vm32_banklocal/h3525_nw.otrun.log",
+  "H": 3525.12,
+  "hub": "q_hub_nw",
+  "raw": {
+   "error": "NameError(\"name 'inst' is not defined\")",
+   "add": null
+  },
+  "verdict": "FAIL_NOTRUN",
+  "qualification": "PROXY ONLY: incomplete shape and/or geometric endpoint identity; not native MU evidence"
+ },
+ {
+  "snapshot": "mu32_vm32_banklocal",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_vm32_banklocal/h4320_ne.otrun.log",
+  "H": 4320.0,
+  "hub": "q_hub_ne",
+  "raw": {
+   "error": "NameError(\"name 'inst' is not defined\")",
+   "add": null
+  },
+  "verdict": "FAIL_NOTRUN",
+  "qualification": "PROXY ONLY: incomplete shape and/or geometric endpoint identity; not native MU evidence"
+ },
+ {
+  "snapshot": "mu32_vm32_banklocal",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_vm32_banklocal/h4320_nw.otrun.log",
+  "H": 4320.0,
+  "hub": "q_hub_nw",
+  "raw": {
+   "error": "NameError(\"name 'inst' is not defined\")",
+   "add": null
+  },
+  "verdict": "FAIL_NOTRUN",
+  "qualification": "PROXY ONLY: incomplete shape and/or geometric endpoint identity; not native MU evidence"
+ },
+ {
+  "snapshot": "mu32_vm32_banklocal_v2",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_vm32_banklocal_v2/h3525_ne.otrun.log",
+  "H": 3525.12,
+  "hub": "q_hub_ne",
+  "raw": {
+   "error": "ValueError('hub cores do not fit the outline on any street width')",
+   "add": {
+    "coll_bits": 6759,
+    "vm_bits": 1792,
+    "fused_bits": 8912,
+    "idxn_bits": 512,
+    "area_um2": 4334734.3104,
+    "core_area_mm2_after": 14.234
+   }
+  },
+  "verdict": "FAIL_MODEL_PACK",
+  "qualification": "PROXY ONLY: incomplete shape and/or geometric endpoint identity; not native MU evidence"
+ },
+ {
+  "snapshot": "mu32_vm32_banklocal_v2",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_vm32_banklocal_v2/h3525_nw.otrun.log",
+  "H": 3525.12,
+  "hub": "q_hub_nw",
+  "raw": {
+   "error": "ValueError('hub cores do not fit the outline on any street width')",
+   "add": {
+    "coll_bits": 9697,
+    "vm_bits": 1793,
+    "fused_bits": 8912,
+    "idxn_bits": 512,
+    "area_um2": 4331934.9504,
+    "core_area_mm2_after": 14.222
+   }
+  },
+  "verdict": "FAIL_MODEL_PACK",
+  "qualification": "PROXY ONLY: incomplete shape and/or geometric endpoint identity; not native MU evidence"
+ },
+ {
+  "snapshot": "mu32_vm32_banklocal_v2",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_vm32_banklocal_v2/h4320_ne.otrun.log",
+  "H": 4320.0,
+  "hub": "q_hub_ne",
+  "raw": {
+   "bound": 3002.4,
+   "k": 3,
+   "x": 0.499,
+   "y": 0.49,
+   "seg": [
+    [
+     0.329,
+     0.521
+    ],
+    [
+     0.507,
+     0.579
+    ]
+   ],
+   "fill": [
+    0.517,
+    0.555
+   ],
+   "cc": 1269,
+   "add": {
+    "coll_bits": 6759,
+    "vm_bits": 1792,
+    "fused_bits": 8912,
+    "idxn_bits": 512,
+    "area_um2": 4334734.3104,
+    "core_area_mm2_after": 14.234
+   },
+   "ok": true
+  },
+  "max_axis": 0.579,
+  "verdict": "PASS_MODEL_CUT",
+  "qualification": "PROXY ONLY: incomplete shape and/or geometric endpoint identity; not native MU evidence"
+ },
+ {
+  "snapshot": "mu32_vm32_banklocal_v2",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_vm32_banklocal_v2/h4320_nw.otrun.log",
+  "H": 4320.0,
+  "hub": "q_hub_nw",
+  "raw": {
+   "error": "ValueError('hub cores do not fit the outline on any street width')",
+   "add": {
+    "coll_bits": 9697,
+    "vm_bits": 1793,
+    "fused_bits": 8912,
+    "idxn_bits": 512,
+    "area_um2": 4331934.9504,
+    "core_area_mm2_after": 14.222
+   }
+  },
+  "verdict": "FAIL_MODEL_PACK",
+  "qualification": "PROXY ONLY: incomplete shape and/or geometric endpoint identity; not native MU evidence"
+ },
+ {
+  "snapshot": "mu32_vm32_tree",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_vm32_tree/h4320_ne.otrun.log",
+  "H": 4320.0,
+  "hub": "q_hub_ne",
+  "raw": {
+   "bound": 3002.4,
+   "k": 2,
+   "x": 0.572,
+   "y": 0.475,
+   "seg": [
+    [
+     0.373,
+     0.53
+    ],
+    [
+     0.572,
+     0.522
+    ]
+   ],
+   "fill": [
+    0.519,
+    0.572
+   ],
+   "cc": 1358,
+   "add": {
+    "coll_bits": 6759,
+    "vm_bits": 1792,
+    "fused_bits": 8912,
+    "idxn_bits": 512,
+    "area_um2": 4752772.070399998,
+    "tree_nodes": 14,
+    "tree_bits": 13320,
+    "global_root_reserve_mm2_outside_hub": 0.11943936000000001,
+    "core_area_mm2_after": 14.652
+   },
+   "ok": true
+  },
+  "max_axis": 0.572,
+  "verdict": "PASS_MODEL_CUT",
+  "qualification": "PROXY ONLY: incomplete shape and/or geometric endpoint identity; not native MU evidence"
+ },
+ {
+  "snapshot": "mu32_vm32_tree",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_vm32_tree/h4320_nw.otrun.log",
+  "H": 4320.0,
+  "hub": "q_hub_nw",
+  "raw": {
+   "error": "ValueError('hub cores do not fit the outline on any street width')",
+   "add": {
+    "coll_bits": 9697,
+    "vm_bits": 1793,
+    "fused_bits": 8912,
+    "idxn_bits": 512,
+    "area_um2": 4749972.710399998,
+    "tree_nodes": 14,
+    "tree_bits": 13320,
+    "global_root_reserve_mm2_outside_hub": 0.11943936000000001,
+    "core_area_mm2_after": 14.64
+   }
+  },
+  "verdict": "FAIL_MODEL_PACK",
+  "qualification": "PROXY ONLY: incomplete shape and/or geometric endpoint identity; not native MU evidence"
+ },
+ {
+  "snapshot": "mu32_vm32_tree",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_vm32_tree/h4665.6_ne.otrun.log",
+  "H": 4665.6,
+  "hub": "q_hub_ne",
+  "raw": {
+   "bound": 3002.4,
+   "k": 1,
+   "x": 0.529,
+   "y": 0.526,
+   "seg": [
+    [
+     0.399,
+     0.586
+    ],
+    [
+     0.536,
+     0.572
+    ]
+   ],
+   "fill": [
+    0.481,
+    0.53
+   ],
+   "cc": 1494,
+   "add": {
+    "coll_bits": 6759,
+    "vm_bits": 1792,
+    "fused_bits": 8912,
+    "idxn_bits": 512,
+    "area_um2": 4752772.070399998,
+    "tree_nodes": 14,
+    "tree_bits": 13320,
+    "global_root_reserve_mm2_outside_hub": 0.11943936000000001,
+    "core_area_mm2_after": 14.652
+   },
+   "ok": true
+  },
+  "max_axis": 0.586,
+  "verdict": "PASS_MODEL_CUT",
+  "qualification": "PROXY ONLY: incomplete shape and/or geometric endpoint identity; not native MU evidence"
+ },
+ {
+  "snapshot": "mu32_vm32_tree",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_vm32_tree/h4665.6_nw.otrun.log",
+  "H": 4665.6,
+  "hub": "q_hub_nw",
+  "raw": {
+   "error": "ValueError('hub cores do not fit the outline on any street width')",
+   "add": {
+    "coll_bits": 9697,
+    "vm_bits": 1793,
+    "fused_bits": 8912,
+    "idxn_bits": 512,
+    "area_um2": 4749972.710399998,
+    "tree_nodes": 14,
+    "tree_bits": 13320,
+    "global_root_reserve_mm2_outside_hub": 0.11943936000000001,
+    "core_area_mm2_after": 14.64
+   }
+  },
+  "verdict": "FAIL_MODEL_PACK",
+  "qualification": "PROXY ONLY: incomplete shape and/or geometric endpoint identity; not native MU evidence"
+ },
+ {
+  "snapshot": "mu32_vm32_tree_l4",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_vm32_tree_l4/h4320_ne.otrun.log",
+  "H": 4320.0,
+  "hub": "q_hub_ne",
+  "raw": {
+   "bound": 3002.4,
+   "k": 3,
+   "x": 0.515,
+   "y": 0.523,
+   "seg": [
+    [
+     0.372,
+     0.578
+    ],
+    [
+     0.515,
+     0.554
+    ]
+   ],
+   "fill": [
+    0.496,
+    0.559
+   ],
+   "cc": 1341,
+   "add": {
+    "coll_bits": 0,
+    "vm_bits": 1792,
+    "fused_bits": 8912,
+    "idxn_bits": 512,
+    "area_um2": 4457980.799999999,
+    "tree_nodes": 14,
+    "tree_bits": 13320,
+    "global_root_reserve_mm2_outside_hub": 0.11943936000000001,
+    "core_area_mm2_after": 14.357
+   },
+   "ok": true
+  },
+  "max_axis": 0.578,
+  "verdict": "PASS_MODEL_CUT",
+  "qualification": "PROXY ONLY: incomplete shape and/or geometric endpoint identity; not native MU evidence"
+ },
+ {
+  "snapshot": "mu32_vm32_tree_l4",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_vm32_tree_l4/h4320_nw.otrun.log",
+  "H": 4320.0,
+  "hub": "q_hub_nw",
+  "raw": {
+   "error": "ValueError('hub cores do not fit the outline on any street width')",
+   "add": {
+    "coll_bits": 0,
+    "vm_bits": 1793,
+    "fused_bits": 8912,
+    "idxn_bits": 512,
+    "area_um2": 4457980.799999999,
+    "tree_nodes": 14,
+    "tree_bits": 13320,
+    "global_root_reserve_mm2_outside_hub": 0.11943936000000001,
+    "core_area_mm2_after": 14.348
+   }
+  },
+  "verdict": "FAIL_MODEL_PACK",
+  "qualification": "PROXY ONLY: incomplete shape and/or geometric endpoint identity; not native MU evidence"
+ },
+ {
+  "snapshot": "mu32_vm32_tree_l4",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_vm32_tree_l4/h4665.6_ne.otrun.log",
+  "H": 4665.6,
+  "hub": "q_hub_ne",
+  "raw": {
+   "bound": 3002.4,
+   "k": 3,
+   "x": 0.455,
+   "y": 0.557,
+   "seg": [
+    [
+     0.326,
+     0.58
+    ],
+    [
+     0.455,
+     0.577
+    ]
+   ],
+   "fill": [
+    0.46,
+    0.517
+   ],
+   "cc": 1343,
+   "add": {
+    "coll_bits": 0,
+    "vm_bits": 1792,
+    "fused_bits": 8912,
+    "idxn_bits": 512,
+    "area_um2": 4457980.799999999,
+    "tree_nodes": 14,
+    "tree_bits": 13320,
+    "global_root_reserve_mm2_outside_hub": 0.11943936000000001,
+    "core_area_mm2_after": 14.357
+   },
+   "ok": true
+  },
+  "max_axis": 0.58,
+  "verdict": "PASS_MODEL_CUT",
+  "qualification": "PROXY ONLY: incomplete shape and/or geometric endpoint identity; not native MU evidence"
+ },
+ {
+  "snapshot": "mu32_vm32_tree_l4",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_vm32_tree_l4/h4665.6_nw.otrun.log",
+  "H": 4665.6,
+  "hub": "q_hub_nw",
+  "raw": {
+   "error": "ValueError('hub cores do not fit the outline on any street width')",
+   "add": {
+    "coll_bits": 0,
+    "vm_bits": 1793,
+    "fused_bits": 8912,
+    "idxn_bits": 512,
+    "area_um2": 4457980.799999999,
+    "tree_nodes": 14,
+    "tree_bits": 13320,
+    "global_root_reserve_mm2_outside_hub": 0.11943936000000001,
+    "core_area_mm2_after": 14.348
+   }
+  },
+  "verdict": "FAIL_MODEL_PACK",
+  "qualification": "PROXY ONLY: incomplete shape and/or geometric endpoint identity; not native MU evidence"
+ },
+ {
+  "snapshot": "mu32_balanced_named_l4",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_balanced_named_l4/h3525.12_ne.otrun.log",
+  "H": 3525.12,
+  "hub": "q_hub_ne",
+  "raw": {
+   "error": "ValueError('hub cores do not fit any shelf count at the fixed outline and street widths')",
+   "add": {
+    "coll_bits": 0,
+    "vm_bits": 1792,
+    "fused_bits": 8912,
+    "idxn_bits": 512,
+    "area_um2": 4457980.799999999,
+    "tree_nodes": 14,
+    "tree_bits": 13320,
+    "global_root_reserve_mm2_outside_hub": 0.11943936000000001,
+    "core_area_mm2_after": 14.357
+   }
+  },
+  "verdict": "FAIL_MODEL_PACK",
+  "qualification": "native VM/FUSED rate guard and real views required"
+ },
+ {
+  "snapshot": "mu32_balanced_named_l4",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_balanced_named_l4/h3525.12_nw.otrun.log",
+  "H": 3525.12,
+  "hub": "q_hub_nw",
+  "raw": {
+   "error": "ValueError('hub cores do not fit any shelf count at the fixed outline and street widths')",
+   "add": {
+    "coll_bits": 0,
+    "vm_bits": 1793,
+    "fused_bits": 8912,
+    "idxn_bits": 512,
+    "area_um2": 4457980.799999999,
+    "tree_nodes": 14,
+    "tree_bits": 13320,
+    "global_root_reserve_mm2_outside_hub": 0.11943936000000001,
+    "core_area_mm2_after": 14.348
+   }
+  },
+  "verdict": "FAIL_MODEL_PACK",
+  "qualification": "native VM/FUSED rate guard and real views required"
+ },
+ {
+  "snapshot": "mu32_balanced_named_l4",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_balanced_named_l4/h4320_ne.otrun.log",
+  "H": 4320.0,
+  "hub": "q_hub_ne",
+  "raw": {
+   "error": "ValueError('hub cores do not fit any shelf count at the fixed outline and street widths')",
+   "add": {
+    "coll_bits": 0,
+    "vm_bits": 1792,
+    "fused_bits": 8912,
+    "idxn_bits": 512,
+    "area_um2": 4457980.799999999,
+    "tree_nodes": 14,
+    "tree_bits": 13320,
+    "global_root_reserve_mm2_outside_hub": 0.11943936000000001,
+    "core_area_mm2_after": 14.357
+   }
+  },
+  "verdict": "FAIL_MODEL_PACK",
+  "qualification": "native VM/FUSED rate guard and real views required"
+ },
+ {
+  "snapshot": "mu32_balanced_named_l4",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_balanced_named_l4/h4320_nw.otrun.log",
+  "H": 4320.0,
+  "hub": "q_hub_nw",
+  "raw": {
+   "bound": 3957.12,
+   "k": 3,
+   "x": 0.576,
+   "y": 0.398,
+   "seg": [
+    [
+     0.576,
+     0.506
+    ],
+    [
+     0.504,
+     0.455
+    ]
+   ],
+   "fill": [
+    0.537,
+    0.534
+   ],
+   "cc": 1374,
+   "add": {
+    "coll_bits": 0,
+    "vm_bits": 1793,
+    "fused_bits": 8912,
+    "idxn_bits": 512,
+    "area_um2": 4457980.799999999,
+    "tree_nodes": 14,
+    "tree_bits": 13320,
+    "global_root_reserve_mm2_outside_hub": 0.11943936000000001,
+    "core_area_mm2_after": 14.348
+   },
+   "ok": true
+  },
+  "max_axis": 0.576,
+  "verdict": "PASS_MODEL_CUT",
+  "qualification": "native VM/FUSED rate guard and real views required"
+ },
+ {
+  "snapshot": "mu32_balanced_equal_l4",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_balanced_equal_l4/h4320_ne.otrun.log",
+  "H": 4320.0,
+  "hub": "q_hub_ne",
+  "raw": {
+   "bound": 3957.12,
+   "k": 4,
+   "x": 0.59,
+   "y": 0.357,
+   "seg": [
+    [
+     0.502,
+     0.508
+    ],
+    [
+     0.59,
+     0.434
+    ]
+   ],
+   "fill": [
+    0.529,
+    0.543
+   ],
+   "cc": 1293,
+   "add": {
+    "coll_bits": 0,
+    "vm_bits": 1792,
+    "fused_bits": 8912,
+    "idxn_bits": 512,
+    "area_um2": 4457980.799999999,
+    "tree_nodes": 14,
+    "tree_bits": 13320,
+    "global_root_reserve_mm2_outside_hub": 0.11943936000000001,
+    "core_area_mm2_after": 14.357
+   },
+   "ok": true
+  },
+  "max_axis": 0.59,
+  "verdict": "PASS_MODEL_CUT",
+  "qualification": "native VM/FUSED rate guard and real views required"
+ },
+ {
+  "snapshot": "mu32_balanced_equal_l4",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_balanced_equal_l4/h4665_ne.otrun.log",
+  "H": 4665.6,
+  "hub": "q_hub_ne",
+  "raw": {
+   "bound": 3957.12,
+   "k": 3,
+   "x": 0.549,
+   "y": 0.371,
+   "seg": [
+    [
+     0.46,
+     0.532
+    ],
+    [
+     0.549,
+     0.461
+    ]
+   ],
+   "fill": [
+    0.489,
+    0.503
+   ],
+   "cc": 1319,
+   "add": {
+    "coll_bits": 0,
+    "vm_bits": 1792,
+    "fused_bits": 8912,
+    "idxn_bits": 512,
+    "area_um2": 4457980.799999999,
+    "tree_nodes": 14,
+    "tree_bits": 13320,
+    "global_root_reserve_mm2_outside_hub": 0.11943936000000001,
+    "core_area_mm2_after": 14.357
+   },
+   "ok": true
+  },
+  "max_axis": 0.549,
+  "verdict": "PASS_MODEL_CUT",
+  "qualification": "native VM/FUSED rate guard and real views required"
+ },
+ {
+  "snapshot": "mu32_buddy_named_l4",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_buddy_named_l4/h4320_ne.otrun.log",
+  "H": 4320.0,
+  "hub": "q_hub_ne",
+  "raw": {
+   "bound": 3957.12,
+   "k": 5,
+   "x": 0.463,
+   "y": 0.52,
+   "seg": [
+    [
+     0.463,
+     0.588
+    ],
+    [
+     0.444,
+     0.571
+    ]
+   ],
+   "fill": [
+    0.529,
+    0.543
+   ],
+   "cc": 1225,
+   "add": {
+    "coll_bits": 0,
+    "vm_bits": 1792,
+    "fused_bits": 8912,
+    "idxn_bits": 512,
+    "area_um2": 4457980.799999999,
+    "tree_nodes": 14,
+    "tree_bits": 13320,
+    "global_root_reserve_mm2_outside_hub": 0.11943936000000001,
+    "core_area_mm2_after": 14.357
+   },
+   "ok": true
+  },
+  "max_axis": 0.588,
+  "verdict": "PASS_MODEL_CUT",
+  "qualification": "native VM/FUSED rate guard and real views required"
+ },
+ {
+  "snapshot": "mu32_buddy_named_l4",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_buddy_named_l4/h4320_nw.otrun.log",
+  "H": 4320.0,
+  "hub": "q_hub_nw",
+  "raw": {
+   "bound": 3957.12,
+   "k": 3,
+   "x": 0.548,
+   "y": 0.414,
+   "seg": [
+    [
+     0.548,
+     0.553
+    ],
+    [
+     0.548,
+     0.492
+    ]
+   ],
+   "fill": [
+    0.537,
+    0.534
+   ],
+   "cc": 1364,
+   "add": {
+    "coll_bits": 0,
+    "vm_bits": 1793,
+    "fused_bits": 8912,
+    "idxn_bits": 512,
+    "area_um2": 4457980.799999999,
+    "tree_nodes": 14,
+    "tree_bits": 13320,
+    "global_root_reserve_mm2_outside_hub": 0.11943936000000001,
+    "core_area_mm2_after": 14.348
+   },
+   "ok": true
+  },
+  "max_axis": 0.553,
+  "verdict": "PASS_MODEL_CUT",
+  "qualification": "native VM/FUSED rate guard and real views required"
+ },
+ {
+  "snapshot": "mu32_buddy_named_l4",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_buddy_named_l4/h4665.6_ne.otrun.log",
+  "H": 4665.6,
+  "hub": "q_hub_ne",
+  "raw": {
+   "bound": 3957.12,
+   "k": 7,
+   "x": 0.383,
+   "y": 0.524,
+   "seg": [
+    [
+     0.383,
+     0.588
+    ],
+    [
+     0.38,
+     0.594
+    ]
+   ],
+   "fill": [
+    0.489,
+    0.503
+   ],
+   "cc": 1236,
+   "add": {
+    "coll_bits": 0,
+    "vm_bits": 1792,
+    "fused_bits": 8912,
+    "idxn_bits": 512,
+    "area_um2": 4457980.799999999,
+    "tree_nodes": 14,
+    "tree_bits": 13320,
+    "global_root_reserve_mm2_outside_hub": 0.11943936000000001,
+    "core_area_mm2_after": 14.357
+   },
+   "ok": true
+  },
+  "max_axis": 0.594,
+  "verdict": "PASS_MODEL_CUT",
+  "qualification": "native VM/FUSED rate guard and real views required"
+ },
+ {
+  "snapshot": "mu32_buddy_named_l4",
+  "log": "/srv/opentallas-scratch2/claude/codex-hbm-2001/mu32_buddy_named_l4/h4665.6_nw.otrun.log",
+  "H": 4665.6,
+  "hub": "q_hub_nw",
+  "raw": {
+   "bound": 3957.12,
+   "k": 2,
+   "x": 0.56,
+   "y": 0.411,
+   "seg": [
+    [
+     0.56,
+     0.557
+    ],
+    [
+     0.504,
+     0.51
+    ]
+   ],
+   "fill": [
+    0.497,
+    0.494
+   ],
+   "cc": 1344,
+   "add": {
+    "coll_bits": 0,
+    "vm_bits": 1793,
+    "fused_bits": 8912,
+    "idxn_bits": 512,
+    "area_um2": 4457980.799999999,
+    "tree_nodes": 14,
+    "tree_bits": 13320,
+    "global_root_reserve_mm2_outside_hub": 0.11943936000000001,
+    "core_area_mm2_after": 14.348
+   },
+   "ok": true
+  },
+  "max_axis": 0.56,
+  "verdict": "PASS_MODEL_CUT",
+  "qualification": "native VM/FUSED rate guard and real views required"
+ }
+]

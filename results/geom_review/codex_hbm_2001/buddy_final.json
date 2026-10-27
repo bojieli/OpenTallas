@@ -1,0 +1,22 @@
+{
+ "verdict": "PASS-COND MODEL ONLY; NOT ROUTE READY",
+ "viewed": true,
+ "picture": "results/geom_review/codex_hbm_2001/buddy_final.png",
+ "facts": [
+  "32 native VM banks, 32 FUSED lanes, 28 external golden-order tree nodes; single central hub0.11944mm2 explicitly reserved but unplaced",
+  "All96nativeVMlinks parallel18/282/257bits,0relay stations,directgap8.64um,max65.88um",
+  "NativeFUSED W/E pins are NEW planned repins, not existing closed views; clock/PG/reset and native bank pin tables require rebuild",
+  "Tree period4 upstream protected<=k4; allnewMUtreehops<=405um",
+  "Cut max NW0.553 NE0.588, bothaxeswholehub andsegments, H4320 bound3957.12; otherSU/sharedreachissues remain",
+  "Existing station generation precedes face-pin spreading, leaving old face endpoint reach gaps; NE4old routes failed; these are NOT frozen/route-ready die views"
+ ],
+ "root_reserve": {
+  "area_mm2": 0.11943936,
+  "unplaced": true,
+  "port_bits_per_hub": 888
+ },
+ "cycles_removed": {
+  "NW": 111,
+  "NE": 75
+ }
+}

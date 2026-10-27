@@ -1,0 +1,376 @@
+{
+ "source": "results/hbm_mu_2001/buddy/NE/original_candidate_type.json",
+ "native_links": 48,
+ "cut": {
+  "x": {
+   "cuts": 1901,
+   "max_use": 0.463,
+   "at_um": 2674.08,
+   "bits": 30675,
+   "face_bits": 14323,
+   "tracks": 66217,
+   "core_core_max_use": 0.345,
+   "cuts_over_0p6": 0
+  },
+  "y": {
+   "cuts": 999,
+   "max_use": 0.52,
+   "at_um": 1464.48,
+   "bits": 56061,
+   "face_bits": 22328,
+   "tracks": 107837,
+   "core_core_max_use": 0.323,
+   "cuts_over_0p6": 0
+  }
+ },
+ "segments": [
+  {
+   "x": {
+    "cuts": 915,
+    "max_use": 0.463,
+    "at_um": 2674.08,
+    "bits": 30675,
+    "face_bits": 14323,
+    "tracks": 66217,
+    "core_core_max_use": 0.247,
+    "cuts_over_0p6": 0
+   },
+   "y": {
+    "cuts": 999,
+    "max_use": 0.588,
+    "at_um": 1645.92,
+    "bits": 32103,
+    "face_bits": 14514,
+    "tracks": 54604,
+    "core_core_max_use": 0.322,
+    "cuts_over_0p6": 0
+   }
+  },
+  {
+   "x": {
+    "cuts": 985,
+    "max_use": 0.444,
+    "at_um": 1196.64,
+    "bits": 31940,
+    "face_bits": 13615,
+    "tracks": 71904,
+    "core_core_max_use": 0.345,
+    "cuts_over_0p6": 0
+   },
+   "y": {
+    "cuts": 999,
+    "max_use": 0.571,
+    "at_um": 1455.84,
+    "bits": 30393,
+    "face_bits": 7473,
+    "tracks": 53233,
+    "core_core_max_use": 0.438,
+    "cuts_over_0p6": 0
+   }
+  }
+ ],
+ "max_axis": 0.588,
+ "verdict": "PASS_MODEL_CUT",
+ "changes": [
+  {
+   "conn": "u_vmb_Q0.rd|u_mu_fused_0",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_0.wr|u_vmb_Q0",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_0.rq|u_vmb_Q0",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_vmb_Q0_mu1.rd|u_mu_fused_1",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_1.wr|u_vmb_Q0_mu1",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_1.rq|u_vmb_Q0_mu1",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_vmb_Q1.rd|u_mu_fused_2",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_2.wr|u_vmb_Q1",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_2.rq|u_vmb_Q1",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_vmb_Q1_mu1.rd|u_mu_fused_3",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_3.wr|u_vmb_Q1_mu1",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_3.rq|u_vmb_Q1_mu1",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_vmb_Q2.rd|u_mu_fused_4",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_4.wr|u_vmb_Q2",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_4.rq|u_vmb_Q2",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_vmb_Q2_mu1.rd|u_mu_fused_5",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_5.wr|u_vmb_Q2_mu1",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_5.rq|u_vmb_Q2_mu1",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_vmb_Q3.rd|u_mu_fused_6",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_6.wr|u_vmb_Q3",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_6.rq|u_vmb_Q3",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_vmb_Q3_mu1.rd|u_mu_fused_7",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_7.wr|u_vmb_Q3_mu1",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_7.rq|u_vmb_Q3_mu1",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_vmb_Q4.rd|u_mu_fused_8",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_8.wr|u_vmb_Q4",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_8.rq|u_vmb_Q4",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_vmb_Q4_mu1.rd|u_mu_fused_9",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_9.wr|u_vmb_Q4_mu1",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_9.rq|u_vmb_Q4_mu1",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_vmb_Q5.rd|u_mu_fused_10",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_10.wr|u_vmb_Q5",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_10.rq|u_vmb_Q5",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_vmb_Q5_mu1.rd|u_mu_fused_11",
+   "kind": "direct_native_gap",
+   "removed_cycles": 4,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_11.wr|u_vmb_Q5_mu1",
+   "kind": "direct_native_gap",
+   "removed_cycles": 4,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_11.rq|u_vmb_Q5_mu1",
+   "kind": "direct_native_gap",
+   "removed_cycles": 4,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_vmb_Q6.rd|u_mu_fused_12",
+   "kind": "direct_native_gap",
+   "removed_cycles": 4,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_12.wr|u_vmb_Q6",
+   "kind": "direct_native_gap",
+   "removed_cycles": 4,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_12.rq|u_vmb_Q6",
+   "kind": "direct_native_gap",
+   "removed_cycles": 4,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_vmb_Q6_mu1.rd|u_mu_fused_13",
+   "kind": "direct_native_gap",
+   "removed_cycles": 4,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_13.wr|u_vmb_Q6_mu1",
+   "kind": "direct_native_gap",
+   "removed_cycles": 4,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_13.rq|u_vmb_Q6_mu1",
+   "kind": "direct_native_gap",
+   "removed_cycles": 4,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_vmb_Q7.rd|u_mu_fused_14",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_14.wr|u_vmb_Q7",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_14.rq|u_vmb_Q7",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_vmb_Q7_mu1.rd|u_mu_fused_15",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_15.wr|u_vmb_Q7_mu1",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "u_mu_fused_15.rq|u_vmb_Q7_mu1",
+   "kind": "direct_native_gap",
+   "removed_cycles": 1,
+   "length_um": 65.88
+  },
+  {
+   "conn": "mu_tree_root:1:up",
+   "kind": "period4_tree_up",
+   "old_k": 5,
+   "new_k": 4,
+   "old_wires": 55,
+   "new_wires": 68,
+   "removed_cycles": 1
+  }
+ ],
+ "removed_relay_cycles": 75,
+ "candidate": "results/hbm_mu_2001/buddy/NE/candidate_type.json",
+ "route_ceiling": "M5, new native pin/clock views require rebuild; no physical closure claim"
+}
