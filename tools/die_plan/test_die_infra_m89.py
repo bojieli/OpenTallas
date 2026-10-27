@@ -56,6 +56,11 @@ class GrtLayers(unittest.TestCase):
             self.assertIn("-signal M4-M7", (out / "grt.tcl").read_text())
             self.assertIn("LEGACY", (out / "grt_meta.json").read_text())
 
+    def test_missing_explicit_router_request_cannot_be_recorded_as_fifty(self):
+        with tempfile.TemporaryDirectory() as td, mock.patch(__name__+".GRT_TCL",GRT_TCL.replace("-congestion_iterations 50 ","")):
+            with self.assertRaisesRegex(ValueError,"no request recorded"):
+                self._run(td)
+
     def test_pg_ir_must_close_before_signal_grt(self):
         with tempfile.TemporaryDirectory() as td:
             with self.assertRaisesRegex(ValueError, "12.4e"):
