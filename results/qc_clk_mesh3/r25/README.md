@@ -81,3 +81,11 @@ qc_clk_mesh3 / die_clock_mesh. That is the next lane. The seam hold numbers are 
 (-96.5..-100.6 FF, CHECKED there).
 
 Renders (viewed): r25_wcorner.png (W edge + first two A0 rows), r25_centre_band.png (centre-facing bands).
+
+## Die DRC re-run for the R24 M9 shield fix (2026-10-27 12:33 PDT, UNCHECKED)
+Tree = R24 fixed dry build (qc-mesh-r24/dryfix/dry), full route + DRC via ot-run on intel2 (chain drc/chain.sh), run_route rc 0.
+- 408 same-net VSS shield gaps (24 at 0.04 um + 384 at 0.28 um, all M9 side): **0 DRC markers on any of them** (drc/samenet_gaps_drc.json, verdict PASS). GEOM-24 PASS-COND met, so the shared-shield fallback is not needed.
+- Total 24 unique markers, all "Min Step" on M8: 12 nets ckm_w_ckt_{17717..19929}_0, 2 each, at y 10749.22/10749.26, x pitch 2471.04 (one per partition column).
+  - Cause: the short load branch (0.187 um, load 2204.253 -> trunk 2204.44). The R19 +0.08 end extension ends at 2204.173, 2 nm off the via enclosure edge.
+  - This is a residual of the R19 Min Step fix, not the shield fix. Fix = plan geometry (snap trunk x to the load x, or extend the branch so the end clears the enclosure), no waiver.
+- The clock_routed report step exited rc 2: the worktree was pruned mid-run, so the tool was missing. This is not a DRC result.
