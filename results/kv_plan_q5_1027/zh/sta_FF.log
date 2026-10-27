@@ -1,0 +1,672 @@
+OpenSTA 3.1.0  Copyright (c) 2026, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+ROW 0 273.62 zh1 BUFx12f_ASAP7_75t_R 1 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+  52.05   12.15   19.89   19.89 v b0/Y (BUFx12f_ASAP7_75t_R)
+         482.60  152.19  172.08 v u/clk (ot_nhb_zh)
+                         172.08   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 1 273.62 zh1 BUFx12f_ASAP7_75t_R 2 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+  18.10    8.78   17.86   17.86 v b0/Y (BUFx12f_ASAP7_75t_R)
+  36.55   10.77   49.48   67.34 v b1/Y (BUFx12f_ASAP7_75t_R)
+         195.87   61.55  128.89 v u/clk (ot_nhb_zh)
+                         128.89   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 2 273.62 zh1 BUFx12f_ASAP7_75t_R 3 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+  12.93    7.77   17.17   17.17 v b0/Y (BUFx12f_ASAP7_75t_R)
+  12.93    8.55   32.36   49.54 v b1/Y (BUFx12f_ASAP7_75t_R)
+  31.39    8.76   32.56   82.09 v b2/Y (BUFx12f_ASAP7_75t_R)
+         121.80   38.12  120.22 v u/clk (ot_nhb_zh)
+                         120.22   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 3 273.62 zh1 BUFx12f_ASAP7_75t_R 4 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+  10.35    7.80   16.85   16.85 v b0/Y (BUFx12f_ASAP7_75t_R)
+  10.35    8.02   25.34   42.19 v b1/Y (BUFx12f_ASAP7_75t_R)
+  10.35    8.03   25.37   67.56 v b2/Y (BUFx12f_ASAP7_75t_R)
+  28.80    8.09   25.55   93.11 v b3/Y (BUFx12f_ASAP7_75t_R)
+          88.98   27.71  120.82 v u/clk (ot_nhb_zh)
+                         120.82   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 4 273.62 zh1 BUFx16f_ASAP7_75t_R 1 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+  52.05   11.50   21.41   21.41 v b0/Y (BUFx16f_ASAP7_75t_R)
+         480.60  151.57  172.98 v u/clk (ot_nhb_zh)
+                         172.98   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 5 273.62 zh1 BUFx16f_ASAP7_75t_R 2 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+  18.10    8.60   19.74   19.74 v b0/Y (BUFx16f_ASAP7_75t_R)
+  36.55   10.99   52.58   72.32 v b1/Y (BUFx16f_ASAP7_75t_R)
+         194.40   61.12  133.44 v u/clk (ot_nhb_zh)
+                         133.44   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 6 273.62 zh1 BUFx16f_ASAP7_75t_R 3 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+  12.93    7.71   19.24   19.24 v b0/Y (BUFx16f_ASAP7_75t_R)
+  12.93    8.78   34.91   54.15 v b1/Y (BUFx16f_ASAP7_75t_R)
+  31.39    8.93   35.12   89.27 v b2/Y (BUFx16f_ASAP7_75t_R)
+         120.48   37.76  127.02 v u/clk (ot_nhb_zh)
+                         127.02   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 7 273.62 zh1 BUFx16f_ASAP7_75t_R 4 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+  10.35    7.40   19.02   19.02 v b0/Y (BUFx16f_ASAP7_75t_R)
+  10.35    7.66   27.38   46.41 v b1/Y (BUFx16f_ASAP7_75t_R)
+  10.35    7.67   27.42   73.83 v b2/Y (BUFx16f_ASAP7_75t_R)
+  28.80    8.04   27.54  101.37 v b3/Y (BUFx16f_ASAP7_75t_R)
+          87.75   27.37  128.75 v u/clk (ot_nhb_zh)
+                         128.75   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 8 273.62 zh1 BUFx24_ASAP7_75t_R 1 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+  52.05   12.14   24.42   24.42 v b0/Y (BUFx24_ASAP7_75t_R)
+         479.43  151.20  175.62 v u/clk (ot_nhb_zh)
+                         175.62   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 9 273.62 zh1 BUFx24_ASAP7_75t_R 2 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+  18.10    9.60   23.14   23.14 v b0/Y (BUFx24_ASAP7_75t_R)
+  36.55   12.18   57.55   80.69 v b1/Y (BUFx24_ASAP7_75t_R)
+         193.53   60.86  141.56 v u/clk (ot_nhb_zh)
+                         141.56   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 10 273.62 zh1 BUFx24_ASAP7_75t_R 3 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+  12.94    8.90   22.77   22.77 v b0/Y (BUFx24_ASAP7_75t_R)
+  12.94    9.74   39.01   61.77 v b1/Y (BUFx24_ASAP7_75t_R)
+  31.39    9.98   39.19  100.97 v b2/Y (BUFx24_ASAP7_75t_R)
+         119.69   37.52  138.49 v u/clk (ot_nhb_zh)
+                         138.49   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 11 273.62 zh1 BUFx24_ASAP7_75t_R 4 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+  10.35    8.59   22.60   22.60 v b0/Y (BUFx24_ASAP7_75t_R)
+  10.35    8.82   31.15   53.75 v b1/Y (BUFx24_ASAP7_75t_R)
+  10.35    8.82   31.20   84.95 v b2/Y (BUFx24_ASAP7_75t_R)
+  28.80    9.24   31.31  116.26 v b3/Y (BUFx24_ASAP7_75t_R)
+          87.11   27.16  143.42 v u/clk (ot_nhb_zh)
+                         143.42   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 12 295.3 zh0 BUFx12f_ASAP7_75t_R 1 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+  54.51   12.75   20.20   20.20 v b0/Y (BUFx12f_ASAP7_75t_R)
+         537.35  169.48  189.68 v u/clk (ot_nhb_zh)
+                         189.68   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 13 295.3 zh0 BUFx12f_ASAP7_75t_R 2 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+  19.33    9.07   18.03   18.03 v b0/Y (BUFx12f_ASAP7_75t_R)
+  37.78   11.32   54.24   72.27 v b1/Y (BUFx12f_ASAP7_75t_R)
+         215.12   67.63  139.90 v u/clk (ot_nhb_zh)
+                         139.90   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 14 295.3 zh0 BUFx12f_ASAP7_75t_R 3 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+  13.75    7.89   17.28   17.28 v b0/Y (BUFx12f_ASAP7_75t_R)
+  13.75    8.91   34.86   52.13 v b1/Y (BUFx12f_ASAP7_75t_R)
+  32.21    9.05   35.04   87.17 v b2/Y (BUFx12f_ASAP7_75t_R)
+         132.78   41.60  128.78 v u/clk (ot_nhb_zh)
+                         128.78   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 15 295.3 zh0 BUFx12f_ASAP7_75t_R 4 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+  10.96    7.64   16.93   16.93 v b0/Y (BUFx12f_ASAP7_75t_R)
+  10.96    7.99   26.83   43.76 v b1/Y (BUFx12f_ASAP7_75t_R)
+  10.96    8.00   26.89   70.65 v b2/Y (BUFx12f_ASAP7_75t_R)
+  29.42    8.21   27.04   97.68 v b3/Y (BUFx12f_ASAP7_75t_R)
+          96.52   30.11  127.79 v u/clk (ot_nhb_zh)
+                         127.79   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 16 295.3 zh0 BUFx16f_ASAP7_75t_R 1 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+  54.51   12.00   21.68   21.68 v b0/Y (BUFx16f_ASAP7_75t_R)
+         535.29  168.83  190.51 v u/clk (ot_nhb_zh)
+                         190.51   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 17 295.3 zh0 BUFx16f_ASAP7_75t_R 2 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+  19.33    8.85   19.86   19.86 v b0/Y (BUFx16f_ASAP7_75t_R)
+  37.78   11.55   57.53   77.40 v b1/Y (BUFx16f_ASAP7_75t_R)
+         213.62   67.19  144.59 v u/clk (ot_nhb_zh)
+                         144.59   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 18 295.3 zh0 BUFx16f_ASAP7_75t_R 3 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+  13.75    7.85   19.31   19.31 v b0/Y (BUFx16f_ASAP7_75t_R)
+  13.75    9.14   37.53   56.85 v b1/Y (BUFx16f_ASAP7_75t_R)
+  32.21    9.29   37.73   94.57 v b2/Y (BUFx16f_ASAP7_75t_R)
+         131.46   41.23  135.80 v u/clk (ot_nhb_zh)
+                         135.80   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 19 295.3 zh0 BUFx16f_ASAP7_75t_R 4 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+  10.96    7.48   19.07   19.07 v b0/Y (BUFx16f_ASAP7_75t_R)
+  10.96    7.91   29.02   48.09 v b1/Y (BUFx16f_ASAP7_75t_R)
+  10.96    7.92   29.08   77.18 v b2/Y (BUFx16f_ASAP7_75t_R)
+  29.42    8.22   29.19  106.37 v b3/Y (BUFx16f_ASAP7_75t_R)
+          95.27   29.76  136.13 v u/clk (ot_nhb_zh)
+                         136.13   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 20 295.3 zh0 BUFx24_ASAP7_75t_R 1 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+  54.51   12.57   24.63   24.63 v b0/Y (BUFx24_ASAP7_75t_R)
+         534.08  168.45  193.08 v u/clk (ot_nhb_zh)
+                         193.08   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 21 295.3 zh0 BUFx24_ASAP7_75t_R 2 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+  19.33    9.79   23.24   23.24 v b0/Y (BUFx24_ASAP7_75t_R)
+  37.78   12.84   62.78   86.01 v b1/Y (BUFx24_ASAP7_75t_R)
+         212.73   66.93  152.94 v u/clk (ot_nhb_zh)
+                         152.94   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 22 295.3 zh0 BUFx24_ASAP7_75t_R 3 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+  13.76    9.00   22.82   22.82 v b0/Y (BUFx24_ASAP7_75t_R)
+  13.76   10.07   41.78   64.60 v b1/Y (BUFx24_ASAP7_75t_R)
+  32.21   10.31   41.95  106.55 v b2/Y (BUFx24_ASAP7_75t_R)
+         130.65   40.99  147.54 v u/clk (ot_nhb_zh)
+                         147.54   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 23 295.3 zh0 BUFx24_ASAP7_75t_R 4 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+  10.97    8.66   22.64   22.64 v b0/Y (BUFx24_ASAP7_75t_R)
+  10.97    9.02   32.85   55.49 v b1/Y (BUFx24_ASAP7_75t_R)
+  10.97    9.03   32.92   88.41 v b2/Y (BUFx24_ASAP7_75t_R)
+  29.42    9.39   33.02  121.43 v b3/Y (BUFx24_ASAP7_75t_R)
+          94.59   29.55  150.98 v u/clk (ot_nhb_zh)
+                         150.98   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 24 75.08 recip BUFx12f_ASAP7_75t_R 1 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+  22.35    7.91   17.04   17.04 v b0/Y (BUFx12f_ASAP7_75t_R)
+          70.96   22.05   39.09 v u/clk (ot_qkh_recip_leaf)
+                          39.09   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 25 75.08 recip BUFx12f_ASAP7_75t_R 2 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+   6.85    7.25   16.50   16.50 v b0/Y (BUFx12f_ASAP7_75t_R)
+  18.10   12.65   17.80   34.30 v b1/Y (BUFx12f_ASAP7_75t_R)
+          35.05   10.34   44.64 v u/clk (ot_qkh_recip_leaf)
+                          44.64   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 26 75.08 recip BUFx12f_ASAP7_75t_R 3 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+   5.43    6.73   16.36   16.36 v b0/Y (BUFx12f_ASAP7_75t_R)
+   5.43    6.40   14.98   31.34 v b1/Y (BUFx12f_ASAP7_75t_R)
+  16.68   13.25   15.63   46.98 v b2/Y (BUFx12f_ASAP7_75t_R)
+          24.93    6.81   53.79 v u/clk (ot_qkh_recip_leaf)
+                          53.79   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 27 75.08 recip BUFx12f_ASAP7_75t_R 4 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+   4.72    6.38   16.28   16.28 v b0/Y (BUFx12f_ASAP7_75t_R)
+   4.72    6.03   13.89   30.17 v b1/Y (BUFx12f_ASAP7_75t_R)
+   4.72    6.03   13.78   43.95 v b2/Y (BUFx12f_ASAP7_75t_R)
+  15.97   13.12   14.90   58.85 v b3/Y (BUFx12f_ASAP7_75t_R)
+          20.38    5.10   63.95 v u/clk (ot_qkh_recip_leaf)
+                          63.95   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 28 75.08 recip BUFx16f_ASAP7_75t_R 1 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+  22.35    7.76   19.15   19.15 v b0/Y (BUFx16f_ASAP7_75t_R)
+          70.09   21.81   40.96 v u/clk (ot_qkh_recip_leaf)
+                          40.96   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 29 75.08 recip BUFx16f_ASAP7_75t_R 2 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+   6.85    6.91   18.76   18.76 v b0/Y (BUFx16f_ASAP7_75t_R)
+  18.10   11.09   19.76   38.52 v b1/Y (BUFx16f_ASAP7_75t_R)
+          34.41   10.17   48.69 v u/clk (ot_qkh_recip_leaf)
+                          48.69   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 30 75.08 recip BUFx16f_ASAP7_75t_R 3 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+   5.43    6.64   18.65   18.65 v b0/Y (BUFx16f_ASAP7_75t_R)
+   5.43    6.33   17.04   35.69 v b1/Y (BUFx16f_ASAP7_75t_R)
+  16.68   12.24   17.54   53.23 v b2/Y (BUFx16f_ASAP7_75t_R)
+          24.41    6.70   59.93 v u/clk (ot_qkh_recip_leaf)
+                          59.93   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 31 75.08 recip BUFx16f_ASAP7_75t_R 4 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+   4.72    6.47   18.58   18.58 v b0/Y (BUFx16f_ASAP7_75t_R)
+   4.72    6.16   15.98   34.56 v b1/Y (BUFx16f_ASAP7_75t_R)
+   4.72    6.16   15.89   50.45 v b2/Y (BUFx16f_ASAP7_75t_R)
+  15.97   12.34   16.75   67.20 v b3/Y (BUFx16f_ASAP7_75t_R)
+          19.91    5.03   72.23 v u/clk (ot_qkh_recip_leaf)
+                          72.23   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 32 75.08 recip BUFx24_ASAP7_75t_R 1 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+  22.35    8.92   22.72   22.72 v b0/Y (BUFx24_ASAP7_75t_R)
+          69.11   21.52   44.23 v u/clk (ot_qkh_recip_leaf)
+                          44.23   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 33 75.08 recip BUFx24_ASAP7_75t_R 2 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+   6.86    8.15   22.39   22.39 v b0/Y (BUFx24_ASAP7_75t_R)
+  18.10    9.25   23.61   46.00 v b1/Y (BUFx24_ASAP7_75t_R)
+          33.71    9.94   55.94 v u/clk (ot_qkh_recip_leaf)
+                          55.94   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 34 75.08 recip BUFx24_ASAP7_75t_R 3 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+   5.44    7.87   22.29   22.29 v b0/Y (BUFx24_ASAP7_75t_R)
+   5.44    7.81   20.87   43.16 v b1/Y (BUFx24_ASAP7_75t_R)
+  16.68   10.91   21.44   64.60 v b2/Y (BUFx24_ASAP7_75t_R)
+          24.00    6.58   71.18 v u/clk (ot_qkh_recip_leaf)
+                          71.18   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+
+ROW 35 75.08 recip BUFx24_ASAP7_75t_R 4 FF
+Startpoint: ck (input port)
+Endpoint: u/clk (internal pin)
+Path Group: unconstrained
+Path Type: max
+
+    Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------
+                   0.00    0.00 v input external delay
+   2.60   20.00    0.00    0.00 v ck (in)
+   4.73    7.70   22.22   22.22 v b0/Y (BUFx24_ASAP7_75t_R)
+   4.73    7.61   19.82   42.05 v b1/Y (BUFx24_ASAP7_75t_R)
+   4.73    7.61   19.80   61.84 v b2/Y (BUFx24_ASAP7_75t_R)
+  15.97   11.54   20.62   82.46 v b3/Y (BUFx24_ASAP7_75t_R)
+          19.69    5.03   87.49 v u/clk (ot_qkh_recip_leaf)
+                          87.49   data arrival time
+-----------------------------------------------------------------------
+(Path is unconstrained)
+
+

@@ -1,0 +1,188 @@
+{
+ "files": [
+  {
+   "file": "cores/qkd_hr_cdc_ch_pins.json",
+   "new_file": "cores/qkd_hr_cdc_ch_pins_r26q5.json",
+   "module": "qkd_hr_cdc_ch",
+   "moved": {
+    "N": 580,
+    "S": 620,
+    "E": 0,
+    "W": 0
+   },
+   "special": []
+  },
+  {
+   "file": "cores/qkd_hr_cdc_ci_pins.json",
+   "new_file": "cores/qkd_hr_cdc_ci_pins_r26q5.json",
+   "module": "qkd_hr_cdc_ci",
+   "moved": {
+    "N": 1,
+    "S": 808,
+    "E": 0,
+    "W": 0
+   },
+   "special": []
+  },
+  {
+   "file": "cores/qkd_hr_cdc_hi_pins.json",
+   "new_file": "cores/qkd_hr_cdc_hi_pins_r26q5.json",
+   "module": "qkd_hr_cdc_hi",
+   "moved": {
+    "N": 0,
+    "S": 0,
+    "E": 139,
+    "W": 518
+   },
+   "special": []
+  },
+  {
+   "file": "cores/qkd_hr_cdc_pc_pins.json",
+   "new_file": "cores/qkd_hr_cdc_pc_pins_r26q5.json",
+   "module": "qkd_hr_cdc_pc",
+   "moved": {
+    "N": 1,
+    "S": 1099,
+    "E": 0,
+    "W": 0
+   },
+   "special": []
+  },
+  {
+   "file": "cores/qkd_hr_core_guard_pins.json",
+   "new_file": "cores/qkd_hr_core_guard_pins_r26q5.json",
+   "module": "qkd_hr_core_guard",
+   "moved": {
+    "N": 456,
+    "S": 0,
+    "E": 693,
+    "W": 25
+   },
+   "special": []
+  },
+  {
+   "file": "cores/qkd_hr_core_order_pins.json",
+   "new_file": "cores/qkd_hr_core_order_pins_r26q5.json",
+   "module": "qkd_hr_core_order",
+   "moved": {
+    "N": 1466,
+    "S": 141,
+    "E": 0,
+    "W": 0
+   },
+   "special": []
+  },
+  {
+   "file": "cores/qkd_hr_core_peer_pins.json",
+   "new_file": "cores/qkd_hr_core_peer_pins_r26q5.json",
+   "module": "qkd_hr_core_peer",
+   "moved": {
+    "N": 867,
+    "S": 1142,
+    "E": 774,
+    "W": 0
+   },
+   "special": []
+  },
+  {
+   "file": "cores/qkd_hr_core_prompt_pins.json",
+   "new_file": "cores/qkd_hr_core_prompt_pins_r26q5.json",
+   "module": "qkd_hr_core_prompt",
+   "moved": {
+    "N": 3002,
+    "S": 0,
+    "E": 1413,
+    "W": 708
+   },
+   "special": []
+  },
+  {
+   "file": "cores/qkd_hr_core_queue_pins.json",
+   "new_file": "cores/qkd_hr_core_queue_pins_r26q5.json",
+   "module": "qkd_hr_core_queue",
+   "moved": {
+    "N": 779,
+    "S": 0,
+    "E": 0,
+    "W": 690
+   },
+   "special": []
+  },
+  {
+   "file": "cores/qkd_hr_core_rx_pins.json",
+   "new_file": "cores/qkd_hr_core_rx_pins_r26q5.json",
+   "module": "qkd_hr_core_rx",
+   "moved": {
+    "N": 1076,
+    "S": 522,
+    "E": 3,
+    "W": 534
+   },
+   "special": []
+  },
+  {
+   "file": "cores/qkd_hr_core_tx_pins.json",
+   "new_file": "cores/qkd_hr_core_tx_pins_r26q5.json",
+   "module": "qkd_hr_core_tx",
+   "moved": {
+    "N": 40,
+    "S": 2539,
+    "E": 0,
+    "W": 1190
+   },
+   "special": []
+  },
+  {
+   "file": "cores/qkd_hr_host_qm_pins.json",
+   "new_file": "cores/qkd_hr_host_qm_pins_r26q5.json",
+   "module": "qkd_hr_host_qm",
+   "moved": {
+    "N": 2,
+    "S": 5,
+    "E": 0,
+    "W": 1
+   },
+   "special": []
+  },
+  {
+   "file": "cores/qkd_hr_ingest_eng_pins.json",
+   "new_file": "cores/qkd_hr_ingest_eng_pins_r26q5.json",
+   "module": "qkd_hr_ingest_eng",
+   "moved": {
+    "N": 300,
+    "S": 1094,
+    "E": 0,
+    "W": 0
+   },
+   "special": []
+  },
+  {
+   "file": "cores/qkd_hr_phy_adp_pins.json",
+   "new_file": "cores/qkd_hr_phy_adp_pins_r26q5.json",
+   "module": "qkd_hr_phy_adp",
+   "moved": {
+    "N": 150,
+    "S": 0,
+    "E": 0,
+    "W": 409
+   },
+   "special": []
+  },
+  {
+   "file": "cores/qkd_hr_phy_pad_pins.json",
+   "new_file": "cores/qkd_hr_phy_pad_pins_r26q5.json",
+   "module": "qkd_hr_phy_pad",
+   "moved": {
+    "N": 548,
+    "S": 1,
+    "E": 1026,
+    "W": 0
+   },
+   "special": [
+    "rst_n[0] (71.112, 0.0) -> (43.608, 47.52) centre entry",
+    "ck_phy[0] (43.224, 95.04) -> (43.224, 47.52) centre entry"
+   ]
+  }
+ ],
+ "taps_moved": 9
+}

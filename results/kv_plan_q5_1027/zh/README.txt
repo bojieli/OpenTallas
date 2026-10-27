@@ -1,0 +1,1 @@
+zh NUMBER-CHECK for D-KV-AHUB-ZH-TAP: see ../README.txt section (b). sta.tcl = q4 centre-entry delivery cases (gen.py), sta2.tcl = q5 pair drop (gen2.py); logs *_TT/FF.log; OpenSTA NLDM ASAP7 + zh/recip .lib from kv-kits-7-hubc qkd_ahub__604.8x440.64/macros.
