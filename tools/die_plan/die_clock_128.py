@@ -1061,13 +1061,13 @@ def combo_tcl(wires, nd, shield):
          f"set hw {hw}; set off {off}; set ob {ob}; set ext {ext}; set sw2 {nd['width'] / 2}; "
          "if {$ex ne \"\"} { set ext $ex; if {$ext + $hw > $ob} { set ob [expr {$ext + $hw}] } }; "
          "if {$L == 8} { odb::dbSBox_create $sw $l [um [expr {$x0-$hw}]] [um [expr {$y0-$hw}]] [um [expr {$x1+$hw}]] "
-         "[um [expr {$y0+$hw}]] STRIPE; if {$sh} { foreach s {-1 1} { set yy [expr {$y0+$s*$off}]; odb::dbSBox_create $fsw $l "
-         "[um [expr {$x0-$ext}]] [um [expr {$yy-$sw2}]] [um [expr {$x1+$ext}]] [um [expr {$yy+$sw2}]] STRIPE } }; "
+         "[um [expr {$y0+$hw}]] STRIPE; if {$sh} { foreach s {-1 1} { set yy [expr {$y0+$s*$off}]; ot_shield_box $fsw $l "
+         "[um [expr {$x0-$ext}]] [um [expr {$yy-$sw2}]] [um [expr {$x1+$ext}]] [um [expr {$yy+$sw2}]] [expr {$s==1?3:1}] [um [expr {2*$sw2}]] } }; "
          "odb::dbObstruction_create $blk $l [um [expr {$x0-$ob}]] [um [expr {$y0-$ob}]] [um [expr {$x1+$ob}]] "
          "[um [expr {$y0+$ob}]] } else { odb::dbSBox_create $sw $l [um [expr {$x0-$hw}]] [um [expr {$y0-$hw}]] "
          "[um [expr {$x0+$hw}]] [um [expr {$y1+$hw}]] STRIPE; if {$sh} { foreach s {-1 1} { set xx [expr {$x0+$s*$off}]; "
-         "odb::dbSBox_create $fsw $l [um [expr {$xx-$sw2}]] [um [expr {$y0-$ext}]] [um [expr {$xx+$sw2}]] "
-         "[um [expr {$y1+$ext}]] STRIPE } }; odb::dbObstruction_create $blk $l [um [expr {$x0-$ob}]] [um [expr {$y0-$ob}]] "
+         "ot_shield_box $fsw $l [um [expr {$xx-$sw2}]] [um [expr {$y0-$ext}]] [um [expr {$xx+$sw2}]] "
+         "[um [expr {$y1+$ext}]] [expr {$s==1?2:0}] [um [expr {2*$sw2}]] } }; odb::dbObstruction_create $blk $l [um [expr {$x0-$ob}]] [um [expr {$y0-$ob}]] "
          "[um [expr {$x0+$ob}]] [um [expr {$y1+$ob}]] } }"]
     nseg = 0
     for w in wires:
@@ -1079,7 +1079,8 @@ def combo_tcl(wires, nd, shield):
                      (" 0" if m_ != DRAWN else f" 1 {e_:.4f}" if e_ is not None else ""))
             nseg += 1
     L.append(f"puts \"OT_FIXED_CLOCK nets {len(wires)} segs {nseg}\"")
-    return L
+    from shield_notches import provenance_tcl
+    return provenance_tcl()+L
 
 
 def shield_union(boxes):
@@ -1128,9 +1129,14 @@ def shield_merge_tcl(shield, nd):
         "lset cur 2 [concat [lindex $cur 2] [list $b]] } "
         "else { if {[llength $cur]} { lappend runs $cur }; set cur [list $lo $hi [list $b] $sw] } }; lappend runs $cur; "
         "foreach r $runs { lassign $r lo hi bs sw; if {[llength $bs] < 2} { continue }; incr nin [llength $bs]; "
-        "incr nout; foreach b $bs { odb::dbSBox_destroy $b }; "
-        "if {$dir eq \"V\"} { odb::dbSBox_create $sw $l $c0 $lo $c1 $hi STRIPE } "
-        "else { odb::dbSBox_create $sw $l $lo $c0 $hi $c1 STRIPE } } }; "
+        "incr nout; set face {}; set nominal {}; set safe 1; foreach b $bs { "
+        "if {![info exists ::ot_clock_shield_outer($b)] || ![info exists ::ot_clock_shield_nominal($b)]} {set safe 0} "
+        "elseif {$face eq {}} {set face $::ot_clock_shield_outer($b);set nominal $::ot_clock_shield_nominal($b)} "
+        "elseif {$face ne $::ot_clock_shield_outer($b) || $nominal ne $::ot_clock_shield_nominal($b)} {set safe 0}; "
+        "unset -nocomplain ::ot_clock_shield_outer($b) ::ot_clock_shield_nominal($b);odb::dbSBox_destroy $b }; "
+        "if {$dir eq \"V\"} { set merged [odb::dbSBox_create $sw $l $c0 $lo $c1 $hi STRIPE] } "
+        "else { set merged [odb::dbSBox_create $sw $l $lo $c0 $hi $c1 STRIPE] }; "
+        "if {$safe} {set ::ot_clock_shield_outer($merged) $face;set ::ot_clock_shield_nominal($merged) $nominal} } }; "
         "puts \"OT_SHIELD_MERGE in $nin out $nout\" }",
         f"ot_merge_shields {shield} [expr {{round({nd['width']}*[[ord::get_db_block] getDbUnitsPerMicron])}}]"] + notch_tcl(shield,nd['width'])
 
