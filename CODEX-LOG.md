@@ -4855,3 +4855,6 @@ CODEX: Current branches/jobs/results/failures/OWNER items parked in handoff/code
 
 ## HBM interim handoff 2026-10-27 10:05 PDT (work continues)
 Full source/branch/job/failure/OWNER coverage: handoff/codex_hbm_interim_20261027_1005.md. Actual EP G1 successor f43fc76a2b PASS399.98um/zero405 violations, no cycles; native pad fix079ad45e1d and deliveredresetclean03577be294 exact cuts PASS, production4rolecalendar remains MISSING. Live EP/pretree clock PLAN and coverage keep-enabled root synth2297458; no P&R starts from held native composition. No reset notification received; continue.
+
+CODEX QK cores/kits interim 2026-10-27 10:03 PDT: current receipts/jobs/failures/descendants in handoff/codex_qk_cores_20261027_1003.md. Work continues until explicit reset; next SDnative1043ps PHYclock exact CDC contract, collect nativeverify/io+hrootplace/SU68FFformal, finishVMRpublication without reroute. No blocking owner dialog.
+CODEX KV interim handoff: handoff/codex-kv-clock-interim-1027.md. Pushed56a9072a5, pending event64bG0C PASS0/1818W51/51. PV160clockresites imageviewed, RCXchainclient2295478 live. Fallbackd06complete/no builds. DensePHY34.319mVboth only, totalPGFAILglue485/493. ActualSDpreflight clk_clk_phy missing:1043psprovider, exactCDCfences/no groups fixownedKITS. ContinueuntilEXPLICITreset.
