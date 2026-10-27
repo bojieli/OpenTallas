@@ -1,0 +1,84 @@
+{
+ "schema": "opentallas.ref_tile.layout_review.v1",
+ "top": "ot_hidx_s3_flat_lpio",
+ "placed": true,
+ "outline_um": [
+  630.72,
+  587.52
+ ],
+ "aspect": 1.074,
+ "die_area_um2": 370560.6,
+ "macros": 5,
+ "macro_area_pct": 60.66,
+ "std_cells": 102909,
+ "std_area_um2": 12475.6,
+ "std_fill_of_free": 0.0856,
+ "ff": 11196,
+ "buf_inv": 88569,
+ "buf_share": 0.8607,
+ "pins_per_face": {
+  "S": 27,
+  "W": 2370,
+  "E": 2374
+ },
+ "pins_per_um": {
+  "S": 0.043,
+  "E": 4.041,
+  "W": 4.034
+ },
+ "pin_peak_per_um_10um": {
+  "S": 2.5,
+  "W": 4.2,
+  "E": 4.2
+ },
+ "pin_layers": {
+  "M7": 27,
+  "M6": 4744
+ },
+ "pins_registered": 567,
+ "pins_to_macro": 0,
+ "pins_unregistered": 4199,
+ "pin_to_reg_median_um": 7.63,
+ "pin_to_reg_p90_um": 25.24,
+ "pin_to_reg_max_um": 102.83,
+ "empty_area": 0.6612,
+ "density_bin_um": 7.884,
+ "macro_obs": {
+  "ot_hidx_s3_ctl": [
+   "M1",
+   "M2",
+   "M3",
+   "M4",
+   "M5",
+   "RVTN",
+   "RVTP"
+  ],
+  "ot_hidx_s3_q": [
+   "M1",
+   "M2",
+   "M3",
+   "M4",
+   "M5",
+   "RVTN",
+   "RVTP"
+  ]
+ },
+ "macros_pins_facing_away": [],
+ "clock_roots": 5,
+ "flags": [
+  "low fill 8.6% of free area",
+  "empty 66%",
+  "buf/inv 86%",
+  "pin density E 4.0/um,W 4.0/um"
+ ],
+ "png": "/home/ubuntu/wt/hbme-idx-1023/physical/ref_tile/hidx_sel_s3p_c19a/gate_layout/review.png",
+ "kind": "parent",
+ "verdict_items": [
+  [
+   "INFO",
+   "layout_review",
+   "parent: macro packing 60.66% of outline, 630.72x587.52 um, fill 8.6% of free, empty 66%, buf/inv 86%, pin->reg p50/p90 7.63/25.24 um, pins/um {'S': 0.043, 'E': 4.041, 'W': 4.034}; flags: low fill 8.6% of free area; empty 66%; buf/inv 86%; pin density E 4.0/um,W 4.0/um",
+   ""
+  ]
+ ]
+}

@@ -1,0 +1,66 @@
+{
+ "schema": "opentallas.ref_tile.layout_review.v1",
+ "top": "ot_hbm_idx_topk_link_static_p",
+ "placed": true,
+ "outline_um": [
+  544.32,
+  492.48
+ ],
+ "aspect": 1.105,
+ "die_area_um2": 268066.7,
+ "macros": 8,
+ "macro_area_pct": 39.76,
+ "std_cells": 295114,
+ "std_area_um2": 32890.2,
+ "std_fill_of_free": 0.2037,
+ "ff": 31281,
+ "buf_inv": 101627,
+ "buf_share": 0.3444,
+ "pins_per_face": {
+  "S": 2392,
+  "E": 2205
+ },
+ "pins_per_um": {
+  "S": 4.394,
+  "E": 4.477
+ },
+ "pin_peak_per_um_10um": {
+  "S": 4.7,
+  "E": 5.2
+ },
+ "pin_layers": {
+  "M5": 2392,
+  "M4": 2205
+ },
+ "pins_registered": 3648,
+ "pins_to_macro": 0,
+ "pins_unregistered": 948,
+ "pin_to_reg_median_um": 4.81,
+ "pin_to_reg_p90_um": 7.47,
+ "pin_to_reg_max_um": 9.86,
+ "empty_area": 0.4568,
+ "density_bin_um": 6.804,
+ "macro_obs": {
+  "ot_sram_1r1w_64x512_m1_r2c2": [
+   "M1",
+   "M2",
+   "M3",
+   "M4"
+  ]
+ },
+ "macros_pins_facing_away": [],
+ "clock_roots": 1,
+ "flags": [
+  "pin density S 4.4/um,E 4.5/um"
+ ],
+ "png": "/home/ubuntu/wt/hbme-idx-1023/physical/ref_tile/hidx_link_r9a/gate_layout/review.png",
+ "kind": "parent",
+ "verdict_items": [
+  [
+   "INFO",
+   "layout_review",
+   "parent: macro packing 39.76% of outline, 544.32x492.48 um, fill 20.4% of free, empty 46%, buf/inv 34%, pin->reg p50/p90 4.81/7.47 um, pins/um {'S': 4.394, 'E': 4.477}; flags: pin density S 4.4/um,E 4.5/um",
+   ""
+  ]
+ ]
+}
