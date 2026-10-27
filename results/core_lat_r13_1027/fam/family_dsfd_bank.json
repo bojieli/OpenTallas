@@ -1,0 +1,37 @@
+[
+ {
+  "core": "dsfd_qbank_S",
+  "family": "dsfd_bank",
+  "verdict": "NO-CENSUS",
+  "fails": [
+   "census: core_family_geo.tcl rc 1 (see /srv/opentallas-scratch2/claude/core-lat-r13-1027/fam/dsfd_qbank_S/geo.log)"
+  ]
+ },
+ {
+  "core": "dsfd_cfifo_crs4",
+  "family": "dsfd_bank",
+  "verdict": "NO-CENSUS",
+  "fails": [
+   "census: /srv/opentallas-scratch2/claude/core-lat-r13-1027/census/dsfd_cfifo_crs4_c13 has no 3_place.odb (submit the trial census kit with GOAL=place first)"
+  ]
+ },
+ {
+  "core": "ot_s81_sstn_base566",
+  "family": "dsfd_bank",
+  "splits": "2,2,2,4",
+  "sinks": 1141,
+  "cells": 79,
+  "stages": [
+   6
+  ],
+  "TT": 130.6,
+  "TTw": 5.22,
+  "FF": 100.16,
+  "FFw": 4.33,
+  "verdict": "FAIL",
+  "fails": [
+   "sink coverage {'census': 1141, 'planned': 1141, 'missing': 0, 'dup': 2, 'extra': 0}",
+   "converter rc 1: =a.calibration, die=a.die,\n                 ndr=ndr or (2, 2))\n  File \"/srv/opentallas-scratch2/claude/wt/s81-core-lat-r13/tools/die_plan/core_plan_to_infra.py\", line 177, in convert\n    raise ConvertError(\"a clock sink is assigned to two leaves\")\nConvertError: a clock sink is assigned to two leaves"
+  ]
+ }
+]

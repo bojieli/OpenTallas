@@ -1,0 +1,34 @@
+[
+ {
+  "core": "ot_s81_cfg7_seq_bfp",
+  "family": "dv_misc",
+  "verdict": "NO-CENSUS",
+  "fails": [
+   "census: /srv/opentallas-scratch2/claude/core-lat-r13-1027/census/ot_s81_cfg7_seq_bfp_c13 has no 3_place.odb (submit the trial census kit with GOAL=place first)"
+  ]
+ },
+ {
+  "core": "ot_s81dv_xfin",
+  "family": "dv_misc",
+  "verdict": "NO-CENSUS",
+  "fails": [
+   "census: /srv/opentallas-scratch2/claude/core-lat-r13-1027/census/ot_s81dv_xfin_c13 has no 3_place.odb (submit the trial census kit with GOAL=place first)"
+  ]
+ },
+ {
+  "core": "ot_v41_bf_col",
+  "family": "dv_misc",
+  "verdict": "NO-CENSUS",
+  "fails": [
+   "census: /srv/opentallas-scratch2/claude/core-lat-r13-1027/census/ot_v41_bf_col_c13 has no 3_place.odb (submit the trial census kit with GOAL=place first)"
+  ]
+ },
+ {
+  "core": "ot_v41_rom_elem_q_qxpq_w10",
+  "family": "dv_misc",
+  "verdict": "NO-CENSUS",
+  "fails": [
+   "census: /srv/opentallas-scratch2/claude/core-lat-r13-1027/census/ot_v41_rom_elem_q_qxpq_w10_gb_c13 has no 3_place.odb (submit the trial census kit with GOAL=place first)"
+  ]
+ }
+]

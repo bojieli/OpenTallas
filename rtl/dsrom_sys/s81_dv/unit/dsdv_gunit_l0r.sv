@@ -12,7 +12,7 @@
 // Timing: a write lands in the store 2 edges after L0's register, a go starts the stream 2 edges after L0's register,
 // so a window's last write is in the store before the stream's first read (the same order as the one-leaf form).
 // The read select is replicated per output byte (40 copies, keep; S81U-GUNIT4: the per-word copy drove 3,059 loads,
-// the leaf's worst reg->reg path): one copy drives 8 bits of a 32:1 word mux.
+// the leaf's worst reg->reg path): one copy drives 8 bits of a 32:1 word mux (R13: registered one-hot copy, AND-OR read).
 // S81U-GUNIT6 (10-17, native pin rules): rst_n drives only ot_rst_relay (2 kept region copies: input flops, stream);
 // release +3 edges after the port (transaction-level exact).  0 data edges.
 // r_f (sticky): a go while the previous stream still runs.  MUT (bench only): 6 = roots 1 / 2 of g = 1 mod 4 swapped.
@@ -47,12 +47,22 @@ module dsdv_gunit_l0r #(
     end
     // ---------------------------------------------------------------- group stream (16 groups an accumulation)
     reg a_on; reg [3:0] a_i; reg [4:0] a_acc;
-    wire [199:0] sel;                                   // {b, i} per output byte (40 kept copies: word w, byte k = 4 w + k)
+    // S81-CORE-LAT-R13 (10-27): REGISTERED ONE-HOT read select.  The old read rs[wad(sel)] computed a 9-bit word address
+    // (x192/x12/x6/x3 adder) from the 5-bit select and indexed the 384-word store, so synthesis built a computed-address
+    // 384-word decode + mux per byte (select cone 5,233 cells / 14 levels for g_sel[34].q[2]; place repair_design then
+    // grew BUFx2 fanout chains 16/24/24 and l0r failed reg->reg setup -385.6 ps, g_sel[34].q -> r_d[278]).  Now each
+    // copy also registers oh = onehot(next q) (oh == decode(q) on every edge after the first go, same cycle), and each
+    // output byte is a 32-term AND-OR over CONSTANT store words (addresses fixed at elaboration): select fanout = 8 AND
+    // terms per one-hot bit, no address arithmetic, no decode on the path.  Ports, cycles and transaction behaviour
+    // unchanged (r_d is only read while r_v = 1, i.e. after a go).
+    wire [32*40-1:0] ohs;                               // one-hot {b, i} per output byte (40 kept copies)
     genvar c;
     generate for (c = 0; c < 40; c = c + 1) begin : g_sel
         (* keep = "true" *) reg [4:0] q;
-        always @(posedge clk) q <= ga ? {gb, 4'd0} : {q[4], q[3:0] + 4'd1};
-        assign sel[5 * c +: 5] = q;
+        (* keep = "true" *) reg [31:0] oh;
+        wire [4:0] qn = ga ? {gb, 4'd0} : {q[4], q[3:0] + 4'd1};
+        always @(posedge clk) begin q <= qn; oh <= 32'd1 << qn; end
+        assign ohs[32 * c +: 32] = oh;
     end endgenerate
     always @(posedge clk or negedge rq[1])
         if (!rq[1]) begin a_on <= 1'b0; a_i <= 4'd0; r_v <= 1'b0; r_f <= 1'b0; fault_hold <= 1'b0; end
@@ -62,20 +72,27 @@ module dsdv_gunit_l0r #(
             r_f <= fault_hold || (ga && a_on && a_i != 4'd15);
             r_v <= a_on;
         end
-    // word w of group i: slice 4m + s, half k >> 1, word (k & 1) * 3 + o  (m = i[1:0], k = i[3:2])
-    function automatic [8:0] wad(input [4:0] bi, input integer s, input integer o);
-        wad = 9'd192 * bi[4] + 9'd12 * ({bi[1:0], 2'd0} + s) + 9'd6 * bi[3] + 9'd3 * bi[2] + o;
-    endfunction
-    // output word w (A32 [31:0] .. D32 [319:288]) = slice 4m + ws(w), word wo(w)
-    function automatic integer ws(input integer w); ws = (w < 2) ? 0 : (w < 5) ? 1 : (w < 8) ? 2 : 3; endfunction
-    function automatic integer wo(input integer w);
-        case (w) 1, 6, 9: wo = 1; 3: wo = (MUT == 6) ? 2 : 1; 4: wo = (MUT == 6) ? 1 : 2; 7: wo = 2; default: wo = 0; endcase
-    endfunction
-    integer w, k;
+    // word w of group i = {b, i}: slice 4m + ws(w), half k >> 1, word (k & 1) * 3 + wo(w)   (m = i[1:0], k = i[3:2])
+    // store index = 192 b + 12 (4 m + ws) + 6 i[3] + 3 i[2] + wo  (a constant per (w, e) term)
+    wire [319:0] rdn;
+    genvar gw, gk;
+    generate for (gw = 0; gw < 10; gw = gw + 1) begin : g_rw
+        localparam integer WS = (gw < 2) ? 0 : (gw < 5) ? 1 : (gw < 8) ? 2 : 3;
+        localparam integer WO = (gw == 1 || gw == 6 || gw == 9) ? 1 : (gw == 3) ? ((MUT == 6) ? 2 : 1) :
+                                (gw == 4) ? ((MUT == 6) ? 1 : 2) : (gw == 7) ? 2 : 0;
+        for (gk = 0; gk < 4; gk = gk + 1) begin : g_rb
+            wire [8*33-1:0] acc;                        // OR chain over the 32 constant-address terms
+            assign acc[7:0] = 8'd0;
+            genvar ge;
+            for (ge = 0; ge < 32; ge = ge + 1) begin : g_t
+                localparam integer A = 192 * (ge / 16) + 12 * (4 * (ge % 4) + WS) + 6 * ((ge / 8) % 2) + 3 * ((ge / 4) % 2) + WO;
+                assign acc[8 * (ge + 1) +: 8] = acc[8 * ge +: 8] | ({8{ohs[32 * (4 * gw + gk) + ge]}} & rs[A][8 * gk +: 8]);
+            end
+            wire [7:0] v = acc[8 * 32 +: 8];
+            assign rdn[32 * gw + 8 * gk +: 8] = v;
+        end
+    end endgenerate
     always @(posedge clk) begin
-        r_i <= a_i; r_acc <= a_acc;
-        for (w = 0; w < 10; w = w + 1)
-            for (k = 0; k < 4; k = k + 1)
-                r_d[32 * w + 8 * k +: 8] <= rs[wad(sel[5 * (4 * w + k) +: 5], ws(w), wo(w))][8 * k +: 8];
+        r_i <= a_i; r_acc <= a_acc; r_d <= rdn;
     end
 endmodule

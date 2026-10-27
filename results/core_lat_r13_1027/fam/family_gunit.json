@@ -1,0 +1,99 @@
+[
+ {
+  "core": "dsdv_gunit_l0",
+  "family": "gunit",
+  "splits": "2,2,4,4",
+  "sinks": 3655,
+  "cells": 183,
+  "stages": [
+   9
+  ],
+  "TT": 265.83,
+  "TTw": 18.99,
+  "FF": 208.71,
+  "FFw": 15.29,
+  "verdict": "PASS",
+  "fails": []
+ },
+ {
+  "core": "dsdv_gunit_l1",
+  "family": "gunit",
+  "verdict": "NO-CENSUS",
+  "fails": [
+   "census: /srv/opentallas-scratch2/claude/core-lat-r13-1027/census/dsdv_gunit_l1_c13 has no 3_place.odb (submit the trial census kit with GOAL=place first)"
+  ]
+ },
+ {
+  "core": "dsdv_gunit_l1c",
+  "family": "gunit",
+  "splits": "2,2,4,8",
+  "sinks": 4806,
+  "cells": 279,
+  "stages": [
+   6
+  ],
+  "TT": 181.47,
+  "TTw": 17.03,
+  "FF": 142.52,
+  "FFw": 18.83,
+  "verdict": "PASS",
+  "fails": []
+ },
+ {
+  "core": "dsdv_gunit_l2",
+  "family": "gunit",
+  "splits": "2,2,4,4",
+  "sinks": 3567,
+  "cells": 183,
+  "stages": [
+   9
+  ],
+  "TT": 253.52,
+  "TTw": 28.48,
+  "FF": 198.93,
+  "FFw": 29.73,
+  "verdict": "FAIL",
+  "fails": [
+   "sink coverage {'census': 3567, 'planned': 3567, 'missing': 0, 'dup': 1, 'extra': 0}",
+   "TT window 28.5 > 20",
+   "FF window 29.7 > 20",
+   "converter rc 1: =a.calibration, die=a.die,\n                 ndr=ndr or (2, 2))\n  File \"/srv/opentallas-scratch2/claude/wt/s81-core-lat-r13/tools/die_plan/core_plan_to_infra.py\", line 177, in convert\n    raise ConvertError(\"a clock sink is assigned to two leaves\")\nConvertError: a clock sink is assigned to two leaves"
+  ]
+ },
+ {
+  "core": "dsdv_gunit_l3",
+  "family": "gunit",
+  "verdict": "NO-CENSUS",
+  "fails": [
+   "census: /srv/opentallas-scratch2/claude/core-lat-r13-1027/census/dsdv_gunit_l3_c13 has no 3_place.odb (submit the trial census kit with GOAL=place first)"
+  ]
+ },
+ {
+  "core": "dsdv_gunit_l4",
+  "family": "gunit",
+  "splits": "2,2,8,8",
+  "sinks": 12098,
+  "cells": 553,
+  "stages": [
+   7
+  ],
+  "TT": 227.58,
+  "TTw": 24.32,
+  "FF": 181.09,
+  "FFw": 26.09,
+  "verdict": "FAIL",
+  "fails": [
+   "TT window 24.3 > 20",
+   "FF window 26.1 > 20",
+   "converter rc 1:  \"/srv/opentallas-scratch2/claude/wt/s81-core-lat-r13/tools/die_plan/core_infra.py\", line 452, in emit_tcl\n    raise InfraError(f\"unequal-count tree model target FAIL/NOT RUN at {corner}; no physical build\")\ncore_infra.InfraError: unequal-count tree model target FAIL/NOT RUN at TT; no physical build"
+  ]
+ },
+ {
+  "core": "dsdv_gunit_l5",
+  "family": "gunit",
+  "verdict": "NO-CENSUS",
+  "fails": [
+   "census: /srv/opentallas-scratch2/claude/core-lat-r13-1027/census/dsdv_gunit_l5_c13 has no 3_place.odb (submit the trial census kit with GOAL=place first)"
+  ]
+ }
+]

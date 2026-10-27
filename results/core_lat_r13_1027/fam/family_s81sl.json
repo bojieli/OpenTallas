@@ -1,0 +1,42 @@
+[
+ {
+  "core": "ot_s81sl_xrt1",
+  "family": "s81sl",
+  "verdict": "NO-CENSUS",
+  "fails": [
+   "census: /srv/opentallas-scratch2/claude/core-lat-r13-1027/census/ot_s81sl_xrt1_c13 has no 3_place.odb (submit the trial census kit with GOAL=place first)"
+  ]
+ },
+ {
+  "core": "ot_s81sl_xrt3",
+  "family": "s81sl",
+  "verdict": "NO-CENSUS",
+  "fails": [
+   "census: /srv/opentallas-scratch2/claude/core-lat-r13-1027/census/ot_s81sl_xrt3_c13 has no 3_place.odb (submit the trial census kit with GOAL=place first)"
+  ]
+ },
+ {
+  "core": "ot_s81sl_vs",
+  "family": "s81sl",
+  "verdict": "NO-CENSUS",
+  "fails": [
+   "census: /srv/opentallas-scratch2/claude/core-lat-r13-1027/census/ot_s81sl_vs_c13 has no 3_place.odb (submit the trial census kit with GOAL=place first)"
+  ]
+ },
+ {
+  "core": "ot_s81sl_eg",
+  "family": "s81sl",
+  "verdict": "NO-CENSUS",
+  "fails": [
+   "census: /srv/opentallas-scratch2/claude/core-lat-r13-1027/census/ot_s81sl_eg_c13 has no 3_place.odb (submit the trial census kit with GOAL=place first)"
+  ]
+ },
+ {
+  "core": "ot_s81sl_capc5r",
+  "family": "s81sl",
+  "verdict": "NO-CENSUS",
+  "fails": [
+   "census: /srv/opentallas-scratch2/claude/core-lat-r13-1027/census/ot_s81sl_capc5r_c13 has no 3_place.odb (submit the trial census kit with GOAL=place first)"
+  ]
+ }
+]

@@ -1,0 +1,26 @@
+[
+ {
+  "core": "dsdv_bksel_c",
+  "family": "bksel",
+  "verdict": "NO-CENSUS",
+  "fails": [
+   "census: /srv/opentallas-scratch2/claude/core-lat-r13-1027/census/dsdv_bksel_c_c13 has no 3_place.odb (submit the trial census kit with GOAL=place first)"
+  ]
+ },
+ {
+  "core": "dsdv_bk_g",
+  "family": "bksel",
+  "verdict": "NO-CENSUS",
+  "fails": [
+   "census: core_family_geo.tcl rc 1 (see /srv/opentallas-scratch2/claude/core-lat-r13-1027/fam/dsdv_bk_g/geo.log)"
+  ]
+ },
+ {
+  "core": "dsdv_bksel_q",
+  "family": "bksel",
+  "verdict": "NO-CENSUS",
+  "fails": [
+   "census: /srv/opentallas-scratch2/claude/core-lat-r13-1027/census/dsdv_bksel_q_c13 has no 3_place.odb (submit the trial census kit with GOAL=place first)"
+  ]
+ }
+]
