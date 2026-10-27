@@ -15,3 +15,7 @@ Viewed hbm_sram.actual_place.png from candidate ab3ae7c3a 3_place.odb. One large
 ## QC actual placement, 08:31 PDT
 
 Viewed qwen_compute.actual_place.png from candidate ab3ae7c3a coll_ftm 3_place.odb. Four station bands align east-west, and the intervening parallel repeater rows leave open vertical access; no macros, overlaps or enclosed channels. Clock entries remain on the reference's station lattice. The main data/pin bands stay aligned. PG348168terms/0open. Shared60um repair126648->174084cells (+47436,37.5%): material buffer cost, to be reported with the timing result; outline remains sparse. Verdict PASS-COND for one diagnostic CTS/route continuation. This does not cure or waive the inherited control-input hold failure.
+
+## HEAD actual placement, 08:33 PDT
+
+Viewed s81_head.actual_place.png from candidate ab3ae7c3a hd_turn_a3_place.odb. Left and south pin bands connect through diagonal turn/station rows, with open routing area and no macro wall. Repeaters follow the turns; clock entries remain the three inherited central sites (the northmost region is mostly empty). No new placement overlap/channel blockage. PG55740terms/0open. Shared60um repair24037->27870cells (+3833,15.9%). Verdict PASS-COND for one diagnostic CTS/route continuation; the known reference clock-insertion/FT-setup failures remain gates.
