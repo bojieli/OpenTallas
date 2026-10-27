@@ -40,6 +40,21 @@ class ExitStatus(unittest.TestCase):
    env=dict(os.environ,PRELOAD='0',FAKE_RC='0',FAKE_V='PASS',LAYERS='2')
    r=subprocess.run(['bash',str(HERE/'run_tok.sh'),str(p/'build'),str(p/'image'),str(p/'runs'),'L',str(p/'vector')],env=env,capture_output=True,text=True)
    self.assertEqual(r.returncode,3,r.stdout+r.stderr); self.assertIn('FAR_LAYER_SUMMARY missing',r.stdout)
+ def test_infrastructure_failure_is_not_caught_mutant(self):
+  import sys; sys.path.insert(0,str(HERE)); import kv_verdict
+  with tempfile.TemporaryDirectory() as td:
+   d=Path(td)
+   self.assertEqual(kv_verdict.main([str(d),'--expect','fail']),1)
+   (d/'exit').write_text('137\n')
+   (d/'sim.log').write_text('KVSLICE_BOOT PASS x\n')
+   self.assertEqual(kv_verdict.main([str(d),'--expect','fail']),1)
+   self.assertTrue((d/'verdict').read_text().startswith('FAIL'))
+   (d/'exit').write_text('0\n')
+   self.assertEqual(kv_verdict.main([str(d),'--layers','36','--expect','fail']),1)
+   (d/'exit').write_text('134\n')
+   (d/'sim.log').write_text('KVSLICE_BOOT FAIL errors 1\n')
+   self.assertEqual(kv_verdict.main([str(d),'--expect','fail']),0)
+
  def test_mutant_classification(self):
   import sys; sys.path.insert(0,str(HERE)); import kv_verdict
   with tempfile.TemporaryDirectory() as td:
