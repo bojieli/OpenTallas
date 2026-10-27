@@ -5,7 +5,7 @@ T=/srv/opentallas-scratch2/claude/codex-qc-cores-0815/source_tools/die_plan
 cp -a --reflink=auto "$K/baseline_run" "$K/run"
 B=$K/run/results/asap7/kq_qfd_dv_s8x_vmr_f4a_m0/base
 mkdir -p "$K/eco_out"
-docker run --rm --name codex-vmr-f4j-eco --cpus 8 --memory 24g -v "$K":/work -v "$K/baseline_run/results/asap7/kq_qfd_dv_s8x_vmr_f4a_m0/base":/base:ro -v "$K/signoff_main/ff/sdcdir":/sdc:ro -v "$K/eco_out":/out openroad/orfs:asap7lock bash -lc 'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -threads 8 -exit /work/eco.tcl' > "$K/eco.log" 2>&1
+docker run --rm --name codex-vmr-f4j-eco --cpus 8 --memory 24g -v "$K":/work -v "$K/baseline_run/results/asap7/kq_qfd_dv_s8x_vmr_f4a_m0/base":/base:ro -v "$K/baseline_signoff/ff/sdcdir":/sdc:ro -v "$K/eco_out":/out openroad/orfs:asap7lock bash -lc 'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -threads 8 -exit /work/eco.tcl' > "$K/eco.log" 2>&1
 grep -q F4J_DONE "$K/eco.log"
 # DRC must actually be empty; never inherit the baseline verdict.
 python3 - "$K" <<'PY'
