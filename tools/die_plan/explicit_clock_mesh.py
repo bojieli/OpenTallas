@@ -69,12 +69,24 @@ def conductor_graph(mesh):
     taps = []
     tap_jogs = []
     for t in mesh.get('taps', []):
-        at, dist = attach(*t['xy'], limit=float(mesh.get('tap_jog_um', 0.)))
+        access=t.get('terminal_access_xy',t['xy'])
+        if len(access)!=2:raise ValueError('terminal_access_xy must contain x and y')
+        access=tuple(round(float(v),4) for v in access)
+        actual=tuple(round(float(v),4) for v in t['xy'])
+        if access!=actual:
+            if t.get('terminal_layer') not in ('M4','M5','M6','M7'):
+                raise ValueError('offset terminal access requires a declared lower-metal terminal')
+            if access[0]!=actual[0] and access[1]!=actual[1]:
+                raise ValueError('terminal access escape must be Manhattan')
+            escape=abs(access[0]-actual[0])+abs(access[1]-actual[1])
+            if escape>float(t.get('terminal_access_limit_um',2.5))+1e-6:
+                raise ValueError('terminal access escape exceeds its declared local reach')
+        at, dist = attach(*access, limit=float(mesh.get('tap_jog_um', 0.)))
         port_at = at
         if dist > 1e-6:
             layer = 'M9' if at[0] == 'M8' else 'M8'
             joint = point(layer, at[1], at[2])
-            port_at = point(layer, *t['xy'])
+            port_at = point(layer, *access)
             tap_jogs.extend([(at, joint), (joint, port_at)])
         terminal=t.get('terminal_layer',port_at[0])
         if terminal not in ('M4','M5','M6','M7','M8','M9'):
@@ -84,7 +96,13 @@ def conductor_graph(mesh):
         for k in range(upper,lower,step):
             below=point('M'+str(k+step),port_at[1],port_at[2])
             tap_jogs.append((port_at,below));port_at=below
-        taps.append(dict(t, anchor=list(at), port_node=list(port_at), jog_um=dist))
+        # Descend at the PG-free access, then follow the true terminal layer to
+        # its declared pin. No upper-metal via is placed over the pin's PG rail.
+        if access!=actual:
+            pin_at=point(terminal,*actual)
+            tap_jogs.append((port_at,pin_at));port_at=pin_at
+        taps.append(dict(t, anchor=list(at), port_node=list(port_at), jog_um=dist,
+                         terminal_escape_um=abs(access[0]-actual[0])+abs(access[1]-actual[1])))
     edges = set()
     def edge(a, b):
         if a != b: edges.add(tuple(sorted((a,b))))
@@ -161,11 +179,15 @@ def attach_mesh(spec, cells, nets, ports, out):
                      level=99,port_aliases=aliases,explicit_mesh=True))
     segs = [('M8',s['x0'],s['y'],s['x1'],s['y']) for s in mesh['M8']]
     segs += [('M9',s['x'],s['y0'],s['x'],s['y1']) for s in mesh['M9']]
-    segs += [(a[0],a[1],a[2],b[1],b[2]) for a,b in graph['tap_jog_segments']]
+    # Shield machinery accepts only the reserved M8/M9 mesh. Lower-metal
+    # terminal escapes are separately drawn and included in access census/RC.
+    segs += [(a[0],a[1],a[2],b[1],b[2]) for a,b in graph['tap_jog_segments'] if a[0] in ('M8','M9')]
+    lower_um=sum(abs(a[1]-b[1])+abs(a[2]-b[2]) for a,b in graph['tap_jog_segments'] if a[0] not in ('M8','M9'))
     w=dict(name=nm,drv=drivers[0],drv_units=drivers,loads=['port:'+p for p in aliases],
            explicit_mesh=True,ndr=ndr,segs=segs,stacks=[],branches=[],horiz=True,
            trunk_tap=list(segs[0][1:3]),mesh_graph=graph,
-           wire_um=round(sum(abs(s[3]-s[1])+abs(s[4]-s[2]) for s in segs),4))
+           wire_um=round(sum(abs(s[3]-s[1])+abs(s[4]-s[2]) for s in segs)+lower_um,4),terminal_wire_um=round(lower_um,4))
+    if mesh.get('terminal_rc_tcl'):w['terminal_rc_tcl']=mesh['terminal_rc_tcl']
     out['fixed_wires'].append(w)
     out['explicit_mesh']=graph
     out['meta']['explicit_mesh']=dict(ndr=ndr,drivers=len(dg),driver_units=len(units),
@@ -251,7 +273,7 @@ def access_paths(w,cells,buf):
             for d in w['mesh_graph']['drivers'] for u in d['units']]
     # Actual declared terminal via stacks participate in cross-net geometry.
     paths += [[tuple(a),tuple(b)] for a,b in w['mesh_graph']['edges']
-              if a[0]!=b[0] and min(int(a[0][1:]),int(b[0][1:]))<8]
+              if min(int(a[0][1:]),int(b[0][1:]))<8]
     return paths
 
 
@@ -270,6 +292,63 @@ def access_shapes(w,cells,buf):
     return out
 
 
+def terminal_rc_basis(w,layer_rc,via_kohm,wire_layers,via_layers):
+    """Opt-in measured lower-layer native model; parse data without Tcl eval.
+
+    Existing top-metal coefficients stay authoritative for their legacy native
+    basis. Actual extracted RC remains the timing authority for every layer.
+    """
+    import hashlib,re
+    from pathlib import Path
+    missing_wire=set(wire_layers)-set(layer_rc)
+    missing_via=set(via_layers)-set(via_kohm)
+    if not missing_wire and not missing_via:return layer_rc,via_kohm
+    selected=w.get('terminal_rc_tcl')
+    if not selected:
+        raise ValueError('explicit mesh native RC missing declared layer coefficients: '
+                         f'wire={sorted(missing_wire)}, cumulative_via={sorted(missing_via)}; '
+                         'select mesh.terminal_rc_tcl explicitly')
+    repo=Path(__file__).resolve().parents[2];relative=Path(selected)
+    if relative.is_absolute() or '..' in relative.parts:
+        raise ValueError('terminal_rc_tcl must be repository-relative')
+    path=repo/relative
+    if not path.is_file():raise ValueError(f'terminal_rc_tcl missing: {relative}')
+    data=path.read_text();layers={};vias={}
+    number=r'([-+0-9.eE]+)'
+    for line in data.splitlines():
+        match=re.fullmatch(r'\s*set_layer_rc -layer (M[1-9]) -resistance '+number+r' -capacitance '+number+r'\s*(?:#.*)?',line)
+        if match:
+            name,rr,cc=match.groups()
+            if name in layers:raise ValueError(f'duplicate layer coefficient {name} in terminal_rc_tcl')
+            value=(float(rr),float(cc))
+            if not all(math.isfinite(v) and v>=0 for v in value):raise ValueError('invalid terminal layer RC')
+            layers[name]=value
+        match=re.fullmatch(r'\s*set_layer_rc -via (V[1-9]) -resistance '+number+r'\s*(?:#.*)?',line)
+        if match:
+            name,rr=match.groups()
+            if name in vias:raise ValueError(f'duplicate via coefficient {name} in terminal_rc_tcl')
+            value=float(rr)
+            if not math.isfinite(value) or value<=0:raise ValueError('invalid terminal via RC')
+            vias[name]=value
+    cumulative={'M1':0.}
+    for k in range(1,9):
+        if 'M'+str(k) in cumulative and 'V'+str(k) in vias:
+            cumulative['M'+str(k+1)]=cumulative['M'+str(k)]+vias['V'+str(k)]
+    if missing_wire-set(layers) or missing_via-set(cumulative):
+        raise ValueError('terminal_rc_tcl lacks requested wire/via layer coefficients: '
+                         f'wire={sorted(missing_wire-set(layers))}, via={sorted(missing_via-set(cumulative))}')
+    for name in ('M8','M9'):
+        if name in via_kohm and name in cumulative and abs(via_kohm[name]-cumulative[name])>1e-9:
+            raise ValueError(f'terminal_rc_tcl cumulative {name} differs from existing native via basis')
+    rc=dict(layer_rc);vk=dict(via_kohm)
+    rc.update({k:layers[k] for k in missing_wire});vk.update({k:cumulative[k] for k in missing_via})
+    w['terminal_rc_basis']=dict(path=relative.as_posix(),sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
+                               wire={k:list(rc[k]) for k in sorted(missing_wire)},
+                               cumulative_via={k:vk[k] for k in sorted(missing_via)},
+                               scope='measured calibrated lower-layer native diagnostic; actual RCX remains timing authority')
+    return rc,vk
+
+
 def mesh_spef_section(w,cells,buf,layer_rc,via_kohm):
     """Native ladder for every mesh conductor and all actual output drivers.
 
@@ -279,6 +358,9 @@ def mesh_spef_section(w,cells,buf,layer_rc,via_kohm):
     from die_clock_mesh import NDR
     import clock_routed as C
     nd=NDR[w['ndr']];g=w['mesh_graph'];nm=w['name']
+    wire_layers={a[0] for a,b in g['edges'] if a[0]==b[0]}
+    via_layers={p[0] for a,b in g['edges'] if a[0]!=b[0] for p in (a,b)}
+    layer_rc,via_kohm=terminal_rc_basis(w,layer_rc,via_kohm,wire_layers,via_layers)
     ids={tuple(p):f'{nm}:{i+1}' for i,p in enumerate(g['nodes'])}
     caps=defaultdict(float);res=[];conn=[];seq=[len(ids)]
     def nid():
@@ -292,8 +374,11 @@ def mesh_spef_section(w,cells,buf,layer_rc,via_kohm):
         count=max(1,math.ceil(length/54.));prev=pa
         for j in range(1,count+1):
             cur=pb if j==count else nid()
-            res.append((prev,cur,rr*nd['rf']*length/count))
-            caps[prev]+=cc*nd['cf']*length/count/2;caps[cur]+=cc*nd['cf']*length/count/2
+            # Lower escape wires use their native minimum-width layer RC, not
+            # the mesh's wide M8/M9 factor.
+            rf,cf=(nd['rf'],nd['cf']) if a[0] in ('M8','M9') else (1.,1.)
+            res.append((prev,cur,rr*rf*length/count))
+            caps[prev]+=cc*cf*length/count/2;caps[cur]+=cc*cf*length/count/2
             prev=cur
     for d in g['drivers']:
         at=tuple(d['anchor'])

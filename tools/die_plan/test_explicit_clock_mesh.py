@@ -145,3 +145,61 @@ def test_declared_m9_entry_can_rise_from_m8_branch():
     g=E.conductor_graph(m)
     assert g['taps'][0]['port_node']==['M9',3.,5.]
     assert g['vias']==6
+
+
+def test_terminal_access_descends_in_gap_then_draws_true_m5_pin_escape():
+    import clock_routed as C
+    m=mesh();m['taps']=[dict(xy=[3.,7.852],terminal_access_xy=[3.,10.],terminal_layer='M5')]
+    g=E.conductor_graph(m);t=g['taps'][0]
+    assert t['port_node']==['M5',3.,7.852] and t['anchor']==['M8',3.,10.]
+    edges={tuple(map(tuple,e)) for e in g['edges']}
+    assert tuple(sorted((('M5',3.,7.852),('M5',3.,10.)))) in edges
+    assert all(a[1:]==(3.,10.) for e in edges for a in e if a[0] in ('M6','M7'))
+    for d in g['drivers']:d['units']=[]
+    w=dict(name='ck_mesh_explicit',ndr='8w',mesh_graph=g)
+    sh=E.access_shapes(w,{},'BUFx24_ASAP7_75t_R')
+    assert any(l=='M5' and abs(x0-2.988)<1e-6 and abs(y0-7.84)<1e-6 and abs(y1-10.012)<1e-6 for _,l,x0,y0,x1,y1 in sh)
+    assert not any(l=='M8' and y0<7.852<y1 for _,l,x0,y0,x1,y1 in sh)
+
+
+def test_terminal_access_rejects_diagonal_long_or_upper_layer_escape():
+    m=mesh();m['taps']=[dict(xy=[3.,3.],terminal_access_xy=[4.,5.],terminal_layer='M5')]
+    with pytest.raises(ValueError,match='Manhattan'):E.conductor_graph(m)
+    m['taps'][0].update(terminal_access_xy=[3.,6.])
+    with pytest.raises(ValueError,match='local reach'):E.conductor_graph(m)
+    m['taps'][0].update(terminal_access_xy=[3.,5.],terminal_layer='M9')
+    with pytest.raises(ValueError,match='lower-metal'):E.conductor_graph(m)
+
+
+def test_lower_terminal_escape_not_shielded_as_top_metal_and_native_rc_kept():
+    import die_clock as DC
+    import die_clock_mesh as D
+    m=mesh();m['taps']=[dict(xy=[3.,7.852],terminal_access_xy=[3.,10.],terminal_layer='M5')]
+    cells={'a':dict(x=0.,y=0.,group=1,kind='node'),'b':dict(x=20.,y=10.,group=2,kind='node')}
+    nets=[dict(name='l1',drv='a',loads=['port:t1']),dict(name='l2',drv='b',loads=['port:t2'])]
+    _,_,_,out=E.attach_mesh(dict(mesh=m),cells,nets,[],dict(taps=[],fixed_wires=[],meta={}))
+    w=out['fixed_wires'][0]
+    assert all(s[0] in ('M8','M9') for s in w['segs'])
+    assert w['terminal_wire_um']==pytest.approx(2.148)
+    rc=dict(DC.LAYER_RC);rc['M5']=(10.,2.)
+    with pytest.raises(ValueError,match='missing declared layer coefficients'):
+        E.mesh_spef_section(w,cells,D.BUF,rc,DC.VIA_KOHM)
+    via=dict(DC.VIA_KOHM,M5=.0634,M6=.0752,M7=.0834)
+    text=E.mesh_spef_section(w,cells,D.BUF,rc,via)
+    # The M5 wire is21.48 kOhm at this controlled layer-RC value, without
+    # incorrectly scaling by8w's rf=.125.
+    assert '21.480000000' in text
+
+
+def test_terminal_rc_basis_is_explicit_measured_file_and_retains_top_rc():
+    import die_clock as DC
+    w=dict(terminal_rc_tcl='tools/die_plan/setRC_rcx_asap7.tcl')
+    rc,via=E.terminal_rc_basis(w,DC.LAYER_RC,DC.VIA_KOHM,{'M5'},{'M5','M6','M7','M8'})
+    assert rc['M5']==pytest.approx((.0189935,.098))
+    assert rc['M8']==DC.LAYER_RC['M8']
+    assert via['M5']==pytest.approx(.0634) and via['M6']==pytest.approx(.0752) and via['M7']==pytest.approx(.0834)
+    assert len(w['terminal_rc_basis']['sha256'])==64
+    with pytest.raises(ValueError,match='repository-relative'):
+        E.terminal_rc_basis(dict(terminal_rc_tcl='/tmp/no.tcl'),{}, {},{'M5'},set())
+    with pytest.raises(ValueError,match='missing:'):
+        E.terminal_rc_basis(dict(terminal_rc_tcl='missing.tcl'),{}, {},{'M5'},set())
