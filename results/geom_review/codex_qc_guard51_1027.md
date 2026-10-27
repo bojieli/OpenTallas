@@ -1,0 +1,3 @@
+QC R23 widened centre-channel candidate pre-route review (2026-10-27).
+Image VIEWED: results/qc_clk_mesh3/r23/guard51.png (codex/qwen-1027).
+51.84-um centre strip reserves empty lane0; all four tree levels shifted up8.64; H_c lane3. Equal topology and bus crossings retained, no extra latency cycle. Root zoom shows horizontal M8 trunks and short M9 drops within strip; no pin-face riser crossing or macro wall. Census266 channel stacks,0outside,0overlap,0hardkeepout. PLAN static/IR gates are not newly claimed. Verdict PASS-COND for structural trial GRT/RCX; final signal-environment clock timing/PG remains owed before freeze.
