@@ -19,6 +19,90 @@ set ff_site [[lindex $ff_rows 0] getSite]
 set ff_sw [$ff_site getWidth]; set ff_rh [$ff_site getHeight]
 set ff_orient {}
 foreach r $ff_rows { dict set ff_orient [lindex [$r getOrigin] 1] [$r getOrient] }
+# BEGIN legal-row allocator (integer database units; pure checks also unit-tested).
+proc ff_reserve_rect {name x0 y0 x1 y1} {
+  global ff_legal_occ ff_y0 ff_rh
+  set first [expr {$ff_y0 + int(floor(double($y0-$ff_y0)/$ff_rh))*$ff_rh}]
+  for {set y $first} {$y < $y1} {incr y $ff_rh} {
+    dict lappend ff_legal_occ $y [list $x0 $x1 $name]
+  }
+}
+proc ff_site_legal {name x y w h} {
+  global ff_legal_rows ff_legal_occ ff_sw ff_rh ff_x0 ff_y0 ff_x1 ff_y1
+  if {$x < $ff_x0 || $y < $ff_y0 || $x+$w > $ff_x1 || $y+$h > $ff_y1} { return 0 }
+  if {($y-$ff_y0)%$ff_rh != 0} { return 0 }
+  for {set cy $y} {$cy < $y+$h} {incr cy $ff_rh} {
+    if {![dict exists $ff_legal_rows $cy]} { return 0 }
+    set fits 0
+    foreach span [dict get $ff_legal_rows $cy] {
+      lassign $span lo hi
+      if {$x >= $lo && $x+$w <= $hi && ($x-$lo)%$ff_sw == 0} { set fits 1; break }
+    }
+    if {!$fits} { return 0 }
+    if {[dict exists $ff_legal_occ $cy]} {
+      foreach span [dict get $ff_legal_occ $cy] {
+        lassign $span lo hi owner
+        if {$owner ne $name && $x < $hi && $x+$w > $lo} { return 0 }
+      }
+    }
+  }
+  return 1
+}
+proc ff_find_x {name x y w h} {
+  global ff_legal_rows ff_legal_occ ff_sw ff_rh ff_cpitch
+  if {![dict exists $ff_legal_rows $y]} { return "" }
+  set raw [list $x]
+  foreach span [dict get $ff_legal_rows $y] {
+    lassign $span lo hi
+    lappend raw $lo [expr {$hi-$w}]
+  }
+  for {set cy $y} {$cy < $y+$h} {incr cy $ff_rh} {
+    if {![dict exists $ff_legal_occ $cy]} continue
+    foreach span [dict get $ff_legal_occ $cy] {
+      lassign $span lo hi owner
+      if {$owner eq $name} continue
+      lappend raw $hi [expr {$lo-$w}]
+    }
+  }
+  set choices {}
+  foreach span [dict get $ff_legal_rows $y] {
+    lassign $span lo hi
+    foreach value $raw {
+      foreach snap [list [expr {$lo+int(ceil(double($value-$lo)/$ff_sw))*$ff_sw}] \
+                         [expr {$lo+int(floor(double($value-$lo)/$ff_sw))*$ff_sw}]] {
+        if {abs($snap-$x) <= $ff_cpitch && [ff_site_legal $name $snap $y $w $h]} {
+          lappend choices [list [expr {abs($snap-$x)}] $snap]
+        }
+      }
+    }
+  }
+  if {![llength $choices]} { return "" }
+  return [lindex [lsort -integer -index 0 $choices] 0 1]
+}
+proc ff_claim_site {f x y} {
+  set master [$f getMaster]
+  ff_reserve_rect [$f getName] $x $y [expr {$x+[$master getWidth]}] [expr {$y+[$master getHeight]}]
+}
+# END legal-row allocator
+set ff_legal_rows {}; set ff_legal_occ {}
+foreach rr $ff_rows {
+  set bb [$rr getBBox]
+  dict lappend ff_legal_rows [$bb yMin] [list [$bb xMin] [$bb xMax]]
+}
+# Fixed clock taps, macro outlines and existing FIRM cells are real occupied
+# intervals.  A nominal face column is not necessarily a legal row fragment.
+foreach ii [$ff_blk getInsts] {
+  set ps [$ii getPlacementStatus]
+  if {$ps eq "UNPLACED" || ($ps ni {FIRM LOCKED COVER} && ![[$ii getMaster] isBlock])} continue
+  set bb [$ii getBBox]
+  ff_reserve_rect [$ii getName] [$bb xMin] [$bb yMin] [$bb xMax] [$bb yMax]
+}
+foreach blockage [$ff_blk getBlockages] {
+  if {[$blockage isSoft]} continue
+  set bb [$blockage getBBox]
+  ff_reserve_rect "blockage:$blockage" [$bb xMin] [$bb yMin] [$bb xMax] [$bb yMax]
+}
+
 set ff_skip_re {^(clk(_t[0-9]+|_c[0-9]+)?|arst_n|rst_o_[0-9]+|start_i|start_o_[0-9]+)$}   ;# rst_o: reset wavefront outs, placed by reset_tree.tcl
 # ft slots: name -> {k in_face regs}
 set ff_ft {}
@@ -149,16 +233,19 @@ foreach pass {INPUT OUTPUT} {
     set d [list [list [expr {$px - $ff_x0}] W] [list [expr {$ff_x1 - $px}] E] [list [expr {$py - $ff_y0}] S] [list [expr {$ff_y1 - $py}] N]]
     set face [lindex [lsort -integer -index 0 $d] 0 1]
     if {$face in {E W}} {
-      set row [expr {max(0, min(([llength $ff_rows] - 1), ($py - $ff_y0) / $ff_rh))}]
+      set row [expr {max(0, min((int(($ff_y1-$ff_y0)/$ff_rh) - 1), ($py - $ff_y0) / $ff_rh))}]
       # nearest free (row, column) slot: columns inward, alternate rows around the pin row
       set placed 0
       for {set c 0} {$c < 400 && !$placed} {incr c} {
         foreach dr {0 1 -1 2 -2} {
           set r [expr {$row + $dr}]
-          if {$r < 0 || $r >= [llength $ff_rows] || [dict exists $ff_occ "$face,$r,$c"]} continue
-          dict set ff_occ "$face,$r,$c" 1
+          if {$r < 0 || $r >= int(($ff_y1-$ff_y0)/$ff_rh) || [dict exists $ff_occ "$face,$r,$c"]} continue
           set cy [expr {$ff_y0 + $r * $ff_rh}]
           set cx [expr {$face eq "W" ? $ff_x0 + $c * $ff_cpitch : $ff_x1 - $c * $ff_cpitch - $w}]
+          set legal_x [ff_find_x [$f getName] $cx $cy $w [[$f getMaster] getHeight]]
+          if {$legal_x eq ""} continue
+          set cx $legal_x
+          dict set ff_occ "$face,$r,$c" 1
           set placed 1; break
         }
       }
@@ -169,21 +256,24 @@ foreach pass {INPUT OUTPUT} {
         foreach dc {0 1 -1} {
           set c [expr {$col + $dc}]
           if {$c < 0 || [dict exists $ff_occ "$face,$r,$c"]} continue
-          dict set ff_occ "$face,$r,$c" 1
           set cx [expr {min($ff_x0 + $c * $ff_cpitch, $ff_x1 - $w)}]
           set cy [expr {$face eq "S" ? $ff_y0 + $r * $ff_rh : $ff_y1 - ($r + 1) * $ff_rh}]
+          set legal_x [ff_find_x [$f getName] $cx $cy $w [[$f getMaster] getHeight]]
+          if {$legal_x eq ""} continue
+          set cx $legal_x
+          dict set ff_occ "$face,$r,$c" 1
           set placed 1; break
         }
       }
     }
-    if {!$placed} { incr ff_miss; continue }
-    set cx [expr {$ff_x0 + (($cx - $ff_x0) / $ff_sw) * $ff_sw}]
+    if {!$placed} { error "no legal row fragment for face register [$f getName] at $nm ($face)" }
     # orient BEFORE location: dbInst::setOrient keeps the bbox, so a later MX flip moved the flop one row down (onto
     # its neighbour: KV-P5 10-23, two FIRM flops in one site -> DPL-0033)
     if {[$f getPlacementStatus] eq "FIRM"} { $f setPlacementStatus PLACED }
     if {[dict exists $ff_orient $cy]} { $f setOrient [dict get $ff_orient $cy] }
     $f setLocation $cx $cy
     $f setPlacementStatus FIRM
+    ff_claim_site $f $cx $cy
     puts $ff_out "[$f getName]\t$face\t[expr {$cx / double($ff_dbu)}]\t[expr {$cy / double($ff_dbu)}]\t$nm"
     incr ff_n
   }
@@ -222,8 +312,12 @@ proc ff_put_near {f x y} {
       foreach dc [lsort -unique [list [expr {$rad - abs($dr)}] [expr {abs($dr) - $rad}]]] {
         set c [expr {$c0 + $dc}]; set r [expr {$r0 + $dr}]
         if {$c < 0 || $r < 0 || $c > $cmax || $r > $rmax || [dict exists $ff_gocc "$c,$r"]} continue
-        dict set ff_gocc "$c,$r" 1
         set cx [expr {$ff_x0 + $c * $ff_cpitch}]; set cy [expr {$ff_y0 + $r * $ff_rh}]
+        set legal_x [ff_find_x [$f getName] $cx $cy $w [[$f getMaster] getHeight]]
+        if {$legal_x eq ""} continue
+        set cx $legal_x
+        dict set ff_gocc "$c,$r" 1
+        ff_claim_site $f $cx $cy
         if {[$f getPlacementStatus] eq "FIRM"} { $f setPlacementStatus PLACED }
     if {[dict exists $ff_orient $cy]} { $f setOrient [dict get $ff_orient $cy] }
         $f setLocation $cx $cy
@@ -273,6 +367,8 @@ foreach bt [$ff_blk getBTerms] {
       set fm [$f getMaster]
       if {[$fm getWidth] > $fw*$ff_dbu+1 || [$fm getHeight] > $fh*$ff_dbu+1} { error "FT cell exceeds allocated footprint: [$f getName]" }
       if {$cx < $ff_x0 || $cy < $ff_y0 || $cx+[$fm getWidth] > $ff_x1 || $cy+[$fm getHeight] > $ff_y1} { error "explicit FT site outside core: $key" }
+      if {![ff_site_legal [$f getName] $cx $cy [$fm getWidth] [$fm getHeight]]} { error "explicit FT site blocked or outside a legal row fragment: $key" }
+      ff_claim_site $f $cx $cy
       if {[$f getPlacementStatus] eq "FIRM"} { $f setPlacementStatus PLACED }
       $f setOrient [dict get $ff_orient $cy]
       $f setLocation $cx $cy
