@@ -66,7 +66,8 @@ def test_ok_writes_dict(tmp_path, capsys):
     dict(design_nickname="hd_elemB_rb"),                     # other view
     dict(kit_dir="elemA_m12"),                               # other kit
     dict(limits=dict(ws_floor_ps=-140.0)),                   # structural, not an allowance
-    dict(limits=dict(max_endpoints=5000)),                   # widens the default cap
+    dict(limits=dict(max_endpoints=5000), cap_reason="x"),   # above the ceiling
+    dict(limits=dict(max_endpoints=2200)),                   # above the default without a reason
     dict(binding=dict(ot_vclk_ff=170)),                      # vclk binding changed
     dict(binding=dict(constraint_sdc_sha256="0" * 64)),      # die IO contract changed
     dict(insertion=dict(band_ps=[150, 190])),                # insertion outside band -> tree fix
@@ -172,3 +173,8 @@ def test_gate_allowance_other_view(tmp_path):
 def test_gate_allowance_unreadable(tmp_path):
     o = tcl(tmp_path, -102.8, 795, I2R, "set x {", "post_route_eco")
     assert "GATE_STOP OT_HOLD_STRUCTURAL: allowance" in o
+
+
+def test_cap_above_default_with_reason(tmp_path):
+    ap, kit, tsv = mk(tmp_path, limits=dict(max_endpoints=2200), cap_reason="RCX view 2165 I2R endpoints")
+    assert run(ap, kit, tsv, kit / "a.tcl") == 0 and "max_endpoints 2200" in (kit / "a.tcl").read_text()

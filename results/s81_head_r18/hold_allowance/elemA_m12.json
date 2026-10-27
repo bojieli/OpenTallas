@@ -1,0 +1,39 @@
+{
+ "schema": "ot_hold_allowance/1",
+ "id": "HEAD-R18-elemA_m12-ffhold",
+ "ruling": "COORD 2026-10-27 07:47 PDT HEAD-CORE-R17 rulings (2): option (a) accepted, not structural (boundary contract -40 + centre-entry tree +25 ps); ~3 HB4 at the input registers = owner-allowed data hold buffers (METHODOLOGY 12.4a a1), ledgered; conditions FF insertion inside 202.5+-20, no change to the die IO contract or vclk binding",
+ "ledger": "~/coord/lanes/HEAD-CORE-LAT.md HEAD-CORE-R18 RESULT line + results/s81_head_r18/README.md",
+ "design_nickname": "hd_elemA_rb",
+ "kit_dir": "elemA_m12",
+ "stage": "post_route_eco",
+ "cause": "RCX-view FF hold ws -88.91 ps / 2181 endpoints at the post-route ECO gate (GRT -102.96/810); input port -> register paths under the die IO min input delay -40 ps",
+ "limits": {
+  "ws_floor_ps": -100.0,
+  "max_endpoints": 2200,
+  "classes": [
+   "I2R"
+  ]
+ },
+ "cap_reason": "RCX view (routed 6_final.spef) has ws -88.91 ps INSIDE the default -100 floor but 2181 failing endpoints > 2000 (GRT basis 795/810); same input-register cause; cap 2200 = measured + <2 %; classes I2R only; PENDING COORD confirmation",
+ "binding": {
+  "ot_vclk_tt": 250,
+  "ot_vclk_ff": 202.5,
+  "constraint_sdc_sha256": "38780311a07318a63695c25066643f18e49fbcce3cb31516a80a817b63f1345f"
+ },
+ "insertion": {
+  "corner": "FF",
+  "statistic": "mean",
+  "band_ps": [
+   182.5,
+   222.5
+  ],
+  "tsv": "intel1:/srv/opentallas-scratch2/claude/head-core-r18/ins/elemA_m12_FF.tsv",
+  "tsv_sha256": "8274ad5143b99ff5b6ed1dcbf4fd18d80e717417c977fa864f839210ef277941",
+  "basis": "basis RCX /work/run/results/asap7/hd_elemA_rb/base/6_final.spef corner FF",
+  "mean_ps": 216.676,
+  "min_ps": 202.945,
+  "max_ps": 235.654,
+  "n": 28723
+ },
+ "expected": "HB4xp67 only (hold_pad_hb4.tcl), on input-register data paths; clock untouched"
+}

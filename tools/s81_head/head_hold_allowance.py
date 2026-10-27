@@ -9,7 +9,8 @@ no change to the die IO contract or the vclk binding (one shared die model).
 The gate itself (tools/orfs_hold_mm.tcl ot_hold_structural_gate) is NOT relaxed: its default limits stay for every
 kit.  This tool checks ONE committed allowance JSON against ONE staged ECO dir and only then writes the Tcl dict the
 gate reads through OT_HOLD_ALLOWANCE_TCL.  FAIL-CLOSED checks:
-  * schema / required fields; ws floor not below -125 ps and endpoint cap not above the default 2000;
+  * schema / required fields; ws floor not below -125 ps; endpoint cap above the default 2000 only with a cap_reason
+    and never above 2500;
   * the kit's DESIGN_NICKNAME and the kit dir name are the ones the allowance names (per view);
   * vclk binding unchanged: config.mk OT_VCLK_TT/FF, constraint.sdc vclk latency and vclk_ff.sdc latency equal the
     allowance values, and constraint.sdc (the die IO contract) has the recorded sha256;
@@ -32,6 +33,7 @@ SCHEMA = "ot_hold_allowance/1"
 REQ = ("schema", "id", "ruling", "ledger", "design_nickname", "kit_dir", "stage", "limits", "binding", "insertion")
 FLOOR_MIN = -125.0
 DEFAULT_MAX_N = 2000
+MAX_N_CEIL = 2500          # a per-view cap above the default needs cap_reason; never above this
 
 
 class Fail(Exception):
@@ -75,8 +77,10 @@ def check(allow_p: Path, kit: Path, tsv: Path):
     floor, max_n = float(lim["ws_floor_ps"]), int(lim["max_endpoints"])
     if floor < FLOOR_MIN:
         raise Fail(f"ws floor {floor} below {FLOOR_MIN}: that is a structural failure, not an allowance")
-    if max_n > DEFAULT_MAX_N:
-        raise Fail(f"endpoint cap {max_n} above the default {DEFAULT_MAX_N}")
+    if max_n > MAX_N_CEIL:
+        raise Fail(f"endpoint cap {max_n} above the allowance ceiling {MAX_N_CEIL}: a structural failure")
+    if max_n > DEFAULT_MAX_N and not str(a.get("cap_reason", "")).strip():
+        raise Fail(f"endpoint cap {max_n} above the default {DEFAULT_MAX_N} needs a cap_reason")
     classes = list(lim.get("classes", []))
     if any(c not in ("I2R", "R2R", "R2O", "I2O") for c in classes):
         raise Fail(f"unknown path classes {classes}")

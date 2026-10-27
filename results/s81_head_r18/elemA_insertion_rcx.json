@@ -1,0 +1,38 @@
+{
+ "m2_FF": {
+  "tsv": "intel1:/srv/opentallas-scratch2/claude/head-core-r18/ins/elemA_m2_FF.tsv",
+  "sha256": "de3ef951add8dcd1c5c20aa68f7600af241a53e1ca820152c32dd632a87a19ee",
+  "basis": "basis RCX /work/run/results/asap7/hd_elemA_rb/base/6_final.spef corner FF",
+  "n": 28723,
+  "mean": 205.858,
+  "min": 188.263,
+  "max": 228.1
+ },
+ "m2_TT": {
+  "tsv": "intel1:/srv/opentallas-scratch2/claude/head-core-r18/ins/elemA_m2_TT.tsv",
+  "sha256": "99858170d7ed5362adf7039f37a79606b6a879b7d78efaf045de304f4f27b118",
+  "basis": "basis RCX /work/run/results/asap7/hd_elemA_rb/base/6_final.spef corner TT",
+  "n": 28723,
+  "mean": 252.439,
+  "min": 233.813,
+  "max": 273.888
+ },
+ "m12_FF": {
+  "tsv": "intel1:/srv/opentallas-scratch2/claude/head-core-r18/ins/elemA_m12_FF.tsv",
+  "sha256": "8274ad5143b99ff5b6ed1dcbf4fd18d80e717417c977fa864f839210ef277941",
+  "basis": "basis RCX /work/run/results/asap7/hd_elemA_rb/base/6_final.spef corner FF",
+  "n": 28723,
+  "mean": 216.676,
+  "min": 202.945,
+  "max": 235.654
+ },
+ "m12_TT": {
+  "tsv": "intel1:/srv/opentallas-scratch2/claude/head-core-r18/ins/elemA_m12_TT.tsv",
+  "sha256": "7bbf9f7bf915b14741dc6b93076f780a2263e22738e6d00c53d36db1addc024b",
+  "basis": "basis RCX /work/run/results/asap7/hd_elemA_rb/base/6_final.spef corner TT",
+  "n": 28723,
+  "mean": 266.798,
+  "min": 252.138,
+  "max": 286.498
+ }
+}
