@@ -35,7 +35,10 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
               every lib corner view has setup+hold on every input and clk->q on every output (fail closed)
   clock/reset every non-hard type has a clock tap inside its outline on a die layer and a reset synchronizer;
               data_reset false, epoch bit true (schema)
-  G0C (--completeness): hard_cores, core_faces, complete; PLAN-TOOL5 cross-die rules die_io_plan (die_io.py),
+  clock_entry_macro (G0C) plan clock entry / island (clock_entries.json) over a hard-core macro of core_macros.json
+  core_channels (G0C) real macro crossing demand <= 0.6 and legal pin escape; fixed-width checks diagnostic
+              (core_macros.json; min_channel_um default 10.8) and plan channel demand <= 0.6 track use
+  G0C (--completeness): hard_cores, core_faces, complete, clock_entry_macro; PLAN-TOOL5 cross-die rules die_io_plan (die_io.py),
               cut_lines / reach / face_tracks / ft_budget (xdie.py, per-layer reach table reach.py)
 Outputs in --out (default: next to the plan): g0_report.json and, with --png, die_plan.png (the G1 render).
 """
@@ -67,7 +70,11 @@ def lnum(name):
 # plain G0 reports them as WARN "[G0C] ..." so a plan that passed G0 keeps passing while it is completed.
 G0C_CHECKS = ("hard_cores", "core_faces", "complete",
               # PLAN-TOOL5 (COORD die-plan visual review 10-23, cross-die items (a)-(e)): die_io.py / xdie.py
-              "die_io_plan", "cut_lines", "reach", "face_tracks", "ft_budget")
+              "die_io_plan", "cut_lines", "reach", "face_tracks", "ft_budget",
+              # HBM-MU-QUAD-6/CLK (COORD 10-27): a core clock entry (12.8a) / its island never sits over a hard-core macro
+              "clock_entry_macro",
+              # HBM-MU-QUAD-6/EP (COORD 10-27): >= 1 routing channel per direction through each hard-core macro column/row
+              "core_channels")
 
 
 class Report:
@@ -182,6 +189,247 @@ def check_station_in_core(P, R, eps=0.5):
                       "(no std cells inside a hard core: re-station onto a street)", type=tn)
             if len(hits) > 5:
                 R.err("station_in_core", f"type {tn}: {len(hits)} {key} registers inside hard cores ({len(hits) - 5} more not listed)", type=tn)
+    return out
+
+
+def check_clock_entry_macro(P, R, plan_dir=None, macros_file=None, entries_file=None, eps=1e-3):
+    """HBM-MU-QUAD-6/CLK (COORD 10-27, METHODOLOGY 12.8a): every hard core's plan clock entry (PLANDIR/clock_entries.json,
+    core frame) sits in a std-cell region: its island rect and its point must not overlap any macro rectangle (+ halo) of
+    that core's module in the plan macro sidecar (PLANDIR/core_macros.json, opentallas.core_macros.v1: cores[module] =
+    {status KNOWN|NONE|UNKNOWN, macros[{name, rect_um}]}, halo_um).  Overlap = ERROR (G0C); touching edges is legal.
+    Missing sidecar / entries, modules with UNKNOWN macro positions and hard cores without an entry are WARN."""
+    out = dict(entries=0, checked=0, over_macro=0, unknown_macros=0, no_entry=0, sidecar=None)
+    pd = Path(plan_dir) if plan_dir else None
+    mf = Path(macros_file) if macros_file else (pd / "core_macros.json" if pd else None)
+    ef = Path(entries_file) if entries_file else (pd / "clock_entries.json" if pd else None)
+    if not ef or not ef.is_file():
+        return out
+    CEN = json.loads(ef.read_text())
+    if not mf or not mf.is_file():
+        R.warn("clock_entry_macro", f"no core macro sidecar ({mf}): clock entries vs hard-core macros unchecked")
+        return out
+    MAC = json.loads(mf.read_text())
+    out["sidecar"] = str(mf)
+    halo = float(MAC.get("halo_um", 0.0))
+    cores = MAC.get("cores", {})
+
+    def ov(a, b):
+        return (min(a[2], b[2] + halo) - max(a[0], b[0] - halo) > eps and
+                min(a[3], b[3] + halo) - max(a[1], b[1] - halo) > eps)
+
+    def pin(p, b):
+        return b[0] - halo + eps < p[0] < b[2] + halo - eps and b[1] - halo + eps < p[1] < b[3] + halo - eps
+
+    unknown, seen = set(), set()
+    for tn, t in P.types.items():
+        ents = CEN.get(tn) or {}
+        for c in t.get("hard_cores", []) or []:
+            inst = c.get("inst")
+            e = ents.get(inst)
+            if not isinstance(e, dict):
+                e = ents.get(re.sub(r"__q\d+$", "", inst or ""))      # hub split u_x__q0/__q1 share u_x's entry
+            if not isinstance(e, dict):
+                out["no_entry"] += 1
+                R.warn("clock_entry_macro", f"type {tn} hard core {inst} ({c.get('module')}): no plan clock entry", type=tn)
+                continue
+            out["entries"] += 1
+            m = c.get("module")
+            cm = cores.get(m) or {}
+            if cm.get("status") != "KNOWN":
+                if cm.get("status") != "NONE" and m not in unknown:
+                    unknown.add(m)
+                    R.warn("clock_entry_macro", f"module {m}: macro positions {cm.get('status', 'not in sidecar')} -- "
+                           "clock entry vs macros unchecked", type=tn)
+                continue
+            out["checked"] += 1
+            key = (m, tuple(e["xy_um"]), tuple(e["island_um"]))
+            hits = [mm.get("name") for mm in cm.get("macros", [])
+                    if ov(e["island_um"], mm["rect_um"]) or pin(e["xy_um"], mm["rect_um"])]
+            if hits:
+                out["over_macro"] += 1
+                if key not in seen:
+                    seen.add(key)
+                    R.err("clock_entry_macro", f"type {tn} core {inst} ({m}): clock entry {e['xy_um']} / island "
+                          f"{e['island_um']} over macro(s) {hits[:3]} (+halo {halo:g}): move the entry to a std-cell "
+                          "region at the core's clock centroid (12.8a)", type=tn)
+    out["unknown_macros"] = len(unknown)
+    return out
+
+
+# HBM-MU-QUAD-6/EP (COORD 10-27): every hard core keeps >= 1 routing channel per direction through each macro column / row.
+# Cores route M1-M5 only (M6+ belong to the die); macro OBS covers M1-M4, so above a macro only M5 (vertical) is left and
+# HORIZONTAL signals (M2/M4) can cross a macro column only through a gap between its macros.  Default minimum channel =
+# 2 x MACRO_PLACE_HALO 4.32 (HBM core kits) + 8 std-cell rows (2.16): a channel that still holds std cells (repeaters,
+# pin registers, clock islands) after the placement halos.  Sidecar key min_channel_um overrides it.
+CORE_CHANNEL_MIN_UM = 10.8
+CORE_CHANNEL_TRACK_MAX = 0.6
+# free tracks of a channel per direction (layers <= M5 in that direction): (layer, pitch um, usable share).  M2/M3 are
+# derated 0.5 for the M1/M2 follow-pin rails and std-cell pin access; M5 carries the 4.32-pitch PG straps (2 x 0.12 + via
+# keep-off ~ 7 %).
+CORE_CHANNEL_LAYERS = dict(H=(("M4", 0.048, 1.0), ("M2", 0.036, 0.5)), V=(("M5", 0.048, 0.93), ("M3", 0.036, 0.5)))
+
+
+def _macro_lines(rects, axis, eps=1e-3):
+    """maximal macro columns (axis 'x': macros chained by overlapping x-extent) or rows (axis 'y'): list of rect lists"""
+    a = 0 if axis == "x" else 1
+    rs = sorted(rects, key=lambda r: (r[a], r[a + 2]))
+    lines, hi = [], None
+    for r in rs:
+        if lines and r[a] < hi - eps:
+            lines[-1].append(r)
+            hi = max(hi, r[a + 2])
+        else:
+            lines.append([r])
+            hi = r[a + 2]
+    return lines
+
+
+def _line_gaps(line, axis, extent, eps=1e-3):
+    """gaps across one macro column (axis 'x' -> gaps in y) or row (axis 'y' -> gaps in x): (interior, end bands);
+    each gap = (lo, hi) in the core frame; abutting / overlapping macros merge."""
+    b = 1 if axis == "x" else 0
+    iv = sorted((r[b], r[b + 2]) for r in line)
+    merged = []
+    for lo, hi in iv:
+        if merged and lo <= merged[-1][1] + eps:
+            merged[-1][1] = max(merged[-1][1], hi)
+        else:
+            merged.append([lo, hi])
+    interior = [(merged[i][1], merged[i + 1][0]) for i in range(len(merged) - 1)]
+    ends = [(0.0, merged[0][0]), (merged[-1][1], extent)]
+    return interior, [g for g in ends if g[1] - g[0] > eps]
+
+
+def channel_tracks(width_um, direction):
+    """free tracks across a channel of width_um (H channel: its height) on the layers <= M5 of that direction"""
+    return sum(math.floor(width_um / p + 1e-9) * s for _, p, s in CORE_CHANNEL_LAYERS[direction])
+
+
+def core_channel_findings(cm, min_um=None, eps=1e-3):
+    """one core (sidecar entry, macros[].rect_um in the core frame, outline_um): list of findings
+    dict(dir H|V, line [lo, hi] (x-extent of a column / y-extent of a row), macros n, widest interior gap, ends, ok, why).
+    Rule: a column / row of >= 2 macros needs an INTERIOR gap >= min_um (a channel through it); a single macro needs an
+    end band >= min_um (it is routed around).  Optional cm['channels'] (plan data: name, dir, span_um, demand_nets) adds a
+    track-use finding per channel (use = demand / channel_tracks(span) <= CORE_CHANNEL_TRACK_MAX)."""
+    mn = float(cm.get("min_channel_um", CORE_CHANNEL_MIN_UM) if min_um is None else min_um)
+    W, H = cm["outline_um"]
+    rects = [m["rect_um"] for m in cm.get("macros", [])]
+    out = []
+    for axis, direction, extent in (("x", "H", H), ("y", "V", W)):
+        a = 0 if axis == "x" else 1
+        for line in _macro_lines(rects, axis, eps):
+            interior, ends = _line_gaps(line, axis, extent, eps)
+            wi = max([g[1] - g[0] for g in interior], default=0.0)
+            we = max([g[1] - g[0] for g in ends], default=0.0)
+            ok = wi >= mn - eps if len(line) > 1 else we >= mn - eps
+            why = "" if ok else (f"widest interior gap {wi:.3f} um < {mn:g}" if len(line) > 1 else
+                                 f"single macro, widest end band {we:.3f} um < {mn:g}")
+            out.append(dict(kind="line", dir=direction, line=[round(min(r[a] for r in line), 4),
+                                                              round(max(r[a + 2] for r in line), 4)],
+                            macros=len(line), widest_interior_um=round(wi, 4), widest_end_um=round(we, 4), ok=ok,
+                            why=why))
+    for ch in cm.get("channels", []) or []:
+        lo, hi = ch["span_um"]
+        cap = channel_tracks(hi - lo, ch["dir"])
+        use = ch["demand_nets"] / cap if cap else float("inf")
+        out.append(dict(kind="channel", name=ch.get("name"), dir=ch["dir"], span_um=[lo, hi], demand_nets=ch["demand_nets"],
+                        tracks=round(cap, 1), use=round(use, 3), ok=use <= CORE_CHANNEL_TRACK_MAX + 1e-9,
+                        why="" if use <= CORE_CHANNEL_TRACK_MAX + 1e-9 else
+                        f"track use {use:.2f} > {CORE_CHANNEL_TRACK_MAX}"))
+    return out
+
+
+def core_channel_demand_findings(cm):
+    """Evaluate measured/planned demand; the old 10.8-um shape rule is diagnostic only.
+
+    channels[] describes real crossings with dir, span_um and demand_nets. A seam
+    may be treated as an abutted macro block only with required_crossings == 0
+    and external_pin_escape_ok == True. Positive-demand seams name a channel.
+    channel_audit.status COMPLETE declares the seam and pin-escape census complete;
+    a missing census is UNKNOWN, never a channel pass inferred from empty data.
+    """
+    out, channels = [], {}
+    for ch in cm.get("channels", []) or []:
+        name = ch.get("name")
+        try:
+            lo, hi = map(float, ch["span_um"])
+            demand = ch["demand_nets"]
+            if (ch["dir"] not in CORE_CHANNEL_LAYERS or not math.isfinite(lo + hi)
+                    or hi < lo or isinstance(demand, bool) or not isinstance(demand, int) or demand < 0):
+                raise ValueError("invalid direction, span, or nonnegative integer demand")
+            cap = channel_tracks(hi - lo, ch["dir"])
+            use = demand / cap if cap else (0.0 if demand == 0 else float("inf"))
+            ok = use <= CORE_CHANNEL_TRACK_MAX + 1e-9
+            f = dict(kind="channel", name=name, dir=ch["dir"], span_um=[lo, hi],
+                     demand_nets=demand, tracks=cap, use=use, ok=ok,
+                     why="" if ok else f"track use {use:g} > {CORE_CHANNEL_TRACK_MAX}")
+        except (KeyError, TypeError, ValueError) as e:
+            f = dict(kind="channel", name=name, ok=False, why=f"invalid crossing record: {e}")
+        if name in channels:
+            f.update(ok=False, why="duplicate channel name")
+        channels[name] = f
+        out.append(f)
+    audit = cm.get("channel_audit") or {}
+    for seam in audit.get("internal_seams", []) or []:
+        name, n = seam.get("name"), seam.get("required_crossings")
+        ok, why = True, ""
+        if isinstance(n, bool) or not isinstance(n, int) or n < 0:
+            ok, why = False, "required_crossings must be a nonnegative integer"
+        elif n == 0:
+            if seam.get("external_pin_escape_ok") is not True:
+                ok, why = False, "abutted block lacks legal external pin escape"
+        else:
+            ch = channels.get(seam.get("channel"))
+            if ch is None or not ch["ok"] or ch.get("demand_nets", -1) < n:
+                ok, why = False, "required seam crossings lack a sufficient legal channel"
+        out.append(dict(kind="seam", name=name, ok=ok, why=why))
+    if audit.get("pin_escape_ok") is False:
+        out.append(dict(kind="pin_escape", name="macro pins", ok=False, why="pin escape/access fails"))
+    complete = (audit.get("status") == "COMPLETE" and audit.get("pin_escape_ok") is True
+                and isinstance(audit.get("internal_seams"), list))
+    return out, complete
+
+
+def check_core_channels(P, R, plan_dir=None, macros_file=None, min_um=None):
+    """Gate actual crossing demand and pin access; report fixed-width checks as diagnostics."""
+    out = dict(modules=0, checked=0, failing_modules=[], lines=0, failing_lines=0,
+               unknown=0, demand_complete=0, demand_unknown=0, geometric_diagnostics=[])
+    pd = Path(plan_dir) if plan_dir else None
+    mf = Path(macros_file) if macros_file else (pd / "core_macros.json" if pd else None)
+    if not mf or not mf.is_file():
+        return out
+    cores = json.loads(mf.read_text()).get("cores", {})
+    first = {}
+    for tn, t in P.types.items():
+        for c in t.get("hard_cores", []) or []:
+            first.setdefault(c.get("module"), tn)
+    for m, tn in sorted(first.items()):
+        out["modules"] += 1
+        cm = cores.get(m) or {}
+        if cm.get("status") != "KNOWN":
+            out["unknown"] += cm.get("status") != "NONE"
+            continue
+        out["checked"] += 1
+        geometry = core_channel_findings(cm, min_um)
+        out["lines"] += sum(f["kind"] == "line" for f in geometry)
+        diag = [f for f in geometry if f["kind"] == "line" and not f["ok"]]
+        out["geometric_diagnostics"].append(dict(module=m, findings=diag))
+        if diag:
+            R.warn("core_channels", f"core {m}: {len(diag)} fixed-width channel diagnostics; "
+                   "10.8 um is not a gate; actual crossing demand and pin escape decide", type=tn)
+        findings, complete = core_channel_demand_findings(cm)
+        out["demand_complete" if complete else "demand_unknown"] += 1
+        if not complete:
+            R.warn("core_channels", f"core {m}: crossing/seam and pin-escape census incomplete; "
+                   "channel completeness UNKNOWN", type=tn)
+        bad = [f for f in findings if not f["ok"]]
+        if bad:
+            out["failing_modules"].append(m)
+        for f in bad:
+            R.err("core_channels", f"core {m}: {f['kind']} {f.get('name')}: {f['why']} "
+                  "-- provide sufficient routing channel and legal pin escape (no M6)", type=tn)
+    if out["unknown"]:
+        R.warn("core_channels", f"{out['unknown']} hard-core modules with UNKNOWN macro positions: channels unchecked")
     return out
 
 
@@ -1592,7 +1840,8 @@ def g0c_summary(P, R):
                 g3_eligible=sorted(tn for tn in P.types if tn not in bad and not die), by_type=bad)
 
 
-def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, core_conns=None, completeness=False):
+def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, core_conns=None, completeness=False,
+        core_macros=None):
     R = Report(completeness)
     io_src = "plan" if raw.get("die", {}).get("io") else None
     sc = Path(plan_dir) / "die_io.json" if plan_dir else None
@@ -1618,6 +1867,8 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["g0c"] = g0c_summary(P, R)
     summ["geometry"] = check_geometry(P, R)
     summ["station_in_core"] = check_station_in_core(P, R)
+    summ["clock_entry_macro"] = check_clock_entry_macro(P, R, plan_dir, core_macros)
+    summ["core_channels"] = check_core_channels(P, R, plan_dir, core_macros)
     import landing_islands as LI
     li_errs = LI.check(raw)
     for e in li_errs:
@@ -1686,13 +1937,14 @@ def main(argv=None):
                     help="G0C: plan-completeness + hard-core rules are ERRORs (default: WARN '[G0C]'); per-type "
                          "summary in summary.g0c (types with 0 findings = G3-eligible)")
     ap.add_argument("--core-conns", help="hard-core connectivity sidecar (default PLANDIR/core_conns.json)")
+    ap.add_argument("--core-macros", help="hard-core macro sidecar for clock_entry_macro (default PLANDIR/core_macros.json)")
     a = ap.parse_args(argv)
     raw = S.load(a.plan)
     out = Path(a.out) if a.out else Path(a.plan).resolve().parent
     out.mkdir(parents=True, exist_ok=True)
     R, summ = run(raw, png=(out / "die_plan.png") if a.png else None, plan_dir=Path(a.plan).resolve().parent,
                   groups=a.groups, landing=a.landing, evidence=a.cells_evidence, core_conns=a.core_conns,
-                  completeness=a.completeness)
+                  completeness=a.completeness, core_macros=a.core_macros)
     ne = len(R.errors())
     nw = len(R.items) - ne
     ok = ne == 0 and not (a.strict and nw)
