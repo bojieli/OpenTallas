@@ -18,11 +18,12 @@ opt_clean
 write_json $O/pre.json
 YS
 $Y -q -l $O/pre.log $O/pre.ys
-python3 $HERE/hr_face_ports.py transform $O/pre.json $O/post.json $O/hr_face_ports.json --top $MOD
-python3 $HERE/hr_face_ports.py transform $O/pre.json $O/mut.json $O/hr_face_ports_mut.json --top $MOD --mutant > /dev/null
+KF=""; [ "${HR_KEPT_FACE:-0}" = 1 ] && KF=--kept-face   # KV-KITS-7: keep_hierarchy face registers
+python3 $HERE/hr_face_ports.py transform $O/pre.json $O/post.json $O/hr_face_ports.json --top $MOD $KF
+python3 $HERE/hr_face_ports.py transform $O/pre.json $O/mut.json $O/hr_face_ports_mut.json --top $MOD --mutant $KF > /dev/null
 cat > $O/emit.ys <<YS
 read_json $O/post.json
-select $MOD
+select $MOD hrfp_kff_*
 write_verilog -selected $O/$MOD.v
 YS
 $Y -q -l $O/emit.log $O/emit.ys
@@ -42,6 +43,9 @@ memory_map
 rename $MOD gold
 design -stash g
 read_json $O/$V.json
+hierarchy -top $MOD
+setattr -mod -unset keep_hierarchy
+flatten
 memory_share
 memory_map
 rename $MOD gate
@@ -69,6 +73,8 @@ read_verilog -sv $O/$MOD.v
 $BBF
 hierarchy -top $MOD
 proc
+setattr -mod -unset keep_hierarchy
+flatten
 memory_collect
 memory_share
 memory_map

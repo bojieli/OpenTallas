@@ -14,7 +14,8 @@ memory_collect -> pre.json; this script edits the netlist JSON -> post.json; wri
 Proof: memory_map both, equiv_make gold=pre gate=post (same-name macro cells merged, then exposed as free
 ports: expose -evert), async2sync, equiv_simple -seq 2, equiv_induct -seq 2, equiv_status -assert (also on the emitted .v); a mutant
 (one private copy's D inverted) must FAIL the same proof.
-usage: hr_face_ports.py transform PRE.json POST.json REPORT.json --top MOD [--mutant]
+usage: hr_face_ports.py transform PRE.json POST.json REPORT.json --top MOD [--mutant] [--kept-face]
+--kept-face (KV-KITS-7): face register bits as keep_hierarchy cells (kept_face doc).
 """
 import argparse
 import copy
@@ -213,6 +214,114 @@ def transform(J, top, mutant=False):
     return J, rep
 
 
+KFF_PREFIX = "hrfp_kff_"
+
+
+def kept_face(J, top):
+    """KV-KITS-7 10-27: every face register bit (the flop driving an output pin bit, the single flop capturing an
+    input pin bit) is moved into its own 1-bit keep_hierarchy cell hrfp_kff_<sig>, the partition standard of
+    gen_rtl.CELLS (ot_dp_st: keep_hierarchy pin registers).  Yosys opt_dff removes a constant-D flop and SAT-dead
+    capture bits EVEN WITH (* keep *) on a flat netlist (measured, ORFS yosys 0.68): core_tx had 299 constant-zero
+    output face flops tied to one TIELO net (face_guard 'shared') and 215 input captures with unobservable Q
+    ('dropped').  Across a kept hierarchy boundary the constant/deadness cannot propagate, so every planned face
+    register survives as its own flop.  Same flop, same D/clock/reset/enable: 0 added cycles, no pin change."""
+    import hashlib
+    M = J["modules"][top]
+    cells, ports = M["cells"], M["ports"]
+    nid = [max([b for c in cells.values() for v in c["connections"].values() for b in v if isinstance(b, int)] +
+               [b for p in ports.values() for b in p["bits"] if isinstance(b, int)] +
+               [b for n in M["netnames"].values() for b in n["bits"] if isinstance(b, int)] + [1])]
+
+    def new():
+        nid[0] += 1
+        return nid[0]
+    drv, loads = {}, defaultdict(list)
+    for cn, c in cells.items():
+        for p, bits in c["connections"].items():
+            d = c.get("port_directions", {}).get(p, "input")
+            for i, b in enumerate(bits):
+                if isinstance(b, int):
+                    (drv.__setitem__(b, (cn, p, i)) if d == "output" else loads[b].append((cn, p, i)))
+    init_bits = {}
+    for nn in M["netnames"].values():
+        if "init" in nn.get("attributes", {}):
+            vals = pbits(nn["attributes"]["init"], len(nn["bits"]))[::-1]
+            for b, v in zip(nn["bits"], vals):
+                if v in "01" and isinstance(b, int):
+                    init_bits[b] = v
+    targets = []                                  # (cell, bit index), unique, in port order
+    seen = set()
+    for pn, p in ports.items():
+        if CLKRST.search(pn):
+            continue
+        for b in p["bits"]:
+            if not isinstance(b, int):
+                continue
+            cand = []
+            if p["direction"] == "output":
+                d = drv.get(b)
+                if d and cells[d[0]]["type"] in FF and d[1] == "Q":
+                    cand = [(d[0], d[2])]
+            else:
+                ld = loads[b]
+                if ld and all(cells[cn]["type"] in FF and pp == "D" for cn, pp, _ in ld):
+                    cand = [(cn, j) for cn, _, j in ld]
+            for t in cand:
+                if t not in seen:
+                    seen.add(t)
+                    targets.append(t)
+    rep = dict(kept_face_bits=0, kept_face_modules=[])
+    for cn, i in targets:
+        c = cells[cn]
+        w = len(c["connections"]["Q"])
+        par = dict(c["parameters"])
+        par["WIDTH"] = format(1, "032b")
+        for k in VAL:
+            if k in par:
+                par[k] = pbits(c["parameters"][k], w)[::-1][i]
+        conns = {}
+        for p, bits in c["connections"].items():
+            conns[p] = [bits[i]] if p in WIDE else list(bits)
+        q = c["connections"]["Q"][i]
+        ini = init_bits.get(q)
+        sig = json.dumps([c["type"], sorted(par.items()), sorted((p, len(v)) for p, v in conns.items()), ini],
+                         sort_keys=True)
+        mn = KFF_PREFIX + hashlib.sha256(sig.encode()).hexdigest()[:10]
+        if mn not in J["modules"]:
+            mp, mnn, k = {}, {}, 2
+            mc = {}
+            for p, v in sorted(conns.items()):
+                bits = list(range(k, k + len(v)))
+                k += len(v)
+                mp[p] = dict(direction="output" if p == "Q" else "input", bits=bits)
+                mnn[p] = dict(hide_name=0, bits=bits, attributes={})
+                mc[p] = bits
+            if ini is not None:
+                mnn["Q"]["attributes"]["init"] = ini
+            J["modules"][mn] = dict(attributes={"keep_hierarchy": ONE, "src": "hr_face_ports.py kept face register"},
+                                    ports=mp, netnames=mnn,
+                                    cells={"ff": dict(hide_name=0, type=c["type"], parameters=par, attributes={},
+                                                      port_directions={p: ("output" if p == "Q" else "input")
+                                                                       for p in conns}, connections=mc)})
+            rep["kept_face_modules"].append(mn)
+        tag = re.sub(r"\W", "_", f"{cn}_{i}")[-80:]
+        cells[f"hrfp_kf_{tag}_{len(rep['kept_face_modules'])}_{rep['kept_face_bits']}"] = dict(
+            hide_name=0, type=mn, parameters={}, attributes={"keep": ONE},
+            port_directions={p: ("output" if p == "Q" else "input") for p in conns}, connections=conns)
+        c["connections"]["Q"][i] = new()          # original bit now unused -> removed by opt
+        if ini is not None:                       # the init now lives inside the kept cell
+            for nn in M["netnames"].values():
+                if q in nn["bits"] and "init" in nn.get("attributes", {}):
+                    vals = list(pbits(nn["attributes"]["init"], len(nn["bits"]))[::-1])
+                    vals[nn["bits"].index(q)] = "x"
+                    if set(vals) <= {"x"}:
+                        del nn["attributes"]["init"]
+                    else:
+                        nn["attributes"]["init"] = "".join(reversed(vals))
+        rep["kept_face_bits"] += 1
+    return J, rep
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("mode", choices=["transform"])
@@ -221,8 +330,12 @@ def main():
     ap.add_argument("report")
     ap.add_argument("--top", required=True)
     ap.add_argument("--mutant", action="store_true")
+    ap.add_argument("--kept-face", action="store_true", help="wrap every face register bit in a keep_hierarchy cell")
     a = ap.parse_args()
     J, rep = transform(json.load(open(a.pre)), a.top, a.mutant)
+    if a.kept_face:
+        J, kr = kept_face(J, a.top)
+        rep.update(kr)
     json.dump(J, open(a.post, "w"))
     json.dump(rep, open(a.report, "w"), indent=1)
     print(json.dumps({k: v for k, v in rep.items() if k.startswith("n_") or k in ("added_ff_bits", "added_cycles")}))
