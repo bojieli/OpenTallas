@@ -57,13 +57,20 @@ def _gate(m, l):                         # synthesis removed c1 as the constant 
 
 
 @pytest.mark.parametrize("kind,want", [
-    ("x1", "proved"),        # no reset, every load 1 (X power-up): constant 1
+    # MUTANT (LEC-TOOL-4 10-27, COORD no-reset ruling): no reset, every load 1 -- X power-up until the first load
+    # and r observes it before that load, so it is never assumed constant (noreset_filter); the old X == 1
+    # assumption is kept only under the opt-out OT_LEC_NORESET_CONST=0 (x1_optout)
+    ("x1", "differs"),
+    ("x1_optout", "proved"),
     ("rst1", "proved"),      # reset value 1, every load 1: constant 1 from reset
     ("rst0", "differs"),     # MUTANT reset value 0 != load value: not a constant, real difference kept
     ("loadb", "differs"),    # MUTANT loads an input: not a constant
 ])
 def test_constant_one_from_hold(tmp_path, monkeypatch, kind, want):
     monkeypatch.setattr(lec, "prove", _sim_prove)
+    if kind == "x1_optout":
+        monkeypatch.setenv("OT_LEC_NORESET_CONST", "0")
+        kind = "x1"
     g, gm = _seq(tmp_path, "g", IN, ["c1", "r"], _gold(kind))
     t, tm = _seq(tmp_path, "t", IN, ["r"], _gate)
     L = lec.Lec(g, gm, t, tm)
