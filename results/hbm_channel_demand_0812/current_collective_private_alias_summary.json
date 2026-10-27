@@ -110,7 +110,7 @@
    "alias_space_sha256": "214ff05ea14ee34b37e5e89ef4b25bd2ccaf14f5b8fff1de61f89a69176f7582"
   }
  ],
- "native_maps": "/srv/opentallas-scratch2/claude/codex-hbm-channels-0812/native_b1_full_alias_maps3",
+ "native_maps": "/srv/opentallas-scratch2/claude/codex-hbm-channels-0812/native_b1_full_alias_maps4",
  "mapped_bare_endpoints": 420,
  "remaining_failures": 142,
  "remaining_categories": {
@@ -119,5 +119,23 @@
   "four-role VMS source/master mismatch": 44,
   "explicit r9 tree contract required": 2
  },
- "scope": "Exact retained parent wire aliases and wrapper composition; no current unified native functional, latency or physical signoff is claimed."
+ "scope": "Exact retained parent wire aliases and wrapper composition; no current unified native functional, latency or physical signoff is claimed.",
+ "alias_binding_failures": {
+  "q_hub_nw:u_hb_coll_Q_body_core__q0": {
+   "fault": "parent public aliases resolve to conflicting native identities",
+   "done": "parent public aliases resolve to conflicting native identities"
+  },
+  "q_hub_nw:u_hb_coll_Q_body_core__q1": {
+   "fault": "parent public aliases resolve to conflicting native identities",
+   "done": "parent public aliases resolve to conflicting native identities"
+  },
+  "q_hub_ne:u_hb_coll_Q_body_n2__q0": {
+   "fault": "parent public aliases resolve to conflicting native identities",
+   "done": "parent public aliases resolve to conflicting native identities"
+  },
+  "q_hub_ne:u_hb_coll_Q_body_n2__q1": {
+   "fault": "parent public aliases resolve to conflicting native identities",
+   "done": "parent public aliases resolve to conflicting native identities"
+  }
+ }
 }
