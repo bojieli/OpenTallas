@@ -61,6 +61,39 @@ class GrtLayers(unittest.TestCase):
             out, _ = self._run(td, pg_ir="FAIL", pg_ir_open_trial=True)
             self.assertTrue(json.loads((out / "grt_meta.json").read_text())["trial"])
 
+    def test_actual_route_import_is_opt_in_and_keeps_guarded_api(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            source, names, provisional = root/"source.odb", root/"nets.txt", root/"provisional.txt"
+            source.touch()
+            names.write_text("clock\nVDD\n")
+            provisional.write_text("old_clock\n")
+            out, _ = self._run(td, infra_odb=str(source), infra_nets=str(names),
+                               infra_provisional_nets=str(provisional))
+            prep, route = (out/"prepare_signal.tcl").read_text(), (out/"grt.tcl").read_text()
+            self.assertIn("write_db /out/target_signal.odb", prep)
+            self.assertNotIn("global_route ", prep)
+            self.assertNotIn("source /pre/preroute_obs.tcl", prep)
+            self.assertIn("read_db /out/combined_infra.odb", route)
+            self.assertNotIn("read_verilog", route)
+            self.assertIn("write_db /out/routed_signal.odb", route)
+            shell = (out/"run_import_inside.sh").read_text()
+            self.assertIn("--nets /out/infra_nets.txt", shell)
+            self.assertIn("--provisional-nets /out/infra_provisional.txt", shell)
+            self.assertIn("verify_import.py", shell)
+            compile((out/"verify_import.py").read_text(), "verify_import.py", "exec")
+            self.assertIn("actual_fixed_import", (out/"grt_meta.json").read_text())
+
+    def test_actual_import_requires_complete_pair_and_inventory(self):
+        with tempfile.TemporaryDirectory() as td:
+            with self.assertRaisesRegex(ValueError, "required together"):
+                self._run(td, infra_odb="missing.odb")
+        with tempfile.TemporaryDirectory() as td:
+            d=Path(td)
+            (d/"s.odb").touch(); (d/"nets.txt").write_text("# empty\n")
+            with self.assertRaisesRegex(ValueError, "nonempty"):
+                self._run(td, infra_odb=str(d/"s.odb"), infra_nets=str(d/"nets.txt"))
+
     def test_capacity_only_never_freezes_even_with_passing_clock_and_grt(self):
         with tempfile.TemporaryDirectory() as td:
             out, _ = self._run(td)

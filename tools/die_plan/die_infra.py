@@ -837,6 +837,63 @@ def pg_ir_state(pg):
     return dict(file=str(pg), sha256=hashlib.sha256(raw).hexdigest(), ir=v or "OPEN")
 
 
+def materialized_grt_scripts(tcl):
+    """Build target placement first, then route the imported physical DB.
+
+    Re-running read_verilog/link_design after importing would discard actual
+    routes. Keep the second session strictly read_db + routing configuration.
+    """
+    match = re.search(r"(?m)^set_routing_layers ", tcl)
+    if not match:
+        raise ValueError("actual import needs a set_routing_layers split after target placement")
+    prepare = tcl[:match.start()] + "write_db /out/target_signal.odb\n"
+    route = ("set t0 [clock seconds]\nread_db /out/combined_infra.odb\n" + tcl[match.start():]
+             + "write_db /out/routed_signal.odb\n")
+    return prepare, route
+
+
+def install_materialized_grt(out, source, names, provisional, tcl, mem):
+    """Stage existing proven importer; the caller launches run_grt.sh via ot-run."""
+    source, names = Path(source).resolve(), Path(names).resolve()
+    if not source.is_file() or not names.is_file():
+        raise ValueError("actual import requires existing --infra-odb and --infra-nets files")
+    if not any(line.strip() and not line.startswith("#") for line in names.read_text().splitlines()):
+        raise ValueError("actual import requires a nonempty exact infrastructure net inventory")
+    # Guide-centreline capacity boxes must not survive as a second clock model.
+    tcl = tcl.replace("source /pre/preroute_obs.tcl\n", "")
+    prepare, route = materialized_grt_scripts(tcl)
+    (out / "prepare_signal.tcl").write_text(prepare)
+    (out / "grt.tcl").write_text(route)
+    (out / "infra_replay.py").write_bytes(Path(__file__).with_name("infra_replay.py").read_bytes())
+    (out / "infra_nets.txt").write_bytes(names.read_bytes())
+    extra = ""
+    if provisional:
+        (out / "infra_provisional.txt").write_bytes(Path(provisional).read_bytes())
+        extra = " --provisional-nets /out/infra_provisional.txt"
+    (out / "verify_import.py").write_text(
+        "import json\nfrom pathlib import Path\nfrom infra_replay import verify\n"
+        "result = verify('/out/routed_signal.odb', '/out/import_receipt.json')\n"
+        "Path('/out/import_preservation.json').write_text(json.dumps(result, indent=1)+'\\n')\n"
+        "print('INFRA_REPLAY', result['verdict'])\n")
+    (out / "run_import_inside.sh").write_text("""#!/bin/bash
+set -e
+source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1
+trap 'chown -R "$HUID:$HGID" /out' EXIT
+openroad -no_init -exit /out/prepare_signal.tcl > /out/prepare_signal.log 2>&1
+openroad -python -exit /out/infra_replay.py --source /infra/source.odb --target /out/target_signal.odb --nets /out/infra_nets.txt --out /out/combined_infra.odb --report /out/import_receipt.json""" + extra + """ > /out/import.log 2>&1
+set +e
+/usr/bin/time -v openroad -no_init -threads "${CPUS:-16}" -exit /out/grt.tcl > /out/grt.log 2>&1
+rc=$?
+if [ "$rc" = 0 ]; then
+  openroad -python -exit /out/verify_import.py > /out/import_verify.log 2>&1
+  rc=$?
+fi
+echo EXIT "$rc" >> /out/grt.log
+exit "$rc"
+""")
+    return source
+
+
 def cmd_grt(a):
     if a.iterations < 50:
         raise ValueError("infra-first die GRT requires at least 50 congestion iterations")
@@ -883,6 +940,25 @@ docker run --rm --name dinfra-grt-$(basename $D)-$$ --cpus=${{CPUS:-16}} --memor
   -v $K:/work:ro -v $(readlink -f $K/abstracts):/work/abstracts:ro -v $PRE:/pre:ro -v $D:/out openroad/orfs:latest \\
   bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -no_init -threads 16 -exit /out/grt.tcl > /out/grt.log 2>&1; rc=\\$?; echo EXIT \\$rc >> /out/grt.log; chown -R $(id -u):$(id -g) /out; exit \\$rc"
 """)
+    infra_source, infra_nets = getattr(a, "infra_odb", None), getattr(a, "infra_nets", None)
+    if bool(infra_source) != bool(infra_nets):
+        raise ValueError("--infra-odb and --infra-nets are required together")
+    if infra_source:
+        import shlex
+        source = install_materialized_grt(out, infra_source, infra_nets,
+                                          getattr(a, "infra_provisional_nets", None), t, a.mem)
+        meta_path = out / "grt_meta.json"
+        meta = json.loads(meta_path.read_text())
+        meta["actual_fixed_import"] = dict(source=str(source), nets=str(Path(infra_nets).resolve()),
+            receipt="import_receipt.json", preservation="import_preservation.json",
+            note="actual route import and preservation only; clock/PG/STA freeze gates remain separate")
+        meta_path.write_text(json.dumps(meta, indent=1) + "\n")
+        (out / "run_grt.sh").write_text(f"""#!/bin/bash
+# Launch with ot-run; stage this out dir, kit, and the exact infrastructure ODB path.
+D=$(cd $(dirname $0) && pwd); K={kit}; PRE={pre}
+INFRA={shlex.quote(str(source))}
+docker run --rm --name dinfra-import-$(basename $D)-$$ --cpus=${{CPUS:-16}} --memory=${{MEM:-{a.mem}}}g --memory-swap=${{MEM:-{a.mem}}}g \  -e HUID=$(id -u) -e HGID=$(id -g) -e CPUS=${{CPUS:-16}} \  -v $K:/work:ro -v $(readlink -f $K/abstracts):/work/abstracts:ro -v $PRE:/pre:ro -v $D:/out \  -v "$INFRA:/infra/source.odb:ro" openroad/orfs:latest bash /out/run_import_inside.sh
+""")
     (out / "run_grt.sh").chmod(0o755)
     print("grt written", out / "grt.tcl")
     return 0
@@ -924,6 +1000,17 @@ def cmd_report(a):
             r_["pg_unchanged_since_grt"] = now.get("sha256") == m_["pg"].get("sha256")
             if not r_["pg_unchanged_since_grt"] or m_.get("trial"):
                 r_["freeze_evidence"] = False
+            if m_.get("actual_fixed_import"):
+                receipt = Path(g) / "import_receipt.json"
+                preservation = Path(g) / "import_preservation.json"
+                imp = json.loads(receipt.read_text()) if receipt.is_file() else {}
+                kept = json.loads(preservation.read_text()) if preservation.is_file() else {}
+                imported = imp.get("verdict") == "IMPORTED" and kept.get("verdict") == "PRESERVED"
+                r_["actual_fixed_import"] = dict(verdict="PASS" if imported else "FAIL",
+                    imported_nets=len(imp.get("nets", {})), preserved_nets=kept.get("nets"),
+                    preserved_signals=kept.get("signals"), freeze_qualified=False)
+                if not imported:
+                    r_["freeze_evidence"] = False
         rep.setdefault("grt", {})[str(g)] = r_
     if a.clock:
         cr = json.loads((Path(a.clock) / "clock_report.json").read_text())
@@ -1108,6 +1195,9 @@ def main(argv=None):
     g.add_argument("--m47-only", action="store_true", help="LEGACY 9.3 diagnostic: die signals M4-M7 only")
     g.add_argument("--pg-ir-open-trial", action="store_true",
                    help="allow signal GRT before PG IR is closed (TRIAL only, METHODOLOGY 12.4e)")
+    g.add_argument("--infra-odb", help="actual routed infrastructure ODB; replay clock/PG/reset wires+vias before signal GRT")
+    g.add_argument("--infra-nets", help="exact complete infrastructure net inventory for infra_replay guards")
+    g.add_argument("--infra-provisional-nets", help="explicit provisional target infrastructure nets permitted to reconnect")
     g.add_argument("--iterations", type=int, default=50)
     g.add_argument("--mem", type=int, default=256)
     q = sub.add_parser("report")
