@@ -1,0 +1,148 @@
+{
+ "status": "CANDIDATE_NOT_ADOPTED",
+ "types": 14,
+ "changes": {
+  "serdes__t15_phy1026_lk_WS0": {
+   "part": "lk_WS0",
+   "rect_um": [
+    63.64,
+    213.88,
+    3381.64,
+    1226.88
+   ],
+   "clock_interface_changed": true
+  },
+  "serdes__t16_phy1026_lk_WS1": {
+   "part": "lk_WS1",
+   "rect_um": [
+    63.64,
+    213.88,
+    3381.64,
+    1226.88
+   ],
+   "clock_interface_changed": true
+  },
+  "serdes__t3_phy1026_lk_WN0": {
+   "part": "lk_WN0",
+   "rect_um": [
+    63.64,
+    213.88,
+    3381.64,
+    1226.88
+   ],
+   "clock_interface_changed": true
+  },
+  "serdes__t1_phy1026_lk_WN1": {
+   "part": "lk_WN1",
+   "rect_um": [
+    63.64,
+    213.88,
+    3381.64,
+    1226.88
+   ],
+   "clock_interface_changed": true
+  },
+  "serdes__t2_phy1026_lk_WN2": {
+   "part": "lk_WN2",
+   "rect_um": [
+    63.64,
+    213.88,
+    3381.64,
+    1226.88
+   ],
+   "clock_interface_changed": true
+  },
+  "serdes__t4_phy1026_lk_WN3": {
+   "part": "lk_WN3",
+   "rect_um": [
+    63.64,
+    213.88,
+    3381.64,
+    1226.88
+   ],
+   "clock_interface_changed": true
+  },
+  "serdes__t1_phy1026_lk_ES0": {
+   "part": "lk_ES0",
+   "rect_um": [
+    65.72,
+    0.0,
+    3383.72,
+    1013.0
+   ],
+   "clock_interface_changed": true
+  },
+  "serdes__t2_phy1026_lk_ES1": {
+   "part": "lk_ES1",
+   "rect_um": [
+    65.72,
+    0.0,
+    3383.72,
+    1013.0
+   ],
+   "clock_interface_changed": true
+  },
+  "serdes__t15_phy1026_lk_EN0": {
+   "part": "lk_EN0",
+   "rect_um": [
+    65.72,
+    213.88,
+    3383.72,
+    1226.88
+   ],
+   "clock_interface_changed": true
+  },
+  "serdes__t16_phy1026_lk_EN1": {
+   "part": "lk_EN1",
+   "rect_um": [
+    65.72,
+    213.88,
+    3383.72,
+    1226.88
+   ],
+   "clock_interface_changed": true
+  },
+  "serdes__t14_phy1026_lk_WS2": {
+   "part": "lk_WS2",
+   "rect_um": [
+    63.64,
+    213.88,
+    3381.64,
+    1226.88
+   ],
+   "clock_interface_changed": true
+  },
+  "serdes__t12_phy1026_lk_WS3": {
+   "part": "lk_WS3",
+   "rect_um": [
+    63.64,
+    0.0,
+    3381.64,
+    1013.0
+   ],
+   "clock_interface_changed": true
+  },
+  "serdes__t13_phy1026_lk_EN2": {
+   "part": "lk_EN2",
+   "rect_um": [
+    65.72,
+    213.88,
+    3383.72,
+    1226.88
+   ],
+   "clock_interface_changed": true
+  },
+  "serdes__t14_phy1026_lk_EN3": {
+   "part": "lk_EN3",
+   "rect_um": [
+    65.72,
+    213.88,
+    3383.72,
+    1226.88
+   ],
+   "clock_interface_changed": true
+  }
+ },
+ "data_cycles_added": 0,
+ "requires": "sink census, render, reset/START regeneration, bind and combined delta"
+}
