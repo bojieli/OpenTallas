@@ -71,11 +71,14 @@ def prepare(root, plan_path, manifest, out):
         names.append(name)
     target = out/'s81_head_top.sv'; target.write_text(top)
     models[models.index(tops[0])] = str(target.relative_to(root))
+    # This is the already-qualified HEAD link profile used by mesh_ep_bench
+    # and head_host_ctl_bench, not an unqualified default linker branch.
+    defines = ['OT_COLL_NATIVE32', 'OT_COLL_NATIVE32_OFF']
     include_dirs = sorted({str(Path(s).parent) for s in models})
-    (out/'native.f').write_text('\n'.join(['+incdir+'+d for d in include_dirs]+models)+'\n')
+    (out/'native.f').write_text('\n'.join(['+define+'+d for d in defines]+['+incdir+'+d for d in include_dirs]+models)+'\n')
     image_names = [name+core+'_'+str(bank)+'.viamap.hex' for name in names for core in ('a0','a1','a2','a3','b') for bank in (0,1)]
     report = dict(schema='opentallas.head.native_sources.v1', replacements=aliases,
-        include_dirs=include_dirs, tile_instances=len(names), required_weight_images=image_names,
+        defines=defines, include_dirs=include_dirs, tile_instances=len(names), required_weight_images=image_names,
         unique_weight_images=len(set(image_names)), added_cycles=0,
         source_sha256={s: hashlib.sha256((root/s).read_bytes()).hexdigest() for s in models},
         qualification='source staging only; current physical-view equivalence, boot schedule and real numerical token execution pending')
