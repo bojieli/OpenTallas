@@ -273,6 +273,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
          unc_setup_ps=60.0, unc_hold_ps=25.0, time_unit_ps=1.0, liberty_unit_ps=None,
          io_floor_ps=None, port_latency_ps=None, port_period_mult=None, insertion_ff_ps=None, straps=None,
          hold_in_min_ps=None, hold_out_min_ps=None, seam_hold_ps=None, hold_in_min_ports_ps=None,
+         hold_out_min_ports_ps=None,
          reset_pad_pins=None, root_async_reset=False, ft_ports=None, ft_interface=None,
          ft_require_characterised=False, tap_window_ps=None):
     """lint an SDC.  inputs / outputs: non-clock port (bus) names; clock_ports: the tap ports.  io_floor_ps
@@ -577,9 +578,13 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
         for m in ("max", "min"):
             if m not in odly[p]:
                 err.append(f"ports: output {p} has no {m} output delay")
-        if "min" in odly[p] and odly[p]["min"][1] > out_lim + tw + EPS:
-            err.append(f"hold: output {p} min output delay {odly[p]['min'][1]:g} ps > {out_lim + tw:g} ps "
+        o_lim = float((hold_out_min_ports_ps or {}).get(p, out_lim))
+        if "min" in odly[p] and odly[p]["min"][1] > o_lim + tw + EPS:
+            err.append(f"hold: output {p} min output delay {odly[p]['min'][1]:g} ps > {o_lim + tw:g} ps "
                        "(sender hold check waived)")
+    for p in (hold_out_min_ports_ps or {}):
+        if p not in ctx.outputs:
+            err.append(f"hold: sender-owned ft hop limit on '{p}', which is not an output port")
     for p, fl in (io_floor_ps or {}).items():
         tab = idly if p in ctx.inputs else odly
         if "max" in tab.get(p, {}) and tab[p]["max"][1] < fl - (tw if p in ctx.inputs else 0.0) - EPS:
@@ -656,7 +661,9 @@ def _io_hold_ctx(P, tn):
     """IO-HOLD option A per-port min input delay limits (none in legacy mode: byte-identical json)."""
     import gen_phys
     m = gen_phys.input_hold_min(P, tn)
-    return dict(hold_in_min_ports_ps={p: d["in_min_ps"] for p, d in sorted(m.items())}) if m else {}
+    o = gen_phys.output_hold_min(P, tn)
+    return dict(**({"hold_in_min_ports_ps": {p: d["in_min_ps"] for p, d in sorted(m.items())}} if m else {}),
+                **({"hold_out_min_ports_ps": {p: d["out_min_ps"] for p, d in sorted(o.items())}} if o else {}))
 
 
 def _seam_ctx(P):

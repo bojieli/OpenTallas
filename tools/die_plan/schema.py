@@ -615,7 +615,9 @@ SCHEMA = {
             # "plan" only); the receiving kit's min input delay = sender guarantee - demand, landed seams keep fallback
             "hold_demand": {"type": "object", "required": ["source"], "properties": {
                 "source": {"enum": ["plan"]}, "pairs": {"type": "object", "additionalProperties": _nonneg},
-                "landed": {"type": "array", "items": {"type": "string"}}, "default_ps": _nonneg}},
+                "landed": {"type": "array", "items": {"type": "string"}}, "default_ps": _nonneg,
+                # HOLD-COLL-R1 10-26 (gen_phys.ft_hold_owner): who pays D on hops into ft-slot inputs
+                "ft_owner": {"enum": ["receiver", "sender"]}}},
             # CP1 proof harness (COORD 2026-10-25 23:26 ruling (3), CLOCK-RESET): a cut-out proof die keeps, for each
             # die-edge input that the FULL plan drives from a registered partition, an explicit registered upstream
             # driver view {port id: part, type, bus, out_hold_guarantee_ps, basis}; under io_hold sender_min that

@@ -467,6 +467,59 @@ def hold_demand_ps(P, snd_part, rcv_part):
     return float(v)
 
 
+def ft_hold_owner(P):
+    """HOLD-COLL-R1 10-26 (plan clock.hold_demand.ft_owner, opt-in; default 'receiver' = HOLD-REPAIR option (a)): who
+    pays the plan seam hold demand D on a hop whose RECEIVING port is an ft-slot input.  The ft port budget (COORD
+    10-23 R3) gives that receiver only ft_hop_in_share x T (0.08 T = 66.64 ps: pin -> face station s0 D + setup) and
+    the sender the rest (0.92 T on ft outputs, 0.8 T on bus outputs).  A receiver-side hold pad of D at FF costs
+    ~1.9 x D at TT, which no 0.08 T share can carry (coll_ftc HB4 GRT 10-26: hold -90.15 FF / setup -47.12 with 7
+    pads; inherited routes TT -67.27).  'sender' = the side holding the setup budget owns the demand (hierarchical
+    budgeting): the sender's output min delay on that port is tightened by D, the receiver keeps the structural
+    option A min (sender guarantee, demand excluded).  Same plan D, same parent check (io_hold_parent.py)."""
+    if io_hold_mode(P) != "plan_demand":
+        return "receiver"
+    v = (P.clock.get("hold_demand") or {}).get("ft_owner", "receiver")
+    if v not in ("receiver", "sender"):
+        raise ValueError(f"clock.hold_demand.ft_owner '{v}' not in ('receiver', 'sender')")
+    return v
+
+
+def _ft_in_bus(P, part, bus):
+    """True when bus of partition part is an ft-slot input (a receiver holding only the ft hop share)."""
+    p = P.parts.get(part)
+    if p is None:
+        return False
+    return any(s["name"] + "_i" == bus for s in P.types[p["type"]].get("ft_slots", []))
+
+
+def output_hold_min(P, tn):
+    """HOLD-COLL-R1 sender-owned ft hop demand (ft_hold_owner 'sender'): {sv output port: dict(out_min_ps, demand_ps,
+    receivers)} for every vector output of type tn that drives an ft-slot input of a partition with a declared
+    (non-landed) plan demand.  One value per port (type hardened once): out_min = hold_out_min_ps - max D over every
+    instance's receivers.  Empty otherwise (byte-identical kits)."""
+    if ft_hold_owner(P) != "sender":
+        return {}
+    import gen_rtl
+    insts = set(n for n, p in P.parts.items() if p["type"] == tn)
+    t = P.types[tn]
+    out_buses = {b["name"] for b in t.get("buses", []) if b["dir"] == "out" and int(b.get("width", 2)) > 1}
+    out_buses |= {s["name"] + "_o" for s in t.get("ft_slots", []) if int(s.get("width", 2)) > 1}
+    dem = {}
+    for pid, pr in P.ports.items():
+        s, d = pr["src"], pr["dst"]
+        if s["part"] not in insts or s["bus"] not in out_buses or not _ft_in_bus(P, d["part"], d["bus"]):
+            continue
+        if P.channel_of(pid) is not None:
+            continue
+        v = hold_demand_ps(P, s["part"], d["part"])
+        if v is None:
+            continue
+        dem.setdefault(s["bus"], []).append((v, P.parts[d["part"]]["type"]))
+    return {gen_rtl.sv_id(b): dict(out_min_ps=round(hold_out_min_ps(P) - max(v for v, _ in vs), 4),
+                                   demand_ps=max(v for v, _ in vs), receivers=sorted({r for _, r in vs}))
+            for b, vs in sorted(dem.items())}
+
+
 def input_hold_min(P, tn, structural=False):
     """IO-HOLD option A: {sv input port: dict(in_min_ps, basis, senders)} for every bus / ft-slot input of type tn
     whose min input delay differs from the fallback hold_in_min_ps(P).  Empty in legacy mode.  One value per port
@@ -493,6 +546,7 @@ def input_hold_min(P, tn, structural=False):
     out = {}
     for bus in in_buses:
         vals, why = [], None
+        sender_owned = ft_hold_owner(P) == "sender" and _ft_in_bus(P, insts[0], bus)
         for inst in insts:
             prs = drv.get((inst, bus))
             if not prs:
@@ -520,7 +574,12 @@ def input_hold_min(P, tn, structural=False):
                 if why:
                     break
                 g, basis = sender_out_guarantee_ps(P, P.parts[s]["type"])
-                if demand:
+                if demand and sender_owned:
+                    if hold_demand_ps(P, s, inst) is None:
+                        why = f"{pid} landed seam"
+                        break
+                    basis += " (ft hop: plan hold demand owned by the sender, HOLD-COLL-R1)"
+                elif demand:
                     d = hold_demand_ps(P, s, inst)
                     if d is None:
                         why = f"{pid} landed seam"
@@ -777,6 +836,13 @@ def sdc(P, tn, pins):
     # delay to +IO_BUDGET x T, which waived the sender's half of the seam hold check (hold uncertainty counted 0.5x
     # at kit level).  0 = the neighbour's face flop holds at the budgeted insertion; tightening only.
     out += (f"set_output_delay -min {t_lib(hold_out_min_sdc_ps(P)):.4f} -clock vclk [all_outputs]\n")
+    om = output_hold_min(P, tn)
+    for v in sorted({d["out_min_ps"] for d in om.values()}):
+        ports = [p for p, d in om.items() if d["out_min_ps"] == v]
+        out += (f"# HOLD-COLL-R1 sender-owned ft hop demand: output min {v:g} ps (hold_out_min - plan D) on ports "
+                "driving ft-slot receivers\n"
+                f"set_output_delay -min {t_lib(v + tap_window_io_shift(P)[1]):.4f} -clock vclk "
+                f"[get_ports {{{' '.join(p + '[*]' for p in ports)}}}]\n")
     import reset_tree as RT
     fp = RT.pad_false_path_pins(P, tn)
     if fp:

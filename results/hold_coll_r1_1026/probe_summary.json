@@ -1,0 +1,8 @@
+{"source": "epyc1:/srv/opentallas-scratch2/claude/codex-flow-2004/coll_ftc_hb4 5_1_grt.odb (unit 552477-1793070783, GRT done 20:51, BC only)",
+ "grt_report_checked": {"hold_ff_wns_ps": -90.15, "hold_ep": 5107, "hb4_inserted": 7, "setup_wns_ps_bc": -47.12, "setup_ep": 1320,
+   "worst_hold": "cmd_cmd_wi_i[48] -> u_ft_cmd_cmd_wi_s0/q[48] (in_min -66, capture clk_t16 214.96 FF)",
+   "worst_setup": "tl_st_wi_i[556] -> u_ft_tl_st_wi_s0/q[556] (in_max 766.36 = 0.92 T, capture clk_t21 137.36 FF)"},
+ "station_clk_tt_placement_rc": {"all": [193.5, 297.0], "s0_face": [193.5, 297.0], "mean": 250.0,
+   "spread_by_tap_ps": {"clk_t21 1457 sinks": 103.5, "clk_t16 1432": 29.3, "clk_t11 1037": 55.1, "clk_t12 1204": 38.1,
+     "clk_t17 1141": 42.8, "clk_t6 1485": 34.6, "clk_t9 521": 9.3, "clk_t10 521": 8.8, "clk_t13 606": 10.5, "clk_t15 668": 9.3, "clk_t7 549": 13.2}},
+ "label": "UNCHECKED except grt_report_checked (read from 5_global_route.rpt)"}

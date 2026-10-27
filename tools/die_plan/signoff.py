@@ -632,6 +632,7 @@ if {[llength $so_vclk] == 1 && $so_reference_ok} {
   if {[llength $so_din]} { set_input_delay -min @IN_MIN@ -clock [lindex $so_vclk 0] $so_din }
   if {[llength [all_outputs]]} { set_output_delay -min @OUT_MIN@ -clock [lindex $so_vclk 0] [all_outputs] }
 @IN_MIN_PORTS@
+@OUT_MIN_PORTS@
   so OVERLAY applied [get_full_name [lindex $so_vclk 0]] in_min @IN_MIN_LOG@ out_min @OUT_MIN@
 } else {
   so OVERLAY skipped vclks [llength $so_vclk]
@@ -772,7 +773,7 @@ def ft_fill_model(decl, model, corners):
 
 
 def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FANOUT_MAX, odb="6_final.odb",
-                ff_vclk="sdc", ff_bound_ps=None, hold_in_min=None, hold_out_min=None, hold_in_min_ports=None, core_taps_ff=False,
+                ff_vclk="sdc", ff_bound_ps=None, hold_in_min=None, hold_out_min=None, hold_in_min_ports=None, core_taps_ff=False, hold_out_min_ports=None,
                 ft_decl=None, tap_window=None):
     """tap_window: the plan's per-tap latency window (sdc_lint.json tap_window_ps, gen_phys.tap_window_ps): the
     golden SDC times every clock port W early, so the overlay's min output delay is the contract + W (exact IO shift);
@@ -824,6 +825,11 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
                  ("@IN_MIN_PORTS@\n", "".join(
                      f"  set_input_delay -min {v:g} -clock [lindex $so_vclk 0] [get_ports {{{' '.join(p + '[*]' for p in ps)}}}]\n"
                      for v, ps in _group_ports(hold_in_min_ports))),
+                 # HOLD-COLL-R1: sender-owned ft hop demand (sdc_lint.json hold_out_min_ports_ps), window-shifted as @OUT_MIN@
+                 ("@OUT_MIN_PORTS@\n", "".join(
+                     f"  set_output_delay -min {v + (hout - (0.0 if hold_out_min is None else float(hold_out_min))):g} "
+                     f"-clock [lindex $so_vclk 0] [get_ports {{{' '.join(p + '[*]' for p in ps)}}}]\n"
+                     for v, ps in _group_ports(hold_out_min_ports))),
                  ("@FANOUT_MAX@", str(int(fanout_max))),
                  ("@CLOCK_FAMILY@", _clock_family_tcl()),
                  ("@PAIR_SKEW@", (HERE / "pair_skew.tcl").read_text()),
@@ -1012,6 +1018,7 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
                                                 hold_in_min=lctx.get("hold_in_min_ps"),
                                                 hold_out_min=lctx.get("hold_out_min_ps"),
                                                 hold_in_min_ports=lctx.get("hold_in_min_ports_ps"), core_taps_ff=core_overlay,
+                                                hold_out_min_ports=lctx.get("hold_out_min_ports_ps"),
                                                 tap_window=lctx.get("tap_window_ps")))
     vol = " ".join(f"-v {shlex.quote(h)}:/{c}" + ("" if c == "out" or c == "sdc" else ":ro") for c, h in mounts)
     cmd = (f"{docker} run --rm --name so_{os.getpid()}_{corner}_{abs(hash(disc['base'])) % 100000} {vol} {image} "
