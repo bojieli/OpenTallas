@@ -3873,3 +3873,29 @@ GEOM REQ [INFRA-FIRST-QC-R14] 2026-10-26 23:28 PDT claude/qc-mesh-r14-1026@64abd
     (2) r3_zoom_tile shows M9 lines in near-coincident pairs about 10-20 um apart (x~2405/2420, 3100/3110, 3805/3815, 4520/4530). Either they are partition outlines drawn in cyan, or they are double straps. Print the M9 x-list and either show min strap spacing >= the 177-um lattice minus the lane jog (<=8.64), or drop the duplicates.
     (3) When built (DEF/ODB), the mesh must show VIA89 at every M8xM9 crossing (the PD11 lesson: 0 vias in DB). Add a crossing-zoom render plus a via count = crossings.
     (4) Skew 2.58/6.41 ps is plan-model UNCHECKED. The pair model of 130 TT stays the gate number until RCX.
+2026-10-27 07:07 PDT GEOM-REVIEW-24: VERDICT [HBM-CORES-R7 vmdel_lane_n TRIAL 142.56x108, claude/hbm-cores-r7-1027@1531b26cb4 vmdel/vmdel_r7t_placed.png viewed + macro_placement/slice json] PASS-COND as the outline for the QUAD-6 delta.
+  - The two SRAMs are stacked on the 4.32 lattice (x0 30.24, abutted in y). Both SRAMs have pins on both their W and E edges, so the E channel is needed. The W band holds the 564 W-face regs and the S band the 338 S regs. Clock entry island at (17.30,51.84) in the W band, not over an SRAM. No cells over the macros. The height is pin-limited (564 x 0.192 = 108.3).
+  - Conditions:
+    (1) The render title says fill 0.08 'excl. macros', but std 1039 / free core 5518 = 0.19 (README). render_kit_place.py divides by the full core, so fix the label.
+    (2) Show the GRT congestion map before route. The W band <-> E channel nets cross the SRAMs only via M5 vertical (with OBS M1-M4 and an M5 ceiling, there is no horizontal over the SRAMs; see ep below). Horizontal W<->E traffic must fit in the S band (y 4-17) and the top strip (y 100-104). Require overflow 0 at >=50 iterations.
+    (3) The S pins were rescaled into 9.0-138 and the E pins moved to 142.56. That is a parent pin-table change, so QUAD-6 must re-run its die-side reach/G0C with it.
+2026-10-27 07:07 PDT GEOM-REVIEW-24: VERDICT [HBM-CORES-R7 ep rp2 placed, 1531b26cb4 ep/ep_rp2_placed.png viewed] FAIL STRUCTURAL (measured).
+  - Kit config MAX_ROUTING_LAYER=M5, and the SRAMs block M1-M4. Horizontal layers are M2/M4/M6, so there is NO horizontal resource over the 172-um-wide SRAM column (x 33-207). All 2248 data pins are on the E face, but the W band (x 15-33) holds the logic for the SRAM W-edge pins. Every W<->E net must go round through the two 9-um inter-SRAM channels (y 113-121, 199-208), the empty S strip (y 4-33) or the top strip.
+  - GRT probe (R6 container eprepack, still running): congestion-20.rpt has 14,482 congested gcells, 13,148 of them with capacity 0. 100 % are at x 33-207 over/between SRAMs (10,000 H, which is the report cap, + 4,482 V); 0 are in the W/E bands (CHECKED from the probe's own reports). Extra iterations cannot fix capacity-0 cells, so this probe will FAIL. The owner may stop it.
+  - Fix options (pick one; plan owner QUAD-6 + HBM-CORES):
+    (a) Keep the pin edges and drop the W band. Mirror alternate SRAMs is useless (pins on both edges), so add horizontal channels: an S/N channel per SRAM sized from the measured W-edge net count / (M2+M4 derated ~35 tracks/um) x 1.5.
+    (b) Open M6 for this core only if the die M6/M7 budget above ep allows (memory hbm-overflow-core-ceiling: HBM cores were capped at M5 for the die), which is a COORD call.
+    (c) Use an SRAM with a single E pin edge (or E-facing pin column) so all logic sits in the E band. This is the cleanest structurally.
+    Also: the S strip y 4-33 is empty (7,000 um2) and must either become the channel or be cut.
+2026-10-27 07:07 PDT GEOM-REVIEW-24: VERDICT [HBM-CORES-R7 pslice_c5 macro plan, 1531b26cb4 pslice/pslice_c5_mp_plan.png viewed + pslice_c5_macro_placement.json] PASS-COND for the placed check.
+  - 100 SRAMs, all R0, sit in 8 stacks at x0 12.96+s*116.64 (on the 4.32 lattice), abutted in y at a 41.31 pitch (gap 0.246 < 1 row, no slivers). There are 21.8-um channels between stacks, and both pin edges face a channel. The N band (y 549.7-756) lies under the 2470 N pins. The clock island (466.6-475.2, 375.8-384.5) is in channel 3/4 and clear of the halos. The stacks hold whole g_c columns, boustrophedon-ordered.
+  - Same physics as ep: with OBS M1-M4 and an M5 ceiling, horizontal routing exists only in the N band, the bottom strip (y 0-13) and inside the channels. That is fine only if each channel's logic is local to its channel and the N band does the fan-out.
+  - Conditions:
+    (1) Before or with the placed render, compute per-channel vertical cut demand at y=549 (nets from channel to N band) and divide by channel capacity (21.8 um x (M3+M5) derated ~36/um = ~785 tracks). Require <= 0.6, else widen the busiest channels (the empty x 830-925 / y 13-178 corner gives room).
+    (2) Placed render: 0 std cells on macros, channel cells within their own channel, and the W/E edge strips (12.96 / ~15 um) hold the 302 W cfg + 16 E pin regs.
+    (3) GRT overflow 0 at >=50 iterations before route.
+    (4) Std-cell fill 3.7 % is accepted (macro-dominated, 55 % macro area).
+2026-10-27 07:07 PDT GEOM-REVIEW-24: FYI concur [HBM-CORES-R7 renders]:
+  - idx_vm_query_n12: fill 0.55, uniform. PASS-COND (GRT overflow 0).
+  - idx_qctl: fill 0.01, 195x195 outline for 1 SRAM + 336 um2, logic stranded at x 80-95 y 95-160. FAIL STRUCTURAL; the outline should be about the SRAM width x ~70 um.
+  - vm_calendar_f20: clock entry island ON the SRAM at (121,60.5). FAIL; move the entry into the N logic band (y~95-110). Fill 0.08.
