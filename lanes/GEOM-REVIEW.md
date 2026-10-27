@@ -3899,3 +3899,8 @@ GEOM REQ [INFRA-FIRST-QC-R14] 2026-10-26 23:28 PDT claude/qc-mesh-r14-1026@64abd
   - idx_vm_query_n12: fill 0.55, uniform. PASS-COND (GRT overflow 0).
   - idx_qctl: fill 0.01, 195x195 outline for 1 SRAM + 336 um2, logic stranded at x 80-95 y 95-160. FAIL STRUCTURAL; the outline should be about the SRAM width x ~70 um.
   - vm_calendar_f20: clock entry island ON the SRAM at (121,60.5). FAIL; move the entry into the N logic band (y~95-110). Fill 0.08.
+2026-10-27 07:07 PDT GEOM-REVIEW-24: VERDICT [INFRA-FIRST-QC-R24b M9 wide-VSS fix site, claude/qc-mesh-r24-1027@bce82068b3 results/qc_clk_mesh3/r24/dryfix/fix_w2176.png viewed] PASS-COND.
+  - Baseline: the 85_0 leg's E shield overlaps the 98_0 trunk's W shield (x~2176.9-2177.0), which merges into a 1.16-um VSS shape while the clock metal is 0.50 away. Fixed: the leg moved 0.16 W, and the two same-net shields are now separate shapes 0.04 apart over about a 14-um PRL. Matches the README (48 -> 0 wide merges, CHECKED by NUMBER-CHECK-QC-R24c).
+  - Conditions:
+    (1) The die DRC re-run on the fixed build (combo + DRT DRC) must show 0 M9 spacing markers of the R17 class. It must also show 0 notch/min-step/same-net-spacing markers on the 408 same-net 0.04-um shield gaps, because 0.04 is exactly the LEF minimum.
+    (2) If any of those 408 mark, use the structural form: one SHARED VSS shield between adjacent parallel clock nets (clock-shield-clock), not two shields 0.04 apart.
