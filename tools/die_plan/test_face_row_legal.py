@@ -25,6 +25,16 @@ if {[ff_site_legal z 4428 152821 1080 270]} {error off_row}
 if {[ff_site_legal z 4321 153090 1080 270]} {error off_site}
 if {![ff_site_legal z 4320 153090 1080 270]} {error adjacent_row}
 if {[ff_site_legal z 4320 153090 1080 540]} {error missing_second_row}
+set offsets [ff_near_offsets 111]
+if {[llength $offsets] != 223 || [lrange $offsets 0 4] ne {0 1 -1 2 -2}} {error row_order}
+# An occupied five-row neighbourhood must not imply the local band is full.
+set ff_legal_rows [dict create 153630 {{4320 6588}}]
+set found 0
+foreach dr $offsets {
+  set cy [expr {152820+$dr*270}]
+  if {[ff_find_x c 4320 $cy 1080 270] ne ""} {set found 1;break}
+}
+if {!$found || $cy != 153630} {error expanded_nearest_row}
 puts PASS
 '''
     fixture=tmp_path/'allocator.tcl';fixture.write_text(script)

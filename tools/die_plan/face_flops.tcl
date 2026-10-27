@@ -20,6 +20,11 @@ set ff_sw [$ff_site getWidth]; set ff_rh [$ff_site getHeight]
 set ff_orient {}
 foreach r $ff_rows { dict set ff_orient [lindex [$r getOrigin] 1] [$r getOrient] }
 # BEGIN legal-row allocator (integer database units; pure checks also unit-tested).
+proc ff_near_offsets {count} {
+  set offsets {0}
+  for {set n 1} {$n <= $count} {incr n} { lappend offsets $n [expr {-$n}] }
+  return $offsets
+}
 proc ff_reserve_rect {name x0 y0 x1 y1} {
   global ff_legal_occ ff_y0 ff_rh
   set first [expr {$ff_y0 + int(floor(double($y0-$ff_y0)/$ff_rh))*$ff_rh}]
@@ -121,6 +126,10 @@ proc ff_slot_of {nm sfx} {
 }
 # column pitch along the depth of an E/W band and along an N/S face (a DFFHQNx1 is 20 sites wide; the rest is room for its INV / port buffer)
 set ff_cpitch [expr {$ff_sw * 40}]
+# Search the local 30-um pin band instead of only two neighbouring rows.
+# A cut-row or fixed-tap hole can consume those first five rows completely.
+set ff_near_rows [ff_near_offsets [expr {int(30.0*$ff_dbu/$ff_rh)}]]
+set ff_near_cols [ff_near_offsets [expr {int(30.0*$ff_dbu/$ff_cpitch)}]]
 proc ff_is_ff {inst} { return [string match "*DFF*" [[$inst getMaster] getName]] }
 proc ff_is_buf {inst} {
   set m [[$inst getMaster] getName]
@@ -237,7 +246,7 @@ foreach pass {INPUT OUTPUT} {
       # nearest free (row, column) slot: columns inward, alternate rows around the pin row
       set placed 0
       for {set c 0} {$c < 400 && !$placed} {incr c} {
-        foreach dr {0 1 -1 2 -2} {
+        foreach dr $ff_near_rows {
           set r [expr {$row + $dr}]
           if {$r < 0 || $r >= int(($ff_y1-$ff_y0)/$ff_rh) || [dict exists $ff_occ "$face,$r,$c"]} continue
           set cy [expr {$ff_y0 + $r * $ff_rh}]
@@ -253,7 +262,7 @@ foreach pass {INPUT OUTPUT} {
       set col [expr {($px - $ff_x0) / $ff_cpitch}]
       set placed 0
       for {set r 0} {$r < 400 && !$placed} {incr r} {
-        foreach dc {0 1 -1} {
+        foreach dc $ff_near_cols {
           set c [expr {$col + $dc}]
           if {$c < 0 || [dict exists $ff_occ "$face,$r,$c"]} continue
           set cx [expr {min($ff_x0 + $c * $ff_cpitch, $ff_x1 - $w)}]
