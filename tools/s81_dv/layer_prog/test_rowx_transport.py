@@ -121,3 +121,9 @@ def test_pvrd_wrap_deadlines_are_not_a_fictitious_full_export_buffer():
     for x in reads:
         assert x['overwrite_cycle'] - x['available_cycle'] == 160
         assert x['row'] <= 383
+
+
+def test_landing_row_field_is_not_silently_truncated():
+    assert max(r['row'] for r in R.landing_reads(512, 0, rb=897)) == 1023
+    with pytest.raises(ValueError):
+        R.landing_reads(512, 0, rb=898)

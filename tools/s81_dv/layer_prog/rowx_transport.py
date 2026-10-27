@@ -115,7 +115,7 @@ def landing_reads(nsel: int, half: int, *, rb: int = 0,
     not assume that the current XR programme can meet them.
     """
     spec.check(nsel)
-    if half not in (0, 1) or not 0 <= rb <= 898:
+    if half not in (0, 1) or not 0 <= rb <= 897:
         raise ValueError('bad half or rb+126 exceeds the 10-bit leaf row field')
     out = []
     for rank in range(nsel):
@@ -150,6 +150,7 @@ def main() -> None:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('input', type=Path, help='JSON gids, receiver, half, tag, pos, user, exports[owner][tile]=hex words')
     p.add_argument('output', type=Path)
+    p.add_argument('--read-plan', type=Path, help='write source leaf read/overwrite constraints as JSON')
     a = p.parse_args()
     d = json.loads(a.input.read_text())
     spec = ExportSpec(**d.get('spec', {}))
@@ -158,6 +159,9 @@ def main() -> None:
     payload = merge_repair(exports, d['gids'], d['receiver'], d['half'], spec)
     frame = rows_frame(payload, d['tag'], pos=d['pos'], user=d['user'], mask=d.get('mask', 1))
     a.output.write_text(''.join(f'{w:0128x}\n' for w in frame))
+    if a.read_plan:
+        a.read_plan.write_text(json.dumps(landing_reads(len(d['gids']), d['half'],
+                              rb=d.get('rb', 0), spec=spec), indent=1) + '\n')
     print(json.dumps({'q_cycles': len(frame), 'payload_words': len(payload),
                       'export_entry_slots': spec.passes * spec.period,
                       'die_link_schedule': 'NOT_COMPILED', 'pvrd_reuse_words': 160,
