@@ -32,8 +32,12 @@ proc ot_clk_dbnets {} {
   if {[llength [info commands sta::find_all_clk_nets]] && [llength [sta::all_clocks]]} {
     if {![catch {sta::find_all_clk_nets} sn]} {
       foreach n $sn {
-        set nm [get_full_name $n]
-        set dn [$block findNet $nm]
+        # this OpenROAD returns odb dbNet handles; older builds return STA nets
+        if {[string match "*odb__dbNet*" $n]} {
+          set dn $n
+        } elseif {[catch {$block findNet [get_full_name $n]} dn]} {
+          continue
+        }
         if {$dn ne "NULL" && $dn ne ""} { dict set nets [$dn getName] $dn }
       }
     }
