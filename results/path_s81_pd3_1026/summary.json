@@ -1,0 +1,9 @@
+{"lane":"PATH-S81-PD3","date":"Mon Oct 26 21:16:06 PDT 2026","subject":"g0fix die GRT (plan c6b5e29a, 50 it, signal-only) congestion localisation vs B5 (aef178ea, GRT0)",
+ "grt_overflow_g0fix":{"total":2236550,"M7":1769169,"M6":464282,"M5":1409,"M4":1690,"source":"epyc1:/srv/opentallas-scratch2/claude/path-s81-taps-1026/die_g0fix_i50/grt/grt.log"},
+ "congestion_rpt":{"cells":1456,"sum_overflow":11049,"cap0_cells":974,"nets":"all ft_svc_*__ft_phy*","location_um":"x 11448-14688, y 1890-5324 (svc_1/3/5 row-seam corners at x~11.65k/13.05k/14.5k, y~5.0k)","note":"rpt lists only 11,049 of 2,236,550 overflow -> partial localisation"},
+ "routed_nets":{"B5":500374,"g0fix":507853},"guide_wl_m":{"M6":[184163,201532],"M7":[277513,308838],"order":"[B5,g0fix] in mm"},
+ "plan_ft_bits":{"B5":498940,"g0fix":516447,"pd2cand_codex_b2_candidate":516447,"new_ft_phy_chains":"s 134242, svc 12394, fW 12312, fE 8720 bits"},
+ "plan_port_bitlen":"unchanged (1621 vs 1623 units, bitmm.txt)","m7_blocked_core_area_mm2":{"B5":146.6,"g0fix":146.4},
+ "verdict":{"gunit_far_face":"PARTIAL: gunit relocation adds 3084 ft_gunit__ft_phy nets / +3.3 m M6+M7; not dominant","bk_sel_2p6mm_wall":"DENIED as cause: no rpt overflow cell near bk_sel, M7-blocked core area unchanged","dominant":"PHY-fit FT re-route of PHY/serdes buses as ft_phy chains through s/svc/fW/fE (+17.5k FT bits, +48 m M6/M7 guide WL), overflow at svc seam corners with capacity 0"},
+ "pd2_implication":"codex b2_candidate (12a0c04f0 B2d3) has the SAME 15 moved part origins and the SAME 516,447-bit FT plan as g0fix -> a die GRT of it is expected to inherit the 2.24M overflow; fix FT plan first",
+ "numbers":"CHECKED from logs/plans except rpt-based localisation (UNCHECKED: partial report)"}
