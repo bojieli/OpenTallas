@@ -1361,3 +1361,5 @@ CODEX: 2026-10-27 08:36  TOK-HBM quarterkeybuf2088/0 eachhalf+tagmutant1542caugh
 CODEX: 2026-10-27 08:36 PDT RM42 main b6efb4c2e0 == origin/main; native HEAD source closure + generated checkpoint tile token gate, positives+mutant PASS; whole-head G5 still open, 0 deletions.
 
 CODEX: 2026-10-27 08:37 PDT RM43 main 769a723236 == origin/main; functional mutant parser + true-quarter key replay, targeted positives/mutant PASS; HBM scorer/cardinality still open, 0 deletions.
+
+CODEX: 2026-10-27 08:38  HEAD m2/m12 I2R-onlyallowance caught real1857/1873R2R; exactm2MMR2R-28.53 shortdata diagnosed, scopedperclassrepair6ddb210f73+evidence9fcaa92193 (30tests) launchedintel1unit1453681; finalsignoff/LECpending. HEADR18physicaltree312fc40f54 fails167tracks/1279stacks underdensePG; parentownsfix.
