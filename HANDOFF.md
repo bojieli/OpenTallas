@@ -1482,3 +1482,5 @@ CODEX: 2026-10-27 14:02 PDT FLOW currentcanariescollected; reporterfixd12READY4t
 CODEX:14:07 HEAD current2/2coresSIGNED+EQ collected; AclkfreezealsoEQ30203pendingflowrelease; exactlyoneBsuccessor waits correctedtag. Native5functionalentry source3be24c5bc0 +signed-view COPYc41625cb88 ready, measuredA255.25/208.29B230.71/189.31,1320realprovidernetsmissingfailclosed; tokennativecouponownedTOK, parentownsmesh, noPNR/adoption.
 
 CODEX:14:07 RM65 main00d9d370a4==origin/main qualifiedclockfreeze+freshdumpguard, restrictedS81multiroot/model, HBMdeliveredreset/default0 and face-clockguard.17focusedPASS; BF/halfcycle/QCwarmsegmentout, no physicaladoptionclaim.
+
+CODEX: 2026-10-27 14:07 PDT HEAD native40FT real partition PASS a83b322b56:128rows5120dims/golden21946,8429cycles/9003lockstep+180420FT checks, row/FT controls caught,0cycles; old264hier generation PASS305s/13.7GB. No fullHEAD token/images/productionSTART claim.
