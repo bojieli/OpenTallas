@@ -1,0 +1,170 @@
+{
+  "schema": "opentallas.hbm-n4-root-physical-prep.v1",
+  "module": "ot_hnx_fused_hub_n4ext",
+  "instance": "u_mu_fused_root",
+  "source": "codex/n4-native-1027@24d4f93a6",
+  "status": "PLACEMENT DESIGN ONLY; no placed/routed master or pin abstract",
+  "outline_um": [
+    388.8,
+    259.2
+  ],
+  "std_area_um2": 20770.34724,
+  "std_cells": 185460,
+  "macros": [
+    {
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 2,
+      "outline_um": [
+        94.824,
+        41.064
+      ],
+      "pins": 821,
+      "signal_pin_bound": 819,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef"
+    },
+    {
+      "master": "ot_sram_1r1w2c_32x64_m1",
+      "count": 1,
+      "outline_um": [
+        31.992,
+        17.304
+      ],
+      "pins": 208,
+      "signal_pin_bound": 206,
+      "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef"
+    }
+  ],
+  "macro_placements": [
+    {
+      "role": "large0",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "origin_um": [
+        54,
+        48
+      ],
+      "orient": "MY"
+    },
+    {
+      "role": "large1",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "origin_um": [
+        238.8,
+        48
+      ],
+      "orient": "R0"
+    },
+    {
+      "role": "small",
+      "master": "ot_sram_1r1w2c_32x64_m1",
+      "origin_um": [
+        178.416,
+        184.32
+      ],
+      "orient": "R0"
+    }
+  ],
+  "macro_halo_um": 4.32,
+  "central_pin_channel_um": 89.976,
+  "central_usable_channel_um": 81.336,
+  "tracks_per_um_assumption": 35,
+  "central_signal_pin_bound": 1638,
+  "clock_entry_um": [
+    194.4,
+    129.6
+  ],
+  "data_cycles_added": 0,
+  "root_ports": {
+    "W": [
+      "up_nw",
+      "down_nw"
+    ],
+    "E": [
+      "up_ne",
+      "down_ne"
+    ],
+    "S": [
+      "job_v",
+      "job",
+      "wsc",
+      "pk5",
+      "pb5",
+      "clk",
+      "rst_n"
+    ],
+    "N": [
+      "done",
+      "fault",
+      "busy"
+    ]
+  },
+  "remaining": [
+    "full pin geometry: big macros have pins on BOTH west/east faces; outer channels carry macro plus die I/O",
+    "actual mapped instance identities and macro pin transform",
+    "native registered-port anchor mapping",
+    "root job/control native provider and clock/reset/START bindings",
+    "actual root pin abstract and per-bit station reach405",
+    "source padded extraction currently FAIL; hold route/signoff",
+    "PG design and actual parent lot placement"
+  ],
+  "macro_area_um2": 8341.295039999999,
+  "minimum_content_area_um2": 29111.64228,
+  "std_density_in_nonmacro_area": 0.22470057687136263,
+  "central_pin_track_ratio": 0.5753909707878431,
+  "macro_actual_face_pin_counts": {
+    "large_W": 410,
+    "large_E": 409,
+    "power_or_other": 2
+  },
+  "outer_corridor_bound": {
+    "demand_each": 854,
+    "left_usable_um": 45.36,
+    "right_usable_um": 46.536,
+    "left_ratio": 0.5379188712522046,
+    "right_ratio": 0.5243252535671308
+  },
+  "wide_recipe_parent_lot_status": "FAIL: no388.8x259.2 free lot in immutable C8b under conservative exclusions",
+  "narrow_alternative": {
+    "outline_um": [
+      250.56,
+      388.8
+    ],
+    "macro_placements": [
+      {
+        "role": "large0",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "origin_um": [
+          77.868,
+          48.0
+        ],
+        "orient": "R0"
+      },
+      {
+        "role": "large1",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "origin_um": [
+          77.868,
+          194.4
+        ],
+        "orient": "R0"
+      },
+      {
+        "role": "small",
+        "master": "ot_sram_1r1w2c_32x64_m1",
+        "origin_um": [
+          109.284,
+          324
+        ],
+        "orient": "R0"
+      }
+    ],
+    "clock_entry_um": [
+      125.28,
+      151.2
+    ],
+    "outer_usable_channel_um": 69.228,
+    "outer_signal_demand_bound": 1264,
+    "outer_signal_ratio": 0.5216716605172144,
+    "std_density_in_nonmacro_area": 0.2331744385108795,
+    "status": "PLACEMENT DESIGN ONLY; actual native pin anchors/internal r2r must be measured"
+  }
+}

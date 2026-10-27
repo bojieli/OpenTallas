@@ -1,0 +1,816 @@
+{
+  "schema": "opentallas.hbm-n4-link-prep.v1",
+  "route_ready": false,
+  "qualification": "PLAN PREPARATION ONLY",
+  "root_provider_found": false,
+  "root_parameters": {
+    "D": 5120,
+    "RR": 10,
+    "NMAX": 8,
+    "MUT": 0,
+    "UW": 271,
+    "DW": 173,
+    "N4EXT": 1
+  },
+  "root_all_ports": {
+    "clk": [
+      "input",
+      1
+    ],
+    "rst_n": [
+      "input",
+      1
+    ],
+    "job_v": [
+      "input",
+      1
+    ],
+    "job": [
+      "input",
+      217
+    ],
+    "done": [
+      "output",
+      1
+    ],
+    "fault": [
+      "output",
+      1
+    ],
+    "busy": [
+      "output",
+      1
+    ],
+    "wsc": [
+      "input",
+      8
+    ],
+    "pk5": [
+      "input",
+      6
+    ],
+    "pb5": [
+      "input",
+      1
+    ],
+    "up_nw": [
+      "input",
+      271
+    ],
+    "up_ne": [
+      "input",
+      271
+    ],
+    "down_nw": [
+      "output",
+      173
+    ],
+    "down_ne": [
+      "output",
+      173
+    ]
+  },
+  "root_wrapper": {
+    "module": "ot_hnx_fused_hub_n4ext",
+    "proposed_new_plan_instance": "u_mu_fused_root",
+    "ports": {
+      "clk": [
+        "input",
+        1
+      ],
+      "rst_n": [
+        "input",
+        1
+      ],
+      "job_v": [
+        "input",
+        1
+      ],
+      "job": [
+        "input",
+        217
+      ],
+      "done": [
+        "output",
+        1
+      ],
+      "fault": [
+        "output",
+        1
+      ],
+      "busy": [
+        "output",
+        1
+      ],
+      "wsc": [
+        "input",
+        8
+      ],
+      "pk5": [
+        "input",
+        6
+      ],
+      "pb5": [
+        "input",
+        1
+      ],
+      "up_nw": [
+        "input",
+        271
+      ],
+      "up_ne": [
+        "input",
+        271
+      ],
+      "down_nw": [
+        "output",
+        173
+      ],
+      "down_ne": [
+        "output",
+        173
+      ]
+    },
+    "source_parameters": {
+      "D": 5120,
+      "RR": 10,
+      "NMAX": 8,
+      "MUT": 0,
+      "N4EXT": 1
+    },
+    "port_identity": {
+      "up_nw": "u_native.uq0",
+      "up_ne": "u_native.uq2",
+      "down_nw": "u_native.dq0",
+      "down_ne": "u_native.dq2"
+    },
+    "removed_dead_abi": {
+      "uq1_uq3": "N4EXT1 generate g_n4ext assigns u4a=uq0,u4b=uq2; no other uses outside unelaborated g_t4",
+      "dq1_dq3": "N4EXT1 assigns constantzero",
+      "pk4a_pk4b_pb4a_pb4b": "Only referenced by unelaborated g_t4 nodes"
+    },
+    "added_cycles": 0,
+    "physical_size": "UNMEASURED",
+    "control_job_native_binding": "PENDING_PLAN_COMPOSER",
+    "root_bus_bits": 888,
+    "whole_kernel_qualified": false
+  },
+  "proposed_new_root_instance": "u_mu_fused_root",
+  "total_link_bits": 888,
+  "source_hashes": {
+    "ot_hnx_fused_tree.sv": "89c4d2bbb5ead4deba511721a87d3ddc0bf2aac1407ebf8fc9bbf01c3faf01ec",
+    "ot_hnx_fused_eng.sv": "11dce25459efa96db88323cbb9da19ab0f6558048cade64e5f0c79bd3fff5a8f"
+  },
+  "links": [
+    {
+      "id": "mu_n4_nw_up",
+      "width": 271,
+      "epoch": false,
+      "epoch_status": "ABI already contains validity; native START/valid transport proof remains required",
+      "source": {
+        "module": "ot_hnx_fused_tnode",
+        "instance": "u_mu_fused_n4",
+        "port": "uo"
+      },
+      "destination": {
+        "module": "ot_hnx_fused_hub",
+        "instance": null,
+        "port": "uq0"
+      },
+      "bit_map": {
+        "kind": "identity",
+        "source_lsb": 0,
+        "destination_lsb": 0,
+        "count": 271,
+        "stride": 1
+      },
+      "hub_bus": {
+        "name": "mu_n4_nw_up",
+        "dir": "out",
+        "width": 271,
+        "kind": "data",
+        "leaf": "u_mu_fused_n4.uo",
+        "face": "E",
+        "window_um": [
+          3448.24,
+          3495.76
+        ],
+        "layers": [
+          "M4",
+          "M6"
+        ],
+        "order": "lsb_low"
+      },
+      "root_bus": {
+        "name": "mu_n4_nw_up",
+        "dir": "in",
+        "width": 271,
+        "kind": "data",
+        "leaf": "u_mu_fused_root.up_nw",
+        "face": "W",
+        "window_um": [
+          5176.24,
+          5223.76
+        ],
+        "layers": [
+          "M4",
+          "M6"
+        ],
+        "order": "lsb_low"
+      },
+      "port": {
+        "id": "mu_n4_nw_up",
+        "src": {
+          "part": "NW_hub",
+          "bus": "mu_n4_nw_up"
+        },
+        "dst": {
+          "part": "root",
+          "bus": "mu_n4_nw_up"
+        },
+        "width": 271,
+        "kind": "data",
+        "epoch": false
+      },
+      "original_orphan": {
+        "conn": "mu_tree_root:n4:up",
+        "launch": "u_mu_fused_n4.uo",
+        "capture": "face root.up",
+        "bits": 271,
+        "from_um": [
+          4933.44,
+          3525.12
+        ],
+        "to_um": [
+          8216.64,
+          3503.52
+        ],
+        "regs_um": [
+          [
+            5326.56,
+            3516.48
+          ],
+          [
+            5728.32,
+            3516.48
+          ],
+          [
+            6130.08,
+            3516.48
+          ],
+          [
+            6531.84,
+            3516.48
+          ],
+          [
+            6933.6,
+            3516.48
+          ],
+          [
+            7335.36,
+            3516.48
+          ],
+          [
+            7534.08,
+            3516.48
+          ],
+          [
+            7737.12,
+            3516.48
+          ],
+          [
+            8138.88,
+            3516.48
+          ]
+        ],
+        "r9_segments": [
+          1,
+          1
+        ],
+        "note": " | PATH-HBM-R9 quadrant (HV, 3311.28 um, 9 st)"
+      },
+      "actual_pin_to_original_station_max_manhattan_um": 392.203,
+      "hub_station_status": "must regenerate per-bit <=405 and macro-avoiding paths from actual pins to new window",
+      "root_station_status": "requires actual root pins and provider placement; no guessed stations",
+      "external_station_depth_unpriced": true
+    },
+    {
+      "id": "mu_n4_nw_down",
+      "width": 173,
+      "epoch": false,
+      "epoch_status": "ABI already contains validity; native START/valid transport proof remains required",
+      "source": {
+        "module": "ot_hnx_fused_hub",
+        "instance": null,
+        "port": "dq0"
+      },
+      "destination": {
+        "module": "ot_hnx_fused_tnode",
+        "instance": "u_mu_fused_n4",
+        "port": "dn"
+      },
+      "bit_map": {
+        "kind": "identity",
+        "source_lsb": 0,
+        "destination_lsb": 0,
+        "count": 173,
+        "stride": 1
+      },
+      "hub_bus": {
+        "name": "mu_n4_nw_down",
+        "dir": "in",
+        "width": 173,
+        "kind": "data",
+        "leaf": "u_mu_fused_n4.dn",
+        "face": "E",
+        "window_um": [
+          3520.88,
+          3551.12
+        ],
+        "layers": [
+          "M4",
+          "M6"
+        ],
+        "order": "lsb_low"
+      },
+      "root_bus": {
+        "name": "mu_n4_nw_down",
+        "dir": "out",
+        "width": 173,
+        "kind": "data",
+        "leaf": "u_mu_fused_root.down_nw",
+        "face": "W",
+        "window_um": [
+          5248.88,
+          5279.12
+        ],
+        "layers": [
+          "M4",
+          "M6"
+        ],
+        "order": "lsb_low"
+      },
+      "port": {
+        "id": "mu_n4_nw_down",
+        "src": {
+          "part": "root",
+          "bus": "mu_n4_nw_down"
+        },
+        "dst": {
+          "part": "NW_hub",
+          "bus": "mu_n4_nw_down"
+        },
+        "width": 173,
+        "kind": "data",
+        "epoch": false
+      },
+      "original_orphan": {
+        "conn": "mu_tree_root:n4:down",
+        "launch": "face root.dn",
+        "capture": "u_mu_fused_n4.dn",
+        "bits": 173,
+        "from_um": [
+          8216.64,
+          3503.52
+        ],
+        "to_um": [
+          4933.44,
+          3525.12
+        ],
+        "regs_um": [
+          [
+            7814.88,
+            3503.52
+          ],
+          [
+            7413.12,
+            3503.52
+          ],
+          [
+            7011.36,
+            3503.52
+          ],
+          [
+            6609.6,
+            3503.52
+          ],
+          [
+            6207.84,
+            3503.52
+          ],
+          [
+            6009.12,
+            3503.52
+          ],
+          [
+            5806.08,
+            3503.52
+          ],
+          [
+            5404.32,
+            3503.52
+          ],
+          [
+            5002.56,
+            3503.52
+          ]
+        ],
+        "r9_segments": [
+          1,
+          1
+        ],
+        "note": " | PATH-HBM-R9 quadrant (HV, 3311.28 um, 9 st)"
+      },
+      "actual_pin_to_original_station_max_manhattan_um": 341.141,
+      "hub_station_status": "must regenerate per-bit <=405 and macro-avoiding paths from actual pins to new window",
+      "root_station_status": "requires actual root pins and provider placement; no guessed stations",
+      "external_station_depth_unpriced": true
+    },
+    {
+      "id": "mu_n4_ne_up",
+      "width": 271,
+      "epoch": false,
+      "epoch_status": "ABI already contains validity; native START/valid transport proof remains required",
+      "source": {
+        "module": "ot_hnx_fused_tnode",
+        "instance": "u_mu_fused_n4",
+        "port": "uo"
+      },
+      "destination": {
+        "module": "ot_hnx_fused_hub",
+        "instance": null,
+        "port": "uq2"
+      },
+      "bit_map": {
+        "kind": "identity",
+        "source_lsb": 0,
+        "destination_lsb": 0,
+        "count": 271,
+        "stride": 1
+      },
+      "hub_bus": {
+        "name": "mu_n4_ne_up",
+        "dir": "out",
+        "width": 271,
+        "kind": "data",
+        "leaf": "u_mu_fused_n4.uo",
+        "face": "E",
+        "window_um": [
+          3448.24,
+          3495.76
+        ],
+        "layers": [
+          "M4",
+          "M6"
+        ],
+        "order": "lsb_low"
+      },
+      "root_bus": {
+        "name": "mu_n4_ne_up",
+        "dir": "in",
+        "width": 271,
+        "kind": "data",
+        "leaf": "u_mu_fused_root.up_ne",
+        "face": "E",
+        "window_um": [
+          5176.24,
+          5223.76
+        ],
+        "layers": [
+          "M4",
+          "M6"
+        ],
+        "order": "lsb_low"
+      },
+      "port": {
+        "id": "mu_n4_ne_up",
+        "src": {
+          "part": "NE_hub",
+          "bus": "mu_n4_ne_up"
+        },
+        "dst": {
+          "part": "root",
+          "bus": "mu_n4_ne_up"
+        },
+        "width": 271,
+        "kind": "data",
+        "epoch": false
+      },
+      "original_orphan": {
+        "conn": "mu_tree_root:n4:up",
+        "launch": "u_mu_fused_n4.uo",
+        "capture": "face root.up",
+        "bits": 271,
+        "from_um": [
+          4933.44,
+          3525.12
+        ],
+        "to_um": [
+          8216.64,
+          3503.52
+        ],
+        "regs_um": [
+          [
+            5326.56,
+            3516.48
+          ],
+          [
+            5728.32,
+            3516.48
+          ],
+          [
+            6130.08,
+            3516.48
+          ],
+          [
+            6531.84,
+            3516.48
+          ],
+          [
+            6933.6,
+            3516.48
+          ],
+          [
+            7335.36,
+            3516.48
+          ],
+          [
+            7534.08,
+            3516.48
+          ],
+          [
+            7737.12,
+            3516.48
+          ],
+          [
+            8138.88,
+            3516.48
+          ]
+        ],
+        "r9_segments": [
+          1,
+          1
+        ],
+        "note": " | PATH-HBM-R9 quadrant (HV, 3311.28 um, 9 st)"
+      },
+      "actual_pin_to_original_station_max_manhattan_um": 392.203,
+      "hub_station_status": "must regenerate per-bit <=405 and macro-avoiding paths from actual pins to new window",
+      "root_station_status": "requires actual root pins and provider placement; no guessed stations",
+      "external_station_depth_unpriced": true
+    },
+    {
+      "id": "mu_n4_ne_down",
+      "width": 173,
+      "epoch": false,
+      "epoch_status": "ABI already contains validity; native START/valid transport proof remains required",
+      "source": {
+        "module": "ot_hnx_fused_hub",
+        "instance": null,
+        "port": "dq2"
+      },
+      "destination": {
+        "module": "ot_hnx_fused_tnode",
+        "instance": "u_mu_fused_n4",
+        "port": "dn"
+      },
+      "bit_map": {
+        "kind": "identity",
+        "source_lsb": 0,
+        "destination_lsb": 0,
+        "count": 173,
+        "stride": 1
+      },
+      "hub_bus": {
+        "name": "mu_n4_ne_down",
+        "dir": "in",
+        "width": 173,
+        "kind": "data",
+        "leaf": "u_mu_fused_n4.dn",
+        "face": "E",
+        "window_um": [
+          3520.88,
+          3551.12
+        ],
+        "layers": [
+          "M4",
+          "M6"
+        ],
+        "order": "lsb_low"
+      },
+      "root_bus": {
+        "name": "mu_n4_ne_down",
+        "dir": "out",
+        "width": 173,
+        "kind": "data",
+        "leaf": "u_mu_fused_root.down_ne",
+        "face": "E",
+        "window_um": [
+          5248.88,
+          5279.12
+        ],
+        "layers": [
+          "M4",
+          "M6"
+        ],
+        "order": "lsb_low"
+      },
+      "port": {
+        "id": "mu_n4_ne_down",
+        "src": {
+          "part": "root",
+          "bus": "mu_n4_ne_down"
+        },
+        "dst": {
+          "part": "NE_hub",
+          "bus": "mu_n4_ne_down"
+        },
+        "width": 173,
+        "kind": "data",
+        "epoch": false
+      },
+      "original_orphan": {
+        "conn": "mu_tree_root:n4:down",
+        "launch": "face root.dn",
+        "capture": "u_mu_fused_n4.dn",
+        "bits": 173,
+        "from_um": [
+          8216.64,
+          3503.52
+        ],
+        "to_um": [
+          4933.44,
+          3525.12
+        ],
+        "regs_um": [
+          [
+            7814.88,
+            3503.52
+          ],
+          [
+            7413.12,
+            3503.52
+          ],
+          [
+            7011.36,
+            3503.52
+          ],
+          [
+            6609.6,
+            3503.52
+          ],
+          [
+            6207.84,
+            3503.52
+          ],
+          [
+            6009.12,
+            3503.52
+          ],
+          [
+            5806.08,
+            3503.52
+          ],
+          [
+            5404.32,
+            3503.52
+          ],
+          [
+            5002.56,
+            3503.52
+          ]
+        ],
+        "r9_segments": [
+          1,
+          1
+        ],
+        "note": " | PATH-HBM-R9 quadrant (HV, 3311.28 um, 9 st)"
+      },
+      "actual_pin_to_original_station_max_manhattan_um": 341.141,
+      "hub_station_status": "must regenerate per-bit <=405 and macro-avoiding paths from actual pins to new window",
+      "root_station_status": "requires actual root pins and provider placement; no guessed stations",
+      "external_station_depth_unpriced": true
+    }
+  ],
+  "root_lot_candidates": [
+    {
+      "origin_um": [
+        336.96,
+        5149.44
+      ],
+      "outline_um": [
+        250.56,
+        388.8
+      ],
+      "halo_um": 4.32,
+      "area_status": "actual-macro/mapped-STD placement recipe; not measured placement",
+      "score_um": 492.48
+    },
+    {
+      "origin_um": [
+        328.32,
+        5149.44
+      ],
+      "outline_um": [
+        250.56,
+        388.8
+      ],
+      "halo_um": 4.32,
+      "area_status": "actual-macro/mapped-STD placement recipe; not measured placement",
+      "score_um": 501.12
+    },
+    {
+      "origin_um": [
+        336.96,
+        5158.08
+      ],
+      "outline_um": [
+        250.56,
+        388.8
+      ],
+      "halo_um": 4.32,
+      "area_status": "actual-macro/mapped-STD placement recipe; not measured placement",
+      "score_um": 501.12
+    },
+    {
+      "origin_um": [
+        319.68,
+        5149.44
+      ],
+      "outline_um": [
+        250.56,
+        388.8
+      ],
+      "halo_um": 4.32,
+      "area_status": "actual-macro/mapped-STD placement recipe; not measured placement",
+      "score_um": 509.76
+    },
+    {
+      "origin_um": [
+        328.32,
+        5158.08
+      ],
+      "outline_um": [
+        250.56,
+        388.8
+      ],
+      "halo_um": 4.32,
+      "area_status": "actual-macro/mapped-STD placement recipe; not measured placement",
+      "score_um": 509.76
+    },
+    {
+      "origin_um": [
+        336.96,
+        5166.72
+      ],
+      "outline_um": [
+        250.56,
+        388.8
+      ],
+      "halo_um": 4.32,
+      "area_status": "actual-macro/mapped-STD placement recipe; not measured placement",
+      "score_um": 509.76
+    },
+    {
+      "origin_um": [
+        311.04,
+        5149.44
+      ],
+      "outline_um": [
+        250.56,
+        388.8
+      ],
+      "halo_um": 4.32,
+      "area_status": "actual-macro/mapped-STD placement recipe; not measured placement",
+      "score_um": 518.4
+    },
+    {
+      "origin_um": [
+        336.96,
+        5175.36
+      ],
+      "outline_um": [
+        250.56,
+        388.8
+      ],
+      "halo_um": 4.32,
+      "area_status": "actual-macro/mapped-STD placement recipe; not measured placement",
+      "score_um": 518.4
+    }
+  ],
+  "lot_exclusions": "hard cores, contents, actual FT bit-cell bank bounds, relay sites, clock taps, full die FT bands; halo4.32",
+  "remaining": [
+    "real central root content/hard-core lot (current plan has no provider)",
+    "measured N4EXT1 root master and pin abstract",
+    "native root instance and exact control/job bindings",
+    "root clock/reset/START delivery and release offsets",
+    "actual per-bit <=405um station sites and macro-avoiding routes",
+    "link station latency in token compiler/model and R8 alignment",
+    "window occupancy/density and PG/clock geometry review"
+  ],
+  "input_sha256": {
+    "plan": "ef239e2e267b7ee51f7384ef2d4e0f06f1b6a44f36ba79dfaf7f3409b6a2eea0",
+    "abi": "d00e48ba9b94b5b5df716d5dbd2f2b3b2a7d095986a60a88fde455048c5f5d45",
+    "n4_pins": "ad9931e7c3d3c88522554c949e620db1735ac025ea2f275daa68c08155f2ed9c",
+    "root_manifest": "74624126ef4679101563551aae63d2924dcc7be50bce8ec027478f2151dab0a6"
+  }
+}

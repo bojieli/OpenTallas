@@ -47,7 +47,7 @@ def obstacles(t):
     return out
 
 
-def root_lots(t, size=(345.6, 345.6), target_y=5231.52):
+def root_lots(t, size=(345.6, 345.6), target_y=5231.52, size_status="historical model assumption; not measured N4EXT1 implementation"):
     obs = obstacles(t)
     w, h = t['outline_um']
     # Scan a legal manufacturing grid, closest to the two abutting N4 faces first.
@@ -63,7 +63,7 @@ def root_lots(t, size=(345.6, 345.6), target_y=5231.52):
             score = abs(y+size[1]/2-target_y)+abs(x+size[0]/2-w/2)
             candidates.append((score, x, y))
     return [{'origin_um':[x,y], 'outline_um':list(size), 'halo_um':4.32,
-             'area_status':'historical model assumption; not measured N4EXT1 implementation',
+             'area_status':size_status,
              'score_um':round(s,6)} for s,x,y in sorted(candidates)[:8]]
 
 
@@ -80,7 +80,7 @@ def wrapper_ports(manifest):
     return manifest['proposed_new_plan_instance']
 
 
-def prepare(plan, abi, pins, manifest=None):
+def prepare(plan, abi, pins, manifest=None, root_outline=None):
     expected = {('NW',271,'uo','uq0'), ('NW',173,'dq0','dn'),
                 ('NE',271,'uo','uq2'), ('NE',173,'dq2','dn')}
     seen = set()
@@ -159,7 +159,8 @@ def prepare(plan, abi, pins, manifest=None):
         root_provider_found=bool(providers),root_parameters=abi['root_parameters'],
         root_all_ports=manifest['ports'] if manifest else abi['root_all_ports'],
         root_wrapper=manifest, proposed_new_root_instance=root_inst,total_link_bits=sum(l['width'] for l in links),
-        source_hashes=abi['sources'],links=links,root_lot_candidates=root_lots(root),
+        source_hashes=abi['sources'],links=links,root_lot_candidates=root_lots(root, size=root_outline or (345.6,345.6),
+            size_status="actual-macro/mapped-STD placement recipe; not measured placement" if root_outline else "historical model assumption; not measured N4EXT1 implementation"),
         lot_exclusions='hard cores, contents, actual FT bit-cell bank bounds, relay sites, clock taps, full die FT bands; halo4.32',
         remaining=missing)
 
@@ -171,9 +172,10 @@ def main():
     ap.add_argument('--n4-pins',required=True,type=Path)
     ap.add_argument('--output',required=True,type=Path)
     ap.add_argument('--root-manifest',type=Path)
+    ap.add_argument('--root-outline',type=float,nargs=2,metavar=('WIDTH','HEIGHT'))
     a=ap.parse_args()
     result=prepare(json.loads(a.plan.read_text()),json.loads(a.abi.read_text()),json.loads(a.n4_pins.read_text()),
-                   json.loads(a.root_manifest.read_text()) if a.root_manifest else None)
+                   json.loads(a.root_manifest.read_text()) if a.root_manifest else None,a.root_outline)
     result['input_sha256']={k:hashlib.sha256(p.read_bytes()).hexdigest() for k,p in
                             [('plan',a.plan),('abi',a.abi),('n4_pins',a.n4_pins)]}
     if a.root_manifest:
