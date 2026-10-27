@@ -3088,7 +3088,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
         log.append(f"correspondence round {rnd}: {len(st)} hypotheses, {len(bad)} failed "
                    f"({sum(st[n] == 'undecided' for n in bad)} undecided) {bad[:6]}")
         if not bad:
-            if structural_constant_closure(L, log) or structural_twin_closure(L, log, tried) or \
+            if structural_constant_closure(L, log) or structural_twin_closure(L, log, tried if not adding else None) or \
                     structural_cofactor_pairs(L, log, tried):
                 continue     # prove the new constants before returning
             if L.hyp == before or not adding:
