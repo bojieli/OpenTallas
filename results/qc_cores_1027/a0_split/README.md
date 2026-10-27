@@ -60,3 +60,16 @@ Labels: CHECKED = recomputed here from the data. UNCHECKED = taken from another 
 1. Parent: cut-RTL (children black-boxed) vs the mapped parent, run with tools/die_plan/lec.py@262d07038. Running at intel2 /srv/opentallas-scratch2/claude/qccores1-1027/a0/lec_nk_parent/lec.
 2. Each child: routed netlist vs its RTL (rawleaf: rawleaf_keep.v; romleaf/node: on re-kit).
 3. The cut identity, original LSL == wrapper(u_lh) o rawleaf. Codex has this only at netlist level (whole-graph identity + 2^50 cone SAT). It still needs an RTL-level LEC of the original ot_qwen_tile_lsl against the cut-RTL composition.
+
+## Clock R2 (QC-CORES-1, answers GEOM-REVIEW-18 FAIL-IN-PLAN) — PLAN ONLY, no P&R
+Script `a0_clk_r2.py LIBDIR OUT` -> `clk_r2/a0_clk_r2_plan.json`, `clk_r2/a0_clk_r2_{nk,nl}.png` (both viewed).
+All numbers PLAN MODEL, UNCHECKED-model (NLDM RVT TT/FF + Elmore, M5/M6 setRC x0.8/0.9 for M6/M7 legs); predictor family reads ~15 ps HIGH on TT.
+- Single in-core E0 tree (R1 form, re-modelled) = P ~200 TT -> child budget ~50 ps: infeasible; also 12.2a forbids core-owned M8/M9.
+  Restructured per 12.8b/12.2a1: die mesh (M8/M9, die-owned) drops into 26 in-core PUSHDOWN islands (identical coords all 720/48 instances),
+  each island = one plan-sized driver + short M6/M7 leg (<= 80.6 um) to child CENTRE entries / parent-FF local roots.
+- (a) unequal legs: ROM = vertical pairs from row-gap islands (legs 65.1/65.5), LSL = column pairs (80.3/80.6), node 79.8 -> child-entry window TT 0.63 / FF 0.96 ps.
+- (b) parent FFs: 18 parent local roots (channel x5, E face x9, c1r0 slot, row-gap x3), P 30.7 TT -> local trees built to composed 250 (B_par 219 TT / 178 FF).
+- (c) composed: P_child TT 43.8 / FF 36.2 -> common child budget B = 206 TT / 166 FF (all three masters, same value).
+- (i) re-kit clk pins (child frame, centre): romleaf (86.4,55.08), rawleaf (57.672,70.2), node (23.76,216.0); child OBS <= M5 (romleaf LEF CHECKED M1-M5; rawleaf/node UNCHECKED).
+- (ii) no legs in row gaps (islands only, stub); legs over children on M6/M7; 0 legs / 0 islands in pin-face columns; 0 islands in child halo.
+- (iii) islands R0-R4 in bus corridor (channel cross, 12.2a site) -> capacity re-deduction for 5 x 8.64 um island footprint + M1-M5 drop vias.
