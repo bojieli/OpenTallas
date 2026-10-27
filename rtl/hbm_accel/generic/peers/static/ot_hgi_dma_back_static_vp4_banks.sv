@@ -161,8 +161,8 @@ module ot_hgi_dma_back_static_vp4_controller #(
     // Pin captures. Normal execution advances the absolute input cycle once per
     // related clock edge; this is checked, never used to reschedule execution.
     function automatic [31:0] inc32(input [31:0] x);
-        inc32={x[31:24]+8'(&x[23:0]),x[23:16]+8'(&x[15:0]),
-               x[15:8]+8'(&x[7:0]),x[7:0]+8'd1};
+        inc32={x[31:24]+{7'd0,&x[23:0]},x[23:16]+{7'd0,&x[15:0]}, // YOSYS-CONCAT 10-26: zero-extend by concat, no cast inside the concat member (rtl_lint YC1)
+               x[15:8]+{7'd0,&x[7:0]},x[7:0]+8'd1};
     endfunction
     reg [31:0] cycle_q;
     wire [31:0] cycle=inc32(cycle_q);

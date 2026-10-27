@@ -210,7 +210,8 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b #(
     // QREG: the four entries an accept at wp would write (beat b), the exact next push entry, both identity candidates
     wire[255:0]qentry;
     for(genvar b=0;b<4;b=b+1)begin:g_qentry
-        assign qentry[b*64+:64]={i_we,incoming[14:12]^incoming[19:17],(2'(incoming[1:0]+b)^incoming[16:15]),incoming[11:7],i_tag,4'(b),i_wstrb};
+        localparam [1:0] B2=b;   // YOSYS-CONCAT 10-26: 2'(incoming[1:0]+b) in a concat member lost the MSB members in yosys (YC1)
+        assign qentry[b*64+:64]={i_we,incoming[14:12]^incoming[19:17],((incoming[1:0]+B2)^incoming[16:15]),incoming[11:7],i_tag,4'(b),i_wstrb};
     end
     wire[4:0]ep_n=posted?ep1:ep;
     wire[4:0]ep_off=ep_n-wp;
@@ -248,7 +249,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b #(
             end
             if(accepted)begin
                 if(QREG==0)for(integer b=0;b<4;b=b+1)if(b<length)
-                    queue[5'(wp+b)]<={i_we,incoming[14:12]^incoming[19:17],(2'(incoming[1:0]+b)^incoming[16:15]),incoming[11:7],i_tag,4'(b),i_wstrb};
+                    queue[5'(wp+b)]<={i_we,incoming[14:12]^incoming[19:17],((incoming[1:0]+b[1:0])^incoming[16:15]),incoming[11:7],i_tag,4'(b),i_wstrb};
                 wp<=wp+5'(length);
                 if(state==IDLE || !same_row)begin active_row<=incoming_row;state<=DESC;end
             end
