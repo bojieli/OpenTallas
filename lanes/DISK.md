@@ -141,3 +141,13 @@ KEPT notable: flow-canary (live writer, 44 SIGNED in ab), proto1025/kits_s81_178
 - epyc2:/srv/opentallas-scratch2/claude/codex-s81-cores/c4/ot_dsrom_su_hcpost_lane_pr_c (0.91 GB, 184) -> closed_archive/ot_dsrom_su_hcpost_lane_pr/kit-ot_dsrom_su_hcpost_lane_pr_c-c4-epyc2 (0.18 GB) PASS
 - epyc2:/srv/opentallas-scratch2/claude/codex-qc-cores/crh_i291_m5 (0.44 GB, 137) -> closed_archive/qfd_dv_s8x_crh/kit-crh_i291_m5-qc-epyc2 (0.06 GB) PASS
 Sources NOT deleted; now SAFE TO PRUNE (~4.3 GB on epyc2). GDS not generated (gds=pending; 6_final.odb/def archived).
+
+## CODEX notes 2026-10-26 20:14 PDT
+Earlier archival/provenance complete; do not spend this takeover repeating. No cleanup of others work.
+
+2026-10-27 01:27 PDT DISK-EPYC2: epyc2 /srv/opentallas-scratch2 85% / 132 GB free (lane start; 175 GB at delete time, others freed ~43 GB meanwhile) -> 70% / 252 GB free (CHECKED df). Checks per dir: newest file >24 h (find %T@ max), no docker mount / ps cwd / lsof, not CLOSED (no .odb/signoff route), referenced in lane tails only as COLLECTED/historical diagnostic.
+- 44.8G wt/kv-tok-d (newest 51 h; detached 179bcea4f already on origin/claude/kv-tok-d-1024, D DONE+merged 10-24; 12 uncommitted edits rescued -> rescue/epyc2-kv-tok-d-1027@d3f0e0251 on hub+GitHub) -> git worktree remove
+- ~18.6G codex-hbm-token-1025/full (42 h; SU31 corrected-clock build+replay COLLECTED, FAIL 640/1046 diag) -> files >1MB except *.log/*.json deleted (Verilator obj/bin/src copy); logs kept
+- codex-hbm-token-0719/su_fault_diag (40 h; orphan diag COLLECTED FAIL632/1046) + codex-hbm-su-diag-2222 (25 h; DIAG_COMPLETE 10-25 23:35) -> same build-artifact prune; these 3 hbm dirs shared hardlinks, ~22.7G total unique
+- ~9.3G codex-kv-token-0719 (40 h; boot160 build COLLECTED, superseded by path-kv-tok) + ~7.3G path-kv-tok (36 h; Stage A COLLECTED KVSLICE_BOOT FAIL, all runs ended 10-25 12:26) -> same build-artifact prune; logs kept
+KEPT: moved/ (59G, 0 h, fresh localhost move), wt/{hbm-mu-quad-3-1027,path-hbm-r15-1026,infra-first-qc-r9-1026,hbm-mu-quad-r13price} + hbm-mu-quad-3-1027 (<24 h/live procs), flow-canary (5 h), qc-f4g-1026/qc-su-prog-l2-1026/qc-su-lat-r6 (live docker+units), clkreset-g2 + wt/clkreset-g2-0810 (clkreset-g2-audit container live 41 h, reads that die_plan), kit dirs (s81-head-kits, s81-kits, kits-spare, kits-wave*, hbm-face/runs_synth 21.8G 43 h, codex-hbm-cores-1025) not pruned: may hold signed-off routes -> closed-archive flow, not deleted here; next candidates if needed: hbm-face (21.8G 43 h, 25 lane refs), infra2 (9.5G 30 h), tok-ds-dskr (7.4G 27 h).
