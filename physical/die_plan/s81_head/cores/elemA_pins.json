@@ -1,24 +1,17 @@
 {
-"source": "results/physical/head_core_r15/elemA_eco_signed/ot_s81hd_elemA_cv.lef (signed-off elemA_eco, R15)",
-"source_sha256": "0077f7e5d80ed00f6d37da369d39d90c8edc748eb15cca75fb4d8f3fc69aee55",
+"source": "intel1:/srv/opentallas-scratch2/claude/head-core-r16/elemA_m2/run/results/asap7/hd_elemA_rb/base/ot_s81hd_elemA_cv.lef (R16 m2 routed abstract 10-27 07:54; R14 centre re-pin)",
+"source_sha256": "17786be2c2d65d9635844dbe598871d9ee51048b5b418068f9bccd31c897dd3c",
 "macro": "ot_s81hd_elemA_cv",
 "outline_um": [
 319.68,
 319.68
 ],
+"excluded_pg": [
+"VDD",
+"VSS"
+],
+"pads_snapped_to_track": 10,
 "pins": [
-{
-"name": "VDD",
-"layer": "M5",
-"x": 313.296,
-"y": 159.84
-},
-{
-"name": "VSS",
-"layer": "M5",
-"x": 313.104,
-"y": 159.84
-},
 {
 "name": "b_d[0]",
 "layer": "M4",
@@ -718,56 +711,92 @@
 {
 "name": "ft_ck0_i",
 "layer": "M5",
-"x": 157.68,
-"y": 163.44
+"x": 157.692,
+"y": 163.44,
+"rect_centre": [
+157.68,
+163.44
+]
 },
 {
 "name": "ft_ck0_o",
 "layer": "M5",
-"x": 157.68,
-"y": 156.24
+"x": 157.692,
+"y": 156.24,
+"rect_centre": [
+157.68,
+156.24
+]
 },
 {
 "name": "ft_ck1_i",
 "layer": "M5",
-"x": 159.12,
-"y": 163.44
+"x": 159.132,
+"y": 163.44,
+"rect_centre": [
+159.12,
+163.44
+]
 },
 {
 "name": "ft_ck1_o",
 "layer": "M5",
-"x": 159.12,
-"y": 156.24
+"x": 159.132,
+"y": 156.24,
+"rect_centre": [
+159.12,
+156.24
+]
 },
 {
 "name": "ft_mesh_i",
 "layer": "M5",
-"x": 160.56,
-"y": 163.44
+"x": 160.572,
+"y": 163.44,
+"rect_centre": [
+160.56,
+163.44
+]
 },
 {
 "name": "ft_mesh_o",
 "layer": "M5",
-"x": 160.56,
-"y": 156.24
+"x": 160.572,
+"y": 156.24,
+"rect_centre": [
+160.56,
+156.24
+]
 },
 {
 "name": "ft_mstrap_i",
 "layer": "M5",
-"x": 162.0,
-"y": 163.44
+"x": 159.852,
+"y": 159.84,
+"rect_centre": [
+159.84,
+159.84
+]
 },
 {
 "name": "ft_rst_i",
 "layer": "M5",
-"x": 156.96,
-"y": 163.44
+"x": 156.972,
+"y": 163.44,
+"rect_centre": [
+156.96,
+163.44
+]
 },
 {
 "name": "ft_rst_o",
 "layer": "M5",
-"x": 162.0,
-"y": 156.24
+"x": 162.012,
+"y": 156.24,
+"rect_centre": [
+162.0,
+156.24
+]
 },
 {
 "name": "go",
@@ -1276,8 +1305,12 @@
 {
 "name": "rst_n",
 "layer": "M5",
-"x": 159.84,
-"y": 157.68
+"x": 159.852,
+"y": 157.68,
+"rect_centre": [
+159.84,
+157.68
+]
 },
 {
 "name": "x[0]",
@@ -2816,5 +2849,5 @@
 "y": 69.516
 }
 ],
-"pins_canon_sha256": "926a1ed7e34f1d9104bb152d16629da30945c53fd311fdfd3c6e8452b35f7627"
+"pins_canon_sha256": "658fddc7993be11dabf8004995abc62c0467dfa9672f67eb9e4d517a43ed9d85"
 }

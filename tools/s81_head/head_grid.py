@@ -5,7 +5,7 @@ import json, sys
 P = json.load(open(sys.argv[1]))
 t = P["partition_types"]["hd_tile"]
 w, h = t["outline_um"]
-eb = [tp for tp in t["clock"]["taps"] if tp["name"].endswith("u_eB.clk")][0]["xy"]
+eb = [tp for tp in t["clock"]["taps"] if tp["name"].endswith(("u_eB.clk", "u_eB.ft_mstrap_i"))][0]["xy"]
 def tf(q, x, y):
     o = q["orient"]; ox, oy = q["origin_um"]
     return {"R0": (ox + x, oy + y), "MY": (ox + w - x, oy + y), "MX": (ox + x, oy + h - y), "R180": (ox + w - x, oy + h - y)}[o]
