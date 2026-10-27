@@ -1,0 +1,31 @@
+{
+ "verdict": "FAIL",
+ "plan_sha256": "e4829ce26d222eac5fb51ab34454e28d0174585995bc0e837fc7e29d660f48d2",
+ "gates": {
+  "reach_gap": "PASS",
+  "bay_fill": "PASS",
+  "corridor_tracks": "FAIL",
+  "entry_pins": "PASS",
+  "clock_shield": "NOT RUN",
+  "static_ir": "FAIL",
+  "lot_fit": "PASS",
+  "clock_entry": "FAIL",
+  "core_reach": "FAIL",
+  "early_taps": "FAIL",
+  "tree_balance": "PASS",
+  "core_insertion_model": "FAIL",
+  "die_pair_skew_model": "FAIL",
+  "tree_commensurate": "PASS",
+  "clock_sites": "PASS",
+  "island_lattice": "PASS",
+  "tree_on_islands": "FAIL",
+  "tree_lattice": "PASS",
+  "infra_sites": "NOT RUN",
+  "clock_rep_sites": "PASS",
+  "tap_region_containment": "NOT RUN",
+  "footless_stubs": "PASS",
+  "island_ft_inputs": "FAIL",
+  "region_distribution": "FAIL",
+  "trunk_sites": "PASS"
+ }
+}

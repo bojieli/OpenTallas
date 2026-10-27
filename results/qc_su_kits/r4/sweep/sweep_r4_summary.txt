@@ -1,0 +1,4 @@
+btab_ls_k6_L3 PASS G1P G2P G3P G4P G5P P_P  TT 267.15 w 14.72 FFe 196.89 w 13.0 trunk None G5n 0 x 0 G4f 0 {'L1': 2, 'L2': 3, 'L3': 0}
+btab_ls_k6_pin FAIL G1P G2P G3P G4P G5P P_F  TT 339.14 w 9.77 FFe 249.36 w 9.96 trunk None G5n 0 x 0 G4f 0 {'L1': 2, 'L2': 3, 'L3': 4}
+btab_ls_k7_L3 PASS G1P G2P G3P G4P G5P P_P  TT 246.01 w 12.87 FFe 182.97 w 12.09 trunk {'TT': {'mean': 263.05, 'window': 12.87}, 'FF': {'mean': 198.58, 'window': 12.06}} G5n 0 x 0 G4f 0 {'L1': 2, 'L2': 1, 'L3': 0}
+btab_ls_k7_pin FAIL G1P G2P G3P G4P G5P P_F  TT 317.11 w 7.91 FFe 234.77 w 8.31 trunk None G5n 0 x 0 G4f 0 {'L1': 2, 'L2': 1, 'L3': 4}

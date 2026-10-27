@@ -180,7 +180,7 @@ def compile_slice(sl):
         # coordinate (region root) and its parent node; its CLK pin moves from the core clock net to the parent's
         # output, its gated domain (the gate's output net, every original gated sink) stays intact and is built
         # below it as a CTS-open leaf. Gated and ungated leaves must sit at the same stage count.
-        gates = []
+        gates, copied = [], set()
         for g in tree.get("gates", []):
             g = dict(g)
             inst, par = g.get("inst"), g.get("parent")
@@ -201,6 +201,33 @@ def compile_slice(sl):
             if not (rect[0] <= x <= rect[2] and rect[1] <= y <= rect[3]):
                 raise InfraError(f"gate {inst}: planned position is outside its island")
             g["rect_um"] = rect
+            # CLOCK-GATE COPY (S81-CORE-LAT-R7, COORD ruling R6 (3)): a NEW ICG instance of the SAME master whose
+            # enable pins (ENA/SE) connect to the SAME nets as an existing RTL gate (same registered enable), so its
+            # gated sinks keep exactly the original gating function; the copy takes the NAMED members out of the
+            # original's gated domain. Structural only (no timing input); kit LEC on the post-hook netlist must prove it.
+            if "clone_of" in g:
+                orig = next((o for o in gates if o["inst"] == g["clone_of"]), None)
+                if orig is None or "clone_of" in orig:
+                    raise InfraError(f"gate copy {inst}: clone_of must name an original RTL gate listed before it")
+                if g["master"] != orig["master"]:
+                    raise InfraError(f"gate copy {inst}: master {g['master']} differs from {orig['inst']} {orig['master']}")
+                if (g["clk_pin"], g["out_pin"]) != (orig["clk_pin"], orig["out_pin"]):
+                    raise InfraError(f"gate copy {inst}: clk/out pins differ from {orig['inst']}")
+                g["enable_pins"] = list(g.get("enable_pins", ["ENA", "SE"]))
+                if not g["enable_pins"] or len(set(g["enable_pins"])) != len(g["enable_pins"]) or \
+                        set(g["enable_pins"]) & {g["clk_pin"], g["out_pin"]}:
+                    raise InfraError(f"gate copy {inst}: enable_pins must be distinct non-clock pins")
+                mem = g.get("members", [])
+                if not mem or len(set(mem)) != len(mem):
+                    raise InfraError(f"gate copy {inst}: members must be a non-empty list of distinct named gated sinks")
+                for s_ in mem:
+                    word(s_)
+                    if s_ in copied:
+                        raise InfraError(f"gated sink {s_} assigned to two gate copies")
+                    copied.add(s_)
+                orig.setdefault("copies", []).append(inst)
+            elif "members" in g:
+                raise InfraError(f"gate {inst}: only a gate copy (clone_of) lists members")
             depth[inst] = depth[par] + 1
             gates.append(g)
         gate_names = {g["inst"] for g in gates}
@@ -218,6 +245,9 @@ def compile_slice(sl):
                     raise InfraError(f"gated_domain leaf {n}: must name a planned clock gate exactly once")
                 if leaf.get("sinks"):
                     raise InfraError(f"gated_domain leaf {n}: gated sinks stay on the gate output; do not list them")
+                gd = next(g for g in gates if g["inst"] == n)
+                if "clone_of" in gd and leaf.get("domain_sinks") != len(gd["members"]):
+                    raise InfraError(f"gated_domain leaf {n}: a gate copy's domain is exactly its {len(gd['members'])} members")
                 domains.add(n)
                 levels.add(depth[n])
                 cts_levels[n] = _cts_levels(leaf, n)
@@ -232,6 +262,8 @@ def compile_slice(sl):
                 raise InfraError(f"{n}: empty leaf")
             for s in sinks:
                 word(s)
+                if s in copied:
+                    raise InfraError(f"clock sink {s} is a gate-copy member and a direct leaf sink")
                 if s in used:
                     raise InfraError(f"clock sink assigned twice: {s}")
                 used.add(s)
@@ -402,16 +434,30 @@ def emit_tcl(sl):
     pgc = trunk_pg_clearance(sl, plan)
     if pgc["verdict"] not in ("PASS", "NOT APPLICABLE"):
         raise InfraError(f"core clock trunk PG clearance {pgc['verdict']}: {pgc.get('issue') or pgc['examples'][:3]}")
+    band_info = []
     if tree and not tree.get("equal_load", True):
         q = tree.get("model_qualification", {})
         if q.get("measured_timing_used") is not False:
             raise InfraError("unequal-count tree refuses build until joint NLDM plan model qualifies both corners")
+        # band_policy "gate" (default, unchanged for every existing caller): the 250+-20 TT / 202.5+-20 FF band gates.
+        # band_policy "info" (METHODOLOGY 12.3a v5.0, COORD RULING S81-CORE-LAT-R9 19:22): the band is a design target,
+        # reported only; the gates are tap window <= 20 ps and slew <= 80 ps at TT and FF (die related-pair STA decides).
+        policy = q.get("band_policy", "gate")
+        if policy not in ("gate", "info"):
+            raise InfraError(f"unknown model_qualification band_policy {policy!r}")
         for corner, low, high in (("TT", 230., 270.), ("FF", 182.5, 222.5)):
             result = q.get("corners", {}).get(corner, {})
-            if not result or result["leaf_window"] > 20 or result["leaf_min"] < low or result["leaf_max"] > high or result["slew_max"] > 80:
+            if not result or result["leaf_window"] > 20 or result["slew_max"] > 80 or (
+                    policy == "gate" and (result["leaf_min"] < low or result["leaf_max"] > high)):
                 raise InfraError(f"unequal-count tree model target FAIL/NOT RUN at {corner}; no physical build")
+            if policy == "info":
+                inb = low <= result["leaf_min"] and result["leaf_max"] <= high
+                band_info.append(f"# core latency band INFO {corner}: model leaf {result['leaf_min']:g}..{result['leaf_max']:g} "
+                                 f"window {result['leaf_window']:g} (target {low:g}..{high:g}: {'IN' if inb else 'OUT'}; not a gate, 12.3a)")
     lines = ["# Shared core infrastructure: plan-defined identities only; no measured adjustments.",
              "source /work/native_pg_binding.tcl", "source /work/core_infra_impl.tcl", "ot_ci_begin"]
+    if band_info:
+        lines[1:1] = band_info
     if plan["clock_entry"]:
         x, y = plan["clock_entry"]["xy_um"]
         lines.append(f"ot_ci_clock_entry {word(plan['core_clock_port'])} {x:g} {y:g}")
@@ -433,10 +479,22 @@ def emit_tcl(sl):
         for c in t["nodes"]:
             lines.append(f"ot_ci_tree_node {word(c['name'])} {word(c['parent'])}")
         for g in t.get("gates", []):
+            if "clone_of" in g:
+                continue
             x, y = g["xy_um"]
             r = " ".join(f"{v:g}" for v in g["rect_um"])
             lines.append(f"ot_ci_tree_gate {word(g['inst'])} {g['master']} {word(g['parent'])} {word(g['clk_pin'])} "
                          f"{word(g['out_pin'])} {x:g} {y:g} {{{r}}}")
+        # copies after every original: each copy reads its original's enable nets and takes members from its domain
+        for g in t.get("gates", []):
+            if "clone_of" not in g:
+                continue
+            x, y = g["xy_um"]
+            r = " ".join(f"{v:g}" for v in g["rect_um"])
+            pins = " ".join(word(q) for q in g["enable_pins"])
+            mem = " ".join(word(q) for q in g["members"])
+            lines.append(f"ot_ci_tree_gate_copy {word(g['inst'])} {g['master']} {word(g['clone_of'])} {word(g['parent'])} "
+                         f"{word(g['clk_pin'])} {word(g['out_pin'])} {x:g} {y:g} {{{r}}} {{{pins}}} {{{mem}}}")
         for leaf in t["leaves"]:
             if leaf.get("load_class") == "gated_domain":
                 lines.append(f"ot_ci_tree_domain {word(leaf['node'])} {leaf['domain_sinks']}")
@@ -446,6 +504,9 @@ def emit_tcl(sl):
             if leaf.get("cts_open"):
                 lines.append(f"ot_ci_tree_open {word(leaf['node'])}")
         lines.append("ot_ci_tree_finish")
+        if any("clone_of" in g for g in t.get("gates", [])):
+            # the copies exist only after this hook: the kit LEC must run on this netlist (lec.py --netlist)
+            lines.append("ot_ci_lec_netlist /work/core_infra_post.v")
     for b in plan["bays"]:
         x, y = b["xy_um"]
         r = " ".join(f"{v:g}" for v in b["rect_um"])

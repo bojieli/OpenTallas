@@ -1,0 +1,168 @@
+{
+ "label": "UNCHECKED plan-model estimate, QC die seams",
+ "cell": "HB4xp67",
+ "scenarios": {
+  "region_flat": {
+   "derate": "flat",
+   "mesh_skew_ps": null,
+   "windows_ps": {
+    "TT": 23.518,
+    "FF": 35.476
+   },
+   "seams": 773,
+   "seams_pad": 581,
+   "seams_land": 192,
+   "bits_pad": 937474,
+   "bits_land": 340012,
+   "demand_ff_ps": [
+    64.94,
+    596.14
+   ],
+   "cells_per_bit": [
+    2,
+    14
+   ],
+   "hold_cells": 2831417,
+   "hold_area_um2": 289087.7,
+   "physical_lower_bound_cells": 2371699,
+   "tt_added_ps_per_bit_max": 414.97,
+   "legacy_contract_cells_same_bits": 1874948,
+   "setup_tt_after_min_ps": 1.09
+  },
+  "region_aocv_draft": {
+   "derate": "aocv_draft",
+   "mesh_skew_ps": null,
+   "windows_ps": {
+    "TT": 23.518,
+    "FF": 35.476
+   },
+   "seams": 773,
+   "seams_pad": 630,
+   "seams_land": 143,
+   "bits_pad": 998333,
+   "bits_land": 279153,
+   "demand_ff_ps": [
+    60.5,
+    566.42
+   ],
+   "cells_per_bit": [
+    2,
+    13
+   ],
+   "hold_cells": 2820719,
+   "hold_area_um2": 287995.4,
+   "physical_lower_bound_cells": 2251832,
+   "tt_added_ps_per_bit_max": 414.97,
+   "legacy_contract_cells_same_bits": 1996666,
+   "setup_tt_after_min_ps": 20.73
+  },
+  "mesh20_flat": {
+   "derate": "flat",
+   "mesh_skew_ps": 20.0,
+   "windows_ps": {
+    "TT": 23.518,
+    "FF": 35.476
+   },
+   "seams": 773,
+   "seams_pad": 773,
+   "seams_land": 0,
+   "bits_pad": 1277486,
+   "bits_land": 0,
+   "demand_ff_ps": [
+    78.44,
+    78.44
+   ],
+   "cells_per_bit": [
+    3,
+    3
+   ],
+   "hold_cells": 3832458,
+   "hold_area_um2": 391294.0,
+   "physical_lower_bound_cells": 2554972,
+   "tt_added_ps_per_bit_max": 248.98,
+   "legacy_contract_cells_same_bits": 2554972,
+   "setup_tt_after_min_ps": 309.16
+  },
+  "mesh20_aocv_draft": {
+   "derate": "aocv_draft",
+   "mesh_skew_ps": 20.0,
+   "windows_ps": {
+    "TT": 23.518,
+    "FF": 35.476
+   },
+   "seams": 773,
+   "seams_pad": 773,
+   "seams_land": 0,
+   "bits_pad": 1277486,
+   "bits_land": 0,
+   "demand_ff_ps": [
+    75.59,
+    75.59
+   ],
+   "cells_per_bit": [
+    2,
+    2
+   ],
+   "hold_cells": 2554972,
+   "hold_area_um2": 260862.6,
+   "physical_lower_bound_cells": 2554972,
+   "tt_added_ps_per_bit_max": 165.99,
+   "legacy_contract_cells_same_bits": 2554972,
+   "setup_tt_after_min_ps": 396.48
+  },
+  "mesh80_flat": {
+   "derate": "flat",
+   "mesh_skew_ps": 80.0,
+   "windows_ps": {
+    "TT": 23.518,
+    "FF": 35.476
+   },
+   "seams": 773,
+   "seams_pad": 773,
+   "seams_land": 0,
+   "bits_pad": 1277486,
+   "bits_land": 0,
+   "demand_ff_ps": [
+    138.44,
+    138.44
+   ],
+   "cells_per_bit": [
+    4,
+    4
+   ],
+   "hold_cells": 5109944,
+   "hold_area_um2": 521725.3,
+   "physical_lower_bound_cells": 3832458,
+   "tt_added_ps_per_bit_max": 331.98,
+   "legacy_contract_cells_same_bits": 2554972,
+   "setup_tt_after_min_ps": 166.17
+  },
+  "mesh80_aocv_draft": {
+   "derate": "aocv_draft",
+   "mesh_skew_ps": 80.0,
+   "windows_ps": {
+    "TT": 23.518,
+    "FF": 35.476
+   },
+   "seams": 773,
+   "seams_pad": 773,
+   "seams_land": 0,
+   "bits_pad": 1277486,
+   "bits_land": 0,
+   "demand_ff_ps": [
+    135.59,
+    135.59
+   ],
+   "cells_per_bit": [
+    4,
+    4
+   ],
+   "hold_cells": 5109944,
+   "hold_area_um2": 521725.3,
+   "physical_lower_bound_cells": 3832458,
+   "tt_added_ps_per_bit_max": 331.98,
+   "legacy_contract_cells_same_bits": 2554972,
+   "setup_tt_after_min_ps": 170.49
+  }
+ }
+}

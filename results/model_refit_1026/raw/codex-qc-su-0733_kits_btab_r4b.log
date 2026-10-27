@@ -1,0 +1,823 @@
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts
+Running cts.tcl, stage 4_1_cts
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /work/macros/ot_sram_1r1w_128x256_m1_r2c2_tt.lib
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner bc /work/macros/ot_sram_1r1w_128x256_m1_r2c2_ff.lib
+read_db /work/run/results/asap7/kq_qfd_dv_s8x_btab_aspect1713a1/base/3_place.odb
+read_sdc /work/run/results/asap7/kq_qfd_dv_s8x_btab_aspect1713a1/base/3_place.sdc
+source /work/cf/rc_cal.tcl
+OT_RC_CAL layer RC scaled: R h0.8 v0.8, C h0.9 v0.9 (estimates only; RCX unaffected)
+source /work/pre_cts_r2.tcl
+OT_FCAP: dont_touch lifted for CTS on 0 flops
+S6P_FACE_FLOPS 1059 written /work/run/results/asap7/kq_qfd_dv_s8x_btab_aspect1713a1/base/ot_face_flops.txt
+OT_R4_MEMBERSHIP sinks 5644 leaves 64 load 88..89
+OT_MSCTS_BUILD macro g_btb\[3\].u_m designed leaf stage BUFx24_ASAP7_75t_R at (226.412,199.500) on the S net of leaf Q3B2L0 (same depth as register leaves)
+OT_MSCTS_BUILD macro g_btb\[2\].u_m designed leaf stage BUFx24_ASAP7_75t_R at (226.412,143.340) on the S net of leaf Q3B0L0 (same depth as register leaves)
+OT_MSCTS_BUILD macro g_btb\[1\].u_m designed leaf stage BUFx24_ASAP7_75t_R at (226.412,87.180) on the S net of leaf Q2B0L1 (same depth as register leaves)
+OT_MSCTS_BUILD macro g_btb\[0\].u_m designed leaf stage BUFx24_ASAP7_75t_R at (226.412,31.020) on the S net of leaf Q1B2L0 (same depth as register leaves)
+OT_MSCTS_BUILD H-tree: entry chain 0, 24 nodes, 64 leaves at depth 3, 5644 register sinks, 4 macro leaves
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets
+OT_MSCTS H: TritonCTS not run (tree fully plan-built)
+estimate_parasitics -placement
+detailed_placement
+[INFO DPL-0006] Core area: 86593.54 um^2
+[INFO DPL-0007] Movable instances area: 2251.17 um^2
+[INFO DPL-0008] Fixed instances area within core: 15799.21 um^2
+[INFO DPL-0009] Utilization: 20.8%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 22277 cells
+[INFO DPL-0393]   height 153 row(s): 4 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |        166 |        20 |       146
+        1 |        115 |        10 |       105
+        2 |        128 |         8 |       120
+        3 |        116 |         9 |       107
+        4 |        110 |         6 |       104
+        5 |         51 |         6 |        45
+        6 |         48 |         6 |        42
+        7 |         45 |         4 |        41
+        8 |         43 |         3 |        40
+        9 |         41 |         3 |        38
+       10 |         43 |         3 |        40
+       20 |         23 |         3 |        20
+       22 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 22.
+[INFO DPL-0500] Runtime: 0.91s
+Placement Analysis
+---------------------------------
+total displacement       2492.5 u
+average displacement        0.1 u
+max displacement            5.5 u
+original HPWL          573724.9 u
+legalized HPWL         575247.2 u
+delta HPWL                    0 %
+
+estimate_parasitics -placement
+Report metrics stage 4, cts final...
+
+==========================================================================
+cts final report_design_area
+--------------------------------------------------------------------------
+Design area 18050 um^2 21% utilization.
+source /work/post_cts_s5.tcl
+OT_FCAP: dont_touch left lifted on 0 flops (hold repair)
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+OT_MSCTS_TAP cts TT Q0B0L0 n 88 mean 124.6 min 124.6 max 124.6
+OT_MSCTS_TAP cts TT Q0B0L1 n 88 mean 124.6 min 124.6 max 124.6
+OT_MSCTS_TAP cts TT Q0B0L2 n 88 mean 124.6 min 124.6 max 124.6
+OT_MSCTS_TAP cts TT Q0B0L3 n 88 mean 124.6 min 124.6 max 124.6
+OT_MSCTS_TAP cts TT Q0B1L0 n 88 mean 124.6 min 124.6 max 124.6
+OT_MSCTS_TAP cts TT Q0B1L1 n 88 mean 124.7 min 124.7 max 124.7
+OT_MSCTS_TAP cts TT Q0B1L2 n 88 mean 124.6 min 124.6 max 124.6
+OT_MSCTS_TAP cts TT Q0B1L3 n 89 mean 124.8 min 124.8 max 124.8
+OT_MSCTS_TAP cts TT Q0B2L0 n 88 mean 124.6 min 124.6 max 124.6
+OT_MSCTS_TAP cts TT Q0B2L1 n 88 mean 124.7 min 124.7 max 124.7
+OT_MSCTS_TAP cts TT Q0B2L2 n 88 mean 124.6 min 124.6 max 124.6
+OT_MSCTS_TAP cts TT Q0B2L3 n 89 mean 124.8 min 124.8 max 124.8
+OT_MSCTS_TAP cts TT Q0B3L0 n 88 mean 124.6 min 124.6 max 124.6
+OT_MSCTS_TAP cts TT Q0B3L1 n 88 mean 124.6 min 124.6 max 124.6
+OT_MSCTS_TAP cts TT Q0B3L2 n 88 mean 124.7 min 124.7 max 124.7
+OT_MSCTS_TAP cts TT Q0B3L3 n 89 mean 124.8 min 124.8 max 124.8
+OT_MSCTS_TAP cts TT Q1B0L0 n 88 mean 124.6 min 124.6 max 124.6
+OT_MSCTS_TAP cts TT Q1B0L1 n 88 mean 124.6 min 124.6 max 124.6
+OT_MSCTS_TAP cts TT Q1B0L2 n 88 mean 124.6 min 124.6 max 124.6
+OT_MSCTS_TAP cts TT Q1B0L3 n 88 mean 124.7 min 124.7 max 124.7
+OT_MSCTS_TAP cts TT Q1B1L0 n 88 mean 124.6 min 124.6 max 124.6
+OT_MSCTS_TAP cts TT Q1B1L1 n 88 mean 124.6 min 124.6 max 124.6
+OT_MSCTS_TAP cts TT Q1B1L2 n 88 mean 124.6 min 124.6 max 124.6
+OT_MSCTS_TAP cts TT Q1B1L3 n 89 mean 124.7 min 124.7 max 124.7
+OT_MSCTS_TAP cts TT Q1B2L0 n 88 mean 125.6 min 125.6 max 125.6
+OT_MSCTS_TAP cts TT Q1B2L1 n 88 mean 125.6 min 125.6 max 125.6
+OT_MSCTS_TAP cts TT Q1B2L2 n 88 mean 125.6 min 125.6 max 125.6
+OT_MSCTS_TAP cts TT Q1B2L3 n 89 mean 125.8 min 125.8 max 125.8
+OT_MSCTS_TAP cts TT Q1B3L0 n 88 mean 124.6 min 124.6 max 124.6
+OT_MSCTS_TAP cts TT Q1B3L1 n 88 mean 124.6 min 124.6 max 124.6
+OT_MSCTS_TAP cts TT Q1B3L2 n 88 mean 124.6 min 124.6 max 124.6
+OT_MSCTS_TAP cts TT Q1B3L3 n 89 mean 124.8 min 124.8 max 124.8
+OT_MSCTS_TAP cts TT Q2B0L0 n 88 mean 125.6 min 125.6 max 125.6
+OT_MSCTS_TAP cts TT Q2B0L1 n 88 mean 125.6 min 125.6 max 125.6
+OT_MSCTS_TAP cts TT Q2B0L2 n 88 mean 125.6 min 125.6 max 125.6
+OT_MSCTS_TAP cts TT Q2B0L3 n 88 mean 125.6 min 125.6 max 125.6
+OT_MSCTS_TAP cts TT Q2B1L0 n 88 mean 124.6 min 124.6 max 124.6
+OT_MSCTS_TAP cts TT Q2B1L1 n 88 mean 124.6 min 124.6 max 124.6
+OT_MSCTS_TAP cts TT Q2B1L2 n 88 mean 124.6 min 124.6 max 124.6
+OT_MSCTS_TAP cts TT Q2B1L3 n 89 mean 124.7 min 124.7 max 124.7
+OT_MSCTS_TAP cts TT Q2B2L0 n 88 mean 124.7 min 124.7 max 124.7
+OT_MSCTS_TAP cts TT Q2B2L1 n 88 mean 124.6 min 124.6 max 124.6
+OT_MSCTS_TAP cts TT Q2B2L2 n 88 mean 124.7 min 124.7 max 124.7
+OT_MSCTS_TAP cts TT Q2B2L3 n 89 mean 124.7 min 124.7 max 124.7
+OT_MSCTS_TAP cts TT Q2B3L0 n 88 mean 124.6 min 124.6 max 124.6
+OT_MSCTS_TAP cts TT Q2B3L1 n 88 mean 124.6 min 124.6 max 124.6
+OT_MSCTS_TAP cts TT Q2B3L2 n 88 mean 124.6 min 124.6 max 124.6
+OT_MSCTS_TAP cts TT Q2B3L3 n 89 mean 124.7 min 124.7 max 124.7
+OT_MSCTS_TAP cts TT Q3B0L0 n 88 mean 125.6 min 125.6 max 125.6
+OT_MSCTS_TAP cts TT Q3B0L1 n 88 mean 125.6 min 125.6 max 125.6
+OT_MSCTS_TAP cts TT Q3B0L2 n 88 mean 125.6 min 125.6 max 125.6
+OT_MSCTS_TAP cts TT Q3B0L3 n 88 mean 125.6 min 125.6 max 125.6
+OT_MSCTS_TAP cts TT Q3B1L0 n 88 mean 124.7 min 124.7 max 124.7
+OT_MSCTS_TAP cts TT Q3B1L1 n 88 mean 124.7 min 124.7 max 124.7
+OT_MSCTS_TAP cts TT Q3B1L2 n 88 mean 124.6 min 124.6 max 124.6
+OT_MSCTS_TAP cts TT Q3B1L3 n 89 mean 124.7 min 124.7 max 124.7
+OT_MSCTS_TAP cts TT Q3B2L0 n 88 mean 125.6 min 125.6 max 125.6
+OT_MSCTS_TAP cts TT Q3B2L1 n 88 mean 125.6 min 125.6 max 125.6
+OT_MSCTS_TAP cts TT Q3B2L2 n 88 mean 125.6 min 125.6 max 125.6
+OT_MSCTS_TAP cts TT Q3B2L3 n 89 mean 125.7 min 125.7 max 125.7
+OT_MSCTS_TAP cts TT Q3B3L0 n 88 mean 124.7 min 124.7 max 124.7
+OT_MSCTS_TAP cts TT Q3B3L1 n 88 mean 124.6 min 124.6 max 124.6
+OT_MSCTS_TAP cts TT Q3B3L2 n 88 mean 124.6 min 124.6 max 124.6
+OT_MSCTS_TAP cts TT Q3B3L3 n 89 mean 124.7 min 124.7 max 124.7
+OT_MSCTS_WINDOW cts TT tap-mean window 1.2 ps (limit 20) PASS
+OT_MSCTS_MACRO cts TT g_btb\[3\].u_m clk 117.6 interface regs n 528 mean 125.2 (124.6..125.7) diff -7.6
+OT_MSCTS_MACRO cts TT g_btb\[2\].u_m clk 117.6 interface regs n 528 mean 125.2 (124.6..125.6) diff -7.5
+OT_MSCTS_MACRO cts TT g_btb\[1\].u_m clk 117.6 interface regs n 528 mean 125.1 (124.6..125.6) diff -7.5
+OT_MSCTS_MACRO cts TT g_btb\[0\].u_m clk 117.6 interface regs n 528 mean 125.3 (124.6..125.8) diff -7.6
+OT_MSCTS_TAP cts FF Q0B0L0 n 88 mean 91.9 min 91.9 max 91.9
+OT_MSCTS_TAP cts FF Q0B0L1 n 88 mean 91.9 min 91.9 max 91.9
+OT_MSCTS_TAP cts FF Q0B0L2 n 88 mean 91.9 min 91.9 max 91.9
+OT_MSCTS_TAP cts FF Q0B0L3 n 88 mean 91.9 min 91.9 max 91.9
+OT_MSCTS_TAP cts FF Q0B1L0 n 88 mean 91.9 min 91.9 max 91.9
+OT_MSCTS_TAP cts FF Q0B1L1 n 88 mean 92.0 min 92.0 max 92.0
+OT_MSCTS_TAP cts FF Q0B1L2 n 88 mean 91.9 min 91.9 max 91.9
+OT_MSCTS_TAP cts FF Q0B1L3 n 89 mean 92.0 min 92.0 max 92.0
+OT_MSCTS_TAP cts FF Q0B2L0 n 88 mean 91.9 min 91.9 max 91.9
+OT_MSCTS_TAP cts FF Q0B2L1 n 88 mean 92.0 min 92.0 max 92.0
+OT_MSCTS_TAP cts FF Q0B2L2 n 88 mean 91.9 min 91.9 max 91.9
+OT_MSCTS_TAP cts FF Q0B2L3 n 89 mean 92.0 min 92.0 max 92.0
+OT_MSCTS_TAP cts FF Q0B3L0 n 88 mean 91.9 min 91.9 max 91.9
+OT_MSCTS_TAP cts FF Q0B3L1 n 88 mean 91.9 min 91.9 max 91.9
+OT_MSCTS_TAP cts FF Q0B3L2 n 88 mean 92.0 min 92.0 max 92.0
+OT_MSCTS_TAP cts FF Q0B3L3 n 89 mean 92.0 min 92.0 max 92.0
+OT_MSCTS_TAP cts FF Q1B0L0 n 88 mean 91.9 min 91.9 max 91.9
+OT_MSCTS_TAP cts FF Q1B0L1 n 88 mean 91.9 min 91.9 max 91.9
+OT_MSCTS_TAP cts FF Q1B0L2 n 88 mean 91.9 min 91.9 max 91.9
+OT_MSCTS_TAP cts FF Q1B0L3 n 88 mean 92.0 min 92.0 max 92.0
+OT_MSCTS_TAP cts FF Q1B1L0 n 88 mean 91.9 min 91.9 max 91.9
+OT_MSCTS_TAP cts FF Q1B1L1 n 88 mean 91.9 min 91.9 max 91.9
+OT_MSCTS_TAP cts FF Q1B1L2 n 88 mean 91.9 min 91.9 max 91.9
+OT_MSCTS_TAP cts FF Q1B1L3 n 89 mean 92.0 min 92.0 max 92.0
+OT_MSCTS_TAP cts FF Q1B2L0 n 88 mean 92.6 min 92.6 max 92.6
+OT_MSCTS_TAP cts FF Q1B2L1 n 88 mean 92.6 min 92.6 max 92.6
+OT_MSCTS_TAP cts FF Q1B2L2 n 88 mean 92.6 min 92.6 max 92.6
+OT_MSCTS_TAP cts FF Q1B2L3 n 89 mean 92.7 min 92.7 max 92.7
+OT_MSCTS_TAP cts FF Q1B3L0 n 88 mean 91.9 min 91.9 max 91.9
+OT_MSCTS_TAP cts FF Q1B3L1 n 88 mean 91.9 min 91.9 max 91.9
+OT_MSCTS_TAP cts FF Q1B3L2 n 88 mean 91.9 min 91.9 max 91.9
+OT_MSCTS_TAP cts FF Q1B3L3 n 89 mean 92.0 min 92.0 max 92.0
+OT_MSCTS_TAP cts FF Q2B0L0 n 88 mean 92.6 min 92.6 max 92.6
+OT_MSCTS_TAP cts FF Q2B0L1 n 88 mean 92.6 min 92.6 max 92.6
+OT_MSCTS_TAP cts FF Q2B0L2 n 88 mean 92.6 min 92.6 max 92.6
+OT_MSCTS_TAP cts FF Q2B0L3 n 88 mean 92.6 min 92.6 max 92.6
+OT_MSCTS_TAP cts FF Q2B1L0 n 88 mean 91.9 min 91.9 max 91.9
+OT_MSCTS_TAP cts FF Q2B1L1 n 88 mean 91.9 min 91.9 max 91.9
+OT_MSCTS_TAP cts FF Q2B1L2 n 88 mean 91.9 min 91.9 max 91.9
+OT_MSCTS_TAP cts FF Q2B1L3 n 89 mean 92.0 min 92.0 max 92.0
+OT_MSCTS_TAP cts FF Q2B2L0 n 88 mean 92.0 min 92.0 max 92.0
+OT_MSCTS_TAP cts FF Q2B2L1 n 88 mean 91.9 min 91.9 max 91.9
+OT_MSCTS_TAP cts FF Q2B2L2 n 88 mean 92.0 min 92.0 max 92.0
+OT_MSCTS_TAP cts FF Q2B2L3 n 89 mean 92.0 min 92.0 max 92.0
+OT_MSCTS_TAP cts FF Q2B3L0 n 88 mean 91.9 min 91.9 max 91.9
+OT_MSCTS_TAP cts FF Q2B3L1 n 88 mean 91.9 min 91.9 max 91.9
+OT_MSCTS_TAP cts FF Q2B3L2 n 88 mean 91.9 min 91.9 max 91.9
+OT_MSCTS_TAP cts FF Q2B3L3 n 89 mean 92.0 min 92.0 max 92.0
+OT_MSCTS_TAP cts FF Q3B0L0 n 88 mean 92.6 min 92.6 max 92.6
+OT_MSCTS_TAP cts FF Q3B0L1 n 88 mean 92.6 min 92.6 max 92.6
+OT_MSCTS_TAP cts FF Q3B0L2 n 88 mean 92.6 min 92.6 max 92.6
+OT_MSCTS_TAP cts FF Q3B0L3 n 88 mean 92.6 min 92.6 max 92.6
+OT_MSCTS_TAP cts FF Q3B1L0 n 88 mean 92.0 min 92.0 max 92.0
+OT_MSCTS_TAP cts FF Q3B1L1 n 88 mean 92.0 min 92.0 max 92.0
+OT_MSCTS_TAP cts FF Q3B1L2 n 88 mean 91.9 min 91.9 max 91.9
+OT_MSCTS_TAP cts FF Q3B1L3 n 89 mean 92.0 min 92.0 max 92.0
+OT_MSCTS_TAP cts FF Q3B2L0 n 88 mean 92.6 min 92.6 max 92.6
+OT_MSCTS_TAP cts FF Q3B2L1 n 88 mean 92.6 min 92.6 max 92.6
+OT_MSCTS_TAP cts FF Q3B2L2 n 88 mean 92.6 min 92.6 max 92.6
+OT_MSCTS_TAP cts FF Q3B2L3 n 89 mean 92.7 min 92.7 max 92.7
+OT_MSCTS_TAP cts FF Q3B3L0 n 88 mean 92.0 min 92.0 max 92.0
+OT_MSCTS_TAP cts FF Q3B3L1 n 88 mean 91.9 min 91.9 max 91.9
+OT_MSCTS_TAP cts FF Q3B3L2 n 88 mean 91.9 min 91.9 max 91.9
+OT_MSCTS_TAP cts FF Q3B3L3 n 89 mean 92.0 min 92.0 max 92.0
+OT_MSCTS_WINDOW cts FF tap-mean window 0.8 ps (limit 20) PASS
+OT_MSCTS_MACRO cts FF g_btb\[3\].u_m clk 87.8 interface regs n 528 mean 92.3 (91.9..92.7) diff -4.5
+OT_MSCTS_MACRO cts FF g_btb\[2\].u_m clk 87.8 interface regs n 528 mean 92.3 (91.9..92.6) diff -4.5
+OT_MSCTS_MACRO cts FF g_btb\[1\].u_m clk 87.8 interface regs n 528 mean 92.3 (91.9..92.6) diff -4.4
+OT_MSCTS_MACRO cts FF g_btb\[0\].u_m clk 87.8 interface regs n 528 mean 92.3 (91.9..92.7) diff -4.5
+[INFO DPL-0006] Core area: 86593.54 um^2
+[INFO DPL-0007] Movable instances area: 2251.17 um^2
+[INFO DPL-0008] Fixed instances area within core: 15799.21 um^2
+[INFO DPL-0009] Utilization: 20.8%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 22277 cells
+[INFO DPL-0393]   height 153 row(s): 4 cells
+[INFO DPL-0500] Runtime: 0.22s
+Placement Analysis
+---------------------------------
+total displacement          0.0 u
+average displacement        0.0 u
+max displacement            0.0 u
+original HPWL          575247.2 u
+legalized HPWL         575247.2 u
+delta HPWL                    0 %
+
+Clock clk
+ 222.67 source latency u_twpd/q[127]$_DFF_P_/CLK ^
+-169.46 target latency g_btb[0].g_r.u_wd/q[127]$_DFF_P_/CLK ^
+  60.00 clock uncertainty
+  -3.31 CRPR
+--------------
+ 109.90 setup skew
+
+Clock vclk
+No launch/capture paths found.
+
+Clock clk
+ 166.60 source latency g_bsel[1].u/q[2]$_DFF_P_/CLK ^
+-217.00 target latency bs_q[31]$_DFF_P_/CLK ^
+ -25.00 clock uncertainty
+  -3.31 CRPR
+--------------
+ -78.71 hold skew
+
+Clock vclk
+No launch/capture paths found.
+
+write_db /work/run/results/asap7/kq_qfd_dv_s8x_btab_aspect1713a1/base/4_1_cts.odb
+write_sdc -no_timestamp /work/run/results/asap7/kq_qfd_dv_s8x_btab_aspect1713a1/base/4_cts.sdc
+Elapsed time: 0:16.76[h:]min:sec. CPU time: user 23.08 sys 4.11 (162%). Peak memory: 776152KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+4_1_cts                   .odb           16            757 61f94ccf582a860f99f3
+cp /work/run/results/asap7/kq_qfd_dv_s8x_btab_aspect1713a1/base/4_1_cts.odb /work/run/results/asap7/kq_qfd_dv_s8x_btab_aspect1713a1/base/4_cts.odb
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route
+Running global_route.tcl, stage 5_1_grt
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /work/macros/ot_sram_1r1w_128x256_m1_r2c2_tt.lib
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner bc /work/macros/ot_sram_1r1w_128x256_m1_r2c2_ff.lib
+read_db /work/run/results/asap7/kq_qfd_dv_s8x_btab_aspect1713a1/base/4_cts.odb
+read_sdc /work/run/results/asap7/kq_qfd_dv_s8x_btab_aspect1713a1/base/4_cts.sdc
+source /work/cf/rc_cal.tcl
+OT_RC_CAL layer RC scaled: R h0.8 v0.8, C h0.9 v0.9 (estimates only; RCX unaffected)
+source /work/pre_grt_s6b.tcl
+S6B_PIN_EDGE_KEEPOUT M5 8 bands (0.096 um) over 4 macros
+pin_access
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     213
+Number of vias:       15
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   qfd_dv_s8x_btab
+Die area:                 ( 0 0 ) ( 354240 259200 )
+Number of track patterns: 26
+Number of DEF vias:       0
+Number of components:     22281
+Number of terminals:      1324
+Number of snets:          2
+Number of nets:           16779
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+[INFO DRT-0164] Number of unique instances = 84.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 370205.
+[INFO DRT-0033] V1 shape region query size = 6853956.
+[INFO DRT-0033] M2 shape region query size = 76932.
+[INFO DRT-0033] V2 shape region query size = 169968.
+[INFO DRT-0033] M3 shape region query size = 169972.
+[INFO DRT-0033] V3 shape region query size = 113312.
+[INFO DRT-0033] M4 shape region query size = 126625.
+[INFO DRT-0033] V4 shape region query size = 131968.
+[INFO DRT-0033] M5 shape region query size = 67353.
+[INFO DRT-0033] V5 shape region query size = 0.
+[INFO DRT-0033] M6 shape region query size = 0.
+[INFO DRT-0033] V6 shape region query size = 0.
+[INFO DRT-0033] M7 shape region query size = 0.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 0.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 0.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+[INFO DRT-0165] Start pin access.
+[INFO DRT-0076]   Complete 1000 pins.
+[INFO DRT-0078]   Complete 1237 pins.
+[INFO DRT-0081]   Complete 83 unique inst patterns.
+[INFO DRT-0082]   Complete 10000 groups.
+[INFO DRT-0084]   Complete 10912 groups.
+#scanned instances     = 22281
+#unique  instances     = 84
+#stdCellGenAp          = 1986
+#stdCellValidPlanarAp  = 9
+#stdCellValidViaAp     = 1781
+#stdCellPinNoAp        = 0
+#stdCellPinCnt         = 34531
+#instTermValidViaApCnt = 0
+#macroGenAp            = 819
+#macroValidPlanarAp    = 819
+#macroValidViaAp       = 0
+#macroNoAp             = 0
+[INFO DRT-0166] Complete pin access.
+[INFO DRT-0267] cpu time = 00:06:50, elapsed time = 00:00:52, memory = 664.05 (MB), peak = 909.99 (MB)
+Took 54 seconds: pin_access
+global_route -congestion_report_file /work/run/reports/asap7/kq_qfd_dv_s8x_btab_aspect1713a1/base/congestion.rpt -congestion_iterations 30 -congestion_report_iter_step 5 -verbose -resistance_aware
+[INFO GRT-0020] Min routing layer: M2
+[INFO GRT-0021] Max routing layer: M5
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.0390  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0003] Macros: 4
+[INFO GRT-0004] Blockages: 16958
+[INFO GRT-0019] Found 94 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 90
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal    3160325       3160325          0.00%
+M3         Vertical      3549813       3549813          0.00%
+M4         Horizontal    2734895       2738171          -0.12%
+M5         Vertical      2613228       2613228          0.00%
+---------------------------------------------------------------
+
+[INFO GRT-0101] Running extra iterations to remove congestion.
+[INFO GRT-0102] Start extra iteration 1/30
+[INFO GRT-0102] Start extra iteration 2/30
+[INFO GRT-0102] Start extra iteration 3/30
+[INFO GRT-0102] Start extra iteration 4/30
+[INFO GRT-0102] Start extra iteration 5/30
+[INFO GRT-0102] Start extra iteration 6/30
+[INFO GRT-0102] Start extra iteration 7/30
+[INFO GRT-0197] Via related to pin nodes: 73905
+[INFO GRT-0198] Via related Steiner nodes: 477
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 114736
+[INFO GRT-0112] Final usage 3D: 1379372
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2             3160325        316439           10.01%             0 /  0 /  0
+M3             3549813        424632           11.96%             0 /  0 /  0
+M4             2738171        130290            4.76%             0 /  0 /  0
+M5             2613228        163803            6.27%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total         12061537       1035164            8.58%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 616211 um
+[INFO GRT-0014] Routed nets: 16779
+[INFO GRT-0303] Global routing runtime = 00:02:57
+Took 177 seconds: global_route -congestion_report_file /work/run/reports/asap7/kq_qfd_dv_s8x_btab_aspect1713a1/base/congestion.rpt -congestion_iterations 30 -congestion_report_iter_step 5 -verbose -resistance_aware
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+estimate_parasitics -global_routing
+Repair antennas...
+[WARNING GRT-0246] No diode with LEF class CORE ANTENNACELL found.
+[INFO ANT-0002] Found 0 net violations.
+[INFO ANT-0001] Found 0 pin violations.
+Estimate parasitics...
+estimate_parasitics -global_routing
+Report metrics stage 5, global route...
+
+==========================================================================
+global route report_design_area
+--------------------------------------------------------------------------
+Design area 18050 um^2 21% utilization.
+[INFO FLW-0007] clock clk period 833.000000
+[WARNING FLW-0010] more than one clock found. Skipping sdc update.
+[INFO FLW-0011] Path endpoint path count 6993
+source /work/post_grt_s5.tcl
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+S5_PRE slew_viol 83 cap_viol 0 hold -218.26/333 setup 46.80
+[WARNING RSZ-0065] max wire length less than 193u increases wire delays.
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     16779
+    final |     +2.7% |      64 |    2864 |          2331 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 271 slew violations.
+[INFO RSZ-0037] Found 2331 long wires.
+[INFO RSZ-0039] Resized 64 instances.
+[INFO RSZ-0038] Inserted 2864 buffers in 2331 nets.
+[INFO RSZ-0504] Runtime: 16.21s
+[INFO DPL-0006] Core area: 86593.54 um^2
+[INFO DPL-0007] Movable instances area: 2745.02 um^2
+[INFO DPL-0008] Fixed instances area within core: 15799.21 um^2
+[INFO DPL-0009] Utilization: 21.4%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 25141 cells
+[INFO DPL-0393]   height 153 row(s): 4 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |       1755 |       251 |      1495
+        1 |       1473 |       161 |      1276
+        2 |       1388 |       116 |      1260
+        3 |       1080 |        92 |       964
+        4 |       1146 |        96 |      1050
+        5 |        972 |        74 |       817
+        6 |        935 |        65 |       861
+        7 |        838 |        54 |       784
+        8 |        667 |        53 |       614
+        9 |        579 |        44 |       535
+       10 |        410 |        33 |       377
+       20 |        123 |         9 |       114
+       30 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 30.
+[INFO DPL-0500] Runtime: 1.48s
+Placement Analysis
+---------------------------------
+total displacement       2491.1 u
+average displacement        0.1 u
+max displacement            7.4 u
+original HPWL          585292.7 u
+legalized HPWL         586286.9 u
+delta HPWL                    0 %
+
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+OT_MSCTS_BAL grt iter 0 tap means 175.6..255.8 (window 80.2) target 255.8 pad step 18.0 ps edits {tap Q0B0L0 3} {tap Q0B0L1 3} {tap Q0B0L2 4} {tap Q0B0L3 3} {tap Q0B1L0 4} {tap Q0B1L1 4} {tap Q0B1L2 4} {tap Q0B1L3 4} {tap Q0B2L0 4} {tap Q0B2L1 4} {tap Q0B2L2 4} {tap Q0B2L3 3} {tap Q0B3L0 3} {tap Q0B3L1 3} {tap Q0B3L2 3} {tap Q0B3L3 3} {tap Q1B2L1 1} {tap Q1B2L2 1} {tap Q1B2L3 1} {tap Q2B0L0 3} {tap Q2B0L1 3} {tap Q2B0L2 3} {tap Q2B0L3 3} {tap Q2B1L0 2} {tap Q2B1L1 2} {tap Q2B1L2 2} {tap Q2B1L3 1} {tap Q2B2L0 3} {tap Q2B2L1 3} {tap Q2B2L2 3} {tap Q2B2L3 3} {tap Q2B3L0 2} {tap Q2B3L1 1} {tap Q2B3L2 2} {tap Q2B3L3 2} {tap Q3B0L0 3} {tap Q3B0L1 3} {tap Q3B0L2 3} {tap Q3B0L3 3} {tap Q3B1L0 3} {tap Q3B1L1 3} {tap Q3B1L2 3} {tap Q3B1L3 4} {tap Q3B2L0 3} {tap Q3B2L1 3} {tap Q3B2L2 3} {tap Q3B2L3 3} {tap Q3B3L0 4} {tap Q3B3L1 3} {tap Q3B3L2 3} {tap Q3B3L3 3} {mac ot_ms_m0_leaf 1} {mac ot_ms_m3_leaf 1}
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+OT_MSCTS_TAP grt TT Q0B0L0 n 88 mean 194.9 min 192.3 max 198.4
+OT_MSCTS_TAP grt TT Q0B0L1 n 88 mean 194.4 min 191.9 max 197.3
+OT_MSCTS_TAP grt TT Q0B0L2 n 88 mean 191.4 min 187.1 max 193.0
+OT_MSCTS_TAP grt TT Q0B0L3 n 88 mean 195.6 min 193.2 max 197.0
+OT_MSCTS_TAP grt TT Q0B1L0 n 88 mean 176.3 min 173.8 max 178.7
+OT_MSCTS_TAP grt TT Q0B1L1 n 88 mean 177.1 min 172.7 max 181.6
+OT_MSCTS_TAP grt TT Q0B1L2 n 88 mean 175.6 min 171.6 max 177.0
+OT_MSCTS_TAP grt TT Q0B1L3 n 89 mean 179.7 min 177.0 max 180.9
+OT_MSCTS_TAP grt TT Q0B2L0 n 88 mean 191.6 min 189.7 max 192.4
+OT_MSCTS_TAP grt TT Q0B2L1 n 88 mean 192.1 min 188.8 max 194.7
+OT_MSCTS_TAP grt TT Q0B2L2 n 88 mean 192.1 min 188.4 max 194.1
+OT_MSCTS_TAP grt TT Q0B2L3 n 89 mean 195.2 min 192.9 max 200.4
+OT_MSCTS_TAP grt TT Q0B3L0 n 88 mean 198.3 min 197.0 max 199.3
+OT_MSCTS_TAP grt TT Q0B3L1 n 88 mean 198.9 min 197.7 max 199.9
+OT_MSCTS_TAP grt TT Q0B3L2 n 88 mean 199.3 min 195.9 max 200.8
+OT_MSCTS_TAP grt TT Q0B3L3 n 89 mean 200.8 min 195.3 max 204.0
+OT_MSCTS_TAP grt TT Q1B0L0 n 88 mean 251.1 min 246.9 max 253.8
+OT_MSCTS_TAP grt TT Q1B0L1 n 88 mean 247.6 min 246.2 max 248.6
+OT_MSCTS_TAP grt TT Q1B0L2 n 88 mean 251.5 min 246.3 max 254.0
+OT_MSCTS_TAP grt TT Q1B0L3 n 88 mean 247.4 min 243.4 max 249.5
+OT_MSCTS_TAP grt TT Q1B1L0 n 88 mean 248.5 min 245.5 max 250.5
+OT_MSCTS_TAP grt TT Q1B1L1 n 88 mean 247.9 min 243.1 max 252.1
+OT_MSCTS_TAP grt TT Q1B1L2 n 88 mean 247.4 min 245.5 max 249.1
+OT_MSCTS_TAP grt TT Q1B1L3 n 89 mean 249.2 min 244.5 max 251.5
+OT_MSCTS_TAP grt TT Q1B2L0 n 88 mean 249.6 min 245.2 max 251.8
+OT_MSCTS_TAP grt TT Q1B2L1 n 88 mean 245.7 min 242.2 max 247.3
+OT_MSCTS_TAP grt TT Q1B2L2 n 88 mean 246.0 min 241.7 max 247.0
+OT_MSCTS_TAP grt TT Q1B2L3 n 89 mean 246.1 min 244.6 max 246.9
+OT_MSCTS_TAP grt TT Q1B3L0 n 88 mean 254.0 min 249.3 max 257.0
+OT_MSCTS_TAP grt TT Q1B3L1 n 88 mean 254.9 min 250.0 max 257.7
+OT_MSCTS_TAP grt TT Q1B3L2 n 88 mean 255.8 min 244.7 max 262.1
+OT_MSCTS_TAP grt TT Q1B3L3 n 89 mean 253.1 min 250.9 max 255.3
+OT_MSCTS_TAP grt TT Q2B0L0 n 88 mean 204.8 min 198.7 max 210.2
+OT_MSCTS_TAP grt TT Q2B0L1 n 88 mean 199.7 min 197.3 max 201.1
+OT_MSCTS_TAP grt TT Q2B0L2 n 88 mean 200.2 min 197.3 max 202.7
+OT_MSCTS_TAP grt TT Q2B0L3 n 88 mean 202.9 min 197.5 max 205.9
+OT_MSCTS_TAP grt TT Q2B1L0 n 88 mean 212.1 min 211.4 max 213.0
+OT_MSCTS_TAP grt TT Q2B1L1 n 88 mean 222.7 min 215.2 max 231.2
+OT_MSCTS_TAP grt TT Q2B1L2 n 88 mean 213.4 min 212.5 max 215.4
+OT_MSCTS_TAP grt TT Q2B1L3 n 89 mean 237.8 min 232.1 max 240.7
+OT_MSCTS_TAP grt TT Q2B2L0 n 88 mean 195.9 min 192.4 max 198.4
+OT_MSCTS_TAP grt TT Q2B2L1 n 88 mean 197.3 min 194.9 max 199.1
+OT_MSCTS_TAP grt TT Q2B2L2 n 88 mean 197.6 min 192.7 max 205.2
+OT_MSCTS_TAP grt TT Q2B2L3 n 89 mean 199.0 min 195.2 max 200.8
+OT_MSCTS_TAP grt TT Q2B3L0 n 88 mean 216.0 min 214.6 max 217.4
+OT_MSCTS_TAP grt TT Q2B3L1 n 88 mean 232.6 min 229.3 max 236.2
+OT_MSCTS_TAP grt TT Q2B3L2 n 88 mean 215.5 min 213.4 max 216.7
+OT_MSCTS_TAP grt TT Q2B3L3 n 89 mean 216.4 min 213.1 max 217.6
+OT_MSCTS_TAP grt TT Q3B0L0 n 88 mean 197.8 min 193.1 max 200.3
+OT_MSCTS_TAP grt TT Q3B0L1 n 88 mean 196.7 min 194.3 max 197.6
+OT_MSCTS_TAP grt TT Q3B0L2 n 88 mean 197.7 min 195.0 max 198.6
+OT_MSCTS_TAP grt TT Q3B0L3 n 88 mean 201.6 min 199.0 max 203.9
+OT_MSCTS_TAP grt TT Q3B1L0 n 88 mean 193.5 min 190.9 max 195.0
+OT_MSCTS_TAP grt TT Q3B1L1 n 88 mean 194.9 min 192.6 max 197.4
+OT_MSCTS_TAP grt TT Q3B1L2 n 88 mean 193.2 min 191.5 max 194.1
+OT_MSCTS_TAP grt TT Q3B1L3 n 89 mean 192.1 min 190.2 max 192.7
+OT_MSCTS_TAP grt TT Q3B2L0 n 88 mean 194.0 min 191.5 max 195.4
+OT_MSCTS_TAP grt TT Q3B2L1 n 88 mean 193.4 min 192.0 max 194.2
+OT_MSCTS_TAP grt TT Q3B2L2 n 88 mean 195.9 min 191.3 max 199.0
+OT_MSCTS_TAP grt TT Q3B2L3 n 89 mean 195.9 min 192.3 max 198.5
+OT_MSCTS_TAP grt TT Q3B3L0 n 88 mean 192.6 min 191.2 max 193.5
+OT_MSCTS_TAP grt TT Q3B3L1 n 88 mean 193.9 min 192.3 max 195.0
+OT_MSCTS_TAP grt TT Q3B3L2 n 88 mean 194.2 min 192.4 max 195.5
+OT_MSCTS_TAP grt TT Q3B3L3 n 89 mean 193.3 min 190.2 max 194.6
+OT_MSCTS_WINDOW grt TT tap-mean window 80.2 ps (limit 20) FAIL
+OT_MSCTS_MACRO grt TT g_btb\[3\].u_m clk 184.3 interface regs n 528 mean 195.3 (191.2..202.5) diff -11.0
+OT_MSCTS_MACRO grt TT g_btb\[2\].u_m clk 187.1 interface regs n 528 mean 196.0 (180.7..205.2) diff -8.9
+OT_MSCTS_MACRO grt TT g_btb\[1\].u_m clk 188.3 interface regs n 528 mean 194.5 (172.7..210.2) diff -6.2
+OT_MSCTS_MACRO grt TT g_btb\[0\].u_m clk 235.1 interface regs n 528 mean 248.7 (241.7..262.1) diff -13.6
+OT_MSCTS_TAP grt FF Q0B0L0 n 88 mean 149.7 min 147.4 max 152.7
+OT_MSCTS_TAP grt FF Q0B0L1 n 88 mean 149.1 min 146.9 max 151.7
+OT_MSCTS_TAP grt FF Q0B0L2 n 88 mean 146.7 min 143.1 max 148.1
+OT_MSCTS_TAP grt FF Q0B0L3 n 88 mean 150.4 min 148.2 max 151.8
+OT_MSCTS_TAP grt FF Q0B1L0 n 88 mean 133.4 min 131.3 max 135.5
+OT_MSCTS_TAP grt FF Q0B1L1 n 88 mean 134.2 min 130.4 max 138.0
+OT_MSCTS_TAP grt FF Q0B1L2 n 88 mean 132.8 min 129.3 max 134.0
+OT_MSCTS_TAP grt FF Q0B1L3 n 89 mean 136.2 min 133.9 max 137.3
+OT_MSCTS_TAP grt FF Q0B2L0 n 88 mean 147.3 min 145.7 max 148.0
+OT_MSCTS_TAP grt FF Q0B2L1 n 88 mean 147.7 min 144.9 max 149.9
+OT_MSCTS_TAP grt FF Q0B2L2 n 88 mean 147.7 min 144.6 max 149.4
+OT_MSCTS_TAP grt FF Q0B2L3 n 89 mean 150.3 min 148.3 max 155.2
+OT_MSCTS_TAP grt FF Q0B3L0 n 88 mean 152.9 min 151.9 max 153.8
+OT_MSCTS_TAP grt FF Q0B3L1 n 88 mean 153.5 min 152.5 max 154.4
+OT_MSCTS_TAP grt FF Q0B3L2 n 88 mean 153.9 min 151.0 max 155.1
+OT_MSCTS_TAP grt FF Q0B3L3 n 89 mean 155.2 min 150.6 max 158.1
+OT_MSCTS_TAP grt FF Q1B0L0 n 88 mean 199.2 min 195.6 max 201.6
+OT_MSCTS_TAP grt FF Q1B0L1 n 88 mean 196.3 min 195.0 max 197.2
+OT_MSCTS_TAP grt FF Q1B0L2 n 88 mean 199.7 min 195.2 max 201.8
+OT_MSCTS_TAP grt FF Q1B0L3 n 88 mean 196.1 min 192.6 max 197.8
+OT_MSCTS_TAP grt FF Q1B1L0 n 88 mean 196.8 min 194.2 max 198.6
+OT_MSCTS_TAP grt FF Q1B1L1 n 88 mean 196.3 min 192.0 max 199.9
+OT_MSCTS_TAP grt FF Q1B1L2 n 88 mean 195.9 min 194.1 max 197.3
+OT_MSCTS_TAP grt FF Q1B1L3 n 89 mean 197.3 min 193.3 max 199.3
+OT_MSCTS_TAP grt FF Q1B2L0 n 88 mean 197.6 min 193.8 max 199.4
+OT_MSCTS_TAP grt FF Q1B2L1 n 88 mean 194.4 min 191.4 max 195.7
+OT_MSCTS_TAP grt FF Q1B2L2 n 88 mean 194.7 min 191.1 max 195.6
+OT_MSCTS_TAP grt FF Q1B2L3 n 89 mean 194.6 min 193.4 max 195.3
+OT_MSCTS_TAP grt FF Q1B3L0 n 88 mean 201.5 min 197.5 max 204.2
+OT_MSCTS_TAP grt FF Q1B3L1 n 88 mean 202.2 min 197.9 max 204.6
+OT_MSCTS_TAP grt FF Q1B3L2 n 88 mean 203.8 min 193.9 max 209.3
+OT_MSCTS_TAP grt FF Q1B3L3 n 89 mean 200.7 min 198.8 max 202.5
+OT_MSCTS_TAP grt FF Q2B0L0 n 88 mean 158.5 min 153.3 max 163.4
+OT_MSCTS_TAP grt FF Q2B0L1 n 88 mean 153.7 min 151.7 max 154.9
+OT_MSCTS_TAP grt FF Q2B0L2 n 88 mean 154.1 min 151.5 max 156.3
+OT_MSCTS_TAP grt FF Q2B0L3 n 88 mean 156.6 min 152.0 max 159.2
+OT_MSCTS_TAP grt FF Q2B1L0 n 88 mean 164.5 min 163.9 max 165.3
+OT_MSCTS_TAP grt FF Q2B1L1 n 88 mean 173.9 min 167.2 max 181.6
+OT_MSCTS_TAP grt FF Q2B1L2 n 88 mean 165.6 min 164.8 max 167.3
+OT_MSCTS_TAP grt FF Q2B1L3 n 89 mean 188.1 min 183.0 max 191.0
+OT_MSCTS_TAP grt FF Q2B2L0 n 88 mean 150.8 min 147.7 max 152.9
+OT_MSCTS_TAP grt FF Q2B2L1 n 88 mean 151.9 min 149.9 max 153.4
+OT_MSCTS_TAP grt FF Q2B2L2 n 88 mean 152.2 min 147.9 max 158.9
+OT_MSCTS_TAP grt FF Q2B2L3 n 89 mean 153.6 min 150.3 max 155.1
+OT_MSCTS_TAP grt FF Q2B3L0 n 88 mean 168.3 min 167.0 max 169.4
+OT_MSCTS_TAP grt FF Q2B3L1 n 88 mean 184.2 min 181.2 max 187.5
+OT_MSCTS_TAP grt FF Q2B3L2 n 88 mean 167.8 min 166.0 max 168.8
+OT_MSCTS_TAP grt FF Q2B3L3 n 89 mean 168.4 min 165.6 max 169.5
+OT_MSCTS_TAP grt FF Q3B0L0 n 88 mean 153.0 min 148.9 max 155.1
+OT_MSCTS_TAP grt FF Q3B0L1 n 88 mean 152.0 min 150.0 max 152.8
+OT_MSCTS_TAP grt FF Q3B0L2 n 88 mean 152.9 min 150.5 max 153.5
+OT_MSCTS_TAP grt FF Q3B0L3 n 88 mean 156.4 min 154.0 max 158.6
+OT_MSCTS_TAP grt FF Q3B1L0 n 88 mean 149.7 min 147.4 max 150.9
+OT_MSCTS_TAP grt FF Q3B1L1 n 88 mean 150.7 min 148.8 max 152.8
+OT_MSCTS_TAP grt FF Q3B1L2 n 88 mean 149.4 min 148.0 max 150.2
+OT_MSCTS_TAP grt FF Q3B1L3 n 89 mean 148.4 min 146.8 max 149.0
+OT_MSCTS_TAP grt FF Q3B2L0 n 88 mean 149.7 min 147.4 max 150.9
+OT_MSCTS_TAP grt FF Q3B2L1 n 88 mean 149.1 min 147.9 max 149.8
+OT_MSCTS_TAP grt FF Q3B2L2 n 88 mean 151.4 min 147.4 max 154.1
+OT_MSCTS_TAP grt FF Q3B2L3 n 89 mean 151.4 min 148.3 max 153.5
+OT_MSCTS_TAP grt FF Q3B3L0 n 88 mean 148.7 min 147.5 max 149.5
+OT_MSCTS_TAP grt FF Q3B3L1 n 88 mean 149.9 min 148.6 max 150.9
+OT_MSCTS_TAP grt FF Q3B3L2 n 88 mean 150.3 min 148.8 max 151.3
+OT_MSCTS_TAP grt FF Q3B3L3 n 89 mean 149.4 min 146.8 max 150.5
+OT_MSCTS_WINDOW grt FF tap-mean window 71.0 ps (limit 20) FAIL
+OT_MSCTS_MACRO grt FF g_btb\[3\].u_m clk 143.8 interface regs n 528 mean 150.7 (147.4..156.8) diff -7.0
+OT_MSCTS_MACRO grt FF g_btb\[2\].u_m clk 146.3 interface regs n 528 mean 151.4 (137.3..158.9) diff -5.2
+OT_MSCTS_MACRO grt FF g_btb\[1\].u_m clk 146.4 interface regs n 528 mean 149.3 (130.4..163.4) diff -2.9
+OT_MSCTS_MACRO grt FF g_btb\[0\].u_m clk 187.7 interface regs n 528 mean 197.0 (191.1..209.3) diff -9.3
+S5_I_GRT pin-register mean TT 239.19 ps over 1059 pin registers (vclk source latency bound in-session)
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+OT_MSCTS_TAP grt TT Q0B0L0 n 88 mean 194.9 min 192.3 max 198.4
+OT_MSCTS_TAP grt TT Q0B0L1 n 88 mean 194.4 min 191.9 max 197.3
+OT_MSCTS_TAP grt TT Q0B0L2 n 88 mean 191.4 min 187.1 max 193.0
+OT_MSCTS_TAP grt TT Q0B0L3 n 88 mean 195.6 min 193.2 max 197.0
+OT_MSCTS_TAP grt TT Q0B1L0 n 88 mean 176.3 min 173.8 max 178.7
+OT_MSCTS_TAP grt TT Q0B1L1 n 88 mean 177.1 min 172.7 max 181.6
+OT_MSCTS_TAP grt TT Q0B1L2 n 88 mean 175.6 min 171.6 max 177.0
+OT_MSCTS_TAP grt TT Q0B1L3 n 89 mean 179.7 min 177.0 max 180.9
+OT_MSCTS_TAP grt TT Q0B2L0 n 88 mean 191.6 min 189.7 max 192.4
+OT_MSCTS_TAP grt TT Q0B2L1 n 88 mean 192.1 min 188.8 max 194.7
+OT_MSCTS_TAP grt TT Q0B2L2 n 88 mean 192.1 min 188.4 max 194.1
+OT_MSCTS_TAP grt TT Q0B2L3 n 89 mean 195.2 min 192.9 max 200.4
+OT_MSCTS_TAP grt TT Q0B3L0 n 88 mean 198.3 min 197.0 max 199.3
+OT_MSCTS_TAP grt TT Q0B3L1 n 88 mean 198.9 min 197.7 max 199.9
+OT_MSCTS_TAP grt TT Q0B3L2 n 88 mean 199.3 min 195.9 max 200.8
+OT_MSCTS_TAP grt TT Q0B3L3 n 89 mean 200.8 min 195.3 max 204.0
+OT_MSCTS_TAP grt TT Q1B0L0 n 88 mean 251.1 min 246.9 max 253.8
+OT_MSCTS_TAP grt TT Q1B0L1 n 88 mean 247.6 min 246.2 max 248.6
+OT_MSCTS_TAP grt TT Q1B0L2 n 88 mean 251.5 min 246.3 max 254.0
+OT_MSCTS_TAP grt TT Q1B0L3 n 88 mean 247.4 min 243.4 max 249.5
+OT_MSCTS_TAP grt TT Q1B1L0 n 88 mean 248.5 min 245.5 max 250.5
+OT_MSCTS_TAP grt TT Q1B1L1 n 88 mean 247.9 min 243.1 max 252.1
+OT_MSCTS_TAP grt TT Q1B1L2 n 88 mean 247.4 min 245.5 max 249.1
+OT_MSCTS_TAP grt TT Q1B1L3 n 89 mean 249.2 min 244.5 max 251.5
+OT_MSCTS_TAP grt TT Q1B2L0 n 88 mean 249.6 min 245.2 max 251.8
+OT_MSCTS_TAP grt TT Q1B2L1 n 88 mean 245.7 min 242.2 max 247.3
+OT_MSCTS_TAP grt TT Q1B2L2 n 88 mean 246.0 min 241.7 max 247.0
+OT_MSCTS_TAP grt TT Q1B2L3 n 89 mean 246.1 min 244.6 max 246.9
+OT_MSCTS_TAP grt TT Q1B3L0 n 88 mean 254.0 min 249.3 max 257.0
+OT_MSCTS_TAP grt TT Q1B3L1 n 88 mean 254.9 min 250.0 max 257.7
+OT_MSCTS_TAP grt TT Q1B3L2 n 88 mean 255.8 min 244.7 max 262.1
+OT_MSCTS_TAP grt TT Q1B3L3 n 89 mean 253.1 min 250.9 max 255.3
+OT_MSCTS_TAP grt TT Q2B0L0 n 88 mean 204.8 min 198.7 max 210.2
+OT_MSCTS_TAP grt TT Q2B0L1 n 88 mean 199.7 min 197.3 max 201.1
+OT_MSCTS_TAP grt TT Q2B0L2 n 88 mean 200.2 min 197.3 max 202.7
+OT_MSCTS_TAP grt TT Q2B0L3 n 88 mean 202.9 min 197.5 max 205.9
+OT_MSCTS_TAP grt TT Q2B1L0 n 88 mean 212.1 min 211.4 max 213.0
+OT_MSCTS_TAP grt TT Q2B1L1 n 88 mean 222.7 min 215.2 max 231.2
+OT_MSCTS_TAP grt TT Q2B1L2 n 88 mean 213.4 min 212.5 max 215.4
+OT_MSCTS_TAP grt TT Q2B1L3 n 89 mean 237.8 min 232.1 max 240.7
+OT_MSCTS_TAP grt TT Q2B2L0 n 88 mean 195.9 min 192.4 max 198.4
+OT_MSCTS_TAP grt TT Q2B2L1 n 88 mean 197.3 min 194.9 max 199.1
+OT_MSCTS_TAP grt TT Q2B2L2 n 88 mean 197.6 min 192.7 max 205.2
+OT_MSCTS_TAP grt TT Q2B2L3 n 89 mean 199.0 min 195.2 max 200.8
+OT_MSCTS_TAP grt TT Q2B3L0 n 88 mean 216.0 min 214.6 max 217.4
+OT_MSCTS_TAP grt TT Q2B3L1 n 88 mean 232.6 min 229.3 max 236.2
+OT_MSCTS_TAP grt TT Q2B3L2 n 88 mean 215.5 min 213.4 max 216.7
+OT_MSCTS_TAP grt TT Q2B3L3 n 89 mean 216.4 min 213.1 max 217.6
+OT_MSCTS_TAP grt TT Q3B0L0 n 88 mean 197.8 min 193.1 max 200.3
+OT_MSCTS_TAP grt TT Q3B0L1 n 88 mean 196.7 min 194.3 max 197.6
+OT_MSCTS_TAP grt TT Q3B0L2 n 88 mean 197.7 min 195.0 max 198.6
+OT_MSCTS_TAP grt TT Q3B0L3 n 88 mean 201.6 min 199.0 max 203.9
+OT_MSCTS_TAP grt TT Q3B1L0 n 88 mean 193.5 min 190.9 max 195.0
+OT_MSCTS_TAP grt TT Q3B1L1 n 88 mean 194.9 min 192.6 max 197.4
+OT_MSCTS_TAP grt TT Q3B1L2 n 88 mean 193.2 min 191.5 max 194.1
+OT_MSCTS_TAP grt TT Q3B1L3 n 89 mean 192.1 min 190.2 max 192.7
+OT_MSCTS_TAP grt TT Q3B2L0 n 88 mean 194.0 min 191.5 max 195.4
+OT_MSCTS_TAP grt TT Q3B2L1 n 88 mean 193.4 min 192.0 max 194.2
+OT_MSCTS_TAP grt TT Q3B2L2 n 88 mean 195.9 min 191.3 max 199.0
+OT_MSCTS_TAP grt TT Q3B2L3 n 89 mean 195.9 min 192.3 max 198.5
+OT_MSCTS_TAP grt TT Q3B3L0 n 88 mean 192.6 min 191.2 max 193.5
+OT_MSCTS_TAP grt TT Q3B3L1 n 88 mean 193.9 min 192.3 max 195.0
+OT_MSCTS_TAP grt TT Q3B3L2 n 88 mean 194.2 min 192.4 max 195.5
+OT_MSCTS_TAP grt TT Q3B3L3 n 89 mean 193.3 min 190.2 max 194.6
+OT_MSCTS_WINDOW grt TT tap-mean window 80.2 ps (limit 20) FAIL
+OT_MSCTS_MACRO grt TT g_btb\[3\].u_m clk 184.3 interface regs n 528 mean 195.3 (191.2..202.5) diff -11.0
+OT_MSCTS_MACRO grt TT g_btb\[2\].u_m clk 187.1 interface regs n 528 mean 196.0 (180.7..205.2) diff -8.9
+OT_MSCTS_MACRO grt TT g_btb\[1\].u_m clk 188.3 interface regs n 528 mean 194.5 (172.7..210.2) diff -6.2
+OT_MSCTS_MACRO grt TT g_btb\[0\].u_m clk 235.1 interface regs n 528 mean 248.7 (241.7..262.1) diff -13.6
+OT_MSCTS_TAP grt FF Q0B0L0 n 88 mean 149.7 min 147.4 max 152.7
+OT_MSCTS_TAP grt FF Q0B0L1 n 88 mean 149.1 min 146.9 max 151.7
+OT_MSCTS_TAP grt FF Q0B0L2 n 88 mean 146.7 min 143.1 max 148.1
+OT_MSCTS_TAP grt FF Q0B0L3 n 88 mean 150.4 min 148.2 max 151.8
+OT_MSCTS_TAP grt FF Q0B1L0 n 88 mean 133.4 min 131.3 max 135.5
+OT_MSCTS_TAP grt FF Q0B1L1 n 88 mean 134.2 min 130.4 max 138.0
+OT_MSCTS_TAP grt FF Q0B1L2 n 88 mean 132.8 min 129.3 max 134.0
+OT_MSCTS_TAP grt FF Q0B1L3 n 89 mean 136.2 min 133.9 max 137.3
+OT_MSCTS_TAP grt FF Q0B2L0 n 88 mean 147.3 min 145.7 max 148.0
+OT_MSCTS_TAP grt FF Q0B2L1 n 88 mean 147.7 min 144.9 max 149.9
+OT_MSCTS_TAP grt FF Q0B2L2 n 88 mean 147.7 min 144.6 max 149.4
+OT_MSCTS_TAP grt FF Q0B2L3 n 89 mean 150.3 min 148.3 max 155.2
+OT_MSCTS_TAP grt FF Q0B3L0 n 88 mean 152.9 min 151.9 max 153.8
+OT_MSCTS_TAP grt FF Q0B3L1 n 88 mean 153.5 min 152.5 max 154.4
+OT_MSCTS_TAP grt FF Q0B3L2 n 88 mean 153.9 min 151.0 max 155.1
+OT_MSCTS_TAP grt FF Q0B3L3 n 89 mean 155.2 min 150.6 max 158.1
+OT_MSCTS_TAP grt FF Q1B0L0 n 88 mean 199.2 min 195.6 max 201.6
+OT_MSCTS_TAP grt FF Q1B0L1 n 88 mean 196.3 min 195.0 max 197.2
+OT_MSCTS_TAP grt FF Q1B0L2 n 88 mean 199.7 min 195.2 max 201.8
+OT_MSCTS_TAP grt FF Q1B0L3 n 88 mean 196.1 min 192.6 max 197.8
+OT_MSCTS_TAP grt FF Q1B1L0 n 88 mean 196.8 min 194.2 max 198.6
+OT_MSCTS_TAP grt FF Q1B1L1 n 88 mean 196.3 min 192.0 max 199.9
+OT_MSCTS_TAP grt FF Q1B1L2 n 88 mean 195.9 min 194.1 max 197.3
+OT_MSCTS_TAP grt FF Q1B1L3 n 89 mean 197.3 min 193.3 max 199.3
+OT_MSCTS_TAP grt FF Q1B2L0 n 88 mean 197.6 min 193.8 max 199.4
+OT_MSCTS_TAP grt FF Q1B2L1 n 88 mean 194.4 min 191.4 max 195.7
+OT_MSCTS_TAP grt FF Q1B2L2 n 88 mean 194.7 min 191.1 max 195.6
+OT_MSCTS_TAP grt FF Q1B2L3 n 89 mean 194.6 min 193.4 max 195.3
+OT_MSCTS_TAP grt FF Q1B3L0 n 88 mean 201.5 min 197.5 max 204.2
+OT_MSCTS_TAP grt FF Q1B3L1 n 88 mean 202.2 min 197.9 max 204.6
+OT_MSCTS_TAP grt FF Q1B3L2 n 88 mean 203.8 min 193.9 max 209.3
+OT_MSCTS_TAP grt FF Q1B3L3 n 89 mean 200.7 min 198.8 max 202.5
+OT_MSCTS_TAP grt FF Q2B0L0 n 88 mean 158.5 min 153.3 max 163.4
+OT_MSCTS_TAP grt FF Q2B0L1 n 88 mean 153.7 min 151.7 max 154.9
+OT_MSCTS_TAP grt FF Q2B0L2 n 88 mean 154.1 min 151.5 max 156.3
+OT_MSCTS_TAP grt FF Q2B0L3 n 88 mean 156.6 min 152.0 max 159.2
+OT_MSCTS_TAP grt FF Q2B1L0 n 88 mean 164.5 min 163.9 max 165.3
+OT_MSCTS_TAP grt FF Q2B1L1 n 88 mean 173.9 min 167.2 max 181.6
+OT_MSCTS_TAP grt FF Q2B1L2 n 88 mean 165.6 min 164.8 max 167.3
+OT_MSCTS_TAP grt FF Q2B1L3 n 89 mean 188.1 min 183.0 max 191.0
+OT_MSCTS_TAP grt FF Q2B2L0 n 88 mean 150.8 min 147.7 max 152.9
+OT_MSCTS_TAP grt FF Q2B2L1 n 88 mean 151.9 min 149.9 max 153.4
+OT_MSCTS_TAP grt FF Q2B2L2 n 88 mean 152.2 min 147.9 max 158.9
+OT_MSCTS_TAP grt FF Q2B2L3 n 89 mean 153.6 min 150.3 max 155.1
+OT_MSCTS_TAP grt FF Q2B3L0 n 88 mean 168.3 min 167.0 max 169.4
+OT_MSCTS_TAP grt FF Q2B3L1 n 88 mean 184.2 min 181.2 max 187.5
+OT_MSCTS_TAP grt FF Q2B3L2 n 88 mean 167.8 min 166.0 max 168.8
+OT_MSCTS_TAP grt FF Q2B3L3 n 89 mean 168.4 min 165.6 max 169.5
+OT_MSCTS_TAP grt FF Q3B0L0 n 88 mean 153.0 min 148.9 max 155.1
+OT_MSCTS_TAP grt FF Q3B0L1 n 88 mean 152.0 min 150.0 max 152.8
+OT_MSCTS_TAP grt FF Q3B0L2 n 88 mean 152.9 min 150.5 max 153.5
+OT_MSCTS_TAP grt FF Q3B0L3 n 88 mean 156.4 min 154.0 max 158.6
+OT_MSCTS_TAP grt FF Q3B1L0 n 88 mean 149.7 min 147.4 max 150.9
+OT_MSCTS_TAP grt FF Q3B1L1 n 88 mean 150.7 min 148.8 max 152.8
+OT_MSCTS_TAP grt FF Q3B1L2 n 88 mean 149.4 min 148.0 max 150.2
+OT_MSCTS_TAP grt FF Q3B1L3 n 89 mean 148.4 min 146.8 max 149.0
+OT_MSCTS_TAP grt FF Q3B2L0 n 88 mean 149.7 min 147.4 max 150.9
+OT_MSCTS_TAP grt FF Q3B2L1 n 88 mean 149.1 min 147.9 max 149.8
+OT_MSCTS_TAP grt FF Q3B2L2 n 88 mean 151.4 min 147.4 max 154.1
+OT_MSCTS_TAP grt FF Q3B2L3 n 89 mean 151.4 min 148.3 max 153.5
+OT_MSCTS_TAP grt FF Q3B3L0 n 88 mean 148.7 min 147.5 max 149.5
+OT_MSCTS_TAP grt FF Q3B3L1 n 88 mean 149.9 min 148.6 max 150.9
+OT_MSCTS_TAP grt FF Q3B3L2 n 88 mean 150.3 min 148.8 max 151.3
+OT_MSCTS_TAP grt FF Q3B3L3 n 89 mean 149.4 min 146.8 max 150.5
+OT_MSCTS_WINDOW grt FF tap-mean window 71.0 ps (limit 20) FAIL
+OT_MSCTS_MACRO grt FF g_btb\[3\].u_m clk 143.8 interface regs n 528 mean 150.7 (147.4..156.8) diff -7.0
+OT_MSCTS_MACRO grt FF g_btb\[2\].u_m clk 146.3 interface regs n 528 mean 151.4 (137.3..158.9) diff -5.2
+OT_MSCTS_MACRO grt FF g_btb\[1\].u_m clk 146.4 interface regs n 528 mean 149.3 (130.4..163.4) diff -2.9
+OT_MSCTS_MACRO grt FF g_btb\[0\].u_m clk 187.7 interface regs n 528 mean 197.0 (191.1..209.3) diff -9.3
+S5_GRT_TT setup 109.90 ep 0 slew 0 cap 0 tap_window FAIL I_grt 239.19
+Clock clk
+ 250.45 source latency ptw_data[427]$_DFF_P_/CLK ^
+-166.58 target latency u_twpd/q[427]$_DFF_P_/CLK ^
+  60.00 clock uncertainty
+  -0.21 CRPR
+--------------
+ 143.66 setup skew
+
+Clock vclk
+No launch/capture paths found.
+
+Took 44 seconds: source /work/post_grt_s5.tcl
+write_db /work/run/results/asap7/kq_qfd_dv_s8x_btab_aspect1713a1/base/5_1_grt.odb
+write_sdc -no_timestamp /work/run/results/asap7/kq_qfd_dv_s8x_btab_aspect1713a1/base/5_1_grt.sdc
+Elapsed time: 4:54.36[h:]min:sec. CPU time: user 788.32 sys 12.71 (272%). Peak memory: 1596780KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+5_1_grt                   .odb          294           1559 79fdf2c1b8776d0f0965
+5_1_grt                   .sdc                             79bc65d971fcd9d2fdfd

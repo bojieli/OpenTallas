@@ -413,7 +413,16 @@ def hold_out_min_ps(P):
 # receiver uncertainty half the sender guarantee already used -- is checked ONCE at the parent: a related-pair FF
 # hold check with CPPR on the assembled real views (io_hold_parent.py over die_sta.py).  A kit signed off under A
 # counts only once that parent check covers its input seams (COORD 10:23).
-IO_HOLD_MODES = ("legacy", "sender_min")
+IO_HOLD_MODES = ("legacy", "sender_min", "plan_demand")
+# HOLD-REPAIR 10-26 (METHODOLOGY 12.4a a1: flow-inserted hold delay on DATA paths, clock untouched): "plan_demand" =
+# option A plus the plan-declared seam hold demand D (clock.hold_demand, written by tools/die_plan/hold_demand.py from
+# the plan's clock arrival model: CPPR-left OCV pessimism of the non-common clock branches + the declared arrival
+# window).  Each partition-driven input takes min input delay = sender guarantee - D, so the RECEIVING tile's own FF
+# hold repair pads that input (tile self-contained, option (a) of hold_demand.HOLD_PLACEMENT_RATIONALE); the parent
+# check (io_hold_parent.py) still verifies the assembled die.  D is a plan number only: clock.hold_demand.source must
+# be "plan" (never a measured arrival or trim, 12.8).  Seams listed in hold_demand.landed are closed by a landed hop
+# and keep the fallback contract.  The structural hold gate (hold_gate.tcl) keeps the option A values
+# (ot_io_hold_apply_structural): the declared demand is an obligation for the repair, not a structural failure.
 
 
 def io_hold_mode(P):
@@ -437,12 +446,37 @@ def sender_out_guarantee_ps(P, snd_type):
     return (1 - UNC_SPLIT) * UNC_HOLD_PS - hold_out_min_ps(P), "plan contract"
 
 
-def input_hold_min(P, tn):
+def hold_demand_ps(P, snd_part, rcv_part):
+    """HOLD-REPAIR plan_demand: the plan-declared FF seam hold demand D (ps) of the sender -> receiver pair, or None
+    when the seam is declared landed.  Keys: 'snd>rcv' (directed) first, then 'a|b' (sorted pair), then default_ps."""
+    hd = P.clock.get("hold_demand")
+    if not hd:
+        raise ValueError("clock.io_hold plan_demand needs clock.hold_demand (tools/die_plan/hold_demand.py)")
+    if hd.get("source") != "plan":
+        raise ValueError("clock.hold_demand.source must be 'plan': the demand derives from the plan's declared clock "
+                         "arrival window, never from a measured trim (12.8)")
+    k = "|".join(sorted((snd_part, rcv_part)))
+    if k in (hd.get("landed") or ()):
+        return None
+    pairs = hd.get("pairs") or {}
+    v = pairs.get(f"{snd_part}>{rcv_part}", pairs.get(k, hd.get("default_ps")))
+    if v is None:
+        raise ValueError(f"clock.hold_demand: no declared demand for seam {k} (and no default_ps)")
+    if float(v) < 0:
+        raise ValueError(f"clock.hold_demand: negative demand {v} for seam {k}")
+    return float(v)
+
+
+def input_hold_min(P, tn, structural=False):
     """IO-HOLD option A: {sv input port: dict(in_min_ps, basis, senders)} for every bus / ft-slot input of type tn
     whose min input delay differs from the fallback hold_in_min_ps(P).  Empty in legacy mode.  One value per port
-    (the type is hardened once): the minimum over every instance's driver."""
-    if io_hold_mode(P) != "sender_min":
+    (the type is hardened once): the minimum over every instance's driver.  plan_demand (HOLD-REPAIR): each value
+    is the sender guarantee minus the plan's seam hold demand D (hold_demand_ps); structural=True returns the plain
+    option A values (the structural hold gate's view)."""
+    mode = io_hold_mode(P)
+    if mode not in ("sender_min", "plan_demand"):
         return {}
+    demand = mode == "plan_demand" and not structural
     import gen_rtl
     insts = sorted(n for n, p in P.parts.items() if p["type"] == tn)
     if not insts:
@@ -470,8 +504,14 @@ def input_hold_min(P, tn):
                 if s == DIE_PART and dv:
                     # CP1 proof harness: explicit registered upstream driver view of the full plan (COORD 23:26 (3));
                     # the seam itself is checked on the real parent (io_hold_parent.py)
-                    vals.append((float(dv["out_hold_guarantee_ps"]), f"driver view {dv['type']} ({dv['basis']})",
-                                 dv["type"]))
+                    g, basis = float(dv["out_hold_guarantee_ps"]), f"driver view {dv['type']} ({dv['basis']})"
+                    if demand:
+                        d = hold_demand_ps(P, dv["part"], inst)
+                        if d is None:
+                            why = f"{pid} landed seam"
+                            break
+                        g, basis = g - d, basis + f" - plan hold demand {d:g}"
+                    vals.append((g, basis, dv["type"]))
                     continue
                 if s == DIE_PART or s not in P.parts:
                     why = f"{pid} from the die edge"
@@ -480,6 +520,12 @@ def input_hold_min(P, tn):
                 if why:
                     break
                 g, basis = sender_out_guarantee_ps(P, P.parts[s]["type"])
+                if demand:
+                    d = hold_demand_ps(P, s, inst)
+                    if d is None:
+                        why = f"{pid} landed seam"
+                        break
+                    g, basis = g - d, basis + f" - plan hold demand {d:g}"
                 vals.append((g, basis, P.parts[s]["type"]))
             if why:
                 break
@@ -492,17 +538,33 @@ def input_hold_min(P, tn):
 
 
 def io_hold_tcl(P, tn):
-    """kit io_hold.tcl (sender_min kits only): proc ot_io_hold_apply {vclk} re-applies the per-port min input delays
-    of input_hold_min after a tool overlay set the fallback on every input (hold_gate.tcl, signoff.py)."""
+    """kit io_hold.tcl (sender_min / plan_demand kits only): proc ot_io_hold_apply {vclk} re-applies the per-port min
+    input delays of input_hold_min after a tool overlay set the fallback on every input (hold_gate.tcl; signoff.py
+    reads sdc_lint.json).  plan_demand (HOLD-REPAIR): ot_io_hold_apply carries the STRUCTURAL option A values (the
+    only caller is the pre-repair structural gate: the declared demand is padded by the FF GRT repair, not a
+    structural failure); ot_io_hold_apply_demand carries the demand values of constraint.sdc / sdc_lint.json."""
     m = input_hold_min(P, tn)
     if not m:
         return None
+    mode = io_hold_mode(P)
+
+    def proc(name, vals, msg):
+        out = [f"proc {name} {{vclk}} {{"]
+        for v, ports in _group_in_min(vals):
+            out.append(f"  set_input_delay -min {t_lib(v):.4f} -clock $vclk [get_ports {{{' '.join(p + '[*]' for p in ports)}}}]")
+        return out + [f"  puts \"{msg}\"", "}"]
     lines = [f"# GENERATED by tools/die_plan/gen.py phys: IO-HOLD option A per-port min input delays of {tn} "
-             f"(plan {P.name}); fallback {hold_in_min_ps(P):g} ps on every other input",
-             "proc ot_io_hold_apply {vclk} {"]
-    for v, ports in _group_in_min(m):
-        lines.append(f"  set_input_delay -min {t_lib(v):.4f} -clock $vclk [get_ports {{{' '.join(p + '[*]' for p in ports)}}}]")
-    lines += [f"  puts \"OT_IO_HOLD sender_min ports {len(m)} fallback {hold_in_min_ps(P):g}\"", "}"]
+             f"(plan {P.name}); fallback {hold_in_min_ps(P):g} ps on every other input"]
+    if mode != "plan_demand":
+        lines += proc("ot_io_hold_apply", m, f"OT_IO_HOLD sender_min ports {len(m)} fallback {hold_in_min_ps(P):g}")
+    else:
+        st = input_hold_min(P, tn, structural=True)
+        lines += ["# HOLD-REPAIR plan_demand: ot_io_hold_apply = structural gate view (option A, demand excluded); "
+                  "ot_io_hold_apply_demand = constraint.sdc values (sender guarantee - plan seam hold demand)"]
+        lines += proc("ot_io_hold_apply", st, f"OT_IO_HOLD plan_demand structural ports {len(st)} fallback "
+                      f"{hold_in_min_ps(P):g}")
+        lines += proc("ot_io_hold_apply_demand", m, f"OT_IO_HOLD plan_demand demand ports {len(m)} fallback "
+                      f"{hold_in_min_ps(P):g}")
     return "\n".join(lines) + "\n"
 
 
@@ -601,6 +663,9 @@ RC_CAL_FILE, RC_CAL_KIT = "setRC_rcx_asap7.tcl", "setRC_rcx.tcl"
 # FLOW 10-25: default FF-only GRT hold repair margin (run_kit.sh grt CORNERS=bc with the FF-bound vclk); = the
 # kit HOLD_SLACK_MARGIN (owner 00:46: repair only 0..5 ps above the SDC).  gen.py phys --hold-mcmm = old MCMM GRT.
 HOLD_FF_MARGIN_DEFAULT = 5.0
+# HOLD-REPAIR 10-26 (plan_demand kits only): repair_timing buffer cap and the HB4 hold-pad hook
+HOLD_REPAIR_MAX_BUFFER_PERCENT = 100.0
+HOLD_PAD_HB4 = Path(__file__).resolve().parents[2] / "physical" / "common_flow" / "hold_pad_hb4.tcl"
 # FLOW-INFRA-2 10-25: GRT-RC tap pre-pass (tapbal_grt.tcl) between CTS and the FF GRT step.  Opt-in until the flow
 # canaries pass with it (plan clock.tap_grt_pre, or OT_GEN_TAP_GRT_PRE=1 at generation for A/B kits); then default on.
 TAP_GRT_PRE_DEFAULT = False
@@ -702,8 +767,9 @@ def sdc(P, tn, pins):
     # IO-HOLD option A (opt-in clock.io_hold sender_min): partition-driven inputs take their sender's guaranteed
     # output-min instead; the related tap pair skew is checked at the parent (io_hold_parent.py)
     for v, ports in _group_in_min(input_hold_min(P, tn)):
-        out += (f"# IO-HOLD A: sender guaranteed output-min (+{v:g} ps after vclk)\n"
-                f"set_input_delay -min {t_lib(v):.4f} -clock vclk [get_ports {{{' '.join(p + '[*]' for p in ports)}}}]\n")
+        out += ((f"# IO-HOLD A: sender guaranteed output-min (+{v:g} ps after vclk)\n" if io_hold_mode(P) != "plan_demand"
+                 else f"# HOLD-REPAIR plan_demand: sender guarantee - plan seam hold demand ({v:g} ps vs vclk)\n")
+                + f"set_input_delay -min {t_lib(v):.4f} -clock vclk [get_ports {{{' '.join(p + '[*]' for p in ports)}}}]\n")
     if root_async_reset(P, tn):
         out += "# Sole asynchronous die-root reset CDC (owner reset rule); forwarded reset remains timed.\n"
         out += ROOT_RESET_FALSE_PATH + "\n"
@@ -831,6 +897,64 @@ def die_islands_tcl(P, tn):
                   "}"]
     lines += ['ot_clear_keepout_physical $di_b $di_rects die_clock_islands', 'puts "OT_DIE_ISLANDS blockages=$di_count rectangle_area_sum_um2=$di_area row_intersections=$di_rows"', "}"]
     return "\n".join(lines) + "\n"
+
+
+RESERVED_KINDS = ("die_clock_tree", "landing_ring_bank")
+
+
+def reserved_sites_tcl(P, tn):
+    """Opt-in clock.reserved_sites_um (FALLBACK-HEAD-2): per-type reserved site rectangles, type frame.
+
+    kind die_clock_tree: die clock-tree cell sites (union over every instance of the type, mapped from the die
+    tree); a permanent hard placement blockage, physical-only cells cleared, exactly like die_islands_um.
+    kind landing_ring_bank: the landing ring storage bank; a GPL-only full blockage created AFTER the landing
+    rings are FIRM in it (other logic stays out of the bank), released before DPL (DPL counts fixed cells
+    under a blockage as not placed in rows). Returns (pre_tcl, post_landing_tcl, release_tcl); empty strings
+    when the key is absent, so a plan without it emits a byte-identical kit.
+    """
+    t = P.types[tn]
+    rows = t.get("clock", {}).get("reserved_sites_um", [])
+    if not rows:
+        return "", "", ""
+    w, h = t["outline_um"]
+    hard, bank = [], []
+    for r in rows:
+        x0, y0, x1, y1 = r["rect_um"]
+        if r.get("kind") not in RESERVED_KINDS:
+            raise ValueError(f"{tn}: reserved site kind {r.get('kind')} not in {RESERVED_KINDS}")
+        if not (0 <= x0 < x1 <= w and 0 <= y0 < y1 <= h):
+            raise ValueError(f"{tn}: reserved site outside outline or empty: {[x0, y0, x1, y1]}")
+        (hard if r["kind"] == "die_clock_tree" else bank).append((x0, y0, x1, y1))
+    # A die clock-tree hole inside a ring bank is legal: landing_placement.tcl packs the ring around it
+    # (cland_avoid_rects) and fails closed when the bank no longer holds the ring.
+    def create(rects, var):
+        out = []
+        for x0, y0, x1, y1 in rects:
+            q = f"[expr {{round({x0:g}*$rs_u)}}] [expr {{round({y0:g}*$rs_u)}}] [expr {{round({x1:g}*$rs_u)}}] [expr {{round({y1:g}*$rs_u)}}]"
+            out += [f"set rs_k [odb::dbBlockage_create $rs_b {q}]", f"lappend {var} $rs_k", f"lappend rs_rects [list {q}]"]
+        return out
+    head = ["uplevel #0 {", "set rs_b [ord::get_db_block]", "set rs_u [[ord::get_db_tech] getDbUnitsPerMicron]",
+            "set rs_rects {}"]
+    pre = post = rel = ""
+    if hard:
+        pre = "\n".join(["# Generated (gen_phys reserved_sites_um): die clock-tree cell sites, permanent hard blockages.",
+                          *head, "source /work/keepout_phys.tcl", "set rs_hard {}", *create(hard, "rs_hard"),
+                          "ot_clear_keepout_physical $rs_b $rs_rects reserved_die_clock_tree",
+                          # landing_placement.tcl packs ring/status cells around these (opt-in variable, default unset)
+                          "set ::cland_avoid_rects $rs_rects",
+                          f'puts "OT_RESERVED_SITES kind=die_clock_tree rects={len(hard)} area_um2={sum((c-a)*(d-b) for a,b,c,d in hard):.3f}"',
+                          "}"]) + "\n"
+    if bank:
+        post = "\n".join(["# Generated (gen_phys reserved_sites_um): landing ring banks, GPL-only blockages after FIRM rings.",
+                           *head, "set ::rs_bank {}", *create(bank, "::rs_bank"),
+                           f'puts "OT_RESERVED_SITES kind=landing_ring_bank rects={len(bank)} area_um2={sum((c-a)*(d-b) for a,b,c,d in bank):.3f}"',
+                           "}"]) + "\n"
+        rel = "\n".join(["# Generated (gen_phys reserved_sites_um): release the GPL-only ring-bank blockages before DPL.",
+                          "set rs_n 0",
+                          "if {[info exists ::rs_bank]} { foreach rs_k $::rs_bank { odb::dbBlockage_destroy $rs_k; incr rs_n } }",
+                          f"if {{$rs_n != {len(bank)}}} {{ error \"OT_RESERVED_SITES released $rs_n of {len(bank)} ring-bank blockages\" }}",
+                          'puts "OT_RESERVED_SITES released ring-bank blockages $rs_n before DPL"']) + "\n"
+    return pre, post, rel
 
 
 def _pdn_inst_patterns(instances):
@@ -1220,6 +1344,13 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     # FLOW 10-25: GRT hooks (grt_pre.tcl: FF vclk binding for the FF-only GRT step + optional max-wire repeaters;
     # grt_post.tcl: density GRT-RC tap pass + vclk back to the SDC value before 5_1_grt.sdc is written)
     cfg += ["export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre.tcl", "export POST_GLOBAL_ROUTE_TCL = /work/grt_post.tcl"]
+    if io_hold_mode(P) == "plan_demand":
+        # HOLD-REPAIR 10-26 (12.4a a1): the FF GRT hold repair pads the declared seam demand on the input paths with
+        # HB4 (hold_pad_hb4.tcl) and a raised buffer cap; hold_repair_pre.tcl sources grt_pre.tcl first
+        cfg[cfg.index("export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre.tcl")] = "export PRE_GLOBAL_ROUTE_TCL = /work/hold_repair_pre.tcl"
+        cfg += [f"export OT_MAX_BUFFER_PERCENT = {HOLD_REPAIR_MAX_BUFFER_PERCENT:g}"]
+        shutil.copyfile(Path(__file__).with_name("hold_repair_pre.tcl"), kd / "hold_repair_pre.tcl")
+        shutil.copyfile(HOLD_PAD_HB4, kd / "hold_pad_hb4.tcl")
     if _tap_grt_pre(P, t):
         # FLOW-INFRA-2 10-25: tap trees re-balanced on GRT RC before the FF GRT hold repair (tapbal_grt.tcl)
         # + pin-register leaf pad (pinreg_pad.tcl): the gate quantity, not the whole-tree mean
@@ -1240,6 +1371,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         (kd / "die_islands.tcl").write_text(islands)
         hook = kd / "face_flops.tcl"
         hook.write_text("source /work/die_islands.tcl\n" + hook.read_text())
+    rs_pre, rs_post, rs_rel = reserved_sites_tcl(P, tn)
+    if rs_pre:
+        (kd / "reserved_sites.tcl").write_text(rs_pre)
+        hook = kd / "face_flops.tcl"
+        hook.write_text("source /work/reserved_sites.tcl\n" + hook.read_text())
     if t.get("clock", {}).get("landing_contract"):
         import landing_contract as LC
         (kd / "landing_contract.json").write_text(json.dumps(t["clock"]["landing_contract"], indent=1) + "\n")
@@ -1266,6 +1402,14 @@ foreach cland_line [split [read $cland_fh] "\n"] {
 close $cland_fh
 puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
 """)
+    if rs_post:
+        # after the landing placement hook: the rings are FIRM in their banks before the bank becomes a GPL blockage
+        (kd / "reserved_banks.tcl").write_text(rs_post)
+        (kd / "reserved_banks_release.tcl").write_text(rs_rel)
+        hook = kd / "face_flops.tcl"
+        hook.write_text(hook.read_text() + "\nsource /work/reserved_banks.tcl\n")
+        hook = kd / "face_flops_release.tcl"
+        hook.write_text("source /work/reserved_banks_release.tcl\n" + hook.read_text())
     # MASTER PLAN 12.7c (opt-in --master-slice DIR): the type's slice -> master_slice.json/.tcl, sourced at
     # PRE_GLOBAL_PLACE (face_flops.tcl: after io placement, before GPL); refused without a slice once required
     import master_slice as MS
@@ -1334,6 +1478,11 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     if ioh:
         from io_hold_qualification import plan_digest
         bud['io_hold'] = dict(mode='sender_min',plan_sha256=plan_digest(P.raw),requires_parent=True)
+        if io_hold_mode(P) == 'plan_demand':
+            hd = P.clock['hold_demand']
+            bud['io_hold'].update(mode='plan_demand', hold_demand=dict(
+                derate=hd.get('derate'), cell=hd.get('cell'), windows_ps=hd.get('windows_ps'),
+                pairs=len(hd.get('pairs') or {}), landed=len(hd.get('landed') or ())))
     if ms is not None:
         bud["master_plan"] = ms
     (kd / "budget.json").write_text(json.dumps(bud, indent=1) + "\n")
@@ -1430,6 +1579,8 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
     if grep -hq 'OT_POSTCTS_GATE.*FAIL' /work/postcts_gate_TT.log /work/postcts_gate_FF.log; then \
       grep -h OT_POSTCTS_GATE /work/postcts_gate_*.log | sed 's/^/FAIL_POSTCTS pre-route insertion gate: /' >> /work/FAIL_POSTCTS; rc=6; fi; fi; \
   if [ \$rc = 0 ]; then \$M $GOAL; rc=\$?; fi; \
+  if [ \$rc = 0 ] && [ -f /work/core_infra_post.v ] && [ -f /work/lec.py ]; then python3 -I /work/lec.py /work --netlist /work/core_infra_post.v --out /work/lec_post > /work/lec_post.log 2>&1; lr=\$?; tail -1 /work/lec_post.log; \
+    if [ \$lr != 0 ]; then echo \"FAIL_POSTPLACE clock-gate copy LEC exit \$lr (lec_post/lec.json): copies not proved equivalent\" | tee -a /work/FAIL_POSTCTS; rc=5; fi; fi; \
   if [ \$rc = 0 ] && [ $GOAL = route ]; then \$M do-finish; rc=\$?; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \$M do-generate_abstract; rc=\$?; fi; \
   O=\$(ls /work/run/results/asap7/*/base/5_route.odb /work/run/results/asap7/*/base/6_final.odb 2>/dev/null | tail -1); \

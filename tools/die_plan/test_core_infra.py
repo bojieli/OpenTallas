@@ -162,3 +162,53 @@ def test_icg_tree_mutants_refused(mut, frag):
     s = icg_tree(); mut(s["core_tree"])
     with pytest.raises(CI.InfraError, match=frag):
         CI.emit_tcl(s)
+
+
+# ---- S81-CORE-LAT-R7: clock-gate copies on the same registered enable (COORD ruling R6 (3))
+def icg_copy_tree():
+    s = icg_tree()
+    t = s["core_tree"]
+    t["nodes"] += [dict(name="w2", master="BUFx12_ASAP7_75t_R", xy_um=[216, 300], parent="root")]
+    t["gates"].append(dict(inst="ot_cgc_r0_1", clone_of="u_e.g_cgr.u_cg_r0.u_icg", master="ICGx1_ASAP7_75t_R",
+                           parent="w2", xy_um=[216, 298], members=[f"m{i}/CLK" for i in range(600)]))
+    t["leaves"].append(dict(node="ot_cgc_r0_1", load_class="gated_domain", domain_sinks=600))
+    return s
+
+
+def test_gate_copy_reads_original_enable_and_takes_named_members():
+    s = icg_copy_tree()
+    p = CI.compile_slice(s)["core_tree"]
+    g = {x["inst"]: x for x in p["gates"]}
+    assert g["ot_cgc_r0_1"]["enable_pins"] == ["ENA", "SE"] and g["u_e.g_cgr.u_cg_r0.u_icg"]["copies"] == ["ot_cgc_r0_1"]
+    assert p["depth"] == 3
+    tcl = CI.emit_tcl(s)
+    line = ("ot_ci_tree_gate_copy {ot_cgc_r0_1} ICGx1_ASAP7_75t_R {u_e.g_cgr.u_cg_r0.u_icg} {w2} {CLK} {GCLK} 216 298 "
+            "{0 0 864 864} {{ENA} {SE}} {" + " ".join("{m%d/CLK}" % i for i in range(600)) + "}")
+    assert line in tcl
+    # copies after every original gate, the domain census after the copies, the LEC netlist after the tree
+    assert tcl.index("ot_ci_tree_gate {u_e.g_cgr.u_cg_r1.u_icg}") < tcl.index(line) < tcl.index("ot_ci_tree_domain")
+    assert tcl.index("ot_ci_tree_finish") < tcl.index("ot_ci_lec_netlist /work/core_infra_post.v")
+    assert "ot_ci_lec_netlist" not in CI.emit_tcl(icg_tree())
+
+
+def _copy(t):
+    return t["gates"][-1]
+
+
+@pytest.mark.parametrize("mut,frag", [
+    (lambda t: _copy(t).update(clone_of="nope"), "original RTL gate listed before"),
+    (lambda t: _copy(t).update(master="ICGx2_ASAP7_75t_R"), "differs from"),
+    (lambda t: _copy(t).update(members=[]), "non-empty list"),
+    (lambda t: _copy(t).update(members=["m0/CLK", "m0/CLK"]), "distinct"),
+    (lambda t: _copy(t).update(enable_pins=["CLK"]), "non-clock pins"),
+    (lambda t: _copy(t).update(parent="root"), "unequal stage"),
+    (lambda t: t["leaves"][-1].update(domain_sinks=601), "exactly its 600 members"),
+    (lambda t: t["leaves"][2]["sinks"].append("m1/CLK"), "gate-copy member and a direct leaf"),
+    (lambda t: t["gates"][0].update(members=["x/CLK"]), "only a gate copy"),
+    (lambda t: t["gates"].append(dict(_copy(t), inst="ot_cgc_r0_2", clone_of="ot_cgc_r0_1")), "original RTL gate"),
+    (lambda t: t["gates"].append(dict(_copy(t), inst="ot_cgc_r0_2", members=["m2/CLK"] * 1)), "two gate copies"),
+])
+def test_gate_copy_mutants_refused(mut, frag):
+    s = icg_copy_tree(); mut(s["core_tree"])
+    with pytest.raises(CI.InfraError, match=frag):
+        CI.emit_tcl(s)

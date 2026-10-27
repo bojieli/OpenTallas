@@ -1,0 +1,736 @@
+{
+ "lattice": {
+  "nx": 32,
+  "ny": 71,
+  "x_pitch": 346.14,
+  "y_pitch": 380.16,
+  "y_phase": 267.84,
+  "y_range": [
+   267.84,
+   26879.04
+  ],
+  "mirror_y": 13003.2
+ },
+ "regions": {
+  "S": {
+   "rows": [
+    0,
+    32
+   ],
+   "axes": "yyyxxxxxyy",
+   "root": [
+    5538.24,
+    6160.32
+   ],
+   "global_leg_um": 6842.88,
+   "path_um": [
+    18100.53,
+    18100.53
+   ]
+  },
+  "H": {
+   "rows": [
+    32,
+    36
+   ],
+   "axes": "yxxxxxy",
+   "root": [
+    5538.24,
+    13003.2
+   ],
+   "global_leg_um": 0.0,
+   "path_um": [
+    5935.41,
+    5935.41
+   ]
+  },
+  "N": {
+   "rows": [
+    36,
+    68
+   ],
+   "axes": "yyyxxxxxyy",
+   "root": [
+    5538.24,
+    19846.08
+   ],
+   "global_leg_um": 6842.88,
+   "path_um": [
+    18100.53,
+    18100.53
+   ]
+  },
+  "Y": {
+   "rows": [
+    68,
+    71
+   ],
+   "axes": "yxxxxxy",
+   "root": [
+    5538.24,
+    26688.96
+   ],
+   "global_leg_um": 13685.76,
+   "path_um": [
+    19621.17,
+    19621.17
+   ]
+  }
+ },
+ "points": {
+  "driver/core": 491,
+  "driver/part": 1781,
+  "node/core": 1042,
+  "node/none": 63,
+  "node/part": 1195,
+  "rep/core": 365,
+  "rep/none": 32,
+  "rep/part": 367
+ },
+ "incore_by_module": {
+  "kv3_head_eighth_e1/node": 128,
+  "kv3_head_eighth_e2/node": 96,
+  "kv3_head_eighth_e5/driver": 128,
+  "kv3_head_eighth_e5/node": 160,
+  "kv3_head_eighth_e5/rep": 96,
+  "kv3_head_eighth_e6/driver": 96,
+  "kv3_head_eighth_e6/node": 160,
+  "kv3_head_eighth_e6/rep": 64,
+  "kv3_pv_pair/node": 288,
+  "kv3_pv_pair/rep": 96,
+  "ot_qwen_tp8_pv_join_t/driver": 32,
+  "qkd_ahub/driver": 1,
+  "qkd_ahub/node": 3,
+  "qkd_ahub/rep": 2,
+  "qkd_ectlk_q1/driver": 32,
+  "qkd_ectlk_q2/driver": 32,
+  "qkd_ectlk_q3/driver": 32,
+  "qkd_hr_cdc_ch/driver": 1,
+  "qkd_hr_cdc_ch/node": 2,
+  "qkd_hr_cdc_ch/rep": 1,
+  "qkd_hr_cdc_ci/driver": 1,
+  "qkd_hr_cdc_pc/driver": 1,
+  "qkd_hr_core_guard/node": 2,
+  "qkd_hr_core_guard/rep": 1,
+  "qkd_hr_core_order/driver": 1,
+  "qkd_hr_core_order/node": 2,
+  "qkd_hr_core_order/rep": 2,
+  "qkd_hr_core_peer/driver": 1,
+  "qkd_hr_core_prompt/node": 1,
+  "qkd_hr_core_prompt/rep": 1,
+  "qkd_hr_core_queue/node": 1,
+  "qkd_hr_core_rx/node": 2,
+  "qkd_hr_core_rx/rep": 3,
+  "qkd_hr_core_tx/driver": 1,
+  "qkd_hr_ingest_eng/driver": 1,
+  "qkd_hr_ingest_eng/node": 2,
+  "qkd_hr_ingest_eng/rep": 2,
+  "qkd_hr_phy_adp/driver": 1,
+  "qkd_kvs_ctl/driver": 2,
+  "qkd_kvs_ctl/node": 3,
+  "qkd_kvs_ctl/rep": 1,
+  "qkd_kvs_pc/driver": 124,
+  "qkd_kvs_pc/node": 184,
+  "qkd_kvs_pc/rep": 92,
+  "qkd_kvs_pc_h_head_p/driver": 4,
+  "qkd_kvs_pc_h_head_p/node": 8,
+  "qkd_kvs_pc_h_head_p/rep": 4
+ },
+ "multi_instance_types": 19,
+ "identity_fail_sites": [],
+ "identity_fail_roles": [],
+ "identity": {
+  "kv3_hg": {
+   "n": 4,
+   "site_sets": 1,
+   "role_sets": 1,
+   "sites_per_inst": [
+    33
+   ]
+  },
+  "kv3_hg_v1": {
+   "n": 4,
+   "site_sets": 1,
+   "role_sets": 1,
+   "sites_per_inst": [
+    33
+   ]
+  },
+  "kv3_hg_v1p2": {
+   "n": 4,
+   "site_sets": 1,
+   "role_sets": 1,
+   "sites_per_inst": [
+    33
+   ]
+  },
+  "kv3_hg_v1p3": {
+   "n": 4,
+   "site_sets": 1,
+   "role_sets": 1,
+   "sites_per_inst": [
+    33
+   ]
+  },
+  "kv3_hg_v1p4": {
+   "n": 4,
+   "site_sets": 1,
+   "role_sets": 1,
+   "sites_per_inst": [
+    33
+   ]
+  },
+  "kv3_hg_v1p5": {
+   "n": 4,
+   "site_sets": 1,
+   "role_sets": 1,
+   "sites_per_inst": [
+    33
+   ]
+  },
+  "kv3_hg_v1p6": {
+   "n": 4,
+   "site_sets": 1,
+   "role_sets": 1,
+   "sites_per_inst": [
+    33
+   ]
+  },
+  "kv3_hg_v3": {
+   "n": 4,
+   "site_sets": 1,
+   "role_sets": 1,
+   "sites_per_inst": [
+    33
+   ]
+  },
+  "kv3_hgi": {
+   "n": 2,
+   "site_sets": 1,
+   "role_sets": 1,
+   "sites_per_inst": [
+    34
+   ]
+  },
+  "kv3_hgi_v1": {
+   "n": 12,
+   "site_sets": 1,
+   "role_sets": 1,
+   "sites_per_inst": [
+    34
+   ]
+  },
+  "kv3_hgi_v2": {
+   "n": 2,
+   "site_sets": 1,
+   "role_sets": 1,
+   "sites_per_inst": [
+    34
+   ]
+  },
+  "kv3_hgi_v4": {
+   "n": 6,
+   "site_sets": 1,
+   "role_sets": 1,
+   "sites_per_inst": [
+    34
+   ]
+  },
+  "kv3_hgi_v7": {
+   "n": 6,
+   "site_sets": 1,
+   "role_sets": 1,
+   "sites_per_inst": [
+    34
+   ]
+  },
+  "kv3_hroot": {
+   "n": 4,
+   "site_sets": 1,
+   "role_sets": 1,
+   "sites_per_inst": [
+    20
+   ]
+  },
+  "kv3_pc": {
+   "n": 4,
+   "site_sets": 1,
+   "role_sets": 1,
+   "sites_per_inst": [
+    24
+   ]
+  },
+  "kv3_pc_v1": {
+   "n": 24,
+   "site_sets": 1,
+   "role_sets": 1,
+   "sites_per_inst": [
+    24
+   ]
+  },
+  "kv3_pc_v3": {
+   "n": 4,
+   "site_sets": 1,
+   "role_sets": 1,
+   "sites_per_inst": [
+    24
+   ]
+  },
+  "kv3_phy": {
+   "n": 4,
+   "site_sets": 1,
+   "role_sets": 1,
+   "sites_per_inst": [
+    16
+   ]
+  },
+  "kv3_phy_v1": {
+   "n": 28,
+   "site_sets": 1,
+   "role_sets": 1,
+   "sites_per_inst": [
+    16
+   ]
+  }
+ },
+ "core_module_identity_fail": [
+  "kv3_head_eighth_e1",
+  "kv3_head_eighth_e2",
+  "kv3_head_eighth_e5",
+  "kv3_head_eighth_e6",
+  "kv3_pv_pair",
+  "ot_qwen_tp8_pv_join_t",
+  "qkd_hr_phy_adp",
+  "qkd_kvs_pc"
+ ],
+ "core_modules": {
+  "kv3_head_eighth_e1": {
+   "instances": 256,
+   "with_sites": 128,
+   "site_sets": 5,
+   "sites": [
+    0,
+    1
+   ],
+   "union_sites": 4,
+   "partition_types": [
+    "kv3_hg",
+    "kv3_hg_v1",
+    "kv3_hg_v1p2",
+    "kv3_hg_v1p3",
+    "kv3_hg_v1p4",
+    "kv3_hg_v1p5",
+    "kv3_hg_v1p6",
+    "kv3_hg_v3",
+    "kv3_hgi",
+    "kv3_hgi_v1",
+    "kv3_hgi_v2",
+    "kv3_hgi_v3",
+    "kv3_hgi_v4",
+    "kv3_hgi_v5",
+    "kv3_hgi_v6",
+    "kv3_hgi_v7",
+    "kv3_hgi_v8"
+   ]
+  },
+  "kv3_head_eighth_e2": {
+   "instances": 128,
+   "with_sites": 96,
+   "site_sets": 4,
+   "sites": [
+    0,
+    1
+   ],
+   "union_sites": 3,
+   "partition_types": [
+    "kv3_hg",
+    "kv3_hg_v1",
+    "kv3_hg_v1p2",
+    "kv3_hg_v1p3",
+    "kv3_hg_v1p4",
+    "kv3_hg_v1p5",
+    "kv3_hg_v1p6",
+    "kv3_hg_v3",
+    "kv3_hgi",
+    "kv3_hgi_v1",
+    "kv3_hgi_v2",
+    "kv3_hgi_v3",
+    "kv3_hgi_v4",
+    "kv3_hgi_v5",
+    "kv3_hgi_v6",
+    "kv3_hgi_v7",
+    "kv3_hgi_v8"
+   ]
+  },
+  "kv3_head_eighth_e6": {
+   "instances": 256,
+   "with_sites": 224,
+   "site_sets": 8,
+   "sites": [
+    0,
+    1,
+    2
+   ],
+   "union_sites": 9,
+   "partition_types": [
+    "kv3_hg",
+    "kv3_hg_v1",
+    "kv3_hg_v1p2",
+    "kv3_hg_v1p3",
+    "kv3_hg_v1p4",
+    "kv3_hg_v1p5",
+    "kv3_hg_v1p6",
+    "kv3_hg_v3",
+    "kv3_hgi",
+    "kv3_hgi_v1",
+    "kv3_hgi_v2",
+    "kv3_hgi_v3",
+    "kv3_hgi_v4",
+    "kv3_hgi_v5",
+    "kv3_hgi_v6",
+    "kv3_hgi_v7",
+    "kv3_hgi_v8"
+   ]
+  },
+  "kv3_head_eighth_e5": {
+   "instances": 256,
+   "with_sites": 256,
+   "site_sets": 8,
+   "sites": [
+    1,
+    2
+   ],
+   "union_sites": 11,
+   "partition_types": [
+    "kv3_hg",
+    "kv3_hg_v1",
+    "kv3_hg_v1p2",
+    "kv3_hg_v1p3",
+    "kv3_hg_v1p4",
+    "kv3_hg_v1p5",
+    "kv3_hg_v1p6",
+    "kv3_hg_v3",
+    "kv3_hgi",
+    "kv3_hgi_v1",
+    "kv3_hgi_v2",
+    "kv3_hgi_v3",
+    "kv3_hgi_v4",
+    "kv3_hgi_v5",
+    "kv3_hgi_v6",
+    "kv3_hgi_v7",
+    "kv3_hgi_v8"
+   ]
+  },
+  "qkd_ectlk_q1": {
+   "instances": 32,
+   "with_sites": 32,
+   "site_sets": 1,
+   "sites": [
+    1
+   ],
+   "union_sites": 1,
+   "partition_types": [
+    "kv3_hg",
+    "kv3_hg_v1",
+    "kv3_hg_v1p2",
+    "kv3_hg_v1p3",
+    "kv3_hg_v1p4",
+    "kv3_hg_v1p5",
+    "kv3_hg_v1p6",
+    "kv3_hg_v3"
+   ]
+  },
+  "qkd_ectlk_q2": {
+   "instances": 32,
+   "with_sites": 32,
+   "site_sets": 1,
+   "sites": [
+    1
+   ],
+   "union_sites": 1,
+   "partition_types": [
+    "kv3_hg",
+    "kv3_hg_v1",
+    "kv3_hg_v1p2",
+    "kv3_hg_v1p3",
+    "kv3_hg_v1p4",
+    "kv3_hg_v1p5",
+    "kv3_hg_v1p6",
+    "kv3_hg_v3"
+   ]
+  },
+  "qkd_ectlk_q3": {
+   "instances": 32,
+   "with_sites": 32,
+   "site_sets": 1,
+   "sites": [
+    1
+   ],
+   "union_sites": 1,
+   "partition_types": [
+    "kv3_hg",
+    "kv3_hg_v1",
+    "kv3_hg_v1p2",
+    "kv3_hg_v1p3",
+    "kv3_hg_v1p4",
+    "kv3_hg_v1p5",
+    "kv3_hg_v1p6",
+    "kv3_hg_v3"
+   ]
+  },
+  "qkd_ahub": {
+   "instances": 1,
+   "with_sites": 1,
+   "site_sets": 1,
+   "sites": [
+    6
+   ],
+   "union_sites": 6,
+   "partition_types": [
+    "kv3_hub_C"
+   ]
+  },
+  "qkd_kvs_ctl": {
+   "instances": 1,
+   "with_sites": 1,
+   "site_sets": 1,
+   "sites": [
+    6
+   ],
+   "union_sites": 6,
+   "partition_types": [
+    "kv3_hub_C"
+   ]
+  },
+  "qkd_hr_ingest_eng": {
+   "instances": 1,
+   "with_sites": 1,
+   "site_sets": 1,
+   "sites": [
+    4
+   ],
+   "union_sites": 4,
+   "partition_types": [
+    "kv3_hub_Wi"
+   ]
+  },
+  "qkd_hr_core_order": {
+   "instances": 1,
+   "with_sites": 1,
+   "site_sets": 1,
+   "sites": [
+    3
+   ],
+   "union_sites": 3,
+   "partition_types": [
+    "kv3_hub_Wi"
+   ]
+  },
+  "qkd_hr_cdc_ch": {
+   "instances": 1,
+   "with_sites": 1,
+   "site_sets": 1,
+   "sites": [
+    4
+   ],
+   "union_sites": 4,
+   "partition_types": [
+    "kv3_hub_Wi"
+   ]
+  },
+  "qkd_hr_cdc_pc": {
+   "instances": 1,
+   "with_sites": 1,
+   "site_sets": 1,
+   "sites": [
+    1
+   ],
+   "union_sites": 1,
+   "partition_types": [
+    "kv3_hub_Wi"
+   ]
+  },
+  "qkd_hr_core_peer": {
+   "instances": 1,
+   "with_sites": 1,
+   "site_sets": 1,
+   "sites": [
+    1
+   ],
+   "union_sites": 1,
+   "partition_types": [
+    "kv3_hub_Wi"
+   ]
+  },
+  "qkd_hr_core_tx": {
+   "instances": 1,
+   "with_sites": 1,
+   "site_sets": 1,
+   "sites": [
+    1
+   ],
+   "union_sites": 1,
+   "partition_types": [
+    "kv3_hub_Wi"
+   ]
+  },
+  "qkd_hr_core_rx": {
+   "instances": 1,
+   "with_sites": 1,
+   "site_sets": 1,
+   "sites": [
+    3
+   ],
+   "union_sites": 3,
+   "partition_types": [
+    "kv3_hub_Wi"
+   ]
+  },
+  "qkd_hr_core_guard": {
+   "instances": 1,
+   "with_sites": 1,
+   "site_sets": 1,
+   "sites": [
+    2
+   ],
+   "union_sites": 2,
+   "partition_types": [
+    "kv3_hub_Wi"
+   ]
+  },
+  "qkd_hr_core_queue": {
+   "instances": 1,
+   "with_sites": 1,
+   "site_sets": 1,
+   "sites": [
+    1
+   ],
+   "union_sites": 1,
+   "partition_types": [
+    "kv3_hub_Wi"
+   ]
+  },
+  "qkd_hr_core_prompt": {
+   "instances": 1,
+   "with_sites": 1,
+   "site_sets": 1,
+   "sites": [
+    2
+   ],
+   "union_sites": 2,
+   "partition_types": [
+    "kv3_hub_Wi"
+   ]
+  },
+  "qkd_hr_cdc_ci": {
+   "instances": 1,
+   "with_sites": 1,
+   "site_sets": 1,
+   "sites": [
+    1
+   ],
+   "union_sites": 1,
+   "partition_types": [
+    "kv3_hub_Wi"
+   ]
+  },
+  "qkd_hr_phy_adp": {
+   "instances": 8,
+   "with_sites": 1,
+   "site_sets": 2,
+   "sites": [
+    0,
+    1
+   ],
+   "union_sites": 1,
+   "partition_types": [
+    "kv3_hub_Wi"
+   ]
+  },
+  "qkd_kvs_pc_h_head_p": {
+   "instances": 4,
+   "with_sites": 4,
+   "site_sets": 1,
+   "sites": [
+    3
+   ],
+   "union_sites": 3,
+   "partition_types": [
+    "kv3_pc"
+   ]
+  },
+  "qkd_kvs_pc": {
+   "instances": 124,
+   "with_sites": 124,
+   "site_sets": 4,
+   "sites": [
+    2,
+    3
+   ],
+   "union_sites": 10,
+   "partition_types": [
+    "kv3_pc",
+    "kv3_pc_v1",
+    "kv3_pc_v3"
+   ]
+  },
+  "kv3_pv_pair": {
+   "instances": 256,
+   "with_sites": 192,
+   "site_sets": 13,
+   "sites": [
+    0,
+    1,
+    3,
+    4
+   ],
+   "union_sites": 22,
+   "partition_types": [
+    "kv3_pv",
+    "kv3_pv_v1",
+    "kv3_pv_v12",
+    "kv3_pv_v1n",
+    "kv3_pv_v2",
+    "kv3_pv_v2n",
+    "kv3_pv_v3",
+    "kv3_pv_v3n",
+    "kv3_pv_v4",
+    "kv3_pv_v4n",
+    "kv3_pv_v5",
+    "kv3_pv_v5n",
+    "kv3_pv_v6",
+    "kv3_pv_v6n",
+    "kv3_pv_v7",
+    "kv3_pv_v8"
+   ]
+  },
+  "ot_qwen_tp8_pv_join_t": {
+   "instances": 64,
+   "with_sites": 32,
+   "site_sets": 3,
+   "sites": [
+    0,
+    1
+   ],
+   "union_sites": 2,
+   "partition_types": [
+    "kv3_pv",
+    "kv3_pv_v1",
+    "kv3_pv_v12",
+    "kv3_pv_v1n",
+    "kv3_pv_v2",
+    "kv3_pv_v2n",
+    "kv3_pv_v3",
+    "kv3_pv_v3n",
+    "kv3_pv_v4",
+    "kv3_pv_v4n",
+    "kv3_pv_v5",
+    "kv3_pv_v5n",
+    "kv3_pv_v6",
+    "kv3_pv_v6n",
+    "kv3_pv_v7",
+    "kv3_pv_v8"
+   ]
+  }
+ }
+}

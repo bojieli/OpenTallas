@@ -1,0 +1,11606 @@
+{
+ "name": "eq_k7_w1_L3",
+ "geo": "/srv/opentallas-scratch2/claude/qc-su-prog-l1-1026/in/r2/prog_m0.geo",
+ "k": 7,
+ "model": "su_tree_uf raw NLDM+setRC0.8/0.9 Elmore + master_plan.plan_tree_insertion(su_tree_model_nldm) offset TT+1.9/FF-5.1 (claude/model-refit-1026@930fa9628d; one calibration point, btab R5)",
+ "plan_pred_raw": {
+  "TT": {
+   "mean": 299.59,
+   "min": 288.02,
+   "max": 306.46,
+   "window": 18.44
+  },
+  "FF": {
+   "mean": 238.45,
+   "min": 228.8,
+   "max": 243.52,
+   "window": 14.72
+  }
+ },
+ "plan_pred": {
+  "TT": {
+   "mean": 301.49,
+   "window": 18.44
+  },
+  "FF": {
+   "mean": 233.35,
+   "window": 14.72
+  }
+ },
+ "gates": {
+  "G1_macro_orient": {
+   "verdict": "PASS",
+   "macros": [
+    {
+     "inst": "g_prog\\[1\\].u_lo",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "plan_wh": [
+      172.824,
+      41.064
+     ],
+     "lef_wh": [
+      172.824,
+      41.064
+     ],
+     "symmetry": [
+      "X",
+      "Y"
+     ],
+     "needs_rotation": false,
+     "ok": true
+    },
+    {
+     "inst": "g_prog\\[1\\].u_hi",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "plan_wh": [
+      172.824,
+      41.064
+     ],
+     "lef_wh": [
+      172.824,
+      41.064
+     ],
+     "symmetry": [
+      "X",
+      "Y"
+     ],
+     "needs_rotation": false,
+     "ok": true
+    },
+    {
+     "inst": "g_prog\\[0\\].u_lo",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "plan_wh": [
+      172.824,
+      41.064
+     ],
+     "lef_wh": [
+      172.824,
+      41.064
+     ],
+     "symmetry": [
+      "X",
+      "Y"
+     ],
+     "needs_rotation": false,
+     "ok": true
+    },
+    {
+     "inst": "g_prog\\[0\\].u_hi",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "plan_wh": [
+      172.824,
+      41.064
+     ],
+     "lef_wh": [
+      172.824,
+      41.064
+     ],
+     "symmetry": [
+      "X",
+      "Y"
+     ],
+     "needs_rotation": false,
+     "ok": true
+    }
+   ]
+  },
+  "G2_island_rows": {
+   "verdict": "PASS",
+   "entry_island": [
+    172.8,
+    129.60000000000002,
+    181.44,
+    138.24
+   ],
+   "islands": [
+    {
+     "island": "Q0",
+     "plan_xy": [
+      272.16,
+      17.28
+     ],
+     "rect_um": [
+      267.84,
+      12.96,
+      276.48,
+      21.6
+     ],
+     "centre_disp_um": 0.0,
+     "contains_plan_point": true,
+     "legal": true
+    },
+    {
+     "island": "Q1",
+     "plan_xy": [
+      21.6,
+      224.64
+     ],
+     "rect_um": [
+      17.28,
+      220.32,
+      25.92,
+      228.96
+     ],
+     "centre_disp_um": 0.0,
+     "contains_plan_point": true,
+     "legal": true
+    },
+    {
+     "island": "Q2",
+     "plan_xy": [
+      272.16,
+      250.56
+     ],
+     "rect_um": [
+      267.84,
+      246.24,
+      276.48,
+      254.88
+     ],
+     "centre_disp_um": 0.0,
+     "contains_plan_point": true,
+     "legal": true
+    },
+    {
+     "island": "Q3",
+     "plan_xy": [
+      112.32,
+      12.96
+     ],
+     "rect_um": [
+      108.0,
+      8.64,
+      116.64,
+      17.28
+     ],
+     "centre_disp_um": 0.0,
+     "contains_plan_point": true,
+     "legal": true
+    },
+    {
+     "island": "Q4",
+     "plan_xy": [
+      345.6,
+      43.2
+     ],
+     "rect_um": [
+      341.28,
+      38.88,
+      349.92,
+      47.52
+     ],
+     "centre_disp_um": 0.0,
+     "contains_plan_point": true,
+     "legal": true
+    },
+    {
+     "island": "Q5",
+     "plan_xy": [
+      203.04,
+      17.28
+     ],
+     "rect_um": [
+      198.72,
+      12.96,
+      207.36,
+      21.6
+     ],
+     "centre_disp_um": 0.0,
+     "contains_plan_point": true,
+     "legal": true
+    }
+   ],
+   "max_disp_um": 0.0
+  },
+  "G3_cell_rows": {
+   "verdict": "PASS",
+   "n_sites": 82,
+   "illegal": []
+  },
+  "G4_detour_sites": {
+   "verdict": "FAIL",
+   "n_edges": 88,
+   "planner": "r4 chain (every cut a legal repeater at exact shortest-segment distances)",
+   "straight_levels": [
+    "L3"
+   ],
+   "repeaters_per_edge_plan": {
+    "L1": 2,
+    "L2": 1,
+    "L3": 0
+   },
+   "repeaters_per_edge": {
+    "L1": 4,
+    "L2": 4,
+    "L3": 0
+   },
+   "n_straight": 66,
+   "n_length_not_fixed": 0,
+   "length_rule": "planned length fixed by placed cells: sum of shortest segments between consecutive cells >= len - 2.16",
+   "n_repeaters": 96,
+   "n_detours": 19,
+   "max_shift_um": 2.16,
+   "failures": [
+    {
+     "edge": "Q5",
+     "level": "L1",
+     "ok": false,
+     "len_um": 270.0,
+     "T_um": 270.0,
+     "shortest_um": 270.0,
+     "detour": false,
+     "straight": false,
+     "cells_fixed_len_um": 295.92,
+     "length_fixed": true,
+     "pin_cut": null,
+     "repeaters": [
+      {
+       "cut": 1,
+       "xy": [
+        231.12,
+        135.0
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 2,
+       "xy": [
+        266.22,
+        116.1
+       ],
+       "legal": false
+      },
+      {
+       "cut": 3,
+       "xy": [
+        266.22,
+        62.1
+       ],
+       "legal": false
+      },
+      {
+       "cut": 4,
+       "xy": [
+        246.78,
+        25.38
+       ],
+       "shift_um": 2.16,
+       "legal": true
+      }
+     ],
+     "max_shift_um": 2.16
+    },
+    {
+     "edge": "Q3B1",
+     "level": "L2",
+     "ok": false,
+     "len_um": 120.42,
+     "T_um": 120.42,
+     "shortest_um": 27.54,
+     "detour": true,
+     "straight": false,
+     "cells_fixed_len_um": 120.42,
+     "length_fixed": true,
+     "pin_cut": 2,
+     "repeaters": [
+      {
+       "cut": 1,
+       "xy": [
+        89.64,
+        14.58
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 2,
+       "xy": [
+        65.88,
+        14.58
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 3,
+       "xy": [
+        90.18,
+        14.58
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 4,
+       "xy": [
+        113.94,
+        14.58
+       ],
+       "legal": false
+      }
+     ],
+     "max_shift_um": 0.0
+    }
+   ],
+   "edges": [
+    {
+     "edge": "Q0",
+     "level": "L1",
+     "ok": true,
+     "len_um": 270.0,
+     "T_um": 270.0,
+     "shortest_um": 212.76,
+     "detour": true,
+     "straight": false,
+     "cells_fixed_len_um": 270.0,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [
+      {
+       "cut": 1,
+       "xy": [
+        228.42,
+        132.3
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 2,
+       "xy": [
+        279.18,
+        129.06
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 3,
+       "xy": [
+        272.16,
+        82.08
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 4,
+       "xy": [
+        293.76,
+        49.68
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      }
+     ],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q1",
+     "level": "L1",
+     "ok": true,
+     "len_um": 270.0,
+     "T_um": 270.0,
+     "shortest_um": 245.16,
+     "detour": true,
+     "straight": false,
+     "cells_fixed_len_um": 270.0,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [
+      {
+       "cut": 1,
+       "xy": [
+        126.36,
+        138.24
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 2,
+       "xy": [
+        86.4,
+        152.28
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 3,
+       "xy": [
+        69.12,
+        189.0
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 4,
+       "xy": [
+        63.18,
+        237.06
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      }
+     ],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q2",
+     "level": "L1",
+     "ok": true,
+     "len_um": 270.0,
+     "T_um": 270.0,
+     "shortest_um": 210.6,
+     "detour": true,
+     "straight": false,
+     "cells_fixed_len_um": 270.0,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [
+      {
+       "cut": 1,
+       "xy": [
+        227.88,
+        138.24
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 2,
+       "xy": [
+        279.18,
+        140.94
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 3,
+       "xy": [
+        272.7,
+        188.46
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 4,
+       "xy": [
+        295.38,
+        219.78
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      }
+     ],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q3",
+     "level": "L1",
+     "ok": true,
+     "len_um": 270.0,
+     "T_um": 270.0,
+     "shortest_um": 235.44,
+     "detour": true,
+     "straight": false,
+     "cells_fixed_len_um": 270.0,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [
+      {
+       "cut": 1,
+       "xy": [
+        125.82,
+        132.3
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 2,
+       "xy": [
+        86.4,
+        117.72
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 3,
+       "xy": [
+        86.4,
+        63.72
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 4,
+       "xy": [
+        70.74,
+        25.38
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      }
+     ],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q4",
+     "level": "L1",
+     "ok": true,
+     "len_um": 270.0,
+     "T_um": 270.0,
+     "shortest_um": 260.28,
+     "detour": true,
+     "straight": false,
+     "cells_fixed_len_um": 270.0,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [
+      {
+       "cut": 1,
+       "xy": [
+        228.42,
+        132.3
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 2,
+       "xy": [
+        279.18,
+        129.06
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 3,
+       "xy": [
+        274.32,
+        79.92
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 4,
+       "xy": [
+        309.96,
+        61.56
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      }
+     ],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q5",
+     "level": "L1",
+     "ok": false,
+     "len_um": 270.0,
+     "T_um": 270.0,
+     "shortest_um": 270.0,
+     "detour": false,
+     "straight": false,
+     "cells_fixed_len_um": 295.92,
+     "length_fixed": true,
+     "pin_cut": null,
+     "repeaters": [
+      {
+       "cut": 1,
+       "xy": [
+        231.12,
+        135.0
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 2,
+       "xy": [
+        266.22,
+        116.1
+       ],
+       "legal": false
+      },
+      {
+       "cut": 3,
+       "xy": [
+        266.22,
+        62.1
+       ],
+       "legal": false
+      },
+      {
+       "cut": 4,
+       "xy": [
+        246.78,
+        25.38
+       ],
+       "shift_um": 2.16,
+       "legal": true
+      }
+     ],
+     "max_shift_um": 2.16
+    },
+    {
+     "edge": "Q0B0",
+     "level": "L2",
+     "ok": true,
+     "len_um": 12.42,
+     "T_um": 120.42,
+     "shortest_um": 12.42,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 12.42,
+     "length_fixed": true,
+     "pin_cut": null,
+     "repeaters": [
+      {
+       "cut": 1,
+       "xy": [
+        267.3,
+        17.28
+       ],
+       "shift_um": 2.16,
+       "legal": true
+      },
+      {
+       "cut": 2,
+       "xy": [
+        267.3,
+        17.28
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 3,
+       "xy": [
+        264.6,
+        17.28
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 4,
+       "xy": [
+        262.44,
+        17.28
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      }
+     ],
+     "max_shift_um": 2.16
+    },
+    {
+     "edge": "Q0B1",
+     "level": "L2",
+     "ok": true,
+     "len_um": 120.42,
+     "T_um": 120.42,
+     "shortest_um": 15.66,
+     "detour": true,
+     "straight": false,
+     "cells_fixed_len_um": 120.42,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [
+      {
+       "cut": 1,
+       "xy": [
+        279.18,
+        34.56
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 2,
+       "xy": [
+        267.84,
+        22.14
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 3,
+       "xy": [
+        279.18,
+        35.1
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 4,
+       "xy": [
+        298.62,
+        30.78
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      }
+     ],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q0B2",
+     "level": "L2",
+     "ok": true,
+     "len_um": 120.96,
+     "T_um": 120.42,
+     "shortest_um": 59.4,
+     "detour": true,
+     "straight": false,
+     "cells_fixed_len_um": 120.96,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [
+      {
+       "cut": 1,
+       "xy": [
+        279.18,
+        34.56
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 2,
+       "xy": [
+        264.06,
+        25.38
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 3,
+       "xy": [
+        279.18,
+        34.02
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 4,
+       "xy": [
+        286.2,
+        51.3
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      }
+     ],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q0B3",
+     "level": "L2",
+     "ok": true,
+     "len_um": 120.42,
+     "T_um": 120.42,
+     "shortest_um": 83.7,
+     "detour": true,
+     "straight": false,
+     "cells_fixed_len_um": 120.42,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [
+      {
+       "cut": 1,
+       "xy": [
+        279.18,
+        34.56
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 2,
+       "xy": [
+        279.18,
+        58.32
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 3,
+       "xy": [
+        272.7,
+        76.14
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 4,
+       "xy": [
+        291.06,
+        81.54
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      }
+     ],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q0B4",
+     "level": "L2",
+     "ok": true,
+     "len_um": 120.96,
+     "T_um": 120.42,
+     "shortest_um": 116.64,
+     "detour": true,
+     "straight": false,
+     "cells_fixed_len_um": 120.96,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [
+      {
+       "cut": 1,
+       "xy": [
+        279.18,
+        34.56
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 2,
+       "xy": [
+        279.18,
+        58.86
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 3,
+       "xy": [
+        277.02,
+        80.46
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 4,
+       "xy": [
+        279.18,
+        102.6
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      }
+     ],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q1B0",
+     "level": "L2",
+     "ok": true,
+     "len_um": 120.42,
+     "T_um": 120.42,
+     "shortest_um": 109.62,
+     "detour": true,
+     "straight": false,
+     "cells_fixed_len_um": 120.42,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [
+      {
+       "cut": 1,
+       "xy": [
+        34.56,
+        213.3
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 2,
+       "xy": [
+        46.44,
+        201.42
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 3,
+       "xy": [
+        59.4,
+        190.08
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 4,
+       "xy": [
+        77.76,
+        195.48
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      }
+     ],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q2B0",
+     "level": "L2",
+     "ok": true,
+     "len_um": 118.26,
+     "T_um": 120.42,
+     "shortest_um": 118.26,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 122.58,
+     "length_fixed": true,
+     "pin_cut": null,
+     "repeaters": [
+      {
+       "cut": 1,
+       "xy": [
+        279.18,
+        231.66
+       ],
+       "shift_um": 2.16,
+       "legal": true
+      },
+      {
+       "cut": 2,
+       "xy": [
+        279.18,
+        207.9
+       ],
+       "shift_um": 2.16,
+       "legal": true
+      },
+      {
+       "cut": 3,
+       "xy": [
+        279.18,
+        184.68
+       ],
+       "shift_um": 2.16,
+       "legal": true
+      },
+      {
+       "cut": 4,
+       "xy": [
+        279.18,
+        160.92
+       ],
+       "shift_um": 2.16,
+       "legal": true
+      }
+     ],
+     "max_shift_um": 2.16
+    },
+    {
+     "edge": "Q2B1",
+     "level": "L2",
+     "ok": true,
+     "len_um": 120.96,
+     "T_um": 120.42,
+     "shortest_um": 75.6,
+     "detour": true,
+     "straight": false,
+     "cells_fixed_len_um": 120.96,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [
+      {
+       "cut": 1,
+       "xy": [
+        279.18,
+        233.28
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 2,
+       "xy": [
+        279.18,
+        208.98
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 3,
+       "xy": [
+        270.54,
+        193.86
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 4,
+       "xy": [
+        293.76,
+        192.78
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      }
+     ],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q2B2",
+     "level": "L2",
+     "ok": true,
+     "len_um": 120.96,
+     "T_um": 120.42,
+     "shortest_um": 52.92,
+     "detour": true,
+     "straight": false,
+     "cells_fixed_len_um": 120.96,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [
+      {
+       "cut": 1,
+       "xy": [
+        279.18,
+        233.28
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 2,
+       "xy": [
+        266.22,
+        244.62
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 3,
+       "xy": [
+        279.18,
+        233.82
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 4,
+       "xy": [
+        288.9,
+        219.24
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      }
+     ],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q2B3",
+     "level": "L2",
+     "ok": true,
+     "len_um": 120.96,
+     "T_um": 120.42,
+     "shortest_um": 18.36,
+     "detour": true,
+     "straight": false,
+     "cells_fixed_len_um": 120.96,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [
+      {
+       "cut": 1,
+       "xy": [
+        279.18,
+        233.28
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 2,
+       "xy": [
+        267.3,
+        245.7
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 3,
+       "xy": [
+        279.18,
+        233.82
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 4,
+       "xy": [
+        300.78,
+        236.52
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      }
+     ],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q3B0",
+     "level": "L2",
+     "ok": true,
+     "len_um": 120.96,
+     "T_um": 120.42,
+     "shortest_um": 23.76,
+     "detour": true,
+     "straight": false,
+     "cells_fixed_len_um": 120.96,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [
+      {
+       "cut": 1,
+       "xy": [
+        90.18,
+        15.12
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 2,
+       "xy": [
+        105.3,
+        24.3
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 3,
+       "xy": [
+        90.72,
+        15.12
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 4,
+       "xy": [
+        104.22,
+        4.32
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      }
+     ],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q3B1",
+     "level": "L2",
+     "ok": false,
+     "len_um": 120.42,
+     "T_um": 120.42,
+     "shortest_um": 27.54,
+     "detour": true,
+     "straight": false,
+     "cells_fixed_len_um": 120.42,
+     "length_fixed": true,
+     "pin_cut": 2,
+     "repeaters": [
+      {
+       "cut": 1,
+       "xy": [
+        89.64,
+        14.58
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 2,
+       "xy": [
+        65.88,
+        14.58
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 3,
+       "xy": [
+        90.18,
+        14.58
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 4,
+       "xy": [
+        113.94,
+        14.58
+       ],
+       "legal": false
+      }
+     ],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q3B2",
+     "level": "L2",
+     "ok": true,
+     "len_um": 120.96,
+     "T_um": 120.42,
+     "shortest_um": 91.8,
+     "detour": true,
+     "straight": false,
+     "cells_fixed_len_um": 120.96,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [
+      {
+       "cut": 1,
+       "xy": [
+        100.44,
+        25.38
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 2,
+       "xy": [
+        86.4,
+        35.64
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 3,
+       "xy": [
+        77.76,
+        50.76
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 4,
+       "xy": [
+        69.12,
+        66.42
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      }
+     ],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q4B0",
+     "level": "L2",
+     "ok": true,
+     "len_um": 120.96,
+     "T_um": 120.42,
+     "shortest_um": 60.48,
+     "detour": true,
+     "straight": false,
+     "cells_fixed_len_um": 120.96,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [
+      {
+       "cut": 1,
+       "xy": [
+        346.14,
+        66.96
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 2,
+       "xy": [
+        346.68,
+        90.72
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 3,
+       "xy": [
+        347.22,
+        67.5
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 4,
+       "xy": [
+        340.2,
+        84.78
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      }
+     ],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q4B1",
+     "level": "L2",
+     "ok": true,
+     "len_um": 120.42,
+     "T_um": 120.42,
+     "shortest_um": 90.18,
+     "detour": true,
+     "straight": false,
+     "cells_fixed_len_um": 120.42,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [
+      {
+       "cut": 1,
+       "xy": [
+        346.14,
+        66.96
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 2,
+       "xy": [
+        346.68,
+        90.18
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 3,
+       "xy": [
+        331.56,
+        99.36
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 4,
+       "xy": [
+        341.28,
+        113.4
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      }
+     ],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q4B2",
+     "level": "L2",
+     "ok": true,
+     "len_um": 120.42,
+     "T_um": 120.42,
+     "shortest_um": 120.42,
+     "detour": false,
+     "straight": false,
+     "cells_fixed_len_um": 120.42,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [
+      {
+       "cut": 1,
+       "xy": [
+        346.14,
+        66.96
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 2,
+       "xy": [
+        346.68,
+        90.18
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 3,
+       "xy": [
+        346.68,
+        114.48
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 4,
+       "xy": [
+        347.22,
+        137.7
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      }
+     ],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q5B0",
+     "level": "L2",
+     "ok": true,
+     "len_um": 22.14,
+     "T_um": 120.42,
+     "shortest_um": 22.14,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 22.14,
+     "length_fixed": true,
+     "pin_cut": null,
+     "repeaters": [
+      {
+       "cut": 1,
+       "xy": [
+        198.18,
+        17.28
+       ],
+       "shift_um": 0.54,
+       "legal": true
+      },
+      {
+       "cut": 2,
+       "xy": [
+        194.4,
+        17.28
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 3,
+       "xy": [
+        189.54,
+        17.28
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 4,
+       "xy": [
+        185.22,
+        17.28
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      }
+     ],
+     "max_shift_um": 0.54
+    },
+    {
+     "edge": "Q5B1",
+     "level": "L2",
+     "ok": true,
+     "len_um": 120.96,
+     "T_um": 120.42,
+     "shortest_um": 18.36,
+     "detour": true,
+     "straight": false,
+     "cells_fixed_len_um": 120.96,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [
+      {
+       "cut": 1,
+       "xy": [
+        214.38,
+        4.32
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 2,
+       "xy": [
+        207.9,
+        22.14
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 3,
+       "xy": [
+        214.38,
+        4.86
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      },
+      {
+       "cut": 4,
+       "xy": [
+        235.98,
+        7.56
+       ],
+       "shift_um": 0.0,
+       "legal": true
+      }
+     ],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q0B0L0",
+     "level": "L3",
+     "ok": true,
+     "len_um": 19.44,
+     "T_um": 31.32,
+     "shortest_um": 19.44,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 19.44,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q0B0L1",
+     "level": "L3",
+     "ok": true,
+     "len_um": 8.64,
+     "T_um": 31.32,
+     "shortest_um": 8.64,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 8.64,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q0B0L2",
+     "level": "L3",
+     "ok": true,
+     "len_um": 5.94,
+     "T_um": 31.32,
+     "shortest_um": 5.94,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 5.94,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q0B0L3",
+     "level": "L3",
+     "ok": true,
+     "len_um": 19.98,
+     "T_um": 31.32,
+     "shortest_um": 19.98,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 19.98,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q0B1L0",
+     "level": "L3",
+     "ok": true,
+     "len_um": 11.88,
+     "T_um": 31.32,
+     "shortest_um": 11.88,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 11.88,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q0B1L1",
+     "level": "L3",
+     "ok": true,
+     "len_um": 3.24,
+     "T_um": 31.32,
+     "shortest_um": 3.24,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 3.24,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q0B1L2",
+     "level": "L3",
+     "ok": true,
+     "len_um": 8.1,
+     "T_um": 31.32,
+     "shortest_um": 8.1,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 8.1,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q0B1L3",
+     "level": "L3",
+     "ok": true,
+     "len_um": 12.96,
+     "T_um": 31.32,
+     "shortest_um": 12.96,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 12.96,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q0B2L0",
+     "level": "L3",
+     "ok": true,
+     "len_um": 21.6,
+     "T_um": 31.32,
+     "shortest_um": 21.6,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 21.6,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q0B2L1",
+     "level": "L3",
+     "ok": true,
+     "len_um": 15.12,
+     "T_um": 31.32,
+     "shortest_um": 15.12,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 15.12,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q0B2L2",
+     "level": "L3",
+     "ok": true,
+     "len_um": 21.06,
+     "T_um": 31.32,
+     "shortest_um": 21.06,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 21.06,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q0B2L3",
+     "level": "L3",
+     "ok": true,
+     "len_um": 13.5,
+     "T_um": 31.32,
+     "shortest_um": 13.5,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 13.5,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q0B3L0",
+     "level": "L3",
+     "ok": true,
+     "len_um": 6.48,
+     "T_um": 31.32,
+     "shortest_um": 6.48,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 6.48,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q0B3L1",
+     "level": "L3",
+     "ok": true,
+     "len_um": 2.16,
+     "T_um": 31.32,
+     "shortest_um": 2.16,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 2.16,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q0B3L2",
+     "level": "L3",
+     "ok": true,
+     "len_um": 2.16,
+     "T_um": 31.32,
+     "shortest_um": 2.16,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 2.16,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q0B3L3",
+     "level": "L3",
+     "ok": true,
+     "len_um": 6.48,
+     "T_um": 31.32,
+     "shortest_um": 6.48,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 6.48,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q0B4L0",
+     "level": "L3",
+     "ok": true,
+     "len_um": 20.52,
+     "T_um": 31.32,
+     "shortest_um": 20.52,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 20.52,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q0B4L1",
+     "level": "L3",
+     "ok": true,
+     "len_um": 15.66,
+     "T_um": 31.32,
+     "shortest_um": 15.66,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 15.66,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q0B4L2",
+     "level": "L3",
+     "ok": true,
+     "len_um": 21.06,
+     "T_um": 31.32,
+     "shortest_um": 21.06,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 21.06,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q1B0L0",
+     "level": "L3",
+     "ok": true,
+     "len_um": 30.78,
+     "T_um": 31.32,
+     "shortest_um": 30.78,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 30.78,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q1B0L1",
+     "level": "L3",
+     "ok": true,
+     "len_um": 22.68,
+     "T_um": 31.32,
+     "shortest_um": 22.68,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 22.68,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q1B0L2",
+     "level": "L3",
+     "ok": true,
+     "len_um": 31.32,
+     "T_um": 31.32,
+     "shortest_um": 31.32,
+     "detour": false,
+     "straight": false,
+     "cells_fixed_len_um": 31.32,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q2B0L0",
+     "level": "L3",
+     "ok": true,
+     "len_um": 14.58,
+     "T_um": 31.32,
+     "shortest_um": 14.58,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 14.58,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q2B0L1",
+     "level": "L3",
+     "ok": true,
+     "len_um": 6.48,
+     "T_um": 31.32,
+     "shortest_um": 6.48,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 6.48,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q2B0L2",
+     "level": "L3",
+     "ok": true,
+     "len_um": 11.34,
+     "T_um": 31.32,
+     "shortest_um": 11.34,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 11.34,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q2B0L3",
+     "level": "L3",
+     "ok": true,
+     "len_um": 15.12,
+     "T_um": 31.32,
+     "shortest_um": 15.12,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 15.12,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q2B1L0",
+     "level": "L3",
+     "ok": true,
+     "len_um": 25.92,
+     "T_um": 31.32,
+     "shortest_um": 25.92,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 25.92,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q2B1L1",
+     "level": "L3",
+     "ok": true,
+     "len_um": 18.36,
+     "T_um": 31.32,
+     "shortest_um": 18.36,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 18.36,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q2B1L2",
+     "level": "L3",
+     "ok": true,
+     "len_um": 25.38,
+     "T_um": 31.32,
+     "shortest_um": 25.38,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 25.38,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q2B1L3",
+     "level": "L3",
+     "ok": true,
+     "len_um": 24.3,
+     "T_um": 31.32,
+     "shortest_um": 24.3,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 24.3,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q2B2L0",
+     "level": "L3",
+     "ok": true,
+     "len_um": 7.56,
+     "T_um": 31.32,
+     "shortest_um": 7.56,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 7.56,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q2B2L1",
+     "level": "L3",
+     "ok": true,
+     "len_um": 2.16,
+     "T_um": 31.32,
+     "shortest_um": 2.16,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 2.16,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q2B2L2",
+     "level": "L3",
+     "ok": true,
+     "len_um": 2.7,
+     "T_um": 31.32,
+     "shortest_um": 2.7,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 2.7,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q2B2L3",
+     "level": "L3",
+     "ok": true,
+     "len_um": 7.02,
+     "T_um": 31.32,
+     "shortest_um": 7.02,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 7.02,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q2B3L0",
+     "level": "L3",
+     "ok": true,
+     "len_um": 23.22,
+     "T_um": 31.32,
+     "shortest_um": 23.22,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 23.22,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q2B3L1",
+     "level": "L3",
+     "ok": true,
+     "len_um": 18.36,
+     "T_um": 31.32,
+     "shortest_um": 18.36,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 18.36,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q2B3L2",
+     "level": "L3",
+     "ok": true,
+     "len_um": 23.22,
+     "T_um": 31.32,
+     "shortest_um": 23.22,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 23.22,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q3B0L0",
+     "level": "L3",
+     "ok": true,
+     "len_um": 16.2,
+     "T_um": 31.32,
+     "shortest_um": 16.2,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 16.2,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q3B0L1",
+     "level": "L3",
+     "ok": true,
+     "len_um": 8.64,
+     "T_um": 31.32,
+     "shortest_um": 8.64,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 8.64,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q3B0L2",
+     "level": "L3",
+     "ok": true,
+     "len_um": 5.4,
+     "T_um": 31.32,
+     "shortest_um": 5.4,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 5.4,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q3B0L3",
+     "level": "L3",
+     "ok": true,
+     "len_um": 16.2,
+     "T_um": 31.32,
+     "shortest_um": 16.2,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 16.2,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q3B1L0",
+     "level": "L3",
+     "ok": true,
+     "len_um": 16.2,
+     "T_um": 31.32,
+     "shortest_um": 16.2,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 16.2,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q3B1L1",
+     "level": "L3",
+     "ok": true,
+     "len_um": 6.48,
+     "T_um": 31.32,
+     "shortest_um": 6.48,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 6.48,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q3B1L2",
+     "level": "L3",
+     "ok": true,
+     "len_um": 6.48,
+     "T_um": 31.32,
+     "shortest_um": 6.48,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 6.48,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q3B1L3",
+     "level": "L3",
+     "ok": true,
+     "len_um": 16.74,
+     "T_um": 31.32,
+     "shortest_um": 16.74,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 16.74,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q3B2L0",
+     "level": "L3",
+     "ok": true,
+     "len_um": 19.44,
+     "T_um": 31.32,
+     "shortest_um": 19.44,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 19.44,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q3B2L1",
+     "level": "L3",
+     "ok": true,
+     "len_um": 15.66,
+     "T_um": 31.32,
+     "shortest_um": 15.66,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 15.66,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q3B2L2",
+     "level": "L3",
+     "ok": true,
+     "len_um": 20.52,
+     "T_um": 31.32,
+     "shortest_um": 20.52,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 20.52,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q4B0L0",
+     "level": "L3",
+     "ok": true,
+     "len_um": 10.8,
+     "T_um": 31.32,
+     "shortest_um": 10.8,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 10.8,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q4B0L1",
+     "level": "L3",
+     "ok": true,
+     "len_um": 0.54,
+     "T_um": 31.32,
+     "shortest_um": 0.54,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 0.54,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q4B0L2",
+     "level": "L3",
+     "ok": true,
+     "len_um": 10.26,
+     "T_um": 31.32,
+     "shortest_um": 10.26,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 10.26,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q4B1L0",
+     "level": "L3",
+     "ok": true,
+     "len_um": 9.72,
+     "T_um": 31.32,
+     "shortest_um": 9.72,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 9.72,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q4B1L1",
+     "level": "L3",
+     "ok": true,
+     "len_um": 0.54,
+     "T_um": 31.32,
+     "shortest_um": 0.54,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 0.54,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q4B1L2",
+     "level": "L3",
+     "ok": true,
+     "len_um": 10.8,
+     "T_um": 31.32,
+     "shortest_um": 10.8,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 10.8,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q4B2L0",
+     "level": "L3",
+     "ok": true,
+     "len_um": 9.72,
+     "T_um": 31.32,
+     "shortest_um": 9.72,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 9.72,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q4B2L1",
+     "level": "L3",
+     "ok": true,
+     "len_um": 0.54,
+     "T_um": 31.32,
+     "shortest_um": 0.54,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 0.54,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q4B2L2",
+     "level": "L3",
+     "ok": true,
+     "len_um": 10.26,
+     "T_um": 31.32,
+     "shortest_um": 10.26,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 10.26,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q5B0L0",
+     "level": "L3",
+     "ok": true,
+     "len_um": 21.06,
+     "T_um": 31.32,
+     "shortest_um": 21.06,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 21.06,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q5B0L1",
+     "level": "L3",
+     "ok": true,
+     "len_um": 10.8,
+     "T_um": 31.32,
+     "shortest_um": 10.8,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 10.8,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q5B0L2",
+     "level": "L3",
+     "ok": true,
+     "len_um": 11.34,
+     "T_um": 31.32,
+     "shortest_um": 11.34,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 11.34,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q5B0L3",
+     "level": "L3",
+     "ok": true,
+     "len_um": 21.06,
+     "T_um": 31.32,
+     "shortest_um": 21.06,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 21.06,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q5B1L0",
+     "level": "L3",
+     "ok": true,
+     "len_um": 10.26,
+     "T_um": 31.32,
+     "shortest_um": 10.26,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 10.26,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q5B1L1",
+     "level": "L3",
+     "ok": true,
+     "len_um": 1.08,
+     "T_um": 31.32,
+     "shortest_um": 1.08,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 1.08,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    },
+    {
+     "edge": "Q5B1L2",
+     "level": "L3",
+     "ok": true,
+     "len_um": 10.8,
+     "T_um": 31.32,
+     "shortest_um": 10.8,
+     "detour": false,
+     "straight": true,
+     "cells_fixed_len_um": 10.8,
+     "length_fixed": true,
+     "pin_cut": "chain",
+     "repeaters": [],
+     "max_shift_um": 0.0
+    }
+   ]
+  },
+  "G5_sram_structure": {
+   "verdict": "FAIL",
+   "pin_columns_um": [
+    [
+     263.544,
+     194.4,
+     278.664,
+     244.104
+    ],
+    [
+     263.544,
+     138.24,
+     278.664,
+     187.944
+    ],
+    [
+     263.544,
+     82.08,
+     278.664,
+     131.784
+    ],
+    [
+     263.544,
+     25.92,
+     278.664,
+     75.624
+    ]
+   ],
+   "pin_column_rule": "15.12 um (3.5 PG pitches) beside each SRAM clock-pin face, macro height +- 4.32 row halo",
+   "nodes_checked": 184,
+   "nodes_in_pin_column": [
+    {
+     "kind": "rep",
+     "node": "Q5_r1",
+     "xy": [
+      266.22,
+      116.1
+     ]
+    },
+    {
+     "kind": "rep",
+     "node": "Q5_r2",
+     "xy": [
+      266.22,
+      62.1
+     ]
+    }
+   ],
+   "legs_across_sram": [],
+   "note": "legs are maze paths (macros + 2.2 um halo blocked) -> they run in the gaps between SRAMs"
+  }
+ },
+ "provenance": {
+  "argv": [
+   "/usr/bin/python3",
+   "/srv/opentallas-scratch2/claude/qc-su-prog-l1-1026/code/results/qc_su_prog_l1_1026/su_kit_gate.py",
+   "eq_k7_w1_L3",
+   "/srv/opentallas-scratch2/claude/qc-su-prog-l1-1026/in/r2/prog_m0.geo",
+   "7",
+   "/srv/opentallas-scratch2/claude/qc-su-prog-l1-1026/in/lib",
+   "/srv/opentallas-scratch2/claude/qc-su-prog-l1-1026/code/results/qc_su_prog_l1_1026/su_tree_uf_eq.py",
+   "/srv/opentallas-scratch2/claude/qc-su-prog-l1-1026/in/lef",
+   "eq_k7_w1_L3.gate.json",
+   "--chain",
+   "--straight",
+   "L3",
+   "--phys",
+   "--size"
+  ],
+  "cwd": "/srv/opentallas-scratch2/claude/qc-su-prog-l1-1026/sweep_b",
+  "script_sha256": "5dea4e261449450bf82ad2248814568ad2ec87d9dd4c25ca089f8258f95e96ce",
+  "inputs": {
+   "/srv/opentallas-scratch2/claude/qc-su-prog-l1-1026/in/r2/prog_m0.geo": "73c70c50d7538616979320ad95fdba1b672c73e92f255f12044948f2bb4dba25",
+   "/srv/opentallas-scratch2/claude/qc-su-prog-l1-1026/code/results/qc_su_prog_l1_1026/su_tree_uf_eq.py": "38e6e5f32ad0a6d4201efa0bdfd58737767b902767deeadf82c4c60be7dc49f9",
+   "/srv/opentallas-scratch2/claude/qc-su-prog-l1-1026/code/results/qc_su_prog_l1_1026/lib.py": "993fd4175bb75d7f72101ead4c3af9b8abd43a51d90af95651bd0e105682d630",
+   "/srv/opentallas-scratch2/claude/qc-su-prog-l1-1026/in/lib/invbuf_tt.lib": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+   "/srv/opentallas-scratch2/claude/qc-su-prog-l1-1026/in/lib/invbuf_ff.lib": "806848fed619856aa96f4965a2e6cc3d5a3b9bb39494bbdad5abd0cc6219ea26",
+   "/srv/opentallas-scratch2/claude/qc-su-prog-l1-1026/in/lef/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.lef": "5bddc67f77da42e5964b6537ee70069c8a7f60965b36d89cc0a849dce85c4131"
+  },
+  "note": "re-run = provenance.argv from provenance.cwd; every input listed with its sha256"
+ },
+ "edge_paths_um": {
+  "Q0": [
+   [
+    177.12,
+    135.0
+   ],
+   [
+    179.28,
+    135.0
+   ],
+   [
+    181.44,
+    135.0
+   ],
+   [
+    183.6,
+    135.0
+   ],
+   [
+    185.76,
+    135.0
+   ],
+   [
+    187.92,
+    135.0
+   ],
+   [
+    190.08,
+    135.0
+   ],
+   [
+    192.24,
+    135.0
+   ],
+   [
+    194.4,
+    135.0
+   ],
+   [
+    196.56,
+    135.0
+   ],
+   [
+    198.72,
+    135.0
+   ],
+   [
+    200.88,
+    135.0
+   ],
+   [
+    203.04,
+    135.0
+   ],
+   [
+    205.2,
+    135.0
+   ],
+   [
+    207.36,
+    135.0
+   ],
+   [
+    209.52,
+    135.0
+   ],
+   [
+    211.68,
+    135.0
+   ],
+   [
+    213.84,
+    135.0
+   ],
+   [
+    216.0,
+    135.0
+   ],
+   [
+    218.16,
+    135.0
+   ],
+   [
+    220.32,
+    135.0
+   ],
+   [
+    222.48,
+    135.0
+   ],
+   [
+    224.64,
+    135.0
+   ],
+   [
+    226.8,
+    135.0
+   ],
+   [
+    228.42,
+    134.46
+   ],
+   [
+    228.42,
+    132.3
+   ],
+   [
+    230.58,
+    132.3
+   ],
+   [
+    232.74,
+    132.3
+   ],
+   [
+    234.9,
+    132.3
+   ],
+   [
+    237.06,
+    132.3
+   ],
+   [
+    239.22,
+    132.3
+   ],
+   [
+    241.38,
+    132.3
+   ],
+   [
+    243.54,
+    132.3
+   ],
+   [
+    245.7,
+    132.3
+   ],
+   [
+    247.86,
+    132.3
+   ],
+   [
+    250.02,
+    132.3
+   ],
+   [
+    252.18,
+    132.3
+   ],
+   [
+    254.34,
+    132.3
+   ],
+   [
+    256.5,
+    132.3
+   ],
+   [
+    258.66,
+    132.3
+   ],
+   [
+    260.82,
+    132.3
+   ],
+   [
+    262.98,
+    132.3
+   ],
+   [
+    265.14,
+    132.3
+   ],
+   [
+    267.3,
+    132.3
+   ],
+   [
+    269.46,
+    132.3
+   ],
+   [
+    271.62,
+    132.3
+   ],
+   [
+    273.78,
+    132.3
+   ],
+   [
+    275.94,
+    132.3
+   ],
+   [
+    278.1,
+    132.3
+   ],
+   [
+    279.18,
+    131.22
+   ],
+   [
+    279.18,
+    129.06
+   ],
+   [
+    277.02,
+    129.06
+   ],
+   [
+    274.86,
+    129.06
+   ],
+   [
+    272.7,
+    129.06
+   ],
+   [
+    272.16,
+    127.44
+   ],
+   [
+    272.16,
+    125.28
+   ],
+   [
+    272.16,
+    123.12
+   ],
+   [
+    272.16,
+    120.96
+   ],
+   [
+    272.16,
+    118.8
+   ],
+   [
+    272.16,
+    116.64
+   ],
+   [
+    272.16,
+    114.48
+   ],
+   [
+    272.16,
+    112.32
+   ],
+   [
+    272.16,
+    110.16
+   ],
+   [
+    272.16,
+    108.0
+   ],
+   [
+    272.16,
+    105.84
+   ],
+   [
+    272.16,
+    103.68
+   ],
+   [
+    272.16,
+    101.52
+   ],
+   [
+    272.16,
+    99.36
+   ],
+   [
+    272.16,
+    97.2
+   ],
+   [
+    272.16,
+    95.04
+   ],
+   [
+    272.16,
+    92.88
+   ],
+   [
+    272.16,
+    90.72
+   ],
+   [
+    272.16,
+    88.56
+   ],
+   [
+    272.16,
+    86.4
+   ],
+   [
+    272.16,
+    84.24
+   ],
+   [
+    272.16,
+    82.08
+   ],
+   [
+    274.32,
+    82.08
+   ],
+   [
+    276.48,
+    82.08
+   ],
+   [
+    278.64,
+    82.08
+   ],
+   [
+    280.8,
+    82.08
+   ],
+   [
+    282.96,
+    82.08
+   ],
+   [
+    285.12,
+    82.08
+   ],
+   [
+    287.28,
+    82.08
+   ],
+   [
+    289.44,
+    82.08
+   ],
+   [
+    291.6,
+    82.08
+   ],
+   [
+    293.76,
+    82.08
+   ],
+   [
+    293.76,
+    79.92
+   ],
+   [
+    293.76,
+    77.76
+   ],
+   [
+    293.76,
+    75.6
+   ],
+   [
+    293.76,
+    73.44
+   ],
+   [
+    293.76,
+    71.28
+   ],
+   [
+    293.76,
+    69.12
+   ],
+   [
+    293.76,
+    66.96
+   ],
+   [
+    293.76,
+    64.8
+   ],
+   [
+    293.76,
+    62.64
+   ],
+   [
+    293.76,
+    60.48
+   ],
+   [
+    293.76,
+    58.32
+   ],
+   [
+    293.76,
+    56.16
+   ],
+   [
+    293.76,
+    54.0
+   ],
+   [
+    293.76,
+    51.84
+   ],
+   [
+    293.76,
+    49.68
+   ],
+   [
+    291.6,
+    49.68
+   ],
+   [
+    289.44,
+    49.68
+   ],
+   [
+    287.28,
+    49.68
+   ],
+   [
+    285.12,
+    49.68
+   ],
+   [
+    282.96,
+    49.68
+   ],
+   [
+    280.8,
+    49.68
+   ],
+   [
+    278.64,
+    49.68
+   ],
+   [
+    276.48,
+    49.68
+   ],
+   [
+    274.32,
+    49.68
+   ],
+   [
+    272.16,
+    49.68
+   ],
+   [
+    272.16,
+    47.52
+   ],
+   [
+    272.16,
+    45.36
+   ],
+   [
+    272.16,
+    43.2
+   ],
+   [
+    272.16,
+    41.04
+   ],
+   [
+    272.16,
+    38.88
+   ],
+   [
+    272.16,
+    36.72
+   ],
+   [
+    272.16,
+    34.56
+   ],
+   [
+    272.16,
+    32.4
+   ],
+   [
+    272.16,
+    30.24
+   ],
+   [
+    272.16,
+    28.08
+   ],
+   [
+    272.16,
+    25.92
+   ],
+   [
+    272.16,
+    23.76
+   ],
+   [
+    272.16,
+    21.6
+   ],
+   [
+    272.16,
+    19.44
+   ],
+   [
+    272.16,
+    17.28
+   ],
+   [
+    272.16,
+    17.28
+   ]
+  ],
+  "Q1": [
+   [
+    177.12,
+    135.0
+   ],
+   [
+    174.96,
+    135.0
+   ],
+   [
+    172.8,
+    135.0
+   ],
+   [
+    170.64,
+    135.0
+   ],
+   [
+    168.48,
+    135.0
+   ],
+   [
+    166.32,
+    135.0
+   ],
+   [
+    164.16,
+    135.0
+   ],
+   [
+    162.0,
+    135.0
+   ],
+   [
+    159.84,
+    135.0
+   ],
+   [
+    157.68,
+    135.0
+   ],
+   [
+    155.52,
+    135.0
+   ],
+   [
+    153.36,
+    135.0
+   ],
+   [
+    151.2,
+    135.0
+   ],
+   [
+    149.04,
+    135.0
+   ],
+   [
+    146.88,
+    135.0
+   ],
+   [
+    144.72,
+    135.0
+   ],
+   [
+    142.56,
+    135.0
+   ],
+   [
+    140.4,
+    135.0
+   ],
+   [
+    138.24,
+    135.0
+   ],
+   [
+    136.08,
+    135.0
+   ],
+   [
+    133.92,
+    135.0
+   ],
+   [
+    131.76,
+    135.0
+   ],
+   [
+    129.6,
+    135.0
+   ],
+   [
+    127.44,
+    135.0
+   ],
+   [
+    126.36,
+    136.08
+   ],
+   [
+    126.36,
+    138.24
+   ],
+   [
+    124.2,
+    138.24
+   ],
+   [
+    122.04,
+    138.24
+   ],
+   [
+    119.88,
+    138.24
+   ],
+   [
+    117.72,
+    138.24
+   ],
+   [
+    115.56,
+    138.24
+   ],
+   [
+    113.4,
+    138.24
+   ],
+   [
+    111.24,
+    138.24
+   ],
+   [
+    109.08,
+    138.24
+   ],
+   [
+    106.92,
+    138.24
+   ],
+   [
+    104.76,
+    138.24
+   ],
+   [
+    102.6,
+    138.24
+   ],
+   [
+    100.44,
+    138.24
+   ],
+   [
+    98.28,
+    138.24
+   ],
+   [
+    96.12,
+    138.24
+   ],
+   [
+    93.96,
+    138.24
+   ],
+   [
+    91.8,
+    138.24
+   ],
+   [
+    89.64,
+    138.24
+   ],
+   [
+    87.48,
+    138.24
+   ],
+   [
+    86.4,
+    139.32
+   ],
+   [
+    86.4,
+    141.48
+   ],
+   [
+    86.4,
+    143.64
+   ],
+   [
+    86.4,
+    145.8
+   ],
+   [
+    86.4,
+    147.96
+   ],
+   [
+    86.4,
+    150.12
+   ],
+   [
+    86.4,
+    152.28
+   ],
+   [
+    84.24,
+    152.28
+   ],
+   [
+    82.08,
+    152.28
+   ],
+   [
+    79.92,
+    152.28
+   ],
+   [
+    77.76,
+    152.28
+   ],
+   [
+    75.6,
+    152.28
+   ],
+   [
+    73.44,
+    152.28
+   ],
+   [
+    71.28,
+    152.28
+   ],
+   [
+    69.12,
+    152.28
+   ],
+   [
+    69.12,
+    154.44
+   ],
+   [
+    69.12,
+    156.6
+   ],
+   [
+    69.12,
+    158.76
+   ],
+   [
+    69.12,
+    160.92
+   ],
+   [
+    69.12,
+    163.08
+   ],
+   [
+    69.12,
+    165.24
+   ],
+   [
+    69.12,
+    167.4
+   ],
+   [
+    69.12,
+    169.56
+   ],
+   [
+    69.12,
+    171.72
+   ],
+   [
+    69.12,
+    173.88
+   ],
+   [
+    69.12,
+    176.04
+   ],
+   [
+    69.12,
+    178.2
+   ],
+   [
+    69.12,
+    180.36
+   ],
+   [
+    69.12,
+    182.52
+   ],
+   [
+    69.12,
+    184.68
+   ],
+   [
+    69.12,
+    186.84
+   ],
+   [
+    69.12,
+    189.0
+   ],
+   [
+    66.96,
+    189.0
+   ],
+   [
+    64.8,
+    189.0
+   ],
+   [
+    63.18,
+    189.54
+   ],
+   [
+    63.18,
+    191.7
+   ],
+   [
+    63.18,
+    193.86
+   ],
+   [
+    63.18,
+    196.02
+   ],
+   [
+    63.18,
+    198.18
+   ],
+   [
+    63.18,
+    200.34
+   ],
+   [
+    63.18,
+    202.5
+   ],
+   [
+    63.18,
+    204.66
+   ],
+   [
+    63.18,
+    206.82
+   ],
+   [
+    63.18,
+    208.98
+   ],
+   [
+    63.18,
+    211.14
+   ],
+   [
+    63.18,
+    213.3
+   ],
+   [
+    63.18,
+    215.46
+   ],
+   [
+    63.18,
+    217.62
+   ],
+   [
+    63.18,
+    219.78
+   ],
+   [
+    63.18,
+    221.94
+   ],
+   [
+    63.18,
+    224.1
+   ],
+   [
+    63.18,
+    226.26
+   ],
+   [
+    63.18,
+    228.42
+   ],
+   [
+    63.18,
+    230.58
+   ],
+   [
+    63.18,
+    232.74
+   ],
+   [
+    63.18,
+    234.9
+   ],
+   [
+    63.18,
+    237.06
+   ],
+   [
+    61.02,
+    237.06
+   ],
+   [
+    58.86,
+    237.06
+   ],
+   [
+    56.7,
+    237.06
+   ],
+   [
+    54.54,
+    237.06
+   ],
+   [
+    52.38,
+    237.06
+   ],
+   [
+    50.22,
+    237.06
+   ],
+   [
+    48.06,
+    237.06
+   ],
+   [
+    45.9,
+    237.06
+   ],
+   [
+    43.74,
+    237.06
+   ],
+   [
+    41.58,
+    237.06
+   ],
+   [
+    39.42,
+    237.06
+   ],
+   [
+    37.26,
+    237.06
+   ],
+   [
+    35.1,
+    237.06
+   ],
+   [
+    32.94,
+    237.06
+   ],
+   [
+    30.78,
+    237.06
+   ],
+   [
+    28.62,
+    237.06
+   ],
+   [
+    26.46,
+    237.06
+   ],
+   [
+    24.3,
+    237.06
+   ],
+   [
+    22.14,
+    237.06
+   ],
+   [
+    21.6,
+    235.44
+   ],
+   [
+    21.6,
+    233.28
+   ],
+   [
+    21.6,
+    231.12
+   ],
+   [
+    21.6,
+    228.96
+   ],
+   [
+    21.6,
+    226.8
+   ],
+   [
+    21.6,
+    224.64
+   ],
+   [
+    21.6,
+    224.64
+   ]
+  ],
+  "Q2": [
+   [
+    177.12,
+    135.0
+   ],
+   [
+    179.28,
+    135.0
+   ],
+   [
+    181.44,
+    135.0
+   ],
+   [
+    183.6,
+    135.0
+   ],
+   [
+    185.76,
+    135.0
+   ],
+   [
+    187.92,
+    135.0
+   ],
+   [
+    190.08,
+    135.0
+   ],
+   [
+    192.24,
+    135.0
+   ],
+   [
+    194.4,
+    135.0
+   ],
+   [
+    196.56,
+    135.0
+   ],
+   [
+    198.72,
+    135.0
+   ],
+   [
+    200.88,
+    135.0
+   ],
+   [
+    203.04,
+    135.0
+   ],
+   [
+    205.2,
+    135.0
+   ],
+   [
+    207.36,
+    135.0
+   ],
+   [
+    209.52,
+    135.0
+   ],
+   [
+    211.68,
+    135.0
+   ],
+   [
+    213.84,
+    135.0
+   ],
+   [
+    216.0,
+    135.0
+   ],
+   [
+    218.16,
+    135.0
+   ],
+   [
+    220.32,
+    135.0
+   ],
+   [
+    222.48,
+    135.0
+   ],
+   [
+    224.64,
+    135.0
+   ],
+   [
+    226.8,
+    135.0
+   ],
+   [
+    227.88,
+    136.08
+   ],
+   [
+    227.88,
+    138.24
+   ],
+   [
+    230.04,
+    138.24
+   ],
+   [
+    232.2,
+    138.24
+   ],
+   [
+    234.36,
+    138.24
+   ],
+   [
+    236.52,
+    138.24
+   ],
+   [
+    238.68,
+    138.24
+   ],
+   [
+    240.84,
+    138.24
+   ],
+   [
+    243.0,
+    138.24
+   ],
+   [
+    245.16,
+    138.24
+   ],
+   [
+    247.32,
+    138.24
+   ],
+   [
+    249.48,
+    138.24
+   ],
+   [
+    251.64,
+    138.24
+   ],
+   [
+    253.8,
+    138.24
+   ],
+   [
+    255.96,
+    138.24
+   ],
+   [
+    258.12,
+    138.24
+   ],
+   [
+    260.28,
+    138.24
+   ],
+   [
+    262.44,
+    138.24
+   ],
+   [
+    264.6,
+    138.24
+   ],
+   [
+    266.76,
+    138.24
+   ],
+   [
+    268.92,
+    138.24
+   ],
+   [
+    271.08,
+    138.24
+   ],
+   [
+    273.24,
+    138.24
+   ],
+   [
+    275.4,
+    138.24
+   ],
+   [
+    277.56,
+    138.24
+   ],
+   [
+    279.18,
+    138.78
+   ],
+   [
+    279.18,
+    140.94
+   ],
+   [
+    277.02,
+    140.94
+   ],
+   [
+    274.86,
+    140.94
+   ],
+   [
+    272.7,
+    140.94
+   ],
+   [
+    272.7,
+    143.1
+   ],
+   [
+    272.7,
+    145.26
+   ],
+   [
+    272.7,
+    147.42
+   ],
+   [
+    272.7,
+    149.58
+   ],
+   [
+    272.7,
+    151.74
+   ],
+   [
+    272.7,
+    153.9
+   ],
+   [
+    272.7,
+    156.06
+   ],
+   [
+    272.7,
+    158.22
+   ],
+   [
+    272.7,
+    160.38
+   ],
+   [
+    272.7,
+    162.54
+   ],
+   [
+    272.7,
+    164.7
+   ],
+   [
+    272.7,
+    166.86
+   ],
+   [
+    272.7,
+    169.02
+   ],
+   [
+    272.7,
+    171.18
+   ],
+   [
+    272.7,
+    173.34
+   ],
+   [
+    272.7,
+    175.5
+   ],
+   [
+    272.7,
+    177.66
+   ],
+   [
+    272.7,
+    179.82
+   ],
+   [
+    272.7,
+    181.98
+   ],
+   [
+    272.7,
+    184.14
+   ],
+   [
+    272.7,
+    186.3
+   ],
+   [
+    272.7,
+    188.46
+   ],
+   [
+    274.86,
+    188.46
+   ],
+   [
+    277.02,
+    188.46
+   ],
+   [
+    279.18,
+    188.46
+   ],
+   [
+    281.34,
+    188.46
+   ],
+   [
+    283.5,
+    188.46
+   ],
+   [
+    285.66,
+    188.46
+   ],
+   [
+    287.82,
+    188.46
+   ],
+   [
+    289.98,
+    188.46
+   ],
+   [
+    292.14,
+    188.46
+   ],
+   [
+    294.3,
+    188.46
+   ],
+   [
+    295.38,
+    189.54
+   ],
+   [
+    295.38,
+    191.7
+   ],
+   [
+    295.38,
+    193.86
+   ],
+   [
+    295.38,
+    196.02
+   ],
+   [
+    295.38,
+    198.18
+   ],
+   [
+    295.38,
+    200.34
+   ],
+   [
+    295.38,
+    202.5
+   ],
+   [
+    295.38,
+    204.66
+   ],
+   [
+    295.38,
+    206.82
+   ],
+   [
+    295.38,
+    208.98
+   ],
+   [
+    295.38,
+    211.14
+   ],
+   [
+    295.38,
+    213.3
+   ],
+   [
+    295.38,
+    215.46
+   ],
+   [
+    295.38,
+    217.62
+   ],
+   [
+    295.38,
+    219.78
+   ],
+   [
+    293.22,
+    219.78
+   ],
+   [
+    291.06,
+    219.78
+   ],
+   [
+    288.9,
+    219.78
+   ],
+   [
+    286.74,
+    219.78
+   ],
+   [
+    284.58,
+    219.78
+   ],
+   [
+    282.42,
+    219.78
+   ],
+   [
+    280.26,
+    219.78
+   ],
+   [
+    278.1,
+    219.78
+   ],
+   [
+    275.94,
+    219.78
+   ],
+   [
+    273.78,
+    219.78
+   ],
+   [
+    272.16,
+    220.32
+   ],
+   [
+    272.16,
+    222.48
+   ],
+   [
+    272.16,
+    224.64
+   ],
+   [
+    272.16,
+    226.8
+   ],
+   [
+    272.16,
+    228.96
+   ],
+   [
+    272.16,
+    231.12
+   ],
+   [
+    272.16,
+    233.28
+   ],
+   [
+    272.16,
+    235.44
+   ],
+   [
+    272.16,
+    237.6
+   ],
+   [
+    272.16,
+    239.76
+   ],
+   [
+    272.16,
+    241.92
+   ],
+   [
+    272.16,
+    244.08
+   ],
+   [
+    272.16,
+    246.24
+   ],
+   [
+    272.16,
+    248.4
+   ],
+   [
+    272.16,
+    250.56
+   ],
+   [
+    272.16,
+    250.56
+   ]
+  ],
+  "Q3": [
+   [
+    177.12,
+    135.0
+   ],
+   [
+    174.96,
+    135.0
+   ],
+   [
+    172.8,
+    135.0
+   ],
+   [
+    170.64,
+    135.0
+   ],
+   [
+    168.48,
+    135.0
+   ],
+   [
+    166.32,
+    135.0
+   ],
+   [
+    164.16,
+    135.0
+   ],
+   [
+    162.0,
+    135.0
+   ],
+   [
+    159.84,
+    135.0
+   ],
+   [
+    157.68,
+    135.0
+   ],
+   [
+    155.52,
+    135.0
+   ],
+   [
+    153.36,
+    135.0
+   ],
+   [
+    151.2,
+    135.0
+   ],
+   [
+    149.04,
+    135.0
+   ],
+   [
+    146.88,
+    135.0
+   ],
+   [
+    144.72,
+    135.0
+   ],
+   [
+    142.56,
+    135.0
+   ],
+   [
+    140.4,
+    135.0
+   ],
+   [
+    138.24,
+    135.0
+   ],
+   [
+    136.08,
+    135.0
+   ],
+   [
+    133.92,
+    135.0
+   ],
+   [
+    131.76,
+    135.0
+   ],
+   [
+    129.6,
+    135.0
+   ],
+   [
+    127.44,
+    135.0
+   ],
+   [
+    125.82,
+    134.46
+   ],
+   [
+    125.82,
+    132.3
+   ],
+   [
+    123.66,
+    132.3
+   ],
+   [
+    121.5,
+    132.3
+   ],
+   [
+    119.34,
+    132.3
+   ],
+   [
+    117.18,
+    132.3
+   ],
+   [
+    115.02,
+    132.3
+   ],
+   [
+    112.86,
+    132.3
+   ],
+   [
+    110.7,
+    132.3
+   ],
+   [
+    108.54,
+    132.3
+   ],
+   [
+    106.38,
+    132.3
+   ],
+   [
+    104.22,
+    132.3
+   ],
+   [
+    102.06,
+    132.3
+   ],
+   [
+    99.9,
+    132.3
+   ],
+   [
+    97.74,
+    132.3
+   ],
+   [
+    95.58,
+    132.3
+   ],
+   [
+    93.42,
+    132.3
+   ],
+   [
+    91.26,
+    132.3
+   ],
+   [
+    89.1,
+    132.3
+   ],
+   [
+    86.94,
+    132.3
+   ],
+   [
+    86.4,
+    130.68
+   ],
+   [
+    86.4,
+    128.52
+   ],
+   [
+    86.4,
+    126.36
+   ],
+   [
+    86.4,
+    124.2
+   ],
+   [
+    86.4,
+    122.04
+   ],
+   [
+    86.4,
+    119.88
+   ],
+   [
+    86.4,
+    117.72
+   ],
+   [
+    86.4,
+    115.56
+   ],
+   [
+    86.4,
+    113.4
+   ],
+   [
+    86.4,
+    111.24
+   ],
+   [
+    86.4,
+    109.08
+   ],
+   [
+    86.4,
+    106.92
+   ],
+   [
+    86.4,
+    104.76
+   ],
+   [
+    86.4,
+    102.6
+   ],
+   [
+    86.4,
+    100.44
+   ],
+   [
+    86.4,
+    98.28
+   ],
+   [
+    86.4,
+    96.12
+   ],
+   [
+    86.4,
+    93.96
+   ],
+   [
+    86.4,
+    91.8
+   ],
+   [
+    86.4,
+    89.64
+   ],
+   [
+    86.4,
+    87.48
+   ],
+   [
+    86.4,
+    85.32
+   ],
+   [
+    86.4,
+    83.16
+   ],
+   [
+    86.4,
+    81.0
+   ],
+   [
+    86.4,
+    78.84
+   ],
+   [
+    86.4,
+    76.68
+   ],
+   [
+    86.4,
+    74.52
+   ],
+   [
+    86.4,
+    72.36
+   ],
+   [
+    86.4,
+    70.2
+   ],
+   [
+    86.4,
+    68.04
+   ],
+   [
+    86.4,
+    65.88
+   ],
+   [
+    86.4,
+    63.72
+   ],
+   [
+    84.24,
+    63.72
+   ],
+   [
+    82.08,
+    63.72
+   ],
+   [
+    79.92,
+    63.72
+   ],
+   [
+    77.76,
+    63.72
+   ],
+   [
+    75.6,
+    63.72
+   ],
+   [
+    73.44,
+    63.72
+   ],
+   [
+    71.28,
+    63.72
+   ],
+   [
+    70.74,
+    62.1
+   ],
+   [
+    70.74,
+    59.94
+   ],
+   [
+    70.74,
+    57.78
+   ],
+   [
+    70.74,
+    55.62
+   ],
+   [
+    70.74,
+    53.46
+   ],
+   [
+    70.74,
+    51.3
+   ],
+   [
+    70.74,
+    49.14
+   ],
+   [
+    70.74,
+    46.98
+   ],
+   [
+    70.74,
+    44.82
+   ],
+   [
+    70.74,
+    42.66
+   ],
+   [
+    70.74,
+    40.5
+   ],
+   [
+    70.74,
+    38.34
+   ],
+   [
+    70.74,
+    36.18
+   ],
+   [
+    70.74,
+    34.02
+   ],
+   [
+    70.74,
+    31.86
+   ],
+   [
+    70.74,
+    29.7
+   ],
+   [
+    70.74,
+    27.54
+   ],
+   [
+    70.74,
+    25.38
+   ],
+   [
+    72.9,
+    25.38
+   ],
+   [
+    75.06,
+    25.38
+   ],
+   [
+    77.22,
+    25.38
+   ],
+   [
+    79.38,
+    25.38
+   ],
+   [
+    81.54,
+    25.38
+   ],
+   [
+    83.7,
+    25.38
+   ],
+   [
+    85.86,
+    25.38
+   ],
+   [
+    88.02,
+    25.38
+   ],
+   [
+    90.18,
+    25.38
+   ],
+   [
+    92.34,
+    25.38
+   ],
+   [
+    94.5,
+    25.38
+   ],
+   [
+    96.66,
+    25.38
+   ],
+   [
+    98.82,
+    25.38
+   ],
+   [
+    100.98,
+    25.38
+   ],
+   [
+    103.14,
+    25.38
+   ],
+   [
+    105.3,
+    25.38
+   ],
+   [
+    107.46,
+    25.38
+   ],
+   [
+    109.62,
+    25.38
+   ],
+   [
+    111.78,
+    25.38
+   ],
+   [
+    112.32,
+    23.76
+   ],
+   [
+    112.32,
+    21.6
+   ],
+   [
+    112.32,
+    19.44
+   ],
+   [
+    112.32,
+    17.28
+   ],
+   [
+    112.32,
+    15.12
+   ],
+   [
+    112.32,
+    12.96
+   ],
+   [
+    112.32,
+    12.96
+   ]
+  ],
+  "Q4": [
+   [
+    177.12,
+    135.0
+   ],
+   [
+    179.28,
+    135.0
+   ],
+   [
+    181.44,
+    135.0
+   ],
+   [
+    183.6,
+    135.0
+   ],
+   [
+    185.76,
+    135.0
+   ],
+   [
+    187.92,
+    135.0
+   ],
+   [
+    190.08,
+    135.0
+   ],
+   [
+    192.24,
+    135.0
+   ],
+   [
+    194.4,
+    135.0
+   ],
+   [
+    196.56,
+    135.0
+   ],
+   [
+    198.72,
+    135.0
+   ],
+   [
+    200.88,
+    135.0
+   ],
+   [
+    203.04,
+    135.0
+   ],
+   [
+    205.2,
+    135.0
+   ],
+   [
+    207.36,
+    135.0
+   ],
+   [
+    209.52,
+    135.0
+   ],
+   [
+    211.68,
+    135.0
+   ],
+   [
+    213.84,
+    135.0
+   ],
+   [
+    216.0,
+    135.0
+   ],
+   [
+    218.16,
+    135.0
+   ],
+   [
+    220.32,
+    135.0
+   ],
+   [
+    222.48,
+    135.0
+   ],
+   [
+    224.64,
+    135.0
+   ],
+   [
+    226.8,
+    135.0
+   ],
+   [
+    228.42,
+    134.46
+   ],
+   [
+    228.42,
+    132.3
+   ],
+   [
+    230.58,
+    132.3
+   ],
+   [
+    232.74,
+    132.3
+   ],
+   [
+    234.9,
+    132.3
+   ],
+   [
+    237.06,
+    132.3
+   ],
+   [
+    239.22,
+    132.3
+   ],
+   [
+    241.38,
+    132.3
+   ],
+   [
+    243.54,
+    132.3
+   ],
+   [
+    245.7,
+    132.3
+   ],
+   [
+    247.86,
+    132.3
+   ],
+   [
+    250.02,
+    132.3
+   ],
+   [
+    252.18,
+    132.3
+   ],
+   [
+    254.34,
+    132.3
+   ],
+   [
+    256.5,
+    132.3
+   ],
+   [
+    258.66,
+    132.3
+   ],
+   [
+    260.82,
+    132.3
+   ],
+   [
+    262.98,
+    132.3
+   ],
+   [
+    265.14,
+    132.3
+   ],
+   [
+    267.3,
+    132.3
+   ],
+   [
+    269.46,
+    132.3
+   ],
+   [
+    271.62,
+    132.3
+   ],
+   [
+    273.78,
+    132.3
+   ],
+   [
+    275.94,
+    132.3
+   ],
+   [
+    278.1,
+    132.3
+   ],
+   [
+    279.18,
+    131.22
+   ],
+   [
+    279.18,
+    129.06
+   ],
+   [
+    277.02,
+    129.06
+   ],
+   [
+    274.86,
+    129.06
+   ],
+   [
+    274.32,
+    127.44
+   ],
+   [
+    274.32,
+    125.28
+   ],
+   [
+    274.32,
+    123.12
+   ],
+   [
+    274.32,
+    120.96
+   ],
+   [
+    274.32,
+    118.8
+   ],
+   [
+    274.32,
+    116.64
+   ],
+   [
+    274.32,
+    114.48
+   ],
+   [
+    274.32,
+    112.32
+   ],
+   [
+    274.32,
+    110.16
+   ],
+   [
+    274.32,
+    108.0
+   ],
+   [
+    274.32,
+    105.84
+   ],
+   [
+    274.32,
+    103.68
+   ],
+   [
+    274.32,
+    101.52
+   ],
+   [
+    274.32,
+    99.36
+   ],
+   [
+    274.32,
+    97.2
+   ],
+   [
+    274.32,
+    95.04
+   ],
+   [
+    274.32,
+    92.88
+   ],
+   [
+    274.32,
+    90.72
+   ],
+   [
+    274.32,
+    88.56
+   ],
+   [
+    274.32,
+    86.4
+   ],
+   [
+    274.32,
+    84.24
+   ],
+   [
+    274.32,
+    82.08
+   ],
+   [
+    274.32,
+    79.92
+   ],
+   [
+    276.48,
+    79.92
+   ],
+   [
+    278.64,
+    79.92
+   ],
+   [
+    280.8,
+    79.92
+   ],
+   [
+    282.96,
+    79.92
+   ],
+   [
+    285.12,
+    79.92
+   ],
+   [
+    287.28,
+    79.92
+   ],
+   [
+    289.44,
+    79.92
+   ],
+   [
+    291.6,
+    79.92
+   ],
+   [
+    293.76,
+    79.92
+   ],
+   [
+    295.92,
+    79.92
+   ],
+   [
+    298.08,
+    79.92
+   ],
+   [
+    300.24,
+    79.92
+   ],
+   [
+    302.4,
+    79.92
+   ],
+   [
+    304.56,
+    79.92
+   ],
+   [
+    306.72,
+    79.92
+   ],
+   [
+    308.88,
+    79.92
+   ],
+   [
+    309.96,
+    78.84
+   ],
+   [
+    309.96,
+    76.68
+   ],
+   [
+    309.96,
+    74.52
+   ],
+   [
+    309.96,
+    72.36
+   ],
+   [
+    309.96,
+    70.2
+   ],
+   [
+    309.96,
+    68.04
+   ],
+   [
+    309.96,
+    65.88
+   ],
+   [
+    309.96,
+    63.72
+   ],
+   [
+    309.96,
+    61.56
+   ],
+   [
+    312.12,
+    61.56
+   ],
+   [
+    314.28,
+    61.56
+   ],
+   [
+    316.44,
+    61.56
+   ],
+   [
+    318.6,
+    61.56
+   ],
+   [
+    320.76,
+    61.56
+   ],
+   [
+    322.92,
+    61.56
+   ],
+   [
+    325.08,
+    61.56
+   ],
+   [
+    327.24,
+    61.56
+   ],
+   [
+    329.4,
+    61.56
+   ],
+   [
+    331.56,
+    61.56
+   ],
+   [
+    333.72,
+    61.56
+   ],
+   [
+    335.88,
+    61.56
+   ],
+   [
+    338.04,
+    61.56
+   ],
+   [
+    340.2,
+    61.56
+   ],
+   [
+    342.36,
+    61.56
+   ],
+   [
+    344.52,
+    61.56
+   ],
+   [
+    345.6,
+    60.48
+   ],
+   [
+    345.6,
+    58.32
+   ],
+   [
+    345.6,
+    56.16
+   ],
+   [
+    345.6,
+    54.0
+   ],
+   [
+    345.6,
+    51.84
+   ],
+   [
+    345.6,
+    49.68
+   ],
+   [
+    345.6,
+    47.52
+   ],
+   [
+    345.6,
+    45.36
+   ],
+   [
+    345.6,
+    43.2
+   ],
+   [
+    345.6,
+    43.2
+   ]
+  ],
+  "Q5": [
+   [
+    177.12,
+    135.0
+   ],
+   [
+    179.28,
+    135.0
+   ],
+   [
+    181.44,
+    135.0
+   ],
+   [
+    183.6,
+    135.0
+   ],
+   [
+    185.76,
+    135.0
+   ],
+   [
+    187.92,
+    135.0
+   ],
+   [
+    190.08,
+    135.0
+   ],
+   [
+    192.24,
+    135.0
+   ],
+   [
+    194.4,
+    135.0
+   ],
+   [
+    196.56,
+    135.0
+   ],
+   [
+    198.72,
+    135.0
+   ],
+   [
+    200.88,
+    135.0
+   ],
+   [
+    203.04,
+    135.0
+   ],
+   [
+    205.2,
+    135.0
+   ],
+   [
+    207.36,
+    135.0
+   ],
+   [
+    209.52,
+    135.0
+   ],
+   [
+    211.68,
+    135.0
+   ],
+   [
+    213.84,
+    135.0
+   ],
+   [
+    216.0,
+    135.0
+   ],
+   [
+    218.16,
+    135.0
+   ],
+   [
+    220.32,
+    135.0
+   ],
+   [
+    222.48,
+    135.0
+   ],
+   [
+    224.64,
+    135.0
+   ],
+   [
+    226.8,
+    135.0
+   ],
+   [
+    228.96,
+    135.0
+   ],
+   [
+    231.12,
+    135.0
+   ],
+   [
+    233.28,
+    135.0
+   ],
+   [
+    235.44,
+    135.0
+   ],
+   [
+    237.6,
+    135.0
+   ],
+   [
+    239.76,
+    135.0
+   ],
+   [
+    241.92,
+    135.0
+   ],
+   [
+    244.08,
+    135.0
+   ],
+   [
+    246.24,
+    135.0
+   ],
+   [
+    248.4,
+    135.0
+   ],
+   [
+    250.56,
+    135.0
+   ],
+   [
+    252.72,
+    135.0
+   ],
+   [
+    254.88,
+    135.0
+   ],
+   [
+    257.04,
+    135.0
+   ],
+   [
+    259.2,
+    135.0
+   ],
+   [
+    261.36,
+    135.0
+   ],
+   [
+    263.52,
+    135.0
+   ],
+   [
+    265.68,
+    135.0
+   ],
+   [
+    266.22,
+    133.38
+   ],
+   [
+    266.22,
+    131.22
+   ],
+   [
+    266.22,
+    129.06
+   ],
+   [
+    266.22,
+    126.9
+   ],
+   [
+    266.22,
+    124.74
+   ],
+   [
+    266.22,
+    122.58
+   ],
+   [
+    266.22,
+    120.42
+   ],
+   [
+    266.22,
+    118.26
+   ],
+   [
+    266.22,
+    116.1
+   ],
+   [
+    266.22,
+    113.94
+   ],
+   [
+    266.22,
+    111.78
+   ],
+   [
+    266.22,
+    109.62
+   ],
+   [
+    266.22,
+    107.46
+   ],
+   [
+    266.22,
+    105.3
+   ],
+   [
+    266.22,
+    103.14
+   ],
+   [
+    266.22,
+    100.98
+   ],
+   [
+    266.22,
+    98.82
+   ],
+   [
+    266.22,
+    96.66
+   ],
+   [
+    266.22,
+    94.5
+   ],
+   [
+    266.22,
+    92.34
+   ],
+   [
+    266.22,
+    90.18
+   ],
+   [
+    266.22,
+    88.02
+   ],
+   [
+    266.22,
+    85.86
+   ],
+   [
+    266.22,
+    83.7
+   ],
+   [
+    266.22,
+    81.54
+   ],
+   [
+    266.22,
+    79.38
+   ],
+   [
+    266.22,
+    77.22
+   ],
+   [
+    266.22,
+    75.06
+   ],
+   [
+    266.22,
+    72.9
+   ],
+   [
+    266.22,
+    70.74
+   ],
+   [
+    266.22,
+    68.58
+   ],
+   [
+    266.22,
+    66.42
+   ],
+   [
+    266.22,
+    64.26
+   ],
+   [
+    266.22,
+    62.1
+   ],
+   [
+    266.22,
+    59.94
+   ],
+   [
+    266.22,
+    57.78
+   ],
+   [
+    266.22,
+    55.62
+   ],
+   [
+    266.22,
+    53.46
+   ],
+   [
+    266.22,
+    51.3
+   ],
+   [
+    266.22,
+    49.14
+   ],
+   [
+    266.22,
+    46.98
+   ],
+   [
+    266.22,
+    44.82
+   ],
+   [
+    266.22,
+    42.66
+   ],
+   [
+    266.22,
+    40.5
+   ],
+   [
+    266.22,
+    38.34
+   ],
+   [
+    266.22,
+    36.18
+   ],
+   [
+    266.22,
+    34.02
+   ],
+   [
+    266.22,
+    31.86
+   ],
+   [
+    266.22,
+    29.7
+   ],
+   [
+    266.22,
+    27.54
+   ],
+   [
+    264.06,
+    27.54
+   ],
+   [
+    261.9,
+    27.54
+   ],
+   [
+    259.74,
+    27.54
+   ],
+   [
+    257.58,
+    27.54
+   ],
+   [
+    255.42,
+    27.54
+   ],
+   [
+    253.26,
+    27.54
+   ],
+   [
+    251.1,
+    27.54
+   ],
+   [
+    248.94,
+    27.54
+   ],
+   [
+    246.78,
+    27.54
+   ],
+   [
+    244.62,
+    27.54
+   ],
+   [
+    242.46,
+    27.54
+   ],
+   [
+    240.3,
+    27.54
+   ],
+   [
+    238.14,
+    27.54
+   ],
+   [
+    235.98,
+    27.54
+   ],
+   [
+    233.82,
+    27.54
+   ],
+   [
+    231.66,
+    27.54
+   ],
+   [
+    229.5,
+    27.54
+   ],
+   [
+    227.34,
+    27.54
+   ],
+   [
+    225.18,
+    27.54
+   ],
+   [
+    223.02,
+    27.54
+   ],
+   [
+    220.86,
+    27.54
+   ],
+   [
+    218.7,
+    27.54
+   ],
+   [
+    216.54,
+    27.54
+   ],
+   [
+    214.38,
+    27.54
+   ],
+   [
+    212.22,
+    27.54
+   ],
+   [
+    210.06,
+    27.54
+   ],
+   [
+    207.9,
+    27.54
+   ],
+   [
+    205.74,
+    27.54
+   ],
+   [
+    203.58,
+    27.54
+   ],
+   [
+    203.04,
+    25.92
+   ],
+   [
+    203.04,
+    23.76
+   ],
+   [
+    203.04,
+    21.6
+   ],
+   [
+    203.04,
+    19.44
+   ],
+   [
+    203.04,
+    17.28
+   ],
+   [
+    203.04,
+    17.28
+   ]
+  ],
+  "Q0B0": [
+   [
+    272.16,
+    17.28
+   ],
+   [
+    270.0,
+    17.28
+   ],
+   [
+    267.84,
+    17.28
+   ],
+   [
+    265.68,
+    17.28
+   ],
+   [
+    263.52,
+    17.28
+   ],
+   [
+    261.36,
+    17.28
+   ],
+   [
+    260.82,
+    16.2
+   ]
+  ],
+  "Q0B1": [
+   [
+    272.16,
+    17.28
+   ],
+   [
+    274.32,
+    17.28
+   ],
+   [
+    276.48,
+    17.28
+   ],
+   [
+    278.64,
+    17.28
+   ],
+   [
+    279.18,
+    18.9
+   ],
+   [
+    279.18,
+    21.06
+   ],
+   [
+    279.18,
+    23.22
+   ],
+   [
+    279.18,
+    25.38
+   ],
+   [
+    279.18,
+    27.54
+   ],
+   [
+    279.18,
+    29.7
+   ],
+   [
+    279.18,
+    31.86
+   ],
+   [
+    279.18,
+    34.02
+   ],
+   [
+    277.56,
+    34.56
+   ],
+   [
+    275.4,
+    34.56
+   ],
+   [
+    273.24,
+    34.56
+   ],
+   [
+    271.08,
+    34.56
+   ],
+   [
+    268.92,
+    34.56
+   ],
+   [
+    267.84,
+    33.48
+   ],
+   [
+    267.84,
+    31.32
+   ],
+   [
+    267.84,
+    29.16
+   ],
+   [
+    267.84,
+    27.0
+   ],
+   [
+    267.84,
+    24.84
+   ],
+   [
+    267.84,
+    22.68
+   ],
+   [
+    269.46,
+    22.14
+   ],
+   [
+    271.62,
+    22.14
+   ],
+   [
+    273.78,
+    22.14
+   ],
+   [
+    275.94,
+    22.14
+   ],
+   [
+    278.1,
+    22.14
+   ],
+   [
+    279.18,
+    23.22
+   ],
+   [
+    279.18,
+    25.38
+   ],
+   [
+    279.18,
+    27.54
+   ],
+   [
+    279.18,
+    29.7
+   ],
+   [
+    279.18,
+    31.86
+   ],
+   [
+    279.18,
+    34.02
+   ],
+   [
+    280.26,
+    35.1
+   ],
+   [
+    282.42,
+    35.1
+   ],
+   [
+    284.58,
+    35.1
+   ],
+   [
+    286.74,
+    35.1
+   ],
+   [
+    288.9,
+    35.1
+   ],
+   [
+    291.06,
+    35.1
+   ],
+   [
+    293.22,
+    35.1
+   ],
+   [
+    295.38,
+    35.1
+   ],
+   [
+    297.54,
+    35.1
+   ],
+   [
+    298.62,
+    34.02
+   ],
+   [
+    298.62,
+    31.86
+   ],
+   [
+    297.54,
+    30.78
+   ],
+   [
+    295.38,
+    30.78
+   ],
+   [
+    293.22,
+    30.78
+   ],
+   [
+    291.06,
+    30.78
+   ],
+   [
+    288.9,
+    30.78
+   ],
+   [
+    286.74,
+    30.78
+   ],
+   [
+    284.58,
+    30.78
+   ],
+   [
+    282.42,
+    30.78
+   ],
+   [
+    280.26,
+    30.78
+   ],
+   [
+    279.18,
+    29.7
+   ],
+   [
+    279.18,
+    27.54
+   ],
+   [
+    279.18,
+    25.92
+   ]
+  ],
+  "Q0B2": [
+   [
+    272.16,
+    17.28
+   ],
+   [
+    274.32,
+    17.28
+   ],
+   [
+    276.48,
+    17.28
+   ],
+   [
+    278.64,
+    17.28
+   ],
+   [
+    279.18,
+    18.9
+   ],
+   [
+    279.18,
+    21.06
+   ],
+   [
+    279.18,
+    23.22
+   ],
+   [
+    279.18,
+    25.38
+   ],
+   [
+    279.18,
+    27.54
+   ],
+   [
+    279.18,
+    29.7
+   ],
+   [
+    279.18,
+    31.86
+   ],
+   [
+    279.18,
+    34.02
+   ],
+   [
+    277.56,
+    34.56
+   ],
+   [
+    275.4,
+    34.56
+   ],
+   [
+    273.24,
+    34.56
+   ],
+   [
+    271.08,
+    34.56
+   ],
+   [
+    268.92,
+    34.56
+   ],
+   [
+    266.76,
+    34.56
+   ],
+   [
+    266.22,
+    32.94
+   ],
+   [
+    266.22,
+    30.78
+   ],
+   [
+    266.22,
+    28.62
+   ],
+   [
+    265.14,
+    27.54
+   ],
+   [
+    264.06,
+    26.46
+   ],
+   [
+    265.14,
+    25.38
+   ],
+   [
+    267.3,
+    25.38
+   ],
+   [
+    269.46,
+    25.38
+   ],
+   [
+    271.62,
+    25.38
+   ],
+   [
+    273.78,
+    25.38
+   ],
+   [
+    275.94,
+    25.38
+   ],
+   [
+    278.1,
+    25.38
+   ],
+   [
+    279.18,
+    26.46
+   ],
+   [
+    279.18,
+    28.62
+   ],
+   [
+    279.18,
+    30.78
+   ],
+   [
+    279.18,
+    32.94
+   ],
+   [
+    280.26,
+    34.02
+   ],
+   [
+    282.42,
+    34.02
+   ],
+   [
+    284.58,
+    34.02
+   ],
+   [
+    286.2,
+    34.56
+   ],
+   [
+    286.2,
+    36.72
+   ],
+   [
+    286.2,
+    38.88
+   ],
+   [
+    286.2,
+    41.04
+   ],
+   [
+    286.2,
+    43.2
+   ],
+   [
+    286.2,
+    45.36
+   ],
+   [
+    286.2,
+    47.52
+   ],
+   [
+    286.2,
+    49.68
+   ],
+   [
+    285.66,
+    51.3
+   ],
+   [
+    283.5,
+    51.3
+   ],
+   [
+    281.34,
+    51.3
+   ],
+   [
+    279.72,
+    51.84
+   ],
+   [
+    279.72,
+    54.0
+   ],
+   [
+    279.72,
+    56.16
+   ],
+   [
+    279.72,
+    58.32
+   ],
+   [
+    279.72,
+    60.48
+   ],
+   [
+    279.72,
+    62.64
+   ],
+   [
+    279.72,
+    64.8
+   ],
+   [
+    279.72,
+    66.96
+   ],
+   [
+    279.72,
+    69.12
+   ],
+   [
+    279.72,
+    69.12
+   ]
+  ],
+  "Q0B3": [
+   [
+    272.16,
+    17.28
+   ],
+   [
+    274.32,
+    17.28
+   ],
+   [
+    276.48,
+    17.28
+   ],
+   [
+    278.64,
+    17.28
+   ],
+   [
+    279.18,
+    18.9
+   ],
+   [
+    279.18,
+    21.06
+   ],
+   [
+    279.18,
+    23.22
+   ],
+   [
+    279.18,
+    25.38
+   ],
+   [
+    279.18,
+    27.54
+   ],
+   [
+    279.18,
+    29.7
+   ],
+   [
+    279.18,
+    31.86
+   ],
+   [
+    279.18,
+    34.02
+   ],
+   [
+    279.18,
+    36.18
+   ],
+   [
+    279.18,
+    38.34
+   ],
+   [
+    279.18,
+    40.5
+   ],
+   [
+    279.18,
+    42.66
+   ],
+   [
+    279.18,
+    44.82
+   ],
+   [
+    279.18,
+    46.98
+   ],
+   [
+    279.18,
+    49.14
+   ],
+   [
+    279.18,
+    51.3
+   ],
+   [
+    279.18,
+    53.46
+   ],
+   [
+    279.18,
+    55.62
+   ],
+   [
+    279.18,
+    57.78
+   ],
+   [
+    277.56,
+    58.32
+   ],
+   [
+    275.4,
+    58.32
+   ],
+   [
+    273.24,
+    58.32
+   ],
+   [
+    272.7,
+    59.94
+   ],
+   [
+    272.7,
+    62.1
+   ],
+   [
+    272.7,
+    64.26
+   ],
+   [
+    272.7,
+    66.42
+   ],
+   [
+    272.7,
+    68.58
+   ],
+   [
+    272.7,
+    70.74
+   ],
+   [
+    272.7,
+    72.9
+   ],
+   [
+    272.7,
+    75.06
+   ],
+   [
+    273.78,
+    76.14
+   ],
+   [
+    275.94,
+    76.14
+   ],
+   [
+    278.1,
+    76.14
+   ],
+   [
+    280.26,
+    76.14
+   ],
+   [
+    282.42,
+    76.14
+   ],
+   [
+    284.58,
+    76.14
+   ],
+   [
+    286.74,
+    76.14
+   ],
+   [
+    288.9,
+    76.14
+   ],
+   [
+    291.06,
+    76.14
+   ],
+   [
+    291.06,
+    78.3
+   ],
+   [
+    291.06,
+    80.46
+   ],
+   [
+    289.98,
+    81.54
+   ],
+   [
+    287.82,
+    81.54
+   ],
+   [
+    285.66,
+    81.54
+   ],
+   [
+    283.5,
+    81.54
+   ],
+   [
+    281.34,
+    81.54
+   ],
+   [
+    279.18,
+    81.54
+   ],
+   [
+    279.18,
+    83.7
+   ],
+   [
+    279.18,
+    85.86
+   ],
+   [
+    279.18,
+    88.02
+   ],
+   [
+    279.18,
+    90.18
+   ],
+   [
+    279.18,
+    92.34
+   ],
+   [
+    279.18,
+    93.96
+   ]
+  ],
+  "Q0B4": [
+   [
+    272.16,
+    17.28
+   ],
+   [
+    274.32,
+    17.28
+   ],
+   [
+    276.48,
+    17.28
+   ],
+   [
+    278.64,
+    17.28
+   ],
+   [
+    279.18,
+    18.9
+   ],
+   [
+    279.18,
+    21.06
+   ],
+   [
+    279.18,
+    23.22
+   ],
+   [
+    279.18,
+    25.38
+   ],
+   [
+    279.18,
+    27.54
+   ],
+   [
+    279.18,
+    29.7
+   ],
+   [
+    279.18,
+    31.86
+   ],
+   [
+    279.18,
+    34.02
+   ],
+   [
+    279.18,
+    36.18
+   ],
+   [
+    279.18,
+    38.34
+   ],
+   [
+    279.18,
+    40.5
+   ],
+   [
+    279.18,
+    42.66
+   ],
+   [
+    279.18,
+    44.82
+   ],
+   [
+    279.18,
+    46.98
+   ],
+   [
+    279.18,
+    49.14
+   ],
+   [
+    279.18,
+    51.3
+   ],
+   [
+    279.18,
+    53.46
+   ],
+   [
+    279.18,
+    55.62
+   ],
+   [
+    279.18,
+    57.78
+   ],
+   [
+    278.1,
+    58.86
+   ],
+   [
+    277.02,
+    59.94
+   ],
+   [
+    277.02,
+    62.1
+   ],
+   [
+    277.02,
+    64.26
+   ],
+   [
+    277.02,
+    66.42
+   ],
+   [
+    277.02,
+    68.58
+   ],
+   [
+    277.02,
+    70.74
+   ],
+   [
+    277.02,
+    72.9
+   ],
+   [
+    277.02,
+    75.06
+   ],
+   [
+    277.02,
+    77.22
+   ],
+   [
+    277.02,
+    79.38
+   ],
+   [
+    278.1,
+    80.46
+   ],
+   [
+    279.18,
+    81.54
+   ],
+   [
+    279.18,
+    83.7
+   ],
+   [
+    279.18,
+    85.86
+   ],
+   [
+    279.18,
+    88.02
+   ],
+   [
+    279.18,
+    90.18
+   ],
+   [
+    279.18,
+    92.34
+   ],
+   [
+    279.18,
+    94.5
+   ],
+   [
+    279.18,
+    96.66
+   ],
+   [
+    279.18,
+    98.82
+   ],
+   [
+    279.18,
+    100.98
+   ],
+   [
+    279.72,
+    102.6
+   ],
+   [
+    279.72,
+    104.76
+   ],
+   [
+    279.72,
+    106.92
+   ],
+   [
+    279.72,
+    109.08
+   ],
+   [
+    279.72,
+    111.24
+   ],
+   [
+    279.72,
+    113.4
+   ],
+   [
+    279.72,
+    115.56
+   ],
+   [
+    279.72,
+    117.72
+   ],
+   [
+    279.72,
+    119.88
+   ],
+   [
+    279.72,
+    122.04
+   ],
+   [
+    279.72,
+    124.2
+   ],
+   [
+    279.72,
+    126.36
+   ],
+   [
+    279.72,
+    126.36
+   ]
+  ],
+  "Q1B0": [
+   [
+    21.6,
+    224.64
+   ],
+   [
+    23.76,
+    224.64
+   ],
+   [
+    25.92,
+    224.64
+   ],
+   [
+    28.08,
+    224.64
+   ],
+   [
+    30.24,
+    224.64
+   ],
+   [
+    32.4,
+    224.64
+   ],
+   [
+    34.56,
+    224.64
+   ],
+   [
+    34.56,
+    222.48
+   ],
+   [
+    34.56,
+    220.32
+   ],
+   [
+    34.56,
+    218.16
+   ],
+   [
+    34.56,
+    216.0
+   ],
+   [
+    34.56,
+    213.84
+   ],
+   [
+    36.18,
+    213.3
+   ],
+   [
+    38.34,
+    213.3
+   ],
+   [
+    40.5,
+    213.3
+   ],
+   [
+    42.66,
+    213.3
+   ],
+   [
+    44.82,
+    213.3
+   ],
+   [
+    46.44,
+    212.76
+   ],
+   [
+    46.44,
+    210.6
+   ],
+   [
+    46.44,
+    208.44
+   ],
+   [
+    46.44,
+    206.28
+   ],
+   [
+    46.44,
+    204.12
+   ],
+   [
+    46.44,
+    201.96
+   ],
+   [
+    48.06,
+    201.42
+   ],
+   [
+    50.22,
+    201.42
+   ],
+   [
+    52.38,
+    201.42
+   ],
+   [
+    54.54,
+    201.42
+   ],
+   [
+    56.7,
+    201.42
+   ],
+   [
+    58.86,
+    201.42
+   ],
+   [
+    59.4,
+    199.8
+   ],
+   [
+    59.4,
+    197.64
+   ],
+   [
+    59.4,
+    195.48
+   ],
+   [
+    59.4,
+    193.32
+   ],
+   [
+    59.4,
+    191.16
+   ],
+   [
+    60.48,
+    190.08
+   ],
+   [
+    62.64,
+    190.08
+   ],
+   [
+    64.8,
+    190.08
+   ],
+   [
+    66.96,
+    190.08
+   ],
+   [
+    69.12,
+    190.08
+   ],
+   [
+    71.28,
+    190.08
+   ],
+   [
+    73.44,
+    190.08
+   ],
+   [
+    75.6,
+    190.08
+   ],
+   [
+    77.76,
+    190.08
+   ],
+   [
+    77.76,
+    192.24
+   ],
+   [
+    77.76,
+    194.4
+   ],
+   [
+    78.84,
+    195.48
+   ],
+   [
+    81.0,
+    195.48
+   ],
+   [
+    83.16,
+    195.48
+   ],
+   [
+    83.7,
+    193.86
+   ],
+   [
+    83.7,
+    191.7
+   ],
+   [
+    83.7,
+    189.54
+   ],
+   [
+    83.7,
+    187.38
+   ],
+   [
+    83.7,
+    185.22
+   ],
+   [
+    83.7,
+    183.06
+   ],
+   [
+    83.7,
+    180.9
+   ],
+   [
+    83.7,
+    178.74
+   ],
+   [
+    83.7,
+    177.12
+   ]
+  ],
+  "Q2B0": [
+   [
+    272.16,
+    250.56
+   ],
+   [
+    274.32,
+    250.56
+   ],
+   [
+    276.48,
+    250.56
+   ],
+   [
+    277.02,
+    248.94
+   ],
+   [
+    277.02,
+    246.78
+   ],
+   [
+    277.02,
+    244.62
+   ],
+   [
+    277.02,
+    242.46
+   ],
+   [
+    277.02,
+    240.3
+   ],
+   [
+    277.02,
+    238.14
+   ],
+   [
+    277.02,
+    235.98
+   ],
+   [
+    277.02,
+    233.82
+   ],
+   [
+    277.02,
+    231.66
+   ],
+   [
+    277.02,
+    229.5
+   ],
+   [
+    277.02,
+    227.34
+   ],
+   [
+    277.02,
+    225.18
+   ],
+   [
+    277.02,
+    223.02
+   ],
+   [
+    277.02,
+    220.86
+   ],
+   [
+    277.02,
+    218.7
+   ],
+   [
+    277.02,
+    216.54
+   ],
+   [
+    277.02,
+    214.38
+   ],
+   [
+    277.02,
+    212.22
+   ],
+   [
+    277.02,
+    210.06
+   ],
+   [
+    277.02,
+    207.9
+   ],
+   [
+    277.02,
+    205.74
+   ],
+   [
+    277.02,
+    203.58
+   ],
+   [
+    277.02,
+    201.42
+   ],
+   [
+    277.02,
+    199.26
+   ],
+   [
+    277.02,
+    197.1
+   ],
+   [
+    277.02,
+    194.94
+   ],
+   [
+    277.02,
+    192.78
+   ],
+   [
+    277.02,
+    190.62
+   ],
+   [
+    277.02,
+    188.46
+   ],
+   [
+    277.02,
+    186.3
+   ],
+   [
+    277.02,
+    184.14
+   ],
+   [
+    277.02,
+    181.98
+   ],
+   [
+    277.02,
+    179.82
+   ],
+   [
+    277.02,
+    177.66
+   ],
+   [
+    277.02,
+    175.5
+   ],
+   [
+    277.02,
+    173.34
+   ],
+   [
+    277.02,
+    171.18
+   ],
+   [
+    277.02,
+    169.02
+   ],
+   [
+    277.02,
+    166.86
+   ],
+   [
+    277.02,
+    164.7
+   ],
+   [
+    277.02,
+    162.54
+   ],
+   [
+    277.02,
+    160.38
+   ],
+   [
+    277.02,
+    158.22
+   ],
+   [
+    277.02,
+    156.06
+   ],
+   [
+    277.02,
+    153.9
+   ],
+   [
+    277.02,
+    151.74
+   ],
+   [
+    277.02,
+    149.58
+   ],
+   [
+    277.02,
+    147.42
+   ],
+   [
+    277.02,
+    145.26
+   ],
+   [
+    277.02,
+    143.1
+   ],
+   [
+    277.02,
+    140.94
+   ],
+   [
+    277.02,
+    138.78
+   ],
+   [
+    277.02,
+    137.16
+   ]
+  ],
+  "Q2B1": [
+   [
+    272.16,
+    250.56
+   ],
+   [
+    274.32,
+    250.56
+   ],
+   [
+    276.48,
+    250.56
+   ],
+   [
+    278.64,
+    250.56
+   ],
+   [
+    279.18,
+    248.94
+   ],
+   [
+    279.18,
+    246.78
+   ],
+   [
+    279.18,
+    244.62
+   ],
+   [
+    279.18,
+    242.46
+   ],
+   [
+    279.18,
+    240.3
+   ],
+   [
+    279.18,
+    238.14
+   ],
+   [
+    279.18,
+    235.98
+   ],
+   [
+    279.18,
+    233.82
+   ],
+   [
+    279.18,
+    231.66
+   ],
+   [
+    279.18,
+    229.5
+   ],
+   [
+    279.18,
+    227.34
+   ],
+   [
+    279.18,
+    225.18
+   ],
+   [
+    279.18,
+    223.02
+   ],
+   [
+    279.18,
+    220.86
+   ],
+   [
+    279.18,
+    218.7
+   ],
+   [
+    279.18,
+    216.54
+   ],
+   [
+    279.18,
+    214.38
+   ],
+   [
+    279.18,
+    212.22
+   ],
+   [
+    279.18,
+    210.06
+   ],
+   [
+    278.1,
+    208.98
+   ],
+   [
+    275.94,
+    208.98
+   ],
+   [
+    273.78,
+    208.98
+   ],
+   [
+    271.62,
+    208.98
+   ],
+   [
+    270.54,
+    207.9
+   ],
+   [
+    270.54,
+    205.74
+   ],
+   [
+    270.54,
+    203.58
+   ],
+   [
+    270.54,
+    201.42
+   ],
+   [
+    270.54,
+    199.26
+   ],
+   [
+    270.54,
+    197.1
+   ],
+   [
+    270.54,
+    194.94
+   ],
+   [
+    271.62,
+    193.86
+   ],
+   [
+    273.78,
+    193.86
+   ],
+   [
+    275.94,
+    193.86
+   ],
+   [
+    278.1,
+    193.86
+   ],
+   [
+    280.26,
+    193.86
+   ],
+   [
+    282.42,
+    193.86
+   ],
+   [
+    284.58,
+    193.86
+   ],
+   [
+    286.74,
+    193.86
+   ],
+   [
+    288.9,
+    193.86
+   ],
+   [
+    291.06,
+    193.86
+   ],
+   [
+    293.22,
+    193.86
+   ],
+   [
+    293.22,
+    192.78
+   ],
+   [
+    291.06,
+    192.78
+   ],
+   [
+    288.9,
+    192.78
+   ],
+   [
+    286.74,
+    192.78
+   ],
+   [
+    284.58,
+    192.78
+   ],
+   [
+    282.42,
+    192.78
+   ],
+   [
+    280.26,
+    192.78
+   ],
+   [
+    279.72,
+    191.16
+   ],
+   [
+    279.72,
+    189.0
+   ],
+   [
+    279.72,
+    186.84
+   ],
+   [
+    279.72,
+    184.68
+   ],
+   [
+    279.72,
+    182.52
+   ],
+   [
+    279.72,
+    182.52
+   ]
+  ],
+  "Q2B2": [
+   [
+    272.16,
+    250.56
+   ],
+   [
+    274.32,
+    250.56
+   ],
+   [
+    276.48,
+    250.56
+   ],
+   [
+    278.64,
+    250.56
+   ],
+   [
+    279.18,
+    248.94
+   ],
+   [
+    279.18,
+    246.78
+   ],
+   [
+    279.18,
+    244.62
+   ],
+   [
+    279.18,
+    242.46
+   ],
+   [
+    279.18,
+    240.3
+   ],
+   [
+    279.18,
+    238.14
+   ],
+   [
+    279.18,
+    235.98
+   ],
+   [
+    279.18,
+    233.82
+   ],
+   [
+    277.56,
+    233.28
+   ],
+   [
+    275.4,
+    233.28
+   ],
+   [
+    273.24,
+    233.28
+   ],
+   [
+    271.08,
+    233.28
+   ],
+   [
+    268.92,
+    233.28
+   ],
+   [
+    266.76,
+    233.28
+   ],
+   [
+    266.22,
+    234.9
+   ],
+   [
+    266.22,
+    237.06
+   ],
+   [
+    266.22,
+    239.22
+   ],
+   [
+    266.22,
+    241.38
+   ],
+   [
+    266.22,
+    243.54
+   ],
+   [
+    267.3,
+    244.62
+   ],
+   [
+    269.46,
+    244.62
+   ],
+   [
+    271.62,
+    244.62
+   ],
+   [
+    273.78,
+    244.62
+   ],
+   [
+    275.94,
+    244.62
+   ],
+   [
+    278.1,
+    244.62
+   ],
+   [
+    279.18,
+    243.54
+   ],
+   [
+    279.18,
+    241.38
+   ],
+   [
+    279.18,
+    239.22
+   ],
+   [
+    279.18,
+    237.06
+   ],
+   [
+    279.18,
+    234.9
+   ],
+   [
+    280.26,
+    233.82
+   ],
+   [
+    282.42,
+    233.82
+   ],
+   [
+    284.58,
+    233.82
+   ],
+   [
+    286.74,
+    233.82
+   ],
+   [
+    288.9,
+    233.82
+   ],
+   [
+    288.9,
+    231.66
+   ],
+   [
+    288.9,
+    229.5
+   ],
+   [
+    288.9,
+    227.34
+   ],
+   [
+    288.9,
+    225.18
+   ],
+   [
+    288.9,
+    223.02
+   ],
+   [
+    288.9,
+    220.86
+   ],
+   [
+    288.36,
+    219.24
+   ],
+   [
+    286.2,
+    219.24
+   ],
+   [
+    284.04,
+    219.24
+   ],
+   [
+    281.88,
+    219.24
+   ],
+   [
+    279.72,
+    219.24
+   ],
+   [
+    279.18,
+    217.62
+   ],
+   [
+    279.18,
+    215.46
+   ],
+   [
+    279.18,
+    213.3
+   ],
+   [
+    279.18,
+    211.14
+   ],
+   [
+    279.18,
+    208.98
+   ],
+   [
+    279.18,
+    206.82
+   ],
+   [
+    279.18,
+    204.66
+   ],
+   [
+    279.18,
+    204.66
+   ]
+  ],
+  "Q2B3": [
+   [
+    272.16,
+    250.56
+   ],
+   [
+    274.32,
+    250.56
+   ],
+   [
+    276.48,
+    250.56
+   ],
+   [
+    278.64,
+    250.56
+   ],
+   [
+    279.18,
+    248.94
+   ],
+   [
+    279.18,
+    246.78
+   ],
+   [
+    279.18,
+    244.62
+   ],
+   [
+    279.18,
+    242.46
+   ],
+   [
+    279.18,
+    240.3
+   ],
+   [
+    279.18,
+    238.14
+   ],
+   [
+    279.18,
+    235.98
+   ],
+   [
+    279.18,
+    233.82
+   ],
+   [
+    277.56,
+    233.28
+   ],
+   [
+    275.4,
+    233.28
+   ],
+   [
+    273.24,
+    233.28
+   ],
+   [
+    271.08,
+    233.28
+   ],
+   [
+    268.92,
+    233.28
+   ],
+   [
+    267.3,
+    233.82
+   ],
+   [
+    267.3,
+    235.98
+   ],
+   [
+    267.3,
+    238.14
+   ],
+   [
+    267.3,
+    240.3
+   ],
+   [
+    267.3,
+    242.46
+   ],
+   [
+    267.3,
+    244.62
+   ],
+   [
+    268.38,
+    245.7
+   ],
+   [
+    270.54,
+    245.7
+   ],
+   [
+    272.7,
+    245.7
+   ],
+   [
+    274.86,
+    245.7
+   ],
+   [
+    277.02,
+    245.7
+   ],
+   [
+    279.18,
+    245.7
+   ],
+   [
+    279.18,
+    243.54
+   ],
+   [
+    279.18,
+    241.38
+   ],
+   [
+    279.18,
+    239.22
+   ],
+   [
+    279.18,
+    237.06
+   ],
+   [
+    279.18,
+    234.9
+   ],
+   [
+    280.26,
+    233.82
+   ],
+   [
+    282.42,
+    233.82
+   ],
+   [
+    284.58,
+    233.82
+   ],
+   [
+    286.74,
+    233.82
+   ],
+   [
+    288.9,
+    233.82
+   ],
+   [
+    291.06,
+    233.82
+   ],
+   [
+    293.22,
+    233.82
+   ],
+   [
+    295.38,
+    233.82
+   ],
+   [
+    297.54,
+    233.82
+   ],
+   [
+    299.7,
+    233.82
+   ],
+   [
+    300.78,
+    234.9
+   ],
+   [
+    300.24,
+    236.52
+   ],
+   [
+    298.08,
+    236.52
+   ],
+   [
+    295.92,
+    236.52
+   ],
+   [
+    293.76,
+    236.52
+   ],
+   [
+    291.6,
+    236.52
+   ],
+   [
+    289.44,
+    236.52
+   ],
+   [
+    287.28,
+    236.52
+   ],
+   [
+    285.12,
+    236.52
+   ],
+   [
+    282.96,
+    236.52
+   ],
+   [
+    280.8,
+    236.52
+   ],
+   [
+    279.72,
+    237.6
+   ],
+   [
+    279.72,
+    239.76
+   ],
+   [
+    279.72,
+    239.76
+   ]
+  ],
+  "Q3B0": [
+   [
+    112.32,
+    12.96
+   ],
+   [
+    110.16,
+    12.96
+   ],
+   [
+    108.0,
+    12.96
+   ],
+   [
+    105.84,
+    12.96
+   ],
+   [
+    103.68,
+    12.96
+   ],
+   [
+    101.52,
+    12.96
+   ],
+   [
+    99.36,
+    12.96
+   ],
+   [
+    97.2,
+    12.96
+   ],
+   [
+    95.04,
+    12.96
+   ],
+   [
+    92.88,
+    12.96
+   ],
+   [
+    90.72,
+    12.96
+   ],
+   [
+    90.18,
+    14.58
+   ],
+   [
+    91.8,
+    15.12
+   ],
+   [
+    93.96,
+    15.12
+   ],
+   [
+    96.12,
+    15.12
+   ],
+   [
+    98.28,
+    15.12
+   ],
+   [
+    100.44,
+    15.12
+   ],
+   [
+    102.6,
+    15.12
+   ],
+   [
+    104.76,
+    15.12
+   ],
+   [
+    105.3,
+    16.74
+   ],
+   [
+    105.3,
+    18.9
+   ],
+   [
+    105.3,
+    21.06
+   ],
+   [
+    105.3,
+    23.22
+   ],
+   [
+    104.22,
+    24.3
+   ],
+   [
+    102.06,
+    24.3
+   ],
+   [
+    99.9,
+    24.3
+   ],
+   [
+    97.74,
+    24.3
+   ],
+   [
+    95.58,
+    24.3
+   ],
+   [
+    93.42,
+    24.3
+   ],
+   [
+    91.26,
+    24.3
+   ],
+   [
+    90.72,
+    22.68
+   ],
+   [
+    90.72,
+    20.52
+   ],
+   [
+    90.72,
+    18.36
+   ],
+   [
+    90.72,
+    16.2
+   ],
+   [
+    91.8,
+    15.12
+   ],
+   [
+    93.96,
+    15.12
+   ],
+   [
+    96.12,
+    15.12
+   ],
+   [
+    98.28,
+    15.12
+   ],
+   [
+    100.44,
+    15.12
+   ],
+   [
+    102.6,
+    15.12
+   ],
+   [
+    104.22,
+    14.58
+   ],
+   [
+    104.22,
+    12.42
+   ],
+   [
+    104.22,
+    10.26
+   ],
+   [
+    104.22,
+    8.1
+   ],
+   [
+    104.22,
+    5.94
+   ],
+   [
+    103.68,
+    4.32
+   ],
+   [
+    101.52,
+    4.32
+   ],
+   [
+    99.36,
+    4.32
+   ],
+   [
+    97.2,
+    4.32
+   ],
+   [
+    95.04,
+    4.32
+   ],
+   [
+    93.96,
+    5.4
+   ],
+   [
+    93.96,
+    7.56
+   ],
+   [
+    93.96,
+    9.72
+   ],
+   [
+    93.96,
+    11.88
+   ],
+   [
+    93.96,
+    14.04
+   ],
+   [
+    93.96,
+    16.2
+   ],
+   [
+    93.96,
+    18.36
+   ],
+   [
+    93.96,
+    18.36
+   ]
+  ],
+  "Q3B1": [
+   [
+    112.32,
+    12.96
+   ],
+   [
+    111.78,
+    14.58
+   ],
+   [
+    109.62,
+    14.58
+   ],
+   [
+    107.46,
+    14.58
+   ],
+   [
+    105.3,
+    14.58
+   ],
+   [
+    103.14,
+    14.58
+   ],
+   [
+    100.98,
+    14.58
+   ],
+   [
+    98.82,
+    14.58
+   ],
+   [
+    96.66,
+    14.58
+   ],
+   [
+    94.5,
+    14.58
+   ],
+   [
+    92.34,
+    14.58
+   ],
+   [
+    90.18,
+    14.58
+   ],
+   [
+    88.02,
+    14.58
+   ],
+   [
+    85.86,
+    14.58
+   ],
+   [
+    83.7,
+    14.58
+   ],
+   [
+    81.54,
+    14.58
+   ],
+   [
+    79.38,
+    14.58
+   ],
+   [
+    77.22,
+    14.58
+   ],
+   [
+    75.06,
+    14.58
+   ],
+   [
+    72.9,
+    14.58
+   ],
+   [
+    70.74,
+    14.58
+   ],
+   [
+    68.58,
+    14.58
+   ],
+   [
+    66.42,
+    14.58
+   ],
+   [
+    67.5,
+    14.58
+   ],
+   [
+    69.66,
+    14.58
+   ],
+   [
+    71.82,
+    14.58
+   ],
+   [
+    73.98,
+    14.58
+   ],
+   [
+    76.14,
+    14.58
+   ],
+   [
+    78.3,
+    14.58
+   ],
+   [
+    80.46,
+    14.58
+   ],
+   [
+    82.62,
+    14.58
+   ],
+   [
+    84.78,
+    14.58
+   ],
+   [
+    86.94,
+    14.58
+   ],
+   [
+    89.1,
+    14.58
+   ],
+   [
+    91.26,
+    14.58
+   ],
+   [
+    93.42,
+    14.58
+   ],
+   [
+    95.58,
+    14.58
+   ],
+   [
+    97.74,
+    14.58
+   ],
+   [
+    99.9,
+    14.58
+   ],
+   [
+    102.06,
+    14.58
+   ],
+   [
+    104.22,
+    14.58
+   ],
+   [
+    106.38,
+    14.58
+   ],
+   [
+    108.54,
+    14.58
+   ],
+   [
+    110.7,
+    14.58
+   ],
+   [
+    112.86,
+    14.58
+   ],
+   [
+    115.02,
+    14.58
+   ],
+   [
+    117.18,
+    14.58
+   ],
+   [
+    119.34,
+    14.58
+   ],
+   [
+    121.5,
+    14.58
+   ],
+   [
+    123.66,
+    14.58
+   ],
+   [
+    125.82,
+    14.58
+   ],
+   [
+    127.98,
+    14.58
+   ],
+   [
+    130.14,
+    14.58
+   ],
+   [
+    132.3,
+    14.58
+   ],
+   [
+    134.46,
+    14.58
+   ],
+   [
+    135.54,
+    15.66
+   ],
+   [
+    135.54,
+    17.28
+   ]
+  ],
+  "Q3B2": [
+   [
+    112.32,
+    12.96
+   ],
+   [
+    110.16,
+    12.96
+   ],
+   [
+    108.0,
+    12.96
+   ],
+   [
+    105.84,
+    12.96
+   ],
+   [
+    103.68,
+    12.96
+   ],
+   [
+    101.52,
+    12.96
+   ],
+   [
+    100.44,
+    14.04
+   ],
+   [
+    100.44,
+    16.2
+   ],
+   [
+    100.44,
+    18.36
+   ],
+   [
+    100.44,
+    20.52
+   ],
+   [
+    100.44,
+    22.68
+   ],
+   [
+    100.44,
+    24.84
+   ],
+   [
+    98.82,
+    25.38
+   ],
+   [
+    96.66,
+    25.38
+   ],
+   [
+    94.5,
+    25.38
+   ],
+   [
+    92.34,
+    25.38
+   ],
+   [
+    90.18,
+    25.38
+   ],
+   [
+    88.02,
+    25.38
+   ],
+   [
+    86.4,
+    25.92
+   ],
+   [
+    86.4,
+    28.08
+   ],
+   [
+    86.4,
+    30.24
+   ],
+   [
+    86.4,
+    32.4
+   ],
+   [
+    86.4,
+    34.56
+   ],
+   [
+    85.32,
+    35.64
+   ],
+   [
+    83.16,
+    35.64
+   ],
+   [
+    81.0,
+    35.64
+   ],
+   [
+    78.84,
+    35.64
+   ],
+   [
+    77.76,
+    36.72
+   ],
+   [
+    77.76,
+    38.88
+   ],
+   [
+    77.76,
+    41.04
+   ],
+   [
+    77.76,
+    43.2
+   ],
+   [
+    77.76,
+    45.36
+   ],
+   [
+    77.76,
+    47.52
+   ],
+   [
+    77.76,
+    49.68
+   ],
+   [
+    76.68,
+    50.76
+   ],
+   [
+    74.52,
+    50.76
+   ],
+   [
+    72.36,
+    50.76
+   ],
+   [
+    70.2,
+    50.76
+   ],
+   [
+    69.12,
+    51.84
+   ],
+   [
+    69.12,
+    54.0
+   ],
+   [
+    69.12,
+    56.16
+   ],
+   [
+    69.12,
+    58.32
+   ],
+   [
+    69.12,
+    60.48
+   ],
+   [
+    69.12,
+    62.64
+   ],
+   [
+    69.12,
+    64.8
+   ],
+   [
+    69.66,
+    66.42
+   ],
+   [
+    71.82,
+    66.42
+   ],
+   [
+    73.98,
+    66.42
+   ],
+   [
+    76.14,
+    66.42
+   ],
+   [
+    78.3,
+    66.42
+   ],
+   [
+    80.46,
+    66.42
+   ],
+   [
+    82.62,
+    66.42
+   ],
+   [
+    83.7,
+    67.5
+   ],
+   [
+    83.7,
+    69.66
+   ],
+   [
+    83.7,
+    71.82
+   ],
+   [
+    83.7,
+    73.98
+   ],
+   [
+    83.7,
+    76.14
+   ],
+   [
+    83.7,
+    76.14
+   ]
+  ],
+  "Q4B0": [
+   [
+    345.6,
+    43.2
+   ],
+   [
+    346.14,
+    44.82
+   ],
+   [
+    346.14,
+    46.98
+   ],
+   [
+    346.14,
+    49.14
+   ],
+   [
+    346.14,
+    51.3
+   ],
+   [
+    346.14,
+    53.46
+   ],
+   [
+    346.14,
+    55.62
+   ],
+   [
+    346.14,
+    57.78
+   ],
+   [
+    346.14,
+    59.94
+   ],
+   [
+    346.14,
+    62.1
+   ],
+   [
+    346.14,
+    64.26
+   ],
+   [
+    346.14,
+    66.42
+   ],
+   [
+    346.68,
+    68.04
+   ],
+   [
+    346.68,
+    70.2
+   ],
+   [
+    346.68,
+    72.36
+   ],
+   [
+    346.68,
+    74.52
+   ],
+   [
+    346.68,
+    76.68
+   ],
+   [
+    346.68,
+    78.84
+   ],
+   [
+    346.68,
+    81.0
+   ],
+   [
+    346.68,
+    83.16
+   ],
+   [
+    346.68,
+    85.32
+   ],
+   [
+    346.68,
+    87.48
+   ],
+   [
+    346.68,
+    89.64
+   ],
+   [
+    347.22,
+    90.18
+   ],
+   [
+    347.22,
+    88.02
+   ],
+   [
+    347.22,
+    85.86
+   ],
+   [
+    347.22,
+    83.7
+   ],
+   [
+    347.22,
+    81.54
+   ],
+   [
+    347.22,
+    79.38
+   ],
+   [
+    347.22,
+    77.22
+   ],
+   [
+    347.22,
+    75.06
+   ],
+   [
+    347.22,
+    72.9
+   ],
+   [
+    347.22,
+    70.74
+   ],
+   [
+    347.22,
+    68.58
+   ],
+   [
+    346.14,
+    67.5
+   ],
+   [
+    343.98,
+    67.5
+   ],
+   [
+    341.82,
+    67.5
+   ],
+   [
+    340.2,
+    68.04
+   ],
+   [
+    340.2,
+    70.2
+   ],
+   [
+    340.2,
+    72.36
+   ],
+   [
+    340.2,
+    74.52
+   ],
+   [
+    340.2,
+    76.68
+   ],
+   [
+    340.2,
+    78.84
+   ],
+   [
+    340.2,
+    81.0
+   ],
+   [
+    340.2,
+    83.16
+   ],
+   [
+    340.74,
+    84.78
+   ],
+   [
+    342.9,
+    84.78
+   ],
+   [
+    345.06,
+    84.78
+   ],
+   [
+    347.22,
+    84.78
+   ],
+   [
+    347.76,
+    86.4
+   ],
+   [
+    347.76,
+    88.56
+   ],
+   [
+    347.76,
+    90.72
+   ],
+   [
+    347.76,
+    92.88
+   ],
+   [
+    347.76,
+    95.04
+   ],
+   [
+    347.76,
+    97.2
+   ],
+   [
+    347.76,
+    99.36
+   ],
+   [
+    347.76,
+    101.52
+   ],
+   [
+    347.76,
+    101.52
+   ]
+  ],
+  "Q4B1": [
+   [
+    345.6,
+    43.2
+   ],
+   [
+    346.14,
+    44.82
+   ],
+   [
+    346.14,
+    46.98
+   ],
+   [
+    346.14,
+    49.14
+   ],
+   [
+    346.14,
+    51.3
+   ],
+   [
+    346.14,
+    53.46
+   ],
+   [
+    346.14,
+    55.62
+   ],
+   [
+    346.14,
+    57.78
+   ],
+   [
+    346.14,
+    59.94
+   ],
+   [
+    346.14,
+    62.1
+   ],
+   [
+    346.14,
+    64.26
+   ],
+   [
+    346.14,
+    66.42
+   ],
+   [
+    346.68,
+    68.04
+   ],
+   [
+    346.68,
+    70.2
+   ],
+   [
+    346.68,
+    72.36
+   ],
+   [
+    346.68,
+    74.52
+   ],
+   [
+    346.68,
+    76.68
+   ],
+   [
+    346.68,
+    78.84
+   ],
+   [
+    346.68,
+    81.0
+   ],
+   [
+    346.68,
+    83.16
+   ],
+   [
+    346.68,
+    85.32
+   ],
+   [
+    346.68,
+    87.48
+   ],
+   [
+    346.68,
+    89.64
+   ],
+   [
+    345.06,
+    90.18
+   ],
+   [
+    342.9,
+    90.18
+   ],
+   [
+    340.74,
+    90.18
+   ],
+   [
+    338.58,
+    90.18
+   ],
+   [
+    336.42,
+    90.18
+   ],
+   [
+    334.26,
+    90.18
+   ],
+   [
+    332.1,
+    90.18
+   ],
+   [
+    331.56,
+    91.8
+   ],
+   [
+    331.56,
+    93.96
+   ],
+   [
+    331.56,
+    96.12
+   ],
+   [
+    331.56,
+    98.28
+   ],
+   [
+    332.64,
+    99.36
+   ],
+   [
+    334.8,
+    99.36
+   ],
+   [
+    336.96,
+    99.36
+   ],
+   [
+    339.12,
+    99.36
+   ],
+   [
+    341.28,
+    99.36
+   ],
+   [
+    341.28,
+    101.52
+   ],
+   [
+    341.28,
+    103.68
+   ],
+   [
+    341.28,
+    105.84
+   ],
+   [
+    341.28,
+    108.0
+   ],
+   [
+    341.28,
+    110.16
+   ],
+   [
+    341.28,
+    112.32
+   ],
+   [
+    342.36,
+    113.4
+   ],
+   [
+    344.52,
+    113.4
+   ],
+   [
+    346.68,
+    113.4
+   ],
+   [
+    347.22,
+    115.02
+   ],
+   [
+    347.22,
+    117.18
+   ],
+   [
+    347.22,
+    119.34
+   ],
+   [
+    347.22,
+    121.5
+   ],
+   [
+    347.22,
+    123.66
+   ],
+   [
+    347.22,
+    125.82
+   ],
+   [
+    347.22,
+    127.98
+   ],
+   [
+    347.22,
+    130.14
+   ],
+   [
+    347.22,
+    131.76
+   ]
+  ],
+  "Q4B2": [
+   [
+    345.6,
+    43.2
+   ],
+   [
+    346.14,
+    44.82
+   ],
+   [
+    346.14,
+    46.98
+   ],
+   [
+    346.14,
+    49.14
+   ],
+   [
+    346.14,
+    51.3
+   ],
+   [
+    346.14,
+    53.46
+   ],
+   [
+    346.14,
+    55.62
+   ],
+   [
+    346.14,
+    57.78
+   ],
+   [
+    346.14,
+    59.94
+   ],
+   [
+    346.14,
+    62.1
+   ],
+   [
+    346.14,
+    64.26
+   ],
+   [
+    346.14,
+    66.42
+   ],
+   [
+    346.68,
+    68.04
+   ],
+   [
+    346.68,
+    70.2
+   ],
+   [
+    346.68,
+    72.36
+   ],
+   [
+    346.68,
+    74.52
+   ],
+   [
+    346.68,
+    76.68
+   ],
+   [
+    346.68,
+    78.84
+   ],
+   [
+    346.68,
+    81.0
+   ],
+   [
+    346.68,
+    83.16
+   ],
+   [
+    346.68,
+    85.32
+   ],
+   [
+    346.68,
+    87.48
+   ],
+   [
+    346.68,
+    89.64
+   ],
+   [
+    346.68,
+    91.8
+   ],
+   [
+    346.68,
+    93.96
+   ],
+   [
+    346.68,
+    96.12
+   ],
+   [
+    346.68,
+    98.28
+   ],
+   [
+    346.68,
+    100.44
+   ],
+   [
+    346.68,
+    102.6
+   ],
+   [
+    346.68,
+    104.76
+   ],
+   [
+    346.68,
+    106.92
+   ],
+   [
+    346.68,
+    109.08
+   ],
+   [
+    346.68,
+    111.24
+   ],
+   [
+    346.68,
+    113.4
+   ],
+   [
+    347.22,
+    115.02
+   ],
+   [
+    347.22,
+    117.18
+   ],
+   [
+    347.22,
+    119.34
+   ],
+   [
+    347.22,
+    121.5
+   ],
+   [
+    347.22,
+    123.66
+   ],
+   [
+    347.22,
+    125.82
+   ],
+   [
+    347.22,
+    127.98
+   ],
+   [
+    347.22,
+    130.14
+   ],
+   [
+    347.22,
+    132.3
+   ],
+   [
+    347.22,
+    134.46
+   ],
+   [
+    347.22,
+    136.62
+   ],
+   [
+    347.76,
+    138.24
+   ],
+   [
+    347.76,
+    140.4
+   ],
+   [
+    347.76,
+    142.56
+   ],
+   [
+    347.76,
+    144.72
+   ],
+   [
+    347.76,
+    146.88
+   ],
+   [
+    347.76,
+    149.04
+   ],
+   [
+    347.76,
+    151.2
+   ],
+   [
+    347.76,
+    153.36
+   ],
+   [
+    347.76,
+    155.52
+   ],
+   [
+    347.76,
+    157.68
+   ],
+   [
+    347.76,
+    159.84
+   ],
+   [
+    347.76,
+    161.46
+   ]
+  ],
+  "Q5B0": [
+   [
+    203.04,
+    17.28
+   ],
+   [
+    200.88,
+    17.28
+   ],
+   [
+    198.72,
+    17.28
+   ],
+   [
+    196.56,
+    17.28
+   ],
+   [
+    194.4,
+    17.28
+   ],
+   [
+    192.24,
+    17.28
+   ],
+   [
+    190.08,
+    17.28
+   ],
+   [
+    187.92,
+    17.28
+   ],
+   [
+    185.76,
+    17.28
+   ],
+   [
+    183.6,
+    17.28
+   ],
+   [
+    181.98,
+    17.82
+   ],
+   [
+    181.98,
+    18.36
+   ]
+  ],
+  "Q5B1": [
+   [
+    203.04,
+    17.28
+   ],
+   [
+    205.2,
+    17.28
+   ],
+   [
+    207.36,
+    17.28
+   ],
+   [
+    209.52,
+    17.28
+   ],
+   [
+    211.68,
+    17.28
+   ],
+   [
+    213.84,
+    17.28
+   ],
+   [
+    214.38,
+    15.66
+   ],
+   [
+    214.38,
+    13.5
+   ],
+   [
+    214.38,
+    11.34
+   ],
+   [
+    214.38,
+    9.18
+   ],
+   [
+    214.38,
+    7.02
+   ],
+   [
+    214.38,
+    4.86
+   ],
+   [
+    212.76,
+    4.32
+   ],
+   [
+    210.6,
+    4.32
+   ],
+   [
+    208.44,
+    4.32
+   ],
+   [
+    207.9,
+    5.94
+   ],
+   [
+    207.9,
+    8.1
+   ],
+   [
+    207.9,
+    10.26
+   ],
+   [
+    207.9,
+    12.42
+   ],
+   [
+    207.9,
+    14.58
+   ],
+   [
+    207.9,
+    16.74
+   ],
+   [
+    207.9,
+    18.9
+   ],
+   [
+    207.9,
+    21.06
+   ],
+   [
+    208.98,
+    22.14
+   ],
+   [
+    211.14,
+    22.14
+   ],
+   [
+    213.3,
+    22.14
+   ],
+   [
+    214.38,
+    21.06
+   ],
+   [
+    214.38,
+    18.9
+   ],
+   [
+    214.38,
+    16.74
+   ],
+   [
+    214.38,
+    14.58
+   ],
+   [
+    214.38,
+    12.42
+   ],
+   [
+    214.38,
+    10.26
+   ],
+   [
+    214.38,
+    8.1
+   ],
+   [
+    214.38,
+    5.94
+   ],
+   [
+    215.46,
+    4.86
+   ],
+   [
+    217.62,
+    4.86
+   ],
+   [
+    219.78,
+    4.86
+   ],
+   [
+    221.94,
+    4.86
+   ],
+   [
+    224.1,
+    4.86
+   ],
+   [
+    226.26,
+    4.86
+   ],
+   [
+    228.42,
+    4.86
+   ],
+   [
+    230.58,
+    4.86
+   ],
+   [
+    232.74,
+    4.86
+   ],
+   [
+    234.9,
+    4.86
+   ],
+   [
+    235.98,
+    5.94
+   ],
+   [
+    235.44,
+    7.56
+   ],
+   [
+    233.28,
+    7.56
+   ],
+   [
+    231.12,
+    7.56
+   ],
+   [
+    228.96,
+    7.56
+   ],
+   [
+    226.8,
+    7.56
+   ],
+   [
+    224.64,
+    7.56
+   ],
+   [
+    222.48,
+    7.56
+   ],
+   [
+    221.4,
+    8.64
+   ],
+   [
+    221.4,
+    10.8
+   ],
+   [
+    221.4,
+    12.96
+   ],
+   [
+    221.4,
+    15.12
+   ],
+   [
+    221.4,
+    17.28
+   ],
+   [
+    221.4,
+    17.28
+   ]
+  ],
+  "Q0B0L0": [
+   [
+    260.82,
+    16.2
+   ],
+   [
+    258.66,
+    16.2
+   ],
+   [
+    256.5,
+    16.2
+   ],
+   [
+    254.34,
+    16.2
+   ],
+   [
+    252.18,
+    16.2
+   ],
+   [
+    250.02,
+    16.2
+   ],
+   [
+    247.86,
+    16.2
+   ],
+   [
+    245.7,
+    16.2
+   ],
+   [
+    243.54,
+    16.2
+   ],
+   [
+    243.54,
+    18.36
+   ],
+   [
+    243.54,
+    18.36
+   ]
+  ],
+  "Q0B0L1": [
+   [
+    260.82,
+    16.2
+   ],
+   [
+    258.66,
+    16.2
+   ],
+   [
+    256.5,
+    16.2
+   ],
+   [
+    254.34,
+    16.2
+   ],
+   [
+    254.34,
+    18.36
+   ],
+   [
+    254.34,
+    18.36
+   ]
+  ],
+  "Q0B0L2": [
+   [
+    260.82,
+    16.2
+   ],
+   [
+    262.98,
+    16.2
+   ],
+   [
+    264.6,
+    16.74
+   ],
+   [
+    264.6,
+    18.36
+   ]
+  ],
+  "Q0B0L3": [
+   [
+    260.82,
+    16.2
+   ],
+   [
+    262.98,
+    16.2
+   ],
+   [
+    265.14,
+    16.2
+   ],
+   [
+    267.3,
+    16.2
+   ],
+   [
+    269.46,
+    16.2
+   ],
+   [
+    271.62,
+    16.2
+   ],
+   [
+    273.78,
+    16.2
+   ],
+   [
+    275.94,
+    16.2
+   ],
+   [
+    278.1,
+    16.2
+   ],
+   [
+    280.26,
+    16.2
+   ],
+   [
+    280.8,
+    16.2
+   ]
+  ],
+  "Q0B1L0": [
+   [
+    279.18,
+    25.92
+   ],
+   [
+    277.02,
+    25.92
+   ],
+   [
+    274.86,
+    25.92
+   ],
+   [
+    272.7,
+    25.92
+   ],
+   [
+    270.54,
+    25.92
+   ],
+   [
+    268.38,
+    25.92
+   ],
+   [
+    267.84,
+    25.38
+   ]
+  ],
+  "Q0B1L1": [
+   [
+    279.18,
+    25.92
+   ],
+   [
+    279.18,
+    28.08
+   ],
+   [
+    279.18,
+    29.16
+   ]
+  ],
+  "Q0B1L2": [
+   [
+    279.18,
+    25.92
+   ],
+   [
+    279.18,
+    28.08
+   ],
+   [
+    279.18,
+    30.24
+   ],
+   [
+    279.18,
+    32.4
+   ],
+   [
+    279.18,
+    34.02
+   ]
+  ],
+  "Q0B1L3": [
+   [
+    279.18,
+    25.92
+   ],
+   [
+    279.18,
+    28.08
+   ],
+   [
+    279.18,
+    30.24
+   ],
+   [
+    279.18,
+    32.4
+   ],
+   [
+    279.18,
+    34.56
+   ],
+   [
+    279.18,
+    36.72
+   ],
+   [
+    279.18,
+    38.88
+   ],
+   [
+    279.18,
+    38.88
+   ]
+  ],
+  "Q0B2L0": [
+   [
+    279.72,
+    69.12
+   ],
+   [
+    279.18,
+    67.5
+   ],
+   [
+    279.18,
+    65.34
+   ],
+   [
+    279.18,
+    63.18
+   ],
+   [
+    279.18,
+    61.02
+   ],
+   [
+    279.18,
+    58.86
+   ],
+   [
+    279.18,
+    56.7
+   ],
+   [
+    279.18,
+    54.54
+   ],
+   [
+    279.18,
+    52.38
+   ],
+   [
+    279.18,
+    50.22
+   ],
+   [
+    279.18,
+    48.06
+   ],
+   [
+    279.18,
+    48.06
+   ]
+  ],
+  "Q0B2L1": [
+   [
+    279.72,
+    69.12
+   ],
+   [
+    279.18,
+    67.5
+   ],
+   [
+    279.18,
+    65.34
+   ],
+   [
+    279.18,
+    63.18
+   ],
+   [
+    279.18,
+    61.02
+   ],
+   [
+    279.18,
+    58.86
+   ],
+   [
+    279.18,
+    56.7
+   ],
+   [
+    279.18,
+    54.54
+   ],
+   [
+    279.18,
+    54.54
+   ]
+  ],
+  "Q0B2L2": [
+   [
+    279.72,
+    69.12
+   ],
+   [
+    277.56,
+    69.12
+   ],
+   [
+    275.4,
+    69.12
+   ],
+   [
+    273.24,
+    69.12
+   ],
+   [
+    271.08,
+    69.12
+   ],
+   [
+    268.92,
+    69.12
+   ],
+   [
+    266.76,
+    69.12
+   ],
+   [
+    266.22,
+    70.74
+   ],
+   [
+    266.22,
+    72.9
+   ],
+   [
+    265.68,
+    74.52
+   ],
+   [
+    265.68,
+    76.14
+   ]
+  ],
+  "Q0B2L3": [
+   [
+    279.72,
+    69.12
+   ],
+   [
+    279.18,
+    70.74
+   ],
+   [
+    279.18,
+    72.9
+   ],
+   [
+    279.18,
+    75.06
+   ],
+   [
+    279.18,
+    77.22
+   ],
+   [
+    279.18,
+    79.38
+   ],
+   [
+    279.18,
+    81.54
+   ],
+   [
+    279.18,
+    82.08
+   ]
+  ],
+  "Q0B3L0": [
+   [
+    279.18,
+    93.96
+   ],
+   [
+    279.18,
+    91.8
+   ],
+   [
+    279.18,
+    89.64
+   ],
+   [
+    279.18,
+    87.48
+   ],
+   [
+    279.18,
+    87.48
+   ]
+  ],
+  "Q0B3L1": [
+   [
+    279.18,
+    93.96
+   ],
+   [
+    279.18,
+    91.8
+   ],
+   [
+    279.18,
+    91.8
+   ]
+  ],
+  "Q0B3L2": [
+   [
+    279.18,
+    93.96
+   ],
+   [
+    279.18,
+    96.12
+   ],
+   [
+    279.18,
+    96.12
+   ]
+  ],
+  "Q0B3L3": [
+   [
+    279.18,
+    93.96
+   ],
+   [
+    279.18,
+    96.12
+   ],
+   [
+    279.18,
+    98.28
+   ],
+   [
+    279.18,
+    100.44
+   ],
+   [
+    279.18,
+    100.44
+   ]
+  ],
+  "Q0B4L0": [
+   [
+    279.72,
+    126.36
+   ],
+   [
+    279.18,
+    124.74
+   ],
+   [
+    279.18,
+    122.58
+   ],
+   [
+    279.18,
+    120.42
+   ],
+   [
+    279.18,
+    118.26
+   ],
+   [
+    279.18,
+    116.1
+   ],
+   [
+    279.18,
+    113.94
+   ],
+   [
+    279.18,
+    111.78
+   ],
+   [
+    279.18,
+    109.62
+   ],
+   [
+    279.18,
+    107.46
+   ],
+   [
+    279.18,
+    106.38
+   ]
+  ],
+  "Q0B4L1": [
+   [
+    279.72,
+    126.36
+   ],
+   [
+    279.18,
+    124.74
+   ],
+   [
+    279.18,
+    122.58
+   ],
+   [
+    279.18,
+    120.42
+   ],
+   [
+    279.18,
+    118.26
+   ],
+   [
+    279.18,
+    116.1
+   ],
+   [
+    279.18,
+    113.94
+   ],
+   [
+    279.18,
+    111.78
+   ],
+   [
+    279.18,
+    111.24
+   ]
+  ],
+  "Q0B4L2": [
+   [
+    279.72,
+    126.36
+   ],
+   [
+    277.56,
+    126.36
+   ],
+   [
+    275.4,
+    126.36
+   ],
+   [
+    273.24,
+    126.36
+   ],
+   [
+    271.08,
+    126.36
+   ],
+   [
+    268.92,
+    126.36
+   ],
+   [
+    266.76,
+    126.36
+   ],
+   [
+    266.22,
+    127.98
+   ],
+   [
+    266.22,
+    130.14
+   ],
+   [
+    264.6,
+    130.68
+   ],
+   [
+    264.6,
+    132.3
+   ]
+  ],
+  "Q1B0L0": [
+   [
+    83.7,
+    177.12
+   ],
+   [
+    83.7,
+    174.96
+   ],
+   [
+    83.7,
+    172.8
+   ],
+   [
+    83.7,
+    170.64
+   ],
+   [
+    83.7,
+    168.48
+   ],
+   [
+    83.7,
+    166.32
+   ],
+   [
+    83.7,
+    164.16
+   ],
+   [
+    83.7,
+    162.0
+   ],
+   [
+    83.7,
+    159.84
+   ],
+   [
+    83.7,
+    157.68
+   ],
+   [
+    83.7,
+    155.52
+   ],
+   [
+    83.7,
+    153.36
+   ],
+   [
+    83.7,
+    151.2
+   ],
+   [
+    83.7,
+    149.04
+   ],
+   [
+    83.7,
+    146.88
+   ],
+   [
+    83.7,
+    146.34
+   ]
+  ],
+  "Q1B0L1": [
+   [
+    83.7,
+    177.12
+   ],
+   [
+    83.7,
+    179.28
+   ],
+   [
+    83.7,
+    181.44
+   ],
+   [
+    83.7,
+    183.6
+   ],
+   [
+    83.7,
+    185.76
+   ],
+   [
+    83.7,
+    187.92
+   ],
+   [
+    83.7,
+    190.08
+   ],
+   [
+    83.7,
+    192.24
+   ],
+   [
+    83.7,
+    194.4
+   ],
+   [
+    83.7,
+    196.56
+   ],
+   [
+    83.7,
+    198.72
+   ],
+   [
+    83.7,
+    199.8
+   ]
+  ],
+  "Q1B0L2": [
+   [
+    83.7,
+    177.12
+   ],
+   [
+    83.7,
+    179.28
+   ],
+   [
+    83.7,
+    181.44
+   ],
+   [
+    83.7,
+    183.6
+   ],
+   [
+    83.7,
+    185.76
+   ],
+   [
+    83.7,
+    187.92
+   ],
+   [
+    83.7,
+    190.08
+   ],
+   [
+    83.7,
+    192.24
+   ],
+   [
+    83.7,
+    194.4
+   ],
+   [
+    83.7,
+    196.56
+   ],
+   [
+    83.7,
+    198.72
+   ],
+   [
+    83.7,
+    200.88
+   ],
+   [
+    83.7,
+    203.04
+   ],
+   [
+    83.7,
+    205.2
+   ],
+   [
+    83.7,
+    207.36
+   ],
+   [
+    83.7,
+    208.44
+   ]
+  ],
+  "Q2B0L0": [
+   [
+    277.02,
+    137.16
+   ],
+   [
+    274.86,
+    137.16
+   ],
+   [
+    272.7,
+    137.16
+   ],
+   [
+    270.54,
+    137.16
+   ],
+   [
+    268.38,
+    137.16
+   ],
+   [
+    266.22,
+    137.16
+   ],
+   [
+    264.06,
+    137.16
+   ],
+   [
+    262.98,
+    137.7
+   ]
+  ],
+  "Q2B0L1": [
+   [
+    277.02,
+    137.16
+   ],
+   [
+    279.18,
+    137.16
+   ],
+   [
+    279.18,
+    139.32
+   ],
+   [
+    279.18,
+    141.48
+   ],
+   [
+    279.18,
+    141.48
+   ]
+  ],
+  "Q2B0L2": [
+   [
+    277.02,
+    137.16
+   ],
+   [
+    279.18,
+    137.16
+   ],
+   [
+    279.18,
+    139.32
+   ],
+   [
+    279.18,
+    141.48
+   ],
+   [
+    279.18,
+    143.64
+   ],
+   [
+    279.18,
+    145.8
+   ],
+   [
+    279.18,
+    146.34
+   ]
+  ],
+  "Q2B0L3": [
+   [
+    277.02,
+    137.16
+   ],
+   [
+    279.18,
+    137.16
+   ],
+   [
+    279.18,
+    139.32
+   ],
+   [
+    279.18,
+    141.48
+   ],
+   [
+    279.18,
+    143.64
+   ],
+   [
+    279.18,
+    145.8
+   ],
+   [
+    279.18,
+    147.96
+   ],
+   [
+    279.18,
+    150.12
+   ],
+   [
+    279.18,
+    150.12
+   ]
+  ],
+  "Q2B1L0": [
+   [
+    279.72,
+    182.52
+   ],
+   [
+    279.18,
+    180.9
+   ],
+   [
+    279.18,
+    178.74
+   ],
+   [
+    279.18,
+    176.58
+   ],
+   [
+    279.18,
+    174.42
+   ],
+   [
+    279.18,
+    172.26
+   ],
+   [
+    279.18,
+    170.1
+   ],
+   [
+    279.18,
+    167.94
+   ],
+   [
+    279.18,
+    165.78
+   ],
+   [
+    279.18,
+    163.62
+   ],
+   [
+    279.18,
+    161.46
+   ],
+   [
+    279.18,
+    159.3
+   ],
+   [
+    279.18,
+    157.14
+   ],
+   [
+    279.18,
+    157.14
+   ]
+  ],
+  "Q2B1L1": [
+   [
+    279.72,
+    182.52
+   ],
+   [
+    279.18,
+    180.9
+   ],
+   [
+    279.18,
+    178.74
+   ],
+   [
+    279.18,
+    176.58
+   ],
+   [
+    279.18,
+    174.42
+   ],
+   [
+    279.18,
+    172.26
+   ],
+   [
+    279.18,
+    170.1
+   ],
+   [
+    279.18,
+    167.94
+   ],
+   [
+    279.18,
+    165.78
+   ],
+   [
+    279.18,
+    164.7
+   ]
+  ],
+  "Q2B1L2": [
+   [
+    279.72,
+    182.52
+   ],
+   [
+    277.56,
+    182.52
+   ],
+   [
+    275.4,
+    182.52
+   ],
+   [
+    273.24,
+    182.52
+   ],
+   [
+    271.08,
+    182.52
+   ],
+   [
+    268.92,
+    182.52
+   ],
+   [
+    266.76,
+    182.52
+   ],
+   [
+    266.22,
+    184.14
+   ],
+   [
+    266.22,
+    186.3
+   ],
+   [
+    264.06,
+    186.3
+   ],
+   [
+    261.9,
+    186.3
+   ],
+   [
+    260.28,
+    186.84
+   ],
+   [
+    260.28,
+    188.46
+   ]
+  ],
+  "Q2B1L3": [
+   [
+    279.72,
+    182.52
+   ],
+   [
+    277.56,
+    182.52
+   ],
+   [
+    275.4,
+    182.52
+   ],
+   [
+    273.24,
+    182.52
+   ],
+   [
+    271.08,
+    182.52
+   ],
+   [
+    268.92,
+    182.52
+   ],
+   [
+    266.76,
+    182.52
+   ],
+   [
+    266.76,
+    184.68
+   ],
+   [
+    266.76,
+    186.84
+   ],
+   [
+    266.76,
+    189.0
+   ],
+   [
+    266.76,
+    191.16
+   ],
+   [
+    266.76,
+    193.32
+   ],
+   [
+    266.76,
+    193.86
+   ]
+  ],
+  "Q2B2L0": [
+   [
+    279.18,
+    204.66
+   ],
+   [
+    279.18,
+    202.5
+   ],
+   [
+    279.18,
+    200.34
+   ],
+   [
+    279.18,
+    198.18
+   ],
+   [
+    279.18,
+    197.1
+   ]
+  ],
+  "Q2B2L1": [
+   [
+    279.18,
+    204.66
+   ],
+   [
+    279.18,
+    202.5
+   ],
+   [
+    279.18,
+    202.5
+   ]
+  ],
+  "Q2B2L2": [
+   [
+    279.18,
+    204.66
+   ],
+   [
+    279.18,
+    206.82
+   ],
+   [
+    279.18,
+    207.36
+   ]
+  ],
+  "Q2B2L3": [
+   [
+    279.18,
+    204.66
+   ],
+   [
+    279.18,
+    206.82
+   ],
+   [
+    279.18,
+    208.98
+   ],
+   [
+    279.18,
+    211.14
+   ],
+   [
+    279.18,
+    211.68
+   ]
+  ],
+  "Q2B3L0": [
+   [
+    279.72,
+    239.76
+   ],
+   [
+    279.18,
+    238.14
+   ],
+   [
+    279.18,
+    235.98
+   ],
+   [
+    279.18,
+    233.82
+   ],
+   [
+    279.18,
+    231.66
+   ],
+   [
+    279.18,
+    229.5
+   ],
+   [
+    279.18,
+    227.34
+   ],
+   [
+    279.18,
+    225.18
+   ],
+   [
+    279.18,
+    223.02
+   ],
+   [
+    279.18,
+    220.86
+   ],
+   [
+    279.18,
+    218.7
+   ],
+   [
+    279.18,
+    217.08
+   ]
+  ],
+  "Q2B3L1": [
+   [
+    279.72,
+    239.76
+   ],
+   [
+    279.18,
+    238.14
+   ],
+   [
+    279.18,
+    235.98
+   ],
+   [
+    279.18,
+    233.82
+   ],
+   [
+    279.18,
+    231.66
+   ],
+   [
+    279.18,
+    229.5
+   ],
+   [
+    279.18,
+    227.34
+   ],
+   [
+    279.18,
+    225.18
+   ],
+   [
+    279.18,
+    223.02
+   ],
+   [
+    279.18,
+    221.94
+   ]
+  ],
+  "Q2B3L2": [
+   [
+    279.72,
+    239.76
+   ],
+   [
+    277.56,
+    239.76
+   ],
+   [
+    275.4,
+    239.76
+   ],
+   [
+    273.24,
+    239.76
+   ],
+   [
+    271.08,
+    239.76
+   ],
+   [
+    268.92,
+    239.76
+   ],
+   [
+    266.76,
+    239.76
+   ],
+   [
+    266.22,
+    241.38
+   ],
+   [
+    265.14,
+    242.46
+   ],
+   [
+    262.98,
+    242.46
+   ],
+   [
+    261.36,
+    243.0
+   ],
+   [
+    261.36,
+    244.62
+   ]
+  ],
+  "Q3B0L0": [
+   [
+    93.96,
+    18.36
+   ],
+   [
+    91.8,
+    18.36
+   ],
+   [
+    89.64,
+    18.36
+   ],
+   [
+    87.48,
+    18.36
+   ],
+   [
+    85.32,
+    18.36
+   ],
+   [
+    83.16,
+    18.36
+   ],
+   [
+    82.62,
+    19.98
+   ],
+   [
+    82.62,
+    22.14
+   ],
+   [
+    82.62,
+    23.22
+   ]
+  ],
+  "Q3B0L1": [
+   [
+    93.96,
+    18.36
+   ],
+   [
+    91.8,
+    18.36
+   ],
+   [
+    89.64,
+    18.36
+   ],
+   [
+    89.1,
+    19.98
+   ],
+   [
+    89.1,
+    22.14
+   ],
+   [
+    89.1,
+    22.14
+   ]
+  ],
+  "Q3B0L2": [
+   [
+    93.96,
+    18.36
+   ],
+   [
+    96.12,
+    18.36
+   ],
+   [
+    98.28,
+    18.36
+   ],
+   [
+    98.82,
+    18.9
+   ]
+  ],
+  "Q3B0L3": [
+   [
+    93.96,
+    18.36
+   ],
+   [
+    96.12,
+    18.36
+   ],
+   [
+    98.28,
+    18.36
+   ],
+   [
+    100.44,
+    18.36
+   ],
+   [
+    102.6,
+    18.36
+   ],
+   [
+    104.76,
+    18.36
+   ],
+   [
+    106.92,
+    18.36
+   ],
+   [
+    109.08,
+    18.36
+   ],
+   [
+    109.62,
+    17.82
+   ]
+  ],
+  "Q3B1L0": [
+   [
+    135.54,
+    17.28
+   ],
+   [
+    133.38,
+    17.28
+   ],
+   [
+    131.22,
+    17.28
+   ],
+   [
+    129.06,
+    17.28
+   ],
+   [
+    126.9,
+    17.28
+   ],
+   [
+    124.74,
+    17.28
+   ],
+   [
+    122.58,
+    17.28
+   ],
+   [
+    120.42,
+    17.28
+   ],
+   [
+    119.88,
+    17.82
+   ]
+  ],
+  "Q3B1L1": [
+   [
+    135.54,
+    17.28
+   ],
+   [
+    133.38,
+    17.28
+   ],
+   [
+    131.22,
+    17.28
+   ],
+   [
+    130.14,
+    18.36
+   ],
+   [
+    130.14,
+    18.36
+   ]
+  ],
+  "Q3B1L2": [
+   [
+    135.54,
+    17.28
+   ],
+   [
+    137.7,
+    17.28
+   ],
+   [
+    139.86,
+    17.28
+   ],
+   [
+    140.94,
+    18.36
+   ],
+   [
+    140.94,
+    18.36
+   ]
+  ],
+  "Q3B1L3": [
+   [
+    135.54,
+    17.28
+   ],
+   [
+    137.7,
+    17.28
+   ],
+   [
+    139.86,
+    17.28
+   ],
+   [
+    142.02,
+    17.28
+   ],
+   [
+    144.18,
+    17.28
+   ],
+   [
+    146.34,
+    17.28
+   ],
+   [
+    148.5,
+    17.28
+   ],
+   [
+    150.66,
+    17.28
+   ],
+   [
+    151.74,
+    17.82
+   ]
+  ],
+  "Q3B2L0": [
+   [
+    83.7,
+    76.14
+   ],
+   [
+    83.7,
+    73.98
+   ],
+   [
+    83.7,
+    71.82
+   ],
+   [
+    83.7,
+    69.66
+   ],
+   [
+    83.7,
+    67.5
+   ],
+   [
+    83.7,
+    65.34
+   ],
+   [
+    83.7,
+    63.18
+   ],
+   [
+    83.7,
+    61.02
+   ],
+   [
+    83.7,
+    58.86
+   ],
+   [
+    83.7,
+    56.7
+   ],
+   [
+    83.7,
+    56.7
+   ]
+  ],
+  "Q3B2L1": [
+   [
+    83.7,
+    76.14
+   ],
+   [
+    83.7,
+    78.3
+   ],
+   [
+    83.7,
+    80.46
+   ],
+   [
+    83.7,
+    82.62
+   ],
+   [
+    83.7,
+    84.78
+   ],
+   [
+    83.7,
+    86.94
+   ],
+   [
+    83.7,
+    89.1
+   ],
+   [
+    83.7,
+    91.26
+   ],
+   [
+    83.7,
+    91.8
+   ]
+  ],
+  "Q3B2L2": [
+   [
+    83.7,
+    76.14
+   ],
+   [
+    83.7,
+    78.3
+   ],
+   [
+    83.7,
+    80.46
+   ],
+   [
+    83.7,
+    82.62
+   ],
+   [
+    83.7,
+    84.78
+   ],
+   [
+    83.7,
+    86.94
+   ],
+   [
+    83.7,
+    89.1
+   ],
+   [
+    83.7,
+    91.26
+   ],
+   [
+    83.7,
+    93.42
+   ],
+   [
+    83.7,
+    95.58
+   ],
+   [
+    83.7,
+    96.66
+   ]
+  ],
+  "Q4B0L0": [
+   [
+    347.76,
+    101.52
+   ],
+   [
+    347.76,
+    99.36
+   ],
+   [
+    347.76,
+    97.2
+   ],
+   [
+    347.76,
+    95.04
+   ],
+   [
+    347.76,
+    92.88
+   ],
+   [
+    347.76,
+    90.72
+   ],
+   [
+    347.76,
+    90.72
+   ]
+  ],
+  "Q4B0L1": [
+   [
+    347.76,
+    101.52
+   ],
+   [
+    347.76,
+    102.06
+   ]
+  ],
+  "Q4B0L2": [
+   [
+    347.76,
+    101.52
+   ],
+   [
+    347.76,
+    103.68
+   ],
+   [
+    347.76,
+    105.84
+   ],
+   [
+    347.76,
+    108.0
+   ],
+   [
+    347.76,
+    110.16
+   ],
+   [
+    347.76,
+    111.78
+   ]
+  ],
+  "Q4B1L0": [
+   [
+    347.22,
+    131.76
+   ],
+   [
+    347.22,
+    129.6
+   ],
+   [
+    347.22,
+    127.44
+   ],
+   [
+    347.22,
+    125.28
+   ],
+   [
+    347.22,
+    123.12
+   ],
+   [
+    347.22,
+    122.04
+   ]
+  ],
+  "Q4B1L1": [
+   [
+    347.22,
+    131.76
+   ],
+   [
+    347.76,
+    131.76
+   ]
+  ],
+  "Q4B1L2": [
+   [
+    347.22,
+    131.76
+   ],
+   [
+    347.76,
+    133.38
+   ],
+   [
+    347.76,
+    135.54
+   ],
+   [
+    347.76,
+    137.7
+   ],
+   [
+    347.76,
+    139.86
+   ],
+   [
+    347.76,
+    142.02
+   ],
+   [
+    347.76,
+    142.02
+   ]
+  ],
+  "Q4B2L0": [
+   [
+    347.76,
+    161.46
+   ],
+   [
+    347.76,
+    159.3
+   ],
+   [
+    347.76,
+    157.14
+   ],
+   [
+    347.76,
+    154.98
+   ],
+   [
+    347.76,
+    152.82
+   ],
+   [
+    347.76,
+    151.74
+   ]
+  ],
+  "Q4B2L1": [
+   [
+    347.76,
+    161.46
+   ],
+   [
+    347.76,
+    162.0
+   ]
+  ],
+  "Q4B2L2": [
+   [
+    347.76,
+    161.46
+   ],
+   [
+    347.76,
+    163.62
+   ],
+   [
+    347.76,
+    165.78
+   ],
+   [
+    347.76,
+    167.94
+   ],
+   [
+    347.76,
+    170.1
+   ],
+   [
+    347.76,
+    171.72
+   ]
+  ],
+  "Q5B0L0": [
+   [
+    181.98,
+    18.36
+   ],
+   [
+    179.82,
+    18.36
+   ],
+   [
+    177.66,
+    18.36
+   ],
+   [
+    175.5,
+    18.36
+   ],
+   [
+    173.34,
+    18.36
+   ],
+   [
+    171.18,
+    18.36
+   ],
+   [
+    169.02,
+    18.36
+   ],
+   [
+    166.86,
+    18.36
+   ],
+   [
+    164.7,
+    18.36
+   ],
+   [
+    162.54,
+    18.36
+   ],
+   [
+    161.46,
+    18.9
+   ]
+  ],
+  "Q5B0L1": [
+   [
+    181.98,
+    18.36
+   ],
+   [
+    179.82,
+    18.36
+   ],
+   [
+    177.66,
+    18.36
+   ],
+   [
+    175.5,
+    18.36
+   ],
+   [
+    173.34,
+    18.36
+   ],
+   [
+    172.26,
+    17.28
+   ],
+   [
+    172.26,
+    17.28
+   ]
+  ],
+  "Q5B0L2": [
+   [
+    181.98,
+    18.36
+   ],
+   [
+    184.14,
+    18.36
+   ],
+   [
+    186.3,
+    18.36
+   ],
+   [
+    188.46,
+    18.36
+   ],
+   [
+    190.62,
+    18.36
+   ],
+   [
+    191.7,
+    17.28
+   ],
+   [
+    191.7,
+    16.74
+   ]
+  ],
+  "Q5B0L3": [
+   [
+    181.98,
+    18.36
+   ],
+   [
+    184.14,
+    18.36
+   ],
+   [
+    186.3,
+    18.36
+   ],
+   [
+    188.46,
+    18.36
+   ],
+   [
+    190.62,
+    18.36
+   ],
+   [
+    192.78,
+    18.36
+   ],
+   [
+    194.94,
+    18.36
+   ],
+   [
+    197.1,
+    18.36
+   ],
+   [
+    199.26,
+    18.36
+   ],
+   [
+    201.42,
+    18.36
+   ],
+   [
+    202.5,
+    18.9
+   ]
+  ],
+  "Q5B1L0": [
+   [
+    221.4,
+    17.28
+   ],
+   [
+    219.24,
+    17.28
+   ],
+   [
+    217.08,
+    17.28
+   ],
+   [
+    214.92,
+    17.28
+   ],
+   [
+    212.76,
+    17.28
+   ],
+   [
+    211.68,
+    17.82
+   ]
+  ],
+  "Q5B1L1": [
+   [
+    221.4,
+    17.28
+   ],
+   [
+    221.4,
+    18.36
+   ]
+  ],
+  "Q5B1L2": [
+   [
+    221.4,
+    17.28
+   ],
+   [
+    223.56,
+    17.28
+   ],
+   [
+    225.72,
+    17.28
+   ],
+   [
+    227.88,
+    17.28
+   ],
+   [
+    230.04,
+    17.28
+   ],
+   [
+    231.66,
+    17.82
+   ],
+   [
+    231.66,
+    17.82
+   ]
+  ]
+ }
+}

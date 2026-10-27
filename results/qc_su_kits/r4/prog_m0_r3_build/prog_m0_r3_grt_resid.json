@@ -1,0 +1,1480 @@
+{
+ "basis": "STA per-sink CK arrival on GRT parasitics (estimate_parasitics -global_routing, rc_cal 0.8/0.9), propagated clock; rise = arrival_*_rise, fall = arrival_*_fall - T/2; late = max(rise_max, fall_max), early = min(rise_min, fall_min); tap = clock net ot_ms_<leaf>_clk (macro: ot_ms_m<k>_clk)",
+ "inputs": {
+  "tt": "/home/ubuntu/.claude/jobs/b7f906df/tmp/meas_grt_TT.tsv",
+  "ff": "/home/ubuntu/.claude/jobs/b7f906df/tmp/meas_grt_FF.tsv",
+  "asbuilt": "/home/ubuntu/.claude/jobs/b7f906df/tmp/prog_m0_r3.gate.asbuilt.json"
+ },
+ "corners": {
+  "TT": {
+   "rise_max": {
+    "n": 3291,
+    "mean": 239.25,
+    "min": 225.22,
+    "max": 253.72,
+    "tap_mean_window": 23.07,
+    "tap_mean_min": 228.35,
+    "tap_mean_max": 251.42,
+    "resid_vs_asbuilt_avg_model": {
+     "mean": -15.16,
+     "sd": 4.39,
+     "min": -24.91,
+     "max": -5.77
+    },
+    "per_leaf": {
+     "Q0B0L0": {
+      "meas": 243.58,
+      "pred": 259.96,
+      "resid": -16.38
+     },
+     "Q0B0L1": {
+      "meas": 242.51,
+      "pred": 258.91,
+      "resid": -16.4
+     },
+     "Q0B0L2": {
+      "meas": 243.44,
+      "pred": 259.53,
+      "resid": -16.09
+     },
+     "Q0B0L3": {
+      "meas": 244.18,
+      "pred": 260.33,
+      "resid": -16.15
+     },
+     "Q0B1L0": {
+      "meas": 248.16,
+      "pred": 261.38,
+      "resid": -13.22
+     },
+     "Q0B1L1": {
+      "meas": 247.08,
+      "pred": 260.18,
+      "resid": -13.1
+     },
+     "Q0B1L2": {
+      "meas": 246.33,
+      "pred": 259.95,
+      "resid": -13.62
+     },
+     "Q0B1L3": {
+      "meas": 251.42,
+      "pred": 264.1,
+      "resid": -12.68
+     },
+     "Q0B2L0": {
+      "meas": 244.4,
+      "pred": 258.64,
+      "resid": -14.24
+     },
+     "Q0B2L1": {
+      "meas": 244.8,
+      "pred": 258.6,
+      "resid": -13.8
+     },
+     "Q0B2L2": {
+      "meas": 244.37,
+      "pred": 258.7,
+      "resid": -14.33
+     },
+     "Q0B3L0": {
+      "meas": 241.48,
+      "pred": 257.29,
+      "resid": -15.81
+     },
+     "Q0B3L1": {
+      "meas": 243.14,
+      "pred": 256.53,
+      "resid": -13.39
+     },
+     "Q0B3L2": {
+      "meas": 244.84,
+      "pred": 256.49,
+      "resid": -11.65
+     },
+     "Q1B0L0": {
+      "meas": 231.85,
+      "pred": 252.96,
+      "resid": -21.11
+     },
+     "Q1B0L1": {
+      "meas": 232.24,
+      "pred": 252.56,
+      "resid": -20.32
+     },
+     "Q1B0L2": {
+      "meas": 235.54,
+      "pred": 259.81,
+      "resid": -24.27
+     },
+     "Q1B1L0": {
+      "meas": 236.58,
+      "pred": 261.49,
+      "resid": -24.91
+     },
+     "Q1B1L1": {
+      "meas": 232.44,
+      "pred": 253.01,
+      "resid": -20.57
+     },
+     "Q1B1L2": {
+      "meas": 233.08,
+      "pred": 253.42,
+      "resid": -20.34
+     },
+     "Q2B0L0": {
+      "meas": 243.56,
+      "pred": 259.16,
+      "resid": -15.6
+     },
+     "Q2B0L1": {
+      "meas": 247.1,
+      "pred": 258.93,
+      "resid": -11.83
+     },
+     "Q2B0L2": {
+      "meas": 245.16,
+      "pred": 258.82,
+      "resid": -13.66
+     },
+     "Q2B0L3": {
+      "meas": 249.28,
+      "pred": 259.19,
+      "resid": -9.91
+     },
+     "Q2B1L0": {
+      "meas": 235.05,
+      "pred": 250.35,
+      "resid": -15.3
+     },
+     "Q2B1L1": {
+      "meas": 235.41,
+      "pred": 250.5,
+      "resid": -15.09
+     },
+     "Q2B1L2": {
+      "meas": 235.32,
+      "pred": 250.24,
+      "resid": -14.92
+     },
+     "Q2B1L3": {
+      "meas": 236.07,
+      "pred": 250.56,
+      "resid": -14.49
+     },
+     "Q2B2L0": {
+      "meas": 238.49,
+      "pred": 254.77,
+      "resid": -16.28
+     },
+     "Q2B2L1": {
+      "meas": 237.77,
+      "pred": 254.19,
+      "resid": -16.42
+     },
+     "Q2B2L2": {
+      "meas": 236.73,
+      "pred": 253.49,
+      "resid": -16.76
+     },
+     "Q3B0L0": {
+      "meas": 234.33,
+      "pred": 255.97,
+      "resid": -21.64
+     },
+     "Q3B0L1": {
+      "meas": 233.29,
+      "pred": 253.68,
+      "resid": -20.39
+     },
+     "Q3B0L2": {
+      "meas": 234.97,
+      "pred": 255.81,
+      "resid": -20.84
+     },
+     "Q3B0L3": {
+      "meas": 234.93,
+      "pred": 256.34,
+      "resid": -21.41
+     },
+     "Q3B1L0": {
+      "meas": 229.13,
+      "pred": 250.39,
+      "resid": -21.26
+     },
+     "Q3B1L1": {
+      "meas": 228.81,
+      "pred": 249.72,
+      "resid": -20.91
+     },
+     "Q3B1L2": {
+      "meas": 228.35,
+      "pred": 249.69,
+      "resid": -21.34
+     },
+     "Q3B1L3": {
+      "meas": 228.49,
+      "pred": 250.35,
+      "resid": -21.86
+     },
+     "Q3B2L0": {
+      "meas": 232.7,
+      "pred": 253.17,
+      "resid": -20.47
+     },
+     "Q3B2L1": {
+      "meas": 232.93,
+      "pred": 253.31,
+      "resid": -20.38
+     },
+     "Q3B2L2": {
+      "meas": 232.96,
+      "pred": 253.31,
+      "resid": -20.35
+     },
+     "Q4B0L0": {
+      "meas": 235.14,
+      "pred": 249.12,
+      "resid": -13.98
+     },
+     "Q4B0L1": {
+      "meas": 235.14,
+      "pred": 248.19,
+      "resid": -13.05
+     },
+     "Q4B0L2": {
+      "meas": 234.57,
+      "pred": 248.67,
+      "resid": -14.1
+     },
+     "Q4B1L0": {
+      "meas": 235.72,
+      "pred": 248.91,
+      "resid": -13.19
+     },
+     "Q4B1L1": {
+      "meas": 235.25,
+      "pred": 248.64,
+      "resid": -13.39
+     },
+     "Q4B1L2": {
+      "meas": 235.2,
+      "pred": 249.04,
+      "resid": -13.84
+     },
+     "Q4B2L0": {
+      "meas": 235.66,
+      "pred": 248.82,
+      "resid": -13.16
+     },
+     "Q4B2L1": {
+      "meas": 234.59,
+      "pred": 248.51,
+      "resid": -13.92
+     },
+     "Q4B2L2": {
+      "meas": 234.94,
+      "pred": 248.7,
+      "resid": -13.76
+     },
+     "Q5B0L0": {
+      "meas": 243.69,
+      "pred": 255.45,
+      "resid": -11.76
+     },
+     "Q5B0L1": {
+      "meas": 245.57,
+      "pred": 255.63,
+      "resid": -10.06
+     },
+     "Q5B0L2": {
+      "meas": 249.11,
+      "pred": 255.84,
+      "resid": -6.73
+     },
+     "Q5B0L3": {
+      "meas": 246.6,
+      "pred": 256.03,
+      "resid": -9.43
+     },
+     "Q5B1L0": {
+      "meas": 242.01,
+      "pred": 251.98,
+      "resid": -9.97
+     },
+     "Q5B1L1": {
+      "meas": 239.54,
+      "pred": 251.43,
+      "resid": -11.89
+     },
+     "Q5B1L2": {
+      "meas": 241.46,
+      "pred": 252.18,
+      "resid": -10.72
+     },
+     "Q5B2L0": {
+      "meas": 246.79,
+      "pred": 255.87,
+      "resid": -9.08
+     },
+     "Q5B2L1": {
+      "meas": 249.16,
+      "pred": 254.93,
+      "resid": -5.77
+     },
+     "Q5B2L2": {
+      "meas": 247.98,
+      "pred": 255.15,
+      "resid": -7.17
+     },
+     "Q5B3L0": {
+      "meas": 241.0,
+      "pred": 251.7,
+      "resid": -10.7
+     },
+     "Q5B3L1": {
+      "meas": 241.29,
+      "pred": 251.77,
+      "resid": -10.48
+     },
+     "Q5B3L2": {
+      "meas": 241.58,
+      "pred": 252.22,
+      "resid": -10.64
+     }
+    }
+   },
+   "late": {
+    "n": 3291,
+    "mean": 252.58,
+    "min": 237.24,
+    "max": 266.8,
+    "tap_mean_window": 24.21,
+    "tap_mean_min": 240.31,
+    "tap_mean_max": 264.52,
+    "resid_vs_asbuilt_avg_model": {
+     "mean": -1.83,
+     "sd": 5.01,
+     "min": -11.74,
+     "max": 8.65
+    }
+   },
+   "early": {
+    "n": 3291,
+    "mean": 227.06,
+    "min": 215.55,
+    "max": 239.92,
+    "tap_mean_window": 19.7,
+    "tap_mean_min": 218.21,
+    "tap_mean_max": 237.91,
+    "resid_vs_asbuilt_avg_model": {
+     "mean": -27.35,
+     "sd": 3.19,
+     "min": -34.55,
+     "max": -19.43
+    },
+    "per_leaf": {
+     "Q0B0L0": {
+      "meas": 230.6,
+      "pred": 259.96,
+      "resid": -29.36
+     },
+     "Q0B0L1": {
+      "meas": 229.7,
+      "pred": 258.91,
+      "resid": -29.21
+     },
+     "Q0B0L2": {
+      "meas": 230.59,
+      "pred": 259.53,
+      "resid": -28.94
+     },
+     "Q0B0L3": {
+      "meas": 231.25,
+      "pred": 260.33,
+      "resid": -29.08
+     },
+     "Q0B1L0": {
+      "meas": 234.79,
+      "pred": 261.38,
+      "resid": -26.59
+     },
+     "Q0B1L1": {
+      "meas": 233.86,
+      "pred": 260.18,
+      "resid": -26.32
+     },
+     "Q0B1L2": {
+      "meas": 233.23,
+      "pred": 259.95,
+      "resid": -26.72
+     },
+     "Q0B1L3": {
+      "meas": 237.91,
+      "pred": 264.1,
+      "resid": -26.19
+     },
+     "Q0B2L0": {
+      "meas": 231.42,
+      "pred": 258.64,
+      "resid": -27.22
+     },
+     "Q0B2L1": {
+      "meas": 231.7,
+      "pred": 258.6,
+      "resid": -26.9
+     },
+     "Q0B2L2": {
+      "meas": 231.36,
+      "pred": 258.7,
+      "resid": -27.34
+     },
+     "Q0B3L0": {
+      "meas": 229.03,
+      "pred": 257.29,
+      "resid": -28.26
+     },
+     "Q0B3L1": {
+      "meas": 230.16,
+      "pred": 256.53,
+      "resid": -26.37
+     },
+     "Q0B3L2": {
+      "meas": 231.48,
+      "pred": 256.49,
+      "resid": -25.01
+     },
+     "Q1B0L0": {
+      "meas": 222.29,
+      "pred": 252.96,
+      "resid": -30.67
+     },
+     "Q1B0L1": {
+      "meas": 222.67,
+      "pred": 252.56,
+      "resid": -29.89
+     },
+     "Q1B0L2": {
+      "meas": 225.97,
+      "pred": 259.81,
+      "resid": -33.84
+     },
+     "Q1B1L0": {
+      "meas": 226.94,
+      "pred": 261.49,
+      "resid": -34.55
+     },
+     "Q1B1L1": {
+      "meas": 222.89,
+      "pred": 253.01,
+      "resid": -30.12
+     },
+     "Q1B1L2": {
+      "meas": 223.41,
+      "pred": 253.42,
+      "resid": -30.01
+     },
+     "Q2B0L0": {
+      "meas": 230.55,
+      "pred": 259.16,
+      "resid": -28.61
+     },
+     "Q2B0L1": {
+      "meas": 233.31,
+      "pred": 258.93,
+      "resid": -25.62
+     },
+     "Q2B0L2": {
+      "meas": 232.05,
+      "pred": 258.82,
+      "resid": -26.77
+     },
+     "Q2B0L3": {
+      "meas": 235.21,
+      "pred": 259.19,
+      "resid": -23.98
+     },
+     "Q2B1L0": {
+      "meas": 222.5,
+      "pred": 250.35,
+      "resid": -27.85
+     },
+     "Q2B1L1": {
+      "meas": 222.85,
+      "pred": 250.5,
+      "resid": -27.65
+     },
+     "Q2B1L2": {
+      "meas": 222.77,
+      "pred": 250.24,
+      "resid": -27.47
+     },
+     "Q2B1L3": {
+      "meas": 223.34,
+      "pred": 250.56,
+      "resid": -27.22
+     },
+     "Q2B2L0": {
+      "meas": 226.02,
+      "pred": 254.77,
+      "resid": -28.75
+     },
+     "Q2B2L1": {
+      "meas": 225.44,
+      "pred": 254.19,
+      "resid": -28.75
+     },
+     "Q2B2L2": {
+      "meas": 224.61,
+      "pred": 253.49,
+      "resid": -28.88
+     },
+     "Q3B0L0": {
+      "meas": 223.76,
+      "pred": 255.97,
+      "resid": -32.21
+     },
+     "Q3B0L1": {
+      "meas": 222.54,
+      "pred": 253.68,
+      "resid": -31.14
+     },
+     "Q3B0L2": {
+      "meas": 224.27,
+      "pred": 255.81,
+      "resid": -31.54
+     },
+     "Q3B0L3": {
+      "meas": 224.21,
+      "pred": 256.34,
+      "resid": -32.13
+     },
+     "Q3B1L0": {
+      "meas": 218.83,
+      "pred": 250.39,
+      "resid": -31.56
+     },
+     "Q3B1L1": {
+      "meas": 218.57,
+      "pred": 249.72,
+      "resid": -31.15
+     },
+     "Q3B1L2": {
+      "meas": 218.21,
+      "pred": 249.69,
+      "resid": -31.48
+     },
+     "Q3B1L3": {
+      "meas": 218.24,
+      "pred": 250.35,
+      "resid": -32.11
+     },
+     "Q3B2L0": {
+      "meas": 222.33,
+      "pred": 253.17,
+      "resid": -30.84
+     },
+     "Q3B2L1": {
+      "meas": 222.7,
+      "pred": 253.31,
+      "resid": -30.61
+     },
+     "Q3B2L2": {
+      "meas": 222.71,
+      "pred": 253.31,
+      "resid": -30.6
+     },
+     "Q4B0L0": {
+      "meas": 223.04,
+      "pred": 249.12,
+      "resid": -26.08
+     },
+     "Q4B0L1": {
+      "meas": 223.07,
+      "pred": 248.19,
+      "resid": -25.12
+     },
+     "Q4B0L2": {
+      "meas": 222.53,
+      "pred": 248.67,
+      "resid": -26.14
+     },
+     "Q4B1L0": {
+      "meas": 223.53,
+      "pred": 248.91,
+      "resid": -25.38
+     },
+     "Q4B1L1": {
+      "meas": 223.16,
+      "pred": 248.64,
+      "resid": -25.48
+     },
+     "Q4B1L2": {
+      "meas": 223.06,
+      "pred": 249.04,
+      "resid": -25.98
+     },
+     "Q4B2L0": {
+      "meas": 223.47,
+      "pred": 248.82,
+      "resid": -25.35
+     },
+     "Q4B2L1": {
+      "meas": 222.53,
+      "pred": 248.51,
+      "resid": -25.98
+     },
+     "Q4B2L2": {
+      "meas": 222.82,
+      "pred": 248.7,
+      "resid": -25.88
+     },
+     "Q5B0L0": {
+      "meas": 230.23,
+      "pred": 255.45,
+      "resid": -25.22
+     },
+     "Q5B0L1": {
+      "meas": 231.68,
+      "pred": 255.63,
+      "resid": -23.95
+     },
+     "Q5B0L2": {
+      "meas": 234.42,
+      "pred": 255.84,
+      "resid": -21.42
+     },
+     "Q5B0L3": {
+      "meas": 232.51,
+      "pred": 256.03,
+      "resid": -23.52
+     },
+     "Q5B1L0": {
+      "meas": 228.75,
+      "pred": 251.98,
+      "resid": -23.23
+     },
+     "Q5B1L1": {
+      "meas": 226.72,
+      "pred": 251.43,
+      "resid": -24.71
+     },
+     "Q5B1L2": {
+      "meas": 228.21,
+      "pred": 252.18,
+      "resid": -23.97
+     },
+     "Q5B2L0": {
+      "meas": 233.23,
+      "pred": 255.87,
+      "resid": -22.64
+     },
+     "Q5B2L1": {
+      "meas": 235.5,
+      "pred": 254.93,
+      "resid": -19.43
+     },
+     "Q5B2L2": {
+      "meas": 234.43,
+      "pred": 255.15,
+      "resid": -20.72
+     },
+     "Q5B3L0": {
+      "meas": 228.0,
+      "pred": 251.7,
+      "resid": -23.7
+     },
+     "Q5B3L1": {
+      "meas": 228.2,
+      "pred": 251.77,
+      "resid": -23.57
+     },
+     "Q5B3L2": {
+      "meas": 228.44,
+      "pred": 252.22,
+      "resid": -23.78
+     }
+    }
+   },
+   "rise_min": {
+    "n": 3291,
+    "mean": 227.06,
+    "min": 215.55,
+    "max": 239.92,
+    "tap_mean_window": 19.7,
+    "tap_mean_min": 218.21,
+    "tap_mean_max": 237.91,
+    "resid_vs_asbuilt_avg_model": {
+     "mean": -27.35,
+     "sd": 3.19,
+     "min": -34.55,
+     "max": -19.43
+    }
+   },
+   "pred_asbuilt": {
+    "avg": {
+     "mean_raw": 252.55,
+     "mean": 254.45,
+     "min": 246.29,
+     "max": 262.2,
+     "window": 15.91
+    },
+    "early": {
+     "mean_raw": 246.29,
+     "mean": 248.19,
+     "min": 240.14,
+     "max": 256.05,
+     "window": 15.91
+    },
+    "late": {
+     "mean_raw": 254.48,
+     "mean": 256.38,
+     "min": 247.97,
+     "max": 263.87,
+     "window": 15.9
+    }
+   },
+   "macro_ck": {
+    "g_prog[0].u_hi/clk": 240.99,
+    "g_prog[0].u_lo/clk": 233.69,
+    "g_prog[1].u_hi/clk": 237.02,
+    "g_prog[1].u_lo/clk": 237.31
+   }
+  },
+  "FF": {
+   "rise_max": {
+    "n": 3291,
+    "mean": 193.81,
+    "min": 178.77,
+    "max": 207.62,
+    "tap_mean_window": 22.68,
+    "tap_mean_min": 181.96,
+    "tap_mean_max": 204.64,
+    "resid_vs_asbuilt_avg_model": {
+     "mean": -0.75,
+     "sd": 4.56,
+     "min": -10.64,
+     "max": 8.55
+    },
+    "per_leaf": {
+     "Q0B0L0": {
+      "meas": 197.85,
+      "pred": 199.8,
+      "resid": -1.95
+     },
+     "Q0B0L1": {
+      "meas": 196.8,
+      "pred": 198.72,
+      "resid": -1.92
+     },
+     "Q0B0L2": {
+      "meas": 197.6,
+      "pred": 199.3,
+      "resid": -1.7
+     },
+     "Q0B0L3": {
+      "meas": 198.38,
+      "pred": 200.11,
+      "resid": -1.73
+     },
+     "Q0B1L0": {
+      "meas": 201.3,
+      "pred": 200.86,
+      "resid": 0.44
+     },
+     "Q0B1L1": {
+      "meas": 200.24,
+      "pred": 199.71,
+      "resid": 0.53
+     },
+     "Q0B1L2": {
+      "meas": 199.46,
+      "pred": 199.46,
+      "resid": 0.0
+     },
+     "Q0B1L3": {
+      "meas": 204.63,
+      "pred": 203.59,
+      "resid": 1.04
+     },
+     "Q0B2L0": {
+      "meas": 200.58,
+      "pred": 199.81,
+      "resid": 0.77
+     },
+     "Q0B2L1": {
+      "meas": 201.08,
+      "pred": 199.72,
+      "resid": 1.36
+     },
+     "Q0B2L2": {
+      "meas": 200.61,
+      "pred": 199.89,
+      "resid": 0.72
+     },
+     "Q0B3L0": {
+      "meas": 197.29,
+      "pred": 198.32,
+      "resid": -1.03
+     },
+     "Q0B3L1": {
+      "meas": 199.65,
+      "pred": 197.8,
+      "resid": 1.85
+     },
+     "Q0B3L2": {
+      "meas": 201.56,
+      "pred": 197.77,
+      "resid": 3.79
+     },
+     "Q1B0L0": {
+      "meas": 185.64,
+      "pred": 192.14,
+      "resid": -6.5
+     },
+     "Q1B0L1": {
+      "meas": 185.96,
+      "pred": 191.73,
+      "resid": -5.77
+     },
+     "Q1B0L2": {
+      "meas": 188.94,
+      "pred": 199.0,
+      "resid": -10.06
+     },
+     "Q1B1L0": {
+      "meas": 189.89,
+      "pred": 200.53,
+      "resid": -10.64
+     },
+     "Q1B1L1": {
+      "meas": 186.07,
+      "pred": 192.06,
+      "resid": -5.99
+     },
+     "Q1B1L2": {
+      "meas": 186.72,
+      "pred": 192.48,
+      "resid": -5.76
+     },
+     "Q2B0L0": {
+      "meas": 196.32,
+      "pred": 197.54,
+      "resid": -1.22
+     },
+     "Q2B0L1": {
+      "meas": 200.54,
+      "pred": 197.38,
+      "resid": 3.16
+     },
+     "Q2B0L2": {
+      "meas": 197.86,
+      "pred": 197.07,
+      "resid": 0.79
+     },
+     "Q2B0L3": {
+      "meas": 202.72,
+      "pred": 197.63,
+      "resid": 5.09
+     },
+     "Q2B1L0": {
+      "meas": 190.2,
+      "pred": 191.0,
+      "resid": -0.8
+     },
+     "Q2B1L1": {
+      "meas": 190.56,
+      "pred": 191.12,
+      "resid": -0.56
+     },
+     "Q2B1L2": {
+      "meas": 190.48,
+      "pred": 190.83,
+      "resid": -0.35
+     },
+     "Q2B1L3": {
+      "meas": 191.38,
+      "pred": 191.2,
+      "resid": 0.18
+     },
+     "Q2B2L0": {
+      "meas": 193.14,
+      "pred": 194.46,
+      "resid": -1.32
+     },
+     "Q2B2L1": {
+      "meas": 192.33,
+      "pred": 193.89,
+      "resid": -1.56
+     },
+     "Q2B2L2": {
+      "meas": 191.23,
+      "pred": 193.17,
+      "resid": -1.94
+     },
+     "Q3B0L0": {
+      "meas": 187.35,
+      "pred": 195.01,
+      "resid": -7.66
+     },
+     "Q3B0L1": {
+      "meas": 186.7,
+      "pred": 193.06,
+      "resid": -6.36
+     },
+     "Q3B0L2": {
+      "meas": 188.05,
+      "pred": 194.86,
+      "resid": -6.81
+     },
+     "Q3B0L3": {
+      "meas": 187.98,
+      "pred": 195.43,
+      "resid": -7.45
+     },
+     "Q3B1L0": {
+      "meas": 182.82,
+      "pred": 190.08,
+      "resid": -7.26
+     },
+     "Q3B1L1": {
+      "meas": 182.44,
+      "pred": 189.38,
+      "resid": -6.94
+     },
+     "Q3B1L2": {
+      "meas": 181.96,
+      "pred": 189.35,
+      "resid": -7.39
+     },
+     "Q3B1L3": {
+      "meas": 182.13,
+      "pred": 190.05,
+      "resid": -7.92
+     },
+     "Q3B2L0": {
+      "meas": 186.5,
+      "pred": 193.09,
+      "resid": -6.59
+     },
+     "Q3B2L1": {
+      "meas": 186.58,
+      "pred": 193.14,
+      "resid": -6.56
+     },
+     "Q3B2L2": {
+      "meas": 186.67,
+      "pred": 193.22,
+      "resid": -6.55
+     },
+     "Q4B0L0": {
+      "meas": 189.52,
+      "pred": 189.3,
+      "resid": 0.22
+     },
+     "Q4B0L1": {
+      "meas": 189.56,
+      "pred": 188.34,
+      "resid": 1.22
+     },
+     "Q4B0L2": {
+      "meas": 189.0,
+      "pred": 188.86,
+      "resid": 0.14
+     },
+     "Q4B1L0": {
+      "meas": 190.15,
+      "pred": 189.13,
+      "resid": 1.02
+     },
+     "Q4B1L1": {
+      "meas": 189.63,
+      "pred": 188.79,
+      "resid": 0.84
+     },
+     "Q4B1L2": {
+      "meas": 189.62,
+      "pred": 189.25,
+      "resid": 0.37
+     },
+     "Q4B2L0": {
+      "meas": 190.13,
+      "pred": 189.06,
+      "resid": 1.07
+     },
+     "Q4B2L1": {
+      "meas": 188.99,
+      "pred": 188.7,
+      "resid": 0.29
+     },
+     "Q4B2L2": {
+      "meas": 189.42,
+      "pred": 188.96,
+      "resid": 0.46
+     },
+     "Q5B0L0": {
+      "meas": 198.34,
+      "pred": 196.07,
+      "resid": 2.27
+     },
+     "Q5B0L1": {
+      "meas": 200.67,
+      "pred": 196.4,
+      "resid": 4.27
+     },
+     "Q5B0L2": {
+      "meas": 204.64,
+      "pred": 196.63,
+      "resid": 8.01
+     },
+     "Q5B0L3": {
+      "meas": 201.82,
+      "pred": 196.85,
+      "resid": 4.97
+     },
+     "Q5B1L0": {
+      "meas": 198.86,
+      "pred": 193.93,
+      "resid": 4.93
+     },
+     "Q5B1L1": {
+      "meas": 196.25,
+      "pred": 193.41,
+      "resid": 2.84
+     },
+     "Q5B1L2": {
+      "meas": 198.37,
+      "pred": 194.16,
+      "resid": 4.21
+     },
+     "Q5B2L0": {
+      "meas": 202.32,
+      "pred": 197.06,
+      "resid": 5.26
+     },
+     "Q5B2L1": {
+      "meas": 204.33,
+      "pred": 195.78,
+      "resid": 8.55
+     },
+     "Q5B2L2": {
+      "meas": 203.4,
+      "pred": 196.31,
+      "resid": 7.09
+     },
+     "Q5B3L0": {
+      "meas": 197.78,
+      "pred": 193.66,
+      "resid": 4.12
+     },
+     "Q5B3L1": {
+      "meas": 198.16,
+      "pred": 193.76,
+      "resid": 4.4
+     },
+     "Q5B3L2": {
+      "meas": 198.48,
+      "pred": 194.22,
+      "resid": 4.26
+     }
+    }
+   },
+   "late": {
+    "n": 3291,
+    "mean": 202.08,
+    "min": 186.1,
+    "max": 216.66,
+    "tap_mean_window": 24.1,
+    "tap_mean_min": 189.26,
+    "tap_mean_max": 213.36,
+    "resid_vs_asbuilt_avg_model": {
+     "mean": 7.52,
+     "sd": 5.02,
+     "min": -2.88,
+     "max": 17.58
+    }
+   },
+   "early": {
+    "n": 3291,
+    "mean": 183.76,
+    "min": 171.26,
+    "max": 195.53,
+    "tap_mean_window": 19.46,
+    "tap_mean_min": 173.98,
+    "tap_mean_max": 193.44,
+    "resid_vs_asbuilt_avg_model": {
+     "mean": -10.8,
+     "sd": 3.39,
+     "min": -18.64,
+     "max": -3.14
+    },
+    "per_leaf": {
+     "Q0B0L0": {
+      "meas": 187.24,
+      "pred": 199.8,
+      "resid": -12.56
+     },
+     "Q0B0L1": {
+      "meas": 186.32,
+      "pred": 198.72,
+      "resid": -12.4
+     },
+     "Q0B0L2": {
+      "meas": 187.1,
+      "pred": 199.3,
+      "resid": -12.2
+     },
+     "Q0B0L3": {
+      "meas": 187.78,
+      "pred": 200.11,
+      "resid": -12.33
+     },
+     "Q0B1L0": {
+      "meas": 190.34,
+      "pred": 200.86,
+      "resid": -10.52
+     },
+     "Q0B1L1": {
+      "meas": 189.44,
+      "pred": 199.71,
+      "resid": -10.27
+     },
+     "Q0B1L2": {
+      "meas": 188.75,
+      "pred": 199.46,
+      "resid": -10.71
+     },
+     "Q0B1L3": {
+      "meas": 193.44,
+      "pred": 203.59,
+      "resid": -10.15
+     },
+     "Q0B2L0": {
+      "meas": 189.45,
+      "pred": 199.81,
+      "resid": -10.36
+     },
+     "Q0B2L1": {
+      "meas": 189.85,
+      "pred": 199.72,
+      "resid": -9.87
+     },
+     "Q0B2L2": {
+      "meas": 189.45,
+      "pred": 199.89,
+      "resid": -10.44
+     },
+     "Q0B3L0": {
+      "meas": 186.68,
+      "pred": 198.32,
+      "resid": -11.64
+     },
+     "Q0B3L1": {
+      "meas": 188.46,
+      "pred": 197.8,
+      "resid": -9.34
+     },
+     "Q0B3L2": {
+      "meas": 190.03,
+      "pred": 197.77,
+      "resid": -7.74
+     },
+     "Q1B0L0": {
+      "meas": 177.8,
+      "pred": 192.14,
+      "resid": -14.34
+     },
+     "Q1B0L1": {
+      "meas": 178.15,
+      "pred": 191.73,
+      "resid": -13.58
+     },
+     "Q1B0L2": {
+      "meas": 181.03,
+      "pred": 199.0,
+      "resid": -17.97
+     },
+     "Q1B1L0": {
+      "meas": 181.89,
+      "pred": 200.53,
+      "resid": -18.64
+     },
+     "Q1B1L1": {
+      "meas": 178.25,
+      "pred": 192.06,
+      "resid": -13.81
+     },
+     "Q1B1L2": {
+      "meas": 178.82,
+      "pred": 192.48,
+      "resid": -13.66
+     },
+     "Q2B0L0": {
+      "meas": 185.84,
+      "pred": 197.54,
+      "resid": -11.7
+     },
+     "Q2B0L1": {
+      "meas": 189.25,
+      "pred": 197.38,
+      "resid": -8.13
+     },
+     "Q2B0L2": {
+      "meas": 187.27,
+      "pred": 197.07,
+      "resid": -9.8
+     },
+     "Q2B0L3": {
+      "meas": 191.18,
+      "pred": 197.63,
+      "resid": -6.45
+     },
+     "Q2B1L0": {
+      "meas": 179.86,
+      "pred": 191.0,
+      "resid": -11.14
+     },
+     "Q2B1L1": {
+      "meas": 180.21,
+      "pred": 191.12,
+      "resid": -10.91
+     },
+     "Q2B1L2": {
+      "meas": 180.14,
+      "pred": 190.83,
+      "resid": -10.69
+     },
+     "Q2B1L3": {
+      "meas": 180.86,
+      "pred": 191.2,
+      "resid": -10.34
+     },
+     "Q2B2L0": {
+      "meas": 182.74,
+      "pred": 194.46,
+      "resid": -11.72
+     },
+     "Q2B2L1": {
+      "meas": 182.08,
+      "pred": 193.89,
+      "resid": -11.81
+     },
+     "Q2B2L2": {
+      "meas": 181.2,
+      "pred": 193.17,
+      "resid": -11.97
+     },
+     "Q3B0L0": {
+      "meas": 178.96,
+      "pred": 195.01,
+      "resid": -16.05
+     },
+     "Q3B0L1": {
+      "meas": 178.19,
+      "pred": 193.06,
+      "resid": -14.87
+     },
+     "Q3B0L2": {
+      "meas": 179.56,
+      "pred": 194.86,
+      "resid": -15.3
+     },
+     "Q3B0L3": {
+      "meas": 179.48,
+      "pred": 195.43,
+      "resid": -15.95
+     },
+     "Q3B1L0": {
+      "meas": 174.7,
+      "pred": 190.08,
+      "resid": -15.38
+     },
+     "Q3B1L1": {
+      "meas": 174.42,
+      "pred": 189.38,
+      "resid": -14.96
+     },
+     "Q3B1L2": {
+      "meas": 173.98,
+      "pred": 189.35,
+      "resid": -15.37
+     },
+     "Q3B1L3": {
+      "meas": 174.07,
+      "pred": 190.05,
+      "resid": -15.98
+     },
+     "Q3B2L0": {
+      "meas": 178.14,
+      "pred": 193.09,
+      "resid": -14.95
+     },
+     "Q3B2L1": {
+      "meas": 178.35,
+      "pred": 193.14,
+      "resid": -14.79
+     },
+     "Q3B2L2": {
+      "meas": 178.39,
+      "pred": 193.22,
+      "resid": -14.83
+     },
+     "Q4B0L0": {
+      "meas": 179.87,
+      "pred": 189.3,
+      "resid": -9.43
+     },
+     "Q4B0L1": {
+      "meas": 179.92,
+      "pred": 188.34,
+      "resid": -8.42
+     },
+     "Q4B0L2": {
+      "meas": 179.39,
+      "pred": 188.86,
+      "resid": -9.47
+     },
+     "Q4B1L0": {
+      "meas": 180.45,
+      "pred": 189.13,
+      "resid": -8.68
+     },
+     "Q4B1L1": {
+      "meas": 180.03,
+      "pred": 188.79,
+      "resid": -8.76
+     },
+     "Q4B1L2": {
+      "meas": 179.97,
+      "pred": 189.25,
+      "resid": -9.28
+     },
+     "Q4B2L0": {
+      "meas": 180.42,
+      "pred": 189.06,
+      "resid": -8.64
+     },
+     "Q4B2L1": {
+      "meas": 179.44,
+      "pred": 188.7,
+      "resid": -9.26
+     },
+     "Q4B2L2": {
+      "meas": 179.79,
+      "pred": 188.96,
+      "resid": -9.17
+     },
+     "Q5B0L0": {
+      "meas": 187.12,
+      "pred": 196.07,
+      "resid": -8.95
+     },
+     "Q5B0L1": {
+      "meas": 189.01,
+      "pred": 196.4,
+      "resid": -7.39
+     },
+     "Q5B0L2": {
+      "meas": 192.24,
+      "pred": 196.63,
+      "resid": -4.39
+     },
+     "Q5B0L3": {
+      "meas": 189.95,
+      "pred": 196.85,
+      "resid": -6.9
+     },
+     "Q5B1L0": {
+      "meas": 187.47,
+      "pred": 193.93,
+      "resid": -6.46
+     },
+     "Q5B1L1": {
+      "meas": 185.25,
+      "pred": 193.41,
+      "resid": -8.16
+     },
+     "Q5B1L2": {
+      "meas": 186.98,
+      "pred": 194.16,
+      "resid": -7.18
+     },
+     "Q5B2L0": {
+      "meas": 190.74,
+      "pred": 197.06,
+      "resid": -6.32
+     },
+     "Q5B2L1": {
+      "meas": 192.64,
+      "pred": 195.78,
+      "resid": -3.14
+     },
+     "Q5B2L2": {
+      "meas": 191.82,
+      "pred": 196.31,
+      "resid": -4.49
+     },
+     "Q5B3L0": {
+      "meas": 186.55,
+      "pred": 193.66,
+      "resid": -7.11
+     },
+     "Q5B3L1": {
+      "meas": 186.86,
+      "pred": 193.76,
+      "resid": -6.9
+     },
+     "Q5B3L2": {
+      "meas": 187.12,
+      "pred": 194.22,
+      "resid": -7.1
+     }
+    }
+   },
+   "rise_min": {
+    "n": 3291,
+    "mean": 183.76,
+    "min": 171.26,
+    "max": 195.53,
+    "tap_mean_window": 19.46,
+    "tap_mean_min": 173.98,
+    "tap_mean_max": 193.44,
+    "resid_vs_asbuilt_avg_model": {
+     "mean": -10.8,
+     "sd": 3.39,
+     "min": -18.64,
+     "max": -3.14
+    }
+   },
+   "pred_asbuilt": {
+    "avg": {
+     "mean_raw": 199.68,
+     "mean": 194.58,
+     "min": 193.44,
+     "max": 208.69,
+     "window": 15.25
+    },
+    "early": {
+     "mean_raw": 196.38,
+     "mean": 191.28,
+     "min": 190.2,
+     "max": 205.39,
+     "window": 15.19
+    },
+    "late": {
+     "mean_raw": 200.89,
+     "mean": 195.79,
+     "min": 194.49,
+     "max": 209.81,
+     "window": 15.32
+    }
+   },
+   "macro_ck": {
+    "g_prog[0].u_hi/clk": 195.47,
+    "g_prog[0].u_lo/clk": 189.17,
+    "g_prog[1].u_hi/clk": 192.85,
+    "g_prog[1].u_lo/clk": 190.89
+   }
+  }
+ }
+}

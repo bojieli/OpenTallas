@@ -1,0 +1,52 @@
+{
+ "table": "results/fallback_head_1026/regions_part.json",
+ "granularity": "part",
+ "requirements": {
+  "crossings": 428,
+  "required_new_scalar_pins": 1712,
+  "added_live_data_storage_flops": 1065250,
+  "type_count_before": 16,
+  "type_count_after": 16,
+  "split_types": []
+ },
+ "compose": {
+  "status": "OK",
+  "types_before": 16,
+  "types_after": 33,
+  "new_ports": 0,
+  "infra_edges": 1403,
+  "placement_failures": 10,
+  "placement_failures_by_type": {
+   "hd_tile__cl1603a4fc": 1,
+   "hd_tile__clbfa8af7b": 1,
+   "hd_tile__cl044dc168": 1,
+   "hd_tile__claf0447a1": 1,
+   "hd_tile__clc9da76b6": 1,
+   "hd_tile__cl3c73e56c": 1,
+   "hd_tile__cld7214c1e": 1,
+   "hd_tile__cla5252e08": 1,
+   "hd_tile__cl0ae91095": 1,
+   "hd_tile__cl54ffb232": 1
+  },
+  "boot_ready_max_cycles": 692,
+  "monitor_max_die_hop_um": 378.04799999999886,
+  "landing_contract": {
+   "errors": 0,
+   "first_errors": [],
+   "pins": 487,
+   "edges": 1403,
+   "max_hop_um": 366.016
+  },
+  "network_lane_cycles": {
+   "lanes": 328,
+   "total": 1284
+  },
+  "observer": {
+   "part": "ctl",
+   "module": "ot_s81hd_ctl",
+   "instance_suffix": "OPEN",
+   "fault_port": "OPEN",
+   "ready_port": "OPEN"
+  }
+ }
+}

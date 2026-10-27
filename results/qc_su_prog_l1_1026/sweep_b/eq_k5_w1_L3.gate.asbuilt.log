@@ -1,0 +1,7 @@
+EQ sites R 257.04 ls reach [199.8, 106.9, 150.1, 257.0, 169.6] eq reach [221.4, 180.4, 210.6, 257.0, 256.0]
+5 [1073, 255, 812, 684, 467] [6, 2, 4, 4, 3] {'T1': 257.04, 'T2': 134.46, 'T3': 39.42} {'mean': 305.43, 'min': 294.96, 'max': 308.56, 'window': 13.6} {'mean': 242.71, 'min': 233.06, 'max': 245.96, 'window': 12.9}
+BEST 5 {'TT': {'mean': 305.43, 'min': 294.96, 'max': 308.56, 'window': 13.6}, 'FF': {'mean': 242.71, 'min': 233.06, 'max': 245.96, 'window': 12.9}}
+uf {'mean': 305.43, 'min': 294.96, 'max': 308.56, 'window': 13.6} {'mean': 242.71, 'min': 233.06, 'max': 245.96, 'window': 12.9}
+ASBUILT {'TT': {'mean_raw': 346.73, 'mean': 348.62, 'min': 328.55, 'max': 353.98, 'window': 25.43}, 'FF': {'mean_raw': 269.08, 'mean': 263.98, 'min': 252.47, 'max': 275.33, 'window': 22.86}}
+EARLY/LATE {'TT': {'early': {'mean_raw': 335.95, 'mean': 337.85, 'min': 317.88, 'max': 343.31, 'window': 25.43}, 'late': {'mean_raw': 352.68, 'mean': 354.58, 'min': 334.77, 'max': 359.52, 'window': 24.75}}, 'FF': {'early': {'mean_raw': 264.04, 'mean': 258.94, 'min': 247.54, 'max': 270.22, 'window': 22.67}, 'late': {'mean_raw': 271.43, 'mean': 266.33, 'min': 254.81, 'max': 277.99, 'window': 23.18}}}
+spec eq_k5_w1_L3.gate.asbuilt.tcl 120 nodes 64 leaves 4 macros

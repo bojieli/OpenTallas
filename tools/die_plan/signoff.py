@@ -742,7 +742,10 @@ def ft_char_tcl(decl, env=None):
         s_, d_ = a["source"], a["sink"]
         L.append(f"foreach so_ft_w {{min max}} {{ set so_ft_p [find_timing_paths -unconstrained -path_delay $so_ft_w "
                  f"-from [get_ports {{{s_}}}] -to [get_ports {{{d_}}}]]; set so_ft_v($so_ft_w) [expr {{[llength $so_ft_p] "
-                 f"? [so_ps [get_property [lindex $so_ft_p 0] arrival]] : \"NA\"}}] }}")
+                 f"? [format %.2f [get_property [lindex [get_property [lindex $so_ft_p 0] points] end] arrival]] : \"NA\"}}] }}")
+        # (QC-SU-F4D: OpenSTA path ENDS have no "arrival" / "data_arrival_time" property -> the F4A rp1 session stopped
+        # here and every corner check read NOT RUN.  The last path POINT carries arrival, already in display units (ps),
+        # so no so_ps re-conversion; probed on the F4A rp1 6_final: ft_ck_i->ft_ck_o min 21.20 / max 24.12 ps.)
         L.append(f"puts \"SO_FT_ARC {s_} {d_} $so_ft_v(min) $so_ft_v(max)\"")
     return "\n".join(L) + "\n"
 

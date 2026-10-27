@@ -12,6 +12,8 @@ def tcl(P,tn):
     groups=[];status=[];tree=c.get('collector_tree');root=c.get('collector_root_node')
     def near(xy):
         x,y=xy;return [x-2.16,y-2.16,x+2.16,y+2.16]
+    if c.get('monitor')=='dataflow' or (root and tree is None):
+        return _dataflow_tcl(tn,c)
     for name,band in c.get('bands',{}).items():
         if band.get('placement')=='FAIL' or not band.get('rect_um'):raise ValueError(f'{tn}.{name}: landing band absent')
         groups.append((band.get('instance','u_cland_'+name),band['rect_um'],'ring:'+name))
@@ -47,6 +49,24 @@ def tcl(P,tn):
     for p,r,tag in groups:
         if tag=='raw-copy-optional':out.append('  {'+p+' {'+' '.join(f'{v:.5f}' for v in r)+'} '+tag+'}')
     out+=['}','set cland_status {']
+    out+=['  {'+n+f' {x:.5f} {y:.5f}'+'}' for n,x,y in status]
+    out+=['}']
+    return '\n'.join(out)+'\n'+Path(__file__).with_name('landing_placement.tcl').read_text()
+
+
+def _dataflow_tcl(tn,c):
+    """monitor="dataflow" (opt-in, FALLBACK-HEAD-2): ring storage bands plus the dedicated registered status
+    output at each sender pin. No reset-tree collector exists, so nothing else is placed by this hook."""
+    groups=[];status=[]
+    for name,band in sorted(c.get('bands',{}).items()):
+        if band.get('placement')=='FAIL' or not band.get('rect_um'):raise ValueError(f'{tn}.{name}: landing band absent')
+        groups.append((band.get('instance','u_cland_'+name),band['rect_um'],'ring:'+name))
+    for pin in sorted(c.get('pins',[]),key=lambda q:q['name']):
+        if pin['dir']=='out' and pin['name'].startswith(('cland_up_ready_','cland_up_fault_')):
+            x,y=pin['xy_um'];status.append((pin['name'],x,y))
+    out=['set cland_groups {']
+    out+=['  {'+p+' {'+' '.join(f'{v:.5f}' for v in r)+'} '+tag+'}' for p,r,tag in groups]
+    out+=['}','set cland_optional_groups {','}','set cland_status {']
     out+=['  {'+n+f' {x:.5f} {y:.5f}'+'}' for n,x,y in status]
     out+=['}']
     return '\n'.join(out)+'\n'+Path(__file__).with_name('landing_placement.tcl').read_text()

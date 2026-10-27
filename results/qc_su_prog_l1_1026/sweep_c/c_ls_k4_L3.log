@@ -1,0 +1,15 @@
+4 [848, 305, 1463, 675] [5, 2, 7, 4] {'T1': 252.72, 'T2': 99.9, 'T3': 29.7} {'mean': 277.94, 'min': 260.06, 'max': 293.61, 'window': 33.55} {'mean': 221.05, 'min': 206.35, 'max': 236.36, 'window': 30.01}
+BEST 4 {'TT': {'mean': 277.94, 'min': 260.06, 'max': 293.61, 'window': 33.55}, 'FF': {'mean': 221.05, 'min': 206.35, 'max': 236.36, 'window': 30.01}}
+CHAIN L1 K 5 unpinned ['Q1', 'Q2', 'Q3']
+CHAIN L2 K 4 unpinned []
+CHAIN L3 K 1 unpinned []
+PASS 0 J 30.625 changed 60
+PASS 1 J 30.625 changed 0
+  PHYS TT rise 271.31 w25.97 | FF early 204.69 w21.21 | TT late 286.22 w24.40 | FAIL | textbook dTT -1.47 dwTT +0.45 dFF +6.09
+c_ls_k4_L3 VERDICT FAIL {'G1_macro_orient': 'PASS', 'G2_island_rows': 'PASS', 'G3_cell_rows': 'PASS', 'G4_detour_sites': 'PASS', 'G5_sram_structure': 'PASS', 'P_phys': 'FAIL'}
+ pred {'TT': {'mean': 279.84, 'window': 33.55}, 'FF': {'mean': 215.95, 'window': 30.01}} trunk None None 0 None
+ asbuilt {'verdict': 'FAIL', 'TT': {'mean_raw': 299.19, 'mean': 301.09, 'min': 276.23, 'max': 324.65, 'window': 48.42}, 'FF': {'mean_raw': 231.58, 'mean': 226.48, 'min': 210.41, 'max': 256.11, 'window': 45.7}, 'FF_early': {'mean_raw': 227.32, 'mean': 222.22, 'min': 206.08, 'max': 252.17, 'window': 46.09}, 'FF_late': {'mean_raw': 233.34, 'mean': 228.24, 'min': 212.54, 'max': 257.11, 'window': 44.57}, 'TT_early': {'mean_raw': 290.05, 'mean': 291.95, 'min': 266.76, 'max': 316.32, 'window': 49.56}, 'TT_late': {'mean_raw': 304.09, 'mean': 305.99, 'min': 282.43, 'max': 327.68, 'window': 45.24}, 'band': 'TT mean 250 +- 20 (rise/fall-average model), TT window <= 20, FF EARLY window <= 20', 'role': 'INFO only under --phys (r3 predictor, -15 TT bias on 3 builds); not in the verdict'}
+ G5 PASS nodes_in_pin_column 0 legs_across 0
+  G2_island_rows PASS {'max_disp_um': 0.0} fail 0
+  G3_cell_rows PASS {'n_sites': 82} fail 0
+  G4_detour_sites PASS {'n_edges': 86, 'repeaters_per_edge': {'L1': 4, 'L2': 3, 'L3': 0}, 'n_straight': 65, 'n_length_not_fixed': 0, 'n_repeaters': 70, 'n_detours': 18, 'max_shift_um': 2.16} fail 0

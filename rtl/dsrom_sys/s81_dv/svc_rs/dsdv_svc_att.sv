@@ -78,9 +78,37 @@
 // with PV_CRED 0 (final-block p.v issue never waits on a credit, no pv_cr); pvq (PVQ 8) is sized by the compiler for
 // one job's 8 beats and only the static checks remain: fault 15 = pvq overflow (a 9th beat before the drain popped),
 // fault 19 = underflow (the drain slot finds no beat).
+// S81-ROWX (2026-10-26, COORD TOK-DS-3 option (a); spec lanes/S81-ROWX.md): HELD-ROW EXPORT + tile-tagged ROWS
+// ingress, built only with ROWX = 1 (ROWX = 0 is the pre-ROWX share, unchanged).  No new port: the export leaves on
+// pv_ov / pv_od (the slice's P.V return-tree output) and the ingress arrives on q, like every other row.
+//   HELD LIST   the SEL_IDS scanner appends the rank of every row this die / stack holds (g_own, the rows it fetches
+//               itself) to x_rk[0 .. XN-1] in rank order (fault 24 if more than XN).
+//   11 ROWX     (new, len 0, ALLQ jobs only, before GO) the export job: [15:0] XO, [21:16] NXW (words, 5 .. 40, a
+//               multiple of 5), [28:22] XB (first list entry of this pass), [29] LAST (the final pass of the job).
+//               From ROWX + gd (the slice-aligned start, as GO) the slice emits NXW words on pv_od, word i in share
+//               cycle XO + pvs + 1 + i (pvs = the compiled all-owner P.V drain slot: the 8 tiles of a half sit in
+//               disjoint 40-cycle windows at the entry pins, exactly as their P.V drain).  Word i carries list entries
+//               XB + 2 i (half 0) and XB + 2 i + 1 (half 1); pv_od[512] (the P.V head flag) = (i mod 5 == 0), so the
+//               export is a P.V-shaped drain for the entry and dsfd_dvland_pvrd (the compiler keeps the half's word
+//               count a multiple of the pvrd nw strap).  Rows are read from the landing store (land[wcount + rank],
+//               the held-row fetch result: no extra HBM read) through the engine's row read ports 0 / 1 (shared;
+//               the engine program is not running before GO).  Static: no ready / credit; faults (sticky) 25 a ROWX
+//               without an open ALLQ job / bad NXW / while armed, running or after GO, 26 LAST pass and the list
+//               holds more than XB + 2 NXW rows (budget overflow), 27 an exported row not landed at its cycle,
+//               28 an export word in the same cycle as a P.V drain word.
+//   12 CFG      (ROWX = 1) [57] DP valid, [56:55] DP = the die's TP position (the held-row owner test g[5:4] == DP for
+//               the fetch and the export; DP valid 0 keeps the parameter DIE_ID).
+//   ROW HALF    (256 b, both the export word halves and the PK2 ingress word halves; bits [128:120] stay 0: on head
+//               words they are the dsdv_pv_den_stamp field): [0] v, [4:1] tile, [14:5] rank, [30:15] the row's 2 E4M3
+//               scales (land [143:128]), [119:31] nibbles [88:0], [167:129] nibbles [127:89], [255:168] 0.
+//    6 ROWS PK2 (header spec [0] = 1, ROWX = 1 only): payload word = 2 ROW HALVES of two DIFFERENT tiles (the slice
+//               transport re-pairs the 256-b halves: one row pair each); the slice of tile t lands the half with v and
+//               tile == t at land[wcount + rank] through the ROWS write port.  Fault 29: both halves for this tile, a
+//               rank >= nsel, or a slot already landed.  Spec [0] = 0 = the pair ROWS word above, unchanged.
 // MUT (bench negative controls): 1 = window scale byte of the neighbouring slot, 2 = ROWS half of the other tile of
 // the pair, 3 = q chunk of the neighbouring tile, 4 = IK_ROW region hash without the j[15:12] term (wrong owner slice
-// for p >= 2^16), 5 = IK_ROW scale bytes of the neighbouring key c ^ 1.
+// for p >= 2^16), 5 = IK_ROW scale bytes of the neighbouring key c ^ 1, 6 = ROWX export rank field rank ^ 1,
+// 7 = PK2 ingress lands the half of the OTHER tile.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_svc_att #(
     parameter integer MUT = 0,
@@ -90,7 +118,9 @@ module dsdv_svc_att #(
     parameter integer PVQ = 8,                    // P.V buffer = the beats of one job (static drain, no credit)
     parameter integer DQ = 8,
     parameter bit SRAM_MACRO = 0,
-    parameter integer PV_IDENTITY = 0
+    parameter integer PV_IDENTITY = 0,
+    parameter integer ROWX = 0,                   // S81-ROWX held-row export + PK2 ingress (0 = pre-ROWX share)
+    parameter integer XN = 128                    // held-row list capacity (ranks of this die / stack per job)
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -153,6 +183,7 @@ module dsdv_svc_att #(
     localparam integer H = 16, D = 32, TD = 32, NL = 4, NT = NL * (D / TD), R = TD / H;
     localparam integer PFW = $clog2(PFIFO);
     localparam integer TR = 640;
+    localparam bit RX = ROWX != 0;                 // S81-ROWX build
     reg [31:0] fc;
     assign fault_code = fc;
     assign pio_o = pio; assign pvo_o = pvo; assign jc_o = jc; assign st_o = st_r;
@@ -290,7 +321,13 @@ module dsdv_svc_att #(
     wire [31:0] sid_g = swd[32*sw_i +: 32];
     wire [9:0] s_rank = sw_base[sw_r[4:0]] + 10'(sw_i);
     wire sw_have = sw_w != sw_r;
-    wire g_own = sid_g[5:4] == 2'(DIE_ID) && sid_g[7:6] == st_r;
+    // S81-ROWX: the die position is a CFG field (ROWX = 1: CFG [57] valid, [56:55] position; else the parameter DIE_ID)
+    // -- one die type serves every TP position, so a parameter cannot tell the dies apart
+    reg [1:0] dp_r;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) dp_r <= 2'(DIE_ID);
+        else if (RX && hdr_mine && h_type == 4'd12 && q_d[57]) dp_r <= q_d[56:55];
+    wire g_own = sid_g[5:4] == (RX ? dp_r : 2'(DIE_ID)) && sid_g[7:6] == st_r;
     wire f_full = (fq_w[sid_g[8]] - fq_r[sid_g[8]]) >= 5'd16;
     wire sw_step = sw_have && !(g_own && f_full);    // the fetch side waits on the elastic HBM boundary only
     always @(posedge clk) if (sel_pay) begin
@@ -341,9 +378,24 @@ module dsdv_svc_att #(
     reg [3:0] spres;
     reg [255:0] hold [0:1];
     // ROWS
-    wire rows_mine = pay_mine && f_type == 4'd6 && q_d[33:31] == tile[3:1];
+    wire rows_pk = RX && f_hdr[0];                   // S81-ROWX: PK2 (tile-tagged halves) ROWS frame
+    wire rows_mine = pay_mine && f_type == 4'd6 && !rows_pk && q_d[33:31] == tile[3:1];
     wire rh = (MUT == 2) ? ~tile[0] : tile[0];
     wire [143:0] rows_bits = {q_d[290 + 16*rh +: 16], q_d[34 + 128*rh +: 128]};
+    // S81-ROWX PK2 ingress: the half (v, tile == this tile) of a 2-half word
+    wire [3:0] rk_t0 = q_d[4:1], rk_t1 = q_d[256 + 4:256 + 1];
+    wire [3:0] rk_my = (MUT == 7) ? tile ^ 4'd1 : tile;
+    wire rk_m0 = q_d[0] && rk_t0 == rk_my, rk_m1 = q_d[256] && rk_t1 == rk_my;
+    wire rk_pay = RX && pay_mine && f_type == 4'd6 && rows_pk;
+    wire rk_v = rk_pay && (rk_m0 || rk_m1);
+    wire rk_h = !rk_m0;                              // the matching half (both matching = fault 29, half 0 lands)
+    wire [255:0] rk_hw = rk_h ? q_d[511:256] : q_d[255:0];
+    wire [9:0] rk_rank = rk_hw[14:5];
+    wire [143:0] rk_bits = {rk_hw[30:15], rk_hw[167:129], rk_hw[119:31]};
+    // the one ROWS landing write port: pair word or PK2 half
+    wire rw_v = rows_mine || rk_v;
+    wire [9:0] rw_slot = 10'(wcount) + (rk_v ? rk_rank : q_d[9:0]);
+    wire [143:0] rw_bits = rk_v ? rk_bits : rows_bits;
 
     // ------------------------------------------------------------------ q store
     reg [D*16-1:0] qmem [0:H-1];
@@ -370,10 +422,26 @@ module dsdv_svc_att #(
             rowword = {1'b0, sc[8*sl +: 8], l};
         end else rowword = need ? {1'b1, 120'd0, l[143:0]} : {1'b1, 264'd0};
     endfunction
+    // ------------------------------------------------------------------ S81-ROWX held-row list + export job state
+    localparam integer XW = $clog2(XN);
+    reg [9:0] x_rk [0:XN-1];                         // ranks of the rows this die / stack holds, rank order
+    reg [XW:0] x_n;
+    reg x_arm, x_on, x_em; reg [7:0] x_gc; reg [15:0] xo, xc; reg [5:0] nxw, xi; reg [6:0] xb; reg x_last; reg [2:0] x5;
+    wire [7:0] x_k0 = 8'(xb) + {1'b0, xi, 1'b0}, x_k1 = x_k0 + 8'd1;  // list entries of export word xi
+    wire x_v0 = RX && x_em && 9'(x_k0) < 9'(x_n), x_v1 = RX && x_em && 9'(x_k1) < 9'(x_n);
+    wire [9:0] x_r0 = x_rk[x_k0[XW-1:0]], x_r1 = x_rk[x_k1[XW-1:0]];
+    wire [9:0] x_s0 = 10'(wcount) + x_r0, x_s1 = 10'(wcount) + x_r1;
+    // the land row read ports 0 / 1 are shared with the export (the engine program never runs during an export:
+    // fault 25 / 27), so the export adds no landing read port
+    reg [255:0] lrd [0:NL-1];
     integer j;
     integer row; reg need, ok;
     always @(*) begin
         kc_w = '0; kc_m = '0; rel_bad = '0; row = 0; need = 1'b0; ok = 1'b0;
+        for (j = 0; j < NL; j = j + 1) begin
+            row = 4 * (32'(rc) - 1) + j;
+            lrd[j] = land[(RX && x_em && j == 0) ? 32'(x_s0) : (RX && x_em && j == 1) ? 32'(x_s1) : row];
+        end
         for (j = 0; j < NL; j = j + 1) begin
             row = 4 * (32'(rc) - 1) + j; need = 1'b0; ok = 1'b0;
             if (row < 32'(tjob)) begin
@@ -384,7 +452,7 @@ module dsdv_svc_att #(
                 need = (row < 32'(wcount)) || sel_held[row - 32'(wcount)] || tile[3:2] == st_r;
 `endif
                 ok = pres[row] && (row >= 32'(wcount) || spres[7'(wfirst[6:0] + 7'(row)) >> 5]);
-                kc_w[265*j +: 265] = rowword(row, land[row], wsc, wcount, wfirst, need);
+                kc_w[265*j +: 265] = rowword(row, lrd[j], wsc, wcount, wfirst, need);
                 rel_bad[j] = need && !ok;
             end
         end
@@ -441,8 +509,15 @@ module dsdv_svc_att #(
     reg [3:0] pv_n;
     always @(posedge clk) if (pv_v) pvq[pvw[PA-1:0]] <= {pv_c, pv_y, pv_f};
     wire [PVB-1:0] pb = pvq[pvr[PA-1:0]];
+    // S81-ROWX export word: 2 ROW HALVES (list entries x_k0 / x_k1), head flag on word 0 of every 5
+    function automatic [255:0] xhalf(input v, input [3:0] t, input [9:0] r, input [143:0] b);
+        xhalf = v ? {88'd0, b[127:89], 9'd0, b[88:0], b[143:128], r, t, 1'b1} : 256'd0;
+    endfunction
+    wire [9:0] x_q0 = (MUT == 6) ? x_r0 ^ 10'd1 : x_r0, x_q1 = (MUT == 6) ? x_r1 ^ 10'd1 : x_r1;
     always @(posedge clk) if (dr_on)
         pv_od <= (p_i == 0) ? {1'b1, pv_provenance, pb[PVB-1 -: 8], pb[NT*H-1:0]} : {1'b0, pb[NT*H + 32'(p_i - 1)*H*32 +: H*32]};
+        else if (RX && x_em)
+        pv_od <= {x5 == 3'd0, xhalf(x_v1, tile, x_q1, lrd[1][143:0]), xhalf(x_v0, tile, x_q0, lrd[0][143:0])};
 
     // ------------------------------------------------------------------ sequential
     integer k;
@@ -473,7 +548,9 @@ module dsdv_svc_att #(
                 default: ;
             endcase
         end
-        if (rows_mine) land[10'(wcount) + q_d[9:0]] <= {112'd0, rows_bits};
+        if (rw_v) land[rw_slot] <= {112'd0, rw_bits};
+        // S81-ROWX held list: every row this die / stack holds, in the scanner's rank order
+        if (RX && sw_step && sw_i < sw_n[sw_r[4:0]] && g_own && 32'(x_n) < XN) x_rk[x_n[XW-1:0]] <= s_rank;
         // fetch FIFO push
         if (sw_step && sw_i < sw_n[sw_r[4:0]] && g_own)
             fq[sid_g[8]][fq_w[sid_g[8]][3:0]] <= {sid_g[3:0], s_rank, sid_g[20:9]};
@@ -493,6 +570,8 @@ module dsdv_svc_att #(
                 fq_w[k] <= 0; fq_r[k] <= 0;
             end
             sw_w <= 0; sw_r <= 0; sw_i <= 0; sel_held <= 0; pres <= 0; spres <= 0; q_have <= 0;
+            x_n <= 0; x_arm <= 0; x_on <= 0; x_em <= 0; x_gc <= 0; xo <= 0; xc <= 0; nxw <= 0; xi <= 0; xb <= 0;
+            x_last <= 0; x5 <= 0;
             job_open <= 0; job_active <= 0; go_arm <= 0; go_cnt <= 0; go <= 0; run <= 0; rc <= 0;
             po <= 0; pvo <= 0; pio <= 0; jc <= 0; dr_arm <= 0; dr_on <= 0; dbeat <= 0;
             ej_v <= 0; eq_v <= 0; ekv_v <= 0; pw <= 0; pr <= 0; p_left <= 0;
@@ -543,13 +622,17 @@ module dsdv_svc_att #(
                     default: fc[4] <= 1'b1;                                   // a response to no read
                 endcase
             end
-            if (rows_mine) pres[10'(wcount) + q_d[9:0]] <= 1'b1;
+            if (rw_v) pres[rw_slot] <= 1'b1;
+            if (rk_v && ((rk_m0 && rk_m1) || rk_rank >= nsel || pres[rw_slot])) fc[29] <= 1'b1;   // PK2 ingress
             // ---- SEL words / scanner
             if (sel_pay) begin sw_w <= sw_w + 1'b1; if (sw_w - sw_r >= 6'd32) fc[5] <= 1'b1; end
             if (sw_step) begin
                 if (sw_i < sw_n[sw_r[4:0]]) begin
                     sel_held[s_rank] <= sid_g[7:6] == st_r;
                     if (g_own) fq_w[sid_g[8]] <= fq_w[sid_g[8]] + 1'b1;
+                    if (RX && g_own) begin
+                        if (32'(x_n) < XN) x_n <= x_n + 1'b1; else fc[24] <= 1'b1;       // held list overflow
+                    end
                 end
                 if (sw_i == 5'd15 || sw_i + 1'b1 >= sw_n[sw_r[4:0]]) begin sw_i <= 0; sw_r <= sw_r + 1'b1; end
                 else sw_i <= sw_i + 1'b1;
@@ -559,11 +642,40 @@ module dsdv_svc_att #(
                 if (job_open) fc[6] <= 1'b1;                                  // a job while one is open
                 if (h_len != 0 || q_d[88:81] > 8'd128 || q_d[98:89] > 10'd512) fc[7] <= 1'b1;
                 job_open <= 1'b1; done <= 1'b0; pres <= 0; spres <= 0; q_have <= 0;
+                if (RX) begin x_n <= 0; if (x_arm || x_on) fc[25] <= 1'b1; end
                 wr_r[0] <= 8'(q_d[99] ^ 1'b0); wr_r[1] <= 8'(q_d[99] ^ 1'b1);
                 wr_on[0] <= 32'(q_d[99]) < 32'(q_d[88:81]); wr_on[1] <= 32'(!q_d[99]) < 32'(q_d[88:81]);
                 sc_n[0] <= 2'd2; sc_n[1] <= 2'd2;
             end
             if (q_word && !start) q_have <= q_have + 1'b1;
+            // ---- S81-ROWX export job (type 11): ROWX + gd = share-aligned start, words at XO + pvs + 1 + i
+            if (RX) begin
+                if (hdr_mine && h_type == 4'd11) begin
+`ifdef OT_SVC_ALLQ
+                    if (!job_open || !allq_r || x_arm || x_on || go_arm || run || job_active || h_len != 0 ||
+                        q_d[21:16] == 6'd0 || q_d[21:16] > 6'd40 || (q_d[21:16] % 6'd5) != 6'd0) fc[25] <= 1'b1;
+`else
+                    fc[25] <= 1'b1;                                                  // export needs the ALLQ share
+`endif
+                    x_arm <= 1'b1; x_gc <= gd; xo <= q_d[15:0]; nxw <= q_d[21:16]; xb <= q_d[28:22]; x_last <= q_d[29];
+                end else if (x_arm) begin
+                    if (x_gc == 0) begin x_arm <= 1'b0; x_on <= 1'b1; xc <= 16'd1; end
+                    else x_gc <= x_gc - 1'b1;
+                end else if (x_on) begin
+                    xc <= xc + 1'b1;
+                    if (!x_em && xc == xo + 16'(pvs)) begin
+                        x_em <= 1'b1; xi <= 0; x5 <= 0;
+                        if (x_last && 32'(x_n) > 32'(xb) + 2 * 32'(nxw)) fc[26] <= 1'b1;   // budget overflow
+                    end
+                    if (x_em) begin
+                        xi <= xi + 1'b1; x5 <= (x5 == 3'd4) ? 3'd0 : x5 + 1'b1;
+                        if (xi + 1'b1 == nxw) begin x_em <= 1'b0; x_on <= 1'b0; end
+                    end
+                end
+                if (x_em && ((x_v0 && !pres[x_s0]) || (x_v1 && !pres[x_s1]) || go || run)) fc[27] <= 1'b1;
+                if (x_em && dr_on) fc[28] <= 1'b1;
+                if (hdr_mine && h_type == 4'd13 && (x_arm || x_on)) fc[25] <= 1'b1;   // GO while the export runs
+            end
             // ---- GO
             go <= 1'b0; go_o <= 1'b0;
             if (hdr_mine && h_type == 4'd13) begin
@@ -604,6 +716,7 @@ module dsdv_svc_att #(
             // ---- scores: straight to the score exchange (valid-only, no credit)
             // ---- P.V words: owner slices emit 5 words a beat (valid-only, never stalled)
             pv_ov <= 1'b0;
+            if (RX && x_em) pv_ov <= 1'b1;
             if (pv_v) begin
                 pv_n <= pv_n + 1'b1;
                 if (pv_n == 4'd7) begin job_active <= 1'b0; job_open <= 1'b0; done <= !pvown; end   // owners: at drain end
@@ -632,7 +745,8 @@ module dsdv_svc_att #(
                 sm_rp <= !f_hdr[13]; sm_rj <= 3'(f_idx); sm_rd <= q_d;
             end
             // ---- other frame checks
-            if (hdr_mine && !(h_type inside {4'd1, 4'd2, 4'd3, 4'd5, 4'd6, 4'd7, 4'd9, 4'd12, 4'd13, 4'd14, 4'd15})) fc[16] <= 1'b1;
+            if (hdr_mine && !(h_type inside {4'd1, 4'd2, 4'd3, 4'd5, 4'd6, 4'd7, 4'd9, 4'd12, 4'd13, 4'd14, 4'd15}) &&
+                !(RX && h_type == 4'd11)) fc[16] <= 1'b1;
             if (hdr_mine && h_type == 4'd1 && h_len != 12'd128) fc[16] <= 1'b1;
             if (hdr_mine && h_type == 4'd3 && h_len != 12'd16) fc[16] <= 1'b1;
             if (hdr_mine && h_type == 4'd15 && h_len != 12'd1) fc[16] <= 1'b1;            // IK_ROW: exactly 1 payload word

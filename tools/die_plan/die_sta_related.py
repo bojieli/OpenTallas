@@ -189,8 +189,12 @@ def nearest_pairs(d, plan_path, tool, taps):
     return {"seam_nearest_INFO": seam, "landed_nearest_INFO": landed}
 
 
-def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=False, window=None, hold_window=None):
+def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=False, window=None, hold_window=None,
+               ocv=None):
+    """ocv: optional callable (a_port, b_port, check) -> clock OCV pessimism ps on the non-common clock (CLK-AOCV,
+    opt-in --clock-ocv); None = unchanged (no clock derate in this gate)."""
     ws, wh, sk, rows = None, None, 0.0, []
+    ocv_max = {"setup": 0.0, "hold": 0.0}
     nneg_s = nneg_h = 0
     mds = mdh = float('-inf')
     for a, b, tag in pairs:
@@ -201,6 +205,10 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
         dmg_s, dmg_h = la - ec - cr, lc - ea - cr
         s = period - unc_s - (la + reg["clkq_max_wire_ps"]) + (ec - reg["setup_ps"]) + cr
         h = (ea + reg["clkq_min_nowire_ps"]) - (lc + reg["hold_ps"]) - unc_h + cr
+        if ocv is not None:
+            ps_, ph_ = ocv(a, b, "setup"), ocv(a, b, "hold")
+            s, h = s - ps_, h - ph_
+            ocv_max["setup"], ocv_max["hold"] = max(ocv_max["setup"], ps_), max(ocv_max["hold"], ph_)
         nneg_s += s < 0
         nneg_h += h < 0
         sk = max(sk, dmg_s, dmg_h)
@@ -223,6 +231,8 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
                sens_core_tol=dict(tol_ps=lat_tol, worst_setup_slack_ps=round(ws[0] - 2 * lat_tol, 2),
                                   worst_hold_slack_ps=round(wh[0] - 2 * lat_tol, 2)),
                worst_skew=[[round(v, 2), a, b] for v, a, b in sorted(rows, reverse=True)[:5]])
+    if ocv is not None:
+        out["clock_ocv_pessimism_max_ps"] = {k: round(v, 2) for k, v in ocv_max.items()}
     if hold_window is not None:
         hd = []
         for a, b, tag in pairs:
@@ -248,6 +258,50 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
     return out
 
 
+def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_path=None, cell_share=None):
+    """CLK-AOCV (METHODOLOGY 12.4a b1, DRAFT, opt-in): per pair clock OCV pessimism on the branches below the last
+    common node.  Needs per-tap 'stages_from_root' + 'xy_um' and per-node meta 'node_stages' / 'node_xy_um' plus the
+    node arrivals 'node_late_ps' / 'node_early_ps' in tap_arrivals_<C>.json (CLOCK-128-R7 --aocv-fold export names;
+    CLOCK-128-R8); refuses when they are missing.
+    Branch = tap arrival - node arrival (+ declared core latency, class-B stages), cell share from the table (class A
+    die stage) unless cell_share is given.  mode 'flat' = die_ci_margins.json cell/net derates, 'table' = clk_aocv.
+    droop 'stated' = +5.1 % late on the late branch always; 'shared' = 0 when both taps share a region (cppr_node
+    != 'h' and equal), else +5.1 %."""
+    import clk_aocv as CA
+    here = Path(__file__).resolve().parent
+    T = CA.load(table_path or here / "clk_aocv_table.json")
+    m = json.loads(Path(margins_path or here / "die_ci_margins.json").read_text())
+    need = [k for k in ("node_stages", "node_xy_um", "node_late_ps", "node_early_ps") if k not in meta]
+    tneed = sum(1 for r in taps.values() if "stages_from_root" not in r or "xy_um" not in r)
+    if need or tneed:
+        raise SystemExit(f"--clock-ocv {mode}: tap_arrivals lacks {need} / {tneed} taps without stages_from_root+xy_um "
+                         "(CLOCK-128 fold export must add them)")
+    corner = meta.get("corner", "TT")
+    B = T["classes"]["B"][corner]
+    fc = cell_share if cell_share is not None else T["classes"]["A"][corner]["cell_share"]
+    nB = max(1, round(core_lat / B["mu_stage_ps"]))
+
+    def branch(r, node, late):
+        arr = (r["late_ps"] if late else r["early_ps"]) - float(meta["node_late_ps" if late else "node_early_ps"][node])
+        return dict(cell_ps=fc * arr + B["cell_share"] * core_lat, net_ps=(1 - fc) * arr + (1 - B["cell_share"]) * core_lat,
+                    stages={"A": int(r["stages_from_root"]) - int(meta["node_stages"][node]), "B": nB})
+
+    def fn(a, b, check):
+        A_, B_ = taps[a], taps[b]
+        node = A_["cppr_node"] if A_["cppr_node"] == B_["cppr_node"] else "h"
+        same = node != "h"
+        nxy = meta["node_xy_um"][node]
+        pts = [A_["xy_um"], B_["xy_um"], nxy]
+        d = ((max(p[0] for p in pts) - min(p[0] for p in pts)) ** 2 + (max(p[1] for p in pts) - min(p[1] for p in pts)) ** 2) ** 0.5
+        # setup: launch a late, capture b early; hold: capture b late, launch a early
+        ba = branch(A_, node, check == "setup")
+        bb = branch(B_, node, check != "setup")
+        if mode == "flat":
+            return CA.flat_pessimism(m, ba, bb, check, same, droop == "shared")
+        return CA.branch_pessimism(T, corner, ba, bb, d, same if droop == "shared" else False, check)
+    return fn
+
+
 def kit_windows(pc, intra_override=None):
     """{intra, seam, seam_nearest_INFO: {ps, basis}}: the kit hold windows the plan clock block declares."""
     if pc.get("seam_hold"):
@@ -256,7 +310,7 @@ def kit_windows(pc, intra_override=None):
         wseam = dict(ps=float(pc.get("insertion_tol_ps", 40.0)) - 0.0,
                      basis="legacy: receiver in_min -insertion_tol, sender out_min 0 (gen_phys.seam_hold)")
     if pc.get("io_hold"):
-        wseam["basis"] += "; plan has clock.io_hold (sender_min) -> per-port, not modelled: bound is conservative"
+        wseam["basis"] += f"; plan has clock.io_hold ({pc['io_hold']}) -> per-port, not modelled: bound is conservative"
     if intra_override is not None:
         wintra = dict(ps=intra_override, basis=f"WHAT-IF --intra-window-ps {intra_override:g} (not the plan)")
     elif pc.get("tap_window"):
@@ -286,6 +340,14 @@ def main(argv=None):
                     help="WHAT-IF override of the intra-partition kit window (default: the plan's clock.tap_window."
                          "window_ps, else 0 = the one-ideal-clock kit SDC)")
     ap.add_argument("--kit", action="append", default=[], help="part_or_type=kit.json (interface model); none yet for QC")
+    ap.add_argument("--clock-ocv", choices=("none", "flat", "table"), default="none",
+                    help="CLK-AOCV opt-in (12.4a b1 DRAFT, not a gate until OWNER review): clock OCV on the non-common "
+                         "branches; default none = unchanged output")
+    ap.add_argument("--clock-droop", choices=("stated", "shared"),
+                    help="clock droop with --clock-ocv: stated +5.1 %% always, or shared (0 in one region); default "
+                         "shared for table, stated for flat")
+    ap.add_argument("--clock-aocv-table", help="clock_aocv block (default tools/die_plan/clk_aocv_table.json)")
+    ap.add_argument("--clock-ocv-cell-share", type=float, help="cell share of the die branch (default: table class A)")
     a = ap.parse_args(argv)
     corners = a.corner or ["TT", "FF"]
     out = Path(a.out)
@@ -330,10 +392,16 @@ def main(argv=None):
         pairs, cov = build_pairs(plan, taps)
         pairs.update(nearest_pairs(d, a.plan, a.clock_tool, taps))
         cr = dict(basis=meta.get("basis"), tap_slew_max_ps=round(slew, 2), register=reg, classes={})
+        ocv = None
+        if a.clock_ocv != "none":
+            droop = a.clock_droop or ("shared" if a.clock_ocv == "table" else "stated")
+            ocv = clock_ocv_fn(a.clock_ocv, droop, dict(meta, corner=c), taps, lat[c], a.clock_aocv_table,
+                               cell_share=a.clock_ocv_cell_share)
+            cr["clock_ocv"] = dict(mode=a.clock_ocv, droop=droop, status="DRAFT 12.4a b1, UNCHECKED, not a gate")
         for k, pl in pairs.items():
             cr["classes"][k] = time_class(pl, taps, rng, reg, a.core_tol_ps, period, UNC_SETUP_PS, UNC_HOLD_PS,
                                           landed=k.startswith("landed"), window=window,
-                                          hold_window=hwin.get(k) if c == "FF" else None)
+                                          hold_window=hwin.get(k) if c == "FF" else None, ocv=ocv)
             cr["classes"][k]["label"] = "declared-budget" + (" / INFO subset" if k.endswith("INFO") else "")
         res["corners"][c] = cr
     res["coverage"] = cov

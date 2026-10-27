@@ -72,7 +72,7 @@ module qfd_dv_amax_mu #(
         if (!rst) begin al0 <= 0; al1 <= 0; al2 <= 0; al3 <= 0; al4 <= 0; end
         else begin
             for (q = 0; q < 16; q = q + 1)
-                al0[57*q +: 57] <= {r_v && stn_amax, r_addr + 24'(q), r_d[32*q +: 32]};
+                al0[57*q +: 57] <= {r_v && stn_amax, r_addr + q[23:0], r_d[32*q +: 32]};
             for (q = 0; q < 8; q = q + 1) al1[57*q +: 57] <= amb(al0[57*(2*q) +: 57], al0[57*(2*q+1) +: 57]);
             for (q = 0; q < 4; q = q + 1) al2[57*q +: 57] <= amb(al1[57*(2*q) +: 57], al1[57*(2*q+1) +: 57]);
             for (q = 0; q < 2; q = q + 1) al3[57*q +: 57] <= amb(al2[57*(2*q) +: 57], al2[57*(2*q+1) +: 57]);
