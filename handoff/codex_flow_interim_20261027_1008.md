@@ -45,3 +45,23 @@ PG old KV kitC experiment is terminal: same44.932W/.7V grid/bumps, independent P
 ## OWNER?
 
 Plain question is already in CODEX-LOG: original analog PMA129.6x2246.4 with X/Y-only symmetry cannot fit3318x1013. Equal-area561.6x518.4 or R90/R270 are planning assumptions, not qualified IP views. Root/S81 must choose model adoption or replan. Reviewable rotated planning candidate: `/srv/opentallas-scratch/claude/codex-s81-phy-profile-1027/rotation_planning.png`. Work continues on real digital/profile portions; no blocking dialog.
+
+## FINAL PARK — explicit reset 2026-10-27 10:16 PDT
+
+Flow and all four descendants are parked. No new jobs/code/merges after notification; no jobs killed. Existing canaries/proofs continue. Own source branches are committed/pushed; no half-done source merge. AP child additionally preserves an unpushed merge-topology-only local HEAD1523348c2126e871bb65830306a6f9ba4e619f5a in its packet; published evidence/source tips are unchanged. Do not remove locked canary worktrees before jobs finish.
+
+Final detailed packets are durable:
+- handoff/codex_flow_autopilot_interim_20261027_1005.md
+- handoff/codex_rc_canary_20261027_1006.md
+- handoff/codex_flow_lec_20261027_1007.md
+- handoff/codex_flow_sta_pg_20261027_1006.md
+
+VMR publication delta: root explicitly APPROVED the bounded composed adoption. Exact source77013e505901e6fc6fd1079fc283284d0fe70e4f, kitvmr_f4k_final, existing modeadopt/goalfinish, computed APid98d3c304f548. Final read confirms actual hub queue row792; state entry stillnull and archive/publication UNCONFIRMED. Paired export receipt, exact proof copies and root approval are staged. Native SIGNED/5342EQ complete; do not rerun. Existing900s recent-log quiet guard stays unchanged; track normal tick. Explicit collectgoal84c is for running a collector, not needed to redo this completed one.
+
+Canaries final:4NO-REGRESSION,1diagnosedQCregression,4active (HBMab3,KVcoreab3,QCcontrolled7fd,exactS815b). Exact unit/path/status command in RC packet. Combined S81 finalNO-REGRESSION TT224.30/FF180.66, FFhold-81.96/691EP, overflow/DRV0; absolute reference insertion stop remainsFAIL. A standalone legacy KVhead_e1__216x216 signoff_hold on canonical0f978 isSIGNED TT12.02/FF2.93; preserve it even though overall canaryabsoluteFAIL and verify current-plan pin/interface fit before reuse.
+
+Additional LEC pending source: codex/lec-state-0950@a21b5d4c5,181testsPASS/2skip. Actual ctlx initialization invariant+wrong-load mutant+one affected mappedcompare proved; no callerloader and NOTfullctlx. Counter0d actualSYS_C continues throughhypcheckpoints. PC raw alias hypotheses0==3/7==10 inductionREFUTED, not adopted. KVSCTL physical2261sharedbits are collateral wide-alias keep attributes (nextfix single-bit kept net), plus scalar/vector pin identity and directembgw__bw[0] landing; sourceproof remainscomplete. No post-reset source patch started.
+
+PG final follow-up: old grid independent-terminalFAIL1.165654Vdrop retained. KV source correctionR4PHY34.319mV each, but digitalglue485.370/493.047mV remainsFAIL, ownerKVclock. No drooptable adopted. S81 profile/sizing and analog OWNER? unchanged; no physical view fabricated.
+
+Root approved genericSTAguard, H-tree names and RCX intake; merger was still working at reset. Confirm finalmain/ROOT-MERGE log before remerging pendingtips. Other pending tips/trial statuses above remain explicit. Coord commits are serialized and some final packet/log commits are waiting on sharedcoord lock; files are already durable. Do not duplicate or kill those helpers.
