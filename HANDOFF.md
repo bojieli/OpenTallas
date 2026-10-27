@@ -1490,3 +1490,5 @@ CODEX: 2026-10-27 14:10 PDT QK existingB48BOOTPASS7404/14/setup37981; nativecale
 CODEX: QK/QW9cb33edd1 READY actualHOST tuple transport3edges+consumer next-edge37checks/2controls PASS; GEN universal HEAD_PREP failclosed23tests. Current programme still requires actual HOST/context dates/reservation; no RTL or fixed token-cycle delta.
 
 CODEX: 2026-10-27 14:46 PDT HBM-plan09c65cf597 sourcepacket: collectedcurrentC15, nativequartercapacity30NW/26NEfit, XQ362.88pin6PASS/5actualclocks,HCpair8facegroups→0 candidates; exactPGC15first99.84/45.72; no canonicaladoption/route.
+
+CODEX: 2026-10-27 nativehost bootstrap clean1b90666eff609e2103d04ec96e63ccac76c6c045 pushed,1332/0+2controls+cold/warm; compiler status+2 endpointcost fixed32PASS/31caught. TARGET225 sourcebinding Coverage; actualcalendar/resetSTART missing. SU PR0/1 inheritedbatches completeRC0; SU2 exactdonorreceipt818651e99 reused/no rerun.
