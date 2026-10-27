@@ -392,7 +392,17 @@ def main():
             for lp, v in dirs.get((tn, hc["inst"]), {}).items():
                 d.setdefault(cport(hc["module"], base(lp)), []).extend(v)
             idirs.append(d)
+        # strap_* ID pins of the canonical (tied at the parent): exact width on the core face (rule B)
+        strap_keys = []
+        if straps.get(fn):
+            cons0 = dict(fam[fn]).get(rmod, {}).get("consts", {})
+            for k, v in strap_decl(cons0, straps[fn]).items():
+                bybase[k] = [f"{k}[{i}]" for i in range(v["width"])]; strap_keys.append(k)
+                ref_face[k] = min("SNWE", key=lambda f: sum(len(bybase[b_]) for b_ in bybase if ref_face.get(b_) == f))
         orient = [hc.get("orient", "R0") for _, hc, _ in mem]
+        # a mirror keeps pins on the plan tracks only when that outline side is a whole number of pitches
+        on = lambda L: abs(L / PITCH - round(L / PITCH)) < 1e-6  # noqa: E731
+        allowed = [o for o in ORIENTS if (on(w) or o not in ("MY", "R180")) and (on(h) or o not in ("MX", "R180"))]
         weight = [ninst[tn] for tn, _, _ in mem]
         faces = dict(ref_face)
         for _it in range(6):
@@ -412,7 +422,7 @@ def main():
                 def osc(o):
                     return sum(len(bybase[b]) * score(d[b], tface(o, faces[b])) for b in bybase if b in d)
                 cur = orient[i]
-                orient[i] = max(ORIENTS, key=lambda o: (osc(o) + (1e-6 if o == cur else 0)))
+                orient[i] = max(sorted(set(allowed) | {cur}), key=lambda o: (osc(o) + (1e-6 if o == cur else 0)))
         # capacity: spill lowest-gain ports to next best face
         fixed = collections.defaultdict(set)
         for p in clk_pins:
@@ -449,7 +459,8 @@ def main():
             names = [n for b in bybase if faces[b] == f for n in bybase[b]]
             # order along the face by mean partner tangent (fewer crossings), stable by name
             pins += place_face(names, f, w, h, set(), fixed[f])
-        assert sorted(p["name"] for p in pins) == sorted(cport(rmod, p["name"]) for p in ref), name
+        assert sorted(p["name"] for p in pins) == sorted([cport(rmod, p["name"]) for p in ref] +
+                                                         [n for k in strap_keys for n in bybase[k]]), name
         assert len({p["name"] for p in pins}) == len(pins), ("duplicate pin names", name)
         s = json.dumps(pins) + "\n"
         fnm = f"cores/{name}__{w:g}x{h:g}__canon.json"

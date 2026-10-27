@@ -47,6 +47,6 @@ for col, pd in enumerate(plans):
                     py = p["y"] if o in ("R0", "MY") else h - p["y"]
                     A.plot(x0 + px, y0 + py, ".", ms=1.5, color="g" if ok else "r")
         A.set_xlim(0, W); A.set_ylim(0, H); A.set_aspect("equal")
-        A.set_title(f"{tn} {'before (planU3f)' if col == 0 else 'after (planU4b)'}: {bad}/{tot} pins face away", fontsize=10)
+        A.set_title(f"{tn} {'before (planU3f)' if col == 0 else 'after (planU4f)'}: {bad}/{tot} pins face away", fontsize=10)
 plt.tight_layout(); plt.savefig(a[2], dpi=100)
 print("wrote", a[2])

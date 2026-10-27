@@ -584,18 +584,18 @@
     "ot_hbm_su_static_pgslice_lg__lane_exp_l"
    ],
    "instances": 60,
-   "pins": 2024,
+   "pins": 2035,
    "faces": {
     "E": 840,
-    "N": 264,
+    "N": 275,
     "W": 525,
     "S": 374
    },
    "orients": {
-    "R0": 20,
+    "R0": 16,
     "MY": 4,
     "R180": 2,
-    "MX": 4
+    "MX": 8
    },
    "ports_away_before": 0,
    "ports_away": 0,
@@ -666,16 +666,16 @@
     "ot_hbm_su_static_pgslice_lg__lanes_plain8_11"
    ],
    "instances": 16,
-   "pins": 3821,
+   "pins": 3830,
    "faces": {
     "N": 784,
-    "S": 640,
+    "S": 649,
     "E": 1352,
     "W": 964
    },
    "orients": {
-    "MY": 1,
-    "R0": 7
+    "MY": 2,
+    "R0": 6
    },
    "ports_away_before": 0,
    "ports_away": 0,
@@ -706,11 +706,11 @@
     "ot_hbm_su_static_pgslice_lg__lanes4_7"
    ],
    "instances": 28,
-   "pins": 3789,
+   "pins": 3798,
    "faces": {
     "W": 1292,
     "N": 584,
-    "S": 512,
+    "S": 521,
     "E": 1320
    },
    "orients": {
@@ -959,18 +959,17 @@
    "instances": 8,
    "pins": 7688,
    "faces": {
-    "W": 2927,
-    "N": 1083,
-    "S": 91,
-    "E": 3587
+    "W": 2588,
+    "N": 3827,
+    "S": 174,
+    "E": 1099
    },
    "orients": {
-    "R0": 4,
-    "R180": 3,
-    "MY": 1
+    "MY": 4,
+    "R0": 4
    },
    "ports_away_before": 46,
-   "ports_away": 1,
+   "ports_away": 36,
    "ports_checked": 272,
    "spilled": [],
    "straps": [],
@@ -1594,31 +1593,17 @@
    "instances": 4,
    "pins": 4947,
    "faces": {
-    "W": 2733,
-    "N": 10,
-    "E": 2192
+    "N": 2415,
+    "W": 2196,
+    "S": 324
    },
    "orients": {
-    "MY": 1,
-    "R0": 1,
-    "R180": 1,
-    "MX": 1
+    "R0": 4
    },
    "ports_away_before": 54,
-   "ports_away": 8,
+   "ports_away": 0,
    "ports_checked": 120,
-   "spilled": [
-    [
-     "rq",
-     "W",
-     "E"
-    ],
-    [
-     "rr",
-     "W",
-     "E"
-    ]
-   ],
+   "spilled": [],
    "straps": [],
    "pins_file": "cores/ot_hgi_dma_back_static_vp4_banks_cp__239.976x240.84__canon.json"
   },
@@ -2120,7 +2105,7 @@
   "instances": 1035,
   "port_refs_rewritten": 56
  },
- "plan_sha256": "6145a4c81f4dc57af4063da2f6835f122552e396b73c4a621679c5fc7d8e3eeb",
+ "plan_sha256": "f465947c05738d54dc02e750475e85573f62e0ad9670c21899cc1ba8710a5b5a",
  "new_pin_tables": {
   "cores/hfd_hgi_vm_calendar_f20__241.92x116.64__canon.json": "3649f48c0839952473e3d8e9059fe8e21eeeb48f055b6551463d5bf8fa9ecfea",
   "cores/hfd_hgi_vms_glue_nw_t__869.832x1334.88__canon.json": "d5888aae6c76263ad44beb49717f6056df406d136dc3e751a31fa5e957091917",
@@ -2135,17 +2120,17 @@
   "cores/ot_hbm_idx_rootctl_static_am__475.2x259.2__canon.json": "22e4bb32eec30b49fdbe43b71c230ea02c2f5e3693f6744c991c46536e77e2e0",
   "cores/ot_hbm_idx_vm_query_static_n12__216x108__canon.json": "2a86020c39994dd894fc57b111142e543ffbcae377e396808db9b366131fb5d2",
   "cores/ot_hbm_sm_vm_wr_q_t_lanes4__142.56x388.8__canon.json": "32936e00f9363199231580927f9a9a7dc4b3efe14a0269a7b4b3b592ba3e8da5",
-  "cores/ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691__440.64x207.36__canon.json": "205f281ba9dc4bf483e55c9ff979f2c79edd70b2c8caf3798b299cc1f05bc1d3",
+  "cores/ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691__440.64x207.36__canon.json": "7842a3622b2e1b98c6375bcf42854cf31b64c9fd973770e806897ed0714d4e10",
   "cores/ot_hbm_su_static_pgslice_lg__lanes8_11__760.32x725.76__canon.json": "5b197dd5c15df86fa92231e5f3205b1be816c46c281e4b89e8a9539d7b5c74eb",
-  "cores/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__440.64x457.92__canon.json": "e9760e68dbb05ffb9d1cc13602cae686cbb8abda3ce4affd2cf7e06d931cd15f",
-  "cores/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__760.32x725.76__canon.json": "8d4bced01cd0b4dc2402066cf2c1071343dfa3fcce11e35d537b681a6e27cd43",
+  "cores/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__440.64x457.92__canon.json": "691345e2dfeca712e8e55a7cc09ffa21bebae5cd0c0fd257d236906f396adbb0",
+  "cores/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__760.32x725.76__canon.json": "3dbea8dac60be5c57f3f3119b17b07f9bbd2f12acba6caa98a3eab7b11e47a6c",
   "cores/ot_hbm_su_static_pgslice_lg__pretree__164.16x457.92__canon.json": "8805b7bd4ecbf48d6cbabe764e29b8c81ca75b3385cc4c833f183b12cf4051e9",
   "cores/ot_hbm_su_programme_pslice_c5__939.6x760.32__canon.json": "45b20875f1bb114af32f612004779fd1f8938fb6d7db1957db06709ff8e9c12f",
   "cores/ot_hbm_su_static_cxport_ij_q__250.56x449.28__canon.json": "a4915c2a80368cb8427cc36a884580d7e9c963b9403f34649ad63d91c340a241",
   "cores/ot_hbm_su_static_qcore_r13__224.64x207.36__canon.json": "cf45f8bcd7a07b7021c47089c8e6003a2f943236e4c09b69c07fd0ba2e6fca34",
   "cores/ot_hbm_su_static_sfustore_hw__336.96x328.32__canon.json": "394064b00cc158b7980d98e984a76df8f2b10a4201e69ae32d7efef6b63432bc",
   "cores/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b__177.984x177.984__canon.json": "a0d1066777ef986497d4cf8f5ebb4f56f3084086a546d9ea6770177021134340",
-  "cores/ot_hbm_svc_sm_group_rel_id__776.304x646.92__canon.json": "78ed20c3cf98a18af8d5b485d528f5936cdff6a7159effe694a03fc9bf73527d",
+  "cores/ot_hbm_svc_sm_group_rel_id__776.304x646.92__canon.json": "4f3d1e29972855a1802e73b4cd1d14a0c869ccfe89bf1f1631ab1118e1b97828",
   "cores/ot_hbm_svc_sm_xcal_rel_t__241.92x224.64__canon.json": "944e239646dc8d2953eb022421459ee97a7565723526d2bfbd63530d6bd79fe6",
   "cores/ot_hbm_svc_vm_kshare_splitstrap__v700685__354.24x453.6__canon.json": "bd444fe5c59edc40396b7a0bcb52eca878f2d26a7631b9ca4a3989ab0efa7d63",
   "cores/ot_hbm_svc_vmdel_lane_n__257.04x108__canon.json": "52abae2bd3d1801e75e09a6e79084b592dc0894ee5f217b77bfd0c7eb53cb3a5",
@@ -2160,7 +2145,7 @@
   "cores/ot_hgi_coll_gq_issue__237.6x237.6__canon.json": "ee6dcd0ba6743de467238a0390cc8f8b445b7f187241311b7a29e2dee3295c31",
   "cores/ot_hgi_coll_gq_land__142.56x207.36__canon.json": "242fc1e36d87924572ba0e0f4b75955686792334d7f1952e5cac9ad1c25d0873",
   "cores/ot_hgi_coll_inj_idx_join_rg__211.68x315.36__canon.json": "4a7e90346f6fda710c1e0fa5a4ac560035a10d8df37479917465c9abf767e8ab",
-  "cores/ot_hgi_dma_back_static_vp4_banks_cp__239.976x240.84__canon.json": "4d58cf5291bc1ae3c57bcaab84aea5cc6a2efd0333ab4cdee23490ccaa8fbcf0",
+  "cores/ot_hgi_dma_back_static_vp4_banks_cp__239.976x240.84__canon.json": "fd689bb5de4a6e6adf2fcd736d7eb56969e403c7fd216c5c2d191f6a3415eda9",
   "cores/ot_hgi_qw_dec__260x260__canon.json": "258247c0a65871a12367b80952a31cada5bfaeb3da0a68e7226a52ba14653e45",
   "cores/ot_hgi_sfu_programme_store_r10__574.56x738.72__canon.json": "5d646ac4fc976861fa76290963ad85406da75800f2bf0ddacb6d9fabda3f7070",
   "cores/ot_hgi_sfu_core_split3__ctl__669.6x626.4__canon.json": "c247d93a8a67e5e229290a6e10c122267ace09dfedda353be747ef5d419856a2",
