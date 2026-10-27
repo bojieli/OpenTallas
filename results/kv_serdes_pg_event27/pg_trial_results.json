@@ -19,6 +19,12 @@
   "sources_and_power": "unchanged R3;4.433825W total,434sourcebumps",
   "verdict": "PHY budget pass only;overallFAILcore"
  },
- "R4_SE": "running",
+ "R4_SE": {
+  "phy_pitch_um": 1.728,
+  "width_um": 0.48,
+  "phy_ir_mV": 34.319,
+  "core_ir_mV": 493.047,
+  "verdict": "PHY budget pass only;overallFAILcore"
+ },
  "core_failure": "Top10.8um and W17.28um glue halo has no direct coreVDD source; existing VDDmicrobumps onlybottom row plus EcoreC4. ActualSDplacement census requested before load/fence redesign."
 }
