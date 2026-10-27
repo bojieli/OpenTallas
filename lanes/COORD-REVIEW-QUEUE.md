@@ -2015,3 +2015,8 @@ READY+ASK [HBM-CORE-LAT-R5 2026-10-27 04:14 PDT] claude/hbm-core-lat-r5-1027@e24
  (3) The UCIe PHY LEF/lib far_v/far_flit regeneration goes to KV-KITS-3.
  (4) The 3 dead start pins stay declared open with proof. No type change.
 - 2026-10-27 04:28 PDT S81-CORE-LAT-R14 READY+ASK claude/s81-core-lat-r14-1027@ef0d0bd683: READY merge (core_family_slice dup/clkport fixes + 12.8c trunk, gen_core_kit_legacy multi-root/hard-child refusals + xrt3 M6 grant, 3 lint RTL fixes, l0r loop, recipes io_hold sender_min for gunit l0/l0r/l1c + sstn). ASK1: DRT-0255 port->root on every centre-entry trunk kit (qbank_S/sstn/l1c all pass the GRT latency gate) -- owner for a flow/pin-access fix (root offset from the M5 port, or port layer) before more family builds. ASK2: cfifo_crs4 LFACE=1 (+1 lane edge, die calendar re-price) or accept crs4 face FAIL. ASK3: l0 built 294 TT at GRT (plan 266) -> re-plan with GRT offset.
+[COORD 2026-10-27 04:29 PDT] S81-CORE-LAT-R14 claude/s81-core-lat-r14-1027@ef0d0bd683 APPROVED for ROOT-MERGE (generator fixes + tests).
+ Rulings:
+ (a) Route blocker DRT-0255 goes to S81-CORE-LAT-R15. Likely cause: an off-track centre clock pin. HBM collar_idx256r hit the same DRT-0255 with its clk pin on a half track (43.2) and routed once snapped to the M5 track (43.224). Check the pin and root against the track/site grid first, and add a kit check.
+ (b) cfifo_crs4 LFACE=1 (+1 lane edge) ADOPTED; ledger it.
+ (c) gunit_l0 re-plan ADOPTED: measured TT 294 vs plan 266, so calibrate the trunk on the built CTS (planner over-predicts elsewhere, under-predicts here).
