@@ -1,0 +1,7 @@
+ot-run: epyc3          admits   564 GB (avail 893, reserve 0, fresh 67.6, peak 196.7, headroom 0, waiters 0/0 GB) load 71/96 running 14 disk 6480 GB 
+ot-run: -> epyc3
+ot-heavy: admitted on eternal-dove as oth-ubuntu-2594369-1792923845 after 1 s
+[mut=0] RESULT XT1N PASS mode=nominal near=64/64 far=64/64
+[mut=1] RESULT XT1N PASS mode=nominal near=64/64 far=64/64
+TIMES built=1 build_s=2218 sim_s=549 obj=/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/both/obj_9de791a19a5ff9ec
+ot-run: RAN on epyc3 (unit oth-ubuntu-2594369-1792923845): exit 0

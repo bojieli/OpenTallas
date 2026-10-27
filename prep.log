@@ -1,0 +1,6 @@
+ot-run: epyc3          admits   600 GB (avail 877, reserve 0, fresh 15.9, peak 197.1, headroom 0, waiters 0/0 GB) load 73/96 running 10 disk 6481 GB 
+ot-run: -> epyc3
+ot-heavy: admitted on eternal-dove as oth-ubuntu-2559313-1792923779 after 1 s
+staged /srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/both (108 files); submit with:
+  rsync -a /srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/both/ <host>:/srv/opentallas-scratch/claude/cal-auto-smoke/both/ && ot-run --mem 90 --threads 32 --disk 30 --dir /srv/opentallas-scratch/claude/cal-auto-smoke/both -- bash /srv/opentallas-scratch/claude/cal-auto-smoke/both/run_smoke.sh
+ot-run: RAN on epyc3 (unit oth-ubuntu-2559313-1792923779): exit 0
