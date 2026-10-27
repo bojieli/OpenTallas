@@ -3491,7 +3491,9 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                             break
                     if hit:
                         L.hyp[(hit[0], hit[1])] = hit[2]
-                        tsig = {t: [c for c in v if c != hit[1]] for t, v in tsig.items()}
+                        if hit[0] == "gate":         # (a gate key sits in one signature list only: drop it
+                            s_ = sv("gate", hit[1])   # there; a design-wide rebuild per hit was O(n^2), Q2n2b)
+                            tsig[s_] = [c for c in tsig.get(s_, []) if c != hit[1]]
                         new += 1
                 for k in L.tonly:
                     if not k.startswith("ff:") or ("gate", k) in L.hyp or k in bound:
