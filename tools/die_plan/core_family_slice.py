@@ -305,6 +305,30 @@ def splits_for(n, fam):
     return sp if len(sp) > 2 else [2, 2, 1]
 
 
+_PLANS = {}   # plan name -> (P, libs, r, c, wire classes) of the last plan() call (refresh_after_d1)
+
+
+def refresh_after_d1(rec0, rec):
+    """S81-CORE-LAT-R20: after the R9 uf_phys3 d1 descent the plan carries NEW frozen masters, but the record kept the
+    R7 NLDM numbers of the PRE-d1 masters -- the window/slew gates and the converter's model_qualification then judged
+    a tree that is not the one being built (gunit_l2: gate R7 window 20.28/20.36 on pre-d1 masters vs 15.49/17.13 on the
+    d1 masters it ships).  Re-evaluate the SAME R7 chain on the shipped masters; the pre-d1 numbers stay as info.
+    Deterministic, plan-model only (12.8 d1), no measurement input."""
+    P, libs, r, c, wc = _PLANS[rec0["name"]]
+    fm = rec["frozen_masters"]
+    miss = sorted(n[0] for n in P["nodes"] if n[0] not in fm)
+    if miss:
+        raise SystemExit("refresh_after_d1: d1 record lacks frozen masters for %s" % miss[:4])
+    P["nodes"] = [(n[0], n[1], n[2], fm[n[0]], n[4]) for n in P["nodes"]]
+    if sorted((n[0], n[3]) for n in P["nodes"]) != sorted((n[0], n[3]) for n in rec["nodes_xy"]):
+        raise SystemExit("refresh_after_d1: d1 nodes_xy masters differ from frozen_masters")
+    res, _ = M7.model_x(P, libs, r, c, wc)
+    rec["model_pre_d1"] = {k: rec0[k] for k in ("TT", "FF")}
+    rec["TT"], rec["FF"] = res["TT"], res["FF"]
+    rec["model"] = rec0["model"] + "; R7 re-evaluated on the d1 (uf_phys3) masters (R20)"
+    return rec
+
+
 def plan(geo, fam, libtt, libff, name, trunk_cal=None):
     sinks = sum(1 for l in open(geo) if l.startswith("SINK"))
     sp = splits_for(sinks, fam)
@@ -321,6 +345,7 @@ def plan(geo, fam, libtt, libff, name, trunk_cal=None):
     sized = M7.size_d1(P, libs, r, c, wc)
     trunk = choose_entry_trunk(P, libs, r, c, wc, trunk_cal) if trunk_cal else None
     res, st = M7.model_x(P, libs, r, c, wc)
+    _PLANS[name] = (P, libs, r, c, wc)
     par = {n[0]: n[1] for n in P["nodes"]}; depths = set()
     for n in P["nodes"]:
         if n[4] == "leaf":
@@ -515,10 +540,18 @@ def run_core(fams, core, kit, work, a):
         r = subprocess.run([sys.executable, str(REPO / "results/core_lat_r9_1026/l0r_r9_d1.py"), str(pj), str(geo), a.libdir, a.fit,
                             str(work / "plan_d1.json"), "--steps", str(a.d1_steps)], capture_output=True, text=True)
         (work / "d1.log").write_text(r.stdout + r.stderr)
-        if r.returncode == 0:
-            rec2 = json.loads((work / "plan_d1.json").read_text())[0]
-            # refresh the NLDM numbers with the d1 masters (same chain the checks read)
-            rec2["d1_from"] = "uf_phys3 v1 coordinate descent (R9)"; rec = rec2; pj = work / "plan_d1.json"
+        if r.returncode != 0:
+            # R20 fail-closed: S81-CORES-R1 sparse worktrees lacked results/core_lat_r9_1026 + model_refit2_1026, the d1
+            # step died (No such file / ModuleNotFoundError) and the slice silently shipped the pre-d1 masters
+            raise SystemExit("run: --fit given but the R9 d1 step failed rc %d (see %s): %s"
+                             % (r.returncode, work / "d1.log", (r.stdout + r.stderr).strip()[-200:]))
+        rec2 = json.loads((work / "plan_d1.json").read_text())[0]
+        # refresh the NLDM numbers with the d1 masters (same chain the checks read)
+        rec2["d1_from"] = "uf_phys3 v1 coordinate descent (R9)"
+        if rec["name"] not in _PLANS:   # re-plan ran in worker processes: rebuild the chosen plan here (deterministic)
+            plan(geo, fam, a.libtt, a.libff, rec["name"], trunk_cal=cal)
+        rec = refresh_after_d1(rec, rec2)
+        pj = work / "plan_d1.json"; pj.write_text(json.dumps([rec]))
     slice_dir = work / "slice"; slice_dir.mkdir(exist_ok=True)
     cmd = [sys.executable, str(HERE / "core_plan_to_infra.py"), str(pj), "--sites", str(work / "sites.txt"), "--module", core,
            "--clock-port", clk, "--band", "info", "--ndr", "none" if fam.get("wire", "std") == "std" else "2,2",
