@@ -13,7 +13,7 @@ from pathlib import Path
 def config(kit):
     values = {}
     text = (kit / 'config.mk').read_text().replace('\\\n', ' ')
-    for key, value in re.findall(r'^\s*(?:override\s+)?export\s+(\w+)\s*[:?]?=\s*(.*?)\s*$', text, re.M):
+    for key, value in re.findall(r'^[ \t]*(?:override[ \t]+)?export[ \t]+(\w+)[ \t]*[:?]?=[ \t]*(.*?)[ \t]*$', text, re.M):
         values[key] = value.split()
     return values
 
