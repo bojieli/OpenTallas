@@ -79,15 +79,21 @@ def rd_beat(src, hops, dst_mask, leaf, row, pairs, data, kind=K_RD):
 
 # Edge constants of the send / receive path, from the RTL edge chain below; bench_vpx asserts every one of them on
 # every run (send edges, read-back edges and the receive latency must match exactly); edge chain (inward port = the edge the beat is on the slice pin):
-#   CTL beat on the slice pin -> rstop pin flop + delivery flop (2) -> xr pin flop (1) -> cvld: CFG_AT = 3
+#   CTL beat on the slice pin -> rstop pin flop + delivery flop (2) -> xr pin flop (1) -> XR7 stage-1 register (1,
+#   ot_s81sl_xr.sv:181-204, "every CTL / RD / lo / V / SC consequence moves +1 cycle") -> cvld / tg: CFG_AT = 4
 #   cvld (target 0) -> c_d flop (1) -> leaf relay DL 4 -> vp pin flop (1) -> sequencer step 0 (1) -> macro + output
-#   register + dv (2) -> lo flop (1) -> relay DL 4 -> xr lo pin flop (1): first lo pair at xr = CFG_AT + LO_AFTER_CTL
-#   pk_go the edge after the 4th pair; snd -> ci flop -> rstop ci flop -> ro flop: beat on the outward port SEND_AFTER_GO
-CFG_AT = 3
+#   register + dv (2) -> lo flop (1) -> relay DL 4 -> xr lo pin flop (1) = lov: first lo pair at xr = CFG_AT + LO_AFTER_CTL
+#   XR7 (TOK-DS-9 10-27): the packer reads lov1 = lov one edge later (ot_s81sl_xr.sv:204, 250-251), and a send config
+#   (tg[4]) in a cycle with |lov1 is a sticky fault (xr.sv:558): the config slot is the lov1-free edge = LO_PACK after lov
+#   pk_go the edge after the 4th lov1 pair; snd -> ci flop -> rstop ci flop -> ro flop: beat on the outward port SEND_AFTER_GO
+# Measured TOK-DS-9 on tb_vpx_ag (current main RTL, the TOK-DS-8 binary; sources sha-identical to main 0f9789993e):
+# RDOUT pin 8136 -> cvld 8140 (CFG_AT 4), lov 8155 (LO_AFTER_CTL 15); 10-18 values were CFG_AT 3, no LO_PACK, RX 5.
+CFG_AT = 4
 LO_AFTER_CTL = 15
+LO_PACK = 1
 SEND_AFTER_GO = 3
-RX_WR_AFTER_PIN = 5          # RD beat on the slice pin -> rstop pin + delivery flops (2) -> xr pin flop (1) -> unpacker
-                             # busy flop (1) -> sw row-pair write flop (1); pair j one edge later each
+RX_WR_AFTER_PIN = 6          # RD beat on the slice pin -> rstop pin + delivery flops (2) -> xr pin flop (1) -> XR7 stage 1
+                             # (1) -> unpacker busy flop (1) -> sw row-pair write flop (1); pair j one edge later each
 PAIRS = 4                    # row pairs per RD beat (the 1,024-b payload)
 
 
@@ -95,7 +101,7 @@ def beat_period():
     """issue period of one 4-pair beat: 4 lo cycles + the one lo-free cycle that takes the next config (= pk_go of the
     previous beat; xr.sv:137-143), with the config CTL and the RDOUT CTL on distinct pin cycles"""
     p = PAIRS + 1
-    while (LO_AFTER_CTL - 1) % p == 0:        # config of beat i (pin t_i + LO_AFTER_CTL - 1) vs RDOUT of beat j (t0 + p j)
+    while (LO_AFTER_CTL + LO_PACK - 1) % p == 0:   # config of beat i (pin t_i + LO_AFTER_CTL + LO_PACK - 1) vs RDOUT j (t0 + p j)
         p += 1
     return p
 
@@ -117,7 +123,7 @@ def leg_program(sid, dir_, peer_sid, rows, leaf=0, t0=0, mut=None, dst_leaf=None
         base = bp[0][0]
         assert all(bp[j][0] == base + 2 * j for j in range(len(bp))), 'beat rows must be consecutive'
         tr = t0 + P * i
-        lo0 = tr + CFG_AT + LO_AFTER_CTL
+        lo0 = tr + CFG_AT + LO_AFTER_CTL + LO_PACK      # first pair at the packer (lov1)
         tc = lo0 - 1 - CFG_AT
         dst = base + dst_off
         if mut == 'row' and i == 2:
@@ -364,10 +370,22 @@ def _emit(die, sl, specs, t0, rows, templates, events, insts, used=None):
 
 # TP4 rank of the die reached by each leg (S81-LINK5: s_0S W -> d-1, s_7S E -> d+1, s_7N E -> d+2)
 LEG_PEER_RANK = {'u_s_0S': -1, 'u_s_7S': 1, 'u_s_7N': 2}
-# owner fold VS11 pair tree after the last RS write (owner_fold.py programme; its span is benched by run_owner_fold.sh,
-# NOT by bench_vpx): the AG phase is issued FOLD_GAP edges after the last RS beat leaves (UNCHECKED placeholder until the
-# fold is bound to these rows)
-FOLD_GAP = 64
+# owner fold VS11 pair tree after the last RS write.  TOK-DS-9 (10-27) replaces the 10-27 FOLD_GAP 64 placeholder:
+#   RS_LAND_TAIL  MEASURED (CHECKED) on bench_vpx out_allreduce_rs_none (current main RTL): last outward RS beat edge ->
+#                 the owner's last RS row-pair write = 50 edges (send -> lep -> lane -> peer lep 41 / 42 + RX_WR_AFTER_PIN 6
+#                 + pairs 1..3); the same 50 on a_allgather / router / out_allreduce_ag.
+#   owner_fold_span(rows)  DERIVED, UNCHECKED: the fold is NOT bound to these rows (RS slots sit on leaves 1..3, the own
+#                 quarter on leaf 3 / 4, and VS RB is leaf-local), so its span is the owner_fold.py law for one leaf: three
+#                 serial RB commands of n = rows pairs, VS_DUR RB n + 19 (measured at n = 1 / 6 only) + guard 8 between.
+RS_LAND_TAIL = 50
+FOLD_GUARD = 8
+
+
+def owner_fold_span(rows):
+    return 3 * (rows + 19) + 2 * FOLD_GUARD
+
+
+FOLD_GAP = RS_LAND_TAIL + owner_fold_span(320)      # = 50 + 1033 = 1083 edges
 
 
 def lower_ar(die, ctx, t0):
@@ -391,4 +409,4 @@ def lower_ar(die, ctx, t0):
                 'end-slice endpoint ABI', insts=insts, rows=rows, templates=templates, events=events, bench=BENCH,
                 gap=dict(GAP_FOLD, missing='RS + AG transport is lowered on the benched endpoint ABI (bench_vpx op '
                          'out_allreduce_rs / _ag); the owner fold between them is not bound to these rows (FOLD_GAP '
-                         f'{FOLD_GAP} placeholder UNCHECKED) and the partial rows\' producer capture is not placed'))
+                         f'{FOLD_GAP} = RS landing tail {RS_LAND_TAIL} CHECKED + fold law {owner_fold_span(320)} UNCHECKED) and the partial rows\' producer capture is not placed'))
