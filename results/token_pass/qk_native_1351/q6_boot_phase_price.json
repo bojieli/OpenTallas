@@ -22,7 +22,8 @@
     "reopen_fault_requirement": "REOPEN/fault raw endpoint issue-kill remains immediate at its existing capture. OWN steering/fault phase observes old state one extra edge; offset miter with issue quiescence does not prove zero-edge fault-trajectory equivalence.",
     "steady_data_edges": 0,
     "layer_cycles": 0,
-    "token_cycles": 0
+    "token_cycles": 0,
+    "reopen_first_boot_write_requirement": "The first new boot/controller write after REOPEN must arrive only after new OWN assertion at every affected head. Prove existing q6 embgw HOLD/transport margin >=1 or add one BOOT-only HOLD edge; zero data/token cycles. The source qkd_embgw_boot_s explicitly relies on HOLD to cover est-trunk/ownership flight."
   },
   "sys_c": {
     "source": "KVclock owner current q6 /srv/opentallas-scratch2/claude/codex-kv-q6-1351/pd/hm_r26q6_hgi128.json",
@@ -34,7 +35,17 @@
     "reset_start_release_after": 9,
     "local_boot_start_delta": 2,
     "layer_cycles": 0,
-    "token_cycles": 0
+    "token_cycles": 0,
+    "full_die_release_delta": {
+      "sys_c": [
+        95,
+        97
+      ],
+      "all_other_partitions_changed": false,
+      "parent_hgi_WN_0_changed": false,
+      "global_max_before": 95,
+      "global_max_after": 97
+    }
   },
   "dcal_tuple": {
     "contract": "98d24a119361b1f3551e5f3affc0cea697858c34afcf8e7e9ff621cd0e05e0a8",
