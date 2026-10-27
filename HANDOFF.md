@@ -1204,3 +1204,5 @@ CODEX: 2026-10-26 20:12 PDT S81/HEAD all physical lanes claimed; HEAD elemB r7 p
 CODEX: 2026-10-26 20:20 PDT FLOW fixed implicit setup+holdHB4dispatch f7dd829445, actualFF16paircoupon64HB4hold+38.45 vsoriginalRSZ0060/-86.11; IOstandinparentguard e1f718f079; owncoll_ftcGRTliveunit552477, inheritedDRTuntouched.
 
 CODEX: 2026-10-26 20:19 PDT HBM SU/MU audit7a36d5f76: exactS2hubcost reproduced; previouslyunchargedbankk4 conditional+40..4144cycles/token;8SMRPL/publish/HBMshare scaling constraints identified; no old16SMheadlinepromotion.
+
+2026-10-26 20:19 PDT CODEX: HEAD HOST provider962ca7e740 pushed; actualHBC RX_ONLY defaultoff fixes fabricatedreturnTX,803framemiter+2mutants+12HBCtestsPASS,hostleafbind+lintPASS; compilerbootdates/token/physical remainopen.

@@ -79,3 +79,6 @@ compose_tok_ds / ds_rom_mtp.json token DAG, reset_tree.py START broadcast (decis
 
 ## CODEX notes 2026-10-26 20:12 PDT takeover
 Root/head_ctl implements approved19:50 contract for ctl/host; mesh realRTL completed fa6598bd6. Strict head bind waits these providers; no synthetic asbuilt.
+
+## CODEX notes 2026-10-26 20:19 PDT HOST provider
+CODEX took over HOST endpoint on codex/head-host-2000@962ca7e740 (hub+GitHub pushed). New ot_s81hd_host_ep_core = real safe8 lanes + HBC1 loader/book/RX + host276; defaultoff RX_ONLY omits the inapplicable layer-return transmitter (draft RETURN_LOCAL=0 was still feeding its external return ring and would fault on ordinary RESULT/STATUS). Corrected 21-bit stage metadata. HOST mux independent lockstep PASS2812cycles/803frames; premature-CSR and dropped-fault mutants CAUGHT. Actual HBC modes0..5 pass with RX_ONLY0 and1; provider elaborates and host leaf binds. No changed-file WIDTH/SELRANGE; inherited primitive warnings retained. Jobactive pin capture adds1 control edge (model). Candidate-only helper head_host_plan_delta.apply(base,params=None) composes htx277 and bootstrap START; no canonical plan adoption. Compiled production boot dates and complete ctl/host token/physical gates OPEN. All jobs complete: epyc1:/srv/opentallas-scratch2/claude/codex-head-host-2000 logs, ot-run units1250282/1329008/1403934.
