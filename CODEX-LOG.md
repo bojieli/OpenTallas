@@ -4571,3 +4571,9 @@ All four agents acknowledged PARK. No new project work is authorized after the r
 - Shared core factory final pushed branch codex/shared-core-0733@cb4bde4fcdce73940e07cc8f634d0fb6dafa9199, clean. Full handback results/core_infra_0733/plan_sta/HANDBACK.md. No live own model jobs. Zero-via native DMP cases are the actual end-to-end model results; finite-via resistance extension has only11 unit tests and has NOT run end-to-end. VMR M5 PG-port-metal crossing remains physically invalid, and no P&R is authorized. Five-die fallback census, honest ring inventory and one actual QC edge price are preserved on this branch.
 
 Root source state is safely parked: mainac2ad01a8 pushed; codex/master-0733@e432697b9, codex/qc-oneevent-0733@40493490d and codex/qc-su-0733@a4692c0cf are clean/pushed. Root has no live jobs. No further implementation, merges or launches after writing this handback.
+
+## CODEX takeover 2026-10-26 20:00 PDT
+All lanes assigned to six parallel workers under AGENTS parallel instruction. Actual current hub epyc1 af224effed; rtx-pro local ac2ad01a8 stale, no local main mutations. Root own sparse integration branch codex/root-2000 on hub. Collect inherited jobs first; no duplicate runs.
+
+OWNER?
+No new owner decisions requested at takeover; continue under latest METHODOLOGY v5.1 and 19:xx COORD rulings.
