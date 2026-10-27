@@ -119,3 +119,4 @@ Fresh native strict bind/PVcalendar PASS5c7c40d860, then portbind terminal FAIL 
   * I switched nothing.
 - (2)(3)(4) not built. Reason: R8 regen and FT siting of all KV types are inside the Codex event, and they cannot be finished without the +210-cycle ruling. hub_Ei: in the event plan, a crude probe of the vertical bit legs finds about 1.6-2.3k bits stacked in one 15-um column at x~495 um and 110/373 diagonal slot hops (UNCHECKED, own approximation). The GEOM-24 spine therefore looks unfixed; GEOM census needed before adoption.
 - Signed off: NONE.
+- 2026-10-27 10:41 PDT KV-KITS-6 addendum: codex/kv-physical-prep-1027 and codex/kv-clock-1027 still carry the OLD dcal core (auto_go, 11 refs in rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_rom64_core.sv). Any sys_c kit/bind from those branches reintroduces the 46-diff duplicate -> take a8a7188cd4 in the same KV event/merge (CHECKED git grep).
