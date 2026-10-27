@@ -15,6 +15,14 @@ global_route -congestion_iterations 30
 set_propagated_clock [all_clocks]
 estimate_parasitics -global_routing
 source /work/cf/mscts_core.tcl
+# New-process FF session on the R10 GRT checkpoint: rebuild the mscts bookkeeping (tap nets, macro leaves) from the
+# ot_ms_* names in the DB and the R10 spec, exactly as the established FF-only session (hold_grt_s6.tcl) does via
+# ot_ms_assign_corr; the CTS/GRT (TT) session had it in memory from the build. No clock change.
+ot_ms_assign_corr ff
+if {![info exists ::ot_ms_macros]} { uplevel #0 [list source $::env(OT_MSCTS_SPEC)] }
+if {![llength $::ot_ms_tapnets]} { error "BTAB_R10_FF: no ot_ms_*_clk tap nets recovered from 5_1_grt.odb" }
+puts "BTAB_R10_FF_RECOVER tapnets [llength $::ot_ms_tapnets] macleaf [llength $::ot_ms_macleaf] spec $::env(OT_MSCTS_SPEC)"
+ot_ms_report hold_ff
 ot_ms_pinmap
 set f [open $R/ot_face_flops.txt r];set pins {}
 foreach ln [split [read $f] "\n"] {if {$ln ne ""} {lappend pins "[lindex [split $ln "\t"] 0]/CLK"}}
