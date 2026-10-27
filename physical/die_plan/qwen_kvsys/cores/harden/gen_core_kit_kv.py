@@ -1380,6 +1380,10 @@ def main():
         if not rec.get("face_flops", True):
             raise SystemExit(f"{tid}: island ft needs the face_flops PRE_GLOBAL_PLACE / PRE_DETAIL_PLACE hooks")
         (kd / "island_ft.tcl").write_text(island_ft_tcl(ft_arcs, tid))
+        if lefs:   # KV-CORES-R9 (COORD 10-27): island rects + halo blocked for rtl_macro_placer, checked before tapcell
+            if any(l.startswith(("export PRE_MACRO_PLACE_TCL", "export PRE_TAPCELL_TCL")) for l in cfg):
+                raise SystemExit(f"{tid}: PRE_MACRO_PLACE_TCL / PRE_TAPCELL_TCL already set; island macro guard needs them")
+            cfg += core_flow.island_macro_guard(kd, [x["rect_um"] for x in ft_arcs], 4.32)
         gpl = kd / ("lane_pre_gpl.tcl" if a.head_lane_taps else "face_flops.tcl")
         dpl = kd / ("lane_pre_dpl.tcl" if a.head_lane_taps else "face_flops_release.tcl")
         for f, line, first in ((kd / "core_keep_release.tcl", "source /work/island_ft.tcl; ot_ft_keep", False),
