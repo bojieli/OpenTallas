@@ -54,12 +54,12 @@ Snapshot: 2026-10-26 06:21 PDT · main 3ab63782a7 · FROZEN: none · no die has 
   - [ ] S81.TILES Tile sign-offs · PATH-S81 / CORES-KITS · RUNNING · 4/171 types, 16/52 hard cores signed
 
 ## DIE hbm · HBM UNIFIED SU/MTP/MU one design (OWNER 10-26 23:1x; SU latency qualified first) · plan D-HBM-B1 (5fa3c6e64838)
-- [ ] HBM.B1 Unified plan of record = codex/hbm-2001@3c3dae6bb hubs H4320 (32 VM+32 FUSED, ~526.6 mm2) · PATH-HBM / HBM-UNIFIED-1 · RUNNING · hub geometry FAIL STRUCTURAL → MU quad tile proposed (claude/hbm-unified-1-1026@98825ecc09), pack rest of hub + cuts + root in root partition next
+- [ ] HBM.B1 Unified plan of record = 3c3dae6bb hubs H4320 + quad v2 (~526.6 mm2) · HBM-MU-QUAD · RUNNING · claude/hbm-mu-quad-1026@bc954e9152: NW hub cut PASS 0.594 k3, NE FAIL 0.644 (seg0 y) UNCHECKED → NE repack, then compose +794.88, G0/G0C, root slice
 - [ ] HBM.GRT Die GRT0 incl clock on the UNIFIED plan · PATH-HBM · WAITS · R15 S2/F2 = SU plan (H3525, 16 banks), flow canary only, collect; unified GRT after HBM.B1 + views
 - [ ] HBM.CLK Mesh clock 12.8 on unified plan · CLOCK-128 · FAIL/INVALID · r7/r8 on old plan; rebuild after HBM.B1, 4 new types need islands (bank/fused/tnode/keybuf)
 - [ ] HBM.BIND Native B2 one-clock bind · PATH-HBM / HC-NATIVE · RUNNING · 98 unread outputs classified (svg redundant views, sm.request/expected check w/o comparator, xl y, ordinals); no open inputs
 - [ ] HBM.STA Die related-pair STA real routed clock (TT setup/FF hold) · DIE-PROTO · WAITS · → HBM.GRT; SU latency qualified first (HBM.SU)
-- [ ] HBM.SU SU latency qual: ds_ar cycles/token on unified plan (target hub Δ<=5%, design <=15%, owner-accepted ~1973 tok/s) · TOK-HBM · RUNNING · model U0 2.75-9.93% (2024-1874 tok/s) UNCHECKED, quad fix to cut upper
+- [ ] HBM.SU SU latency qual: ds_ar cycles/token on unified plan (target hub Δ<=5%, design <=15%, owner-accepted ~1973 tok/s) · TOK-HBM / HBM-MU-QUAD · RUNNING · U0 9.93% upper root cause = stale service-copy binding (fixed in quad pack); reprice waits NE cut
 
 ## TOKEN · Token-pass gate per design
 - [ ] TOK.DS DeepSeek ROM token pass (S81 array + head) · TOK-DS-6 · RUNNING · L14 27/57/8; idx scan 3-die shard; S81 all-rows MTP 3,655 tok/s > 3,000 floor (AR 1,260), 17.0% ledger ACCEPTED (owner 10-26) → S81.BIND, → HEAD.BIND
