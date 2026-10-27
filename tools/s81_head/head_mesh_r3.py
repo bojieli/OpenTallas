@@ -198,6 +198,48 @@ def snap_lanes(S, plan_raw, clk_w=0.64):
     return fix, jog
 
 
+def lane_residual(S, plan_raw, clk_w=0.64):
+    """HEAD-CORE-R19 (GEOM-25 condition 1): per strap, distance of its centre line from the nearest legal VSS-locked
+    clock lane of the plan die.pg.grid (0 = inside the half-gap band).  -> (per-layer summary, off-band list)."""
+    import head_pg_sweep as HP
+    grid = {g["layer"]: g for g in plan_raw["die"]["pg"]["grid"] if not g.get("region")}
+    out, off = {}, []
+    for L in ("M8", "M9"):
+        st = grid[L]
+        ivs, _ = HP.lanes(st, clk_w)
+        p = st["pitch_um"]
+        vss0 = st["offset_um"] + p / 2
+        res = []
+        for L2, f, lo, hi, k in S:
+            if L2 != L:
+                continue
+            r = (f - vss0) % p
+            d = min((0.0 if a_ + kk * p - 1e-6 <= r <= b_ + kk * p + 1e-6 else
+                     min(abs(r - a_ - kk * p), abs(r - b_ - kk * p))) for kk in (-1, 0, 1) for a_, b_ in ivs)
+            res.append(d)
+            if d > 1e-3:
+                off.append(dict(layer=L, fixed_um=f, kind=k, residual_um=r3(d)))
+        out[L] = dict(straps=len(res), off_band=sum(1 for d in res if d > 1e-3), max_residual_um=r3(max(res, default=0.0)),
+                      grid=dict(width_um=st["width_um"], pitch_um=p, offset_um=st["offset_um"]),
+                      band_rel_vss_um=[[r3(a_), r3(b_)] for a_, b_ in ivs])
+    return out, off
+
+
+def snap_root(PL, root):
+    """HEAD-CORE-R19 (COORD ruling on head-r17-plan 2b67cdc6c3): the plan root sits on a partition abutment edge; the
+    first tree node is sited at the snap_inside centre of that site in the owning partition (the island
+    head_infra_delta_r4 declares there), the root itself stays the plan source point (root stub = the clamp)."""
+    import head_infra_delta_r4 as D
+    p = PL.part_at(root)
+    if p is None or p["o"] != "R0":
+        raise SystemExit(f"--snap-root: root {root} not in an R0 partition")
+    lx, ly = root[0] - p["x0"], root[1] - p["y0"]
+    cx, cy = D.snap_inside(lx, ly, p["w"], p["h"])
+    return (r3(p["x0"] + cx), r3(p["y0"] + cy)), dict(part=p["name"], type=p["type"], root_um=list(root),
+                                                      root_local_um=[r3(lx), r3(ly)], island_centre_local_um=[cx, cy],
+                                                      stub_um=r3(abs(cx - lx) + abs(cy - ly)))
+
+
 def on_strap(S, xy, tol=0.01):
     for L, f, lo, hi, _ in S:
         if L == "M8" and abs(xy[1] - f) <= tol and lo - tol <= xy[0] <= hi + tol:
@@ -658,6 +700,8 @@ def main(argv=None):
     ap.add_argument("--symmetric", action="store_true", help="HEAD-CORE-R17: equal-leg binary H re-site (build_tree_sym)")
     ap.add_argument("--r18", action="store_true", help="HEAD-CORE-R18: outer-anchored half lattices, no station tree drivers (build_tree_r18)")
     ap.add_argument("--r18-xoff", type=float, default=4.32, help="R18 x-tree translation onto the snapped edge islands (um)")
+    ap.add_argument("--snap-root", action="store_true", help="HEAD-CORE-R19: first tree node on the snap_inside centre "
+                    "of the plan root (partition-edge root -> island 4.32 um inside)")
     ap.add_argument("--m8-max-pitch", type=float, default=0.0, help="HEAD-CORE-R17: densify tile-array M8 rows to <= this pitch (um)")
     ap.add_argument("--out", required=True)
     a = ap.parse_args(argv)
@@ -678,6 +722,9 @@ def main(argv=None):
     st = Q.Stage(a.stage)
     et = Q.EdgeType(st, a.top_w, a.top_m, a.reach)
     root = tuple(PL.P["clock"]["spine"]["root_um"])
+    root_snap = None
+    if a.snap_root:
+        root, root_snap = snap_root(PL, root)
     if a.r18:
         nodes, top, info, _ = build_tree_r18(drv, st_rows, et, root, TRUNK_X, a.top_m, a.r18_xoff)
         drv = sorted({(r3(n["xy"][0]), r3(n["xy"][1])) for n in nodes if not n["kids"]})
@@ -704,6 +751,8 @@ def main(argv=None):
     else:
         nodes, top, info = build_tree(drv, st_rows, et, root)
     rep, arr = Q.grid_report(nodes, top)
+    if root_snap:
+        info["root_snap"] = root_snap
     # ---- islands (in-core core entries, plan taps) for classification
     isl = []
     for p in PL.parts:
@@ -778,6 +827,10 @@ def main(argv=None):
         wire=wire, track_share=share, lane_jog=lane_jog,
         m9_spacing=dict(verdict="PASS" if m9_min >= m9_floor else "FAIL", min_um=r3(m9_min), floor_um=r3(m9_floor),
                         basis="GEOM-24 (b): no doubled M9 straps; min column gap >= 177.12 - 8.64 (one island step)"))
+    lres, loff = lane_residual(S, PL.P)
+    mesh_gate["lane_band"] = dict(verdict="PASS" if not loff else "FAIL", by_layer=lres, off_band=loff[:40],
+                                  rule="GEOM-25 cond. 1: every clock strap centre inside a VSS-locked half-gap lane of "
+                                       "the plan die.pg.grid (0 straps off band, no clock-PG overlap)")
     sib = sibling_rep_findings(nodes, a.reach)
     info["sibling_reps"] = dict(verdict="PASS" if not sib else "FAIL", findings=sib[:20], n_findings=len(sib))
     summ = dict(schema="opentallas.head_mesh_r3.v1", plan=a.plan, plan_sha256=__import__("hashlib").sha256(
