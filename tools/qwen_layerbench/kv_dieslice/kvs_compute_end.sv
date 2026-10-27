@@ -19,6 +19,12 @@
 //   KVN word j (tags {010, 00000, j1 0 j0}) = the new position's K row (j 0, 1) / V row (j 2, 3), 512-b halves of
 //   kv.hex row T-1 / 2T-1; record epoch / status epoch = the KV die's host token epoch (the compute die's own host
 //   hands it the same epoch; fixture).  The witness record = a fixed observed record (as tb_qwen_d2d_program).
+// TOK-QK-KVL 10-27 per-layer mode (+VECL=<dir>, replaces +VEC): every layer n has its own operands dir/L<n>/q.hex (512
+//   FP32), gold.hex (512 FP32) and kvn.hex (2 lines of 1024 b: the new position's K row, then its V row), selected by the
+//   layer the compute calendar is running (lay_q, for CMD / Q / KVN) and by the layer field of the received RESULT record
+//   (ca_rl, for the check).  The KV history of layer n is that layer's own HBM rows (kv_preload.py per layer).
+//   Mutant m4 +MUT_QSWAP: layer n is fed the q of layer n^1 (the per-layer selection must be visible in RESULT).
+//   FAR_LAYER lines: per layer, RESULT beats ok / bad and the first / last RESULT cycle (the measured per-layer timing).
 // Checks: every RESULT word (kind 3, beat b, word j) == gold[16b + j] for every layer run; STATUS (kind 4) = {done 1,
 //   ready 1}; no compute-side fault (master, sequencer, codec, transport).  Counters reported by the bench.
 module kvs_compute_end #(
@@ -45,15 +51,39 @@ module kvs_compute_end #(
     reg [31:0]   q   [0:511];
     reg [31:0]   gold[0:511];
     reg [1023:0] kv  [0:16383];
+    localparam integer NL = 36;
+    reg [31:0]   q_l   [0:NL*512-1];
+    reg [31:0]   gold_l[0:NL*512-1];
+    reg [1023:0] kvn_l [0:2*NL-1];
+    reg          perlayer = 0, mut_qswap = 0;
     integer T = 256;
     initial begin : ld
-        string v;
+        string v, vl;
         if (!$value$plusargs("VEC=%s", v)) v = "";
+        if (!$value$plusargs("VECL=%s", vl)) vl = "";
         if (!$value$plusargs("CTX=%d", T)) T = 256;
-        if (v != "") begin
+        mut_qswap = $test$plusargs("MUT_QSWAP");
+        if (vl != "") begin
+            perlayer = 1;
+            for (int n = 0; n < NL; n++) begin
+                $readmemh($sformatf("%s/L%0d/q.hex", vl, n), q_l, 512 * n, 512 * n + 511);
+                $readmemh($sformatf("%s/L%0d/gold.hex", vl, n), gold_l, 512 * n, 512 * n + 511);
+                $readmemh($sformatf("%s/L%0d/kvn.hex", vl, n), kvn_l, 2 * n, 2 * n + 1);
+            end
+            $display("FAR_VECL %s layers %0d T %0d mut_qswap %0d q0 %h gold0 %h q35 %h", vl, NL, T, mut_qswap, q_l[0], gold_l[0],
+                     q_l[512 * 35]);
+        end else if (v != "") begin
             $readmemh({v, "/q.hex"}, q); $readmemh({v, "/gold.hex"}, gold); $readmemh({v, "/kv.hex"}, kv, 0, 2 * T - 1);
         end
     end
+    // per-layer operand selection (lay_q: the layer the compute calendar runs; m4 feeds layer n^1's q)
+    function automatic [31:0] q_at(input [5:0] l, input integer i);
+        automatic integer ql = mut_qswap ? (l ^ 1) : l;
+        q_at = perlayer ? q_l[512 * (ql % NL) + i] : q[i];
+    endfunction
+    function automatic [31:0] gold_at(input [5:0] l, input integer i);
+        gold_at = perlayer ? gold_l[512 * (l % NL) + i] : gold[i];
+    endfunction
     // ---------------- bumps (package edges after the KV pad)
     reg [31:0] ep_sr = 0, lr_sr = 32'hffffffff;
     always @(posedge ck) begin ep_sr <= {ep_sr[30:0], kv_fwd_ep_pad}; lr_sr <= {lr_sr[30:0], kv_fwd_lrst_pad}; end
@@ -122,7 +152,7 @@ module kvs_compute_end #(
     always @* begin
         ed = 512'd0;
         if (ek == 4'd1) ed = {493'd0, 5'd0, pos, 1'b1};
-        else if (ek == 4'd2) for (int j = 0; j < 16; j++) ed[32*j +: 32] = q[16 * eb + j];
+        else if (ek == 4'd2) for (int j = 0; j < 16; j++) ed[32*j +: 32] = q_at(lay_q, 16 * eb + j);
     end
     wire ca_rv, ca_f; wire [3:0] ca_rk, ca_fc; wire [15:0] ca_re; wire [5:0] ca_rl; wire [4:0] ca_rb; wire [511:0] ca_rd;
     qkd_native_attention_record #(.KV_SIDE(0)) u_ca (.ck(ck), .rst_n(rst_n & en & ~c_eb),
@@ -142,8 +172,9 @@ module kvs_compute_end #(
     always @(posedge ck) if (s_cs) kn <= 0; else if (x3_pre && kn < 4) kn <= kn + 1;
     wire kvn_push = en && x3_pre && kn < 4;
     wire [1:0] kj = kn[1:0];
-    wire [511:0] kw_d = kj[1] ? (kj[0] ? kv[2 * T - 1][1023:512] : kv[2 * T - 1][511:0])
-                              : (kj[0] ? kv[T - 1][1023:512] : kv[T - 1][511:0]);
+    wire [1023:0] kn_k = perlayer ? kvn_l[2 * (lay_q % NL)] : kv[T - 1];
+    wire [1023:0] kn_v = perlayer ? kvn_l[2 * (lay_q % NL) + 1] : kv[2 * T - 1];
+    wire [511:0] kw_d = kj[1] ? (kj[0] ? kn_v[1023:512] : kn_v[511:0]) : (kj[0] ? kn_k[1023:512] : kn_k[511:0]);
     wire kvt_f;
     qfd_kvn_static_transport u_kvt (.ck(ck), .rst_n(rst_n & en & ~c_eb), .word_v(kvn_push), .word_tag({3'b010, 5'd0, ktag(kj)}),
         .word_data(kw_d), .word_identity({epoch, 6'(lay_q + 1), 18'd0, pos, 6'd0}), .word_generation(2'd0), .slot_v(n_x3s),
@@ -151,8 +182,8 @@ module kvs_compute_end #(
     // ---------------- checks / counters
     integer n_res = 0, n_res_ok = 0, n_res_bad = 0, n_stat = 0, n_stat_ok = 0, n_tok = 0, n_adm = 0, n_layers = 0, n_emb = 0;
     integer f_first = -1, cyc = 0; reg [7:0] f_what = 0;
-    integer lay_ok [0:63];
-    initial for (int i = 0; i < 64; i++) lay_ok[i] = 0;
+    integer lay_ok [0:63], lay_bad [0:63], lay_r0 [0:63], lay_r1 [0:63], lay_cs [0:63];
+    initial for (int i = 0; i < 64; i++) begin lay_ok[i] = 0; lay_bad[i] = 0; lay_r0[i] = -1; lay_r1[i] = -1; lay_cs[i] = -1; end
     always @(posedge ck) if (en && rst_n) begin
         cyc <= cyc + 1;
         if (s_cs && s_l == 6'h3f) n_adm <= n_adm + 1;
@@ -161,14 +192,19 @@ module kvs_compute_end #(
         if (c_emb_v) n_emb <= n_emb + 1;
         if (ca_rv && ca_rk == 4'd3) begin
             automatic reg ok = 1;
-            for (int j = 0; j < 16; j++) if (ca_rd[32*j +: 32] !== gold[16 * ca_rb + j]) ok = 0;
+            for (int j = 0; j < 16; j++) if (ca_rd[32*j +: 32] !== gold_at(ca_rl, 16 * ca_rb + j)) ok = 0;
             n_res <= n_res + 1;
+            if (lay_r0[ca_rl] < 0) lay_r0[ca_rl] <= cyc;
+            lay_r1[ca_rl] <= cyc;
             if (ok) begin n_res_ok <= n_res_ok + 1; lay_ok[ca_rl] <= lay_ok[ca_rl] + 1; end
             else begin
-                n_res_bad <= n_res_bad + 1;
+                n_res_bad <= n_res_bad + 1; lay_bad[ca_rl] <= lay_bad[ca_rl] + 1;
                 if (n_res_bad < 8) $display("FAR_RESULT_MISMATCH cyc %0d layer %0d beat %0d got %h want %h..", cyc, ca_rl, ca_rb,
-                                            ca_rd[31:0], gold[16 * ca_rb]);
+                                            ca_rd[31:0], gold_at(ca_rl, 16 * ca_rb));
             end
+            if (ca_rb == 5'd31)
+                $display("FAR_LAYER layer %0d cal_start %0d result_first %0d result_last %0d ok %0d bad %0d (beats of this word incl.)",
+                         ca_rl, lay_cs[ca_rl], lay_r0[ca_rl] < 0 ? cyc : lay_r0[ca_rl], cyc, lay_ok[ca_rl] + ok, lay_bad[ca_rl] + !ok);
         end
         if (ca_rv && ca_rk == 4'd4) begin
             n_stat <= n_stat + 1;
@@ -181,11 +217,15 @@ module kvs_compute_end #(
                      cyc, c_f, s_f, ca_f, ca_fc, kvt_f, c_abort, c_tf, lay_q);
         end
     end
+    always @(posedge ck) if (en && rst_n && s_cs && s_l != 6'h3f && lay_cs[s_l] < 0) lay_cs[s_l] <= cyc;
     always @(posedge ck) if (en && rst_n && s_cs)
         $display("FAR_CAL cyc %0d cal_start seg %0d layer %0d (adm %0d ready %0d)", cyc, s_sg, s_l, s_ad, s_rdy);
     task report;
         $display("FAR_SUMMARY admissions %0d tokens %0d runs %0d results %0d ok %0d bad %0d status %0d ok %0d emb_words %0d first_fault %0d (%b) cal_ready %0d",
                  n_adm, n_tok, n_layers, n_res, n_res_ok, n_res_bad, n_stat, n_stat_ok, n_emb, f_first, f_what, s_rdy);
+        for (int n = 0; n < NL; n++)
+            $display("FAR_LAYER_SUMMARY layer %0d ok %0d bad %0d cal_start %0d result_first %0d result_last %0d %s", n, lay_ok[n],
+                     lay_bad[n], lay_cs[n], lay_r0[n], lay_r1[n], (lay_ok[n] == 32 && lay_bad[n] == 0) ? "PASS" : "FAIL");
     endtask
 endmodule
 

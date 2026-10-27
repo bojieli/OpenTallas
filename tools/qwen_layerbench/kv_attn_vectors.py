@@ -35,7 +35,10 @@ def sha(p):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--gold', type=Path, required=True)
-    ap.add_argument('--fx', type=Path, required=True, help='realmem/P<pos> of the real-prefill fixtures')
+    ap.add_argument('--fx', required=True, help="realmem/P<pos> of the real-prefill fixtures, or 'declared' when the gold "
+                    "is history-seeded with a declared history (TOK-QK-KVL 10-27: no 36-layer real prefill exists); the "
+                    "fixture identity is then recorded as not applicable and the history manifest sha is recorded instead")
+    ap.add_argument('--history-manifest', type=Path, help="with --fx declared: the kvl_history.py manifest.json")
     ap.add_argument('--ksrc', type=Path, required=True, help='KV die source tree (tools/qwen_nearhbm_attn_ref.py)')
     ap.add_argument('--layers', default='0,1')
     ap.add_argument('--vec', type=Path)
@@ -47,6 +50,8 @@ def main():
     import hdc_golden as G
     import qwen_nearhbm_attn_ref as R
     TMAX, HD, NHD, KVD, W = 8192, 128, 8, 2, 16
+    if a.fx == 'declared' and not a.history_manifest:
+        raise SystemExit('--fx declared needs --history-manifest')
     rec = {'schema': 'opentallas.qwen_layerbench.kv_attn_vectors.v1', 'gold': str(a.gold), 'fx': str(a.fx),
            'ksrc': str(a.ksrc), 'mutant': a.mutant, 'layers': {},
            'ref_sha256': {p: sha(a.ksrc / p) for p in ('tools/qwen_nearhbm_attn_ref.py', 'tools/hdc_golden.py')}}
@@ -61,9 +66,14 @@ def main():
         pdir = a.gold / f'P{pos}'
         L = {'pos': pos, 'isa_splits': {'score': s_sc, 'pv': s_pv}, 'fixture_identity': {}, 'heads': {}}
         for d in range(4):
-            fx_ok = (pdir / f'L{n:02d}_die{d}_x.hex').read_bytes() == (a.fx / f'L{n:02d}_die{d}_x.hex').read_bytes() and \
-                    (pdir / 'kv_at_P' / f'L{n}_die{d}.json').read_bytes() == (a.fx / 'kv_at_P' / f'L{n}_die{d}.json').read_bytes()
-            L['fixture_identity'][f'die{d}'] = bool(fx_ok)
+            if a.fx == 'declared':
+                fx_ok = True
+                L['fixture_identity'][f'die{d}'] = 'not applicable: history-seeded, history manifest ' + sha(a.history_manifest)
+            else:
+                fx = Path(a.fx)
+                fx_ok = (pdir / f'L{n:02d}_die{d}_x.hex').read_bytes() == (fx / f'L{n:02d}_die{d}_x.hex').read_bytes() and \
+                        (pdir / 'kv_at_P' / f'L{n}_die{d}.json').read_bytes() == (fx / 'kv_at_P' / f'L{n}_die{d}.json').read_bytes()
+                L['fixture_identity'][f'die{d}'] = bool(fx_ok)
             ok &= fx_ok
             qall = vm[d, vmap['QR']:vmap['QR'] + NHD * HD].view(np.float32).reshape(NHD, HD)
             isa = vm[d, vmap['ATTN']:vmap['ATTN'] + NHD * HD].view(np.float32).reshape(NHD, HD)
