@@ -59,3 +59,6 @@ GEOM-REVIEW-10 conditions:
      cluster = 3.2 /um (CHECKED arithmetic) <= 6; interval 726 um. Metric fix (count width for broadcast buses) owed.
 Scratch epyc1:/srv/opentallas-scratch2/claude/path-hbm-r13-1026 (planM0 planF planF2 planS2 planMsep0; planM = default-height
 search run still live, diagnostic only). Render viewed: r13_planF2.png.
+ADDENDUM planS2 PRICE (price/S2_price.json): ds_ar lower 0.89 / mid 0.60 / upper 4.19 %; qwen_ar -0.14 / -0.26 / 0.65 %.
+  Affinity shortens the long cc chains (SM.* upper 66 -> 38) -> upper now <= 5 %/unit; design total lower 12.31 %.
+  planS2 = recommended candidate (all cuts <= 0.6, ne x 0.596 tight; area unchanged).
