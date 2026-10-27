@@ -24,8 +24,7 @@ module kv3_head_eighth_e1 (
     output wire [0:0] g_t_3_u_stk__gf_o,
     output wire [31:0] g_t_3_u_stk__kp_o,
     output wire [0:0] g_t_3_u_stk__kpv_o,
-    input wire [1:0] strap_bsel,
-    input wire [1:0] g_t_2_u_l8__bsel
+    input wire [1:0] strap_bsel
 );
     wire [0:0] n0;   // r4_u_head0_e1_n3
     wire [0:0] n1;   // r4_u_head0_e1_n2
@@ -767,7 +766,7 @@ module kv3_head_eighth_e1 (
     assign g_t_3_u_stk__kpv_o[0] = n669[0];
     // member head0__g_t_2__u_l8 (u_head0_g_t_2_u_l8)
     ot_qkh_lane8 #(.ADD_LAT(7), .LTW(12)) u_g_t_2_u_l8 (
-        .bsel(g_t_2_u_l8__bsel[1:0]),
+        .bsel(strap_bsel[1:0]),
         .c_in({n0[0], n1[0], n2[0], n3[0]}),
         .clk(g_t_2_u_l8__clk[0]),
         .e_in({n4[0], n5[0], n6[0], n7[0], n8[0], n9[0], n10[0], n11[0], n12[0], n13[0], n14[0], n15[0], n16[0], n17[0], n18[0], n19[0]}),
@@ -806,7 +805,7 @@ module kv3_head_eighth_e1 (
     );
     // member head0__g_t_3__u_l8 (u_head0_g_t_3_u_l8)
     ot_qkh_lane8 #(.ADD_LAT(7), .LTW(12)) u_g_t_3_u_l8 (
-        .bsel(g_t_2_u_l8__bsel[1:0]),
+        .bsel(strap_bsel[1:0]),
         .c_in({n335[0], n336[0], n337[0], n338[0]}),
         .clk(g_t_2_u_l8__clk[0]),
         .e_in({n339[0], n340[0], n341[0], n342[0], n343[0], n344[0], n345[0], n346[0], n347[0], n348[0], n349[0], n350[0], n351[0], n352[0], n353[0], n354[0]}),
