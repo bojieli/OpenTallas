@@ -16,7 +16,7 @@ library (ot_qfd_serdes_112g_x6_phy_w522_ff) {
     process : 1; voltage : 0.77; temperature : 0;
   }
   default_operating_conditions : PVT_ff;
-  voltage_map (VDDPHY, 0.77);
+  voltage_map (VDD, 0.77);
   voltage_map (VSS, 0);
   default_max_transition : 320;
   default_fanout_load : 1;
@@ -71,13 +71,13 @@ library (ot_qfd_serdes_112g_x6_phy_w522_ff) {
     dont_touch : true;
     interface_timing : true;
     cell_leakage_power : 0.0000;
-    pg_pin (VDDPHY) { voltage_name : VDDPHY; pg_type : primary_power; }
+    pg_pin (VDD) { voltage_name : VDD; pg_type : primary_power; }
     pg_pin (VSS) { voltage_name : VSS; pg_type : primary_ground; }
     pin (clk) {
       direction : input;
       clock : true;
       capacitance : 50.0000;
-      related_power_pin : VDDPHY;
+      related_power_pin : VDD;
       related_ground_pin : VSS;
       min_period : 800.000;
       min_pulse_width_high : 300.000;
@@ -95,7 +95,7 @@ library (ot_qfd_serdes_112g_x6_phy_w522_ff) {
     }
     pin (rst_n) {
       direction : input;
-      related_power_pin : VDDPHY;
+      related_power_pin : VDD;
       related_ground_pin : VSS;
       capacitance : 1.3674;
       timing () {
@@ -153,7 +153,7 @@ library (ot_qfd_serdes_112g_x6_phy_w522_ff) {
     }
     pin (tx_up) {
       direction : output;
-      related_power_pin : VDDPHY;
+      related_power_pin : VDD;
       related_ground_pin : VSS;
       max_capacitance : 46.08;
       timing () {
@@ -208,7 +208,7 @@ library (ot_qfd_serdes_112g_x6_phy_w522_ff) {
     }
     pin (tx_v) {
       direction : input;
-      related_power_pin : VDDPHY;
+      related_power_pin : VDD;
       related_ground_pin : VSS;
       capacitance : 1.3674;
       timing () {
@@ -267,7 +267,7 @@ library (ot_qfd_serdes_112g_x6_phy_w522_ff) {
     bus (tx_flit) {
       bus_type : ot_qfd_serdes_112g_x6_phy_w522_tx_flit_t;
       direction : input;
-      related_power_pin : VDDPHY;
+      related_power_pin : VDD;
       related_ground_pin : VSS;
       capacitance : 1.3674;
       timing () {
@@ -325,7 +325,7 @@ library (ot_qfd_serdes_112g_x6_phy_w522_ff) {
     }
     pin (rx_v) {
       direction : output;
-      related_power_pin : VDDPHY;
+      related_power_pin : VDD;
       related_ground_pin : VSS;
       max_capacitance : 46.08;
       timing () {
@@ -381,7 +381,7 @@ library (ot_qfd_serdes_112g_x6_phy_w522_ff) {
     bus (rx_flit) {
       bus_type : ot_qfd_serdes_112g_x6_phy_w522_rx_flit_t;
       direction : output;
-      related_power_pin : VDDPHY;
+      related_power_pin : VDD;
       related_ground_pin : VSS;
       max_capacitance : 46.08;
       timing () {

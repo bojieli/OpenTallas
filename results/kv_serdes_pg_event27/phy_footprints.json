@@ -37,8 +37,10 @@
   "power_basis": "existing infra_pg SER.MACRO6_POWER proxy, not new measurement",
   "pg_interface": {
    "layer": "M7",
+   "power_pin": "VDD",
+   "domain_net": "VDDPHY_SW",
    "contacts": {
-    "VDDPHY": [
+    "VDD": [
      [
       2.004,
       0.5,
@@ -9467,8 +9469,10 @@
   "power_basis": "existing infra_pg SER.MACRO6_POWER proxy, not new measurement",
   "pg_interface": {
    "layer": "M7",
+   "power_pin": "VDD",
+   "domain_net": "VDDPHY_SE",
    "contacts": {
-    "VDDPHY": [
+    "VDD": [
      [
       2.004,
       0.5,
