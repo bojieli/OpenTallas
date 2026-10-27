@@ -1,0 +1,43 @@
+{
+ "top": "ot_hnx_fused_hub_n4ext",
+ "files": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_next/fused/ot_hnx_fused_tree.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat.sv",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hbm_next/fused/ot_hnx_fused_hub_n4ext.sv"
+ ],
+ "macros": [
+  {
+   "module": "ot_sram_1r1w_128x256_m1_r2c2",
+   "file": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+  },
+  {
+   "module": "ot_sram_1r1w2c_32x64_m1",
+   "file": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_bb.v"
+  }
+ ],
+ "blackboxes": [],
+ "unresolved": [],
+ "ambiguous": {
+  "ot_hdc_qmul_lat": [
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat_c12.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+  ],
+  "ot_hdc_qadd_lat": [
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat_c12.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+  ]
+ }
+}

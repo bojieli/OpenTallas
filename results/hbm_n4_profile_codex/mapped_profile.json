@@ -1,0 +1,264 @@
+{
+ "qualification": "DIAGNOSTIC_ORIGINAL_PAD_BUG_NOT_ROUTED_NOT_SIGNED",
+ "source_commit": "24d4f93a6e",
+ "pad_failure": "Original 6-bit fill+1 wraps at saturated63; TOK owns source fix and new closure. Preserve this mapped diagnostic.",
+ "targets": {
+  "central": {
+   "top": "ot_hnx_fused_hub_n4ext",
+   "standard_cells": 185460,
+   "standard_area_um2": 20770.34724,
+   "ff": 30135,
+   "macros": [
+    {
+     "instance": "u_native.u_scb",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "connections_sha256": "9c9a0350eab13062130b2a0cef815a83ce6a221ea53b6772ea625e15fc4ab198"
+    },
+    {
+     "instance": "u_native.u_t5.u_pad.u_c",
+     "master": "ot_sram_1r1w2c_32x64_m1",
+     "connections_sha256": "e1b705af7048a5c487c4ade9f3cf22ac7261c3cdfe6d514617c42c2f0d602957"
+    },
+    {
+     "instance": "u_native.u_t5.u_pad.u_d",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "connections_sha256": "22c5361638e83a51b4a4e0f40effe8ecc7ea21a5393d30ba6d0a5dc21bacd3b2"
+    }
+   ],
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "width": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "width": 1
+    },
+    "job_v": {
+     "direction": "input",
+     "width": 1
+    },
+    "job": {
+     "direction": "input",
+     "width": 217
+    },
+    "done": {
+     "direction": "output",
+     "width": 1
+    },
+    "fault": {
+     "direction": "output",
+     "width": 1
+    },
+    "busy": {
+     "direction": "output",
+     "width": 1
+    },
+    "wsc": {
+     "direction": "input",
+     "width": 8
+    },
+    "pk5": {
+     "direction": "input",
+     "width": 6
+    },
+    "pb5": {
+     "direction": "input",
+     "width": 1
+    },
+    "up_nw": {
+     "direction": "input",
+     "width": 271
+    },
+    "up_ne": {
+     "direction": "input",
+     "width": 271
+    },
+    "down_nw": {
+     "direction": "output",
+     "width": 173
+    },
+    "down_ne": {
+     "direction": "output",
+     "width": 173
+    }
+   },
+   "cells_by_type": {
+    "INVx1_ASAP7_75t_R": 40844,
+    "NAND2xp33_ASAP7_75t_R": 13720,
+    "NAND3xp33_ASAP7_75t_R": 2021,
+    "OR2x2_ASAP7_75t_R": 1207,
+    "NOR3xp33_ASAP7_75t_R": 2491,
+    "AND4x1_ASAP7_75t_R": 2307,
+    "NAND4xp25_ASAP7_75t_R": 1025,
+    "AOI21xp33_ASAP7_75t_R": 8778,
+    "OA21x2_ASAP7_75t_R": 1009,
+    "OAI21xp33_ASAP7_75t_R": 9960,
+    "NOR2xp33_ASAP7_75t_R": 14254,
+    "OR3x1_ASAP7_75t_R": 783,
+    "AND2x2_ASAP7_75t_R": 7307,
+    "O2A1O1Ixp33_ASAP7_75t_R": 1807,
+    "AO21x1_ASAP7_75t_R": 6085,
+    "XNOR2xp5_ASAP7_75t_R": 12000,
+    "MAJIxp5_ASAP7_75t_R": 4530,
+    "XOR2xp5_ASAP7_75t_R": 3487,
+    "NOR4xp25_ASAP7_75t_R": 2570,
+    "AND3x1_ASAP7_75t_R": 1576,
+    "A2O1A1Ixp33_ASAP7_75t_R": 1402,
+    "OAI211xp5_ASAP7_75t_R": 1588,
+    "OA211x2_ASAP7_75t_R": 317,
+    "OA22x2_ASAP7_75t_R": 2,
+    "OAI31xp33_ASAP7_75t_R": 1766,
+    "AOI211xp5_ASAP7_75t_R": 1507,
+    "AOI221xp5_ASAP7_75t_R": 853,
+    "OAI22xp33_ASAP7_75t_R": 871,
+    "AOI22xp33_ASAP7_75t_R": 2146,
+    "OAI221xp5_ASAP7_75t_R": 327,
+    "A2O1A1O1Ixp25_ASAP7_75t_R": 291,
+    "NAND5xp2_ASAP7_75t_R": 272,
+    "NOR5xp2_ASAP7_75t_R": 451,
+    "OR4x1_ASAP7_75t_R": 627,
+    "OAI32xp33_ASAP7_75t_R": 171,
+    "AOI31xp33_ASAP7_75t_R": 326,
+    "AOI33xp33_ASAP7_75t_R": 11,
+    "OAI311xp33_ASAP7_75t_R": 436,
+    "AO33x2_ASAP7_75t_R": 1,
+    "AOI311xp33_ASAP7_75t_R": 56,
+    "AOI32xp33_ASAP7_75t_R": 102,
+    "AOI321xp33_ASAP7_75t_R": 2,
+    "AO211x2_ASAP7_75t_R": 41,
+    "MAJx2_ASAP7_75t_R": 2522,
+    "OR5x1_ASAP7_75t_R": 139,
+    "AO32x1_ASAP7_75t_R": 730,
+    "DFFHQNx1_ASAP7_75t_R": 26679,
+    "DFFASRHQNx1_ASAP7_75t_R": 3456,
+    "AO221x1_ASAP7_75t_R": 270,
+    "AO22x1_ASAP7_75t_R": 192,
+    "AND5x1_ASAP7_75t_R": 98,
+    "AO31x2_ASAP7_75t_R": 24,
+    "OA31x2_ASAP7_75t_R": 1,
+    "HB1xp67_ASAP7_75t_R": 21,
+    "ot_sram_1r1w_128x256_m1_r2c2": 2,
+    "OAI321xp33_ASAP7_75t_R": 1,
+    "ot_sram_1r1w2c_32x64_m1": 1
+   },
+   "inputs": 777,
+   "outputs": 349
+  },
+  "n4": {
+   "top": "ot_hnx_fused_tnode",
+   "standard_cells": 10445,
+   "standard_area_um2": 1361.4804,
+   "ff": 2895,
+   "macros": [
+    {
+     "instance": "u_pad.u_c",
+     "master": "ot_sram_1r1w2c_32x64_m1",
+     "connections_sha256": "e1b705af7048a5c487c4ade9f3cf22ac7261c3cdfe6d514617c42c2f0d602957"
+    },
+    {
+     "instance": "u_pad.u_d",
+     "master": "ot_sram_1r1w_128x256_m1_r2c2",
+     "connections_sha256": "22c5361638e83a51b4a4e0f40effe8ecc7ea21a5393d30ba6d0a5dc21bacd3b2"
+    }
+   ],
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "width": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "width": 1
+    },
+    "pad_k": {
+     "direction": "input",
+     "width": 6
+    },
+    "pad_b": {
+     "direction": "input",
+     "width": 1
+    },
+    "ua": {
+     "direction": "input",
+     "width": 271
+    },
+    "ub": {
+     "direction": "input",
+     "width": 271
+    },
+    "uo": {
+     "direction": "output",
+     "width": 271
+    },
+    "dn": {
+     "direction": "input",
+     "width": 173
+    },
+    "da": {
+     "direction": "output",
+     "width": 173
+    },
+    "db": {
+     "direction": "output",
+     "width": 173
+    }
+   },
+   "cells_by_type": {
+    "INVx1_ASAP7_75t_R": 2299,
+    "NAND2xp33_ASAP7_75t_R": 847,
+    "OAI21xp33_ASAP7_75t_R": 1071,
+    "NOR2xp33_ASAP7_75t_R": 953,
+    "AO21x1_ASAP7_75t_R": 398,
+    "AOI21xp33_ASAP7_75t_R": 536,
+    "NOR4xp25_ASAP7_75t_R": 73,
+    "AOI22xp33_ASAP7_75t_R": 10,
+    "AND2x2_ASAP7_75t_R": 217,
+    "OAI321xp33_ASAP7_75t_R": 1,
+    "OAI211xp5_ASAP7_75t_R": 39,
+    "DFFHQNx1_ASAP7_75t_R": 2734,
+    "DFFASRHQNx1_ASAP7_75t_R": 161,
+    "OA21x2_ASAP7_75t_R": 20,
+    "AND3x1_ASAP7_75t_R": 42,
+    "AND4x1_ASAP7_75t_R": 29,
+    "XNOR2xp5_ASAP7_75t_R": 181,
+    "XOR2xp5_ASAP7_75t_R": 67,
+    "OR2x2_ASAP7_75t_R": 18,
+    "NAND4xp25_ASAP7_75t_R": 13,
+    "MAJIxp5_ASAP7_75t_R": 75,
+    "AOI31xp33_ASAP7_75t_R": 6,
+    "NOR3xp33_ASAP7_75t_R": 42,
+    "AO32x1_ASAP7_75t_R": 29,
+    "A2O1A1Ixp33_ASAP7_75t_R": 22,
+    "NAND3xp33_ASAP7_75t_R": 20,
+    "OAI31xp33_ASAP7_75t_R": 48,
+    "OAI221xp5_ASAP7_75t_R": 10,
+    "AOI211xp5_ASAP7_75t_R": 17,
+    "OA211x2_ASAP7_75t_R": 6,
+    "O2A1O1Ixp33_ASAP7_75t_R": 35,
+    "OR3x1_ASAP7_75t_R": 11,
+    "OAI311xp33_ASAP7_75t_R": 15,
+    "AO221x1_ASAP7_75t_R": 10,
+    "NAND5xp2_ASAP7_75t_R": 9,
+    "OAI32xp33_ASAP7_75t_R": 6,
+    "AO22x1_ASAP7_75t_R": 2,
+    "OR5x1_ASAP7_75t_R": 5,
+    "OAI22xp33_ASAP7_75t_R": 96,
+    "AOI32xp33_ASAP7_75t_R": 3,
+    "AOI221xp5_ASAP7_75t_R": 200,
+    "AOI311xp33_ASAP7_75t_R": 2,
+    "AND5x1_ASAP7_75t_R": 4,
+    "NOR5xp2_ASAP7_75t_R": 12,
+    "OR4x1_ASAP7_75t_R": 18,
+    "MAJx2_ASAP7_75t_R": 23,
+    "AO31x2_ASAP7_75t_R": 1,
+    "A2O1A1O1Ixp25_ASAP7_75t_R": 8,
+    "HB1xp67_ASAP7_75t_R": 1,
+    "ot_sram_1r1w2c_32x64_m1": 1,
+    "ot_sram_1r1w_128x256_m1_r2c2": 1
+   },
+   "inputs": 724,
+   "outputs": 617
+  }
+ }
+}
