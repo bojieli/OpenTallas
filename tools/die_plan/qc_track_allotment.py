@@ -52,7 +52,7 @@ def candidates(router,r):
     legal=[]
     for k in range(first,last+1):
         c=round(offset+k*pitch,4)
-        got,mode,ext=router.place(r['layer'],c,*r['interval'],r['owner'],keep=(c,c),dry=True)
+        got,mode,ext=router.place(r['layer'],c,*r['interval'],r['owner'],keep=(c,c),avoid=r.get('avoid',()),dry=True)
         if got is not None and not (mode=='drawn' and ext is None):
             legal.append(dict(track=got,mode=mode,extension=ext))
     return sorted(legal,key=lambda p:(abs(p['track']-r['ideal']),p['track']))
@@ -76,7 +76,7 @@ def allot(requests,router_factory):
         start=len(router.ix.shapes);moves=len(router.moves);old_modes=dict(router.modes);pending=[];bad=None
         for r in sorted(groups[owner],key=rank):
             _rules(router,r)
-            c,mode,ext=router.place(r['layer'],r['ideal'],*r['interval'],owner,keep=r.get('keep'))
+            c,mode,ext=router.place(r['layer'],r['ideal'],*r['interval'],owner,keep=r.get('keep'),avoid=r.get('avoid',()))
             if c is None or (mode=='drawn' and ext is None):
                 overlaps=[p['owner'] for p in placed if p['layer']==r['layer'] and min(p['interval'][1],r['interval'][1])>max(p['interval'][0],r['interval'][0])]
                 bad=dict(owner=owner,request=r['id'],static_candidates=len(capacity[r['id']]),candidate_tracks=[p['track'] for p in capacity[r['id']]],overlapping_allocated_owners=sorted(set(overlaps)),reason='no actual tied track in declared window')
@@ -94,3 +94,35 @@ def allot(requests,router_factory):
             else:rr.append(dict(first=p['track'],last=p['track'],tracks=1,mode=p['mode']))
         runs[r['id']]=rr
     return dict(status='TRUNK_ONLY_INCOMPLETE' if failed else 'TRUNKS_ALLOCATED_ACCESS_NOT_CHECKED',scope='Ordering/allotment proposal; pin stacks, drops, ties, body legality and full native dry build NOT CHECKED',owner_order=owners,assigned=placed,failures=failed,static_capacity={k:len(v) for k,v in capacity.items()},gap_runs=runs)
+
+
+def fixed_occupancy_router(router):
+    """Snapshot exact PG+mesh before/after routing, excluding tree pressure.
+
+    Cache once per builder run. This is a diagnostic copy, never the active
+    router. All actual fixed rectangles and their per-pair spacing are retained.
+    """
+    import die_clock_128 as C
+    fixed=C.TrackRouter(dict(router.nd),router.shield,router.tracks,
+                        max_move=router.max_move,wide_merge_um=router.wide_merge_um)
+    fixed.ix.pairwise=router.ix.pairwise
+    fixed.reserve([s for s in router.ix.shapes if s[2] in ('pg','mesh')])
+    return fixed
+
+
+def failure_witness(fixed,active,layer,ideal,a0,a1,net,keep=None,avoid=()):
+    """Serialize an EXACT failed place() call for future full-run diagnostics.
+
+    Invoke only after the active call failed, using its unchanged arguments.
+    It probes cached fixed occupancy, never mutates active geometry or retries a
+    build. Zero tied candidates distinguishes a static geometry/tie limitation
+    from a failure caused by occupied tracks on this very interval/window.
+    """
+    fixed.max_move=active.max_move
+    r=dict(id=net,owner=net,layer=layer,ideal=ideal,interval=sorted((a0,a1)),
+           ndr=dict(active.nd),wide_merge_um=active.wide_merge_um,avoid=list(avoid))
+    if keep is not None:r['keep']=list(keep)
+    legal=candidates(fixed,r)
+    return dict(request=r,static_candidate_count=len(legal),static_candidates=legal,
+                classification='STATIC_UNAVAILABLE' if not legal else 'ROUTE_PRESSURE_ON_EXACT_CALL',
+                scope='Exact failed interval/keep/avoid; tied static PG+mesh candidates only; not full build PASS')

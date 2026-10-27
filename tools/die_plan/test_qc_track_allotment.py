@@ -46,3 +46,16 @@ def test_real_explicit_v2_net_schema_and_branches_remain_intact():
         original=next(v for v in nets if v['name']==n['name'])
         assert n['drv']==original['drv'] and n['loads']==original['loads']
         assert sorted(n.get('plan_connections',[]),key=str)==sorted(original.get('plan_connections',[]),key=str)
+
+
+def test_exact_failed_call_witness_removes_only_tree_pressure():
+    r=factory();q=requests();r.nd=q[0]['ndr'];r.ix.space=.08
+    r.place('M8',0.,10.,100.,'narrow',keep=q[0]['keep'])
+    r.nd=q[1]['ndr'];r.ix.space=.5
+    assert r.place('M8',0.,10.,100.,'wide',keep=q[1]['keep'])[0] is None
+    before=deepcopy(r.ix.shapes)
+    fixed=A.fixed_occupancy_router(r)
+    witness=A.failure_witness(fixed,r,'M8',0.,10.,100.,'wide',keep=q[1]['keep'])
+    assert witness['classification']=='ROUTE_PRESSURE_ON_EXACT_CALL'
+    assert witness['static_candidate_count']>0 and witness['request']['keep']==q[1]['keep']
+    assert r.ix.shapes==before
