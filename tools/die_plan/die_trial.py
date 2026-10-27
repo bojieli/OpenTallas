@@ -1103,12 +1103,21 @@ def bump_grid(P, io, pitch=150.0, size=60.0):
     return out
 
 
-def bumps_tcl(P, bumps, size=4.0):
+def bumps_tcl(P, bumps, size=4.0, pad_um=0.0):
     """Attach each source to actual M9 metal of its own net after pdngen.
 
     Stripe origins depend on the floorplan core origin and pdngen net phase.
     Computing them from the plan offset produced isolated voltage-source pins.
+
+    pad_um = 0 (default, legacy point bump): a size x size source on the single nearest same-net M9 strap.
+    pad_um > 0 (INFRA-FIRST-HEAD-5, real bump pad): the C4 pad is a pad_um x pad_um plate of pad metal over M9,
+    centred on the bump, with a V9 farm to EVERY same-net M9 strap under it.  The plate is ideal (pad/RDL metal and
+    the V9 farm are not resistive in PDNSim; the lane README bounds them) so each source = the overlap of the pad square
+    with one same-net M9 strap.  A pad that touches no same-net strap falls back to the point bump (counted in
+    OT_BUMPS pad_fallback; must be 0 for a valid pad model).
     """
+    if pad_um and pad_um > 0:
+        return _pad_bumps_tcl(bumps, pad_um)
     t = ["set block [ord::get_db_block]",
          # pdngen makes boundary PG ports; they are not the specified C4 sources.
          "foreach ot_auto_name {VDD VSS} { set ot_auto_bt [$block findBTerm $ot_auto_name]; "
@@ -1157,6 +1166,56 @@ def bumps_tcl(P, bumps, size=4.0):
               f"$bt setSigType {'POWER' if net == 'VDD' else 'GROUND'}; set bp [odb::dbBPin_create $bt]",
               "odb::dbBox_create $bp $m9 {*}$best; $bp setPlacementStatus FIRM"]
     t.append(f'puts "OT_BUMPS actual_m9_sources {len(bumps)} cached_columns [dict size $bump_x_cache]"')
+    return "\n".join(t) + "\n"
+
+
+def _pad_bumps_tcl(bumps, pad_um):
+    """bumps_tcl with real bump pads (see bumps_tcl): one dbBTerm per bump, one dbBPin per pad x same-net M9 overlap."""
+    t = ["set block [ord::get_db_block]",
+         "foreach ot_auto_name {VDD VSS} { set ot_auto_bt [$block findBTerm $ot_auto_name]; "
+         "if {$ot_auto_bt ne \"NULL\"} { if {[$ot_auto_bt getSigType] ni {POWER GROUND}} "
+         "{ error \"refusing to remove non-PG boundary port $ot_auto_name\" }; "
+         "odb::dbBTerm_destroy $ot_auto_bt } }",
+         "set m9 [[ord::get_db_tech] findLayer M9]",
+         "set bump_dbu [[ord::get_db_tech] getDbUnitsPerMicron]",
+         "set bump_shapes {}",
+         "foreach net_name {VDD VSS} {",
+         "  set shapes {}",
+         "  foreach wire [[$block findNet $net_name] getSWires] {",
+         "    foreach shape [$wire getWires] {",
+         "      if {[$shape isVia] || [$shape getTechLayer] ne $m9} continue",
+         "      lappend shapes [list [$shape xMin] [$shape yMin] [$shape xMax] [$shape yMax]]",
+         "    }",
+         "  }",
+         "  if {![llength $shapes]} { error \"no actual M9 metal for $net_name voltage sources\" }",
+         "  dict set bump_shapes $net_name $shapes",
+         "}",
+         "set pad_pins 0; set pad_fallback 0; set pad_area 0.0",
+         f"set pad_half [expr {{round({pad_um:g}*$bump_dbu/2.0)}}]",
+         "proc ot_pad {net k bx by} {",
+         "  global block m9 bump_dbu bump_shapes pad_pins pad_fallback pad_area pad_half",
+         "  set bx [expr {round($bx*$bump_dbu)}]; set by [expr {round($by*$bump_dbu)}]",
+         "  set px0 [expr {$bx-$pad_half}]; set px1 [expr {$bx+$pad_half}]; set py0 [expr {$by-$pad_half}]; set py1 [expr {$by+$pad_half}]",
+         "  set hits {}; set best {}; set bd 1e30",
+         "  foreach rect [dict get $bump_shapes $net] {",
+         "    lassign $rect x0 y0 x1 y1",
+         "    set ix0 [expr {max($x0,$px0)}]; set ix1 [expr {min($x1,$px1)}]; set iy0 [expr {max($y0,$py0)}]; set iy1 [expr {min($y1,$py1)}]",
+         "    if {$ix1 > $ix0 && $iy1 > $iy0} { lappend hits [list $ix0 $iy0 $ix1 $iy1] }",
+         "    set d [expr {abs(($x0+$x1)/2.0-$bx)}]; if {$d < $bd && $y0 <= $by && $by <= $y1} { set bd $d; set best $rect }",
+         "  }",
+         "  if {![llength $hits]} {",
+         "    incr pad_fallback",
+         "    if {![llength $best]} { error \"bump $net $k touches no $net M9 metal\" }",
+         "    lassign $best x0 y0 x1 y1; set hits [list [list $x0 [expr {$by-2*$bump_dbu}] $x1 [expr {$by+2*$bump_dbu}]]]",
+         "  }",
+         "  set bt [odb::dbBTerm_create [$block findNet $net] ${net}_b$k]; $bt setIoType INOUT",
+         "  $bt setSigType [expr {$net eq {VDD} ? {POWER} : {GROUND}}]",
+         "  foreach h $hits { set bp [odb::dbBPin_create $bt]; odb::dbBox_create $bp $m9 {*}$h; $bp setPlacementStatus FIRM; incr pad_pins",
+         "    lassign $h a b c d; set pad_area [expr {$pad_area + ($c-$a)*($d-$b)/double($bump_dbu*$bump_dbu)}] }",
+         "}"]
+    t += [f"ot_pad {net} {k} {x:g} {y:g}" for k, (net, x, y) in enumerate(bumps)]
+    t.append(f'puts "OT_BUMPS pad_um {pad_um:g} bumps {len(bumps)} pad_pins $pad_pins pad_fallback $pad_fallback '
+             f'm9_contact_um2 [format %.1f $pad_area]"')
     return "\n".join(t) + "\n"
 
 

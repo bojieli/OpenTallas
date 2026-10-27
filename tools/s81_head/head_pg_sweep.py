@@ -7,7 +7,12 @@ and PDNSim windows) with VSS-locked clock lanes.
     head_pg_sweep.py sweep PLAN --power power.json --act 0.5 --out sweep.json [--bump 150 ...]
         analytic IR (tools/die_plan/infra_pg.estimate) + track share + clock-lane fit per candidate grid
     head_pg_sweep.py psm PLAN --power power.json --act 0.5 --cand LABEL ... --window NAME=x0,y0,x1,y1 --out DIR
-        PDNSim window kits (infra_pg.window_kit) with die.pg.domains dropped (core-only window, no PHY)
+            [--pad UM ...] [--map cores] [--vss] [--tile 43.2]
+        PDNSim window kits (infra_pg.window_kit) with die.pg.domains dropped (core-only window, no PHY).
+        --pad: real C4 bump pads (die_trial.bumps_tcl pad model), one kit per pad size (0 = legacy point bump).
+        --map cores: measured per-region power map (core_map: each hd_tile hard core at its own measured W on its plan
+        outline, glue at the tile remainder, other types at the tile upper density) instead of one uniform density.
+        --vss: PDNSim solves VSS too (bounce), the gate is VDD drop + VSS bounce (COORD 10-27 06:34).
 
 Read-only on the plan.  All numbers produced here are own-tool (UNCHECKED until NUMBER-CHECK).
 """
@@ -185,6 +190,47 @@ def cmd_sweep(a):
     Path(a.out).write_text(json.dumps(out, indent=1) + "\n")
 
 
+def core_map(raw, pw, act, bound="upper"):
+    """Measured per-region power map [(die rect, W/mm2)] (INFRA-FIRST-HEAD-5).
+    hd_tile: every hard core (partition_types.hd_tile.contents with origin_um/outline_um) carries its measured
+    report_power watts on its PLAN outline (watts preserved, so the density is total_w / plan area: elemB 0.1189 W on
+    277.652^2 = 1.542 W/mm2, above the 1.462 of the 285.12-um kit area -> conservative); the glue = tile upper watts -
+    core watts over the remaining tile area ('upper' bound; 'lower' = 0 W glue).  Other types: the tile upper density
+    (power.json basis ASSUMPTION).  Channels / whitespace 0 W."""
+    A = pw["activities"][act]
+    T = raw["partition_types"]["hd_tile"]
+    tw, th = T["outline_um"]
+    cores = [c for c in (T.get("hard_cores") or []) + (T.get("contents") or []) if "origin_um" in c and "outline_um" in c]
+    def kind(c):
+        return "elemB" if "elemB" in c["module"] else "elemA"
+    cw = sum(A["cores"][kind(c)]["total_w"] for c in cores)
+    ca = sum(c["outline_um"][0] * c["outline_um"][1] for c in cores) * 1e-6
+    glue_w = (A["tile_w_upper"] - cw) if bound == "upper" else 0.0
+    glue_d = glue_w / (tw * th * 1e-6 - ca)
+    other_d = A["tile_w_mm2_upper"] if bound == "upper" else A["tile_w_mm2_lower"]
+    dens = {kind(c): A["cores"][kind(c)]["total_w"] / (c["outline_um"][0] * c["outline_um"][1] * 1e-6) for c in cores}
+    loads = []
+    for q in raw["partitions"]:
+        ox, oy = q["origin_um"]
+        o = q.get("orient", "R0")
+        w, h = raw["partition_types"][q["type"]]["outline_um"]
+        if o in ("R90", "R270", "MXR90", "MYR90"):
+            raise ValueError(f"core_map: rotated partition {q['name']} not supported")
+        if q["type"] != "hd_tile":
+            loads.append(([ox, oy, ox + w, oy + h], other_d))
+            continue
+        loads.append(([ox, oy, ox + w, oy + h], glue_d))
+        for c in cores:
+            x, y = c["origin_um"]
+            cx, cy = c["outline_um"]
+            x = w - x - cx if o in ("MY", "R180") else x
+            y = h - y - cy if o in ("MX", "R180") else y
+            loads.append(([ox + x, oy + y, ox + x + cx, oy + y + cy], dens[kind(c)] - glue_d))
+    info = dict(glue_w_mm2=round(glue_d, 4), other_w_mm2=other_d, core_w_mm2={k: round(v, 4) for k, v in dens.items()},
+                tile_w=round(cw + glue_w, 4), core_w=round(cw, 4))
+    return loads, info
+
+
 class _NoDom(G._PG):
     def __init__(self, P, grid):
         super().__init__(P, grid)
@@ -201,18 +247,24 @@ def cmd_psm(a):
     nd.parent.mkdir(parents=True, exist_ok=True)
     nd.write_text(json.dumps(raw))
     Pn = plan(str(nd))
+    loads, minfo = core_map(raw, pw, a.act, a.bound) if a.map == "cores" else (None, None)
+    nets = ("VDD", "VSS") if a.vss else ("VDD",)
     for spec in a.cand:
         lab, g8, g9 = spec.split(":")
         w8, p8 = map(float, g8.split("@"))
         w9, p9 = map(float, g9.split("@"))
         g = [entry("M8", w8, p8), entry("M9", w9, p9)]
         pg = dict(grid=g, regions=[], core_w_mm2=d, bump_pitch_um=a.bump, vdd=0.7, budget_mv=35.0)
-        for win in a.window:
+        for pad in (a.pad or [0.0]):
+          for win in a.window:
             name, r = win.split("=")
             rect = [float(v) for v in r.split(",")]
-            outd = Path(a.out) / f"{lab}_{name}"
-            m = G.window_kit(Pn, nd.parent, pg, outd, f"{lab}_{name}", rect, core_w_mm2=d)
+            plab = f"{lab}_p{pad:g}" if a.pad else lab
+            outd = Path(a.out) / f"{plab}_{name}"
+            m = G.window_kit(Pn, nd.parent, pg, outd, f"{plab}_{name}", rect, tile=a.tile, core_w_mm2=d, pad_um=pad,
+                             nets=nets, loads=loads)
             m["plan"] = str(nd.resolve())
+            m["power_map_info"] = minfo
             m["tracks"] = G.tracks_of(Pn, g)
             (outd / "irwin.json").write_text(json.dumps(m, indent=1) + "\n")
             print(lab, name, m["window_um"], m["power_w"], "W est", m["est_worst_mv"], "mV", m["tracks"])
@@ -239,6 +291,10 @@ def main(argv=None):
             s.add_argument("--bump", type=float, default=150.0)
             s.add_argument("--cand", action="append", required=True, help="LABEL:W8@P8:W9@P9")
             s.add_argument("--window", action="append", required=True)
+            s.add_argument("--pad", type=float, action="append", help="bump pad edge um (repeat to sweep)")
+            s.add_argument("--map", choices=("uniform", "cores"), default="uniform")
+            s.add_argument("--vss", action="store_true")
+            s.add_argument("--tile", type=float, default=86.4, help="PDNSim load block edge um")
     a = ap.parse_args(argv)
     if a.cmd == "power":
         return cmd_power(a)

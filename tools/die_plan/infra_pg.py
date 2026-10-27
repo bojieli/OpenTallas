@@ -561,9 +561,13 @@ def default_windows(P, pg, margin=600.0, core_um=1500.0):
     return win
 
 
-def window_kit(P, plan_dir, pg, out, name, rect, tile=86.4, power=None, phy_w=4.37, core_w_mm2=None):
+def window_kit(P, plan_dir, pg, out, name, rect, tile=86.4, power=None, phy_w=4.37, core_w_mm2=None, pad_um=None,
+               nets=("VDD",), loads=None):
     """PDNSim on a die window (phy_ir._window_kit style): the sized die grid, the die's own bumps inside the window,
-    load blocks (M7 PG pins, as the partition kits) tiling the window, each at the region density under it."""
+    load blocks (M7 PG pins, as the partition kits) tiling the window, each at the region density under it.
+    pad_um (default pg['bump_pad_um'] or 0 = legacy point bump): real C4 bump pads (die_trial.bumps_tcl pad model).
+    nets: nets PDNSim solves (VDD drop; VSS bounce with ('VDD', 'VSS')).
+    loads: optional [(rect_um, W/mm2)] power map that replaces the region model's loads (e.g. per hard core)."""
     import numpy as np
     q = max(s["pitch_um"] for s in pg["grid"])
     q = max(q, BASE_PITCH)
@@ -572,6 +576,8 @@ def window_kit(P, plan_dir, pg, out, name, rect, tile=86.4, power=None, phy_w=4.
     w, h = x1 - x0, y1 - y0
     Pg = _PG(P, pg["grid"])
     model = load_model(P, plan_dir, power, phy_w, core_w_mm2 if core_w_mm2 is not None else pg.get("core_w_mm2"))
+    lmap = loads if loads is not None else model["loads"]
+    pad_um = float(pad_um if pad_um is not None else pg.get("bump_pad_um", 0.0) or 0.0)
     io = _pg_io(P, plan_dir)
     bp = pg.get("bump_pitch_um", 150.0)
     allb = pg_bumps(P, io, pitch=bp)
@@ -595,11 +601,11 @@ def window_kit(P, plan_dir, pg, out, name, rect, tile=86.4, power=None, phy_w=4.
     for i in range(nx_t):
         for j in range(ny_t):
             r = [x0 + i * bw, y0 + j * bh, x0 + (i + 1) * bw, y0 + (j + 1) * bh]
-            pw = sum(d * _ov(r, lr) for lr, d in model["loads"]) * 1e-6
+            pw = sum(d * _ov(r, lr) for lr, d in lmap) * 1e-6
             blks.append((f"u_b{i}_{j}", i * bw, j * bh, max(0.0, pw)))
     (out / "psm" / "psm.v").write_text("module irwin ();\n" + "".join(f"  irblk {n} ();\n" for n, *_ in blks) + "endmodule\n")
     (out / "psm" / "pdn.tcl").write_text(D.psm_pdn_tcl(Pg))
-    (out / "psm" / "bumps.tcl").write_text(D.bumps_tcl(Pg, bumps))
+    (out / "psm" / "bumps.tcl").write_text(D.bumps_tcl(Pg, bumps, pad_um=pad_um))
     t = ["set t0 [clock seconds]", f"read_lef {D.TECH_LEF}", f"read_lef {D.SC_LEF}", "read_lef /work/psm/irblk.lef",
          f"foreach f [glob {D.PLAT}/lib/NLDM/*RVT_TT_nldm*.lib*] {{ read_liberty $f }}",
          "read_verilog /work/psm/psm.v", "link_design irwin",
@@ -613,8 +619,8 @@ def window_kit(P, plan_dir, pg, out, name, rect, tile=86.4, power=None, phy_w=4.
     t += [f"set_pdnsim_inst_power -inst {n} -power {pw:.8f}" for n, _, _, pw in blks if pw > 0]
     t += ["foreach n {VDD VSS} { if {[catch {check_power_grid -net $n} e]} { puts \"OT_PG_CHECK_FAIL $n $e\" } "
           "else { puts \"OT_PG_CHECK_OK $n\" } }",
-          "if {[catch {analyze_power_grid -net VDD -error_file /work/psm/psm_VDD.rpt -voltage_file /work/psm/ir_VDD.csv} e]} "
-          "{ puts \"OT_PSM_FAIL $e\" } else { puts OT_PSM_OK }",
+          f"foreach n {{{' '.join(nets)}}} {{ if {{[catch {{analyze_power_grid -net $n -error_file /work/psm/psm_$n.rpt "
+          "-voltage_file /work/psm/ir_$n.csv} e]} { puts \"OT_PSM_FAIL $n $e\" } else { puts \"OT_PSM_OK $n\" } }",
           "puts \"OT_T psm [expr {[clock seconds]-$t0}]\"", "puts OT_DONE"]
     (out / "psm" / "tracks.tcl").write_text(D.coarse_tracks(P, 0.72))
     (out / "psm" / "psm.tcl").write_text("\n".join(t) + "\n")
@@ -628,7 +634,9 @@ def window_kit(P, plan_dir, pg, out, name, rect, tile=86.4, power=None, phy_w=4.
     est, worst, det = estimate(P, model, pg["grid"], bp, pg.get("vdd", 0.7), domain=(x0, y0, x1, y1), regions=regs)
     meta = dict(die=P.name, ir_budget_mv=pg.get("budget_mv"), window=name, window_um=[x0, y0, x1, y1], area_mm2=round(w * h * 1e-6, 3), grid=pg["grid"],
                 power_w=round(sum(b[3] for b in blks), 4), load_blocks=len(blks), bumps=len(bumps),
-                bumps_vdd=sum(1 for b in bumps if b[0] == "VDD"), est_regions_mv=est, est_worst_mv=worst, est_detail=det,
+                bumps_vdd=sum(1 for b in bumps if b[0] == "VDD"), bump_pad_um=pad_um, nets=list(nets),
+                power_map="loads" if loads is not None else "region model",
+                est_regions_mv=est, est_worst_mv=worst, est_detail=det,
                 scope="window PDNSim: window edges open (no feed from outside), window-local bumps; the estimate "
                       "above is the same model on the same domain")
     (out / "irwin.json").write_text(json.dumps(meta, indent=1) + "\n")
