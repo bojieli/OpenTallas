@@ -679,6 +679,8 @@ def main():
     if a.astk_face_ports and not any(Path(f).name == "qkd_astk_static_leaves.sv" for f in files):
         files.append(str(REPO / "rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv"))
     for f in files:
+        if not Path(f).is_absolute():   # KV-CORES-R2/AHUB 10-27: repo-relative core-json sources (frozen-tree safe)
+            f = str(REPO / f)
         if a.kvspc_core_clock:
             import kvspc_core_clock
             f = str(kvspc_core_clock.source(REPO, f))
