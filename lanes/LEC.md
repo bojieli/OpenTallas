@@ -113,3 +113,6 @@ CODEX took over idx_score quarter r0c0_k0h1 LEC on codex/idx-alias-1026 (source6
 
 ## CODEX notes 2026-10-26 20:07 PDT
 Current physical blockers:HEAD-Bcerr5twin, QXPQ85tool miss under active codex/lec-relay-2002; prior proof failures retained. Native PC833cyclefix already integrated earlier; no duplicate old proofs.
+
+## CODEX notes 2026-10-26 20:21 PDT
+Collected formerly pending official cold proofs from epyc1:/srv/opentallas-scratch2/claude/codex-token-1713/{headb_official,e5_official,hcore_official}/lec.json: HEADB EQUIVALENT29,764/29,764; E5 EQUIVALENT32,946/32,946; HCORE EQUIVALENT30,562/30,562, all0diff/0undecided (direct terminal JSON). Validated HCORE30,562 and M6E046,125 receipts remain EQ. Historical cohorts only: this closes old pending proof collection, does not qualify later RTL/physical revisions or sign-off. Current QXPQ correspondence and old elemB twin-refinement issue tracked under LEC-ICG-2 CODEX notes; no duplicated cold proof.
