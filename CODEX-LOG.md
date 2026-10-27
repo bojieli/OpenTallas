@@ -5019,3 +5019,5 @@ Plan sourcecodex/hbm-plan-0815@fdc89866a8 pushed/WTclean; narrowtypedHCschema7e3
 
 ## Handoff to Claude 2026-10-27 10:16 PDT — shared flow
 Explicit reset: PARKED flow and all descendants; existing jobs continue, no kills/new launches. Full final delta and all shas/branches/jobs/results/failures/OWNER/pendingREADY: /home/ubuntu/coord/handoff/codex_flow_interim_20261027_1008.md plus its four linked final packets. Top unfinished action: approved VMR nativeSIGNED+5342EQ publication queued98d3c304f548 at hubrow792, no state/archive yet; do not rerun proof. Canaries4NR/1QCreg/4active. Root-approved STA/RCX/Htree intake in progress; verify finalROOT-MERGE log rather than original-tip ancestry.
+
+2026-10-27 13:57 PDT CODEX token lanes resumed all DS/QK/QW/HBM/HEADnative onfresh1351/main5b3. CollectedHEAD264sharedtypeelaborationPASS305s/13.7GB/no runtime; B48 sourcefixnowall32PCsbootPASS, nominalactive/newtarget11dcalfaultdiagnosis; HBMmutantsRED/CAL/EPOCHcaught; DSactualGBmanifest/frozenprofiles notmain, thin sourcecompositionactive. Childownership/currentjobs/nextfailures inlanes/CODEX.md. ContinueuntilEXPLICITreset.
