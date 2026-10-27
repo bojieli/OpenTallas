@@ -950,62 +950,61 @@
     ],
     "layer": "M9",
     "insertion_ps": 250,
-    "core_taps": "early",
     "taps": [
      {
       "name": "u_core.u_b.g_cv.u_eA0.clk",
       "kind": "core",
       "xy": [
-       341.112,
-       8.71
+       177.12,
+       168.48
       ],
-      "insertion_ps": 415.62717,
+      "insertion_ps": 250.0,
       "budget_owner": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
-      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+      "note": "INSERTION PENDING (no centre-entry real view; hold2 kits have edge clk pins). D-INFRA-FIRST-HEAD: 12.8a centre clock entry (M9->M5 in-core island), core-local (159.84, 159.84) on the rebuilt 319.68 outline; die common latency target until the core's centre-entry signed view publishes its real insertion (12.3 v5.0)"
      },
      {
       "name": "u_core.u_b.g_cv.u_eA1.clk",
       "kind": "core",
       "xy": [
-       365.4,
-       8.71
+       531.36,
+       168.48
       ],
-      "insertion_ps": 415.62717,
+      "insertion_ps": 250.0,
       "budget_owner": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
-      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+      "note": "INSERTION PENDING (no centre-entry real view; hold2 kits have edge clk pins). D-INFRA-FIRST-HEAD: 12.8a centre clock entry (M9->M5 in-core island), core-local (159.84, 159.84) on the rebuilt 319.68 outline; die common latency target until the core's centre-entry signed view publishes its real insertion (12.3 v5.0)"
      },
      {
       "name": "u_core.u_b.g_cv.u_eA2.clk",
       "kind": "core",
       "xy": [
-       310.872,
-       704.282
+       177.12,
+       540.0
       ],
-      "insertion_ps": 415.62717,
+      "insertion_ps": 250.0,
       "budget_owner": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
-      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+      "note": "INSERTION PENDING (no centre-entry real view; hold2 kits have edge clk pins). D-INFRA-FIRST-HEAD: 12.8a centre clock entry (M9->M5 in-core island), core-local (159.84, 159.84) on the rebuilt 319.68 outline; die common latency target until the core's centre-entry signed view publishes its real insertion (12.3 v5.0)"
      },
      {
       "name": "u_core.u_b.g_cv.u_eA3.clk",
       "kind": "core",
       "xy": [
-       395.64,
-       704.282
+       531.36,
+       540.0
       ],
-      "insertion_ps": 415.62717,
+      "insertion_ps": 250.0,
       "budget_owner": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
-      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+      "note": "INSERTION PENDING (no centre-entry real view; hold2 kits have edge clk pins). D-INFRA-FIRST-HEAD: 12.8a centre clock entry (M9->M5 in-core island), core-local (159.84, 159.84) on the rebuilt 319.68 outline; die common latency target until the core's centre-entry signed view publishes its real insertion (12.3 v5.0)"
      },
      {
       "name": "u_core.u_b.g_cvb.u_eB.clk",
       "kind": "core",
       "xy": [
-       209.574,
-       991.992
+       354.24,
+       876.96
       ],
-      "insertion_ps": 378.75565,
+      "insertion_ps": 250.0,
       "budget_owner": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemB_cv/ot_s81hd_elemB_cv_tt.lib",
-      "note": "CP2 early core tap; selected TT max_clock_tree_path_rise"
+      "note": "INSERTION PENDING (no centre-entry real view; hold2 kits have edge clk pins). D-INFRA-FIRST-HEAD: 12.8a centre clock entry (M9->M5 in-core island), core-local (138.24, 142.56) on the rebuilt 285.12 outline; die common latency target until the core's centre-entry signed view publishes its real insertion (12.3 v5.0)"
      }
     ]
    },
@@ -2360,7 +2359,7 @@
    "clock": {
     "tap_um": [
      1442.88,
-     613.44
+     77.76
     ],
     "layer": "M9",
     "insertion_ps": 250
