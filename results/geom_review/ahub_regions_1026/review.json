@@ -1,0 +1,12 @@
+{
+ "verdict": "PASS-COND placement trial only",
+ "picture": "/srv/opentallas-scratch/claude/codex-kv-ahub-1026/regions_packed.png",
+ "findings": [
+  "Existing300FF moved into legal macro-free bands; no new pins/FF/cycles",
+  "Full actual26596 register cones used;1802 over405um becomes0 in packed guide, not yet actualDPL",
+  "False ck[0] data-face anchor removed; actual input/outputface flops preserved",
+  "Macrohalos, centralclockgap, supplychannels retained; distinctFFbodies packed without overlap",
+  "ActualDPL and full fresh reach census required; no CTS/route authorization"
+ ],
+ "scope": "Inheritedr3 physical prototype, current-source equivalence and canonical regeneration still required"
+}

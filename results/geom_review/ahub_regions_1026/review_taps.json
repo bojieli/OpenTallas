@@ -1,0 +1,12 @@
+{
+ "verdict": "PASS-COND placement trial only",
+ "picture": "/srv/opentallas-scratch/claude/codex-kv-ahub-1026/regions_packed_taps.png",
+ "target_manifest": "/srv/opentallas-scratch/claude/codex-kv-ahub-1026/packed_regions_taps.json",
+ "findings": [
+  "300 existing FF bodies now packed against all fixed tapcells plus0.108um cellpadding",
+  "No interface/FF/cycle changes; all26596 projectedcone endpoints <=405um",
+  "Clockgap and macrohalos clear; pins remainonS/E and truefaceFF untouched",
+  "Independent actualDPL and freshRRcensus required; no CTS/route authorization"
+ ],
+ "old_failed_job": "place_trial.otrun.log DPL24tapcell overlaps; preserved"
+}
