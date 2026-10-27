@@ -2156,6 +2156,22 @@
          "mission"
         ]
        },
+       "bootstrap_buses": {
+        "type": "array",
+        "uniqueItems": true,
+        "items": {
+         "type": "string",
+         "minLength": 1
+        }
+       },
+       "bootstrap_contents": {
+        "type": "array",
+        "uniqueItems": true,
+        "items": {
+         "type": "string",
+         "minLength": 1
+        }
+       },
        "core_start_roles": {
         "type": "object",
         "additionalProperties": {

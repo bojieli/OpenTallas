@@ -10,6 +10,13 @@ from head_token_sources import prepare
 class NativeWeightIdentity(unittest.TestCase):
  def setup_tree(self,r):
   texts={
+   'physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v':'(* blackbox *) module ot_rom_4096x274_m8(); endmodule',
+   'physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v':'''module ot_rom_4096x274_m8;
+    initial begin
+        for (init_i = 0; init_i < PR; init_i = init_i + 1) arr[init_i] = 0;
+        if ($value$plusargs("OT_ROM_DIR=%s", rom_dir) && INSTANCE != "") $readmemh(rom_dir, arr);
+    end
+endmodule''',
    'rtl/dsrom_sys/s81_head/ot_s81hd_elem_cv_bb.v':'(* blackbox *) module ot_s81hd_elemA_cv(); endmodule',
    'rtl/dsrom_sys/s81_head/ot_s81hd_elem_cv.sv':'module ot_s81hd_elemA_cv(); wire real_model=1; endmodule',
    'rtl/dsrom_sys/s81_head/ot_s81hd_oreg.sv':'module ot_s81hd_oreg(); endmodule',
@@ -35,6 +42,23 @@ class NativeWeightIdentity(unittest.TestCase):
     os.chdir(r);res=prepare(r,Path("plan.json"),Path("physical.f"),Path("native"))
    finally:os.chdir(before)
    self.assertEqual(res["unique_weight_images"],20)
+ def test_scope_loader_preserves_shared_tile_parameters(self):
+  with tempfile.TemporaryDirectory() as d:
+   r=Path(d);self.setup_tree(r);p=r/'gen/s81_head_top.sv';p.write_text(p.read_text().replace('endmodule','endmodule : s81_head_top'))
+   res=prepare(r,r/'plan.json',r/'physical.f',r/'native','scope')
+   text=(r/'native/s81_head_top.sv').read_text()
+   self.assertNotIn('#(.INSTANCE(',text)
+   self.assertIn('s81_head_top.tile0.u_core.u_b.g_cv.u_eA0.u_m.u_rom0.viamap.hex',res['required_scope_images'])
+   self.assertIn('s81_head_top.tile1.u_core.u_b.g_cvb.u_eB.u_m.u_rom1.viamap.hex',res['required_scope_images'])
+   self.assertIn('HEAD missing scope image',(r/'native/ot_rom_4096x274_m8_scope.sv').read_text())
+   self.assertEqual(res['unique_weight_images'],20)
+ def test_shared_hierarchical_type_uses_actual_runtime_scope(self):
+  with tempfile.TemporaryDirectory() as d:
+   r=Path(d);self.setup_tree(r)
+   res=prepare(r,r/'plan.json',r/'physical.f',r/'native','scope',True)
+   self.assertIn('/*verilator hier_block*/',(r/'native/ot_s81hd_tile_p.sv').read_text())
+   self.assertIn('s81_head_top.tile1.ot_s81hd_tile_p.u_core.u_b.g_cvb.u_eB.u_m.u_rom1.viamap.hex',res['required_scope_images'])
+   self.assertEqual(res['added_cycles'],0)
  def test_missing_tile_mutant_is_rejected(self):
   with tempfile.TemporaryDirectory() as d:
    r=Path(d);self.setup_tree(r);p=r/'gen/s81_head_top.sv';p.write_text(p.read_text().replace('tile1','lost_tile'))

@@ -802,6 +802,7 @@ def for_type(P, tn, reach=None):
     Pipelined plans: entry 'relayed', depth = the plan contract K.  Other plans (kit_rsync interim): entry 'sync', the
     type's own depth."""
     reach = float(reach or relay_um(P))
+    boot_buses, boot_contents = bootstrap_consumers(P, tn)
     if wavefront(P):
         if P.types[tn].get("hard"):
             raise ResetError(f"type {tn}: hard partitions carry no generated reset tree")
@@ -829,6 +830,9 @@ def for_type(P, tn, reach=None):
             # BOOTSTRAP types publish ONE registered local START tap (start_t<leaf tap>, = what a MISSION tap would be:
             # registered reset AND run at the same site/depth) for the contents' explicit mission-admission input
             T["start_tap"] = leaf_tap(P, tn) if role == "bootstrap" else None
+            if boot_buses or boot_contents:
+                T.update(bootstrap_buses=boot_buses, bootstrap_contents=boot_contents,
+                         bootstrap_taps=list(range(nck)))
         return T
     if pipelined(P):
         K = part_depth(P)
@@ -1255,6 +1259,32 @@ def _start_sites(P, tn):
 START_ROLES = ("bootstrap", "mission")
 
 
+def bootstrap_consumers(P, tn):
+    """Explicit raw-reset transports inside an otherwise mission-gated type.
+
+    These are equal-depth copies of delivered reset, never raw die reset. The
+    selected content must have a declared reset binding; other content and all
+    unselected boundary/station consumers retain their existing mission role.
+    """
+    t = P.types[tn]; r = t.get('reset', {})
+    buses = list(r.get('bootstrap_buses', []))
+    contents = list(r.get('bootstrap_contents', []))
+    if not buses and not contents:
+        return [], []
+    if not start_broadcast(P) or t.get('hard'):
+        raise ResetError(f'type {tn}: bootstrap consumers need a soft START-broadcast wrapper')
+    names = {b['name'] for b in t.get('buses', [])}
+    names |= {s['name'] + suffix for s in t.get('ft_slots', []) for suffix in ('_i', '_o')}
+    bad = sorted(set(buses)-names)
+    cs = {c['inst']: c for c in t.get('contents', [])}
+    if bad or set(contents)-set(cs):
+        raise ResetError(f'type {tn}: unknown bootstrap consumers buses={bad}, contents={sorted(set(contents)-set(cs))}')
+    for inst in contents:
+        if not any(v in ('rst_n', 'rst') for v in cs[inst].get('bind', {}).values()):
+            raise ResetError(f'type {tn}: bootstrap content {inst} has no declared reset binding')
+    return sorted(set(buses)), sorted(set(contents))
+
+
 def start_roles(P, tn):
     """(type role, {hard-core inst: role}) of a START-broadcast plan (reset fix 10-25, KV/QC bootstrap deadlock).
     Declared explicitly in the plan type's reset block, never inferred from names:
@@ -1397,6 +1427,10 @@ def wf_plan(P):
         if T.get("start_role"):
             types[tn].update(start_role=T["start_role"], start_tap=T["start_tap"],
                              core_start_roles={c["inst"]: T["tap_roles"][c["tap"]] for c in T.get("core_resets", [])})
+        if T.get('bootstrap_taps'):
+            types[tn].update(bootstrap_buses=T['bootstrap_buses'], bootstrap_contents=T['bootstrap_contents'],
+                             bootstrap_reset_relays=len(T['bootstrap_taps']),
+                             bootstrap_release_after_pin=release_clocks(T))
     kids = {}
     for p, pr in sol["parent"].items():
         if pr is not None:
@@ -1582,6 +1616,9 @@ def start_relays(T):
                 # the type's ONE local START tap: registered (reset AND run) beside the leaf tap relay
                 out.append(dict(base, name=r["name"] + "_g", d=raw(r["d"]), run=run(r["d"]), q=f"start_t{i}",
                                 role="gated"))
+            if i in T.get('bootstrap_taps', []):
+                out.append(dict(base, name=r['name'] + '_b', d=raw(r['d']), q=f'rst_boot_t{i}',
+                                role='bootstrap_transport'))
             if raw(r["q"]) in used:
                 out.append(dict(base, name=r["name"] + "_r", d=raw(r["d"]), q=raw(r["q"]), role="raw"))
                 out.append(dict(base, name=srl, d=run(r["d"]), q=run(r["q"]), role="run"))

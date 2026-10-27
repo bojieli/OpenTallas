@@ -1,6 +1,7 @@
 """METHODOLOGY 12.1c / 12.4d / 12.4e (v2, owner 10-26): die-top signal GRT on M4-M7 + leftover M8/M9 by default,
 PG IR closed before signal GRT, skew gate re-run after signal GRT."""
 import json
+import hashlib
 import sys
 import tempfile
 import unittest
@@ -28,8 +29,10 @@ class GrtLayers(unittest.TestCase):
         (kit / "grt" / "route.v").write_text("module x(); endmodule\n")
         pg = d / "pg.json"
         pg.write_text(json.dumps({"ir_verdict": pg_ir}))
-        (pre / "preroute.json").write_text(json.dumps({"pg_file": str(pg)}))
-        a = SimpleNamespace(iterations=50, plan="p", kit=str(kit), pre=str(pre), out=str(out), pg=None, m89=False,
+        plan=d/"plan.json"; plan.write_text('{"name":"tiny"}\n')
+        (pre / "preroute.json").write_text(json.dumps({"pg_file": str(pg), "plan": str(plan),
+            "plan_sha256": hashlib.sha256(plan.read_bytes()).hexdigest()}))
+        a = SimpleNamespace(iterations=50, plan=str(plan), kit=str(kit), pre=str(pre), out=str(out), pg=None, m89=False,
                             m47_only=False, pg_ir_open_trial=False, mem=64)
         for k, v in kw.items():
             setattr(a, k, v)
@@ -52,6 +55,11 @@ class GrtLayers(unittest.TestCase):
             out, _ = self._run(td, m47_only=True)
             self.assertIn("-signal M4-M7", (out / "grt.tcl").read_text())
             self.assertIn("LEGACY", (out / "grt_meta.json").read_text())
+
+    def test_missing_explicit_router_request_cannot_be_recorded_as_fifty(self):
+        with tempfile.TemporaryDirectory() as td, mock.patch(__name__+".GRT_TCL",GRT_TCL.replace("-congestion_iterations 50 ","")):
+            with self.assertRaisesRegex(ValueError,"no request recorded"):
+                self._run(td)
 
     def test_pg_ir_must_close_before_signal_grt(self):
         with tempfile.TemporaryDirectory() as td:
@@ -122,10 +130,11 @@ class GrtLayers(unittest.TestCase):
                 c: {"verdict": "PASS", "related_pair_max_ps": 10} for c in ("TT", "FF")}}))
             a = SimpleNamespace(pre=str(d / "pre"), grt=[str(out)], clock=str(clk), clock_post=str(clk),
                                 pg=None, sites=None, out=str(d / "report.json"))
+            baseline=json.loads((d/"pre/preroute.json").read_text())
             for extra, expected in (({}, "FAIL"), ({"connected_preroutes": False}, "FAIL"),
                                     ({"connected_preroutes": True, "qualification": "CAPACITY_RESERVATION_ONLY"}, "FAIL"),
-                                    ({"connected_preroutes": True, "qualification": "CONNECTED_FIXED_ROUTES"}, "PASS")):
-                pre = {"tracks_taken": {"M8": {"all": 0.1}}, **extra}
+                                    ({"connected_preroutes": True, "qualification": "CONNECTED_FIXED_ROUTES"}, "NOT RUN")):
+                pre = {**baseline, "tracks_taken": {"M8": {"all": 0.1}}, **extra}
                 (d / "pre/preroute.json").write_text(json.dumps(pre))
                 DI.cmd_report(a)
                 gate = json.loads((d / "report.json").read_text())["freeze_gate"]
@@ -144,7 +153,8 @@ class GrtLayers(unittest.TestCase):
                 (d / name).mkdir()
                 (d / name / "clock_report.json").write_text(json.dumps(
                     {"corners": {c: {"related_pair_max_ps": 70.0, "verdict": verdict} for c in ("TT", "FF")}}))
-            (d / "pre" / "preroute.json").write_text(json.dumps({"tracks_taken": {"M8": {"all": 0.1}}}))
+            prior=json.loads((d/"pre/preroute.json").read_text())
+            (d / "pre" / "preroute.json").write_text(json.dumps({**prior,"tracks_taken": {"M8": {"all": 0.1}}}))
             a = SimpleNamespace(pre=str(d / "pre"), grt=[str(out)], clock=str(d / "clk"), clock_post=str(d / "post"),
                                 pg=None, sites=None, out=str(d / "rep.json"))
             DI.cmd_report(a)
@@ -158,6 +168,108 @@ class GrtLayers(unittest.TestCase):
             self.assertFalse(r["grt"][str(out)]["pg_unchanged_since_grt"])
             self.assertFalse(r["freeze_gate"]["signal_grt0"])
             self.assertEqual(r["freeze_gate"]["verdict"], "FAIL")
+
+
+class RelatedStaGate(unittest.TestCase):
+    def fixture(self):
+        temp=tempfile.TemporaryDirectory(); self.addCleanup(temp.cleanup)
+        d=Path(temp.name);out,_=GrtLayers()._run(temp.name)
+        (out/"grt.log").write_text("Final congestion report\n M4 100 1 1.0% 0 / 0 / 0\n Total 100 1 1.0% 0 / 0 / 0\nEXIT 0\n")
+        pre=json.loads((d/"pre/preroute.json").read_text())
+        pre.update(connected_preroutes=True,qualification="CONNECTED_FIXED_ROUTES",tracks_taken={"M8":{"all":.1}})
+        (d/"pre/preroute.json").write_text(json.dumps(pre))
+        for name in ("clock","post"):
+            (d/name).mkdir()
+            (d/name/"clock_report.json").write_text(json.dumps({"corners":{
+                c:{"verdict":"DIAGNOSTIC-FAIL","related_pair_max_ps":300} for c in ("TT","FF")}}))
+        rec=dict(plan=pre["plan"],plan_sha256=pre["plan_sha256"],proof=str(d/"post"),period_ps=833,unc_setup_ps=60,unc_hold_ps=25,
+                 coverage={"uncovered_bits":{}},corners={},block_model={"label":"declared-budget"})
+        for corner in ("TT","FF"):
+            rec["corners"][corner]=dict(basis="routed RC (fixed geometry)",classes={
+                "intra":dict(pairs=2,worst_setup_slack_ps=40,worst_hold_slack_ps=3,setup_neg_pairs=0,hold_neg_pairs=0),
+                "seam":dict(pairs=2,worst_setup_slack_ps=30,worst_hold_slack_ps=2,setup_neg_pairs=0,hold_neg_pairs=0),
+                "intra_cross_region":dict(pairs=0),"landed":dict(pairs=0)})
+        sta=d/"sta.json";sta.write_text(json.dumps(rec))
+        args=SimpleNamespace(pre=str(d/"pre"),grt=[str(out)],clock=str(d/"clock"),clock_post=str(d/"post"),
+                             related_sta=str(sta),pg=None,sites=None,out=str(d/"report.json"))
+        return args,rec,out,pre
+
+    def report(self,args,rec=None):
+        if rec is not None:Path(args.related_sta).write_text(json.dumps(rec))
+        DI.cmd_report(args)
+        return json.loads(Path(args.out).read_text())
+
+    def test_actual_sta_pass_not_skew_target_is_freeze_gate(self):
+        args,rec,_out,_pre=self.fixture()
+        # The other corner/check is informational; do not take a collapsed min.
+        rec["corners"]["TT"]["classes"]["intra"]["worst_hold_slack_ps"]=-999
+        rec["corners"]["FF"]["classes"]["intra"]["worst_setup_slack_ps"]=-999
+        result=self.report(args,rec)
+        self.assertEqual(result["related_sta"]["verdict"],"PASS")
+        self.assertEqual(result["freeze_gate"]["verdict"],"PASS")
+        self.assertEqual(result["clock"]["TT"]["verdict"],"DIAGNOSTIC-FAIL")
+
+    def test_missing_receipt_is_explicitly_not_run(self):
+        args,_,_,_=self.fixture();args.related_sta=None
+        result=self.report(args)
+        self.assertEqual(result["freeze_gate"]["verdict"],"NOT RUN")
+        self.assertEqual(result["related_sta"]["verdict"],"NOT RUN")
+
+    def test_negative_actual_hold_cannot_use_positive_summary_or_hb4_model(self):
+        args,rec,_,_=self.fixture()
+        rec["summary"]={"seam":{"verdict":"PASS","hb4":{"ff_hold_ps":100}}}
+        rec["corners"]["FF"]["classes"]["seam"].update(worst_hold_slack_ps=-1,hold_neg_pairs=1)
+        self.assertEqual(self.report(args,rec)["freeze_gate"]["verdict"],"FAIL")
+
+    def test_rounded_zero_with_negative_pair_still_fails(self):
+        args,rec,_,_=self.fixture()
+        rec["corners"]["TT"]["classes"]["intra"].update(worst_setup_slack_ps=0,setup_neg_pairs=1)
+        self.assertEqual(self.report(args,rec)["freeze_gate"]["verdict"],"FAIL")
+
+    def test_mismatched_or_changed_plan_fails(self):
+        args,rec,_,pre=self.fixture();rec["plan_sha256"]="f"*64
+        self.assertEqual(self.report(args,rec)["freeze_gate"]["verdict"],"FAIL")
+        rec["plan_sha256"]=pre["plan_sha256"];Path(pre["plan"]).write_text('{"name":"changed"}')
+        self.assertEqual(self.report(args,rec)["freeze_gate"]["verdict"],"FAIL")
+
+    def test_legacy_path_without_plan_hash_is_unqualified(self):
+        args,rec,_,_=self.fixture();rec.pop("plan_sha256")
+        self.assertEqual(self.report(args,rec)["related_sta"]["verdict"],"NOT RUN")
+
+    def test_partial_or_unrouted_receipt_is_unqualified(self):
+        args,rec,_,_=self.fixture();rec["corners"]["FF"]["basis"]="placement estimate"
+        self.assertEqual(self.report(args,rec)["freeze_gate"]["verdict"],"NOT RUN")
+        rec["corners"].pop("FF")
+        self.assertEqual(self.report(args,rec)["freeze_gate"]["verdict"],"NOT RUN")
+
+    def test_pre_signal_clock_receipt_cannot_replace_post_signal_timing(self):
+        args,rec,_,_=self.fixture();rec["proof"]=args.clock
+        self.assertEqual(self.report(args,rec)["freeze_gate"]["verdict"],"FAIL")
+
+    def test_uncertainty_is_not_relaxed(self):
+        args,rec,_,_=self.fixture();rec["unc_hold_ps"]=0
+        self.assertEqual(self.report(args,rec)["freeze_gate"]["verdict"],"FAIL")
+
+    def test_requested_five_iteration_zero_overflow_diagnostic_does_not_freeze(self):
+        args,rec,out,_=self.fixture();path=out/"grt_meta.json";meta=json.loads(path.read_text())
+        meta["congestion_iterations_requested"]=5;path.write_text(json.dumps(meta))
+        result=self.report(args,rec)
+        self.assertEqual(result["grt"][str(out)]["verdict"],"PASS")
+        self.assertFalse(result["freeze_gate"]["signal_grt0"])
+        self.assertEqual(result["freeze_gate"]["verdict"],"NOT RUN")
+
+    def test_missing_iteration_request_is_not_inferred_from_log(self):
+        args,rec,out,_=self.fixture();path=out/"grt_meta.json";meta=json.loads(path.read_text())
+        meta.pop("congestion_iterations_requested");path.write_text(json.dumps(meta))
+        self.assertEqual(self.report(args,rec)["freeze_gate"]["verdict"],"NOT RUN")
+
+    def test_landed_uses_existing_landing_margins_and_info_subset_does_not_gate(self):
+        args,rec,_,_=self.fixture()
+        for corner in ("TT","FF"):
+            rec["corners"][corner]["classes"]["landed"]=dict(pairs=1,worst_setup_slack_ps=-1000,
+                worst_hold_slack_ps=-1000,plan_landing=dict(setup_margin_ps=5,hold_margin_ps=3,verdict="PASS"))
+            rec["corners"][corner]["classes"]["seam_nearest_INFO"]=dict(pairs=1,worst_setup_slack_ps=-1000)
+        self.assertEqual(self.report(args,rec)["freeze_gate"]["verdict"],"PASS")
 
 
 if __name__ == "__main__":
