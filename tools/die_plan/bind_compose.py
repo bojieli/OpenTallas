@@ -1,4 +1,5 @@
 """Opt-in structural composition before Graph: exact terminals, no aliases or timing edits."""
+import gzip
 import hashlib
 import json
 import re
@@ -145,7 +146,9 @@ def compose(F, rules, spec, Cell):
 def apply(binder, spec_path):
     path=Path(spec_path)
     if not path.is_absolute(): path=Path(binder.base)/path
-    sources,receipt=compose(binder.F,binder.R,json.loads(path.read_text()),__import__('bind_elab').Cell)
+    # a committed spec may be gzipped (KV: 148 MB composition of 1024 head eighths + 4 ASTK corners)
+    text=gzip.decompress(path.read_bytes()).decode() if path.suffix=='.gz' else path.read_text()
+    sources,receipt=compose(binder.F,binder.R,json.loads(text),__import__('bind_elab').Cell)
     # Keep source paths outside the repository tree, immutable content-addressed.
     out=path.parent/'composed_rtl';out.mkdir(exist_ok=True)
     for mod,rtl in sources:

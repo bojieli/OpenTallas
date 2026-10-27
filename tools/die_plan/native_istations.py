@@ -1,15 +1,17 @@
 """Opt-in native realization of the same FIRM stations used by physical kits."""
-import contextlib,io,json,shutil,copy
+import contextlib,io,json,shutil,copy,re
 from pathlib import Path
 
 
-def source_entries(typ):
+def source_entries(typ, skip=()):
     """Coalesce only identical OUT geometry; IN/core entries remain owned by their existing flow."""
     buses={x['name']:x for x in typ.get('buses',[])}
     selected={}
     for e in typ.get('internal_stations',[]):
         if not e.get('conn','').startswith('bus:'):continue
         name=e['conn'][4:]
+        if any(re.fullmatch(r, name) for r in skip):
+            continue
         if name not in buses:raise ValueError(f'internal station references unknown bus {name}')
         if buses[name]['dir']!='out':continue
         geometry={k:v for k,v in e.items() if k!='note'}
@@ -36,7 +38,7 @@ def annotate(b):
     for part,p in b.parts.items():
         if p['type'] not in selected:continue
         t=b.types[p['type']]
-        for e in source_entries(t):
+        for e in source_entries(t, b.ab.get("internal_stations_skip_buses", ())):
             name=e['conn'][4:];bus=next(x for x in t['buses'] if x['name']==name)
             count=len(e['regs_um']);matches=[L for L in b.out_bus[part] if L['oname']==name]
             if len(matches)!=1:raise ValueError(f'native stations {part}.{name}: expected one outgoing lane')
@@ -57,7 +59,7 @@ def materialize(b,tn,file):
     selected=set(b.ab.get('internal_stations_types',[]))
     if tn not in selected and original not in selected:return
     typ=copy.deepcopy(typ)
-    typ['internal_stations']=source_entries(typ)
+    typ['internal_stations']=source_entries(typ, b.ab.get("internal_stations_skip_buses", ()))
     if not typ['internal_stations']:return
     # Binding removes proven constant/unused payload bits from the functional
     # lane. The native station carries that exact bound payload plus its epoch,
