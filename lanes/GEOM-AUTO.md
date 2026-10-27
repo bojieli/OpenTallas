@@ -8,3 +8,6 @@ Next: root merge+enable AP_AUTO_GEOM_ALL=1 on hub after review; collect automate
 
 ## CODEX notes 2026-10-27 08:39 PDT
 Native station geometry fix f51684c55 on main; local synchronous reset consumers source READY codex/reset-local-1027@7beec5b1d. KV oneevent owner has grids and +3/+2bootSTARTcycles/data0. io_cor/hroot routes remain FAIL until coherent re-kit+fullr2r review; old FT-only PASS explicitly superseded. Independent review also fixed kit_rsync old leaf initializer causing two reset drivers on re-plan.54focused+3G2PASS, no own heavy jobs.
+
+## CODEX PARKED 2026-10-27 10:13 PDT
+Explicit reset. Source91be61fb1 and f51684c55 pushed; no live jobs. E0 coherent pinreface read-only investigation only, no edits or new job; authoritative68203aa542 pins paths and next step in handoff/codex_geom_auto_20261027_reset.md. OWNER? none.
