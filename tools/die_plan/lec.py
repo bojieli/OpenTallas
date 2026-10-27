@@ -2527,7 +2527,7 @@ def trace_constant_closure(L, log, tried):
 
 
 # ------------------------------------------------------------------------------------------------ no-reset constants
-RESET_PORT = re.compile(r"^(?:\w+_)?(?:rst|reset|rn|rstn|nrst|arst|srst)(?:_?n|_ni|_b|_l)?$", re.I)
+RESET_PORT = re.compile(r"^(?:\w+_)?(?:rst|reset|rn|rstn|nrst|arst|srst)(?:_?n|_ni|_b|_l)?(?:_pin)?$", re.I)
 
 
 def reset_vars(d, pis):
@@ -2541,7 +2541,8 @@ def reset_vars(d, pis):
         base = re.sub(r"\[\d+\]$", "", k[3:]).split(".")[-1]
         if not (base in names if names else RESET_PORT.match(base)):
             continue
-        low = bool(re.search(r"(n|_ni|_b|_l)$", base, re.I))
+        stem = re.sub(r"_pin$", "", base, flags=re.I)
+        low = bool(re.search(r"(n|_ni|_b|_l)$", stem, re.I))
         R[lit >> 1] = (0 if low else 1) ^ (lit & 1)
     return R
 

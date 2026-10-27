@@ -131,3 +131,41 @@ def test_rejected_closure_constant_does_not_restart_proved_rounds(tmp_path, monk
     assert L.hyp[("gold", "ff:u_dut.z")] == ("const", 0)  # valid proof survives
     assert len(calls) < 5
     assert not any("did not converge" in x for x in log)
+
+
+def test_reset_pin_suffix_is_detected_with_stem_polarity():
+    # The standard physical core pin is rst_n_pin. The final n of the word
+    # "pin" must not turn an active-high reset_pin into an active-low reset.
+    p = {"pi:rst_n_pin[0]": 2, "pi:reset_pin[0]": 4, "pi:burst_len_pin[0]": 6}
+    assert lec.reset_vars({}, p) == {1: 0, 2: 1}
+
+
+def test_pin_reset_loads_gated_unreset_constant_before_release(tmp_path, monkeypatch):
+    # BF tile clock: its enable resets to one; the enabled data capture
+    # p<=1 has no reset of its own. Under reset it loads at edge 2.
+    # Thereafter p==1 is inductive even when the clock enable goes low.
+    inputs = ["rst_n_pin", "en"]
+    def gold(m, l):
+        return {"ze": _mux(m, l["rst_n_pin"], l["en"], 1),
+                "p": _mux(m, l["ze"], 1, l["p"]), "o": l["p"]}
+    g, gm = _seq(tmp_path, "gold", inputs, ["ze", "p", "o"], gold)
+    t, tm = _seq(tmp_path, "gate", inputs, ["ze", "o"],
+                 lambda m, l: {"ze": _mux(m, l["rst_n_pin"], l["en"], 1), "o": 1})
+    L = lec.Lec(g, gm, t, tm)
+    st, _ = _verdict(tmp_path, monkeypatch, L)
+    assert st == "proved"
+    assert L.hyp[("gold", "ff:u_dut.p")] == ("const", 1)
+    assert L.rst_val[("gold", "ff:u_dut.p")] == (1, 2)
+
+
+def test_pin_reset_wrong_enable_polarity_keeps_difference(tmp_path, monkeypatch):
+    inputs = ["rst_n_pin", "en"]
+    g, gm = _seq(tmp_path, "gold", inputs, ["ze", "p", "o"], lambda m, l: {
+        # MUTANT: enable resets to zero, so p is still unknown throughout reset.
+        "ze": _mux(m, l["rst_n_pin"], l["en"], 0),
+        "p": _mux(m, l["ze"], 1, l["p"]), "o": l["p"]})
+    t, tm = _seq(tmp_path, "gate", inputs, ["ze", "o"],
+                 lambda m, l: {"ze": _mux(m, l["rst_n_pin"], l["en"], 0), "o": 1})
+    L = lec.Lec(g, gm, t, tm)
+    st, _ = _verdict(tmp_path, monkeypatch, L)
+    assert st == "differs" and ("gold", "ff:u_dut.p") not in L.hyp
