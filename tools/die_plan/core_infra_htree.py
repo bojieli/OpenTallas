@@ -26,6 +26,28 @@ BIG = 'BUFx24_ASAP7_75t_R'
 FFC = {'TT': 0.474736, 'FF': 0.522010}   # DFFHQNx1 CLK pin C per corner (actual liberty)
 
 
+def group_name(group):
+    """Keep legacy single-digit names; delimit every token of wider paths."""
+    if any(type(i) is not int or i < 0 for i in group):
+        raise ValueError('clock group path requires nonnegative integer indices')
+    if not group:
+        return 'R'
+    if all(i < 10 for i in group):
+        return 'T' + ''.join(str(i) for i in group)
+    return 'TX' + '_'.join(str(i) for i in group)
+
+
+def validate_names(P):
+    """Reject ambiguous plans before name-keyed lookup or output."""
+    for label, names in [('node', [n[0] for n in P['nodes']]),
+                         ('wire edge', [w['edge'] for w in P['wires']])]:
+        seen = set()
+        for name in names:
+            if name in seen:
+                raise ValueError('duplicate clock %s name: %s' % (label, name))
+            seen.add(name)
+
+
 # ---------------------------------------------------------------- liberty
 def lib_cells(path, names):
     import re
@@ -270,7 +292,7 @@ def plan(geo, splits, smax, keepout, islands=None, macro_leaf=True):
         L = [mz.md(site[g[:-1]], site[g]) for g in groups if len(g) == lv + 1]
         T.append(max(L)); K.append(max(1, math.ceil(max(L) / smax)))
     nodes = []; wires = []   # nodes: (name, parent, cell, master, kind)
-    def nm(g): return 'R' if not g else 'T' + ''.join(str(i) for i in g)
+    nm = group_name
     nodes.append(('root', None, ent, BIG, 'entry'))
     branch_of = {(): 'root'}
     for lv in range(depth):
@@ -330,6 +352,7 @@ def mst_edges(pts):
 
 
 def model(P, libs, r, c, src_slew=0.0, ffc=FFC, allow_star=False):
+    validate_names(P)
     """allow_star: comparison mode for legacy multi-branch nets (star, no shared-trunk term)."""
     mz = P['mz']; nodes = P['nodes']; ch = collections.defaultdict(list)
     for n in nodes:
@@ -421,6 +444,7 @@ def shared_wire(P):
 
 # ---------------------------------------------------------------- outputs
 def emit_tcl(P, out):
+    validate_names(P)
     mz = P['mz']; L = ['# core_infra_htree R6 equal-structure H-tree, buffer at every branch point (plan-computed, no measurement input)',
                        'set ot_ms_port ck', 'set ot_ms_root {%.3f %.3f}' % mz.xy(P['ent']), 'set ot_h_entry_n 0', 'set ot_h_fixed {']
     # FIRM pushdown cells (12.2a1): the entry root + the branch buffers sitting at each island hub
@@ -442,6 +466,7 @@ def emit_tcl(P, out):
 
 def emit_sta(P, outdir, r, c, ffmaster=None):
     """synthetic clock netlist + SPEF (planned maze lengths, distributed 2-pin wires, MST leaf nets)."""
+    validate_names(P)
     out = Path(outdir); out.mkdir(parents=True, exist_ok=True); mz = P['mz']; nodes = P['nodes']
     pos = {n[0]: mz.xy(n[2]) for n in nodes}; ch = collections.defaultdict(list)
     for n in nodes:
@@ -733,7 +758,7 @@ def plan_ring(geo, islands, nb, leaf_n=4, smax=200.0, keepout=(), hub_ring=True)
     for g in sorted(x for x in groups if len(x) == 4):
         site[g], disp[g] = on_ring(mz, site[g[:3]], T4, ideal[g])
     T = [T1, T2, T3, T4]; K = [max(1, math.ceil(t / smax)) for t in T]
-    def nm(g): return 'R' if not g else 'T' + ''.join(str(i) for i in g)
+    nm = group_name
     nodes = [('root', None, ent, BIG, 'entry')]; wires = []; last = {(): 'root'}; land = {}
     for lv in range(4):
         for g in sorted(x for x in groups if len(x) == lv + 1):
@@ -863,7 +888,7 @@ def plan_r6(geo, islands, nb, leaf_n=4, side_hub=True, smax=150.0, tol_um=2.2, k
                     v = (De[i][j] + max(D0[i][j], D1[i][j]), abs(D0[i][j] - D1[i][j]), -De[i][j])
                     if b is None or v < b[0]: b = (v, (i, j))
             site[(s_,)] = b[1]
-    def nm(g): return 'R' if not g else 'T' + ''.join(str(i) for i in g)
+    nm = group_name
     nodes = [('root', None, ent, BIG, 'entry')]; wires = []; last = {(): 'root'}; land = {}; T = []; K = []; spread = {}
     for lv in range(depth):
         gl = sorted(x for x in groups if len(x) == lv + 1)
