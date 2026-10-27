@@ -36,6 +36,18 @@ for(c=0;c<1900;c=c+1) begin
 end
 $display("ROWX_SRAM_MITER bad=%0d rp_words=%0d lc_mutant=%0d rp_mutant=%0d rp_fault=%0d",bad,rp_words,ml,mr,gf);
 if(bad || rp_words!=640 || ml==0 || mr==0 || gf)$fatal(1,"ROWX SRAM miter failed");
+// Restart while a prior output is active also preserves the original control
+// priority and fault behavior. This is a lockstep corner, not a legal schedule.
+iv=0;pop=0;xv=1;
+for(c=0;c<1000;c=c+1) begin
+  go=(c==0||c==50);
+  for(k=0;k<16;k=k+1)xd[32*k+:32]=32'h3a561f97^(c*32'h67ba129d)^k;
+  @(posedge clk);#1;
+  if({gv,gf}!=={sv,sf} || gd!==sd)begin bad=bad+1;if(bad<5)$display("RESTART_MISMATCH c=%0d",c);end
+  @(negedge clk);
+end
+$display("ROWX_SRAM_RESTART_MITER bad=%0d",bad);
+if(bad)$fatal(1,"ROWX SRAM restart lockstep failed");
 $finish;
 end
 endmodule
