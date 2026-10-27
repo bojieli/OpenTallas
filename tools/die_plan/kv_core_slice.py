@@ -18,7 +18,8 @@ Per hard-core module of the plan (every instance of a module uses one slice, cor
   trunk       12.8c designed fixed trunk for shallow cores: N x BUFx4 from the plan insertion model
               (master_plan.core_insertion: TT = A + B x L_max) -> N = round((target - pred) / stage), frozen.
 Outputs OUT/kv_core_slice.json (+ per-type OUT/slices/<module>.json) and OUT/pd_slice/cores/*.json = the plan pin views
-with the slice applied (only clock/reset pins move; data pins byte-for-byte the same values).
+with the slice applied (only clock/reset pins move; data pins byte-for-byte the same values).  OUT/pd_slice carries REAL
+copies of its views + views.sha256 (plan_views.snapshot); the source plan dir is never written.
 """
 import argparse
 import copy
@@ -34,6 +35,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import master_plan as MP  # noqa: E402
+import plan_views as PV  # noqa: E402
 
 SCHEMA = "opentallas.kv_core_slice.v1"
 ISL = 8.64
@@ -275,9 +277,10 @@ def main(argv=None):
     pdo = out / "pd_slice"
     if pdo.exists():
         shutil.rmtree(pdo)
-    shutil.copytree(pd, pdo, symlinks=True, ignore=shutil.ignore_patterns("*.png"))
+    # COORD KV-CORES-R6: real view copies + views.sha256; never write through a shared cores/ symlink
+    PV.snapshot(pd, pdo, ignore=shutil.ignore_patterns("*.png"))
     for view, J2 in new_views.items():
-        (pdo / view).write_text(json.dumps(J2, indent=1) + "\n")
+        PV.safe_write(pdo, view, json.dumps(J2, indent=1) + "\n")
     if outlines:
         P2 = json.loads((pdo / a.plan).read_text())
         for tn, t in P2["partition_types"].items():
@@ -293,7 +296,7 @@ def main(argv=None):
                     hc["origin_um"] = [MP.r3(ox + (ow - W2) if e_side else ox), MP.r3(oy + (oh - H2) if n_side else oy)]
                     hc["outline_um"] = [W2, H2]
                     hc["note"] = hc.get("note", "") + f" | KV-CORE-SLICE-1 outline {ow}x{oh} -> {W2}x{H2} anchored {anc}"
-        (pdo / a.plan).write_text(json.dumps(P2) + "\n")
+        PV.safe_write(pdo, a.plan, json.dumps(P2) + "\n")
     meta = dict(schema=SCHEMA, lane="KV-CORE-SLICE-1", plan=str(plan_path), plan_sha256=sha(plan_path),
                 census=str(a.census), census_sha256=sha(a.census), mesh=str(a.mesh), mesh_sha256=sha(a.mesh),
                 applied_plan_sha256=sha(pdo / a.plan),
