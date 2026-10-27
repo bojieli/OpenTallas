@@ -1,0 +1,1 @@
+Head-p ownership regional copies: zero-cycle component lockstep 20000 cycles PASS0 mismatches; ownership-polarity mutant caught19251. Pin/outline/clock/reset geometry unchanged. Existing R10 build continues; source successor addresses GEOM62paths from one NW ownership register. Full new mapped/placed census remains owed.
