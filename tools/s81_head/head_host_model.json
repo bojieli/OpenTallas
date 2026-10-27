@@ -1,0 +1,81 @@
+{
+  "schema": "opentallas.head-host-composition.v1",
+  "status": "candidate source composition; no physical or token qualification",
+  "replicas_per_head_die": 1,
+  "planned_cells": 200000,
+  "lane_count": 2,
+  "lane_payload_bits": 553,
+  "hbc_context_bits": 512,
+  "host276": {
+    "physical_bits": 276,
+    "payload_bits_per_beat": 273,
+    "beats_per_frame": 3,
+    "frame_bits": 553,
+    "max_frames_per_cycle": 0.3333333333333333,
+    "sampled_visibility_edges_without_relays": 4,
+    "additional_serialization_edges_vs_one_beat": 2
+  },
+  "job_active_bits": 1,
+  "control_status": {
+    "transport": "in-band HSF0 STATUS type8 payload bits32:16",
+    "sticky_fault_bits": 17,
+    "maximum_pending_fault_records": 1
+  },
+  "admission": {
+    "source": "actual dsdv_hbc1_loader and affine book",
+    "boot_dates": "compiler must supply BOOT_HEADER_EDGE and BOOT_COMMIT_EDGE",
+    "default": "not admitted",
+    "starter_armed": "actual delivered START tap",
+    "job_active": "actual ctl issue until matching token retirement"
+  },
+  "core_changes": {
+    "hbc_parent": "HOST_FRAMES=1 retains actual HBC authority loader/affine book and omits S81 HBE consumer plus layer-return TX, because HEAD carries ordinary HSF0 HFWD frames. RX_ONLY remains for receiver-only S81 use; both new modes default off.",
+    "default_hbc_parent_behavior": "RX_ONLY=0 retains existing stage composition",
+    "datapath_cycles_added_by_new_mux": 0
+  },
+  "open": [
+    "actual production host/clock/reset identity and compiled boot/START slots",
+    "whole-head mission token pass on current physical views",
+    "master-plan slice and physical TT setup/FF hold timing"
+  ],
+  "job_active_input_capture_edges": 1,
+  "hbc_test_profile_observed": {
+    "status": "component TEST profile, not production HEAD schedule",
+    "boot_header_edge": 20,
+    "boot_body_edge": 24,
+    "boot_commit_edge": 30,
+    "context_valid_bench_cycle": 33,
+    "hbe_header_bench_cycle": 126,
+    "hbe_receiver_edge": 1100,
+    "f_host_bench_write_cycle": 133,
+    "native_consumer_contract_from_existing_bench": "HOST body +4 edges / KS header +2 edges; production native test not rerun here"
+  },
+  "ordinary_HFWD": {
+    "source": "HOST0 HSF0 type7, payload512",
+    "admission": "actual HBC context_valid; precontext HFWD faults",
+    "path": "actual HBC stripping -> host276 -> ctl HFWD -> stage kind6",
+    "class_semantics": "S81 HBE classes are not interpreted as head programmes; HBE consumer is omitted by explicit default-off HOST_FRAMES mode"
+  },
+  "native_two_core_test": {
+    "clock_period_ps": 833,
+    "test_only": true,
+    "hbc_boot_edges": [
+      501,
+      505,
+      511
+    ],
+    "peer_launch_edges": [
+      472,
+      476,
+      482
+    ],
+    "peer_to_hbc_edges": 29,
+    "arrival_phase": "odd HBC boot edges from even peer launch in this clock/reset profile; scalar delay alone was insufficient",
+    "context_bench_cycle": 522,
+    "issue_CSR_config_bench_cycle": 637,
+    "static_START_boot_edge": 750,
+    "config_CSR_frames": 7,
+    "ordinary_HFWD_bits": 512,
+    "two_core_payload_flip_mutant": "caught"
+  }
+}

@@ -114,7 +114,8 @@ def eval_hub(t1, H0, W, H, bound, k, cap, spread, kcc, cc_min, route=False, hop=
 
 
 def _full(r):
-    return max(r["cut"]["x"]["max_use"], r["cut"]["y"]["max_use"], *[s["cut_y"] or 0 for s in r["segs"]]) <= 0.6 + 1e-9
+    return max(r["cut"]["x"]["max_use"], r["cut"]["y"]["max_use"],
+               *[s["cut_" + axis] or 0 for s in r["segs"] for axis in "xy"]) <= 0.6 + 1e-9
 
 
 def _cand(args):
@@ -135,7 +136,7 @@ def _cand(args):
     if not _full(r) and kw is not None:
         k = kw
     wx, wy = r["cut"]["x"]["max_use"], r["cut"]["y"]["max_use"]
-    sy = max(s["cut_y"] or 0 for s in r["segs"])
+    sy = max(s["cut_" + axis] or 0 for s in r["segs"] for axis in "xy")
     ok = _full(r)
     whole = max(wx, wy) <= 0.6 + 1e-9
     tier = 0 if ok else (1 if whole else 2)
@@ -174,10 +175,12 @@ def run_hub(P, part, tn, H, bound, cap, spread, kcc, cc_min, kmax, route=True, j
         bound, table = search_bound(t1, H0, W, H, cap, spread, kcc, cc_min, kmax, jobs=jobs)
         log(f"{tn}: y-demand boundary {bound} um ({len(table)} candidates)")
     rows = []
-    full = lambda w: max(w["cut_x"], w["cut_y"], *[v or 0 for v in w["seg_y"]]) <= 0.6 + 1e-9  # noqa: E731
+    full = lambda w: max(w["cut_x"], w["cut_y"],
+                         *[v or 0 for axis in "xy" for v in w["seg_" + axis]]) <= 0.6 + 1e-9  # noqa: E731
     for k in range(1, kmax + 1):
         r = eval_hub(t1, H0, W, H, bound, k, cap, spread, kcc, cc_min)
         rows.append(dict(k=k, cut_x=r["cut"]["x"]["max_use"], cut_y=r["cut"]["y"]["max_use"],
+                         seg_x=[s["cut_x"] for s in r["segs"]],
                          seg_y=[s["cut_y"] for s in r["segs"]]))
         log(f"{tn}: H {H} b {bound} k {k} x {rows[-1]['cut_x']} y {rows[-1]['cut_y']} seg y {rows[-1]['seg_y']}")
         if full(rows[-1]):

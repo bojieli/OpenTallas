@@ -35,7 +35,8 @@ module dsdv_hostb_stage_hbc #(
  parameter [47:0] RETURN_ARRIVAL_DEADLINE=48'hffffffffffff,
  parameter [63:0] CLOCK_RESET_ID=64'd0,
  parameter [47:0] BOOT_HEADER_EDGE=48'hffffffffffff,
- parameter [47:0] BOOT_COMMIT_EDGE=48'hffffffffffff
+ parameter [47:0] BOOT_COMMIT_EDGE=48'hffffffffffff,
+ parameter integer RX_ONLY=0, HOST_FRAMES=0
 )(
  input wire ck,rst_n,job_active,starter_armed,
  input wire [1103:0] from_prev,local_ro,return_ro,
@@ -86,6 +87,28 @@ module dsdv_hostb_stage_hbc #(
   end else begin:g_external_return
    assign actual_return=return_ro;assign return_fault=0;
   end
+  if(HOST_FRAMES!=0)begin:g_host_frames
+   // A HEAD host carries ordinary HSF0 HFWD programme records, not S81 HBE
+   // sequencer words. Retain the real HBC authority loader and its affine book;
+   // consume HBC LOAD/body/COMMIT there and pass ordinary frames to HEAD ctl.
+   // No HEAD HBE consumer or layer-return transmitter exists in this mode.
+   assign to_local=after_hbc;assign next_ro=local_ro;
+   assign f_host=515'd0;assign ks_descriptor=53'd0;assign ks_slot=3'd0;
+   assign arm_mask=6'd0;assign arm_commit=1'b0;assign fault=12'd0;
+  end else if(RX_ONLY!=0)begin:g_rx_only
+   // Head host endpoints load the same HBC authority and validate incoming HBE,
+   // but have no layer-return producer or NEXT physical ring. Omitting the TX
+   // makes return/status inputs dead by this explicit parameter, not a tie-off.
+   assign next_ro=local_ro;
+   dsdv_hostb_rx u_rx(.ck(ck),.rst_n(rst_n),.configured(context_valid),
+    .local_stage(LOCAL_STAGE[7:0]),.local_rank(LOCAL_RANK[1:0]),.epoch_id(epoch_id),.programme_id(programme_id),
+    .receiver_edge(receiver_edge),.transit_body_edge(transit_body_edge),.expected_tid(tid),
+    .expected_header_stage(data_stage),.expected_user(user_id),.expected_position(position),.expected_token(token),
+    .header_slot(next_header_slot),.job_active(job_active),.starter_armed(starter_armed),.ring_i(after_hbc),
+    .local_ring(to_local),.forward_ring(),.f_host(f_host),.ks_descriptor(ks_descriptor),.ks_slot(ks_slot),
+    .arm_mask(arm_mask),.arm_commit(arm_commit),.fault(fault[7:0]));
+   assign fault[11:8]=4'd0;
+  end else begin:g_tx_rx
   dsdv_hostb_stage #(.ENABLE(1)) u_stage(.ck(ck),.rst_n(rst_n),.configured(context_valid),
    .local_stage(LOCAL_STAGE[7:0]),.local_rank(LOCAL_RANK[1:0]),.epoch_id(epoch_id),.programme_id(programme_id),
    .receiver_edge(receiver_edge),.transit_body_edge(transit_body_edge),.expected_tid(tid),
@@ -94,6 +117,7 @@ module dsdv_hostb_stage_hbc #(
    .local_ro(local_ro),.return_ro(actual_return),.forward_slot(next_forward_slot),.return_slot(source_return_tx_slot),
    .to_local(to_local),.next_ro(next_ro),.f_host(f_host),.ks_descriptor(ks_descriptor),.ks_slot(ks_slot),
    .arm_mask(arm_mask),.arm_commit(arm_commit),.fault(fault));
+  end
  end endgenerate
 endmodule
 `default_nettype wire

@@ -1204,7 +1204,7 @@ endmodule
 
 module ot_s81hd_lep_idx_nr #(
     parameter integer DT = 512, parameter integer DR = 8, parameter integer CRED = 8, parameter integer SRAM = 1,
-    parameter integer NB = 80, parameter integer RX_SRAM = 0, parameter integer IN_PIPE = 0, parameter integer NATIVE32 = 0
+    parameter integer NB = 80, parameter integer RX_SRAM = 0, parameter integer IN_PIPE = 0, parameter integer NATIVE32 = 0, parameter integer IDX_EN = 1
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -1238,7 +1238,7 @@ module ot_s81hd_lep_idx_nr #(
     output wire [275:0]    cb
 );
     ot_s81hd_lep_core_nr #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(0), .MU_EN(1), .RX_SRAM(RX_SRAM), .AB_EN(1), .NB(NB),
-        .IN_PIPE(IN_PIPE), .NATIVE32(NATIVE32), .IDX_EN(1)) u (   // L5B-LEPMU 10-21: native32 / face-stage opt-ins exposed (defaults 0 = unchanged)
+        .IN_PIPE(IN_PIPE), .NATIVE32(NATIVE32), .IDX_EN(IDX_EN)) u (   // L5B-LEPMU 10-21: native32 / face-stage opt-ins exposed (defaults 0 = unchanged)
         .clk(clk), .rst_n(rst_n), .ro(ro), .ri(ri),
         .lo0_v(lo0_v), .lo0_r(lo0_r), .lo0_d(lo0_d), .lo1_v(lo1_v), .lo1_r(lo1_r), .lo1_d(lo1_d),
         .li0_v(li0_v), .li0_r(li0_r), .li0_d(li0_d), .li1_v(li1_v), .li1_r(li1_r), .li1_d(li1_d), .rxv(rxv),

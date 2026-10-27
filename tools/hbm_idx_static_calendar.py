@@ -42,7 +42,10 @@ def shifts(pin, chain=0):
     return {t: v - base for t, v in cal.items()}, core
 
 
-def compile_program(pins='registered', gap=100, score_chain=0, vm_period=1, vm_phase=0):
+def compile_program(pins='registered', gap=100, score_chain=0, vm_period=1, vm_phase=0,
+                    query_period=1, key_period=1):
+    if any(type(x) is not int or x < 1 for x in (query_period, key_period)):
+        raise ValueError('query/key periods must be positive integer core edges')
     if vm_period not in (1,2) or not 0<=vm_phase<vm_period:
         raise ValueError('VM period must be1/2 and phase within period')
     pin = PIN_TABLES[pins]
@@ -75,16 +78,21 @@ def compile_program(pins='registered', gap=100, score_chain=0, vm_period=1, vm_p
     wait(28)
     for h in range(32):
         emit('q', head=1, index=h)
+        if h < 31:
+            wait(query_period - 1)
     wait(gap)
     marks['scan_start'] = t[0]
     emit('sel', op=3)
     marks['first_key'] = t[0]
-    for k in range(294):
-        if k < 171:
-            events.append((t[0], 's', dict(beat=1, index=k)))
-        if k >= 123:
-            events.append((t[0], 'sel', dict(op=2, addr=k - 123)))
-        t[0] += 1
+    # A serialized key exchange cannot accept the old consecutive-cycle beats.
+    # The scorer pipeline keeps its 123-edge latency: move the histogram store
+    # for each beat together with that beat, rather than storing stale scores.
+    key0 = t[0]
+    for k in range(171):
+        edge = key0 + k * key_period
+        events.append((edge, 's', dict(beat=1, index=k)))
+        events.append((edge + 123, 'sel', dict(op=2, addr=k)))
+    t[0] = key0 + 170 * key_period + 124
     wait(2)
     for b in range(31, -1, -1):
         emit('sel', op=5, addr=b)
@@ -147,6 +155,14 @@ def compile_program(pins='registered', gap=100, score_chain=0, vm_period=1, vm_p
                 vm_request_instruction_edges=[e+sh[tile] for e,tile,f in events if tile=='vmq' and (f.get('weight') or f.get('query'))],
                 scope='source-compiled schedule for the pin-registered IDX tiles; exact timeline proven by '
                       'rtl/test/hbm_idx_static/run_scheduled.sh (calendar SRAM + parent, full shape)')
+    if query_period != 1 or key_period != 1:
+        meta['bank_exchange'] = dict(query_period=query_period, key_period=key_period,
+            query_heads=32, key_beats=171,
+            added_query_span=31 * (query_period - 1), added_key_span=170 * (key_period - 1),
+            query_instruction_edges=[e+sh[tile] for e,tile,f in events if tile=='q' and f.get('head')],
+            key_instruction_edges=[e+sh[tile] for e,tile,f in events if tile=='s' and f.get('beat')],
+            qualification='calendar service spacing only; actual serializer latency and current B2 binding not yet qualified')
+        meta['scope'] = 'source-compiled serialized-bank calendar; current selected RTL replay NOT RUN'
     return prog, meta
 
 
@@ -159,10 +175,12 @@ def main():
                     help='IDX-SCORE chained cluster: scorer outputs this many edges later (ot_hbm_idx_score_cluster: 4)')
     ap.add_argument('--vm-period',type=int,choices=[1,2],default=1,help='native L74 serializer needs request II2')
     ap.add_argument('--vm-phase',type=int,choices=[0,1],default=0,help='request instruction phase; bind start accounts for actual fixed output age')
+    ap.add_argument('--query-period', type=int, default=1, help='planned bank query exchange service II, core edges')
+    ap.add_argument('--key-period', type=int, default=1, help='planned bank key exchange service II, core edges')
     a = ap.parse_args()
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
-    p, meta = compile_program(a.pins, a.gap, a.score_chain,a.vm_period,a.vm_phase)
+    p, meta = compile_program(a.pins, a.gap, a.score_chain,a.vm_period,a.vm_phase,a.query_period,a.key_period)
     rows = [sum((p[i + j] if i + j < len(p) else 0) << (32 * j) for j in range(8)) for i in range(0, len(p), 8)]
     meta['rows'] = len(rows)
     (out / 'calendar.hex').write_text(''.join(f'{r:064x}\n' for r in rows))

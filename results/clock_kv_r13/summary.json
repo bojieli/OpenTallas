@@ -1,0 +1,69 @@
+{
+ "lane": "CLOCK-KV-R13",
+ "plan": "epyc1:/srv/opentallas-scratch2/claude/clock-kv-r12-1026/pd/hm_r12.json sha 96e6d1cb",
+ "run_dir": "/srv/opentallas-scratch2/claude/clock-kv-r13-1026",
+ "census": {
+  "modules": 31,
+  "fail": 0,
+  "r12_fail": 4,
+  "pushdown_roles": {
+   "mesh_driver": 512,
+   "tree_node": 576
+  },
+  "per_type": {
+   "head_e1,e5": "(b) upstream L6 140.4/L7 116.64/L8 183.6 um, all nodes",
+   "head_e6": "(b) upstream L9 116.64 um on its 128 L9 nodes (per-type)",
+   "head_e2,pv_pair,e0,ectlk q0/q2": "(a) pushdown island on every instance",
+   "qkd_kvs_pc": "124/124 one pattern, 2 driver sites",
+   "kvs_pc_h_head_p": "4/4 one pattern"
+  }
+ },
+ "split_drops": {
+  "shared_opposite_junctions_r13": 0,
+  "shared_opposite_junctions_split_off": 4064,
+  "odd_minus_even_ps": {
+   "r13_TT_median": -0.078,
+   "r13_TT_max": 3.992,
+   "r13_pairs_over_2ps": 32,
+   "up4_TT_max": 15.986,
+   "up4_pairs_over_2ps": 2048
+  }
+ },
+ "tree_sta_rcx": {
+  "r13": {
+   "TT_spread": 33.438,
+   "FF_spread": 30.306
+  },
+  "split_off_control": {
+   "TT_spread": 47.812,
+   "FF_spread": 46.721
+  },
+  "r13_level_TT": "L1:0.7 L2:9.7 L3:16.2 L4:18.9 L5:26.9 L6:25.6 L7:27.4 L8:27.2 L9:55.5 L10:30.1 L99:33.4",
+  "rcx_connectivity": "4366/4366 nets driven, 0 disconnected, 0 unreachable"
+ },
+ "combo_grt": {
+  "overflow": "0/0/0",
+  "usage_total_pct": 3.76,
+  "M7_pct": 8.75,
+  "wirelength_um": 280161471
+ },
+ "mesh_stub_TT": {
+  "late_ps": [
+   4679.16,
+   4752.68
+  ],
+  "stubs_slew_over_120ps": 128,
+  "of": 1920,
+  "slew_max_ps": 553.44
+ },
+ "m7_band": {
+  "hgi_v6_v7_v8_M7_straps": "148 VDD+148 VSS each, 0.288w 8.64 pitch, identical to d5 kit",
+  "pg_track_frac": 0.0741,
+  "left_after_0p5_band": 0.426,
+  "IR": "UNCHECKED (PG grid unchanged, no IR run)"
+ },
+ "pin_views": {
+  "r12": "8 views = one per (module, data flip) but NOT one per orientation (e.g. pv_join MX uses base+fMX+fR180)",
+  "per_orient_repin": "core_pins_orient.py --per-orient: 6 views, away groups 849->320, G0C completeness 60 core_faces ERRORs (R12 per-instance: 0) -> FAIL, not adopted"
+ }
+}

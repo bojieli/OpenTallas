@@ -453,15 +453,32 @@ def routed_tcl(wires, cells, ports, buf, ndr_name):
                 x_, y_ = tp(v)
                 L.append(f"set j{side}{k} [$e addPoint {q(x_)} {q(y_)}]")
                 jn[v] = f"$j{side}{k}"
-        # 3. drops / loads
+        # 3. drops / loads. One physical VIA89 per same-net trunk/drop junction.
+        # Repeating coincident vias for two opposite drops leaves RCX components
+        # disconnected even though the dbWire's logical net contains every pin.
+        shared_drops = {}
+        drop_counts = defaultdict(int)
+        for ld in N["loads"]:
+            if ld[5] != tl:
+                drop_counts[(ld[6], ld[5])] += 1
         for kind, ident, pl, pxy, at, lay, root in N["loads"]:
             v = round(root[0] if horiz else root[1], 4)
             if v not in jn:
                 raise ValueError(f"clock_routed: {nm}: drop root {root} not on the trunk")
-            L.append(f"$e newPath {jn[v]} FIXED [RL {tl}]")
-            pts = [(tl, root[0], root[1])]
-            if lay != tl:
-                pts += [(lay, root[0], root[1]), (lay, at[0], at[1])]
+            key = (root, lay)
+            if drop_counts.get(key, 0) > 1:
+                if key not in shared_drops:
+                    jdrop = f"jd{len(shared_drops)}"
+                    L.append(f"$e newPath {jn[v]} FIXED [RL {tl}]")
+                    L.append(f"set {jdrop} [$e addTechVia [V {via(tl, lay)}]]")
+                    shared_drops[key] = jdrop
+                L.append(f"$e newPath ${shared_drops[key]} FIXED [RL {lay}]")
+                pts = [(lay, root[0], root[1]), (lay, at[0], at[1])]
+            else:
+                L.append(f"$e newPath {jn[v]} FIXED [RL {tl}]")
+                pts = [(tl, root[0], root[1])]
+                if lay != tl:
+                    pts += [(lay, root[0], root[1]), (lay, at[0], at[1])]
             if kind == "cell":
                 st = cell_pts(ident, "A", at, lay)
                 pts += st[1:]

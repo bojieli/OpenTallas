@@ -1,0 +1,773 @@
+{
+ "lane": "CLOCK-KV-R17",
+ "date": "2026-10-27T01:16:53-07:00",
+ "status": "own scripts; numbers UNCHECKED-independent (NUMBER-CHECK owed)",
+ "mesh_signoff": {
+  "mc": {
+   "TT": {
+    "nominal_skew_ps": 67.35,
+    "mc_worst_skew_ps": 114.92,
+    "mesh_only_nominal_skew_ps": 42.82,
+    "mesh_only_mc_worst_skew_ps": 105.33,
+    "per_load_sigma_ps": 12.43,
+    "pair_3sigma_ps": 52.75,
+    "gradient_worst_pair_ps": 152.51,
+    "routed_minus_sim_mean_ps": 25.13,
+    "routed_minus_sim_spread_ps": 31.43,
+    "dieU_bound_ps": 298.86
+   },
+   "FF": {
+    "nominal_skew_ps": 57.63,
+    "mc_worst_skew_ps": 106.96,
+    "mesh_only_nominal_skew_ps": 39.98,
+    "mesh_only_mc_worst_skew_ps": 102.35,
+    "per_load_sigma_ps": 12.46,
+    "pair_3sigma_ps": 52.86,
+    "gradient_worst_pair_ps": 126.05,
+    "routed_minus_sim_mean_ps": 15.1,
+    "routed_minus_sim_spread_ps": 19.43,
+    "dieU_bound_ps": 252.45
+   }
+  },
+  "mc14": {
+   "TT": {
+    "nominal_skew_ps": 37.51,
+    "mc_worst_skew_ps": 97.53,
+    "mesh_only_nominal_skew_ps": 37.51,
+    "mesh_only_mc_worst_skew_ps": 97.53,
+    "per_load_sigma_ps": 12.43,
+    "pair_3sigma_ps": 52.75,
+    "gradient_worst_pair_ps": 152.07,
+    "routed_minus_sim_mean_ps": 26.24,
+    "routed_minus_sim_spread_ps": 13.09,
+    "dieU_bound_ps": 262.69
+   },
+   "FF": {
+    "nominal_skew_ps": 34.44,
+    "mc_worst_skew_ps": 95.52,
+    "mesh_only_nominal_skew_ps": 34.44,
+    "mesh_only_mc_worst_skew_ps": 95.52,
+    "per_load_sigma_ps": 12.46,
+    "pair_3sigma_ps": 52.86,
+    "gradient_worst_pair_ps": 125.62,
+    "routed_minus_sim_mean_ps": 15.8,
+    "routed_minus_sim_spread_ps": 10.15,
+    "dieU_bound_ps": 231.29
+   }
+  }
+ },
+ "sta": {
+  "A_droopmesh": {
+   "intra": {
+    "all_tt_setup": 103.14,
+    "all_ff_hold": -316.82,
+    "real_tt_setup": 103.14,
+    "real_ff_hold": -238.96,
+    "real_ff_hold_neg": 9600,
+    "real_pairs": 9600,
+    "both_real_tt_setup": 103.14,
+    "both_real_ff_hold": -148.15,
+    "real_worst_hold": {
+     "launch": "t_hg_ES_0__clk_t3",
+     "capture": "t_hg_ES_0__clk_t4",
+     "where": "hg_ES_0",
+     "launch_model": "core:kv3_head_eighth_e1",
+     "capture_model": "budget",
+     "clock_damage_ps": 43.86
+    },
+    "kit_contract_ff": 11.39
+   },
+   "seam": {
+    "all_tt_setup": 102.16,
+    "all_ff_hold": -307.78,
+    "real_tt_setup": 102.16,
+    "real_ff_hold": -244.16,
+    "real_ff_hold_neg": 37584,
+    "real_pairs": 37584,
+    "both_real_tt_setup": 102.16,
+    "both_real_ff_hold": -149.27,
+    "real_worst_hold": {
+     "launch": "t_hgi_EN_0__clk_t9",
+     "capture": "t_pv_N_0__clk",
+     "where": "hgi_EN_0->pv_N_0",
+     "launch_model": "core:kv3_head_eighth_e5",
+     "capture_model": "budget",
+     "clock_damage_ps": 47.86
+    },
+    "kit_contract_ff": 5.77
+   },
+   "mesh_unc_max_ps": {
+    "TT": null,
+    "FF": null
+   },
+   "droop_region": {
+    "mode": "mesh",
+    "file": null,
+    "regions": [
+     "mesh:0"
+    ],
+    "taps_in_region": 1920
+   }
+  },
+  "B_mesh_strict": {
+   "intra": {
+    "all_tt_setup": 297.53,
+    "all_ff_hold": -316.82,
+    "real_tt_setup": 368.15,
+    "real_ff_hold": -26.14,
+    "real_ff_hold_neg": 1323,
+    "real_pairs": 9600,
+    "both_real_tt_setup": 368.15,
+    "both_real_ff_hold": 67.46,
+    "real_worst_hold": {
+     "launch": "t_hg_ES_5__clk_t3",
+     "capture": "t_hg_ES_5__clk_t8",
+     "where": "hg_ES_5",
+     "launch_model": "core:kv3_head_eighth_e1",
+     "capture_model": "budget",
+     "clock_damage_ps": 10.94
+    },
+    "kit_contract_ff": 16.88
+   },
+   "seam": {
+    "all_tt_setup": 161.39,
+    "all_ff_hold": -307.78,
+    "real_tt_setup": 161.39,
+    "real_ff_hold": -241.99,
+    "real_ff_hold_neg": 13043,
+    "real_pairs": 37584,
+    "both_real_tt_setup": 321.5,
+    "both_real_ff_hold": 24.67,
+    "real_worst_hold": {
+     "launch": "t_hgi_EN_0__clk_t9",
+     "capture": "t_io_E5__clk_t3",
+     "where": "hgi_EN_0->io_E5",
+     "launch_model": "core:kv3_head_eighth_e5",
+     "capture_model": "budget",
+     "clock_damage_ps": 45.02
+    },
+    "kit_contract_ff": 5.77
+   },
+   "mesh_unc_max_ps": {
+    "TT": {
+     "setup": 101.3462638035787,
+     "hold": 101.3462638035787
+    },
+    "FF": {
+     "setup": 95.42357920453048,
+     "hold": 95.42357920453048
+    }
+   },
+   "droop_region": {
+    "mode": "mesh",
+    "file": null,
+    "regions": [
+     "mesh:0"
+    ],
+    "taps_in_region": 1920
+   }
+  },
+  "B_split_band": {
+   "intra": {
+    "all_tt_setup": 297.53,
+    "all_ff_hold": -316.82,
+    "real_tt_setup": null,
+    "real_ff_hold": null,
+    "real_ff_hold_neg": 0,
+    "real_pairs": 0,
+    "both_real_tt_setup": null,
+    "both_real_ff_hold": null,
+    "real_worst_hold": null,
+    "kit_contract_ff": 16.88
+   },
+   "seam": {
+    "all_tt_setup": 161.39,
+    "all_ff_hold": -307.78,
+    "real_tt_setup": 161.39,
+    "real_ff_hold": -241.99,
+    "real_ff_hold_neg": 672,
+    "real_pairs": 672,
+    "both_real_tt_setup": null,
+    "both_real_ff_hold": null,
+    "real_worst_hold": {
+     "launch": "t_hgi_EN_0__clk_t9",
+     "capture": "t_io_E5__clk_t3",
+     "where": "hgi_EN_0->io_E5",
+     "launch_model": "core:kv3_head_eighth_e5",
+     "capture_model": "budget",
+     "clock_damage_ps": 45.02
+    },
+    "kit_contract_ff": 5.77
+   },
+   "mesh_unc_max_ps": {
+    "TT": {
+     "setup": 0.0,
+     "hold": 0.0
+    },
+    "FF": {
+     "setup": 0.0,
+     "hold": 0.0
+    }
+   },
+   "droop_region": {
+    "mode": "mesh",
+    "file": null,
+    "regions": [
+     "mesh:0"
+    ],
+    "taps_in_region": 1920
+   }
+  },
+  "B_split_mesh": {
+   "intra": {
+    "all_tt_setup": 368.15,
+    "all_ff_hold": -106.06,
+    "real_tt_setup": 368.15,
+    "real_ff_hold": -26.14,
+    "real_ff_hold_neg": 1323,
+    "real_pairs": 9600,
+    "both_real_tt_setup": 368.15,
+    "both_real_ff_hold": 67.46,
+    "real_worst_hold": {
+     "launch": "t_hg_ES_5__clk_t3",
+     "capture": "t_hg_ES_5__clk_t8",
+     "where": "hg_ES_5",
+     "launch_model": "core:kv3_head_eighth_e1",
+     "capture_model": "budget",
+     "clock_damage_ps": 10.94
+    },
+    "kit_contract_ff": 66.0
+   },
+   "seam": {
+    "all_tt_setup": 321.5,
+    "all_ff_hold": -124.93,
+    "real_tt_setup": 321.5,
+    "real_ff_hold": -70.51,
+    "real_ff_hold_neg": 12371,
+    "real_pairs": 36912,
+    "both_real_tt_setup": 321.5,
+    "both_real_ff_hold": 24.67,
+    "real_worst_hold": {
+     "launch": "t_hg_ES_4__clk_t7",
+     "capture": "t_hg_ES_3__clk_t12",
+     "where": "hg_ES_4->hg_ES_3",
+     "launch_model": "core:kv3_head_eighth_e1",
+     "capture_model": "budget",
+     "clock_damage_ps": 7.07
+    },
+    "kit_contract_ff": 65.7
+   },
+   "mesh_unc_max_ps": {
+    "TT": {
+     "setup": 101.3462638035787,
+     "hold": 101.3462638035787
+    },
+    "FF": {
+     "setup": 95.42357920453048,
+     "hold": 95.42357920453048
+    }
+   },
+   "droop_region": {
+    "mode": "mesh",
+    "file": null,
+    "regions": [
+     "mesh:0"
+    ],
+    "taps_in_region": 1920
+   }
+  },
+  "C_mesh_bandsim": {
+   "intra": {
+    "all_tt_setup": 368.15,
+    "all_ff_hold": -167.96,
+    "real_tt_setup": 368.15,
+    "real_ff_hold": -26.14,
+    "real_ff_hold_neg": 1323,
+    "real_pairs": 9600,
+    "both_real_tt_setup": 368.15,
+    "both_real_ff_hold": 67.46,
+    "real_worst_hold": {
+     "launch": "t_hg_ES_5__clk_t3",
+     "capture": "t_hg_ES_5__clk_t8",
+     "where": "hg_ES_5",
+     "launch_model": "core:kv3_head_eighth_e1",
+     "capture_model": "budget",
+     "clock_damage_ps": 10.94
+    },
+    "kit_contract_ff": 56.78
+   },
+   "seam": {
+    "all_tt_setup": 201.69,
+    "all_ff_hold": -256.01,
+    "real_tt_setup": 201.69,
+    "real_ff_hold": -201.58,
+    "real_ff_hold_neg": 12851,
+    "real_pairs": 37584,
+    "both_real_tt_setup": 321.5,
+    "both_real_ff_hold": 24.67,
+    "real_worst_hold": {
+     "launch": "t_hg_EN_7__clk_t3",
+     "capture": "t_hub_Eo__clk_t1",
+     "where": "hg_EN_7->hub_Eo",
+     "launch_model": "core:kv3_head_eighth_e1",
+     "capture_model": "budget",
+     "clock_damage_ps": 54.13
+    },
+    "kit_contract_ff": 17.47
+   },
+   "mesh_unc_max_ps": {
+    "TT": {
+     "setup": 217.94945369397982,
+     "hold": 217.94945369397982
+    },
+    "FF": {
+     "setup": 186.6611024631249,
+     "hold": 186.6611024631249
+    }
+   },
+   "droop_region": {
+    "mode": "mesh",
+    "file": null,
+    "regions": [
+     "mesh:0"
+    ],
+    "taps_in_region": 1920
+   }
+  },
+  "C_split_band": {
+   "intra": {
+    "all_tt_setup": 479.28,
+    "all_ff_hold": -167.96,
+    "real_tt_setup": null,
+    "real_ff_hold": null,
+    "real_ff_hold_neg": 0,
+    "real_pairs": 0,
+    "both_real_tt_setup": null,
+    "both_real_ff_hold": null,
+    "real_worst_hold": null,
+    "kit_contract_ff": 56.78
+   },
+   "seam": {
+    "all_tt_setup": 201.69,
+    "all_ff_hold": -256.01,
+    "real_tt_setup": 201.69,
+    "real_ff_hold": -201.58,
+    "real_ff_hold_neg": 480,
+    "real_pairs": 672,
+    "both_real_tt_setup": null,
+    "both_real_ff_hold": null,
+    "real_worst_hold": {
+     "launch": "t_hg_EN_7__clk_t3",
+     "capture": "t_hub_Eo__clk_t1",
+     "where": "hg_EN_7->hub_Eo",
+     "launch_model": "core:kv3_head_eighth_e1",
+     "capture_model": "budget",
+     "clock_damage_ps": 54.13
+    },
+    "kit_contract_ff": 17.47
+   },
+   "mesh_unc_max_ps": {
+    "TT": {
+     "setup": 217.94945369397982,
+     "hold": 217.94945369397982
+    },
+    "FF": {
+     "setup": 186.6611024631249,
+     "hold": 186.6611024631249
+    }
+   },
+   "droop_region": {
+    "mode": "mesh",
+    "file": null,
+    "regions": [
+     "mesh:0"
+    ],
+    "taps_in_region": 1920
+   }
+  },
+  "C_split_mesh": {
+   "intra": {
+    "all_tt_setup": 368.15,
+    "all_ff_hold": -106.06,
+    "real_tt_setup": 368.15,
+    "real_ff_hold": -26.14,
+    "real_ff_hold_neg": 1323,
+    "real_pairs": 9600,
+    "both_real_tt_setup": 368.15,
+    "both_real_ff_hold": 67.46,
+    "real_worst_hold": {
+     "launch": "t_hg_ES_5__clk_t3",
+     "capture": "t_hg_ES_5__clk_t8",
+     "where": "hg_ES_5",
+     "launch_model": "core:kv3_head_eighth_e1",
+     "capture_model": "budget",
+     "clock_damage_ps": 10.94
+    },
+    "kit_contract_ff": 66.0
+   },
+   "seam": {
+    "all_tt_setup": 321.5,
+    "all_ff_hold": -124.93,
+    "real_tt_setup": 321.5,
+    "real_ff_hold": -70.51,
+    "real_ff_hold_neg": 12371,
+    "real_pairs": 36912,
+    "both_real_tt_setup": 321.5,
+    "both_real_ff_hold": 24.67,
+    "real_worst_hold": {
+     "launch": "t_hg_ES_4__clk_t7",
+     "capture": "t_hg_ES_3__clk_t12",
+     "where": "hg_ES_4->hg_ES_3",
+     "launch_model": "core:kv3_head_eighth_e1",
+     "capture_model": "budget",
+     "clock_damage_ps": 7.07
+    },
+    "kit_contract_ff": 65.7
+   },
+   "mesh_unc_max_ps": {
+    "TT": {
+     "setup": 101.3462638035787,
+     "hold": 101.3462638035787
+    },
+    "FF": {
+     "setup": 95.42357920453048,
+     "hold": 95.42357920453048
+    }
+   },
+   "droop_region": {
+    "mode": "mesh",
+    "file": null,
+    "regions": [
+     "mesh:0"
+    ],
+    "taps_in_region": 1920
+   }
+  },
+  "D_mesh_noocv": {
+   "intra": {
+    "all_tt_setup": 393.28,
+    "all_ff_hold": -85.23,
+    "real_tt_setup": 393.28,
+    "real_ff_hold": -5.27,
+    "real_ff_hold_neg": 24,
+    "real_pairs": 9600,
+    "both_real_tt_setup": 393.28,
+    "both_real_ff_hold": 88.21,
+    "real_worst_hold": {
+     "launch": "t_hg_ES_5__clk_t3",
+     "capture": "t_hg_ES_5__clk_t8",
+     "where": "hg_ES_5",
+     "launch_model": "core:kv3_head_eighth_e1",
+     "capture_model": "budget",
+     "clock_damage_ps": 10.94
+    },
+    "kit_contract_ff": 16.88
+   },
+   "seam": {
+    "all_tt_setup": 346.87,
+    "all_ff_hold": -103.91,
+    "real_tt_setup": 346.87,
+    "real_ff_hold": -49.48,
+    "real_ff_hold_neg": 2458,
+    "real_pairs": 37584,
+    "both_real_tt_setup": 346.87,
+    "both_real_ff_hold": 45.7,
+    "real_worst_hold": {
+     "launch": "t_hg_ES_4__clk_t7",
+     "capture": "t_hg_ES_3__clk_t12",
+     "where": "hg_ES_4->hg_ES_3",
+     "launch_model": "core:kv3_head_eighth_e1",
+     "capture_model": "budget",
+     "clock_damage_ps": 7.07
+    },
+    "kit_contract_ff": 5.77
+   },
+   "mesh_unc_max_ps": {
+    "TT": {
+     "setup": 101.3462638035787,
+     "hold": 101.3462638035787
+    },
+    "FF": {
+     "setup": 95.42357920453048,
+     "hold": 95.42357920453048
+    }
+   },
+   "droop_region": null
+  },
+  "E14_mesh": {
+   "intra": {
+    "all_tt_setup": 370.88,
+    "all_ff_hold": -159.66,
+    "real_tt_setup": 370.88,
+    "real_ff_hold": -26.27,
+    "real_ff_hold_neg": 1311,
+    "real_pairs": 9600,
+    "both_real_tt_setup": 370.88,
+    "both_real_ff_hold": 67.64,
+    "real_worst_hold": {
+     "launch": "t_hg_ES_5__clk_t3",
+     "capture": "t_hg_ES_5__clk_t8",
+     "where": "hg_ES_5",
+     "launch_model": "core:kv3_head_eighth_e1",
+     "capture_model": "budget",
+     "clock_damage_ps": 10.94
+    },
+    "kit_contract_ff": 56.34
+   },
+   "seam": {
+    "all_tt_setup": 263.2,
+    "all_ff_hold": -218.5,
+    "real_tt_setup": 263.2,
+    "real_ff_hold": -161.55,
+    "real_ff_hold_neg": 12650,
+    "real_pairs": 37584,
+    "both_real_tt_setup": 321.68,
+    "both_real_ff_hold": 24.52,
+    "real_worst_hold": {
+     "launch": "t_hg_EN_7__clk_t3",
+     "capture": "t_hub_Eo__clk_t2",
+     "where": "hg_EN_7->hub_Eo",
+     "launch_model": "core:kv3_head_eighth_e1",
+     "capture_model": "budget",
+     "clock_damage_ps": 58.59
+    },
+    "kit_contract_ff": 15.36
+   },
+   "mesh_unc_max_ps": {
+    "TT": {
+     "setup": 147.916955232004,
+     "hold": 147.916955232004
+    },
+    "FF": {
+     "setup": 138.15419825842727,
+     "hold": 138.15419825842727
+    }
+   },
+   "droop_region": {
+    "mode": "mesh",
+    "file": null,
+    "regions": [
+     "mesh:0"
+    ],
+    "taps_in_region": 1920
+   }
+  },
+  "E14_split_band": {
+   "intra": {
+    "all_tt_setup": 490.26,
+    "all_ff_hold": -159.66,
+    "real_tt_setup": null,
+    "real_ff_hold": null,
+    "real_ff_hold_neg": 0,
+    "real_pairs": 0,
+    "both_real_tt_setup": null,
+    "both_real_ff_hold": null,
+    "real_worst_hold": null,
+    "kit_contract_ff": 56.34
+   },
+   "seam": {
+    "all_tt_setup": 263.2,
+    "all_ff_hold": -218.5,
+    "real_tt_setup": 263.2,
+    "real_ff_hold": -161.55,
+    "real_ff_hold_neg": 426,
+    "real_pairs": 672,
+    "both_real_tt_setup": null,
+    "both_real_ff_hold": null,
+    "real_worst_hold": {
+     "launch": "t_hg_EN_7__clk_t3",
+     "capture": "t_hub_Eo__clk_t2",
+     "where": "hg_EN_7->hub_Eo",
+     "launch_model": "core:kv3_head_eighth_e1",
+     "capture_model": "budget",
+     "clock_damage_ps": 58.59
+    },
+    "kit_contract_ff": 15.36
+   },
+   "mesh_unc_max_ps": {
+    "TT": {
+     "setup": 147.916955232004,
+     "hold": 147.916955232004
+    },
+    "FF": {
+     "setup": 138.15419825842727,
+     "hold": 138.15419825842727
+    }
+   },
+   "droop_region": {
+    "mode": "mesh",
+    "file": null,
+    "regions": [
+     "mesh:0"
+    ],
+    "taps_in_region": 1920
+   }
+  },
+  "E14_split_mesh": {
+   "intra": {
+    "all_tt_setup": 370.88,
+    "all_ff_hold": -101.12,
+    "real_tt_setup": 370.88,
+    "real_ff_hold": -26.27,
+    "real_ff_hold_neg": 1311,
+    "real_pairs": 9600,
+    "both_real_tt_setup": 370.88,
+    "both_real_ff_hold": 67.64,
+    "real_worst_hold": {
+     "launch": "t_hg_ES_5__clk_t3",
+     "capture": "t_hg_ES_5__clk_t8",
+     "where": "hg_ES_5",
+     "launch_model": "core:kv3_head_eighth_e1",
+     "capture_model": "budget",
+     "clock_damage_ps": 10.94
+    },
+    "kit_contract_ff": 65.81
+   },
+   "seam": {
+    "all_tt_setup": 321.68,
+    "all_ff_hold": -125.03,
+    "real_tt_setup": 321.68,
+    "real_ff_hold": -70.6,
+    "real_ff_hold_neg": 12224,
+    "real_pairs": 36912,
+    "both_real_tt_setup": 321.68,
+    "both_real_ff_hold": 24.52,
+    "real_worst_hold": {
+     "launch": "t_hg_ES_4__clk_t7",
+     "capture": "t_hg_ES_3__clk_t12",
+     "where": "hg_ES_4->hg_ES_3",
+     "launch_model": "core:kv3_head_eighth_e1",
+     "capture_model": "budget",
+     "clock_damage_ps": 7.07
+    },
+    "kit_contract_ff": 65.49
+   },
+   "mesh_unc_max_ps": {
+    "TT": {
+     "setup": 101.48086504932732,
+     "hold": 101.48086504932732
+    },
+    "FF": {
+     "setup": 95.5284581787561,
+     "hold": 95.5284581787561
+    }
+   },
+   "droop_region": {
+    "mode": "mesh",
+    "file": null,
+    "regions": [
+     "mesh:0"
+    ],
+    "taps_in_region": 1920
+   }
+  },
+  "repro_r16": {
+   "intra": {
+    "all_tt_setup": -36.21,
+    "all_ff_hold": -418.98,
+    "real_tt_setup": -36.21,
+    "real_ff_hold": -340.57,
+    "real_ff_hold_neg": 9600,
+    "real_pairs": 9600,
+    "both_real_tt_setup": -36.21,
+    "both_real_ff_hold": -249.76,
+    "real_worst_hold": {
+     "launch": "t_hg_ES_0__clk_t3",
+     "capture": "t_hg_ES_0__clk_t4",
+     "where": "hg_ES_0",
+     "launch_model": "core:kv3_head_eighth_e1",
+     "capture_model": "budget",
+     "clock_damage_ps": 43.86
+    },
+    "kit_contract_ff": 11.39
+   },
+   "seam": {
+    "all_tt_setup": -37.04,
+    "all_ff_hold": -409.94,
+    "real_tt_setup": -37.04,
+    "real_ff_hold": -346.14,
+    "real_ff_hold_neg": 37584,
+    "real_pairs": 37584,
+    "both_real_tt_setup": -37.04,
+    "both_real_ff_hold": -250.87,
+    "real_worst_hold": {
+     "launch": "t_hgi_EN_0__clk_t9",
+     "capture": "t_pv_N_0__clk",
+     "where": "hgi_EN_0->pv_N_0",
+     "launch_model": "core:kv3_head_eighth_e5",
+     "capture_model": "budget",
+     "clock_damage_ps": 47.86
+    },
+    "kit_contract_ff": 5.77
+   },
+   "mesh_unc_max_ps": {
+    "TT": null,
+    "FF": null
+   },
+   "droop_region": {
+    "mode": "tree",
+    "file": null,
+    "regions": null,
+    "taps_in_region": null
+   }
+  },
+  "repro_r16_deftable": {
+   "intra": {
+    "all_tt_setup": -109.97,
+    "all_ff_hold": -476.63,
+    "real_tt_setup": -109.97,
+    "real_ff_hold": -394.76,
+    "real_ff_hold_neg": 9600,
+    "real_pairs": 9600,
+    "both_real_tt_setup": -109.97,
+    "both_real_ff_hold": -303.64,
+    "real_worst_hold": {
+     "launch": "t_hg_ES_0__clk_t3",
+     "capture": "t_hg_ES_0__clk_t4",
+     "where": "hg_ES_0",
+     "launch_model": "core:kv3_head_eighth_e1",
+     "capture_model": "budget",
+     "clock_damage_ps": 43.86
+    },
+    "kit_contract_ff": 11.39
+   },
+   "seam": {
+    "all_tt_setup": -110.84,
+    "all_ff_hold": -467.66,
+    "real_tt_setup": -110.84,
+    "real_ff_hold": -400.5,
+    "real_ff_hold_neg": 37584,
+    "real_pairs": 37584,
+    "both_real_tt_setup": -110.84,
+    "both_real_ff_hold": -304.73,
+    "real_worst_hold": {
+     "launch": "t_hg_WN_0__clk_t9",
+     "capture": "t_pc_WN_0__clk",
+     "where": "hg_WN_0->pc_WN_0",
+     "launch_model": "core:kv3_head_eighth_e5",
+     "capture_model": "budget",
+     "clock_damage_ps": 44.05
+    },
+    "kit_contract_ff": 5.77
+   },
+   "mesh_unc_max_ps": {
+    "TT": null,
+    "FF": null
+   },
+   "droop_region": {
+    "mode": "tree",
+    "file": null,
+    "regions": null,
+    "taps_in_region": null
+   }
+  }
+ },
+ "gate_form": "B_mesh_strict: 12.4a b1 AOCV table g=0.21 %/mm (clock-kv-r8 clk_aocv_table_g021.json), droop region = one mesh region (PDNSim not available), CPPR at the 12.8e signed mesh + per-pair sim U, leaf-fed band taps strict (CPPR at h)",
+ "findings": {
+  "r16_table": "R16 gate numbers (-110.8/-400.5) used the DEFAULT tools/die_plan/clk_aocv_table.json = DRAFT g 0.4163 %/mm, not the approved 0.21 %/mm. Reproduced byte-for-byte with --droop-region tree (CHECKED). With g 0.21 + tree droop: real TT -36.2/-37.0, FF -340.6/-346.1.",
+  "droop_fix": "--droop-region mesh (default): all 1920 taps in mesh:0 -> real TT +103.1/+102.2, FF -239.0/-244.2 (A_droopmesh)",
+  "mesh_signoff": "R15 mesh MC 24 samples TT/FF (vt 10 mV, wire 5 %, tree 2 ps/stage hierarchical, gradient 0.21 %/mm worst-direction); ngspice w1hub window nominal tap skew 21.8 TT / 20.8 FF vs linear 20.1/19.6 (Thevenin refit err <= 0.6/0.8 ps); other 8 decks running at lane end (ng/w2early, w3mc*)",
+  "classification": "mesh-mesh pairs: both-real FF +67.5 intra / +24.7 seam PASS; core->budget-capture real FF -26.1 intra / -70.5 seam (real vs budget: neighbour declared register); budget-budget zero-logic -106/-125 = HB4 (12.4a a1). Band pairs (96 leaf-fed band taps): real FF seam -242.0 strict / -201.6 sim-covered; R14 mesh-fed band -161.6 (mesh-mesh identical). TT setup PASS everywhere (+161.4 worst, band seam).",
+  "pdnsim": "kv-pdn-m78-1026 kitC psm 64g run OOM-killed (signal 9 after 36 min, no ir_VDD.csv); relaunched by COORD at 192 GB (dtrial-psm-3852148), not collected"
+ }
+}

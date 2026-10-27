@@ -1,0 +1,65 @@
+{
+  "scope": "conditional R8 one query event and one key stream per IDX.INDEX record; physical pass multiplicity not yet qualified",
+  "frames": [
+    {
+      "layer": 2,
+      "op": "IDX.INDEX",
+      "global_keys": 524288
+    },
+    {
+      "layer": 8,
+      "op": "IDX.INDEX",
+      "global_keys": 524288
+    },
+    {
+      "layer": 14,
+      "op": "IDX.INDEX",
+      "global_keys": 524288
+    },
+    {
+      "layer": 20,
+      "op": "IDX.INDEX",
+      "global_keys": 1048576
+    },
+    {
+      "layer": 24,
+      "op": "IDX.INDEX",
+      "global_keys": 1048576
+    },
+    {
+      "layer": 28,
+      "op": "IDX.INDEX",
+      "global_keys": 1048576
+    },
+    {
+      "layer": 32,
+      "op": "IDX.INDEX",
+      "global_keys": 1048576
+    },
+    {
+      "layer": 36,
+      "op": "IDX.INDEX",
+      "global_keys": 1048576
+    }
+  ],
+  "records_per_token": 8,
+  "baseline_cycles": 576702.4178468838,
+  "bank_k": 4,
+  "nkeys_per_stream_upper_assumption": 2736,
+  "beats_upper": 171,
+  "rate_at_most_one_per_four": {
+    "added_cycles_per_index_frame": 5,
+    "cycles": 576742.4178468838,
+    "added_cycles": 40.0,
+    "tok_s": 2080.651540214234,
+    "loss_pct": 0.006935505134042508
+  },
+  "one_beat_per_cycle_max171": {
+    "added_cycles_per_index_frame": 518,
+    "cycles": 580846.4178468838,
+    "added_cycles": 4144.0,
+    "tok_s": 2065.9505906023,
+    "loss_pct": 0.7134416039546565
+  },
+  "serial_upper_added_cycles": 4144
+}

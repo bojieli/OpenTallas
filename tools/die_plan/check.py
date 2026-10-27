@@ -1088,7 +1088,7 @@ def load_core_conns(plan_dir=None, path=None):
     return json.loads(f.read_text()) if f.is_file() else {}
 
 
-def check_core_faces(P, R, plan_dir=None, conns_file=None, max_msgs=5):
+def check_core_faces(P, R, plan_dir=None, conns_file=None, max_msgs=5, per_core=None):
     """Connectivity-aware hard-core face rule (GEOM-REVIEW face rule; COORD 10-23 PLAN-TOOL4).
 
     Every hard-core pin group (core port) that connects to a partition face or to another core / placed leaf must
@@ -1205,6 +1205,10 @@ def check_core_faces(P, R, plan_dir=None, conns_file=None, max_msgs=5):
                 out["groups"] += 1
                 out["pins"] += len(cs)
                 out["pins_away"] += away
+                if per_core is not None:        # CLOCK-KV-R12: per-core away-pin tally (core_pins_orient.py)
+                    pc = per_core.setdefault((tn, ci), [0, 0])
+                    pc[0] += away
+                    pc[1] += 1 if mean < FACE_AWAY_COS else 0
                 if mean < FACE_WARN_COS:
                     bf = best_face(dirs)
                     part = ", ".join(sorted({wh for wh, _, _ in dirs})[:3]) + (" ..." if len(dirs) > 3 else "")

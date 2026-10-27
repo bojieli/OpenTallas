@@ -871,7 +871,9 @@ MTP_BINDING = OrderedDict(
            "ot_hdc_v41x_vec (SU), ot_hdc_actquant, ot_hdc_select, the H16/D512 attention engine; DAG hw status none",
     head="draft.head<i> / draft.markov<i> (group DH): the head dies' lm_head bundle rtl/v41rom/ot_dsrom_head_bundle.sv "
          "+ ot_dsrom_head_elem.sv (+ rtl/s81/ot_dsrom_head_bundle_glue.sv; elem A/B SAFE closed 10-08); the Markov "
-         "head has no full-shape RTL (DAG: modelled)",
+         "head has real historical full-shape RTL (rtl/dsrom_sys/mtp/ot_dsrom_markov_head_full340.sv and "
+         "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv), plus native/static K256 row RTL; "
+         "current four-head image/embedding/native/physical composition remains open (tools/s81_head/head_mtp_source_census.py)",
     seed="accept.seed (previous step, accept phase): main_proj + each stage's wkv on the head group",
     gap="a measured draft layer needs the head / draft die netlist of record (not in die_sources.json)")
 

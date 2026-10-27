@@ -1,0 +1,10 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "Encoding repair and re-extraction only; no new physical route",
+  "picture": "results/geom_review/kv_b5_codex_2000.png",
+  "findings": [
+    "Equal driver lattice and short mesh stubs; moved internal-node diagonal legs remain a plan issue.",
+    "No floorplan/data/pin/PG or clock geometry changed by shared-VIA89 dedup.",
+    "Existing per-type island identity failure and band internal-tree reach remain open; no signoff claim."
+  ]
+}

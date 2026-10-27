@@ -1,0 +1,52 @@
+{
+ "lane": "CLOCK-KV-R11",
+ "date": "2026-10-26T21:58:56-07:00",
+ "b6_merge_shields": {
+  "desc": "b5 rebuilt with --merge-shields (combo), RCX ndr016 + tree STA",
+  "D_spread_TT": 71.919,
+  "D_spread_FF": 65.005,
+  "identical_to_R10_posthoc_probe": true,
+  "check": "CHECKED by own reproduction (10677 arrivals max diff 0.000); independent NUMBER-CHECK owed",
+  "run": "/srv/opentallas-scratch2/claude/clock-kv-r11-1026/b6"
+ },
+ "b7_pushdown": {
+  "desc": "in_core pushdown: 544 tree-node islands at ideal points, all legs of a level equal (L7-L9 mirrored, no trims)",
+  "native_spread_TT": 9.1,
+  "D_spread_TT": 52.94,
+  "D_spread_FF": 50.73,
+  "per_level_TT": {
+   "L6": 28.5,
+   "L7": 31.1,
+   "L10": 36.2,
+   "D": 52.9
+  },
+  "L7_step": "gone",
+  "adoptable": false,
+  "why": "d5 plan cores do not carry node islands; to be applied on headmirror plan",
+  "run": "/srv/opentallas-scratch2/claude/clock-kv-r11-1026/b7"
+ },
+ "rcx_residual": {
+  "odd_minus_even_leaf_ps": 11.24,
+  "cause": "rcx_kv emitter: SPEF n10 nets have load-R asymmetry med 599 ohm (vs <=23 at other levels) - odd driver path retraces the even branch leg (213+210 ohm); M9 point-junction transform (rcx3) gives identical SPEF -> encoding is in the net wire graph, not junction via; Codex rcx_kv/clock_routed domain",
+  "even_only_TT": 38.2,
+  "odd_only_TT": 47.5
+ },
+ "level_mode": {
+  "result": "infeasible on d5: L7 no slide frees (32 hit), L9 256 hit -> 416 pushdown anyway"
+ },
+ "kvs_pc_canon": {
+  "build": "/srv/opentallas-scratch2/claude/clock-kv-r11-1026/hm_b",
+  "lattice": "lat_hm_canon.json",
+  "snaps": 256,
+  "max_snap_um": 0.016,
+  "census": "31 modules, 0 FAIL (qkd_kvs_pc 124 inst 1 pattern (125.0,86.4),(125.0,276.48)); control composed+r9 FAIL 2 patterns 64/60"
+ },
+ "headmirror_g0c": {
+  "normalized_origin_offset_errors": 0,
+  "pin_quantum_snaps": 48,
+  "G0C": "FAIL 609 errors: geometry 456 (ft station cells on moved macros), core_faces 139 (head cores face away after flips -> re-pin), cuts 14 (13 baseline)",
+  "ft_corridor": "failed ft24 no chain within 394.9 um",
+  "data_reach": "NOT RUN"
+ },
+ "tests": "tools/die_plan/test_die_clock_mesh_r11.py + test_die_clock_mesh.py 40 PASS"
+}

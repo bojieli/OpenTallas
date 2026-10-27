@@ -1,0 +1,7 @@
+r14fold TT intra              pairs   28970 setup    79.95 (neg 0) hold  -577.01 (neg 28970) skew   72.18
+r14fold TT seam               pairs  104384 setup    54.52 (neg 0) hold  -602.44 (neg 104384) skew  127.90
+r14fold TT seam_nearest_INFO  pairs    4085 setup    55.93 (neg 0) hold  -601.03 (neg 4085) skew   98.65
+r14fold FF intra              pairs   28970 setup   229.58 (neg 0) hold  -472.28 (neg 28970) skew   59.30 kit-contract hold 20.70 (W 80, need 59.30, neg 0)
+r14fold FF seam               pairs  104384 setup   215.46 (neg 0) hold  -486.40 (neg 104384) skew  101.99 kit-contract hold -21.99 (W 80, need 101.99, neg 875)
+r14fold FF seam_nearest_INFO  pairs    4085 setup   216.37 (neg 0) hold  -485.49 (neg 4085) skew   79.45 kit-contract hold 0.55 (W 80, need 79.45, neg 0)
+SUMMARY {"intra": {"tt_setup_ps": 79.95, "ff_hold_ps": -472.28, "verdict": "FAIL", "ff_hold_kit_contract_ps": 20.7, "kit_contract_window_ps": 80.0, "kit_contract_window_needed_ps": 59.3, "kit_contract_verdict": "PASS"}, "seam": {"tt_setup_ps": 54.52, "ff_hold_ps": -486.4, "verdict": "FAIL", "ff_hold_kit_contract_ps": -21.99, "kit_contract_window_ps": 80.0, "kit_contract_window_needed_ps": 101.99, "kit_contract_verdict": "FAIL"}, "landed": {"tt_setup_margin_ps": null, "ff_hold_margin_ps": null, "verdict": "FAIL"}, "status": "UNCHECKED (NUMBER-CHECK pending)", "label": "declared-budget (no QC kit)"}

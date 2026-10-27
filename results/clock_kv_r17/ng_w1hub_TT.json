@@ -1,0 +1,44 @@
+{
+ "window": [
+  3800.0,
+  13300.0,
+  5200.0,
+  14600.0
+ ],
+ "ring_um": 1000.0,
+ "corner": "TT",
+ "ndr": "4w",
+ "sigma": {
+  "vt_mV": 10.0,
+  "wire_rel": 0.05,
+  "tree_ps_per_stage": 2.0
+ },
+ "samples": 1,
+ "errors": 0,
+ "deck0": {
+  "sample": 0,
+  "nodes": 1339,
+  "resistors": 1418,
+  "drivers": 99,
+  "drivers_in_window": 16,
+  "taps_in_window": 8,
+  "crossings_in_window": 12,
+  "t0": 4626.557129,
+  "span": 15.352539000000434
+ },
+ "nominal": {
+  "sample": "s000",
+  "taps": {
+   "n": 8,
+   "min": 54.584,
+   "max": 76.4,
+   "skew": 21.817
+  },
+  "crossings": {
+   "n": 12,
+   "min": 56.17,
+   "max": 236.586,
+   "spread": 180.415
+  }
+ }
+}

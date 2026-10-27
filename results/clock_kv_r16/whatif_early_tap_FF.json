@@ -1,0 +1,505 @@
+{
+ "proof": "/srv/opentallas-scratch2/claude/clock-kv-r15-1026/r15",
+ "timed_dir": "/srv/opentallas-scratch2/claude/clock-kv-r15-1026/r15",
+ "plan": "/srv/opentallas-scratch2/claude/clock-kv-r15-1026/in/hm_r12.json",
+ "period_ps": 833.333,
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "gate": "METHODOLOGY 12.4a v4.3: TT setup >= 0 and FF hold >= 0 on every related pair; CPPR at last common tree node (12.4b); skew = DIAGNOSTIC",
+ "block_model": {
+  "label": "real-view (2 core views, 0 kits) + declared-budget rest",
+  "core_latency_ps": {
+   "TT": 250.0,
+   "FF": 250.0
+  },
+  "cancels": "same declared latency both sides",
+  "core_tol_sensitivity_ps": 20.0,
+  "register": "DFFHQNx1_ASAP7_75t_R",
+  "seam_wire": {
+   "um": 40.0,
+   "ff_per_um": 0.15,
+   "applied": "setup only"
+  },
+  "kits_found": 0,
+  "core_views_found": 2,
+  "declared_latency_ps": {
+   "TT": 250.0,
+   "FF": 202.5
+  },
+  "core_part_delay_ps": -30.7
+ },
+ "corners": {
+  "FF": {
+   "basis": "routed RC (fixed-geometry tree SPEF + mesh transient + stub STA), raw (no offsets)",
+   "tap_slew_max_ps": 79.21,
+   "register": {
+    "key": {
+     "corner": "FF",
+     "slew_ps": 79.213,
+     "load_ff": 6.0,
+     "cell": "DFFHQNx1_ASAP7_75t_R",
+     "image": "openroad/orfs:asap7lock"
+    },
+    "clkq_max_wire_ps": 66.614,
+    "clkq_min_nowire_ps": 44.611,
+    "setup_ps": 6.273,
+    "hold_ps": 21.022,
+    "note": "OpenSTA DFFHQNx1_ASAP7_75t_R, ideal clock at max tap slew; setup = -(library setup term), hold = library hold"
+   },
+   "classes": {
+    "intra": {
+     "pairs": 28970,
+     "worst_setup_slack_ps": 492.6,
+     "setup_neg_pairs": 0,
+     "worst_setup": {
+      "launch": "t_hgi_WS_0__clk_t7",
+      "capture": "t_hgi_WS_0__clk_t3",
+      "where": "hgi_WS_0",
+      "clock_damage_ps": 44.27,
+      "cppr_ps": 0.3
+     },
+     "worst_hold_slack_ps": -70.02,
+     "hold_neg_pairs": 28970,
+     "worst_hold": {
+      "launch": "t_pv_N_7__clk_t3",
+      "capture": "t_pv_N_7__clk_t18",
+      "where": "pv_N_7",
+      "clock_damage_ps": 68.61,
+      "cppr_ps": 0.3
+     },
+     "skew_diag_max_ps": 68.61,
+     "skew_diag_over_80": 0,
+     "sens_core_tol": {
+      "tol_ps": 20.0,
+      "worst_setup_slack_ps": 452.6,
+      "worst_hold_slack_ps": -110.02
+     },
+     "worst_skew": [
+      [
+       68.61,
+       "t_pv_N_7__clk_t3",
+       "t_pv_N_7__clk_t18"
+      ],
+      [
+       68.61,
+       "t_pv_N_7__clk_t18",
+       "t_pv_N_7__clk_t3"
+      ],
+      [
+       68.17,
+       "t_pv_N_7__clk_t9",
+       "t_pv_N_7__clk_t18"
+      ],
+      [
+       68.17,
+       "t_pv_N_7__clk_t18",
+       "t_pv_N_7__clk_t9"
+      ],
+      [
+       67.93,
+       "t_pv_S_7__clk_t3",
+       "t_pv_S_7__clk_t18"
+      ]
+     ],
+     "real_view": {
+      "pairs_with_real_endpoint": 9600,
+      "pairs_both_real": 1920,
+      "pairs_total": 28970,
+      "setup_neg_pairs": 0,
+      "hold_neg_pairs": 5760,
+      "worst_setup_slack_ps": 492.6,
+      "worst_hold_slack_ps": -37.14,
+      "worst_setup": {
+       "launch": "t_hgi_WS_0__clk_t7",
+       "capture": "t_hgi_WS_0__clk_t3",
+       "where": "hgi_WS_0",
+       "launch_model": "core:kv3_head_eighth_e1",
+       "capture_model": "core:kv3_head_eighth_e1"
+      },
+      "worst_hold": {
+       "launch": "t_hgi_WN_7__clk_t3",
+       "capture": "t_hgi_WN_7__clk_t15",
+       "where": "hgi_WN_7",
+       "launch_model": "core:kv3_head_eighth_e1",
+       "capture_model": "budget"
+      }
+     },
+     "kit_contract_hold": {
+      "window_ps": 80.0,
+      "basis": "plan clock.tap_window.window_ps (gen_phys.tap_window_ps: kit SDC source -early -W / -late 0 on every tap port, CRPR credits same-tap)",
+      "worst_hold_bound_ps": 11.39,
+      "neg_pairs": 0,
+      "window_needed_ps": 68.61,
+      "worst": {
+       "launch": "t_pv_N_7__clk_t3",
+       "capture": "t_pv_N_7__clk_t18",
+       "where": "pv_N_7",
+       "damage_ps": 68.61
+      },
+      "damage_pctl_ps": {
+       "50": 33.57,
+       "99": 49.46,
+       "99.9": 59.45
+      },
+      "verdict": "PASS"
+     },
+     "label": "real-view+budget"
+    },
+    "intra_cross_region": {
+     "pairs": 0,
+     "label": "real-view+budget"
+    },
+    "seam": {
+     "pairs": 104384,
+     "worst_setup_slack_ps": 478.85,
+     "setup_neg_pairs": 0,
+     "worst_setup": {
+      "launch": "t_hgi_WN_4__clk_t7",
+      "capture": "t_hgi_WN_3__clk_t3",
+      "where": "hgi_WN_4->hgi_WN_3",
+      "clock_damage_ps": 58.03,
+      "cppr_ps": 0.3
+     },
+     "worst_hold_slack_ps": -75.64,
+     "hold_neg_pairs": 104383,
+     "worst_hold": {
+      "launch": "t_hub_C__clk_t3",
+      "capture": "t_pv_N_7__clk_t18",
+      "where": "hub_C->pv_N_7",
+      "clock_damage_ps": 74.23,
+      "cppr_ps": 0.3
+     },
+     "skew_diag_max_ps": 74.23,
+     "skew_diag_over_80": 0,
+     "sens_core_tol": {
+      "tol_ps": 20.0,
+      "worst_setup_slack_ps": 438.85,
+      "worst_hold_slack_ps": -115.64
+     },
+     "worst_skew": [
+      [
+       74.23,
+       "t_pv_N_7__clk_t18",
+       "t_hub_C__clk_t3"
+      ],
+      [
+       74.23,
+       "t_hub_C__clk_t3",
+       "t_pv_N_7__clk_t18"
+      ],
+      [
+       70.42,
+       "t_pv_S_7__clk_t18",
+       "t_hub_C__clk_t3"
+      ],
+      [
+       70.42,
+       "t_hub_C__clk_t3",
+       "t_pv_S_7__clk_t18"
+      ],
+      [
+       68.0,
+       "t_pv_S_7__clk_t18",
+       "t_pv_S_6__clk_t3"
+      ]
+     ],
+     "real_view": {
+      "pairs_with_real_endpoint": 37584,
+      "pairs_both_real": 5328,
+      "pairs_total": 104384,
+      "setup_neg_pairs": 0,
+      "hold_neg_pairs": 20680,
+      "worst_setup_slack_ps": 478.85,
+      "worst_hold_slack_ps": -42.8,
+      "worst_setup": {
+       "launch": "t_hgi_WN_4__clk_t7",
+       "capture": "t_hgi_WN_3__clk_t3",
+       "where": "hgi_WN_4->hgi_WN_3",
+       "launch_model": "core:kv3_head_eighth_e1",
+       "capture_model": "core:kv3_head_eighth_e1"
+      },
+      "worst_hold": {
+       "launch": "t_hgi_EN_7__clk_t3",
+       "capture": "t_pv_N_7__clk_t18",
+       "where": "hgi_EN_7->pv_N_7",
+       "launch_model": "core:kv3_head_eighth_e1",
+       "capture_model": "budget"
+      }
+     },
+     "kit_contract_hold": {
+      "window_ps": 80.0,
+      "basis": "plan clock.seam_hold.seam_ps (gen_phys.seam_hold)",
+      "worst_hold_bound_ps": 5.77,
+      "neg_pairs": 0,
+      "window_needed_ps": 74.23,
+      "worst": {
+       "launch": "t_hub_C__clk_t3",
+       "capture": "t_pv_N_7__clk_t18",
+       "where": "hub_C->pv_N_7",
+       "damage_ps": 74.23
+      },
+      "damage_pctl_ps": {
+       "50": 33.59,
+       "99": 52.08,
+       "99.9": 60.63
+      },
+      "verdict": "PASS"
+     },
+     "label": "real-view+budget"
+    },
+    "landed": {
+     "pairs": 0,
+     "label": "real-view+budget"
+    },
+    "seam_nearest_INFO": {
+     "pairs": 4085,
+     "worst_setup_slack_ps": 509.65,
+     "setup_neg_pairs": 0,
+     "worst_setup": {
+      "launch": "t_io_E5__clk_t3",
+      "capture": "t_hgi_EN_0__clk_t3",
+      "where": "L2045_2",
+      "clock_damage_ps": 45.45,
+      "cppr_ps": 0.3
+     },
+     "worst_hold_slack_ps": -60.76,
+     "hold_neg_pairs": 4085,
+     "worst_hold": {
+      "launch": "t_hroot_ES__clk_t2",
+      "capture": "t_pc_ES_7__clk_t9",
+      "where": "L520_1",
+      "clock_damage_ps": 59.35,
+      "cppr_ps": 0.3
+     },
+     "skew_diag_max_ps": 59.35,
+     "skew_diag_over_80": 0,
+     "sens_core_tol": {
+      "tol_ps": 20.0,
+      "worst_setup_slack_ps": 469.65,
+      "worst_hold_slack_ps": -100.76
+     },
+     "worst_skew": [
+      [
+       59.35,
+       "t_pc_ES_7__clk_t9",
+       "t_hroot_ES__clk_t2"
+      ],
+      [
+       59.35,
+       "t_pc_ES_7__clk_t9",
+       "t_hroot_ES__clk_t2"
+      ],
+      [
+       59.35,
+       "t_pc_ES_7__clk_t9",
+       "t_hroot_ES__clk_t2"
+      ],
+      [
+       59.35,
+       "t_pc_ES_7__clk_t9",
+       "t_hroot_ES__clk_t2"
+      ],
+      [
+       59.35,
+       "t_pc_ES_7__clk_t9",
+       "t_hroot_ES__clk_t2"
+      ]
+     ],
+     "real_view": {
+      "pairs_with_real_endpoint": 725,
+      "pairs_both_real": 0,
+      "pairs_total": 4085,
+      "setup_neg_pairs": 0,
+      "hold_neg_pairs": 245,
+      "worst_setup_slack_ps": 509.65,
+      "worst_hold_slack_ps": -23.14,
+      "worst_setup": {
+       "launch": "t_io_E5__clk_t3",
+       "capture": "t_hgi_EN_0__clk_t3",
+       "where": "L2045_2",
+       "launch_model": "budget",
+       "capture_model": "core:kv3_head_eighth_e1"
+      },
+      "worst_hold": {
+       "launch": "t_hgi_EN_0__clk_t3",
+       "capture": "t_io_E5__clk_t3",
+       "where": "L1428_9",
+       "launch_model": "core:kv3_head_eighth_e1",
+       "capture_model": "budget"
+      }
+     },
+     "kit_contract_hold": {
+      "window_ps": 80.0,
+      "basis": "plan clock.seam_hold.seam_ps (gen_phys.seam_hold)",
+      "worst_hold_bound_ps": 20.65,
+      "neg_pairs": 0,
+      "window_needed_ps": 59.35,
+      "worst": {
+       "launch": "t_hroot_ES__clk_t2",
+       "capture": "t_pc_ES_7__clk_t9",
+       "where": "L728_1",
+       "damage_ps": 59.35
+      },
+      "damage_pctl_ps": {
+       "50": 33.06,
+       "99": 52.71,
+       "99.9": 59.35
+      },
+      "verdict": "PASS"
+     },
+     "label": "real-view+budget / INFO subset"
+    },
+    "landed_nearest_INFO": {
+     "pairs": 0,
+     "label": "real-view+budget / INFO subset"
+    }
+   },
+   "real_view_coverage": {
+    "core_instances_total": 1628,
+    "core_instances_real": 512,
+    "real_by_module": {
+     "kv3_head_eighth_e1": 256,
+     "kv3_head_eighth_e5": 256
+    },
+    "taps_total": 1920,
+    "taps_with_real_model": 384,
+    "kit_partitions": [],
+    "core_models": {
+     "kv3_head_eighth_e1": {
+      "lib": "/srv/opentallas-scratch2/claude/clock-kv-r16-1026/views/kv3_head_eighth_e1/kv3_head_eighth_e1_ff.lib",
+      "clock_pin": "g_t_2_u_l8__clk[0]",
+      "load_ff": 6.0,
+      "clock_tree_path_ps": {
+       "min_clock_tree_path": 219.06277,
+       "max_clock_tree_path": 253.67708
+      },
+      "out_max_ps": 318.041,
+      "out_max_pin": "g_t_2_u_stk__gf_o[0]",
+      "out_min_ps": 301.535,
+      "out_min_pin": "g_t_2_u_stk__kp_o[26]",
+      "in_setup_ps": -81.58,
+      "in_setup_pin": "g_t_3_u_stin__cr_i[5]",
+      "in_hold_ps": 133.363,
+      "in_hold_pin": "g_t_3_u_stk__rst_n[0]",
+      "arcs": {
+       "out": 136,
+       "setup": 936,
+       "hold": 936
+      },
+      "other_timing_types": [],
+      "meta": {
+       "clock_latency_measured": {
+        "tt": {
+         "n": 534,
+         "min": 281.19,
+         "mean": 289.4,
+         "max": 297.02,
+         "spread": 15.83
+        },
+        "ff": {
+         "n": 534,
+         "min": 225.74,
+         "mean": 233.21,
+         "max": 240.86,
+         "spread": 15.12
+        }
+       },
+       "verdict": "SIGNED (signoff.py; pin audit PASS)",
+       "pins_sha256": "b11859eff9205ded51c22a8e008fdc30ebd13abb910f088a0b0c1e8fa24b841b",
+       "pins_file": "cores/kv3_head_eighth_e1_pins.json"
+      },
+      "part_delay_ps": -30.7
+     },
+     "kv3_head_eighth_e5": {
+      "lib": "/srv/opentallas-scratch2/claude/clock-kv-r16-1026/views/kv3_head_eighth_e5/kv3_head_eighth_e5_ff.lib",
+      "clock_pin": "g_t_10_u_l8__clk[0]",
+      "load_ff": 6.0,
+      "clock_tree_path_ps": {
+       "min_clock_tree_path": 223.50848,
+       "max_clock_tree_path": 255.52927
+      },
+      "out_max_ps": 312.09,
+      "out_max_pin": "g_t_11_u_stk__gf_o[0]",
+      "out_min_ps": 299.904,
+      "out_min_pin": "g_t_10_u_stk__kp_o[4]",
+      "in_setup_ps": -84.546,
+      "in_setup_pin": "g_t_10_u_stin__cr_i[9]",
+      "in_hold_ps": 130.877,
+      "in_hold_pin": "g_t_11_u_stin__dr_i[132]",
+      "arcs": {
+       "out": 136,
+       "setup": 936,
+       "hold": 936
+      },
+      "other_timing_types": [],
+      "meta": {
+       "clock_latency_measured": {
+        "tt": {
+         "n": 534,
+         "min": 286.03,
+         "mean": 291.53,
+         "max": 298.85,
+         "spread": 12.82
+        },
+        "ff": {
+         "n": 534,
+         "min": 229.96,
+         "mean": 234.98,
+         "max": 241.21,
+         "spread": 11.25
+        }
+       },
+       "verdict": "SIGNED (signoff.py; pin audit PASS)",
+       "pins_sha256": "5cf4d52bc35eb490887d8d7ee52e1881036d3ab68382d95865717df665257c9a",
+       "pins_file": "cores/kv3_head_eighth_e5_pins.json"
+      },
+      "part_delay_ps": -30.7
+     }
+    },
+    "map_distance_max_um": 668.38
+   }
+  }
+ },
+ "coverage": {
+  "partitions_with_taps": 160,
+  "connected_part_pairs": 512,
+  "uncovered_bits": {}
+ },
+ "summary": {
+  "intra": {
+   "tt_setup_ps": null,
+   "ff_hold_ps": -70.02,
+   "verdict": "FAIL",
+   "ff_hold_kit_contract_ps": 11.39,
+   "kit_contract_window_ps": 80.0,
+   "kit_contract_window_needed_ps": 68.61,
+   "kit_contract_verdict": "PASS",
+   "real_view": {
+    "pairs": "0/0",
+    "tt_setup_ps": null,
+    "ff_hold_ps": -37.14
+   }
+  },
+  "seam": {
+   "tt_setup_ps": null,
+   "ff_hold_ps": -75.64,
+   "verdict": "FAIL",
+   "ff_hold_kit_contract_ps": 5.77,
+   "kit_contract_window_ps": 80.0,
+   "kit_contract_window_needed_ps": 74.23,
+   "kit_contract_verdict": "PASS",
+   "real_view": {
+    "pairs": "0/0",
+    "tt_setup_ps": null,
+    "ff_hold_ps": -42.8
+   }
+  },
+  "landed": {
+   "tt_setup_margin_ps": null,
+   "ff_hold_margin_ps": null,
+   "verdict": "FAIL"
+  },
+  "status": "UNCHECKED (NUMBER-CHECK pending)",
+  "label": "real-view (2 core views, 0 kits) + declared-budget rest"
+ }
+}

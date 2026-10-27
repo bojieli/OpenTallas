@@ -1,0 +1,44 @@
+{
+  "source_base": "248c30dba1",
+  "status": "PASS real controller/SEQ protocol; synthetic DHRES fixture, not Markov numeric or wholehead G5",
+  "positive_unit": "oth-ubuntu-3081865-1793072729",
+  "mutant_unit": "oth-ubuntu-3114288-1793072782",
+  "root_cause": "qpend asserted cycle8864 before hreg Q stable8865; link sent old j0 rather than actual j1/token101; sequencer correctly faulted",
+  "fix": "advertise ROWS/DHRES pending after one additional validity stage, retaining payload/Q stable",
+  "counts": {
+    "SEED": 1,
+    "ROWS": 1,
+    "DHSTEP": 5,
+    "DHRES": 5,
+    "DRAFT": 1,
+    "held_RESULT": 1
+  },
+  "exact_values": {
+    "draft": [
+      101,
+      102,
+      103,
+      104,
+      105
+    ],
+    "target_token": 50000,
+    "target_logit": "40400000"
+  },
+  "added_stages": {
+    "ROWS": 1,
+    "DHRES": 1,
+    "five_step_wave": 6
+  },
+  "fixture_observation": {
+    "SEED": 8826,
+    "DHSTEP": [
+      8856,
+      8883,
+      8910,
+      8937,
+      8964
+    ]
+  },
+  "negative_control": "legacy early valid reproduces same j0/seq fault, caught",
+  "remaining": "current Markov producer/native masterplan; production HBC/START/fulltoken and physical timing"
+}

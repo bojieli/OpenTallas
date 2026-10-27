@@ -10,7 +10,17 @@
 if {![llength [info procs ::ot_hb4pad_rt_orig]] && [llength [info commands ::repair_timing]]} {
   rename ::repair_timing ::ot_hb4pad_rt_orig
   proc ::repair_timing {args} {
+    # OpenROAD defaults to setup followed by hold when neither selector is present.
+    # Split the two phases so HB4 stays unavailable during setup, including an
+    # explicit -setup -hold request. The original options reach both phases.
+    set setup [expr {[lsearch -exact $args -setup] >= 0}]
     set hold [expr {[lsearch -exact $args -hold] >= 0}]
+    if {$setup == $hold} {
+      set opts {}
+      foreach arg $args { if {$arg ni {-setup -hold}} { lappend opts $arg } }
+      uplevel 1 [list ::repair_timing -setup {*}$opts]
+      return [uplevel 1 [list ::repair_timing -hold {*}$opts]]
+    }
     set cells {}
     if {$hold} {
       set cells [get_lib_cells -quiet */HB4xp67_ASAP7_75t_R]

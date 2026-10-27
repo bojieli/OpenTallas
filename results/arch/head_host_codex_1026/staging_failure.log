@@ -1,0 +1,16 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-head-host-2000
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-head-host-2000
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/codex-head-host-2000
+ot-run: localhost      admits   207 GB (avail 426, reserve 0, fresh 68.6, peak 86.1, headroom 0, waiters 0/0 GB) load 41/256 running 25 disk 781 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tender-ray as oth-ubuntu-1511063-1793071265 after 1 s
+Traceback (most recent call last):
+  File "<stdin>", line 9, in <module>
+  File "/srv/opentallas-scratch2/claude/codex-head-host-2000/tools/s81_head/head_host_plan_delta.py", line 10, in <module>
+    from head_rtl_plan_delta import MESH_SOURCES
+  File "/srv/opentallas-scratch2/claude/codex-head-host-2000/tools/s81_head/head_rtl_plan_delta.py", line 15, in <module>
+    import head_lep_plan_delta as LEP
+  File "/srv/opentallas-scratch2/claude/codex-head-host-2000/tools/s81_head/head_lep_plan_delta.py", line 10, in <module>
+    from gen import latency_table
+ModuleNotFoundError: No module named 'gen'
+ot-run: RAN on localhost (unit oth-ubuntu-1511063-1793071265): exit 1
