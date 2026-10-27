@@ -1,0 +1,46 @@
+{
+ "e": {
+  "rc": 0,
+  "cone_cells": 0,
+  "seq_cells": 0,
+  "bytes": 6459177,
+  "sat_success": true,
+  "sat_fail": false,
+  "y_connect": [
+   "  connect \\y 24'000000000000000000000000"
+  ]
+ },
+ "w": {
+  "rc": 0,
+  "cone_cells": 0,
+  "seq_cells": 0,
+  "bytes": 6459177,
+  "sat_success": true,
+  "sat_fail": false,
+  "y_connect": [
+   "  connect \\y 24'000000000000000000000000"
+  ]
+ },
+ "e_mut": {
+  "rc": 1,
+  "cone_cells": 0,
+  "seq_cells": 0,
+  "bytes": 6484105,
+  "sat_success": false,
+  "sat_fail": true,
+  "y_connect": [
+   "  connect \\y 24'000000000000000000000001"
+  ]
+ },
+ "w_mut": {
+  "rc": 1,
+  "cone_cells": 0,
+  "seq_cells": 0,
+  "bytes": 6484105,
+  "sat_success": false,
+  "sat_fail": true,
+  "y_connect": [
+   "  connect \\y 24'000000000000000000000001"
+  ]
+ }
+}

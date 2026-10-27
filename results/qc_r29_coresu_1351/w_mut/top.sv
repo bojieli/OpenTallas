@@ -1,0 +1,28 @@
+module proof_w_mut(input clk,rst_n,input [759:0] ci,output [23:0] y);
+wire [301:0]full;
+qfd_qc_su_lane_w_l0 dut(.clk(clk),.rst_n(rst_n),.c_i(ci),.c_o(full));
+assign y[0] = ~full[49];
+assign y[1] = full[50];
+assign y[2] = full[51];
+assign y[3] = full[52];
+assign y[4] = full[53];
+assign y[5] = full[54];
+assign y[6] = full[55];
+assign y[7] = full[56];
+assign y[8] = full[57];
+assign y[9] = full[58];
+assign y[10] = full[59];
+assign y[11] = full[60];
+assign y[12] = full[61];
+assign y[13] = full[62];
+assign y[14] = full[63];
+assign y[15] = full[64];
+assign y[16] = full[65];
+assign y[17] = full[66];
+assign y[18] = full[67];
+assign y[19] = full[68];
+assign y[20] = full[297];
+assign y[21] = full[298];
+assign y[22] = full[299];
+assign y[23] = full[300];
+endmodule
