@@ -2,7 +2,7 @@
  "schema": "opentallas.fallback_landed.v1",
  "mode": "class",
  "block": 2,
- "regions_count": 171,
+ "regions_count": 169,
  "regions": [
   {
    "k": 0,
@@ -175,7 +175,7 @@
   },
   {
    "k": 13,
-   "tag": "std_b9_0_0",
+   "tag": "std_b9_0_1",
    "box_um": [
     27518.4,
     1330.56,
@@ -1254,7 +1254,7 @@
   },
   {
    "k": 96,
-   "tag": "std_b8_8_1",
+   "tag": "std_b8_8_0",
    "box_um": [
     24632.64,
     20960.64,
@@ -1267,7 +1267,7 @@
   },
   {
    "k": 97,
-   "tag": "std_b8_8_1",
+   "tag": "std_b8_8_0",
    "box_um": [
     24632.64,
     19733.76,
@@ -2658,7 +2658,7 @@
   },
   {
    "k": 204,
-   "tag": "std_b2_8_1",
+   "tag": "std_b2_8_0",
    "box_um": [
     5875.2,
     20960.64,
@@ -2671,7 +2671,7 @@
   },
   {
    "k": 205,
-   "tag": "std_b2_8_1",
+   "tag": "std_b2_8_0",
    "box_um": [
     5875.2,
     19733.76,
@@ -2853,7 +2853,7 @@
   },
   {
    "k": 219,
-   "tag": "std_b3_0_1",
+   "tag": "hard_phy_hbm",
    "box_um": [
     10445.76,
     103.68,
@@ -2918,7 +2918,7 @@
   },
   {
    "k": 224,
-   "tag": "std_b8_0_1",
+   "tag": "std_b8_0_0",
    "box_um": [
     23189.76,
     103.68,
@@ -2957,7 +2957,7 @@
   },
   {
    "k": 227,
-   "tag": "std_b1_9_1",
+   "tag": "std_b1_9_0",
    "box_um": [
     3551.04,
     23414.4,
@@ -3451,7 +3451,7 @@
   },
   {
    "k": 265,
-   "tag": "std_b3_2_1",
+   "tag": "std_b3_2_0",
    "box_um": [
     10203.84,
     6238.08,
@@ -3724,7 +3724,7 @@
   },
   {
    "k": 286,
-   "tag": "std_b4_9_2",
+   "tag": "std_b4_9_1",
    "box_um": [
     13089.6,
     22187.52,
@@ -4049,7 +4049,7 @@
   },
   {
    "k": 311,
-   "tag": "std_b5_8_0",
+   "tag": "std_b5_8_1",
    "box_um": [
     15975.36,
     19733.76,
@@ -4062,7 +4062,7 @@
   },
   {
    "k": 312,
-   "tag": "std_b5_8_0",
+   "tag": "std_b5_8_1",
    "box_um": [
     15975.36,
     20960.64,
@@ -4101,7 +4101,7 @@
   },
   {
    "k": 315,
-   "tag": "std_b5_3_0",
+   "tag": "std_b5_3_1",
    "box_um": [
     15975.36,
     8691.84,
@@ -4127,7 +4127,7 @@
   },
   {
    "k": 317,
-   "tag": "std_b5_3_0",
+   "tag": "std_b5_3_1",
    "box_um": [
     15975.36,
     7464.96,
@@ -4400,7 +4400,7 @@
   },
   {
    "k": 338,
-   "tag": "std_b6_8_0",
+   "tag": "std_b6_8_1",
    "box_um": [
     18861.12,
     19733.76,
@@ -4413,7 +4413,7 @@
   },
   {
    "k": 339,
-   "tag": "std_b6_8_0",
+   "tag": "std_b6_8_1",
    "box_um": [
     18861.12,
     20960.64,
@@ -4673,7 +4673,7 @@
   },
   {
    "k": 359,
-   "tag": "std_b7_8_0",
+   "tag": "std_b7_8_1",
    "box_um": [
     21746.88,
     19733.76,
@@ -4686,7 +4686,7 @@
   },
   {
    "k": 360,
-   "tag": "std_b7_8_0",
+   "tag": "std_b7_8_1",
    "box_um": [
     21746.88,
     20960.64,
@@ -5180,13 +5180,13 @@
   }
  ],
  "added_cycles_per_crossing": 3,
- "crossings": 1210,
- "bits": 559382,
+ "crossings": 1211,
+ "bits": 559181,
  "lanes": 570,
  "by_class_pair": {
   "std->std": {
-   "ports": 1210,
-   "bits": 559382
+   "ports": 1211,
+   "bits": 559181
   }
  },
  "ports": [
@@ -5317,7 +5317,7 @@
    "src": "s_4S_L4",
    "dst": "s_4S_L2",
    "src_region": "std_b5_2_0",
-   "dst_region": "std_b5_3_0",
+   "dst_region": "std_b5_3_1",
    "width": 562,
    "kind": "data",
    "added_cycles": 3
@@ -5327,7 +5327,7 @@
    "lane": "attn__svc_11__s_4S_C",
    "src": "s_4S_L0",
    "dst": "s_4S_C",
-   "src_region": "std_b5_3_0",
+   "src_region": "std_b5_3_1",
    "dst_region": "std_b5_4_0",
    "width": 562,
    "kind": "data",
@@ -5675,120 +5675,142 @@
    "added_cycles": 3
   },
   {
-   "port": "ca__s_0N_LP__bk_sel__phy1026_1",
+   "port": "ca__s_0N_LP__bk_sel__pd4_1",
    "lane": "ca__s_0N_LP__bk_sel",
-   "src": "s_0N_C",
-   "dst": "s_1N_C",
+   "src": "s_0N_x03",
+   "dst": "s_0N_x04",
    "src_region": "std_b3_7_0",
-   "dst_region": "std_b4_7_0",
+   "dst_region": "std_b3_8_1",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "ca__s_0N_LP__bk_sel__phy1026_3",
+   "port": "ca__s_0N_LP__bk_sel__pd4_3",
    "lane": "ca__s_0N_LP__bk_sel",
-   "src": "s_2N_C",
-   "dst": "s_3N_C",
-   "src_region": "std_b4_7_0",
-   "dst_region": "std_b5_7_0",
+   "src": "s_0N_x05",
+   "dst": "s_0N_x06",
+   "src_region": "std_b3_8_1",
+   "dst_region": "std_b3_9_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "ca__s_0N_LP__bk_sel__phy1026_5",
+   "port": "ca__s_0N_LP__bk_sel__pd4_5",
    "lane": "ca__s_0N_LP__bk_sel",
-   "src": "s_3N_L1",
-   "dst": "s_3N_L3",
-   "src_region": "std_b5_7_0",
-   "dst_region": "std_b5_8_0",
+   "src": "s_0N_x16",
+   "dst": "s_1N_x06",
+   "src_region": "std_b3_9_0",
+   "dst_region": "std_b4_9_1",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "ca__s_0N_LP__bk_sel__phy1026_8",
+   "port": "ca__s_0N_LP__bk_sel__pd4_7",
    "lane": "ca__s_0N_LP__bk_sel",
-   "src": "s_4N_L4",
+   "src": "s_2N_x06",
+   "dst": "s_3N_x06",
+   "src_region": "std_b4_9_1",
+   "dst_region": "std_b5_9_0",
+   "width": 276,
+   "kind": "data",
+   "added_cycles": 3
+  },
+  {
+   "port": "ca__s_0N_LP__bk_sel__pd4_8",
+   "lane": "ca__s_0N_LP__bk_sel",
+   "src": "s_3N_x06",
    "dst": "bk_sel",
-   "src_region": "std_b5_8_0",
+   "src_region": "std_b5_9_0",
    "dst_region": "std_b6_9_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "cb__s_0N_LP__bk_sel__phy1026_1",
+   "port": "cb__s_0N_LP__bk_sel__pd4_1",
    "lane": "cb__s_0N_LP__bk_sel",
-   "src": "s_0N_C",
-   "dst": "s_1N_C",
+   "src": "s_0N_x03",
+   "dst": "s_0N_x04",
    "src_region": "std_b3_7_0",
-   "dst_region": "std_b4_7_0",
+   "dst_region": "std_b3_8_1",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "cb__s_0N_LP__bk_sel__phy1026_3",
+   "port": "cb__s_0N_LP__bk_sel__pd4_3",
    "lane": "cb__s_0N_LP__bk_sel",
-   "src": "s_2N_C",
-   "dst": "s_3N_C",
-   "src_region": "std_b4_7_0",
-   "dst_region": "std_b5_7_0",
+   "src": "s_0N_x05",
+   "dst": "s_0N_x06",
+   "src_region": "std_b3_8_1",
+   "dst_region": "std_b3_9_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "cb__s_0N_LP__bk_sel__phy1026_5",
+   "port": "cb__s_0N_LP__bk_sel__pd4_5",
    "lane": "cb__s_0N_LP__bk_sel",
-   "src": "s_3N_L1",
-   "dst": "s_3N_L3",
-   "src_region": "std_b5_7_0",
-   "dst_region": "std_b5_8_0",
+   "src": "s_0N_x16",
+   "dst": "s_1N_x06",
+   "src_region": "std_b3_9_0",
+   "dst_region": "std_b4_9_1",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "cb__s_0N_LP__bk_sel__phy1026_8",
+   "port": "cb__s_0N_LP__bk_sel__pd4_7",
    "lane": "cb__s_0N_LP__bk_sel",
-   "src": "s_4N_L4",
+   "src": "s_2N_x06",
+   "dst": "s_3N_x06",
+   "src_region": "std_b4_9_1",
+   "dst_region": "std_b5_9_0",
+   "width": 276,
+   "kind": "data",
+   "added_cycles": 3
+  },
+  {
+   "port": "cb__s_0N_LP__bk_sel__pd4_8",
+   "lane": "cb__s_0N_LP__bk_sel",
+   "src": "s_3N_x06",
    "dst": "bk_sel",
-   "src_region": "std_b5_8_0",
+   "src_region": "std_b5_9_0",
    "dst_region": "std_b6_9_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_EN0__s_7N_LP__phy1026_1",
+   "port": "coll__lk_EN0__s_7N_LP__pd4_1",
    "lane": "coll__lk_EN0__s_7N_LP",
    "src": "s_7N_x16",
    "dst": "s_7N_x15",
    "src_region": "std_b7_9_0",
-   "dst_region": "std_b7_8_0",
+   "dst_region": "std_b7_8_1",
    "width": 514,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_EN0__s_7N_LP__phy1026_3",
+   "port": "coll__lk_EN0__s_7N_LP__pd4_3",
    "lane": "coll__lk_EN0__s_7N_LP",
    "src": "s_7N_x14",
    "dst": "s_7N_x13",
-   "src_region": "std_b7_8_0",
+   "src_region": "std_b7_8_1",
    "dst_region": "std_b7_7_0",
    "width": 514,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_EN1__s_7N_LP__phy1026_1",
+   "port": "coll__lk_EN1__s_7N_LP__pd4_0",
    "lane": "coll__lk_EN1__s_7N_LP",
-   "src": "fE5_p1_b0",
-   "dst": "s_7N_x16",
+   "src": "lk_EN1",
+   "dst": "lk_EN0",
    "src_region": "std_b8_9_0",
    "dst_region": "std_b7_9_0",
    "width": 514,
@@ -5796,29 +5818,29 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_EN1__s_7N_LP__phy1026_2",
+   "port": "coll__lk_EN1__s_7N_LP__pd4_2",
    "lane": "coll__lk_EN1__s_7N_LP",
    "src": "s_7N_x16",
    "dst": "s_7N_x15",
    "src_region": "std_b7_9_0",
-   "dst_region": "std_b7_8_0",
+   "dst_region": "std_b7_8_1",
    "width": 514,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_EN1__s_7N_LP__phy1026_4",
+   "port": "coll__lk_EN1__s_7N_LP__pd4_4",
    "lane": "coll__lk_EN1__s_7N_LP",
    "src": "s_7N_x14",
    "dst": "s_7N_x13",
-   "src_region": "std_b7_8_0",
+   "src_region": "std_b7_8_1",
    "dst_region": "std_b7_7_0",
    "width": 514,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_EN2__s_7N_LP__phy1026_0",
+   "port": "coll__lk_EN2__s_7N_LP__pd4_0",
    "lane": "coll__lk_EN2__s_7N_LP",
    "src": "lk_EN2",
    "dst": "s_7N_x06",
@@ -5829,51 +5851,40 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_EN2__s_7N_LP__phy1026_2",
+   "port": "coll__lk_EN2__s_7N_LP__pd4_2",
    "lane": "coll__lk_EN2__s_7N_LP",
    "src": "s_7N_x16",
    "dst": "s_7N_x15",
    "src_region": "std_b7_9_0",
-   "dst_region": "std_b7_8_0",
+   "dst_region": "std_b7_8_1",
    "width": 514,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_EN2__s_7N_LP__phy1026_4",
+   "port": "coll__lk_EN2__s_7N_LP__pd4_4",
    "lane": "coll__lk_EN2__s_7N_LP",
    "src": "s_7N_x14",
    "dst": "s_7N_x13",
-   "src_region": "std_b7_8_0",
+   "src_region": "std_b7_8_1",
    "dst_region": "std_b7_7_0",
    "width": 514,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_EN3__s_7N_LP__phy1026_0",
+   "port": "coll__lk_EN3__s_7N_LP__pd4_0",
    "lane": "coll__lk_EN3__s_7N_LP",
    "src": "lk_EN3",
-   "dst": "fE5_p4_b0",
+   "dst": "lk_EN1",
    "src_region": "std_b10_9_1",
-   "dst_region": "std_b9_9_0",
-   "width": 514,
-   "kind": "data",
-   "added_cycles": 3
-  },
-  {
-   "port": "coll__lk_EN3__s_7N_LP__phy1026_2",
-   "lane": "coll__lk_EN3__s_7N_LP",
-   "src": "fE5_p3_b0",
-   "dst": "fE5_p2_b0",
-   "src_region": "std_b9_9_0",
    "dst_region": "std_b8_9_0",
    "width": 514,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_EN3__s_7N_LP__phy1026_4",
+   "port": "coll__lk_EN3__s_7N_LP__pd4_2",
    "lane": "coll__lk_EN3__s_7N_LP",
    "src": "fE5_p1_b0",
    "dst": "s_7N_x16",
@@ -5884,40 +5895,40 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_EN3__s_7N_LP__phy1026_5",
+   "port": "coll__lk_EN3__s_7N_LP__pd4_3",
    "lane": "coll__lk_EN3__s_7N_LP",
    "src": "s_7N_x16",
    "dst": "s_7N_x15",
    "src_region": "std_b7_9_0",
-   "dst_region": "std_b7_8_0",
+   "dst_region": "std_b7_8_1",
    "width": 514,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_EN3__s_7N_LP__phy1026_7",
+   "port": "coll__lk_EN3__s_7N_LP__pd4_5",
    "lane": "coll__lk_EN3__s_7N_LP",
    "src": "s_7N_x14",
    "dst": "s_7N_x13",
-   "src_region": "std_b7_8_0",
+   "src_region": "std_b7_8_1",
    "dst_region": "std_b7_7_0",
    "width": 514,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_ES0__s_7S_LP__phy1026_0",
+   "port": "coll__lk_ES0__s_7S_LP__pd4_0",
    "lane": "coll__lk_ES0__s_7S_LP",
    "src": "lk_ES0",
    "dst": "s_7S_x10",
-   "src_region": "std_b8_0_1",
+   "src_region": "std_b8_0_0",
    "dst_region": "std_b7_0_1",
    "width": 514,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_ES0__s_7S_LP__phy1026_2",
+   "port": "coll__lk_ES0__s_7S_LP__pd4_2",
    "lane": "coll__lk_ES0__s_7S_LP",
    "src": "s_7S_x11",
    "dst": "s_7S_x12",
@@ -5928,7 +5939,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_ES0__s_7S_LP__phy1026_4",
+   "port": "coll__lk_ES0__s_7S_LP__pd4_4",
    "lane": "coll__lk_ES0__s_7S_LP",
    "src": "s_7S_x13",
    "dst": "s_7S_x14",
@@ -5939,7 +5950,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_ES0__s_7S_LP__phy1026_6",
+   "port": "coll__lk_ES0__s_7S_LP__pd4_6",
    "lane": "coll__lk_ES0__s_7S_LP",
    "src": "s_7S_x15",
    "dst": "s_7S_x16",
@@ -5950,7 +5961,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_ES0__s_7S_LP__phy1026_8",
+   "port": "coll__lk_ES0__s_7S_LP__pd4_8",
    "lane": "coll__lk_ES0__s_7S_LP",
    "src": "s_7S_x17",
    "dst": "s_7S_LP",
@@ -5961,10 +5972,10 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_ES1__s_7S_LP__phy1026_1",
+   "port": "coll__lk_ES1__s_7S_LP__pd4_0",
    "lane": "coll__lk_ES1__s_7S_LP",
-   "src": "fE0_p3_b2",
-   "dst": "fE0_p2_b2",
+   "src": "lk_ES1",
+   "dst": "lk_ES0",
    "src_region": "std_b9_0_0",
    "dst_region": "std_b8_0_0",
    "width": 514,
@@ -5972,18 +5983,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_ES1__s_7S_LP__phy1026_10",
-   "lane": "coll__lk_ES1__s_7S_LP",
-   "src": "s_7S_x17",
-   "dst": "s_7S_LP",
-   "src_region": "std_b7_3_0",
-   "dst_region": "std_b7_4_0",
-   "width": 514,
-   "kind": "data",
-   "added_cycles": 3
-  },
-  {
-   "port": "coll__lk_ES1__s_7S_LP__phy1026_3",
+   "port": "coll__lk_ES1__s_7S_LP__pd4_2",
    "lane": "coll__lk_ES1__s_7S_LP",
    "src": "fE0_p1_b2",
    "dst": "s_7S_x11",
@@ -5994,7 +5994,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_ES1__s_7S_LP__phy1026_4",
+   "port": "coll__lk_ES1__s_7S_LP__pd4_3",
    "lane": "coll__lk_ES1__s_7S_LP",
    "src": "s_7S_x11",
    "dst": "s_7S_x12",
@@ -6005,7 +6005,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_ES1__s_7S_LP__phy1026_6",
+   "port": "coll__lk_ES1__s_7S_LP__pd4_5",
    "lane": "coll__lk_ES1__s_7S_LP",
    "src": "s_7S_x13",
    "dst": "s_7S_x14",
@@ -6016,7 +6016,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_ES1__s_7S_LP__phy1026_8",
+   "port": "coll__lk_ES1__s_7S_LP__pd4_7",
    "lane": "coll__lk_ES1__s_7S_LP",
    "src": "s_7S_x15",
    "dst": "s_7S_x16",
@@ -6027,7 +6027,18 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_WN0__s_0N_LP__phy1026_1",
+   "port": "coll__lk_ES1__s_7S_LP__pd4_9",
+   "lane": "coll__lk_ES1__s_7S_LP",
+   "src": "s_7S_x17",
+   "dst": "s_7S_LP",
+   "src_region": "std_b7_3_0",
+   "dst_region": "std_b7_4_0",
+   "width": 514,
+   "kind": "data",
+   "added_cycles": 3
+  },
+  {
+   "port": "coll__lk_WN0__s_0N_LP__pd4_1",
    "lane": "coll__lk_WN0__s_0N_LP",
    "src": "s_0N_x06",
    "dst": "s_0N_x05",
@@ -6038,7 +6049,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_WN0__s_0N_LP__phy1026_3",
+   "port": "coll__lk_WN0__s_0N_LP__pd4_3",
    "lane": "coll__lk_WN0__s_0N_LP",
    "src": "s_0N_x04",
    "dst": "s_0N_x03",
@@ -6049,29 +6060,18 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_WN1__s_0N_LP__phy1026_0",
+   "port": "coll__lk_WN1__s_0N_LP__pd4_0",
    "lane": "coll__lk_WN1__s_0N_LP",
    "src": "lk_WN1",
-   "dst": "fW5_p2_b0",
-   "src_region": "std_b1_9_1",
-   "dst_region": "std_b2_9_0",
-   "width": 514,
-   "kind": "data",
-   "added_cycles": 3
-  },
-  {
-   "port": "coll__lk_WN1__s_0N_LP__phy1026_2",
-   "lane": "coll__lk_WN1__s_0N_LP",
-   "src": "fW5_p1_b0",
-   "dst": "s_0N_x06",
-   "src_region": "std_b2_9_0",
+   "dst": "lk_WN0",
+   "src_region": "std_b1_9_0",
    "dst_region": "std_b3_9_0",
    "width": 514,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_WN1__s_0N_LP__phy1026_3",
+   "port": "coll__lk_WN1__s_0N_LP__pd4_2",
    "lane": "coll__lk_WN1__s_0N_LP",
    "src": "s_0N_x06",
    "dst": "s_0N_x05",
@@ -6082,7 +6082,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_WN1__s_0N_LP__phy1026_5",
+   "port": "coll__lk_WN1__s_0N_LP__pd4_4",
    "lane": "coll__lk_WN1__s_0N_LP",
    "src": "s_0N_x04",
    "dst": "s_0N_x03",
@@ -6093,10 +6093,10 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_WN2__s_0N_LP__phy1026_0",
+   "port": "coll__lk_WN2__s_0N_LP__pd4_0",
    "lane": "coll__lk_WN2__s_0N_LP",
    "src": "lk_WN2",
-   "dst": "fW5_p4_b0",
+   "dst": "lk_WN1",
    "src_region": "std_b0_9_1",
    "dst_region": "std_b1_9_0",
    "width": 514,
@@ -6104,9 +6104,9 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_WN2__s_0N_LP__phy1026_2",
+   "port": "coll__lk_WN2__s_0N_LP__pd4_1",
    "lane": "coll__lk_WN2__s_0N_LP",
-   "src": "fW5_p3_b0",
+   "src": "lk_WN1",
    "dst": "fW5_p2_b0",
    "src_region": "std_b1_9_0",
    "dst_region": "std_b2_9_0",
@@ -6115,7 +6115,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_WN2__s_0N_LP__phy1026_4",
+   "port": "coll__lk_WN2__s_0N_LP__pd4_3",
    "lane": "coll__lk_WN2__s_0N_LP",
    "src": "fW5_p1_b0",
    "dst": "s_0N_x06",
@@ -6126,7 +6126,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_WN2__s_0N_LP__phy1026_5",
+   "port": "coll__lk_WN2__s_0N_LP__pd4_4",
    "lane": "coll__lk_WN2__s_0N_LP",
    "src": "s_0N_x06",
    "dst": "s_0N_x05",
@@ -6137,7 +6137,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_WN2__s_0N_LP__phy1026_7",
+   "port": "coll__lk_WN2__s_0N_LP__pd4_6",
    "lane": "coll__lk_WN2__s_0N_LP",
    "src": "s_0N_x04",
    "dst": "s_0N_x03",
@@ -6148,7 +6148,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_WN3__s_0N_LP__phy1026_0",
+   "port": "coll__lk_WN3__s_0N_LP__pd4_0",
    "lane": "coll__lk_WN3__s_0N_LP",
    "src": "lk_WN3",
    "dst": "s_0N_x16",
@@ -6159,29 +6159,29 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_WN3__s_0N_LP__phy1026_1",
+   "port": "coll__lk_WN3__s_0N_LP__pd4_2",
    "lane": "coll__lk_WN3__s_0N_LP",
-   "src": "s_0N_x16",
-   "dst": "s_0N_L4",
+   "src": "s_0N_x06",
+   "dst": "s_0N_x05",
    "src_region": "std_b3_9_0",
-   "dst_region": "std_b3_8_0",
+   "dst_region": "std_b3_8_1",
    "width": 514,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_WN3__s_0N_LP__phy1026_3",
+   "port": "coll__lk_WN3__s_0N_LP__pd4_4",
    "lane": "coll__lk_WN3__s_0N_LP",
-   "src": "s_0N_L3",
-   "dst": "s_0N_L1",
-   "src_region": "std_b3_8_0",
+   "src": "s_0N_x04",
+   "dst": "s_0N_x03",
+   "src_region": "std_b3_8_1",
    "dst_region": "std_b3_7_0",
    "width": 514,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_WS0__s_0S_LP__phy1026_1",
+   "port": "coll__lk_WS0__s_0S_LP__pd4_1",
    "lane": "coll__lk_WS0__s_0S_LP",
    "src": "gunit",
    "dst": "s_0S_x00",
@@ -6192,7 +6192,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_WS0__s_0S_LP__phy1026_3",
+   "port": "coll__lk_WS0__s_0S_LP__pd4_3",
    "lane": "coll__lk_WS0__s_0S_LP",
    "src": "s_0S_x01",
    "dst": "s_0S_x02",
@@ -6203,7 +6203,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_WS0__s_0S_LP__phy1026_5",
+   "port": "coll__lk_WS0__s_0S_LP__pd4_5",
    "lane": "coll__lk_WS0__s_0S_LP",
    "src": "s_0S_x03",
    "dst": "s_0S_x04",
@@ -6214,7 +6214,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_WS0__s_0S_LP__phy1026_7",
+   "port": "coll__lk_WS0__s_0S_LP__pd4_7",
    "lane": "coll__lk_WS0__s_0S_LP",
    "src": "s_0S_x05",
    "dst": "s_0S_LP",
@@ -6225,8 +6225,74 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_WS1__s_0S_LP__phy1026_0",
+   "port": "coll__lk_WS1__s_0S_LP__pd4_0",
    "lane": "coll__lk_WS1__s_0S_LP",
+   "src": "lk_WS1",
+   "dst": "lk_WS0",
+   "src_region": "std_b1_0_1",
+   "dst_region": "std_b3_0_0",
+   "width": 514,
+   "kind": "data",
+   "added_cycles": 3
+  },
+  {
+   "port": "coll__lk_WS1__s_0S_LP__pd4_2",
+   "lane": "coll__lk_WS1__s_0S_LP",
+   "src": "gunit",
+   "dst": "s_0S_x00",
+   "src_region": "std_b3_0_0",
+   "dst_region": "std_b3_1_0",
+   "width": 514,
+   "kind": "data",
+   "added_cycles": 3
+  },
+  {
+   "port": "coll__lk_WS1__s_0S_LP__pd4_4",
+   "lane": "coll__lk_WS1__s_0S_LP",
+   "src": "s_0S_x01",
+   "dst": "s_0S_x02",
+   "src_region": "std_b3_1_0",
+   "dst_region": "std_b3_2_0",
+   "width": 514,
+   "kind": "data",
+   "added_cycles": 3
+  },
+  {
+   "port": "coll__lk_WS1__s_0S_LP__pd4_6",
+   "lane": "coll__lk_WS1__s_0S_LP",
+   "src": "s_0S_x03",
+   "dst": "s_0S_x04",
+   "src_region": "std_b3_2_0",
+   "dst_region": "std_b3_3_0",
+   "width": 514,
+   "kind": "data",
+   "added_cycles": 3
+  },
+  {
+   "port": "coll__lk_WS1__s_0S_LP__pd4_8",
+   "lane": "coll__lk_WS1__s_0S_LP",
+   "src": "s_0S_x05",
+   "dst": "s_0S_LP",
+   "src_region": "std_b3_3_0",
+   "dst_region": "std_b3_4_0",
+   "width": 514,
+   "kind": "data",
+   "added_cycles": 3
+  },
+  {
+   "port": "coll__lk_WS2__s_0S_LP__pd4_0",
+   "lane": "coll__lk_WS2__s_0S_LP",
+   "src": "lk_WS2",
+   "dst": "lk_WS1",
+   "src_region": "std_b0_0_2",
+   "dst_region": "std_b1_0_1",
+   "width": 514,
+   "kind": "data",
+   "added_cycles": 3
+  },
+  {
+   "port": "coll__lk_WS2__s_0S_LP__pd4_1",
+   "lane": "coll__lk_WS2__s_0S_LP",
    "src": "lk_WS1",
    "dst": "fW0_p2_b2",
    "src_region": "std_b1_0_1",
@@ -6236,73 +6302,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_WS1__s_0S_LP__phy1026_2",
-   "lane": "coll__lk_WS1__s_0S_LP",
-   "src": "fW0_p1_b2",
-   "dst": "gunit",
-   "src_region": "std_b2_0_0",
-   "dst_region": "std_b3_0_0",
-   "width": 514,
-   "kind": "data",
-   "added_cycles": 3
-  },
-  {
-   "port": "coll__lk_WS1__s_0S_LP__phy1026_3",
-   "lane": "coll__lk_WS1__s_0S_LP",
-   "src": "gunit",
-   "dst": "s_0S_x00",
-   "src_region": "std_b3_0_0",
-   "dst_region": "std_b3_1_0",
-   "width": 514,
-   "kind": "data",
-   "added_cycles": 3
-  },
-  {
-   "port": "coll__lk_WS1__s_0S_LP__phy1026_5",
-   "lane": "coll__lk_WS1__s_0S_LP",
-   "src": "s_0S_x01",
-   "dst": "s_0S_x02",
-   "src_region": "std_b3_1_0",
-   "dst_region": "std_b3_2_0",
-   "width": 514,
-   "kind": "data",
-   "added_cycles": 3
-  },
-  {
-   "port": "coll__lk_WS1__s_0S_LP__phy1026_7",
-   "lane": "coll__lk_WS1__s_0S_LP",
-   "src": "s_0S_x03",
-   "dst": "s_0S_x04",
-   "src_region": "std_b3_2_0",
-   "dst_region": "std_b3_3_0",
-   "width": 514,
-   "kind": "data",
-   "added_cycles": 3
-  },
-  {
-   "port": "coll__lk_WS1__s_0S_LP__phy1026_9",
-   "lane": "coll__lk_WS1__s_0S_LP",
-   "src": "s_0S_x05",
-   "dst": "s_0S_LP",
-   "src_region": "std_b3_3_0",
-   "dst_region": "std_b3_4_0",
-   "width": 514,
-   "kind": "data",
-   "added_cycles": 3
-  },
-  {
-   "port": "coll__lk_WS2__s_0S_LP__phy1026_0",
-   "lane": "coll__lk_WS2__s_0S_LP",
-   "src": "lk_WS2",
-   "dst": "fW0_p4_b2",
-   "src_region": "std_b0_0_2",
-   "dst_region": "std_b1_0_0",
-   "width": 514,
-   "kind": "data",
-   "added_cycles": 3
-  },
-  {
-   "port": "coll__lk_WS2__s_0S_LP__phy1026_11",
+   "port": "coll__lk_WS2__s_0S_LP__pd4_10",
    "lane": "coll__lk_WS2__s_0S_LP",
    "src": "s_0S_x05",
    "dst": "s_0S_LP",
@@ -6313,18 +6313,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_WS2__s_0S_LP__phy1026_2",
-   "lane": "coll__lk_WS2__s_0S_LP",
-   "src": "fW0_p3_b2",
-   "dst": "fW0_p2_b2",
-   "src_region": "std_b1_0_0",
-   "dst_region": "std_b2_0_0",
-   "width": 514,
-   "kind": "data",
-   "added_cycles": 3
-  },
-  {
-   "port": "coll__lk_WS2__s_0S_LP__phy1026_4",
+   "port": "coll__lk_WS2__s_0S_LP__pd4_3",
    "lane": "coll__lk_WS2__s_0S_LP",
    "src": "fW0_p1_b2",
    "dst": "gunit",
@@ -6335,7 +6324,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_WS2__s_0S_LP__phy1026_5",
+   "port": "coll__lk_WS2__s_0S_LP__pd4_4",
    "lane": "coll__lk_WS2__s_0S_LP",
    "src": "gunit",
    "dst": "s_0S_x00",
@@ -6346,7 +6335,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_WS2__s_0S_LP__phy1026_7",
+   "port": "coll__lk_WS2__s_0S_LP__pd4_6",
    "lane": "coll__lk_WS2__s_0S_LP",
    "src": "s_0S_x01",
    "dst": "s_0S_x02",
@@ -6357,7 +6346,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_WS2__s_0S_LP__phy1026_9",
+   "port": "coll__lk_WS2__s_0S_LP__pd4_8",
    "lane": "coll__lk_WS2__s_0S_LP",
    "src": "s_0S_x03",
    "dst": "s_0S_x04",
@@ -6368,7 +6357,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_WS3__s_0S_LP__phy1026_1",
+   "port": "coll__lk_WS3__s_0S_LP__pd4_1",
    "lane": "coll__lk_WS3__s_0S_LP",
    "src": "s_3N_x06",
    "dst": "s_3N_L4",
@@ -6379,7 +6368,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_WS3__s_0S_LP__phy1026_11",
+   "port": "coll__lk_WS3__s_0S_LP__pd4_11",
    "lane": "coll__lk_WS3__s_0S_LP",
    "src": "s_1S_L3",
    "dst": "s_0S_L3",
@@ -6390,7 +6379,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_WS3__s_0S_LP__phy1026_12",
+   "port": "coll__lk_WS3__s_0S_LP__pd4_12",
    "lane": "coll__lk_WS3__s_0S_LP",
    "src": "s_0S_L3",
    "dst": "s_0S_L1",
@@ -6401,7 +6390,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_WS3__s_0S_LP__phy1026_3",
+   "port": "coll__lk_WS3__s_0S_LP__pd4_3",
    "lane": "coll__lk_WS3__s_0S_LP",
    "src": "s_3N_L3",
    "dst": "s_3N_L1",
@@ -6412,7 +6401,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_WS3__s_0S_LP__phy1026_5",
+   "port": "coll__lk_WS3__s_0S_LP__pd4_5",
    "lane": "coll__lk_WS3__s_0S_LP",
    "src": "s_3N_C",
    "dst": "s_3N_L0",
@@ -6423,7 +6412,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_WS3__s_0S_LP__phy1026_7",
+   "port": "coll__lk_WS3__s_0S_LP__pd4_7",
    "lane": "coll__lk_WS3__s_0S_LP",
    "src": "s_3N_L2",
    "dst": "s_3S_L4",
@@ -6434,7 +6423,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__lk_WS3__s_0S_LP__phy1026_9",
+   "port": "coll__lk_WS3__s_0S_LP__pd4_9",
    "lane": "coll__lk_WS3__s_0S_LP",
    "src": "s_3S_L3",
    "dst": "s_2S_L3",
@@ -6445,7 +6434,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0N_LP__lk_WN0__phy1026_1",
+   "port": "coll__s_0N_LP__lk_WN0__pd4_1",
    "lane": "coll__s_0N_LP__lk_WN0",
    "src": "s_0N_x03",
    "dst": "s_0N_x04",
@@ -6456,7 +6445,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0N_LP__lk_WN0__phy1026_3",
+   "port": "coll__s_0N_LP__lk_WN0__pd4_3",
    "lane": "coll__s_0N_LP__lk_WN0",
    "src": "s_0N_x05",
    "dst": "s_0N_x06",
@@ -6467,7 +6456,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0N_LP__lk_WN1__phy1026_1",
+   "port": "coll__s_0N_LP__lk_WN1__pd4_1",
    "lane": "coll__s_0N_LP__lk_WN1",
    "src": "s_0N_x03",
    "dst": "s_0N_x04",
@@ -6478,40 +6467,40 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0N_LP__lk_WN1__phy1026_3",
+   "port": "coll__s_0N_LP__lk_WN1__pd4_3",
    "lane": "coll__s_0N_LP__lk_WN1",
    "src": "s_0N_x05",
-   "dst": "s_0N_x06",
+   "dst": "fW5_p1_b1",
    "src_region": "std_b3_8_1",
-   "dst_region": "std_b3_9_0",
+   "dst_region": "std_b2_8_0",
    "width": 512,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0N_LP__lk_WN1__phy1026_4",
+   "port": "coll__s_0N_LP__lk_WN1__pd4_5",
    "lane": "coll__s_0N_LP__lk_WN1",
-   "src": "s_0N_x06",
-   "dst": "fW5_p1_b0",
-   "src_region": "std_b3_9_0",
-   "dst_region": "std_b2_9_0",
+   "src": "fW5_p2_b1",
+   "dst": "fW5_p3_b1",
+   "src_region": "std_b2_8_0",
+   "dst_region": "std_b1_8_0",
    "width": 512,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0N_LP__lk_WN1__phy1026_6",
+   "port": "coll__s_0N_LP__lk_WN1__pd4_6",
    "lane": "coll__s_0N_LP__lk_WN1",
-   "src": "fW5_p2_b0",
-   "dst": "lk_WN1",
-   "src_region": "std_b2_9_0",
-   "dst_region": "std_b1_9_1",
+   "src": "fW5_p3_b1",
+   "dst": "fW5_p3_b0",
+   "src_region": "std_b1_8_0",
+   "dst_region": "std_b1_9_0",
    "width": 512,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0N_LP__lk_WN2__phy1026_1",
+   "port": "coll__s_0N_LP__lk_WN2__pd4_1",
    "lane": "coll__s_0N_LP__lk_WN2",
    "src": "s_0N_x03",
    "dst": "s_0N_x04",
@@ -6522,7 +6511,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0N_LP__lk_WN2__phy1026_3",
+   "port": "coll__s_0N_LP__lk_WN2__pd4_3",
    "lane": "coll__s_0N_LP__lk_WN2",
    "src": "s_0N_x05",
    "dst": "s_0N_x06",
@@ -6533,7 +6522,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0N_LP__lk_WN2__phy1026_4",
+   "port": "coll__s_0N_LP__lk_WN2__pd4_4",
    "lane": "coll__s_0N_LP__lk_WN2",
    "src": "s_0N_x06",
    "dst": "fW5_p1_b0",
@@ -6544,7 +6533,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0N_LP__lk_WN2__phy1026_6",
+   "port": "coll__s_0N_LP__lk_WN2__pd4_6",
    "lane": "coll__s_0N_LP__lk_WN2",
    "src": "fW5_p2_b0",
    "dst": "fW5_p3_b0",
@@ -6555,7 +6544,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0N_LP__lk_WN2__phy1026_8",
+   "port": "coll__s_0N_LP__lk_WN2__pd4_8",
    "lane": "coll__s_0N_LP__lk_WN2",
    "src": "fW5_p4_b0",
    "dst": "lk_WN2",
@@ -6566,29 +6555,29 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0N_LP__lk_WN3__phy1026_2",
+   "port": "coll__s_0N_LP__lk_WN3__pd4_1",
    "lane": "coll__s_0N_LP__lk_WN3",
-   "src": "s_0N_L1",
-   "dst": "s_0N_L3",
+   "src": "s_0N_x03",
+   "dst": "s_0N_x04",
    "src_region": "std_b3_7_0",
-   "dst_region": "std_b3_8_0",
+   "dst_region": "std_b3_8_1",
    "width": 512,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0N_LP__lk_WN3__phy1026_4",
+   "port": "coll__s_0N_LP__lk_WN3__pd4_3",
    "lane": "coll__s_0N_LP__lk_WN3",
-   "src": "s_0N_L4",
-   "dst": "s_0N_x16",
-   "src_region": "std_b3_8_0",
+   "src": "s_0N_x05",
+   "dst": "s_0N_x06",
+   "src_region": "std_b3_8_1",
    "dst_region": "std_b3_9_0",
    "width": 512,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0N_LP__lk_WN3__phy1026_5",
+   "port": "coll__s_0N_LP__lk_WN3__pd4_5",
    "lane": "coll__s_0N_LP__lk_WN3",
    "src": "s_0N_x16",
    "dst": "lk_WN3",
@@ -6599,7 +6588,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0S_LP__lk_WS0__phy1026_0",
+   "port": "coll__s_0S_LP__lk_WS0__pd4_0",
    "lane": "coll__s_0S_LP__lk_WS0",
    "src": "s_0S_LP",
    "dst": "s_0S_x05",
@@ -6610,7 +6599,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0S_LP__lk_WS0__phy1026_2",
+   "port": "coll__s_0S_LP__lk_WS0__pd4_2",
    "lane": "coll__s_0S_LP__lk_WS0",
    "src": "s_0S_x04",
    "dst": "s_0S_x03",
@@ -6621,7 +6610,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0S_LP__lk_WS0__phy1026_4",
+   "port": "coll__s_0S_LP__lk_WS0__pd4_4",
    "lane": "coll__s_0S_LP__lk_WS0",
    "src": "s_0S_x02",
    "dst": "s_0S_x01",
@@ -6632,7 +6621,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0S_LP__lk_WS0__phy1026_6",
+   "port": "coll__s_0S_LP__lk_WS0__pd4_6",
    "lane": "coll__s_0S_LP__lk_WS0",
    "src": "s_0S_x00",
    "dst": "gunit",
@@ -6643,7 +6632,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0S_LP__lk_WS1__phy1026_0",
+   "port": "coll__s_0S_LP__lk_WS1__pd4_0",
    "lane": "coll__s_0S_LP__lk_WS1",
    "src": "s_0S_LP",
    "dst": "s_0S_x05",
@@ -6654,7 +6643,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0S_LP__lk_WS1__phy1026_2",
+   "port": "coll__s_0S_LP__lk_WS1__pd4_2",
    "lane": "coll__s_0S_LP__lk_WS1",
    "src": "s_0S_x04",
    "dst": "s_0S_x03",
@@ -6665,7 +6654,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0S_LP__lk_WS1__phy1026_4",
+   "port": "coll__s_0S_LP__lk_WS1__pd4_4",
    "lane": "coll__s_0S_LP__lk_WS1",
    "src": "s_0S_x02",
    "dst": "s_0S_x01",
@@ -6676,7 +6665,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0S_LP__lk_WS1__phy1026_6",
+   "port": "coll__s_0S_LP__lk_WS1__pd4_6",
    "lane": "coll__s_0S_LP__lk_WS1",
    "src": "s_0S_x00",
    "dst": "gunit",
@@ -6687,7 +6676,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0S_LP__lk_WS1__phy1026_7",
+   "port": "coll__s_0S_LP__lk_WS1__pd4_7",
    "lane": "coll__s_0S_LP__lk_WS1",
    "src": "gunit",
    "dst": "fW0_p1_b2",
@@ -6698,7 +6687,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0S_LP__lk_WS1__phy1026_9",
+   "port": "coll__s_0S_LP__lk_WS1__pd4_9",
    "lane": "coll__s_0S_LP__lk_WS1",
    "src": "fW0_p2_b2",
    "dst": "lk_WS1",
@@ -6709,7 +6698,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0S_LP__lk_WS2__phy1026_0",
+   "port": "coll__s_0S_LP__lk_WS2__pd4_0",
    "lane": "coll__s_0S_LP__lk_WS2",
    "src": "s_0S_LP",
    "dst": "s_0S_x05",
@@ -6720,7 +6709,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0S_LP__lk_WS2__phy1026_11",
+   "port": "coll__s_0S_LP__lk_WS2__pd4_11",
    "lane": "coll__s_0S_LP__lk_WS2",
    "src": "fW0_p4_b2",
    "dst": "lk_WS2",
@@ -6731,7 +6720,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0S_LP__lk_WS2__phy1026_2",
+   "port": "coll__s_0S_LP__lk_WS2__pd4_2",
    "lane": "coll__s_0S_LP__lk_WS2",
    "src": "s_0S_x04",
    "dst": "s_0S_x03",
@@ -6742,7 +6731,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0S_LP__lk_WS2__phy1026_4",
+   "port": "coll__s_0S_LP__lk_WS2__pd4_4",
    "lane": "coll__s_0S_LP__lk_WS2",
    "src": "s_0S_x02",
    "dst": "s_0S_x01",
@@ -6753,7 +6742,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0S_LP__lk_WS2__phy1026_6",
+   "port": "coll__s_0S_LP__lk_WS2__pd4_6",
    "lane": "coll__s_0S_LP__lk_WS2",
    "src": "s_0S_x00",
    "dst": "gunit",
@@ -6764,7 +6753,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0S_LP__lk_WS2__phy1026_7",
+   "port": "coll__s_0S_LP__lk_WS2__pd4_7",
    "lane": "coll__s_0S_LP__lk_WS2",
    "src": "gunit",
    "dst": "fW0_p1_b2",
@@ -6775,7 +6764,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0S_LP__lk_WS2__phy1026_9",
+   "port": "coll__s_0S_LP__lk_WS2__pd4_9",
    "lane": "coll__s_0S_LP__lk_WS2",
    "src": "fW0_p2_b2",
    "dst": "fW0_p3_b2",
@@ -6786,7 +6775,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0S_LP__lk_WS3__phy1026_1",
+   "port": "coll__s_0S_LP__lk_WS3__pd4_1",
    "lane": "coll__s_0S_LP__lk_WS3",
    "src": "s_0S_x07",
    "dst": "s_0S_x08",
@@ -6797,7 +6786,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0S_LP__lk_WS3__phy1026_11",
+   "port": "coll__s_0S_LP__lk_WS3__pd4_11",
    "lane": "coll__s_0S_LP__lk_WS3",
    "src": "s_3N_L1",
    "dst": "s_3N_L3",
@@ -6808,7 +6797,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0S_LP__lk_WS3__phy1026_13",
+   "port": "coll__s_0S_LP__lk_WS3__pd4_13",
    "lane": "coll__s_0S_LP__lk_WS3",
    "src": "s_3N_L4",
    "dst": "s_3N_x06",
@@ -6819,7 +6808,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0S_LP__lk_WS3__phy1026_4",
+   "port": "coll__s_0S_LP__lk_WS3__pd4_4",
    "lane": "coll__s_0S_LP__lk_WS3",
    "src": "s_0S_L4",
    "dst": "s_0N_L2",
@@ -6830,7 +6819,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0S_LP__lk_WS3__phy1026_6",
+   "port": "coll__s_0S_LP__lk_WS3__pd4_6",
    "lane": "coll__s_0S_LP__lk_WS3",
    "src": "s_0N_L0",
    "dst": "s_1N_L0",
@@ -6841,7 +6830,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0S_LP__lk_WS3__phy1026_8",
+   "port": "coll__s_0S_LP__lk_WS3__pd4_8",
    "lane": "coll__s_0S_LP__lk_WS3",
    "src": "s_2N_L0",
    "dst": "s_3N_L0",
@@ -6852,7 +6841,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_0S_LP__lk_WS3__phy1026_9",
+   "port": "coll__s_0S_LP__lk_WS3__pd4_9",
    "lane": "coll__s_0S_LP__lk_WS3",
    "src": "s_3N_L0",
    "dst": "s_3N_C",
@@ -6863,84 +6852,84 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_7N_LP__lk_EN0__phy1026_1",
+   "port": "coll__s_7N_LP__lk_EN0__pd4_1",
    "lane": "coll__s_7N_LP__lk_EN0",
    "src": "s_7N_x13",
    "dst": "s_7N_x14",
    "src_region": "std_b7_7_0",
-   "dst_region": "std_b7_8_0",
+   "dst_region": "std_b7_8_1",
    "width": 512,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "coll__s_7N_LP__lk_EN0__phy1026_3",
+   "port": "coll__s_7N_LP__lk_EN0__pd4_3",
    "lane": "coll__s_7N_LP__lk_EN0",
    "src": "s_7N_x15",
    "dst": "s_7N_x16",
-   "src_region": "std_b7_8_0",
+   "src_region": "std_b7_8_1",
    "dst_region": "std_b7_9_0",
    "width": 512,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "coll__s_7N_LP__lk_EN1__phy1026_1",
+   "port": "coll__s_7N_LP__lk_EN1__pd4_1",
    "lane": "coll__s_7N_LP__lk_EN1",
    "src": "s_7N_x13",
    "dst": "s_7N_x14",
    "src_region": "std_b7_7_0",
-   "dst_region": "std_b7_8_0",
+   "dst_region": "std_b7_8_1",
    "width": 512,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "coll__s_7N_LP__lk_EN1__phy1026_3",
+   "port": "coll__s_7N_LP__lk_EN1__pd4_3",
    "lane": "coll__s_7N_LP__lk_EN1",
    "src": "s_7N_x15",
-   "dst": "s_7N_x16",
-   "src_region": "std_b7_8_0",
-   "dst_region": "std_b7_9_0",
+   "dst": "fE5_p1_b1",
+   "src_region": "std_b7_8_1",
+   "dst_region": "std_b8_8_0",
    "width": 512,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "coll__s_7N_LP__lk_EN1__phy1026_4",
+   "port": "coll__s_7N_LP__lk_EN1__pd4_5",
    "lane": "coll__s_7N_LP__lk_EN1",
-   "src": "s_7N_x16",
-   "dst": "fE5_p1_b0",
-   "src_region": "std_b7_9_0",
+   "src": "fE5_p2_b1",
+   "dst": "fE5_p2_b0",
+   "src_region": "std_b8_8_0",
    "dst_region": "std_b8_9_0",
    "width": 512,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "coll__s_7N_LP__lk_EN2__phy1026_1",
+   "port": "coll__s_7N_LP__lk_EN2__pd4_1",
    "lane": "coll__s_7N_LP__lk_EN2",
    "src": "s_7N_x13",
    "dst": "s_7N_x14",
    "src_region": "std_b7_7_0",
-   "dst_region": "std_b7_8_0",
+   "dst_region": "std_b7_8_1",
    "width": 512,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "coll__s_7N_LP__lk_EN2__phy1026_3",
+   "port": "coll__s_7N_LP__lk_EN2__pd4_3",
    "lane": "coll__s_7N_LP__lk_EN2",
    "src": "s_7N_x15",
    "dst": "s_7N_x16",
-   "src_region": "std_b7_8_0",
+   "src_region": "std_b7_8_1",
    "dst_region": "std_b7_9_0",
    "width": 512,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "coll__s_7N_LP__lk_EN2__phy1026_5",
+   "port": "coll__s_7N_LP__lk_EN2__pd4_5",
    "lane": "coll__s_7N_LP__lk_EN2",
    "src": "s_7N_x06",
    "dst": "lk_EN2",
@@ -6951,29 +6940,29 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_7N_LP__lk_EN3__phy1026_1",
+   "port": "coll__s_7N_LP__lk_EN3__pd4_1",
    "lane": "coll__s_7N_LP__lk_EN3",
    "src": "s_7N_x13",
    "dst": "s_7N_x14",
    "src_region": "std_b7_7_0",
-   "dst_region": "std_b7_8_0",
+   "dst_region": "std_b7_8_1",
    "width": 512,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "coll__s_7N_LP__lk_EN3__phy1026_3",
+   "port": "coll__s_7N_LP__lk_EN3__pd4_3",
    "lane": "coll__s_7N_LP__lk_EN3",
    "src": "s_7N_x15",
    "dst": "s_7N_x16",
-   "src_region": "std_b7_8_0",
+   "src_region": "std_b7_8_1",
    "dst_region": "std_b7_9_0",
    "width": 512,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "coll__s_7N_LP__lk_EN3__phy1026_4",
+   "port": "coll__s_7N_LP__lk_EN3__pd4_4",
    "lane": "coll__s_7N_LP__lk_EN3",
    "src": "s_7N_x16",
    "dst": "fE5_p1_b0",
@@ -6984,7 +6973,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_7N_LP__lk_EN3__phy1026_6",
+   "port": "coll__s_7N_LP__lk_EN3__pd4_6",
    "lane": "coll__s_7N_LP__lk_EN3",
    "src": "fE5_p2_b0",
    "dst": "fE5_p3_b0",
@@ -6995,7 +6984,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_7N_LP__lk_EN3__phy1026_8",
+   "port": "coll__s_7N_LP__lk_EN3__pd4_8",
    "lane": "coll__s_7N_LP__lk_EN3",
    "src": "fE5_p4_b0",
    "dst": "lk_EN3",
@@ -7006,7 +6995,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_7S_LP__lk_ES0__phy1026_0",
+   "port": "coll__s_7S_LP__lk_ES0__pd4_0",
    "lane": "coll__s_7S_LP__lk_ES0",
    "src": "s_7S_LP",
    "dst": "s_7S_x17",
@@ -7017,7 +7006,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_7S_LP__lk_ES0__phy1026_2",
+   "port": "coll__s_7S_LP__lk_ES0__pd4_2",
    "lane": "coll__s_7S_LP__lk_ES0",
    "src": "s_7S_x16",
    "dst": "s_7S_x15",
@@ -7028,7 +7017,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_7S_LP__lk_ES0__phy1026_4",
+   "port": "coll__s_7S_LP__lk_ES0__pd4_4",
    "lane": "coll__s_7S_LP__lk_ES0",
    "src": "s_7S_x14",
    "dst": "s_7S_x13",
@@ -7039,7 +7028,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_7S_LP__lk_ES0__phy1026_6",
+   "port": "coll__s_7S_LP__lk_ES0__pd4_6",
    "lane": "coll__s_7S_LP__lk_ES0",
    "src": "s_7S_x12",
    "dst": "s_7S_x11",
@@ -7050,18 +7039,18 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_7S_LP__lk_ES0__phy1026_8",
+   "port": "coll__s_7S_LP__lk_ES0__pd4_7",
    "lane": "coll__s_7S_LP__lk_ES0",
-   "src": "s_7S_x10",
-   "dst": "lk_ES0",
+   "src": "s_7S_x11",
+   "dst": "fE0_p1_b2",
    "src_region": "std_b7_0_1",
-   "dst_region": "std_b8_0_1",
+   "dst_region": "std_b8_0_0",
    "width": 512,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "coll__s_7S_LP__lk_ES1__phy1026_0",
+   "port": "coll__s_7S_LP__lk_ES1__pd4_0",
    "lane": "coll__s_7S_LP__lk_ES1",
    "src": "s_7S_LP",
    "dst": "s_7S_x17",
@@ -7072,7 +7061,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_7S_LP__lk_ES1__phy1026_2",
+   "port": "coll__s_7S_LP__lk_ES1__pd4_2",
    "lane": "coll__s_7S_LP__lk_ES1",
    "src": "s_7S_x16",
    "dst": "s_7S_x15",
@@ -7083,7 +7072,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_7S_LP__lk_ES1__phy1026_4",
+   "port": "coll__s_7S_LP__lk_ES1__pd4_4",
    "lane": "coll__s_7S_LP__lk_ES1",
    "src": "s_7S_x14",
    "dst": "s_7S_x13",
@@ -7094,7 +7083,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_7S_LP__lk_ES1__phy1026_6",
+   "port": "coll__s_7S_LP__lk_ES1__pd4_6",
    "lane": "coll__s_7S_LP__lk_ES1",
    "src": "s_7S_x12",
    "dst": "s_7S_x11",
@@ -7105,7 +7094,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_7S_LP__lk_ES1__phy1026_7",
+   "port": "coll__s_7S_LP__lk_ES1__pd4_7",
    "lane": "coll__s_7S_LP__lk_ES1",
    "src": "s_7S_x11",
    "dst": "fE0_p1_b2",
@@ -7116,7 +7105,7 @@
    "added_cycles": 3
   },
   {
-   "port": "coll__s_7S_LP__lk_ES1__phy1026_9",
+   "port": "coll__s_7S_LP__lk_ES1__pd4_9",
    "lane": "coll__s_7S_LP__lk_ES1",
    "src": "fE0_p2_b2",
    "dst": "fE0_p3_b2",
@@ -7187,7 +7176,7 @@
    "src": "s_0S_L2",
    "dst": "s_0S_x13",
    "src_region": "std_b3_3_0",
-   "dst_region": "std_b3_2_1",
+   "dst_region": "std_b3_2_0",
    "width": 571,
    "kind": "data",
    "added_cycles": 3
@@ -7197,7 +7186,7 @@
    "lane": "ctrl__s_0N_C__seqhost",
    "src": "s_0S_x13",
    "dst": "s_1S_L4",
-   "src_region": "std_b3_2_1",
+   "src_region": "std_b3_2_0",
    "dst_region": "std_b4_2_0",
    "width": 571,
    "kind": "data",
@@ -7281,10 +7270,10 @@
    "added_cycles": 3
   },
   {
-   "port": "dfi__svc_0__phy_hbm__phy1026_0",
+   "port": "dfi__svc_0__phy_hbm__pd4_0",
    "lane": "dfi__svc_0__phy_hbm",
    "src": "svc_0",
-   "dst": "svc_2",
+   "dst": "iqf",
    "src_region": "std_bg_0_0",
    "dst_region": "hard_phy_hbm",
    "width": 1368,
@@ -7693,7 +7682,7 @@
    "src": "s_4N_L1",
    "dst": "s_4N_L3",
    "src_region": "std_b5_7_0",
-   "dst_region": "std_b5_8_0",
+   "dst_region": "std_b5_8_1",
    "width": 597,
    "kind": "data",
    "added_cycles": 3
@@ -7704,7 +7693,7 @@
    "src": "s_4N_L1",
    "dst": "s_4N_L3",
    "src_region": "std_b5_7_0",
-   "dst_region": "std_b5_8_0",
+   "dst_region": "std_b5_8_1",
    "width": 597,
    "kind": "data",
    "added_cycles": 3
@@ -7715,7 +7704,7 @@
    "src": "s_4S_C",
    "dst": "s_4S_L0",
    "src_region": "std_b5_4_0",
-   "dst_region": "std_b5_3_0",
+   "dst_region": "std_b5_3_1",
    "width": 597,
    "kind": "data",
    "added_cycles": 3
@@ -7726,7 +7715,7 @@
    "src": "s_4S_C",
    "dst": "s_4S_L0",
    "src_region": "std_b5_4_0",
-   "dst_region": "std_b5_3_0",
+   "dst_region": "std_b5_3_1",
    "width": 597,
    "kind": "data",
    "added_cycles": 3
@@ -7748,7 +7737,7 @@
    "src": "s_4S_C",
    "dst": "s_4S_L0",
    "src_region": "std_b5_4_0",
-   "dst_region": "std_b5_3_0",
+   "dst_region": "std_b5_3_1",
    "width": 597,
    "kind": "data",
    "added_cycles": 3
@@ -7758,7 +7747,7 @@
    "lane": "dn_s_4S_L4",
    "src": "s_4S_L2",
    "dst": "s_4S_L4",
-   "src_region": "std_b5_3_0",
+   "src_region": "std_b5_3_1",
    "dst_region": "std_b5_2_0",
    "width": 597,
    "kind": "data",
@@ -7880,7 +7869,7 @@
    "src": "s_6N_L1",
    "dst": "s_6N_L3",
    "src_region": "std_b6_7_0",
-   "dst_region": "std_b6_8_0",
+   "dst_region": "std_b6_8_1",
    "width": 597,
    "kind": "data",
    "added_cycles": 3
@@ -7891,7 +7880,7 @@
    "src": "s_6N_L1",
    "dst": "s_6N_L3",
    "src_region": "std_b6_7_0",
-   "dst_region": "std_b6_8_0",
+   "dst_region": "std_b6_8_1",
    "width": 597,
    "kind": "data",
    "added_cycles": 3
@@ -8111,7 +8100,7 @@
    "src": "fE0_p4_b1",
    "dst": "fE0_p4_b2",
    "src_region": "std_b9_1_0",
-   "dst_region": "std_b9_0_0",
+   "dst_region": "std_b9_0_1",
    "width": 1230,
    "kind": "data",
    "added_cycles": 3
@@ -8121,7 +8110,7 @@
    "lane": "fi_E0_p4_r2r1",
    "src": "fE0_p4_b2",
    "dst": "fE0_p4_b1",
-   "src_region": "std_b9_0_0",
+   "src_region": "std_b9_0_1",
    "dst_region": "std_b9_1_0",
    "width": 384,
    "kind": "data",
@@ -8727,7 +8716,7 @@
    "src": "fE5_p2_b0",
    "dst": "fE5_p2_b1",
    "src_region": "std_b8_9_0",
-   "dst_region": "std_b8_8_1",
+   "dst_region": "std_b8_8_0",
    "width": 1167,
    "kind": "data",
    "added_cycles": 3
@@ -8737,7 +8726,7 @@
    "lane": "fi_E5_p2_r1r0",
    "src": "fE5_p2_b1",
    "dst": "fE5_p2_b0",
-   "src_region": "std_b8_8_1",
+   "src_region": "std_b8_8_0",
    "dst_region": "std_b8_9_0",
    "width": 261,
    "kind": "data",
@@ -9519,7 +9508,7 @@
    "src": "fW5_p2_b0",
    "dst": "fW5_p2_b1",
    "src_region": "std_b2_9_0",
-   "dst_region": "std_b2_8_1",
+   "dst_region": "std_b2_8_0",
    "width": 1167,
    "kind": "data",
    "added_cycles": 3
@@ -9529,7 +9518,7 @@
    "lane": "fi_W5_p2_r1r0",
    "src": "fW5_p2_b1",
    "dst": "fW5_p2_b0",
-   "src_region": "std_b2_8_1",
+   "src_region": "std_b2_8_0",
    "dst_region": "std_b2_9_0",
    "width": 261,
    "kind": "data",
@@ -9624,7 +9613,7 @@
    "added_cycles": 3
   },
   {
-   "port": "flt__bk_sel__gunit__phy1026_0",
+   "port": "flt__bk_sel__gunit__pd4_0",
    "lane": "flt__bk_sel__gunit",
    "src": "bk_sel",
    "dst": "s_3N_x06",
@@ -9635,7 +9624,7 @@
    "added_cycles": 3
   },
   {
-   "port": "flt__bk_sel__gunit__phy1026_1",
+   "port": "flt__bk_sel__gunit__pd4_1",
    "lane": "flt__bk_sel__gunit",
    "src": "s_3N_x06",
    "dst": "s_3N_L4",
@@ -9646,7 +9635,7 @@
    "added_cycles": 3
   },
   {
-   "port": "flt__bk_sel__gunit__phy1026_11",
+   "port": "flt__bk_sel__gunit__pd4_11",
    "lane": "flt__bk_sel__gunit",
    "src": "s_3S_C",
    "dst": "s_3S_L0",
@@ -9657,7 +9646,7 @@
    "added_cycles": 3
   },
   {
-   "port": "flt__bk_sel__gunit__phy1026_13",
+   "port": "flt__bk_sel__gunit__pd4_13",
    "lane": "flt__bk_sel__gunit",
    "src": "s_3S_L2",
    "dst": "s_2S_L2",
@@ -9668,7 +9657,7 @@
    "added_cycles": 3
   },
   {
-   "port": "flt__bk_sel__gunit__phy1026_14",
+   "port": "flt__bk_sel__gunit__pd4_14",
    "lane": "flt__bk_sel__gunit",
    "src": "s_2S_L2",
    "dst": "s_2S_x00",
@@ -9679,29 +9668,40 @@
    "added_cycles": 3
   },
   {
-   "port": "flt__bk_sel__gunit__phy1026_16",
+   "port": "flt__bk_sel__gunit__pd4_16",
    "lane": "flt__bk_sel__gunit",
    "src": "s_1S_L4",
-   "dst": "svc_3",
+   "dst": "s_0S_x13",
    "src_region": "std_b4_2_0",
-   "dst_region": "std_bg_0_0",
+   "dst_region": "std_b3_2_0",
    "width": 1,
    "kind": "ctl",
    "added_cycles": 3
   },
   {
-   "port": "flt__bk_sel__gunit__phy1026_19",
+   "port": "flt__bk_sel__gunit__pd4_19",
    "lane": "flt__bk_sel__gunit",
-   "src": "svc_0",
+   "src": "s_0S_x02",
+   "dst": "s_0S_x01",
+   "src_region": "std_b3_2_0",
+   "dst_region": "std_b3_1_0",
+   "width": 1,
+   "kind": "ctl",
+   "added_cycles": 3
+  },
+  {
+   "port": "flt__bk_sel__gunit__pd4_21",
+   "lane": "flt__bk_sel__gunit",
+   "src": "s_0S_x00",
    "dst": "gunit",
-   "src_region": "std_bg_0_0",
+   "src_region": "std_b3_1_0",
    "dst_region": "std_b3_0_0",
    "width": 1,
    "kind": "ctl",
    "added_cycles": 3
   },
   {
-   "port": "flt__bk_sel__gunit__phy1026_3",
+   "port": "flt__bk_sel__gunit__pd4_3",
    "lane": "flt__bk_sel__gunit",
    "src": "s_3N_L3",
    "dst": "s_3N_L1",
@@ -9712,7 +9712,7 @@
    "added_cycles": 3
   },
   {
-   "port": "flt__bk_sel__gunit__phy1026_5",
+   "port": "flt__bk_sel__gunit__pd4_5",
    "lane": "flt__bk_sel__gunit",
    "src": "s_3N_C",
    "dst": "s_3N_L0",
@@ -9723,7 +9723,7 @@
    "added_cycles": 3
   },
   {
-   "port": "flt__bk_sel__gunit__phy1026_7",
+   "port": "flt__bk_sel__gunit__pd4_7",
    "lane": "flt__bk_sel__gunit",
    "src": "s_3N_L2",
    "dst": "s_3S_L4",
@@ -9734,7 +9734,7 @@
    "added_cycles": 3
   },
   {
-   "port": "flt__bk_sel__gunit__phy1026_9",
+   "port": "flt__bk_sel__gunit__pd4_9",
    "lane": "flt__bk_sel__gunit",
    "src": "s_3S_L3",
    "dst": "s_3S_L1",
@@ -9756,7 +9756,7 @@
    "added_cycles": 3
   },
   {
-   "port": "flt__gunit__s_3N_C__phy1026_0",
+   "port": "flt__gunit__s_3N_C__pd4_0",
    "lane": "flt__gunit__s_3N_C",
    "src": "gunit",
    "dst": "s_0S_x00",
@@ -9767,7 +9767,7 @@
    "added_cycles": 3
   },
   {
-   "port": "flt__gunit__s_3N_C__phy1026_10",
+   "port": "flt__gunit__s_3N_C__pd4_11",
    "lane": "flt__gunit__s_3N_C",
    "src": "s_2S_L1",
    "dst": "s_2S_L3",
@@ -9778,84 +9778,73 @@
    "added_cycles": 3
   },
   {
-   "port": "flt__gunit__s_3N_C__phy1026_12",
+   "port": "flt__gunit__s_3N_C__pd4_13",
    "lane": "flt__gunit__s_3N_C",
    "src": "s_2S_L4",
-   "dst": "s_2N_L2",
+   "dst": "s_3S_L4",
    "src_region": "std_b4_5_0",
-   "dst_region": "std_b4_6_0",
+   "dst_region": "std_b5_5_0",
    "width": 1,
    "kind": "ctl",
    "added_cycles": 3
   },
   {
-   "port": "flt__gunit__s_3N_C__phy1026_14",
+   "port": "flt__gunit__s_3N_C__pd4_14",
    "lane": "flt__gunit__s_3N_C",
-   "src": "s_2N_L0",
-   "dst": "s_2N_C",
-   "src_region": "std_b4_6_0",
-   "dst_region": "std_b4_7_0",
+   "src": "s_3S_L4",
+   "dst": "s_3N_L2",
+   "src_region": "std_b5_5_0",
+   "dst_region": "std_b5_6_0",
    "width": 1,
    "kind": "ctl",
    "added_cycles": 3
   },
   {
-   "port": "flt__gunit__s_3N_C__phy1026_15",
+   "port": "flt__gunit__s_3N_C__pd4_16",
    "lane": "flt__gunit__s_3N_C",
-   "src": "s_2N_C",
+   "src": "s_3N_L0",
    "dst": "s_3N_C",
-   "src_region": "std_b4_7_0",
+   "src_region": "std_b5_6_0",
    "dst_region": "std_b5_7_0",
    "width": 1,
    "kind": "ctl",
    "added_cycles": 3
   },
   {
-   "port": "flt__gunit__s_3N_C__phy1026_2",
+   "port": "flt__gunit__s_3N_C__pd4_2",
    "lane": "flt__gunit__s_3N_C",
    "src": "s_0S_x01",
-   "dst": "svc_1",
+   "dst": "s_0S_x02",
    "src_region": "std_b3_1_0",
-   "dst_region": "std_bg_0_0",
+   "dst_region": "std_b3_2_0",
    "width": 1,
    "kind": "ctl",
    "added_cycles": 3
   },
   {
-   "port": "flt__gunit__s_3N_C__phy1026_4",
+   "port": "flt__gunit__s_3N_C__pd4_5",
    "lane": "flt__gunit__s_3N_C",
-   "src": "svc_3",
-   "dst": "svc_5",
-   "src_region": "std_bg_0_0",
-   "dst_region": "std_bg_1_0",
+   "src": "s_0S_x13",
+   "dst": "s_0S_L2",
+   "src_region": "std_b3_2_0",
+   "dst_region": "std_b3_3_0",
    "width": 1,
    "kind": "ctl",
    "added_cycles": 3
   },
   {
-   "port": "flt__gunit__s_3N_C__phy1026_5",
+   "port": "flt__gunit__s_3N_C__pd4_6",
    "lane": "flt__gunit__s_3N_C",
-   "src": "svc_5",
-   "dst": "s_2S_x00",
-   "src_region": "std_bg_1_0",
-   "dst_region": "std_b4_2_0",
-   "width": 1,
-   "kind": "ctl",
-   "added_cycles": 3
-  },
-  {
-   "port": "flt__gunit__s_3N_C__phy1026_6",
-   "lane": "flt__gunit__s_3N_C",
-   "src": "s_2S_x00",
-   "dst": "s_2S_L2",
-   "src_region": "std_b4_2_0",
+   "src": "s_0S_L2",
+   "dst": "s_1S_L2",
+   "src_region": "std_b3_3_0",
    "dst_region": "std_b4_3_0",
    "width": 1,
    "kind": "ctl",
    "added_cycles": 3
   },
   {
-   "port": "flt__gunit__s_3N_C__phy1026_8",
+   "port": "flt__gunit__s_3N_C__pd4_9",
    "lane": "flt__gunit__s_3N_C",
    "src": "s_2S_L0",
    "dst": "s_2S_C",
@@ -9866,11 +9855,11 @@
    "added_cycles": 3
   },
   {
-   "port": "flt__iqf__svc_0__phy1026_0",
+   "port": "flt__iqf__svc_0__pd4_0",
    "lane": "flt__iqf__svc_0",
    "src": "iqf",
    "dst": "svc_0",
-   "src_region": "std_b3_0_1",
+   "src_region": "hard_phy_hbm",
    "dst_region": "std_bg_0_0",
    "width": 1,
    "kind": "ctl",
@@ -10009,9 +9998,9 @@
    "added_cycles": 3
   },
   {
-   "port": "hbmrd__phy_hbm__svc_0__phy1026_1",
+   "port": "hbmrd__phy_hbm__svc_0__pd4_1",
    "lane": "hbmrd__phy_hbm__svc_0",
-   "src": "svc_2",
+   "src": "iqf",
    "dst": "svc_0",
    "src_region": "hard_phy_hbm",
    "dst_region": "std_bg_0_0",
@@ -10031,18 +10020,18 @@
    "added_cycles": 3
   },
   {
-   "port": "idx__iqf__svc_0__phy1026_0",
+   "port": "idx__iqf__svc_0__pd4_0",
    "lane": "idx__iqf__svc_0",
    "src": "iqf",
    "dst": "svc_0",
-   "src_region": "std_b3_0_1",
+   "src_region": "hard_phy_hbm",
    "dst_region": "std_bg_0_0",
    "width": 513,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "idx__s_3S_C__iqf__phy1026_0",
+   "port": "idx__s_3S_C__iqf__pd4_0",
    "lane": "idx__s_3S_C__iqf",
    "src": "s_3S_C",
    "dst": "s_3S_L0",
@@ -10053,7 +10042,7 @@
    "added_cycles": 3
   },
   {
-   "port": "idx__s_3S_C__iqf__phy1026_2",
+   "port": "idx__s_3S_C__iqf__pd4_2",
    "lane": "idx__s_3S_C__iqf",
    "src": "s_3S_L2",
    "dst": "seqhost",
@@ -10064,34 +10053,45 @@
    "added_cycles": 3
   },
   {
-   "port": "idx__s_3S_C__iqf__phy1026_3",
+   "port": "idx__s_3S_C__iqf__pd4_3",
    "lane": "idx__s_3S_C__iqf",
    "src": "seqhost",
-   "dst": "svc_7",
+   "dst": "s_2S_x00",
    "src_region": "std_b5_2_0",
-   "dst_region": "std_bg_1_0",
+   "dst_region": "std_b4_2_0",
    "width": 513,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "idx__s_3S_C__iqf__phy1026_5",
+   "port": "idx__s_3S_C__iqf__pd4_5",
    "lane": "idx__s_3S_C__iqf",
-   "src": "svc_5",
-   "dst": "svc_3",
-   "src_region": "std_bg_1_0",
+   "src": "s_1S_L4",
+   "dst": "s_0S_x13",
+   "src_region": "std_b4_2_0",
+   "dst_region": "std_b3_2_0",
+   "width": 513,
+   "kind": "data",
+   "added_cycles": 3
+  },
+  {
+   "port": "idx__s_3S_C__iqf__pd4_6",
+   "lane": "idx__s_3S_C__iqf",
+   "src": "s_0S_x13",
+   "dst": "svc_1",
+   "src_region": "std_b3_2_0",
    "dst_region": "std_bg_0_0",
    "width": 513,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "idx__s_3S_C__iqf__phy1026_8",
+   "port": "idx__s_3S_C__iqf__pd4_8",
    "lane": "idx__s_3S_C__iqf",
    "src": "svc_0",
    "dst": "iqf",
    "src_region": "std_bg_0_0",
-   "dst_region": "std_b3_0_1",
+   "dst_region": "hard_phy_hbm",
    "width": 513,
    "kind": "data",
    "added_cycles": 3
@@ -10119,7 +10119,7 @@
    "added_cycles": 3
   },
   {
-   "port": "idx__svc_14__bk_sel__phy1026_0",
+   "port": "idx__svc_14__bk_sel__pd4_0",
    "lane": "idx__svc_14__bk_sel",
    "src": "svc_14",
    "dst": "svc_12",
@@ -10130,7 +10130,7 @@
    "added_cycles": 3
   },
   {
-   "port": "idx__svc_14__bk_sel__phy1026_1",
+   "port": "idx__svc_14__bk_sel__pd4_1",
    "lane": "idx__svc_14__bk_sel",
    "src": "svc_12",
    "dst": "svc_13",
@@ -10141,7 +10141,7 @@
    "added_cycles": 3
   },
   {
-   "port": "idx__svc_14__bk_sel__phy1026_11",
+   "port": "idx__svc_14__bk_sel__pd4_11",
    "lane": "idx__svc_14__bk_sel",
    "src": "s_6N_L0",
    "dst": "s_6N_C",
@@ -10152,29 +10152,29 @@
    "added_cycles": 3
   },
   {
-   "port": "idx__svc_14__bk_sel__phy1026_13",
+   "port": "idx__svc_14__bk_sel__pd4_13",
    "lane": "idx__svc_14__bk_sel",
    "src": "s_6N_L1",
    "dst": "s_6N_L3",
    "src_region": "std_b6_7_0",
-   "dst_region": "std_b6_8_0",
+   "dst_region": "std_b6_8_1",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "idx__svc_14__bk_sel__phy1026_16",
+   "port": "idx__svc_14__bk_sel__pd4_15",
    "lane": "idx__svc_14__bk_sel",
-   "src": "s_5N_L4",
-   "dst": "bk_sel",
-   "src_region": "std_b6_8_0",
+   "src": "s_6N_L4",
+   "dst": "s_6N_x06",
+   "src_region": "std_b6_8_1",
    "dst_region": "std_b6_9_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "idx__svc_14__bk_sel__phy1026_2",
+   "port": "idx__svc_14__bk_sel__pd4_2",
    "lane": "idx__svc_14__bk_sel",
    "src": "svc_13",
    "dst": "s_6S_L4",
@@ -10185,7 +10185,7 @@
    "added_cycles": 3
   },
   {
-   "port": "idx__svc_14__bk_sel__phy1026_3",
+   "port": "idx__svc_14__bk_sel__pd4_3",
    "lane": "idx__svc_14__bk_sel",
    "src": "s_6S_L4",
    "dst": "s_6S_L2",
@@ -10196,7 +10196,7 @@
    "added_cycles": 3
   },
   {
-   "port": "idx__svc_14__bk_sel__phy1026_5",
+   "port": "idx__svc_14__bk_sel__pd4_5",
    "lane": "idx__svc_14__bk_sel",
    "src": "s_6S_L0",
    "dst": "s_6S_C",
@@ -10207,7 +10207,7 @@
    "added_cycles": 3
   },
   {
-   "port": "idx__svc_14__bk_sel__phy1026_7",
+   "port": "idx__svc_14__bk_sel__pd4_7",
    "lane": "idx__svc_14__bk_sel",
    "src": "s_6S_L1",
    "dst": "s_6S_L3",
@@ -10218,7 +10218,7 @@
    "added_cycles": 3
   },
   {
-   "port": "idx__svc_14__bk_sel__phy1026_9",
+   "port": "idx__svc_14__bk_sel__pd4_9",
    "lane": "idx__svc_14__bk_sel",
    "src": "s_6S_x06",
    "dst": "s_6N_L2",
@@ -10229,18 +10229,18 @@
    "added_cycles": 3
   },
   {
-   "port": "qc__iqf__s_0N_LP__phy1026_0",
+   "port": "qc__iqf__s_0N_LP__pd4_0",
    "lane": "qc__iqf__s_0N_LP",
    "src": "iqf",
    "dst": "svc_0",
-   "src_region": "std_b3_0_1",
+   "src_region": "hard_phy_hbm",
    "dst_region": "std_bg_0_0",
    "width": 258,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "qc__iqf__s_0N_LP__phy1026_1",
+   "port": "qc__iqf__s_0N_LP__pd4_1",
    "lane": "qc__iqf__s_0N_LP",
    "src": "svc_0",
    "dst": "s_0S_x00",
@@ -10251,7 +10251,7 @@
    "added_cycles": 3
   },
   {
-   "port": "qc__iqf__s_0N_LP__phy1026_11",
+   "port": "qc__iqf__s_0N_LP__pd4_11",
    "lane": "qc__iqf__s_0N_LP",
    "src": "s_0S_x09",
    "dst": "s_0N_x00",
@@ -10262,7 +10262,7 @@
    "added_cycles": 3
   },
   {
-   "port": "qc__iqf__s_0N_LP__phy1026_13",
+   "port": "qc__iqf__s_0N_LP__pd4_13",
    "lane": "qc__iqf__s_0N_LP",
    "src": "s_0N_x01",
    "dst": "s_0N_LP",
@@ -10273,7 +10273,7 @@
    "added_cycles": 3
   },
   {
-   "port": "qc__iqf__s_0N_LP__phy1026_3",
+   "port": "qc__iqf__s_0N_LP__pd4_3",
    "lane": "qc__iqf__s_0N_LP",
    "src": "s_0S_x01",
    "dst": "s_0S_x02",
@@ -10284,7 +10284,7 @@
    "added_cycles": 3
   },
   {
-   "port": "qc__iqf__s_0N_LP__phy1026_5",
+   "port": "qc__iqf__s_0N_LP__pd4_5",
    "lane": "qc__iqf__s_0N_LP",
    "src": "s_0S_x03",
    "dst": "s_0S_x04",
@@ -10295,7 +10295,7 @@
    "added_cycles": 3
   },
   {
-   "port": "qc__iqf__s_0N_LP__phy1026_7",
+   "port": "qc__iqf__s_0N_LP__pd4_7",
    "lane": "qc__iqf__s_0N_LP",
    "src": "s_0S_x05",
    "dst": "s_0S_LP",
@@ -10306,7 +10306,7 @@
    "added_cycles": 3
   },
   {
-   "port": "qc__iqf__s_0N_LP__phy1026_9",
+   "port": "qc__iqf__s_0N_LP__pd4_9",
    "lane": "qc__iqf__s_0N_LP",
    "src": "s_0S_x07",
    "dst": "s_0S_x08",
@@ -10317,7 +10317,7 @@
    "added_cycles": 3
   },
   {
-   "port": "ql__s_0N_LP__iqf__phy1026_0",
+   "port": "ql__s_0N_LP__iqf__pd4_0",
    "lane": "ql__s_0N_LP__iqf",
    "src": "s_0N_LP",
    "dst": "s_0N_x01",
@@ -10328,7 +10328,7 @@
    "added_cycles": 3
   },
   {
-   "port": "ql__s_0N_LP__iqf__phy1026_10",
+   "port": "ql__s_0N_LP__iqf__pd4_10",
    "lane": "ql__s_0N_LP__iqf",
    "src": "s_0S_x02",
    "dst": "s_0S_x01",
@@ -10339,7 +10339,7 @@
    "added_cycles": 3
   },
   {
-   "port": "ql__s_0N_LP__iqf__phy1026_12",
+   "port": "ql__s_0N_LP__iqf__pd4_12",
    "lane": "ql__s_0N_LP__iqf",
    "src": "s_0S_x00",
    "dst": "svc_0",
@@ -10350,18 +10350,18 @@
    "added_cycles": 3
   },
   {
-   "port": "ql__s_0N_LP__iqf__phy1026_13",
+   "port": "ql__s_0N_LP__iqf__pd4_13",
    "lane": "ql__s_0N_LP__iqf",
    "src": "svc_0",
    "dst": "iqf",
    "src_region": "std_bg_0_0",
-   "dst_region": "std_b3_0_1",
+   "dst_region": "hard_phy_hbm",
    "width": 513,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "ql__s_0N_LP__iqf__phy1026_2",
+   "port": "ql__s_0N_LP__iqf__pd4_2",
    "lane": "ql__s_0N_LP__iqf",
    "src": "s_0N_x00",
    "dst": "s_0S_x09",
@@ -10372,7 +10372,7 @@
    "added_cycles": 3
   },
   {
-   "port": "ql__s_0N_LP__iqf__phy1026_4",
+   "port": "ql__s_0N_LP__iqf__pd4_4",
    "lane": "ql__s_0N_LP__iqf",
    "src": "s_0S_x08",
    "dst": "s_0S_x07",
@@ -10383,7 +10383,7 @@
    "added_cycles": 3
   },
   {
-   "port": "ql__s_0N_LP__iqf__phy1026_6",
+   "port": "ql__s_0N_LP__iqf__pd4_6",
    "lane": "ql__s_0N_LP__iqf",
    "src": "s_0S_LP",
    "dst": "s_0S_x05",
@@ -10394,7 +10394,7 @@
    "added_cycles": 3
   },
   {
-   "port": "ql__s_0N_LP__iqf__phy1026_8",
+   "port": "ql__s_0N_LP__iqf__pd4_8",
    "lane": "ql__s_0N_LP__iqf",
    "src": "s_0S_x04",
    "dst": "s_0S_x03",
@@ -12148,7 +12148,7 @@
    "src": "svc_1",
    "dst": "s_0S_x13",
    "src_region": "std_bg_0_0",
-   "dst_region": "std_b3_2_1",
+   "dst_region": "std_b3_2_0",
    "width": 70,
    "kind": "data",
    "added_cycles": 3
@@ -12158,7 +12158,7 @@
    "lane": "rt_W0_in_0",
    "src": "s_0S_x13",
    "dst": "s_0S_L2",
-   "src_region": "std_b3_2_1",
+   "src_region": "std_b3_2_0",
    "dst_region": "std_b3_3_0",
    "width": 70,
    "kind": "data",
@@ -12203,7 +12203,7 @@
    "src": "svc_1",
    "dst": "s_0S_x13",
    "src_region": "std_bg_0_0",
-   "dst_region": "std_b3_2_1",
+   "dst_region": "std_b3_2_0",
    "width": 70,
    "kind": "data",
    "added_cycles": 3
@@ -12213,7 +12213,7 @@
    "lane": "rt_W0_in_1",
    "src": "s_0S_x13",
    "dst": "s_0S_L2",
-   "src_region": "std_b3_2_1",
+   "src_region": "std_b3_2_0",
    "dst_region": "std_b3_3_0",
    "width": 70,
    "kind": "data",
@@ -12269,7 +12269,7 @@
    "src": "svc_1",
    "dst": "s_0S_x13",
    "src_region": "std_bg_0_0",
-   "dst_region": "std_b3_2_1",
+   "dst_region": "std_b3_2_0",
    "width": 70,
    "kind": "data",
    "added_cycles": 3
@@ -12279,7 +12279,7 @@
    "lane": "rt_W0_in_2",
    "src": "s_0S_x13",
    "dst": "s_0S_L2",
-   "src_region": "std_b3_2_1",
+   "src_region": "std_b3_2_0",
    "dst_region": "std_b3_3_0",
    "width": 70,
    "kind": "data",
@@ -12335,7 +12335,7 @@
    "src": "svc_1",
    "dst": "s_0S_x13",
    "src_region": "std_bg_0_0",
-   "dst_region": "std_b3_2_1",
+   "dst_region": "std_b3_2_0",
    "width": 70,
    "kind": "data",
    "added_cycles": 3
@@ -12345,7 +12345,7 @@
    "lane": "rt_W0_out_0",
    "src": "s_0S_x13",
    "dst": "s_0S_L2",
-   "src_region": "std_b3_2_1",
+   "src_region": "std_b3_2_0",
    "dst_region": "std_b3_3_0",
    "width": 70,
    "kind": "data",
@@ -12412,7 +12412,7 @@
    "src": "svc_1",
    "dst": "s_0S_x13",
    "src_region": "std_bg_0_0",
-   "dst_region": "std_b3_2_1",
+   "dst_region": "std_b3_2_0",
    "width": 70,
    "kind": "data",
    "added_cycles": 3
@@ -12422,7 +12422,7 @@
    "lane": "rt_W0_out_1",
    "src": "s_0S_x13",
    "dst": "s_0S_L2",
-   "src_region": "std_b3_2_1",
+   "src_region": "std_b3_2_0",
    "dst_region": "std_b3_3_0",
    "width": 70,
    "kind": "data",
@@ -12500,7 +12500,7 @@
    "src": "svc_1",
    "dst": "s_0S_x13",
    "src_region": "std_bg_0_0",
-   "dst_region": "std_b3_2_1",
+   "dst_region": "std_b3_2_0",
    "width": 70,
    "kind": "data",
    "added_cycles": 3
@@ -12510,7 +12510,7 @@
    "lane": "rt_W0_out_2",
    "src": "s_0S_x13",
    "dst": "s_0S_L2",
-   "src_region": "std_b3_2_1",
+   "src_region": "std_b3_2_0",
    "dst_region": "std_b3_3_0",
    "width": 70,
    "kind": "data",
@@ -13974,7 +13974,7 @@
    "src": "s_4S_L4",
    "dst": "s_4S_L2",
    "src_region": "std_b5_2_0",
-   "dst_region": "std_b5_3_0",
+   "dst_region": "std_b5_3_1",
    "width": 1,
    "kind": "ctl",
    "added_cycles": 3
@@ -13984,7 +13984,7 @@
    "lane": "sid_seqhost__s_7S_C",
    "src": "s_4S_L0",
    "dst": "s_4S_C",
-   "src_region": "std_b5_3_0",
+   "src_region": "std_b5_3_1",
    "dst_region": "std_b5_4_0",
    "width": 1,
    "kind": "ctl",
@@ -14013,7 +14013,7 @@
    "added_cycles": 3
   },
   {
-   "port": "tl__bk_sel__s_0N_LP__phy1026_0",
+   "port": "tl__bk_sel__s_0N_LP__pd4_0",
    "lane": "tl__bk_sel__s_0N_LP",
    "src": "bk_sel",
    "dst": "s_3N_x06",
@@ -14024,51 +14024,51 @@
    "added_cycles": 3
   },
   {
-   "port": "tl__bk_sel__s_0N_LP__phy1026_1",
+   "port": "tl__bk_sel__s_0N_LP__pd4_1",
    "lane": "tl__bk_sel__s_0N_LP",
    "src": "s_3N_x06",
-   "dst": "s_3N_L4",
+   "dst": "s_2N_x06",
    "src_region": "std_b5_9_0",
-   "dst_region": "std_b5_8_0",
+   "dst_region": "std_b4_9_1",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "tl__bk_sel__s_0N_LP__phy1026_3",
+   "port": "tl__bk_sel__s_0N_LP__pd4_3",
    "lane": "tl__bk_sel__s_0N_LP",
-   "src": "s_3N_L3",
-   "dst": "s_3N_L1",
-   "src_region": "std_b5_8_0",
-   "dst_region": "std_b5_7_0",
+   "src": "s_1N_x06",
+   "dst": "s_0N_x16",
+   "src_region": "std_b4_9_1",
+   "dst_region": "std_b3_9_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "tl__bk_sel__s_0N_LP__phy1026_4",
+   "port": "tl__bk_sel__s_0N_LP__pd4_5",
    "lane": "tl__bk_sel__s_0N_LP",
-   "src": "s_3N_L1",
-   "dst": "s_2N_L1",
-   "src_region": "std_b5_7_0",
-   "dst_region": "std_b4_7_0",
+   "src": "s_0N_x06",
+   "dst": "s_0N_x05",
+   "src_region": "std_b3_9_0",
+   "dst_region": "std_b3_8_1",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "tl__bk_sel__s_0N_LP__phy1026_6",
+   "port": "tl__bk_sel__s_0N_LP__pd4_7",
    "lane": "tl__bk_sel__s_0N_LP",
-   "src": "s_1N_L1",
-   "dst": "s_0N_L1",
-   "src_region": "std_b4_7_0",
+   "src": "s_0N_x04",
+   "dst": "s_0N_x03",
+   "src_region": "std_b3_8_1",
    "dst_region": "std_b3_7_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "tp__bk_sel__s_7N_LP__phy1026_1",
+   "port": "tp__bk_sel__s_7N_LP__pd4_1",
    "lane": "tp__bk_sel__s_7N_LP",
    "src": "s_6N_x06",
    "dst": "s_7N_x06",
@@ -14079,40 +14079,40 @@
    "added_cycles": 3
   },
   {
-   "port": "tp__bk_sel__s_7N_LP__phy1026_3",
+   "port": "tp__bk_sel__s_7N_LP__pd4_3",
    "lane": "tp__bk_sel__s_7N_LP",
    "src": "s_7N_x16",
    "dst": "s_7N_x15",
    "src_region": "std_b7_9_0",
-   "dst_region": "std_b7_8_0",
+   "dst_region": "std_b7_8_1",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "tp__bk_sel__s_7N_LP__phy1026_5",
+   "port": "tp__bk_sel__s_7N_LP__pd4_5",
    "lane": "tp__bk_sel__s_7N_LP",
    "src": "s_7N_x14",
    "dst": "s_7N_x13",
-   "src_region": "std_b7_8_0",
+   "src_region": "std_b7_8_1",
    "dst_region": "std_b7_7_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "tp__bk_sel__s_7S_LP__phy1026_0",
+   "port": "tp__bk_sel__s_7S_LP__pd4_1",
    "lane": "tp__bk_sel__s_7S_LP",
-   "src": "bk_sel",
-   "dst": "s_5N_L4",
+   "src": "s_6N_x06",
+   "dst": "s_7N_x06",
    "src_region": "std_b6_9_0",
-   "dst_region": "std_b6_8_0",
+   "dst_region": "std_b7_9_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "tp__bk_sel__s_7S_LP__phy1026_11",
+   "port": "tp__bk_sel__s_7S_LP__pd4_11",
    "lane": "tp__bk_sel__s_7S_LP",
    "src": "s_7S_x110",
    "dst": "s_7S_x19",
@@ -14123,40 +14123,40 @@
    "added_cycles": 3
   },
   {
-   "port": "tp__bk_sel__s_7S_LP__phy1026_2",
+   "port": "tp__bk_sel__s_7S_LP__pd4_3",
    "lane": "tp__bk_sel__s_7S_LP",
-   "src": "s_5N_L3",
-   "dst": "s_5N_L1",
-   "src_region": "std_b6_8_0",
-   "dst_region": "std_b6_7_0",
+   "src": "s_7N_x16",
+   "dst": "s_7N_x15",
+   "src_region": "std_b7_9_0",
+   "dst_region": "std_b7_8_1",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "tp__bk_sel__s_7S_LP__phy1026_4",
+   "port": "tp__bk_sel__s_7S_LP__pd4_5",
    "lane": "tp__bk_sel__s_7S_LP",
-   "src": "s_5N_C",
-   "dst": "s_5N_L0",
-   "src_region": "std_b6_7_0",
-   "dst_region": "std_b6_6_0",
+   "src": "s_7N_x14",
+   "dst": "s_7N_x13",
+   "src_region": "std_b7_8_1",
+   "dst_region": "std_b7_7_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "tp__bk_sel__s_7S_LP__phy1026_6",
+   "port": "tp__bk_sel__s_7S_LP__pd4_7",
    "lane": "tp__bk_sel__s_7S_LP",
-   "src": "s_6N_L0",
-   "dst": "s_7N_L0",
-   "src_region": "std_b6_6_0",
+   "src": "s_7N_LP",
+   "dst": "s_7N_x11",
+   "src_region": "std_b7_7_0",
    "dst_region": "std_b7_6_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "tp__bk_sel__s_7S_LP__phy1026_9",
+   "port": "tp__bk_sel__s_7S_LP__pd4_9",
    "lane": "tp__bk_sel__s_7S_LP",
    "src": "s_7N_x10",
    "dst": "s_7S_x111",
@@ -14200,33 +14200,33 @@
    "added_cycles": 3
   },
   {
-   "port": "tp__s_7N_LP__bk_sel__phy1026_1",
+   "port": "tp__s_7N_LP__bk_sel__pd4_1",
    "lane": "tp__s_7N_LP__bk_sel",
    "src": "s_7N_x13",
    "dst": "s_7N_x14",
    "src_region": "std_b7_7_0",
-   "dst_region": "std_b7_8_0",
+   "dst_region": "std_b7_8_1",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "tp__s_7N_LP__bk_sel__phy1026_4",
+   "port": "tp__s_7N_LP__bk_sel__pd4_3",
    "lane": "tp__s_7N_LP__bk_sel",
-   "src": "s_7N_L4",
-   "dst": "s_6N_L4",
-   "src_region": "std_b7_8_0",
-   "dst_region": "std_b6_8_0",
+   "src": "s_7N_x15",
+   "dst": "s_7N_x16",
+   "src_region": "std_b7_8_1",
+   "dst_region": "std_b7_9_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "tp__s_7N_LP__bk_sel__phy1026_6",
+   "port": "tp__s_7N_LP__bk_sel__pd4_5",
    "lane": "tp__s_7N_LP__bk_sel",
-   "src": "s_5N_L4",
-   "dst": "bk_sel",
-   "src_region": "std_b6_8_0",
+   "src": "s_7N_x06",
+   "dst": "s_6N_x06",
+   "src_region": "std_b7_9_0",
    "dst_region": "std_b6_9_0",
    "width": 276,
    "kind": "data",
@@ -14365,40 +14365,40 @@
    "added_cycles": 3
   },
   {
-   "port": "unit__seqhost__gunit__phy1026_0",
+   "port": "unit__seqhost__gunit__pd4_0",
    "lane": "unit__seqhost__gunit",
    "src": "seqhost",
-   "dst": "svc_7",
+   "dst": "s_2S_x00",
    "src_region": "std_b5_2_0",
-   "dst_region": "std_bg_1_0",
+   "dst_region": "std_b4_2_0",
    "width": 267,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "unit__seqhost__gunit__phy1026_2",
+   "port": "unit__seqhost__gunit__pd4_2",
    "lane": "unit__seqhost__gunit",
-   "src": "svc_5",
-   "dst": "svc_3",
-   "src_region": "std_bg_1_0",
-   "dst_region": "std_bg_0_0",
+   "src": "s_1S_L4",
+   "dst": "s_0S_x13",
+   "src_region": "std_b4_2_0",
+   "dst_region": "std_b3_2_0",
    "width": 267,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "unit__seqhost__gunit__phy1026_4",
+   "port": "unit__seqhost__gunit__pd4_5",
    "lane": "unit__seqhost__gunit",
-   "src": "svc_1",
+   "src": "s_0S_x02",
    "dst": "s_0S_x01",
-   "src_region": "std_bg_0_0",
+   "src_region": "std_b3_2_0",
    "dst_region": "std_b3_1_0",
    "width": 267,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "unit__seqhost__gunit__phy1026_6",
+   "port": "unit__seqhost__gunit__pd4_7",
    "lane": "unit__seqhost__gunit",
    "src": "s_0S_x00",
    "dst": "gunit",
@@ -15260,7 +15260,7 @@
    "lane": "up_s_4N_L3",
    "src": "s_4N_L3",
    "dst": "s_4N_L1",
-   "src_region": "std_b5_8_0",
+   "src_region": "std_b5_8_1",
    "dst_region": "std_b5_7_0",
    "width": 668,
    "kind": "data",
@@ -15271,7 +15271,7 @@
    "lane": "up_s_4N_L4",
    "src": "s_4N_L3",
    "dst": "s_4N_L1",
-   "src_region": "std_b5_8_0",
+   "src_region": "std_b5_8_1",
    "dst_region": "std_b5_7_0",
    "width": 668,
    "kind": "data",
@@ -15282,7 +15282,7 @@
    "lane": "up_s_4S_L0",
    "src": "s_4S_L0",
    "dst": "s_4S_C",
-   "src_region": "std_b5_3_0",
+   "src_region": "std_b5_3_1",
    "dst_region": "std_b5_4_0",
    "width": 668,
    "kind": "data",
@@ -15293,7 +15293,7 @@
    "lane": "up_s_4S_L2",
    "src": "s_4S_L0",
    "dst": "s_4S_C",
-   "src_region": "std_b5_3_0",
+   "src_region": "std_b5_3_1",
    "dst_region": "std_b5_4_0",
    "width": 668,
    "kind": "data",
@@ -15316,7 +15316,7 @@
    "src": "s_4S_L4",
    "dst": "s_4S_L2",
    "src_region": "std_b5_2_0",
-   "dst_region": "std_b5_3_0",
+   "dst_region": "std_b5_3_1",
    "width": 668,
    "kind": "data",
    "added_cycles": 3
@@ -15326,7 +15326,7 @@
    "lane": "up_s_4S_L4",
    "src": "s_4S_L0",
    "dst": "s_4S_C",
-   "src_region": "std_b5_3_0",
+   "src_region": "std_b5_3_1",
    "dst_region": "std_b5_4_0",
    "width": 668,
    "kind": "data",
@@ -15447,7 +15447,7 @@
    "lane": "up_s_6N_L3",
    "src": "s_6N_L3",
    "dst": "s_6N_L1",
-   "src_region": "std_b6_8_0",
+   "src_region": "std_b6_8_1",
    "dst_region": "std_b6_7_0",
    "width": 668,
    "kind": "data",
@@ -15458,7 +15458,7 @@
    "lane": "up_s_6N_L4",
    "src": "s_6N_L3",
    "dst": "s_6N_L1",
-   "src_region": "std_b6_8_0",
+   "src_region": "std_b6_8_1",
    "dst_region": "std_b6_7_0",
    "width": 668,
    "kind": "data",
@@ -15624,7 +15624,7 @@
    "src": "s_1S_L4",
    "dst": "s_0S_x13",
    "src_region": "std_b4_2_0",
-   "dst_region": "std_b3_2_1",
+   "dst_region": "std_b3_2_0",
    "width": 1,
    "kind": "ctl",
    "added_cycles": 3
@@ -15634,7 +15634,7 @@
    "lane": "vid_seqhost__svc_0",
    "src": "s_0S_x13",
    "dst": "svc_1",
-   "src_region": "std_b3_2_1",
+   "src_region": "std_b3_2_0",
    "dst_region": "std_bg_0_0",
    "width": 1,
    "kind": "ctl",
@@ -15679,7 +15679,7 @@
    "src": "svc_1",
    "dst": "s_0S_x13",
    "src_region": "std_bg_0_0",
-   "dst_region": "std_b3_2_1",
+   "dst_region": "std_b3_2_0",
    "width": 1,
    "kind": "ctl",
    "added_cycles": 3
@@ -15689,7 +15689,7 @@
    "lane": "vid_svc_1__seqhost",
    "src": "s_0S_x13",
    "dst": "s_1S_L4",
-   "src_region": "std_b3_2_1",
+   "src_region": "std_b3_2_0",
    "dst_region": "std_b4_2_0",
    "width": 1,
    "kind": "ctl",
@@ -16229,7 +16229,7 @@
    "src": "s_0S_L2",
    "dst": "s_0S_x13",
    "src_region": "std_b3_3_0",
-   "dst_region": "std_b3_2_1",
+   "dst_region": "std_b3_2_0",
    "width": 1104,
    "kind": "data",
    "added_cycles": 3
@@ -16239,7 +16239,7 @@
    "lane": "x_W0_in",
    "src": "s_0S_x13",
    "dst": "svc_1",
-   "src_region": "std_b3_2_1",
+   "src_region": "std_b3_2_0",
    "dst_region": "std_bg_0_0",
    "width": 1104,
    "kind": "data",
@@ -16284,7 +16284,7 @@
    "src": "s_0S_L2",
    "dst": "s_0S_x13",
    "src_region": "std_b3_3_0",
-   "dst_region": "std_b3_2_1",
+   "dst_region": "std_b3_2_0",
    "width": 1104,
    "kind": "data",
    "added_cycles": 3
@@ -16294,7 +16294,7 @@
    "lane": "x_W0_out",
    "src": "s_0S_x13",
    "dst": "svc_1",
-   "src_region": "std_b3_2_1",
+   "src_region": "std_b3_2_0",
    "dst_region": "std_bg_0_0",
    "width": 1104,
    "kind": "data",
@@ -17137,29 +17137,29 @@
    "added_cycles": 3
   },
   {
-   "port": "xtier__bk_sel__s_4S_C__phy1026_0",
+   "port": "xtier__bk_sel__s_4S_C__pd4_0",
    "lane": "xtier__bk_sel__s_4S_C",
    "src": "bk_sel",
    "dst": "s_4N_L4",
    "src_region": "std_b6_9_0",
-   "dst_region": "std_b5_8_0",
+   "dst_region": "std_b5_8_1",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "xtier__bk_sel__s_4S_C__phy1026_2",
+   "port": "xtier__bk_sel__s_4S_C__pd4_2",
    "lane": "xtier__bk_sel__s_4S_C",
    "src": "s_4N_L3",
    "dst": "s_4N_L1",
-   "src_region": "std_b5_8_0",
+   "src_region": "std_b5_8_1",
    "dst_region": "std_b5_7_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "xtier__bk_sel__s_4S_C__phy1026_4",
+   "port": "xtier__bk_sel__s_4S_C__pd4_4",
    "lane": "xtier__bk_sel__s_4S_C",
    "src": "s_4N_C",
    "dst": "s_4N_L0",
@@ -17170,7 +17170,7 @@
    "added_cycles": 3
   },
   {
-   "port": "xtier__bk_sel__s_4S_C__phy1026_6",
+   "port": "xtier__bk_sel__s_4S_C__pd4_6",
    "lane": "xtier__bk_sel__s_4S_C",
    "src": "s_4N_L2",
    "dst": "s_4S_x06",
@@ -17181,7 +17181,7 @@
    "added_cycles": 3
   },
   {
-   "port": "xtier__bk_sel__s_4S_C__phy1026_8",
+   "port": "xtier__bk_sel__s_4S_C__pd4_8",
    "lane": "xtier__bk_sel__s_4S_C",
    "src": "s_4S_L3",
    "dst": "s_4S_L1",
@@ -17192,89 +17192,89 @@
    "added_cycles": 3
   },
   {
-   "port": "xtier__bk_sel__seqhost__phy1026_0",
+   "port": "xtier__bk_sel__seqhost__pd4_1",
    "lane": "xtier__bk_sel__seqhost",
-   "src": "bk_sel",
-   "dst": "s_3N_x06",
+   "src": "s_6N_x06",
+   "dst": "s_6N_L4",
    "src_region": "std_b6_9_0",
-   "dst_region": "std_b5_9_0",
+   "dst_region": "std_b6_8_1",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "xtier__bk_sel__seqhost__phy1026_1",
+   "port": "xtier__bk_sel__seqhost__pd4_11",
    "lane": "xtier__bk_sel__seqhost",
-   "src": "s_3N_x06",
-   "dst": "s_3N_L4",
-   "src_region": "std_b5_9_0",
-   "dst_region": "std_b5_8_0",
+   "src": "s_6S_C",
+   "dst": "s_6S_L0",
+   "src_region": "std_b6_4_0",
+   "dst_region": "std_b6_3_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "xtier__bk_sel__seqhost__phy1026_11",
+   "port": "xtier__bk_sel__seqhost__pd4_13",
    "lane": "xtier__bk_sel__seqhost",
-   "src": "s_3S_C",
-   "dst": "s_3S_L0",
-   "src_region": "std_b5_4_0",
-   "dst_region": "std_b5_3_0",
+   "src": "s_6S_L2",
+   "dst": "s_6S_L4",
+   "src_region": "std_b6_3_0",
+   "dst_region": "std_b6_2_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "xtier__bk_sel__seqhost__phy1026_13",
+   "port": "xtier__bk_sel__seqhost__pd4_15",
    "lane": "xtier__bk_sel__seqhost",
-   "src": "s_3S_L2",
-   "dst": "seqhost",
-   "src_region": "std_b5_3_0",
+   "src": "s_5S_x00",
+   "dst": "s_4S_L4",
+   "src_region": "std_b6_2_0",
    "dst_region": "std_b5_2_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "xtier__bk_sel__seqhost__phy1026_3",
+   "port": "xtier__bk_sel__seqhost__pd4_3",
    "lane": "xtier__bk_sel__seqhost",
-   "src": "s_3N_L3",
-   "dst": "s_3N_L1",
-   "src_region": "std_b5_8_0",
-   "dst_region": "std_b5_7_0",
+   "src": "s_6N_L3",
+   "dst": "s_6N_L1",
+   "src_region": "std_b6_8_1",
+   "dst_region": "std_b6_7_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "xtier__bk_sel__seqhost__phy1026_5",
+   "port": "xtier__bk_sel__seqhost__pd4_5",
    "lane": "xtier__bk_sel__seqhost",
-   "src": "s_3N_C",
-   "dst": "s_3N_L0",
-   "src_region": "std_b5_7_0",
-   "dst_region": "std_b5_6_0",
+   "src": "s_6N_C",
+   "dst": "s_6N_L0",
+   "src_region": "std_b6_7_0",
+   "dst_region": "std_b6_6_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "xtier__bk_sel__seqhost__phy1026_7",
+   "port": "xtier__bk_sel__seqhost__pd4_7",
    "lane": "xtier__bk_sel__seqhost",
-   "src": "s_3N_L2",
-   "dst": "s_3S_L4",
-   "src_region": "std_b5_6_0",
-   "dst_region": "std_b5_5_0",
+   "src": "s_6N_L2",
+   "dst": "s_6S_x06",
+   "src_region": "std_b6_6_0",
+   "dst_region": "std_b6_5_1",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "xtier__bk_sel__seqhost__phy1026_9",
+   "port": "xtier__bk_sel__seqhost__pd4_9",
    "lane": "xtier__bk_sel__seqhost",
-   "src": "s_3S_L3",
-   "dst": "s_3S_L1",
-   "src_region": "std_b5_5_0",
-   "dst_region": "std_b5_4_0",
+   "src": "s_6S_L3",
+   "dst": "s_6S_L1",
+   "src_region": "std_b6_5_1",
+   "dst_region": "std_b6_4_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
@@ -17445,7 +17445,7 @@
    "added_cycles": 3
   },
   {
-   "port": "xtier__gunit__s_3N_C__phy1026_0",
+   "port": "xtier__gunit__s_3N_C__pd4_0",
    "lane": "xtier__gunit__s_3N_C",
    "src": "gunit",
    "dst": "s_0S_x00",
@@ -17456,18 +17456,29 @@
    "added_cycles": 3
   },
   {
-   "port": "xtier__gunit__s_3N_C__phy1026_11",
+   "port": "xtier__gunit__s_3N_C__pd4_11",
    "lane": "xtier__gunit__s_3N_C",
-   "src": "s_3S_L1",
-   "dst": "s_3S_L3",
-   "src_region": "std_b5_4_0",
+   "src": "s_2S_L1",
+   "dst": "s_2S_L3",
+   "src_region": "std_b4_4_0",
+   "dst_region": "std_b4_5_0",
+   "width": 276,
+   "kind": "data",
+   "added_cycles": 3
+  },
+  {
+   "port": "xtier__gunit__s_3N_C__pd4_13",
+   "lane": "xtier__gunit__s_3N_C",
+   "src": "s_2S_L4",
+   "dst": "s_3S_L4",
+   "src_region": "std_b4_5_0",
    "dst_region": "std_b5_5_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "xtier__gunit__s_3N_C__phy1026_13",
+   "port": "xtier__gunit__s_3N_C__pd4_14",
    "lane": "xtier__gunit__s_3N_C",
    "src": "s_3S_L4",
    "dst": "s_3N_L2",
@@ -17478,7 +17489,7 @@
    "added_cycles": 3
   },
   {
-   "port": "xtier__gunit__s_3N_C__phy1026_15",
+   "port": "xtier__gunit__s_3N_C__pd4_16",
    "lane": "xtier__gunit__s_3N_C",
    "src": "s_3N_L0",
    "dst": "s_3N_C",
@@ -17489,62 +17500,51 @@
    "added_cycles": 3
   },
   {
-   "port": "xtier__gunit__s_3N_C__phy1026_2",
+   "port": "xtier__gunit__s_3N_C__pd4_2",
    "lane": "xtier__gunit__s_3N_C",
    "src": "s_0S_x01",
-   "dst": "svc_1",
+   "dst": "s_0S_x02",
    "src_region": "std_b3_1_0",
-   "dst_region": "std_bg_0_0",
+   "dst_region": "std_b3_2_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "xtier__gunit__s_3N_C__phy1026_4",
+   "port": "xtier__gunit__s_3N_C__pd4_5",
    "lane": "xtier__gunit__s_3N_C",
-   "src": "svc_3",
-   "dst": "svc_5",
-   "src_region": "std_bg_0_0",
-   "dst_region": "std_bg_1_0",
+   "src": "s_0S_x13",
+   "dst": "s_0S_L2",
+   "src_region": "std_b3_2_0",
+   "dst_region": "std_b3_3_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "xtier__gunit__s_3N_C__phy1026_6",
+   "port": "xtier__gunit__s_3N_C__pd4_6",
    "lane": "xtier__gunit__s_3N_C",
-   "src": "svc_7",
-   "dst": "seqhost",
-   "src_region": "std_bg_1_0",
-   "dst_region": "std_b5_2_0",
+   "src": "s_0S_L2",
+   "dst": "s_1S_L2",
+   "src_region": "std_b3_3_0",
+   "dst_region": "std_b4_3_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "xtier__gunit__s_3N_C__phy1026_7",
+   "port": "xtier__gunit__s_3N_C__pd4_9",
    "lane": "xtier__gunit__s_3N_C",
-   "src": "seqhost",
-   "dst": "s_3S_L2",
-   "src_region": "std_b5_2_0",
-   "dst_region": "std_b5_3_0",
+   "src": "s_2S_L0",
+   "dst": "s_2S_C",
+   "src_region": "std_b4_3_0",
+   "dst_region": "std_b4_4_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "xtier__gunit__s_3N_C__phy1026_9",
-   "lane": "xtier__gunit__s_3N_C",
-   "src": "s_3S_L0",
-   "dst": "s_3S_C",
-   "src_region": "std_b5_3_0",
-   "dst_region": "std_b5_4_0",
-   "width": 276,
-   "kind": "data",
-   "added_cycles": 3
-  },
-  {
-   "port": "xtier__gunit__s_3S_C__phy1026_0",
+   "port": "xtier__gunit__s_3S_C__pd4_0",
    "lane": "xtier__gunit__s_3S_C",
    "src": "gunit",
    "dst": "s_0S_x00",
@@ -17555,56 +17555,56 @@
    "added_cycles": 3
   },
   {
-   "port": "xtier__gunit__s_3S_C__phy1026_2",
+   "port": "xtier__gunit__s_3S_C__pd4_10",
+   "lane": "xtier__gunit__s_3S_C",
+   "src": "s_3S_L0",
+   "dst": "s_3S_C",
+   "src_region": "std_b5_3_0",
+   "dst_region": "std_b5_4_0",
+   "width": 276,
+   "kind": "data",
+   "added_cycles": 3
+  },
+  {
+   "port": "xtier__gunit__s_3S_C__pd4_2",
    "lane": "xtier__gunit__s_3S_C",
    "src": "s_0S_x01",
-   "dst": "svc_1",
+   "dst": "s_0S_x02",
    "src_region": "std_b3_1_0",
-   "dst_region": "std_bg_0_0",
+   "dst_region": "std_b3_2_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "xtier__gunit__s_3S_C__phy1026_4",
+   "port": "xtier__gunit__s_3S_C__pd4_5",
    "lane": "xtier__gunit__s_3S_C",
-   "src": "svc_3",
-   "dst": "svc_5",
-   "src_region": "std_bg_0_0",
-   "dst_region": "std_bg_1_0",
+   "src": "s_0S_x13",
+   "dst": "s_1S_L4",
+   "src_region": "std_b3_2_0",
+   "dst_region": "std_b4_2_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "xtier__gunit__s_3S_C__phy1026_6",
+   "port": "xtier__gunit__s_3S_C__pd4_7",
    "lane": "xtier__gunit__s_3S_C",
-   "src": "svc_7",
+   "src": "s_2S_x00",
    "dst": "seqhost",
-   "src_region": "std_bg_1_0",
+   "src_region": "std_b4_2_0",
    "dst_region": "std_b5_2_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "xtier__gunit__s_3S_C__phy1026_7",
+   "port": "xtier__gunit__s_3S_C__pd4_8",
    "lane": "xtier__gunit__s_3S_C",
    "src": "seqhost",
    "dst": "s_3S_L2",
    "src_region": "std_b5_2_0",
    "dst_region": "std_b5_3_0",
-   "width": 276,
-   "kind": "data",
-   "added_cycles": 3
-  },
-  {
-   "port": "xtier__gunit__s_3S_C__phy1026_9",
-   "lane": "xtier__gunit__s_3S_C",
-   "src": "s_3S_L0",
-   "dst": "s_3S_C",
-   "src_region": "std_b5_3_0",
-   "dst_region": "std_b5_4_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
@@ -17808,7 +17808,7 @@
    "added_cycles": 3
   },
   {
-   "port": "xtier__s_3N_C__gunit__phy1026_0",
+   "port": "xtier__s_3N_C__gunit__pd4_0",
    "lane": "xtier__s_3N_C__gunit",
    "src": "s_3N_C",
    "dst": "s_3N_L0",
@@ -17819,21 +17819,21 @@
    "added_cycles": 3
   },
   {
-   "port": "xtier__s_3N_C__gunit__phy1026_10",
+   "port": "xtier__s_3N_C__gunit__pd4_10",
    "lane": "xtier__s_3N_C__gunit",
-   "src": "s_0S_LP",
-   "dst": "s_0S_x05",
-   "src_region": "std_b3_4_0",
+   "src": "s_1S_L2",
+   "dst": "s_0S_L2",
+   "src_region": "std_b4_3_0",
    "dst_region": "std_b3_3_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "xtier__s_3N_C__gunit__phy1026_12",
+   "port": "xtier__s_3N_C__gunit__pd4_11",
    "lane": "xtier__s_3N_C__gunit",
-   "src": "s_0S_x04",
-   "dst": "s_0S_x03",
+   "src": "s_0S_L2",
+   "dst": "s_0S_x13",
    "src_region": "std_b3_3_0",
    "dst_region": "std_b3_2_0",
    "width": 276,
@@ -17841,7 +17841,7 @@
    "added_cycles": 3
   },
   {
-   "port": "xtier__s_3N_C__gunit__phy1026_14",
+   "port": "xtier__s_3N_C__gunit__pd4_14",
    "lane": "xtier__s_3N_C__gunit",
    "src": "s_0S_x02",
    "dst": "s_0S_x01",
@@ -17852,7 +17852,7 @@
    "added_cycles": 3
   },
   {
-   "port": "xtier__s_3N_C__gunit__phy1026_16",
+   "port": "xtier__s_3N_C__gunit__pd4_16",
    "lane": "xtier__s_3N_C__gunit",
    "src": "s_0S_x00",
    "dst": "gunit",
@@ -17863,7 +17863,7 @@
    "added_cycles": 3
   },
   {
-   "port": "xtier__s_3N_C__gunit__phy1026_2",
+   "port": "xtier__s_3N_C__gunit__pd4_2",
    "lane": "xtier__s_3N_C__gunit",
    "src": "s_3N_L2",
    "dst": "s_3S_L4",
@@ -17874,40 +17874,40 @@
    "added_cycles": 3
   },
   {
-   "port": "xtier__s_3N_C__gunit__phy1026_4",
+   "port": "xtier__s_3N_C__gunit__pd4_4",
    "lane": "xtier__s_3N_C__gunit",
    "src": "s_3S_L3",
-   "dst": "s_2S_L3",
+   "dst": "s_3S_L1",
    "src_region": "std_b5_5_0",
-   "dst_region": "std_b4_5_0",
+   "dst_region": "std_b5_4_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "xtier__s_3N_C__gunit__phy1026_6",
+   "port": "xtier__s_3N_C__gunit__pd4_6",
    "lane": "xtier__s_3N_C__gunit",
-   "src": "s_1S_L3",
-   "dst": "s_0S_L3",
-   "src_region": "std_b4_5_0",
-   "dst_region": "std_b3_5_0",
+   "src": "s_3S_C",
+   "dst": "s_3S_L0",
+   "src_region": "std_b5_4_0",
+   "dst_region": "std_b5_3_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "xtier__s_3N_C__gunit__phy1026_7",
+   "port": "xtier__s_3N_C__gunit__pd4_8",
    "lane": "xtier__s_3N_C__gunit",
-   "src": "s_0S_L3",
-   "dst": "s_0S_L1",
-   "src_region": "std_b3_5_0",
-   "dst_region": "std_b3_4_0",
+   "src": "s_3S_L2",
+   "dst": "s_2S_L2",
+   "src_region": "std_b5_3_0",
+   "dst_region": "std_b4_3_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "xtier__s_3S_C__gunit__phy1026_0",
+   "port": "xtier__s_3S_C__gunit__pd4_0",
    "lane": "xtier__s_3S_C__gunit",
    "src": "s_3S_C",
    "dst": "s_2S_C",
@@ -17918,7 +17918,7 @@
    "added_cycles": 3
   },
   {
-   "port": "xtier__s_3S_C__gunit__phy1026_1",
+   "port": "xtier__s_3S_C__gunit__pd4_1",
    "lane": "xtier__s_3S_C__gunit",
    "src": "s_2S_C",
    "dst": "s_2S_L0",
@@ -17929,7 +17929,7 @@
    "added_cycles": 3
   },
   {
-   "port": "xtier__s_3S_C__gunit__phy1026_10",
+   "port": "xtier__s_3S_C__gunit__pd4_10",
    "lane": "xtier__s_3S_C__gunit",
    "src": "s_0S_x00",
    "dst": "gunit",
@@ -17940,7 +17940,7 @@
    "added_cycles": 3
   },
   {
-   "port": "xtier__s_3S_C__gunit__phy1026_3",
+   "port": "xtier__s_3S_C__gunit__pd4_3",
    "lane": "xtier__s_3S_C__gunit",
    "src": "s_1S_L0",
    "dst": "s_0S_L0",
@@ -17951,7 +17951,7 @@
    "added_cycles": 3
   },
   {
-   "port": "xtier__s_3S_C__gunit__phy1026_6",
+   "port": "xtier__s_3S_C__gunit__pd4_6",
    "lane": "xtier__s_3S_C__gunit",
    "src": "s_0S_x04",
    "dst": "s_0S_x03",
@@ -17962,7 +17962,7 @@
    "added_cycles": 3
   },
   {
-   "port": "xtier__s_3S_C__gunit__phy1026_8",
+   "port": "xtier__s_3S_C__gunit__pd4_8",
    "lane": "xtier__s_3S_C__gunit",
    "src": "s_0S_x02",
    "dst": "s_0S_x01",
@@ -18028,7 +18028,7 @@
    "added_cycles": 3
   },
   {
-   "port": "xtier__s_4S_C__bk_sel__phy1026_1",
+   "port": "xtier__s_4S_C__bk_sel__pd4_1",
    "lane": "xtier__s_4S_C__bk_sel",
    "src": "s_4S_L1",
    "dst": "s_4S_L3",
@@ -18039,7 +18039,7 @@
    "added_cycles": 3
   },
   {
-   "port": "xtier__s_4S_C__bk_sel__phy1026_3",
+   "port": "xtier__s_4S_C__bk_sel__pd4_3",
    "lane": "xtier__s_4S_C__bk_sel",
    "src": "s_4S_x06",
    "dst": "s_4N_L2",
@@ -18050,7 +18050,7 @@
    "added_cycles": 3
   },
   {
-   "port": "xtier__s_4S_C__bk_sel__phy1026_5",
+   "port": "xtier__s_4S_C__bk_sel__pd4_5",
    "lane": "xtier__s_4S_C__bk_sel",
    "src": "s_4N_L0",
    "dst": "s_4N_C",
@@ -18061,22 +18061,22 @@
    "added_cycles": 3
   },
   {
-   "port": "xtier__s_4S_C__bk_sel__phy1026_7",
+   "port": "xtier__s_4S_C__bk_sel__pd4_7",
    "lane": "xtier__s_4S_C__bk_sel",
    "src": "s_4N_L1",
    "dst": "s_4N_L3",
    "src_region": "std_b5_7_0",
-   "dst_region": "std_b5_8_0",
+   "dst_region": "std_b5_8_1",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "xtier__s_4S_C__bk_sel__phy1026_9",
+   "port": "xtier__s_4S_C__bk_sel__pd4_9",
    "lane": "xtier__s_4S_C__bk_sel",
    "src": "s_4N_L4",
    "dst": "bk_sel",
-   "src_region": "std_b5_8_0",
+   "src_region": "std_b5_8_1",
    "dst_region": "std_b6_9_0",
    "width": 276,
    "kind": "data",
@@ -18369,78 +18369,89 @@
    "added_cycles": 3
   },
   {
-   "port": "xtier__seqhost__bk_sel__phy1026_0",
+   "port": "xtier__seqhost__bk_sel__pd4_1",
    "lane": "xtier__seqhost__bk_sel",
-   "src": "seqhost",
-   "dst": "s_3S_L2",
+   "src": "s_4S_L4",
+   "dst": "s_5S_x00",
    "src_region": "std_b5_2_0",
-   "dst_region": "std_b5_3_0",
+   "dst_region": "std_b6_2_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "xtier__seqhost__bk_sel__phy1026_11",
+   "port": "xtier__seqhost__bk_sel__pd4_11",
    "lane": "xtier__seqhost__bk_sel",
-   "src": "s_4N_L1",
-   "dst": "s_4N_L3",
-   "src_region": "std_b5_7_0",
-   "dst_region": "std_b5_8_0",
+   "src": "s_6N_L0",
+   "dst": "s_6N_C",
+   "src_region": "std_b6_6_0",
+   "dst_region": "std_b6_7_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "xtier__seqhost__bk_sel__phy1026_13",
+   "port": "xtier__seqhost__bk_sel__pd4_13",
    "lane": "xtier__seqhost__bk_sel",
-   "src": "s_4N_L4",
-   "dst": "bk_sel",
-   "src_region": "std_b5_8_0",
+   "src": "s_6N_L1",
+   "dst": "s_6N_L3",
+   "src_region": "std_b6_7_0",
+   "dst_region": "std_b6_8_1",
+   "width": 276,
+   "kind": "data",
+   "added_cycles": 3
+  },
+  {
+   "port": "xtier__seqhost__bk_sel__pd4_15",
+   "lane": "xtier__seqhost__bk_sel",
+   "src": "s_6N_L4",
+   "dst": "s_6N_x06",
+   "src_region": "std_b6_8_1",
    "dst_region": "std_b6_9_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "xtier__seqhost__bk_sel__phy1026_3",
+   "port": "xtier__seqhost__bk_sel__pd4_3",
    "lane": "xtier__seqhost__bk_sel",
-   "src": "s_4S_L0",
-   "dst": "s_4S_C",
-   "src_region": "std_b5_3_0",
-   "dst_region": "std_b5_4_0",
+   "src": "s_6S_L4",
+   "dst": "s_6S_L2",
+   "src_region": "std_b6_2_0",
+   "dst_region": "std_b6_3_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "xtier__seqhost__bk_sel__phy1026_5",
+   "port": "xtier__seqhost__bk_sel__pd4_5",
    "lane": "xtier__seqhost__bk_sel",
-   "src": "s_4S_L1",
-   "dst": "s_4S_L3",
-   "src_region": "std_b5_4_0",
-   "dst_region": "std_b5_5_1",
+   "src": "s_6S_L0",
+   "dst": "s_6S_C",
+   "src_region": "std_b6_3_0",
+   "dst_region": "std_b6_4_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "xtier__seqhost__bk_sel__phy1026_7",
+   "port": "xtier__seqhost__bk_sel__pd4_7",
    "lane": "xtier__seqhost__bk_sel",
-   "src": "s_4S_x06",
-   "dst": "s_4N_L2",
-   "src_region": "std_b5_5_1",
-   "dst_region": "std_b5_6_1",
+   "src": "s_6S_L1",
+   "dst": "s_6S_L3",
+   "src_region": "std_b6_4_0",
+   "dst_region": "std_b6_5_1",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
   },
   {
-   "port": "xtier__seqhost__bk_sel__phy1026_9",
+   "port": "xtier__seqhost__bk_sel__pd4_9",
    "lane": "xtier__seqhost__bk_sel",
-   "src": "s_4N_L0",
-   "dst": "s_4N_C",
-   "src_region": "std_b5_6_1",
-   "dst_region": "std_b5_7_0",
+   "src": "s_6S_x06",
+   "dst": "s_6N_L2",
+   "src_region": "std_b6_5_1",
+   "dst_region": "std_b6_6_0",
    "width": 276,
    "kind": "data",
    "added_cycles": 3
