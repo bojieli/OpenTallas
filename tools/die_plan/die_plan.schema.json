@@ -2776,6 +2776,43 @@
       "cells": {
        "type": "integer",
        "minimum": 1
+      },
+      "core_islands": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+         "rule",
+         "instances",
+         "rects_um",
+         "frame"
+        ],
+        "properties": {
+         "rule": {
+          "type": "string"
+         },
+         "frame": {
+          "type": "string"
+         },
+         "instances": {
+          "type": "integer",
+          "minimum": 1
+         },
+         "rects_um": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+           "type": "array",
+           "items": {
+            "type": "number"
+           },
+           "minItems": 4,
+           "maxItems": 4
+          }
+         }
+        }
+       }
       }
      }
     },

@@ -602,7 +602,17 @@ SCHEMA = {
                          "sites_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
                          "regions_depth": {"type": "integer", "minimum": 0},
                          "regions": {"type": "array", "minItems": 1, "items": _clock_mesh_region},
-                         "cells": {"type": "integer", "minimum": 1}}},
+                         "cells": {"type": "integer", "minimum": 1},
+                         # CLOCK-KV-R24 (12.2a1): per hard-core module, the core-frame bodies of the die clock cells
+                         # pushed down into that core (identical on every instance; apply_clkmesh_sites.py)
+                         "core_islands": {"type": "object", "additionalProperties": {
+                             "type": "object", "additionalProperties": False,
+                             "required": ["rule", "instances", "rects_um", "frame"],
+                             "properties": {"rule": {"type": "string"}, "frame": {"type": "string"},
+                                            "instances": {"type": "integer", "minimum": 1},
+                                            "rects_um": {"type": "array", "minItems": 1, "items": {
+                                                "type": "array", "items": {"type": "number"},
+                                                "minItems": 4, "maxItems": 4}}}}}}},
             # FLOW 10-25 (ruling 9.7 / decision 5e): die-wide FF pin-register insertion budget (the TT one is
             # insertion_ps / common_latency_ps); absent -> gen_phys.FF_TT_INSERTION_RATIO x TT
             "insertion_ff_ps": _pos,
