@@ -530,7 +530,9 @@ def for_type(P, tn, reach=None):
             raise ResetError(f"type {tn}: hard partitions carry no generated reset tree")
         T = _wf_type_tree(P, tn)
         T.update(entry="sync" if tn == wf_solve(P)["root_type"] else "relayed", sync_stages=sync_stages(P, tn),
-                 type=tn)
+                 type=tn, start=start_broadcast(P))
+        if T["start"]:
+            T["start_in"] = list(start_in_pin(P, tn))
         return T
     if pipelined(P):
         K = part_depth(P)
@@ -904,6 +906,62 @@ def out_pins(P, tn):
     return [(f"rst_o_{k}",) + tuple(sites[j]["xy"]) for k, j in enumerate(wf_solve(P)["outs"].get(tn, []))]
 
 
+START_DX_UM = 2.16      # start_i / start_o_<k> sit this far (then snapped) beside arst_n / rst_o_<k>
+
+
+def start_broadcast(P):
+    """OWNER DECISION 13c: the static schedule starts on an explicit START broadcast after reset (reset.start
+    "broadcast", wavefront plans only).  START rides the reset wavefront: every soft partition registers start_i
+    beside arst_n and re-drives start_o_<k> beside every rst_o_<k>; the same relay tree carries it (run relays
+    u_srl_<k> on the reset relay sites).  Leaf / boundary / hard-core control state is released by the GATED tap reset
+    rst_n_t<i> = registered (reset AND run): taps release at start_cycle + the published release offset of the
+    partition (identical table, measured from the die `start` pin edge instead of rst_n); rst_o / start_o forward the
+    raw reset / run.  start tied high == the plain wavefront."""
+    return wavefront(P) and P.reset.get("start", "none") == "broadcast"
+
+
+def _beside(P, tn, xy, taken):
+    """a snapped pin site beside xy (start pin next to its reset pin), not on any taken site."""
+    w, h = P.types[tn]["outline_um"]
+    x, y = xy
+    for k in (1, -1, 2, -2, 3, -3, 4, -4):
+        for dx, dy in ((k * START_DX_UM, 0.0), (0.0, k * START_DX_UM)):
+            q = _snap(P, min(max(x + dx, INSET_UM), w - INSET_UM), min(max(y + dy, INSET_UM), h - INSET_UM))
+            if not any(abs(q[0] - a) < 1.0 and abs(q[1] - b) < 1.0 for a, b in taken):
+                return q
+    raise ResetError(f"type {tn}: no free start pin site beside {xy}")
+
+
+def _start_sites(P, tn):
+    cache = P.__dict__.setdefault("_reset_tree_cache", {})
+    key = ("start_sites", tn)
+    if key not in cache:
+        import schema as S
+        taken = [(x, y) for _, x, y in _taps(P, tn)] + [tuple(in_pin(P, tn))] + \
+            [(x, y) for _, x, y in out_pins(P, tn)] + [tuple(v[1:3]) for v in S.core_taps(P, tn)]
+        sin = _beside(P, tn, in_pin(P, tn), taken)
+        taken.append(sin)
+        souts = []
+        for n, x, y in out_pins(P, tn):
+            q = _beside(P, tn, (x, y), taken)
+            taken.append(q)
+            souts.append(("start_o_" + n.rsplit("_", 1)[1],) + tuple(q))
+        cache[key] = (sin, souts)
+    return cache[key]
+
+
+def start_in_pin(P, tn):
+    """the START IN pin (start_i) of a soft type of a start-broadcast plan (type frame), beside arst_n."""
+    return tuple(_start_sites(P, tn)[0])
+
+
+def start_out_pins(P, tn):
+    """[(port, x, y)] registered START outs start_o_<k> (beside rst_o_<k>, same neighbour)."""
+    if not start_broadcast(P) or P.types[tn].get("hard"):
+        return []
+    return list(_start_sites(P, tn)[1])
+
+
 def core_reset_targets(P, tn):
     """Active-low hard-core reset pins, transformed into the type frame, with legal local relay sites.
 
@@ -1037,6 +1095,19 @@ def wf_plan(P):
                note="OWNER DECISION 13 (2026-10-24): one root 2-flop synchroniser; neighbour wavefront; release = "
                     "clocks after die rst_n deasserts at which the partition's taps (and its rst_o) release; the "
                     "static schedule starts with an explicit start broadcast after reset")
+    if start_broadcast(P):
+        hard_parts = sorted(p for p in parts if p in sol["hard"])
+        out["start"] = dict(
+            mode="broadcast", die_pin="start", sync_stages=N,
+            types={tn: dict(in_um=[round(v, 4) for v in start_in_pin(P, tn)],
+                            outs=[[o[0], round(o[1], 4), round(o[2], 4)] for o in start_out_pins(P, tn)])
+                   for tn in types},
+            hard_parts_raw_reset=hard_parts,
+            note="OWNER DECISION 13c: START rides the reset wavefront (start_i / start_o_<k> beside arst_n / "
+                 "rst_o_<k>, run relays on the reset relay sites).  Soft partition p's control state (leaves, "
+                 "boundary epochs, hard-core resets) releases at  max(release[p], S + release[p])  clocks, S = the "
+                 "die start pin's rising edge relative to rst_n deassert; i.e. the START offsets ARE the published "
+                 "release offsets.  Hard partitions (prebuilt, no start pin) see the raw reset only.")
     cache["wf_plan"] = out
     return out
 
@@ -1060,6 +1131,28 @@ def wf_die_rtl(P, ind="    "):
     return lines, arst, outs
 
 
+def wf_die_start(P, ind="    "):
+    """die top START wiring (decision 13c; start_broadcast plans): the root partition's start_i = the die `start` pin,
+    every other soft partition's start_i = its parent's start_o_<k> (the k of its rst_o parent).  Returns (wire lines,
+    {part: start_i net}, {part: {start_o port: net}}).  Hard partitions have no start pin."""
+    W = wf_plan(P)
+    lines = [f"{ind}// OWNER DECISION 13c START broadcast: rides the reset wavefront (start_o_<k> beside rst_o_<k>)"]
+    sin, souts = {}, {}
+    for p, r in W["parts"].items():
+        if r["type"] not in W["types"]:
+            continue                                  # hard leaf: raw reset only
+        if r["parent"] is None:
+            sin[p] = "start"
+        else:
+            src = r["source"].replace(".rst_o_", ".start_o_")
+            net = "stw_" + re.sub(r"\W", "_", src)
+            if net not in {n for d in souts.values() for n in d.values()}:
+                lines.append(f"{ind}wire {net};")
+            souts.setdefault(r["parent"], {})[src.split(".")[-1]] = net
+            sin[p] = net
+    return lines, sin, souts
+
+
 # ----------------------------------------------------------------------------------------------- RTL / TCL
 def relay_sv():
     """the ot_dp_rrelay module text (held in gen_rtl.CELLS, the one copy of the kit cells)."""
@@ -1067,8 +1160,47 @@ def relay_sv():
     return re.search(r"(//[^\n]*ot_dp_rrelay.*?\nendmodule\n)", gen_rtl.CELLS, re.S).group(1)
 
 
-def rtl_lines(T, ind="    ", src="arst_n"):
-    """SystemVerilog body lines: entry stage + relays.  Declares rst_n_t<i> for every tap."""
+_TAPQ = re.compile(r"^rst_n_t(\d+)$")
+
+
+def start_relays(T):
+    """START broadcast (decision 13c, T['start']): the relay list with the run relays and the gated tap stages.
+    Nets: rr_t<i> raw reset, rn_* run (rn_ + raw net; run_root at the entry).  A CONSUMER tap (clock tap / hard-core
+    reset target, not an rst_o) keeps its relay instance u_rrl_<k>, now loading (raw AND run) of its parent: rst_n_t<i>
+    releases on the same cycle depth as before, measured from the later of reset and START.  Raw / run copies
+    (u_rrl_<k>_r, u_srl_<k>) exist only where something downstream (a deeper relay or an rst_o / start_o) needs them.
+    [{name, d (SV expression), q, dlab (parent net label for the hop check), xy, kind, depth, role}]"""
+    nck = T.get("n_clock_taps", len(T["taps"]))
+    outs = set(range(nck, nck + len(T.get("outs", []))))
+
+    def raw(n):
+        m = _TAPQ.match(n)
+        return f"rr_t{m.group(1)}" if m else n
+
+    def run(n):
+        return "run_root" if n == "rst_root_n" else "rn_" + raw(n)
+    used = {raw(r["d"]) for r in T["relays"]} | {f"rr_t{i}" for i in outs}
+    out = []
+    for r in T["relays"]:
+        m = _TAPQ.match(r["q"])
+        base = dict(xy=r["xy"], kind=r["kind"], depth=r["depth"], dlab=r["d"], tap=r.get("tap"))
+        srl = r["name"].replace("u_rrl", "u_srl", 1)
+        if m and int(m.group(1)) not in outs:
+            out.append(dict(base, name=r["name"], d=f"{raw(r['d'])} & {run(r['d'])}", q=r["q"], role="gated"))
+            if raw(r["q"]) in used:
+                out.append(dict(base, name=r["name"] + "_r", d=raw(r["d"]), q=raw(r["q"]), role="raw"))
+                out.append(dict(base, name=srl, d=run(r["d"]), q=run(r["q"]), role="run"))
+        else:
+            out.append(dict(base, name=r["name"], d=raw(r["d"]), q=raw(r["q"]), role="raw"))
+            out.append(dict(base, name=srl, d=run(r["d"]), q=run(r["q"]), role="run"))
+    return out
+
+
+def rtl_lines(T, ind="    ", src="arst_n", start_src="start_i"):
+    """SystemVerilog body lines: entry stage + relays.  Declares rst_n_t<i> for every tap.  With T['start'] (decision
+    13c START broadcast) the run entry / relays and the gated taps (start_relays) are emitted as well."""
+    if T.get("start"):
+        return _rtl_lines_start(T, ind, src, start_src)
     ns = T["sync_stages"]
     if T["entry"] == "sync" and ns not in (2, 3):
         raise ResetError(f"reset_tree: sync_stages {ns} (root synchronisers exist for 2 or 3)")
@@ -1093,6 +1225,43 @@ def rtl_lines(T, ind="    ", src="arst_n"):
     for k in range(len(T.get("outs", []))):
         out.append(f"{ind}assign rst_o_{k} = rst_n_t{nck + k};  // registered reset out (wavefront): the relay at "
                    f"({T['outs'][k][0]:.1f}, {T['outs'][k][1]:.1f}), released with the taps")
+    return out
+
+
+def _rtl_lines_start(T, ind, src, start_src):
+    ns = T["sync_stages"]
+    if T["entry"] == "sync" and ns not in (2, 3):
+        raise ResetError(f"reset_tree: sync_stages {ns} (root synchronisers exist for 2 or 3)")
+    taps = list(range(len(T["taps"])))
+    out = [f"{ind}// OWNER RESET RULE 10-24 + DECISION 13c (tools/die_plan/reset_tree.py): entry {T['entry']} + "
+           f"synchronous relay tree carrying reset AND run (START broadcast), depth {T['depth']} to all {len(taps)} "
+           f"taps, hops <= {T['reach_um']:g} um; every tap releases {release_clocks(T)} clocks after the LATER of the "
+           "entry reset release and the entry START",
+           f"{ind}wire rst_root_n, run_root;"]
+    if T["entry"] == "sync":
+        out.append(f"{ind}ot_dp_rsync_s{ns} u_rst_root (.clk(clk), .async_rst_n({src}), .sync_rst_n(rst_root_n));  "
+                   "// the die's ONE root reset synchroniser: its async input is the only reset false path")
+        out.append(f"{ind}ot_dp_rsync_s{ns} u_run_root (.clk(clk), .async_rst_n({start_src}), .sync_rst_n(run_root));  "
+                   "// the die's ONE START synchroniser (die start pin, asynchronous level): the only START false path")
+    else:
+        out.append(f"{ind}ot_dp_rrelay u_rst_in (.clk(clk), .d({src}), .q(rst_root_n));  "
+                   "// pin register of the SYNCHRONOUS reset input (neighbour's rst_o)")
+        out.append(f"{ind}ot_dp_rrelay u_run_in (.clk(clk), .d({start_src}), .q(run_root));  "
+                   "// pin register of the SYNCHRONOUS START input (neighbour's start_o)")
+    nck = T.get("n_clock_taps", len(taps))
+    outs = set(range(nck, nck + len(T.get("outs", []))))
+    out += [f"{ind}wire rst_n_t{i};" for i in taps if i not in outs]     # consumer taps (gated)
+    declared = {f"rst_n_t{i}" for i in taps} | {"rst_root_n", "run_root"}
+    for r in start_relays(T):
+        if r["q"] not in declared:
+            out.append(f"{ind}wire {r['q']};")
+            declared.add(r["q"])
+        out.append(f"{ind}ot_dp_rrelay {r['name']} (.clk(clk), .d({r['d']}), .q({r['q']}));  "
+                   f"// {r['role']} {r['kind']} tap {r['tap']} depth {r['depth']} @ ({r['xy'][0]:.1f}, {r['xy'][1]:.1f})")
+    for k in range(len(T.get("outs", []))):
+        out.append(f"{ind}assign rst_o_{k} = rr_t{nck + k};  // registered reset out (wavefront) at "
+                   f"({T['outs'][k][0]:.1f}, {T['outs'][k][1]:.1f})")
+        out.append(f"{ind}assign start_o_{k} = rn_rr_t{nck + k};  // registered START out beside rst_o_{k}")
     return out
 
 
@@ -1163,7 +1332,11 @@ def tcl_text(T):
     ent = "u_rst_root" if T["entry"] == "sync" else "u_rst_in"
     t = [TCL_HEAD.replace("REACH", f"{T['reach_um']:g} um"),
          f"rtr_place rst_root_n {{*{ent}[./]*}} {T['root'][0]:.3f} {T['root'][1]:.3f} rentry"]
-    for r in T["relays"]:
+    rel = start_relays(T) if T.get("start") else [dict(r, dlab=r["d"]) for r in T["relays"]]
+    if T.get("start"):
+        rent = "u_run_root" if T["entry"] == "sync" else "u_run_in"
+        t.append(f"rtr_place run_root {{*{rent}[./]*}} {T['start_in'][0]:.3f} {T['start_in'][1]:.3f} sentry")
+    for r in rel:
         t.append(f"rtr_place {r['q']} {{*{r['name']}[./]*}} {r['xy'][0]:.3f} {r['xy'][1]:.3f} rrl:{r['kind']}{r['depth']}")
     if T.get("core_resets"):
         terminals = " ".join(r["q"] for r in T["relays"] if r["depth"] == T["depth"])
@@ -1184,7 +1357,7 @@ def tcl_text(T):
               "$rtr_it disconnect; $rtr_it connect [lindex $rtr_cn 0]",
               f"dict set rtr_at core:{c['tap']} [list [expr {{round({c['pin_um'][0]:.5f} * $ff_dbu)}}] [expr {{round({c['pin_um'][1]:.5f} * $ff_dbu)}}]]",
               f"puts \"OT_RESET_CORE {inst}.{pin} <- {q} depth {T['depth']}\""]
-    edges = " ".join(f"{r['q']} {r['d']}" for r in T["relays"])
+    edges = " ".join(f"{r['q']} {r['d'].split(' & ')[0]}" for r in rel)
     edges += " " + " ".join(f"core:{c['tap']} rst_n_t{c['tap']}" for c in T.get("core_resets", []))
     t += ["close $rtr_fh",
           "# placed hop check (driver relay -> relay, Manhattan between placed sites)",
