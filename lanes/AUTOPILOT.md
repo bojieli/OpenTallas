@@ -181,3 +181,6 @@ GEOM-PASS-NOT-ROUTED (51 gaps): most are plan/tree verdicts or superseded kits; 
 PREFLIGHT-2 preflight.json: not yet landed; the chain already runs main kit_preflight.py before the runner. Next: admission check on preflight.json once PREFLIGHT-2 publishes its schema.
 
 - 2026-10-27 10:49 PDT ROOT-REVIEW-36 (COORD-DELEGATE): codex/autopilot-signoff-1027@98560e3183 and @8e680fa910 are already on main via RM51 f108b501fd (curated: f4aa309205 -> 38b31d27d4; efe32451f2/3eebb18bc6 patch-equal; branch through be7faf292d). They OVERLAP AUTOPILOT-SIGNOFF-2: build on main 60b5ddf523, do not re-merge these tips; the all-kit path stays gated on PREFLIGHT canaries. ap-dispatch-urgent 1895efef9e = RM44, canary-alias f8e8f69222 = RM41. codex/ap-collect-1027@84c97f6c38 not reviewed here.
+
+## CODEX 13:51 fresh VMR publication collection
+98d3c304f548 is TERMINAL SIGNED-UNVERSIONED, not pending: archive+mirror completed10:22 at closed/qwen_compute/qfd_dv_s8x_vmr__f4kfinal__77013e5059. Only failure is no flowrelease watchedfingerprint matches77013. ROOT explicitly accepts exactas-run view as realclosure/usable perprecedent; VMR COMPLETE atthat scope. No historicaltag, no broadenedQC/freezequalification, no rerun. Originalroot-approved exact113eq/0const proof/pairedexport/rootapproval manifest retained. CanonicalHEADfreeze tag is separate ROOT path.
