@@ -1,0 +1,46 @@
+[INFO GRT-0019] Found 860 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 58
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal    3520366       2505929          28.82%
+M3         Vertical      4021950       2988094          25.71%
+M4         Horizontal    3100042       2304915          25.65%
+M5         Vertical      2965970       2198253          25.88%
+---------------------------------------------------------------
+
+[INFO GRT-0101] Running extra iterations to remove congestion.
+[INFO GRT-0102] Start extra iteration 1/30
+[INFO GRT-0102] Start extra iteration 2/30
+[INFO GRT-0102] Start extra iteration 3/30
+[INFO GRT-0197] Via related to pin nodes: 651147
+[INFO GRT-0198] Via related Steiner nodes: 13635
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 831442
+[INFO GRT-0112] Final usage 3D: 3205172
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2             2505929        299772           11.96%             0 /  0 /  0
+M3             2988094        330492           11.06%             0 /  0 /  0
+M4             2304915         45497            1.97%             0 /  0 /  0
+M5             2198253         35085            1.60%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total          9997191        710846            7.11%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 552497 um
+[INFO GRT-0014] Routed nets: 114553
+[INFO GRT-0303] Global routing runtime = 00:02:27
+Took 147 seconds: global_route -congestion_report_file /work/run/reports/asap7/hd_elemA_rb/base/congestion.rpt -congestion_iterations 30 -congestion_report_iter_step 5 -verbose -resistance_aware
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+estimate_parasitics -global_routing
+Took 14 seconds: estimate_parasitics -global_routing
+Repair antennas...
+[WARNING GRT-0246] No diode with LEF class CORE ANTENNACELL found.
+[INFO ANT-0002] Found 0 net violations.

@@ -1,0 +1,157 @@
+{
+  "type": "ot_s81hd_elemA_cv",
+  "centre": 159.84,
+  "L": 128,
+  "diam": 40,
+  "nodes": {
+    "WS": [
+      77.76,
+      77.76
+    ],
+    "WN": [
+      77.76,
+      241.92
+    ],
+    "ES": [
+      241.92,
+      77.76
+    ],
+    "EN": [
+      241.92,
+      241.92
+    ]
+  },
+  "sinks_c2": {
+    "WS": 8223,
+    "WN": 3049,
+    "ES": 8551,
+    "EN": 8898
+  },
+  "size": {
+    "WS": 65,
+    "WN": 24,
+    "ES": 67,
+    "EN": 70
+  },
+  "ft_ports": [
+    [
+      "ft_ck0_i",
+      "INPUT",
+      157.68,
+      163.44
+    ],
+    [
+      "ft_ck1_i",
+      "INPUT",
+      159.12,
+      163.44
+    ],
+    [
+      "ft_mesh_i",
+      "INPUT",
+      160.56,
+      163.44
+    ],
+    [
+      "ft_mstrap_i",
+      "INPUT",
+      162.0,
+      163.44
+    ],
+    [
+      "ft_rst_i",
+      "INPUT",
+      156.96,
+      163.44
+    ],
+    [
+      "ft_ck0_o",
+      "OUTPUT",
+      157.68,
+      156.24
+    ],
+    [
+      "ft_ck1_o",
+      "OUTPUT",
+      159.12,
+      156.24
+    ],
+    [
+      "ft_mesh_o",
+      "OUTPUT",
+      160.56,
+      156.24
+    ],
+    [
+      "ft_rst_o",
+      "OUTPUT",
+      162.0,
+      156.24
+    ]
+  ],
+  "die_cells": [
+    [
+      "u_isl_ck0",
+      "BUFx24_ASAP7_75t_R",
+      156.6,
+      160.92,
+      {
+        "A": "ft_ck0_i",
+        "Y": "ft_ck0_o"
+      }
+    ],
+    [
+      "u_isl_ck1",
+      "BUFx24_ASAP7_75t_R",
+      158.22,
+      160.92,
+      {
+        "A": "ft_ck1_i",
+        "Y": "ft_ck1_o"
+      }
+    ],
+    [
+      "u_isl_m0",
+      "BUFx24_ASAP7_75t_R",
+      159.84,
+      160.92,
+      {
+        "A": "ft_mesh_i",
+        "Y": "ft_mesh_o"
+      }
+    ],
+    [
+      "u_isl_root",
+      "BUFx24_ASAP7_75t_R",
+      159.03,
+      159.57,
+      {
+        "A": "ft_mstrap_i",
+        "Y": "clk"
+      }
+    ],
+    [
+      "u_isl_rstft",
+      "BUFx4_ASAP7_75t_R",
+      157.14,
+      158.22,
+      {
+        "A": "ft_rst_i",
+        "Y": "ft_rst_o"
+      }
+    ]
+  ],
+  "prediction_12_9d": {
+    "stages": "CT_c + CT_w/e + CT_q + ~5.5 TritonCTS levels (128 equal-count clusters, c2 fit levels~log2(N)-1.7) + leaf = ~9.5 BUFx24 @ ~25 ps TT",
+    "trunk_wire_ps": 12,
+    "pinreg_TT_ps": 250,
+    "pinreg_FF_ps": 200,
+    "per_quadrant": "equal leaf count -> same depth all 4 quadrants (+-1 level if TritonCTS splits differently: +-25 ps)"
+  },
+  "pushdown_src": "HEAD-CORE-LAT-R2/DIECLK c3' list (lat1 @73e7059514), OWNER 12.2a1 06:39",
+  "remove_ports": [
+    "clk"
+  ],
+  "note_reset": "Polarity-preserving, combinational dedicated feedthrough; core rst_n separate; +0 reset cycles.",
+  "cts_construction": "Separate OpenROAD session per quadrant; ceil(actual placed sinks / L), no measured-clock inputs."
+}
