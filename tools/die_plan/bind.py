@@ -54,6 +54,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import bind_elab as E  # noqa: E402
+import bind_position_bank as PB  # noqa: E402
 
 SCHEMA = "opentallas.die_plan.bind.v1"
 
@@ -1657,6 +1658,101 @@ class Binder:
         st["inner"] = dict(members=len(inner), self_noop=noop, matched=len(hit), changed_bits=changed[0], stale=len(miss),
                            dly_sets_before=before, dly_sets_after=sum(len(v) for v in self.intra_dly.values()))
 
+    def uniform_inner(self):
+        """asbuilt.inner_uniform = [plan type, ...] (PATH-KV-BIND 10-25): every instance of one plan type is one hardened
+        kit, so an intra-partition edge (sink leaf.port[bit] <- source leaf.port[bit], both inside the partition) must
+        have ONE kept depth per type.  The as-built die netlist was generated on an older floorplan, so the same edge can
+        carry different relay depths per instance (KV kv3_pc*: slg <-> kvpc_k o_grp/i_grp 1..8 stages).  Each such edge
+        is landed at the type's largest as-built depth (an instance never gets fewer stages than it was built with, so
+        no path gets shorter than its as-built timing); every changed bit is recorded in _inner_original, so
+        bus_groups.internal / bind_timing.changed_inner_groups hand the exact added cycles to the compiler (priced, not
+        hidden).  Only the listed types are touched; an edge whose sink or source is not present in every instance
+        is an error (no partial equalisation)."""
+        types = list(self.ab.get("inner_uniform") or [])
+        if not types:
+            return
+        unknown = [t for t in types if t not in self.types]
+        if unknown:
+            raise BindError(f"inner_uniform: unknown plan types {unknown}")
+        st = dict(types=len(types), edges=0, changed_bits=0, added_stage_bits=0, max_added=0)
+        for tn in types:
+            parts = sorted(p for p, ps in self.parts.items() if ps["type"] == tn)
+            groups = defaultdict(dict)        # (sink rel, port, bit, path in OR tree) -> {part: (src rel, port, bit, depth)}
+
+            def walk(p, ci, pn, i, d, path):
+                if not isinstance(d, tuple) or not d:
+                    return
+                if d[0] == "int":
+                    groups[(self.rel_of(ci), pn, i, path, self.rel_of(d[1]), d[2], d[3])][p] = d[4]
+                elif d[0] in ("or", "and"):
+                    for j, u in enumerate(d[1]):
+                        walk(p, ci, pn, i, u, path + (j,))
+            for p in parts:
+                for ci in self.members[p]:
+                    for pn, bits in self.F.cells[ci].ports.items():
+                        if self.G.dirs[ci].get(pn) != "input":
+                            continue
+                        for i in range(len(bits)):
+                            d = self.sinks.get((ci, pn, i))
+                            if d is not None:
+                                walk(p, ci, pn, i, d, ())
+            want = {}
+            for k, per in groups.items():
+                if len(per) != len(parts):
+                    continue          # an edge some instances do not have is a contents difference (check_types reports it)
+                top = max(per.values())
+                if all(v == top for v in per.values()):
+                    continue
+                st["edges"] += 1
+                for p, v in per.items():
+                    if v != top:
+                        want[(p,) + k] = top
+            if not want:
+                continue
+
+            def fix(p, ci, pn, i, d, path):
+                if not isinstance(d, tuple) or not d:
+                    return d
+                if d[0] == "int":
+                    top = want.get((p, self.rel_of(ci), pn, i, path, self.rel_of(d[1]), d[2], d[3]))
+                    if top is None or top == d[4]:
+                        return d
+                    st["changed_bits"] += 1
+                    st["added_stage_bits"] += top - d[4]
+                    st["max_added"] = max(st["max_added"], top - d[4])
+                    return ("int", d[1], d[2], d[3], top)
+                if d[0] in ("or", "and"):
+                    return (d[0], tuple(fix(p, ci, pn, i, u, path + (j,)) for j, u in enumerate(d[1])))
+                return d
+            for p in parts:
+                for ci in self.members[p]:
+                    for pn, bits in self.F.cells[ci].ports.items():
+                        if self.G.dirs[ci].get(pn) != "input":
+                            continue
+                        for i in range(len(bits)):
+                            d = self.sinks.get((ci, pn, i))
+                            if d is None:
+                                continue
+                            nd = fix(p, ci, pn, i, d, ())
+                            if nd != d:
+                                self.__dict__.setdefault("_inner_original", {}).setdefault((ci, pn, i), d)
+                                self.sinks[(ci, pn, i)] = nd
+            used = {p: set() for p in parts}     # kept-stage sets rebuilt from what the sinks now use
+
+            def use(p, d):
+                if d and d[0] == "int" and d[4]:
+                    used[p].add((d[1], d[2], d[4]))
+                elif d and d[0] in ("or", "and"):
+                    for u in d[1]:
+                        use(p, u)
+            for (cj, pn, i), d in self.sinks.items():
+                p = self.cpart.get(cj)
+                if p in used:
+                    use(p, d)
+            for p in parts:
+                self.intra_dly[p] = used[p]
+        self.inner_uniform_stats = st
+
     def align_r8(self):
         """asbuilt.land_align = "r8" (COORD 10-23 16:58 R8 SOURCE OF TRUTH): the landing pads are NOT computed here but
         read from PLAN-TOOL3's r8 landing table (tools/die_plan/r8.py; asbuilt.land_r8, default
@@ -1766,6 +1862,13 @@ class Binder:
                                        f"{m['source']} as-built {m['asbuilt']} bound {m['bound']}")
                 continue
             pad = m["pad"]
+            position_bank = PB.spec(self, ci, pn)
+            if position_bank:
+                declared_pad = position_bank["pad"]
+                if pad != declared_pad:
+                    self.errors.append(f"POSITION_BANK {path}.{pn}: table pad {pad} != declared position pad {declared_pad}")
+                st["position_bank_members"] = st.get("position_bank_members", 0) + 1
+                continue  # real kept stages live inside the uniform same-ABI slg wrapper
             if any(x.fullmatch(f"{path}.{pn}") for x in excl):
                 st["excluded_bits"] += 1
                 if pad and (not st["r8_excluded"] or st["r8_excluded"][-1]["id"] != m["id"]):
@@ -1919,7 +2022,7 @@ class Binder:
         out = {}
         for i in range(len(self.F.cells[ci].ports[port])):
             d = self.sinks[(ci, port, i)]
-            out[i] = (self.bitcyc[(d[1], d[6], d[2], d[3], d[4])] + (d[7] if len(d) > 7 else 0)) if d[0] == "x" else 0
+            out[i] = (self.bitcyc[(d[1], d[6], d[2], d[3], d[4])] + (d[7] if len(d) > 7 else 0) + PB.extra(self, ci, port)) if d[0] == "x" else 0
         return out
 
     def timing_depths(self, path, port):
@@ -1995,7 +2098,7 @@ class Binder:
                 continue
             L, j = self.bitpos[(d[1], d[6], d[2], d[3], d[4])]
             b0 = self.bitcyc[(d[1], d[6], d[2], d[3], d[4])]
-            pad = d[7] if len(d) > 7 else 0
+            pad = (d[7] if len(d) > 7 else 0) + PB.extra(self, ci, pn)
             land[(ci, d[1])][(pn, f"{F.cells[d[2]].path}.{d[3]}", d[5], b0, b0 + pad,
                               L.get("lane") or ("spine" if L.get("spine") else "UNPLANNED"))].append((i, d[4]))
             rep[(d[2], d[3], d[4], d[5])][d[6]].add(b0 + pad)
@@ -2005,7 +2108,8 @@ class Binder:
             for (pn, src, st, b0, b1, lane), bl in sorted(m.items()):
                 mem.append(dict(sink_port=pn, sink_bits=ranges(x for x, _ in bl), source=src,
                                 source_bits=ranges(y for _, y in bl), asbuilt_stages=st, bound_stages=b0,
-                                landed_stages=b1, lane=lane))
+                                landed_stages=b1, lane=lane,
+                                **({"position_bank": PB.spec(self, ci, pn)} if PB.spec(self, ci, pn) else {})))
             off = {x["landed_stages"] - x["asbuilt_stages"] for x in mem}
             off0 = {x["bound_stages"] - x["asbuilt_stages"] for x in mem}
             groups.append(dict(sink=F.cells[ci].path, sink_part=self.cpart[ci], src_part=sp,
@@ -2517,6 +2621,11 @@ class Binder:
             f.write_text(txt)
             import native_istations
             native_istations.materialize(self, tn, f)
+            import bound_groups
+            try:
+                files.extend(bound_groups.materialize(self, tn, f))
+            except (bound_groups.BoundGroupError, ValueError) as exc:
+                raise BindError(str(exc)) from exc
             files.append(f)
         if self._native_glue is not None:
             files.extend(self._native_glue.files)
@@ -2572,7 +2681,7 @@ class Binder:
             self.parent_id_ports, self.parent_id_values = {}, {}
         id_decls = {}
         if any(d.get("parent_id_straps") or d.get("straps") for d in t.get("contents", []) + t.get("hard_cores", [])):
-            from parent_id_straps import type_parent_id_straps, validate_parent_id_straps
+            from parent_id_straps import type_parent_id_straps, validate_parent_id_straps, validate_bound_id_bits
             try:
                 id_decls = type_parent_id_straps(t)
             except ValueError as e:
@@ -2600,11 +2709,11 @@ class Binder:
                     validate_parent_id_straps({"parent_id_straps": id_decls[r]}, actual_inputs)
                 except ValueError as e:
                     raise BindError(f"parent ID {tn}.{r}: {e}") from e
-                if set(bitsv) != set(range(w)) or any(vals[0] not in "01" for vals in bitsv.values()):
-                    raise BindError(f"parent ID {tn}.{r}.{pn}: every bit must be a declared known strap")
                 expected = id_decls[r][pn]["value"]
-                if int(''.join(reversed(v0)), 2) != expected:
-                    raise BindError(f"parent ID {tn}.{r}.{pn}: representative as-built value disagrees with {expected}")
+                try:
+                    validate_bound_id_bits(bitsv, w, expected)
+                except ValueError as e:
+                    raise BindError(f"parent ID {tn}.{r}.{pn}: {e}") from e
                 id_ports[nm] = dict(leaf=r, port=pn, width=w)
             else:
                 pdecl.append(f"    parameter [{w - 1}:0] {nm} = {w}'b{''.join(reversed(v0))}")
@@ -2677,6 +2786,18 @@ class Binder:
         if rtree is not None:
             for target in rtree.get("core_resets", []):
                 pin = target["pin"]
+                hc = next((h for h in t.get("hard_cores", []) if h["inst"] == target["inst"] and h.get("bound_group")), None)
+                if hc is not None:
+                    import bound_groups
+                    try:
+                        group = bound_groups.reset_members(F.cells, self.members[p], self.rel_of, target, hc, rtree, RT.leaf_tap(P, ptn))
+                    except bound_groups.BoundGroupError as exc:
+                        raise BindError(str(exc)) from exc
+                    for key in group:
+                        if key in core_reset:
+                            raise BindError("overlapping bound-group reset projection")
+                        core_reset[key] = f"rst_n_t{target['tap']}"
+                    continue
                 candidates = [ci for ci in self.members[p] if pin in F.cells[ci].ports and
                               target["inst"] in {self.rel_of(ci), short_id("u_" + self.rel_of(ci), 90), F.cells[ci].path}]
                 if not candidates:
@@ -2723,9 +2844,18 @@ class Binder:
                     # Plan-local matrix names commonly compact coordinate
                     # separators (u_t00 versus RTL u_t_0_0). Accept only a unique
                     # punctuation-only alias; never select a different replica.
-                    key = target["inst"].replace("_", "")
+                    modules = {c["module"] for c in t.get("hard_cores", []) if c["inst"] == target["inst"]}
+                    # SU plan names flatten dots to underscores (u_suvm_u_vm8q_u_va).
+                    # Keep all original tokens/digits, then retain the older matrix
+                    # punctuation alias only if that exact flattening did not match.
+                    key = target["inst"].replace(".", "_")
                     candidates = [ci for ci in self.members[p] if pin in F.cells[ci].ports and
-                                  self.rel_of(ci).replace("_", "") == key]
+                                  (not modules or F.cells[ci].module in modules) and
+                                  self.rel_of(ci).replace(".", "_") == key]
+                    if not candidates:
+                        key = target["inst"].replace("_", "")
+                        candidates = [ci for ci in self.members[p] if pin in F.cells[ci].ports and
+                                      self.rel_of(ci).replace("_", "") == key]
                 if not candidates:
                     modules = {c["module"] for c in t.get("hard_cores", []) if c["inst"] == target["inst"]}
                     candidates = [ci for ci in self.members[p] if pin in F.cells[ci].ports and F.cells[ci].module in modules]
@@ -3072,8 +3202,10 @@ class Binder:
                     if nm in self.__dict__.get("parent_id_ports", {}).get(tn, {}):
                         actual_bits = {kk[3]: val for kk, val in self.tvals[tn][p].items()
                                        if kk[0] == "strap" and kk[1] == r and kk[2] == port}
-                        if set(actual_bits) != set(range(width)) or any(val not in "01" for val in actual_bits.values()):
-                            raise BindError(f"parent ID {p}.{r}.{port}: unknown or missing as-built ID bits")
+                        parameter_bits = {kk[3] for kk in self.tparams[tn]
+                                          if kk[0] == "strap" and kk[1] == r and kk[2] == port}
+                        if not parameter_bits or set(actual_bits) != parameter_bits or any(val not in "01" for val in actual_bits.values()):
+                            raise BindError(f"parent ID {p}.{r}.{port}: unknown or missing as-built ID parameter bits")
                         expr = f"{width}'b{''.join(reversed(v))}"
                         parent_ids.append((nm, expr))
                         self.__dict__.setdefault("parent_id_values", {}).setdefault(p, {})[nm] = dict(width=width,
@@ -3466,7 +3598,12 @@ def cmd_bind(a):
             raise BindError(f"clock landing: {exc}") from exc
     B.build_buses()
     B.align_landings()
+    B.uniform_inner()
     B.regen_params()
+    try:
+        B.position_bank_layout = PB.layout(B)
+    except ValueError as exc:
+        B.errors.append(f"POSITION_BANK {exc}")
     B.check_types()
     if B.ab.get("land_pad_tree"):
         B.pad_trees()
@@ -3502,6 +3639,11 @@ def cmd_bind(a):
     rep["variants"] = dict(instances=len(B.variants), removed_input_bits=dict(getattr(B, "variant_removed", {})),
                            list=B.variants[:500])
     rep["type_splits"] = B.type_splits
+    rep["bound_groups"] = getattr(B, "bound_group_records", {})
+    if getattr(B, "inner_uniform_stats", None):
+        rep["inner_uniform"] = B.inner_uniform_stats
+    if getattr(B, "position_bank_layout", None):
+        rep["position_banks"] = B.position_bank_layout
     rep["type_canon_merged"] = getattr(B, "type_canon_merged", [])
     if B.param_regen:
         rep["param_regen"] = B.param_regen
@@ -3514,7 +3656,9 @@ def cmd_bind(a):
     names = {}
     for ci, p in B.cpart.items():
         if B.G.kind[ci] != "glue":
-            names[f"{sv_id(p)}.{short_id('u_' + B.rel_of(ci), 90)}"] = B.F.cells[ci].path
+            import bound_groups
+            scope = bound_groups.scope_for_member(B.types[B.parts[p]["type"]], B.rel_of(ci))
+            names[f"{sv_id(p)}.{scope}{short_id('u_' + B.rel_of(ci), 90)}"] = B.F.cells[ci].path
     (out / "bind_names.json").write_text(json.dumps(names, indent=0))
     sinks = {}
     for (ci, pn, i), d in B.sinks.items():
