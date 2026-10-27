@@ -1742,6 +1742,14 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         kids = [(i0, h, j0, j1), (h, i1, j0, j1)] if ax == 0 else [(i0, i1, j0, h), (i0, i1, h, j1)]
         loads = []
         for c, kr in enumerate(kids):
+            # A dropped mesh-driver subtree has no electrical loads.  Prune it before
+            # placing any interior node, just as rec() does for macro-hole branches.
+            # Leaf-grid indices address the driver lattice directly (not strap rows).
+            if lg.get("off_core_drop") and not any(
+                    f"{i_}_{j_}" in out["drivers"]
+                    for i_ in range(kr[0], kr[1]) for j_ in range(kr[2], kr[3])):
+                out.setdefault("pruned_branches", []).append(f"{path}{c}")
+                continue
             tag = f"{path}{c}"
             kp = node_xy(*kr)
             if (kr[1] - kr[0]) * (kr[3] - kr[2]) == 1:
