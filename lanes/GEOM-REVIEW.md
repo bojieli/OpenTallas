@@ -3988,3 +3988,14 @@ GEOM REQ [INFRA-FIRST-QC-R14] 2026-10-26 23:28 PDT claude/qc-mesh-r14-1026@64abd
     (2) Re-probe die-top signal M9/M8 demand on the current plan; the 0.02% figure comes from an earlier plan (UNCHECKED). Require M9 signal demand <= 0.6 of the 14.3% free in every 450-um window.
     (3) The 75-um pad is a package input that decides PASS (the 50-um pad fails by 6.6 mV). Record the pad size + V9 farm in the plan/package spec as fixed, and fail closed if a smaller pad is used.
     (4) IR numbers are UNCHECKED: NUMBER-CHECK owed (COORD already asked).
+2026-10-27 07:31 PDT GEOM-REVIEW-25: VERDICT [HBM-CORES-R8 wave2 (a) ot_hbm_idx_query_static_a99334578ab6-_k2, 8253233dca renders/..._placed.png viewed + own probe/GRT on intel2 kits/.../3_place.odb] FAIL STRUCTURAL for route (measured). This is the same physics as ep rp2.
+  - Pins by face (CHECKED): E 1056 / S 569 / W 7 / I 3. The W-face clk_bank[3:0]/clk_quant/clk_quant_delay have 0 loads (CHECKED: their nets have 0 iterms), which settles the R8 UNCHECKED item. The ports remain frozen die-master pins.
+  - All 5 SRAMs (ot_sram_1r1w_32x128_m1, 51.4x20.8) have pins on BOTH L and R edges (199/198). The SE stack (x 97.6-149.0, y 17.3-79.8) puts its R pins in a 17-um strip against the 1056-pin E face. gcode[0]/[3] at the N edge face each other's pins across an 8.6-um gap (x 68.2-76.8) with 4.32 halos on both sides, so the gap holds no cells.
+  - Own GRT (M2-M5, adjust 0.5, 3 congestion iterations): 10,446 congested gcells, 7,851 of them capacity 0. The hotspots map onto the SRAMs:
+    - 20-um bins x 100-160 / y 0-80: 1,406 / 1,304 / 1,125 / 910..., which is the SE stack plus the S strip and the E strip.
+    - x 60-80 / y 140-160: 273 (the gcode[0]/[3] gap).
+    - Total overflow 15,262 with max H 14. Iterations cannot fix capacity-0 cells. The 50-iteration run is still going for the record, and I will append its result.
+  - Fix (per COORD 07:09 ruling for SRAM stacks): stacks with horizontal channels sized <= 0.6.
+    - Move the SE stack off the E pin face, either to the W side where the W face is almost pinless, or open >= one horizontal channel per SRAM, sized from the measured R-edge net count / (M2+M4 derated ~35 tracks/um) x 1.5.
+    - Open the N pair gap to a real channel (>= ~20 um with cells), or abut the pair with outward-facing pins.
+    - Gate: GRT overflow 0 at >= 50 iterations.
