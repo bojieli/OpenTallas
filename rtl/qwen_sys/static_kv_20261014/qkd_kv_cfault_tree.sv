@@ -14,23 +14,41 @@
 // qkd_kv_cfault_tree: the same nodes composed for N leaves, radix R (bench vehicle and a one-instance option); leaf i is
 // controller i = 32*cfg_stack + pc (pc already in physical slot order), so node j of level 1 covers 4 abutted PCs = one
 // controller group, level 2 four adjacent groups, and so on.  Latency LEVELS*STAGES (128 / R 4: 4 levels).
-module qkd_kv_cfault_node #(parameter integer R = 4, parameter integer STAGES = 1, parameter integer MUT = 0)(
+// KV-KVSCTL-3 10-27: IN_LAND 1 = 0-cycle backward retime of the first (OR) register into R input landing flops (reset 0),
+// OR after the flops: fault(t) = |fault_in(t-1) exactly as IN_LAND 0, so a pin-fed node has every input registered at
+// the face.  Only valid where the node output feeds a flop (next node / relay), not a pin.  Default 0 = unchanged.
+module qkd_kv_cfault_node #(parameter integer R = 4, parameter integer STAGES = 1, parameter integer MUT = 0,
+                            parameter integer IN_LAND = 0)(
     input  wire         ck,
     input  wire         rst_n,
     input  wire [R-1:0] fault_in,
     output wire         fault
 );
     // MUT 1: leaf 0 dropped (the OR ignores input 0)
-    wire [R-1:0] m = (MUT == 1) ? {fault_in[R-1:1], 1'b0} : fault_in;
+    wire [R-1:0] fi;
+    genvar s;
+    if (IN_LAND != 0) begin : g_land
+        reg [R-1:0] fl;
+        always @(posedge ck or negedge rst_n)
+            if (!rst_n) fl <= {R{1'b0}};
+            else        fl <= fault_in;
+        assign fi = fl;
+    end else begin : g_noland
+        assign fi = fault_in;
+    end
+    wire [R-1:0] m = (MUT == 1) ? {fi[R-1:1], 1'b0} : fi;
     wire [STAGES:0] q;                                   // q[0] is the OR (combinational); q[1..STAGES] are flops
     assign q[0] = |m;
-    genvar s;
     for (s = 1; s <= STAGES; s = s + 1) begin : st
-        reg r;
-        always @(posedge ck or negedge rst_n)
-            if (!rst_n) r <= 1'b0;
-            else        r <= q[s-1];
-        assign q[s] = r;
+        if (IN_LAND != 0 && s == 1) begin : g_l1        // the first register moved to the inputs (g_land)
+            assign q[s] = q[s-1];
+        end else begin : g_r
+            reg r;
+            always @(posedge ck or negedge rst_n)
+                if (!rst_n) r <= 1'b0;
+                else        r <= q[s-1];
+            assign q[s] = r;
+        end
     end
     assign fault = q[STAGES];
 endmodule

@@ -1,0 +1,55 @@
+{
+ "schema": "kvsctl3.rebind.v1",
+ "old": "/srv/opentallas-scratch2/claude/kvsctl-r2/kit_rtl2/kv3_hub_C/kv3_hub_C_part_bound.sv",
+ "core_ports": 65,
+ "parent_conns_old": 61,
+ "parent_conns_new": 65,
+ "pieces": [
+  {
+   "port": "boot__boot_pr",
+   "from": "boot__boot_pr[74:0]",
+   "bits": 75
+  },
+  {
+   "port": "boot__boot_pr_142",
+   "from": "boot__boot_pr[142:142]",
+   "bits": 1
+  },
+  {
+   "port": "cht_6",
+   "from": "cht[36:6]",
+   "bits": 31
+  },
+  {
+   "port": "cht_43",
+   "from": "cht[58:43]",
+   "bits": 16
+  },
+  {
+   "port": "d2d__srx_10",
+   "from": "d2d__srx[521:10]",
+   "bits": 512
+  },
+  {
+   "port": "d2d__svc_23",
+   "from": "d2d__svc[24:23]",
+   "bits": 2
+  },
+  {
+   "port": "d2d__svc_74",
+   "from": "d2d__svc[89:74]",
+   "bits": 16
+  },
+  {
+   "port": "d2d__svc_92",
+   "from": "d2d__svc[109:92]",
+   "bits": 18
+  }
+ ],
+ "dropped_bits": 250,
+ "dropped_unconnected_ports": [
+  "kg"
+ ],
+ "errors": [],
+ "verdict": "PASS"
+}
