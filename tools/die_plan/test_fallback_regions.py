@@ -34,6 +34,27 @@ def test_classes_and_hard_merge():
     assert len({reg[n] for n in "abc"}) == 3 and reg["h"] == reg["d"]
 
 
+def test_input_only_hard_merge_does_not_drag_regions(monkeypatch):
+    P = _plan()
+    # d drives the hard input; c shares d's old region but does not drive h.
+    # A hard output landing belongs at its ordinary receiver a, not in h.
+    P["ports"].append(dict(id="ha", src=dict(part="h"), dst=dict(part="a"), width=8))
+    monkeypatch.setattr(FR, "HARD_MERGE", "inputs")
+    reg = FR.merge_hard(P, dict(a="a", b="b", c="cd", d="cd", h="h"))
+    assert reg["h"] == reg["d"] == "hard_h"
+    assert reg["c"] == "cd" and reg["a"] == "a"
+
+
+def test_input_only_hard_merge_shared_driver(monkeypatch):
+    P = _plan()
+    P["partitions"].append(dict(name="h2", type="hard", origin_um=[50, 0]))
+    P["ports"].append(dict(id="dh2", src=dict(part="d"), dst=dict(part="h2"), width=8))
+    monkeypatch.setattr(FR, "HARD_MERGE", "inputs")
+    reg = FR.merge_hard(P, {q["name"]:q["name"] for q in P["partitions"]})
+    assert reg["h"] == reg["d"] == reg["h2"]
+    assert reg["c"] != reg["h"]
+
+
 def test_cli_prices_face_and_fwd(tmp_path):
     P = _plan()
     lat = dict(lanes=dict(L1=dict(cycles=10, natural=10), L2=dict(cycles=4, natural=4)))
