@@ -119,3 +119,32 @@ def test_physical_hook_uses_local_reset_sites_without_extra_clock_pins(tmp_path)
     assert f'{{{len(before)} ' in hook
     assert len(S.tap_grid(p,tn))==len(before)
     assert 'rt_consumer_taps_um' in hook and 'round($y * $rt_dbu)' in hook
+
+def test_pipelined_local_consumers_kept_and_sparse_tree_count():
+    p=plan();raw=copy.deepcopy(p.raw);raw['reset']['release']='pipelined';raw['reset'].pop('start',None)
+    p=S.Plan(raw);tn=next(iter(p.types));t=RT.for_type(p,tn)
+    assert t['local_reset_taps'] and RT.consumer_count(t)==len(RT.consumer_taps(p,tn))
+    assert RT.verify(t)==[] and '(* keep = 1 *) wire rst_n_t' in '\n'.join(RT.rtl_lines(t))
+    assert RT.consumer_count({'n_clock_taps':0})==0
+
+def test_replan_native_initialized_leaf_keeps_one_reset_driver(tmp_path):
+    import kit_rsync
+    p=plan();tn=next(iter(p.types));raw=copy.deepcopy(p.raw)
+    raw['partition_types'][tn]['reset']['leaf_um']=raw['partition_types'][tn]['reset']['local_taps_um'][-1]
+    pn=tmp_path/'plan.json';pn.write_text(json.dumps(raw));p=S.Plan(raw,pn)
+    before=copy.deepcopy(raw)
+    for t in before['partition_types'].values():t['reset'].pop('local_taps_um',None);t['reset'].pop('leaf_um',None)
+    old=RT.for_type(S.Plan(before),tn)
+    new_leaf=RT.leaf_tap(p,tn);assert new_leaf!=0
+    kd=tmp_path/'kit';kd.mkdir();b=kd/'toy_bound.sv';c=kd/'bind_cells.sv'
+    b.write_text('module toy_bound (\ninput wire clk,\ninput wire arst_n,\ninput wire [3:0] x\n);\n'+
+                 '\n'.join(RT.rtl_lines(old))+'\nwire rst_n = rst_n_t0;\nendmodule\n')
+    c.write_text('module ot_dp_st #(parameter W=1) (input wire clk);\nendmodule\n')
+    (kd/'kit_rtl.json').write_text(json.dumps({'files':[str(b),str(c)],'bound_module':'toy_bound'}))
+    for _ in range(2):
+        assert kit_rsync.main([str(pn),tn,str(kd)])==0
+        text=b.read_text()
+        assert 'wire rst_n = ' not in text
+        assert len(re.findall(r'assign rst_n = rst_n_t\d+;',text))==1
+        assert f'assign rst_n = rst_n_t{new_leaf};' in text
+        assert text.count('wire rst_n;')==1

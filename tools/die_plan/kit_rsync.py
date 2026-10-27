@@ -180,6 +180,12 @@ def main(argv):
     leaf = reset_tree.leaf_tap(P, tn)
     out, ns, nfirm, nnear, nste, rr, conv, placed = [], None, 0, 0, 0, 0, None, False
     for ln in lines:
+        # A native bind declares the old leaf reset with an initializer. Re-plan
+        # replaces its driver; retaining the initializer shorts old/new relays.
+        old_leaf = re.match(r"^(\s*)wire\s+rst_n\s*=\s*rst_n_t\d+;\s*(?://.*)?$", ln)
+        if old_leaf:
+            out.append(old_leaf.group(1) + "wire rst_n;\n")
+            continue
         m = RSYNC.match(ln)
         t = TAPSYNC.match(ln) if m is None else None
         tr = TREE.match(ln) if m is None and t is None else None
