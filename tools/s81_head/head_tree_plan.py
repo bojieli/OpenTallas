@@ -122,13 +122,17 @@ def main():
     ap.add_argument("--fanouts", required=True)
     ap.add_argument("--entry", default=None)
     ap.add_argument("--seg", type=float, default=60.0)
-    ap.add_argument("--halo", type=float, default=2.16)
+    ap.add_argument("--halo", type=float, default=4.33, help="R5: site snap halo = kit MACRO_ROWS_HALO 4.32 (+0.01); R4 used the 2.16 wire halo, which left 2 leaf sites inside the row halo (head_plan_gate G3)")
     ap.add_argument("--trunk", type=int, default=0)
     ap.add_argument("--bend", type=int, default=0)
     ap.add_argument("--balance", type=int, default=0)
     ap.add_argument("--sector", type=int, default=0)
     ap.add_argument("--sector_phase", type=float, default=0.0)
     ap.add_argument("--l1_radius", type=float, default=0.0)
+    ap.add_argument("--l1_seeds", default=None, help="R5: 'x,y;x,y;...' one seed per L1 group (count-balanced assignment by route distance)")
+    ap.add_argument("--l1_equal", type=float, default=0.0, help="R5: every L1 leg = this route length from the entry (0 = max over groups)")
+    ap.add_argument("--eq_levels", default="", help="R5: comma list of tree levels (1 = root->L1 legs) whose sibling legs get ONE plan-placed detour repeater each so that leg + mean downstream path is equal for all siblings (equal-length branches by construction, 12.8d)")
+    ap.add_argument("--eq_mode", default="mean", choices=["mean", "leg"], help="mean: equalise leg + mean downstream path; leg: equalise the leg alone")
     ap.add_argument("--cell", default=BUF)
     ap.add_argument("--repcell", default=BUF)
     ap.add_argument("--leafcell", default=BUF)
@@ -191,6 +195,24 @@ def main():
             sub = part(kd["sinks"], 1, kd["name"] + "_")
             kd["kids"] = sub["kids"]
 
+    if a.l1_seeds:   # R5: count-balanced L1 groups about plan seeds (capacity n/k, greedy by Manhattan cost), equal-length L1 legs
+        seeds = [tuple(map(float, q.split(","))) for q in a.l1_seeds.split(";")]
+        k = len(seeds)
+        assert k == fos[0], "one seed per L1 child"
+        n = len(sinks)
+        cap = [n // k + (1 if i < n % k else 0) for i in range(k)]
+        cost = sorted(((abs(s["x"] - q[0]) + abs(s["y"] - q[1]), j, i) for j, s in enumerate(sinks) for i, q in enumerate(seeds)))
+        grp, G = {}, [[] for _ in range(k)]
+        for c, j, i in cost:
+            if j in grp or len(G[i]) >= cap[i]:
+                continue
+            grp[j] = i
+            G[i].append(sinks[j])
+        T["kids"] = []
+        for i in range(k):
+            sub = part(G[i], 1, f"N{i}_")
+            T["kids"].append(dict(name=f"N{i}", sinks=G[i], kids=sub["kids"]))
+
     def site(nd):
         """bottom-up: leaf at its sink centroid; with --balance a parent at the L1 additive-weight 1-centre of its
         children (minimises the max of leg + downstream path length = DME-style tapping point), else at the centroid."""
@@ -222,10 +244,96 @@ def main():
             kd["xy"] = snap_out((entry[0] + dx * R / d, entry[1] + dy * R / d), macs, a.halo)
         print("L1", [(kd["name"], [round(c, 1) for c in kd["xy"]], len(kd["sinks"]), round(abs(kd["xy"][0] - entry[0]) + abs(kd["xy"][1] - entry[1]), 1)) for kd in T["kids"]])
 
-    def build(nd, par, pxy):
+    l1_meta = []
+    if a.l1_seeds:   # place every L1 node at route length R along the macro-avoiding route entry -> group centroid
+        def walk(pts, R):
+            acc = 0.0
+            for i in range(len(pts) - 1):
+                p, q = pts[i], pts[i + 1]
+                L = abs(p[0] - q[0]) + abs(p[1] - q[1])
+                if acc + L >= R - 1e-9:
+                    t = (R - acc) / L if L else 0
+                    return (p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t), pts[:i + 1]
+                acc += L
+            return None, pts
+        routes = [l_route(entry, centroid(kd["sinks"]), macs) for kd in T["kids"]]
+        lens = [sum(abs(r[i][0] - r[i + 1][0]) + abs(r[i][1] - r[i + 1][1]) for i in range(len(r) - 1)) for r in routes]
+        R = a.l1_equal or min(lens)
+        for kd, r, Lr in zip(T["kids"], routes, lens):
+            if Lr < R - 1e-6:
+                raise SystemExit(f"L1_SHORT {kd['name']} route {Lr:.1f} < R {R:.1f}: equal legs need a longer group route (no snaking)")
+            xy, _ = walk(r, R)
+            kd["xy"] = xy
+            l1_meta.append(dict(name=kd["name"], n=len(kd["sinks"]), centroid=[round(c, 2) for c in centroid(kd["sinks"])],
+                                route_to_centroid=round(Lr, 1), site=[round(c, 2) for c in xy], leg=round(R, 2)))
+        print("L1EQ", json.dumps(l1_meta))
+
+    eqL = sorted({int(x) for x in a.eq_levels.split(",") if x}, reverse=True)
+    eq_meta = []
+
+    def mpath(nd):
+        """mean root(nd)->leaf wire path below nd (Manhattan legs incl. planned detours)."""
+        if not nd["kids"]:
+            return 0.0
+        return sum(nd["legL"][i] + mpath(k) for i, k in enumerate(nd["kids"])) / len(nd["kids"])
+
+    def init_legs(nd):
+        nd["legL"] = [abs(nd["xy"][0] - k["xy"][0]) + abs(nd["xy"][1] - k["xy"][1]) for k in nd["kids"]]
+        nd["det"] = [None] * len(nd["kids"])
         for k in nd["kids"]:
+            init_legs(k)
+    T["xy"] = rxy
+    init_legs(T)
+
+    def at_level(nd, lv, want):
+        if lv == want:
+            return [nd]
+        return [m for k in nd["kids"] for m in at_level(k, lv + 1, want)]
+
+    def detour_pt(p, c, D):
+        """q with |p-q|+|q-c| = D (>= Manhattan): offset perpendicular to the leg's longer axis, side that stays in the core / off macros."""
+        M = abs(p[0] - c[0]) + abs(p[1] - c[1])
+        e = max(0.0, (D - M) / 2.0)
+        mid = ((p[0] + c[0]) / 2, (p[1] + c[1]) / 2)
+        horiz = abs(p[0] - c[0]) >= abs(p[1] - c[1])
+        lo_y, hi_y = max(p[1], c[1]), min(p[1], c[1])
+        lo_x, hi_x = max(p[0], c[0]), min(p[0], c[0])
+        cands = ([(mid[0], max(p[1], c[1]) + e), (mid[0], min(p[1], c[1]) - e)] if horiz else
+                 [(max(p[0], c[0]) + e, mid[1]), (min(p[0], c[0]) - e, mid[1])])
+        x0, y0, x1, y1 = die[0] + 4.32, die[1] + 4.32, die[2] - 4.32, die[3] - 4.32
+        ok = [q for q in cands if x0 < q[0] < x1 and y0 < q[1] < y1 and not inside(q, macs, a.halo)]
+        if not ok:
+            raise SystemExit(f"NO_DETOUR_SITE {p}->{c} D {D:.1f}")
+        # prefer the side toward the core centre
+        cc = ((die[0] + die[2]) / 2, (die[1] + die[3]) / 2)
+        return min(ok, key=lambda q: abs(q[0] - cc[0]) + abs(q[1] - cc[1]))
+    for lv in eqL:     # deepest first, so higher levels see the equalised subtree paths
+        for nd in at_level(T, 1, lv):
+            if not nd["kids"]:
+                continue
+            tot = [nd["legL"][i] + (mpath(k) if a.eq_mode == "mean" else 0.0) for i, k in enumerate(nd["kids"])]
+            D = max(tot)
+            for i, k in enumerate(nd["kids"]):
+                Di = D - (tot[i] - nd["legL"][i])
+                q = detour_pt(nd["xy"], k["xy"], Di)
+                nd["det"][i] = q
+                nd["legL"][i] = abs(nd["xy"][0] - q[0]) + abs(nd["xy"][1] - q[1]) + abs(q[0] - k["xy"][0]) + abs(q[1] - k["xy"][1])
+            eq_meta.append(dict(level=lv, node=nd.get("name") or "root", leg_plus_path=round(D, 1),
+                                legs=[round(x, 1) for x in nd["legL"]]))
+    if eqL:
+        print("EQ", json.dumps(eq_meta[-4:]))
+
+    def build(nd, par, pxy):
+        for i, k in enumerate(nd["kids"]):
             cn, cxy = k["name"], k["xy"]
-            drv, dxy = leg(par, pxy, cxy, cn, a.repcell)
+            if nd.get("det") and nd["det"][i] is not None:     # planned detour repeater (equal-length branch)
+                q = nd["det"][i]
+                qd, qxy = leg(par, pxy, q, cn + "_q", a.repcell)
+                tree.append((cn + "_q", qd, q, a.repcell))
+                seg[cn + "_q"] = abs(q[0] - qxy[0]) + abs(q[1] - qxy[1])
+                drv, dxy = leg(cn + "_q", q, cxy, cn, a.repcell)
+            else:
+                drv, dxy = leg(par, pxy, cxy, cn, a.repcell)
             seg[cn] = abs(cxy[0] - dxy[0]) + abs(cxy[1] - dxy[1])
             if not k["kids"]:
                 leaves.append((cn, drv, cxy, k["sinks"], a.leafcell))
@@ -271,7 +379,7 @@ def main():
     sz = [len(L[3]) for L in leaves]
     summ = dict(argv=sys.argv, geo_sha256=hashlib.sha256(open(a.geo, "rb").read()).hexdigest(), entry=entry,
                 n_sinks=len(sinks), n_leaves=len(leaves), leaf_sinks=[min(sz), max(sz)], n_tree=len(tree),
-                n_rep=sum(1 for t in tree if "_r" in t[0]), macros=mac)
+                n_rep=sum(1 for t in tree if "_r" in t[0]), macros=mac, l1=l1_meta, eq=eq_meta)
     json.dump(summ, open(a.out + ".plan.json", "w"), indent=1)
     print("PLAN", json.dumps({k: summ[k] for k in ("n_sinks", "n_leaves", "leaf_sinks", "n_tree", "n_rep")}))
 
