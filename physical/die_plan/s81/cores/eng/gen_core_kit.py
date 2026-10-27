@@ -244,6 +244,8 @@ def main():
     # (face_flops.tcl: after io placement, before GPL); refused without a slice once required unless --trial
     ms = MS.kit_apply(kd, c["module"], [w, h], a.master_slice, None, a.trial, kind="core",
                       gpl_hook=kd / "face_flops.tcl")
+    # CTS-HOOK-PORT-1: plan-built core tree -> shared PRE/POST_CTS hook (no plan tree: kit unchanged)
+    MS.plan_tree_cts(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     rec_sha = hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest()
     fz = dict(schema="opentallas.s81.core_freeze.v1", type=f"{c['module']}__{w:g}x{h:g}", module=c["module"],
