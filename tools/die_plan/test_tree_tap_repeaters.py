@@ -28,3 +28,20 @@ def test_illegal_siting_cannot_silently_exceed_reach():
             return (1000.,1000.)
     with pytest.raises(ValueError, match="no legal tap-repeater sequence"):
         D.tree_netlist(_nodes(), [], site=BadSite(), tap_rep_um=405.)
+
+
+def test_resited_long_leg_gets_legal_channel_anchors():
+    class BoxSite:
+        b=1000
+        forb=[(0.,0.,648.,300.,"macro")]
+        idx={(-1,-1):[0],(-1,0):[0],(0,-1):[0],(0,0):[0]}
+        def legal(self,p):return not(0<p[0]<648 and 0<p[1]<300)
+        def nearest(self,p,axis=None):
+            if self.legal(p):return p
+            return min([(-.6,p[1]),(648.6,p[1]),(p[0],-.6),(p[0],300.6)],
+                       key=lambda q:abs(q[0]-p[0])+abs(q[1]-p[1]))
+    a=(-20.,150.);b=(668.,150.);site=BoxSite()
+    chain=D.legal_repeater_chain(a,b,site,405.)
+    assert chain and all(site.legal(p) for p in chain)
+    points=[a]+chain+[b]
+    assert max(abs(p[0]-q[0])+abs(p[1]-q[1]) for p,q in zip(points,points[1:]))<=405.

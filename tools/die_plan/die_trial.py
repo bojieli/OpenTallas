@@ -483,6 +483,54 @@ def build_htree(P, taps, leaf_um=600.0, full_depth=False, regions=None):
     return nodes
 
 
+def legal_repeater_chain(a, b, site, reach):
+    """Shortest Manhattan-wire chain of legal repeater anchors, every hop <= reach.
+
+    Siting a nominal repeater off a macro changes its two wire lengths. Recompute
+    those actual legs before emitting the tree; this is reach repair, not clock
+    delay balancing. Wires may cross a macro on the top metals, cells may not.
+    """
+    import heapq
+    dist=lambda p,q:abs(p[0]-q[0])+abs(p[1]-q[1])
+    if dist(a,b)<=reach+1e-6:return []
+    pts={tuple(a),tuple(b)}
+    n=math.ceil(dist(a,b)/(reach/2))
+    for i in range(1,n):
+        q=(a[0]+(b[0]-a[0])*i/n,a[1]+(b[1]-a[1])*i/n)
+        for axis in (None,"x","y"):
+            pts.add(tuple(site.nearest(q,axis)))
+    lo=(min(a[0],b[0])-reach,min(a[1],b[1])-reach)
+    hi=(max(a[0],b[0])+reach,max(a[1],b[1])+reach)
+    ids=set()
+    for ix in range(int(lo[0]//site.b),int(hi[0]//site.b)+1):
+        for iy in range(int(lo[1]//site.b),int(hi[1]//site.b)+1):
+            ids.update(site.idx.get((ix,iy),[]))
+    for k in ids:
+        x0,y0,x1,y1,*_=site.forb[k]
+        x0-=.6;y0-=.6;x1+=.6;y1+=.6
+        for p,q in [((x0,y0),(x1,y0)),((x0,y1),(x1,y1)),((x0,y0),(x0,y1)),((x1,y0),(x1,y1))]:
+            m=max(1,math.ceil(dist(p,q)/(reach/2)))
+            for i in range(m+1):
+                v=(round(p[0]+(q[0]-p[0])*i/m,3),round(p[1]+(q[1]-p[1])*i/m,3))
+                if lo[0]<=v[0]<=hi[0] and lo[1]<=v[1]<=hi[1] and site.legal(v):pts.add(v)
+    pts=sorted(pts);src=pts.index(tuple(a));dst=pts.index(tuple(b))
+    best={src:(0.,0)};prev={};heap=[(0.,0,src)]
+    while heap:
+        length,count,i=heapq.heappop(heap)
+        if best[i]!=(length,count):continue
+        if i==dst:
+            path=[]
+            while i!=src:path.append(pts[i]);i=prev[i]
+            return list(reversed(path))[0:-1]
+        for j,p in enumerate(pts):
+            hop=dist(pts[i],p)
+            if not 1e-6<hop<=reach+1e-6:continue
+            score=(length+hop,count+1)
+            if score<best.get(j,(math.inf,math.inf)):
+                best[j]=score;prev[j]=i;heapq.heappush(heap,(*score,j))
+    raise ValueError(f"no legal repeater corridor from {a} to {b} at {reach}um reach")
+
+
 def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_rep_um=None):
     """buffered tree: a BUF at every node (branch / leaf driver), repeaters every rep_um along each leg.
     -> (verilog, placements [(inst, x, y)], tap ports [(port, x, y)], node_buf {node id: inst}, path {tap port: [inst]})"""
@@ -504,6 +552,7 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_rep_um=None):
             nrep = max(0, int(math.ceil(L / rep_um)) - 1)
             src = f"{net(nd['parent'])}"
             prev_inst = node_buf[nd["parent"]]
+            anchors=[]
             for j in range(nrep):
                 f = (j + 1) / (nrep + 1)
                 x = p["x"] + (nd["x"] - p["x"]) * f
@@ -511,6 +560,12 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_rep_um=None):
                 inst = f"r{i}_{j}"
                 if site is not None:
                     x, y = site.nearest((x, y), "x" if abs(nd["x"] - p["x"]) >= abs(nd["y"] - p["y"]) else "y")
+                anchors.append((x,y))
+            if tap_rep_um is not None and site is not None:
+                points=[(p["x"],p["y"])]+anchors+[(nd["x"],nd["y"])]
+                if any(abs(a[0]-b[0])+abs(a[1]-b[1])>tap_rep_um+1e-6 for a,b in zip(points,points[1:])):
+                    anchors=legal_repeater_chain(points[0],points[-1],site,tap_rep_um)
+            for j,(x,y) in enumerate(anchors):
                 o = f"rn{i}_{j}"
                 cells.append(f"  {BUF} {inst} (.A({src}), .Y({o}));")
                 wires.append(o)
