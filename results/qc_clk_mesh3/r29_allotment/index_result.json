@@ -1,0 +1,34 @@
+{
+ "verdict": "PASS",
+ "old_source": "99eaa6d63",
+ "new_source": "975d1b2ee",
+ "input": "actualR28c_dry11plan/clock_spec",
+ "pg_rectangles": 13749,
+ "fixed_pg_mesh": {
+  "shapes": 23646,
+  "queries": 1800,
+  "hit_set_mismatches": 0,
+  "first_legality_mismatches": 0,
+  "old_seconds": 0.009437104978132993,
+  "new_seconds": 0.02097853599116206,
+  "speedup": 0.449845736714359,
+  "index_build_seconds": {
+   "old": 0.02938742598053068,
+   "new": 2.0696955890161917
+  }
+ },
+ "declared_edge_interval_pressure": {
+  "shapes": 123894,
+  "queries": 1800,
+  "hit_set_mismatches": 0,
+  "first_legality_mismatches": 0,
+  "old_seconds": 0.9998196240048856,
+  "new_seconds": 0.04870970995398238,
+  "speedup": 20.526084531183763,
+  "index_build_seconds": {
+   "old": 0.19421659602085128,
+   "new": 2.402272773964796
+  }
+ },
+ "pressure_scope": "Declared physical edge intervals at actualsite+TREE_OFF; NOT routed reservations or dry-build success. Same pairwise geometry predicates in both indexes."
+}
