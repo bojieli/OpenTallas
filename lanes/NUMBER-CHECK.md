@@ -138,3 +138,5 @@ VERDICT: claims 1-6 CONFIRMED; the 70-um lower bound PASSES with the lane's (phy
 
 ## CODEX notes 2026-10-27 08:13 PDT
 Latest HEADPG-2 collection is terminal: 150-um bump/75-um pad 29.9 mV incl 5.13 below-M7 CONFIRMED; 70-um lower bound 31.1 mV PASS physical contact, margin 3.9; centre-only conservative bound 35.45. Shared with HEAD lead; no duplicate solves. QC R25 assumptions remain explicit and next routed R26 evidence belongs QC lead.
+
+2026-10-27 09:33 PDT CODEX NUMBER-CHECK [RCX-MIXED 166adab391] CONFIRMED: own parser independently read5native SPEFs,20/20 exact matching-width mixed-vs-single tuples (D_NET C, summedground/couplingC, summedR);20/20 reported100um-normalized values reproduced. Rules SHA256732a3b391032a54d556c6b80e7d31d161c6d4284b4aa8a023f9e430f0bf1928a matches actualbytes. Units PF/OHM readfromheaders. Widths0.16/0.32/0.64/1.28 and0.04baseline, M8/M9 shielded/unshielded. No die timing/closure inference. Own script+receipt /srv/opentallas-scratch/claude/codex-numbercheck-rcx-1027/{check.py,independent_check.json}.
