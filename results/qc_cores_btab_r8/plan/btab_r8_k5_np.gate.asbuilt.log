@@ -1,0 +1,7 @@
+LEG_KO 4.32 um rects [[224.42, 194.4, 243.86, 244.1], [224.42, 138.24, 243.86, 187.94], [224.42, 82.08, 243.86, 131.78], [224.42, 25.92, 243.86, 75.62]] cells 12032
+5 [1032, 357, 631, 1117, 305] [5, 2, 3, 6, 2] {'T1': 199.8, 'T2': 77.76, 'T3': 30.24} {'mean': 245.4, 'min': 232.83, 'max': 253.12, 'window': 20.29} {'mean': 195.26, 'min': 184.34, 'max': 203.65, 'window': 19.31}
+BEST 5 {'TT': {'mean': 245.4, 'min': 232.83, 'max': 253.12, 'window': 20.29}, 'FF': {'mean': 195.26, 'min': 184.34, 'max': 203.65, 'window': 19.31}}
+uf {'mean': 245.4, 'min': 232.83, 'max': 253.12, 'window': 20.29} {'mean': 195.26, 'min': 184.34, 'max': 203.65, 'window': 19.31}
+ASBUILT {'TT': {'mean_raw': 196.93, 'mean': 198.83, 'min': 173.61, 'max': 226.35, 'window': 52.74}, 'FF': {'mean_raw': 154.7, 'mean': 149.6, 'min': 132.22, 'max': 182.37, 'window': 50.15}}
+EARLY/LATE {'TT': {'early': {'mean_raw': 192.46, 'mean': 194.36, 'min': 168.95, 'max': 222.66, 'window': 53.71}, 'late': {'mean_raw': 197.24, 'mean': 199.14, 'min': 174.69, 'max': 224.35, 'window': 49.66}}, 'FF': {'early': {'mean_raw': 152.22, 'mean': 147.12, 'min': 129.76, 'max': 180.11, 'window': 50.36}, 'late': {'mean_raw': 155.18, 'mean': 150.08, 'min': 132.78, 'max': 181.99, 'window': 49.21}}}
+spec btab_r8_k5_np.gate.asbuilt.tcl 28 nodes 64 leaves 4 macros

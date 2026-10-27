@@ -1,0 +1,17 @@
+LEG_KO 4.32 um rects [[224.42, 194.4, 243.86, 244.1], [224.42, 138.24, 243.86, 187.94], [224.42, 82.08, 243.86, 131.78], [224.42, 25.92, 243.86, 75.62]] cells 12032
+5 [1032, 357, 631, 1117, 305] [5, 2, 3, 6, 2] {'T1': 199.8, 'T2': 77.76, 'T3': 30.24} {'mean': 245.4, 'min': 232.83, 'max': 253.12, 'window': 20.29} {'mean': 195.26, 'min': 184.34, 'max': 203.65, 'window': 19.31}
+BEST 5 {'TT': {'mean': 245.4, 'min': 232.83, 'max': 253.12, 'window': 20.29}, 'FF': {'mean': 195.26, 'min': 184.34, 'max': 203.65, 'window': 19.31}}
+CHAIN L1 K 2 unpinned []
+CHAIN L2 K 1 unpinned []
+CHAIN L3 K 1 unpinned []
+PASS 0 J 63.035 changed 21
+PASS 1 J 62.12 changed 2
+PASS 2 J 61.8 changed 2
+  PHYS TT rise 197.78 w40.19 | FF early 149.56 w34.85 | TT late 208.33 w42.17 | FAIL | textbook dTT -0.83 dwTT +11.47 dFF +7.26
+btab_r8_k5_np VERDICT FAIL {'G1_macro_orient': 'PASS', 'G2_island_rows': 'PASS', 'G3_cell_rows': 'PASS', 'G4_detour_sites': 'PASS', 'G5_sram_structure': 'PASS', 'P_phys': 'FAIL'}
+ pred {'TT': {'mean': 247.3, 'window': 20.29}, 'FF': {'mean': 190.16, 'window': 19.31}} trunk None None 0 None
+ asbuilt {'verdict': 'FAIL', 'TT': {'mean_raw': 196.93, 'mean': 198.83, 'min': 173.61, 'max': 226.35, 'window': 52.74}, 'FF': {'mean_raw': 154.7, 'mean': 149.6, 'min': 132.22, 'max': 182.37, 'window': 50.15}, 'FF_early': {'mean_raw': 152.22, 'mean': 147.12, 'min': 129.76, 'max': 180.11, 'window': 50.36}, 'FF_late': {'mean_raw': 155.18, 'mean': 150.08, 'min': 132.78, 'max': 181.99, 'window': 49.21}, 'TT_early': {'mean_raw': 192.46, 'mean': 194.36, 'min': 168.95, 'max': 222.66, 'window': 53.71}, 'TT_late': {'mean_raw': 197.24, 'mean': 199.14, 'min': 174.69, 'max': 224.35, 'window': 49.66}, 'band': 'TT mean 250 +- 20 (rise/fall-average model), TT window <= 20, FF EARLY window <= 20', 'role': 'INFO only under --phys (r3 predictor, -15 TT bias on 3 builds); not in the verdict'}
+ G5 PASS nodes_in_pin_column 0 legs_across 0
+  G2_island_rows PASS {'max_disp_um': 0.0} fail 0
+  G3_cell_rows PASS {'n_sites': 82} fail 0
+  G4_detour_sites PASS {'n_edges': 87, 'repeaters_per_edge': {'L1': 1, 'L2': 0, 'L3': 0}, 'n_straight': 84, 'n_length_not_fixed': 0, 'n_repeaters': 5, 'n_detours': 0, 'max_shift_um': 0.0} fail 0
