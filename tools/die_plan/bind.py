@@ -3770,7 +3770,28 @@ PKG_DEF = re.compile(r"^\s*package\s+([A-Za-z_]\w*)\s*;", re.M)
 PKG_USE = re.compile(r"\b([A-Za-z_]\w*)::")
 
 
-def kit_closure(names, idx, prefer, picks=None):
+MACRO_VIEW_DIRS = ("physical/asap7_memory_macros_v2", "physical/asap7_memory_macros")  # bind_smoke.MACRO_DIRS order
+
+
+def macro_views(base):
+    """QC-CORES-4 10-27 (coll_n LEC UNPROVEN, INFRA-FIRST-QC item 8): {module: view dir} of every hardened memory macro
+    (<root>/<m>/<m>.lef) under the macro view roots, first root wins.  The kit closure indexes RTL roots only, so a macro
+    module also defined by a same-named KIT-LEVEL successor wrapper under rtl/ (rtl/lib/sram_p192_1019/*__p192*.sv:
+    module ot_sram_1r1w_64x512_m1_r2c2 -> ot_sram_1r1w_64x512_m1_r2c2_p192_mir) was descended as RTL: the wrapper went
+    in kit_rtl.f, its _p192_mir child had no index entry and was silently dropped (E.instantiated filters by the
+    index) -> no bb/view in the kit, synth bound the base liberty cell, LEC elaboration failed."""
+    out = {}
+    for r in MACRO_VIEW_DIRS:
+        rp = Path(base) / r
+        if not rp.is_dir():
+            continue
+        for lef in sorted(rp.glob("*/*.lef")):
+            if lef.stem == lef.parent.name and lef.stem not in out:
+                out[lef.stem] = lef.parent
+    return out
+
+
+def kit_closure(names, idx, prefer, picks=None, views=None):
     """E.closure for a G3 kit (KV-P6 18:51 hub_Wi): (1) a module with a hardened view (macro dir <m>/<m>.lef) is a
     HARD MACRO: its black box (<m>_bb.v, else the model) goes in the list, its lef/libs in the manifest, no descent;
     (2) a *_sim.sv definition is never picked while a non-sim candidate exists.  -> files, missing, macros
@@ -3780,6 +3801,12 @@ def kit_closure(names, idx, prefer, picks=None):
     (optional dict) receives {module: file} for every needed module (kit_strip_dups keeps those definitions)."""
     seen, files, missing, macros = set(), [], set(), {}
     picks = {} if picks is None else picks
+    # QC-CORES-4 10-27: a module with a hardened view under MACRO_VIEW_DIRS (`views`, macro_views(base)) is a HARD MACRO
+    # even when a same-named successor wrapper exists under rtl/: a kit binds a successor only explicitly (its plan type
+    # places that successor master), never by the closure's file pick.  Instantiations are looked up in idx + views, so
+    # a macro reached only through a wrapper is a hard macro too (bb + view), never silently dropped.
+    views = views or {}
+    known = set(idx) | set(views)
     todo = list(names)
     while todo:
         n = todo.pop()
@@ -3788,8 +3815,8 @@ def kit_closure(names, idx, prefer, picks=None):
         seen.add(n)
         cands = idx.get(n, [])
         hard = [f for f in cands if Path(f).parent.name == n and (Path(f).parent / f"{n}.lef").is_file()]
-        if hard:
-            d = Path(hard[0]).parent
+        if hard or n in views:
+            d = Path(hard[0]).parent if hard else Path(views[n])
             bb, mdl = d / f"{n}_bb.v", d / f"{n}.v"
             macros[n] = dict(dir=str(d.resolve()), lef=str((d / f"{n}.lef").resolve()),
                              libs=[str(x.resolve()) for x in sorted(d.glob(f"{n}*.lib"))],
@@ -3809,7 +3836,7 @@ def kit_closure(names, idx, prefer, picks=None):
         picks[n] = f
         if f not in files:
             files.append(f)
-        todo += sorted(E.instantiated(E.module_body(f, n), idx))
+        todo += sorted(E.instantiated(E.module_body(f, n), known))
     return files, sorted(missing), macros
 
 
@@ -4210,7 +4237,7 @@ def cmd_kit_rtl(a):
                    set(re.findall(r"^module\s+(\w+)", btxt, re.M)) -
                    {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"})
     picks = {}
-    cl, cl_missing, macros = kit_closure(leafm, idx, prefer, picks)
+    cl, cl_missing, macros = kit_closure(leafm, idx, prefer, picks, views=macro_views(base))
     if cl_missing:
         raise BindError(f"kit-rtl {tn}: leaf modules without a source {sorted(cl_missing)[:10]}")
     files = [Path(f).resolve() for f in cl]
