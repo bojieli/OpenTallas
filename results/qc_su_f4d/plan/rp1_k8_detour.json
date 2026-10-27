@@ -1,0 +1,41 @@
+{
+ "plan": "plan/rp1_k8.json",
+ "edges": 88,
+ "total_len_um": 2247.5,
+ "total_manhattan_um": 2247.5,
+ "detour_um": 0.0,
+ "detour_pct": 0.0,
+ "levels": {
+  "L1": {
+   "edges": 8,
+   "len_um": 1257.1,
+   "manhattan_um": 1257.1,
+   "over10": 0
+  },
+  "L2": {
+   "edges": 16,
+   "len_um": 370.4,
+   "manhattan_um": 370.4,
+   "over10": 0
+  },
+  "L3": {
+   "edges": 64,
+   "len_um": 619.9,
+   "manhattan_um": 619.9,
+   "over10": 0
+  }
+ },
+ "edges_over_10pct": 0,
+ "edges_over_10pct_not_shortest": 0,
+ "over": [],
+ "pinwin_path_cells": {
+  "L1": 0,
+  "L2": 71,
+  "L3": 418
+ },
+ "edges_with_pinwin_cells": {
+  "L1": 0,
+  "L2": 5,
+  "L3": 28
+ }
+}

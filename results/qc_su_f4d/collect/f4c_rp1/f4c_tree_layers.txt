@@ -1,0 +1,192 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+ot_ms_Q1_r0_n          fanout   1 len    58.2 M2:0.9 M3:0.5 M4:21.9 M5:34.9 vias 24
+ot_ms_Q0B0_r0_n        fanout   1 len    27.6 M2:1.0 M3:0.7 M4:23.8 M5:2.1 vias 30
+ot_ms_Q7_n             fanout   2 len    38.7 M2:1.1 M3:0.7 M4:16.8 M5:20.2 vias 23
+ot_ms_Q7_r1_n          fanout   1 len    67.6 M2:2.4 M3:1.1 M4:47.7 M5:16.3 vias 44
+ot_ms_Q7_r0_n          fanout   1 len    47.9 M3:0.1 M4:47.8 vias 6
+ot_ms_Q6_n             fanout   2 len    30.8 M3:0.7 M4:8.8 M5:21.4 vias 17
+ot_ms_Q6_r1_n          fanout   1 len    68.1 M3:0.1 M4:51.3 M5:16.6 vias 8
+ot_ms_Q6_r0_n          fanout   1 len    48.9 M3:0.2 M4:48.7 vias 6
+ot_ms_Q5_n             fanout   2 len    50.5 M2:0.6 M3:0.8 M4:42.8 M5:6.3 vias 25
+ot_ms_Q5_r1_n          fanout   1 len    69.1 M2:3.1 M3:0.8 M4:62.6 M5:2.6 vias 52
+ot_ms_Q5_r0_n          fanout   1 len    67.6 M3:0.1 M4:51.3 M5:16.1 vias 8
+ot_ms_Q4_n             fanout   2 len    42.5 M2:0.3 M3:1.1 M4:26.8 M5:14.3 vias 27
+ot_ms_Q4_r1_n          fanout   1 len    66.0 M2:2.1 M3:1.1 M4:58.6 M5:4.2 vias 44
+ot_ms_Q4_r0_n          fanout   1 len    71.7 M3:3.8 M4:48.7 M5:19.3 vias 10
+ot_ms_Q3_n             fanout   2 len    47.8 M2:0.3 M3:0.9 M4:43.1 M5:3.5 vias 25
+ot_ms_Q3_r1_n          fanout   1 len    76.2 M2:4.6 M3:1.4 M4:70.2 vias 72
+ot_ms_Q3_r0_n          fanout   1 len    60.9 M3:0.2 M4:37.3 M5:23.3 vias 8
+ot_ms_Q2_n             fanout   2 len    51.0 M2:1.5 M3:0.9 M4:37.7 M5:10.8 vias 40
+ot_ms_Q2_r1_n          fanout   1 len    68.2 M3:0.5 M4:65.2 M5:2.5 vias 8
+ot_ms_Q2_r0_n          fanout   1 len    67.6 M3:0.5 M4:47.0 M5:20.1 vias 12
+ot_ms_Q1_n             fanout   2 len    53.8 M2:1.0 M3:2.3 M4:38.2 M5:12.2 vias 34
+ot_ms_Q1_r1_n          fanout   1 len    78.6 M3:0.1 M4:66.6 M5:11.9 vias 10
+ot_ms_Q0_n             fanout   2 len    42.1 M2:0.2 M3:0.8 M4:21.8 M5:19.4 vias 22
+ot_ms_Q0_r1_n          fanout   1 len    79.0 M2:7.5 M3:4.3 M4:59.5 M5:7.8 vias 70
+ot_ms_Q0_r0_n          fanout   1 len    52.4 M2:2.1 M3:0.7 M4:49.5 vias 38
+ot_ms_root_n           fanout   8 len   176.7 M3:1.5 M4:9.0 M5:166.2 vias 33
+ot_ms_Q0B0_n           fanout   4 len    24.5 M3:0.6 M4:18.9 M5:5.0 vias 21
+ot_ms_Q0B1_r0_n        fanout   1 len    30.1 M3:0.6 M4:11.3 M5:18.2 vias 12
+ot_ms_Q0B1_n           fanout   4 len    49.6 M2:1.2 M3:2.4 M4:24.6 M5:21.5 vias 47
+ot_ms_Q1B0_r0_n        fanout   1 len    25.8 M3:0.2 M4:4.8 M5:20.8 vias 8
+ot_ms_Q1B0_n           fanout   4 len    40.7 M2:1.3 M3:2.3 M4:20.0 M5:17.1 vias 41
+ot_ms_Q1B1_r0_n        fanout   1 len    24.7 M3:0.9 M4:15.9 M5:7.8 vias 24
+ot_ms_Q1B1_n           fanout   4 len    23.9 M3:0.2 M4:6.5 M5:17.1 vias 21
+ot_ms_Q2B0_r0_n        fanout   1 len    24.1 M3:0.7 M4:14.0 M5:9.4 vias 14
+ot_ms_Q2B0_n           fanout   4 len    23.6 M2:1.2 M3:2.3 M4:4.5 M5:15.7 vias 22
+ot_ms_Q2B1_r0_n        fanout   1 len    24.7 M2:0.3 M3:0.2 M4:4.1 M5:20.1 vias 12
+ot_ms_Q2B1_n           fanout   4 len    43.7 M2:0.1 M3:1.1 M4:30.7 M5:11.8 vias 29
+ot_ms_Q3B0_r0_n        fanout   1 len    24.5 M3:0.2 M4:14.1 M5:10.2 vias 10
+ot_ms_Q3B0_n           fanout   4 len    23.9 M3:0.3 M4:6.1 M5:17.5 vias 19
+ot_ms_Q3B1_r0_n        fanout   1 len    25.2 M3:0.4 M4:16.1 M5:8.8 vias 12
+ot_ms_Q3B1_n           fanout   4 len    39.1 M2:1.6 M3:0.4 M4:21.2 M5:15.9 vias 17
+ot_ms_Q4B0_r0_n        fanout   1 len    32.8 M2:0.1 M3:0.4 M4:1.0 M5:31.3 vias 8
+ot_ms_Q4B0_n           fanout   4 len    41.4 M3:0.5 M4:2.5 M5:38.4 vias 23
+ot_ms_Q4B1_r0_n        fanout   1 len    26.3 M2:0.1 M3:0.1 M4:25.2 M5:1.0 vias 8
+ot_ms_Q4B1_n           fanout   4 len    27.4 M2:2.0 M3:3.2 M4:5.5 M5:16.7 vias 20
+ot_ms_Q5B0_r0_n        fanout   1 len    26.4 M3:1.1 M4:14.9 M5:10.4 vias 16
+ot_ms_Q5B0_n           fanout   4 len    39.2 M2:0.6 M3:1.0 M4:33.9 M5:3.7 vias 31
+ot_ms_Q5B1_r0_n        fanout   1 len    22.3 M3:0.4 M4:5.5 M5:16.4 vias 10
+ot_ms_Q5B1_n           fanout   4 len    27.0 M2:0.9 M3:1.5 M4:22.9 M5:1.7 vias 34
+ot_ms_Q6B0_r0_n        fanout   1 len    24.7 M3:0.3 M4:3.1 M5:21.3 vias 8
+ot_ms_Q6B0_n           fanout   4 len    41.4 M3:0.8 M4:24.7 M5:15.9 vias 19
+ot_ms_Q6B1_r0_n        fanout   1 len    24.4 M2:0.1 M3:0.4 M4:3.4 M5:20.6 vias 8
+ot_ms_Q6B1_n           fanout   4 len    40.2 M2:0.2 M3:0.7 M4:22.8 M5:16.4 vias 22
+ot_ms_Q7B0_r0_n        fanout   1 len    25.8 M2:0.6 M3:0.4 M4:12.6 M5:12.3 vias 18
+ot_ms_Q7B0_n           fanout   4 len    35.0 M3:1.6 M4:25.8 M5:7.6 vias 24
+ot_ms_Q7B1_r0_n        fanout   1 len    24.5 M2:0.1 M3:0.2 M4:2.3 M5:21.9 vias 8
+ot_ms_Q7B1_n           fanout   4 len    24.7 M2:1.1 M3:2.0 M4:6.1 M5:15.6 vias 18
+ot_ms_Q0B0L0_r0_n      fanout   1 len    18.8 M3:0.1 M4:16.6 M5:2.0 vias 8
+ot_ms_Q0B0L1_r0_n      fanout   1 len    18.9 M2:0.3 M3:0.1 M4:17.4 M5:1.1 vias 8
+ot_ms_Q0B0L2_r0_n      fanout   1 len    20.1 M2:0.6 M3:0.7 M4:17.8 M5:0.9 vias 24
+ot_ms_Q0B0L3_r0_n      fanout   1 len    19.9 M2:0.3 M3:0.7 M4:15.8 M5:3.1 vias 14
+ot_ms_Q0B1L0_r0_n      fanout   1 len    17.6 M3:0.1 M4:4.8 M5:12.8 vias 10
+ot_ms_Q0B1L1_r0_n      fanout   1 len    20.5 M2:0.6 M3:1.5 M4:13.8 M5:4.5 vias 20
+ot_ms_Q0B1L2_r0_n      fanout   1 len    19.1 M2:1.9 M3:2.1 M4:3.6 M5:11.4 vias 20
+ot_ms_Q0B1L3_r0_n      fanout   1 len    20.1 M2:1.9 M3:2.2 M4:9.6 M5:6.4 vias 32
+ot_ms_Q1B0L0_r0_n      fanout   1 len    20.2 M2:0.9 M3:0.9 M4:8.7 M5:9.6 vias 26
+ot_ms_Q1B0L1_r0_n      fanout   1 len    17.9 M3:0.3 M4:1.7 M5:15.9 vias 10
+ot_ms_Q1B0L2_r0_n      fanout   1 len    36.8 M3:0.5 M4:25.3 M5:11.0 vias 10
+ot_ms_Q1B0L3_r0_n      fanout   1 len    28.2 M3:0.9 M4:26.4 M5:0.9 vias 22
+ot_ms_Q1B1L0_r0_n      fanout   1 len    18.8 M3:0.3 M4:4.4 M5:14.1 vias 10
+ot_ms_Q1B1L1_r0_n      fanout   1 len    18.0 M3:0.2 M4:1.1 M5:16.7 vias 8
+ot_ms_Q1B1L2_r0_n      fanout   1 len    17.2 M2:0.1 M3:0.5 M4:0.4 M5:16.2 vias 8
+ot_ms_Q1B1L3_r0_n      fanout   1 len    17.9 M2:0.3 M3:0.6 M4:2.5 M5:14.5 vias 10
+ot_ms_Q2B0L0_r0_n      fanout   1 len    18.4 M3:0.3 M4:2.5 M5:15.5 vias 8
+ot_ms_Q2B0L1_r0_n      fanout   1 len    17.7 M3:0.7 M4:1.5 M5:15.6 vias 8
+ot_ms_Q2B0L2_r0_n      fanout   1 len    18.2 M3:0.2 M4:0.8 M5:17.2 vias 8
+ot_ms_Q2B0L3_r0_n      fanout   2 len    27.0 M3:0.3 M4:9.3 M5:17.4 vias 12
+ot_ms_Q2B1L0_r0_n      fanout   1 len    18.9 M3:0.2 M4:7.1 M5:11.6 vias 8
+ot_ms_Q2B1L1_r0_n      fanout   2 len    25.1 M2:0.1 M3:0.4 M4:22.4 M5:2.2 vias 14
+ot_ms_Q2B1L2_r0_n      fanout   1 len    17.1 M2:0.3 M3:0.8 M4:5.8 M5:10.2 vias 14
+ot_ms_Q2B1L3_r0_n      fanout   1 len    16.5 M3:0.2 M4:8.1 M5:8.3 vias 10
+ot_ms_Q3B0L0_r0_n      fanout   1 len    18.9 M3:0.4 M4:2.7 M5:15.8 vias 8
+ot_ms_Q3B0L1_r0_n      fanout   1 len    18.2 M3:0.5 M4:1.7 M5:16.1 vias 8
+ot_ms_Q3B0L2_r0_n      fanout   1 len    18.2 M2:0.0 M3:0.3 M4:0.6 M5:17.3 vias 8
+ot_ms_Q3B0L3_r0_n      fanout   1 len    16.8 M3:0.3 M4:2.1 M5:14.4 vias 8
+ot_ms_Q3B1L0_r0_n      fanout   1 len    18.4 M3:0.2 M4:3.6 M5:14.5 vias 10
+ot_ms_Q3B1L1_r0_n      fanout   1 len    21.8 M2:0.5 M3:0.2 M4:18.8 M5:2.3 vias 8
+ot_ms_Q3B1L2_r0_n      fanout   1 len    19.6 M3:0.3 M4:17.7 M5:1.7 vias 8
+ot_ms_Q3B1L3_r0_n      fanout   1 len    16.4 M3:0.3 M4:16.0 vias 8
+ot_ms_Q4B0L0_r0_n      fanout   1 len    14.9 M2:0.1 M3:0.2 M4:0.2 M5:14.4 vias 8
+ot_ms_Q4B0L1_r0_n      fanout   1 len    15.1 M3:0.3 M4:0.9 M5:13.8 vias 8
+ot_ms_Q4B0L2_r0_n      fanout   1 len    17.0 M2:0.1 M3:0.5 M4:0.4 M5:16.1 vias 8
+ot_ms_Q4B0L3_r0_n      fanout   1 len    20.7 M3:0.6 M4:0.6 M5:19.5 vias 8
+ot_ms_Q4B1L0_r0_n      fanout   1 len    16.7 M3:0.3 M4:2.5 M5:13.9 vias 8
+ot_ms_Q4B1L1_r0_n      fanout   1 len    21.1 M3:0.3 M4:1.3 M5:19.5 vias 8
+ot_ms_Q4B1L2_r0_n      fanout   1 len    14.7 M3:0.5 M4:2.2 M5:12.1 vias 8
+ot_ms_Q4B1L3_r0_n      fanout   1 len    18.3 M2:0.6 M3:0.1 M4:3.3 M5:14.4 vias 8
+ot_ms_Q5B0L0_r0_n      fanout   1 len    18.1 M3:0.2 M4:0.1 M5:17.8 vias 8
+ot_ms_Q5B0L1_r0_n      fanout   1 len    34.7 M2:2.0 M3:1.3 M4:30.7 M5:0.7 vias 36
+ot_ms_Q5B0L2_r0_n      fanout   1 len    35.2 M3:0.6 M4:34.1 M5:0.6 vias 8
+ot_ms_Q5B0L3_r0_n      fanout   1 len    19.7 M2:0.7 M3:0.1 M4:16.9 M5:2.0 vias 12
+ot_ms_Q5B1L0_r0_n      fanout   1 len    13.3 M2:0.6 M3:1.2 M4:11.4 vias 14
+ot_ms_Q5B1L1_r0_n      fanout   1 len    19.7 M2:0.6 M3:0.6 M4:18.5 vias 18
+ot_ms_Q5B1L2_r0_n      fanout   1 len    22.5 M3:0.6 M4:21.1 M5:0.8 vias 8
+ot_ms_Q5B1L3_r0_n      fanout   1 len    22.3 M3:0.1 M4:22.2 vias 6
+ot_ms_Q6B0L0_r0_n      fanout   1 len    18.7 M2:0.1 M3:0.8 M4:1.3 M5:16.6 vias 8
+ot_ms_Q6B0L1_r0_n      fanout   1 len    17.5 M2:1.0 M3:0.6 M4:15.9 vias 18
+ot_ms_Q6B0L2_r0_n      fanout   1 len    19.4 M3:0.1 M4:0.4 M5:18.8 vias 8
+ot_ms_Q6B0L3_r0_n      fanout   1 len    18.9 M3:0.6 M4:3.5 M5:14.8 vias 10
+ot_ms_Q6B1L0_r0_n      fanout   1 len    19.2 M2:0.1 M3:0.1 M4:3.9 M5:15.1 vias 8
+ot_ms_Q6B1L1_r0_n      fanout   1 len    18.2 M3:0.5 M4:1.2 M5:16.6 vias 8
+ot_ms_Q6B1L2_r0_n      fanout   1 len    18.8 M3:0.1 M4:17.6 M5:1.2 vias 8
+ot_ms_Q6B1L3_r0_n      fanout   1 len    16.8 M3:0.6 M4:1.8 M5:14.3 vias 8
+ot_ms_Q7B0L0_r0_n      fanout   1 len    19.3 M2:0.3 M3:0.5 M4:12.9 M5:5.6 vias 16
+ot_ms_Q7B0L1_r0_n      fanout   1 len    19.7 M3:0.3 M4:8.0 M5:11.4 vias 10
+ot_ms_Q7B0L2_r0_n      fanout   1 len    18.7 M3:0.9 M4:10.5 M5:7.2 vias 10
+ot_ms_Q7B0L3_r0_n      fanout   1 len    18.4 M3:1.1 M4:12.2 M5:5.2 vias 14
+ot_ms_Q7B1L0_r0_n      fanout   1 len    19.5 M2:0.1 M3:0.2 M4:3.3 M5:15.9 vias 8
+ot_ms_Q7B1L1_r0_n      fanout   1 len    18.3 M3:0.4 M4:1.1 M5:16.8 vias 8
+ot_ms_Q7B1L2_r0_n      fanout   1 len    18.1 M3:0.5 M4:1.1 M5:16.6 vias 8
+ot_ms_Q7B1L3_r0_n      fanout   1 len    18.4 M3:0.9 M4:3.6 M5:13.9 vias 10
+ot_ms_Q0B0L0_clk       fanout  36 len    25.7 M2:4.9 M3:12.5 M4:7.6 M5:0.6 vias 112
+ot_ms_Q0B0L1_clk       fanout  36 len    26.2 M2:5.4 M3:13.3 M4:7.5 vias 104
+ot_ms_Q0B0L2_clk       fanout  35 len    25.8 M2:4.2 M3:11.1 M4:7.5 M5:2.9 vias 107
+ot_ms_Q0B0L3_clk       fanout  35 len    27.3 M2:4.9 M3:13.1 M4:8.5 M5:0.8 vias 103
+ot_ms_Q0B1L0_clk       fanout  36 len    26.1 M2:5.7 M3:12.3 M4:7.4 M5:0.6 vias 109
+ot_ms_Q0B1L1_clk       fanout  36 len    54.5 M2:3.9 M3:13.1 M4:33.3 M5:4.3 vias 126
+ot_ms_Q0B1L2_clk       fanout  35 len    44.2 M2:6.0 M3:13.5 M4:15.0 M5:9.6 vias 129
+ot_ms_Q0B1L3_clk       fanout  35 len    28.4 M2:6.8 M3:12.9 M4:7.9 M5:0.8 vias 117
+ot_ms_Q1B0L0_clk       fanout  36 len    29.4 M2:6.2 M3:12.8 M4:8.3 M5:2.1 vias 115
+ot_ms_Q1B0L1_clk       fanout  36 len    46.0 M2:8.8 M3:12.4 M4:23.3 M5:1.5 vias 109
+ot_ms_Q1B0L2_clk       fanout  35 len    22.0 M2:9.3 M3:11.1 M4:0.6 M5:1.0 vias 93
+ot_ms_Q1B0L3_clk       fanout  35 len    19.2 M2:4.9 M3:10.7 M4:2.8 M5:0.9 vias 97
+ot_ms_Q1B1L0_clk       fanout  36 len    23.9 M2:6.0 M3:11.2 M4:3.8 M5:3.0 vias 102
+ot_ms_Q1B1L1_clk       fanout  36 len    26.9 M2:6.9 M3:11.2 M4:4.3 M5:4.5 vias 102
+ot_ms_Q1B1L2_clk       fanout  35 len    23.3 M2:5.7 M3:11.0 M4:2.1 M5:4.5 vias 90
+ot_ms_Q1B1L3_clk       fanout  35 len    23.5 M2:4.2 M3:10.3 M4:4.6 M5:4.4 vias 98
+ot_ms_Q2B0L0_clk       fanout  36 len    26.6 M2:4.2 M3:9.8 M4:7.7 M5:4.9 vias 108
+ot_ms_Q2B0L1_clk       fanout  36 len    26.8 M2:4.3 M3:12.3 M4:6.1 M5:4.0 vias 106
+ot_ms_Q2B0L2_clk       fanout  35 len    22.0 M2:5.7 M3:11.7 M4:3.5 M5:1.1 vias 97
+ot_ms_Q2B0L3_clk       fanout  35 len    30.7 M2:7.2 M3:12.4 M4:5.2 M5:5.9 vias 106
+ot_ms_Q2B1L0_clk       fanout  36 len    56.8 M2:3.3 M3:9.6 M4:34.9 M5:9.0 vias 131
+ot_ms_Q2B1L1_clk       fanout  35 len    22.1 M2:4.6 M3:11.9 M4:5.5 M5:0.1 vias 107
+ot_ms_Q2B1L2_clk       fanout  35 len    22.4 M2:6.9 M3:10.4 M4:4.0 M5:1.0 vias 101
+ot_ms_Q2B1L3_clk       fanout  35 len    20.8 M2:3.9 M3:11.5 M4:5.4 vias 105
+ot_ms_Q3B0L0_clk       fanout  36 len    27.4 M2:6.2 M3:12.8 M4:8.4 vias 110
+ot_ms_Q3B0L1_clk       fanout  36 len    21.7 M2:9.4 M3:11.2 M4:1.1 vias 92
+ot_ms_Q3B0L2_clk       fanout  35 len    20.6 M2:8.7 M3:10.9 M4:1.0 vias 100
+ot_ms_Q3B0L3_clk       fanout  35 len    21.3 M2:8.7 M3:10.5 M4:2.2 vias 96
+ot_ms_Q3B1L0_clk       fanout  36 len    22.1 M2:7.5 M3:10.6 M4:4.0 vias 108
+ot_ms_Q3B1L1_clk       fanout  35 len    22.5 M2:9.4 M3:12.4 M4:0.7 vias 92
+ot_ms_Q3B1L2_clk       fanout  35 len    23.3 M2:9.8 M3:10.8 M4:2.0 M5:0.7 vias 97
+ot_ms_Q3B1L3_clk       fanout  35 len    20.5 M2:6.6 M3:11.4 M4:2.4 vias 101
+ot_ms_Q4B0L0_clk       fanout  36 len    27.4 M2:7.7 M3:11.3 M4:6.2 M5:2.3 vias 111
+ot_ms_Q4B0L1_clk       fanout  36 len    25.8 M2:6.1 M3:12.3 M4:6.2 M5:1.2 vias 113
+ot_ms_Q4B0L2_clk       fanout  35 len    27.0 M2:4.5 M3:10.7 M4:9.5 M5:2.3 vias 110
+ot_ms_Q4B0L3_clk       fanout  35 len    25.4 M2:6.0 M3:10.7 M4:7.4 M5:1.2 vias 103
+ot_ms_Q4B1L0_clk       fanout  36 len    20.3 M2:8.0 M3:11.7 M4:0.6 vias 91
+ot_ms_Q4B1L1_clk       fanout  36 len    25.0 M2:5.3 M3:14.2 M4:5.5 vias 106
+ot_ms_Q4B1L2_clk       fanout  35 len    30.7 M2:3.8 M3:12.4 M4:9.6 M5:4.8 vias 118
+ot_ms_Q4B1L3_clk       fanout  35 len    52.7 M2:3.9 M3:11.5 M4:36.2 M5:1.2 vias 124
+ot_ms_Q5B0L0_clk       fanout  33 len   100.4 M2:6.7 M3:11.5 M4:56.7 M5:25.5 vias 157
+ot_ms_Q5B0L1_clk       fanout  33 len    21.3 M2:6.4 M3:10.4 M4:4.6 vias 93
+ot_ms_Q5B0L2_clk       fanout  33 len    22.4 M2:8.9 M3:11.9 M4:1.7 vias 90
+ot_ms_Q5B0L3_clk       fanout  33 len    22.6 M2:5.0 M3:12.5 M4:5.1 vias 97
+ot_ms_Q5B1L0_clk       fanout  33 len    44.0 M2:30.9 M3:12.4 M4:0.8 vias 95
+ot_ms_Q5B1L1_clk       fanout  33 len    21.4 M2:9.4 M3:12.0 vias 95
+ot_ms_Q5B1L2_clk       fanout  33 len    20.8 M2:7.9 M3:8.9 M4:3.9 vias 88
+ot_ms_Q5B1L3_clk       fanout  32 len    21.8 M2:4.3 M3:10.9 M4:6.6 vias 101
+ot_ms_Q6B0L0_clk       fanout  33 len    21.8 M2:8.1 M3:10.6 M4:2.5 M5:0.6 vias 90
+ot_ms_Q6B0L1_clk       fanout  33 len    22.3 M2:5.9 M3:10.8 M4:4.7 M5:0.9 vias 93
+ot_ms_Q6B0L2_clk       fanout  33 len    23.0 M2:5.2 M3:11.2 M4:5.0 M5:1.6 vias 94
+ot_ms_Q6B0L3_clk       fanout  33 len    24.3 M2:10.9 M3:13.4 vias 88
+ot_ms_Q6B1L0_clk       fanout  33 len    25.1 M2:3.6 M3:10.5 M4:9.7 M5:1.2 vias 106
+ot_ms_Q6B1L1_clk       fanout  33 len    23.3 M2:4.0 M3:9.1 M4:8.8 M5:1.3 vias 98
+ot_ms_Q6B1L2_clk       fanout  33 len    24.4 M2:5.4 M3:12.2 M4:5.9 M5:1.0 vias 101
+ot_ms_Q6B1L3_clk       fanout  33 len    24.0 M2:3.9 M3:11.4 M4:8.4 M5:0.3 vias 98
+ot_ms_Q7B0L0_clk       fanout  33 len   209.6 M2:4.2 M3:9.1 M4:164.3 M5:32.1 vias 114
+ot_ms_Q7B0L1_clk       fanout  33 len    25.9 M2:11.9 M3:13.8 M4:0.2 vias 96
+ot_ms_Q7B0L2_clk       fanout  33 len    24.1 M2:6.6 M3:11.6 M4:5.0 M5:0.8 vias 100
+ot_ms_Q7B0L3_clk       fanout  33 len    24.4 M2:10.0 M3:14.0 M4:0.3 vias 98
+ot_ms_Q7B1L0_clk       fanout  33 len    25.5 M2:3.9 M3:12.6 M4:9.0 vias 107
+ot_ms_Q7B1L1_clk       fanout  33 len    24.2 M2:9.6 M3:13.4 M4:1.3 vias 92
+ot_ms_Q7B1L2_clk       fanout  33 len    25.1 M2:5.4 M3:13.1 M4:5.8 M5:0.9 vias 98
+ot_ms_Q7B1L3_clk       fanout  32 len    23.6 M2:5.9 M3:11.9 M4:5.8 vias 96
+ot_ms_m0_clk           fanout   1 len     4.9 M3:2.4 M4:0.2 M5:2.3 vias 8
+ot_ms_m1_clk           fanout   1 len     4.7 M3:0.0 M4:0.0 M5:4.6 vias 4

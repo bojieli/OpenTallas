@@ -1,0 +1,13 @@
+F4C_STAGE start 2026-10-26T18:33:39-07:00
+S5_GRT_TT setup_tt 237.23 ep 0 slew 0 cap 0 tap_window PASS I_grt 260.52 rc_cal 0.8,0.9 Tue Oct 27 01:36:10 UTC 2026
+GUIDE_M56 {'nets': 10079, 'tree_nets': 121, 'tree_boxes_in': 1560, 'tree_boxes_out': 2996, 'non_tree_nets_with_M6': 0}
+"detailedroute__route__drc_errors": 0
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+M6_CENSUS nets_on_M6 {} M6_um {} non_tree_examples []
+F4C_STAGE drt_done 2026-10-26T18:40:57-07:00
+MEAS_DONE FF 2210 pins
+MEAS_DONE TT 2210 pins
+MEAS_DONE FF 2210 pins
+MEAS_DONE TT 2210 pins
+F4C_STAGE CHAIN_DONE 2026-10-26T18:43:03-07:00

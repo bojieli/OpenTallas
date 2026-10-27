@@ -1,0 +1,216 @@
+{
+ "schema": "opentallas.lec.v1",
+ "kit": "/work",
+ "generated": "2026-10-27T01:23:16+0000",
+ "verdict": "EQUIVALENT",
+ "top": "qfd_dv_s8_crh_rp1",
+ "netlist": "/work/run/results/asap7/kq_qfd_dv_s8_crh_rp1_f4a_m0/base/6_final.v",
+ "synth_frontend": "verilog",
+ "gold_frontend": "slang",
+ "implicit_nets": [],
+ "black_boxes": {
+  "ot_sram_1r1w_1024x256_m1b2_r2c2_ns": 12
+ },
+ "ports": {
+  "inputs": 741,
+  "outputs": 257
+ },
+ "t_aig_s": 6.3,
+ "t_corr_s": 4.3,
+ "keypoints": {
+  "gold": {
+   "inputs": 744,
+   "flops": 4056,
+   "outputs": 0,
+   "ands": 5385
+  },
+  "gate": {
+   "inputs": 750,
+   "flops": 6335,
+   "outputs": 0,
+   "ands": 5436
+  },
+  "matched": 3390,
+  "gold_constant_flops": {
+   "n": 0,
+   "first": []
+  },
+  "paired_flops": {
+   "n": 80,
+   "first": [
+    "both:ff:u_dut.g_cbk[10].u.q=ff:u_dut.g_cbk[0].u.q",
+    "both:ff:u_dut.g_cbk[11].u.q=ff:u_dut.g_cbk[0].u.q",
+    "both:ff:u_dut.g_cbk[12].u.q=ff:u_dut.g_cbk[0].u.q",
+    "both:ff:u_dut.g_cbk[13].u.q=ff:u_dut.g_cbk[0].u.q",
+    "both:ff:u_dut.g_cbk[14].u.q=ff:u_dut.g_cbk[0].u.q",
+    "both:ff:u_dut.g_cbk[15].u.q=ff:u_dut.g_cbk[0].u.q",
+    "both:ff:u_dut.g_cbk[1].u.q=ff:u_dut.g_cbk[0].u.q",
+    "both:ff:u_dut.g_cbk[2].u.q=ff:u_dut.g_cbk[0].u.q",
+    "both:ff:u_dut.g_cbk[3].u.q=ff:u_dut.g_cbk[0].u.q",
+    "both:ff:u_dut.g_cbk[4].u.q=ff:u_dut.g_cbk[0].u.q",
+    "both:ff:u_dut.g_cbk[5].u.q=ff:u_dut.g_cbk[0].u.q",
+    "both:ff:u_dut.g_cbk[6].u.q=ff:u_dut.g_cbk[0].u.q",
+    "both:ff:u_dut.g_cbk[7].u.q=ff:u_dut.g_cbk[0].u.q",
+    "both:ff:u_dut.g_cbk[8].u.q=ff:u_dut.g_cbk[0].u.q",
+    "both:ff:u_dut.g_cbk[9].u.q=ff:u_dut.g_cbk[0].u.q",
+    "both:ff:u_dut.g_cext[0].u1.q[0]=ff:u_dut.g_cext[0].u0.q[0]",
+    "both:ff:u_dut.g_cext[0].u1.q[1]=ff:u_dut.g_cext[0].u0.q[1]",
+    "both:ff:u_dut.g_cext[0].u1.q[2]=ff:u_dut.g_cext[0].u0.q[2]",
+    "both:ff:u_dut.g_cext[0].u1.q[3]=ff:u_dut.g_cext[0].u0.q[3]",
+    "both:ff:u_dut.g_cext[0].u1.q[4]=ff:u_dut.g_cext[0].u0.q[4]",
+    "both:ff:u_dut.g_cext[0].u1.q[5]=ff:u_dut.g_cext[0].u0.q[5]",
+    "both:ff:u_dut.g_cext[0].u1.q[6]=ff:u_dut.g_cext[0].u0.q[6]",
+    "both:ff:u_dut.g_cext[0].u1.q[7]=ff:u_dut.g_cext[0].u0.q[7]",
+    "both:ff:u_dut.g_cext[1].u1.q[0]=ff:u_dut.g_cext[1].u0.q[0]",
+    "both:ff:u_dut.g_cext[1].u1.q[1]=ff:u_dut.g_cext[1].u0.q[1]",
+    "both:ff:u_dut.g_cext[1].u1.q[2]=ff:u_dut.g_cext[1].u0.q[2]",
+    "both:ff:u_dut.g_cext[1].u1.q[3]=ff:u_dut.g_cext[1].u0.q[3]",
+    "both:ff:u_dut.g_cext[1].u1.q[4]=ff:u_dut.g_cext[1].u0.q[4]",
+    "both:ff:u_dut.g_cext[1].u1.q[5]=ff:u_dut.g_cext[1].u0.q[5]",
+    "both:ff:u_dut.g_cext[1].u1.q[6]=ff:u_dut.g_cext[1].u0.q[6]",
+    "both:ff:u_dut.g_cext[1].u1.q[7]=ff:u_dut.g_cext[1].u0.q[7]",
+    "both:ff:u_dut.g_cext[2].u1.q[0]=ff:u_dut.g_cext[2].u0.q[0]",
+    "both:ff:u_dut.g_cext[2].u1.q[1]=ff:u_dut.g_cext[2].u0.q[1]",
+    "both:ff:u_dut.g_cext[2].u1.q[2]=ff:u_dut.g_cext[2].u0.q[2]",
+    "both:ff:u_dut.g_cext[2].u1.q[3]=ff:u_dut.g_cext[2].u0.q[3]",
+    "both:ff:u_dut.g_cext[2].u1.q[4]=ff:u_dut.g_cext[2].u0.q[4]",
+    "both:ff:u_dut.g_cext[2].u1.q[5]=ff:u_dut.g_cext[2].u0.q[5]",
+    "both:ff:u_dut.g_cext[2].u1.q[6]=ff:u_dut.g_cext[2].u0.q[6]",
+    "both:ff:u_dut.g_cext[2].u1.q[7]=ff:u_dut.g_cext[2].u0.q[7]",
+    "both:ff:u_dut.g_cext[3].u1.q[0]=ff:u_dut.g_cext[3].u0.q[0]"
+   ]
+  },
+  "gold_unmatched_live": {
+   "n": 0,
+   "first": []
+  },
+  "gate_unmatched": {
+   "n": 70,
+   "first": [
+    "ff:u_dut.ot_fcap_00000_ff",
+    "ff:u_dut.ot_fcap_00001_ff",
+    "ff:u_dut.ot_fcap_00002_ff",
+    "ff:u_dut.ot_fcap_00003_ff",
+    "ff:u_dut.ot_fcap_00004_ff",
+    "ff:u_dut.ot_fcap_00005_ff",
+    "ff:u_dut.ot_fcap_00006_ff",
+    "ff:u_dut.ot_fcap_00007_ff",
+    "ff:u_dut.ot_fcap_00008_ff",
+    "ff:u_dut.ot_fcap_00009_ff",
+    "ff:u_dut.ot_fcap_00010_ff",
+    "ff:u_dut.ot_fcap_00011_ff",
+    "ff:u_dut.ot_fcap_00012_ff",
+    "ff:u_dut.ot_fcap_00013_ff",
+    "ff:u_dut.ot_fcap_00014_ff",
+    "ff:u_dut.ot_fcap_00015_ff",
+    "ff:u_dut.ot_fcap_00016_ff",
+    "ff:u_dut.ot_fcap_00017_ff",
+    "ff:u_dut.ot_fcap_00018_ff",
+    "ff:u_dut.ot_fcap_00019_ff",
+    "ff:u_dut.ot_fcap_00020_ff",
+    "ff:u_dut.ot_fcap_00021_ff",
+    "ff:u_dut.ot_fcap_00022_ff",
+    "ff:u_dut.ot_fcap_00023_ff",
+    "ff:u_dut.ot_fcap_00024_ff",
+    "ff:u_dut.ot_fcap_00025_ff",
+    "ff:u_dut.ot_fcap_00026_ff",
+    "ff:u_dut.ot_fcap_00027_ff",
+    "ff:u_dut.ot_fcap_00028_ff",
+    "ff:u_dut.ot_fcap_00029_ff",
+    "ff:u_dut.ot_fcap_00030_ff",
+    "ff:u_dut.ot_fcap_00031_ff",
+    "ff:u_dut.ot_fcap_00032_ff",
+    "ff:u_dut.ot_fcap_00033_ff",
+    "ff:u_dut.ot_fcap_00034_ff",
+    "ff:u_dut.ot_fcap_00035_ff",
+    "ff:u_dut.ot_fcap_00036_ff",
+    "ff:u_dut.ot_fcap_00037_ff",
+    "ff:u_dut.ot_fcap_00038_ff",
+    "ff:u_dut.ot_fcap_00039_ff"
+   ]
+  },
+  "gold_x_sources": 3,
+  "gate_x_sources": 9,
+  "gold_only_compare": {
+   "n": 0,
+   "first": []
+  },
+  "gate_only_compare": {
+   "n": 71,
+   "first": [
+    "ff:u_dut.ot_fcap_00000_ff",
+    "ff:u_dut.ot_fcap_00001_ff",
+    "ff:u_dut.ot_fcap_00002_ff",
+    "ff:u_dut.ot_fcap_00003_ff",
+    "ff:u_dut.ot_fcap_00004_ff",
+    "ff:u_dut.ot_fcap_00005_ff",
+    "ff:u_dut.ot_fcap_00006_ff",
+    "ff:u_dut.ot_fcap_00007_ff",
+    "ff:u_dut.ot_fcap_00008_ff",
+    "ff:u_dut.ot_fcap_00009_ff",
+    "ff:u_dut.ot_fcap_00010_ff",
+    "ff:u_dut.ot_fcap_00011_ff",
+    "ff:u_dut.ot_fcap_00012_ff",
+    "ff:u_dut.ot_fcap_00013_ff",
+    "ff:u_dut.ot_fcap_00014_ff",
+    "ff:u_dut.ot_fcap_00015_ff",
+    "ff:u_dut.ot_fcap_00016_ff",
+    "ff:u_dut.ot_fcap_00017_ff",
+    "ff:u_dut.ot_fcap_00018_ff",
+    "ff:u_dut.ot_fcap_00019_ff",
+    "ff:u_dut.ot_fcap_00020_ff",
+    "ff:u_dut.ot_fcap_00021_ff",
+    "ff:u_dut.ot_fcap_00022_ff",
+    "ff:u_dut.ot_fcap_00023_ff",
+    "ff:u_dut.ot_fcap_00024_ff",
+    "ff:u_dut.ot_fcap_00025_ff",
+    "ff:u_dut.ot_fcap_00026_ff",
+    "ff:u_dut.ot_fcap_00027_ff",
+    "ff:u_dut.ot_fcap_00028_ff",
+    "ff:u_dut.ot_fcap_00029_ff",
+    "ff:u_dut.ot_fcap_00030_ff",
+    "ff:u_dut.ot_fcap_00031_ff",
+    "ff:u_dut.ot_fcap_00032_ff",
+    "ff:u_dut.ot_fcap_00033_ff",
+    "ff:u_dut.ot_fcap_00034_ff",
+    "ff:u_dut.ot_fcap_00035_ff",
+    "ff:u_dut.ot_fcap_00036_ff",
+    "ff:u_dut.ot_fcap_00037_ff",
+    "ff:u_dut.ot_fcap_00038_ff",
+    "ff:u_dut.ot_fcap_00039_ff"
+   ]
+  }
+ },
+ "t_prove_s": 0.1,
+ "x_dont_care_points": {
+  "n": 0,
+  "first": []
+ },
+ "kept_registers": {
+  "declared": 670,
+  "in_netlist": 670,
+  "constant_proved": {
+   "n": 0,
+   "first": []
+  },
+  "missing": {
+   "n": 0,
+   "first": []
+  }
+ },
+ "counts": {
+  "compare_points": 3703,
+  "proved": 3703,
+  "differs": 0,
+  "undecided": 0
+ },
+ "failing": [],
+ "unproven_points": [],
+ "note": "3703 compare points proved; 3390 key points matched by name, 80 register pairs / merges and 0 constant registers proved inductively; 0 RTL and 70 gate registers unmatched and unobservable (proved as free inputs)",
+ "t_total_s": 11.0,
+ "provenance": {
+  "commit": null,
+  "dirty": null,
+  "source": "kit provenance invalid: FileNotFoundError: [Errno 2] No such file or directory: '/work/PROVENANCE.json'"
+ }
+}

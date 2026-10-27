@@ -1,0 +1,190 @@
+{
+ "before": {
+  "J": 24.67,
+  "TT_rise": {
+   "mean": 172.92,
+   "min": 162.21,
+   "max": 186.87,
+   "window": 24.67
+  },
+  "FF_early": {
+   "mean": 132.74,
+   "min": 124.29,
+   "max": 143.56,
+   "window": 19.27
+  },
+  "max_slew": 81.02
+ },
+ "after": {
+  "J": 10.37,
+  "TT_rise": {
+   "mean": 170.53,
+   "min": 164.65,
+   "max": 175.02,
+   "window": 10.37
+  },
+  "FF_early": {
+   "mean": 130.04,
+   "min": 125.44,
+   "max": 134.43,
+   "window": 9.0
+  },
+  "max_slew": 75.34
+ },
+ "slew_limit": 81.02,
+ "passes": [
+  {
+   "pass_": 0,
+   "J": 18.87,
+   "changed": 6
+  },
+  {
+   "pass_": 1,
+   "J": 10.5,
+   "changed": 12
+  },
+  {
+   "pass_": 2,
+   "J": 10.37,
+   "changed": 1
+  },
+  {
+   "pass_": 3,
+   "J": 10.37,
+   "changed": 0
+  }
+ ],
+ "sizes": [
+  "BUFx8_ASAP7_75t_R",
+  "BUFx10_ASAP7_75t_R",
+  "BUFx12f_ASAP7_75t_R",
+  "BUFx16f_ASAP7_75t_R",
+  "BUFx24_ASAP7_75t_R"
+ ],
+ "changes": {
+  "Q0_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx12f_ASAP7_75t_R"
+  ],
+  "Q0": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx12f_ASAP7_75t_R"
+  ],
+  "Q1_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx12f_ASAP7_75t_R"
+  ],
+  "Q4_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx10_ASAP7_75t_R"
+  ],
+  "Q5_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx10_ASAP7_75t_R"
+  ],
+  "Q6_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx10_ASAP7_75t_R"
+  ],
+  "Q6": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "Q7_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx12f_ASAP7_75t_R"
+  ],
+  "Q0B0": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx10_ASAP7_75t_R"
+  ],
+  "Q1B1": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "Q2B1": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx10_ASAP7_75t_R"
+  ],
+  "Q5B0": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "Q5B1": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx10_ASAP7_75t_R"
+  ],
+  "Q6B0": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "Q7B0": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx12f_ASAP7_75t_R"
+  ]
+ },
+ "cells": {
+  "Q0_r0": "BUFx12f_ASAP7_75t_R",
+  "Q0": "BUFx12f_ASAP7_75t_R",
+  "Q1_r0": "BUFx12f_ASAP7_75t_R",
+  "Q1": "BUFx24_ASAP7_75t_R",
+  "Q2_r0": "BUFx16f_ASAP7_75t_R",
+  "Q2": "BUFx24_ASAP7_75t_R",
+  "Q3_r0": "BUFx16f_ASAP7_75t_R",
+  "Q3": "BUFx24_ASAP7_75t_R",
+  "Q4_r0": "BUFx10_ASAP7_75t_R",
+  "Q4": "BUFx24_ASAP7_75t_R",
+  "Q5_r0": "BUFx10_ASAP7_75t_R",
+  "Q5": "BUFx24_ASAP7_75t_R",
+  "Q6_r0": "BUFx10_ASAP7_75t_R",
+  "Q6": "BUFx8_ASAP7_75t_R",
+  "Q7_r0": "BUFx12f_ASAP7_75t_R",
+  "Q7": "BUFx24_ASAP7_75t_R",
+  "Q0B0": "BUFx10_ASAP7_75t_R",
+  "Q0B1": "BUFx24_ASAP7_75t_R",
+  "Q1B0": "BUFx24_ASAP7_75t_R",
+  "Q1B1": "BUFx8_ASAP7_75t_R",
+  "Q2B0": "BUFx24_ASAP7_75t_R",
+  "Q2B1": "BUFx10_ASAP7_75t_R",
+  "Q3B0": "BUFx24_ASAP7_75t_R",
+  "Q3B1": "BUFx24_ASAP7_75t_R",
+  "Q4B0": "BUFx24_ASAP7_75t_R",
+  "Q4B1": "BUFx24_ASAP7_75t_R",
+  "Q5B0": "BUFx8_ASAP7_75t_R",
+  "Q5B1": "BUFx10_ASAP7_75t_R",
+  "Q6B0": "BUFx8_ASAP7_75t_R",
+  "Q6B1": "BUFx24_ASAP7_75t_R",
+  "Q7B0": "BUFx12f_ASAP7_75t_R",
+  "Q7B1": "BUFx24_ASAP7_75t_R"
+ },
+ "layers": "m56",
+ "objective": "window_only",
+ "fit": "/srv/opentallas-scratch2/claude/wt/qc-su-f4d-1026/results/model_refit3_1026/uf_phys3_v1.json",
+ "provenance": {
+  "argv": [
+   "/usr/bin/python3",
+   "f4d_size.py",
+   "/srv/opentallas-scratch2/claude/wt/qc-su-f4d-1026",
+   "/srv/opentallas-scratch2/claude/wt/qc-su-f4d-1026/results/qc_su_f4d/plan/vmr_k8.tcl",
+   "/srv/opentallas-scratch2/claude/wt/qc-su-f4d-1026/results/qc_su_f4c/plan/vmr_placed.geo",
+   "/srv/opentallas-scratch2/claude/master-plan-r4-1026/su_refloor",
+   "vmr_k8_s56.tcl",
+   "--layers",
+   "m56",
+   "--passes",
+   "4",
+   "--window-only",
+   "--seg-plan",
+   "/srv/opentallas-scratch2/claude/wt/qc-su-f4d-1026/results/qc_su_f4d/plan/vmr_k8.json"
+  ],
+  "sha256": {
+   "/srv/opentallas-scratch2/claude/wt/qc-su-f4d-1026/results/qc_su_f4d/plan/vmr_k8.tcl": "1bdd8a3b2edee562c5d7a27e8518b651168496d0314d4ce2c7f7348d32c07c8d",
+   "/srv/opentallas-scratch2/claude/wt/qc-su-f4d-1026/results/qc_su_f4c/plan/vmr_placed.geo": "9e6cf475894efa18c0882ae9dea65fdf93dd5a3096561570d385f9d4d44df615",
+   "/srv/opentallas-scratch2/claude/wt/qc-su-f4d-1026/results/qc_su_f4d/pred/f4d_size.py": "a8d7f0bfd29ff2e0df29876038a4609d77bc1296f4b9ea1a6737786335563550",
+   "/srv/opentallas-scratch2/claude/wt/qc-su-f4d-1026/results/qc_su_prog_l1_1026/su_branch_size.py": "112ac246210502de812254c6ca2b16930aa053c193ec8bcb4528d1270f588da8",
+   "/srv/opentallas-scratch2/claude/wt/qc-su-f4d-1026/results/qc_su_prog_l1_1026/phys_gate.py": "8b0cd6026724baa0c446eb3b5816b6ef71c8549d593530cd98205cbb0d294e14",
+   "vmr_k8_s56.tcl": "7bbebddff40dc0259fe7747d0191d4330550074d8c1bfb9da196b9f0030ebf1e",
+   "/srv/opentallas-scratch2/claude/wt/qc-su-f4d-1026/results/model_refit3_1026/uf_phys3_v1.json": "cef9c3672fc8aa6b5410afc461747846132eaa17424589c624272ba77e21a990"
+  }
+ }
+}
