@@ -1,0 +1,262 @@
+{
+ "scope": "MASTER-PLAN-R6 2026-10-26, all numbers UNCHECKED (NUMBER-CHECK requested); plan model only",
+ "byte_identity": {
+  "rule": "no flags -> identical to main f57aae94a7 tools (ROOT-MERGE-20 hold)",
+  "plans": {
+   "s81": "228 files, 0 diffs (main 12:02 wall, r6 3:15: core_lattice cover vectorised)",
+   "s81_head": "23 files, 0 diffs",
+   "qwen_compute": "82 files, 0 diffs",
+   "qwen_kvsys": "76 files, 0 diffs (main lattice recursion not reached without --tree-lattice; recursion fixed for opt-in)",
+   "hbm": "249 files, 0 diffs"
+  },
+  "qc_event": "QC candidate_oneqc0733 with --onramp-bays --drop-mesh-early --tree-lattice 8x8 / c4x4 == r5 default / c4x4 outputs, 117/117 files identical",
+  "outputs": "epyc1:/srv/opentallas-scratch2/claude/master-plan-r6-1026/bi"
+ },
+ "qcf_c4x4_reg": {
+  "verdicts": {
+   "reach_gap": "PASS",
+   "bay_fill": "PASS",
+   "corridor_tracks": "FAIL",
+   "entry_pins": "PASS",
+   "clock_shield": "FAIL",
+   "static_ir": "FAIL",
+   "lot_fit": "PASS",
+   "clock_entry": "FAIL",
+   "core_reach": "FAIL",
+   "early_taps": "FAIL",
+   "tree_balance": "FAIL",
+   "core_insertion_model": "FAIL",
+   "die_pair_skew_model": "FAIL",
+   "tree_commensurate": "PASS",
+   "clock_sites": "FAIL",
+   "island_lattice": "FAIL",
+   "tree_on_islands": "FAIL",
+   "tree_lattice": "PASS",
+   "infra_sites": "FAIL",
+   "clock_rep_sites": "FAIL",
+   "tap_region_containment": "PASS",
+   "footless_stubs": "PASS",
+   "island_ft_inputs": "FAIL"
+  },
+  "bay_fill": {
+   "bays": 4359,
+   "bay_fails": 0,
+   "max_fill": 0.591,
+   "bay_fail_kinds": {},
+   "partition_fill_fails": 0,
+   "onramp_bays": 97
+  },
+  "corridor_tracks": {
+   "verdict": "FAIL",
+   "max_use": {
+    "M4": 1.166,
+    "M5": 1.268,
+    "M6": 0.881,
+    "M7": 0.997,
+    "M8": 0.591,
+    "M9": 0.994
+   }
+  },
+  "reach": {
+   "verdict": "PASS",
+   "max_gap_um": 404.976,
+   "fails": 0
+  },
+  "tree_commensurate_regional": {
+   "verdict": "PASS",
+   "regions": 377,
+   "regions_fail": 0,
+   "regions_with_tree_points": 34,
+   "fail_by_type": {},
+   "regions_irregular_islands": 12,
+   "irregular_islands_by_type": {
+    "sle_su_c__cl3c67a3d5": 3,
+    "sle_su_c__cl78b6fe86": 2,
+    "sle_su_c__cl99d49f55": 1,
+    "slw_su_c__cl49a25f5f": 1,
+    "slw_su_c__cl77ab230a": 4,
+    "slw_su_c__clbb0c543d": 1
+   },
+   "inter_region_lanes": 240
+  },
+  "tree_lattice": "PASS"
+ },
+ "hbmf_b1e_reg": {
+  "verdicts": {
+   "reach_gap": "PASS",
+   "bay_fill": "FAIL",
+   "corridor_tracks": "FAIL",
+   "entry_pins": "PASS",
+   "clock_shield": "NOT RUN",
+   "static_ir": "NOT RUN",
+   "lot_fit": "PASS",
+   "clock_entry": "FAIL",
+   "core_reach": "FAIL",
+   "early_taps": "PASS",
+   "tree_balance": "NOT RUN",
+   "core_insertion_model": "FAIL",
+   "die_pair_skew_model": "NOT RUN",
+   "tree_commensurate": "FAIL",
+   "clock_sites": "FAIL",
+   "island_lattice": "NOT RUN",
+   "tree_on_islands": "FAIL",
+   "tree_lattice": "FAIL",
+   "infra_sites": "FAIL",
+   "clock_rep_sites": "NOT RUN",
+   "tap_region_containment": "NOT RUN",
+   "footless_stubs": "NOT RUN",
+   "island_ft_inputs": "NOT RUN"
+  },
+  "bay_fill": {
+   "bays": 167632,
+   "bay_fails": 37535,
+   "max_fill": 0.957,
+   "bay_fail_kinds": {
+    "fill": 110,
+    "overlaps": 37500
+   },
+   "partition_fill_fails": 0,
+   "onramp_bays": 12
+  },
+  "corridor_tracks": {
+   "verdict": "FAIL",
+   "max_use": {
+    "M4": 126.127,
+    "M5": 136.634,
+    "M6": 147.312,
+    "M7": 136.63,
+    "M8": 3.029,
+    "M9": 1.436
+   }
+  },
+  "reach": {
+   "verdict": "PASS",
+   "max_gap_um": 404.726,
+   "fails": 0
+  },
+  "tree_commensurate_regional": {
+   "verdict": "FAIL",
+   "regions": 88,
+   "regions_fail": 29,
+   "regions_with_tree_points": 44,
+   "fail_by_type": {
+    "PHY_N": 1,
+    "q_b111": 2,
+    "q_b112": 2,
+    "q_hub_ne": 1,
+    "q_hub_nw": 1,
+    "q_mcb": 2,
+    "q_sm0": 2,
+    "q_sm1": 2,
+    "q_sm2": 2,
+    "q_sm3": 2,
+    "q_su00": 2,
+    "q_su01": 2,
+    "q_su10": 2,
+    "q_su21": 2,
+    "q_su30": 2,
+    "q_su31": 2
+   },
+   "regions_irregular_islands": 3,
+   "irregular_islands_by_type": {
+    "q_hub_ne": 1,
+    "q_hub_nw": 1,
+    "root": 1
+   },
+   "inter_region_lanes": 58
+  },
+  "tree_lattice": "FAIL"
+ },
+ "hbmf_b1e2_reg": {
+  "verdicts": {
+   "reach_gap": "PASS",
+   "bay_fill": "FAIL",
+   "corridor_tracks": "FAIL",
+   "entry_pins": "PASS",
+   "clock_shield": "NOT RUN",
+   "static_ir": "NOT RUN",
+   "lot_fit": "PASS",
+   "clock_entry": "FAIL",
+   "core_reach": "FAIL",
+   "early_taps": "PASS",
+   "tree_balance": "NOT RUN",
+   "core_insertion_model": "FAIL",
+   "die_pair_skew_model": "NOT RUN",
+   "tree_commensurate": "FAIL",
+   "clock_sites": "FAIL",
+   "island_lattice": "NOT RUN",
+   "tree_on_islands": "FAIL",
+   "tree_lattice": "FAIL",
+   "infra_sites": "FAIL",
+   "clock_rep_sites": "NOT RUN",
+   "tap_region_containment": "NOT RUN",
+   "footless_stubs": "NOT RUN",
+   "island_ft_inputs": "NOT RUN"
+  },
+  "bay_fill": {
+   "bays": 106812,
+   "bay_fails": 7052,
+   "max_fill": 0.957,
+   "bay_fail_kinds": {
+    "fill": 110,
+    "overlaps": 7018
+   },
+   "partition_fill_fails": 0,
+   "onramp_bays": 8
+  },
+  "corridor_tracks": {
+   "verdict": "FAIL",
+   "max_use": {
+    "M4": 74.908,
+    "M5": 80.095,
+    "M6": 74.904,
+    "M7": 80.09,
+    "M8": 2.554,
+    "M9": 1.436
+   }
+  },
+  "reach": {
+   "verdict": "PASS",
+   "max_gap_um": 404.726,
+   "fails": 0
+  },
+  "tree_commensurate_regional": {
+   "verdict": "FAIL",
+   "regions": 88,
+   "regions_fail": 29,
+   "regions_with_tree_points": 44,
+   "fail_by_type": {
+    "PHY_N": 1,
+    "q_b111": 2,
+    "q_b112": 2,
+    "q_hub_ne": 1,
+    "q_hub_nw": 1,
+    "q_mcb": 2,
+    "q_sm0": 2,
+    "q_sm1": 2,
+    "q_sm2": 2,
+    "q_sm3": 2,
+    "q_su00": 2,
+    "q_su01": 2,
+    "q_su10": 2,
+    "q_su21": 2,
+    "q_su30": 2,
+    "q_su31": 2
+   },
+   "regions_irregular_islands": 3,
+   "irregular_islands_by_type": {
+    "q_hub_ne": 1,
+    "q_hub_nw": 1,
+    "root": 1
+   },
+   "inter_region_lanes": 58
+  },
+  "tree_lattice": "FAIL"
+ },
+ "plan_b1e2": {
+  "path": "epyc1:/srv/opentallas-scratch2/claude/master-plan-r6-1026/plan_b1e2",
+  "die_plan_sha256": "81f5433b2e0a252bfb7eb1b4f007cc03ce9acc1465a3584ce4bbefdc5b2674fc",
+  "source": "plan_b1e sha 43fb3b14 (claude/hbm-b1e-1026@5801b1aa16)",
+  "tool": "tools/die_plan/hub_repack.py --hubs q_hub_nw,q_hub_ne --shrink shrink_b1e2.json"
+ }
+}

@@ -162,6 +162,44 @@ proc ot_ci_tree_gate {inst master parent clk_pin out_pin x y rect} {
   lappend ::ot_ci_fixed $i
   dict set ::ot_ci_tree_out $inst $n
 }
+# CLOCK-GATE COPY (S81-CORE-LAT-R7): a new ICG of the original's master; every enable pin reads the SAME net as the
+# original's pin (same registered enable), CLK from the plan parent, own GCLK net; the named members move from the
+# original's gated domain (each must be on it now). Exact membership: the domain census equals the member count.
+proc ot_ci_tree_gate_copy {inst master orig parent clk_pin out_pin x y rect pins members} {
+  set o [$::ot_ci_b findInst $orig]
+  if {$o eq "NULL" || ![dict exists $::ot_ci_tree_out $orig]} {error "OT_CORE_INFRA_GATE_COPY_ORIG $inst $orig"}
+  if {[[$o getMaster] getName] ne $master} {error "OT_CORE_INFRA_GATE_COPY_MASTER $inst"}
+  if {[$::ot_ci_b findInst $inst] ne "NULL"} {error "OT_CORE_INFRA_GATE_COPY_EXISTS $inst"}
+  set m [[ord::get_db] findMaster $master]
+  set i [odb::dbInst_create $::ot_ci_b $m $inst]
+  foreach p $pins {
+    set n [[$o findITerm $p] getNet]
+    if {$n eq "NULL"} {error "OT_CORE_INFRA_GATE_COPY_ENABLE_UNCONNECTED $orig/$p"}
+    [$i findITerm $p] connect $n
+  }
+  [$i findITerm $clk_pin] connect [dict get $::ot_ci_tree_out $parent]
+  set og [dict get $::ot_ci_tree_out $orig]
+  set n [ot_ci_net ${inst}_gclk]; $n setSigType CLOCK
+  [$i findITerm $out_pin] connect $n
+  foreach path $members {
+    set cut [string last / $path]
+    set s [$::ot_ci_b findInst [string range $path 0 [expr {$cut-1}]]]
+    if {$cut < 1 || $s eq "NULL"} {error "OT_CORE_INFRA_GATE_COPY_MEMBER $path"}
+    set it [$s findITerm [string range $path [expr {$cut+1}] end]]
+    if {$it eq "NULL" || [$it getNet] ne $og} {error "OT_CORE_INFRA_GATE_COPY_MEMBER_NOT_IN_DOMAIN $path $orig"}
+    set protected [$s isDoNotTouch]
+    if {$protected} {$s setDoNotTouch 0}
+    try {$it disconnect; $it connect $n} finally {if {$protected} {$s setDoNotTouch 1}}
+  }
+  ot_ci_place $i $x $y $rect
+  lappend ::ot_ci_cells $i
+  dict set ::ot_ci_tree_out $inst $n
+  puts "OT_CORE_INFRA_GATE_COPY $inst of=$orig members=[llength $members]"
+}
+proc ot_ci_lec_netlist {path} {
+  write_verilog $path
+  puts "OT_CORE_INFRA_LEC_NETLIST $path (gate copies: kit LEC must run lec.py --netlist on it)"
+}
 proc ot_ci_tree_domain {inst expected} {
   set n [dict get $::ot_ci_tree_out $inst]
   set k 0

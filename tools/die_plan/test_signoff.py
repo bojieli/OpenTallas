@@ -469,3 +469,13 @@ def test_pg_census_in_session_after_read_db():
     t = signoff.session_tcl("tt", [], spef=True)
     assert t.index("read_db /base/") < t.index("so PG $so_pg_terms $so_pg_open $so_pg_first") < t.index("read_spef")
     assert "getMTerms" in t and "{POWER GROUND}" in t
+
+
+def test_ft_char_reads_arrival_from_last_path_point():
+    # QC-SU-F4D: OpenSTA path ends have no "arrival" property (F4A rp1 session died -> every corner NOT RUN);
+    # the arrival comes from the last path POINT, already in ps (no so_ps re-conversion).
+    t = signoff.ft_char_tcl({"arcs": [{"source": "ft_ck_i", "sink": "ft_ck_o"}]})
+    assert "[get_property [lindex [get_property [lindex $so_ft_p 0] points] end] arrival]" in t
+    assert "[get_property [lindex $so_ft_p 0] arrival]" not in t
+    assert "so_ps [get_property" not in t
+    assert 'puts "SO_FT_ARC ft_ck_i ft_ck_o $so_ft_v(min) $so_ft_v(max)"' in t

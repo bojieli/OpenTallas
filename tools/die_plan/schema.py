@@ -331,6 +331,11 @@ SCHEMA = {
                         "keepouts_um": {"type": "array", "items": _rect},
                         # Die clock driver islands are uniform physical reservations, not extra tile IO.
                         "die_islands_um": {"type": "array", "items": _rect},
+                        # FALLBACK-HEAD-2 (opt-in): reserved site rectangles in the type frame (gen_phys
+                        # reserved_sites_tcl): die_clock_tree = hard, landing_ring_bank = GPL-only after the rings
+                        "reserved_sites_um": {"type": "array", "items": {"type": "object", "required": ["rect_um", "kind"],
+                            "properties": {"rect_um": _rect, "kind": {"enum": ["die_clock_tree", "landing_ring_bank"]},
+                                           "ref": {"type": "string"}}}},
                         # R4 revised (COORD 10-23): tap grid pitch for this type, sized from the measured tree
                         # (OT_TAP_CHECK WARN suggests it); default budgets.tap_pitch_um
                         "tap_pitch_um": _pos,
@@ -341,7 +346,7 @@ SCHEMA = {
                         # "density" (OWNER decision 5, 10-24; opt-in): NO grid -- taps placed by sink density
                         # (taps.density_taps: <= tap_target_sinks per tap within tap_radius_um, none on a hard
                         # core); sinks = face / ft registers + sink_sites_um + sink_bins_file (internal inventory)
-                        "tap_mode": {"enum": ["grid", "grid+sinks", "sinks", "density"]}, "tap_radius_um": _pos,
+                        "tap_mode": {"enum": ["grid", "grid+sinks", "sinks", "density", "explicit"]}, "tap_radius_um": _pos,
                         # PATH-KV-SYSC2 10-25 (GEOM F2): opt-in "sinks" = an R4 grid tap that tap_clear had to move
                         # off a macro / keepout (its cell centre is blocked) is re-centred on the weighted L1 median of
                         # the planned sinks the kit's nearest-tap rule gives it (taps.recentre_displaced), so it never
@@ -602,7 +607,13 @@ SCHEMA = {
             # IO-HOLD option A (COORD 10-25 10:23, opt-in; gen_phys.input_hold_min): "sender_min" = each partition
             # input's min input delay is its driving partition's guaranteed output-min, the related tap pair skew is
             # checked at the parent (io_hold_parent.py); "legacy" / absent = the flat contract above
-            "io_hold": {"enum": ["legacy", "sender_min"]},
+            "io_hold": {"enum": ["legacy", "sender_min", "plan_demand"]},
+            # HOLD-REPAIR 10-26 (12.4a a1, opt-in io_hold plan_demand; gen_phys.hold_demand_ps): plan-declared FF seam
+            # hold demand per seam pair (tools/die_plan/hold_demand.py from the plan clock arrival model, source
+            # "plan" only); the receiving kit's min input delay = sender guarantee - demand, landed seams keep fallback
+            "hold_demand": {"type": "object", "required": ["source"], "properties": {
+                "source": {"enum": ["plan"]}, "pairs": {"type": "object", "additionalProperties": _nonneg},
+                "landed": {"type": "array", "items": {"type": "string"}}, "default_ps": _nonneg}},
             # CP1 proof harness (COORD 2026-10-25 23:26 ruling (3), CLOCK-RESET): a cut-out proof die keeps, for each
             # die-edge input that the FULL plan drives from a registered partition, an explicit registered upstream
             # driver view {port id: part, type, bus, out_hold_guarantee_ps, basis}; under io_hold sender_min that
@@ -668,6 +679,7 @@ SCHEMA = {
                                "faces": {"type": "integer"}, "fixed": {"type": "integer"},
                                "boundary": {"type": "integer"},
                                "natural": {"type": "integer"}, "pad": {"type": "integer", "minimum": 0},
+                               "clock_landing": {"type": "integer", "minimum": 0},   # landed +3k (schema.lane_latency)
                                "beats": {"type": "integer", "minimum": 2}, "word_cycles": {"type": "integer"},
                                "param": {"type": "string"}}}}}},
         # mandatory G0 census coverage (census_cov.py): [{rows, map, note}] or {"none": reason}
@@ -691,6 +703,8 @@ SCHEMA = {
 # status hops are checked by landing_contract.py; default plans are unchanged.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_contract"] = {"type": "object"}
 SCHEMA["properties"]["clock"]["properties"]["landing_network"] = {"type": "object"}
+# clock-landing cohort types (clock_landing_plan.compose) name the base plan type they were split from.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["landing_base_type"] = {"type": "string"}
 
 
 def _check(v, s, path, errs):
@@ -1141,7 +1155,7 @@ def tap_pitch(P, tn):
 def sink_tap_mode(t):
     """True when the type adds sink-anchored taps to its grid (clock.tap_mode "grid+sinks", or the KV-P6 alias
     "sinks", which since the CP1 r8 RULING no longer replaces the grid)."""
-    return t.get("clock", {}).get("tap_mode") in ("grid+sinks", "sinks", "density")
+    return t.get("clock", {}).get("tap_mode") in ("grid+sinks", "sinks", "density", "explicit")
 
 
 def tap_grid(P, tn):
@@ -1160,6 +1174,9 @@ def tap_grid(P, tn):
         xy = t.get("clock", {}).get("tap_um")
         if isinstance(xy, (list, tuple)) and len(xy) == 2:
             return [("clk", float(xy[0]), float(xy[1]))]
+    if t.get("clock", {}).get("tap_mode") == "explicit":
+        import taps
+        return [(n, x, y) for n, x, y, _, _ in taps.explicit_taps(P, tn)]
     if t.get("clock", {}).get("tap_mode") == "density":
         import taps
         return [(n, x, y) for n, x, y, _, _ in taps.density_taps(P, tn)]
@@ -1247,6 +1264,18 @@ def _grid_taps(P, tn):
     if moved and t.get("clock", {}).get("tap_recentre") == "sinks":
         import taps
         out = taps.recentre_displaced(P, tn, out, moved)
+    edge = t.get("clock", {}).get("tap_edge_y_um")
+    if edge:
+        # CLOCK-KV-R8 (opt-in, COORD RULING CLOCK-KV-R7 (3) option a): a band partition outside the driven die-mesh rows
+        # takes its die clock entries on the array-facing edge(s) only: every grid column keeps one tap per listed
+        # type-frame y (plan-computed from the die mesh cover), the partition CTS reaches the interior (12.3 target).
+        xs_ = sorted({round((i + 0.5) * w / nx, 6) for i in range(nx)})
+        new = []
+        for ey in edge:
+            for cx in xs_:
+                x, y = tap_clear(t, cx, float(ey), [(a, b) for _, a, b in new])
+                new.append(("clk" if not new else f"clk_t{len(new)}", x, y))
+        out = new
     return out
 
 

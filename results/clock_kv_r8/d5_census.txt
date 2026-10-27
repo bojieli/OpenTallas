@@ -1,0 +1,37 @@
+{
+ "build": "d5",
+ "pushdown_total": 1760,
+ "not_in_a_core_rect": 0,
+ "roles": {
+  "mesh_driver": 1760
+ },
+ "modules": 12,
+ "identity_fail": [
+  "kv3_head_eighth_e0",
+  "kv3_head_eighth_e1",
+  "kv3_head_eighth_e2",
+  "kv3_head_eighth_e5",
+  "kv3_head_eighth_e6",
+  "kv3_pv_pair",
+  "ot_qwen_tp8_pv_join_t",
+  "qkd_kvs_pc"
+ ],
+ "identity_pass": [
+  "qkd_ectlk_q1",
+  "qkd_ectlk_q2",
+  "qkd_ectlk_q3",
+  "qkd_kvs_pc_h_head_p"
+ ]
+}
+kv3_head_eighth_e5 {'instances': 256, 'with_points': 256, 'site_sets': 8, 'identity': 'FAIL', 'per_inst': [1, 2], 'union_sites': 12, 'roles': {'mesh_driver': 384}}
+kv3_head_eighth_e6 {'instances': 256, 'with_points': 192, 'site_sets': 7, 'identity': 'FAIL', 'per_inst': [0, 1, 2], 'union_sites': 9, 'roles': {'mesh_driver': 288}}
+kv3_head_eighth_e1 {'instances': 256, 'with_points': 256, 'site_sets': 8, 'identity': 'FAIL', 'per_inst': [1], 'union_sites': 8, 'roles': {'mesh_driver': 256}}
+kv3_pv_pair {'instances': 256, 'with_points': 256, 'site_sets': 16, 'identity': 'FAIL', 'per_inst': [1], 'union_sites': 16, 'roles': {'mesh_driver': 256}}
+qkd_kvs_pc {'instances': 124, 'with_points': 124, 'site_sets': 2, 'identity': 'FAIL', 'per_inst': [2], 'union_sites': 4, 'roles': {'mesh_driver': 248}}
+kv3_head_eighth_e0 {'instances': 128, 'with_points': 96, 'site_sets': 4, 'identity': 'FAIL', 'per_inst': [0, 1], 'union_sites': 3, 'roles': {'mesh_driver': 96}}
+kv3_head_eighth_e2 {'instances': 128, 'with_points': 96, 'site_sets': 4, 'identity': 'FAIL', 'per_inst': [0, 1], 'union_sites': 3, 'roles': {'mesh_driver': 96}}
+qkd_ectlk_q1 {'instances': 32, 'with_points': 32, 'site_sets': 1, 'identity': 'PASS', 'per_inst': [1], 'union_sites': 1, 'roles': {'mesh_driver': 32}}
+qkd_ectlk_q2 {'instances': 32, 'with_points': 32, 'site_sets': 1, 'identity': 'PASS', 'per_inst': [1], 'union_sites': 1, 'roles': {'mesh_driver': 32}}
+qkd_ectlk_q3 {'instances': 32, 'with_points': 32, 'site_sets': 1, 'identity': 'PASS', 'per_inst': [1], 'union_sites': 1, 'roles': {'mesh_driver': 32}}
+ot_qwen_tp8_pv_join_t {'instances': 64, 'with_points': 32, 'site_sets': 3, 'identity': 'FAIL', 'per_inst': [0, 1], 'union_sites': 2, 'roles': {'mesh_driver': 32}}
+qkd_kvs_pc_h_head_p {'instances': 4, 'with_points': 4, 'site_sets': 1, 'identity': 'PASS', 'per_inst': [2], 'union_sites': 2, 'roles': {'mesh_driver': 8}}

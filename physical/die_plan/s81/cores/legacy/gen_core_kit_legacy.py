@@ -591,6 +591,12 @@ def _ms():
     return m
 
 
+def pin_gate_refusal(module, pg):
+    """refusal message for a core_pin_sites_gate FAIL (ROOT-MERGE-23: the f-string used bare names -> NameError)"""
+    return (f"{module}: plan pin table fails core_pin_sites_gate {pg['counts']} ({pg['stacked_pins']} stacked "
+            f"pins, e.g. {pg['examples']}) -- fix the plan pin assignment, not the kit")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--module", required=True, help="recipe key (= plan module unless the recipe names plan_module)")
@@ -676,6 +682,13 @@ def main():
         nx_, ny_ = a.regional_taps.lower().split("x")
         rt.update(nx=int(nx_), ny=int(ny_))
     pins = hc["pins"] if "pins" in hc else json.load(open(S81 / hc["pins_file"]))["pins"]
+    # S81-CORE-LAT-R6 10-26 (COORD RULING 15:12): the plan pin table must have no stacked / duplicate pin sites (l0r r3rt22
+    # GRT-0080 abort on 255 stacked W-face pins) -- refuse the kit, fix the PLAN pin assignment.
+    sys.path.insert(0, str(REPO / "tools/die_plan"))
+    import core_pin_sites_gate
+    _pg = core_pin_sites_gate.check_pins(pins, *hc["outline_um"])
+    if _pg["verdict"] != "PASS":
+        raise SystemExit(pin_gate_refusal(a.module, _pg))
     dirs = lef_dirs(REPO / hc["lef"])
     shapes = lef_pin_rects(REPO / hc["lef"])
     suffix = a.suffix or rec.get("suffix", "c")

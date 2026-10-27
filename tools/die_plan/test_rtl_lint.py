@@ -48,3 +48,21 @@ def test_lint_fails_closed_on_malformed_top_parameters(tmp_path):
     (tmp_path / 'config.mk').write_text('export DESIGN_NAME = demo\nexport VERILOG_FILES = /work/demo.sv\nexport VERILOG_TOP_PARAMS = AQ_XMEM\n')
     assert rtl_lint.run(tmp_path) == 1
     assert 'name/value pairs' in (tmp_path / 'rtl_lint.json').read_text()
+
+
+def test_empty_config_values_do_not_consume_following_assignments(tmp_path):
+    (tmp_path / 'config.mk').write_text(
+        'export DESIGN_NAME = demo\n'
+        'export VERILOG_FILES = /work/demo.sv\n'
+        'export VERILOG_TOP_PARAMS =\n'
+        'export VERILOG_DEFINES = -DREAL=1\n'
+        'export VERILOG_INCLUDE_DIRS =\n'
+        'override export SYNTH_INCLUDE_DIRS := /work/inc\n')
+    cfg = rtl_lint.config(tmp_path)
+    assert cfg['VERILOG_TOP_PARAMS'] == []
+    assert cfg['VERILOG_INCLUDE_DIRS'] == []
+    assert cfg['SYNTH_INCLUDE_DIRS'] == ['/work/inc']
+    text = rtl_lint.script(tmp_path)
+    assert 'chparam' not in text
+    assert '-DREAL=1' in text
+    assert 'read_verilog -defer -sv -noautowire -I/work/inc /work/demo.sv' in text

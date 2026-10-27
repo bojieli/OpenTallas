@@ -41,9 +41,8 @@ endmodule
 module ot_s81hd_elemB_cv #(parameter INSTANCE = "") (
     input  wire clk, input wire rst_n, input wire go, input wire [16:0] row0, input wire [255:0] x,
     input  wire b_v, input wire [31:0] b_d,
-    output wire o_v, output wire [31:0] o_d, output wire l_v, output wire [31:0] l_d,
-    output wire done, output wire [16:0] best_row, output wire [31:0] best_bits, output wire [31:0] best_key,
-    output wire fault
+    output wire o_v, output wire [31:0] o_d,
+    output wire fault   // R6 10-26: l_v/l_d/done/best_* removed (unused at the parent), as ot_s81hd_elemB_rb.sv
 );
     wire nc_hv; wire [31:0] nc_hd; wire [16:0] nc_hr;
     // OWNER RESET RULE 2026-10-24: the delivered reset is a SYNCHRONOUS signal (die relay chain); one local relay flop
@@ -51,11 +50,11 @@ module ot_s81hd_elemB_cv #(parameter INSTANCE = "") (
     // the only TT setup failure, recovery -71 ps).  +1 cycle of reset latency.
     reg rst_q;
     always @(posedge clk) rst_q <= rst_n;
-    wire m_ov, m_lv, m_done, m_fault; wire [31:0] m_od, m_ld, m_bits, m_key; wire [16:0] m_row;
+    wire m_ov, m_fault; wire [31:0] m_od;
+    wire m_lv, m_done; wire [31:0] m_ld, m_bits, m_key; wire [16:0] m_row;   // dead element cones (removed ports)
     // one dedicated output register stage on EVERY output (+1 cycle; the rebuilt elemB macro, ot_s81hd_elemB_rb.sv)
-    ot_s81hd_oreg #(.W(1 + 32 + 1 + 32 + 1 + 17 + 32 + 32 + 1)) u_oreg (.clk(clk), .rst_n(rst_q),
-        .d({m_ov, m_od, m_lv, m_ld, m_done, m_row, m_bits, m_key, m_fault}),
-        .q({o_v, o_d, l_v, l_d, done, best_row, best_bits, best_key, fault}));
+    ot_s81hd_oreg #(.W(1 + 32 + 1)) u_oreg (.clk(clk), .rst_n(rst_q),
+        .d({m_ov, m_od, m_fault}), .q({o_v, o_d, fault}));
     ot_s81hd_elem #(.LV(6), .PAD(2), .JOIN(0), .ROWS(128), .CUT(9'h1ff), .SPLIT9(1), .INSTANCE(INSTANCE), .IOREG(1),
                     .SAFE(1)) u_m (
         .clk(clk), .rst_n(rst_q), .go(go), .row0(row0), .x(x), .b_v(b_v), .b_d(b_d), .o_v(m_ov), .o_d(m_od), .l_v(m_lv),

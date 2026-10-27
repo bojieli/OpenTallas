@@ -77,3 +77,12 @@ def test_hard_child_master_kit(tmp_path):
     r = subprocess.run([sys.executable, str(GEN), "--module", "dsdv_bksel_q", "--out", str(tmp_path / "p")],
                        capture_output=True, text=True)
     assert r.returncode != 0 and "must be signed first" in r.stderr
+
+
+def test_pin_gate_refusal_message():
+    """ROOT-MERGE-23: a core_pin_sites_gate FAIL must refuse with the message, not a NameError"""
+    pg = dict(pins=3, counts=dict(stacked=2, off_face=1), stacked_pins=2, verdict="FAIL",
+              examples=dict(stacked=["a", "b"], off_face=["c"]))
+    msg = G.pin_gate_refusal("dsdv_x", pg)
+    assert msg.startswith("dsdv_x: plan pin table fails core_pin_sites_gate {'stacked': 2, 'off_face': 1} (2 stacked pins")
+    assert "['c']" in msg and msg.endswith("fix the plan pin assignment, not the kit")

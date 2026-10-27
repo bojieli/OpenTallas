@@ -1,0 +1,6 @@
+5 [965, 305, 847, 707, 467] [5, 2, 4, 4, 3] {'T1': 257.04, 'T2': 70.74, 'T3': 30.24} {'mean': 259.15, 'min': 253.23, 'max': 266.79, 'window': 13.56} {'mean': 206.88, 'min': 200.74, 'max': 213.44, 'window': 12.7}
+BEST 5 {'TT': {'mean': 259.15, 'min': 253.23, 'max': 266.79, 'window': 13.56}, 'FF': {'mean': 206.88, 'min': 200.74, 'max': 213.44, 'window': 12.7}}
+uf {'mean': 259.15, 'min': 253.23, 'max': 266.79, 'window': 13.56} {'mean': 206.88, 'min': 200.74, 'max': 213.44, 'window': 12.7}
+ASBUILT {'TT': {'mean_raw': 289.27, 'mean': 291.17, 'min': 260.04, 'max': 302.0, 'window': 41.96}, 'FF': {'mean_raw': 225.56, 'mean': 220.46, 'min': 197.65, 'max': 236.53, 'window': 38.88}}
+EARLY/LATE {'TT': {'early': {'mean_raw': 280.64, 'mean': 282.54, 'min': 251.31, 'max': 293.43, 'window': 42.12}, 'late': {'mean_raw': 293.77, 'mean': 295.67, 'min': 265.29, 'max': 305.75, 'window': 40.46}}, 'FF': {'early': {'mean_raw': 221.49, 'mean': 216.39, 'min': 193.58, 'max': 232.43, 'window': 38.85}, 'late': {'mean_raw': 227.3, 'mean': 222.2, 'min': 199.63, 'max': 237.97, 'window': 38.34}}}
+spec c_ls_k5_L3.gate.asbuilt.tcl 79 nodes 64 leaves 4 macros

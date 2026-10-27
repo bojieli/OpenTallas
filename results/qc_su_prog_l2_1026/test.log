@@ -1,0 +1,61 @@
+test_band_edges (__main__.GuardBand.test_band_edges) ... ok
+test_band_values (__main__.GuardBand.test_band_values) ... ok
+test_frozen_params (__main__.GuardBand.test_frozen_params) ... ok
+test_sizer_list_calibrated_only (__main__.GuardBand.test_sizer_list_calibrated_only) ... ok
+test_windows (__main__.GuardBand.test_windows) ... ok
+test_provenance_and_sensitivity (__main__.Predict.test_provenance_and_sensitivity) ... /srv/opentallas-scratch2/claude/wt/qc-su-prog-l2-1026/results/model_refit2_1026/py/lib.py:3: ResourceWarning: unclosed file <_io.TextIOWrapper name='/srv/opentallas-scratch2/claude/qc-su-prog-l1-1026/in/lib/invbuf_tt.lib' mode='r' encoding='UTF-8'>
+  t=open(path).read();out={}
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/srv/opentallas-scratch2/claude/wt/qc-su-prog-l2-1026/results/model_refit2_1026/py/lib.py:3: ResourceWarning: unclosed file <_io.TextIOWrapper name='/srv/opentallas-scratch2/claude/qc-su-prog-l1-1026/in/lib/invbuf_ff.lib' mode='r' encoding='UTF-8'>
+  t=open(path).read();out={}
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/srv/opentallas-scratch2/claude/wt/qc-su-prog-l2-1026/results/qc_su_prog_l1_1026/phys_gate.py:109: ResourceWarning: unclosed file <_io.TextIOWrapper name='/srv/opentallas-scratch2/claude/wt/qc-su-prog-l2-1026/results/qc_su_kits/r4/btab_m0_r4/btab_ls_k6_L3.gate.asbuilt.json' mode='r' encoding='UTF-8'>
+  plan = U.Plan(spec, geo, json.load(open(asb))["seg_um"])
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/srv/opentallas-scratch2/claude/wt/qc-su-prog-l2-1026/results/model_refit2_1026/py/common.py:6: ResourceWarning: unclosed file <_io.TextIOWrapper name='/srv/opentallas-scratch2/claude/wt/qc-su-prog-l2-1026/results/qc_su_kits/r4/btab_m0_r4/btab_ls_k6_L3.gate.asbuilt.tcl' mode='r' encoding='UTF-8'>
+  t = open(p).read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/srv/opentallas-scratch2/claude/wt/qc-su-prog-l2-1026/results/model_refit2_1026/py/common.py:29: ResourceWarning: unclosed file <_io.TextIOWrapper name='/srv/opentallas-scratch2/claude/wt/qc-su-prog-l2-1026/results/qc_su_kits/r2/btab_m0.geo' mode='r' encoding='UTF-8'>
+  for ln in open(p):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_reproduces_model_refit2_evalgate (__main__.Predict.test_reproduces_model_refit2_evalgate) ... /srv/opentallas-scratch2/claude/wt/qc-su-prog-l2-1026/results/qc_su_prog_l1_1026/phys_gate.py:109: ResourceWarning: unclosed file <_io.TextIOWrapper name='/srv/opentallas-scratch2/claude/wt/qc-su-prog-l2-1026/results/qc_su_kits/r3/out/prog_m0_r3.gate.asbuilt.json' mode='r' encoding='UTF-8'>
+  plan = U.Plan(spec, geo, json.load(open(asb))["seg_um"])
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/srv/opentallas-scratch2/claude/wt/qc-su-prog-l2-1026/results/model_refit2_1026/py/common.py:6: ResourceWarning: unclosed file <_io.TextIOWrapper name='/srv/opentallas-scratch2/claude/wt/qc-su-prog-l2-1026/results/qc_su_kits/r3/out/prog_m0_r3.gate.asbuilt.tcl' mode='r' encoding='UTF-8'>
+  t = open(p).read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/srv/opentallas-scratch2/claude/wt/qc-su-prog-l2-1026/results/model_refit2_1026/py/common.py:29: ResourceWarning: unclosed file <_io.TextIOWrapper name='/srv/opentallas-scratch2/claude/wt/qc-su-prog-l2-1026/results/qc_su_kits/r2/prog_m0.geo' mode='r' encoding='UTF-8'>
+  for ln in open(p):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_sizer_cells_only (__main__.Predict.test_sizer_cells_only) ... /srv/opentallas-scratch2/claude/wt/qc-su-prog-l2-1026/results/qc_su_prog_l1_1026/su_branch_size.py:62: ResourceWarning: unclosed file <_io.TextIOWrapper name='/srv/opentallas-scratch2/claude/wt/qc-su-prog-l2-1026/results/qc_su_kits/r4/btab_m0_r4/btab_ls_k6_L3.gate.asbuilt.json' mode='r' encoding='UTF-8'>
+  plan = U.Plan(spec, geo, json.load(open(asb))["seg_um"])
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+PASS 0 J 12.545 changed 21
+/srv/opentallas-scratch2/claude/wt/qc-su-prog-l2-1026/results/qc_su_prog_l1_1026/test_phys_gate.py:90: ResourceWarning: unclosed file <_io.TextIOWrapper name='/srv/opentallas-scratch2/claude/wt/qc-su-prog-l2-1026/results/qc_su_kits/r4/btab_m0_r4/btab_ls_k6_L3.gate.asbuilt.json' mode='r' encoding='UTF-8'>
+  plan = U.Plan(BTAB[0], BTAB[2], json.load(open(BTAB[1]))["seg_um"])
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/srv/opentallas-scratch2/claude/wt/qc-su-prog-l2-1026/results/model_refit2_1026/py/common.py:6: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp34bhsnqk/s.tcl' mode='r' encoding='UTF-8'>
+  t = open(p).read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 43.338s
+
+OK
+test_gap_row_crossing_passes (__main__.Clearance.test_gap_row_crossing_passes) ... ok
+test_l1_lpath_convention_is_checked (__main__.Clearance.test_l1_lpath_convention_is_checked) ... ok
+test_leg_across_sram_fails (__main__.Clearance.test_leg_across_sram_fails) ... ok
+test_leg_inside_column_fails (__main__.Clearance.test_leg_inside_column_fails) ... ok
+test_legal_node_leaves_band (__main__.Clearance.test_legal_node_leaves_band) ... ok
+test_maze_paths_keep_clearance (__main__.Clearance.test_maze_paths_keep_clearance) ... ok
+test_vertical_leg_at_283_passes (__main__.Clearance.test_vertical_leg_at_283_passes) ... ok
+test_vertical_leg_hugging_column_fails (__main__.Clearance.test_vertical_leg_hugging_column_fails) ... ok
+test_west_side_band_also_checked (__main__.Clearance.test_west_side_band_also_checked) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.771s
+
+OK
