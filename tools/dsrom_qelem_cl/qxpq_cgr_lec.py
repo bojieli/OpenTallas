@@ -169,6 +169,10 @@ def merge_enable_copies(m):
     for pn, pp in m["ports"].items():
         if pp["direction"] == "output":
             pp["bits"] = [sub.get(b, b) for b in pp["bits"]]
+    # Removed register outputs must not survive as undriven public wire aliases:
+    # equiv_make treats those aliases as independent compare points.
+    for nn in m["netnames"].values():
+        nn["bits"] = [sub.get(b, b) for b in nn["bits"]]
     return {"into": rep, "copies": done, "check": "type/CLK/ARST/D/params identical"}
 
 
