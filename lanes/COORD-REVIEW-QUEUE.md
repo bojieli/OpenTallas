@@ -2230,3 +2230,5 @@ READY [CODEX HBM-SK-CE 2026-10-27 08:52 PDT] codex/hbm-sk-ce-0835@d02f055a42: op
 
 READY [CODEX HBM-SM-NATIVE 2026-10-27 09:03 PDT] codex/hbm-rp3-macroscope-0825@9719667735: source-only4nativehard profile,8inventory/4releaseeligible,INTERNAL_CORE0facecycles;12mockguardsPASS/0freshkits; four-hard residual mapped58218N/38853Sstd13children each. No P&R; pinsmodel first.
 READY [CODEX HBM-CTLX-HINTS 2026-10-27 09:03 PDT] codex/hbm-ctlx-hints-0900@61a829674e:48inductivelyprovedquartethints+3lineemitter; actualEQ42320/42320; wrongquartetcontrolfails1/dropsfalsehint. NoRTL/cycleschange; VMSunprovedexcluded.
+
+READY [CODEX HBM-LINT 2026-10-27 09:07 PDT] codex/hbm-lint-1027@53db0772b: realstaticpreflightmissingtool fixed HBMgen copiesrtl_lint.py; runnerinsideDockerfailsclosedbeforeSDC/synth onFAIL/missing(exit8).4runtimecontrolsPASS+bash-n; independentHBMcanarylint alreadyPASS, nophysical/QoR/RCchanges, no unreadyRC60ancestry. Root/flowapproved.

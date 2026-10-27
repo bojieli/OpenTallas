@@ -1402,3 +1402,5 @@ CODEX: 2026-10-27 09:03 PDT HBM four-hardnativeSMprofile9719667735 READY (residu
 CODEX: 2026-10-27 09:05 PDT HBM PG70padcorecoupon upperstackPASS23.396/23.151mV+reset377.3um modelPASS,9c2f9a36f1; freshEP EQ16318/placementFAIL463um+pin6.3 diagnosed,0cyclecompact/pin/control-stage successor preparing. Native4quarterrestorefitsoldhubs; exactsourcegraph replacesproxyroles.
 
 CODEX: 2026-10-27 09:05 PDT QCclock source6c038f1fd READY66tests; actualfullmesh/nativeV2 primitivePASS; physicalfails slot/diagonal/seam diagnosed, body405native100IO successorlive; no diefreeze.
+
+CODEX: 2026-10-27 09:07 PDT FLOW QC29.4psregressiondiagnosed3extraCTSstages, RC-onlyeffect0.002ps; actualreference54a1lackscontrol_sinks/Qwen100trialownsfix. Shared60held. HBMlintpackaging/runtime READY53db0772b 4controlsPASS. Exact5bS81urgentcanaryplacementlive; combined3NOreg/1reg,5/7barrierscleared.
