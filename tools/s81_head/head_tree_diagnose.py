@@ -3,11 +3,13 @@
 import argparse
 import copy
 import json
+import os
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / 'die_plan'))
+sys.path.insert(0, os.environ.get('HEAD_TREE_SHARED_TOOLS',
+                                 str(Path(__file__).resolve().parent.parent / 'die_plan')))
 import die_clock_mesh as D
 import schema as S
 
