@@ -34,7 +34,7 @@ def color_intervals(rows):
     return result, count
 
 
-def allocate(spec, plan, align_inputs=False):
+def allocate(spec, plan, align_inputs=False, exact_jogs=False):
     out = copy.deepcopy(spec)
     groups, bydrv, incoming = defaultdict(list), defaultdict(list), {}
     for name, cell in out['cell_sites'].items():
@@ -78,7 +78,9 @@ def allocate(spec, plan, align_inputs=False):
         bucket = round(coord / 8.64) * 8.64
         vals = [d[axis]] + [p[axis] for p in ps]
         # Account for every permitted local-jog displacement before coloring.
-        buckets[lay, round(bucket, 3)].append((min(vals)-8.64, max(vals)+8.64, g))
+        pad = (.08 if lay == 'M8' else D.C128.STACK_RISER_MAX_UM +
+               (max(len(v) for v in groups.values())-1)*D.ROW_Y + .08) if exact_jogs else 8.64
+        buckets[lay, round(bucket, 3)].append((min(vals)-pad, max(vals)+pad, g))
     targets, counts = {}, {}
     for (lay, bucket), rows in sorted(buckets.items()):
         colors, n = color_intervals(rows)
@@ -115,19 +117,22 @@ def allocate(spec, plan, align_inputs=False):
         axis = 0 if layers[g] == 'M8' else 1
         vals = [d[axis]] + [p[axis] for p in ps]
         name = 'ckm_w_' + groups[g][0][0]
-        corridors[name] = dict(targets[g], lo=min(vals)-8.64, hi=max(vals)+8.64)
+        pad = (.08 if layers[g] == 'M8' else D.C128.STACK_RISER_MAX_UM +
+               (max(len(v) for v in groups.values())-1)*D.ROW_Y + .08) if exact_jogs else 8.64
+        corridors[name] = dict(targets[g], lo=min(vals)-pad, hi=max(vals)+pad)
     out['exact_reserve'] = False
     out['summary']['corridor_colors'] = counts
     out['summary']['requires_new_island_census'] = True
     return out, corridors
 
 
-def route(spec, corridors, plan):
+def route(spec, corridors, plan, exact_jogs=False):
     original = D.C128.TrackRouter
     class CorridorRouter(original):
         def __init__(self, *a, **kw):
             super().__init__(*a, **kw)
             self.preloaded, self.fixed, self.used = False, {}, set()
+            self.pending_drops = {}
         def reserve(self, shapes):
             super().reserve(shapes)
             if self.preloaded:
@@ -151,11 +156,37 @@ def route(spec, corridors, plan):
                     raise D.C128.PlanError([dict(kind='corridor_pin_reach', name=net,
                         detail=f'{c} vs ideal {ideal}, bound {self.max_move}')])
                 return c, mode, ext
+            if exact_jogs and net in self.used and corridors[net]['layer'] == 'M8':
+                if layer == 'M8' and abs(abs(a1-a0)-2*self.max_move) < 1e-5:
+                    # Local drop is anchored to the already-aligned capture A
+                    # pin. Reserve its actual short jog, then require that exact
+                    # M9 column; failure does not fall back to a distant drop.
+                    x = (a0+a1)/2
+                    tr = self.tracks['M9']
+                    col = tr['offset_um'] + round((x-tr['offset_um'])/tr['pitch_um'])*tr['pitch_um']
+                    self.pending_drops[net] = col
+                    return super().place(layer, ideal, min(x,col), max(x,col), net, **kw)
+                if layer == 'M9' and net in self.pending_drops:
+                    col = self.pending_drops.pop(net)
+                    return super().place(layer, col, a0, a1, net, keep=(col-.001,col+.001))
             return super().place(layer, ideal, a0, a1, net, **kw)
     D.C128.TrackRouter = CorridorRouter
     try:
-        return D.build_explicit(spec, plan, ndr='16w', root_um=plan.raw['clock']['spine']['root_um']
+        result = D.build_explicit(spec, plan, ndr='16w', root_um=plan.raw['clock']['spine']['root_um']
             if hasattr(plan, 'raw') else None)
+        errors = []
+        for wire in result[3]['fixed_wires']:
+            if wire['name'] not in corridors:
+                continue
+            r = corridors[wire['name']]
+            for layer,x0,y0,x1,y1 in wire['segs'][:1]:
+                lo,hi = sorted((x0,x1) if layer=='M8' else (y0,y1))
+                if layer != r['layer'] or lo < r['lo']-1e-5 or hi > r['hi']+1e-5:
+                    errors.append(dict(kind='corridor_reserve_overflow', name=wire['name'],
+                                       detail=dict(actual=[layer,lo,hi], reserved=r)))
+        if errors:
+            raise D.C128.PlanError(errors)
+        return result
     finally:
         D.C128.TrackRouter = original
 
@@ -166,13 +197,15 @@ def main():
     ap.add_argument('spec', type=Path)
     ap.add_argument('out', type=Path)
     ap.add_argument('--align-inputs', action='store_true')
+    ap.add_argument('--exact-local-jogs', action='store_true')
     a = ap.parse_args(); a.out.mkdir(parents=True, exist_ok=True)
     plan = S.Plan(S.load(a.plan))
-    spec, corridors = allocate(json.loads(a.spec.read_text()), plan, align_inputs=a.align_inputs)
+    spec, corridors = allocate(json.loads(a.spec.read_text()), plan, align_inputs=a.align_inputs,
+                               exact_jogs=a.exact_local_jogs)
     (a.out/'explicit_tree.json').write_text(json.dumps(spec, indent=1)+'\n')
     (a.out/'corridors.json').write_text(json.dumps(corridors, indent=1)+'\n')
     try:
-        cells, nets, ports, meta = route(spec, corridors, plan)
+        cells, nets, ports, meta = route(spec, corridors, plan, exact_jogs=a.exact_local_jogs)
     except D.C128.PlanError as error:
         from collections import Counter
         summary = dict(verdict='FAIL', counts=dict(Counter(r['kind'] for r in error.rows)), errors=len(error.rows))
