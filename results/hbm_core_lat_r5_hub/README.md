@@ -8,7 +8,7 @@ Renders: render_core_placed.py on each kit's placed.csv (viewed by author). Numb
 | sfustore_hw@e7982b24ac22 | intel1 | EQUIVALENT 13827 pts | PLACED | 336.96x328.32 | 0.076 | 16 SRAMs NOT on a regular grid; all 1829 pins on S face; std logic = S-face band + scatter; outline oversized (R3 proposal 293.76x285.12) |
 | programme_store_r10@b0729904377c | epyc2 | EQUIVALENT 58963 pts (1070 RTL-X dont-care) | FAIL GPL-0305 (RePlAce diverged; routability inflation +182%) | 574.56x738.72 | movable 43373 um2 / white 84343 um2 | outline = B2o; R3 proposal 535.68x682.56; divergence = local pin-face congestion (inflation), not density |
 | gq_land@4e84c42519cf | intel2 | NOT EQUIVALENT 24/11019 | not placed (FAIL_PREFLOOR) | - | - | see diagnosis below |
-| pc_ctrl_leaf_cfg_h9b p00@f667644f356a | intel2 | RUNNING (correspondence round ~30+) | pending | - | - | collect kits/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_f667644f356a-_r4/{lec/lec.json,placed.csv,run_place.log} |
+| pc_ctrl_leaf_cfg_h9b p00@f667644f356a | intel2 | NOT EQUIVALENT 77 differ (controller.on.bsel/bsel_oh) + keys_r[168..] removed although not constant (5994 s) | not placed (FAIL_PREFLOOR) | - | - | root cause NOT diagnosed (UNCHECKED: possibly same no-reset X-refinement class); next owner reads lec/lec.json first cones |
 
 ## gq_land LEC NOT EQUIVALENT: diagnosis (CHECKED from RTL + gate netlist names)
 - Failing points = g_face_clone_vm_kq[281k+277..279], k=0..7 = kq_n word bits [279:277] = ln_s[m][15:13].
