@@ -1,0 +1,24 @@
+{
+  "source_commit": "3bd658f042",
+  "baseline_errors": 15916,
+  "errors": 4794,
+  "by_kind": {
+    "no_clock_track": 4749,
+    "reserve_overflow": 33,
+    "net_trunk_layer": 12
+  },
+  "by_ndr": {
+    "2x16w": 3049,
+    "16w": 1332,
+    "8w": 81,
+    "4w": 332
+  },
+  "by_namespace": {
+    "b": 4551,
+    "t": 16,
+    "c": 227
+  },
+  "phase": "R28 light PG plus VSS mesh cut",
+  "geometry": "same cells/sites/masters/NDRs/plan as R28 c_dry10; only pair-spacing router changed",
+  "scope": "dry failure census; no P&R/STA or freeze admission"
+}
