@@ -790,7 +790,15 @@ def main():
     # MASTER PLAN 12.7c (opt-in --master-slice DIR): slice -> master_slice.json/.tcl, sourced at PRE_GLOBAL_PLACE
     # (face_flops.tcl: after io placement, before GPL); refused without a slice once required unless --trial
     ms = MS.kit_apply(kd, mod, [w, h], a.master_slice, plan, a.trial, kind="core",
-                      gpl_hook=kd / "face_flops.tcl", clock_ports=clks, reset_ports=rsts)
+                      gpl_hook=kd / "face_flops.tcl", clock_ports=clks, reset_ports=rsts,
+                      cts_hook=kd / "hold_budget.tcl")
+    if (kd / "master_slice_cts_nets.txt").is_file():
+        # 12.8b structured internal H-tree from the slice: PRE_CTS assigns sinks to the plan leaf nets, CTS builds one
+        # sub-tree per leaf net (the leaf drivers are fixed pushdown cells at the plan islands)
+        nets = (kd / "master_slice_cts_nets.txt").read_text().split()
+        cfg += [f'override export CTS_ARGS := $(CTS_ARGS) -clk_nets "{" ".join(nets)}"']
+        if not (kd / "hold_budget.tcl").is_file():
+            cfg += ["override export PRE_CTS_TCL = /work/master_slice_cts.tcl"]
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     rev = subprocess.run(["git", "-C", str(REPO), "rev-parse", "--short", "HEAD"], capture_output=True,
                          text=True).stdout.strip() or "?"

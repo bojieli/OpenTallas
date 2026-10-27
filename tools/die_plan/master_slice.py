@@ -30,6 +30,8 @@ BAY_KINDS = ("station", "repeater")
 OUTLINE_TOL_UM = 1e-3
 TRIAL = "TRIAL-NO-SLICE"
 HOOK_LINE = "if {[file exists /work/master_slice.tcl]} { source /work/master_slice.tcl }\n"
+PDN_HOOK_LINE = "if {[file exists /work/master_slice_pdn.tcl]} { source /work/master_slice_pdn.tcl }\n"
+CTS_HOOK_LINE = "if {[file exists /work/master_slice_cts.tcl]} { source /work/master_slice_cts.tcl }\n"
 REFUSE = ("sign-off kit refused: no master-plan slice (METHODOLOGY 12.7c); pass --master-slice or --trial")
 
 
@@ -197,7 +199,7 @@ def validate(sl):
     return errs
 
 
-PD_ROLES = ("clock_entry", "tree_leaf", "die_node")
+PD_ROLES = ("clock_entry", "tree_leaf", "die_node", "core_tree_node")
 
 
 def validate_pushdown(pd, outline):
@@ -458,7 +460,7 @@ def emit_consume_tcl(sl, dbu=1000, clock_ports=None, reset_ports=None):
          "  if {$bt eq \"NULL\"} { set n [ot_ms_net $nm $sig]; set bt [odb::dbBTerm_create $n $nm]",
          "    $bt setIoType [expr {$dir eq \"in\" ? \"INPUT\" : \"OUTPUT\"}]; $bt setSigType $sig; incr ::ms_np }",
          "  place_pin -pin_name $nm -layer $layer -location [list $x $y] -pin_size {0.024 0.384}",
-         "  foreach bp [$bt getBPins] { $bp setPlacementStatus FIXED }",
+         "  foreach bp [$bt getBPins] { $bp setPlacementStatus FIRM }",
          "  return [$bt getNet]",
          "}",
          "# a cell at (x, y) um snapped to the row/site grid, the nearest free site inside rect (um); FIXED + dont_touch",
@@ -484,7 +486,7 @@ def emit_consume_tcl(sl, dbu=1000, clock_ports=None, reset_ports=None):
          "return NULL }",
          "  set i [odb::dbInst_create $::ms_b $m $nm]",
          "  $i setOrient [lindex $best 3]; $i setLocation [lindex $best 1] [lindex $best 2]",
-         "  $i setPlacementStatus FIXED; $i setDoNotTouch 1; incr ::ms_nc",
+         "  $i setPlacementStatus FIRM; incr ::ms_nc",
          "  lappend ::ms_fixed [list [lindex $best 1] [lindex $best 2] [expr {[lindex $best 1] + $w}] "
          "[expr {[lindex $best 2] + $h}]]",
          "  return $i",
@@ -492,13 +494,14 @@ def emit_consume_tcl(sl, dbu=1000, clock_ports=None, reset_ports=None):
          "proc ot_ms_buf {nm mn x y rect nin nout} { set i [ot_ms_cell $nm $mn $x $y {*}$rect]",
          "  if {$i eq \"NULL\"} { return }",
          "  if {[[$i findITerm A] getNet] eq \"NULL\"} { [$i findITerm A] connect $nin }",
-         "  if {[[$i findITerm Y] getNet] eq \"NULL\"} { [$i findITerm Y] connect $nout } }",
+         "  if {[[$i findITerm Y] getNet] eq \"NULL\"} { [$i findITerm Y] connect $nout }",
+         "  $i setDoNotTouch 1 }",
          "# clock entry: the kit's own clock / reset port moves to the island ft-input point and the island driver goes",
          "# between the port and the core clock net (the 12.8c designed fixed entry stage, same cell every instance)",
          "proc ot_ms_entry {port x y layer mn par rect sig} {",
          "  set bt [$::ms_b findBTerm $port]; if {$bt eq \"NULL\"} { return 0 }",
          "  place_pin -pin_name $port -layer $layer -location [list $x $y] -pin_size {0.024 0.384}",
-         "  foreach bp [$bt getBPins] { $bp setPlacementStatus FIXED }",
+         "  foreach bp [$bt getBPins] { $bp setPlacementStatus FIRM }",
          "  if {$mn eq {}} { return 1 }",
          "  set n [$bt getNet]; if {[$::ms_b findInst mp_isl_entry_${port}_0] ne \"NULL\"} { return 1 }",
          "  set nn [ot_ms_net ${port}_mp_core $sig]",
@@ -522,6 +525,15 @@ def emit_consume_tcl(sl, dbu=1000, clock_ports=None, reset_ports=None):
         rs_i = next((q for q in fp.values() if q["name"].endswith("_rst_i")), None)
         rs_o = next((q for q in fp.values() if q["name"].endswith("_rst_o")), None)
         L.append(f"# pushdown island {k['name']} ({k.get('role')}) rect {{{r}}}: driver {mn} x{par}, {drv.get('basis', '')}")
+        if k.get("role") == "core_tree_node":
+            # 12.8b internal H-tree node: driver fed from the entry driver's core-side net(s), drives leaf net mp_ct<k>
+            leaf = "mp_ct" + k["name"][3:] if k["name"].startswith("isl") else "mp_ct_" + _ident(k["name"])
+            L.append(f"set ms_nl [ot_ms_net {leaf} CLOCK]; $ms_nl setDoNotTouch 0")
+            L.append("foreach p $ms_clock_ports { set ms_nr [$ms_b findNet ${p}_mp_core]; if {$ms_nr ne \"NULL\"} {")
+            for j in range(par):
+                L.append(f"  ot_ms_buf mp_{k['name']}_ct_{j} {mn} {cx:.4f} {cy:.4f} {{{r}}} $ms_nr $ms_nl")
+            L.append("  break } }")
+            continue
         if k.get("role") == "clock_entry" and ck_i:
             # bind the kit clock / reset ports at the ft-input points (no extra ports: ck_o / rst_o are internal)
             L.append("foreach p $ms_clock_ports { incr ms_entry [ot_ms_entry $p %.4f %.4f %s %s %d {%s} CLOCK] }"
@@ -542,7 +554,7 @@ def emit_consume_tcl(sl, dbu=1000, clock_ports=None, reset_ports=None):
                      f"{rs_i.get('layer', 'M5')}]; set ms_no2 [ot_ms_port {rs_o['name']} out {rs_o['xy_um'][0]:.4f} "
                      f"{rs_o['xy_um'][1]:.4f} {rs_o.get('layer', 'M5')}]")
             L.append("$ms_ni setDoNotTouch 1; $ms_no2 setDoNotTouch 1")
-            L.append(f"ot_ms_buf mp_{k['name']}_rst {RST_DRIVER} {cx:.4f} {cy - 2.16:.4f} {{{r}}} $ms_ni $ms_no2")
+            L.append(f"ot_ms_buf mp_{k['name']}_rst {RST_DRIVER} {rs_i['xy_um'][0]:.4f} {rs_i['xy_um'][1]:.4f} {{{r}}} $ms_ni $ms_no2")
     for c in reps:
         x, y = c["xy_um"]
         rr = c.get("rect_um") or [x - 2.16, y - 2.16, x + 2.16, y + 2.16]
@@ -567,10 +579,126 @@ def emit_consume_tcl(sl, dbu=1000, clock_ports=None, reset_ports=None):
         L.append(f"ot_ms_buf mp_ep{j} {EP_REPEATER} {cx:.4f} {cy:.4f} {{{r}}} $ms_ni $ms_no2   ;# {a.get('path')} "
                  f"bit {a.get('pair')}")
     L += _bay_rows(bays, dbu)
+    L += _pg_check_tcl(sl)
     L.append(_consume_puts(isl, reps, pairs))
     L.append("if {$ms_ovf > 0 && [info exists ::env(OT_MASTER_SLICE_STRICT)]} "
              "{ error \"master_slice.tcl: $ms_ovf pushdown cells found no free site (slice/kit mismatch)\" }")
     return L
+
+
+VIA_WIN_HALF_UM = 0.648       # die via-stack window half size around a die drop point (3 x 0.432 um M5 pitch)
+VIA_WIN_LAYERS = ("M5", "M6", "M7")   # core PG layers the die M9->M5 stack passes through (12.2a1)
+
+
+def via_windows(sl):
+    """[(port name, rect_um)] of the die drop points of the slice: the *_i ft ports of pushdown islands with a via
+    stack and of clock repeaters.  pdngen must not put core straps there (HBM-CORE-LAT r8 probe: windows made BEFORE
+    pdngen cut the straps)."""
+    out = []
+    pd = sl.get("pushdown") or {}
+    items = [k for k in pd.get("islands") or [] if k.get("via_stack")] + list(pd.get("clock_repeaters") or [])
+    for k in items:
+        for q in k.get("ft_ports") or []:
+            if q.get("dir") == "in":
+                x, y = q["xy_um"]
+                h = VIA_WIN_HALF_UM
+                out.append((q["name"], [round(x - h, 4), round(y - h, 4), round(x + h, 4), round(y + h, 4)]))
+    return out
+
+
+def emit_pdn_tcl(sl):
+    """Prefix of the kit pdn.tcl (reused from HBM-CORE-LAT 5b1fd19f1 infra_islands_pdn_tcl, generic here): via-window
+    routing obstructions on M5-M7 at every die drop point exist BEFORE pdngen, so the core straps are cut there.
+    The consume step (PRE_GLOBAL_PLACE, after PDN) removes these obstructions again (no LEF hole, no lasting OBS)
+    and fail-closes when a window still holds core PG or an island lost its M1 followpin rails."""
+    w = via_windows(sl)
+    if not w:
+        return ""
+    L = [f"# GENERATED by tools/die_plan/master_slice.py: 12.2a1 via windows of {sl['type']} before pdngen",
+         "uplevel #0 {", "set mw_b [ord::get_db_block]; set mw_t [ord::get_db_tech]; set mw_n 0",
+         "set mw_u [$mw_t getDbUnitsPerMicron]"]
+    for _, r in w:
+        for ly in VIA_WIN_LAYERS:
+            L.append(f"if {{[$mw_t findLayer {ly}] ne \"NULL\"}} {{ odb::dbObstruction_create $mw_b [$mw_t findLayer {ly}] "
+                     f"[expr {{round({r[0]}*$mw_u)}}] [expr {{round({r[1]}*$mw_u)}}] [expr {{round({r[2]}*$mw_u)}}] "
+                     f"[expr {{round({r[3]}*$mw_u)}}]; incr mw_n }}")
+    L += [f'puts "OT_MASTER_SLICE_PDN via_windows={len(w)} obstructions=$mw_n"', "}"]
+    return "\n".join(L) + "\n"
+
+
+def _pg_check_tcl(sl):
+    """After PDN (PRE_GLOBAL_PLACE): drop the via-window obstructions, then the rail-survival check reused from
+    HBM-CORE-LAT (infra_islands_tcl): every pushdown island keeps VDD+VSS M1 followpin rails, and no core PG shape
+    is left in a via window.  FAIL = Tcl error (the kit stops)."""
+    w = via_windows(sl)
+    isl = (sl.get("pushdown") or {}).get("islands") or []
+    if not (w or isl):
+        return []
+    wins = " ".join("{" + " ".join(f"{v:g}" for v in r) + "}" for _, r in w)
+    rects = " ".join("{" + " ".join(f"{float(v):g}" for v in k["rect_um"]) + "}" for k in isl)
+    return [
+        "proc ot_ms_dbu {v} { return [expr {round($v*$::ms_u)}] }",
+        "set ms_u [[ord::get_db_tech] getDbUnitsPerMicron]",
+        "set ms_wins {" + wins + "}; set ms_wdel 0",
+        "foreach o [$ms_b getObstructions] { set bb [$o getBBox]; set ln [[$bb getTechLayer] getName]",
+        "  if {[lsearch {" + " ".join(VIA_WIN_LAYERS) + "} $ln] < 0} continue",
+        "  foreach r $ms_wins { if {[$bb xMin] == [ot_ms_dbu [lindex $r 0]] && [$bb yMin] == [ot_ms_dbu [lindex $r 1]] "
+        "&& [$bb xMax] == [ot_ms_dbu [lindex $r 2]] && [$bb yMax] == [ot_ms_dbu [lindex $r 3]]} { odb::dbObstruction_destroy $o; incr ms_wdel; break } } }",
+        "proc ot_ms_pg {x0 y0 x1 y1 lys} {",
+        "  set n [dict create VDD 0 VSS 0]",
+        "  foreach net {VDD VSS} { set nt [$::ms_b findNet $net]; if {$nt eq \"NULL\"} continue",
+        "    foreach sw [$nt getSWires] { foreach s [$sw getWires] {",
+        "      if {[$s isVia]} { set v [$s getTechVia]; if {$v eq \"NULL\"} { set v [$s getBlockVia] }; "
+        "if {$v eq \"NULL\"} continue; set ly [$v getTopLayer] } else { set ly [$s getTechLayer] }",
+        "      if {[lsearch $lys [$ly getName]] < 0} continue",
+        "      if {[$s xMax] > [ot_ms_dbu $x0] && [$s xMin] < [ot_ms_dbu $x1] && [$s yMax] > [ot_ms_dbu $y0] && "
+        "[$s yMin] < [ot_ms_dbu $y1]} { dict incr n $net } } } }",
+        "  return $n }",
+        "set ms_haspg [expr {[$ms_b findNet VDD] ne \"NULL\" && [llength [[$ms_b findNet VDD] getSWires]] > 0}]",
+        "set ms_norail 0; set ms_winpg 0",
+        "if {$ms_haspg} {",
+        "  foreach r {" + rects + "} { set c [ot_ms_pg {*}$r {M1}]; "
+        "if {[dict get $c VDD] == 0 || [dict get $c VSS] == 0} { incr ms_norail } }",
+        "  foreach r $ms_wins { set c [ot_ms_pg {*}$r {" + " ".join(VIA_WIN_LAYERS) + "}]; "
+        "incr ms_winpg [expr {[dict get $c VDD] + [dict get $c VSS]}] } }",
+        'puts "OT_MASTER_SLICE_PG pg_present=$ms_haspg via_windows=[llength $ms_wins] window_obs_removed=$ms_wdel '
+        'islands_without_rails=$ms_norail window_pg_shapes=$ms_winpg"',
+        "if {$ms_norail > 0} { error \"OT_MASTER_SLICE_PG FAIL: $ms_norail pushdown islands without VDD/VSS M1 rails\" }",
+        "if {$ms_winpg > 0} { error \"OT_MASTER_SLICE_PG FAIL: $ms_winpg core PG shapes in die via windows\" }"]
+
+
+def emit_cts_tcl(sl, clock_ports=None):
+    """PRE_CTS Tcl of the 12.8b structured internal H-tree (slice core_tree): every clock sink on the entry driver's
+    core net joins the leaf net of the NEAREST leaf island centre (plan geometry: the symmetric leaf grid's regions;
+    no measured value).  The kit's CTS then builds one sub-tree per leaf net (ot_master_cts_nets).  Empty without a
+    core_tree."""
+    ct = sl.get("core_tree") or {}
+    leaves = ct.get("leaves") or []
+    if not leaves:
+        return ""
+    L = [f"# GENERATED by tools/die_plan/master_slice.py: 12.8b internal H-tree of {sl['type']} "
+         f"(grid {ct.get('grid')}, leaf reach {ct.get('leaf_reach_um')} um)",
+         "uplevel #0 {",
+         "set mc_b [ord::get_db_block]; set mc_u [[ord::get_db_tech] getDbUnitsPerMicron]",
+         "set mc_leaf {" + " ".join(f"{{{q['net']} {q['centre_um'][0]:g} {q['centre_um'][1]:g}}}" for q in leaves) + "}",
+         "set ot_master_cts_nets {" + " ".join(q["net"] for q in leaves) + "}",
+         "set mc_n 0; set mc_cnt [dict create]",
+         "foreach p {" + " ".join(_tcl_word(p) for p in (clock_ports or [])) + "} {",
+         "  set root [$mc_b findNet ${p}_mp_core]; if {$root eq \"NULL\"} continue",
+         "  foreach it [$root getITerms] {",
+         "    set inst [$it getInst]",
+         "    if {[$it getIoType] ne \"INPUT\" || [string match mp_isl* [$inst getName]]} continue",
+         "    set bb [$inst getBBox]; set x [expr {([$bb xMin] + [$bb xMax]) / 2.0 / $mc_u}]; "
+         "set y [expr {([$bb yMin] + [$bb yMax]) / 2.0 / $mc_u}]",
+         "    set best {}; set bd 1e30",
+         "    foreach q $mc_leaf { set d [expr {abs($x - [lindex $q 1]) + abs($y - [lindex $q 2])}]",
+         "      if {$d < $bd} { set bd $d; set best [lindex $q 0] } }",
+         "    $it disconnect; $it connect [$mc_b findNet $best]; dict incr mc_cnt $best; incr mc_n",
+         "  }",
+         "}",
+         "puts \"OT_MASTER_CORE_TREE sinks=$mc_n per_leaf=$mc_cnt cts_nets=$ot_master_cts_nets\"",
+         "}"]
+    return "\n".join(L) + "\n"
 
 
 def _bay_rows(bays, dbu):
@@ -622,7 +750,7 @@ def resolve(slice_dir, name, outline_um, plan_raw=None, trial=False, kind=None):
 
 
 def kit_apply(kd, name, outline_um, slice_dir=None, plan_raw=None, trial=False, kind=None, gpl_hook=None,
-              clock_ports=None, reset_ports=None):
+              clock_ports=None, reset_ports=None, cts_hook=None, pdn_tcl=None):
     """Generator hook.  Returns the budget value: stamp dict (slice given), TRIAL (required, --trial, no slice) or
     None (not required, no slice: the kit is unchanged).  Raises SystemExit when a sign-off kit has no slice, and
     SliceError when the slice does not fit.  gpl_hook: a kit Tcl file (PRE_GLOBAL_PLACE) the guarded
@@ -636,6 +764,19 @@ def kit_apply(kd, name, outline_um, slice_dir=None, plan_raw=None, trial=False, 
     kd = Path(kd)
     shutil.copyfile(p, kd / "master_slice.json")
     (kd / "master_slice.tcl").write_text(emit_tcl(sl, clock_ports=clock_ports, reset_ports=reset_ports))
+    pdn = emit_pdn_tcl(sl)
+    pf = Path(pdn_tcl) if pdn_tcl else kd / "pdn.tcl"
+    if pdn:
+        (kd / "master_slice_pdn.tcl").write_text(pdn)
+        if pf.is_file() and "master_slice_pdn.tcl" not in pf.read_text():
+            pf.write_text(PDN_HOOK_LINE + pf.read_text())
+    cts = emit_cts_tcl(sl, clock_ports)
+    if cts:
+        (kd / "master_slice_cts.tcl").write_text(cts)
+        (kd / "master_slice_cts_nets.txt").write_text(" ".join(q["net"] for q in sl["core_tree"]["leaves"]) + "\n")
+        if cts_hook and Path(cts_hook).is_file():
+            h = Path(cts_hook)
+            h.write_text(CTS_HOOK_LINE + h.read_text())
     if (sl.get("pushdown") or {}).get("islands"):
         # 12.2a1: islands are pushdown cells now -> the old top-owned island hole (die_islands.tcl blockage +
         # row clear) is dropped from this kit

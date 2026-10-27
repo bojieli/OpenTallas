@@ -429,14 +429,24 @@ def pushdown_island(k, rect, centre, role, drive_len_um, sinks):
     """12.2a1 pushdown spec of one in-core island: ft ports (in from the M9->M5 stack, out to the die mesh/tree or
     the core-internal tree), fixed driver cells at the island centre, sizing per 12.8 d1."""
     cx, cy = centre
+    # ft port offsets stay inside the island rect (an entry point near a rect edge flips the offset side)
+    if role == "core_tree_node":
+        # 12.8b internal H-tree node (COORD 10-26 shared core-kit ruling): a core-owned fixed driver fed from the
+        # centre-entry driver; no die ft ports (the die reaches the core only at the clock entry)
+        return dict(name=f"isl{k}", role=role, rect_um=rect, centre_um=[r3(cx), r3(cy)], via_stack=[], ft_ports=[],
+                    driver=dict(size_driver(drive_len_um, sinks), placement="fixed dont_touch at centre_um",
+                                basis="12.8 d1: plan geometry only (leaf region reach %.1f um)" % drive_len_um),
+                    lec="core clock tree buffer (LEC-transparent)")
+    dx = 2.16 if cx + 2.16 <= rect[2] - 0.2 else -2.16
+    dy = -2.16 if cy - 2.16 >= rect[1] + 0.2 else 2.16
     return dict(name=f"isl{k}", role=role, rect_um=rect, centre_um=[r3(cx), r3(cy)], via_stack=["M9", "M5"],
                 ft_ports=[dict(name=f"mp_isl{k}_ck_i", dir="in", layer="M5", xy_um=[r3(cx), r3(cy)],
                                connect="die M9 clock stack (M9->M5 at the island centre)"),
-                          dict(name=f"mp_isl{k}_ck_o", dir="out", layer="M5", xy_um=[r3(cx + 2.16), r3(cy)],
+                          dict(name=f"mp_isl{k}_ck_o", dir="out", layer="M5", xy_um=[r3(cx + dx), r3(cy)],
                                connect="die mesh/tree net" if role != "clock_entry" else "core clock tree root"),
-                          dict(name=f"mp_isl{k}_rst_i", dir="in", layer="M5", xy_um=[r3(cx), r3(cy - 2.16)],
+                          dict(name=f"mp_isl{k}_rst_i", dir="in", layer="M5", xy_um=[r3(cx), r3(cy + dy)],
                                connect="die regional reset stack (M9->M5)"),
-                          dict(name=f"mp_isl{k}_rst_o", dir="out", layer="M5", xy_um=[r3(cx + 2.16), r3(cy - 2.16)],
+                          dict(name=f"mp_isl{k}_rst_o", dir="out", layer="M5", xy_um=[r3(cx + dx), r3(cy + dy)],
                                connect="core reset tree root")],
                 driver=dict(size_driver(drive_len_um, sinks), placement="fixed dont_touch at centre_um",
                             basis="12.8 d1: plan geometry only (driven length %.1f um, %d sinks)" % (drive_len_um, sinks)),
@@ -679,7 +689,7 @@ def entry_pin_limit(P, pg_grid, tracks, lower_pg_frac, margin=0.6, stagger=0.5, 
                                                            binding=min(free, key=free.get))
 
 
-def place_pins(occ, bay, n, limit, P=None):
+def place_pins(occ, bay, n, limit, P=None, box=None):
     """n M7 entry pins (down + up via per bit at a repeater/station drop) in the gcells nearest the bay, filling each
     gcell to <= limit across all bays (occ = shared per-gcell count).  Pins sit on every other M7 track (0.128) and
     every other M8 row (0.16), staggered."""
@@ -694,9 +704,11 @@ def place_pins(occ, bay, n, limit, P=None):
             while occ[(gx, gy)] < limit and len(out) < n:
                 k = occ[(gx, gy)]
                 col, row = k % 84, k // 84
-                out.append((r3(gx * G + 0.064 + col * 0.128),
-                            r3(gy * G + 0.08 + row * 0.32 + (0.16 if col % 2 else 0.0))))
+                xy = (r3(gx * G + 0.064 + col * 0.128), r3(gy * G + 0.08 + row * 0.32 + (0.16 if col % 2 else 0.0)))
                 occ[(gx, gy)] += 1
+                if box and not (box[0] + 0.2 <= xy[0] <= box[2] - 0.2 and box[1] + 0.2 <= xy[1] <= box[3] - 0.2):
+                    continue                 # an entry pin belongs to ITS partition: never outside the outline
+                out.append(xy)
             if len(out) >= n:
                 break
         ring += 1
@@ -1106,7 +1118,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
                     bind = (lg["slot"] + "_o", 1)
             dk = drops[(sgm["part"], sgm["path"])]
             drops[(sgm["part"], sgm["path"])] += 1
-            for i, xy in enumerate(place_pins(occ, bb["rect_um"], 2 * sgm["bits"], lim, P)):
+            for i, xy in enumerate(place_pins(occ, bb["rect_um"], 2 * sgm["bits"], lim, P, box=P.rect(sgm["part"]))):
                 pin = f"{bind[0]}[{i // 2}]" if bind and i % 2 == bind[1] else None
                 n_bound += pin is not None
                 pins.append(dict(part=sgm["part"], path=sgm["path"], bit=i, layer="M7", xy_um=list(xy),
@@ -1274,7 +1286,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
             isl_inst.append(dict(kind="core", part=part, inst=f"{part}/{h['inst']}", role="clock_entry",
                                  rect_um=IS.rect_pts(P, part, core_to_type(h, e["island"]))))
             for q in (e.get("in_core_islands") or {}).get("islands", []):
-                isl_inst.append(dict(kind="core", part=part, inst=f"{part}/{h['inst']}", role="tree_leaf",
+                isl_inst.append(dict(kind="core", part=part, inst=f"{part}/{h['inst']}", role="core_tree_node",
                                      rect_um=IS.rect_pts(P, part, core_to_type(h, q["rect_um"]))))
     rulings = dict(clock_rep_sites=rep_gate, tap_region_containment=MR.tap_region_containment(Mx, P),
                    footless_stubs=MR.footless_stubs(Mx), island_ft_inputs=MR.island_ft_inputs(Mx, isl_inst))
@@ -1499,11 +1511,20 @@ def write_slices(P, d, bays, pins, roads, islands, entry, core_types, in_core, g
                                                           abs(q["centre_um"][1] - e["xy"][1]) for q in leaves)),
                               max(1, len(leaves)))]
         for i, q in enumerate(leaves):
-            pd.append(pushdown_island(i + 1, q["rect_um"], q["centre_um"], "tree_leaf",
+            pd.append(pushdown_island(i + 1, q["rect_um"], q["centre_um"], "core_tree_node",
                                       sub.get("leaf_reach_um", 0.0), 0))
         sl["pushdown"] = dict(rule="12.2a1: island drivers are core-netlist cells at these fixed coordinates, "
                                    "identical for every instance; die connects only via the mp_isl* ft ports",
                               islands=pd)
+        if leaves:
+            sl["core_tree"] = dict(
+                rule="12.8b: structured internal H-tree from the plan centre entry: entry driver (isl0) -> one fixed "
+                     "driver per in-core leaf island (equal Manhattan legs by the symmetric leaf grid) -> each sink "
+                     "joins the leaf whose region (nearest leaf centre, plan geometry) contains it -> one CTS sub-tree "
+                     "per leaf net; sizing 12.8 d1 (plan geometry only), no pads / trims",
+                grid=sub.get("grid"), leaf_reach_um=sub.get("leaf_reach_um"),
+                leaves=[dict(island=f"isl{i + 1}", net=f"mp_ct{i + 1}", centre_um=q["centre_um"])
+                        for i, q in enumerate(leaves)])
         (d / f"{_safe(mod)}.json").write_text(json.dumps(sl, indent=1))
 
 

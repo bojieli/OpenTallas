@@ -259,6 +259,9 @@ def island_ft_inputs(M, islands):
     feed = defaultdict(int)
     open_ = []
     for isl in islands:
+        if isl.get("role") == "core_tree_node":
+            feed["core_internal_tree_node"] += 1      # fed by the core's own entry driver: no die ft input
+            continue
         r = isl["rect_um"]
         if node_in(r):
             feed["tree_node_or_mesh_driver"] += 1

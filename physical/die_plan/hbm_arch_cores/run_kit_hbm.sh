@@ -4,6 +4,7 @@
 #   GOAL (finish) -> generate_abstract -> pin audit -> corners_hbm.tcl at TT / FF
 #   (STA, face-flop CK spread, ETM).  Outputs chowned back to the caller.
 #   run_kit_hbm.sh KITDIR [GOAL=finish] [MEM_GB=32] [CPUS=16]     (heavy: call through ot-run --mem MEM_GB)
+#   GOAL=floorplan / place: stop before CTS (MASTER-PLAN-R2 10-26: GOAL=place used to run CTS first).
 #   GOAL=route: continue detailed route through finish and abstract generation, then sign off.
 #   GOAL=post: no flow steps; pin audit + corners + signoff on the run's existing routed ODB (HBM-ELEM 10-24: the
 #   corners step used to read 'make print-X' as 'X = ...' but ORFS prints 'X: ...' -> empty libs -> STA-0453 -> rc+100
@@ -33,7 +34,7 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
     if [ \$lr = 1 ]; then echo 'FAIL_PREFLOOR LEC NOT EQUIVALENT (lec/lec.json)' | tee -a /work/FAIL_PREFLOOR; rc=3; elif [ \$lr != 0 ]; then echo \"LEC WARNING (exit \$lr): not proved, recorded in lec/lec.json; the flow continues\"; fi; fi; \
   if [ -n \"\$SP\" ]; then wait \$SP; sr=\$(cat /work/selrange.rc 2>/dev/null); echo \"selrange rc \$sr\"; \
     if [ \"\$sr\" = 1 ]; then echo 'FAIL_PREFLOOR selrange' | tee -a /work/FAIL_PREFLOOR; rc=3; fi; fi; \
-  if [ \$rc = 0 ] && [ $GOAL != synth ]; then \$M cts; rc=\$?; \
+  if [ \$rc = 0 ] && [ $GOAL != synth ] && [ $GOAL != floorplan ] && [ $GOAL != place ]; then \$M cts; rc=\$?; \
     C=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); \
     if [ \$rc = 0 ] && [ -n \"\$C\" ] && [ -f /work/hold_gate.tcl ]; then \
       S=\$(ls /work/run/results/asap7/*/base/4_cts.sdc 2>/dev/null | head -1); S=\${S:-/work/constraint.sdc}; \
