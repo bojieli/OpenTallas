@@ -1,0 +1,69 @@
+{
+  "schema": "opentallas.quarter_joint_ff_sites.v1",
+  "verdict": "PASS_SUBSET_MODEL",
+  "modeled_ff": 12542,
+  "placed_ff": 12542,
+  "covered_edges": 78881,
+  "missing_edges": 0,
+  "max_actual_hop_um": 404.83799999999997,
+  "worst_actual_edge": [
+    "nk_r[10]",
+    "ge[0].gc[0].leaf.f_kkv[3]",
+    "quarter_to_first_leaf_control"
+  ],
+  "cell_um": [
+    1.404,
+    0.27
+  ],
+  "macro_halo_um": 0.0,
+  "directionally_repaired": [
+    "nk_r[9]",
+    "nk_r[8]",
+    "nk_r[7]",
+    "nk_r[6]",
+    "nk_r[5]",
+    "nk_r[4]",
+    "nk_r[3]",
+    "nk_r[2]",
+    "nk_r[1]",
+    "nk_r[11]",
+    "nk_r[10]",
+    "bv_r",
+    "qv_r"
+  ],
+  "status": "MIXED_SOURCE_AND_BARE_MAPPED_RF_SUBSET_ONLY",
+  "actual_RF_FF": 6164,
+  "total_sequential_subset": 18706,
+  "all_RF_std_cells": 22978,
+  "total_allocated_sourceFF_and_RF_std_cells": 35520,
+  "retired_semantic_md_line": 6150,
+  "RF_banks": [
+    {
+      "bank": 0,
+      "rect": [
+        1415.48,
+        1132,
+        1491.48,
+        1208
+      ],
+      "cells": 11489,
+      "area_um2": 1601.1026999994476,
+      "fill": 0.27719922091403176
+    },
+    {
+      "bank": 1,
+      "rect": [
+        1499.48,
+        1202,
+        1575.48,
+        1278
+      ],
+      "cells": 11489,
+      "area_um2": 1601.1026999994476,
+      "fill": 0.27719922091403176
+    }
+  ],
+  "remaining": "Ordinary source aliases may merge; unmodeled native FFs, real macro halo/PG/row orientation/clock/reset/hold and full native hierarchy remain unqualified.",
+  "source": "ef994fe770 /44a5cccc2d baremapped RF, geometry71648c3daf",
+  "artifacts": "intel1:/srv/opentallas-scratch2/claude/codex-hbm-joint-bays-1351/combined_actual_rf and input/{rf_sites.json,preplaced.json,obstacles.json,control_paths_actual_rf_combined.json}; original actual RF extraction intel2:codex-hbm-source-1351/quarter_actual_rf"
+}

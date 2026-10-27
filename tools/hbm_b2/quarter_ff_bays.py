@@ -152,13 +152,13 @@ def pack(nodes, fixed, edges, obstacles, max_radius=50., halo=0., directional=Fa
                 qualification='Source-logical FF subset only; not mapped cell placement, G1, PG/clock/reset/hold closure or all native FFs. Exact disjoint row-cell sets reserve <=60% FF fill; all modeled paths checked at actual allocated centres. Other declared banks are obstacles. No RTL, cycles or plan edited.')
 
 
-def render(layout, report, output):
+def render(layout, report, output, obstacles=None):
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
     import matplotlib.patches as patches
     fig,ax=plt.subplots(figsize=(11,13))
-    _,_,_,obstacles=load_problem(layout,dict(paths=[]),dict(anchors={},arcs=[]))
+    if obstacles is None: _,_,_,obstacles=load_problem(layout,dict(paths=[]),dict(anchors={},arcs=[]))
     colors={'cores':'#e5e7eb','tails':'#f2b9ba','srams':'#bdd7ee','clock':'#d1b2ea','existing_bank':'#f6d795'}
     for o in obstacles:
         x,y,X,Y=o['rect'];ax.add_patch(patches.Rectangle((x,y),X-x,Y-y,facecolor=colors[o['kind']],edgecolor='#777',lw=.35))
@@ -175,6 +175,8 @@ def main():
     for n in ('layout','outputs','controls','out'):p.add_argument('--'+n,type=Path,required=True)
     p.add_argument('--macro-halo',type=float,default=0.);p.add_argument('--max-radius',type=float,default=50.)
     p.add_argument('--directional-repair',action='store_true')
+    p.add_argument('--preplaced',type=Path,help='JSON native cell->actual centre; remove corresponding anchors from movable set')
+    p.add_argument('--extra-obstacles',type=Path,help='JSON list of {name,rect}; reserve actual RF/stdcell-bank boxes before allocating FFs')
     p.add_argument('--cell-width',type=float,default=1.404,help='default reserves the wider native async FF; plain-data-only may use 1.08')
     a=p.parse_args()
     global W
@@ -182,8 +184,14 @@ def main():
         p.error('cell width must be >=1.08 um on ASAP7 0.054-um sites')
     W=a.cell_width
     layout=json.loads(a.layout.read_text());nodes,fixed,edges,obstacles=load_problem(layout,json.loads(a.outputs.read_text()),json.loads(a.controls.read_text()))
+    if a.preplaced:
+        for name,point in json.loads(a.preplaced.read_text()).items():
+            if name in nodes: nodes.pop(name); fixed[name]=tuple(point)
+    if a.extra_obstacles:
+        for bank in json.loads(a.extra_obstacles.read_text()):
+            obstacles.append(dict(name=bank['name'],kind='existing_bank',rect=tuple(bank['rect'])))
     report=pack(nodes,fixed,edges,obstacles,a.max_radius,a.macro_halo,a.directional_repair);a.out.mkdir(parents=True,exist_ok=True)
-    (a.out/'joint_ff_sites.json').write_text(json.dumps(report,indent=1)+'\n');render(layout,report,a.out/'joint_ff_sites.png')
+    (a.out/'joint_ff_sites.json').write_text(json.dumps(report,indent=1)+'\n');render(layout,report,a.out/'joint_ff_sites.png',obstacles)
     print(json.dumps({k:v for k,v in report.items()if k not in ('placements','bays','bay_failures','reach_failures','original_reach_failures','initial_envelope_failures','directionally_repaired')}))
     print('failure samples',report['bay_failures'][:5]);return 0 if report['verdict']=='PASS_SUBSET_MODEL' else 1
 
