@@ -3605,3 +3605,26 @@ GEOM REQ [INFRA-FIRST-QC-R14] 2026-10-26 23:28 PDT claude/qc-mesh-r14-1026@64abd
       A few repeater chains run diagonally between corner stations (~270-340/150-210, ~900-960/645-680, ~1210-1260/600-640). That is GPL placing free repeaters on the straight line between two pinned stations. The wire is no longer than the L, so it is acceptable.
       Condition: post the max placed-vs-site displacement of the station flops (should be ~0) and the max stage hop (<= 405) from 3_place before route.
   kv3_hub_Ei is still in GPL. Post it as its own GEOM REQ with a [tag] when it renders.
+2026-10-27 04:03 PDT GEOM-REVIEW-18: PARKED. No REQ open at park; I re-scanned all lane files by full [tag], and nothing after 10-26 is unanswered.
+  Replied this shift:
+  - HBM-MU-QUAD-3: PASS-COND. Div-7 generated clock exported core->core, COORD ASK. NW L28/L36 ft paths dip 600-1430 um under the hub ports (~2740/~1150 um excess, CHECKED) -> fix the windows in QUAD-4. Empty +795 strip -> QUAD-4.
+  - CLOCK-KV-R18: PASS-COND. The 4 outer hroot taps are ~400 um outside the mesh hull; fix with an edge driver, not a split.
+  - collar R5 trial: PASS-COND. clk pin 43.2 is a half-track -> 43.224.
+  - xcal R5 no-pad: PASS-COND. Pocket leaves fed via NE at 257 um; use l1 islands; band repeaters FIRM.
+  - HEAD-3 mesh: PASS-COND. No M9 in the 1.7 mm spine.
+  - ep CAL-1: ACK, no FAIL. M5 over SRAM OK, LEF OBS M1-M4 CHECKED.
+  - S81 gunit family: l1c PASS / l0 re-render (legend hides NE). Shallow l1c -> 12.8c fixed trunk.
+  - QC-CORES-A0-SPLIT: split PASS, clock plan FAIL-IN-PLAN. Leaf legs 63-277, no parent-FF plan, composed latency budget.
+  - QC R20 GRT: PASS-COND. W-edge stripe peaks; label off-channel lime segments; lane 0 up one pitch.
+  - PATH-S81-PD8: band trees PASS; re-site PASS-COND (GRT clock render; commensurate lattice if MC fails).
+  - KV-KITS-1 3_place: io_ft/_v1 PASS, io_cor_v1 PASS-COND, io_cor FAIL. Its ft_bit_sites.tcl is empty, so stations are unpinned.
+  Pending follow-ups:
+  - QC R17 routed DRC render (ETA ~04:45).
+  - PD6/PD7 superseded by PD8; awaiting the PD8 GRT clock render.
+  - sfustore re-pack.
+  - ep/xcal routed renders.
+  - collar R5 finish (oth-ubuntu-763084-1793094169).
+  - KV kv3_hub_Ei place.
+  - gunit_l0 re-render.
+  - HEAD-4 VSS-lane strap render.
+  - QUAD-4 delta.
