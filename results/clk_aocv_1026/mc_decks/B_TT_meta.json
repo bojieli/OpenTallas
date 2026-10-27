@@ -1,0 +1,29 @@
+{
+ "chain": "B",
+ "corner": "TT",
+ "cell": "BUFx8_ASAP7_75t_R",
+ "depth": 6,
+ "samples": 400,
+ "seed": 14,
+ "avt_mv_um": 1.2,
+ "weff_fin_nm": 70.5,
+ "l_nm": 20.0,
+ "sigma_vt_mv": {
+  "2": 22.597,
+  "3": 18.451
+ },
+ "chain_def": {
+  "cell": "BUFx8_ASAP7_75t_R",
+  "wire_um": 40.0,
+  "r_ohm_um": 19.0,
+  "c_ff_um": 0.164,
+  "nseg": 4,
+  "sib": 3,
+  "note": "core tree stage: BUFx8 + 40 um M5 (setRC 19 ohm/um, 0.164 fF/um) + 3 sibling BUFx8 loads"
+ },
+ "corner_def": {
+  "vdd": 0.7,
+  "temp": 25
+ },
+ "devices_per_cell": 20
+}
