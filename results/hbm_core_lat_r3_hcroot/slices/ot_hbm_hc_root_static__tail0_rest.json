@@ -1,0 +1,50 @@
+{
+ "schema": "opentallas.master_plan_slice.v1",
+ "kind": "core",
+ "die": "hbm",
+ "type": "ot_hbm_hc_root_static__tail0_rest",
+ "module": "ot_hbm_hc_root_static__tail0_rest",
+ "master_plan_sha256": "e876baf4156b28464764965fbc8de764153823644774d1df11afb4f83760c24a",
+ "frozen": false,
+ "outline_um": [
+  155.52,
+  172.8
+ ],
+ "instances": [
+  "root.u_hc_eng_tail0_rest"
+ ],
+ "islands": [
+  {
+   "name": "clock_entry",
+   "rect_um": [
+    73.44,
+    82.08,
+    82.08,
+    90.72
+   ],
+   "centre_um": [
+    77.76,
+    86.4
+   ],
+   "clock_pin": {
+    "layer": "M5",
+    "xy_um": [
+     77.76,
+     86.4
+    ]
+   }
+  }
+ ],
+ "keepouts": [],
+ "bays": [],
+ "entry_pins": [],
+ "gates": {},
+ "latency": {
+  "common_clock_latency_ps": {
+   "TT": 250.0,
+   "FF": 202.5
+  }
+ },
+ "note": "HBM-CORE-LAT-R3 hcroot TRIAL slice: B2o centre clock entry (planS2 clock_entries.json root/u_hc_eng_tail0_rest, 12.8a); master plan NOT frozen",
+ "core_clock_port": "clk"
+}

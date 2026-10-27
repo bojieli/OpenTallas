@@ -1,0 +1,6 @@
+OT_R4_CLKPIN M5 77.768 86.304 77.800 86.496
+OT_R4_MEMBERSHIP sinks 9034 leaves 256 load 35..36
+OT_MSCTS_BUILD H-tree: entry chain 0, 360 nodes, 256 leaves at depth 7, 9034 register sinks, 0 macro leaves
+OT_MSCTS H: TritonCTS not run (tree fully plan-built)
+OT_R4_POST_CTS report-only (no F4 chain moves, no tap balance pads)
+OT_HOLD_GATE PASS FF wns_ps -15.69 endpoints 326 reg2reg (limits wns -100 ps, 2000 endpoints); port paths (FF vclk) not gated here: 191 endpoints wns -55.77; rc /work/setRC_rcx.tcl

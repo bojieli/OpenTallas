@@ -1,0 +1,66 @@
+{
+"n_sinks": 9034,
+"splits": [
+2,
+2,
+4,
+4,
+2
+],
+"leaf_load": [
+70,
+71
+],
+"level_len_um": [
+55.080000000000005,
+37.260000000000005,
+49.68000000000001,
+36.72,
+21.6
+],
+"repeaters_per_edge": [
+1,
+0,
+0,
+0,
+0
+],
+"trunk": {
+"cell": "BUFx4_ASAP7_75t_R",
+"n": 1,
+"island": "entry island (8.64 x 8.64 um at the centre)",
+"dont_touch": true,
+"firm": true
+},
+"pred": {
+"TT": {
+"trunk_ps": 29.8,
+"trunk_out_slew_ps": 12.74,
+"trunk_stage_ps": [
+29.8
+],
+"mean": 266.58,
+"window": 32.45,
+"sink_min": 255.12,
+"sink_max": 297.06,
+"tree_mean": 236.78
+},
+"FF": {
+"trunk_ps": 23.21,
+"trunk_out_slew_ps": 9.54,
+"trunk_stage_ps": [
+23.21
+],
+"mean": 209.09,
+"window": 32.94,
+"sink_min": 197.41,
+"sink_max": 240.38,
+"tree_mean": 185.88
+}
+},
+"in_band": {
+"TT": true,
+"FF": true
+},
+"window_ok": false
+}
