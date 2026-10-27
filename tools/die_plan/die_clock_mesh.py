@@ -412,6 +412,63 @@ def level_slides(lg, nx, nty, axes, node_xy, hop_slack, K, root_here, step=None)
     return sl, rec
 
 
+def upstream_slides(lg, nx, nty, axes, node_xy, K, rep_um, root_here, step=None, ko=None, inst_module=None):
+    """CLOCK-KV-R13 in_core "upstream" (plan-computed before placement): for every level in lg["upstream_levels"],
+    ONE distance d (multiple of STEP_UM) by which every node BUFFER of the level moves back along its incoming leg
+    (toward the parent); the branch point itself stays at its ideal point (the buffer drives it through the d-long
+    stem), so child legs and root->leaf lengths are unchanged.  d = the smallest value with the fewest nodes of the
+    level on a keep-out, bounded by the shortest incoming leg cut and by the first child hop (d + child cut <= hop
+    reach).  Levels whose child splits on the incoming axis (the stem would be retraced) are refused."""
+    step = step or STEP_UM
+    per = defaultdict(list)
+
+    def pre(i0, i1, j0, j1, level, here):
+        ax = split_axis(i1 - i0, j1 - j0, level, axes)
+        h = (i0 + i1) // 2 if ax == 0 else (j0 + j1) // 2
+        for kr in ([(i0, h, j0, j1), (h, i1, j0, j1)] if ax == 0 else [(i0, i1, j0, h), (i0, i1, h, j1)]):
+            if (kr[1] - kr[0]) * (kr[3] - kr[2]) == 1:
+                continue
+            kp = node_xy(*kr)
+            cax = split_axis(kr[1] - kr[0], kr[3] - kr[2], level + 1, axes)
+            ch = node_xy(*((kr[0], (kr[0] + kr[1]) // 2, kr[2], kr[3]) if cax == 0 else
+                           (kr[0], kr[1], kr[2], (kr[2] + kr[3]) // 2)))
+            lc = abs(ch[0] - kp[0]) + abs(ch[1] - kp[1])
+            cut = lc / max(1, math.ceil(lc / rep_um - 1e-9))
+            li = abs(kp[0] - here[0]) + abs(kp[1] - here[1])
+            sel = level + 1 in lg["upstream_levels"]
+            if sel and level + 1 in lg["upstream_types"]:
+                sel = inst_module(core_at(ko, kp)) in lg["upstream_types"][level + 1]
+            if sel:
+                per[level + 1].append((kp, here, ax, cax, cut, li / max(1, math.ceil(li / rep_um - 1e-9))))
+            pre(*kr, level + 1, kp)
+
+    pre(0, nx, 0, nty, 0, root_here)
+
+    def mv(r, d):
+        kp, here, inc = r[0], r[1], r[2]
+        sg = 1.0 if here[inc] >= kp[inc] else -1.0
+        return (kp[0] + sg * d, kp[1]) if inc == 0 else (kp[0], kp[1] + sg * d)
+
+    sl, rec = {}, {}
+    for lv, rows in sorted(per.items()):
+        if any(r[3] == r[2] for r in rows):
+            raise ValueError(f"upstream level {lv}: child split on the incoming axis (stem retrace)")
+        h0 = sum(1 for r in rows if hitf(K, r[0]))
+        best = (h0, 0.0)
+        # the buffer stays strictly inside the incoming leg's last cut (one STEP short of the parent / last repeater)
+        lim = min(min(r[5] - step, lg["hop_reach"] - r[4]) for r in rows)
+        k = 1
+        while k * step <= lim + 1e-9 and best[0]:
+            nh = sum(1 for r in rows if hitf(K, mv(r, k * step)))
+            if nh < best[0]:
+                best = (nh, k * step)
+            k += 1
+        sl[lv] = round(best[1], 4)
+        rec[str(lv)] = dict(nodes=len(rows), hit_at_ideal=h0, upstream_um=round(best[1], 4), hit_at_d=best[0],
+                            limit_um=round(lim, 2))
+    return sl, rec
+
+
 def core_frame(P, part, core, pt, inverse=False):
     """die point <-> hard-core frame (origin_um + track_offset_um, core orient; the four orients are involutions)."""
     w, h = core["outline_um"]
@@ -1084,15 +1141,25 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                       # (origin + track_offset, core orient); a pushdown driver in such a core snaps onto the nearest
                       # site within canon_tol_um so every instance of the module carries one identical island
                       canon={k: [tuple(map(float, s_)) for s_ in v] for k, v in (lattice.get("island_canon") or {}).items()},
-                      canon_tol=float(lattice.get("island_canon_tol_um", 0.05)))
+                      canon_tol=float(lattice.get("island_canon_tol_um", 0.05)),
+                      # CLOCK-KV-R13 (opt-in, in_core "upstream"): levels whose node BUFFER moves upstream along the
+                      # incoming leg by ONE level-wide distance d (plan-computed, fewest keep-out hits); the branch point
+                      # stays at its ideal point and the node drives it through the d-long stem, so every root->leaf
+                      # Manhattan length and every child leg are unchanged (12.2a1 option (b): no in-core node island)
+                      upstream_levels={int(v) for v in lattice.get("upstream_levels", [])},
+                      # {level: [module, ...]}: on these levels only nodes whose IDEAL point lies in a core of a listed
+                      # module move upstream (one d for them, the smallest that frees all of them); the other nodes of
+                      # the level stay at their ideal points (a node on a core there = a pushdown island that must be
+                      # used by every instance, checked by the census).  12.2a1 per-type choice (COORD R12 ruling).
+                      upstream_types={int(k): set(v) for k, v in (lattice.get("upstream_types") or {}).items()})
             # "drivers": only the mesh drivers stay at their ideal points (pushdown), tree nodes keep the
             # path-length-preserving re-site toward the parent
             # CLOCK-KV-R11 "level": drivers as "drivers"; every tree node of a level takes ONE level-wide slide toward its
             # parent (plan-computed before placement, the smallest slide that frees the most nodes of the level), so
             # every leg of a level keeps one length (mirror-symmetric sibling pairs); a node still on a core at that
             # slide becomes a pushdown island at the slid point (never an individual re-site)
-            if lg["in_core"] not in ("slide", "pushdown", "drivers", "level"):
-                raise ValueError("--lattice-spec in_core: slide | pushdown | drivers | level")
+            if lg["in_core"] not in ("slide", "pushdown", "drivers", "level", "upstream"):
+                raise ValueError("--lattice-spec in_core: slide | pushdown | drivers | level | upstream")
             if lg["nx"] != nx or not pow2(lg["ny"]):
                 raise ValueError("--lattice-spec leaf_grid: [nx, ny_leaf] with nx = --nx (leaves on the V straps), "
                                  "ny_leaf a power of two")
@@ -1278,7 +1345,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         for i, x in enumerate(xs):
             for j, y in enumerate(ly):
                 q, d = free_along(K, (x, y), 1, lg["drv_reach"], bounds=(0.0, H))
-                if lg["in_core"] in ("pushdown", "drivers", "level") and d:
+                if lg["in_core"] in ("pushdown", "drivers", "level", "upstream") and d:
                     q = None   # CLOCK-KV-R8: no slide, pushdown island at the ideal point
                 isl = None
                 if q is None:
@@ -1291,8 +1358,9 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                             q = (x, y)
                         elif dc:
                             out["meta"].setdefault("canon_snaps", []).append([f"ckm_d_{i}_{j}", isl, round(dc, 4)])
-                    out["pushdown"].append(dict(role="mesh_driver", name=f"ckm_d_{i}_{j}", xy=[round(x, 3), round(y, 3)],
-                                                core=isl))
+                    # CLOCK-KV-R13: the island is where the driver sits (canonical site), not the pre-snap ideal point
+                    out["pushdown"].append(dict(role="mesh_driver", name=f"ckm_d_{i}_{j}", xy=[round(q[0], 3), round(q[1], 3)],
+                                                ideal=[round(x, 3), round(y, 3)], core=isl))
                 names = [cell(f"ckm_d_{i}_{j}_{k}", q[0] + (k - (m - 1) / 2) * BUF_W, q[1], "drv", i=i, j=j)
                          for k in range(m)]
                 out["drivers"][f"{i}_{j}"] = dict(i=i, j=j, ideal=[x, y], site=[round(q[0], 3), round(q[1], 3)],
@@ -1429,6 +1497,15 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
             return hop_slack(ch, lvl + 1) - L
         return max(1, math.ceil(L / rep_um - 1e-9)) * lg["hop_reach"] - L
 
+    _imod = {}
+
+    def inst_module(isl):
+        """module of a 'part/inst' keep-out name (CLOCK-KV-R13 upstream_types; built on first use)"""
+        if not _imod:
+            _imod.update({f"{pn}/{c_['inst']}": c_["module"] for pn in P.parts
+                          for c_ in P.ptype(pn).get("hard_cores", [])})
+        return _imod.get(isl or "", isl)
+
     def rec_lg(i0, i1, j0, j1, level, drv_cell, path, here, plen, wire_pt=False):
         """CLOCK-KV-R4 leaf-grid H-tree: same bisection as rec(), actual positions carried down (see build doc).
         wire_pt: this node level is in lattice wire_levels = a wire Steiner point of the parent's net (no buffer,
@@ -1463,7 +1540,21 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                 loads += rec_lg(*kr, level + 1, drv_cell, tag, tuple(kp), plen + L, wire_pt=True)
                 continue
             q, d, isl = kp, 0.0, None
-            if lg["in_core"] == "level":
+            up = lg["in_core"] == "upstream" and (level + 1) in lg["upstream_levels"]
+            if up and (level + 1) in lg["upstream_types"]:
+                # a node not selected falls through to the pushdown branch below (island at its ideal point)
+                up = inst_module(core_at(ko, kp)) in lg["upstream_types"][level + 1]
+            if up:
+                d = lvl_slide.get(level + 1, 0.0)
+                if d:
+                    sg_ = 1.0 if here[inc] >= kp[inc] else -1.0
+                    q = (kp[0] + sg_ * d, kp[1]) if inc == 0 else (kp[0], kp[1] + sg_ * d)
+                if hitf(K, q):
+                    isl = core_at(ko, q)
+                    out["pushdown"].append(dict(role="tree_node", name=f"ckm_n{level + 1}_{tag}", level=level + 1,
+                                                xy=[round(q[0], 3), round(q[1], 3)], core=isl, upstream_um=d,
+                                                same_axis_split=cax == inc))
+            elif lg["in_core"] == "level":
                 d = lvl_slide.get(level + 1, 0.0)
                 if d:
                     sg_ = 1.0 if here[inc] >= kp[inc] else -1.0
@@ -1475,7 +1566,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                                                 same_axis_split=cax == inc))
             elif hitf(K, kp):
                 q = None
-                if cax != inc and lg["in_core"] != "pushdown":
+                if cax != inc and lg["in_core"] not in ("pushdown", "upstream"):
                     # the re-site lengthens both child legs by the slide: keep their hops within reach
                     lim = min(abs(kp[inc] - here[inc]), max(0.0, hop_slack(kr, level + 1)))
                     q, d = free_toward(K, kp, inc, here[inc], lim)
@@ -1526,8 +1617,12 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                 loads.append(nb)
             out["htree"].append(dict(level=level + 1, tag=tag, a=list(here), b=list(q), len_um=round(L, 2),
                                      n_seg=n_seg, reps=reps, node=nb, node_move_um=round(d, 2), leaf=False,
-                                     **(dict(pushdown=isl) if isl else {})))
-            rec_lg(*kr, level + 1, nb, tag, tuple(q), plen + L)
+                                     **(dict(pushdown=isl) if isl else {}), **(dict(upstream_um=d, branch=list(kp)) if up else {})))
+            if up and d:
+                # the node buffer drives its ideal branch point through the d-long stem (comb drops in fixed_wires)
+                rec_lg(*kr, level + 1, nb, tag, tuple(kp), plen + L + d)
+            else:
+                rec_lg(*kr, level + 1, nb, tag, tuple(q), plen + L)
         if wire_pt:
             return loads
         nets.append(dict(name=f"ckm_w_{drv_cell}", drv=drv_cell, loads=loads, level=level))
@@ -1695,6 +1790,11 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
             lvl_slide, lvl_rec = level_slides(lg, nx, nty, axes, node_xy, hop_slack, K,
                                               (cells[n0]["x"] + BUF_W / 2, cells[n0]["y"] + ROW_Y / 2))
             out["meta"]["level_slides"] = lvl_rec
+        elif lg["in_core"] == "upstream":
+            lvl_slide, lvl_rec = upstream_slides(lg, nx, nty, axes, node_xy, K, rep_um,
+                                                 (cells[n0]["x"] + BUF_W / 2, cells[n0]["y"] + ROW_Y / 2),
+                                                 ko=ko, inst_module=inst_module)
+            out["meta"]["upstream_slides"] = lvl_rec
         rec_lg(0, nx, 0, nty, 0, n0, "h", (cells[n0]["x"] + BUF_W / 2, cells[n0]["y"] + ROW_Y / 2), 0.0)
         pl = [dv["path_um"] for dv in out["drivers"].values()]
         pd = out["pushdown"]
@@ -1775,6 +1875,22 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         erows = C128.early_offset_taps(P, tap_rows, early_c)
         out["rule_12_8"] = dict(early_offset_taps=erows, early_offset_cores=C128.summarize_early(erows),
                                 stub_sizing=sizing)
+    if lg and (lg.get("upstream_levels") or lg.get("split_drops")) and out.get("pushdown"):
+        # CLOCK-KV-R13 (opt-in with the R13 lattice keys): every 12.2a1 pushdown record declares its in-core island
+        # window (the cell bodies it holds, + one site), so the hard-keepout census / combo accept exactly the
+        # declared islands and nothing else.  The census (identical core-frame pattern per type) is separate.
+        for r_ in out["pushdown"]:
+            if not r_.get("core"):
+                continue
+            nm_ = r_["name"]
+            cs_ = [cells[nm_]] if nm_ in cells else [c_ for k_, c_ in cells.items() if k_.startswith(nm_ + "_")
+                                                      and k_[len(nm_) + 1:].isdigit()]
+            if not cs_:
+                continue
+            out.setdefault("island_windows", []).append([
+                round(min(c_["x"] for c_ in cs_) - SITE_X, 4), round(min(c_["y"] for c_ in cs_) - 1e-3, 4),
+                round(max(c_["x"] + cell_width(c_) for c_ in cs_) + SITE_X, 4),
+                round(max(c_["y"] for c_ in cs_) + ROW_Y + 1e-3, 4), r_["core"]])
     overlaps = placement_overlaps(cells)
     out["clock_cell_overlaps"] = overlaps
     out["clock_hard_keepout_violations"] = hard_keepout_violations(
@@ -1871,9 +1987,11 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
             dv.update(jog_c=c_, jog_mode=m_, jog_ext=e_)
         if jerr:
             raise C128.PlanError(jerr)
-        wires = C128.fixed_wires(out, cells, nets, BUF_W, ROW_Y, router=router)
+        # CLOCK-KV-R13 opt-in (lattice "split_drops"): every opposite drop pair gets its own trunk via / track
+        spl = bool((lattice or {}).get("split_drops"))
+        wires = C128.fixed_wires(out, cells, nets, BUF_W, ROW_Y, router=router, split_drops=spl)
         out["fixed_wires"] = wires
-        free = C128.fixed_wires(out, cells, nets, BUF_W, ROW_Y)
+        free = C128.fixed_wires(out, cells, nets, BUF_W, ROW_Y, split_drops=spl)
         dl = [abs(a_["wire_um"] - b_["wire_um"]) for a_, b_ in zip(wires, free)]
         out["meta"]["tree_tracks"] = dict(
             method="C128.TrackRouter: nearest PG-aware track, clock metal + VSS shields clear of PG/clock/shields by "
