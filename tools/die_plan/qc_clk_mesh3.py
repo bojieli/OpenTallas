@@ -990,13 +990,19 @@ def periodic_feed_lanes(a, top, P, cols, gaps, nodes, rows, m, col, cores, H, YC
         # R17: channel x-tree with one channel VSS lane per level (COORD R14 lanes rule inside the R15 (a) 5-lane channel):
         # leaves (the 12 H_c) on lane CHAN_HC, node depth d on CHAN_LANES[d]; legs on the node lane, M9 drop at the end
         yb = YC - CC / 2
+        L0 = float(getattr(a, "chan_lane0_um", 0.0) or 0.0)
+        if not 0.0 <= L0 < ISL:
+            raise SystemExit(f"--chan-lane0-um {L0}: must be in [0, {ISL}) (lane 1 sits at +{ISL})")
 
         def ht(items, tag, d):
             if len(items) == 1:
                 return items[0]
             h_ = len(items) // 2
+            # R21 (COORD RULING INFRA-FIRST-QC-R20 ASK1 (a), plan geometry): --chan-lane0-um lifts the channel BOTTOM
+            # lane (lane 0, on the channel edge) so the M8 trunks of its cells land inside the channel (R20: lane-0
+            # risers crossed the partition M7 pin face at y 13132.935); 0 = R17-R20 geometry
             return merge_lane(ht(items[:h_], tag + "0", d + 1), ht(items[h_:], tag + "1", d + 1), "x", top, tag, nodes,
-                              r3(yb + ISL * CHAN_LANES[d]))
+                              r3(yb + ISL * CHAN_LANES[d] + (L0 if CHAN_LANES[d] == 0 else 0.0)))
         hr = ht(sorted(croots, key=lambda q: q["xy"][0]), "H", 0)
     else:
         hr = dtree([q["xy"] for q in croots], "x", top, "H", nodes,
@@ -2377,6 +2383,8 @@ def add_common(p):
                    help="R17 (with --lanes vss): local-root lift node lane: own y-tree leaf depth (R15/R16) or the deepest leaf "
                         "lane for every row (identical lift legs per type, 12.2a1)")
     p.add_argument("--centre-split", type=float, default=ISL, help="R15: centre fine row split -> YC -/+ this (um)")
+    p.add_argument("--chan-lane0-um", type=float, default=0.0,
+                   help="R21: lift of the centre-channel bottom lane (lane 0) in um (plan geometry; default 0 = R17-R20)")
     p.add_argument("--per-x", default=None, help="periodic feed x period um (default QC 2471.04)")
     p.add_argument("--per-off", default=None, help="periodic column-tap offsets, comma list (default QC 0,622.08,1235.52,1848.96)")
     p.add_argument("--chan-hc", default=None, help="centre channel H_c lane index (default QC 2)")
