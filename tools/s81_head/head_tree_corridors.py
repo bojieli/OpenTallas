@@ -107,14 +107,6 @@ def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=Fa
             tr = D.DEFAULT_TRACKS[lay]
             targets[g] = dict(layer=lay, c=round(tr['offset_um'] +
                 round((desired-tr['offset_um'])/tr['pitch_um']) * tr['pitch_um'], 4), color=c)
-    if separate_drops:
-        for g in set(groups)-set(incoming):
-            if targets[g]['layer']=='M9':
-                # Root input and output are distinct nets in one PG half-gap.
-                # Leave one NDR width for the input lane rather than centring
-                # the output where it would block both sides of the gap.
-                direction=1 if pin(g,'Y')[0]>pin(g,'A')[0] else -1
-                targets[g]['c']=round(targets[g]['c']+direction*D.NDR['16w']['width'],4)
     for g, cells in groups.items():
         # The producing stage owns its outgoing corridor. Leaves follow their
         # incoming corridor, keeping the local mesh driver on the same row.
@@ -203,6 +195,16 @@ def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=Fa
                         y=min(max(y,yl),yh)
                 for k,(_,cell) in enumerate(cells):cell['origin_um'][1]=round(y+k*D.ROW_Y,4)
     recolor_horizontal()
+    if separate_drops:
+        # Align the root capture bank with the input's first legal M8 landing
+        # inside the existing root island. This removes an unnecessary M9 drop
+        # sharing the output gap, while retaining the same root buffer stage.
+        source_y=plan.raw['clock']['spine']['root_um'][1]
+        pg=grid['M8'];step=pg['pitch_um']/2;phase=pg['offset_um']+pg['pitch_um']/4
+        landing=phase+round((source_y+D.C128.TREE_OFF_UM-phase)/step)*step
+        for g in set(groups)-set(incoming):
+            cc=groups[g];y=D.snap(landing-len(cc)*D.ROW_Y/2,D.ROW_Y)
+            for k,(_,cell) in enumerate(cc):cell['origin_um'][1]=round(y+k*D.ROW_Y,4)
     original_ax={g:pin(g,'A')[0] for g in groups}
     def allocate_capture_columns():
         # Distinct clock nets cannot share a local "M9" capture drop. Allocate
