@@ -77,3 +77,38 @@ class BoundaryControls(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class KeptFace(unittest.TestCase):
+    """KV-KITS-7: --kept-face moves each face register bit into a keep_hierarchy 1-bit cell (constant-D output and
+    dead input captures survive synthesis; core_tx shared299/dropped215)."""
+    def j(self):
+        def ff(d, q):
+            return dict(type="$adff", parameters=dict(WIDTH="00000000000000000000000000000010", CLK_POLARITY="1",
+                        ARST_POLARITY="0", ARST_VALUE="00"), attributes={},
+                        port_directions=dict(D="input", Q="output", CLK="input", ARST="input"),
+                        connections=dict(D=d, Q=q, CLK=[3], ARST=[4]))
+        return dict(modules=dict(top=dict(ports=dict(ck=dict(direction="input", bits=[3]),
+                    rst_n=dict(direction="input", bits=[4]), a=dict(direction="input", bits=[5, 6]),
+                    c=dict(direction="output", bits=[7, 8])),
+                    netnames=dict(ck=dict(bits=[3], attributes={}), rst_n=dict(bits=[4], attributes={}),
+                                  a=dict(bits=[5, 6], attributes={}), c=dict(bits=[7, 8], attributes={}),
+                                  q=dict(bits=[9, 10], attributes={})),
+                    cells=dict(cap=ff([5, 6], [9, 10]), cst=ff(["0", "0"], [7, 8])))))
+
+    def test_every_face_bit_wrapped_same_flop(self):
+        out, r = H.transform(self.j(), "top")
+        out, k = H.kept_face(out, "top")
+        self.assertEqual(k["kept_face_bits"], 4)
+        mods = [m for m in out["modules"] if m.startswith(H.KFF_PREFIX)]
+        self.assertEqual(len(mods), 1)                       # same signature -> one 1-bit module
+        mm = out["modules"][mods[0]]
+        self.assertEqual(mm["attributes"]["keep_hierarchy"], H.ONE)
+        self.assertEqual(mm["cells"]["ff"]["type"], "$adff")
+        self.assertEqual(mm["cells"]["ff"]["parameters"]["ARST_VALUE"], "0")
+        top = out["modules"]["top"]["cells"]
+        inst = [c for n, c in top.items() if c["type"] == mods[0]]
+        self.assertEqual(sorted(tuple(c["connections"]["Q"]) for c in inst), [(7,), (8,), (9,), (10,)])
+        self.assertEqual(sorted((str(c["connections"]["D"]) for c in inst)), sorted(str(x) for x in [["0"], ["0"], [5], [6]]))
+        for n in ("cap", "cst"):                               # originals no longer drive any face / internal net
+            self.assertFalse(set(top[n]["connections"]["Q"]) & {7, 8, 9, 10})
