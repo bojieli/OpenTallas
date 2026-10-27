@@ -91,3 +91,6 @@ CODEX consolidated active work under PATH-HBM/HBM-CORE-LAT; retained ROOT actual
  - hc_root: hcp_sys1 placed (fill 26%, pin-reg p90 6.6 um CHECKED); tree 2,2,4,4,4 N=0 trunk pred 258/203 w16.9; GEOM REQ 7fe423c01; LEC running. tail0_rest/tail1_rest + 4 sk: plan wires x_g_tail_*_u_tail_sink_clk (div-7 generated OUTPUT) to die tap -> plan bug; tail_rest MAP_AMBIGUOUS glue_1; sk_step0/sk_steady outline 82%/68% synth fill (need bigger outline or sk_recip_rom macro).
  - SKIP: 8 hub types (ASK pin freeze at B2o), host_cp_rxs/idx_selector/idx_rootctl (G4 roads), topk_link (other owner live job), pgslice_lg/sfu split3/idx_score_quarter (TR2), hc_bank128_pair (B1), ctlx/vm_wr_q (quad column), kshare/pc_ctrl/gq_land (R14 enclosed-pin), gq_issue (coll repack), SM halves (765k > 400k cap), serdes IP, stale OWNERS rows.
  Flow blocker seen: S81 R10 core_infra CTS ODB-0370 (TritonCTS disconnects dont_touch mp_ck_T1_br, cts.tcl:36). NEXT: COORD rulings below, then fresh short lanes per type.
+
+## CODEX notes 2026-10-27 08:35 PDT
+Current core/kit continuation is HBM-CORE-LAT.md CODEX08:35: own codex/hbm-cores-0815 + proof codex/hbm-lec-0820, R7/R8 jobs collected, vm_query failed route withdrawn, DMA structural placement trial live; legacy jobs never requeued.
