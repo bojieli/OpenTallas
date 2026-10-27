@@ -612,6 +612,17 @@ def macro_boxes(kd):
     for m in re.finditer(r"place_macro\s+-macro_name\s+(\S+)\s+-location\s+\{\s*" + _NUM + r"\s+" + _NUM +
                          r"\s*\}(?:\s+-orientation\s+(\S+))?", txt):
         return None, "place_macro by instance name: master size not static here (extend kit_contract)"
+    # gen_core_kit_kv --hard-children form (one block per instance): master match, setOrient, setLocation
+    # [expr {round(X * $dbu) ...}] [expr {round(Y * $dbu) ...}] (KV-KITS-7: static FIRM sites, was "no macro sites parsed")
+    for m in re.finditer(r'getName\] eq "(\S+)".*?\$i setOrient (\S+).*?setLocation \[expr \{round\(' + _NUM +
+                         r' \* \$dbu\)[^\n]*?\[expr \{round\(' + _NUM + r' \* \$dbu\)', txt, re.S):
+        master, o, x, y = m.group(1), m.group(2), float(m.group(3)), float(m.group(4))
+        if master not in sizes:
+            return None, f"macro {master}: no LEF SIZE"
+        w, h = sizes[master]
+        if o in ("R90", "R270", "MXR90", "MYR90"):
+            w, h = h, w
+        boxes.append((f"{master}#{len(boxes)}", x, y, x + w, y + h))
     if not boxes:
         return None, f"{mp.name}: no macro sites parsed"
     return boxes, None
