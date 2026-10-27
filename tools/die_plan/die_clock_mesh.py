@@ -2937,9 +2937,16 @@ def cmd_render(a):
     ax.set_ylim(0, H)
     ax.set_aspect("equal")
     m_ = M["meta"]
-    ax.set_title(f"{Path(m_.get('plan', 'die')).parent.name} die clock mesh {m_['nx']}x{m_['ny']} ({m_['pitch_um'][0]:.0f}x{m_['pitch_um'][1]:.0f} um, "
-                 f"{m_['ndr']}), {m_['drivers']} driver sites x{m_['m']} (orange = moved, max "
-                 f"{m_['driver_move_max_um']:.0f} um), H-tree red, {m_['stubs']} stubs green", fontsize=7)
+    lgm = m_.get("leaf_grid")
+    if lgm:   # CLOCK-KV-R4: name the build (delta id + build dir), not the plan's parent folder
+        ax.set_title(f"{m_.get('delta_id') or 'die'} {d.name}: continuous mesh {m_['nx']}x{m_['ny']} straps "
+                     f"({m_['ndr']}), leaf grid {lgm['nx']}x{lgm['ny']} ({lgm['pitch_um'][0]:.0f}x{lgm['pitch_um'][1]:.0f} um)"
+                     f", {m_['drivers']} drivers x{m_['m']} on V straps (max slide {m_['driver_move_max_um']:.0f} um), "
+                     f"H-tree red, {m_['stubs']} stubs green", fontsize=7)
+    else:
+        ax.set_title(f"{Path(m_.get('plan', 'die')).parent.name} die clock mesh {m_['nx']}x{m_['ny']} ({m_['pitch_um'][0]:.0f}x{m_['pitch_um'][1]:.0f} um, "
+                     f"{m_['ndr']}), {m_['drivers']} driver sites x{m_['m']} (orange = moved, max "
+                     f"{m_['driver_move_max_um']:.0f} um), H-tree red, {m_['stubs']} stubs green", fontsize=7)
     out = a.out or str(d / "mesh.png")
     fig.savefig(out, bbox_inches="tight")
     print(out)
