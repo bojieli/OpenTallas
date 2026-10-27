@@ -89,6 +89,7 @@ set_load 3.0 [get_ports t_*]
 report_checks -path_delay min_max -format end
 set fh [open /out/tree_$::env(CORNER)_$::env(BASIS).txt w]
 foreach c [get_cells ckm_d_*] { set p [get_pins [get_full_name $c]/A]; puts $fh "D [get_full_name $c] [get_property $p arrival_max_rise] [get_property $p arrival_min_rise] [get_property $p slew_max_rise]" }
+foreach c [get_cells -quiet ckm_br_*] { set p [get_pins [get_full_name $c]/A]; set v [get_property $p arrival_max_rise]; if {$v != "" && $v < 1e20} { puts $fh "B [get_full_name $c] $v [get_property $p arrival_min_rise] [get_property $p slew_max_rise]" } }
 foreach c [get_cells {ckm_n* ckm_r*}] { set p [get_pins [get_full_name $c]/Y]; puts $fh "N [get_full_name $c] [get_property $p arrival_max_rise] [get_property $p arrival_min_rise] [get_property $p slew_max_rise]" }
 close $fh
 report_check_types -max_slew -max_capacitance -violators

@@ -1356,11 +1356,39 @@ def stage_depths(nets):
     return out, by_load
 
 
-def aocv_fold_fields(M, nets, place, nodes_arr):
+def mesh_walk_nets(nets, place, drv_kinds=("drv",), load_kinds=("stub", "broot")):
+    """CLK-AOCV opt-in (CLOCK-KV-R15, shared by every die_clock_mesh / die_clock_128 die): the multi-driver mesh is not
+    a nets.json net (mesh drivers drive the special ck_mesh[_r<k>] net), so stage_depths cannot walk from a mesh-fed
+    stub back to the root.  Return one synthetic multi-driver net per mesh region: drv = every mesh driver cell of
+    that region (place kind in drv_kinds), loads = every cell of a load kind that no nets.json net drives (its input
+    is on the mesh).  The mesh itself is wire: a mesh-fed cell's depth = 1 + the deepest driver's depth (the
+    stage_depths multi-driver rule).  Raises when mesh loads exist but no driver does."""
+    driven = {ld for n in nets for ld in n["loads"]}
+    drv, lds = defaultdict(list), defaultdict(list)
+    for c, v in sorted(place.items()):
+        k = v.get("kind")
+        if k in drv_kinds:
+            drv[v.get("region")].append(c)
+        elif k in load_kinds and c not in driven:
+            lds[v.get("region")].append(c)
+    out = []
+    for r in sorted(set(drv) | set(lds), key=lambda z: (z is None, z)):
+        if not lds.get(r):
+            continue
+        if not drv.get(r):
+            raise ValueError(f"mesh_walk_nets: region {r} has {len(lds[r])} mesh loads but no mesh driver")
+        out.append(dict(name="ck_mesh" if r is None else f"ck_mesh_r{r}", drv=drv[r], loads=lds[r], level=50,
+                        synthetic="mesh_walk"))
+    return out
+
+
+def aocv_fold_fields(M, nets, place, nodes_arr, mesh_walk=False):
     """CLK-AOCV table-mode inputs (opt-in, die_clock_mesh report --aocv-fold): per tap 'stages_from_root' (buffers
     from the die root up to the cell driving the tap) + 'xy_um'; per CPPR node ('h' = die root node ckm_n0, else the
     region root ckm_n<l>_<tag>) 'node_stages', 'node_xy_um' and the node cell's output arrival 'node_late_ps' /
     'node_early_ps' (tree STA at this corner)."""
+    if mesh_walk:
+        nets = list(nets) + mesh_walk_nets(nets, place)
     dep, by_load = stage_depths(nets)
     taps = {}
     for t in M["taps"]:
