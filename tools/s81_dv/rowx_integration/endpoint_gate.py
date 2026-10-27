@@ -34,7 +34,7 @@ def main():
   for pn,(di,_) in m.ports.items():
    if di=='output':sig=who+'_'+pn
    elif pn in ('clk','rst_n'):sig=pn
-   elif who=='a' and pn=='ro':sig='packet'
+   elif who=='a' and pn=='ro':sig='{packet[1103:1],packet_v}'
    elif who=='a' and pn in ('lo0_r','lo1_r'):sig='b_li'+pn[2]+'_r'
    elif who=='b' and pn in ('li0_v','li0_d','li1_v','li1_d'):sig='a_lo'+pn[2:]
    else:sig="'0"
