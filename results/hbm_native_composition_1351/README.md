@@ -42,3 +42,13 @@ Validation: three narrow tests pass, including wrong VMS-role and distinct-clock
 mutants. Actual emitted source round-trips to 356 instances / 8886 ports; all
 referenced net ranges are declared. These checks do not establish RTL equivalence
 or source-module ABI elaboration.
+
+LEC bounded identity review: all 658 retained ports across the 28 imported
+instances match original resolved bit origins and directions, zero mismatches.
+352 input ports carry removed original transport history (maximum 129 edges).
+The receipt now records each history obligation and an empty current-plan
+station binding ledger. Original parameter dates remain provenance. This is
+BITGRAPH_PARTIAL_ONLY; executable dates and current calendar equivalence are
+not established by collapsing that history. The separate current-main strict
+RTL port/child bind uses immutable ee405a63ca8 (merged delivered reset and HCOL
+clock adapter) and is collecting diagnostics before any source qualification.

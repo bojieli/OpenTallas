@@ -137,10 +137,16 @@ def compose(original, base, config, out):
     lines += ['endmodule', '`default_nettype wire']
     out.mkdir(parents=True, exist_ok=False)
     (out / 'hbm_current_native_top.sv').write_text('\n'.join(lines) + '\n')
+    history = [dict(instance=path['instance'], port=path['port'],
+        original_depths=sorted({depth for _, depth in path['segments']}),
+        status='MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION')
+        for path in stages if path['instance'] in selected and any(depth != 0 for _, depth in path['segments'])]
     report = dict(schema='opentallas.hbm.current_native_composition.v1', status='FAIL_CLOSED_NATIVE_PROVIDERS_MISSING',
         original_sha256=hashlib.sha256(Path(original).read_bytes()).hexdigest(), base_sha256=hashlib.sha256(Path(base).read_bytes()).hexdigest(),
         instances=len(instances), selected_released_instances=sorted(selected), vms_roles=expected_roles, quarter_count=4,
         quarter_sram_count=68, fused_packet_links=4, fused_packet_bits=888, unresolved_boundary=unresolved,
+        transport_history_obligations=history, current_plan_station_binding_ledger=[],
+        original_parameters_provenance={name: instances[name]['params'] for name in sorted(selected)},
         obligations=obligations, original_reset_provenance=original_reset_provenance, unconsumed_native_outputs=sorted(exposed_outputs),
         scope='Source candidate only. Existing non-IDX/VMS B1 leaves remain historical scaffold pending current full-native review. No geometry, boot, LEC, P&R or timing qualification.')
     (out / 'composition.json').write_text(json.dumps(report, indent=2) + '\n')

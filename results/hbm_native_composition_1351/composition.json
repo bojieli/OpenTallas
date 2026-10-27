@@ -3144,6 +3144,2958 @@
       "reason": "missing_native_provider"
     }
   ],
+  "transport_history_obligations": [
+    {
+      "instance": "hb_argmax",
+      "port": "die_id",
+      "original_depths": [
+        71
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_argmax",
+      "port": "go",
+      "original_depths": [
+        10
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_argmax",
+      "port": "mode",
+      "original_depths": [
+        12
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_argmax",
+      "port": "imm_a",
+      "original_depths": [
+        12
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_argmax",
+      "port": "a_mirror",
+      "original_depths": [
+        12
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_argmax",
+      "port": "a_base",
+      "original_depths": [
+        12
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_argmax",
+      "port": "n",
+      "original_depths": [
+        12
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_argmax",
+      "port": "o_base",
+      "original_depths": [
+        12
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_argmax",
+      "port": "o_is",
+      "original_depths": [
+        12
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_argmax",
+      "port": "vm_rr",
+      "original_depths": [
+        4
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_argmax",
+      "port": "cr",
+      "original_depths": [
+        36
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__ctl",
+      "port": "program_we",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__ctl",
+      "port": "program_addr",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__ctl",
+      "port": "program_data",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__ctl",
+      "port": "start",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__ctl",
+      "port": "length",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__ctl",
+      "port": "selected_v",
+      "original_depths": [
+        18
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__ctl",
+      "port": "tree_ev",
+      "original_depths": [
+        15
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__ctl",
+      "port": "qfault",
+      "original_depths": [
+        10,
+        11,
+        12
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__ctl",
+      "port": "sf",
+      "original_depths": [
+        18
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__ctl",
+      "port": "lf",
+      "original_depths": [
+        16
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__ctl",
+      "port": "topk_go",
+      "original_depths": [
+        12
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__ctl",
+      "port": "topk_k",
+      "original_depths": [
+        12
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__ctl",
+      "port": "topk_order",
+      "original_depths": [
+        12
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__ctl",
+      "port": "topk_n",
+      "original_depths": [
+        12
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__ctl",
+      "port": "topk_m",
+      "original_depths": [
+        12
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__ctl",
+      "port": "topk_a_mirror",
+      "original_depths": [
+        12
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__ctl",
+      "port": "topk_a_base",
+      "original_depths": [
+        12
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__ctl",
+      "port": "topk_a_str",
+      "original_depths": [
+        12
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__ctl",
+      "port": "topk_o_mirror",
+      "original_depths": [
+        12
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__ctl",
+      "port": "topk_o_base",
+      "original_depths": [
+        12
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__ctl",
+      "port": "topk_o_str",
+      "original_depths": [
+        12
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__ctl",
+      "port": "topk_has_r",
+      "original_depths": [
+        12
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__ctl",
+      "port": "topk_r_base",
+      "original_depths": [
+        12
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__ctl",
+      "port": "topk_r_str",
+      "original_depths": [
+        12
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__ctl",
+      "port": "cr",
+      "original_depths": [
+        32
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__ctl",
+      "port": "index_rq",
+      "original_depths": [
+        84
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__ctl",
+      "port": "argmax_rq",
+      "original_depths": [
+        5
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__ctl",
+      "port": "vm_rr",
+      "original_depths": [
+        45,
+        46,
+        55,
+        56,
+        60,
+        61,
+        69,
+        71
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__link",
+      "port": "clear",
+      "original_depths": [
+        16
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__link",
+      "port": "ingest_v",
+      "original_depths": [
+        16
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__link",
+      "port": "selected_line",
+      "original_depths": [
+        2
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__link",
+      "port": "flush",
+      "original_depths": [
+        16
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__link",
+      "port": "emit_v",
+      "original_depths": [
+        16
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__link",
+      "port": "emit_group",
+      "original_depths": [
+        16
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__link",
+      "port": "rank",
+      "original_depths": [
+        73
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__link",
+      "port": "gbase",
+      "original_depths": [
+        14
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__nwsh",
+      "port": "a_rq",
+      "original_depths": [
+        95
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__nwsh",
+      "port": "b_rq",
+      "original_depths": [
+        21,
+        23,
+        32,
+        34
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__nwsh",
+      "port": "vm_rr",
+      "original_depths": [
+        6,
+        8,
+        10,
+        12,
+        17,
+        19,
+        21,
+        23
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__op_NE",
+      "port": "weight_slot",
+      "original_depths": [
+        81
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__op_NE",
+      "port": "query_slot",
+      "original_depths": [
+        81
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__op_NE",
+      "port": "query_index",
+      "original_depths": [
+        81
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__op_NE",
+      "port": "weight_sector",
+      "original_depths": [
+        101
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__op_NE",
+      "port": "query_sector",
+      "original_depths": [
+        101
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__op_NE",
+      "port": "vm_rr",
+      "original_depths": [
+        27,
+        34,
+        35,
+        37,
+        43,
+        44
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__op_NW",
+      "port": "weight_slot",
+      "original_depths": [
+        76
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__op_NW",
+      "port": "query_slot",
+      "original_depths": [
+        76
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__op_NW",
+      "port": "query_index",
+      "original_depths": [
+        76
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__op_NW",
+      "port": "weight_sector",
+      "original_depths": [
+        126
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__op_NW",
+      "port": "query_sector",
+      "original_depths": [
+        126
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__op_NW",
+      "port": "vm_rr",
+      "original_depths": [
+        26
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__op_SE",
+      "port": "weight_slot",
+      "original_depths": [
+        73
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__op_SE",
+      "port": "query_slot",
+      "original_depths": [
+        73
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__op_SE",
+      "port": "query_index",
+      "original_depths": [
+        73
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__op_SE",
+      "port": "weight_sector",
+      "original_depths": [
+        96
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__op_SE",
+      "port": "query_sector",
+      "original_depths": [
+        96
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__op_SE",
+      "port": "vm_rr",
+      "original_depths": [
+        29,
+        36,
+        37,
+        39,
+        45,
+        46,
+        47
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__op_SW",
+      "port": "weight_slot",
+      "original_depths": [
+        70
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__op_SW",
+      "port": "query_slot",
+      "original_depths": [
+        70
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__op_SW",
+      "port": "query_index",
+      "original_depths": [
+        70
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__op_SW",
+      "port": "weight_sector",
+      "original_depths": [
+        122
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__op_SW",
+      "port": "query_sector",
+      "original_depths": [
+        122
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__op_SW",
+      "port": "vm_rr",
+      "original_depths": [
+        65,
+        66
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_NE",
+      "port": "frame_start",
+      "original_depths": [
+        80
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_NE",
+      "port": "block_v",
+      "original_depths": [
+        1
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_NE",
+      "port": "block_head",
+      "original_depths": [
+        1
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_NE",
+      "port": "block_number",
+      "original_depths": [
+        1
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_NE",
+      "port": "block_data",
+      "original_depths": [
+        1
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_NE",
+      "port": "head_weight",
+      "original_depths": [
+        1
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_NE",
+      "port": "emit_v",
+      "original_depths": [
+        80
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_NE",
+      "port": "emit_head",
+      "original_depths": [
+        80
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_NW",
+      "port": "frame_start",
+      "original_depths": [
+        77
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_NW",
+      "port": "block_v",
+      "original_depths": [
+        1
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_NW",
+      "port": "block_head",
+      "original_depths": [
+        1
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_NW",
+      "port": "block_number",
+      "original_depths": [
+        1
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_NW",
+      "port": "block_data",
+      "original_depths": [
+        1
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_NW",
+      "port": "head_weight",
+      "original_depths": [
+        1
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_NW",
+      "port": "emit_v",
+      "original_depths": [
+        77
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_NW",
+      "port": "emit_head",
+      "original_depths": [
+        77
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_SE",
+      "port": "frame_start",
+      "original_depths": [
+        71
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_SE",
+      "port": "block_v",
+      "original_depths": [
+        1
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_SE",
+      "port": "block_head",
+      "original_depths": [
+        1
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_SE",
+      "port": "block_number",
+      "original_depths": [
+        1
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_SE",
+      "port": "block_data",
+      "original_depths": [
+        1
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_SE",
+      "port": "head_weight",
+      "original_depths": [
+        1
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_SE",
+      "port": "emit_v",
+      "original_depths": [
+        71
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_SE",
+      "port": "emit_head",
+      "original_depths": [
+        71
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_SW",
+      "port": "frame_start",
+      "original_depths": [
+        71
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_SW",
+      "port": "block_v",
+      "original_depths": [
+        1
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_SW",
+      "port": "block_head",
+      "original_depths": [
+        1
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_SW",
+      "port": "block_number",
+      "original_depths": [
+        1
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_SW",
+      "port": "block_data",
+      "original_depths": [
+        1
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_SW",
+      "port": "head_weight",
+      "original_depths": [
+        1
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_SW",
+      "port": "emit_v",
+      "original_depths": [
+        71
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__q_SW",
+      "port": "emit_head",
+      "original_depths": [
+        71
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_NE",
+      "port": "program_we",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_NE",
+      "port": "program_addr",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_NE",
+      "port": "program_data",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_NE",
+      "port": "start",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_NE",
+      "port": "length",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_NE",
+      "port": "nkeys",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_NE",
+      "port": "vf",
+      "original_depths": [
+        81
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_NE",
+      "port": "qf",
+      "original_depths": [
+        79
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_NE",
+      "port": "scf",
+      "original_depths": [
+        75
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_NW",
+      "port": "program_we",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_NW",
+      "port": "program_addr",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_NW",
+      "port": "program_data",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_NW",
+      "port": "start",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_NW",
+      "port": "length",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_NW",
+      "port": "nkeys",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_NW",
+      "port": "vf",
+      "original_depths": [
+        77
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_NW",
+      "port": "qf",
+      "original_depths": [
+        77
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_NW",
+      "port": "scf",
+      "original_depths": [
+        76
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_SE",
+      "port": "program_we",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_SE",
+      "port": "program_addr",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_SE",
+      "port": "program_data",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_SE",
+      "port": "start",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_SE",
+      "port": "length",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_SE",
+      "port": "nkeys",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_SE",
+      "port": "vf",
+      "original_depths": [
+        73
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_SE",
+      "port": "qf",
+      "original_depths": [
+        71
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_SE",
+      "port": "scf",
+      "original_depths": [
+        72
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_SW",
+      "port": "program_we",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_SW",
+      "port": "program_addr",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_SW",
+      "port": "program_data",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_SW",
+      "port": "start",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_SW",
+      "port": "length",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_SW",
+      "port": "nkeys",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_SW",
+      "port": "vf",
+      "original_depths": [
+        70
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_SW",
+      "port": "qf",
+      "original_depths": [
+        71
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__qctl_SW",
+      "port": "scf",
+      "original_depths": [
+        74
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_NE",
+      "port": "rank",
+      "original_depths": [
+        127
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_NE",
+      "port": "nkeys",
+      "original_depths": [
+        76
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_NE",
+      "port": "keep_en",
+      "original_depths": [
+        97
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_NE",
+      "port": "keep_bitmap",
+      "original_depths": [
+        75
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_NE",
+      "port": "ql_v",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_NE",
+      "port": "ql_head",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_NE",
+      "port": "ql_codes",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_NE",
+      "port": "ql_sc",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_NE",
+      "port": "ql_w",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_NE",
+      "port": "beat_v",
+      "original_depths": [
+        76
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_NE",
+      "port": "beat_index",
+      "original_depths": [
+        76
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_NE",
+      "port": "key_lines",
+      "original_depths": [
+        16,
+        17,
+        21
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_NW",
+      "port": "rank",
+      "original_depths": [
+        104
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_NW",
+      "port": "nkeys",
+      "original_depths": [
+        76
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_NW",
+      "port": "keep_en",
+      "original_depths": [
+        119
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_NW",
+      "port": "keep_bitmap",
+      "original_depths": [
+        79
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_NW",
+      "port": "ql_v",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_NW",
+      "port": "ql_head",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_NW",
+      "port": "ql_codes",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_NW",
+      "port": "ql_sc",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_NW",
+      "port": "ql_w",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_NW",
+      "port": "beat_v",
+      "original_depths": [
+        76
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_NW",
+      "port": "beat_index",
+      "original_depths": [
+        76
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_NW",
+      "port": "key_lines",
+      "original_depths": [
+        16,
+        17,
+        18,
+        20
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_SE",
+      "port": "rank",
+      "original_depths": [
+        129
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_SE",
+      "port": "nkeys",
+      "original_depths": [
+        72
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_SE",
+      "port": "keep_en",
+      "original_depths": [
+        94
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_SE",
+      "port": "keep_bitmap",
+      "original_depths": [
+        69
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_SE",
+      "port": "ql_v",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_SE",
+      "port": "ql_head",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_SE",
+      "port": "ql_codes",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_SE",
+      "port": "ql_sc",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_SE",
+      "port": "ql_w",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_SE",
+      "port": "beat_v",
+      "original_depths": [
+        72
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_SE",
+      "port": "beat_index",
+      "original_depths": [
+        72
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_SE",
+      "port": "key_lines",
+      "original_depths": [
+        21,
+        22,
+        24,
+        25
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_SW",
+      "port": "rank",
+      "original_depths": [
+        107
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_SW",
+      "port": "nkeys",
+      "original_depths": [
+        74
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_SW",
+      "port": "keep_en",
+      "original_depths": [
+        117
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_SW",
+      "port": "keep_bitmap",
+      "original_depths": [
+        73
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_SW",
+      "port": "ql_v",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_SW",
+      "port": "ql_head",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_SW",
+      "port": "ql_codes",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_SW",
+      "port": "ql_sc",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_SW",
+      "port": "ql_w",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_SW",
+      "port": "beat_v",
+      "original_depths": [
+        74
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_SW",
+      "port": "beat_index",
+      "original_depths": [
+        74
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__s_SW",
+      "port": "key_lines",
+      "original_depths": [
+        21,
+        23,
+        25,
+        26
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__selector",
+      "port": "op",
+      "original_depths": [
+        18
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__selector",
+      "port": "pass",
+      "original_depths": [
+        18
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__selector",
+      "port": "addr",
+      "original_depths": [
+        18
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__selector",
+      "port": "k",
+      "original_depths": [
+        15
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__selector",
+      "port": "in_line",
+      "original_depths": [
+        0,
+        1
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__xq_N",
+      "port": "a",
+      "original_depths": [
+        55
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__xq_N",
+      "port": "b",
+      "original_depths": [
+        58
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__xq_S",
+      "port": "a",
+      "original_depths": [
+        55
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__xq_S",
+      "port": "b",
+      "original_depths": [
+        59
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__xqr",
+      "port": "a",
+      "original_depths": [
+        20
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_idx__xqr",
+      "port": "b",
+      "original_depths": [
+        20
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NE",
+      "port": "client_seq",
+      "original_depths": [
+        10
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NE",
+      "port": "response_enable",
+      "original_depths": [
+        10
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NE",
+      "port": "response_seq",
+      "original_depths": [
+        10
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NE",
+      "port": "bank_enable",
+      "original_depths": [
+        10
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NE",
+      "port": "bank_client",
+      "original_depths": [
+        10
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NE",
+      "port": "hub_ring_enable",
+      "original_depths": [
+        10
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NE",
+      "port": "hub_ring_client",
+      "original_depths": [
+        10
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NE",
+      "port": "cw_in",
+      "original_depths": [
+        32
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NE",
+      "port": "ccw_in",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NE",
+      "port": "ring_tx_enable",
+      "original_depths": [
+        10
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NE",
+      "port": "ring_tx_source",
+      "original_depths": [
+        10
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NE",
+      "port": "replay_enable",
+      "original_depths": [
+        10
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NE",
+      "port": "replay_source",
+      "original_depths": [
+        10
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NE",
+      "port": "bank_status",
+      "original_depths": [
+        29,
+        34,
+        36,
+        43,
+        44,
+        49
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NE",
+      "port": "bk_xq_done",
+      "original_depths": [
+        27,
+        28,
+        33,
+        35,
+        41,
+        42,
+        47,
+        48
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NE",
+      "port": "bk_xq2_done",
+      "original_depths": [
+        29,
+        34,
+        36,
+        43,
+        44,
+        49
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NE",
+      "port": "bk_eg",
+      "original_depths": [
+        27,
+        28,
+        32,
+        34,
+        41,
+        43,
+        47,
+        49
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NE",
+      "port": "bk_pr",
+      "original_depths": [
+        28,
+        30,
+        32,
+        34,
+        43,
+        44,
+        48,
+        49
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "client_seq",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "response_enable",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "response_seq",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "bank_enable",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "bank_client",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "hub_ring_enable",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "hub_ring_client",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "cw_in",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "ccw_in",
+      "original_depths": [
+        36
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "ring_tx_enable",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "ring_tx_source",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "replay_enable",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "replay_source",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b0_xq_done",
+      "original_depths": [
+        50
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b0_xq2_done",
+      "original_depths": [
+        49
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b0_eg",
+      "original_depths": [
+        49
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b0_pr",
+      "original_depths": [
+        50
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b0_status",
+      "original_depths": [
+        49
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b0_flt",
+      "original_depths": [
+        51
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b1_xq_done",
+      "original_depths": [
+        52
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b1_xq2_done",
+      "original_depths": [
+        51
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b1_eg",
+      "original_depths": [
+        50
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b1_pr",
+      "original_depths": [
+        51
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b1_status",
+      "original_depths": [
+        51
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b1_flt",
+      "original_depths": [
+        52
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b2_xq_done",
+      "original_depths": [
+        34
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b2_xq2_done",
+      "original_depths": [
+        33
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b2_eg",
+      "original_depths": [
+        32
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b2_pr",
+      "original_depths": [
+        34
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b2_status",
+      "original_depths": [
+        33
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b2_flt",
+      "original_depths": [
+        32
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b3_xq_done",
+      "original_depths": [
+        35
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b3_xq2_done",
+      "original_depths": [
+        34
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b3_eg",
+      "original_depths": [
+        33
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b3_pr",
+      "original_depths": [
+        34
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b3_status",
+      "original_depths": [
+        34
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b3_flt",
+      "original_depths": [
+        34
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b4_xq_done",
+      "original_depths": [
+        45
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b4_xq2_done",
+      "original_depths": [
+        44
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b4_eg",
+      "original_depths": [
+        44
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b4_pr",
+      "original_depths": [
+        45
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b4_status",
+      "original_depths": [
+        44
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b4_flt",
+      "original_depths": [
+        45
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b5_xq_done",
+      "original_depths": [
+        47
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b5_xq2_done",
+      "original_depths": [
+        45
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b5_eg",
+      "original_depths": [
+        45
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b5_pr",
+      "original_depths": [
+        46
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b5_status",
+      "original_depths": [
+        45
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b5_flt",
+      "original_depths": [
+        46
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b6_xq_done",
+      "original_depths": [
+        28
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b6_xq2_done",
+      "original_depths": [
+        27
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b6_eg",
+      "original_depths": [
+        27
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b6_pr",
+      "original_depths": [
+        28
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b6_status",
+      "original_depths": [
+        27
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b6_flt",
+      "original_depths": [
+        26
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b7_xq_done",
+      "original_depths": [
+        30
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b7_xq2_done",
+      "original_depths": [
+        29
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b7_eg",
+      "original_depths": [
+        29
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b7_pr",
+      "original_depths": [
+        30
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b7_status",
+      "original_depths": [
+        29
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_NW",
+      "port": "b7_flt",
+      "original_depths": [
+        28
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SE",
+      "port": "client_seq",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SE",
+      "port": "response_enable",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SE",
+      "port": "response_seq",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SE",
+      "port": "bank_enable",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SE",
+      "port": "bank_client",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SE",
+      "port": "hub_ring_enable",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SE",
+      "port": "hub_ring_client",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SE",
+      "port": "cw_in",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SE",
+      "port": "ccw_in",
+      "original_depths": [
+        31
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SE",
+      "port": "ring_tx_enable",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SE",
+      "port": "ring_tx_source",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SE",
+      "port": "replay_enable",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SE",
+      "port": "replay_source",
+      "original_depths": [
+        7
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SE",
+      "port": "bank_status",
+      "original_depths": [
+        32,
+        34,
+        35,
+        47,
+        48,
+        49,
+        50
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SE",
+      "port": "bk_xq_done",
+      "original_depths": [
+        31,
+        33,
+        34,
+        46,
+        47,
+        48,
+        49
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SE",
+      "port": "bk_xq2_done",
+      "original_depths": [
+        32,
+        34,
+        35,
+        47,
+        48,
+        49,
+        50
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SE",
+      "port": "bk_eg",
+      "original_depths": [
+        30,
+        32,
+        33,
+        45,
+        46,
+        48
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SE",
+      "port": "bk_pr",
+      "original_depths": [
+        28,
+        30,
+        32,
+        43,
+        45,
+        46
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "cq",
+      "original_depths": [
+        25,
+        30
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "client_seq",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "response_enable",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "response_seq",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "bank_enable",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "bank_client",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "hub_ring_enable",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "hub_ring_client",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "cw_in",
+      "original_depths": [
+        36
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "ccw_in",
+      "original_depths": [
+        8
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "ring_tx_enable",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "ring_tx_source",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "replay_enable",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "replay_source",
+      "original_depths": [
+        3
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b0_xq_done",
+      "original_depths": [
+        48
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b0_xq2_done",
+      "original_depths": [
+        45
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b0_eg",
+      "original_depths": [
+        45
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b0_pr",
+      "original_depths": [
+        44
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b0_status",
+      "original_depths": [
+        45
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b1_xq_done",
+      "original_depths": [
+        51
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b1_xq2_done",
+      "original_depths": [
+        50
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b1_eg",
+      "original_depths": [
+        47
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b1_pr",
+      "original_depths": [
+        46
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b1_status",
+      "original_depths": [
+        50
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b2_xq_done",
+      "original_depths": [
+        33
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b2_xq2_done",
+      "original_depths": [
+        29
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b2_eg",
+      "original_depths": [
+        29
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b2_pr",
+      "original_depths": [
+        29
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b2_status",
+      "original_depths": [
+        29
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b3_xq_done",
+      "original_depths": [
+        34
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b3_xq2_done",
+      "original_depths": [
+        33
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b3_eg",
+      "original_depths": [
+        31
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b3_pr",
+      "original_depths": [
+        30
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b3_status",
+      "original_depths": [
+        33
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b4_xq_done",
+      "original_depths": [
+        49
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b4_xq2_done",
+      "original_depths": [
+        48
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b4_eg",
+      "original_depths": [
+        46
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b4_pr",
+      "original_depths": [
+        46
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b4_status",
+      "original_depths": [
+        48
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b5_xq_done",
+      "original_depths": [
+        50
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b5_xq2_done",
+      "original_depths": [
+        49
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b5_eg",
+      "original_depths": [
+        47
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b5_pr",
+      "original_depths": [
+        47
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b5_status",
+      "original_depths": [
+        49
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b6_xq_done",
+      "original_depths": [
+        34
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b6_xq2_done",
+      "original_depths": [
+        33
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b6_eg",
+      "original_depths": [
+        30
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b6_pr",
+      "original_depths": [
+        30
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b6_status",
+      "original_depths": [
+        33
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b7_xq_done",
+      "original_depths": [
+        34
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b7_xq2_done",
+      "original_depths": [
+        33
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b7_eg",
+      "original_depths": [
+        32
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b7_pr",
+      "original_depths": [
+        32
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    },
+    {
+      "instance": "hb_vms_SW",
+      "port": "b7_status",
+      "original_depths": [
+        33
+      ],
+      "status": "MISSING_CURRENT_PLAN_STATION_AND_CALENDAR_REALIZATION"
+    }
+  ],
+  "current_plan_station_binding_ledger": [],
+  "original_parameters_provenance": {
+    "hb_argmax": ".TP(192), .VMX(89), .ACK(52)",
+    "hb_idx__ctl": ".VM_RT(75), .CR_RT(36), .SEL_LAT(40), .RSTL(1), .FAN32(1)",
+    "hb_idx__link": "",
+    "hb_idx__nwsh": ".BANK_RT(54)",
+    "hb_idx__op_NE": ".VM_RT_EXTRA(171)",
+    "hb_idx__op_NW": ".VM_RT_EXTRA(173)",
+    "hb_idx__op_SE": ".VM_RT_EXTRA(171)",
+    "hb_idx__op_SW": ".VM_RT_EXTRA(171)",
+    "hb_idx__q_NE": "",
+    "hb_idx__q_NW": "",
+    "hb_idx__q_SE": "",
+    "hb_idx__q_SW": "",
+    "hb_idx__qctl_NE": "",
+    "hb_idx__qctl_NW": "",
+    "hb_idx__qctl_SE": "",
+    "hb_idx__qctl_SW": "",
+    "hb_idx__s_NE": ".TP(192), .DELIVERED_RESET(1)",
+    "hb_idx__s_NW": ".TP(192), .DELIVERED_RESET(1)",
+    "hb_idx__s_SE": ".TP(192), .DELIVERED_RESET(1)",
+    "hb_idx__s_SW": ".TP(192), .DELIVERED_RESET(1)",
+    "hb_idx__selector": "",
+    "hb_idx__xq_N": ".WI(297)",
+    "hb_idx__xq_S": ".WI(297)",
+    "hb_idx__xqr": ".WI(594)",
+    "hb_vms_NE": "",
+    "hb_vms_NW": "",
+    "hb_vms_SE": "",
+    "hb_vms_SW": ""
+  },
   "obligations": [
     {
       "instance": "hb_idx__s_SW",

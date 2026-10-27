@@ -1,0 +1,1176 @@
+{
+ "ports_compared": 658,
+ "bad": [],
+ "history": {
+  "hb_argmax.die_id": [
+   71
+  ],
+  "hb_argmax.go": [
+   10
+  ],
+  "hb_argmax.mode": [
+   12
+  ],
+  "hb_argmax.imm_a": [
+   12
+  ],
+  "hb_argmax.a_mirror": [
+   12
+  ],
+  "hb_argmax.a_base": [
+   12
+  ],
+  "hb_argmax.n": [
+   12
+  ],
+  "hb_argmax.o_base": [
+   12
+  ],
+  "hb_argmax.o_is": [
+   12
+  ],
+  "hb_argmax.vm_rr": [
+   4
+  ],
+  "hb_argmax.cr": [
+   36
+  ],
+  "hb_idx__ctl.program_we": [
+   7
+  ],
+  "hb_idx__ctl.program_addr": [
+   7
+  ],
+  "hb_idx__ctl.program_data": [
+   7
+  ],
+  "hb_idx__ctl.start": [
+   7
+  ],
+  "hb_idx__ctl.length": [
+   7
+  ],
+  "hb_idx__ctl.selected_v": [
+   18
+  ],
+  "hb_idx__ctl.tree_ev": [
+   15
+  ],
+  "hb_idx__ctl.qfault": [
+   10,
+   11,
+   12
+  ],
+  "hb_idx__ctl.sf": [
+   18
+  ],
+  "hb_idx__ctl.lf": [
+   16
+  ],
+  "hb_idx__ctl.topk_go": [
+   12
+  ],
+  "hb_idx__ctl.topk_k": [
+   12
+  ],
+  "hb_idx__ctl.topk_order": [
+   12
+  ],
+  "hb_idx__ctl.topk_n": [
+   12
+  ],
+  "hb_idx__ctl.topk_m": [
+   12
+  ],
+  "hb_idx__ctl.topk_a_mirror": [
+   12
+  ],
+  "hb_idx__ctl.topk_a_base": [
+   12
+  ],
+  "hb_idx__ctl.topk_a_str": [
+   12
+  ],
+  "hb_idx__ctl.topk_o_mirror": [
+   12
+  ],
+  "hb_idx__ctl.topk_o_base": [
+   12
+  ],
+  "hb_idx__ctl.topk_o_str": [
+   12
+  ],
+  "hb_idx__ctl.topk_has_r": [
+   12
+  ],
+  "hb_idx__ctl.topk_r_base": [
+   12
+  ],
+  "hb_idx__ctl.topk_r_str": [
+   12
+  ],
+  "hb_idx__ctl.cr": [
+   32
+  ],
+  "hb_idx__ctl.index_rq": [
+   84
+  ],
+  "hb_idx__ctl.argmax_rq": [
+   5
+  ],
+  "hb_idx__ctl.vm_rr": [
+   45,
+   46,
+   55,
+   56,
+   60,
+   61,
+   69,
+   71
+  ],
+  "hb_idx__link.clear": [
+   16
+  ],
+  "hb_idx__link.ingest_v": [
+   16
+  ],
+  "hb_idx__link.selected_line": [
+   2
+  ],
+  "hb_idx__link.flush": [
+   16
+  ],
+  "hb_idx__link.emit_v": [
+   16
+  ],
+  "hb_idx__link.emit_group": [
+   16
+  ],
+  "hb_idx__link.rank": [
+   73
+  ],
+  "hb_idx__link.gbase": [
+   14
+  ],
+  "hb_idx__nwsh.a_rq": [
+   95
+  ],
+  "hb_idx__nwsh.b_rq": [
+   21,
+   23,
+   32,
+   34
+  ],
+  "hb_idx__nwsh.vm_rr": [
+   6,
+   8,
+   10,
+   12,
+   17,
+   19,
+   21,
+   23
+  ],
+  "hb_idx__op_NE.weight_slot": [
+   81
+  ],
+  "hb_idx__op_NE.query_slot": [
+   81
+  ],
+  "hb_idx__op_NE.query_index": [
+   81
+  ],
+  "hb_idx__op_NE.weight_sector": [
+   101
+  ],
+  "hb_idx__op_NE.query_sector": [
+   101
+  ],
+  "hb_idx__op_NE.vm_rr": [
+   27,
+   34,
+   35,
+   37,
+   43,
+   44
+  ],
+  "hb_idx__op_NW.weight_slot": [
+   76
+  ],
+  "hb_idx__op_NW.query_slot": [
+   76
+  ],
+  "hb_idx__op_NW.query_index": [
+   76
+  ],
+  "hb_idx__op_NW.weight_sector": [
+   126
+  ],
+  "hb_idx__op_NW.query_sector": [
+   126
+  ],
+  "hb_idx__op_NW.vm_rr": [
+   26
+  ],
+  "hb_idx__op_SE.weight_slot": [
+   73
+  ],
+  "hb_idx__op_SE.query_slot": [
+   73
+  ],
+  "hb_idx__op_SE.query_index": [
+   73
+  ],
+  "hb_idx__op_SE.weight_sector": [
+   96
+  ],
+  "hb_idx__op_SE.query_sector": [
+   96
+  ],
+  "hb_idx__op_SE.vm_rr": [
+   29,
+   36,
+   37,
+   39,
+   45,
+   46,
+   47
+  ],
+  "hb_idx__op_SW.weight_slot": [
+   70
+  ],
+  "hb_idx__op_SW.query_slot": [
+   70
+  ],
+  "hb_idx__op_SW.query_index": [
+   70
+  ],
+  "hb_idx__op_SW.weight_sector": [
+   122
+  ],
+  "hb_idx__op_SW.query_sector": [
+   122
+  ],
+  "hb_idx__op_SW.vm_rr": [
+   65,
+   66
+  ],
+  "hb_idx__q_NE.frame_start": [
+   80
+  ],
+  "hb_idx__q_NE.block_v": [
+   1
+  ],
+  "hb_idx__q_NE.block_head": [
+   1
+  ],
+  "hb_idx__q_NE.block_number": [
+   1
+  ],
+  "hb_idx__q_NE.block_data": [
+   1
+  ],
+  "hb_idx__q_NE.head_weight": [
+   1
+  ],
+  "hb_idx__q_NE.emit_v": [
+   80
+  ],
+  "hb_idx__q_NE.emit_head": [
+   80
+  ],
+  "hb_idx__q_NW.frame_start": [
+   77
+  ],
+  "hb_idx__q_NW.block_v": [
+   1
+  ],
+  "hb_idx__q_NW.block_head": [
+   1
+  ],
+  "hb_idx__q_NW.block_number": [
+   1
+  ],
+  "hb_idx__q_NW.block_data": [
+   1
+  ],
+  "hb_idx__q_NW.head_weight": [
+   1
+  ],
+  "hb_idx__q_NW.emit_v": [
+   77
+  ],
+  "hb_idx__q_NW.emit_head": [
+   77
+  ],
+  "hb_idx__q_SE.frame_start": [
+   71
+  ],
+  "hb_idx__q_SE.block_v": [
+   1
+  ],
+  "hb_idx__q_SE.block_head": [
+   1
+  ],
+  "hb_idx__q_SE.block_number": [
+   1
+  ],
+  "hb_idx__q_SE.block_data": [
+   1
+  ],
+  "hb_idx__q_SE.head_weight": [
+   1
+  ],
+  "hb_idx__q_SE.emit_v": [
+   71
+  ],
+  "hb_idx__q_SE.emit_head": [
+   71
+  ],
+  "hb_idx__q_SW.frame_start": [
+   71
+  ],
+  "hb_idx__q_SW.block_v": [
+   1
+  ],
+  "hb_idx__q_SW.block_head": [
+   1
+  ],
+  "hb_idx__q_SW.block_number": [
+   1
+  ],
+  "hb_idx__q_SW.block_data": [
+   1
+  ],
+  "hb_idx__q_SW.head_weight": [
+   1
+  ],
+  "hb_idx__q_SW.emit_v": [
+   71
+  ],
+  "hb_idx__q_SW.emit_head": [
+   71
+  ],
+  "hb_idx__qctl_NE.program_we": [
+   7
+  ],
+  "hb_idx__qctl_NE.program_addr": [
+   7
+  ],
+  "hb_idx__qctl_NE.program_data": [
+   7
+  ],
+  "hb_idx__qctl_NE.start": [
+   7
+  ],
+  "hb_idx__qctl_NE.length": [
+   7
+  ],
+  "hb_idx__qctl_NE.nkeys": [
+   7
+  ],
+  "hb_idx__qctl_NE.vf": [
+   81
+  ],
+  "hb_idx__qctl_NE.qf": [
+   79
+  ],
+  "hb_idx__qctl_NE.scf": [
+   75
+  ],
+  "hb_idx__qctl_NW.program_we": [
+   7
+  ],
+  "hb_idx__qctl_NW.program_addr": [
+   7
+  ],
+  "hb_idx__qctl_NW.program_data": [
+   7
+  ],
+  "hb_idx__qctl_NW.start": [
+   7
+  ],
+  "hb_idx__qctl_NW.length": [
+   7
+  ],
+  "hb_idx__qctl_NW.nkeys": [
+   7
+  ],
+  "hb_idx__qctl_NW.vf": [
+   77
+  ],
+  "hb_idx__qctl_NW.qf": [
+   77
+  ],
+  "hb_idx__qctl_NW.scf": [
+   76
+  ],
+  "hb_idx__qctl_SE.program_we": [
+   7
+  ],
+  "hb_idx__qctl_SE.program_addr": [
+   7
+  ],
+  "hb_idx__qctl_SE.program_data": [
+   7
+  ],
+  "hb_idx__qctl_SE.start": [
+   7
+  ],
+  "hb_idx__qctl_SE.length": [
+   7
+  ],
+  "hb_idx__qctl_SE.nkeys": [
+   7
+  ],
+  "hb_idx__qctl_SE.vf": [
+   73
+  ],
+  "hb_idx__qctl_SE.qf": [
+   71
+  ],
+  "hb_idx__qctl_SE.scf": [
+   72
+  ],
+  "hb_idx__qctl_SW.program_we": [
+   7
+  ],
+  "hb_idx__qctl_SW.program_addr": [
+   7
+  ],
+  "hb_idx__qctl_SW.program_data": [
+   7
+  ],
+  "hb_idx__qctl_SW.start": [
+   7
+  ],
+  "hb_idx__qctl_SW.length": [
+   7
+  ],
+  "hb_idx__qctl_SW.nkeys": [
+   7
+  ],
+  "hb_idx__qctl_SW.vf": [
+   70
+  ],
+  "hb_idx__qctl_SW.qf": [
+   71
+  ],
+  "hb_idx__qctl_SW.scf": [
+   74
+  ],
+  "hb_idx__s_NE.rank": [
+   127
+  ],
+  "hb_idx__s_NE.nkeys": [
+   76
+  ],
+  "hb_idx__s_NE.keep_en": [
+   97
+  ],
+  "hb_idx__s_NE.keep_bitmap": [
+   75
+  ],
+  "hb_idx__s_NE.ql_v": [
+   3
+  ],
+  "hb_idx__s_NE.ql_head": [
+   3
+  ],
+  "hb_idx__s_NE.ql_codes": [
+   3
+  ],
+  "hb_idx__s_NE.ql_sc": [
+   3
+  ],
+  "hb_idx__s_NE.ql_w": [
+   3
+  ],
+  "hb_idx__s_NE.beat_v": [
+   76
+  ],
+  "hb_idx__s_NE.beat_index": [
+   76
+  ],
+  "hb_idx__s_NE.key_lines": [
+   16,
+   17,
+   21
+  ],
+  "hb_idx__s_NW.rank": [
+   104
+  ],
+  "hb_idx__s_NW.nkeys": [
+   76
+  ],
+  "hb_idx__s_NW.keep_en": [
+   119
+  ],
+  "hb_idx__s_NW.keep_bitmap": [
+   79
+  ],
+  "hb_idx__s_NW.ql_v": [
+   3
+  ],
+  "hb_idx__s_NW.ql_head": [
+   3
+  ],
+  "hb_idx__s_NW.ql_codes": [
+   3
+  ],
+  "hb_idx__s_NW.ql_sc": [
+   3
+  ],
+  "hb_idx__s_NW.ql_w": [
+   3
+  ],
+  "hb_idx__s_NW.beat_v": [
+   76
+  ],
+  "hb_idx__s_NW.beat_index": [
+   76
+  ],
+  "hb_idx__s_NW.key_lines": [
+   16,
+   17,
+   18,
+   20
+  ],
+  "hb_idx__s_SE.rank": [
+   129
+  ],
+  "hb_idx__s_SE.nkeys": [
+   72
+  ],
+  "hb_idx__s_SE.keep_en": [
+   94
+  ],
+  "hb_idx__s_SE.keep_bitmap": [
+   69
+  ],
+  "hb_idx__s_SE.ql_v": [
+   7
+  ],
+  "hb_idx__s_SE.ql_head": [
+   7
+  ],
+  "hb_idx__s_SE.ql_codes": [
+   7
+  ],
+  "hb_idx__s_SE.ql_sc": [
+   7
+  ],
+  "hb_idx__s_SE.ql_w": [
+   7
+  ],
+  "hb_idx__s_SE.beat_v": [
+   72
+  ],
+  "hb_idx__s_SE.beat_index": [
+   72
+  ],
+  "hb_idx__s_SE.key_lines": [
+   21,
+   22,
+   24,
+   25
+  ],
+  "hb_idx__s_SW.rank": [
+   107
+  ],
+  "hb_idx__s_SW.nkeys": [
+   74
+  ],
+  "hb_idx__s_SW.keep_en": [
+   117
+  ],
+  "hb_idx__s_SW.keep_bitmap": [
+   73
+  ],
+  "hb_idx__s_SW.ql_v": [
+   7
+  ],
+  "hb_idx__s_SW.ql_head": [
+   7
+  ],
+  "hb_idx__s_SW.ql_codes": [
+   7
+  ],
+  "hb_idx__s_SW.ql_sc": [
+   7
+  ],
+  "hb_idx__s_SW.ql_w": [
+   7
+  ],
+  "hb_idx__s_SW.beat_v": [
+   74
+  ],
+  "hb_idx__s_SW.beat_index": [
+   74
+  ],
+  "hb_idx__s_SW.key_lines": [
+   21,
+   23,
+   25,
+   26
+  ],
+  "hb_idx__selector.op": [
+   18
+  ],
+  "hb_idx__selector.pass": [
+   18
+  ],
+  "hb_idx__selector.addr": [
+   18
+  ],
+  "hb_idx__selector.k": [
+   15
+  ],
+  "hb_idx__selector.in_line": [
+   0,
+   1
+  ],
+  "hb_idx__xq_N.a": [
+   55
+  ],
+  "hb_idx__xq_N.b": [
+   58
+  ],
+  "hb_idx__xq_S.a": [
+   55
+  ],
+  "hb_idx__xq_S.b": [
+   59
+  ],
+  "hb_idx__xqr.a": [
+   20
+  ],
+  "hb_idx__xqr.b": [
+   20
+  ],
+  "hb_vms_NE.client_seq": [
+   10
+  ],
+  "hb_vms_NE.response_enable": [
+   10
+  ],
+  "hb_vms_NE.response_seq": [
+   10
+  ],
+  "hb_vms_NE.bank_enable": [
+   10
+  ],
+  "hb_vms_NE.bank_client": [
+   10
+  ],
+  "hb_vms_NE.hub_ring_enable": [
+   10
+  ],
+  "hb_vms_NE.hub_ring_client": [
+   10
+  ],
+  "hb_vms_NE.cw_in": [
+   32
+  ],
+  "hb_vms_NE.ccw_in": [
+   7
+  ],
+  "hb_vms_NE.ring_tx_enable": [
+   10
+  ],
+  "hb_vms_NE.ring_tx_source": [
+   10
+  ],
+  "hb_vms_NE.replay_enable": [
+   10
+  ],
+  "hb_vms_NE.replay_source": [
+   10
+  ],
+  "hb_vms_NE.bank_status": [
+   29,
+   34,
+   36,
+   43,
+   44,
+   49
+  ],
+  "hb_vms_NE.bk_xq_done": [
+   27,
+   28,
+   33,
+   35,
+   41,
+   42,
+   47,
+   48
+  ],
+  "hb_vms_NE.bk_xq2_done": [
+   29,
+   34,
+   36,
+   43,
+   44,
+   49
+  ],
+  "hb_vms_NE.bk_eg": [
+   27,
+   28,
+   32,
+   34,
+   41,
+   43,
+   47,
+   49
+  ],
+  "hb_vms_NE.bk_pr": [
+   28,
+   30,
+   32,
+   34,
+   43,
+   44,
+   48,
+   49
+  ],
+  "hb_vms_NW.client_seq": [
+   3
+  ],
+  "hb_vms_NW.response_enable": [
+   3
+  ],
+  "hb_vms_NW.response_seq": [
+   3
+  ],
+  "hb_vms_NW.bank_enable": [
+   3
+  ],
+  "hb_vms_NW.bank_client": [
+   3
+  ],
+  "hb_vms_NW.hub_ring_enable": [
+   3
+  ],
+  "hb_vms_NW.hub_ring_client": [
+   3
+  ],
+  "hb_vms_NW.cw_in": [
+   7
+  ],
+  "hb_vms_NW.ccw_in": [
+   36
+  ],
+  "hb_vms_NW.ring_tx_enable": [
+   3
+  ],
+  "hb_vms_NW.ring_tx_source": [
+   3
+  ],
+  "hb_vms_NW.replay_enable": [
+   3
+  ],
+  "hb_vms_NW.replay_source": [
+   3
+  ],
+  "hb_vms_NW.b0_xq_done": [
+   50
+  ],
+  "hb_vms_NW.b0_xq2_done": [
+   49
+  ],
+  "hb_vms_NW.b0_eg": [
+   49
+  ],
+  "hb_vms_NW.b0_pr": [
+   50
+  ],
+  "hb_vms_NW.b0_status": [
+   49
+  ],
+  "hb_vms_NW.b0_flt": [
+   51
+  ],
+  "hb_vms_NW.b1_xq_done": [
+   52
+  ],
+  "hb_vms_NW.b1_xq2_done": [
+   51
+  ],
+  "hb_vms_NW.b1_eg": [
+   50
+  ],
+  "hb_vms_NW.b1_pr": [
+   51
+  ],
+  "hb_vms_NW.b1_status": [
+   51
+  ],
+  "hb_vms_NW.b1_flt": [
+   52
+  ],
+  "hb_vms_NW.b2_xq_done": [
+   34
+  ],
+  "hb_vms_NW.b2_xq2_done": [
+   33
+  ],
+  "hb_vms_NW.b2_eg": [
+   32
+  ],
+  "hb_vms_NW.b2_pr": [
+   34
+  ],
+  "hb_vms_NW.b2_status": [
+   33
+  ],
+  "hb_vms_NW.b2_flt": [
+   32
+  ],
+  "hb_vms_NW.b3_xq_done": [
+   35
+  ],
+  "hb_vms_NW.b3_xq2_done": [
+   34
+  ],
+  "hb_vms_NW.b3_eg": [
+   33
+  ],
+  "hb_vms_NW.b3_pr": [
+   34
+  ],
+  "hb_vms_NW.b3_status": [
+   34
+  ],
+  "hb_vms_NW.b3_flt": [
+   34
+  ],
+  "hb_vms_NW.b4_xq_done": [
+   45
+  ],
+  "hb_vms_NW.b4_xq2_done": [
+   44
+  ],
+  "hb_vms_NW.b4_eg": [
+   44
+  ],
+  "hb_vms_NW.b4_pr": [
+   45
+  ],
+  "hb_vms_NW.b4_status": [
+   44
+  ],
+  "hb_vms_NW.b4_flt": [
+   45
+  ],
+  "hb_vms_NW.b5_xq_done": [
+   47
+  ],
+  "hb_vms_NW.b5_xq2_done": [
+   45
+  ],
+  "hb_vms_NW.b5_eg": [
+   45
+  ],
+  "hb_vms_NW.b5_pr": [
+   46
+  ],
+  "hb_vms_NW.b5_status": [
+   45
+  ],
+  "hb_vms_NW.b5_flt": [
+   46
+  ],
+  "hb_vms_NW.b6_xq_done": [
+   28
+  ],
+  "hb_vms_NW.b6_xq2_done": [
+   27
+  ],
+  "hb_vms_NW.b6_eg": [
+   27
+  ],
+  "hb_vms_NW.b6_pr": [
+   28
+  ],
+  "hb_vms_NW.b6_status": [
+   27
+  ],
+  "hb_vms_NW.b6_flt": [
+   26
+  ],
+  "hb_vms_NW.b7_xq_done": [
+   30
+  ],
+  "hb_vms_NW.b7_xq2_done": [
+   29
+  ],
+  "hb_vms_NW.b7_eg": [
+   29
+  ],
+  "hb_vms_NW.b7_pr": [
+   30
+  ],
+  "hb_vms_NW.b7_status": [
+   29
+  ],
+  "hb_vms_NW.b7_flt": [
+   28
+  ],
+  "hb_vms_SE.client_seq": [
+   7
+  ],
+  "hb_vms_SE.response_enable": [
+   7
+  ],
+  "hb_vms_SE.response_seq": [
+   7
+  ],
+  "hb_vms_SE.bank_enable": [
+   7
+  ],
+  "hb_vms_SE.bank_client": [
+   7
+  ],
+  "hb_vms_SE.hub_ring_enable": [
+   7
+  ],
+  "hb_vms_SE.hub_ring_client": [
+   7
+  ],
+  "hb_vms_SE.cw_in": [
+   7
+  ],
+  "hb_vms_SE.ccw_in": [
+   31
+  ],
+  "hb_vms_SE.ring_tx_enable": [
+   7
+  ],
+  "hb_vms_SE.ring_tx_source": [
+   7
+  ],
+  "hb_vms_SE.replay_enable": [
+   7
+  ],
+  "hb_vms_SE.replay_source": [
+   7
+  ],
+  "hb_vms_SE.bank_status": [
+   32,
+   34,
+   35,
+   47,
+   48,
+   49,
+   50
+  ],
+  "hb_vms_SE.bk_xq_done": [
+   31,
+   33,
+   34,
+   46,
+   47,
+   48,
+   49
+  ],
+  "hb_vms_SE.bk_xq2_done": [
+   32,
+   34,
+   35,
+   47,
+   48,
+   49,
+   50
+  ],
+  "hb_vms_SE.bk_eg": [
+   30,
+   32,
+   33,
+   45,
+   46,
+   48
+  ],
+  "hb_vms_SE.bk_pr": [
+   28,
+   30,
+   32,
+   43,
+   45,
+   46
+  ],
+  "hb_vms_SW.cq": [
+   25,
+   30
+  ],
+  "hb_vms_SW.client_seq": [
+   3
+  ],
+  "hb_vms_SW.response_enable": [
+   3
+  ],
+  "hb_vms_SW.response_seq": [
+   3
+  ],
+  "hb_vms_SW.bank_enable": [
+   3
+  ],
+  "hb_vms_SW.bank_client": [
+   3
+  ],
+  "hb_vms_SW.hub_ring_enable": [
+   3
+  ],
+  "hb_vms_SW.hub_ring_client": [
+   3
+  ],
+  "hb_vms_SW.cw_in": [
+   36
+  ],
+  "hb_vms_SW.ccw_in": [
+   8
+  ],
+  "hb_vms_SW.ring_tx_enable": [
+   3
+  ],
+  "hb_vms_SW.ring_tx_source": [
+   3
+  ],
+  "hb_vms_SW.replay_enable": [
+   3
+  ],
+  "hb_vms_SW.replay_source": [
+   3
+  ],
+  "hb_vms_SW.b0_xq_done": [
+   48
+  ],
+  "hb_vms_SW.b0_xq2_done": [
+   45
+  ],
+  "hb_vms_SW.b0_eg": [
+   45
+  ],
+  "hb_vms_SW.b0_pr": [
+   44
+  ],
+  "hb_vms_SW.b0_status": [
+   45
+  ],
+  "hb_vms_SW.b1_xq_done": [
+   51
+  ],
+  "hb_vms_SW.b1_xq2_done": [
+   50
+  ],
+  "hb_vms_SW.b1_eg": [
+   47
+  ],
+  "hb_vms_SW.b1_pr": [
+   46
+  ],
+  "hb_vms_SW.b1_status": [
+   50
+  ],
+  "hb_vms_SW.b2_xq_done": [
+   33
+  ],
+  "hb_vms_SW.b2_xq2_done": [
+   29
+  ],
+  "hb_vms_SW.b2_eg": [
+   29
+  ],
+  "hb_vms_SW.b2_pr": [
+   29
+  ],
+  "hb_vms_SW.b2_status": [
+   29
+  ],
+  "hb_vms_SW.b3_xq_done": [
+   34
+  ],
+  "hb_vms_SW.b3_xq2_done": [
+   33
+  ],
+  "hb_vms_SW.b3_eg": [
+   31
+  ],
+  "hb_vms_SW.b3_pr": [
+   30
+  ],
+  "hb_vms_SW.b3_status": [
+   33
+  ],
+  "hb_vms_SW.b4_xq_done": [
+   49
+  ],
+  "hb_vms_SW.b4_xq2_done": [
+   48
+  ],
+  "hb_vms_SW.b4_eg": [
+   46
+  ],
+  "hb_vms_SW.b4_pr": [
+   46
+  ],
+  "hb_vms_SW.b4_status": [
+   48
+  ],
+  "hb_vms_SW.b5_xq_done": [
+   50
+  ],
+  "hb_vms_SW.b5_xq2_done": [
+   49
+  ],
+  "hb_vms_SW.b5_eg": [
+   47
+  ],
+  "hb_vms_SW.b5_pr": [
+   47
+  ],
+  "hb_vms_SW.b5_status": [
+   49
+  ],
+  "hb_vms_SW.b6_xq_done": [
+   34
+  ],
+  "hb_vms_SW.b6_xq2_done": [
+   33
+  ],
+  "hb_vms_SW.b6_eg": [
+   30
+  ],
+  "hb_vms_SW.b6_pr": [
+   30
+  ],
+  "hb_vms_SW.b6_status": [
+   33
+  ],
+  "hb_vms_SW.b7_xq_done": [
+   34
+  ],
+  "hb_vms_SW.b7_xq2_done": [
+   33
+  ],
+  "hb_vms_SW.b7_eg": [
+   32
+  ],
+  "hb_vms_SW.b7_pr": [
+   32
+  ],
+  "hb_vms_SW.b7_status": [
+   33
+  ]
+ },
+ "source_status": "FAIL_CLOSED_NATIVE_PROVIDERS_MISSING",
+ "scorer_and_fused_bad": [],
+ "qualification": "BITGRAPH_PARTIAL_ONLY_NOT_CALENDAR_OR_RELEASE",
+ "observations": [
+  "658 retained imported ports match original resolved bit origins and directions",
+  "All four half/first_ord values correct; explicit mode1 and one clock source",
+  "All four FUSED identity links correct (888bits)",
+  "352 imported ports have removed history, maximum129edges; current transport realization remainsMISSING",
+  "Seven new delivered reset bindings are explicitMISSING",
+  "SWargmaxCR0:273,IDXctlCR274:547 exactoriginalslices"
+ ]
+}
