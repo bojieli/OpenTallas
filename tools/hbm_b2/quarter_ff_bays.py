@@ -48,7 +48,7 @@ def load_problem(layout, output, control):
 def distance(a,b): return abs(a[0]-b[0])+abs(a[1]-b[1])
 
 
-def pack(nodes, fixed, edges, obstacles, max_radius=50., halo=0.):
+def pack(nodes, fixed, edges, obstacles, max_radius=50., halo=0., directional=False):
     anchors = fixed | nodes
     budgets = {n:max_radius for n in nodes}; incident = collections.Counter()
     original_bad=[]
@@ -66,7 +66,6 @@ def pack(nodes, fixed, edges, obstacles, max_radius=50., halo=0.):
     for xy in groups:
         x,y=xy;r=max_radius+halo+W
         nearby[xy]=[o for o in obstacles if o['rect'][0]<x+r and o['rect'][2]>x-r and o['rect'][1]<y+r and o['rect'][3]>y-r]
-    used={},{}  # kept below as separate dictionaries for explicit FF / spare-site ownership
     occupied, reserve = {}, {}
     placements, bays, failures = {}, [], []
     def candidates(xy, limit):
@@ -109,6 +108,37 @@ def pack(nodes, fixed, edges, obstacles, max_radius=50., halo=0.):
         if len(blank)!=extra:failures.append(dict(bay=bay_id,anchor_um=xy,reason='NO_JOINT_60PCT_SPARE_SITES',missing=extra-len(blank)))
         bays.append(dict(id=bay_id,anchor_um=xy,requested_ff=demand,placed_ff=len(assigned),spare_sites=len(blank),fill=len(assigned)/(len(assigned)+len(blank)) if assigned or blank else None,
                          max_displacement_um=max([distance(xy,placements[n]) for n in assigned]or[0]),sites=slots))
+    initial_failures=list(failures)
+    repaired=[]
+    if directional:
+        # The half-slack envelope is sufficient, not necessary. Once neighboring FFs have
+        # actual sites, use their exact directional diamonds instead of declaring the
+        # envelope failure physically impossible. Never move an already allocated FF.
+        adjacent=collections.defaultdict(set)
+        for a,b,_ in edges:
+            adjacent[a].add(b); adjacent[b].add(a)
+        owner={n:i for i,xy in enumerate(order) for n in groups[xy]}
+        for name in sorted(set(nodes)-set(placements),key=lambda n:(len(adjacent[n]),n),reverse=True):
+            i=owner[name]; xy=nodes[name]; actual=fixed | placements
+            if any(n not in actual for n in adjacent[name]):continue
+            for d,ix,iy,x,y in candidates(xy,max_radius):
+                slot=(ix,iy)
+                if slot in occupied or (slot in reserve and reserve[slot]!=i):continue
+                if any(distance((x,y),actual[n])>REACH+1e-7 for n in adjacent[name]):continue
+                reserve.pop(slot,None); occupied[slot]=name;placements[name]=(x,y);repaired.append(name);break
+        failures=[f for f in failures if f.get('name') not in repaired and f['reason']!='NO_JOINT_60PCT_SPARE_SITES']
+        for i,xy in enumerate(order):
+            bay=bays[i];placed=[n for n in groups[xy] if n in placements]
+            spare=[slot for slot,bid in reserve.items() if bid==i]
+            need=math.ceil(len(placed)/.6)-len(placed)
+            for d,ix,iy,x,y in candidates(xy,max_radius):
+                if len(spare)>=need:break
+                if (ix,iy) not in occupied and (ix,iy) not in reserve:
+                    reserve[ix,iy]=i;spare.append((ix,iy))
+            if len(spare)<need:failures.append(dict(bay=i,anchor_um=xy,reason='NO_JOINT_60PCT_SPARE_SITES',missing=need-len(spare)))
+            bay.update(placed_ff=len(placed),spare_sites=len(spare),fill=len(placed)/(len(placed)+len(spare)) if placed or spare else None,
+                       max_displacement_um=max([distance(xy,placements[n])for n in placed]or[0]),
+                       sites=[slot for slot,n in occupied.items()if owner[n]==i]+spare)
     actual=fixed | placements; bad=[];missing=[];worst=(0,None)
     for a,b,k in edges:
         if a not in actual or b not in actual:missing.append((a,b,k));continue
@@ -116,7 +146,7 @@ def pack(nodes, fixed, edges, obstacles, max_radius=50., halo=0.):
         if d>worst[0]:worst=(d,(a,b,k))
         if d>REACH+1e-6:bad.append(dict(source=a,target=b,kind=k,length_um=d))
     return dict(schema='opentallas.quarter_joint_ff_sites.v1',verdict='PASS_SUBSET_MODEL' if not(failures or original_bad or bad or missing) else 'FAIL',
-                modeled_ff=len(nodes),placed_ff=len(placements),covered_edges=len(edges),missing_edges=len(missing),reach_failures=bad,original_reach_failures=original_bad,
+                initial_envelope_failures=initial_failures,directionally_repaired=repaired,modeled_ff=len(nodes),placed_ff=len(placements),covered_edges=len(edges),missing_edges=len(missing),reach_failures=bad,original_reach_failures=original_bad,
                 max_actual_hop_um=worst[0],worst_actual_edge=worst[1],bay_failures=failures,bays=bays,placements={n:list(p) for n,p in placements.items()},
                 cell_um=[W,H],macro_halo_um=halo,max_search_radius_um=max_radius,
                 qualification='Source-logical FF subset only; not mapped cell placement, G1, PG/clock/reset/hold closure or all native FFs. Exact disjoint row-cell sets reserve <=60% FF fill; all modeled paths checked at actual allocated centres. Other declared banks are obstacles. No RTL, cycles or plan edited.')
@@ -144,10 +174,17 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     for n in ('layout','outputs','controls','out'):p.add_argument('--'+n,type=Path,required=True)
     p.add_argument('--macro-halo',type=float,default=0.);p.add_argument('--max-radius',type=float,default=50.)
-    a=p.parse_args(); layout=json.loads(a.layout.read_text());nodes,fixed,edges,obstacles=load_problem(layout,json.loads(a.outputs.read_text()),json.loads(a.controls.read_text()))
-    report=pack(nodes,fixed,edges,obstacles,a.max_radius,a.macro_halo);a.out.mkdir(parents=True,exist_ok=True)
+    p.add_argument('--directional-repair',action='store_true')
+    p.add_argument('--cell-width',type=float,default=1.404,help='default reserves the wider native async FF; plain-data-only may use 1.08')
+    a=p.parse_args()
+    global W
+    if a.cell_width < 1.08 or abs(a.cell_width/.054-round(a.cell_width/.054))>1e-7:
+        p.error('cell width must be >=1.08 um on ASAP7 0.054-um sites')
+    W=a.cell_width
+    layout=json.loads(a.layout.read_text());nodes,fixed,edges,obstacles=load_problem(layout,json.loads(a.outputs.read_text()),json.loads(a.controls.read_text()))
+    report=pack(nodes,fixed,edges,obstacles,a.max_radius,a.macro_halo,a.directional_repair);a.out.mkdir(parents=True,exist_ok=True)
     (a.out/'joint_ff_sites.json').write_text(json.dumps(report,indent=1)+'\n');render(layout,report,a.out/'joint_ff_sites.png')
-    print(json.dumps({k:v for k,v in report.items()if k not in ('placements','bays','bay_failures','reach_failures','original_reach_failures')}))
+    print(json.dumps({k:v for k,v in report.items()if k not in ('placements','bays','bay_failures','reach_failures','original_reach_failures','initial_envelope_failures','directionally_repaired')}))
     print('failure samples',report['bay_failures'][:5]);return 0 if report['verdict']=='PASS_SUBSET_MODEL' else 1
 
 if __name__=='__main__':raise SystemExit(main())

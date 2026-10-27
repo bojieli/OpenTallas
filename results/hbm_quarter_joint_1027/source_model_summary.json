@@ -1,0 +1,187 @@
+{
+  "schema": "opentallas.quarter_joint_ff_sites.v1",
+  "verdict": "PASS_SUBSET_MODEL",
+  "modeled_ff": 18692,
+  "placed_ff": 18692,
+  "covered_edges": 24039,
+  "missing_edges": 0,
+  "max_actual_hop_um": 404.83799999999997,
+  "worst_actual_edge": [
+    "nk_r[10]",
+    "ge[0].gc[0].leaf.f_kkv[3]",
+    "quarter_to_first_leaf_control"
+  ],
+  "cell_um": [
+    1.404,
+    0.27
+  ],
+  "macro_halo_um": 0.0,
+  "max_search_radius_um": 50.0,
+  "directionally_repaired": [
+    "nk_r[9]",
+    "nk_r[8]",
+    "nk_r[7]",
+    "nk_r[6]",
+    "nk_r[5]",
+    "nk_r[4]",
+    "nk_r[3]",
+    "nk_r[2]",
+    "nk_r[1]",
+    "nk_r[11]",
+    "nk_r[10]",
+    "bv_r",
+    "qv_r"
+  ],
+  "initial_envelope_failures": [
+    {
+      "bay": 2,
+      "anchor_um": [
+        230.256,
+        1173.744
+      ],
+      "name": "nk_r[10]",
+      "reason": "NO_JOINT_SITE_WITHIN_REACH_BUDGET",
+      "movement_budget_um": 1.372,
+      "demand": 23
+    },
+    {
+      "bay": 2,
+      "anchor_um": [
+        230.256,
+        1173.744
+      ],
+      "name": "nk_r[11]",
+      "reason": "NO_JOINT_SITE_WITHIN_REACH_BUDGET",
+      "movement_budget_um": 1.372,
+      "demand": 23
+    },
+    {
+      "bay": 2,
+      "anchor_um": [
+        230.256,
+        1173.744
+      ],
+      "name": "nk_r[1]",
+      "reason": "NO_JOINT_SITE_WITHIN_REACH_BUDGET",
+      "movement_budget_um": 1.372,
+      "demand": 23
+    },
+    {
+      "bay": 2,
+      "anchor_um": [
+        230.256,
+        1173.744
+      ],
+      "name": "nk_r[2]",
+      "reason": "NO_JOINT_SITE_WITHIN_REACH_BUDGET",
+      "movement_budget_um": 1.372,
+      "demand": 23
+    },
+    {
+      "bay": 2,
+      "anchor_um": [
+        230.256,
+        1173.744
+      ],
+      "name": "nk_r[3]",
+      "reason": "NO_JOINT_SITE_WITHIN_REACH_BUDGET",
+      "movement_budget_um": 1.372,
+      "demand": 23
+    },
+    {
+      "bay": 2,
+      "anchor_um": [
+        230.256,
+        1173.744
+      ],
+      "name": "nk_r[4]",
+      "reason": "NO_JOINT_SITE_WITHIN_REACH_BUDGET",
+      "movement_budget_um": 1.372,
+      "demand": 23
+    },
+    {
+      "bay": 2,
+      "anchor_um": [
+        230.256,
+        1173.744
+      ],
+      "name": "nk_r[5]",
+      "reason": "NO_JOINT_SITE_WITHIN_REACH_BUDGET",
+      "movement_budget_um": 1.372,
+      "demand": 23
+    },
+    {
+      "bay": 2,
+      "anchor_um": [
+        230.256,
+        1173.744
+      ],
+      "name": "nk_r[6]",
+      "reason": "NO_JOINT_SITE_WITHIN_REACH_BUDGET",
+      "movement_budget_um": 1.372,
+      "demand": 23
+    },
+    {
+      "bay": 2,
+      "anchor_um": [
+        230.256,
+        1173.744
+      ],
+      "name": "nk_r[7]",
+      "reason": "NO_JOINT_SITE_WITHIN_REACH_BUDGET",
+      "movement_budget_um": 1.372,
+      "demand": 23
+    },
+    {
+      "bay": 2,
+      "anchor_um": [
+        230.256,
+        1173.744
+      ],
+      "name": "nk_r[8]",
+      "reason": "NO_JOINT_SITE_WITHIN_REACH_BUDGET",
+      "movement_budget_um": 1.372,
+      "demand": 23
+    },
+    {
+      "bay": 2,
+      "anchor_um": [
+        230.256,
+        1173.744
+      ],
+      "name": "nk_r[9]",
+      "reason": "NO_JOINT_SITE_WITHIN_REACH_BUDGET",
+      "movement_budget_um": 1.372,
+      "demand": 23
+    },
+    {
+      "bay": 2,
+      "anchor_um": [
+        230.256,
+        1173.744
+      ],
+      "name": "bv_r",
+      "reason": "NO_JOINT_SITE_WITHIN_REACH_BUDGET",
+      "movement_budget_um": 1.372,
+      "demand": 23
+    },
+    {
+      "bay": 2,
+      "anchor_um": [
+        230.256,
+        1173.744
+      ],
+      "name": "qv_r",
+      "reason": "NO_JOINT_SITE_WITHIN_REACH_BUDGET",
+      "movement_budget_um": 1.372,
+      "demand": 23
+    }
+  ],
+  "qualification": "Source-logical FF subset only; not mapped cell placement, G1, PG/clock/reset/hold closure or all native FFs. Exact disjoint row-cell sets reserve <=60% FF fill; all modeled paths checked at actual allocated centres. Other declared banks are obstacles. No RTL, cycles or plan edited.",
+  "status": "SOURCE_MODEL_ONLY_NOT_MAPPED_AUTHORITY",
+  "mapped_correction": "6150 md.line anchors are semantic delay states implemented in ot_hdc_delay_rf; retire from mapped-cell claims. Actual RF cell graph pending SK source owner.",
+  "bay_count": 1312,
+  "reserved_row_sites": 31587,
+  "max_bay_fill": 0.6,
+  "artifacts": "intel1:/srv/opentallas-scratch2/claude/codex-hbm-joint-bays-1351/{output_only_joint,combined_final3,combined_final3_wide,combined_final3_directional}; corrected graph intel2:codex-hbm-source-1351/quarter_control_final3"
+}
