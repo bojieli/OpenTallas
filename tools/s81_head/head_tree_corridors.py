@@ -44,12 +44,14 @@ def allocate(spec, plan, align_inputs=False, exact_jogs=False):
     for edge in out['nets']:
         bydrv[edge['drv']].append(edge)
         incoming[edge['load']] = edge['drv']
+    for g in groups:
+        bydrv.setdefault(g, [])       # leaf output stubs are physical nets too
     def pin(g, p):
         _, cell = groups[g][0]
         return D.C128.pin_xy({'c': dict(x=cell['origin_um'][0], y=cell['origin_um'][1],
             orient=cell['orient'])}, 'c', p, D.ROW_Y)
     grid = {v['layer']: v for v in plan.die['pg']['grid']}
-    original_layers = {g: edges[0]['layer'] for g, edges in bydrv.items()}
+    original_layers = {g: edges[0]['layer'] if edges else 'M8' for g, edges in bydrv.items()}
     if align_inputs:
         for g, cells in groups.items():
             if original_layers.get(g) == 'M9' or original_layers.get(incoming.get(g)) == 'M9':
@@ -67,10 +69,10 @@ def allocate(spec, plan, align_inputs=False, exact_jogs=False):
     buckets = defaultdict(list)
     layers = {}
     for g, edges in bydrv.items():
-        lay, = {e['layer'] for e in edges}
+        lay, = {e['layer'] for e in edges} if edges else {'M8'}
         layers[g] = lay
         d = pin(g, 'Y')
-        ps = [pin(e['load'], 'A') for e in edges]
+        ps = [pin(e['load'], 'A') for e in edges] if edges else [(d[0]+8.64,d[1])]
         axis = 0 if lay == 'M8' else 1
         _, cell = groups[g][0]
         coord = (cell['origin_um'][1] + len(groups[g]) * D.ROW_Y / 2
@@ -116,7 +118,8 @@ def allocate(spec, plan, align_inputs=False, exact_jogs=False):
     for g, edges in bydrv.items():
         if layers[g] != 'M8':
             continue
-        vals = [pin(g,'Y')[0]] + [pin(e['load'],'A')[0] for e in edges]
+        d = pin(g,'Y')
+        vals = [d[0]] + ([pin(e['load'],'A')[0] for e in edges] if edges else [d[0]+8.64])
         pad = .08 if exact_jogs else 8.64
         hrows[hbucket[g]].append((min(vals)-pad,max(vals)+pad,g))
     for bucket, rows in hrows.items():
@@ -134,7 +137,7 @@ def allocate(spec, plan, align_inputs=False, exact_jogs=False):
     corridors = {}
     for g, edges in bydrv.items():
         d = pin(g, 'Y')
-        ps = [pin(e['load'], 'A') for e in edges]
+        ps = [pin(e['load'], 'A') for e in edges] if edges else [(d[0]+8.64,d[1])]
         axis = 0 if layers[g] == 'M8' else 1
         vals = [d[axis]] + [p[axis] for p in ps]
         name = 'ckm_w_' + groups[g][0][0]
