@@ -167,3 +167,13 @@ def test_stage_from_a_kit_copy_fails_closed(tmp_path, monkeypatch):
     with pytest.raises(kit_modes.Fail, match="repository copy"):
         kit_modes.stage(kd)
     assert "OT_HOLD_MM" not in (kd / "config.mk").read_text()
+
+
+def test_kit_copy_imports_outside_repo():
+    """HBM-CORES-R11 10-27: the kit copy runs as /work/kit_modes.py; REPO = HERE.parents[1] raised IndexError there
+    (aq_tree13 k11m GRT step rc 9).  The module must import from a one-level path."""
+    from pathlib import Path
+    src = (Path(__file__).resolve().parent / "kit_modes.py").read_text()
+    ns = {"__name__": "kit_modes_copy", "__file__": "/work/kit_modes.py"}
+    exec(compile(src, "/work/kit_modes.py", "exec"), ns)
+    assert ns["HERE"] == Path("/work") and ns["main"](["check", "/nonexistent-kit", "--step", "grt"]) == 2
