@@ -3717,3 +3717,4 @@ GEOM REQ [INFRA-FIRST-QC-R14] 2026-10-26 23:28 PDT claude/qc-mesh-r14-1026@64abd
   (5) COND, render/plan: the title says 18 parent-FF local roots (triangles), but no triangles are drawn and island A (200,745) has no visible load. Re-draw with the parent-FF roots and their sink clusters (counts per root).
       Reconcile B: the README says P_child 43.8 TT -> B 206/166, while the render title says P 37.44 -> B 212.56/172.15. One number must go into the child re-kits.
   The re-kit rules (centre clk pin, OBS <= M5, internal tree to B) are ACCEPTED, subject to (2)-(5). No P&R until then.
+- 2026-10-27 04:28 PDT GEOM REQ S81-CORE-LAT-R14: trunk slices qbank_S / sstn_base566 / gunit_l1c (renders results/core_lat_r14_1027/*_tk.png on claude/s81-core-lat-r14-1027@ef0d0bd683, checks PASS; author viewed sstn+l1c). Please check the entry column (root + trunk + T0/T1 branch stack under the M5 port) -- all three fail DRT-0255 there.
