@@ -1,0 +1,207 @@
+{
+ "source": "results/hbm_mu_2001/buddy/NE/candidate_before_MY_fix.json",
+ "fix": "NE_hub MY: local E faces central root",
+ "cut": {
+  "x": {
+   "cuts": 1901,
+   "max_use": 0.455,
+   "at_um": 2674.08,
+   "bits": 30128,
+   "face_bits": 14115,
+   "tracks": 66217,
+   "core_core_max_use": 0.349,
+   "cuts_over_0p6": 0
+  },
+  "y": {
+   "cuts": 999,
+   "max_use": 0.523,
+   "at_um": 1464.48,
+   "bits": 56402,
+   "face_bits": 22466,
+   "tracks": 107837,
+   "core_core_max_use": 0.325,
+   "cuts_over_0p6": 0
+  }
+ },
+ "segments": [
+  {
+   "x": {
+    "cuts": 915,
+    "max_use": 0.455,
+    "at_um": 2674.08,
+    "bits": 30128,
+    "face_bits": 14115,
+    "tracks": 66217,
+    "core_core_max_use": 0.242,
+    "cuts_over_0p6": 0
+   },
+   "y": {
+    "cuts": 999,
+    "max_use": 0.586,
+    "at_um": 1645.92,
+    "bits": 32000,
+    "face_bits": 14479,
+    "tracks": 54604,
+    "core_core_max_use": 0.321,
+    "cuts_over_0p6": 0
+   }
+  },
+  {
+   "x": {
+    "cuts": 985,
+    "max_use": 0.445,
+    "at_um": 2203.2,
+    "bits": 36584,
+    "face_bits": 7898,
+    "tracks": 82137,
+    "core_core_max_use": 0.349,
+    "cuts_over_0p6": 0
+   },
+   "y": {
+    "cuts": 999,
+    "max_use": 0.577,
+    "at_um": 1455.84,
+    "bits": 30734,
+    "face_bits": 7611,
+    "tracks": 53233,
+    "core_core_max_use": 0.441,
+    "cuts_over_0p6": 0
+   }
+  }
+ ],
+ "max_axis": 0.586,
+ "changes": [
+  {
+   "conn": "mu_tree_root:0:up",
+   "old": {
+    "k": 1,
+    "wires": 271,
+    "regs": 11,
+    "from_um": [
+     3844.8,
+     2021.76
+    ],
+    "to_um": [
+     0.0,
+     2160.0
+    ]
+   },
+   "new": {
+    "k": 4,
+    "wires": 68,
+    "regs": 15,
+    "from_um": [
+     3844.8,
+     2021.76
+    ],
+    "to_um": [
+     8216.64,
+     2160.0
+    ]
+   }
+  },
+  {
+   "conn": "mu_tree_root:0:down",
+   "old": {
+    "k": 1,
+    "wires": 173,
+    "regs": 10,
+    "from_um": [
+     0.0,
+     2160.0
+    ],
+    "to_um": [
+     3672.0,
+     2021.76
+    ]
+   },
+   "new": {
+    "k": 5,
+    "wires": 35,
+    "regs": 15,
+    "from_um": [
+     8216.64,
+     2160.0
+    ],
+    "to_um": [
+     3672.0,
+     2021.76
+    ]
+   }
+  },
+  {
+   "conn": "mu_tree_root:1:up",
+   "old": {
+    "k": 4,
+    "wires": 68,
+    "regs": 25,
+    "from_um": [
+     6117.12,
+     972.0
+    ],
+    "to_um": [
+     0.0,
+     2160.0
+    ]
+   },
+   "new": {
+    "k": 1,
+    "wires": 271,
+    "regs": 25,
+    "from_um": [
+     6117.12,
+     972.0
+    ],
+    "to_um": [
+     8216.64,
+     2160.0
+    ]
+   }
+  },
+  {
+   "conn": "mu_tree_root:1:down",
+   "old": {
+    "k": 5,
+    "wires": 35,
+    "regs": 25,
+    "from_um": [
+     0.0,
+     2160.0
+    ],
+    "to_um": [
+     5944.32,
+     972.0
+    ]
+   },
+   "new": {
+    "k": 1,
+    "wires": 173,
+    "regs": 25,
+    "from_um": [
+     8216.64,
+     2160.0
+    ],
+    "to_um": [
+     5944.32,
+     972.0
+    ]
+   }
+  }
+ ],
+ "verdict": "PASS_MODEL_CUT",
+ "candidate": "results/hbm_mu_2001/buddy/NE/candidate_type.json",
+ "root_reserve_geometry_candidate": {
+  "source_plan": "R13 S2",
+  "type": "root",
+  "local_origin_um": [
+   682.56,
+   4536.0
+  ],
+  "outline_um": [
+   345.6,
+   345.6
+  ],
+  "halo_um": 8.64,
+  "placement_approved": false
+ }
+}
