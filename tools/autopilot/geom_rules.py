@@ -1197,7 +1197,7 @@ def verdict_line(verdict, rules, title=""):
     order = {"FAIL": 0, "NA": 0, "WARN": 1, "PASS": 2}
     parts = [f"{r['rule']}={short[r['status']]}({r['value'] if not isinstance(r['value'], dict) else max(r['value'].values() or [0])})"
              for r in sorted((r for r in rules if r["status"] != "INFO"), key=lambda r: order[r["status"]])]
-    warn = "; ".join(f"{r['rule']}: {r['detail'] or r['value']}" for r in rules if r["status"] == "WARN")
+    warn = "; ".join(f"{r['rule']} {r['value']}: {r['detail']}" for r in rules if r["status"] == "WARN")
     return (f"AUTO-GEOM {verdict}" + (f" {title}" if title else "") + (f" WARN[{warn}]" if warn else "") + " "
             + " ".join(parts))
 
@@ -1223,7 +1223,7 @@ def main(argv=None):
     line = verdict_line(verdict, rules, a.title)
     out = dict(schema="opentallas.auto_geom.v2", dump=a.dump, verdict=verdict, line=line, rules=rules, metrics=m,
                reasons=reasons(rules), warns=[r["rule"] for r in rules if r["status"] == "WARN"],
-               warn_detail=[f"{r['rule']}: {r['detail'] or r['value']}" for r in rules if r["status"] == "WARN"])
+               warn_detail=[f"{r['rule']} {r['value']}: {r['detail']}" for r in rules if r["status"] == "WARN"])
     if a.json:
         with open(a.json, "w") as fh:
             json.dump(out, fh, indent=1)

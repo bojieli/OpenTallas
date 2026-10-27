@@ -111,7 +111,7 @@ class TestRules(unittest.TestCase):
         self.assertIn("W/M4 8.0/um at y 50.0-60.0", pd[0]["detail"])
         self.assertNotIn("pin_density", " ".join(G.reasons(R)))
         line = G.verdict_line(v, R, "t")
-        self.assertIn("WARN[pin_density: W/M4 8.0/um at y 50.0-60.0]", line)
+        self.assertIn("WARN[pin_density 8.0: W/M4 8.0/um at y 50.0-60.0]", line)
         self.assertIn("pin_density=WARN(8.0)", line)
         m2 = G.metrics(str(dump(self.d / "pe.tsv", flops=[(1, 2, 100)], comb=fill_cells(100, 3600), pins=pins[:50],
                                 nets=[("SIGNAL", f"p{k}", ["i1"]) for k in range(50)])), odb="3_place.odb")
