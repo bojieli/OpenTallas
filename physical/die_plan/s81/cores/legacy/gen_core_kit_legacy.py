@@ -673,7 +673,7 @@ def regional_taps_cfg(kd, rt, ckb):
             "export SKIP_CTS_REPAIR_TIMING = 1", f"export CTS_ARGS = {rt.get('cts_args', RT_CTS_ARGS)}"]
 
 
-def _pin_freeze_hashes(kd, plan_pins_file, outline):
+def _pin_freeze_hashes(kd, plan_pins_file, outline, declared_pins=None):
     """Keep declared plan provenance distinct from actual kit placement.
 
     The contract checks placement against the declared pins plus explicit master
@@ -681,7 +681,7 @@ def _pin_freeze_hashes(kd, plan_pins_file, outline):
     """
     sys.path.insert(0, str(TOOL))
     import kit_contract
-    declared = json.loads(Path(plan_pins_file).read_text())
+    declared = declared_pins if declared_pins is not None else json.loads(Path(plan_pins_file).read_text())
     return dict(pins_canon_sha256=kit_contract._canon(declared, outline),
                 pins_placed_canon_sha256=kit_contract._canon(kit_contract.placed_pins(kd), outline))
 
@@ -1395,7 +1395,7 @@ def main():
                  if hc.get("child_of") else {}),
               pins_file=hc["pins_file"], pins_sha256=sha(REPO / hc["pins_file"] if "pins" in hc else S81 / hc["pins_file"]), pins=len(pins), plan_lef=hc["lef"],
               **_pin_freeze_hashes(kd, REPO / hc["pins_file"] if "pins" in hc else S81 / hc["pins_file"],
-                                   [w, h]),
+                                   [w, h], declared_pins=hc.get("pins")),
               clocks=clks, resets=rsts, **({"multi_root": dict(roots=mr["roots"], entries=sum(len(r["pins"]) for r in mr["roots"]))}
                                            if mr else {}),
               recipe_sha256=hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest(),
