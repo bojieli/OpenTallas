@@ -987,7 +987,15 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
             lg = dict(nx=int(lattice["leaf_grid"][0]), ny=int(lattice["leaf_grid"][1]),
                       drv_reach=float(lattice.get("drv_reach_um", 200.0)),
                       hop_reach=float(lattice.get("hop_reach_um", 600.0)),
-                      wire_levels={int(v) for v in lattice.get("wire_levels", [])})
+                      wire_levels={int(v) for v in lattice.get("wire_levels", [])},
+                      # CLOCK-KV-R8 (opt-in): "pushdown" = no driver/node slide at all; every lattice point that falls in
+                      # a hard core stays at its ideal point as a 12.2a1 in-core PUSHDOWN island (type-identical coords
+                      # checked by the census), so every root->driver path keeps its equal-structure legs by construction
+                      in_core=str(lattice.get("in_core", "slide")))
+            # "drivers": only the mesh drivers stay at their ideal points (pushdown), tree nodes keep the
+            # path-length-preserving re-site toward the parent
+            if lg["in_core"] not in ("slide", "pushdown", "drivers"):
+                raise ValueError("--lattice-spec in_core: slide | pushdown | drivers")
             if lg["nx"] != nx or not pow2(lg["ny"]):
                 raise ValueError("--lattice-spec leaf_grid: [nx, ny_leaf] with nx = --nx (leaves on the V straps), "
                                  "ny_leaf a power of two")
@@ -1173,6 +1181,8 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         for i, x in enumerate(xs):
             for j, y in enumerate(ly):
                 q, d = free_along(K, (x, y), 1, lg["drv_reach"], bounds=(0.0, H))
+                if lg["in_core"] in ("pushdown", "drivers") and d:
+                    q = None   # CLOCK-KV-R8: no slide, pushdown island at the ideal point
                 isl = None
                 if q is None:
                     q, d, isl = (x, y), 0.0, core_at(ko, (x, y))
@@ -1350,7 +1360,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
             q, d, isl = kp, 0.0, None
             if hitf(K, kp):
                 q = None
-                if cax != inc:
+                if cax != inc and lg["in_core"] != "pushdown":
                     # the re-site lengthens both child legs by the slide: keep their hops within reach
                     lim = min(abs(kp[inc] - here[inc]), max(0.0, hop_slack(kr, level + 1)))
                     q, d = free_toward(K, kp, inc, here[inc], lim)
