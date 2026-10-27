@@ -98,7 +98,7 @@ def phy_pg_pitch(kind):
     return round(UBUMP_UM / math.sqrt(PHY_PG_SHARE[kind]), 3)
 
 
-def pg_bumps(P, io, pitch=150.0, phy=True):
+def pg_bumps(P, io, pitch=None, phy=True):
     """Core C4 power bumps (die_trial.bump_grid) + every PHY window's own PG micro-bump lattice (VDD/VSS by parity).
     The plan uses every 150-um site of a PHY window for signals, so without these a PHY window has no supply at all."""
     out = list(D.bump_grid(P, io, pitch=pitch))
@@ -573,7 +573,7 @@ def window_kit(P, plan_dir, pg, out, name, rect, tile=86.4, power=None, phy_w=4.
     Pg = _PG(P, pg["grid"])
     model = load_model(P, plan_dir, power, phy_w, core_w_mm2 if core_w_mm2 is not None else pg.get("core_w_mm2"))
     io = _pg_io(P, plan_dir)
-    bp = pg.get("bump_pitch_um", 150.0)
+    bp = pg.get("bump_pitch_um", D.bump_contract(P)["pitch_um"])
     allb = pg_bumps(P, io, pitch=bp)
     bumps = [(n, round(x - x0, 3), round(y - y0, 3)) for n, x, y in allb if x0 < x < x1 and y0 < y < y1]
     out = Path(out)
