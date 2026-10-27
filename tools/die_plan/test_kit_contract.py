@@ -260,8 +260,8 @@ def test_pins_canonical_plan_table_with_dir(tmp_path):
     doc = dict(schema="opentallas.core_pins.v1", core="k", pins=rows)
     b = json.dumps(doc).encode()
     (kd / "plan_pins.json").write_bytes(b)
-    (kd / "io.tcl").write_text("".join(f"place_pin -pin_name {{{r[name]}}} -layer {r[layer]} -location "
-                                       f"{{{r[x]:.4f} {r[y]:.4f}}} -pin_size {{0.024 0.084}}\n" for r in rows))
+    (kd / "io.tcl").write_text("".join(f"place_pin -pin_name {{{r['name']}}} -layer {r['layer']} -location "
+                                       f"{{{r['x']:.4f} {r['y']:.4f}}} -pin_size {{0.024 0.084}}\n" for r in rows))
     (kd / "freeze.json").write_text(json.dumps(dict(
         outline_um=[100.0, 100.0], pins_file="cores/x/k_pins.json", pins_sha256=hashlib.sha256(b).hexdigest(),
         pins_canon_sha256=KC._canon(doc, [100.0, 100.0]))))
