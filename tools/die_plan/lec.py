@@ -1032,10 +1032,22 @@ class Lec:
                 bind(lt, self.tp[k], v)
             merged = nxt
         later = []
+        # A gold-only register whose next state is its own Q is never written (no reset, no load): slang pads a
+        # non-power-of-two unpacked array (rg_d[0:4] -> 8 words) with such words, where read_verilog reads X.
+        # An ASAP7 flop has no power-up value, so the register holds X: a gold X source, never the constant 0
+        # that write_aiger -zinit gives it (LEC-ICG-2 10-26: 27 qxpq cfg_d bits differed only at rg_s >= 5,
+        # unreachable since rk <= 17; RTL-vs-netlist co-simulation 0 mismatches)
+        self.unwritten = sorted(k for k in self.gonly if k.startswith("ff:") and self.gc.get(k) == self.gp[k])
+        unwritten = set(self.unwritten)
         for side, keys, p, lmap in (("gold", self.gonly, self.gp, lg), ("gate", self.tonly, self.tp, lt)):
             for k in keys:
                 h = self.hyp.get((side, k))
-                if h and h[0] == "const":
+                if side == "gold" and k in unwritten:
+                    v = m.add_input(f"gold:{k}")
+                    kind[v >> 1] = ("gold_x", k)
+                    bind(lmap, p[k], v)
+                    lgx[p[k] & ~1] = 1
+                elif h and h[0] == "const":
                     bind(lmap, p[k], h[1])
                 elif h and h[0] in ("eq", "cube"):
                     later.append((side, k, h))
@@ -3281,7 +3293,7 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
             gate=dict(inputs=L.gate["I"], flops=L.gate["L"], outputs=L.gate["O"], ands=L.gate["A"]),
             matched=len(L.matched), gold_constant_flops=lst(consts), paired_flops=lst(pairs),
             gold_unmatched_live=lst(live_g), gate_unmatched=lst(live_t),
-            gold_x_sources=len(L.gx), gate_x_sources=len(L.tx),
+            gold_x_sources=len(L.gx), gold_unwritten_x=lst(getattr(L, "unwritten", [])), gate_x_sources=len(L.tx),
             gold_only_compare=lst(cpg), gate_only_compare=lst(cpt))
         if not m.outs:
             raise Unproven("no matched compare points")
