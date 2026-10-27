@@ -4,15 +4,21 @@
 Example: hc128_native_kit.py --masters /.../masters_drst --view MODULE@SHA12 --out KITROOT
 All normal kit arguments pass through; this candidate adds zero face cycles.
 """
-import argparse,hashlib,importlib.util,json,sys
+import argparse,hashlib,importlib.util,json,os,sys
 from pathlib import Path
+from hc_alpha_names import normalize_names, placement_name
 ap=argparse.ArgumentParser(add_help=False);ap.add_argument('--masters',type=Path,required=True);ap.add_argument('--repo',type=Path,default=Path(__file__).resolve().parents[2]);ap.add_argument('--diagnostic-plan',action='store_true');a,rest=ap.parse_known_args();a.repo=a.repo.resolve();cfg=a.repo/'physical/die_plan/hbm_arch_cores/native128';views=json.loads((cfg/'views.json').read_text());recipes={};overrides={};receipts={}
+if '--out' not in rest:raise SystemExit('--out required')
+alpha_dir=Path(rest[rest.index('--out')+1]).resolve()/'_hc128_alpha';alpha_dir.mkdir(parents=True,exist_ok=True)
 for view in views['view_list']:
- mod=view['module'];sv=a.masters/(mod+'.sv');receipt=json.loads((a.masters/(mod+'_receipt.json')).read_text());assert hashlib.sha256(sv.read_bytes()).hexdigest()==receipt['verilog_sha256'],mod;receipts[mod]=receipt
+ mod=view['module'];original=a.masters/(mod+'.sv');receipt=json.loads((a.masters/(mod+'_receipt.json')).read_text());assert hashlib.sha256(original.read_bytes()).hexdigest()==receipt['verilog_sha256'],mod
+ text,alpha=normalize_names(original.read_text(),mod);sv=alpha_dir/(mod+'.sv');tmp=sv.with_suffix('.'+str(os.getpid())+'.tmp');tmp.write_text(text);os.replace(tmp,sv)
+ receipt=dict(receipt,original_verilog_sha256=receipt['verilog_sha256'],verilog_sha256=hashlib.sha256(sv.read_bytes()).hexdigest(),identifier_alpha=alpha);receipts[mod]=receipt
  virtual='native_hc128/'+mod+'.sv';overrides[virtual]=str(sv.resolve());rec=dict(top=mod,files=[virtual],params={},defines=[],source_commit=receipt['source_commit'],source='Current exact native W128 cut; complete emitted module closure; zero face-shell cycles',macros=[])
  if 'pair' in mod:
   # One M5 PDN pitch lower leaves 4.296 um between X/W0 halos; y=129.6 overlaps by 0.024 um.
   rec.update(macros=['ot_sram_1r1w_1024x256_m2_r2c2','ot_sram_1r1w_128x256_m1_r2c2'],macro_place_halo_um=4.32,macro_placement=[dict(inst='u_c.u_b.g_w\\[1\\].u_m',macro='ot_sram_1r1w_1024x256_m2_r2c2',xy_um=[21.6,4.32],orient='R180'),dict(inst='u_c.u_b.g_x\\[0\\].u_m',macro='ot_sram_1r1w_128x256_m1_r2c2',xy_um=[21.6,125.28],orient='MY'),dict(inst='u_c.u_b.g_w\\[0\\].u_m',macro='ot_sram_1r1w_1024x256_m2_r2c2',xy_um=[21.6,179.28],orient='MY')])
+ for item in rec.get('macro_placement',[]):item['inst']=placement_name(item['inst'],alpha)
  recipes[mod]=rec
 if '--view' not in rest:raise SystemExit('--view required; see native128/views.json')
 vid=rest[rest.index('--view')+1];selected=next((v for v in views['view_list'] if v['view']==vid),None)
