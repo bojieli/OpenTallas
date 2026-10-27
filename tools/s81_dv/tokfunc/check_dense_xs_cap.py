@@ -11,7 +11,10 @@ from pathlib import Path
 import re
 
 
-def check(v, log):
+XS4_PATH_EDGES = 1   # measured XS4 path edge over the calibrated model (s81_dense_source_1021 positive: 322 = 321 + 1)
+
+
+def check(v, log, pin=None):
     m = json.loads((v/'meta.json').read_text())
     prog = json.loads((v/'dense_program.json').read_text())
     text = log.read_text()
@@ -26,6 +29,8 @@ def check(v, log):
     shift = ret[0][0]-want[0][0] if ret and want else None
     if len(ret) != len(want):
         errors.append(f'return count {len(ret)} != {len(want)}')
+    if pin is not None and shift != pin:
+        errors.append(f'return calendar shift {shift} != pinned {pin} (calibrated model + measured XS4 edge)')
     if shift is not None:
         for n, (r, w) in enumerate(zip(ret, want)):
             if r != [w[0]+shift]+w[1:]:
@@ -61,6 +66,9 @@ def check(v, log):
                 measured_return_plan_shift=shift, measured_control_edges=ctrl,
                 measured_last_return=ret[-1][0] if ret else None,
                 measured_last_capture=max((r[1] for r in cap),default=None),
+                measured_first_return=ret[0][0] if ret else None,
+                measured_first_capture=min((r[1] for r in cap),default=None),
+                pinned_return_shift=pin, element_go_edges=len(re.findall(r'^ELEMENT_GO ', text, re.M)),
                 immutable_program=prog, log_sha256=hashlib.sha256(log.read_bytes()).hexdigest())
 
 
@@ -68,7 +76,12 @@ def main():
     p=argparse.ArgumentParser()
     p.add_argument('--vectors',type=Path,required=True)
     p.add_argument('--run',type=Path,required=True)
+    p.add_argument('--gb',action='store_true',help='TOK-ALL-15 GB successor: pinned shift + old-Q and wrong-image controls')
+    p.add_argument('--oldq-vectors',type=Path)
+    p.add_argument('--wrongimg-vectors',type=Path)
     a=p.parse_args()
+    if a.gb:
+        return main_gb(a)
     positive=check(a.vectors,a.run/'run_mut0.log')
     mutant=check(a.vectors,a.run/'run_mut1.log')
     d=dict(positive=positive,mutant=mutant,
@@ -77,6 +90,29 @@ def main():
     (a.run/'check.json').write_text(json.dumps(d,indent=2)+'\n')
     print(json.dumps(d))
     return 0 if d['causal_negative_detected'] else 1
+
+
+def main_gb(a):
+    prog=json.loads((a.vectors/'dense_program.json').read_text())
+    assert prog['q_issue_advance_edges']==1 and prog['gb_provider_under_test'], 'GB positive needs the native Q advance1'
+    pin=prog['calibrated_common_shift_model']+XS4_PATH_EDGES
+    positive=check(a.vectors,a.run/'run_mut0.log',pin)
+    runs=dict(input_corruption=check(a.vectors,a.run/'run_mut1.log',pin))
+    if a.oldq_vectors:
+        q=json.loads((a.oldq_vectors/'dense_program.json').read_text())
+        assert q['q_issue_advance_edges']==0, 'old-Q control must use the legacy Q launch'
+        # the old calendar is judged against the SAME pinned schedule as the positive
+        runs['old_q_calendar']=check(a.oldq_vectors,a.run/'run_oldq.log',pin)
+    if a.wrongimg_vectors:
+        runs['wrong_loaded_image']=check(a.wrongimg_vectors,a.run/'run_wrongimg.log',pin)
+    caught={k:r['status']=='FAIL' for k,r in runs.items()}
+    d=dict(schema='opentallas.s81.dense_gb_composition_receipt.v1',positive=positive,controls=runs,controls_caught=caught,
+           pass_and_all_controls_caught=positive['status']=='PASS' and all(caught.values()),
+           uniform_clock_phase=True,native_provider_qualified=False,full_stage=False,full_token=False)
+    (a.run/'check.json').write_text(json.dumps(d,indent=2)+'\n')
+    print(json.dumps(dict(positive=positive['status'],errors=positive['errors'][:4],caught=caught,
+                          shift=positive['measured_return_plan_shift'],pin=pin)))
+    return 0 if d['pass_and_all_controls_caught'] else 1
 
 
 if __name__=='__main__':

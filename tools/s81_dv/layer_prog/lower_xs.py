@@ -344,8 +344,20 @@ def qualify_frame_source(schedule, master, source_root, selected_manifest=None):
         if len(gb) != len(stations):
             raise ValueError('mixed legacy/GB QX stations cannot use a global GO advance: ' + master)
         if any(s.get('required_go_issue_advance_edges') != 1 or
-               s.get('native_provider_qualified') is not True for s in gb):
+               (s.get('native_provider_qualified') is not True and not gb_provider_under_test()) for s in gb):
             raise ValueError('GB frame requires its qualified one-edge-early GO/TAG provider: ' + master)
+
+
+def gb_provider_under_test():
+    """TOK-ALL-15 bench-only admission: the native GB composition bench exercises the unqualified provider itself.
+
+    Requires the native calendar Q issue advance (OT_XS_Q_CPR=1, xs_calendar.q_command_lead). It never marks the
+    provider qualified; unset (the default) keeps the GB guard exactly as before."""
+    if os.environ.get('OT_XS_GB_PROVIDER_UNDER_TEST', '0') != '1':
+        return False
+    if os.environ.get('OT_XS_Q_CPR', '0') != '1':
+        raise ValueError('GB provider under test requires the native Q issue advance OT_XS_Q_CPR=1')
+    return True
 
 
 def source_frame_schedule(master):
@@ -653,6 +665,7 @@ def cmd_gen(a):
         rows = {p['rows'][r]: v for r, v in rows.items()}
         plan = rank_plan(plan, p['rows'])
     meta = dict(master=base_master(p['master']), die_frame=a.frame, die_master=p['master'], lk=p['lk'],
+                gb_provider_under_test=gb_provider_under_test(), native_provider_qualified=False,
                 land_e=land_e(p['lk']), slice=sl, slice_index=g, seed=SEED, only=None, K=mats[0].K,
                 rows_per_mat=[m.rows for m in mats], mats=len(mats), q_pairs=q, bf_pairs=bf, pairs=qa,
                 phase=dict((k, v) for k, v in ph.items() if k != 'matrices'), matrices=ph['matrices'], nrows=off, ops=off,

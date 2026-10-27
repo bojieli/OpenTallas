@@ -34,6 +34,8 @@ class Inventory:
     def strap(self, name, port):
         m = re.search(r'\.' + port + r"\((\d+)'([dh])([0-9a-fA-F]+)\)", self.inst[name]['ports'])
         if not m:
+            if port == 'lk' and X.is_asbuilt(self.inst[name]['master']):
+                return None   # as-built wrapper has no lk pin: lower_xs.frame_lk uses its measured cfifo lk
             raise ValueError(f'Missing actual {port} strap on {name}')
         return int(m[3], 16 if m[2] == 'h' else 10)
 
