@@ -1,0 +1,1000 @@
+{
+  "creator": "Yosys 0.9 (git sha1 1979e0b)",
+  "modules": {
+    "fe_reset": {
+      "attributes": {
+        "top": 1,
+        "src": "results/fe_reset_preserve_2144/old.sv:9"
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "arst_n": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "start_i": {
+          "direction": "input",
+          "bits": [ 4 ]
+        },
+        "rst_o_0": {
+          "direction": "output",
+          "bits": [ 5 ]
+        },
+        "start_o_0": {
+          "direction": "output",
+          "bits": [ 6 ]
+        },
+        "rst_o_1": {
+          "direction": "output",
+          "bits": [ 7 ]
+        },
+        "start_o_1": {
+          "direction": "output",
+          "bits": [ 8 ]
+        },
+        "mission": {
+          "direction": "output",
+          "bits": [ 9 ]
+        }
+      },
+      "cells": {
+        "u_rrl_0": {
+          "hide_name": 0,
+          "type": "ot_dp_rrelay",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": 1,
+            "src": "results/fe_reset_preserve_2144/old.sv:24"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 10 ],
+            "q": [ 11 ]
+          }
+        },
+        "u_rrl_15": {
+          "hide_name": 0,
+          "type": "ot_dp_rrelay",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": 1,
+            "src": "results/fe_reset_preserve_2144/old.sv:69"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 11 ],
+            "q": [ 12 ]
+          }
+        },
+        "u_rrl_16": {
+          "hide_name": 0,
+          "type": "ot_dp_rrelay",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": 1,
+            "src": "results/fe_reset_preserve_2144/old.sv:73"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 12 ],
+            "q": [ 13 ]
+          }
+        },
+        "u_rrl_17": {
+          "hide_name": 0,
+          "type": "ot_dp_rrelay",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": 1,
+            "src": "results/fe_reset_preserve_2144/old.sv:77"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 13 ],
+            "q": [ 14 ]
+          }
+        },
+        "u_rrl_18": {
+          "hide_name": 0,
+          "type": "ot_dp_rgate",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": 1,
+            "src": "results/fe_reset_preserve_2144/old.sv:80"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output",
+            "run": "input"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 14 ],
+            "q": [ 9 ],
+            "run": [ 15 ]
+          }
+        },
+        "u_rrl_23": {
+          "hide_name": 0,
+          "type": "ot_dp_rrelay",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": 1,
+            "src": "results/fe_reset_preserve_2144/old.sv:92"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 12 ],
+            "q": [ 16 ]
+          }
+        },
+        "u_rrl_24": {
+          "hide_name": 0,
+          "type": "ot_dp_rrelay",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": 1,
+            "src": "results/fe_reset_preserve_2144/old.sv:96"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 16 ],
+            "q": [ 17 ]
+          }
+        },
+        "u_rrl_25": {
+          "hide_name": 0,
+          "type": "ot_dp_rrelay",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": 1,
+            "src": "results/fe_reset_preserve_2144/old.sv:100"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 17 ],
+            "q": [ 7 ]
+          }
+        },
+        "u_rrl_26": {
+          "hide_name": 0,
+          "type": "ot_dp_rrelay",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": 1,
+            "src": "results/fe_reset_preserve_2144/old.sv:104"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 10 ],
+            "q": [ 18 ]
+          }
+        },
+        "u_rrl_27": {
+          "hide_name": 0,
+          "type": "ot_dp_rrelay",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": 1,
+            "src": "results/fe_reset_preserve_2144/old.sv:108"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 18 ],
+            "q": [ 19 ]
+          }
+        },
+        "u_rrl_28": {
+          "hide_name": 0,
+          "type": "ot_dp_rrelay",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": 1,
+            "src": "results/fe_reset_preserve_2144/old.sv:112"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 19 ],
+            "q": [ 20 ]
+          }
+        },
+        "u_rrl_29": {
+          "hide_name": 0,
+          "type": "ot_dp_rrelay",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": 1,
+            "src": "results/fe_reset_preserve_2144/old.sv:116"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 20 ],
+            "q": [ 21 ]
+          }
+        },
+        "u_rrl_30": {
+          "hide_name": 0,
+          "type": "ot_dp_rrelay",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": 1,
+            "src": "results/fe_reset_preserve_2144/old.sv:120"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 21 ],
+            "q": [ 5 ]
+          }
+        },
+        "u_rst_in": {
+          "hide_name": 0,
+          "type": "ot_dp_rrelay",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": 1,
+            "src": "results/fe_reset_preserve_2144/old.sv:12"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 3 ],
+            "q": [ 10 ]
+          }
+        },
+        "u_run_in": {
+          "hide_name": 0,
+          "type": "ot_dp_rrelay",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": 1,
+            "src": "results/fe_reset_preserve_2144/old.sv:13"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 4 ],
+            "q": [ 22 ]
+          }
+        },
+        "u_srl_0": {
+          "hide_name": 0,
+          "type": "ot_dp_rrelay",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": 1,
+            "src": "results/fe_reset_preserve_2144/old.sv:26"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 22 ],
+            "q": [ 23 ]
+          }
+        },
+        "u_srl_15": {
+          "hide_name": 0,
+          "type": "ot_dp_rrelay",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": 1,
+            "src": "results/fe_reset_preserve_2144/old.sv:71"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 23 ],
+            "q": [ 24 ]
+          }
+        },
+        "u_srl_16": {
+          "hide_name": 0,
+          "type": "ot_dp_rrelay",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": 1,
+            "src": "results/fe_reset_preserve_2144/old.sv:75"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 24 ],
+            "q": [ 25 ]
+          }
+        },
+        "u_srl_17": {
+          "hide_name": 0,
+          "type": "ot_dp_rrelay",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": 1,
+            "src": "results/fe_reset_preserve_2144/old.sv:79"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 25 ],
+            "q": [ 15 ]
+          }
+        },
+        "u_srl_23": {
+          "hide_name": 0,
+          "type": "ot_dp_rrelay",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": 1,
+            "src": "results/fe_reset_preserve_2144/old.sv:94"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 24 ],
+            "q": [ 26 ]
+          }
+        },
+        "u_srl_24": {
+          "hide_name": 0,
+          "type": "ot_dp_rrelay",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": 1,
+            "src": "results/fe_reset_preserve_2144/old.sv:98"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 26 ],
+            "q": [ 27 ]
+          }
+        },
+        "u_srl_25": {
+          "hide_name": 0,
+          "type": "ot_dp_rrelay",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": 1,
+            "src": "results/fe_reset_preserve_2144/old.sv:102"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 27 ],
+            "q": [ 8 ]
+          }
+        },
+        "u_srl_26": {
+          "hide_name": 0,
+          "type": "ot_dp_rrelay",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": 1,
+            "src": "results/fe_reset_preserve_2144/old.sv:106"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 22 ],
+            "q": [ 28 ]
+          }
+        },
+        "u_srl_27": {
+          "hide_name": 0,
+          "type": "ot_dp_rrelay",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": 1,
+            "src": "results/fe_reset_preserve_2144/old.sv:110"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 28 ],
+            "q": [ 29 ]
+          }
+        },
+        "u_srl_28": {
+          "hide_name": 0,
+          "type": "ot_dp_rrelay",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": 1,
+            "src": "results/fe_reset_preserve_2144/old.sv:114"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 29 ],
+            "q": [ 30 ]
+          }
+        },
+        "u_srl_29": {
+          "hide_name": 0,
+          "type": "ot_dp_rrelay",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": 1,
+            "src": "results/fe_reset_preserve_2144/old.sv:118"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 30 ],
+            "q": [ 31 ]
+          }
+        },
+        "u_srl_30": {
+          "hide_name": 0,
+          "type": "ot_dp_rrelay",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": 1,
+            "src": "results/fe_reset_preserve_2144/old.sv:122"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 31 ],
+            "q": [ 6 ]
+          }
+        }
+      },
+      "netnames": {
+        "arst_n": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:9"
+          }
+        },
+        "clk": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:9"
+          }
+        },
+        "mission": {
+          "hide_name": 0,
+          "bits": [ 9 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:9"
+          }
+        },
+        "rn_rr_t8": {
+          "hide_name": 0,
+          "bits": [ 6 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:121"
+          }
+        },
+        "rn_rr_t9": {
+          "hide_name": 0,
+          "bits": [ 8 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:101"
+          }
+        },
+        "rn_rst_rl_0": {
+          "hide_name": 0,
+          "bits": [ 23 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:25"
+          }
+        },
+        "rn_rst_rl_15": {
+          "hide_name": 0,
+          "bits": [ 24 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:70"
+          }
+        },
+        "rn_rst_rl_16": {
+          "hide_name": 0,
+          "bits": [ 25 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:74"
+          }
+        },
+        "rn_rst_rl_17": {
+          "hide_name": 0,
+          "bits": [ 15 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:78"
+          }
+        },
+        "rn_rst_rl_23": {
+          "hide_name": 0,
+          "bits": [ 26 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:93"
+          }
+        },
+        "rn_rst_rl_24": {
+          "hide_name": 0,
+          "bits": [ 27 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:97"
+          }
+        },
+        "rn_rst_rl_26": {
+          "hide_name": 0,
+          "bits": [ 28 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:105"
+          }
+        },
+        "rn_rst_rl_27": {
+          "hide_name": 0,
+          "bits": [ 29 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:109"
+          }
+        },
+        "rn_rst_rl_28": {
+          "hide_name": 0,
+          "bits": [ 30 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:113"
+          }
+        },
+        "rn_rst_rl_29": {
+          "hide_name": 0,
+          "bits": [ 31 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:117"
+          }
+        },
+        "rr_t8": {
+          "hide_name": 0,
+          "bits": [ 5 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:119"
+          }
+        },
+        "rr_t9": {
+          "hide_name": 0,
+          "bits": [ 7 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:99"
+          }
+        },
+        "rst_n_t2": {
+          "hide_name": 0,
+          "bits": [ 9 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:16"
+          }
+        },
+        "rst_o_0": {
+          "hide_name": 0,
+          "bits": [ 5 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:9"
+          }
+        },
+        "rst_o_1": {
+          "hide_name": 0,
+          "bits": [ 7 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:9"
+          }
+        },
+        "rst_rl_0": {
+          "hide_name": 0,
+          "bits": [ 11 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:23"
+          }
+        },
+        "rst_rl_15": {
+          "hide_name": 0,
+          "bits": [ 12 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:68"
+          }
+        },
+        "rst_rl_16": {
+          "hide_name": 0,
+          "bits": [ 13 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:72"
+          }
+        },
+        "rst_rl_17": {
+          "hide_name": 0,
+          "bits": [ 14 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:76"
+          }
+        },
+        "rst_rl_23": {
+          "hide_name": 0,
+          "bits": [ 16 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:91"
+          }
+        },
+        "rst_rl_24": {
+          "hide_name": 0,
+          "bits": [ 17 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:95"
+          }
+        },
+        "rst_rl_26": {
+          "hide_name": 0,
+          "bits": [ 18 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:103"
+          }
+        },
+        "rst_rl_27": {
+          "hide_name": 0,
+          "bits": [ 19 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:107"
+          }
+        },
+        "rst_rl_28": {
+          "hide_name": 0,
+          "bits": [ 20 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:111"
+          }
+        },
+        "rst_rl_29": {
+          "hide_name": 0,
+          "bits": [ 21 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:115"
+          }
+        },
+        "rst_root_n": {
+          "hide_name": 0,
+          "bits": [ 10 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:11"
+          }
+        },
+        "run_root": {
+          "hide_name": 0,
+          "bits": [ 22 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:11"
+          }
+        },
+        "start_i": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:9"
+          }
+        },
+        "start_o_0": {
+          "hide_name": 0,
+          "bits": [ 6 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:9"
+          }
+        },
+        "start_o_1": {
+          "hide_name": 0,
+          "bits": [ 8 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:9"
+          }
+        }
+      }
+    },
+    "ot_dp_rgate": {
+      "attributes": {
+        "keep_hierarchy": 1,
+        "src": "results/fe_reset_preserve_2144/old.sv:6"
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "d": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "run": {
+          "direction": "input",
+          "bits": [ 4 ]
+        },
+        "q": {
+          "direction": "output",
+          "bits": [ 5 ]
+        }
+      },
+      "cells": {
+        "$abc$54$auto$blifparse.cc:371:parse_blif$55": {
+          "hide_name": 1,
+          "type": "$_AND_",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 4 ],
+            "B": [ 3 ],
+            "Y": [ 6 ]
+          }
+        },
+        "$auto$simplemap.cc:420:simplemap_dff$52": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:7"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 6 ],
+            "Q": [ 5 ]
+          }
+        }
+      },
+      "netnames": {
+        "$0\\q[0:0]": {
+          "hide_name": 1,
+          "bits": [ 6 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:7"
+          }
+        },
+        "clk": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:6"
+          }
+        },
+        "d": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:6"
+          }
+        },
+        "q": {
+          "hide_name": 0,
+          "bits": [ 5 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:6"
+          }
+        },
+        "run": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:6"
+          }
+        }
+      }
+    },
+    "ot_dp_rrelay": {
+      "attributes": {
+        "keep_hierarchy": 1,
+        "src": "results/fe_reset_preserve_2144/old.sv:2"
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "d": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "q": {
+          "direction": "output",
+          "bits": [ 4 ]
+        }
+      },
+      "cells": {
+        "$auto$simplemap.cc:420:simplemap_dff$50": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:3"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 3 ],
+            "Q": [ 4 ]
+          }
+        }
+      },
+      "netnames": {
+        "clk": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:2"
+          }
+        },
+        "d": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:2"
+          }
+        },
+        "q": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+            "src": "results/fe_reset_preserve_2144/old.sv:2"
+          }
+        }
+      }
+    }
+  }
+}
