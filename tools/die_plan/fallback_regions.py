@@ -2,6 +2,7 @@
 """Bottom-up landed fallback (IF.FALLBACK, OWNER 10-26 16:5x): clock-region partition + landed-crossing table + lane price.
 
     fallback_regions.py plan PLAN --lat LAT --out DIR [--block G] [--mode class|partition] [--cycles 3]
+                             [--core early|land|rebuild]
 
 Region model (fallback, NOT the 12.7 master plan):
   * every partition closes its OWN local clock tree from one partition root (its existing cores kept as they are; a
@@ -17,6 +18,20 @@ Region model (fallback, NOT the 12.7 master plan):
   * two FT readings are priced: `face` = ft stations run on the crossed partition's local clock, so a lane lands at
     every landed face (+3 each); `fwd` = ft stations of a lane run on the lane's forwarded clock (half-cycle
     forwarded hops), so a lane lands ONCE at its sink if any of its faces is landed (+3 per lane).
+Legacy core clock ports (FALLBACK-S81-2, COORD RULING 10-26 17:49: feeding a 552/645/430/520-ps signed core from an
+earlier point of the partition tree is an early tap, BANNED under 12.8):
+  * --core early   (FALLBACK-S81 original, now BANNED): core-led latency classes, cores fed early by the partition CTS;
+  * --core land    every legacy core clock port is LANDED: the core keeps its own insertion, every partition<->core data
+                   crossing is an ot_dp_clk_landing hop (+cycles); the partition itself is a 250-ps std-class partition.
+                   Priced per lane as +cycles for each lane endpoint (src or dst partition) holding legacy cores (the
+                   lane's data leaves / enters a core there) -- an UPPER BOUND for lanes ending in glue only, and a
+                   LOWER BOUND where a lane's data crosses several cores of one partition in series (intra-partition
+                   core chains are not on die lanes; not priced here);
+  * --core rebuild every legacy core rebuilt to the 12.3 common latency: std class, no added cycles.
+  * --core tap     (METHODOLOGY v5.0 18:4x) the die CTS taps each legacy core early by its annotated signed-view
+                   insertion (macro insertion-delay balancing): partition boundaries sit at the common latency, so std class
+                   and no added cycles (same regions/price as rebuild); the unshared core tree is charged by the AOCV table.
+  With land / rebuild every partition is std class, so regions are std-class connected components per G x G block.
 Outputs (DIR): regions.json, landed_crossings.json (die_clock_mesh write_landed format, one box per partition so
 clock_landing_plan.compose resolves each part's region exactly), lat_face.json / lat_fwd.json (s81_latency with the
 added cycles), summary.json.  Analysis only: no plan, RTL or calendar edit.
@@ -27,7 +42,16 @@ import json
 from pathlib import Path
 
 
+CORE_MODE = "early"
+
+
+def legacy_cores(t):
+    return [x for x in t.get("clock", {}).get("taps", []) if x.get("kind") == "core"]
+
+
 def part_class(t):
+    if CORE_MODE != "early":
+        return "std"
     c = [x.get("insertion_ps", 0) for x in t.get("clock", {}).get("taps", []) if x.get("kind") == "core"]
     return f"core{int(round(max(c), -1))}" if c else "std"
 
@@ -44,8 +68,9 @@ def regions(P, block, mode):
         return merge_hard(P, {n: n for n in parts}), rect, {n: part_class(T[p["type"]]) for n, p in parts.items()}
     xs = sorted({round(p["origin_um"][0], 3) for p in parts.values()})
     ys = sorted({round(p["origin_um"][1], 3) for p in parts.values()})
-    cw = min(T[p["type"]]["outline_um"][0] for p in parts.values() if part_class(T[p["type"]]) != "std")
-    ch = min(T[p["type"]]["outline_um"][1] for p in parts.values() if part_class(T[p["type"]]) != "std")
+    # block pitch = the smallest legacy-core (col) partition, independent of the core mode
+    cw = min(T[p["type"]]["outline_um"][0] for p in parts.values() if legacy_cores(T[p["type"]]))
+    ch = min(T[p["type"]]["outline_um"][1] for p in parts.values() if legacy_cores(T[p["type"]]))
     cls = {n: part_class(T[p["type"]]) for n, p in parts.items()}
 
     def blk(n):
@@ -103,7 +128,10 @@ def main():
     a.add_argument("--block", type=int, default=2)
     a.add_argument("--mode", choices=("class", "partition"), default="class")
     a.add_argument("--cycles", type=int, default=3)
+    a.add_argument("--core", choices=("early", "land", "rebuild", "tap"), default="early")
     g = ap.parse_args()
+    global CORE_MODE
+    CORE_MODE = g.core
     P = json.load(open(g.plan))
     L = json.load(open(g.lat))
     d = Path(g.out)
@@ -132,22 +160,34 @@ def main():
     (d / "regions.json").write_text(json.dumps(dict(part_region=reg, part_class=cls,
                                                     region_parts=dict(sorted(rsum.items()))), indent=1) + "\n")
     landed_per_lane = collections.Counter(r["lane"] for r in rows if r["lane"])
+    T = P["partition_types"]
+    has_core = {p["name"]: bool(legacy_cores(T[p["type"]])) for p in P["partitions"]}
+    core_end = {}
+    if g.core == "land":
+        for ln, v in L["lanes"].items():
+            k = sum(1 for e in ("src", "dst") if has_core.get((v.get(e) or {}).get("part")))
+            if k:
+                core_end[ln] = k
     for m in ("face", "fwd"):
         e = json.loads(json.dumps(L))
         for ln, v in e["lanes"].items():
             n = landed_per_lane.get(ln, 0)
-            add = g.cycles * (n if m == "face" else (1 if n else 0))
+            add = g.cycles * (n if m == "face" else (1 if n else 0)) + g.cycles * core_end.get(ln, 0)
             v["cycles"] += add
             v["natural"] += add
             v["fallback_landed_faces"] = n
-        e["fallback"] = dict(mode=g.mode, block=g.block, ft=m, cycles_per_landing=g.cycles)
+            if g.core == "land":
+                v["fallback_core_landings"] = core_end.get(ln, 0)
+        e["fallback"] = dict(mode=g.mode, block=g.block, ft=m, cycles_per_landing=g.cycles, core=g.core)
         (d / f"lat_{m}.json").write_text(json.dumps(e, indent=1) + "\n")
     summ = dict(mode=g.mode, block=g.block, regions=len(tags),
                 largest_region_parts=max(rsum.values()), landed_ports=len(rows), landed_bits=table["bits"],
                 lanes_with_landing=len(landed_per_lane), lanes_total=len(L["lanes"]),
                 added_lane_cycles_face=g.cycles * sum(landed_per_lane.values()),
                 added_lane_cycles_fwd=g.cycles * len(landed_per_lane),
-                ring_live_ff=sum(5 * (int(r["width"]) + 1) for r in rows),
+                ring_live_ff=sum(5 * (int(r["width"]) + 1) for r in rows), core=g.core,
+                lanes_with_core_landing=len(core_end), added_lane_cycles_core=g.cycles * sum(core_end.values()),
+                legacy_core_partitions=sum(has_core.values()),
                 by_class_pair=table["by_class_pair"])
     (d / "summary.json").write_text(json.dumps(summ, indent=1) + "\n")
     print(json.dumps(summ))

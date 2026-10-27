@@ -81,6 +81,41 @@ def _fill_ft_windows(raw,path):
             name=name+suffix,face=face,window_um=vals[0],width=slot["width"])
 
 
+def _grid_scan(w,h,obstacles,margin,px,py,area,depth,length,g=2.16,reach=405-2.16):
+    """FALLBACK-S81-2 10-26: exhaustive macro-free bank search, used ONLY when the face-strip and compact-bank
+    searches above find nothing.  Same legality (outline margin, no obstacle overlap, every corner within reach of the
+    bus pin), same reserved area; any aspect from the face strip (depth x length) to near-square, both orientations,
+    on a 2.16-um grid (prefix-sum occupancy).  Returns legal boxes (may be empty)."""
+    import numpy as np
+    nx,ny=int(w//g),int(h//g)
+    if nx<=0 or ny<=0:return []
+    occ=np.zeros((nx,ny),np.int32)
+    for o in obstacles:
+        i0,i1=max(0,int(math.floor(o[0]/g))),min(nx,int(math.ceil(o[2]/g)))
+        j0,j1=max(0,int(math.floor(o[1]/g))),min(ny,int(math.ceil(o[3]/g)))
+        if i1>i0 and j1>j0:occ[i0:i1,j0:j1]=1
+    m=int(math.ceil(margin/g));occ[:m,:]=1;occ[nx-m:,:]=1;occ[:,:m]=1;occ[:,ny-m:]=1
+    S=np.zeros((nx+1,ny+1),np.int64);S[1:,1:]=occ.cumsum(0).cumsum(1)
+    shapes=set();a_cells=area/(g*g)
+    for d in sorted({max(4,int(math.ceil(depth/g)))*k for k in (1,2,3,4,6,8)}):
+        L=int(math.ceil(a_cells/d))
+        if L>=4:shapes.update({(d,L),(L,d)})
+    s0=int(math.ceil(math.sqrt(a_cells)));shapes.add((s0,s0))
+    out=[]
+    for bw,bh in sorted(shapes):
+        if bw>nx or bh>ny:continue
+        blk=S[bw:,bh:]-S[:-bw,bh:]-S[bw:,:-bh]+S[:-bw,:-bh]
+        ii,jj=np.nonzero(blk==0)
+        if not len(ii):continue
+        x0=ii*g;y0=jj*g;x1=x0+bw*g;y1=y0+bh*g
+        far=np.maximum(np.maximum(abs(x0-px),abs(x1-px))+np.maximum(abs(y0-py),abs(y1-py)),0)
+        ok=np.nonzero(far<=reach)[0]
+        if not len(ok):continue
+        k=ok[np.argmin(far[ok])]
+        out.append([float(x0[k]),float(y0[k]),float(x1[k]),float(y1[k])])
+    return out
+
+
 def _storage_band(t,bus,width,used,*,has_epoch=True):
     b=_bus_geom(t,bus);w,h=t["outline_um"];lo,hi=b["window_um"]
     length=max(hi-lo,8.64);rw=64*math.ceil((width+int(has_epoch))/64)
@@ -128,6 +163,8 @@ def _storage_band(t,bus,width,used,*,has_epoch=True):
                 if max(abs(x-px)+abs(y-py) for x in(box[0],box[2]) for y in(box[1],box[3]))>405-2.16:continue
                 if any(min(box[2],o[2])>max(box[0],o[0])+1e-6 and min(box[3],o[3])>max(box[1],o[1])+1e-6 for o in obstacles):continue
                 candidates.append(box)
+    if not candidates:
+        candidates=_grid_scan(w,h,obstacles,margin,px,py,area,depth,length)
     if candidates:
         box=min(candidates,key=lambda b:max(abs(x-px)+abs(y-py) for x in(b[0],b[2]) for y in(b[1],b[3])))
         if (box[2]-box[0])*(box[3]-box[1])+1e-6<area:

@@ -47,3 +47,22 @@ def test_cli_prices_face_and_fwd(tmp_path):
     face = json.loads((tmp_path / "o" / "lat_face.json").read_text())["lanes"]
     fwd = json.loads((tmp_path / "o" / "lat_fwd.json").read_text())["lanes"]
     assert face["L1"]["cycles"] == 19 and fwd["L1"]["cycles"] == 13 and face["L2"]["cycles"] == 4
+
+
+def test_core_land_collapses_classes_and_prices_core_ports(tmp_path):
+    P = _plan()
+    lat = dict(lanes=dict(L1=dict(cycles=10, natural=10, src=dict(part="a"), dst=dict(part="d")),
+                          L2=dict(cycles=4, natural=4, src=dict(part="d"), dst=dict(part="h"))))
+    (tmp_path / "p.json").write_text(json.dumps(P))
+    (tmp_path / "l.json").write_text(json.dumps(lat))
+    for mode, l1 in (("land", 13), ("rebuild", 10)):
+        o = tmp_path / mode
+        subprocess.run([sys.executable, str(HERE / "fallback_regions.py"), "plan", str(tmp_path / "p.json"), "--lat",
+                        str(tmp_path / "l.json"), "--out", str(o), "--mode", "class", "--block", "99", "--core", mode],
+                       check=True, capture_output=True)
+        reg = json.loads((o / "regions.json").read_text())
+        assert set(reg["part_class"].values()) == {"std"}
+        # one std class: a-b-c-d connected, h merges -> no landed region port at all
+        assert json.loads((o / "landed_crossings.json").read_text())["crossings"] == 0
+        face = json.loads((o / "lat_face.json").read_text())["lanes"]
+        assert face["L1"]["cycles"] == l1 and face["L2"]["cycles"] == 4

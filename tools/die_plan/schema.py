@@ -668,6 +668,7 @@ SCHEMA = {
                                "faces": {"type": "integer"}, "fixed": {"type": "integer"},
                                "boundary": {"type": "integer"},
                                "natural": {"type": "integer"}, "pad": {"type": "integer", "minimum": 0},
+                               "clock_landing": {"type": "integer", "minimum": 0},   # landed +3k (schema.lane_latency)
                                "beats": {"type": "integer", "minimum": 2}, "word_cycles": {"type": "integer"},
                                "param": {"type": "string"}}}}}},
         # mandatory G0 census coverage (census_cov.py): [{rows, map, note}] or {"none": reason}
