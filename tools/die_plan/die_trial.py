@@ -176,6 +176,82 @@ def clock_taps(P):
     return out
 
 
+
+# ------------------------------------------------------------------------------------- tree cell site legality (opt-in)
+class SiteMap:
+    """Legal sites for die clock-tree cells (FALLBACK-HEAD 10-26, 12.2a1): inside a partition, never inside a planned
+    hard-core outline (+halo) and never inside a reserved PHY power domain (die.pg.domains with VDDPHY).  Geometry only:
+    moves a requested point to the nearest legal channel point; no timing value is used."""
+    def __init__(self, P, halo=2.16, bucket=250.0):
+        self.W, self.H, self.b = P.W, P.H, bucket
+        self.parts = []
+        self.forb = []
+        for n, p in P.parts.items():
+            t = P.types[p["type"]]
+            w, h = t["outline_um"]
+            ox, oy = p["origin_um"]
+            self.parts.append((ox, oy, ox + w, oy + h))
+            for x0, y0, x1, y1, *_ in core_obs(t):
+                a, b = P.to_die(n, (x0, y0)), P.to_die(n, (x1, y1))
+                self.forb.append((min(a[0], b[0]) - halo, min(a[1], b[1]) - halo,
+                                  max(a[0], b[0]) + halo, max(a[1], b[1]) + halo, "core"))
+        for d in P.die.get("pg", {}).get("domains", []) or []:
+            if any("PHY" in str(v) for v in d.get("nets", [])) and d.get("rect_um"):
+                x0, y0, x1, y1 = d["rect_um"]
+                self.forb.append((x0 - halo, y0 - halo, x1 + halo, y1 + halo, "phy"))
+        self.idx = {}
+        for k, r in enumerate(self.forb):
+            for i in range(int(r[0] // bucket), int(r[2] // bucket) + 1):
+                for j in range(int(r[1] // bucket), int(r[3] // bucket) + 1):
+                    self.idx.setdefault((i, j), []).append(k)
+
+    def hits(self, q):
+        return [self.forb[k] for k in self.idx.get((int(q[0] // self.b), int(q[1] // self.b)), ())
+                if self.forb[k][0] < q[0] < self.forb[k][2] and self.forb[k][1] < q[1] < self.forb[k][3]]
+
+    def in_part(self, q, m=0.5):
+        return any(r[0] + m <= q[0] <= r[2] - m and r[1] + m <= q[1] <= r[3] - m for r in self.parts)
+
+    def why(self, q):
+        h = self.hits(q)
+        return h[0][4] if h else (None if self.in_part(q) else "outside")
+
+    def legal(self, q):
+        return self.why(q) is None
+
+    def nearest(self, p, axis=None):
+        """nearest legal point; axis 'x'/'y' = prefer sliding along that leg axis (perpendicular moves cost 3x)."""
+        p = (float(p[0]), float(p[1]))
+        if self.legal(p):
+            return p
+        def cost(q):
+            dx, dy = abs(q[0] - p[0]), abs(q[1] - p[1])
+            return dx + dy + (2 * dy if axis == "x" else 2 * dx if axis == "y" else 0)
+        e = 0.6
+        front, seen, best = [p], set(), []
+        for _ in range(6):
+            nxt = []
+            for q in front:
+                cands = []
+                for r in self.hits(q):
+                    cands += [(r[0] - e, q[1]), (r[2] + e, q[1]), (q[0], r[1] - e), (q[0], r[3] + e)]
+                if not self.hits(q) and not self.in_part(q):
+                    for r in self.parts:
+                        cands.append((min(max(q[0], r[0] + 1.0), r[2] - 1.0), min(max(q[1], r[1] + 1.0), r[3] - 1.0)))
+                    cands.sort(key=lambda c: abs(c[0] - q[0]) + abs(c[1] - q[1]))
+                    cands = cands[:3]
+                for c in cands:
+                    c = (round(min(max(c[0], 0.0), self.W), 3), round(min(max(c[1], 0.0), self.H), 3))
+                    if c in seen:
+                        continue
+                    seen.add(c)
+                    (best if self.legal(c) else nxt).append(c)
+            if best:
+                return min(best, key=cost)
+            front = sorted(nxt, key=cost)[:40]
+        raise ValueError(f"no legal clock-tree site near {p}")
+
+
 def build_htree(P, taps, leaf_um=600.0, full_depth=False):
     """explicit H-tree: nodes {id: dict(x, y, parent, level, kids, taps)} rooted at the spine root.  Region bisection
     along the longer axis at the region midpoint; the child node sits at the child region centre (the leg runs along
@@ -225,7 +301,7 @@ def build_htree(P, taps, leaf_um=600.0, full_depth=False):
     return nodes
 
 
-def tree_netlist(nodes, taps, rep_um=450.0):
+def tree_netlist(nodes, taps, rep_um=450.0, site=None):
     """buffered tree: a BUF at every node (branch / leaf driver), repeaters every rep_um along each leg.
     -> (verilog, placements [(inst, x, y)], tap ports [(port, x, y)], node_buf {node id: inst}, path {tap port: [inst]})"""
     cells, place, wires = [], [], []
@@ -251,6 +327,8 @@ def tree_netlist(nodes, taps, rep_um=450.0):
                 x = p["x"] + (nd["x"] - p["x"]) * f
                 y = p["y"] + (nd["y"] - p["y"]) * f
                 inst = f"r{i}_{j}"
+                if site is not None:
+                    x, y = site.nearest((x, y), "x" if abs(nd["x"] - p["x"]) >= abs(nd["y"] - p["y"]) else "y")
                 o = f"rn{i}_{j}"
                 cells.append(f"  {BUF} {inst} (.A({src}), .Y({o}));")
                 wires.append(o)
@@ -277,12 +355,22 @@ def tree_netlist(nodes, taps, rep_um=450.0):
     return "\n".join(v) + "\n", place, tap_ports, node_buf, parent_of
 
 
-def clock_kit(P, out, leaf_um, rep_um, full_depth=False):
+def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False):
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     taps = clock_taps(P)
     nodes = build_htree(P, taps, leaf_um, full_depth)
-    v, place, tap_ports, node_buf, parent_of = tree_netlist(nodes, taps, rep_um)
+    site = None
+    if site_legal:          # opt-in: every buffer/repeater on a legal channel site; a one-entry leaf drives AT its entry
+        site = SiteMap(P)
+        for nd in nodes.values():
+            nd["req_xy"] = [nd["x"], nd["y"]]
+            if len(nd["taps"]) == 1 and site.legal(nd["taps"][0][2:4]):
+                q = nd["taps"][0][2:4]
+            else:
+                q = site.nearest((nd["x"], nd["y"]))
+            nd["x"], nd["y"] = round(q[0], 3), round(q[1], 3)
+    v, place, tap_ports, node_buf, parent_of = tree_netlist(nodes, taps, rep_um, site)
     (out / "ctree.v").write_text(v)
     segs = []
     for i, nd in nodes.items():
@@ -331,10 +419,18 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False):
                 wire_um=round(sum(abs(a - c) + abs(b - d) for a, b, c, d, _ in segs) +
                               sum(abs(a - c) + abs(b - d) for a, b, c, d in leaf_legs), 1),
                 levels=max(n["level"] for n in nodes.values()))
+    if site is not None:
+        bad = {}
+        for inst, x, y in place:
+            w = site.why((x, y))
+            if w:
+                bad[w] = bad.get(w, 0) + 1
+        meta["site_legal"] = dict(cells=len(place), illegal=bad, forbidden_rects=len(site.forb),
+                                  moved_nodes=sum(1 for n in nodes.values() if [n["x"], n["y"]] != n["req_xy"]))
     tree = dict(meta=meta, nodes={i: {k: v for k, v in n.items() if k != "taps"} | dict(ntaps=len(n["taps"]))
                                   for i, n in nodes.items()},
                 taps=[dict(port=tp, part=part, tap=port, xy=[x, y], node=i) for tp, x, y, part, port, i in tap_ports],
-                node_buf=node_buf, parent_of=parent_of)
+                node_buf=node_buf, parent_of=parent_of, sites={inst: [round(x, 3), round(y, 3)] for inst, x, y in place})
     (out / "tree.json").write_text(json.dumps(tree) + "\n")
     return nodes, segs, leaf_legs, meta
 
@@ -1003,7 +1099,8 @@ exit $rc
 """
 
 
-def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.72, density=0.15, full_depth=False):
+def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.72, density=0.15, full_depth=False,
+              site_legal=False):
     raw = S.load(plan_path)
     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
     plan_dir = Path(plan_path).parent
@@ -1041,7 +1138,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     meta["die_io"] = [dict(name=w["name"], part=w.get("part"), iface=w.get("iface"), rect_um=w["rect_um"],
                            sites=w.get("sites"), signals=w.get("signals"), host=w.get("host", False)) for w in io]
     # clock
-    nodes, segs, leaf_legs, cm = clock_kit(P, out / "clock", leaf_um, rep_um, full_depth)
+    nodes, segs, leaf_legs, cm = clock_kit(P, out / "clock", leaf_um, rep_um, full_depth, site_legal)
     (out / "clock" / "make_tracks.tcl").write_text(gen_phys.make_tracks_tcl(P))
     meta["clock_tree"] = cm
     reserve = reserve_rects(segs, leaf_legs, P)
@@ -1584,6 +1681,8 @@ def main(argv=None):
     k.add_argument("--rep-um", type=float, default=450.0)
     k.add_argument("--htree-full-depth", action="store_true",
                    help="opt-in: bisect single-tap regions to --leaf-um (equal-depth leaves; FALLBACK-HEAD one-entry plans)")
+    k.add_argument("--tree-site-legal", action="store_true",
+                   help="opt-in: site every tree buffer/repeater in a partition, off hard cores and PHY domains (12.2a1)")
     k.add_argument("--coarse-um", type=float, default=0.72)
     k.add_argument("--density", type=float, default=0.15, help="die power density W/mm2 for PDNSim")
     r = sub.add_parser("report")
@@ -1641,7 +1740,8 @@ def main(argv=None):
         print(json.dumps(dict(cell=die_sta.bhold_cell(a.tol_ps), types=len(tot), input_bits=sum(tot.values())), indent=1))
         return 0
     if a.cmd == "kit":
-        m = write_kit(a.plan, a.out, a.views, a.leaf_um, a.rep_um, a.coarse_um, a.density, full_depth=a.htree_full_depth)
+        m = write_kit(a.plan, a.out, a.views, a.leaf_um, a.rep_um, a.coarse_um, a.density, full_depth=a.htree_full_depth,
+                      site_legal=a.tree_site_legal)
         print(json.dumps({k: m[k] for k in ("die", "parts", "types", "closed_views", "hard_cores", "clock_tree", "grt",
                                              "psm", "sta")}, indent=1))
     elif a.cmd == "report":

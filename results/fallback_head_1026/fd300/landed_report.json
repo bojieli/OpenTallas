@@ -153,9 +153,43 @@
    ]
   }
  },
+ "site_check": {
+  "cells": 2333,
+  "buffers": 1663,
+  "repeaters": 670,
+  "on_core": 1360,
+  "in_phy": 56,
+  "outside_partition": 16,
+  "examples": {
+   "core": [
+    "r2_3",
+    "r2_6",
+    "r2_8",
+    "r3_2",
+    "r3_3"
+   ],
+   "phy": [
+    "b5",
+    "r6_0",
+    "r6_1",
+    "b6",
+    "r13_0"
+   ],
+   "outside": [
+    "r7_0",
+    "b7",
+    "r8_0",
+    "b10",
+    "r514_0"
+   ]
+  },
+  "hard_core_rects": 1320,
+  "phy_rects": 12
+ },
  "drift_max_ps": 9.22,
  "verdict": {
   "landing_window": "PASS",
+  "tree_sites": "FAIL",
   "scope": "die clock landing window only; NOT the 12.4a freeze gate (needs partition views with landing rings, ring-window STA, real-view die STA)"
  }
 }

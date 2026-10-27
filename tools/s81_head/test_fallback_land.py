@@ -49,3 +49,14 @@ def test_variant_one_entry_and_htree_full_depth(tmp_path):
     nd = DT.build_htree(P, taps, 300.0, True)
     leaf_levels = {n["level"] for n in nd.values() if n["taps"]}
     assert len(leaf_levels) == 1                                                       # equal-depth leaves
+
+
+def test_tree_site_legal(tmp_path):
+    import types
+    import die_trial as DT
+    import schema as S
+    out = tmp_path / "fb1.json"
+    F.cmd_variant(types.SimpleNamespace(plan=str(PLAN), out=str(out)))
+    P = S.Plan(S.load(str(out)))
+    *_, m = DT.clock_kit(P, tmp_path / "clk", 300.0, 450.0, True, True)
+    assert m["site_legal"]["illegal"] == {} and m["site_legal"]["forbidden_rects"] == 1332

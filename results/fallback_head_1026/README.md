@@ -63,6 +63,40 @@ bisecting early, so leaf legs are unrepeated and long and the depth is unequal (
 fd300 detail: insertion TT 5,816-5,995 (spread 179), FF 5,035-5,195 (spread 160); margin 327 ps; drift max 9.2 ps.
 Render fd300/fb1_fd300.png (viewed: no red crossings, no slew rings, equal-depth tree).
 
+## 3b. GEOM-REVIEW-7 FAIL on fd300 tree sites -> fs300 (COORD amend 17:21)
+
+GEOM-REVIEW-7 found that 1,002 of the 1,663 fd300 buffers sat on hard cores. The report recount with this branch gives
+1,360 cells on core, 56 in VDDPHY and 16 outside any partition, out of 2,333 buffers + repeaters. Rule 12.2a1 forbids
+parent cells inside core outlines.
+
+**Fix: `die_trial --tree-site-legal`** (opt-in, combined with `--htree-full-depth --leaf-um 300`).
+- A SiteMap holds the 1,320 core outlines and the 12 VDDPHY rects (2.16 um halo) and requires every cell to sit inside
+  a partition.
+- A one-entry leaf buffer drives AT its entry, which is already in the tile channel.
+- Every other buffer moves to the nearest legal channel point. A repeater slides along its leg first.
+- `fallback_land_report.py` now runs an independent site check (no halo, own transform) and draws core outlines, PHY
+  rects and every cell.
+
+| Build | Cells | On core / in PHY / outside | GRT overflow TT+FF | Entry slew max | abs(d) max TT / FF | Insertion spread TT | Drift max |
+|---|---|---|---|---|---|---|---|
+| fd300 | 2,333 | 1,360 / 56 / 16 (FAIL) | 0 | 97 | 89.3 / 80.1 | 179 | 9.2 |
+| **fs300** | 2,311 (648 reps) | **0 / 0 / 0** | **0** | **18.5** | **311.9 / 272.8** | 607 | 39.2 |
+
+fs300 passes the landing window against 416.5, with a margin of only **105 ps TT** and 144 ps FF.
+- The greedy nearest-site moves break equal length: 1,145 nodes moved and wire grew 4 %.
+- The worst crossings are spine sp2<->sp3 (sp_x3, sp_b3, host_tx/rx_3), which sit on the two sides of an upper H-tree
+  split.
+- The 105 ps margin is below a ~5 % OCV allowance on a ~6 ns unshared tree (~300 ps, UNCHECKED estimate). It is
+  therefore NOT robust.
+
+**Next structural step (GEOM-7 item 1).** Snap the bisection itself to tile-relative channel crossings so that every
+node of a level gets the same tile-local site and leg lengths stay equal. Also meet the sp2/sp3 seam at a common
+spine-column node. Predict |d| before the build.
+
+**Implication for the 16 ring rebuilds.** The tree buffers inside partitions are push-down cells in the partition
+channels: 1,312+ of them in hd_tile at channel sites. Each type kit must reserve those sites (fs300/tree.json `sites`)
+the way it reserves FT.
+
 ## Not done (freeze gate 12.4a still open)
 
 Die STA on real views needs four things first:
