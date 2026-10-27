@@ -4,7 +4,7 @@
 // combinational live bypass stays between real registered producer/scorer pins;
 // no artificial keybuf face stage or arithmetic/rounding change is introduced.
 module ot_hnx_idxn_quarter_with_keybuf #(
- parameter integer TP=192,RANK_W=(TP<=1?1:$clog2(TP))
+ parameter integer TP=192,RANK_W=(TP<=1?1:$clog2(TP)),DELIVERED_RESET=0
 )(
  input wire clk,rst_n,half,
  input wire clear,live_v,pre_v,replay_v,
@@ -21,7 +21,7 @@ module ot_hnx_idxn_quarter_with_keybuf #(
   .live_v(live_v),.live_index(live_index),.key_in(key_lines),
   .pre_v(pre_v),.pre_index(pre_index),.replay_v(replay_v),.replay_index(replay_index),
   .key_out(replayed_key_lines),.fault(keybuf_fault));
- ot_hbm_idx_score_quarter_static_h #(.TP(TP)) scorer(
+ ot_hbm_idx_score_quarter_static_h #(.TP(TP),.DELIVERED_RESET(DELIVERED_RESET)) scorer(
   .clk_ctl(clk),.clk_engine({2{clk}}),.clk_meta({2{clk}}),.clk_tail({2{clk}}),
   .clk_chunk({8{clk}}),.clk_hslice({256{clk}}),.rst_n(rst_n),.half(half),
   .rank(rank),.first_ord(first_ord),.nkeys(nkeys),.keep_en(keep_en),.keep_bitmap(keep_bitmap),
