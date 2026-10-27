@@ -197,7 +197,7 @@ class T(unittest.TestCase):
             CM.pg_free_axis([2.16], shapes, "M9", 0, 6., profile, .16, .08, 1.)
 
     def test_unplaceable_clock_repeater_keeps_legal_short_tail_but_fails_long_tail(self):
-        for end, structural in ((783., False), (950., True)):
+        for end, structural in ((500., False), (783., True), (950., True)):
             cells = dict(d=dict(x=50., y=500., kind="stub"))
             nets = [dict(name="wire", drv="d", loads=["port:t"], level=99)]
             K = CM.DC.KeepIndex([(100., 0., 800., 1000., "PHY")], die=(1000., 1000.))
@@ -225,22 +225,25 @@ class T(unittest.TestCase):
             for x, y in made:
                 self.assertIsNone(K.hit(x, y, m=0.))
 
-    def test_floorplan_tail_single_repeater_within_reach(self):
-        # 770-um straight tail whose midpoint sits in a 600-um macro: one legal repeater near the start keeps both
-        # hops inside the 750-um reach; without both_l the tail is structural
+    def test_floorplan_tail_respects_requested_reach_across_macro(self):
+        # A 600-um wall cannot be crossed within a requested 480-um hop.
+        # An explicit 750-um request permits one legal repeater at its edge.
         ko = [(100., 0., 700., 1000., "macro")]
-        for both in (False, True):
-            cells = dict(n=dict(x=10., y=500., kind="node"), d=dict(x=780., y=500., kind="drv"))
-            nets = [dict(name="w", drv="n", loads=["d"], level=9)]
-            out = dict(unplaced=[])
-            made = []
-            def cell(name, x, y, kind, **kw):
-                made.append((x, y)); cells[name] = dict(x=x, y=y, kind=kind); return name
-            CM.split_long(cells, nets, CM.DC.KeepIndex(ko, die=(1000., 1000.)), {}, 480., cell, out, both_l=both)
-            self.assertEqual(bool(out["unplaced"]), not both)
-            if both:
-                (x, y), = made
-                self.assertLessEqual(max(abs(x - 10.), abs(780. - x)) + CM.BUF_W + CM.ROW_Y, 750.)
+        for reach in (480., 750.):
+            for both in (False, True):
+                cells = dict(n=dict(x=10., y=500., kind="node"), d=dict(x=780., y=500., kind="drv"))
+                nets = [dict(name="w", drv="n", loads=["d"], level=9)]
+                out = dict(unplaced=[])
+                made = []
+                def cell(name, x, y, kind, **kw):
+                    made.append((x, y)); cells[name] = dict(x=x, y=y, kind=kind); return name
+                CM.split_long(cells, nets, CM.DC.KeepIndex(ko, die=(1000., 1000.)), {}, reach, cell, out, both_l=both)
+                self.assertEqual(bool(out["unplaced"]), reach == 480.)
+                if reach == 480.:
+                    self.assertEqual(made, [])
+                else:
+                    (x, y), = made
+                    self.assertLessEqual(max(abs(x - 10.), abs(780. - x)) + CM.BUF_W + CM.ROW_Y, reach)
 
     def test_floorplan_tail_detours_around_a_wall(self):
         ko = [(300., 0., 1300., 1600., "wall")]
