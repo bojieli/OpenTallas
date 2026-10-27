@@ -15,11 +15,13 @@ def inspect(log: str, simulator_exit: int | None) -> dict:
             cycle = re.search(r"\bcyc\s+(\d+)\b", line)
             samples.append({"cycle": int(cycle[1]) if cycle else None,
                             "fault": int(m[1])})
+    boot_lines = [line for line in log.splitlines() if re.search(r"KVSLICE_BOOT (PASS|FAIL)\b", line)]
     boot = re.findall(r"KVSLICE_BOOT (PASS|FAIL)\b", log)
+    terminal = re.search(r"\bdcal_fault\s+([01])\b", boot_lines[-1]) if boot_lines else None
     asserted = [s for s in samples if s["fault"]]
     if asserted:
         verdict = "FAIL"
-    elif samples and simulator_exit == 0 and boot and boot[-1] == "PASS":
+    elif terminal and terminal[1] == "0" and simulator_exit == 0 and boot[-1] == "PASS":
         verdict = "PASS"
     else:
         verdict = "NOT_QUALIFIED"
@@ -27,6 +29,7 @@ def inspect(log: str, simulator_exit: int | None) -> dict:
             "boot_load_verdict": boot[-1] if boot else "NOT_OBSERVED",
             "simulator_exit": simulator_exit, "observations": len(samples),
             "first_fault_cycle": asserted[0]["cycle"] if asserted else None,
+            "terminal_calendar_marker": terminal is not None,
             "last_observed_fault": samples[-1]["fault"] if samples else None}
 
 

@@ -71,8 +71,9 @@ def prepare(landing: dict, groups: dict, face: bytes, provider: str) -> tuple[di
                "integration_required": "Apply the qualified current source-event reference to these four members before R8; retain raw historical groups and member IDs. Generic R8 on the old reference must still fail this candidate. Preserve all PV/calendar and unrelated landing rows."}
     digest = hashlib.sha256(json.dumps(receipt, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
     receipt["contract_sha256"] = digest
+    changed_ids = {c["id"] for c in changes}
     for r in result["members"]:
-        if r.get("sink") == "dcal" and r.get("sink_port") in ("bcfg_rx_we", "bcfg_tx_we"):
+        if r.get("id") in changed_ids:
             r["producer_event_offset"] = 1
             r["legacy_asbuilt"] = r["asbuilt"]
             r["source_event_contract_sha256"] = digest
