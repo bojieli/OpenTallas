@@ -79,3 +79,12 @@ def test_mixed_spacing_keeps_wide_pairs_without_poisoning_later_narrow_pairs():
     assert not ix.hits(('M8','narrow1','tree',22.29,22.45,0.,100.))
     ix.add(('M8','VDD','pg',30.,31.92,0.,100.),space=.04)
     assert ix.hits(('M8','narrow1','tree',32.7,32.86,0.,100.))[0][1]=='wide_spacing'
+
+
+def test_wide_pg_spacing_uses_actual_overlap_of_a_nested_segment():
+    import die_clock_128 as C
+    ix=C.MetalIndex(.08)
+    ix.add(('M8','VDD','pg',0.,1.92,0.,10.))
+    # The .5um segment is contained in a10um stripe: PRL is .5, not4.5.
+    assert not ix.hits(('M8','clock','tree',2.22,2.38,4.,4.5))
+    assert ix.hits(('M8','clock','tree',2.22,2.38,4.,6.))[0][1]=='wide_spacing'
