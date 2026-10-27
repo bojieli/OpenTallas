@@ -19,3 +19,6 @@ Grade: lane receipt. No whole-token RTL pass is claimed.
 | XDIE pair edge @pre_o (X + STATUS tail 213) | X 8, L0 X -214 | XD4 QC v7 x KV B48: X 8, L0 X -214, period 7056, RT 1957 | 0 |
 | attention return (dr land + o_proj x) | 149 | bound-row attnret 149 = compiled | 0 |
 | KV slice hr face +1 buses (KV-CORE-SLICE-1 ASK-1) | none | hr_plus1_price.json: 21 listed buses, none per-layer | 0 per layer, <= +21 per token (UNCHECKED, list incomplete) |
+| KV kvs_ctl boot landing (KV-KVSCTL-3 claude/kv-kvsctl3-1027@958c1ffda4, COORD RULING 10-27 03:12) | none | +1 landing register on the 305 static sealed-config bits + setup_ready (166 layer/auth/i_hroot-fault bits retimed at 0 cycles, declared-retiming LEC 91117/91117) | boot +1 cycle (once per boot, before the first token); 0 per layer, 0 per token (CHECKED vs the KV-CORES lane line; not yet in a native boot sim) |
+
+Boot term (TOK-QK-2 10-27): the native B48 boot sims (tok-qk-b48r4, tok-qk-kvl) are built on the pre-KVSCTL-3 kvs_ctl RTL, so their measured setup_ready cycle is 1 cycle EARLIER than the KVSCTL-3 die; add +1 to any boot-to-setup_ready number they report.
