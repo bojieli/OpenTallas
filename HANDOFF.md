@@ -1440,3 +1440,5 @@ CODEX: 2026-10-27 09:41 PDT TOK-DS L0 programme now zero GAP:24 LOWERED/41 PARTI
 CODEX: HBM N4 fourorphans diagnosed entirelymissingcentralprovider; exact888bit additive linkprep+reviewedlotprobe `codex/hbm-n4-links-1027@366f79971`. TOK owns realwrapper24d4f93a6, LEC mappedrootprofile, HBMplan nativejob/controlbindings. No aliases/no routepass; actualpins/405stations/modelcycles remain batchrequirements.
 
 CODEX:09:43 S81 GO-boundary integration candidate9f575a2e2b, controller and dated-LC golden/mutants PASS; no canonical adoption. XRT3 OOM retry38057EQ. qbank/sstn finish held current combined density.
+
+CODEX: 2026-10-27 09:46 PDT SYS_C4561FAIL diagnosed as timebudget-clearedallH aftercounterbitpeeling; smallwitnessfix0d1e7a780174testsPASS/2skip, exactfrozenAIGretryLIVE(noRTL/synthrepeat). HCP9,250/9,662 diagnostic/412diff preserved; CDCproofsLIVE.
