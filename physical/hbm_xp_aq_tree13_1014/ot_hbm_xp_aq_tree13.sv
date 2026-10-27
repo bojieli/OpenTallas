@@ -74,6 +74,14 @@ module ot_hbm_xp_aq_tree13 #(parameter integer MUT=0) (
     endfunction
     // HBM-CORES-R11 2026-10-27: loop index declared per always block (named-block local): one module-level integer i
     // driven from six always blocks failed main rtl_lint (check -assert: multi-driven i, $procdff Q vs const 16).
+    // HBM-CORES-R12: block-local `integer i` mis-elaborates in the yosys verilog frontend (kit LEC vs slang NOT EQ,
+    // 1056 y bits); one distinct module-level loop index per always block instead.
+    integer i_lp94;
+    integer i_lp103;
+    integer i_lp115;
+    integer i_lp177;
+    integer i_lp212;
+    integer i_lp236;
 
     // -- S0: input register ------------------------------------------------------
     reg          s0_v, s0_fp4;
@@ -93,19 +101,17 @@ module ot_hbm_xp_aq_tree13 #(parameter integer MUT=0) (
     reg [30:0] t16 [0:15];
     reg        nf0;
     always @(*) begin : g_lp94
-        integer i;
         nf0 = 1'b0;
-        for (i = 0; i < 32; i = i + 1) nf0 = nf0 | (s0_x[32*i + 23 +: 8] == 8'hFF);
-        for (i = 0; i < 16; i = i + 1) t16[i] = mx(s0_x[64*i +: 31], s0_x[64*i + 32 +: 31]);
+        for (i_lp94 = 0; i_lp94 < 32; i_lp94 = i_lp94 + 1) nf0 = nf0 | (s0_x[32*i_lp94 + 23 +: 8] == 8'hFF);
+        for (i_lp94 = 0; i_lp94 < 16; i_lp94 = i_lp94 + 1) t16[i_lp94] = mx(s0_x[64*i_lp94 +: 31], s0_x[64*i_lp94 + 32 +: 31]);
     end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) s1_v <= 1'b0;
         else s1_v <= s0_v;
     end
     always @(posedge clk) begin : g_lp103
-        integer i;
         s1_fp4 <= s0_fp4; s1_nf <= nf0;
-        for (i = 0; i < 8; i = i + 1) s1_m[i] <= mx4(s0_x[128*i+:31],s0_x[128*i+32+:31],s0_x[128*i+64+:31],s0_x[128*i+96+:31]);
+        for (i_lp103 = 0; i_lp103 < 8; i_lp103 = i_lp103 + 1) s1_m[i_lp103] <= mx4(s0_x[128*i_lp103+:31],s0_x[128*i_lp103+32+:31],s0_x[128*i_lp103+64+:31],s0_x[128*i_lp103+96+:31]);
     end
 
     // -- S2: 8 -> 2 ------------------------------------------------------------------------
@@ -116,10 +122,9 @@ module ot_hbm_xp_aq_tree13 #(parameter integer MUT=0) (
         else s2a_v <= s1_v;
     end
     always @(posedge clk) begin : g_lp115
-        integer i;
         s2a_fp4 <= s1_fp4; s2a_nf <= s1_nf;
-        for (i = 0; i < 2; i = i + 1)
-            s2a_m[i] <= mx4(s1_m[4*i],s1_m[4*i+1],s1_m[4*i+2],s1_m[4*i+3]);
+        for (i_lp115 = 0; i_lp115 < 2; i_lp115 = i_lp115 + 1)
+            s2a_m[i_lp115] <= mx4(s1_m[4*i_lp115],s1_m[4*i_lp115+1],s1_m[4*i_lp115+2],s1_m[4*i_lp115+3]);
     end
 
     // -- S2b: 2 -> 1 and the floor ----------------------------------------------------------
@@ -179,24 +184,23 @@ module ot_hbm_xp_aq_tree13 #(parameter integer MUT=0) (
         else s9_v <= s8_v;
     end
     always @(posedge clk) begin : g_lp177
-        integer i;
         s9_fp4 <= s8_fp4; s9_nf <= s8_nf; s9_e <= s8_e;
-        for (i = 0; i < 32; i = i + 1) begin
-            fld = x8[32*i + 23 +: 8];
-            man = x8[32*i +: 23];
+        for (i_lp177 = 0; i_lp177 < 32; i_lp177 = i_lp177 + 1) begin
+            fld = x8[32*i_lp177 + 23 +: 8];
+            man = x8[32*i_lp177 +: 23];
             //: a subnormal element has exponent -126 and no leading one
             ev = ((fld == 8'd0) ? -11'sd126 : ($signed({3'b000, fld}) - 11'sd127)) - s8_e;
             mine = s8_fp4 ? 11'sd0 : -11'sd6;
             dd = mine - ev;
-            s9_sig[i] <= {(fld != 8'd0), man};
-            s9_sgn[i] <= x8[32*i + 31] && (x8[32*i +: 31] != 31'd0);
+            s9_sig[i_lp177] <= {(fld != 8'd0), man};
+            s9_sgn[i_lp177] <= x8[32*i_lp177 + 31] && (x8[32*i_lp177 +: 31] != 31'd0);
             if (dd > 11'sd0) begin
-                s9_g[i] <= mine[4:0];
+                s9_g[i_lp177] <= mine[4:0];
                 //: past 26 every bit of the 24-bit significand is below the guard
-                s9_rs[i] <= (dd > (s8_fp4 ? 11'sd4 : 11'sd6)) ? 5'd26 : ((s8_fp4 ? 5'd22 : 5'd20) + dd[4:0]);
+                s9_rs[i_lp177] <= (dd > (s8_fp4 ? 11'sd4 : 11'sd6)) ? 5'd26 : ((s8_fp4 ? 5'd22 : 5'd20) + dd[4:0]);
             end else begin
-                s9_g[i] <= ev[4:0];
-                s9_rs[i] <= s8_fp4 ? 5'd22 : 5'd20;
+                s9_g[i_lp177] <= ev[4:0];
+                s9_rs[i_lp177] <= s8_fp4 ? 5'd22 : 5'd20;
             end
         end
     end
@@ -215,15 +219,14 @@ module ot_hbm_xp_aq_tree13 #(parameter integer MUT=0) (
         else s10_v <= s9_v;
     end
     always @(posedge clk) begin : g_lp212
-        integer i;
         s10_fp4 <= s9_fp4; s10_nf <= s9_nf; s10_e <= s9_e; s10_sgn <= s9_sgn;
-        for (i = 0; i < 32; i = i + 1) begin
-            wide = {s9_sig[i], 27'd0} >> s9_rs[i];
+        for (i_lp212 = 0; i_lp212 < 32; i_lp212 = i_lp212 + 1) begin
+            wide = {s9_sig[i_lp212], 27'd0} >> s9_rs[i_lp212];
             tq = wide[50:27];
             gd = wide[26];
             st = (wide[25:0] != 26'd0);
-            s10_c[i] <= tq[4:0] + {4'd0, gd & (st | tq[0])};
-            s10_g[i] <= s9_g[i];
+            s10_c[i_lp212] <= tq[4:0] + {4'd0, gd & (st | tq[0])};
+            s10_g[i_lp212] <= s9_g[i_lp212];
         end
     end
 
@@ -240,31 +243,30 @@ module ot_hbm_xp_aq_tree13 #(parameter integer MUT=0) (
         else begin vo <= s10_v; fault <= s10_v && s10_nf; end
     end
     always @(posedge clk) begin : g_lp236
-        integer i;
         e <= s10_e;
-        for (i = 0; i < 32; i = i + 1) begin
-            c = s10_c[i];
-            g4 = s10_g[i][3:0];
+        for (i_lp236 = 0; i_lp236 < 32; i_lp236 = i_lp236 + 1) begin
+            c = s10_c[i_lp236];
+            g4 = s10_g[i_lp236][3:0];
             // codes
             if (!s10_fp4) begin
-                if (c[4])      q[8*i +: 8] <= {s10_sgn[i], g4 + 4'd8, 3'd0};
-                else if (c[3]) q[8*i +: 8] <= {s10_sgn[i], g4 + 4'd7, c[2:0]};
-                else           q[8*i +: 8] <= {s10_sgn[i], 4'd0, c[2:0]};
+                if (c[4])      q[8*i_lp236 +: 8] <= {s10_sgn[i_lp236], g4 + 4'd8, 3'd0};
+                else if (c[3]) q[8*i_lp236 +: 8] <= {s10_sgn[i_lp236], g4 + 4'd7, c[2:0]};
+                else           q[8*i_lp236 +: 8] <= {s10_sgn[i_lp236], 4'd0, c[2:0]};
             end else begin
-                if (c[2])      q[8*i +: 8] <= {4'd0, s10_sgn[i], g4[1:0] + 2'd2, 1'b0};
-                else if (c[1]) q[8*i +: 8] <= {4'd0, s10_sgn[i], g4[1:0] + 2'd1, c[0]};
-                else           q[8*i +: 8] <= {4'd0, s10_sgn[i], 2'd0, c[0]};
+                if (c[2])      q[8*i_lp236 +: 8] <= {4'd0, s10_sgn[i_lp236], g4[1:0] + 2'd2, 1'b0};
+                else if (c[1]) q[8*i_lp236 +: 8] <= {4'd0, s10_sgn[i_lp236], g4[1:0] + 2'd1, c[0]};
+                else           q[8*i_lp236 +: 8] <= {4'd0, s10_sgn[i_lp236], 2'd0, c[0]};
             end
             // value c * 2^(g - mant_bits + e) as BF16
             p = c[4] ? 3'd4 : c[3] ? 3'd3 : c[2] ? 3'd2 : c[1] ? 3'd1 : 3'd0;
-            be = $signed({9'd0, p}) + s10_g[i] - (s10_fp4 ? 12'sd1 : 12'sd3) + s10_e + 12'sd127;
+            be = $signed({9'd0, p}) + s10_g[i_lp236] - (s10_fp4 ? 12'sd1 : 12'sd3) + s10_e + 12'sd127;
             cn = {3'd0, c} << (3'd7 - p);
-            shs = s10_g[i] - (s10_fp4 ? 12'sd1 : 12'sd3) + s10_e + 12'sd133;
+            shs = s10_g[i_lp236] - (s10_fp4 ? 12'sd1 : 12'sd3) + s10_e + 12'sd133;
             sub = (shs < 12'sd0) ? 7'd0 : ({2'd0, c} << shs[3:0]);
-            if (c == 5'd0)           y[16*i +: 16] <= {s10_sgn[i], 15'd0};
-            else if (be >= 12'sd255) y[16*i +: 16] <= {s10_sgn[i], 8'hFF, 7'd0};
-            else if (be >= 12'sd1)   y[16*i +: 16] <= {s10_sgn[i], be[7:0], cn[6:0]};
-            else                     y[16*i +: 16] <= {s10_sgn[i], 8'd0, sub};
+            if (c == 5'd0)           y[16*i_lp236 +: 16] <= {s10_sgn[i_lp236], 15'd0};
+            else if (be >= 12'sd255) y[16*i_lp236 +: 16] <= {s10_sgn[i_lp236], 8'hFF, 7'd0};
+            else if (be >= 12'sd1)   y[16*i_lp236 +: 16] <= {s10_sgn[i_lp236], be[7:0], cn[6:0]};
+            else                     y[16*i_lp236 +: 16] <= {s10_sgn[i_lp236], 8'd0, sub};
         end
     end
 endmodule
