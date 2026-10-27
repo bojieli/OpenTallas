@@ -1510,6 +1510,10 @@ def cmd_run(a):
         if lctx.get("insertion_ff_ps") is not None:                 # FLOW 10-25 per-corner binding
             bound = dict(tt=float(lctx["insertion_ps"]), ff=float(lctx["insertion_ff_ps"]),
                          tol=float(lctx.get("insertion_tol_ps", INSERTION_TOL_PS)), source=disc["sdc_lint_ctx"])
+    if a.ff_vclk == "bound-ff" and disc.get("ff_bound_ps") is None and getattr(a, "ff_bound_ps", None) is not None:
+        # S81-CORE-LAT-R18: an explicit declared FF bound (CLI-checked: --ff-vclk bound-ff + --ff-vclk-contract) is honoured
+        # for a die-plan core kit too (it was dropped outside the hard-core contract branch -> ValueError in the session)
+        disc["ff_bound_ps"] = float(a.ff_bound_ps)
     if a.ff_vclk == "auto":
         a.ff_vclk = "rebind" if bound else "sdc"
         if bound:
