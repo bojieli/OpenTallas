@@ -1,0 +1,1740 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/w/mut.ys' --
+
+1. Executing Verilog-2005 frontend: /w/gold.v
+Parsing SystemVerilog input from `/w/gold.v' to AST representation.
+Generating RTLIL representation for module `\gold_mul'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /w/gate_mut.v
+Parsing SystemVerilog input from `/w/gate_mut.v' to AST representation.
+Generating RTLIL representation for module `\gate_mul'.
+Successfully finished Verilog frontend.
+
+3. Executing PROC pass (convert processes to netlists).
+
+3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 48 switch rules as full_case in process $proc$/w/gate_mut.v:213$967 in module gate_mul.
+Marked 24 switch rules as full_case in process $proc$/w/gate_mut.v:206$815 in module gate_mul.
+Marked 24 switch rules as full_case in process $proc$/w/gate_mut.v:58$773 in module gate_mul.
+Marked 24 switch rules as full_case in process $proc$/w/gate_mut.v:57$743 in module gate_mul.
+Marked 3 switch rules as full_case in process $proc$/w/gate_mut.v:254$739 in module gate_mul.
+Marked 1 switch rules as full_case in process $proc$/w/gate_mut.v:225$723 in module gate_mul.
+Marked 1 switch rules as full_case in process $proc$/w/gate_mut.v:154$709 in module gate_mul.
+Marked 1 switch rules as full_case in process $proc$/w/gate_mut.v:111$628 in module gate_mul.
+Marked 1 switch rules as full_case in process $proc$/w/gate_mut.v:73$619 in module gate_mul.
+Marked 48 switch rules as full_case in process $proc$/w/gold.v:213$378 in module gold_mul.
+Marked 24 switch rules as full_case in process $proc$/w/gold.v:206$226 in module gold_mul.
+Marked 24 switch rules as full_case in process $proc$/w/gold.v:58$184 in module gold_mul.
+Marked 24 switch rules as full_case in process $proc$/w/gold.v:57$154 in module gold_mul.
+Marked 3 switch rules as full_case in process $proc$/w/gold.v:249$150 in module gold_mul.
+Marked 1 switch rules as full_case in process $proc$/w/gold.v:222$136 in module gold_mul.
+Marked 1 switch rules as full_case in process $proc$/w/gold.v:154$121 in module gold_mul.
+Marked 1 switch rules as full_case in process $proc$/w/gold.v:111$40 in module gold_mul.
+Marked 1 switch rules as full_case in process $proc$/w/gold.v:73$31 in module gold_mul.
+Removed a total of 0 dead cases.
+
+3.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 71 redundant assignments.
+Promoted 124 assignments to connections.
+
+3.4. Executing PROC_INIT pass (extract init attributes).
+
+3.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\gate_mul.$proc$/w/gate_mut.v:254$739'.
+Found async reset \rst_n in `\gate_mul.$proc$/w/gate_mut.v:225$723'.
+Found async reset \rst_n in `\gate_mul.$proc$/w/gate_mut.v:154$709'.
+Found async reset \rst_n in `\gate_mul.$proc$/w/gate_mut.v:111$628'.
+Found async reset \rst_n in `\gate_mul.$proc$/w/gate_mut.v:73$619'.
+Found async reset \rst_n in `\gold_mul.$proc$/w/gold.v:249$150'.
+Found async reset \rst_n in `\gold_mul.$proc$/w/gold.v:222$136'.
+Found async reset \rst_n in `\gold_mul.$proc$/w/gold.v:154$121'.
+Found async reset \rst_n in `\gold_mul.$proc$/w/gold.v:111$40'.
+Found async reset \rst_n in `\gold_mul.$proc$/w/gold.v:73$31'.
+
+3.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~244 debug messages>
+
+3.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\gate_mul.$proc$/w/gate_mut.v:135$1176'.
+Creating decoders for process `\gate_mul.$proc$/w/gate_mut.v:135$1174'.
+Creating decoders for process `\gate_mul.$proc$/w/gate_mut.v:135$1172'.
+Creating decoders for process `\gate_mul.$proc$/w/gate_mut.v:135$1170'.
+Creating decoders for process `\gate_mul.$proc$/w/gate_mut.v:135$1168'.
+Creating decoders for process `\gate_mul.$proc$/w/gate_mut.v:135$1166'.
+Creating decoders for process `\gate_mul.$proc$/w/gate_mut.v:213$967'.
+     1/48: $48\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1164
+     2/48: $47\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1160
+     3/48: $46\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1156
+     4/48: $45\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1152
+     5/48: $44\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1148
+     6/48: $43\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1144
+     7/48: $42\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1140
+     8/48: $41\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1136
+     9/48: $40\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1132
+    10/48: $39\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1128
+    11/48: $38\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1124
+    12/48: $37\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1120
+    13/48: $36\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1116
+    14/48: $35\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1112
+    15/48: $34\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1108
+    16/48: $33\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1104
+    17/48: $32\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1100
+    18/48: $31\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1096
+    19/48: $30\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1092
+    20/48: $29\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1088
+    21/48: $28\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1084
+    22/48: $27\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1080
+    23/48: $26\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1076
+    24/48: $25\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1072
+    25/48: $24\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1068
+    26/48: $23\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1064
+    27/48: $22\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1060
+    28/48: $21\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1056
+    29/48: $20\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1052
+    30/48: $19\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1048
+    31/48: $18\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1044
+    32/48: $17\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1040
+    33/48: $16\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1036
+    34/48: $15\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1032
+    35/48: $14\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1028
+    36/48: $13\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1024
+    37/48: $12\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1020
+    38/48: $11\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1016
+    39/48: $10\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1012
+    40/48: $9\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1008
+    41/48: $8\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1004
+    42/48: $7\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$1000
+    43/48: $6\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$996
+    44/48: $5\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$992
+    45/48: $4\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$988
+    46/48: $3\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$984
+    47/48: $2\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$980
+    48/48: $1\sticky_below$func$/w/gate_mut.v:213$602.found[0:0]$976
+Creating decoders for process `\gate_mul.$proc$/w/gate_mut.v:206$815'.
+     1/24: $24\shift_48_to_24$func$/w/gate_mut.v:206$601.taken[23:23]$965
+     2/24: $23\shift_48_to_24$func$/w/gate_mut.v:206$601.taken[22:22]$959
+     3/24: $22\shift_48_to_24$func$/w/gate_mut.v:206$601.taken[21:21]$953
+     4/24: $21\shift_48_to_24$func$/w/gate_mut.v:206$601.taken[20:20]$947
+     5/24: $20\shift_48_to_24$func$/w/gate_mut.v:206$601.taken[19:19]$941
+     6/24: $19\shift_48_to_24$func$/w/gate_mut.v:206$601.taken[18:18]$935
+     7/24: $18\shift_48_to_24$func$/w/gate_mut.v:206$601.taken[17:17]$929
+     8/24: $17\shift_48_to_24$func$/w/gate_mut.v:206$601.taken[16:16]$923
+     9/24: $16\shift_48_to_24$func$/w/gate_mut.v:206$601.taken[15:15]$917
+    10/24: $15\shift_48_to_24$func$/w/gate_mut.v:206$601.taken[14:14]$911
+    11/24: $14\shift_48_to_24$func$/w/gate_mut.v:206$601.taken[13:13]$905
+    12/24: $13\shift_48_to_24$func$/w/gate_mut.v:206$601.taken[12:12]$899
+    13/24: $12\shift_48_to_24$func$/w/gate_mut.v:206$601.taken[11:11]$893
+    14/24: $11\shift_48_to_24$func$/w/gate_mut.v:206$601.taken[10:10]$887
+    15/24: $10\shift_48_to_24$func$/w/gate_mut.v:206$601.taken[9:9]$881
+    16/24: $9\shift_48_to_24$func$/w/gate_mut.v:206$601.taken[8:8]$875
+    17/24: $8\shift_48_to_24$func$/w/gate_mut.v:206$601.taken[7:7]$869
+    18/24: $7\shift_48_to_24$func$/w/gate_mut.v:206$601.taken[6:6]$863
+    19/24: $6\shift_48_to_24$func$/w/gate_mut.v:206$601.taken[5:5]$857
+    20/24: $5\shift_48_to_24$func$/w/gate_mut.v:206$601.taken[4:4]$851
+    21/24: $4\shift_48_to_24$func$/w/gate_mut.v:206$601.taken[3:3]$845
+    22/24: $3\shift_48_to_24$func$/w/gate_mut.v:206$601.taken[2:2]$839
+    23/24: $2\shift_48_to_24$func$/w/gate_mut.v:206$601.taken[1:1]$833
+    24/24: $1\shift_48_to_24$func$/w/gate_mut.v:206$601.taken[0:0]$827
+Creating decoders for process `\gate_mul.$proc$/w/gate_mut.v:58$773'.
+     1/24: $24\lead_shift_24$func$/w/gate_mut.v:58$600.shift[4:0]$802
+     2/24: $23\lead_shift_24$func$/w/gate_mut.v:58$600.shift[4:0]$801
+     3/24: $22\lead_shift_24$func$/w/gate_mut.v:58$600.shift[4:0]$800
+     4/24: $21\lead_shift_24$func$/w/gate_mut.v:58$600.shift[4:0]$799
+     5/24: $20\lead_shift_24$func$/w/gate_mut.v:58$600.shift[4:0]$798
+     6/24: $19\lead_shift_24$func$/w/gate_mut.v:58$600.shift[4:0]$797
+     7/24: $18\lead_shift_24$func$/w/gate_mut.v:58$600.shift[4:0]$796
+     8/24: $17\lead_shift_24$func$/w/gate_mut.v:58$600.shift[4:0]$795
+     9/24: $16\lead_shift_24$func$/w/gate_mut.v:58$600.shift[4:0]$794
+    10/24: $15\lead_shift_24$func$/w/gate_mut.v:58$600.shift[4:0]$793
+    11/24: $14\lead_shift_24$func$/w/gate_mut.v:58$600.shift[4:0]$792
+    12/24: $13\lead_shift_24$func$/w/gate_mut.v:58$600.shift[4:0]$791
+    13/24: $12\lead_shift_24$func$/w/gate_mut.v:58$600.shift[4:0]$790
+    14/24: $11\lead_shift_24$func$/w/gate_mut.v:58$600.shift[4:0]$789
+    15/24: $10\lead_shift_24$func$/w/gate_mut.v:58$600.shift[4:0]$788
+    16/24: $9\lead_shift_24$func$/w/gate_mut.v:58$600.shift[4:0]$787
+    17/24: $8\lead_shift_24$func$/w/gate_mut.v:58$600.shift[4:0]$786
+    18/24: $7\lead_shift_24$func$/w/gate_mut.v:58$600.shift[4:0]$785
+    19/24: $6\lead_shift_24$func$/w/gate_mut.v:58$600.shift[4:0]$784
+    20/24: $5\lead_shift_24$func$/w/gate_mut.v:58$600.shift[4:0]$783
+    21/24: $4\lead_shift_24$func$/w/gate_mut.v:58$600.shift[4:0]$782
+    22/24: $3\lead_shift_24$func$/w/gate_mut.v:58$600.shift[4:0]$781
+    23/24: $2\lead_shift_24$func$/w/gate_mut.v:58$600.shift[4:0]$780
+    24/24: $1\lead_shift_24$func$/w/gate_mut.v:58$600.shift[4:0]$779
+Creating decoders for process `\gate_mul.$proc$/w/gate_mut.v:57$743'.
+     1/24: $24\lead_shift_24$func$/w/gate_mut.v:57$599.shift[4:0]$772
+     2/24: $23\lead_shift_24$func$/w/gate_mut.v:57$599.shift[4:0]$771
+     3/24: $22\lead_shift_24$func$/w/gate_mut.v:57$599.shift[4:0]$770
+     4/24: $21\lead_shift_24$func$/w/gate_mut.v:57$599.shift[4:0]$769
+     5/24: $20\lead_shift_24$func$/w/gate_mut.v:57$599.shift[4:0]$768
+     6/24: $19\lead_shift_24$func$/w/gate_mut.v:57$599.shift[4:0]$767
+     7/24: $18\lead_shift_24$func$/w/gate_mut.v:57$599.shift[4:0]$766
+     8/24: $17\lead_shift_24$func$/w/gate_mut.v:57$599.shift[4:0]$765
+     9/24: $16\lead_shift_24$func$/w/gate_mut.v:57$599.shift[4:0]$764
+    10/24: $15\lead_shift_24$func$/w/gate_mut.v:57$599.shift[4:0]$763
+    11/24: $14\lead_shift_24$func$/w/gate_mut.v:57$599.shift[4:0]$762
+    12/24: $13\lead_shift_24$func$/w/gate_mut.v:57$599.shift[4:0]$761
+    13/24: $12\lead_shift_24$func$/w/gate_mut.v:57$599.shift[4:0]$760
+    14/24: $11\lead_shift_24$func$/w/gate_mut.v:57$599.shift[4:0]$759
+    15/24: $10\lead_shift_24$func$/w/gate_mut.v:57$599.shift[4:0]$758
+    16/24: $9\lead_shift_24$func$/w/gate_mut.v:57$599.shift[4:0]$757
+    17/24: $8\lead_shift_24$func$/w/gate_mut.v:57$599.shift[4:0]$756
+    18/24: $7\lead_shift_24$func$/w/gate_mut.v:57$599.shift[4:0]$755
+    19/24: $6\lead_shift_24$func$/w/gate_mut.v:57$599.shift[4:0]$754
+    20/24: $5\lead_shift_24$func$/w/gate_mut.v:57$599.shift[4:0]$753
+    21/24: $4\lead_shift_24$func$/w/gate_mut.v:57$599.shift[4:0]$752
+    22/24: $3\lead_shift_24$func$/w/gate_mut.v:57$599.shift[4:0]$751
+    23/24: $2\lead_shift_24$func$/w/gate_mut.v:57$599.shift[4:0]$750
+    24/24: $1\lead_shift_24$func$/w/gate_mut.v:57$599.shift[4:0]$749
+Creating decoders for process `\gate_mul.$proc$/w/gate_mut.v:254$739'.
+     1/3: $0\err[1:0]
+     2/3: $0\y[31:0]
+     3/3: $0\valid_out[0:0]
+Creating decoders for process `\gate_mul.$proc$/w/gate_mut.v:225$723'.
+     1/8: $0\s4_floor[11:0]
+     2/8: $0\s4_inc_q[0:0]
+     3/8: $0\s4_main_q[23:0]
+     4/8: $0\s4_is_sub[0:0]
+     5/8: $0\s4_err[1:0]
+     6/8: $0\s4_sign[0:0]
+     7/8: $0\s4_byp[0:0]
+     8/8: $0\s4_v[0:0]
+Creating decoders for process `\gate_mul.$proc$/w/gate_mut.v:154$709'.
+     1/8: $0\s3_shift_q[11:0]
+     2/8: $0\s3_floor_q[11:0]
+     3/8: $0\s3_is_sub_q[0:0]
+     4/8: $0\s3_product[47:0]
+     5/8: $0\s3_err[1:0]
+     6/8: $0\s3_sign[0:0]
+     7/8: $0\s3_byp[0:0]
+     8/8: $0\s3_v[0:0]
+Creating decoders for process `\gate_mul.$proc$/w/gate_mut.v:111$628'.
+     1/19: $0\s2_d46[24:0]
+     2/19: $1\decide$func$/w/gate_mut.v:121$596.$result[24:0]$645
+     3/19: $1\decide$func$/w/gate_mut.v:121$596.sh[11:0]$648
+     4/19: $1\decide$func$/w/gate_mut.v:121$596.sub[0:0]$649
+     5/19: $1\decide$func$/w/gate_mut.v:121$596.fl[11:0]$647
+     6/19: $1\decide$func$/w/gate_mut.v:121$596.power[11:0]$646
+     7/19: $0\s2_d47[24:0]
+     8/19: $1\decide$func$/w/gate_mut.v:120$595.$result[24:0]$640
+     9/19: $1\decide$func$/w/gate_mut.v:120$595.sh[11:0]$643
+    10/19: $1\decide$func$/w/gate_mut.v:120$595.sub[0:0]$644
+    11/19: $1\decide$func$/w/gate_mut.v:120$595.fl[11:0]$642
+    12/19: $1\decide$func$/w/gate_mut.v:120$595.power[11:0]$641
+    13/19: $0\s2_pp2[31:0]
+    14/19: $0\s2_pp1[31:0]
+    15/19: $0\s2_pp0[31:0]
+    16/19: $0\s2_err[1:0]
+    17/19: $0\s2_sign[0:0]
+    18/19: $0\s2_byp[0:0]
+    19/19: $0\s2_v[0:0]
+Creating decoders for process `\gate_mul.$proc$/w/gate_mut.v:73$619'.
+     1/8: $0\s1_power[11:0]
+     2/8: $0\s1_b[23:0]
+     3/8: $0\s1_a[23:0]
+     4/8: $0\s1_sign[0:0]
+     5/8: $0\s1_err[1:0]
+     6/8: $0\s1_byp[0:0]
+     7/8: $0\s1_v[0:0]
+     8/8: $0\s1_inv6[0:0]
+Creating decoders for process `\gold_mul.$proc$/w/gold.v:135$587'.
+Creating decoders for process `\gold_mul.$proc$/w/gold.v:135$585'.
+Creating decoders for process `\gold_mul.$proc$/w/gold.v:135$583'.
+Creating decoders for process `\gold_mul.$proc$/w/gold.v:135$581'.
+Creating decoders for process `\gold_mul.$proc$/w/gold.v:135$579'.
+Creating decoders for process `\gold_mul.$proc$/w/gold.v:135$577'.
+Creating decoders for process `\gold_mul.$proc$/w/gold.v:213$378'.
+     1/48: $48\sticky_below$func$/w/gold.v:213$14.found[0:0]$575
+     2/48: $47\sticky_below$func$/w/gold.v:213$14.found[0:0]$571
+     3/48: $46\sticky_below$func$/w/gold.v:213$14.found[0:0]$567
+     4/48: $45\sticky_below$func$/w/gold.v:213$14.found[0:0]$563
+     5/48: $44\sticky_below$func$/w/gold.v:213$14.found[0:0]$559
+     6/48: $43\sticky_below$func$/w/gold.v:213$14.found[0:0]$555
+     7/48: $42\sticky_below$func$/w/gold.v:213$14.found[0:0]$551
+     8/48: $41\sticky_below$func$/w/gold.v:213$14.found[0:0]$547
+     9/48: $40\sticky_below$func$/w/gold.v:213$14.found[0:0]$543
+    10/48: $39\sticky_below$func$/w/gold.v:213$14.found[0:0]$539
+    11/48: $38\sticky_below$func$/w/gold.v:213$14.found[0:0]$535
+    12/48: $37\sticky_below$func$/w/gold.v:213$14.found[0:0]$531
+    13/48: $36\sticky_below$func$/w/gold.v:213$14.found[0:0]$527
+    14/48: $35\sticky_below$func$/w/gold.v:213$14.found[0:0]$523
+    15/48: $34\sticky_below$func$/w/gold.v:213$14.found[0:0]$519
+    16/48: $33\sticky_below$func$/w/gold.v:213$14.found[0:0]$515
+    17/48: $32\sticky_below$func$/w/gold.v:213$14.found[0:0]$511
+    18/48: $31\sticky_below$func$/w/gold.v:213$14.found[0:0]$507
+    19/48: $30\sticky_below$func$/w/gold.v:213$14.found[0:0]$503
+    20/48: $29\sticky_below$func$/w/gold.v:213$14.found[0:0]$499
+    21/48: $28\sticky_below$func$/w/gold.v:213$14.found[0:0]$495
+    22/48: $27\sticky_below$func$/w/gold.v:213$14.found[0:0]$491
+    23/48: $26\sticky_below$func$/w/gold.v:213$14.found[0:0]$487
+    24/48: $25\sticky_below$func$/w/gold.v:213$14.found[0:0]$483
+    25/48: $24\sticky_below$func$/w/gold.v:213$14.found[0:0]$479
+    26/48: $23\sticky_below$func$/w/gold.v:213$14.found[0:0]$475
+    27/48: $22\sticky_below$func$/w/gold.v:213$14.found[0:0]$471
+    28/48: $21\sticky_below$func$/w/gold.v:213$14.found[0:0]$467
+    29/48: $20\sticky_below$func$/w/gold.v:213$14.found[0:0]$463
+    30/48: $19\sticky_below$func$/w/gold.v:213$14.found[0:0]$459
+    31/48: $18\sticky_below$func$/w/gold.v:213$14.found[0:0]$455
+    32/48: $17\sticky_below$func$/w/gold.v:213$14.found[0:0]$451
+    33/48: $16\sticky_below$func$/w/gold.v:213$14.found[0:0]$447
+    34/48: $15\sticky_below$func$/w/gold.v:213$14.found[0:0]$443
+    35/48: $14\sticky_below$func$/w/gold.v:213$14.found[0:0]$439
+    36/48: $13\sticky_below$func$/w/gold.v:213$14.found[0:0]$435
+    37/48: $12\sticky_below$func$/w/gold.v:213$14.found[0:0]$431
+    38/48: $11\sticky_below$func$/w/gold.v:213$14.found[0:0]$427
+    39/48: $10\sticky_below$func$/w/gold.v:213$14.found[0:0]$423
+    40/48: $9\sticky_below$func$/w/gold.v:213$14.found[0:0]$419
+    41/48: $8\sticky_below$func$/w/gold.v:213$14.found[0:0]$415
+    42/48: $7\sticky_below$func$/w/gold.v:213$14.found[0:0]$411
+    43/48: $6\sticky_below$func$/w/gold.v:213$14.found[0:0]$407
+    44/48: $5\sticky_below$func$/w/gold.v:213$14.found[0:0]$403
+    45/48: $4\sticky_below$func$/w/gold.v:213$14.found[0:0]$399
+    46/48: $3\sticky_below$func$/w/gold.v:213$14.found[0:0]$395
+    47/48: $2\sticky_below$func$/w/gold.v:213$14.found[0:0]$391
+    48/48: $1\sticky_below$func$/w/gold.v:213$14.found[0:0]$387
+Creating decoders for process `\gold_mul.$proc$/w/gold.v:206$226'.
+     1/24: $24\shift_48_to_24$func$/w/gold.v:206$13.taken[23:23]$376
+     2/24: $23\shift_48_to_24$func$/w/gold.v:206$13.taken[22:22]$370
+     3/24: $22\shift_48_to_24$func$/w/gold.v:206$13.taken[21:21]$364
+     4/24: $21\shift_48_to_24$func$/w/gold.v:206$13.taken[20:20]$358
+     5/24: $20\shift_48_to_24$func$/w/gold.v:206$13.taken[19:19]$352
+     6/24: $19\shift_48_to_24$func$/w/gold.v:206$13.taken[18:18]$346
+     7/24: $18\shift_48_to_24$func$/w/gold.v:206$13.taken[17:17]$340
+     8/24: $17\shift_48_to_24$func$/w/gold.v:206$13.taken[16:16]$334
+     9/24: $16\shift_48_to_24$func$/w/gold.v:206$13.taken[15:15]$328
+    10/24: $15\shift_48_to_24$func$/w/gold.v:206$13.taken[14:14]$322
+    11/24: $14\shift_48_to_24$func$/w/gold.v:206$13.taken[13:13]$316
+    12/24: $13\shift_48_to_24$func$/w/gold.v:206$13.taken[12:12]$310
+    13/24: $12\shift_48_to_24$func$/w/gold.v:206$13.taken[11:11]$304
+    14/24: $11\shift_48_to_24$func$/w/gold.v:206$13.taken[10:10]$298
+    15/24: $10\shift_48_to_24$func$/w/gold.v:206$13.taken[9:9]$292
+    16/24: $9\shift_48_to_24$func$/w/gold.v:206$13.taken[8:8]$286
+    17/24: $8\shift_48_to_24$func$/w/gold.v:206$13.taken[7:7]$280
+    18/24: $7\shift_48_to_24$func$/w/gold.v:206$13.taken[6:6]$274
+    19/24: $6\shift_48_to_24$func$/w/gold.v:206$13.taken[5:5]$268
+    20/24: $5\shift_48_to_24$func$/w/gold.v:206$13.taken[4:4]$262
+    21/24: $4\shift_48_to_24$func$/w/gold.v:206$13.taken[3:3]$256
+    22/24: $3\shift_48_to_24$func$/w/gold.v:206$13.taken[2:2]$250
+    23/24: $2\shift_48_to_24$func$/w/gold.v:206$13.taken[1:1]$244
+    24/24: $1\shift_48_to_24$func$/w/gold.v:206$13.taken[0:0]$238
+Creating decoders for process `\gold_mul.$proc$/w/gold.v:58$184'.
+     1/24: $24\lead_shift_24$func$/w/gold.v:58$12.shift[4:0]$213
+     2/24: $23\lead_shift_24$func$/w/gold.v:58$12.shift[4:0]$212
+     3/24: $22\lead_shift_24$func$/w/gold.v:58$12.shift[4:0]$211
+     4/24: $21\lead_shift_24$func$/w/gold.v:58$12.shift[4:0]$210
+     5/24: $20\lead_shift_24$func$/w/gold.v:58$12.shift[4:0]$209
+     6/24: $19\lead_shift_24$func$/w/gold.v:58$12.shift[4:0]$208
+     7/24: $18\lead_shift_24$func$/w/gold.v:58$12.shift[4:0]$207
+     8/24: $17\lead_shift_24$func$/w/gold.v:58$12.shift[4:0]$206
+     9/24: $16\lead_shift_24$func$/w/gold.v:58$12.shift[4:0]$205
+    10/24: $15\lead_shift_24$func$/w/gold.v:58$12.shift[4:0]$204
+    11/24: $14\lead_shift_24$func$/w/gold.v:58$12.shift[4:0]$203
+    12/24: $13\lead_shift_24$func$/w/gold.v:58$12.shift[4:0]$202
+    13/24: $12\lead_shift_24$func$/w/gold.v:58$12.shift[4:0]$201
+    14/24: $11\lead_shift_24$func$/w/gold.v:58$12.shift[4:0]$200
+    15/24: $10\lead_shift_24$func$/w/gold.v:58$12.shift[4:0]$199
+    16/24: $9\lead_shift_24$func$/w/gold.v:58$12.shift[4:0]$198
+    17/24: $8\lead_shift_24$func$/w/gold.v:58$12.shift[4:0]$197
+    18/24: $7\lead_shift_24$func$/w/gold.v:58$12.shift[4:0]$196
+    19/24: $6\lead_shift_24$func$/w/gold.v:58$12.shift[4:0]$195
+    20/24: $5\lead_shift_24$func$/w/gold.v:58$12.shift[4:0]$194
+    21/24: $4\lead_shift_24$func$/w/gold.v:58$12.shift[4:0]$193
+    22/24: $3\lead_shift_24$func$/w/gold.v:58$12.shift[4:0]$192
+    23/24: $2\lead_shift_24$func$/w/gold.v:58$12.shift[4:0]$191
+    24/24: $1\lead_shift_24$func$/w/gold.v:58$12.shift[4:0]$190
+Creating decoders for process `\gold_mul.$proc$/w/gold.v:57$154'.
+     1/24: $24\lead_shift_24$func$/w/gold.v:57$11.shift[4:0]$183
+     2/24: $23\lead_shift_24$func$/w/gold.v:57$11.shift[4:0]$182
+     3/24: $22\lead_shift_24$func$/w/gold.v:57$11.shift[4:0]$181
+     4/24: $21\lead_shift_24$func$/w/gold.v:57$11.shift[4:0]$180
+     5/24: $20\lead_shift_24$func$/w/gold.v:57$11.shift[4:0]$179
+     6/24: $19\lead_shift_24$func$/w/gold.v:57$11.shift[4:0]$178
+     7/24: $18\lead_shift_24$func$/w/gold.v:57$11.shift[4:0]$177
+     8/24: $17\lead_shift_24$func$/w/gold.v:57$11.shift[4:0]$176
+     9/24: $16\lead_shift_24$func$/w/gold.v:57$11.shift[4:0]$175
+    10/24: $15\lead_shift_24$func$/w/gold.v:57$11.shift[4:0]$174
+    11/24: $14\lead_shift_24$func$/w/gold.v:57$11.shift[4:0]$173
+    12/24: $13\lead_shift_24$func$/w/gold.v:57$11.shift[4:0]$172
+    13/24: $12\lead_shift_24$func$/w/gold.v:57$11.shift[4:0]$171
+    14/24: $11\lead_shift_24$func$/w/gold.v:57$11.shift[4:0]$170
+    15/24: $10\lead_shift_24$func$/w/gold.v:57$11.shift[4:0]$169
+    16/24: $9\lead_shift_24$func$/w/gold.v:57$11.shift[4:0]$168
+    17/24: $8\lead_shift_24$func$/w/gold.v:57$11.shift[4:0]$167
+    18/24: $7\lead_shift_24$func$/w/gold.v:57$11.shift[4:0]$166
+    19/24: $6\lead_shift_24$func$/w/gold.v:57$11.shift[4:0]$165
+    20/24: $5\lead_shift_24$func$/w/gold.v:57$11.shift[4:0]$164
+    21/24: $4\lead_shift_24$func$/w/gold.v:57$11.shift[4:0]$163
+    22/24: $3\lead_shift_24$func$/w/gold.v:57$11.shift[4:0]$162
+    23/24: $2\lead_shift_24$func$/w/gold.v:57$11.shift[4:0]$161
+    24/24: $1\lead_shift_24$func$/w/gold.v:57$11.shift[4:0]$160
+Creating decoders for process `\gold_mul.$proc$/w/gold.v:249$150'.
+     1/3: $0\err[1:0]
+     2/3: $0\y[31:0]
+     3/3: $0\valid_out[0:0]
+Creating decoders for process `\gold_mul.$proc$/w/gold.v:222$136'.
+     1/7: $0\s4_floor[11:0]
+     2/7: $0\s4_mant[24:0]
+     3/7: $0\s4_is_sub[0:0]
+     4/7: $0\s4_err[1:0]
+     5/7: $0\s4_sign[0:0]
+     6/7: $0\s4_byp[0:0]
+     7/7: $0\s4_v[0:0]
+Creating decoders for process `\gold_mul.$proc$/w/gold.v:154$121'.
+     1/8: $0\s3_shift_q[11:0]
+     2/8: $0\s3_floor_q[11:0]
+     3/8: $0\s3_is_sub_q[0:0]
+     4/8: $0\s3_product[47:0]
+     5/8: $0\s3_err[1:0]
+     6/8: $0\s3_sign[0:0]
+     7/8: $0\s3_byp[0:0]
+     8/8: $0\s3_v[0:0]
+Creating decoders for process `\gold_mul.$proc$/w/gold.v:111$40'.
+     1/19: $0\s2_d46[24:0]
+     2/19: $1\decide$func$/w/gold.v:121$8.$result[24:0]$57
+     3/19: $1\decide$func$/w/gold.v:121$8.sh[11:0]$60
+     4/19: $1\decide$func$/w/gold.v:121$8.sub[0:0]$61
+     5/19: $1\decide$func$/w/gold.v:121$8.fl[11:0]$59
+     6/19: $1\decide$func$/w/gold.v:121$8.power[11:0]$58
+     7/19: $0\s2_d47[24:0]
+     8/19: $1\decide$func$/w/gold.v:120$7.$result[24:0]$52
+     9/19: $1\decide$func$/w/gold.v:120$7.sh[11:0]$55
+    10/19: $1\decide$func$/w/gold.v:120$7.sub[0:0]$56
+    11/19: $1\decide$func$/w/gold.v:120$7.fl[11:0]$54
+    12/19: $1\decide$func$/w/gold.v:120$7.power[11:0]$53
+    13/19: $0\s2_pp2[31:0]
+    14/19: $0\s2_pp1[31:0]
+    15/19: $0\s2_pp0[31:0]
+    16/19: $0\s2_err[1:0]
+    17/19: $0\s2_sign[0:0]
+    18/19: $0\s2_byp[0:0]
+    19/19: $0\s2_v[0:0]
+Creating decoders for process `\gold_mul.$proc$/w/gold.v:73$31'.
+     1/8: $0\s1_power[11:0]
+     2/8: $0\s1_b[23:0]
+     3/8: $0\s1_a[23:0]
+     4/8: $0\s1_sign[0:0]
+     5/8: $0\s1_err[1:0]
+     6/8: $0\s1_byp[0:0]
+     7/8: $0\s1_v[0:0]
+     8/8: $0\s1_inv6[0:0]
+
+3.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\gate_mul.\byte_sum[5]' from process `\gate_mul.$proc$/w/gate_mut.v:135$1176'.
+No latch inferred for signal `\gate_mul.\byte_sum[4]' from process `\gate_mul.$proc$/w/gate_mut.v:135$1174'.
+No latch inferred for signal `\gate_mul.\byte_sum[3]' from process `\gate_mul.$proc$/w/gate_mut.v:135$1172'.
+No latch inferred for signal `\gate_mul.\byte_sum[2]' from process `\gate_mul.$proc$/w/gate_mut.v:135$1170'.
+No latch inferred for signal `\gate_mul.\byte_sum[1]' from process `\gate_mul.$proc$/w/gate_mut.v:135$1168'.
+No latch inferred for signal `\gate_mul.\byte_sum[0]' from process `\gate_mul.$proc$/w/gate_mut.v:135$1166'.
+No latch inferred for signal `\gate_mul.\sticky_below$func$/w/gate_mut.v:213$598.$result' from process `\gate_mul.$proc$/w/gate_mut.v:213$967'.
+No latch inferred for signal `\gate_mul.\shift_48_to_24$func$/w/gate_mut.v:206$597.$result' from process `\gate_mul.$proc$/w/gate_mut.v:206$815'.
+No latch inferred for signal `\gate_mul.\lead_shift_24$func$/w/gate_mut.v:58$594.$result' from process `\gate_mul.$proc$/w/gate_mut.v:58$773'.
+No latch inferred for signal `\gate_mul.\lead_shift_24$func$/w/gate_mut.v:57$593.$result' from process `\gate_mul.$proc$/w/gate_mut.v:57$743'.
+No latch inferred for signal `\gold_mul.\byte_sum[5]' from process `\gold_mul.$proc$/w/gold.v:135$587'.
+No latch inferred for signal `\gold_mul.\byte_sum[4]' from process `\gold_mul.$proc$/w/gold.v:135$585'.
+No latch inferred for signal `\gold_mul.\byte_sum[3]' from process `\gold_mul.$proc$/w/gold.v:135$583'.
+No latch inferred for signal `\gold_mul.\byte_sum[2]' from process `\gold_mul.$proc$/w/gold.v:135$581'.
+No latch inferred for signal `\gold_mul.\byte_sum[1]' from process `\gold_mul.$proc$/w/gold.v:135$579'.
+No latch inferred for signal `\gold_mul.\byte_sum[0]' from process `\gold_mul.$proc$/w/gold.v:135$577'.
+No latch inferred for signal `\gold_mul.\sticky_below$func$/w/gold.v:213$10.$result' from process `\gold_mul.$proc$/w/gold.v:213$378'.
+No latch inferred for signal `\gold_mul.\shift_48_to_24$func$/w/gold.v:206$9.$result' from process `\gold_mul.$proc$/w/gold.v:206$226'.
+No latch inferred for signal `\gold_mul.\lead_shift_24$func$/w/gold.v:58$6.$result' from process `\gold_mul.$proc$/w/gold.v:58$184'.
+No latch inferred for signal `\gold_mul.\lead_shift_24$func$/w/gold.v:57$5.$result' from process `\gold_mul.$proc$/w/gold.v:57$154'.
+
+3.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\gate_mul.\y' using process `\gate_mul.$proc$/w/gate_mut.v:254$739'.
+  created $adff cell `$procdff$1922' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\err' using process `\gate_mul.$proc$/w/gate_mut.v:254$739'.
+  created $adff cell `$procdff$1927' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\valid_out' using process `\gate_mul.$proc$/w/gate_mut.v:254$739'.
+  created $adff cell `$procdff$1932' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s4_v' using process `\gate_mul.$proc$/w/gate_mut.v:225$723'.
+  created $adff cell `$procdff$1937' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s4_byp' using process `\gate_mul.$proc$/w/gate_mut.v:225$723'.
+  created $adff cell `$procdff$1942' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s4_sign' using process `\gate_mul.$proc$/w/gate_mut.v:225$723'.
+  created $adff cell `$procdff$1947' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s4_is_sub' using process `\gate_mul.$proc$/w/gate_mut.v:225$723'.
+  created $adff cell `$procdff$1952' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s4_err' using process `\gate_mul.$proc$/w/gate_mut.v:225$723'.
+  created $adff cell `$procdff$1957' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s4_floor' using process `\gate_mul.$proc$/w/gate_mut.v:225$723'.
+  created $adff cell `$procdff$1962' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s4_main_q' using process `\gate_mul.$proc$/w/gate_mut.v:225$723'.
+  created $adff cell `$procdff$1967' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s4_inc_q' using process `\gate_mul.$proc$/w/gate_mut.v:225$723'.
+  created $adff cell `$procdff$1972' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s3_v' using process `\gate_mul.$proc$/w/gate_mut.v:154$709'.
+  created $adff cell `$procdff$1977' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s3_byp' using process `\gate_mul.$proc$/w/gate_mut.v:154$709'.
+  created $adff cell `$procdff$1982' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s3_sign' using process `\gate_mul.$proc$/w/gate_mut.v:154$709'.
+  created $adff cell `$procdff$1987' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s3_is_sub_q' using process `\gate_mul.$proc$/w/gate_mut.v:154$709'.
+  created $adff cell `$procdff$1992' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s3_err' using process `\gate_mul.$proc$/w/gate_mut.v:154$709'.
+  created $adff cell `$procdff$1997' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s3_product' using process `\gate_mul.$proc$/w/gate_mut.v:154$709'.
+  created $adff cell `$procdff$2002' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s3_floor_q' using process `\gate_mul.$proc$/w/gate_mut.v:154$709'.
+  created $adff cell `$procdff$2007' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s3_shift_q' using process `\gate_mul.$proc$/w/gate_mut.v:154$709'.
+  created $adff cell `$procdff$2012' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s2_v' using process `\gate_mul.$proc$/w/gate_mut.v:111$628'.
+  created $adff cell `$procdff$2017' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s2_byp' using process `\gate_mul.$proc$/w/gate_mut.v:111$628'.
+  created $adff cell `$procdff$2022' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s2_sign' using process `\gate_mul.$proc$/w/gate_mut.v:111$628'.
+  created $adff cell `$procdff$2027' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s2_err' using process `\gate_mul.$proc$/w/gate_mut.v:111$628'.
+  created $adff cell `$procdff$2032' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s2_pp0' using process `\gate_mul.$proc$/w/gate_mut.v:111$628'.
+  created $adff cell `$procdff$2037' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s2_pp1' using process `\gate_mul.$proc$/w/gate_mut.v:111$628'.
+  created $adff cell `$procdff$2042' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s2_pp2' using process `\gate_mul.$proc$/w/gate_mut.v:111$628'.
+  created $adff cell `$procdff$2047' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s2_d47' using process `\gate_mul.$proc$/w/gate_mut.v:111$628'.
+  created $adff cell `$procdff$2052' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s2_d46' using process `\gate_mul.$proc$/w/gate_mut.v:111$628'.
+  created $adff cell `$procdff$2057' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\decide$func$/w/gate_mut.v:120$595.$result' using process `\gate_mul.$proc$/w/gate_mut.v:111$628'.
+  created $adff cell `$procdff$2062' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\decide$func$/w/gate_mut.v:120$595.power' using process `\gate_mul.$proc$/w/gate_mut.v:111$628'.
+  created $adff cell `$procdff$2067' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\decide$func$/w/gate_mut.v:120$595.fl' using process `\gate_mul.$proc$/w/gate_mut.v:111$628'.
+  created $adff cell `$procdff$2072' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\decide$func$/w/gate_mut.v:120$595.sh' using process `\gate_mul.$proc$/w/gate_mut.v:111$628'.
+  created $adff cell `$procdff$2077' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\decide$func$/w/gate_mut.v:120$595.sub' using process `\gate_mul.$proc$/w/gate_mut.v:111$628'.
+  created $adff cell `$procdff$2082' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\decide$func$/w/gate_mut.v:121$596.$result' using process `\gate_mul.$proc$/w/gate_mut.v:111$628'.
+  created $adff cell `$procdff$2087' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\decide$func$/w/gate_mut.v:121$596.power' using process `\gate_mul.$proc$/w/gate_mut.v:111$628'.
+  created $adff cell `$procdff$2092' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\decide$func$/w/gate_mut.v:121$596.fl' using process `\gate_mul.$proc$/w/gate_mut.v:111$628'.
+  created $adff cell `$procdff$2097' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\decide$func$/w/gate_mut.v:121$596.sh' using process `\gate_mul.$proc$/w/gate_mut.v:111$628'.
+  created $adff cell `$procdff$2102' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\decide$func$/w/gate_mut.v:121$596.sub' using process `\gate_mul.$proc$/w/gate_mut.v:111$628'.
+  created $adff cell `$procdff$2107' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s1_v' using process `\gate_mul.$proc$/w/gate_mut.v:73$619'.
+  created $adff cell `$procdff$2112' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s1_byp' using process `\gate_mul.$proc$/w/gate_mut.v:73$619'.
+  created $adff cell `$procdff$2117' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s1_inv6' using process `\gate_mul.$proc$/w/gate_mut.v:73$619'.
+  created $adff cell `$procdff$2122' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s1_err' using process `\gate_mul.$proc$/w/gate_mut.v:73$619'.
+  created $adff cell `$procdff$2127' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s1_sign' using process `\gate_mul.$proc$/w/gate_mut.v:73$619'.
+  created $adff cell `$procdff$2132' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s1_a' using process `\gate_mul.$proc$/w/gate_mut.v:73$619'.
+  created $adff cell `$procdff$2137' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s1_b' using process `\gate_mul.$proc$/w/gate_mut.v:73$619'.
+  created $adff cell `$procdff$2142' with positive edge clock and positive level reset.
+Creating register for signal `\gate_mul.\s1_power' using process `\gate_mul.$proc$/w/gate_mut.v:73$619'.
+  created $adff cell `$procdff$2147' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\y' using process `\gold_mul.$proc$/w/gold.v:249$150'.
+  created $adff cell `$procdff$2152' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\err' using process `\gold_mul.$proc$/w/gold.v:249$150'.
+  created $adff cell `$procdff$2157' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\valid_out' using process `\gold_mul.$proc$/w/gold.v:249$150'.
+  created $adff cell `$procdff$2162' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s4_v' using process `\gold_mul.$proc$/w/gold.v:222$136'.
+  created $adff cell `$procdff$2167' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s4_byp' using process `\gold_mul.$proc$/w/gold.v:222$136'.
+  created $adff cell `$procdff$2172' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s4_sign' using process `\gold_mul.$proc$/w/gold.v:222$136'.
+  created $adff cell `$procdff$2177' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s4_is_sub' using process `\gold_mul.$proc$/w/gold.v:222$136'.
+  created $adff cell `$procdff$2182' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s4_err' using process `\gold_mul.$proc$/w/gold.v:222$136'.
+  created $adff cell `$procdff$2187' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s4_mant' using process `\gold_mul.$proc$/w/gold.v:222$136'.
+  created $adff cell `$procdff$2192' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s4_floor' using process `\gold_mul.$proc$/w/gold.v:222$136'.
+  created $adff cell `$procdff$2197' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s3_v' using process `\gold_mul.$proc$/w/gold.v:154$121'.
+  created $adff cell `$procdff$2202' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s3_byp' using process `\gold_mul.$proc$/w/gold.v:154$121'.
+  created $adff cell `$procdff$2207' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s3_sign' using process `\gold_mul.$proc$/w/gold.v:154$121'.
+  created $adff cell `$procdff$2212' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s3_is_sub_q' using process `\gold_mul.$proc$/w/gold.v:154$121'.
+  created $adff cell `$procdff$2217' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s3_err' using process `\gold_mul.$proc$/w/gold.v:154$121'.
+  created $adff cell `$procdff$2222' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s3_product' using process `\gold_mul.$proc$/w/gold.v:154$121'.
+  created $adff cell `$procdff$2227' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s3_floor_q' using process `\gold_mul.$proc$/w/gold.v:154$121'.
+  created $adff cell `$procdff$2232' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s3_shift_q' using process `\gold_mul.$proc$/w/gold.v:154$121'.
+  created $adff cell `$procdff$2237' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s2_v' using process `\gold_mul.$proc$/w/gold.v:111$40'.
+  created $adff cell `$procdff$2242' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s2_byp' using process `\gold_mul.$proc$/w/gold.v:111$40'.
+  created $adff cell `$procdff$2247' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s2_sign' using process `\gold_mul.$proc$/w/gold.v:111$40'.
+  created $adff cell `$procdff$2252' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s2_err' using process `\gold_mul.$proc$/w/gold.v:111$40'.
+  created $adff cell `$procdff$2257' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s2_pp0' using process `\gold_mul.$proc$/w/gold.v:111$40'.
+  created $adff cell `$procdff$2262' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s2_pp1' using process `\gold_mul.$proc$/w/gold.v:111$40'.
+  created $adff cell `$procdff$2267' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s2_pp2' using process `\gold_mul.$proc$/w/gold.v:111$40'.
+  created $adff cell `$procdff$2272' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s2_d47' using process `\gold_mul.$proc$/w/gold.v:111$40'.
+  created $adff cell `$procdff$2277' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s2_d46' using process `\gold_mul.$proc$/w/gold.v:111$40'.
+  created $adff cell `$procdff$2282' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\decide$func$/w/gold.v:120$7.$result' using process `\gold_mul.$proc$/w/gold.v:111$40'.
+  created $adff cell `$procdff$2287' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\decide$func$/w/gold.v:120$7.power' using process `\gold_mul.$proc$/w/gold.v:111$40'.
+  created $adff cell `$procdff$2292' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\decide$func$/w/gold.v:120$7.fl' using process `\gold_mul.$proc$/w/gold.v:111$40'.
+  created $adff cell `$procdff$2297' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\decide$func$/w/gold.v:120$7.sh' using process `\gold_mul.$proc$/w/gold.v:111$40'.
+  created $adff cell `$procdff$2302' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\decide$func$/w/gold.v:120$7.sub' using process `\gold_mul.$proc$/w/gold.v:111$40'.
+  created $adff cell `$procdff$2307' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\decide$func$/w/gold.v:121$8.$result' using process `\gold_mul.$proc$/w/gold.v:111$40'.
+  created $adff cell `$procdff$2312' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\decide$func$/w/gold.v:121$8.power' using process `\gold_mul.$proc$/w/gold.v:111$40'.
+  created $adff cell `$procdff$2317' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\decide$func$/w/gold.v:121$8.fl' using process `\gold_mul.$proc$/w/gold.v:111$40'.
+  created $adff cell `$procdff$2322' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\decide$func$/w/gold.v:121$8.sh' using process `\gold_mul.$proc$/w/gold.v:111$40'.
+  created $adff cell `$procdff$2327' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\decide$func$/w/gold.v:121$8.sub' using process `\gold_mul.$proc$/w/gold.v:111$40'.
+  created $adff cell `$procdff$2332' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s1_v' using process `\gold_mul.$proc$/w/gold.v:73$31'.
+  created $adff cell `$procdff$2337' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s1_byp' using process `\gold_mul.$proc$/w/gold.v:73$31'.
+  created $adff cell `$procdff$2342' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s1_inv6' using process `\gold_mul.$proc$/w/gold.v:73$31'.
+  created $adff cell `$procdff$2347' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s1_err' using process `\gold_mul.$proc$/w/gold.v:73$31'.
+  created $adff cell `$procdff$2352' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s1_sign' using process `\gold_mul.$proc$/w/gold.v:73$31'.
+  created $adff cell `$procdff$2357' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s1_a' using process `\gold_mul.$proc$/w/gold.v:73$31'.
+  created $adff cell `$procdff$2362' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s1_b' using process `\gold_mul.$proc$/w/gold.v:73$31'.
+  created $adff cell `$procdff$2367' with positive edge clock and positive level reset.
+Creating register for signal `\gold_mul.\s1_power' using process `\gold_mul.$proc$/w/gold.v:73$31'.
+  created $adff cell `$procdff$2372' with positive edge clock and positive level reset.
+
+3.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `gate_mul.$proc$/w/gate_mut.v:135$1176'.
+Removing empty process `gate_mul.$proc$/w/gate_mut.v:135$1174'.
+Removing empty process `gate_mul.$proc$/w/gate_mut.v:135$1172'.
+Removing empty process `gate_mul.$proc$/w/gate_mut.v:135$1170'.
+Removing empty process `gate_mul.$proc$/w/gate_mut.v:135$1168'.
+Removing empty process `gate_mul.$proc$/w/gate_mut.v:135$1166'.
+Found and cleaned up 48 empty switches in `\gate_mul.$proc$/w/gate_mut.v:213$967'.
+Removing empty process `gate_mul.$proc$/w/gate_mut.v:213$967'.
+Found and cleaned up 24 empty switches in `\gate_mul.$proc$/w/gate_mut.v:206$815'.
+Removing empty process `gate_mul.$proc$/w/gate_mut.v:206$815'.
+Found and cleaned up 24 empty switches in `\gate_mul.$proc$/w/gate_mut.v:58$773'.
+Removing empty process `gate_mul.$proc$/w/gate_mut.v:58$773'.
+Found and cleaned up 24 empty switches in `\gate_mul.$proc$/w/gate_mut.v:57$743'.
+Removing empty process `gate_mul.$proc$/w/gate_mut.v:57$743'.
+Found and cleaned up 2 empty switches in `\gate_mul.$proc$/w/gate_mut.v:254$739'.
+Removing empty process `gate_mul.$proc$/w/gate_mut.v:254$739'.
+Removing empty process `gate_mul.$proc$/w/gate_mut.v:225$723'.
+Removing empty process `gate_mul.$proc$/w/gate_mut.v:154$709'.
+Removing empty process `gate_mul.$proc$/w/gate_mut.v:111$628'.
+Removing empty process `gate_mul.$proc$/w/gate_mut.v:73$619'.
+Removing empty process `gold_mul.$proc$/w/gold.v:135$587'.
+Removing empty process `gold_mul.$proc$/w/gold.v:135$585'.
+Removing empty process `gold_mul.$proc$/w/gold.v:135$583'.
+Removing empty process `gold_mul.$proc$/w/gold.v:135$581'.
+Removing empty process `gold_mul.$proc$/w/gold.v:135$579'.
+Removing empty process `gold_mul.$proc$/w/gold.v:135$577'.
+Found and cleaned up 48 empty switches in `\gold_mul.$proc$/w/gold.v:213$378'.
+Removing empty process `gold_mul.$proc$/w/gold.v:213$378'.
+Found and cleaned up 24 empty switches in `\gold_mul.$proc$/w/gold.v:206$226'.
+Removing empty process `gold_mul.$proc$/w/gold.v:206$226'.
+Found and cleaned up 24 empty switches in `\gold_mul.$proc$/w/gold.v:58$184'.
+Removing empty process `gold_mul.$proc$/w/gold.v:58$184'.
+Found and cleaned up 24 empty switches in `\gold_mul.$proc$/w/gold.v:57$154'.
+Removing empty process `gold_mul.$proc$/w/gold.v:57$154'.
+Found and cleaned up 2 empty switches in `\gold_mul.$proc$/w/gold.v:249$150'.
+Removing empty process `gold_mul.$proc$/w/gold.v:249$150'.
+Removing empty process `gold_mul.$proc$/w/gold.v:222$136'.
+Removing empty process `gold_mul.$proc$/w/gold.v:154$121'.
+Removing empty process `gold_mul.$proc$/w/gold.v:111$40'.
+Removing empty process `gold_mul.$proc$/w/gold.v:73$31'.
+Cleaned up 244 empty switches.
+
+3.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gate_mul.
+<suppressed ~101 debug messages>
+Optimizing module gold_mul.
+<suppressed ~99 debug messages>
+
+4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gate_mul..
+Finding unused cells or wires in module \gold_mul..
+Removed 133 unused cells and 1042 unused wires.
+<suppressed ~155 debug messages>
+
+5. Executing ASYNC2SYNC pass.
+Replacing gate_mul.$procdff$2047 ($adff): ARST=\rst_n, D=$0\s2_pp2[31:0], Q=\s2_pp2
+Replacing gate_mul.$procdff$2112 ($adff): ARST=\rst_n, D=\valid_in, Q=\s1_v
+Replacing gate_mul.$procdff$1952 ($adff): ARST=\rst_n, D=\s3_is_sub_q, Q=\s4_is_sub
+Replacing gate_mul.$procdff$1967 ($adff): ARST=\rst_n, D=\s4_main, Q=\s4_main_q
+Replacing gate_mul.$procdff$2002 ($adff): ARST=\rst_n, D=\s3_prod, Q=\s3_product
+Replacing gate_mul.$procdff$1947 ($adff): ARST=\rst_n, D=\s3_sign, Q=\s4_sign
+Replacing gate_mul.$procdff$2147 ($adff): ARST=\rst_n, D=$0\s1_power[11:0], Q=\s1_power
+Replacing gate_mul.$procdff$2052 ($adff): ARST=\rst_n, D=$0\decide$func$/w/gate_mut.v:120$595.$result[24:0]$629, Q=\s2_d47
+Replacing gate_mul.$procdff$1942 ($adff): ARST=\rst_n, D=\s3_byp, Q=\s4_byp
+Replacing gate_mul.$procdff$2057 ($adff): ARST=\rst_n, D=$0\decide$func$/w/gate_mut.v:121$596.$result[24:0]$634, Q=\s2_d46
+Replacing gate_mul.$procdff$2132 ($adff): ARST=\rst_n, D=$0\s1_sign[0:0], Q=\s1_sign
+Replacing gate_mul.$procdff$1937 ($adff): ARST=\rst_n, D=\s3_v, Q=\s4_v
+Replacing gate_mul.$procdff$2022 ($adff): ARST=\rst_n, D=\s1_byp, Q=\s2_byp
+Replacing gate_mul.$procdff$1997 ($adff): ARST=\rst_n, D=\s2_err, Q=\s3_err
+Replacing gate_mul.$procdff$1932 ($adff): ARST=\rst_n, D=\s4_v, Q=\valid_out
+Replacing gate_mul.$procdff$2032 ($adff): ARST=\rst_n, D=\s1_err, Q=\s2_err
+Replacing gate_mul.$procdff$1962 ($adff): ARST=\rst_n, D=\s3_floor_q, Q=\s4_floor
+Replacing gate_mul.$procdff$1927 ($adff): ARST=\rst_n, D=$0\err[1:0], Q=\err
+Replacing gate_mul.$procdff$2117 ($adff): ARST=\rst_n, D=$0\s1_byp[0:0], Q=\s1_byp
+Replacing gate_mul.$procdff$2017 ($adff): ARST=\rst_n, D=\s1_v, Q=\s2_v
+Replacing gate_mul.$procdff$1922 ($adff): ARST=\rst_n, D=$0\y[31:0], Q=\y
+Replacing gate_mul.$procdff$1972 ($adff): ARST=\rst_n, D=\s4_inc, Q=\s4_inc_q
+Replacing gate_mul.$procdff$1992 ($adff): ARST=\rst_n, D=\s3_dec [24], Q=\s3_is_sub_q
+Replacing gate_mul.$procdff$2042 ($adff): ARST=\rst_n, D=$0\s2_pp1[31:0], Q=\s2_pp1
+Replacing gate_mul.$procdff$2127 ($adff): ARST=\rst_n, D=$0\s1_err[1:0], Q=\s1_err
+Replacing gate_mul.$procdff$1977 ($adff): ARST=\rst_n, D=\s2_v, Q=\s3_v
+Replacing gate_mul.$procdff$2012 ($adff): ARST=\rst_n, D=\s3_dec [11:0], Q=\s3_shift_q
+Replacing gate_mul.$procdff$2007 ($adff): ARST=\rst_n, D=\s3_dec [23:12], Q=\s3_floor_q
+Replacing gate_mul.$procdff$1982 ($adff): ARST=\rst_n, D=\s2_byp, Q=\s3_byp
+Replacing gate_mul.$procdff$2027 ($adff): ARST=\rst_n, D=\s1_sign, Q=\s2_sign
+Replacing gate_mul.$procdff$2137 ($adff): ARST=\rst_n, D=$0\s1_a[23:0], Q=\s1_a
+Replacing gate_mul.$procdff$2122 ($adff): ARST=\rst_n, D=$0\s1_inv6[0:0], Q=\s1_inv6
+Replacing gate_mul.$procdff$1987 ($adff): ARST=\rst_n, D=\s2_sign, Q=\s3_sign
+Replacing gate_mul.$procdff$2037 ($adff): ARST=\rst_n, D=$0\s2_pp0[31:0], Q=\s2_pp0
+Replacing gate_mul.$procdff$1957 ($adff): ARST=\rst_n, D=\s3_err, Q=\s4_err
+Replacing gold_mul.$procdff$2232 ($adff): ARST=\rst_n, D=\s3_dec [23:12], Q=\s3_floor_q
+Replacing gold_mul.$procdff$2182 ($adff): ARST=\rst_n, D=\s3_is_sub_q, Q=\s4_is_sub
+Replacing gold_mul.$procdff$2262 ($adff): ARST=\rst_n, D=$0\s2_pp0[31:0], Q=\s2_pp0
+Replacing gold_mul.$procdff$2357 ($adff): ARST=\rst_n, D=$0\s1_sign[0:0], Q=\s1_sign
+Replacing gold_mul.$procdff$2177 ($adff): ARST=\rst_n, D=\s3_sign, Q=\s4_sign
+Replacing gold_mul.$procdff$2362 ($adff): ARST=\rst_n, D=$0\s1_a[23:0], Q=\s1_a
+Replacing gold_mul.$procdff$2247 ($adff): ARST=\rst_n, D=\s1_byp, Q=\s2_byp
+Replacing gold_mul.$procdff$2172 ($adff): ARST=\rst_n, D=\s3_byp, Q=\s4_byp
+Replacing gold_mul.$procdff$2372 ($adff): ARST=\rst_n, D=$0\s1_power[11:0], Q=\s1_power
+Replacing gold_mul.$procdff$2227 ($adff): ARST=\rst_n, D=\s3_prod, Q=\s3_product
+Replacing gold_mul.$procdff$2167 ($adff): ARST=\rst_n, D=\s3_v, Q=\s4_v
+Replacing gold_mul.$procdff$2272 ($adff): ARST=\rst_n, D=$0\s2_pp2[31:0], Q=\s2_pp2
+Replacing gold_mul.$procdff$2257 ($adff): ARST=\rst_n, D=\s1_err, Q=\s2_err
+Replacing gold_mul.$procdff$2162 ($adff): ARST=\rst_n, D=\s4_v, Q=\valid_out
+Replacing gold_mul.$procdff$2197 ($adff): ARST=\rst_n, D=\s3_floor_q, Q=\s4_floor
+Replacing gold_mul.$procdff$2267 ($adff): ARST=\rst_n, D=$0\s2_pp1[31:0], Q=\s2_pp1
+Replacing gold_mul.$procdff$2157 ($adff): ARST=\rst_n, D=$0\err[1:0], Q=\err
+Replacing gold_mul.$procdff$2202 ($adff): ARST=\rst_n, D=\s2_v, Q=\s3_v
+Replacing gold_mul.$procdff$2222 ($adff): ARST=\rst_n, D=\s2_err, Q=\s3_err
+Replacing gold_mul.$procdff$2152 ($adff): ARST=\rst_n, D=$0\y[31:0], Q=\y
+Replacing gold_mul.$procdff$2337 ($adff): ARST=\rst_n, D=\valid_in, Q=\s1_v
+Replacing gold_mul.$procdff$2282 ($adff): ARST=\rst_n, D=$0\decide$func$/w/gold.v:121$8.$result[24:0]$46, Q=\s2_d46
+Replacing gold_mul.$procdff$2347 ($adff): ARST=\rst_n, D=$0\s1_inv6[0:0], Q=\s1_inv6
+Replacing gold_mul.$procdff$2187 ($adff): ARST=\rst_n, D=\s3_err, Q=\s4_err
+Replacing gold_mul.$procdff$2192 ($adff): ARST=\rst_n, D=\s4_rounded, Q=\s4_mant
+Replacing gold_mul.$procdff$2207 ($adff): ARST=\rst_n, D=\s2_byp, Q=\s3_byp
+Replacing gold_mul.$procdff$2342 ($adff): ARST=\rst_n, D=$0\s1_byp[0:0], Q=\s1_byp
+Replacing gold_mul.$procdff$2277 ($adff): ARST=\rst_n, D=$0\decide$func$/w/gold.v:120$7.$result[24:0]$41, Q=\s2_d47
+Replacing gold_mul.$procdff$2212 ($adff): ARST=\rst_n, D=\s2_sign, Q=\s3_sign
+Replacing gold_mul.$procdff$2242 ($adff): ARST=\rst_n, D=\s1_v, Q=\s2_v
+Replacing gold_mul.$procdff$2237 ($adff): ARST=\rst_n, D=\s3_dec [11:0], Q=\s3_shift_q
+Replacing gold_mul.$procdff$2352 ($adff): ARST=\rst_n, D=$0\s1_err[1:0], Q=\s1_err
+Replacing gold_mul.$procdff$2217 ($adff): ARST=\rst_n, D=\s3_dec [24], Q=\s3_is_sub_q
+Replacing gold_mul.$procdff$2252 ($adff): ARST=\rst_n, D=\s1_sign, Q=\s2_sign
+
+6. Executing MITER pass (creating miter circuit).
+Creating miter cell "miter" with gold cell "gold_mul" and gate cell "gate_mul".
+
+6.1. Executing FLATTEN pass (flatten design).
+<suppressed ~2 debug messages>
+
+6.2. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+<suppressed ~6 debug messages>
+
+7. Executing HIERARCHY pass (managing design hierarchy).
+
+7.1. Analyzing design hierarchy..
+Top module:  \miter
+
+7.2. Analyzing design hierarchy..
+Top module:  \miter
+Removing unused module `\gate_mul'.
+Removing unused module `\gold_mul'.
+Removed 2 unused modules.
+
+8. Executing FLATTEN pass (flatten design).
+
+9. Executing OPT pass (performing simple optimizations).
+
+9.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+<suppressed ~10 debug messages>
+
+9.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Computing hashes of 1199 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 1086 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 1079 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 1078 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 1077 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 1076 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+<suppressed ~369 debug messages>
+Removed a total of 123 cells.
+
+9.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \miter..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~540 debug messages>
+
+9.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \miter.
+    New input vector for $reduce_and cell $flatten\gate.$reduce_and$/w/gate_mut.v:144$700: { \gate.byte_sum[1] [7:0] \gate.byte_sum[2] [7:0] \gate.byte_sum[3] [7:0] \gate.byte_sum[4] [7:0] }
+    New input vector for $reduce_and cell $flatten\gold.$reduce_and$/w/gold.v:144$112: { \gold.byte_sum[4] [7:0] \gold.byte_sum[3] [7:0] \gold.byte_sum[2] [7:0] \gold.byte_sum[1] [7:0] }
+    New input vector for $reduce_and cell $flatten\gold.$reduce_and$/w/gold.v:144$109: { \gold.byte_sum[4] [7:0] \gold.byte_sum[3] [7:0] \gold.byte_sum[2] [7:0] }
+    New input vector for $reduce_and cell $flatten\gold.$reduce_and$/w/gold.v:144$106: { \gold.byte_sum[4] [7:0] \gold.byte_sum[3] [7:0] }
+    New input vector for $reduce_and cell $flatten\gold.$reduce_and$/w/gold.v:143$101: { \gold.byte_sum[3] [7:0] \gold.byte_sum[2] [7:0] \gold.byte_sum[1] [7:0] }
+    New input vector for $reduce_and cell $flatten\gold.$reduce_and$/w/gold.v:143$98: { \gold.byte_sum[3] [7:0] \gold.byte_sum[2] [7:0] }
+    New input vector for $reduce_and cell $flatten\gold.$reduce_and$/w/gold.v:142$93: { \gold.byte_sum[2] [7:0] \gold.byte_sum[1] [7:0] }
+    New input vector for $reduce_and cell $flatten\gate.$reduce_and$/w/gate_mut.v:144$697: { \gate.byte_sum[2] [7:0] \gate.byte_sum[3] [7:0] \gate.byte_sum[4] [7:0] }
+    New input vector for $reduce_and cell $flatten\gate.$reduce_and$/w/gate_mut.v:143$686: { \gate.byte_sum[2] [7:0] \gate.byte_sum[3] [7:0] }
+    New input vector for $reduce_and cell $flatten\gate.$reduce_and$/w/gate_mut.v:144$694: { \gate.byte_sum[3] [7:0] \gate.byte_sum[4] [7:0] }
+    New input vector for $reduce_and cell $flatten\gate.$reduce_and$/w/gate_mut.v:142$681: { \gate.byte_sum[1] [7:0] \gate.byte_sum[2] [7:0] }
+    New input vector for $reduce_and cell $flatten\gate.$reduce_and$/w/gate_mut.v:143$689: { \gate.byte_sum[1] [7:0] \gate.byte_sum[2] [7:0] \gate.byte_sum[3] [7:0] }
+  Optimizing cells in module \miter.
+Performed a total of 12 changes.
+
+9.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Computing hashes of 1076 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 1069 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 1063 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 1057 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 1051 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 1045 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 1039 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 1033 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 1029 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 1025 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 1022 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 1020 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 1018 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 1016 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 1014 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 1012 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 1010 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 1008 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 1006 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 1004 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 1002 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 1000 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 998 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 996 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 993 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 990 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 988 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 982 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 978 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 972 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 966 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 960 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 956 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 953 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 947 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 934 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 924 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 920 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 916 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 913 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 911 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 909 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 907 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 905 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 902 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 899 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 869 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 745 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 718 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 692 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 689 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 688 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 687 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 686 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 685 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 684 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 683 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 682 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 681 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 680 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 679 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 678 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 677 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 676 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 675 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 674 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 673 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 672 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 671 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 670 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 669 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 668 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 667 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 666 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 665 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 664 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 663 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 662 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 661 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 660 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 659 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 658 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 657 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 656 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 655 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 654 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 653 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 652 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 651 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 650 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 649 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 648 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 647 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 646 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 645 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 644 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 643 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 642 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 641 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 640 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 639 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 638 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 637 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 636 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 635 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 634 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 633 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 632 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 631 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 630 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 629 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 628 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 627 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 626 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 625 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 624 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 623 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 622 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 621 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 620 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 619 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 618 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 617 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 616 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 615 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 614 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 613 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 612 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 611 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 610 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 609 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 608 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 607 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 606 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 605 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 604 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 603 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 602 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 601 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 600 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 599 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 598 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 597 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 596 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 595 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+<suppressed ~1443 debug messages>
+Removed a total of 481 cells.
+
+9.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding SRST signal on $flatten\gold.$procdff$2152 ($sdff) from module miter (D = \gold.s5_code, Q = $flatten\gold.$auto$async2sync.cc:253:execute$2481, rval = 0).
+Adding SRST signal on $flatten\gate.$procdff$1962 ($sdff) from module miter (D = $flatten\gate.$auto$async2sync.cc:253:execute$2427, Q = $flatten\gate.$auto$async2sync.cc:253:execute$2405, rval = 12'000000000000).
+Adding SRST signal on $flatten\gate.$procdff$1932 ($sdff) from module miter (D = $flatten\gate.$auto$async2sync.cc:253:execute$2395, Q = $flatten\gate.$auto$async2sync.cc:253:execute$2401, rval = 1'0).
+Adding SRST signal on $flatten\gate.$procdff$1947 ($sdff) from module miter (D = $flatten\gate.$auto$async2sync.cc:253:execute$2437, Q = $flatten\gate.$auto$async2sync.cc:253:execute$2383, rval = 1'0).
+Adding SRST signal on $flatten\gate.$procdff$2052 ($sdff) from module miter (D = { $flatten\gate.$neg$/w/gate_mut.v:102$662_Y [11:5] $flatten\gate.$neg$/w/gate_mut.v:102$662_Y [2:0] }, Q = { $flatten\gate.$auto$async2sync.cc:253:execute$2387 [11:5] $flatten\gate.$auto$async2sync.cc:253:execute$2387 [2:0] }, rval = 10'0000000000).
+Adding SRST signal on $flatten\gate.$procdff$2022 ($sdff) from module miter (D = $flatten\gate.$auto$async2sync.cc:253:execute$2409, Q = $flatten\gate.$auto$async2sync.cc:253:execute$2397, rval = 1'0).
+Adding SRST signal on $flatten\gate.$procdff$2057 ($sdff) from module miter (D = { $flatten\gate.$neg$/w/gate_mut.v:102$667_Y [11:5] $flatten\gate.$neg$/w/gate_mut.v:102$667_Y [3] }, Q = { $flatten\gate.$auto$async2sync.cc:253:execute$2391 [11:5] $flatten\gate.$auto$async2sync.cc:253:execute$2391 [3] }, rval = 8'00000000).
+Adding SRST signal on $flatten\gate.$procdff$1937 ($sdff) from module miter (D = $flatten\gate.$auto$async2sync.cc:253:execute$2423, Q = $flatten\gate.$auto$async2sync.cc:253:execute$2395, rval = 1'0).
+Adding SRST signal on $flatten\gate.$procdff$1997 ($sdff) from module miter (D = $flatten\gate.$auto$async2sync.cc:253:execute$2403, Q = $flatten\gate.$auto$async2sync.cc:253:execute$2399, rval = 2'00).
+Adding SRST signal on $flatten\gate.$procdff$2017 ($sdff) from module miter (D = $flatten\gate.$auto$async2sync.cc:253:execute$2375, Q = $flatten\gate.$auto$async2sync.cc:253:execute$2411, rval = 1'0).
+Adding SRST signal on $flatten\gate.$procdff$1977 ($sdff) from module miter (D = $flatten\gate.$auto$async2sync.cc:253:execute$2411, Q = $flatten\gate.$auto$async2sync.cc:253:execute$2423, rval = 1'0).
+Adding SRST signal on $flatten\gate.$procdff$2027 ($sdff) from module miter (D = $flatten\gate.$auto$async2sync.cc:253:execute$2393, Q = $flatten\gate.$auto$async2sync.cc:253:execute$2431, rval = 1'0).
+Adding SRST signal on $flatten\gate.$procdff$1957 ($sdff) from module miter (D = $flatten\gate.$auto$async2sync.cc:253:execute$2399, Q = $flatten\gate.$auto$async2sync.cc:253:execute$2441, rval = 2'00).
+Adding SRST signal on $flatten\gate.$procdff$1982 ($sdff) from module miter (D = $flatten\gate.$auto$async2sync.cc:253:execute$2397, Q = $flatten\gate.$auto$async2sync.cc:253:execute$2429, rval = 1'0).
+Adding SRST signal on $flatten\gate.$procdff$1922 ($sdff) from module miter (D = \gate.s5_code, Q = $flatten\gate.$auto$async2sync.cc:253:execute$2413, rval = 0).
+
+9.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+Removed 17 unused cells and 538 unused wires.
+<suppressed ~42 debug messages>
+
+9.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+<suppressed ~1 debug messages>
+
+9.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+9.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \miter..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~264 debug messages>
+
+9.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \miter.
+    New input vector for $reduce_and cell $auto$miter.cc:263:create_miter_equiv$2567: { $auto$miter.cc:228:create_miter_equiv$2527 $auto$miter.cc:228:create_miter_equiv$2566 }
+  Optimizing cells in module \miter.
+Performed a total of 1 changes.
+
+9.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Computing hashes of 583 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 582 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+<suppressed ~3 debug messages>
+Removed a total of 1 cells.
+
+9.13. Executing OPT_DFF pass (perform DFF optimizations).
+Adding SRST signal on $flatten\gate.$procdff$2032 ($sdff) from module miter (D = $flatten\gate.$auto$async2sync.cc:253:execute$2421, Q = $flatten\gate.$auto$async2sync.cc:253:execute$2403, rval = 2'00).
+Adding SRST signal on $flatten\gate.$procdff$2042 ($sdff) from module miter (D = $flatten\gate.$mul$/w/gate_mut.v:118$654_Y [0], Q = $flatten\gate.$auto$async2sync.cc:253:execute$2419 [0], rval = 1'0).
+Adding SRST signal on $flatten\gate.$procdff$1942 ($sdff) from module miter (D = $flatten\gate.$auto$async2sync.cc:253:execute$2429, Q = $flatten\gate.$auto$async2sync.cc:253:execute$2389, rval = 1'0).
+Adding SRST signal on $flatten\gate.$procdff$1987 ($sdff) from module miter (D = $flatten\gate.$auto$async2sync.cc:253:execute$2431, Q = $flatten\gate.$auto$async2sync.cc:253:execute$2437, rval = 1'0).
+
+9.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+Removed 5 unused cells and 10 unused wires.
+<suppressed ~12 debug messages>
+
+9.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+9.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+9.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \miter..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~258 debug messages>
+
+9.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \miter.
+Performed a total of 0 changes.
+
+9.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Computing hashes of 580 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 579 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+<suppressed ~3 debug messages>
+Removed a total of 1 cells.
+
+9.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+9.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+Removed 0 unused cells and 1 unused wires.
+<suppressed ~1 debug messages>
+
+9.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+9.23. Rerunning OPT passes. (Maybe there is more to do..)
+
+9.24. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \miter..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~258 debug messages>
+
+9.25. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \miter.
+Performed a total of 0 changes.
+
+9.26. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Computing hashes of 579 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Removed a total of 0 cells.
+
+9.27. Executing OPT_DFF pass (perform DFF optimizations).
+
+9.28. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+
+9.29. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+9.30. Finished fast OPT passes. (There is nothing left to do.)
+
+10. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Imported 579 cells to SAT database.
+Final init constraint equation: { $flatten\gate.$auto$async2sync.cc:253:execute$2419 [31:1] $flatten\gold.$auto$async2sync.cc:253:execute$2491 $flatten\gold.$auto$async2sync.cc:253:execute$2481 $flatten\gold.$auto$async2sync.cc:253:execute$2475 $flatten\gate.$auto$async2sync.cc:253:execute$2405 $flatten\gate.$auto$async2sync.cc:253:execute$2401 $flatten\gate.$auto$async2sync.cc:253:execute$2375 $flatten\gate.$auto$async2sync.cc:253:execute$2379 $flatten\gate.$auto$async2sync.cc:253:execute$2383 $flatten\gate.$auto$async2sync.cc:253:execute$2387 [11:5] $flatten\gate.$auto$async2sync.cc:253:execute$2387 [2:0] $flatten\gate.$auto$async2sync.cc:253:execute$2397 $flatten\gate.$auto$async2sync.cc:253:execute$2391 [11:5] $flatten\gate.$auto$async2sync.cc:253:execute$2391 [3] $flatten\gate.$auto$async2sync.cc:253:execute$2391 [24:12] $flatten\gate.$auto$async2sync.cc:253:execute$2391 [4] $flatten\gate.$auto$async2sync.cc:253:execute$2391 [2:0] $flatten\gate.$auto$async2sync.cc:253:execute$2395 $flatten\gate.$auto$async2sync.cc:253:execute$2399 $flatten\gate.$auto$async2sync.cc:253:execute$2403 $flatten\gate.$auto$async2sync.cc:253:execute$2407 $flatten\gate.$auto$async2sync.cc:253:execute$2411 $flatten\gate.$auto$async2sync.cc:253:execute$2393 $flatten\gate.$auto$async2sync.cc:253:execute$2415 $flatten\gate.$auto$async2sync.cc:253:execute$2419 [0] $flatten\gate.$auto$async2sync.cc:253:execute$2423 $flatten\gate.$auto$async2sync.cc:253:execute$2427 $flatten\gate.$auto$async2sync.cc:253:execute$2431 $flatten\gate.$auto$async2sync.cc:253:execute$2435 $flatten\gate.$auto$async2sync.cc:253:execute$2439 $flatten\gate.$auto$async2sync.cc:253:execute$2389 $flatten\gate.$auto$async2sync.cc:253:execute$2385 $flatten\gate.$auto$async2sync.cc:253:execute$2441 $flatten\gate.$auto$async2sync.cc:253:execute$2437 $flatten\gate.$auto$async2sync.cc:253:execute$2433 $flatten\gate.$auto$async2sync.cc:253:execute$2429 $flatten\gate.$auto$async2sync.cc:253:execute$2425 $flatten\gate.$auto$async2sync.cc:253:execute$2421 $flatten\gate.$auto$async2sync.cc:253:execute$2417 $flatten\gate.$auto$async2sync.cc:253:execute$2413 $flatten\gate.$auto$async2sync.cc:253:execute$2409 $flatten\gate.$auto$async2sync.cc:253:execute$2381 $flatten\gate.$auto$async2sync.cc:253:execute$2377 $flatten\gate.$auto$async2sync.cc:253:execute$2373 $flatten\gate.$auto$async2sync.cc:253:execute$2387 [24:12] $flatten\gate.$auto$async2sync.cc:253:execute$2387 [4:3] } = 408'000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Imported 579 cells to SAT database.
+Import proof-constraint: \trigger = 1'0
+Final proof equation: \trigger = 1'0
+
+** Trying induction with length 1 **
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Imported 579 cells to SAT database.
+Import proof-constraint: \trigger = 1'0
+Final proof equation: \trigger = 1'0
+
+[base case 1] Solving problem with 97706 variables and 276893 clauses..
+Base case for induction length 1 proven.
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Imported 579 cells to SAT database.
+Import proof-constraint: \trigger = 1'0
+Final proof equation: \trigger = 1'0
+
+[induction step 1] Solving problem with 96892 variables and 274044 clauses..
+Induction step failed. Incrementing induction length.
+
+  Time Signal Name                                                             Dec       Hex                                                 Bin
+  ---- --------------------------------------------------------------- ----------- --------- ---------------------------------------------------
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2373                        0         0                    00000000000000000000000000000000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2375                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2377                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2379                        0         0                            000000000000000000000000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2381                       --        --    000000000000000000000000000000000000000001000001
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2383                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2385                     4050       fd2                                        111111010010
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2387 [11:5]                 0         0                                             0000000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2387 [24:12]                0         0                                       0000000000000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2387 [2:0]                  0         0                                                 000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2387 [4:3]                  0         0                                                  00
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2389                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2391 [11:5]                 1         1                                             0000001
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2391 [24:12]                0         0                                       0000000000000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2391 [2:0]                  1         1                                                 001
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2391 [3]                    0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2391 [4]                    0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2393                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2395                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2397                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2399                        0         0                                                  00
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2401                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2403                        0         0                                                  00
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2405                      127        7f                                        000001111111
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2407                        3         3                                                  11
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2409                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2411                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2413                       -1  ffffffff                    11111111111111111111111111111111
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2415                        1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2417                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2419 [0]                    0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2419 [31:1]                 0         0                     0000000000000000000000000000000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2421                        0         0                                                  00
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2423                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2425                        7         7                                        000000000111
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2427                        0         0                                        000000000000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2429                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2431                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2433                        0         0                            000000000000000000000000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2435                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2437                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2439                        0         0                    00000000000000000000000000000000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2441                        3         3                                                  11
+  init $flatten\gold.$auto$async2sync.cc:253:execute$2475                        3         3                                                  11
+  init $flatten\gold.$auto$async2sync.cc:253:execute$2481                       -1  ffffffff                    11111111111111111111111111111111
+  init $flatten\gold.$auto$async2sync.cc:253:execute$2491                 16777216   1000000                           1000000000000000000000000
+  ---- --------------------------------------------------------------- ----------- --------- ---------------------------------------------------
+     1 \in_a                                                                     0         0                    00000000000000000000000000000000
+     1 \in_b                                                                  4180      1054                    00000000000000000001000001010100
+     1 \in_clk                                                                   0         0                                                   0
+     1 \in_rst_n                                                                 1         1                                                   1
+     1 \trigger                                                                  0         0                                                   0
+  ---- --------------------------------------------------------------- ----------- --------- ---------------------------------------------------
+     2 \in_a                                                            1266679534  4b7ffeee                    01001011011111111111111011101110
+     2 \in_b                                                            1107288660  41ffe254                    01000001111111111110001001010100
+     2 \in_clk                                                                   0         0                                                   0
+     2 \in_rst_n                                                                 1         1                                                   1
+     2 \trigger                                                                  1         1                                                   1
+
+** Trying induction with length 2 **
+
+Setting up time step 3:
+Final constraint equation: { } = { }
+Imported 579 cells to SAT database.
+Import proof-constraint: \trigger = 1'0
+Final proof equation: \trigger = 1'0
+
+[base case 2] Solving problem with 148401 variables and 421274 clauses..
+Base case for induction length 2 proven.
+
+Setting up time step 3:
+Final constraint equation: { } = { }
+Imported 579 cells to SAT database.
+Import proof-constraint: \trigger = 1'0
+Final proof equation: \trigger = 1'0
+
+[induction step 2] Solving problem with 148812 variables and 422507 clauses..
+Induction step failed. Incrementing induction length.
+
+  Time Signal Name                                                             Dec       Hex                                                 Bin
+  ---- --------------------------------------------------------------- ----------- --------- ---------------------------------------------------
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2373                       -1  ffffffff                    11111111111111111111111111111111
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2375                        1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2377                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2379                 16777215    ffffff                            111111111111111111111111
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2381                       --        --    100100001110111101110111111111111111111111111100
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2383                        1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2385                     2091       82b                                        100000101011
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2387 [11:5]                68        44                                             1000100
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2387 [24:12]              283       11b                                       0000100011011
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2387 [2:0]                  7         7                                                 111
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2387 [4:3]                  1         1                                                  01
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2389                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2391 [11:5]                65        41                                             1000001
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2391 [24:12]             4112      1010                                       1000000010000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2391 [2:0]                  1         1                                                 001
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2391 [3]                    0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2391 [4]                    0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2393                        1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2395                        1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2397                        1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2399                        1         1                                                  01
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2401                        1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2403                        0         0                                                  00
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2405                     1158       486                                        010010000110
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2407                        3         3                                                  11
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2409                        1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2411                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2413                 -1054753  ffefe7df                    11111111111011111110011111011111
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2415                        1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2417                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2419 [0]                    1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2419 [31:1]        1476394975  57ffffdf                     1010111111111111111111111011111
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2421                        3         3                                                  11
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2423                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2425                        3         3                                        000000000011
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2427                      127        7f                                        000001111111
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2429                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2431                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2433                 10583989    a17fb5                            101000010111111110110101
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2435                        1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2437                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2439                   -16385  ffffbfff                    11111111111111111011111111111111
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2441                        2         2                                                  10
+  init $flatten\gold.$auto$async2sync.cc:253:execute$2475                        1         1                                                  01
+  init $flatten\gold.$auto$async2sync.cc:253:execute$2481                 -1054753  ffefe7df                    11111111111011111110011111011111
+  init $flatten\gold.$auto$async2sync.cc:253:execute$2491                 16777215    ffffff                           0111111111111111111111111
+  ---- --------------------------------------------------------------- ----------- --------- ---------------------------------------------------
+     1 \in_a                                                                     0         0                    00000000000000000000000000000000
+     1 \in_b                                                           -2147471276  80003054                    10000000000000000011000001010100
+     1 \in_clk                                                                   0         0                                                   0
+     1 \in_rst_n                                                                 1         1                                                   1
+     1 \trigger                                                                  0         0                                                   0
+  ---- --------------------------------------------------------------- ----------- --------- ---------------------------------------------------
+     2 \in_a                                                            1887895272  7086fee8                    01110000100001101111111011101000
+     2 \in_b                                                            2004869716  777fe254                    01110111011111111110001001010100
+     2 \in_clk                                                                   0         0                                                   0
+     2 \in_rst_n                                                                 1         1                                                   1
+     2 \trigger                                                                  0         0                                                   0
+  ---- --------------------------------------------------------------- ----------- --------- ---------------------------------------------------
+     3 \in_a                                                            1266156270  4b7802ee                    01001011011110000000001011101110
+     3 \in_b                                                            1107288660  41ffe254                    01000001111111111110001001010100
+     3 \in_clk                                                                   0         0                                                   0
+     3 \in_rst_n                                                                 1         1                                                   1
+     3 \trigger                                                                  1         1                                                   1
+
+** Trying induction with length 3 **
+
+Setting up time step 4:
+Final constraint equation: { } = { }
+Imported 579 cells to SAT database.
+Import proof-constraint: \trigger = 1'0
+Final proof equation: \trigger = 1'0
+
+[base case 3] Solving problem with 200321 variables and 569737 clauses..
+Base case for induction length 3 proven.
+
+Setting up time step 4:
+Final constraint equation: { } = { }
+Imported 579 cells to SAT database.
+Import proof-constraint: \trigger = 1'0
+Final proof equation: \trigger = 1'0
+
+[induction step 3] Solving problem with 201957 variables and 575052 clauses..
+Induction step failed. Incrementing induction length.
+
+  Time Signal Name                                                             Dec       Hex                                                 Bin
+  ---- --------------------------------------------------------------- ----------- --------- ---------------------------------------------------
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2373                853528492  32dfcfac                    00110010110111111100111110101100
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2375                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2377                        1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2379                 14147549    d7dfdd                            110101111101111111011101
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2381                       --        --    111100111111111101111111111111111111111111111101
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2383                        1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2385                     2091       82b                                        100000101011
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2387 [11:5]                65        41                                             1000001
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2387 [24:12]             7977      1f29                                       1111100101001
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2387 [2:0]                  1         1                                                 001
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2387 [4:3]                  0         0                                                  00
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2389                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2391 [11:5]                 0         0                                             0000000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2391 [24:12]              127        7f                                       0000001111111
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2391 [2:0]                  0         0                                                 000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2391 [3]                    1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2391 [4]                    0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2393                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2395                        1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2397                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2399                        0         0                                                  00
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2401                        1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2403                        3         3                                                  11
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2405                     1158       486                                        010010000110
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2407                        3         3                                                  11
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2409                        1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2411                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2413               -185620860  f4efa684                    11110100111011111010011010000100
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2415                        1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2417                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2419 [0]                    1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2419 [31:1]         666944363  27c0c36b                     0100111110000001100001101101011
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2421                        2         2                                                  10
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2423                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2425                        3         3                                        000000000011
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2427                      638       27e                                        001001111110
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2429                        1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2431                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2433                 10583989    a17fb5                            101000010111111110110101
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2435                        1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2437                        1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2439               -288544574  eecd28c2                    11101110110011010010100011000010
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2441                        1         1                                                  01
+  init $flatten\gold.$auto$async2sync.cc:253:execute$2475                        3         3                                                  11
+  init $flatten\gold.$auto$async2sync.cc:253:execute$2481               1424991876  54efa684                    01010100111011111010011010000100
+  init $flatten\gold.$auto$async2sync.cc:253:execute$2491                        0         0                           0000000000000000000000000
+  ---- --------------------------------------------------------------- ----------- --------- ---------------------------------------------------
+     1 \in_a                                                                     0         0                    00000000000000000000000000000000
+     1 \in_b                                                               2895956    2c3054                    00000000001011000011000001010100
+     1 \in_clk                                                                   0         0                                                   0
+     1 \in_rst_n                                                                 1         1                                                   1
+     1 \trigger                                                                  0         0                                                   0
+  ---- --------------------------------------------------------------- ----------- --------- ---------------------------------------------------
+     2 \in_a                                                            1998796520  772336e8                    01110111001000110011011011101000
+     2 \in_b                                                            2004869716  777fe254                    01110111011111111110001001010100
+     2 \in_clk                                                                   0         0                                                   0
+     2 \in_rst_n                                                                 1         1                                                   1
+     2 \trigger                                                                  0         0                                                   0
+  ---- --------------------------------------------------------------- ----------- --------- ---------------------------------------------------
+     3 \in_a                                                             900615342  35ae4cae                    00110101101011100100110010101110
+     3 \in_b                                                             184541780   affe254                    00001010111111111110001001010100
+     3 \in_clk                                                                   0         0                                                   0
+     3 \in_rst_n                                                                 1         1                                                   1
+     3 \trigger                                                                  0         0                                                   0
+  ---- --------------------------------------------------------------- ----------- --------- ---------------------------------------------------
+     4 \in_a                                                            1266549454  4b7e02ce                    01001011011111100000001011001110
+     4 \in_b                                                            1107292244  41fff054                    01000001111111111111000001010100
+     4 \in_clk                                                                   0         0                                                   0
+     4 \in_rst_n                                                                 1         1                                                   1
+     4 \trigger                                                                  1         1                                                   1
+
+** Trying induction with length 4 **
+
+Setting up time step 5:
+Final constraint equation: { } = { }
+Imported 579 cells to SAT database.
+Import proof-constraint: \trigger = 1'0
+Final proof equation: \trigger = 1'0
+
+[base case 4] Solving problem with 253466 variables and 722282 clauses..
+Base case for induction length 4 proven.
+
+Setting up time step 5:
+Final constraint equation: { } = { }
+Imported 579 cells to SAT database.
+Import proof-constraint: \trigger = 1'0
+Final proof equation: \trigger = 1'0
+
+[induction step 4] Solving problem with 256327 variables and 731679 clauses..
+Induction step failed. Incrementing induction length.
+
+  Time Signal Name                                                             Dec       Hex                                                 Bin
+  ---- --------------------------------------------------------------- ----------- --------- ---------------------------------------------------
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2373                513797613  1e9feded                    00011110100111111110110111101101
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2375                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2377                        1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2379                 14146525    d7dbdd                            110101111101101111011101
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2381                       --        --    101000101011111000001111111111111111111111111101
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2383                        1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2385                     3922       f52                                        111101010010
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2387 [11:5]                65        41                                             1000001
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2387 [24:12]             8188      1ffc                                       1111111111100
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2387 [2:0]                  3         3                                                 011
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2387 [4:3]                  0         0                                                  00
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2389                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2391 [11:5]                 0         0                                             0000000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2391 [24:12]              127        7f                                       0000001111111
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2391 [2:0]                  0         0                                                 000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2391 [3]                    1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2391 [4]                    0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2393                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2395                        1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2397                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2399                        0         0                                                  00
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2401                        1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2403                        1         1                                                  01
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2405                     1158       486                                        010010000110
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2407                        3         3                                                  11
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2409                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2411                        1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2413               -185620860  f4efa684                    11110100111011111010011010000100
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2415                        1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2417                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2419 [0]                    1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2419 [31:1]         133219115   7f0c32b                     0000111111100001100001100101011
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2421                        1         1                                                  01
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2423                        1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2425                        3         3                                        000000000011
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2427                      638       27e                                        001001111110
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2429                        1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2431                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2433                 15906639    f2b74f                            111100101011011101001111
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2435                        1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2437                        1         1                                                   1
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2439              -1332959006  b08ca8e2                    10110000100011001010100011100010
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2441                        3         3                                                  11
+  init $flatten\gold.$auto$async2sync.cc:253:execute$2475                        3         3                                                  11
+  init $flatten\gold.$auto$async2sync.cc:253:execute$2481               1424991748  54efa604                    01010100111011111010011000000100
+  init $flatten\gold.$auto$async2sync.cc:253:execute$2491                        0         0                           0000000000000000000000000
+  ---- --------------------------------------------------------------- ----------- --------- ---------------------------------------------------
+     1 \in_a                                                                     0         0                    00000000000000000000000000000000
+     1 \in_b                                                               2895956    2c3054                    00000000001011000011000001010100
+     1 \in_clk                                                                   0         0                                                   0
+     1 \in_rst_n                                                                 1         1                                                   1
+     1 \trigger                                                                  0         0                                                   0
+  ---- --------------------------------------------------------------- ----------- --------- ---------------------------------------------------
+     2 \in_a                                                            1998796520  772336e8                    01110111001000110011011011101000
+     2 \in_b                                                            2004869716  777fe254                    01110111011111111110001001010100
+     2 \in_clk                                                                   0         0                                                   0
+     2 \in_rst_n                                                                 1         1                                                   1
+     2 \trigger                                                                  0         0                                                   0
+  ---- --------------------------------------------------------------- ----------- --------- ---------------------------------------------------
+     3 \in_a                                                             900615342  35ae4cae                    00110101101011100100110010101110
+     3 \in_b                                                            1258283604  4affe254                    01001010111111111110001001010100
+     3 \in_clk                                                                   0         0                                                   0
+     3 \in_rst_n                                                                 1         1                                                   1
+     3 \trigger                                                                  0         0                                                   0
+  ---- --------------------------------------------------------------- ----------- --------- ---------------------------------------------------
+     4 \in_a                                                                  8908      22cc                    00000000000000000010001011001100
+     4 \in_b                                                            1929375828  72fff054                    01110010111111111111000001010100
+     4 \in_clk                                                                   0         0                                                   0
+     4 \in_rst_n                                                                 1         1                                                   1
+     4 \trigger                                                                  0         0                                                   0
+  ---- --------------------------------------------------------------- ----------- --------- ---------------------------------------------------
+     5 \in_a                                                            1266678990  4b7ffcce                    01001011011111111111110011001110
+     5 \in_b                                                            1107289172  41ffe454                    01000001111111111110010001010100
+     5 \in_clk                                                                   0         0                                                   0
+     5 \in_rst_n                                                                 1         1                                                   1
+     5 \trigger                                                                  1         1                                                   1
+
+** Trying induction with length 5 **
+
+Setting up time step 6:
+Final constraint equation: { } = { }
+Imported 579 cells to SAT database.
+Import proof-constraint: \trigger = 1'0
+Final proof equation: \trigger = 1'0
+
+[base case 5] Solving problem with 307836 variables and 878909 clauses..
+SAT temporal induction proof finished - model found for base case: FAIL!
+
+   ______                   ___       ___       _ _            _ _ 
+  (_____ \                 / __)     / __)     (_) |          | | |
+   _____) )___ ___   ___ _| |__    _| |__ _____ _| | _____  __| | |
+  |  ____/ ___) _ \ / _ (_   __)  (_   __|____ | | || ___ |/ _  |_|
+  | |   | |  | |_| | |_| || |       | |  / ___ | | || ____( (_| |_ 
+  |_|   |_|   \___/ \___/ |_|       |_|  \_____|_|\_)_____)\____|_|
+
+
+  Time Signal Name                                                             Dec       Hex                                                 Bin
+  ---- --------------------------------------------------------------- ----------- --------- ---------------------------------------------------
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2373                        0         0                    00000000000000000000000000000000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2375                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2377                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2379                        0         0                            000000000000000000000000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2381                       --        --    000000000000000000000000000000000000000000000000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2383                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2385                        0         0                                        000000000000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2387 [11:5]                 0         0                                             0000000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2387 [24:12]                0         0                                       0000000000000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2387 [2:0]                  0         0                                                 000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2387 [4:3]                  0         0                                                  00
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2389                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2391 [11:5]                 0         0                                             0000000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2391 [24:12]                0         0                                       0000000000000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2391 [2:0]                  0         0                                                 000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2391 [3]                    0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2391 [4]                    0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2393                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2395                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2397                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2399                        0         0                                                  00
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2401                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2403                        0         0                                                  00
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2405                        0         0                                        000000000000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2407                        0         0                                                  00
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2409                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2411                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2413                        0         0                    00000000000000000000000000000000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2415                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2417                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2419 [0]                    0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2419 [31:1]                 0         0                     0000000000000000000000000000000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2421                        0         0                                                  00
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2423                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2425                        0         0                                        000000000000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2427                        0         0                                        000000000000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2429                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2431                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2433                        0         0                            000000000000000000000000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2435                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2437                        0         0                                                   0
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2439                        0         0                    00000000000000000000000000000000
+  init $flatten\gate.$auto$async2sync.cc:253:execute$2441                        0         0                                                  00
+  init $flatten\gold.$auto$async2sync.cc:253:execute$2475                        0         0                                                  00
+  init $flatten\gold.$auto$async2sync.cc:253:execute$2481                        0         0                    00000000000000000000000000000000
+  init $flatten\gold.$auto$async2sync.cc:253:execute$2491                        0         0                           0000000000000000000000000
+  ---- --------------------------------------------------------------- ----------- --------- ---------------------------------------------------
+     1 \in_a                                                              11028221    a846fd                    00000000101010000100011011111101
+     1 \in_b                                                            1403693739  53aaaaab                    01010011101010101010101010101011
+     1 \in_clk                                                                   0         0                                                   0
+     1 \in_rst_n                                                                 1         1                                                   1
+     1 \trigger                                                                  0         0                                                   0
+  ---- --------------------------------------------------------------- ----------- --------- ---------------------------------------------------
+     2 \in_a                                                               4201621    401c95                    00000000010000000001110010010101
+     2 \in_b                                                            1443539616  560aaaa0                    01010110000010101010101010100000
+     2 \in_clk                                                                   0         0                                                   0
+     2 \in_rst_n                                                                 1         1                                                   1
+     2 \trigger                                                                  0         0                                                   0
+  ---- --------------------------------------------------------------- ----------- --------- ---------------------------------------------------
+     3 \in_a                                                                     1         1                    00000000000000000000000000000001
+     3 \in_b                                                             539667115  202aaaab                    00100000001010101010101010101011
+     3 \in_clk                                                                   0         0                                                   0
+     3 \in_rst_n                                                                 1         1                                                   1
+     3 \trigger                                                                  0         0                                                   0
+  ---- --------------------------------------------------------------- ----------- --------- ---------------------------------------------------
+     4 \in_a                                                             406958562  1841b1e2                    00011000010000011011000111100010
+     4 \in_b                                                            1042983595  3e2aaaab                    00111110001010101010101010101011
+     4 \in_clk                                                                   0         0                                                   0
+     4 \in_rst_n                                                                 1         1                                                   1
+     4 \trigger                                                                  0         0                                                   0
+  ---- --------------------------------------------------------------- ----------- --------- ---------------------------------------------------
+     5 \in_a                                                            2140074489  7f8ef1f9                    01111111100011101111000111111001
+     5 \in_b                                                             472558251  1c2aaaab                    00011100001010101010101010101011
+     5 \in_clk                                                                   0         0                                                   0
+     5 \in_rst_n                                                                 1         1                                                   1
+     5 \trigger                                                                  0         0                                                   0
+  ---- --------------------------------------------------------------- ----------- --------- ---------------------------------------------------
+     6 \in_a                                                            1266548942  4b7e00ce                    01001011011111100000000011001110
+     6 \in_b                                                            1275052116  4bffc054                    01001011111111111100000001010100
+     6 \in_clk                                                                   0         0                                                   0
+     6 \in_rst_n                                                                 1         1                                                   1
+     6 \trigger                                                                  1         1                                                   1
+
+End of script. Logfile hash: 199d485fdc, time: 8.11s, user: 7.83s, system: 0.33s, MEM: 364.49 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 92% 1x sat (7 sec), 1% 5x opt_merge (0 sec), ...

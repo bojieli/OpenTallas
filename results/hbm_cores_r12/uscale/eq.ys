@@ -1,0 +1,8 @@
+read_verilog -sv /w/gold.v
+read_verilog -sv /w/gate.v
+proc; opt_clean
+async2sync
+miter -equiv -flatten -make_outputs -ignore_gold_x gold_mul gate_mul miter
+hierarchy -top miter
+flatten; opt
+sat -verify -tempinduct -prove trigger 0 -set-init-zero -seq 1 -maxsteps 12 -show-ports miter
