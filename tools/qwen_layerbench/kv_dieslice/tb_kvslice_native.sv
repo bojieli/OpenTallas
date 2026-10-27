@@ -291,6 +291,8 @@ module tb_kvslice;
             $display("KVSLICE_POST cyc %0d events %0d fdi_tx_words %0d", cyc_core, po_n, ftx_n);
             if (far_en) u_far.report();
         end
+        $display("KVSLICE_FINALCAL dcal_fault %b cyc %0d", dut.sys_c.w_dcal_fault[0], cyc_core);
+        if (dut.sys_c.w_dcal_fault[0]) $fatal(1, "KVSLICE_FINALCAL FAIL: calendar fault after POST");
         $finish;
     end
 endmodule

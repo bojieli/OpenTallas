@@ -13,6 +13,7 @@ import re
 from pathlib import Path
 
 FACE_SHA256 = "1f43f8d36a8f2d4ababbace304a53712edf51bdfaf1b4de6689ffcb5120835e2"
+PROVIDER_SHA256 = "dfa84083822a3577a09593c84739fbd278eb21ab1946a39fcfb7590bb9236f14"
 PORTS = {"bcfg_addr": ("link_cfg_addr", [[0, 5]]),
          "bcfg_data": ("link_cfg_data", [[0, 31]]),
          "bcfg_rx_we": ("link_cfg_rx_we", [[0, 0]]),
@@ -22,9 +23,13 @@ PORTS = {"bcfg_addr": ("link_cfg_addr", [[0, 5]]),
 def prepare(landing: dict, groups: dict, face: bytes, provider: str) -> tuple[dict, dict]:
     if hashlib.sha256(face).hexdigest() != FACE_SHA256:
         raise ValueError("boot dispatcher differs from the measured DSTG1 source")
+    if hashlib.sha256(provider.encode()).hexdigest() != PROVIDER_SHA256:
+        raise ValueError("selected provider differs from the measured native b3 source")
     instances = re.findall(r"qkd_static_kv_boot_dispatch_mu_nc32\s*#\((.*?)\)\s*u_boot\s*\(", provider, re.S)
-    if len(instances) != 1 or not re.search(r"\.DSTG\(\s*1\s*\)", instances[0]):
-        raise ValueError("selected provider must contain exactly one measured u_boot DSTG1")
+    required = {"DSTG": 1, "MUT": 0, "LINKCFG": 1, "MU": 1, "WMUT": 0}
+    if len(instances) != 1 or any(not re.search(r"\." + key + r"\(\s*" + str(value) + r"\s*\)", instances[0])
+                                  for key, value in required.items()):
+        raise ValueError("selected provider must contain exactly one measured u_boot DSTG1/MUT0/LINKCFG1/MU1/WMUT0")
     gs = [g for g in groups.get("landing", []) if g.get("sink") == "dcal"
           and g.get("sink_part") == "sys_c" and g.get("src_part") == "hub_C"
           and any(m.get("sink_port") in PORTS for m in g["members"])]
@@ -72,6 +77,8 @@ def prepare(landing: dict, groups: dict, face: bytes, provider: str) -> tuple[di
     digest = hashlib.sha256(json.dumps(receipt, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
     receipt["contract_sha256"] = digest
     changed_ids = {c["id"] for c in changes}
+    if any(sum(row.get("id") == key for row in result["members"]) != 1 for key in changed_ids):
+        raise ValueError("corrected landing member ID is duplicated")
     for r in result["members"]:
         if r.get("id") in changed_ids:
             r["producer_event_offset"] = 1
