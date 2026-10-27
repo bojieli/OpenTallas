@@ -193,10 +193,11 @@ def merge(A, B, ax, et, tag, nodes):
     return n
 
 
-def lift(r, xy, et, tag, nodes):
-    """one straight leg from xy to the subtree root r (|dx| or |dy| only)."""
+def lift(r, xy, et, tag, nodes, n=None):
+    """one straight leg from xy to the subtree root r (|dx| or |dy| only); n > nseg = extra repeaters in the same
+    straight leg (equal stage count, r2 rule)."""
     L = md(xy, r["xy"])
-    r["parent"], r["leg"], r["nseg"], r["et"] = tag, L, et.nseg(L), et
+    r["parent"], r["leg"], r["nseg"], r["et"] = tag, L, max(n or 0, et.nseg(L)), et
     n = dict(tag=tag, xy=xy, kids=[r["tag"]], T={c: r["T"][c] + et.delay(L, c, r["nseg"]) for c in ("TT", "FF")}, S=r["S"] + r["nseg"])
     nodes.append(n)
     return n
@@ -245,26 +246,31 @@ def build(a, st):
     if cols[-1] not in scols and a.spine_stride > 1 and cols[-1] - scols[-1] > (scols[1] - scols[0]) * 0.75:
         scols.append(cols[-1])
     nodes = []
-    # TOP TREE: per gap row an x-tree along the row over the spine columns, then a y-tree over the rows in one free
-    # channel (every group root has the same x: identical x-trees).  The group-root x is moved to the nearest FREE
-    # column by one equal leg per group (same for all).
-    groots = []
-    for gi, g in enumerate(gaps):
-        r = dtree([(x, g) for x in scols], "x", top, f"t{gi:02d}_", nodes)
-        if not free(r["xy"][0]):
-            xc = min(cols, key=lambda x: abs(x - r["xy"][0]))
-            r = lift(r, (xc, g), top, f"t{gi:02d}_L", nodes)
-        groots.append(r)
-    xs0 = {r3(r["xy"][0]) for r in groots}
-    assert len(xs0) == 1, xs0
 
     def ytree(items, tag):
         if len(items) == 1:
             return items[0]
         h = len(items) // 2
         return merge(ytree(items[:h], tag + "0"), ytree(items[h:], tag + "1"), "y", top, tag, nodes)
-    root = ytree(groots, "T")
-    root["parent"] = None
+
+    def xrow(gi, g, xs_, tag):
+        r = dtree([(x, g) for x in xs_], "x", top, tag, nodes)
+        if not free(r["xy"][0]):
+            xc = min(cols, key=lambda x: abs(x - r["xy"][0]))
+            r = lift(r, (xc, g), top, tag + "L", nodes)
+        return r
+    r9 = None
+    if getattr(a, "feed", "mesh3") == "r9":
+        r9, root = r9_feed(a, top, gaps, scols, xrow, ytree, nodes)
+    else:
+        # TOP TREE: per gap row an x-tree along the row over the spine columns, then a y-tree over the rows in one free
+        # channel (every group root has the same x: identical x-trees).  The group-root x is moved to the nearest FREE
+        # column by one equal leg per group (same for all).
+        groots = [xrow(gi, g, scols, f"t{gi:02d}_") for gi, g in enumerate(gaps)]
+        xs0 = {r3(r["xy"][0]) for r in groots}
+        assert len(xs0) == 1, xs0
+        root = ytree(groots, "T")
+        root["parent"] = None
     spine_drv = [n for n in nodes if not n["kids"]]
     # COLUMN TREES: tap on the spine M8 strap at (x_c, g); y-tree over the 2m+1 rows; tap buffer drives a straight leg
     # to the column-tree root (on the same column).
@@ -302,7 +308,86 @@ def build(a, st):
             ctrees.append(dict(g=gi, c=ci, tap=(x, g), root=r["tag"], nodes=cnodes[t0:]))
     return dict(rec=rec, P=P, dtp=dtp, parts=parts, cores=cores, cols=cols, gaps=gaps, rows=rows, m=m, dy=dy,
                 scols=scols, top_nodes=nodes, top_root=root, spine_drv=spine_drv, ctrees=ctrees, cnodes=cnodes,
-                et=dict(top=top, col=col), free=free, incore=incore, added_cols=lattice.added, dropped_rows=dropped)
+                et=dict(top=top, col=col), free=free, incore=incore, added_cols=lattice.added, dropped_rows=dropped, r9=r9)
+
+
+# ------------------------------------------------------------------------------------------------ R9 global H-tree feed
+def load_r9(d):
+    """R9 physical tree/stack canary (codex/qc-r9-2000@c540e671da tree5: DRC 0, RCX ndr016): lattice nodes + per-node
+    RCX late/early arrival (ps from the die clock input) per corner."""
+    d = Path(d)
+    lat = json.loads((d / "r9_lattice.json").read_text())
+    nodes = {n["tag"]: dict(n, xy=tuple(n["xy_um"])) for n in lat["nodes"]}
+    rcx = {}
+    for c in ("TT", "FF"):
+        rcx[c] = {}
+        for ln in (d / f"r9_tree5_tree_{c}_rcx.txt").read_text().splitlines():
+            f = ln.split()
+            if len(f) < 4 or f[0] != "N":
+                continue
+            m = f[1]
+            tag = "t" if m == "ckm_n0" else ("t" + m.split("_t", 1)[1] if m.startswith("ckm_n") and "_t" in m else None)
+            if tag in nodes:
+                rcx[c][tag] = dict(late=float(f[2]), early=float(f[3]), slew=float(f[4]) if len(f) > 4 else None)
+        miss = [t for t in nodes if t not in rcx[c]]
+        if miss:
+            raise SystemExit(f"R9 RCX {c}: no arrival for {miss}")
+    return dict(nodes=nodes, rcx=rcx, leg_reps=lat.get("leg_repeaters", {}), source=lat.get("source"), dir=str(d))
+
+
+def r9_feed(a, top, gaps, scols, xrow, ytree, nodes):
+    """the R9 16-leaf H-tree as the global tree: every column tap goes to its nearest R9 leaf (L1 lattice cell; ties to
+    the lower index); per leaf region the same delay-balanced x-rows + y-tree as the mesh3 top tree, then straight legs
+    (y then x) to the leaf.  Equal stage count on every leaf->tap path: extra repeaters in the longer leaf leg."""
+    R9 = load_r9(a.r9_dir)
+    lv = sorted(t for t, n in R9["nodes"].items() if n["depth"] == max(m["depth"] for m in R9["nodes"].values()))
+    LX = sorted({R9["nodes"][t]["xy"][0] for t in lv})
+    LY = sorted({R9["nodes"][t]["xy"][1] for t in lv})
+    byxy = {(R9["nodes"][t]["xy"][0], R9["nodes"][t]["xy"][1]): t for t in lv}
+    near = lambda v, L: min(range(len(L)), key=lambda i: (abs(L[i] - v), i))
+    reg = defaultdict(lambda: defaultdict(list))
+    for gi, g in enumerate(gaps):
+        for x in scols:
+            reg[byxy[(LX[near(x, LX)], LY[near(g, LY)])]][gi].append(x)
+    subs = []
+    for ri, tl in enumerate(lv):
+        rows_ = [xrow(gi, gaps[gi], reg[tl][gi], f"t{gi:02d}r{ri:02d}_") for gi in sorted(reg[tl])]
+        assert len({r3(r["xy"][0]) for r in rows_}) == 1, (tl, {r3(r["xy"][0]) for r in rows_})
+        subs.append((ri, tl, ytree(rows_, f"T{ri:02d}_")))
+    legs = []
+    for ri, tl, rr in subs:
+        lx, ly = R9["nodes"][tl]["xy"]
+        Lv, Lh = abs(rr["xy"][1] - ly), abs(rr["xy"][0] - lx)
+        nv, nh = (top.nseg(Lv) if Lv > 1e-6 else 0), (top.nseg(Lh) if Lh > 1e-6 else 0)
+        legs.append([Lv, Lh, nv, nh])
+    need = [rr["S"] + max(1, lg[2] + lg[3]) for (_, _, rr), lg in zip(subs, legs)]
+    target = max(need)
+    info = []
+    for (ri, tl, rr), lg, nd in zip(subs, legs, need):
+        lx, ly = R9["nodes"][tl]["xy"]
+        Lv, Lh, nv, nh = lg
+        extra = target - nd
+        if Lv >= Lh and Lv > 1e-6:
+            nv += extra
+        elif Lh > 1e-6:
+            nh += extra
+        cur = rr
+        if Lv > 1e-6 and Lh > 1e-6:
+            cur = lift(cur, (rr["xy"][0], ly), top, f"T{ri:02d}_Lv", nodes, n=nv)
+            cur = lift(cur, (lx, ly), top, f"T{ri:02d}_Lh", nodes, n=nh)
+        else:
+            cur = lift(cur, (lx, ly), top, f"T{ri:02d}_L", nodes, n=max(1, nv + nh))
+        cur["parent"] = None
+        cur["ext"], cur["r9_tag"] = "r9", tl
+        info.append(dict(leaf=tl, xy=[lx, ly], region_rows=sorted(reg[tl]), region_cols=len(next(iter(reg[tl].values()))),
+                         taps=sum(len(v) for v in reg[tl].values()), sub_root=[r3(rr["xy"][0]), r3(rr["xy"][1])],
+                         leg_v_um=r3(Lv), leg_h_um=r3(Lh), stages=cur["S"], padded_stages=extra,
+                         T_TT_ps=r3(cur["T"]["TT"]), T_FF_ps=r3(cur["T"]["FF"])))
+    tts = [i["T_TT_ps"] + R9["rcx"]["TT"][i["leaf"]]["late"] for i in info]
+    R9["regions"] = info
+    R9["region_nominal_spread_TT_ps"] = r3(max(tts) - min(tts))
+    root = dict(tag="r9_root", xy=R9["nodes"]["t"]["xy"], T={c: 0.0 for c in ("TT", "FF")}, kids=[], S=0)
+    return R9, root
 
 
 # ------------------------------------------------------------------------------------------------ legal sites
@@ -312,12 +397,33 @@ CELL_W = 6.48       # BUFx24 footprint width incl. spacing (UNCHECKED vs LEF; co
 ROW_H = 0.27        # ASAP7 row
 
 
-def legalize(B):
+# ASAP7 R 1x LEF (asap7sc7p5t_28_R_1x_220121a.lef, ORFS asap7lock): master -> (width, A-pin access centroid x, Y-pin
+# access centroid x) from the cell origin, um; both pins span the row (y centroid = row middle).
+LEF_BUF = {"BUFx24": (1.62, 0.048, 0.956), "BUFx16f": (1.188, 0.039, 0.74), "BUFx12f": (0.972, 0.046, 0.632)}
+BUF_STRENGTH = {"BUFx24": 1.0, "BUFx16f": 0.667, "BUFx12f": 0.5}
+
+
+def decompose(mult):
+    """d1 driver strength (BUFx24 units, MULT_SET x base) -> the fewest real cells (BUFx24 / BUFx16f / BUFx12f)."""
+    best = None
+    for a_ in range(6):
+        for b_ in range(4):
+            for c_ in range(3):
+                v = a_ + 0.667 * b_ + 0.5 * c_
+                if abs(v - mult) <= 0.01 and (best is None or a_ + b_ + c_ < best[0]):
+                    best = (a_ + b_ + c_, ["BUFx24"] * a_ + ["BUFx16f"] * b_ + ["BUFx12f"] * c_)
+    if best is None:
+        raise ValueError(f"no BUFx24/x16f/x12f decomposition for mult {mult}")
+    return best[1]
+
+
+def legalize(B, fine_masters=None):
     """GEOM-REVIEW-10 (2): one legal site per cell.  Merges the zero-length level (top-tree leaf == column-tree tap
     buffer, one cell), puts tree buffers in lanes beside the fine-driver line, then bumps residual footprint overlaps
     along the lane.  Every net is a Manhattan L between its two cell sites (ratio 1.0 by construction)."""
-    cells = []          # dict(kind, xy0, site, units, lane)
+    cells = []          # dict(kind, xy0, site, units, lane, ref, masters)
     side = {}
+    fine_masters = fine_masters or {}
 
     def lane_sign(x):
         """tree lane on the wider side of the channel (nearest core edge left / right of the column, any y)."""
@@ -328,9 +434,13 @@ def legalize(B):
             side[k] = 1.0 if R - x >= x - L else -1.0
         return side[k]
 
-    def add(kind, xy, units, lane):
+    def add(kind, xy, units, lane, ref=None, masters=None):
         dx, dy = (DX_LANE * lane_sign(xy[0]), 0.0) if lane == "v" else ((0.0, DY_LANE) if lane == "h" else (0.0, 0.0))
-        cells.append(dict(kind=kind, xy0=(r3(xy[0]), r3(xy[1])), site=[xy[0] + dx, xy[1] + dy], units=units, lane=lane))
+        if kind == "r9_leaf":
+            dx = dy = 0.0       # the R9 leaf buffer is already placed by the R9 tree (DRC-clean); no new cell
+        masters = masters if masters is not None else ["BUFx24"] * int(units)
+        cells.append(dict(kind=kind, xy0=(r3(xy[0]), r3(xy[1])), site=[xy[0] + dx, xy[1] + dy], units=len(masters), lane=lane,
+                          ref=ref, masters=masters))
         return len(cells) - 1
     top, col = B["et"]["top"], B["et"]["col"]
     site_of = {}
@@ -338,16 +448,22 @@ def legalize(B):
     for n in B["top_nodes"]:
         if not n["kids"]:
             continue          # top leaf = column tap cell (merged level), added with the column tree
-        site_of[("t", n["tag"])] = add("top_node", n["xy"], top.m, "v" if n["tag"].startswith("T") else "h")
+        if n.get("ext") == "r9":
+            site_of[("t", n["tag"])] = add("r9_leaf", n["xy"], 0, "x", ("t", n["tag"]), masters=[])
+            continue
+        site_of[("t", n["tag"])] = add("top_node", n["xy"], top.m, "v" if n["tag"].startswith("T") else "h", ("t", n["tag"]))
     for ct in B["ctrees"]:
         for n in ct["nodes"]:
             if not n["kids"]:
-                site_of[("c", n["tag"])] = add("fine_driver", n["xy"], 2, "d")
+                fm = fine_masters.get((r3(n["xy"][0]), r3(n["xy"][1])))
+                site_of[("c", n["tag"])] = add("fine_driver", n["xy"], 2, "d", ("c", n["tag"]), masters=fm)
             else:
-                site_of[("c", n["tag"])] = add("col_tap" if not n.get("parent") else "col_node", n["xy"], col.m, "v")
+                site_of[("c", n["tag"])] = add("col_tap" if not n.get("parent") else "col_node", n["xy"], col.m, "v", ("c", n["tag"]))
     leafpos = {(r3(n["xy"][0]), r3(n["xy"][1])): n["tag"] for n in B["top_nodes"] if not n["kids"]}
     ctap = {(r3(ct["tap"][0]), r3(ct["tap"][1])): ct for ct in B["ctrees"]}
     assert set(leafpos) == set(ctap), "top leaves must coincide with column taps (merged level)"
+    for k, tg in leafpos.items():           # merged level: the top leaf IS the column-tap cell
+        site_of[("t", tg)] = site_of[("c", ctap[k]["root"])]
     nrep = {"top": 0, "col": 0}
     for kind, nodes, et in (("top", B["top_nodes"], top), ("col", B["cnodes"], col)):
         by = {n["tag"]: n for n in nodes}
@@ -358,11 +474,11 @@ def legalize(B):
             lane = "h" if abs(p[1] - n["xy"][1]) < 1e-6 and abs(p[0] - n["xy"][0]) > 1e-6 else "v"
             for k in range(1, n["nseg"]):
                 q = (p[0] + (n["xy"][0] - p[0]) * k / n["nseg"], p[1] + (n["xy"][1] - p[1]) * k / n["nseg"])
-                add(kind + "_rep", q, et.m, lane)
+                site_of[(kind + "_rep", n["tag"], k)] = add(kind + "_rep", q, et.m, lane, (kind + "_rep", n["tag"], k))
                 nrep[kind] += 1
     # exact coincidences before the bump (the GEOM-REVIEW-10 metric on the raw tree coordinates)
     from collections import Counter
-    raw = Counter((r3(c["site"][0]), r3(c["site"][1])) for c in cells)
+    raw = Counter((r3(c["site"][0]), r3(c["site"][1])) for c in cells if c["kind"] != "r9_leaf")
     pre_coinc = sum(v for v in raw.values() if v > 1)
     # footprint occupancy on a (CELL_W x ROW_H) grid; bump along the lane until free and off-core
     occ = set()
@@ -376,6 +492,8 @@ def legalize(B):
     order = sorted(range(len(cells)), key=lambda i: (cells[i]["kind"] != "fine_driver", i))   # drivers keep the strap sites
     for i in order:
         c = cells[i]
+        if c["kind"] == "r9_leaf":
+            continue
         s0 = list(c["site"])
         step = (0.0, ROW_H * c["units"]) if c["lane"] in ("v", "d") else (CELL_W, 0.0)
         for t in range(2400):
@@ -393,12 +511,16 @@ def legalize(B):
             maxbump = max(maxbump, md(cand, s0))
         c["site"] = cand
         occ.update(b)
-    post = Counter((r3(c["site"][0]), r3(c["site"][1])) for c in cells)
+    B["site_of"] = site_of
+    phys = [c for c in cells if c["kind"] != "r9_leaf"]
+    post = Counter((r3(c["site"][0]), r3(c["site"][1])) for c in phys)
     strict = lambda q: any(c[0] < q[0] < c[2] and c[1] < q[1] < c[3] for c in B["cores"])
-    oncore = sum(1 for c in cells if strict(c["site"]))
-    near_isl = sum(1 for c in cells if inc(c["site"]))
+    oncore = sum(1 for c in phys if strict(c["site"]))
+    near_isl = sum(1 for c in phys if inc(c["site"]))
     # merged-level check: every column tap cell is ALSO the top-tree leaf (one cell, no zero-length edge)
-    stats = dict(cells=len(cells), by_kind=dict(Counter(c["kind"] for c in cells)), raw_coincident_items=pre_coinc,
+    stats = dict(cells=len(phys), by_kind=dict(Counter(c["kind"] for c in cells)), raw_coincident_items=pre_coinc,
+                 instances=sum(c["units"] for c in phys),
+                 instances_by_master=dict(Counter(m for c in phys for m in c["masters"])),
                  coincident_items=sum(v for v in post.values() if v > 1), footprint_overlaps=0, cells_on_core=oncore,
                  cells_within_ISL_of_core=near_isl, cells_within_ISL_note="r2 fine-driver sites kept as r2 placed them (r2 seam_channel)",
                  bumped=bumped, max_bump_um=r3(maxbump), merged_top_leaf_eq_col_tap=len(ctap),
@@ -408,6 +530,39 @@ def legalize(B):
                  note="net = Manhattan L between cell sites (ratio 1.0); planned legs differ by <= max_net_extra_vs_leg_um, "
                       "same on every root->driver path of a level (common, not skew). UNCHECKED")
     return cells, stats
+
+
+def pin_xy(c, which):
+    """centroid of a cell group's A (input) or Y (output) pins + the tie strap joining its stacked units (um)."""
+    if not c["masters"]:
+        return (c["site"][0], c["site"][1]), 0.0
+    xs, ys = [], []
+    for u, m in enumerate(c["masters"]):
+        w, ax, yx = LEF_BUF[m]
+        xs.append(c["site"][0] - w / 2 + (ax if which == "A" else yx))
+        ys.append(c["site"][1] + u * ROW_H + ROW_H / 2)
+    return (sum(xs) / len(xs), sum(ys) / len(ys)), (len(xs) - 1) * ROW_H
+
+
+def net_um(src, dst):
+    """pin-to-pin net length between two legal cell groups: Manhattan Y-centroid -> A-centroid + both unit ties."""
+    (p, tp), (q, tq) = pin_xy(src, "Y"), pin_xy(dst, "A")
+    return md(p, q) + tp + tq
+
+
+def phys_edges(B):
+    """every tree edge (namespace, child tag) -> [(driver cell, load cell, net um)] over the LEGAL cells: parent cell,
+    its repeaters in order, child cell (legalize() geometry, units expanded)."""
+    cells, so = B["cells"], B["site_of"]
+    out = {}
+    for ns, kind, nodes in (("t", "top", B["top_nodes"]), ("c", "col", B["cnodes"])):
+        for n in nodes:
+            if not n.get("parent"):
+                continue
+            chain = ([cells[so[(ns, n["parent"])]]] + [cells[so[(kind + "_rep", n["tag"], k)]] for k in range(1, n["nseg"])]
+                     + [cells[so[(ns, n["tag"])]]])
+            out[(ns, n["tag"])] = [(a_, b_, net_um(a_, b_)) for a_, b_ in zip(chain, chain[1:])]
+    return out
 
 
 def paths(nodes):
@@ -487,6 +642,9 @@ def cmd_plan(a):
                 col_wire_um=r3(sum(e["leg_um"] for e in edge_geom(B["cnodes"]))),
                 nodes=[dict(tag=n["tag"], xy=n["xy"], parent=n.get("parent"), leg=n.get("leg"), nseg=n.get("nseg"),
                             T=n["T"], imb=n.get("imbalance_TT")) for n in B["top_nodes"]],
+                feed=getattr(a, "feed", "mesh3"),
+                r9_feed=(dict(source=B["r9"]["source"], regions=B["r9"]["regions"],
+                              region_nominal_spread_TT_ps=B["r9"]["region_nominal_spread_TT_ps"]) if B.get("r9") else None),
                 checked="UNCHECKED")
     (out / "r3_plan.json").write_text(json.dumps(plan, indent=1, default=str))
     print(json.dumps({k: v for k, v in plan.items() if k not in ("nodes", "argv")}, indent=1, default=str))
@@ -535,6 +693,15 @@ def render(B, plan, path, box):
             if n.get("parent"):
                 p, q = cby[n["parent"]]["xy"], n["xy"]
                 ax.plot([p[0] + 6, q[0] + 6], [p[1], q[1]], "-", c="#8000a0", lw=1.0)
+    if B.get("r9"):
+        N9 = B["r9"]["nodes"]
+        for t, n in N9.items():
+            if n.get("parent"):
+                p = N9[n["parent"]]["xy"]
+                ax.plot([p[0], n["xy"][0], n["xy"][0]], [p[1], p[1], n["xy"][1]], "-", c="#e07000", lw=3.0, alpha=0.8)
+        lv = [n["xy"] for n in N9.values() if not any(m.get("parent") == n["tag"] for m in N9.values())]
+        ax.plot([q[0] for q in lv], [q[1] for q in lv], "o", c="#e07000", ms=9, mfc="none", mew=2, label="R9 H-tree leaf (16)")
+        ax.plot([], [], "-", c="#e07000", lw=3, label="R9 physical H-tree (tree5 DRC 0)")
     sp = [n["xy"] for n in B["spine_drv"]]
     ax.plot([p[0] for p in sp], [p[1] for p in sp], "s", c="#d00000", ms=6 if box else 3.5, label=(f"column-tap buffer = top-tree leaf ({len(sp)})" if plan["spine"].get("none") else f"spine driver ({len(sp)})"))
     ax.plot(*B["top_root"]["xy"], "*", c="#ff00ff", ms=14, label="top-tree root")
@@ -715,10 +882,40 @@ def seeded(*k):
     return random.Random(zlib.crc32(("|".join(map(str, k))).encode()))
 
 
+def r9_sample(R, st, c, s, sg, g_mm, ctr, u):
+    """R9 leaf arrivals for one sample: RCX late arrival per node (nominal) + per R9 leg one Gaussian (stage sigma of
+    the 4w x1 BUFx24 table at the leg piece length x sqrt(stages); stages = declared leg repeaters + 1) + gradient."""
+    N, A = R["nodes"], R["rcx"][c]
+    memo = {}
+
+    def arr(t):
+        if t in memo:
+            return memo[t]
+        n = N[t]
+        if not n.get("parent"):
+            memo[t] = A[t]["late"]
+            return memo[t]
+        p = N[n["parent"]]
+        d = A[t]["late"] - A[n["parent"]]["late"]
+        v = 0.0
+        if s:
+            ns_ = R["leg_reps"].get(t, 0) + 1
+            L = md(p["xy"], n["xy"])
+            if sg.get("tree", 1.0):
+                v += seeded("r9", s, t).gauss(0.0, st.sigma("4w", 1, c, L / ns_) * math.sqrt(ns_) * sg.get("tree", 1.0))
+            if g_mm:
+                mx, my = (p["xy"][0] + n["xy"][0]) / 2 - ctr[0], (p["xy"][1] + n["xy"][1]) / 2 - ctr[1]
+                v += d * g_mm * (mx * u[0] + my * u[1]) / 1000.0
+        memo[t] = arr(n["parent"]) + d + v
+        return memo[t]
+    return {t: arr(t) for t, n in N.items() if n["depth"] == max(m["depth"] for m in N.values())}
+
+
 def cmd_solve(a):
     import numpy as np
     st = Stage(a.stage)
     B = build(a, st)
+    legal = a.geometry == "legal"
     thev = json.loads(Path(a.thev).read_text())
     sens = json.loads(Path(a.slew_sens).read_text()) if a.slew_sens else {}
     sg = json.loads(Path(a.sigma[1:]).read_text() if a.sigma.startswith("@") else a.sigma)
@@ -731,7 +928,23 @@ def cmd_solve(a):
     th_dir = seeded("grad", s).uniform(0, 2 * math.pi)
     u = (math.cos(th_dir), math.sin(th_dir))
 
-    def edge_var(tag, p, q, L, et, n):
+    def edge_var_phys(ns, tag, et):
+        """LEGAL geometry: one stage per real driver->load net (pin-to-pin), sigma per real stage, gradient per net."""
+        d = v = s2 = 0.0
+        for a_, b_, L in PE[(ns, tag)]:
+            di = et.st.seg(et.w, et.m, c, L)
+            d += di
+            s2 += et.st.sigma(et.w, et.m, c, L) ** 2
+            if g_mm:
+                mx, my = (a_["site"][0] + b_["site"][0]) / 2 - cx, (a_["site"][1] + b_["site"][1]) / 2 - cy
+                v += di * g_mm * (mx * u[0] + my * u[1]) / 1000.0
+        if s and sg.get("tree", 1.0):
+            v += seeded("e", s, tag).gauss(0.0, math.sqrt(s2) * sg.get("tree", 1.0))
+        return d + v
+
+    def edge_var(tag, p, q, L, et, n, ns=None):
+        if legal:
+            return edge_var_phys(ns, tag, et)
         d = et.delay(L, c, n)
         v = 0.0
         if s and sg.get("tree", 1.0):
@@ -740,14 +953,35 @@ def cmd_solve(a):
             mx, my = (p[0] + q[0]) / 2 - cx, (p[1] + q[1]) / 2 - cy
             v += d * g_mm * (mx * u[0] + my * u[1]) / 1000.0
         return d + v
-    # 1) top tree -> spine driver arrivals (die input reference: trunk from the r2 plan model, common to all)
+    rec = B["rec"]
+    xs, ys = [r3(x) for x in rec["xs"]], [r3(y) for y in rec["ys"]]
+    fw = RC3[a.fine_w]
+    taps = [(r3(t["tap"][0]), r3(t["tap"][1])) for t in rec["taps"]]
+    hs_f = [(y, xs[0], xs[-1]) for y in ys]
+    vs_f = [(x, ys[0], ys[-1]) for x in xs]
+    fine_masters = None
+    if legal:
+        # d1 sizing is plan-computed: Voronoi strap C of the NOMINAL plan netlist (ideal driver points), then every
+        # driver group is decomposed into real cells and legalised with its true unit count
+        fd0 = sorted({(r3(n["xy"][0]), r3(n["xy"][1])) for ct in B["ctrees"] for n in ct["nodes"] if not n["kids"]})
+        N0 = mesh(hs_f, vs_f, fd0, taps, fw, (RC3[a.stub_w], a.stub_um))
+        m0 = size(voronoi_c(N0), a.fine_m, a.sizing)
+        fine_masters = {q: decompose(float(m)) for q, m in zip(fd0, m0)}
+        cells, lstat = legalize(B, fine_masters)
+        B["cells"] = cells
+        PE = phys_edges(B)
+    # 1) top tree -> spine driver arrivals (die input reference: trunk from the r2 plan model, common to all; with
+    #    --feed r9 the measured R9 RCX arrival at the leaf + R9 per-edge variation)
     tp, by = paths(B["top_nodes"])
     trunk = json.loads(a.trunk_ps)[c]
+    r9arr = r9_sample(B["r9"], st, c, s, sg, g_mm, (cx, cy), u) if B.get("r9") else None
     sarr = []
     for dnode in B["spine_drv"]:
-        tt = trunk
-        for e in tp[dnode["tag"]]:
-            tt += edge_var(e["tag"], by[e["parent"]]["xy"], e["xy"], e["leg"], e["et"], e["nseg"])
+        ch = tp[dnode["tag"]]
+        rt = by[ch[-1]["parent"]] if ch else dnode
+        tt = r9arr[rt["r9_tag"]] if rt.get("ext") == "r9" else trunk
+        for e in ch:
+            tt += edge_var(e["tag"], by[e["parent"]]["xy"], e["xy"], e["leg"], e["et"], e["nseg"], ns="t")
         sarr.append(tt)
     # 2) spine mesh (or, --no-spine, the top tree feeds every column-tree tap directly)
     if a.no_spine:
@@ -776,19 +1010,23 @@ def cmd_solve(a):
         for leaf, ch in cpath.items():
             tt = base
             for e in ch:
-                tt += edge_var(e["tag"], cby[e["parent"]]["xy"], e["xy"], e["leg"], e["et"], e["nseg"])
-            farr[(r3(cby[leaf]["xy"][0]), r3(cby[leaf]["xy"][1]))] = tt
-    # 4) fine mesh (r2 lattice, straps over the r2 extents) + partition entry taps
-    rec = B["rec"]
-    xs, ys = [r3(x) for x in rec["xs"]], [r3(y) for y in rec["ys"]]
-    fw = RC3[a.fine_w]
-    hs = [(y, xs[0], xs[-1]) for y in ys]
-    vs = [(x, ys[0], ys[-1]) for x in xs]
+                tt += edge_var(e["tag"], cby[e["parent"]]["xy"], e["xy"], e["leg"], e["et"], e["nseg"], ns="c")
+            if legal:
+                q = B["cells"][B["site_of"][("c", leaf)]]["site"]
+                farr[(r3(q[0]), r3(q[1]))] = tt
+            else:
+                farr[(r3(cby[leaf]["xy"][0]), r3(cby[leaf]["xy"][1]))] = tt
+    # 4) fine mesh (r2 lattice, straps over the r2 extents) + partition entry taps; LEGAL: drivers attach at their
+    #    legal sites on their own column strap, strength = the real cells of the group
     fdrv = sorted(farr)
-    taps = [(r3(t["tap"][0]), r3(t["tap"][1])) for t in rec["taps"]]
-    NF = mesh(hs, vs, fdrv, taps, fw, (RC3[a.stub_w], a.stub_um), wire_rel=sg.get("wire_rel", 0.0) if s else 0.0, rnd=rnd)
+    NF = mesh(hs_f, vs_f, fdrv, taps, fw, (RC3[a.stub_w], a.stub_um), wire_rel=sg.get("wire_rel", 0.0) if s else 0.0, rnd=rnd)
     cvor = voronoi_c(NF)
-    fmult = size(cvor, a.fine_m, a.sizing)
+    if legal:
+        fm_at = {(r3(B["cells"][B["site_of"][("c", n["tag"])]]["site"][0]), r3(B["cells"][B["site_of"][("c", n["tag"])]]["site"][1])):
+                 B["cells"][B["site_of"][("c", n["tag"])]]["masters"] for ct in B["ctrees"] for n in ct["nodes"] if not n["kids"]}
+        fmult = np.array([sum(BUF_STRENGTH[m] for m in fm_at[q]) for q in fdrv])
+    else:
+        fmult = size(cvor, a.fine_m, a.sizing)
     fdvt = [(seeded("vf", s, k).gauss(0, sg["vt_mV"]) + seeded("vf2", s, k).gauss(0, sg["vt_mV"])) / 2 / math.sqrt(max(1.0, fmult[k]))
             if s else 0.0 for k in range(len(fdrv))]
     t_ent, sl_ent = solve(NF, [farr[q] for q in fdrv], fmult, fdvt, th, c, t_extra=a.t_extra)
@@ -804,7 +1042,22 @@ def cmd_solve(a):
                          voronoi_C_fF=dict(min=r3(cvor.min()), med=r3(float(np.median(cvor))), max=r3(cvor.max())),
                          entry_slew_ps=dict(min=r3(sl_ent.min()), max=r3(sl_ent.max()))),
                insertion_ps=dict(min=r3(float(np.nanmin(t_ent))), max=r3(float(np.nanmax(t_ent)))),
-               tap_skew_ps=r3(float(np.nanmax(t_ent) - np.nanmin(t_ent))), tap_arr_ps=tap_arr, checked="UNCHECKED")
+               tap_skew_ps=r3(float(np.nanmax(t_ent) - np.nanmin(t_ent))), tap_arr_ps=tap_arr,
+               tap_slew_ps={p: r3(v) for p, v in zip(parts, sl_ent)}, geometry=a.geometry, feed=getattr(a, "feed", "mesh3"),
+               checked="UNCHECKED")
+    if legal:
+        ets = dict(t=B["et"]["top"], c=B["et"]["col"])
+        uq = [(L, ets[k[0]]) for k, v in PE.items() for _, _, L in v]       # every real net once
+        Ls = [L for L, _ in uq]
+        over = [(L, et) for L, et in uq if L > et.reach + 1e-6]
+        out["physical"] = dict(legal=lstat, nets=len(Ls), net_um=dict(min=r3(min(Ls)), max=r3(max(Ls))),
+                               nets_over_reach=len(over), worst_over_reach_slew_ps=r3(max((et.st.slew(et.w, et.m, c, L) for L, et in over), default=0.0)),
+                               note="every tree stage = one real driver->load net between legal cell pins (units expanded); "
+                                    "the stage table is extrapolated above reach (slew reported)")
+    if B.get("r9"):
+        R = B["r9"]
+        out["r9_feed"] = dict(source=R["source"], regions=R["regions"], region_nominal_spread_TT_ps=R["region_nominal_spread_TT_ps"],
+                              leaf_arr_ps={k: r3(v) for k, v in r9arr.items()})
     if a.dump_loads:
         out["fine_drivers"] = [[q[0], q[1], r3(cvor[k]), float(fmult[k])] for k, q in enumerate(fdrv)]
         out["spine_tap_ps"] = [[ct["tap"][0], ct["tap"][1], r3(t_tap[k]), r3(sl_tap[k])] for k, ct in enumerate(B["ctrees"])]
@@ -826,14 +1079,118 @@ def cmd_collect(a):
                 insertion_ps=dict(min=min(r["insertion_ps"]["min"] for r in rows), max=max(r["insertion_ps"]["max"] for r in rows)),
                 nominal=nom[0] if nom else None)
     summ["nominal"] = {k: v for k, v in (summ["nominal"] or {}).items() if k != "tap_arr_ps"}
+    if mc and "physical" in mc[0]:
+        summ["mc_net_um_max"] = max(r["physical"]["net_um"]["max"] for r in rows)
     out = dict(summary=summ, samples=[dict(sample=r["sample"], tap_skew_ps=r["tap_skew_ps"], tap_arr_ps=r["tap_arr_ps"]) for r in rows],
                checked="UNCHECKED")
     Path(a.out).write_text(json.dumps(out, indent=1))
-    print(json.dumps(summ, indent=1))
+    print(json.dumps({k: v for k, v in summ.items() if k != "nominal"}, indent=1))
     return 0
 
 
 # ------------------------------------------------------------------------------------------------ pairs (approved AOCV)
+def pair_u(x, y, tap, solve_, aocv, g):
+    """per related pair (partition entries x, y on the one signed mesh): mesh uncertainty = the pair's worst MC tap
+    difference |t_x - t_y| over the samples (signed-mesh common point, 12.4a b), plus the approved AOCV below the mesh
+    (class A depth sigma k=3 on stub + 10 stages each side; g x bbox diagonal x unshared delay), droop 0 (one mesh)."""
+    import region_clock as RC
+    CORE = RC.CORE_LAT
+    r = dict(a=x, b=y, common="continuous signed die mesh (12.4a b exception)")
+    q1, q2 = tap[x]["tap"], tap[y]["tap"]
+    e1, e2 = tap[x]["entry"], tap[y]["entry"]
+    bx = [min(q1[0], q2[0], e1[0], e2[0]), min(q1[1], q2[1], e1[1], e2[1]), max(q1[0], q2[0], e1[0], e2[0]), max(q1[1], q2[1], e1[1], e2[1])]
+    dmm = math.hypot(bx[2] - bx[0], bx[3] - bx[1]) / 1000.0
+    for c in ("TT", "FF"):
+        f = aocv["classes"]["A"][c]["path_fit"]
+        sgm = lambda n: math.sqrt(max(0.0, f["a_ps2_per_stage"] * n + f["b_ps2_per_stage2"] * n * n))
+        na, nb = (max(1, math.ceil(tap[q]["stub_um"] / 450.0 - 1e-9)) + 10 for q in (x, y))
+        rnd_ = aocv["k_sigma"] * math.sqrt(sgm(na) ** 2 + sgm(nb) ** 2)
+        nc = max(RC.stage_delay(tap[x]["stub_um"], 1, c), RC.stage_delay(tap[y]["stub_um"], 1, c)) + CORE[c]
+        sys_ = g * dmm * nc           # approved g (0.21 %/mm) x bbox diagonal x unshared delay (half each side)
+        mesh_u = r3(max(abs(s_["tap_arr_ps"][x] - s_["tap_arr_ps"][y]) for s_ in solve_[c]))
+        r[c] = dict(noncommon_ps=r3(nc), aocv_random_ps=r3(rnd_), aocv_distance_ps=r3(sys_), droop_ps=0.0,
+                    mesh_uncertainty_ps=mesh_u, total_ps=r3(rnd_ + sys_ + mesh_u))
+    r["bbox_diag_mm"] = r3(dmm)
+    return r
+
+
+def cmd_sta_export(a):
+    """die_sta_related.py input from the mesh solves: OUT/tap_arrivals_<C>.json (one entry tap per partition, nominal
+    arrival late = early, one cppr node 'm' = the signed mesh with range 0: no mesh-node credit) + OUT/pair_unc.json
+    (pair_u total per corner for every port-connected partition pair and every seam pair)."""
+    import qc_clk_mesh as Q
+    import region_clock as RC
+    rec = json.loads(Path(a.r2).read_text())
+    P, dtp, parts, cores, psha = Q.load(rec["plan"], rec["tree_plan"])
+    solve_ = {c: json.loads(Path(v).read_text()) for c, v in json.loads(a.mesh_skew).items()}
+    aocv = json.loads(Path(a.aocv).read_text())["clock_aocv"]
+    tap = {t["part"]: t for t in rec["taps"]}
+    out = Path(a.out)
+    out.mkdir(parents=True, exist_ok=True)
+    # real core views (signed-off RCX / GRT model) per hard-core module: the partition's core clock latency range is the
+    # union over its hard cores (a viewed module -> its [early, late]; others -> the declared 12.3 common latency),
+    # folded into the entry arrivals as the delta to the declared latency (die_sta_related cancels the declared value)
+    decl = {k: float(v) for k, v in (kv.split("=") for kv in a.declared.split(","))}
+    views = {}
+    for cv in a.core_view:
+        mod, vals = cv.split("=")
+        te, tl, fe, fl = (float(v) for v in vals.split(","))
+        views[mod] = {"TT": (te, tl), "FF": (fe, fl)}
+    ptype = {q["name"]: q["type"] for q in json.loads(Path(rec["plan"]).read_text())["partitions"]}
+    PT = json.loads(Path(rec["plan"]).read_text())["partition_types"]
+    delta, used = {}, defaultdict(list)
+    for part, ty in ptype.items():
+        mods = {h["module"] for h in PT.get(ty, {}).get("hard_cores", [])}
+        if not mods & set(views):
+            continue
+        for c in ("TT", "FF"):
+            lo = min([views[m][c][0] for m in mods if m in views] + ([decl[c]] if mods - set(views) else []))
+            hi = max([views[m][c][1] for m in mods if m in views] + ([decl[c]] if mods - set(views) else []))
+            delta[(part, c)] = (lo - decl[c], hi - decl[c])
+        used[part] = sorted(mods & set(views))
+    for c, d in solve_.items():
+        nom = [s_ for s_ in d["samples"] if s_["sample"] == 0][0]
+        sl = d["summary"]["nominal"].get("tap_slew_ps") or {}
+        rows = [dict(port=p, part=p, late_ps=v + delta.get((p, c), (0.0, 0.0))[1], early_ps=v + delta.get((p, c), (0.0, 0.0))[0],
+                     cppr_node="m", slew_ps=sl.get(p, 190.0), xy_um=tap[p]["entry"], stages_from_root=None,
+                     core_view=used.get(p)) for p, v in nom["tap_arr_ps"].items()]
+        (out / f"tap_arrivals_{c}.json").write_text(json.dumps(dict(
+            corner=c, basis=f"qc_clk_mesh3 solve nominal ({d['summary']['nominal'].get('geometry', 'ideal')} geometry, "
+                            f"feed {d['summary']['nominal'].get('feed', 'mesh3')}); per-pair MC+AOCV in pair_unc.json",
+            cppr_node_range_ps={"m": 0.0, "h": 0.0}, core_views=dict(views={m: v[c] for m, v in views.items()},
+                                                                      declared_ps=decl[c], partitions=sorted(used)),
+            taps=rows), indent=1))
+    plan = json.loads(Path(rec["plan"]).read_text())
+    keys = set()
+    for pr in plan["ports"]:
+        s_, t_ = pr["src"]["part"], pr["dst"]["part"]
+        if s_ != t_ and s_ in tap and t_ in tap:
+            keys.add(tuple(sorted((s_, t_))))
+    seam = {tuple(sorted((x, y))) for x, y, _ in RC.seam_pairs(P, parts) if x in tap and y in tap}
+    U = {"TT": {}, "FF": {}}
+    rows = []
+    for x, y in sorted(keys | seam):
+        r = pair_u(x, y, tap, {c: d["samples"] for c, d in solve_.items()}, aocv, a.g_per_mm)
+        r["port_connected"], r["seam"] = (x, y) in keys, (x, y) in seam
+        for c, d in solve_.items():
+            # the STA carries the NOMINAL arrivals, so its pair uncertainty takes only the MC spread AROUND the
+            # nominal pair difference (no double count of the nominal skew): max_s |dt_s - dt_0| + AOCV below the mesh
+            sm = d["samples"]
+            d0 = [s_ for s_ in sm if s_["sample"] == 0][0]["tap_arr_ps"]
+            var = max(abs((s_["tap_arr_ps"][x] - s_["tap_arr_ps"][y]) - (d0[x] - d0[y])) for s_ in sm)
+            r[c]["mesh_mc_var_ps"] = r3(var)
+            r[c]["nominal_dt_ps"] = r3(d0[x] - d0[y])
+            r[c]["sta_unc_ps"] = r3(r[c]["aocv_random_ps"] + r[c]["aocv_distance_ps"] + var)
+            U[c][f"{x}|{y}"] = r[c]["sta_unc_ps"]
+        rows.append(r)
+    (out / "pair_unc.json").write_text(json.dumps(dict(schema="ot_qc_pair_unc/1", g_per_mm=a.g_per_mm, aocv=a.aocv,
+                                                       mesh_skew=json.loads(a.mesh_skew), U=U, rows=rows,
+                                                       checked="UNCHECKED"), indent=1))
+    print(json.dumps(dict(port_pairs=len(keys), seam_pairs=len(seam), union=len(rows),
+                          TT_max=max(U["TT"].values()), FF_max=max(U["FF"].values()))))
+    return 0
+
+
 def cmd_pairs(a):
     import qc_clk_mesh as Q
     import region_clock as RC
@@ -849,22 +1206,8 @@ def cmd_pairs(a):
     for x, y, edge in pairs:
         if x not in tap or y not in tap:
             continue
-        r = dict(a=x, b=y, edge_um=edge, common="continuous signed die mesh (12.4a b exception)")
-        q1, q2 = tap[x]["tap"], tap[y]["tap"]
-        e1, e2 = tap[x]["entry"], tap[y]["entry"]
-        bx = [min(q1[0], q2[0], e1[0], e2[0]), min(q1[1], q2[1], e1[1], e2[1]), max(q1[0], q2[0], e1[0], e2[0]), max(q1[1], q2[1], e1[1], e2[1])]
-        dmm = math.hypot(bx[2] - bx[0], bx[3] - bx[1]) / 1000.0
-        for c in ("TT", "FF"):
-            f = aocv["classes"]["A"][c]["path_fit"]
-            sgm = lambda n: math.sqrt(max(0.0, f["a_ps2_per_stage"] * n + f["b_ps2_per_stage2"] * n * n))
-            na, nb = (max(1, math.ceil(tap[q]["stub_um"] / 450.0 - 1e-9)) + 10 for q in (x, y))
-            rnd_ = aocv["k_sigma"] * math.sqrt(sgm(na) ** 2 + sgm(nb) ** 2)
-            nc = max(RC.stage_delay(tap[x]["stub_um"], 1, c), RC.stage_delay(tap[y]["stub_um"], 1, c)) + CORE[c]
-            sys_ = g * dmm * nc           # approved g (0.21 %/mm) x bbox diagonal x unshared delay (half each side)
-            mesh_u = r3(max(abs(s_["tap_arr_ps"][x] - s_["tap_arr_ps"][y]) for s_ in solve_[c]))
-            r[c] = dict(noncommon_ps=r3(nc), aocv_random_ps=r3(rnd_), aocv_distance_ps=r3(sys_), droop_ps=0.0,
-                        mesh_uncertainty_ps=mesh_u, total_ps=r3(rnd_ + sys_ + mesh_u))
-        r["bbox_diag_mm"] = r3(dmm)
+        r = pair_u(x, y, tap, solve_, aocv, g)
+        r["edge_um"] = edge
         rows.append(r)
         demand["|".join(sorted((x, y)))] = math.ceil(r["FF"]["total_ps"] * 10) / 10.0
     import statistics as S
@@ -937,6 +1280,10 @@ def add_common(p):
     p.add_argument("--sizing", default="d1", choices=["d1", "none"])
     p.add_argument("--no-spine", action="store_true", help="comparison: top tree straight to every column tap")
     p.add_argument("--t-extra", type=float, default=1500.0)
+    p.add_argument("--feed", default="mesh3", choices=["mesh3", "r9"],
+                   help="global tree: mesh3 own top tree (default) or the R9 16-leaf physical H-tree (--r9-dir)")
+    p.add_argument("--r9-dir", default=str(HERE.parent.parent / "results/qc_clk_mesh3/r10_inputs"),
+                   help="r9_lattice.json + r9_tree5_tree_{TT,FF}_rcx.txt")
 
 
 def main(argv=None):
@@ -955,6 +1302,9 @@ def main(argv=None):
     s.add_argument("--sample", type=int, default=0)
     s.add_argument("--sigma", default='{"vt_mV": 10.0, "wire_rel": 0.05, "tree": 1.0, "grad_per_mm": 0.0021}')
     s.add_argument("--dump-loads", action="store_true")
+    s.add_argument("--geometry", default="legal", choices=["legal", "ideal"],
+                   help="legal (default, r10): time the legalize() cells with units expanded and pin-to-pin nets; "
+                        "ideal = the r3 plan-model geometry (comparison only)")
     s.add_argument("--trunk-ps", default='{"TT": 319.5, "FF": 261.1}', help="die input -> tree root (r2 insertion_spice_r6.json)")
     s.add_argument("--out", required=True)
     s.set_defaults(fn=cmd_solve)
@@ -969,6 +1319,16 @@ def main(argv=None):
     r.add_argument("--g-per-mm", type=float, default=0.0021)
     r.add_argument("--out", required=True)
     r.set_defaults(fn=cmd_pairs)
+    x = sub.add_parser("sta-export")
+    x.add_argument("--r2", required=True)
+    x.add_argument("--mesh-skew", required=True, help='{"TT": collect.json, "FF": collect.json}')
+    x.add_argument("--aocv", required=True)
+    x.add_argument("--g-per-mm", type=float, default=0.0021)
+    x.add_argument("--core-view", action="append", default=[],
+                   help="MODULE=TTearly,TTlate,FFearly,FFlate core clock latency range of a real (signed / GRT) core view")
+    x.add_argument("--declared", default="TT=250,FF=202.5", help="12.3 declared common core latency per corner")
+    x.add_argument("--out", required=True)
+    x.set_defaults(fn=cmd_sta_export)
     e = sub.add_parser("em")
     e.add_argument("loads")
     e.add_argument("--mesh-w", default="8w")
