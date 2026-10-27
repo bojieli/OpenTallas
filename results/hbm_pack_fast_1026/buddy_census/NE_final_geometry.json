@@ -1,0 +1,163 @@
+{
+ "scope": "model core rectangles and direct native buddy stations only; actual M5 route/clock/pin-plan still required",
+ "pairs": 16,
+ "gap_um": [
+  8.64
+ ],
+ "max_buddy_length_um": 65.88000000000056,
+ "all_buddy_within405": true,
+ "core_overlaps": [],
+ "other_serialized_vm_stations": 257,
+ "bank_sample": {
+  "inst": "u_vmb_Q0",
+  "module": "hnx_vms_bank_q0_faces",
+  "origin_um": [
+   2198.88,
+   622.08
+  ],
+  "outline_um": [
+   270.0,
+   403.92
+  ],
+  "track_offset_um": [
+   0.0,
+   0.0
+  ],
+  "pins_file": "cores/hfd_vms_bank_native_q0_faces__270x313.2__q_hub_u_vmb_Q0.json",
+  "note": "d4g hard core; 64722 cells",
+  "obs_max": "M5"
+ },
+ "fused_sample": {
+  "inst": "u_mu_fused_0",
+  "module": "hnx_fused_lane",
+  "origin_um": [
+   2477.52,
+   622.08
+  ],
+  "outline_um": [
+   345.6,
+   518.4
+  ],
+  "track_offset_um": [
+   0,
+   0
+  ],
+  "pins_file": null,
+  "note": "MU probe",
+  "obs_max": "M5"
+ },
+ "rows": [
+  {
+   "bank": "u_vmb_Q0",
+   "lane": "u_mu_fused_0",
+   "gap_um": 8.64,
+   "length_um_max": 65.87999999999988,
+   "within405": true
+  },
+  {
+   "bank": "u_vmb_Q0_mu1",
+   "lane": "u_mu_fused_1",
+   "gap_um": 8.64,
+   "length_um_max": 65.88000000000011,
+   "within405": true
+  },
+  {
+   "bank": "u_vmb_Q1",
+   "lane": "u_mu_fused_2",
+   "gap_um": 8.64,
+   "length_um_max": 65.87999999999988,
+   "within405": true
+  },
+  {
+   "bank": "u_vmb_Q1_mu1",
+   "lane": "u_mu_fused_3",
+   "gap_um": 8.64,
+   "length_um_max": 65.88000000000034,
+   "within405": true
+  },
+  {
+   "bank": "u_vmb_Q2",
+   "lane": "u_mu_fused_4",
+   "gap_um": 8.64,
+   "length_um_max": 65.87999999999988,
+   "within405": true
+  },
+  {
+   "bank": "u_vmb_Q2_mu1",
+   "lane": "u_mu_fused_5",
+   "gap_um": 8.64,
+   "length_um_max": 65.87999999999988,
+   "within405": true
+  },
+  {
+   "bank": "u_vmb_Q3",
+   "lane": "u_mu_fused_6",
+   "gap_um": 8.64,
+   "length_um_max": 65.87999999999988,
+   "within405": true
+  },
+  {
+   "bank": "u_vmb_Q3_mu1",
+   "lane": "u_mu_fused_7",
+   "gap_um": 8.64,
+   "length_um_max": 65.87999999999977,
+   "within405": true
+  },
+  {
+   "bank": "u_vmb_Q4",
+   "lane": "u_mu_fused_8",
+   "gap_um": 8.64,
+   "length_um_max": 65.88000000000034,
+   "within405": true
+  },
+  {
+   "bank": "u_vmb_Q4_mu1",
+   "lane": "u_mu_fused_9",
+   "gap_um": 8.64,
+   "length_um_max": 65.87999999999943,
+   "within405": true
+  },
+  {
+   "bank": "u_vmb_Q5",
+   "lane": "u_mu_fused_10",
+   "gap_um": 8.64,
+   "length_um_max": 65.88000000000011,
+   "within405": true
+  },
+  {
+   "bank": "u_vmb_Q5_mu1",
+   "lane": "u_mu_fused_11",
+   "gap_um": 8.64,
+   "length_um_max": 65.88000000000056,
+   "within405": true
+  },
+  {
+   "bank": "u_vmb_Q6",
+   "lane": "u_mu_fused_12",
+   "gap_um": 8.64,
+   "length_um_max": 65.88000000000056,
+   "within405": true
+  },
+  {
+   "bank": "u_vmb_Q6_mu1",
+   "lane": "u_mu_fused_13",
+   "gap_um": 8.64,
+   "length_um_max": 65.88000000000056,
+   "within405": true
+  },
+  {
+   "bank": "u_vmb_Q7",
+   "lane": "u_mu_fused_14",
+   "gap_um": 8.64,
+   "length_um_max": 65.88000000000034,
+   "within405": true
+  },
+  {
+   "bank": "u_vmb_Q7_mu1",
+   "lane": "u_mu_fused_15",
+   "gap_um": 8.64,
+   "length_um_max": 65.87999999999943,
+   "within405": true
+  }
+ ]
+}

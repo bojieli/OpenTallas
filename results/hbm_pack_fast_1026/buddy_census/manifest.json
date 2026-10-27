@@ -1,0 +1,16 @@
+{
+ "model_source": "a810b810fa",
+ "census_source": "6016f26553 with relay-count reporting added",
+ "inputs": {
+  "NW": {
+   "path": "results/hbm_mu_2001/buddy/NW/candidate_type.json",
+   "sha256": "fc1061be170988b30eafed3656583c002217957c16958fcf1654e9f14a67f0f2"
+  },
+  "NE": {
+   "path": "results/hbm_mu_2001/buddy/NE/candidate_type.json",
+   "sha256": "58391442da70ab873dcddd5d98edfedd83d9c260f245c123dd35ba71c5d89306"
+  }
+ },
+ "scope": "native buddy identity/width/serialization/relay census only; actual native pin/clock/PG/route/functional bind not qualified",
+ "census_source_code_sha256": "9ff2647f43f866f2693402153d8d2b85d99beb99f8f84449b1e7cc8e335ee19c"
+}

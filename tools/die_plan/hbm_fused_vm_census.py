@@ -21,7 +21,7 @@ def audit(cores,stations,expected_lanes=16):
         elif a in lanes and b in banks:
             bank,lane=b,a;kind='rq' if int(s['bits'])==18 else 'wr';expected=18 if kind=='rq' else 282
         else:continue
-        row=dict(station=i,bank=bank,lane=lane,kind=kind,bits=s['bits'],serial_k=serial,conn=s.get('conn'))
+        row=dict(station=i,bank=bank,lane=lane,kind=kind,bits=s['bits'],serial_k=serial,relay_stations=len(s.get('regs_um',[])),conn=s.get('conn'))
         rows.append(row);pairs.setdefault((bank,lane),[]).append(row)
         if serial!=1 or s.get('r11_cc_serial'):errors.append(f'station {i}: native buddy link serialized')
         if int(s['bits'])!=expected:errors.append(f'station {i}: {kind} width {s["bits"]} != {expected}')
@@ -37,6 +37,7 @@ def audit(cores,stations,expected_lanes=16):
     return dict(schema='opentallas.hbm_fused_vm_census.v1',verdict='PASS' if not errors else 'FAIL',
         scope='model native buddy identity/width/serialization only; no physical or throughput signoff',
         banks=len(banks),lanes=len(lanes),buddy_records=len(rows),pairs=len(pairs),errors=errors,
+        buddy_relay_stations_total=sum(r['relay_stations'] for r in rows),
         serialized_vm_station_indices=other_serial,buddy_rows=rows)
 
 
