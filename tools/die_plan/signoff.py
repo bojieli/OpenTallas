@@ -214,7 +214,8 @@ def macro_libs(kit, corner):
     return list(dict.fromkeys(libs)), missing
 
 
-SIGNOFF_BUNDLE = ("signoff.py", "sdc_lint.py", "face_guard.py", "io_hold_qualification.py", "pair_skew.tcl", "clock_family.tcl")
+SIGNOFF_BUNDLE = ("signoff.py", "sdc_lint.py", "face_guard.py", "io_hold_qualification.py", "pair_skew.tcl", "clock_family.tcl",
+                  "kit_modes.py")
 
 
 def signoff_bundle_sources(source=HERE):
@@ -1227,6 +1228,21 @@ def ff_reference_problem(rec, cff, requested):
     return None
 
 
+def timing_modes_check(kit, ff_bound_ps=None):
+    """SIGNOFF-MODES-2: kit_modes.signoff_record on the kit; None when there is no kit config.mk (die-level record /
+    re-evaluation away from the kit) or the kit predates the per-corner binding.  Missing helper -> FAIL (re-bundle)."""
+    if not kit or not (Path(kit) / "config.mk").is_file():
+        return None
+    try:
+        if str(HERE) not in sys.path:
+            sys.path.insert(0, str(HERE))
+        import kit_modes
+    except ImportError as e:
+        return dict(verdict="FAIL", reason=f"kit_modes.py missing next to signoff.py ({e}): re-bundle the kit")
+    r = kit_modes.signoff_record(kit, ff_bound_ps)
+    return r if r.get("applicable", True) else None
+
+
 ROUTED_NETLIST = re.compile(r"(^6_|final|route)", re.I)
 
 
@@ -1435,8 +1451,14 @@ def evaluate(rec, insertion_target=None):
     lp = lec_superset_problems(kit_lec_receipts((rec.get("inputs") or {}).get("kit")))
     if lp is not None:
         put("lec_superset", "FAIL" if lp else "PASS", problems=lp[:10])
+    # SIGNOFF-MODES-2 10-27: one timing mode per corner (kit_modes.py, re-read like lec_superset): kit binding
+    # config.mk OT_VCLK_TT == constraint.sdc vclk == sdc_lint insertion_ps, OT_VCLK_FF == insertion_ff_ps == the
+    # bound-ff value this record timed FF hold against.  A wrong-mode flow step is an advisory, not a FAIL.
+    tm = timing_modes_check((rec.get("inputs") or {}).get("kit"), (rec.get("policy") or {}).get("ff_vclk_bound_ps"))
+    if tm is not None:
+        put("timing_modes", tm.get("verdict", "NOT RUN"), **{k: v for k, v in tm.items() if k != "verdict"})
     for k in BLOCKING + (("macro_libs",) if "macro_libs" in ch else ()) + (("ft_interface",) if "ft_interface" in ch else ()) + \
-            (("lec_superset",) if "lec_superset" in ch else ()):
+            (("lec_superset",) if "lec_superset" in ch else ()) + (("timing_modes",) if "timing_modes" in ch else ()):
         v = ch[k]["verdict"]
         if v != "PASS":
             reasons.append(f"{k}: {v}" + _detail(k, ch[k]))
