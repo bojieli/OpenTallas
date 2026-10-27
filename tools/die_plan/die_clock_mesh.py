@@ -3650,7 +3650,8 @@ def cmd_combo(a):
             _, off, ext = C128.shield_geom(nd)
             L += [f"set pn [$blk findNet {shield}]",
                   f"if {{$pn eq \"NULL\"}} {{ set pn [odb::dbNet_create $blk {shield}] }}",
-                  "$pn setSpecial", "$pn setSigType GROUND", "set psw [odb::dbSWire_create $pn ROUTED]"]
+                  "$pn setSpecial", "$pn setSigType GROUND", "set psw [odb::dbSWire_create $pn ROUTED]",
+                  "lappend ::ot_clock_shield_swires $psw"]
             segs = [("M8", xlo, y, xhi, y) for y, (xlo, xhi) in hsp] + [("M9", x, ylo, x, yhi) for x, (ylo, yhi) in vsp]
             sw2 = nd["width"] / 2
             smode = M["meta"].get("strap_shield") or {}     # a 'pg' layer: the PG stripes are the shields, none drawn
