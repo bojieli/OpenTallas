@@ -1,0 +1,43 @@
+{
+  "clock_period_ps": 833,
+  "controls": [
+    {
+      "pin": "arst_n",
+      "xy": [
+        778.08,
+        918.496
+      ],
+      "nearest": "clk_t13",
+      "distance_um": 9.12
+    },
+    {
+      "pin": "start_i",
+      "xy": [
+        778.08,
+        920.672
+      ],
+      "nearest": "clk_t13",
+      "distance_um": 11.296
+    },
+    {
+      "pin": "rst_o_0",
+      "xy": [
+        131.04,
+        8.608
+      ],
+      "nearest": "clk_t2",
+      "distance_um": 65.952
+    },
+    {
+      "pin": "start_o_0",
+      "xy": [
+        133.216,
+        8.608
+      ],
+      "nearest": "clk_t2",
+      "distance_um": 63.776
+    }
+  ],
+  "taps": 21,
+  "source": "7bb650272d + ctl_trial_native100 candidate"
+}
