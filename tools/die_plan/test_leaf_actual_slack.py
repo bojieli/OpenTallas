@@ -2,9 +2,10 @@ from types import SimpleNamespace
 from unittest.mock import patch
 import die_clock_mesh as DM
 
-def vehicle(exact, generic=False):
+def vehicle(exact, generic=False, segments=None):
  P=SimpleNamespace(W=800.,H=800.,clock={},types={'T':{}},layer_budget={'partition_signal_max':'M7'},parts={'p':{'type':'T'}},rect=lambda n:(0.,0.,800.,800.),to_die=lambda n,xy:xy)
  lat=dict(ys_um=[200.,600.],leaf_ys_um=[200.,600.],xs_um=[200.,600.],leaf_grid=[2,2],drv_reach_um=200.,off_core_resite=True,off_core_drop_driver=True,off_core_alt_l=True,hop_reach_um=405.,actual_leaf_slack=exact)
+ if segments is not None:lat['min_level_segments']=segments
  with patch.object(DM.DC,'keepouts',return_value=[(150.,300.,250.,500.,'p/core')]),patch.object(DM.DC,'plan_taps',return_value=[('p','clk',600.,600.,0.)]),patch.object(DM.DC,'plan_tap_early',return_value={}):
   return DM.build(P,2,2,m=1,max_move=0.,rep_um=405.,hop_max=405.,lattice=None if generic else lat)
 
@@ -27,3 +28,15 @@ def test_nearest_free_search_keeps_actual_incoming_reach_bound():
 def test_generic_tree_does_not_enter_leaf_grid_optional_policy():
  cells,nets,ports,model=vehicle(False,generic=True)
  assert cells and nets and model['htree']
+
+
+def test_minimum_segments_adds_equal_stages_to_the_whole_internal_level():
+ _,_,_,base=vehicle(True);_,_,_,more=vehicle(True,segments={'1':2})
+ assert {x['n_seg'] for x in base['htree'] if x['level']==1} == {1}
+ assert {x['n_seg'] for x in more['htree'] if x['level']==1} == {2}
+ assert all(x['n_seg']==1 for x in more['htree'] if x.get('leaf'))
+
+def test_leaf_level_cannot_claim_unrealized_extra_buffers():
+ import pytest
+ with pytest.raises(ValueError,match='internal buffered levels'):
+  vehicle(True,segments={'2':2})

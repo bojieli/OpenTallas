@@ -1341,6 +1341,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                       # orientation of the same leg (same length, same stage count) before any in-core pushdown
                       alt_l=bool(lattice.get("off_core_alt_l", False)),
                       actual_leaf_slack=bool(lattice.get("actual_leaf_slack", False)),
+                      min_segments={int(k): int(v) for k,v in lattice.get("min_level_segments", {}).items()},
                       # CLOCK-KV-R11 (opt-in): {module: [[u, v], ...]} canonical in-core island sites in the CORE frame
                       # (origin + track_offset, core orient); a pushdown driver in such a core snaps onto the nearest
                       # site within canon_tol_um so every instance of the module carries one identical island
@@ -1460,6 +1461,10 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
             raise C128.PlanError([dict(kind="pg_snap", name="mesh axis", detail=str(e))])
         axis_snap = dict(M9=round(max(abs(x-y) for x, y in zip(xs, old_xs)), 6),
                          M8=round(max(abs(x-y) for x, y in zip(ys, old_ys)), 6))
+    if lg:
+        maxlevel = int(math.ceil(math.log2(lg["nx"] * lg["ny"])))
+        if any(k < 1 or k >= maxlevel or v < 1 or k in lg["wire_levels"] for k,v in lg.get("min_segments", {}).items()):
+            raise ValueError("min_level_segments requires positive counts on internal buffered levels")
     cells, nets, ports = {}, [], [("input", "root")]
     out = dict(meta=dict(nx=nx, ny=ny, m=m, rep_um=rep_um, ndr=ndr, sites=sites, W=W, H=H, pitch_um=[W / nx, H / ny]),
                xs=xs, ys=ys, drivers={}, htree=[], stubs=[], unplaced=[])
@@ -1733,6 +1738,11 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
     def live(i0, i1, j0, j1):
         return any(f"{i}_{jt[j]}" in out["drivers"] for i in range(i0, i1) for j in range(j0, j1))
 
+    def lg_segments(length, level):
+        # One minimum count for the entire level, so no branch gains an
+        # instance-specific stage. Leaf legs remain direct to their drivers.
+        return max(1, math.ceil(length / rep_um - 1e-9), lg.get("min_segments", {}).get(level, 1))
+
     def hop_slack(kr, lvl):
         """largest re-site slide of the node kr (level lvl) that keeps its first downstream hop within reach: a
         buffered child leg of n equal cuts allows n * hop_reach - L; a wire_levels child / leaf adds its ideal
@@ -1754,7 +1764,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
             return lg["hop_reach"] - L - lg["drv_reach"]
         if lvl + 1 in lg["wire_levels"]:
             return hop_slack(ch, lvl + 1) - L
-        return max(1, math.ceil(L / rep_um - 1e-9)) * lg["hop_reach"] - L
+        return lg_segments(L, lvl + 1) * lg["hop_reach"] - L
 
     _imod = {}
 
@@ -1862,7 +1872,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                 # A parent can already have moved. Choose a free point satisfying
                 # its real incoming budget as well as the downstream slide bound.
                 ip_ = node_xy(i0, i1, j0, j1)
-                ns_ = max(1, math.ceil((abs(kp[0] - ip_[0]) + abs(kp[1] - ip_[1])) / rep_um - 1e-9))
+                ns_ = lg_segments(abs(kp[0] - ip_[0]) + abs(kp[1] - ip_[1]), level + 1)
                 cap_ = ns_ * lg["hop_reach"]
                 if abs(q[0] - here[0]) + abs(q[1] - here[1]) > cap_ + 1e-6:
                     lim_ = max(0.0, hop_slack(kr, level + 1))
@@ -1877,7 +1887,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
             L = abs(q[0] - here[0]) + abs(q[1] - here[1])
             # stage count fixed by the IDEAL leg (same structure for every leg of the level, whatever the re-sites)
             ip = node_xy(i0, i1, j0, j1)
-            n_seg = max(1, math.ceil((abs(kp[0] - ip[0]) + abs(kp[1] - ip[1])) / rep_um - 1e-9))
+            n_seg = lg_segments(abs(kp[0] - ip[0]) + abs(kp[1] - ip[1]), level + 1)
             if L / n_seg > lg["hop_reach"] + 1e-6:
                 out["unplaced"].append([tag, "STRUCTURAL re-sited leg hop beyond reach", round(L / n_seg, 2)])
             reps, prev, first = [], None, None
