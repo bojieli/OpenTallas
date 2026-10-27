@@ -1,0 +1,12 @@
+time	host	path	size_kb	reason
+2026-10-26 18:37:57 PDT	epyc2	/srv/opentallas-scratch2/claude/s81-kits	41628132	untouched >24h (newest 10-25 06:18), no proc/cwd/docker/scope/queue ref; 15 routed kits all NOT SIGNED (failed/superseded); KEPT SIGNED c3/dsdv_eng_rr_h1_c (2.8G, TT +34.75/FF +0.87, not in closed_archive)
+2026-10-26 18:37:59 PDT	epyc2	/srv/opentallas-scratch2/claude/proto1025	29686996	untouched >24h (newest 10-25 05:02), prototype gen/kits superseded by later protos, no 6_final, no live proc/docker/scope/queue ref on epyc2
+2026-10-26 18:38:01 PDT	epyc2	/srv/opentallas-scratch2/claude/codex-hbm	21229052	untouched >24h (newest 10-24 10:48), Codex prog_r8 runs superseded, no 6_final, no live ref
+2026-10-26 18:38:04 PDT	epyc2	/srv/opentallas-scratch2/claude/tok-hbm	21178192	untouched >24h (newest 10-24 19:27), old HBM token build superseded by tok-hbm-suv/codex-tok-hbm-1026, no live ref
+2026-10-26 18:38:05 PDT	epyc2	/srv/opentallas-scratch2/claude/s81-portfix	20142024	untouched >24h (newest 10-25 01:37), portfix flt kits superseded, no 6_final, no live ref
+2026-10-26 18:38:08 PDT	epyc2	/srv/opentallas-scratch2/claude/kv-tok	18957972	untouched >24h (newest 10-25 01:47), old KV token builds (bo1tok) superseded; B/repo clean, HEAD in origin; no live ref
+2026-10-26 18:38:08 PDT	epyc2	/srv/opentallas-scratch2/claude/s81-st-rst	14676520	untouched >24h (newest 10-25 01:45), S81 station-reset kitsW superseded, no 6_final, no live ref
+2026-10-26 18:38:09 PDT	epyc2	/srv/opentallas-scratch2/claude/kits-spare3	9826864	untouched >24h (newest 10-25 15:22), spare kit wave, no 6_final, no live/queue ref
+2026-10-26 18:38:10 PDT	epyc2	/srv/opentallas-scratch2/claude/codex-s81-split	9473340	untouched >24h (newest 10-25 02:39), 4 vn_a/vn_b split routes all NOT SIGNED (failed), no live/queue ref
+2026-10-26 18:38:10 PDT	epyc2	/srv/opentallas-scratch2/claude/kv-cores-1025r	9129756	untouched >24h (newest 10-25 06:32), KV cores 1025r kits superseded, no 6_final, no live ref
+# 2026-10-26 18:38:31 PDT epyc2 scratch2 df before 703G used/132G avail (85%) -> after 482G/353G (58%, 40% free); 186.0 GB deleted (sum size_kb). Kept: moved/ (root relocation), all dirs touched <24h, queue-referenced REQ/PASS-COND kits (hbm-cores-1025, hbm-kits-1025, s81-cores3-rt, s81-cores3-sw, s81-cores-split), SIGNED routes s81-kits/c3/dsdv_eng_rr_h1_c, codex-s81-cores/c4/ot_dsrom_su_hcpost_lane_pr_c, codex-qc-cores/crh_i291_m5 (not in closed_archive; COORD: archive these 3 later).
