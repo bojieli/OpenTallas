@@ -1,0 +1,212 @@
+
+-- Executing script file `/work/wrongbit6.ys' --
+
+1. Executing Verilog-2005 frontend: /work/ot_hdc_delay_rf.sv
+Parsing SystemVerilog input from `/work/ot_hdc_delay_rf.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_delay_rf'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /work/top.sv
+Parsing SystemVerilog input from `/work/top.sv' to AST representation.
+Generating RTLIL representation for module `\rf_base'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \rf_base
+Used module:     \ot_hdc_delay_rf
+Parameter \W = 2
+Parameter \D = 6
+
+3.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay_rf'.
+Parameter \W = 2
+Parameter \D = 6
+Generating RTLIL representation for module `$paramod$21972ec9f27f976e7fae6cc119f99ee88abb50f1\ot_hdc_delay_rf'.
+
+3.3. Analyzing design hierarchy..
+Top module:  \rf_base
+Used module:     $paramod$21972ec9f27f976e7fae6cc119f99ee88abb50f1\ot_hdc_delay_rf
+
+3.4. Analyzing design hierarchy..
+Top module:  \rf_base
+Used module:     $paramod$21972ec9f27f976e7fae6cc119f99ee88abb50f1\ot_hdc_delay_rf
+Removing unused module `\ot_hdc_delay_rf'.
+Removed 1 unused modules.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+4.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 6 assignments to connections.
+
+4.4. Executing PROC_INIT pass (extract init attributes).
+
+4.5. Executing PROC_ARST pass (detect async resets in processes).
+
+4.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+4.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod$21972ec9f27f976e7fae6cc119f99ee88abb50f1\ot_hdc_delay_rf.$proc$/work/ot_hdc_delay_rf.sv:31$11'.
+
+4.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+4.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod$21972ec9f27f976e7fae6cc119f99ee88abb50f1\ot_hdc_delay_rf.\din' using process `$paramod$21972ec9f27f976e7fae6cc119f99ee88abb50f1\ot_hdc_delay_rf.$proc$/work/ot_hdc_delay_rf.sv:31$11'.
+  created $dff cell `$procdff$19' with positive edge clock.
+Creating register for signal `$paramod$21972ec9f27f976e7fae6cc119f99ee88abb50f1\ot_hdc_delay_rf.\dout' using process `$paramod$21972ec9f27f976e7fae6cc119f99ee88abb50f1\ot_hdc_delay_rf.$proc$/work/ot_hdc_delay_rf.sv:31$11'.
+  created $dff cell `$procdff$20' with positive edge clock.
+Creating register for signal `$paramod$21972ec9f27f976e7fae6cc119f99ee88abb50f1\ot_hdc_delay_rf.\wptr' using process `$paramod$21972ec9f27f976e7fae6cc119f99ee88abb50f1\ot_hdc_delay_rf.$proc$/work/ot_hdc_delay_rf.sv:31$11'.
+  created $dff cell `$procdff$21' with positive edge clock.
+Creating register for signal `$paramod$21972ec9f27f976e7fae6cc119f99ee88abb50f1\ot_hdc_delay_rf.$memwr$\mem$/work/ot_hdc_delay_rf.sv:33$10_ADDR' using process `$paramod$21972ec9f27f976e7fae6cc119f99ee88abb50f1\ot_hdc_delay_rf.$proc$/work/ot_hdc_delay_rf.sv:31$11'.
+  created $dff cell `$procdff$22' with positive edge clock.
+Creating register for signal `$paramod$21972ec9f27f976e7fae6cc119f99ee88abb50f1\ot_hdc_delay_rf.$memwr$\mem$/work/ot_hdc_delay_rf.sv:33$10_DATA' using process `$paramod$21972ec9f27f976e7fae6cc119f99ee88abb50f1\ot_hdc_delay_rf.$proc$/work/ot_hdc_delay_rf.sv:31$11'.
+  created $dff cell `$procdff$23' with positive edge clock.
+Creating register for signal `$paramod$21972ec9f27f976e7fae6cc119f99ee88abb50f1\ot_hdc_delay_rf.$memwr$\mem$/work/ot_hdc_delay_rf.sv:33$10_EN' using process `$paramod$21972ec9f27f976e7fae6cc119f99ee88abb50f1\ot_hdc_delay_rf.$proc$/work/ot_hdc_delay_rf.sv:31$11'.
+  created $dff cell `$procdff$24' with positive edge clock.
+
+4.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `$paramod$21972ec9f27f976e7fae6cc119f99ee88abb50f1\ot_hdc_delay_rf.$proc$/work/ot_hdc_delay_rf.sv:31$11'.
+Cleaned up 0 empty switches.
+
+4.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module rf_base.
+Optimizing module $paramod$21972ec9f27f976e7fae6cc119f99ee88abb50f1\ot_hdc_delay_rf.
+
+5. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+Mapping memory \mem in module $paramod$21972ec9f27f976e7fae6cc119f99ee88abb50f1\ot_hdc_delay_rf:
+  created 4 $dff cells and 0 static cells of width 2.
+  read interface: 0 $dff and 3 $mux cells.
+  write interface: 4 write mux blocks.
+
+6. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$21972ec9f27f976e7fae6cc119f99ee88abb50f1\ot_hdc_delay_rf.
+<suppressed ~1 debug messages>
+
+7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \rf_base..
+Removed 3 unused cells and 17 unused wires.
+<suppressed ~4 debug messages>
+
+8. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Imported 26 cells to SAT database.
+No constraints for initial state found.
+
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Imported 26 cells to SAT database.
+
+Setting up time step 3:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Imported 26 cells to SAT database.
+
+Setting up time step 4:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Imported 26 cells to SAT database.
+
+Setting up time step 5:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Imported 26 cells to SAT database.
+
+Setting up time step 6:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Imported 26 cells to SAT database.
+
+Setting up time step 7:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Imported 26 cells to SAT database.
+Import proof-constraint: \q = 2'00
+Final proof equation: \q = 2'00
+Import show expression: \q
+Import show expression: \u.wptr
+Import show expression: \u.din
+Import show expression: \u.dout
+
+Solving problem with 5424 variables and 14539 clauses..
+SAT proof finished - model found: FAIL!
+
+   ______                   ___       ___       _ _            _ _ 
+  (_____ \                 / __)     / __)     (_) |          | | |
+   _____) )___ ___   ___ _| |__    _| |__ _____ _| | _____  __| | |
+  |  ____/ ___) _ \ / _ (_   __)  (_   __|____ | | || ___ |/ _  |_|
+  | |   | |  | |_| | |_| || |       | |  / ___ | | || ____( (_| |_ 
+  |_|   |_|   \___/ \___/ |_|       |_|  \_____|_|\_)_____)\____|_|
+
+
+  Time Signal Name             Dec       Hex           Bin
+  ---- --------------- ----------- --------- -------------
+  init \u.din                    0         0            00
+  init \u.dout                   0         0            00
+  init \u.mem[0]                 0         0            00
+  init \u.mem[1]                 0         0            00
+  init \u.mem[2]                 0         0            00
+  init \u.mem[3]                 0         0            00
+  init \u.wptr                   1         1            01
+  ---- --------------- ----------- --------- -------------
+     1 \q                        0         0            00
+     1 \u.din                    0         0            00
+     1 \u.dout                   0         0            00
+     1 \u.wptr                   1         1            01
+  ---- --------------- ----------- --------- -------------
+     2 \q                        0         0            00
+     2 \u.din                    1         1            01
+     2 \u.dout                   0         0            00
+     2 \u.wptr                   2         2            10
+  ---- --------------- ----------- --------- -------------
+     3 \q                        0         0            00
+     3 \u.din                    1         1            01
+     3 \u.dout                   0         0            00
+     3 \u.wptr                   3         3            11
+  ---- --------------- ----------- --------- -------------
+     4 \q                        0         0            00
+     4 \u.din                    1         1            01
+     4 \u.dout                   0         0            00
+     4 \u.wptr                   0         0            00
+  ---- --------------- ----------- --------- -------------
+     5 \q                        0         0            00
+     5 \u.din                    1         1            01
+     5 \u.dout                   0         0            00
+     5 \u.wptr                   1         1            01
+  ---- --------------- ----------- --------- -------------
+     6 \q                        0         0            00
+     6 \u.din                    1         1            01
+     6 \u.dout                   0         0            00
+     6 \u.wptr                   2         2            10
+  ---- --------------- ----------- --------- -------------
+     7 \q                        1         1            01
+     7 \u.din                    1         1            01
+     7 \u.dout                   1         1            01
+     7 \u.wptr                   3         3            11
+Dumping SAT model to WaveJSON file '/work/wrongbit6.cex.json'.
+
+End of script. Logfile hash: 5f2fe5c793, time: 0.05s, user: 0.08s, system: 0.03s, MEM: 27.70 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 87% 1x sat (0 sec), 5% 3x read_verilog (0 sec), ...

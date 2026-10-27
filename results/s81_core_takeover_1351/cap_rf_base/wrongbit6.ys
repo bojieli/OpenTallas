@@ -1,0 +1,7 @@
+read_verilog -sv -D SYNTHESIS /work/ot_hdc_delay_rf.sv /work/top.sv
+hierarchy -top rf_base
+proc
+memory_map
+flatten
+opt_clean
+sat -seq 7 -set-def-inputs -set-init-def -prove q 2'b00 -prove-skip 6  -show q -show u.wptr -show u.din -show u.dout -dump_json /work/wrongbit6.cex.json
