@@ -41,3 +41,12 @@ pulled to the pin faces, long local clock tree. COORD: no more trunk; shrink the
   (R4: 2003); GRT util 59%. Prediction ~264/205 vs measured 262.0/203.2 (prediction UNCHECKED, measurement CHECKED).
 - DRT -> finish -> abstract -> signoff tt,ff -> routed LEC (OT_LEC_SUPERSET_VEC=1) RUNNING in attempt 2 at 03:05 PDT.
   Collect kit/{chain_r5.status, signoff/signoff.json, lec_routed/lec.json (superset_vec.extra_bits)}.
+
+## Clock pin snap (COORD 2026-10-27)
+- clk was at x 43.2 = half an M5 track (M5 tracks 0.024 + k*0.048). Now x 43.224 (k 900), y 43.2 (pins_r5.json, io_r5.tcl,
+  master_slice.json, gen_r5_collar.py). The plan copies pins_r5.json verbatim (HBM-MU-QUAD-5).
+- Attempt 2 (clk 43.2) passed CTS/GRT gates (TT 262.0 / FF 203.2, above) but DRT FAILED: DRT-0255 "Maze Route cannot find path of net clk"
+  at the pin (routeBox 39.9..43.89) = the half-track pin had no on-track access point (attempt2 logs kept outside git). Insertion numbers
+  above are from the 43.2 pin; the signed view must use the snapped pin.
+- Attempt 3 (unit oth-ubuntu-2802261-1793099257, started 04:07 PDT): kit io.tcl/pins.json/master_slice*.json = snapped pin, rerun from
+  floorplan (synth kept, netlist unchanged) -> place -> CTS -> GRT -> DRT -> finish -> signoff -> routed LEC (OT_LEC_SUPERSET_VEC=1).

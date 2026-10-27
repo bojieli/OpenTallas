@@ -1558,4 +1558,4 @@ place_pin -pin_name {pw_data[144]} -layer M4 -location {0.0960 83.5920} -pin_siz
 place_pin -pin_name {pw_data[145]} -layer M4 -location {0.0960 83.7840} -pin_size {0.1920 0.0240}
 place_pin -pin_name {pw_data[146]} -layer M4 -location {0.0960 84.0240} -pin_size {0.1920 0.0240}
 place_pin -pin_name {pw_data[147]} -layer M4 -location {0.0960 84.2160} -pin_size {0.1920 0.0240}
-place_pin -pin_name {clk} -layer M5 -location {43.2000 43.2000} -pin_size {0.032 0.192}   ;# master-plan slice centre entry (R5 trial outline)
+place_pin -pin_name {clk} -layer M5 -location {43.2240 43.2000} -pin_size {0.032 0.192}   ;# master-plan slice centre entry (R5 trial outline), x snapped to M5 track 43.224 (COORD)

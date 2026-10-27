@@ -56,8 +56,9 @@ for f, lst in faces.items():
             out.append(dict(bus=bus, bit=bit, layer="M4", x=x, y=t, face=f))
             io.append(f"place_pin -pin_name {{{nm}}} -layer M4 -location {{{side-0.096 if f=='E' else 0.096:.4f} {t:.4f}}} -pin_size {{0.1920 0.0240}}")
 c = side / 2; i0, i1 = c - 4.32, c + 4.32
-out.append(dict(bus="clk", bit=None, layer="M5", x=c, y=c, face="C"))
-io.append(f"place_pin -pin_name {{clk}} -layer M5 -location {{{c:.4f} {c:.4f}}} -pin_size {{0.032 0.192}}   ;# master-plan slice centre entry (R5 trial outline)")
+cx = round(0.024 + round((c - 0.024) / 0.048 + 1e-9) * 0.048, 3)  # M5 track (COORD: no half-track clk pin); 43.2 -> 43.224
+out.append(dict(bus="clk", bit=None, layer="M5", x=cx, y=c, face="C"))
+io.append(f"place_pin -pin_name {{clk}} -layer M5 -location {{{cx:.4f} {c:.4f}}} -pin_size {{0.032 0.192}}   ;# master-plan slice centre entry (R5 trial outline)")
 if new.exists(): raise SystemExit(f"{new} exists")
 shutil.copytree(r4, new, ignore=shutil.ignore_patterns("run", "lec", "FAIL_*", "*.log", "placed.csv", "postcts_gate_*", "ot_face_flops.txt", "hold_census.txt", "__pycache__", "face_shell_work"))
 (new / "pins.json").write_text(json.dumps(out) + "\n")
@@ -72,7 +73,7 @@ cm += f"# HBM-CORE-LAT-R5 2026-10-27: trial outline {side:g}^2 (was 108^2, ~35% 
 ms = json.load(open(new / "master_slice.json"))
 ms["outline_um"] = [side, side]
 ms["islands"][0]["rect_um"] = [i0, i0, i1, i1]; ms["islands"][0]["centre_um"] = [c, c]
-ms["islands"][0]["clock_pin"]["xy_um"] = [c, c]
+ms["islands"][0]["clock_pin"]["xy_um"] = [cx, c]
 ms["note"] += f" | HBM-CORE-LAT-R5: TRIAL outline {side}^2 + rebalanced pins, pending HBM-MU-QUAD-3 planU2 delta"
 (new / "master_slice.json").write_text(json.dumps(ms, indent=1) + "\n")
 t = (new / "master_slice.tcl").read_text()
