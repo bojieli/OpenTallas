@@ -14,5 +14,7 @@
   },
   "provider_lint": "Elaboration PASS; no changed-file WIDTH/SELRANGE; inherited primitive warnings retained",
   "leaf_bind": "PASS gen.py rtl --types hd_host --rtl-root",
-  "boot_dates": "UNRESOLVED explicit compiler params; defaults not admitted"
+  "boot_dates": "UNRESOLVED explicit compiler params; defaults not admitted",
+  "rx_only_return_probe": "PASS all6 modes at RX_ONLY1 with nonzero local/return rings; original RX_ONLY0 control passes all6",
+  "staging_failure": "First probe NOT RUN after helper imported unstaged die_plan/gen; fixed with standalone source closure and reran successfully."
 }

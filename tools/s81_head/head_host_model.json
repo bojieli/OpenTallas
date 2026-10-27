@@ -38,5 +38,16 @@
     "compiled production boot dates and stage/rank identity",
     "master-plan slice and physical timing"
   ],
-  "job_active_input_capture_edges": 1
+  "job_active_input_capture_edges": 1,
+  "hbc_test_profile_observed": {
+    "status": "component TEST profile, not production HEAD schedule",
+    "boot_header_edge": 20,
+    "boot_body_edge": 24,
+    "boot_commit_edge": 30,
+    "context_valid_bench_cycle": 33,
+    "hbe_header_bench_cycle": 126,
+    "hbe_receiver_edge": 1100,
+    "f_host_bench_write_cycle": 133,
+    "native_consumer_contract_from_existing_bench": "HOST body +4 edges / KS header +2 edges; production native test not rerun here"
+  }
 }

@@ -7,7 +7,9 @@ import argparse,copy,json,sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools/s81_head'))
-from head_rtl_plan_delta import MESH_SOURCES
+# Keep this closure usable in a staged RTL-only vehicle; importing the plan
+# composer would load die-plan tools even for source-list-only lint.
+MESH_SOURCES=['rtl/link/ot_link_crc32.sv', 'rtl/lib/ot_rst_relay_tree3.sv', 'rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv', 'rtl/lib/ot_sram_oldread_b64.sv', 'rtl/lib/ot_sram_showahead_b64.sv', 'rtl/common/ot_link_credit_rx_b64.sv', 'rtl/common/ot_link_credit_tx_rc.sv', 'rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv', 'rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv', 'rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv', 'physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v', 'physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.v', 'rtl/dsrom_sys/s81_head/ot_s81hd_util.sv', 'rtl/dsrom_sys/s81_head/ot_s81hd_lsc_parts.sv', 'rtl/dsrom_sys/s81_head/ot_s81hd_beat_link.sv', 'rtl/dsrom_sys/s81_head/ot_s81hd_best64.sv', 'rtl/dsrom_sys/s81_head/ot_s81hd_mesh_ep_core.sv']
 HOSTB='rtl/dsrom_sys/s81_dv/hostb/'
 HBC_FILES=['dsdv_hostb_hold.sv','dsdv_hostb_crc512.sv','dsdv_hostb_rx.sv','dsdv_hostb_tx.sv','dsdv_hostb_stage.sv','dsdv_hbc1_loader.sv','dsdv_hbc1_affine_book.sv','dsdv_hostb_stage_hbc.sv']
 SOURCES=list(dict.fromkeys(MESH_SOURCES+['rtl/lib/ot_reset_sync.sv']+[HOSTB+p for p in HBC_FILES]+['rtl/dsrom_sys/s81_head/ot_s81hd_host276.sv','rtl/dsrom_sys/s81_head/ot_s81hd_host_ep_core.sv']))

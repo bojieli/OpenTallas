@@ -25,6 +25,9 @@ import sys
 from pathlib import Path
 out=Path(sys.argv[1]);p=Path('tools/s81_dv/hostctx_1021/tb_hostb_stage_hbc.sv')
 s=p.read_text().replace('module tb_hostb_stage_hbc;', 'module tb_hostb_stage_hbc #(parameter integer RX_ONLY=0);').replace('#(.ENABLE(1),.LOCAL_STAGE','#(.ENABLE(1),.RX_ONLY(RX_ONLY),.LOCAL_STAGE')
+s=s.replace('wire [1103:0] to_local,next_ro;', 'wire [1103:0] probe_ro=RX_ONLY!=0 ? {571\'d0,512\'hFEDCBA9876543210,8\'d0,4\'d0,5\'d1,3\'d6,1\'b1}:1104\'d0;\n wire [1103:0] to_local,next_ro;')
+s=s.replace('.local_ro(1104\'d0),.return_ro(1104\'d0)', '.local_ro(probe_ro),.return_ro(probe_ro),.status_t_host(77\'d0),.status_t_kd(54\'d0)')
+s=s.replace('#0.01;cyc++;', '#0.01;cyc++; if(RX_ONLY!=0 && next_ro!==probe_ro)$fatal(1,\"RX_ONLY pass-through mismatch\");')
 (out/'tb_hbc.sv').write_text(s)
 sys.path.insert(0,'tools/s81_head');from head_host_plan_delta import SOURCES
 (out/'provider_sources.f').write_text('\n'.join(SOURCES)+'\n')
