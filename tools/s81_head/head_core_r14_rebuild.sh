@@ -21,7 +21,7 @@ mkdir -p "$OUT"; OUT=$(realpath "$OUT")
 exec >> "$OUT/r14_rebuild.log" 2>&1
 NICK=$(sed -n 's/^export DESIGN_NICKNAME = //p' "$SRC/config.mk" | tail -1)
 echo "R14RB start $(date -Is) host $(hostname) src $SRC nick $NICK plan '$PLAN' clk '${CLK:-keep}'"
-rsync -a --exclude /run --exclude '/signoff*' --exclude '/*.log' --exclude /rc.txt --exclude '/lec*' --exclude '/actual_*.v' --exclude '/actual_sta_*.json' --exclude '/repaired_*' \
+rsync -a --exclude /run --exclude '/signoff_*' --exclude '/signoff.log' --exclude '/*.log' --exclude /rc.txt --exclude '/lec*' --exclude '/actual_*.v' --exclude '/actual_sta_*.json' --exclude '/repaired_*' \
   --exclude '/if_base' --exclude '/if_mut' "$SRC"/ "$OUT"/
 for f in config.mk io.tcl bind_ff_actual.tcl actual_head_sta.tcl pre_cts_r5.tcl cf/mscts_core.tcl cf/mscts_h_head.tcl; do
   test -s "$OUT/$f" || { echo "R14RB FAIL kit lacks $f"; exit 2; }; done

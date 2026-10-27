@@ -25,7 +25,7 @@ for f in config.mk lec.py rtl macros; do test -e "$GOLD/$f" || { echo "head_post
 mkdir -p "$OUT"; OUT=$(realpath "$OUT")
 exec >> "$OUT/eco_chain.log" 2>&1
 echo "HEAD_ECO_CHAIN start $(date -Is) kit $(hostname):$KIT nick $NICK gold $GOLD"
-rsync -a --exclude /run --exclude '/signoff*' --exclude '/*.log' --exclude /rc.txt "$KIT"/ "$OUT"/
+rsync -a --exclude /run --exclude '/signoff_*' --exclude '/signoff.log' --exclude '/*.log' --exclude /rc.txt "$KIT"/ "$OUT"/
 B=$OUT/run/results/asap7/$NICK/base
 mkdir -p "$B" "$OUT/run/logs/asap7/$NICK/base" "$OUT/run/reports/asap7/$NICK/base" "$OUT/run/objects/asap7/$NICK/base"
 cp "$RS/5_2_route.odb" "$B/4_cts.odb"
