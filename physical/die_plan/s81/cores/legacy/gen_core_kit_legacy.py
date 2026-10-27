@@ -657,6 +657,13 @@ def regional_taps_cfg(kd, rt, ckb):
             "export SKIP_CTS_REPAIR_TIMING = 1", f"export CTS_ARGS = {rt.get('cts_args', RT_CTS_ARGS)}"]
 
 
+def _pins_canon(kd, outline):
+    """GATE-PINS-2 canonical pin hash of the kit's placed pin set (io.tcl), the one shared kit_contract form."""
+    sys.path.insert(0, str(TOOL))
+    import kit_contract
+    return kit_contract._canon(kit_contract.placed_pins(kd), outline)
+
+
 def git_show(spec):
     return subprocess.run(["git", "-C", str(REPO), "show", spec], capture_output=True, text=True, check=True).stdout
 
@@ -1378,6 +1385,8 @@ def main():
                    "pin_expand": rec.get("pin_expand", {})}
                  if hc.get("child_of") else {}),
               pins_file=hc["pins_file"], pins_sha256=sha(REPO / hc["pins_file"] if "pins" in hc else S81 / hc["pins_file"]), pins=len(pins), plan_lef=hc["lef"],
+              # PREFLIGHT-2 GATE-PINS-2 (kit_contract.pins_canonical): canonical sha of the kit placed pin set (io.tcl)
+              pins_canon_sha256=_pins_canon(kd, [w, h]),
               clocks=clks, resets=rsts, **({"multi_root": dict(roots=mr["roots"], entries=sum(len(r["pins"]) for r in mr["roots"]))}
                                            if mr else {}),
               recipe_sha256=hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest(),
