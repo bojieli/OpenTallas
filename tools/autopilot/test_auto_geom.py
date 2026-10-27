@@ -17,6 +17,9 @@ from test_autopilot import TickBase, ROW, KIT  # noqa: E402
 def dump(path, die=(0, 0, 200, 200), flops=(), comb=(), nets=(), pins=(), macros=()):
     """flops/comb/macros: (id, x, y[, name]); pins: (k, name, io, x, y[, sig]); nets: (sig, drv, [sinks])"""
     L = ["D\t" + "\t".join(map(str, die))]
+    L += ["T\tM2\tHORIZONTAL\t0.036", "T\tM3\tVERTICAL\t0.036", "T\tM4\tHORIZONTAL\t0.048", "T\tM5\tVERTICAL\t0.048"]
+    if macros:
+        L.append("O\tsram_x\tM1\tM2\tM3\tM4")
     for i, x, y, *n in flops:
         L.append(f"C\t{i}\tS\tDFFHQNx1_ASAP7_75t_R\t{x - .5}\t{y - .5}\t{x + .5}\t{y + .5}\t{n[0] if n else f'ff{i}'}")
     for i, x, y, *n in comb:
@@ -46,13 +49,113 @@ def fill_cells(n0, count, die=200):
     return out
 
 
+GRT_OK = """[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M2              226772         68229           30.09%             0 /  0 /  0
+M3              263214         66743           25.36%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total          1736309        975818           56.20%             0 /  0 /  0
+OT_GRT_DONE
+"""
+
+
 class TestRules(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.d = Path(self.tmp.name)
+        (self.d / "grt.log").write_text(GRT_OK)
+        self._metrics = G.metrics
+        G.metrics = lambda p, *a, **k: self._metrics(p, *a, **dict(k, grt_log=k.get("grt_log", str(self.d / "grt.log"))))
 
     def tearDown(self):
+        G.metrics = self._metrics
         self.tmp.cleanup()
+
+    def test_grt_log_parse_overflow_and_unfinished(self):
+        self.assertEqual(G.grt_metrics(str(self.d / "grt.log"))["grt_overflow"], 0)
+        bad = GRT_OK.replace("0 /  0 /  0\nOT", "22 / 22 / 13484\nOT")
+        (self.d / "b.log").write_text("Start extra iteration 50/50\n" + bad)
+        g = G.grt_metrics(str(self.d / "b.log"))
+        self.assertEqual((g["grt_overflow"], g["grt_iterations"]), (13484, 50))
+        (self.d / "u.log").write_text("Start extra iteration 7/50\n")
+        self.assertIsNone(G.grt_metrics(str(self.d / "u.log"))["grt_overflow"])
+        m = self._metrics(str(self.base(far=150.0)), odb="3_place.odb", grt_log=str(self.d / "b.log"))
+        self.assertEqual([r["status"] for r in G.judge(m, None, [200, 200])[0] if r["rule"] == "grt"], ["FAIL"])
+        m = self._metrics(str(self.base(far=150.0)), odb="3_place.odb")
+        self.assertEqual([r["status"] for r in G.judge(m, None, [200, 200])[0] if r["rule"] == "grt"], ["NA"])
+
+    def test_clock_entry_on_macro_and_cells_on_macro(self):
+        carpet = [c for c in fill_cells(100, 3600) if not (60 < c[1] < 140 and 60 < c[2] < 140)]
+        carpet.append((99, 100, 100))                          # one std cell on the macro
+        p = dump(self.d / "cm.tsv", flops=[(1, 20, 20), (2, 180, 180)], comb=carpet, macros=[(500, 60, 60, 140, 140)],
+                 nets=[("CLOCK", "p0", ["i1c", "i2c"]), ("SIGNAL", "i1", ["i2"])],
+                 pins=[(0, "clk", "INPUT", 100, 100, "CLOCK")])
+        m = G.metrics(str(p), odb="3_place.odb")
+        self.assertEqual(m["cells_on_macros"], 1)
+        self.assertEqual(m["clock_entry_on_macro"], 1)
+        st = {r["rule"]: r["status"] for r in G.judge(m, None, [200, 200], all_kits=True)[0]}
+        self.assertEqual((st["cells_on_macros"], st["clock_on_macro"]), ("FAIL", "FAIL"))
+
+    def test_pin_density_per_layer_is_budget_warn_with_window(self):
+        # COORD 10-27 10:48: METHODOLOGY 5.2 pin window = BUDGET -> WARN naming layer, face, peak and window, not FAIL
+        pins = [(k, f"a[{k}]", "INPUT", 0, 50 + k * 0.1) for k in range(80)]          # 8/um on W/M4 at y 50..58
+        p = dump(self.d / "pd.tsv", flops=[(1, 2, 100)], comb=fill_cells(100, 3600), pins=pins,
+                 nets=[("SIGNAL", f"p{k}", ["i1"]) for k in range(80)])
+        m = G.metrics(str(p), odb="3_place.odb")
+        self.assertEqual(m["pin_peak_layer"]["W/M4"], 8.0)
+        self.assertEqual(m["pin_peak_layer_win"]["W/M4"], ["y", 50.0, 60.0])
+        R, v = G.judge(m, None, [200, 200])
+        pd = [r for r in R if r["rule"] == "pin_density"]
+        self.assertEqual([r["status"] for r in pd], ["WARN"])
+        self.assertIn("W/M4 8.0/um at y 50.0-60.0", pd[0]["detail"])
+        self.assertNotIn("pin_density", " ".join(G.reasons(R)))
+        line = G.verdict_line(v, R, "t")
+        self.assertIn("WARN[pin_density 8.0: W/M4 8.0/um at y 50.0-60.0]", line)
+        self.assertIn("pin_density=WARN(8.0)", line)
+        m2 = G.metrics(str(dump(self.d / "pe.tsv", flops=[(1, 2, 100)], comb=fill_cells(100, 3600), pins=pins[:50],
+                                nets=[("SIGNAL", f"p{k}", ["i1"]) for k in range(50)])), odb="3_place.odb")
+        self.assertEqual([r["status"] for r in G.judge(m2, None, [200, 200])[0] if r["rule"] == "pin_density"], ["PASS"])
+
+    def test_pin_window_only_excess_passes_with_warn_and_others_still_fail(self):
+        m = G.metrics(str(self.base()), odb="3_place.odb")
+        R, v = G.judge(json.loads(json.dumps(m)), {"metrics": m})
+        self.assertEqual(v, "PASS")
+        m["pin_peak_layer"] = dict(m["pin_peak_layer"], **{"E/M4": 11.6})
+        m["pin_peak_layer_win"] = dict(m["pin_peak_layer_win"], **{"E/M4": ["y", 120.0, 130.0]})
+        m["pin_peak_layer_max"] = 11.6
+        R, v = G.judge(json.loads(json.dumps(m)), {"metrics": json.loads(json.dumps(m))})
+        self.assertEqual(v, "PASS", [r for r in R if r["status"] not in ("PASS", "INFO")])
+        self.assertEqual([r["status"] for r in R if r["rule"] == "pin_density"], ["WARN"])
+        self.assertIn("E/M4 11.6/um at y 120.0-130.0", G.verdict_line(v, R))
+        m["pins_unregistered"] = 1                            # any other check stays fail-closed alongside the WARN
+        R, v = G.judge(m, {"metrics": G.metrics(str(self.base(name="z.tsv")), odb="3_place.odb")})
+        self.assertEqual(v, "FAIL")
+
+    def test_channel_demand_over_one_fails_without_clean_grt(self):
+        flops = [(i, 5, 40 + (i % 120)) for i in range(1, 401)] + [(1000 + i, 195, 40 + (i % 120)) for i in range(1, 401)]
+        nets = [("SIGNAL", f"i{i}", [f"i{1000 + i}"]) for i in range(1, 401)]
+        p = dump(self.d / "cg.tsv", flops=flops, comb=fill_cells(5000, 900), macros=[(500, 20, 10, 180, 200)], nets=nets,
+                 pins=[(0, "clk", "INPUT", 100, 5, "CLOCK")])
+        m = G.metrics(str(p), odb="3_place.odb", grt_log=None)
+        self.assertIsNone(m["grt_overflow"])
+        R, v = G.judge(m, None, [200, 200])
+        self.assertEqual(v, "FAIL")
+        self.assertEqual([r["status"] for r in R if r["rule"] == "channel_h"], ["FAIL"])
+        for val, grt, want in ((1.02, None, "FAIL"), (1.02, 5, "FAIL"), (0.97, 0, "WARN"), (0.97, None, "FAIL")):
+            m2 = dict(m, channel_h_max=val, grt_overflow=grt)
+            self.assertEqual([r["status"] for r in G.judge(m2, None, [200, 200])[0] if r["rule"] == "channel_h"], [want],
+                             (val, grt))
+
+    def test_channel_demand_detours_around_macro_column(self):
+        # 400 W<->E nets at y 40..160 across a full-height-minus-strip macro column: all detour through the S strip
+        flops = [(i, 5, 40 + (i % 120)) for i in range(1, 401)] + [(1000 + i, 195, 40 + (i % 120)) for i in range(1, 401)]
+        nets = [("SIGNAL", f"i{i}", [f"i{1000 + i}"]) for i in range(1, 401)]
+        p = dump(self.d / "ch.tsv", flops=flops, comb=fill_cells(5000, 900), macros=[(500, 20, 10, 180, 200)], nets=nets,
+                 pins=[(0, "clk", "INPUT", 100, 5, "CLOCK")])
+        m = G.metrics(str(p), odb="3_place.odb")
+        self.assertGreater(m["detour_h"], 0)
+        self.assertGreater(m["channel_h_max"], G.DEMAND_HARD)   # 400 crossings through a 10-um strip (~365 tracks)
 
     def base(self, far=300.0, name="a.tsv", reg=True):
         """clk pin W face; in pin W -> ff1 (registered at the pin); ff1 -> comb -> ff2 at distance far; ff2 -> out pin E"""
@@ -121,10 +224,11 @@ class TestRules(unittest.TestCase):
     def test_all_kits_requires_absolute_limits_and_complete_measurement(self):
         m = G.metrics(str(self.base(far=190)), odb="3_place.odb")
         # Rule fixtures use unit-area cells; supply a production-like density independently.
-        m.update(fill_of_free=.4, empty_area=.1)
+        m.update(fill_of_free=.4, empty_area=.1, clock_reach_max=150.0)    # fixture clock port sits on the W face
         self.assertEqual(G.judge(m, None, [200, 200], all_kits=True)[1], "PASS")
-        for key, value in (("fill_of_free", .05), ("comb_loop_cells", 1), ("unrooted_sinks", 1),
-                           ("clock_sinks", 0), ("r2r_max", 406)):
+        for key, value in (("fill_of_free", .05), ("fill_of_free", .8), ("comb_loop_cells", 1), ("unrooted_sinks", 1),
+                           ("clock_sinks", 0), ("r2r_max", 406), ("clock_reach_max", 260.0), ("grt_overflow", 3),
+                           ("grt_overflow", None), ("partial_faces", 1)):
             bad = dict(m, **{key: value})
             self.assertEqual(G.judge(bad, None, [200, 200], all_kits=True)[1], "FAIL", key)
         self.assertEqual(G.judge(m, None, None, all_kits=True)[1], "FAIL")
