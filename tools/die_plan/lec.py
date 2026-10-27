@@ -2778,41 +2778,68 @@ def memory_layout(g, t, geom):
     Gate (synthesised netlist, one flop vector per element): [a][b] = address a, bit b.  When the gate has K = W/w
     times more elements than the gold memory has words (slang folds the inner unpacked dimension of
     `reg [w-1:0] x [0:N-1][0:K-1]` into one W-bit word, element 0 at the MSB, like its flat vectors), gate element
-    a is word a//K, sub-element K-1-a%K.  -> {gate key: gold key} when every gate bit lands on a distinct gold bit,
+    a is word a//K, sub-element K-1-a%K (K = the one divisor of W that places every gate bit on a distinct gold bit;
+    trailing elements may be absent).  -> {gate key: gold key} when every gate bit lands on a distinct gold bit,
     else None (never a guess)."""
     if not geom or not g or not t:
         return None
     W, S, O = geom
-    if W <= 0 or S <= 0 or any(len(v) != 2 for v in g.values()) or any(len(v) != 2 for v in t.values()):
+    if W <= 0 or S <= 0 or any(len(v) != 2 for v in g.values()):
+        return None
+    # one-bit elements: the gate names them x[a] (one index); bit 0 of element a (HBM argmax tvl[0:3][0:7])
+    one = all(len(v) == 1 for v in t.values())
+    if one:
+        t = {k: (v[0], 0) for k, v in t.items()}
+    elif any(len(v) != 2 for v in t.values()):
         return None
     words = {v[0] for v in g.values()}
-    if S % len(words):
-        return None
-    F = S // len(words)
+    # widening factor F: wide word w holds addresses w*F .. w*F+F-1.  When the present words do not divide S, F is
+    # read off the widest bit present: the LAST wide word may be partial (hcp_sys1 u_div r_rem [0:26] x 25 b ->
+    # r_rem[0][0..399] = addresses 0..15, r_rem[1][0..274] = 16..26), or trailing words may be absent altogether
+    # (HBM argmax tk / tvl [0:3]: the last tree level is unused, F = 1).  Every bit must land at an address < S.
+    if S % len(words) == 0:
+        F = S // len(words)
+    else:
+        F = max(j for _, j in g.values()) // W + 1
+        if max(words) >= -(-S // F):
+            return None
     gold = {}
     for k, (w, j) in g.items():
-        if j >= F * W:
+        if j >= F * W or w * F + j // W >= S:
             return None
         gold[(w * F + j // W, j % W)] = k
     if len(gold) != len(g):
         return None
+
+    def place(elem):
+        mp = {}
+        for k, e in elem.items():
+            if e not in gold:
+                return None
+            mp[k] = gold[e]
+        return mp if len(set(mp.values())) == len(mp) else None
+
     amax = max(a for a, _ in t.values())
-    if all(O <= a < O + S and 0 <= b < W for a, b in t.values()):
-        elem = dict(t)
-    elif F == 1 and O == 0 and (amax + 1) % S == 0 and W % ((amax + 1) // S) == 0:
-        K = (amax + 1) // S                          # inner elements per gold word; every word's last one present
-        w = W // K
-        if K < 2 or any(a < 0 or not 0 <= b < w for a, b in t.values()):
-            return None
-        elem = {k: (a // K, (K - 1 - a % K) * w + b) for k, (a, b) in t.items()}
-    else:
-        return None
-    mp = {}
-    for k, e in elem.items():
-        if e not in gold:
-            return None
-        mp[k] = gold[e]
-    return mp if len(set(mp.values())) == len(mp) else None
+    bmax = max(b for _, b in t.values())
+    elem = False
+    if all(O <= a < O + S and 0 <= b < W for a, b in t.values()) and (W == 1 or not one):
+        elem = None
+    elif F == 1 and O == 0 and min(min(v) for v in t.values()) >= 0:
+        # inner elements per gold word K (element width w = W / K): read off the gate's highest element and bit.
+        # Trailing elements may be absent (a reduction tree `x [0:LL][0:LP-1]` uses LP >> lv elements at level lv:
+        # HBM argmax ti / tvl last level keeps element 0 only, gate ti#t[24] = level 3 element 0 = gold
+        # ti[3][126..143]); K must be the ONLY divisor of W that places every gate bit on a distinct gold bit
+        # (tk: 264 b words, gate element 17 bit 32 fits K = 6 and K = 8; only K = 8 lands on gold bits), else no guess.
+        fits = []
+        for K in range(2, W + 1):
+            w = W // K
+            if W % K or amax >= K * S or bmax >= w or (one and w != 1):
+                continue
+            mp = place({k: (a // K, (K - 1 - a % K) * w + b) for k, (a, b) in t.items()})
+            if mp:
+                fits.append(mp)
+        return fits[0] if len(fits) == 1 else None
+    return place(t) if elem is None else None
 
 
 def alias_arrays(L, log, words=4, work=None):
@@ -2891,7 +2918,20 @@ def alias_arrays(L, log, words=4, work=None):
             votes[gb + "#t"] = len(g)                # index it differently (slang gt[row][4 words] vs gt[q][j])
         for tb, n in votes.most_common(1):
             t = T[tb]
-            if 2 * n < len(g) or 2 * len(t) < len(g) or len(t) > len(g):
+            if 2 * n < len(g):
+                continue
+            # The source memory's own geometry places every gate bit exactly, so the size guards below (made for
+            # guessed layouts) do not apply: synthesis may keep far fewer bits than the gold memory has (hcp_sys1
+            # u_div r_rem: gate 313 of 675, a triangular remainder pipeline whose constant low bits were dropped)
+            gmp = memory_layout(g, t, geom.get(gb))
+            if gmp:
+                apply(gmp)
+                del T[tb]
+                log.append(f"alias array: gate {tb.split('.')[-1]} ({len(t)} b) -> gold {gb.split('.')[-1]} "
+                           f"({len(g)} b, Q-net alias evidence {n}); source memory layout {geom[gb]} "
+                           f"(width, size, offset) (simulation scoring unnecessary; proof pending)")
+                continue
+            if 2 * len(t) < len(g) or len(t) > len(g):
                 continue
             cands = []
             for gr in (False, True):
@@ -2906,14 +2946,6 @@ def alias_arrays(L, log, words=4, work=None):
             # 192 b, gold a_pr[w][j] = element 8w + j/24, bit j%24), and the gate may have dropped constant high
             # bits (a_pr#t[r][3..16]), so radices read off either side's maximal indices give none of the four
             # flat variants above the right stride (QC slw_hc0 10-26: 223 a_pr + 268 b_emin false differences).
-            gmp = memory_layout(g, t, geom.get(gb))
-            if gmp:
-                apply(gmp)
-                del T[tb]
-                log.append(f"alias array: gate {tb.split('.')[-1]} ({len(t)} b) -> gold {gb.split('.')[-1]} "
-                           f"({len(g)} b, Q-net alias evidence {n}); source memory layout {geom[gb]} "
-                           f"(width, size, offset) (simulation scoring unnecessary; proof pending)")
-                continue
             if not cands:
                 continue
             if len(cands) == 1:
