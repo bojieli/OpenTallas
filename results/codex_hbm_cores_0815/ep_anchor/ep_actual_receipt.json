@@ -1,0 +1,58 @@
+{
+ "scope": "Actual successor ODB dump comparison, all records identical except exact three existing FF boxes",
+ "records": 71026,
+ "changes": [
+  {
+   "name": "u_fcore.rn_bd$_DFF_PN0_",
+   "old_box": [
+    "4.8600",
+    "9.7200",
+    "6.2640",
+    "9.9900"
+   ],
+   "new_box": [
+    "190.0800",
+    "185.2200",
+    "191.4840",
+    "185.4900"
+   ]
+  },
+  {
+   "name": "u_fcore.rn_tx$_DFF_PN0_",
+   "old_box": [
+    "4.4820",
+    "11.0700",
+    "5.8860",
+    "11.3400"
+   ],
+   "new_box": [
+    "189.5400",
+    "185.7600",
+    "190.9440",
+    "186.0300"
+   ]
+  },
+  {
+   "name": "u_fcore.u_rxb.g_block\\[0\\].u_block.vp\\[1\\]$_DFF_PN0_",
+   "old_box": [
+    "22.0860",
+    "94.2300",
+    "23.4900",
+    "94.5000"
+   ],
+   "new_box": [
+    "190.0800",
+    "186.5700",
+    "191.4840",
+    "186.8400"
+   ]
+  }
+ ],
+ "source_sha256": "73cb8ec51b9125422e1345c820d13282021ed102534284f14769be0dea7ed80f",
+ "successor_sha256": "8d63e87b01832a924aa047cf32661650eea2c71918aaf0257caa9c58a38ac4bc",
+ "connectivity_ports_macros_identical": true,
+ "added_cycles": 0,
+ "placement_check": "PASS",
+ "geometry": "PASS against original template",
+ "visual_review": "PASS-COND: 5.02um reach margin; preserve FIRM anchors; clock plan/build still pending"
+}
