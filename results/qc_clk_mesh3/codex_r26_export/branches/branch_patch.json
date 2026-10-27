@@ -3850,20 +3850,22 @@
    ]
   }
  ],
- "shared_reservations_need_tree_compilation": [
+ "blocked": {
+  "io_serdes_2": "Actual inter-PHY gap4.104um <8.64clockisland+2*5.4halo=19.44um. Cannot place intermediate buffer across~880umterminaldelivery. Need service-band replan or explicit priced longstage proof; no insidePHYbuffer invented."
+ },
+ "conditions": [
+  "True buffer masters/origins/pins and stage timing must be compiled and repriced",
+  "Shared canonical type reservations across distinct physical instances are expected; actual physical sharing must be compiled once with one driver.",
+  "Actual full PG/shield/stair census including PHYpinexception and native terminalcoupon",
+  "New fulltypeuniformreservation windows must be adopted/rekit; currently proposal only"
+ ],
+ "shared_canonical_reservation_consumers": [
   [
    "coll_f0",
    "coll_f1",
    "coll_f2"
   ]
  ],
- "blocked": {
-  "io_serdes_2": "Actual inter-PHY gap4.104um <8.64clockisland+2*5.4halo=19.44um. Cannot place intermediate buffer across~880umterminaldelivery. Need service-band replan or explicit priced longstage proof; no insidePHYbuffer invented."
- },
- "conditions": [
-  "True buffer masters/origins/pins and stage timing must be compiled and repriced",
-  "Clockbranch tree must reconcile shared reservation consumers; no multiple driver assumptions",
-  "Actual full PG/shield/stair census including PHYpinexception and native terminalcoupon",
-  "New fulltypeuniformreservation windows must be adopted/rekit; currently proposal only"
- ]
+ "shared_physical_stations": [],
+ "terminal_shield_condition": "Current0.81um normalescape fits8w shieldextent0.56um.16w shieldextent1.46um requiresmidgapapproach2.052um frommacroedge(pinriser2.148um<2.5). No width or terminal PG qualification claimed."
 }
