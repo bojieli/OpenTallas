@@ -9,7 +9,7 @@ module tb_pad_native;
   cyc<=cyc+1;refc[0]<=dc;refd[0]<=dd;for(integer i=1;i<8;i=i+1)begin refc[i]<=refc[i-1];refd[i]<=refd[i-1];end
  end
  always @(negedge clk)if(cyc>70)begin
-  if(dc||qc)$display("PADTRACE cycle=%0d in=%h out=%h data=%h wp=%d ra=%d rdc=%h",cyc,dc,qc,qd,dut.wp,dut.ra,dut.rdc);
+  if(cyc<99)$display("PADTRACE cycle=%0d in=%h out=%h data=%h wp=%d ra=%d rdc=%h arr11=%h mask=%h ce=%b ok=%b",cyc,dc,qc,qd,dut.wp,dut.ra,dut.rdc,dut.u_c.arr[11],dut.u_c.w_mask_in,dut.u_c.w_ce_in,dut.ok_q);
   if(qc)begin seen=seen+1;for(integer i=0;i<8;i=i+1)if(qc==refc[i]&&qd==refd[i])hits[i]=hits[i]+1;end
  end
  initial begin

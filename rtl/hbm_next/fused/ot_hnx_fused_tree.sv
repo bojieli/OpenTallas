@@ -65,7 +65,7 @@ module ot_hnx_fused_pad #(parameter integer WC = 15) (
         else begin
             wp <= wp + 5'd1;
             if (fill != 6'd63) fill <= fill + 6'd1;
-            ok_q <= (fill + 6'd1 >= k);                  // the slot read at this edge was written after reset
+            ok_q <= ({1'b0, fill} + 7'd1 >= {1'b0, k});                  // the slot read at this edge was written after reset
         end
     wire [255:0] rdd; wire [63:0] rdc;
     ot_sram_1r1w_128x256_m1_r2c2 u_d (.clk(clk), .r_ce_in(1'b1), .r_addr_in({2'b00, ra}), .rd_out(rdd),
