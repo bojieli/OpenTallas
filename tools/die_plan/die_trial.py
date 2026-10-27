@@ -251,6 +251,24 @@ class SiteMap:
             front = sorted(nxt, key=cost)[:40]
         raise ValueError(f"no legal clock-tree site near {p}")
 
+    def slide(self, p, toward, step=0.54):
+        """first legal point on the straight/L Manhattan leg from p back toward `toward` (the parent's ideal point):
+        a buffer moved along its own incoming leg keeps every root->descendant Manhattan length unchanged."""
+        p = (float(p[0]), float(p[1]))
+        if self.legal(p):
+            return p
+        pts = [p, (toward[0], p[1]), (toward[0], toward[1])] if abs(p[1] - toward[1]) > 1e-6 and abs(p[0] - toward[0]) > 1e-6 \
+            else [p, (toward[0], toward[1])]
+        for a, b in zip(pts, pts[1:]):
+            L = abs(b[0] - a[0]) + abs(b[1] - a[1])
+            n = int(L / step)
+            for k in range(1, n + 1):
+                f = k / n
+                q = (round(a[0] + (b[0] - a[0]) * f, 3), round(a[1] + (b[1] - a[1]) * f, 3))
+                if self.legal(q):
+                    return q
+        return None
+
 
 def build_htree(P, taps, leaf_um=600.0, full_depth=False):
     """explicit H-tree: nodes {id: dict(x, y, parent, level, kids, taps)} rooted at the spine root.  Region bisection
@@ -355,13 +373,36 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None):
     return "\n".join(v) + "\n", place, tap_ports, node_buf, parent_of
 
 
-def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False):
+def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_slide=False):
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     taps = clock_taps(P)
     nodes = build_htree(P, taps, leaf_um, full_depth)
     site = None
-    if site_legal:          # opt-in: every buffer/repeater on a legal channel site; a one-entry leaf drives AT its entry
+    slid_fallback = 0
+    if site_slide:          # opt-in: slide each buffer back along its OWN incoming leg (equal length by construction)
+        site = SiteMap(P)
+        for nd in nodes.values():
+            nd["req_xy"] = [nd["x"], nd["y"]]
+        for nd in nodes.values():
+            if nd["parent"] is None:
+                q = site.nearest((nd["x"], nd["y"]))
+            else:
+                par = nodes[nd["parent"]]["req_xy"]
+                q = site.slide(nd["req_xy"], par)
+                # one downstream path (single kid, or a leaf with one entry): sliding forward along that leg keeps the
+                # length too; take the nearer of the two legal slides
+                fwd = (nodes[nd["kids"][0]]["req_xy"] if len(nd["kids"]) == 1 and not nd["taps"] else
+                       nd["taps"][0][2:4] if not nd["kids"] and len(nd["taps"]) == 1 else None)
+                qf = site.slide(nd["req_xy"], fwd) if fwd is not None else None
+                dist = lambda c: abs(c[0] - nd["req_xy"][0]) + abs(c[1] - nd["req_xy"][1])
+                if qf is not None and (q is None or dist(qf) < dist(q)):
+                    q = qf
+                if q is None:
+                    slid_fallback += 1
+                    q = site.nearest(tuple(nd["req_xy"]))
+            nd["x"], nd["y"] = round(q[0], 3), round(q[1], 3)
+    elif site_legal:          # opt-in: every buffer/repeater on a legal channel site; a one-entry leaf drives AT its entry
         site = SiteMap(P)
         for nd in nodes.values():
             nd["req_xy"] = [nd["x"], nd["y"]]
@@ -425,7 +466,8 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False):
             w = site.why((x, y))
             if w:
                 bad[w] = bad.get(w, 0) + 1
-        meta["site_legal"] = dict(cells=len(place), illegal=bad, forbidden_rects=len(site.forb),
+        meta["site_legal"] = dict(mode="slide" if site_slide else "nearest", slide_fallbacks=slid_fallback,
+                                  cells=len(place), illegal=bad, forbidden_rects=len(site.forb),
                                   moved_nodes=sum(1 for n in nodes.values() if [n["x"], n["y"]] != n["req_xy"]))
     tree = dict(meta=meta, nodes={i: {k: v for k, v in n.items() if k != "taps"} | dict(ntaps=len(n["taps"]))
                                   for i, n in nodes.items()},
@@ -1100,7 +1142,7 @@ exit $rc
 
 
 def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.72, density=0.15, full_depth=False,
-              site_legal=False):
+              site_legal=False, site_slide=False):
     raw = S.load(plan_path)
     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
     plan_dir = Path(plan_path).parent
@@ -1138,7 +1180,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     meta["die_io"] = [dict(name=w["name"], part=w.get("part"), iface=w.get("iface"), rect_um=w["rect_um"],
                            sites=w.get("sites"), signals=w.get("signals"), host=w.get("host", False)) for w in io]
     # clock
-    nodes, segs, leaf_legs, cm = clock_kit(P, out / "clock", leaf_um, rep_um, full_depth, site_legal)
+    nodes, segs, leaf_legs, cm = clock_kit(P, out / "clock", leaf_um, rep_um, full_depth, site_legal, site_slide)
     (out / "clock" / "make_tracks.tcl").write_text(gen_phys.make_tracks_tcl(P))
     meta["clock_tree"] = cm
     reserve = reserve_rects(segs, leaf_legs, P)
@@ -1683,6 +1725,9 @@ def main(argv=None):
                    help="opt-in: bisect single-tap regions to --leaf-um (equal-depth leaves; FALLBACK-HEAD one-entry plans)")
     k.add_argument("--tree-site-legal", action="store_true",
                    help="opt-in: site every tree buffer/repeater in a partition, off hard cores and PHY domains (12.2a1)")
+    k.add_argument("--tree-site-slide", action="store_true",
+                   help="opt-in: like --tree-site-legal, but each buffer slides back along its own incoming leg "
+                        "(root->entry Manhattan lengths unchanged = equal length kept by construction)")
     k.add_argument("--coarse-um", type=float, default=0.72)
     k.add_argument("--density", type=float, default=0.15, help="die power density W/mm2 for PDNSim")
     r = sub.add_parser("report")
@@ -1741,7 +1786,7 @@ def main(argv=None):
         return 0
     if a.cmd == "kit":
         m = write_kit(a.plan, a.out, a.views, a.leaf_um, a.rep_um, a.coarse_um, a.density, full_depth=a.htree_full_depth,
-                      site_legal=a.tree_site_legal)
+                      site_legal=a.tree_site_legal, site_slide=a.tree_site_slide)
         print(json.dumps({k: m[k] for k in ("die", "parts", "types", "closed_views", "hard_cores", "clock_tree", "grt",
                                              "psm", "sta")}, indent=1))
     elif a.cmd == "report":

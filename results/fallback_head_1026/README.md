@@ -97,6 +97,43 @@ spine-column node. Predict |d| before the build.
 channels: 1,312+ of them in hd_tile at channel sites. Each type kit must reserve those sites (fs300/tree.json `sites`)
 the way it reserves FT.
 
+## 3c. COORD ruling 17:4x: equal-length site-legal tree (sl300) + uniform monitor (no type growth). UNCHECKED.
+
+**Tree: `die_trial --htree-full-depth --leaf-um 300 --tree-site-slide`** (opt-in).
+- Each buffer slides back along its OWN incoming leg (toward the parent's ideal point) to the first legal site. A node
+  with one downstream path may also slide forward along that leg, whichever is nearer.
+- Either move keeps every root->entry Manhattan length unchanged, so equal length holds by construction.
+- 118 nodes had no legal point on either leg and fell back to the nearest site.
+- **Prediction before build:** `tools/s81_head/tree_predict.py` is a least-squares stage model fitted on fd300+fs300.
+  It has RMS 36 ps and under-predicted abs(d) by 45-70 ps on those two runs. It predicted max abs(d) 181 TT / 161 FF.
+
+| Build | Cells | On core / PHY / outside | GRT TT+FF | Entry slew max | abs(d) max TT / FF | Margin TT | Spread TT | Drift |
+|---|---|---|---|---|---|---|---|---|
+| fs300 (nearest) | 2,311 | 0/0/0 | 0 | 18.5 | 311.9 / 272.8 | 105 | 607 | 39 |
+| **sl300 (slide)** | 2,393 (730 reps) | **0/0/0** | **0** | 81 | **212.4 / 188.4** | **204** | 469 | 24 |
+
+Measured 212.4 against the predicted 181, inside the predictor's known under-bias.
+- Worst crossings: the chain turn tW3b10<->tW3b9 (212) and spine end sp5<->host (202).
+- sp2<->sp3, the fs300 worst, is no longer in the top 5.
+- A literal common spine node for sp2/sp3 was not needed: they share the root, and once equal length is restored their
+  offset is small.
+
+**Monitor: `fallback_land.py compose --monitor dataflow`** (opt-in mode added to clock_landing_plan.compose; the
+default reset-wavefront mode is unchanged and all clock_landing tests still pass).
+- The ready/fault status rides each landed DATA crossing as 2 spare bits of the receiving ring, on the same forwarded
+  write clock.
+- Its ctl pins are named by the data bus, so every instance of a type has identical declared ports. Every pin has
+  exactly one driver and one receiver (landing_contract: no absent-child ties).
+- Each type has ONE uniform tree bus toward ctl, chosen on a reverse-BFS potential (hd_tile = `o`). Other outputs carry
+  local-only status, so the AND network is acyclic.
+- **Types 16 -> 16** (was 33). landing_contract 0 errors (420 pins, 1,284 edges, max hop 18.3 um). Boot ready max 326
+  cycles (was 692).
+
+**Placement failures 10 -> 0.** Root cause: the hd_tile W/E faces are elemA columns from y 8.64, so no full-height face
+strip exists. `_storage_band` now also tries equal-area channel-aspect banks, and only when both legacy aspects fail.
+hd_tile `i` gets a 244.1 x 10.8 um bank in the 45-um horizontal core channel (y 362.9-373.7). Its max pin hop is
+402.7 um against the 403 limit, which is tight. The tile kit must reserve this bank next to the tree sites.
+
 ## Not done (freeze gate 12.4a still open)
 
 Die STA on real views needs four things first:
