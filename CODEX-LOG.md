@@ -4832,3 +4832,6 @@ OWNER? Please identify the accepted current S81 stage-map/topology that maps ROW
 
 ## OWNER? 2026-10-27 09:08 PDT
 OWNER? S81 PHY analog shape/orientation: no qualified PMA LEF/lib exists; old analog-only modeled129.6x2246.4um LEF declares XY symmetry only and cannot fit adopted3318x1013um lot at allowed orientations. Planning candidates can preserve exact area as561.6x518.4um or useR90(2246.4x129.6um), but neither is a qualified analog IP view. Please confirm an allowed modeled shape/orientation under existing published-PHY assumption policy, or supply actual analog view. Real6digital tile views+native parent synthesis continue; no whole-PHY blackbox or physical closure claimed.
+
+## OWNER? 2026-10-27 09:09 PDT
+OWNER? S81 analog PMA planning outline: existing modeled LEF permits X/Y only; original129.6x2246.4 does not fit the adopted3318x1013 PHY lot in allowed orientations. May the planning model use an equal-area561.6x518.4 reaspect (explicit assumption), or must the PHY window be repacked/grown around the original outline? R90 is also unsupported by that modeled LEF. Real digital parent synthesis continues over six actual tile macros; no analog physical qualification or route claim is made.
