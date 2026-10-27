@@ -354,13 +354,15 @@ def wrapper(P, tn, epochs, rtl_root=None):
             cen = {}
 
         def rsel(key=None, key2=None, f=0.0):
+            bootstrap = key in (rtree or {}).get('bootstrap_buses', [])
             if key in cen:
                 x, y = cen[key]
                 if key2 in cen:
                     x, y = x + (cen[key2][0] - x) * f, y + (cen[key2][1] - y) * f
                 i = min(range(len(taps)), key=lambda k: abs(taps[k][1] - x) + abs(taps[k][2] - y))
-                return f"rst_n_t{i}"
-            r = f"rst_n_t{rr[0] % len(taps)}"
+                return f"rst_boot_t{i}" if bootstrap else f"rst_n_t{i}"
+            i = rr[0] % len(taps)
+            r = f"rst_boot_t{i}" if bootstrap else f"rst_n_t{i}"
             rr[0] += 1
             return r
     else:
@@ -432,6 +434,10 @@ def wrapper(P, tn, epochs, rtl_root=None):
         decl.append(f"    wire [{nt['width'] - 1}:0] n_{sv_id(nt['name'])};")
         sig[f"net:{nt['name']}"] = f"n_{sv_id(nt['name'])}"
     sig["clk"], sig["rst_n"], sig["rst"] = "clk", "rst_n", "rst"
+    if (rtree or {}).get('bootstrap_contents'):
+        sig['bootstrap_rst_n'] = f'rst_boot_t{RT.leaf_tap(P, tn)}'
+        sig['bootstrap_rst'] = 'bootstrap_rst'
+        decl.append(f"    wire bootstrap_rst = ~{sig['bootstrap_rst_n']};")
     for sp in t.get("id_straps", []):
         sig[f"strap:{sp['name']}"] = sp["name"]
     for pd in t.get("pads", []):
@@ -442,6 +448,9 @@ def wrapper(P, tn, epochs, rtl_root=None):
         sig[f"infra:{ip['name']}"] = ip["name"]
     # leaf bindings: contents[].bind plus bus.leaf
     binds = {c["inst"]: dict(c.get("bind", {})) for c in t.get("contents", [])}
+    for inst in (rtree or {}).get('bootstrap_contents', []):
+        binds[inst] = {p: ('bootstrap_' + k if k in ('rst_n', 'rst') else k)
+                       for p, k in binds[inst].items()}
     for b in buses:
         if b.get("leaf"):
             inst, port = b["leaf"].split(".", 1)
