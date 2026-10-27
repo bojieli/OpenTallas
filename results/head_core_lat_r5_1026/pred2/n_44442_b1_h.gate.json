@@ -1,0 +1,65 @@
+{
+ "checks": {
+  "G1": {
+   "verdict": "PASS",
+   "n_fail": 0,
+   "sample": []
+  },
+  "G3": {
+   "verdict": "PASS",
+   "n_fail": 0,
+   "sample": []
+  },
+  "G4": {
+   "verdict": "PASS",
+   "n_fail": 0,
+   "sample": []
+  },
+  "G5": {
+   "verdict": "PASS",
+   "n_fail": 0,
+   "sample": []
+  },
+  "G6": {
+   "verdict": "PASS",
+   "n_fail": 0,
+   "sample": []
+  },
+  "G7": {
+   "verdict": "PASS",
+   "n_fail": 0,
+   "sample": []
+  }
+ },
+ "info": {
+  "n_nodes": 340,
+  "n_leaves": 512,
+  "leaf_load": [
+   56,
+   57
+  ],
+  "depth": [
+   5
+  ],
+  "macro_leaf_in_halo": [],
+  "note": "macro leaf stage sits on the ROM clock pin (within its halo by design, as QC mscts_h)"
+ },
+ "verdict": "PASS",
+ "argv": [
+  "head_plan_gate.py",
+  "p/n_44442_b1_h.tcl",
+  "p/n_44442_b1_h.seg.json",
+  "p/n_44442_b1_h.geo",
+  "kits/elemA_n50/macros/ot_rom_4096x274_m8.lef",
+  "159.84,159.84",
+  "p/n_44442_b1_h.gate.json",
+  "py"
+ ],
+ "sha256": {
+  "p/n_44442_b1_h.tcl": "3b76c372b3a55868fcbce297c99c64bfe9dae14290d5d0c74abdf6b1b93f31a2",
+  "p/n_44442_b1_h.seg.json": "487cff6f4f729f538bd42702eb9cebcd0c2570b7a5c7e7dde5d4589c3e63b30a",
+  "p/n_44442_b1_h.geo": "0838326576c38b39162d117e20064259bb3def56f1042c9ff5aa08f5836a0f68",
+  "kits/elemA_n50/macros/ot_rom_4096x274_m8.lef": "a283603bb491073a454f91dac30fa98687366aa2ef2d493eea6512771d876e6d"
+ },
+ "scope": "PLAN gate, UNCHECKED"
+}
