@@ -799236,17 +799236,26 @@
      "inst": "u_io_serdes_2",
      "module": "ot_qfd_serdes_112g_x12_phy_s597",
      "status": "reuse",
-     "note": "hard IP used as-is (die-edge PHY); COORD 10-25 11:31: bare macro, its registered FDI pins are the boundary registers (no plan stations on this side)",
+     "note": "hard IP used as-is (die-edge PHY); COORD 10-25 11:31: bare macro, its registered FDI pins are the boundary registers (no plan stations on this side) | CODEX exact LEF clock provider clk(M5), local macro origin[0,0]/R0; partition orientation applied externally.",
      "registered_pins": true,
-     "lib": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_tt.lib"
+     "lib": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_tt.lib",
+     "lef": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597.lef",
+     "origin_um": [
+      0.0,
+      0.0
+     ],
+     "orient": "R0",
+     "bind": {
+      "clk": "clk"
+     }
     }
    ],
    "hard": true,
    "note": "west strip: io_serdes_2 Native phase/support identity from af589e572a; physical cell estimate inherited pending fresh mapped census.",
    "clock": {
     "tap_um": [
-     777.6,
-     1157.76
+     753.018,
+     2319.96
     ],
     "layer": "M9",
     "insertion_ps": 250,
@@ -799710,17 +799719,26 @@
      "inst": "u_io_serdes_1",
      "module": "ot_qfd_serdes_112g_x12_phy_s597",
      "status": "reuse",
-     "note": "hard IP used as-is (die-edge PHY); COORD 10-25 11:31: bare macro, its registered FDI pins are the boundary registers (no plan stations on this side)",
+     "note": "hard IP used as-is (die-edge PHY); COORD 10-25 11:31: bare macro, its registered FDI pins are the boundary registers (no plan stations on this side) | CODEX exact LEF clock provider clk(M5), local macro origin[0,0]/R0; partition orientation applied externally.",
      "registered_pins": true,
-     "lib": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_tt.lib"
+     "lib": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_tt.lib",
+     "lef": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597.lef",
+     "origin_um": [
+      0.0,
+      0.0
+     ],
+     "orient": "R0",
+     "bind": {
+      "clk": "clk"
+     }
     }
    ],
    "hard": true,
    "note": "west strip: io_serdes_1 Native phase/support identity from af589e572a; physical cell estimate inherited pending fresh mapped census.",
    "clock": {
     "tap_um": [
-     777.6,
-     1157.76
+     753.018,
+     2319.96
     ],
     "layer": "M9",
     "insertion_ps": 250,
@@ -805285,7 +805303,7 @@
      "inst": "u_ucie_kv",
      "module": "ot_qkvd_ucie_x64_phy",
      "status": "reuse",
-     "note": "hard IP used as-is (die-edge PHY); COORD 10-25 11:31: bare macro, its registered FDI pins are the boundary registers (no plan stations on this side)",
+     "note": "hard IP used as-is (die-edge PHY); COORD 10-25 11:31: bare macro, its registered FDI pins are the boundary registers (no plan stations on this side) | CODEX exact LEF clock provider clk(M5), local macro origin[0,0]/R0; partition orientation applied externally.",
      "bump_ports": [
       {
        "pin": "link_v",
@@ -805309,15 +805327,24 @@
       }
      ],
      "registered_pins": true,
-     "lib": "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_tt.lib"
+     "lib": "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_tt.lib",
+     "lef": "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy.lef",
+     "origin_um": [
+      0.0,
+      0.0
+     ],
+     "orient": "R0",
+     "bind": {
+      "clk": "clk"
+     }
     }
    ],
    "hard": true,
    "note": "west strip: ucie_kv Native phase/support identity from af589e572a; physical cell estimate inherited pending fresh mapped census.",
    "clock": {
     "tap_um": [
-     388.8,
-     388.8
+     276.396,
+     777.504
     ],
     "layer": "M9",
     "insertion_ps": 250,
