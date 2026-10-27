@@ -1332,6 +1332,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                       # PATH-S81-PD9 (opt-in): a leg repeater with no die-top site on its leg L takes the alternate L
                       # orientation of the same leg (same length, same stage count) before any in-core pushdown
                       alt_l=bool(lattice.get("off_core_alt_l", False)),
+                      actual_leaf_slack=bool(lattice.get("actual_leaf_slack", False)),
                       # CLOCK-KV-R11 (opt-in): {module: [[u, v], ...]} canonical in-core island sites in the CORE frame
                       # (origin + track_offset, core orient); a pushdown driver in such a core snaps onto the nearest
                       # site within canon_tol_um so every instance of the module carries one identical island
@@ -1734,6 +1735,14 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         p0, p1 = node_xy(*kr), node_xy(*ch)
         L = abs(p1[0] - p0[0]) + abs(p1[1] - p0[1])
         if (ch[1] - ch[0]) * (ch[3] - ch[2]) == 1:
+            if lg.get("actual_leaf_slack"):
+                # Drivers are already fixed. Bound BOTH live child legs against their
+                # actual sites rather than charging the maximum possible slide again.
+                siblings = [ch, (h, kr[1], kr[2], kr[3]) if a == 0 else (kr[0], kr[1], h, kr[3])]
+                distances = [abs(d["site"][0] - p0[0]) + abs(d["site"][1] - p0[1])
+                             for r in siblings
+                             if (d := out["drivers"].get(f"{r[0]}_{r[2]}")) is not None]
+                return lg["hop_reach"] - max(distances) if distances else 0.0
             return lg["hop_reach"] - L - lg["drv_reach"]
         if lvl + 1 in lg["wire_levels"]:
             return hop_slack(ch, lvl + 1) - L
