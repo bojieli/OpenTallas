@@ -1,0 +1,5 @@
+{"stage": "cut", "hub": "q_hub_nw", "k": 1, "whole": {"x": 0.658, "y": 0.614}, "segs": [[0.658, 0.662], [0.559, 0.66]], "max": 0.662, "ok": false}
+{"stage": "cut", "hub": "q_hub_nw", "k": 2, "whole": {"x": 0.589, "y": 0.57}, "segs": [[0.589, 0.621], [0.491, 0.583]], "max": 0.621, "ok": false}
+{"stage": "cut", "hub": "q_hub_nw", "k": 3, "whole": {"x": 0.55, "y": 0.55}, "segs": [[0.55, 0.594], [0.468, 0.549]], "max": 0.594, "ok": true}
+{"hub": "q_hub_nw", "k": 3, "max_axis": 0.594, "verdict": "PASS_MODEL_CUT", "stats": {"stations": 2962, "inter_segment": 438, "serialised": 438, "regs_old": 24150, "regs_new": 28063, "latency_up": 1177, "failed": 1, "chain_links": 1, "latency_up_hist": {"1": 251, "2": 148, "3": 161, "4": 84, "5": 65, "6": 132, "7": 67, "8": 92, "9": 47, "10": 60, "11": 18, "12": 19, "13": 28, "14": 5}}, "cc": 1276, "overlaps": [], "su_service_rebound": {"u_hb_vms_Q": 48, "u_smw_Q": 6, "u_xl_Q_ctl": 10, "u_hb_dbk_Q": 7, "u_calendar_Q": 24}, "cores": 145, "core_area_mm2": 19.035}
+EXIT 0

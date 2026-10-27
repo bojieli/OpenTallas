@@ -1,0 +1,17 @@
+HBM-MU-QUAD 2026-10-26 23:49 PDT (plan arithmetic only, UNCHECKED unless CHECKED; runs on epyc2 /srv/opentallas-scratch2/claude/hbm-mu-quad-1026)
+SU ROOT CAUSE (CHECKED by direct read of hbmu1_candNW stations): Codex MU grouping put banks Q0-Q3 in segment 0 AFTER plan_quadrants
+  bound each bank<->service station to the service copy of the bank OLD segment (__q1). Q0/Q1/Q2 therefore talk to hb_vms/xl_ctl/smw/dbk/
+  calendar __q1 across the hub (e.g. u_hb_vms_Q.b0_pq|u_vmb_Q0 6719 um, serial k3, 18 regs vs 2 in t_banks) = the +17..+19 SU bank legs.
+STRUCTURAL FIX (scripts/hbm_mu_quad_pack.py): every replicated service end rebound to the copy of its partner segment, so each quad 4 banks are
+  served by its own service column (NW rebound: hb_vms 48, calendar 24, xl_ctl 10, dbk 7, smw 6 station ends).
+QUAD v2 (GEOM-REVIEW-15 applied): 2302.56 x 2643.84 tile, outer 43.2 um column streets beside the FUSED columns for n1->n2 legs (e),
+  hb_vms centred on the n2 middle street, xl_ctl/smw/dbk/cal below, vmdel x4 above (c), n3 at the column top, one n4 between quads
+  on the N street with equal legs (b)/(d); keybuf left out of the quad (its partner is idx). W cells MY (pin offsets mirrored).
+PLACEMENT: q0 at the E end of segment 0 (flush to bound 3957.12), q1 at the E end of segment 1, both vertically centred; rest legalised
+  near the Codex 3c3dae6bb positions (12 NW variants tried: only mid/E/codex passes; variant logs NW/variant_*).
+NW: k3, whole+both segment axes max 0.594 PASS_MODEL_CUT, 0 overlaps, 1 station route failed, 144 cores (UNCHECKED).
+  n3->n4 legs 2298/2320 um (6 regs, k3, equal q0/q1); n4->root E face 3788 um (10 regs). Core VM<->service legs: 266, max pin-pin 2898 um,
+  every leg regs >= ceil(L/405)-1 (0 reach violations); registers carried from the SU plan dominate (hops 3..28).
+NE: FAIL. Best max 0.644 at k8 (segment-0 y-cut, coll body_n2<->reduce 5327 b + in-quad bank<->service 8 kb); cluster sweeps 1-3 do not help.
+NOT DONE: compose (scripts/compose.py) + G0/G0C + R13 price on the +794.88 die: blocked by the NE cut FAIL.
+Render viewed: nw_quad.png (defect: n4->root leg corners over mfused_15 at the E face; face pin y must move to the N street row).
