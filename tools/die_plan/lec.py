@@ -1805,8 +1805,12 @@ def seq_traces(L, log, words=4, warm=2, cycles=48, seed=2718):
                         acc[(side, k)] = (hash((h[0], v)), hash((h[1], v ^ mask)), h[2] and v == 0,
                                           h[3] and v == mask) if h else (hash(v), hash(v ^ mask), v == 0, v == mask)
             states[si] = [val[l >> 1] ^ (mask if l & 1 else 0) for l in d["latches"]]
+    const = {}
     for key, (hp, hn, c0, c1) in acc.items():
         out[key] = None if (c0 or c1) else (hp, hn)
+        if c0 or c1:
+            const[key] = 1 if c1 else 0
+    L.trace_const = const            # (side, key) -> the constant value of a constant trace (trace_constant_closure)
     log.append(f"sequential traces: {len(out)} registers, {sum(v is None for v in out.values())} constant, "
                f"{warm}+{cycles} cycles x {W} lanes")
     return out
@@ -2424,6 +2428,52 @@ def matched_copy_closure(L, log, T, tried, words=8, seed=5151, rounds=8):
         log.append(f"matched copy closure: {len(pending)} matched registers proposed equal to a matched copy of equal "
                    f"trace and next state")
     return len(pending)
+
+
+def trace_constant_closure(L, log, tried):
+    """Constant-from-reset candidates (LEC-TOOL-2 10-27): a register whose sequential trace (seq_traces: from the
+    zero state, random inputs including the reset each cycle) is one constant on every side that has it is proposed
+    that constant -- matched registers on both sides, gold-only / gate-only on their side -- and enters the
+    simultaneous induction proof with every other hypothesis.  HBM hcp_sys1 R5: nout_r[1] resets to 0 and reloads
+    the tied cmd_nout[1] = 0 (async reset, kept by synthesis as a matched DFFASRHQN), so gold d0[F_NV] =
+    last_r ? nlast_r : 256 is 256 (nlast_r[7:0] == nout_r[1] == 0, proved) while the gate folded sd_nv[7:0] to 0; with
+    nout_r[1] a free matched input the 9 sd_nv face bits 'differed'.  The random-state signature search never
+    proposes it (its next state depends on its own state) unless the self-hold cofactor also happens to fire, so only
+    self-holding registers are proposed here.
+    A register that is constant only from reset but not inductively (it needs another invariant that is not
+    proposed) is refuted and dropped, never assumed.  Each register is proposed at most once.  -> number proposed."""
+    tc = getattr(L, "trace_const", None)
+    if not tc:
+        return 0
+    m, kind = L.build(with_compare=False, with_hyp=False)
+    var_of = {(t.split("_")[0] if t != "matched" else "both", kk): v for v, (t, kk) in kind.items()
+              if t in ("matched", "gold_only", "gate_only")}
+    # only self-holding registers (own Q within 8 AND levels of the next state: hold mux + async2sync reset mux);
+    # a constant register whose next state does not read itself is found by the random-state signature search
+    holds = lambda sd, k: (sd, k) in var_of and var_of[(sd, k)] in m.near_inputs(
+        L.dlit[("gold" if sd == "both" else sd, k)], 8)
+    n = 0
+    for k in L.matched:
+        if not k.startswith("ff:") or ("both", k) in L.hyp or tried[("tc", "both", k)]:
+            continue
+        g, t = tc.get(("gold", k)), tc.get(("gate", k))
+        if g is not None and g == t and holds("both", k):
+            tried[("tc", "both", k)] += 1
+            L.hyp[("both", k)] = ("const", g)
+            n += 1
+    partners = anchored(L)
+    for side, keys in (("gold", L.gonly), ("gate", L.tonly)):
+        for k in keys:
+            c = tc.get((side, k))
+            if c is None or not k.startswith("ff:") or (side, k) in L.hyp or k in partners or tried[("tc", side, k)] \
+                    or not holds(side, k):
+                continue
+            tried[("tc", side, k)] += 1
+            L.hyp[(side, k)] = ("const", c)
+            n += 1
+    if n:
+        log.append(f"trace constant closure: {n} registers of constant sequential trace proposed constant")
+    return n
 
 
 def slang_elements(aliases_file):
@@ -3391,10 +3441,13 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             fsm_proposals(L, log)
         if os.environ.get("OT_LEC_SIM_REFINE", "1") != "0":
             sim_refine(L, log, tried, seed=4242 + rnd)
-        if not L.hyp and os.environ.get("OT_LEC_COPY_CLOSURE", "1") != "0":
+        if not L.hyp:
             if traces is None:
                 traces = seq_traces(L, log)
-            matched_copy_closure(L, log, traces, tried)     # (each pair at most once: no loop)
+            if os.environ.get("OT_LEC_COPY_CLOSURE", "1") != "0":
+                matched_copy_closure(L, log, traces, tried)     # (each pair / register at most once: no loop)
+            if os.environ.get("OT_LEC_TRACE_CONST", "1") != "0":
+                trace_constant_closure(L, log, tried)
         if not L.hyp:
             return
         m, kind = L.build(with_compare=False, with_hyp=True)
@@ -3406,11 +3459,13 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
         if not bad:
             if structural_constant_closure(L, log) or structural_twin_closure(L, log):
                 continue     # prove the new constants before returning
+            if traces is None:
+                traces = seq_traces(L, log)
             if os.environ.get("OT_LEC_COPY_CLOSURE", "1") != "0":
-                if traces is None:
-                    traces = seq_traces(L, log)
                 if matched_copy_closure(L, log, traces, tried):
                     continue     # prove the matched copy relations before returning
+            if os.environ.get("OT_LEC_TRACE_CONST", "1") != "0" and trace_constant_closure(L, log, tried):
+                continue         # prove the constant-from-reset candidates before returning
             if L.hyp == before or not adding:
                 return
             continue
