@@ -111,11 +111,24 @@ def test_wrapper_preserves_original_packed_bus_range():
     assert "input wire [4:11] d" in v
 
 
+def _tcl_eval_set(word):
+    """value Tcl gives `set x <word>`: tkinter when the interpreter has it, else the system tclsh (the fleet
+    pytest venv python has no _tkinter); skip only when neither Tcl is present."""
+    try:
+        import tkinter
+        return tkinter.Tcl().eval("set x "+word)
+    except ImportError:
+        import shutil, subprocess
+        tclsh=shutil.which("tclsh") or shutil.which("tclsh8.6")
+        if not tclsh:
+            pytest.skip("no Tcl interpreter (tkinter or tclsh)")
+        r=subprocess.run([tclsh],input="puts -nonewline [set x "+word+"]\n",capture_output=True,text=True,check=True)
+        return r.stdout
+
+
 def test_tcl_word_preserves_real_yosys_sink_identity():
-    import tkinter
-    interp=tkinter.Tcl()
     name=r"c1_off\[0\]$_DFF_P_/CLK"
-    assert interp.eval("set x "+CI.word(name)) == name
+    assert _tcl_eval_set(CI.word(name)) == name
     with pytest.raises(CI.InfraError): CI.word("unsafe"+chr(92))
 
 
