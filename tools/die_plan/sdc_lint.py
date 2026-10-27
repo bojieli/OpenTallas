@@ -888,6 +888,22 @@ def ff_binding_errors(kitdir, ctx):
     return measured_frame_errors(kitdir)
 
 
+def two_scene_measured(kd):
+    """two-corner kit staged with the two-scene GRT step whose FF scene binds the measured frame (FLOW-MCMM-GRT)."""
+    cfg = kd / "config.mk"
+    if not cfg.is_file() or not (kd / "grt_scenes.sh").is_file():
+        return False
+    sc = kd / "grt_ff_scene.sdc"
+    if not sc.is_file() or "ot_vmh_scene_bind" not in sc.read_text(errors="replace"):
+        return False
+    cs = None
+    for line in cfg.read_text(errors="replace").splitlines():
+        m = re.match(r"^\s*(?:override\s+)?export\s+CORNERS\s*[:?]?=\s*(.*?)\s*$", line)
+        if m:
+            cs = m.group(1).lower().split()
+    return cs == ["tc", "bc"]
+
+
 def measured_frame_errors(kitdir):
     """S81-ECO-2 10-27 (qbank_S / sstn_base566 c18 FF -6.19 / -6.32, CHECKED): a 'rebind' kit is signed off against
     the routed FF pin-register mean, so its FF-only GRT step must also repair hold in that measured frame
@@ -902,6 +918,10 @@ def measured_frame_errors(kitdir):
     if ref != "rebind":
         return []
     miss = [f for f in ("vclk_measured_hold.tcl", "vclk_ref.py") if not (kd / f).is_file()]
+    if two_scene_measured(kd):
+        # FLOW-MCMM-GRT 10-27: a two-corner kit repairs at GRT in two scenes (grt_scenes.sh); its FF scene SDC
+        # (grt_ff_scene.sdc -> ot_vmh_scene_bind) binds the measured mean before the stage repair
+        return ["clocks: " + f"two-scene GRT kit lacks {', '.join(miss)}"] if miss else []
     gp = kd / "grt_post.tcl"
     if not gp.is_file() or "ot_vclk_measured_hold" not in gp.read_text(errors="replace"):
         miss.append("grt_post.tcl with ot_vclk_measured_hold")

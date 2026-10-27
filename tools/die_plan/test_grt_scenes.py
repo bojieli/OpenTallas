@@ -166,3 +166,16 @@ def test_declared_signoff_frame_overrides_derived_ref(tmp_path):
         f.write("export OT_FF_VCLK_REF = measured\n")
     with pytest.raises(vclk_ref.RefError, match="OT_FF_VCLK_REF"):
         vclk_ref.ff_reference(kd)
+
+
+def test_measured_frame_rule_accepts_two_scene_kit(tmp_path):
+    """fba10301d's rebind rule asked for grt_post ot_vclk_measured_hold; a two-scene kit binds the measured frame in
+    its FF scene SDC instead (hbm_sram A/B canary 8d2f04b67 stopped at sdc_lint on exactly this)."""
+    import sdc_lint
+    kd = staged(tmp_path)
+    assert sdc_lint.measured_frame_errors(kd) == []
+    (kd / "grt_ff_scene.sdc").write_text("# no binding\n")
+    errs = sdc_lint.measured_frame_errors(kd)
+    assert errs and "ot_vclk_measured_hold" in errs[0]
+    kd1 = staged(tmp_path / "one", corners="bc") if (tmp_path / "one").mkdir() is None else None
+    assert sdc_lint.measured_frame_errors(kd1) and "ot_vclk_measured_hold" in sdc_lint.measured_frame_errors(kd1)[0]
