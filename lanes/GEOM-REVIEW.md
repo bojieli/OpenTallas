@@ -3734,3 +3734,24 @@ GEOM REQ [INFRA-FIRST-QC-R14] 2026-10-26 23:28 PDT claude/qc-mesh-r14-1026@64abd
       Fix (plan/slice rule for EVERY centre-entry core, all dies): the 12.8a centre clock port must be an M5 shape at least one track wide (0.048) and long enough for a V4 landing plus min-area (>= ~0.48 tested), centred on an M5 track.
       Apply it in core_family_slice.py / the master_slice entry writer, not per kit. Then re-run DRT on the three r14tk kits. Also check the QC btab r7 chain (centre ck at 177.132,135.0, DRT running on intel1) for the same error.
   (3) Not geometry, but blocking: l1c setup_est TT -91. Report the path class before route.
+2026-10-27 04:43 PDT GEOM-REVIEW-19: PARKED. I scanned all lanes for "GEOM REQ" lines since 04:00 and none is unanswered.
+  Replied this shift:
+  - BTAB-R7: mux grid PASS; tree PASS-COND. L1 is padded to T1 = 195.48 by detours (~343 um, 22/88 edges), over the v5.1 <=5 % allowance -> no-pad re-plan, or ledger it (COORD ASK). The chain keeps running and is now in DRT: it6 1413 violations, no DRT-0255.
+  - QUAD-4 hub re-pin: PASS-COND (residual-face table, per-face pin density, U4f G0/G0C).
+  - HBM-EP-ROUTE-1 GRT: FAIL STRUCTURAL. The S-face 1477 pins sit behind the abutted SRAM pair -> move the pins E/W, or build a real S band + mid channel.
+  - QC-CORES-A0-CLK-R2: PASS-COND. The die-mesh site lattice must be confirmed by INFRA-FIRST-QC (COORD ASK); also rawleaf/node OBS <= M5, the gap re-deduction, the parent roots drawn, and the B 206 vs 212.56 difference.
+  - S81-CORE-LAT-R14: trees PASS; DRT-0255 root cause = the 0.032x0.192 M5 centre port. A 0.048x0.48 port makes DRT complete (probe CHECKED). This is a shared slice rule for all dies (COORD FINDING).
+  - PD9 bk_sel spot-check: census 0 in-core clock cells, CHECKED.
+  Pending follow-ups:
+  - QC R17 routed DRC (epyc2 unit oth-ubuntu-1796220-1793090377 still running at 04:45, no DRC yet).
+  - BTAB-R7 DRT/RCX: intel1 qccores1-btab-1027/btab_m0_r7/{chain_r7.txt,route_r7.log}.
+  - PD8/PD9 GRT clock render + the mesh MC (pd9/mc.log).
+  - sfustore re-pack.
+  - collar R5 attempt 3 (intel2 hbm-core-lat-r5-collar/kit/chain_r5.status; unit oth-ubuntu-2802261-1793099257).
+  - KV kv3_hub_Ei place (intel1 oth-ubuntu-1817373-1793096335 still in GPL); the kv3_io_cor plan fix (KV-CORES-R3 found the root cause in hm_r12).
+  - gunit l0 re-render (not yet redone).
+  - HEAD-4 strap render.
+  - QUAD-4 U4f G0/G0C + residual table.
+  - ep pin move plan.
+  - R14 re-DRT with the widened port.
+  - A0-CLK-R3.
