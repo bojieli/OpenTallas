@@ -93,7 +93,10 @@ def test_rtl_ports_and_kept_cells():
     head = t[:t.index("endmodule")]
     for p in ("input wire ft_ck_i_0,", "output wire ft_ck_o_0,", "input wire ft_ck_i_1,", "output wire ft_ck_o_1,"):
         assert p in head
-    assert "(* keep = 1, dont_touch = 1 *) BUFx24_ASAP7_75t_R mp_isl1_ck1 (.A(ft_ck_i_1), .Y(ft_ck_o_1));" in head
+    assert "(* keep = 1, dont_touch = 1 *) BUFx24_ASAP7_75t_R mp_isl1_ck0 (.A(ft_ck_i_1), .Y(ft_ck_o_1));" in head
+    # parallel driver j >= 1: own logical net (one driver per net), shorted in ODB by ot_ft_short
+    assert "(* keep = 1 *) wire ft_ck_o_1__p1;" in head
+    assert "(* keep = 1, dont_touch = 1 *) BUFx24_ASAP7_75t_R mp_isl1_ck1 (.A(ft_ck_i_1), .Y(ft_ck_o_1__p1));" in head
     assert t.count("BUFx24_ASAP7_75t_R") == 3 and t.endswith("module other (input wire a); endmodule\n")
     with pytest.raises(SystemExit):                       # second application: names already used
         gk.island_ft_rtl(t, "kv3_pv_pair", arcs)
@@ -104,7 +107,8 @@ def test_rtl_ports_and_kept_cells():
 def test_tcl_procs():
     arcs, _ = gk.island_ft_arcs(view(), W, H)
     t = gk.island_ft_tcl(arcs, "kv3_pv_pair__380.16x190.08")
-    for p in ("proc ot_ft_keep", "proc ot_ft_place", "proc ot_ft_check", "setPlacementStatus FIRM", "setDoNotTouch 1"):
+    for p in ("proc ot_ft_keep", "proc ot_ft_place", "proc ot_ft_check", "setPlacementStatus FIRM", "setDoNotTouch 1",
+              "proc ot_ft_short", "$it connect $pn", "odb::dbNet_destroy $n", "  ot_ft_short\n"):
         assert p in t
     assert "{mp_isl1_ck1 BUFx24_ASAP7_75t_R 109.08 138.24 ft_ck_i_1 ft_ck_o_1}" in t
     assert "{ft_ck_i_1 ft_ck_o_1 2}" in t
@@ -161,6 +165,36 @@ def test_netlist_gate(tmp_path):
     assert r["verdict"] == "FAIL" and r["bad"][0][0] == "ft_ck_i_1"
     n.write_text(NET.replace("EXTRA", "").replace("mp_isl1_ck1 (.A(ft_ck_i_1)", "mp_isl1_ck1 (.A(s0__clk)"))
     assert cp.island_ft_gate(n, "kv3_pv_pair", arcs)["verdict"] == "FAIL"     # a parallel driver lost its input
+    rtl_form = NET.replace("EXTRA", "").replace("mp_isl1_ck1 (.A(ft_ck_i_1),\n    .Y(ft_ck_o_1))",
+                                                "mp_isl1_ck1 (.A(ft_ck_i_1),\n    .Y(ft_ck_o_1__p1))")
+    assert "ft_ck_o_1__p1" in rtl_form
+    n.write_text(rtl_form)                                                     # synthesised RTL form (own driver net)
+    assert cp.island_ft_gate(n, "kv3_pv_pair", arcs)["verdict"] == "PASS"
+    n.write_text(rtl_form.replace("endmodule", "  INVx1_ASAP7_75t_R spy2 (.A(ft_ck_o_1__p1), .Y(z));\nendmodule"))
+    assert cp.island_ft_gate(n, "kv3_pv_pair", arcs)["verdict"] == "FAIL"     # logic on the parallel driver net
+
+
+def test_lec_parallel_normalise(tmp_path):
+    lec = _load("lec_ft", TOOLS / "lec.py")
+    arcs, _ = gk.island_ft_arcs(view(), W, H)
+    (tmp_path / "island_ft.json").write_text(json.dumps(dict(arcs=arcs)))
+    n = tmp_path / "6_final.v"
+    n.write_text(NET.replace("EXTRA", ""))                                     # routed form: physical short
+    rec = {}
+    out = lec.ft_parallel_normalise(tmp_path, "kv3_pv_pair", str(n), tmp_path, rec)
+    t = Path(out).read_text()
+    assert ".Y(ft_ck_o_1__p1)" in t and "wire ft_ck_o_1__p1;" in t and t.count(".Y(ft_ck_o_1)") == 1
+    assert rec["ft_parallel"]["remapped"] == ["ft_ck_o_1__p1"]
+    n.write_text(t.replace("  wire ft_ck_o_1__p1;", ""))                       # RTL form: unchanged mapping
+    rec = {}
+    lec.ft_parallel_normalise(tmp_path, "kv3_pv_pair", str(n), tmp_path, rec)
+    assert rec["ft_parallel"]["remapped"] == []
+    n.write_text(NET.replace("EXTRA", "").replace("mp_isl1_ck1 (.A(ft_ck_i_1),\n    .Y(ft_ck_o_1))",
+                                                   "mp_isl1_ck1 (.A(ft_ck_i_1),\n    .Y(other))"))
+    with pytest.raises(lec.Unproven):
+        lec.ft_parallel_normalise(tmp_path, "kv3_pv_pair", str(n), tmp_path, {})
+    (tmp_path / "island_ft.json").unlink()
+    assert lec.ft_parallel_normalise(tmp_path, "kv3_pv_pair", str(n), tmp_path, {}) == str(n)
 
 
 def test_face_guard_skips_declared_ft_ports(tmp_path):

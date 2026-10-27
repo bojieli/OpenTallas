@@ -249,6 +249,11 @@ def island_ft_arcs(doc, w, h):
     return sorted(arcs, key=lambda a: a["k"]), names
 
 
+def par_net(sink, j):
+    """logical output net of parallel arc driver j >= 1 (lec.ft_parallel_normalise maps the routed short back to it)."""
+    return f"{sink}__p{j}"
+
+
 def island_ft_rtl(text, mod, arcs):
     """core top RTL (ANSI port list) + one input / one output port per arc and the arc cells as kept RTL instances of the
     liberty BUF (synthesis keeps a liberty cell instance; the gold LEC reads its functional model, lec.rtl_standard_libs)."""
@@ -264,8 +269,11 @@ def island_ft_rtl(text, mod, arcs):
     ports = "".join(f"input wire {a['source']},\n    output wire {a['sink']},\n    " for a in arcs)
     inst = ["    // KV-CORES-PV2 (12.2a1): die-owned island ft arcs, fixed dont_touch cells at the plan island (island_ft.tcl)"]
     for a in arcs:
-        for c in a["cells"]:
-            inst.append(f"    (* keep = 1, dont_touch = 1 *) {a['master']} {c['name']} (.A({a['source']}), .Y({a['sink']}));")
+        for j, c in enumerate(a["cells"]):
+            y = a["sink"] if j == 0 else par_net(a["sink"], j)
+            if j:                          # parallel driver j >= 1: own logical net (one driver per net for synth/lint/LEC);
+                inst.append(f"    (* keep = 1 *) wire {y};")      # ot_ft_short shorts its Y onto the port net in ODB
+            inst.append(f"    (* keep = 1, dont_touch = 1 *) {a['master']} {c['name']} (.A({a['source']}), .Y({y}));")
     return text[:m.end()] + ports + text[m.end():end] + "\n".join(inst) + "\n" + text[end:]
 
 
@@ -298,8 +306,29 @@ proc ot_ft_keep {{}} {{
   foreach a $::ot_ft_nets {{ foreach p [lrange $a 0 1] {{ [ot_ft_bnet $b $p] setDoNotTouch 1 }} }}
   puts "OT_ISLAND_FT keep [llength $::ot_ft_cells] cells [expr {{2 * [llength $::ot_ft_nets]}}] port nets"
 }}
+proc ot_ft_short {{}} {{
+  # parallel arc drivers (island mesh_driver cells > 1): RTL gives driver j >= 1 its own net <sink>__p<j> (one driver
+  # per logical net); here its Y joins the port net (the physical short), the empty logical net is removed.  Idempotent.
+  set b [ord::get_db_block]; set k 0
+  foreach c $::ot_ft_cells {{
+    lassign $c name master x y src dst
+    set i [$b findInst $name]; set it [$i findITerm Y]; set pn [ot_ft_bnet $b $dst]; set n [$it getNet]
+    if {{$n ne "NULL" && [$n getName] eq $dst}} continue
+    if {{$n ne "NULL" && ![string match "${{dst}}__p*" [$n getName]]}} {{ error "OT_ISLAND_FT_SHORT $name Y on [$n getName]" }}
+    $i setDoNotTouch 0; $pn setDoNotTouch 0
+    if {{$n ne "NULL"}} {{
+      $n setDoNotTouch 0; $it disconnect
+      if {{[llength [$n getITerms]] || [llength [$n getBTerms]]}} {{ error "OT_ISLAND_FT_SHORT [$n getName] has other pins" }}
+      odb::dbNet_destroy $n
+    }}
+    $it connect $pn
+    $i setDoNotTouch 1; $pn setDoNotTouch 1; incr k
+  }}
+  puts "OT_ISLAND_FT short $k parallel drivers"
+}}
 proc ot_ft_place {{}} {{
   ot_ft_keep
+  ot_ft_short
   set b [ord::get_db_block]; set u [[ord::get_db_tech] getDbUnitsPerMicron]
   foreach c $::ot_ft_cells {{
     lassign $c name master x y src dst
