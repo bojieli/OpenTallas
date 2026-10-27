@@ -34,7 +34,7 @@ def color_intervals(rows):
     return result, count
 
 
-def allocate(spec, plan, align_inputs=False, exact_jogs=False):
+def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=False):
     out = copy.deepcopy(spec)
     groups, bydrv, incoming = defaultdict(list), defaultdict(list), {}
     for name, cell in out['cell_sites'].items():
@@ -137,6 +137,31 @@ def allocate(spec, plan, align_inputs=False, exact_jogs=False):
         base=phase+round((bucket-phase)/step)*step
         for g,c in colors.items():
             desired=base+(c-n//2)*step; tr=D.DEFAULT_TRACKS['M8']
+            if lower_face_gap:
+                # Reserve the actual bank body below the first face-flop row.
+                # These dimensions belong only to the measured HEAD lower band;
+                # upper spine bands retain their independent open reservation.
+                limits=[]
+                for _,_,gg in rows:
+                    cc=groups[gg]; part=cc[0][1]['part']; pp=plan.parts[part]
+                    typ=pp['type']; height=plan.types[typ]['outline_um'][1]
+                    oy=pp['origin_um'][1]; cy=sum(v['origin_um'][1] for _,v in cc)/len(cc)
+                    local=cy-oy
+                    if pp.get('orient','R0') in ('MX','R180'):local=height-local
+                    if typ not in ('hd_tile','hd_spn','hd_spn_end') or not 328.32<=local<=380.0:
+                        limits=[];break
+                    half=len(cc)*D.ROW_Y/2
+                    if pp.get('orient','R0') in ('MX','R180'):
+                        limits.append((oy+height-352.78+half,oy+height-330.32-half))
+                    else:limits.append((oy+330.32+half,oy+352.78-half))
+                if limits:
+                    low=max(q[0] for q in limits);high=min(q[1] for q in limits)
+                    import math
+                    first=phase+math.ceil((low-phase)/step)*step
+                    desired=first+c*step
+                    if desired>high+1e-6:
+                        raise D.C128.PlanError([dict(kind='face_gap_capacity',name=str(bucket),
+                            detail=dict(colors=n,required=desired,allowed=[low,high]))])
             targets[g]=dict(layer='M8',c=round(tr['offset_um']+round((desired-tr['offset_um'])/tr['pitch_um'])*tr['pitch_um'],4),color=c)
     for g,cells in groups.items():
         gy=g if layers.get(g)=='M8' else incoming.get(g)
@@ -231,10 +256,11 @@ def main():
     ap.add_argument('out', type=Path)
     ap.add_argument('--align-inputs', action='store_true')
     ap.add_argument('--exact-local-jogs', action='store_true')
+    ap.add_argument('--lower-face-gap', action='store_true')
     a = ap.parse_args(); a.out.mkdir(parents=True, exist_ok=True)
     plan = S.Plan(S.load(a.plan))
     spec, corridors = allocate(json.loads(a.spec.read_text()), plan, align_inputs=a.align_inputs,
-                               exact_jogs=a.exact_local_jogs)
+                               exact_jogs=a.exact_local_jogs, lower_face_gap=a.lower_face_gap)
     (a.out/'explicit_tree.json').write_text(json.dumps(spec, indent=1)+'\n')
     (a.out/'corridors.json').write_text(json.dumps(corridors, indent=1)+'\n')
     try:
