@@ -89,6 +89,23 @@ class TestQueue(Base):
 
 
 class TestAdmissionBundle(unittest.TestCase):
+    def test_cached_bundle_bootstrap_executes_its_checker_and_helpers(self):
+        import autopilot,base64,subprocess
+        ap=importlib.reload(autopilot);ap.DRY=False
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary);tools=root/"source";tools.mkdir()
+            chain=root/"chain.py"
+            chain.write_text("import subprocess,sys\nassert sys.argv[1]=='--preflight'\nsubprocess.run([sys.executable,sys.argv[2]],check=True)\nprint('CHAIN_PASS')\n")
+            (tools/"helper.py").write_text("message='HELPER_PASS'\n")
+            (tools/"kit_preflight.py").write_text("from helper import message\nprint(message)\n")
+            bundle=ap.stage_admission_tools(chain,tools,root/"scratch")
+            bundle["source_host"]="not-used-for-cached-bundle"
+            meta=base64.b64encode(json.dumps(bundle).encode()).decode()
+            result=subprocess.run([sys.executable,"-c",ap.ADMISSION_BOOTSTRAP,meta],capture_output=True,text=True,check=True)
+            self.assertIn("ADMISSION_TOOLS READY",result.stdout)
+            self.assertIn("HELPER_PASS",result.stdout)
+            self.assertIn("CHAIN_PASS",result.stdout)
+
     def test_source_changes_create_new_immutable_own_scratch_bundle(self):
         import autopilot
         ap = importlib.reload(autopilot)
