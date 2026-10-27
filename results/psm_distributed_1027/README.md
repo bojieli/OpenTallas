@@ -31,3 +31,17 @@ PASS; unequal-area mutant rejected. Full historical KV hm_r12 kitC preparation:
 Actual distributed IR analysis is running in the new, separately owned directory
 `intel1:/srv/opentallas-scratch2/claude/codex-sta-pg-1027` (`analyze2.log`). No
 current-plan droop or IR claim follows until that analysis completes.
+
+Final controlled experiment: process exit0, VDD/VSS connectivity PASS, IR **FAIL**.
+23,516 independent VDD stripe terminals produce worst modeled IR1,165.654mV,
+versus original468.441mV, with the same grid, bumps and power. The worst remains
+sys_SW/sys_SE, both without VDD bump targets inside their SerDes windows. The
+negative linear-model voltage is an infeasible constant-current solution, not a
+physical operating-point claim. Removing ideal cross-strap shorts worsens the
+result; a single CSV M1-node count never justified dismissing the original IR
+failure. Current KV owner is measuring truthful PHY-only supply domains with
+the existing dedicated micro-bump lattice, keeping digital glue on VDD.
+
+Run4552s, peak RSS98,169,220KiB; raw logs/CSV and output ODB retained in the new
+run directory. `result.json` records per-instance terminal voltage summaries.
+No droop table or plan was adopted from this failed diagnostic.
