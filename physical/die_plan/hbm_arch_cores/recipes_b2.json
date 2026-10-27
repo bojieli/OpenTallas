@@ -94,7 +94,12 @@
   "source": "d4g as-built die_r18h5.v instance xl_NW_aqhi (module ot_hbm_xp_aq_tree13_fmt); files = closure of ot_hbm_xp_aq_tree13_fmt at d34578d6f",
   "source_commit": "d34578d6f",
   "read_at_commit": true,
-  "asbuilt_inst": "xl_NW_aqhi"
+  "asbuilt_inst": "xl_NW_aqhi",
+  "files_at": {
+   "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv": "c691d1bee505fad3cb2e766c64bb52eb5df3bea8",
+   "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_scale13.sv": "c691d1bee505fad3cb2e766c64bb52eb5df3bea8"
+  },
+  "files_at_note": "HBM-CORES-R11/R13 2026-10-27: tree13 per-block loop locals (rtl_lint; yosys equiv 4733/4733) + scale13 stage-4 round increment moved to stage 5 (k11m u_scale TT -19.33; old/new miter BMC SUCCESS). Other files stay at the as-built pin d34578d6f (identical at HEAD)."
  },
  "ot_hgi_qw_dec": {
   "top": "ot_hgi_qw_dec",

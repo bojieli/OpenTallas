@@ -571,6 +571,10 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     # GRT hold repair (TT setup then only at the post-CTS hook).
     ap.add_argument("--no-cts-setup", action="store_true", help="no post-CTS TT setup-only repair (old behaviour)")
     ap.add_argument("--single-mode-grt", action="store_true", help="FF-only GRT hold repair (no TT setup repair at GRT)")
+    # HBM-CORES-R13 (COORD 10-27 10:37 ruling 1: input-port hold -> HB4 hook OK, data hold buffers allowed): the GRT hold
+    # repair pads with HB4xp67 (main physical/common_flow/hold_pad_hb4.tcl) instead of BUFx2 only.  Replaces the
+    # hand-edited core_grt_pre.tcl of the R10/R11 aq_tree13 kits; recorded in freeze.json flow_defaults.
+    ap.add_argument("--hold-pad-hb4", action="store_true", help="GRT hold repair may pad with HB4 (hold_pad_hb4.tcl)")
     MS = _ms()
     MS.add_args(ap)   # 12.7c: --master-slice DIR (opt-in), --trial
     a = ap.parse_args()
@@ -869,7 +873,11 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     for f in ("face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
               "lec.py", "selrange_gate.py", "vclk_corner.tcl", "postcts_gate.tcl", "pinreg_measure.tcl"):
         shutil.copyfile(TOOL / f, kd / f)
-    (kd / "core_grt_pre.tcl").write_text("source /work/vclk_corner.tcl\nsource /work/hold_cap.tcl\n")
+    grt_pre = "source /work/vclk_corner.tcl\nsource /work/hold_cap.tcl\n"
+    if a.hold_pad_hb4:
+        shutil.copyfile(REPO / "physical/common_flow/hold_pad_hb4.tcl", kd / "hold_pad_hb4.tcl")
+        grt_pre += "source /work/hold_pad_hb4.tcl\n"
+    (kd / "core_grt_pre.tcl").write_text(grt_pre)
     # FLOW 10-26 PG: cells created by CTS / tap / F4 / GRT repair (dont_touch ones included) get their supplies, then
     # the hard check (OT_PG_OPEN fails the GRT step); tools/die_plan/pg_connect.tcl
     shutil.copyfile(TOOL / "pg_connect.tcl", kd / "pg_connect.tcl")
@@ -1054,6 +1062,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                 f"{rec.get('cts_delay_buffer_derate', 0.5)} -sink_clustering_max_diameter 30 -sink_clustering_size 20 "
                 "-distance_between_buffers 40 -balance_levels"]
     flow = dict(rc_cal=not a.stock_rc, f1=None, f4=not a.no_f4)
+    if a.hold_pad_hb4:
+        flow["hold_pad"] = "HB4 (physical/common_flow/hold_pad_hb4.tcl at GRT)"
     if not a.stock_rc:
         cfg += ["export LAYER_PARASITICS_FILE = /work/setRC_rcx.tcl", "export SET_RC_TCL = /work/setRC_rcx.tcl"]
     if not a.no_f1:
