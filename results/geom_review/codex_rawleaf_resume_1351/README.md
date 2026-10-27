@@ -6,4 +6,4 @@ New tag: [QC-A0-KITS-RAWLEAF rst145 continuation]. Source anchor95444301f/924a35
 
 Before any queue entry: ROOT reviews/integrates source, resolves exact-source QC canary and current plan/slice/preflight gates, and posts a matching fresh GEOM verdict for this kit. Source changes after staging invalidate the manifest and require restaging; the runner does not override gates. Proposed eventual CLI (do not execute until ROOT source gates clear):
 
-python3 tools/autopilot/enqueue.py --die qwen_compute --type ot_qwen_tile_lsl_rawfault_m3 --kit intel2:NEW_KIT --src codex/pv-review-1351-1027@PACKAGING_SHA --geom REQ --geom-ref 'QC-A0-KITS-RAWLEAF rst145 continuation' --mem24 --cells57137 --lane QC-A0-KITS --goal grt --runner NEW_KIT/resume.sh --threads8 --mode trial
+python3 tools/autopilot/enqueue.py --die qwen_compute --type ot_qwen_tile_lsl_rawfault_m3 --kit intel2:NEW_KIT --src codex/pv-review-1351-1027@PACKAGING_SHA --geom REQ --geom-ref 'QC-A0-KITS-RAWLEAF rst145 continuation' --mem 24 --cells 57137 --lane QC-A0-KITS --goal grt --runner NEW_KIT/resume.sh --threads 8 --mode trial
