@@ -141,3 +141,13 @@ def test_interval_buckets_preserve_pair_spacing_and_rollback_hits():
             ix.nearby=old;assert sorted(ix.hits(q))==got
         ix.nearby=fast
         if not iteration:ix.truncate(130)
+
+
+def test_gap_order_is_explicit_and_preserves_actual_cell_and_net_inventory():
+    s=branching();s['route_order']='gap_wide_first'
+    cells,nets,ports,m=build(s)
+    assert len(cells)==len(s['cell_sites'])
+    assert m['meta']['explicit_route_order']=='gap_wide_first'
+    assert sorted(p['ndr'] for w in m['fixed_wires'] for p in w.get('pieces',[w]) if p.get('physical_edge'))==sorted(e.get('ndr','16w') for e in s['nets'])
+    s['route_order']='unknown'
+    with pytest.raises(ValueError,match='unknown explicit route order'):build(s)

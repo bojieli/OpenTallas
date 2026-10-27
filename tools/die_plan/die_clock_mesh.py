@@ -2741,6 +2741,12 @@ def _explicit_v2_wires(out, cells, nets, groups, router, off, r8, exact, default
             proxy[u].update(x=xc-BUF_W/2,lib=BUF)
         hetero[rep]=us
     wires=[]
+    order=out.get("meta",{}).get("explicit_route_order","input")
+    if order=="gap_wide_first":
+        from qc_track_allotment import order_nets
+        nets=order_nets(nets,proxy,NDR,default_ndr,ROW_Y)
+    elif order!="input":
+        raise ValueError(f"unknown explicit route order {order}")
     collect=os.environ.get("OT_V2_COLLECT_PLAN_ERRORS")=="1"; collected=[]
     for n in nets:
         pieces=[]
@@ -3032,6 +3038,7 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
     if v2:
         out["meta"]["clock_pin_window"] = True
         out["meta"]["plan_trunk_layers"] = True
+        out["meta"]["explicit_route_order"] = spec.get("route_order","input")
         # Replaced leaf stubs are diagnostic ports, not physical routes. Their
         # real output is the pre-reserved continuous mesh.
         routed_phys = [n for n in phys if not (n["drv"] in mesh_driver_units
