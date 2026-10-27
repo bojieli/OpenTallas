@@ -1,0 +1,134 @@
+{
+ "scope": "Full placed register-pair geometry census through combinational connectivity.\n\nRun inside the pinned OpenROAD image with ODB and OUT environment variables.\nAll sequential data/control inputs except clocks are traversed. Memory macros\nstop a register path. Distances are placed instance-centre Manhattan lower\nbounds, not routed wire lengths or a timing claim. No per-endpoint path pruning.",
+ "verdict": "PLACED_REACH_PASS",
+ "register_count": 12382,
+ "endpoints_with_register_fanin": 10950,
+ "related_register_pairs": 93949,
+ "related_reset_pairs": 135,
+ "over_405um": 0,
+ "max_manhattan_um": 292.572,
+ "combinational_cycles": [],
+ "pair_enumeration": "ALL unique launch/capture register pairs; data and timed reset/control fanins",
+ "worst": [
+  {
+   "distance_um": 292.572,
+   "launch": "u_fcore.u_wrq.g_sm\\[1\\].ent\\[0\\]\\[11\\]$_DFFE_PP_",
+   "capture": "u_fcore.u_wrq.wq\\[306\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 292.572,
+   "launch": "u_fcore.u_wrq.g_sm\\[1\\].ent\\[0\\]\\[11\\]$_DFFE_PP_",
+   "capture": "u_fcore.u_wrq.wq\\[305\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 291.438,
+   "launch": "u_fcore.u_wrq.g_sm\\[1\\].ent\\[0\\]\\[11\\]$_DFFE_PP_",
+   "capture": "u_fcore.u_wrq.wq\\[308\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 291.33,
+   "launch": "u_fcore.u_wrq.g_sm\\[1\\].ent\\[0\\]\\[11\\]$_DFFE_PP_",
+   "capture": "u_fcore.u_wrq.wq\\[307\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 291.222,
+   "launch": "u_fcore.u_wrq.g_sm\\[1\\].ent\\[0\\]\\[11\\]$_DFFE_PP_",
+   "capture": "u_fcore.u_wrq.wq\\[300\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 290.898,
+   "launch": "u_fcore.u_wrq.g_sm\\[1\\].ent\\[0\\]\\[11\\]$_DFFE_PP_",
+   "capture": "u_fcore.u_wrq.wq\\[311\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 290.142,
+   "launch": "u_fcore.u_wrq.g_sm\\[1\\].ent\\[0\\]\\[11\\]$_DFFE_PP_",
+   "capture": "u_fcore.u_wrq.wq\\[312\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 289.872,
+   "launch": "u_fcore.u_wrq.g_sm\\[1\\].ent\\[0\\]\\[11\\]$_DFFE_PP_",
+   "capture": "u_fcore.u_wrq.wq\\[310\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 289.602,
+   "launch": "u_fcore.u_wrq.g_sm\\[1\\].ent\\[0\\]\\[11\\]$_DFFE_PP_",
+   "capture": "u_fcore.u_wrq.wq\\[315\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 288.306,
+   "launch": "u_fcore.u_wrq.g_sm\\[1\\].ent\\[0\\]\\[11\\]$_DFFE_PP_",
+   "capture": "u_fcore.u_wrq.wq\\[309\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 288.036,
+   "launch": "u_fcore.u_wrq.g_sm\\[1\\].ent\\[0\\]\\[11\\]$_DFFE_PP_",
+   "capture": "u_fcore.u_wrq.wq\\[316\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 287.496,
+   "launch": "u_fcore.u_wrq.g_sm\\[1\\].ent\\[0\\]\\[11\\]$_DFFE_PP_",
+   "capture": "u_fcore.u_wrq.wq\\[313\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 286.794,
+   "launch": "u_fcore.u_wrq.g_sm\\[1\\].ent\\[0\\]\\[11\\]$_DFFE_PP_",
+   "capture": "u_fcore.u_wrq.wq\\[319\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 286.146,
+   "launch": "u_fcore.u_wrq.g_sm\\[1\\].ent\\[0\\]\\[11\\]$_DFFE_PP_",
+   "capture": "u_fcore.u_wrq.wq\\[337\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 286.038,
+   "launch": "u_fcore.u_wrq.g_sm\\[1\\].ent\\[0\\]\\[11\\]$_DFFE_PP_",
+   "capture": "u_fcore.u_wrq.wq\\[338\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 285.498,
+   "launch": "u_fcore.u_wrq.g_sm\\[1\\].ent\\[0\\]\\[11\\]$_DFFE_PP_",
+   "capture": "u_fcore.u_wrq.wq\\[342\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 285.336,
+   "launch": "u_fcore.u_wrq.g_sm\\[1\\].ent\\[0\\]\\[11\\]$_DFFE_PP_",
+   "capture": "u_fcore.u_wrq.wq\\[339\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 285.12,
+   "launch": "u_fcore.u_wrq.g_sm\\[1\\].ent\\[0\\]\\[11\\]$_DFFE_PP_",
+   "capture": "u_fcore.u_wrq.wq\\[340\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 285.012,
+   "launch": "u_fcore.u_wrq.g_sm\\[1\\].ent\\[0\\]\\[11\\]$_DFFE_PP_",
+   "capture": "u_fcore.u_wrq.wq\\[343\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 284.688,
+   "launch": "u_fcore.u_wrq.g_sm\\[1\\].ent\\[0\\]\\[11\\]$_DFFE_PP_",
+   "capture": "u_fcore.u_wrq.wq\\[332\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 283.932,
+   "launch": "u_fcore.u_wrq.g_sm\\[1\\].ent\\[0\\]\\[11\\]$_DFFE_PP_",
+   "capture": "u_fcore.u_wrq.wq\\[347\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 283.878,
+   "launch": "u_fcore.u_wrq.g_sm\\[1\\].ent\\[0\\]\\[11\\]$_DFFE_PP_",
+   "capture": "u_fcore.u_wrq.wq\\[344\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 283.554,
+   "launch": "u_fcore.u_wrq.g_sm\\[1\\].ent\\[0\\]\\[11\\]$_DFFE_PP_",
+   "capture": "u_fcore.u_wrq.wq\\[341\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 283.5,
+   "launch": "u_fcore.u_wrq.g_sm\\[1\\].ent\\[0\\]\\[11\\]$_DFFE_PP_",
+   "capture": "u_fcore.u_wrq.wq\\[318\\]$_DFF_P_"
+  }
+ ]
+}

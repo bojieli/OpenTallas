@@ -1,0 +1,134 @@
+{
+ "scope": "Full placed register-pair geometry census through combinational connectivity.\n\nRun inside the pinned OpenROAD image with ODB and OUT environment variables.\nAll sequential data/control inputs except clocks are traversed. Memory macros\nstop a register path. Distances are placed instance-centre Manhattan lower\nbounds, not routed wire lengths or a timing claim. No per-endpoint path pruning.",
+ "verdict": "PLACED_REACH_PASS",
+ "register_count": 33702,
+ "endpoints_with_register_fanin": 32634,
+ "related_register_pairs": 310499,
+ "related_reset_pairs": 0,
+ "over_405um": 0,
+ "max_manhattan_um": 207.414,
+ "combinational_cycles": [],
+ "pair_enumeration": "ALL unique launch/capture register pairs; data and timed reset/control fanins",
+ "worst": [
+  {
+   "distance_um": 207.414,
+   "launch": "u_bin_tree_cmd/q\\[11\\]$_DFF_P_",
+   "capture": "u_fcore.u_core.u_pt.v1\\[25\\]$_DFF_PN0_"
+  },
+  {
+   "distance_um": 205.524,
+   "launch": "u_bin_tree_cmd/q\\[11\\]$_DFF_P_",
+   "capture": "u_fcore.u_core.u_pt.v1\\[24\\]$_DFF_PN0_"
+  },
+  {
+   "distance_um": 205.497,
+   "launch": "u_fcore.u_core.u_pt.m1$_DFF_P_",
+   "capture": "u_fcore.u_core.u_pt.g_chunk\\[3\\].g_k\\[1\\].u_n.u_add.u_ca.genblk1.g_rv.rd\\[82\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 201.204,
+   "launch": "u_bin_tree_cmd/q\\[9\\]$_DFF_P_",
+   "capture": "u_fcore.u_core.u_pt.v1\\[25\\]$_DFF_PN0_"
+  },
+  {
+   "distance_um": 199.314,
+   "launch": "u_bin_tree_cmd/q\\[9\\]$_DFF_P_",
+   "capture": "u_fcore.u_core.u_pt.v1\\[24\\]$_DFF_PN0_"
+  },
+  {
+   "distance_um": 197.478,
+   "launch": "u_bin_tree_cmd/q\\[8\\]$_DFF_P_",
+   "capture": "u_fcore.u_core.u_pt.v1\\[25\\]$_DFF_PN0_"
+  },
+  {
+   "distance_um": 195.588,
+   "launch": "u_bin_tree_cmd/q\\[8\\]$_DFF_P_",
+   "capture": "u_fcore.u_core.u_pt.v1\\[24\\]$_DFF_PN0_"
+  },
+  {
+   "distance_um": 195.507,
+   "launch": "u_fcore.u_core.u_pt.m1$_DFF_P_",
+   "capture": "u_fcore.u_core.u_pt.g_chunk\\[3\\].g_k\\[1\\].u_n.u_add.u_ca.genblk1.g_rv.rd\\[105\\]$_SDFF_PP0_"
+  },
+  {
+   "distance_um": 195.453,
+   "launch": "u_fcore.u_core.u_pt.m1$_DFF_P_",
+   "capture": "u_fcore.u_core.u_pt.g_chunk\\[3\\].g_k\\[1\\].u_n.u_add.u_ca.genblk1.g_rv.rd\\[96\\]$_SDFF_PP0_"
+  },
+  {
+   "distance_um": 195.21,
+   "launch": "u_bin_tree_cmd/q\\[7\\]$_DFF_P_",
+   "capture": "u_fcore.u_core.u_pt.v1\\[25\\]$_DFF_PN0_"
+  },
+  {
+   "distance_um": 194.697,
+   "launch": "u_fcore.u_core.u_pt.m1$_DFF_P_",
+   "capture": "u_fcore.u_core.u_pt.g_chunk\\[3\\].g_k\\[1\\].u_n.u_add.u_ca.genblk1.g_rv.rd\\[63\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 194.265,
+   "launch": "u_fcore.u_core.u_pt.m1$_DFF_P_",
+   "capture": "u_fcore.u_core.u_pt.g_chunk\\[3\\].g_k\\[1\\].u_n.u_add.u_ca.genblk1.g_rv.rd\\[99\\]$_SDFF_PP0_"
+  },
+  {
+   "distance_um": 194.049,
+   "launch": "u_fcore.u_core.u_pt.m1$_DFF_P_",
+   "capture": "u_fcore.u_core.u_pt.g_chunk\\[3\\].g_k\\[1\\].u_n.u_add.u_ca.genblk1.g_rv.rd\\[97\\]$_SDFF_PP0_"
+  },
+  {
+   "distance_um": 193.941,
+   "launch": "u_fcore.u_core.u_pt.m1$_DFF_P_",
+   "capture": "u_fcore.u_core.u_pt.g_chunk\\[3\\].g_k\\[1\\].u_n.u_add.u_ca.genblk1.g_rv.rd\\[53\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 193.725,
+   "launch": "u_fcore.u_core.u_pt.m1$_DFF_P_",
+   "capture": "u_fcore.u_core.u_pt.g_chunk\\[3\\].g_k\\[1\\].u_n.u_add.u_ca.genblk1.g_rv.rd\\[56\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 193.725,
+   "launch": "u_fcore.u_core.u_pt.m1$_DFF_P_",
+   "capture": "u_fcore.u_core.u_pt.g_chunk\\[3\\].g_k\\[1\\].u_n.u_add.u_ca.genblk1.g_rv.rd\\[103\\]$_SDFF_PP0_"
+  },
+  {
+   "distance_um": 193.32,
+   "launch": "u_bin_tree_cmd/q\\[7\\]$_DFF_P_",
+   "capture": "u_fcore.u_core.u_pt.v1\\[24\\]$_DFF_PN0_"
+  },
+  {
+   "distance_um": 192.915,
+   "launch": "u_fcore.u_core.u_pt.m1$_DFF_P_",
+   "capture": "u_fcore.u_core.u_pt.g_chunk\\[3\\].g_k\\[1\\].u_n.u_add.u_ca.genblk1.g_rv.rd\\[60\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 192.483,
+   "launch": "u_fcore.u_core.u_pt.m1$_DFF_P_",
+   "capture": "u_fcore.u_core.u_pt.g_chunk\\[3\\].g_k\\[1\\].u_n.u_add.u_ca.genblk1.g_rv.rd\\[62\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 192.483,
+   "launch": "u_fcore.u_core.u_pt.m1$_DFF_P_",
+   "capture": "u_fcore.u_core.u_pt.g_chunk\\[3\\].g_k\\[1\\].u_n.u_add.u_ca.genblk1.g_rv.rd\\[55\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 192.375,
+   "launch": "u_fcore.u_core.u_pt.m1$_DFF_P_",
+   "capture": "u_fcore.u_core.u_pt.g_chunk\\[3\\].g_k\\[1\\].u_n.u_add.u_ca.genblk1.g_rv.rd\\[54\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 192.186,
+   "launch": "u_bin_tree_cmd/q\\[6\\]$_DFF_P_",
+   "capture": "u_fcore.u_core.u_pt.v1\\[25\\]$_DFF_PN0_"
+  },
+  {
+   "distance_um": 191.781,
+   "launch": "u_fcore.u_core.u_pt.m1$_DFF_P_",
+   "capture": "u_fcore.u_core.u_pt.g_chunk\\[3\\].g_k\\[1\\].u_n.u_add.u_ca.genblk1.g_rv.rd\\[57\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 191.727,
+   "launch": "u_fcore.u_core.u_pt.m1$_DFF_P_",
+   "capture": "u_fcore.u_core.u_pt.g_chunk\\[3\\].g_k\\[1\\].u_n.u_add.u_ca.genblk1.g_rv.rd\\[98\\]$_SDFF_PP0_"
+  }
+ ]
+}

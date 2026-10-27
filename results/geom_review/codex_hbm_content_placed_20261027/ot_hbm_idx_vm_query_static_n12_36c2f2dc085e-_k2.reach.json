@@ -1,0 +1,134 @@
+{
+ "scope": "Full placed register-pair geometry census through combinational connectivity.\n\nRun inside the pinned OpenROAD image with ODB and OUT environment variables.\nAll sequential data/control inputs except clocks are traversed. Memory macros\nstop a register path. Distances are placed instance-centre Manhattan lower\nbounds, not routed wire lengths or a timing claim. No per-endpoint path pruning.",
+ "verdict": "PLACED_REACH_PASS",
+ "register_count": 26328,
+ "endpoints_with_register_fanin": 24224,
+ "related_register_pairs": 66715,
+ "related_reset_pairs": 1461,
+ "over_405um": 0,
+ "max_manhattan_um": 250.344,
+ "combinational_cycles": [],
+ "pair_enumeration": "ALL unique launch/capture register pairs; data and timed reset/control fanins",
+ "worst": [
+  {
+   "distance_um": 250.344,
+   "launch": "u_fcore.core.block_data\\[212\\]$_DFFE_PP_",
+   "capture": "u_fcore.block_data\\[212\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 248.886,
+   "launch": "u_fcore.core.u_rst.rst_n\\[1\\]$_DFF_PN0_",
+   "capture": "u_fcore.core.face.due\\[26\\]\\[5\\]$_DFF_PN0_"
+  },
+  {
+   "distance_um": 248.724,
+   "launch": "u_fcore.core.u_rst.rst_n\\[1\\]$_DFF_PN0_",
+   "capture": "u_fcore.core.face.due\\[23\\]\\[5\\]$_DFF_PN0_"
+  },
+  {
+   "distance_um": 247.752,
+   "launch": "u_fcore.core.u_rst.rst_n\\[1\\]$_DFF_PN0_",
+   "capture": "u_fcore.core.face.g_nrst.rq_v\\[5\\]$_DFF_PN0_"
+  },
+  {
+   "distance_um": 247.59,
+   "launch": "u_fcore.core.u_rst.rst_n\\[1\\]$_DFF_PN0_",
+   "capture": "u_fcore.core.face.due\\[25\\]\\[5\\]$_DFF_PN0_"
+  },
+  {
+   "distance_um": 247.482,
+   "launch": "u_fcore.core.u_rst.rst_n\\[1\\]$_DFF_PN0_",
+   "capture": "u_fcore.core.face.g_nrst.rq_v\\[6\\]$_DFF_PN0_"
+  },
+  {
+   "distance_um": 246.618,
+   "launch": "u_fcore.core.u_rst.rst_n\\[1\\]$_DFF_PN0_",
+   "capture": "u_fcore.core.face.due\\[24\\]\\[5\\]$_DFF_PN0_"
+  },
+  {
+   "distance_um": 246.618,
+   "launch": "u_fcore.core.u_rst.rst_n\\[1\\]$_DFF_PN0_",
+   "capture": "u_fcore.core.face.due\\[22\\]\\[5\\]$_DFF_PN0_"
+  },
+  {
+   "distance_um": 246.51,
+   "launch": "u_fcore.core.block_data\\[228\\]$_DFFE_PP_",
+   "capture": "u_fcore.block_data\\[228\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 245.484,
+   "launch": "u_fcore.core.u_rst.rst_n\\[1\\]$_DFF_PN0_",
+   "capture": "u_fcore.core.face.due\\[21\\]\\[5\\]$_DFF_PN0_"
+  },
+  {
+   "distance_um": 243.918,
+   "launch": "u_fcore.core.u_rst.rst_n\\[1\\]$_DFF_PN0_",
+   "capture": "u_fcore.core.face.due\\[20\\]\\[5\\]$_DFF_PN0_"
+  },
+  {
+   "distance_um": 243.756,
+   "launch": "u_fcore.core.u_rst.rst_n\\[1\\]$_DFF_PN0_",
+   "capture": "u_fcore.core.face.due\\[1\\]\\[7\\]$_DFF_PN0_"
+  },
+  {
+   "distance_um": 243.594,
+   "launch": "u_fcore.core.block_data\\[222\\]$_DFFE_PP_",
+   "capture": "u_fcore.block_data\\[222\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 243.594,
+   "launch": "u_fcore.core.block_data\\[205\\]$_DFFE_PP_",
+   "capture": "u_fcore.block_data\\[205\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 243.486,
+   "launch": "u_fcore.core.u_rst.rst_n\\[1\\]$_DFF_PN0_",
+   "capture": "u_fcore.core.face.due\\[31\\]\\[5\\]$_DFF_PN0_"
+  },
+  {
+   "distance_um": 243.486,
+   "launch": "u_fcore.core.u_rst.rst_n\\[1\\]$_DFF_PN0_",
+   "capture": "u_fcore.core.face.due\\[30\\]\\[5\\]$_DFF_PN0_"
+  },
+  {
+   "distance_um": 242.568,
+   "launch": "u_fcore.core.u_rst.rst_n\\[1\\]$_DFF_PN0_",
+   "capture": "u_fcore.core.face.due\\[33\\]\\[5\\]$_DFF_PN0_"
+  },
+  {
+   "distance_um": 242.46,
+   "launch": "u_fcore.core.block_data\\[208\\]$_DFFE_PP_",
+   "capture": "u_fcore.block_data\\[208\\]$_DFF_P_"
+  },
+  {
+   "distance_um": 242.298,
+   "launch": "u_fcore.core.u_rst.rst_n\\[1\\]$_DFF_PN0_",
+   "capture": "u_fcore.core.face.due\\[29\\]\\[5\\]$_DFF_PN0_"
+  },
+  {
+   "distance_um": 241.488,
+   "launch": "u_fcore.core.u_rst.rst_n\\[1\\]$_DFF_PN0_",
+   "capture": "u_fcore.core.face.due\\[28\\]\\[5\\]$_DFF_PN0_"
+  },
+  {
+   "distance_um": 241.434,
+   "launch": "u_fcore.core.u_rst.rst_n\\[1\\]$_DFF_PN0_",
+   "capture": "u_fcore.core.face.due\\[4\\]\\[6\\]$_DFF_PN0_"
+  },
+  {
+   "distance_um": 241.38,
+   "launch": "u_fcore.core.u_rst.rst_n\\[1\\]$_DFF_PN0_",
+   "capture": "u_fcore.core.face.due\\[32\\]\\[5\\]$_DFF_PN0_"
+  },
+  {
+   "distance_um": 241.218,
+   "launch": "u_fcore.core.u_rst.rst_n\\[1\\]$_DFF_PN0_",
+   "capture": "u_fcore.core.face.due\\[3\\]\\[6\\]$_DFF_PN0_"
+  },
+  {
+   "distance_um": 240.786,
+   "launch": "u_fcore.core.u_rst.rst_n\\[1\\]$_DFF_PN0_",
+   "capture": "u_fcore.core.face.due\\[43\\]\\[5\\]$_DFF_PN0_"
+  }
+ ]
+}

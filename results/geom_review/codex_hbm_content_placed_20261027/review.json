@@ -1,0 +1,120 @@
+{
+ "scope": "Reviewed allfive actualplacement images and fullregister-paircensus",
+ "source_branch": "codex/hbm-cores-0815",
+ "rows": [
+  {
+   "kit": "/srv/opentallas-scratch2/claude/codex-hbm-cores-0815/outline_kits4/ot_hbm_su_static_pgslice_lg__pretree_4924b69d3416-_k2",
+   "image": "ot_hbm_su_static_pgslice_lg__pretree_4924b69d3416-_k2.png",
+   "verdict": "PASS-COND",
+   "findings": "Balanced body fill0.50, no macro wall or slivers, centre clock island clear. WideEbus reaches distributed local registers; all registerpairs within207.414um. Valid candidate for finalplan adoption after pin/clockbinding.",
+   "pin_window_peak_per_um": {
+    "S": 0.4,
+    "W": 0.4,
+    "E": 4.6
+   },
+   "r2r_related_pairs": 310499,
+   "r2r_max_manhattan_um": 207.414,
+   "r2r_over405": 0,
+   "r2r_census_file": "ot_hbm_su_static_pgslice_lg__pretree_4924b69d3416-_k2.reach.json",
+   "physical_result": "3_place.odb and placed.csv complete",
+   "runner_result": "exit127 AFTER Docker placement PASS: live shell file header edit shifted parser offset to suffix ace",
+   "conditions": [
+    "No route or STA in this trial; no sign-off claim",
+    "Final coupledplan owns interface/clock/PDN and nativebay/facechanges",
+    "R2R is full connectivity census of placedcentres, routedlengths/timing stillunmeasured"
+   ]
+  },
+  {
+   "kit": "/srv/opentallas-scratch2/claude/codex-hbm-cores-0815/outline_kits4/ot_hgi_sm_xload_xq_pegress_d84d0278d6d2-_k2",
+   "image": "ot_hgi_sm_xload_xq_pegress_d84d0278d6d2-_k2.png",
+   "verdict": "FAIL",
+   "findings": "Logic follows crowdedN/Efaces, large emptyWbody explained partlybywidepinbudgets. Peakdensityfails6; do not promote area shrink. FourlegacySclockaliases remain outside centre entry; finalCLK adapter/entrycontract needed.",
+   "pin_window_peak_per_um": {
+    "S": 0.1,
+    "W": 0.1,
+    "E": 12.2,
+    "N": 12.6
+   },
+   "r2r_related_pairs": 33866,
+   "r2r_max_manhattan_um": 311.958,
+   "r2r_over405": 0,
+   "r2r_census_file": "ot_hgi_sm_xload_xq_pegress_d84d0278d6d2-_k2.reach.json",
+   "physical_result": "3_place.odb and placed.csv complete",
+   "runner_result": "exit127 AFTER Docker placement PASS: live shell file header edit shifted parser offset to suffix ace",
+   "conditions": [
+    "No route or STA in this trial; no sign-off claim",
+    "Final coupledplan owns interface/clock/PDN and nativebay/facechanges",
+    "R2R is full connectivity census of placedcentres, routedlengths/timing stillunmeasured"
+   ]
+  },
+  {
+   "kit": "/srv/opentallas-scratch2/claude/codex-hbm-cores-0815/outline_kits4/ot_hgi_coll_inj_idx_join_rg_fcba1ff2148f-_k2",
+   "image": "ot_hgi_coll_inj_idx_join_rg_fcba1ff2148f-_k2.png",
+   "verdict": "FAIL",
+   "findings": "E/N dataflowbands local with centreclockpocketclear; fill0.24. Epinwindow overbudget although r2r352.62um; mustrebalancewhole-nativebusfaces and/oroutline inoneevent.",
+   "pin_window_peak_per_um": {
+    "S": 1.7,
+    "W": 5.5,
+    "E": 12.3,
+    "N": 5.7
+   },
+   "r2r_related_pairs": 77474,
+   "r2r_max_manhattan_um": 352.62,
+   "r2r_over405": 0,
+   "r2r_census_file": "ot_hgi_coll_inj_idx_join_rg_fcba1ff2148f-_k2.reach.json",
+   "physical_result": "3_place.odb and placed.csv complete",
+   "runner_result": "exit127 AFTER Docker placement PASS: live shell file header edit shifted parser offset to suffix ace",
+   "conditions": [
+    "No route or STA in this trial; no sign-off claim",
+    "Final coupledplan owns interface/clock/PDN and nativebay/facechanges",
+    "R2R is full connectivity census of placedcentres, routedlengths/timing stillunmeasured"
+   ]
+  },
+  {
+   "kit": "/srv/opentallas-scratch2/claude/codex-hbm-cores-0815/outline_kits4/ot_hbm_idx_vm_query_static_n12_36c2f2dc085e-_k2",
+   "image": "ot_hbm_idx_vm_query_static_n12_36c2f2dc085e-_k2.png",
+   "verdict": "FAIL",
+   "findings": "Compact distributed body fill0.42, centreclockpocketclear; preplacementrepair recoveredpositiveWNS andadvanced. N/Edensefaces violate6; GRT on oldshape failed3819 andnewshape neverrouted.",
+   "pin_window_peak_per_um": {
+    "W": 0.1,
+    "E": 8.7,
+    "S": 0.1,
+    "N": 11.3
+   },
+   "r2r_related_pairs": 66715,
+   "r2r_max_manhattan_um": 250.344,
+   "r2r_over405": 0,
+   "r2r_census_file": "ot_hbm_idx_vm_query_static_n12_36c2f2dc085e-_k2.reach.json",
+   "physical_result": "3_place.odb and placed.csv complete",
+   "runner_result": "watchclient interrupted after forward progress; actualDocker completedPLACEMENT_ONLY_PASS",
+   "conditions": [
+    "No route or STA in this trial; no sign-off claim",
+    "Final coupledplan owns interface/clock/PDN and nativebay/facechanges",
+    "R2R is full connectivity census of placedcentres, routedlengths/timing stillunmeasured"
+   ]
+  },
+  {
+   "kit": "/srv/opentallas-scratch2/claude/codex-hbm-cores-0815/outline_kits5/ot_hbm_sm_vm_wr_q_t_lanes4_0df036df4db8-_k2",
+   "image": "ot_hbm_sm_vm_wr_q_t_lanes4_0df036df4db8-_k2.png",
+   "verdict": "FAIL",
+   "findings": "Automaticplacer relocatedsingleSRAMtoN(21.6,158.49), shadowing833Npins and leavingnarrowuppercaptureband. Centreclockclear. N/Sfacewindows over6; needexplicitmacroplanandnativebusfacefixbefore route.",
+   "pin_window_peak_per_um": {
+    "E": 5.7,
+    "W": 2.9,
+    "S": 9.3,
+    "N": 6.7
+   },
+   "r2r_related_pairs": 93949,
+   "r2r_max_manhattan_um": 292.572,
+   "r2r_over405": 0,
+   "r2r_census_file": "ot_hbm_sm_vm_wr_q_t_lanes4_0df036df4db8-_k2.reach.json",
+   "physical_result": "3_place.odb and placed.csv complete",
+   "runner_result": "exit0",
+   "conditions": [
+    "No route or STA in this trial; no sign-off claim",
+    "Final coupledplan owns interface/clock/PDN and nativebay/facechanges",
+    "R2R is full connectivity census of placedcentres, routedlengths/timing stillunmeasured"
+   ]
+  }
+ ]
+}
