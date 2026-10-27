@@ -794,6 +794,10 @@ class Aig:
         self.outs, self.onames = [], []
         self.strash = {}
         self.parity_expr, self.parity_cache = {}, {}
+        # Expanding every prefix of a wide CRC makes normalization quadratic.
+        # Above this support size keep the exact ordinary AIG XOR; SAT still
+        # proves the same Boolean function without an expanded parity cache.
+        self.parity_terms = max(2, int(os.environ.get("OT_LEC_PARITY_TERMS", "256")))
 
     def add_input(self, name):
         if self.ands:
@@ -843,6 +847,8 @@ class Aig:
     def XOR(self, a, b):
         aa, ac = self._parity(a)
         bb, bc = self._parity(b)
+        if len(aa) + len(bb) > self.parity_terms:
+            return self._and(self._and(a, b ^ 1) ^ 1, self._and(a ^ 1, b) ^ 1) ^ 1
         terms, const = aa ^ bb, ac ^ bc
         if not terms:
             return const
@@ -1564,6 +1570,70 @@ def closest(k, cands, cap=512):
 GENCOPY = re.compile(r"(?<![A-Za-z0-9_])g_[A-Za-z0-9_]+\[\d+\]")
 
 
+def replica_groups(d, points, compare):
+    """Group generated ff: compare keys by (norm(k), input-support set); exact."""
+    norm = lambda k: GENCOPY.sub(lambda m: m[0].split("[")[0] + "[]", k)
+    # Exact support-set grouping, computed one norm(k) bucket at a time over
+    # that bucket's cone only, with bucket-local leaf numbering and freeing of
+    # dead supports.  A design-wide bitset per AND node is O(nodes x symbols)
+    # and exhausted 320 GB on the 841k-input Q2n2 gate (LEC-TOOL-3).
+    pv = {}
+    for k, lit in sorted(points.items()):
+        pv[lit >> 1] = None if k.startswith("ff:") else ("point", k)
+    base = d["I"] + d["L"] + 1
+    ands = d["ands"]
+    buckets = {}
+    for k, lit in compare.items():
+        if k.startswith("ff:") and GENCOPY.search(k):
+            buckets.setdefault(norm(k), []).append(k)
+    out = {}
+    for nk, keys in sorted(buckets.items()):
+        if len(keys) < 2:
+            out[(nk, None)] = keys
+            continue
+        roots = [compare[k] >> 1 for k in keys]
+        cone, todo = set(), list(roots)
+        while todo:
+            v = todo.pop()
+            if v in cone:
+                continue
+            cone.add(v)
+            if v >= base:
+                i = v - base
+                todo.append(ands[2*i] >> 1); todo.append(ands[2*i+1] >> 1)
+        uses = {}
+        for v in cone:
+            if v >= base:
+                i = v - base
+                for c in (ands[2*i] >> 1, ands[2*i+1] >> 1):
+                    uses[c] = uses.get(c, 0) + 1
+        for v in roots:
+            uses[v] = uses.get(v, 0) + (1 << 30)     # roots are never freed
+        local, sup = {}, {}
+        def leaf(t):
+            if t not in local:
+                local[t] = 1 << len(local)
+            return local[t]
+        for v in sorted(cone):
+            if v >= base:
+                i = v - base
+                a, b = ands[2*i] >> 1, ands[2*i+1] >> 1
+                sup[v] = sup[a] | sup[b]
+                for c in (a, b):
+                    uses[c] -= 1
+                    if not uses[c]:
+                        del sup[c]
+            elif v in pv:
+                sup[v] = 0 if pv[v] is None else leaf(pv[v])
+            elif v == 0:
+                sup[v] = 0
+            else:
+                sup[v] = leaf(("anonymous", v))
+        for k, v in zip(keys, roots):
+            out.setdefault((nk, sup[v]), []).append(k)
+    return out
+
+
 def replica_proposals(L, log):
     """Propose interchangeable generated-register cohorts on both designs.
 
@@ -1573,29 +1643,9 @@ def replica_proposals(L, log):
     pass through the normal simultaneous inductive SAT proof/refinement.
     """
     norm = lambda k: GENCOPY.sub(lambda m: m[0].split("[")[0] + "[]", k)
-    symbols = {}
-    def sym(k):
-        if k not in symbols:
-            symbols[k] = 1 << len(symbols)
-        return symbols[k]
-    def groups(d, points, compare, side):
-        support = [0] * (d["I"] + d["L"] + d["A"] + 1)
-        for v in range(1, d["I"] + d["L"] + 1):
-            support[v] = sym(("anonymous", side, v))
-        for k, lit in sorted(points.items()):
-            # State copies are induction candidates; external data bits stay distinct.
-            support[lit >> 1] = 0 if k.startswith("ff:") else sym(("point", k))
-        base = d["I"] + d["L"] + 1
-        for i in range(d["A"]):
-            support[base+i] = support[d["ands"][2*i] >> 1] | support[d["ands"][2*i+1] >> 1]
-        out = {}
-        for k, lit in compare.items():
-            if k.startswith("ff:") and GENCOPY.search(k):
-                out.setdefault((norm(k), support[lit >> 1]), []).append(k)
-        return out
     n = 0
     for side, d, points, compare in (("gold", L.gold, L.gp, L.gc), ("gate", L.gate, L.tp, L.tc)):
-        for keys in groups(d, points, compare, side).values():
+        for keys in replica_groups(d, points, compare).values():
             if len(keys) < 2:
                 continue
             common = sorted(set(keys) & set(L.matched))
@@ -2996,41 +3046,68 @@ def memory_layout(g, t, geom):
     Gate (synthesised netlist, one flop vector per element): [a][b] = address a, bit b.  When the gate has K = W/w
     times more elements than the gold memory has words (slang folds the inner unpacked dimension of
     `reg [w-1:0] x [0:N-1][0:K-1]` into one W-bit word, element 0 at the MSB, like its flat vectors), gate element
-    a is word a//K, sub-element K-1-a%K.  -> {gate key: gold key} when every gate bit lands on a distinct gold bit,
+    a is word a//K, sub-element K-1-a%K (K = the one divisor of W that places every gate bit on a distinct gold bit;
+    trailing elements may be absent).  -> {gate key: gold key} when every gate bit lands on a distinct gold bit,
     else None (never a guess)."""
     if not geom or not g or not t:
         return None
     W, S, O = geom
-    if W <= 0 or S <= 0 or any(len(v) != 2 for v in g.values()) or any(len(v) != 2 for v in t.values()):
+    if W <= 0 or S <= 0 or any(len(v) != 2 for v in g.values()):
+        return None
+    # one-bit elements: the gate names them x[a] (one index); bit 0 of element a (HBM argmax tvl[0:3][0:7])
+    one = all(len(v) == 1 for v in t.values())
+    if one:
+        t = {k: (v[0], 0) for k, v in t.items()}
+    elif any(len(v) != 2 for v in t.values()):
         return None
     words = {v[0] for v in g.values()}
-    if S % len(words):
-        return None
-    F = S // len(words)
+    # widening factor F: wide word w holds addresses w*F .. w*F+F-1.  When the present words do not divide S, F is
+    # read off the widest bit present: the LAST wide word may be partial (hcp_sys1 u_div r_rem [0:26] x 25 b ->
+    # r_rem[0][0..399] = addresses 0..15, r_rem[1][0..274] = 16..26), or trailing words may be absent altogether
+    # (HBM argmax tk / tvl [0:3]: the last tree level is unused, F = 1).  Every bit must land at an address < S.
+    if S % len(words) == 0:
+        F = S // len(words)
+    else:
+        F = max(j for _, j in g.values()) // W + 1
+        if max(words) >= -(-S // F):
+            return None
     gold = {}
     for k, (w, j) in g.items():
-        if j >= F * W:
+        if j >= F * W or w * F + j // W >= S:
             return None
         gold[(w * F + j // W, j % W)] = k
     if len(gold) != len(g):
         return None
+
+    def place(elem):
+        mp = {}
+        for k, e in elem.items():
+            if e not in gold:
+                return None
+            mp[k] = gold[e]
+        return mp if len(set(mp.values())) == len(mp) else None
+
     amax = max(a for a, _ in t.values())
-    if all(O <= a < O + S and 0 <= b < W for a, b in t.values()):
-        elem = dict(t)
-    elif F == 1 and O == 0 and (amax + 1) % S == 0 and W % ((amax + 1) // S) == 0:
-        K = (amax + 1) // S                          # inner elements per gold word; every word's last one present
-        w = W // K
-        if K < 2 or any(a < 0 or not 0 <= b < w for a, b in t.values()):
-            return None
-        elem = {k: (a // K, (K - 1 - a % K) * w + b) for k, (a, b) in t.items()}
-    else:
-        return None
-    mp = {}
-    for k, e in elem.items():
-        if e not in gold:
-            return None
-        mp[k] = gold[e]
-    return mp if len(set(mp.values())) == len(mp) else None
+    bmax = max(b for _, b in t.values())
+    elem = False
+    if all(O <= a < O + S and 0 <= b < W for a, b in t.values()) and (W == 1 or not one):
+        elem = None
+    elif F == 1 and O == 0 and min(min(v) for v in t.values()) >= 0:
+        # inner elements per gold word K (element width w = W / K): read off the gate's highest element and bit.
+        # Trailing elements may be absent (a reduction tree `x [0:LL][0:LP-1]` uses LP >> lv elements at level lv:
+        # HBM argmax ti / tvl last level keeps element 0 only, gate ti#t[24] = level 3 element 0 = gold
+        # ti[3][126..143]); K must be the ONLY divisor of W that places every gate bit on a distinct gold bit
+        # (tk: 264 b words, gate element 17 bit 32 fits K = 6 and K = 8; only K = 8 lands on gold bits), else no guess.
+        fits = []
+        for K in range(2, W + 1):
+            w = W // K
+            if W % K or amax >= K * S or bmax >= w or (one and w != 1):
+                continue
+            mp = place({k: (a // K, (K - 1 - a % K) * w + b) for k, (a, b) in t.items()})
+            if mp:
+                fits.append(mp)
+        return fits[0] if len(fits) == 1 else None
+    return place(t) if elem is None else None
 
 
 def alias_arrays(L, log, words=4, work=None):
@@ -3109,7 +3186,20 @@ def alias_arrays(L, log, words=4, work=None):
             votes[gb + "#t"] = len(g)                # index it differently (slang gt[row][4 words] vs gt[q][j])
         for tb, n in votes.most_common(1):
             t = T[tb]
-            if 2 * n < len(g) or 2 * len(t) < len(g) or len(t) > len(g):
+            if 2 * n < len(g):
+                continue
+            # The source memory's own geometry places every gate bit exactly, so the size guards below (made for
+            # guessed layouts) do not apply: synthesis may keep far fewer bits than the gold memory has (hcp_sys1
+            # u_div r_rem: gate 313 of 675, a triangular remainder pipeline whose constant low bits were dropped)
+            gmp = memory_layout(g, t, geom.get(gb))
+            if gmp:
+                apply(gmp)
+                del T[tb]
+                log.append(f"alias array: gate {tb.split('.')[-1]} ({len(t)} b) -> gold {gb.split('.')[-1]} "
+                           f"({len(g)} b, Q-net alias evidence {n}); source memory layout {geom[gb]} "
+                           f"(width, size, offset) (simulation scoring unnecessary; proof pending)")
+                continue
+            if 2 * len(t) < len(g) or len(t) > len(g):
                 continue
             cands = []
             for gr in (False, True):
@@ -3124,14 +3214,6 @@ def alias_arrays(L, log, words=4, work=None):
             # 192 b, gold a_pr[w][j] = element 8w + j/24, bit j%24), and the gate may have dropped constant high
             # bits (a_pr#t[r][3..16]), so radices read off either side's maximal indices give none of the four
             # flat variants above the right stride (QC slw_hc0 10-26: 223 a_pr + 268 b_emin false differences).
-            gmp = memory_layout(g, t, geom.get(gb))
-            if gmp:
-                apply(gmp)
-                del T[tb]
-                log.append(f"alias array: gate {tb.split('.')[-1]} ({len(t)} b) -> gold {gb.split('.')[-1]} "
-                           f"({len(g)} b, Q-net alias evidence {n}); source memory layout {geom[gb]} "
-                           f"(width, size, offset) (simulation scoring unnecessary; proof pending)")
-                continue
             if not cands:
                 continue
             if len(cands) == 1:
@@ -4071,7 +4153,9 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
             ins = m.cone_inputs(m.outs[idx[n]])
             kinds = sorted({kind[v][0] for v in ins if kind[v][0] not in ("matched", "paired")})
             keys = sorted(kind[v][1] for v in ins if kind[v][0] not in ("matched", "paired"))[:8]
-            e = dict(point=n, status=st, cone_unmatched=kinds, cone_unmatched_keys=keys)
+            e = dict(point=n, status=st, cone_unmatched=kinds, cone_unmatched_keys=keys,
+                     cone_support_count=len(ins),
+                     cone_state_keys=sorted({f"{kind[v][0]}:{kind[v][1]}" for v in ins})[:64])
             # a difference whose cone sees only matched key points, constants, partners and RTL registers that
             # synthesis removed although their next state is not constant is a real function difference
             if st == "differs" and set(kinds) <= {"gold_only", "gold_x"}:
