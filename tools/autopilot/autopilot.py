@@ -887,6 +887,11 @@ def geom_fail_after_submit(st, j, r):
 CLOSURE = {}                                           # per tick: parsed PATH-FREEZE / PLAN-DELTA + flow tags
 
 
+def canonical_die(die):
+    """Use the same canonical die for closure guards and legacy queue canaries."""
+    return {"kv": "qwen_kvsys"}.get(die, die)
+
+
 def parse_path_freeze(text):
     """-> ({PATH: {"pass": bool, "why": str, "items": {item: state}}}, {PATH: set(types)})
     lines 'PATH | GRT0 / CLOCK-ROUTE / PATH-STA | PASS|FAIL|RUNNING|NOT RUN ... | evidence | date' (latest line per
@@ -932,7 +937,7 @@ def parse_plan_delta(text):
         line = raw.strip()
         m = re.match(r"^PENDING-DELTA\s+(\S+)\s+(\S+)\s+(\S+)", line)
         if m:
-            pend[m.group(1)] = (m.group(2), {t for t in m.group(3).split(",") if t})
+            pend[m.group(1)] = (canonical_die(m.group(2)), {t for t in m.group(3).split(",") if t})
             continue
         m = re.match(r"^(?:CLOSED|MERGED|DROPPED)-DELTA\s+(\S+)", line)
         if m:
@@ -956,7 +961,7 @@ def _base_type(t):
 
 def path_of(r):
     """the path name of a queue row / job when it is a path part, else None"""
-    path = DIE_PATH.get(r.get("die") or "")
+    path = DIE_PATH.get(canonical_die(r.get("die") or ""))
     if not path:
         return None
     lane = (r.get("lane") or "").upper()
@@ -970,6 +975,7 @@ def path_of(r):
 def die_frozen(die):
     """the FROZEN line of the die's plan when lanes/PATH-FREEZE.md freezes it (no later FAIL gate line of that name)"""
     gates = CLOSURE.get("gates", {})
+    die = canonical_die(die)
     for name, key in FROZEN_DIE.items():
         g = gates.get(name)
         if key == die and g and g.get("frozen"):
@@ -991,8 +997,9 @@ def path_gate_hold(r):
 
 
 def plan_delta_hold(r):
-    did = CLOSURE.get("delta", {}).get((r.get("die"), r.get("type"))) or \
-        CLOSURE.get("delta", {}).get((r.get("die"), _base_type(r.get("type"))))
+    die = canonical_die(r.get("die"))
+    did = CLOSURE.get("delta", {}).get((die, r.get("type"))) or \
+        CLOSURE.get("delta", {}).get((die, _base_type(r.get("type"))))
     return (f"pending plan delta {did} in lanes/PLAN-DELTA.md touches {r.get('die')}/{r.get('type')} "
             f"(closure order rule 4: no kit run until the delta is CLOSED/MERGED/DROPPED)") if did else ""
 

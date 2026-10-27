@@ -32,6 +32,16 @@ class TestParse(unittest.TestCase):
         import autopilot
         self.ap = autopilot
 
+    def test_legacy_kv_alias_cannot_bypass_pending_delta_or_path_gate(self):
+        self.ap.CLOSURE.clear()
+        self.ap.CLOSURE.update(gates={}, parts={"KV": {"kv_core"}},
+                              delta=self.ap.parse_plan_delta("PENDING-DELTA d qwen_kvsys kv_core"))
+        row={"die":"kv", "type":"kv_core", "lane":"KV-CORES"}
+        self.assertIn("pending plan delta d", self.ap.plan_delta_hold(row))
+        self.assertIn("path KV die gate not PASS", self.ap.path_gate_hold(row))
+        self.assertEqual(self.ap.parse_plan_delta("PENDING-DELTA d kv kv_core"),
+                         {("qwen_kvsys", "kv_core"):"d"})
+
     def test_gate_states(self):
         g, parts = self.ap.parse_path_freeze(
             FREEZE_HEAD + "QC | GRT0 | PASS | x | d\nQC | CLOCK-ROUTE / PATH-STA | PASS | y | d\n"
