@@ -1,0 +1,259 @@
+die L0_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L1_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L2_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L3_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L3_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_wo
+die L3_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L1_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L1_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_wo
+die L0_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L0_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_wo
+die L1_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L1_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_s
+die L1_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L1_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/153
+die L2_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L2_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_wo
+die L3_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L3_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/153
+die L4_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L2_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L2_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/153
+die L3_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L3_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_s
+die L0_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L0_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/153
+die L0_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L0_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_s
+die L2_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L2_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_s
+die L4_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L4_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_wo
+die L5_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L3_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L3_resid2.npz r=0x405bca72 x_words=64 psums=160 span_cycles=11
+die L2_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L2_resid1.npz r=0x408dd770 x_words=64 psums=160 span_cycles=11
+die L4_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L4_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/153
+die L1_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L1_resid1.npz r=0x40b67dd6 x_words=64 psums=160 span_cycles=11
+die L3_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L3_resid1.npz r=0x40750207 x_words=64 psums=160 span_cycles=11
+die L5_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L5_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_wo
+die L6_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L3_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L3_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=30
+die L1_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L1_resid2.npz r=0x409ac91d x_words=64 psums=160 span_cycles=11
+die L2_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L2_resid2.npz r=0x4087aba9 x_words=64 psums=160 span_cycles=11
+die L5_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L5_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/153
+die L0_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L0_resid1.npz r=0x412e3b9a x_words=64 psums=160 span_cycles=11
+die L4_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L4_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_s
+die L7_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L0_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L0_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=30
+die L0_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L0_resid2.npz r=0x40d90860 x_words=64 psums=160 span_cycles=11
+die L5_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L5_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_s
+die L2_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L2_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=30
+die L1_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L1_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=30
+die L6_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L6_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_wo
+die L8_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L4_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L4_resid2.npz r=0x40158928 x_words=64 psums=160 span_cycles=11
+die L7_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L7_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_wo
+die L4_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L4_resid1.npz r=0x40401d88 x_words=64 psums=160 span_cycles=11
+die L6_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L6_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/153
+die L5_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L5_resid1.npz r=0x4002ed53 x_words=64 psums=160 span_cycles=11
+die L4_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L4_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=30
+die L5_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L5_resid2.npz r=0x3fd3205c x_words=64 psums=160 span_cycles=11
+die L9_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L7_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L7_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/153
+die L6_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L6_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_s
+die L8_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L8_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_wo
+die L7_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L7_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_s
+die L5_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L5_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=30
+die L10_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L8_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L8_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/153
+die L8_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L8_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_s
+die L6_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L6_resid1.npz r=0x3fb90b26 x_words=64 psums=160 span_cycles=11
+die L9_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L9_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_wo
+die L10_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L10_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_w
+die L6_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L6_resid2.npz r=0x3fa5b856 x_words=64 psums=160 span_cycles=11
+die L11_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L9_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L9_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/153
+die L7_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L7_resid1.npz r=0x3f9bd90a x_words=64 psums=160 span_cycles=11
+die L7_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L7_resid2.npz r=0x3f99ae17 x_words=64 psums=160 span_cycles=11
+die L6_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L6_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=30
+die L10_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L10_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/15
+die L9_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L9_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_s
+die L12_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L8_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L8_resid1.npz r=0x3f95b285 x_words=64 psums=160 span_cycles=11
+die L7_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L7_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=30
+die L10_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L10_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_
+die L8_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L8_resid2.npz r=0x3f9830cb x_words=64 psums=160 span_cycles=11
+die L8_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L8_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=30
+die L11_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L11_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/15
+die L13_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L11_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L11_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_w
+die L12_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L12_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_w
+die L9_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L9_resid1.npz r=0x3f90331a x_words=64 psums=160 span_cycles=11
+die L11_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L11_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_
+die L9_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L9_resid2.npz r=0x3f993505 x_words=64 psums=160 span_cycles=11
+die L12_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L12_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/15
+die L14_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L10_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L10_resid1.npz r=0x3f97f005 x_words=64 psums=160 span_cycles=1
+die L13_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L13_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_w
+die L9_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L9_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=30
+die L10_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L10_resid2.npz r=0x3f967448 x_words=64 psums=160 span_cycles=1
+die L12_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L12_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_
+die L13_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L13_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/15
+die L15_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L10_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L10_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=3
+die L11_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L11_resid1.npz r=0x3f8a2245 x_words=64 psums=160 span_cycles=1
+die L11_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L11_resid2.npz r=0x3f849a30 x_words=64 psums=160 span_cycles=1
+die L13_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L13_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_
+die L14_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L14_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_w
+die L14_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L14_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/15
+die L16_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L15_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L15_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_w
+die L11_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L11_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=3
+die L12_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L12_resid2.npz r=0x3f7d245a x_words=64 psums=160 span_cycles=1
+die L14_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L14_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_
+die L12_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L12_resid1.npz r=0x3f74915e x_words=64 psums=160 span_cycles=1
+die L15_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L15_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/15
+die L17_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L12_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L12_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=3
+die L13_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L13_resid1.npz r=0x3f72fb2d x_words=64 psums=160 span_cycles=1
+die L13_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L13_resid2.npz r=0x3f84eee3 x_words=64 psums=160 span_cycles=1
+die L16_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L16_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_w
+die L15_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L15_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_
+die L16_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L16_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/15
+die L18_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L16_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L16_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_
+die L14_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L14_resid1.npz r=0x3f798ff6 x_words=64 psums=160 span_cycles=1
+die L13_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L13_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=3
+die L14_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L14_resid2.npz r=0x3f84a7a0 x_words=64 psums=160 span_cycles=1
+die L17_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L17_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_w
+die L17_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L17_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/15
+die L19_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L14_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L14_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=3
+die L18_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L18_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_w
+die L15_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L15_resid2.npz r=0x3f80c95b x_words=64 psums=160 span_cycles=1
+die L15_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L15_resid1.npz r=0x3f767eae x_words=64 psums=160 span_cycles=1
+die L17_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L17_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_
+die L15_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L15_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=3
+die L20_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L18_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L18_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/15
+die L16_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L16_resid1.npz r=0x3f6b0ce5 x_words=64 psums=160 span_cycles=1
+die L18_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L18_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_
+die L16_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L16_resid2.npz r=0x3f7eeca7 x_words=64 psums=160 span_cycles=1
+die L19_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L19_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_w
+die L19_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L19_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/15
+die L21_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L19_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L19_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_
+die L16_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L16_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=3
+die L17_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L17_resid1.npz r=0x3f57238a x_words=64 psums=160 span_cycles=1
+die L20_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L20_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_w
+die L17_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L17_resid2.npz r=0x3f59cb53 x_words=64 psums=160 span_cycles=1
+die L20_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L20_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/15
+die L22_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L17_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L17_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=3
+die L21_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L21_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_w
+die L18_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L18_resid1.npz r=0x3f4ce72c x_words=64 psums=160 span_cycles=1
+die L18_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L18_resid2.npz r=0x3f494ab8 x_words=64 psums=160 span_cycles=1
+die L20_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L20_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_
+die L21_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L21_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/15
+die L23_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L18_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L18_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=3
+die L19_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L19_resid1.npz r=0x3f320168 x_words=64 psums=160 span_cycles=1
+die L21_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L21_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_
+die L19_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L19_resid2.npz r=0x3f2d849c x_words=64 psums=160 span_cycles=1
+die L22_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L22_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_w
+die L22_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L22_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/15
+die L24_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L19_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L19_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=3
+die L23_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L23_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_w
+die L22_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L22_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_
+die L20_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L20_resid2.npz r=0x3f1e0c96 x_words=64 psums=160 span_cycles=1
+die L20_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L20_resid1.npz r=0x3f254f84 x_words=64 psums=160 span_cycles=1
+die L20_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L20_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=3
+die L25_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L21_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L21_resid1.npz r=0x3f12a96b x_words=64 psums=160 span_cycles=1
+die L23_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L23_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/15
+die L21_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L21_resid2.npz r=0x3f08b4a9 x_words=64 psums=160 span_cycles=1
+die L23_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L23_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_
+die L24_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L24_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_w
+die L24_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L24_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/15
+die L26_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L21_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L21_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=3
+die L24_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L24_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_
+die L22_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L22_resid1.npz r=0x3ef8f5a1 x_words=64 psums=160 span_cycles=1
+die L22_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L22_resid2.npz r=0x3edf715f x_words=64 psums=160 span_cycles=1
+die L25_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L25_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_w
+die L22_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L22_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=3
+die L27_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L25_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L25_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/15
+die L26_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L26_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_w
+die L23_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L23_resid1.npz r=0x3ec37286 x_words=64 psums=160 span_cycles=1
+die L23_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L23_resid2.npz r=0x3eae3b94 x_words=64 psums=160 span_cycles=1
+die L25_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L25_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_
+die L23_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L23_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=3
+die L28_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L26_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L26_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/15
+die L24_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L24_resid1.npz r=0x3ea1d2ba x_words=64 psums=160 span_cycles=1
+die L24_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L24_resid2.npz r=0x3e9025a4 x_words=64 psums=160 span_cycles=1
+die L26_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L26_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_
+die L27_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L27_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_w
+die L27_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L27_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/15
+die L29_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L24_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L24_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=3
+die L25_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L25_resid1.npz r=0x3e8c9c48 x_words=64 psums=160 span_cycles=1
+die L27_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L27_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_
+die L25_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L25_resid2.npz r=0x3e7e7eab x_words=64 psums=160 span_cycles=1
+die L28_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L28_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_w
+die L28_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L28_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/15
+die L30_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L25_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L25_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=3
+die L29_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L29_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_w
+die L26_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L26_resid1.npz r=0x3e78330c x_words=64 psums=160 span_cycles=1
+die L28_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L28_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_
+die L26_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L26_resid2.npz r=0x3e5e19d9 x_words=64 psums=160 span_cycles=1
+die L29_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L29_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/15
+die L31_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L26_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L26_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=3
+die L29_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L29_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_
+die L27_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L27_resid1.npz r=0x3e5c8f30 x_words=64 psums=160 span_cycles=1
+die L27_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L27_resid2.npz r=0x3e4dffc5 x_words=64 psums=160 span_cycles=1
+die L30_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L30_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_w
+die L30_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L30_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/15
+die L32_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L27_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L27_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=3
+die L30_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L30_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_
+die L31_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L31_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_w
+die L28_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L28_resid1.npz r=0x3e4601a0 x_words=64 psums=160 span_cycles=1
+die L28_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L28_resid2.npz r=0x3e352715 x_words=64 psums=160 span_cycles=1
+die L28_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L28_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=3
+die L33_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L31_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L31_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/15
+die L32_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L32_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_w
+die L29_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L29_resid1.npz r=0x3e2b1911 x_words=64 psums=160 span_cycles=1
+die L31_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L31_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_
+die L29_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L29_resid2.npz r=0x3e20743a x_words=64 psums=160 span_cycles=1
+die L29_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L29_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=3
+die L34_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L32_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L32_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/15
+die L30_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L30_resid1.npz r=0x3e194d16 x_words=64 psums=160 span_cycles=1
+die L32_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L32_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_
+die L33_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L33_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_w
+die L30_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L30_resid2.npz r=0x3e075b86 x_words=64 psums=160 span_cycles=1
+die L33_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L33_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/15
+die L35_od DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L31_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L31_resid1.npz r=0x3e0455e2 x_words=64 psums=160 span_cycles=1
+die L34_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L34_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_w
+die LGPOS_od_arf DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)
+die L30_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L30_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=3
+die L33_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L33_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_
+die L31_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L31_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=3
+die L31_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L31_resid2.npz r=0x3df424a5 x_words=64 psums=160 span_cycles=1
+die L32_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L32_resid2.npz r=0x3dd9e7b2 x_words=64 psums=160 span_cycles=1
+die L32_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L32_resid1.npz r=0x3de996ab x_words=64 psums=160 span_cycles=1
+die L34_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L34_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/15
+die L34_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L34_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_
+die L35_qk DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L35_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_w
+die L35_silu DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L35_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/15
+die L32_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L32_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=3
+die LGPOS_qk_roperx DV_LOWER_VEC qk FAIL 2/4 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=0 q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold=none
+die L35_qkv DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L35_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_
+die L33_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L33_resid1.npz r=0x3dcc2027 x_words=64 psums=160 span_cycles=1
+die LGPOS_qk_stream DV_LOWER_VEC qk FAIL 2/4 mutant=0 commands=26 collisions=0 ar_order=slice rope=stream fixture=0 q heads 4 / k / v, d2d words=96 span_cycles=1142 isa_gold=none
+die LGPOS_qk_roperx_ropelate DV_LOWER_VEC qk FAIL 2/4 mutant=rope_late commands=27 collisions=0 ar_order=slice rope=rx fixture=0 q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold=no
+die L33_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L33_resid2.npz r=0x3dbd7ff8 x_words=64 psums=160 span_cycles=1
+die L34_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L34_resid2.npz r=0x3d6c8b8b x_words=64 psums=160 span_cycles=1
+die L34_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L34_resid1.npz r=0x3d9427af x_words=64 psums=160 span_cycles=1
+die L33_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L33_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=3
+die L34_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L34_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=3
+die lm DV_LOWER_MAT lm FAIL 25/26 mutant=0 arf=1 fixture=0 {"best": 4926, "gather_rank": 0, "rounds": 25, "stn": 298, "collective_contract": {"arx_tag": 4926, "xc_tag"
+die L35_resid2 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L35_resid2.npz r=0x3d93940e x_words=64 psums=160 span_cycles=1
+die LGPOS_lm_arf DV_LOWER_MAT lm FAIL 25/26 mutant=0 arf=1 fixture=0 {"best": 4926, "gather_rank": 0, "rounds": 25, "stn": 298, "collective_contract": {"arx_tag": 4926, "xc_tag"
+die L35_resid1 DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L35_resid1.npz r=0x3d5d6bf7 x_words=64 psums=160 span_cycles=1
+die emb DV_LOWER_MAT emb PASS 4096/4096 mutant=0 arf=0 fixture=0 {"ports": 64}
+die L35_gu DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L35_mat_gu.npz {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "isa_gold": "isa_gold_words=3

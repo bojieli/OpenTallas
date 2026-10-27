@@ -1,0 +1,12 @@
+DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L1_mat_qkv.npz {"stn": 12, "slices": [0, 2, 4, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_span_cycles": 445, "delivery_span_origin": "chain schedule base (same origin as od span_cycles and the legacy anchor)", "legacy_schedule_anchor_span_cycles": 407, "first_stn_command_edge": 134, "first_cluster_word_edge": 148, "last_cluster_word_edge": 225, "first_vm_write_edge": 256, "last_vm_write_edge": 263, "vm_write_window_cycles": 7, "vm_writes_observed": 24, "vm_writes_expected": 48, "vm_write_addresses_missing": 24, "vm_write_obse
+    S0AG stn_busy still set at the end (1100100000)
+    S0ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    S10ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    S11ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    S1ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    S2ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    S3ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    S4ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    S5ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    S6ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+rc=1

@@ -1,0 +1,12 @@
+DV_LOWER_MAT lm FAIL 25/26 mutant=0 arf=1 fixture=0 {"best": 4926, "gather_rank": 0, "rounds": 25, "stn": 298, "collective_contract": {"arx_tag": 4926, "xc_tag": 1280114688, "tag_mismatch": 1}}
+    S0AG stn_busy still set at the end (1100100100)
+    S0ST fault bits 1001001 (any,su,vm,stn,sc,stm,port)
+    S10ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    S11ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    S1ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    S2ST fault bits 1001001 (any,su,vm,stn,sc,stm,port)
+    S3ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    S4ST fault bits 1001001 (any,su,vm,stn,sc,stm,port)
+    S5ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    S6ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+rc=1

@@ -1,0 +1,1712 @@
+{
+ "stage": "stg_die",
+ "grade": "RTL-functional (bound compute-die slice row, source assembly)",
+ "vehicle": "tb_qfd_dv2 FACE 3 = bound_r8 s8 slice row (qfd_dv_slice_die), DV2_S8DIE=1",
+ "verdict": "FAIL",
+ "cases_total": 259,
+ "matched_pos": 2,
+ "problems": [
+  "L0_resid1: die FAIL vs pos PASS",
+  "L0_resid2: die FAIL vs pos PASS",
+  "L0_silu: die FAIL vs pos PASS",
+  "L0_qk: die FAIL vs pos PASS",
+  "L0_qkv: die FAIL vs pos PASS",
+  "L0_gu: die FAIL vs pos PASS",
+  "L0_od: die NO RESULT vs pos PASS",
+  "L1_resid1: die FAIL vs pos PASS",
+  "L1_resid2: die FAIL vs pos PASS",
+  "L1_silu: die FAIL vs pos PASS",
+  "L1_qk: die FAIL vs pos PASS",
+  "L1_qkv: die FAIL vs pos PASS",
+  "L1_gu: die FAIL vs pos PASS",
+  "L1_od: die NO RESULT vs pos PASS",
+  "L2_resid1: die FAIL vs pos PASS",
+  "L2_resid2: die FAIL vs pos PASS",
+  "L2_silu: die FAIL vs pos PASS",
+  "L2_qk: die FAIL vs pos PASS",
+  "L2_qkv: die FAIL vs pos PASS",
+  "L2_gu: die FAIL vs pos PASS",
+  "L2_od: die NO RESULT vs pos PASS",
+  "L3_resid1: die FAIL vs pos PASS",
+  "L3_resid2: die FAIL vs pos PASS",
+  "L3_silu: die FAIL vs pos PASS",
+  "L3_qk: die FAIL vs pos PASS",
+  "L3_qkv: die FAIL vs pos PASS",
+  "L3_gu: die FAIL vs pos PASS",
+  "L3_od: die NO RESULT vs pos PASS",
+  "L4_resid1: die FAIL vs pos PASS",
+  "L4_resid2: die FAIL vs pos PASS",
+  "L4_silu: die FAIL vs pos PASS",
+  "L4_qk: die FAIL vs pos PASS",
+  "L4_qkv: die FAIL vs pos PASS",
+  "L4_gu: die FAIL vs pos PASS",
+  "L4_od: die NO RESULT vs pos PASS",
+  "L5_resid1: die FAIL vs pos PASS",
+  "L5_resid2: die FAIL vs pos PASS",
+  "L5_silu: die FAIL vs pos PASS",
+  "L5_qk: die FAIL vs pos PASS",
+  "L5_qkv: die FAIL vs pos PASS",
+  "L5_gu: die FAIL vs pos PASS",
+  "L5_od: die NO RESULT vs pos PASS",
+  "L6_resid1: die FAIL vs pos PASS",
+  "L6_resid2: die FAIL vs pos PASS",
+  "L6_silu: die FAIL vs pos PASS",
+  "L6_qk: die FAIL vs pos PASS",
+  "L6_qkv: die FAIL vs pos PASS",
+  "L6_gu: die FAIL vs pos PASS",
+  "L6_od: die NO RESULT vs pos PASS",
+  "L7_resid1: die FAIL vs pos PASS"
+ ],
+ "ages": {
+  "vec": {
+   "schema": "opentallas.qwen.dv-slice-vec-ages.v1",
+   "add_psum_out": [
+    171,
+    187,
+    203
+   ],
+   "xs_out": [
+    70,
+    78,
+    86,
+    94,
+    102,
+    110
+   ],
+   "silu_out": [
+    196,
+    204
+   ],
+   "red_vm": 171,
+   "root_cfg_lead": 4,
+   "d2d": {
+    "rs": [
+     124
+    ],
+    "qn": [
+     62,
+     63,
+     64,
+     65,
+     66,
+     67,
+     68,
+     69,
+     70,
+     71,
+     72,
+     73,
+     74,
+     75,
+     76,
+     77
+    ],
+    "rope_q": [
+     62,
+     63,
+     64,
+     65,
+     66,
+     67,
+     68,
+     69
+    ],
+    "rope_k": [
+     62,
+     63,
+     64,
+     65,
+     66,
+     67,
+     68,
+     69
+    ],
+    "v": [
+     62,
+     63,
+     64,
+     65,
+     66,
+     67,
+     68,
+     69,
+     70,
+     71,
+     72,
+     73,
+     74,
+     75,
+     76,
+     77
+    ],
+    "gur": [
+     62,
+     63,
+     64,
+     65,
+     66,
+     67,
+     68,
+     69,
+     70,
+     71,
+     72,
+     73,
+     74,
+     75,
+     76,
+     77,
+     78,
+     79,
+     80,
+     81,
+     82,
+     83,
+     84,
+     85,
+     86,
+     87,
+     88,
+     89,
+     90,
+     91,
+     92,
+     93
+    ],
+    "readback": [
+     62,
+     63,
+     64,
+     65,
+     66,
+     67,
+     68,
+     69,
+     70,
+     71,
+     72,
+     73,
+     74,
+     75,
+     76,
+     77,
+     78,
+     79,
+     80,
+     81,
+     82,
+     83,
+     84,
+     85,
+     86,
+     87,
+     88,
+     89,
+     90,
+     91,
+     92,
+     93,
+     94,
+     95,
+     96,
+     97,
+     98,
+     99,
+     100,
+     101,
+     102,
+     103,
+     104,
+     105,
+     106,
+     107,
+     108,
+     109
+    ]
+   },
+   "per_probe": {
+    "add@1": [
+     171,
+     187,
+     203
+    ],
+    "add@11": [
+     171,
+     187
+    ],
+    "xs@1": [
+     70,
+     78,
+     86,
+     94,
+     102,
+     110
+    ],
+    "xs@10": [
+     70,
+     78,
+     86,
+     94
+    ],
+    "silu@3": [
+     196,
+     204
+    ],
+    "red_vm@2": [
+     171
+    ],
+    "rs@2": [
+     124
+    ],
+    "qn@2": [
+     62,
+     63,
+     64,
+     65,
+     66,
+     67,
+     68,
+     69,
+     70,
+     71,
+     72,
+     73,
+     74,
+     75,
+     76,
+     77
+    ],
+    "rope_q@2": [
+     62,
+     63,
+     64,
+     65,
+     66,
+     67,
+     68,
+     69
+    ],
+    "rope_k@8": [
+     62,
+     63,
+     64,
+     65,
+     66,
+     67,
+     68,
+     69
+    ],
+    "v@10": [
+     62,
+     63,
+     64,
+     65,
+     66,
+     67,
+     68,
+     69,
+     70,
+     71,
+     72,
+     73,
+     74,
+     75,
+     76,
+     77
+    ],
+    "gur@3": [
+     62,
+     63,
+     64,
+     65,
+     66,
+     67,
+     68,
+     69,
+     70,
+     71,
+     72,
+     73,
+     74,
+     75,
+     76,
+     77,
+     78,
+     79,
+     80,
+     81,
+     82,
+     83,
+     84,
+     85,
+     86,
+     87,
+     88,
+     89,
+     90,
+     91,
+     92,
+     93
+    ],
+    "readback@1": [
+     62,
+     63,
+     64,
+     65,
+     66,
+     67,
+     68,
+     69,
+     70,
+     71,
+     72,
+     73,
+     74,
+     75,
+     76,
+     77,
+     78,
+     79,
+     80,
+     81,
+     82,
+     83,
+     84,
+     85,
+     86,
+     87,
+     88,
+     89,
+     90,
+     91,
+     92,
+     93,
+     94,
+     95,
+     96,
+     97,
+     98,
+     99,
+     100,
+     101,
+     102,
+     103,
+     104,
+     105,
+     106,
+     107,
+     108,
+     109
+    ]
+   },
+   "source": "rtl/test/qwen_dv/dv_lower_vec_bench.py --mode calibrate (tb_qfd_dv2 N 12, Verilator 5.050). Offsets from the slice cmd landing (entry + 2 s): PSUM = leave edge of the slice dn_o (S<s>SD); x = edge at the E5 end (S11E) - ST_HOP (11 - s); D2D = edge at W5 (S0DD) - 2 s; d2d rs / qn / gur are the VM-only ops re-targeted to the D2D window (same pipeline) = their last-write ages; red_vm = the head SSQ reducer result (PSUM-window variant) age"
+  },
+  "stn": {
+   "schema": "opentallas.qwen.dv-mat-ages.v1",
+   "l8_ar": 30,
+   "ar_hop": 2.0,
+   "xc_cc": 3,
+   "amax_ami": 7,
+   "arx_after_amv": 9,
+   "source": "rtl/test/qwen_dv/dv_lower_mat_bench.py --calibrate (tb_qfd_dv2 N 12, Verilator 5.050): l8_ar = S0AR edge of word 0 - far-word edge (slice 0, L8, AR dst); ar_hop from slice 11; xc_cc = S0CC edge - XC chain entry; amax_ami = AMI leaving slice 5 dn_o - emit landing (entry + cmd arrival); arx_after_amv = ARX AR word at W5 - the last AMV leaving slice 1 dn_o",
+   "faults": []
+  }
+ },
+ "cases": {
+  "L0_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L0_resid1.npz r=0x412e3b9a x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L0_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L0_resid2.npz r=0x40d90860 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L0_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L0_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L0_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L0_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L0_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L0_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin\""
+  },
+  "L0_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L0_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, \""
+  },
+  "L0_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L1_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L1_resid1.npz r=0x40b67dd6 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L1_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L1_resid2.npz r=0x409ac91d x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L1_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L1_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L1_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L1_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L1_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L1_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin\""
+  },
+  "L1_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L1_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, \""
+  },
+  "L1_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L2_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L2_resid1.npz r=0x408dd770 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L2_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L2_resid2.npz r=0x4087aba9 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L2_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L2_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L2_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L2_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L2_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L2_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin\""
+  },
+  "L2_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L2_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, \""
+  },
+  "L2_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L3_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L3_resid1.npz r=0x40750207 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L3_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L3_resid2.npz r=0x405bca72 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L3_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L3_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L3_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L3_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L3_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L3_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin\""
+  },
+  "L3_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L3_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, \""
+  },
+  "L3_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L4_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L4_resid1.npz r=0x40401d88 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L4_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L4_resid2.npz r=0x40158928 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L4_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L4_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L4_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L4_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L4_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L4_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin\""
+  },
+  "L4_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L4_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, \""
+  },
+  "L4_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L5_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L5_resid1.npz r=0x4002ed53 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L5_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L5_resid2.npz r=0x3fd3205c x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L5_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L5_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L5_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L5_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L5_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L5_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin\""
+  },
+  "L5_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L5_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, \""
+  },
+  "L5_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L6_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L6_resid1.npz r=0x3fb90b26 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L6_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L6_resid2.npz r=0x3fa5b856 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L6_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L6_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L6_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L6_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L6_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L6_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin\""
+  },
+  "L6_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L6_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, \""
+  },
+  "L6_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L7_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L7_resid1.npz r=0x3f9bd90a x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L7_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L7_resid2.npz r=0x3f99ae17 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L7_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L7_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L7_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L7_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L7_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L7_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin\""
+  },
+  "L7_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L7_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, \""
+  },
+  "L7_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L8_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L8_resid1.npz r=0x3f95b285 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L8_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L8_resid2.npz r=0x3f9830cb x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L8_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L8_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L8_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L8_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L8_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L8_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin\""
+  },
+  "L8_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L8_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, \""
+  },
+  "L8_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L9_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L9_resid1.npz r=0x3f90331a x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L9_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L9_resid2.npz r=0x3f993505 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L9_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L9_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L9_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L9_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L9_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L9_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin\""
+  },
+  "L9_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L9_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, \""
+  },
+  "L9_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L10_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L10_resid1.npz r=0x3f97f005 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L10_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L10_resid2.npz r=0x3f967448 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L10_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L10_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L10_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L10_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L10_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L10_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L10_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L10_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L10_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L11_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L11_resid1.npz r=0x3f8a2245 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L11_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L11_resid2.npz r=0x3f849a30 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L11_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L11_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L11_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L11_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L11_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L11_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L11_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L11_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L11_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L12_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L12_resid1.npz r=0x3f74915e x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L12_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L12_resid2.npz r=0x3f7d245a x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L12_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L12_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L12_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L12_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L12_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L12_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L12_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L12_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L12_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L13_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L13_resid1.npz r=0x3f72fb2d x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L13_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L13_resid2.npz r=0x3f84eee3 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L13_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L13_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L13_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L13_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L13_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L13_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L13_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L13_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L13_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L14_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L14_resid1.npz r=0x3f798ff6 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L14_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L14_resid2.npz r=0x3f84a7a0 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L14_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L14_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L14_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L14_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L14_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L14_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L14_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L14_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L14_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L15_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L15_resid1.npz r=0x3f767eae x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L15_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L15_resid2.npz r=0x3f80c95b x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L15_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L15_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L15_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L15_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L15_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L15_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L15_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L15_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L15_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L16_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L16_resid1.npz r=0x3f6b0ce5 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L16_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L16_resid2.npz r=0x3f7eeca7 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L16_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L16_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L16_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L16_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L16_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L16_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L16_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L16_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L16_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L17_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L17_resid1.npz r=0x3f57238a x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L17_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L17_resid2.npz r=0x3f59cb53 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L17_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L17_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L17_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L17_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L17_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L17_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L17_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L17_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L17_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L18_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L18_resid1.npz r=0x3f4ce72c x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L18_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L18_resid2.npz r=0x3f494ab8 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L18_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L18_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L18_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L18_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L18_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L18_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L18_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L18_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L18_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L19_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L19_resid1.npz r=0x3f320168 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L19_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L19_resid2.npz r=0x3f2d849c x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L19_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L19_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L19_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L19_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L19_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L19_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L19_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L19_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L19_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L20_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L20_resid1.npz r=0x3f254f84 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L20_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L20_resid2.npz r=0x3f1e0c96 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L20_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L20_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L20_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L20_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L20_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L20_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L20_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L20_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L20_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L21_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L21_resid1.npz r=0x3f12a96b x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L21_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L21_resid2.npz r=0x3f08b4a9 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L21_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L21_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L21_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L21_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L21_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L21_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L21_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L21_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L21_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L22_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L22_resid1.npz r=0x3ef8f5a1 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L22_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L22_resid2.npz r=0x3edf715f x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L22_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L22_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L22_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L22_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L22_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L22_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L22_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L22_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L22_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L23_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L23_resid1.npz r=0x3ec37286 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L23_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L23_resid2.npz r=0x3eae3b94 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L23_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L23_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L23_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L23_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L23_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L23_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L23_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L23_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L23_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L24_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L24_resid1.npz r=0x3ea1d2ba x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L24_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L24_resid2.npz r=0x3e9025a4 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L24_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L24_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L24_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L24_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L24_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L24_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L24_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L24_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L24_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L25_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L25_resid1.npz r=0x3e8c9c48 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L25_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L25_resid2.npz r=0x3e7e7eab x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L25_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L25_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L25_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L25_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L25_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L25_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L25_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L25_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L25_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L26_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L26_resid1.npz r=0x3e78330c x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L26_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L26_resid2.npz r=0x3e5e19d9 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L26_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L26_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L26_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L26_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L26_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L26_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L26_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L26_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L26_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L27_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L27_resid1.npz r=0x3e5c8f30 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L27_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L27_resid2.npz r=0x3e4dffc5 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L27_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L27_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L27_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L27_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L27_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L27_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L27_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L27_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L27_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L28_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L28_resid1.npz r=0x3e4601a0 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L28_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L28_resid2.npz r=0x3e352715 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L28_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L28_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L28_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L28_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L28_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L28_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L28_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L28_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L28_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L29_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L29_resid1.npz r=0x3e2b1911 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L29_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L29_resid2.npz r=0x3e20743a x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L29_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L29_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L29_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L29_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L29_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L29_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L29_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L29_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L29_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L30_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L30_resid1.npz r=0x3e194d16 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L30_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L30_resid2.npz r=0x3e075b86 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L30_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L30_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L30_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L30_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L30_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L30_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L30_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L30_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L30_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L31_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L31_resid1.npz r=0x3e0455e2 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L31_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L31_resid2.npz r=0x3df424a5 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L31_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L31_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L31_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L31_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L31_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L31_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L31_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L31_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L31_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L32_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L32_resid1.npz r=0x3de996ab x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L32_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L32_resid2.npz r=0x3dd9e7b2 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L32_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L32_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L32_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L32_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L32_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L32_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L32_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L32_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L32_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L33_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L33_resid1.npz r=0x3dcc2027 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L33_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L33_resid2.npz r=0x3dbd7ff8 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L33_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L33_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L33_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L33_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L33_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L33_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L33_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L33_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L33_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L34_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L34_resid1.npz r=0x3d9427af x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L34_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L34_resid2.npz r=0x3d6c8b8b x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L34_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L34_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L34_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L34_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L34_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L34_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L34_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L34_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L34_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "L35_resid1": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L35_resid1.npz r=0x3d5d6bf7 x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L35_resid2": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC resid FAIL 3/28 mutant=0 commands=72 collisions=0 ar_order=slice rope=stream fixture=L35_resid2.npz r=0x3d93940e x_words=64 psums=160 span_cycles=1167 isa_gold_words=4097/4097"
+  },
+  "L35_silu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC silu FAIL 1/2 mutant=0 commands=36 collisions=0 ar_order=slice rope=stream fixture=L35_silu.npz act words=24 span_cycles=935 isa_gold_words=1536/1536"
+  },
+  "L35_qk": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 5/7 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=L35_qk.npz q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold_words=768/768"
+  },
+  "L35_qkv": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT qkv FAIL 385/769 mutant=0 arf=0 fixture=L35_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 445, \"delivery_span_origin"
+  },
+  "L35_gu": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT gu FAIL 3073/3073 mutant=0 arf=0 fixture=L35_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 437, "
+  },
+  "L35_od": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "lm": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT lm FAIL 25/26 mutant=0 arf=1 fixture=0 {\"best\": 4926, \"gather_rank\": 0, \"rounds\": 25, \"stn\": 298, \"collective_contract\": {\"arx_tag\": 4926, \"xc_tag\": 1280114688, \"tag_mismatch\": 1}}"
+  },
+  "emb": {
+   "verdict": "PASS",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT emb PASS 4096/4096 mutant=0 arf=0 fixture=0 {\"ports\": 64}"
+  },
+  "LGPOS_od_arf": {
+   "verdict": "NO RESULT",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT od REFUSED mutant=0: down round 1 slice 0: STN window empty (land 1320 < previous results 1323)"
+  },
+  "LGPOS_lm_arf": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_MAT lm FAIL 25/26 mutant=0 arf=1 fixture=0 {\"best\": 4926, \"gather_rank\": 0, \"rounds\": 25, \"stn\": 298, \"collective_contract\": {\"arx_tag\": 4926, \"xc_tag\": 1280114688, \"tag_mismatch\": 1}}"
+  },
+  "LGPOS_qk_roperx": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 2/4 mutant=0 commands=27 collisions=0 ar_order=slice rope=rx fixture=0 q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold=none"
+  },
+  "LGPOS_qk_roperx_ropelate": {
+   "verdict": "FAIL",
+   "pos_verdict": "FAIL",
+   "first": "DV_LOWER_VEC qk FAIL 2/4 mutant=rope_late commands=27 collisions=0 ar_order=slice rope=rx fixture=0 q heads 4 / k / v, d2d words=96 span_cycles=1174 isa_gold=none"
+  },
+  "LGPOS_qk_stream": {
+   "verdict": "FAIL",
+   "pos_verdict": "PASS",
+   "first": "DV_LOWER_VEC qk FAIL 2/4 mutant=0 commands=26 collisions=0 ar_order=slice rope=stream fixture=0 q heads 4 / k / v, d2d words=96 span_cycles=1142 isa_gold=none"
+  }
+ }
+}
