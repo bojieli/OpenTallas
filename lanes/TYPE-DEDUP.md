@@ -36,3 +36,9 @@ Claude reset order: safe park, no new jobs. Sources/jobs/results/failures/OWNER?
 
 ## CODEX notes 2026-10-25 21:48 PDT
 CODEX remaining-lanes takeover: Tool DONE main4a5c3620d8. Jobs: None. Next: Current TYPE-REDUCE batches with exact kit gates. Failure disposition: Do not bypass R7 with superset ties.
+
+## CODEX notes 2026-10-26 20:14 PDT
+Tool done; exact strap/type reductions remain per-die plans and must preserve R7. Historical questions not reopened.
+
+## CODEX notes 2026-10-27 08:13 PDT
+Historical dedup tool done. Current S81 family replica tooling and HBM planU6 family work owned physical leads; no new retyping of frozen S81.

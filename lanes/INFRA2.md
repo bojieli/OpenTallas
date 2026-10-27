@@ -52,3 +52,6 @@ Auxiliary takeover collected current operational state; details codex-aux-infra-
 
 ## CODEX notes 2026-10-26 20:08 PDT
 Backup+sync operational lane; no QC-specific active failure. Ops remains root auxiliary coverage.
+
+## CODEX notes 2026-10-27 08:13 PDT
+Current intel2 timers healthy (autopilot active08:12, canary08:16, stall-watch08:20). Scheduler memory headroom646/753/500GB; scratch233/1500/669GB epyc2/intel1/intel2. No cleanup needed. Diagnosed ownership gaps assigned: old HBM serdes48h to HBM, topk LEC idle2h to HBM, old QC NK44hGRT and duplicate btab32hDRT to Qwen, DIE-CI67h to FLOW. No other jobs killed or repeated.

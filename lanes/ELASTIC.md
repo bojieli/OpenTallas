@@ -19,3 +19,6 @@ Record: results/arch/elastic_seam_1024/ (README verdict, analyze.py -> sizing.js
 
 ## CODEX notes 2026-10-25 21:48 PDT
 CODEX remaining-lanes takeover: DONE REJECT main8e69517bf2. Jobs: None. Next: No action; fixed plan-side padding retained. Failure disposition: Elastic overhead2.9x/5.2x with0cycle gain rejected.
+
+## CODEX notes 2026-10-27 08:13 PDT
+REJECT remains final (main8e69517bf2): overhead2.9x/5.2x, zero cycles saved. No jobs or followup.

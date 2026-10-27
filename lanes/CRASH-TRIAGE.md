@@ -61,3 +61,6 @@ Throughput effect of crash-triage-1025: C1+C2 (18 rows) now resubmit themselves 
   (G9) QC bound kits, synth_odb ORD-2013 LEF master missing in kit (ot_sram_1r1w_64x512_m1_r2c2, ot_sram_1r1w2c_64x546_m1 ...): coll_n, sle_st_a_v1/v2, sle_st_b_v1/v2, slw_st_a_v1/v2, slw_st_b_v1/v2.
   (G10) QC bound kits, GPL ODB-0360 'change orientation of FIRM instance u_bound.u_run_in/q$_DFF_P_': sle_fe_v1-3, slw_fe_v1/v2.
   (G11) S81-HEAD plan d7b8d1eb has no asbuilt section: hd_ctl/hd_host/hd_mesh synth 'recursive instantiations'; hd_lep0N missing dsdv_slice_lepw_mu.LP, hd_serdes missing ot_pdie_serdes.
+
+## CODEX notes 2026-10-27 08:13 PDT
+Historical known generator failures remain assigned to current die/core teams and FLOW shared preflight. Owner08:02 PREFLIGHT-1 sent FLOW; no dead-host kit resurrection. Full lane inventory123md files in CODEX.md.

@@ -1288,6 +1288,12 @@ CODEX: 2026-10-27 05:12 PDT explicitreset PARK root main8810c5e6a4==origin/main;
 CODEX: 2026-10-27 05:13 PDT HBM PARK reset:190c6da3ff source+positive2088/0+lintPASS pushed, mutantunit250387 live; QUAD5e95rescue, propertargetchecker only4missingkeybuf; full handoff/codex_hbm_20261027_0511.md.
 
 CODEX: 2026-10-27 08:12 PDT takeover all lanes active; source hub intel2 main a54fa8a6ce. RM34 approved HEAD/KVFT/TOKQK/EP package integrating; physical/token/flow teams collect then diagnose/fix.
-CODEX: 2026-10-27 08:25 PDT KV adopted R26 clock canonical-body RCX refresh launched intel1 via ot-run client intel2 PID333473; fresh continuity gate + MC before related-pair STA, codex/kv-clock-1027.
+CODEX: 2026-10-27 08:13 PDT KV adopted R26 clock canonical-body RCX refresh launched intel1 via ot-run client intel2 PID333473; fresh continuity gate + MC before related-pair STA, codex/kv-clock-1027.
 
 CODEX: 2026-10-27 08:13 PDT LEC closure/noreset convergence fixed c337ef681; 27 focused PASS. Q2n2b memory repaired(~4GB), Q2n2c live; argmax34diff delegated HBM RTL diagnosis; KV reset BMC12 PASS/48 live, not EQ.
+
+CODEX: 2026-10-27 08:13 PDT coverage123lanes assigned; ops3hosts healthy/no cleanup; GEOM independent collection+AUTO-GEOM1in5 implementation active; fallbackPLANS KV/S81/HEAD assigned, no builds; old runaways handed die owners, no kills.
+
+CODEX: 2026-10-27 08:13 PDT HBM all-lane takeover active; QUAD6 plan/core/proof results collecting, vmquery50it FAIL3819 assigned plan growth; conservative PG sizing642.7W envelope live intel2 unit346755-1793114007; no superseded route adopted.
+
+CODEX: 2026-10-27 08:14 PDT S81 recovered pausedc3dd5ad1a34 into codex/s81-topology-0818@1d422ed2d2;PD7f strictbind0,fi288seams6/7->2 geometry,LK2table,37focusedPASS; token child consuming. PD13 completed candidate predictor+31.28psseam afterHB4 is MODELONLY/no realviews,no build.

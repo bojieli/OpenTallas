@@ -117,3 +117,6 @@ HEAD-CORE-LAT-R4 is untouched: the fallback uses the existing cv cores and does 
 
 ## CODEX notes 2026-10-26 20:12 PDT takeover
 S81 fallback GRT overflow0TTFF but landed135/85fail; childPD2 fixes directPHY regions, equal roots and lk405umrepeaters. Thin bank60->22fail, residuals measured before anystrip.
+
+## CODEX notes 2026-10-27 08:13 PDT
+Owner08:02 FALLBACK-PLAN-PREP assigned KV to qwen and S81/HEAD to s81_head; PLANS ONLY, no fallback builds. Old S81GRT0/landed135TT85FF failures retained; latest structural prep uses directPHY/equalroots/405um relays. Current no new run.

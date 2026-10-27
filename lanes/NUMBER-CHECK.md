@@ -135,3 +135,6 @@ Own deck = own generator /home/ubuntu/.claude/jobs/b7f906df/tmp/nc5_psmgen.py (o
 Notes: irwin.json analytic estimate est_worst 78 mV vs PDNSim 24.8 -> infra_pg estimator is not pad-aware (do not use it as a gate on pad kits). Interior worst sits ~130 um inside the 450-um interior line (open-edge gradient, pessimistic).
 70 vs 75 (150-um bumps, M9 12.96@34.56, measured map, VDD+VSS co-located interior + 5.13 below M7, gate 35): pad 75 = 29.9 (overlap) / 33.1 (centre-only); pad 70 = 31.1 (overlap) / 35.45 (centre-only). Edge windows at 70 not solved (edge 75 values are 4-5 mV below interior, so interior governs).
 VERDICT: claims 1-6 CONFIRMED; the 70-um lower bound PASSES with the lane's (physical) pad-overlap contact model at 31.1 mV, margin 3.9 mV; it is marginal (0.45 over) only under my stricter centre-only bound. Margin at 70 is thin: any further loss (M7 lateral/V7 not modelled, real M6/M7 tile straps thinner than assumed) eats it.
+
+## CODEX notes 2026-10-27 08:13 PDT
+Latest HEADPG-2 collection is terminal: 150-um bump/75-um pad 29.9 mV incl 5.13 below-M7 CONFIRMED; 70-um lower bound 31.1 mV PASS physical contact, margin 3.9; centre-only conservative bound 35.45. Shared with HEAD lead; no duplicate solves. QC R25 assumptions remain explicit and next routed R26 evidence belongs QC lead.

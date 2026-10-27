@@ -109,3 +109,9 @@ CODEX took over capacity collection/report on codex/partcap-0555 (from codex/par
 
 ## CODEX notes 2026-10-25 21:49 PDT
 Collected retained intel1 codex-partcap1025/n27_resume/route_resume.log: final setup repair5103s, then legacy min hold-95.14ps/TNS-7334.5/102 and make GRT Terminated. No live n27 continuation; n44 was lost on retired epyc3. These old reset/mixed-boundary runs remain capacity diagnostics, NOT SIGNED. No relaunch ahead of real die closure tasks.
+
+## CODEX notes 2026-10-26 20:14 PDT
+Tool/capacity result completed historically; current plan completeness governs cap/hardcores. No resource sweep needed.
+
+## CODEX notes 2026-10-27 08:13 PDT
+Historical capacity sweep complete as diagnostics; old N27 boundary/reset failure already diagnosed, N44 died on retired host. No source/route rerun ahead of die closure. Current completeness/hardcore cap remains binding.

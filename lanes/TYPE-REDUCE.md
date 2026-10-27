@@ -59,3 +59,9 @@ CODEX took over TYPE-REDUCE/LEC on codex/aux-lec-1026 (current main bd41cae2e to
 
 ## CODEX notes 2026-10-26 07:47 PDT
 Collected stale remaining HBM tasks: SFU lane0/15 full kit EQUIVALENT59246/59246 and57326/57326; lanes4 plain0_3/12_15 EQUIVALENT73368/73368 and71928/71928 (02:18 collection already completed; no missing kit jobs remain). Lane_exp1/_l recovered_target/summary.json at epyc1:codex-aux-lec-1026 now EQUIVALENT42157/42157 and41911/41911 proof obligations,0nonzero; generic source6483d030dd; all untrusted hypotheses re-proved. Earlier elapsed-time serializer TypeError occurred AFTER terminal bad0, preserved as original failure and separate recovered receipts. Original cohort source commit unknown; oldKEEP2003/2003; no current-source physical release claim. IDX quarter correspondence also resolved33871/33871 (LEC lane02:20). No historical proof relaunch needed. Next: current D-HBM-B1 core slices + common-clock/pushdown rebuilds; use these as mechanism evidence only.
+
+## CODEX notes 2026-10-26 20:14 PDT
+All earlier HBMproofs collected EQ including recovered exp closure; no duplicate proof. Current D-HBM-B1 slices need rebuild, HBM path owns.
+
+## CODEX notes 2026-10-27 08:13 PDT
+Historical HBM strap/exp/IDX proofs already collected EQUIVALENT; no missing proof remains. Current unified-plan family reductions owned HBM lead; no replay of retired kit cohorts.

@@ -20,3 +20,9 @@ Current live5-host fleet PASS; epyc1 restored after /run/user incident without u
 
 ## CODEX notes 2026-10-25 21:48 PDT
 CODEX remaining-lanes takeover: DONE tools/live fleet; epyc3 retired later. Jobs: None. Next: Use live epyc1/intel1/intel2/epyc2 only. Failure disposition: Old-nvme recovery OWNER question CLOSED by owner wipe.
+
+## CODEX notes 2026-10-26 20:14 PDT
+Fleet tool operational; oldNVMe question closed by owner wipe. Use current four hosts.
+
+## CODEX notes 2026-10-27 08:13 PDT
+Fleet migration complete; current three surviving hosts healthy. Owner wipe closes historical old-NVMe question. No tool parity sweep required.
