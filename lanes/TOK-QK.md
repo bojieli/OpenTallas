@@ -27,3 +27,17 @@ B33 run7 boot now PASS (KV-TOK collection); B48 build3 DONErc0 but inherited asi
 - (2) QC per-layer: QCLM 259/259 (L0-L35 resid/silu/qk/qkv/gu/od + LM + emb) on b272ba0ec (CHECKED, 10-26). Current main 262d07038 preprocesses to the same text except 1 line, qfd_dv_amax_mu 24'(q)->q[23:0], which gives the same value (CHECKED, pp diff). Fresh r2 rebuild LIVE on epyc2 unit oth-ubuntu-1744034-1793089766 (/srv/opentallas-scratch2/claude/tok-qk-qclm-r2). COLLECT stgdie/result.json; expect 259/259 and hashes = r1.
 - (3) Latency table vs the v7 QCE composer 296,341 cyc/token (4,051.0 tok/s, 58.9 % measured grade): XD4 B48 X 8 / L0 X -214 = ledger -> +0 (CHECKED). attnret 149 = composer 149 -> +0 (CHECKED). KV slice hr +1 buses: 21 listed buses (cdc_ci/hi rd/rdata/wdata, guard status/request_tag, order chain/fault, peer accepted_ranks/token_grant, prompt fault/auth_digest, queue bootbarrier, rx deferred, phy_adp r_cr, phy_pad out_v). None of them is a QC<->KV attention lane: those lanes cross hub_Wi only as partition ft0..31. So the per-layer cost is +0, and the per-token bound is <= +21 (<= 0.007 %) (UNCHECKED: hr_price listed_complete=false on 13/14 cores, and ingest_eng has no face_guard).
 - LAYERS: QC compute 36/36 layers (259/259 cases). KV per-layer attention on B48: 0/36 run, because there is no booted B48 binary and the native tb has only PHASE=boot (no kv/chain phase; owner KV-TOK). Whole QC+KV layer end to end: 0/36. Real cycles/token on current dies = composed 296,341 (+<=21 hr), not an RTL whole-token run. No whole-token pass is claimed.
+- 10-27 02:24 PDT ASK2 (KV per-layer attention on B48), branch claude/tok-qk-kvl-1027@47c66beb0, results/token_pass/qk_kvl_1027.
+  - Correction to my earlier line: the native tb already has the FAR=1 token phase, but with one q/gold/KV shared by every layer. It is now made per-layer.
+    - kvs_compute_end +VECL: each layer gets its own q/gold/new K,V row, selected by the calendar's layer and by the RESULT record's layer.
+    - Per-layer HBM history comes from kv_preload --as-layer --skip-last.
+    - Mutants: m4 +MUT_QSWAP, m5 L0/L1 history swap. The existing m1 CMD-late and m3 kswap are kept.
+    - FAR_LAYER_SUMMARY gives per-layer PASS/FAIL plus cal_start/result cycles.
+  - Operands: real checkpoint W, prompt token at P8191, x chained. History-seeded TP4 ISA golden on CPU (111 s), using a DECLARED FP8 history (no 36-layer real prefill exists).
+  - 288/288 (36 layers x 8 TP8 heads): reference at the ISA splits = ISA golden bit-exact (CHECKED). Gold = reference at the KV die's TP8 splits.
+  - Units on intel2:
+    - top rebuild oth-ubuntu-231395-1793092035 (--mem 360; the first try OOMed at 160 GiB), ETA ~05:30 (UNCHECKED);
+    - chain.sh then auto-launches 12 sims (launch_all.sh, 24 GB each): 8 nominal heads x 36 layers (~2 h boot + ~13.5 h token at ~6 cyc/s, UNCHECKED) and 4 mutants on L0-2;
+    - smoke on the r4 binary (L0 d0_g0, old far end) oth-ubuntu-365470-1793092993.
+  - Limitation: the 36 layers cannot be 36 independent sims, because the calendar runs L0..L35 back to back in one token. Each layer-L sim would replay boot plus L0..L-1. The parallel axis is therefore heads x mutants.
+  - Collect from /srv/opentallas-scratch2/claude/tok-qk-kvl/{chain.log,runs/*/sim.log,smoke_old/sim.log}.
