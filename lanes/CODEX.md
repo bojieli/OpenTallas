@@ -1407,3 +1407,5 @@ KV q5b99b9coreplan/q6partitionhold; currentq0geometryPASS/provenanceinvestigatio
 CODEX QK/QW:9cb33edd1 READY actualHOST transport37checks+2mutants, total23compiler/caller testsPASS; universal GEN HEAD_PREP scalar now failclosed. All own jobs terminal; current production HOST dates/programme still blocked, no profile invented.
 
 CODEX13:51 FLOW/autopilot coverage: HEADfreeze30203EQ+SIGNED andKVfreezeSIGNED collected;1f7+freshdumpcheckermerged00d9. VMR98d3terminalSIGNED-UNVERSIONEDarchive acceptedROOTclosure,no rerun/tag. QCactualmissing40clockguides cause fixedroute-map loadfailure; rawfailure+native82zero-noop/3921realvectorroundtripPASS retained; freshmatchedfinalpair canary266596 liveepyc2. HEADreleaseproposal7c63 drynormalresolver273blobsMATCH,rootapprovalpending.
+
+LEC-FPREG/LEC-TOOL 2026-10-27 14:13 PDT: reviewedfd41710PASS; universalD e6READY190PASS; L1width237exactmiter/mutant/main1e964; hcoreunit356387+NNfd3718806LIVE; inheritedQ2b/cprogress5GB; oldSYS_C4561FAIL/Hempty andHRtwo64GBOOMdiagnosed. Currentjobs/next/allclasses handoff/codex_lec_current_20261027_1415.md. YOSYS-CONCAT/FP32oldaliasesclosed/currentFPREGclassesowned.
