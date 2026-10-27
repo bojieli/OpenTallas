@@ -3395,3 +3395,12 @@ GEOM REQ [INFRA-FIRST-QC-R14] 2026-10-26 23:28 PDT claude/qc-mesh-r14-1026@64abd
       The HBM plan owner must confirm the moved column keeps the 12.4c <= 405 um station gap (UNCHECKED).
       Note on Q1: bus:L78_o is 8.64 um from the new outline. It is outside, so OK, but the README line '>=30.24 clear' applies to edges/cores only.
   No CTS until the tree re-plan is re-reviewed. The floorplan, islands and pins (TRIAL stretch; the plan owner re-derives) can go into the plan delta now.
+2026-10-27 01:46 PDT GEOM-REVIEW-17: REPLY [INFRA-FIRST-QC-R17 d43b QC top tree + 43.2 centre channel x-tree] VERDICT PASS-COND (claude/qc-mesh-r17-1027@fca406244a, on the intel2 hub, not yet on GitHub. I viewed render/r17_render.png and parsed epyc2 out/d43b/sites/r15_top_sites.json (8330 cells) against plan_delta/plan_d43.json.gz (377 partitions, 960 hard cores, orient-transformed) myself.)
+  (1) The channel tree stays in the band: CHECKED. All 266 chan cells (46 node + 220 rep = 23 + 110 groups x2) are inside [1563.84,13132.8,31216.32,13176.0], on 5 lanes y=13132.8/13141.44/13150.08/13158.72/13167.36 (8.64 pitch).
+      The 35 lane-0 cells sit at y=13132.8, exactly on the sl_* partition top edge (abutting, not inside). Condition: the routed DRC must show no conflict between lane 0 and the S-side sl_* top rows and halos. Lane 4 has 8.4 um clearance to the N side; lane 0 has 0.
+  (2) No on-core cells: CHECKED. 0 of 8330 top/chan/tap cells lie inside any of the 960 hard-core rects.
+  (3) Straight L legs: viewed in the zoom (x 1564-6700). The legs are straight runs plus single L risers on lane changes, all inside the band, with reps at ~400 um, consistent with the 450 reach.
+      Only that window is rendered at legible scale. The full-die panel is too small to judge legs, so the routed render on collect must include full-band strips.
+  (4) Type identity 66/66: lane CHECKED (independent r15_idcheck). I did not re-run it, so it is UNCHECKED by me. Dry 0/0 and 1562 mm: UNCHECKED (lane label).
+  Note: plan_delta/tree_plan_d43.json.gz is the old R3 tree plan re-pointed to the new hash, with gate FAIL inside ('contents NOT re-cut'). Confirm that the build consumes only the qc_clk_mesh3 spec and never this file. If it is not needed, drop it from the kit inputs.
+  Build continues (unit oth-ubuntu-1796220-1793090377). Re-submit the routed clock plus DRC render for review on collect, before any freeze claim.
