@@ -14,6 +14,14 @@
 #  4 routed LEC of 6_final.v vs GOLD: runs whenever a 6_final.v exists, whatever the sign-off verdict (R13 root cause 4:
 #    set -e skipped it on NOT SIGNED).  Export removes only portless TAPCELL/FILLER/DECAP; refuses any with ports.
 # Log: OUT/eco_chain.log, lines HEAD_ECO_CHAIN_* (grep '^HEAD_ECO_\|^SIGNOFF').
+# HEAD-CORE-R17 2026-10-27 (same fix as R16 for head_core_r14_rebuild.sh): the ECO session is PER MODE -- scene tc
+#   (mode ss) TT setup under constraint.sdc (vclk 250), scene BC (mode ff) FF hold with vclk_ff.sdc (vclk = OT_VCLK_FF
+#   = sdc_lint insertion_ff_ps = the sign-off FF bound).  Before R17 it ran single-mode 'tc bc' with the kit hook's
+#   GLOBAL 202.5, so the TT scene timed hold against the FF vclk (phantom TT hold padded by the hold repair).
+#   head_eco_modes.py stages the binding and FAILS CLOSED (exit 2, nothing run) on any disagreement between config.mk
+#   OT_VCLK_FF/TT, sdc_lint.json, constraint.sdc, the hook's latency, an existing vclk_ff.sdc and the sign-off bound;
+#   the ORFS container is patched with tools/orfs_hold_mm.py; the sign-off FF bound is passed from the kit, not a
+#   literal.  head_eco_post.tcl refuses a session without the synced FF mode.
 set -uo pipefail
 KIT=$(realpath "$1"); OUT=$2; GOLD=$(realpath "$3"); MEM=${4:-48}; CPUS=${5:-16}
 HERE=$(cd "$(dirname "$0")" && pwd)
@@ -33,21 +41,27 @@ for f in 6_final.spef 1_2_yosys.v 1_synth.v 1_synth.sdc clock_period.txt mem.jso
   test -f "$RS/$f" && cp "$RS/$f" "$B/"; done
 rsync -a "$KIT/run/objects/asap7/$NICK/base/" "$OUT/run/objects/asap7/$NICK/base/" 2>/dev/null || true
 { cat "$OUT/constraint.sdc"; echo 'set_propagated_clock [all_clocks]'; } > "$B/4_cts.sdc"
-cp "$HERE/head_eco_post.tcl" "$HERE/../../physical/die_plan/qwen_kvsys/cores/harden/eco/eco_route.tcl" "$OUT/"
+cp "$HERE/head_eco_post.tcl" "$HERE/../../physical/die_plan/qwen_kvsys/cores/harden/eco/eco_route.tcl" "$HERE/../orfs_hold_mm.py" "$HERE/../orfs_hold_mm.tcl" "$OUT/"
 grep -q 'hold_pad_hb4.tcl' "$OUT/bind_ff_actual.tcl" || { echo "HEAD_ECO_CHAIN FAIL: bind_ff_actual.tcl lacks the HB4-only hold wrapper"; exit 2; }
+# R17 per-mode binding (fail closed); FFB = the FF bound signoff.py uses, taken from the kit and checked against it
+MODES=$(python3 -I "$HERE/head_eco_modes.py" "$OUT" --ff-bound-ps "${OT_ECO_FF_BOUND_PS:-202.5}"); echo "$MODES"
+case "$MODES" in "HEAD_ECO_MODES ok "*) ;; *) echo "HEAD_ECO_CHAIN FAIL per-mode binding"; exit 2;; esac
+FFB=$(echo "$MODES" | sed -n 's/.* ff_bound_ps \([0-9.]*\) .*/\1/p'); test -n "$FFB" || { echo "HEAD_ECO_CHAIN FAIL no FF bound"; exit 2; }
 cat >> "$OUT/config.mk" <<'CFG'
 # HEAD-CORE-R14 warm post-route ECO (tools/s81_head/head_post_route_eco.sh): RCX DRV + setup + HB4-only data hold
 override export POST_GLOBAL_ROUTE_TCL = /work/head_eco_post.tcl
 override export SKIP_INCREMENTAL_REPAIR = 1
 CFG
 ENV="-e OT_MAX_FANOUT=24 -e OT_SLEW_MARGIN=${OT_SLEW_MARGIN:-20} -e OT_SETUP_MARGIN=${OT_SETUP_MARGIN:-10} -e OT_HOLD_MARGIN=${OT_HOLD_MARGIN:-10} -e OT_HOLD_ALLOW_SETUP=1 -e OT_HOLD_MAXBUF=40 -e OT_DRV_LAST=0 -e OT_DRV_PLACE=0 -e OT_PAD_MASTERS= -e OT_RETIME_LAST=0"
-printf '{"flow": "HEAD-CORE-R14 head_post_route_eco.sh", "source_kit": "%s:%s", "source_route": "%s/5_2_route.odb", "gold": "%s", "env": "%s"}\n' \
-  "$(hostname)" "$KIT" "$RS" "$GOLD" "$ENV" > "$OUT/ECO.json"
+printf '{"flow": "HEAD-CORE-R17 head_post_route_eco.sh (per-mode)", "source_kit": "%s:%s", "source_route": "%s/5_2_route.odb", "gold": "%s", "env": "%s", "ff_bound_ps": %s, "modes": "eco_modes.json"}\n' \
+  "$(hostname)" "$KIT" "$RS" "$GOLD" "$ENV" "$FFB" > "$OUT/ECO.json"
 docker run --rm --name "hd-eco-$NICK-$$" --memory="${MEM}g" --memory-swap="${MEM}g" --cpus="$CPUS" -v "$OUT":/work $ENV \
   -e CPUS="$CPUS" -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc '
     set -euo pipefail
     source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1
-    M=(make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES="$CPUS" CORNER=TC "CORNERS=tc bc")
+    python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts /work/orfs_hold_mm.tcl > /work/orfs_hold_mm.eco.log 2>&1 || { cat /work/orfs_hold_mm.eco.log; exit 4; }
+    # corners from the kit config.mk + the R17 block (CORNERS tc BC, OT_HOLD_MM 1): no command-line CORNERS override
+    M=(make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES="$CPUS")
     "${M[@]}" do-5_1_grt SKIP_INCREMENTAL_REPAIR=1
     B=$(dirname $(find /work/run/results/asap7 -name 5_1_grt.odb))
     cp --remove-destination /work/constraint.sdc $B/5_1_grt.sdc
@@ -58,11 +72,11 @@ docker run --rm --name "hd-eco-$NICK-$$" --memory="${MEM}g" --memory-swap="${MEM
 rrc=$?
 docker run --rm -v "$OUT":/work "$IMAGE" chown -R "$(id -u):$(id -g)" /work >/dev/null 2>&1
 echo "HEAD_ECO_CHAIN route rc=$rrc $(date -Is)"
-grep -h '^HEAD_ECO_\|KVCORES_ECO\|R10_HOLD_DONE\|OT_HB4PAD: after' "$OUT"/run/logs/asap7/"$NICK"/base/5_1_grt.log 2>/dev/null | tail -n 20
+grep -h '^HEAD_ECO_\|KVCORES_ECO\|R10_HOLD_DONE\|OT_HB4PAD: after\|OT_HOLD_MM\|OT_HOLD_STRUCTURAL' "$OUT"/run/logs/asap7/"$NICK"/base/5_1_grt.log 2>/dev/null | tail -n 20
 src=NA
 if [ "$rrc" = 0 ]; then
   python3 -I "$OUT/signoff.py" run --kit "$OUT" --run-dir "$OUT/run" --corners tt,ff \
-    --ff-vclk bound-ff --ff-bound-ps 202.5 \
+    --ff-vclk bound-ff --ff-bound-ps "$FFB" \
     --ff-vclk-contract 'HEAD actual standalone clock contract: actual_contract.json; primary ft_mstrap_i; zero source offset' \
     --docker docker --image "$IMAGE" --out "$OUT/signoff_actual" > "$OUT/signoff_actual.log" 2>&1
   src=$?
