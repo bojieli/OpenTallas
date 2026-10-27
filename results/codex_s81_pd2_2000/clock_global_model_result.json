@@ -1,0 +1,35 @@
+{
+ "status": "MODEL_ONLY",
+ "source": "3073aee6c plus PHY --density a1b14e314 and exact-bank schema0765b6c59",
+ "base": "12a0c04f0",
+ "meta": {
+  "leaf_um": 300,
+  "rep_um": 405,
+  "full_depth": true,
+  "tap_rep_um": 405,
+  "tap_repeaters": 0,
+  "buffer": "BUFx24_ASAP7_75t_R",
+  "wire_r_kohm_um": 0.0043358024999999994,
+  "wire_c_ff_um": 0.10824363000000001,
+  "tap_load_ff": 3.0,
+  "nodes": 25253,
+  "leaves": 6379,
+  "repeaters": 2141,
+  "taps": 7398,
+  "wire_um": 4582199.2,
+  "levels": 14,
+  "site_legal": {
+   "mode": "slide",
+   "slide_fallbacks": 2197,
+   "cells": 27394,
+   "illegal": {},
+   "forbidden_rects": 19007,
+   "moved_nodes": 9486
+  }
+ },
+ "clock_regions": "data landing regions retained; clock globalfull-depth, CPPR actualLCA",
+ "tap_stages_min": 76,
+ "tap_stages_max": 80,
+ "tap_path_min_um": 27409.634000000002,
+ "tap_path_max_um": 28699.932000000008
+}

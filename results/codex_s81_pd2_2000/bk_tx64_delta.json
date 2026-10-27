@@ -1,0 +1,23 @@
+{
+ "status": "PROPOSED_NOT_APPLIED",
+ "type": "bk_sel__t2_phy1026_bk_sel",
+ "core": "u_bk_sel.u_tx",
+ "origin_before": [
+  8.64,
+  25.92
+ ],
+ "origin_after": [
+  8.64,
+  64.8
+ ],
+ "outline_change": false,
+ "macro_overlaps": [],
+ "storage_band_failures": 0,
+ "required": [
+  "translate associated u_tx clock/reset landing coordinates consistently",
+  "full core-face and r2r reach census, including actual TXphys816 view",
+  "latency reset START and bind regeneration; no new data cycle implied by macro move",
+  "fold into ONE PD2 event only after review"
+ ],
+ "cycles": "No RTL change; timing and model impact still require exact path census"
+}

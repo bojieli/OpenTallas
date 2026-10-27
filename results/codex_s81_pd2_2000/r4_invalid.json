@@ -1,0 +1,7 @@
+{
+ "status": "INVALID_EMITTER_NOT_USABLE",
+ "source": "95e8b8c6d",
+ "reason": "Repeated emitted repeater instance names caused self-parent links; caught in actual parent-graph census before STA/P&R",
+ "fix": "ded7c5349 unique-emitter fix and duplicate guard, multi-node regression; corrected R5 terminal native-library model only",
+ "replaced_by": "clock_global_r5_result.json"
+}

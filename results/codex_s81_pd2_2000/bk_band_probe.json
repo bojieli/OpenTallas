@@ -1,0 +1,124 @@
+[
+ {
+  "tx_y": 25.92,
+  "move_um": 0.0,
+  "failures": [
+   {
+    "bus": "ca_i0",
+    "error": "no macro-free clock landing storage band forca_i0, required depth25.92um"
+   },
+   {
+    "bus": "cb_i0",
+    "error": "no macro-free clock landing storage band forcb_i0, required depth25.92um"
+   },
+   {
+    "bus": "xtier_i0",
+    "error": "no macro-free clock landing storage band forxtier_i0, required depth25.92um"
+   },
+   {
+    "bus": "xtier_i1",
+    "error": "no macro-free clock landing storage band forxtier_i1, required depth25.92um"
+   }
+  ],
+  "bands": {
+   "idx_i0": [
+    2399.28,
+    17.28,
+    2459.497391,
+    43.2
+   ],
+   "tp_i0": [
+    2523.714783,
+    17.28,
+    2583.932174,
+    43.2
+   ]
+  }
+ },
+ {
+  "tx_y": 64.8,
+  "move_um": 38.879999999999995,
+  "failures": [],
+  "bands": {
+   "ca_i0": [
+    17.28,
+    17.28,
+    77.497391,
+    43.2
+   ],
+   "cb_i0": [
+    79.657391,
+    17.28,
+    139.874783,
+    43.2
+   ],
+   "idx_i0": [
+    2399.28,
+    17.28,
+    2459.497391,
+    43.2
+   ],
+   "tp_i0": [
+    2523.714783,
+    17.28,
+    2583.932174,
+    43.2
+   ],
+   "xtier_i0": [
+    192.796174,
+    17.28,
+    253.013565,
+    43.2
+   ],
+   "xtier_i1": [
+    255.013565,
+    17.28,
+    315.230957,
+    43.2
+   ]
+  }
+ },
+ {
+  "tx_y": 77.76,
+  "move_um": 51.84,
+  "failures": [],
+  "bands": {
+   "ca_i0": [
+    17.28,
+    17.28,
+    77.497391,
+    43.2
+   ],
+   "cb_i0": [
+    68.361391,
+    43.2,
+    128.578783,
+    69.12
+   ],
+   "idx_i0": [
+    2399.28,
+    17.28,
+    2459.497391,
+    43.2
+   ],
+   "tp_i0": [
+    2523.714783,
+    17.28,
+    2583.932174,
+    43.2
+   ],
+   "xtier_i0": [
+    192.796174,
+    17.28,
+    253.013565,
+    43.2
+   ],
+   "xtier_i1": [
+    255.013565,
+    17.28,
+    315.230957,
+    43.2
+   ]
+  }
+ }
+]
