@@ -394,6 +394,7 @@ PIN_BAR_X = {f"BUFx{k}_ASAP7_75t_R": {"A": 0.027, "Y": yx}
 # LEF AREA (asap7_tech_1x_201209.lef: M2/M3 0.000666, M4/M5 0.002, M6 0.0021875)
 STACK_PAD = {"M2": (0.019, 0.009), "M3": (0.009, 0.020), "M4": (0.043, 0.012), "M5": (0.012, 0.043),
              "M6": (0.035, 0.016)}
+SHORT_STACK_PAD = {"M7": (0.016, 0.036), "M8": (0.08, 0.08)}
 STACK_RISER_MAX_UM = 2.5     # longest M7 riser (TREE_OFF_UM + track move) the island window is sized for
 
 

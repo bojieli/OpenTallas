@@ -34,3 +34,16 @@ def test_cell_body_cannot_cross_partition_seam():
     with pytest.raises(C.PlanError,match="cell_site_seam"):
         D.apply_lattice_cell_sites({"a":dict(x=0,y=0)},[],[],
             {"a":dict(origin_um=[0,0],part="p")},lambda xy:("p",None),{"p":(0,0,1,1)})
+
+
+def test_short_stack_has_real_min_area_pads_on_both_riser_ends():
+    import clock_routed as R
+    st=dict(xy=[1.,2.],riser_from=[1.,2.005],short_stack=True)
+    p=R.stack_pad_layers(st)
+    assert "M7" in p[(1.,2.)] and "M8" in p[(1.,2.005)]
+    lines=[]
+    R._emit_stack(lines,R.stack_down(st),p,split_down=True)
+    i=next(i for i,l in enumerate(lines) if "VIA78" in l)
+    assert "addRect" in lines[i-1]
+    assert C.SHORT_STACK_PAD["M7"][0]*C.SHORT_STACK_PAD["M7"][1]*4 >= .0021875
+    assert C.SHORT_STACK_PAD["M8"][0]*C.SHORT_STACK_PAD["M8"][1]*4 >= .00752

@@ -2109,6 +2109,9 @@ def build_lattice(P, dtp, plan_sha, rep_um=450.0, ndr="4w", pg_shapes=None, trac
                              **(dict(port_on_trunk=True) if stack_r8 else {}))
     if "stack_track_offset_um" in lat:
         out["meta"]["lattice_tree"]["stack_track_offset_um"] = stack_offset
+        for w in wires:
+            for s_ in w.get("stacks", []):
+                s_["short_stack"] = True
     if stack_r8:    # CLOCK-128-R8: clock_routed encodes every downward via as a junction split (see clock_routed)
         for w in wires:
             if w.get("pin_stack"):
