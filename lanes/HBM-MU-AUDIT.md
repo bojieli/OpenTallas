@@ -31,3 +31,4 @@ Conditional die area526.571mm2 withoutSMrowgrowth /529.979 with120umSMrow assump
 
 ## PARKED 2026-10-26 21:05 PDT
 Explicitreset; finalnative32VM/32FUSED/28treebuddy model3c3dae6bb, correctedNE_MYlocalE, cutmax0.553/0.586. Detailedpacket handoff/codex_hbm_20261026_2104.md. Unifiedscope recommendationconditional, noowneradoption.
+- 2026-10-27 04:07 PDT HBM-MU-QUAD-4/keybuf: NB=3 serialiser SUPERSEDED by COORD (keybuf -> 8 key-line slices of one core type, 0 added cycles; owner HBM-MU-QUAD-5). Reference only on claude/hbm-mu-quad-4-1027@0678fedd95 results/hbm_mu_quad_4/keybuf (sim 0 err NB=2/3/4, PDR proof PASS, rejected for row II 232->573).
