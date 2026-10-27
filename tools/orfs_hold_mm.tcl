@@ -437,6 +437,35 @@ proc ot_hold_stop {rt_args} {
   catch { lassign [ot_hold_stats] w t v; puts [format "OT_HOLD_STOP stage=%s done: hold ws %.2f tns %.1f viol %d" $stage $w $t $v] }
   return 1
 }
+# FLOW-SHARED-5 2026-10-27 (COORD S81-R24 ruling): PLANNED input-hold demand is counted apart from real structural
+# failures.  An FF hold failure whose startpoint is a primary INPUT port is the pin-register input path timed against
+# the declared input-hold budget (set_input_delay -min, e.g. vclk in_min -40): one delay chain per input bit, which
+# repair_timing -hold closes by design (S81 hrow: 1909 of 2096 failing endpoints).  Rule:
+#   internal (reg->reg / anything not starting at an input port): ws >= -100 ps AND endpoints <= 2000  (unchanged);
+#   planned input:  ws >= -100 ps AND endpoints <= input-port bits (one pin register per bit; more = not a planned
+#                   pin-register path, i.e. structural).
+# Worst slack keeps the -100 ps limit for BOTH classes.  OT_HOLD_PLANNED_INPUT=0 restores the single combined count.
+proc ot_hold_input_ports {} {
+  set s [dict create]
+  if {[catch {set ports [get_ports -quiet *]}]} { return $s }
+  foreach p $ports {
+    if {[catch {get_property $p direction} d] || $d ne "input"} continue
+    dict set s [get_full_name $p] 1
+  }
+  return $s
+}
+proc ot_hold_split {} {
+  # -> {worst_internal n_internal worst_input n_input n_input_ports} over true failures (slack < 0) in the FF scene
+  set in [ot_hold_input_ports]
+  set wi 1e6; set ni 0; set wp 1e6; set np 0
+  foreach p [ot_hold_paths] {
+    set s [get_property $p slack]
+    if {$s eq "INF" || $s >= 0} continue
+    set sp ""; catch { set sp [get_full_name [get_property $p startpoint]] }
+    if {$sp ne "" && [dict exists $in $sp]} { incr np; if {$s < $wp} { set wp $s } } else { incr ni; if {$s < $wi} { set wi $s } }
+  }
+  return [list $wi $ni $wp $np [dict size $in]]
+}
 # Owner 2026-10-25: structural FF hold failures must stop BEFORE repair_timing. Its
 # -max_iterations bounds inner passes, not the endpoint sweep, so the stall guard
 # cannot interrupt a single call that adds hundreds of thousands of buffers.
@@ -451,7 +480,21 @@ proc ot_hold_structural_gate {} {
   lassign [ot_hold_stats] w t n
   if {$w >= -100.0 && $n <= 2000} { return }
   set stage [ot_hold_stage]
-  set msg [format "OT_HOLD_STRUCTURAL stage=%s: FF hold ws %.2f ps, %d true failing endpoints (limits: ws >= -100 ps, endpoints <= 2000); revise plan/RTL/boundary before repair" $stage $w $n]
+  set planned [expr {![info exists ::env(OT_HOLD_PLANNED_INPUT)] || $::env(OT_HOLD_PLANNED_INPUT) ne "0"}]
+  if {$planned && $w >= -100.0} {
+    # only the endpoint count tripped: split planned input-hold demand from internal failures
+    lassign [ot_hold_split] wi ni wp np nports
+    set swi -; set swp -
+    if {$ni} { set swi [format %.2f $wi] }; if {$np} { set swp [format %.2f $wp] }
+    set line [format "internal %d endpoints (ws %s), planned input %d endpoints (ws %s) of %d input-port bits" $ni $swi $np $swp $nports]
+    if {$ni <= 2000 && $np <= $nports} {
+      puts "OT_HOLD_PLANNED_INPUT stage=$stage: $line; total $n > 2000 is planned input-hold demand -> repair proceeds"
+      return
+    }
+    set msg [format "OT_HOLD_STRUCTURAL stage=%s: FF hold ws %.2f ps, %d true failing endpoints: %s (limits: ws >= -100 ps, internal endpoints <= 2000, planned input endpoints <= input-port bits); revise plan/RTL/boundary before repair" $stage $w $n $line]
+  } else {
+    set msg [format "OT_HOLD_STRUCTURAL stage=%s: FF hold ws %.2f ps, %d true failing endpoints (limits: ws >= -100 ps, endpoints <= 2000); revise plan/RTL/boundary before repair" $stage $w $n]
+  }
   puts $msg
   catch {
     set f [expr {[info exists ::env(REPORTS_DIR)] ? "$::env(REPORTS_DIR)/ot_hold_structural_${stage}.rpt" : "ot_hold_structural_${stage}.rpt"}]
