@@ -262,3 +262,6 @@ Collected old v7 whole-source stage4 on intel2: terminal signal15, marker stoppe
 
 ## CODEX notes 2026-10-26 20:07 PDT
 Current QCLM259/259, boundrow attnret149 and XD4 already collected. B33run7 now bootPASS; B48 native boot blocked by missing8regionalclockbenchports, fix prepared under KV-TOK. xhead/RoPE/current ONEQCbind remain open; no stale wholeQC/token promotion.
+
+## CODEX notes 2026-10-27 08:13 PDT — bound s8 xhead gap
+CODEX took over on codex/qc-xhead-1027 (base a54fa8a6c). Historical xhead stage ignores DV_LOWER_VFLAGS, thus forces FACE0 even when S8 source list selected, and passes no measured producer ages. Own helper fixes both; no RTL/cycle change. Fresh bound-row CROM3/MIF0 build+calibration via ot-run 220GB/48t, intel2 client326033, dir /srv/opentallas-scratch2/claude/codex-qc-xhead-1027 (spilling to epyc2 at admission); uses QCLM r2 producer ages. Collect calibrate.log/build/build_xh.log then four consumers and negative controls. No xhead/current-die token verdict yet.
