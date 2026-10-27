@@ -206,7 +206,8 @@ def core_tap_of(t, inst, pin):
         if tp.get("kind") != "core":
             continue
         nm = tp["name"]
-        if nm == inst or nm == f"{inst}.{pin}":
+        if nm == inst or nm == f"{inst}.{pin}" or (tp.get("merged_clock_ports") and
+                nm.startswith(inst + ".") and pin in tp["merged_clock_ports"]):
             return f"clk_c{k}"
         k += 1
     return None

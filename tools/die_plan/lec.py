@@ -2748,7 +2748,9 @@ def _noreset_held(L, consts, sides, cycles, extra, banned):
     for (sd, k), c in consts.items():
         for s in sides(sd):
             v, e = L.rst_val.get((s, k), (None, None))
-            if v == c:
+            if getattr(L, "raw_constant_status", {}).get((s, k, c)) == "proved":
+                held[(s, k)] = 1           # D == c for ALL inputs/state, including every RTL X
+            elif v == c:
                 held[(s, k)] = e or 1
     hyp_side = lambda s, j: (("both", j) in consts) or ((s, j) in consts)
     for e in range(1, cycles + extra + 1):
@@ -2780,7 +2782,41 @@ def _noreset_held(L, consts, sides, cycles, extra, banned):
     return held
 
 
-def noreset_filter(L, log, tried):
+def raw_constant_bases(L, work, conflicts, log):
+    """Try an unconditional base case where structural cone analysis refused one.
+
+    This uses the ORIGINAL side AIG, with every latch and input an independent
+    free input. In particular RTL X inputs are ordinary Boolean variables:
+    there are no X rails, reset constraints, correspondence hypotheses or FSM
+    assumptions. UNSAT(D xor c) establishes Q == c after the first clock edge.
+    SAT/undecided establishes nothing. Cache by side/key/value; the source AIGs
+    are immutable throughout correspondence. The normal induction still proves
+    every surviving hypothesis again in the final miter.
+    """
+    cache = L.__dict__.setdefault("raw_constant_status", {})
+    batch = L.__dict__.get("_raw_constant_batch", 0)
+    for side, d, points in (("gold", L.gold, L.gc), ("gate", L.gate, L.tc)):
+        candidates = sorted({(k, h[1]) for (sd, k), h in L.hyp.items()
+                             if h[0] == "const" and sd in (side, "both")
+                             and (side, k, h[1]) not in cache
+                             and latch_cone(L, side, k) is None})
+        if not candidates:
+            continue
+        m = Aig()
+        m.ni = d["I"] + d["L"]
+        m.ands = d["ands"]
+        m.outs = [points[k] ^ c for k, c in candidates]
+        m.onames = [f"raw-base:{side}:{k}:{c}" for k, c in candidates]
+        status = prove(m, work, conflicts, log, tag=f"rawbase{batch}_{side}")
+        for (k, c), name in zip(candidates, m.onames):
+            cache[(side, k, c)] = status.get(name, "undecided")
+        log.append(f"universal raw-D bases {side}: {sum(status.get(n) == 'proved' for n in m.onames)}"
+                   f" / {len(candidates)} proved with all RTL X and state free")
+        batch += 1
+    L._raw_constant_batch = batch
+
+
+def noreset_filter(L, log, tried, work=None, conflicts=1000):
     """Constant hypotheses on registers that are not that constant in the reset state (LEC-TOOL-4 10-27, COORD
     ruling on no-reset constants).  The correspondence induction proves Q == c -> D(Q) == c; its base case is the
     reset state.  A register with no reset (an X power-up, e.g. hcp_sys1 db <= nf_r on rs_take, argmax ti) that only
@@ -2790,6 +2826,8 @@ def noreset_filter(L, log, tried):
     do); the others are dropped and never re-proposed (the register stays a free input, so an observable difference
     is reported, never assumed away). There is no switch to assume an unknown
     power-up value equals a constant. -> number dropped."""
+    if work is not None:
+        raw_constant_bases(L, work, conflicts, log)
     total = 0
     while True:                     # dropping one can unseat a register reloaded from it
         ok = noreset_sound(L)
@@ -2820,14 +2858,19 @@ def noreset_report(L):
             continue
         edge = ok.get((sd, k), -1)
         cyc = int(os.environ.get("OT_LEC_RESET_CYCLES", "4"))
+        sides = ("gold", "gate") if sd == "both" else (sd,)
+        raw = all(getattr(L, "raw_constant_status", {}).get((s, k, h[1])) == "proved" for s in sides)
         kept.append(dict(register=k, side=sd, value=h[1], edge=edge,
-                         basis="reset" if edge <= 1 else "reloaded" if edge <= cyc else "release"))
+                         basis="universal_raw_D" if raw else
+                               "reset" if edge <= 1 else "reloaded" if edge <= cyc else "release"))
     dropped = [dict(register=k, side=sd, value=c) for (sd, k), c in sorted(getattr(L, "noreset_dropped", {}).items())
                if (sd, k) not in L.hyp]
     return dict(enabled=True, reset_ports=L.rst_ports, reset_cycles=int(os.environ.get("OT_LEC_RESET_CYCLES", "4")),
                 release_edges=int(os.environ.get("OT_LEC_RELEASE_EDGES", "8")),
                 n_release=sum(1 for e in kept if e["basis"] == "release"),
                 release=[e for e in kept if e["basis"] == "release"][:500],
+                n_universal_raw_D=sum(1 for e in kept if e["basis"] == "universal_raw_D"),
+                universal_raw_D=[e for e in kept if e["basis"] == "universal_raw_D"][:500],
                 n_kept=len(kept), n_reloaded=sum(1 for e in kept if e["basis"] == "reloaded"),
                 n_dropped=len(dropped), reloaded=[e for e in kept if e["basis"] == "reloaded"][:500],
                 dropped=dropped[:500],
@@ -3809,7 +3852,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                 matched_copy_closure(L, log, traces, tried)     # (each pair / register at most once: no loop)
             if os.environ.get("OT_LEC_TRACE_CONST", "1") != "0":
                 trace_constant_closure(L, log, tried)
-        noreset_filter(L, log, tried)
+        noreset_filter(L, log, tried, work, conflicts)
         if not L.hyp:
             return
         m, kind = L.build(with_compare=False, with_hyp=True)
@@ -3825,7 +3868,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             snap = dict(L.hyp)
 
             def surviving_change():
-                noreset_filter(L, log, tried)
+                noreset_filter(L, log, tried, work, conflicts)
                 return L.hyp != snap
 
             if structural_constant_closure(L, log) and surviving_change():
@@ -3920,7 +3963,7 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40):
                 L.hyp[(side, k)] = ("eq", osd, c, inv)
                 rec["anon"] += 1
     for rnd in range(rounds):
-        noreset_filter(L, log, collections.Counter())
+        noreset_filter(L, log, collections.Counter(), work, conflicts)
         m, _ = L.build(with_compare=False, with_hyp=True)
         st = prove(m, work, conflicts, log, tag=f"hint{rnd}")
         bad = [n for n, s in st.items() if s != "proved"]
@@ -4173,7 +4216,7 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
             rec["hints"]["dropped"] = dict(n=len(rec["hints"]["dropped"]), first=rec["hints"]["dropped"][:40])
         elif hints:
             raise LecError(f"hints file {hints} not found")
-        noreset_filter(L, log, collections.Counter())
+        noreset_filter(L, log, collections.Counter(), out, conflicts)
         rec["noreset_constants"] = noreset_report(L)
         (out / "hyp.json").write_text(json.dumps([[sd, k, list(h)] for (sd, k), h in sorted(L.hyp.items())]) + "\n")
         m, kind = L.build(with_compare=True, with_hyp=True)
