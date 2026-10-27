@@ -1,0 +1,245 @@
+{
+ "schema": "opentallas.macro_cut_demand.v1",
+ "native_source": "/srv/opentallas-scratch2/claude/codex-hbm-channels-0812/ep_old_all.json",
+ "odb": "/srv/opentallas-scratch2/claude/hbm-ep-route-1/hfd_ep_static_916cfe0a1db9-_route1/run/results/asap7/hbc_hfd_ep_static/base/3_place.odb",
+ "odb_sha256": "fa4f98442c22a06a610c22c6eace664f36d98779c5d91b0ecbc6210bbe1cad08",
+ "native_nets": 36079,
+ "macro_count": 4,
+ "signal_layers": [
+  "M2",
+  "M3",
+  "M4",
+  "M5"
+ ],
+ "assumption": "SRAM OBS M1-M4; M5 crosses macros; M2/M3 usable share0.5; M5 PG usable share0.93; track use limit0.6. Actual endpoint plane crossings, necessary capacity check only.",
+ "cuts": [
+  {
+   "direction": "H",
+   "axis": "x",
+   "cut_um": 120.204,
+   "demand_nets": 557,
+   "capacity_tracks": 2244.5,
+   "use": 0.2481621742036088,
+   "ok": true,
+   "layers": [
+    {
+     "layer": "M2",
+     "pitch_um": 0.036,
+     "share": 0.5,
+     "spans_um": [
+      [
+       0.0,
+       17.28
+      ],
+      [
+       95.064,
+       95.31
+      ],
+      [
+       173.094,
+       202.77
+      ],
+      [
+       280.554,
+       280.8
+      ],
+      [
+       358.584,
+       375.84
+      ]
+     ]
+    },
+    {
+     "layer": "M4",
+     "pitch_um": 0.048,
+     "share": 1.0,
+     "spans_um": [
+      [
+       0.0,
+       17.28
+      ],
+      [
+       95.064,
+       95.31
+      ],
+      [
+       173.094,
+       202.77
+      ],
+      [
+       280.554,
+       280.8
+      ],
+      [
+       358.584,
+       375.84
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "direction": "V",
+   "axis": "y",
+   "cut_um": 56.172,
+   "demand_nets": 1758,
+   "capacity_tracks": 5955.6,
+   "use": 0.2951843642957888,
+   "ok": true,
+   "layers": [
+    {
+     "layer": "M3",
+     "pitch_um": 0.036,
+     "share": 0.5,
+     "spans_um": [
+      [
+       0.0,
+       34.56
+      ],
+      [
+       205.848,
+       250.56
+      ]
+     ]
+    },
+    {
+     "layer": "M5",
+     "pitch_um": 0.048,
+     "share": 0.93,
+     "spans_um": [
+      [
+       0.0,
+       250.56
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "direction": "V",
+   "axis": "y",
+   "cut_um": 134.202,
+   "demand_nets": 1696,
+   "capacity_tracks": 5955.6,
+   "use": 0.2847739942239237,
+   "ok": true,
+   "layers": [
+    {
+     "layer": "M3",
+     "pitch_um": 0.036,
+     "share": 0.5,
+     "spans_um": [
+      [
+       0.0,
+       34.56
+      ],
+      [
+       205.848,
+       250.56
+      ]
+     ]
+    },
+    {
+     "layer": "M5",
+     "pitch_um": 0.048,
+     "share": 0.93,
+     "spans_um": [
+      [
+       0.0,
+       250.56
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "direction": "V",
+   "axis": "y",
+   "cut_um": 241.662,
+   "demand_nets": 985,
+   "capacity_tracks": 5955.6,
+   "use": 0.16539055678688963,
+   "ok": true,
+   "layers": [
+    {
+     "layer": "M3",
+     "pitch_um": 0.036,
+     "share": 0.5,
+     "spans_um": [
+      [
+       0.0,
+       34.56
+      ],
+      [
+       205.848,
+       250.56
+      ]
+     ]
+    },
+    {
+     "layer": "M5",
+     "pitch_um": 0.048,
+     "share": 0.93,
+     "spans_um": [
+      [
+       0.0,
+       250.56
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "direction": "V",
+   "axis": "y",
+   "cut_um": 319.692,
+   "demand_nets": 407,
+   "capacity_tracks": 5955.6,
+   "use": 0.06833904224595339,
+   "ok": true,
+   "layers": [
+    {
+     "layer": "M3",
+     "pitch_um": 0.036,
+     "share": 0.5,
+     "spans_um": [
+      [
+       0.0,
+       34.56
+      ],
+      [
+       205.848,
+       250.56
+      ]
+     ]
+    },
+    {
+     "layer": "M5",
+     "pitch_um": 0.048,
+     "share": 0.93,
+     "spans_um": [
+      [
+       0.0,
+       250.56
+      ]
+     ]
+    }
+   ]
+  }
+ ],
+ "pin_escape": {
+  "native_macro_pins": 6340,
+  "immediate_escape_ok": true,
+  "blocked": [],
+  "non_edge_pins": [],
+  "qualification": "one track of outward geometric clearance; full router pin-access unqualified"
+ },
+ "bad_cuts": [],
+ "worst_use": {
+  "H": 0.2481621742036088,
+  "V": 0.2951843642957888
+ },
+ "abutted_block_zero_crossings_claimed": false,
+ "routing_qualified": false,
+ "full_cut_record": "/srv/opentallas-scratch2/claude/codex-hbm-channels-0812/ep_old_cuts.json"
+}
