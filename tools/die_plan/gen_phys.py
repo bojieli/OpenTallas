@@ -1267,7 +1267,7 @@ def core_latency_files(P, tn, kd, root=None, mean_contract=False, require_signed
         (kd / "core_taps.txt").write_text("# port inst pin|* early_ps insertion_ps   (GENERATED; CP2 early core taps)\n" +
                                           "".join(f"{n} {i} {p} {e:g} {ins:g}" +
                                                   (" exact" if any(p in tp.get("merged_clock_ports", []) and
-                                                   tp["name"].startswith(i + ".") for tp in P.types[tn].get("clock", {}).get("taps", [])) else "") + "\n"
+                                                   (tp["name"] == i or tp["name"].startswith(i + ".")) for tp in P.types[tn].get("clock", {}).get("taps", [])) else "") + "\n"
                                                   for n, i, p, e, ins in taps))
     return dict(rows=rows, taps=taps)
 
