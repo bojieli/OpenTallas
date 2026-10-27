@@ -1,0 +1,19 @@
+{
+  "source_revision": "98f7f4be4deb919a9f4b62bd983a46bbe48e1160",
+  "sources": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_hard_v8g_s.sv": "3efc485cf7d138cacef929d5b16c291f34cd0c17410ca8844193813e0dbe84f0",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q3_hard_v8x_s.sv": "207a247a8ad26d2648ce2bdea78712b163d997806aa3bba874f7580ead4472bc"
+  },
+  "subcores": {
+    "u_ring": {
+      "equal_ignoring_whitespace": true,
+      "source_connections": "u_ring(.clk(clk_ring[0]),.clk_ctl(clk_ring[0]),.clk_state(clk_ring[8:1]),\n  .clk_add(clk_ring[16:9]),.rst_n(rst_n),.qid(qid),.cw_i(pr_cw_i),.ccw_i(pr_ccw_i),.cw_o(pr_cw_o),.ccw_o(pr_ccw_o),\n  .lp_we(ra_lp_we),.lp_tag(ra_lp_tag),.lp_data(ra_lp_data),\n  .state_read_add(ra_state_read_add),.state_read_tx(ra_state_read_tx),.state_read_rr(ra_state_read_rr),\n  .state_add_tag(ra_state_add_tag),.state_tx_tag(ra_state_tx_tag),.state_rr_tag(ra_state_rr_tag),\n  .state_add_src(ra_state_add_src),.state_add_rhs_acc(ra_state_add_rhs_acc),.state_tx_acc(ra_state_tx_acc),\n  .add_v(ra_add_v),.add_tag(ra_add_tag),.add_src(ra_add_src),.add_rhs_acc(ra_add_rhs_acc),\n  .tx_inject(ra_tx_inject),.tx_forward(ra_tx_forward),.tx_tag(ra_tx_tag),.tx_dst(ra_tx_dst),.tx_result(ra_tx_result),\n  .tx_acc(ra_tx_acc),.tx_gather(ra_tx_gather),.tx_ttl(ra_tx_ttl),.rx_slot(ra_rx_slot),.rx_kind(ra_rx_kind),\n  .rx_src(ra_rx_src),.rx_tag(ra_rx_tag),.rr_local(ra_rr_local),.rr_local_tag(ra_rr_local_tag),\n  .rr_v(rr_v),.rr_tag(rr_tag),.rr_d(rr_d),.ag_v(ag_v),.ag_src(ag_src),.ag_tag(ag_tag),.ag_d(ag_d),.fault(ring_fault));"
+    },
+    "u_reduce": {
+      "equal_ignoring_whitespace": true,
+      "source_connections": "u_reduce(\n  .clk_control(clk_reduce[0]),.clk_state(clk_reduce[16:1]),.clk_add(clk_reduce[32:17]),\n  .rst_n(rst_n),.clear(p_ring[83]),.in_v(dest_v[ND-1]),.in_flit(dest_d[(ND-1)*PWT+:PWT]),\n  .load_v(a_load_v),.load_tag(a_load_tag),.add_read(a_add_read),.read_tag(a_read_tag),.add_issue(a_add_issue),\n  .pub_read(a_pub_read),.pub_tag_a(a_pub_tag_a),.pub_tag_b(a_pub_tag_b),.pub_bf16(a_pub_bf16),\n  .pub_meta({1'b1,8'hff,a_pub_src,a_pub_index}),.pub_release(a_pub_release),.pub_issue(a_pub_issue),\n  .out_v(reduce_out_v),.out_flit(reduce_out_data),.fault(reduce_fault),.fault_cause(reduce_fault_cause));"
+    }
+  },
+  "scope": "Textual child hookup equality only. Certify only cut-map labels that match actual public parent ports in current B1 top; no internal packed-index/whole-module equivalence claim.",
+  "reduce_rebase": "ND=NPT+13,PWT=545: dest_d[(ND-1)*PWT+:PWT] and source_d[(NPT+6)*PWT+:PWT] shift by545*(actualNLINK-1) against oldNLINK1 map. Internal cut labels excluded."
+}

@@ -1,0 +1,398 @@
+{
+  "schema": "opentallas.hbm.quarter_key_dataflow.v1",
+  "source": "rtl/hbm_next/idxn/ot_hnx_idxn_quarter_with_keybuf.sv",
+  "macros": [
+    {
+      "instance": "keybuf.gm[0].mem",
+      "module": "ot_sram_1r1w_256x256_m2_r2c2",
+      "payload_segments": [
+        {
+          "quarter_pc": 0,
+          "macro_rd_lo": 0,
+          "macro_rd_hi": 255,
+          "quarter_packet_lo": 11,
+          "quarter_packet_hi": 266,
+          "engine": 0,
+          "key_columns": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "instance": "keybuf.gm[1].mem",
+      "module": "ot_sram_1r1w_256x256_m2_r2c2",
+      "payload_segments": [
+        {
+          "quarter_pc": 0,
+          "macro_rd_lo": 0,
+          "macro_rd_hi": 255,
+          "quarter_packet_lo": 267,
+          "quarter_packet_hi": 522,
+          "engine": 0,
+          "key_columns": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "instance": "keybuf.gm[2].mem",
+      "module": "ot_sram_1r1w_256x256_m2_r2c2",
+      "payload_segments": [
+        {
+          "quarter_pc": 0,
+          "macro_rd_lo": 0,
+          "macro_rd_hi": 255,
+          "quarter_packet_lo": 523,
+          "quarter_packet_hi": 778,
+          "engine": 0,
+          "key_columns": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "instance": "keybuf.gm[3].mem",
+      "module": "ot_sram_1r1w_256x256_m2_r2c2",
+      "payload_segments": [
+        {
+          "quarter_pc": 0,
+          "macro_rd_lo": 0,
+          "macro_rd_hi": 255,
+          "quarter_packet_lo": 779,
+          "quarter_packet_hi": 1034,
+          "engine": 0,
+          "key_columns": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "instance": "keybuf.gm[4].mem",
+      "module": "ot_sram_1r1w_256x256_m2_r2c2",
+      "payload_segments": [
+        {
+          "quarter_pc": 0,
+          "macro_rd_lo": 0,
+          "macro_rd_hi": 63,
+          "quarter_packet_lo": 1035,
+          "quarter_packet_hi": 1098,
+          "engine": 0,
+          "key_columns": [
+            0,
+            1
+          ]
+        },
+        {
+          "quarter_pc": 1,
+          "macro_rd_lo": 64,
+          "macro_rd_hi": 255,
+          "quarter_packet_lo": 1110,
+          "quarter_packet_hi": 1301,
+          "engine": 0,
+          "key_columns": [
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "instance": "keybuf.gm[5].mem",
+      "module": "ot_sram_1r1w_256x256_m2_r2c2",
+      "payload_segments": [
+        {
+          "quarter_pc": 1,
+          "macro_rd_lo": 0,
+          "macro_rd_hi": 255,
+          "quarter_packet_lo": 1302,
+          "quarter_packet_hi": 1557,
+          "engine": 0,
+          "key_columns": [
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "instance": "keybuf.gm[6].mem",
+      "module": "ot_sram_1r1w_256x256_m2_r2c2",
+      "payload_segments": [
+        {
+          "quarter_pc": 1,
+          "macro_rd_lo": 0,
+          "macro_rd_hi": 255,
+          "quarter_packet_lo": 1558,
+          "quarter_packet_hi": 1813,
+          "engine": 0,
+          "key_columns": [
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "instance": "keybuf.gm[7].mem",
+      "module": "ot_sram_1r1w_256x256_m2_r2c2",
+      "payload_segments": [
+        {
+          "quarter_pc": 1,
+          "macro_rd_lo": 0,
+          "macro_rd_hi": 255,
+          "quarter_packet_lo": 1814,
+          "quarter_packet_hi": 2069,
+          "engine": 0,
+          "key_columns": [
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "instance": "keybuf.gm[8].mem",
+      "module": "ot_sram_1r1w_256x256_m2_r2c2",
+      "payload_segments": [
+        {
+          "quarter_pc": 1,
+          "macro_rd_lo": 0,
+          "macro_rd_hi": 127,
+          "quarter_packet_lo": 2070,
+          "quarter_packet_hi": 2197,
+          "engine": 0,
+          "key_columns": [
+            2,
+            3
+          ]
+        },
+        {
+          "quarter_pc": 2,
+          "macro_rd_lo": 128,
+          "macro_rd_hi": 255,
+          "quarter_packet_lo": 2209,
+          "quarter_packet_hi": 2336,
+          "engine": 1,
+          "key_columns": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "instance": "keybuf.gm[9].mem",
+      "module": "ot_sram_1r1w_256x256_m2_r2c2",
+      "payload_segments": [
+        {
+          "quarter_pc": 2,
+          "macro_rd_lo": 0,
+          "macro_rd_hi": 255,
+          "quarter_packet_lo": 2337,
+          "quarter_packet_hi": 2592,
+          "engine": 1,
+          "key_columns": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "instance": "keybuf.gm[10].mem",
+      "module": "ot_sram_1r1w_256x256_m2_r2c2",
+      "payload_segments": [
+        {
+          "quarter_pc": 2,
+          "macro_rd_lo": 0,
+          "macro_rd_hi": 255,
+          "quarter_packet_lo": 2593,
+          "quarter_packet_hi": 2848,
+          "engine": 1,
+          "key_columns": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "instance": "keybuf.gm[11].mem",
+      "module": "ot_sram_1r1w_256x256_m2_r2c2",
+      "payload_segments": [
+        {
+          "quarter_pc": 2,
+          "macro_rd_lo": 0,
+          "macro_rd_hi": 255,
+          "quarter_packet_lo": 2849,
+          "quarter_packet_hi": 3104,
+          "engine": 1,
+          "key_columns": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "instance": "keybuf.gm[12].mem",
+      "module": "ot_sram_1r1w_256x256_m2_r2c2",
+      "payload_segments": [
+        {
+          "quarter_pc": 2,
+          "macro_rd_lo": 0,
+          "macro_rd_hi": 191,
+          "quarter_packet_lo": 3105,
+          "quarter_packet_hi": 3296,
+          "engine": 1,
+          "key_columns": [
+            0,
+            1
+          ]
+        },
+        {
+          "quarter_pc": 3,
+          "macro_rd_lo": 192,
+          "macro_rd_hi": 255,
+          "quarter_packet_lo": 3308,
+          "quarter_packet_hi": 3371,
+          "engine": 1,
+          "key_columns": [
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "instance": "keybuf.gm[13].mem",
+      "module": "ot_sram_1r1w_256x256_m2_r2c2",
+      "payload_segments": [
+        {
+          "quarter_pc": 3,
+          "macro_rd_lo": 0,
+          "macro_rd_hi": 255,
+          "quarter_packet_lo": 3372,
+          "quarter_packet_hi": 3627,
+          "engine": 1,
+          "key_columns": [
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "instance": "keybuf.gm[14].mem",
+      "module": "ot_sram_1r1w_256x256_m2_r2c2",
+      "payload_segments": [
+        {
+          "quarter_pc": 3,
+          "macro_rd_lo": 0,
+          "macro_rd_hi": 255,
+          "quarter_packet_lo": 3628,
+          "quarter_packet_hi": 3883,
+          "engine": 1,
+          "key_columns": [
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "instance": "keybuf.gm[15].mem",
+      "module": "ot_sram_1r1w_256x256_m2_r2c2",
+      "payload_segments": [
+        {
+          "quarter_pc": 3,
+          "macro_rd_lo": 0,
+          "macro_rd_hi": 255,
+          "quarter_packet_lo": 3884,
+          "quarter_packet_hi": 4139,
+          "engine": 1,
+          "key_columns": [
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "instance": "keybuf.gm[16].mem",
+      "module": "ot_sram_1r1w_256x256_m2_r2c2",
+      "payload_segments": [
+        {
+          "quarter_pc": 3,
+          "macro_rd_lo": 0,
+          "macro_rd_hi": 255,
+          "quarter_packet_lo": 4140,
+          "quarter_packet_hi": 4395,
+          "engine": 1,
+          "key_columns": [
+            2,
+            3
+          ]
+        }
+      ]
+    }
+  ],
+  "source_registered_stages": {
+    "quarter_kl_r": {
+      "cycle": 1,
+      "width": 4396
+    },
+    "chunks": [
+      {
+        "chunk": 0,
+        "leaf_f_key_age": 2,
+        "leaf_g_key_age": 3,
+        "core_rkey_age": 3,
+        "hcol_key_pin_input_age": 3,
+        "hcol_internal_key_p_age": 4,
+        "per_engine_payload_bits": 2176,
+        "engines": 2
+      },
+      {
+        "chunk": 1,
+        "leaf_f_key_age": 4,
+        "leaf_g_key_age": 5,
+        "core_rkey_age": 5,
+        "hcol_key_pin_input_age": 5,
+        "hcol_internal_key_p_age": 6,
+        "per_engine_payload_bits": 2176,
+        "engines": 2
+      },
+      {
+        "chunk": 2,
+        "leaf_f_key_age": 6,
+        "leaf_g_key_age": 7,
+        "core_rkey_age": 7,
+        "hcol_key_pin_input_age": 7,
+        "hcol_internal_key_p_age": 8,
+        "per_engine_payload_bits": 2176,
+        "engines": 2
+      },
+      {
+        "chunk": 3,
+        "leaf_f_key_age": 8,
+        "leaf_g_key_age": 9,
+        "core_rkey_age": 9,
+        "hcol_key_pin_input_age": 9,
+        "hcol_internal_key_p_age": 10,
+        "per_engine_payload_bits": 2176,
+        "engines": 2
+      }
+    ]
+  },
+  "placement_rule": "Place existing kl_r/f_key/g_key/rkey soft registers as distributed bays; each actual register-to-register path must meet405um. Source stage graph is not itself a physical reach pass. Added hops require native phase/cycle reprice.",
+  "scope": "One canonical quarter NP4/RS0. Packed macros can share adjacent PC-line payloads; no per-PC hard keybuf outline."
+}

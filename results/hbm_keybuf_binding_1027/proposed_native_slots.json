@@ -40,98 +40,162 @@
             {
               "logical_core": "hb_idx__s_SW.r0c0_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 11
             },
             {
               "logical_core": "hb_idx__s_SW.r0c0_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 11
             },
             {
               "logical_core": "hb_idx__s_SW.r0c1_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 11
             },
             {
               "logical_core": "hb_idx__s_SW.r0c1_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 11
             },
             {
               "logical_core": "hb_idx__s_SW.r0c2_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 11
             },
             {
               "logical_core": "hb_idx__s_SW.r0c2_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 11
             },
             {
               "logical_core": "hb_idx__s_SW.r0c3_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 11
             },
             {
               "logical_core": "hb_idx__s_SW.r0c3_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 11
             },
             {
               "logical_core": "hb_idx__s_SW.r0c0_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 555
             },
             {
               "logical_core": "hb_idx__s_SW.r0c0_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 555
             },
             {
               "logical_core": "hb_idx__s_SW.r0c1_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 555
             },
             {
               "logical_core": "hb_idx__s_SW.r0c1_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 555
             },
             {
               "logical_core": "hb_idx__s_SW.r0c2_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 555
             },
             {
               "logical_core": "hb_idx__s_SW.r0c2_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 555
             },
             {
               "logical_core": "hb_idx__s_SW.r0c3_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 555
             },
             {
               "logical_core": "hb_idx__s_SW.r0c3_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 555
+            }
+          ],
+          "metadata_consumers": [
+            {
+              "target": "hb_idx__s_SW.W_glue",
+              "source_port": "key_out",
+              "lo": 0,
+              "width": 1,
+              "meaning": "line_valid"
+            },
+            {
+              "target": "hb_idx__s_SW.W_glue",
+              "source_port": "key_out",
+              "lo": 1,
+              "width": 10,
+              "meaning": "PC*128+beat service tag"
             }
           ]
         },
@@ -149,98 +213,162 @@
             {
               "logical_core": "hb_idx__s_SW.r0c0_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 1110
             },
             {
               "logical_core": "hb_idx__s_SW.r0c0_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 1110
             },
             {
               "logical_core": "hb_idx__s_SW.r0c1_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 1110
             },
             {
               "logical_core": "hb_idx__s_SW.r0c1_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 1110
             },
             {
               "logical_core": "hb_idx__s_SW.r0c2_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 1110
             },
             {
               "logical_core": "hb_idx__s_SW.r0c2_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 1110
             },
             {
               "logical_core": "hb_idx__s_SW.r0c3_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 1110
             },
             {
               "logical_core": "hb_idx__s_SW.r0c3_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 1110
             },
             {
               "logical_core": "hb_idx__s_SW.r0c0_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 1654
             },
             {
               "logical_core": "hb_idx__s_SW.r0c0_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 1654
             },
             {
               "logical_core": "hb_idx__s_SW.r0c1_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 1654
             },
             {
               "logical_core": "hb_idx__s_SW.r0c1_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 1654
             },
             {
               "logical_core": "hb_idx__s_SW.r0c2_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 1654
             },
             {
               "logical_core": "hb_idx__s_SW.r0c2_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 1654
             },
             {
               "logical_core": "hb_idx__s_SW.r0c3_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 1654
             },
             {
               "logical_core": "hb_idx__s_SW.r0c3_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 1654
+            }
+          ],
+          "metadata_consumers": [
+            {
+              "target": "hb_idx__s_SW.W_glue",
+              "source_port": "key_out",
+              "lo": 0,
+              "width": 1,
+              "meaning": "line_valid"
+            },
+            {
+              "target": "hb_idx__s_SW.W_glue",
+              "source_port": "key_out",
+              "lo": 1,
+              "width": 10,
+              "meaning": "PC*128+beat service tag"
             }
           ]
         },
@@ -258,98 +386,162 @@
             {
               "logical_core": "hb_idx__s_SW.r1c0_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 2209
             },
             {
               "logical_core": "hb_idx__s_SW.r1c0_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 2209
             },
             {
               "logical_core": "hb_idx__s_SW.r1c1_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 2209
             },
             {
               "logical_core": "hb_idx__s_SW.r1c1_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 2209
             },
             {
               "logical_core": "hb_idx__s_SW.r1c2_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 2209
             },
             {
               "logical_core": "hb_idx__s_SW.r1c2_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 2209
             },
             {
               "logical_core": "hb_idx__s_SW.r1c3_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 2209
             },
             {
               "logical_core": "hb_idx__s_SW.r1c3_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 2209
             },
             {
               "logical_core": "hb_idx__s_SW.r1c0_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 2753
             },
             {
               "logical_core": "hb_idx__s_SW.r1c0_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 2753
             },
             {
               "logical_core": "hb_idx__s_SW.r1c1_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 2753
             },
             {
               "logical_core": "hb_idx__s_SW.r1c1_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 2753
             },
             {
               "logical_core": "hb_idx__s_SW.r1c2_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 2753
             },
             {
               "logical_core": "hb_idx__s_SW.r1c2_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 2753
             },
             {
               "logical_core": "hb_idx__s_SW.r1c3_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 2753
             },
             {
               "logical_core": "hb_idx__s_SW.r1c3_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 2753
+            }
+          ],
+          "metadata_consumers": [
+            {
+              "target": "hb_idx__s_SW.W_glue",
+              "source_port": "key_out",
+              "lo": 0,
+              "width": 1,
+              "meaning": "line_valid"
+            },
+            {
+              "target": "hb_idx__s_SW.W_glue",
+              "source_port": "key_out",
+              "lo": 1,
+              "width": 10,
+              "meaning": "PC*128+beat service tag"
             }
           ]
         },
@@ -367,98 +559,162 @@
             {
               "logical_core": "hb_idx__s_SW.r1c0_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 3308
             },
             {
               "logical_core": "hb_idx__s_SW.r1c0_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 3308
             },
             {
               "logical_core": "hb_idx__s_SW.r1c1_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 3308
             },
             {
               "logical_core": "hb_idx__s_SW.r1c1_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 3308
             },
             {
               "logical_core": "hb_idx__s_SW.r1c2_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 3308
             },
             {
               "logical_core": "hb_idx__s_SW.r1c2_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 3308
             },
             {
               "logical_core": "hb_idx__s_SW.r1c3_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 3308
             },
             {
               "logical_core": "hb_idx__s_SW.r1c3_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 3308
             },
             {
               "logical_core": "hb_idx__s_SW.r1c0_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 3852
             },
             {
               "logical_core": "hb_idx__s_SW.r1c0_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 3852
             },
             {
               "logical_core": "hb_idx__s_SW.r1c1_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 3852
             },
             {
               "logical_core": "hb_idx__s_SW.r1c1_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 3852
             },
             {
               "logical_core": "hb_idx__s_SW.r1c2_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 3852
             },
             {
               "logical_core": "hb_idx__s_SW.r1c2_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 3852
             },
             {
               "logical_core": "hb_idx__s_SW.r1c3_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 3852
             },
             {
               "logical_core": "hb_idx__s_SW.r1c3_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 3852
+            }
+          ],
+          "metadata_consumers": [
+            {
+              "target": "hb_idx__s_SW.W_glue",
+              "source_port": "key_out",
+              "lo": 0,
+              "width": 1,
+              "meaning": "line_valid"
+            },
+            {
+              "target": "hb_idx__s_SW.W_glue",
+              "source_port": "key_out",
+              "lo": 1,
+              "width": 10,
+              "meaning": "PC*128+beat service tag"
             }
           ]
         }
@@ -490,98 +746,162 @@
             {
               "logical_core": "hb_idx__s_SE.r0c0_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 4407
             },
             {
               "logical_core": "hb_idx__s_SE.r0c0_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 4407
             },
             {
               "logical_core": "hb_idx__s_SE.r0c1_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 4407
             },
             {
               "logical_core": "hb_idx__s_SE.r0c1_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 4407
             },
             {
               "logical_core": "hb_idx__s_SE.r0c2_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 4407
             },
             {
               "logical_core": "hb_idx__s_SE.r0c2_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 4407
             },
             {
               "logical_core": "hb_idx__s_SE.r0c3_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 4407
             },
             {
               "logical_core": "hb_idx__s_SE.r0c3_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 4407
             },
             {
               "logical_core": "hb_idx__s_SE.r0c0_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 4951
             },
             {
               "logical_core": "hb_idx__s_SE.r0c0_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 4951
             },
             {
               "logical_core": "hb_idx__s_SE.r0c1_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 4951
             },
             {
               "logical_core": "hb_idx__s_SE.r0c1_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 4951
             },
             {
               "logical_core": "hb_idx__s_SE.r0c2_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 4951
             },
             {
               "logical_core": "hb_idx__s_SE.r0c2_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 4951
             },
             {
               "logical_core": "hb_idx__s_SE.r0c3_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 4951
             },
             {
               "logical_core": "hb_idx__s_SE.r0c3_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 4951
+            }
+          ],
+          "metadata_consumers": [
+            {
+              "target": "hb_idx__s_SE.W_glue",
+              "source_port": "key_out",
+              "lo": 0,
+              "width": 1,
+              "meaning": "line_valid"
+            },
+            {
+              "target": "hb_idx__s_SE.W_glue",
+              "source_port": "key_out",
+              "lo": 1,
+              "width": 10,
+              "meaning": "PC*128+beat service tag"
             }
           ]
         },
@@ -599,98 +919,162 @@
             {
               "logical_core": "hb_idx__s_SE.r0c0_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 5506
             },
             {
               "logical_core": "hb_idx__s_SE.r0c0_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 5506
             },
             {
               "logical_core": "hb_idx__s_SE.r0c1_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 5506
             },
             {
               "logical_core": "hb_idx__s_SE.r0c1_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 5506
             },
             {
               "logical_core": "hb_idx__s_SE.r0c2_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 5506
             },
             {
               "logical_core": "hb_idx__s_SE.r0c2_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 5506
             },
             {
               "logical_core": "hb_idx__s_SE.r0c3_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 5506
             },
             {
               "logical_core": "hb_idx__s_SE.r0c3_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 5506
             },
             {
               "logical_core": "hb_idx__s_SE.r0c0_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 6050
             },
             {
               "logical_core": "hb_idx__s_SE.r0c0_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 6050
             },
             {
               "logical_core": "hb_idx__s_SE.r0c1_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 6050
             },
             {
               "logical_core": "hb_idx__s_SE.r0c1_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 6050
             },
             {
               "logical_core": "hb_idx__s_SE.r0c2_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 6050
             },
             {
               "logical_core": "hb_idx__s_SE.r0c2_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 6050
             },
             {
               "logical_core": "hb_idx__s_SE.r0c3_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 6050
             },
             {
               "logical_core": "hb_idx__s_SE.r0c3_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 6050
+            }
+          ],
+          "metadata_consumers": [
+            {
+              "target": "hb_idx__s_SE.W_glue",
+              "source_port": "key_out",
+              "lo": 0,
+              "width": 1,
+              "meaning": "line_valid"
+            },
+            {
+              "target": "hb_idx__s_SE.W_glue",
+              "source_port": "key_out",
+              "lo": 1,
+              "width": 10,
+              "meaning": "PC*128+beat service tag"
             }
           ]
         },
@@ -708,98 +1092,162 @@
             {
               "logical_core": "hb_idx__s_SE.r1c0_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 6605
             },
             {
               "logical_core": "hb_idx__s_SE.r1c0_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 6605
             },
             {
               "logical_core": "hb_idx__s_SE.r1c1_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 6605
             },
             {
               "logical_core": "hb_idx__s_SE.r1c1_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 6605
             },
             {
               "logical_core": "hb_idx__s_SE.r1c2_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 6605
             },
             {
               "logical_core": "hb_idx__s_SE.r1c2_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 6605
             },
             {
               "logical_core": "hb_idx__s_SE.r1c3_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 6605
             },
             {
               "logical_core": "hb_idx__s_SE.r1c3_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 6605
             },
             {
               "logical_core": "hb_idx__s_SE.r1c0_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 7149
             },
             {
               "logical_core": "hb_idx__s_SE.r1c0_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 7149
             },
             {
               "logical_core": "hb_idx__s_SE.r1c1_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 7149
             },
             {
               "logical_core": "hb_idx__s_SE.r1c1_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 7149
             },
             {
               "logical_core": "hb_idx__s_SE.r1c2_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 7149
             },
             {
               "logical_core": "hb_idx__s_SE.r1c2_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 7149
             },
             {
               "logical_core": "hb_idx__s_SE.r1c3_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 7149
             },
             {
               "logical_core": "hb_idx__s_SE.r1c3_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 7149
+            }
+          ],
+          "metadata_consumers": [
+            {
+              "target": "hb_idx__s_SE.W_glue",
+              "source_port": "key_out",
+              "lo": 0,
+              "width": 1,
+              "meaning": "line_valid"
+            },
+            {
+              "target": "hb_idx__s_SE.W_glue",
+              "source_port": "key_out",
+              "lo": 1,
+              "width": 10,
+              "meaning": "PC*128+beat service tag"
             }
           ]
         },
@@ -817,98 +1265,162 @@
             {
               "logical_core": "hb_idx__s_SE.r1c0_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 7704
             },
             {
               "logical_core": "hb_idx__s_SE.r1c0_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 7704
             },
             {
               "logical_core": "hb_idx__s_SE.r1c1_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 7704
             },
             {
               "logical_core": "hb_idx__s_SE.r1c1_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 7704
             },
             {
               "logical_core": "hb_idx__s_SE.r1c2_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 7704
             },
             {
               "logical_core": "hb_idx__s_SE.r1c2_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 7704
             },
             {
               "logical_core": "hb_idx__s_SE.r1c3_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 7704
             },
             {
               "logical_core": "hb_idx__s_SE.r1c3_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 7704
             },
             {
               "logical_core": "hb_idx__s_SE.r1c0_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 8248
             },
             {
               "logical_core": "hb_idx__s_SE.r1c0_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 8248
             },
             {
               "logical_core": "hb_idx__s_SE.r1c1_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 8248
             },
             {
               "logical_core": "hb_idx__s_SE.r1c1_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 8248
             },
             {
               "logical_core": "hb_idx__s_SE.r1c2_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 8248
             },
             {
               "logical_core": "hb_idx__s_SE.r1c2_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 8248
             },
             {
               "logical_core": "hb_idx__s_SE.r1c3_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 8248
             },
             {
               "logical_core": "hb_idx__s_SE.r1c3_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 8248
+            }
+          ],
+          "metadata_consumers": [
+            {
+              "target": "hb_idx__s_SE.W_glue",
+              "source_port": "key_out",
+              "lo": 0,
+              "width": 1,
+              "meaning": "line_valid"
+            },
+            {
+              "target": "hb_idx__s_SE.W_glue",
+              "source_port": "key_out",
+              "lo": 1,
+              "width": 10,
+              "meaning": "PC*128+beat service tag"
             }
           ]
         }
@@ -940,98 +1452,162 @@
             {
               "logical_core": "hb_idx__s_NW.r0c0_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 8803
             },
             {
               "logical_core": "hb_idx__s_NW.r0c0_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 8803
             },
             {
               "logical_core": "hb_idx__s_NW.r0c1_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 8803
             },
             {
               "logical_core": "hb_idx__s_NW.r0c1_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 8803
             },
             {
               "logical_core": "hb_idx__s_NW.r0c2_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 8803
             },
             {
               "logical_core": "hb_idx__s_NW.r0c2_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 8803
             },
             {
               "logical_core": "hb_idx__s_NW.r0c3_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 8803
             },
             {
               "logical_core": "hb_idx__s_NW.r0c3_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 8803
             },
             {
               "logical_core": "hb_idx__s_NW.r0c0_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 9347
             },
             {
               "logical_core": "hb_idx__s_NW.r0c0_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 9347
             },
             {
               "logical_core": "hb_idx__s_NW.r0c1_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 9347
             },
             {
               "logical_core": "hb_idx__s_NW.r0c1_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 9347
             },
             {
               "logical_core": "hb_idx__s_NW.r0c2_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 9347
             },
             {
               "logical_core": "hb_idx__s_NW.r0c2_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 9347
             },
             {
               "logical_core": "hb_idx__s_NW.r0c3_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 9347
             },
             {
               "logical_core": "hb_idx__s_NW.r0c3_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 9347
+            }
+          ],
+          "metadata_consumers": [
+            {
+              "target": "hb_idx__s_NW.W_glue",
+              "source_port": "key_out",
+              "lo": 0,
+              "width": 1,
+              "meaning": "line_valid"
+            },
+            {
+              "target": "hb_idx__s_NW.W_glue",
+              "source_port": "key_out",
+              "lo": 1,
+              "width": 10,
+              "meaning": "PC*128+beat service tag"
             }
           ]
         },
@@ -1049,98 +1625,162 @@
             {
               "logical_core": "hb_idx__s_NW.r0c0_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 9902
             },
             {
               "logical_core": "hb_idx__s_NW.r0c0_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 9902
             },
             {
               "logical_core": "hb_idx__s_NW.r0c1_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 9902
             },
             {
               "logical_core": "hb_idx__s_NW.r0c1_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 9902
             },
             {
               "logical_core": "hb_idx__s_NW.r0c2_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 9902
             },
             {
               "logical_core": "hb_idx__s_NW.r0c2_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 9902
             },
             {
               "logical_core": "hb_idx__s_NW.r0c3_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 9902
             },
             {
               "logical_core": "hb_idx__s_NW.r0c3_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 9902
             },
             {
               "logical_core": "hb_idx__s_NW.r0c0_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 10446
             },
             {
               "logical_core": "hb_idx__s_NW.r0c0_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 10446
             },
             {
               "logical_core": "hb_idx__s_NW.r0c1_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 10446
             },
             {
               "logical_core": "hb_idx__s_NW.r0c1_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 10446
             },
             {
               "logical_core": "hb_idx__s_NW.r0c2_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 10446
             },
             {
               "logical_core": "hb_idx__s_NW.r0c2_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 10446
             },
             {
               "logical_core": "hb_idx__s_NW.r0c3_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 10446
             },
             {
               "logical_core": "hb_idx__s_NW.r0c3_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 10446
+            }
+          ],
+          "metadata_consumers": [
+            {
+              "target": "hb_idx__s_NW.W_glue",
+              "source_port": "key_out",
+              "lo": 0,
+              "width": 1,
+              "meaning": "line_valid"
+            },
+            {
+              "target": "hb_idx__s_NW.W_glue",
+              "source_port": "key_out",
+              "lo": 1,
+              "width": 10,
+              "meaning": "PC*128+beat service tag"
             }
           ]
         },
@@ -1158,98 +1798,162 @@
             {
               "logical_core": "hb_idx__s_NW.r1c0_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 11001
             },
             {
               "logical_core": "hb_idx__s_NW.r1c0_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 11001
             },
             {
               "logical_core": "hb_idx__s_NW.r1c1_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 11001
             },
             {
               "logical_core": "hb_idx__s_NW.r1c1_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 11001
             },
             {
               "logical_core": "hb_idx__s_NW.r1c2_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 11001
             },
             {
               "logical_core": "hb_idx__s_NW.r1c2_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 11001
             },
             {
               "logical_core": "hb_idx__s_NW.r1c3_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 11001
             },
             {
               "logical_core": "hb_idx__s_NW.r1c3_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 11001
             },
             {
               "logical_core": "hb_idx__s_NW.r1c0_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 11545
             },
             {
               "logical_core": "hb_idx__s_NW.r1c0_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 11545
             },
             {
               "logical_core": "hb_idx__s_NW.r1c1_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 11545
             },
             {
               "logical_core": "hb_idx__s_NW.r1c1_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 11545
             },
             {
               "logical_core": "hb_idx__s_NW.r1c2_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 11545
             },
             {
               "logical_core": "hb_idx__s_NW.r1c2_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 11545
             },
             {
               "logical_core": "hb_idx__s_NW.r1c3_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 11545
             },
             {
               "logical_core": "hb_idx__s_NW.r1c3_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 11545
+            }
+          ],
+          "metadata_consumers": [
+            {
+              "target": "hb_idx__s_NW.W_glue",
+              "source_port": "key_out",
+              "lo": 0,
+              "width": 1,
+              "meaning": "line_valid"
+            },
+            {
+              "target": "hb_idx__s_NW.W_glue",
+              "source_port": "key_out",
+              "lo": 1,
+              "width": 10,
+              "meaning": "PC*128+beat service tag"
             }
           ]
         },
@@ -1267,98 +1971,162 @@
             {
               "logical_core": "hb_idx__s_NW.r1c0_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 12100
             },
             {
               "logical_core": "hb_idx__s_NW.r1c0_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 12100
             },
             {
               "logical_core": "hb_idx__s_NW.r1c1_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 12100
             },
             {
               "logical_core": "hb_idx__s_NW.r1c1_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 12100
             },
             {
               "logical_core": "hb_idx__s_NW.r1c2_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 12100
             },
             {
               "logical_core": "hb_idx__s_NW.r1c2_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 12100
             },
             {
               "logical_core": "hb_idx__s_NW.r1c3_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 12100
             },
             {
               "logical_core": "hb_idx__s_NW.r1c3_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 12100
             },
             {
               "logical_core": "hb_idx__s_NW.r1c0_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 12644
             },
             {
               "logical_core": "hb_idx__s_NW.r1c0_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 12644
             },
             {
               "logical_core": "hb_idx__s_NW.r1c1_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 12644
             },
             {
               "logical_core": "hb_idx__s_NW.r1c1_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 12644
             },
             {
               "logical_core": "hb_idx__s_NW.r1c2_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 12644
             },
             {
               "logical_core": "hb_idx__s_NW.r1c2_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 12644
             },
             {
               "logical_core": "hb_idx__s_NW.r1c3_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 12644
             },
             {
               "logical_core": "hb_idx__s_NW.r1c3_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 12644
+            }
+          ],
+          "metadata_consumers": [
+            {
+              "target": "hb_idx__s_NW.W_glue",
+              "source_port": "key_out",
+              "lo": 0,
+              "width": 1,
+              "meaning": "line_valid"
+            },
+            {
+              "target": "hb_idx__s_NW.W_glue",
+              "source_port": "key_out",
+              "lo": 1,
+              "width": 10,
+              "meaning": "PC*128+beat service tag"
             }
           ]
         }
@@ -1390,98 +2158,162 @@
             {
               "logical_core": "hb_idx__s_NE.r0c0_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 13199
             },
             {
               "logical_core": "hb_idx__s_NE.r0c0_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 13199
             },
             {
               "logical_core": "hb_idx__s_NE.r0c1_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 13199
             },
             {
               "logical_core": "hb_idx__s_NE.r0c1_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 13199
             },
             {
               "logical_core": "hb_idx__s_NE.r0c2_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 13199
             },
             {
               "logical_core": "hb_idx__s_NE.r0c2_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 13199
             },
             {
               "logical_core": "hb_idx__s_NE.r0c3_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 13199
             },
             {
               "logical_core": "hb_idx__s_NE.r0c3_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 11,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 11,
+              "die_output_lo": 13199
             },
             {
               "logical_core": "hb_idx__s_NE.r0c0_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 13743
             },
             {
               "logical_core": "hb_idx__s_NE.r0c0_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 13743
             },
             {
               "logical_core": "hb_idx__s_NE.r0c1_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 13743
             },
             {
               "logical_core": "hb_idx__s_NE.r0c1_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 13743
             },
             {
               "logical_core": "hb_idx__s_NE.r0c2_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 13743
             },
             {
               "logical_core": "hb_idx__s_NE.r0c2_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 13743
             },
             {
               "logical_core": "hb_idx__s_NE.r0c3_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 13743
             },
             {
               "logical_core": "hb_idx__s_NE.r0c3_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 555,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 555,
+              "die_output_lo": 13743
+            }
+          ],
+          "metadata_consumers": [
+            {
+              "target": "hb_idx__s_NE.W_glue",
+              "source_port": "key_out",
+              "lo": 0,
+              "width": 1,
+              "meaning": "line_valid"
+            },
+            {
+              "target": "hb_idx__s_NE.W_glue",
+              "source_port": "key_out",
+              "lo": 1,
+              "width": 10,
+              "meaning": "PC*128+beat service tag"
             }
           ]
         },
@@ -1499,98 +2331,162 @@
             {
               "logical_core": "hb_idx__s_NE.r0c0_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 14298
             },
             {
               "logical_core": "hb_idx__s_NE.r0c0_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 14298
             },
             {
               "logical_core": "hb_idx__s_NE.r0c1_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 14298
             },
             {
               "logical_core": "hb_idx__s_NE.r0c1_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 14298
             },
             {
               "logical_core": "hb_idx__s_NE.r0c2_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 14298
             },
             {
               "logical_core": "hb_idx__s_NE.r0c2_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 14298
             },
             {
               "logical_core": "hb_idx__s_NE.r0c3_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 14298
             },
             {
               "logical_core": "hb_idx__s_NE.r0c3_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 1110,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 1110,
+              "die_output_lo": 14298
             },
             {
               "logical_core": "hb_idx__s_NE.r0c0_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 14842
             },
             {
               "logical_core": "hb_idx__s_NE.r0c0_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 14842
             },
             {
               "logical_core": "hb_idx__s_NE.r0c1_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 14842
             },
             {
               "logical_core": "hb_idx__s_NE.r0c1_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 14842
             },
             {
               "logical_core": "hb_idx__s_NE.r0c2_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 14842
             },
             {
               "logical_core": "hb_idx__s_NE.r0c2_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 14842
             },
             {
               "logical_core": "hb_idx__s_NE.r0c3_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 14842
             },
             {
               "logical_core": "hb_idx__s_NE.r0c3_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 1654,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 1654,
+              "die_output_lo": 14842
+            }
+          ],
+          "metadata_consumers": [
+            {
+              "target": "hb_idx__s_NE.W_glue",
+              "source_port": "key_out",
+              "lo": 0,
+              "width": 1,
+              "meaning": "line_valid"
+            },
+            {
+              "target": "hb_idx__s_NE.W_glue",
+              "source_port": "key_out",
+              "lo": 1,
+              "width": 10,
+              "meaning": "PC*128+beat service tag"
             }
           ]
         },
@@ -1608,98 +2504,162 @@
             {
               "logical_core": "hb_idx__s_NE.r1c0_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 15397
             },
             {
               "logical_core": "hb_idx__s_NE.r1c0_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 15397
             },
             {
               "logical_core": "hb_idx__s_NE.r1c1_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 15397
             },
             {
               "logical_core": "hb_idx__s_NE.r1c1_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 15397
             },
             {
               "logical_core": "hb_idx__s_NE.r1c2_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 15397
             },
             {
               "logical_core": "hb_idx__s_NE.r1c2_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 15397
             },
             {
               "logical_core": "hb_idx__s_NE.r1c3_k0h0",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 15397
             },
             {
               "logical_core": "hb_idx__s_NE.r1c3_k0h1",
               "port": "key",
-              "keybuf_payload_lo": 2209,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 2209,
+              "die_output_lo": 15397
             },
             {
               "logical_core": "hb_idx__s_NE.r1c0_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 15941
             },
             {
               "logical_core": "hb_idx__s_NE.r1c0_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 15941
             },
             {
               "logical_core": "hb_idx__s_NE.r1c1_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 15941
             },
             {
               "logical_core": "hb_idx__s_NE.r1c1_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 15941
             },
             {
               "logical_core": "hb_idx__s_NE.r1c2_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 15941
             },
             {
               "logical_core": "hb_idx__s_NE.r1c2_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 15941
             },
             {
               "logical_core": "hb_idx__s_NE.r1c3_k1h0",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 15941
             },
             {
               "logical_core": "hb_idx__s_NE.r1c3_k1h1",
               "port": "key",
-              "keybuf_payload_lo": 2753,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 2753,
+              "die_output_lo": 15941
+            }
+          ],
+          "metadata_consumers": [
+            {
+              "target": "hb_idx__s_NE.W_glue",
+              "source_port": "key_out",
+              "lo": 0,
+              "width": 1,
+              "meaning": "line_valid"
+            },
+            {
+              "target": "hb_idx__s_NE.W_glue",
+              "source_port": "key_out",
+              "lo": 1,
+              "width": 10,
+              "meaning": "PC*128+beat service tag"
             }
           ]
         },
@@ -1717,98 +2677,162 @@
             {
               "logical_core": "hb_idx__s_NE.r1c0_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 16496
             },
             {
               "logical_core": "hb_idx__s_NE.r1c0_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 16496
             },
             {
               "logical_core": "hb_idx__s_NE.r1c1_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 16496
             },
             {
               "logical_core": "hb_idx__s_NE.r1c1_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 16496
             },
             {
               "logical_core": "hb_idx__s_NE.r1c2_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 16496
             },
             {
               "logical_core": "hb_idx__s_NE.r1c2_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 16496
             },
             {
               "logical_core": "hb_idx__s_NE.r1c3_k2h0",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 16496
             },
             {
               "logical_core": "hb_idx__s_NE.r1c3_k2h1",
               "port": "key",
-              "keybuf_payload_lo": 3308,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 11,
+              "quarter_output_lo": 3308,
+              "die_output_lo": 16496
             },
             {
               "logical_core": "hb_idx__s_NE.r1c0_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 17040
             },
             {
               "logical_core": "hb_idx__s_NE.r1c0_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 17040
             },
             {
               "logical_core": "hb_idx__s_NE.r1c1_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 17040
             },
             {
               "logical_core": "hb_idx__s_NE.r1c1_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 17040
             },
             {
               "logical_core": "hb_idx__s_NE.r1c2_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 17040
             },
             {
               "logical_core": "hb_idx__s_NE.r1c2_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 17040
             },
             {
               "logical_core": "hb_idx__s_NE.r1c3_k3h0",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 17040
             },
             {
               "logical_core": "hb_idx__s_NE.r1c3_k3h1",
               "port": "key",
-              "keybuf_payload_lo": 3852,
-              "width": 544
+              "width": 544,
+              "source_port": "key_out",
+              "slice_output_lo": 555,
+              "quarter_output_lo": 3852,
+              "die_output_lo": 17040
+            }
+          ],
+          "metadata_consumers": [
+            {
+              "target": "hb_idx__s_NE.W_glue",
+              "source_port": "key_out",
+              "lo": 0,
+              "width": 1,
+              "meaning": "line_valid"
+            },
+            {
+              "target": "hb_idx__s_NE.W_glue",
+              "source_port": "key_out",
+              "lo": 1,
+              "width": 10,
+              "meaning": "PC*128+beat service tag"
             }
           ]
         }

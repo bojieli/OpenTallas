@@ -1,0 +1,67 @@
+{
+  "schema": "opentallas.hbm.native_idxn_key_calendar_measurement.v1",
+  "scope": "Canonical one-client NQ2 key path: actual native issuer plus sixteen SRAM slices; scorer arithmetic, selector, physical stations and native TX excluded",
+  "source_branch": "codex/keybuf-bind-1027",
+  "source_revision": "409b45b0c8",
+  "top": "tb_calendar_quad",
+  "component_shape": {
+    "stack_key_streams": 2,
+    "quarter_scorer_key_interfaces": 4,
+    "pc_lines": 16,
+    "key_packet_bits_per_pc": 1099,
+    "key_payload_bits_per_pc": 1088,
+    "key_beats_per_stream": 171,
+    "keybuf_slice_count": 16,
+    "sram256x256_per_slice": 5,
+    "storage_sram_count": 80
+  },
+  "compiler": {
+    "frame_instructions": 1315,
+    "row_pitch_cycles": 232,
+    "rows": 6,
+    "score_chain_cycles": 14,
+    "selector_instances": 4,
+    "issuer_stream_slots": 8,
+    "compiled_class_collisions": 0,
+    "compiler_predicted_first_key_edge_row0": 219,
+    "compiler_predicted_first_TX_edge_row0": 1190,
+    "tx_prediction_not_measured": true
+  },
+  "measured": {
+    "clock_ps": 833,
+    "checks": 2516,
+    "errors": 0,
+    "live_key_beats": 171,
+    "replayed_key_beats": 855,
+    "issuer_done_checker_cycle": 2477,
+    "whole_layer_qualified": false
+  },
+  "derived": {
+    "issuer_first_row_checker_cycle": 1317,
+    "per_record_HBM_payload_bytes": 372096,
+    "per_record_HBM_packet_bytes": 375858,
+    "live_line_writes": 2736,
+    "replay_line_reads": 13680,
+    "sram_write_transactions": 13680,
+    "sram_read_transactions": 68400,
+    "wrapper_added_cycles": 0
+  },
+  "model_integration": {
+    "status": "PENDING_COMPOSED_SOURCE_AND_PHYSICAL_STATIONS",
+    "current_1905_97_tok_s_not_recomputed": true,
+    "requirements": [
+      "Keep canonical four-quarter source multiplicity:256HCOL+8tails",
+      "Apply actual key producer->buffer->scorer route and calendar phases after physical plan event",
+      "Replace only measured issuer/key-storage term; this cut has no measured score/selector/TX completion",
+      "N_Q4/P3 thirtytwo-slice proxy proof and old1917/1906model are not native source binding",
+      "Bare slice live pass-through is combinational; physical R2 face registers and their phase/cycle cost remain to qualify"
+    ]
+  },
+  "negative_control": {
+    "same_binary": true,
+    "mutation": "force quarter1 PC0 strap4 to0",
+    "checks": 2516,
+    "errors": 855,
+    "result": "CAUGHT"
+  }
+}
