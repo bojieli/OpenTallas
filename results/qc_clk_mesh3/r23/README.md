@@ -1,0 +1,4 @@
+QC R23: COORD-approved 51.84um centre clock strip, empty lane0.
+Dry builder 8330cells,0overlap,0hardkeepout;266channel stacks,0outside strip (R22 had5). Image guard51.png viewed, PASS-COND structural trial; review results/geom_review/codex_qc_guard51_1027.md.
+Repro: dry_guard.sh (package inherited input candidate_oneqc0733/r2_plan_orig/stage_table/tree; tools from ef99597f11). Lanes1,5,2,4/H_c3, centre split34.56. No cycle change; die outline31216.32x26317.44;plan sha37937a8691f9155b19f76998af3811b478f3961d17127c0968e7c5c5aac9b53b.
+Live full trial: intel2:/srv/opentallas-scratch2/claude/codex-qwen-1027/pkg, ot-run unit oth-ubuntu-278560-1793102453, client277854, build_guard2.otrun.log. kit generation plus combo GRT TT/FF; collect GUARD51_GRT_DONE and dry_exact/combo_{TT,FF}.log. Clock environmental RCX/rebalance/mesh MC (+26A0drops/core load) and residual HB4/latch parallel trials remain. No freeze/STA/signoff claim.
