@@ -949,7 +949,8 @@
          "grid",
          "grid+sinks",
          "sinks",
-         "density"
+         "density",
+         "explicit"
         ]
        },
        "tap_radius_um": {
@@ -3111,6 +3112,10 @@
         "type": "integer"
        },
        "pad": {
+        "type": "integer",
+        "minimum": 0
+       },
+       "clock_landing": {
         "type": "integer",
         "minimum": 0
        },
