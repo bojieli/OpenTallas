@@ -1384,3 +1384,4 @@ CODEX: 2026-10-27 08:47 PDT HBM HC source-profile frontend fix READY6a09097e23: 
 CODEX: 2026-10-27 08:48 PDT Qwen native source cohort READY4ca93bed6f: bootwindow+HOSTABI+nativebench; actual B48 source table FAIL2→PASS13/13, parser rejects infrastructure as caught mutant; corrected B48 top frontend live intel1 unit1384010.
 
 CODEX: 2026-10-27 08:50 PDT RM48 clock zero-load pruning; RM49 main 961b7c0a97 == origin/main reviewed QC actual clock export + static preflight, 29 composition PASS; physical QC FAIL/RC+snap holds retained, 0 deletions.
+CODEX: 2026-10-27 08:50 PDT PV join pass2 on826ff576d6: approved1BUF trunk CTS PASS,15763sinks; placement TT+2.27/FFhold+1.22, oldclockmodelmiss retained; route trial next. Shared entrypinshape fixd0a96a8a53 READY; fR180CTS live intel2 codex-pv-pass2-0830/fr180_cts.otrun.log.
