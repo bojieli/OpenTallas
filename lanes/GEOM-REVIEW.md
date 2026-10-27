@@ -3949,3 +3949,13 @@ GEOM REQ [INFRA-FIRST-QC-R14] 2026-10-26 23:28 PDT claude/qc-mesh-r14-1026@64abd
   - Pins by face (CHECKED): W 778 / E 1027 / S 1 / I 3.
   - Own diagnostic GRT (M2-M5, adjust 0.5, clock special, docker orfs:asap7lock; probe at intel2:/srv/opentallas-scratch2/claude/geom25/): overflow 0 / 0 at the first pass, 11 s, wirelength 343.5 mm. Usage M2 57 % / M3 26 % / M4 35 % / M5 5 % (CHECKED).
   - Conditions: none beyond the normal kit sign-off. M2 at 57 % is the busiest layer, so watch DRT on M2 pin access in the W/E reg bands.
+2026-10-27 07:28 PDT GEOM-REVIEW-25: VERDICT [INFRA-FIRST-QC-R25 mesh drivers on the A0 drop lattice, claude/qc-mesh-r25-1027@a764d022ff results/qc_clk_mesh3/r25/{r25_wcorner,r25_centre_band}.png, both viewed + own parse of plan_replan.json.gz] PASS-COND (plan form; COORD adopted the form at 07:18).
+  - The drivers sit on the drop straps (CHECKED). 3,456 band drivers: 0 off a V9 drop x, and 0 outside the 18 bands. The json shows 0 sites on core and 0 on a seam. 3,072 row segments of 1,279-1,322 um each: every segment end has a band driver at the same x within 90 um (0 undriven ends), so each segment is driven from both ends, as the README states.
+  - W column at 1632.96 with 170 drivers. In wcorner it clears the A0 W face (~1650) by 12.96 from the island edge. 8 rows are skipped where a core sits under the column (json wedge_skipped_on_core 8).
+  - In the renders, segments end on the gold/orange band drivers and the x2 drivers (orange) are on the columns with one adjacent driver column. The non-A0 field (centre_band y 11.8-15.8k) has only kept M9 at a ~610-um pitch plus M8 rows. Partition taps there carry 42 ps TT nominal / 114 MC (UNCHECKED).
+  - Conditions (for R26 build):
+    (1) Feed legs reach 1,229.76 um at 3 stages (max 410 per stage, CHECKED from the json). R26 must site every feed repeater on a declared off-core island/bay at <=450 um, report 0 on-core, and replace the 41-268-ps leg spread with equal-level band trees (already ruled).
+    (2) The built DB must show one M8-M9 via at each of the 36,370 crossings (mesh-vias fail-closed rule).
+    (3) The 58-ps median in-core drop spread is the 1.3-mm segment RC, driven only from both ends. It is structural and accepted until related-pair STA names intra-A0 pairs (COORD deferred the mid-row driver).
+    (4) E-pin shift -19.344: re-run the pin/face audit and show 0 pins in EF0-5/EN1-2 with >=0.5-um access margin on the rebuilt kits; the legacy E-face ck pin (668.076) must not be a clock entry.
+    (5) The DRC same-net 0.04/0.28 gap check (R24b condition) stays open until unit oth-ubuntu-1828381-1793110415 (~10:45) reports.
