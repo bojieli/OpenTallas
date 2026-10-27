@@ -127,3 +127,6 @@ Branch claude/head-rtl5-1026@38e2758e9a (on head-rtl4 ce0713f99f; intel2 wt/head
 
 ## CODEX notes 2026-10-27 08:15 PDT
 CODEX took over HEAD source/plan closure on codex/head-plan-0815@dc7e87fd2. Candidate results/head_source_0815/die_plan.json on approved2b67clamped plan adds7existing supplement files to5owning type source closures (no RTL/geometry/cycle changes), approvedBQ2 and5physicaltap names ft_mstrap_i. head_die_portbind de-duplicates exact path migration while keeping manifest-only conflict/missing gates. Tokens team tests candidate strict/native elaboration; physical owner applies helper to same final mesh/PG delta. No route or release claim.
+
+## CODEX notes 2026-10-27 08:34 PDT — physical source profile gap fixed
+Native strict receipt candidatePASS326inst0open/tied/undriven/stub,528tieaudit,2217nested (tokens); logical source check only, physicalCV .clk versus ft_mstrap_i+8FT remains physicalchild. Required both OT_COLL_NATIVE32+OT_COLL_NATIVE32_OFF match qualifiedbenchprofile; shared schema/gen_phys support8598634d8b, sourcehelpercandidatead63eb92e sets type.verilog_defines on hd_mesh/hd_lep0N/hd_ctl/hd_host. FirstG0sourcecandidate10errors were plan-relative pins_file packaging; portableexport rebases actualpinassets, originalfailedreceiptpreserved.

@@ -53,3 +53,6 @@ Branch claude/fallback-head-2-1026@ba603056a (base eb56dcd125). All numbers UNCH
 
 ## CODEX notes 2026-10-26 20:12 PDT takeover
 Tool monitor=dataflow and reserved-site source READY982a208cfa; root merge review. Rings cannot build until HEAD-RTL and strict real bind; sl300 GRT0 historical, no dieSTA.
+
+## CODEX notes 2026-10-27 08:34 PDT — plan prep under owner08:02
+Concrete current-provider candidate codex/head-plan-0815@c9bd770f5 results/head_fallback_prep_0815/compose/landed_portable.json + landed_sidecar.json:16types0splits0storage-bandFAIL0landing-contracterrors;326regions427ports211813bits1061200ringFF;1281edges,boot327,+171cycles/headpass,0.987mm2unmapped. No fallback build. Old missing-provider blocker is resolved by currentHEADRTL; actual remaining blockers= native binder ring emission/observer exact binding, eight physicalFTport adapter, finalR18outline/PGsite reservation. Candidate on adoptedR17geometry; run same recipe on finalR18event beforeadoption. Historicalsl300GRT/timing not reused as gate.
