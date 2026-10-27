@@ -3665,6 +3665,48 @@ def superset_report(L, m, kind, verdict):
                        "inductively proved correspondence hypotheses; shown only when the verdict is EQUIVALENT"))
 
 
+def ft_parallel_normalise(kit, top, netlist, out, rec):
+    """KV-CORES-PV2 10-27 (12.2a1 island ft arcs, kit island_ft.json): an arc with n > 1 parallel drivers (island
+    mesh_driver) is one logical driver in RTL -- driver j >= 1 drives its own net <sink>__p<j> -- and a physical short in
+    the placed/routed ODB (ot_ft_short).  Parallel identical buffers on one input are one driver functionally, so the gate
+    netlist's short is mapped back to the RTL form (Y of driver j -> <sink>__p<j>) before the AIG build; fail-closed: every
+    declared driver must be found with Y on <sink> or <sink>__p<j>.  No island_ft.json or no parallel arc -> unchanged."""
+    fj = Path(kit) / "island_ft.json"
+    if not fj.is_file():
+        return netlist
+    par = [(a["sink"], j, c["name"]) for a in json.loads(fj.read_text())["arcs"]
+           for j, c in enumerate(a["cells"]) if j]
+    if not par:
+        return netlist
+    op = gzip.open if str(netlist).endswith(".gz") else open
+    with op(netlist, "rt", errors="replace") as f:
+        t = f.read()
+    m = re.search(r"^module\s+\\?" + re.escape(top) + r"\s*\(.*?\);", t, re.M | re.S)
+    if not m:
+        raise Unproven(f"ft_parallel: module {top} not found in {netlist}")
+    wires, done = [], []
+    for sink, j, name in par:
+        cm = re.compile(r"(^\s*\S+\s+\\?" + re.escape(name) + r"\s*\((?:[^;])*?\.Y\s*\(\s*)\\?([^\s()]+)(\s*\))", re.M | re.S)
+        hits = cm.findall(t)
+        if len(hits) != 1:
+            raise Unproven(f"ft_parallel: driver {name} found {len(hits)} times")
+        net = hits[0][1]
+        pn = f"{sink}__p{j}"
+        if net == sink:
+            t = cm.sub(lambda q: q[1] + pn + q[3], t)
+            wires.append(pn)
+        elif net != pn:
+            raise Unproven(f"ft_parallel: driver {name} Y on {net}, not {sink} / {pn}")
+        done.append(name)
+    if wires:
+        m = re.search(r"^module\s+\\?" + re.escape(top) + r"\s*\(.*?\);", t, re.M | re.S)
+        t = t[:m.end()] + "".join(f"\n  wire {w};" for w in wires) + t[m.end():]
+    rec["ft_parallel"] = dict(drivers=done, remapped=wires, source=str(netlist))
+    dst = Path(out) / "gate_ft_parallel.v"
+    dst.write_text(t)
+    return str(dst)
+
+
 def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_map=None, reuse=False, hints=None):
     kit = str(Path(kit).resolve())
     out = Path(out or Path(kit) / "lec")
@@ -3681,6 +3723,7 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         rec.update(top=top, netlist=netlist, synth_frontend=gate_fe, gold_frontend=gold_fe)
         if gold_fe == gate_fe:
             rec["warning"] = "gold frontend == synthesis frontend (frontend bugs are not independent)"
+        netlist = ft_parallel_normalise(kit, top, netlist, out, rec)
         types = netlist_cell_types(netlist)
         bad = sorted(c for c in types if UNSUPPORTED_CELLS.match(c) and not ICG_CELLS.match(c))
         if bad:
