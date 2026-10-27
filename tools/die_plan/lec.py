@@ -2744,6 +2744,7 @@ def _noreset_held(L, consts, sides, cycles, extra, banned):
     """noreset_sound's fixpoint -> {(side, key): first edge the constant holds}; edges past `cycles` only for
     unmatched registers not in `banned`."""
     held = {}                                 # (side, key) -> edge, per side
+    matched = set(L.matched)
     for (sd, k), c in consts.items():
         for s in sides(sd):
             v, e = L.rst_val.get((s, k), (None, None))
@@ -2756,7 +2757,7 @@ def _noreset_held(L, consts, sides, cycles, extra, banned):
             for s in sides(sd):
                 if (s, k) in held:
                     continue
-                if e > cycles and (sd == "both" or (s, k) in banned):
+                if e > cycles and (sd == "both" or k in matched or (s, k) in banned):
                     continue
                 cone = latch_cone(L, s, k)
                 if cone is None or k in cone:
