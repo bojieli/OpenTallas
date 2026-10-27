@@ -1,0 +1,154 @@
+{
+ "schema": "opentallas.hbm_final_stations.v1",
+ "verdict": "FAIL",
+ "reach_um": 405.0,
+ "scope": "model-only final-pin station geometry; native RTL/compiler latency and route/clock/PG gates remain required",
+ "failed": [
+  164,
+  224,
+  457,
+  568,
+  984,
+  990,
+  996,
+  1002,
+  1482,
+  1490,
+  1542,
+  1550,
+  1579,
+  1587,
+  1595,
+  1603,
+  2221,
+  2239,
+  2240,
+  2850
+ ],
+ "stations": 2903,
+ "added_cycles": 169,
+ "max_hop_um": 2726.7839999999997,
+ "failed_rows": [
+  {
+   "station": 164,
+   "conn": "u_hb_coll_Q_body_n2.u_body_u_upipe_SL_7_u_d3|u_hcollgi_Q",
+   "verdict": "FAIL",
+   "reason": "no legal final-pin station path"
+  },
+  {
+   "station": 224,
+   "conn": "u_cij_Q.inj_d_r1|u_hb_coll_Q_body_n2",
+   "verdict": "FAIL",
+   "reason": "no legal final-pin station path"
+  },
+  {
+   "station": 457,
+   "conn": "u_vmb_Q0.wq1|u_smw_Q",
+   "verdict": "FAIL",
+   "reason": "no legal final-pin station path"
+  },
+  {
+   "station": 568,
+   "conn": "u_vmb_Q7.wq1|u_smw_Q",
+   "verdict": "FAIL",
+   "reason": "no legal final-pin station path"
+  },
+  {
+   "station": 984,
+   "conn": "u_hcollgl_Q.pa_d|u_hb_coll_Q_body_n2",
+   "verdict": "FAIL",
+   "reason": "no legal final-pin station path"
+  },
+  {
+   "station": 990,
+   "conn": "u_hcollgl_Q.pa_src|u_hb_coll_Q_body_n2",
+   "verdict": "FAIL",
+   "reason": "no legal final-pin station path"
+  },
+  {
+   "station": 996,
+   "conn": "u_hcollgl_Q.pa_tag|u_hb_coll_Q_body_n2",
+   "verdict": "FAIL",
+   "reason": "no legal final-pin station path"
+  },
+  {
+   "station": 1002,
+   "conn": "u_hcollgl_Q.pa_v|u_hb_coll_Q_body_n2",
+   "verdict": "FAIL",
+   "reason": "no legal final-pin station path"
+  },
+  {
+   "station": 1482,
+   "conn": "u_vmks_Q3.c_k_rdy|u_ctl_Q_p14",
+   "verdict": "FAIL",
+   "reason": "no legal final-pin station path"
+  },
+  {
+   "station": 1490,
+   "conn": "u_vmks_Q3.c_kr_beat|u_ctl_Q_p14",
+   "verdict": "FAIL",
+   "reason": "no legal final-pin station path"
+  },
+  {
+   "station": 1542,
+   "conn": "u_vmks_Q3.c_k_addr|u_ctl_Q_p14",
+   "verdict": "FAIL",
+   "reason": "no legal final-pin station path"
+  },
+  {
+   "station": 1550,
+   "conn": "u_vmks_Q3.c_k_wstrb|u_ctl_Q_p14",
+   "verdict": "FAIL",
+   "reason": "no legal final-pin station path"
+  },
+  {
+   "station": 1579,
+   "conn": "u_calendar_Q.rslot|u_vmb_Q5",
+   "verdict": "FAIL",
+   "reason": "no legal final-pin station path"
+  },
+  {
+   "station": 1587,
+   "conn": "u_calendar_Q.rslot_v|u_vmb_Q5",
+   "verdict": "FAIL",
+   "reason": "no legal final-pin station path"
+  },
+  {
+   "station": 1595,
+   "conn": "u_calendar_Q.wslot|u_vmb_Q5",
+   "verdict": "FAIL",
+   "reason": "no legal final-pin station path"
+  },
+  {
+   "station": 1603,
+   "conn": "u_calendar_Q.wslot_v|u_vmb_Q5",
+   "verdict": "FAIL",
+   "reason": "no legal final-pin station path"
+  },
+  {
+   "station": 2221,
+   "conn": "bus:L26_i",
+   "verdict": "FAIL",
+   "reason": "no legal final-pin station path"
+  },
+  {
+   "station": 2239,
+   "conn": "bus:L2_o",
+   "verdict": "FAIL",
+   "reason": "no legal final-pin station path"
+  },
+  {
+   "station": 2240,
+   "conn": "bus:L2_o",
+   "verdict": "FAIL",
+   "reason": "no legal final-pin station path"
+  },
+  {
+   "station": 2850,
+   "conn": "mu_tree:u_mu_fused_11.uo|u_mu_fused_n1_q1_1",
+   "verdict": "FAIL",
+   "reason": "no legal final-pin station path"
+  }
+ ],
+ "preserved_cycles": 628
+}

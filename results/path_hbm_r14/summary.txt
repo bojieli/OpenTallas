@@ -1,0 +1,26 @@
+PATH-HBM-R14 (2026-10-26 ~21:45 PDT) -- shared SU/MU tasks only. Numbers UNCHECKED unless marked CHECKED.
+
+(1) clock.taps regenerated from placed replicas (tools/die_plan/hbm_hub_clock_retarget.py, Codex 09bd4a632 cherry-picked):
+    planF2 e1e94bc9 -> be1be8084775, planS2 9e154039 -> e876baf4156b; q_hub_nw 81 -> 104 taps (104 cores), q_hub_ne 80 -> 102 (102 cores).
+    Die-wide check (tapcheck.py, every type with core taps): before 45 stale/44 untapped cores (all q_hub_ne), after 623 core taps, 0 stale, 0 untapped. CHECKED.
+    Per-type LEF alias fix: already on main (0351fcfbbc); branch merged origin/main.
+    Die GRT INCLUDING clock (chain.sh): die_trial kit -> die_clock_mesh build ONE continuous mesh (12.8e1; 64x32, 12.8 default,
+    fixed VSS-shielded tree pre-routes; PHY_N not a hole since a hole splits continuous straps) -> balance (audit) -> combo GRT 50 it TT+FF -> post -> render.
+    RUNNING at lane end (>30 min): epyc1 units oth-ubuntu-3996736-1793074296 (S2), oth-ubuntu-618605-1793074570 (F2);
+    dirs epyc1:/srv/opentallas-scratch2/claude/path-hbm-r14-1026/run{S2,F2}/ (chain_{S2,F2}.log, mesh_b/combo_{TT,FF}.log, post.log, mesh_b/mesh.png).
+    Diagnostic build test: buildtest_S2 (catches build errors before the kit finishes).
+
+(2) Missing RTL:
+    ot_hbm_hc_subtree32_core: RTL EXISTS as a generated master (Slang cut of the HC qhub), epyc1:/srv/opentallas-scratch2/claude/codex-hbm-hc-native-1026/masters_drst/ot_hbm_hc_subtree32_core.sv (+receipt, census source b05ef89bdd). Not committed (README: "generated master SVs are reproducible artifacts"). Port directions are readable there -> R13 direction-blind 4.4k b can be resolved.
+    ot_hfd_coll_q2n2_body_core / ot_hfd_coll_q2n2_vm_core (q_hub_ne only, 2+2 replicas, 12,131 / 8,661 pins): NO cut RTL found in the repo or scratch; only plan pin files + master-plan slices. Parent RTL = ot_hfd_coll_q2_hard_v8g_s (NLINK=2, TP=192, AR_ITER=1, ROWS=256, VM_RT=81; path-hbm/q3synth/q2n2.ys synthesised exit0). The only body split SV is wrappers/split wip_unverified for q2 (not n2).
+    PLAN: HBM-CORES writes the q2n2 body/vm cut with the same cut exporter as HC native (codex/hbm-hc-native-1026 flow), proves parent-composition equivalence (lec.py) and commits SV or a pinned generator+SHA; ROOT commits the subtree32 masters or their generator receipt. Release blocker (no-stubs) until done.
+
+(3) NUMBER-CHECK:
+    planS2 price: combine.py re-run from S2_lane.json + S2_cc.json reproduces S2_price.json exactly (REPRO True); ds_ar base 576702.4; loss 1-base/new = lower 0.892 / mid 0.602 / upper 4.185 % CHECKED (arithmetic + reproduction; the lane traversal and cc legs themselves not re-derived).
+    Label anomaly: "lower" > "mid" because the only parallel op (SM.*|ATT.*, lane -18, cc +13 = net -5 cycles) is zeroed in "lower" but counted in "mid"; the real bracket is 0.60..4.19 %.
+    Codex MU buddy cuts (codex/hbm-2001@3c3dae6bb candidate_type.json, bound 3957.12) with the R12 independent per-sink cut: NW whole x 0.548 / y 0.414 EXACT, segs (0.547,0.553)(0.539,0.492) -> max 0.553 EXACT; NE (MY-corrected) whole 0.455 / 0.523 EXACT, segs (0.453,0.584)(0.439,0.577) -> max 0.584 vs reported 0.586 (mine lower). All <= 0.6 CHECKED under the per-sink model. Model only; GEOM-REVIEW-13 hub-plan FAIL STRUCTURAL (no lattice, NE not mirrored, zig-zag tree, unplaced root) stands.
+
+(4) Final-pin station helper (hbm_final_stations.py, Codex 7b3f0becc1 + R14 fix): preserve_count() keeps the old priced register count explicitly (HR.route_station/place_regs stop padding when the longest gap has no free lattice sample); fails closed when no free site.
+    Inputs buddy_census/{NW,NE}_final_candidate.json (NW == a810/3c3d candidate_type; NE MY-corrected input gives identical results).
+    --pad-ring 40: NW 20 FAIL (no free site), NE 36 FAIL. --pad-ring 100: NW PASS 2960/2960, +163 added cycles (published per station), 334 registers kept by padding, max hop 404.89 um;
+    NE FAIL 20/2903 = 'no legal final-pin station path' (route_station None: u_vmb_Q0/Q7.wq1|u_smw_Q, u_hcollgl_Q.pa_*|coll body_n2, u_vmks_Q3.c_k_*|u_ctl_Q_p14, u_calendar_Q.*slot*|u_vmb_Q5, cij inj_d_r1, coll SL_7, bus L26_i/L2_o, one mu_tree leg), +169 added, 628 kept. NE needs a geometry fix (pins enclosed), not a helper change.

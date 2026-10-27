@@ -1,0 +1,194 @@
+{
+ "schema": "opentallas.hbm_final_stations.v1",
+ "verdict": "FAIL",
+ "reach_um": 405.0,
+ "scope": "model-only final-pin station geometry; native RTL/compiler latency and route/clock/PG gates remain required",
+ "failed": [
+  1197,
+  1198,
+  1199,
+  1200,
+  1201,
+  1203,
+  1204,
+  1205,
+  1206,
+  1208,
+  1209,
+  1210,
+  1410,
+  1578,
+  1582,
+  2424,
+  2425,
+  2525,
+  2526,
+  2585
+ ],
+ "stations": 2960,
+ "added_cycles": 163,
+ "max_hop_um": 1544.116,
+ "failed_rows": [
+  {
+   "station": 1197,
+   "conn": "u_ctl_Q_p12.k_addr|u_vmks_Q3",
+   "verdict": "FAIL",
+   "reason": "no free site to keep the priced register count",
+   "old_cycles": 5,
+   "routed_cycles": 3
+  },
+  {
+   "station": 1198,
+   "conn": "u_ctl_Q_p12.k_len|u_vmks_Q3",
+   "verdict": "FAIL",
+   "reason": "no free site to keep the priced register count",
+   "old_cycles": 5,
+   "routed_cycles": 3
+  },
+  {
+   "station": 1199,
+   "conn": "u_ctl_Q_p12.k_rdy|u_vmks_Q3",
+   "verdict": "FAIL",
+   "reason": "no free site to keep the priced register count",
+   "old_cycles": 5,
+   "routed_cycles": 3
+  },
+  {
+   "station": 1200,
+   "conn": "u_ctl_Q_p12.k_tag|u_vmks_Q3",
+   "verdict": "FAIL",
+   "reason": "no free site to keep the priced register count",
+   "old_cycles": 5,
+   "routed_cycles": 3
+  },
+  {
+   "station": 1201,
+   "conn": "u_ctl_Q_p12.k_v|u_vmks_Q3",
+   "verdict": "FAIL",
+   "reason": "no free site to keep the priced register count",
+   "old_cycles": 5,
+   "routed_cycles": 3
+  },
+  {
+   "station": 1203,
+   "conn": "u_ctl_Q_p12.k_we|u_vmks_Q3",
+   "verdict": "FAIL",
+   "reason": "no free site to keep the priced register count",
+   "old_cycles": 5,
+   "routed_cycles": 3
+  },
+  {
+   "station": 1204,
+   "conn": "u_ctl_Q_p12.k_wr_done|u_vmks_Q3",
+   "verdict": "FAIL",
+   "reason": "no free site to keep the priced register count",
+   "old_cycles": 5,
+   "routed_cycles": 3
+  },
+  {
+   "station": 1205,
+   "conn": "u_ctl_Q_p12.k_wstrb|u_vmks_Q3",
+   "verdict": "FAIL",
+   "reason": "no free site to keep the priced register count",
+   "old_cycles": 5,
+   "routed_cycles": 3
+  },
+  {
+   "station": 1206,
+   "conn": "u_ctl_Q_p12.kr_beat|u_vmks_Q3",
+   "verdict": "FAIL",
+   "reason": "no free site to keep the priced register count",
+   "old_cycles": 5,
+   "routed_cycles": 3
+  },
+  {
+   "station": 1208,
+   "conn": "u_ctl_Q_p12.kr_rdy|u_vmks_Q3",
+   "verdict": "FAIL",
+   "reason": "no free site to keep the priced register count",
+   "old_cycles": 5,
+   "routed_cycles": 3
+  },
+  {
+   "station": 1209,
+   "conn": "u_ctl_Q_p12.kr_tag|u_vmks_Q3",
+   "verdict": "FAIL",
+   "reason": "no free site to keep the priced register count",
+   "old_cycles": 5,
+   "routed_cycles": 3
+  },
+  {
+   "station": 1210,
+   "conn": "u_ctl_Q_p12.kr_v|u_vmks_Q3",
+   "verdict": "FAIL",
+   "reason": "no free site to keep the priced register count",
+   "old_cycles": 5,
+   "routed_cycles": 3
+  },
+  {
+   "station": 1410,
+   "conn": "u_vmks_Q1.c_k_wdata|u_ctl_Q_p07",
+   "verdict": "FAIL",
+   "reason": "no free site to keep the priced register count",
+   "old_cycles": 5,
+   "routed_cycles": 3
+  },
+  {
+   "station": 1578,
+   "conn": "u_vmks_Q3.c_k_wdata|u_ctl_Q_p12",
+   "verdict": "FAIL",
+   "reason": "no free site to keep the priced register count",
+   "old_cycles": 6,
+   "routed_cycles": 3
+  },
+  {
+   "station": 1582,
+   "conn": "u_vmks_Q3.c_k_wstrb|u_ctl_Q_p12",
+   "verdict": "FAIL",
+   "reason": "no free site to keep the priced register count",
+   "old_cycles": 6,
+   "routed_cycles": 3
+  },
+  {
+   "station": 2424,
+   "conn": "bus:L66_o",
+   "verdict": "FAIL",
+   "reason": "no free site to keep the priced register count",
+   "old_cycles": 17,
+   "routed_cycles": 7
+  },
+  {
+   "station": 2425,
+   "conn": "bus:L66_o",
+   "verdict": "FAIL",
+   "reason": "no free site to keep the priced register count",
+   "old_cycles": 17,
+   "routed_cycles": 7
+  },
+  {
+   "station": 2525,
+   "conn": "bus:L79_o",
+   "verdict": "FAIL",
+   "reason": "no free site to keep the priced register count",
+   "old_cycles": 17,
+   "routed_cycles": 7
+  },
+  {
+   "station": 2526,
+   "conn": "bus:L79_o",
+   "verdict": "FAIL",
+   "reason": "no free site to keep the priced register count",
+   "old_cycles": 17,
+   "routed_cycles": 7
+  },
+  {
+   "station": 2585,
+   "conn": "bus:L82_i",
+   "verdict": "FAIL",
+   "reason": "no free site to keep the priced register count",
+   "old_cycles": 9,
+   "routed_cycles": 7
+  }
+ ],
+ "preserved_cycles": 260
+}

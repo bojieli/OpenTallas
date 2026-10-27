@@ -1,0 +1,12 @@
+{
+ "schema": "opentallas.hbm_final_stations.v1",
+ "verdict": "PASS",
+ "reach_um": 405.0,
+ "scope": "model-only final-pin station geometry; native RTL/compiler latency and route/clock/PG gates remain required",
+ "failed": [],
+ "stations": 2960,
+ "added_cycles": 163,
+ "max_hop_um": 404.8879999999999,
+ "failed_rows": [],
+ "preserved_cycles": 334
+}

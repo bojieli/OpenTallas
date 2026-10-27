@@ -1,0 +1,2 @@
+{"note": "PATH-HBM-R14 10-26: ONE continuous die mesh (12.8e1 preferred form; x_cuts none, 64 columns). PHY_N NOT a hole (a hole would split the continuous horizontal straps); io-macro and hard-core drivers dropped where no legal site (cores at M5 ceiling, straps pass over on M8/M9); VSS shields. No island windows (old core_lat island file is pre-R9).",
+ "x_cuts_um": [], "region_nx": [64], "macro_holes": [], "hard_core_drivers": "drop", "io_macro_drivers": "drop", "shield_net": "VSS"}

@@ -1,0 +1,130 @@
+{
+ "NW": {
+  "outline": [
+   8216.64,
+   4320.0
+  ],
+  "cores": 144,
+  "stations": 2960,
+  "whole": {
+   "x": {
+    "max_use": 0.548,
+    "at_um": 2751.84,
+    "bits": 35776,
+    "face_bits": 16804,
+    "tracks": 65312,
+    "cuts_over_0p6": 0
+   },
+   "y": {
+    "max_use": 0.414,
+    "at_um": 3248.64,
+    "bits": 50681,
+    "face_bits": 16219,
+    "tracks": 122384,
+    "cuts_over_0p6": 0
+   }
+  },
+  "segs": [
+   {
+    "x": {
+     "max_use": 0.547,
+     "at_um": 2751.84,
+     "bits": 35741,
+     "face_bits": 16769,
+     "tracks": 65312,
+     "cuts_over_0p6": 0
+    },
+    "y": {
+     "max_use": 0.553,
+     "at_um": 3291.84,
+     "bits": 32208,
+     "face_bits": 10086,
+     "tracks": 58272,
+     "cuts_over_0p6": 0
+    }
+   },
+   {
+    "x": {
+     "max_use": 0.539,
+     "at_um": 1732.32,
+     "bits": 36607,
+     "face_bits": 12888,
+     "tracks": 67938,
+     "cuts_over_0p6": 0
+    },
+    "y": {
+     "max_use": 0.492,
+     "at_um": 2691.36,
+     "bits": 29418,
+     "face_bits": 7236,
+     "tracks": 59822,
+     "cuts_over_0p6": 0
+    }
+   }
+  ]
+ },
+ "NE": {
+  "outline": [
+   8216.64,
+   4320.0
+  ],
+  "cores": 142,
+  "stations": 2903,
+  "whole": {
+   "x": {
+    "max_use": 0.455,
+    "at_um": 2674.08,
+    "bits": 30128,
+    "face_bits": 14115,
+    "tracks": 66217,
+    "cuts_over_0p6": 0
+   },
+   "y": {
+    "max_use": 0.523,
+    "at_um": 1464.48,
+    "bits": 56402,
+    "face_bits": 22466,
+    "tracks": 107837,
+    "cuts_over_0p6": 0
+   }
+  },
+  "segs": [
+   {
+    "x": {
+     "max_use": 0.453,
+     "at_um": 2674.08,
+     "bits": 30001,
+     "face_bits": 13988,
+     "tracks": 66217,
+     "cuts_over_0p6": 0
+    },
+    "y": {
+     "max_use": 0.584,
+     "at_um": 1645.92,
+     "bits": 31896,
+     "face_bits": 14375,
+     "tracks": 54604,
+     "cuts_over_0p6": 0
+    }
+   },
+   {
+    "x": {
+     "max_use": 0.439,
+     "at_um": 2203.2,
+     "bits": 36093,
+     "face_bits": 7407,
+     "tracks": 82137,
+     "cuts_over_0p6": 0
+    },
+    "y": {
+     "max_use": 0.577,
+     "at_um": 1455.84,
+     "bits": 30709,
+     "face_bits": 7586,
+     "tracks": 53233,
+     "cuts_over_0p6": 0
+    }
+   }
+  ]
+ }
+}
