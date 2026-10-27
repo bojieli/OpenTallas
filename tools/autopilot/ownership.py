@@ -5,7 +5,8 @@ working on it).  Read-only: pure functions over inputs that autopilot.py gathers
 ~/coord/autopilot/OWNERS.tsv and puts the summary + UNOWNED-ITEM gaps into LOOP-GAPS.txt.
 
 Items are DISTINCT DESIGNS (owner 2026-10-25: count what has to be hardened, not instances or pieces) of the
-release-die plans on origin/main (S81 incl. head, QC, KV, HBM B2n -- DIES below):
+release-die plans on origin/main (S81 incl. head, QC, KV, HBM planU2 = the unified SU/MTP/MU plan of record, COORD
+RULING HBM-CORE-LAT-R4 (7) 2026-10-27; was B2n -- DIES below):
   core  key = (RTL master, outline, pin table).  RTL master = the canonical split type + top of
         physical/die_plan/hbm/cores/harden/canonical_ports_split.json (HBM split pieces: 64 idx hcol piece modules are
         2 masters; straps are tied at the parent, so they are not part of the core) or else the module itself (its
@@ -58,7 +59,7 @@ import loopgaps as LG
 
 # (die key used in OWNERS.tsv / autopilot queue, plan dir under physical/die_plan, PROTO die name)
 DIES = [("s81", "s81", "s81"), ("s81_head", "s81_head", "s81_head"), ("qwen_compute", "qwen_compute", "qwen_compute"),
-        ("qwen_kvsys", "qwen_kvsys", "qwen_kvsys"), ("hbm", "hbm_arch/B2n", "B2n")]
+        ("qwen_kvsys", "qwen_kvsys", "qwen_kvsys"), ("hbm", "hbm_arch/planU2", "planU2")]
 CANONICAL_SPLIT = "physical/die_plan/hbm/cores/harden/canonical_ports_split.json"   # HBM split piece -> RTL master
 STATES = ["PLAN-STRUCTURAL", "NEEDS-KIT", "KIT-PLACED", "GEOM-REQ", "ROUTING", "REVIEW", "FIX", "WAIT-PARENT",
           "SIGNED-UNVERSIONED", "SIGNED", "GENERATED", "RETIRED"]
@@ -478,6 +479,9 @@ def build(inp, now=None):
                             (inp.get("bound_rtl") or {}).get(die))
     M = Matcher(items)
     by_key = {(it["die"], it["item"]): it for it in items}
+    missing = [(die, pdir) for die, pdir, _ in DIES if not ((inp.get("plans") or {}).get(die) or {}).get("partition_types")]
+    if len(missing) == len(DIES):
+        missing = []               # no plan read at all (no repo / fetch failed): the summary says so, no per-die gaps
     die_items = {}
     for it in items:
         die_items.setdefault(it["die"], []).append(it)
@@ -646,6 +650,9 @@ def build(inp, now=None):
                            for s, v in sorted(by.items(), key=lambda kv: STATES.index(kv[0])))
         gaps.append((t, f"UNOWNED-ITEM {die} -> {owner}: {len(lst)} items with no live job and no lane activity > 60 min "
                         f"((LANE) = last lane that touched it; OWNERS.tsv) -- {detail}"))
+    for die, pdir in missing:      # a plan of record that is not on origin/main is a gap, never a silent fallback
+        gaps.append((now, f"PLAN-MISSING {die}: physical/die_plan/{pdir}/die_plan.json not readable on origin/main -> no "
+                          f"OWNERS rows for this die (commit the plan of record; ownership.py DIES)"))
     return rows, gaps, summary(rows, unowned, inp)
 
 

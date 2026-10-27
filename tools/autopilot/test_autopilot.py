@@ -839,12 +839,12 @@ class TestOwnership(TickBase):
         kv = {"partition_types": {"kv3_hg": {"module": "kv3_hg_part"}, "kv3_hg_v2": {"module": "kv3_hg_v2_part"}}}
         hbm = {"partition_types": {"q_b000": {"module": "hbm_arch_q_b000", "hard_cores": [{"module": "ot_hbm_x_core"}]},
                                    "root": {"module": "hbm_arch_root"}}}
-        for d, P in (("s81", s81), ("s81_head", head), ("qwen_compute", qc), ("qwen_kvsys", kv), ("hbm_arch/B2n", hbm)):
+        for d, P in (("s81", s81), ("s81_head", head), ("qwen_compute", qc), ("qwen_kvsys", kv), ("hbm_arch/planU2", hbm)):
             (repo / "physical/die_plan" / d).mkdir(parents=True)
             (repo / "physical/die_plan" / d / "die_plan.json").write_text(json.dumps(P))
         (repo / "results/proto_1025/geom").mkdir(parents=True)
         (repo / "results/proto_1025/g2").mkdir(parents=True)
-        (repo / "results/proto_1025/geom/B2n.json").write_text(json.dumps(
+        (repo / "results/proto_1025/geom/planU2.json").write_text(json.dumps(
             {"plan": "x", "types": {"q_b000": {"verdict": "FAIL"}, "root": {"verdict": "PASS"}}}))
         (repo / "results/proto_1025/g2/res_qwen_kvsys.json").write_text(json.dumps(
             {"kv3_hg": {"classify": {"cls": "STRUCTURAL", "why": "GRT ov 5000"}}, "kv3_hg_v2": {"classify": {"cls": "CLEAN"}}}))
@@ -893,7 +893,7 @@ class TestOwnership(TickBase):
         self.ps = ("4242 300 python3 /home/ubuntu/.local/bin/ot-run --mem 24 --dir /srv/opentallas-scratch2/claude/x/"
                    "ot_s81sl_leaf__t1 -- bash /srv/x/run_kit.sh /srv/x route 24 8\n"
                    "4243 30 python3 /home/ubuntu/.local/bin/ot-run --mem 40 --dir /srv/opentallas-scratch2/claude/proto/"
-                   "gen/B2n/part_root -- bash run.sh\n")
+                   "gen/planU2/part_root -- bash run.sh\n")
         self.tick()
         o = self.owners()
         st = lambda k: o[k]["state"]
@@ -970,11 +970,23 @@ class TestDistinctDesigns(unittest.TestCase):
         self.assertTrue(all(re.fullmatch(r"pc_ctrl_[0-9a-f]{12}", k) for k in pc))
         self.assertEqual(sorted(cores[k]["replicas"] for k in pc), [1, 3])
 
+    def test_hbm_plan_of_record_is_planU2_and_missing_plan_is_a_gap(self):
+        import ownership as O
+        self.assertIn(("hbm", "hbm_arch/planU2", "planU2"), O.DIES)       # COORD RULING HBM-CORE-LAT-R4 (7)
+        self.assertFalse(any("B2n" in d for _, d, _ in O.DIES))
+        plan, pins, canonical = self.hbm()
+        _, gaps, _ = O.build(dict(plans={"hbm": plan}, core_pins={"hbm": pins}, canonical=canonical), now=time.time())
+        miss = [g for _, g in gaps if g.startswith("PLAN-MISSING")]
+        self.assertFalse(any("PLAN-MISSING hbm" in g for g in miss))
+        self.assertTrue(any("PLAN-MISSING s81:" in g for g in miss))       # no s81 plan given -> gap, not silence
+        _, gaps, _ = O.build(dict(plans={"s81": plan}), now=time.time())
+        self.assertTrue(any("PLAN-MISSING hbm: physical/die_plan/hbm_arch/planU2/die_plan.json" in g for _, g in gaps))
+
     def test_one_signoff_clears_every_replica_but_not_other_tables(self):
         import ownership as O
         plan, pins, canonical = self.hbm()
         sha_y = O.pin_sig(pins["cores/pc_y.json"])[0]
-        cache = {"provenance_rule": "v1", "plans": {"hbm_arch/B2n": {"signed_types": {}, "signed_cores": {
+        cache = {"provenance_rule": "v1", "plans": {"hbm_arch/planU2": {"signed_types": {}, "signed_cores": {
                      "piece__r1": ["host:/k/piece__r1/signoff.json"],
                      "pc_ctrl": [f"host:/kits/pc_ctrl_{sha_y}/signoff.json"]}}},
                  "signed_records": [{"name": "kl_pc_ctrl_c", "top": "pc_ctrl", "path": "/k/unknown/signoff.json"}]}
