@@ -1,0 +1,10 @@
+{"schema":"opentallas.hold_repair2.status.v1","label":"estimates UNCHECKED; routed census NOT YET (jobs live)","stamp":"Mon Oct 26 18:12:31 PDT 2026",
+ "kit":"coll_ftc (single instance coll_f4, QC west strip io_collective FT segment: 26 ft_slots, 5074 input bits, all inputs zero-logic ft-station pin registers, 14709 station FF, est std-cell fill 0.01)",
+ "why":"every input is a zero-logic seam input (pure FT segment), single instance so the per-type contract equals the instance contract, all its seams are region_node class and padded (none landed) in both scenarios, ~62k placed instances (<<400k), sibling of the QC flow canary coll_ftm",
+ "estimator_cells":{"mesh20_flat":15195,"region_flat":15655,"legacy_-40_contract":"~2/bit = ~10.1k","die_seam_tool_mesh20":15222,"die_seam_tool_region":15688},
+ "contract":{"mesh20_flat":"all 17 seam ports min -66 ps (sender 12.5 - D 78.5)","region_flat":"-163 (crec_tx_s0,out_data_rd_wi,out_rank_rr; D 175.5) / -85 / -65.3 / -58.3"},
+ "placed_3_place_mesh20":{"instances_nonphys":51804,"flops":14885,"other":36919,"die_um":[786.24,1036.8]},
+ "jobs":{"host":"epyc1 (tender-ray)","mesh20_flat":{"unit":"oth-ubuntu-1339017-1793062009","kit":"/srv/opentallas-scratch2/claude/hold-repair2-1026/gen_mesh20_flat/coll_ftc","log":"/srv/opentallas-scratch2/claude/hold-repair2-1026/otrun_mesh20_flat.log"},
+   "region_flat":{"unit":"oth-ubuntu-1339026-1793062010","kit":"/srv/opentallas-scratch2/claude/hold-repair2-1026/gen_region_flat/coll_ftc","log":"/srv/opentallas-scratch2/claude/hold-repair2-1026/otrun_region_flat.log"},
+   "stage_at_stop":"4_1_cts (25 min); previous coll_ftc route took GRT 57 + DRT 68 + final 119 min"},
+ "collect":["grep OT_HB4PAD / RSZ-0032 / RSZ-0060 / OT_HOLD_REPAIR in run/logs/asap7/*/base/5_1_grt.log (hold_demand.hold_cell_census)","signoff/signoff.json TT setup + FF hold WNS, DRV","5_route DRT violations","fill: design area before (3_place) vs after GRT","render 5_1_grt.odb with results/hold_repair2_1026/scripts/{dump,plot}.py -> GEOM REQ (HB4 at W/E/S input faces)","parent check io_hold_parent.py needs a die_sta run with coll_f4 real view + neighbours (NOT RUN)"]}
