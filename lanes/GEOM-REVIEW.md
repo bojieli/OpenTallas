@@ -3656,3 +3656,9 @@ GEOM REQ [INFRA-FIRST-QC-R14] 2026-10-26 23:28 PDT claude/qc-mesh-r14-1026@64abd
       Collect gate_U4f/g0.log (still 0 bytes at 04:02) and g0c.log before any GRT.
   (4) The 4 hatched keybuf boxes have no pins: no geometry verdict until the keybuf ruling (COORD 04:06 adopted the 8 key-line slices; post their tile render with the slices placed in the hub).
   (5) The L28/L36 ft dip (QUAD-3 COND, ~2740/~1150 um excess) is still open. A row-wide staircase window re-plan is the structural fix, and I support the ASK(b) lane.
+2026-10-27 04:15 PDT GEOM-REVIEW-19: SPOT-CHECK PATH-S81-PD9 me1 bk_sel (no REQ yet; intel1:/srv/opentallas-scratch2/claude/path-s81-pd7-1026/pd9/me1_bksel.png, which I viewed, and me1_census.json, which I read). The GEOM-18 PD8 (3) condition is MET on the census, CHECKED.
+  (1) Rows: ckm_d_32_60 and ckm_d_34_60 are dropped (magenta X).
+  (2) Census: fail [], and every module has with_islands 0, including dsdv_bksel_q (4 instances, 1 pattern) and dsdv_bksel_c.
+  (3) Render: leg nodes and reps (e.g. ~16950/22870, 17300/22870, 17280 and 17620/22200) are drawn exactly on hard-core edges, so the census is the authority.
+      For the review copy, re-draw with the core halo so that edge-sitting cells read as outside.
+  (4) Legs over g_q[0..3] (x ~16950, ~17500) cross the cores. That is allowed on M8/M9 only, if the bksel LEF OBS caps at M7. Confirm it in the GRT clock render, which is still owed from PD8 (2). The mesh MC is running (pd9/mc.log 04:07); collect the row-60 node arrivals there.
