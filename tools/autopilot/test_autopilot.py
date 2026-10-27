@@ -1008,6 +1008,26 @@ class TestDistinctDesigns(unittest.TestCase):
         self.assertFalse(any("ot_rom_4096x72_m8" in str(g) for g in gaps))     # never an UNOWNED-ITEM gap
         self.assertTrue(any("generated macros 1 (placed 4)" in h for h in head))
 
+    def test_retired_rows_leave_the_gap_list_and_default_is_unchanged(self):
+        import ownership as O
+        core = lambda m: {"module": m, "outline_um": [10, 10], "lef": f"physical/x/{m}.lef"}
+        plan = {"partition_types": {"col": {"module": "col_m", "hard_cores": [
+                    core("ot_hgi_coll_tkm_m_tp192__tile1"), core("ot_hgi_coll_tkm_m_tp192__tile2"), core("q_keep")]}},
+                "partitions": [{"type": "col"}]}
+        base, gaps0, _ = O.build(dict(plans={"hbm": plan}), now=time.time())
+        self.assertNotIn("RETIRED", {r["state"] for r in base})                  # no file -> nothing retired
+        self.assertEqual(O.parse_retired(""), {})
+        ret = O.parse_retired("# die item reason\nhbm\tot_hgi_coll_tkm_m_tp192__tile*\tnot a hard core in planS2/planU2\n"
+                              "bad line\n")
+        rows, gaps, head = O.build(dict(plans={"hbm": plan}, retired=ret), now=time.time())
+        st = {r["item"]: r for r in rows}
+        self.assertEqual(st["ot_hgi_coll_tkm_m_tp192__tile1"]["state"], "RETIRED")
+        self.assertIn("planS2", st["ot_hgi_coll_tkm_m_tp192__tile2"]["evidence"])
+        self.assertEqual(st["q_keep"]["state"], "NEEDS-KIT")
+        self.assertFalse(any("tile1" in str(g) for g in gaps))
+        self.assertTrue(any("tile1" in str(g) for g in gaps0))
+        self.assertTrue(any("RETIRED 2" in h for h in head))
+
     def test_job_of_one_table_routes_only_that_design(self):
         import ownership as O
         plan, pins, canonical = self.hbm()

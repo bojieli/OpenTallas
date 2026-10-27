@@ -45,6 +45,39 @@ already guarantees, so the die only has to deliver its tap arrivals inside the d
 Landed hops are timed as the plan defines them (die_clock_mesh report): the region-to-region clock damage against the
 landing window (--landing-window-ps, default T/2) -> margin = window - damage; their single-cycle slacks are INFO.
 
+REAL VIEWS (CLOCK-KV-R16, opt-in; without them the output is unchanged):
+  --core-view MODULE=VIEWDIR  a signed hard core's own view (VIEWDIR/<MODULE>_{tt,ff}.lib ETM + <MODULE>.core.json).
+      Every plan hard-core instance of MODULE is mapped to the nearest tap of its partition (core centre, die frame).
+      That tap gets a second endpoint model next to the declared pin register: the ETM boundary arcs, which already
+      hold the core's own clock insertion (clk->out at the seam-wire load; input setup/hold constraints), referenced
+      to the core clock pin = tap arrival + --core-part-delay-ps (the partition tap->core-pin wire, unbuilt = budget).
+  --kit PART_OR_TYPE=kit.json  a partition interface model replacing the declared register on every tap of that
+      partition (or type): {"corners": {"TT": {"lat_min_ps", "lat_max_ps", "clkq_max_ps", "clkq_min_ps", "setup_ps",
+      "hold_ps"}, "FF": {...}}}.
+  With any real view the declared side carries the 12.3 common latency explicitly (TT clock.insertion_ps, FF
+  clock.insertion_ff_ps or 0.81 x TT) because it no longer cancels against a real core latency.  Every pair is
+  timed over all endpoint-model combinations; the class keeps the worst over all, and 'real_view' reports the worst
+  over the combinations that use at least one real model, plus real/total pair and instance counts.
+
+DROOP REGION (CLOCK-KV-R17, COORD RULING CLOCK-KV-R16 (2), METHODOLOGY 12.4a b1): with --clock-droop shared the clock
+  is charged droop only between taps in DIFFERENT mesh/PDN regions.  --droop-region mesh (default) = the region is the
+  mesh/PDN region: every tap of the proof's mesh.json (one continuous die mesh) is in ONE region unless --droop-regions
+  FILE (JSON {port: region}, e.g. from PDNSim) says otherwise; taps without a mesh region fall back to the tree rule.
+  --droop-region tree = the old (buggy) behaviour that tied the droop region to the last common tree node; kept only to
+  reproduce pre-R17 numbers.
+SIGNED MESH = COMMON POINT (CLOCK-KV-R17, opt-in, METHODOLOGY 12.4a b exception / 12.8e): --mesh-signoff
+  TT=mc_TT.json,FF=mc_FF.json (kv_r17/mesh_mc17.py variation sim: per mesh-load nominal + MC arrivals, routed nominal,
+  gradient shift vectors).  Every tap whose mesh load (array stub input; with --mesh-band sim also the leaf-fed band
+  root input) is in the sign-off is re-referenced to the mesh: late/early := M0 + (tap - routed load late/early),
+  cppr_node 'm' (credit 0: the same M0 on both sides), AOCV charged only below the load point (node 'm' stages = mesh
+  driver output, no node position: distance = launch/capture bbox).  Each 'm' pair then carries the explicit signed
+  uncertainty U(a,b) = max(worst |d| over the samples, |mean d| + 3 sigma) + |routed-vs-sim gap difference| +
+  |gradient shift vector difference| (worst direction), where d = the two load arrivals' difference in a sample.
+  --mesh-band tree (default, strict): the leaf-fed band taps are NOT through the mesh; any pair with one keeps its
+  absolute arrivals and CPPR at the die root 'h' (12.4b).  --mesh-band sim: band-root inputs are sign-off pseudo loads
+  (same per-sample tree offsets as the drivers above them) -> 'm' too (INFO / ruling needed).
+  Pair classes (intra / seam / landed) are always built on the tree cppr nodes, before the re-reference.
+
 Output OUT/die_sta_related.json (+ worst pairs per class); prints one line per class and corner.
 """
 import argparse
@@ -57,6 +90,11 @@ import subprocess
 import sys
 from collections import defaultdict
 from pathlib import Path
+
+# CLOCK-KV-R18: default clock AOCV table = the OWNER-approved 0.21 %/mm gate table (METHODOLOGY 12.4a b1, 10-26 18:4x).
+# clk_aocv_table.json keeps the 0.42 %/mm DRAFT (global-variation bound); R16 gate numbers used it by mistake.
+APPROVED_AOCV_TABLE = "clk_aocv_table_g021.json"
+APPROVED_G_PER_MM = 0.0021
 
 PERIOD_PS = 833.333
 UNC_SETUP_PS = 60.0
@@ -132,6 +170,34 @@ def load_taps(d, corner):
     return t, taps
 
 
+CPPR_LCA = False   # PATH-S81-PD6 opt-in --cppr-lca (default off = unchanged output)
+
+
+def pair_node(A, B):
+    """last common clock node of a pair.  Default: the shared cppr_node (region root) else the die root 'h'.
+    --cppr-lca (opt-in, PATH-S81-PD6): taps carry 'tree_path' (root 'h' + one child-index char per tree level, so a
+    prefix is an ancestor); the node is the longest common prefix = the true last common tree node (12.4b), which for
+    cross-region pairs is the H-tree node above both region roots instead of the die root."""
+    if A["cppr_node"] == "m" and B["cppr_node"] == "m":
+        return "m"     # both taps re-referenced to the signed mesh (--mesh-signoff)
+    if CPPR_LCA and "tree_path" in A and "tree_path" in B:
+        x, y = A["tree_path"], B["tree_path"]
+        n = 0
+        while n < min(len(x), len(y)) and x[n] == y[n]:
+            n += 1
+        return x[:max(1, n)]
+    return A["cppr_node"] if A["cppr_node"] == B["cppr_node"] else "h"
+
+
+def arr4(A, B, node):
+    """launch late/early, capture late/early for this pair's common node: a mesh-re-referenced tap keeps its absolute
+    arrival for every pair whose common point is not the signed mesh 'm' (die root or, with --cppr-lca, a tree node above it) (--mesh-signoff, CLOCK-KV-R17)."""
+    if node != "m":
+        return (A.get("abs_late_ps", A["late_ps"]), A.get("abs_early_ps", A["early_ps"]),
+                B.get("abs_late_ps", B["late_ps"]), B.get("abs_early_ps", B["early_ps"]))
+    return A["late_ps"], A["early_ps"], B["late_ps"], B["early_ps"]
+
+
 def credit(rng, node, la, ea, lc, ec):
     c = node
     while c not in rng and len(c) > 1:
@@ -178,7 +244,7 @@ def nearest_pairs(d, plan_path, tool, taps):
     except Exception as e:  # noqa: BLE001
         print(f"nearest-tap INFO classes skipped ({e})", file=sys.stderr)
         return {}
-    if not (d / "mesh.json").exists():          # e.g. a qc_clk_mesh3 sta-export proof (one entry tap per partition)
+    if not (d / "mesh.json").exists():          # e.g. a qc_clk_mesh3 sta-export proof / S81 region-tree proof (as main)
         print("nearest-tap INFO classes skipped (no mesh.json)", file=sys.stderr)
         return {}
     M = json.loads((d / "mesh.json").read_text())
@@ -192,26 +258,100 @@ def nearest_pairs(d, plan_path, tool, taps):
     return {"seam_nearest_INFO": seam, "landed_nearest_INFO": landed}
 
 
+def seam_bits(d, plan_path, tool, taps):
+    """{(src tap, dst tap): bits} from DC.seam_pairs (nearest tap under each pin register), for the HB4 cell count."""
+    if tool:
+        sys.path.insert(0, str(Path(tool)))
+    import die_clock as DC
+    import schema as S
+    M = json.loads((d / "mesh.json").read_text())
+    tb = defaultdict(list)
+    for t in M["taps"]:
+        if t["port"] in taps:
+            tb[t["part"]].append(dict(port=t["port"], part=t["part"], xy=t["xy"]))
+    out = defaultdict(int)
+    for (a_, b_, pid), n in DC.seam_pairs(S.Plan(S.load(plan_path)), tb).items():
+        out[(a_, b_)] += n
+    return dict(out)
+
+
+def endpoint_slacks(A, B, la, ea, lc, ec, cr, period, unc_s, unc_h, models_a, models_b):
+    """[(setup, hold, real, ma, mb)] over every launch model x capture model (REAL VIEWS).  Model: name, real,
+    lat_late, lat_early (clock pin latency below the tap), clkq_max/min (launch arcs), setup/hold (capture arcs)."""
+    out = []
+    for ma in models_a:
+        al = la + ma["lat_late"] + ma["clkq_max"]
+        ae = ea + ma["lat_early"] + ma["clkq_min"]
+        for mb in models_b:
+            s = (ec + mb["lat_early"] + period - mb["setup"]) - al - unc_s + cr
+            h = ae - (lc + mb["lat_late"] + mb["hold"]) - unc_h + cr
+            out.append((s, h, ma["real"] or mb["real"], ma["name"], mb["name"], ma["real"] and mb["real"]))
+    return out
+
+
 def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=False, window=None, hold_window=None,
-               ocv=None):
+               ocv=None, views=None, rec=None):
     """ocv: optional callable (a_port, b_port, check) -> clock OCV pessimism ps on the non-common clock (CLK-AOCV,
-    opt-in --clock-ocv); None = unchanged (no clock derate in this gate)."""
+    opt-in --clock-ocv); None = unchanged (no clock derate in this gate).
+    views: optional {port: [endpoint models]} (REAL VIEWS, opt-in); None = the declared register on every tap.
+    rec: optional dict, filled {(a, b, tag): (gate setup, gate hold, has real endpoint, both real)} (HB4, opt-in)."""
     ws, wh, sk, rows = None, None, 0.0, []
+    rv = dict(pairs=0, ws=None, wh=None, nneg_s=0, nneg_h=0, both=0, bs=None, bh=None, bneg_s=0, bneg_h=0,
+              dmg=[]) if views is not None else None
     ocv_max = {"setup": 0.0, "hold": 0.0}
     nneg_s = nneg_h = 0
     mds = mdh = float('-inf')
     for a, b, tag in pairs:
         A, B = taps[a], taps[b]
-        la, ea, lc, ec = A["late_ps"], A["early_ps"], B["late_ps"], B["early_ps"]
-        node = A["cppr_node"] if A["cppr_node"] == B["cppr_node"] else "h"
+        node = pair_node(A, B)
+        la, ea, lc, ec = arr4(A, B, node)
         cr = credit(rng, node, la, ea, lc, ec)
         dmg_s, dmg_h = la - ec - cr, lc - ea - cr
-        s = period - unc_s - (la + reg["clkq_max_wire_ps"]) + (ec - reg["setup_ps"]) + cr
-        h = (ea + reg["clkq_min_nowire_ps"]) - (lc + reg["hold_ps"]) - unc_h + cr
+        if views is None:
+            s = period - unc_s - (la + reg["clkq_max_wire_ps"]) + (ec - reg["setup_ps"]) + cr
+            h = (ea + reg["clkq_min_nowire_ps"]) - (lc + reg["hold_ps"]) - unc_h + cr
+        else:
+            ma, mb = views[a], views[b]
+            combos = endpoint_slacks(A, B, la, ea, lc, ec, cr, period, unc_s, unc_h, ma, mb)
+            s, h = min(c[0] for c in combos), min(c[1] for c in combos)
+            rc = [c for c in combos if c[2]]
+            if rc:
+                po = (ocv(a, b, "setup"), ocv(a, b, "hold")) if ocv is not None else (0.0, 0.0)
+                rs = min(rc, key=lambda c: c[0])
+                rh = min(rc, key=lambda c: c[1])
+                rv["pairs"] += 1
+                rv["both"] += any(m["real"] for m in ma) and any(m["real"] for m in mb)
+                rv["nneg_s"] += rs[0] - po[0] < 0
+                rv["nneg_h"] += rh[1] - po[1] < 0
+                if rv["ws"] is None or rs[0] - po[0] < rv["ws"][0]:
+                    rv["ws"] = (rs[0] - po[0], a, b, tag, rs[3], rs[4])
+                if rv["wh"] is None or rh[1] - po[1] < rv["wh"][0]:
+                    rv["wh"] = (rh[1] - po[1], a, b, tag, rh[3], rh[4], round(lc - ea - cr, 2))
+                bc = [c for c in combos if c[5]]
+                if bc:
+                    bs_ = min(bc, key=lambda c: c[0])
+                    bh_ = min(bc, key=lambda c: c[1])
+                    rv["bneg_s"] += bs_[0] - po[0] < 0
+                    rv["bneg_h"] += bh_[1] - po[1] < 0
+                    if rv["bs"] is None or bs_[0] - po[0] < rv["bs"][0]:
+                        rv["bs"] = (bs_[0] - po[0], a, b, tag, bs_[3], bs_[4], round(la - ec - cr, 2))
+                    if rv["bh"] is None or bh_[1] - po[1] < rv["bh"][0]:
+                        rv["bh"] = (bh_[1] - po[1], a, b, tag, bh_[3], bh_[4], round(lc - ea - cr, 2))
         if ocv is not None:
             ps_, ph_ = ocv(a, b, "setup"), ocv(a, b, "hold")
             s, h = s - ps_, h - ph_
             ocv_max["setup"], ocv_max["hold"] = max(ocv_max["setup"], ps_), max(ocv_max["hold"], ph_)
+        if rec is not None:
+            if views is None:
+                rec[(a, b, tag, "budget", "budget")] = (s, h, False, False)
+            else:
+                # CLOCK-KV-R19 (NUMBER-CHECK-KV-R18): one record PER ENDPOINT PATH (launch model x capture model).  HB4
+                # cells sit on one capture register's data input and are sized from THAT path's hold; R18 keyed per tap
+                # pair, sized k from the worst endpoint (declared budget->budget) and charged it to another endpoint's
+                # (real core) setup -> 121 artefact negatives.
+                po_s, po_h = (ocv(a, b, "setup"), ocv(a, b, "hold")) if ocv is not None else (0.0, 0.0)
+                for c_ in combos:
+                    rec[(a, b, tag, c_[3], c_[4])] = (c_[0] - po_s, c_[1] - po_h, c_[2], c_[5])
         nneg_s += s < 0
         nneg_h += h < 0
         sk = max(sk, dmg_s, dmg_h)
@@ -234,15 +374,31 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
                sens_core_tol=dict(tol_ps=lat_tol, worst_setup_slack_ps=round(ws[0] - 2 * lat_tol, 2),
                                   worst_hold_slack_ps=round(wh[0] - 2 * lat_tol, 2)),
                worst_skew=[[round(v, 2), a, b] for v, a, b in sorted(rows, reverse=True)[:5]])
+    if rv is not None:
+        out["real_view"] = dict(pairs_with_real_endpoint=rv["pairs"], pairs_both_real=int(rv["both"]),
+                                pairs_total=len(pairs), setup_neg_pairs=int(rv["nneg_s"]), hold_neg_pairs=int(rv["nneg_h"]))
+        if rv["ws"]:
+            out["real_view"].update(
+                worst_setup_slack_ps=round(rv["ws"][0], 2), worst_hold_slack_ps=round(rv["wh"][0], 2),
+                worst_setup=dict(zip(("launch", "capture", "where", "launch_model", "capture_model"), rv["ws"][1:])),
+                worst_hold=dict(zip(("launch", "capture", "where", "launch_model", "capture_model", "clock_damage_ps"),
+                                    rv["wh"][1:])))
+        if rv["bs"]:
+            k_ = ("launch", "capture", "where", "launch_model", "capture_model", "clock_damage_ps")
+            out["real_view"]["both_real"] = dict(
+                setup_neg_pairs=int(rv["bneg_s"]), hold_neg_pairs=int(rv["bneg_h"]),
+                worst_setup_slack_ps=round(rv["bs"][0], 2), worst_hold_slack_ps=round(rv["bh"][0], 2),
+                worst_setup=dict(zip(k_, rv["bs"][1:])), worst_hold=dict(zip(k_, rv["bh"][1:])))
     if ocv is not None:
         out["clock_ocv_pessimism_max_ps"] = {k: round(v, 2) for k, v in ocv_max.items()}
     if hold_window is not None:
         hd = []
         for a, b, tag in pairs:
             A, B = taps[a], taps[b]
-            node = A["cppr_node"] if A["cppr_node"] == B["cppr_node"] else "h"
-            cr = credit(rng, node, A["late_ps"], A["early_ps"], B["late_ps"], B["early_ps"])
-            hd.append((B["late_ps"] - A["early_ps"] - cr, a, b, tag))
+            node = pair_node(A, B)
+            la, ea, lc, ec = arr4(A, B, node)
+            cr = credit(rng, node, la, ea, lc, ec)
+            hd.append((lc - ea - cr, a, b, tag))
         hd.sort(reverse=True)
         w = float(hold_window["ps"])
         out["kit_contract_hold"] = dict(
@@ -251,6 +407,21 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
             worst=dict(launch=hd[0][1], capture=hd[0][2], where=hd[0][3], damage_ps=round(hd[0][0], 2)),
             damage_pctl_ps={q: round(hd[min(len(hd) - 1, int(len(hd) * (1 - q / 100.0)))][0], 2) for q in (50, 99, 99.9)},
             verdict="PASS" if hd[0][0] <= w else "FAIL")
+        if ocv is not None:
+            # INFRA-FIRST-QC-R18 (additive, gate unchanged): the kit contract only holds if the die delivers the tap
+            # pair INSIDE the window including the clock OCV (pair MC mesh skew + AOCV below the mesh) that the
+            # zero-logic slack charges; the bound above uses the nominal damage only.  residual_ps = what die-level
+            # data hold buffers must still cover per ordered pair (max(0, damage + ocv - W)).
+            ho = sorted(((v + ocv(a, b, "hold"), a, b, tag) for v, a, b, tag in hd), reverse=True)
+            res = [(round(v - w, 2), a, b) for v, a, b, _ in ho if v > w]
+            out["kit_contract_hold_ocv"] = dict(
+                window_ps=w, worst_hold_bound_ps=round(w - ho[0][0], 2), neg_pairs=len(res),
+                window_needed_ps=round(max(0.0, ho[0][0]), 2),
+                worst=dict(launch=ho[0][1], capture=ho[0][2], where=ho[0][3], damage_plus_ocv_ps=round(ho[0][0], 2)),
+                damage_plus_ocv_pctl_ps={q: round(ho[min(len(ho) - 1, int(len(ho) * (1 - q / 100.0)))][0], 2)
+                                         for q in (50, 90, 99)},
+                residual_ps=res, verdict="PASS" if ho[0][0] <= w else "FAIL",
+                note="R18 additive: kit window vs nominal damage + clock OCV (pair_unc); INFO until COORD rules")
     if landed:
         out["plan_landing"] = dict(window_ps=round(window, 2), setup_margin_ps=round(window - mds, 2),
                                    hold_margin_ps=round(window - mdh, 2),
@@ -261,18 +432,19 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
     return out
 
 
-def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_path=None, cell_share=None):
+def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_path=None, cell_share=None, region=None):
     """CLK-AOCV (METHODOLOGY 12.4a b1, DRAFT, opt-in): per pair clock OCV pessimism on the branches below the last
     common node.  Needs per-tap 'stages_from_root' + 'xy_um' and per-node meta 'node_stages' / 'node_xy_um' plus the
     node arrivals 'node_late_ps' / 'node_early_ps' in tap_arrivals_<C>.json (CLOCK-128-R7 --aocv-fold export names;
     CLOCK-128-R8); refuses when they are missing.
     Branch = tap arrival - node arrival (+ declared core latency, class-B stages), cell share from the table (class A
     die stage) unless cell_share is given.  mode 'flat' = die_ci_margins.json cell/net derates, 'table' = clk_aocv.
-    droop 'stated' = +5.1 % late on the late branch always; 'shared' = 0 when both taps share a region (cppr_node
-    != 'h' and equal), else +5.1 %."""
+    droop 'stated' = +5.1 % late on the late branch always; 'shared' = 0 when both taps share a droop region, else
+    +5.1 %.  region: {port: mesh/PDN region} (CLOCK-KV-R17 default --droop-region mesh); a tap missing from it (or
+    region None = --droop-region tree, the pre-R17 rule) uses its tree region (cppr_node != 'h')."""
     import clk_aocv as CA
     here = Path(__file__).resolve().parent
-    T = CA.load(table_path or here / "clk_aocv_table.json")
+    T = CA.load(table_path or here / APPROVED_AOCV_TABLE)
     m = json.loads(Path(margins_path or here / "die_ci_margins.json").read_text())
     need = [k for k in ("node_stages", "node_xy_um", "node_late_ps", "node_early_ps") if k not in meta]
     tneed = sum(1 for r in taps.values() if "stages_from_root" not in r or "xy_um" not in r)
@@ -285,16 +457,22 @@ def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_pat
     nB = max(1, round(core_lat / B["mu_stage_ps"]))
 
     def branch(r, node, late):
-        arr = (r["late_ps"] if late else r["early_ps"]) - float(meta["node_late_ps" if late else "node_early_ps"][node])
+        own = (r.get("abs_late_ps", r["late_ps"]) if late else r.get("abs_early_ps", r["early_ps"])) if node == "h" \
+            else (r["late_ps"] if late else r["early_ps"])
+        arr = own - float(meta["node_late_ps" if late else "node_early_ps"][node])
         return dict(cell_ps=fc * arr + B["cell_share"] * core_lat, net_ps=(1 - fc) * arr + (1 - B["cell_share"]) * core_lat,
                     stages={"A": int(r["stages_from_root"]) - int(meta["node_stages"][node]), "B": nB})
 
     def fn(a, b, check):
         A_, B_ = taps[a], taps[b]
-        node = A_["cppr_node"] if A_["cppr_node"] == B_["cppr_node"] else "h"
-        same = node != "h"
+        node = pair_node(A_, B_)
+        same = (A_["cppr_node"] == B_["cppr_node"]) if CPPR_LCA else node != "h"   # droop shared = same region
+        if region is not None:
+            ra = region.get(a, A_["cppr_node"] if A_["cppr_node"] != "h" else None)
+            rb = region.get(b, B_["cppr_node"] if B_["cppr_node"] != "h" else None)
+            same = ra is not None and ra == rb
         nxy = meta["node_xy_um"][node]
-        pts = [A_["xy_um"], B_["xy_um"], nxy]
+        pts = [A_["xy_um"], B_["xy_um"]] + ([nxy] if nxy is not None else [])
         d = ((max(p[0] for p in pts) - min(p[0] for p in pts)) ** 2 + (max(p[1] for p in pts) - min(p[1] for p in pts)) ** 2) ** 0.5
         # setup: launch a late, capture b early; hold: capture b late, launch a early
         ba = branch(A_, node, check == "setup")
@@ -303,6 +481,324 @@ def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_pat
             return CA.flat_pessimism(m, ba, bb, check, same, droop == "shared")
         return CA.branch_pessimism(T, corner, ba, bb, d, same if droop == "shared" else False, check)
     return fn
+
+
+# ---------------------------------------------------------------- SIGNED MESH (CLOCK-KV-R17, opt-in)
+# CLOCK-KV-R18 (COORD RULING CLOCK-KV-R17, 12.4a a1 data hold buffers): planned HB4 insertion model.  Per cell: FF early
+# +44.6 ps (hold repair) and TT late +83.0 ps (setup cost), area 0.1021 um2 (HOLD-REPAIR estimate basis, kv_hb_count.py).
+HB4 = dict(cell="HB4xp67_ASAP7_75t_R", ff_early_ps=44.6, tt_late_ps=83.0, area_um2=0.1021,
+           basis="HOLD-REPAIR estimate basis (CLOCK-KV-R6/R15 kv_hb_count.py), UNCHECKED")
+
+
+def hold_buffer_model(tt, ff, bits=None, hb=HB4):
+    """per ENDPOINT PATH k = ceil(-FF hold / ff_early) HB4 cells on the capture data input (0 when hold >= 0); after
+    insertion FF hold += k ff_early, TT setup -= k tt_late, both of THAT path (CLOCK-KV-R19, NUMBER-CHECK-KV-R18: keys
+    (a, b, tag, launch_model, capture_model); never size k from one endpoint and charge it to another).
+    tt/ff: {key: (setup, hold, real, both_real)} of ONE class at
+    TT / FF (gate form: every endpoint model, clock OCV, mesh U).  bits: optional {(a, b): bit count} (nearest-tap
+    seam bits, DC.seam_pairs) for the cell count; pairs absent from it count per pair-bit (k cells).  Returns the
+    record for all / real-endpoint / both-real subsets plus the k histogram and the cell / area count."""
+    import math as _m
+
+    def blk(sel):
+        ws = wh = None
+        neg_s = neg_h = n = 0
+        negs = []
+        for key in sel:
+            s_, _, _, _ = tt[key]
+            _, h_, _, _ = ff[key]
+            k = max(0, _m.ceil(-h_ / hb["ff_early_ps"] - 1e-9)) if h_ < 0 else 0
+            s2, h2 = s_ - k * hb["tt_late_ps"], h_ + k * hb["ff_early_ps"]
+            n += 1
+            if s2 < 0:
+                negs.append((round(s2, 2), key[0], key[1], key[2], k, round(s_, 2), round(h_, 2)))
+            neg_s += s2 < 0
+            neg_h += h2 < 0
+            if ws is None or s2 < ws[0]:
+                ws = (s2, key, k, s_)
+            if wh is None or h2 < wh[0]:
+                wh = (h2, key, k)
+        if not n:
+            return dict(pairs=0)
+        return dict(pairs=n, tt_setup_after_ps=round(ws[0], 2), setup_neg_pairs_after=int(neg_s),
+                    worst_setup_after=dict(launch=ws[1][0], capture=ws[1][1], where=ws[1][2], hb4_cells=ws[2],
+                                           setup_before_ps=round(ws[3], 2),
+                                           endpoint=list(ws[1][3:5]) if len(ws[1]) > 3 else None),
+                    ff_hold_after_ps=round(wh[0], 2), hold_neg_pairs_after=int(neg_h),
+                    setup_neg_after=[dict(zip(("tt_setup_after", "launch", "capture", "where", "hb4_cells",
+                                               "tt_setup_before", "ff_hold_before"), r_)) for r_ in sorted(negs)])
+    keys = [k for k in ff if k in tt]
+    hist, cells, cbits, fbits, seen = defaultdict(int), 0, 0, 0, set()
+    kpair = defaultdict(int)
+    for key in keys:
+        h_ = ff[key][1]
+        k = max(0, _m.ceil(-h_ / hb["ff_early_ps"] - 1e-9)) if h_ < 0 else 0
+        hist[k] += 1
+        kpair[(key[0], key[1])] = max(kpair[(key[0], key[1])], k)
+    for pk, k in kpair.items():
+        if bits is not None and pk not in seen:
+            seen.add(pk)       # a tap pair's bits once (INFO keys repeat it per port id / endpoint path)
+            nb = bits.get(pk, 0)
+            cbits += nb
+            if k:              # cell-count bound: every bit of the pair at the pair's worst endpoint-path k
+                fbits += nb
+                cells += k * nb
+    out = dict(model=hb, all=blk(keys), real_view=blk([k for k in keys if ff[k][2]]),
+               both_real=blk([k for k in keys if ff[k][3]]), cells_per_pair_hist=dict(sorted(hist.items())),
+               pairs_needing_hb=sum(1 for k in kpair.values() if k), endpoint_paths=len(keys),
+               paths_needing_hb=sum(v for k, v in hist.items() if k))
+    if bits is not None:
+        out.update(bits_counted=cbits, bits_needing_hb=fbits, hb4_cells=cells,
+                   hb4_area_um2=round(cells * hb["area_um2"], 1), hb4_area_mm2=round(cells * hb["area_um2"] / 1e6, 4),
+                   count_basis="nearest-tap seam bits (DC.seam_pairs: the pin register's own launch/capture taps)")
+    return out
+
+
+def droop_regions(proof_dir, taps, mode, regions_file=None):
+    """{port: region} for --droop-region mesh; None for 'tree'."""
+    if mode == "tree":
+        return None
+    reg = {}
+    mj = Path(proof_dir) / "mesh.json"
+    if mj.exists():
+        for t in json.loads(mj.read_text()).get("taps", []):
+            if t["port"] in taps:
+                reg[t["port"]] = "mesh:0"
+    if regions_file:
+        reg.update(json.loads(Path(regions_file).read_text()))
+    return reg
+
+
+def mesh_signoff(proof_dir, taps, meta, corner, so_path, band_mode="tree"):
+    """re-reference mesh-fed taps to the signed mesh (in place on taps/meta); returns U(a, b) and a record."""
+    S = json.loads(Path(so_path).read_text())
+    if S.get("corner") != corner:
+        raise SystemExit(f"{so_path}: sign-off corner {S.get('corner')} != {corner}")
+    L = S["loads"]
+    idx = {k: i for i, k in enumerate(L)}
+    arr = S["arr"]
+    gv = S["grad_vec_ps"]
+    rtj = json.loads((Path(proof_dir) / f"mesh_{corner}.json").read_text())["stubs"]
+    M = json.loads((Path(proof_dir) / "mesh.json").read_text())
+    load = {}
+    for t in M["taps"]:
+        if t["port"] not in taps:
+            continue
+        if t.get("mesh_in"):
+            if band_mode == "sim":
+                load[t["port"]] = t["mesh_in"]
+        else:
+            load[t["port"]] = t["stub"]
+    load = {p: l for p, l in load.items() if l in idx and l in rtj}
+    # reference = median routed late of the normal mesh stubs (band mesh_in loads excluded so M0 is the same for
+    # --mesh-band tree|sim; M0 is a common offset and cancels in every pair slack)
+    band_in = {t["mesh_in"] for t in M["taps"] if t.get("mesh_in")}
+    m0 = sorted(rtj[l]["late"] for l in set(load.values()) if l not in band_in) \
+        or sorted(rtj[l]["late"] for l in set(load.values()))
+    m0 = m0[len(m0) // 2]
+    arr_stub = [r["stages_from_root"] for p, r in taps.items() if p in load and not p.startswith("~")
+                and load[p].startswith("ckm_s_")] if all("stages_from_root" in r for r in taps.values()) else []
+    for p, l in load.items():
+        r = taps[p]
+        r["abs_late_ps"], r["abs_early_ps"] = r["late_ps"], r["early_ps"]
+        r["late_ps"] = m0 + (r["late_ps"] - rtj[l]["late"])
+        r["early_ps"] = m0 + (r["early_ps"] - rtj[l]["early"])
+        r["cppr_node_tree"], r["cppr_node"], r["mesh_load"] = r["cppr_node"], "m", l
+    meta.setdefault("cppr_node_range_ps", {})["m"] = 0.0
+    if "node_stages" in meta:
+        meta["node_stages"]["m"] = (min(arr_stub) - 1) if arr_stub else 0
+        meta["node_xy_um"]["m"] = None
+        meta["node_late_ps"]["m"] = m0
+        meta["node_early_ps"]["m"] = m0
+    ns = len(arr)
+    gap = [rtj[k]["late"] - arr[0][i] if k in rtj else 0.0 for i, k in enumerate(L)]
+    cache = {}
+
+    def U(a, b):
+        x, y = taps[a].get("mesh_load"), taps[b].get("mesh_load")
+        if taps[a]["cppr_node"] != "m" or taps[b]["cppr_node"] != "m" or x is None or y is None or x == y:
+            return 0.0
+        k = (x, y) if x < y else (y, x)
+        if k not in cache:
+            i, j = idx[k[0]], idx[k[1]]
+            ds = [arr[s][i] - arr[s][j] for s in range(ns)]
+            mc = ds[1:] or ds
+            mu = sum(mc) / len(mc)
+            sd = (sum((v - mu) ** 2 for v in mc) / max(1, len(mc) - 1)) ** 0.5
+            gd = ((gv[i][0] - gv[j][0]) ** 2 + (gv[i][1] - gv[j][1]) ** 2) ** 0.5
+            cache[k] = max(max(abs(v) for v in ds), abs(mu) + 3.0 * sd) + abs(gap[i] - gap[j]) + gd
+        return cache[k]
+    rec = dict(file=str(so_path), M0_ps=round(m0, 3), taps_on_mesh=len(load), taps_total=len(taps), band_mode=band_mode,
+               samples=ns - 1, sim_summary=S.get("summary"), status=S.get("checked", "UNCHECKED"))
+    return U, rec
+
+
+# ---------------------------------------------------------------- REAL VIEWS (CLOCK-KV-R16, opt-in)
+def _vals(txt):
+    return [float(v) for v in re.findall(r"-?\d+(?:\.\d+)?(?:[eE][-+]?\d+)?", txt)]
+
+
+def _interp(index, values, x):
+    """1-D table at x (linear, clamped extrapolation-free at the ends); a non 1-D table -> None."""
+    if not index or len(index) != len(values):
+        return None
+    if x <= index[0]:
+        return values[0]
+    for i in range(1, len(index)):
+        if x <= index[i]:
+            f = (x - index[i - 1]) / (index[i] - index[i - 1])
+            return values[i - 1] + f * (values[i] - values[i - 1])
+    return values[-1]
+
+
+def parse_etm(lib_path, load_ff):
+    """worst boundary arcs of a hard-core ETM (OpenROAD write_timing_model Liberty) against its main clock pin (the
+    pin with min/max_clock_tree_path).  out_max/out_min = max/min clk->out (cell_rise|fall) over every output at
+    load_ff; in_setup/in_hold = max setup/hold constraint over every input.  Arcs already include the core's own
+    clock insertion.  Tables that are not 1-D in load use their max (setup side) / min (hold side) entry."""
+    txt = Path(lib_path).read_text()
+    pin, ttype, rel, grp, idx = None, None, None, None, None
+    clk_tree, arcs, other = {}, dict(out=[], setup=[], hold=[]), set()
+    for line in txt.splitlines():
+        s = line.strip()
+        m = re.match(r'pin\("([^"]+)"\)', s)
+        if m:
+            pin = m.group(1)
+            continue
+        if s.startswith("timing()"):
+            ttype, rel = None, None
+            continue
+        m = re.match(r"timing_type\s*:\s*(\w+)", s)
+        if m:
+            ttype = m.group(1)
+            continue
+        m = re.match(r'related_pin\s*:\s*"([^"]+)"', s)
+        if m:
+            rel = m.group(1)
+            continue
+        m = re.match(r"(cell_rise|cell_fall|rise_constraint|fall_constraint)\b", s)
+        if m:
+            grp, idx = m.group(1), None
+            continue
+        if s.startswith("index_1"):
+            idx = _vals(s.split("(", 1)[1])
+            continue
+        if s.startswith("values(") and grp:
+            v = _vals(s[len("values("):])
+            if ttype in ("min_clock_tree_path", "max_clock_tree_path"):
+                clk_tree.setdefault(pin, {})[ttype] = max(v) if ttype.startswith("max") else min(v)
+            elif ttype == "rising_edge" and grp.startswith("cell_"):
+                x = _interp(idx, v, load_ff)
+                arcs["out"].append((pin, rel, x if x is not None else max(v), x if x is not None else min(v)))
+            elif ttype in ("setup_rising", "hold_rising") and grp.endswith("constraint"):
+                arcs["setup" if ttype.startswith("setup") else "hold"].append((pin, rel, max(v)))
+            elif ttype:
+                other.add(ttype)
+            grp = None
+    if len(clk_tree) != 1:
+        raise SystemExit(f"{lib_path}: expected one main clock pin with clock_tree_path arcs, found {sorted(clk_tree)}")
+    ck = next(iter(clk_tree))
+    bad = sorted({r for k in arcs for _, r, *_ in arcs[k] if r != ck})
+    if bad:
+        raise SystemExit(f"{lib_path}: boundary arcs related to non-main clocks {bad}")
+    if not arcs["out"] or not arcs["setup"] or not arcs["hold"]:
+        raise SystemExit(f"{lib_path}: missing boundary arcs (out {len(arcs['out'])} setup {len(arcs['setup'])} "
+                         f"hold {len(arcs['hold'])})")
+    om = max(arcs["out"], key=lambda r: r[2])
+    on = min(arcs["out"], key=lambda r: r[3])
+    su = max(arcs["setup"], key=lambda r: r[2])
+    ho = max(arcs["hold"], key=lambda r: r[2])
+    return dict(lib=str(lib_path), clock_pin=ck, load_ff=load_ff, clock_tree_path_ps=clk_tree[ck],
+                out_max_ps=round(om[2], 3), out_max_pin=om[0], out_min_ps=round(on[3], 3), out_min_pin=on[0],
+                in_setup_ps=round(su[2], 3), in_setup_pin=su[0], in_hold_ps=round(ho[2], 3), in_hold_pin=ho[0],
+                arcs=dict(out=len(arcs["out"]), setup=len(arcs["setup"]), hold=len(arcs["hold"])),
+                other_timing_types=sorted(other))
+
+
+def core_view_model(module, view_dir, corner, load_ff, part_delay_ps):
+    vd = Path(view_dir)
+    etm = parse_etm(vd / f"{module}_{corner.lower()}.lib", load_ff)
+    cj = vd / f"{module}.core.json"
+    prov = vd / "provenance.json"
+    meta = {}
+    if cj.exists():
+        meta["clock_latency_measured"] = json.loads(cj.read_text()).get("clock_latency_measured")
+    if prov.exists():
+        p = json.loads(prov.read_text())
+        meta.update(verdict=p.get("verdict"), pins_sha256=p.get("kit", {}).get("pins_sha256"),
+                    pins_file=p.get("kit", {}).get("pins_file"))
+    return dict(name=f"core:{module}", real=True, lat_late=part_delay_ps, lat_early=part_delay_ps,
+                clkq_max=etm["out_max_ps"], clkq_min=etm["out_min_ps"], setup=etm["in_setup_ps"],
+                hold=etm["in_hold_ps"], etm=etm, meta=meta)
+
+
+def kit_model(spec, corner, name):
+    c = spec["corners"][corner]
+    return dict(name=f"kit:{name}", real=True, lat_late=float(c["lat_max_ps"]), lat_early=float(c["lat_min_ps"]),
+                clkq_max=float(c["clkq_max_ps"]), clkq_min=float(c["clkq_min_ps"]), setup=float(c["setup_ps"]),
+                hold=float(c["hold_ps"]))
+
+
+def budget_model(reg, lat):
+    return dict(name="budget", real=False, lat_late=lat, lat_early=lat, clkq_max=reg["clkq_max_wire_ps"],
+                clkq_min=reg["clkq_min_nowire_ps"], setup=reg["setup_ps"], hold=reg["hold_ps"])
+
+
+def map_cores_to_taps(plan, taps):
+    """{(part, inst): (module, port, distance_um, pins_file)} every plan hard-core instance -> nearest tap of its
+    partition (core outline centre, die frame via schema.Plan.to_die)."""
+    import schema as S
+    P = S.Plan(plan)
+    by_part = defaultdict(list)
+    for p, r in taps.items():
+        by_part[r["part"]].append((p, r["xy_um"]))
+    out = {}
+    for n, p in P.parts.items():
+        for h in P.types[p["type"]].get("hard_cores", []) or []:
+            cx = float(h["origin_um"][0]) + float(h["outline_um"][0]) / 2
+            cy = float(h["origin_um"][1]) + float(h["outline_um"][1]) / 2
+            X, Y = P.to_die(n, (cx, cy))
+            tl = by_part.get(n)
+            if not tl:
+                out[(n, h["inst"])] = (h["module"], None, None, h.get("pins_file"))
+                continue
+            port, xy = min(tl, key=lambda t: (t[1][0] - X) ** 2 + (t[1][1] - Y) ** 2)
+            out[(n, h["inst"])] = (h["module"], port, round(((xy[0] - X) ** 2 + (xy[1] - Y) ** 2) ** 0.5, 2),
+                                   h.get("pins_file"))
+    return out
+
+
+def build_views(plan, taps, corner, reg, lat, core_views, kits, load_ff, part_delay_ps):
+    """{port: [models]} + coverage record.  core_views {module: dir}; kits {part_or_type: spec}."""
+    budget = budget_model(reg, lat)
+    views = {p: [budget] for p in taps}
+    cmodels = {m: core_view_model(m, d, corner, load_ff, part_delay_ps) for m, d in core_views.items()}
+    cmap = map_cores_to_taps(plan, taps) if core_views else {}
+    real_inst, real_taps = defaultdict(int), set()
+    for (n, inst), (mod, port, dist, pins) in cmap.items():
+        if mod in cmodels and port:
+            if cmodels[mod] not in views[port]:
+                views[port] = views[port] + [cmodels[mod]]
+            real_inst[mod] += 1
+            real_taps.add(port)
+    ptype = {x["name"]: x["type"] for x in plan["partitions"]}
+    kit_parts = set()
+    for p, r in taps.items():
+        key = r["part"] if r["part"] in kits else ptype.get(r["part"]) if ptype.get(r["part"]) in kits else None
+        if key:
+            views[p] = [kit_model(kits[key], corner, key)]
+            real_taps.add(p)
+            kit_parts.add(r["part"])
+    tot = defaultdict(int)
+    for (_, _), (mod, *_r) in cmap.items():
+        tot[mod] += 1
+    cov = dict(core_instances_total=sum(tot.values()) if cmap else None,
+               core_instances_real=sum(real_inst.values()), real_by_module=dict(real_inst),
+               taps_total=len(taps), taps_with_real_model=len(real_taps), kit_partitions=sorted(kit_parts),
+               core_models={m: dict(c["etm"], meta=c["meta"], part_delay_ps=part_delay_ps) for m, c in cmodels.items()},
+               map_distance_max_um=max([v[2] for v in cmap.values() if v[2] is not None] or [0.0]),
+               map_distance_real_um=sorted(v[2] for v in cmap.values() if v[0] in cmodels and v[2] is not None)[::32])
+    return views, cov
 
 
 def kit_windows(pc, intra_override=None):
@@ -342,19 +838,44 @@ def main(argv=None):
     ap.add_argument("--intra-window-ps", type=float,
                     help="WHAT-IF override of the intra-partition kit window (default: the plan's clock.tap_window."
                          "window_ps, else 0 = the one-ideal-clock kit SDC)")
-    ap.add_argument("--kit", action="append", default=[], help="part_or_type=kit.json (interface model); none yet for QC")
+    ap.add_argument("--kit", action="append", default=[], help="part_or_type=kit.json partition interface model "
+                    "(REAL VIEWS, opt-in; see docstring)")
+    ap.add_argument("--cppr-lca", action="store_true",
+                    help="opt-in (PATH-S81-PD6): CPPR/AOCV node = longest common prefix of the taps' tree_path (true last "
+                         "common tree node); classes and shared droop still by cppr_node (region)")
+    ap.add_argument("--core-view", action="append", default=[], help="MODULE=VIEWDIR signed hard-core view "
+                    "(<MODULE>_{tt,ff}.lib ETM + core.json); REAL VIEWS, opt-in")
+    ap.add_argument("--core-part-delay-ps", type=float, default=0.0,
+                    help="partition tap -> core clock pin delay (unbuilt partition = budget; default 0)")
     ap.add_argument("--clock-ocv", choices=("none", "flat", "table"), default="none",
                     help="CLK-AOCV opt-in (12.4a b1 DRAFT, not a gate until OWNER review): clock OCV on the non-common "
                          "branches; default none = unchanged output")
     ap.add_argument("--clock-droop", choices=("stated", "shared"),
                     help="clock droop with --clock-ocv: stated +5.1 %% always, or shared (0 in one region); default "
                          "shared for table, stated for flat")
-    ap.add_argument("--clock-aocv-table", help="clock_aocv block (default tools/die_plan/clk_aocv_table.json)")
+    ap.add_argument("--clock-aocv-table", help="clock_aocv block (default tools/die_plan/" + APPROVED_AOCV_TABLE + " = the approved 0.21 %%/mm gate table; "
+                    "clk_aocv_table.json is the 0.42 %%/mm DRAFT, CLOCK-KV-R18)")
     ap.add_argument("--clock-ocv-cell-share", type=float, help="cell share of the die branch (default: table class A)")
     ap.add_argument("--pair-unc", help="opt-in per related pair clock uncertainty (qc_clk_mesh3 sta-export pair_unc.json: "
                     "U[corner]['partA|partB'], signed-mesh MC + approved AOCV below the mesh), subtracted from setup and "
-                    "hold of every pair; replaces --clock-ocv")
+                    "hold of every pair; replaces --clock-ocv (main e94f224396, reconciled PATH-S81-PD7: exclusive with "
+                    "--clock-ocv and --mesh-signoff, which price the same non-common clock; --cppr-lca only picks the CPPR "
+                    "node and is compatible)")
+    ap.add_argument("--droop-region", choices=("mesh", "tree"), default="mesh",
+                    help="shared-droop region (12.4a b1): mesh = mesh/PDN region (default, R17 fix); tree = pre-R17 rule")
+    ap.add_argument("--droop-regions", help="JSON {port: region} override (e.g. PDNSim regions)")
+    ap.add_argument("--hold-buffers", choices=("none", "HB4"), default="none",
+                    help="CLOCK-KV-R18 opt-in: model the planned HB4 data hold-buffer insertion (12.4a a1) per pair and "
+                         "report the gate after it (summary.hb4); default none = output unchanged")
+    ap.add_argument("--mesh-signoff", help="TT=mc.json,FF=mc.json signed-mesh variation sim (12.8e): CPPR at the mesh "
+                    "+ per-pair sim uncertainty (opt-in, CLOCK-KV-R17)")
+    ap.add_argument("--mesh-band", choices=("tree", "sim"), default="tree",
+                    help="leaf-fed band taps: tree = strict CPPR at h (default); sim = sign-off pseudo loads (INFO)")
     a = ap.parse_args(argv)
+    if a.pair_unc and (a.clock_ocv != "none" or a.mesh_signoff):   # ROOT-MERGE-29: fail fast, before any work
+        raise SystemExit("--pair-unc is exclusive with --clock-ocv and --mesh-signoff (all price the non-common clock)")
+    global CPPR_LCA
+    CPPR_LCA = bool(a.cppr_lca)
     corners = a.corner or ["TT", "FF"]
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -373,8 +894,12 @@ def main(argv=None):
             raise SystemExit(f"fold report failed, see {out / 'fold_report.log'}")
         d = cp
     plan = json.loads(Path(a.plan).read_text())
-    if a.kit:
-        raise SystemExit("kit interface models: not implemented (no QC partition kit exists yet); add the reader here")
+    kits = {}
+    for k in a.kit:
+        n, f = k.split("=", 1)
+        kits[n] = json.loads(Path(f).read_text())
+    core_views = dict(k.split("=", 1) for k in a.core_view)
+    real = bool(kits or core_views)
     period = a.period_ps
     window = a.landing_window_ps if a.landing_window_ps else period / 2
     lat_tt = float(plan.get("clock", {}).get("common_latency_ps", 250.0))
@@ -387,21 +912,42 @@ def main(argv=None):
                block_model=dict(label="declared-budget", core_latency_ps=lat, cancels="same declared latency both sides",
                                 core_tol_sensitivity_ps=a.core_tol_ps, register=REG_CELL,
                                 seam_wire=dict(um=a.seam_wire_um, ff_per_um=a.wire_ff_per_um, applied="setup only"),
-                                kits_found=0),
+                                kits_found=len(kits), core_views_found=len(core_views)),
                corners={})
+    if real:
+        import schema as S_
+        res["block_model"]["label"] = "real-view (%d core views, %d kits) + declared-budget rest" % (len(core_views), len(kits))
+        res["block_model"]["declared_latency_ps"] = {c: S_.common_latency_ps(S_.Plan(plan), c) for c in ("TT", "FF")}
+        res["block_model"]["core_part_delay_ps"] = a.core_part_delay_ps
     cov = None
+    hbrec, hbbits = {}, None
     for c in corners:
         meta, taps = load_taps(d, c)
         rng = meta["cppr_node_range_ps"]
         slew = max(r["slew_ps"] for r in taps.values())
         reg = characterise(out, c, slew, a.seam_wire_um * a.wire_ff_per_um)
         pairs, cov = build_pairs(plan, taps)
+        views = None
+        if real:
+            import schema as S_
+            views, rcov = build_views(plan, taps, c, reg, S_.common_latency_ps(S_.Plan(plan), c), core_views, kits,
+                                      a.seam_wire_um * a.wire_ff_per_um, a.core_part_delay_ps)
+            cr_real = rcov
         pairs.update(nearest_pairs(d, a.plan, a.clock_tool, taps))
+        if a.hold_buffers != "none" and hbbits is None:
+            hbbits = seam_bits(d, a.plan, a.clock_tool, taps)
+        unc = None
+        if a.mesh_signoff:
+            so = dict(x.split("=", 1) for x in a.mesh_signoff.split(","))
+            unc, mrec = mesh_signoff(d, taps, meta, c, so[c], a.mesh_band)
+            rng = meta["cppr_node_range_ps"]
         cr = dict(basis=meta.get("basis"), tap_slew_max_ps=round(slew, 2), register=reg, classes={})
+        if real:
+            cr["real_view_coverage"] = cr_real
         ocv = None
         if a.pair_unc:
-            if a.clock_ocv != "none":
-                raise SystemExit("--pair-unc and --clock-ocv are exclusive (both price the non-common clock)")
+            if a.clock_ocv != "none" or a.mesh_signoff:
+                raise SystemExit("--pair-unc is exclusive with --clock-ocv and --mesh-signoff (all price the non-common clock)")
             PU = json.loads(Path(a.pair_unc).read_text())["U"][c]
 
             def ocv(x, y, check, PU=PU):
@@ -412,14 +958,31 @@ def main(argv=None):
             cr["clock_ocv"] = dict(mode="pair-unc", file=str(Path(a.pair_unc).resolve()), status="UNCHECKED")
         elif a.clock_ocv != "none":
             droop = a.clock_droop or ("shared" if a.clock_ocv == "table" else "stated")
+            dreg = droop_regions(d, taps, a.droop_region, a.droop_regions) if droop == "shared" else None
             ocv = clock_ocv_fn(a.clock_ocv, droop, dict(meta, corner=c), taps, lat[c], a.clock_aocv_table,
-                               cell_share=a.clock_ocv_cell_share)
+                               cell_share=a.clock_ocv_cell_share, region=dreg)
             cr["clock_ocv"] = dict(mode=a.clock_ocv, droop=droop, status="DRAFT 12.4a b1, UNCHECKED, not a gate")
+            if droop == "shared":
+                cr["clock_ocv"]["droop_region"] = dict(mode=a.droop_region, file=a.droop_regions,
+                                                       regions=sorted(set(dreg.values())) if dreg else None,
+                                                       taps_in_region=len(dreg) if dreg else None)
+        if unc is not None:
+            base_ocv, umax = ocv, {"setup": 0.0, "hold": 0.0}
+
+            def ocv(x, y, check, _b=base_ocv, _u=unc, _m=umax):
+                u = _u(x, y)
+                _m[check] = max(_m[check], u)
+                return (_b(x, y, check) if _b is not None else 0.0) + u
+            mrec["unc_max_ps"] = umax
+            cr["mesh_signoff"] = mrec
         for k, pl in pairs.items():
+            hrec = hbrec.setdefault(c, {}).setdefault(k, {}) if a.hold_buffers != "none" else None
             cr["classes"][k] = time_class(pl, taps, rng, reg, a.core_tol_ps, period, UNC_SETUP_PS, UNC_HOLD_PS,
                                           landed=k.startswith("landed"), window=window,
-                                          hold_window=hwin.get(k) if c == "FF" else None, ocv=ocv)
-            cr["classes"][k]["label"] = "declared-budget" + (" / INFO subset" if k.endswith("INFO") else "")
+                                          hold_window=hwin.get(k) if c == "FF" else None, ocv=ocv, views=views,
+                                          rec=hrec)
+            cr["classes"][k]["label"] = ("real-view+budget" if real else "declared-budget") + (
+                " / INFO subset" if k.endswith("INFO") else "")
         res["corners"][c] = cr
     res["coverage"] = cov
     gate = {}
@@ -440,7 +1003,30 @@ def main(argv=None):
     lf = res["corners"].get("FF", {}).get("classes", {}).get("landed", {}).get("plan_landing", {})
     gate["landed"] = dict(tt_setup_margin_ps=lt.get("setup_margin_ps"), ff_hold_margin_ps=lf.get("hold_margin_ps"),
                           verdict="PASS" if lt.get("verdict") == "PASS" and lf.get("verdict") == "PASS" else "FAIL")
-    res["summary"] = dict(gate, status="UNCHECKED (NUMBER-CHECK pending)", label="declared-budget (no QC kit)")
+    if a.hold_buffers != "none" and "TT" in hbrec and "FF" in hbrec:
+        hb = {}
+        for k in ("intra", "seam", "seam_nearest_INFO"):
+            if k in hbrec["TT"] and k in hbrec["FF"]:
+                hb[k] = hold_buffer_model(hbrec["TT"][k], hbrec["FF"][k],
+                                          bits=hbbits if k.startswith("seam") else None)
+        for k in ("intra", "seam"):
+            if k in hb:
+                gate[k]["hb4"] = dict(tt_setup_ps=hb[k]["all"].get("tt_setup_after_ps"),
+                                      ff_hold_ps=hb[k]["all"].get("ff_hold_after_ps"),
+                                      real_tt_setup_ps=hb[k]["real_view"].get("tt_setup_after_ps"),
+                                      real_ff_hold_ps=hb[k]["real_view"].get("ff_hold_after_ps"),
+                                      setup_neg_pairs=hb[k]["all"].get("setup_neg_pairs_after"),
+                                      pairs_needing_hb=hb[k]["pairs_needing_hb"])
+        res["hb4"] = hb
+    res["summary"] = dict(gate, status="UNCHECKED (NUMBER-CHECK pending)",
+                          label=res["block_model"]["label"] if real else "declared-budget (no QC kit)")
+    if real:
+        for k in ("intra", "seam"):
+            rs = res["corners"].get("TT", {}).get("classes", {}).get(k, {}).get("real_view", {})
+            rh = res["corners"].get("FF", {}).get("classes", {}).get(k, {}).get("real_view", {})
+            gate[k]["real_view"] = dict(pairs=f"{rs.get('pairs_with_real_endpoint', 0)}/{rs.get('pairs_total', 0)}",
+                                        tt_setup_ps=rs.get("worst_setup_slack_ps"), ff_hold_ps=rh.get("worst_hold_slack_ps"))
+        res["summary"].update(gate)
     (out / "die_sta_related.json").write_text(json.dumps(res, indent=1) + "\n")
     for c, cr in res["corners"].items():
         for k, v in cr["classes"].items():
@@ -449,7 +1035,15 @@ def main(argv=None):
                       f"(neg {v['setup_neg_pairs']}) hold {v['worst_hold_slack_ps']:8.2f} (neg {v['hold_neg_pairs']}) "
                       f"skew {v['skew_diag_max_ps']:7.2f}" + (f" kit-contract hold {v['kit_contract_hold']['worst_hold_bound_ps']:.2f}"
                       f" (W {v['kit_contract_hold']['window_ps']:g}, need {v['kit_contract_hold']['window_needed_ps']:.2f},"
-                      f" neg {v['kit_contract_hold']['neg_pairs']})" if "kit_contract_hold" in v else "") + (f" landing {v['plan_landing']}" if "plan_landing" in v else ""))
+                      f" neg {v['kit_contract_hold']['neg_pairs']})" if "kit_contract_hold" in v else "") + (f" landing {v['plan_landing']}" if "plan_landing" in v else "")
+                      + (f" | REAL {v['real_view']['pairs_with_real_endpoint']} pairs setup "
+                         f"{v['real_view'].get('worst_setup_slack_ps')} (neg {v['real_view']['setup_neg_pairs']}) hold "
+                         f"{v['real_view'].get('worst_hold_slack_ps')} (neg {v['real_view']['hold_neg_pairs']})"
+                         + (f" | BOTH-REAL {v['real_view']['pairs_both_real']} setup "
+                            f"{v['real_view']['both_real']['worst_setup_slack_ps']} hold "
+                            f"{v['real_view']['both_real']['worst_hold_slack_ps']} (neg "
+                            f"{v['real_view']['both_real']['hold_neg_pairs']})" if "both_real" in v["real_view"] else "")
+                         if v.get("real_view", {}).get("pairs_with_real_endpoint") else ""))
     print("SUMMARY", json.dumps(res["summary"]))
     return 0
 

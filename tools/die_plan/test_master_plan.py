@@ -365,3 +365,21 @@ def test_core_clock_entry_catches_fake_centre_tap_against_native_file(tmp_path):
     checked = MP.core_clock_entry_check(P,h,[dict(name="u_c.ck",kind="core",xy=[432,432])],[99.36,99.36])
     assert checked["verdict"] == "FAIL" and checked["native_to_entry_um"] == 99.318
     assert checked["tap_to_native_um"] == 99.318 and checked["off_um"] == 0
+
+
+def test_core_clock_entry_landed_phy_forwarded_clock(tmp_path):
+    """CLOCK-KV-R19: a PHY-domain core entry is a landed crossing with a forwarded clock on its native PHY clock pin;
+    the die-clock entry proposal does not apply, but the tap must sit on the native pin and declare domain + forwarded."""
+    raw = _with_core(json.loads(TINY.read_text()))
+    P = plan(raw, tmp_path)
+    h = raw["partition_types"]["mid"]["hard_cores"][0]
+    h["pins"][0]["name"] = "ck_phy[0]"
+    tap = dict(name="u_c.ck_phy[0]", kind="landed", clock_domain="ck_phy[0]", forwarded=True, xy=[432, 432])
+    ok = MP.core_clock_entry_check(P, h, [tap], [10.0, 10.0])
+    assert ok["verdict"] == "PASS" and ok["landed"] and ok["clock_domain"] == "ck_phy[0]"
+    bad = MP.core_clock_entry_check(P, h, [dict(tap, forwarded=False)], [10.0, 10.0])
+    assert "landed entry must be forwarded on its native clock pin domain" in bad["issues"]
+    core = MP.core_clock_entry_check(P, h, [dict(tap, kind="core")], [10.0, 10.0])
+    assert core["verdict"] == "FAIL" and "native clock pin differs from proposed entry" in core["issues"]
+    off = MP.core_clock_entry_check(P, h, [dict(tap, xy=[400, 400])], [10.0, 10.0])
+    assert "plan clock tap differs from native clock pin" in off["issues"]
