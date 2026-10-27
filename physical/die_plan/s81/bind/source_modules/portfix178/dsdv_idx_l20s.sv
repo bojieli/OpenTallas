@@ -380,6 +380,7 @@ endmodule
 // ===================================================================================================================
 module dsdv_idx_tx_n32 #(
     parameter integer V = 276,
+    parameter integer PHYS_LANE = -1, // -1 legacy: physical lane = HDR qslot; explicit TP lane leaves HDR identity intact
     parameter integer IK = 4,
     parameter integer EK = 5,
     parameter integer UID = 8'h5C,
@@ -816,6 +817,7 @@ module dsdv_idx_tx_n32 #(
             s_b0 <= nx_pop && nx_isb0; s_b1 <= nx_pop && nx_isb1; s_h <= nx_pop && nx_d_h; s_p <= nx_pop;
             lo[0] <= s_p;
         end
+    wire [1:0] physical_lane = (PHYS_LANE < 0 || MUT == 6) ? j_l : 2'(PHYS_LANE);
     wire s_h_data;
     dsdv_tx_copy #(.W(1),.RESET(1),.ID(5000))u_shd(.ck(ck),.rn(rl[3]),.d(nx_pop&&nx_d_h),.q(s_h_data));
     wire [255:0] wmk0 = wscb[0] & lvmask(wlvb[0]), wmk1 = wscb[1] & lvmask(wlvb[1]);   // stale fields masked
@@ -831,7 +833,7 @@ module dsdv_idx_tx_n32 #(
         for (c_ = 0; c_ < 8; c_ = c_ + 1)                                      // part 0 scores
             dd[32 * c_ +: 32] = dd[32 * c_ +: 32] | ({32{sb0[c_]}} & wmk0[32 * c_ +: 32]) | ({32{sb0[8 + c_]}} & wmk1[32 * c_ +: 32]);
         tt = s_h ? {4'd1, j_pt} : (srb != 2'd0) ? {4'd6, j_pt} : s_b0 ? {4'd2, j_pt} : 12'd0;
-        lo[V-1:1] <= {dd, tt, s_h || srb != 2'd0, s_b1, {2{s_p}} & j_l, {3{s_p}} & 3'(IK)};
+        lo[V-1:1] <= {dd, tt, s_h || srb != 2'd0, s_b1, {2{s_p}} & physical_lane, {3{s_p}} & 3'(IK)};
     end
 
     // ------------------------------------------------------------------ faults / status
