@@ -1,0 +1,189 @@
+{
+ "schema": "opentallas.hbm.centre_entry_calibration.v1",
+ "lane": "PATH-HBM/HBM-CORE-LAT task 2 (12.9d diagnostic)",
+ "date": "2026-10-26T11:46:37-07:00",
+ "status": "UNCHECKED",
+ "caveats": "ORFS TritonCTS single-entry tree from a centre M5 BTerm on a COPY of the existing 3_place.odb (cells not re-placed for the new entry); kit CTS_ARGS kept, kit tap_balance POST_CTS hook dropped (12.8 pad), SKIP_CTS_REPAIR_TIMING=1; GRT (allow_congestion) + estimate_parasitics -global_routing, NOT RCX; NLDM RVT TT/FF; not a structured H-tree; not sign-off. Insertion = clock pin -> register CK arrival (ot_cf_wire), no source latency. WNS/WHS are kit-SDC worst slacks, info only.",
+ "model_basis": "TT = 0.9429*0.8963*L_max(entry->farthest corner), FF = 0.7998*TT (master_exact gates.json core_insertion_model.all)",
+ "fit_basis": "rebuild_rootcause.json pred_centre_tt_ps (a=200 + b=0.401*L_max_from_centre, sd 64)",
+ "types": {
+  "gq_issue": {
+   "type": "gq_issue",
+   "outline_um": [
+    237.6,
+    237.6
+   ],
+   "entry_um": [
+    116.64,
+    116.64
+   ],
+   "label": "UNCHECKED diagnostic: ORFS TritonCTS single-entry tree from a centre M5 pin, GRT-estimated RC (not RCX), no structured tree, not sign-off",
+   "tt": {
+    "sinks": 34855,
+    "min_ps": 257.2,
+    "mean_ps": 272.8,
+    "max_ps": 295.2,
+    "p5_ps": 264.9,
+    "p95_ps": 281.5,
+    "spread_ps": 38.0
+   },
+   "ff": {
+    "sinks": 34855,
+    "min_ps": 205.3,
+    "mean_ps": 219.4,
+    "max_ps": 241.0,
+    "p5_ps": 212.2,
+    "p95_ps": 227.3,
+    "spread_ps": 35.7
+   },
+   "xy_unresolved": 0,
+   "lmax_entry_to_sink_um": 232.5,
+   "module": "ot_hgi_coll_gq_issue",
+   "source_kit": "intel2:/srv/opentallas-scratch2/claude/codex-hbm/revised_held/ot_hgi_coll_gq_issue_620157ecc938-b2l",
+   "render": "/srv/opentallas-scratch2/claude/path-hbm/b1d_1026/cal/gq_issue/cal_gq_issue.png",
+   "kit_worst_slack_ps_info": {
+    "tt_setup": -106.9,
+    "tt_hold": -90.8,
+    "ff_setup": 104.7,
+    "ff_hold": -40.9
+   },
+   "model": {
+    "tt_ps": 204.5,
+    "ff_ps": 163.5,
+    "farthest_um": 241.92
+   },
+   "fit_tt_ps": 296,
+   "natural_edge_tt_ps": 343,
+   "err_vs_max_tt": {
+    "model": -90.7,
+    "fit": 0.8
+   },
+   "err_vs_mean_tt": {
+    "model": -68.3,
+    "fit": 23.2
+   },
+   "closer_predictor": "fit (vs max TT)",
+   "ff_over_tt_max": 0.8164,
+   "die_equals_plan_outline": true
+  },
+  "pc_ctrl_leaf": {
+   "type": "pc_ctrl_leaf",
+   "outline_um": [
+    177.984,
+    177.984
+   ],
+   "entry_um": [
+    90.72,
+    90.72
+   ],
+   "label": "UNCHECKED diagnostic: ORFS TritonCTS single-entry tree from a centre M5 pin, GRT-estimated RC (not RCX), no structured tree, not sign-off",
+   "tt": {
+    "sinks": 9772,
+    "min_ps": 212.7,
+    "mean_ps": 231.2,
+    "max_ps": 278.9,
+    "p5_ps": 216.3,
+    "p95_ps": 252.6,
+    "spread_ps": 66.3
+   },
+   "ff": {
+    "sinks": 9772,
+    "min_ps": 168.8,
+    "mean_ps": 185.3,
+    "max_ps": 229.8,
+    "p5_ps": 171.8,
+    "p95_ps": 206.5,
+    "spread_ps": 61.0
+   },
+   "xy_unresolved": 0,
+   "lmax_entry_to_sink_um": 171.7,
+   "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "source_kit": "intel2:/srv/opentallas-scratch2/claude/codex-hbm-cores-1025/runs/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_e94f31d435ad_shell_base",
+   "render": "/srv/opentallas-scratch2/claude/path-hbm/b1d_1026/cal/pc_ctrl_leaf/cal_pc_ctrl_leaf.png",
+   "kit_worst_slack_ps_info": {
+    "tt_setup": -91.8,
+    "tt_hold": -66.1,
+    "ff_setup": 147.5,
+    "ff_hold": -25.4
+   },
+   "model": {
+    "tt_ps": 153.3,
+    "ff_ps": 122.6,
+    "farthest_um": 181.44
+   },
+   "fit_tt_ps": 272,
+   "natural_edge_tt_ps": 295,
+   "err_vs_max_tt": {
+    "model": -125.6,
+    "fit": -6.9
+   },
+   "err_vs_mean_tt": {
+    "model": -77.9,
+    "fit": 40.8
+   },
+   "closer_predictor": "fit (vs max TT)",
+   "ff_over_tt_max": 0.824,
+   "die_equals_plan_outline": true
+  },
+  "side_rest": {
+   "type": "side_rest",
+   "outline_um": [
+    440.64,
+    457.92
+   ],
+   "entry_um": [
+    220.32,
+    228.96
+   ],
+   "label": "UNCHECKED diagnostic: ORFS TritonCTS single-entry tree from a centre M5 pin, GRT-estimated RC (not RCX), no structured tree, not sign-off",
+   "tt": {
+    "sinks": 18190,
+    "min_ps": 274.2,
+    "mean_ps": 366.3,
+    "max_ps": 480.9,
+    "p5_ps": 283.8,
+    "p95_ps": 391.0,
+    "spread_ps": 206.8
+   },
+   "ff": {
+    "sinks": 18190,
+    "min_ps": 218.8,
+    "mean_ps": 293.9,
+    "max_ps": 395.7,
+    "p5_ps": 227.5,
+    "p95_ps": 313.5,
+    "spread_ps": 176.9
+   },
+   "xy_unresolved": 0,
+   "lmax_entry_to_sink_um": 439.0,
+   "module": "ot_hbm_su_static_pgslice_lg__side_rest",
+   "source_kit": "epyc1:/srv/opentallas-scratch/claude/codex-hbm/kit_memory_r2/ot_hbm_su_static_pgslice_lg__side_rest_1bbe3488b9c4",
+   "render": "/srv/opentallas-scratch2/claude/path-hbm/b1d_1026/cal/side_rest/cal_side_rest.png",
+   "kit_worst_slack_ps_info": {
+    "tt_setup": -326.1,
+    "tt_hold": -254.4,
+    "ff_setup": -40.8,
+    "ff_hold": -180.0
+   },
+   "model": {
+    "tt_ps": 379.7,
+    "ff_ps": 303.7,
+    "farthest_um": 449.28
+   },
+   "fit_tt_ps": 381,
+   "natural_edge_tt_ps": 515,
+   "err_vs_max_tt": {
+    "model": -101.2,
+    "fit": -99.9
+   },
+   "err_vs_mean_tt": {
+    "model": 13.4,
+    "fit": 14.7
+   },
+   "closer_predictor": "fit (vs max TT)",
+   "ff_over_tt_max": 0.8228,
+   "die_equals_plan_outline": true,
+   "outline_note": "DIE 440.64x457.92 = plan outline, but GEOM-REVIEW flags this outline as oversized (pgs03 defect): sinks occupy a central column only; max set by a few isolated edge flops at the SE corner. Not a valid calibration of a correctly-sized core; no new outline invented."
+  }
+ }
+}
