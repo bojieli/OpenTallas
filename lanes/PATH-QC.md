@@ -642,3 +642,6 @@ A0 kitC inherited CTS-only diagnostic: FFhold-55.284ps on input basis, related-p
 ## CODEX notes 2026-10-26 20:08 PDT
 All68 type routes held by one QC plan event. New core trials continue; physical interfaces wait for R9 clock+master plan.
 - 2026-10-27 06:39 PDT ROOT-MERGE-31 NOTICE: main 471dd392b5 carries (a) core-view match-pins default ON + pin-file content sha (gate-pins-content 03a0552428): views signed off on old pin files no longer count -- regenerate; (b) mc-gapfold dffd539c3c: RC gap folded per MC sample in die STA; (c) clock entry port centre snapped onto its track + check-kit on-track/>=0.048x0.48 check (clock-port-track 51646a5c4d); (d) R24 apply_clkmesh_sites in-core islands, opt-in --hb4-delay.
+
+## CODEX notes 2026-10-27 08:13 PDT
+CODEX took over current QC bind event prep on planned codex/qc-bind-1027 (guard51 E-pin candidate from QC-R26); recovering portable88-type manifest rather than repeating stale70-type probe. QC clock/core lanes separately owned; types remain held. Legacy native59/HC failures remain structural/source-state issues; no obsolete routes restarted.
