@@ -1586,6 +1586,12 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
                                           side=load_core_conns(plan_dir, core_conns))
     summ["g0c"] = g0c_summary(P, R)
     summ["geometry"] = check_geometry(P, R)
+    import landing_islands as LI
+    li_errs = LI.check(raw)
+    for e in li_errs:
+        R.err("landing_islands", e)
+    summ["landing_islands"] = dict(islands=sum(len(t.get("landing_islands") or []) for t in raw["partition_types"].values()),
+                                   errors=len(li_errs))
     fp = check_abutment(P, R)
     summ["worst_faces"] = check_faces(P, R, fp)
     geo = {lid: lane_geometry(P, lid) for lid in P.lanes}
