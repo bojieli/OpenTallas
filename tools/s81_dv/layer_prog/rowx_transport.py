@@ -106,12 +106,12 @@ def merge_repair(exports: Mapping[int, Mapping[int, Sequence[int]]], gids: Seque
 
 
 def landing_reads(nsel: int, half: int, *, rb: int = 0,
-                  spec: ExportSpec = ExportSpec()) -> list[dict[str, int]]:
+                  spec: ExportSpec = ExportSpec()) -> list[dict[str, int | None]]:
     """Source leaf reads for PK2 order, with the pvrd nw=160 overwrite edge.
 
     Offsets use the first half-entry export word as zero, before transport ages.
     Every half is one 256-bit row pair at row base + 2*j. A consumer must have
-    read it strictly before overwrite_cycle. This publishes constraints; it does
+    read it strictly before overwrite_cycle, unless it is None (no later write). This publishes constraints; it does
     not assume that the current XR programme can meet them.
     """
     spec.check(nsel)
@@ -126,7 +126,8 @@ def landing_reads(nsel: int, half: int, *, rb: int = 0,
             slot = ordinal % 160
             later = ordinal + 160
             lp, within = divmod(later, 8 * spec.nxw)
-            overwrite = lp * spec.period + within
+            overwrite = (lp * spec.period + within
+                         if later < spec.passes * 8 * spec.nxw else None)
             out.append(dict(rank=rank, tile=tile, leaf=slot % 5,
                             row=rb + 4 * (slot // 5) + 2 * j,
                             available_cycle=spec.entry_cycle(tile, word),

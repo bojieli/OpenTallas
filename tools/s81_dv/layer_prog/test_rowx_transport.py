@@ -119,7 +119,8 @@ def test_pvrd_wrap_deadlines_are_not_a_fictitious_full_export_buffer():
     assert a['available_cycle'] == 0 and a['overwrite_cycle'] == b['available_cycle'] == 160
     assert by[1, 0]['row'] == 258
     for x in reads:
-        assert x['overwrite_cycle'] - x['available_cycle'] == 160
+        if x['overwrite_cycle'] is not None:
+            assert x['overwrite_cycle'] - x['available_cycle'] == 160
         assert x['row'] <= 383
 
 
@@ -127,3 +128,9 @@ def test_landing_row_field_is_not_silently_truncated():
     assert max(r['row'] for r in R.landing_reads(512, 0, rb=897)) == 1023
     with pytest.raises(ValueError):
         R.landing_reads(512, 0, rb=898)
+
+
+def test_final_landing_bank_is_retained_after_export_stops():
+    reads = R.landing_reads(512, 0)
+    last = [r for r in reads if r['rank'] == 511 and r['tile'] == 7][0]
+    assert last['overwrite_cycle'] is None
