@@ -17,7 +17,7 @@ PLAN = "physical/die_plan/s81/b2d3_0733/die_plan_b2d3.json.gz"
 EVENT = "physical/die_plan/s81/b2d3_0733/event_ledger.json"
 
 
-def stage(repo, rev, base_dir, out):
+def stage(repo, rev, base_dir, out, density=False):
     out.mkdir(parents=True,exist_ok=False)
     def read(path):
         return subprocess.check_output(["git","-C",str(repo),"show",rev+":"+path])
@@ -42,7 +42,7 @@ def stage(repo, rev, base_dir, out):
         (qdir/name).write_bytes(read("physical/die_plan/s81/cores/bksel_q_r864/"+name))
     (out/"core_conns.json").write_bytes(read("physical/die_plan/s81/b2d1_1026/core_conns_b2d1.json"))
     path=out/"die_plan_pd2_b2_candidate.json"
-    raw,phy=apply(raw,path)
+    raw,phy=apply(raw,path,density)
     path.write_text(json.dumps(raw,indent=1)+"\n")
     report=dict(status="CANDIDATE_NOT_BUILDABLE",source_rev=sha,source_plan=PLAN,
                 source_sha256=hashlib.sha256(data).hexdigest(),parts=len(raw["partitions"]),
@@ -60,7 +60,8 @@ def main():
     ap.add_argument("--rev",default="12a0c04f0")
     ap.add_argument("--base-dir",type=Path,required=True)
     ap.add_argument("--out",type=Path,required=True)
-    a=ap.parse_args();r=stage(a.repo,a.rev,a.base_dir,a.out)
+    ap.add_argument("--density",action="store_true",help="use measured sink-density PHY candidate (15 taps, no empty drops)")
+    a=ap.parse_args();r=stage(a.repo,a.rev,a.base_dir,a.out,a.density)
     print(json.dumps({k:v for k,v in r.items() if k not in ["phy_clock","preserved_blockers"]}))
 
 
