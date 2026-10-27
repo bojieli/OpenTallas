@@ -1,0 +1,2050 @@
+{
+ "schema": "opentallas.quarter_bare_alias_geometry.v1",
+ "verdict": "PASS_BARE_ALIAS_SUBSET",
+ "merged_groups": 52,
+ "multipoint_groups": 48,
+ "eliminated_duplicate_FF": 84,
+ "resolved_alias_IDs": 7111,
+ "unresolved_non_md_IDs": [
+  "ge[0].gc[0].leaf.core.rdy2[0]",
+  "ge[0].gc[0].leaf.core.rdy2[1]",
+  "ge[0].gc[0].leaf.core.rdy2[2]",
+  "ge[0].gc[0].leaf.core.rdy2[3]",
+  "ge[0].gc[0].leaf.core.rdy2[4]",
+  "ge[0].gc[0].leaf.core.rdy2[5]",
+  "ge[0].gc[0].leaf.core.rdy2[6]",
+  "ge[0].gc[0].leaf.core.rdy2[7]",
+  "ge[0].gc[0].leaf.core.rdy2[8]",
+  "ge[0].gc[0].leaf.core.rdy2[9]",
+  "ge[0].gc[0].leaf.core.rdy2[10]",
+  "ge[0].gc[0].leaf.core.rdy2[11]",
+  "ge[0].gc[0].leaf.core.rdy2[12]",
+  "ge[0].gc[0].leaf.core.rdy2[13]",
+  "ge[0].gc[0].leaf.core.rdy2[14]",
+  "ge[0].gc[0].leaf.core.rdy2[15]",
+  "ge[0].gc[1].leaf.core.rdy2[0]",
+  "ge[0].gc[1].leaf.core.rdy2[1]",
+  "ge[0].gc[1].leaf.core.rdy2[2]",
+  "ge[0].gc[1].leaf.core.rdy2[3]",
+  "ge[0].gc[1].leaf.core.rdy2[4]",
+  "ge[0].gc[1].leaf.core.rdy2[5]",
+  "ge[0].gc[1].leaf.core.rdy2[6]",
+  "ge[0].gc[1].leaf.core.rdy2[7]",
+  "ge[0].gc[1].leaf.core.rdy2[8]",
+  "ge[0].gc[1].leaf.core.rdy2[9]",
+  "ge[0].gc[1].leaf.core.rdy2[10]",
+  "ge[0].gc[1].leaf.core.rdy2[11]",
+  "ge[0].gc[1].leaf.core.rdy2[12]",
+  "ge[0].gc[1].leaf.core.rdy2[13]",
+  "ge[0].gc[1].leaf.core.rdy2[14]",
+  "ge[0].gc[1].leaf.core.rdy2[15]",
+  "ge[0].gc[2].leaf.core.rdy2[0]",
+  "ge[0].gc[2].leaf.core.rdy2[1]",
+  "ge[0].gc[2].leaf.core.rdy2[2]",
+  "ge[0].gc[2].leaf.core.rdy2[3]",
+  "ge[0].gc[2].leaf.core.rdy2[4]",
+  "ge[0].gc[2].leaf.core.rdy2[5]",
+  "ge[0].gc[2].leaf.core.rdy2[6]",
+  "ge[0].gc[2].leaf.core.rdy2[7]",
+  "ge[0].gc[2].leaf.core.rdy2[8]",
+  "ge[0].gc[2].leaf.core.rdy2[9]",
+  "ge[0].gc[2].leaf.core.rdy2[10]",
+  "ge[0].gc[2].leaf.core.rdy2[11]",
+  "ge[0].gc[2].leaf.core.rdy2[12]",
+  "ge[0].gc[2].leaf.core.rdy2[13]",
+  "ge[0].gc[2].leaf.core.rdy2[14]",
+  "ge[0].gc[2].leaf.core.rdy2[15]",
+  "ge[0].gc[3].leaf.core.rdy2[0]",
+  "ge[0].gc[3].leaf.core.rdy2[1]",
+  "ge[0].gc[3].leaf.core.rdy2[2]",
+  "ge[0].gc[3].leaf.core.rdy2[3]",
+  "ge[0].gc[3].leaf.core.rdy2[4]",
+  "ge[0].gc[3].leaf.core.rdy2[5]",
+  "ge[0].gc[3].leaf.core.rdy2[6]",
+  "ge[0].gc[3].leaf.core.rdy2[7]",
+  "ge[0].gc[3].leaf.core.rdy2[8]",
+  "ge[0].gc[3].leaf.core.rdy2[9]",
+  "ge[0].gc[3].leaf.core.rdy2[10]",
+  "ge[0].gc[3].leaf.core.rdy2[11]",
+  "ge[0].gc[3].leaf.core.rdy2[12]",
+  "ge[0].gc[3].leaf.core.rdy2[13]",
+  "ge[0].gc[3].leaf.core.rdy2[14]",
+  "ge[0].gc[3].leaf.core.rdy2[15]",
+  "ge[1].gc[0].leaf.core.rdy2[0]",
+  "ge[1].gc[0].leaf.core.rdy2[1]",
+  "ge[1].gc[0].leaf.core.rdy2[2]",
+  "ge[1].gc[0].leaf.core.rdy2[3]",
+  "ge[1].gc[0].leaf.core.rdy2[4]",
+  "ge[1].gc[0].leaf.core.rdy2[5]",
+  "ge[1].gc[0].leaf.core.rdy2[6]",
+  "ge[1].gc[0].leaf.core.rdy2[7]",
+  "ge[1].gc[0].leaf.core.rdy2[8]",
+  "ge[1].gc[0].leaf.core.rdy2[9]",
+  "ge[1].gc[0].leaf.core.rdy2[10]",
+  "ge[1].gc[0].leaf.core.rdy2[11]",
+  "ge[1].gc[0].leaf.core.rdy2[12]",
+  "ge[1].gc[0].leaf.core.rdy2[13]",
+  "ge[1].gc[0].leaf.core.rdy2[14]",
+  "ge[1].gc[0].leaf.core.rdy2[15]",
+  "ge[1].gc[1].leaf.core.rdy2[0]",
+  "ge[1].gc[1].leaf.core.rdy2[1]",
+  "ge[1].gc[1].leaf.core.rdy2[2]",
+  "ge[1].gc[1].leaf.core.rdy2[3]",
+  "ge[1].gc[1].leaf.core.rdy2[4]",
+  "ge[1].gc[1].leaf.core.rdy2[5]",
+  "ge[1].gc[1].leaf.core.rdy2[6]",
+  "ge[1].gc[1].leaf.core.rdy2[7]",
+  "ge[1].gc[1].leaf.core.rdy2[8]",
+  "ge[1].gc[1].leaf.core.rdy2[9]",
+  "ge[1].gc[1].leaf.core.rdy2[10]",
+  "ge[1].gc[1].leaf.core.rdy2[11]",
+  "ge[1].gc[1].leaf.core.rdy2[12]",
+  "ge[1].gc[1].leaf.core.rdy2[13]",
+  "ge[1].gc[1].leaf.core.rdy2[14]",
+  "ge[1].gc[1].leaf.core.rdy2[15]",
+  "ge[1].gc[2].leaf.core.rdy2[0]",
+  "ge[1].gc[2].leaf.core.rdy2[1]",
+  "ge[1].gc[2].leaf.core.rdy2[2]",
+  "ge[1].gc[2].leaf.core.rdy2[3]",
+  "ge[1].gc[2].leaf.core.rdy2[4]",
+  "ge[1].gc[2].leaf.core.rdy2[5]",
+  "ge[1].gc[2].leaf.core.rdy2[6]",
+  "ge[1].gc[2].leaf.core.rdy2[7]",
+  "ge[1].gc[2].leaf.core.rdy2[8]",
+  "ge[1].gc[2].leaf.core.rdy2[9]",
+  "ge[1].gc[2].leaf.core.rdy2[10]",
+  "ge[1].gc[2].leaf.core.rdy2[11]",
+  "ge[1].gc[2].leaf.core.rdy2[12]",
+  "ge[1].gc[2].leaf.core.rdy2[13]",
+  "ge[1].gc[2].leaf.core.rdy2[14]",
+  "ge[1].gc[2].leaf.core.rdy2[15]",
+  "ge[1].gc[3].leaf.core.rdy2[0]",
+  "ge[1].gc[3].leaf.core.rdy2[1]",
+  "ge[1].gc[3].leaf.core.rdy2[2]",
+  "ge[1].gc[3].leaf.core.rdy2[3]",
+  "ge[1].gc[3].leaf.core.rdy2[4]",
+  "ge[1].gc[3].leaf.core.rdy2[5]",
+  "ge[1].gc[3].leaf.core.rdy2[6]",
+  "ge[1].gc[3].leaf.core.rdy2[7]",
+  "ge[1].gc[3].leaf.core.rdy2[8]",
+  "ge[1].gc[3].leaf.core.rdy2[9]",
+  "ge[1].gc[3].leaf.core.rdy2[10]",
+  "ge[1].gc[3].leaf.core.rdy2[11]",
+  "ge[1].gc[3].leaf.core.rdy2[12]",
+  "ge[1].gc[3].leaf.core.rdy2[13]",
+  "ge[1].gc[3].leaf.core.rdy2[14]",
+  "ge[1].gc[3].leaf.core.rdy2[15]",
+  "ge[0].settle[0]",
+  "ge[0].settle[1]",
+  "ge[0].ready2[0]",
+  "ge[0].online_q",
+  "ge[0].ready2[1]",
+  "ge[0].ready2[2]",
+  "ge[0].ready2[3]",
+  "ge[1].settle[0]",
+  "ge[1].settle[1]",
+  "ge[1].ready2[0]",
+  "ge[1].online_q",
+  "ge[1].ready2[1]",
+  "ge[1].ready2[2]",
+  "ge[1].ready2[3]",
+  "ge[0].ofl[0]",
+  "ge[0].ofl[1]",
+  "ge[0].ofl[2]",
+  "ge[0].ofl[3]",
+  "ge[1].ov",
+  "ge[1].ofl[0]",
+  "ge[1].ofl[1]",
+  "ge[1].ofl[2]",
+  "ge[1].ofl[3]"
+ ],
+ "placed_merges": [
+  {
+   "cell": "scorer._12894_",
+   "logical_ids": [
+    "score[146]",
+    "score[186]"
+   ],
+   "neighbors": 1,
+   "uv_bounds": [
+    2182.976999999998,
+    2992.976999999998,
+    -104.733000000002,
+    705.266999999998
+   ],
+   "original_points": [
+    [
+     1549.3139999999999,
+     1166.805
+    ],
+    [
+     1547.9099999999999,
+     1172.7450000000001
+    ]
+   ],
+   "point_um": [
+    1546.5059999999999,
+    1170.855
+   ],
+   "spare_site": [
+    1095,
+    4336
+   ],
+   "max_hop_um": 129.38400000000183
+  },
+  {
+   "cell": "scorer._12914_",
+   "logical_ids": [
+    "score[166]",
+    "score[206]"
+   ],
+   "neighbors": 1,
+   "uv_bounds": [
+    2182.976999999998,
+    2992.976999999998,
+    -104.733000000002,
+    705.266999999998
+   ],
+   "original_points": [
+    [
+     1546.5059999999999,
+     1170.855
+    ],
+    [
+     1550.7179999999998,
+     1165.4550000000002
+    ]
+   ],
+   "point_um": [
+    1549.3139999999999,
+    1166.805
+   ],
+   "spare_site": [
+    1109,
+    4321
+   ],
+   "max_hop_um": 128.14200000000187
+  },
+  {
+   "cell": "scorer._12972_",
+   "logical_ids": [
+    "score[226]",
+    "score[266]"
+   ],
+   "neighbors": 1,
+   "uv_bounds": [
+    2336.930999999998,
+    3146.930999999998,
+    -90.63900000000194,
+    719.3609999999981
+   ],
+   "original_points": [
+    [
+     1553.5259999999998,
+     1167.885
+    ],
+    [
+     1547.9099999999999,
+     1165.7250000000001
+    ]
+   ],
+   "point_um": [
+    1550.7179999999998,
+    1165.4550000000002
+   ],
+   "spare_site": [
+    1105,
+    4316
+   ],
+   "max_hop_um": 70.90200000000164
+  },
+  {
+   "cell": "scorer._12992_",
+   "logical_ids": [
+    "score[246]",
+    "score[286]"
+   ],
+   "neighbors": 1,
+   "uv_bounds": [
+    2336.930999999998,
+    3146.930999999998,
+    -90.63900000000194,
+    719.3609999999981
+   ],
+   "original_points": [
+    [
+     1553.5259999999998,
+     1172.4750000000001
+    ],
+    [
+     1552.1219999999998,
+     1165.4550000000002
+    ]
+   ],
+   "point_um": [
+    1553.5259999999998,
+    1167.885
+   ],
+   "spare_site": [
+    1110,
+    4325
+   ],
+   "max_hop_um": 71.28000000000179
+  },
+  {
+   "cell": "scorer.ge[0].gc[0].leaf.core._9030_",
+   "logical_ids": [
+    "ge[0].gc[0].leaf.core.hid[0][1]",
+    "ge[0].gc[0].leaf.core.hid[4][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    695.011,
+    716.141,
+    -261.437,
+    -240.3069999999999
+   ],
+   "original_points": [
+    [
+     115.83,
+     478.305
+    ],
+    [
+     347.48999999999995,
+     471.82500000000005
+    ]
+   ],
+   "point_um": [
+    229.55399999999997,
+    472.90500000000003
+   ],
+   "spare_site": [
+    162,
+    1751
+   ],
+   "max_hop_um": 401.9559999999999
+  },
+  {
+   "cell": "scorer.ge[0].gc[0].leaf.core._9037_",
+   "logical_ids": [
+    "ge[0].gc[0].leaf.core.hid[1][1]",
+    "ge[0].gc[0].leaf.core.hid[5][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    696.355,
+    717.485,
+    -260.093,
+    -238.96299999999997
+   ],
+   "original_points": [
+    [
+     117.234,
+     477.495
+    ],
+    [
+     353.106,
+     477.225
+    ]
+   ],
+   "point_um": [
+    235.17,
+    477.225
+   ],
+   "spare_site": [
+    168,
+    1767
+   ],
+   "max_hop_um": 401.9079999999999
+  },
+  {
+   "cell": "scorer.ge[0].gc[0].leaf.core._9044_",
+   "logical_ids": [
+    "ge[0].gc[0].leaf.core.hid[0][0]",
+    "ge[0].gc[0].leaf.core.hid[2][0]",
+    "ge[0].gc[0].leaf.core.hid[4][0]",
+    "ge[0].gc[0].leaf.core.hid[6][0]"
+   ],
+   "neighbors": 16,
+   "uv_bounds": [
+    697.5549999999998,
+    715.949,
+    -258.893,
+    -240.4989999999999
+   ],
+   "original_points": [
+    [
+     114.42599999999999,
+     478.305
+    ],
+    [
+     118.63799999999999,
+     477.495
+    ],
+    [
+     341.87399999999997,
+     490.18500000000006
+    ],
+    [
+     344.68199999999996,
+     468.58500000000004
+    ]
+   ],
+   "point_um": [
+    235.17,
+    476.95500000000004
+   ],
+   "spare_site": [
+    168,
+    1766
+   ],
+   "max_hop_um": 403.7139999999999
+  },
+  {
+   "cell": "scorer.ge[0].gc[0].leaf.core._9045_",
+   "logical_ids": [
+    "ge[0].gc[0].leaf.core.hid[2][1]",
+    "ge[0].gc[0].leaf.core.hid[6][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    697.7469999999998,
+    718.877,
+    -258.701,
+    -237.5709999999999
+   ],
+   "original_points": [
+    [
+     118.63799999999999,
+     477.225
+    ],
+    [
+     351.702,
+     475.605
+    ]
+   ],
+   "point_um": [
+    235.17,
+    476.415
+   ],
+   "spare_site": [
+    168,
+    1764
+   ],
+   "max_hop_um": 401.3259999999999
+  },
+  {
+   "cell": "scorer.ge[0].gc[0].leaf.core._9052_",
+   "logical_ids": [
+    "ge[0].gc[0].leaf.core.hid[1][0]",
+    "ge[0].gc[0].leaf.core.hid[3][0]",
+    "ge[0].gc[0].leaf.core.hid[5][0]",
+    "ge[0].gc[0].leaf.core.hid[7][0]"
+   ],
+   "neighbors": 16,
+   "uv_bounds": [
+    698.9469999999999,
+    717.341,
+    -257.50100000000003,
+    -239.10699999999997
+   ],
+   "original_points": [
+    [
+     117.234,
+     477.76500000000004
+    ],
+    [
+     120.04199999999999,
+     479.115
+    ],
+    [
+     347.48999999999995,
+     484.785
+    ],
+    [
+     344.68199999999996,
+     468.31500000000005
+    ]
+   ],
+   "point_um": [
+    235.17,
+    479.115
+   ],
+   "spare_site": [
+    168,
+    1774
+   ],
+   "max_hop_um": 401.944
+  },
+  {
+   "cell": "scorer.ge[0].gc[0].leaf.core._9053_",
+   "logical_ids": [
+    "ge[0].gc[0].leaf.core.hid[3][1]",
+    "ge[0].gc[0].leaf.core.hid[7][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    699.0909999999999,
+    720.221,
+    -257.357,
+    -236.22699999999998
+   ],
+   "original_points": [
+    [
+     120.04199999999999,
+     479.38500000000005
+    ],
+    [
+     347.48999999999995,
+     485.32500000000005
+    ]
+   ],
+   "point_um": [
+    235.17,
+    479.38500000000005
+   ],
+   "spare_site": [
+    168,
+    1775
+   ],
+   "max_hop_um": 399.33400000000006
+  },
+  {
+   "cell": "scorer.ge[0].gc[1].leaf.core._9030_",
+   "logical_ids": [
+    "ge[0].gc[1].leaf.core.hid[0][1]",
+    "ge[0].gc[1].leaf.core.hid[4][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    1144.291,
+    1165.4209999999998,
+    187.84300000000007,
+    208.97299999999996
+   ],
+   "original_points": [
+    [
+     565.11,
+     478.305
+    ],
+    [
+     793.962,
+     487.485
+    ]
+   ],
+   "point_um": [
+    678.834,
+    482.89500000000004
+   ],
+   "spare_site": [
+    482,
+    1788
+   ],
+   "max_hop_um": 401.3080000000001
+  },
+  {
+   "cell": "scorer.ge[0].gc[1].leaf.core._9037_",
+   "logical_ids": [
+    "ge[0].gc[1].leaf.core.hid[1][1]",
+    "ge[0].gc[1].leaf.core.hid[5][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    1145.6349999999998,
+    1166.7649999999999,
+    189.1869999999999,
+    210.317
+   ],
+   "original_points": [
+    [
+     566.514,
+     477.495
+    ],
+    [
+     799.578,
+     482.08500000000004
+    ]
+   ],
+   "point_um": [
+    684.4499999999999,
+    479.38500000000005
+   ],
+   "spare_site": [
+    488,
+    1775
+   ],
+   "max_hop_um": 402.07000000000005
+  },
+  {
+   "cell": "scorer.ge[0].gc[1].leaf.core._9044_",
+   "logical_ids": [
+    "ge[0].gc[1].leaf.core.hid[0][0]",
+    "ge[0].gc[1].leaf.core.hid[2][0]",
+    "ge[0].gc[1].leaf.core.hid[4][0]",
+    "ge[0].gc[1].leaf.core.hid[6][0]"
+   ],
+   "neighbors": 16,
+   "uv_bounds": [
+    1146.835,
+    1165.229,
+    190.38699999999994,
+    208.78100000000006
+   ],
+   "original_points": [
+    [
+     563.706,
+     478.305
+    ],
+    [
+     567.918,
+     477.495
+    ],
+    [
+     791.154,
+     466.15500000000003
+    ],
+    [
+     798.174,
+     483.70500000000004
+    ]
+   ],
+   "point_um": [
+    678.834,
+    473.71500000000003
+   ],
+   "spare_site": [
+    482,
+    1754
+   ],
+   "max_hop_um": 401.33799999999985
+  },
+  {
+   "cell": "scorer.ge[0].gc[1].leaf.core._9045_",
+   "logical_ids": [
+    "ge[0].gc[1].leaf.core.hid[2][1]",
+    "ge[0].gc[1].leaf.core.hid[6][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    1147.027,
+    1168.157,
+    190.57899999999995,
+    211.70900000000006
+   ],
+   "original_points": [
+    [
+     567.918,
+     477.225
+    ],
+    [
+     799.578,
+     482.355
+    ]
+   ],
+   "point_um": [
+    684.4499999999999,
+    479.115
+   ],
+   "spare_site": [
+    488,
+    1774
+   ],
+   "max_hop_um": 400.40799999999996
+  },
+  {
+   "cell": "scorer.ge[0].gc[1].leaf.core._9052_",
+   "logical_ids": [
+    "ge[0].gc[1].leaf.core.hid[1][0]",
+    "ge[0].gc[1].leaf.core.hid[3][0]",
+    "ge[0].gc[1].leaf.core.hid[5][0]",
+    "ge[0].gc[1].leaf.core.hid[7][0]"
+   ],
+   "neighbors": 16,
+   "uv_bounds": [
+    1148.2269999999999,
+    1166.6209999999999,
+    191.779,
+    210.173
+   ],
+   "original_points": [
+    [
+     566.514,
+     477.76500000000004
+    ],
+    [
+     569.322,
+     479.115
+    ],
+    [
+     796.77,
+     471.555
+    ],
+    [
+     795.366,
+     469.665
+    ]
+   ],
+   "point_um": [
+    684.4499999999999,
+    476.415
+   ],
+   "spare_site": [
+    488,
+    1764
+   ],
+   "max_hop_um": 402.8619999999999
+  },
+  {
+   "cell": "scorer.ge[0].gc[1].leaf.core._9053_",
+   "logical_ids": [
+    "ge[0].gc[1].leaf.core.hid[3][1]",
+    "ge[0].gc[1].leaf.core.hid[7][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    1148.3709999999999,
+    1169.501,
+    191.923,
+    213.053
+   ],
+   "original_points": [
+    [
+     569.322,
+     479.38500000000005
+    ],
+    [
+     796.77,
+     471.01500000000004
+    ]
+   ],
+   "point_um": [
+    684.4499999999999,
+    476.68500000000006
+   ],
+   "spare_site": [
+    488,
+    1765
+   ],
+   "max_hop_um": 399.7119999999999
+  },
+  {
+   "cell": "scorer.ge[0].gc[2].leaf.core._9030_",
+   "logical_ids": [
+    "ge[0].gc[2].leaf.core.hid[0][1]",
+    "ge[0].gc[2].leaf.core.hid[4][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    1593.571,
+    1614.7009999999998,
+    637.123,
+    658.2529999999999
+   ],
+   "original_points": [
+    [
+     1014.39,
+     478.305
+    ],
+    [
+     1243.242,
+     487.485
+    ]
+   ],
+   "point_um": [
+    1126.71,
+    483.43500000000006
+   ],
+   "spare_site": [
+    801,
+    1790
+   ],
+   "max_hop_um": 400.44400000000024
+  },
+  {
+   "cell": "scorer.ge[0].gc[2].leaf.core._9037_",
+   "logical_ids": [
+    "ge[0].gc[2].leaf.core.hid[1][1]",
+    "ge[0].gc[2].leaf.core.hid[5][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    1594.915,
+    1616.0449999999998,
+    638.4670000000001,
+    659.597
+   ],
+   "original_points": [
+    [
+     1015.794,
+     477.495
+    ],
+    [
+     1248.858,
+     482.08500000000004
+    ]
+   ],
+   "point_um": [
+    1133.73,
+    479.38500000000005
+   ],
+   "spare_site": [
+    808,
+    1775
+   ],
+   "max_hop_um": 402.07000000000016
+  },
+  {
+   "cell": "scorer.ge[0].gc[2].leaf.core._9044_",
+   "logical_ids": [
+    "ge[0].gc[2].leaf.core.hid[0][0]",
+    "ge[0].gc[2].leaf.core.hid[2][0]",
+    "ge[0].gc[2].leaf.core.hid[4][0]",
+    "ge[0].gc[2].leaf.core.hid[6][0]"
+   ],
+   "neighbors": 16,
+   "uv_bounds": [
+    1596.1149999999998,
+    1614.509,
+    639.6669999999999,
+    658.061
+   ],
+   "original_points": [
+    [
+     1012.986,
+     478.305
+    ],
+    [
+     1017.198,
+     477.495
+    ],
+    [
+     1240.434,
+     466.15500000000003
+    ],
+    [
+     1247.454,
+     483.70500000000004
+    ]
+   ],
+   "point_um": [
+    1128.114,
+    473.71500000000003
+   ],
+   "spare_site": [
+    802,
+    1754
+   ],
+   "max_hop_um": 401.33799999999997
+  },
+  {
+   "cell": "scorer.ge[0].gc[2].leaf.core._9045_",
+   "logical_ids": [
+    "ge[0].gc[2].leaf.core.hid[2][1]",
+    "ge[0].gc[2].leaf.core.hid[6][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    1596.3069999999998,
+    1617.437,
+    639.8589999999999,
+    660.989
+   ],
+   "original_points": [
+    [
+     1017.198,
+     477.225
+    ],
+    [
+     1248.858,
+     482.355
+    ]
+   ],
+   "point_um": [
+    1133.73,
+    479.115
+   ],
+   "spare_site": [
+    808,
+    1774
+   ],
+   "max_hop_um": 400.4080000000001
+  },
+  {
+   "cell": "scorer.ge[0].gc[2].leaf.core._9052_",
+   "logical_ids": [
+    "ge[0].gc[2].leaf.core.hid[1][0]",
+    "ge[0].gc[2].leaf.core.hid[3][0]",
+    "ge[0].gc[2].leaf.core.hid[5][0]",
+    "ge[0].gc[2].leaf.core.hid[7][0]"
+   ],
+   "neighbors": 16,
+   "uv_bounds": [
+    1597.5069999999998,
+    1615.9009999999998,
+    641.059,
+    659.453
+   ],
+   "original_points": [
+    [
+     1015.794,
+     477.76500000000004
+    ],
+    [
+     1018.602,
+     479.115
+    ],
+    [
+     1246.05,
+     471.555
+    ],
+    [
+     1244.646,
+     469.665
+    ]
+   ],
+   "point_um": [
+    1133.73,
+    476.415
+   ],
+   "spare_site": [
+    808,
+    1764
+   ],
+   "max_hop_um": 402.862
+  },
+  {
+   "cell": "scorer.ge[0].gc[2].leaf.core._9053_",
+   "logical_ids": [
+    "ge[0].gc[2].leaf.core.hid[3][1]",
+    "ge[0].gc[2].leaf.core.hid[7][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    1597.6509999999998,
+    1618.781,
+    641.203,
+    662.333
+   ],
+   "original_points": [
+    [
+     1018.602,
+     479.38500000000005
+    ],
+    [
+     1246.05,
+     471.01500000000004
+    ]
+   ],
+   "point_um": [
+    1133.73,
+    476.68500000000006
+   ],
+   "spare_site": [
+    808,
+    1765
+   ],
+   "max_hop_um": 399.712
+  },
+  {
+   "cell": "scorer.ge[0].gc[3].leaf.core._9030_",
+   "logical_ids": [
+    "ge[0].gc[3].leaf.core.hid[0][1]",
+    "ge[0].gc[3].leaf.core.hid[4][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    2042.8509999999997,
+    2063.9809999999998,
+    1086.403,
+    1107.5330000000001
+   ],
+   "original_points": [
+    [
+     1463.6699999999998,
+     478.305
+    ],
+    [
+     1692.522,
+     487.485
+    ]
+   ],
+   "point_um": [
+    1577.394,
+    482.89500000000004
+   ],
+   "spare_site": [
+    1122,
+    1788
+   ],
+   "max_hop_um": 401.308
+  },
+  {
+   "cell": "scorer.ge[0].gc[3].leaf.core._9037_",
+   "logical_ids": [
+    "ge[0].gc[3].leaf.core.hid[1][1]",
+    "ge[0].gc[3].leaf.core.hid[5][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    2044.1949999999997,
+    2065.325,
+    1087.747,
+    1108.8770000000002
+   ],
+   "original_points": [
+    [
+     1465.0739999999998,
+     477.495
+    ],
+    [
+     1698.138,
+     482.08500000000004
+    ]
+   ],
+   "point_um": [
+    1583.01,
+    479.38500000000005
+   ],
+   "spare_site": [
+    1128,
+    1775
+   ],
+   "max_hop_um": 402.06999999999994
+  },
+  {
+   "cell": "scorer.ge[0].gc[3].leaf.core._9044_",
+   "logical_ids": [
+    "ge[0].gc[3].leaf.core.hid[0][0]",
+    "ge[0].gc[3].leaf.core.hid[2][0]",
+    "ge[0].gc[3].leaf.core.hid[4][0]",
+    "ge[0].gc[3].leaf.core.hid[6][0]"
+   ],
+   "neighbors": 16,
+   "uv_bounds": [
+    2045.3949999999995,
+    2063.7889999999998,
+    1088.947,
+    1107.3410000000001
+   ],
+   "original_points": [
+    [
+     1462.2659999999998,
+     478.305
+    ],
+    [
+     1466.4779999999998,
+     477.495
+    ],
+    [
+     1689.714,
+     466.15500000000003
+    ],
+    [
+     1696.734,
+     483.70500000000004
+    ]
+   ],
+   "point_um": [
+    1577.394,
+    473.71500000000003
+   ],
+   "spare_site": [
+    1122,
+    1754
+   ],
+   "max_hop_um": 401.33799999999985
+  },
+  {
+   "cell": "scorer.ge[0].gc[3].leaf.core._9045_",
+   "logical_ids": [
+    "ge[0].gc[3].leaf.core.hid[2][1]",
+    "ge[0].gc[3].leaf.core.hid[6][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    2045.5869999999995,
+    2066.7169999999996,
+    1089.139,
+    1110.269
+   ],
+   "original_points": [
+    [
+     1466.4779999999998,
+     477.225
+    ],
+    [
+     1698.138,
+     482.355
+    ]
+   ],
+   "point_um": [
+    1583.01,
+    479.115
+   ],
+   "spare_site": [
+    1128,
+    1774
+   ],
+   "max_hop_um": 400.4080000000001
+  },
+  {
+   "cell": "scorer.ge[0].gc[3].leaf.core._9052_",
+   "logical_ids": [
+    "ge[0].gc[3].leaf.core.hid[1][0]",
+    "ge[0].gc[3].leaf.core.hid[3][0]",
+    "ge[0].gc[3].leaf.core.hid[5][0]",
+    "ge[0].gc[3].leaf.core.hid[7][0]"
+   ],
+   "neighbors": 16,
+   "uv_bounds": [
+    2046.7869999999998,
+    2065.181,
+    1090.339,
+    1108.7330000000002
+   ],
+   "original_points": [
+    [
+     1465.0739999999998,
+     477.76500000000004
+    ],
+    [
+     1467.8819999999998,
+     479.115
+    ],
+    [
+     1695.33,
+     471.555
+    ],
+    [
+     1693.926,
+     469.665
+    ]
+   ],
+   "point_um": [
+    1583.01,
+    476.415
+   ],
+   "spare_site": [
+    1128,
+    1764
+   ],
+   "max_hop_um": 402.8619999999998
+  },
+  {
+   "cell": "scorer.ge[0].gc[3].leaf.core._9053_",
+   "logical_ids": [
+    "ge[0].gc[3].leaf.core.hid[3][1]",
+    "ge[0].gc[3].leaf.core.hid[7][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    2046.9309999999996,
+    2068.0609999999997,
+    1090.483,
+    1111.613
+   ],
+   "original_points": [
+    [
+     1467.8819999999998,
+     479.38500000000005
+    ],
+    [
+     1695.33,
+     471.01500000000004
+    ]
+   ],
+   "point_um": [
+    1583.01,
+    476.68500000000006
+   ],
+   "spare_site": [
+    1128,
+    1765
+   ],
+   "max_hop_um": 399.7119999999999
+  },
+  {
+   "cell": "scorer.ge[1].gc[0].leaf.core._9030_",
+   "logical_ids": [
+    "ge[1].gc[0].leaf.core.hid[0][1]",
+    "ge[1].gc[0].leaf.core.hid[4][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    2086.051,
+    2107.181,
+    -1652.477,
+    -1631.347
+   ],
+   "original_points": [
+    [
+     115.83,
+     1869.345
+    ],
+    [
+     350.298,
+     1872.855
+    ]
+   ],
+   "point_um": [
+    235.17,
+    1870.4250000000002
+   ],
+   "spare_site": [
+    168,
+    6927
+   ],
+   "max_hop_um": 403.41400000000004
+  },
+  {
+   "cell": "scorer.ge[1].gc[0].leaf.core._9037_",
+   "logical_ids": [
+    "ge[1].gc[0].leaf.core.hid[1][1]",
+    "ge[1].gc[0].leaf.core.hid[5][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    2087.395,
+    2108.525,
+    -1651.1330000000003,
+    -1630.003
+   ],
+   "original_points": [
+    [
+     117.234,
+     1868.535
+    ],
+    [
+     346.08599999999996,
+     1861.2450000000001
+    ]
+   ],
+   "point_um": [
+    229.55399999999997,
+    1863.9450000000002
+   ],
+   "spare_site": [
+    162,
+    6903
+   ],
+   "max_hop_um": 400.61199999999974
+  },
+  {
+   "cell": "scorer.ge[1].gc[0].leaf.core._9044_",
+   "logical_ids": [
+    "ge[1].gc[0].leaf.core.hid[0][0]",
+    "ge[1].gc[0].leaf.core.hid[2][0]",
+    "ge[1].gc[0].leaf.core.hid[4][0]",
+    "ge[1].gc[0].leaf.core.hid[6][0]"
+   ],
+   "neighbors": 16,
+   "uv_bounds": [
+    2088.595,
+    2106.989,
+    -1649.933,
+    -1631.539
+   ],
+   "original_points": [
+    [
+     114.42599999999999,
+     1869.345
+    ],
+    [
+     118.63799999999999,
+     1868.535
+    ],
+    [
+     348.894,
+     1874.2050000000002
+    ],
+    [
+     344.68199999999996,
+     1859.6250000000002
+    ]
+   ],
+   "point_um": [
+    235.17,
+    1868.265
+   ],
+   "spare_site": [
+    168,
+    6919
+   ],
+   "max_hop_um": 403.4439999999998
+  },
+  {
+   "cell": "scorer.ge[1].gc[0].leaf.core._9045_",
+   "logical_ids": [
+    "ge[1].gc[0].leaf.core.hid[2][1]",
+    "ge[1].gc[0].leaf.core.hid[6][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    2088.787,
+    2109.9170000000004,
+    -1649.7410000000002,
+    -1628.6109999999999
+   ],
+   "original_points": [
+    [
+     118.63799999999999,
+     1868.265
+    ],
+    [
+     351.702,
+     1866.6450000000002
+    ]
+   ],
+   "point_um": [
+    235.17,
+    1867.4550000000002
+   ],
+   "spare_site": [
+    168,
+    6916
+   ],
+   "max_hop_um": 401.32599999999974
+  },
+  {
+   "cell": "scorer.ge[1].gc[0].leaf.core._9052_",
+   "logical_ids": [
+    "ge[1].gc[0].leaf.core.hid[1][0]",
+    "ge[1].gc[0].leaf.core.hid[3][0]",
+    "ge[1].gc[0].leaf.core.hid[5][0]",
+    "ge[1].gc[0].leaf.core.hid[7][0]"
+   ],
+   "neighbors": 16,
+   "uv_bounds": [
+    2089.987,
+    2108.3810000000003,
+    -1648.5410000000002,
+    -1630.147
+   ],
+   "original_points": [
+    [
+     117.234,
+     1868.805
+    ],
+    [
+     120.04199999999999,
+     1870.1550000000002
+    ],
+    [
+     351.702,
+     1866.9150000000002
+    ],
+    [
+     351.702,
+     1866.3750000000002
+    ]
+   ],
+   "point_um": [
+    235.17,
+    1867.7250000000001
+   ],
+   "spare_site": [
+    168,
+    6917
+   ],
+   "max_hop_um": 402.59199999999976
+  },
+  {
+   "cell": "scorer.ge[1].gc[0].leaf.core._9053_",
+   "logical_ids": [
+    "ge[1].gc[0].leaf.core.hid[3][1]",
+    "ge[1].gc[0].leaf.core.hid[7][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    2090.131,
+    2111.2610000000004,
+    -1648.3970000000002,
+    -1627.2669999999998
+   ],
+   "original_points": [
+    [
+     120.04199999999999,
+     1870.4250000000002
+    ],
+    [
+     344.68199999999996,
+     1859.355
+    ]
+   ],
+   "point_um": [
+    229.55399999999997,
+    1863.6750000000002
+   ],
+   "spare_site": [
+    162,
+    6902
+   ],
+   "max_hop_um": 401.9019999999997
+  },
+  {
+   "cell": "scorer.ge[1].gc[1].leaf.core._9030_",
+   "logical_ids": [
+    "ge[1].gc[1].leaf.core.hid[0][1]",
+    "ge[1].gc[1].leaf.core.hid[4][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    2535.331,
+    2556.4610000000002,
+    -1203.1970000000001,
+    -1182.067
+   ],
+   "original_points": [
+    [
+     565.11,
+     1869.345
+    ],
+    [
+     798.174,
+     1864.2150000000001
+    ]
+   ],
+   "point_um": [
+    684.4499999999999,
+    1867.4550000000002
+   ],
+   "spare_site": [
+    488,
+    6916
+   ],
+   "max_hop_um": 404.0619999999998
+  },
+  {
+   "cell": "scorer.ge[1].gc[1].leaf.core._9037_",
+   "logical_ids": [
+    "ge[1].gc[1].leaf.core.hid[1][1]",
+    "ge[1].gc[1].leaf.core.hid[5][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    2536.6749999999997,
+    2557.8050000000003,
+    -1201.853,
+    -1180.723
+   ],
+   "original_points": [
+    [
+     566.514,
+     1868.535
+    ],
+    [
+     799.578,
+     1873.1250000000002
+    ]
+   ],
+   "point_um": [
+    684.4499999999999,
+    1870.4250000000002
+   ],
+   "spare_site": [
+    488,
+    6927
+   ],
+   "max_hop_um": 402.07000000000005
+  },
+  {
+   "cell": "scorer.ge[1].gc[1].leaf.core._9044_",
+   "logical_ids": [
+    "ge[1].gc[1].leaf.core.hid[0][0]",
+    "ge[1].gc[1].leaf.core.hid[2][0]",
+    "ge[1].gc[1].leaf.core.hid[4][0]",
+    "ge[1].gc[1].leaf.core.hid[6][0]"
+   ],
+   "neighbors": 16,
+   "uv_bounds": [
+    2537.875,
+    2556.2690000000002,
+    -1200.6530000000002,
+    -1182.259
+   ],
+   "original_points": [
+    [
+     563.706,
+     1869.345
+    ],
+    [
+     567.918,
+     1868.535
+    ],
+    [
+     791.154,
+     1857.1950000000002
+    ],
+    [
+     802.386,
+     1867.9950000000001
+    ]
+   ],
+   "point_um": [
+    678.834,
+    1864.755
+   ],
+   "spare_site": [
+    482,
+    6906
+   ],
+   "max_hop_um": 401.33799999999974
+  },
+  {
+   "cell": "scorer.ge[1].gc[1].leaf.core._9045_",
+   "logical_ids": [
+    "ge[1].gc[1].leaf.core.hid[2][1]",
+    "ge[1].gc[1].leaf.core.hid[6][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    2538.067,
+    2559.197,
+    -1200.4610000000002,
+    -1179.331
+   ],
+   "original_points": [
+    [
+     567.918,
+     1868.265
+    ],
+    [
+     796.77,
+     1862.325
+    ]
+   ],
+   "point_um": [
+    678.834,
+    1864.4850000000001
+   ],
+   "spare_site": [
+    482,
+    6905
+   ],
+   "max_hop_um": 399.7479999999998
+  },
+  {
+   "cell": "scorer.ge[1].gc[1].leaf.core._9052_",
+   "logical_ids": [
+    "ge[1].gc[1].leaf.core.hid[1][0]",
+    "ge[1].gc[1].leaf.core.hid[3][0]",
+    "ge[1].gc[1].leaf.core.hid[5][0]",
+    "ge[1].gc[1].leaf.core.hid[7][0]"
+   ],
+   "neighbors": 16,
+   "uv_bounds": [
+    2539.267,
+    2557.661,
+    -1199.2610000000002,
+    -1180.867
+   ],
+   "original_points": [
+    [
+     566.514,
+     1868.805
+    ],
+    [
+     569.322,
+     1870.1550000000002
+    ],
+    [
+     792.558,
+     1880.1450000000002
+    ],
+    [
+     798.174,
+     1875.015
+    ]
+   ],
+   "point_um": [
+    678.834,
+    1873.9350000000002
+   ],
+   "spare_site": [
+    482,
+    6940
+   ],
+   "max_hop_um": 400.84000000000003
+  },
+  {
+   "cell": "scorer.ge[1].gc[1].leaf.core._9053_",
+   "logical_ids": [
+    "ge[1].gc[1].leaf.core.hid[3][1]",
+    "ge[1].gc[1].leaf.core.hid[7][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    2539.411,
+    2560.541,
+    -1199.1170000000002,
+    -1177.987
+   ],
+   "original_points": [
+    [
+     569.322,
+     1870.4250000000002
+    ],
+    [
+     796.77,
+     1862.055
+    ]
+   ],
+   "point_um": [
+    684.4499999999999,
+    1867.7250000000001
+   ],
+   "spare_site": [
+    488,
+    6917
+   ],
+   "max_hop_um": 399.71199999999976
+  },
+  {
+   "cell": "scorer.ge[1].gc[2].leaf.core._9030_",
+   "logical_ids": [
+    "ge[1].gc[2].leaf.core.hid[0][1]",
+    "ge[1].gc[2].leaf.core.hid[4][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    2984.611,
+    3005.741,
+    -753.9170000000001,
+    -732.787
+   ],
+   "original_points": [
+    [
+     1014.39,
+     1869.345
+    ],
+    [
+     1247.454,
+     1864.2150000000001
+    ]
+   ],
+   "point_um": [
+    1133.73,
+    1867.4550000000002
+   ],
+   "spare_site": [
+    808,
+    6916
+   ],
+   "max_hop_um": 404.0619999999999
+  },
+  {
+   "cell": "scorer.ge[1].gc[2].leaf.core._9037_",
+   "logical_ids": [
+    "ge[1].gc[2].leaf.core.hid[1][1]",
+    "ge[1].gc[2].leaf.core.hid[5][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    2985.955,
+    3007.085,
+    -752.5730000000001,
+    -731.443
+   ],
+   "original_points": [
+    [
+     1015.794,
+     1868.535
+    ],
+    [
+     1248.858,
+     1873.1250000000002
+    ]
+   ],
+   "point_um": [
+    1133.73,
+    1870.4250000000002
+   ],
+   "spare_site": [
+    808,
+    6927
+   ],
+   "max_hop_um": 402.07000000000016
+  },
+  {
+   "cell": "scorer.ge[1].gc[2].leaf.core._9044_",
+   "logical_ids": [
+    "ge[1].gc[2].leaf.core.hid[0][0]",
+    "ge[1].gc[2].leaf.core.hid[2][0]",
+    "ge[1].gc[2].leaf.core.hid[4][0]",
+    "ge[1].gc[2].leaf.core.hid[6][0]"
+   ],
+   "neighbors": 16,
+   "uv_bounds": [
+    2987.1549999999997,
+    3005.549,
+    -751.3730000000003,
+    -732.9789999999998
+   ],
+   "original_points": [
+    [
+     1012.986,
+     1869.345
+    ],
+    [
+     1017.198,
+     1868.535
+    ],
+    [
+     1240.434,
+     1857.1950000000002
+    ],
+    [
+     1251.666,
+     1867.9950000000001
+    ]
+   ],
+   "point_um": [
+    1128.114,
+    1864.755
+   ],
+   "spare_site": [
+    802,
+    6906
+   ],
+   "max_hop_um": 401.33799999999985
+  },
+  {
+   "cell": "scorer.ge[1].gc[2].leaf.core._9045_",
+   "logical_ids": [
+    "ge[1].gc[2].leaf.core.hid[2][1]",
+    "ge[1].gc[2].leaf.core.hid[6][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    2987.3469999999998,
+    3008.477,
+    -751.1810000000003,
+    -730.0509999999999
+   ],
+   "original_points": [
+    [
+     1017.198,
+     1868.265
+    ],
+    [
+     1246.05,
+     1862.325
+    ]
+   ],
+   "point_um": [
+    1128.114,
+    1864.4850000000001
+   ],
+   "spare_site": [
+    802,
+    6905
+   ],
+   "max_hop_um": 399.7479999999996
+  },
+  {
+   "cell": "scorer.ge[1].gc[2].leaf.core._9052_",
+   "logical_ids": [
+    "ge[1].gc[2].leaf.core.hid[1][0]",
+    "ge[1].gc[2].leaf.core.hid[3][0]",
+    "ge[1].gc[2].leaf.core.hid[5][0]",
+    "ge[1].gc[2].leaf.core.hid[7][0]"
+   ],
+   "neighbors": 16,
+   "uv_bounds": [
+    2988.5469999999996,
+    3006.941,
+    -749.9810000000002,
+    -731.587
+   ],
+   "original_points": [
+    [
+     1015.794,
+     1868.805
+    ],
+    [
+     1018.602,
+     1870.1550000000002
+    ],
+    [
+     1241.838,
+     1880.1450000000002
+    ],
+    [
+     1247.454,
+     1875.015
+    ]
+   ],
+   "point_um": [
+    1128.114,
+    1873.9350000000002
+   ],
+   "spare_site": [
+    802,
+    6940
+   ],
+   "max_hop_um": 400.8399999999999
+  },
+  {
+   "cell": "scorer.ge[1].gc[2].leaf.core._9053_",
+   "logical_ids": [
+    "ge[1].gc[2].leaf.core.hid[3][1]",
+    "ge[1].gc[2].leaf.core.hid[7][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    2988.691,
+    3009.821,
+    -749.8370000000002,
+    -728.7069999999999
+   ],
+   "original_points": [
+    [
+     1018.602,
+     1870.4250000000002
+    ],
+    [
+     1246.05,
+     1862.055
+    ]
+   ],
+   "point_um": [
+    1133.73,
+    1867.7250000000001
+   ],
+   "spare_site": [
+    808,
+    6917
+   ],
+   "max_hop_um": 399.7119999999999
+  },
+  {
+   "cell": "scorer.ge[1].gc[3].leaf.core._9030_",
+   "logical_ids": [
+    "ge[1].gc[3].leaf.core.hid[0][1]",
+    "ge[1].gc[3].leaf.core.hid[4][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    3433.8909999999996,
+    3455.021,
+    -304.63700000000017,
+    -283.50699999999983
+   ],
+   "original_points": [
+    [
+     1463.6699999999998,
+     1869.345
+    ],
+    [
+     1696.734,
+     1864.2150000000001
+    ]
+   ],
+   "point_um": [
+    1583.01,
+    1867.4550000000002
+   ],
+   "spare_site": [
+    1128,
+    6916
+   ],
+   "max_hop_um": 404.06199999999967
+  },
+  {
+   "cell": "scorer.ge[1].gc[3].leaf.core._9037_",
+   "logical_ids": [
+    "ge[1].gc[3].leaf.core.hid[1][1]",
+    "ge[1].gc[3].leaf.core.hid[5][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    3435.2349999999997,
+    3456.3650000000002,
+    -303.2930000000001,
+    -282.1629999999998
+   ],
+   "original_points": [
+    [
+     1465.0739999999998,
+     1868.535
+    ],
+    [
+     1698.138,
+     1873.1250000000002
+    ]
+   ],
+   "point_um": [
+    1583.01,
+    1870.4250000000002
+   ],
+   "spare_site": [
+    1128,
+    6927
+   ],
+   "max_hop_um": 402.06999999999994
+  },
+  {
+   "cell": "scorer.ge[1].gc[3].leaf.core._9044_",
+   "logical_ids": [
+    "ge[1].gc[3].leaf.core.hid[0][0]",
+    "ge[1].gc[3].leaf.core.hid[2][0]",
+    "ge[1].gc[3].leaf.core.hid[4][0]",
+    "ge[1].gc[3].leaf.core.hid[6][0]"
+   ],
+   "neighbors": 16,
+   "uv_bounds": [
+    3436.4349999999995,
+    3454.829,
+    -302.0930000000003,
+    -283.69899999999984
+   ],
+   "original_points": [
+    [
+     1462.2659999999998,
+     1869.345
+    ],
+    [
+     1466.4779999999998,
+     1868.535
+    ],
+    [
+     1689.714,
+     1857.1950000000002
+    ],
+    [
+     1700.946,
+     1867.9950000000001
+    ]
+   ],
+   "point_um": [
+    1577.394,
+    1864.755
+   ],
+   "spare_site": [
+    1122,
+    6906
+   ],
+   "max_hop_um": 401.33799999999974
+  },
+  {
+   "cell": "scorer.ge[1].gc[3].leaf.core._9045_",
+   "logical_ids": [
+    "ge[1].gc[3].leaf.core.hid[2][1]",
+    "ge[1].gc[3].leaf.core.hid[6][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    3436.6269999999995,
+    3457.757,
+    -301.9010000000003,
+    -280.77099999999996
+   ],
+   "original_points": [
+    [
+     1466.4779999999998,
+     1868.265
+    ],
+    [
+     1695.33,
+     1862.325
+    ]
+   ],
+   "point_um": [
+    1577.394,
+    1864.4850000000001
+   ],
+   "spare_site": [
+    1122,
+    6905
+   ],
+   "max_hop_um": 399.7479999999996
+  },
+  {
+   "cell": "scorer.ge[1].gc[3].leaf.core._9052_",
+   "logical_ids": [
+    "ge[1].gc[3].leaf.core.hid[1][0]",
+    "ge[1].gc[3].leaf.core.hid[3][0]",
+    "ge[1].gc[3].leaf.core.hid[5][0]",
+    "ge[1].gc[3].leaf.core.hid[7][0]"
+   ],
+   "neighbors": 16,
+   "uv_bounds": [
+    3437.8269999999998,
+    3456.2210000000005,
+    -300.70100000000025,
+    -282.3069999999998
+   ],
+   "original_points": [
+    [
+     1465.0739999999998,
+     1868.805
+    ],
+    [
+     1467.8819999999998,
+     1870.1550000000002
+    ],
+    [
+     1691.118,
+     1880.1450000000002
+    ],
+    [
+     1696.734,
+     1875.015
+    ]
+   ],
+   "point_um": [
+    1577.394,
+    1873.9350000000002
+   ],
+   "spare_site": [
+    1122,
+    6940
+   ],
+   "max_hop_um": 400.8399999999999
+  },
+  {
+   "cell": "scorer.ge[1].gc[3].leaf.core._9053_",
+   "logical_ids": [
+    "ge[1].gc[3].leaf.core.hid[3][1]",
+    "ge[1].gc[3].leaf.core.hid[7][1]"
+   ],
+   "neighbors": 8,
+   "uv_bounds": [
+    3437.9709999999995,
+    3459.101,
+    -300.55700000000024,
+    -279.4269999999999
+   ],
+   "original_points": [
+    [
+     1467.8819999999998,
+     1870.4250000000002
+    ],
+    [
+     1695.33,
+     1862.055
+    ]
+   ],
+   "point_um": [
+    1583.01,
+    1867.7250000000001
+   ],
+   "spare_site": [
+    1128,
+    6917
+   ],
+   "max_hop_um": 399.71199999999976
+  }
+ ],
+ "failures": [],
+ "unique_edges": 72813,
+ "missing_edges": 0,
+ "reach_failures": [],
+ "max_actual_hop_um": 404.83799999999997,
+ "worst_edge": [
+  "scorer._13043_",
+  "scorer.ge[0].gc[0].leaf._19945_",
+  "quarter_to_first_leaf_control"
+ ],
+ "qualification": "Bare mapped control aliases only. Full ordinary-keep-enabled synth supersedes this graph; unresolved source IDs and output FF aliases remain unqualified. All existing FF/RF/blank reservations preserved except freed duplicate cells; each merged FF receives one spare site."
+}
