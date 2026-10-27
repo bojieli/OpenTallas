@@ -1,0 +1,94 @@
+{
+ "B75C3_p37.5_edgeW": {
+  "window": "B75C3_p37.5_edgeW",
+  "pad_um": 37.5,
+  "grid": [
+   {
+    "layer": "M8",
+    "width_um": 0.48,
+    "pitch_um": 4.32,
+    "offset_um": 2.16,
+    "nets": [
+     "VDD",
+     "VSS"
+    ]
+   },
+   {
+    "layer": "M9",
+    "width_um": 6.48,
+    "pitch_um": 34.56,
+    "offset_um": 17.28,
+    "nets": [
+     "VDD",
+     "VSS"
+    ]
+   }
+  ],
+  "power_w": 7.374,
+  "tracks": {
+   "M8": 0.294,
+   "M9": 0.4831
+  },
+  "bumps_line": "OT_BUMPS pad_um 37.5 bumps 1040 pad_pins 1300 pad_fallback 0 m9_contact_um2 273780.0",
+  "pg_check": [
+   "OT_PG_CHECK_OK VDD",
+   "OT_PG_CHECK_OK VSS"
+  ],
+  "VDD": {
+   "all": 13.08,
+   "die_edge_band": 7.48,
+   "inner": 8.9
+  },
+  "VSS": {
+   "all": 17.69,
+   "die_edge_band": 7.79,
+   "inner": 9.29
+  }
+ },
+ "B75C3_p37.5_int": {
+  "window": "B75C3_p37.5_int",
+  "pad_um": 37.5,
+  "grid": [
+   {
+    "layer": "M8",
+    "width_um": 0.48,
+    "pitch_um": 4.32,
+    "offset_um": 2.16,
+    "nets": [
+     "VDD",
+     "VSS"
+    ]
+   },
+   {
+    "layer": "M9",
+    "width_um": 6.48,
+    "pitch_um": 34.56,
+    "offset_um": 17.28,
+    "nets": [
+     "VDD",
+     "VSS"
+    ]
+   }
+  ],
+  "power_w": 11.1051,
+  "tracks": {
+   "M8": 0.294,
+   "M9": 0.4831
+  },
+  "bumps_line": "OT_BUMPS pad_um 37.5 bumps 1600 pad_pins 2000 pad_fallback 0 m9_contact_um2 419782.5",
+  "pg_check": [
+   "OT_PG_CHECK_OK VDD",
+   "OT_PG_CHECK_OK VSS"
+  ],
+  "VDD": {
+   "all": 9.19,
+   "interior": 8.84,
+   "interior_avg": 5.29
+  },
+  "VSS": {
+   "all": 10.54,
+   "interior": 9.38,
+   "interior_avg": 5.57
+  }
+ }
+}

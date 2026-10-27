@@ -1,0 +1,186 @@
+{
+ "C3_p50_int": {
+  "window": "C3_p50_int",
+  "pad_um": 50.0,
+  "grid": [
+   {
+    "layer": "M8",
+    "width_um": 0.48,
+    "pitch_um": 4.32,
+    "offset_um": 2.16,
+    "nets": [
+     "VDD",
+     "VSS"
+    ]
+   },
+   {
+    "layer": "M9",
+    "width_um": 6.48,
+    "pitch_um": 34.56,
+    "offset_um": 17.28,
+    "nets": [
+     "VDD",
+     "VSS"
+    ]
+   }
+  ],
+  "power_w": 11.1051,
+  "tracks": {
+   "M8": 0.294,
+   "M9": 0.4831
+  },
+  "bumps_line": "OT_BUMPS pad_um 50 bumps 380 pad_pins 617 pad_fallback 0 m9_contact_um2 176944.0",
+  "pg_check": [
+   "OT_PG_CHECK_OK VDD",
+   "OT_PG_CHECK_OK VSS"
+  ],
+  "VDD": {
+   "all": 54.33,
+   "interior": 35.26,
+   "interior_avg": 21.68
+  },
+  "VSS": {
+   "all": 78.51,
+   "interior": 37.27,
+   "interior_avg": 23.85
+  }
+ },
+ "C3_p75_int": {
+  "window": "C3_p75_int",
+  "pad_um": 75.0,
+  "grid": [
+   {
+    "layer": "M8",
+    "width_um": 0.48,
+    "pitch_um": 4.32,
+    "offset_um": 2.16,
+    "nets": [
+     "VDD",
+     "VSS"
+    ]
+   },
+   {
+    "layer": "M9",
+    "width_um": 6.48,
+    "pitch_um": 34.56,
+    "offset_um": 17.28,
+    "nets": [
+     "VDD",
+     "VSS"
+    ]
+   }
+  ],
+  "power_w": 11.1051,
+  "tracks": {
+   "M8": 0.294,
+   "M9": 0.4831
+  },
+  "bumps_line": "OT_BUMPS pad_um 75 bumps 380 pad_pins 883 pad_fallback 0 m9_contact_um2 394051.5",
+  "pg_check": [
+   "OT_PG_CHECK_OK VDD",
+   "OT_PG_CHECK_OK VSS"
+  ],
+  "VDD": {
+   "all": 46.53,
+   "interior": 23.49,
+   "interior_avg": 12.96
+  },
+  "VSS": {
+   "all": 54.59,
+   "interior": 24.34,
+   "interior_avg": 13.12
+  }
+ },
+ "G12_p50_int": {
+  "window": "G12_p50_int",
+  "pad_um": 50.0,
+  "grid": [
+   {
+    "layer": "M8",
+    "width_um": 0.48,
+    "pitch_um": 4.32,
+    "offset_um": 2.16,
+    "nets": [
+     "VDD",
+     "VSS"
+    ]
+   },
+   {
+    "layer": "M9",
+    "width_um": 12.96,
+    "pitch_um": 34.56,
+    "offset_um": 17.28,
+    "nets": [
+     "VDD",
+     "VSS"
+    ]
+   }
+  ],
+  "power_w": 11.1051,
+  "tracks": {
+   "M8": 0.294,
+   "M9": 0.8568
+  },
+  "bumps_line": "OT_BUMPS pad_um 50 bumps 380 pad_pins 683 pad_fallback 0 m9_contact_um2 354068.0",
+  "pg_check": [
+   "OT_PG_CHECK_OK VDD",
+   "OT_PG_CHECK_OK VSS"
+  ],
+  "VDD": {
+   "all": 34.86,
+   "interior": 23.13,
+   "interior_avg": 13.86
+  },
+  "VSS": {
+   "all": 48.65,
+   "interior": 21.08,
+   "interior_avg": 12.72
+  }
+ },
+ "G12_p75_int": {
+  "window": "G12_p75_int",
+  "pad_um": 75.0,
+  "grid": [
+   {
+    "layer": "M8",
+    "width_um": 0.48,
+    "pitch_um": 4.32,
+    "offset_um": 2.16,
+    "nets": [
+     "VDD",
+     "VSS"
+    ]
+   },
+   {
+    "layer": "M9",
+    "width_um": 12.96,
+    "pitch_um": 34.56,
+    "offset_um": 17.28,
+    "nets": [
+     "VDD",
+     "VSS"
+    ]
+   }
+  ],
+  "power_w": 11.1051,
+  "tracks": {
+   "M8": 0.294,
+   "M9": 0.8568
+  },
+  "bumps_line": "OT_BUMPS pad_um 75 bumps 380 pad_pins 959 pad_fallback 0 m9_contact_um2 790033.5",
+  "pg_check": [
+   "OT_PG_CHECK_OK VDD",
+   "OT_PG_CHECK_OK VSS"
+  ],
+  "VDD": {
+   "all": 29.1,
+   "interior": 15.11,
+   "interior_avg": 8.2
+  },
+  "VSS": {
+   "all": 33.2,
+   "interior": 15.07,
+   "interior_avg": 7.74
+  }
+ }
+}
