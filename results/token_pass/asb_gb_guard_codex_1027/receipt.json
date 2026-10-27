@@ -1,0 +1,26 @@
+{
+  "source": "8c2fd41e4",
+  "core_integration_source": "9f575a2e2b (same patch cherry-picked9f25113a5)",
+  "guard_checks": "15/15 PASS",
+  "core_helper_checks": "9 PASS",
+  "direct_tracer_controls": "PASS old-calendar, plan, source, removed traced-stage mutants",
+  "current_selected_source": "5c27db4d4 on intel1 pinned worktree",
+  "current_positive_calendars": [
+    "col_h10_l4_lp_asb_x",
+    "col_h10_l4_lp_asb_nx",
+    "col_h9_l4_lp_asb_x",
+    "col_h9_l4_lp_asb_nx"
+  ],
+  "negative_controls": [
+    "selected source739->737 same-path mutation",
+    "GB master fallback to legacy calendar",
+    "GB extracted station lacks qualified early GO provider",
+    "mixed legacy/GB global GO advance",
+    "missing exact source map"
+  ],
+  "limits": [
+    "no actual GB frame/source-provider adoption",
+    "core source owns primitive and controller timing miter; not rerun here",
+    "L2 compile remains pinned5c27, unaffected by this separate branch"
+  ]
+}

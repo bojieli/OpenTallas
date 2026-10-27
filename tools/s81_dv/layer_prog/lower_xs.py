@@ -196,7 +196,7 @@ def placement(die, sl, fx=None):
     frames = die.frames_of(sl)
     g = slice_index(die, sl)
     if dense_split2() == 'X':
-        return g, [dict(frame=f, master=die.inst[f]['master'], lk=die.strap(f, 'lk'), rows=[]) for f in frames]
+        return g, [dict(frame=f, master=die.inst[f]['master'], lk=frame_lk(die, f), rows=[]) for f in frames]
     if aproj_topology_enabled():
         # One real phase on EVERY real frame: preserve tensor row order, keep
         # wq_a/wkv in separate frames, and never exceed the measured four rows.
@@ -255,12 +255,12 @@ def placement(die, sl, fx=None):
         assert fi == sum(counts) and row0 == (total if own is None else own[1])
         for frame in all_frames:
             assigned.setdefault(frame, [])
-        return g, [dict(frame=f, master=die.inst[f]['master'], lk=die.strap(f, 'lk'), rows=assigned[f]) for f in frames]
+        return g, [dict(frame=f, master=die.inst[f]['master'], lk=frame_lk(die, f), rows=assigned[f]) for f in frames]
     out = []
     for j, f in enumerate(frames):
         r0 = ROWS_PER_SLICE * g + ROWS_PER_FRAME * j
         rows = list(range(r0, r0 + ROWS_PER_FRAME)) if ROWS_PER_FRAME * (j + 1) <= ROWS_PER_SLICE else []
-        out.append(dict(frame=f, master=die.inst[f]['master'], lk=die.strap(f, 'lk'), rows=rows))
+        out.append(dict(frame=f, master=die.inst[f]['master'], lk=frame_lk(die, f), rows=rows))
     return g, out
 
 
@@ -306,6 +306,21 @@ def land_e(lk):
     ks = {(lk >> (3 * k)) & 7 for k in range(4)}
     assert len(ks) == 1, f'one landing E per frame expected, lk {lk:03x}'
     return ks.pop()
+
+
+def frame_lk(die, frame):
+    """Use the actual cfifo constant of an as-built wrapper which has no parent lk pin."""
+    master = die.inst[frame]['master']
+    value = die.strap(frame, 'lk')
+    if is_asbuilt(master):
+        path = source_frame_schedule(master)
+        measured = json.loads(path.read_text()).get('landing_lk')
+        if type(measured) is not int or not 0 <= measured < 4096:
+            raise ValueError('as-built frame schedule lacks its measured cfifo lk: ' + master)
+        if value is not None and value != measured:
+            raise ValueError('as-built frame parent lk differs from measured cfifo lk: ' + frame)
+        return measured
+    return value
 
 
 def qualify_frame_source(schedule, master, source_root):

@@ -50,6 +50,17 @@ def main():
         expect_raise(lambda: X.source_frame_schedule(M), 'not bound'); n += 1
         cp.write_text(json.dumps(dict(verdict='PASS', fails=[], schedule_sha256=hashlib.sha256(sp.read_bytes()).hexdigest())))
         assert X.source_frame_schedule(M) == sp; n += 1
+        class Die:
+            inst = {'frame': {'master': M}}
+            value = None
+            def strap(self, frame, port): return self.value
+        die = Die()
+        expect_raise(lambda: X.frame_lk(die, 'frame'), 'lacks its measured'); n += 1
+        sp.write_text(json.dumps(dict(schema='opentallas.s81.frame_schedule.v1', landing_lk=0x492, source_sha256=hashes)))
+        cp.write_text(json.dumps(dict(verdict='PASS', fails=[], schedule_sha256=hashlib.sha256(sp.read_bytes()).hexdigest())))
+        assert X.frame_lk(die, 'frame') == 0x492; n += 1
+        die.value = 0x924
+        expect_raise(lambda: X.frame_lk(die, 'frame'), 'differs from measured'); n += 1
         # Real source mutation: changing selected739 to737 at the SAME path cannot reuse the old PASS receipt.
         source.write_text('GB737')
         expect_raise(lambda: X.source_frame_schedule(M), 'differs from selected source'); n += 1
