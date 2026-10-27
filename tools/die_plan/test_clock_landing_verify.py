@@ -39,6 +39,13 @@ def vehicle(mutant=None):
         tree['relays'].append(dict(name='u_rrl_1',q='rst_n_t1',d='rst_root_n',xy=[2,0]))
         B['local_sources'][0]['tap']=1;bc.path='b.u_cland_collect_rst_n_t1';bc.ports['rst_n']=[bt1]
     raw=dict(partitions=[dict(name='a',type='A',origin_um=[0,0]),dict(name='b',type='B',origin_um=[10,0])],partition_types=dict(A=dict(outline_um=[10,10]),B=dict(outline_um=[10,10],buses=[dict(name='y',face='W',window_um=[0,2])])),ports=[dict(id='p',src=dict(part='a',bus='x'),dst=dict(part='b',bus='y'))])
+    if mutant in ('physical_tree_taps','wrong_physical_tree_reset'):
+        bt1=cell('b.u_rrl_1','ot_dp_rrelay',{'clk':[bclk],'d':[br]},{'q':1}).ports['q'][0]
+        tree['n_clock_taps']=2;tree['relays'][0]['xy']=[9,0]
+        tree['relays'].append(dict(name='u_rrl_1',q='rst_n_t1',d='rst_root_n',xy=[1,0]))
+        B['local_sources'][0]['tap']=1;bc.path='b.u_cland_collect_rst_n_t1';bc.ports['rst_n']=[bt1]
+        ring.ports['rst_n']=[bt1 if mutant=='physical_tree_taps' else bt]
+        raw['partition_types']['B']['clock']=dict(taps=[dict(name='glue_only',xy=[1,0])])
     table=dict(ports=[dict(port='p',src='a',dst='b',width=1)],regions=[dict(tag='h0',parts=['a']),dict(tag='h1',parts=['b'])],collector=dict(root='a',edges=[dict(src='b',dst='a',dst_index=0,seam=True)],types=dict(A=A,B=B),observer=dict(part='a',module=obs.module,instance_suffix='u_sys_face',fault_port='obs_fault',ready_port='seq_cfg_image_ready')))
     if mutant=='wrong_child':table['collector']['edges'][0]['src']='a'
     if mutant in ('count_regions','bad_region_count'):
@@ -100,3 +107,7 @@ def test_replica_child_uses_exact_top_edge():assert vehicle('representative_chil
 def test_ring_and_status_can_use_distinct_declared_taps():assert vehicle('different_status_tap')['errors']==[]
 
 def test_wrong_child_edge_fails_actual_status_and_clock_checks():assert vehicle('wrong_child')['errors']
+
+def test_ring_reset_uses_complete_physical_tree_taps():
+    assert vehicle('physical_tree_taps')['errors']==[]
+    assert any('reset-parent/depth' in s for s in vehicle('wrong_physical_tree_reset')['errors'])

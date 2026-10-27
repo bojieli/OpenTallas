@@ -146,6 +146,10 @@ class Verification:
         face=geom['face'];at=sum(geom['window_um'])/2;w,h=t['outline_um']
         x,y=(0 if face=='W' else w,at) if face in 'EW' else (at,0 if face=='S' else h)
         taps=t.get('clock',{}).get('taps',[])
+        tree=info.get('tree') or {}
+        if not tree.get('hard') and tree.get('n_clock_taps') is not None:
+            terminal_xy={r['q']:r['xy'] for r in tree['relays']}
+            taps=[dict(xy=terminal_xy[f'rst_n_t{i}']) for i in range(tree['n_clock_taps'])]
         tap=min(range(len(taps)),key=lambda i:abs(taps[i]['xy'][0]-x)+abs(taps[i]['xy'][1]-y)) if taps else 0
         return f'rst_n_t{tap}'
 

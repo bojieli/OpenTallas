@@ -333,6 +333,13 @@ class Landings:
             x, y = (0 if face == "W" else tw, at) if face in "EW" else (at, 0 if face == "S" else th)
             hard_tree = collector_info and (collector_info.get("tree") or {}).get("hard")
             taps = t.get("clock", {}).get("taps", [])
+            # Structured clocks may publish only glue taps here; reset-tree
+            # indices refer to its complete physical clock-tap grid.
+            tree = (collector_info or {}).get("tree") or {}
+            if not hard_tree and tree.get("n_clock_taps") is not None:
+                terminals = {r["q"]: r["xy"] for r in tree["relays"]}
+                taps = [dict(xy=terminals[f"rst_n_t{i}"])
+                        for i in range(tree["n_clock_taps"])]
             if hard_tree:
                 tap, xy = None, [x, y]
             elif taps:
