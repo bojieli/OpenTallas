@@ -1,0 +1,19 @@
+NATIVE_BOOT_DATE event=host_ingress_launch edge=423
+NATIVE_BOOT_DATE event=provider_start_pin edge=427
+NATIVE_BOOT_DATE event=provider_START_capture edge=428
+NATIVE_BOOT_DATE event=job217_pin edge=438
+NATIVE_BOOT_DATE event=native_root_done edge=506
+NATIVE_BOOT_DATE event=job217_pin edge=738
+NATIVE_BOOT_DATE event=native_root_done edge=806
+NATIVE_BOOT_DATE event=programme_done edge=928
+NATIVE_BOOT_DATE event=host_ingress_launch edge=984
+NATIVE_BOOT_DATE event=provider_start_pin edge=988
+NATIVE_BOOT_DATE event=provider_START_capture edge=989
+NATIVE_BOOT_DATE event=job217_pin edge=999
+NATIVE_BOOT_DATE event=native_root_done edge=1067
+NATIVE_BOOT_DATE event=job217_pin edge=1299
+NATIVE_BOOT_DATE event=native_root_done edge=1367
+NATIVE_BOOT_DATE event=programme_done edge=1489
+NATIVE_BOOT_RESULT checks=1332 errors=0 writes=2 jobs=4 traces=4 root_done=4 programme_done=2 scalar_returns=72 clock_ps=833
+NATIVE_BOOT PASS native ingress/leaf/target/twoSRAMprovider/root; current targetallocation and4rolecalendar unbound
+- tb_native_boot.sv:62: Verilog $finish

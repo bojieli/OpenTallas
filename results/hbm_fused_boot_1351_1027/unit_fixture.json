@@ -1,0 +1,68 @@
+{
+  "scope": "two actual HC_POST records; synthetic unit dates, no productioncalendar",
+  "records": [
+    {
+      "image_offset": 5760,
+      "op": "HC_POST",
+      "fields": {
+        "post": 1,
+        "nm1": 5,
+        "rgap": 0,
+        "eps": 0,
+        "A": 344320,
+        "rsA": 5120,
+        "B": 147712,
+        "rsB": 20480,
+        "C": 0,
+        "rsC": 24,
+        "O": 0,
+        "rsO": 20480
+      },
+      "job217": "0000000000000a00000003000a00000280000000000024100a8200b",
+      "formats": {
+        "A": "FP32",
+        "B": "FP32",
+        "C": "FP32",
+        "O": "FP32"
+      }
+    },
+    {
+      "image_offset": 12400,
+      "op": "HC_POST",
+      "fields": {
+        "post": 1,
+        "nm1": 5,
+        "rgap": 0,
+        "eps": 0,
+        "A": 270592,
+        "rsA": 5120,
+        "B": 147712,
+        "rsB": 20480,
+        "C": 0,
+        "rsC": 24,
+        "O": 0,
+        "rsO": 20480
+      },
+      "job217": "0000000000000a00000003000a0000028000000000002410084200b",
+      "formats": {
+        "A": "FP32",
+        "B": "FP32",
+        "C": "FP32",
+        "O": "FP32"
+      }
+    }
+  ],
+  "launch_cycles": [
+    10,
+    310
+  ],
+  "deadlines": [
+    200,
+    500
+  ],
+  "wsc": 24,
+  "pk5": 0,
+  "pb5": 0,
+  "target": 224,
+  "target_allocation": "unit fixture only; productiondefault0unbound"
+}

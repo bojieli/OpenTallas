@@ -1,0 +1,56 @@
+{
+  "scope": "Passed opt-in native hostcfg256 -> finite217provider bootstrap",
+  "native_upstream": "ot_hbm_host_cfg_leaf2.a_cfg_v/target8/addr12/data256, a_desc_v/base12/limit13/loops16, a_launch_v",
+  "programme_entry_bits": 281,
+  "host_cfg_frames_per_entry": 2,
+  "max_entries": 256,
+  "actual_image_entries": 161,
+  "actual_image_cfg_frames": 323,
+  "actual_image_MMIO32_writes": 2589,
+  "existing_MMIO_ABI": "F20target/address,F24eight32bpieces,F28base/limit,F2cloops,F30launch; unchanged",
+  "new_target_payload": "addr0..511 pairs low256/high25 with upper231zero; addr512 configuration count9/wsc8/pk5six/pb5/calendarbound and F217 formatcookie; descriptorbase0,limit2count,loops1",
+  "target_allocation": "225 (0xE1), audited free across 75 concrete straps/81 original TGTS; Coverage owns COPY binding and uniqueness guard",
+  "estimated_new_register_bits_upper": 909,
+  "replica_count": 1,
+  "arithmetic_changes": 0,
+  "mission_cycles_per_record_added": 0,
+  "boot_latency_edges": {
+    "hostleaf_cfg": 2,
+    "adapter_pin": 1,
+    "adapter_decode_output": 1,
+    "provider_capture": 1,
+    "physical_transport": "MISSING"
+  },
+  "hostleaf_to_provider_START_edges": 3,
+  "existing_provider": {
+    "real_SRAM": 2,
+    "std_cells": 2393,
+    "FF": 587,
+    "std_area_um2": 342.06138
+  },
+  "physical_adoption": "NONE; current calendar/reset dates and selected source composition required",
+  "one_clock_ps": 833,
+  "rtl_declared_register_bits": 909,
+  "estimate_scope": "boot adapter only, source declaration count; mapped area unmeasured",
+  "area_estimate_um2": {
+    "FF_only_using_existing_provider_FF_average": 344.17731802385003,
+    "logic_and_physical_lot": "UNMEASURED; no new profile gate"
+  },
+  "per_programme_START_path_edges": {
+    "native_host_ingress_output_to_provider_capture": 5,
+    "hostleaf_output_to_provider_capture": 3,
+    "physical_relays": "MISSING until currentplan"
+  },
+  "status_endpoint_edges": {
+    "root_output_to_pin_capture": 1,
+    "pin_capture_to_FSM_check": 1,
+    "total": 2,
+    "prior_compiler_assumption": 1,
+    "incremental_price_per_tight_scheduled_record": 1
+  },
+  "source_target_allocation": {
+    "target": 225,
+    "owner": "coverage fulltop + HBM LEC namespaceaudit",
+    "status": "sourcebindinginprogress; unitfixture224 remains separate"
+  }
+}
