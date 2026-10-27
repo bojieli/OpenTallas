@@ -418,7 +418,11 @@ SCHEMA = {
                         # landed glue region (COORD 10-23 07:24; QC-FIX)
                         "taps": {"type": "array", "items": {
                             "type": "object", "required": ["name", "xy"], "additionalProperties": False,
-                            "properties": {"name": _name, "xy": _xy, "kind": {"enum": ["core", "glue", "leaf"]},
+                            "properties": {"name": _name, "xy": _xy, "kind": {"enum": ["core", "glue", "leaf", "landed"]},
+                                           # CLOCK-KV-R19: kind landed = PHY-domain core entry, forwarded clock on
+                                           # the native non-die clock pin (clock_domain); never a die-clock tap
+                                           "clock_domain": {"type": "string", "minLength": 1},
+                                           "forwarded": {"type": "boolean"},
                                            "orient": {"enum": list(ORIENTS)}, "insertion_ps": _pos,
                                            # CORELAT 10-25: the core's FF insertion (SIGNED FF pin-register mean,
                                            # or the FF budget); absent -> FF_TT_INSERTION_RATIO x insertion_ps
@@ -501,7 +505,11 @@ SCHEMA = {
                                        "bits": {"type": "integer", "minimum": 1}, "launch": {"type": "string"},
                                        "capture": {"type": "string"}, "note": {"type": "string"},
                                        # per-bit station sites (kit_istations): bit b on its own L leaf_um <-> pin b
-                                       "leaf_um": _xy, "bit_route": {"enum": ["per_bit"]}}}},
+                                       "leaf_um": _xy, "bit_route": {"enum": ["per_bit"]},
+                                       # Exact lower-left FF banks, payload then epoch; one bank per regs_um.
+                                       "bit_sites_um": {"type": "array", "items": {"type": "array", "items": _xy}},
+                                       "bit_site_cell_um": _xy,
+                                       "face_bit_sites_um": {"type": "array", "items": _xy}}}},
                     "channels": {"type": "array", "items": {
                         "type": "object", "required": ["rect_um", "reason"], "additionalProperties": False,
                         "properties": {"rect_um": _rect, "reason": {"type": "string", "minLength": 3}}}},

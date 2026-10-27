@@ -196,7 +196,7 @@ def core_clock_entry_check(P, h, taps, proposed, tolerance=0.5):
     inst = h["inst"]
     row = dict(inst=inst, module=h["module"], entry_um=list(proposed), issues=[])
     candidates = [tp for tp in taps if tp.get("name") in (inst, inst+".ck", inst+".clk")
-                  or (tp.get("kind") == "core" and tp.get("name", "").startswith(inst+"."))]
+                  or (tp.get("kind") in ("core", "landed") and tp.get("name", "").startswith(inst+"."))]
     if len(candidates) != 1:
         row["issues"].append("ambiguous plan core clock taps" if candidates else "no plan clock tap")
     tp = candidates[0] if len(candidates) == 1 else None
@@ -237,7 +237,14 @@ def core_clock_entry_check(P, h, taps, proposed, tolerance=0.5):
         row.update(native_pin=name, native_core_um=list(xy))
         d = abs(xy[0]-proposed[0])+abs(xy[1]-proposed[1])
         row["native_to_entry_um"] = r3(d)
-        if d > tolerance:
+        landed = bool(tp and tp.get("kind") == "landed")
+        if landed:
+            # CLOCK-KV-R19: a landed (forwarded-clock) entry is the core's own non-die clock pin; the die-clock entry
+            # proposal does not apply.  It must name its clock domain = the native pin and be forwarded.
+            row.update(landed=True, clock_domain=tp.get("clock_domain"))
+            if tp.get("clock_domain") != name or not tp.get("forwarded"):
+                row["issues"].append("landed entry must be forwarded on its native clock pin domain")
+        elif d > tolerance:
             row["issues"].append("native clock pin differs from proposed entry")
         if tp:
             placed = dict(h, origin_um=[a+b for a,b in zip(h["origin_um"],h.get("track_offset_um",[0,0]))])
@@ -248,7 +255,7 @@ def core_clock_entry_check(P, h, taps, proposed, tolerance=0.5):
                        tap_to_native_um=r3(dn), off_um=r3(de))
             if dn > tolerance:
                 row["issues"].append("plan clock tap differs from native clock pin")
-            if de > tolerance:
+            if de > tolerance and not landed:
                 row["issues"].append("plan clock tap differs from proposed entry")
     row["verdict"] = "FAIL" if row["issues"] else "PASS"
     if row["issues"]:

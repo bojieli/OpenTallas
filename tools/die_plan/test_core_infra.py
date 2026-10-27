@@ -212,3 +212,28 @@ def test_gate_copy_mutants_refused(mut, frag):
     s = icg_copy_tree(); mut(s["core_tree"])
     with pytest.raises(CI.InfraError, match=frag):
         CI.emit_tcl(s)
+
+
+def test_cts_hook_written_with_plan_open_count(tmp_path):
+    # S81-CORE-LAT-R12 (ODB-0370): a plan tree kit gets the PRE_CTS hook; leaf-complete tree -> 0 CTS-open nets
+    s = sample()
+    s["core_tree"] = {"clock_port": "clk", "nodes": [
+        dict(name="root", master="BUFx16f_ASAP7_75t_R", xy_um=[430,430], parent="port:clk"),
+        dict(name="n0", master="BUFx8_ASAP7_75t_R", xy_um=[200,200], parent="root"),
+        dict(name="n1", master="BUFx8_ASAP7_75t_R", xy_um=[600,600], parent="root")],
+        "leaves": [dict(node="n0", sinks=["u0/CLK", "u1/CLK"]), dict(node="n1", sinks=["u2/CLK", "u3/CLK"])]}
+    s["pg_obstructions_um"] = {}
+    assert CI.install(tmp_path, s)
+    hook = (tmp_path / CI.CTS_HOOK).read_text()
+    assert "set ::ot_ci_cts_plan_open 0\n" in hook and "TritonCTS not run" in hook
+    assert CI.emit_cts_tcl(CI.compile_slice(icg_tree())).count("set ::ot_ci_cts_plan_open 4\n") == 1
+    # parses with a stand-in TritonCTS command; the wrapper replaces it exactly once
+    prog = "proc clock_tree_synthesis {args} {}\n" + hook + hook + \
+        "\nputs [llength [info commands ::ot_ci_tritoncts]]\nputs CTS_HOOK_PARSED\n"
+    r = subprocess.run(["tclsh"], input=prog, text=True, capture_output=True)
+    assert r.returncode == 0 and r.stdout.split() == ["1", "CTS_HOOK_PARSED"] and not r.stderr
+
+
+def test_no_cts_hook_without_plan_tree(tmp_path):
+    assert CI.install(tmp_path, sample())
+    assert not (tmp_path / CI.CTS_HOOK).exists()

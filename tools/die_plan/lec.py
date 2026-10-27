@@ -944,8 +944,17 @@ class Lec:
                 if k.startswith("ff:") and m:
                     d.setdefault(m.group(1), set()).add(m.group(2))
         self.relaid = sorted(b for b in tidx if b in gidx and not tidx[b] <= gidx[b])
+        # OT_LEC_SUPERSET_VEC=1 (opt-in, default off): a 1-D vector whose gate bits are a strict superset of the gold
+        # bits (the gold frontend dropped dead bits the gate kept, e.g. inside a keep_hierarchy cell) is laid out
+        # identically on both sides; keep the common bit names and re-key only the gate-only extra bits.  Every
+        # name match is still a correspondence obligation, so a wrong pairing can only fail, never hide a difference.
+        superset_vec = os.environ.get("OT_LEC_SUPERSET_VEC") == "1"
+        one_dim = lambda s: all(ix.count("[") == 1 for ix in s)
         for b in self.relaid:
+            sub = superset_vec and gidx[b] < tidx[b] and one_dim(tidx[b])
             for ix in tidx[b]:
+                if sub and ix in gidx[b]:
+                    continue
                 self.tp[f"{b}#t{ix}"] = self.tp.pop(b + ix)
                 self.tc[f"{b}#t{ix}"] = self.tc.pop(b + ix)
         self.matched = sorted(set(self.gp) & set(self.tp))
@@ -1701,6 +1710,10 @@ def fsm_proposals(L, log, words=2, max_bits=4):
         for c, j in sorted(pi.items()):
             L.hyp[("gate", tk[j])] = ("cube", "gold", list(gk), [(c >> b) & 1 for b in range(n)])
             n_new += 1
+        # a later round can re-propose the same state vector (its cube hypotheses were dropped and its gate bits are
+        # unbound again): the new encoding replaces the earlier constraint over the same gold bits instead of adding
+        # a second one with the same proof-output name (cons:gold:<first key>, rejected by build() as a duplicate)
+        L.cons = [c for c in L.cons if not (c[0] == "gold" and list(c[1]) == list(gk))]
         L.cons.append(("gold", list(gk), [[(c >> b) & 1 for b in range(n)] for c in sorted(pi)]))
         log.append(f"fsm: {base} recoded one-hot: " + ", ".join(f"{c}->{tk[j]}" for c, j in sorted(pi.items())))
     return n_new
@@ -3468,6 +3481,8 @@ def via_docker(args, image, mem):
     cmd = ["docker", "run", "--rm", f"--memory={mem}g", f"--memory-swap={mem}g", "-v", f"{kit}:/work:ro",
            "-v", f"{out}:/lecout", "-v", f"{me}:/lec.py:ro", "-e", f"HUID={os.getuid()}", "-e", f"HGID={os.getgid()}", "-e", f"OT_LEC_REFINE_S={os.environ.get('OT_LEC_REFINE_S', '3600')}"]
     # optional XOR-aware SAT backend: OT_LEC_SOLVER = a host dir holding pycryptosat for the image's python (cp310)
+    if os.environ.get("OT_LEC_SUPERSET_VEC") == "1":
+        cmd += ["-e", "OT_LEC_SUPERSET_VEC=1"]
     sol = os.environ.get("OT_LEC_SOLVER", "")
     if sol and os.path.isdir(sol):
         cmd += ["-v", f"{os.path.abspath(sol)}:/lecsolver:ro", "-e", "LEC_SOLVER_PATH=/lecsolver"]
