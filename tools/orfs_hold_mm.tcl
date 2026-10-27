@@ -456,15 +456,23 @@ proc ot_hold_allowance_ok {stage w n} {
   if {$why eq "" && $n > [dict get $a max_endpoints]} { set why "endpoints $n > allowance cap [dict get $a max_endpoints]" }
   set cls_txt ""
   if {$why eq "" && [dict exists $a classes] && [llength [dict get $a classes]]} {
-    array set cls {}
+    array set cls {}; array set cls_worst {}
     foreach p [ot_hold_paths] {
       set s [get_property $p slack]; if {$s eq "INF" || $s >= 0} { continue }
       set sp [get_full_name [get_property $p startpoint]]; set ep [get_full_name [get_property $p endpoint]]
-      incr cls([expr {[ot_pin_class $sp] eq "port" ? "I" : "R"}]2[expr {[ot_pin_class $ep] eq "port" ? "O" : "R"}])
+      set c [expr {[ot_pin_class $sp] eq "port" ? "I" : "R"}]2[expr {[ot_pin_class $ep] eq "port" ? "O" : "R"}]
+      incr cls($c)
+      if {![info exists cls_worst($c)] || $s < $cls_worst($c)} { set cls_worst($c) $s }
     }
     foreach c [lsort [array names cls]] {
-      append cls_txt " $c=$cls($c)"
+      append cls_txt " $c=$cls($c)@[format %.3f $cls_worst($c)]"
       if {[lsearch -exact [dict get $a classes] $c] < 0} { set why "failing class $c ($cls($c) endpoints) not in allowance classes [dict get $a classes]" }
+      if {[dict exists $a per_class]} {
+        if {![dict exists $a per_class $c]} { set why "class $c has no individual admission bounds"; continue }
+        set cl [dict get $a per_class $c]
+        if {$cls_worst($c) < [dict get $cl ws_floor_ps]} { set why "class $c floor missed: $cls_worst($c) < [dict get $cl ws_floor_ps]" }
+        if {$cls($c) > [dict get $cl max_endpoints]} { set why "class $c cap missed: $cls($c) > [dict get $cl max_endpoints]" }
+      }
     }
   }
   if {$why ne ""} {

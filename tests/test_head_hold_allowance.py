@@ -178,3 +178,27 @@ def test_gate_allowance_unreadable(tmp_path):
 def test_cap_above_default_with_reason(tmp_path):
     ap, kit, tsv = mk(tmp_path, limits=dict(max_endpoints=2200), cap_reason="RCX view 2165 I2R endpoints")
     assert run(ap, kit, tsv, kit / "a.tcl") == 0 and "max_endpoints 2200" in (kit / "a.tcl").read_text()
+
+PERCLASS = ("set ::ot_hold_allowance [dict create id X nickname hd_elemA_rb stage post_route_eco "
+            "ws_floor_ps -100 max_endpoints 2200 classes [list I2R R2R] "
+            "per_class [dict create I2R [dict create ws_floor_ps -100 max_endpoints 308] "
+            "R2R [dict create ws_floor_ps -35 max_endpoints 1900]]]\n")
+MIXED = "{slack -76 startpoint in_a endpoint u/r1/D} {slack -29 startpoint u/q/QN endpoint u/r2/D}"
+
+
+def test_per_class_short_path_admission_and_deep_r2r_mutant(tmp_path):
+    assert "GATE_PASS" in tcl(tmp_path, -76, 2165, MIXED, PERCLASS, "post_route_eco")
+    out = tcl(tmp_path, -76, 2165, MIXED.replace("slack -29", "slack -60"), PERCLASS, "post_route_eco")
+    assert "GATE_STOP" in out and "class R2R floor missed" in out
+
+
+def test_per_class_cap_and_unlisted_path_mutants(tmp_path):
+    out = tcl(tmp_path, -76, 2165, MIXED, PERCLASS.replace("R2R [dict create ws_floor_ps -35 max_endpoints 1900]", "R2R [dict create ws_floor_ps -35 max_endpoints 0]"), "post_route_eco")
+    assert "GATE_STOP" in out and "class R2R cap missed" in out
+    out = tcl(tmp_path, -76, 2165, MIXED + " {slack -1 startpoint u/q/QN endpoint out}", PERCLASS, "post_route_eco")
+    assert "GATE_STOP" in out and "class R2O" in out
+
+
+def test_mixed_classes_require_individual_limits(tmp_path):
+    ap,kit,tsv=mk(tmp_path, limits=dict(classes=["I2R","R2R"]))
+    assert run(ap,kit,tsv)==2

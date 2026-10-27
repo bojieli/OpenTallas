@@ -1,20 +1,31 @@
 {
  "schema": "ot_hold_allowance/1",
- "id": "HEAD-R18-elemA_m2-ffhold",
- "ruling": "COORD 2026-10-27 07:47 PDT HEAD-CORE-R17 rulings (2): option (a) accepted, not structural (boundary contract -40 + centre-entry tree +25 ps); ~3 HB4 at the input registers = owner-allowed data hold buffers (METHODOLOGY 12.4a a1), ledgered; conditions FF insertion inside 202.5+-20, no change to the die IO contract or vclk binding",
+ "id": "HEAD-CODEX-m2-mixed-shortdata",
+ "ruling": "COORD 2026-10-27 07:47 PDT HEAD-CORE-R17 rulings (2): option (a) accepted, not structural (boundary contract -40 + centre-entry tree +25 ps); ~3 HB4 at the input registers = owner-allowed data hold buffers (METHODOLOGY 12.4a a1), ledgered; conditions FF insertion inside 202.5+-20, no change to the die IO contract or vclk binding; CODEX COORD 2026-10-27 scoped mixed short-data repair admitted after official MM/BC full-clock diagnosis, per-class floors and caps",
  "ledger": "~/coord/lanes/HEAD-CORE-LAT.md HEAD-CORE-R18 RESULT line + results/s81_head_r18/README.md",
  "design_nickname": "hd_elemA_rb",
  "kit_dir": "elemA_m2",
  "stage": "post_route_eco",
- "cause": "RCX-view FF hold ws -76.52 ps / 2165 endpoints at the post-route ECO gate (GRT -102.82/795); input port -> register paths under the die IO min input delay -40 ps",
+ "cause": "Official MM/BC RCX: 308 I2R at -76.522820 ps plus 1857 R2R at -28.534689 ps; R2R short QN->INV->D forwarding, launch183.81 capture215.70, data45.56, uncertainty25, hold17.27, CPPR0.06; bounded normal data hold padding.",
  "limits": {
   "ws_floor_ps": -100.0,
   "max_endpoints": 2200,
   "classes": [
-   "I2R"
-  ]
+   "I2R",
+   "R2R"
+  ],
+  "per_class": {
+   "I2R": {
+    "ws_floor_ps": -100,
+    "max_endpoints": 308
+   },
+   "R2R": {
+    "ws_floor_ps": -35,
+    "max_endpoints": 1900
+   }
+  }
  },
- "cap_reason": "RCX view (routed 6_final.spef) has ws -76.52 ps INSIDE the default -100 floor but 2165 failing endpoints > 2000 (GRT basis 795/810); same input-register cause; cap 2200 = measured + <2 %; classes I2R only; COORD CODEX 2026-10-27 accepted ONLY these two hashed I2R views; actual SIGNED zero-negative-slack gate unchanged",
+ "cap_reason": "COORD CODEX approves ONLY m2 current hashed view, I2R cap308/floor-100 plus R2R cap1900/floor-35; total2200. Actual signoff negative count remains zero; clock and vclk/IO contract unchanged.",
  "binding": {
   "ot_vclk_tt": 250,
   "ot_vclk_ff": 202.5,
