@@ -91,8 +91,8 @@
    "MUT": 0
   },
   "macros": [],
-  "source": "d4g as-built die_r18h5.v instance xl_NW_aqhi (module ot_hbm_xp_aq_tree13_fmt); files = closure of ot_hbm_xp_aq_tree13_fmt at d34578d6f",
-  "source_commit": "d34578d6f",
+  "source": "d4g as-built die_r18h5.v instance xl_NW_aqhi (module ot_hbm_xp_aq_tree13_fmt); files = closure of ot_hbm_xp_aq_tree13_fmt at d34578d6f; HBM-CORES-R12 read at 35a65cf390 = same closure + R11 per-block loop index (rtl_lint) + u_scale round-increment retime s4->s5 (0 cycles, tempinduct PROVEN)",
+  "source_commit": "35a65cf390",
   "read_at_commit": true,
   "asbuilt_inst": "xl_NW_aqhi"
  },
