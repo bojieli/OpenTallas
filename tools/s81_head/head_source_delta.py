@@ -55,6 +55,22 @@ def apply(plan, root, supplement):
     return out, report
 
 
+def rebase_pin_assets(plan, source, target, root):
+    rebased = []
+    for ty in plan['partition_types'].values():
+        for core in ty.get('hard_cores', []):
+            if core.get('pins_file'):
+                old = core['pins_file']
+                asset = (source.parent / old).resolve()
+                asset.relative_to(root.resolve())
+                if not asset.is_file():
+                    raise ValueError('missing plan pin asset: ' + str(asset))
+                core['pins_file'] = os.path.relpath(asset, target.parent.resolve())
+                if core['pins_file'] != old:
+                    rebased.append([old, core['pins_file']])
+    return rebased
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('plan', type=Path)
@@ -68,19 +84,7 @@ def main():
                          args.supplement.read_text())
     # pins_file is relative to the plan directory (sources remain repo-relative).
     # A candidate exported under results/ must still read the original pin asset.
-    rebased = []
-    for ty in plan['partition_types'].values():
-        for core in ty.get('hard_cores', []):
-            if core.get('pins_file'):
-                old = core['pins_file']
-                asset = (args.plan.parent / old).resolve()
-                asset.relative_to(args.root.resolve())
-                if not asset.is_file():
-                    raise ValueError('missing plan pin asset: ' + str(asset))
-                core['pins_file'] = os.path.relpath(asset, args.out.parent.resolve())
-                if core['pins_file'] != old:
-                    rebased.append([old, core['pins_file']])
-    report['plan_relative_pin_assets'] = rebased
+    report['plan_relative_pin_assets'] = rebase_pin_assets(plan, args.plan, args.out, args.root)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(plan, indent=2) + '\n')
     if args.report:

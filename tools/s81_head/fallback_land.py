@@ -189,6 +189,8 @@ def cmd_compose(a):
                instance_suffix="OPEN", fault_port="OPEN", ready_port="OPEN")
     side["collector"]["observer"] = obs
     raw["clock"]["landing_network"]["root_observer"] = obs
+    from head_source_delta import rebase_pin_assets
+    rep['plan_relative_pin_assets'] = rebase_pin_assets(raw, Path(a.plan), out / 'landed_plan.json', ROOT)
     (out / "landed_plan.json").write_text(json.dumps(raw, indent=1) + "\n")
     (out / "landed_sidecar.json").write_text(json.dumps(side, indent=1) + "\n")
     P = S.Plan(raw, str(out / "landed_plan.json"))
