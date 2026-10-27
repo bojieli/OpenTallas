@@ -6,8 +6,14 @@ sys.path.insert(0,str(Path(__file__).resolve().parent))
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'hbm_b2'))
 from b2_top import Die,parse_expr
 from rebind_station_endpoints import split_ref,baseinst
-ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('plan_dir');ap.add_argument('rebind_report');ap.add_argument('native');ap.add_argument('asbuilt');ap.add_argument('out');ap.add_argument('--role-map',help='explicit per-instance logical native roles with expected_plan_master');ap.add_argument('--asbuilt-map',help='generated native instance -> local role map (paired with plan census_map)');ap.add_argument('--split-maps',help='explicit type:base-instance -> native_parent, expected_module, cut_map for external master ports only');a=ap.parse_args()
-pd=Path(a.plan_dir);raw=json.load(open(pd/'die_plan.json'));report=json.load(open(a.rebind_report));cfg=json.load(open(a.asbuilt));d=Die(a.native,cfg['transport']);out=Path(a.out)
+ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('plan_dir');ap.add_argument('rebind_report');ap.add_argument('native');ap.add_argument('asbuilt');ap.add_argument('out');ap.add_argument('--core-graph',action='store_true',help='emit exact native producer/consumer graph instead of station maps; pass - for report');ap.add_argument('--types',help='comma-separated plan types for core graph');ap.add_argument('--bus-bindings',help='exact per-type bus/native-bit bindings');ap.add_argument('--role-map',help='explicit per-instance logical native roles with expected_plan_master');ap.add_argument('--asbuilt-map',help='generated native instance -> local role map (paired with plan census_map)');ap.add_argument('--split-maps',help='explicit type:base-instance -> native_parent, expected_module, cut_map for external master ports only');a=ap.parse_args()
+pd=Path(a.plan_dir);raw=json.load(open(pd/'die_plan.json'));original_types={}
+if a.core_graph:
+ selected_types=set(a.types.split(',')) if a.types else None
+ original_types={p['name']:p['type'] for p in raw['partitions'] if selected_types is None or p['type'] in selected_types}
+ if not original_types:raise SystemExit('core graph selection has no physical partitions')
+ raw=dict(raw,partition_types={part:raw['partition_types'][tn] for part,tn in original_types.items()},partitions=[dict(p,type=p['name']) for p in raw['partitions'] if p['name'] in original_types])
+report=json.load(open(a.rebind_report)) if a.rebind_report!='-' else {'unresolved':[]};cfg=json.load(open(a.asbuilt));d=Die(a.native,cfg['transport']);out=Path(a.out)
 if out.exists():raise SystemExit('refusing existing output')
 out.mkdir(parents=True)
 split_maps=json.load(open(a.split_maps)) if a.split_maps else {}
@@ -20,6 +26,11 @@ for part in raw['partitions']:parts_by_type[part['type']].add(part['name'])
 
 connection_cache={}
 cache={}
+def lookup(config,tn,inst):
+ for key in [f'{tn}:{inst}',f'{tn}:{baseinst(inst)}',f'{original_types.get(tn,tn)}:{inst}',f'{original_types.get(tn,tn)}:{baseinst(inst)}']:
+  if key in config:return config[key]
+ return None
+
 def bits(expr):
  if expr not in cache:
   vals=[]
@@ -36,7 +47,7 @@ def choose(t,s,field):
  return cand[0]
 
 def native(t,h,tn):
- override=role_maps.get(f"{tn}:{h['inst']}")
+ override=lookup(role_maps,tn,h['inst'])
  if override:
   if h['module']!=override['expected_plan_master']:raise ValueError(f"logical native role requires plan master {override['expected_plan_master']}, current {h['module']}")
   n=override['native_instance']
@@ -64,7 +75,7 @@ def connections(tn,t,h):
   n=native(t,h,tn)
   value=(n,{p:bits(expr) for p,expr in d.insts[n]['conns'].items()})
  except ValueError:
-  spec=split_maps.get(f"{tn}:{baseinst(h['inst'])}")
+  spec=lookup(split_maps,tn,h['inst'])
   if not spec:raise
   if h['module']!=spec['expected_module']:raise ValueError('split-map module contract differs from actual core')
   current_map=json.load(open(spec['cut_map']))
@@ -97,6 +108,46 @@ def connections(tn,t,h):
   value=(n+'::'+h['inst'],ports)
  connection_cache[key]=value
  return value
+
+if a.core_graph:
+ from native_core_graph import build
+ def source_identity(tn,h,label):
+  if '::' not in label:return label
+  spec=lookup(split_maps,tn,h['inst']) or {}
+  return spec.get('native_parent',label.split('::')[0])+'::'+spec.get('subcore',h['module'])
+ def source_direction(tn,h,label,port,vector):
+  origin=label.split('::')[0];states=set()
+  for value in vector:
+   if value is None:continue
+   driver=d.driver.get(value[0])
+   if driver==(origin,port):states.add('output')
+   elif driver is not None or d.dirs.get(value[0])=='input':states.add('input')
+   else:states.add('unknown')
+  return next(iter(states)) if len(states)==1 else 'unknown'
+ bus=json.load(open(a.bus_bindings)) if a.bus_bindings else []
+ instance_bus=[]
+ for b in bus:
+  context=b.get('partition') or (b['type'] if b['type'] in original_types else None)
+  if context is None:
+   candidates=[part for part,tn in original_types.items() if tn==b['type']]
+   if len(candidates)!=1:raise ValueError('replicated-type buses require explicit per-partition native bit bindings')
+   context=candidates[0]
+  instance_bus.append(dict(b,type=context))
+ cc,edges,gr=build(raw,pd,connections,source_identity,source_direction,None,instance_bus,entry_types=original_types)
+ aggregate={}
+ for part,cores in cc.items():
+  tn=original_types[part];target=aggregate.setdefault(tn,{})
+  for inst,ports in cores.items():
+   for port,peers in ports.items():target.setdefault(inst,{}).setdefault(port,set()).update(peers)
+ aggregate={tn:{inst:{port:sorted(peers) for port,peers in ports.items()} for inst,ports in cores.items()} for tn,cores in aggregate.items()}
+ for edge in edges:edge['partition']=edge['type'];edge['type']=original_types[edge['type']]
+ gr.update(native=a.native,plan=str(pd),role_map=a.role_map,split_maps=a.split_maps,instance_types=original_types,aggregation='Union of exact per-physical-partition edges only; no replica source aliases inferred.')
+ (out/'core_conns_by_instance.json').write_text(json.dumps(cc,indent=1)+'\n')
+ (out/'core_conns.json').write_text(json.dumps(aggregate,indent=1)+'\n')
+ (out/'core_edges.json').write_text(json.dumps(edges,indent=1)+'\n')
+ (out/'report.json').write_text(json.dumps(gr,indent=1)+'\n')
+ print('CORE_GRAPH',gr['verdict'],'errors',len(gr['errors']),'alias_collisions',len(gr['source_alias_collisions']),'edges',gr['edges'])
+ sys.exit(gr['verdict']!='PASS')
 
 emap={};rows=[]
 for entry in report['unresolved']:
