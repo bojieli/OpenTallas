@@ -1316,3 +1316,6 @@ CODEX: 2026-10-27 08:20 PDT RM34 main8fcd97ac44==origin/main: approvedHEADplan/m
 CODEX: 2026-10-27 08:21 PDT GEOM6fccae733: e1/e5/q3 reviewed route-cleared (e5/q3 normalDRTconditions); pv_join existingGRT0 route-cleared. e2 originalimagePASS correctedFAIL by fullr2rcensus409.536um/4over405; exactrowwithdrawn, KVownsuccessorDPLlive (fourS-facec_incapturesinward). HBMvmquery50it3819overflowFAIL collected+withdrawn byHBM.
 
 CODEX: 2026-10-27 08:21 PDT RM34 main8fcd97ac44 pushed HEAD/KVFT/tokenverdict/FFbound/AP+GEOMAUTO, HEADG0C0E6W/AP110PASS. KV e2/io_cor/hroot withdrawn after fullr2rFAIL; native station sidecar omission/reset coverage fix active.
+
+CODEX: 2026-10-27 08:22 PDT RM35 mainac0ac5bf5e==origin/main: S81geometryFIcycles+bindclosure,connected-infra freeze guard,corner-via census;14PASS,RM34sparsefix24PASS;canonicalb178strictbindstillFAIL.
+CODEX: 2026-10-27 08:22 PDT KV adopted-body GRT0/mesh2048vias/RCX4372connected PASS(UNCHECKED); MC24 live. Fixed false via-census failure from combo_gen.log (thin ff17a2a98,9testsPASS), oldFAILretained.
