@@ -58,7 +58,7 @@ def pin(name,d,x,y):
 '''
 
 
-def build(plan,out,part=None,segmented=False,slots=None,bounded=None):
+def build(plan,out,part=None,segmented=False,slots=None,bounded=None,iterations=5,signal_max=None):
     raw=S.load(plan);P=S.Plan(raw,Path(plan));out=Path(out)
     if bounded is None:bounded=bool(part)
     if bounded and not part:raise ValueError('--bounded requires --part')
@@ -115,7 +115,13 @@ def build(plan,out,part=None,segmented=False,slots=None,bounded=None):
     (out/'grt/route.v').write_text('\n'.join(v+instances+['endmodule'])+'\n')
     (out/'grt/tracks.tcl').write_text(DT.coarse_tracks(P,.72))
     adjust=[(f'M{i}',.75) for i in range(4,8)]+[('M8',.4),('M9',.4)]
-    tcl=DT.grt_tcl(P,out/'grt',.72,lefs,[],adjust).replace('-congestion_iterations 50','-congestion_iterations 5')
+    tcl=DT.grt_tcl(P,out/'grt',.72,lefs,[],adjust).replace('-congestion_iterations 50',f'-congestion_iterations {int(iterations)}')
+    if signal_max:
+        # Kit-level coupon (KV-PLAN-DELTA-3): partition routing ends at the plan partition ceiling
+        # (layer_budget.partition_signal_max, M7); M8/M9 stay die clock/PG/reset (METHODOLOGY 12.1c/12.2).
+        top=int(str(signal_max)[1:]);assert 4<=top<=9,signal_max
+        tcl=re.sub(r'set_routing_layers -signal M4-M\d',f'set_routing_layers -signal M4-M{top}',tcl)
+        assert f'-signal M4-M{top}' in tcl
     coupon_canvas=None
     if bounded:
         # Preserve the original die's 10.8um GRT gcell phase and include only
@@ -149,7 +155,7 @@ def build(plan,out,part=None,segmented=False,slots=None,bounded=None):
             if a<c and b<d:clipped.append(f'create_obstruction -region {{{a:.6f} {b:.6f} {c:.6f} {d:.6f}}} -layer {m[2]}')
         obs.write_text('\n'.join(clipped)+'\n')
     (out/'grt/grt.tcl').write_text(tcl)
-    result=dict(die_trial_sha256=hashlib.sha256(Path(DT.__file__).read_bytes()).hexdigest(),plan_sha256=hashlib.sha256(Path(plan).read_bytes()).hexdigest(),part=part,segmented=segmented,original_ft_bits=original,wire_segments=segments,adjust=dict(adjust),types=stats,added_data_cycles=0,qualification='ROUTING_DIAGNOSTIC_ONLY',bounded=bounded,part_bounds_um=list(P.rect(part)) if part else None,coupon_canvas_um=coupon_canvas)
+    result=dict(die_trial_sha256=hashlib.sha256(Path(DT.__file__).read_bytes()).hexdigest(),plan_sha256=hashlib.sha256(Path(plan).read_bytes()).hexdigest(),part=part,segmented=segmented,original_ft_bits=original,wire_segments=segments,adjust=dict(adjust),types=stats,added_data_cycles=0,qualification='ROUTING_DIAGNOSTIC_ONLY',bounded=bounded,congestion_iterations=int(iterations),signal_max=signal_max,part_bounds_um=list(P.rect(part)) if part else None,coupon_canvas_um=coupon_canvas)
     (out/'station_probe.json').write_text(json.dumps(result,indent=2))
     (out/'station_sites.json').write_text(json.dumps(tables))
     return result
@@ -195,6 +201,6 @@ def report(out):
 if __name__=='__main__':
     if len(sys.argv)>1 and sys.argv[1]=='report':
         r=report(sys.argv[2]);print(json.dumps(r));sys.exit(0 if r['verdict']=='PASS' else 1)
-    a=argparse.ArgumentParser(description=__doc__);a.add_argument('plan',type=Path);a.add_argument('--out',type=Path,required=True);a.add_argument('--part');a.add_argument('--slot',action='append');a.add_argument('--segmented',action='store_true')
+    a=argparse.ArgumentParser(description=__doc__);a.add_argument('plan',type=Path);a.add_argument('--out',type=Path,required=True);a.add_argument('--part');a.add_argument('--slot',action='append');a.add_argument('--segmented',action='store_true');a.add_argument('--iterations',type=int,default=5);a.add_argument('--signal-max')
     scope=a.add_mutually_exclusive_group();scope.add_argument('--bounded',action='store_const',const=True,default=None);scope.add_argument('--unbounded',dest='bounded',action='store_const',const=False)
-    p=a.parse_args();print(json.dumps(build(p.plan,p.out,p.part,p.segmented,p.slot,p.bounded)))
+    p=a.parse_args();print(json.dumps(build(p.plan,p.out,p.part,p.segmented,p.slot,p.bounded,p.iterations,p.signal_max)))
