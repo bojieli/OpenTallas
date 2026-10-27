@@ -1329,3 +1329,5 @@ CODEX: 2026-10-27 08:25 PDT FLOW-WATCH READY3400e5da8: helper-only fingerprint b
 CODEX: 2026-10-27 08:26 PDT KV native station sidecar bug fixed f51684c55; actual b53 sources 13 io_cor / 7 hroot station sites preserved, zero added lane cycles; same KV regeneration waits local reset grid + 200 FT/R8 batch.
 
 CODEX: 2026-10-27 08:26 PDT RM37 main0cda17b22f==origin/main;urgentFTsenderIOoverlay79a,45laneTcltestsPASS/defaultsessionunchanged;0deletions.
+
+CODEX: 2026-10-27 08:26 PDT KV200FTslotreachdelta b4a705f520 prepared (761slotsmax402.84um,125lanes+1..4/R8coherent); io_cor/hrootfullR2RFAIL supersedesFT-onlyPASS, trialrowswithdrawn; nativeistationTCLlossrootcaused f51684c55+resetcoveragefixownedcoverage.
