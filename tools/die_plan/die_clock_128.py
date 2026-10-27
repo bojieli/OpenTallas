@@ -569,7 +569,8 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
                     # R12 L net: M9 drop at the bar column, M8 jog one track pair off the load row toward the trunk
                     sg = 1.0 if ty >= p[1] else -1.0
                     by, jm = track("M8", p[1] + sg * off, p[0] - mm, p[0] + mm, nm, f"jog {ld}", keep=pin_keep(ld))
-                    bx, bm = track("M9", p[0], ty, by, nm, f"drop {ld}")
+                    bx, bm = track("M9", p[0], ty, by, nm, f"drop {ld}",
+                                   keep=(rsv[0],rsv[1]) if exact_h else None)
                     add(("M9", bx, min(ty, by), bx, max(ty, by)), bm)
                     if abs(bx - p[0]) > 1e-6:
                         add(("M8", min(bx, p[0]), by, max(bx, p[0]), by), jm)

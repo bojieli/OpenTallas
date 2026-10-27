@@ -151,3 +151,24 @@ def test_gap_order_is_explicit_and_preserves_actual_cell_and_net_inventory():
     assert sorted(p['ndr'] for w in m['fixed_wires'] for p in w.get('pieces',[w]) if p.get('physical_edge'))==sorted(e.get('ndr','16w') for e in s['nets'])
     s['route_order']='unknown'
     with pytest.raises(ValueError,match='unknown explicit route order'):build(s)
+
+
+def test_exact_trunk_drop_search_stays_inside_its_reserved_interval():
+    from collections import defaultdict
+    import math
+    class Router:
+        max_move=8.64
+        modes=defaultdict(int)
+        def place(self,layer,ideal,a0,a1,net,keep=None,dry=False):
+            if layer=='M8':c=ideal-2.4 if a1-a0<10. else ideal
+            else:c=round(ideal/.108)*.108
+            if keep is not None and not keep[0]<=c<=keep[1]:
+                c=math.floor(keep[1]/.108)*.108
+                if c<keep[0]:return None,None,None
+            return round(c,6),C.DRAWN,0.
+        def tie_ext(self,*args):return 0.
+    lib='BUFx24_ASAP7_75t_R'
+    cells={n:dict(x=x,y=y,lib=lib) for n,x,y in [('d0',10.,20.),('d1',10.,20.27),('l0',20.,20.27),('l1',20.,20.54)]}
+    m=dict(taps=[],meta=dict(root_um=[0.,0.],clock_pin_window=True))
+    wires=C.fixed_wires(m,cells,[dict(name='w',drv='d0',loads=['l0'])],1.62,.27,off=0.,router=Router(),pin_stack=True,ties={'d0':['d0','d1'],'l0':['l0','l1']},l_drops=True,exact_reserve=True)
+    assert all(seg[1]<=20.027 for w in wires for seg in w['segs'] if seg[0]=='M9')
