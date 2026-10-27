@@ -32,6 +32,10 @@ class BoundsTests(unittest.TestCase):
         r=self.run_bounds();self.assertEqual(r['rows'][0]['sink_um'],[4190,0]);self.assertEqual(r['bundles'][0]['minimum_extra_uniform_stages'],10)
     def test_clock_geometry_cannot_claim_signal_cycles(self):
         self.edge['kind']='clock';self.ledger['bundles']['bus']['kind']='clock';r=self.run_bounds();self.assertNotIn('minimum_extra_uniform_stages',r['bundles'][0]);self.assertNotIn('extra_signal_stage_lower_bound',r['rows'][0])
+    def test_ambiguous_physical_access_is_not_silently_chosen(self):
+        f=self.root/'pins.json';f.write_text(json.dumps([dict(name='p',x=0,y=0),dict(name='p',x=2,y=0)]))
+        for side in ['source_pin','sink_pin']:self.edge[side]['pins_sha256']=B.digest(f)
+        self.assertEqual(self.run_bounds()['failed_edges'],1)
     def test_missing_epoch_binding_fails(self):
         self.edge['epoch_binding']='';self.assertEqual(self.run_bounds()['failed_edges'],1)
 if __name__=='__main__':unittest.main()

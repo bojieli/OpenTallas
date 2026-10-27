@@ -17,7 +17,7 @@ def native_bit(manifest,endpoint,direction):
     port=inst['ports'][endpoint['port']]
     if port['direction']!=direction:raise ValueError('native endpoint direction differs from actual source')
     bit=endpoint['bit']
-    if not isinstance(bit,int) or bit<0:raise ValueError('native bit must be a nonnegative index')
+    if type(bit) is not int or bit<0:raise ValueError('native bit must be a nonnegative index')
     for seg in port['segments']:
         width=seg[3]-seg[2]+1 if seg[0]=='n' else seg[1]
         if bit<width:
@@ -54,7 +54,10 @@ class Pins:
         h=found[0]
         if h['module']!=endpoint['expected_module']:raise ValueError('physical core master differs from explicit binding')
         file=self.root/h['pins_file'];key=str(file)
-        if key not in self.tables:self.tables[key]=(digest(file),{p['name']:p for p in json.loads(file.read_text())})
+        if key not in self.tables:
+            records=json.loads(file.read_text());table={p['name']:p for p in records}
+            if len(table)!=len(records):raise ValueError('physical pin identity has multiple access points; explicit access selection required')
+            self.tables[key]=(digest(file),table)
         sha,table=self.tables[key]
         if sha!=endpoint['pins_sha256']:raise ValueError('bound physical pin table changed')
         p=table[endpoint['pin']];x,y=p['x'],p['y'];w,hh=h['outline_um']
