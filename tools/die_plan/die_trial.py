@@ -1348,7 +1348,16 @@ def standin_netlist(P, tn, hold_contract=True, clock_contract=True):
     for n, x, y in rout:
         cells.append(f"  {FLOP} f{k} (.CLK({ckn[near(x, y)]}), .D(1'b0), .QN({n}));")
         k += 1
-    names = tapn + [n for n, _, _ in rin] + [n for n, _, _ in rout] + sorted(bits)
+    # Pin-register-free partition ports (STANDIN-PADPORT 10-27), carried like the KV hard-IP line side (bind.py
+    # bump_pins: a die port with no timing arc of ours): off-die PHY pads (plan types[].pads, e.g. ot_s81hd_serdes
+    # pma_*: PHY-side timing, die.io phy_macro bumps) and per-instance ID straps (types[].id_straps: tied at the die
+    # top, kit SDC set_false_path -from).  Declared ports only: no face flop, no contract cell, so die STA sees the
+    # connection (no 'port not found') and times nothing through it.  Never tied off or dropped here.
+    free = [(gen_rtl.sv_id(pd["name"]), pd["dir"], pd["width"]) for pd in t.get("pads", []) or []] + \
+        [(sp["name"], "in", sp["width"]) for sp in t.get("id_straps", []) or []]
+    for n, d, w in free:
+        ports.append(f"  {'input' if d == 'in' else 'output'} [{w - 1}:0] {n};")
+    names = tapn + [n for n, _, _ in rin] + [n for n, _, _ in rout] + sorted(bits) + [n for n, _, _ in free]
     v = [f"module {t['module']} ({', '.join(names)});"] + ports + ckwires
     v += [f"  wire q{i};" for i in range(k) if f".QN(q{i})" in cells[i]]
     v += [f"  wire d{i};" for i in range(k) if f".Y(d{i})" in cells[i]]
