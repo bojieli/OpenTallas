@@ -1,0 +1,92 @@
+{
+  "scope": "Placed register/macro data-cone endpoint Manhattan reach; no STA",
+  "captures": 29373,
+  "captures_with_register_or_macro_sources": 27432,
+  "primary_or_constant_only": 1941,
+  "combinational_cycle_nets": [],
+  "over_405": 0,
+  "max_um": 263.323,
+  "worst": [
+    [
+      263.323,
+      "u_m.t_r\\[30\\]$_DFF_P_/D"
+    ],
+    [
+      261.109,
+      "u_m.t_r\\[19\\]$_DFF_P_/D"
+    ],
+    [
+      252.7,
+      "u_m.g_t\\[5\\].g_pair.u_a.y\\[3\\]$_DFF_PN0_/RESETN"
+    ],
+    [
+      252.615,
+      "u_m.g_t\\[5\\].g_pair.u_a.y\\[2\\]$_DFF_PN0_/RESETN"
+    ],
+    [
+      252.592,
+      "u_m.g_t\\[7\\].g_pad.u_a.u_c7.g_r.v$_DFF_PN0_/RESETN"
+    ],
+    [
+      252.561,
+      "u_m.g_t\\[7\\].g_pad.u_a.u_c5.g_r.v$_DFF_PN0_/RESETN"
+    ],
+    [
+      251.929,
+      "u_m.t_r\\[21\\]$_DFF_P_/D"
+    ],
+    [
+      251.404,
+      "u_m.g_t\\[5\\].g_pair.u_a.y\\[1\\]$_DFF_PN0_/RESETN"
+    ],
+    [
+      251.373,
+      "u_m.g_t\\[5\\].g_pair.u_a.y\\[31\\]$_DFF_PN0_/RESETN"
+    ],
+    [
+      251.026,
+      "u_m.g_t\\[7\\].g_pad.u_a.u_c6.g_r.v$_DFF_PN0_/RESETN"
+    ],
+    [
+      250.833,
+      "u_m.g_t\\[7\\].g_pad.u_a.u_c4.g_r.v$_DFF_PN0_/RESETN"
+    ],
+    [
+      249.915,
+      "u_m.g_t\\[7\\].g_pad.u_a.u_c8.g_r.v$_DFF_PN0_/RESETN"
+    ],
+    [
+      249.838,
+      "u_m.g_t\\[5\\].g_pair.u_a.y\\[5\\]$_DFF_PN0_/RESETN"
+    ],
+    [
+      249.699,
+      "u_m.g_t\\[7\\].g_pad.u_a.u_c3.g_r.v$_DFF_PN0_/RESETN"
+    ],
+    [
+      248.542,
+      "u_m.g_t\\[7\\].g_pad.u_a.u_c2.g_r.v$_DFF_PN0_/RESETN"
+    ],
+    [
+      248.272,
+      "u_m.g_t\\[5\\].g_pair.u_a.y\\[7\\]$_DFF_PN0_/RESETN"
+    ],
+    [
+      248.272,
+      "u_m.g_t\\[5\\].g_pair.u_a.y\\[4\\]$_DFF_PN0_/RESETN"
+    ],
+    [
+      247.971,
+      "u_m.g_t\\[6\\].g_pad.u_a.u_c8.g_r.v$_DFF_PN0_/RESETN"
+    ],
+    [
+      247.755,
+      "u_m.g_t\\[6\\].g_pad.u_a.g_s9.v_q$_DFF_PN0_/RESETN"
+    ],
+    [
+      247.57,
+      "u_m.g_t\\[5\\].g_pair.u_a.y\\[8\\]$_DFF_PN0_/RESETN"
+    ]
+  ],
+  "nets_visited": 101960
+}

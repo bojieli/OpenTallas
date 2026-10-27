@@ -1,0 +1,65 @@
+{
+ "checks": {
+  "G1": {
+   "verdict": "PASS",
+   "n_fail": 0,
+   "sample": []
+  },
+  "G3": {
+   "verdict": "PASS",
+   "n_fail": 0,
+   "sample": []
+  },
+  "G4": {
+   "verdict": "PASS",
+   "n_fail": 0,
+   "sample": []
+  },
+  "G5": {
+   "verdict": "PASS",
+   "n_fail": 0,
+   "sample": []
+  },
+  "G6": {
+   "verdict": "PASS",
+   "n_fail": 0,
+   "sample": []
+  },
+  "G7": {
+   "verdict": "PASS",
+   "n_fail": 0,
+   "sample": []
+  }
+ },
+ "info": {
+  "n_nodes": 170,
+  "n_leaves": 512,
+  "leaf_load": [
+   50,
+   51
+  ],
+  "depth": [
+   5
+  ],
+  "macro_leaf_in_halo": [],
+  "note": "macro leaf stage sits on the ROM clock pin (within its halo by design, as QC mscts_h)"
+ },
+ "verdict": "PASS",
+ "argv": [
+  "/srv/opentallas-scratch2/claude/codex-head-2000/planning/head_plan_gate.py",
+  "/srv/opentallas-scratch2/claude/codex-head-2000/planning/plans/eq_b_24444_b0.tcl",
+  "/srv/opentallas-scratch2/claude/codex-head-2000/planning/plans/eq_b_24444_b0.seg.json",
+  "/srv/opentallas-scratch2/claude/codex-head-2000/planning/plans/eq_b_24444_b0.geo",
+  "/srv/opentallas-scratch2/claude/codex-head-2000/elemB_r7place_r4/macros/ot_rom_4096x274_m8.lef",
+  "142.56,142.56",
+  "/srv/opentallas-scratch2/claude/codex-head-2000/planning/plans/eq_b_24444_b0.gate.json",
+  "/srv/opentallas-scratch2/claude/codex-head-2000/planning/codex-head-mr3/results/model_refit2_1026/py"
+ ],
+ "sha256": {
+  "/srv/opentallas-scratch2/claude/codex-head-2000/planning/plans/eq_b_24444_b0.tcl": "8c4d095c46737b9346f8fdd7e57f90965b1d1730202212c4cb69969d2ab4c8df",
+  "/srv/opentallas-scratch2/claude/codex-head-2000/planning/plans/eq_b_24444_b0.seg.json": "c99bdc685f2697250793e1015e487f77965d2308f7d4dfdc15b07bc004e236a2",
+  "/srv/opentallas-scratch2/claude/codex-head-2000/planning/plans/eq_b_24444_b0.geo": "37c82fc8e37eb93b6ea478c676f0347c607e09ebd4744fbc2e5118cc7bbed959",
+  "/srv/opentallas-scratch2/claude/codex-head-2000/elemB_r7place_r4/macros/ot_rom_4096x274_m8.lef": "a283603bb491073a454f91dac30fa98687366aa2ef2d493eea6512771d876e6d"
+ },
+ "scope": "PLAN gate, UNCHECKED"
+}
