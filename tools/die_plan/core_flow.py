@@ -54,6 +54,33 @@ def install_rc(kd, src=None):
     check_rc_cal(src)
     shutil.copyfile(src, Path(kd) / RC_CAL_KIT)
     return check_rc_cal(Path(kd) / RC_CAL_KIT)
+
+
+def install_signal_repair(kd, cfg):
+    """OWNER 10-27: segment long signal wires at placement, before CTS/routing.
+
+    Preserve an existing POST_RESIZE hook first. repair_design skips clock nets;
+    the shared 60 um default changes no register, latency or clock constraint.
+    """
+    import re
+    kd = Path(kd)
+    hook = "/work/signal_maxwire.tcl"
+    previous = None
+    for line in cfg:
+        match = re.match(r"(?:override )?export POST_RESIZE_TCL\s*=\s*(.+)$", line)
+        if match:
+            previous = match.group(1).strip()
+    cfg[:] = [line for line in cfg if not re.match(r"(?:override )?export POST_RESIZE_TCL\s*=", line)]
+    shutil.copyfile(TOOL / "signal_maxwire.tcl", kd / "signal_maxwire.tcl")
+    shutil.copyfile(TOOL / "pg_connect.tcl", kd / "pg_connect.tcl")
+    chain = []
+    if previous and previous != hook:
+        chain.append(f"source {previous}")
+    chain.append("source /work/signal_maxwire.tcl")
+    (kd / "post_resize_signal.tcl").write_text("\n".join(chain) + "\n")
+    cfg.append("override export POST_RESIZE_TCL = /work/post_resize_signal.tcl")
+    return cfg
+
 LINT_RC = 8
 
 # first step inside the docker bash -lc string (rc starts at 0 before it)
