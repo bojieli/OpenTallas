@@ -4,3 +4,5 @@ Wi E-corridor: personallyVIEWED wi_east_review.png. 1118-bit ft5 avoids the S sm
 14:44 v8 split image personally viewed: FT26 uses two 528-bit jog columns in separate glue channels; bodies stay outside hard-core lots, first/last ports and stage counts unchanged. PASS-COND for bounded 50-iteration .75 FT-only comparison, full partition route held.
 
 14:57 Source-qualified PV correction applied exact7371668398 mapping of256 current instances: S0 zero-load alias -> S1 actual29724sink entry. Transformed384nm pin delta uses core orient/origin/track offset with oldtap exact checks. No clockcount/domain/RTL/cycle change; actual timedS1 CTS/signoff remains held pending fullq6.
+
+14:54 Wi split candidate personally viewed: FT6 divided into two559-bit groups with jogs220/1050 across centralglue, actualsites clear hardlots. All403um internalhop asserts pass, no stage/count/pin/cycle change. PASS-COND for bounded50/.75 FT-only coupon; fullpartitionroute held.

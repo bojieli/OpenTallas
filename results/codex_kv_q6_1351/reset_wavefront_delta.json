@@ -1,0 +1,1477 @@
+{
+ "max_release_before": 95,
+ "max_release_after": 97,
+ "part_changes": {
+  "sys_c": {
+   "old": 95,
+   "new": 97,
+   "delta": 2,
+   "parent_old": "hgi_WN_0",
+   "parent_new": "hgi_WN_0"
+  }
+ },
+ "sys_c_type_before": {
+  "in_um": [
+   8.16,
+   8.608
+  ],
+  "outs": [],
+  "depth_K": 6,
+  "entry": "relayed",
+  "entry_stages": 1,
+  "release_after_pin": 7,
+  "relays": 21,
+  "max_hop_um": 360.0,
+  "core_resets": [],
+  "start_role": "bootstrap",
+  "start_tap": 2,
+  "core_start_roles": {}
+ },
+ "sys_c_type_after": {
+  "in_um": [
+   8.16,
+   8.608
+  ],
+  "outs": [],
+  "depth_K": 8,
+  "entry": "relayed",
+  "entry_stages": 1,
+  "release_after_pin": 9,
+  "relays": 69,
+  "max_hop_um": 380.0,
+  "core_resets": [],
+  "start_role": "bootstrap",
+  "start_tap": 8,
+  "core_start_roles": {}
+ },
+ "start_before": {
+  "mode": "broadcast",
+  "die_pin": "start",
+  "sync_stages": 2,
+  "types": {
+   "kv3_hg": {
+    "in_um": [
+     801.888,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      481.184,
+      8.608
+     ]
+    ]
+   },
+   "kv3_hg_v1": {
+    "in_um": [
+     801.888,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      481.184,
+      8.608
+     ]
+    ]
+   },
+   "kv3_hg_v1p2": {
+    "in_um": [
+     801.888,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      481.184,
+      8.608
+     ]
+    ]
+   },
+   "kv3_hg_v1p3": {
+    "in_um": [
+     801.888,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      481.184,
+      8.608
+     ]
+    ]
+   },
+   "kv3_hg_v1p4": {
+    "in_um": [
+     801.888,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      481.184,
+      8.608
+     ]
+    ]
+   },
+   "kv3_hg_v1p5": {
+    "in_um": [
+     801.888,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      481.184,
+      8.608
+     ]
+    ]
+   },
+   "kv3_hg_v1p6": {
+    "in_um": [
+     1267.424,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      481.184,
+      8.608
+     ]
+    ]
+   },
+   "kv3_hg_v3": {
+    "in_um": [
+     1269.6,
+     762.976
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      161.504,
+      1511.968
+     ],
+     [
+      "start_o_2",
+      10.336,
+      456.288
+     ]
+    ]
+   },
+   "kv3_hgi": {
+    "in_um": [
+     10.336,
+     1511.968
+    ],
+    "outs": []
+   },
+   "kv3_hgi_v1": {
+    "in_um": [
+     801.888,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      481.184,
+      8.608
+     ],
+     [
+      "start_o_2",
+      1121.568,
+      8.608
+     ]
+    ]
+   },
+   "kv3_hgi_v2": {
+    "in_um": [
+     1267.424,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      481.184,
+      8.608
+     ],
+     [
+      "start_o_2",
+      1121.568,
+      8.608
+     ],
+     [
+      "start_o_3",
+      10.336,
+      456.288
+     ]
+    ]
+   },
+   "kv3_hgi_v3": {
+    "in_um": [
+     10.336,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      481.184,
+      8.608
+     ]
+    ]
+   },
+   "kv3_hgi_v4": {
+    "in_um": [
+     801.888,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      481.184,
+      8.608
+     ],
+     [
+      "start_o_2",
+      1121.568,
+      8.608
+     ]
+    ]
+   },
+   "kv3_hgi_v5": {
+    "in_um": [
+     1267.424,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      481.184,
+      8.608
+     ],
+     [
+      "start_o_2",
+      10.336,
+      456.288
+     ]
+    ]
+   },
+   "kv3_hgi_v6": {
+    "in_um": [
+     10.336,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      481.184,
+      8.608
+     ],
+     [
+      "start_o_1",
+      1121.568,
+      8.608
+     ]
+    ]
+   },
+   "kv3_hgi_v7": {
+    "in_um": [
+     801.888,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      481.184,
+      8.608
+     ]
+    ]
+   },
+   "kv3_hgi_v8": {
+    "in_um": [
+     1267.424,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      481.184,
+      8.608
+     ],
+     [
+      "start_o_2",
+      10.336,
+      456.288
+     ]
+    ]
+   },
+   "kv3_hroot": {
+    "in_um": [
+     1891.68,
+     10.272
+    ],
+    "outs": []
+   },
+   "kv3_hub_C": {
+    "in_um": [
+     1262.176,
+     8.608
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      182.176,
+      8.608
+     ],
+     [
+      "start_o_1",
+      902.176,
+      8.608
+     ],
+     [
+      "start_o_2",
+      1982.176,
+      8.608
+     ],
+     [
+      "start_o_3",
+      2150.88,
+      504.928
+     ],
+     [
+      "start_o_4",
+      2150.88,
+      1510.752
+     ],
+     [
+      "start_o_5",
+      182.176,
+      1667.488
+     ],
+     [
+      "start_o_6",
+      902.176,
+      1667.488
+     ],
+     [
+      "start_o_7",
+      10.336,
+      502.752
+     ]
+    ]
+   },
+   "kv3_hub_Ei": {
+    "in_um": [
+     10.336,
+     838.112
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      1269.6,
+      504.928
+     ]
+    ]
+   },
+   "kv3_hub_Eo": {
+    "in_um": [
+     10.336,
+     838.112
+    ],
+    "outs": []
+   },
+   "kv3_hub_Wi": {
+    "in_um": [
+     1269.6,
+     840.736
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      10.336,
+      502.752
+     ]
+    ]
+   },
+   "kv3_hub_Wo": {
+    "in_um": [
+     1269.6,
+     840.736
+    ],
+    "outs": []
+   },
+   "kv3_io_cor": {
+    "in_um": [
+     801.888,
+     8.608
+    ],
+    "outs": []
+   },
+   "kv3_io_cor_v1": {
+    "in_um": [
+     801.888,
+     8.608
+    ],
+    "outs": []
+   },
+   "kv3_io_ft": {
+    "in_um": [
+     801.888,
+     8.608
+    ],
+    "outs": []
+   },
+   "kv3_io_ft_v1": {
+    "in_um": [
+     801.888,
+     8.608
+    ],
+    "outs": []
+   },
+   "kv3_pc": {
+    "in_um": [
+     520.096,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      174.496,
+      8.608
+     ],
+     [
+      "start_o_1",
+      10.336,
+      456.288
+     ]
+    ]
+   },
+   "kv3_pc_v1": {
+    "in_um": [
+     1027.68,
+     1370.784
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      174.496,
+      8.608
+     ],
+     [
+      "start_o_1",
+      10.336,
+      456.288
+     ]
+    ]
+   },
+   "kv3_pc_v3": {
+    "in_um": [
+     1027.68,
+     762.976
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      10.336,
+      456.288
+     ]
+    ]
+   },
+   "kv3_pv": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_pv_v1": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_pv_v12": {
+    "in_um": [
+     1262.176,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      902.176,
+      8.608
+     ]
+    ]
+   },
+   "kv3_pv_v1n": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_pv_v2": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_pv_v2n": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_pv_v3": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_pv_v3n": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_pv_v4": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_pv_v4n": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_pv_v5": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_pv_v5n": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_pv_v6": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_pv_v6n": {
+    "in_um": [
+     1262.176,
+     1511.968
+    ],
+    "outs": []
+   },
+   "kv3_pv_v7": {
+    "in_um": [
+     1262.176,
+     1511.968
+    ],
+    "outs": []
+   },
+   "kv3_pv_v8": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_sys_SD": {
+    "in_um": [
+     1110.944,
+     8.608
+    ],
+    "outs": []
+   },
+   "kv3_sys_SD_v1": {
+    "in_um": [
+     1110.944,
+     8.608
+    ],
+    "outs": []
+   },
+   "kv3_sys_c": {
+    "in_um": [
+     10.336,
+     8.608
+    ],
+    "outs": []
+   }
+  },
+  "hard_parts_raw_reset": [
+   "phy_EN_0",
+   "phy_EN_1",
+   "phy_EN_2",
+   "phy_EN_3",
+   "phy_EN_4",
+   "phy_EN_5",
+   "phy_EN_6",
+   "phy_EN_7",
+   "phy_ES_0",
+   "phy_ES_1",
+   "phy_ES_2",
+   "phy_ES_3",
+   "phy_ES_4",
+   "phy_ES_5",
+   "phy_ES_6",
+   "phy_ES_7",
+   "phy_WN_0",
+   "phy_WN_1",
+   "phy_WN_2",
+   "phy_WN_3",
+   "phy_WN_4",
+   "phy_WN_5",
+   "phy_WN_6",
+   "phy_WN_7",
+   "phy_WS_0",
+   "phy_WS_1",
+   "phy_WS_2",
+   "phy_WS_3",
+   "phy_WS_4",
+   "phy_WS_5",
+   "phy_WS_6",
+   "phy_WS_7"
+  ],
+  "bootstrap_types": [
+   "kv3_hg",
+   "kv3_hg_v1",
+   "kv3_hg_v1p2",
+   "kv3_hg_v1p3",
+   "kv3_hg_v1p4",
+   "kv3_hg_v1p5",
+   "kv3_hg_v1p6",
+   "kv3_hg_v3",
+   "kv3_hgi_v3",
+   "kv3_hgi_v4",
+   "kv3_hgi_v5",
+   "kv3_hgi_v6",
+   "kv3_hgi_v7",
+   "kv3_hgi_v8",
+   "kv3_hroot",
+   "kv3_hub_C",
+   "kv3_hub_Ei",
+   "kv3_hub_Eo",
+   "kv3_hub_Wi",
+   "kv3_hub_Wo",
+   "kv3_io_cor",
+   "kv3_io_cor_v1",
+   "kv3_io_ft",
+   "kv3_io_ft_v1",
+   "kv3_pc",
+   "kv3_pc_v1",
+   "kv3_pc_v3",
+   "kv3_pv_v1",
+   "kv3_pv_v12",
+   "kv3_pv_v1n",
+   "kv3_pv_v2",
+   "kv3_pv_v2n",
+   "kv3_pv_v3",
+   "kv3_pv_v3n",
+   "kv3_pv_v4",
+   "kv3_pv_v4n",
+   "kv3_pv_v5",
+   "kv3_pv_v5n",
+   "kv3_pv_v6",
+   "kv3_pv_v6n",
+   "kv3_pv_v7",
+   "kv3_sys_SD",
+   "kv3_sys_SD_v1",
+   "kv3_sys_c"
+  ],
+  "roles_note": "start_role mission: taps release at max(release[p], S + release[p]); start_role bootstrap: taps (and core resets with role bootstrap) release at release[p] (raw delivered wavefront, boot runs before START), the local START tap start_t<start_tap> at S + release[p] gates the contents' declared mission admission.  One START, no timer, no die-reset bypass.",
+  "note": "OWNER DECISION 13c: START rides the reset wavefront (start_i / start_o_<k> beside arst_n / rst_o_<k>, run relays on the reset relay sites).  Soft partition p's control state (leaves, boundary epochs, hard-core resets) releases at  max(release[p], S + release[p])  clocks, S = the die start pin's rising edge relative to rst_n deassert; i.e. the START offsets ARE the published release offsets.  Hard partitions (prebuilt, no start pin) see the raw reset only."
+ },
+ "start_after": {
+  "mode": "broadcast",
+  "die_pin": "start",
+  "sync_stages": 2,
+  "types": {
+   "kv3_hg": {
+    "in_um": [
+     801.888,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      481.184,
+      8.608
+     ]
+    ]
+   },
+   "kv3_hg_v1": {
+    "in_um": [
+     801.888,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      481.184,
+      8.608
+     ]
+    ]
+   },
+   "kv3_hg_v1p2": {
+    "in_um": [
+     801.888,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      481.184,
+      8.608
+     ]
+    ]
+   },
+   "kv3_hg_v1p3": {
+    "in_um": [
+     801.888,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      481.184,
+      8.608
+     ]
+    ]
+   },
+   "kv3_hg_v1p4": {
+    "in_um": [
+     801.888,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      481.184,
+      8.608
+     ]
+    ]
+   },
+   "kv3_hg_v1p5": {
+    "in_um": [
+     801.888,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      481.184,
+      8.608
+     ]
+    ]
+   },
+   "kv3_hg_v1p6": {
+    "in_um": [
+     1267.424,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      481.184,
+      8.608
+     ]
+    ]
+   },
+   "kv3_hg_v3": {
+    "in_um": [
+     1269.6,
+     762.976
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      161.504,
+      1511.968
+     ],
+     [
+      "start_o_2",
+      10.336,
+      456.288
+     ]
+    ]
+   },
+   "kv3_hgi": {
+    "in_um": [
+     10.336,
+     1511.968
+    ],
+    "outs": []
+   },
+   "kv3_hgi_v1": {
+    "in_um": [
+     801.888,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      481.184,
+      8.608
+     ],
+     [
+      "start_o_2",
+      1121.568,
+      8.608
+     ]
+    ]
+   },
+   "kv3_hgi_v2": {
+    "in_um": [
+     1267.424,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      481.184,
+      8.608
+     ],
+     [
+      "start_o_2",
+      1121.568,
+      8.608
+     ],
+     [
+      "start_o_3",
+      10.336,
+      456.288
+     ]
+    ]
+   },
+   "kv3_hgi_v3": {
+    "in_um": [
+     10.336,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      481.184,
+      8.608
+     ]
+    ]
+   },
+   "kv3_hgi_v4": {
+    "in_um": [
+     801.888,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      481.184,
+      8.608
+     ],
+     [
+      "start_o_2",
+      1121.568,
+      8.608
+     ]
+    ]
+   },
+   "kv3_hgi_v5": {
+    "in_um": [
+     1267.424,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      481.184,
+      8.608
+     ],
+     [
+      "start_o_2",
+      10.336,
+      456.288
+     ]
+    ]
+   },
+   "kv3_hgi_v6": {
+    "in_um": [
+     10.336,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      481.184,
+      8.608
+     ],
+     [
+      "start_o_1",
+      1121.568,
+      8.608
+     ]
+    ]
+   },
+   "kv3_hgi_v7": {
+    "in_um": [
+     801.888,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      481.184,
+      8.608
+     ]
+    ]
+   },
+   "kv3_hgi_v8": {
+    "in_um": [
+     1267.424,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      161.504,
+      8.608
+     ],
+     [
+      "start_o_1",
+      481.184,
+      8.608
+     ],
+     [
+      "start_o_2",
+      10.336,
+      456.288
+     ]
+    ]
+   },
+   "kv3_hroot": {
+    "in_um": [
+     1891.68,
+     10.272
+    ],
+    "outs": []
+   },
+   "kv3_hub_C": {
+    "in_um": [
+     1262.176,
+     8.608
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      182.176,
+      8.608
+     ],
+     [
+      "start_o_1",
+      902.176,
+      8.608
+     ],
+     [
+      "start_o_2",
+      1982.176,
+      8.608
+     ],
+     [
+      "start_o_3",
+      2150.88,
+      504.928
+     ],
+     [
+      "start_o_4",
+      2150.88,
+      1510.752
+     ],
+     [
+      "start_o_5",
+      182.176,
+      1667.488
+     ],
+     [
+      "start_o_6",
+      902.176,
+      1667.488
+     ],
+     [
+      "start_o_7",
+      10.336,
+      502.752
+     ]
+    ]
+   },
+   "kv3_hub_Ei": {
+    "in_um": [
+     10.336,
+     838.112
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      1269.6,
+      504.928
+     ]
+    ]
+   },
+   "kv3_hub_Eo": {
+    "in_um": [
+     10.336,
+     838.112
+    ],
+    "outs": []
+   },
+   "kv3_hub_Wi": {
+    "in_um": [
+     1269.6,
+     840.736
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      10.336,
+      502.752
+     ]
+    ]
+   },
+   "kv3_hub_Wo": {
+    "in_um": [
+     1269.6,
+     840.736
+    ],
+    "outs": []
+   },
+   "kv3_io_cor": {
+    "in_um": [
+     801.888,
+     8.608
+    ],
+    "outs": []
+   },
+   "kv3_io_cor_v1": {
+    "in_um": [
+     801.888,
+     8.608
+    ],
+    "outs": []
+   },
+   "kv3_io_ft": {
+    "in_um": [
+     801.888,
+     8.608
+    ],
+    "outs": []
+   },
+   "kv3_io_ft_v1": {
+    "in_um": [
+     801.888,
+     8.608
+    ],
+    "outs": []
+   },
+   "kv3_pc": {
+    "in_um": [
+     520.096,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      174.496,
+      8.608
+     ],
+     [
+      "start_o_1",
+      10.336,
+      456.288
+     ]
+    ]
+   },
+   "kv3_pc_v1": {
+    "in_um": [
+     1027.68,
+     1370.784
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      174.496,
+      8.608
+     ],
+     [
+      "start_o_1",
+      10.336,
+      456.288
+     ]
+    ]
+   },
+   "kv3_pc_v3": {
+    "in_um": [
+     1027.68,
+     762.976
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      10.336,
+      456.288
+     ]
+    ]
+   },
+   "kv3_pv": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_pv_v1": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_pv_v12": {
+    "in_um": [
+     1262.176,
+     1511.968
+    ],
+    "outs": [
+     [
+      "start_o_0",
+      902.176,
+      8.608
+     ]
+    ]
+   },
+   "kv3_pv_v1n": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_pv_v2": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_pv_v2n": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_pv_v3": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_pv_v3n": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_pv_v4": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_pv_v4n": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_pv_v5": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_pv_v5n": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_pv_v6": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_pv_v6n": {
+    "in_um": [
+     1262.176,
+     1511.968
+    ],
+    "outs": []
+   },
+   "kv3_pv_v7": {
+    "in_um": [
+     1262.176,
+     1511.968
+    ],
+    "outs": []
+   },
+   "kv3_pv_v8": {
+    "in_um": [
+     2150.88,
+     1370.784
+    ],
+    "outs": []
+   },
+   "kv3_sys_SD": {
+    "in_um": [
+     1110.944,
+     8.608
+    ],
+    "outs": []
+   },
+   "kv3_sys_SD_v1": {
+    "in_um": [
+     1110.944,
+     8.608
+    ],
+    "outs": []
+   },
+   "kv3_sys_c": {
+    "in_um": [
+     10.336,
+     8.608
+    ],
+    "outs": []
+   }
+  },
+  "hard_parts_raw_reset": [
+   "phy_EN_0",
+   "phy_EN_1",
+   "phy_EN_2",
+   "phy_EN_3",
+   "phy_EN_4",
+   "phy_EN_5",
+   "phy_EN_6",
+   "phy_EN_7",
+   "phy_ES_0",
+   "phy_ES_1",
+   "phy_ES_2",
+   "phy_ES_3",
+   "phy_ES_4",
+   "phy_ES_5",
+   "phy_ES_6",
+   "phy_ES_7",
+   "phy_WN_0",
+   "phy_WN_1",
+   "phy_WN_2",
+   "phy_WN_3",
+   "phy_WN_4",
+   "phy_WN_5",
+   "phy_WN_6",
+   "phy_WN_7",
+   "phy_WS_0",
+   "phy_WS_1",
+   "phy_WS_2",
+   "phy_WS_3",
+   "phy_WS_4",
+   "phy_WS_5",
+   "phy_WS_6",
+   "phy_WS_7"
+  ],
+  "bootstrap_types": [
+   "kv3_hg",
+   "kv3_hg_v1",
+   "kv3_hg_v1p2",
+   "kv3_hg_v1p3",
+   "kv3_hg_v1p4",
+   "kv3_hg_v1p5",
+   "kv3_hg_v1p6",
+   "kv3_hg_v3",
+   "kv3_hgi_v3",
+   "kv3_hgi_v4",
+   "kv3_hgi_v5",
+   "kv3_hgi_v6",
+   "kv3_hgi_v7",
+   "kv3_hgi_v8",
+   "kv3_hroot",
+   "kv3_hub_C",
+   "kv3_hub_Ei",
+   "kv3_hub_Eo",
+   "kv3_hub_Wi",
+   "kv3_hub_Wo",
+   "kv3_io_cor",
+   "kv3_io_cor_v1",
+   "kv3_io_ft",
+   "kv3_io_ft_v1",
+   "kv3_pc",
+   "kv3_pc_v1",
+   "kv3_pc_v3",
+   "kv3_pv_v1",
+   "kv3_pv_v12",
+   "kv3_pv_v1n",
+   "kv3_pv_v2",
+   "kv3_pv_v2n",
+   "kv3_pv_v3",
+   "kv3_pv_v3n",
+   "kv3_pv_v4",
+   "kv3_pv_v4n",
+   "kv3_pv_v5",
+   "kv3_pv_v5n",
+   "kv3_pv_v6",
+   "kv3_pv_v6n",
+   "kv3_pv_v7",
+   "kv3_sys_SD",
+   "kv3_sys_SD_v1",
+   "kv3_sys_c"
+  ],
+  "roles_note": "start_role mission: taps release at max(release[p], S + release[p]); start_role bootstrap: taps (and core resets with role bootstrap) release at release[p] (raw delivered wavefront, boot runs before START), the local START tap start_t<start_tap> at S + release[p] gates the contents' declared mission admission.  One START, no timer, no die-reset bypass.",
+  "note": "OWNER DECISION 13c: START rides the reset wavefront (start_i / start_o_<k> beside arst_n / rst_o_<k>, run relays on the reset relay sites).  Soft partition p's control state (leaves, boundary epochs, hard-core resets) releases at  max(release[p], S + release[p])  clocks, S = the die start pin's rising edge relative to rst_n deassert; i.e. the START offsets ARE the published release offsets.  Hard partitions (prebuilt, no start pin) see the raw reset only."
+ }
+}
