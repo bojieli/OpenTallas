@@ -71,8 +71,11 @@ SIGNED MESH = COMMON POINT (CLOCK-KV-R17, opt-in, METHODOLOGY 12.4a b exception 
   root input) is in the sign-off is re-referenced to the mesh: late/early := M0 + (tap - routed load late/early),
   cppr_node 'm' (credit 0: the same M0 on both sides), AOCV charged only below the load point (node 'm' stages = mesh
   driver output, no node position: distance = launch/capture bbox).  Each 'm' pair then carries the explicit signed
-  uncertainty U(a,b) = max(worst |d| over the samples, |mean d| + 3 sigma) + |routed-vs-sim gap difference| +
-  |gradient shift vector difference| (worst direction), where d = the two load arrivals' difference in a sample.
+  uncertainty U(a,b) = max(worst |d'| over the samples, |mean d'| + 3 sigma) + |gradient shift vector difference|
+  (worst direction), where d' = the two load arrivals' difference in a sample PLUS the routed-vs-sim gap difference
+  (gap_a - gap_b, folded into every sample; PD11 ruling 3, 10-27 -- before, |gap_a - gap_b| was added after max|d|,
+  which over-counted when the gap and the sample difference had opposite signs).  The record reports the die-wide
+  bound (max U) and per-pair percentiles (p50/p90/p99/max) over every mesh pair the STA evaluated.
   --mesh-band tree (default, strict): the leaf-fed band taps are NOT through the mesh; any pair with one keeps its
   absolute arrivals and CPPR at the die root 'h' (12.4b).  --mesh-band sim: band-root inputs are sign-off pseudo loads
   (same per-sample tree offsets as the drivers above them) -> 'm' too (INFO / ruling needed).
@@ -675,13 +678,26 @@ def mesh_signoff(proof_dir, taps, meta, corner, so_path, band_mode="tree"):
         k = (x, y) if x < y else (y, x)
         if k not in cache:
             i, j = idx[k[0]], idx[k[1]]
-            ds = [arr[s][i] - arr[s][j] for s in range(ns)]
+            g = gap[i] - gap[j]
+            ds = [arr[s][i] - arr[s][j] + g for s in range(ns)]   # RC gap folded into every sample (PD11 ruling 3)
             mc = ds[1:] or ds
             mu = sum(mc) / len(mc)
             sd = (sum((v - mu) ** 2 for v in mc) / max(1, len(mc) - 1)) ** 0.5
             gd = ((gv[i][0] - gv[j][0]) ** 2 + (gv[i][1] - gv[j][1]) ** 2) ** 0.5
-            cache[k] = max(max(abs(v) for v in ds), abs(mu) + 3.0 * sd) + abs(gap[i] - gap[j]) + gd
+            cache[k] = max(max(abs(v) for v in ds), abs(mu) + 3.0 * sd) + gd
         return cache[k]
+
+    def stats():
+        """die-wide bound (max U) + per-pair percentiles over every mesh pair evaluated so far"""
+        v = sorted(cache.values())
+        if not v:
+            return dict(pairs=0)
+
+        def q(f):
+            return round(v[min(len(v) - 1, int(f * (len(v) - 1) + 0.5))], 2)
+        return dict(pairs=len(v), p50_ps=q(0.5), p90_ps=q(0.9), p99_ps=q(0.99), max_ps=round(v[-1], 2),
+                    die_wide_bound_ps=round(v[-1], 2), gap="folded into each sample")
+    U.stats = stats
     rec = dict(file=str(so_path), M0_ps=round(m0, 3), taps_on_mesh=len(load), taps_total=len(taps), band_mode=band_mode,
                samples=ns - 1, sim_summary=S.get("summary"), status=S.get("checked", "UNCHECKED"))
     return U, rec
@@ -1079,6 +1095,12 @@ def main(argv=None):
                                           rec=hrec)
             cr["classes"][k]["label"] = ("real-view+budget" if real else "declared-budget") + (
                 " / INFO subset" if k.endswith("INFO") else "")
+        if unc is not None:
+            # PD11 ruling 3: die-wide bound + per-pair percentiles of the signed-mesh U over the timed mesh pairs
+            cr["mesh_signoff"]["pair_U"] = unc.stats()
+            pu = cr["mesh_signoff"]["pair_U"]
+            print(f"MESH_U {c} pairs {pu.get('pairs')} p50 {pu.get('p50_ps')} p90 {pu.get('p90_ps')} p99 {pu.get('p99_ps')} "
+                  f"max {pu.get('max_ps')} (die-wide bound {pu.get('die_wide_bound_ps')} ps; RC gap folded per sample)")
         res["corners"][c] = cr
     res["coverage"] = cov
     gate = {}

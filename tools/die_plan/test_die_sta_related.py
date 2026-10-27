@@ -208,9 +208,9 @@ def test_mesh_signoff_rereference_and_unc(tmp_path):
     assert rec["M0_ps"] == m0 and rec["taps_on_mesh"] == 2
     assert taps["a"]["late_ps"] == m0 + 50.0 and taps["a"]["early_ps"] == m0 + 40.0 and taps["a"]["cppr_node"] == "m"
     assert taps["a"]["abs_late_ps"] == 4650.0 and taps["c"]["cppr_node"] == "h"        # band strict: not on the mesh
-    # d = s1 - s2 over samples: -12, -14, -9; MC mean -11.5 sd 3.5355 -> mu+3sd 22.11; max|d| 14 -> 22.11
-    # gap: (4600-4595) - (4610-4607) = 2; gradient |(3,0)-(0,4)| = 5
-    assert abs(U("a", "b") - (11.5 + 3 * 3.5355339 + 2 + 5)) < 1e-4
+    # d = s1 - s2 over samples: -12, -14, -9; gap (4600-4595) - (4610-4607) = 2 folded into every sample (PD11 ruling 3)
+    # -> d' = -10, -12, -7; MC mean -9.5 sd 3.5355 -> mu+3sd 20.107 > max|d'| 12; gradient |(3,0)-(0,4)| = 5
+    assert abs(U("a", "b") - (9.5 + 3 * 3.5355339 + 5)) < 1e-4
     assert U("a", "c") == 0.0 and U("a", "a") == 0.0
     # strict band pair uses absolute arrivals and the die root
     la, ea, lc, ec = R.arr4(taps["a"], taps["c"], "h")
@@ -346,3 +346,28 @@ def test_hb4_intra_bound_and_abutted_model():
     assert r2["all"]["tt_setup_after_ps"] == round(300.0 - 3 * 67.67, 2)
     assert R._DATA_PIN_SKIP.search("g_t_10_u_l8__clk[0]") and R._DATA_PIN_SKIP.search("strap_bsel[1]")
     assert R._DATA_PIN_SKIP.search("g_t_11_u_stk__rst_n[0]") and not R._DATA_PIN_SKIP.search("i_ck_data[3]")
+
+
+def test_mesh_signoff_gap_folded_per_sample_and_stats(tmp_path):
+    """PD11 ruling 3: the routed-vs-sim gap is folded into every MC sample (opposite-sign gap reduces U instead of
+    adding to it), and stats() reports per-pair percentiles + the die-wide bound over the evaluated pairs."""
+    import json
+    M = {"taps": [{"port": p, "stub": s} for p, s in (("a", "s1"), ("b", "s2"), ("c", "s3"))]}
+    (tmp_path / "mesh.json").write_text(json.dumps(M))
+    # gaps routed - sim nominal: s1 +10, s2 0, s3 0 (sim nominal s1 100, s2 110, s3 100)
+    rt = {"s1": dict(late=110.0, early=100.0), "s2": dict(late=110.0, early=100.0), "s3": dict(late=100.0, early=90.0)}
+    (tmp_path / "mesh_TT.json").write_text(json.dumps({"stubs": rt}))
+    # sim: s1 is 10 ps EARLY of s2 in every sample -> routed difference s1-s2 = 0: folded U = 0 (+ gradient 0);
+    # old form would give max|d| 10 + |gap diff| 10 = 20
+    so = dict(corner="TT", loads=["s1", "s2", "s3"], arr=[[100.0, 110.0, 100.0], [100.0, 110.0, 104.0],
+                                                           [100.0, 110.0, 96.0]],
+              grad_vec_ps=[[0.0, 0.0]] * 3, summary={}, checked="UNCHECKED")
+    (tmp_path / "so.json").write_text(json.dumps(so))
+    taps = {p: dict(late_ps=200.0, early_ps=190.0, cppr_node="h") for p in "abc"}
+    U, rec = R.mesh_signoff(tmp_path, taps, {"cppr_node_range_ps": {"h": 0.0}}, "TT", tmp_path / "so.json", "tree")
+    assert abs(U("a", "b")) < 1e-9
+    # s1 - s3 + gap 10: d' = 10, 6, 14 -> MC mean 10 sd 5.657 -> 26.97 > max 14
+    assert abs(U("a", "c") - (10 + 3 * 32 ** 0.5)) < 1e-4
+    st = U.stats()
+    assert st["pairs"] == 2 and st["max_ps"] == st["die_wide_bound_ps"] == round(10 + 3 * 32 ** 0.5, 2)
+    assert st["p50_ps"] in (0.0, round(10 + 3 * 32 ** 0.5, 2))
