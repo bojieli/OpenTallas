@@ -118,3 +118,11 @@ def test_mixed_rcx_tables_must_cover_every_actual_width():
     assert not old['ok'] and old['selected_widths_um'][8]['0.16']==.04
     assert old['selected_widths_um'][9]['1.28']==.64
     assert C.rules_width_inventory_check(rules([.04]+actual),actual)['ok']
+
+
+def test_mesh_reserved_before_tree_with_physical_vss_shields():
+    shapes=E.mesh_reservation_shapes(mesh())
+    assert any(s[1]=='ck_mesh_explicit' and s[2]=='mesh' for s in shapes)
+    assert any(s[1]=='VSS' and s[2]=='pg' for s in shapes)
+    # All mesh metal keeps its real 0.32um width; no global16w substitution.
+    assert all(abs(s[4]-s[3]-.32)<1e-6 for s in shapes)

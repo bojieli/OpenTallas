@@ -109,3 +109,19 @@ def test_legalized_driver_jog_is_charged_as_mesh_metal():
                  M.RC3['8w'],(M.RC3['8w'],0.),jog_um=1.)
     assert (10.81,5.) in N['xy']
     assert any(N['dn'][0] in (a,b) and r>0 for a,b,r in N['R'])
+
+
+def test_west_column_feed_crosses_macro_only_in_free_row_band():
+    B=tiny(False);et=B['et']['col'];nodes=[]
+    r=dict(tag='west',xy=(0.,400.),kids=[],S=0,T={'TT':0.,'FF':0.});nodes.append(r)
+    blocked=lambda q:100.<q[0]<800. and 0.<q[1]<800.
+    out=M.orthogonal_lift(r,(900.,400.),et,'feed',nodes,8,blocked,feed_bands=[900.])
+    assert out is not None and out['S']==8
+    by={n['tag']:n for n in nodes}
+    for n in nodes:
+        if not n.get('parent'):continue
+        a=by[n['parent']]['xy'];b=n['xy']
+        if a[0]!=b[0]: assert a[1]==b[1]==900.
+        for k in range(1,n['nseg']+1):
+            q=tuple(a[j]+(b[j]-a[j])*k/n['nseg'] for j in (0,1))
+            assert not blocked(q)

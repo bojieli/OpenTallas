@@ -2867,7 +2867,10 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
         if why or part != v.get("part"):
             perr.append(dict(kind="cell_site_host", name=name, detail=f"{part}/{why} vs {v.get('part')}"))
         r = part_rects.get(part)
-        if r is not None and not (r[0] <= x and r[1] <= y and x + w <= r[2] and y + ROW_Y <= r[3]):
+        if r is not None and not (round(r[0]*1000) <= round(x*1000)
+                                  and round(r[1]*1000) <= round(y*1000)
+                                  and round((x+w)*1000) <= round(r[2]*1000)
+                                  and round((y+ROW_Y)*1000) <= round(r[3]*1000)):
             perr.append(dict(kind="cell_site_seam", name=name, detail=f"cell body leaves host {part}"))
         orient = v.get("orient", "R0")
         if orient not in ("R0", "MX", "MY", "R180"):
@@ -2987,6 +2990,13 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
     router = C128.TrackRouter(nd, sh, track_profile or DEFAULT_TRACKS, TRACK_MOVE_UM,
                               **(dict(wide_merge_um=nd.get("wide_merge_um", C128.WIDE_MERGE_UM)) if stack_r8 else {}))
     router.reserve(C128.pg_shapes(pgr))
+    mesh_driver_units = set()
+    if v2 and spec.get("mesh"):
+        from explicit_clock_mesh import mesh_reservation_shapes
+        router.reserve(mesh_reservation_shapes(spec["mesh"], sh))
+        for d in spec["mesh"]["drivers"]:
+            mesh_driver_units.update(groups[d["group"]])
+        out["meta"]["explicit_mesh_reserved_before_tree"] = True
     ties = {us[0]: list(us) for us in groups.values() if len(us) > 1}
     if chan_rects and spec.get("channel_keep", False):   # opt-in: R20 found no legal in-channel track for lane 0
         # R20: channel-hosted cells keep their trunk (and so the M7 riser) inside the clock channel
@@ -2994,7 +3004,11 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
     # physical view: one pin stack per GROUP (the tie reaches the other units); logical nets keep every unit
     phys = [dict(n, loads=[ld for ld in n["loads"] if ld.startswith("port:") or rep_of[ld] == ld]) for n in nets]
     if v2:
-        wires = _explicit_v2_wires(out, cells, phys, groups, router, stack_offset, stack_r8,
+        # Replaced leaf stubs are diagnostic ports, not physical routes. Their
+        # real output is the pre-reserved continuous mesh.
+        routed_phys = [n for n in phys if not (n["drv"] in mesh_driver_units
+                       and all(ld.startswith("port:") for ld in n["loads"]))]
+        wires = _explicit_v2_wires(out, cells, routed_phys, groups, router, stack_offset, stack_r8,
                                    bool(spec.get("exact_reserve") if exact_reserve is None else exact_reserve), ndr)
         out["meta"]["explicit_tree"].update(clock_topology_version=2,
             edge_ndrs=sorted({n.get("ndr", ndr) for n in spec.get("nets", [])}),

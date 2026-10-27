@@ -840,47 +840,46 @@ def stree(subs, ax, et, tag, nodes):
     return merge(stree(subs[:h], ax, et, tag + "0", nodes), stree(subs[h:], ax, et, tag + "1", nodes), ax, et, tag, nodes)
 
 
-def orthogonal_lift(r, tap, et, tag, nodes, S_target, blocked=None):
-    """Plan an explicit Manhattan elbow; never interpolate buffers diagonally.
+def orthogonal_lift(r, tap, et, tag, nodes, S_target, blocked=None, feed_bands=()):
+    """Plan explicit off-core Manhattan legs, including legal row-band routes.
 
-    Evaluate both physical elbows before choosing; each node and repeater must
-    be clear of the same hard-core keepouts as the top tree. Extra stages are
-    allocated by planned leg length, then timed on those actual legs.
+    A W-edge column must not feed each row horizontally through an A0 macro.
+    Its vertical tree crosses to the main tree in a free row band. This is a
+    physical channel route, not clock padding; every added leg/stage is priced.
     """
-    tap=tuple(tap)
-    start=tuple(r["xy"])
-    if abs(start[0]-tap[0]) <= 1e-6 or abs(start[1]-tap[1]) <= 1e-6:
-        length=md(start,tap)
-        if length <= 1e-6 and r["S"] >= S_target:
-            return r
-        n=max(et.nseg(length), S_target-r["S"])
-        points=[tuple(start[j]+(tap[j]-start[j])*k/n for j in (0,1)) for k in range(1,n+1)]
-        if blocked and any(blocked(q) for q in points):
-            return None
-        return lift(r,tap,et,tag,nodes,n=n)
+    tap,start=tuple(tap),tuple(r["xy"])
+    if md(start,tap)<=1e-6 and r["S"]>=S_target:return r
+    routes=[]
+    if abs(start[0]-tap[0])<=1e-6 or abs(start[1]-tap[1])<=1e-6:
+        routes.append([start,tap])
+    else:
+        routes += [[start,(start[0],tap[1]),tap],[start,(tap[0],start[1]),tap]]
+    for y in feed_bands:
+        routes.append([start,(start[0],float(y)),(tap[0],float(y)),tap])
     options=[]
-    for elbow in ((start[0],tap[1]),(tap[0],start[1])):
-        l1,l2=md(start,elbow),md(elbow,tap)
-        n1,n2=et.nseg(l1),et.nseg(l2)
-        extra=max(0,S_target-r["S"]-n1-n2)
-        # Balance the actual segment lengths within the fixed total stage count.
-        for _ in range(extra):
-            if l1/n1 >= l2/n2:n1+=1
-            else:n2+=1
-        points=[]
-        for a,b,n in ((start,elbow,n1),(elbow,tap,n2)):
-            points += [tuple(a[j]+(b[j]-a[j])*k/n for j in (0,1)) for k in range(1,n+1)]
-        if blocked and any(blocked(q) for q in points):
-            continue
-        delay=et.delay(l1,"TT",n1)+et.delay(l2,"TT",n2)
-        options.append((delay,elbow,n1,n2))
+    for route in routes:
+        pts=[route[0]]
+        for q in route[1:]:
+            if md(pts[-1],q)>1e-6:pts.append(q)
+        if len(pts)==1:pts.append(tap)
+        legs=[md(a,b) for a,b in zip(pts,pts[1:])]
+        ns=[et.nseg(length) for length in legs]
+        for _ in range(max(0,S_target-r["S"]-sum(ns))):
+            i=max(range(len(legs)),key=lambda k:legs[k]/ns[k]);ns[i]+=1
+        sites=[]
+        for a,b,n in zip(pts,pts[1:],ns):
+            sites += [tuple(a[j]+(b[j]-a[j])*k/n for j in (0,1)) for k in range(1,n+1)]
+        if blocked and any(blocked(q) for q in sites):continue
+        delay=sum(et.delay(length,"TT",n) for length,n in zip(legs,ns))
+        options.append((delay,sum(legs),tuple(pts),ns))
     if not options:return None
-    _,elbow,n1,n2=min(options)
-    r=lift(r,elbow,et,tag+"_elbow",nodes,n=n1)
-    return lift(r,tap,et,tag,nodes,n=n2)
+    _,_,pts,ns=min(options)
+    for i,(q,n) in enumerate(zip(pts[1:],ns)):
+        r=lift(r,q,et,tag if i==len(ns)-1 else f"{tag}_elbow{i}",nodes,n=n)
+    return r
 
 
-def band_tree(leaves, xc, tap, et, tag, S_target, blocked=None):
+def band_tree(leaves, xc, tap, et, tag, S_target, blocked=None, feed_bands=()):
     """DME row trees, column merge, and an explicit orthogonal upstream feed."""
     nodes=[]
     byrow=defaultdict(list)
@@ -893,7 +892,7 @@ def band_tree(leaves, xc, tap, et, tag, S_target, blocked=None):
         subs.append(r)
     r=stree(subs,"y",et,f"{tag}y",nodes)
     if md(r["xy"],tap)>1e-6 or r["S"]<S_target:
-        r=orthogonal_lift(r,tap,et,f"{tag}tap",nodes,S_target,blocked)
+        r=orthogonal_lift(r,tap,et,f"{tag}tap",nodes,S_target,blocked,feed_bands)
     if r is not None:r["parent"]=None
     return nodes,r
 
@@ -937,7 +936,10 @@ def band_trees(B, st, a):
         croot = [n for n in ct["nodes"] if n["tag"] == ct["root"]][0]
         ch = tpath[tleaf[(r3(ct["tap"][0]), r3(ct["tap"][1]))]]
         leaves = [(F["drivers"][k]["x"], F["drivers"][k]["y"]) for k in ks]
-        xc = cols[ct["c"]]
+        wedge = all(F["drivers"][k]["kind"] == "wedge" for k in ks)
+        xc = F["drivers"][ks[0]]["x"] if wedge else cols[ct["c"]]
+        feed_bands = sorted({d["y"] for d in F["drivers"] if d["kind"] == "band"},
+                            key=lambda y:min(abs(y-q[1]) for q in leaves))[:4] if wedge else ()
         best = None
         for j in range(0, min(a.a0_band_up, len(ch)) + 1):
             anc = tuple(ct["tap"]) if j == 0 else tuple(tby[ch[j - 1]["parent"]]["xy"])
@@ -950,7 +952,7 @@ def band_trees(B, st, a):
                     continue
                 et = EdgeType(st, w, mm, float(getattr(a, "a0_band_reach", 405.0)))
                 tag = f"b{ct['g']:02d}_{ct['c']:02d}_{len(out):03d}_"
-                nodes, r = band_tree(leaves, xc, anc, et, tag, Sc, B["incore"])
+                nodes, r = band_tree(leaves, xc, anc, et, tag, Sc, B["incore"], feed_bands)
                 if r is None or r["S"] != Sc:
                     continue           # equal levels is a hard rule; a deeper band tree is not a candidate
                 d = r["T"]["TT"] - Tc["TT"]
@@ -1058,8 +1060,7 @@ def mesh_seg(hs, vs, drivers, taps, wtab, stub, seg_um=54.0, wire_rel=0.0, rnd=N
         jogs.append((at, tuple(q), "M9" if kind == "h" else "M8"))
         return dist
     jd = [attach(tuple(q)) for q in taps]
-    for q in drivers:
-        attach(tuple(q))
+    driver_jd = [attach(tuple(q)) for q in drivers]
     dset = {tuple(q) for q in drivers}
     nid, xy = {}, []
 
@@ -1116,7 +1117,8 @@ def mesh_seg(hs, vs, drivers, taps, wtab, stub, seg_um=54.0, wire_rel=0.0, rnd=N
     dn = [nid[(round(q[0], 3), round(q[1], 3))] for q in drivers]
     tn = [nid[(round(q[0], 3), round(q[1], 3))] for q in taps]
     return dict(R=R, C=C, xy=xy, dn=dn, tn=tn, n=len(nid), crossings=len(geo), vias=len(geo),
-                jogs=dict(n=len(jogs), max_um=r3(max(jd)) if jd else 0.0))
+                jogs=dict(n=len(jogs), max_um=r3(max(jd + driver_jd)) if jd or driver_jd else 0.0,
+                          driver_n=sum(d>1e-6 for d in driver_jd), driver_max_um=r3(max(driver_jd)) if driver_jd else 0.0))
 
 
 # ------------------------------------------------------------------------------------------------ R13 periodic feed

@@ -363,13 +363,22 @@ def mixed_shield_analysis(wires,pgr,shield):
         width=shape[4]-shape[3]
         spaces.append(1.0 if width>=.99975 else .5 if width>=.49975 else .04)
         shapes.append(shape)
+    flank_pg=list(pgr)
+    for p in pieces:
+        if not p.get('explicit_mesh'):continue
+        # The mesh's actual, separately tie-checked VSS shields can flank a
+        # neighboring input-tree segment in the same physical PG gap.
+        for shape in C.clock_shapes(C.tree_segs([p]),NDR[p['ndr']],shield):
+            if shape[1]!=shield:continue
+            lay,_,_,lo,hi,a0,a1=shape
+            flank_pg.append((shield,lay,a0,lo,a1,hi) if lay=='M8' else (shield,lay,lo,a0,hi,a1))
     ties=dict(grid_vias=[],shield_vias=[],untied=[],shorts=[],used_grid=set(),stripes=0,
               stripes_with_grid_via=0,stripes_grid_contact=0,net=shield)
     for p in pieces:
         nd=NDR[p['ndr']];ss=C.tree_segs([p])
         cs=C.clock_shapes(ss,nd,shield)
         shapes+=cs;spaces += [nd['space']]*len(cs)
-        unflanked += C.flank_census(pgr,ss,nd)
+        unflanked += C.flank_census(flank_pg,ss,nd)
         flanked += sum(len(r)>7 and r[7]==C.FLANK for r in ss)
         segs=[tuple(r[:5])+(r[8],) for r in ss if r[7]==C.DRAWN]
         stripes=C.shield_stripes(segs,nd)
@@ -400,3 +409,16 @@ def mixed_shield_analysis(wires,pgr,shield):
                 spacing_by_kind=dict(spacing),rows=rows,shapes=len(shapes),unflanked=unflanked,
                 flank_mode_segments=flanked,rule='pair spacing=max(actual per-edge NDR classes); actual shield widths')
     return allstripes,ties,census
+
+
+def mesh_reservation_shapes(mesh,shield='VSS'):
+    """Reserve fixed mesh conductors before planning their input clock trees."""
+    import die_clock_128 as C
+    from die_clock_mesh import NDR
+    nd=NDR[mesh.get('ndr','8w')]
+    segs=[('M8',s['x0'],s['y'],s['x1'],s['y'],'ck_mesh_explicit','mesh') for s in mesh['M8']]
+    segs += [('M9',s['x'],s['y0'],s['x'],s['y1'],'ck_mesh_explicit','mesh') for s in mesh['M9']]
+    shapes=C.clock_shapes(segs,nd,shield)
+    # These are actual VSS conductors; final PG tie validation remains required
+    # before another clock segment may count their shielding as qualified.
+    return [tuple(s[:2])+('pg',)+tuple(s[3:]) if s[1]==shield else s for s in shapes]
