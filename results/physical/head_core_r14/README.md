@@ -74,13 +74,13 @@ R14:
 - LEC: lec.py with gold = the NEW RTL (r11 CY_COPY element RTL + new wrapper) and gate = the hold2 export `actual_functional.v`.
   - That export is already proven EQUIVALENT 27498/27498 to the r11 RTL (R12).
   - The gate-only row0/b_v/b_d inputs become free inputs, so EQUIVALENT proves new RTL = old netlist = old RTL.
-  - Run: epyc2 `head-core-r14/elemB_rtl_lec`, unit oth-ubuntu-3964732-1793099267. Collect `lec/lec.json`.
+  - Run: epyc2 `head-core-r14/elemB_rtl_lec`. **EQUIVALENT 27594/27594 proved, 0 differ, 0 undecided, kept missing 0** (2435.8 s, rc 0). CHECKED (raw `lec/lec.json`).
 - Kit `epyc2:head-core-r14/elemB_src` (copy of hold2):
   - new RTL;
   - io.tcl: 341 -> 291 place_pin;
   - pins.json: 343 -> 293;
   - constraint.sdc: `non_clk_in = {go rst_n x}`.
-- Rebuild: `head-core-r14/elemB_rb` with the same plan options as the built tree (`--entry 142.56,142.56 --seg 405 --fanouts 2,4,4,4,4 --balance 0 --halo 4.32`). It re-synthesises from rtl (`OT_R14_PATCH_SYNTH=1`: orfs_hold_mm -> synth -> face_guard_core -> patch_synth -> place), relaunched at 04:38:51 from `repo/tools/s81_head_r14b/` (75f964343). Earlier tries, data deleted: PPL-0061 (no patch step); face_guard (kit skip set lacked the pre-patch `clk`; kit wrapper used `G.MAX_CHAIN`, gone from main face_guard.py) -> fixed 7383a1825, the probe then gave FACE_GUARD PASS 291/291; floorplan STA-0102 (CORNERS override) -> fixed 75f964343.
+- Rebuild: `head-core-r14/elemB_rb` with the same plan options as the built tree (`--entry 142.56,142.56 --seg 405 --fanouts 2,4,4,4,4 --balance 0 --halo 4.32`). It re-synthesises from rtl (`OT_R14_PATCH_SYNTH=1`: orfs_hold_mm -> synth -> face_guard_core -> patch_synth -> place), relaunched at 04:38:51 from `repo/tools/s81_head_r14b/` (75f964343). Earlier tries, data deleted: PPL-0061 (no patch step); face_guard (kit skip set lacked the pre-patch `clk`; kit wrapper used `G.MAX_CHAIN`, gone from main face_guard.py) -> fixed 7383a1825, the probe then gave FACE_GUARD PASS 291/291; floorplan STA-0102 (CORNERS override) -> fixed 75f964343. Then PPL-0061 {clk}: the kit `island_elemB_pins.tcl` still placed the pre-patch clk/rst_n; it was regenerated in `elemB_src` from the routed hold2 6_final.def (ft_* + rst_n at the closed-view positions, ft_mstrap_i (144.72,146.16)). Fourth launch 04:49:39.
 - The elemB clock pin ft_mstrap_i is at (144.72,146.16) (routed LEF, CHECKED). It is near the centre, not on the W edge. The edge "clk" pin belonged to the old closed view.
 
 ## Collect
