@@ -63,6 +63,18 @@ module dsdv_hostb_seqhost_mux #(parameter integer HOSTB_ENABLE=0, STATIC_KS6=0,
  .mu_c_7n(mu_c_7n),.mu_c_7s(mu_c_7s),.mu_c_0n(mu_c_0n),.mu_c_0s(mu_c_0s),
  .mu_rc_7n(mu_rc_7n),.mu_rc_7s(mu_rc_7s),.mu_rc_0n(mu_rc_0n),.mu_rc_0s(mu_rc_0s),.mu_rt_7n(mu_rt_7n),.mu_rt_0n(mu_rt_0n));
  // ---- die fault word (control state: one relayed reset leaf, cleared by the die reset wavefront)
+`ifdef S81_HOSTB_LAND_OBS
+ // S81-UNBLOCK-3 10-27 (opt-in, off by default): the SAME die fault-word register as its own leaf dsdv_hostb_dstat, so
+ // that the clock-landing collector root (partition seqhost) binds the die's ACTUAL observer inputs (no new IO):
+ //   vid_ri  (fault ring end, 1 bit)  -> pin flop -> sticky vid_f -> t_host[75] fault / [73] -> host THOST frame
+ //   alive_i (= core t_host[76], 1 bit) -> t_host[76] alive, the die status the host waits on before it starts the
+ //           stream (every change of t_host[76:65] is sent as a THOST frame) = the S81 START gate.
+ // Without a collector both inputs carry their old nets and the register is the inline form below, bit-for-bit.
+ dsdv_hostb_dstat #(.FMUT(FMUT)) u_dst(.ck(ck),.rst_n(rst_n),.sid_ri(sid_ri),.vid_ri(vid_ri),.alive_i(t_core[76]),
+  .own_ev(|t_mf | (|hostb_fault)),.core_f(t_core[75]),.core_wf(|t_core[74:71]),.sid_ro(sid_ro),.vid_ro(vid_ro),
+  .alive_o(t_host[76]),.st(t_host[75:71]));
+ assign t_host[70:0]=t_core[70:0];
+`else
  wire [0:0] frn;ot_rst_relay #(.REGIONS(1)) u_frr(.clk(ck),.rst_n_in(rst_n),.rst_n(frn));
  reg sid_q,vid_q,own_f,sid_f,vid_f,sid_h,vid_h;reg [4:0] st_q;
  always @(posedge ck or negedge frn[0])
@@ -77,5 +89,33 @@ module dsdv_hostb_seqhost_mux #(parameter integer HOSTB_ENABLE=0, STATIC_KS6=0,
   end
  assign sid_ro=sid_h;assign vid_ro=vid_h;
  assign t_host={t_core[76],st_q,t_core[70:0]};
+`endif
+endmodule
+
+// S81-UNBLOCK-3 10-27: die fault-word register (moved unchanged from dsdv_hostb_seqhost_mux, opt-in S81_HOSTB_LAND_OBS).
+// st = {fault, sid_f, vid_f, own_f, core wf} (FMUT 3: sid/vid swapped); alive_o = alive_i (0 cycles, as t_host[76]).
+module dsdv_hostb_dstat #(parameter integer FMUT=0) (
+    input  wire       ck, rst_n,
+    input  wire       sid_ri, vid_ri,  // fault ring ends (vid_ri = clock-landing observer fault input)
+    input  wire       alive_i,         // core alive (clock-landing observer ready input)
+    input  wire       own_ev,          // this unit's fault events (|t_mf | |hostb_fault)
+    input  wire       core_f, core_wf, // core t_host[75], |t_host[74:71]
+    output wire       sid_ro, vid_ro,
+    output wire       alive_o,
+    output wire [4:0] st
+);
+ wire [0:0] frn;ot_rst_relay #(.REGIONS(1)) u_frr(.clk(ck),.rst_n_in(rst_n),.rst_n(frn));
+ reg sid_q,vid_q,own_f,sid_f,vid_f,sid_h,vid_h;reg [4:0] st_q;
+ always @(posedge ck or negedge frn[0])
+  if(!frn[0])begin sid_q<=0;vid_q<=0;own_f<=0;sid_f<=0;vid_f<=0;sid_h<=0;vid_h<=0;st_q<=0;end
+  else begin
+   sid_q<=sid_ri;vid_q<=vid_ri;
+   own_f<=own_f|own_ev;
+   sid_f<=sid_f|sid_q;vid_f<=vid_f|vid_q;
+   sid_h<=(FMUT==1)?1'b0:own_f;vid_h<=(FMUT==1)?1'b0:own_f;
+   st_q<=(FMUT==3)?{core_f|own_f|sid_f|vid_f,vid_f,sid_f,own_f,core_wf}
+                  :{core_f|own_f|sid_f|vid_f,sid_f,vid_f,(FMUT==2)?1'b0:own_f,core_wf};
+  end
+ assign sid_ro=sid_h;assign vid_ro=vid_h;assign alive_o=alive_i;assign st=st_q;
 endmodule
 `default_nettype wire
