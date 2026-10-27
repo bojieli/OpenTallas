@@ -97,7 +97,7 @@ Die plan inputs (not committed, intel2 codex-qwen-1027/pkg/inputs): d43 plan f2c
   R0-R4 moved from ROM row centres to the gap above; EF to x 452; G0-G2 to the lattice columns. Leaves keep R2 positions.
   Model (UNCHECKED-model, same stage model as R2, reads ~15 ps high TT): child-entry P TT 48.93 (window 12.05) / FF 40.93 (11.27);
   max leg 115.8 um (R2 80.6); slew <= 46.2. Window 12 ps < 20 ps design target; the ROM branches already sit at BUFx8 (smallest).
-- **(5) B reconciled: B_child = 206.2 TT / 163.8 FF was right in R2 (child-only mean); 212.56 averaged child AND parent taps (wrong
+- **(5) B reconciled: B_child = 206.2 TT / 166.3 FF was right in R2 (child-only mean); 212.56 averaged child AND parent taps (wrong
   field, removed).** R3 numbers: **B_child = 201.07 TT / 161.57 FF (NK), 201.32 / 161.87 (NL)** -> one value 201 TT / 161.5 FF into
   the child re-kits (NK/NL differ 0.25 ps). Parent roots each get their own B_par (TT 196.5-219.3). Renders now draw the 18 parent
   roots (labelled triangles). Per-root FF counts need the parent placement (16,592 NK / 15,561 NL FF, avg ~920/root UNCHECKED).
