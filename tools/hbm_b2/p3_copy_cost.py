@@ -13,10 +13,12 @@ from pathlib import Path
 import sys
 
 
-def price(model_root: Path, image_dir: Path, fused_model=None):
+def price(model_root: Path, image_dir: Path, fused_model=None, calibration_only=False):
     sys.path[:0] = [str(model_root/'tools/hbm_next'), str(model_root/'tools')]
     import isa_rows as IR
     from hgi_sim import timing as T
+    if calibration_only:
+        T.MEAS = {}  # Explicit frozen calibration basis; sparse result files cannot change it.
     meta = json.loads((image_dir/'emitter.json').read_text())
     raw = (image_dir/meta['token']['image']).read_bytes()
     recs=[]; off=0
@@ -69,6 +71,7 @@ def price(model_root: Path, image_dir: Path, fused_model=None):
     return dict(schema='opentallas.p3.materialization_cost.v1',input_image=str(image_dir),
         status='CONDITIONAL_EXISTING_MODEL_UNIT_WORK_NOT_TOKEN_RATE',
         scope='selected cohort cost; FUSED row overlap, all-unit drain delays, physical replay and eight-SM model not included',
+        calibration_only=calibration_only, measured_overrides=T.MEAS,
         instructions_selected=len(selected),rowx_instructions_expanded_serially=rowx_records,
         records_per_unit=dict(kinds),cycles_per_unit=dict(cycles),unit_work_serial_sum_cycles=sum(cycles.values()),
         vm_copy_words=words['VM_copy'],hbm_load_words=words['HBM_load'],hbm_load_bytes=words['HBM_bytes'],HBM_bytes_per_cycle=bw,
@@ -83,13 +86,14 @@ def main():
     p.add_argument('--out',type=Path,required=True)
     p.add_argument('--fused-pre',help='explicit HC_PRE_NORM firstrow,II cycles (optional diagnostic)')
     p.add_argument('--fused-post',help='explicit HC_POST firstrow,II cycles (optional diagnostic)')
+    p.add_argument('--calibration-only', action='store_true', help='use calibration.json only, independent of optional result-file overrides')
     a=p.parse_args()
     if bool(a.fused_pre)!=bool(a.fused_post):p.error('supply both FUSED first-row/II models')
     fm=None
     if a.fused_pre:
         fm={k:tuple(map(float,v.split(','))) for k,v in [('HC_PRE_NORM',a.fused_pre),('HC_POST',a.fused_post)]}
         if any(len(v)!=2 or min(v)<0 for v in fm.values()):p.error('expected non-negative firstrow,II pairs')
-    result=price(a.model_root,a.image,fm)
+    result=price(a.model_root,a.image,fm,a.calibration_only)
     a.out.write_text(json.dumps(result,indent=2)+'\n')
     print(json.dumps({k:v for k,v in result.items() if k!='record_costs'},indent=2))
 

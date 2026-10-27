@@ -1,0 +1,8064 @@
+{
+  "schema": "opentallas.p3.materialization_cost.v1",
+  "input_image": "/srv/opentallas-scratch2/claude/codex-p3-compiler-2018/producer_aligned_lowered_mtp",
+  "status": "CONDITIONAL_EXISTING_MODEL_UNIT_WORK_NOT_TOKEN_RATE",
+  "scope": "selected cohort cost; FUSED row overlap, all-unit drain delays, physical replay and eight-SM model not included",
+  "calibration_only": true,
+  "measured_overrides": {},
+  "instructions_selected": 201,
+  "rowx_instructions_expanded_serially": 120,
+  "records_per_unit": {
+    "DMA.LOAD": 81,
+    "SU.VOP": 720
+  },
+  "cycles_per_unit": {
+    "DMA.LOAD": 13483.851327880775,
+    "SU.VOP": 43200.0
+  },
+  "unit_work_serial_sum_cycles": 56683.85132788077,
+  "vm_copy_words": 11040,
+  "hbm_load_words": 414720,
+  "hbm_load_bytes": 1658880,
+  "HBM_bytes_per_cycle": 3166.7,
+  "HBM_traffic_floor_cycles": 523.8513278807592,
+  "fused_chunk_model": {
+    "firstrow_II": {
+      "HC_PRE_NORM": [
+        404.0,
+        81.0
+      ],
+      "HC_POST": [
+        196.0,
+        103.0
+      ]
+    },
+    "original_cycles": 122409.0,
+    "lowered_cycles": 122409.0,
+    "added_cycles": 0.0,
+    "chunks": [
+      {
+        "op": "HC_POST",
+        "rows": 6,
+        "count": 80
+      },
+      {
+        "op": "HC_PRE_NORM",
+        "rows": 6,
+        "count": 81
+      }
+    ],
+    "scope": "explicit supplied first-row/II model; no selected native or eight-SM claim"
+  },
+  "record_costs": [
+    {
+      "offset": 0,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 5616,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 5616,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 5616,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 5616,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 5616,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 5616,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 5936,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 6992,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 6992,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 6992,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 6992,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 6992,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 6992,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 12256,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 12256,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 12256,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 12256,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 12256,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 12256,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 21744,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 27360,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 27360,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 27360,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 27360,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 27360,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 27360,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 27680,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 28736,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 28736,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 28736,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 28736,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 28736,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 28736,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 34000,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 34000,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 34000,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 34000,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 34000,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 34000,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 34432,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 42256,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 42256,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 42256,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 42256,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 42256,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 42256,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 42576,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 44240,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 44240,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 44240,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 44240,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 44240,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 44240,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 48672,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 48672,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 48672,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 48672,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 48672,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 48672,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 48992,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 54736,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 54736,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 54736,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 54736,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 54736,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 54736,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 55056,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 56112,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 56112,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 56112,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 56112,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 56112,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 56112,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 61376,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 61376,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 61376,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 61376,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 61376,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 61376,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 61696,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 67440,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 67440,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 67440,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 67440,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 67440,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 67440,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 67760,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 68816,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 68816,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 68816,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 68816,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 68816,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 68816,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 74080,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 74080,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 74080,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 74080,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 74080,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 74080,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 74400,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 80144,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 80144,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 80144,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 80144,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 80144,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 80144,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 80464,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 81520,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 81520,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 81520,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 81520,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 81520,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 81520,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 86784,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 86784,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 86784,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 86784,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 86784,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 86784,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 87104,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 92848,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 92848,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 92848,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 92848,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 92848,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 92848,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 93168,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 94224,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 94224,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 94224,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 94224,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 94224,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 94224,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 99488,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 99488,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 99488,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 99488,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 99488,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 99488,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 99808,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 105552,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 105552,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 105552,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 105552,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 105552,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 105552,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 105872,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 106928,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 106928,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 106928,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 106928,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 106928,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 106928,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 112192,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 112192,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 112192,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 112192,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 112192,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 112192,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 112624,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 120448,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 120448,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 120448,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 120448,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 120448,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 120448,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 120768,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 122432,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 122432,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 122432,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 122432,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 122432,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 122432,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 126864,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 126864,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 126864,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 126864,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 126864,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 126864,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 127184,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 132928,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 132928,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 132928,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 132928,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 132928,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 132928,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 133248,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 134304,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 134304,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 134304,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 134304,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 134304,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 134304,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 139568,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 139568,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 139568,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 139568,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 139568,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 139568,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 139888,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 145632,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 145632,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 145632,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 145632,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 145632,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 145632,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 145952,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 147008,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 147008,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 147008,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 147008,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 147008,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 147008,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 152272,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 152272,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 152272,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 152272,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 152272,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 152272,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 152592,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 158336,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 158336,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 158336,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 158336,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 158336,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 158336,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 158656,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 159712,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 159712,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 159712,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 159712,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 159712,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 159712,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 164976,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 164976,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 164976,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 164976,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 164976,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 164976,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 165296,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 171040,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 171040,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 171040,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 171040,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 171040,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 171040,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 171360,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 172416,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 172416,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 172416,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 172416,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 172416,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 172416,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 177680,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 177680,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 177680,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 177680,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 177680,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 177680,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 178000,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 183744,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 183744,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 183744,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 183744,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 183744,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 183744,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 184064,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 185120,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 185120,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 185120,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 185120,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 185120,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 185120,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 190384,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 190384,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 190384,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 190384,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 190384,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 190384,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 200624,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 207808,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 207808,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 207808,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 207808,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 207808,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 207808,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 208128,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 209792,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 209792,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 209792,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 209792,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 209792,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 209792,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 214224,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 214224,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 214224,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 214224,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 214224,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 214224,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 214544,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 220288,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 220288,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 220288,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 220288,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 220288,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 220288,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 220608,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 221664,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 221664,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 221664,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 221664,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 221664,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 221664,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 226928,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 226928,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 226928,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 226928,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 226928,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 226928,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 227248,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 232992,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 232992,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 232992,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 232992,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 232992,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 232992,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 233312,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 234368,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 234368,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 234368,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 234368,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 234368,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 234368,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 239632,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 239632,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 239632,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 239632,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 239632,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 239632,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 239952,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 245696,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 245696,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 245696,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 245696,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 245696,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 245696,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 246016,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 247072,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 247072,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 247072,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 247072,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 247072,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 247072,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 252336,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 252336,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 252336,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 252336,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 252336,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 252336,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 252656,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 258400,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 258400,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 258400,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 258400,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 258400,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 258400,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 258720,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 259776,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 259776,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 259776,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 259776,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 259776,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 259776,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 265040,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 265040,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 265040,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 265040,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 265040,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 265040,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 265360,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 271104,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 271104,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 271104,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 271104,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 271104,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 271104,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 271424,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 272480,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 272480,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 272480,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 272480,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 272480,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 272480,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 277744,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 277744,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 277744,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 277744,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 277744,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 277744,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 278176,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 286032,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 286032,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 286032,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 286032,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 286032,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 286032,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 286352,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 288016,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 288016,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 288016,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 288016,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 288016,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 288016,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 292448,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 292448,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 292448,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 292448,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 292448,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 292448,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 292768,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 298512,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 298512,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 298512,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 298512,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 298512,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 298512,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 298832,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 299888,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 299888,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 299888,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 299888,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 299888,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 299888,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 305152,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 305152,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 305152,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 305152,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 305152,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 305152,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 305472,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 311216,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 311216,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 311216,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 311216,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 311216,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 311216,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 311536,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 312592,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 312592,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 312592,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 312592,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 312592,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 312592,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 317856,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 317856,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 317856,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 317856,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 317856,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 317856,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 318176,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 323920,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 323920,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 323920,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 323920,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 323920,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 323920,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 324240,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 325296,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 325296,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 325296,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 325296,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 325296,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 325296,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 330560,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 330560,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 330560,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 330560,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 330560,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 330560,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 330992,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 338144,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 338144,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 338144,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 338144,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 338144,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 338144,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 338464,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 340128,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 340128,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 340128,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 340128,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 340128,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 340128,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 344560,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 344560,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 344560,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 344560,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 344560,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 344560,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 344880,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 350624,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 350624,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 350624,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 350624,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 350624,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 350624,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 350944,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 352000,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 352000,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 352000,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 352000,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 352000,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 352000,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 357264,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 357264,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 357264,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 357264,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 357264,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 357264,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 357584,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 363328,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 363328,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 363328,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 363328,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 363328,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 363328,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 363648,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 364704,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 364704,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 364704,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 364704,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 364704,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 364704,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 369968,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 369968,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 369968,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 369968,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 369968,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 369968,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 370288,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 376032,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 376032,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 376032,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 376032,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 376032,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 376032,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 376352,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 377408,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 377408,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 377408,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 377408,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 377408,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 377408,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 382672,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 382672,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 382672,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 382672,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 382672,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 382672,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 383104,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 390256,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 390256,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 390256,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 390256,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 390256,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 390256,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 390576,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 392240,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 392240,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 392240,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 392240,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 392240,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 392240,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 396672,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 396672,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 396672,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 396672,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 396672,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 396672,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 396992,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 402736,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 402736,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 402736,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 402736,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 402736,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 402736,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 403056,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 404112,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 404112,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 404112,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 404112,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 404112,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 404112,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 409376,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 409376,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 409376,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 409376,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 409376,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 409376,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 409696,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 415440,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 415440,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 415440,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 415440,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 415440,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 415440,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 415760,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 416816,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 416816,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 416816,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 416816,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 416816,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 416816,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 422080,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 422080,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 422080,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 422080,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 422080,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 422080,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 422400,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 428144,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 428144,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 428144,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 428144,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 428144,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 428144,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 428464,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 429520,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 429520,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 429520,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 429520,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 429520,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 429520,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 434784,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 434784,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 434784,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 434784,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 434784,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 434784,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 435216,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 442368,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 442368,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 442368,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 442368,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 442368,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 442368,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 442688,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 444352,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 444352,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 444352,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 444352,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 444352,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 444352,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 448784,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 448784,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 448784,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 448784,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 448784,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 448784,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 449104,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 454848,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 454848,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 454848,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 454848,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 454848,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 454848,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 455168,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 456224,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 456224,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 456224,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 456224,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 456224,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 456224,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 461488,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 461488,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 461488,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 461488,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 461488,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 461488,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 461808,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 467552,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 467552,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 467552,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 467552,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 467552,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 467552,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 467872,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 468928,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 468928,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 468928,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 468928,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 468928,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 468928,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 474192,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 474192,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 474192,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 474192,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 474192,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 474192,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 474512,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 480256,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 480256,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 480256,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 480256,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 480256,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 480256,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 480576,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 481632,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 481632,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 481632,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 481632,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 481632,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 481632,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 486896,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 486896,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 486896,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 486896,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 486896,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 486896,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 487328,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 494480,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 494480,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 494480,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 494480,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 494480,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 494480,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 494800,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 496464,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 496464,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 496464,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 496464,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 496464,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 496464,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 500896,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 500896,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 500896,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 500896,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 500896,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 500896,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 501216,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 506960,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 506960,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 506960,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 506960,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 506960,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 506960,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 507280,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 508336,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 508336,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 508336,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 508336,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 508336,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 508336,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 513600,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 513600,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 513600,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 513600,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 513600,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 513600,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 513920,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 519664,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 519664,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 519664,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 519664,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 519664,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 519664,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 519984,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 521040,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 521040,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 521040,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 521040,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 521040,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 521040,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 526304,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 526304,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 526304,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 526304,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 526304,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 526304,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 526624,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 532368,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 532368,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 532368,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 532368,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 532368,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 532368,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 532688,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    },
+    {
+      "offset": 533744,
+      "row": 0,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 533744,
+      "row": 1,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 533744,
+      "row": 2,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 533744,
+      "row": 3,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 533744,
+      "row": 4,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 533744,
+      "row": 5,
+      "origin": "RID_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 6,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 539008,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 539008,
+      "row": 1,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 539008,
+      "row": 2,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 539008,
+      "row": 3,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 539008,
+      "row": 4,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 539008,
+      "row": 5,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "SU.VOP",
+      "words": 20,
+      "cycles": 60.0,
+      "grade": "model",
+      "how": "SU model nv 1 + depth 55"
+    },
+    {
+      "offset": 539328,
+      "row": 0,
+      "origin": "FUSED_MATERIALIZATION",
+      "unit": "DMA.LOAD",
+      "words": 5120,
+      "cycles": 166.4673003442069,
+      "grade": "estimate",
+      "how": "DMA load"
+    }
+  ]
+}
