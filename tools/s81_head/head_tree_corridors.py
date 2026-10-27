@@ -148,12 +148,14 @@ def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=Fa
                     oy=pp['origin_um'][1]; cy=sum(v['origin_um'][1] for _,v in cc)/len(cc)
                     local=cy-oy
                     if pp.get('orient','R0') in ('MX','R180'):local=height-local
-                    if typ not in ('hd_tile','hd_spn','hd_spn_end') or not 328.32<=local<=380.0:
+                    band=1036.8 if typ in ('hd_spn','hd_spn_end') and 1365.12<=local<=1416.8 else 0.0
+                    if typ not in ('hd_tile','hd_spn','hd_spn_end') or not 328.32<=local-band<=380.0:
                         limits=[];break
+                    lowbody,highbody=330.32+band,352.78+band
                     half=len(cc)*D.ROW_Y/2
                     if pp.get('orient','R0') in ('MX','R180'):
-                        limits.append((oy+height-352.78+half,oy+height-330.32-half))
-                    else:limits.append((oy+330.32+half,oy+352.78-half))
+                        limits.append((oy+height-highbody+half,oy+height-lowbody-half))
+                    else:limits.append((oy+lowbody+half,oy+highbody-half))
                 if limits:
                     low=max(q[0] for q in limits);high=min(q[1] for q in limits)
                     import math
