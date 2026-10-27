@@ -19,3 +19,5 @@ Preserved mixed-basis model extra serial unit work for batch2/batch3: AR/MU1 290
 Failure diagnoses: B48zero-frame stall was eight unconnected region clock inputs in the bench; successor drives all at833ps. Own initial spill omitted hier.vlt/gen include, fixed on newattempt. P3 earlier sparse-source/CLI packaging failures preserved; source_complete.py materialized only exact tracked inputs before the successful L0 trial. Original I7 failures were real illegal gain/phase/C operands; original MTP ID table also named the wrong reused producer allocation. Current lowerer installs/copies actual payloads. No failed result was overwritten, no foreign job stopped, no physical clock relaxed.
 
 OWNER?: none new from this token group. Remaining source, native schedule and die qualification dependencies belong to the existing physical/plan owners.
+
+PARKED on explicit user reset 2026-10-26 21:03 PDT. No new engineering or jobs after reset. Existing three jobs may continue. All child agents already finished cleanly; root received this packet path. No new OWNER? items.
