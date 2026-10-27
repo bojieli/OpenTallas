@@ -34,9 +34,10 @@ def color_intervals(rows):
     return result, count
 
 
-def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=False, separate_drops=False, mesh_straps=None):
+def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=False, separate_drops=False, mesh_straps=None, ndr="16w"):
     mesh_straps = mesh_straps or []
     out = copy.deepcopy(spec)
+    for edge in out["nets"]:edge["ndr"]=ndr
     groups, bydrv, incoming = defaultdict(list), defaultdict(list), {}
     for name, cell in out['cell_sites'].items():
         groups['g' + str(cell['group'])].append((name, cell))
@@ -283,7 +284,7 @@ def allocate(spec, plan, align_inputs=False, exact_jogs=False, lower_face_gap=Fa
     return out, corridors
 
 
-def route(spec, corridors, plan, exact_jogs=False, mesh_straps=None):
+def route(spec, corridors, plan, exact_jogs=False, mesh_straps=None, ndr="16w"):
     groups=defaultdict(list)
     for unit,cell in spec['cell_sites'].items():groups['g'+str(cell['group'])].append((unit,cell))
     for us in groups.values():us.sort(key=lambda q:q[1]['origin_um'][1])
@@ -357,7 +358,7 @@ def route(spec, corridors, plan, exact_jogs=False, mesh_straps=None):
             return super().place(layer, ideal, a0, a1, net, **kw)
     D.C128.TrackRouter = CorridorRouter
     try:
-        result = D.build_explicit(spec, plan, ndr='16w', root_um=plan.raw['clock']['spine']['root_um']
+        result = D.build_explicit(spec, plan, ndr=ndr, root_um=plan.raw['clock']['spine']['root_um']
             if hasattr(plan, 'raw') else None)
         errors = []
         for wire in result[3]['fixed_wires']:
@@ -385,16 +386,17 @@ def main():
     ap.add_argument('--exact-local-jogs', action='store_true')
     ap.add_argument('--lower-face-gap', action='store_true')
     ap.add_argument('--separate-drops', action='store_true')
+    ap.add_argument('--ndr', choices=['8w','16w'], default='16w')
     ap.add_argument('--mesh-straps', type=Path, help='actual continuous mesh strap file reserved before all tree metal')
     a = ap.parse_args(); a.out.mkdir(parents=True, exist_ok=True)
     plan = S.Plan(S.load(a.plan))
     mesh_straps=json.loads(a.mesh_straps.read_text()) if a.mesh_straps else []
     spec, corridors = allocate(json.loads(a.spec.read_text()), plan, align_inputs=a.align_inputs,
-                               exact_jogs=a.exact_local_jogs, lower_face_gap=a.lower_face_gap, separate_drops=a.separate_drops, mesh_straps=mesh_straps)
+                               exact_jogs=a.exact_local_jogs, lower_face_gap=a.lower_face_gap, separate_drops=a.separate_drops, mesh_straps=mesh_straps, ndr=a.ndr)
     (a.out/'explicit_tree.json').write_text(json.dumps(spec, indent=1)+'\n')
     (a.out/'corridors.json').write_text(json.dumps(corridors, indent=1)+'\n')
     try:
-        cells, nets, ports, meta = route(spec, corridors, plan, exact_jogs=a.exact_local_jogs, mesh_straps=mesh_straps)
+        cells, nets, ports, meta = route(spec, corridors, plan, exact_jogs=a.exact_local_jogs, mesh_straps=mesh_straps, ndr=a.ndr)
     except D.C128.PlanError as error:
         from collections import Counter
         summary = dict(verdict='FAIL', counts=dict(Counter(r['kind'] for r in error.rows)), errors=len(error.rows))
@@ -404,6 +406,7 @@ def main():
         (a.out/'mesh.json').write_text(json.dumps(meta)+'\n')
         (a.out/'place.json').write_text(json.dumps(cells)+'\n')
         (a.out/'nets.json').write_text(json.dumps(dict(nets=nets, ports=ports))+'\n')
+    summary['ndr']=a.ndr
     summary['mesh_straps_reserved']=len(mesh_straps)
     summary['corridor_colors'] = spec['summary']['corridor_colors']
     (a.out/'summary.json').write_text(json.dumps(summary, indent=1)+'\n')
