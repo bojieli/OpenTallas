@@ -22,3 +22,7 @@ global_route -end_incremental
 ot_clk_freeze_assert post_grt
 estimate_parasitics -global_routing
 write_guides $::env(RESULTS_DIR)/route.guide
+# Preserve the exact incremental route map across the ORFS stage/process boundary.
+# Fixed pre-routed clock nets intentionally have no guides; DB-guide completeness
+# then prevents GlobalRouter::loadGuidesFromDB from restoring any data routes.
+write_global_route_segments $::env(RESULTS_DIR)/eco_global_route.segments
