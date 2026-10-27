@@ -177,6 +177,9 @@ def main(argv=None):
                          "master_plan.required or OT_MASTER_PLAN_REQUIRED=1)")
     a3.add_argument("--trial", action="store_true",
                     help="trial kit (not sign-off): allowed without a master-plan slice when one is required")
+    a3.add_argument("--gpl-plain", default="", metavar="TYPES",
+                    help="comma list of pure-FT corridor types whose kits place with GPL_ROUTABILITY_DRIVEN=0 / "
+                         "GPL_TIMING_DRIVEN=0 (stations FIRM at plan sites; KV hub_Ei routability GPL diverged)")
     a3.add_argument("--kit-rtl", action="append", default=[], metavar="TYPE=FILELIST",
                     help="G3: the type's kit RTL = this filelist (bind.py kit-rtl: bound partition inside the plan "
                          "wrapper) instead of the generated plan wrapper + type sources; repeatable")
@@ -216,7 +219,8 @@ def main(argv=None):
                                            None if a.hold_mcmm else a.hold_ff_margin,
                                            (a.slew_margin, a.cap_margin), a.skip_kit_ir, a.max_wire_um,
                                            plan_path=Path(a.plan).resolve(), rc_cal=not a.stock_rc,
-                                           master_slice=a.master_slice, trial=a.trial)
+                                           master_slice=a.master_slice, trial=a.trial,
+                                           gpl_plain=[x for x in a.gpl_plain.split(",") if x])
             else:
                 kits = [gen_phys.write_assembly(S.load(a.plan), a.out, a.views, plan_path=Path(a.plan).resolve(),
                                                 pg_map=json.loads(Path(a.pg_map).read_text()) if a.pg_map else None)]
