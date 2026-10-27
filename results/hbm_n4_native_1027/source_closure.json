@@ -3,8 +3,9 @@
   "locked_sources": [
     {
       "path": "rtl/hbm_next/fused/ot_hnx_fused_tree.sv",
-      "source": "source_snapshot.tar.gz",
-      "sha256": "89c4d2bbb5ead4deba511721a87d3ddc0bf2aac1407ebf8fc9bbf01c3faf01ec"
+      "source": "repository",
+      "sha256": "15359c07add720121a132949bc2df4178ec0a137312a06b908a260bb533f6ff9",
+      "change": "Widen fill+1 to7bits to preserve control after fill63 saturation"
     },
     {
       "path": "rtl/hbm_next/fused/ot_hnx_fused_eng.sv",
@@ -143,7 +144,7 @@
       "expected_real_sram_instances": 2
     }
   },
-  "instructions": "Extract snapshot to own scratch root; copy repository wrapper at same relative path; compile listed files only. Profile actual target; preserve SRAM master instances, report standardcells/area separately. Do not substitute shells or currentmain dependencies.",
+  "instructions": "Extract snapshot to own scratch root; overwrite every repository-sourced path with exact listed repository file; compile listed files only. Preserve SRAMs and report stdarea separately. Snapshot tree is original buggy negative, production repository tree has7bit fillmask fix.",
   "physical_gate_status": "NOT_ROUTED_NOT_SIGNED",
   "whole_kernel_status": "FAILED_INHERITED_FULLTREE"
 }

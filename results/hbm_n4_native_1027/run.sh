@@ -3,6 +3,7 @@ set -euo pipefail
 ROOT=$(git rev-parse --show-toplevel);HERE=$ROOT/results/hbm_n4_native_1027;OUT=${1:?scratchout}
 mkdir -p "$OUT/source";tar -xzf "$HERE/source_snapshot.tar.gz" -C "$OUT/source"
 cp "$HERE/tb_n4_extract.sv" "$OUT/source/"
+cp "$ROOT/rtl/hbm_next/fused/ot_hnx_fused_tree.sv" "$OUT/source/rtl/hbm_next/fused/"
 cp "$ROOT/rtl/hbm_next/fused/ot_hnx_fused_hub_n4ext.sv" "$OUT/source/rtl/hbm_next/fused/"
 cd "$OUT/source"
 export PATH=$HOME/.local/opentallas-tools/bin:$PATH
