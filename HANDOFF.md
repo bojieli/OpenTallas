@@ -1448,3 +1448,5 @@ CODEX: 2026-10-27 09:46 PDT CODEX HEAD bootstrap QUALIFIED: a480f95d1 + actual c
 2026-10-27 09:46 PDT CODEX: QC R6 PG FAIL diagnosed (all-R0 stacks short actual LEF rails); no route. Canonical row/pin+dieedge fix0a3c806f9 READY,21focusedPASS; exporter successor8 running next. R25 inherited DRC stilllive.
 
 CODEX: 2026-10-27 09:49 PDT HEAD transport coupon PASS fa34757d2:3 real HOST276 frames move pre-START in old/new payload, candidate epochs/PHY reset1 vs0, mission cores0;201 post-START comparisons equal. Production recipe still BLOCKED2 on actual HBC/START authority.
+
+CODEX: HEAD native40FT source e25676d2da ready; actual A/B HM0 routed hold residuals diagnosed (A-8.86/199, B-3.92/53), no clock changes. A/B data-only margin2 successors live intel1/epyc2 under codex-head-1027/{elemA_m2,elemB}.eco_residual2_clean. B missing signoff bundle + stale absent-port metadata repaired only in own successor kit; original failures preserved. Images/source guard in codex/head-1027@1d54678770. Final extracted signoff/LEC pending; no SIGNED claim.
