@@ -15,9 +15,22 @@ test -s "$B/clk_freeze_pre.tsv" || { echo "CLK_GEOM_DIFF FAIL: $B/clk_freeze_pre
 DB=; for f in 6_final.odb 5_route.odb 5_2_route.odb; do test -s "$B/$f" && { DB=$f; break; }; done
 test -n "$DB" || { echo "CLK_GEOM_DIFF FAIL: no routed DB in $B"; exit 2; }
 R=${B#$D/}
+# Retain prior attempts for diagnosis, but never let a failed dump reuse them.
+attempt=$(date +%s%N)-$$
+for previous in "$B/clk_freeze_post.tsv" "$D/clk_geom_diff.json"; do
+  if [ -e "$previous" ]; then
+    mv -- "$previous" "$previous.previous.$attempt" || { echo "CLK_GEOM_DIFF FAIL: cannot retain prior output $previous"; exit 2; }
+  fi
+done
 $DK run --rm --memory=16g --cpus=2 -v "$D":/work -e OT_DB=/work/$R/$DB -e OT_OUT=/work/$R/clk_freeze_post.tsv \
   -e OT_TAG="post:$DB" -e OT_NETS=/work/$R/clk_freeze_nets.txt "$IMAGE" bash -lc \
   "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -no_init -exit /work/clk_dump_db.tcl" > "$D/clk_freeze_post.log" 2>&1
+dump_rc=$?
+if [ "$dump_rc" != 0 ]; then
+  echo "CLK_GEOM_DIFF FAIL: fresh dump failed rc=$dump_rc ($D/clk_freeze_post.log)"
+  tail -n 5 "$D/clk_freeze_post.log"
+  exit 2
+fi
 $DK run --rm -v "$D":/work "$IMAGE" chown -R "$(id -u):$(id -g)" /work/$R >/dev/null 2>&1
 test -s "$B/clk_freeze_post.tsv" || { echo "CLK_GEOM_DIFF FAIL: post dump failed ($D/clk_freeze_post.log)"; tail -n 5 "$D/clk_freeze_post.log"; exit 2; }
 python3 -I "$D/clk_geom_diff.py" "$B/clk_freeze_pre.tsv" "$B/clk_freeze_post.tsv" --json "$D/clk_geom_diff.json"
