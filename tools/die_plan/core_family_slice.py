@@ -289,7 +289,10 @@ def choose_entry_trunk(P, libs, r, c, wc, cal):
 
 # ------------------------------------------------------------------ family template -> splits
 def splits_for(n, fam):
-    """2 (W/E) x 2 (islands per side) x leaf levels; leaf levels a<=b from the family menu so that leaves ~ n/target."""
+    """2 (W/E) x 2 (islands per side) x leaf levels; leaf levels a<=b from the family menu so that leaves ~ n/target.
+    A calibrated re-plan (replan_structure) passes its menu candidate as fam['splits_override']."""
+    if fam.get("splits_override"):
+        return list(fam["splits_override"])
     tgt = fam.get("leaf_target", 48); menu = fam.get("menu", [1, 2, 4, 8])
     want = max(1.0, n / (4.0 * tgt)); best = None
     for a in menu:
@@ -349,6 +352,70 @@ def plan(geo, fam, libtt, libff, name, trunk_cal=None):
                                     n_gt_40=sum(v > 40 for v in spread.values()), top=sorted(spread.items(), key=lambda kv: -kv[1])[:8]),
                model="R7 NLDM+Elmore chain + 12.8 d1 (core_family_slice); PLAN MODEL, UNCHECKED")
     return rec
+
+
+# ------------------------------------------------------------------ calibrated structural re-plan (R16)
+WIRE_MENU = ("std", "ndr2w")
+
+
+def _menu_splits(fam):
+    menu = fam.get("menu", [1, 2, 4, 8]); out = []
+    for a in menu:
+        for b in menu:
+            if a <= b:
+                sp = [2, 2] + [x for x in (a, b) if x > 1]
+                sp = sp if len(sp) > 2 else [2, 2, 1]
+                if sp not in out:
+                    out.append(sp)
+    return out
+
+
+def _replan_one(args):
+    geo, fam, libtt, libff, name, off = args
+    try:
+        rec = plan(geo, fam, libtt, libff, name)
+    except ValueError as e:                       # the H planner refuses some menu shapes (shared wire): not a candidate
+        return dict(splits=fam["splits_override"], wire=fam["wire"], error=str(e)[:120]), None
+    pred = {k: round(rec[k]["mean"] + off[k], 2) for k in ("TT", "FF")}
+    gates = []
+    for c in ("TT", "FF"):
+        if rec[c]["window"] > GATES["window_ps"]: gates.append("%s window %.1f" % (c, rec[c]["window"]))
+        if rec[c]["leaf_out_slew_max"] > GATES["slew_ps"]: gates.append("%s slew %.1f" % (c, rec[c]["leaf_out_slew_max"]))
+    if rec["leaf_spread_max"]["n_gt_40"]: gates.append("leaf spread")
+    if len(rec["stages"]) != 1: gates.append("stages %s" % rec["stages"])
+    err = abs(pred["TT"] - BAND["TT"][0]) + abs(pred["FF"] - BAND["FF"][0])
+    row = dict(splits=fam["splits_override"], wire=fam["wire"], stages=rec["stages"], cells=rec["n_cells"],
+               plan={k: rec[k]["mean"] for k in ("TT", "FF")}, window={k: rec[k]["window"] for k in ("TT", "FF")},
+               predicted_built=pred, band={k: ("IN" if abs(pred[k] - BAND[k][0]) <= BAND[k][1] else "OUT") for k in pred},
+               gate_fails=gates, err=round(err, 2))
+    return row, rec
+
+
+def replan_structure(geo, fam, libtt, libff, name, cal, jobs=8):
+    """12.3 calibrated re-plan for a core whose BUILT CTS insertion is out of band HIGH (a trunk only lengthens).
+    offset[c] = built[c] - plan[c] of the core's own built slice (COORD RULING S81-CORE-LAT-R13: calibrate on the built CTS);
+    every family-menu structure (leaf levels from fam menu) x wire class (std / 2W NDR) is planned with the same
+    deterministic planner + d1 sizing; candidates that fail a plan gate (window 20, slew 80, spread 40, equal stages) are
+    out; pick min |pred TT - 250| + |pred FF - 202.5| (tie: fewer cells, std wire).  No per-core hand tuning: the rule and
+    menu are the family's; the offset is applied unchanged to NDR candidates (NDR halves wire R, so the std offset is the
+    conservative high side).  PLAN MODEL + one-build calibration, UNCHECKED until the re-planned build is measured."""
+    from concurrent.futures import ProcessPoolExecutor
+    off = {k: float(cal["built_" + k]) - float(cal["plan_" + k]) for k in ("TT", "FF")}
+    cands = [dict(fam, splits_override=sp, wire=w) for w in WIRE_MENU for sp in _menu_splits(fam)]
+    args = [(str(geo), f, libtt, libff, name, off) for f in cands]
+    if jobs <= 1:
+        res = [_replan_one(x) for x in args]
+    else:
+        with ProcessPoolExecutor(max_workers=jobs) as ex:
+            res = list(ex.map(_replan_one, args))
+    ok = [(r, rec, f) for (r, rec), f in zip(res, cands) if rec is not None and not r["gate_fails"]]
+    if not ok:
+        raise SystemExit("replan: no family-menu structure passes the plan gates")
+    r, rec, f = min(ok, key=lambda t: (t[0]["err"], t[0]["cells"], WIRE_MENU.index(t[0]["wire"])))
+    rec["calibrated_replan"] = dict(rule=replan_structure.__doc__.split(".")[0], offset_ps={k: round(v, 2) for k, v in off.items()},
+                                    calibration=cal, chosen=r, candidates=[x for x, _ in res],
+                                    label="PLAN MODEL + one-build calibration, UNCHECKED until the re-planned build is measured")
+    return rec, f
 
 
 # ------------------------------------------------------------------ checks
@@ -436,7 +503,13 @@ def run_core(fams, core, kit, work, a):
     clk = census(kit, work)
     geo = work / "geo.txt"
     cal = json.loads(Path(a.trunk_cal).read_text()).get(core) if getattr(a, "trunk_cal", None) else None
-    rec = plan(geo, fam, a.libtt, a.libff, "%s_r13_%s%s" % (core, fam["name"], "_tk" if cal else ""), trunk_cal=cal)
+    rcal = json.loads(Path(a.replan_cal).read_text()).get(core) if getattr(a, "replan_cal", None) else None
+    if rcal and cal:
+        raise SystemExit("run: --trunk-cal and --replan-cal both name %s (trunk = built LOW, re-plan = built HIGH)" % core)
+    if rcal:
+        rec, fam = replan_structure(geo, fam, a.libtt, a.libff, "%s_r16_%s_rp" % (core, fam["name"]), rcal)
+    else:
+        rec = plan(geo, fam, a.libtt, a.libff, "%s_r13_%s%s" % (core, fam["name"], "_tk" if cal else ""), trunk_cal=cal)
     pj = work / "plan.json"; pj.write_text(json.dumps([rec]))
     if a.fit:
         r = subprocess.run([sys.executable, str(REPO / "results/core_lat_r9_1026/l0r_r9_d1.py"), str(pj), str(geo), a.libdir, a.fit,
@@ -472,6 +545,8 @@ def main():
     ap.add_argument("--libtt", required=True); ap.add_argument("--libff", required=True)
     ap.add_argument("--trunk-cal", default=None, help="JSON {core: {built_TT, built_FF, plan_TT, plan_FF, basis, source}}: "
                     "12.8c entry trunk calibrated on the core's own built CTS insertion")
+    ap.add_argument("--replan-cal", default=None, help="JSON {core: {built_TT, built_FF, plan_TT, plan_FF, basis, source}}: "
+                    "calibrated family-menu structure re-plan for a core built out of band HIGH")
     ap.add_argument("--fit", default=None); ap.add_argument("--libdir", default=None); ap.add_argument("--d1-steps", type=int, default=60)
     a = ap.parse_args()
     fams = json.loads(Path(a.family).read_text())

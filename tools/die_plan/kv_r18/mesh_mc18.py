@@ -121,7 +121,10 @@ out = dict(lane='CLOCK-KV-R18', method=__doc__, rec=a.rec, corner=C, thev=thev[C
                         per_load_sigma_ps=round(sd, 2), pair_3sigma_ps=round(3 * sd * 2 ** 0.5, 2),
                         gradient_worst_pair_ps=round(gw, 2), routed_minus_sim_mean_ps=round(gm, 2),
                         routed_minus_sim_spread_ps=round(gap_spread, 2),
-                        dieU_bound_ps=round(mc_skew + gap_spread + gw, 2)),
+                        # die-wide BOUND only: three extremes from DIFFERENT pairs stacked (PD11 ruling 3); the gate
+                        # uses die_sta_related.mesh_signoff per-pair U (RC gap folded per sample), see its pair_U record
+                        dieU_bound_ps=round(mc_skew + gap_spread + gw, 2),
+                        dieU_bound_note="die-wide bound (not a per-pair gate number)"),
            checked='UNCHECKED')
 Path(a.out).write_text(json.dumps(out))
 print('SUMMARY', C, json.dumps(out['summary']))
