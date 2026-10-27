@@ -483,7 +483,7 @@ def build_htree(P, taps, leaf_um=600.0, full_depth=False, regions=None):
     return nodes
 
 
-def tree_netlist(nodes, taps, rep_um=450.0, site=None):
+def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_rep_um=None):
     """buffered tree: a BUF at every node (branch / leaf driver), repeaters every rep_um along each leg.
     -> (verilog, placements [(inst, x, y)], tap ports [(port, x, y)], node_buf {node id: inst}, path {tap port: [inst]})"""
     cells, place, wires = [], [], []
@@ -524,10 +524,39 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None):
         place.append((node_buf[i], nd["x"], nd["y"]))
     tap_ports = []
     for i, nd in sorted(nodes.items()):
-        for (part, port, x, y) in nd["taps"]:
+        for ti, (part, port, x, y) in enumerate(nd["taps"]):
             tp = f"t_{sv(part)}__{port}"
             tap_ports.append((tp, x, y, part, port, i))
-            cells.append(f"  assign {tp} = {net(i)};")
+            src = net(i)
+            if tap_rep_um is not None:
+                if tap_rep_um <= 0:
+                    raise ValueError("tap repeater reach must be positive")
+                px, py = nd["x"], nd["y"]
+                length = abs(x-px) + abs(y-py)
+                count = max(0, math.ceil(length / tap_rep_um)-1)
+                prev = node_buf[i]
+                for j in range(count):
+                    # Follow the actual M8-horizontal/M9-vertical L path.
+                    d = length * (j+1)/(count+1)
+                    dx = min(d, abs(x-nd["x"]))
+                    dy = d-dx
+                    qx = nd["x"] + math.copysign(dx, x-nd["x"])
+                    qy = nd["y"] + math.copysign(dy, y-nd["y"])
+                    if site is not None:
+                        qx, qy = site.nearest((qx, qy))
+                    hop = abs(qx-px)+abs(qy-py)
+                    if hop > tap_rep_um + 1e-6:
+                        raise ValueError(f"no legal tap-repeater sequence for {part}.{port}: hop {hop:.3f} > {tap_rep_um}")
+                    inst, outnet = f"rtap{i}_{ti}_{j}", f"rtn{i}_{ti}_{j}"
+                    cells.append(f"  {BUF} {inst} (.A({src}), .Y({outnet}));")
+                    wires.append(outnet)
+                    place.append((inst, qx, qy))
+                    parent_of[inst] = prev
+                    src, prev, px, py = outnet, inst, qx, qy
+                hop = abs(x-px)+abs(y-py)
+                if hop > tap_rep_um + 1e-6:
+                    raise ValueError(f"no legal last tap hop for {part}.{port}: {hop:.3f} > {tap_rep_um}")
+            cells.append(f"  assign {tp} = {src};")
     v = ["module ctree (root, " + ", ".join(t[0] for t in tap_ports) + ");", "  input root;"]
     v += [f"  output {t[0]};" for t in tap_ports]
     v += [f"  wire {w};" for w in wires]
@@ -537,7 +566,8 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None):
     return "\n".join(v) + "\n", place, tap_ports, node_buf, parent_of
 
 
-def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_slide=False, regions=None):
+def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_slide=False, regions=None,
+              tap_rep_um=None):
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     taps = clock_taps(P)
@@ -575,7 +605,7 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
             else:
                 q = site.nearest((nd["x"], nd["y"]))
             nd["x"], nd["y"] = round(q[0], 3), round(q[1], 3)
-    v, place, tap_ports, node_buf, parent_of = tree_netlist(nodes, taps, rep_um, site)
+    v, place, tap_ports, node_buf, parent_of = tree_netlist(nodes, taps, rep_um, site, tap_rep_um)
     (out / "ctree.v").write_text(v)
     segs = []
     for i, nd in nodes.items():
@@ -619,6 +649,8 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
             "puts OT_DONE"]
     (out / "ctree.tcl").write_text("\n".join(tcl) + "\n")
     meta = dict(leaf_um=leaf_um, rep_um=rep_um, **({"full_depth": True} if full_depth else {}),
+                **({"tap_rep_um": tap_rep_um, "tap_repeaters": sum(i.startswith("rtap") for i, *_ in place)}
+                   if tap_rep_um is not None else {}),
                 **({"region_trees": len({n.get("region_root") for n in nodes.values()} - {None})} if regions else {}), buffer=BUF, wire_r_kohm_um=WIRE_R, wire_c_ff_um=WIRE_C,
                 tap_load_ff=TAP_LOAD_FF, nodes=len(nodes), leaves=sum(1 for n in nodes.values() if n["taps"]),
                 repeaters=sum(1 for i, *_ in place if i.startswith("r")), taps=len(tap_ports),
@@ -1307,7 +1339,8 @@ exit $rc
 
 
 def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.72, density=0.15, island_sites=None,
-              island_margin=ISLAND_MARGIN_UM, full_depth=False, site_legal=False, site_slide=False, regions=None):
+              island_margin=ISLAND_MARGIN_UM, full_depth=False, site_legal=False, site_slide=False, regions=None,
+              tap_rep_um=None):
     raw = S.load(plan_path)
     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
     plan_dir = Path(plan_path).parent
@@ -1371,7 +1404,8 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
                            sites=w.get("sites"), signals=w.get("signals"), host=w.get("host", False)) for w in io]
     # clock
     nodes, segs, leaf_legs, cm = clock_kit(P, out / "clock", leaf_um, rep_um, full_depth, site_legal, site_slide,
-                                           json.loads(Path(regions).read_text())["part_region"] if regions else None)
+                                            json.loads(Path(regions).read_text())["part_region"] if regions else None,
+                                            tap_rep_um)
     (out / "clock" / "make_tracks.tcl").write_text(gen_phys.make_tracks_tcl(P))
     meta["clock_tree"] = cm
     reserve = reserve_rects(segs, leaf_legs, P)
@@ -1921,6 +1955,7 @@ def main(argv=None):
                         "(root->entry Manhattan lengths unchanged = equal length kept by construction)")
     k.add_argument("--region-trees", help="fallback regions.json (part_region): die reference tree to one root per "
                    "region + equal-depth local tree per region (FALLBACK-S81-2, opt-in)")
+    k.add_argument("--tap-rep-um", type=float, help="opt-in: repeat leaf-to-tap legs too, refusing any final legal-site hop above this reach")
     k.add_argument("--coarse-um", type=float, default=0.72)
     k.add_argument("--density", type=float, default=0.15, help="die power density W/mm2 for PDNSim")
     k.add_argument("--island-sites", nargs="+", help="CLOCK-128-R7 opt-in: die_tree_plan.json / ot_clock_sites/1 / "
@@ -1984,7 +2019,7 @@ def main(argv=None):
     if a.cmd == "kit":
         m = write_kit(a.plan, a.out, a.views, a.leaf_um, a.rep_um, a.coarse_um, a.density, a.island_sites,
                       a.island_margin_um, full_depth=a.htree_full_depth, site_legal=a.tree_site_legal,
-                      site_slide=a.tree_site_slide, regions=a.region_trees)
+                      site_slide=a.tree_site_slide, regions=a.region_trees, tap_rep_um=a.tap_rep_um)
         print(json.dumps({k: m[k] for k in ("die", "parts", "types", "closed_views", "hard_cores", "clock_tree", "grt",
                                              "psm", "sta")}, indent=1))
     elif a.cmd == "report":
