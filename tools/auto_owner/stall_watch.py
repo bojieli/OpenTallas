@@ -30,8 +30,8 @@ Usage: stall_watch.py [--coord DIR] [--hosts h1,h2] [--out FILE] [--stdout] [--j
 import argparse, json, os, re, subprocess, sys, time
 from concurrent.futures import ThreadPoolExecutor
 
-DEFAULT_HOSTS = ['localhost', 'epyc2', 'intel1', 'intel2']   # epyc3 retired 2026-10-25
-LOCAL_NAME = 'epyc1'
+LOCAL_NAME = os.environ.get('OT_HUB_NAME', 'epyc1')            # EPYC1-RETIRE 2026-10-26: hub host name (epyc1 -> intel2)
+DEFAULT_HOSTS = ['localhost'] + [h for h in ['epyc2', 'intel1', 'intel2'] if h != LOCAL_NAME]   # epyc3 retired 2026-10-25
 
 PROBE = r'''
 import os, re, json, time, subprocess
