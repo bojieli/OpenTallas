@@ -26,3 +26,10 @@ def main():
  assert case(a,b,'W','E',4)>=5
  print('PASS3: straight depth preserved; mandatory L and Z knees; actual paired bits<=403um; exact rowlegal sites')
 if __name__=='__main__':main()
+
+def test_one_bit_straight_inside_shared_z_spine():
+ # One payload's aligned endpoints collapse its own spine to two vertices;
+ # the other bit and common mean still require the four-vertex Z topology.
+ a=np.array([[1400.,300.],[1400.,320.]])
+ b=np.array([[0.,300.],[0.,340.]])
+ assert case(a,b,'E','W',4)==4
