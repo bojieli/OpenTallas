@@ -2,8 +2,9 @@
 """Make the native simulation file list for an already generated HEAD plan.
 
 Physical manifests intentionally select black boxes. Native execution uses the
-same interfaces with the checked-in behavioral models. Tile ROM prefixes must
-be unique per partition; changing a prefix changes only simulation file lookup.
+same interfaces with the checked-in behavioral models. Tile ROM identities must
+be unique. Parameter mode specializes the wrapper image prefix; scope mode keeps
+shared type parameters and selects images using the runtime ROM hierarchy.
 No pipeline, port, arithmetic or clock/reset signal is changed.
 """
 import argparse
@@ -21,7 +22,32 @@ def replace_once(text, pattern, value, description):
     return result
 
 
-def prepare(root, plan_path, manifest, out):
+def scope_rom_model(text):
+    anchor = '    initial begin\n        for (init_i = 0;'
+    if text.count(anchor) != 1:
+        raise ValueError('ROM initialization anchor changed')
+    extra = ('    string head_scope;\n'
+             '    string head_dir;\n'
+             '    string head_image_path;\n'
+             '    integer head_image_fd;\n')
+    text = text.replace(anchor, extra+anchor, 1)
+    anchor = '        if ($value$plusargs("OT_ROM_DIR=%s", rom_dir) && INSTANCE != "")'
+    branch = r'''        if ($value$plusargs("OT_HEAD_ROM_DIR=%s", head_dir) && VIAMAP == "") begin
+            head_scope = $sformatf("%m");
+            if (head_scope.len() > 4 && head_scope.substr(0,3) == "TOP.")
+                head_scope = head_scope.substr(4,head_scope.len()-1);
+            head_image_path = $sformatf("%s/%s.viamap.hex",head_dir,head_scope);
+            head_image_fd = $fopen(head_image_path,"r");
+            if (head_image_fd == 0) $fatal(1,"HEAD missing scope image %s",head_image_path);
+            $fclose(head_image_fd);
+            $readmemh(head_image_path,arr);
+        end else'''
+    if text.count(anchor) != 1:
+        raise ValueError('ROM image selection anchor changed')
+    return text.replace(anchor, branch+'\n'+anchor, 1)
+
+
+def prepare(root, plan_path, manifest, out, rom_load='parameters'):
     root, plan_path, manifest, out = [p.resolve() for p in (root, plan_path, manifest, out)]
     plan = json.loads(plan_path.read_text())
     out.mkdir(parents=True, exist_ok=False)
@@ -45,6 +71,13 @@ def prepare(root, plan_path, manifest, out):
             p.write_bytes(data)
         if re.search(r'\(\*\s*blackbox\s*\*\)', p.read_text()):
             raise ValueError('native manifest still contains blackbox '+s)
+    if rom_load == 'scope':
+        macro = 'physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v'
+        if macro not in models:
+            raise ValueError('expected real HEAD weight ROM model')
+        target = out/'ot_rom_4096x274_m8_scope.sv'
+        target.write_text(scope_rom_model((root/macro).read_text()))
+        models[models.index(macro)] = str(target.relative_to(root))
     tile = plan['partition_types']['hd_tile']
     wrapper = tile['module']
     generated = [s for s in models if Path(s).name == wrapper+'.sv']
@@ -52,10 +85,11 @@ def prepare(root, plan_path, manifest, out):
         raise ValueError('expected exactly one generated tile wrapper')
     s = generated[0]
     text = (root/s).read_text()
-    text = replace_once(text, r'\bmodule\s+'+re.escape(wrapper)+r'\s*\(',
-                        'module '+wrapper+' #(parameter INSTANCE = "") (', 'tile wrapper header')
+    if rom_load == 'parameters':
+        text = replace_once(text, r'\bmodule\s+'+re.escape(wrapper)+r'\s*\(',
+                            'module '+wrapper+' #(parameter INSTANCE = "") (', 'tile wrapper header')
     # Keep all existing physical content parameters verbatim.
-    text = replace_once(text, r'(\bot_s81hd_tile\s*#\s*\()', r'\1.INSTANCE(INSTANCE), ', 'tile content parameter list')
+        text = replace_once(text, r'(\bot_s81hd_tile\s*#\s*\()', r'\1.INSTANCE(INSTANCE), ', 'tile content parameter list')
     target = out/(wrapper+'.sv'); target.write_text(text)
     models[models.index(s)] = str(target.relative_to(root))
     tops = [s for s in models if Path(s).name == 's81_head_top.sv']
@@ -63,11 +97,18 @@ def prepare(root, plan_path, manifest, out):
         raise ValueError('expected exactly one generated die top')
     top = (root/tops[0]).read_text()
     tiles = [p for p in plan['partitions'] if p['type'] == 'hd_tile']
-    names = []
+    names, bindings = [], []
     for p in tiles:
         name = p['name']
         pat = r'(\b'+re.escape(wrapper)+r')\s+('+re.escape(name)+r')\s*\('
-        top = replace_once(top, pat, r'\1 #(.INSTANCE("'+name+r'")) \2 (', 'tile instance '+name)
+        if rom_load == 'parameters':
+            top = replace_once(top, pat, r'\1 #(.INSTANCE("'+name+r'")) \2 (', 'tile instance '+name)
+        elif len(re.findall(pat, top)) != 1:
+            raise ValueError('missing unique tile instance '+name)
+        for core in ('a0','a1','a2','a3','b'):
+            elem = 'g_cvb.u_eB' if core == 'b' else 'g_cv.u_eA'+core[-1]
+            for bank in (0,1):
+                bindings.append((name+'.u_core.u_b.'+elem+'.u_m.u_rom'+str(bank)+'.arr', name+core+'_'+str(bank)+'.viamap.hex'))
         names.append(name)
     target = out/'s81_head_top.sv'; target.write_text(top)
     models[models.index(tops[0])] = str(target.relative_to(root))
@@ -79,7 +120,7 @@ def prepare(root, plan_path, manifest, out):
     image_names = [name+core+'_'+str(bank)+'.viamap.hex' for name in names for core in ('a0','a1','a2','a3','b') for bank in (0,1)]
     report = dict(schema='opentallas.head.native_sources.v1', replacements=aliases,
         defines=defines, include_dirs=include_dirs, tile_instances=len(names), required_weight_images=image_names,
-        unique_weight_images=len(set(image_names)), added_cycles=0,
+        unique_weight_images=len(set(image_names)), rom_load=rom_load, image_bindings=bindings, required_scope_images=['s81_head_top.'+p[:-4]+'.viamap.hex' for p,_ in bindings] if rom_load == 'scope' else [], added_cycles=0,
         source_sha256={s: hashlib.sha256((root/s).read_bytes()).hexdigest() for s in models},
         qualification='source staging only; current physical-view equivalence, boot schedule and real numerical token execution pending')
     (out/'source_contract.json').write_text(json.dumps(report,indent=2)+'\n')
@@ -89,7 +130,8 @@ def prepare(root, plan_path, manifest, out):
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('plan',type=Path); ap.add_argument('manifest',type=Path); ap.add_argument('out',type=Path)
+    ap.add_argument('--rom-load',choices=['parameters','scope'],default='parameters')
     a=ap.parse_args(); root=Path.cwd()
-    report=prepare(root, a.plan, a.manifest, a.out)
+    report=prepare(root, a.plan, a.manifest, a.out, a.rom_load)
     print('HEAD_NATIVE_SOURCES tiles=%d unique_images=%d cycles_added=0' % (report['tile_instances'],report['unique_weight_images']))
 if __name__=='__main__':main()
