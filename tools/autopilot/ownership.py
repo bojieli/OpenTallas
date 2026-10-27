@@ -61,7 +61,7 @@ DIES = [("s81", "s81", "s81"), ("s81_head", "s81_head", "s81_head"), ("qwen_comp
         ("qwen_kvsys", "qwen_kvsys", "qwen_kvsys"), ("hbm", "hbm_arch/B2n", "B2n")]
 CANONICAL_SPLIT = "physical/die_plan/hbm/cores/harden/canonical_ports_split.json"   # HBM split piece -> RTL master
 STATES = ["PLAN-STRUCTURAL", "NEEDS-KIT", "KIT-PLACED", "GEOM-REQ", "ROUTING", "REVIEW", "FIX", "WAIT-PARENT",
-          "SIGNED-UNVERSIONED", "SIGNED", "GENERATED"]
+          "SIGNED-UNVERSIONED", "SIGNED", "GENERATED", "RETIRED"]
 # generated memory macros (tools/mem_compiler: ROM/SRAM compilers, owner 2026-10-25 ROM-MACRO): one content-independent
 # LEF/Liberty/behavioural view per shape, built by the generator, never kitted or routed -- ROM content is per-instance
 # via-map data (rom_gen.py personalise / verify), so a macro is never a design to harden
@@ -90,6 +90,7 @@ NEXT = {
     "SIGNED-UNVERSIONED": "sign-off record lacks src commit + flow tag (closure order rule 3): re-run sign-off at a flow tag",
     "SIGNED": "-",
     "GENERATED": "- (generated macro view; per-content check = tools/mem_compiler/rom_gen.py verify)",
+    "RETIRED": "- (not a design of the plan of record; coord autopilot/OWNERS-RETIRED.tsv)",
 }
 
 
@@ -575,7 +576,10 @@ def build(inp, now=None):
             ev, state, why = None, None, ""
             skey = next((x for x in [it["item"], it["module"]] + list(it.get("members") or []) + list(it.get("modules") or [])
                          if x in struct), None)
-            if it["kind"] == "macro":
+            rt = _retired(inp.get("retired"), die, it)
+            if rt and not e["live"]:
+                state, why = "RETIRED", rt
+            elif it["kind"] == "macro":
                 state, why = "GENERATED", f"generated memory macro view ({it['module']}; tools/mem_compiler)"
             elif k in signed:
                 state, why = "SIGNED", signed[k]
@@ -629,7 +633,7 @@ def build(inp, now=None):
             rows.append(dict(die=die, item=it["item"], kind=it["kind"], state=state, owner=owner, live_job=live,
                              last_activity=age, next_step=nxt, default_owner=dflt, evidence=(why or "").replace("\t", " ")[:200],
                              replicas=it.get("replicas", ""), members=_members(it), _last=last))
-            if state not in ("SIGNED", "GENERATED") and not e["live"] and (not last or now - last > UNOWNED_S):
+            if state not in ("SIGNED", "GENERATED", "RETIRED") and not e["live"] and (not last or now - last > UNOWNED_S):
                 unowned.setdefault((die, dflt), []).append((last, it["item"], state, owner))
 
     for (die, owner), lst in sorted(unowned.items()):
@@ -643,6 +647,31 @@ def build(inp, now=None):
         gaps.append((t, f"UNOWNED-ITEM {die} -> {owner}: {len(lst)} items with no live job and no lane activity > 60 min "
                         f"((LANE) = last lane that touched it; OWNERS.tsv) -- {detail}"))
     return rows, gaps, summary(rows, unowned, inp)
+
+
+def parse_retired(text):
+    """coord autopilot/OWNERS-RETIRED.tsv: 'die<TAB>name<TAB>reason' rows (# comments).  name = an item, a member
+    module/type key, or a prefix ending in '*'.  Opt-in: no file / no rows -> nothing retired (default unchanged)."""
+    out = {}
+    for ln in (text or "").splitlines():
+        if not ln.strip() or ln.lstrip().startswith("#"):
+            continue
+        f = ln.rstrip("\n").split("\t")
+        if len(f) >= 2 and f[0].strip() and f[1].strip():
+            out.setdefault(f[0].strip(), {})[f[1].strip()] = (f[2].strip() if len(f) > 2 else "") or "retired"
+    return out
+
+
+def _retired(ret, die, it):
+    """reason if a retire row names the item (exact item / member / module, or 'prefix*'), else None"""
+    rows = (ret or {}).get(die) or {}
+    if not rows:
+        return None
+    names = [it["item"], it.get("module") or ""] + list(it.get("members") or []) + list(it.get("modules") or [])
+    for pat, why in rows.items():
+        if any(n and (n == pat or (pat.endswith("*") and n.startswith(pat[:-1]))) for n in names):
+            return f"RETIRED ({pat}): {why}"
+    return None
 
 
 def summary(rows, unowned, inp):

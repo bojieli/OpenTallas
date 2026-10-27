@@ -1840,7 +1840,8 @@ def ownership_inputs(st, geom_text, trows):
     lane_texts.pop("GEOM-REVIEW", None)               # read once, as geom_text
     return dict(plans=plans, proto=proto, cache=cache, jobs=list(st["jobs"].values()), trows=trows,
                 geom_text=geom_text, lane_texts=lane_texts, live=hub_otrun_clients(), core_pins=core_pins, bound_rtl=bound_rtl,
-                canonical=_json(read_repo(OWN.CANONICAL_SPLIT)))
+                canonical=_json(read_repo(OWN.CANONICAL_SPLIT)),
+                retired=OWN.parse_retired(read_coord("autopilot/OWNERS-RETIRED.tsv")))
 
 
 def status(args):
