@@ -1213,9 +1213,13 @@ def standin_netlist(P, tn, hold_contract=True, clock_contract=True):
     cells = []
     k = 0
     bh = die_sta.bhold_cell(gen_phys.seam_hold(P)["seam_ps"])
+    # A sender-min/plan-demand input has no legacy receiver padding guarantee.
+    # Leave its face flop bare: this is a pessimistic diagnostic, never a parent
+    # hold proof. Fallback inputs and reset retain the legacy contract.
+    parent_inputs = gen_phys.input_hold_min(P, tn)
     for bus, bit, ln, x, y, f in sorted(pins, key=lambda p: (p[0], p[1])):
         ck = ckn[near(x, y)]
-        if dirs.get(bus) == "in" and hold_contract:
+        if dirs.get(bus) == "in" and hold_contract and bus not in parent_inputs:
             cells.append(f"  {bh} h{k} (.A({bus}[{bit}]), .Y(d{k}));\n  {FLOP} f{k} (.CLK({ck}), .D(d{k}), .QN(q{k}));")
         elif dirs.get(bus) == "in":
             cells.append(f"  {FLOP} f{k} (.CLK({ck}), .D({bus}[{bit}]), .QN(q{k}));")
@@ -1237,6 +1241,8 @@ def standin_netlist(P, tn, hold_contract=True, clock_contract=True):
     v += [f"  wire q{i};" for i in range(k) if f".QN(q{i})" in cells[i]]
     v += [f"  wire d{i};" for i in range(k) if f".Y(d{i})" in cells[i]]
     v += ckcells + cells + ["endmodule"]
+    if parent_inputs:
+        v.insert(0, "// OT_IO_HOLD NEEDS_PARENT: bare diagnostic inputs " + ",".join(sorted(parent_inputs)))
     return "\n".join(v) + "\n", k
 
 
@@ -1456,6 +1462,9 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     (out / "sta" / "die_top.v").write_text(plain + "\n")
     meta["sta"] = dict(standin_flops=nff, seam_bits=seam_bits,
                        per_type_modules=sorted(tn for tn, m in smod.items() if m != P.types[tn]["module"]))
+    if gen_phys.io_hold_mode(P) != "legacy":
+        meta["sta"]["io_hold"] = dict(mode=gen_phys.io_hold_mode(P), status="NEEDS_PARENT",
+            basis="bare diagnostic input flops; real-view parent FF hold/CPPR required")
     for x in ("run_grt.sh", "run_clock.sh", "run_psm.sh"):
         os.chmod(out / x, 0o755)
     (out / "kit.json").write_text(json.dumps(meta, indent=1) + "\n")
