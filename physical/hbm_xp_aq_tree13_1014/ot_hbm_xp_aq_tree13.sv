@@ -72,8 +72,7 @@ module ot_hbm_xp_aq_tree13 #(parameter integer MUT=0) (
         mx4=({31{wa}}&a)|({31{wb}}&b)|({31{wc}}&c)|({31{wd}}&d);
       end
     endfunction
-    // HBM-CORES-R11 2026-10-27: loop index declared per always block (named-block local): one module-level integer i
-    // driven from six always blocks failed main rtl_lint (check -assert: multi-driven i, $procdff Q vs const 16).
+    integer i;
 
     // -- S0: input register ------------------------------------------------------
     reg          s0_v, s0_fp4;
@@ -92,8 +91,7 @@ module ot_hbm_xp_aq_tree13 #(parameter integer MUT=0) (
     reg [30:0] s1_m [0:7];
     reg [30:0] t16 [0:15];
     reg        nf0;
-    always @(*) begin : g_lp94
-        integer i;
+    always @(*) begin
         nf0 = 1'b0;
         for (i = 0; i < 32; i = i + 1) nf0 = nf0 | (s0_x[32*i + 23 +: 8] == 8'hFF);
         for (i = 0; i < 16; i = i + 1) t16[i] = mx(s0_x[64*i +: 31], s0_x[64*i + 32 +: 31]);
@@ -102,8 +100,7 @@ module ot_hbm_xp_aq_tree13 #(parameter integer MUT=0) (
         if (!rst_n) s1_v <= 1'b0;
         else s1_v <= s0_v;
     end
-    always @(posedge clk) begin : g_lp103
-        integer i;
+    always @(posedge clk) begin
         s1_fp4 <= s0_fp4; s1_nf <= nf0;
         for (i = 0; i < 8; i = i + 1) s1_m[i] <= mx4(s0_x[128*i+:31],s0_x[128*i+32+:31],s0_x[128*i+64+:31],s0_x[128*i+96+:31]);
     end
@@ -115,8 +112,7 @@ module ot_hbm_xp_aq_tree13 #(parameter integer MUT=0) (
         if (!rst_n) s2a_v <= 1'b0;
         else s2a_v <= s1_v;
     end
-    always @(posedge clk) begin : g_lp115
-        integer i;
+    always @(posedge clk) begin
         s2a_fp4 <= s1_fp4; s2a_nf <= s1_nf;
         for (i = 0; i < 2; i = i + 1)
             s2a_m[i] <= mx4(s1_m[4*i],s1_m[4*i+1],s1_m[4*i+2],s1_m[4*i+3]);
@@ -178,8 +174,7 @@ module ot_hbm_xp_aq_tree13 #(parameter integer MUT=0) (
         if (!rst_n) s9_v <= 1'b0;
         else s9_v <= s8_v;
     end
-    always @(posedge clk) begin : g_lp177
-        integer i;
+    always @(posedge clk) begin
         s9_fp4 <= s8_fp4; s9_nf <= s8_nf; s9_e <= s8_e;
         for (i = 0; i < 32; i = i + 1) begin
             fld = x8[32*i + 23 +: 8];
@@ -214,8 +209,7 @@ module ot_hbm_xp_aq_tree13 #(parameter integer MUT=0) (
         if (!rst_n) s10_v <= 1'b0;
         else s10_v <= s9_v;
     end
-    always @(posedge clk) begin : g_lp212
-        integer i;
+    always @(posedge clk) begin
         s10_fp4 <= s9_fp4; s10_nf <= s9_nf; s10_e <= s9_e; s10_sgn <= s9_sgn;
         for (i = 0; i < 32; i = i + 1) begin
             wide = {s9_sig[i], 27'd0} >> s9_rs[i];
@@ -239,8 +233,7 @@ module ot_hbm_xp_aq_tree13 #(parameter integer MUT=0) (
         if (!rst_n) begin vo <= 1'b0; fault <= 1'b0; end
         else begin vo <= s10_v; fault <= s10_v && s10_nf; end
     end
-    always @(posedge clk) begin : g_lp236
-        integer i;
+    always @(posedge clk) begin
         e <= s10_e;
         for (i = 0; i < 32; i = i + 1) begin
             c = s10_c[i];
