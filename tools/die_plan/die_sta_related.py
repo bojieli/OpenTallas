@@ -59,6 +59,25 @@ REAL VIEWS (CLOCK-KV-R16, opt-in; without them the output is unchanged):
   timed over all endpoint-model combinations; the class keeps the worst over all, and 'real_view' reports the worst
   over the combinations that use at least one real model, plus real/total pair and instance counts.
 
+DROOP REGION (CLOCK-KV-R17, COORD RULING CLOCK-KV-R16 (2), METHODOLOGY 12.4a b1): with --clock-droop shared the clock
+  is charged droop only between taps in DIFFERENT mesh/PDN regions.  --droop-region mesh (default) = the region is the
+  mesh/PDN region: every tap of the proof's mesh.json (one continuous die mesh) is in ONE region unless --droop-regions
+  FILE (JSON {port: region}, e.g. from PDNSim) says otherwise; taps without a mesh region fall back to the tree rule.
+  --droop-region tree = the old (buggy) behaviour that tied the droop region to the last common tree node; kept only to
+  reproduce pre-R17 numbers.
+SIGNED MESH = COMMON POINT (CLOCK-KV-R17, opt-in, METHODOLOGY 12.4a b exception / 12.8e): --mesh-signoff
+  TT=mc_TT.json,FF=mc_FF.json (kv_r17/mesh_mc17.py variation sim: per mesh-load nominal + MC arrivals, routed nominal,
+  gradient shift vectors).  Every tap whose mesh load (array stub input; with --mesh-band sim also the leaf-fed band
+  root input) is in the sign-off is re-referenced to the mesh: late/early := M0 + (tap - routed load late/early),
+  cppr_node 'm' (credit 0: the same M0 on both sides), AOCV charged only below the load point (node 'm' stages = mesh
+  driver output, no node position: distance = launch/capture bbox).  Each 'm' pair then carries the explicit signed
+  uncertainty U(a,b) = max(worst |d| over the samples, |mean d| + 3 sigma) + |routed-vs-sim gap difference| +
+  |gradient shift vector difference| (worst direction), where d = the two load arrivals' difference in a sample.
+  --mesh-band tree (default, strict): the leaf-fed band taps are NOT through the mesh; any pair with one keeps its
+  absolute arrivals and CPPR at the die root 'h' (12.4b).  --mesh-band sim: band-root inputs are sign-off pseudo loads
+  (same per-sample tree offsets as the drivers above them) -> 'm' too (INFO / ruling needed).
+  Pair classes (intra / seam / landed) are always built on the tree cppr nodes, before the re-reference.
+
 Output OUT/die_sta_related.json (+ worst pairs per class); prints one line per class and corner.
 """
 import argparse
@@ -146,6 +165,15 @@ def load_taps(d, corner):
     return t, taps
 
 
+def arr4(A, B, node):
+    """launch late/early, capture late/early for this pair's common node: a mesh-re-referenced tap keeps its absolute
+    arrival for pairs whose common point is the die root (--mesh-signoff, CLOCK-KV-R17)."""
+    if node == "h":
+        return (A.get("abs_late_ps", A["late_ps"]), A.get("abs_early_ps", A["early_ps"]),
+                B.get("abs_late_ps", B["late_ps"]), B.get("abs_early_ps", B["early_ps"]))
+    return A["late_ps"], A["early_ps"], B["late_ps"], B["early_ps"]
+
+
 def credit(rng, node, la, ea, lc, ec):
     c = node
     while c not in rng and len(c) > 1:
@@ -230,8 +258,8 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
     mds = mdh = float('-inf')
     for a, b, tag in pairs:
         A, B = taps[a], taps[b]
-        la, ea, lc, ec = A["late_ps"], A["early_ps"], B["late_ps"], B["early_ps"]
         node = A["cppr_node"] if A["cppr_node"] == B["cppr_node"] else "h"
+        la, ea, lc, ec = arr4(A, B, node)
         cr = credit(rng, node, la, ea, lc, ec)
         dmg_s, dmg_h = la - ec - cr, lc - ea - cr
         if views is None:
@@ -312,8 +340,9 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
         for a, b, tag in pairs:
             A, B = taps[a], taps[b]
             node = A["cppr_node"] if A["cppr_node"] == B["cppr_node"] else "h"
-            cr = credit(rng, node, A["late_ps"], A["early_ps"], B["late_ps"], B["early_ps"])
-            hd.append((B["late_ps"] - A["early_ps"] - cr, a, b, tag))
+            la, ea, lc, ec = arr4(A, B, node)
+            cr = credit(rng, node, la, ea, lc, ec)
+            hd.append((lc - ea - cr, a, b, tag))
         hd.sort(reverse=True)
         w = float(hold_window["ps"])
         out["kit_contract_hold"] = dict(
@@ -332,15 +361,16 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
     return out
 
 
-def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_path=None, cell_share=None):
+def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_path=None, cell_share=None, region=None):
     """CLK-AOCV (METHODOLOGY 12.4a b1, DRAFT, opt-in): per pair clock OCV pessimism on the branches below the last
     common node.  Needs per-tap 'stages_from_root' + 'xy_um' and per-node meta 'node_stages' / 'node_xy_um' plus the
     node arrivals 'node_late_ps' / 'node_early_ps' in tap_arrivals_<C>.json (CLOCK-128-R7 --aocv-fold export names;
     CLOCK-128-R8); refuses when they are missing.
     Branch = tap arrival - node arrival (+ declared core latency, class-B stages), cell share from the table (class A
     die stage) unless cell_share is given.  mode 'flat' = die_ci_margins.json cell/net derates, 'table' = clk_aocv.
-    droop 'stated' = +5.1 % late on the late branch always; 'shared' = 0 when both taps share a region (cppr_node
-    != 'h' and equal), else +5.1 %."""
+    droop 'stated' = +5.1 % late on the late branch always; 'shared' = 0 when both taps share a droop region, else
+    +5.1 %.  region: {port: mesh/PDN region} (CLOCK-KV-R17 default --droop-region mesh); a tap missing from it (or
+    region None = --droop-region tree, the pre-R17 rule) uses its tree region (cppr_node != 'h')."""
     import clk_aocv as CA
     here = Path(__file__).resolve().parent
     T = CA.load(table_path or here / "clk_aocv_table.json")
@@ -356,7 +386,9 @@ def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_pat
     nB = max(1, round(core_lat / B["mu_stage_ps"]))
 
     def branch(r, node, late):
-        arr = (r["late_ps"] if late else r["early_ps"]) - float(meta["node_late_ps" if late else "node_early_ps"][node])
+        own = (r.get("abs_late_ps", r["late_ps"]) if late else r.get("abs_early_ps", r["early_ps"])) if node == "h" \
+            else (r["late_ps"] if late else r["early_ps"])
+        arr = own - float(meta["node_late_ps" if late else "node_early_ps"][node])
         return dict(cell_ps=fc * arr + B["cell_share"] * core_lat, net_ps=(1 - fc) * arr + (1 - B["cell_share"]) * core_lat,
                     stages={"A": int(r["stages_from_root"]) - int(meta["node_stages"][node]), "B": nB})
 
@@ -364,8 +396,12 @@ def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_pat
         A_, B_ = taps[a], taps[b]
         node = A_["cppr_node"] if A_["cppr_node"] == B_["cppr_node"] else "h"
         same = node != "h"
+        if region is not None:
+            ra = region.get(a, A_["cppr_node"] if A_["cppr_node"] != "h" else None)
+            rb = region.get(b, B_["cppr_node"] if B_["cppr_node"] != "h" else None)
+            same = ra is not None and ra == rb
         nxy = meta["node_xy_um"][node]
-        pts = [A_["xy_um"], B_["xy_um"], nxy]
+        pts = [A_["xy_um"], B_["xy_um"]] + ([nxy] if nxy is not None else [])
         d = ((max(p[0] for p in pts) - min(p[0] for p in pts)) ** 2 + (max(p[1] for p in pts) - min(p[1] for p in pts)) ** 2) ** 0.5
         # setup: launch a late, capture b early; hold: capture b late, launch a early
         ba = branch(A_, node, check == "setup")
@@ -374,6 +410,82 @@ def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_pat
             return CA.flat_pessimism(m, ba, bb, check, same, droop == "shared")
         return CA.branch_pessimism(T, corner, ba, bb, d, same if droop == "shared" else False, check)
     return fn
+
+
+# ---------------------------------------------------------------- SIGNED MESH (CLOCK-KV-R17, opt-in)
+def droop_regions(proof_dir, taps, mode, regions_file=None):
+    """{port: region} for --droop-region mesh; None for 'tree'."""
+    if mode == "tree":
+        return None
+    reg = {}
+    mj = Path(proof_dir) / "mesh.json"
+    if mj.exists():
+        for t in json.loads(mj.read_text()).get("taps", []):
+            if t["port"] in taps:
+                reg[t["port"]] = "mesh:0"
+    if regions_file:
+        reg.update(json.loads(Path(regions_file).read_text()))
+    return reg
+
+
+def mesh_signoff(proof_dir, taps, meta, corner, so_path, band_mode="tree"):
+    """re-reference mesh-fed taps to the signed mesh (in place on taps/meta); returns U(a, b) and a record."""
+    S = json.loads(Path(so_path).read_text())
+    if S.get("corner") != corner:
+        raise SystemExit(f"{so_path}: sign-off corner {S.get('corner')} != {corner}")
+    L = S["loads"]
+    idx = {k: i for i, k in enumerate(L)}
+    arr = S["arr"]
+    gv = S["grad_vec_ps"]
+    rtj = json.loads((Path(proof_dir) / f"mesh_{corner}.json").read_text())["stubs"]
+    M = json.loads((Path(proof_dir) / "mesh.json").read_text())
+    load = {}
+    for t in M["taps"]:
+        if t["port"] not in taps:
+            continue
+        if t.get("mesh_in"):
+            if band_mode == "sim":
+                load[t["port"]] = t["mesh_in"]
+        else:
+            load[t["port"]] = t["stub"]
+    load = {p: l for p, l in load.items() if l in idx and l in rtj}
+    m0 = sorted(rtj[l]["late"] for l in set(load.values()))
+    m0 = m0[len(m0) // 2]
+    arr_stub = [r["stages_from_root"] for p, r in taps.items() if p in load and not p.startswith("~")
+                and load[p].startswith("ckm_s_")] if all("stages_from_root" in r for r in taps.values()) else []
+    for p, l in load.items():
+        r = taps[p]
+        r["abs_late_ps"], r["abs_early_ps"] = r["late_ps"], r["early_ps"]
+        r["late_ps"] = m0 + (r["late_ps"] - rtj[l]["late"])
+        r["early_ps"] = m0 + (r["early_ps"] - rtj[l]["early"])
+        r["cppr_node_tree"], r["cppr_node"], r["mesh_load"] = r["cppr_node"], "m", l
+    meta.setdefault("cppr_node_range_ps", {})["m"] = 0.0
+    if "node_stages" in meta:
+        meta["node_stages"]["m"] = (min(arr_stub) - 1) if arr_stub else 0
+        meta["node_xy_um"]["m"] = None
+        meta["node_late_ps"]["m"] = m0
+        meta["node_early_ps"]["m"] = m0
+    ns = len(arr)
+    gap = [rtj[k]["late"] - arr[0][i] if k in rtj else 0.0 for i, k in enumerate(L)]
+    cache = {}
+
+    def U(a, b):
+        x, y = taps[a].get("mesh_load"), taps[b].get("mesh_load")
+        if taps[a]["cppr_node"] != "m" or taps[b]["cppr_node"] != "m" or x is None or y is None or x == y:
+            return 0.0
+        k = (x, y) if x < y else (y, x)
+        if k not in cache:
+            i, j = idx[k[0]], idx[k[1]]
+            ds = [arr[s][i] - arr[s][j] for s in range(ns)]
+            mc = ds[1:] or ds
+            mu = sum(mc) / len(mc)
+            sd = (sum((v - mu) ** 2 for v in mc) / max(1, len(mc) - 1)) ** 0.5
+            gd = ((gv[i][0] - gv[j][0]) ** 2 + (gv[i][1] - gv[j][1]) ** 2) ** 0.5
+            cache[k] = max(max(abs(v) for v in ds), abs(mu) + 3.0 * sd) + abs(gap[i] - gap[j]) + gd
+        return cache[k]
+    rec = dict(file=str(so_path), M0_ps=round(m0, 3), taps_on_mesh=len(load), taps_total=len(taps), band_mode=band_mode,
+               samples=ns - 1, sim_summary=S.get("summary"), status=S.get("checked", "UNCHECKED"))
+    return U, rec
 
 
 # ---------------------------------------------------------------- REAL VIEWS (CLOCK-KV-R16, opt-in)
@@ -595,6 +707,13 @@ def main(argv=None):
                          "shared for table, stated for flat")
     ap.add_argument("--clock-aocv-table", help="clock_aocv block (default tools/die_plan/clk_aocv_table.json)")
     ap.add_argument("--clock-ocv-cell-share", type=float, help="cell share of the die branch (default: table class A)")
+    ap.add_argument("--droop-region", choices=("mesh", "tree"), default="mesh",
+                    help="shared-droop region (12.4a b1): mesh = mesh/PDN region (default, R17 fix); tree = pre-R17 rule")
+    ap.add_argument("--droop-regions", help="JSON {port: region} override (e.g. PDNSim regions)")
+    ap.add_argument("--mesh-signoff", help="TT=mc.json,FF=mc.json signed-mesh variation sim (12.8e): CPPR at the mesh "
+                    "+ per-pair sim uncertainty (opt-in, CLOCK-KV-R17)")
+    ap.add_argument("--mesh-band", choices=("tree", "sim"), default="tree",
+                    help="leaf-fed band taps: tree = strict CPPR at h (default); sim = sign-off pseudo loads (INFO)")
     a = ap.parse_args(argv)
     corners = a.corner or ["TT", "FF"]
     out = Path(a.out)
@@ -653,15 +772,34 @@ def main(argv=None):
                                       a.seam_wire_um * a.wire_ff_per_um, a.core_part_delay_ps)
             cr_real = rcov
         pairs.update(nearest_pairs(d, a.plan, a.clock_tool, taps))
+        unc = None
+        if a.mesh_signoff:
+            so = dict(x.split("=", 1) for x in a.mesh_signoff.split(","))
+            unc, mrec = mesh_signoff(d, taps, meta, c, so[c], a.mesh_band)
+            rng = meta["cppr_node_range_ps"]
         cr = dict(basis=meta.get("basis"), tap_slew_max_ps=round(slew, 2), register=reg, classes={})
         if real:
             cr["real_view_coverage"] = cr_real
         ocv = None
         if a.clock_ocv != "none":
             droop = a.clock_droop or ("shared" if a.clock_ocv == "table" else "stated")
+            dreg = droop_regions(d, taps, a.droop_region, a.droop_regions) if droop == "shared" else None
             ocv = clock_ocv_fn(a.clock_ocv, droop, dict(meta, corner=c), taps, lat[c], a.clock_aocv_table,
-                               cell_share=a.clock_ocv_cell_share)
+                               cell_share=a.clock_ocv_cell_share, region=dreg)
             cr["clock_ocv"] = dict(mode=a.clock_ocv, droop=droop, status="DRAFT 12.4a b1, UNCHECKED, not a gate")
+            if droop == "shared":
+                cr["clock_ocv"]["droop_region"] = dict(mode=a.droop_region, file=a.droop_regions,
+                                                       regions=sorted(set(dreg.values())) if dreg else None,
+                                                       taps_in_region=len(dreg) if dreg else None)
+        if unc is not None:
+            base_ocv, umax = ocv, {"setup": 0.0, "hold": 0.0}
+
+            def ocv(x, y, check, _b=base_ocv, _u=unc, _m=umax):
+                u = _u(x, y)
+                _m[check] = max(_m[check], u)
+                return (_b(x, y, check) if _b is not None else 0.0) + u
+            mrec["unc_max_ps"] = umax
+            cr["mesh_signoff"] = mrec
         for k, pl in pairs.items():
             cr["classes"][k] = time_class(pl, taps, rng, reg, a.core_tol_ps, period, UNC_SETUP_PS, UNC_HOLD_PS,
                                           landed=k.startswith("landed"), window=window,

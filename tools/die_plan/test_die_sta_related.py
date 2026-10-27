@@ -137,3 +137,68 @@ def test_core_view_pair_uses_etm_arcs():
     assert rv["worst_setup_slack_ps"] == round(1040 + 833.333 + 90 - 1000 - 250 - 68 - 60 + 10, 2)
     assert rv["worst_hold"]["capture_model"] == "core:c"
     assert r["worst_hold_slack_ps"] <= rv["worst_hold_slack_ps"]
+
+
+# ---- DROOP REGION + SIGNED MESH (CLOCK-KV-R17)
+def _ocv_taps():
+    t = {"a": dict(late_ps=4700.0, early_ps=4660.0, cppr_node="h", stages_from_root=46, xy_um=[1000.0, 1000.0]),
+         "b": dict(late_ps=4710.0, early_ps=4670.0, cppr_node="h", stages_from_root=46, xy_um=[1300.0, 1000.0])}
+    meta = dict(corner="FF", node_stages={"h": 1}, node_xy_um={"h": [5000.0, 13000.0]}, node_late_ps={"h": 40.0},
+                node_early_ps={"h": 39.6})
+    return t, meta
+
+
+def test_droop_region_mesh_shares_droop():
+    t, meta = _ocv_taps()
+    old = R.clock_ocv_fn("table", "shared", meta, t, 250.0)                           # pre-R17: region = tree node
+    same = R.clock_ocv_fn("table", "shared", meta, t, 250.0, region={"a": "mesh:0", "b": "mesh:0"})
+    diff = R.clock_ocv_fn("table", "shared", meta, t, 250.0, region={"a": "mesh:0", "b": "mesh:1"})
+    stated = R.clock_ocv_fn("table", "stated", meta, t, 250.0)
+    # one mesh region: no droop charge; different regions: the full one-sided droop (= the old / stated value)
+    assert same("a", "b", "hold") < old("a", "b", "hold")
+    assert abs(diff("a", "b", "hold") - old("a", "b", "hold")) < 1e-9
+    assert abs(stated("a", "b", "hold") - old("a", "b", "hold")) < 1e-9
+
+
+def test_droop_regions_from_mesh_json(tmp_path):
+    import json
+    (tmp_path / "mesh.json").write_text(json.dumps({"taps": [{"port": "a"}, {"port": "b"}]}))
+    reg = R.droop_regions(tmp_path, {"a": {}, "b": {}, "c": {}}, "mesh")
+    assert reg == {"a": "mesh:0", "b": "mesh:0"}
+    assert R.droop_regions(tmp_path, {"a": {}}, "tree") is None
+    (tmp_path / "pdn.json").write_text(json.dumps({"b": "pdn:1"}))
+    assert R.droop_regions(tmp_path, {"a": {}, "b": {}}, "mesh", tmp_path / "pdn.json") == {"a": "mesh:0", "b": "pdn:1"}
+
+
+def test_mesh_signoff_rereference_and_unc(tmp_path):
+    import json
+    M = {"taps": [{"port": "a", "stub": "s1"}, {"port": "b", "stub": "s2"}, {"port": "c", "stub": "s3", "mesh_in": "br0"}]}
+    (tmp_path / "mesh.json").write_text(json.dumps(M))
+    rt = {"s1": dict(late=4600.0, early=4560.0), "s2": dict(late=4610.0, early=4570.0), "s3": dict(late=1, early=1),
+          "br0": dict(late=4550.0, early=4510.0)}
+    (tmp_path / "mesh_TT.json").write_text(json.dumps({"stubs": rt}))
+    # loads s1, s2, br0; sample 0 = nominal (sim 5 ps below routed for s1, 3 below for s2), 2 MC samples
+    so = dict(corner="TT", loads=["br0", "s1", "s2"], arr=[[4550.0, 4595.0, 4607.0], [4552.0, 4596.0, 4610.0],
+                                                           [4549.0, 4594.0, 4603.0]],
+              grad_vec_ps=[[0.0, 0.0], [3.0, 0.0], [0.0, 4.0]], summary={}, checked="UNCHECKED")
+    (tmp_path / "so.json").write_text(json.dumps(so))
+    taps = {"a": dict(late_ps=4650.0, early_ps=4600.0, cppr_node="h"),
+            "b": dict(late_ps=4655.0, early_ps=4610.0, cppr_node="h"),
+            "c": dict(late_ps=4700.0, early_ps=4650.0, cppr_node="h")}
+    meta = {"cppr_node_range_ps": {"h": 0.4}}
+    U, rec = R.mesh_signoff(tmp_path, taps, meta, "TT", tmp_path / "so.json", "tree")
+    m0 = 4610.0                                                   # median routed late of the mesh loads s1, s2
+    assert rec["M0_ps"] == m0 and rec["taps_on_mesh"] == 2
+    assert taps["a"]["late_ps"] == m0 + 50.0 and taps["a"]["early_ps"] == m0 + 40.0 and taps["a"]["cppr_node"] == "m"
+    assert taps["a"]["abs_late_ps"] == 4650.0 and taps["c"]["cppr_node"] == "h"        # band strict: not on the mesh
+    # d = s1 - s2 over samples: -12, -14, -9; MC mean -11.5 sd 3.5355 -> mu+3sd 22.11; max|d| 14 -> 22.11
+    # gap: (4600-4595) - (4610-4607) = 2; gradient |(3,0)-(0,4)| = 5
+    assert abs(U("a", "b") - (11.5 + 3 * 3.5355339 + 2 + 5)) < 1e-4
+    assert U("a", "c") == 0.0 and U("a", "a") == 0.0
+    # strict band pair uses absolute arrivals and the die root
+    la, ea, lc, ec = R.arr4(taps["a"], taps["c"], "h")
+    assert (la, ea, lc, ec) == (4650.0, 4600.0, 4700.0, 4650.0)
+    t2 = {k: dict(late_ps=v["abs_late_ps"] if "abs_late_ps" in v else v["late_ps"],
+                  early_ps=v["abs_early_ps"] if "abs_early_ps" in v else v["early_ps"], cppr_node="h") for k, v in taps.items()}
+    U2, rec2 = R.mesh_signoff(tmp_path, t2, {"cppr_node_range_ps": {}}, "TT", tmp_path / "so.json", "sim")
+    assert rec2["taps_on_mesh"] == 3 and t2["c"]["cppr_node"] == "m" and t2["c"]["late_ps"] == 4610.0 + 150.0

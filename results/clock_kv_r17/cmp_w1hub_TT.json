@@ -1,0 +1,16 @@
+{
+ "TT": {
+  "R_ohm": 250,
+  "tr_ps": 60,
+  "d_int_ps": 28.123,
+  "fit_max_err_ps": 0.605,
+  "fit_window": [
+   3800.0,
+   13300.0,
+   5200.0,
+   14600.0
+  ],
+  "fit_source": "ng/w1hub_TT",
+  "note": "d_int includes the ngspice ref offset (100 ps start, 25 ps to 50 %)"
+ }
+}

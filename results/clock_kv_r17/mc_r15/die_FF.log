@@ -1,0 +1,28 @@
+{"sample": 0, "nodes": 31757, "drivers": 4096, "loads": 1914, "skew": 57.632, "sec": 2.2}
+{"sample": 1, "nodes": 31757, "drivers": 4096, "loads": 1914, "skew": 97.043, "sec": 2.2}
+{"sample": 2, "nodes": 31757, "drivers": 4096, "loads": 1914, "skew": 105.566, "sec": 2.2}
+{"sample": 3, "nodes": 31757, "drivers": 4096, "loads": 1914, "skew": 78.132, "sec": 2.1}
+{"sample": 4, "nodes": 31757, "drivers": 4096, "loads": 1914, "skew": 76.304, "sec": 2.1}
+{"sample": 5, "nodes": 31757, "drivers": 4096, "loads": 1914, "skew": 106.962, "sec": 2.1}
+{"sample": 6, "nodes": 31757, "drivers": 4096, "loads": 1914, "skew": 77.073, "sec": 2.2}
+{"sample": 7, "nodes": 31757, "drivers": 4096, "loads": 1914, "skew": 71.247, "sec": 2.2}
+{"sample": 8, "nodes": 31757, "drivers": 4096, "loads": 1914, "skew": 80.114, "sec": 2.1}
+{"sample": 9, "nodes": 31757, "drivers": 4096, "loads": 1914, "skew": 73.223, "sec": 2.2}
+{"sample": 10, "nodes": 31757, "drivers": 4096, "loads": 1914, "skew": 91.874, "sec": 2.3}
+{"sample": 11, "nodes": 31757, "drivers": 4096, "loads": 1914, "skew": 80.505, "sec": 2.2}
+{"sample": 12, "nodes": 31757, "drivers": 4096, "loads": 1914, "skew": 91.765, "sec": 2.2}
+{"sample": 13, "nodes": 31757, "drivers": 4096, "loads": 1914, "skew": 89.941, "sec": 2.1}
+{"sample": 14, "nodes": 31757, "drivers": 4096, "loads": 1914, "skew": 79.108, "sec": 2.1}
+{"sample": 15, "nodes": 31757, "drivers": 4096, "loads": 1914, "skew": 74.576, "sec": 2.1}
+{"sample": 16, "nodes": 31757, "drivers": 4096, "loads": 1914, "skew": 99.296, "sec": 2.1}
+{"sample": 17, "nodes": 31757, "drivers": 4096, "loads": 1914, "skew": 90.142, "sec": 2.1}
+{"sample": 18, "nodes": 31757, "drivers": 4096, "loads": 1914, "skew": 97.525, "sec": 2.1}
+{"sample": 19, "nodes": 31757, "drivers": 4096, "loads": 1914, "skew": 95.498, "sec": 2.2}
+{"sample": 20, "nodes": 31757, "drivers": 4096, "loads": 1914, "skew": 74.059, "sec": 2.1}
+{"sample": 21, "nodes": 31757, "drivers": 4096, "loads": 1914, "skew": 83.864, "sec": 2.1}
+{"sample": 22, "nodes": 31757, "drivers": 4096, "loads": 1914, "skew": 82.245, "sec": 2.1}
+{"sample": 23, "nodes": 31757, "drivers": 4096, "loads": 1914, "skew": 75.799, "sec": 2.1}
+{"sample": 24, "nodes": 31757, "drivers": 4096, "loads": 1914, "skew": 83.299, "sec": 2.1}
+grad axis 0 shift range per unit g -5018.7 5027.7
+grad axis 1 shift range per unit g -29523.8 29777.5
+SUMMARY FF {"nominal_skew_ps": 57.63, "mc_worst_skew_ps": 106.96, "mesh_only_nominal_skew_ps": 39.98, "mesh_only_mc_worst_skew_ps": 102.35, "per_load_sigma_ps": 12.46, "pair_3sigma_ps": 52.86, "gradient_worst_pair_ps": 126.05, "routed_minus_sim_mean_ps": 15.1, "routed_minus_sim_spread_ps": 19.43, "dieU_bound_ps": 252.45}
