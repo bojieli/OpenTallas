@@ -8,15 +8,53 @@ proc pc_sub {r h} {
 }
 set b [ord::get_db_block];set u [$b getDbUnitsPerMicron];set tech [ord::get_db_tech]
 set X [expr {round(7.074*$u)}];set Y [expr {round(2.16*$u)}];set I [expr {round(.30*$u)}];set margin [expr {round(.128*$u)}]
-set pg {}
+# Prune only PG shapes that cannot intersect any requested box. Cache each via definition once.
+set ::pc_windows {}
+foreach inst [$b getInsts] {
+ if {![[$inst getMaster] isBlock]} continue
+ set q [$inst getBBox]
+ foreach face [list [$q xMin] [$q xMax]] {foreach end {S N} {
+  set yc [expr {$end eq "S" ? [$q yMin] : [$q yMax]}]
+  set ya [expr {$end eq "S" ? $yc-$Y-$margin : $yc-$I-$margin}]
+  set yb [expr {$end eq "S" ? $yc+$I+$margin : $yc+$Y+$margin}]
+  lappend ::pc_windows [list [expr {$face-$X-$margin}] $ya [expr {$face+$X+$margin}] $yb]
+ }}
+}
+proc pc_near {r} {
+ lassign $r x y X Y
+ foreach w $::pc_windows {lassign $w a c A C;if {$X>$a && $x<$A && $Y>$c && $y<$C} {return 1}}
+ return 0
+}
+set pg {};set vc {}
 foreach n [$b getNets] {
  if {[$n getSigType] ni {POWER GROUND}} continue
  foreach sw [$n getSWires] {foreach w [$sw getWires] {
-  if {![$w isVia]} {lappend pg [list [[$w getTechLayer] getName] [$w xMin] [$w yMin] [$w xMax] [$w yMax]];continue}
+  if {![$w isVia]} {
+   set l [[$w getTechLayer] getName];if {$l ni {M2 M3 M4 M5}} continue
+   set q [list [$w xMin] [$w yMin] [$w xMax] [$w yMax]]
+   if {[pc_near $q]} {lappend pg [list $l {*}$q]}
+   continue
+  }
   lassign [$w getViaXY] vx vy
   set v [$w getTechVia];if {$v eq "NULL"} {set v [$w getBlockVia]}
   if {$v eq "NULL"} {error "PC_CLIP missing PG via definition"}
-  foreach q [$v getBoxes] {set l [$q getTechLayer];if {$l eq "NULL"} continue;lappend pg [list [$l getName] [expr {$vx+[$q xMin]}] [expr {$vy+[$q yMin]}] [expr {$vx+[$q xMax]}] [expr {$vy+[$q yMax]}]]}
+  if {![dict exists $vc $v]} {
+   set qs {};set bb {1000000000 1000000000 -1000000000 -1000000000}
+   foreach q [$v getBoxes] {
+    set l [$q getTechLayer];if {$l eq "NULL" || [$l getName] ni {M2 M3 M4 M5}} continue
+    lappend qs [list [$l getName] [$q xMin] [$q yMin] [$q xMax] [$q yMax]]
+    lassign $bb a c A C;set bb [list [expr {min($a,[$q xMin])}] [expr {min($c,[$q yMin])}] [expr {max($A,[$q xMax])}] [expr {max($C,[$q yMax])}]]
+   }
+   dict set vc $v [list $bb $qs]
+  }
+  lassign [dict get $vc $v] bb qs
+  if {![llength $qs]} continue
+  lassign $bb a c A C
+  if {![pc_near [list [expr {$vx+$a}] [expr {$vy+$c}] [expr {$vx+$A}] [expr {$vy+$C}]]]} continue
+  foreach q $qs {
+   lassign $q l a c A C;set r [list [expr {$vx+$a}] [expr {$vy+$c}] [expr {$vx+$A}] [expr {$vy+$C}]]
+   if {[pc_near $r]} {lappend pg [list $l {*}$r]}
+  }
  }}
 }
 set fp [open $::env(RESULTS_DIR)/pincol_pg_clip.txt w];set nbox 0;set pieces_count 0
