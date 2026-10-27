@@ -39,6 +39,23 @@ PERIOD_PS = 833.333
 UNC_HOLD_PS, UNC_SPLIT = 25.0, 0.5
 # region_clock stage model (QC-MP-REGION-2): stage delay = d0 + k x um, full stage 450 um; cell share of a full stage
 STAGE = {"TT": (52.713, 0.058822), "FF": (38.561, 0.060298)}
+# opt-in stage models (--stage-model; default r4_native = STAGE above, output unchanged).
+# r6_rcx_ndr016 (CLOCK-128-R8): the R4 native cell intercept d0 kept, the wire slope refit so the model reproduces the
+# CLOCK-128-R6 routed-clock OpenRCX (ndr016 width-aware rules) legs: 235 single-load BUFx24 legs, mean 430.2 um,
+# mean stage 103.16 ps TT / 85.68 ps FF (epyc2 clock128-r6-1026/r5x tree_{TT,FF}_rcx.txt).  A free 2-parameter fit is
+# ill-conditioned on that narrow length range (354-442 um: d0 -11.5 ps TT, unphysical), so d0 stays the native one.
+STAGE_MODELS = {
+    "r4_native": dict(STAGE),
+    "r6_rcx_ndr016": {"TT": (52.713, round((103.16 - 52.713) / 430.2, 6)),
+                      "FF": (38.561, round((85.68 - 38.561) / 430.2, 6))},
+}
+
+
+def set_stage_model(name):
+    """select a STAGE_MODELS entry for this process (module STAGE updated in place)"""
+    STAGE.clear()
+    STAGE.update(STAGE_MODELS[name])
+    return dict(STAGE)
 REP_UM = 450.0
 CORE_LAT = {"TT": 250.0, "FF": 202.5}
 CORE_STAGES = 10            # partition tree tap -> face flops: 8-14 stages (die_ci_margins.json ocv.why)
@@ -195,6 +212,9 @@ def main(argv=None):
     ap.add_argument("--entry-window-tt", type=float, help="declared TT entry arrival window ps (else region summary)")
     ap.add_argument("--core-window-ps", type=float, default=20.0, help="declared core tap window (12.3: <= 20 ps)")
     ap.add_argument("--derate", choices=("flat", "aocv_draft"), default="flat")
+    ap.add_argument("--stage-model", choices=sorted(STAGE_MODELS), default="r4_native",
+                    help="die tree stage delay model (default r4_native = unchanged; r6_rcx_ndr016 = CLOCK-128-R8 refit "
+                         "to the R6 routed-clock RCX legs)")
     ap.add_argument("--aocv-table", help="CLK-AOCV table JSON {rows:[{max_stages,max_mm,cell,net}], ir_cross_region}")
     ap.add_argument("--mesh-skew-ps", type=float, help="what-if: signed-off regional mesh = common point + this skew")
     ap.add_argument("--cell", choices=sorted(HOLD_CELLS), default="HB4xp67")
@@ -203,6 +223,8 @@ def main(argv=None):
     ap.add_argument("--hold-ff-lib-ps", type=float, default=12.28, help="DFFHQNx1 FF hold (die_ci_margins lib)")
     ap.add_argument("--out", required=True, help="output dir: hold_demand.json + plan_hold_demand.json")
     a = ap.parse_args(argv)
+    if a.stage_model != "r4_native":
+        set_stage_model(a.stage_model)
     sl = json.loads(Path(a.seam_landing).read_text())
     rs = json.loads(Path(a.region_summary).read_text()) if a.region_summary else {}
     ew = {c: (getattr(a, f"entry_window_{c.lower()}") if getattr(a, f"entry_window_{c.lower()}") is not None else
