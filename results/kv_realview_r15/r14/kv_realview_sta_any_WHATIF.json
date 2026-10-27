@@ -1,0 +1,699 @@
+{
+ "declared": "/srv/opentallas-scratch2/claude/kv-realview-r15-1026/r14/sta_any_WHATIF/declared/die_sta_related.json",
+ "accept": "any",
+ "counts": {
+  "core_types_total": 31,
+  "core_instances_total": 1628,
+  "core_types_real": 9,
+  "core_instances_real": 1349,
+  "partition_types_total": 51,
+  "partition_types_real": 0,
+  "taps_hosting_real_cores": 965
+ },
+ "real_views": {
+  "kv3_head_eighth_e1": {
+   "status": "stale-signed",
+   "instances": 256,
+   "arcs": {
+    "TT": {
+     "ins_late": 321.48,
+     "ins_early": 261.73,
+     "hold_in": 156.47,
+     "setup_in": -83.89,
+     "q_min": 376.51,
+     "q_max": 406.44,
+     "n_in": 470,
+     "n_out": 68
+    },
+    "FF": {
+     "ins_late": 253.68,
+     "ins_early": 208.88,
+     "hold_in": 133.36,
+     "setup_in": -81.58,
+     "q_min": 295.1,
+     "q_max": 317.72,
+     "n_in": 470,
+     "n_out": 68
+    }
+   }
+  },
+  "kv3_head_eighth_e5": {
+   "status": "stale-signed",
+   "instances": 256,
+   "arcs": {
+    "TT": {
+     "ins_late": 324.68,
+     "ins_early": 266.55,
+     "hold_in": 138.92,
+     "setup_in": -86.35,
+     "q_min": 374.77,
+     "q_max": 400.29,
+     "n_in": 470,
+     "n_out": 68
+    },
+    "FF": {
+     "ins_late": 255.53,
+     "ins_early": 213.13,
+     "hold_in": 130.88,
+     "setup_in": -84.55,
+     "q_min": 293.46,
+     "q_max": 311.77,
+     "n_in": 470,
+     "n_out": 68
+    }
+   }
+  },
+  "ot_qwen_tp8_pv_join_t": {
+   "status": "stale-closed",
+   "instances": 64,
+   "arcs": {
+    "TT": {
+     "ins_late": 278.86,
+     "ins_early": 197.18,
+     "hold_in": 139.92,
+     "setup_in": 160.79,
+     "q_min": 382.69,
+     "q_max": 422.39,
+     "n_in": 4106,
+     "n_out": 514
+    },
+    "FF": {
+     "ins_late": 231.55,
+     "ins_early": 158.52,
+     "hold_in": 121.69,
+     "setup_in": 117.94,
+     "q_min": 295.28,
+     "q_max": 326.27,
+     "n_in": 4106,
+     "n_out": 514
+    }
+   }
+  },
+  "qkd_kvs_ctl": {
+   "status": "stale-closed",
+   "instances": 1,
+   "arcs": {
+    "TT": {
+     "ins_late": 650.59,
+     "ins_early": 461.88,
+     "hold_in": 419.88,
+     "setup_in": -299.84,
+     "q_min": 649.83,
+     "q_max": 774.79,
+     "n_in": 1729,
+     "n_out": 4679
+    },
+    "FF": {
+     "ins_late": 529.76,
+     "ins_early": 373.82,
+     "hold_in": 350.25,
+     "setup_in": -252.91,
+     "q_min": 517.67,
+     "q_max": 621.78,
+     "n_in": 1729,
+     "n_out": 4679
+    }
+   }
+  },
+  "kv3_head_eighth_e0": {
+   "status": "routed",
+   "instances": 128,
+   "arcs": {
+    "TT": {
+     "ins_late": 326.83,
+     "ins_early": 274.01,
+     "hold_in": 140.79,
+     "setup_in": -50.82,
+     "q_min": 370.93,
+     "q_max": 510.8,
+     "n_in": 1291,
+     "n_out": 501
+    },
+    "FF": {
+     "ins_late": 258.01,
+     "ins_early": 219.46,
+     "hold_in": 132.75,
+     "setup_in": -56.51,
+     "q_min": 289.95,
+     "q_max": 400.01,
+     "n_in": 1291,
+     "n_out": 501
+    }
+   }
+  },
+  "kv3_head_eighth_e2": {
+   "status": "routed",
+   "instances": 128,
+   "arcs": {
+    "TT": {
+     "ins_late": 336.63,
+     "ins_early": 268.96,
+     "hold_in": 141.62,
+     "setup_in": -75.08,
+     "q_min": 370.59,
+     "q_max": 530.82,
+     "n_in": 814,
+     "n_out": 535
+    },
+    "FF": {
+     "ins_late": 267.99,
+     "ins_early": 215.07,
+     "hold_in": 132.3,
+     "setup_in": -79.9,
+     "q_min": 289.56,
+     "q_max": 405.4,
+     "n_in": 814,
+     "n_out": 535
+    }
+   }
+  },
+  "kv3_head_eighth_e6": {
+   "status": "routed",
+   "instances": 256,
+   "arcs": {
+    "TT": {
+     "ins_late": 328.0,
+     "ins_early": 262.2,
+     "hold_in": 139.01,
+     "setup_in": -66.51,
+     "q_min": 365.73,
+     "q_max": 547.25,
+     "n_in": 814,
+     "n_out": 535
+    },
+    "FF": {
+     "ins_late": 260.27,
+     "ins_early": 208.94,
+     "hold_in": 130.62,
+     "setup_in": -71.4,
+     "q_min": 285.2,
+     "q_max": 413.42,
+     "n_in": 814,
+     "n_out": 535
+    }
+   }
+  },
+  "kv3_pv_pair": {
+   "status": "routed",
+   "instances": 256,
+   "arcs": {
+    "TT": {
+     "ins_late": 398.48,
+     "ins_early": 306.97,
+     "hold_in": 118.93,
+     "setup_in": -11.79,
+     "q_min": 428.32,
+     "q_max": 538.67,
+     "n_in": 624,
+     "n_out": 1026
+    },
+    "FF": {
+     "ins_late": 315.78,
+     "ins_early": 245.87,
+     "hold_in": 122.32,
+     "setup_in": -45.03,
+     "q_min": 336.31,
+     "q_max": 414.74,
+     "n_in": 624,
+     "n_out": 1026
+    }
+   }
+  },
+  "kv3_astk": {
+   "status": "routed",
+   "instances": 4,
+   "arcs": {
+    "TT": {
+     "ins_late": 345.35,
+     "ins_early": 263.1,
+     "hold_in": 257.18,
+     "setup_in": 50.85,
+     "q_min": 380.19,
+     "q_max": 684.38,
+     "n_in": 1014,
+     "n_out": 675
+    },
+    "FF": {
+     "ins_late": 283.39,
+     "ins_early": 212.55,
+     "hold_in": 215.72,
+     "setup_in": 64.11,
+     "q_min": 300.33,
+     "q_max": 533.49,
+     "n_in": 1014,
+     "n_out": 675
+    }
+   }
+  }
+ },
+ "model": "ETM arcs at the core clock pin, exact early-tap compensation by ins_late per corner (12.3 v5.0)",
+ "corners": {
+  "TT": {
+   "real_core_endpoint_pairs": 47058,
+   "intra_real": {
+    "worst_setup_ps": -3.66,
+    "worst_setup": [
+     -3.66,
+     "t_hub_Wo__clk_t4",
+     "t_hub_Wo__clk",
+     "kv3_astk->kv3_astk"
+    ],
+    "worst_hold_ps": -113.85,
+    "worst_hold": [
+     -113.85,
+     "t_hub_C__clk_t3",
+     "t_hub_C__clk_t6",
+     "qkd_kvs_ctl->P"
+    ]
+   },
+   "intra_real_by_endpoint": {
+    "P->kv3_astk": {
+     "setup_ps": 240.66,
+     "hold_ps": 83.68
+    },
+    "P->kv3_head_eighth_e0": {
+     "setup_ps": 342.08,
+     "hold_ps": 175.61
+    },
+    "P->kv3_head_eighth_e1": {
+     "setup_ps": 379.84,
+     "hold_ps": 151.44
+    },
+    "P->kv3_head_eighth_e2": {
+     "setup_ps": 364.1,
+     "hold_ps": 181.35
+    },
+    "P->kv3_head_eighth_e5": {
+     "setup_ps": 389.19,
+     "hold_ps": 169.29
+    },
+    "P->kv3_head_eighth_e6": {
+     "setup_ps": 366.35,
+     "hold_ps": 175.3
+    },
+    "P->kv3_pv_pair": {
+     "setup_ps": 219.84,
+     "hold_ps": 244.95
+    },
+    "P->ot_qwen_tp8_pv_join_t": {
+     "setup_ps": 167.2,
+     "hold_ps": 117.33
+    },
+    "P->qkd_kvs_ctl": {
+     "setup_ps": 267.1,
+     "hold_ps": 232.76
+    },
+    "kv3_astk->P": {
+     "setup_ps": 380.83,
+     "hold_ps": -59.24
+    },
+    "kv3_astk->kv3_astk": {
+     "setup_ps": -3.66,
+     "hold_ps": 56.25
+    },
+    "kv3_head_eighth_e0->P": {
+     "setup_ps": 529.95,
+     "hold_ps": -68.76
+    },
+    "kv3_head_eighth_e0->kv3_head_eighth_e0": {
+     "setup_ps": 266.32,
+     "hold_ps": 158.1
+    },
+    "kv3_head_eighth_e0->kv3_head_eighth_e1": {
+     "setup_ps": 303.78,
+     "hold_ps": 134.24
+    },
+    "kv3_head_eighth_e0->kv3_head_eighth_e2": {
+     "setup_ps": 291.21,
+     "hold_ps": 164.37
+    },
+    "kv3_head_eighth_e0->kv3_head_eighth_e5": {
+     "setup_ps": 313.23,
+     "hold_ps": 151.8
+    },
+    "kv3_head_eighth_e0->kv3_head_eighth_e6": {
+     "setup_ps": 290.16,
+     "hold_ps": 157.83
+    },
+    "kv3_head_eighth_e1->P": {
+     "setup_ps": 625.82,
+     "hold_ps": -58.48
+    },
+    "kv3_head_eighth_e1->kv3_head_eighth_e0": {
+     "setup_ps": 362.49,
+     "hold_ps": 168.08
+    },
+    "kv3_head_eighth_e1->kv3_head_eighth_e1": {
+     "setup_ps": 399.65,
+     "hold_ps": 143.91
+    },
+    "kv3_head_eighth_e1->kv3_head_eighth_e2": {
+     "setup_ps": 384.63,
+     "hold_ps": 173.82
+    },
+    "kv3_head_eighth_e1->kv3_head_eighth_e5": {
+     "setup_ps": 410.13,
+     "hold_ps": 161.76
+    },
+    "kv3_head_eighth_e1->kv3_head_eighth_e6": {
+     "setup_ps": 387.02,
+     "hold_ps": 167.77
+    },
+    "kv3_head_eighth_e2->P": {
+     "setup_ps": 516.5,
+     "hold_ps": -71.33
+    },
+    "kv3_head_eighth_e2->kv3_head_eighth_e0": {
+     "setup_ps": 253.4,
+     "hold_ps": 158.39
+    },
+    "kv3_head_eighth_e2->kv3_head_eighth_e1": {
+     "setup_ps": 290.33,
+     "hold_ps": 131.78
+    },
+    "kv3_head_eighth_e2->kv3_head_eighth_e2": {
+     "setup_ps": 275.74,
+     "hold_ps": 162.11
+    },
+    "kv3_head_eighth_e2->kv3_head_eighth_e5": {
+     "setup_ps": 301.01,
+     "hold_ps": 150.37
+    },
+    "kv3_head_eighth_e2->kv3_head_eighth_e6": {
+     "setup_ps": 277.88,
+     "hold_ps": 156.17
+    },
+    "kv3_head_eighth_e5->P": {
+     "setup_ps": 632.27,
+     "hold_ps": -53.34
+    },
+    "kv3_head_eighth_e5->kv3_head_eighth_e0": {
+     "setup_ps": 368.64,
+     "hold_ps": 173.32
+    },
+    "kv3_head_eighth_e5->kv3_head_eighth_e1": {
+     "setup_ps": 406.1,
+     "hold_ps": 150.18
+    },
+    "kv3_head_eighth_e5->kv3_head_eighth_e2": {
+     "setup_ps": 391.82,
+     "hold_ps": 180.3
+    },
+    "kv3_head_eighth_e5->kv3_head_eighth_e5": {
+     "setup_ps": 418.09,
+     "hold_ps": 169.55
+    },
+    "kv3_head_eighth_e5->kv3_head_eighth_e6": {
+     "setup_ps": 395.0,
+     "hold_ps": 174.9
+    },
+    "kv3_head_eighth_e6->P": {
+     "setup_ps": 491.41,
+     "hold_ps": -65.38
+    },
+    "kv3_head_eighth_e6->kv3_head_eighth_e0": {
+     "setup_ps": 227.81,
+     "hold_ps": 161.05
+    },
+    "kv3_head_eighth_e6->kv3_head_eighth_e1": {
+     "setup_ps": 265.24,
+     "hold_ps": 137.87
+    },
+    "kv3_head_eighth_e6->kv3_head_eighth_e2": {
+     "setup_ps": 250.74,
+     "hold_ps": 167.96
+    },
+    "kv3_head_eighth_e6->kv3_head_eighth_e5": {
+     "setup_ps": 276.57,
+     "hold_ps": 157.26
+    },
+    "kv3_head_eighth_e6->kv3_head_eighth_e6": {
+     "setup_ps": 253.47,
+     "hold_ps": 162.6
+    },
+    "kv3_pv_pair->P": {
+     "setup_ps": 549.55,
+     "hold_ps": -94.58
+    },
+    "kv3_pv_pair->kv3_pv_pair": {
+     "setup_ps": 174.27,
+     "hold_ps": 212.21
+    },
+    "kv3_pv_pair->ot_qwen_tp8_pv_join_t": {
+     "setup_ps": 121.64,
+     "hold_ps": 84.6
+    },
+    "ot_qwen_tp8_pv_join_t->P": {
+     "setup_ps": 559.22,
+     "hold_ps": -20.26
+    },
+    "ot_qwen_tp8_pv_join_t->kv3_pv_pair": {
+     "setup_ps": 183.94,
+     "hold_ps": 286.54
+    },
+    "ot_qwen_tp8_pv_join_t->ot_qwen_tp8_pv_join_t": {
+     "setup_ps": 132.33,
+     "hold_ps": 159.94
+    },
+    "qkd_kvs_ctl->P": {
+     "setup_ps": 602.2,
+     "hold_ps": -113.85
+    }
+   },
+   "intra_declared": {
+    "setup_ps": 595.11,
+    "hold_ps": -61.85,
+    "kit_contract_hold_ps": null
+   },
+   "seam_declared": {
+    "setup_ps": 539.39,
+    "hold_ps": -117.57,
+    "kit_contract_hold_ps": null
+   }
+  },
+  "FF": {
+   "real_core_endpoint_pairs": 47058,
+   "intra_real": {
+    "worst_setup_ps": 137.96,
+    "worst_setup": [
+     137.96,
+     "t_hub_Wo__clk_t4",
+     "t_hub_Wo__clk",
+     "kv3_astk->kv3_astk"
+    ],
+    "worst_hold_ps": -110.48,
+    "worst_hold": [
+     -110.48,
+     "t_hub_C__clk_t3",
+     "t_hub_C__clk_t6",
+     "qkd_kvs_ctl->P"
+    ]
+   },
+   "intra_real_by_endpoint": {
+    "P->kv3_astk": {
+     "setup_ps": 321.32,
+     "hold_ps": 49.04
+    },
+    "P->kv3_head_eighth_e0": {
+     "setup_ps": 455.22,
+     "hold_ps": 102.83
+    },
+    "P->kv3_head_eighth_e1": {
+     "setup_ps": 484.52,
+     "hold_ps": 95.64
+    },
+    "P->kv3_head_eighth_e2": {
+     "setup_ps": 475.41,
+     "hold_ps": 111.11
+    },
+    "P->kv3_head_eighth_e5": {
+     "setup_ps": 491.07,
+     "hold_ps": 98.8
+    },
+    "P->kv3_head_eighth_e6": {
+     "setup_ps": 473.47,
+     "hold_ps": 107.33
+    },
+    "P->kv3_pv_pair": {
+     "setup_ps": 376.68,
+     "hold_ps": 153.75
+    },
+    "P->ot_qwen_tp8_pv_join_t": {
+     "setup_ps": 298.33,
+     "hold_ps": 79.62
+    },
+    "P->qkd_kvs_ctl": {
+     "setup_ps": 377.49,
+     "hold_ps": 168.6
+    },
+    "kv3_astk->P": {
+     "setup_ps": 478.73,
+     "hold_ps": -66.98
+    },
+    "kv3_astk->kv3_astk": {
+     "setup_ps": 137.96,
+     "hold_ps": 21.83
+    },
+    "kv3_head_eighth_e0->P": {
+     "setup_ps": 583.02,
+     "hold_ps": -64.08
+    },
+    "kv3_head_eighth_e0->kv3_head_eighth_e0": {
+     "setup_ps": 388.04,
+     "hold_ps": 90.4
+    },
+    "kv3_head_eighth_e0->kv3_head_eighth_e1": {
+     "setup_ps": 417.2,
+     "hold_ps": 83.66
+    },
+    "kv3_head_eighth_e0->kv3_head_eighth_e2": {
+     "setup_ps": 410.25,
+     "hold_ps": 99.33
+    },
+    "kv3_head_eighth_e0->kv3_head_eighth_e5": {
+     "setup_ps": 423.86,
+     "hold_ps": 86.66
+    },
+    "kv3_head_eighth_e0->kv3_head_eighth_e6": {
+     "setup_ps": 406.0,
+     "hold_ps": 95.07
+    },
+    "kv3_head_eighth_e1->P": {
+     "setup_ps": 658.74,
+     "hold_ps": -54.69
+    },
+    "kv3_head_eighth_e1->kv3_head_eighth_e0": {
+     "setup_ps": 464.21,
+     "hold_ps": 99.65
+    },
+    "kv3_head_eighth_e1->kv3_head_eighth_e1": {
+     "setup_ps": 492.92,
+     "hold_ps": 92.47
+    },
+    "kv3_head_eighth_e1->kv3_head_eighth_e2": {
+     "setup_ps": 484.82,
+     "hold_ps": 107.94
+    },
+    "kv3_head_eighth_e1->kv3_head_eighth_e5": {
+     "setup_ps": 500.46,
+     "hold_ps": 95.62
+    },
+    "kv3_head_eighth_e1->kv3_head_eighth_e6": {
+     "setup_ps": 482.69,
+     "hold_ps": 104.15
+    },
+    "kv3_head_eighth_e2->P": {
+     "setup_ps": 585.47,
+     "hold_ps": -67.67
+    },
+    "kv3_head_eighth_e2->kv3_head_eighth_e0": {
+     "setup_ps": 391.12,
+     "hold_ps": 88.83
+    },
+    "kv3_head_eighth_e2->kv3_head_eighth_e1": {
+     "setup_ps": 419.64,
+     "hold_ps": 80.51
+    },
+    "kv3_head_eighth_e2->kv3_head_eighth_e2": {
+     "setup_ps": 411.64,
+     "hold_ps": 96.07
+    },
+    "kv3_head_eighth_e2->kv3_head_eighth_e5": {
+     "setup_ps": 427.4,
+     "hold_ps": 84.0
+    },
+    "kv3_head_eighth_e2->kv3_head_eighth_e6": {
+     "setup_ps": 409.56,
+     "hold_ps": 92.4
+    },
+    "kv3_head_eighth_e5->P": {
+     "setup_ps": 665.36,
+     "hold_ps": -52.75
+    },
+    "kv3_head_eighth_e5->kv3_head_eighth_e0": {
+     "setup_ps": 470.66,
+     "hold_ps": 101.7
+    },
+    "kv3_head_eighth_e5->kv3_head_eighth_e1": {
+     "setup_ps": 499.54,
+     "hold_ps": 95.4
+    },
+    "kv3_head_eighth_e5->kv3_head_eighth_e2": {
+     "setup_ps": 491.78,
+     "hold_ps": 111.09
+    },
+    "kv3_head_eighth_e5->kv3_head_eighth_e5": {
+     "setup_ps": 508.38,
+     "hold_ps": 99.85
+    },
+    "kv3_head_eighth_e5->kv3_head_eighth_e6": {
+     "setup_ps": 490.56,
+     "hold_ps": 107.87
+    },
+    "kv3_head_eighth_e6->P": {
+     "setup_ps": 571.99,
+     "hold_ps": -65.47
+    },
+    "kv3_head_eighth_e6->kv3_head_eighth_e0": {
+     "setup_ps": 377.16,
+     "hold_ps": 88.73
+    },
+    "kv3_head_eighth_e6->kv3_head_eighth_e1": {
+     "setup_ps": 406.16,
+     "hold_ps": 82.51
+    },
+    "kv3_head_eighth_e6->kv3_head_eighth_e2": {
+     "setup_ps": 398.27,
+     "hold_ps": 98.12
+    },
+    "kv3_head_eighth_e6->kv3_head_eighth_e5": {
+     "setup_ps": 414.49,
+     "hold_ps": 86.92
+    },
+    "kv3_head_eighth_e6->kv3_head_eighth_e6": {
+     "setup_ps": 396.66,
+     "hold_ps": 94.93
+    },
+    "kv3_pv_pair->P": {
+     "setup_ps": 608.8,
+     "hold_ps": -84.78
+    },
+    "kv3_pv_pair->kv3_pv_pair": {
+     "setup_ps": 344.33,
+     "hold_ps": 129.68
+    },
+    "kv3_pv_pair->ot_qwen_tp8_pv_join_t": {
+     "setup_ps": 265.98,
+     "hold_ps": 55.55
+    },
+    "ot_qwen_tp8_pv_join_t->P": {
+     "setup_ps": 622.5,
+     "hold_ps": -41.19
+    },
+    "ot_qwen_tp8_pv_join_t->kv3_pv_pair": {
+     "setup_ps": 358.03,
+     "hold_ps": 173.27
+    },
+    "ot_qwen_tp8_pv_join_t->ot_qwen_tp8_pv_join_t": {
+     "setup_ps": 280.55,
+     "hold_ps": 100.01
+    },
+    "qkd_kvs_ctl->P": {
+     "setup_ps": 644.53,
+     "hold_ps": -110.48
+    }
+   },
+   "intra_declared": {
+    "setup_ps": 641.15,
+    "hold_ps": -60.71,
+    "kit_contract_hold_ps": 20.7
+   },
+   "seam_declared": {
+    "setup_ps": 598.46,
+    "hold_ps": -103.4,
+    "kit_contract_hold_ps": -21.99
+   }
+  }
+ },
+ "status": "UNCHECKED (NUMBER-CHECK pending)"
+}

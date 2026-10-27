@@ -1,0 +1,15 @@
+{
+ "schema": "opentallas.kv.realview_manifest.v1",
+ "note": "CLOCK-KV-R15 inventory 2026-10-27 (plan hm_r12 sha 96e6d1cb). status: signed/stale-signed (signed off on an older interface) / closed / stale-closed / routed (not signed) / none. Paths repo-relative unless absolute. Only types with a liberty ETM are listed; every other KV type is declared-budget.",
+ "types": {
+  "kv3_head_eighth_e1": {"status": "stale-signed", "lib_tt": "physical/ref_tile/kv3_head_eighth_e1/views/kv3_head_eighth_e1/kv3_head_eighth_e1_tt.lib", "lib_ff": "physical/ref_tile/kv3_head_eighth_e1/views/kv3_head_eighth_e1/kv3_head_eighth_e1_ff.lib", "why_stale": "LEF 544 pins vs plan 546 (strap_bsel[1:0]); plan pin positions changed (R12 fMX view)"},
+  "kv3_head_eighth_e5": {"status": "stale-signed", "lib_tt": "physical/ref_tile/kv3_head_eighth_e5/views/kv3_head_eighth_e5/kv3_head_eighth_e5_tt.lib", "lib_ff": "physical/ref_tile/kv3_head_eighth_e5/views/kv3_head_eighth_e5/kv3_head_eighth_e5_ff.lib", "why_stale": "same strap/pin gaps; ODB/SPEF gone"},
+  "ot_qwen_tp8_pv_join_t": {"status": "stale-closed", "lib_tt": "physical/ref_tile/qkd_pv_join/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib", "lib_ff": "physical/ref_tile/qkd_pv_join/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_ff.lib", "why_stale": "old closure-loop r4; current signoff NOT SIGNED face_guard 513"},
+  "qkd_kvs_ctl": {"status": "stale-closed", "lib_tt": "physical/ref_tile/qkd_kvs_ctl/views/qkd_kvs_ctl/qkd_kvs_ctl_tt.lib", "lib_ff": "physical/ref_tile/qkd_kvs_ctl/views/qkd_kvs_ctl/qkd_kvs_ctl_ff.lib", "why_stale": "outline 475.2 vs plan 371.52; recheck FF hold -30.86"},
+  "kv3_head_eighth_e0": {"status": "routed", "lib_tt": "physical/ref_tile/kv3_head_eighth_e0/views/kv3_head_eighth_e0/kv3_head_eighth_e0_tt.lib", "lib_ff": "physical/ref_tile/kv3_head_eighth_e0/views/kv3_head_eighth_e0/kv3_head_eighth_e0_ff.lib", "why_stale": "NOT SIGNED FF hold -4.69, slew/face_guard"},
+  "kv3_head_eighth_e2": {"status": "routed", "lib_tt": "physical/ref_tile/kv3_head_eighth_e2/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib", "lib_ff": "physical/ref_tile/kv3_head_eighth_e2/views/kv3_head_eighth_e2/kv3_head_eighth_e2_ff.lib", "why_stale": "NOT SIGNED slew 15, face_guard"},
+  "kv3_head_eighth_e6": {"status": "routed", "lib_tt": "physical/ref_tile/kv3_head_eighth_e6/views/kv3_head_eighth_e6/kv3_head_eighth_e6_tt.lib", "lib_ff": "physical/ref_tile/kv3_head_eighth_e6/views/kv3_head_eighth_e6/kv3_head_eighth_e6_ff.lib", "why_stale": "NOT SIGNED TT -12.1 / FF hold -7.5"},
+  "kv3_pv_pair": {"status": "routed", "lib_tt": "physical/ref_tile/kv3_pv_pair/views/kv3_pv_pair/kv3_pv_pair_tt.lib", "lib_ff": "physical/ref_tile/kv3_pv_pair/views/kv3_pv_pair/kv3_pv_pair_ff.lib", "why_stale": "NOT SIGNED (repo view from pvpair_m7; fd4_cc TT -0.02 / FF -17.59)"},
+  "kv3_astk": {"status": "routed", "lib_tt": "/srv/opentallas-scratch2/claude/path-kv/astk5/kit/kv3_astk__190.08x181.44/views/kv3_astk_tt.lib", "lib_ff": "/srv/opentallas-scratch2/claude/path-kv/astk5/kit/kv3_astk__190.08x181.44/views/kv3_astk_ff.lib", "why_stale": "ASTK5 routed, NOT SIGNED TT -85.9 / FF -13.2 (intel1 path)"}
+ }
+}

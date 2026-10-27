@@ -1,0 +1,22 @@
+{
+ "endpoints_bits": 603026,
+ "hb4_cells": 611083,
+ "hb4_area_um2": 62391.6,
+ "by_class": {
+  "band_bits": 70175,
+  "band_bits_fail": 56766,
+  "band_cells": 69867,
+  "array_bits": 532851,
+  "array_bits_fail": 532851,
+  "array_cells": 541216
+ },
+ "cells_per_bit_hist": {
+  "1": 568151,
+  "2": 21466
+ },
+ "tt_setup_worst_after_insertion_ps": 473.11,
+ "tt_setup_fail_bits_after": 0,
+ "basis": "CLOCK-KV-R6 data hold-buffer count from the REAL endpoint list (12.4a a1): every abutted plan port bit",
+ "status": "UNCHECKED",
+ "clock_ocv": "none"
+}

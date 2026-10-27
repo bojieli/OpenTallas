@@ -1,0 +1,8 @@
+TT reset  hops  159 setup   354.69 (neg 0) hold   -94.23 (neg 153) | all-taps setup   328.93 hold  -112.13 (neg 153)  worst hold rstw_hg_ES_7_rst_o_1
+TT start  hops  127 setup   354.69 (neg 0) hold   -94.23 (neg 121) | all-taps setup   328.93 hold  -112.13 (neg 121)  worst hold stw_hg_ES_7_start_o_1
+TT NAMED reset rstw_hub_C_rst_o_4 hub_C->hgi_EN_7 len 194.5 wire 16.53 setup 412.51 hold 25.46 (all-taps 382.78/9.76) kit-contract hold 95.14
+TT NAMED start stw_hub_C_start_o_4 hub_C->hgi_EN_7 len 194.5 wire 16.52 setup 412.52 hold 25.46 (all-taps 382.79/9.76) kit-contract hold 95.14
+FF reset  hops  159 setup   459.86 (neg 0) hold   -85.56 (neg 153) | all-taps setup   440.83 hold  -104.34 (neg 159)  worst hold rstw_hg_ES_7_rst_o_1 | kit-contract hold (W 80) -4.16 (neg 4, all-taps -22.93)
+FF start  hops  127 setup   459.86 (neg 0) hold   -85.56 (neg 121) | all-taps setup   440.83 hold  -104.34 (neg 127)  worst hold stw_hg_ES_7_start_o_1 | kit-contract hold (W 80) -4.16 (neg 4, all-taps -22.93)
+FF NAMED reset rstw_hub_C_rst_o_4 hub_C->hgi_EN_7 len 194.5 wire 16.53 setup 516.14 hold 4.82 (all-taps 494.69/-8.37) kit-contract hold 86.22
+FF NAMED start stw_hub_C_start_o_4 hub_C->hgi_EN_7 len 194.5 wire 16.52 setup 516.16 hold 4.82 (all-taps 494.7/-8.37) kit-contract hold 86.22

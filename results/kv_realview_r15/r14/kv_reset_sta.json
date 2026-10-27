@@ -1,0 +1,325 @@
+{
+ "tapdir": "/srv/opentallas-scratch2/claude/clock-kv-r14-1026/r14",
+ "plan": "/srv/opentallas-scratch2/claude/clock-kv-r12-1026/pd/hm_r12.json",
+ "period_ps": 833.333,
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "root": "hub_C",
+ "release_mode": "wavefront",
+ "max_release": 95,
+ "hop_counts": {
+  "reset": 159,
+  "root_async": 1,
+  "start": 127
+ },
+ "max_len_um": {
+  "reset": 377.34,
+  "root_async": 1002.95,
+  "start": 377.34
+ },
+ "async_false_path": [
+  {
+   "kind": "root_async",
+   "net": "rst_n",
+   "src_part": null,
+   "dst_part": "hub_C",
+   "a": [
+    5546.88,
+    13005.32
+   ],
+   "b": [
+    5718.24,
+    12173.728
+   ],
+   "note": "die pad_por_n (asynchronous: the ONE root synchroniser + PLL lock qualifier, +19 stages)",
+   "dx_um": 171.35999999999967,
+   "dy_um": 831.5920000000006,
+   "len_um": 1002.95
+  }
+ ],
+ "block_model": "declared-budget (12.3 common latency cancels; DFFHQNx1 pin registers; Elmore wire UNCHECKED)",
+ "corners": {
+  "TT": {
+   "tap_slew_max_ps": 84.04,
+   "register": {
+    "key": {
+     "corner": "TT",
+     "slew_ps": 84.038,
+     "load_ff": 39.6366,
+     "cell": "DFFHQNx1_ASAP7_75t_R",
+     "image": "openroad/orfs:asap7lock"
+    },
+    "clkq_max_wire_ps": 228.221,
+    "clkq_min_nowire_ps": 62.567,
+    "setup_ps": 24.458,
+    "hold_ps": 27.238,
+    "note": "OpenSTA DFFHQNx1_ASAP7_75t_R, ideal clock at max tap slew; setup = -(library setup term), hold = library hold"
+   },
+   "classes": {
+    "reset": {
+     "hops": 159,
+     "worst_setup_ps": 354.69,
+     "worst_setup": "rstw_hub_C_rst_o_1",
+     "worst_hold_ps": -94.23,
+     "worst_hold": "rstw_hg_ES_7_rst_o_1",
+     "setup_neg": 0,
+     "hold_neg": 153,
+     "worst_setup_all_taps_ps": 328.93,
+     "worst_hold_all_taps_ps": -112.13,
+     "hold_neg_all_taps": 153,
+     "worst5_hold": [
+      [
+       -94.23,
+       "rstw_hg_ES_7_rst_o_1"
+      ],
+      [
+       -94.12,
+       "rstw_hg_WS_7_rst_o_1"
+      ],
+      [
+       -93.84,
+       "rstw_hg_EN_7_rst_o_1"
+      ],
+      [
+       -93.57,
+       "rstw_hg_WN_7_rst_o_1"
+      ],
+      [
+       -88.13,
+       "rstw_hg_WN_0_rst_o_0"
+      ]
+     ],
+     "kit_hold_bound_ps": -24.56,
+     "kit_hold_neg": 9,
+     "kit_hold_bound_all_taps_ps": -42.46
+    },
+    "start": {
+     "hops": 127,
+     "worst_setup_ps": 354.69,
+     "worst_setup": "stw_hub_C_start_o_1",
+     "worst_hold_ps": -94.23,
+     "worst_hold": "stw_hg_ES_7_start_o_1",
+     "setup_neg": 0,
+     "hold_neg": 121,
+     "worst_setup_all_taps_ps": 328.93,
+     "worst_hold_all_taps_ps": -112.13,
+     "hold_neg_all_taps": 121,
+     "worst5_hold": [
+      [
+       -94.23,
+       "stw_hg_ES_7_start_o_1"
+      ],
+      [
+       -94.12,
+       "stw_hg_WS_7_start_o_1"
+      ],
+      [
+       -93.84,
+       "stw_hg_EN_7_start_o_1"
+      ],
+      [
+       -93.57,
+       "stw_hg_WN_7_start_o_1"
+      ],
+      [
+       -88.13,
+       "stw_hg_WN_0_start_o_0"
+      ]
+     ],
+     "kit_hold_bound_ps": -24.56,
+     "kit_hold_neg": 9,
+     "kit_hold_bound_all_taps_ps": -42.46
+    }
+   },
+   "named": [
+    {
+     "kind": "reset",
+     "net": "rstw_hub_C_rst_o_4",
+     "src": "hub_C",
+     "dst": "hgi_EN_7",
+     "len_um": 194.5,
+     "wire_ps": 16.53,
+     "launch_tap": "t_hub_C__clk_t11",
+     "capture_tap": "t_hgi_EN_7__clk_t15",
+     "launch_late_ps": 4821.948,
+     "capture_early_ps": 4729.959,
+     "launch_early_ps": 4783.049,
+     "capture_late_ps": 4768.29,
+     "cppr_ps": 0.38,
+     "setup_ps": 412.51,
+     "hold_ps": 25.46,
+     "hold_damage_ps": -15.14,
+     "kit_hold_bound_ps": 95.14,
+     "kit_hold_bound_all_taps_ps": 79.43,
+     "setup_all_taps_ps": 382.78,
+     "hold_all_taps_ps": 9.76
+    },
+    {
+     "kind": "start",
+     "net": "stw_hub_C_start_o_4",
+     "src": "hub_C",
+     "dst": "hgi_EN_7",
+     "len_um": 194.5,
+     "wire_ps": 16.52,
+     "launch_tap": "t_hub_C__clk_t11",
+     "capture_tap": "t_hgi_EN_7__clk_t15",
+     "launch_late_ps": 4821.948,
+     "capture_early_ps": 4729.959,
+     "launch_early_ps": 4783.049,
+     "capture_late_ps": 4768.29,
+     "cppr_ps": 0.38,
+     "setup_ps": 412.52,
+     "hold_ps": 25.46,
+     "hold_damage_ps": -15.14,
+     "kit_hold_bound_ps": 95.14,
+     "kit_hold_bound_all_taps_ps": 79.43,
+     "setup_all_taps_ps": 382.79,
+     "hold_all_taps_ps": 9.76
+    }
+   ],
+   "errors": []
+  },
+  "FF": {
+   "tap_slew_max_ps": 79.15,
+   "register": {
+    "key": {
+     "corner": "FF",
+     "slew_ps": 79.153,
+     "load_ff": 39.6366,
+     "cell": "DFFHQNx1_ASAP7_75t_R",
+     "image": "openroad/orfs:asap7lock"
+    },
+    "clkq_max_wire_ps": 155.641,
+    "clkq_min_nowire_ps": 44.603,
+    "setup_ps": 11.041,
+    "hold_ps": 21.011,
+    "note": "OpenSTA DFFHQNx1_ASAP7_75t_R, ideal clock at max tap slew; setup = -(library setup term), hold = library hold"
+   },
+   "classes": {
+    "reset": {
+     "hops": 159,
+     "worst_setup_ps": 459.86,
+     "worst_setup": "rstw_hub_C_rst_o_1",
+     "worst_hold_ps": -85.56,
+     "worst_hold": "rstw_hg_ES_7_rst_o_1",
+     "setup_neg": 0,
+     "hold_neg": 153,
+     "worst_setup_all_taps_ps": 440.83,
+     "worst_hold_all_taps_ps": -104.34,
+     "hold_neg_all_taps": 159,
+     "worst5_hold": [
+      [
+       -85.56,
+       "rstw_hg_ES_7_rst_o_1"
+      ],
+      [
+       -85.44,
+       "rstw_hg_EN_7_rst_o_1"
+      ],
+      [
+       -85.07,
+       "rstw_hg_WS_7_rst_o_1"
+      ],
+      [
+       -84.95,
+       "rstw_hg_WN_7_rst_o_1"
+      ],
+      [
+       -80.23,
+       "rstw_hg_WN_0_rst_o_0"
+      ]
+     ],
+     "kit_hold_bound_ps": -4.16,
+     "kit_hold_neg": 4,
+     "kit_hold_bound_all_taps_ps": -22.93
+    },
+    "start": {
+     "hops": 127,
+     "worst_setup_ps": 459.86,
+     "worst_setup": "stw_hub_C_start_o_1",
+     "worst_hold_ps": -85.56,
+     "worst_hold": "stw_hg_ES_7_start_o_1",
+     "setup_neg": 0,
+     "hold_neg": 121,
+     "worst_setup_all_taps_ps": 440.83,
+     "worst_hold_all_taps_ps": -104.34,
+     "hold_neg_all_taps": 127,
+     "worst5_hold": [
+      [
+       -85.56,
+       "stw_hg_ES_7_start_o_1"
+      ],
+      [
+       -85.44,
+       "stw_hg_EN_7_start_o_1"
+      ],
+      [
+       -85.07,
+       "stw_hg_WS_7_start_o_1"
+      ],
+      [
+       -84.95,
+       "stw_hg_WN_7_start_o_1"
+      ],
+      [
+       -80.23,
+       "stw_hg_WN_0_start_o_0"
+      ]
+     ],
+     "kit_hold_bound_ps": -4.16,
+     "kit_hold_neg": 4,
+     "kit_hold_bound_all_taps_ps": -22.93
+    }
+   },
+   "named": [
+    {
+     "kind": "reset",
+     "net": "rstw_hub_C_rst_o_4",
+     "src": "hub_C",
+     "dst": "hgi_EN_7",
+     "len_um": 194.5,
+     "wire_ps": 16.53,
+     "launch_tap": "t_hub_C__clk_t11",
+     "capture_tap": "t_hgi_EN_7__clk_t15",
+     "launch_late_ps": 3971.194,
+     "capture_early_ps": 3896.915,
+     "launch_early_ps": 3936.774,
+     "capture_late_ps": 3930.85,
+     "cppr_ps": 0.3,
+     "setup_ps": 516.14,
+     "hold_ps": 4.82,
+     "hold_damage_ps": -6.22,
+     "kit_hold_bound_ps": 86.22,
+     "kit_hold_bound_all_taps_ps": 73.04,
+     "setup_all_taps_ps": 494.69,
+     "hold_all_taps_ps": -8.37
+    },
+    {
+     "kind": "start",
+     "net": "stw_hub_C_start_o_4",
+     "src": "hub_C",
+     "dst": "hgi_EN_7",
+     "len_um": 194.5,
+     "wire_ps": 16.52,
+     "launch_tap": "t_hub_C__clk_t11",
+     "capture_tap": "t_hgi_EN_7__clk_t15",
+     "launch_late_ps": 3971.194,
+     "capture_early_ps": 3896.915,
+     "launch_early_ps": 3936.774,
+     "capture_late_ps": 3930.85,
+     "cppr_ps": 0.3,
+     "setup_ps": 516.16,
+     "hold_ps": 4.82,
+     "hold_damage_ps": -6.22,
+     "kit_hold_bound_ps": 86.22,
+     "kit_hold_bound_all_taps_ps": 73.04,
+     "setup_all_taps_ps": 494.7,
+     "hold_all_taps_ps": -8.37
+    }
+   ],
+   "errors": []
+  }
+ },
+ "kit_contract_window_ps": 80.0,
+ "status": "UNCHECKED (NUMBER-CHECK pending)"
+}

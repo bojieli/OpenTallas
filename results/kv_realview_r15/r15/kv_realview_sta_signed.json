@@ -1,0 +1,197 @@
+{
+ "declared": "/srv/opentallas-scratch2/claude/kv-realview-r15-1026/r15/sta_signed/declared/die_sta_related.json",
+ "accept": "signed",
+ "counts": {
+  "core_types_total": 31,
+  "core_instances_total": 1628,
+  "core_types_real": 2,
+  "core_instances_real": 512,
+  "partition_types_total": 51,
+  "partition_types_real": 0,
+  "taps_hosting_real_cores": 384
+ },
+ "real_views": {
+  "kv3_head_eighth_e1": {
+   "status": "stale-signed",
+   "instances": 256,
+   "arcs": {
+    "TT": {
+     "ins_late": 321.48,
+     "ins_early": 261.73,
+     "hold_in": 156.47,
+     "setup_in": -83.89,
+     "q_min": 376.51,
+     "q_max": 406.44,
+     "n_in": 470,
+     "n_out": 68
+    },
+    "FF": {
+     "ins_late": 253.68,
+     "ins_early": 208.88,
+     "hold_in": 133.36,
+     "setup_in": -81.58,
+     "q_min": 295.1,
+     "q_max": 317.72,
+     "n_in": 470,
+     "n_out": 68
+    }
+   }
+  },
+  "kv3_head_eighth_e5": {
+   "status": "stale-signed",
+   "instances": 256,
+   "arcs": {
+    "TT": {
+     "ins_late": 324.68,
+     "ins_early": 266.55,
+     "hold_in": 138.92,
+     "setup_in": -86.35,
+     "q_min": 374.77,
+     "q_max": 400.29,
+     "n_in": 470,
+     "n_out": 68
+    },
+    "FF": {
+     "ins_late": 255.53,
+     "ins_early": 213.13,
+     "hold_in": 130.88,
+     "setup_in": -84.55,
+     "q_min": 293.46,
+     "q_max": 311.77,
+     "n_in": 470,
+     "n_out": 68
+    }
+   }
+  }
+ },
+ "model": "ETM arcs at the core clock pin, exact early-tap compensation by ins_late per corner (12.3 v5.0)",
+ "corners": {
+  "TT": {
+   "real_core_endpoint_pairs": 13440,
+   "intra_real": {
+    "worst_setup_ps": 369.21,
+    "worst_setup": [
+     369.21,
+     "t_hgi_WN_7__clk_t15",
+     "t_hgi_WN_7__clk_t3",
+     "P->kv3_head_eighth_e1"
+    ],
+    "worst_hold_ps": -69.11,
+    "worst_hold": [
+     -69.11,
+     "t_hgi_WN_7__clk_t3",
+     "t_hgi_WN_7__clk_t15",
+     "kv3_head_eighth_e1->P"
+    ]
+   },
+   "intra_real_by_endpoint": {
+    "P->kv3_head_eighth_e1": {
+     "setup_ps": 369.21,
+     "hold_ps": 151.46
+    },
+    "P->kv3_head_eighth_e5": {
+     "setup_ps": 380.29,
+     "hold_ps": 169.67
+    },
+    "kv3_head_eighth_e1->P": {
+     "setup_ps": 625.83,
+     "hold_ps": -69.11
+    },
+    "kv3_head_eighth_e1->kv3_head_eighth_e1": {
+     "setup_ps": 399.65,
+     "hold_ps": 143.91
+    },
+    "kv3_head_eighth_e1->kv3_head_eighth_e5": {
+     "setup_ps": 410.13,
+     "hold_ps": 162.12
+    },
+    "kv3_head_eighth_e5->P": {
+     "setup_ps": 632.64,
+     "hold_ps": -62.23
+    },
+    "kv3_head_eighth_e5->kv3_head_eighth_e1": {
+     "setup_ps": 406.46,
+     "hold_ps": 150.18
+    },
+    "kv3_head_eighth_e5->kv3_head_eighth_e5": {
+     "setup_ps": 417.88,
+     "hold_ps": 169.35
+    }
+   },
+   "intra_declared": {
+    "setup_ps": 584.45,
+    "hold_ps": -72.5,
+    "kit_contract_hold_ps": null
+   },
+   "seam_declared": {
+    "setup_ps": 577.93,
+    "hold_ps": -79.02,
+    "kit_contract_hold_ps": null
+   }
+  },
+  "FF": {
+   "real_core_endpoint_pairs": 13440,
+   "intra_real": {
+    "worst_setup_ps": 475.17,
+    "worst_setup": [
+     475.17,
+     "t_hgi_WN_7__clk_t15",
+     "t_hgi_WN_7__clk_t3",
+     "P->kv3_head_eighth_e1"
+    ],
+    "worst_hold_ps": -64.05,
+    "worst_hold": [
+     -64.05,
+     "t_hgi_WN_7__clk_t3",
+     "t_hgi_WN_7__clk_t15",
+     "kv3_head_eighth_e1->P"
+    ]
+   },
+   "intra_real_by_endpoint": {
+    "P->kv3_head_eighth_e1": {
+     "setup_ps": 475.17,
+     "hold_ps": 95.65
+    },
+    "P->kv3_head_eighth_e5": {
+     "setup_ps": 482.85,
+     "hold_ps": 99.11
+    },
+    "kv3_head_eighth_e1->P": {
+     "setup_ps": 658.75,
+     "hold_ps": -64.05
+    },
+    "kv3_head_eighth_e1->kv3_head_eighth_e1": {
+     "setup_ps": 492.92,
+     "hold_ps": 92.47
+    },
+    "kv3_head_eighth_e1->kv3_head_eighth_e5": {
+     "setup_ps": 500.46,
+     "hold_ps": 95.93
+    },
+    "kv3_head_eighth_e5->P": {
+     "setup_ps": 665.67,
+     "hold_ps": -60.97
+    },
+    "kv3_head_eighth_e5->kv3_head_eighth_e1": {
+     "setup_ps": 499.85,
+     "hold_ps": 95.4
+    },
+    "kv3_head_eighth_e5->kv3_head_eighth_e5": {
+     "setup_ps": 508.21,
+     "hold_ps": 99.68
+    }
+   },
+   "intra_declared": {
+    "setup_ps": 631.83,
+    "hold_ps": -70.02,
+    "kit_contract_hold_ps": 11.39
+   },
+   "seam_declared": {
+    "setup_ps": 626.22,
+    "hold_ps": -75.64,
+    "kit_contract_hold_ps": 5.77
+   }
+  }
+ },
+ "status": "UNCHECKED (NUMBER-CHECK pending)"
+}

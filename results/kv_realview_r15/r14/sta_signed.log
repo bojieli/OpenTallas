@@ -1,0 +1,12 @@
+r14 TT intra              pairs   28970 setup   595.11 (neg 0) hold   -61.85 (neg 28958) skew   72.18
+r14 TT seam               pairs  104384 setup   539.39 (neg 0) hold  -117.57 (neg 102482) skew  127.90
+r14 TT seam_nearest_INFO  pairs    4085 setup   568.64 (neg 0) hold   -88.32 (neg 3962) skew   98.65
+r14 FF intra              pairs   28970 setup   641.15 (neg 0) hold   -60.71 (neg 28970) skew   59.30 kit-contract hold 20.70 (W 80, need 59.30, neg 0)
+r14 FF seam               pairs  104384 setup   598.46 (neg 0) hold  -103.40 (neg 102760) skew  101.99 kit-contract hold -21.99 (W 80, need 101.99, neg 875)
+r14 FF seam_nearest_INFO  pairs    4085 setup   621.00 (neg 0) hold   -80.86 (neg 4002) skew   79.45 kit-contract hold 0.55 (W 80, need 79.45, neg 0)
+SUMMARY {"intra": {"tt_setup_ps": 595.11, "ff_hold_ps": -60.71, "verdict": "FAIL", "ff_hold_kit_contract_ps": 20.7, "kit_contract_window_ps": 80.0, "kit_contract_window_needed_ps": 59.3, "kit_contract_verdict": "PASS"}, "seam": {"tt_setup_ps": 539.39, "ff_hold_ps": -103.4, "verdict": "FAIL", "ff_hold_kit_contract_ps": -21.99, "kit_contract_window_ps": 80.0, "kit_contract_window_needed_ps": 101.99, "kit_contract_verdict": "FAIL"}, "landed": {"tt_setup_margin_ps": null, "ff_hold_margin_ps": null, "verdict": "FAIL"}, "status": "UNCHECKED (NUMBER-CHECK pending)", "label": "declared-budget (no QC kit)"}
+TT intra P->P declared setup 595.11 hold -61.85 kit None | seam declared setup 539.39 hold -117.57 kit None
+TT intra REAL-core endpoints (13440 pair-combos, 2/31 core types, 512/1628 instances real): setup (379.84, 't_hgi_WN_7__clk_t15', 't_hgi_WN_7__clk_t3', 'P->kv3_head_eighth_e1') hold (-58.48, 't_hgi_WN_7__clk_t3', 't_hgi_WN_7__clk_t15', 'kv3_head_eighth_e1->P')
+FF intra P->P declared setup 641.15 hold -60.71 kit 20.7 | seam declared setup 598.46 hold -103.4 kit -21.99
+FF intra REAL-core endpoints (13440 pair-combos, 2/31 core types, 512/1628 instances real): setup (484.52, 't_hgi_WN_7__clk_t15', 't_hgi_WN_7__clk_t3', 'P->kv3_head_eighth_e1') hold (-54.69, 't_hgi_WN_7__clk_t3', 't_hgi_WN_7__clk_t15', 'kv3_head_eighth_e1->P')
+COUNTS {"core_types_total": 31, "core_instances_total": 1628, "core_types_real": 2, "core_instances_real": 512, "partition_types_total": 51, "partition_types_real": 0, "taps_hosting_real_cores": 384}
