@@ -1431,3 +1431,5 @@ CODEX: 2026-10-27 09:27 PDT LEC phase-resume cache audit: existing receipts lack
 CODEX: 2026-10-27 09:28 PDT RM54 main 38ebe196be == origin/main; sound reset/cycle-one base proof + unchanged-map mtime,171LEC/5map lane testsPASS; full core proof still open,0deletions.
 
 CODEX: 2026-10-27 09:34 PDT FLOW mtime fix18a1048a4 READY (5 tests), separate helper watch e0fbdbc0f READY (6 tests); active jobs unchanged. QC control/sender40/C60 trial7fd PLACE-only launched under explicit ROOT exception; Qwen owns actual image before CTS. Exact5b S81 canonical canary still live.
+
+CODEX: 2026-10-27 09:39 PDT RM55 fallback/geometry artifacts; RM56 main a76dafeab6 == origin/main exact opt-in ROWX native SRAM, full production smoke+mutantsPASS; parent-lotFAIL/no physical adoption,0deletions.
