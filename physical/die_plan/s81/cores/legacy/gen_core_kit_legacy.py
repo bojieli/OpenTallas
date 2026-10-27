@@ -947,11 +947,9 @@ def main():
     if spec.get("children"):
         raise SystemExit(hard_children_refusal(mod, spec, REPO))
     mr = multi_root_contract(mod, spec, rec)   # None (single root) or the declared multi-root contract; refuses else
-    if mr is not None and a.master_slice:
-        # the 12.7c slice carries ONE clock entry + one core_tree (master_slice.slice_pins / _consume_io / core_infra):
-        # a slice kit would move the primary root only -> fail closed until the slice schema has one entry per root
-        raise SystemExit(f"{mod}: multi-root core: master slices carry one clock entry; per-root slice entries "
-                         f"(clock_entries[]) are not in master_slice.py yet -- use --trial (census) only")
+    # S81-CORE-LAT-R21 (COORD R20 ruling (e)): a multi-root core takes a master slice only in the multi-root form
+    # (clock_entries[], one entry per root pin, master_slice.py); kit_apply refuses the single-entry form and any
+    # entry set != the declared root pins.
     w, h = hc["outline_um"]
     per = float(plan["die"]["period_ps"])
     if modern:
@@ -1392,7 +1390,8 @@ def main():
     # MASTER PLAN 12.7c (opt-in --master-slice DIR): slice -> master_slice.json/.tcl, sourced at PRE_GLOBAL_PLACE
     # (face_flops.tcl: after io placement, before GPL); refused without a slice once required unless --trial
     ms = MS.kit_apply(kd, mod, [w, h], a.master_slice, plan, a.trial, kind="core",
-                      gpl_hook=kd / "face_flops.tcl")
+                      gpl_hook=kd / "face_flops.tcl",
+                      **({"clock_ports": [p for r_ in mr["roots"] for p in r_["pins"]]} if mr else {}))
     planned_tree_cts(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     rev = subprocess.run(["git", "-C", str(REPO), "rev-parse", "--short", "HEAD"], capture_output=True,
