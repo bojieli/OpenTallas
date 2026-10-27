@@ -3011,6 +3011,7 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
     # physical view: one pin stack per GROUP (the tie reaches the other units); logical nets keep every unit
     phys = [dict(n, loads=[ld for ld in n["loads"] if ld.startswith("port:") or rep_of[ld] == ld]) for n in nets]
     if v2:
+        out["meta"]["clock_pin_window"] = True
         # Replaced leaf stubs are diagnostic ports, not physical routes. Their
         # real output is the pre-reserved continuous mesh.
         routed_phys = [n for n in phys if not (n["drv"] in mesh_driver_units

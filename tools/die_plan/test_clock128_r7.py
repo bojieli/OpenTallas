@@ -2,6 +2,7 @@
 """CLOCK-128-R7: partition island windows (die_trial kit --island-sites) and straight pin stacks
 (die_clock_mesh build --pin-stack).  python3 -m pytest tools/die_plan/test_clock128_r7.py"""
 import sys
+import pytest
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -193,3 +194,15 @@ def test_aocv_fold_fields_stage_counts_and_node_arrivals(tmp_path):
     assert out["taps"][0]["stages_from_root"] - out["node_stages"][out["taps"][0]["cppr_node"]] == 1
     assert out["spine_late"] == base["spine_late"]                                   # die_sta layout untouched
     assert json.loads((tmp_path / "b.json").read_text())["node_xy_um"]["t0"] == [2.0, 1.0]
+
+
+def test_optin_pin_window_searches_a_track_inside_the_stack_extent(monkeypatch):
+    M,cells,nets=_tree()
+    monkeypatch.setattr(C,'STACK_RISER_MAX_UM',.1)
+    # The usual .54um trunk offset is outside this deliberately tight window;
+    # an actual nearby grid track exists and must be searched instead.
+    with pytest.raises(C.PlanError):
+        C.fixed_wires(M,cells,nets[:1],1.62,.27,router=_router(),pin_stack=True)
+    M['meta']['clock_pin_window']=True
+    wires=C.fixed_wires(M,cells,nets[:1],1.62,.27,router=_router(),pin_stack=True)
+    assert all(s['riser_um']<=.1 for w in wires for s in w['stacks'])

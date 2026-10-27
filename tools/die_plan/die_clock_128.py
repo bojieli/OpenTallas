@@ -463,6 +463,18 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
         return None
     mm = router.max_move if router is not None else 0.0
 
+    def pin_keep(cell, channel=None):
+        # V2 explicit groups must not choose a globally legal track whose M7
+        # access would leave their declared island. Leave legacy modes alone.
+        if not M.get("meta", {}).get("clock_pin_window"):
+            return channel
+        us = (ties or {}).get(cell, [cell])
+        ys = [pin_xy(cells, u, "A", row_y)[1] for u in us]
+        # Actual A/Y access points differ from bar centres by .045um.
+        bound = STACK_RISER_MAX_UM - .045
+        keep = (min(ys)-bound, max(ys)+bound)
+        return (max(keep[0],channel[0]),min(keep[1],channel[1])) if channel else keep
+
     def port_xy(p):
         return root if p == "port:root" else txy[p[5:]]
 
@@ -528,7 +540,7 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
                                             for ld, p in Ls)
             mh = 0.0 if exact_h else mm
             rsv = (min(xs_all) - mh, max(xs_all) + mh)
-            ty, tm = track("M8", D[1] + off, rsv[0], rsv[1], nm, "trunk", keep=chan_keep(D) if dcell else None)
+            ty, tm = track("M8", D[1] + off, rsv[0], rsv[1], nm, "trunk", keep=pin_keep(n["drv"], chan_keep(D)) if dcell else None)
             te = last_ext[0]
             xs_ = []
             if dcell:
@@ -554,7 +566,7 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
                 if l_drops and abs(p[1] - ty) > STACK_RISER_MAX_UM:
                     # R12 L net: M9 drop at the bar column, M8 jog one track pair off the load row toward the trunk
                     sg = 1.0 if ty >= p[1] else -1.0
-                    by, jm = track("M8", p[1] + sg * off, p[0] - mm, p[0] + mm, nm, f"jog {ld}")
+                    by, jm = track("M8", p[1] + sg * off, p[0] - mm, p[0] + mm, nm, f"jog {ld}", keep=pin_keep(ld))
                     bx, bm = track("M9", p[0], ty, by, nm, f"drop {ld}")
                     add(("M9", bx, min(ty, by), bx, max(ty, by)), bm)
                     if abs(bx - p[0]) > 1e-6:
@@ -589,7 +601,7 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
             yd = D[1]
             if dcell:      # driver jog one track pair off the pin row toward the loads, Y bar -> trunk
                 sg = 1.0 if sum(p[1] for _, p in Ls) / len(Ls) >= D[1] else -1.0
-                yd, jm = track("M8", D[1] + sg * off, D[0], tx, nm, "driver jog")
+                yd, jm = track("M8", D[1] + sg * off, D[0], tx, nm, "driver jog", keep=pin_keep(n["drv"]))
                 add(("M8", min(D[0], tx), yd, max(D[0], tx), yd), jm)
                 stacks.append(stack(n["drv"], "Y", D, (D[0], yd)))
             ys_ = []
@@ -599,7 +611,7 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
                     by = p[1] + off
                 else:
                     sg = 1.0 if port or D[1] >= p[1] else -1.0     # drop row on the trunk (driver) side
-                    by, bm = track("M8", p[1] + sg * off, tx, p[0], nm, f"drop {ld}")
+                    by, bm = track("M8", p[1] + sg * off, tx, p[0], nm, f"drop {ld}", keep=pin_keep(ld) if not port else None)
                     add(("M8", min(tx, p[0]), by, max(tx, p[0]), by), bm)
                 branches.append((ld, p[0], by))
                 ys_.append(by)
