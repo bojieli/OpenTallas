@@ -15,6 +15,9 @@
 //    release is 3 clk edges later than the pin (no data / valid may arrive in the first 3 cycles after release; the tile
 //    is idle for far longer after reset).
 // The body below is ot_qwen_me_node_w12 #(W 16, WS 1, TREE_LAT 7, ANR 1) register for register, with the region resets.
+// QC-CORES-4 10-27: the 16 pair adders use ANR 2 = ot_hdc_fp32_add_lat_nc (the no-copy form of the ANR 1 nr adder, same
+// cycles and values): the nr adder carried the constant err[1] through six unreset flops that synthesis removes, so the
+// kit LEC (no-reset constants, 4 reset edges) could not establish them (16 x err[1] NOT EQUIVALENT, node a0r3 11:44).
 module ot_qwen_tile_node (
     input  wire          clk,
     input  wire          rst_n,
@@ -41,7 +44,7 @@ module ot_qwen_tile_node (
     generate
         for (p = 0; p < 16; p = p + 1) begin : g_add
             wire [31:0] s;
-            ot_qwen_w12_tadd #(.LAT(7), .ANR(1)) u_add (clk, rn[p / 4], vd, ad[32*p +: 32], bd[32*p +: 32], s, pf[p]);
+            ot_qwen_w12_tadd #(.LAT(7), .ANR(2)) u_add (clk, rn[p / 4], vd, ad[32*p +: 32], bd[32*p +: 32], s, pf[p]);
             always @(posedge clk) y[32*p +: 32] <= s;
         end
     endgenerate

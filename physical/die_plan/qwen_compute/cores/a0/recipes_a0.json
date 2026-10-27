@@ -1,0 +1,35 @@
+{
+ "_doc": "A0 child recipes (QC-A0-KITS 2026-10-27) for gen_core_kit_qc.py --recipes recipes_a0.json --plan cores/a0/children_plan.json",
+ "ot_qwen_tile_node": {
+  "ref_tile": "physical/ref_tile/ot_qwen_tile_node",
+  "plan": "physical/die_plan/qwen_compute/cores/a0/children_plan.json",
+  "insertion_ps": 201.0,
+  "insertion_ff_ps": 161.5,
+  "insertion_basis": "A0 R3 B_child (child budget, UNCHECKED-model)",
+  "suffix": "a0r3",
+  "rtl_patches": [
+   {
+    "file": "rtl/lib/ot_rst_relay.sv",
+    "why": "OWNER DECISION 13 hard-core reset contract: rst_n is a SYNCHRONOUS registered input; the relay's async-clear synchroniser + tree stages become synchronous stages of the same release depth (kit-local patch, as the QC SU recipes).",
+    "edits": [
+     [
+      "always @(posedge clk or negedge rst_n_in) begin",
+      "always @(posedge clk) begin   // QC-A0-KITS kit patch (OWNER DECISION 13): synchronous relay, same depth",
+      2
+     ]
+    ]
+   }
+  ],
+  "ft1_pairs": [
+   [
+    "t_d",
+    "t_out"
+   ],
+   [
+    "t_vd",
+    "t_vout"
+   ]
+  ],
+  "ft1_pairs_note": "RTL TOREG (q14 r5-fp1): t_d/t_vd -> one register -> t_out/t_vout, same edge, 0 cycles added; E-seam in, W-face out, 47.52 um"
+ }
+}
