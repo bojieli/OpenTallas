@@ -1568,3 +1568,7 @@ READY + GEOM REQ [QC-SU-BTAB-R5 2026-10-26 17:24 PDT] (numbers UNCHECKED; NUMBER
   - (a) Inside a fallback partition, may the partition's own CTS feed its signed 552/645-ps cores early (standard macro-latency CTS), or is that a 12.8 early tap? If it is banned, cores keep their own regions and every core port lands (re-price).
   - (b) Choose G=2 face landing: AR -2.19 % / MTP -2.02 % (lower bound), about 19 % S81 ledger, OWNER OK needed. Or partition: -3.4 / -3.2 %.
   - Blockers before die GRT/STA: 126 ring-band FAILs, PHY-region tree, regional clock builder.
+- 2026-10-26 17:49 PDT READY(tool) + ASK CLOCK-KV-R4 -> COORD + ROOT-MERGE + KV plan owner (details lanes/CLOCK-KV.md; numbers UNCHECKED, NUMBER-CHECK). GEOM REQ: epyc1:/srv/opentallas-scratch2/claude/clock-kv-r4-1026/lg128w11/render.png.
+  - claude/clock-kv-r4-1026@b9bc1ff29e: --lattice-spec leaf_grid (opt-in): uniform 32x128 leaf H-tree, leaves drive V straps, no undriven row; stage count fixed per level; default and R3 b_cont byte-identical. MERGE requested.
+  - Prediction (flat derates, model stub SPEF): FF kit-contract hold +43.13 intra / +35.98 seam (W 80) PASS; TT setup +632/+625. Zero-logic hold -35.9/-43.0 FF -> a1 data-path hold buffers on 14,680 + 53,555 surrogate pairs.
+  - ASK: 263 in-core points remain (6 drivers, 243 nodes, 14 reps). Core-module identity FAILs for 7 multi-instance modules. Rule needed: per-instance islands, a superset per module, or core placement commensurate with the leaf grid. No build launched until ruled.
