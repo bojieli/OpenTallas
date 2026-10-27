@@ -2700,6 +2700,45 @@ def noreset_report(L):
                        "assumptions never establish a constant's base case"))
 
 
+
+def add_reset_state_constraints(L, hints, log):
+    """Untrusted finite-state invariants, with a universal reset base case.
+
+    Every completion of unknown reset-state bits must be allowed. Accepted
+    candidates enter L.cons, so the existing induction and final comparison
+    miter must prove their next-state preservation; a failed candidate is
+    dropped by normal refinement. This never fixes an unknown bit to a value.
+    """
+    if not hasattr(L, "rst_val"):
+        noreset_classify(L)
+    rec = dict(given=len(hints), added=[], rejected=[])
+    ids = {(sd, ks[0]) for sd, ks, _ in L.cons}
+    for item in hints:
+        try:
+            side = item["side"]
+            keys = tuple(item["keys"])
+            allowed = tuple(sorted(set(tuple(row) for row in item["allowed"])))
+            points = L.gp if side == "gold" else L.tp
+            valid = (side in ("gold", "gate") and keys and len(set(keys)) == len(keys)
+                     and all(isinstance(k, str) and k.startswith("ff:") and k in points for k in keys)
+                     and allowed and all(len(row) == len(keys) and all(isinstance(b, int) and b in (0, 1) for b in row)
+                                         for row in allowed)
+                     and (side, keys[0]) not in ids)
+            if not valid:
+                raise ValueError("invalid or duplicate state constraint")
+            values = [L.rst_val.get((side, k), (None, None))[0] for k in keys]
+            covered = {row for row in allowed if all(v is None or v == b for v, b in zip(values, row))}
+            if len(covered) != 1 << values.count(None):
+                raise ValueError("constraint does not cover every unknown reset-state completion")
+            L.cons.append((side, keys, allowed))
+            ids.add((side, keys[0]))
+            rec["added"].append(dict(side=side, keys=keys, allowed=allowed, reset_values=values))
+        except (KeyError, TypeError, ValueError, AttributeError) as exc:
+            rec["rejected"].append(dict(item=item, reason=str(exc)))
+    log.append(f"reset-state constraints: {len(rec['added'])} candidates, {len(rec['rejected'])} rejected bases")
+    return rec
+
+
 def slang_elements(aliases_file):
     """slang lays an unpacked array out as one flat vector (`reg [3:0] x [0:N-1]`: element 0 at the MSB) and drives
     each element from its own cell `$driver$x[i]` (the aldff / dff of that element).  -> {gold key 'ff:<scope>x[f]':
