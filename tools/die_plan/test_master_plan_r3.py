@@ -40,7 +40,8 @@ def test_core_kit_consumes_clock_entry_and_passes_check(tmp_path):
                                         "place_pin -pin_name {d[0]} -layer M4 -location {0.0160 110.0000}"])
     io = (kd / "io.tcl").read_text()  # clock centre snapped to the M5 track (GEOM-21, 51646a5c4d)
     assert "-pin_name {clk} -layer M5 -location {432.0120 432.0000}" in io and "{d[0]} -layer M4" in io
-    assert "ot_ci_clock_entry {clk} 432 432" in (kd / "master_core_infra.tcl").read_text()
+    # the later pushdown hook re-places the same snapped centre (S81-CORE-LAT-R18/R19 DRT-0255: it used to undo the snap)
+    assert "ot_ci_clock_entry {clk} 432.012 432" in (kd / "master_core_infra.tcl").read_text()
     assert "placement blockage: keepout clock_entry_island" not in (kd / "master_slice.tcl").read_text()
     rep = MS.check_kit(kd)
     assert rep["verdict"] == "PASS", rep["issues"]

@@ -12,6 +12,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import sdc_lint
 import rtl_lint
+import kit_contract
 
 # Inputs consumed by make must survive removal of the generator worktree.
 INPUT_VARS = ('VERILOG_FILES', 'VERILOG_INCLUDE_DIRS', 'SYNTH_INCLUDE_DIRS',
@@ -23,7 +24,7 @@ REQUIRED = ('config.mk', 'constraint.sdc', 'sdc_lint.json', 'pins.json',
             'lec.py', 'rtl_lint.py', 'face_guard.py', 'signoff.py')
 
 
-def check(kit):
+def check(kit, plan_dir=None, contract=False):
     kit = Path(kit).resolve()
     issues, checks = [], {}
     def run(name, fn):
@@ -68,7 +69,18 @@ def check(kit):
             report = master_slice.check_kit(kit)
             return report.get('issues', [])
         run('master_slice', slice_check)
-    return dict(schema='opentallas.kit_preflight.v1', kit=str(kit),
+    # PREFLIGHT-2 (OWNER 10-27): the shared kit contract, one check per recent bug class (kit_contract.py)
+    # Binding (fail-closed) on hard-core kits; recorded as advisory on other kits (partition tiles) unless forced.
+    binding = contract or kit_contract.is_core_kit(kit)
+    advisory = {}
+    for name, row in kit_contract.run_all(kit, plan_dir).items():
+        if binding:
+            checks[name] = row
+            issues.extend(f'{name}: {error}' for error in row['errors'])
+        else:
+            advisory[name] = row
+    return dict(schema='opentallas.kit_preflight.v2', kit=str(kit), contract=list(kit_contract.CHECKS),
+                contract_binding=binding, contract_advisory=advisory,
                 verdict='FAIL' if issues else 'PASS', checks=checks, issues=issues,
                 deferred=['RTL elaboration/SELRANGE', 'synthesis face/fanout/port binding/LEC',
                           'placed and routed PG', 'TT setup / FF hold', 'routed LEC'])
@@ -78,8 +90,19 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('kit', type=Path)
     ap.add_argument('--out', type=Path)
+    ap.add_argument('--plan-dir', type=Path, help='plan dir resolving freeze.json pins_file (optional)')
+    ap.add_argument('--no-emit', action='store_true', help='do not write <kit>/preflight.json')
+    ap.add_argument('--contract', action='store_true', help='kit contract binding on any kit (default: core kits)')
     args = ap.parse_args(argv)
-    record = check(args.kit)
+    record = check(args.kit, args.plan_dir, args.contract)
+    if not args.no_emit:
+        # latest verdict beside freeze.json (timestamped --out receipts stay immutable)
+        import os
+        import tempfile
+        kd = Path(record['kit'])
+        with tempfile.NamedTemporaryFile('w', dir=kd, prefix='.preflight.', delete=False) as handle:
+            handle.write(json.dumps(record, indent=1)+'\n')
+        os.replace(handle.name, kd/'preflight.json')
     if args.out:
         # Never overwrite an existing failure/success receipt.
         with args.out.open('x') as handle:

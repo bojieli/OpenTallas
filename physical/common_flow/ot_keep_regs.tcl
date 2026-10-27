@@ -30,6 +30,21 @@ if {[info exists ::env(OT_FSM_NONE_WIRES)] && [string trim $::env(OT_FSM_NONE_WI
   yosys setattr -set fsm_encoding {"none"} @ot_fn
   puts "OT_FSM_NONE: fsm_encoding none on wires named [join $::env(OT_FSM_NONE_WIRES) {, }]"
 }
+# OT_KEEP_WIRES (HBM-CORES-R9 2026-10-27): wire base names whose driving registers are kept like a (* keep *) register, set
+# from the kit (no RTL edit).  Trigger: ctlx k2 LEC NOT EQUIVALENT 48/27696 -- u_ctl.lane_en[4g..4g+3] share D and enable
+# (lane_en[l] <= (l/8 < c_p) && (l%8 < fmt width) on start_bd), opt_merge folded 64 flops into 16, and merged copies of a
+# never-reset register are not provable from the free power-up state.  Plain, element and generate-scoped wires in every
+# module (paramod-renamed modules included: the selection is by wire name, not module name); function unchanged.
+if {[info exists ::env(OT_KEEP_WIRES)] && [string trim $::env(OT_KEEP_WIRES)] ne ""} {
+  set ot_kwn_pats {}
+  foreach b $::env(OT_KEEP_WIRES) {
+    if {![regexp {^[A-Za-z_][A-Za-z0-9_]*$} $b]} { error "OT_KEEP_WIRES: not a wire base name: $b" }
+    lappend ot_kwn_pats "w:$b" "w:$b\[\[\]*" "w:*.$b" "w:*.$b\[\[\]*"
+  }
+  yosys select -set ot_kwn {*}$ot_kwn_pats
+  yosys setattr -set keep 1 @ot_kwn
+  puts "OT_KEEP_WIRES: keep on wires named [join $::env(OT_KEEP_WIRES) {, }]"
+}
 # HBM-OWN/SVG 2026-10-21: OpenROAD 26Q3 link_design reads the Verilog dont_touch attribute as an integer (std::stoi)
 # and aborts on a string value: RTL (* dont_touch = "true" *) (1195 sites in rtl/) -> mapped `(* dont_touch = "true" *)`
 # -> "Error: synth_odb.tcl, 4 stoi" before floorplan (hdie_svg_rel8e/f 4a581f01c, packet 91e933ca3; stripping only

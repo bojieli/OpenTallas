@@ -41,7 +41,12 @@ def test_bhold_lib_unchanged():
 
 @pytest.mark.skipif(not HEAD.is_file(), reason="s81_head plan not in this checkout")
 def test_head_standins_contract(tmp_path):
+    # INFRA-FIRST-HEAD-2 R2 (8ccc0bb5a3) moved the HEAD plan to centre entries (no type keeps clock.core_taps
+    # early); hd_tile still declares its 5 kind-core taps, so re-enable CP2 early taps there in memory to keep
+    # the core-tap contract-cell branch covered on a real plan.
     P = S.Plan(S.load(HEAD))
+    if not any(S.core_taps(P, tn) for tn in P.types):
+        P.types["hd_tile"].setdefault("clock", {})["core_taps"] = "early"
     seen_core = False
     for tn, t in sorted(P.types.items()):
         v, k = T.standin_netlist(P, tn)

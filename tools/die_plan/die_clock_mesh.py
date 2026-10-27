@@ -50,6 +50,7 @@ import gzip
 import json
 import math
 import re
+import os
 import sys
 import time
 from collections import defaultdict
@@ -724,9 +725,9 @@ def free_along(K, p, axis, limit, step=STEP_UM, bounds=None):
     return None, None
 
 
-def free_near(K, p, limit=1500.0, step=4.32):
+def free_near(K, p, limit=1500.0, step=4.32, accept=None):
     """nearest free point to p in any direction (Manhattan rings), <= limit; (None, None) if none."""
-    if not hitf(K, p):
+    if not hitf(K, p) and (accept is None or accept(p)):
         return p, 0.0
     r = 1
     while r * step <= limit:
@@ -734,7 +735,7 @@ def free_near(K, p, limit=1500.0, step=4.32):
         for dx in range(-r, r + 1):
             for dy in {r - abs(dx), -(r - abs(dx))}:
                 q = (p[0] + dx * step, p[1] + dy * step)
-                if not hitf(K, q):
+                if not hitf(K, q) and (accept is None or accept(q)):
                     best = q
                     break
             if best:
@@ -1339,6 +1340,7 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                       # PATH-S81-PD9 (opt-in): a leg repeater with no die-top site on its leg L takes the alternate L
                       # orientation of the same leg (same length, same stage count) before any in-core pushdown
                       alt_l=bool(lattice.get("off_core_alt_l", False)),
+                      actual_leaf_slack=bool(lattice.get("actual_leaf_slack", False)),
                       # CLOCK-KV-R11 (opt-in): {module: [[u, v], ...]} canonical in-core island sites in the CORE frame
                       # (origin + track_offset, core orient); a pushdown driver in such a core snaps onto the nearest
                       # site within canon_tol_um so every instance of the module carries one identical island
@@ -1741,6 +1743,14 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
         p0, p1 = node_xy(*kr), node_xy(*ch)
         L = abs(p1[0] - p0[0]) + abs(p1[1] - p0[1])
         if (ch[1] - ch[0]) * (ch[3] - ch[2]) == 1:
+            if lg.get("actual_leaf_slack"):
+                # Drivers are already fixed. Bound BOTH live child legs against their
+                # actual sites rather than charging the maximum possible slide again.
+                siblings = [ch, (h, kr[1], kr[2], kr[3]) if a == 0 else (kr[0], kr[1], h, kr[3])]
+                distances = [abs(d["site"][0] - p0[0]) + abs(d["site"][1] - p0[1])
+                             for r in siblings
+                             if (d := out["drivers"].get(f"{r[0]}_{r[2]}")) is not None]
+                return lg["hop_reach"] - max(distances) if distances else 0.0
             return lg["hop_reach"] - L - lg["drv_reach"]
         if lvl + 1 in lg["wire_levels"]:
             return hop_slack(ch, lvl + 1) - L
@@ -1848,6 +1858,18 @@ def build(P, nx=64, ny=64, m=2, rep_um=450.0, ndr="4w", max_move=MAX_MOVE_UM, ho
                     out["pushdown"].append(dict(role="tree_node", name=f"ckm_n{level + 1}_{tag}", level=level + 1,
                                                 xy=[round(kp[0], 3), round(kp[1], 3)], core=isl,
                                                 same_axis_split=cax == inc))
+            if lg.get("actual_leaf_slack") and isl is None:
+                # A parent can already have moved. Choose a free point satisfying
+                # its real incoming budget as well as the downstream slide bound.
+                ip_ = node_xy(i0, i1, j0, j1)
+                ns_ = max(1, math.ceil((abs(kp[0] - ip_[0]) + abs(kp[1] - ip_[1])) / rep_um - 1e-9))
+                cap_ = ns_ * lg["hop_reach"]
+                if abs(q[0] - here[0]) + abs(q[1] - here[1]) > cap_ + 1e-6:
+                    lim_ = max(0.0, hop_slack(kr, level + 1))
+                    q_, d_ = free_near(K, kp, limit=lim_, step=STEP_UM * 2,
+                                      accept=lambda z: abs(z[0]-here[0]) + abs(z[1]-here[1]) <= cap_ + 1e-6)
+                    if q_ is not None:
+                        q, d = q_, d_
             nb = cell(f"ckm_n{level + 1}_{tag}", q[0], q[1], "node", level=level + 1)
             corner = list(q)
             corner[inc] = here[inc]
@@ -2755,6 +2777,7 @@ def _explicit_v2_wires(out, cells, nets, groups, router, off, r8, exact, default
             proxy[u].update(x=xc-BUF_W/2,lib=BUF)
         hetero[rep]=us
     wires=[]
+    collect=os.environ.get("OT_V2_COLLECT_PLAN_ERRORS")=="1"; collected=[]
     for n in nets:
         pieces=[]
         conns=n.get("plan_connections")
@@ -2772,13 +2795,21 @@ def _explicit_v2_wires(out, cells, nets, groups, router, off, r8, exact, default
             router.nd=nd
             router.wide_merge_um=nd.get("wide_merge_um",C128.WIDE_MERGE_UM) if r8 else None
             router.ix.space=max(router.ix.space,nd["space"])
-            pp=C128.fixed_wires(out,proxy,[n0],BUF_W,ROW_Y,off=off,router=router,pin_stack=True,
-                port_on_trunk=r8,ties=ties,l_drops=True,exact_reserve=exact)
+            try:
+                pp=C128.fixed_wires(out,proxy,[n0],BUF_W,ROW_Y,off=off,router=router,pin_stack=True,
+                    port_on_trunk=r8,ties=ties,l_drops=True,exact_reserve=exact)
+            except C128.PlanError as e:
+                # INFRA-FIRST-QC-R27 opt-in census (OT_V2_COLLECT_PLAN_ERRORS=1): record every failing edge and keep
+                # going, so one dry build lists ALL plan errors; the build still fails closed with the full list.
+                if not collect: raise
+                collected.extend(dict(r, edge=n0.get("physical_edge")) for r in e.rows); continue
             if len(pp)!=1: raise RuntimeError("one edge must produce one physical wire piece")
             w=pp[0]
             expected=n0.get("physical_layer")
             if expected and expected != ("M8" if w["horiz"] else "M9"):
-                raise C128.PlanError([dict(kind="net_trunk_layer",name=n0["name"],detail=f"edge {n0.get('physical_edge')}: planned {expected} disagrees with actual pin geometry")])
+                row=dict(kind="net_trunk_layer",name=n0["name"],detail=f"edge {n0.get('physical_edge')}: planned {expected} disagrees with actual pin geometry")
+                if not collect: raise C128.PlanError([row])
+                collected.append(dict(row, edge=n0.get("physical_edge"))); continue
             w.update(ndr=ndr,enc="r8" if r8 else "r7",clock_topology_version=2,physical_edge=n0.get("physical_edge"))
             for st in w["stacks"]:
                 st["short_stack"]=True
@@ -2799,6 +2830,8 @@ def _explicit_v2_wires(out, cells, nets, groups, router, off, r8, exact, default
                     st["tie"]["heterogeneous"]=True
                     st["entry_xy"]=next(p[1:] for p in pts if p[0]==st["entry"])
             pieces.append(w)
+        if not pieces:
+            continue
         if len(pieces)==1:
             wires.append(pieces[0]); continue
         # Downstream emits these pieces into a single dbWire. Aggregate arrays
@@ -2810,6 +2843,8 @@ def _explicit_v2_wires(out, cells, nets, groups, router, off, r8, exact, default
         w["loads"]=list(n["loads"])
         w["wire_um"]=round(sum(p["wire_um"] for p in pieces),3)
         wires.append(w)
+    if collected:
+        raise C128.PlanError(collected)
     out["meta"]["ndr_rules"]={k:dict(NDR[k]) for k in sorted({p["ndr"] for w in wires for p in w.get("pieces",[w])})}
     return wires
 

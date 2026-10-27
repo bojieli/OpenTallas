@@ -7,6 +7,10 @@
 // Per layer L of a token at position count T the issuer sends two words to every controller of the die (through one
 // ot_async_fifo per stack and the hclk chain of ot_qkvd_kcmd_tap stations, which turn {T, layer} into each PC's own
 // {n, row}):  DESC {layer, T}, then GO {layer} when the CTL ATTN of that layer arrives (attn_v).
+// KV-RTL-MODDUP 2026-10-27: the station is defined ONLY in ot_qkvd_kcmd_tap.sv (1 register stage, n = 1,024: the
+// cycle contract every PC controller leaf and the kit face-port transform kvspc_face_ports.py are built on).  The
+// earlier 2-stage per-PC-n draft of the same module that sat at the end of this file was a second definition of
+// the same name (Verilator kept the first file read, yosys -overwrite the last) and is deleted.
 //
 // TIMED PRE-HINT.  The stream bench (tb_hbm_stream_bw CONS 1 WR_EN 1 WSETP 0) needs the descriptor at the controllers
 // ~320 hclk before the go (hint 320 -> worst 1,085 ns, all 8 refresh phases; hint 0 -> 1,345 ns > the 1,165 ns step;
@@ -155,44 +159,5 @@ module ot_qkvd_kv_desc #(
             end
             q0 <= r0; q1 <= r1; qn <= n; outst <= o;
         end
-    end
-endmodule
-
-// ---------------------------------------------------------------------------------------------------------------------
-// One station of the per-stack hclk command chain: registered forward to the next station and a registered,
-// converted copy to its controller head (abutted to the head's cmd pins).  DESC {layer, T} -> the PC's own descriptor
-// {n, row}: the PC {q, G} (G = t[2:0] of the positions it holds) of stack ST holds, per layer, 4 sectors (K/V x 2 heads)
-// of every position t < T with t[2:0] = G and t[8:7] = ST (CONTRACT map), so
-//   n = 4 * (16 * (T >> 9) + (m >> 3) + ((m & 7) > G)),  m = clamp((T & 511) - 128 * ST, 0, 128);  row = ROW0 + layer.
-// GO -> cmd 1.  Two register stages (input, output); the arithmetic sits between them.
-// ---------------------------------------------------------------------------------------------------------------------
-module ot_qkvd_kcmd_tap #(
-    parameter integer G    = 0,
-    parameter integer ST   = 0,
-    parameter integer ROW0 = 0
-) (
-    input  wire        clk,               // the stack's hclk
-    input  wire        rst_n,
-    input  wire        i_v,
-    input  wire [31:0] i_d,
-    output reg         o_v,               // to the next station
-    output reg  [31:0] o_d,
-    output reg         c_v,               // to the controller head (cmd_v / cmd)
-    output reg  [31:0] c_d
-);
-    reg        v_q;
-    reg [31:0] d_q;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin v_q <= 1'b0; o_v <= 1'b0; c_v <= 1'b0; end
-        else begin v_q <= i_v; o_v <= i_v; c_v <= v_q; end
-    wire [13:0] T  = d_q[13:0];
-    wire [5:0]  L  = d_q[19:14];
-    wire signed [10:0] mr = $signed({2'b0, T[8:0]}) - 11'sd128 * ST;
-    wire [7:0]  m  = (mr < 0) ? 8'd0 : (mr > 128) ? 8'd128 : mr[7:0];
-    wire [8:0]  c  = {T[13:9], 4'b0} + {4'b0, m[7:3]} + ((m[2:0] > G) ? 9'd1 : 9'd0);
-    wire [10:0] n  = {c, 2'b0};
-    always @(posedge clk) begin
-        d_q <= i_d; o_d <= i_d;
-        c_d <= (d_q[31:30] == 2'd0) ? {2'd0, n, 19'(ROW0 + L)} : {2'd1, 30'd0};
     end
 endmodule

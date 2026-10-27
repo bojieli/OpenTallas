@@ -4,7 +4,9 @@
 set -u
 B=$(readlink -f $1)/obj/Vtb_kvslice; I=$(readlink -f $2); O=$(mkdir -p $3 && readlink -f $3); MF=${4:-}
 EP=$(cat $I/epoch.txt)
-run() { local n=$1; shift; mkdir -p $O/$n; ( cd $O/$n && /usr/bin/time -f "%e s %M KB" -o time $B +FRAMES=$I/frames.hex +EXPECT=$I/expect.txt +EPOCH=$EP "$@" > sim.log 2>&1; echo $? > exit ); }
+BOOT_ARGS=()
+[ "$(cat "$(dirname "$B")/../native_boot.profile" 2>/dev/null || echo 0)" = 0 ] || BOOT_ARGS+=(+START_AFTER_SETUP)
+run() { local n=$1; shift; mkdir -p $O/$n; ( cd $O/$n && /usr/bin/time -f "%e s %M KB" -o time $B +FRAMES=$I/frames.hex +EXPECT=$I/expect.txt +EPOCH=$EP "${BOOT_ARGS[@]}" "$@" > sim.log 2>&1; echo $? > exit ); }
 run nominal &
 [ -n "$MF" ] && run mut_frame +MUT_FRAME=$MF &
 wait

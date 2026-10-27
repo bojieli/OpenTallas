@@ -1304,10 +1304,15 @@ def _corner_libs(mlib, kd, corner):
         out.append(str(Path(f).parent / name))
     return out
 
+KEEP_REGS_HOOK = ("ot_keep_regs.tcl", "ot_pin_regs.tcl", "pin_reg_split.tcl", "ot_rst_copies.tcl", "ot_rst_copies.py")
+
+
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False,
-                   bump_ports=None):
+                   bump_ports=None, gpl_plain=False):
     t = P.types[tn]
+    if gpl_plain and not t.get("ft_slots"):
+        raise ValueError(f"type {tn}: --gpl-plain is for pure-FT corridor kits; the type has no ft_slots")
     import core_clock_groups as CG
     grouped = CG.network_manifest(P, tn)  # reject incomplete endpoint/network data before writing a kit
     ib = insertion_binding(P, tn)
@@ -1467,6 +1472,15 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # unused (r10b: 120 in-bus flops); boundary cells dont_touch around that step only
            "export PRE_SYNTH_TCL = /work/face_keep.tcl",
            "export POST_SYNTH_TCL = /work/face_keep_release.tcl",
+           # KV-KITS-5 10-27 (COORD sys_c LEC ruling; QC-CORES-2 EQUIVALENT with it): the shared keep-register
+           # canonicalize hook puts keep on the flip-flop CELL of every (* keep *) register, so opt_merge cannot fold
+           # declared copies (sys_c: 374 of 11287 kept bits merged without it).  Attribute based, so it also holds
+           # in $paramod-renamed modules (a keep_module name list matched nothing there).
+           "export SYNTH_CANONICALIZE_TCL = /work/ot_keep_regs.tcl",
+           # KV-KITS-5 10-27 (opt-in gen.py phys --gpl-plain TYPES): pure-FT corridor kits (stations FIRM at their
+           # plan sites, ~3k um2 movable vs 200k fixed) place on plain wirelength; routability-driven GPL inflated
+           # +1495% and diverged on kv3_hub_Ei (GPL-0305 after 2h25m), plain GPL converged in 438 s
+           *(["export GPL_ROUTABILITY_DRIVEN = 0", "export GPL_TIMING_DRIVEN = 0"] if gpl_plain else []),
            *(["export SKIP_INCREMENTAL_REPAIR = 1   # proof kit: seam / abutment proof, partition IO budgets not "
               "closed (the post-GRT repair loop otherwise runs for hours on the IO paths)"] if proof else []),
            "export TNS_END_PERCENT = 100",
@@ -1647,7 +1661,8 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         with (kd / "face_flops_release.tcl").open("a") as f:
             f.write("\nsource /work/reset_physical_stages_release.tcl\n")
     if rc_cal:
-        shutil.copyfile(Path(__file__).with_name(RC_CAL_FILE), kd / RC_CAL_KIT)
+        import core_flow   # FLOW-RC-1: fail-closed per-class (signal + clock) RC calibration guard
+        core_flow.install_rc(kd, Path(__file__).with_name(RC_CAL_FILE))
     (kd / "clock_binding.json").write_text(json.dumps(dict(type=tn, insertion_ps=dict(tt=ib["tt"], ff=ib["ff"]),
                                                            insertion_tol_ps=ib["tol"], basis=ib["basis"],
                                                            parent_early_tap_ps=ib["early_tap_ps"],
@@ -1742,6 +1757,10 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     shutil.copyfile(Path(__file__).with_name("adder_map_dontuse.py"), kd / "adder_map_dontuse.py")   # ruling 4 (10-25)
     for f in ("face_keep.tcl", "face_keep_release.tcl"):   # CP1-R10 (restored: lost in main merge 0ce45ab03c)
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
+    # Copy the current shared hook and its conditional helpers beside each generated kit.
+    cf = Path(__file__).resolve().parents[2] / "physical" / "common_flow"
+    for f in KEEP_REGS_HOOK:
+        shutil.copyfile(cf / f, kd / f)
     # SIGNOFF 10-24: uniform sign-off as the final kit-flow step (run_kit.sh after route): signoff.py + its helpers
     from signoff import copy_signoff_bundle
     copy_signoff_bundle(kd, extra=("kit_preflight.py",))
@@ -1875,7 +1894,8 @@ exit $rc
 
 def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_rtl=None,
                hold_ff_margin=HOLD_FF_MARGIN_DEFAULT, margins=None, skip_ir=False, max_wire_um=None, plan_path=None,
-               rc_cal=True, master_slice=None, trial=False):
+               rc_cal=True, master_slice=None, trial=False, gpl_plain=()):
+    """gpl_plain: types whose kit places on plain-wirelength GPL (pure-FT corridors, --gpl-plain)."""
     """margins (slew_pct, cap_pct): opt-in repair_design SLEW_MARGIN / CAP_MARGIN (None: not exported)."""
     """kit_rtl {type: filelist}: G3 kits take the bound partition RTL (bind.py kit-rtl: the bound module inside a
     port-only wrapper with the plan type's module name and exact pins) instead of the generated plan wrapper"""
@@ -1918,7 +1938,8 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
             mine = [cells, rs, rtl_dir / f"{t['module']}.sv"] + [root / s for s in t.get("sources", [])]
         bumps = kit_bump_ports(P, tn, kit_rtl[tn]) if kit_rtl and tn in kit_rtl else None
         kits.append(write_type_kit(P, tn, out, [str(f) for f in mine], util, proof, root, hold_ff_margin, margins,
-                                   skip_ir, max_wire_um, rc_cal, master_slice, trial, bump_ports=bumps))
+                                   skip_ir, max_wire_um, rc_cal, master_slice, trial, bump_ports=bumps,
+                                   gpl_plain=tn in (gpl_plain or ())))
     (out / "run_kit.sh").write_text(RUN_KIT)
     (out / "run_kit.sh").chmod(0o755)
     return kits
