@@ -1,0 +1,80 @@
+{
+ "pv_join_pins.json": {
+  "E": {
+   "pins": 962,
+   "peak_10um": 58,
+   "pins_per_um": 5.8,
+   "min_spacing_um": 0.144
+  },
+  "W": {
+   "pins": 1001,
+   "peak_10um": 60,
+   "pins_per_um": 6.0,
+   "min_spacing_um": 0.144
+  },
+  "S": {
+   "pins": 1344,
+   "peak_10um": 53,
+   "pins_per_um": 5.3,
+   "min_spacing_um": 0.144
+  },
+  "N": {
+   "pins": 1312,
+   "peak_10um": 52,
+   "pins_per_um": 5.2,
+   "min_spacing_um": 0.192
+  }
+ },
+ "pv_join_pins_fMX.json": {
+  "E": {
+   "pins": 962,
+   "peak_10um": 58,
+   "pins_per_um": 5.8,
+   "min_spacing_um": 0.144
+  },
+  "W": {
+   "pins": 1001,
+   "peak_10um": 60,
+   "pins_per_um": 6.0,
+   "min_spacing_um": 0.144
+  },
+  "N": {
+   "pins": 1344,
+   "peak_10um": 53,
+   "pins_per_um": 5.3,
+   "min_spacing_um": 0.144
+  },
+  "S": {
+   "pins": 1312,
+   "peak_10um": 52,
+   "pins_per_um": 5.2,
+   "min_spacing_um": 0.192
+  }
+ },
+ "pv_join_pins_fR180.json": {
+  "W": {
+   "pins": 962,
+   "peak_10um": 58,
+   "pins_per_um": 5.8,
+   "min_spacing_um": 0.144
+  },
+  "E": {
+   "pins": 1001,
+   "peak_10um": 60,
+   "pins_per_um": 6.0,
+   "min_spacing_um": 0.144
+  },
+  "N": {
+   "pins": 1344,
+   "peak_10um": 53,
+   "pins_per_um": 5.3,
+   "min_spacing_um": 0.144
+  },
+  "S": {
+   "pins": 1312,
+   "peak_10um": 52,
+   "pins_per_um": 5.2,
+   "min_spacing_um": 0.192
+  }
+ }
+}
