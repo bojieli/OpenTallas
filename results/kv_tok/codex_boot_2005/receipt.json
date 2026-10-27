@@ -1,0 +1,7 @@
+{
+  "source_branch": "claude/kv-boot-setup-1026",
+  "source_commit": "89ff87dcfd6511b11fa68c79d1eb75c71e45a9a9",
+  "vehicle": "B33 private fixed boot component",
+  "result": "KVSLICE_BOOT PASS frames_sent 7404/7404 images_ready 14/14 errors 0 boot_fault 0 setup_ready 1 (cyc 37950) cf_fault 0 pll_locked 1 host_faults 000000 die_to_host_words 16 last_ready_cyc 37945 cyc 39951",
+  "scope": "functional boot only; no current B48 token or physical sign-off"
+}
