@@ -4709,3 +4709,5 @@ Main d7fd2c861c; current hub intel2. Three workers qwen/s81_head/hbm; root share
 
 OWNER?
 None newly raised at takeover. HEAD measured PG 150um bump failure awaits scope decision; collecting existing ruling first.
+
+OWNER? HEAD PG: INFRA-FIRST-HEAD-4 measured 150-um bumps fail IR (92.4mV vs35mV budget); 75-um candidate reports20.6mV. Adopt75-um core bump pitch? Existing C3 PG grid supports either; lane continues independent clock/core work. Numbers remain UNCHECKED pending required independent check.
