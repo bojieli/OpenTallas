@@ -3662,7 +3662,9 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
             ins = m.cone_inputs(m.outs[idx[n]])
             kinds = sorted({kind[v][0] for v in ins if kind[v][0] not in ("matched", "paired")})
             keys = sorted(kind[v][1] for v in ins if kind[v][0] not in ("matched", "paired"))[:8]
-            e = dict(point=n, status=st, cone_unmatched=kinds, cone_unmatched_keys=keys)
+            e = dict(point=n, status=st, cone_unmatched=kinds, cone_unmatched_keys=keys,
+                     cone_support_count=len(ins),
+                     cone_state_keys=sorted({f"{kind[v][0]}:{kind[v][1]}" for v in ins})[:64])
             # a difference whose cone sees only matched key points, constants, partners and RTL registers that
             # synthesis removed although their next state is not constant is a real function difference
             if st == "differs" and set(kinds) <= {"gold_only", "gold_x"}:
