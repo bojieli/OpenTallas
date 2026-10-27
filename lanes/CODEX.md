@@ -1392,3 +1392,6 @@ Own sparse codex/qc-clock-r29-1351 from18c6286d88; current99eaa6d63. Fresh R28 s
 CODEX QK/QW 14:02: source/compiler5ab863087 READY; actual native pending/HOST22checks+2mutants and12compiler testsPASS. No live own heavy jobs. Filler14/user0minimum15, universal HEAD_PREP held on actual HOST cohort and programme; R29 plan/profile narrowing physical-owner held.
 
 CODEX14:02 R29notch child READYbb194f129; NC3actual24same-net20nm gaps repaired40nm via24outershieldtrims; native/KLayoutcouponPASS, clock/PGfixed. No live jobs. Parentownsnewcandidatefullcensus/planner.
+
+### HBM fresh takeover 2026-10-27 14:08 PDT
+Alllanesreclaimed via plan/cores/LEC children. FreshC15G0PASS/G0C20 (C14was200),quarterrestore/nativegraph/47pin6/12clockstillopen. NativefulltopemitternowCoverageparentowner,TOKrealbootstrap/LECcompositionreview; old142B1a2stopdiagnosticnotC15truth. Corescollectedaq_r12t1056FAIL→existingadditiverevert05a nowmain;EP50FAIL513723,Q3GP.989lotfailure,topk+steadyABC99.9CPUactive no kills/dups. Nativequartercapacity NW30/30NE26/26fitsunchangedhubMODELonly; actual405/clock/PGpending. NativeDELIVEREDresetbd6dmergedRM65,actual2clockadaptereffeREADYroot. PG-ACTIVITY-2ownedparentabove; no10amoldtrialassumedlive.
