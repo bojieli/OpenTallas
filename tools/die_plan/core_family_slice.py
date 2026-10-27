@@ -324,8 +324,19 @@ def refresh_after_d1(rec0, rec):
         raise SystemExit("refresh_after_d1: d1 nodes_xy masters differ from frozen_masters")
     res, _ = M7.model_x(P, libs, r, c, wc)
     rec["model_pre_d1"] = {k: rec0[k] for k in ("TT", "FF")}
-    rec["TT"], rec["FF"] = res["TT"], res["FF"]
-    rec["model"] = rec0["model"] + "; R7 re-evaluated on the d1 (uf_phys3) masters (R20)"
+    calibrated = rec.get("d1_uf3", {}).get("prediction")
+    if calibrated is not None:
+        for corner in ("TT", "FF"):
+            q = calibrated[corner]
+            needed = {"mean", "window", "sink_min", "sink_max", "leaf_out_slew_max", "leaf_slew_in_max"}
+            if needed - set(q) or q.get("model") != "uf_phys3 v1" or q.get("basis") != "GRT":
+                raise SystemExit("refresh_after_d1: malformed calibrated prediction at " + corner)
+        rec["model_r7_info"] = res
+        rec["TT"], rec["FF"] = calibrated["TT"], calibrated["FF"]
+        rec["model"] = "uf_phys3 v1 GRT, TT max-rise / FF min-rise-fall; SAME frozen masters and kernel as d1 (R21); R7 retained as info"
+    else:
+        rec["TT"], rec["FF"] = res["TT"], res["FF"]
+        rec["model"] = rec0["model"] + "; R7 re-evaluated on the d1 (uf_phys3) masters (R20)"
     return rec
 
 

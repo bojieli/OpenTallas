@@ -143,7 +143,12 @@ def wrapper(text, mod, head=False):
     # (1) one clock: drop hck + forwarded HBM data clocks, bind them to ck
     for d in ("    input wire [0:0] hck,\n", "    input wire [3:0] pc__front_hbm_data,\n", "    input wire [3:0] pc__return_hbm_data,\n"):
         s = _sub1(s, d, "")
-    s = _sub1(s, ".hck(hck[0])", ".hck(ck[0])")
+    # current binds (common833) already tie hck to the partition clock net -> the cut binds .hck(ck[0]); accept
+    # exactly one of the two forms (fail closed on neither/both)
+    n_sep, n_tied = s.count(".hck(hck[0])"), s.count(".hck(ck[0])")
+    assert (n_sep, n_tied) in ((1, 0), (0, 1)), ("hck binding", n_sep, n_tied)
+    if n_sep:
+        s = _sub1(s, ".hck(hck[0])", ".hck(ck[0])")
     s = _sub1(s, ".pc__front_hbm_data(pc__front_hbm_data[3:0])", ".pc__front_hbm_data({4{ck[0]}})")
     s = _sub1(s, ".pc__return_hbm_data(pc__return_hbm_data[3:0])", ".pc__return_hbm_data({4{ck[0]}})")
     # (2) dead pins

@@ -82,6 +82,8 @@ def main():
     rec["nodes_xy"] = [[n[0], n[1], n[2], P.nodes[n[0]]["cell"], n[4]] for n in rec["nodes_xy"]]
     rec["frozen_masters"] = {n[0]: n[3] for n in rec["nodes_xy"]}
     rec["d1_uf3"] = dict(rule="12.8 d1 plan-computed sizing under uf_phys3 v1 (pre-build, no measurement)", start=dict(obj=round(o0[0], 2), TTw=round(o0[1], 2), FFw=round(o0[2], 2)), changes=log)
+    rec["d1_uf3"]["prediction"] = A.calibrated_summary(P, L, pmax, pmin)
+    rec["d1_uf3"]["fit_name"] = F["name"]
     rec["name"] = rec["name"] + "_uf3d1"
     Path(out).write_text(json.dumps([rec]))
     print("done", len(log), "changes; window TT %.2f FF %.2f (start %.2f/%.2f)" % (cur[1], cur[2], o0[1], o0[2]))
