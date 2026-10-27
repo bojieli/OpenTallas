@@ -383,3 +383,33 @@ def test_core_clock_entry_landed_phy_forwarded_clock(tmp_path):
     assert core["verdict"] == "FAIL" and "native clock pin differs from proposed entry" in core["issues"]
     off = MP.core_clock_entry_check(P, h, [dict(tap, xy=[400, 400])], [10.0, 10.0])
     assert "plan clock tap differs from native clock pin" in off["issues"]
+
+
+def test_core_clock_entry_signed_face_entry_band(tmp_path):
+    """CLOCK-KV-R22: a face clock pin (off the proposed centre entry) passes only with the declared signed-face-entry
+    form (view lib sha256 TT+FF + routed RCX insertion mean) inside the 12.3 band at both corners; out of band stays
+    FAIL with a rebuild reason; the tap must still sit on the native pin."""
+    raw = _with_core(json.loads(TINY.read_text()))
+    raw["clock"]["insertion_ps"] = 250.0
+    raw["clock"]["insertion_ff_ps"] = 202.5
+    P = plan(raw, tmp_path)
+    h = raw["partition_types"]["mid"]["hard_cores"][0]
+    tap = dict(name="u_c.ck", kind="core", xy=[432, 432])
+    sfe = dict(view="v", lib_sha256=dict(tt="a" * 64, ff="b" * 64),
+               rcx_insertion_ps=dict(TT=dict(mean=232.73, min=228.0, max=238.0), FF=dict(mean=190.95)))
+    plain = MP.core_clock_entry_check(P, h, [tap], [10.0, 10.0])
+    assert plain["verdict"] == "FAIL" and "native clock pin differs from proposed entry" in plain["issues"]
+    ok = MP.core_clock_entry_check(P, h, [dict(tap, signed_face_entry=sfe)], [10.0, 10.0])
+    assert ok["verdict"] == "PASS" and ok["signed_face_entry"]["accepted"]
+    assert ok["signed_face_entry"]["TT"]["band"] == [230.0, 270.0] and ok["signed_face_entry"]["FF"]["band"] == [182.5, 222.5]
+    hot = copy.deepcopy(sfe); hot["rcx_insertion_ps"]["TT"]["mean"] = 289.4          # KV head e1 signed view
+    bad = MP.core_clock_entry_check(P, h, [dict(tap, signed_face_entry=hot)], [10.0, 10.0])
+    assert bad["verdict"] == "FAIL" and not bad["signed_face_entry"]["accepted"]
+    assert any("outside the 12.3 band" in i and "TT" in i for i in bad["issues"])
+    ffhot = copy.deepcopy(sfe); ffhot["rcx_insertion_ps"]["FF"]["mean"] = 233.21
+    assert MP.core_clock_entry_check(P, h, [dict(tap, signed_face_entry=ffhot)], [10.0, 10.0])["verdict"] == "FAIL"
+    nosha = dict(sfe, lib_sha256={"tt": "a" * 64})
+    assert "signed face entry lacks the view lib sha256 (tt, ff)" in \
+        MP.core_clock_entry_check(P, h, [dict(tap, signed_face_entry=nosha)], [10.0, 10.0])["issues"]
+    off = MP.core_clock_entry_check(P, h, [dict(tap, xy=[400, 400], signed_face_entry=sfe)], [10.0, 10.0])
+    assert "plan clock tap differs from native clock pin" in off["issues"]

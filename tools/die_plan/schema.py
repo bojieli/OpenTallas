@@ -722,6 +722,9 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
 SCHEMA["properties"]["clock"]["properties"]["landing_network"] = {"type": "object"}
 # clock-landing cohort types (clock_landing_plan.compose) name the base plan type they were split from.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["landing_base_type"] = {"type": "string"}
+# CLOCK-KV-R22: declared die-top data landing islands (landing_islands.py; hold cells for hard->hard seams)
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["landing_islands"] = {
+    "type": "array", "items": {"type": "object", "required": ["name", "port", "rect_um", "cells", "owner", "demand"]}}
 
 
 def _check(v, s, path, errs):

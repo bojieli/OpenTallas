@@ -113,8 +113,10 @@ def main(argv=None):
     ap.add_argument("--tool", required=True, help="the die_sta_related.py that produced GATE.json (main)")
     ap.add_argument("--out", required=True)
     ap.add_argument("--core-view", action="append", default=[], help="MODULE=VIEWDIR (same as the gate)")
-    ap.add_argument("--match-pins", action="store_true", help="the gate ran with --core-view-match-pins (a core is "
-                    "real only when its plan pins_file is the view's own); default = module match, as the gate default")
+    ap.add_argument("--match-pins", action=argparse.BooleanOptionalAction, default=True,
+                    help="a core is real only when its plan pins_file is the view's own; default ON = the gate default "
+                         "(--core-view-match-pins, CLOCK-KV-R22); --no-match-pins for a gate run with "
+                         "--no-core-view-match-pins")
     ap.add_argument("--sender-side", action="append", default=[], help="receiver TYPE without a P&R kit: pad at sender")
     ap.add_argument("--types", default="", help="comma list: also write per-type files for these first")
     a = ap.parse_args(argv)

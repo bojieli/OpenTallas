@@ -2348,6 +2348,20 @@
      },
      "landing_base_type": {
       "type": "string"
+     },
+     "landing_islands": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "required": [
+        "name",
+        "port",
+        "rect_um",
+        "cells",
+        "owner",
+        "demand"
+       ]
+      }
      }
     }
    }

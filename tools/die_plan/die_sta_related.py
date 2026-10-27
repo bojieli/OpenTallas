@@ -770,7 +770,7 @@ def map_cores_to_taps(plan, taps):
 
 def build_views(plan, taps, corner, reg, lat, core_views, kits, load_ff, part_delay_ps, match_pins=False):
     """{port: [models]} + coverage record.  core_views {module: dir}; kits {part_or_type: spec}.
-    match_pins (CLOCK-KV-R21 opt-in): a core view applies only to instances whose plan pins_file is the view's own
+    match_pins (CLOCK-KV-R21; gate default ON since CLOCK-KV-R22): a core view applies only to instances whose plan pins_file is the view's own
     (provenance kit.pins_file, by file name); other pin views of the module (e.g. an orientation re-pin) are a
     different physical core and stay budget (listed in pin_view_mismatch)."""
     budget = budget_model(reg, lat)
@@ -856,9 +856,10 @@ def main(argv=None):
                          "common tree node); classes and shared droop still by cppr_node (region)")
     ap.add_argument("--core-view", action="append", default=[], help="MODULE=VIEWDIR signed hard-core view "
                     "(<MODULE>_{tt,ff}.lib ETM + core.json); REAL VIEWS, opt-in")
-    ap.add_argument("--core-view-match-pins", action="store_true",
-                    help="CLOCK-KV-R21 opt-in: apply a --core-view only to instances whose plan pins_file is the view's "
-                         "own (provenance kit.pins_file); default off = output unchanged")
+    ap.add_argument("--core-view-match-pins", action=argparse.BooleanOptionalAction, default=True,
+                    help="apply a --core-view only to instances whose plan pins_file is the view's own (provenance "
+                         "kit.pins_file); DEFAULT ON for freeze numbers (COORD RULING CLOCK-KV-R21 04:02, CLOCK-KV-R22); "
+                         "--no-core-view-match-pins = the pre-R22 module-only match (diagnostic)")
     ap.add_argument("--core-part-delay-ps", type=float, default=0.0,
                     help="partition tap -> core clock pin delay (unbuilt partition = budget; default 0)")
     ap.add_argument("--clock-ocv", choices=("none", "flat", "table"), default="none",
