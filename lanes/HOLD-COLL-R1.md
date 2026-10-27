@@ -11,3 +11,6 @@
 
 ## CODEX notes 2026-10-27 05:00 PDT
 COLLECTED epyc1 unit958350 terminal exit0, NOT SIGNED: TT setup-77.26/1957; FFhold-58.69/3149 (rawSDC-17.46/10); slew4986TT/3325FF; DRC0 ant0; pair36.27TT/28.11FF. Full run copied intel1 same /srv/opentallas-scratch2/claude/hold-coll-r1. TT worst = reset recovery u_rrl45 -> u_ft_out_err_re_wi_s1/eq RESETN (FT eq async control); FF std worst u_rrl71 -> FT cmd eq RESETN; sender-specific FT output overlay still noted in lane and must be preserved (global overlay-40/0). Qwen worker owns structural reset/overlay successor and parent receipts; no obsolete reroute. Figures UNCHECKED-independent.
+
+## CODEX notes 2026-10-27 08:23 PDT
+READY codex/ft-overlay-1027@79a0cfe0a (actual intel2 main8fcd97ac44): current main lacked HOLD-COLL sender per-port output-overlay support; ported only those signoff hunks, then fixed declared die-timed FT endpoint exclusions on BOTH per-port input and output overrides after get_ports bus expansion. Mixed core/FT bits in one bus work; ordinary core IO floors/window shifts unchanged. 45 focused tests PASS incl Tcl-executed mixed-bus control + reintroduced-FT mutant; 6 default TT/FF sessions byte-identical. No RTL/physical changes. Parent FLOW/root owns integration. Physical reset-recovery/slew failures stay with Qwen successors; no obsolete route repeated.

@@ -1321,3 +1321,5 @@ CODEX: 2026-10-27 08:22 PDT RM35 mainac0ac5bf5e==origin/main: S81geometryFIcycle
 CODEX: 2026-10-27 08:22 PDT KV adopted-body GRT0/mesh2048vias/RCX4372connected PASS(UNCHECKED); MC24 live. Fixed false via-census failure from combo_gen.log (thin ff17a2a98,9testsPASS), oldFAILretained.
 
 CODEX: 2026-10-27 08:23 PDT FT boundary overlay79a0cfe0a READY: mixedFT/core bus per-port filters, sender demands;45focusedPASS+6byte-identicaldefaults. PG160->47032terminalprepPASS; actualPDNSim LIVEintel1codex-sta-pg-1027.
+
+CODEX: 2026-10-27 08:23 PDT RM36 main00ecb92c4c==origin/main;supersedingKV io_cor/hroot fullr2rFAIL evidencecommitted,historicalPASSretained;0deletions.

@@ -88,3 +88,6 @@ Canonical TTsetup/FFhold60/25 current; unbound PG invalid3 preserved. Actual phy
 
 ## CODEX notes 2026-10-27 08:16 PDT
 Canonical TT/FF gates current; explicit --ff-bound-ps on non-core die-plan kits FIXED9529b56ff0 (4focusedPASS). Old invalidPG3/unverified13 rows retained. No blind lostDB reruns.
+
+## CODEX notes 2026-10-27 08:23 PDT
+READY codex/ft-overlay-1027@79a0cfe0a (actual intel2 main8fcd97ac44): current main lacked HOLD-COLL sender per-port output-overlay support; ported only those signoff hunks, then fixed declared die-timed FT endpoint exclusions on BOTH per-port input and output overrides after get_ports bus expansion. Mixed core/FT bits in one bus work; ordinary core IO floors/window shifts unchanged. 45 focused tests PASS incl Tcl-executed mixed-bus control + reintroduced-FT mutant; 6 default TT/FF sessions byte-identical. No RTL/physical changes. Parent FLOW/root owns integration. Physical reset-recovery/slew failures stay with Qwen successors; no obsolete route repeated.
