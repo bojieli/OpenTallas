@@ -1,4 +1,4 @@
-# OpenTallas design methodology (FROZEN v5.0, 2026-10-26 18:4x; v4.9 17:3x; v4.8 17:4x; v4.7 17:3x; v4.6 17:0x; v4.5 16:5x; v4.4 06:39; v4.3 06:33; v4.2 06:15; v4.1 06:11; v4 06:07; v3 05:58; v2 earlier 10-26; v1 2026-10-24 21:40 PDT)
+# OpenTallas design methodology (FROZEN v5.1, 2026-10-26 18:5x; v5.0 18:4x; v4.9 17:3x; v4.8 17:4x; v4.7 17:3x; v4.6 17:0x; v4.5 16:5x; v4.4 06:39; v4.3 06:33; v4.2 06:15; v4.1 06:11; v4 06:07; v3 05:58; v2 earlier 10-26; v1 2026-10-24 21:40 PDT)
 
 One rule set for every lane (Claude, Codex, sub-agents) on all four release dies (S81, Qwen compute, Qwen KV, HBM).
 Build to these rules; do not re-derive them per lane. Precedence: latest OWNER decision > this file > AGENTS.md >
@@ -348,6 +348,7 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
   - 10-26 ~17:3x OWNER: "approve automatic hold-buffer insertion on data paths" (12.4a a1) = CURRENT. Supersedes reading "hold safe by structure, never padding" as a ban on data-path hold buffers; clock padding stays banned. Trigger: QC-MP-REGION-2 zero-logic seam hold budget 10.9 ps FF < >=29.5 ps flat-OCV pessimism (UNCHECKED).
   - 10-26 18:4x OWNER: "use 0.21% per mm" (12.4a b1) = CURRENT: AOCV clock table approved to gate with distance gradient 0.21 %/mm (interim; the 0.42 %/mm corner-derived bound was global variation, NUMBER-CHECK-AOCV).
   - 10-26 18:4x OWNER: "remove the ban rule and keep aligned with industry flows" (12.3, 12.8d/d1/f) = CURRENT: early taps allowed as macro insertion-delay balancing from the core's own signed/real view; unshared core-internal delay charged by the AOCV table. Supersedes 12.8 (06:07) early-tap ban and 12.3 "no early taps by design". Still banned: per-tap trims, useful-skew offsets, post-CTS clock ECO padding, mesh-node CPPR on unsigned meshes.
+  - 10-26 18:5x OWNER: "trims, useful skew and clock fix-up padding are all allowed, but you need to use these techniques sparsely. do principle level fixes whenever applicable" (12.8 d2, v5.1) = CURRENT. Supersedes the 12.8d (06:07) and d1 BANNED lists and my 18:4x narrow reading of "remove the ban rule"; residual tools allowed sparse + ledgered after the structural fix; meander that dominates a tree (QC-SU-F4C 51 %) is not sparse.
 
 - 12.7 MASTER PLAN FIRST -- CITY-PLANNING MODEL (OWNER 2026-10-26 05:58, "yes, do all of them on all dies"). Supersedes/extends 12.1-12.4 where stricter.
   Utilities (PG) -> transit (clock, reset, with islands as stations) -> roads (die-level routing corridors) with rest stops (repeater bays) and
@@ -388,6 +389,16 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
      taps), regional meshes with landed seams. NOT allowed as closure means: early-tap offsets/branches, per-tap stub trims or useful-skew
      offsets, post-CTS ECO padding/buffer swaps on the clock, mesh-node CPPR credit, gate-number relaxations. (v5.0: early-tap
      offsets/branches REMOVED from this list -- allowed per 12.3 v5.0 as macro insertion-delay balancing.)
+  d2. (OWNER 10-26 18:5x, v5.1, "trims, useful skew and clock fix-up padding are all allowed, but you need to use these techniques
+     sparsely. do principle level fixes whenever applicable") The 12.8d list is no longer a ban. Per-tap trims, useful-skew offsets,
+     post-CTS clock ECO padding/buffer swaps and meander/detour balancing are ALLOWED as RESIDUAL tools, under three conditions:
+     (1) PRINCIPLE FIRST: the structural/plan fix (12.8a-e, d1 sizing, early taps) is applied wherever it applies, and the root cause
+     of each remaining miss is recorded before any residual tool is used;
+     (2) SPARSE: residual tools touch a small minority of taps/edges/paths (guideline <= ~5 % of a tree's edges or a die's clock taps,
+     and never the dominant balancing mechanism -- e.g. 51 % of tree wire as meander is NOT sparse);
+     (3) LEDGER: every use is listed per die (what, where, how much, why the structural fix did not apply) in lanes/CLOCK-RESIDUAL.md
+     and reported with the die STA. GEOM flags any tree whose residual share exceeds the guideline.
+     Still not allowed: mesh-node CPPR on an UNSIGNED mesh, and gate-number relaxations.
   d1. (OWNER 10-26 06:11) ALLOWED as design: per-tap driver/stub sizing COMPUTED BY THE PLAN TOOL from plan geometry and loads BEFORE any
      block is built, deterministic, recorded and frozen with the plan. BANNED: any value chosen after a measurement (trims, offsets, ECOs).
      Exception (v5.0): a hard core's annotated insertion delay from its own signed/real view (industry macro latency annotation) is an
