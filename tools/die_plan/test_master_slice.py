@@ -342,8 +342,14 @@ def mr_slice(**kw):
           {"port": "xk[0]", "clock": "clk_xk", "island": "isl_xk0", "clock_pin": {"layer": "M5", "xy_um": [30.0, 5.0]},
            "latency": {"common_clock_latency_ps": {"TT": 250.0, "FF": 202.5}, "tol_ps": 40}}]
     # 12.2a1: core islands are pushdown islands (one root driver cell each), not strip blockages
+    # core_infra: an explicit pushdown cell declares its A/Y feedthrough ports (one in/out M5 pair per island)
     pd = {"islands": [{"name": i["name"], "rect_um": i["rect_um"],
-                       "cells": [{"name": f"mp_{i['name']}_root", "master": "BUFx4_ASAP7_75t_R", "xy_um": i["centre_um"]}]}
+                       "ft_ports": [{"name": f"mp_{i['name']}_ck_i", "dir": "in", "layer": "M5",
+                                     "xy_um": [i["centre_um"][0] - 2.0, i["centre_um"][1]]},
+                                    {"name": f"mp_{i['name']}_ck_o", "dir": "out", "layer": "M5",
+                                     "xy_um": [i["centre_um"][0] + 2.0, i["centre_um"][1]]}],
+                       "cells": [{"name": f"mp_{i['name']}_root", "master": "BUFx4_ASAP7_75t_R", "xy_um": i["centre_um"],
+                                  "pins": {"A": f"mp_{i['name']}_ck_i", "Y": f"mp_{i['name']}_ck_o"}}]}
                       for i in isl]}
     sl = good_slice(kind="core", type="mr", module="mr_core", outline_um=[200.0, 69.12], keepouts=[], islands=isl,
                     bays=[], entry_pins=[], corridors=[], clock_entries=ce, pushdown=pd)
