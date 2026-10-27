@@ -8,3 +8,6 @@
 
 ## CODEX notes 2026-10-26 20:07 PDT
 Known5release mis-elaboration source fixes/lint already ready47aa9825d and upstreamissueYosysHQ/yosys#6408filed(owner16:35). No new upstream action needed. Unsigned affected kits must use correctedsource whenphysicalownersrebuild; signed27had0hits.
+
+## CODEX notes 2026-10-27 08:13 PDT
+Tool/source correction DONE historical 47aa9825d; owner-approved upstream issue already filed. No live job or new source work required here; corrected release sources flow into physical owners' current kits. No new issue or redundant proof launched.
