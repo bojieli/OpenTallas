@@ -323,11 +323,17 @@ def frame_lk(die, frame):
     return value
 
 
-def qualify_frame_source(schedule, master, source_root):
+def qualify_frame_source(schedule, master, source_root, selected_manifest=None):
     """A bound receipt qualifies its exact selected sources and GO interface, not just a filename."""
     hashes = schedule.get('source_sha256')
     if not isinstance(hashes, dict) or not hashes:
         raise ValueError('as-built frame schedule lacks exact source hashes: ' + master)
+    if selected_manifest is not None:
+        root = Path(source_root).resolve()
+        manifest = Path(selected_manifest)
+        manifest = manifest.resolve() if manifest.is_absolute() else (root / manifest).resolve()
+        if not manifest.is_relative_to(root) or manifest.relative_to(root).as_posix() not in hashes:
+            raise ValueError('as-built frame schedule does not bind the selected manifest: ' + str(selected_manifest))
     for name, expected in hashes.items():
         path = Path(source_root) / name
         if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != expected:
@@ -365,7 +371,9 @@ def source_frame_schedule(master):
         if not path.is_file() or c.get('schedule_sha256') != hashlib.sha256(path.read_bytes()).hexdigest():
             raise ValueError('as-built frame plan check is not bound to this schedule: ' + str(path))
         qualify_frame_source(json.loads(path.read_text()), master,
-                             Path(os.environ.get('OT_S81_SELECTED_SOURCE_ROOT', str(ROOT))))
+                             Path(os.environ.get('OT_S81_SELECTED_SOURCE_ROOT', str(ROOT))),
+                             os.environ.get('OT_S81_SELECTED_ASBUILT_MANIFEST',
+                                            'physical/die_plan/s81/bind/asbuilt_b178_coll.json'))
         return path
     if not master.endswith('_lp'):
         return None
