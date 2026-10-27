@@ -1,0 +1,33 @@
+{
+  "diagnostic": "HBM native FUSED shape, not a release gate",
+  "shape_consistent": false,
+  "errors": [
+    "native top instantiates 32 lanes and a 32-chunk golden tree; provided lane count differs",
+    "native top rejects NM > 31; widening its counters requires a new implementation",
+    "KX*NM=160 exceeds the native 128-row x-store"
+  ],
+  "vector_words": 5120,
+  "provided_lanes": 16,
+  "covered_words": 5120,
+  "coverage_fraction": 1.0,
+  "nm": 40,
+  "x_store_rows": 160,
+  "native_x_store_rows": 128,
+  "native_fixed_lanes": 32,
+  "vm_banks": 16,
+  "max_lanes_per_bank": 1,
+  "simultaneous_lane_read_demand": 16,
+  "simultaneous_lane_write_demand": 16,
+  "bank_calendar_status": "NEEDS_NATIVE_MAPPING_AND_SLOT_CHECK",
+  "bank_calendar_note": "32 lanes over 16 VM banks require two real lane calendars per bank; a port-name count is insufficient",
+  "provided_lane_outline_mm2": 2.8665446400000003,
+  "native32_lane_outline_mm2": 5.733089280000001,
+  "missing_lane_outline_mm2": 2.8665446400000003,
+  "provided_external_tree_nodes": 28,
+  "required_external_tree_nodes": 28,
+  "provided_hubs": 1,
+  "external_tree_outline_mm2": 0.8360755200000002,
+  "hub_outline_mm2": 0.11943936000000001,
+  "latency_status": "81/103 row-II measurements require the full native shape and a compatible memory calendar",
+  "nm40_alternative": "16 lanes * 8 words * 40 sectors cover 5120, but NM40 violates both the native NM31 bound and KX4*NM<=128"
+}
