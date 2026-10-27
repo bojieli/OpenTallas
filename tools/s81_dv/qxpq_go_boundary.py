@@ -148,7 +148,8 @@ def lower_plan(raw, ready_types):
         t = out['partition_types'][name]; count = 0
         for hc in t.get('hard_cores', []):
             if hc.get('module') != LEGACY: continue
-            if hc.get('lib'): raise ValueError('replacing a signed view needs an explicit re-sign analysis')
+            if any(v for k,v in hc.items() if k.lower().startswith('lib')):
+                raise ValueError('replacing a signed view needs an explicit re-sign analysis')
             hc.update(module=GB, lef=GB_LEF, pins_file=GB_PINS)
             count += 1
         if not count: raise ValueError('ready type has no legacy QXPQ: ' + name)
