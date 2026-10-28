@@ -2090,6 +2090,14 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
              if any(int(v) > 0 for v in (tap_pad or {}).values()) else
              "foreach i [get_cells b*] { set q [get_pins [get_full_name $i]/Y]; ")
             + "puts $fh \"N [get_full_name $i] [get_property $q arrival_max_rise] [get_property $q arrival_min_rise]\" }",
+            # FLOW-GEN-1 10-28 (DIE-HEAD-11): MEASURED falling-edge arrivals (both edges propagated; a BUF tree's duty
+            # distortion is 148-420 ps), F per tap / M per clock cell; a fall-edge start sample is timed on them
+            "foreach p [get_ports t_*] { puts $fh \"F [get_full_name $p] [expr {833.333 - [get_property $p slack_max_fall]}] "
+            "[get_property $p slack_min_fall]\" }",
+            ("foreach i [get_cells {b* r* p*}] { set q [get_pins [get_full_name $i]/Y]; "
+             if any(int(v) > 0 for v in (tap_pad or {}).values()) else
+             "foreach i [get_cells b*] { set q [get_pins [get_full_name $i]/Y]; ")
+            + "puts $fh \"M [get_full_name $i] [get_property $q arrival_max_fall] [get_property $q arrival_min_fall]\" }",
             "close $fh",
             "report_checks -path_delay max -group_path_count 1 -format full -fields {cap slew fanout}",
             "puts OT_DONE"]

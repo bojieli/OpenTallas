@@ -369,7 +369,23 @@ def virtual_tap(meta, taps, path, leg):
                        late_ps=float(meta["node_late_ps"][path]) + leg[0],
                        early_ps=float(meta["node_early_ps"][path]) + leg[1],
                        stages_from_root=int(meta["node_stages"][path]) + leg[2], xy_um=meta["node_xy_um"][path])
+        if path in meta.get("node_fall_late_ps", {}) and path in meta.get("node_fall_early_ps", {}):
+            taps[k].update(fall_late_ps=float(meta["node_fall_late_ps"][path]) + leg[0],
+                           fall_early_ps=float(meta["node_fall_early_ps"][path]) + leg[1])
     return k
+
+
+def fall_taps(taps, k):
+    """FLOW-GEN-1 10-28 (DIE-HEAD-11, ONE SHARED DIE TIMING MODEL): the tap table with capture tap k re-timed on its
+    MEASURED falling-edge arrival (fall_late_ps / fall_early_ps, both edges propagated), or None when k has none.  A
+    fall-edge sample happens at T/2 + that arrival, not at T/2 + the rise arrival (BUF-tree duty distortion 148-420 ps).
+    The interval on it takes no CPPR credit (launch rise and capture fall share no common transition)."""
+    t = taps.get(k)
+    if t is None or "fall_late_ps" not in t or "fall_early_ps" not in t:
+        return None
+    f = {x: v for x, v in t.items() if x not in ("abs_late_ps", "abs_early_ps")}
+    f.update(late_ps=float(t["fall_late_ps"]), early_ps=float(t["fall_early_ps"]))
+    return dict(taps, **{k: f})
 
 
 def count_align_start_ports(bind, taps, meta, period, cppr_range=None, ocv=None, sync_ap=26.5, clkq=(0.0, 0.0)):
@@ -398,7 +414,16 @@ def count_align_start_ports(bind, taps, meta, period, cppr_range=None, ocv=None,
             row.update(ok=False, reason="no taps")
             rows.append(row)
             continue
-        iv = count_align_d_intervals([(ends[0], ends[1], "s")], taps, cppr_range, ocv=ocv)["s"]
+        if row["edge"] == "fall":
+            ft = fall_taps(taps, ends[1])
+            if ft is None:
+                row.update(ok=False, reason="fall-edge sample without a measured fall arrival (fall != rise + T/2)")
+                rows.append(row)
+                continue
+            iv = count_align_d_intervals([(ends[0], ends[1], "s")], ft, None, ocv=ocv)["s"]
+            row["fall_basis"] = "measured"
+        else:
+            iv = count_align_d_intervals([(ends[0], ends[1], "s")], taps, cppr_range, ocv=ocv)["s"]
         off = period / 2 if row["edge"] == "fall" else 0.0
         elo, ehi = iv[0] - clkq[1], iv[1] - clkq[0]
         k = math.floor((elo - off) / period)

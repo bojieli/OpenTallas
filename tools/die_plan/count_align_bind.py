@@ -108,8 +108,10 @@ def bind(plan, T=None, parts=None):
         if step != e["offset_from_parent"]:
             raise BindError(f"tree edge {port}: origin step {step} != plan offset_from_parent {e['offset_from_parent']}")
         # convention equality on the nominal phase and on both ends of the plan's J deviation interval
-        a = integ_step(o["d_ps"], e["edge"], T, pad)
-        b = count2_step(o["d_ps"], e["edge"], T, pad)
+        # a fall sample on a measured fall arrival (FLOW-GEN-1 10-28): the phase is the fall interval's
+        od = o["fall_d_ps"] if e["edge"] == "fall" and "fall_d_ps" in o else o["d_ps"]
+        a = integ_step(od, e["edge"], T, pad)
+        b = count2_step(od, e["edge"], T, pad)
         if not (a == b == step):
             raise BindError(f"tree edge {port}: MESO-INTEG-1 step {a} / MESO-COUNT-2 step {b} / plan {step} differ")
         regions[x] = dict(parent=p, tree_port=port, edge_fall=bool(e["rtl"]["EDGE_FALL"]), pad=pad, n_nominal=n[x],
@@ -142,12 +144,17 @@ def bind(plan, T=None, parts=None):
         # START-TREE-1: the start ports, their tap ends and the derated start interval (verify() samples it; the die STA
         # re-checks it on built arrivals); step = PAD + 2 + J (sender -> child origin), K + 1 = 0 in the loop identity
         b["start_tree"] = "clock"
-        b["start_ports"] = {pid: dict(src=e["src"], dst=e["dst"], d_ps=e["d_ps"],
-                                      d_lo_ps=round(e["d_ps"] - e["p_dn_ps"], 1), d_hi_ps=round(e["d_ps"] + e["p_up_ps"], 1),
-                                      step=regions[e["dst"]]["n_nominal"] - regions[e["src"]]["n_nominal"],
-                                      **{k: e.get(k) for k in ("launch", "capture", "launch_part", "capture_part",
-                                                               "retime", "fork_node")})
-                            for pid, e in starts.items()}
+        def _sp(e):
+            # the interval the child's sync samples: a fall sample on a measured fall arrival uses the fall interval
+            mf = regions[e["dst"]]["edge_fall"] and "fall_lo" in e
+            d, lo, hi = (e["fall_d_ps"], e["fall_lo"], e["fall_hi"]) if mf else \
+                (e["d_ps"], e["d_ps"] - e["p_dn_ps"], e["d_ps"] + e["p_up_ps"])
+            return dict(src=e["src"], dst=e["dst"], d_ps=d, d_lo_ps=round(lo, 1), d_hi_ps=round(hi, 1),
+                        step=regions[e["dst"]]["n_nominal"] - regions[e["src"]]["n_nominal"],
+                        **{k: e.get(k) for k in ("launch", "capture", "launch_part", "capture_part", "retime",
+                                                 "fork_node")},
+                        **({"fall_basis": "measured"} if mf else {}))
+        b["start_ports"] = {pid: _sp(e) for pid, e in starts.items()}
     if summ.get("start_skew_clean"):
         # MESO-START-2 (opt-in): the start-up sim samples each tree edge at d - skew (plan --start-skew-clean)
         b["start_skew_ps"] = [float(x) for x in summ["start_skew_ps"]]

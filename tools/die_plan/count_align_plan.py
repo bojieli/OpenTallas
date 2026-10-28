@@ -65,6 +65,14 @@ def J(d, T, off):
     return -math.floor((d - off) / T)
 
 
+def edge_iv(r, edge):
+    """(d, lo, hi) of start crossing r as sampled by `edge`: the fall edge uses the measured fall interval
+    (fall_d_ps / fall_lo / fall_hi: capture re-timed on its falling-edge arrival) when r has one."""
+    if edge == "fall" and "fall_lo" in r:
+        return r["fall_d_ps"], r["fall_lo"], r["fall_hi"]
+    return r["d_ps"], r["lo"], r["hi"]
+
+
 def sync_choice(r, T, ap, start_skew=(0.0, 0.0), sync_ap=26.5):
     """(n_values, edge, off, dist): best sample edge for the start sync across crossing r.
     start_skew (lo, hi) ps (DIE-HEAD-4b, COORD NC-HEAD-PART): start arrival at the child's first sync flop minus the
@@ -76,12 +84,14 @@ def sync_choice(r, T, ap, start_skew=(0.0, 0.0), sync_ap=26.5):
     (T/8 >= 100 ps) from the boundary.  Order: fewest values, smaller hard shortfall, smaller soft shortfall, larger
     static distance (an edge that clears both keeps the static order).  dist stays the STATIC
     distance (start_skew_limit = dist - sync aperture, as die_sta_related reads it).  Default (0, 0): unchanged."""
-    lo, hi = r["lo"], r["hi"]
     s_lo, s_hi = float(start_skew[0]), float(start_skew[1])
     skewed = bool(s_lo or s_hi)
     smax = max(abs(s_lo), abs(s_hi))
     best = None
     for edge, off in (("rise", 0.0), ("fall", T / 2)):
+        # FLOW-GEN-1 10-28 (DIE-HEAD-11): the fall edge samples at T/2 + the MEASURED fall arrival when the row
+        # carries it (fall_lo / fall_hi, edge_iv); without it the fall edge keeps the rise + T/2 form
+        lo, hi = edge_iv(r, edge)[1:]
         n = interval_boundaries(lo - ap, hi + ap, T, off) + 1
         dist = boundary_dist(lo, hi, T, off)
         hard = soft = 0.0
@@ -325,15 +335,16 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
     a0, dev, jn = {root: 0}, {}, {}
     for x in order[1:]:
         p, r = par[x]
-        jn[x] = J(r["d_ps"], T, r["_off"])
+        ed, elo, ehi = edge_iv(r, r["_edge"])
+        jn[x] = J(ed, T, r["_off"])
         a0[x] = a0[p] + pe(x) + 2 + jn[x]
         # J deviation range over the derated interval +- ap (J decreases with d)
-        dev[x] = (J(r["hi"] + ap, T, r["_off"]) - jn[x], J(r["lo"] - ap, T, r["_off"]) - jn[x])
+        dev[x] = (J(ehi + ap, T, r["_off"]) - jn[x], J(elo - ap, T, r["_off"]) - jn[x])
         if skew_clean:
             # the sync samples d - skew: cover the skewed phase (+- the sync aperture) too
             s_lo, s_hi = float(start_skew[0]), float(start_skew[1])
-            dev[x] = (min(dev[x][0], J(r["hi"] - s_lo + sync_ap, T, r["_off"]) - jn[x]),
-                      max(dev[x][1], J(r["lo"] - s_hi - sync_ap, T, r["_off"]) - jn[x]))
+            dev[x] = (min(dev[x][0], J(ehi - s_lo + sync_ap, T, r["_off"]) - jn[x]),
+                      max(dev[x][1], J(elo - s_hi - sync_ap, T, r["_off"]) - jn[x]))
 
     def path_amb(u, v):
         """whole-cycle deviation range of (a_v - a_u) from nominal"""
@@ -616,19 +627,36 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
         nl = c0["meta"]["node_late_ps"]
         d = 0.5 * (float(B["late_ps"]) + float(B["early_ps"])) - 0.5 * (float(A["late_ps"]) + float(A["early_ps"]))
         d = min(max(d, lo), hi)
-        return dict(d_ps=d, p_dn_ps=d - lo, p_up_ps=hi - d, fork_node=node,
-                    unshared_a_ps=float(A["late_ps"]) - float(nl[node]), unshared_b_ps=float(B["late_ps"]) - float(nl[node]))
+        out = dict(d_ps=d, p_dn_ps=d - lo, p_up_ps=hi - d, fork_node=node,
+                   unshared_a_ps=float(A["late_ps"]) - float(nl[node]), unshared_b_ps=float(B["late_ps"]) - float(nl[node]))
+        # FLOW-GEN-1 10-28 (DIE-HEAD-11): the fall-edge sample interval on the capture's MEASURED fall arrival, the
+        # same die_sta_related.fall_taps form the gate (count_align_start_ports) re-times it with
+        flo = fhi = None
+        for c in cs:
+            ft = DSR.fall_taps(ctx[c]["taps"], b)
+            if ft is None:
+                flo = None
+                break
+            iv = DSR.count_align_d_intervals([(a, b, "s")], ft, None, ocv=ctx[c]["ocv"])["s"]
+            flo, fhi = (iv[0], iv[1]) if flo is None else (min(flo, iv[0]), max(fhi, iv[1]))
+        if flo is not None:
+            fd = 0.5 * (float(B["fall_late_ps"]) + float(B["fall_early_ps"])) \
+                - 0.5 * (float(A["late_ps"]) + float(A["early_ps"]))
+            out.update(fall_d_ps=min(max(fd, flo), fhi), fall_lo=flo, fall_hi=fhi)
+        return out
 
     smax = max(abs(float(start_skew[0])), abs(float(start_skew[1])))
 
     def clean(r):
         q = dict(r, lo=r["d_ps"] - r["p_dn_ps"], hi=r["d_ps"] + r["p_up_ps"])
-        n, _, _, dist = sync_choice(q, T, ap, start_skew, sync_ap)
+        n, edge, _, dist = sync_choice(q, T, ap, start_skew, sync_ap)
         ok = n == 1 and (not skew_clean or dist - sync_ap >= smax)
         if clean_by == "width":
             # SAFE BY DESIGN: the port is narrow enough that one of rise / fall is clean wherever d lands
-            # (width + skew range <= T/2 - 2 ap), not only by the luck of its phase
-            ok = ok and (q["hi"] - q["lo"]) + (float(start_skew[1]) - float(start_skew[0])) <= T / 2 - 2 * ap + 1e-9
+            # (width + skew range <= T/2 - 2 ap), not only by the luck of its phase (width of the sampled edge's
+            # interval: the measured fall interval for a fall sample)
+            _, elo, ehi = edge_iv(q, edge)
+            ok = ok and (ehi - elo) + (float(start_skew[1]) - float(start_skew[0])) <= T / 2 - 2 * ap + 1e-9
         return ok
 
     def part(k):
@@ -731,6 +759,11 @@ def mc_check(rows, out, regs, T=833.0, chips=2000, sync_ap=26.5, seed=1, start_s
                 continue
             off = 0.0 if e["edge"] == "rise" else T / 2
             x = d[e["port"]]
+            r0 = byp.get(e["port"], {})
+            if e["edge"] == "fall" and "fall_lo" in r0:      # measured fall: same position in the fall interval
+                lo0, hi0 = r0["lo"], r0["hi"]
+                u = (x - lo0) / (hi0 - lo0) if hi0 > lo0 else 0.5
+                x = r0["fall_lo"] + u * (r0["fall_hi"] - r0["fall_lo"])
             if start_skew is not None:
                 x -= rnd.uniform(*start_skew) if mode == 0 else start_skew[rnd.random() < 0.5]
             j = J(x, T, off)

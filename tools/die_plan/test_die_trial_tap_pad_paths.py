@@ -87,3 +87,30 @@ def test_actual_cli_preserves_body_packer_sibling_sites(tmp_path, monkeypatch):
     # Existing counts-only envelope and direct function input stay unchanged.
     path.write_text(json.dumps(dict(pad=raw["pad"], source="old metadata")))
     assert D.load_tap_pad(path) == raw["pad"]
+
+
+def test_measured_fall_arrivals_exported(tmp_path, monkeypatch):
+    """FLOW-GEN-1 10-28 (DIE-HEAD-11): ctree.tcl dumps falling-edge arrivals (F taps / M cells) and the export carries
+    them as fall_late_ps / fall_early_ps and node_fall_*; an arr file without them exports exactly as before."""
+    monkeypatch.setattr(D, "clock_taps", lambda p: [])
+    monkeypatch.setattr(D, "build_htree", lambda *a, **k: copy.deepcopy(nodes()))
+    out = tmp_path/"clock"
+    D.clock_kit(SimpleNamespace(W=100., H=100.), out, 100., 450.,
+                tap_pad={"t_part__ck": 2, "t_part__ck2": 1,
+                         "sites": {"t_part__ck": [[20.,20.],[30.,20.]], "t_part__ck2": [[40.,20.]]}})
+    tcl = (out/"ctree.tcl").read_text()
+    assert "slack_max_fall" in tcl and "arrival_max_fall" in tcl
+    t = json.loads((out/"tree.json").read_text())
+    base = [f"N {cell} {10+i} {9+i}" for i, cell in enumerate(t["sites"])] + \
+        [f"T {x['port']} 100 90 20" for x in t["taps"]]
+    arr = tmp_path/"arr_TT.txt"
+    arr.write_text("\n".join(base)+"\n")
+    r0, _ = E.export(out/"tree.json", arr, "TT")
+    assert not any("fall_late_ps" in x for x in r0["taps"]) and "node_fall_late_ps" not in r0
+    arr.write_text("\n".join(base + [f"M {cell} {210+i} {200+i}" for i, cell in enumerate(t["sites"])] +
+                             [f"F {x['port']} 400 380" for x in t["taps"]])+"\n")
+    r1, _ = E.export(out/"tree.json", arr, "TT")
+    assert all((x["fall_late_ps"], x["fall_early_ps"]) == (400.0, 380.0) for x in r1["taps"])
+    assert r1["node_fall_late_ps"]["A"] == 210 and r1["node_fall_early_ps"]["A"] == 200
+    strip = lambda r: [{k: v for k, v in x.items() if not k.startswith("fall_")} for x in r["taps"]]  # noqa: E731
+    assert strip(r1) == r0["taps"] and r1["node_late_ps"] == r0["node_late_ps"]

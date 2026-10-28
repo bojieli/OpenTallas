@@ -158,7 +158,7 @@ def test_die_sta_rechecks_start_ports_on_arrivals():
     """12.16d: the gate re-times every start port on the proof arrivals; a moved sync tap clock FAILs it"""
     import die_sta_related as DSR
     rows = chain_rows()
-    ctx = ctx_chain()
+    ctx = _with_fall(ctx_chain(), lambda p: 0.0)     # measured fall arrivals (FLOW-GEN-1: a fall sample needs them)
     root, edges, _ = cap.clock_start_edges(rows, ctx)
     s, out, regs = cap.plan(rows, T, AP, 0.05, start_edges=edges, start_root=root)
     doc = dict(summary=dict(s, period_ps=T, pad=0), regions=regs, crossings=out,
@@ -175,8 +175,9 @@ def test_die_sta_rechecks_start_ports_on_arrivals():
         off = T / 2 if b["regions"]["R3"]["edge_fall"] else 0.0
         sh = (off - e["d_ps"]) % T                    # mutant: the sync tap clock moves the phase onto the boundary
         moved = dict(taps)
-        moved[e["capture"]] = dict(moved[e["capture"]], late_ps=moved[e["capture"]]["late_ps"] + sh,
-                                   early_ps=moved[e["capture"]]["early_ps"] + sh)
+        c0 = moved[e["capture"]]
+        moved[e["capture"]] = dict(c0, late_ps=c0["late_ps"] + sh, early_ps=c0["early_ps"] + sh,
+                                   fall_late_ps=c0["fall_late_ps"] + sh, fall_early_ps=c0["fall_early_ps"] + sh)
         bad = {r["port"]: r for r in DSR.count_align_start_ports(b, moved, k["meta"], T, {}, k["ocv"])}
         assert not bad[e["port"]]["ok"]
         b2 = copy.deepcopy(b)
@@ -185,3 +186,76 @@ def test_die_sta_rechecks_start_ports_on_arrivals():
         assert miss[e["port"]]["ok"] is False and miss[e["port"]]["reason"] == "no taps"
     finally:
         DSR.CPPR_LCA = old
+
+
+def _with_fall(ctx, dist):
+    """measured falling-edge arrivals (both edges propagated): fall = rise + dist(path) on every node and tap"""
+    k = ctx["TT"]
+    m = k["meta"]
+    m["node_fall_late_ps"] = {p: v + dist(p) for p, v in m["node_late_ps"].items()}
+    m["node_fall_early_ps"] = {p: v + dist(p) for p, v in m["node_early_ps"].items()}
+    for t in k["taps"].values():
+        t["fall_late_ps"], t["fall_early_ps"] = t["late_ps"] + dist(t["tree_path"]), t["early_ps"] + dist(t["tree_path"])
+    return ctx
+
+
+def _plan_bind(rows, ctx, **kw):
+    root, edges, info = cap.clock_start_edges(rows, ctx, **kw)
+    s, out, regs = cap.plan(copy.deepcopy(rows), T, AP, 0.05, start_edges=edges, start_root=root)
+    doc = dict(summary=dict(s, period_ps=T, pad=0), regions=regs, crossings=out,
+               start_edges=[{k: v for k, v in e.items() if not k.startswith("_")} for e in edges])
+    return s, edges, regs, CAB.bind(doc)
+
+
+def _gate(b, ctx):
+    import die_sta_related as DSR
+    k = ctx["TT"]
+    for q in [q for q in k["taps"] if q.startswith("__st__")]:
+        k["taps"].pop(q)                  # the gate adds the virtual start pins itself (the fixture ocv reads k taps)
+    old, DSR.CPPR_LCA = DSR.CPPR_LCA, True
+    try:
+        return {r["port"]: r for r in DSR.count_align_start_ports(b, k["taps"], k["meta"], T, {}, k["ocv"])}
+    finally:
+        DSR.CPPR_LCA = old
+
+
+def test_fall_sample_uses_measured_fall_arrival_in_plan_and_gate():
+    """FLOW-GEN-1 10-28 (DIE-HEAD-11): BUF-tree duty distortion 148-420 ps.  A fall-edge start sample is planned and
+    gated on the capture's MEASURED fall arrival (both edges propagated), never on rise + T/2."""
+    rows = chain_rows()
+    dist = lambda p: 150.0 + 10.0 * len(p)          # noqa: E731  grows down the tree (~160..230 ps)
+    ctx = _with_fall(ctx_chain(), dist)
+    s, edges, regs, b = _plan_bind(rows, ctx, clean_by="width")
+    assert s["start_tree"]["start_fail"] == 0
+    assert all("fall_lo" in e for e in edges)
+    falls = [p for p, c in b["start_ports"].items() if b["regions"][c["dst"]]["edge_fall"]]
+    assert falls and all(b["start_ports"][p].get("fall_basis") == "measured" for p in falls)
+    v = CAB.verify(b, 600)
+    assert v["identity_and_loop_errors"] == [] and v["sim_window_violations"] == 0
+    g = _gate(b, ctx)
+    assert all(r["ok"] for r in g.values())
+    # a distortion that leaves neither edge clean is not planned around: the planner reports it (unclean ports)
+    s3, _, _, _ = _plan_bind(rows, _with_fall(ctx_chain(), lambda p: 150.0 + 30.0 * len(p)), clean_by="width",
+                             retime_max=0)
+    assert s3["start_tree"]["start_fail"] > 0
+    # plan and gate agree: the gate's fall interval IS the planner's (same fall_taps form)
+    for p in falls:
+        e = next(e for e in edges if e["port"] == p)
+        assert g[p]["fall_basis"] == "measured"
+        assert (g[p]["d_lo_ps"], g[p]["d_hi_ps"]) == (round(e["fall_lo"], 1), round(e["fall_hi"], 1))
+
+
+def test_rise_plus_half_period_assumption_is_caught():
+    rows = chain_rows()
+    s, edges, regs, b = _plan_bind(rows, ctx_chain(), clean_by="width")      # no fall data: old rise + T/2 plan
+    falls = [p for p, c in b["start_ports"].items() if b["regions"][c["dst"]]["edge_fall"]]
+    assert falls
+    g = _gate(b, ctx_chain())                                                  # no measured fall: fail closed
+    assert all(not g[p]["ok"] and "measured fall" in g[p]["reason"] for p in falls)
+    # the real tree (fall = rise + 300 ps) re-times the fall samples: the old plan's fall ports no longer all pass
+    g2 = _gate(b, _with_fall(ctx_chain(), lambda p: 300.0))
+    assert not all(g2[p]["ok"] for p in falls)
+    # zero distortion: measured fall == rise, the plan is unchanged (edges, J, origins)
+    s0, edges0, regs0, b0 = _plan_bind(rows, _with_fall(ctx_chain(), lambda p: 0.0), clean_by="width")
+    assert [g["origin_cycles"] for g in regs0] == [g["origin_cycles"] for g in regs]
+    assert b0["regions"] == b["regions"]
