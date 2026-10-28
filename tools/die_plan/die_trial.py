@@ -410,6 +410,11 @@ class SiteMap:
 # straight path runs > rep_um through forbidden rects cannot meet the repeater spacing on that path, so it is routed on a
 # LEGAL detour path (shortest Manhattan path over legal sites, bend penalty) and its repeaters are spaced evenly along that
 # path.  Legs without such a stretch are unchanged (byte-identical).  Geometry only, no timing value.
+# a leg is re-routed only when its straight placement would leave an unrepeated span > DETOUR_SPAN_X * rep_um and the
+# straight leg runs > rep_um through forbidden rects (KV G2 c3500 rep 250: exactly 1 leg, r3715)
+DETOUR_SPAN_X = 2.0
+
+
 def leg_blocked_run(site, a, b, step=1.08):
     """longest contiguous stretch (um along the leg) of the straight leg a->b inside forbidden rects"""
     L = abs(b[0] - a[0]) + abs(b[1] - a[1])
@@ -601,10 +606,8 @@ def build_htree(P, taps, leaf_um=600.0, full_depth=False, regions=None):
     return nodes
 
 
-def tree_netlist(nodes, taps, rep_um=450.0, site=None, detour_span_x=2.0):
-    """detour_span_x (slid-root fix): a leg is re-routed on a legal detour only when its straight placement would leave an
-    unrepeated span > detour_span_x * rep_um and the straight leg runs > rep_um through forbidden rects (KV G2: 1 leg).
-    buffered tree: a BUF at every node (branch / leaf driver), repeaters every rep_um along each leg.
+def tree_netlist(nodes, taps, rep_um=450.0, site=None):
+    """buffered tree: a BUF at every node (branch / leaf driver), repeaters every rep_um along each leg.
     -> (verilog, placements [(inst, x, y)], tap ports [(port, x, y)], node_buf {node id: inst}, path {tap port: [inst]})"""
     cells, place, wires = [], [], []
     node_buf, parent_of = {}, {}
@@ -624,7 +627,7 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, detour_span_x=2.0):
             nrep = max(0, int(math.ceil(L / rep_um)) - 1)
             poly = None
             if site is not None and L > 2 * rep_um and leg_blocked_run(site, (p["x"], p["y"]), (nd["x"], nd["y"])) > rep_um \
-                    and straight_leg_span(site, p, nd, nrep) > detour_span_x * rep_um:
+                    and straight_leg_span(site, p, nd, nrep) > DETOUR_SPAN_X * rep_um:
                 poly = legal_detour(site, (p["x"], p["y"]), (nd["x"], nd["y"]))
                 if poly is not None:       # slid-root fix: repeaters evenly along the legal detour path
                     _, Ld = polyline_points(poly, [])
