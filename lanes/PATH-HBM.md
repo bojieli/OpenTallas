@@ -1084,3 +1084,11 @@ Resumed exclusive whole-hub mover endpoint work in fresh sparse codex/hbm-datafl
     3. ctree STA TT/FF at spice x1.0485/x1.0552;
     4. count_align --sta-proof with the hub halves as real partitions (no NW_hub back-mapping).
     About 1 h on epyc2.
+- 2026-10-28 03:32 PDT [HBM-CORE-LAT-2] RESULT claude/hbm-core-lat-2-1028@2ec75de09e results/hbm_core_lat_2_1028/early_taps.{json,tsv} (C20h sha 2e5644cf5f65, 77 modules / 1063 placements; plan files NOT edited).
+  - Sources: 22 real routed views (CHECKED measured); CTS probes tkm idpin_strap TT 260/FF 211, pretree 245/195, lane_exp__canon 296 (220-447)/243, reduce 240 (placement RC, CHECKED run / UNCHECKED vs routed); 16 b2l old-kit (UNCHECKED); 35 r4 model (UNPROVEN).
+  - Boundary FF hold (R3 basis m0 25, OCV 5 %, UNCHECKED model): 33 modules / 473 placements < -100 today -> 21 / 339 reach >= -25 with early taps. Gate >= 0: PASS 7/19, FAIL 36/267, UNPROVEN 34/777.
+  - Early taps cannot fix: SPREAD>150 7/88 (programme_store 536, xcal 424, side_softplus 361, kshare 265, side_rest 231, lane_exp 227); SHALLOW FF<182 17/372 (qctl, wr_q, argmax, collar, xq_pegress, calendar, n12, bfqg, model fused_tnode, score_hcol h0/h1, hc_bank128 pair) -> in-core 12.8c trunk or late delivery; MULTI-CLOCK 9/104 -> per-pin taps.
+  - 60 ps uncertainty is setup (6.1); hold U is 25 ps -> table has hold_ff_after and hold_ff_after_u25 columns.
+  - COORD cond (1): PHY_N NOT COVERED (placeholder, no lib). SM halves NOT COVERED: _s CTS blocked by kit GPL OT_CORE_INFRA_PLANNED_OVERLAP mp_isl0_ck1/ck0 (same as programme_store_r10); _n probe still running on epyc2.
+  - Collect SM_n: epyc2:/srv/opentallas-scratch2/claude/hbm-core-lat-2/kits/hnx_rp3lp3h_n_a97a6f92c3e0-_c20e/run_cts.log "OT_TAP_BALANCE it0" + postcts_gate_{tt,ff}.json -> add to probes.json, rerun build.py.
+  - Kit blockers for owners: lanes__canon_cf1e77 / lanes_plain__canon_663526 GPL OT_CORE_INFRA_CLOCK_ENTRY_PORT clk_bank; SM halves + pretree RTL lint (conflicting constant drivers).

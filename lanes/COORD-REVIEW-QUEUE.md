@@ -3130,3 +3130,8 @@ LEC NOT EQUIVALENT: the kit stops (lec/lec.json)
   - No new gate (rule freeze).
   Details: lanes/LAND-HEAD.md [RISK-SWEEP-2] C4.
 - 2026-10-28 03:26 PDT [PG-CORECONN-1] READY ROOT-MERGE claude/pg-coreconn-1-1028@df9e962939 (on main 387e0d011): shared tools/die_plan gen_phys.py (core_pg_grids / core_pg_unconnected / core_pg_connect_layer, phy_pg_pdn core_grids arg) + schema.py + die_plan.schema.json (dump-schema run) + test_gen_phys_core_pg_connect.py (6 tests, 4 mutants) + core_pg_probe.py (diagnostic, not a gate). Opt-in partition_types.<t>.core_pg_connect, default kit byte-identical; no new _orient_rect-style name shadowing (new names only). Fixes the hard-core PG physical open on every macro kit (hd_tile 0/744 -> 744/744 PG shapes connected, S81 col_h10_r2 0/21001 today). ASK: die owners set core_pg_connect:true on their macro types after merge; DEFAULT = HEAD sets it on hd_tile first (with pg_island_cut), others at next kit regen.
+- 2026-10-28 03:32 PDT [HBM-CORE-LAT-2] READY -> DIE-HBM-5 (die-local plan input, not ROOT-MERGE): claude/hbm-core-lat-2-1028@2ec75de09e results/hbm_core_lat_2_1028/early_taps.json.
+  - Per module tap: insertion_ps = tt.mean, insertion_ff_ps = ff.mean. budget_owner is NOT SIGNED, so gen_phys keeps the legacy core_latency path.
+  - Early taps fix the gross hold (21/33 deep types reach >= -25, UNCHECKED model), but >= 0 is not met for most real views (OCV + spread). SPREAD/SHALLOW/MULTI-CLOCK rows need in-core or per-pin fixes.
+  - PHY_N and SM are still NOT COVERED (see PATH-HBM.md).
+  - DEFAULT (30 min): DIE-HBM-5 applies the CHECKED view/probe rows in its next plan delta, keeps model rows at 250/202.5 until a probe or view exists, and adds per-pin taps for lane_exp__canon from the probe per-pin list.
