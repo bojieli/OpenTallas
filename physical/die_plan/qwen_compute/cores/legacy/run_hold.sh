@@ -26,9 +26,22 @@ echo "route_finish_rc=$rc" > $D/rc.txt
 grep -h "^QC1S\|OT_CLK_FREEZE\|RSZ-00[0-9]*\|Inserted\|Number of violations\|DRT-0199" $D/run_hold.log 2>/dev/null | tail -n 14
 # FLOW-CLKFREEZE 2026-10-27: BLOCKING clock-net geometry diff (ECO input route vs final DB); change -> rc 5, no sign-off
 if [ $rc = 0 ]; then
-  bash $D/clk_freeze_check.sh $D $IMAGE > $D/clk_freeze_check.log 2>&1; ck=$?
+  # FLOW-SHARED-6: the ECO starts from the PRE-RCX pre-fill DB, so the opcode diff runs on the session's own pre-RCX
+  # 5_2_route.odb (hold_1s.tcl writes it right after DRT + f4g_post_drt).  RCX in the same session re-encodes the dbWire
+  # path segmentation of 80/106 VMR clock nets without moving metal (the kit's own signed route shows the same), so the
+  # RCX'd 6_final is held to covered-geometry equality with that DB (clk_geom_cover.py).  Either FAIL -> rc 5.
+  OT_CLK_CHECK_DB=5_2_route.odb bash $D/clk_freeze_check.sh $D $IMAGE > $D/clk_freeze_check.log 2>&1; ck=$?
   grep -h '^CLK_GEOM_DIFF' $D/clk_freeze_check.log | head -n 6; echo "clk_freeze_check_rc=$ck" >> $D/rc.txt
   [ $ck = 0 ] || rc=5
+  if [ $rc = 0 ]; then
+    B=$(ls -d $D/run/results/asap7/*/base | head -1); RB=${B#$D/}
+    $DK run --rm --memory=16g --cpus=2 -v "$D":/work -e OT_A=/work/$RB/5_2_route.odb -e OT_B=/work/$RB/6_final.odb \
+      -e OT_NETS=/work/$RB/clk_freeze_nets.txt -e OT_JSON=/work/clk_geom_cover.json "$IMAGE" bash -lc \
+      "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -python -exit /work/clk_geom_cover.py" > $D/clk_geom_cover.log 2>&1
+    grep -h '^CLK_GEOM_COVER' $D/clk_geom_cover.log | head -n 2
+    if grep -q '^CLK_GEOM_COVER PASS' $D/clk_geom_cover.log; then echo "clk_geom_cover_rc=0" >> $D/rc.txt
+    else echo "clk_geom_cover_rc=1" >> $D/rc.txt; rc=5; fi
+  fi
 fi
 if [ $rc = 0 ]; then
   SIGNOFF_DOCKER="$DK" python3 -I $D/so/tools/die_plan/signoff.py run --run-dir $D/run --kit $D --out $D/signoff \

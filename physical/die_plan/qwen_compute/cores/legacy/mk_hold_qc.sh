@@ -31,7 +31,7 @@ KPRE=$(grep -E '^override export PRE_GLOBAL_ROUTE_TCL' $O/config.mk | tail -n 1 
 [ -n "$KPRE" ] || KPRE=$(grep -E '^export PRE_GLOBAL_ROUTE_TCL' $O/config.mk | tail -n 1 | sed 's/.*= *//' || true)
 # FLOW-CLKFREEZE 2026-10-27: clock lock sourced by hold_1s.tcl + blocking clock-net geometry check (run_hold.sh)
 ROOT=$(cd "$HERE/../../../../.." && pwd)
-for f in clk_freeze.tcl clk_dump_db.tcl clk_geom_diff.py clk_freeze_check.sh; do cp "$ROOT/tools/die_plan/$f" $O/; done
+for f in clk_freeze.tcl clk_dump_db.tcl clk_geom_diff.py clk_freeze_check.sh clk_geom_cover.py; do cp "$ROOT/tools/die_plan/$f" $O/; done
 # kit PRE_GLOBAL_ROUTE hook (FF vclk bind) runs inside the one session (hold_1s.tcl), not as an ORFS stage hook
 DRTP=generic; [ -f $O/f4g_pre_drt_sig.tcl ] && [ -f $O/m6_strip_f4g.txt ] && DRTP=f4g
 printf "OT_HOLD_MARGIN=$MG\nOT_HOLD_ALLOW_SETUP=1\nOT_HOLD_MAXBUF=40\nROUTE_CORNERS='CORNER=BC CORNERS=bc'\nOT_KIT_PRE_GRT=$KPRE\nOT_QC_DRT_PREP=$DRTP\nOT_QC_GUIDE=/work/run/results/asap7/$NICK/base/route_src.guide\n" > $O/variant.env
