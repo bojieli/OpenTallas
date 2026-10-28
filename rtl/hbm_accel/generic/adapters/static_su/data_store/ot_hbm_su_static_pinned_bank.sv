@@ -21,6 +21,8 @@ module ot_hbm_su_static_pinned_bank #(
  // r_macro is cleared). Requires >= 3 clock edges in reset;
  // reset is entered from idle (a read sampled before the asserting edge may still return within 2 edges).
  parameter integer PIN_RST=0,
+ // WCOPY 1 (HBM-CORES-REBAL-8, opt-in): per-column registered write copy in the replicated bank; write commit n+2
+ parameter integer WCOPY=0,
  parameter integer MUT_RESET=0 // bench mutant: a write issued during reset lands (reset gate dropped on w_pin)
 )(
  input wire clk,rst_n,
@@ -64,7 +66,7 @@ module ot_hbm_su_static_pinned_bank #(
   end
  end
  assign read_return=MUT_RETURN!=0?r_late:r_return;
- ot_hbm_su_static_replicated_bank #(.READERS(READERS),.RB(RB),.MUT_COHERENCE(MUT_COHERENCE))u_data(
+ ot_hbm_su_static_replicated_bank #(.READERS(READERS),.RB(RB),.MUT_COHERENCE(MUT_COHERENCE),.WCOPY(WCOPY))u_data(
   .clk(c_ws),.clk_macro(clk_macro),.read_v(r_pin),.read_addr(a_pin),.read_data(raw_data),
   .write_v(w_pin),.write_addr(wa_pin),.write_data(wd_pin));
 endmodule
