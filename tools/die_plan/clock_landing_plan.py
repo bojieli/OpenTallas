@@ -384,6 +384,32 @@ def _ca_strap_pins(raw,table):
     return st
 
 
+def _ca_start_pins(raw,table):
+    """START-TREE compose slice (DIE-HEAD-11, opt-in: count_aligned.start_ports from a --start-tree clock bind): every
+    origin type that captures a start port gets ONE input pin cland_tstart_in, every type that launches one gets ONE output
+    pin cland_tstart_out (= its region start; one launch tap per partition, fanned out at the die top), both beside the
+    type's first landed bus.  Real -> real start ports become 1-bit registered ctl plan ports cland_tstart__<port>; the
+    ends at a virtual region are die-level start stages (start_stage_emit.py: rs_<region> in / pst_<region> out), listed
+    in the sidecar (count_aligned.start_pins) and wired as die-top ports by clock_landings.top_rtl."""
+    ca=table.get("count_aligned") or {}
+    if not ca.get("start_ports"):return None
+    doc=CL.start_pins(raw,ca)
+    for tn,pins in doc["type_pins"].items():
+        t=raw["partition_types"][tn];names={b["name"] for b in t.get("buses",[])}
+        ref=sorted(b[len("cland_fstart_in_"):] for b in names if b.startswith("cland_fstart_in_")) or \
+            sorted(b[len("cland_fstart_out_"):] for b in names if b.startswith("cland_fstart_out_"))
+        xy=_bus_xy(t,ref[0]) if ref else [v/2 for v in t["outline_um"]]
+        for pin,d in sorted(pins.items()):
+            if pin in names:raise ValueError(f"type {tn}: start pin {pin} already declared")
+            t.setdefault("buses",[]).append(_scalar(t,pin,d,xy,"ctl",shift=2.16*(6 if d=="in" else 7)))
+    for e in doc["plan_ports"]:
+        raw["ports"].append(dict(id="cland_tstart__"+CL.ident(e["port"]),src=dict(part=e["src_part"],bus=CL.START_PIN_OUT),
+            dst=dict(part=e["dst_part"],bus=CL.START_PIN_IN),width=1,kind="ctl",epoch=False))
+    ids=[p["id"] for p in raw["ports"]]
+    if len(ids)!=len(set(ids)):raise ValueError("start pins: duplicate plan port ids after sanitising")
+    return doc
+
+
 def _ca_relay_ports(raw,table):
     """registered same-region ctl edge origin -> each relay partition (tx flop -> rx flop, timed by die STA as an
     intra-region related pair; never a landed crossing)"""
@@ -539,6 +565,7 @@ def _compose_dataflow(raw,plan_path,table,pports,ins,outs,region,base_type,obser
             data_cycles_added=0,boot_transport_extra_cycles=1))
     _ca_relay_ports(raw,table)
     _ca_strap_pins(raw,table)
+    tstart=_ca_start_pins(raw,table)
     # boot budget: rings train in parallel (21); an aggregate input arrives after its source's aggregate + ring (3);
     # a local-only input after the source's local ready; then the receiver's registered depth.
     loc={pn:W["max_release"]+21+bytype[P.parts[pn]["type"]]["local_registered_depth"] for pn in P.parts};agg={}
@@ -549,6 +576,7 @@ def _compose_dataflow(raw,plan_path,table,pports,ins,outs,region,base_type,obser
             if e["dst"]==pn:arr.append((agg[e["src"]] if e["carries"]=="aggregate" else loc[e["src"]])+e["boot_transport_extra_cycles"])
         agg[pn]=max(arr)+d
     side=copy.deepcopy(table);side["added_cycles_per_crossing"]="count_aligned" if table.get("count_aligned") else 3
+    if tstart:side["count_aligned"]["start_pins"]=tstart
     side["collector"]=dict(root=observer_part,monitor=mode,observer=dict(part=observer_part,**({k:observer[k] for k in ("module","instance_suffix","fault_port","ready_port")}
             if observer else dict(module="OPEN",instance_suffix="OPEN",fault_port="OPEN",ready_port="OPEN"))),
         parts={pn:dict(type=P.parts[pn]["type"],parent=parent[pn],active=True,potential=dist[pn]) for pn in P.parts},
@@ -756,6 +784,7 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
                 dst=dict(part=r["dst"],bus="cland_fstart_in_"+pr["dst"]["bus"]),width=1,kind="ctl",epoch=False))
     _ca_relay_ports(raw,table)
     _ca_strap_pins(raw,table)
+    tstart=_ca_start_pins(raw,table)
     for pn in sorted(active):
         par=monitor_parent[pn]
         if par is None:continue
@@ -772,6 +801,7 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
             data_cycles_added=0,boot_transport_extra_cycles=3 if seam else 0))
     root=observer_part
     side=copy.deepcopy(table);side["added_cycles_per_crossing"]="count_aligned" if table.get("count_aligned") else 3
+    if tstart:side["count_aligned"]["start_pins"]=tstart
     side["collector"]=dict(root=root,observer=dict(part=root,**{k:observer[k] for k in ("module","instance_suffix","fault_port","ready_port")}),
         parts={pn:dict(type=P.parts[pn]["type"],parent=monitor_parent[pn],active=pn in active)
         for pn in P.parts},types=bytype,edges=monitor_edges,base_type_by_part=base_type,
