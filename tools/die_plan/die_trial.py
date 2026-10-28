@@ -405,6 +405,72 @@ class SiteMap:
         return None
 
 
+def balance_legalize(nodes, site, radius_um=800.0, step=1.08, tol_um=2.0):
+    """DIE-KV-3 (link_htree + --tree-site-slide/--tree-site-legal): legal sites for the region H-tree buffers that KEEP the
+    tree balanced.  The feed-leg slide (sliding a branch node back along its incoming leg) lengthens one child leg and
+    shortens the other when the split axis is collinear with that leg (KV sys_c: +800 um / 490 ps), so region H-tree nodes
+    (rib nodes + region roots) are placed bottom-up as zero-skew (DME-style, Manhattan) merge points instead: a leaf sits
+    on the legal site nearest its ideal point; a node's subtree wire S = leg + S(kid) (leaf: mean last-mile to its taps);
+    a two-kid node takes the legal point nearest its ideal point on the locus |P-C1| + S1 = |P-C2| + S2 (scanned on
+    rows/columns through the ideal point within radius_um).  Geometry only, no timing value, no pads/trims/detours.
+    Returns stats (moved, merge points off-balance > tol_um and their worst imbalance)."""
+    H = sorted((i for i, n in nodes.items() if n.get("rib") is not None or n.get("region_root") is not None), reverse=True)
+    Hs = set(H)
+    S = {}
+    st = dict(nodes=len(H), moved=0, unbalanced=0, worst_imbalance_um=0.0)
+    md = lambda a, b: abs(a[0] - b[0]) + abs(a[1] - b[1])
+    for i in H:
+        nd = nodes[i]
+        ideal = tuple(nd["req_xy"])
+        kids = [k for k in nd["kids"] if k in Hs and nodes[k].get("region_root") is None]
+        if len(kids) == 2:
+            (c1, c2) = [(nodes[k]["x"], nodes[k]["y"]) for k in kids]
+            s1, s2 = S[kids[0]], S[kids[1]]
+            dl = s2 - s1
+            best = None
+            if site.legal(ideal) and abs(md(ideal, c1) - md(ideal, c2) - dl) <= tol_um:
+                best = ideal
+            else:
+                cand = []
+                nst = int(radius_um / step)
+                for k in range(-nst, nst + 1):
+                    for ax in (0, 1):
+                        o = 1 - ax          # scan coordinate o fixed, solve coordinate ax
+                        q = [0.0, 0.0]
+                        q[o] = ideal[o] + k * step
+                        h = dl - (abs(q[o] - c1[o]) - abs(q[o] - c2[o]))
+                        a, b = c1[ax], c2[ax]
+                        if abs(a - b) < 1e-9:
+                            continue
+                        v = (h + a + b) / 2 if a < b else (a + b - h) / 2
+                        if min(a, b) - 1e-9 <= v <= max(a, b) + 1e-9:
+                            q[ax] = v
+                            cand.append((md(q, ideal), round(q[0], 3), round(q[1], 3)))
+                for _, x, y in sorted(cand):
+                    if 0 <= x <= site.W and 0 <= y <= site.H and site.legal((x, y)):
+                        best = (x, y)
+                        break
+            if best is None:
+                best = site.nearest(ideal)
+            imb = abs(md(best, c1) + s1 - md(best, c2) - s2)
+            if imb > tol_um:
+                st["unbalanced"] += 1
+                st["worst_imbalance_um"] = max(st["worst_imbalance_um"], round(imb, 1))
+            nd["balance_imbalance_um"] = round(imb, 1)
+            S[i] = max(md(best, c1) + s1, md(best, c2) + s2)
+        else:
+            best = site.nearest(ideal)
+            if kids:
+                S[i] = md(best, (nodes[kids[0]]["x"], nodes[kids[0]]["y"])) + S[kids[0]]
+            else:
+                tl = nd["taps"]
+                S[i] = sum(md(best, t[2:4]) for t in tl) / len(tl) if tl else 0.0
+        if md(best, ideal) > 1e-6:
+            st["moved"] += 1
+        nd["x"], nd["y"] = round(best[0], 3), round(best[1], 3)
+    return st
+
+
 # DIE-KV-2 10-27 (slid-root leg fix): a site-slid node can end up on the far side of a hard core from its kid (the slide
 # keeps every root->node length, so it is chosen even when the kid leg then crosses the core).  On such a leg the straight
 # repeaters snap to the core edges and leave a span of the core's length (KV G2 r3715: 800 um, 764 ps slew).  A leg whose
@@ -980,7 +1046,7 @@ def path_lengths(nodes):
     return L
 
 
-def build_link_fishbone(P, taps, regions, feed, col_um=60.0):
+def build_link_fishbone(P, taps, regions, feed, col_um=60.0, local="fishbone", leaf_um=200.0, full=0.0):
     """DIE-KV-2 (opt-in --tree-form link_fishbone --region-trees MAP --feed FEED, METHODOLOGY 12.13 clock follows data):
     the die clock is fed ALONG THE REGION LINKS, not by a die-wide balanced tree.
       (1) FEED: the region feed tree of tools/die_plan/locality.py (feed 'fish': max-bit spanning tree of the region
@@ -991,7 +1057,14 @@ def build_link_fishbone(P, taps, regions, feed, col_um=60.0):
           count-aligned ring (MESO-COUNT-1 ruling 20:35; per-crossing K from count_align_plan.py).
       (2) FISHBONE region tree: a trunk along the region's long axis through its centre; one trunk node per tap column
           (taps within col_um share it); a perpendicular stub to a leaf per tap row (leaf delay ~ Manhattan distance).
-    Region names come from the map values; every tap's partition must be in the map and every region in the feed."""
+    Region names come from the map values; every tap's partition must be in the map and every region in the feed.
+    local='htree' (DIE-KV-3, opt-in --tree-form link_htree; COORD 21:38 CROSS-DIE NOTE: balanced local tree inside each
+    region): instead of (2), a BALANCED H-tree per region rooted at the region centre (= the feed end): full-depth
+    bisection of the region bbox along its longer axis down to leaf_um (both halves of a split at the same depth, the child
+    node at the child box centre, so every root->leaf path has the same leg lengths and repeater count by construction;
+    empty halves pruned); taps hang from their leaf (leaf->tap last-mile leg <= leaf_um).  No trims, pads or detours.
+    full=1 (opt-in): empty halves are NOT pruned (tapless leaves), so every branch node drives two equal legs and a sparse
+    half loads its parent like a dense one (KV H200B: a 1-tap phy half ran 70-150 ps early against its 12-tap pc half)."""
     par = feed["parent"]
     tapxy = {tuple(k.split("->")): v for k, v in feed["tap"].items()}
     rt = defaultdict(list)
@@ -1041,6 +1114,34 @@ def build_link_fishbone(P, taps, regions, feed, col_um=60.0):
             nodes[a]["region_root"] = c
             rr[c] = a
             order.append(c)
+    if local == "htree":
+        def bisect(nid, reg, tl):
+            x0, y0, x1, y1 = reg
+            if max(x1 - x0, y1 - y0) <= leaf_um:
+                nodes[nid]["taps"] += tl
+                return
+            if x1 - x0 >= y1 - y0:
+                xm = (x0 + x1) / 2
+                halves = [((x0, y0, xm, y1), [t for t in tl if t[2] < xm]), ((xm, y0, x1, y1), [t for t in tl if t[2] >= xm])]
+            else:
+                ym = (y0 + y1) / 2
+                halves = [((x0, y0, x1, ym), [t for t in tl if t[3] < ym]), ((x0, ym, x1, y1), [t for t in tl if t[3] >= ym])]
+            for rg, sub in halves:
+                if sub or full:     # full (opt-in --tree-opt full=1): empty halves kept as tapless branches, so every
+                    c = leg(nid, (rg[0] + rg[2]) / 2, (rg[1] + rg[3]) / 2, rg, rib=r)   # node drives 2 equal legs
+                    bisect(c, rg, sub)
+        for r, tl in rt.items():
+            bisect(rr[r], box[r], tl)
+        nodes[0]["link_feed"] = dict(root=root, regions=len(box), local="htree", leaf_um=leaf_um,
+                                     **({"full": True, "tapless_leaves": sum(1 for d in nodes.values() if d.get("rib") is not None
+                                                                              and not d["kids"] and not d["taps"])}
+                                        if full else {}),
+                                     feed_edges=sum(1 for v in par.values() if v is not None),
+                                     feed_wire_um=round(sum(abs(nodes[i]["x"] - nodes[n["parent"]]["x"]) +
+                                                            abs(nodes[i]["y"] - nodes[n["parent"]]["y"])
+                                                            for i, n in nodes.items() if n.get("feed") and
+                                                            n["parent"] is not None), 1))
+        return nodes
     # (2) fishbone per region
     for r, tl in rt.items():
         b, (cx, cy), r0 = box[r], cen[r], rr[r]
@@ -1161,6 +1262,7 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
     site = None
     slid_fallback = 0
     spine_info = None
+    balanced = None
     if slice_spine:         # QC-SLICECLK-3 opt-in: spine-column region trees + shared top spine, no slide along a split axis
         if not regions:
             raise ValueError("--slice-spine needs --region-trees")
@@ -1193,8 +1295,10 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
                                    max_um=max([m["um"] for m in moves], default=0.0),
                                    sum_um=round(sum(m["um"] for m in moves), 1),
                                    zero_cost=sum(1 for v in imb if v <= 1e-6), max_imbalance_um=max(imb, default=0.0))
-    elif tree_form == "link_fishbone":
+    elif tree_form in ("link_fishbone", "link_htree"):
         to = dict(tree_opts or {})
+        if tree_form == "link_htree":
+            to.update(local="htree", leaf_um=leaf_um)
         nodes = build_link_fishbone(P, taps, regions, json.loads(Path(to.pop("feed")).read_text()), **to)
     else:
         nodes = (build_spine_fishbone(P, taps, **(tree_opts or {})) if tree_form == "spine_fishbone" else
@@ -1204,6 +1308,8 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
         for nd in nodes.values():
             nd["req_xy"] = [nd["x"], nd["y"]]
         for nd in nodes.values():
+            if tree_form == "link_htree" and (nd.get("rib") is not None or nd.get("region_root") is not None):
+                continue        # region H-tree nodes: balance_legalize below
             if nd["parent"] is None:
                 q = site.nearest((nd["x"], nd["y"]))
             else:
@@ -1221,15 +1327,21 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
                     slid_fallback += 1
                     q = site.nearest(tuple(nd["req_xy"]))
             nd["x"], nd["y"] = round(q[0], 3), round(q[1], 3)
+        if tree_form == "link_htree":
+            balanced = balance_legalize(nodes, site)
     elif site_legal and not slice_spine:          # opt-in: every buffer/repeater on a legal channel site; a one-entry leaf drives AT its entry
         site = SiteMap(P)
         for nd in nodes.values():
             nd["req_xy"] = [nd["x"], nd["y"]]
+            if tree_form == "link_htree" and (nd.get("rib") is not None or nd.get("region_root") is not None):
+                continue        # region H-tree nodes: balance_legalize below
             if len(nd["taps"]) == 1 and site.legal(nd["taps"][0][2:4]):
                 q = nd["taps"][0][2:4]
             else:
                 q = site.nearest((nd["x"], nd["y"]))
             nd["x"], nd["y"] = round(q[0], 3), round(q[1], 3)
+        if tree_form == "link_htree":
+            balanced = balance_legalize(nodes, site)
     v, place, tap_ports, node_buf, parent_of = tree_netlist(nodes, taps, rep_um, site)
     (out / "ctree.v").write_text(v)
     segs = []
@@ -1298,7 +1410,8 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
                 bad[w] = bad.get(w, 0) + 1
         meta["site_legal"] = dict(mode="slice_spine" if slice_spine else "slide" if site_slide else "nearest", slide_fallbacks=slid_fallback,
                                   cells=len(place), illegal=bad, forbidden_rects=len(site.forb),
-                                  moved_nodes=sum(1 for n in nodes.values() if [n["x"], n["y"]] != n["req_xy"]))
+                                  moved_nodes=sum(1 for n in nodes.values() if [n["x"], n["y"]] != n["req_xy"]),
+                                  **({"balance": balanced} if balanced is not None else {}))
         # slid-root fix report (new file; kit.json changes only when a leg is detoured): legal-detour legs and every leg
         # whose longest unrepeated span still exceeds rep_um
         xy = {inst: (x, y) for inst, x, y in place}
@@ -2892,9 +3005,11 @@ def main(argv=None):
                    help="opt-in: like --tree-site-legal, but each buffer slides back along its own incoming leg "
                         "(root->entry Manhattan lengths unchanged = equal length kept by construction)")
     k.add_argument("--feed", help="link_fishbone: region feed tree JSON (tools/die_plan/locality.py score()['feed'])")
-    k.add_argument("--tree-form", choices=("htree", "spine_fishbone", "link_fishbone"), default="htree",
+    k.add_argument("--tree-form", choices=("htree", "spine_fishbone", "link_fishbone", "link_htree"), default="htree",
                    help="die clock topology: htree (default) or spine_fishbone (LAND-HEAD-3 opt-in: 1-D DME spine + per-row "
-                        "fishbone ribs, low insertion so landed pairs split late)")
+                        "fishbone ribs, low insertion so landed pairs split late); link_fishbone / link_htree (DIE-KV-2/3 opt-in: "
+                        "region clocks fed along the locality feed tree --feed; fishbone or balanced H-tree (--leaf-um) inside "
+                        "each --region-trees region)")
     k.add_argument("--tree-opt", action="append", default=[], metavar="K=V",
                    help="spine_fishbone options: matched=1 (phase-matched rib heads, station rows as 1-D DME; LAND-HEAD-3 model: worse), col_um, merge_um")
     k.add_argument("--region-trees", help="fallback regions.json (part_region): die reference tree to one root per "
@@ -2979,7 +3094,7 @@ def main(argv=None):
                       site_slide=a.tree_site_slide, regions=a.region_trees,
                       tree_form=a.tree_form,
                       tree_opts={**{k: float(v) for k, v in (o.split("=") for o in a.tree_opt)},
-                                 **({"feed": a.feed} if a.tree_form == "link_fishbone" else {})},
+                                 **({"feed": a.feed} if a.tree_form in ("link_fishbone", "link_htree") else {})},
                       slice_spine=a.slice_spine, spine_top_leaf_um=a.spine_top_leaf_um, slice_rows=a.slice_rows)
         print(json.dumps({k: m[k] for k in ("die", "parts", "types", "closed_views", "hard_cores", "clock_tree", "grt",
                                              "psm", "sta")}, indent=1))
