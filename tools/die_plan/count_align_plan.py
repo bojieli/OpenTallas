@@ -504,13 +504,15 @@ def clock_contexts(proof, plan_path, corners, clock_cal="spice", clock_ocv="tabl
         meta, taps = DSR.load_taps(Path(proof), c)
         if not all("tree_path" in t for t in taps.values()):
             raise ValueError("--start-tree clock needs tap tree_path in the proof (the clock tree topology)")
+        cc, _ = DSR.detect_clock_cell(proof, meta)      # CLK-INV-CAL-1: same clock-cell model as sta_d_intervals
         if clock_cal == "spice":
-            meta, taps = DSR.scale_clock(meta, taps, DSR.SPICE_CLOCK_CAL.get(c, DSR.SPICE_CLOCK_CAL["TT"]))
+            meta, taps = DSR.scale_clock(meta, taps, DSR.spice_cal_factor(c, cc))
         taps = dict(taps)
         lat = core_latency_ff if (c == "FF" and core_latency_ff is not None) else lt
         old, DSR.CPPR_LCA = DSR.CPPR_LCA, True
         try:
-            ocv = DSR.ca_ocv(Path(proof), meta, taps, c, lat, clock_ocv, clock_droop, "mesh", droop_regions_file)
+            ocv = DSR.ca_ocv(Path(proof), meta, taps, c, lat, clock_ocv, clock_droop, "mesh", droop_regions_file,
+                             clock_cell=cc)
         finally:
             DSR.CPPR_LCA = old
         out[c] = dict(meta=meta, taps=taps, ocv=ocv, rng=meta.get("cppr_node_range_ps"))
@@ -925,6 +927,9 @@ def main(argv=None):
         sta_info.update(proof=a.sta_proof, plan=a.sta_plan, clock_cal=a.sta_clock_cal, cppr_lca=a.sta_cppr_lca,
                         clock_ocv=a.sta_clock_ocv,
                         model="hull(landed_phase_ocv derated, die_sta_related.count_align_d_intervals)")
+        cc, cb = DSR.detect_clock_cell(a.sta_proof, DSR.load_taps(DSR.Path(a.sta_proof), cs[0])[0])
+        if cc != "buf":         # CLK-INV-CAL-1 (BUFx24 records unchanged)
+            sta_info["clock_cell"] = dict(cell=cc, basis=cb, aocv_class=DSR.CLOCK_CELL_AOCV_CLASS[cc])
         if sta_info["missing"]:
             print(f"WARNING --sta-proof: {sta_info['missing']} crossings without STA tap pairs keep the OCV interval "
                   "(die_sta_related fails them closed: no taps)", file=sys.stderr)

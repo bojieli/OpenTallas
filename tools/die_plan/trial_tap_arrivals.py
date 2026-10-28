@@ -7,6 +7,7 @@ including repeaters and pads; CPPR grouping remains the declared region.
 """
 import argparse
 import json
+import re
 from pathlib import Path
 
 CH = "0123456789abcdefghijklmnopqrstuvwxyz"
@@ -49,6 +50,14 @@ def export(tree, arr, corner):
             stack.append((c, p + CH[k]))
     meta = dict(corner=corner, source=f"{arr} (die_trial region trees, combo GRT routed RC, OpenSTA)",
                 node_late_ps={}, node_early_ps={}, node_stages={}, node_xy_um={}, cppr_node_range_ps={})
+    # CLK-INV-CAL-1: an inverter die clock (die_trial --clock-cell inv/inv2: ctree.v beside tree.json) is recorded so
+    # die_sta_related picks the inverter model (spice factor + AOCV class Ainv); BUFx24 exports are unchanged
+    nl = Path(tree).parent / "ctree.v"
+    if nl.is_file():
+        txt = nl.read_text()
+        ninv = len(re.findall(r"^\s*CKINVDCx16_ASAP7_75t_R\s", txt, re.M))
+        if ninv > len(re.findall(r"^\s*BUFx24_ASAP7_75t_R\s", txt, re.M)):
+            meta["clock_cell"] = "inv"
 
     def put_cell(key, cell, xy):
         if cell not in N:

@@ -131,6 +131,294 @@
      },
      "stage_skewness": 0.205
     }
+   },
+   "Ainv": {
+    "TT": {
+     "mu_cell_ps": 21.589,
+     "mu_stage_ps": 42.056,
+     "cell_share": 0.6248,
+     "sigma_stage_ps": 0.5433,
+     "s_cell": 0.02517,
+     "rho": [
+      0.0214,
+      0.0
+     ],
+     "rho_measured": [
+      -0.0475,
+      -0.0115
+     ],
+     "rho_note": "negative measured lag correlations clamped to 0 (conservative: no credit for slew anti-correlation)",
+     "mc_samples": 199,
+     "stages_used": 7,
+     "by_edge": {
+      "out_rise": {
+       "mu_cell_ps": 22.561,
+       "mu_stage_ps": 43.467,
+       "sigma_stage_ps": 0.5347,
+       "s_cell": 0.0237
+      },
+      "out_fall": {
+       "mu_cell_ps": 20.617,
+       "mu_stage_ps": 40.644,
+       "sigma_stage_ps": 0.5517,
+       "s_cell": 0.02676
+      }
+     },
+     "fall_minus_rise_ps_per_stage": -2.823,
+     "path_fit": {
+      "a_ps2_per_stage": 0.2527,
+      "b_ps2_per_stage2": 0.00143,
+      "sigma_N_ps": {
+       "1": 0.502,
+       "2": 0.734,
+       "3": 0.89,
+       "4": 1.025,
+       "5": 1.123,
+       "6": 1.229,
+       "7": 1.374
+      },
+      "note": "sigma_N^2 = a N + b N^2 on the simulated prefix sums of one propagating edge; b = non-averaging part"
+     },
+     "stage_skewness": 0.089,
+     "mc": {
+      "cell": "CKINVDCx16_ASAP7_75t_R",
+      "depth": 8,
+      "samples": 400,
+      "seed": 31,
+      "wire_um": 250.0,
+      "rc": "ndr",
+      "wire": {
+       "r_ohm_um": 4.3358025,
+       "c_ff_um": 0.10824363000000001
+      },
+      "pi_um": 45.0,
+      "avt_mv_um": 1.2,
+      "sigma_vt_mv": {
+       "3": 18.451
+      },
+      "devices_per_cell": 56,
+      "corner_def": {
+       "vdd": 0.7,
+       "temp": 25
+      }
+     },
+     "envelope": {
+      "wire_um": [
+       150.0,
+       250.0
+      ],
+      "rule": "s_cell / rho / cell_share = max over the measured wire lengths; mu from the longest",
+      "mu_from_wire_um": 250.0
+     }
+    },
+    "FF": {
+     "mu_cell_ps": 15.316,
+     "mu_stage_ps": 36.206,
+     "cell_share": 0.5367,
+     "sigma_stage_ps": 0.4102,
+     "s_cell": 0.02678,
+     "rho": [
+      0.0,
+      0.0
+     ],
+     "rho_measured": [
+      -0.0649,
+      -0.0273
+     ],
+     "rho_note": "negative measured lag correlations clamped to 0 (conservative: no credit for slew anti-correlation)",
+     "mc_samples": 199,
+     "stages_used": 7,
+     "by_edge": {
+      "out_rise": {
+       "mu_cell_ps": 16.369,
+       "mu_stage_ps": 37.663,
+       "sigma_stage_ps": 0.406,
+       "s_cell": 0.0248
+      },
+      "out_fall": {
+       "mu_cell_ps": 14.263,
+       "mu_stage_ps": 34.748,
+       "sigma_stage_ps": 0.4143,
+       "s_cell": 0.02905
+      }
+     },
+     "fall_minus_rise_ps_per_stage": -2.915,
+     "path_fit": {
+      "a_ps2_per_stage": 0.1424,
+      "b_ps2_per_stage2": -0.00176,
+      "sigma_N_ps": {
+       "1": 0.386,
+       "2": 0.549,
+       "3": 0.643,
+       "4": 0.703,
+       "5": 0.835,
+       "6": 0.885,
+       "7": 0.956
+      },
+      "note": "sigma_N^2 = a N + b N^2 on the simulated prefix sums of one propagating edge; b = non-averaging part"
+     },
+     "stage_skewness": -0.323,
+     "mc": {
+      "cell": "CKINVDCx16_ASAP7_75t_R",
+      "depth": 8,
+      "samples": 400,
+      "seed": 32,
+      "wire_um": 250.0,
+      "rc": "ndr",
+      "wire": {
+       "r_ohm_um": 4.3358025,
+       "c_ff_um": 0.10824363000000001
+      },
+      "pi_um": 45.0,
+      "avt_mv_um": 1.2,
+      "sigma_vt_mv": {
+       "3": 18.451
+      },
+      "devices_per_cell": 56,
+      "corner_def": {
+       "vdd": 0.77,
+       "temp": 0
+      }
+     },
+     "envelope": {
+      "wire_um": [
+       150.0,
+       250.0
+      ],
+      "rule": "s_cell / rho / cell_share = max over the measured wire lengths; mu from the longest",
+      "mu_from_wire_um": 250.0
+     }
+    }
+   },
+   "Ainv2": {
+    "TT": {
+     "mu_cell_ps": 43.149,
+     "mu_stage_ps": 84.039,
+     "cell_share": 0.6247,
+     "sigma_stage_ps": 0.7411,
+     "s_cell": 0.01717,
+     "rho": [
+      0.0125,
+      0.0
+     ],
+     "rho_measured": [
+      -0.0194,
+      -0.078
+     ],
+     "rho_note": "negative measured lag correlations clamped to 0 (conservative: no credit for slew anti-correlation)",
+     "mc_samples": 199,
+     "stages_used": 3,
+     "by_edge": {
+      "edge_in_rise_stage_ps": 84.067,
+      "edge_in_fall_stage_ps": 84.01
+     },
+     "fall_minus_rise_ps_per_stage": -0.057,
+     "path_fit": {
+      "a_ps2_per_stage": 0.5622,
+      "b_ps2_per_stage2": -0.01941,
+      "sigma_N_ps": {
+       "1": 0.734,
+       "2": 1.025,
+       "3": 1.229
+      },
+      "note": "sigma_N^2 = a N + b N^2 on the simulated prefix sums of one propagating edge; b = non-averaging part"
+     },
+     "stage_skewness": 0.005,
+     "mc": {
+      "cell": "CKINVDCx16_ASAP7_75t_R",
+      "depth": 8,
+      "samples": 400,
+      "seed": 31,
+      "wire_um": 250.0,
+      "rc": "ndr",
+      "wire": {
+       "r_ohm_um": 4.3358025,
+       "c_ff_um": 0.10824363000000001
+      },
+      "pi_um": 45.0,
+      "avt_mv_um": 1.2,
+      "sigma_vt_mv": {
+       "3": 18.451
+      },
+      "devices_per_cell": 56,
+      "corner_def": {
+       "vdd": 0.7,
+       "temp": 25
+      }
+     },
+     "envelope": {
+      "wire_um": [
+       150.0,
+       250.0
+      ],
+      "rule": "s_cell / rho / cell_share = max over the measured wire lengths; mu from the longest",
+      "mu_from_wire_um": 250.0
+     }
+    },
+    "FF": {
+     "mu_cell_ps": 30.618,
+     "mu_stage_ps": 72.333,
+     "cell_share": 0.5369,
+     "sigma_stage_ps": 0.5617,
+     "s_cell": 0.01835,
+     "rho": [
+      0.0,
+      0.0
+     ],
+     "rho_measured": [
+      -0.1058,
+      -0.0425
+     ],
+     "rho_note": "negative measured lag correlations clamped to 0 (conservative: no credit for slew anti-correlation)",
+     "mc_samples": 199,
+     "stages_used": 3,
+     "by_edge": {
+      "edge_in_rise_stage_ps": 72.34,
+      "edge_in_fall_stage_ps": 72.326
+     },
+     "fall_minus_rise_ps_per_stage": -0.014,
+     "path_fit": {
+      "a_ps2_per_stage": 0.2751,
+      "b_ps2_per_stage2": -0.00585,
+      "sigma_N_ps": {
+       "1": 0.549,
+       "2": 0.703,
+       "3": 0.885
+      },
+      "note": "sigma_N^2 = a N + b N^2 on the simulated prefix sums of one propagating edge; b = non-averaging part"
+     },
+     "stage_skewness": -0.067,
+     "mc": {
+      "cell": "CKINVDCx16_ASAP7_75t_R",
+      "depth": 8,
+      "samples": 400,
+      "seed": 32,
+      "wire_um": 250.0,
+      "rc": "ndr",
+      "wire": {
+       "r_ohm_um": 4.3358025,
+       "c_ff_um": 0.10824363000000001
+      },
+      "pi_um": 45.0,
+      "avt_mv_um": 1.2,
+      "sigma_vt_mv": {
+       "3": 18.451
+      },
+      "devices_per_cell": 56,
+      "corner_def": {
+       "vdd": 0.77,
+       "temp": 0
+      }
+     },
+     "envelope": {
+      "wire_um": [
+       150.0,
+       250.0
+      ],
+      "rule": "s_cell / rho / cell_share = max over the measured wire lengths; mu from the longest",
+      "mu_from_wire_um": 250.0
+     }
+    }
    }
   },
   "systematic": {
@@ -1480,9 +1768,1703 @@
        0.9375
       ]
      ]
+    },
+    "Ainv_TT": {
+     "late_rows": [
+      [
+       1,
+       1.0755,
+       1.076,
+       1.0766,
+       1.0776,
+       1.0797,
+       1.0839,
+       1.0923,
+       1.1007
+      ],
+      [
+       2,
+       1.054,
+       1.0545,
+       1.055,
+       1.0561,
+       1.0582,
+       1.0624,
+       1.0708,
+       1.0792
+      ],
+      [
+       3,
+       1.0442,
+       1.0447,
+       1.0453,
+       1.0463,
+       1.0484,
+       1.0526,
+       1.061,
+       1.0694
+      ],
+      [
+       4,
+       1.0384,
+       1.0389,
+       1.0394,
+       1.0405,
+       1.0426,
+       1.0468,
+       1.0552,
+       1.0636
+      ],
+      [
+       6,
+       1.0314,
+       1.0319,
+       1.0324,
+       1.0335,
+       1.0356,
+       1.0398,
+       1.0482,
+       1.0566
+      ],
+      [
+       8,
+       1.0272,
+       1.0277,
+       1.0282,
+       1.0293,
+       1.0314,
+       1.0356,
+       1.044,
+       1.0524
+      ],
+      [
+       12,
+       1.0222,
+       1.0227,
+       1.0233,
+       1.0243,
+       1.0264,
+       1.0306,
+       1.039,
+       1.0474
+      ],
+      [
+       16,
+       1.0193,
+       1.0198,
+       1.0203,
+       1.0214,
+       1.0235,
+       1.0277,
+       1.0361,
+       1.0445
+      ],
+      [
+       24,
+       1.0157,
+       1.0163,
+       1.0168,
+       1.0178,
+       1.0199,
+       1.0241,
+       1.0325,
+       1.0409
+      ],
+      [
+       32,
+       1.0136,
+       1.0141,
+       1.0147,
+       1.0157,
+       1.0178,
+       1.022,
+       1.0304,
+       1.0388
+      ],
+      [
+       48,
+       1.0111,
+       1.0116,
+       1.0122,
+       1.0132,
+       1.0153,
+       1.0195,
+       1.0279,
+       1.0363
+      ],
+      [
+       64,
+       1.0096,
+       1.0102,
+       1.0107,
+       1.0117,
+       1.0138,
+       1.018,
+       1.0264,
+       1.0348
+      ],
+      [
+       80,
+       1.0086,
+       1.0091,
+       1.0097,
+       1.0107,
+       1.0128,
+       1.017,
+       1.0254,
+       1.0338
+      ]
+     ],
+     "early_rows": [
+      [
+       1,
+       0.9245,
+       0.924,
+       0.9234,
+       0.9224,
+       0.9203,
+       0.9161,
+       0.9077,
+       0.8993
+      ],
+      [
+       2,
+       0.946,
+       0.9455,
+       0.945,
+       0.9439,
+       0.9418,
+       0.9376,
+       0.9292,
+       0.9208
+      ],
+      [
+       3,
+       0.9558,
+       0.9553,
+       0.9547,
+       0.9537,
+       0.9516,
+       0.9474,
+       0.939,
+       0.9306
+      ],
+      [
+       4,
+       0.9616,
+       0.9611,
+       0.9606,
+       0.9595,
+       0.9574,
+       0.9532,
+       0.9448,
+       0.9364
+      ],
+      [
+       6,
+       0.9686,
+       0.9681,
+       0.9676,
+       0.9665,
+       0.9644,
+       0.9602,
+       0.9518,
+       0.9434
+      ],
+      [
+       8,
+       0.9728,
+       0.9723,
+       0.9718,
+       0.9707,
+       0.9686,
+       0.9644,
+       0.956,
+       0.9476
+      ],
+      [
+       12,
+       0.9778,
+       0.9773,
+       0.9767,
+       0.9757,
+       0.9736,
+       0.9694,
+       0.961,
+       0.9526
+      ],
+      [
+       16,
+       0.9807,
+       0.9802,
+       0.9797,
+       0.9786,
+       0.9765,
+       0.9723,
+       0.9639,
+       0.9555
+      ],
+      [
+       24,
+       0.9843,
+       0.9837,
+       0.9832,
+       0.9822,
+       0.9801,
+       0.9759,
+       0.9675,
+       0.9591
+      ],
+      [
+       32,
+       0.9864,
+       0.9859,
+       0.9853,
+       0.9843,
+       0.9822,
+       0.978,
+       0.9696,
+       0.9612
+      ],
+      [
+       48,
+       0.9889,
+       0.9884,
+       0.9878,
+       0.9868,
+       0.9847,
+       0.9805,
+       0.9721,
+       0.9637
+      ],
+      [
+       64,
+       0.9904,
+       0.9898,
+       0.9893,
+       0.9883,
+       0.9862,
+       0.982,
+       0.9736,
+       0.9652
+      ],
+      [
+       80,
+       0.9914,
+       0.9909,
+       0.9903,
+       0.9893,
+       0.9872,
+       0.983,
+       0.9746,
+       0.9662
+      ]
+     ]
+    },
+    "Ainv_FF": {
+     "late_rows": [
+      [
+       1,
+       1.0803,
+       1.0809,
+       1.0814,
+       1.0824,
+       1.0845,
+       1.0887,
+       1.0971,
+       1.1055
+      ],
+      [
+       2,
+       1.0568,
+       1.0573,
+       1.0579,
+       1.0589,
+       1.061,
+       1.0652,
+       1.0736,
+       1.082
+      ],
+      [
+       3,
+       1.0464,
+       1.0469,
+       1.0474,
+       1.0485,
+       1.0506,
+       1.0548,
+       1.0632,
+       1.0716
+      ],
+      [
+       4,
+       1.0402,
+       1.0407,
+       1.0412,
+       1.0423,
+       1.0444,
+       1.0486,
+       1.057,
+       1.0654
+      ],
+      [
+       6,
+       1.0328,
+       1.0333,
+       1.0338,
+       1.0349,
+       1.037,
+       1.0412,
+       1.0496,
+       1.058
+      ],
+      [
+       8,
+       1.0284,
+       1.0289,
+       1.0295,
+       1.0305,
+       1.0326,
+       1.0368,
+       1.0452,
+       1.0536
+      ],
+      [
+       12,
+       1.0232,
+       1.0237,
+       1.0242,
+       1.0253,
+       1.0274,
+       1.0316,
+       1.04,
+       1.0484
+      ],
+      [
+       16,
+       1.0201,
+       1.0206,
+       1.0211,
+       1.0222,
+       1.0243,
+       1.0285,
+       1.0369,
+       1.0453
+      ],
+      [
+       24,
+       1.0164,
+       1.0169,
+       1.0174,
+       1.0185,
+       1.0206,
+       1.0248,
+       1.0332,
+       1.0416
+      ],
+      [
+       32,
+       1.0142,
+       1.0147,
+       1.0153,
+       1.0163,
+       1.0184,
+       1.0226,
+       1.031,
+       1.0394
+      ],
+      [
+       48,
+       1.0116,
+       1.0121,
+       1.0126,
+       1.0137,
+       1.0158,
+       1.02,
+       1.0284,
+       1.0368
+      ],
+      [
+       64,
+       1.01,
+       1.0106,
+       1.0111,
+       1.0121,
+       1.0142,
+       1.0184,
+       1.0268,
+       1.0352
+      ],
+      [
+       80,
+       1.009,
+       1.0095,
+       1.01,
+       1.0111,
+       1.0132,
+       1.0174,
+       1.0258,
+       1.0342
+      ]
+     ],
+     "early_rows": [
+      [
+       1,
+       0.9197,
+       0.9191,
+       0.9186,
+       0.9176,
+       0.9155,
+       0.9113,
+       0.9029,
+       0.8945
+      ],
+      [
+       2,
+       0.9432,
+       0.9427,
+       0.9421,
+       0.9411,
+       0.939,
+       0.9348,
+       0.9264,
+       0.918
+      ],
+      [
+       3,
+       0.9536,
+       0.9531,
+       0.9526,
+       0.9515,
+       0.9494,
+       0.9452,
+       0.9368,
+       0.9284
+      ],
+      [
+       4,
+       0.9598,
+       0.9593,
+       0.9588,
+       0.9577,
+       0.9556,
+       0.9514,
+       0.943,
+       0.9346
+      ],
+      [
+       6,
+       0.9672,
+       0.9667,
+       0.9662,
+       0.9651,
+       0.963,
+       0.9588,
+       0.9504,
+       0.942
+      ],
+      [
+       8,
+       0.9716,
+       0.9711,
+       0.9705,
+       0.9695,
+       0.9674,
+       0.9632,
+       0.9548,
+       0.9464
+      ],
+      [
+       12,
+       0.9768,
+       0.9763,
+       0.9758,
+       0.9747,
+       0.9726,
+       0.9684,
+       0.96,
+       0.9516
+      ],
+      [
+       16,
+       0.9799,
+       0.9794,
+       0.9789,
+       0.9778,
+       0.9757,
+       0.9715,
+       0.9631,
+       0.9547
+      ],
+      [
+       24,
+       0.9836,
+       0.9831,
+       0.9826,
+       0.9815,
+       0.9794,
+       0.9752,
+       0.9668,
+       0.9584
+      ],
+      [
+       32,
+       0.9858,
+       0.9853,
+       0.9847,
+       0.9837,
+       0.9816,
+       0.9774,
+       0.969,
+       0.9606
+      ],
+      [
+       48,
+       0.9884,
+       0.9879,
+       0.9874,
+       0.9863,
+       0.9842,
+       0.98,
+       0.9716,
+       0.9632
+      ],
+      [
+       64,
+       0.99,
+       0.9894,
+       0.9889,
+       0.9879,
+       0.9858,
+       0.9816,
+       0.9732,
+       0.9648
+      ],
+      [
+       80,
+       0.991,
+       0.9905,
+       0.99,
+       0.9889,
+       0.9868,
+       0.9826,
+       0.9742,
+       0.9658
+      ]
+     ]
+    },
+    "Ainv2_TT": {
+     "late_rows": [
+      [
+       1,
+       1.0515,
+       1.052,
+       1.0526,
+       1.0536,
+       1.0557,
+       1.0599,
+       1.0683,
+       1.0767
+      ],
+      [
+       2,
+       1.0367,
+       1.0372,
+       1.0377,
+       1.0388,
+       1.0409,
+       1.0451,
+       1.0535,
+       1.0619
+      ],
+      [
+       3,
+       1.03,
+       1.0305,
+       1.031,
+       1.0321,
+       1.0342,
+       1.0384,
+       1.0468,
+       1.0552
+      ],
+      [
+       4,
+       1.026,
+       1.0265,
+       1.027,
+       1.0281,
+       1.0302,
+       1.0344,
+       1.0428,
+       1.0512
+      ],
+      [
+       6,
+       1.0212,
+       1.0218,
+       1.0223,
+       1.0233,
+       1.0254,
+       1.0296,
+       1.038,
+       1.0464
+      ],
+      [
+       8,
+       1.0184,
+       1.0189,
+       1.0195,
+       1.0205,
+       1.0226,
+       1.0268,
+       1.0352,
+       1.0436
+      ],
+      [
+       12,
+       1.015,
+       1.0156,
+       1.0161,
+       1.0171,
+       1.0192,
+       1.0234,
+       1.0318,
+       1.0402
+      ],
+      [
+       16,
+       1.013,
+       1.0136,
+       1.0141,
+       1.0151,
+       1.0172,
+       1.0214,
+       1.0298,
+       1.0382
+      ],
+      [
+       24,
+       1.0106,
+       1.0112,
+       1.0117,
+       1.0127,
+       1.0148,
+       1.019,
+       1.0274,
+       1.0358
+      ],
+      [
+       32,
+       1.0092,
+       1.0097,
+       1.0103,
+       1.0113,
+       1.0134,
+       1.0176,
+       1.026,
+       1.0344
+      ],
+      [
+       48,
+       1.0075,
+       1.0081,
+       1.0086,
+       1.0096,
+       1.0117,
+       1.0159,
+       1.0243,
+       1.0327
+      ],
+      [
+       64,
+       1.0065,
+       1.007,
+       1.0076,
+       1.0086,
+       1.0107,
+       1.0149,
+       1.0233,
+       1.0317
+      ],
+      [
+       80,
+       1.0058,
+       1.0064,
+       1.0069,
+       1.0079,
+       1.01,
+       1.0142,
+       1.0226,
+       1.031
+      ]
+     ],
+     "early_rows": [
+      [
+       1,
+       0.9485,
+       0.948,
+       0.9474,
+       0.9464,
+       0.9443,
+       0.9401,
+       0.9317,
+       0.9233
+      ],
+      [
+       2,
+       0.9633,
+       0.9628,
+       0.9623,
+       0.9612,
+       0.9591,
+       0.9549,
+       0.9465,
+       0.9381
+      ],
+      [
+       3,
+       0.97,
+       0.9695,
+       0.969,
+       0.9679,
+       0.9658,
+       0.9616,
+       0.9532,
+       0.9448
+      ],
+      [
+       4,
+       0.974,
+       0.9735,
+       0.973,
+       0.9719,
+       0.9698,
+       0.9656,
+       0.9572,
+       0.9488
+      ],
+      [
+       6,
+       0.9788,
+       0.9782,
+       0.9777,
+       0.9767,
+       0.9746,
+       0.9704,
+       0.962,
+       0.9536
+      ],
+      [
+       8,
+       0.9816,
+       0.9811,
+       0.9805,
+       0.9795,
+       0.9774,
+       0.9732,
+       0.9648,
+       0.9564
+      ],
+      [
+       12,
+       0.985,
+       0.9844,
+       0.9839,
+       0.9829,
+       0.9808,
+       0.9766,
+       0.9682,
+       0.9598
+      ],
+      [
+       16,
+       0.987,
+       0.9864,
+       0.9859,
+       0.9849,
+       0.9828,
+       0.9786,
+       0.9702,
+       0.9618
+      ],
+      [
+       24,
+       0.9894,
+       0.9888,
+       0.9883,
+       0.9873,
+       0.9852,
+       0.981,
+       0.9726,
+       0.9642
+      ],
+      [
+       32,
+       0.9908,
+       0.9903,
+       0.9897,
+       0.9887,
+       0.9866,
+       0.9824,
+       0.974,
+       0.9656
+      ],
+      [
+       48,
+       0.9925,
+       0.9919,
+       0.9914,
+       0.9904,
+       0.9883,
+       0.9841,
+       0.9757,
+       0.9673
+      ],
+      [
+       64,
+       0.9935,
+       0.993,
+       0.9924,
+       0.9914,
+       0.9893,
+       0.9851,
+       0.9767,
+       0.9683
+      ],
+      [
+       80,
+       0.9942,
+       0.9936,
+       0.9931,
+       0.9921,
+       0.99,
+       0.9858,
+       0.9774,
+       0.969
+      ]
+     ]
+    },
+    "Ainv2_FF": {
+     "late_rows": [
+      [
+       1,
+       1.0551,
+       1.0556,
+       1.0561,
+       1.0572,
+       1.0593,
+       1.0635,
+       1.0718,
+       1.0802
+      ],
+      [
+       2,
+       1.0389,
+       1.0395,
+       1.04,
+       1.041,
+       1.0431,
+       1.0473,
+       1.0557,
+       1.0641
+      ],
+      [
+       3,
+       1.0318,
+       1.0323,
+       1.0328,
+       1.0339,
+       1.036,
+       1.0402,
+       1.0486,
+       1.057
+      ],
+      [
+       4,
+       1.0275,
+       1.0281,
+       1.0286,
+       1.0296,
+       1.0317,
+       1.0359,
+       1.0443,
+       1.0527
+      ],
+      [
+       6,
+       1.0225,
+       1.023,
+       1.0235,
+       1.0246,
+       1.0267,
+       1.0309,
+       1.0393,
+       1.0477
+      ],
+      [
+       8,
+       1.0195,
+       1.02,
+       1.0205,
+       1.0216,
+       1.0237,
+       1.0279,
+       1.0363,
+       1.0447
+      ],
+      [
+       12,
+       1.0159,
+       1.0164,
+       1.0169,
+       1.018,
+       1.0201,
+       1.0243,
+       1.0327,
+       1.0411
+      ],
+      [
+       16,
+       1.0138,
+       1.0143,
+       1.0148,
+       1.0159,
+       1.018,
+       1.0222,
+       1.0306,
+       1.039
+      ],
+      [
+       24,
+       1.0112,
+       1.0118,
+       1.0123,
+       1.0133,
+       1.0154,
+       1.0196,
+       1.028,
+       1.0364
+      ],
+      [
+       32,
+       1.0097,
+       1.0103,
+       1.0108,
+       1.0118,
+       1.0139,
+       1.0181,
+       1.0265,
+       1.0349
+      ],
+      [
+       48,
+       1.0079,
+       1.0085,
+       1.009,
+       1.01,
+       1.0121,
+       1.0163,
+       1.0247,
+       1.0331
+      ],
+      [
+       64,
+       1.0069,
+       1.0074,
+       1.0079,
+       1.009,
+       1.0111,
+       1.0153,
+       1.0237,
+       1.0321
+      ],
+      [
+       80,
+       1.0062,
+       1.0067,
+       1.0072,
+       1.0083,
+       1.0104,
+       1.0146,
+       1.023,
+       1.0314
+      ]
+     ],
+     "early_rows": [
+      [
+       1,
+       0.9449,
+       0.9444,
+       0.9439,
+       0.9428,
+       0.9407,
+       0.9365,
+       0.9282,
+       0.9198
+      ],
+      [
+       2,
+       0.9611,
+       0.9605,
+       0.96,
+       0.959,
+       0.9569,
+       0.9527,
+       0.9443,
+       0.9359
+      ],
+      [
+       3,
+       0.9682,
+       0.9677,
+       0.9672,
+       0.9661,
+       0.964,
+       0.9598,
+       0.9514,
+       0.943
+      ],
+      [
+       4,
+       0.9725,
+       0.9719,
+       0.9714,
+       0.9704,
+       0.9683,
+       0.9641,
+       0.9557,
+       0.9473
+      ],
+      [
+       6,
+       0.9775,
+       0.977,
+       0.9765,
+       0.9754,
+       0.9733,
+       0.9691,
+       0.9607,
+       0.9523
+      ],
+      [
+       8,
+       0.9805,
+       0.98,
+       0.9795,
+       0.9784,
+       0.9763,
+       0.9721,
+       0.9637,
+       0.9553
+      ],
+      [
+       12,
+       0.9841,
+       0.9836,
+       0.9831,
+       0.982,
+       0.9799,
+       0.9757,
+       0.9673,
+       0.9589
+      ],
+      [
+       16,
+       0.9862,
+       0.9857,
+       0.9852,
+       0.9841,
+       0.982,
+       0.9778,
+       0.9694,
+       0.961
+      ],
+      [
+       24,
+       0.9888,
+       0.9882,
+       0.9877,
+       0.9867,
+       0.9846,
+       0.9804,
+       0.972,
+       0.9636
+      ],
+      [
+       32,
+       0.9903,
+       0.9897,
+       0.9892,
+       0.9882,
+       0.9861,
+       0.9819,
+       0.9735,
+       0.9651
+      ],
+      [
+       48,
+       0.9921,
+       0.9915,
+       0.991,
+       0.99,
+       0.9879,
+       0.9837,
+       0.9753,
+       0.9669
+      ],
+      [
+       64,
+       0.9931,
+       0.9926,
+       0.9921,
+       0.991,
+       0.9889,
+       0.9847,
+       0.9763,
+       0.9679
+      ],
+      [
+       80,
+       0.9938,
+       0.9933,
+       0.9928,
+       0.9917,
+       0.9896,
+       0.9854,
+       0.977,
+       0.9686
+      ]
+     ]
     }
    },
    "note": "late = 1 + 3 sigma_r(N)/mu_cell + g d/2; early = 2 - late (symmetric); cells only"
+  },
+  "clock_cells": {
+   "map": {
+    "BUFx24_ASAP7_75t_R": "A",
+    "CKINVDCx16_ASAP7_75t_R": "Ainv"
+   },
+   "note": "CLK-INV-CAL-1 (2026-10-28): die clock cell -> die-stage class. Ainv = one CKINVDCx16 stage (inv and inv2 trees: a branch counts every inverter); Ainv2 = one inverter pair (inv2 leg), information/planner form of the same MC. Same method as class A (clk_aocv_mc.py: BSIM-CMG 111, A_VT 1.2 mV.um per transistor, ASAP7 r1p7 xAct3D cells, stage = cell -> NDR M8/M9 wire -> next cell, stage 1 dropped), on an inverting chain with both edges (tools/die_plan/clk_inv_cal.py). g / droop / net rows are shared (OWNER 0.21 %/mm).",
+   "rows_by_wire_um": {
+    "inv": {
+     "TT": {
+      "250": {
+       "mu_cell_ps": 21.589,
+       "mu_stage_ps": 42.056,
+       "cell_share": 0.5133,
+       "sigma_stage_ps": 0.5433,
+       "s_cell": 0.02517,
+       "rho": [
+        0.0,
+        0.0
+       ],
+       "rho_measured": [
+        -0.0475,
+        -0.0115
+       ],
+       "rho_note": "negative measured lag correlations clamped to 0 (conservative: no credit for slew anti-correlation)",
+       "mc_samples": 199,
+       "stages_used": 7,
+       "by_edge": {
+        "out_rise": {
+         "mu_cell_ps": 22.561,
+         "mu_stage_ps": 43.467,
+         "sigma_stage_ps": 0.5347,
+         "s_cell": 0.0237
+        },
+        "out_fall": {
+         "mu_cell_ps": 20.617,
+         "mu_stage_ps": 40.644,
+         "sigma_stage_ps": 0.5517,
+         "s_cell": 0.02676
+        }
+       },
+       "fall_minus_rise_ps_per_stage": -2.823,
+       "path_fit": {
+        "a_ps2_per_stage": 0.2527,
+        "b_ps2_per_stage2": 0.00143,
+        "sigma_N_ps": {
+         "1": 0.502,
+         "2": 0.734,
+         "3": 0.89,
+         "4": 1.025,
+         "5": 1.123,
+         "6": 1.229,
+         "7": 1.374
+        },
+        "note": "sigma_N^2 = a N + b N^2 on the simulated prefix sums of one propagating edge; b = non-averaging part"
+       },
+       "stage_skewness": 0.089,
+       "mc": {
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "depth": 8,
+        "samples": 400,
+        "seed": 31,
+        "wire_um": 250.0,
+        "rc": "ndr",
+        "wire": {
+         "r_ohm_um": 4.3358025,
+         "c_ff_um": 0.10824363000000001
+        },
+        "pi_um": 45.0,
+        "avt_mv_um": 1.2,
+        "sigma_vt_mv": {
+         "3": 18.451
+        },
+        "devices_per_cell": 56,
+        "corner_def": {
+         "vdd": 0.7,
+         "temp": 25
+        }
+       }
+      },
+      "150": {
+       "mu_cell_ps": 15.538,
+       "mu_stage_ps": 24.867,
+       "cell_share": 0.6248,
+       "sigma_stage_ps": 0.3383,
+       "s_cell": 0.02177,
+       "rho": [
+        0.0214,
+        0.0
+       ],
+       "rho_measured": [
+        0.0214,
+        -0.0046
+       ],
+       "rho_note": "negative measured lag correlations clamped to 0 (conservative: no credit for slew anti-correlation)",
+       "mc_samples": 199,
+       "stages_used": 7,
+       "by_edge": {
+        "out_rise": {
+         "mu_cell_ps": 16.116,
+         "mu_stage_ps": 25.639,
+         "sigma_stage_ps": 0.3365,
+         "s_cell": 0.02088
+        },
+        "out_fall": {
+         "mu_cell_ps": 14.96,
+         "mu_stage_ps": 24.095,
+         "sigma_stage_ps": 0.34,
+         "s_cell": 0.02273
+        }
+       },
+       "fall_minus_rise_ps_per_stage": -1.544,
+       "path_fit": {
+        "a_ps2_per_stage": 0.1131,
+        "b_ps2_per_stage2": -0.00022,
+        "sigma_N_ps": {
+         "1": 0.33,
+         "2": 0.479,
+         "3": 0.586,
+         "4": 0.669,
+         "5": 0.739,
+         "6": 0.826,
+         "7": 0.883
+        },
+        "note": "sigma_N^2 = a N + b N^2 on the simulated prefix sums of one propagating edge; b = non-averaging part"
+       },
+       "stage_skewness": 0.082,
+       "mc": {
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "depth": 8,
+        "samples": 200,
+        "seed": 33,
+        "wire_um": 150.0,
+        "rc": "ndr",
+        "wire": {
+         "r_ohm_um": 4.3358025,
+         "c_ff_um": 0.10824363000000001
+        },
+        "pi_um": 45.0,
+        "avt_mv_um": 1.2,
+        "sigma_vt_mv": {
+         "3": 18.451
+        },
+        "devices_per_cell": 56,
+        "corner_def": {
+         "vdd": 0.7,
+         "temp": 25
+        }
+       }
+      }
+     },
+     "FF": {
+      "250": {
+       "mu_cell_ps": 15.316,
+       "mu_stage_ps": 36.206,
+       "cell_share": 0.423,
+       "sigma_stage_ps": 0.4102,
+       "s_cell": 0.02678,
+       "rho": [
+        0.0,
+        0.0
+       ],
+       "rho_measured": [
+        -0.0649,
+        -0.0273
+       ],
+       "rho_note": "negative measured lag correlations clamped to 0 (conservative: no credit for slew anti-correlation)",
+       "mc_samples": 199,
+       "stages_used": 7,
+       "by_edge": {
+        "out_rise": {
+         "mu_cell_ps": 16.369,
+         "mu_stage_ps": 37.663,
+         "sigma_stage_ps": 0.406,
+         "s_cell": 0.0248
+        },
+        "out_fall": {
+         "mu_cell_ps": 14.263,
+         "mu_stage_ps": 34.748,
+         "sigma_stage_ps": 0.4143,
+         "s_cell": 0.02905
+        }
+       },
+       "fall_minus_rise_ps_per_stage": -2.915,
+       "path_fit": {
+        "a_ps2_per_stage": 0.1424,
+        "b_ps2_per_stage2": -0.00176,
+        "sigma_N_ps": {
+         "1": 0.386,
+         "2": 0.549,
+         "3": 0.643,
+         "4": 0.703,
+         "5": 0.835,
+         "6": 0.885,
+         "7": 0.956
+        },
+        "note": "sigma_N^2 = a N + b N^2 on the simulated prefix sums of one propagating edge; b = non-averaging part"
+       },
+       "stage_skewness": -0.323,
+       "mc": {
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "depth": 8,
+        "samples": 400,
+        "seed": 32,
+        "wire_um": 250.0,
+        "rc": "ndr",
+        "wire": {
+         "r_ohm_um": 4.3358025,
+         "c_ff_um": 0.10824363000000001
+        },
+        "pi_um": 45.0,
+        "avt_mv_um": 1.2,
+        "sigma_vt_mv": {
+         "3": 18.451
+        },
+        "devices_per_cell": 56,
+        "corner_def": {
+         "vdd": 0.77,
+         "temp": 0
+        }
+       }
+      },
+      "150": {
+       "mu_cell_ps": 11.201,
+       "mu_stage_ps": 20.868,
+       "cell_share": 0.5367,
+       "sigma_stage_ps": 0.2426,
+       "s_cell": 0.02166,
+       "rho": [
+        0.0,
+        0.0
+       ],
+       "rho_measured": [
+        -0.0701,
+        -0.0079
+       ],
+       "rho_note": "negative measured lag correlations clamped to 0 (conservative: no credit for slew anti-correlation)",
+       "mc_samples": 199,
+       "stages_used": 7,
+       "by_edge": {
+        "out_rise": {
+         "mu_cell_ps": 11.794,
+         "mu_stage_ps": 21.65,
+         "sigma_stage_ps": 0.2453,
+         "s_cell": 0.0208
+        },
+        "out_fall": {
+         "mu_cell_ps": 10.607,
+         "mu_stage_ps": 20.086,
+         "sigma_stage_ps": 0.2398,
+         "s_cell": 0.0226
+        }
+       },
+       "fall_minus_rise_ps_per_stage": -1.564,
+       "path_fit": {
+        "a_ps2_per_stage": 0.0593,
+        "b_ps2_per_stage2": -0.00153,
+        "sigma_N_ps": {
+         "1": 0.248,
+         "2": 0.335,
+         "3": 0.41,
+         "4": 0.447,
+         "5": 0.514,
+         "6": 0.554,
+         "7": 0.58
+        },
+        "note": "sigma_N^2 = a N + b N^2 on the simulated prefix sums of one propagating edge; b = non-averaging part"
+       },
+       "stage_skewness": 0.029,
+       "mc": {
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "depth": 8,
+        "samples": 200,
+        "seed": 34,
+        "wire_um": 150.0,
+        "rc": "ndr",
+        "wire": {
+         "r_ohm_um": 4.3358025,
+         "c_ff_um": 0.10824363000000001
+        },
+        "pi_um": 45.0,
+        "avt_mv_um": 1.2,
+        "sigma_vt_mv": {
+         "3": 18.451
+        },
+        "devices_per_cell": 56,
+        "corner_def": {
+         "vdd": 0.77,
+         "temp": 0
+        }
+       }
+      }
+     }
+    },
+    "inv2": {
+     "TT": {
+      "250": {
+       "mu_cell_ps": 43.149,
+       "mu_stage_ps": 84.039,
+       "cell_share": 0.5134,
+       "sigma_stage_ps": 0.7411,
+       "s_cell": 0.01717,
+       "rho": [
+        0.0,
+        0.0
+       ],
+       "rho_measured": [
+        -0.0194,
+        -0.078
+       ],
+       "rho_note": "negative measured lag correlations clamped to 0 (conservative: no credit for slew anti-correlation)",
+       "mc_samples": 199,
+       "stages_used": 3,
+       "by_edge": {
+        "edge_in_rise_stage_ps": 84.067,
+        "edge_in_fall_stage_ps": 84.01
+       },
+       "fall_minus_rise_ps_per_stage": -0.057,
+       "path_fit": {
+        "a_ps2_per_stage": 0.5622,
+        "b_ps2_per_stage2": -0.01941,
+        "sigma_N_ps": {
+         "1": 0.734,
+         "2": 1.025,
+         "3": 1.229
+        },
+        "note": "sigma_N^2 = a N + b N^2 on the simulated prefix sums of one propagating edge; b = non-averaging part"
+       },
+       "stage_skewness": 0.005,
+       "mc": {
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "depth": 8,
+        "samples": 400,
+        "seed": 31,
+        "wire_um": 250.0,
+        "rc": "ndr",
+        "wire": {
+         "r_ohm_um": 4.3358025,
+         "c_ff_um": 0.10824363000000001
+        },
+        "pi_um": 45.0,
+        "avt_mv_um": 1.2,
+        "sigma_vt_mv": {
+         "3": 18.451
+        },
+        "devices_per_cell": 56,
+        "corner_def": {
+         "vdd": 0.7,
+         "temp": 25
+        }
+       }
+      },
+      "150": {
+       "mu_cell_ps": 31.051,
+       "mu_stage_ps": 49.702,
+       "cell_share": 0.6247,
+       "sigma_stage_ps": 0.4876,
+       "s_cell": 0.0157,
+       "rho": [
+        0.0125,
+        0.0
+       ],
+       "rho_measured": [
+        0.0125,
+        -0.0828
+       ],
+       "rho_note": "negative measured lag correlations clamped to 0 (conservative: no credit for slew anti-correlation)",
+       "mc_samples": 199,
+       "stages_used": 3,
+       "by_edge": {
+        "edge_in_rise_stage_ps": 49.722,
+        "edge_in_fall_stage_ps": 49.681
+       },
+       "fall_minus_rise_ps_per_stage": -0.041,
+       "path_fit": {
+        "a_ps2_per_stage": 0.2241,
+        "b_ps2_per_stage2": 0.0009,
+        "sigma_N_ps": {
+         "1": 0.479,
+         "2": 0.669,
+         "3": 0.826
+        },
+        "note": "sigma_N^2 = a N + b N^2 on the simulated prefix sums of one propagating edge; b = non-averaging part"
+       },
+       "stage_skewness": -0.099,
+       "mc": {
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "depth": 8,
+        "samples": 200,
+        "seed": 33,
+        "wire_um": 150.0,
+        "rc": "ndr",
+        "wire": {
+         "r_ohm_um": 4.3358025,
+         "c_ff_um": 0.10824363000000001
+        },
+        "pi_um": 45.0,
+        "avt_mv_um": 1.2,
+        "sigma_vt_mv": {
+         "3": 18.451
+        },
+        "devices_per_cell": 56,
+        "corner_def": {
+         "vdd": 0.7,
+         "temp": 25
+        }
+       }
+      }
+     },
+     "FF": {
+      "250": {
+       "mu_cell_ps": 30.618,
+       "mu_stage_ps": 72.333,
+       "cell_share": 0.4233,
+       "sigma_stage_ps": 0.5617,
+       "s_cell": 0.01835,
+       "rho": [
+        0.0,
+        0.0
+       ],
+       "rho_measured": [
+        -0.1058,
+        -0.0425
+       ],
+       "rho_note": "negative measured lag correlations clamped to 0 (conservative: no credit for slew anti-correlation)",
+       "mc_samples": 199,
+       "stages_used": 3,
+       "by_edge": {
+        "edge_in_rise_stage_ps": 72.34,
+        "edge_in_fall_stage_ps": 72.326
+       },
+       "fall_minus_rise_ps_per_stage": -0.014,
+       "path_fit": {
+        "a_ps2_per_stage": 0.2751,
+        "b_ps2_per_stage2": -0.00585,
+        "sigma_N_ps": {
+         "1": 0.549,
+         "2": 0.703,
+         "3": 0.885
+        },
+        "note": "sigma_N^2 = a N + b N^2 on the simulated prefix sums of one propagating edge; b = non-averaging part"
+       },
+       "stage_skewness": -0.067,
+       "mc": {
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "depth": 8,
+        "samples": 400,
+        "seed": 32,
+        "wire_um": 250.0,
+        "rc": "ndr",
+        "wire": {
+         "r_ohm_um": 4.3358025,
+         "c_ff_um": 0.10824363000000001
+        },
+        "pi_um": 45.0,
+        "avt_mv_um": 1.2,
+        "sigma_vt_mv": {
+         "3": 18.451
+        },
+        "devices_per_cell": 56,
+        "corner_def": {
+         "vdd": 0.77,
+         "temp": 0
+        }
+       }
+      },
+      "150": {
+       "mu_cell_ps": 22.389,
+       "mu_stage_ps": 41.705,
+       "cell_share": 0.5369,
+       "sigma_stage_ps": 0.3255,
+       "s_cell": 0.01454,
+       "rho": [
+        0.0,
+        0.0
+       ],
+       "rho_measured": [
+        -0.0063,
+        -0.0311
+       ],
+       "rho_note": "negative measured lag correlations clamped to 0 (conservative: no credit for slew anti-correlation)",
+       "mc_samples": 199,
+       "stages_used": 3,
+       "by_edge": {
+        "edge_in_rise_stage_ps": 41.713,
+        "edge_in_fall_stage_ps": 41.697
+       },
+       "fall_minus_rise_ps_per_stage": -0.016,
+       "path_fit": {
+        "a_ps2_per_stage": 0.1074,
+        "b_ps2_per_stage2": -0.002,
+        "sigma_N_ps": {
+         "1": 0.335,
+         "2": 0.447,
+         "3": 0.554
+        },
+        "note": "sigma_N^2 = a N + b N^2 on the simulated prefix sums of one propagating edge; b = non-averaging part"
+       },
+       "stage_skewness": 0.145,
+       "mc": {
+        "cell": "CKINVDCx16_ASAP7_75t_R",
+        "depth": 8,
+        "samples": 200,
+        "seed": 34,
+        "wire_um": 150.0,
+        "rc": "ndr",
+        "wire": {
+         "r_ohm_um": 4.3358025,
+         "c_ff_um": 0.10824363000000001
+        },
+        "pi_um": 45.0,
+        "avt_mv_um": 1.2,
+        "sigma_vt_mv": {
+         "3": 18.451
+        },
+        "devices_per_cell": 56,
+        "corner_def": {
+         "vdd": 0.77,
+         "temp": 0
+        }
+       }
+      }
+     }
+    }
+   },
+   "process_only_delay_ps": null
   }
  }
 }

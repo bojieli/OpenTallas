@@ -267,6 +267,64 @@ def scale_clock(meta, taps, f):
     return m, t
 
 
+# CLK-INV-CAL-1 (COORD 09:16: the inverter tree die_trial --clock-cell inv / inv2 is the release clock on all dies): the
+# ONE shared model keyed by the die clock cell.  'buf' (BUFx24) = SPICE_CLOCK_CAL + AOCV class A, unchanged.  'inv'
+# (CKINVDCx16, inv and inv2 trees alike: a branch counts every inverter as one stage) = SPICE_CLOCK_CAL_INV + AOCV class
+# 'Ainv' of the approved table, both from the BUFx24 methods repeated on the inverter (tools/die_plan/clk_inv_cal.py,
+# results/clk_inv_cal_1_1028/README.md).  Auto-detected from the proof's clock netlist (detect_clock_cell).
+# Measured 10-28 (ngspice r3 xAct3D CKINVDCx16 vs OpenSTA NLDM on the same SPEF ladders, 48-stage comb trees, affine
+# slope over both sink edges): NDR rep 250 TT 0.9207 / FF 0.9380, NDR rep 150 TT 0.9324 / FF 0.9371 (1x rep 250 TT
+# 0.9333 / FF 0.9515, not a clock form).  Gate value = the larger NDR slope per corner (keeps more of the arrival, so
+# more OCV, than the smaller one).  BUFx24 control on the same bench: 1.0537 / 1.0640 vs SPICE_CLOCK_CAL 1.0485 / 1.0552.
+SPICE_CLOCK_CAL_INV = {"TT": 0.9324, "FF": 0.9380}
+CLOCK_CELL_MASTERS = {"buf": ("BUFx24_ASAP7_75t_R",), "inv": ("CKINVDCx16_ASAP7_75t_R",)}
+CLOCK_CELL_AOCV_CLASS = {"buf": "A", "inv": "Ainv"}
+CLOCK_CELLS = ("auto", "buf", "inv", "inv2")
+
+
+def spice_cal_factor(corner, clock_cell="buf"):
+    """12.15b clock spice factor of the die clock cell ('buf' = SPICE_CLOCK_CAL; SS uses the TT factor)."""
+    t = SPICE_CLOCK_CAL_INV if clock_cell == "inv" else SPICE_CLOCK_CAL
+    return t.get(corner, t["TT"])
+
+
+def _clock_netlists(proof, meta):
+    """candidate die clock netlists of a proof: PROOF/{,clk/,clock/}ctree.v, then the same names beside / above the
+    arrival file the proof's tap_arrivals 'source' names (die_trial run dir: run/out_<C>/arr_<C>.txt + run/clk/ctree.v)."""
+    proof = Path(proof)
+    c = [proof / "ctree.v", proof / "clk" / "ctree.v", proof / "clock" / "ctree.v"]
+    src = str((meta or {}).get("source") or "").split(" ")[0]
+    if src:
+        p = Path(src).parent
+        for q in (p, p.parent, p.parent.parent):
+            c += [q / "ctree.v", q / "clk" / "ctree.v", q / "clock" / "ctree.v"]
+    return c
+
+
+def detect_clock_cell(proof, meta=None):
+    """CLK-INV-CAL-1: (cell, basis) of the die clock.  meta 'clock_cell' (trial_tap_arrivals export) wins; else the
+    majority clock master of the first netlist _clock_netlists finds ('inv' when CKINVDCx16 instances outnumber BUFx24);
+    else 'buf' (legacy proofs without a netlist: unchanged BUFx24 model)."""
+    mc = (meta or {}).get("clock_cell")
+    if mc in ("buf", "inv", "inv2"):
+        return ("inv" if mc == "inv2" else mc), f"tap_arrivals meta clock_cell={mc}"
+    for f in _clock_netlists(proof, meta):
+        if f.is_file():
+            txt = f.read_text()
+            n = {k: sum(len(re.findall(r"^\s*" + re.escape(m) + r"\s", txt, re.M)) for m in v)
+                 for k, v in CLOCK_CELL_MASTERS.items()}
+            if n["inv"] or n["buf"]:
+                return ("inv" if n["inv"] > n["buf"] else "buf"), f"{f}: {n['inv']} CKINVDCx16 / {n['buf']} BUFx24"
+    return "buf", "no clock netlist found (legacy BUFx24 model)"
+
+
+def resolve_clock_cell(choice, proof, meta=None):
+    """--clock-cell: 'auto' = detect_clock_cell; buf / inv / inv2 (inv2 = inv model) as given."""
+    if choice in (None, "auto"):
+        return detect_clock_cell(proof, meta)
+    return ("inv" if choice == "inv2" else choice), f"--clock-cell {choice}"
+
+
 def credit(rng, node, la, ea, lc, ec):
     c = node
     while c not in rng and len(c) > 1:
@@ -313,21 +371,23 @@ def count_align_d_intervals(landed, taps, cppr_range=None, part_region=None, ocv
 
 
 def ca_ocv(proof, meta, taps, corner, lat, clock_ocv="none", clock_droop=None, droop_region="mesh",
-           droop_regions_file=None, aocv_table=None, cell_share=None):
+           droop_regions_file=None, aocv_table=None, cell_share=None, clock_cell="buf"):
     """CA-OCV-1: the clock variation callable main() hands the related-pair classes and the count-aligned row
-    (--clock-ocv flat/table with the --clock-droop rule and --droop-region regions); None for --clock-ocv none."""
+    (--clock-ocv flat/table with the --clock-droop rule and --droop-region regions); None for --clock-ocv none.
+    clock_cell (CLK-INV-CAL-1): 'inv' = AOCV class Ainv for the die stages."""
     if clock_ocv == "none":
         return None
     droop = clock_droop or ("shared" if clock_ocv == "table" else "stated")
     dreg = droop_regions(proof, taps, droop_region, droop_regions_file) if droop == "shared" else None
     return clock_ocv_fn(clock_ocv, droop, dict(meta, corner=corner), taps, lat, aocv_table, cell_share=cell_share,
-                        region=dreg)
+                        region=dreg, **({"clock_cell": clock_cell} if clock_cell != "buf" else {}))
 
 
 def sta_d_intervals(proof, plan, corners=("TT", "FF"), clock_cal="none", cppr_lca=False, clock_ocv="none",
-                    clock_droop=None, droop_regions_file=None, core_latency_ff=None, aocv_table=None):
+                    clock_droop=None, droop_regions_file=None, core_latency_ff=None, aocv_table=None, clock_cell="auto"):
     """{corner: count_align_d_intervals} exactly as main() feeds count_align_landed: tap_arrivals_<C>.json of PROOF,
-    --clock-cal spice scaling (SPICE_CLOCK_CAL), build_pairs on the plan (dict or path), --cppr-lca node choice.
+    --clock-cal spice scaling (spice_cal_factor of the die clock cell), build_pairs on the plan (dict or path),
+    --cppr-lca node choice.  clock_cell (CLK-INV-CAL-1, as main --clock-cell): 'auto' detects it from the proof.
     clock_ocv != 'none' (CA-OCV-1): the same clock variation term main() adds with --clock-ocv / --clock-droop /
     --droop-regions / --core-latency-ff (core latency TT = plan clock.common_latency_ps, FF = core_latency_ff or TT),
     so the planner hull and the gate share one interval model; 'none' = unchanged."""
@@ -338,12 +398,14 @@ def sta_d_intervals(proof, plan, corners=("TT", "FF"), clock_cal="none", cppr_lc
         out = {}
         for c in corners:
             meta, taps = load_taps(Path(proof), c)
+            cc, _ = resolve_clock_cell(clock_cell, proof, meta)
             if clock_cal == "spice":
-                meta, taps = scale_clock(meta, taps, SPICE_CLOCK_CAL.get(c, SPICE_CLOCK_CAL["TT"]))
+                meta, taps = scale_clock(meta, taps, spice_cal_factor(c, cc))
             pairs, _ = build_pairs(plan, taps)
             lt = float(plan.get("clock", {}).get("common_latency_ps", 250.0))
             lat = core_latency_ff if (c == "FF" and core_latency_ff is not None) else lt
-            ocv = ca_ocv(Path(proof), meta, taps, c, lat, clock_ocv, clock_droop, "mesh", droop_regions_file, aocv_table)
+            ocv = ca_ocv(Path(proof), meta, taps, c, lat, clock_ocv, clock_droop, "mesh", droop_regions_file, aocv_table,
+                         clock_cell=cc)
             out[c] = count_align_d_intervals(pairs["landed"], taps, meta.get("cppr_node_range_ps"), ocv=ocv)
         return out
     finally:
@@ -787,7 +849,8 @@ def landed_gate(corners):
                 verdict="PASS" if lt.get("verdict") == "PASS" and lf.get("verdict") == "PASS" else "FAIL")
 
 
-def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_path=None, cell_share=None, region=None):
+def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_path=None, cell_share=None, region=None,
+                 clock_cell="buf"):
     """CLK-AOCV (METHODOLOGY 12.4a b1, DRAFT, opt-in): per pair clock OCV pessimism on the branches below the last
     common node.  Needs per-tap 'stages_from_root' + 'xy_um' and per-node meta 'node_stages' / 'node_xy_um' plus the
     node arrivals 'node_late_ps' / 'node_early_ps' in tap_arrivals_<C>.json (CLOCK-128-R7 --aocv-fold export names;
@@ -796,7 +859,9 @@ def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_pat
     die stage) unless cell_share is given.  mode 'flat' = die_ci_margins.json cell/net derates, 'table' = clk_aocv.
     droop 'stated' = +5.1 % late on the late branch always; 'shared' = 0 when both taps share a droop region, else
     +5.1 %.  region: {port: mesh/PDN region} (CLOCK-KV-R17 default --droop-region mesh); a tap missing from it (or
-    region None = --droop-region tree, the pre-R17 rule) uses its tree region (cppr_node != 'h')."""
+    region None = --droop-region tree, the pre-R17 rule) uses its tree region (cppr_node != 'h').
+    clock_cell (CLK-INV-CAL-1): the die stages use AOCV class CLOCK_CELL_AOCV_CLASS[clock_cell] ('buf' = A, unchanged;
+    'inv' = Ainv, one stage per CKINVDCx16, cell share of that class); the table must carry the class (fail closed)."""
     import clk_aocv as CA
     here = Path(__file__).resolve().parent
     T = CA.load(table_path or here / APPROVED_AOCV_TABLE)
@@ -808,7 +873,10 @@ def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_pat
                          "(CLOCK-128 fold export must add them)")
     corner = meta.get("corner", "TT")
     B = T["classes"]["B"][corner]
-    fc = cell_share if cell_share is not None else T["classes"]["A"][corner]["cell_share"]
+    ka = CLOCK_CELL_AOCV_CLASS[clock_cell]
+    if ka not in T["classes"]:
+        raise SystemExit(f"--clock-ocv {mode}: clock cell {clock_cell} needs AOCV class {ka} in the table (CLK-INV-CAL-1)")
+    fc = cell_share if cell_share is not None else T["classes"][ka][corner]["cell_share"]
     nB = max(1, round(core_lat / B["mu_stage_ps"]))
 
     def branch(r, node, late):
@@ -816,7 +884,7 @@ def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_pat
             else (r["late_ps"] if late else r["early_ps"])
         arr = own - float(meta["node_late_ps" if late else "node_early_ps"][node])
         return dict(cell_ps=fc * arr + B["cell_share"] * core_lat, net_ps=(1 - fc) * arr + (1 - B["cell_share"]) * core_lat,
-                    stages={"A": int(r["stages_from_root"]) - int(meta["node_stages"][node]), "B": nB})
+                    stages={ka: int(r["stages_from_root"]) - int(meta["node_stages"][node]), "B": nB})
 
     def fn(a, b, check):
         A_, B_ = taps[a], taps[b]
@@ -1435,6 +1503,11 @@ def main(argv=None):
     ap.add_argument("--clock-cal", choices=("none", "spice"), default="none",
                     help="METHODOLOGY 12.15 b: spice = scale clock arrivals x1.0485 TT / x1.0552 FF (SPICE_CLOCK_CAL; SS "
                          "uses the TT factor) before every class and the --count-align rows")
+    ap.add_argument("--clock-cell", choices=CLOCK_CELLS, default="auto",
+                    help="CLK-INV-CAL-1: die clock cell of the ONE shared model (spice factor + AOCV die class). auto "
+                         "(default) = tap_arrivals meta clock_cell, else the majority master of the proof's clock netlist "
+                         "(ctree.v), else buf; inv / inv2 = CKINVDCx16 (SPICE_CLOCK_CAL_INV, class Ainv); buf = BUFx24 "
+                         "(unchanged)")
     ap.add_argument("--count-align-ss-scale", type=float, default=1.27,
                     help="--count-align SS INFO row (never gates): TT taps x this SS/TT delay ratio when the proof has no "
                          "tap_arrivals_SS.json; 0 = off")
@@ -1553,8 +1626,13 @@ def main(argv=None):
     hbrec, hbbits = {}, None
     for c in corners:
         meta, taps = load_taps(d, c)
+        ccell, cbasis = resolve_clock_cell(a.clock_cell, d, meta)
+        if ccell != "buf":              # CLK-INV-CAL-1 record (BUFx24 records stay byte-identical)
+            res.setdefault("clock_cell", {})[c] = dict(cell=ccell, basis=cbasis, aocv_class=CLOCK_CELL_AOCV_CLASS[ccell],
+                                                       spice_factor=spice_cal_factor(c, ccell) if a.clock_cal == "spice"
+                                                       else None)
         if a.clock_cal == "spice":
-            meta, taps = scale_clock(meta, taps, SPICE_CLOCK_CAL.get(c, SPICE_CLOCK_CAL["TT"]))
+            meta, taps = scale_clock(meta, taps, spice_cal_factor(c, ccell))
         rng = meta["cppr_node_range_ps"]
         slew = max(r["slew_ps"] for r in taps.values())
         reg = characterise(out, c, slew, a.seam_wire_um * a.wire_ff_per_um)
@@ -1594,7 +1672,8 @@ def main(argv=None):
             droop = a.clock_droop or ("shared" if a.clock_ocv == "table" else "stated")
             dreg = droop_regions(d, taps, a.droop_region, a.droop_regions) if droop == "shared" else None
             ocv = clock_ocv_fn(a.clock_ocv, droop, dict(meta, corner=c), taps, lat[c], a.clock_aocv_table,
-                               cell_share=a.clock_ocv_cell_share, region=dreg)
+                               cell_share=a.clock_ocv_cell_share, region=dreg,
+                               **({"clock_cell": ccell} if ccell != "buf" else {}))
             cr["clock_ocv"] = dict(mode=a.clock_ocv, droop=droop, status="DRAFT 12.4a b1, UNCHECKED, not a gate")
             if droop == "shared":
                 cr["clock_ocv"]["droop_region"] = dict(mode=a.droop_region, file=a.droop_regions,
