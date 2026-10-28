@@ -83,3 +83,26 @@ endmodule
 
 def test_missing_top_fails(tmp_path):
     assert any('DESIGN_NAME' in e for e in K.unresolved_modules(kit(tmp_path, {'top.sv': TOP}, top='nope')))
+
+
+def test_missing_include_fails_staged_include_passes(tmp_path):
+    src = 'module top(input wire a, output wire y);\n`include "inc_tbl.svh"\n    assign y = a;\nendmodule\n'
+    k = kit(tmp_path, {'top.sv': src})
+    assert any('inc_tbl.svh' in e for e in K.unresolved_modules(k))
+    (k / 'rtl' / 'inc_tbl.svh').write_text('// table\n')
+    assert K.unresolved_modules(k) == []
+    # a dead `ifdef include is not read by the flow
+    k2 = kit(tmp_path / 'd', {'top.sv': src.replace('`include', '`ifdef NOPE\n`include').replace('.svh"', '.svh"\n`endif')})
+    assert K.unresolved_modules(k2) == []
+
+
+def test_gen_phys_stages_includes_transitively(tmp_path):
+    s = tmp_path / 'src'
+    s.mkdir()
+    (s / 'a.sv').write_text('`include "b.svh"\nmodule a; endmodule\n')
+    (s / 'b.svh').write_text('`include "c.svh"\n')
+    (s / 'c.svh').write_text('// c\n')
+    d = tmp_path / 'rtl'
+    d.mkdir()
+    gen_phys.stage_includes([str(s / 'a.sv')], d)
+    assert sorted(p.name for p in d.iterdir()) == ['b.svh', 'c.svh']
