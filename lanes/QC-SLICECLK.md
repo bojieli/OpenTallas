@@ -129,3 +129,27 @@
   - A0 NK/NL (768): centre-entry tap placeholder 390 TT / 312 FF (range 355-424 / 284-340), UNCHECKED = fresh child CTS (rawleaf 158.0, romleaf 170.3, node 222.3 TT, placement RC, intel2 corelat-sq-1-a0cts) + analytic trunk 30 + 515 um x 199-334 ps/mm; est FF hold -15.8 (was ~-345 on the 682.7 model, which is too high). 250+-20 rebuild impossible (node alone 222). If R3b drop islands stay adopted: 250/202.5 but node is +21 over its 201 budget. Real number = parent kit CTS (~64k cells) - not launched. xy of the centre tap TO-DO (no A0 LEF in plan).
   - su_lane_w 96: model 288.4 TT (UNCHECKED, no view).
   - Residual after taps: all 8 types slightly < 0 (worst prog -29.9) = in-core spread + 5 % OCV -> boundary hold buffers. Kit side: no QC type is all-SIGNED (btab/A0 parent_budget) -> legacy core_latency.txt (ASK in queue).
+- 2026-10-28 03:46 PDT DIE-QC-6 RESULT + PARKED claude/die-qc6-1028@c336474cc4 (results only: results/die_qc6_1028/README.md + scripts; GitHub + hub). Runs epyc2:/srv/opentallas-scratch2/claude/die-qc6-1028. All OWN/UNCHECKED-independent unless marked.
+  - OUTCOME: real views do NOT remove the -162. Its structural cause is the superseded A0 multi-tap entry, not buffers and not the SU views.
+  - (1) SU bind is a PLAN DELTA, not a flag. --core-view-match-pins bound 0/84 SU placements (CHECKED):
+    - The K2 SU pin tables are the provisional single 'io' group ('replaced when the su_c leaves are bound').
+    - The slot outlines differ: vmr/rp1 259.2x276.48 plan vs 250.56x216 signed; prog 354.24x259.2 vs 259.2x354.24 rotated.
+    - Five signed ETMs are staged with provenance at die-qc6-1028/views (vmr f4k, rp1 f4g, prog s8b, rst3 K0 pre-hold-ECO ETM, s8x_crh).
+  - (2) Real-view FF hold (INFO, match-pins off because the plan pins are placeholders):
+    - Main: 84/960 real; real-endpoint worst FF -133.57; both-real -109.99 (84 neg); gate -162.18 unchanged.
+    - One physical model per tap (rv_phys.py), su_c core-core FF: -114.5 (89 neg) -> **-28.1 (24 neg)** with the CORELAT early taps; TT +1.4.
+    - su_c core-glue -114.4 stays: SU insertion vs the 202.5 FF budget register.
+    - c_* -160.6 unchanged: no A0 view exists on the fleet (CHECKED search).
+  - (3) Structural cause of c_* hold (c_pairs.py). c_* = 5 glue + ~6 die taps per A0 core x 4 (the old a0cv8 multi-pin entry).
+    - **66.9 % of c_* pairs (97,152; 89,004 neg; worst -162.2 = the gate worst) are SAME-CORE: two die taps of one A0 core, an in-core path timed at die level with zero logic.**
+    - core-glue: 30.4 %, worst -159.6. glue-glue: 2.6 %, worst -121.3.
+    - The COORD 03:35 A0 centre entry moves the same-core pairs into the core's own CTS/hold.
+    - OCV split (main clock_ocv_fn): c_* median 45.4 = 34.8 die tree below the LCA (capture branch 558 ps / 13 stages; sl_* is 250 ps / 7) + 10.6 declared in-core class B. A shallower region tree saves ~17 ps, but alone it cannot close (median pair needs 56 ps of data).
+    - HB4 BOUND 7.91M -> 7.40M without same-core pairs. The bound is (all core data pins) x (partition worst k=4), so it is not a per-path count; the real count needs the A0 ETM.
+  - (4) FREEZE GATE on K2 + MESO-START-2 --tree-parent x3 (fbb34b6aac tools, event plan):
+    - PASS: GRT0 (QC-5 CHECKED), skew 135.39/117.43, TT setup +475.43/+545.94 seam, CA plan 0 fail (lo 106.8), bind 2537 crossings / 0 unbound / 0 no-taps, lag lo 121.7/116.8.
+    - FAIL: FF hold intra -162.18 / seam -97.89; start-skew 37/312 TT, 24/312 FF (MESO-START-3).
+  - (5) A0 NK/NL sign-off, biggest missing piece: the NK/NL PARENT kit with the centre entry (parent-kit CTS replaces the CORELAT 390/312 placeholder; ~64k cells) on top of routed child views.
+    - Children: rawleaf PLACED + LEC EQ; node LEC EQ + placed (QC-CORES-4); romleaf wrapper FAIL shared 1 (ce_d).
+    - No live lane owns it (QC-A0-KITS last 10-27 11:55, QC-CORES-4 13:19). ETA UNCHECKED ~16-24 h: child routes in parallel ~6-8 h, parent CTS ~1-2 h, parent route + sign-off + routed LEC ~8-12 h.
+  - NEXT (DIE-QC-7): plan event K2b = signed SU LEF outlines/ports + CORELAT taps -> G0C -> clock-first GRT -> CA (--tree-parent x3) -> STA with --core-view (match-pins ON). A0 parent kit by a core lane. The rst3 K0 hold_b re-sign with pg census (CORES-KITS-ALL) is also QC-owned. No live jobs.
