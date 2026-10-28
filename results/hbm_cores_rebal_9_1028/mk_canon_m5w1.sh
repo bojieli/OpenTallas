@@ -4,8 +4,8 @@
 # the only change is the canon wrapper passing the lane build to the generated core
 # (ot_hbm_su_pg_lanes4_core #(.MLAT(5),.WCOPY(1)), build_split_tops.py --pg-params) -- derived, never hand-edited.
 set -eu
-W=/srv/opentallas-scratch2/claude/wt/hbm-cores-rebal-9; R4=/srv/opentallas-scratch2/claude/hbm-cores-rebal-4
-R=/srv/opentallas-scratch2/claude/hbm-cores-rebal-9; F=$R/fixes_m5w1; m=ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77
+W=${W:-/srv/opentallas-scratch2/claude/wt/hbm-cores-rebal-9}; R4=/srv/opentallas-scratch2/claude/hbm-cores-rebal-4
+R=/srv/opentallas-scratch2/claude/hbm-cores-rebal-9; F=${F:-$R/fixes_m5w1}; m=ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77
 P=$R4/c20e_k2m; V=$R4/views_k2m.json; MLAT=${MLAT:-5}; WCOPY=${WCOPY:-1}; TAG=${TAG:-_c20ek2m_m5w1}
 rm -rf $F; mkdir -p $R/kits $R/preflight; cp -r $R4/fixes $F
 python3 - $F/canon_wrappers/$m.sv $MLAT $WCOPY <<PY
