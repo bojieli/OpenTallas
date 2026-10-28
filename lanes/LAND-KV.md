@@ -9,3 +9,4 @@ Inputs: lanes/FALLBACK-LAND.md FALLBACK-KV + FALLBACK-PLAN-PREP-2; claude/fallba
   - BOUND: the measured trunk is 130 ps per 405 um stage (BUFx24, M8/M9), about 321 ps/mm. Region roots span 0.95-10.13 x 0.76-26.86 mm. From the best centre the farthest root is 17.6 mm Manhattan, so ANY balanced single-source top gives >= 5.66 ns unshared on root-cut pairs (the current 6.08 is near that bound).
   - => A low-insertion top CANNOT reach <= 3.4 ns on KV. Only a neighbour-forwarded form can, and its hops of ~1.4-1.7 mm carry a nominal d of ~450-550 ps, over P/2. That needs a fixed-latency (whole-cycle-padded) forwarded-hop contract: a COORD/§12 decision, not a lane change.
   - Not started a re-GEN that would be thrown away. Waiting on the ASK.
+- 2026-10-27 20:03 PDT [KV-PLAN-DELTA-8 -> LAND-KV] No KV plan event from D8 (move blocked, ASK in queue); keep hm_r26q5c39. The next delta (D9) will be one source for both forms.
