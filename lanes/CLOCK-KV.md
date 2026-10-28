@@ -224,3 +224,39 @@ Own codex/kv-clock-1027@563778e9a pending ONE event: R26+200FT+resetlocal+q2rena
   - Summary: 11 types / 1,348 placements < 0, of which 2 types < -100 (kvs_ctl, ahub); with u60, 15 types / 1,352 placements < 0. NO DATA: 13 types / 273 placements: qkd_kvs_pc x124, ectlk_q0..q3 x128 (older ectl_a/b_tp8 views 345-455 TT suggest deep), hr_phy_adp x8, astk x4, kvs_pc_h_head_p x4, hr_ingest_eng/cdc_ch/core_peer/cdc_hi/cdc_ci x1.
   - The KV die STA (DIE-KV-5 intra -11.02 / seam +14.38) uses the declared 250 budget, so it does not see any of this.
   - FIX: early core taps from each core's own view (12.3 v5.0; DIE-HEAD-5 signed_mean_core_taps / RM91 mean contract), plus planned core taps for e0/e2/e6. Per-type early TT approximately +49..+63 (heads), +120 (pv_pair), +10 (pv_join), +353 (kvs_ctl); mean-contract basis (core_latency.json pin-flop means) is about 10-15 ps less. The mean contract needs SIGNED views: only e1/e5 qualify today, so the others need the 'real view' basis or must be signed first. Measure kvs_pc/ectlk before their kits reach CTS. UNCHECKED estimate.
+- 2026-10-28 03:04 PDT [RISK-SWEEP-2] KV C2 ESTIMATE, in-core clock spread coverage per hard-core type (TT/FF, ps).
+  - Spread measured on a real routed internal tree (core_latency.json, all registers):
+    - heads e0 19.0/17.8, e1 27.5/24.9 (SIGNED), e2 33.3/31.3, e5 25.3/22.5 (SIGNED), e6 32.2/30.7.
+    - pv_pair 55.3/47.9. This is the OLD kv-g3 view; the QK-CORES-11 island rebuild has no view yet.
+  - Spread from the ETM table only (max - min clock_tree_path, real views):
+    - pv_join 63.3/60.8
+    - kvs_ctl 141.3/126.4 (close to 150)
+    - hr_core_order 40.5/37.6, hr_cdc_pc 46.9/43.5, hr_core_tx 41.5/37.9, hr_core_guard 51.4/51.7, hr_core_queue 43.0/41.4
+  - Over 150: only the ahub PROXY (qkd_ahub_static_dw), about 310 TT. The plan ahub is a 605x441 rework with no view.
+  - NOT COVERED (no real internal tree, 17 types / 277 placements):
+    - no view at all: kvs_pc x124, ectlk_q0..q3 x128, hr_phy_adp x8, astk x4, kvs_pc_h_head_p x4, hr_ingest_eng, hr_cdc_ch, hr_core_peer, hr_cdc_hi, hr_cdc_ci
+    - older-view proxy only: ahub, hr_core_rx, hr_core_prompt, hr_phy_pad
+  - Their spreads remain die-level unknowns until views exist. CHECKED (data reads); the ETM spread is an upper-bound proxy (UNCHECKED).
+- 2026-10-28 03:04 PDT [RISK-SWEEP-2] KV C3 ESTIMATE, reset final-hop reach on q9b.
+  - Model: max Manhattan distance from any free point outside the hard cores (8.64-um grid) to the nearest reset terminal. Terminals come from main reset_tree.consumer_taps, i.e. the kit clock BTerms plus local_taps_um. This is geometric and UNCHECKED; it reproduces DIE-HEAD-5's HEAD 298.1 um exactly.
+  - Result: 46 of 51 types / 96 placements are over 405 um.
+    - (a) EDGE-TAP band types, 13 types / 16 placements: hroot x4, hub_C/Ei/Eo/Wi/Wo, io_cor(_v1), io_ft(_v1), sys_SD(_v1), sys_c. Their reach is 968-1197 um, with 55-70 % of the free area beyond 405.
+      - Cause: clock.tap_edge_y_um (CLOCK-KV-R8) puts every clock BTerm on one edge row at y = 21.6, and the reset terminals follow the clock BTerms.
+      - KV-KITS measured the same mechanism on 10-25: io_cor_v1 reset leaf u_rrl_11 up to 1305 um.
+    - (b) CORNER types, 33 types / 80 placements: hg*/hgi*/pv*. Reach is 477-498 um at the outline corners (0.45-0.8 % of the free area), where the grid taps were moved off the hard cores.
+    - kv3_pc* passes at 356 um.
+  - A kit would hit OT_RESET_LEAF at GPL.
+  - FIX (plan only, ~1 h): reset.local_taps_um, the opt-in already on main that DIE-HEAD-5 TILEIO used on 15 HEAD types (worst 298). Add a corner local tap on the hg/hgi/pv types.
+  - PG IR: not re-run. The current number is PG-ACTIVITY-3 31.44 mV CHECKED (measured activity, c39 grid; COORD 17:17 ruling). The q9b die.pg grid = c39 (M9 12.96@39.96 offset 13.77, CHECKED json). Whether q9b adopted the edge-fit bump map is UNCHECKED (no bump field in die.pg).
+- 2026-10-28 03:04 PDT [RISK-SWEEP-2] KV C4 ESTIMATE, kit size (logic outside hard cores) vs the 400k cap.
+  - Basis: l1_cores_v31 glue_k (v3.1, OLD, UNCHECKED for q9b). Before any additions, kv3_pv/pv_v2/v4/v6 (+n variants) are at 388k = 97 % and kv3_pc_v1/pc_v3 at 382k = 95.5 %.
+  - Adding the count-aligned landing ring on every input data bit, at an ASSUMED 8 cells/bit (D4) / 14 (D8) (UNCHECKED, no measured ring cost):
+    - OVER 400k: kv3_pv x1 (401k), pv_v2/v2n 432k, pv_v4/v4n 439k, pv_v6/v6n 429k, pc_v1 x24 and pc_v3 x4 409k
+    - kv3_pc reaches 410k at D8
+    - the rest are <= 355k
+  - DIE-S81-3 found the same class: 403k/434k after the CA ring (COORD 22:24 accepted ring banks as own hard cores).
+  - FIX: the first strap/ring kit of pv_v4 and pc_v1 reports its synth count before the wave. If over the cap, use landing-ring banks as hard cores (S81 ruling), with no type split. Missing from l1: io_cor/io_ft (unknown).
+- 2026-10-28 03:04 PDT [RISK-SWEEP-2] KV C5 DRT PREVIEW: NOT RUN (blocked, CHECKED).
+  - (1) There is no q9b kit RTL. gen phys --trial fails on every hard-core partition type with unbound buses (DRT-TRIAL-1 23:50). The only bind kit-rtl is q3 b3 (KV-KITS-7), and its one placed kit (sys_c) is FAIL_PREFLOOR (LEC NOT EQUIVALENT).
+  - (2) The q9b hard_cores carry no lef/lib, and the pv_pair real view is the old kv-g3 pin set (pre QK-CORES-11 islands).
+  - DEFAULT next: the DRT-TRIAL-1 recipe on kv3_pv_v1n (16 pv_pair + 4 pv_join = 20/20 real) once the q9b kit-rtl and the QK-CORES-11 pv_pair view exist. Congestion pick: pv faces up to 1056-b buses, E M4 9.4/um on pv_join (GEOM-27).
