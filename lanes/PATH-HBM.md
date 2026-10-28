@@ -1062,3 +1062,25 @@ Resumed exclusive whole-hub mover endpoint work in fresh sparse codex/hbm-datafl
   - (a) builder fix and <=150 proof on R002/R024/R015E, starting from --region-dme priced.
   - (b) spt re-root + relay plan for the 38 pairs over 3.4 ns at 342 ps/mm.
   - No jobs left running.
+- 2026-10-28 03:06 PDT [HBM-RISK-2] R5 COLLECT: the epyc2 run of gen.py phys --trial --types q_hub_nw (pid 1292431) ended with "ERROR type q_hub_nw: bus L0_o is not bound to any leaf port (open output)", and no kit was written (CHECKED phys_hub.log).
+  - This is the same blocker DRT-TRIAL-1 found on KV: the HBM partitions need bind.py kit RTL (--kit-rtl), not the plan wrapper. That is one more prerequisite before any HBM partition DRT preview.
+  - Failed kit data and my epyc2 worktree are deleted; logs are kept in epyc2:/srv/opentallas-scratch2/claude/hbm-risk-2/. No jobs of mine are left running.
+- 10-28 03:06 PDT DIE-HBM-5 ESTIMATE for COORD 03:00 (region = PARTITION). No build yet.
+  - Region count: 90 (88 partitions, with the hubs as W/E halves); 92-108 once the hubs are partition-split (k=9-10 each, see 02:4x).
+  - Max partition span: 8.80 mm (PHY_N, no hard cores), hubs 8.22, root 7.79, SM 5.81, MC 4.90. 34 of 88 partitions span >4 mm; every partition exceeds 1.15 mm in one direction (the b-columns are 0.55-0.83 x 4.32 mm). A <=~1 mm span everywhere would mean about 690 regions, so not as-is. (CHECKED, plan outlines)
+  - BUILT evidence already says partition alone does not close HBM. The HBM-RISK-1 k1 tree (region-dme delay) has single-partition regions at TT spread:
+    - SM: NW_sm0 1036 ps, NW_sm3 1000, NE_sm0 963, NE_sm3 781, NW_sm2 749 (34 taps each);
+    - hub halves 810-964;
+    - root 428.
+    - Only the multi-partition regions gain from region = partition (R012 805, R018 636, R007/R008 599-631, ...).
+    - So the SM/hub/root fix has to come from --region-dme-only on the macro partitions (QC fb85083883; tool in rm91b / die-s81-7 worktrees). That is UNMEASURED on HBM.
+  - CA, analytic model on the partition map (r5_sf + spt, hub halves as true partitions from plan_hubsplit; CHECKED tool run, UNCHECKED model):
+    - 638 crossings, D4 564 / D8 64, max_lat 6, worst margin 110.0/130.3 ps at 278.6 and 132.2 at 219.2;
+    - 10 FAIL (54 bits), all "unreached" status links in the 3-region spb0-spb1-spb2 chains (NW/NE) and vsN. The SF wire is anchored on a region that is itself unreached, so SF must iterate to a fixpoint (spb2->spb1->spb0). Not done yet.
+    - Files: intel1 die-hbm-5/r5/region3/r6/{map_part.json,part_spt_*.{tsv,log}}.
+  - CA on BUILT arrivals: PENDING, not run in this slice. The chain is:
+    1. spt feed json over the 90 regions;
+    2. r2_clock.py-style clock_kit with --region-dme delay --region-dme-only <SM, hub halves, root, b*-macro partitions> on rm91b tools;
+    3. ctree STA TT/FF at spice x1.0485/x1.0552;
+    4. count_align --sta-proof with the hub halves as real partitions (no NW_hub back-mapping).
+    About 1 h on epyc2.
