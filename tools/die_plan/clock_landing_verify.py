@@ -155,7 +155,7 @@ class Verification:
         for r in rows:
             pr=ports[r['port']];bus=pr['dst']['bus'];path=ident(r['dst'])+'.u_cland_'+bus
             ca=self.table.get('count_aligned')
-            c=self.instance(path,'ot_dp_clk_landing_ca' if ca else 'ot_dp_clk_landing')
+            c=self.instance(path,('ot_dp_clk_landing_cas' if ca.get('strap_form') else 'ot_dp_clk_landing_ca') if ca else 'ot_dp_clk_landing')
             if c:
                 self.clock(c,r['dst']);self.clock(c,r['src'],'fclk')
                 info=self.collector['types'][self.parts[r['dst']]['type']]
@@ -221,7 +221,8 @@ class Verification:
                     # Concatenation is MSB first in RTL, Yosys bits are LSB first.
                     self.equal_input(c,port,list(reversed(want)))
         actual={c.path for c in self.F.cells if c.module in ('ot_dp_clk_landing','ot_dp_landing_collect','ot_dp_clk_landing_ca',
-                                                             'ot_dp_landing_origin','ot_dp_landing_root','ot_dp_landing_relay')}
+                                                             'ot_dp_landing_origin','ot_dp_landing_root','ot_dp_landing_relay',
+                                                             'ot_dp_clk_landing_cas','ot_dp_landing_origin_s')}
         for x in sorted(actual-self.expected):self.fail('unexpected/unpriced infrastructure '+x)
         for x in sorted(self.expected-actual):self.fail('missing infrastructure instance '+x)
 
@@ -230,7 +231,19 @@ class Verification:
         relay flop's q"""
         parts=self.table['count_aligned'].get('parts') or {}
         if parts.get(pn,{}).get('role')=='relay':return self.output(ident(pn)+'.u_cland_rstart_rx','q')
+        if self._strap_root(pn):return self.output(ident(pn)+'.u_cland_root','start')
         return self.output(ident(pn)+'.u_cland_origin','start')
+
+    def _strap_root(self,pn):
+        """MESO-STRAP-1 strap form: the root copy of a type that also has child copies keeps its root counter as
+        u_cland_root (strap_ca_root selects it); the strap select muxes fold on the die's constant ties."""
+        ca=self.table.get('count_aligned') or {}
+        if not ca.get('strap_form'):return False
+        if not hasattr(self,'_strap'):
+            import count_align_bind as CAB
+            self._strap=CAB.strap_ties(ca,self.raw)
+        si=self._strap['instances'].get(pn)
+        return bool(si and si['values'].get('strap_ca_root'))
 
     def _raw_node(self,pn,ins,info):
         b=sorted(ins[pn])[0] if ins[pn] else None
@@ -260,8 +273,13 @@ class Verification:
                     self.fail(f'count-aligned region {tag}: bind roles {roles} need exactly one origin {pn}');continue
             path=ident(pn)+'.u_cland_origin'
             info=self.collector['types'][self.parts[pn]['type']]
+            if ca.get('strap_form'):
+                self._strap_root(pn)
+                st=self._strap['types'].get(self.parts[pn]['type'],{}).get('origin',{})
+                if st.get('root'):   # both origins exist in every copy of a root+child strap type; the strap selects one
+                    self.expected|={ident(pn)+'.u_cland_root',ident(pn)+'.u_cland_origin'}
             if rg['parent'] is None:
-                c=self.instance(path,'ot_dp_landing_root')
+                c=self.instance(ident(pn)+'.u_cland_root' if self._strap_root(pn) else path,'ot_dp_landing_root')
                 if c:
                     node,relay=self._raw_node(pn,ins,info)
                     self.clock(c,pn);self.check_reset(c,pn,node,relay,port='rst_raw_n')
@@ -271,7 +289,7 @@ class Verification:
                 b=ports[tp['port']]['dst']['bus']
                 if self.region.get(tp['src'])!=rg['parent']:
                     self.fail(f'count-aligned region {tag}: tree port sender {tp["src"]} is not in parent region {rg["parent"]}');continue
-                c=self.instance(path,'ot_dp_landing_origin')
+                c=self.instance(path,'ot_dp_landing_origin_s' if ca.get('strap_form') else 'ot_dp_landing_origin')
                 if c:
                     self.clock(c,pn);self.check_reset(c,pn,self.ring_reset_node(pn,b,info),'u_cland_rst_'+b,port='rst_raw_n')
                     self.equal_input(c,'p_start',[self.start_net(tp['src'])])

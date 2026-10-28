@@ -2653,7 +2653,18 @@ class Binder:
                 raise BindError("die reset pad gate (por_gate.py): " + "; ".join(g["errors"][:6]))
         man = dict(schema="opentallas.parent_id_straps.v1", types=self.parent_id_ports,
                    instances=self.parent_id_values, added_data_cycles=0)
-        if any(self.parent_id_ports.values()):
+        cl = getattr(self, "clock_landings", None)
+        cexp = cl.strap_expected() if cl is not None and getattr(cl, "strap", None) else {}
+        if cexp:
+            # MESO-STRAP-1 (OWNER 12.15a): count straps strap_ca_* join the parent strap manifest (same 1.8 rules)
+            man = json.loads(json.dumps(man))
+            decl = cl.strap_declarations({tn: self.types[tn].get("split_of", tn) for tn in self.types})
+            for tn, ports in decl.items():
+                man["types"].setdefault(tn, {}).update({sp: dict(width=w, kind="count_strap") for sp, w in ports.items()})
+            for q, ports in cexp.items():
+                man["instances"].setdefault(q, {}).update({sp: dict(width=w, value=v, kind="count_strap")
+                                                           for sp, (w, v) in ports.items()})
+        if any(man["types"].values()):
             (out.parent / "bind_parent_id_straps.json").write_text(json.dumps(man, indent=1) + "\n")
         # tie-off audit (OWNER 10-25 option B): a literal on a partition pin is legal ONLY on a declared ID strap;
         # each strap bit then gets its own TIEHI/TIELO next to the pin (die_constant_cells.tcl; strap_ties_check.tcl)
@@ -2662,8 +2673,18 @@ class Binder:
         (out.parent / "bind_tie_audit.json").write_text(json.dumps(aud, indent=1) + "\n")
         if aud["verdict"] != "PASS":
             raise BindError(f"tie-off audit: {aud['reason']}")
-        if aud["rows"]:
-            (out.parent / "strap_ties_check.tcl").write_text(STR.tie_check_tcl(aud["rows"]))
+        rows = aud["rows"]
+        if cexp:
+            # count-strap VALUE audit (COORD addition, 12.14a: extends this audit): literal == bind value, every pin
+            cva = STR.audit_count_strap_values(f.read_text(), {re.sub(r"[^A-Za-z0-9_]", "_", q): v for q, v in cexp.items()})
+            (out.parent / "bind_count_strap_audit.json").write_text(json.dumps(cva, indent=1) + "\n")
+            if cva["verdict"] != "PASS":
+                raise BindError(f"count-strap tie-value audit (G0 ERROR): {cva['reason']}")
+            # the netlist tie check takes count-strap values from the bind, not from the literals it just checked
+            rows = [r for r in rows if not STR.COUNT_STRAP_RE.match(r[1])] + \
+                STR.count_strap_rows({re.sub(r"[^A-Za-z0-9_]", "_", q): v for q, v in cexp.items()})
+        if rows:
+            (out.parent / "strap_ties_check.tcl").write_text(STR.tie_check_tcl(rows))
         return files
 
     def _pname(self, k):
