@@ -113,6 +113,32 @@ _MODSPAN = re.compile(r"\b(?:module|macromodule|interface)\s+(?:automatic\s+|sta
                       r"\b(?:endmodule|endinterface)\b", re.S)
 
 
+_INCLUDE = re.compile(r'`include\s+"([^"]+)"')
+
+
+def missing_includes(kit, cfg, defines):
+    """live `include "x" lines of the staged sources that resolve neither next to the including file nor under
+    VERILOG_INCLUDE_DIRS / SYNTH_INCLUDE_DIRS (RISK-SWEEP-2 10-28: HEAD hd_serdes lacked 3 s81_link .svh)."""
+    dirs = []
+    for v in cfg.get('VERILOG_INCLUDE_DIRS', []) + cfg.get('SYNTH_INCLUDE_DIRS', []):
+        p = Path(v)
+        dirs.append(kit / v[len('/work/'):] if v.startswith('/work/') else p)
+    errors, todo, seen = [], [p for p in rtl_lint._kit_sources(kit) if p.is_file()], set()
+    while todo:
+        p = todo.pop()
+        if p in seen:
+            continue
+        seen.add(p)
+        text = _preprocess(re.sub(r"/\*.*?\*/|//[^\n]*", " ", p.read_text(errors='replace'), flags=re.S), set(defines))
+        for inc in _INCLUDE.findall(text):
+            hit = next((d / inc for d in [p.parent] + dirs if (d / inc).is_file()), None)
+            if hit is None:
+                errors.append(f'`include "{inc}" in {p.name} resolves neither beside it nor in the include dirs')
+            else:
+                todo.append(hit)
+    return errors
+
+
 def unresolved_modules(kit):
     """['module M instantiated in F has no definition ...'] for every module type instantiated (unguarded) in the
     hierarchy reachable from DESIGN_NAME that no staged source, blackbox header or macro liberty defines and that is
@@ -141,6 +167,7 @@ def unresolved_modules(kit):
             mods.setdefault(mm.group(1), (p.name, uses))
     macros = sorted((kit / 'macros').glob('*.lib*')) if (kit / 'macros').is_dir() else []
     cells = rtl_lint.liberty_cells(macros) if macros else set()
+    errors += missing_includes(kit, cfg, defines)
     if len(top) == 1 and top[0] not in mods and top[0] not in cells:
         errors.append(f'top {top[0]} (DESIGN_NAME) is not defined by any VERILOG_FILES source')
     seen, todo, missing = set(), list(top[:1]), {}

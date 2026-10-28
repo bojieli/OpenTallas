@@ -1378,6 +1378,28 @@ def _corner_libs(mlib, kd, corner):
 KEEP_REGS_HOOK = ("ot_keep_regs.tcl", "ot_pin_regs.tcl", "pin_reg_split.tcl", "ot_rst_copies.tcl", "ot_rst_copies.py")
 
 
+_INCLUDE = re.compile(r'^[ \t]*`include[ \t]+"([^"]+)"', re.M)
+
+
+def stage_includes(rtl_files, rtl_dir):
+    """DIE-HEAD-7 / RISK-SWEEP-2 10-28: copy every `include "x" a staged source names (transitively) from the source's
+    own directory into the kit rtl/ (yosys resolves includes next to the including file); the HEAD hd_serdes kit
+    dropped s81_link/ot_s81_gf1024.svh + kp4 *_mat.svh.  A missing include stays missing: KIT_PREFLIGHT fails it."""
+    todo, done = [Path(f) for f in rtl_files], set()
+    while todo:
+        f = todo.pop()
+        if f in done or not f.is_file():
+            continue
+        done.add(f)
+        for inc in _INCLUDE.findall(f.read_text(errors="replace")):
+            src = f.parent / inc
+            dst = Path(rtl_dir) / Path(inc).name
+            if src.is_file():
+                if not dst.exists():
+                    shutil.copyfile(src, dst)
+                todo.append(src)
+
+
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False,
                    bump_ports=None, gpl_plain=False):
@@ -1433,6 +1455,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         if Path(f).resolve() != dst.resolve():
             shutil.copyfile(f, dst)
         srcs.append(f"/work/rtl/{Path(f).name}")
+    stage_includes(rtl_files, kd / "rtl")
     pins = type_pins(P, tn)
     bump_sites = bump_pin_sites(P, tn, bump_ports, macros, Path(root) if root else Path(__file__).resolve().parent.parent.parent) \
         if bump_ports else []
