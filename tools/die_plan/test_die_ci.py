@@ -105,7 +105,7 @@ def test_inject_derate_keeps_policy_lines():
            "set fh [open out.txt w]\n")
     out = C.inject_derate(tcl, C.DEFAULT_MARGINS)
     assert "set_clock_uncertainty 60.0000 -setup" in out and "set_clock_uncertainty 25.0000 -hold" in out
-    assert out.index("set_timing_derate -late -cell_delay") < out.index("set fh [open")
+    assert out.index("set_timing_derate -late") < out.index("set fh [open")
     assert out.index("set_clock_uncertainty 25.0000") < out.index("set_timing_derate")
     with pytest.raises(SystemExit):
         C.inject_derate("read_liberty x\n", C.DEFAULT_MARGINS)

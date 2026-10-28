@@ -25,6 +25,13 @@ def transform(text, mutant=False, nface_ff=False):
                           "    (* keep *) reg wpin_f;\n    always @(posedge ck or negedge rs_q) if (!rs_q) wpin_f <= 1'b0; else wpin_f <= wes[0] && own_pin;\n",1)
         text=text.replace(old2,old2+"            if (wpin_f) m_fault <= 1'b1;\n")
     return text
-def apply_kit(rtl_dir, mutant=False, nface_ff=False):
+def apply_kit(rtl_dir, mutant=False, nface_ff=False, calendar_report=None):
+    """TOK-ALL-17 hook (fail closed): the kit is transformed only with an admitted KV boot / REOPEN phase calendar
+    (tools/qwen_kv_die/hhp_boot_calendar.py report at PHASE_DELAY 1 under the current hhp_phase_guard).  Returns it."""
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parents[5] / "tools/qwen_kv_die"))
+    import hhp_boot_calendar
+    cal = hhp_boot_calendar.require_admitted(calendar_report, d=1)
     p=Path(rtl_dir)/"qkd_static_kv_pc_es_merge_b.sv"
     p.write_text(transform(p.read_text(),mutant,nface_ff))
+    return cal

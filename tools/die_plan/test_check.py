@@ -744,3 +744,71 @@ def test_run_keeps_plan_path_for_plan_relative_files(tmp_path, monkeypatch):
     check.run(json.loads((HERE / "examples" / "tiny_plan.json").read_text()), plan_dir=tmp_path)
     P = seen[-1]  # schema.validate builds its own path-free structural Plan first
     assert P.path is not None and Path(P.path).parent == tmp_path
+
+
+def test_core_bundle_reach_pin_to_pin(tmp_path):
+    """S81-CORES-R25 10-27 (COORD ruling: the plan bundle check measures pin-to-pin, not box-to-box).  Two abutting
+    hard cores (box distance 0) whose bundle pins sit on the FAR faces (gunit L1/L2 class: 928 um pin-to-pin, box 17)
+    must FAIL the 405-um core reach; the same pins re-faced to the shared face PASS; orient MX is honoured."""
+    def plan(pa_y, pb_y, orient_b="R0", port_named=True):
+        p = copy.deepcopy(EX)
+        t = p["partition_types"]["src"]
+        t["hard_cores"] = [
+            dict(inst="u_a", origin_um=[8.64, 8.64], outline_um=[345.6, 345.6], track_offset_um=[0.0, 0.0],
+                 pins=[dict(name=f"q[{i}]", layer="M5", xy=[10.0 + i, pa_y]) for i in range(4)]),
+            dict(inst="u_b", origin_um=[8.64, 354.24], outline_um=[345.6, 345.6], track_offset_um=[0.0, 0.0],
+                 orient=orient_b, pins=[dict(name=f"d[{i}]", layer="M5", xy=[330.0 - i, pb_y]) for i in range(4)])]
+        tg = "core:u_b.d" if port_named else "core:u_b"
+        (tmp_path / "core_conns.json").write_text(json.dumps({"src": {"u_a": {"q": [tg]}}}))
+        p.setdefault("budgets", {})["core_internal_reach_um"] = 405.0
+        R, _ = check.run(p, plan_dir=tmp_path, completeness=True)
+        return [i["msg"] for i in R.errors() if i["check"] == "complete" and "core bundle u_a.q" in i["msg"]]
+    # boxes abut (distance 0): the old box-to-box check passed every case below
+    far = plan(0.0, 345.6)              # u_a pins on its S face, u_b pins on its N face: >= 2 x 345.6 apart
+    assert len(far) == 1 and ">= 1011 um" in far[0], far
+    assert plan(345.6, 0.0) == []      # both on the shared face: |dx| <= 323 um, dy 0
+    assert plan(345.6, 345.6, orient_b="MX") == []          # MX puts u_b's N-face pins on its S (shared) face
+    assert plan(0.0, 345.6, port_named=False) == []         # partner without a port: pin -> partner box (345.6 lower bound)
+
+
+def test_g0c_known_error_list(tmp_path):
+    """ROOT-MERGE-82 (COORD 10-27 18:21): PLANDIR/g0c_known_errors.json turns the listed G0C ERRORs into
+    '[KNOWN-ERROR <owner>]' WARNs; the check stays ON for everything else; a stale entry is an ERROR (shrink only)."""
+    p = copy.deepcopy(EX)
+    t = p["partition_types"]["src"]
+    t["hard_cores"] = [
+        dict(inst="u_a", origin_um=[8.64, 8.64], outline_um=[345.6, 345.6], track_offset_um=[0.0, 0.0],
+             pins=[dict(name=f"q[{i}]", layer="M5", xy=[10.0 + i, 0.0]) for i in range(4)]),
+        dict(inst="u_b", origin_um=[8.64, 354.24], outline_um=[345.6, 345.6], track_offset_um=[0.0, 0.0],
+             pins=[dict(name=f"d[{i}]", layer="M5", xy=[330.0 - i, 345.6]) for i in range(4)])]
+    (tmp_path / "core_conns.json").write_text(json.dumps({"src": {"u_a": {"q": ["core:u_b.d"]}}}))
+    p.setdefault("budgets", {})["core_internal_reach_um"] = 405.0
+    R0, _ = check.run(copy.deepcopy(p), plan_dir=tmp_path, completeness=True)
+    e0 = [(i["check"], i["msg"]) for i in R0.errors() if "core bundle u_a.q" in i["msg"]]
+    assert len(e0) == 1
+    kf = tmp_path / check.KNOWN_ERRORS_FILE
+    kf.write_text(json.dumps(dict(owner="LANE-X", errors=[dict(check=e0[0][0], msg=e0[0][1])])))
+    R1, s1 = check.run(copy.deepcopy(p), plan_dir=tmp_path, completeness=True)
+    assert not [i for i in R1.errors() if "core bundle u_a.q" in i["msg"] or i["check"] == "known_errors"]
+    assert any(i["msg"].startswith("[KNOWN-ERROR LANE-X]") and i["level"] == "WARN" for i in R1.items)
+    assert s1["known_errors"]["matched"] == 1 and s1["known_errors"]["stale"] == 0
+    # stale entry (the error is fixed or the text changed) -> ERROR: the list may only shrink
+    kf.write_text(json.dumps(dict(owner="LANE-X", errors=[dict(check=e0[0][0], msg=e0[0][1]),
+                                                          dict(check="complete", msg="gone")])))
+    R2, _ = check.run(copy.deepcopy(p), plan_dir=tmp_path, completeness=True)
+    assert [i["check"] for i in R2.errors()].count("known_errors") == 1
+
+
+def test_s81_known_error_list_only_shrinks():
+    """S81 gunit known-error list (COORD 10-27 18:21): owner S81-CORES-R26, at most the 8 entries the gunit plan
+    event exposed; it may only shrink and must be empty before the S81 freeze."""
+    f = HERE.parent.parent / "physical" / "die_plan" / "s81" / check.KNOWN_ERRORS_FILE
+    if not f.is_file():
+        return
+    K = json.loads(f.read_text())
+    assert K["owner"] == "S81-CORES-R26"
+    allowed = ("eng__t1: internal core bundle u_eng.u_e.vi_s -> bus:xtier_i0",
+               "ot_s81sl_leaf__t34: internal core bundle u_lf.u_vn.u_b.", "ot_s81sl_leaf__t39: internal core bundle u_lf.u_vn.u_b.",
+               "ot_s81sl_leaf__t58: internal core bundle u_lf.u_vn.u_b.")
+    assert len(K["errors"]) <= 8
+    assert all(e["check"] == "complete" and any(a in e["msg"] for a in allowed) for e in K["errors"])

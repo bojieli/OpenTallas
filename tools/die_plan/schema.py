@@ -503,6 +503,16 @@ SCHEMA = {
                                        "bump_ports": _bump_ports,
                                        "orient": {"enum": list(ORIENTS)},
                                        "track_offset_um": _xy,      # added to origin_um (lattice) at placement
+                                       # Exact native HC128 overlay identity / placement contract. Consumed by
+                                       # hc128_apply_templates.py and hc128_core_conns.py; not inferred aliases.
+                                       "parent_instance": _name, "cut_instance": _name,
+                                       "halo_um": _nonneg,
+                                       # G0C ruling 2b (COORD 10-26 06:01): superset-face master. pin_select = the
+                                       # pin group (port copy on another face) this instance binds per port;
+                                       # unused_pins = superset groups it leaves unbound (registered, declared)
+                                       "pin_select": {"type": "object", "additionalProperties": {"type": "string"}},
+                                       "unused_pins": {"type": "array", "items": {"type": "string"}},
+                                       "unused_pins_policy": {"type": "string"},
                                        "pins": {"type": "array", "items": {   # core frame (R0, origin 0)
                                            "type": "object", "required": ["name", "layer", "xy"],
                                            "additionalProperties": False,

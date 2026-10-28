@@ -26,6 +26,27 @@ def load(path):
     return receipt
 
 
+# S81-CORES-R25 10-27 (LEC-FPREG-4 ask b): per-kit LEC settings a recipe may set in config.mk.  Allowlist only;
+# OT_LEC_RAW_BASE_STEPS = finite-prefix base cases (c6e4bfa53; each prefix constant is proved, never assumed).
+# OT_LEC_RESET_CYCLES is NOT here: lec.py gates it on KIT/reset_contract.json.
+LEC_ENV_KEYS = {'OT_LEC_RAW_BASE_STEPS': (0, 16)}
+
+
+def lec_env(kit):
+    cfg = Path(kit) / 'config.mk'
+    text = cfg.read_text() if cfg.is_file() else ''
+    env = {}
+    for key, (lo, hi) in LEC_ENV_KEYS.items():
+        found = re.findall(r'^export\s+' + key + r'\s*=\s*(\S+)\s*$', text, re.M)
+        if len(found) > 1:
+            raise ValueError(f'{key} set {len(found)} times in config.mk')
+        if found:
+            if not re.fullmatch(r'\d+', found[0]) or not lo <= int(found[0]) <= hi:
+                raise ValueError(f'{key} = {found[0]!r} outside {lo}..{hi}')
+            env[key] = found[0]
+    return env
+
+
 def run(kit, stage, netlist=None, execute=subprocess.run):
     kit = Path(kit)
     marker = kit / ('FAIL_PREFLOOR' if stage == 'lec' else 'FAIL_POSTCTS')
@@ -41,9 +62,10 @@ def run(kit, stage, netlist=None, execute=subprocess.run):
             retain(receipt)
             log = kit / 'lec_run.log'
             retain(log)
+            env = dict(os.environ, **lec_env(kit))
             with log.open('w') as stream:
                 result = execute([sys.executable, '-I', str(tool), str(kit), '--netlist', str(netlist),
-                                  '--out', str(out)], stdout=stream, stderr=subprocess.STDOUT)
+                                  '--out', str(out)], stdout=stream, stderr=subprocess.STDOUT, env=env)
             verdict = load(receipt).get('verdict')
             if result.returncode != 0 or verdict != 'EQUIVALENT':
                 raise ValueError(f'LEC {verdict}, exit {result.returncode}')

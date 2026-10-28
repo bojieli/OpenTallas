@@ -2037,6 +2037,33 @@
          "minItems": 2,
          "maxItems": 2
         },
+        "parent_instance": {
+         "type": "string",
+         "minLength": 1
+        },
+        "cut_instance": {
+         "type": "string",
+         "minLength": 1
+        },
+        "halo_um": {
+         "type": "number",
+         "minimum": 0
+        },
+        "pin_select": {
+         "type": "object",
+         "additionalProperties": {
+          "type": "string"
+         }
+        },
+        "unused_pins": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "unused_pins_policy": {
+         "type": "string"
+        },
         "pins": {
          "type": "array",
          "items": {
