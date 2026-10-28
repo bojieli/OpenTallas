@@ -206,7 +206,15 @@ def _grid_scan(w,h,obstacles,margin,px,py,area,depth,length,g=2.16,reach=405-2.1
     return out
 
 
-BAND_RESERVE="padded"   # "padded" (default) | "live" (LAND-KV-1, opt-in via compose(band_reserve="live"))
+BAND_RESERVE="padded"   # "padded" (default) | "live" (LAND-KV-1) | "ring_ff" (DIE-HEAD-11), opt-in via compose(band_reserve=)
+BAND_MODES=("padded","live","ring_ff")
+# DIE-HEAD-11 10-28 (opt-in BAND_RESERVE="ring_ff"): the band is sized from the ring FLOP COUNT x the measured mapped
+# footprint per ring flop under the landing_placement.tcl reserve rule (each cell ceil(w/0.40/site) sites wide). Measured
+# on the mapped count-aligned ring ot_dp_clk_landing_ca W=567 DEPTH 4 (hd_tile u_cland_i, one-entry kit 10-28): 2949
+# flops, 12834 cells, body 1657.1 um2, reserved footprint 4177.4 um2 -> 1.4166 um2 per flop. The padded formula
+# reserved 2636 um2 there (its 4 x 0.0729/bit non-flop term predates the CA ring, which maps ~9.9k AO/AND/INV cells),
+# so the placer ran out of band rows by construction (GPL: OT_CLAND no legal site for u_ring.s_d[0][26]).
+RING_FF_RESERVE_UM2=4177.4/2949
 
 
 def _storage_band(t,bus,width,used,*,has_epoch=True):
@@ -221,6 +229,7 @@ def _storage_band(t,bus,width,used,*,has_epoch=True):
     # that measured count at the same 40 % fill; W=64 gives 397 um2 (padded formula 396). Default "padded" keeps
     # every existing compose byte-identical.
     if BAND_RESERVE=="padded":area=(5*rw*.2916 + 4*rw*.0729 + 160*.2916)/.40
+    elif BAND_RESERVE=="ring_ff":area=(5*rw+160)*RING_FF_RESERVE_UM2   # ring flop count (padded ring + control) x footprint
     else:
         wl=width+int(has_epoch)
         area=((4*(wl+3)+124)*.2916 + 612*math.ceil(wl/64)*.0729)/.40
@@ -575,7 +584,7 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
     monitor="region" (opt-in, DIE-HEAD-2): dataflow monitor whose observer walk also follows same-region links
     (multi-partition clock regions); types split once by their landed mask (exact uniform hardware)."""
     if monitor not in ("reset","dataflow","region"):raise ValueError(f"unknown monitor mode {monitor}")
-    if band_reserve not in ("padded","live"):raise ValueError(f"unknown band_reserve {band_reserve}")
+    if band_reserve not in BAND_MODES:raise ValueError(f"unknown band_reserve {band_reserve}")
     global BAND_RESERVE
     BAND_RESERVE=band_reserve
     if observer is not None or monitor=="reset":
