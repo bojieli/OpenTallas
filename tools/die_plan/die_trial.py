@@ -1057,7 +1057,7 @@ def build_slice_spine_tree(P, taps, regions, leaf_um=600.0, site=None, top_leaf_
     return nodes, info
 
 
-def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None, route_um=480.0, only=None):
+def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None, route_um=480.0, only=None, early=None):
     """DIE-QC-3 opt-in (--tree-form link_htree --region-dme): hang one legal-site DME tree (dme_region_tree) under every
     LEGALIZED feed-end node that carries region_root; legs that cross a core take the L corner through the channels
     (same rule as the slice-spine form).  Runs after the site pass, so nothing it places slides afterwards."""
@@ -1069,7 +1069,7 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
         rn = nodes[e]["region_root"]
         if not rt.get(rn) or (only is not None and rn not in only):   # DIE-QC-4 --region-dme-only: listed regions only
             continue
-        dn, droot, dst = dme_region_tree(site, rt[rn], rep_um=rep_um, delay_rep_um=delay_rep_um)
+        dn, droot, dst = dme_region_tree(site, rt[rn], rep_um=rep_um, delay_rep_um=delay_rep_um, early=early)
 
         def attach(j, parent):
             d = dn[j]
@@ -1091,7 +1091,8 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
             for k in d["kids"]:
                 attach(k, i)
         attach(droot, e)
-        st[rn] = dict(merges=dst.get("merges"), imbalanced=dst.get("imbalanced"), spread=dst.get("spread_um"))
+        st[rn] = dict(merges=dst.get("merges"), imbalanced=dst.get("imbalanced"), spread=dst.get("spread_um"),
+                      **({"early_taps": dst["early_taps"]} if dst.get("early_taps") else {}))
     return st
 
 
@@ -1254,7 +1255,8 @@ def merge_point_delay(site, c1, s1, c2, s2, rep_um, radius_um=800.0, step=1.08, 
     return q, abs(leg_ps(md(q, c1), rep_um) + s1 - leg_ps(md(q, c2), rep_um) - s2), md(q, c1) + md(q, c2) - D_
 
 
-def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MODES, rep_um=None, delay_rep_um=None):
+def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MODES, rep_um=None, delay_rep_um=None,
+                    early=None):
     """DIE-QC-3 opt-in (--region-dme): a region clock tree built ON legal sites, so nothing slides after balancing.
     Embedding: bottom-up DME with Manhattan length as the delay proxy (repeated 1x line: delay ~ linear in length);
     every merge point is the legal zero-skew point from merge_point() (no slide, no snake; an elongated merge point is
@@ -1333,8 +1335,15 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
             live = [x for k, x in enumerate(live) if k not in (a, b)] + [m]
         return live[0]
     byp = defaultdict(list)
+    late = []           # DIE-QC-8 opt-in --region-dme-early: early core taps hang from an upper node (below)
     for t in taps:
-        byp[t[0]].append(t)
+        if early and delay_rep_um and early.get((t[0], t[1]), 0.0) > 0.0:
+            late.append(t)
+        else:
+            byp[t[0]].append(t)
+    if late and not byp:
+        byp[late[0][0]] = late
+        late = []
     proots, pick = [], defaultdict(int)
     for pn in sorted(byp):
         tl = sorted(byp[pn], key=lambda t: (t[2], t[3], t[1]))
@@ -1344,7 +1353,34 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
         out[tries[k]]["part_root"] = pn
         proots.append(tries[k])
     root = build(proots, lambda i: (out[i]["x"], out[i]["y"]), lambda i: i, "gap")
+    early_rows = []
+    if late:
+        # DIE-QC-8 opt-in (12.3 v5.0 macro insertion-delay balancing): a core tap with declared early e (model ps) is
+        # delivered early BY CONSTRUCTION: it hangs from the kept-tree node j whose subtree delay S_j best matches
+        # e + leg_ps(j -> tap) (arrival at j = S_root - S_j, so the tap arrives e before the other taps); no pads.
+        # A shortfall (root not deep enough) is reported, never hidden.
+        kept, stack = [], [root]
+        while stack:
+            i = stack.pop()
+            kept.append(i)
+            stack += out[i]["kids"]
+        for t in sorted(late, key=lambda t: (t[0], t[1])):
+            e = float(early[(t[0], t[1])])
+            q = (t[2], t[3]) if site.legal((t[2], t[3])) else site.nearest((t[2], t[3]))
+            q = round_legal(site, q)
+            d = _man(q, (t[2], t[3]))
+
+            def miss(j):
+                return out[j]["S"] - e - leg_ps(_man((out[j]["x"], out[j]["y"]), q), delay_rep_um) - d
+            j = min((j for j in kept if out[j]["kids"]), key=lambda j: (round(abs(miss(j)), 3), j), default=root)
+            out.append(dict(x=q[0], y=q[1], kids=[], taps=[t], S=d, Smin=d, W=d))
+            out[j]["kids"].append(len(out) - 1)
+            early_rows.append(dict(part=t[0], port=t[1], early_model_ps=round(e, 2), node_S_ps=round(out[j]["S"], 2),
+                                   leg_um=round(_man((out[j]["x"], out[j]["y"]), q), 1), miss_ps=round(miss(j), 2),
+                                   root_S_ps=round(out[root]["S"], 2)))
     st = dict(merges=0, imbalanced=0, worst_imbalance_um=0.0, extra_wire_um=0.0, topology=dict(pick))
+    if early_rows:
+        st["early_taps"] = early_rows
     stack = [root]
     while stack:                       # stats of the kept tree only
         d = out[stack.pop()]
@@ -1685,8 +1721,10 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
 
 def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_slide=False, regions=None, tree_form="htree",
               tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None, clock_rc="ndr",
-              slice_balance=False, region_dme=False, region_dme_only=None):
+              slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None):
     out = Path(out)
+    if region_dme_early and region_dme != "delay":
+        raise ValueError("--region-dme-early needs --region-dme delay")
     if region_dme_only and not (region_dme and tree_form == "link_htree" and site_slide and not slice_spine):
         raise ValueError("--region-dme-only needs --region-dme with --tree-form link_htree --tree-site-slide")
     wire_r, wire_c = WIRE_RC_1X if clock_rc == "1x" else (WIRE_R, WIRE_C)
@@ -1696,6 +1734,14 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
         raise ValueError("--slice-balance needs --slice-spine")
     out.mkdir(parents=True, exist_ok=True)
     taps = clock_taps(P)
+    dme_early = None
+    if region_dme_early:    # DIE-QC-8 opt-in: declared core early (TT) in DME model ps = early / measured-over-model ratio
+        dme_early = {}
+        for n, p in P.parts.items():
+            for port, _, _, tp in S.core_taps(P, p["type"]):
+                e = S.core_tap_early_ps(P, tp, "TT")
+                if e > 0:
+                    dme_early[(n, port)] = e / float(region_dme_early)
     if slice_spine and tree_form != "htree":
         raise ValueError("--slice-spine and --tree-form %s are exclusive opt-ins" % tree_form)
     site = None
@@ -1780,11 +1826,12 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
             balanced["region_dme"] = attach_region_dme(nodes, site, taps, regions,
                                                        rep_um=rep_um if region_dme == "priced" else None,
                                                        delay_rep_um=rep_um if region_dme == "delay" else None,
-                                                       only=set(region_dme_only))
+                                                       only=set(region_dme_only), early=dme_early)
         elif tree_form == "link_htree" and region_dme:   # DIE-QC-3 opt-in: legal-site DME region trees, no re-slide
             balanced = dict(region_dme=attach_region_dme(nodes, site, taps, regions,
                                                          rep_um=rep_um if region_dme == "priced" else None,
-                                                         delay_rep_um=rep_um if region_dme == "delay" else None))
+                                                         delay_rep_um=rep_um if region_dme == "delay" else None,
+                                                         early=dme_early))
         elif tree_form == "link_htree":
             balanced = balance_legalize(nodes, site)
     elif site_legal and not slice_spine:          # opt-in: every buffer/repeater on a legal channel site; a one-entry leaf drives AT its entry
@@ -2877,7 +2924,7 @@ exit $rc
 def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.72, density=0.15, island_sites=None,
               island_margin=ISLAND_MARGIN_UM, full_depth=False, site_legal=False, site_slide=False, regions=None,
               tree_form="htree", tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None,
-              clock_rc="ndr", slice_balance=False, region_dme=False, region_dme_only=None):
+              clock_rc="ndr", slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None):
     raw = S.load(plan_path)
     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
     plan_dir = Path(plan_path).parent
@@ -2949,7 +2996,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
                                            tree_form=tree_form, tree_opts=tree_opts, slice_spine=slice_spine,
                                            spine_top_leaf_um=spine_top_leaf_um, slice_rows=slice_rows, tap_pad=tap_pad,
                                            clock_rc=clock_rc, slice_balance=slice_balance, region_dme=region_dme,
-                                           region_dme_only=region_dme_only)
+                                           region_dme_only=region_dme_only, region_dme_early=region_dme_early)
     (out / "clock" / "make_tracks.tcl").write_text(gen_phys.make_tracks_tcl(P))
     meta["clock_tree"] = cm
     reserve = reserve_rects(segs, leaf_legs, P)
@@ -3555,6 +3602,12 @@ def main(argv=None):
     k.add_argument("--region-dme-only", help="DIE-QC-4 opt-in (with --tree-form link_htree --tree-site-slide --region-dme): "
                    "comma list of regions that get the legal-site DME tree; every other region keeps the balanced "
                    "link_htree (balance_legalize).  Per-region fallback: DME only where the H-tree is worse")
+    k.add_argument("--region-dme-early", type=float, default=None, metavar="RATIO",
+                   help="DIE-QC-8 opt-in (with --region-dme delay; 12.3 v5.0 macro insertion-delay balancing): every early "
+                        "core tap (clk_c<k>, early = core insertion - common latency, TT) in a DME region hangs from the "
+                        "upper DME node whose subtree delay matches early/RATIO + its leg (RATIO = measured/model ps of "
+                        "the routed clock, e.g. 1.548 from QC trial4), so it arrives early by construction; no pads. "
+                        "Default: core taps are ordinary DME sinks")
     k.add_argument("--coarse-um", type=float, default=0.72)
     k.add_argument("--density", type=float, default=0.15, help="die power density W/mm2 for PDNSim")
     k.add_argument("--island-sites", nargs="+", help="CLOCK-128-R7 opt-in: die_tree_plan.json / ot_clock_sites/1 / "
@@ -3632,7 +3685,8 @@ def main(argv=None):
                       slice_spine=a.slice_spine, spine_top_leaf_um=a.spine_top_leaf_um, slice_rows=a.slice_rows,
                       tap_pad=load_tap_pad(a.tap_pad) if a.tap_pad else None,
                       clock_rc=a.clock_rc, slice_balance=a.slice_balance, region_dme=a.region_dme,
-                      region_dme_only=[r for r in a.region_dme_only.split(",") if r] if a.region_dme_only else None)
+                      region_dme_only=[r for r in a.region_dme_only.split(",") if r] if a.region_dme_only else None,
+                      region_dme_early=a.region_dme_early)
         print(json.dumps({k: m[k] for k in ("die", "parts", "types", "closed_views", "hard_cores", "clock_tree", "grt",
                                              "psm", "sta")}, indent=1))
     elif a.cmd == "report":
