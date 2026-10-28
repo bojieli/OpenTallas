@@ -10,13 +10,17 @@ corner exceeds --core-reach-um, default 200 as master_plan).  Island rects come 
 master_plan.entry_island (leaves); nothing is re-sited here.
 Also writes SLICEDIR/core_islands.json {module: {rule, frame: "core", instances, rects_um}} (schema
 die_plan.schema.json clock.mesh.core_islands) for the plan event."""
-import json, sys, subprocess, os, argparse, math
+import json, sys, subprocess, os, argparse, math, shlex
 from pathlib import Path
 ap = argparse.ArgumentParser()
 ap.add_argument("plan"); ap.add_argument("views"); ap.add_argument("sdir"); ap.add_argument("kdir"); ap.add_argument("wt")
 ap.add_argument("mods"); ap.add_argument("--tag", default="_c20"); ap.add_argument("--islands-only", action="store_true")
 ap.add_argument("--core-reach-um", type=float, default=200.0)
+ap.add_argument("--gen-args", default="", help="extra gen_core_kit_hbm.py args (shlex), e.g. \"--hold-margin 5\"")
+ap.add_argument("--ft-pin-dx-um", type=float, default=None,
+                help="HBM-CORES-REBAL-2: island ft pin x offset (1.08 clears the core M5 VSS/VDD pair; default = master_plan legacy 2.16)")
 a = ap.parse_args()
+PDX = {} if a.ft_pin_dx_um is None else dict(pin_dx_um=a.ft_pin_dx_um)
 plan, views, sdir, kdir, wt = [os.path.abspath(x) for x in (a.plan, a.views, a.sdir, a.kdir, a.wt)]
 sys.path.insert(0, f"{wt}/tools/die_plan")
 import master_plan as MP  # noqa: E402  (shared tool: pushdown_island, restructure_islands, entry_island)
@@ -49,9 +53,9 @@ for m in mods:
         pc = list(xy) if fits else [MP.r3((isl[0] + isl[2]) / 2), MP.r3((isl[1] + isl[3]) / 2)]
         pd = [MP.pushdown_island(0, list(isl), pc, "clock_entry",
                                  (far if not leaves else max(abs(q["centre_um"][0] - xy[0]) + abs(q["centre_um"][1] - xy[1])
-                                                             for q in leaves)), max(1, len(leaves)))]
+                                                             for q in leaves)), max(1, len(leaves)), **PDX)]
         for i, q in enumerate(leaves):
-            pd.append(MP.pushdown_island(i + 1, q["rect_um"], q["centre_um"], "tree_leaf", sub.get("leaf_reach_um", 0.0), 0))
+            pd.append(MP.pushdown_island(i + 1, q["rect_um"], q["centre_um"], "tree_leaf", sub.get("leaf_reach_um", 0.0), 0, **PDX))
         sl = {"schema": MP.SLICE_SCHEMA, "die": "hbm", "kind": "core", "type": m, "module": m,
               "instances": [], "master_plan_sha256": "TRIAL-no-frozen-master-plan", "frozen": False,
               "outline_um": [W, H], "latency": {"common_clock_latency_ps": {"TT": 250, "FF": 202.5}, "tol_ps": 20,
@@ -82,7 +86,7 @@ for m in mods:
             out.append(dict(view=v["view"], cls="SLICE_ONLY", islands=len(pd))); continue
         log = f"{kdir}/gen_{m}{tag}.log"
         cmd = ["python3", f"{wt}/physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py", "--views", views, "--view", v["view"],
-               "--out", kdir, "--master-slice", sdir, "--trial", "--tag", tag]
+               "--out", kdir, "--master-slice", sdir, "--trial", "--tag", tag] + shlex.split(a.gen_args)
         r = subprocess.run(cmd, cwd=f"{wt}/physical/die_plan/hbm_arch_cores", stdout=open(log, "w"), stderr=subprocess.STDOUT)
         lines = open(log).read().strip().splitlines()
         tail = lines[-1] if lines else ""
