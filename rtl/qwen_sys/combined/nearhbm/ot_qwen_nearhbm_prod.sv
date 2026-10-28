@@ -32,7 +32,12 @@ module ot_qwen_nearhbm_prod (
     wire        bad1 = (a[14:7] == 8'hFF) || (k[6:0] == 7'h7F);
     reg         v1, s1_sign, s1_bad;
     reg [11:0]  s1_p;
-    reg [9:0]   s1_e;                                              // E + 149 = ea + ek + 5  (>= 7)
+    // QK-CORES-8 10-27: s1_e holds 9 bits (ea + ek + 5 <= 255 + 15 + 5 = 275 < 512): bit 9 is 0 for every input, so
+    // synthesis removed the unreset s1_e[9] flop and kit LEC could not pair it (130 differs per head, all in its cone).
+    // Same form as ot_qwen_nearhbm_prod_nc (KV-PARAMS3 10-20); 0 cycles, -1 flop, outputs bit-identical.
+    wire [9:0]  e1 = ea + ek + 10'd5;
+    reg [8:0]   s1_e9;
+    wire [9:0]  s1_e = {1'b0, s1_e9};                            // E + 149 = ea + ek + 5  (>= 7)
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) v1 <= 1'b0; else v1 <= valid_in;
     end
@@ -40,7 +45,11 @@ module ot_qwen_nearhbm_prod (
         s1_sign <= a[15] ^ k[7];
         s1_bad <= bad1;
         s1_p <= sa * sk;
-        s1_e <= ea + ek + 10'd5;
+`ifdef QKC8_PROD_MUT
+        s1_e9 <= {1'b0, e1[7:0]};                      // bench mutant (must FAIL): a live exponent bit dropped
+`else
+        s1_e9 <= e1[8:0];
+`endif
     end
     // ---- stage 2: leading one, exponent, placement shift amounts -------------------------------------------------
     reg [3:0] lz;                                                  // position of the leading one (0..11)
