@@ -16,9 +16,10 @@ ROOT = HERE.parent.parent
 def test_landing_rtl_picks_only_instantiated_ring_files():
     assert gen_phys.landing_rtl(ROOT, "module w;\n    ot_dp_st #(.W(1)) u (.d(a));\nendmodule\n") == []
     got = gen_phys.landing_rtl(ROOT, "module w;\n    ot_dp_clk_landing #(.W(5)) u_cland_y (\n    );\nendmodule\n")
-    assert [p.name for p in got] == ["ot_dp_clk_landing.sv"]
+    assert [p.name for p in got] == ["ot_dp_clk_landing.sv", "ot_meso_fifo.sv"]
     got = gen_phys.landing_rtl(ROOT, "    ot_dp_clk_landing_ca #(.W(5), .K(2)) u_cland_y (\n")
-    assert [p.name for p in got] == (["ot_dp_clk_landing_ca.sv"]
+    # the CA ring also uses ot_dp_landing_fault_port (defined in ot_dp_clk_landing.sv)
+    assert [p.name for p in got] == (["ot_dp_clk_landing.sv", "ot_dp_clk_landing_ca.sv", "ot_meso_fifo.sv"]
                                      if (ROOT / "rtl/common/ot_dp_clk_landing_ca.sv").is_file() else [])
 
 
