@@ -129,3 +129,30 @@ def test_landed_bundle_one_depth(tmp_path):
         assert sm["pad_flops"] == 0 and not any(s == "ERROR" for s, _ in msgs) and any(s == "WARN" for s, _ in msgs)
     finally:
         r8.LANDED.update(rx=[], window=4, stage_cycles=0.5, over="keep")
+
+
+def _two(b_a, b_b):
+    return dict(landing=[dict(sink=f"s_{k}.u", sink_part=f"s_{k}_x", src_part="tap",
+                              members=[mem("d", [[0, 3]], "u_tap.y", 0, b)]) for k, b in (("A", b_a), ("B", b_b))],
+                replica=[dict(source="u_tap.y", source_bits=[[0, 3]], asbuilt_stages=0, sink_parts=["s_A_x", "s_B_x"])])
+
+
+def test_strap_pads_turn_type_conflict_into_strap_site(tmp_path):
+    """OWNER 10-28 strap pads (opt-in): per-instance pads become one strap-count bank site, no type ERROR"""
+    bg = _two(2, 5)
+    p, _ = r8.write_pads(RAW, bg, tmp_path)
+    msgs, st = r8.check(bg, RAW, r8.load_landing(p)[0], strap_pads=True)
+    assert st["types_conflicting"] == 0 and not [m for s, m in msgs if s == "ERROR"]
+    (site,) = st["strap_sites"]
+    assert (site["type"], site["width"], site["base"], site["span"]) == ("ts", 4, 0, 3)
+    assert site["pads"] == {"s_A_x": 3, "s_B_x": 0} and st["strap_used_constants"] == [(4, 3, 0), (4, 3, 3)]
+    # default (off) is unchanged: still the type ERROR
+    msgs0, st0 = r8.check(bg, RAW, r8.load_landing(p)[0])
+    assert st0["types_conflicting"] == 1 and "strap_sites" not in st0
+
+
+def test_strap_pad_over_capacity_is_error(tmp_path):
+    bg = _two(2, 2 + r8.STRAP_PAD_MAX + 1)
+    p, _ = r8.write_pads(RAW, bg, tmp_path)
+    msgs, st = r8.check(bg, RAW, r8.load_landing(p)[0], strap_pads=True)
+    assert st["types_conflicting"] == 1 and any("strap capacity" in m for s, m in msgs if s == "ERROR")
