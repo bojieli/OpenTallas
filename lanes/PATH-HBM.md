@@ -1233,3 +1233,14 @@ All HBM plan/streets/locality/clock/crossing/core/native boot+token/PG aliases c
     - trial1/chain.sh, status in trial1/chain.status (kit pid 3309279, then bays, overlay, docker GRT TT/FF);
     - duty/MPW readout: trial1/duty_trial1.json.
 - 2026-10-28 09:29 PDT [DIE-HBM-9] PARKED: PHY_N W/C/E partition split + idx lane ports (next event pass); START-TREE-1 HBM start-stage homes + node-arrival proof; constructive hub placement on the face-aligned net; manifest full-RTL prefer + re-bind.
+- 2026-10-28 10:05 PDT [DIE-HBM-10] RESULT (claude/die-hbm-10-1028@4efe3882ab, results/die_hbm_1027/hbm10/README.md; vmx RTL claude/die-hbm-10-vmx-1028@3acc793e88):
+  - (1) Collect, CHECKED: C21 G0 FAIL 19 (geometry). C21 G0C 80 ERR against the C20j base 16 (+64 new, 0 gone): street_die_leg 41 + geometry 19 = idx Q2 pieces homed on ft lane stations; complete 4 = VM link hop >405 um. trial1 (private tool copy) still at the kit step after 54 min (pid 3309279, not killed).
+  - C22 fix (apply_c22.py, plan intel2:/srv/opentallas-scratch2/claude/die-hbm-10/c22): 66 pieces re-homed on corridor-free slots (b000 7 / b010 23 / b001 27 / b011 7 / b002 2; render viewed). VM link via a free channel row: NW 14 regs, Lx 15; NE 13 regs, Lx 14; max hop 401.8, 0 regs in a core.
+  - (2) PHY_N W/C/E split, CA bound (UNCHECKED-model, inverter tree, until CLK-INV-CAL-1 lands): 92 links, 0 FAIL, 0 below 100 ps. Worst link T047~T052: 9.37 ns, D8, m_lo/m_hi 219/1462 PASS. With 12.16b(i) <=2 tree hops, 17 links become hop chains, worst 109.6 ps. The split is NOT BUILT: PHY_N is ONE hard macro with one clk pin, so a 3-partition cut would cut the macro (ASK).
+  - (3) VMX, CHECKED: hfd_vms_xread_link.sv bench catches 4/4 mutants; LEC EQUIVALENT 20560/20560. The token check is NOT RUN (the compiler has no half-local allocation), so the relief is NOT counted.
+  - (4) Hub placement, constructive + legal pack (ESTIMATE): NW worst face 0.70; NE 1.00-1.03 (1 face). Quarter cuts <=0.64.
+- 2026-10-28 10:05 PDT [DIE-HBM-10] COLLECT:
+  - C22 G0/G0C: intel2 .../die-hbm-10/c22/gates_g0{,c}.{log,exit}, started 10:00, ~50 min. Diff against c20j_base; expect 16.
+  - trial2: main die_trial --clock-cell inv2 on C22, .../die-hbm-10/trial2/chain.status, duty_trial2.json (duty both edges TT/FF, MPW, overflow; view the render).
+  - trial1: .../die-hbm-9/trial1/chain.status (informational only).
+- 2026-10-28 10:05 PDT [DIE-HBM-10] PARKED: PHY_N slice-macro split (after the ASK); ds tok/s with the 17 hop chains; vmx LX 15 re-bench + glue wiring; hub repack from the constructive placement.
