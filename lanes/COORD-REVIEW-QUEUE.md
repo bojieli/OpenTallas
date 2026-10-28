@@ -3488,3 +3488,10 @@ FAILED [AUTOPILOT 4ea738599325] 2026-10-28 10:23:09 PDT AUTOPILOT -> KV-CORES: F
     (b) inv2 + region DME without early hang;
     (c) wait for CLK-INV-CAL-1's inverter late/early model before the next inverter build.
   - F1 GEOM-44 a/b/c estimate is done; die STA/CTS owed.
+- [COORD 2026-10-28 11:19 PDT] DIE-S81-13 go13 ASK: default (a) is REJECTED. The ruling is (c) + (b) + structural fixes.
+  Why not (a): a BUF tree with inverters only at the leaves keeps the accumulated duty distortion (10-28 duty ruling: restoring stages every ~5 hops are NOT enough). Leaf inverters cannot restore a low phase already lost upstream. Inverters are the release clock cell on all dies.
+  Why (c) first: a 13.4% late/early spread for inv2 against 2.7% for BUF is a MODEL question before it is a structure question. Per stage, an inverter is about half a buffer and should not vary 5x more relative to its insertion. CLK-INV-CAL-1 must explain this spread from its own MC (per-stage sigma, depth credit/AOCV row used, CPPR) for the S81 go13 and QC t10 trees, and S81 re-times hold with the calibrated inverter rows (clock_cell=inv2 DECLARED) BEFORE any new build.
+  (b) The next S81 inverter build drops the early core-tap hangs (they lengthen the unshared paths). Plus two structural fixes: (i) the star-shaped region-tree legs in col_h9 (204/228 repeater inputs over 320 ps slew) become branched legs with repeaters at <=450 um, never upsized; (ii) the ~450 ps per DME level that blocks CA width (211-244 vs 208) is fixed by splitting levels into shorter segments in the plan, not by more retime.
+  Estimate before build: hold, width and slew on the plan with the calibrated model, then one build.
+  F1 GEOM-44: the estimate is accepted; the die STA/CTS with that placement goes into the same build.
+  Results @ee9d619deb -> ROOT-MERGE import-only. Successor DIE-S81-14.
