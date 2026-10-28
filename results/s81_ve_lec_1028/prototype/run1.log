@@ -1,0 +1,11 @@
+DEFINED_DIFF cyc=15 bit=5 old=0 new=1
+DEFINED_DIFF cyc=15 bit=6 old=0 new=1
+DEFINED_DIFF cyc=15 bit=8 old=0 new=1
+DEFINED_DIFF cyc=15 bit=9 old=1 new=0
+DEFINED_DIFF cyc=15 bit=11 old=0 new=1
+DEFINED_DIFF cyc=15 bit=12 old=0 new=1
+DEFINED_DIFF cyc=15 bit=13 old=0 new=1
+DEFINED_DIFF cyc=15 bit=14 old=0 new=1
+VE_ZERO_FOURSTATE mut=1 checks=125786 bad=11944
+VE_ZERO_FAIL
+/srv/opentallas-scratch2/claude/codex-s81-ve-lec-0359/zero_fourstate/tb.sv:41: $finish called at 213764500 (1fs)

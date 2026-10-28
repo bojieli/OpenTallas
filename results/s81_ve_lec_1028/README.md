@@ -25,3 +25,16 @@ No EQUIVALENT or SIGNED master claim is made by these component results.
 Current selected sources match main26/27 staged files; the sole differing fp32_add_lat file
 is explicitly pruned unused by actual ve_m hierarchy. The primary ve and custom arithmetic
 sources are byte-identical to main.
+
+Full kept census classifies all640 missing bits:256 add.hline ring low bits,
+256 BF16-by-BF16 s2_pa/s2_pb low32,128 BF16-by-FP32 s2_pa/s2_pb low16.
+The proposed generic component matcher recovers zero bits on this actual master and is excluded.
+Actual multiply cones with three caller captures prove both copies zero after6edges;
+5edges for BF16 is SAT, and a false low32 BF16-by-FP32 claim is SAT.
+
+Unadopted ring structural prototype diagnostics: full-word seven-edge comparison PASS,
+six-edge startup comparison SAT, wrong-mask mutant SAT. Actual full-core four-state simulation
+checks125786 defined output bits including invalid cycles after the existing four reset edges:
+original/prototype PASS, mutant11944 mismatches. Verilator valid/control simulation checks32175
+outputs: PASS, mutant11178 mismatches. These are diagnostic, not whole-master equivalence or
+permission to change early observability. RTL remains uncommitted; no recipe change is made.

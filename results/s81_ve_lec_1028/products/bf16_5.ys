@@ -1,0 +1,14 @@
+read_verilog -sv -defer -D SYNTHESIS -D OT_S81_VE_LOADSAFE5 /work/rtl/ot_dsrom_aq12.sv /work/rtl/ot_dsrom_divc.sv /work/rtl/ot_dsrom_fp32_add_l6.sv /work/rtl/ot_dsrom_su_add6.sv /work/rtl/ot_dsrom_su_hcpost.sv /work/rtl/ot_dsrom_su_norm.sv /work/rtl/ot_hdc_actquant.sv /work/rtl/ot_hdc_delay.sv /work/rtl/ot_hdc_delay_rf.sv /work/rtl/ot_hdc_fastfp.sv /work/rtl/ot_hdc_fastfp_lat_f12.sv /work/rtl/ot_hdc_fdiv.sv /work/rtl/ot_hdc_fp32_add_lat.sv /work/rtl/ot_hdc_fp32_f12.sv /work/rtl/ot_hdc_fp32_mul_lat.sv /work/rtl/ot_hdc_fp32_mul_pipe.sv /work/rtl/ot_hdc_fpu.sv /work/rtl/ot_hdc_fsqrt.sv /work/rtl/ot_hdc_prefix.sv /work/rtl/ot_hdc_sfu.sv /work/rtl/ot_hdc_softplus.sv /work/rtl/ot_hdc_v41x_sfu.sv /work/rtl/ot_hdc_v41x_vec_side.sv /work/rtl/ot_rst_relay.sv /work/rtl/ot_s81_engram_mix.sv /work/rtl/ot_s81sl_ve.sv /work/rtl/ot_s81sl_ve_fp.sv /work/top.sv
+chparam -set B_BF16 1 product_base
+hierarchy -top product_base
+setattr -mod -unset keep_hierarchy
+setattr -unset keep_hierarchy
+proc
+memory_map
+flatten
+async2sync
+opt_clean
+hierarchy -top product_base
+select -clear
+select product_base
+sat -seq 6 -set-def-inputs -set-init-def -prove u.s2_pa[31:0] 0 -prove u.s2_pb[31:0] 0 -prove-skip 5 -show u.s2_pa -show u.s2_pb -dump_json /work/bf16_5.cex.json

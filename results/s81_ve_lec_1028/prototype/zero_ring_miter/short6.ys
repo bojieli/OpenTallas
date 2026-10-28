@@ -1,0 +1,8 @@
+read_verilog -sv -D SYNTHESIS /work/gold.sv /work/trial.sv /work/top.sv
+chparam -set MUT 0 zero_ring_miter
+hierarchy -top zero_ring_miter
+proc
+memory_map
+flatten
+opt_clean
+sat -seq 7 -set-def-inputs -set-init-def -prove mismatch 0 -prove-skip 6 -show mismatch -dump_json /work/short6.cex.json
