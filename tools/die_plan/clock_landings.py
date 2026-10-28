@@ -41,7 +41,9 @@ def network_lane_cycles(plan):
     """
     net=plan.get("clock",{}).get("landing_network")
     if not net:return {}
-    if net.get("data_cycles_per_crossing")!=3:raise LandingError("clock landing network requires the proved nominal +3 contract")
+    ca=net.get("data_cycles_per_crossing")=="count_aligned"
+    if not ca and net.get("data_cycles_per_crossing")!=3:raise LandingError("clock landing network requires the proved nominal +3 contract")
+    if ca and not isinstance(net.get("count_aligned_cycles"),dict):raise LandingError("count-aligned landing network needs per-crossing count_aligned_cycles")
     ports={p["id"]:p for p in plan["ports"]};owners=defaultdict(list)
     for lane in plan["lanes"]:
         for pid in lane["ports"]:owners[pid].append(lane["id"])
@@ -55,7 +57,8 @@ def network_lane_cycles(plan):
         if edge.get("kind")!="clock" or any(edge[k]!=expected[k] for k in ("src","dst")):
             raise LandingError("clock landing physical endpoints changed "+pid)
         if len(owners[pid])!=1:raise LandingError("clock landing must identify exactly one logical lane "+pid)
-        out[owners[pid][0]]+=3
+        if ca and pid not in net["count_aligned_cycles"]:raise LandingError("count-aligned crossing has no planned latency "+pid)
+        out[owners[pid][0]]+=int(net["count_aligned_cycles"][pid]) if ca else 3
     return dict(out)
 
 
@@ -71,6 +74,7 @@ def requirements(plan, table):
     ports = {p["id"]: p for p in plan["ports"]}
     masks = {pn: dict(inputs=set(), outputs=set()) for pn in parts}
     pin_refs, lanes = [], defaultdict(int)
+    ca = table.get("count_aligned")
     for r in table["ports"]:
         p = ports[r["port"]]
         sp, sb, dp, db = p["src"]["part"], p["src"]["bus"], p["dst"]["part"], p["dst"]["bus"]
@@ -78,12 +82,15 @@ def requirements(plan, table):
             raise LandingError(f"stale clock landing endpoints/width on {r['port']}")
         masks[sp]["outputs"].add(sb)
         masks[dp]["inputs"].add(db)
-        lanes[r["lane"]] += 3
+        cyc = ca_cycles(ca, r["port"])
+        lanes[r["lane"]] += cyc
         pin_refs.append(dict(port=r["port"], lane=r["lane"], src=sp, dst=dp,
                              src_bus=sb, dst_bus=db, width=p["width"],
                              required_src_pin=f"fclk_out_{sb}",
-                             required_dst_pins=[f"fclk_in_{db}", f"landing_ready_{db}", f"landing_fault_{db}"],
-                             extra_cycles=3))
+                             required_dst_pins=[f"fclk_in_{db}", f"landing_ready_{db}", f"landing_fault_{db}"]
+                             + ([f"cland_fstart_in_{db}"] if ca else []),
+                             **({"required_src_start_pin": f"cland_fstart_out_{sb}"} if ca else {}),
+                             extra_cycles=cyc))
     cohorts = defaultdict(dict)
     for pn, p in parts.items():
         mask = {k: sorted(v) for k, v in masks[pn].items()}
@@ -113,13 +120,24 @@ def requirements(plan, table):
                 type_count_before=len(types), type_count_after=sum(map(len, groups.values())),
                 split_types={tn: g for tn, g in groups.items() if len(g) > 1},
                 cohorts=groups, ports=pin_refs, lane_added_cycles=dict(sorted(lanes.items())),
-                nominal_added_cycles_per_crossing=3,
+                nominal_added_cycles_per_crossing="count_aligned (per crossing)" if ca else 3,
                 pending=["reserve forwarded-clock and observed status pin tracks", "split nonuniform landing masks",
                          "update lane/R8/calendar price", "emit actual landing RTL", "ring window STA and token pass"])
 
 
 class LandingError(ValueError):
     pass
+
+
+def ca_cycles(ca, pid):
+    """Added data cycles of one landed crossing: the proved old-ring +3, or (count-aligned form, MESO-INTEG-1) the
+    plan's per-crossing schedule latency K + 1 + n_dst - n_src (count_align_bind.py)."""
+    if not ca:
+        return 3
+    c = ca["ports"].get(pid)
+    if c is None:
+        raise LandingError(f"count-aligned landing {pid}: no K/DEPTH/latency in the bind table")
+    return int(c["sched_lat"])
 
 
 def ident(s):
@@ -195,6 +213,7 @@ class Landings:
             self.region[pn] = candidates[0]
         self.ins = defaultdict(dict)
         self.outs = defaultdict(set)
+        self.ca = table.get("count_aligned")
         seen = set()
         for r in table["ports"]:
             pid = r["port"]
@@ -223,6 +242,14 @@ class Landings:
             row = dict(r, src_bus=sb, dst_bus=db, added_cycles=3,
                        module="ot_dp_clk_landing", ring_depth=4, ring_offset=2,
                        ring_read_registered=True)
+            if self.ca:
+                c = self.ca["ports"].get(pid)
+                if c is None:
+                    raise LandingError(f"count-aligned landing {pid}: no K/DEPTH/latency in the bind table")
+                if int(c["depth"]) not in (4, 8):
+                    raise LandingError(f"count-aligned landing {pid}: DEPTH {c['depth']} not 4/8")
+                row.update(added_cycles=int(c["sched_lat"]), module="ot_dp_clk_landing_ca", ring_depth=int(c["depth"]),
+                           ring_offset=None, ring_k=int(c["K"]), start_tree_port=bool(c["tree"]))
             self.rows.append(row)
             self.ins[dp][db] = row
             self.outs[sp].add(sb)
@@ -235,6 +262,7 @@ class Landings:
         bad = {tn: list(ms.values()) for tn, ms in masks.items() if len(ms) > 1}
         if bad:
             raise LandingError(f"clock landing TYPE_SPLIT required: {bad}")
+        self.ca_type = self._count_aligned_types() if self.ca else {}
         self.by_type = {}
         for tn, ms in masks.items():
             mask = next(iter(ms))
@@ -246,6 +274,9 @@ class Landings:
             for pin in contract.get("pins",[]):
                 declared[pin["name"]]=dict(pin,width=1,face="interior",window_um=[0,1],layers=[pin["layer"]])
             required = {f"fclk_out_{b}": "out" for b in mask[1]}
+            if self.ca:
+                required.update({f"cland_fstart_out_{b}": "out" for b in mask[1]})
+                required.update({f"cland_fstart_in_{b}": "in" for b in mask[0]})
             for b in mask[0]:
                 required.update({f"fclk_in_{b}": "in"})
                 if not self.collector:
@@ -279,6 +310,42 @@ class Landings:
                     raise LandingError(f"clock landing {tn}: declare placed scalar {direction} pin {name}")
                 if not all(k in b for k in ("face", "window_um", "layers")):
                     raise LandingError(f"clock landing {tn}.{name}: missing physical pin geometry")
+
+    def _count_aligned_types(self):
+        """Count-aligned form (opt-in): one count origin per partition = per region (the bind's regions are the table's
+        region tags), and every copy of a type gets identical ring parameters and origin role, else TYPE_SPLIT."""
+        ca = self.ca
+        regs = defaultdict(list)
+        for pn in self.parts:
+            if self.ins[pn] or self.outs[pn]:
+                regs[self.region[pn]].append(pn)
+        multi = {r: ps for r, ps in regs.items() if len(ps) > 1}
+        if multi:
+            raise LandingError("count-aligned landing needs one partition per region (intra-region start distribution "
+                               f"is not built): {dict(list(multi.items())[:3])}")
+        ports = {r["port"]: r for r in self.rows}
+        out, per_type = {}, defaultdict(dict)
+        for reg, (pn,) in regs.items():
+            rg = ca["regions"].get(reg)
+            if rg is None:
+                raise LandingError(f"count-aligned landing: region {reg} ({pn}) not in the start tree")
+            if rg["parent"] is None:
+                role = ("root", int(ca.get("root_settle_cycles", 64)))
+            else:
+                r = ports.get(rg["tree_port"])
+                if r is None or r["dst"] != pn or r["src_region"] != rg["parent"]:
+                    raise LandingError(f"count-aligned landing: tree port {rg['tree_port']} does not land {rg['parent']} -> {pn}")
+                role = ("child", r["dst_bus"], bool(rg["edge_fall"]), int(rg["pad"]))
+            sig = (tuple((b, r["ring_k"], r["ring_depth"]) for b, r in sorted(self.ins[pn].items())), role)
+            per_type[self.parts[pn]["type"]].setdefault(sig, []).append(pn)
+        bad = {tn: [ps for ps in sigs.values()] for tn, sigs in per_type.items() if len(sigs) > 1}
+        if bad:
+            raise LandingError(f"count-aligned landing TYPE_SPLIT required (K/DEPTH/origin differ between copies): "
+                               f"{len(bad)} types, e.g. {dict(list(bad.items())[:2])}")
+        for tn, sigs in per_type.items():
+            ((ins, role), _), = sigs.items()
+            out[tn] = dict(rings={b: dict(K=k, depth=d) for b, k, d in ins}, role=role)
+        return out
 
     def validate_observer(self,binder):
         if not self.collector or not self.collector.get("observer"):return
@@ -319,9 +386,17 @@ class Landings:
             raise LandingError(f"{tn}: binder ANSI module header not found")
         head, body = text.split(marker, 1)
         extra, logic = [], []
+        cat = self.ca_type.get(key) if self.ca else None
+        if cat:
+            logic.append("    wire cland_start;  // count origin of this region (count-aligned landings)")
+        ca_raw = {}
         for b in mask["outputs"]:
             extra.append(f"    output wire fclk_out_{b}")
             logic.append(f"    assign fclk_out_{b} = clk;")
+            if cat:
+                # the sender's start, forwarded beside its bus with fclk: resets the receiver ring's write count
+                extra.append(f"    output wire cland_fstart_out_{b}")
+                logic.append(f"    assign cland_fstart_out_{b} = cland_start;")
         part = next(p for p, v in self.parts.items() if v["type"] == key)
         for b in mask["inputs"]:
             r = self.ins[part][b]
@@ -385,6 +460,15 @@ class Landings:
                     copied_raw_parent=relay.group(2), extra_control_flops=int(relay.group(1) == "gate"),
                     must_be_ready_before_start=True, boot_settle_cycles=21)
             extra += [f"    input wire fclk_in_{b}"]
+            if cat:
+                extra += [f"    input wire cland_fstart_in_{b}"]
+                ca_raw[b] = reset
+                ring_mod = (f"ot_dp_clk_landing_ca #(.W({{w}}), .DEPTH({cat['rings'][b]['depth']}), "
+                            f".K({cat['rings'][b]['K']}))")
+                ring_rst = f".t_rst_n(cland_fstart_in_{b}), .clk(clk), .rst_n(cland_start)"
+                self.reset_placements[tn][b].update(ring_rst_n="cland_start", origin_raw_reset=reset)
+            else:
+                ring_mod, ring_rst = "ot_dp_clk_landing #(.W({w}))", f".clk(clk), .rst_n({reset})"
             if self.dataflow:
                 extra += [f"    input wire cland_dn_ready_{b}", f"    input wire cland_dn_fault_{b}"]
             if self.collector:
@@ -399,16 +483,18 @@ class Landings:
                 ring = f"cland_ring_{b}"
                 logic += [f"    wire [{w+1}:0] {ring};", f"    wire [{w-1}:0] {landed};",
                           f"    assign {landed} = {ring}[{w-1}:0];",
-                          f"    ot_dp_clk_landing #(.W({w+2})) u_cland_{b} (",
-                          f"        .fclk(fclk_in_{b}), .clk(clk), .rst_n({reset}), .d({{cland_dn_fault_{b}, cland_dn_ready_{b}, {b}}}), .q({ring}),",
+                          f"    {ring_mod.format(w=w+2)} u_cland_{b} (",
+                          f"        .fclk(fclk_in_{b}), {ring_rst}, .d({{cland_dn_fault_{b}, cland_dn_ready_{b}, {b}}}), .q({ring}),",
                           f"        .ready(landing_ready_{b}), .fault(landing_fault_{b}));",
                           f"    wire cland_ok_{b} = {ring}[{w}] && landing_ready_{b} && !landing_fault_{b};",
                           f"    wire cland_bad_{b} = landing_fault_{b} || (landing_ready_{b} && {ring}[{w+1}]);"]
                 continue
             logic += [f"    wire [{w-1}:0] {landed};",
-                      f"    ot_dp_clk_landing #(.W({w})) u_cland_{b} (",
-                      f"        .fclk(fclk_in_{b}), .clk(clk), .rst_n({reset}), .d({b}), .q({landed}),",
+                      f"    {ring_mod.format(w=w)} u_cland_{b} (",
+                      f"        .fclk(fclk_in_{b}), {ring_rst}, .d({b}), .q({landed}),",
                       f"        .ready(landing_ready_{b}), .fault(landing_fault_{b}));"]
+        if cat:
+            logic += self._origin_rtl(tn, cat, ca_raw, body)
         if self.dataflow:
             body = self._dataflow_monitor(tn, key, mask, collector_info, extra, logic, body)
         elif active_collector:
@@ -454,6 +540,29 @@ class Landings:
         head = "\n".join(lines) + "\n" + ",\n".join(extra)
         self.emitted_types.add(tn)
         return head + marker + "\n".join(logic) + "\n" + body
+
+    def _origin_rtl(self, tn, cat, ca_raw, body):
+        """The region's count origin: root = ot_dp_landing_root (fixed settle count), child = ot_dp_landing_origin on
+        the start-tree port (3-FF sync of the parent's forwarded start, edge/PAD from the bind).  Its raw reset is the
+        timed local raw-reset relay of the tree bus (child) / of a landed input or tap 0 (root), never START-gated."""
+        role = cat["role"]
+        if role[0] == "child":
+            b = role[1]
+            raw = ca_raw.get(b)
+            if raw is None:
+                raise LandingError(f"{tn}: start-tree bus {b} is not a landed input of this type")
+            self.reset_placements.setdefault(tn, {})["count_origin"] = dict(kind="child", tree_bus=b, raw_reset=raw,
+                                                                         edge_fall=role[2], pad=role[3])
+            return [f"    ot_dp_landing_origin #(.PAD({role[3]}), .EDGE_FALL({int(role[2])})) u_cland_origin (",
+                    f"        .clk(clk), .rst_raw_n({raw}), .p_start(cland_fstart_in_{b}), .start(cland_start));"]
+        raw = next(iter(ca_raw.values()), None)
+        if raw is None:
+            m = re.search(r"ot_dp_r(?:gate|relay)\s+\w+\s*\([^;]*?\.q\((rst_n_t0)\)\);", body)
+            raw = m.group(1) if m else ("rst_n" if re.search(r"\bwire rst_n = arst_n;", body) else None)
+            if raw is None:
+                raise LandingError(f"{tn}: root count origin needs a timed raw reset relay (rst_n_t0) or delivered rst_n")
+        self.reset_placements.setdefault(tn, {})["count_origin"] = dict(kind="root", raw_reset=raw, settle=role[1])
+        return [f"    ot_dp_landing_root #(.SETTLE({role[1]})) u_cland_origin (.clk(clk), .rst_raw_n({raw}), .start(cland_start));"]
 
     def _dataflow_monitor(self, tn, key, mask, info, extra, logic, body):
         """Registered dataflow monitor: local = AND(landing_ready) / OR(landing_fault), aggregate = AND(in_ok) /
@@ -537,6 +646,8 @@ class Landings:
         fwd = {(r["src"], r["src_bus"]): f"clock_landing_fwd_{ident(r['src'])}__{ident(r['src_bus'])}"
                for r in self.rows}
         decl += [f"    wire {w};" for w in sorted(set(fwd.values()))]
+        fst = {k: v.replace("clock_landing_fwd_", "clock_landing_start_", 1) for k, v in fwd.items()} if self.ca else {}
+        decl += [f"    wire {w};" for w in sorted(set(fst.values()))]
         mon = {}
         if self.dataflow:
             # one wire pair per sender status pin (a source bus fanning out to several sinks shares its pin)
@@ -564,12 +675,15 @@ class Landings:
             if count != 1:
                 raise LandingError(f"clock landing: default clock connection not found on {pn}")
             conn = [f"        .fclk_out_{b}({fwd[(pn,b)]})" for b in sorted(self.outs[pn])]
+            conn += [f"        .cland_fstart_out_{b}({fst[(pn,b)]})" for b in sorted(self.outs[pn]) if self.ca]
             if self.dataflow:
                 for b in sorted(self.outs[pn]):
                     conn += [f"        .cland_up_ready_{b}({mon[(pn,b)]}_ready)", f"        .cland_up_fault_{b}({mon[(pn,b)]}_fault)"]
             for b, r in sorted(self.ins[pn].items()):
                 i = index[(pn,b)]
                 conn += [f"        .fclk_in_{b}({fwd[(r['src'],r['src_bus'])]})"]
+                if self.ca:
+                    conn += [f"        .cland_fstart_in_{b}({fst[(r['src'],r['src_bus'])]})"]
                 if self.dataflow:
                     w = mon[(r["src"], r["src_bus"])]
                     conn += [f"        .cland_dn_ready_{b}({w}_ready)", f"        .cland_dn_fault_{b}({w}_fault)"]
@@ -596,10 +710,12 @@ class Landings:
     def manifest(self):
         by_lane = defaultdict(int)
         for r in self.rows:
-            by_lane[r["lane"]] += 3
+            by_lane[r["lane"]] += int(r["added_cycles"])
         return dict(schema="opentallas.clock_landing_rtl.v1",
                     implemented=self.emitted_top and self.emitted_types == set(self.types),
-                    physical_qualified=False, added_cycles_per_crossing=3,
+                    physical_qualified=False,
+                    added_cycles_per_crossing="count_aligned (per crossing)" if self.ca else 3,
+                    count_aligned=bool(self.ca),
                     crossings=len(self.rows), ports=self.rows,
                     lane_added_cycles=dict(sorted(by_lane.items())),
                     types=self.by_type, reset_placements=self.reset_placements,
