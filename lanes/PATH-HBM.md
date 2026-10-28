@@ -1291,3 +1291,13 @@ All HBM plan/streets/locality/clock/crossing/core/native boot+token/PG aliases c
 - RESULT DIE-HBM-10 2026-10-28 13:38 PDT: the one tok/s rerun now uses REBAL-9's -1.16% (COORD 12:50).
   - Combined estimate: 1906 / 1.0298 x (1 - 0.0116) = 1829 tok/s, -4.0% (UNCHECKED model). Under 5%, so no OWNER item on this estimate.
   - The measured VMX-TOK-1 replay delta (running on epyc2) replaces the VMX term. If that measured total exceeds 5%, it goes to the OWNER.
+- RESULT DIE-HBM-10 2026-10-28 15:08 PDT: the C23q PHY_N split plan event is BUILT. It is not plan of record. claude/die-hbm-10-1028@656035a2b6; plan at intel2:/srv/opentallas-scratch2/claude/die-hbm-10/c23r_cc (sha 403d45a4).
+  - CHECKED:
+    - G0 PASS, 0 errors.
+    - G0C 16 errors, identical to C22b (12 core_faces on hub nw/ne, 4 street_reach on sm2 u_sm_t07): 0 new. Pending-view 85.
+    - Face fills: W path 0.819, column 0.694 (windows 0.755).
+    - Hub re-station: 191/188 stations, 0 fail. L22 lat 45, L22m 37.
+    - Render phy_split/phy_n_c23q.png, viewed: 3 abutting slices PC0-9 / 10-21 / 22-31; one clk tap per slice in its middle; W/E rst taps on the mcb faces, NC rst on its S face; the column carries the L22 rdata windows at its outer edges beside the C22b data-in windows. The NE macro leaves 293.76 um spare at the E end.
+  - UNCHECKED-model: CA, 0 fail. PHY links 208.3 / 283.1 / 205.5 ps; die worst 109.6. The inverter model waits on CLK-INV-CAL-1, which is not on main.
+  - Also in it: the 4 stale xq_pegress views were dropped (PENDING-VIEW).
+  - Next: re-plan CA on CLK-INV-CAL-1 when it merges; trial clock GRT on C23q after trial2b.
