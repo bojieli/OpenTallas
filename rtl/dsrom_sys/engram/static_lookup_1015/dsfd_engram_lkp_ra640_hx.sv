@@ -298,15 +298,12 @@ module ot_s81_engram_lookup_ra640_hx #(
     wire[5:0] wa_e=wx_ea,wa_o=wx_oa,ra_e=rq_ea,ra_o=rq_oa;wire[2:0]wa_a=wx_aa,ra_a=rq_aa;
     wire[255:0]wd_e=wx_de,wd_o=wx_do,wd_a=wx_da;
 `endif
-    ot_sram_1r1w_128x256_m1_r2c2 u_row_e (.clk(clk_rd), .r_ce_in(rv_e), .r_addr_in({1'b0, ra_e}), .rd_out(rd_e),
-        .w_ce_in(we_e), .w_addr_in({1'b0, wa_e}), .wd_in(wd_e), .w_mask_in({256{1'b1}}),
-        .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
-    ot_sram_1r1w_128x256_m1_r2c2 u_row_o (.clk(clk_rd), .r_ce_in(rv_o), .r_addr_in({1'b0, ra_o}), .rd_out(rd_o),
-        .w_ce_in(we_o), .w_addr_in({1'b0, wa_o}), .wd_in(wd_o), .w_mask_in({256{1'b1}}),
-        .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
-    ot_sram_1r1w_128x256_m1_r2c2 u_row_a (.clk(clk_rd), .r_ce_in(rv_a), .r_addr_in({4'd0, ra_a}), .rd_out(rd_a),
-        .w_ce_in(we_a), .w_addr_in({4'd0, wa_a}), .wd_in(wd_a), .w_mask_in({256{1'b1}}),
-        .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+    ot_sram_1r1w_128x256_m1_r0c0_pc u_row_e (.clk(clk_rd), .r_ce_in(rv_e), .r_addr_in({1'b0, ra_e}), .rd_out(rd_e),
+        .w_ce_in(we_e), .w_addr_in({1'b0, wa_e}), .wd_in(wd_e), .w_mask_in({256{1'b1}}));
+    ot_sram_1r1w_128x256_m1_r0c0_pc u_row_o (.clk(clk_rd), .r_ce_in(rv_o), .r_addr_in({1'b0, ra_o}), .rd_out(rd_o),
+        .w_ce_in(we_o), .w_addr_in({1'b0, wa_o}), .wd_in(wd_o), .w_mask_in({256{1'b1}}));
+    ot_sram_1r1w_128x256_m1_r0c0_pc u_row_a (.clk(clk_rd), .r_ce_in(rv_a), .r_addr_in({4'd0, ra_a}), .rd_out(rd_a),
+        .w_ce_in(we_a), .w_addr_in({4'd0, wa_a}), .wd_in(wd_a), .w_mask_in({256{1'b1}}));
 
     // ---- issue ------------------------------------------------------------------------
     reg [2:0] icnt;
