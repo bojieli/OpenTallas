@@ -6,7 +6,7 @@ per-bit Manhattan hops after packing. Epochs stay outside all banks.
 import argparse,collections,json,math
 from pathlib import Path
 A=argparse.ArgumentParser();A.add_argument("plan");A.add_argument("out");A.add_argument("--widths",default="256,1024");A.add_argument("--rotate",action="store_true");A.add_argument("--safe-subset",action="store_true");a=A.parse_args();widths=sorted(map(int,a.widths.split(",")))
-p=json.load(open(a.plan));out={"scope":"estimate only, no RTL/plan adoption","types":{},"banks":{}}
+p=json.load(open(a.plan));reach=float(p["die"]["reach_um"]);out={"scope":"estimate only, no RTL/plan adoption","types":{},"banks":{}}
 G=8.64;BS=69.12
 for tn in ("q_hub_nw","q_hub_ne"):
  t=p["partition_types"][tn];W,H=t["outline_um"];grid=collections.defaultdict(list)
@@ -65,6 +65,10 @@ for tn in ("q_hub_nw","q_hub_ne"):
     if bi in rejected:return s["regs_um"][ri]
     b=banks[bi];off=.192*(boff+bit-first);return (b["origin_um"][0]+4.32+(0 if b["vertical"] else off),b["origin_um"][1]+4.32+(off if b["vertical"] else 0))
   raise ValueError("missing payload bit")
+ def bankof(si,ri,bit):
+  for first,size,bi,boff in chunks.get((si,ri),[]):
+   if first<=bit<first+size:return bi if bi is not None and bi not in rejected else None
+  return None
  if a.safe_subset:
   while True:
    remove=set()
@@ -72,7 +76,8 @@ for tn in ("q_hub_nw","q_hub_ne"):
     for bit in range(station["bits"]):
      pts=[station["from_um"]]+[point(si,ri,bit) for ri in range(len(station["regs_um"]))]+[station["to_um"]]
      for hi,(b,c) in enumerate(zip(pts,pts[1:])):
-      if abs(b[0]-c[0])+abs(b[1]-c[1])<=441.36:continue
+      reserve=4.32*sum(bankof(si,ri,bit) is not None for ri in (hi-1,hi) if 0<=ri<len(station["regs_um"]))
+      if abs(b[0]-c[0])+abs(b[1]-c[1])+reserve<=reach:continue
       for ri in (hi-1,hi):
        if not 0<=ri<len(station["regs_um"]):continue
        for first,size,bi,boff in chunks.get((si,ri),[]):
@@ -88,20 +93,48 @@ for tn in ("q_hub_nw","q_hub_ne"):
    pts=[s["from_um"]]+[point(si,ri,bit) for ri in range(len(s["regs_um"]))]+[s["to_um"]]
    if any(x is None for x in pts):missing+=1;continue
    mh=max(abs(b[0]-c[0])+abs(b[1]-c[1]) for b,c in zip(pts,pts[1:]));worst=max(worst,mh)
-   if mh>450+1e-6:
+   if mh>reach+1e-6:
     bad+=1
     if len(examples)<8:examples.append({"station":si,"conn":s["conn"],"bit":bit,"max_hop_um":mh})
- soft=[0.,0.]
+ soft=[0.,0.];softpts=[]
  cut=3957.12 if tn=="q_hub_nw" else 8216.64-3957.12
  for c in t["contents"]:
   if any(h["inst"]==c["inst"] or h["inst"].startswith(c["inst"]+"_") or h["inst"].startswith(c["inst"]+".") for h in t["hard_cores"]):continue
-  soft[int(c["origin_um"][0]+c["outline_um"][0]/2>=cut)]+=c["cells"]
+  xx=c["origin_um"][0]+c["outline_um"][0]/2;soft[int(xx>=cut)]+=c["cells"];softpts.append((xx,c["cells"]))
  for si,station in enumerate(t["internal_stations"]):
   for ri,r in enumerate(station["regs_um"]):
    retained=sum(size for first,size,bi,boff in chunks.get((si,ri),[]) if bi is not None and bi not in rejected)
-   soft[int(r[0]>=cut)]+=(station["bits"]-retained)*1.3
+   cost=(station["bits"]-retained)*1.3;soft[int(r[0]>=cut)]+=cost;softpts.append((r[0],cost))
  active=[b for bi,b in enumerate(banks) if bi not in rejected]
- out["types"][tn]={"safe_subset":a.safe_subset,"pruned_banks":len(rejected),"remaining_soft_cells_halves_F1p3":soft,"banks":len(banks)-len(rejected),"width_counts":dict(collections.Counter(b["width"] for b in active)),"unplaced_banks":len(unplaced),"unplaced_first":unplaced[:8],"banked_payload_bits":sum(b["used"] for b in active),"max_original_hop_um":original,"max_repacked_hop_um":worst,"payload_bits_with_hop_gt450":bad,"payload_bits_unplaced":missing,"first_hop_failures":examples,"bank_macro_area_um2":sum(b["outline_um"][0]*b["outline_um"][1] for b in active),"verdict":"ESTIMATE_FAIL" if bad or unplaced else "GEOMETRY_ESTIMATE_ONLY"}
+ cp=collections.Counter()
+ for xx,cost in softpts:cp[xx]+=cost
+ cutrows=[];partcells=[];acc=0;prev=None
+ for xx,cost in sorted(cp.items()):
+  if acc+cost>360000 and acc:
+   cutrows.append({"x_um":(prev+xx)/2,"crossing_payload_bits":0});partcells.append(acc);acc=0
+  acc+=cost;prev=xx
+ if acc:partcells.append(acc)
+ for si,station in enumerate(t["internal_stations"]):
+  for bit in range(station["bits"]):
+   pts=[station["from_um"]]+[point(si,ri,bit) for ri in range(len(station["regs_um"]))]+[station["to_um"]]
+   if any(q is None for q in pts):continue
+   for aa,bb in zip(pts,pts[1:]):
+    lo,hi=sorted((aa[0],bb[0]))
+    for cr in cutrows:
+     if lo<cr["x_um"]<=hi:cr["crossing_payload_bits"]+=1
+ allrect=[]
+ for hh in t["hard_cores"]+active:
+  xx,yy=hh["origin_um"];ww,hhgt=hh["outline_um"];allrect.append((xx,yy,xx+ww,yy+hhgt,hh.get("obs_max","M5")))
+ for cr in cutrows:
+  cx=cr["x_um"];hit=[rr for rr in allrect if rr[0]<cx<rr[2]];cr["intersected_hard_bodies"]=len(hit);cap={}
+  for metal,pitch in [(2,.036),(4,.048),(6,.064)]:
+   spans=sorted((r[1],r[3]) for r in hit if int(r[4][1:])>=metal);length=0;end=0
+   for lo,hi in spans:
+    length+=max(0,hi-max(lo,end));end=max(end,hi)
+   cap["M%d"%metal]=math.floor(.6*(H-length)/pitch)
+  cr["optimistic_tracks_at_0p6"]=cap;cr["demand_over_optimistic_capacity"]=cr["crossing_payload_bits"]/sum(cap.values()) if sum(cap.values()) else None
+
+ out["types"][tn]={"reach_um":reach,"safe_subset":a.safe_subset,"minimum_soft_subparts_360k_lowerbound":math.ceil(sum(soft)/360000),"greedy_x_soft_cells":partcells,"candidate_x_cuts_DIAGNOSTIC":cutrows,"pruned_banks":len(rejected),"remaining_soft_cells_halves_F1p3":soft,"banks":len(banks)-len(rejected),"width_counts":dict(collections.Counter(b["width"] for b in active)),"unplaced_banks":len(unplaced),"unplaced_first":unplaced[:8],"banked_payload_bits":sum(b["used"] for b in active),"max_original_hop_um":original,"max_repacked_hop_um":worst,"payload_bits_with_hop_above_reach":bad,"payload_bits_unplaced":missing,"first_hop_failures":examples,"bank_macro_area_um2":sum(b["outline_um"][0]*b["outline_um"][1] for b in active),"verdict":"ESTIMATE_FAIL" if bad or unplaced else "GEOMETRY_ESTIMATE_ONLY"}
  out["banks"][tn]=active
  print(tn,json.dumps(out["types"][tn]),flush=True)
 Path(a.out).write_text(json.dumps(out,indent=1)+"\n")
