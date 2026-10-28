@@ -26,6 +26,28 @@ class Anchors(unittest.TestCase):
             G._sub1("set a {1}\nset a {2}\n", r"^set a \{[^\n]*\}", "x", "dup")
 
 
+class SliceClockPinsOut(unittest.TestCase):
+    """QC-A0-KITS-4 10-28: a master-slice clock entry (interior M5) leaves the face-pin audit table pins.json, so
+    pin_audit does not compare the routed entry against the stale face pin; other pins and slice-less kits unchanged."""
+    def test_moved_clock_dropped_others_kept(self):
+        sys.path.insert(0, str(HERE.parents[4] / "tools/die_plan"))
+        import master_slice as MS
+        with tempfile.TemporaryDirectory() as t:
+            kd = Path(t)
+            rows = [dict(bus="clk", bit=None, layer="M4", x=0.042, y=21.756, face="W"),
+                    dict(bus="a", bit=0, layer="M4", x=0.042, y=10.0, face="W")]
+            (kd / "pins.json").write_text(json.dumps(rows) + "\n")
+            self.assertEqual(G.slice_clock_pins_out(kd, MS, ["clk"]), [])          # no slice: unchanged
+            self.assertEqual(len(json.loads((kd / "pins.json").read_text())), 2)
+            sl = dict(kind="core", core_clock_port="clk",
+                      islands=[dict(name="i0", clock_pin=dict(layer="M5", xy_um=[86.412, 98.4]))])
+            (kd / "master_slice.json").write_text(json.dumps(sl))
+            self.assertEqual(G.slice_clock_pins_out(kd, MS, ["clk"]), ["clk"])
+            left = json.loads((kd / "pins.json").read_text())
+            self.assertEqual([r["bus"] for r in left], ["a"])
+            self.assertEqual(G.slice_clock_pins_out(kd, MS, ["clk"]), [])          # idempotent
+
+
 class GeneratedKit(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
