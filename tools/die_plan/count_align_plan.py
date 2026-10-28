@@ -182,7 +182,7 @@ def directed_tree(rows, regions):
 
 
 def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edge_pad=None, start_skew=(0.0, 0.0),
-         skew_clean=False, _pad_pass=False, tree_parent=None, max_depth=8):
+         skew_clean=False, _pad_pass=False, tree_parent=None, start_edges=None, start_root=None):
     """edge_pad {tree port or child region: PAD}: per-start-tree-edge PAD overriding the default `pad` (MESO-RECONCILE-1,
     COORD 10-27).  An edge PAD p_e >= pad delays the child's origin by p_e - pad counts and HOLDS the tree crossing's RTL K
     at its default-PAD value, so that crossing's lag (and latency) grow by (p_e - pad) T; every other crossing's K is
@@ -197,18 +197,22 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
     tree_parent {child region: port} (MESO-START-2, COORD 03:4x, opt-in): re-parent the child (with its subtree) onto
     the given crossing (src -> child) after the min-ambiguity tree is built, so a region pair that has no bound crossing
     gets its crossing as the start edge itself (no path ambiguity); refused if the src lies in the child's subtree.
-    max_depth (DIE-S81-11, METHODOLOGY 12.16 b(iii), opt-in): largest standard ring DEPTH, 8 (default, unchanged) or 16
-    (RTL proof: results/die_s81_11_1028/D16.md, ot_dp_clk_landing_ca lag sweep [0.5, 15.5] T, mutants caught); a
-    crossing takes the smallest of 4 / 8 / 16 whose window holds L_hi with ap (16 only when max_depth = 16)."""
-    if max_depth not in (8, 16):
-        raise ValueError(f"max_depth {max_depth}: standard ring depths are 8 or 16")
+    start_edges / start_root (START-TREE-1, METHODOLOGY 12.16b(iv)/12.16e, opt-in --start-tree clock): the start tree is
+    given (clock_start_edges: the clock tree's own region/branch nodes, one dedicated start port per edge) instead of
+    the min-ambiguity tree over data crossings; every data crossing is then 'nontree' and its origin difference is
+    summed over the start ports on the clock-tree path between its two regions.  None (default): unchanged."""
+    if start_edges is not None:
+        if tree_parent:
+            raise ValueError("tree_parent does not apply with a given start tree (--start-tree clock)")
+        start_edges = [dict(e) for e in start_edges]
     smax = max(abs(float(start_skew[0])), abs(float(start_skew[1])))
     if skew_clean and not _pad_pass:
         if not smax:
             raise ValueError("skew_clean needs a nonzero start_skew (--start-skew LO,HI)")
         need = 100.0 + smax
         args = (T, ap, wander_frac, sync_ap, pad)
-        s0, out0, regs0 = plan([dict(r) for r in rows], *args, edge_pad, start_skew, True, True, tree_parent, max_depth)
+        kw = dict(start_edges=start_edges, start_root=start_root)
+        s0, out0, regs0 = plan([dict(r) for r in rows], *args, edge_pad, start_skew, True, True, tree_parent, **kw)
         byp = {o["port"]: o for o in out0}
         ep = dict(edge_pad or {})
         add = {}
@@ -216,13 +220,14 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
             e = g["start_from"]
             if not e or e["sync_values"] == 1:
                 continue
-            o = byp[e["port"]]
+            o = byp.get(e["port"])
+            if o is None:
+                continue        # dedicated start port (--start-tree clock): no tree crossing lag to pad
             if o.get("depth") and o["margin_lo_ps"] < need:
                 ep.pop(e["port"], None)
                 ep[g["region"]] = add[g["region"]] = int(e["rtl"]["PAD"]) + 1
-        summ, out, regs = plan(rows, *args, ep, start_skew, True, True, tree_parent, max_depth)
-        sn, outn, _ = plan([dict(r) for r in rows], *args, edge_pad, start_skew, tree_parent=tree_parent,
-                           max_depth=max_depth)
+        summ, out, regs = plan(rows, *args, ep, start_skew, True, True, tree_parent, **kw)
+        sn, outn, _ = plan([dict(r) for r in rows], *args, edge_pad, start_skew, tree_parent=tree_parent, **kw)
 
         def lat(xs):
             return sum(o["lat_cycles"] for o in xs if o.get("lat_cycles") is not None)
@@ -247,8 +252,30 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
         r["lo"], r["hi"] = r["d_ps"] - r["p_dn_ps"], r["d_ps"] + r["p_up_ps"]
         r["_nv"], r["_edge"], r["_off"], r["_dist"] = sync_choice(r, T, ap, start_skew, sync_ap)
         r["_w"] = wander_frac * max(r.get("unshared_a_ps", 0.0), r.get("unshared_b_ps", 0.0))
-    regions = sorted({r["src"] for r in rows} | {r["dst"] for r in rows})
-    root, par = directed_tree(rows, regions)
+    data_regions = sorted({r["src"] for r in rows} | {r["dst"] for r in rows})
+    regions = data_regions
+    if start_edges is not None:
+        for r in start_edges:
+            r["lo"], r["hi"] = r["d_ps"] - r["p_dn_ps"], r["d_ps"] + r["p_up_ps"]
+            r["_nv"], r["_edge"], r["_off"], r["_dist"] = sync_choice(r, T, ap, start_skew, sync_ap)
+            r["_w"] = 0.0
+        root, par = start_root, {start_root: None}
+        for r in start_edges:
+            par[r["dst"]] = (r["src"], r)
+        regions = sorted(set(data_regions) | set(par))
+        stack, seen = [start_root], {start_root}
+        kids0 = defaultdict(list)
+        for x, v in par.items():
+            if v:
+                kids0[v[0]].append(x)
+        for x in stack:
+            for y in kids0[x]:
+                if y not in seen:
+                    seen.add(y); stack.append(y)
+        if seen != set(par):
+            raise ValueError(f"start_edges: {len(set(par) - seen)} nodes not reached from start_root {start_root}")
+    else:
+        root, par = directed_tree(rows, regions)
     for x, port in (tree_parent or {}).items():
         r = next((q for q in rows if q["port"] == port), None)
         if r is None or r["dst"] != x or r["src"] == x or x not in par or r["src"] not in par:
@@ -314,6 +341,16 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
             vlo += dev[sv][0]; vhi += dev[sv][1]; sv = par[sv][0]
         return vlo - uhi, vhi - ulo
 
+    def hops(u, v):
+        su, sv, n = u, v, 0
+        while su != sv:
+            if depth[su] >= depth[sv]:
+                su = par[su][0]
+            else:
+                sv = par[sv][0]
+            n += 1
+        return n
+
     tree_port = {par[x][1]["port"]: x for x in order[1:]}
     out = []
     lo_win = 0.5 * T + ap
@@ -337,7 +374,7 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
         k_eff = math.ceil((lo_win - rel_lo) / T - 1e-12) + (pe(child) - pad if child is not None else 0)
         L_lo, L_hi = k_eff * T + rel_lo, k_eff * T + rel_hi
         nh = max(ap, 100.0 + smax) if (skew_clean and kind == "tree_ambiguous") else ap
-        dep = next((dd for dd in (4, 8, 16) if dd <= max_depth and L_hi <= (dd - 0.5) * T - nh + 1e-9), None)
+        dep = 4 if L_hi <= 3.5 * T - nh + 1e-9 else (8 if L_hi <= 7.5 * T - nh + 1e-9 else None)
         old_vals = interval_boundaries(r["lo"], r["hi"], T, T / 2) + 1
         out.append(dict(port=r["port"], src=u, dst=v, kind=kind, d_ps=r["d_ps"], p_up_ps=r["p_up_ps"],
                         p_dn_ps=r["p_dn_ps"], wander_ps=round(w, 1), path_ambiguous_cycles=amb[1] - amb[0],
@@ -350,6 +387,8 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
                         if dep else None,
                         old_ring_lat_values=old_vals, old_ring_margin_ps=r.get("margin_ps"),
                         old_ring_ok=(r.get("margin_ps", 0) >= 0)))
+        if start_edges is not None:
+            out[-1]["start_hops"] = hops(u, v)
     regs = []
     byp = {o["port"]: o for o in out}
     for x in order:
@@ -373,7 +412,12 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
                      offset_from_parent=pe(x) + 2 + jn[x], pad_override=x in epad,
                      start_skew_limit_ps=None if lim is None else round(lim, 1), start_skew_basis=basis,
                      rtl=dict(module="ot_dp_landing_origin", PAD=pe(x), EDGE_FALL=int(r["_edge"] == "fall")))
+            if start_edges is not None:
+                e.update({k: r[k] for k in START_EDGE_KEYS if k in r})
+                e["start_interval_ps"] = [round(r["lo"], 1), round(r["hi"], 1)]
         regs.append(dict(region=x, origin_cycles=a0[x], tree_depth=depth[x], start_from=e))
+        if start_edges is not None:
+            regs[-1]["virtual"] = x not in data_regions
     ok = [o for o in out if o.get("depth")]
     amb_edges = [g for g in regs if g["start_from"] and g["start_from"]["sync_values"] > 1]
     summ = dict(regions=len(regions), regions_reached=len(a0), tree_root=root, tree_edges=len(order) - 1,
@@ -390,8 +434,7 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
                     (g["start_from"]["sync_dist_ps"] for g in regs if g["start_from"] and g["start_from"]["sync_values"] == 1),
                     default=None),
                 crossings=len(out), depth4=sum(1 for o in ok if o["depth"] == 4),
-                depth8=sum(1 for o in ok if o["depth"] == 8), depth16=sum(1 for o in ok if o["depth"] == 16),
-                max_depth=max_depth, fail=len(out) - len(ok),
+                depth8=sum(1 for o in ok if o["depth"] == 8), fail=len(out) - len(ok),
                 max_path_ambiguous_cycles=max((o.get("path_ambiguous_cycles", 0) for o in out), default=0),
                 worst_margin_lo_ps=min((o["margin_lo_ps"] for o in ok), default=None),
                 worst_margin_lo_port=min(ok, key=lambda o: o["margin_lo_ps"])["port"] if ok else None,
@@ -403,7 +446,257 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
                 lat_total_vs_old3=sum(o["lat_cycles"] - 3 for o in ok),
                 old_ring_not_cycle_fixed=sum(1 for o in out if o.get("old_ring_lat_values", 1) > 1),
                 old_ring_fail_margin=sum(1 for o in out if o.get("old_ring_ok") is False))
+    if start_edges is not None:
+        se = [g["start_from"] for g in regs if g["start_from"]]
+        hp = sorted(o["start_hops"] for o in out if "start_hops" in o)
+        wd = sorted(e["start_interval_ps"][1] - e["start_interval_ps"][0] for e in se)
+        summ["start_tree"] = dict(
+            form="clock", data_regions=len(data_regions), virtual_nodes=sum(1 for g in regs if g.get("virtual")),
+            retime_nodes=sum(1 for e in se if e.get("retime")), start_edges=len(se),
+            start_clean=sum(1 for e in se if e["sync_values"] == 1 and e.get("clean_ok", True)),
+            start_fail=sum(1 for e in se if e["sync_values"] > 1 or not e.get("clean_ok", True)),
+            start_fail_edges=[e["port"] for e in se if e["sync_values"] > 1 or not e.get("clean_ok", True)][:20],
+            start_width_ps=dict(median=wd[len(wd) // 2] if wd else None, max=wd[-1] if wd else None),
+            start_min_sync_dist_ps=min((e["sync_dist_ps"] for e in se), default=None),
+            crossing_start_hops=dict(median=hp[len(hp) // 2] if hp else None, max=hp[-1] if hp else None),
+            rule="12.16b(iv): every start (reset-release) port is a crossing; CLEAN iff its interval (same shared model, "
+                 "clock_variation table) +- aperture holds no sampling boundary; an unclean port FAILs the plan")
     return summ, out, regs
+
+# ---------------------------------------------------------------- START-TREE-1 (opt-in --start-tree clock)
+# METHODOLOGY 12.16b(i)/(iv) + 12.16e: the start (reset-release) distribution follows the CLOCK tree.  Root cause it
+# removes (results/start_tree_1028/README.md): the default start tree is a min-ambiguity spanning tree over DATA
+# crossings, each start edge's interval is the region-pair union of all its tap pairs (incl. the whole unshared clock
+# + OCV), so with OCV many start edges are ambiguous, and a crossing between regions that are far apart in that tree
+# sums every ambiguous edge on the path (QC t6: 6-9 cycles on all 94 FAILs, 10-11 start hops).
+START_EDGE_KEYS = ("launch", "capture", "launch_part", "capture_part", "retime", "unshared_a_ps", "unshared_b_ps",
+                   "fork_node", "clean_ok")
+
+
+def _lcp(a, b):
+    n = 0
+    while n < min(len(a), len(b)) and a[n] == b[n]:
+        n += 1
+    return a[:n]
+
+
+def clock_contexts(proof, plan_path, corners, clock_cal="spice", clock_ocv="table", clock_droop=None,
+                   droop_regions_file=None, core_latency_ff=None):
+    """{corner: dict(meta, taps, ocv, rng)} with the ONE shared die model exactly as sta_d_intervals builds it (tap
+    arrivals of PROOF, --clock-cal spice, CPPR at the last common tree node, clock_ocv_fn table + shared droop)."""
+    import die_sta_related as DSR
+    from pathlib import Path
+    if clock_ocv == "none":
+        raise ValueError("--start-tree clock needs a clock variation model (--sta-clock-ocv table): 12.16b(iv) checks "
+                         "reset release with the same CA rule")
+    plan = json.load(open(plan_path))
+    lt = float(plan.get("clock", {}).get("common_latency_ps", 250.0))
+    out = {}
+    for c in corners:
+        meta, taps = DSR.load_taps(Path(proof), c)
+        if not all("tree_path" in t for t in taps.values()):
+            raise ValueError("--start-tree clock needs tap tree_path in the proof (the clock tree topology)")
+        if clock_cal == "spice":
+            meta, taps = DSR.scale_clock(meta, taps, DSR.SPICE_CLOCK_CAL.get(c, DSR.SPICE_CLOCK_CAL["TT"]))
+        taps = dict(taps)
+        lat = core_latency_ff if (c == "FF" and core_latency_ff is not None) else lt
+        old, DSR.CPPR_LCA = DSR.CPPR_LCA, True
+        try:
+            ocv = DSR.ca_ocv(Path(proof), meta, taps, c, lat, clock_ocv, clock_droop, "mesh", droop_regions_file)
+        finally:
+            DSR.CPPR_LCA = old
+        out[c] = dict(meta=meta, taps=taps, ocv=ocv, rng=meta.get("cppr_node_range_ps"))
+    return out
+
+
+def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew=(0.0, 0.0), skew_clean=False,
+                      retime_max=8, clean_by="phase"):
+    """START TREE = CLOCK TREE (START-TREE-1).  ctx = clock_contexts() ({corner: meta/taps/ocv/rng}, first = nominal).
+    Nodes: every data region at its clock root (longest common tree_path prefix of its taps) and every branch node of
+    the clock subtree spanning those roots (virtual 'st:<path>', a retime flop on that tree node).  Each node's start
+    parent is its nearest clock-tree ancestor node, so the start path between two regions IS their clock-tree path.
+    One DEDICATED start port per edge (not a data crossing, no region-pair union):
+      launch  = virtual tap at the parent node, or the parent region's FORK tap (deepest common tree node with the
+                child's sync tap; the parent's start reaches it in-region, same clock);
+      capture = virtual tap at the child node, or the child region's tap with the shortest leg below its root (its
+                origin / sync flop).
+    The port's interval is count_align_d_intervals on that one tap pair (same CPPR + ocv as the gate) over every
+    corner (union), d nominal from the first corner.  An unclean port is split by retime flops at intermediate tree
+    nodes, down to the sync tap's driving node inside the child region (greedy deepest clean segment, <= retime_max
+    per edge), so every start port is CLEAN where the tree allows;
+    a port that stays unclean is kept (its J range enters path ambiguity as before) and FAILs the plan (12.16b(iv)).
+    A branch node is contracted (no stage of its own) when all its children take a clean port straight from its parent.
+    Virtual taps: node arrival + the proof's median tap leg (late / early / stages from the tap's driving tree node).
+    Returns (root, edges, info)."""
+    import die_sta_related as DSR
+    cs = list(ctx)
+    c0 = ctx[cs[0]]
+    p2r = {}
+    for r in rows:
+        p2r.setdefault(r.get("src_part", r["src"]), r["src"])
+        p2r.setdefault(r.get("dst_part", r["dst"]), r["dst"])
+    rtaps = defaultdict(list)
+    for k, t in sorted(c0["taps"].items()):
+        if t.get("part") in p2r:
+            rtaps[p2r[t["part"]]].append(k)
+    regions = sorted({r["src"] for r in rows} | {r["dst"] for r in rows})
+    miss = [x for x in regions if not rtaps.get(x)]
+    if miss:
+        raise ValueError(f"--start-tree clock: {len(miss)} regions without proof taps (e.g. {miss[:5]})")
+    leg = {c: DSR.tap_leg(k["meta"], k["taps"]) for c, k in ctx.items()}
+    rootp = {}
+    for x in regions:
+        ps = [c0["taps"][k]["tree_path"] for k in rtaps[x]]
+        p = ps[0]
+        for q in ps[1:]:
+            p = _lcp(p, q)
+        rootp[x] = p
+    paths = sorted(set(rootp.values()))
+    allp = set(paths) | {_lcp(a, b) for a, b in zip(paths, paths[1:])}
+    if len(paths) > 1:
+        top = paths[0]
+        for q in paths[1:]:
+            top = _lcp(top, q)
+        allp.add(top)
+    at = defaultdict(list)
+    for x in regions:
+        at[rootp[x]].append(x)
+    node_of, path_of = {}, {}
+    for p in sorted(allp, key=lambda q: (len(q), q)):
+        prim = at[p][0] if at.get(p) else f"st:{p}"
+        node_of[p] = prim
+        path_of[prim] = p
+        for x in at.get(p, [])[1:]:
+            path_of[x] = p
+    root = node_of[min(allp, key=lambda q: (len(q), q))]
+
+    def vtap(c, p):
+        return DSR.virtual_tap(ctx[c]["meta"], ctx[c]["taps"], p, leg[c])
+
+    def capture_of(y):
+        if y.startswith("st:"):
+            return vtap(cs[0], path_of[y])
+        m = c0["meta"]
+        return min(rtaps[y], key=lambda k: (float(c0["taps"][k]["late_ps"]) - float(m["node_late_ps"][path_of[y]]), k))
+
+    def launch_of(x, cap_path):
+        if x.startswith("st:"):
+            return vtap(cs[0], path_of[x])
+        m = c0["meta"]
+
+        def key(k):
+            t = c0["taps"][k]
+            f = _lcp(t["tree_path"], cap_path)
+            return (-len(f), float(t["late_ps"]) - float(m["node_late_ps"][f]), k)
+        return min(rtaps[x], key=key)
+
+    def interval(a, b):
+        old, DSR.CPPR_LCA = DSR.CPPR_LCA, True
+        try:
+            lo = hi = None
+            for c in cs:
+                for k in (a, b):
+                    if k.startswith("__st__"):
+                        vtap(c, k[6:])
+                iv = DSR.count_align_d_intervals([(a, b, "s")], ctx[c]["taps"], ctx[c]["rng"], ocv=ctx[c]["ocv"])["s"]
+                lo = iv[0] if lo is None else min(lo, iv[0])
+                hi = iv[1] if hi is None else max(hi, iv[1])
+        finally:
+            DSR.CPPR_LCA = old
+        A, B = c0["taps"][a], c0["taps"][b]
+        node = _lcp(A["tree_path"], B["tree_path"]) or "h"
+        nl = c0["meta"]["node_late_ps"]
+        d = 0.5 * (float(B["late_ps"]) + float(B["early_ps"])) - 0.5 * (float(A["late_ps"]) + float(A["early_ps"]))
+        d = min(max(d, lo), hi)
+        return dict(d_ps=d, p_dn_ps=d - lo, p_up_ps=hi - d, fork_node=node,
+                    unshared_a_ps=float(A["late_ps"]) - float(nl[node]), unshared_b_ps=float(B["late_ps"]) - float(nl[node]))
+
+    smax = max(abs(float(start_skew[0])), abs(float(start_skew[1])))
+
+    def clean(r):
+        q = dict(r, lo=r["d_ps"] - r["p_dn_ps"], hi=r["d_ps"] + r["p_up_ps"])
+        n, _, _, dist = sync_choice(q, T, ap, start_skew, sync_ap)
+        ok = n == 1 and (not skew_clean or dist - sync_ap >= smax)
+        if clean_by == "width":
+            # SAFE BY DESIGN: the port is narrow enough that one of rise / fall is clean wherever d lands
+            # (width + skew range <= T/2 - 2 ap), not only by the luck of its phase
+            ok = ok and (q["hi"] - q["lo"]) + (float(start_skew[1]) - float(start_skew[0])) <= T / 2 - 2 * ap + 1e-9
+        return ok
+
+    def part(k):
+        return c0["taps"][k].get("part")
+
+    edges = []
+    pairs = []
+    for p in sorted(allp, key=lambda q: (len(q), q)):
+        prim = node_of[p]
+        if prim != root:
+            pp = max((q for q in allp if len(q) < len(p) and p.startswith(q)), key=len)
+            pairs.append((node_of[pp], prim))
+        pairs += [(prim, x) for x in at.get(p, [])[1:]]
+    # contract virtual branch nodes: a branch node needs its own start stage only if some child cannot take a CLEAN
+    # port straight from the branch node's parent (fewer stages, fewer retime flops; every kept port stays clean)
+    par_of = {y: x for x, y in pairs}
+    kids_of = defaultdict(list)
+    for x, y in pairs:
+        kids_of[x].append(y)
+    contracted = 0
+    for p in sorted(allp, key=lambda q: (len(q), q)):
+        v = node_of[p]
+        if not v.startswith("st:") or v == root:
+            continue
+        x = par_of[v]
+
+        def direct_ok(c):
+            cp = capture_of(c)
+            return clean(interval(launch_of(x, c0["taps"][cp]["tree_path"]), cp))
+        if all(direct_ok(c) for c in kids_of[v]):
+            for c in kids_of[v]:
+                par_of[c] = x
+                kids_of[x].append(c)
+            kids_of[x].remove(v)
+            del par_of[v], kids_of[v]
+            contracted += 1
+    pairs = [(x, y) for x in sorted(kids_of) for y in kids_of[x]]
+    for x, y in pairs:
+        cap = capture_of(y)
+        cpath = c0["taps"][cap]["tree_path"]
+        lau = launch_of(x, cpath)
+        src, chain = x, []
+        while True:
+            r = interval(lau, cap)
+            if clean(r) or len(chain) >= retime_max:
+                break
+            f = _lcp(c0["taps"][lau]["tree_path"], cpath)
+            # retime candidates: tree nodes strictly below the launch fork, down to the child node (a virtual child)
+            # or to the sync tap's driving node inside the child region (its own clock tree)
+            stop = len(path_of[y]) - 1 if y.startswith("st:") else len(cpath) - 1
+            best = None
+            for n in range(stop, len(f), -1):
+                mp = cpath[:n]
+                rm = interval(lau, vtap(cs[0], mp))
+                if clean(rm):
+                    best = (mp, rm)
+                    break
+            if best is None:
+                break
+            mp, rm = best
+            mid = f"st:{mp}"
+            path_of[mid] = mp
+            edges.append(dict(port=f"start:{src}->{mid}", src=src, dst=mid, launch=lau, capture=vtap(cs[0], mp),
+                              launch_part=part(lau), capture_part=None, retime=True, clean_ok=True, **rm))
+            chain.append(mid)
+            src, lau = mid, vtap(cs[0], mp)
+        edges.append(dict(port=f"start:{src}->{y}", src=src, dst=y, launch=lau, capture=cap, launch_part=part(lau),
+                          capture_part=part(cap), retime=False, clean_ok=clean(r), **r))
+    for e in edges:
+        e["lo"], e["hi"] = e["d_ps"] - e["p_dn_ps"], e["d_ps"] + e["p_up_ps"]
+    width_ok = T / 2 - 2 * ap
+    info = dict(clean_by=clean_by, clean_by_width=sum(1 for e in edges if e["p_up_ps"] + e["p_dn_ps"] <= width_ok + 1e-9),
+                root=root, root_path=path_of[root], leg_ps={c: list(v) for c, v in leg.items()},
+                regions=len(regions), branch_nodes=sum(1 for p in allp if not at.get(p)), branch_nodes_contracted=contracted,
+                retime_nodes=sum(1 for e in edges if e["retime"]))
+    return root, edges, info
 
 
 def mc_check(rows, out, regs, T=833.0, chips=2000, sync_ap=26.5, seed=1, start_skew=None):
@@ -512,6 +805,45 @@ def sta_ocv_kw(a):
                 core_latency_ff=a.sta_core_latency_ff)
 
 
+def add_start_tree_args(ap):
+    """START-TREE-1 (opt-in): --start-tree clock; default 'data' = the min-ambiguity tree over data crossings (unchanged)"""
+    ap.add_argument("--start-tree", choices=("data", "clock"), default="data",
+                    help="START-TREE-1 (12.16b(iv)/12.16e): 'clock' = the start (reset-release) tree follows the clock "
+                         "tree of --sta-proof, one dedicated start port per clock-tree edge (fork tap -> child sync tap, "
+                         "retime flops on tree nodes where a port would be unclean), each port checked as a crossing "
+                         "with the --sta-clock-ocv model; needs --sta-proof/--sta-plan and --sta-clock-ocv table")
+    ap.add_argument("--start-retime-max", type=int, default=8, help="max retime flops per clock-tree start edge")
+    ap.add_argument("--start-clean", choices=("phase", "width"), default="phase",
+                    help="--start-tree clock: 'phase' (default) = the CA rule: the port's derated interval (shared model, "
+                         "OCV + droop) keeps >= T/8 from every sampling boundary of the chosen edge; 'width' (stricter) = "
+                         "also width (+ skew range) <= T/2 - 2 ap, clean wherever d lands (more retime stages on deep trees)")
+
+
+def check_start_tree_args(a, err):
+    if a.start_tree != "clock":
+        return
+    if not (a.sta_proof and a.sta_plan):
+        err("--start-tree clock needs --sta-proof and --sta-plan (the clock tree)")
+    if a.sta_clock_ocv == "none":
+        err("--start-tree clock needs --sta-clock-ocv table (12.16b(iv): reset release under the same CA rule)")
+    if a.tree_parent:
+        err("--start-tree clock and --tree-parent exclude each other (the clock tree fixes every start edge)")
+
+
+def start_tree_from_args(a, rows, err):
+    """(start_edges, start_root, info) for --start-tree clock, else (None, None, None)"""
+    if a.start_tree != "clock":
+        return None, None, None
+    check_start_tree_args(a, err)
+    cs = [c.split("_")[0] for c in a.corner.split(",")]
+    cs = list(dict.fromkeys(cs))
+    ctx = clock_contexts(a.sta_proof, a.sta_plan, cs, a.sta_clock_cal, a.sta_clock_ocv, a.sta_clock_droop,
+                         a.sta_droop_regions, a.sta_core_latency_ff)
+    root, edges, info = clock_start_edges(rows, ctx, a.period, a.aperture, a.sync_aperture, a.start_skew,
+                                          a.start_skew_clean, a.start_retime_max, a.start_clean)
+    return edges, root, info
+
+
 def parse_skew(text):
     """'LO,HI' ps -> (lo, hi) with lo <= hi"""
     lo, hi = (float(x) for x in text.split(","))
@@ -565,12 +897,12 @@ def main(argv=None):
                     help="as die_sta_related --clock-cal (12.15b gate: spice)")
     ap.add_argument("--sta-cppr-lca", action="store_true", help="as die_sta_related --cppr-lca")
     add_sta_ocv_args(ap)
-    ap.add_argument("--max-depth", type=int, choices=(8, 16), default=8,
-                    help="DIE-S81-11 / 12.16 b(iii) opt-in: largest standard ring DEPTH (16 needs its RTL proof; default 8)")
+    add_start_tree_args(ap)
     ap.add_argument("--mc-chips", type=int, default=0)
     ap.add_argument("--out")
     ap.add_argument("--cases", help="TSV for the Verilator bench: port DEPTH L_ps (lo / mid / hi per crossing)")
     a = ap.parse_args(argv)
+    check_start_tree_args(a, ap.error)
     rows = load_rows(a.ocv_json, a.corner, a.scale)
     sta_info = None
     if a.sta_proof:
@@ -588,9 +920,13 @@ def main(argv=None):
                   "(die_sta_related fails them closed: no taps)", file=sys.stderr)
     if a.start_skew_clean and not any(a.start_skew):
         ap.error("--start-skew-clean needs --start-skew LO,HI")
+    sedges, sroot, sinfo = start_tree_from_args(a, rows, ap.error)
+    skw = dict(start_edges=sedges, start_root=sroot) if sedges is not None else {}
     summ, out, regs = plan(rows, a.period, a.aperture, a.wander_frac, a.sync_aperture, a.pad, parse_edge_pad(a.edge_pad),
                            a.start_skew, a.start_skew_clean, tree_parent=parse_edge_pad(a.tree_parent, str) or None,
-                           max_depth=a.max_depth)
+                           **skw)
+    if sinfo:
+        summ["start_tree"].update(sinfo)
     if a.tree_parent:
         summ["tree_parent"] = parse_edge_pad(a.tree_parent, str)
     if any(a.start_skew):
@@ -600,12 +936,15 @@ def main(argv=None):
     summ.update(corner=a.corner, period_ps=a.period, aperture_ps=a.aperture, sync_aperture_ps=a.sync_aperture,
                 wander_frac=a.wander_frac, pad=a.pad, scale=a.scale, source=a.ocv_json)
     if a.mc_chips:
-        n, bad, wl, wh = mc_check(rows, out, regs, a.period, a.mc_chips, a.sync_aperture,
+        n, bad, wl, wh = mc_check(rows + (sedges or []), out, regs, a.period, a.mc_chips, a.sync_aperture,
                                   start_skew=a.start_skew if a.start_skew_clean else None)
         summ["mc"] = dict(chips=n, violations=bad, worst_lo_to_guard_ps=wl, worst_hi_to_guard_ps=wh)
     print(json.dumps({k: v for k, v in summ.items() if k != "tree_edges_ambiguous"}, indent=1))
     if a.out:
-        json.dump(dict(summary=summ, regions=regs, crossings=out), open(a.out, "w"), indent=0)
+        doc = dict(summary=summ, regions=regs, crossings=out)
+        if sedges is not None:
+            doc["start_edges"] = [{k: v for k, v in e.items() if not k.startswith("_")} for e in sedges]
+        json.dump(doc, open(a.out, "w"), indent=0)
     if a.cases:
         with open(a.cases, "w") as f:
             for o in out:
@@ -613,7 +952,8 @@ def main(argv=None):
                     continue
                 for L in (o["L_lo_ps"], 0.5 * (o["L_lo_ps"] + o["L_hi_ps"]), o["L_hi_ps"]):
                     f.write(f"{o['port']}\t{o['depth']}\t{int(round(L))}\n")
-    return 0 if summ["fail"] == 0 and summ["regions_reached"] == summ["regions"] else 1
+    sfail = summ.get("start_tree", {}).get("start_fail", 0)
+    return 0 if summ["fail"] == 0 and summ["regions_reached"] == summ["regions"] and not sfail else 1
 
 
 if __name__ == "__main__":

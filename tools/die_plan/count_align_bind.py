@@ -85,6 +85,8 @@ def bind(plan, T=None, parts=None):
     if bad:
         raise BindError(f"{len(bad)} crossings have no RTL K/DEPTH (plan FAIL/unreached): {bad[:5]}")
     rows = {o["port"]: o for o in xs}
+    # START-TREE-1 (--start-tree clock): dedicated start ports (not data crossings) carry the start tree
+    starts = {e["port"]: e for e in plan.get("start_edges", [])}
     n = {g["region"]: int(g["origin_cycles"]) for g in regs}
     root = [g["region"] for g in regs if g["start_from"] is None]
     if len(root) != 1:
@@ -97,7 +99,9 @@ def bind(plan, T=None, parts=None):
                               depth=0)
             continue
         p, port, pad = e["parent"], e["port"], int(e["rtl"]["PAD"])
-        o = rows[port]
+        o = rows.get(port, starts.get(port))
+        if o is None:
+            raise BindError(f"tree port {port}: neither a crossing nor a start port of the plan")
         if (o["src"], o["dst"]) != (p, x):
             raise BindError(f"tree port {port} is not parent {p} -> child {x} (start rides src -> dst only)")
         step = n[x] - n[p]
@@ -131,6 +135,19 @@ def bind(plan, T=None, parts=None):
                 convention="a_child - a_parent = PAD + 2 + J(d) = MESO-INTEG-1 m + 1 + PAD (identity, checked per edge); "
                            "RTL K = plan K_eff - n0",
                 latency_frame="receiver counts; sched_lat = K + 1 + n_dst - n_src (nominal) = plan lat_cycles")
+    if starts:
+        for g in regs:
+            regions[g["region"]]["virtual"] = bool(g.get("virtual"))
+    if starts:
+        # START-TREE-1: the start ports, their tap ends and the derated start interval (verify() samples it; the die STA
+        # re-checks it on built arrivals); step = PAD + 2 + J (sender -> child origin), K + 1 = 0 in the loop identity
+        b["start_tree"] = "clock"
+        b["start_ports"] = {pid: dict(src=e["src"], dst=e["dst"], d_ps=e["d_ps"],
+                                      d_lo_ps=round(e["d_ps"] - e["p_dn_ps"], 1), d_hi_ps=round(e["d_ps"] + e["p_up_ps"], 1),
+                                      step=regions[e["dst"]]["n_nominal"] - regions[e["src"]]["n_nominal"],
+                                      **{k: e.get(k) for k in ("launch", "capture", "launch_part", "capture_part",
+                                                               "retime", "fork_node")})
+                            for pid, e in starts.items()}
     if summ.get("start_skew_clean"):
         # MESO-START-2 (opt-in): the start-up sim samples each tree edge at d - skew (plan --start-skew-clean)
         b["start_skew_ps"] = [float(x) for x in summ["start_skew_ps"]]
@@ -157,6 +174,12 @@ def bind_parts(b, parts):
         sp, dp = parts[pid]
         reg_parts[c["src"]].add(sp)
         reg_parts[c["dst"]].add(dp)
+    sp_ = b.get("start_ports", {})
+    for pid, c in sp_.items():
+        # START-TREE-1: the start launch flop sits in the fork tap's partition, the sync in the capture tap's; a
+        # virtual (clock-tree node) start node is its own frame
+        for x, q in ((c["src"], c["launch_part"]), (c["dst"], c["capture_part"])):
+            reg_parts[x].add(q if (q and not reg[x].get("virtual")) else x)
     owner = {}
     for r, ps in reg_parts.items():
         for pn in ps:
@@ -164,14 +187,20 @@ def bind_parts(b, parts):
                 raise BindError(f"partition {pn} lands in two regions ({owner[pn]}, {r})")
     tree_ports = {r["tree_port"] for r in reg.values() if r["tree_port"]}
     sends, nports = defaultdict(int), defaultdict(int)
+    def eparts(port):
+        if port in sp_:
+            c = sp_[port]
+            return (c["launch_part"] if c["launch_part"] and not reg[c["src"]].get("virtual") else c["src"],
+                    c["capture_part"] if c["capture_part"] and not reg[c["dst"]].get("virtual") else c["dst"])
+        return parts[port]
     for port in tree_ports:
-        sends[parts[port][0]] += 1
+        sends[eparts(port)[0]] += 1
     for pid in ports:
         sp, dp = parts[pid]
         nports[sp] += 1
         nports[dp] += 1
     root = b["root"]
-    origin = {x: parts[r["tree_port"]][1] for x, r in reg.items() if r["tree_port"]}
+    origin = {x: eparts(r["tree_port"])[1] for x, r in reg.items() if r["tree_port"]}
     origin[root] = min(reg_parts[root], key=lambda q: (-sends[q], -nports[q], q))
     N, pinfo = {origin[root]: 0}, {}
 
@@ -184,13 +213,15 @@ def bind_parts(b, parts):
     for x in sorted((x for x in reg if reg[x]["parent"] is not None), key=lambda x: reg[x]["depth"]):
         r = reg[x]
         step = r["n_nominal"] - reg[r["parent"]]["n_nominal"]
-        N[origin[x]] = N[parts[r["tree_port"]][0]] + step
+        N[origin[x]] = N[eparts(r["tree_port"])[0]] + step
         relays(x)
     for pid, c in ports.items():
         sp, dp = parts[pid]
         if not c["tree"]:
             c["K"] = c["sched_lat"] - 1 - (N[dp] - N[sp])
         c.update(src_part=sp, dst_part=dp)
+    for pid, c in sp_.items():
+        c["src_part"], c["dst_part"] = eparts(pid)
     for x, r in reg.items():
         r["origin_part"] = origin[x]
         r["n_region_frame"] = r["n_nominal"]
@@ -215,7 +246,7 @@ def _start_tree(b):
             up[q] = (None, None)
         else:
             tp = reg[pi["region"]]["tree_port"]
-            up[q] = (b["ports"][tp]["src_part"], tp)
+            up[q] = ((b["ports"].get(tp) or b["start_ports"][tp])["src_part"], tp)
     return up
 
 
@@ -227,6 +258,8 @@ def _edge(b, eid):
     """(sched_lat, K + 1) of a start-tree edge or crossing; a relay edge is r stages with K + 1 = 0"""
     if eid.startswith("relay:"):
         return b["parts"][eid[6:]]["stages"], 0
+    if eid in b.get("start_ports", {}):
+        return b["start_ports"][eid]["step"], 0     # START-TREE-1 start port: origin step, no ring
     c = b["ports"][eid]
     return c["sched_lat"], c["K"] + 1
 
@@ -292,6 +325,9 @@ def verify(b, samples=2000, seed=1, need_ps=100.0):
             lo, hi = c["d_lo_ps"], c["d_hi_ps"]
             x = rnd.uniform(lo, hi) if mode == 0 else rnd.choice((lo, hi))
             dd[pid] = x + c["wander_ps"] * rnd.uniform(-1, 1)
+        for pid, c in b.get("start_ports", {}).items():
+            lo, hi = c["d_lo_ps"], c["d_hi_ps"]
+            dd[pid] = rnd.uniform(lo, hi) if mode == 0 else rnd.choice((lo, hi))
         nn = {}
         for x in order:
             r = reg[x]
@@ -300,7 +336,7 @@ def verify(b, samples=2000, seed=1, need_ps=100.0):
                 for q in relay_of[x]:
                     nn[q] = b["parts"][q]["stages"]      # registered same-clock relay: exact
                 continue
-            c = ports[r["tree_port"]]
+            c = ports.get(r["tree_port"]) or b["start_ports"][r["tree_port"]]
             # the start was synchronised at a phase inside the derated interval (no post-start wander yet)
             d0 = min(max(dd[r["tree_port"]], c["d_lo_ps"]), c["d_hi_ps"])
             if "start_skew_ps" in b:
@@ -575,6 +611,7 @@ def main(argv=None):
     ap.add_argument("--sta-clock-cal", choices=("none", "spice"), default="spice")
     ap.add_argument("--sta-cppr-lca", action="store_true")
     CAP.add_sta_ocv_args(ap)
+    CAP.add_start_tree_args(ap)
     ap.add_argument("--samples", type=int, default=2000)
     ap.add_argument("--table")
     ap.add_argument("--table-out")
@@ -589,6 +626,9 @@ def main(argv=None):
     ap.add_argument("--straps-out", help="MESO-STRAP-1 (OWNER 12.15a): write per-type strap pins + per-instance tie "
                     "values (count_straps.v1) for the annotated table (needs --table and --plan-die)")
     a = ap.parse_args(argv)
+    CAP.check_start_tree_args(a, ap.error)
+    if a.start_tree == "clock" and not a.from_ocv:
+        ap.error("--start-tree clock plans in-process: needs --from-ocv (a plan JSON carries its own start tree)")
     if a.from_ocv:
         rows = CAP.load_rows(a.plan_json, a.corner, a.scale)
         if a.sta_proof:
@@ -601,14 +641,20 @@ def main(argv=None):
                                                    **CAP.sta_ocv_kw(a)))
         if a.start_skew_clean and not any(a.start_skew):
             ap.error("--start-skew-clean needs --start-skew LO,HI")
+        sedges, sroot, sinfo = CAP.start_tree_from_args(a, rows, ap.error)
+        skw = dict(start_edges=sedges, start_root=sroot) if sedges is not None else {}
         s, out, regs = CAP.plan(rows, a.period, a.aperture, a.wander_frac, a.sync_aperture, a.pad,
                                 CAP.parse_edge_pad(a.edge_pad), a.start_skew, a.start_skew_clean,
-                                tree_parent=CAP.parse_edge_pad(a.tree_parent, str) or None)
+                                tree_parent=CAP.parse_edge_pad(a.tree_parent, str) or None, **skw)
+        if sinfo:
+            s["start_tree"].update(sinfo)
         if any(a.start_skew):
             s["start_skew_ps"] = list(a.start_skew)
         s.update(period_ps=a.period, aperture_ps=a.aperture, sync_aperture_ps=a.sync_aperture, pad=a.pad, scale=a.scale,
                  wander_frac=a.wander_frac, source=a.plan_json)
         plan = plan_doc(s, out, regs)
+        if sedges is not None:
+            plan["start_edges"] = [{k: v for k, v in e.items() if not k.startswith("_")} for e in sedges]
     else:
         plan = json.load(open(a.plan_json))
     table = json.load(open(a.table)) if a.table else None
