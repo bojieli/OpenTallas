@@ -4041,6 +4041,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     # only removes assumptions, the loop still returns only on a fully proved (inductive) set, so this is sound;
     # OT_LEC_REFINE_MONOTONE=0 restores the old clear-all.
     expired, sup = False, {}
+    seen_proved = collections.Counter()   # proved-set signature -> rounds proved
     for rnd in range(rounds + 1000):
         if rnd >= rounds + 40 and time.time() - t_ref > budget:
             if os.environ.get("OT_LEC_REFINE_MONOTONE", "1") == "0":
@@ -4381,6 +4382,17 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             # Only surviving changes need another proof round; otherwise empty
             # rounds repeat until the time budget discards valid correspondence.
             snap = dict(L.hyp)
+            # LEC-FPREG-7 10-27 (RXsf: hyp50..hyp1190 byte-identical miters, 0 failed, ~12 s each): a closure's
+            # proposal survives the reset-state filter here but is removed again before the next proof (sim_refine /
+            # top-of-round filter), so the SAME proved set returns every round until rounds + 1000, where the
+            # non-convergence exit cleared every hypothesis.  The set was just proved inductive in full: seeing it
+            # proved a third time is a fixpoint, return it as is (sound: only proved sets are ever returned).
+            sig = hashlib.sha1(repr(sorted((repr(hk), repr(h)) for hk, h in L.hyp.items())).encode()).hexdigest()
+            seen_proved[sig] += 1
+            if seen_proved[sig] >= 3:
+                log.append(f"correspondence round {rnd}: the same proved set ({len(L.hyp)} hypotheses) recurred "
+                           f"{seen_proved[sig]}x with no surviving closure change; fixpoint, returned")
+                return
 
             def surviving_change():
                 noreset_filter(L, log, tried, work, conflicts)
