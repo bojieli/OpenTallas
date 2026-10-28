@@ -1,0 +1,54 @@
+{
+ "qfd_dv_s8x_btab": {
+  "label": "parent_budget pin_register_mean physical/ref_tile/qfd_dv_s5_btab/views/qfd_dv_s8x_btab/insertion.json (routed SPEF ref view xbtab_86288faea; VIEW NOT FINAL: btab r8/r10 still open)",
+  "tt": {
+   "mean": 352.8,
+   "min": 328.5,
+   "max": 371.2
+  },
+  "ff": {
+   "mean": 295.2,
+   "min": 270.8,
+   "max": 313.6
+  },
+  "checked": "CHECKED read; view NOT FINAL"
+ },
+ "qfd_qc_su_lane_w": {
+  "label": "parent_budget core_insertion_model 12.9d (MASTER-PLAN: K 0.896 ps/um x L_max x RCX 0.943, FF 0.80 x TT); no view",
+  "tt": {
+   "mean": 288.4
+  },
+  "ff": {
+   "mean": 230.7
+  },
+  "checked": "UNCHECKED model"
+ },
+ "qfd_tile_nk_a0c": {
+  "label": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+  "tt": {
+   "mean": 390.0,
+   "min": 368.0,
+   "max": 420.0
+  },
+  "ff": {
+   "mean": 312.0,
+   "min": 294.0,
+   "max": 336.0
+  },
+  "checked": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)"
+ },
+ "qfd_tile_nl_a0c": {
+  "label": "parent_budget COMPOSED centre-entry estimate: child CTS (rawleaf 158.0 / romleaf 170.3 / node 222.3 TT, intel2 corelat-sq-1-a0cts, placement RC) + analytic parent trunk 30 + 515 um x 199-334 ps/mm (balanced to node); range TT 355-424 / FF 284-340; no parent view",
+  "tt": {
+   "mean": 390.0,
+   "min": 368.0,
+   "max": 420.0
+  },
+  "ff": {
+   "mean": 312.0,
+   "min": 294.0,
+   "max": 336.0
+  },
+  "checked": "UNCHECKED (child CTS CHECKED as measured; trunk analytic)"
+ }
+}

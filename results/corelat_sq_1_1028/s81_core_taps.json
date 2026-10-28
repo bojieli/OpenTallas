@@ -1,0 +1,4849 @@
+{
+ "plan": "/srv/opentallas-scratch2/claude/die-s81-5/plan_s5.json",
+ "plan_sha": "d29050658673",
+ "common_tt": 250.0,
+ "common_ff": 202.5,
+ "rows": [
+  {
+   "module": "ot_rom_4096x72_m8",
+   "placements": 7644,
+   "types": 27,
+   "plan_lef": [
+    "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef"
+   ],
+   "plan_lib": [
+    "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     38.04,
+     62.952
+    ],
+    "npins": 86,
+    "pins_sha": "d4b58f3a43"
+   },
+   "view_lib": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib",
+   "identity": "plan_lib",
+   "view_lib_sha": "37a56b32f239",
+   "view_measure": {
+    "error": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib: pin-register mean measurement missing (no ETM-max fallback)"
+   },
+   "signed_records": [],
+   "extra": {
+    "label": "parent_budget memory macro (asap7_memory_macros_v2 lib: no internal clock tree, CK pin = register; insertion 0)",
+    "tt": {
+     "mean": 0.0
+    },
+    "ff": {
+     "mean": 0.0
+    },
+    "checked": "CHECKED read (lib has no max_clock_tree_path)"
+   },
+   "source": "parent_budget memory macro (asap7_memory_macros_v2 lib: no internal clock tree, CK pin = register; insertion 0)",
+   "label": "CHECKED read (lib has no max_clock_tree_path)",
+   "tt": {
+    "mean": 0.0
+   },
+   "ff": {
+    "mean": 0.0
+   },
+   "tap": {
+    "early": false,
+    "within_band": false,
+    "insertion_ps": 0.0,
+    "insertion_ff_ps": 0.0,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "parent_budget memory macro (asap7_memory_macros_v2 lib: no internal clock tree, CK pin = register; insertion 0)"
+   },
+   "spread_tt_all": null
+  },
+  {
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "placements": 1200,
+   "types": 74,
+   "plan_lef": [
+    "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     114.48,
+     114.48
+    ],
+    "npins": 341,
+    "pins_sha": "fe9e20907c"
+   },
+   "view_lib": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr_tt.lib",
+   "identity": "plan_lef_view_dir",
+   "view_lib_sha": "1919868e1aed",
+   "view_measure": {
+    "pins": [
+     "clk"
+    ],
+    "tt_mean": 253.24,
+    "ff_mean": 199.42,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/insertion.json",
+    "n": 340,
+    "boundary": {
+     "tt": {
+      "n": 340,
+      "mean": 253.24,
+      "min": 248.36,
+      "max": 263.27
+     },
+     "tt_all_spread": 20.7,
+     "ff": {
+      "n": 340,
+      "mean": 199.42,
+      "min": 194.99,
+      "max": 208.2
+     },
+     "ff_all_spread": 19.0,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view)",
+   "tt": {
+    "n": 340,
+    "mean": 253.24,
+    "min": 248.36,
+    "max": 263.27
+   },
+   "ff": {
+    "n": 340,
+    "mean": 199.42,
+    "min": 194.99,
+    "max": 208.2
+   },
+   "tap": {
+    "early": false,
+    "within_band": true,
+    "insertion_ps": 253.24,
+    "insertion_ff_ps": 199.42,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 199.4,
+    "late": 8.8,
+    "early": 4.4,
+    "hold_in": 5.8,
+    "hold_out": 10.8,
+    "hold_in_u60": -29.2,
+    "hold_out_u60": -24.2,
+    "verdict": "PASS",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 20.7
+  },
+  {
+   "module": "ot_s81c_attn_hcore",
+   "placements": 1024,
+   "types": 16,
+   "plan_lef": [
+    "physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     157.68,
+     259.2
+    ],
+    "npins": 1214,
+    "pins_sha": "751e634280"
+   },
+   "lef_candidates": [],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "extra": {
+    "label": "parent_budget pin_register_mean OpenSTA on routed intel2 cores-kits/hv/hcore/kit_ctsA_d75 6_final.odb+spef (10-26, NOT SIGNED: TT -4.62 / FF hold -28.13; outline == plan LEF); boundary regs n=1213",
+    "tt": {
+     "mean": 252.4,
+     "min": 244.0,
+     "max": 261.9
+    },
+    "ff": {
+     "mean": 208.0,
+     "min": 200.5,
+     "max": 216.8
+    },
+    "checked": "CHECKED read (routed SPEF measure, sub-lane); view NOT SIGNED"
+   },
+   "source": "parent_budget pin_register_mean OpenSTA on routed intel2 cores-kits/hv/hcore/kit_ctsA_d75 6_final.odb+spef (10-26, NOT SIGNED: TT -4.62 / FF hold -28.13; outline == plan LEF); boundary regs n=1213",
+   "label": "CHECKED read (routed SPEF measure, sub-lane); view NOT SIGNED",
+   "tt": {
+    "mean": 252.4,
+    "min": 244.0,
+    "max": 261.9
+   },
+   "ff": {
+    "mean": 208.0,
+    "min": 200.5,
+    "max": 216.8
+   },
+   "tap": {
+    "early": false,
+    "within_band": true,
+    "insertion_ps": 252.4,
+    "insertion_ff_ps": 208.0,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "parent_budget pin_register_mean OpenSTA on routed intel2 cores-kits/hv/hcore/kit_ctsA_d75 6_final.odb+spef (10-26, NOT SIGNED: TT -4.62 / FF hold -28.13; outline == plan LEF); boundary regs n=1213"
+   },
+   "hold_est": {
+    "comp_ff": 202.5,
+    "late": 14.3,
+    "early": 2.0,
+    "hold_in": -0.1,
+    "hold_out": 13.0,
+    "hold_in_u60": -35.1,
+    "hold_out_u60": -22.0,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": null
+  },
+  {
+   "module": "dsfd_qbank_N",
+   "placements": 864,
+   "types": 27,
+   "plan_lef": [
+    "physical/ref_tile/s81fill2_qbank_n/views/dsfd_qbank_N/dsfd_qbank_N.lef"
+   ],
+   "plan_lib": [
+    "physical/ref_tile/s81fill2_qbank_n/views/dsfd_qbank_N/dsfd_qbank_N_tt.lib"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     60.48,
+     8.64
+    ],
+    "npins": 258,
+    "pins_sha": "e570b5e5c3"
+   },
+   "view_lib": "physical/ref_tile/s81fill2_qbank_n/views/dsfd_qbank_N/dsfd_qbank_N_tt.lib",
+   "identity": "plan_lib",
+   "view_lib_sha": "d2fabb13348b",
+   "view_measure": {
+    "pins": [
+     "ck[0]"
+    ],
+    "tt_mean": 76.8,
+    "ff_mean": 61.0,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/s81fill2_qbank_n/views/dsfd_qbank_N/insertion.json",
+    "n": 128,
+    "boundary": {
+     "tt": {
+      "n": 128,
+      "mean": 76.8,
+      "min": 75.3,
+      "max": 78.1
+     },
+     "tt_all_spread": 2.8,
+     "ff": {
+      "n": 128,
+      "mean": 61.0,
+      "min": 59.5,
+      "max": 62.6
+     },
+     "ff_all_spread": 3.1,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/ref_tile/s81fill2_qbank_n/views/dsfd_qbank_N/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view)",
+   "tt": {
+    "n": 128,
+    "mean": 76.8,
+    "min": 75.3,
+    "max": 78.1
+   },
+   "ff": {
+    "n": 128,
+    "mean": 61.0,
+    "min": 59.5,
+    "max": 62.6
+   },
+   "tap": {
+    "early": false,
+    "within_band": false,
+    "insertion_ps": 76.8,
+    "insertion_ff_ps": 61.0,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81fill2_qbank_n/views/dsfd_qbank_N/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 61.0,
+    "late": 1.6,
+    "early": 1.5,
+    "hold_in": 20.3,
+    "hold_out": 20.5,
+    "hold_in_u60": -14.7,
+    "hold_out_u60": -14.5,
+    "verdict": "PASS",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 2.8
+  },
+  {
+   "module": "dsfd_qbank_S",
+   "placements": 864,
+   "types": 27,
+   "plan_lef": [
+    "physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S/dsfd_qbank_S.lef"
+   ],
+   "plan_lib": [
+    "physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S/dsfd_qbank_S_tt.lib"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     60.48,
+     17.28
+    ],
+    "npins": 1210,
+    "pins_sha": "5196eaa4a5"
+   },
+   "view_lib": "physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S/dsfd_qbank_S_tt.lib",
+   "identity": "plan_lib",
+   "view_lib_sha": "9d3a28a5b493",
+   "view_measure": {
+    "pins": [
+     "ck[0]"
+    ],
+    "tt_mean": 92.1,
+    "ff_mean": 73.7,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S/insertion.json",
+    "n": 604,
+    "boundary": {
+     "tt": {
+      "n": 604,
+      "mean": 92.1,
+      "min": 85.4,
+      "max": 98.2
+     },
+     "tt_all_spread": 12.8,
+     "ff": {
+      "n": 604,
+      "mean": 73.7,
+      "min": 66.9,
+      "max": 80.0
+     },
+     "ff_all_spread": 13.1,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view)",
+   "tt": {
+    "n": 604,
+    "mean": 92.1,
+    "min": 85.4,
+    "max": 98.2
+   },
+   "ff": {
+    "n": 604,
+    "mean": 73.7,
+    "min": 66.9,
+    "max": 80.0
+   },
+   "tap": {
+    "early": false,
+    "within_band": false,
+    "insertion_ps": 92.1,
+    "insertion_ff_ps": 73.7,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81fill2_qbank_s/views/dsfd_qbank_S/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 73.7,
+    "late": 6.3,
+    "early": 6.8,
+    "hold_in": 14.7,
+    "hold_out": 14.9,
+    "hold_in_u60": -20.3,
+    "hold_out_u60": -20.1,
+    "verdict": "PASS",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 12.8
+  },
+  {
+   "module": "ot_v41_rom_elem_q_qxpq_w10",
+   "placements": 864,
+   "types": 27,
+   "plan_lef": [
+    "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10.lef"
+   ],
+   "plan_lib": [
+    "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     510.84,
+     221.4
+    ],
+    "npins": 739,
+    "pins_sha": "9e8fa8f4e6"
+   },
+   "view_lib": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/ot_v41_rom_elem_q_qxpq_w10_tt.lib",
+   "identity": "plan_lib",
+   "view_lib_sha": "35b9ec451f66",
+   "view_measure": {
+    "error": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/insertion.json: explicit clock-pin mapping required for clk",
+    "tt_mean": 510.3,
+    "ff_mean": 402.1,
+    "basis": "pin_register_mean(direct insertion.json boundary; main CC.load refused: explicit clock-pin mapping required for clk)",
+    "signed": false,
+    "contract_source": "physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/insertion.json",
+    "n": 729,
+    "direct": true,
+    "raw_source_flag": null,
+    "boundary": {
+     "tt": {
+      "n": 729,
+      "mean": 510.3,
+      "min": 474.1,
+      "max": 524.3
+     },
+     "tt_all_spread": 96.1,
+     "ff": {
+      "n": 729,
+      "mean": 402.1,
+      "min": 373.8,
+      "max": 412.0
+     },
+     "ff_all_spread": 75.3,
+     "raw_source": null,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean(direct insertion.json boundary; main CC.load refused: explicit clock-pin mapping required for clk) physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/insertion.json",
+   "label": "CHECKED read (direct insertion.json; main loader refuses it)",
+   "tt": {
+    "n": 729,
+    "mean": 510.3,
+    "min": 474.1,
+    "max": 524.3
+   },
+   "ff": {
+    "n": 729,
+    "mean": 402.1,
+    "min": 373.8,
+    "max": 412.0
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 510.3,
+    "insertion_ff_ps": 402.1,
+    "early_tt_ps": 260.3,
+    "early_ff_ps": 199.6,
+    "budget_owner": "parent_budget pin_register_mean(direct insertion.json boundary; main CC.load refused: explicit clock-pin mapping required for clk) physical/s81_die_views/q_elem_qs5f_efs_view/ot_v41_rom_elem_q_qxpq_w10/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 402.1,
+    "late": 9.9,
+    "early": 28.3,
+    "hold_in": -5.5,
+    "hold_out": -22.0,
+    "hold_in_u60": -40.5,
+    "hold_out_u60": -57.0,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 96.1
+  },
+  {
+   "module": "ot_s81_cfg7_seq",
+   "placements": 864,
+   "types": 27,
+   "plan_lef": [
+    "physical/ref_tile/s81coll_cfg7_seq_pr/views/ot_s81_cfg7_seq/ot_s81_cfg7_seq.lef"
+   ],
+   "plan_lib": [
+    "physical/ref_tile/s81coll_cfg7_seq_pr/views/ot_s81_cfg7_seq/ot_s81_cfg7_seq_tt.lib"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     17.28,
+     51.84
+    ],
+    "npins": 433,
+    "pins_sha": "b73d8002d3"
+   },
+   "view_lib": "physical/ref_tile/s81coll_cfg7_seq_pr/views/ot_s81_cfg7_seq/ot_s81_cfg7_seq_tt.lib",
+   "identity": "plan_lib",
+   "view_lib_sha": "4dc959a96152",
+   "view_measure": {
+    "pins": [
+     "clk[0]"
+    ],
+    "tt_mean": 87.1,
+    "ff_mean": 68.8,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/s81coll_cfg7_seq_pr/views/ot_s81_cfg7_seq/insertion.json",
+    "n": 435,
+    "boundary": {
+     "tt": {
+      "n": 435,
+      "mean": 87.1,
+      "min": 81.8,
+      "max": 93.8
+     },
+     "tt_all_spread": 12.0,
+     "ff": {
+      "n": 435,
+      "mean": 68.8,
+      "min": 63.7,
+      "max": 75.0
+     },
+     "ff_all_spread": 11.3,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/ref_tile/s81coll_cfg7_seq_pr/views/ot_s81_cfg7_seq/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view)",
+   "tt": {
+    "n": 435,
+    "mean": 87.1,
+    "min": 81.8,
+    "max": 93.8
+   },
+   "ff": {
+    "n": 435,
+    "mean": 68.8,
+    "min": 63.7,
+    "max": 75.0
+   },
+   "tap": {
+    "early": false,
+    "within_band": false,
+    "insertion_ps": 87.1,
+    "insertion_ff_ps": 68.8,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81coll_cfg7_seq_pr/views/ot_s81_cfg7_seq/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 68.8,
+    "late": 6.2,
+    "early": 5.1,
+    "hold_in": 15.0,
+    "hold_out": 16.7,
+    "hold_in_u60": -20.0,
+    "hold_out_u60": -18.3,
+    "verdict": "PASS",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 12.0
+  },
+  {
+   "module": "ot_s81_sstn_base566",
+   "placements": 660,
+   "types": 27,
+   "plan_lef": [
+    "physical/s81_die_views/frame_restub_1019/ot_s81_sstn_base566/ot_s81_sstn_base566.lef"
+   ],
+   "plan_lib": [
+    "physical/s81_die_views/frame_restub_1019/ot_s81_sstn_base566/ot_s81_sstn_base566_tt.lib"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     84.24,
+     30.24
+    ],
+    "npins": 1143,
+    "pins_sha": "906fcef46d"
+   },
+   "view_lib": "physical/s81_die_views/frame_restub_1019/ot_s81_sstn_base566/ot_s81_sstn_base566_tt.lib",
+   "identity": "plan_lib",
+   "view_lib_sha": "fbbb6eddac31",
+   "view_measure": {
+    "pins": [
+     "ck"
+    ],
+    "tt_mean": 90.7,
+    "ff_mean": 73.0,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/s81_die_views/frame_restub_1019/ot_s81_sstn_base566/insertion.json",
+    "n": 566,
+    "boundary": {
+     "tt": {
+      "n": 566,
+      "mean": 90.7,
+      "min": 84.0,
+      "max": 98.5
+     },
+     "tt_all_spread": 14.5,
+     "ff": {
+      "n": 566,
+      "mean": 73.0,
+      "min": 66.4,
+      "max": 80.9
+     },
+     "ff_all_spread": 14.5,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/s81_die_views/frame_restub_1019/ot_s81_sstn_base566/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view)",
+   "tt": {
+    "n": 566,
+    "mean": 90.7,
+    "min": 84.0,
+    "max": 98.5
+   },
+   "ff": {
+    "n": 566,
+    "mean": 73.0,
+    "min": 66.4,
+    "max": 80.9
+   },
+   "tap": {
+    "early": false,
+    "within_band": false,
+    "insertion_ps": 90.7,
+    "insertion_ff_ps": 73.0,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "parent_budget pin_register_mean physical/s81_die_views/frame_restub_1019/ot_s81_sstn_base566/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 73.0,
+    "late": 7.9,
+    "early": 6.6,
+    "hold_in": 13.1,
+    "hold_out": 15.1,
+    "hold_in_u60": -21.9,
+    "hold_out_u60": -19.9,
+    "verdict": "PASS",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 14.5
+  },
+  {
+   "module": "ot_s81_sstn_payload536",
+   "placements": 660,
+   "types": 27,
+   "plan_lef": [
+    "physical/ref_tile/s81_sstn_payload536/views/ot_s81_sstn_payload536/ot_s81_sstn_payload536.lef"
+   ],
+   "plan_lib": [
+    "physical/ref_tile/s81_sstn_payload536/views/ot_s81_sstn_payload536/ot_s81_sstn_payload536_tt.lib"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     86.4,
+     25.92
+    ],
+    "npins": 1074,
+    "pins_sha": "ca0b5cac41"
+   },
+   "view_lib": "physical/ref_tile/s81_sstn_payload536/views/ot_s81_sstn_payload536/ot_s81_sstn_payload536_tt.lib",
+   "identity": "plan_lib",
+   "view_lib_sha": "4dd59195f7a4",
+   "view_measure": {
+    "pins": [
+     "ck"
+    ],
+    "tt_mean": 88.0,
+    "ff_mean": 70.9,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/s81_sstn_payload536/views/ot_s81_sstn_payload536/insertion.json",
+    "n": 536,
+    "boundary": {
+     "tt": {
+      "n": 536,
+      "mean": 88.0,
+      "min": 82.6,
+      "max": 91.4
+     },
+     "tt_all_spread": 8.8,
+     "ff": {
+      "n": 536,
+      "mean": 70.9,
+      "min": 65.3,
+      "max": 74.3
+     },
+     "ff_all_spread": 9.0,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [
+    {
+     "label": "autopilot closed ot_s81_sstn_payload536__abcf698a79",
+     "signoff": "/srv/opentallas-scratch2/claude/autopilot/closed/s81/ot_s81_sstn_payload536__abcf698a79/kit/signoff/signoff.json",
+     "verdict": "SIGNED",
+     "tt": {
+      "n": 1072,
+      "mean": 256.84,
+      "min": 251.74,
+      "max": 261.99,
+      "design": "ot_s81_sstn_payload536",
+      "parasitics": "spef",
+      "clock_ports": [
+       "ck"
+      ]
+     },
+     "ff": {
+      "n": 1072,
+      "mean": 196.22,
+      "min": 191.06,
+      "max": 201.51,
+      "design": "ot_s81_sstn_payload536",
+      "parasitics": "spef",
+      "clock_ports": [
+       "ck"
+      ]
+     },
+     "lef": "/srv/opentallas-scratch2/claude/autopilot/closed/s81/ot_s81_sstn_payload536__abcf698a79/base/ot_s81_sstn_payload536.lef",
+     "lef_sig": {
+      "size": [
+       86.4,
+       25.92
+      ],
+      "npins": 1074,
+      "pins_sha": "ca0b5cac41"
+     },
+     "lef_match_placed": true
+    }
+   ],
+   "source": "SIGNED autopilot closed ot_s81_sstn_payload536__abcf698a79 /srv/opentallas-scratch2/claude/autopilot/closed/s81/ot_s81_sstn_payload536__abcf698a79/kit/signoff/signoff.json insertion_pinflops",
+   "label": "CHECKED (SIGNED record, LEF identity == placed)",
+   "tt": {
+    "n": 1072,
+    "mean": 256.84,
+    "min": 251.74,
+    "max": 261.99,
+    "design": "ot_s81_sstn_payload536",
+    "parasitics": "spef",
+    "clock_ports": [
+     "ck"
+    ]
+   },
+   "ff": {
+    "n": 1072,
+    "mean": 196.22,
+    "min": 191.06,
+    "max": 201.51,
+    "design": "ot_s81_sstn_payload536",
+    "parasitics": "spef",
+    "clock_ports": [
+     "ck"
+    ]
+   },
+   "tap": {
+    "early": false,
+    "within_band": true,
+    "insertion_ps": 256.84,
+    "insertion_ff_ps": 196.22,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "SIGNED autopilot closed ot_s81_sstn_payload536__abcf698a79 /srv/opentallas-scratch2/claude/autopilot/closed/s81/ot_s81_sstn_payload536__abcf698a79/kit/signoff/signoff.json insertion_pinflops"
+   },
+   "hold_est": {
+    "comp_ff": 196.2,
+    "late": 5.3,
+    "early": 5.2,
+    "hold_in": 9.6,
+    "hold_out": 10.3,
+    "hold_in_u60": -25.4,
+    "hold_out_u60": -24.7,
+    "verdict": "PASS",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 8.8
+  },
+  {
+   "module": "dsfd_node_LLfu",
+   "placements": 516,
+   "types": 27,
+   "plan_lef": [
+    "physical/ref_tile/s81net_node_llfu/views/dsfd_node_LLfu/dsfd_node_LLfu.lef"
+   ],
+   "plan_lib": [
+    "physical/ref_tile/s81net_node_llfu/views/dsfd_node_LLfu/dsfd_node_LLfu_tt.lib"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     43.2,
+     77.76
+    ],
+    "npins": 196,
+    "pins_sha": "e376693a0a"
+   },
+   "view_lib": "physical/ref_tile/s81net_node_llfu/views/dsfd_node_LLfu/dsfd_node_LLfu_tt.lib",
+   "identity": "plan_lib",
+   "view_lib_sha": "309d75cac3dd",
+   "view_measure": {
+    "pins": [
+     "clk[0]"
+    ],
+    "tt_mean": 109.7,
+    "ff_mean": 89.7,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/s81net_node_llfu/views/dsfd_node_LLfu/insertion.json",
+    "n": 194,
+    "boundary": {
+     "tt": {
+      "n": 194,
+      "mean": 109.7,
+      "min": 99.5,
+      "max": 115.8
+     },
+     "tt_all_spread": 20.1,
+     "ff": {
+      "n": 194,
+      "mean": 89.7,
+      "min": 79.0,
+      "max": 96.1
+     },
+     "ff_all_spread": 20.0,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/ref_tile/s81net_node_llfu/views/dsfd_node_LLfu/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view)",
+   "tt": {
+    "n": 194,
+    "mean": 109.7,
+    "min": 99.5,
+    "max": 115.8
+   },
+   "ff": {
+    "n": 194,
+    "mean": 89.7,
+    "min": 79.0,
+    "max": 96.1
+   },
+   "tap": {
+    "early": false,
+    "within_band": false,
+    "insertion_ps": 109.7,
+    "insertion_ff_ps": 89.7,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81net_node_llfu/views/dsfd_node_LLfu/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 89.7,
+    "late": 6.4,
+    "early": 10.7,
+    "hold_in": 13.8,
+    "hold_out": 10.3,
+    "hold_in_u60": -21.2,
+    "hold_out_u60": -24.7,
+    "verdict": "PASS",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 20.1
+  },
+  {
+   "module": "dsfd_node_NNfd",
+   "placements": 516,
+   "types": 27,
+   "plan_lef": [
+    "physical/ref_tile/s81net_node_nnfd/views/dsfd_node_NNfd/dsfd_node_NNfd.lef"
+   ],
+   "plan_lib": [
+    "physical/ref_tile/s81net_node_nnfd/views/dsfd_node_NNfd/dsfd_node_NNfd_tt.lib"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     43.2,
+     77.76
+    ],
+    "npins": 202,
+    "pins_sha": "ce45fe7568"
+   },
+   "view_lib": "physical/ref_tile/s81net_node_nnfd/views/dsfd_node_NNfd/dsfd_node_NNfd_tt.lib",
+   "identity": "plan_lib",
+   "view_lib_sha": "c11f07659bc7",
+   "view_measure": {
+    "pins": [
+     "clk[0]"
+    ],
+    "tt_mean": 110.5,
+    "ff_mean": 90.5,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/s81net_node_nnfd/views/dsfd_node_NNfd/insertion.json",
+    "n": 200,
+    "boundary": {
+     "tt": {
+      "n": 200,
+      "mean": 110.5,
+      "min": 102.9,
+      "max": 117.1
+     },
+     "tt_all_spread": 22.5,
+     "ff": {
+      "n": 200,
+      "mean": 90.5,
+      "min": 82.9,
+      "max": 97.2
+     },
+     "ff_all_spread": 22.7,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [
+    {
+     "label": "autopilot closed dsfd_node_NNfd__abcf698a79",
+     "signoff": "/srv/opentallas-scratch2/claude/autopilot/closed/s81/dsfd_node_NNfd__abcf698a79/kit/signoff/signoff.json",
+     "verdict": "SIGNED",
+     "tt": {
+      "n": 200,
+      "mean": 255.61,
+      "min": 241.3,
+      "max": 268.92,
+      "design": "dsfd_node_NNfd",
+      "parasitics": "spef",
+      "clock_ports": [
+       "clk[0]"
+      ]
+     },
+     "ff": {
+      "n": 200,
+      "mean": 198.39,
+      "min": 183.96,
+      "max": 211.43,
+      "design": "dsfd_node_NNfd",
+      "parasitics": "spef",
+      "clock_ports": [
+       "clk[0]"
+      ]
+     },
+     "lef": "/srv/opentallas-scratch2/claude/autopilot/closed/s81/dsfd_node_NNfd__abcf698a79/base/dsfd_node_NNfd.lef",
+     "lef_sig": {
+      "size": [
+       43.2,
+       77.76
+      ],
+      "npins": 202,
+      "pins_sha": "ce45fe7568"
+     },
+     "lef_match_placed": true
+    }
+   ],
+   "source": "SIGNED autopilot closed dsfd_node_NNfd__abcf698a79 /srv/opentallas-scratch2/claude/autopilot/closed/s81/dsfd_node_NNfd__abcf698a79/kit/signoff/signoff.json insertion_pinflops",
+   "label": "CHECKED (SIGNED record, LEF identity == placed)",
+   "tt": {
+    "n": 200,
+    "mean": 255.61,
+    "min": 241.3,
+    "max": 268.92,
+    "design": "dsfd_node_NNfd",
+    "parasitics": "spef",
+    "clock_ports": [
+     "clk[0]"
+    ]
+   },
+   "ff": {
+    "n": 200,
+    "mean": 198.39,
+    "min": 183.96,
+    "max": 211.43,
+    "design": "dsfd_node_NNfd",
+    "parasitics": "spef",
+    "clock_ports": [
+     "clk[0]"
+    ]
+   },
+   "tap": {
+    "early": false,
+    "within_band": true,
+    "insertion_ps": 255.61,
+    "insertion_ff_ps": 198.39,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "SIGNED autopilot closed dsfd_node_NNfd__abcf698a79 /srv/opentallas-scratch2/claude/autopilot/closed/s81/dsfd_node_NNfd__abcf698a79/kit/signoff/signoff.json insertion_pinflops"
+   },
+   "hold_est": {
+    "comp_ff": 198.4,
+    "late": 13.0,
+    "early": 14.4,
+    "hold_in": 1.4,
+    "hold_out": 1.4,
+    "hold_in_u60": -33.6,
+    "hold_out_u60": -33.6,
+    "verdict": "PASS",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 22.5
+  },
+  {
+   "module": "dsfd_node_NNfu",
+   "placements": 504,
+   "types": 27,
+   "plan_lef": [
+    "physical/ref_tile/s81net_node_nnfu/views/dsfd_node_NNfu/dsfd_node_NNfu.lef"
+   ],
+   "plan_lib": [
+    "physical/ref_tile/s81net_node_nnfu/views/dsfd_node_NNfu/dsfd_node_NNfu_tt.lib"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     43.2,
+     77.76
+    ],
+    "npins": 202,
+    "pins_sha": "ce45fe7568"
+   },
+   "view_lib": "physical/ref_tile/s81net_node_nnfu/views/dsfd_node_NNfu/dsfd_node_NNfu_tt.lib",
+   "identity": "plan_lib",
+   "view_lib_sha": "bec6295084ac",
+   "view_measure": {
+    "pins": [
+     "clk[0]"
+    ],
+    "tt_mean": 112.0,
+    "ff_mean": 91.8,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/s81net_node_nnfu/views/dsfd_node_NNfu/insertion.json",
+    "n": 200,
+    "boundary": {
+     "tt": {
+      "n": 200,
+      "mean": 112.0,
+      "min": 96.9,
+      "max": 122.0
+     },
+     "tt_all_spread": 27.4,
+     "ff": {
+      "n": 200,
+      "mean": 91.8,
+      "min": 77.5,
+      "max": 101.6
+     },
+     "ff_all_spread": 26.5,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/ref_tile/s81net_node_nnfu/views/dsfd_node_NNfu/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view)",
+   "tt": {
+    "n": 200,
+    "mean": 112.0,
+    "min": 96.9,
+    "max": 122.0
+   },
+   "ff": {
+    "n": 200,
+    "mean": 91.8,
+    "min": 77.5,
+    "max": 101.6
+   },
+   "tap": {
+    "early": false,
+    "within_band": false,
+    "insertion_ps": 112.0,
+    "insertion_ff_ps": 91.8,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81net_node_nnfu/views/dsfd_node_NNfu/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 91.8,
+    "late": 9.8,
+    "early": 14.3,
+    "hold_in": 10.1,
+    "hold_out": 6.8,
+    "hold_in_u60": -24.9,
+    "hold_out_u60": -28.2,
+    "verdict": "PASS",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 27.4
+  },
+  {
+   "module": "dsfd_node_LLfd",
+   "placements": 504,
+   "types": 27,
+   "plan_lef": [
+    "physical/ref_tile/s81net_node_llfd/views/dsfd_node_LLfd/dsfd_node_LLfd.lef"
+   ],
+   "plan_lib": [
+    "physical/ref_tile/s81net_node_llfd/views/dsfd_node_LLfd/dsfd_node_LLfd_tt.lib"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     43.2,
+     77.76
+    ],
+    "npins": 196,
+    "pins_sha": "e376693a0a"
+   },
+   "view_lib": "physical/ref_tile/s81net_node_llfd/views/dsfd_node_LLfd/dsfd_node_LLfd_tt.lib",
+   "identity": "plan_lib",
+   "view_lib_sha": "ff044f19c0b3",
+   "view_measure": {
+    "pins": [
+     "clk[0]"
+    ],
+    "tt_mean": 106.5,
+    "ff_mean": 86.1,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/s81net_node_llfd/views/dsfd_node_LLfd/insertion.json",
+    "n": 194,
+    "boundary": {
+     "tt": {
+      "n": 194,
+      "mean": 106.5,
+      "min": 98.9,
+      "max": 112.0
+     },
+     "tt_all_spread": 16.5,
+     "ff": {
+      "n": 194,
+      "mean": 86.1,
+      "min": 78.7,
+      "max": 91.4
+     },
+     "ff_all_spread": 16.9,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/ref_tile/s81net_node_llfd/views/dsfd_node_LLfd/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view)",
+   "tt": {
+    "n": 194,
+    "mean": 106.5,
+    "min": 98.9,
+    "max": 112.0
+   },
+   "ff": {
+    "n": 194,
+    "mean": 86.1,
+    "min": 78.7,
+    "max": 91.4
+   },
+   "tap": {
+    "early": false,
+    "within_band": false,
+    "insertion_ps": 106.5,
+    "insertion_ff_ps": 86.1,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81net_node_llfd/views/dsfd_node_LLfd/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 86.1,
+    "late": 5.3,
+    "early": 7.4,
+    "hold_in": 15.1,
+    "hold_out": 13.7,
+    "hold_in_u60": -19.9,
+    "hold_out_u60": -21.3,
+    "verdict": "PASS",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 16.5
+  },
+  {
+   "module": "ot_v41_bf_col",
+   "placements": 456,
+   "types": 27,
+   "plan_lef": [
+    "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col.lef"
+   ],
+   "plan_lib": [
+    "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col_tt.lib"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     450.168,
+     198.72
+    ],
+    "npins": 842,
+    "pins_sha": "52a085fd7c"
+   },
+   "view_lib": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/ot_v41_bf_col_tt.lib",
+   "identity": "plan_lib",
+   "view_lib_sha": "3deeca065fda",
+   "view_measure": {
+    "error": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/insertion.json: explicit clock-pin mapping required for clk",
+    "tt_mean": 544.0,
+    "ff_mean": 435.2,
+    "basis": "pin_register_mean(direct insertion.json boundary; main CC.load refused: explicit clock-pin mapping required for clk)",
+    "signed": false,
+    "contract_source": "physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/insertion.json",
+    "n": 839,
+    "direct": true,
+    "raw_source_flag": true,
+    "boundary": {
+     "tt": {
+      "n": 839,
+      "mean": 544.0,
+      "min": 525.7,
+      "max": 570.1
+     },
+     "tt_all_spread": 149.8,
+     "ff": {
+      "n": 839,
+      "mean": 435.2,
+      "min": 416.7,
+      "max": 449.3
+     },
+     "ff_all_spread": 126.3,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean(direct insertion.json boundary; main CC.load refused: explicit clock-pin mapping required for clk) physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/insertion.json",
+   "label": "CHECKED read (direct insertion.json; main loader refuses it)",
+   "tt": {
+    "n": 839,
+    "mean": 544.0,
+    "min": 525.7,
+    "max": 570.1
+   },
+   "ff": {
+    "n": 839,
+    "mean": 435.2,
+    "min": 416.7,
+    "max": 449.3
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 544.0,
+    "insertion_ff_ps": 435.2,
+    "early_tt_ps": 294.0,
+    "early_ff_ps": 232.7,
+    "budget_owner": "parent_budget pin_register_mean(direct insertion.json boundary; main CC.load refused: explicit clock-pin mapping required for clk) physical/s81_die_views/bf_compact199_prepabs_lat/ot_v41_bf_col/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 435.2,
+    "late": 14.1,
+    "early": 18.5,
+    "hold_in": -11.6,
+    "hold_out": -14.3,
+    "hold_in_u60": -46.6,
+    "hold_out_u60": -49.3,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 149.8
+  },
+  {
+   "module": "dsfd_bf_front_roots",
+   "placements": 228,
+   "types": 27,
+   "plan_lef": [
+    "physical/s81_die_views/bf_roots_1016_fg/dsfd_bf_front_roots/dsfd_bf_front_roots.lef"
+   ],
+   "plan_lib": [
+    "physical/s81_die_views/bf_roots_1016_fg/dsfd_bf_front_roots/dsfd_bf_front_roots_tt.lib"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     116.64,
+     198.72
+    ],
+    "npins": 3272,
+    "pins_sha": "8789f23709"
+   },
+   "view_lib": "physical/s81_die_views/bf_roots_1016_fg/dsfd_bf_front_roots/dsfd_bf_front_roots_tt.lib",
+   "identity": "plan_lib",
+   "view_lib_sha": "67705d4e826d",
+   "view_measure": {
+    "pins": [
+     "ck",
+     "io_clk",
+     "io_e",
+     "io_n",
+     "io_w"
+    ],
+    "tt_mean": 214.8,
+    "ff_mean": 174.9,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/s81_die_views/bf_roots_1016_fg/dsfd_bf_front_roots/insertion.json",
+    "n": 3,
+    "boundary": {
+     "tt": {
+      "n": 3,
+      "mean": 214.8,
+      "min": 208.3,
+      "max": 218.2
+     },
+     "tt_all_spread": 33.4,
+     "ff": {
+      "n": 3,
+      "mean": 174.9,
+      "min": 169.3,
+      "max": 177.7
+     },
+     "ff_all_spread": 25.4,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/s81_die_views/bf_roots_1016_fg/dsfd_bf_front_roots/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view); 5 clock pins -> one early tap PER PIN",
+   "tt": {
+    "mean": "per-pin"
+   },
+   "ff": {
+    "mean": "per-pin"
+   },
+   "per_pin": [
+    {
+     "pin": "ck",
+     "tt": {
+      "n": 3,
+      "mean": 214.8,
+      "min": 208.3,
+      "max": 218.2
+     },
+     "ff": {
+      "n": 3,
+      "mean": 174.9,
+      "min": 169.3,
+      "max": 177.7
+     },
+     "basis": "pin_register_mean",
+     "spread_tt_all": 33.4,
+     "tap": {
+      "early": false,
+      "within_band": false,
+      "insertion_ps": 214.8,
+      "insertion_ff_ps": 174.9,
+      "early_tt_ps": 0.0,
+      "early_ff_ps": 0.0,
+      "budget_owner": "parent_budget pin_register_mean physical/s81_die_views/bf_roots_1016_fg/dsfd_bf_front_roots/insertion.json"
+     },
+     "hold_est": {
+      "comp_ff": 174.9,
+      "late": 2.8,
+      "early": 5.6,
+      "hold_in": 13.3,
+      "hold_out": 10.9,
+      "hold_in_u60": -21.7,
+      "hold_out_u60": -24.1,
+      "verdict": "PASS",
+      "label": "UNCHECKED model"
+     }
+    },
+    {
+     "pin": "io_clk",
+     "tt": {
+      "n": 669,
+      "mean": 145.4,
+      "min": 126.9,
+      "max": 164.1
+     },
+     "ff": {
+      "n": 669,
+      "mean": 120.1,
+      "min": 102.9,
+      "max": 138.4
+     },
+     "basis": "pin_register_mean",
+     "spread_tt_all": 49.4,
+     "tap": {
+      "early": false,
+      "within_band": false,
+      "insertion_ps": 145.4,
+      "insertion_ff_ps": 120.1,
+      "early_tt_ps": 0.0,
+      "early_ff_ps": 0.0,
+      "budget_owner": "parent_budget pin_register_mean physical/s81_die_views/bf_roots_1016_fg/dsfd_bf_front_roots/insertion.json"
+     },
+     "hold_est": {
+      "comp_ff": 120.1,
+      "late": 18.3,
+      "early": 17.2,
+      "hold_in": -0.2,
+      "hold_out": 2.7,
+      "hold_in_u60": -35.2,
+      "hold_out_u60": -32.3,
+      "verdict": "FAIL",
+      "label": "UNCHECKED model"
+     }
+    },
+    {
+     "pin": "io_e",
+     "tt": {
+      "n": 777,
+      "mean": 132.7,
+      "min": 118.2,
+      "max": 150.5
+     },
+     "ff": {
+      "n": 777,
+      "mean": 108.9,
+      "min": 94.7,
+      "max": 126.2
+     },
+     "basis": "pin_register_mean",
+     "spread_tt_all": 32.3,
+     "tap": {
+      "early": false,
+      "within_band": false,
+      "insertion_ps": 132.7,
+      "insertion_ff_ps": 108.9,
+      "early_tt_ps": 0.0,
+      "early_ff_ps": 0.0,
+      "budget_owner": "parent_budget pin_register_mean physical/s81_die_views/bf_roots_1016_fg/dsfd_bf_front_roots/insertion.json"
+     },
+     "hold_est": {
+      "comp_ff": 108.9,
+      "late": 17.3,
+      "early": 14.2,
+      "hold_in": 1.4,
+      "hold_out": 6.1,
+      "hold_in_u60": -33.6,
+      "hold_out_u60": -28.9,
+      "verdict": "PASS",
+      "label": "UNCHECKED model"
+     }
+    },
+    {
+     "pin": "io_n",
+     "tt": {
+      "n": 1024,
+      "mean": 137.0,
+      "min": 125.7,
+      "max": 146.8
+     },
+     "ff": {
+      "n": 1024,
+      "mean": 111.6,
+      "min": 101.6,
+      "max": 121.7
+     },
+     "basis": "pin_register_mean",
+     "spread_tt_all": 31.0,
+     "tap": {
+      "early": false,
+      "within_band": false,
+      "insertion_ps": 137.0,
+      "insertion_ff_ps": 111.6,
+      "early_tt_ps": 0.0,
+      "early_ff_ps": 0.0,
+      "budget_owner": "parent_budget pin_register_mean physical/s81_die_views/bf_roots_1016_fg/dsfd_bf_front_roots/insertion.json"
+     },
+     "hold_est": {
+      "comp_ff": 111.6,
+      "late": 10.1,
+      "early": 10.0,
+      "hold_in": 8.8,
+      "hold_out": 9.9,
+      "hold_in_u60": -26.2,
+      "hold_out_u60": -25.1,
+      "verdict": "PASS",
+      "label": "UNCHECKED model"
+     }
+    },
+    {
+     "pin": "io_w",
+     "tt": {
+      "n": 777,
+      "mean": 121.6,
+      "min": 101.5,
+      "max": 140.2
+     },
+     "ff": {
+      "n": 777,
+      "mean": 101.4,
+      "min": 81.3,
+      "max": 119.6
+     },
+     "basis": "pin_register_mean",
+     "spread_tt_all": 38.7,
+     "tap": {
+      "early": false,
+      "within_band": false,
+      "insertion_ps": 121.6,
+      "insertion_ff_ps": 101.4,
+      "early_tt_ps": 0.0,
+      "early_ff_ps": 0.0,
+      "budget_owner": "parent_budget pin_register_mean physical/s81_die_views/bf_roots_1016_fg/dsfd_bf_front_roots/insertion.json"
+     },
+     "hold_est": {
+      "comp_ff": 101.4,
+      "late": 18.2,
+      "early": 20.1,
+      "hold_in": 0.8,
+      "hold_out": 0.8,
+      "hold_in_u60": -34.2,
+      "hold_out_u60": -34.2,
+      "verdict": "PASS",
+      "label": "UNCHECKED model"
+     }
+    }
+   ],
+   "tap": null,
+   "hold_est": {
+    "hold_in": -0.2,
+    "hold_out": 0.8,
+    "hold_in_u60": -35.2,
+    "hold_out_u60": -34.2,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model, worst pin"
+   },
+   "spread_tt_all": 33.4
+  },
+  {
+   "module": "ot_s81_cfg7_seq_bfp",
+   "placements": 228,
+   "types": 27,
+   "plan_lef": [
+    "physical/ref_tile/s81coll_cfg7_seq_bfp_pr/views/ot_s81_cfg7_seq_bfp/ot_s81_cfg7_seq_bfp.lef"
+   ],
+   "plan_lib": [
+    "physical/ref_tile/s81coll_cfg7_seq_bfp_pr/views/ot_s81_cfg7_seq_bfp/ot_s81_cfg7_seq_bfp_tt.lib"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     30.24,
+     60.48
+    ],
+    "npins": 635,
+    "pins_sha": "fb593f032f"
+   },
+   "view_lib": "physical/ref_tile/s81coll_cfg7_seq_bfp_pr/views/ot_s81_cfg7_seq_bfp/ot_s81_cfg7_seq_bfp_tt.lib",
+   "identity": "plan_lib",
+   "view_lib_sha": "5176c1557ee3",
+   "view_measure": {
+    "pins": [
+     "clk[0]"
+    ],
+    "tt_mean": 93.2,
+    "ff_mean": 74.3,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/s81coll_cfg7_seq_bfp_pr/views/ot_s81_cfg7_seq_bfp/insertion.json",
+    "n": 638,
+    "boundary": {
+     "tt": {
+      "n": 638,
+      "mean": 93.2,
+      "min": 83.8,
+      "max": 98.2
+     },
+     "tt_all_spread": 14.4,
+     "ff": {
+      "n": 638,
+      "mean": 74.3,
+      "min": 65.8,
+      "max": 79.3
+     },
+     "ff_all_spread": 13.5,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/ref_tile/s81coll_cfg7_seq_bfp_pr/views/ot_s81_cfg7_seq_bfp/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view)",
+   "tt": {
+    "n": 638,
+    "mean": 93.2,
+    "min": 83.8,
+    "max": 98.2
+   },
+   "ff": {
+    "n": 638,
+    "mean": 74.3,
+    "min": 65.8,
+    "max": 79.3
+   },
+   "tap": {
+    "early": false,
+    "within_band": false,
+    "insertion_ps": 93.2,
+    "insertion_ff_ps": 74.3,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81coll_cfg7_seq_bfp_pr/views/ot_s81_cfg7_seq_bfp/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 74.3,
+    "late": 5.0,
+    "early": 8.5,
+    "hold_in": 16.0,
+    "hold_out": 13.2,
+    "hold_in_u60": -19.0,
+    "hold_out_u60": -21.8,
+    "verdict": "PASS",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 14.4
+  },
+  {
+   "module": "dsfd_rstg",
+   "placements": 216,
+   "types": 15,
+   "plan_lef": [
+    "physical/ref_tile/s81net_rstg/views/dsfd_rstg/dsfd_rstg.lef"
+   ],
+   "plan_lib": [
+    "physical/ref_tile/s81net_rstg/views/dsfd_rstg/dsfd_rstg_tt.lib"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     38.88,
+     34.56
+    ],
+    "npins": 134,
+    "pins_sha": "3b2bf9a580"
+   },
+   "view_lib": "physical/ref_tile/s81net_rstg/views/dsfd_rstg/dsfd_rstg_tt.lib",
+   "identity": "plan_lib",
+   "view_lib_sha": "58c55c28cdc3",
+   "view_measure": {
+    "pins": [
+     "ck[0]"
+    ],
+    "tt_mean": 54.2,
+    "ff_mean": 41.4,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/s81net_rstg/views/dsfd_rstg/insertion.json",
+    "n": 66,
+    "boundary": {
+     "tt": {
+      "n": 66,
+      "mean": 54.2,
+      "min": 53.6,
+      "max": 54.8
+     },
+     "tt_all_spread": 1.2,
+     "ff": {
+      "n": 66,
+      "mean": 41.4,
+      "min": 40.8,
+      "max": 42.2
+     },
+     "ff_all_spread": 1.4,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [
+    {
+     "label": "autopilot closed dsfd_rstg__abcf698a79",
+     "signoff": "/srv/opentallas-scratch2/claude/autopilot/closed/s81/dsfd_rstg__abcf698a79/kit/signoff/signoff.json",
+     "verdict": "SIGNED",
+     "tt": {
+      "n": 132,
+      "mean": 235.78,
+      "min": 234.01,
+      "max": 237.14,
+      "design": "dsfd_rstg",
+      "parasitics": "spef",
+      "clock_ports": [
+       "ck[0]"
+      ]
+     },
+     "ff": {
+      "n": 132,
+      "mean": 176.59,
+      "min": 174.77,
+      "max": 177.99,
+      "design": "dsfd_rstg",
+      "parasitics": "spef",
+      "clock_ports": [
+       "ck[0]"
+      ]
+     },
+     "lef": "/srv/opentallas-scratch2/claude/autopilot/closed/s81/dsfd_rstg__abcf698a79/base/dsfd_rstg.lef",
+     "lef_sig": {
+      "size": [
+       38.88,
+       34.56
+      ],
+      "npins": 134,
+      "pins_sha": "3b2bf9a580"
+     },
+     "lef_match_placed": true
+    }
+   ],
+   "source": "SIGNED autopilot closed dsfd_rstg__abcf698a79 /srv/opentallas-scratch2/claude/autopilot/closed/s81/dsfd_rstg__abcf698a79/kit/signoff/signoff.json insertion_pinflops",
+   "label": "CHECKED (SIGNED record, LEF identity == placed)",
+   "tt": {
+    "n": 132,
+    "mean": 235.78,
+    "min": 234.01,
+    "max": 237.14,
+    "design": "dsfd_rstg",
+    "parasitics": "spef",
+    "clock_ports": [
+     "ck[0]"
+    ]
+   },
+   "ff": {
+    "n": 132,
+    "mean": 176.59,
+    "min": 174.77,
+    "max": 177.99,
+    "design": "dsfd_rstg",
+    "parasitics": "spef",
+    "clock_ports": [
+     "ck[0]"
+    ]
+   },
+   "tap": {
+    "early": false,
+    "within_band": false,
+    "insertion_ps": 235.78,
+    "insertion_ff_ps": 176.59,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "SIGNED autopilot closed dsfd_rstg__abcf698a79 /srv/opentallas-scratch2/claude/autopilot/closed/s81/dsfd_rstg__abcf698a79/kit/signoff/signoff.json insertion_pinflops"
+   },
+   "hold_est": {
+    "comp_ff": 176.6,
+    "late": 1.4,
+    "early": 1.8,
+    "hold_in": 14.7,
+    "hold_out": 14.4,
+    "hold_in_u60": -20.3,
+    "hold_out_u60": -20.6,
+    "verdict": "PASS",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 1.2
+  },
+  {
+   "module": "ot_sram_1r1w_512x128_m4_r0c0",
+   "placements": 150,
+   "types": 74,
+   "plan_lef": [
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     169.368,
+     29.16
+    ],
+    "npins": 405,
+    "pins_sha": "7347ff03a4"
+   },
+   "view_lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0_tt.lib",
+   "identity": "plan_lef_view_dir",
+   "view_lib_sha": "4ec33f16d7db",
+   "view_measure": {
+    "error": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0_tt.lib: pin-register mean measurement missing (no ETM-max fallback)"
+   },
+   "signed_records": [],
+   "extra": {
+    "label": "parent_budget memory macro (asap7_memory_macros_v2 lib: no internal clock tree, CK pin = register; insertion 0)",
+    "tt": {
+     "mean": 0.0
+    },
+    "ff": {
+     "mean": 0.0
+    },
+    "checked": "CHECKED read (lib has no max_clock_tree_path)"
+   },
+   "source": "parent_budget memory macro (asap7_memory_macros_v2 lib: no internal clock tree, CK pin = register; insertion 0)",
+   "label": "CHECKED read (lib has no max_clock_tree_path)",
+   "tt": {
+    "mean": 0.0
+   },
+   "ff": {
+    "mean": 0.0
+   },
+   "tap": {
+    "early": false,
+    "within_band": false,
+    "insertion_ps": 0.0,
+    "insertion_ff_ps": 0.0,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "parent_budget memory macro (asap7_memory_macros_v2 lib: no internal clock tree, CK pin = register; insertion 0)"
+   },
+   "spread_tt_all": null
+  },
+  {
+   "module": "dsdv_svc_sx_hrow",
+   "placements": 128,
+   "types": 16,
+   "plan_lef": [
+    "physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     138.24,
+     164.16
+    ],
+    "npins": 3851,
+    "pins_sha": "cb9d8482ec"
+   },
+   "lef_candidates": [
+    {
+     "lef": "physical/ref_tile/dsdv_svc_sx_hrow/views/dsdv_svc_sx_hrow/dsdv_svc_sx_hrow.lef",
+     "sig": {
+      "size": [
+       216.0,
+       216.0
+      ],
+      "npins": 3851,
+      "pins_sha": "cb9d8482ec"
+     },
+     "match": false,
+     "numbers_if_rebound": {
+      "tt": 211.0,
+      "ff": 177.9
+     }
+    }
+   ],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "source": null,
+   "label": "UNCHECKED",
+   "tt": null,
+   "ff": null
+  },
+  {
+   "module": "ot_s81sl_ve_m",
+   "placements": 75,
+   "types": 74,
+   "plan_lef": [
+    "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_tpl.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     172.8,
+     345.6
+    ],
+    "npins": 1262,
+    "pins_sha": "012effa808"
+   },
+   "lef_candidates": [],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "extra": {
+    "label": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/ve_m",
+    "tt": {
+     "mean": 365.0
+    },
+    "ff": {
+     "mean": 292.0
+    },
+    "checked": "UNCHECKED model (CTS pending)"
+   },
+   "source": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/ve_m",
+   "label": "UNCHECKED model (CTS pending)",
+   "tt": {
+    "mean": 365.0
+   },
+   "ff": {
+    "mean": 292.0
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 365.0,
+    "insertion_ff_ps": 292.0,
+    "early_tt_ps": 115.0,
+    "early_ff_ps": 89.5,
+    "budget_owner": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/ve_m"
+   },
+   "spread_tt_all": null
+  },
+  {
+   "module": "ot_s81sl_ve_s",
+   "placements": 75,
+   "types": 74,
+   "plan_lef": [
+    "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     164.16,
+     345.6
+    ],
+    "npins": 488,
+    "pins_sha": "ec84560621"
+   },
+   "lef_candidates": [],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "extra": {
+    "label": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/ve_s",
+    "tt": {
+     "mean": 284.7
+    },
+    "ff": {
+     "mean": 227.8
+    },
+    "checked": "UNCHECKED model (CTS pending)"
+   },
+   "source": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/ve_s",
+   "label": "UNCHECKED model (CTS pending)",
+   "tt": {
+    "mean": 284.7
+   },
+   "ff": {
+    "mean": 227.8
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 284.7,
+    "insertion_ff_ps": 227.8,
+    "early_tt_ps": 34.7,
+    "early_ff_ps": 25.3,
+    "budget_owner": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/ve_s"
+   },
+   "spread_tt_all": null
+  },
+  {
+   "module": "ot_s81sl_vsw",
+   "placements": 75,
+   "types": 74,
+   "plan_lef": [
+    "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw/ot_s81sl_vsw.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     224.64,
+     224.64
+    ],
+    "npins": 389,
+    "pins_sha": "6a1b2975c3"
+   },
+   "view_lib": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw/ot_s81sl_vsw_tt.lib",
+   "identity": "plan_lef_view_dir",
+   "view_lib_sha": "c005b97581b1",
+   "view_measure": {
+    "pins": [
+     "clk"
+    ],
+    "tt_mean": 298.4,
+    "ff_mean": 243.2,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw/insertion.json",
+    "n": 391,
+    "boundary": {
+     "tt": {
+      "n": 391,
+      "mean": 298.4,
+      "min": 285.5,
+      "max": 315.6
+     },
+     "tt_all_spread": 41.7,
+     "ff": {
+      "n": 391,
+      "mean": 243.2,
+      "min": 230.9,
+      "max": 260.0
+     },
+     "ff_all_spread": 43.4,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view)",
+   "tt": {
+    "n": 391,
+    "mean": 298.4,
+    "min": 285.5,
+    "max": 315.6
+   },
+   "ff": {
+    "n": 391,
+    "mean": 243.2,
+    "min": 230.9,
+    "max": 260.0
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 298.4,
+    "insertion_ff_ps": 243.2,
+    "early_tt_ps": 48.4,
+    "early_ff_ps": 40.7,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 243.2,
+    "late": 16.8,
+    "early": 12.3,
+    "hold_in": -4.8,
+    "hold_out": 1.2,
+    "hold_in_u60": -39.8,
+    "hold_out_u60": -33.8,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 41.7
+  },
+  {
+   "module": "ot_s81sl_vn_b",
+   "placements": 75,
+   "types": 74,
+   "plan_lef": [
+    "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vn_b_tpl.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     356.4,
+     172.8
+    ],
+    "npins": 953,
+    "pins_sha": "decb8deb5a"
+   },
+   "lef_candidates": [],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "extra": {
+    "label": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/vn_b",
+    "tt": {
+     "mean": 374.2
+    },
+    "ff": {
+     "mean": 299.4
+    },
+    "checked": "UNCHECKED model (CTS pending)"
+   },
+   "source": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/vn_b",
+   "label": "UNCHECKED model (CTS pending)",
+   "tt": {
+    "mean": 374.2
+   },
+   "ff": {
+    "mean": 299.4
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 374.2,
+    "insertion_ff_ps": 299.4,
+    "early_tt_ps": 124.2,
+    "early_ff_ps": 96.9,
+    "budget_owner": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/vn_b"
+   },
+   "spread_tt_all": null
+  },
+  {
+   "module": "ot_s81sl_vs",
+   "placements": 75,
+   "types": 74,
+   "plan_lef": [
+    "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vs_tpl.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     172.8,
+     172.8
+    ],
+    "npins": 2536,
+    "pins_sha": "0cde49a9af"
+   },
+   "lef_candidates": [
+    {
+     "lef": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs/ot_s81sl_vs.lef",
+     "sig": {
+      "size": [
+       172.8,
+       172.8
+      ],
+      "npins": 2859,
+      "pins_sha": "38735e7d87"
+     },
+     "match": false,
+     "numbers_if_rebound": {
+      "tt": 247.0,
+      "ff": 203.2
+     }
+    },
+    {
+     "lef": "physical/ref_tile/s81sl_vs_n32f/views/ot_s81sl_vs/ot_s81sl_vs.lef",
+     "sig": {
+      "size": [
+       216.0,
+       237.6
+      ],
+      "npins": 2859,
+      "pins_sha": "38735e7d87"
+     },
+     "match": false,
+     "numbers_if_rebound": {
+      "tt": 366.8,
+      "ff": 304.7
+     }
+    }
+   ],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "source": null,
+   "label": "UNCHECKED",
+   "tt": null,
+   "ff": null
+  },
+  {
+   "module": "ot_s81sl_vn_a",
+   "placements": 75,
+   "types": 74,
+   "plan_lef": [
+    "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vn_a_tpl.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     356.4,
+     164.16
+    ],
+    "npins": 916,
+    "pins_sha": "2c68451bb6"
+   },
+   "lef_candidates": [],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "extra": {
+    "label": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/vn_a",
+    "tt": {
+     "mean": 370.5
+    },
+    "ff": {
+     "mean": 296.4
+    },
+    "checked": "UNCHECKED model (CTS pending)"
+   },
+   "source": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/vn_a",
+   "label": "UNCHECKED model (CTS pending)",
+   "tt": {
+    "mean": 370.5
+   },
+   "ff": {
+    "mean": 296.4
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 370.5,
+    "insertion_ff_ps": 296.4,
+    "early_tt_ps": 120.5,
+    "early_ff_ps": 93.9,
+    "budget_owner": "parent_budget core_insertion_model 12.9d (0.896 ps/um x L_max x 0.943, FF 0.80xTT; ran +13% high on attn_hcore); CTS probe running intel2 corelat-sq-1/cts/vn_a"
+   },
+   "spread_tt_all": null
+  },
+  {
+   "module": "dsfd_su_t_rxsb",
+   "placements": 75,
+   "types": 74,
+   "plan_lef": [
+    "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb/dsfd_su_t_rxsb.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     140.4,
+     140.4
+    ],
+    "npins": 131,
+    "pins_sha": "e9d4a692c9"
+   },
+   "view_lib": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb/dsfd_su_t_rxsb_tt.lib",
+   "identity": "plan_lef_view_dir",
+   "view_lib_sha": "ffe5528724e7",
+   "view_measure": {
+    "error": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb/insertion.json: explicit clock-pin mapping required for ck",
+    "tt_mean": 257.85,
+    "ff_mean": 205.22,
+    "basis": "pin_register_mean(direct insertion.json boundary; main CC.load refused: explicit clock-pin mapping required for ck)",
+    "signed": false,
+    "contract_source": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb/insertion.json",
+    "n": 129,
+    "direct": true,
+    "raw_source_flag": true,
+    "boundary": {
+     "tt": {
+      "n": 129,
+      "mean": 257.85,
+      "min": 248.16,
+      "max": 263.85
+     },
+     "tt_all_spread": 21.5,
+     "ff": {
+      "n": 129,
+      "mean": 205.22,
+      "min": 196.35,
+      "max": 210.73
+     },
+     "ff_all_spread": 21.6,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean(direct insertion.json boundary; main CC.load refused: explicit clock-pin mapping required for ck) physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb/insertion.json",
+   "label": "CHECKED read (direct insertion.json; main loader refuses it)",
+   "tt": {
+    "n": 129,
+    "mean": 257.85,
+    "min": 248.16,
+    "max": 263.85
+   },
+   "ff": {
+    "n": 129,
+    "mean": 205.22,
+    "min": 196.35,
+    "max": 210.73
+   },
+   "tap": {
+    "early": false,
+    "within_band": true,
+    "insertion_ps": 257.85,
+    "insertion_ff_ps": 205.22,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "parent_budget pin_register_mean(direct insertion.json boundary; main CC.load refused: explicit clock-pin mapping required for ck) physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 202.5,
+    "late": 8.2,
+    "early": 6.2,
+    "hold_in": 6.2,
+    "hold_out": 9.0,
+    "hold_in_u60": -28.8,
+    "hold_out_u60": -26.0,
+    "verdict": "PASS",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 21.5
+  },
+  {
+   "module": "dsfd_su_t_rxsf",
+   "placements": 75,
+   "types": 74,
+   "plan_lef": [
+    "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf/dsfd_su_t_rxsf.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     140.4,
+     140.4
+    ],
+    "npins": 133,
+    "pins_sha": "bb7715a28b"
+   },
+   "view_lib": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf/dsfd_su_t_rxsf_tt.lib",
+   "identity": "plan_lef_view_dir",
+   "view_lib_sha": "198385e13830",
+   "view_measure": {
+    "pins": [
+     "ck"
+    ],
+    "tt_mean": 197.4,
+    "ff_mean": 164.1,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf/insertion.json",
+    "n": 131,
+    "boundary": {
+     "tt": {
+      "n": 131,
+      "mean": 197.4,
+      "min": 183.2,
+      "max": 210.5
+     },
+     "tt_all_spread": 36.4,
+     "ff": {
+      "n": 131,
+      "mean": 164.1,
+      "min": 150.0,
+      "max": 176.8
+     },
+     "ff_all_spread": 34.9,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view)",
+   "tt": {
+    "n": 131,
+    "mean": 197.4,
+    "min": 183.2,
+    "max": 210.5
+   },
+   "ff": {
+    "n": 131,
+    "mean": 164.1,
+    "min": 150.0,
+    "max": 176.8
+   },
+   "tap": {
+    "early": false,
+    "within_band": false,
+    "insertion_ps": 197.4,
+    "insertion_ff_ps": 164.1,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 164.1,
+    "late": 12.7,
+    "early": 14.1,
+    "hold_in": 3.5,
+    "hold_out": 3.4,
+    "hold_in_u60": -31.5,
+    "hold_out_u60": -31.6,
+    "verdict": "PASS",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 36.4
+  },
+  {
+   "module": "ot_s81sl_vq",
+   "placements": 75,
+   "types": 74,
+   "plan_lef": [
+    "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vq_tpl.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     172.8,
+     129.6
+    ],
+    "npins": 702,
+    "pins_sha": "f2bdb4d09b"
+   },
+   "lef_candidates": [
+    {
+     "lef": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq/ot_s81sl_vq.lef",
+     "sig": {
+      "size": [
+       172.8,
+       129.6
+      ],
+      "npins": 830,
+      "pins_sha": "5254b72166"
+     },
+     "match": false,
+     "numbers_if_rebound": {
+      "tt": 225.8,
+      "ff": 183.2
+     }
+    }
+   ],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [
+    {
+     "label": "autopilot closed ot_s81sl_vq__8d2f04b676",
+     "signoff": "/srv/opentallas-scratch2/claude/autopilot/closed/s81/ot_s81sl_vq__8d2f04b676/kit/signoff/signoff.json",
+     "verdict": "SIGNED",
+     "tt": {
+      "n": 828,
+      "mean": 257.0,
+      "min": 246.02,
+      "max": 278.69,
+      "design": "ot_s81sl_vq",
+      "parasitics": "spef",
+      "clock_ports": [
+       "clk"
+      ]
+     },
+     "ff": {
+      "n": 828,
+      "mean": 210.94,
+      "min": 200.69,
+      "max": 231.2,
+      "design": "ot_s81sl_vq",
+      "parasitics": "spef",
+      "clock_ports": [
+       "clk"
+      ]
+     },
+     "lef": "/srv/opentallas-scratch2/claude/autopilot/closed/s81/ot_s81sl_vq__8d2f04b676/base/ot_s81sl_vq.lef",
+     "lef_sig": {
+      "size": [
+       172.8,
+       129.6
+      ],
+      "npins": 830,
+      "pins_sha": "5254b72166"
+     },
+     "lef_match_placed": false
+    }
+   ],
+   "rebind_candidate": "autopilot closed ot_s81sl_vq__8d2f04b676 TT 257.0 FF 210.94 (LEF != placed)",
+   "source": null,
+   "label": "UNCHECKED",
+   "tt": null,
+   "ff": null
+  },
+  {
+   "module": "dsfd_cfifo_crs4",
+   "placements": 72,
+   "types": 13,
+   "plan_lef": [
+    "physical/ref_tile/s81coll_cfifo_crs4/views/dsfd_cfifo_crs4/dsfd_cfifo_crs4.lef"
+   ],
+   "plan_lib": [
+    "physical/ref_tile/s81coll_cfifo_crs4/views/dsfd_cfifo_crs4/dsfd_cfifo_crs4_tt.lib"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     280.8,
+     69.12
+    ],
+    "npins": 2362,
+    "pins_sha": "e38e4ace4a"
+   },
+   "view_lib": "physical/ref_tile/s81coll_cfifo_crs4/views/dsfd_cfifo_crs4/dsfd_cfifo_crs4_tt.lib",
+   "identity": "plan_lib",
+   "view_lib_sha": "c7c22d332f88",
+   "view_measure": {
+    "pins": [
+     "cr",
+     "cr_s",
+     "xk[0]",
+     "xk[1]",
+     "xk[2]",
+     "xk[3]"
+    ],
+    "tt_mean": 176.6,
+    "ff_mean": 144.5,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/s81coll_cfifo_crs4/views/dsfd_cfifo_crs4/insertion.json",
+    "n": 2283,
+    "boundary": {
+     "tt": {
+      "n": 2283,
+      "mean": 176.6,
+      "min": 152.8,
+      "max": 214.1
+     },
+     "tt_all_spread": 61.3,
+     "ff": {
+      "n": 2283,
+      "mean": 144.5,
+      "min": 120.6,
+      "max": 181.2
+     },
+     "ff_all_spread": 60.6,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/ref_tile/s81coll_cfifo_crs4/views/dsfd_cfifo_crs4/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view); 6 clock pins -> one early tap PER PIN",
+   "tt": {
+    "mean": "per-pin"
+   },
+   "ff": {
+    "mean": "per-pin"
+   },
+   "per_pin": [
+    {
+     "pin": "cr",
+     "tt": {
+      "n": 2283,
+      "mean": 176.6,
+      "min": 152.8,
+      "max": 214.1
+     },
+     "ff": {
+      "n": 2283,
+      "mean": 144.5,
+      "min": 120.6,
+      "max": 181.2
+     },
+     "basis": "pin_register_mean",
+     "spread_tt_all": 61.3,
+     "tap": {
+      "early": false,
+      "within_band": false,
+      "insertion_ps": 176.6,
+      "insertion_ff_ps": 144.5,
+      "early_tt_ps": 0.0,
+      "early_ff_ps": 0.0,
+      "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81coll_cfifo_crs4/views/dsfd_cfifo_crs4/insertion.json"
+     },
+     "hold_est": {
+      "comp_ff": 144.5,
+      "late": 36.7,
+      "early": 23.9,
+      "hold_in": -20.8,
+      "hold_out": -4.9,
+      "hold_in_u60": -55.8,
+      "hold_out_u60": -39.9,
+      "verdict": "FAIL",
+      "label": "UNCHECKED model"
+     }
+    },
+    {
+     "pin": "cr_s",
+     "tt": {
+      "n": 70,
+      "mean": 53.3,
+      "min": 52.2,
+      "max": 54.4
+     },
+     "ff": {
+      "n": 70,
+      "mean": 42.4,
+      "min": 41.1,
+      "max": 43.4
+     },
+     "basis": "pin_register_mean",
+     "spread_tt_all": 2.2,
+     "tap": {
+      "early": false,
+      "within_band": false,
+      "insertion_ps": 53.3,
+      "insertion_ff_ps": 42.4,
+      "early_tt_ps": 0.0,
+      "early_ff_ps": 0.0,
+      "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81coll_cfifo_crs4/views/dsfd_cfifo_crs4/insertion.json"
+     },
+     "hold_est": {
+      "comp_ff": 42.4,
+      "late": 1.0,
+      "early": 1.3,
+      "hold_in": 21.8,
+      "hold_out": 21.6,
+      "hold_in_u60": -13.2,
+      "hold_out_u60": -13.4,
+      "verdict": "PASS",
+      "label": "UNCHECKED model"
+     }
+    },
+    {
+     "pin": "xk[0]",
+     "tt": {
+      "n": 1104,
+      "mean": 119.6,
+      "min": 112.8,
+      "max": 130.6
+     },
+     "ff": {
+      "n": 1104,
+      "mean": 95.8,
+      "min": 89.0,
+      "max": 106.3
+     },
+     "basis": "pin_register_mean",
+     "spread_tt_all": 17.8,
+     "tap": {
+      "early": false,
+      "within_band": false,
+      "insertion_ps": 119.6,
+      "insertion_ff_ps": 95.8,
+      "early_tt_ps": 0.0,
+      "early_ff_ps": 0.0,
+      "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81coll_cfifo_crs4/views/dsfd_cfifo_crs4/insertion.json"
+     },
+     "hold_est": {
+      "comp_ff": 95.8,
+      "late": 10.5,
+      "early": 6.8,
+      "hold_in": 9.2,
+      "hold_out": 13.8,
+      "hold_in_u60": -25.8,
+      "hold_out_u60": -21.2,
+      "verdict": "PASS",
+      "label": "UNCHECKED model"
+     }
+    },
+    {
+     "pin": "xk[1]",
+     "tt": {
+      "n": 1104,
+      "mean": 100.9,
+      "min": 95.1,
+      "max": 107.9
+     },
+     "ff": {
+      "n": 1104,
+      "mean": 81.6,
+      "min": 75.5,
+      "max": 88.4
+     },
+     "basis": "pin_register_mean",
+     "spread_tt_all": 12.8,
+     "tap": {
+      "early": false,
+      "within_band": false,
+      "insertion_ps": 100.9,
+      "insertion_ff_ps": 81.6,
+      "early_tt_ps": 0.0,
+      "early_ff_ps": 0.0,
+      "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81coll_cfifo_crs4/views/dsfd_cfifo_crs4/insertion.json"
+     },
+     "hold_est": {
+      "comp_ff": 81.6,
+      "late": 6.8,
+      "early": 6.1,
+      "hold_in": 13.8,
+      "hold_out": 15.1,
+      "hold_in_u60": -21.2,
+      "hold_out_u60": -19.9,
+      "verdict": "PASS",
+      "label": "UNCHECKED model"
+     }
+    },
+    {
+     "pin": "xk[2]",
+     "tt": {
+      "n": 1104,
+      "mean": 118.6,
+      "min": 111.8,
+      "max": 123.9
+     },
+     "ff": {
+      "n": 1104,
+      "mean": 94.8,
+      "min": 88.6,
+      "max": 99.7
+     },
+     "basis": "pin_register_mean",
+     "spread_tt_all": 12.1,
+     "tap": {
+      "early": false,
+      "within_band": false,
+      "insertion_ps": 118.6,
+      "insertion_ff_ps": 94.8,
+      "early_tt_ps": 0.0,
+      "early_ff_ps": 0.0,
+      "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81coll_cfifo_crs4/views/dsfd_cfifo_crs4/insertion.json"
+     },
+     "hold_est": {
+      "comp_ff": 94.8,
+      "late": 4.9,
+      "early": 6.2,
+      "hold_in": 15.1,
+      "hold_out": 14.4,
+      "hold_in_u60": -19.9,
+      "hold_out_u60": -20.6,
+      "verdict": "PASS",
+      "label": "UNCHECKED model"
+     }
+    },
+    {
+     "pin": "xk[3]",
+     "tt": {
+      "n": 1104,
+      "mean": 103.2,
+      "min": 97.7,
+      "max": 107.8
+     },
+     "ff": {
+      "n": 1104,
+      "mean": 83.1,
+      "min": 77.2,
+      "max": 88.2
+     },
+     "basis": "pin_register_mean",
+     "spread_tt_all": 10.1,
+     "tap": {
+      "early": false,
+      "within_band": false,
+      "insertion_ps": 103.2,
+      "insertion_ff_ps": 83.1,
+      "early_tt_ps": 0.0,
+      "early_ff_ps": 0.0,
+      "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81coll_cfifo_crs4/views/dsfd_cfifo_crs4/insertion.json"
+     },
+     "hold_est": {
+      "comp_ff": 83.1,
+      "late": 5.1,
+      "early": 5.9,
+      "hold_in": 15.5,
+      "hold_out": 15.2,
+      "hold_in_u60": -19.5,
+      "hold_out_u60": -19.8,
+      "verdict": "PASS",
+      "label": "UNCHECKED model"
+     }
+    }
+   ],
+   "tap": null,
+   "hold_est": {
+    "hold_in": -20.8,
+    "hold_out": -4.9,
+    "hold_in_u60": -55.8,
+    "hold_out_u60": -39.9,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model, worst pin"
+   },
+   "spread_tt_all": 61.3
+  },
+  {
+   "module": "dsfd_node_LLd",
+   "placements": 72,
+   "types": 10,
+   "plan_lef": [
+    "physical/ref_tile/s81net_node_lld/views/dsfd_node_LLd/dsfd_node_LLd.lef"
+   ],
+   "plan_lib": [
+    "physical/ref_tile/s81net_node_lld/views/dsfd_node_LLd/dsfd_node_LLd_tt.lib"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     43.2,
+     77.76
+    ],
+    "npins": 195,
+    "pins_sha": "a8c066533f"
+   },
+   "view_lib": "physical/ref_tile/s81net_node_lld/views/dsfd_node_LLd/dsfd_node_LLd_tt.lib",
+   "identity": "plan_lib",
+   "view_lib_sha": "f222b3f7f007",
+   "view_measure": {
+    "pins": [
+     "clk[0]"
+    ],
+    "tt_mean": 104.6,
+    "ff_mean": 84.5,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/s81net_node_lld/views/dsfd_node_LLd/insertion.json",
+    "n": 194,
+    "boundary": {
+     "tt": {
+      "n": 194,
+      "mean": 104.6,
+      "min": 97.5,
+      "max": 110.3
+     },
+     "tt_all_spread": 13.6,
+     "ff": {
+      "n": 194,
+      "mean": 84.5,
+      "min": 76.8,
+      "max": 89.9
+     },
+     "ff_all_spread": 13.7,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/ref_tile/s81net_node_lld/views/dsfd_node_LLd/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view)",
+   "tt": {
+    "n": 194,
+    "mean": 104.6,
+    "min": 97.5,
+    "max": 110.3
+   },
+   "ff": {
+    "n": 194,
+    "mean": 84.5,
+    "min": 76.8,
+    "max": 89.9
+   },
+   "tap": {
+    "early": false,
+    "within_band": false,
+    "insertion_ps": 104.6,
+    "insertion_ff_ps": 84.5,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81net_node_lld/views/dsfd_node_LLd/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 84.5,
+    "late": 5.4,
+    "early": 7.7,
+    "hold_in": 15.1,
+    "hold_out": 13.5,
+    "hold_in_u60": -19.9,
+    "hold_out_u60": -21.5,
+    "verdict": "PASS",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 13.6
+  },
+  {
+   "module": "ot_s81sl_capc5r",
+   "placements": 16,
+   "types": 16,
+   "plan_lef": [
+    "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     336.96,
+     414.72
+    ],
+    "npins": 1182,
+    "pins_sha": "02d116e1cc"
+   },
+   "view_lib": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r_tt.lib",
+   "identity": "plan_lef_view_dir",
+   "view_lib_sha": "71edf454ba66",
+   "view_measure": {
+    "pins": [
+     "ck_ce",
+     "ck_cw",
+     "ck_rn",
+     "ck_rs",
+     "ck_rt"
+    ],
+    "tt_mean": 174.0,
+    "ff_mean": 143.0,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/insertion.json",
+    "n": 281,
+    "boundary": {
+     "tt": {
+      "n": 1,
+      "mean": 442.0,
+      "min": 442.0,
+      "max": 442.0
+     },
+     "tt_all_spread": 287.2,
+     "ff": {
+      "n": 1,
+      "mean": 348.9,
+      "min": 348.9,
+      "max": 348.9
+     },
+     "ff_all_spread": 223.1,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view); 5 clock pins -> one early tap PER PIN",
+   "tt": {
+    "mean": "per-pin"
+   },
+   "ff": {
+    "mean": "per-pin"
+   },
+   "per_pin": [
+    {
+     "pin": "ck_ce",
+     "tt": {
+      "n": 281,
+      "mean": 174.0,
+      "min": 162.5,
+      "max": 194.8
+     },
+     "ff": {
+      "n": 281,
+      "mean": 143.0,
+      "min": 132.0,
+      "max": 161.3
+     },
+     "basis": "pin_register_mean",
+     "spread_tt_all": 132.6,
+     "tap": {
+      "early": false,
+      "within_band": false,
+      "insertion_ps": 174.0,
+      "insertion_ff_ps": 143.0,
+      "early_tt_ps": 0.0,
+      "early_ff_ps": 0.0,
+      "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/insertion.json"
+     },
+     "hold_est": {
+      "comp_ff": 143.0,
+      "late": 18.3,
+      "early": 11.0,
+      "hold_in": -1.4,
+      "hold_out": 7.4,
+      "hold_in_u60": -36.4,
+      "hold_out_u60": -27.6,
+      "verdict": "FAIL",
+      "label": "UNCHECKED model"
+     }
+    },
+    {
+     "pin": "ck_cw",
+     "tt": {
+      "n": 281,
+      "mean": 210.6,
+      "min": 200.5,
+      "max": 231.2
+     },
+     "ff": {
+      "n": 281,
+      "mean": 169.9,
+      "min": 160.0,
+      "max": 188.7
+     },
+     "basis": "pin_register_mean",
+     "spread_tt_all": 148.1,
+     "tap": {
+      "early": false,
+      "within_band": false,
+      "insertion_ps": 210.6,
+      "insertion_ff_ps": 169.9,
+      "early_tt_ps": 0.0,
+      "early_ff_ps": 0.0,
+      "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/insertion.json"
+     },
+     "hold_est": {
+      "comp_ff": 169.9,
+      "late": 18.8,
+      "early": 9.9,
+      "hold_in": -3.2,
+      "hold_out": 7.1,
+      "hold_in_u60": -38.2,
+      "hold_out_u60": -27.9,
+      "verdict": "FAIL",
+      "label": "UNCHECKED model"
+     }
+    },
+    {
+     "pin": "ck_rn",
+     "tt": {
+      "n": 342,
+      "mean": 271.4,
+      "min": 249.0,
+      "max": 293.3
+     },
+     "ff": {
+      "n": 342,
+      "mean": 221.1,
+      "min": 201.3,
+      "max": 238.9
+     },
+     "basis": "pin_register_mean",
+     "spread_tt_all": 55.4,
+     "tap": {
+      "early": true,
+      "within_band": false,
+      "insertion_ps": 271.4,
+      "insertion_ff_ps": 221.1,
+      "early_tt_ps": 21.4,
+      "early_ff_ps": 18.6,
+      "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/insertion.json"
+     },
+     "hold_est": {
+      "comp_ff": 221.1,
+      "late": 17.8,
+      "early": 19.8,
+      "hold_in": -4.7,
+      "hold_out": -4.9,
+      "hold_in_u60": -39.7,
+      "hold_out_u60": -39.9,
+      "verdict": "FAIL",
+      "label": "UNCHECKED model"
+     }
+    },
+    {
+     "pin": "ck_rs",
+     "tt": {
+      "n": 272,
+      "mean": 136.3,
+      "min": 125.0,
+      "max": 155.4
+     },
+     "ff": {
+      "n": 272,
+      "mean": 111.0,
+      "min": 99.8,
+      "max": 129.1
+     },
+     "basis": "pin_register_mean",
+     "spread_tt_all": 34.8,
+     "tap": {
+      "early": false,
+      "within_band": false,
+      "insertion_ps": 136.3,
+      "insertion_ff_ps": 111.0,
+      "early_tt_ps": 0.0,
+      "early_ff_ps": 0.0,
+      "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/insertion.json"
+     },
+     "hold_est": {
+      "comp_ff": 111.0,
+      "late": 18.1,
+      "early": 11.2,
+      "hold_in": 0.4,
+      "hold_out": 8.8,
+      "hold_in_u60": -34.6,
+      "hold_out_u60": -26.2,
+      "verdict": "PASS",
+      "label": "UNCHECKED model"
+     }
+    },
+    {
+     "pin": "ck_rt",
+     "tt": {
+      "n": 1,
+      "mean": 442.0,
+      "min": 442.0,
+      "max": 442.0
+     },
+     "ff": {
+      "n": 1,
+      "mean": 348.9,
+      "min": 348.9,
+      "max": 348.9
+     },
+     "basis": "pin_register_mean",
+     "spread_tt_all": 287.2,
+     "tap": {
+      "early": true,
+      "within_band": false,
+      "insertion_ps": 442.0,
+      "insertion_ff_ps": 348.9,
+      "early_tt_ps": 192.0,
+      "early_ff_ps": 146.4,
+      "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/insertion.json"
+     },
+     "hold_est": {
+      "comp_ff": 348.9,
+      "late": 0.0,
+      "early": 0.0,
+      "hold_in": 7.6,
+      "hold_out": 7.6,
+      "hold_in_u60": -27.4,
+      "hold_out_u60": -27.4,
+      "verdict": "PASS",
+      "label": "UNCHECKED model"
+     }
+    }
+   ],
+   "tap": null,
+   "hold_est": {
+    "hold_in": -4.7,
+    "hold_out": -4.9,
+    "hold_in_u60": -39.7,
+    "hold_out_u60": -39.9,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model, worst pin"
+   },
+   "spread_tt_all": 287.2
+  },
+  {
+   "module": "ot_s81sl_eg",
+   "placements": 16,
+   "types": 16,
+   "plan_lef": [
+    "physical/die_plan/s81/cores/eg/lef/ot_s81sl_eg_c.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     259.2,
+     259.2
+    ],
+    "npins": 201,
+    "pins_sha": "5875240590"
+   },
+   "lef_candidates": [
+    {
+     "lef": "physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg.lef",
+     "sig": {
+      "size": [
+       259.2,
+       259.2
+      ],
+      "npins": 201,
+      "pins_sha": "5875240590"
+     },
+     "match": true
+    }
+   ],
+   "view_lib": "physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg_tt.lib",
+   "identity": "lef_match_unique",
+   "view_lib_sha": "3f4ee25024a8",
+   "view_measure": {
+    "pins": [
+     "clk"
+    ],
+    "tt_mean": 351.3,
+    "ff_mean": 290.1,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/insertion.json",
+    "n": 201,
+    "boundary": {
+     "tt": {
+      "n": 201,
+      "mean": 351.3,
+      "min": 344.9,
+      "max": 355.0
+     },
+     "tt_all_spread": 26.3,
+     "ff": {
+      "n": 201,
+      "mean": 290.1,
+      "min": 283.3,
+      "max": 293.9
+     },
+     "ff_all_spread": 26.3,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view)",
+   "tt": {
+    "n": 201,
+    "mean": 351.3,
+    "min": 344.9,
+    "max": 355.0
+   },
+   "ff": {
+    "n": 201,
+    "mean": 290.1,
+    "min": 283.3,
+    "max": 293.9
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 351.3,
+    "insertion_ff_ps": 290.1,
+    "early_tt_ps": 101.3,
+    "early_ff_ps": 87.6,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 290.1,
+    "late": 3.8,
+    "early": 6.8,
+    "hold_in": 6.5,
+    "hold_out": 4.0,
+    "hold_in_u60": -28.5,
+    "hold_out_u60": -31.0,
+    "verdict": "PASS",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 26.3
+  },
+  {
+   "module": "ot_s81dv_xfin",
+   "placements": 16,
+   "types": 16,
+   "plan_lef": [
+    "physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     181.44,
+     181.44
+    ],
+    "npins": 806,
+    "pins_sha": "8e71d128a2"
+   },
+   "view_lib": "physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin_tt.lib",
+   "identity": "plan_lef_view_dir",
+   "view_lib_sha": "fab40ceecce5",
+   "view_measure": {
+    "pins": [
+     "clk"
+    ],
+    "tt_mean": 274.4,
+    "ff_mean": 228.4,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/insertion.json",
+    "n": 806,
+    "boundary": {
+     "tt": {
+      "n": 806,
+      "mean": 274.4,
+      "min": 250.4,
+      "max": 308.2
+     },
+     "tt_all_spread": 77.4,
+     "ff": {
+      "n": 806,
+      "mean": 228.4,
+      "min": 205.2,
+      "max": 261.4
+     },
+     "ff_all_spread": 74.9,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view)",
+   "tt": {
+    "n": 806,
+    "mean": 274.4,
+    "min": 250.4,
+    "max": 308.2
+   },
+   "ff": {
+    "n": 806,
+    "mean": 228.4,
+    "min": 205.2,
+    "max": 261.4
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 274.4,
+    "insertion_ff_ps": 228.4,
+    "early_tt_ps": 24.4,
+    "early_ff_ps": 25.9,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 228.4,
+    "late": 33.0,
+    "early": 23.2,
+    "hold_in": -21.1,
+    "hold_out": -8.5,
+    "hold_in_u60": -56.1,
+    "hold_out_u60": -43.5,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 77.4
+  },
+  {
+   "module": "ot_s81sl_xrt1",
+   "placements": 14,
+   "types": 14,
+   "plan_lef": [
+    "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     311.04,
+     395.28
+    ],
+    "npins": 7651,
+    "pins_sha": "6a74041507"
+   },
+   "view_lib": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1_tt.lib",
+   "identity": "plan_lef_view_dir",
+   "view_lib_sha": "e0f1ab77f98d",
+   "view_measure": {
+    "pins": [
+     "clk"
+    ],
+    "tt_mean": 433.6,
+    "ff_mean": 355.5,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/insertion.json",
+    "n": 7717,
+    "boundary": {
+     "tt": {
+      "n": 7717,
+      "mean": 433.6,
+      "min": 404.0,
+      "max": 473.1
+     },
+     "tt_all_spread": 73.8,
+     "ff": {
+      "n": 7717,
+      "mean": 355.5,
+      "min": 329.5,
+      "max": 394.0
+     },
+     "ff_all_spread": 68.5,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view)",
+   "tt": {
+    "n": 7717,
+    "mean": 433.6,
+    "min": 404.0,
+    "max": 473.1
+   },
+   "ff": {
+    "n": 7717,
+    "mean": 355.5,
+    "min": 329.5,
+    "max": 394.0
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 433.6,
+    "insertion_ff_ps": 355.5,
+    "early_tt_ps": 183.6,
+    "early_ff_ps": 153.0,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 355.5,
+    "late": 38.5,
+    "early": 26.0,
+    "hold_in": -33.2,
+    "hold_out": -17.5,
+    "hold_in_u60": -68.2,
+    "hold_out_u60": -52.5,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 73.8
+  },
+  {
+   "module": "dsdv_bksel_q",
+   "placements": 4,
+   "types": 1,
+   "plan_lef": [
+    "physical/ref_tile/s81dvbk_sq_hq3/views/dsdv_bksel_q/dsdv_bksel_q.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     648.0,
+     648.0
+    ],
+    "npins": 1803,
+    "pins_sha": "d863ce92ae"
+   },
+   "view_lib": "physical/ref_tile/s81dvbk_sq_hq3/views/dsdv_bksel_q/dsdv_bksel_q_tt.lib",
+   "identity": "plan_lef_view_dir",
+   "view_lib_sha": "88fe764555f5",
+   "view_measure": {
+    "pins": [
+     "ck"
+    ],
+    "tt_mean": 651.6,
+    "ff_mean": 527.5,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/s81dvbk_sq_hq3/views/dsdv_bksel_q/insertion.json",
+    "n": 1852,
+    "boundary": {
+     "tt": {
+      "n": 1852,
+      "mean": 651.6,
+      "min": 625.8,
+      "max": 691.7
+     },
+     "tt_all_spread": 165.1,
+     "ff": {
+      "n": 1852,
+      "mean": 527.5,
+      "min": 504.0,
+      "max": 565.2
+     },
+     "ff_all_spread": 132.0,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/ref_tile/s81dvbk_sq_hq3/views/dsdv_bksel_q/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view)",
+   "tt": {
+    "n": 1852,
+    "mean": 651.6,
+    "min": 625.8,
+    "max": 691.7
+   },
+   "ff": {
+    "n": 1852,
+    "mean": 527.5,
+    "min": 504.0,
+    "max": 565.2
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 651.6,
+    "insertion_ff_ps": 527.5,
+    "early_tt_ps": 401.6,
+    "early_ff_ps": 325.0,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81dvbk_sq_hq3/views/dsdv_bksel_q/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 527.5,
+    "late": 37.7,
+    "early": 23.5,
+    "hold_in": -41.0,
+    "hold_out": -23.7,
+    "hold_in_u60": -76.0,
+    "hold_out_u60": -58.7,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 165.1
+  },
+  {
+   "module": "ot_s81sl_xrt3",
+   "placements": 2,
+   "types": 2,
+   "plan_lef": [
+    "physical/ref_tile/s81sl_xrt3_b/views/ot_s81sl_xrt3/ot_s81sl_xrt3.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     570.24,
+     395.28
+    ],
+    "npins": 9268,
+    "pins_sha": "7c40011ec4"
+   },
+   "view_lib": "physical/ref_tile/s81sl_xrt3_b/views/ot_s81sl_xrt3/ot_s81sl_xrt3_tt.lib",
+   "identity": "plan_lef_view_dir",
+   "view_lib_sha": "8fcbe9f838e6",
+   "view_measure": {
+    "pins": [
+     "clk"
+    ],
+    "tt_mean": 607.7,
+    "ff_mean": 501.4,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/s81sl_xrt3_b/views/ot_s81sl_xrt3/insertion.json",
+    "n": 9302,
+    "boundary": {
+     "tt": {
+      "n": 9302,
+      "mean": 607.7,
+      "min": 577.4,
+      "max": 641.5
+     },
+     "tt_all_spread": 73.6,
+     "ff": {
+      "n": 9302,
+      "mean": 501.4,
+      "min": 476.6,
+      "max": 531.0
+     },
+     "ff_all_spread": 58.3,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/ref_tile/s81sl_xrt3_b/views/ot_s81sl_xrt3/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view)",
+   "tt": {
+    "n": 9302,
+    "mean": 607.7,
+    "min": 577.4,
+    "max": 641.5
+   },
+   "ff": {
+    "n": 9302,
+    "mean": 501.4,
+    "min": 476.6,
+    "max": 531.0
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 607.7,
+    "insertion_ff_ps": 501.4,
+    "early_tt_ps": 357.7,
+    "early_ff_ps": 298.9,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81sl_xrt3_b/views/ot_s81sl_xrt3/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 501.4,
+    "late": 29.6,
+    "early": 24.8,
+    "hold_in": -31.2,
+    "hold_out": -23.6,
+    "hold_in_u60": -66.2,
+    "hold_out_u60": -58.6,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 73.6
+  },
+  {
+   "module": "dsdv_gunit_l5",
+   "placements": 1,
+   "types": 1,
+   "plan_lef": [
+    "physical/ref_tile/dsdv_gunit_l5/views/dsdv_gunit_l5/dsdv_gunit_l5.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     345.6,
+     302.4
+    ],
+    "npins": 1861,
+    "pins_sha": "e8ae2f71d9"
+   },
+   "view_lib": "physical/ref_tile/dsdv_gunit_l5/views/dsdv_gunit_l5/dsdv_gunit_l5_tt.lib",
+   "identity": "plan_lef_view_dir",
+   "view_lib_sha": "3cc1cb79953b",
+   "view_measure": {
+    "pins": [
+     "clk"
+    ],
+    "tt_mean": 436.6,
+    "ff_mean": 364.1,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/dsdv_gunit_l5/views/dsdv_gunit_l5/insertion.json",
+    "n": 1726,
+    "boundary": {
+     "tt": {
+      "n": 1726,
+      "mean": 436.6,
+      "min": 405.7,
+      "max": 507.6
+     },
+     "tt_all_spread": 121.5,
+     "ff": {
+      "n": 1726,
+      "mean": 364.1,
+      "min": 334.8,
+      "max": 430.1
+     },
+     "ff_all_spread": 109.1,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/ref_tile/dsdv_gunit_l5/views/dsdv_gunit_l5/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view)",
+   "tt": {
+    "n": 1726,
+    "mean": 436.6,
+    "min": 405.7,
+    "max": 507.6
+   },
+   "ff": {
+    "n": 1726,
+    "mean": 364.1,
+    "min": 334.8,
+    "max": 430.1
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 436.6,
+    "insertion_ff_ps": 364.1,
+    "early_tt_ps": 186.6,
+    "early_ff_ps": 161.6,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/dsdv_gunit_l5/views/dsdv_gunit_l5/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 364.1,
+    "late": 66.0,
+    "early": 29.3,
+    "hold_in": -62.5,
+    "hold_out": -21.0,
+    "hold_in_u60": -97.5,
+    "hold_out_u60": -56.0,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 121.5
+  },
+  {
+   "module": "dsdv_gunit_l1",
+   "placements": 1,
+   "types": 1,
+   "plan_lef": [
+    "physical/ref_tile/dsdv_gunit_l1/views/dsdv_gunit_l1/dsdv_gunit_l1.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     345.6,
+     216.0
+    ],
+    "npins": 4133,
+    "pins_sha": "2c6644d476"
+   },
+   "view_lib": "physical/ref_tile/dsdv_gunit_l1/views/dsdv_gunit_l1/dsdv_gunit_l1_tt.lib",
+   "identity": "plan_lef_view_dir",
+   "view_lib_sha": "66a52694d94b",
+   "view_measure": {
+    "pins": [
+     "clk"
+    ],
+    "tt_mean": 306.7,
+    "ff_mean": 254.7,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/dsdv_gunit_l1/views/dsdv_gunit_l1/insertion.json",
+    "n": 3737,
+    "boundary": {
+     "tt": {
+      "n": 3737,
+      "mean": 306.7,
+      "min": 274.0,
+      "max": 350.0
+     },
+     "tt_all_spread": 76.0,
+     "ff": {
+      "n": 3737,
+      "mean": 254.7,
+      "min": 222.7,
+      "max": 296.4
+     },
+     "ff_all_spread": 73.7,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/ref_tile/dsdv_gunit_l1/views/dsdv_gunit_l1/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view)",
+   "tt": {
+    "n": 3737,
+    "mean": 306.7,
+    "min": 274.0,
+    "max": 350.0
+   },
+   "ff": {
+    "n": 3737,
+    "mean": 254.7,
+    "min": 222.7,
+    "max": 296.4
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 306.7,
+    "insertion_ff_ps": 254.7,
+    "early_tt_ps": 56.7,
+    "early_ff_ps": 52.2,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/dsdv_gunit_l1/views/dsdv_gunit_l1/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 254.7,
+    "late": 41.7,
+    "early": 32.0,
+    "hold_in": -31.5,
+    "hold_out": -18.1,
+    "hold_in_u60": -66.5,
+    "hold_out_u60": -53.1,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 76.0
+  },
+  {
+   "module": "dsdv_gunit_l1c",
+   "placements": 1,
+   "types": 1,
+   "plan_lef": [
+    "physical/ref_tile/dsdv_gunit_l1c/views/dsdv_gunit_l1c/dsdv_gunit_l1c.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     86.4,
+     216.0
+    ],
+    "npins": 1322,
+    "pins_sha": "2c539304fa"
+   },
+   "view_lib": "physical/ref_tile/dsdv_gunit_l1c/views/dsdv_gunit_l1c/dsdv_gunit_l1c_tt.lib",
+   "identity": "plan_lef_view_dir",
+   "view_lib_sha": "f563ec1febad",
+   "view_measure": {
+    "pins": [
+     "clk"
+    ],
+    "tt_mean": 217.3,
+    "ff_mean": 181.1,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/dsdv_gunit_l1c/views/dsdv_gunit_l1c/insertion.json",
+    "n": 1308,
+    "boundary": {
+     "tt": {
+      "n": 1308,
+      "mean": 217.3,
+      "min": 201.6,
+      "max": 237.8
+     },
+     "tt_all_spread": 51.3,
+     "ff": {
+      "n": 1308,
+      "mean": 181.1,
+      "min": 165.2,
+      "max": 201.5
+     },
+     "ff_all_spread": 48.8,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/ref_tile/dsdv_gunit_l1c/views/dsdv_gunit_l1c/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view)",
+   "tt": {
+    "n": 1308,
+    "mean": 217.3,
+    "min": 201.6,
+    "max": 237.8
+   },
+   "ff": {
+    "n": 1308,
+    "mean": 181.1,
+    "min": 165.2,
+    "max": 201.5
+   },
+   "tap": {
+    "early": false,
+    "within_band": false,
+    "insertion_ps": 217.3,
+    "insertion_ff_ps": 181.1,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/dsdv_gunit_l1c/views/dsdv_gunit_l1c/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 181.1,
+    "late": 20.4,
+    "early": 15.9,
+    "hold_in": -5.5,
+    "hold_out": 0.8,
+    "hold_in_u60": -40.5,
+    "hold_out_u60": -34.2,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 51.3
+  },
+  {
+   "module": "dsdv_gunit_l0",
+   "placements": 1,
+   "types": 1,
+   "plan_lef": [
+    "physical/ref_tile/dsdv_gunit_l0/views/dsdv_gunit_l0/dsdv_gunit_l0.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     345.6,
+     172.8
+    ],
+    "npins": 3859,
+    "pins_sha": "56f35daba5"
+   },
+   "view_lib": "physical/ref_tile/dsdv_gunit_l0/views/dsdv_gunit_l0/dsdv_gunit_l0_tt.lib",
+   "identity": "plan_lef_view_dir",
+   "view_lib_sha": "be2197e2b761",
+   "view_measure": {
+    "pins": [
+     "clk"
+    ],
+    "tt_mean": 286.1,
+    "ff_mean": 235.4,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/dsdv_gunit_l0/views/dsdv_gunit_l0/insertion.json",
+    "n": 3719,
+    "boundary": {
+     "tt": {
+      "n": 3719,
+      "mean": 286.1,
+      "min": 261.9,
+      "max": 320.1
+     },
+     "tt_all_spread": 58.2,
+     "ff": {
+      "n": 3719,
+      "mean": 235.4,
+      "min": 212.4,
+      "max": 268.0
+     },
+     "ff_all_spread": 55.6,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/ref_tile/dsdv_gunit_l0/views/dsdv_gunit_l0/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view)",
+   "tt": {
+    "n": 3719,
+    "mean": 286.1,
+    "min": 261.9,
+    "max": 320.1
+   },
+   "ff": {
+    "n": 3719,
+    "mean": 235.4,
+    "min": 212.4,
+    "max": 268.0
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 286.1,
+    "insertion_ff_ps": 235.4,
+    "early_tt_ps": 36.1,
+    "early_ff_ps": 32.9,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/dsdv_gunit_l0/views/dsdv_gunit_l0/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 235.4,
+    "late": 32.6,
+    "early": 23.0,
+    "hold_in": -21.0,
+    "hold_out": -8.6,
+    "hold_in_u60": -56.0,
+    "hold_out_u60": -43.6,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 58.2
+  },
+  {
+   "module": "dsdv_gunit_l2",
+   "placements": 1,
+   "types": 1,
+   "plan_lef": [
+    "physical/ref_tile/dsdv_gunit_l2/views/dsdv_gunit_l2/dsdv_gunit_l2.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     345.6,
+     172.8
+    ],
+    "npins": 3584,
+    "pins_sha": "bd6cbc6013"
+   },
+   "view_lib": "physical/ref_tile/dsdv_gunit_l2/views/dsdv_gunit_l2/dsdv_gunit_l2_tt.lib",
+   "identity": "plan_lef_view_dir",
+   "view_lib_sha": "a31d7d8f455c",
+   "view_measure": {
+    "pins": [
+     "clk"
+    ],
+    "tt_mean": 276.7,
+    "ff_mean": 226.9,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/dsdv_gunit_l2/views/dsdv_gunit_l2/insertion.json",
+    "n": 3587,
+    "boundary": {
+     "tt": {
+      "n": 3587,
+      "mean": 276.7,
+      "min": 255.7,
+      "max": 304.6
+     },
+     "tt_all_spread": 48.9,
+     "ff": {
+      "n": 3587,
+      "mean": 226.9,
+      "min": 206.3,
+      "max": 253.6
+     },
+     "ff_all_spread": 47.3,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/ref_tile/dsdv_gunit_l2/views/dsdv_gunit_l2/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view)",
+   "tt": {
+    "n": 3587,
+    "mean": 276.7,
+    "min": 255.7,
+    "max": 304.6
+   },
+   "ff": {
+    "n": 3587,
+    "mean": 226.9,
+    "min": 206.3,
+    "max": 253.6
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 276.7,
+    "insertion_ff_ps": 226.9,
+    "early_tt_ps": 26.7,
+    "early_ff_ps": 24.4,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/dsdv_gunit_l2/views/dsdv_gunit_l2/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 226.9,
+    "late": 26.7,
+    "early": 20.6,
+    "hold_in": -14.4,
+    "hold_out": -5.9,
+    "hold_in_u60": -49.4,
+    "hold_out_u60": -40.9,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 48.9
+  },
+  {
+   "module": "dsdv_gunit_l3",
+   "placements": 1,
+   "types": 1,
+   "plan_lef": [
+    "physical/ref_tile/dsdv_gunit_l3/views/dsdv_gunit_l3/dsdv_gunit_l3.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     345.6,
+     172.8
+    ],
+    "npins": 1966,
+    "pins_sha": "0ef02c3530"
+   },
+   "view_lib": "physical/ref_tile/dsdv_gunit_l3/views/dsdv_gunit_l3/dsdv_gunit_l3_tt.lib",
+   "identity": "plan_lef_view_dir",
+   "view_lib_sha": "e310a90b5e98",
+   "view_measure": {
+    "pins": [
+     "clk"
+    ],
+    "tt_mean": 257.6,
+    "ff_mean": 212.6,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/dsdv_gunit_l3/views/dsdv_gunit_l3/insertion.json",
+    "n": 1864,
+    "boundary": {
+     "tt": {
+      "n": 1864,
+      "mean": 257.6,
+      "min": 232.3,
+      "max": 293.3
+     },
+     "tt_all_spread": 65.1,
+     "ff": {
+      "n": 1864,
+      "mean": 212.6,
+      "min": 189.2,
+      "max": 247.7
+     },
+     "ff_all_spread": 62.4,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/ref_tile/dsdv_gunit_l3/views/dsdv_gunit_l3/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view)",
+   "tt": {
+    "n": 1864,
+    "mean": 257.6,
+    "min": 232.3,
+    "max": 293.3
+   },
+   "ff": {
+    "n": 1864,
+    "mean": 212.6,
+    "min": 189.2,
+    "max": 247.7
+   },
+   "tap": {
+    "early": false,
+    "within_band": true,
+    "insertion_ps": 257.6,
+    "insertion_ff_ps": 212.6,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/dsdv_gunit_l3/views/dsdv_gunit_l3/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 202.5,
+    "late": 45.2,
+    "early": 13.3,
+    "hold_in": -32.6,
+    "hold_out": 2.2,
+    "hold_in_u60": -67.6,
+    "hold_out_u60": -32.8,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 65.1
+  },
+  {
+   "module": "dsdv_gunit_l0r",
+   "placements": 1,
+   "types": 1,
+   "plan_lef": [
+    "physical/ref_tile/dsdv_gunit_l0r/views/dsdv_gunit_l0r/dsdv_gunit_l0r.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     172.8,
+     172.8
+    ],
+    "npins": 737,
+    "pins_sha": "9a51c561cb"
+   },
+   "view_lib": "physical/ref_tile/dsdv_gunit_l0r/views/dsdv_gunit_l0r/dsdv_gunit_l0r_tt.lib",
+   "identity": "plan_lef_view_dir",
+   "view_lib_sha": "ec3aeba70e1d",
+   "view_measure": {
+    "pins": [
+     "clk"
+    ],
+    "tt_mean": 236.3,
+    "ff_mean": 193.2,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/dsdv_gunit_l0r/views/dsdv_gunit_l0r/insertion.json",
+    "n": 739,
+    "boundary": {
+     "tt": {
+      "n": 739,
+      "mean": 236.3,
+      "min": 229.7,
+      "max": 242.2
+     },
+     "tt_all_spread": 20.4,
+     "ff": {
+      "n": 739,
+      "mean": 193.2,
+      "min": 186.6,
+      "max": 199.2
+     },
+     "ff_all_spread": 20.4,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/ref_tile/dsdv_gunit_l0r/views/dsdv_gunit_l0r/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view)",
+   "tt": {
+    "n": 739,
+    "mean": 236.3,
+    "min": 229.7,
+    "max": 242.2
+   },
+   "ff": {
+    "n": 739,
+    "mean": 193.2,
+    "min": 186.6,
+    "max": 199.2
+   },
+   "tap": {
+    "early": false,
+    "within_band": false,
+    "insertion_ps": 236.3,
+    "insertion_ff_ps": 193.2,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/dsdv_gunit_l0r/views/dsdv_gunit_l0r/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 193.2,
+    "late": 6.0,
+    "early": 6.6,
+    "hold_in": 9.0,
+    "hold_out": 9.1,
+    "hold_in_u60": -26.0,
+    "hold_out_u60": -25.9,
+    "verdict": "PASS",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 20.4
+  },
+  {
+   "module": "dsdv_gunit_l5f",
+   "placements": 1,
+   "types": 1,
+   "plan_lef": [
+    "physical/ref_tile/dsdv_gunit_l5f/views/dsdv_gunit_l5f/dsdv_gunit_l5f.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     151.2,
+     151.2
+    ],
+    "npins": 136,
+    "pins_sha": "d564a128ba"
+   },
+   "view_lib": "physical/ref_tile/dsdv_gunit_l5f/views/dsdv_gunit_l5f/dsdv_gunit_l5f_tt.lib",
+   "identity": "plan_lef_view_dir",
+   "view_lib_sha": "038d711a22e6",
+   "view_measure": {
+    "pins": [
+     "clk"
+    ],
+    "tt_mean": 205.4,
+    "ff_mean": 167.6,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/dsdv_gunit_l5f/views/dsdv_gunit_l5f/insertion.json",
+    "n": 138,
+    "boundary": {
+     "tt": {
+      "n": 138,
+      "mean": 205.4,
+      "min": 199.9,
+      "max": 211.3
+     },
+     "tt_all_spread": 27.9,
+     "ff": {
+      "n": 138,
+      "mean": 167.6,
+      "min": 162.5,
+      "max": 173.5
+     },
+     "ff_all_spread": 26.7,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/ref_tile/dsdv_gunit_l5f/views/dsdv_gunit_l5f/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view)",
+   "tt": {
+    "n": 138,
+    "mean": 205.4,
+    "min": 199.9,
+    "max": 211.3
+   },
+   "ff": {
+    "n": 138,
+    "mean": 167.6,
+    "min": 162.5,
+    "max": 173.5
+   },
+   "tap": {
+    "early": false,
+    "within_band": false,
+    "insertion_ps": 205.4,
+    "insertion_ff_ps": 167.6,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/dsdv_gunit_l5f/views/dsdv_gunit_l5f/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 167.6,
+    "late": 5.9,
+    "early": 5.1,
+    "hold_in": 10.4,
+    "hold_out": 11.8,
+    "hold_in_u60": -24.6,
+    "hold_out_u60": -23.2,
+    "verdict": "PASS",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 27.9
+  },
+  {
+   "module": "dsdv_gunit_l4r",
+   "placements": 1,
+   "types": 1,
+   "plan_lef": [
+    "physical/ref_tile/dsdv_gunit_l4r/views/dsdv_gunit_l4r/dsdv_gunit_l4r.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     129.6,
+     129.6
+    ],
+    "npins": 101,
+    "pins_sha": "8c7ca9d554"
+   },
+   "view_lib": "physical/ref_tile/dsdv_gunit_l4r/views/dsdv_gunit_l4r/dsdv_gunit_l4r_tt.lib",
+   "identity": "plan_lef_view_dir",
+   "view_lib_sha": "1d0c97032542",
+   "view_measure": {
+    "pins": [
+     "clk"
+    ],
+    "tt_mean": 190.6,
+    "ff_mean": 157.0,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/dsdv_gunit_l4r/views/dsdv_gunit_l4r/insertion.json",
+    "n": 104,
+    "boundary": {
+     "tt": {
+      "n": 104,
+      "mean": 190.6,
+      "min": 184.2,
+      "max": 194.8
+     },
+     "tt_all_spread": 27.4,
+     "ff": {
+      "n": 104,
+      "mean": 157.0,
+      "min": 151.1,
+      "max": 161.2
+     },
+     "ff_all_spread": 26.9,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/ref_tile/dsdv_gunit_l4r/views/dsdv_gunit_l4r/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view)",
+   "tt": {
+    "n": 104,
+    "mean": 190.6,
+    "min": 184.2,
+    "max": 194.8
+   },
+   "ff": {
+    "n": 104,
+    "mean": 157.0,
+    "min": 151.1,
+    "max": 161.2
+   },
+   "tap": {
+    "early": false,
+    "within_band": false,
+    "insertion_ps": 190.6,
+    "insertion_ff_ps": 157.0,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/dsdv_gunit_l4r/views/dsdv_gunit_l4r/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 157.0,
+    "late": 4.2,
+    "early": 5.9,
+    "hold_in": 12.7,
+    "hold_out": 11.5,
+    "hold_in_u60": -22.3,
+    "hold_out_u60": -23.5,
+    "verdict": "PASS",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 27.4
+  },
+  {
+   "module": "dsdv_gunit_l4",
+   "placements": 1,
+   "types": 1,
+   "plan_lef": [
+    "physical/ref_tile/dsdv_gunit_l4/views/dsdv_gunit_l4/dsdv_gunit_l4.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     345.6,
+     64.8
+    ],
+    "npins": 2741,
+    "pins_sha": "2dfe28ab22"
+   },
+   "view_lib": "physical/ref_tile/dsdv_gunit_l4/views/dsdv_gunit_l4/dsdv_gunit_l4_tt.lib",
+   "identity": "plan_lef_view_dir",
+   "view_lib_sha": "ce256877e6bc",
+   "view_measure": {
+    "pins": [
+     "clk"
+    ],
+    "tt_mean": 303.0,
+    "ff_mean": 252.9,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/dsdv_gunit_l4/views/dsdv_gunit_l4/insertion.json",
+    "n": 2745,
+    "boundary": {
+     "tt": {
+      "n": 2745,
+      "mean": 303.0,
+      "min": 276.3,
+      "max": 329.1
+     },
+     "tt_all_spread": 63.3,
+     "ff": {
+      "n": 2745,
+      "mean": 252.9,
+      "min": 226.4,
+      "max": 278.4
+     },
+     "ff_all_spread": 61.3,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/ref_tile/dsdv_gunit_l4/views/dsdv_gunit_l4/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view)",
+   "tt": {
+    "n": 2745,
+    "mean": 303.0,
+    "min": 276.3,
+    "max": 329.1
+   },
+   "ff": {
+    "n": 2745,
+    "mean": 252.9,
+    "min": 226.4,
+    "max": 278.4
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 303.0,
+    "insertion_ff_ps": 252.9,
+    "early_tt_ps": 53.0,
+    "early_ff_ps": 50.4,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/dsdv_gunit_l4/views/dsdv_gunit_l4/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 252.9,
+    "late": 25.5,
+    "early": 26.5,
+    "hold_in": -14.4,
+    "hold_out": -12.8,
+    "hold_in_u60": -49.4,
+    "hold_out_u60": -47.8,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 63.3
+  },
+  {
+   "module": "dsdv_idx_tx_n32",
+   "placements": 1,
+   "types": 1,
+   "plan_lef": [
+    "physical/s81_die_views/closed_import/dsdv_idx_tx_n32/dsdv_idx_tx_n32.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     626.4,
+     561.6
+    ],
+    "npins": 846,
+    "pins_sha": "59e9efeffe"
+   },
+   "view_lib": "physical/s81_die_views/closed_import/dsdv_idx_tx_n32/dsdv_idx_tx_n32_tt.lib",
+   "identity": "plan_lef_view_dir",
+   "view_lib_sha": "8eec0a670c9b",
+   "view_measure": {
+    "error": "physical/s81_die_views/closed_import/dsdv_idx_tx_n32/dsdv_idx_tx_n32_tt.lib: pin-register mean measurement missing (no ETM-max fallback)"
+   },
+   "signed_records": [],
+   "extra": {
+    "label": "lib_etm_range physical/s81_die_views/closed_import/dsdv_idx_tx_n32 (ETM min/max_clock_tree_path only; mean = midpoint, NOT a register census)",
+    "tt": {
+     "mean": 829.1,
+     "min": 727.6,
+     "max": 930.6
+    },
+    "ff": {
+     "mean": 665.2,
+     "min": 582.2,
+     "max": 748.1
+    },
+    "checked": "UNCHECKED (ETM range, no routed census)"
+   },
+   "source": "lib_etm_range physical/s81_die_views/closed_import/dsdv_idx_tx_n32 (ETM min/max_clock_tree_path only; mean = midpoint, NOT a register census)",
+   "label": "UNCHECKED (ETM range, no routed census)",
+   "tt": {
+    "mean": 829.1,
+    "min": 727.6,
+    "max": 930.6
+   },
+   "ff": {
+    "mean": 665.2,
+    "min": 582.2,
+    "max": 748.1
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 829.1,
+    "insertion_ff_ps": 665.2,
+    "early_tt_ps": 579.1,
+    "early_ff_ps": 462.7,
+    "budget_owner": "parent_budget physical/s81_die_views/closed_import/dsdv_idx_tx_n32 (ETM min/max_clock_tree_path only; mean = midpoint, NOT a register census)"
+   },
+   "hold_est": {
+    "comp_ff": 665.2,
+    "late": 82.9,
+    "early": 83.0,
+    "hold_in": -95.3,
+    "hold_out": -87.1,
+    "hold_in_u60": -130.3,
+    "hold_out_u60": -122.1,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": null
+  },
+  {
+   "module": "dsdv_bksel_c",
+   "placements": 1,
+   "types": 1,
+   "plan_lef": [
+    "physical/ref_tile/s81dvbk_selc2/views/dsdv_bksel_c/dsdv_bksel_c.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     388.8,
+     172.8
+    ],
+    "npins": 5660,
+    "pins_sha": "8d1d62fa58"
+   },
+   "view_lib": "physical/ref_tile/s81dvbk_selc2/views/dsdv_bksel_c/dsdv_bksel_c_tt.lib",
+   "identity": "plan_lef_view_dir",
+   "view_lib_sha": "55e09cb3705e",
+   "view_measure": {
+    "pins": [
+     "ck[0]"
+    ],
+    "tt_mean": 367.2,
+    "ff_mean": 302.2,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/s81dvbk_selc2/views/dsdv_bksel_c/insertion.json",
+    "n": 5349,
+    "boundary": {
+     "tt": {
+      "n": 5349,
+      "mean": 367.2,
+      "min": 347.7,
+      "max": 399.3
+     },
+     "tt_all_spread": 55.2,
+     "ff": {
+      "n": 5349,
+      "mean": 302.2,
+      "min": 284.2,
+      "max": 332.7
+     },
+     "ff_all_spread": 51.6,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/ref_tile/s81dvbk_selc2/views/dsdv_bksel_c/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view)",
+   "tt": {
+    "n": 5349,
+    "mean": 367.2,
+    "min": 347.7,
+    "max": 399.3
+   },
+   "ff": {
+    "n": 5349,
+    "mean": 302.2,
+    "min": 284.2,
+    "max": 332.7
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 367.2,
+    "insertion_ff_ps": 302.2,
+    "early_tt_ps": 117.2,
+    "early_ff_ps": 99.7,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81dvbk_selc2/views/dsdv_bksel_c/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 302.2,
+    "late": 30.5,
+    "early": 18.0,
+    "hold_in": -22.1,
+    "hold_out": -7.2,
+    "hold_in_u60": -57.1,
+    "hold_out_u60": -42.2,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 55.2
+  },
+  {
+   "module": "dsdv_bk_g",
+   "placements": 1,
+   "types": 1,
+   "plan_lef": [
+    "physical/ref_tile/s81dvbk_g2/views/dsdv_bk_g/dsdv_bk_g.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     216.0,
+     172.8
+    ],
+    "npins": 3712,
+    "pins_sha": "49c08b0619"
+   },
+   "view_lib": "physical/ref_tile/s81dvbk_g2/views/dsdv_bk_g/dsdv_bk_g_tt.lib",
+   "identity": "plan_lef_view_dir",
+   "view_lib_sha": "1b546f907544",
+   "view_measure": {
+    "pins": [
+     "clk[0]"
+    ],
+    "tt_mean": 329.2,
+    "ff_mean": 269.0,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/s81dvbk_g2/views/dsdv_bk_g/insertion.json",
+    "n": 3709,
+    "boundary": {
+     "tt": {
+      "n": 3709,
+      "mean": 329.2,
+      "min": 299.4,
+      "max": 366.9
+     },
+     "tt_all_spread": 67.5,
+     "ff": {
+      "n": 3709,
+      "mean": 269.0,
+      "min": 242.9,
+      "max": 302.5
+     },
+     "ff_all_spread": 59.6,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/ref_tile/s81dvbk_g2/views/dsdv_bk_g/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view)",
+   "tt": {
+    "n": 3709,
+    "mean": 329.2,
+    "min": 299.4,
+    "max": 366.9
+   },
+   "ff": {
+    "n": 3709,
+    "mean": 269.0,
+    "min": 242.9,
+    "max": 302.5
+   },
+   "tap": {
+    "early": true,
+    "within_band": false,
+    "insertion_ps": 329.2,
+    "insertion_ff_ps": 269.0,
+    "early_tt_ps": 79.2,
+    "early_ff_ps": 66.5,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/s81dvbk_g2/views/dsdv_bk_g/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 269.0,
+    "late": 33.5,
+    "early": 26.1,
+    "hold_in": -23.6,
+    "hold_out": -13.2,
+    "hold_in_u60": -58.6,
+    "hold_out_u60": -48.2,
+    "verdict": "FAIL",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 67.5
+  },
+  {
+   "module": "dsdv_eng_rr_e",
+   "placements": 1,
+   "types": 1,
+   "plan_lef": [
+    "physical/die_plan/s81/cores/eng/lef/dsdv_eng_rr_e_e2.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     410.4,
+     466.56
+    ],
+    "npins": 2690,
+    "pins_sha": "a28e84b767"
+   },
+   "lef_candidates": [],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "source": null,
+   "label": "UNCHECKED",
+   "tt": null,
+   "ff": null
+  },
+  {
+   "module": "dsdv_eng_rr_h0",
+   "placements": 1,
+   "types": 1,
+   "plan_lef": [
+    "physical/die_plan/s81/cores/eng/lef/dsdv_eng_rr_h0.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     164.16,
+     267.84
+    ],
+    "npins": 645,
+    "pins_sha": "bc5e7a6dd4"
+   },
+   "lef_candidates": [],
+   "view_lib": null,
+   "identity": "NO_MATCHING_VIEW",
+   "view_lib_sha": null,
+   "view_measure": null,
+   "signed_records": [],
+   "source": null,
+   "label": "UNCHECKED",
+   "tt": null,
+   "ff": null
+  },
+  {
+   "module": "dsdv_eng_rr_h1",
+   "placements": 1,
+   "types": 1,
+   "plan_lef": [
+    "physical/die_plan/s81/cores/eng/lef/dsdv_eng_rr_h1.lef"
+   ],
+   "plan_lib": [
+    "None"
+   ],
+   "plan_lef_sig": {
+    "size": [
+     164.16,
+     267.84
+    ],
+    "npins": 645,
+    "pins_sha": "bc5e7a6dd4"
+   },
+   "lef_candidates": [
+    {
+     "lef": "physical/ref_tile/dsdv_eng_rr_h1/views/dsdv_eng_rr_h1/dsdv_eng_rr_h1.lef",
+     "sig": {
+      "size": [
+       164.16,
+       267.84
+      ],
+      "npins": 645,
+      "pins_sha": "bc5e7a6dd4"
+     },
+     "match": true
+    }
+   ],
+   "view_lib": "physical/ref_tile/dsdv_eng_rr_h1/views/dsdv_eng_rr_h1/dsdv_eng_rr_h1_tt.lib",
+   "identity": "lef_match_unique",
+   "view_lib_sha": "2711e51df958",
+   "view_measure": {
+    "pins": [
+     "ck"
+    ],
+    "tt_mean": 263.18,
+    "ff_mean": 211.69,
+    "basis": "pin_register_mean",
+    "signed": false,
+    "contract_source": "physical/ref_tile/dsdv_eng_rr_h1/views/dsdv_eng_rr_h1/insertion.json",
+    "n": 644,
+    "boundary": {
+     "tt": {
+      "n": 644,
+      "mean": 263.18,
+      "min": 248.76,
+      "max": 269.32
+     },
+     "tt_all_spread": 54.0,
+     "ff": {
+      "n": 644,
+      "mean": 211.69,
+      "min": 204.12,
+      "max": 216.52
+     },
+     "ff_all_spread": 43.4,
+     "raw_source": true,
+     "parasitics": "spef"
+    }
+   },
+   "signed_records": [],
+   "source": "parent_budget pin_register_mean physical/ref_tile/dsdv_eng_rr_h1/views/dsdv_eng_rr_h1/insertion.json",
+   "label": "CHECKED (main core_clock_contract.load on the placed view)",
+   "tt": {
+    "n": 644,
+    "mean": 263.18,
+    "min": 248.76,
+    "max": 269.32
+   },
+   "ff": {
+    "n": 644,
+    "mean": 211.69,
+    "min": 204.12,
+    "max": 216.52
+   },
+   "tap": {
+    "early": false,
+    "within_band": true,
+    "insertion_ps": 263.18,
+    "insertion_ff_ps": 211.69,
+    "early_tt_ps": 0.0,
+    "early_ff_ps": 0.0,
+    "budget_owner": "parent_budget pin_register_mean physical/ref_tile/dsdv_eng_rr_h1/views/dsdv_eng_rr_h1/insertion.json"
+   },
+   "hold_est": {
+    "comp_ff": 202.5,
+    "late": 14.0,
+    "early": -1.6,
+    "hold_in": 0.2,
+    "hold_out": 14.8,
+    "hold_in_u60": -34.8,
+    "hold_out_u60": -20.2,
+    "verdict": "PASS",
+    "label": "UNCHECKED model"
+   },
+   "spread_tt_all": 54.0
+  }
+ ]
+}

@@ -1,0 +1,184 @@
+{
+ "kv3_head_eighth_e1": {
+  "label": "parent_budget register census physical/ref_tile/kv3_head_eighth_e1/views/kv3_head_eighth_e1/kv3_head_eighth_e1.core.json clock_latency_measured (routed; all registers, n=534)",
+  "tt": {
+   "mean": 289.4,
+   "min": 281.19,
+   "max": 297.02
+  },
+  "ff": {
+   "mean": 233.21,
+   "min": 225.74,
+   "max": 240.86
+  },
+  "checked": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)"
+ },
+ "kv3_head_eighth_e6": {
+  "label": "parent_budget register census physical/ref_tile/kv3_head_eighth_e6/views/kv3_head_eighth_e6/kv3_head_eighth_e6.core.json clock_latency_measured (routed; all registers, n=1303)",
+  "tt": {
+   "mean": 291.08,
+   "min": 276.63,
+   "max": 303.07
+  },
+  "ff": {
+   "mean": 234.28,
+   "min": 221.68,
+   "max": 245.55
+  },
+  "checked": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)"
+ },
+ "kv3_head_eighth_e5": {
+  "label": "parent_budget register census physical/ref_tile/kv3_head_eighth_e5/views/kv3_head_eighth_e5/kv3_head_eighth_e5.core.json clock_latency_measured (routed; all registers, n=534)",
+  "tt": {
+   "mean": 291.53,
+   "min": 286.03,
+   "max": 298.85
+  },
+  "ff": {
+   "mean": 234.98,
+   "min": 229.96,
+   "max": 241.21
+  },
+  "checked": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)"
+ },
+ "kv3_pv_pair": {
+  "label": "parent_budget lib_etm_range physical/ref_tile/kv3_pv_pair/views/kv3_pv_pair (ETM min..max clock_tree_path, mean = midpoint; NOT a register census)",
+  "tt": {
+   "mean": 352.7,
+   "min": 307.0,
+   "max": 398.5
+  },
+  "ff": {
+   "mean": 280.8,
+   "min": 245.9,
+   "max": 315.8
+  },
+  "checked": "UNCHECKED (ETM range; view identity by module name)"
+ },
+ "kv3_head_eighth_e0": {
+  "label": "parent_budget register census physical/ref_tile/kv3_head_eighth_e0/views/kv3_head_eighth_e0/kv3_head_eighth_e0.core.json clock_latency_measured (routed; all registers, n=1731)",
+  "tt": {
+   "mean": 294.15,
+   "min": 286.32,
+   "max": 304.88
+  },
+  "ff": {
+   "mean": 237.11,
+   "min": 229.35,
+   "max": 246.99
+  },
+  "checked": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)"
+ },
+ "kv3_head_eighth_e2": {
+  "label": "parent_budget register census physical/ref_tile/kv3_head_eighth_e2/views/kv3_head_eighth_e2/kv3_head_eighth_e2.core.json clock_latency_measured (routed; all registers, n=1303)",
+  "tt": {
+   "mean": 293.69,
+   "min": 284.68,
+   "max": 310.74
+  },
+  "ff": {
+   "mean": 236.66,
+   "min": 228.19,
+   "max": 253.0
+  },
+  "checked": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)"
+ },
+ "ot_qwen_tp8_pv_join_t": {
+  "label": "parent_budget pin_register_mean physical/ref_tile/qkd_pv_join/views/ot_qwen_tp8_pv_join_t/insertion.json boundary (routed spef)",
+  "tt": {
+   "mean": 230.1,
+   "min": 210.3,
+   "max": 260.5
+  },
+  "ff": {
+   "mean": 188.2,
+   "min": 169.5,
+   "max": 219.3
+  },
+  "checked": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)"
+ },
+ "qkd_kvs_ctl": {
+  "label": "parent_budget pin_register_mean physical/ref_tile/qkd_kvs_ctl/views/qkd_kvs_ctl/insertion.json boundary (routed spef)",
+  "tt": {
+   "mean": 513.6,
+   "min": 481.4,
+   "max": 603.2
+  },
+  "ff": {
+   "mean": 421.5,
+   "min": 390.9,
+   "max": 500.2
+  },
+  "checked": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)"
+ },
+ "qkd_hr_core_order": {
+  "label": "parent_budget pin_register_mean physical/ref_tile/qkd_hr_core_order/views/qkd_hr_core_order/insertion.json boundary (routed spef)",
+  "tt": {
+   "mean": 264.1,
+   "min": 247.4,
+   "max": 273.7
+  },
+  "ff": {
+   "mean": 216.0,
+   "min": 200.8,
+   "max": 225.4
+  },
+  "checked": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)"
+ },
+ "qkd_hr_cdc_pc": {
+  "label": "parent_budget pin_register_mean physical/ref_tile/qkd_hr_cdc_pc/views/qkd_hr_cdc_pc/insertion.json boundary (routed spef)",
+  "tt": {
+   "mean": 237.0,
+   "min": 226.8,
+   "max": 252.4
+  },
+  "ff": {
+   "mean": 195.0,
+   "min": 184.7,
+   "max": 210.9
+  },
+  "checked": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)"
+ },
+ "qkd_hr_core_tx": {
+  "label": "parent_budget pin_register_mean physical/ref_tile/qkd_hr_core_tx/views/qkd_hr_core_tx/insertion.json boundary (routed spef)",
+  "tt": {
+   "mean": 187.5,
+   "min": 173.0,
+   "max": 203.6
+  },
+  "ff": {
+   "mean": 154.2,
+   "min": 141.2,
+   "max": 169.9
+  },
+  "checked": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)"
+ },
+ "qkd_hr_core_guard": {
+  "label": "parent_budget pin_register_mean physical/ref_tile/qkd_hr_core_guard/views/qkd_hr_core_guard/insertion.json boundary (routed spef)",
+  "tt": {
+   "mean": 212.3,
+   "min": 199.1,
+   "max": 235.2
+  },
+  "ff": {
+   "mean": 173.9,
+   "min": 161.6,
+   "max": 196.9
+  },
+  "checked": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)"
+ },
+ "qkd_hr_core_queue": {
+  "label": "parent_budget pin_register_mean physical/ref_tile/qkd_hr_core_queue/views/qkd_hr_core_queue/insertion.json boundary (routed spef)",
+  "tt": {
+   "mean": 202.4,
+   "min": 190.0,
+   "max": 219.3
+  },
+  "ff": {
+   "mean": 167.9,
+   "min": 155.3,
+   "max": 185.4
+  },
+  "checked": "CHECKED read; view identity UNCHECKED (plan binds no view; module-name pick)"
+ }
+}
