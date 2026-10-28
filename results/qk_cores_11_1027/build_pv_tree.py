@@ -64,9 +64,7 @@ if "--dry" in sys.argv:
     plan = CI.compile_slice(sl, None); print("COMPILE OK depth", plan["core_tree"]["depth"], "reach", sl["plan_prediction"]); sys.exit(0)
 CI.install(kd, sl)
 (kd / "pv_tree_slice.json").write_text(json.dumps(sl, indent=1) + "\n")
-(kd / "pv_tree_pre_gpl.tcl").write_text(
-    "# QK-CORES-11: face_flops (pass-1 reserve + island ft + face regs), then the plan in-core clock tree (FIRM nodes)\n"
-    "source /work/face_flops.tcl\nsource /work/master_core_infra.tcl\nputs \"PV_TREE_INSTALLED 4 branch + 4 island nodes\"\n")
+(kd / "pv_tree_pre_gpl.tcl").write_text((Path(__file__).resolve().parent / "pv_tree_pre_gpl.tcl").read_text())
 cfg = (kd / "config.mk").read_text().splitlines()
 cfg.append("override export PRE_GLOBAL_PLACE_TCL = /work/pv_tree_pre_gpl.tcl")
 CI.kit_cts_hook(kd, cfg)
