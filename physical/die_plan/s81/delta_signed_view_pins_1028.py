@@ -145,7 +145,7 @@ def run(plan, plan_dir, write_tables, views=VIEWS):
                 rep[m + " | " + pf] = dict(status=st, detail=why, view=v["dir"])
                 if st == "PLAN-STALE" and write_tables:
                     with open(tp, "w") as fh:
-                        json.dump(tab, fh, indent=0)
+                        json.dump(tab, fh)          # same compact form as the CORE-KS tables (1 line, no newline)
             if done[k][0] in ("PLAN-STALE", "FOLLOWS-VIEW"):   # idempotent: a plan read after the tables moved
                 h["lef"] = v["lef"]
                 if v["lib"]:
