@@ -21,6 +21,11 @@ usage:
   parent_trunk_dme.py plan GEOM.json CLUSTER_INS.json OUT.json --entry X,Y [--pin-offset MODULE=DX,DY ...] [opts]
   parent_trunk_dme.py corr PREV.json ARRIVALS_TT.txt OUT.json [opts]
   parent_trunk_dme.py tcl PLAN.json OUT.tcl          (ICG/TI/TS lists for parent_trunk_insert.tcl)
+  parent_trunk_dme.py ocv PLAN.json ARRIVALS_TT.txt ARRIVALS_FF.txt [OUT.json]   (OCV-inclusive spread, measured)
+
+OPT-IN (DIE-QC-17): `plan --topology bipart` = balanced top-down bipartition topology (several deterministic split
+variants, the one with the smallest plan-model OCV-inclusive spread wins), embedded with the same wire-length merges.
+The default `--topology greedy` is the DIE-QC-15 planner, byte-identical.
 
 GEOM.json: {W, H, macros: [[x0,y0,x1,y1]...], clusters: [{name, root:[x,y], ...}], kids: [{inst, module, pin:[x,y]}]}
 CLUSTER_INS.json: {cluster: {TT: {mean}, FF: {mean}}} (measured cluster-root -> register insertion)
@@ -50,6 +55,7 @@ class Planner:
         self.a = a
         self.TAB = tab
         self.G = geom
+        self.pull = None          # (entry xy, ps/um) -- opt-in bipart merge-point pull; None = DIE-QC-15 behaviour
 
     # ------------------------------------------------------------ delay model (measured stage table)
     def _interp(self, C, fo, L):
@@ -211,6 +217,8 @@ class Planner:
                         x = self.solve_len(nb, Lb, ta - B["tt"]); Leb = x if x is not None else nb * a.sp * a.sp_max
                         tb = self.nd_tt(nb, Leb) + B["tt"]
                     cost = abs(ta - tb) + 0.02 * (Lea + Leb - D_) + 4 * (ea + eb)
+                    if self.pull is not None:      # bipart only: prefer the merge point nearest the tile entry
+                        cost += self.pull[1] * man(q, self.pull[0])
                     if best is None or cost < best[0]:
                         best = (cost, q, rM, na, nb, Lea, Leb)
         _, q, rM, na, nb, Lea, Leb = best
@@ -387,6 +395,8 @@ def do_plan(a):
                           tt=tt, ff=ff, r=0))
     if len(nodes) < 2:
         raise ValueError("need >= 2 sinks")
+    if a.topology == "bipart":
+        return do_plan_bipart(a, P, nodes, CI)
     live = list(nodes)
     k1 = 0.40
     while len(live) > 1:
@@ -409,6 +419,226 @@ def do_plan(a):
         n += 1
     _, rootleg, _ = P.build_leg(icg, tuple(top["p"]), n, L)
     return P.save(top, rootleg, list(icg), E, a.out, dict(iteration=0), CI, a.a1)
+
+
+# ---------------------------------------------------------------- opt-in balanced top-down bipartition (DIE-QC-17)
+# --topology bipart: the topology comes from a recursive top-down bipartition of the sink set (instead of greedy
+# bottom-up nearest-pair merging, which can leave a far singleton for the root merge: A0 nl a0cl1, 1051 of 2043 um
+# elongation), then it is embedded bottom-up with the SAME zero-skew wire-length merge (plan_merge).  Several
+# deterministic split variants are embedded and the one with the smallest OCV-INCLUSIVE spread (plan model, approved
+# clock AOCV table, hold convention, CPPR at the pair's LCA) wins; ties -> lower insertion.  Default (greedy) unchanged.
+EST_PS_PER_UM = 0.43     # CKINVDCx16 at ~110 um (stage table, TT) -- split heuristic only, never a reported number
+
+
+def _bbox(pts):
+    xs = [p[0] for p in pts]; ys = [p[1] for p in pts]
+    return min(xs), min(ys), max(xs), max(ys)
+
+
+def _est_lat(sub):
+    """crude latency of a subtree over sinks `sub`: max(sink tt + ps/um * distance to the subset centroid)"""
+    cx = sum(n["p"][0] for n in sub) / len(sub); cy = sum(n["p"][1] for n in sub) / len(sub)
+    return max(n["tt"] + EST_PS_PER_UM * man(n["p"], (cx, cy)) for n in sub)
+
+
+def _geo_split(sub, rule, axis=None):
+    x0, y0, x1, y1 = _bbox([n["p"] for n in sub])
+    ax = axis if axis is not None else (0 if (x1 - x0) >= (y1 - y0) else 1)
+    order = sorted(sub, key=lambda n: (n["p"][ax], n["p"][1 - ax], n["name"]))
+    m = len(order)
+    if rule == "count" or m < 4:
+        k = m // 2
+    else:   # "delay": cut in the middle half that best balances the two subtree latencies (+ their extents)
+        best = None
+        for k in range(max(1, m // 4), min(m - 1, (3 * m + 3) // 4) + 1):
+            A, B = order[:k], order[k:]
+            ha = sum(b - a for a, b in zip(_bbox([n["p"] for n in A])[:2], _bbox([n["p"] for n in A])[2:]))
+            hb = sum(b - a for a, b in zip(_bbox([n["p"] for n in B])[:2], _bbox([n["p"] for n in B])[2:]))
+            c = abs(_est_lat(A) - _est_lat(B)) + EST_PS_PER_UM * 0.5 * (ha + hb)
+            if best is None or c < best[0] - 1e-9:
+                best = (c, k)
+        k = best[1]
+    return order[:k], order[k:]
+
+
+def bipart_topology(sinks, top, rule, axis0):
+    """nested binary topology (lists of sink dicts).  top='type': the root splits children from glue clusters (the
+    children's 12.3 contract latency then sits on ONE shared elongated leg of the cluster side, not on every leaf
+    merge); top='geo': geometric from the root.  axis0 forces the first geometric cut axis (None = longer side)."""
+    def rec(sub, first):
+        if len(sub) == 1:
+            return sub[0]
+        A, B = _geo_split(sub, rule, axis0 if first else None)
+        return [rec(A, False), rec(B, False)]
+    if top == "type":
+        ch = [n for n in sinks if n["kind"] == "child"]; cl = [n for n in sinks if n["kind"] != "child"]
+        if ch and cl:
+            return [rec(ch, True), rec(cl, True)]
+    return rec(sinks, True)
+
+
+def embed(P, t, pull=None):
+    """bottom-up zero-skew embedding of topology t; `pull` (entry, ps/um) biases only the ROOT merge point toward the
+    tile entry (a shorter root leg; lower merges stay at their balance points)."""
+    if isinstance(t, dict):
+        return dict(t)
+    A, B = embed(P, t[0]), embed(P, t[1])
+    P.pull = pull
+    try:
+        return P.plan_merge(A, B)
+    finally:
+        P.pull = None
+
+
+def _paths(top):
+    paths = {}
+
+    def walk(n, path):
+        for lg, k in zip(n.get("legs", []), n.get("kids", [])):
+            p2 = path + [lg]
+            if k["kind"] == "merge":
+                walk(k, p2)
+            else:
+                paths[k["name"].replace("\\", "")] = (p2, k)
+    walk(top, [])
+    return paths
+
+
+def ocv_spread(T, top, rng, corners=("TT", "FF")):
+    """OCV-inclusive spread = max over ordered sink pairs (capture b late, launch a early) of rng[b].hi - rng[a].lo +
+    AOCV pessimism of the two branches below their LCA (planned legs: delay, stage count, bounding box; a cluster's
+    local tree delay is added to its branch; a child's own insertion is its signed view's and is not charged here).
+    Same region -> no droop term.  rng = {corner: {sink: (lo, hi)}}.  Same method as results/die_qc16_1028 nl_ocv.py."""
+    import clk_aocv as AO
+    paths = _paths(top); out = {}
+    for C in corners:
+        key = "d_tt" if C == "TT" else "d_ff"; sh = T["classes"]["A"][C]["cell_share"]
+        R = rng[C]; names = sorted(n for n in R if n in paths)
+        miss = sorted(n for n in R if n not in paths)
+        if miss:
+            raise ValueError("arrivals for sinks not in the plan tree: %s" % miss[:3])
+
+        def branch(n, dpt):
+            p, k = paths[n]; d = 0.0; stg = 0; xs = []
+            for lg in p[dpt:]:
+                d += lg[key]; stg += lg["n"]; xs += lg["pts"]
+            if k["kind"] == "cluster":
+                d += k[C.lower()]
+            return dict(cell_ps=d * sh, net_ps=d * (1 - sh), stages={"A": max(stg, 1)}), xs
+        worst = None
+        for a_ in names:
+            for b_ in names:
+                if a_ == b_:
+                    continue
+                pa, pb = paths[a_][0], paths[b_][0]; dpt = 0
+                while dpt < min(len(pa), len(pb)) and pa[dpt] is pb[dpt]:
+                    dpt += 1
+                ba, xa = branch(a_, dpt); bb, xb = branch(b_, dpt)
+                xy = xa + xb + [paths[a_][1]["p"], paths[b_][1]["p"]]
+                diag = (max(x for x, _ in xy) - min(x for x, _ in xy)) + (max(y for _, y in xy) - min(y for _, y in xy))
+                pes = AO.branch_pessimism(T, C, ba, bb, diag, True, "hold")
+                s = R[b_][1] - R[a_][0] + pes
+                if worst is None or s > worst[0]:
+                    worst = (s, [a_, b_, round(R[b_][1] - R[a_][0], 1), round(pes, 1)])
+        nom = max(v[1] for v in R.values()) - min(v[0] for v in R.values())
+        out[C] = dict(nominal_spread=round(nom, 1), ocv_inclusive_spread=round(worst[0], 1), worst_pair=worst[1],
+                      sinks=len(names))
+    return out
+
+
+def _load_aocv(path):
+    sys.path.insert(0, str(HERE))
+    import clk_aocv as AO
+    return AO.load(path)
+
+
+def _root_leg(P, a, top):
+    E = tuple(map(float, a.entry.split(",")))
+    ox, oy = map(float, a.icg_offset.split(","))
+    icg = P.legal((E[0] + ox, E[1] + oy))
+    L = man(icg, top["p"]); n = max(1, math.ceil(L / a.sp))
+    if (n - 1 - top["r"]) % 2:
+        n += 1
+    _, rootleg, _ = P.build_leg(icg, tuple(top["p"]), n, L)
+    return E, icg, rootleg
+
+
+def do_plan_bipart(a, P, nodes, CI):
+    T = _load_aocv(a.aocv_table)
+    variants = []
+    for top in ("type", "geo"):
+        for rule in ("delay", "count"):
+            for ax in (None, 0, 1):
+                variants.append((top, rule, ax))
+    pulls = [float(x) for x in a.bipart_pull.split(",")]
+    E0 = tuple(map(float, a.entry.split(",")))
+    if a.bipart_variants:
+        keep = set(a.bipart_variants.split(","))
+        variants = [v for v in variants if "%s/%s/%s" % (v[0], v[1], "auto" if v[2] is None else "xy"[v[2]]) in keep]
+        # (pull weights are chosen by --bipart-pull)
+        if not variants:
+            raise ValueError("--bipart-variants selects none of the variants")
+    seen = {}; res = []
+    for v, w in [(v, w) for v in variants for w in pulls]:
+        t = bipart_topology(nodes, *v)
+        sig = json.dumps(t, sort_keys=True, default=str) + "|%g" % w
+        if sig in seen:                                    # same topology from another variant: embed once
+            continue
+        seen[sig] = v
+        top = embed(P, t, (E0, w) if w > 0 else None)
+        E, icg, rootleg = _root_leg(P, a, top)
+        arr, sm = P.stats(top, rootleg)
+        rng = {C: {k.replace("\\", ""): (x[C.lower()], x[C.lower()]) for k, x in arr.items()} for C in ("TT", "FF")}
+        oc = ocv_spread(T, top, rng)
+        obj = max(oc["TT"]["ocv_inclusive_spread"], oc["FF"]["ocv_inclusive_spread"])
+        name = "%s/%s/%s/p%g" % (v[0], v[1], "auto" if v[2] is None else "xy"[v[2]], w)
+        res.append(dict(variant=name, ocv_tt=oc["TT"]["ocv_inclusive_spread"], ocv_ff=oc["FF"]["ocv_inclusive_spread"],
+                        insertion_tt=sm["plan_tt"]["max"], insertion_ff=sm["plan_ff"]["max"],
+                        elongation_um=sm["elongation_um"], _k=(round(obj, 1), sm["plan_tt"]["max"], name),
+                        _p=(top, E, icg, rootleg, oc)))
+        print("bipart %-16s ocv TT/FF %6.1f %6.1f  insertion TT %6.1f  elong %7.1f" %
+              (name, res[-1]["ocv_tt"], res[-1]["ocv_ff"], res[-1]["insertion_tt"], res[-1]["elongation_um"]),
+              file=sys.stderr)
+    best = min(res, key=lambda r: r["_k"])
+    top, E, icg, rootleg, oc = best["_p"]
+    table = [{k: v for k, v in r.items() if not k.startswith("_")} for r in res]
+    extra = dict(iteration=0, topology="bipart", bipart_variant=best["variant"], bipart_objective="max(TT,FF) "
+                 "OCV-inclusive spread, plan model (aocv %s)" % Path(a.aocv_table).name,
+                 plan_ocv=oc, bipart_table=table)
+    return P.save(top, rootleg, list(icg), E, a.out, extra, CI, a.a1)
+
+
+def do_ocv(a):
+    """OCV-inclusive spread of a plan on MEASURED arrivals (kit meas format, TT + FF): cluster = its registers' min..max,
+    child = pin + its --child-ins contract (same convention as the plan)."""
+    T = _load_aocv(a.aocv_table)
+    Pv = json.load(open(a.a1)); G = json.load(open(Pv["cl"]))
+    CI = {k: tuple(v) for k, v in Pv["summary"]["child_ins"].items()}
+    reg2cl = {r.replace("\\", ""): c["name"] for c in G["clusters"] for r in c.get("regs", [])}
+    rng = {}
+    for C, ci, f in (("TT", 0, a.a2), ("FF", 1, a.a3)):
+        R = {}
+        for l in open(f):
+            p = l.split()
+            if not p or p[0] != "S" or p[2].startswith("ICG"):
+                continue
+            inst = p[1].rsplit("/", 1)[0].replace("\\", "")
+            if p[2] in CI:
+                nm = inst; v = float(p[4]) + CI[p[2]][ci]
+            else:
+                nm = reg2cl.get(inst); v = float(p[4])
+                if nm is None:
+                    continue
+            lo, hi = R.get(nm, (1e18, -1e18)); R[nm] = (min(lo, v), max(hi, v))
+        want = {s["name"].replace("\\", "") for s in Pv["sinks"]}
+        if set(R) != want:
+            raise ValueError("%s arrivals miss %d plan sinks (e.g. %s)" % (C, len(want - set(R)), sorted(want - set(R))[:2]))
+        rng[C] = R
+    oc = ocv_spread(T, Pv["tree"], rng)
+    print(json.dumps(oc))
+    if a.out:
+        json.dump(oc, open(a.out, "w"), indent=1)
+    return oc
 
 
 def read_arrivals(arrf, CI):
@@ -516,7 +746,7 @@ def do_tcl(plan, out):
 
 def build_parser():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("mode", choices=["plan", "corr", "tcl"])
+    ap.add_argument("mode", choices=["plan", "corr", "tcl", "ocv"])
     ap.add_argument("a1"); ap.add_argument("a2"); ap.add_argument("a3", nargs="?"); ap.add_argument("out", nargs="?")
     ap.add_argument("--stage-table", default=str(DEFAULT_TABLE), help="measured stage delay vs segment length")
     ap.add_argument("--sp", type=float, default=110.0, help="max segment length um")
@@ -535,6 +765,14 @@ def build_parser():
     ap.add_argument("--prefix", default="a0t", help="instance/net name prefix")
     ap.add_argument("--max-extra", type=int, default=12, help="extra stages (pairs) on an elongated leg")
     ap.add_argument("--damp", type=float, default=1.0, help="corr: fraction of the measured imbalance corrected")
+    ap.add_argument("--topology", choices=["greedy", "bipart"], default="greedy",
+                    help="plan: greedy bottom-up pairing (default, unchanged) or balanced top-down bipartition (opt-in)")
+    ap.add_argument("--bipart-variants", default=None,
+                    help="bipart: comma list of variants to try (top/rule/axis, e.g. type/delay/auto); default all")
+    ap.add_argument("--bipart-pull", default="0,0.3",
+                    help="bipart: merge-point pull toward the tile entry, ps/um (each value is one more variant)")
+    ap.add_argument("--aocv-table", default=str(HERE / "clk_aocv_table_g021.json"),
+                    help="bipart objective / ocv mode: approved clock AOCV table (12.4a b1, g 0.21 %%/mm)")
     return ap
 
 
@@ -542,6 +780,11 @@ def main(argv=None):
     a = build_parser().parse_args(argv)
     if a.mode == "tcl":
         do_tcl(a.a1, a.a2)
+        return 0
+    if a.mode == "ocv":
+        if a.a3 is None:
+            raise SystemExit("ocv needs PLAN ARRIVALS_TT ARRIVALS_FF [OUT]")
+        do_ocv(a)
         return 0
     if a.mode == "plan":
         if a.entry is None or a.a3 is None:
