@@ -164,7 +164,9 @@
  },
  "ot_dsrom_su_hcpost_lane_pr": {
   "ref_tile": "physical/ref_tile/s81sl_hcpl",
-  "hold_ff_margin": 5
+  "hold_ff_margin": 5,
+  "lec_hints": "results/die_s81_3_1027/ot_dsrom_su_hcpost_lane_pr.lec_hints.json",
+  "why_lec_hints": "DIE-S81-3 10-27 (COORD 21:25 HCPL ruling): 72 RTL-derived pipeline-fill hints on the no-reset cut data regs synthesis folded to 0 (BF16 low product bits, err[1]); EQUIVALENT 13010/13010 with LEC-FPREG-7 lec.py, constant-1 MUTANT NOT EQ 72 (results/die_s81_3_1027/hcpl_lec_receipt.json)"
  },
  "ot_s81sl_vs": {
   "ref_tile": "physical/ref_tile/s81sl_vs",

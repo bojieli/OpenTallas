@@ -102,6 +102,13 @@ cover:
 
 ## Limits (honest list)
 
+- **Corner.** Emitted ORFS configs pin `CORNER = TC` (ORFS asap7 defaults to BC = FF; before OSS-HIER-2 every
+  block/ETM was FF while the STA was TT, which was the whole +340 ps ETM error). Old FF runs: `scripts/etm_tt.sh`.
+- **ETM hold.** OpenSTA `write_timing_model` keeps one (max) table per arc: the ETM view is setup-only, hold is
+  signed off on the stitched view (OSS-HIER-2: per-pin hold error mean +176..+191 ps optimistic).
+- **Context.** `set_driving_cell`/`set_load` from the top (default on) double-count the driver delay with
+  load-indexed ETMs (measured -21 ps, pessimistic); `--no-context` turns it off.
+
 - **Partitioner.** The partitioner is greedy agglomerative clustering plus
   FM moves. It is not multilevel hMETIS/TritonPart quality and has not been
   tried above about 10k items. The cost is cut only; wire length enters

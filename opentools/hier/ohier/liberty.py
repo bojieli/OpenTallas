@@ -17,6 +17,7 @@ _AREA_RE = re.compile(r'^\s*area\s*:\s*([0-9.eE+-]+)')
 _DIR_RE = re.compile(r'^\s*direction\s*:\s*"?(\w+)"?')
 _SEQ_RE = re.compile(r'^\s*(ff|ff_bank|latch|latch_bank|statetable)\s*\(')
 _CLK_RE = re.compile(r'^\s*clock\s*:\s*"?true"?')
+_CAP_RE = re.compile(r'^\s*capacitance\s*:\s*([0-9.eE+-]+)')
 
 
 @dataclass
@@ -26,6 +27,7 @@ class LibCell:
     sequential: bool = False
     pins: dict = field(default_factory=dict)   # pin -> "input"/"output"/"inout"
     clock_pins: set = field(default_factory=set)
+    pin_caps: dict = field(default_factory=dict)  # input pin -> capacitance (library unit, fF on ASAP7)
     is_macro: bool = False
 
 
@@ -69,6 +71,9 @@ def read_liberty(paths, cells=None):
                     md = _DIR_RE.match(line)
                     if md and depth == pin_depth + 1:
                         cur.pins[cur_pin] = md.group(1)
+                    mc = _CAP_RE.match(line)
+                    if mc and depth == pin_depth + 1:
+                        cur.pin_caps[cur_pin] = float(mc.group(1))
                     if _CLK_RE.match(line):
                         cur.clock_pins.add(cur_pin)
             depth += line.count("{") - line.count("}")

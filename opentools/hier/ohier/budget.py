@@ -13,6 +13,10 @@ Budget model (single clock, all partitions in one clock domain):
       A: set_output_delay  T - L - budget_A       (required at A's port)
       B: set_input_delay   L + budget_A + wire(n) (arrival at B's port)
   Hold: input -min = L, output -min = -L (zero-logic neighbour, same L).
+* Context (context=True): crossing inputs get set_driving_cell of the real driver leaf
+  (default buffer when it is a macro or a chip input), crossing outputs get set_load =
+  far-side input pin caps + top wire cap, so the block's ETM arcs see real slews/loads.
+  The driver cell delay into the port load is counted on both sides (a few ps).
 * Chip IO ports: input arrival L + io_budget, output delay io_budget
   (io_budget = the design SDC IO delay; approximate, see README).
 These are first-pass budgets; re-budgeting from the measured abstracts is
@@ -110,7 +114,7 @@ def make_budgets(crossings, arr, req, period_ps, latency_ps, wire_ps_of,
 
 
 def partition_sdc(rid, clock_port, period_ps, latency_ps, budgets_by_port, io_budget,
-                  uncertainty_ps=0.0):
+                  uncertainty_ps=0.0, context=False, default_drive=None):
     """budgets_by_port: {port: ("in"|"out", budget dict or None for chip IO)}."""
     T = period_ps
     L = latency_ps
@@ -131,10 +135,17 @@ def partition_sdc(rid, clock_port, period_ps, latency_ps, budgets_by_port, io_bu
                          f"-source_latency_included {p}")
             lines.append(f"set_input_delay -min {L:.1f} -clock clk -network_latency_included "
                          f"-source_latency_included {p}")
+            if context:
+                cell, pin = ((b["drive_cell"], b["drive_pin"]) if b and b.get("drive_cell")
+                             else (default_drive or (None, None)))
+                if cell:
+                    lines.append(f"set_driving_cell -lib_cell {cell} -pin {pin} {p}")
         else:
             v = (T - L - b["src_budget_ps"]) if b else io_budget
             lines.append(f"set_output_delay -max {v:.1f} -clock clk -network_latency_included "
                          f"-source_latency_included {p}")
             lines.append(f"set_output_delay -min {-L:.1f} -clock clk -network_latency_included "
                          f"-source_latency_included {p}")
+            if context and b and b.get("load_ff") is not None:
+                lines.append(f"set_load -pin_load {b['load_ff']:.4f} {p}")
     return "\n".join(lines) + "\n"

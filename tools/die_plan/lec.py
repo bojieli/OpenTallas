@@ -499,6 +499,53 @@ def icg_to_enable(src, dst, side):
             return "1" if sig == "0" else "0"
         return newcell("$_NOT_", {"A": sig, "Y": None})
 
+    mem_wclk = {}                         # $mem_v2 -> original write-port clock identities
+
+    def gate_mem_port(cn, ln, lp, li, en):
+        """LEC-FPREG-7 10-27 (S81 dsfd_cfifo_crs4: slot ICG GCLK -> bank $mem_v2 WR_CLK): a rising-edge clocked
+        memory port on GCLK == the same port on the root clock with its enables ANDed with ENA | SE (the flop rule
+        applied to the port's write / read-enable bits).  Refused: falling-edge or unclocked write port, a clocked
+        read port with a sync / async reset, and another write port on a different clock unless both are
+        gated from the same root and write constant, distinct addresses."""
+        c = cells[ln]
+        P, pc = c["parameters"], c["connections"]
+        ival = lambda v: int(v, 2) if isinstance(v, str) else int(v)
+
+        def pbit(name, i):
+            v = P.get(name, "0")
+            b = v if isinstance(v, str) else format(int(v), "b")
+            return b.rjust(i + 1, "0")[-1 - i] == "1"
+        kind = lp[:2]
+        if kind == "WR":
+            if not (pbit("WR_CLK_ENABLE", li) and pbit("WR_CLK_POLARITY", li)):
+                raise Unproven(f"icg {side}: {cn} GCLK clocks {ln} write port {li} that is not rising-edge clocked")
+            wclk = mem_wclk.setdefault(ln, [gclk_of.get(b, through_bufs(b)) for b in pc["WR_CLK"]])  # before rewrites
+            ab = ival(P["ABITS"])
+            addr = lambda j: pc["WR_ADDR"][j * ab:(j + 1) * ab]
+            for j, cb in enumerate(wclk):
+                if j == li or not pbit("WR_CLK_ENABLE", j) or cb == wclk[li]:
+                    continue
+                # another write port on a different (gated) clock: kept only when it is gated from the SAME root and
+                # both ports write constant, different addresses (crs4 ot_s81_land GSLOT ring: slot s writes bank[s]
+                # through its own ICG), so no write-write collision order is ever needed after the move to the root
+                rj = root[cb] if cb in icgs else cb
+                ca, cj = addr(li), addr(j)
+                if rj != root[cn] or not all(str(x) in "01" for x in ca + cj) or [str(x) for x in ca] == \
+                        [str(x) for x in cj]:
+                    raise Unproven(f"icg {side}: {ln} write ports {li}/{j} on different clocks (not one root with "
+                                   f"constant distinct addresses): not modelled")
+            w = ival(P["WIDTH"])
+            pc["WR_EN"][li * w:(li + 1) * w] = [and_(en, b) for b in pc["WR_EN"][li * w:(li + 1) * w]]
+        elif pbit("RD_CLK_ENABLE", li):
+            if not pbit("RD_CLK_POLARITY", li):
+                raise Unproven(f"icg {side}: {cn} GCLK clocks {ln} read port {li} on its falling edge: not modelled")
+            if any(str(pc.get(x, ["0"] * (li + 1))[li]) != "0" for x in ("RD_SRST", "RD_ARST")):
+                raise Unproven(f"icg {side}: {cn} GCLK clocks {ln} read port {li} with a reset: not modelled")
+            pc["RD_EN"][li] = and_(en, pc["RD_EN"][li])
+        pc[lp][li] = root[cn]
+        st["gated_mem_ports"] = st.get("gated_mem_ports", 0) + 1
+        st["per_gate"][cn]["mem_ports"] = st["per_gate"][cn].get("mem_ports", 0) + 1
+
     eff = {}
     for cn in sorted(icgs):
         r = root[cn]
@@ -521,9 +568,12 @@ def icg_to_enable(src, dst, side):
                 st["gated_bb_clock_pins"] += 1
                 st["per_gate"][cn]["bb_clock_pins"] += 1
                 continue
+            if t == "$mem_v2" and lp in ("WR_CLK", "RD_CLK"):
+                gate_mem_port(cn, ln, lp, li, en)
+                continue
             if not f or lp != "C" or f[2] != "P":
-                raise Unproven(f"icg {side}: {cn} GCLK reaches {t} {ln}.{lp}[{li}] (only rising-edge flop clocks "
-                               f"and black-box clock pins are modelled)")
+                raise Unproven(f"icg {side}: {cn} GCLK reaches {t} {ln}.{lp}[{li}] (only rising-edge flop clocks, "
+                               f"$mem_v2 clocked ports and black-box clock pins are modelled)")
             kind, ctl = f[1], f[3]
             if kind == "DFF" and ctl == "":
                 c["type"] = "$_DFFE_PP_"
@@ -1287,6 +1337,9 @@ class Lec:
         # unreachable since rk <= 17; RTL-vs-netlist co-simulation 0 mismatches)
         self.unwritten = sorted(k for k in self.gonly if k.startswith("ff:") and self.gc.get(k) == self.gp[k])
         unwritten = set(self.unwritten)
+        self.fill_live = fill_live(self.hyp)      # pipeline-fill hints whose ghost chain reaches its constant root
+        self.fill_in = {}                         # gold key -> ghost 'filled' input literal
+        fillq = []
         for side, keys, p, lmap in (("gold", self.gonly, self.gp, lg), ("gate", self.tonly, self.tp, lt)):
             for k in keys:
                 h = self.hyp.get((side, k))
@@ -1295,6 +1348,17 @@ class Lec:
                     kind[v >> 1] = ("gold_x", k)
                     bind(lmap, p[k], v)
                     lgx[p[k] & ~1] = 1
+                elif h and h[0] == "fill" and side == "gold" and k in self.fill_live:
+                    # Q = filled ? c : X.  'filled' is a tool-owned ghost bit (not RTL state): filled' = filled(pred),
+                    # the root's filled' = 1, so every ghost is 1 a chain-length of edges after the reset state and
+                    # X is never held as a constant: an unfilled register is X (its RTL power-up value) and a compare
+                    # point reading it is a don't care only while the register really is X in the RTL.
+                    f = m.add_input(f"fill:{k}")
+                    kind[f >> 1] = ("fill", k)
+                    v = m.add_input(f"gold:{k}")
+                    kind[v >> 1] = ("gold_x", k)
+                    self.fill_in[k] = f
+                    fillq.append((k, h, f, v))      # bound after every input (the mux is ANDs)
                 elif h and h[0] == "const":
                     bind(lmap, p[k], h[1])
                 elif h and h[0] in ("eq", "cube"):
@@ -1361,6 +1425,9 @@ class Lec:
                 v = m.AND(v, olmap[op[ok] & ~1] ^ (op[ok] & 1) ^ (ov ^ 1))
             lmap, p = (lg, self.gp) if side == "gold" else (lt, self.tp)
             bind(lmap, p[k], v)
+        for k, h, f, v in fillq:                  # Q = filled ? c : X (gold X rail = not filled)
+            bind(lg, self.gp[k], m.AND(m.AND(f, h[1]) ^ 1, m.AND(f ^ 1, v) ^ 1) ^ 1)
+            lgx[self.gp[k] & ~1] = f ^ 1
         lkeys = {k for k, _, _ in loaded}
         for k, h, v in loaded:                    # Q = guard ? c : power-up value (loaded-valid qualification)
             if any(key in lkeys for cube in h[2] for key, _ in cube):
@@ -1430,6 +1497,20 @@ class Lec:
                     m.outs.append(m.AND(gx, bad))
                     m.onames.append(f"hyp:{side}:{k}")
                     continue
+                if h[0] == "fill":
+                    # filled' (the root: always; else the predecessor's ghost) -> D(k) == c and not X, and
+                    # not filled' -> D(k) is X (tight: the ghost is 0 only while the RTL register really is X, so no
+                    # read of a known RTL value becomes a don't care).  A hint whose ghost chain is broken (a
+                    # predecessor dropped) is not bound (free) and fails here, so it drops.
+                    if k not in self.fill_live:
+                        m.outs.append(1)
+                    else:
+                        fn = 1 if h[2] is None else self.fill_in[h[2]]
+                        dx = self.dxlit.get(k, 0)
+                        bad = m.AND((d ^ h[1]) ^ 1, dx ^ 1) ^ 1
+                        m.outs.append(m.AND(m.AND(fn, bad) ^ 1, m.AND(fn ^ 1, dx ^ 1) ^ 1) ^ 1)
+                    m.onames.append(f"hyp:{side}:{k}")
+                    continue
                 if h[0] == "const":
                     m.outs.append(m.AND(d ^ h[1], nx(k)) if side == "gold" else d ^ h[1])
                 else:
@@ -1475,6 +1556,22 @@ def guard_lit(m, guard, lit):
             c = m.AND(c, lit(key) ^ (val ^ 1))
         g = m.AND(g ^ 1, c ^ 1) ^ 1
     return g
+
+
+def fill_live(hyp):
+    """gold keys of 'fill' hypotheses whose predecessor chain ends at a root (pred None) through fill hypotheses only,
+    with no cycle: only those ghosts are guaranteed to become 1 (a broken chain would keep its register X forever)."""
+    fills = {k: h[2] for (sd, k), h in hyp.items() if sd == "gold" and h and h[0] == "fill"}
+    live = {}
+    for k in fills:
+        path, x = [], k
+        while x in fills and x not in live and x not in path:
+            path.append(x)
+            x = fills[x]
+        ok = live.get(x, False) if x in live else (x is None)
+        for y in path:
+            live[y] = ok
+    return {k for k, ok in live.items() if ok}
 
 
 def loaded_base(L, guard):
@@ -2811,11 +2908,19 @@ def trace_constant_closure(L, log, tried):
 RESET_PORT = re.compile(r"^(?:\w+_)?(?:rst|reset|rn|rstn|nrst|arst|srst)(?:_?n|_ni|_b|_l)?(?:_pin)?$", re.I)
 
 
-def reset_vars(d, pis):
+def reset_vars(d, pis, asserted=None, levels=None):
     """{var: asserted value} of the reset ports of one side (pi keys; OT_LEC_RESET_PORTS=a,b overrides the name
-    pattern).  Active low when the name ends in n / _ni / _b / _l (rst_n, rn, core_rst_n)."""
+    pattern).  Active low when the name ends in n / _ni / _b / _l (rst_n, rn, core_rst_n) -- unless the structure
+    says otherwise (LEC-FPREG-7 10-27, S81 dsdv_bksel_c: port 'rst' is the ACTIVE-LOW async reset of every register,
+    'always @(posedge ck or negedge rst[0])'; the name rule asserted rst = 1 = released, so the 'reset state' reset
+    nothing and 6,382 points differed).  The asserted level of a reset is by definition the level that forces the
+    registers: from an all-unknown state, one edge with the port at each level (the other reset ports at their
+    level); when the opposite level of the name rule forces more than twice as many registers that the name level does
+    not force, it is the asserted level (registers constant at both levels do not count: S81 RXsf gold has ~2,070).  OT_LEC_RESET_POLARITY=name keeps the name rule only.  asserted: {pi key: logical asserted value} decided
+    on the gold side, applied unchanged to the gate (one port, one polarity); levels: dict filled with {pi key: asserted
+    value} -> R = {var: asserted literal value}."""
     names = [n for n in os.environ.get("OT_LEC_RESET_PORTS", "").split(",") if n]
-    R = {}
+    R, key_of, lv = {}, {}, {}
     for k, lit in pis.items():
         if not k.startswith("pi:"):
             continue
@@ -2824,7 +2929,18 @@ def reset_vars(d, pis):
             continue
         stem = re.sub(r"_pin$", "", base, flags=re.I)
         low = bool(re.search(r"(n|_ni|_b|_l)$", stem, re.I))
-        R[lit >> 1] = (0 if low else 1) ^ (lit & 1)
+        lv[k] = asserted[k] if asserted and k in asserted else (0 if low else 1)
+        R[lit >> 1] = lv[k] ^ (lit & 1)
+        key_of[lit >> 1] = k
+    if asserted is None and R and "I" in d and os.environ.get("OT_LEC_RESET_POLARITY", "struct") != "name":
+        for v in sorted(R):
+            S = {b: set(reset_state(d, {**R, v: b}, 1)[0]) for b in (0, 1)}
+            n = {b: len(S[b] - S[1 - b]) for b in (0, 1)}      # forced ONLY at that level: constant registers excluded
+            if n[1 - R[v]] > 2 * max(1, n[R[v]]):
+                R[v] = 1 - R[v]
+                lv[key_of[v]] ^= 1
+    if levels is not None:
+        levels.update(lv)
     return R
 
 
@@ -2867,8 +2983,12 @@ def noreset_classify(L):
     L.rst_val[(side, key)] = (value or None, first edge)."""
     cycles = int(os.environ.get("OT_LEC_RESET_CYCLES", "4"))
     L.rst_val, L.rst_ports = {}, {}
+    pol = None
     for side, d, p in (("gold", L.gold, L.gp), ("gate", L.gate, L.tp)):
-        R = reset_vars(d, p)
+        lv = {}
+        R = reset_vars(d, p, pol, lv)
+        pol = lv if pol is None else pol
+        L.__dict__.setdefault("rst_asserted", {})[side] = lv
         L.rst_ports[side] = sorted(k for k, lit in p.items() if (lit >> 1) in R and k.startswith("pi:"))
         st, first = reset_state(d, R, cycles)
         L.__dict__.setdefault("_rst_state", {})[side] = st
@@ -3286,7 +3406,7 @@ def noreset_report(L):
                                "reset" if edge <= 1 else "reloaded" if edge <= cyc else "release"))
     dropped = [dict(register=k, side=sd, value=c) for (sd, k), c in sorted(getattr(L, "noreset_dropped", {}).items())
                if (sd, k) not in L.hyp]
-    return dict(enabled=True, reset_ports=L.rst_ports, reset_cycles=int(os.environ.get("OT_LEC_RESET_CYCLES", "4")),
+    return dict(enabled=True, reset_ports=L.rst_ports, reset_asserted=getattr(L, "rst_asserted", {}), reset_cycles=int(os.environ.get("OT_LEC_RESET_CYCLES", "4")),
                 release_edges=int(os.environ.get("OT_LEC_RELEASE_EDGES", "8")),
                 n_release=sum(1 for e in kept if e["basis"] == "release"),
                 release=[e for e in kept if e["basis"] == "release"][:500],
@@ -3994,6 +4114,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     # only removes assumptions, the loop still returns only on a fully proved (inductive) set, so this is sound;
     # OT_LEC_REFINE_MONOTONE=0 restores the old clear-all.
     expired, sup = False, {}
+    seen_proved = collections.Counter()   # proved-set signature -> rounds proved
     for rnd in range(rounds + 1000):
         if rnd >= rounds + 40 and time.time() - t_ref > budget:
             if os.environ.get("OT_LEC_REFINE_MONOTONE", "1") == "0":
@@ -4334,6 +4455,17 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             # Only surviving changes need another proof round; otherwise empty
             # rounds repeat until the time budget discards valid correspondence.
             snap = dict(L.hyp)
+            # LEC-FPREG-7 10-27 (RXsf: hyp50..hyp1190 byte-identical miters, 0 failed, ~12 s each): a closure's
+            # proposal survives the reset-state filter here but is removed again before the next proof (sim_refine /
+            # top-of-round filter), so the SAME proved set returns every round until rounds + 1000, where the
+            # non-convergence exit cleared every hypothesis.  The set was just proved inductive in full: seeing it
+            # proved a third time is a fixpoint, return it as is (sound: only proved sets are ever returned).
+            sig = hashlib.sha1(repr(sorted((repr(hk), repr(h)) for hk, h in L.hyp.items())).encode()).hexdigest()
+            seen_proved[sig] += 1
+            if seen_proved[sig] >= 3:
+                log.append(f"correspondence round {rnd}: the same proved set ({len(L.hyp)} hypotheses) recurred "
+                           f"{seen_proved[sig]}x with no surviving closure change; fixpoint, returned")
+                return
 
             def surviving_change():
                 noreset_filter(L, log, tried, work, conflicts)
@@ -4447,7 +4579,59 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40):
     loaded = {e[1] for e in hints if isinstance(e, (list, tuple)) and len(e) == 3 and e[0] == "gold"
               and isinstance(e[2], (list, tuple)) and e[2] and e[2][0] == "loaded"}
     rec["loaded"], rec["loaded_refused"] = [], []
+    # Pipeline fill (LEC-FPREG-6 10-27): ['gold', key, ['fill', c, pred]] for an RTL register with no reset on an
+    # every-cycle pipeline whose source is the constant c (exp_s x = {1'b1, x[30:0]}: xc5/6/7[31]); synthesis folded
+    # it.  It holds X until the constant has ridden down to it.  Bound to (filled ? c : X) with a tool-owned ghost
+    # 'filled' bit (filled' = filled(pred); pred None = the chain root, filled' = 1), never to c unconditionally.
+    # Proved with the other hypotheses (filled' -> D == c and not X).  Base: the register is not the other constant
+    # in the reset state (ghost = 1 where it already is c, else 0 = X, which is its RTL value there).  A read while
+    # unfilled is an RTL X (don't care, the tool's X rule); a read after filling is compared against c.
+    fills = {}
     for e in hints:
+        if isinstance(e, (list, tuple)) and len(e) == 3 and isinstance(e[2], (list, tuple)) and e[2] \
+                and e[2][0] == "fill":
+            fills[e[1] if isinstance(e[1], str) else repr(e[1])] = e
+    rec["fill"], rec["fill_refused"] = [], []
+    for e in hints:
+        if isinstance(e, (list, tuple)) and len(e) == 3 and isinstance(e[2], (list, tuple)) and e[2] \
+                and e[2][0] == "fill":
+            try:
+                sd, k, (_, c, pred) = e
+                ok = (sd == "gold" and k in L.gonly and gk(k) and c in (0, 1) and k not in getattr(L, "unwritten", ())
+                      and (pred is None or (pred in fills and pred != k)))
+            except (TypeError, ValueError):
+                ok = False
+            if not ok:
+                rec["skipped"].append(e)
+                continue
+            if not hasattr(L, "rst_val"):
+                noreset_classify(L)
+            rv = L.rst_val.get(("gold", k), (None, None))[0]
+            if rv == 1 - c:
+                rec["fill_refused"].append(dict(register=k, why=f"reset-state value {rv} is the other constant"))
+                continue
+            L.hyp[(sd, k)] = ("fill", c, pred)
+            rec["applied"] += 1
+            continue
+    for e in hints:
+        if isinstance(e, (list, tuple)) and len(e) == 3 and isinstance(e[2], (list, tuple)) and e[2] \
+                and e[2][0] == "fill":
+            continue
+        refs = []                                  # other hint forms must not read a fill register (X while unfilled)
+        try:
+            if e[0] == "cons":
+                refs = list(e[2])
+            elif e[2][0] == "loaded":
+                refs = [x for cube in e[2][2] for x, _ in cube]
+            elif e[2][0] == "cube":
+                refs = list(e[2][2])
+            elif e[2][0] == "eq":
+                refs = [e[2][2]]
+        except (IndexError, TypeError, KeyError):
+            refs = []
+        if any(isinstance(x, str) and x in fills for x in refs):
+            rec["skipped"].append(e)
+            continue
         if isinstance(e, (list, tuple)) and e and e[0] == "cons":
             try:
                 _, csd, ck, allowed = e
@@ -4543,6 +4727,9 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40):
             rec["kept"] = len(L.hyp)
             rec["loaded"] = [dict(register=k, value=h[1], guard=[[list(x) for x in c] for c in h[2]], base="reset")
                              for (sd, k), h in sorted(L.hyp.items()) if h[0] == "loaded"]
+            rec["fill"] = [dict(register=k, value=h[1], pred=h[2],
+                                base_filled=L.rst_val.get(("gold", k), (None, None))[0] == h[1])
+                           for (sd, k), h in sorted(L.hyp.items()) if h[0] == "fill"]
             return rec
         drop_failed(L, [n for n in bad if n.startswith("cons:")])
         rec["dropped"] += [n for n in bad if n.startswith("cons:")]

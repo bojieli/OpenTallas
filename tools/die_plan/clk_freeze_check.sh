@@ -38,4 +38,6 @@ if [ "$dump_rc" != 0 ]; then
 fi
 $DK run --rm -v "$D":/work "$IMAGE" chown -R "$(id -u):$(id -g)" /work/$R >/dev/null 2>&1
 test -s "$B/clk_freeze_post.tsv" || { echo "CLK_GEOM_DIFF FAIL: post dump failed ($D/clk_freeze_post.log)"; tail -n 5 "$D/clk_freeze_post.log"; exit 2; }
-python3 -I "$D/clk_geom_diff.py" "$B/clk_freeze_pre.tsv" "$B/clk_freeze_post.tsv" --json "$D/clk_geom_diff.json"
+# FLOW-SHARED-10: an ECO that started from the pre-DRT 5_1_grt DB (variant.env OT_ECO_FROM=grt) routes the clock once
+PU=; grep -qs '^OT_ECO_FROM=grt$' "$D/variant.env" && PU=--pre-unrouted
+python3 -I "$D/clk_geom_diff.py" "$B/clk_freeze_pre.tsv" "$B/clk_freeze_post.tsv" --json "$D/clk_geom_diff.json" $PU

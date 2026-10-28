@@ -494,3 +494,97 @@ def test_landed_gate_pairs_without_landing_fails_closed():
     assert R.landed_gate(corners)["verdict"] == "FAIL"
     corners = {"TT": {"classes": {"landed": dict(pairs=0)}}, "FF": {"classes": {"landed": dict(pairs=3)}}}
     assert R.landed_gate(corners)["verdict"] == "FAIL"
+
+
+def _ca_tap(part, late, early):
+    return dict(part=part, cppr_node=part, late_ps=late, early_ps=early)
+
+
+CA_REG = dict(clkq_max_wire_ps=48.0, clkq_min_nowire_ps=30.0)
+
+
+def _ca_bind(T):
+    # x: non-tree A->B, plan d [200, 250], L = 1T + d (+-0 wander); t: clean tree B->A (rise, sync_dist 150 -> limit
+    # 123.5), plan d [-260, -240], L = 2T + d
+    return {"sync_aperture_ps": 26.5, "ports": {
+        "x": dict(src="A", dst="B", K=1, depth=4, sched_lat=2, tree=False, L_lo_ps=T + 200.0, L_hi_ps=T + 250.0,
+                  d_lo_ps=200.0, d_hi_ps=250.0, wander_ps=0.0),
+        "t": dict(src="B", dst="A", K=0, depth=4, sched_lat=3, tree=True, L_lo_ps=2 * T - 260.0, L_hi_ps=2 * T - 240.0,
+                  d_lo_ps=-260.0, d_hi_ps=-240.0, wander_ps=0.0)},
+        "regions": {"B": dict(parent=None, tree_port=None), "A": dict(parent="B", tree_port="t", edge_fall=False,
+                                                                       sync_values=1, start_skew_limit_ps=123.5)}}
+
+
+def test_count_align_landed_rows_lag_slot_guard_start():
+    """MESO-RECONCILE-1: lag re-derived from the STA's own d (tree and non-tree), margins to the guards >= 100 ps,
+    slot->read (L_lo - T/2 >= 0), guard (margin_hi >= T/8), start skew per tree edge vs the plan limit."""
+    T = 833.0
+    taps = {"a0": _ca_tap("A", 300.0, 280.0), "b0": _ca_tap("B", 520.0, 500.0)}
+    landed = [("a0", "b0", "A->B"), ("b0", "a0", "B->A")]
+    bind = _ca_bind(T)
+    r = R.count_align_landed(landed, taps, bind, T, CA_REG)
+    x = {o["port"]: o for o in r["rows"]}
+    # STA d A->B = [500 - 300, 520 - 280] = [200, 240]
+    assert x["x"]["source"] == "sta" and x["x"]["L_lo_ps"] == round(T + 200, 1) and x["x"]["L_hi_ps"] == round(T + 240, 1)
+    assert x["x"]["margin_lo_ps"] == round(T + 200 - 0.5 * T, 1) and x["x"]["margin_hi_ps"] == round(3.5 * T - T - 240, 1)
+    assert x["x"]["slot_read_ps"] == x["x"]["margin_lo_ps"] and x["x"]["guard_hi_slack_ps"] == round(x["x"]["margin_hi_ps"] - T / 8, 1)
+    # clean tree crossing is STA-shifted too: d B->A = [280 - 520, 300 - 500] = [-240, -200]
+    assert x["t"]["source"] == "sta" and x["t"]["L_lo_ps"] == round(2 * T - 240, 1)
+    st = r["start_skew"]
+    assert st["tree_ports"] == 1 and st["fail"] == 0 and st["rows"][0]["skew_hi_ps"] == 48.0
+    assert st["rows"][0]["source"] == "model-coroute" and st["rows"][0]["sta_sync_dist_ps"] >= 26.5
+    assert r["verdict"] == "PASS"
+    # routed start wire 100 ps longer than the fclk wire -> skew 148 > 123.5 -> start row FAIL
+    r = R.count_align_landed(landed, taps, bind, T, CA_REG, start_wire={"t": [90.0, 100.0]})
+    assert r["start_skew"]["fail"] == 1 and r["verdict"] == "FAIL"
+    # STA d much later than the plan on x: high margin under T/8 -> guard FAIL (and lag FAIL)
+    taps2 = dict(taps, b0=_ca_tap("B", 2500.0, 2480.0))
+    r = R.count_align_landed([("a0", "b0", "A->B"), ("b0", "a0", "B->A")], taps2, bind, T, CA_REG)
+    xx = {o["port"]: o for o in r["rows"]}
+    assert not xx["x"]["guard_ok"] and r["guard"]["fail"] >= 1 and r["verdict"] == "FAIL"
+    # STA d earlier than the plan by 700 ps: lag under the low guard -> slot_read + lag FAIL
+    taps3 = dict(taps, a0=_ca_tap("A", 1000.0, 980.0))
+    r = R.count_align_landed([("a0", "b0", "A->B"), ("b0", "a0", "B->A")], taps3, bind, T, CA_REG)
+    assert r["slot_read"]["fail"] >= 1 and r["fail"] >= 1 and r["verdict"] == "FAIL"
+
+
+def test_count_align_landed_ambiguous_tree_keeps_plan_window_and_no_taps_fails():
+    T = 833.0
+    taps = {"a0": _ca_tap("A", 300.0, 280.0), "b0": _ca_tap("B", 520.0, 500.0)}
+    bind = _ca_bind(T)
+    bind["regions"]["A"].update(sync_values=2, start_skew_limit_ps=60.0)
+    r = R.count_align_landed([("a0", "b0", "A->B"), ("b0", "a0", "B->A")], taps, bind, T, CA_REG)
+    x = {o["port"]: o for o in r["rows"]}
+    assert x["t"]["source"] == "plan-sync" and x["t"]["L_lo_ps"] == round(2 * T - 260, 1)
+    assert "sta_sync_dist_ps" not in r["start_skew"]["rows"][0] and r["start_skew"]["fail"] == 0
+    bind["ports"]["y"] = dict(bind["ports"]["x"], src="C", dst="B")
+    r = R.count_align_landed([("a0", "b0", "A->B"), ("b0", "a0", "B->A")], taps, bind, T, CA_REG)
+    assert r["no_taps"] == 1 and r["verdict"] == "FAIL"
+
+
+def test_count_align_ss_info_scales_tt_taps_and_never_gates():
+    """MESO-RECONCILE: SS row = TT taps x SS/TT scale against the fixed plan; info only (SS never gates)."""
+    T = 833.0
+    taps = {"a0": _ca_tap("A", 300.0, 280.0), "b0": _ca_tap("B", 520.0, 500.0)}
+    landed = [("a0", "b0", "A->B"), ("b0", "a0", "B->A")]
+    bind = _ca_bind(T)
+    r1 = R.count_align_ss_info(landed, taps, bind, T, CA_REG, 1.0)
+    r0 = R.count_align_landed(landed, taps, bind, T, CA_REG)
+    assert r1["rows"] == r0["rows"] and r1["info_only"] and not r1["gates"]
+    r = R.count_align_ss_info(landed, taps, bind, T, CA_REG, 1.27)
+    x = {o["port"]: o for o in r["rows"]}
+    # d A->B scales to [1.27 * 500 - 1.27 * 300, 1.27 * 520 - 1.27 * 280] = [254, 304.8]
+    assert x["x"]["L_lo_ps"] == round(T + 254.0, 1) and x["x"]["L_hi_ps"] == round(T + 304.8, 1)
+    assert r["start_skew"]["rows"][0]["skew_hi_ps"] == round(48.0 * 1.27, 1)
+    assert taps["a0"]["late_ps"] == 300.0   # input not mutated
+
+
+def test_clock_cal_spice_scales_taps_and_ranges():
+    """METHODOLOGY 12.15 b: clock arrivals x1.0485 TT / x1.0552 FF; inputs untouched; factor 1 = identity."""
+    taps = {"a0": dict(_ca_tap("A", 300.0, 280.0), abs_late_ps=310.0)}
+    meta = dict(cppr_node_range_ps={"h": 10.0})
+    m, t = R.scale_clock(meta, taps, R.SPICE_CLOCK_CAL["TT"])
+    assert abs(t["a0"]["late_ps"] - 300.0 * 1.0485) < 1e-9 and abs(t["a0"]["abs_late_ps"] - 310.0 * 1.0485) < 1e-9
+    assert abs(m["cppr_node_range_ps"]["h"] - 10.485) < 1e-9 and taps["a0"]["late_ps"] == 300.0
+    assert R.SPICE_CLOCK_CAL == {"TT": 1.0485, "FF": 1.0552}
+    assert R.scale_clock(meta, taps, 1.0) == (meta, taps)
