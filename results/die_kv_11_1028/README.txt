@@ -37,3 +37,11 @@ Built arrivals -> landed_phase_ocv -> ca_spice (x1.0485/1.0552) -> START-TREE-1 
   (e.g. L678_5 plan 523.0 vs STA 461.2 ps): a plan/gate interval disagreement on the phy columns, not a re-tree long loop.
   Baseline pad2 (DIE-KV-9 sta_table): TT 38 / FF 55 fail, start-skew 23/127.  Landed class FAIL is the same plan-defined
   landed-hop form as the baseline (count-aligned crossings carry it).
+
+== COORD duty risk sweep (2026-10-28 09:0x PDT, estimate/probe): kit_rt clock, BUFx24-only (10712 cells), 158 median / 230 max stages ==
+duty.sh: combo GRT0 tcl rerun, root driven by vclk, rise AND fall arrival per tap (duty_{TT,FF}.txt).
+  TT: fall-rise median 671.2 ps, max 1059.0 (t_phy_WN_0), 4.25 ps/stage median (max 4.64); duty(high) 0.561..1.771
+  FF: fall-rise median 539.2 ps, max 870.0 (t_pc_WN_0_t7), 3.40 ps/stage median (max 3.82); duty(high) 0.544..1.544
+  => the low phase vanishes on most KV taps at both corners (KV trees are deeper than QC: 158 median stages).
+  report_check_types -min_pulse_width: empty on this clock-only netlist (no sequential clock pins), so not a check here.
+  Fix form = inverter clock tree (die_trial --clock-cell inv, DIE-QC-11), not restoring stages.
