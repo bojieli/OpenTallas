@@ -1,0 +1,32 @@
+Clock core_clk
+ 774.53 source latency u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[365]$_DFF_P_/CLK ^
+-355.52 target latency u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf/clk ^
+-143.99 target internal clock delay
+  60.00 clock uncertainty
+   0.00 CRPR
+--------------
+ 335.03 setup skew
+
+Clock core_clk
+rise -> rise
+    min     max
+   0.00    0.00 source latency
+ 355.52         network latency u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf/clk
+         774.53 network latency u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[365]$_DFF_P_/CLK
+ 143.99    0.00 internal clock latency
+---------------
+ 499.50  774.53 latency
+         275.03 skew
+
+fall -> fall
+    min     max
+   0.00    0.00 source latency
+ 384.51         network latency u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf/clk
+         837.60 network latency u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[365]$_DFF_P_/CLK
+ 155.02    0.00 internal clock latency
+---------------
+ 539.53  837.60 latency
+         298.08 skew
+
+
+Total number of Clock Roots: 0.

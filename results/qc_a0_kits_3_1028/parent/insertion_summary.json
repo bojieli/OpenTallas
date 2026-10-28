@@ -1,0 +1,144 @@
+{
+ "nk": {
+  "TT": {
+   "parent_regs": {
+    "n": 15013,
+    "mean": 619.2,
+    "min": 557.5,
+    "max": 729.9
+   },
+   "node": {
+    "n": 1,
+    "pin_mean": 447.6,
+    "pin_min": 447.6,
+    "pin_max": 447.6,
+    "total_mean": 669.9,
+    "total_min": 657.5,
+    "total_max": 683.4
+   },
+   "romleaf": {
+    "n": 10,
+    "pin_mean": 454.2,
+    "pin_min": 378.6,
+    "pin_max": 525.2,
+    "total_mean": 624.5,
+    "total_min": 527.1,
+    "total_max": 725.3
+   },
+   "rawleaf": {
+    "n": 8,
+    "pin_mean": 478.1,
+    "pin_min": 406.7,
+    "pin_max": 589.5,
+    "total_mean": 636.1,
+    "total_min": 559.2,
+    "total_max": 754.9
+   },
+   "all_endpoints_mean_basis": {
+    "min": 548.9,
+    "max": 747.5
+   }
+  },
+  "FF": {
+   "parent_regs": {
+    "n": 15013,
+    "mean": 507.5,
+    "min": 451.6,
+    "max": 604.8
+   },
+   "node": {
+    "n": 1,
+    "pin_mean": 373.6,
+    "pin_min": 373.6,
+    "pin_max": 373.6,
+    "total_mean": 552.0,
+    "total_min": 540.6,
+    "total_max": 565.2
+   },
+   "romleaf": {
+    "n": 10,
+    "pin_mean": 385.7,
+    "pin_min": 316.0,
+    "pin_max": 448.0,
+    "total_mean": 525.6,
+    "total_min": 434.2,
+    "total_max": 616.4
+   },
+   "rawleaf": {
+    "n": 8,
+    "pin_mean": 401.8,
+    "pin_min": 338.3,
+    "pin_max": 499.1,
+    "total_mean": 528.1,
+    "total_min": 459.1,
+    "total_max": 632.4
+   },
+   "all_endpoints_mean_basis": {
+    "min": 451.6,
+    "max": 625.3
+   }
+  }
+ },
+ "nl": {
+  "TT": {
+   "parent_regs": {
+    "n": 13982,
+    "mean": 605.5,
+    "min": 549.4,
+    "max": 774.5
+   },
+   "romleaf": {
+    "n": 10,
+    "pin_mean": 448.0,
+    "pin_min": 410.1,
+    "pin_max": 510.7,
+    "total_mean": 618.3,
+    "total_min": 558.6,
+    "total_max": 710.8
+   },
+   "rawleaf": {
+    "n": 8,
+    "pin_mean": 426.7,
+    "pin_min": 366.1,
+    "pin_max": 522.1,
+    "total_mean": 584.7,
+    "total_min": 518.6,
+    "total_max": 687.4
+   },
+   "all_endpoints_mean_basis": {
+    "min": 524.1,
+    "max": 774.5
+   }
+  },
+  "FF": {
+   "parent_regs": {
+    "n": 13982,
+    "mean": 494.8,
+    "min": 443.8,
+    "max": 643.5
+   },
+   "romleaf": {
+    "n": 10,
+    "pin_mean": 374.1,
+    "pin_min": 336.1,
+    "pin_max": 432.3,
+    "total_mean": 514.0,
+    "total_min": 454.3,
+    "total_max": 600.7
+   },
+   "rawleaf": {
+    "n": 8,
+    "pin_mean": 355.4,
+    "pin_min": 298.8,
+    "pin_max": 431.5,
+    "total_mean": 481.7,
+    "total_min": 419.5,
+    "total_max": 564.8
+   },
+   "all_endpoints_mean_basis": {
+    "min": 425.1,
+    "max": 643.5
+   }
+  }
+ }
+}
