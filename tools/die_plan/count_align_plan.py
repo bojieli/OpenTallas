@@ -566,7 +566,7 @@ def clock_contexts(proof, plan_path, corners, clock_cal="spice", clock_ocv="tabl
 
 
 def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew=(0.0, 0.0), skew_clean=False,
-                      retime_max=8, clean_by="phase"):
+                      retime_max=8, clean_by="phase", retime_up=False):
     """START TREE = CLOCK TREE (START-TREE-1).  ctx = clock_contexts() ({corner: meta/taps/ocv/rng}, first = nominal).
     Nodes: every data region at its clock root (longest common tree_path prefix of its taps) and every branch node of
     the clock subtree spanning those roots (virtual 'st:<path>', a retime flop on that tree node).  Each node's start
@@ -582,6 +582,10 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
     per edge), so every start port is CLEAN where the tree allows;
     a port that stays unclean is kept (its J range enters path ambiguity as before) and FAILs the plan (12.16b(iv)).
     A branch node is contracted (no stage of its own) when all its children take a clean port straight from its parent.
+    retime_up (opt-in, DIE-S81-13): when no capture-side node gives a clean segment from the launch (the launch is a
+    region leaf deep below the fork: its in-region insertion alone makes every segment too wide), the start first climbs
+    the LAUNCH side of the clock tree: a retime flop on the shallowest clean ancestor of the launch tap, down to the
+    fork node itself (sync on the spine tap at the fork), then continues down the capture path as above.
     Virtual taps: node arrival + the proof's median tap leg (late / early / stages from the tap's driving tree node).
     Returns (root, edges, info)."""
     import die_sta_related as DSR
@@ -727,6 +731,7 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
             del par_of[v], kids_of[v]
             contracted += 1
     pairs = [(x, y) for x in sorted(kids_of) for y in kids_of[x]]
+    up_made = {}
     for x, y in pairs:
         cap = capture_of(y)
         cpath = c0["taps"][cap]["tree_path"]
@@ -747,25 +752,70 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
                 if clean(rm):
                     best = (mp, rm)
                     break
+            up = False
+            if best is None and retime_up:
+                lp = c0["taps"][lau]["tree_path"] if lau in c0["taps"] else path_of.get(src, "")
+                nlp = c0["meta"]["node_late_ps"]
+                for n in range(len(f), len(lp)):
+                    mp = lp[:n]
+                    if mp not in nlp:
+                        continue
+                    rm = interval(lau, vtap(cs[0], mp))
+                    if clean(rm):
+                        best, up = (mp, rm), True
+                        break
             if best is None:
                 break
             mp, rm = best
-            mid = f"st:{mp}"
+            # DIE-S81-13 / DIE-QC-13: an up stage sits on the LAUNCH side, where a branch node st:<mp> of the start tree
+            # (or another child's up stage) may already exist; it is its own flop, named by its launch tap (or by its
+            # start parent when that is itself a retime node), and a second
+            # child of the same region that climbs from the same launch tap to the same node REUSES it (one edge)
+            mid = f"st:{mp}@{src if lau.startswith('__st__') else lau}" if up else f"st:{mp}"
             path_of[mid] = mp
-            edges.append(dict(port=f"start:{src}->{mid}", src=src, dst=mid, launch=lau, capture=vtap(cs[0], mp),
-                              launch_part=part(lau), capture_part=None, retime=True, clean_ok=True, **rm))
+            if not (up and mid in up_made):
+                edges.append(dict(port=f"start:{src}->{mid}", src=src, dst=mid, launch=lau, capture=vtap(cs[0], mp),
+                                  launch_part=part(lau), capture_part=None, retime=True, clean_ok=True, **rm))
+                if up:
+                    up_made[mid] = src
+            elif up_made[mid] != src:
+                raise ValueError(f"--start-retime-up: up stage {mid} reached from {up_made[mid]} and {src}")
             chain.append(mid)
             src, lau = mid, vtap(cs[0], mp)
         edges.append(dict(port=f"start:{src}->{y}", src=src, dst=y, launch=lau, capture=cap, launch_part=part(lau),
                           capture_part=part(cap), retime=False, clean_ok=clean(r), **r))
     for e in edges:
         e["lo"], e["hi"] = e["d_ps"] - e["p_dn_ps"], e["d_ps"] + e["p_up_ps"]
+    start_tree_check(root, edges)
     info = dict(clean_by=clean_by, clean_by_width=sum(1 for e in edges if width_robust(e, T, ap)),
                 fall_measured=sum(1 for e in edges if e.get("fall_lo") is not None),
                 root=root, root_path=path_of[root], leg_ps={c: list(v) for c, v in leg.items()},
                 regions=len(regions), branch_nodes=sum(1 for p in allp if not at.get(p)), branch_nodes_contracted=contracted,
                 retime_nodes=sum(1 for e in edges if e["retime"]))
     return root, edges, info
+
+
+def start_tree_check(root, edges):
+    """fail closed unless the start edges form ONE tree from root: every node has exactly one incoming edge (the root
+    none) and every node is reached from the root (DIE-QC-13: duplicate retime nodes made '753 nodes not reached')"""
+    inc = defaultdict(list)
+    kids = defaultdict(list)
+    for e in edges:
+        inc[e["dst"]].append(e["src"])
+        kids[e["src"]].append(e["dst"])
+    dup = {v: u for v, u in inc.items() if len(u) > 1}
+    if root in inc:
+        dup[root] = inc[root]
+    seen, st = {root}, [root]
+    while st:
+        for k in kids[st.pop()]:
+            if k not in seen:
+                seen.add(k)
+                st.append(k)
+    lost = sorted((set(inc) | set(kids)) - seen)
+    if dup or lost:
+        raise ValueError(f"start tree is not a tree from {root}: {len(dup)} nodes with !=1 parent "
+                         f"(e.g. {list(dup.items())[:3]}), {len(lost)} not reached (e.g. {lost[:3]})")
 
 
 def mc_check(rows, out, regs, T=833.0, chips=2000, sync_ap=26.5, seed=1, start_skew=None):
@@ -936,6 +986,10 @@ def add_start_tree_args(ap):
                          "retime flops on tree nodes where a port would be unclean), each port checked as a crossing "
                          "with the --sta-clock-ocv model; needs --sta-proof/--sta-plan and --sta-clock-ocv table")
     ap.add_argument("--start-retime-max", type=int, default=8, help="max retime flops per clock-tree start edge")
+    ap.add_argument("--start-retime-up", action="store_true",
+                    help="--start-tree clock (opt-in): allow retime flops on ANCESTOR nodes of the launch tap (climb the "
+                         "launch region tree to the fork node, sync on the spine tap) when no capture-side node is clean; "
+                         "default off = byte-identical")
     ap.add_argument("--start-clean", choices=("phase", "width"), default="phase",
                     help="--start-tree clock: 'phase' (default) = the CA rule: the port's derated interval (shared model, "
                          "OCV + droop) keeps >= T/8 from every sampling boundary of the chosen edge; 'width' (stricter) = "
@@ -955,6 +1009,8 @@ def check_start_tree_args(a, err):
 
 def start_tree_from_args(a, rows, err):
     """(start_edges, start_root, info) for --start-tree clock, else (None, None, None)"""
+    if getattr(a, "start_retime_up", False) and a.start_tree != "clock":
+        err("--start-retime-up needs --start-tree clock")
     if a.start_tree != "clock":
         return None, None, None
     check_start_tree_args(a, err)
@@ -963,7 +1019,8 @@ def start_tree_from_args(a, rows, err):
     ctx = clock_contexts(a.sta_proof, a.sta_plan, cs, a.sta_clock_cal, a.sta_clock_ocv, a.sta_clock_droop,
                          a.sta_droop_regions, a.sta_core_latency_ff)
     root, edges, info = clock_start_edges(rows, ctx, a.period, a.aperture, a.sync_aperture, a.start_skew,
-                                          a.start_skew_clean, a.start_retime_max, a.start_clean)
+                                          a.start_skew_clean, a.start_retime_max, a.start_clean,
+                                          getattr(a, "start_retime_up", False))
     return edges, root, info
 
 
