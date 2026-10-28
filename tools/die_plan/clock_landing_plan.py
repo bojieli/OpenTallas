@@ -330,6 +330,38 @@ def _monitor_endpoints(P,W,src,dst,hard_xy=None):
     raise ValueError(f"monitor edge {src}->{dst} is not an existing reset-neighbor edge")
 
 
+def _ca_relay(table,pn):
+    """count-aligned intra-region start relay role of a partition (DIE-KV-3/CAORIGIN, COORD 21:14 ASK 3):
+    "tx" = origin partition of a multi-partition region (cland_rstart_out), "rx" = relay partition (cland_rstart_in)"""
+    ca=table.get("count_aligned") or {};parts=ca.get("parts")
+    if not parts or pn not in parts:return None
+    if parts[pn]["role"]=="relay":return "rx"
+    return "tx" if any(v["role"]=="relay" and v["src"]==pn for v in parts.values()) else None
+
+
+def _ca_relay_pins(t,table,pn,ins,outs):
+    """one scalar ctl pin beside the partition's first landed bus (tree bus first for a child origin)"""
+    role=_ca_relay(table,pn)
+    if role is None:return
+    ca=table["count_aligned"];reg=ca["regions"].get(ca["parts"][pn]["region"],{})
+    tb=None
+    if role=="tx" and reg.get("tree_port"):
+        tb=next((b for b,r in ins.items() if r["port"]==reg["tree_port"]),None)
+    bus=tb or (sorted(ins)[0] if ins else sorted(outs)[0])
+    name,d=("cland_rstart_out","out") if role=="tx" else ("cland_rstart_in","in")
+    t.setdefault("buses",[]).append(_scalar(t,name,d,_bus_xy(t,bus),"ctl",shift=2.16*5))
+
+
+def _ca_relay_ports(raw,table):
+    """registered same-region ctl edge origin -> each relay partition (tx flop -> rx flop, timed by die STA as an
+    intra-region related pair; never a landed crossing)"""
+    parts=(table.get("count_aligned") or {}).get("parts") or {}
+    for pn,v in sorted(parts.items()):
+        if v["role"]=="relay":
+            raw["ports"].append(dict(id="cland_relay__"+pn,src=dict(part=v["src"],bus="cland_rstart_out"),
+                dst=dict(part=pn,bus="cland_rstart_in"),width=1,kind="ctl",epoch=False))
+
+
 def _dataflow_tree(P,table,pports,observer):
     """Monitor DAG on the landed DATA ports (opt-in monitor="dataflow").  Potential = reverse-BFS distance to the
     observer over the data ports; each type gets ONE uniform tree bus (an out bus that strictly lowers the potential
@@ -371,6 +403,8 @@ def _compose_dataflow(raw,plan_path,table,pports,ins,outs,region,base_type,obser
         for n in names:
             if sorted(ins[n])!=sorted(ins[pn]) or sorted(outs[n])!=sorted(outs[pn]):
                 raise ValueError(f"dataflow monitor: {tn} instances differ in landed buses ({n} vs {pn})")
+            if _ca_relay(table,n)!=_ca_relay(table,pn):
+                raise ValueError(f"count-aligned start relay TYPE_SPLIT required: {tn} ({n} vs {pn})")
         sig=dict(inputs=sorted(ins[pn]),outputs=sorted(outs[pn]),active=True,observer=pn==observer_part,
                  monitor="dataflow",tree_bus=tree_bus[tn])
         info=dict(base_type=base_type[pn],mask=sig,tree=None,local_sources=[],children=[],up_buses=[],
@@ -400,6 +434,7 @@ def _compose_dataflow(raw,plan_path,table,pports,ins,outs,region,base_type,obser
             for j,kind in enumerate(("ready","fault")):
                 t["buses"].append(_scalar(t,f"cland_up_{kind}_{bus}","out",point,"ctl",shift=2.16*(j+2)))
             info["up_buses"].append(dict(bus=bus,carries="aggregate" if bus==tree_bus[tn] else "local"))
+        _ca_relay_pins(t,table,pn,ins[pn],outs[pn])
         tgt=_bus_xy(t,tree_bus[tn]) if tree_bus[tn] else [v/2 for v in t["outline_um"]]
         srcs=[c["xy_um"] for c in info["children"]] or [tgt]
         info["local_registered_depth"]=1+max(math.ceil((abs(x-tgt[0])+abs(y-tgt[1]))/405) for x,y in srcs)
@@ -421,6 +456,7 @@ def _compose_dataflow(raw,plan_path,table,pports,ins,outs,region,base_type,obser
         monitor_edges.append(dict(port=r["port"],src=r["src"],dst=r["dst"],seam=True,
             carries="aggregate" if pr["src"]["bus"]==tree_bus[tn] and parent[r["src"]]==r["dst"] else "local",
             data_cycles_added=0,boot_transport_extra_cycles=3))
+    _ca_relay_ports(raw,table)
     # boot budget: rings train in parallel (21); an aggregate input arrives after its source's aggregate + ring (3);
     # a local-only input after the source's local ready; then the receiver's registered depth.
     loc={pn:W["max_release"]+21+bytype[P.parts[pn]["type"]]["local_registered_depth"] for pn in P.parts};agg={}
@@ -507,7 +543,8 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
             signatures[pn]=dict(inputs=sorted(ins[pn]),outputs=sorted(outs[pn]),active=pn in active,observer=pn==observer_part,
                 up_xy=up["src_xy"] if up else None,
                 up_seam=pn in active and monitor_parent[pn] is not None and region[pn]!=region[monitor_parent[pn]],
-                children=[dict(xy_um=c["xy_um"],seam=c["seam"]) for c in ch])
+                children=[dict(xy_um=c["xy_um"],seam=c["seam"]) for c in ch],
+                **({"ca_relay":_ca_relay(table,pn)} if _ca_relay(table,pn) else {}))
         groups=defaultdict(lambda:defaultdict(list))
         for pn,p in P.parts.items():groups[p["type"]][json.dumps(signatures[pn],sort_keys=True)].append(pn)
         split=False
@@ -568,6 +605,7 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
         for bus in sorted(outs[pn]):
             t.setdefault("buses",[]).append(_scalar(t,"fclk_out_"+bus,"out",_bus_xy(t,bus),"clock"))
             if table.get("count_aligned"):t["buses"].append(_scalar(t,"cland_fstart_out_"+bus,"out",_bus_xy(t,bus),"ctl",shift=2.16*4))
+        _ca_relay_pins(t,table,pn,ins[pn],outs[pn])
         if pn in active:
             if monitor_parent[pn] is None and hard:raise ValueError(f"hard partition {pn} cannot be the monitor root")
             if monitor_parent[pn] is None:
@@ -607,6 +645,7 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
             # on a start-tree port, the receiver's origin sync input); registered both ends, boot only
             raw["ports"].append(dict(id="cland_start__"+r["port"],src=dict(part=r["src"],bus="cland_fstart_out_"+pr["src"]["bus"]),
                 dst=dict(part=r["dst"],bus="cland_fstart_in_"+pr["dst"]["bus"]),width=1,kind="ctl",epoch=False))
+    _ca_relay_ports(raw,table)
     for pn in sorted(active):
         par=monitor_parent[pn]
         if par is None:continue

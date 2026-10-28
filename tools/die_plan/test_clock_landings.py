@@ -310,3 +310,76 @@ def test_count_aligned_network_prices_per_crossing():
     del p["clock"]["landing_network"]["count_aligned_cycles"]
     with pytest.raises(LandingError, match="count_aligned_cycles"):
         network_lane_cycles(p)
+
+
+def ca_relay_vehicle(parts=True):
+    """DIE-KV-3/CAORIGIN: region r1 holds b (origin, tree port P lands there) and c (relay, crossing Q a -> c)"""
+    p, t = ca_vehicle()
+    def pin(name, direction):
+        return dict(name=name, dir=direction, width=1, face="E", window_um=[1, 2], layers=["M8"])
+    p["partitions"].append(dict(name="c", type="C", origin_um=[10, 5]))
+    p["partition_types"]["B"]["outline_um"] = [10, 5]
+    p["partition_types"]["C"] = dict(module="c_mod", outline_um=[10, 5], buses=[pin("z", "in"), pin("fclk_in_z", "in"),
+        pin("landing_ready_z", "out"), pin("landing_fault_z", "out"), pin("cland_fstart_in_z", "in"),
+        pin("cland_rstart_in", "in")])
+    p["partition_types"]["B"]["buses"].append(pin("cland_rstart_out", "out"))
+    p["partition_types"]["A"]["buses"] += [pin("fclk_out_w", "out"), pin("cland_fstart_out_w", "out")]
+    p["ports"].append(dict(id="Q", width=4, kind="data", src=dict(part="a", bus="w"), dst=dict(part="c", bus="z")))
+    t["ports"].append(dict(port="Q", width=4, src="a", dst="c", src_region="r0", dst_region="r1", lane="LQ"))
+    ca = t["count_aligned"]
+    ca["ports"]["Q"] = dict(K=-1, depth=4, sched_lat=3, tree=False)
+    ca["regions"]["r0"]["origin_part"] = "a"; ca["regions"]["r1"]["origin_part"] = "b"
+    if parts:
+        ca["relay_stages"] = 2
+        ca["parts"] = dict(a=dict(region="r0", role="origin", src=None, stages=0),
+                           b=dict(region="r1", role="origin", src=None, stages=0),
+                           c=dict(region="r1", role="relay", src="b", stages=2))
+    return p, t
+
+
+C_BODY = ("module c_mod (\n input wire clk,\n input wire [4:0] z // whole bundle\n);\n wire rst_n, rst_n_t0, rr_parent, run;\n"
+          " ot_dp_rgate u_rrl_0 (.clk(clk), .d(rr_parent), .run(run), .q(rst_n_t0));\n wire [4:0] z_q;\n assign z_q = z;\nendmodule\n")
+
+
+def test_count_aligned_relay_emits_one_origin_and_timed_start_relay():
+    p, t = ca_relay_vehicle(); c = Landings(p, t)
+    bb = c.type_rtl("B", B_BODY); cc = c.type_rtl("C", C_BODY)
+    assert "u_cland_origin" in bb and "output wire cland_rstart_out" in bb
+    assert "ot_dp_landing_relay u_cland_rstart_tx (.clk(clk), .rst_raw_n(cland_reset_y), .d(cland_start), .q(cland_rstart_out));" in bb
+    assert "u_cland_origin" not in cc and "input wire cland_rstart_in" in cc
+    assert "ot_dp_landing_relay u_cland_rstart_rx (.clk(clk), .rst_raw_n(cland_reset_z), .d(cland_rstart_in), .q(cland_start));" in cc
+    assert "ot_dp_clk_landing_ca #(.W(5), .DEPTH(4), .K(-1)) u_cland_z" in cc and ".rst_n(cland_start)" in cc
+    top = ("module die_bound_top (rst_n, clk_core);\n input wire rst_n;\n input wire clk_core;\n    a_mod a (\n"
+           "        .clk(clk_core)\n    );\n    b_mod b (\n        .clk(clk_core)\n    );\n    c_mod c (\n"
+           "        .clk(clk_core)\n    );\nendmodule\n")
+    tt = c.top_rtl(top)
+    assert "wire clock_landing_rstart_b;" in tt
+    assert ".cland_rstart_out(clock_landing_rstart_b)" in tt and ".cland_rstart_in(clock_landing_rstart_b)" in tt
+    assert c.ca_part_role["c"]["role"] == "relay" and c.ca_part_role["b"]["relay_tx"]
+
+
+def test_count_aligned_multi_partition_region_without_relay_roles_fails_closed():
+    p, t = ca_relay_vehicle(parts=False)
+    with pytest.raises(LandingError, match="one partition per region"):
+        Landings(p, t)
+    p, t = ca_relay_vehicle(); p["partition_types"]["C"]["buses"].pop()
+    with pytest.raises(LandingError, match="cland_rstart_in"):
+        Landings(p, t)
+    p, t = ca_relay_vehicle(); t["count_aligned"]["parts"]["c"]["stages"] = 3
+    with pytest.raises(LandingError, match="relay role"):
+        Landings(p, t)
+
+
+def test_plan_relay_pins_and_registered_ctl_ports():
+    import clock_landing_plan as CP
+    p, t = ca_relay_vehicle()
+    assert (CP._ca_relay(t, "a"), CP._ca_relay(t, "b"), CP._ca_relay(t, "c")) == (None, "tx", "rx")
+    raw = dict(ports=[]); CP._ca_relay_ports(raw, t)
+    assert raw["ports"] == [dict(id="cland_relay__c", src=dict(part="b", bus="cland_rstart_out"),
+                                 dst=dict(part="c", bus="cland_rstart_in"), width=1, kind="ctl", epoch=False)]
+    ty = dict(outline_um=[10, 5], buses=[dict(name="y", face="W", window_um=[1, 2])])
+    CP._ca_relay_pins(ty, t, "b", {"y": dict(port="P")}, set())
+    assert ty["buses"][-1]["name"] == "cland_rstart_out" and ty["buses"][-1]["kind"] == "ctl"
+    p, t = ca_relay_vehicle(parts=False)
+    raw = dict(ports=[]); CP._ca_relay_ports(raw, t)
+    assert raw["ports"] == [] and CP._ca_relay(t, "b") is None        # no bind roles: nothing added (old form)

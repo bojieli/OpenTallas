@@ -129,6 +129,11 @@ class LandingError(ValueError):
     pass
 
 
+# count-aligned intra-region start relay: tx flop (origin partition) + rx flop (relay partition); must equal
+# count_align_bind.RELAY_STAGES, which shifts the K of the relay partition's crossings by the same counts
+RELAY_STAGES = 2
+
+
 def ca_cycles(ca, pid):
     """Added data cycles of one landed crossing: the proved old-ring +3, or (count-aligned form, MESO-INTEG-1) the
     plan's per-crossing schedule latency K + 1 + n_dst - n_src (count_align_bind.py)."""
@@ -277,6 +282,11 @@ class Landings:
             if self.ca:
                 required.update({f"cland_fstart_out_{b}": "out" for b in mask[1]})
                 required.update({f"cland_fstart_in_{b}": "in" for b in mask[0]})
+                cat = self.ca_type.get(tn)
+                if cat and cat["relay_tx"]:
+                    required["cland_rstart_out"] = "out"
+                if cat and cat["role"][0] == "relay":
+                    required["cland_rstart_in"] = "in"
             for b in mask[0]:
                 required.update({f"fclk_in_{b}": "in"})
                 if not self.collector:
@@ -311,40 +321,66 @@ class Landings:
                 if not all(k in b for k in ("face", "window_um", "layers")):
                     raise LandingError(f"clock landing {tn}.{name}: missing physical pin geometry")
 
-    def _count_aligned_types(self):
-        """Count-aligned form (opt-in): one count origin per partition = per region (the bind's regions are the table's
-        region tags), and every copy of a type gets identical ring parameters and origin role, else TYPE_SPLIT."""
+    def _count_aligned_types(self, raise_split=True):
+        """Count-aligned form (opt-in): one count origin per region; every copy of a type gets identical ring parameters
+        and origin role, else TYPE_SPLIT.  Without a bind "parts" block (MESO-INTEG-1) a region must hold one landed
+        partition.  With it (DIE-KV-3/CAORIGIN, COORD 21:14 ASK 3) the region's origin partition hosts the origin and a
+        tx relay flop driving cland_rstart_out; every other landed partition of the region is a relay: rx flop on
+        cland_rstart_in = its start (count_align_bind RELAY_STAGES = 2 = tx + rx)."""
         ca = self.ca
         regs = defaultdict(list)
         for pn in self.parts:
             if self.ins[pn] or self.outs[pn]:
                 regs[self.region[pn]].append(pn)
+        cparts = ca.get("parts")
         multi = {r: ps for r, ps in regs.items() if len(ps) > 1}
-        if multi:
+        if multi and cparts is None:
             raise LandingError("count-aligned landing needs one partition per region (intra-region start distribution "
                                f"is not built): {dict(list(multi.items())[:3])}")
         ports = {r["port"]: r for r in self.rows}
         out, per_type = {}, defaultdict(dict)
-        for reg, (pn,) in regs.items():
+        self.ca_part_role = {}
+        for reg, ps in sorted(regs.items()):
             rg = ca["regions"].get(reg)
             if rg is None:
-                raise LandingError(f"count-aligned landing: region {reg} ({pn}) not in the start tree")
-            if rg["parent"] is None:
-                role = ("root", int(ca.get("root_settle_cycles", 64)))
+                raise LandingError(f"count-aligned landing: region {reg} ({ps[0]}) not in the start tree")
+            if cparts is None:
+                org = ps[0]
             else:
-                r = ports.get(rg["tree_port"])
-                if r is None or r["dst"] != pn or r["src_region"] != rg["parent"]:
-                    raise LandingError(f"count-aligned landing: tree port {rg['tree_port']} does not land {rg['parent']} -> {pn}")
-                role = ("child", r["dst_bus"], bool(rg["edge_fall"]), int(rg["pad"]))
-            sig = (tuple((b, r["ring_k"], r["ring_depth"]) for b, r in sorted(self.ins[pn].items())), role)
-            per_type[self.parts[pn]["type"]].setdefault(sig, []).append(pn)
+                org = rg.get("origin_part")
+                bad = [q for q in ps if q not in cparts or cparts[q]["region"] != reg]
+                if bad or org not in ps or cparts[org]["role"] != "origin":
+                    raise LandingError(f"count-aligned landing: region {reg} partitions {sorted(ps)} do not match the bind "
+                                       f"roles (origin {org}, unknown {bad})")
+                if sorted(q for q in ps if cparts[q]["role"] == "origin") != [org]:
+                    raise LandingError(f"count-aligned landing: region {reg} needs exactly one origin partition")
+            for pn in ps:
+                if pn != org:
+                    c = cparts[pn]
+                    if c["role"] != "relay" or c["src"] != org or int(c["stages"]) != RELAY_STAGES:
+                        raise LandingError(f"count-aligned landing: {pn} relay role {c} != relay({org}, {RELAY_STAGES})")
+                    role = ("relay", org, RELAY_STAGES)
+                elif rg["parent"] is None:
+                    role = ("root", int(ca.get("root_settle_cycles", 64)))
+                else:
+                    r = ports.get(rg["tree_port"])
+                    if r is None or r["dst"] != pn or r["src_region"] != rg["parent"]:
+                        raise LandingError(f"count-aligned landing: tree port {rg['tree_port']} does not land {rg['parent']} -> {pn}")
+                    role = ("child", r["dst_bus"], bool(rg["edge_fall"]), int(rg["pad"]))
+                tx = pn == org and len(ps) > 1
+                self.ca_part_role[pn] = dict(region=reg, role=role[0], origin=org, relay_tx=tx)
+                sig = (tuple((b, r["ring_k"], r["ring_depth"]) for b, r in sorted(self.ins[pn].items())),
+                       role if role[0] != "relay" else role[::2], tx)
+                per_type[self.parts[pn]["type"]].setdefault(sig, []).append(pn)
         bad = {tn: [ps for ps in sigs.values()] for tn, sigs in per_type.items() if len(sigs) > 1}
-        if bad:
+        self.ca_type_split = dict(types_needing_split=len(bad), type_count_before=len(per_type),
+                                  type_count_after=sum(len(s) for s in per_type.values()))
+        if bad and raise_split:
             raise LandingError(f"count-aligned landing TYPE_SPLIT required (K/DEPTH/origin differ between copies): "
                                f"{len(bad)} types, e.g. {dict(list(bad.items())[:2])}")
         for tn, sigs in per_type.items():
-            ((ins, role), _), = sigs.items()
-            out[tn] = dict(rings={b: dict(K=k, depth=d) for b, k, d in ins}, role=role)
+            (ins, role, tx), _ = next(iter(sigs.items()))
+            out[tn] = dict(rings={b: dict(K=k, depth=d) for b, k, d in ins}, role=role, relay_tx=tx)
         return out
 
     def validate_observer(self,binder):
@@ -494,7 +530,7 @@ class Landings:
                       f"        .fclk(fclk_in_{b}), {ring_rst}, .d({b}), .q({landed}),",
                       f"        .ready(landing_ready_{b}), .fault(landing_fault_{b}));"]
         if cat:
-            logic += self._origin_rtl(tn, cat, ca_raw, body)
+            logic += self._origin_rtl(tn, cat, ca_raw, body, extra)
         if self.dataflow:
             body = self._dataflow_monitor(tn, key, mask, collector_info, extra, logic, body)
         elif active_collector:
@@ -541,11 +577,28 @@ class Landings:
         self.emitted_types.add(tn)
         return head + marker + "\n".join(logic) + "\n" + body
 
-    def _origin_rtl(self, tn, cat, ca_raw, body):
+    def _origin_rtl(self, tn, cat, ca_raw, body, extra):
         """The region's count origin: root = ot_dp_landing_root (fixed settle count), child = ot_dp_landing_origin on
         the start-tree port (3-FF sync of the parent's forwarded start, edge/PAD from the bind).  Its raw reset is the
-        timed local raw-reset relay of the tree bus (child) / of a landed input or tap 0 (root), never START-gated."""
+        timed local raw-reset relay of the tree bus (child) / of a landed input or tap 0 (root), never START-gated.
+        Intra-region relay (ASK 3): the origin partition of a multi-partition region adds the tx flop u_cland_rstart_tx
+        -> cland_rstart_out; a relay partition's start is the rx flop u_cland_rstart_rx on cland_rstart_in."""
         role = cat["role"]
+
+        def local_raw(what):
+            raw = next(iter(ca_raw.values()), None)
+            if raw is None:
+                m = re.search(r"ot_dp_r(?:gate|relay)\s+\w+\s*\([^;]*?\.q\((rst_n_t0)\)\);", body)
+                raw = m.group(1) if m else ("rst_n" if re.search(r"\bwire rst_n = arst_n;", body) else None)
+                if raw is None:
+                    raise LandingError(f"{tn}: {what} needs a timed raw reset relay (rst_n_t0) or delivered rst_n")
+            return raw
+        if role[0] == "relay":
+            raw = local_raw("start relay rx")
+            self.reset_placements.setdefault(tn, {})["count_origin"] = dict(kind="relay", raw_reset=raw, stages=role[-1])
+            extra.append("    input wire cland_rstart_in")
+            return [f"    ot_dp_landing_relay u_cland_rstart_rx (.clk(clk), .rst_raw_n({raw}), .d(cland_rstart_in), "
+                    f".q(cland_start));"]
         if role[0] == "child":
             b = role[1]
             raw = ca_raw.get(b)
@@ -553,16 +606,18 @@ class Landings:
                 raise LandingError(f"{tn}: start-tree bus {b} is not a landed input of this type")
             self.reset_placements.setdefault(tn, {})["count_origin"] = dict(kind="child", tree_bus=b, raw_reset=raw,
                                                                          edge_fall=role[2], pad=role[3])
-            return [f"    ot_dp_landing_origin #(.PAD({role[3]}), .EDGE_FALL({int(role[2])})) u_cland_origin (",
-                    f"        .clk(clk), .rst_raw_n({raw}), .p_start(cland_fstart_in_{b}), .start(cland_start));"]
-        raw = next(iter(ca_raw.values()), None)
-        if raw is None:
-            m = re.search(r"ot_dp_r(?:gate|relay)\s+\w+\s*\([^;]*?\.q\((rst_n_t0)\)\);", body)
-            raw = m.group(1) if m else ("rst_n" if re.search(r"\bwire rst_n = arst_n;", body) else None)
-            if raw is None:
-                raise LandingError(f"{tn}: root count origin needs a timed raw reset relay (rst_n_t0) or delivered rst_n")
-        self.reset_placements.setdefault(tn, {})["count_origin"] = dict(kind="root", raw_reset=raw, settle=role[1])
-        return [f"    ot_dp_landing_root #(.SETTLE({role[1]})) u_cland_origin (.clk(clk), .rst_raw_n({raw}), .start(cland_start));"]
+            logic = [f"    ot_dp_landing_origin #(.PAD({role[3]}), .EDGE_FALL({int(role[2])})) u_cland_origin (",
+                     f"        .clk(clk), .rst_raw_n({raw}), .p_start(cland_fstart_in_{b}), .start(cland_start));"]
+        else:
+            raw = local_raw("root count origin")
+            self.reset_placements.setdefault(tn, {})["count_origin"] = dict(kind="root", raw_reset=raw, settle=role[1])
+            logic = [f"    ot_dp_landing_root #(.SETTLE({role[1]})) u_cland_origin (.clk(clk), .rst_raw_n({raw}), .start(cland_start));"]
+        if cat.get("relay_tx"):
+            self.reset_placements[tn]["count_origin"]["relay_tx"] = True
+            extra.append("    output wire cland_rstart_out")
+            logic.append(f"    ot_dp_landing_relay u_cland_rstart_tx (.clk(clk), .rst_raw_n({raw}), .d(cland_start), "
+                         f".q(cland_rstart_out));")
+        return logic
 
     def _dataflow_monitor(self, tn, key, mask, info, extra, logic, body):
         """Registered dataflow monitor: local = AND(landing_ready) / OR(landing_fault), aggregate = AND(in_ok) /
@@ -648,6 +703,9 @@ class Landings:
         decl += [f"    wire {w};" for w in sorted(set(fwd.values()))]
         fst = {k: v.replace("clock_landing_fwd_", "clock_landing_start_", 1) for k, v in fwd.items()} if self.ca else {}
         decl += [f"    wire {w};" for w in sorted(set(fst.values()))]
+        rpr = getattr(self, "ca_part_role", {}) if self.ca else {}
+        rst = {r["origin"]: f"clock_landing_rstart_{ident(r['origin'])}" for r in rpr.values() if r["role"] == "relay"}
+        decl += [f"    wire {w};" for w in sorted(set(rst.values()))]
         mon = {}
         if self.dataflow:
             # one wire pair per sender status pin (a source bus fanning out to several sinks shares its pin)
@@ -676,6 +734,10 @@ class Landings:
                 raise LandingError(f"clock landing: default clock connection not found on {pn}")
             conn = [f"        .fclk_out_{b}({fwd[(pn,b)]})" for b in sorted(self.outs[pn])]
             conn += [f"        .cland_fstart_out_{b}({fst[(pn,b)]})" for b in sorted(self.outs[pn]) if self.ca]
+            if pn in rpr and rpr[pn]["relay_tx"]:
+                conn.append(f"        .cland_rstart_out({rst[pn]})")
+            if pn in rpr and rpr[pn]["role"] == "relay":
+                conn.append(f"        .cland_rstart_in({rst[rpr[pn]['origin']]})")
             if self.dataflow:
                 for b in sorted(self.outs[pn]):
                     conn += [f"        .cland_up_ready_{b}({mon[(pn,b)]}_ready)", f"        .cland_up_fault_{b}({mon[(pn,b)]}_fault)"]

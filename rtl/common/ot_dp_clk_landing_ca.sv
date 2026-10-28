@@ -312,3 +312,23 @@ module ot_dp_landing_root #(
     initial if (SETTLE < 1) $fatal(1, "root SETTLE must be >= 1");
 `endif
 endmodule
+
+// Intra-region start relay stage (DIE-KV-3/CAORIGIN, COORD 21:14 ASK 3): a region holding several landed partitions
+// has ONE origin (ot_dp_landing_root / ot_dp_landing_origin) in its origin partition; every other landed partition of
+// the region takes the origin's start through two of these flops on the region clock (tx in the origin partition ->
+// cland_rstart pin -> rx in the relay partition).  It is a plain registered same-clock control path, timed by the die
+// STA as an intra-region related pair (not a landed crossing).  count_align_bind.py gives the relay partition the
+// count origin N_origin + 2 and shifts the K of its crossings by the same 2 counts.  Cleared by the partition's raw
+// reset (synchronous, like ot_dp_landing_root); the raw reset must release before the start wave arrives (root SETTLE).
+(* keep_hierarchy *)
+module ot_dp_landing_relay (
+    input  wire clk,
+    input  wire rst_raw_n,
+    input  wire d,
+    output reg  q
+);
+    always @(posedge clk) begin
+        if (!rst_raw_n) q <= 1'b0;
+        else q <= d;
+    end
+endmodule

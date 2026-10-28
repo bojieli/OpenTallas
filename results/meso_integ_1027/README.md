@@ -95,3 +95,85 @@ TOK (UNCHECKED):
 - `die_sta_related --count-align` has unit tests only. It has not run on a real die proof yet.
 
 Files: `kv_ca_price.{py,json}`, `bind/{head3,kv}_bind{,_summary}.json`, `bench/`.
+
+## Intra-region start relay (DIE-KV-3/CAORIGIN, 2026-10-27 22:0x; COORD 21:14 ASK 3)
+COORD accepted "one origin per region + start relay to its partitions as a timed ctl pin". This section builds it. It
+is opt-in: it switches on only when the bind gets partition endpoints (`count_align_bind.py --table`, or `--parts ocv`).
+Without them, the bind output is byte-identical to MESO-INTEG-1 (loop bench `single`: `loop_bind.json` identical).
+
+- **Origin choice (deterministic).** A child region's origin is the partition that its start-tree port lands in. The
+  root region's origin is the partition that sends the most child tree ports; ties go to the most landed crossings,
+  then to the first name. Every other landed partition of the region is a **relay**.
+- **Hardware.** The relay is `ot_dp_landing_relay`: one flop with a synchronous raw-reset clear, on the region clock.
+  - The origin partition has `u_cland_rstart_tx` (d = origin start), which drives `cland_rstart_out`.
+  - The die net `clock_landing_rstart_<origin>` carries it to `cland_rstart_in` of every relay partition.
+  - In each relay partition, `u_cland_rstart_rx` produces that partition's `cland_start`.
+  - This gives r = `RELAY_STAGES` = 2 counts. The path is a same-clock registered ctl edge (`cland_relay__<part>` in
+    `landing_network.edges`, registered at both ends), timed by the die STA as an intra-region related pair. It is not
+    a landed crossing.
+- **Count frames (derived in `bind_parts`).** Each landed partition q counts from its own start N_q.
+  - Child origin: N = N_sender + m + SYNC - 1 - LAUNCH + PAD. The tree port's sender may be a relay, so a region
+    origin also moves by r for each relayed tree sender on its path.
+  - Relay: N_q = N_origin + r.
+  - Ring lag: L = (K + N_d - N_s) T + d.
+  - Tree port: K = K_tree + tree_shift (unchanged).
+  - Other crossings: K = sched_lat - 1 - (N_d - N_s).
+  - `sched_lat` is the absolute latency the schedule and TOK use. It is unchanged, and q == word_s(c - K) still holds
+    in the receiver partition's counts.
+- **Loops.** The start spanning tree is over partitions: tree ports plus relay edges. A relay edge is (sched_lat r,
+  K+1 = 0), because it moves the count origin by r. Every non-tree crossing closes one loop, and the identity
+  sum(sched_lat) = sum(K+1) must hold on every loop. The physical start-up MC now also draws the origins per partition.
+- **Wiring.** `clock_landings.py` emits the tx/rx flops and the pins, and checks that the bind roles match the regions.
+  A multi-partition region with no bind `parts` still fails closed. `TYPE_SPLIT` now includes the origin/relay role
+  and the tx flag.
+- **Plan.** `clock_landing_plan.py` adds the pins: a `cland_rstart_out/in` scalar ctl beside the first landed bus
+  (the tree bus for an origin). It also adds the `cland_relay__*` ctl ports, and the cohort signature includes the
+  relay role.
+- **Verify.** `clock_landing_verify.py` checks rx.d == tx.q, tx.d == origin start, the clocks and raw resets, ring
+  t_rst_n/rst_n against each partition's start, and that p_start comes from the tree port's sender partition. It
+  adds 3 mutants (skip tx, ring on the origin start, no bind roles).
+
+### Numbers (own runs, intel1 docker; CHECKED-own, not independently NUMBER-CHECKed)
+- **Tests:** 93 (`tools/die_plan`: clock_landing*, count_align*, die_sta_related) + 7 (fallback_land) PASS. 9 tests
+  are new.
+- **Loop bench `multi`** (`run_loop_bench.sh OUT 200 multi`):
+  - Graph: 5 regions, 9 partitions (regions with 2, 2 and 3 partitions), 17 crossings, 13 loops.
+  - Coverage: 2 tree ports sent from a relay partition, 6 crossings with a relayed receiver, 6 with a relayed sender.
+  - Result: lint clean; 200 chips, 1,203,219 word checks, **0 bad**.
+  - Negative control (`mutant_noshift`, region-frame K with the relay offset ignored): 20/20 chips bad.
+  - Bench `single`: unchanged (782,183 checks, 0 bad).
+- **KV land128 bind:**
+  - Inputs: `die-kv-3-1027/base/L128fish_xing_lpo.json` (byte-identical to `die-kv-2-1027/L128_xing_lpo.json`),
+    `l128_table.json`, and `landed_l128_plan.json`; see `caorigin/kv_l128_bind_summary.json`.
+  - Size: 128 regions, 160 landed partitions, 3595 crossings (D4 3505 / D8 90 / FAIL 0).
+  - **Multi-partition regions: 32 (all 2-partition: phy/pc pairs, 950 um centre to centre)**. 96 regions have a single
+    partition.
+  - Relays: 32 relay partitions. Relay pins: 32 tx_out + 32 rx_in, with 32 `cland_relay` ctl edges.
+  - 130 crossings have a relayed receiver and 120 a relayed sender. 3 tree ports are sent from a relay. 151 non-tree
+    K values shift.
+  - Rc 0. **Identity/loop errors 0** on 3468 fundamental loops.
+  - Start-up MC: 2000 chips, 0 window violations, min margin low/high 104.4 / 341.7 ps.
+  - The binder no longer fails closed on multi-partition regions.
+- **TYPE_SPLIT** (`caorigin/kv_l128_typesplit.json`, `Landings` with no RTL): 20 of 60 landed types need a split, giving
+  119 variants. Per-instance K/DEPTH alone already gives 117. The origin/relay role adds 2 variants (6 types differ in
+  role, and those are already split by K). TYPE_SPLIT still fails closed; resolving it is the remaining open item
+  (type splits or per-instance K parameters).
+
+### sched_lat <= 0 and >= 9 on KV land128 (parent's question): not the relabel, not a bind bug
+The `sched_lat` histogram from this partition-frame bind is identical to the region-only bind:
+- {-4:2, -3:28, -2:2, -1:8, 0:7, 1:161, 2:1347, 3:1920, 4:34, 5:30, 6:23, 7:1, 9:1, 10:16, 11:15}
+- total 9276 vs old ring 10785.
+
+`sched_lat` does not depend on origins or relays. It is a count-frame latency: sched_lat = 1 + (L - d)/T, within 0.5
+on every crossing. The 79 extreme crossings are all non-tree. Only 1 touches a relay partition.
+
+They are the pairs whose measured region clock phase differs by 6-8 periods. Examples:
+- pv_N_7 -> hgi_EN_7: d = +6.5 ns, sched_lat -4
+- phy_EN_7 -> hroot_EN: d = -5.7 ns, sched_lat 11
+- hroot_EN -> phy_EN_7: -3
+
+In total, 139 crossings have |d| > 2T. The physical lag of these crossings is a normal L of about 2.2-2.4 ns. A
+round trip sums to the physical value (11 + -3 = 8), so loops and token loops are exact.
+
+Open-lane sums of `sched_lat` include the endpoint regions' phase offset. That is correct in each region's own count
+frame, but it is not a physical time.

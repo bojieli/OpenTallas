@@ -92,3 +92,71 @@ def test_tree_wander_shifts_the_window_up_one_period():
     summ, out, b, v = run(rows)
     assert out[0]["tree_shift"] == 1 and b["ports"]["ab"]["K"] == 0 and out[0]["lat_cycles"] == 3
     assert v["sim_window_violations"] == 0
+
+
+# DIE-KV-3/CAORIGIN (COORD 21:14 ASK 3): one origin per region + timed start relay to the region's other partitions
+def multi_rows():
+    """regions a, b, c; a holds a1/a2, c holds c1/c2/c3; crossings hit relayed senders and receivers"""
+    pr = dict(a1="a", a2="a", b="b", c1="c", c2="c", c3="c")
+    ph = dict(a=0, b=300, c=-250)
+    edges = [("a1", "b"), ("b", "c1"), ("c2", "a2"), ("a2", "c3"), ("c3", "b"), ("b", "a2"), ("c1", "a1"), ("a2", "b"),
+             ("b", "c2")]
+    rows = [row(f"{u}_{v}", pr[u], pr[v], ph[pr[v]] - ph[pr[u]], 60, 60) for u, v in edges]
+    return rows, {f"{u}_{v}": (u, v) for u, v in edges}
+
+
+def test_multi_partition_regions_get_one_origin_and_relays():
+    rows, parts = multi_rows()
+    summ, out = CAP.plan([dict(r) for r in rows], T, T / 8, 0.05)
+    br = CB.bind(summ, out, T, 0)                       # region frames (MESO-INTEG-1)
+    summ, out = CAP.plan([dict(r) for r in rows], T, T / 8, 0.05)
+    b = CB.bind(summ, out, T, 0, parts)
+    v = CB.verify(b, {r["port"]: r for r in rows}, 400, T / 8, 0.05)
+    assert not v["identity_and_loop_errors"] and v["sim_window_violations"] == 0, v
+    # one origin per region; the child origin is the partition its tree port lands in
+    for x, rg in b["regions"].items():
+        org = [q for q, p in b["parts"].items() if p["region"] == x and p["role"] == "origin"]
+        assert org == [rg["origin_part"]]
+        if rg["parent"] is not None:
+            assert b["ports"][rg["tree_port"]]["dst_part"] == rg["origin_part"]
+    # dN = partition count origin - one-origin-per-region origin: the relay stages plus the relayed tree senders
+    dn = {q: p["n_nominal"] - br["regions"][p["region"]]["n_nominal"] for q, p in b["parts"].items()}
+    assert sum(1 for p in b["parts"].values() if p["role"] == "relay") == 3 and set(dn.values()) - {0} 
+    for pid, c in b["ports"].items():
+        assert c["sched_lat"] == br["ports"][pid]["sched_lat"]            # schedule / TOK latency unchanged
+        if not c["tree"]:
+            assert c["K"] == br["ports"][pid]["K"] - dn[c["dst_part"]] + dn[c["src_part"]]
+        else:
+            assert c["K"] == br["ports"][pid]["K"]
+    assert v["fundamental_cycles"] == len(rows) - (len(b["parts"]) - 1 - 3)   # partition tree: tree ports + 3 relays
+    s = CB.relay_summary(b)
+    assert s["multi_partition_regions"] == 2 and s["relay_pins"] == dict(tx_out=2, rx_in=3)
+
+
+def test_relay_offset_ignored_is_caught():
+    rows, parts = multi_rows()
+    summ, out = CAP.plan([dict(r) for r in rows], T, T / 8, 0.05)
+    b = CB.bind(summ, out, T, 0, parts)
+    rel = {q: (p["stages"] if p["role"] == "relay" else 0) for q, p in b["parts"].items()}
+    hit = [p for p, c in b["ports"].items() if not c["tree"] and rel[c["dst_part"]] != rel[c["src_part"]]]
+    assert hit
+    c = b["ports"][hit[0]]
+    c["K"] += rel[c["dst_part"]] - rel[c["src_part"]]                    # region-frame K: relay offset dropped
+    v = CB.verify(b, {r["port"]: r for r in rows}, 200, T / 8, 0.05)
+    assert v["identity_and_loop_errors"] and v["sim_window_violations"] > 0
+
+
+def test_annotate_table_writes_partition_roles():
+    rows, parts = multi_rows()
+    summ, out = CAP.plan([dict(r) for r in rows], T, T / 8, 0.05)
+    b = CB.bind(summ, out, T, 0, parts)
+    table = dict(regions=[], ports=[dict(port=p, src=c["src_part"], dst=c["dst_part"], src_region=c["src"],
+                                         dst_region=c["dst"], width=8, lane="L" + p) for p, c in b["ports"].items()])
+    assert CB.table_parts(table) == parts
+    t = CB.annotate_table(table, b)
+    ca = t["count_aligned"]
+    assert ca["relay_stages"] == 2 and set(ca["parts"]) == set(b["parts"])
+    assert all(ca["regions"][x]["origin_part"] == b["regions"][x]["origin_part"] for x in b["regions"])
+    table["ports"][0]["dst"] = "zz"
+    with pytest.raises(CB.BindError, match="bind partitions"):
+        CB.annotate_table(table, b)
