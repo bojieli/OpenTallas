@@ -190,3 +190,14 @@ Shared opt-in source READY codex/flow-mcmm-1351@2f4c07767c (own intel2 scratch2 
 
 ## CODEX notes 2026-10-28 04:09 PDT
 CODEX took over approved nonrelease mean contract on codex/coremean-0359-1028@acbf0993be (pushed). Explicit parent_budget EARLY core taps with TT+FF use selected-view mean contracts in --trial kits; release refuses unsigned budgets. Legacy default unchanged, SIGNED plans use measured means. 8 focused tests PASS incl budget TT390/FF312 export, wrong-view control and release refusal. No physical run; shared merge review pending.
+
+## FLOW-GEN-1 (2026-10-28 10:01 PDT)
+Six separate branches off origin/main 6a750743dc, each READY in COORD-REVIEW-QUEUE:
+- fg1-hb4@a550926211: die_sta intra_bits pins-list crash.
+- fg1-lec-keep@aba2ced7f6: unobservable kept bits; romleaf 32/1206.
+- fg1-apcancel@ccc81bc94e: an ot-run --cancel becomes CANCELLED.
+- fg1-lec-rst@a343807824: kit-declared reset ports.
+- fg1-gen@8b904ba59c: DIE-HEAD-9 x5 + afifo fingerprints; only s81_head kits change.
+- Item 4, the 14 LEC tests: not reproducible on main (288 and 286 passed on two hosts).
+- bind_reset.json: done by ROOT-MERGE-127 (39 passed).
+- Interval and fall work moved to FLOW-ONEMODEL-1. Its input is claude/flow-gen-1-1028: 1953bebd0a (region-key interval, KV-11 CHECKED) and 6672c59214 (measured fall).
