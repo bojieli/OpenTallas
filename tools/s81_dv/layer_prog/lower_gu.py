@@ -64,9 +64,12 @@ JOB_LEAD = 8                    # job at the cw pin this many edges before the f
 NE, NEMAX, K = 384, 448, 6
 # fixed latencies, measured on the RTL of record by run_gu_bench.sh (asserted there: any drift fails the bench)
 #   from the edge the LAST beat is on vi_n (the matching S beat is on vi_s 2 edges later; both reach the stop together)
-HC_LAT_N, HC_LAT_S = 759, 757   # -> first coefficient row on vo_n / vo_s (rows i = 1..5 follow one an edge)
-RT_LAT_N, RT_LAT_S = 68, 66     # -> ids row on vo_n / vo_s (S81-CORE-LAT-R17: +1, l1c order sort CPS 3 -> 2)
-RW_GAP = 121                    # ids row -> first weights row on the same port (L3 ot_s81_su_rw, measured)
+HC_LAT_N, HC_LAT_S = 1018, 1016  # -> first coefficient row on vo_n / vo_s (rows i = 1..5 follow one an edge)
+# TOK-ALL-16 10-27: re-measured on current main (gunit parent with the bound native-32 L5 127356adf2 + 10-24 pin-register
+# stations; identical with and without the GUNIT_* defines): HC 759/757 -> 1018/1016 (+259), router ids 68/66 -> 50/48
+# (-18), RW_GAP 121 -> 101; every value bit-exact (results/token_pass/tok16_dsl0_1027/gu)
+RT_LAT_N, RT_LAT_S = 50, 48     # -> ids row on vo_n / vo_s (S81-CORE-LAT-R17: +1, l1c order sort CPS 3 -> 2)
+RW_GAP = 101                    # ids row -> first weights row on the same port (L3 ot_s81_su_rw, measured)
 import sys as _sys                                  # noqa: E402
 _sys.path.insert(0, str(Path(__file__).resolve().parent))
 from leaf_rows import GU_ROWS                       # noqa: E402  (TOK-S81-GAPS/GU: the allocated leaf-store rows)

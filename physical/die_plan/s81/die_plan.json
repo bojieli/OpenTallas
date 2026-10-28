@@ -109282,6 +109282,27 @@
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 414 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
     },
     {
+     "conn": "core:u_lf.u_vn.u_b.n_pre|core:u_lf.u_vp.u_b1",
+     "from_um": [
+      952.65,
+      159.96
+     ],
+     "to_um": [
+      921.144,
+      544.776
+     ],
+     "regs_um": [
+      [
+       959.148,
+       380.387
+      ]
+     ],
+     "bits": 128,
+     "launch": "core:u_lf.u_vn.u_b.n_pre",
+     "capture": "u_lf.u_vp.u_b1",
+     "note": "S81-CORES-R26 10-27 (delta_g0c_r26_1027.py): pin-to-pin > 405 um; same vni chain (u_cst_vni, CS_VNI_D) and same station as the type's existing n_pre entry: 0 new cycles"
+    },
+    {
      "conn": "bus:leafdn_i0",
      "from_um": [
       735.534,
@@ -123849,6 +123870,69 @@
      "launch": "core:u_lf.u_vn.u_b.n_pre",
      "capture": "u_lf.u_vp.u_b0",
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 415 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
+    },
+    {
+     "conn": "core:u_lf.u_vn.u_b.n_go|core:u_lf.u_vp.u_b0",
+     "from_um": [
+      987.21,
+      255.864
+     ],
+     "to_um": [
+      972.984,
+      657.096
+     ],
+     "regs_um": [
+      [
+       1002.348,
+       445.187
+      ]
+     ],
+     "bits": 1,
+     "launch": "core:u_lf.u_vn.u_b.n_go",
+     "capture": "u_lf.u_vp.u_b0",
+     "note": "S81-CORES-R26 10-27 (delta_g0c_r26_1027.py): pin-to-pin > 405 um; same vni chain (u_cst_vni, CS_VNI_D) and same station as the type's existing n_pre entry: 0 new cycles"
+    },
+    {
+     "conn": "core:u_lf.u_vn.u_b.n_pre|core:u_lf.u_vp.u_b1",
+     "from_um": [
+      987.21,
+      229.08
+     ],
+     "to_um": [
+      947.064,
+      605.256
+     ],
+     "regs_um": [
+      [
+       1002.348,
+       445.187
+      ]
+     ],
+     "bits": 128,
+     "launch": "core:u_lf.u_vn.u_b.n_pre",
+     "capture": "u_lf.u_vp.u_b1",
+     "note": "S81-CORES-R26 10-27 (delta_g0c_r26_1027.py): pin-to-pin > 405 um; same vni chain (u_cst_vni, CS_VNI_D) and same station as the type's existing n_pre entry: 0 new cycles"
+    },
+    {
+     "conn": "core:u_lf.u_vn.u_b.wl_d|core:u_lf.u_vp.u_b0",
+     "from_um": [
+      987.21,
+      256.056
+     ],
+     "to_um": [
+      972.984,
+      657.096
+     ],
+     "regs_um": [
+      [
+       1002.348,
+       445.187
+      ]
+     ],
+     "bits": 128,
+     "launch": "core:u_lf.u_vn.u_b.wl_d",
+     "capture": "u_lf.u_vp.u_b0",
+     "note": "S81-CORES-R26 10-27 (delta_g0c_r26_1027.py): pin-to-pin > 405 um; same vni chain (u_cst_vni, CS_VNI_D) and same station as the type's existing n_pre entry: 0 new cycles"
     },
     {
      "conn": "core:u_lf.u_vq.u|core:u_lf.u_vs",
@@ -166792,6 +166876,69 @@
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 415 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
     },
     {
+     "conn": "core:u_lf.u_vn.u_b.n_go|core:u_lf.u_vp.u_b1",
+     "from_um": [
+      1090.89,
+      290.424
+     ],
+     "to_um": [
+      1085.304,
+      700.296
+     ],
+     "regs_um": [
+      [
+       1097.388,
+       484.067
+      ]
+     ],
+     "bits": 1,
+     "launch": "core:u_lf.u_vn.u_b.n_go",
+     "capture": "u_lf.u_vp.u_b1",
+     "note": "S81-CORES-R26 10-27 (delta_g0c_r26_1027.py): pin-to-pin > 405 um; same vni chain (u_cst_vni, CS_VNI_D) and same station as the type's existing n_pre entry: 0 new cycles"
+    },
+    {
+     "conn": "core:u_lf.u_vn.u_b.n_pre|core:u_lf.u_vp.u_b0",
+     "from_um": [
+      1090.89,
+      263.64
+     ],
+     "to_um": [
+      1059.384,
+      648.456
+     ],
+     "regs_um": [
+      [
+       1097.388,
+       484.067
+      ]
+     ],
+     "bits": 128,
+     "launch": "core:u_lf.u_vn.u_b.n_pre",
+     "capture": "u_lf.u_vp.u_b0",
+     "note": "S81-CORES-R26 10-27 (delta_g0c_r26_1027.py): pin-to-pin > 405 um; same vni chain (u_cst_vni, CS_VNI_D) and same station as the type's existing n_pre entry: 0 new cycles"
+    },
+    {
+     "conn": "core:u_lf.u_vn.u_b.wl_d|core:u_lf.u_vp.u_b1",
+     "from_um": [
+      1090.89,
+      290.616
+     ],
+     "to_um": [
+      1085.304,
+      700.296
+     ],
+     "regs_um": [
+      [
+       1097.388,
+       484.067
+      ]
+     ],
+     "bits": 128,
+     "launch": "core:u_lf.u_vn.u_b.wl_d",
+     "capture": "u_lf.u_vp.u_b1",
+     "note": "S81-CORES-R26 10-27 (delta_g0c_r26_1027.py): pin-to-pin > 405 um; same vni chain (u_cst_vni, CS_VNI_D) and same station as the type's existing n_pre entry: 0 new cycles"
+    },
+    {
      "conn": "core:u_lf.u_vn.u_b.y|core:u_lf.u_vq",
      "from_um": [
       734.55,
@@ -208832,8 +208979,8 @@
       "name": "u_gunit.u_l5",
       "kind": "core",
       "xy": [
-       1531.59,
-       135.912
+       1263.75,
+       201.072
       ],
       "insertion_ps": 520.0,
       "insertion_tol_ps": 40.0,
@@ -208849,16 +208996,16 @@
     {"inst":"u_gunit","module":"dsdv_gunit","status":"rework","params":{"SID":"4'd3"},"note":"re-aspected 950x1469 -> 2-cell row slot"}
    ],
    "hard_cores": [
-    {"inst":"u_gunit.u_l5","module":"dsdv_gunit_l5","lef":"physical/ref_tile/dsdv_gunit_l5/views/dsdv_gunit_l5/dsdv_gunit_l5.lef","origin_um":[1537.92,17.28],"outline_um":[345.6,302.4],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_gunit_l5.json","obs_max":"M5"},
-    {"inst":"u_gunit.u_l1","module":"dsdv_gunit_l1","lef":"physical/ref_tile/dsdv_gunit_l1/views/dsdv_gunit_l1/dsdv_gunit_l1.lef","origin_um":[812.16,207.36],"outline_um":[345.6,216.0],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_gunit_l1.json","obs_max":"M5"},
-    {"inst":"u_gunit.u_l1c","module":"dsdv_gunit_l1c","lef":"physical/ref_tile/dsdv_gunit_l1c/views/dsdv_gunit_l1c/dsdv_gunit_l1c.lef","origin_um":[708.48,207.36],"outline_um":[86.4,216.0],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_gunit_l1c.json","obs_max":"M5"},
-    {"inst":"u_gunit.u_l0","module":"dsdv_gunit_l0","lef":"physical/ref_tile/dsdv_gunit_l0/views/dsdv_gunit_l0/dsdv_gunit_l0.lef","origin_um":[1175.04,207.36],"outline_um":[345.6,172.8],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_gunit_l0.json","obs_max":"M5"},
-    {"inst":"u_gunit.u_l2","module":"dsdv_gunit_l2","lef":"physical/ref_tile/dsdv_gunit_l2/views/dsdv_gunit_l2/dsdv_gunit_l2.lef","origin_um":[1175.04,17.28],"outline_um":[345.6,172.8],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_gunit_l2.json","obs_max":"M5"},
-    {"inst":"u_gunit.u_l3","module":"dsdv_gunit_l3","lef":"physical/ref_tile/dsdv_gunit_l3/views/dsdv_gunit_l3/dsdv_gunit_l3.lef","origin_um":[812.16,17.28],"outline_um":[345.6,172.8],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_gunit_l3.json","obs_max":"M5"},
-    {"inst":"u_gunit.u_l0r","module":"dsdv_gunit_l0r","lef":"physical/ref_tile/dsdv_gunit_l0r/views/dsdv_gunit_l0r/dsdv_gunit_l0r.lef","origin_um":[1175.04,397.44],"outline_um":[267.84,267.84],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_gunit_l0r.json","obs_max":"M5"},
-    {"inst":"u_gunit.u_l5f","module":"dsdv_gunit_l5f","lef":"physical/ref_tile/dsdv_gunit_l5f/views/dsdv_gunit_l5f/dsdv_gunit_l5f.lef","origin_um":[1900.8,17.28],"outline_um":[151.2,151.2],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_gunit_l5f.json","obs_max":"M5"},
-    {"inst":"u_gunit.u_l4r","module":"dsdv_gunit_l4r","lef":"physical/ref_tile/dsdv_gunit_l4r/views/dsdv_gunit_l4r/dsdv_gunit_l4r.lef","origin_um":[1537.92,423.36],"outline_um":[129.6,129.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_gunit_l4r.json","obs_max":"M5"},
-    {"inst":"u_gunit.u_l4","module":"dsdv_gunit_l4","lef":"physical/ref_tile/dsdv_gunit_l4/views/dsdv_gunit_l4/dsdv_gunit_l4.lef","origin_um":[1537.92,336.96],"outline_um":[345.6,64.8],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_gunit_l4.json","obs_max":"M5"}
+    {"inst":"u_gunit.u_l5","module":"dsdv_gunit_l5","lef":"physical/ref_tile/dsdv_gunit_l5/views/dsdv_gunit_l5/dsdv_gunit_l5.lef","origin_um":[1270.08,17.28],"outline_um":[345.6,302.4],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/dsdv_gunit_l5.json","obs_max":"M5"},
+    {"inst":"u_gunit.u_l1","module":"dsdv_gunit_l1","lef":"physical/ref_tile/dsdv_gunit_l1/views/dsdv_gunit_l1/dsdv_gunit_l1.lef","origin_um":[768.96,380.16],"outline_um":[345.6,216.0],"orient":"MY","track_offset_um":[0.132,0.012],"pins_file":"inputs/core_pins/dsdv_gunit_l1.json","obs_max":"M5"},
+    {"inst":"u_gunit.u_l1c","module":"dsdv_gunit_l1c","lef":"physical/ref_tile/dsdv_gunit_l1c/views/dsdv_gunit_l1c/dsdv_gunit_l1c.lef","origin_um":[665.28,380.16],"outline_um":[86.4,216.0],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_gunit_l1c.json","obs_max":"M5"},
+    {"inst":"u_gunit.u_l0","module":"dsdv_gunit_l0","lef":"physical/ref_tile/dsdv_gunit_l0/views/dsdv_gunit_l0/dsdv_gunit_l0.lef","origin_um":[1270.08,423.36],"outline_um":[345.6,172.8],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/dsdv_gunit_l0.json","obs_max":"M5"},
+    {"inst":"u_gunit.u_l2","module":"dsdv_gunit_l2","lef":"physical/ref_tile/dsdv_gunit_l2/views/dsdv_gunit_l2/dsdv_gunit_l2.lef","origin_um":[1019.52,613.44],"outline_um":[345.6,34.56],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_gunit_l2.json","obs_max":"M5"},
+    {"inst":"u_gunit.u_l3","module":"dsdv_gunit_l3","lef":"physical/ref_tile/dsdv_gunit_l3/views/dsdv_gunit_l3/dsdv_gunit_l3.lef","origin_um":[768.96,17.28],"outline_um":[345.6,172.8],"orient":"MY","track_offset_um":[0.132,0.012],"pins_file":"inputs/core_pins/dsdv_gunit_l3.json","obs_max":"M5"},
+    {"inst":"u_gunit.u_l0r","module":"dsdv_gunit_l0r","lef":"physical/ref_tile/dsdv_gunit_l0r/views/dsdv_gunit_l0r/dsdv_gunit_l0r.lef","origin_um":[1632.96,423.36],"outline_um":[267.84,267.84],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/dsdv_gunit_l0r.json","obs_max":"M5"},
+    {"inst":"u_gunit.u_l5f","module":"dsdv_gunit_l5f","lef":"physical/ref_tile/dsdv_gunit_l5f/views/dsdv_gunit_l5f/dsdv_gunit_l5f.lef","origin_um":[1632.96,17.28],"outline_um":[151.2,151.2],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/dsdv_gunit_l5f.json","obs_max":"M5"},
+    {"inst":"u_gunit.u_l4r","module":"dsdv_gunit_l4r","lef":"physical/ref_tile/dsdv_gunit_l4r/views/dsdv_gunit_l4r/dsdv_gunit_l4r.lef","origin_um":[1632.96,285.12],"outline_um":[129.6,129.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/dsdv_gunit_l4r.json","obs_max":"M5"},
+    {"inst":"u_gunit.u_l4","module":"dsdv_gunit_l4","lef":"physical/ref_tile/dsdv_gunit_l4/views/dsdv_gunit_l4/dsdv_gunit_l4.lef","origin_um":[1270.08,336.96],"outline_um":[345.6,64.8],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/dsdv_gunit_l4.json","obs_max":"M5"}
    ],
    "note": "unit partition; 1 instance(s) (R0)",
    "internal_stations": [
@@ -208869,18 +209016,58 @@
       0.0
      ],
      "to_um": [
-      812.268,
+      782.26,
       17.292
      ],
      "regs_um": [
       [
-       432.819,
-       0.0
+       401.0,
+       8.64
       ]
      ],
      "launch": "face bus xtier_i0",
      "capture": "u_gunit.u_l3.vi_s",
-     "note": "S81-PLAN3/CCONN2 10-25 R3: derived core bundle 793 um > 405 after the core moves: 1 FIRM station(s), +1 cycle(s)"
+     "note": "S81-CORES-R25 gunit re-layout 10-27: 1 FIRM station (was 432.819, same cycle count); per-bit hops <= 403.5 um (delta_gunit_relayout_1027.py)"
+    },
+    {
+     "conn": "bus:xtier_o0",
+     "from_um": [
+      1101.26,
+      17.292
+     ],
+     "to_um": [
+      1538.194,
+      0.0
+     ],
+     "regs_um": [
+      [
+       1268.56,
+       8.64
+      ]
+     ],
+     "launch": "u_gunit.u_l3.vo_s",
+     "capture": "face bus xtier_o0",
+     "note": "S81-CORES-R25 gunit re-layout 10-27: NEW FIRM station, +1 cycle on xtier_o0 (L3 -> s_3N_x06 ft1_i); L3's two windows are 1472 um apart -> geometric; ledger TOK"
+    },
+    {
+     "conn": "bus:unit_i0",
+     "from_um": [
+      1477.998,
+      0.0
+     ],
+     "to_um": [
+      1342.3,
+      613.44
+     ],
+     "regs_um": [
+      [
+       1440.08,
+       328.32
+      ]
+     ],
+     "launch": "face bus unit_i0",
+     "capture": "u_gunit.u_l2.cw_d",
+     "note": "S81-CORES-R25 gunit re-layout 10-27: NEW FIRM station in the 17.28 strip between L5 and L4, +1 cycle on unit_i0 (seqhost -> gunit cw); L2 is the U top (>= 613 um from the S face); ledger TOK"
     }
    ]
   },

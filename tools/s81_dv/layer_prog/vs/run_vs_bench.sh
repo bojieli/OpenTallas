@@ -18,6 +18,7 @@ S="rtl/lib/ot_rst_relay.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc
  rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sw.sv
  physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
  physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v
+ physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0.v
  rtl/dsrom_sys/s81_dv/slice/ot_s81sl_aq12x.sv
  rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv
  rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vsw.sv tools/s81_dv/layer_prog/vs/tb_vs_lowered.sv"
