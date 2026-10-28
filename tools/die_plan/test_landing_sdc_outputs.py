@@ -34,3 +34,14 @@ def test_lint_context_times_landing_controls_and_knows_count_straps():
     assert 'strap_ca_k_data' in ctx['straps']
     assert 'fclk_out_data' not in ctx['outputs']
     assert ctx['forwarded_clock_outputs']==['fclk_out_data']
+
+
+def test_head_phy_nonclock_pad_outputs_kept_clock_pads_not_data():
+    p,tn=fixture()
+    p.types[tn]['pads']=[dict(name='pma_tx',dir='out',width=544),dict(name='pma_rx',dir='in',width=544),
+                        dict(name='pma_tck',dir='out',clock=True),dict(name='pma_rck',dir='in',clock=True)]
+    selectors=L.data_output_selectors(p,tn)
+    assert 'pma_tx[*]' in selectors and 'pma_tck' not in selectors
+    ctx=SD.kit_context(p,tn)
+    assert 'pma_tx' in ctx['outputs'] and 'pma_rx' in ctx['inputs']
+    assert 'pma_tck' not in ctx['outputs'] and 'pma_rck' not in ctx['inputs']

@@ -78,6 +78,8 @@ def data_output_selectors(P,tn):
     t=P.types[tn]
     out=[gen_rtl.sv_id(b['name'])+'[*]' for b in t.get('buses',[]) if b['dir']=='out']
     out += [gen_rtl.sv_id(sl['name']+'_o')+'[*]' for sl in t.get('ft_slots',[])]
+    out += [p['name']+('[*]' if int(p.get('width',1))>1 else '') for p in t.get('pads',[])
+            if p.get('dir')=='out' and not p.get('clock',False)]
     out += [name for name,_x,_y in gen_phys.reset_out_pins(P,tn)]
     out += [p['name'] for p in t.get('clock',{}).get('landing_contract',{}).get('pins',[])
             if p['dir']=='out' and p['kind']!='clock']
