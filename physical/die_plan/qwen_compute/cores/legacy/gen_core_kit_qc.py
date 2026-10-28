@@ -563,6 +563,28 @@ def lef_pin_rects(path):
     return out
 
 
+def slice_clock_pins_out(kd, ms_mod, clks):
+    """QC-A0-KITS-4 10-28: a master slice moves the clock port to its interior M5 entry (io.tcl rewritten by
+    kit_apply), so the routed pin is no longer the plan face pin.  pins.json is the face-pin audit table
+    (pin_audit.py / face_guard_core.py); the moved clock ports leave it (pin_audit already treats clk / clk_t<i> as
+    interior spine pins) instead of being audited against the stale face location (romleaf a0k3: PIN_AUDIT clk
+    planned M4 face, routed M5 entry).  Returns the dropped names; no slice or no moved clock port: unchanged."""
+    kd = Path(kd)
+    if not (kd / "master_slice.json").is_file() or not (kd / "pins.json").is_file():
+        return []
+    sl = json.loads((kd / "master_slice.json").read_text())
+    ports = {c for c in clks if c}
+    moved = {n for n in ms_mod.slice_pins(sl, ms_mod._clock_port(kd, sl)) if n in ports}
+    rows = json.loads((kd / "pins.json").read_text())
+
+    def name(r):
+        return r["bus"] if r.get("bit") is None else f"{r['bus']}[{r['bit']}]"
+    keep = [r for r in rows if name(r) not in moved]
+    if len(keep) != len(rows):
+        (kd / "pins.json").write_text(json.dumps(keep) + "\n")
+    return sorted(moved & {name(r) for r in rows})
+
+
 def kit_hash(kd):
     h = hashlib.sha256()
     for f in sorted(p for p in Path(kd).rglob("*") if p.is_file() and p.relative_to(kd).parts[0] not in ("run", "views")
@@ -1044,6 +1066,7 @@ def main():
     # (face_flops.tcl: after io placement, before GPL); refused without a slice once required unless --trial
     ms = MS.kit_apply(kd, mod, [w, h], a.master_slice, plan, a.trial, kind="core",
                       gpl_hook=kd / "face_flops.tcl", clock_ports=clks, reset_ports=rsts)
+    slice_clock_pins_out(kd, MS, clks)
     # CTS-HOOK-PORT-1: plan-built core tree -> shared PRE/POST_CTS hook (no plan tree: kit unchanged)
     MS.plan_tree_cts(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
