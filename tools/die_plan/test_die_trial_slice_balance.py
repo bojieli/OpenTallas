@@ -152,3 +152,18 @@ def test_region_dme_delay_mode_balances_stage_priced_delay():
         d = dn[st_.pop()]
         st_ += d["kids"]
         assert site.legal((d["x"], d["y"]))
+
+
+def test_attach_region_dme_hangs_legal_zero_skew_tree_under_a_link_feed_end():
+    """link_htree + --region-dme: the DME tree goes under the LEGALIZED feed-end node (region_root) after the site pass"""
+    site, taps = _c_partition()
+    site.hits = lambda q: site.why(q) == "core"                      # SiteMap.hits stand-in (L-route blocked runs)
+    rn = "R"
+    e = site.nearest((600.0, 1300.0))
+    nodes = {0: dict(id=0, x=e[0], y=e[1], parent=None, level=0, kids=[], taps=[], region=[0, 0, 1, 1], region_root=rn)}
+    st = D.attach_region_dme(nodes, site, taps, {t[0]: rn for t in taps}, delay_rep_um=250.0)
+    assert st[rn]["merges"] == len(taps) - 1
+    got = [t for nd in nodes.values() for t in nd["taps"]]
+    assert sorted(map(tuple, got)) == sorted(map(tuple, taps))
+    assert all(site.legal((nd["x"], nd["y"])) for i, nd in nodes.items() if i)
+    assert len(nodes[0]["kids"]) == 1 and nodes[nodes[0]["kids"][0]]["parent"] == 0
