@@ -231,3 +231,33 @@ def test_dataflow_landing_place_emits_bands_and_status_points_only():
     assert "{u_cland_y {1.00000 2.00000 3.00000 4.00000} ring:y}" in head
     assert "{cland_up_ready_z 9.00000 1.50000}" in head and "{cland_up_fault_z 9.00000 2.00000}" in head
     assert "cland_dn_ready_y" not in head and "collector:" not in head and "u_cland_rst_" not in head
+
+
+def test_ring_form_is_a_per_row_choice_and_default_is_unchanged():
+    # MESO-COUNT-1 may swap in a count-aligned ring: module/params/extra pins come from the sidecar row
+    b = "module b_mod (\n input wire clk,\n input wire [4:0] y // whole bundle\n);\n wire rst_n, rst_n_t0, rr_parent, run;\n ot_dp_rgate u_rrl_0 (.clk(clk), .d(rr_parent), .run(run), .q(rst_n_t0));\n wire [4:0] y_q;\n assign y_q = y;\nendmodule\n"
+    p, t = vehicle()
+    assert "ot_dp_clk_landing #(.W(5)) u_cland_y (" in Landings(p, t).type_rtl("B", b)
+    p, t = vehicle()
+    t["ports"][0].update(ring_module="ot_dp_clk_landing_ca", ring_params=dict(DEPTH=4, K=3), ring_ports=dict(t_rst_n="rr_parent"))
+    c = Landings(p, t)
+    bb = c.type_rtl("B", b)
+    assert "ot_dp_clk_landing_ca #(.W(5), .DEPTH(4), .K(3)) u_cland_y (" in bb
+    assert ".rst_n(cland_reset_y), .t_rst_n(rr_parent), .d(y)" in bb
+    assert c.rows[0]["ring_offset"] == 3
+    for bad in (dict(ring_module="ot_meso_fifo"), dict(ring_params=dict(W=9)), dict(ring_ports=dict(clk="x")),
+                dict(ring_ports=dict(t_rst_n="a); evil(")),):
+        p, t = vehicle(); t["ports"][0].update(bad)
+        with pytest.raises(LandingError):
+            Landings(p, t)
+
+
+def test_replicas_of_one_type_must_agree_on_ring_form():
+    p, t = vehicle()
+    p["partitions"].append(dict(name="b2", type="B", origin_um=[20, 0]))
+    p["ports"].append(dict(id="Q", width=4, kind="data", src=dict(part="a", bus="x"), dst=dict(part="b2", bus="y")))
+    t["regions"].append(dict(tag="r2", box_um=[20, 0, 30, 10]))
+    t["ports"].append(dict(port="Q", width=4, src="a", dst="b2", src_region="r0", dst_region="r2", lane="L",
+                           ring_module="ot_dp_clk_landing_ca"))
+    with pytest.raises(LandingError, match="TYPE_SPLIT"):
+        Landings(p, t)

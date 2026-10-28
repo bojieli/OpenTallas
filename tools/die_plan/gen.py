@@ -147,6 +147,10 @@ def main(argv=None):
     a2.add_argument("--out", required=True)
     a2.add_argument("--rtl-root", help="repo root for the types' leaf `sources` (enables the leaf port-binding check)")
     a2.add_argument("--types", help="comma list of partition types (default all non-hard)")
+    a2.add_argument("--clock-landing", help="opt-in (LAND-HEAD-BIND-1): clock_landing_plan sidecar (landed_sidecar.json) of this "
+                    "landed plan; emits the ot_dp_clk_landing rings + dataflow monitor into every wrapper, region clocks + "
+                    "forwarded clocks + monitor wires into the die top, gates the declared observer, and writes "
+                    "DIR/gen_clock_landings.json")
     a3 = sub.add_parser("phys")
     a3.add_argument("plan")
     a3.add_argument("--out", required=True)
@@ -236,7 +240,8 @@ def main(argv=None):
         import gen_rtl
         try:
             files = gen_rtl.write_rtl(S.load(a.plan), a.out, a.rtl_root, a.types.split(",") if a.types else None,
-                                     plan_path=Path(a.plan).resolve())
+                                     plan_path=Path(a.plan).resolve(),
+                                     landing=load_json(a.clock_landing) if a.clock_landing else None)
         except gen_rtl.GenError as e:
             print(f"gen rtl: ERROR {e}")
             return 1
