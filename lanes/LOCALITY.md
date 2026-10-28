@@ -1,3 +1,20 @@
 # LOCALITY lane: shared locality / 12.14b estimate tool (tools/die_plan/locality.py) for all 5 die owners
 
 - 2026-10-27 20:04 PDT LOCALITY-SCORE-1 START (fresh; no predecessor branch found). Worktree intel2:/srv/opentallas-scratch2/claude/wt/locality-score-1, branch claude/locality-score-1027 from main abbbffac9b + landed_phase_ocv.py from be648cbdd7 (reused, not forked). Inputs: S81 land-s81 179 regions, HEAD part regions (326), QC 12 slices + HUB, KV land-kv 128 groups (intel1 fallback/regions.json), HBM C18 quad (land-hbm c18_quad). Results -> results/locality_1027/.
+- 2026-10-27 20:19 PDT LOCALITY-SCORE-1 RESULT: MERGED to main d2e68fb36b (branch claude/locality-score-1027@53396c427a; only additions; tests 11 + landed_phase_ocv 2 PASS; merge.lock, hub ff'd). Tool: tools/die_plan/locality.py. Results: results/locality_1027/ (README, <die>_ESTIMATE.md, json, png; renders viewed).
+  USE: `python3 tools/die_plan/locality.py both --plan PLAN --regions MAP|part --die D --v-ps-mm V --span-mm 3.5 --out DIR` -> traffic matrix, score of your map + a proposed map, feeds top/fwd/spt, RAW/FOLD/PAD margins (landed_phase_ocv.analyse reused, clk_aocv g021, droop regions), track demand/supply, render, one-page 12.14b ESTIMATE. v: HEAD/S81/HBM 340, KV 321, QC 199 ps/mm TT.
+  CALIBRATION (CHECKED): HEAD part map top-feed model -59.9 TT/+17.2 FF, 33 <100 vs measured d=0 bound -60.7/+13.3, 33 <100. KV: model ~85 ps optimistic (6.2 vs built 7.2 ns unshared).
+  SCORES (ESTIMATE, UNCHECKED; worst margin TT/FF ps; bit-mm inside; crossings / off-feed):
+  | die map | regions | bit-mm in | xings / off-feed (fwd) | top FOLD | fwd FOLD | fwd PAD | fwd PAD <100 TT/FF |
+  | S81 land179 | 179 | 47.6% | 1173 / 195 | -461/-317 | -2151/-1774 | -2867/-1754 | 179/614 |
+  | S81 proposed | 210 | 37.5% | 1336 / 288 | -387/-256 | -1912/-1486 | -2528/-1625 | 182/494 |
+  | HEAD part | 326 | 0% | 427 / 12 | -60/+17 | -798/-644 | -2325/-1277 | 12/16 |
+  | HEAD proposed | 85 | 57.1% | 162 / 12 | -48/+28 | -38/-158 | -7/-140 | 12/18 |
+  | QC slices | 13 | 97.7% | 264 / 0 | -64/+14 | -126/-238 | +116/-297 | 0/264 |
+  | QC proposed | 142 | 34.1% | 1418 / 21 | -43/+32 | -171/-156 | -83/-200 | 6/8 |
+  | KV land128 | 128 | 8.9% | 3619 / 1350 | -53/+24 | -1853/-1334 | -2619/-1813 | 346/1015 |
+  | KV proposed | 50 | 53.6% | 1885 / 717 | -77/+5 | -1825/-1488 | -2415/-1625 | 438/1198 |
+  | HBM c18quad | 4 | 86.2% | 60 / 12 | -376/-239 | -1240/-777 | -1091/-1107 | 43/60 |
+  | HBM proposed | 66 | 8.2% | 527 / 96 | -325/-202 | -1357/-1059 | -1456/-1664 | 60/207 |
+  FINDINGS for die owners: (1) nothing passes 100/100 yet on any die. (2) The die-wide top feed sits at ~6 ns unshared everywhere: about -50..-75 TT, so it is a dead end (12.13f confirmed). (3) Forwarded feeds: on-feed crossings are fine when regions are small, but OFF-feed crossings (adjacent regions that are not parent/child on the feed tree) carry 10-20 ns unshared. => Make the CROSSING GRAPH A TREE (chain/fishbone along the dataflow, like the QC slices with 0 off-feed), not just make regions small. (4) Whole-cycle PAD does not track PVT: the FF residual is ~14.5% of the forwarded delay (QC slices PAD +116 TT / -297 FF). FOLD needs the MESO-COUNT verdict. (5) QC: the slice clock height (I 3.0 ns) is the item to fix (spine column), not the region count. (6) HEAD proposed (span <=3 mm) is closest: fwd PAD -7/-140, with only 12 off-feed seam crossings (x~3.1/14.5 mm column seams) failing. (7) Tracks are not binding (<=1.08x supply; S81 has 2 boundaries >1).
+  LIMITS: equal-length H-tree region trees only (no spine/fishbone region tree yet); the proposer is connectivity-greedy and does not yet force a tree-shaped crossing graph. NEXT (this lane): proposer v2 = crossing graph constrained to the feed tree (merge or re-cut off-feed pairs) + spine region trees, so HEAD/QC owners can price fishbone forms.
