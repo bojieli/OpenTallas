@@ -21,6 +21,9 @@
 //     whole-cycle variation is absorbed by the ring depth, window width (GUARD_HI - GUARD_LO - 1) T (3 T at the
 //     default DEPTH 4 / guards 0,4), instead of the old one-period placement window.
 //
+// Ready-timeout (MESO-RECONCILE-1, COORD 21:55): a lag below the window never consumes a valid word, so the guards
+// never arm and the crossing stayed !ready with no fault (fail-closed but silent).  TIMEOUT receiver cycles after rst_n
+// release without arming raise the sticky fault on the same fault port.  GUARD_HI defaults to DEPTH.
 // Ports as ot_dp_clk_landing plus t_rst_n.  Receiver count c = rclk edges since rst_n release (c = 0 at the first edge
 // that samples rst_n high).  Right after edge c, q holds sender word c - K (captured at that edge, RDREG); the
 // receiver's own boundary flop takes it at c + 1: crossing latency K + 1 counts, for every lag in the window.
@@ -35,8 +38,14 @@ module ot_dp_clk_landing_ca #(
     parameter integer DEPTH    = 4,   // power of two >= 4
     parameter integer K        = 2,   // read offset in counts (binder: K' - (a_y - a_x)); any integer
     parameter integer GUARD_LO = 0,
-    parameter integer GUARD_HI = 4,   // <= DEPTH
-    parameter integer ARM      = 2 * DEPTH + 4  // receiver cycles after the first valid word before guards are trusted
+    parameter integer GUARD_HI = DEPTH, // <= DEPTH; MESO-RECONCILE-1: default DEPTH (4 was wrong at DEPTH 8)
+    parameter integer ARM      = 2 * DEPTH + 4, // receiver cycles after the first valid word before guards are trusted
+    // MESO-RECONCILE-1 ready-timeout: fault if the crossing is not armed TIMEOUT receiver cycles after rst_n release
+    // (0 = off).  In the window the first valid word (sender count 0) is consumed at receiver count max(K, 0), seen one
+    // count later, armed ARM counts after that: armed by count max(K,0) + ARM + 2.  The default adds 2*DEPTH + 6 counts
+    // of slack, so it never fires in the window (proven, fv_ca2 A_ALL); a lag below the window (no valid word is ever
+    // consumed: never ready, previously no fault) now raises fault (fv_ca2 A_TMO).
+    parameter integer TIMEOUT  = (K > 0 ? K : 0) + ARM + 2 * DEPTH + 8
 ) (
     input  wire         fclk,
     input  wire         t_rst_n,     // sender start, forwarded with fclk (synchronous to fclk)
@@ -54,6 +63,7 @@ module ot_dp_clk_landing_ca #(
     localparam integer RW = ((W + 63) / 64) * 64;
     localparam integer AW = $clog2(DEPTH);
     localparam integer CW = $clog2(ARM + 1);
+    localparam integer TCW = $clog2(TIMEOUT + 2);
     wire rv, lap_ok, glo_ok, ghi_ok;
     wire [RW-1:0] ring_q;
     assign q = ring_q[W-1:0];
@@ -61,13 +71,20 @@ module ot_dp_clk_landing_ca #(
     reg [CW-1:0] arm_cnt;
     wire armed = seen && (arm_cnt == CW'(ARM));
     reg fault_state;
-    wire trip = armed && (!rv || !lap_ok || !glo_ok || !ghi_ok);
+    reg [TCW-1:0] tmo_cnt;          // receiver cycles since rst_n release while not armed (saturates at TIMEOUT)
+`ifdef OT_MESO_CA_MUTANT_NO_TIMEOUT
+    wire tmo = 1'b0;                // MUTANT: ready-timeout disabled
+`else
+    wire tmo = (TIMEOUT > 0) && !armed && (tmo_cnt == TCW'(TIMEOUT));
+`endif
+    wire trip = (armed && (!rv || !lap_ok || !glo_ok || !ghi_ok)) || tmo;
     wire fault_next = fault_state || trip;
     ot_dp_landing_fault_port u_fault_port (.clk(clk), .rst_n(rst_n), .d(fault_next), .q(fault));
     always @(posedge clk) begin
         if (!rst_n) begin
-            seen <= 0; arm_cnt <= 0; ready <= 0; fault_state <= 0;
+            seen <= 0; arm_cnt <= 0; ready <= 0; fault_state <= 0; tmo_cnt <= 0;
         end else begin
+            if (!armed && tmo_cnt != TCW'(TIMEOUT)) tmo_cnt <= tmo_cnt + 1'b1;
             if (rv) seen <= 1;
             if (seen && arm_cnt != CW'(ARM)) arm_cnt <= arm_cnt + 1'b1;
             ready <= armed && !fault_next;
@@ -86,6 +103,7 @@ module ot_dp_clk_landing_ca #(
         if (W < 1) $fatal(1, "count-aligned landing requires a nonempty bundle");
         if (DEPTH < 4 || (DEPTH & (DEPTH - 1)) != 0) $fatal(1, "DEPTH must be a power of two >= 4");
         if (GUARD_LO < 0 || GUARD_HI > DEPTH || GUARD_HI < GUARD_LO + 2) $fatal(1, "need 0 <= GUARD_LO, GUARD_LO+2 <= GUARD_HI <= DEPTH");
+        if (TIMEOUT != 0 && TIMEOUT < (K > 0 ? K : 0) + ARM + 3) $fatal(1, "TIMEOUT below max(K,0) + ARM + 3 would fire in the window");
     end
 `endif
 endmodule

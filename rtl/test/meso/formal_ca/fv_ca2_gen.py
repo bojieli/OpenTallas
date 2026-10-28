@@ -26,7 +26,7 @@ def conn(D):
     c += [f"connect -set h_sd[{i}] dut.u_ring.s_d[{i}][0]" for i in range(D)]
     c += ["connect -set h2_seen dut.seen", "connect -set h2_fs dut.fault_state", "connect -set h2_rvq dut.u_ring.r_v_q",
           "connect -set h2_rlq dut.u_ring.r_lap_q", "connect -set h2_yq dut.u_ring.dch[0].u_dsel.genblk1.g_reg.y_q[0]",
-          "connect -set h2_dxq dut.u_ring.fv_dx_q", "connect -set h2_arm dut.arm_cnt"]
+          "connect -set h2_dxq dut.u_ring.fv_dx_q", "connect -set h2_arm dut.arm_cnt", "connect -set h3_tmo dut.tmo_cnt"]
     c += [f"connect -set h2_glo[{i}] dut.u_ring.glo{i}" for i in range(4)]
     c += [f"connect -set h2_ghi[{i}] dut.u_ring.ghi{i}" for i in range(4)]
     return c + ["cd .."]
@@ -57,6 +57,11 @@ for D, rrs in ((4, (12, 63)), (8, (20, 127))):
         full[f"reach_{b}"] = ("bmc", 400, "abc bmc3", dd + " -DFV_REACH", D, False)
         full[f"flt_{b}"] = ("bmc", 420 if D == 4 else 600, "abc bmc3", dd + " -DFV_FLT -DFV_SAFE_ONLY", D, False)
         full[f"hbmc_{b}"] = ("bmc", 300, "abc bmc3", dd + " -DFV_HELP -DFV_HELPONLY", D, True)
+        # MESO-RECONCILE-1: A_TMO (fault raised outside the window within TMO + 3 cycles) BMC, + NO_TIMEOUT mutant
+        tdep = 8 * (rr + 2 + 2 * D + 4 + 2 * D + 8 + 3 + 4) if rr <= 20 else None
+        if tdep:
+            full[f"tmo_{b}"] = ("bmc", tdep, "abc bmc3", dd + " -DFV_TMO -DFV_SAFE_ONLY", D, False)
+            full[f"mutNO_TIMEOUT_{b}"] = ("bmc", tdep, "abc bmc3", dd + " -DFV_TMO -DFV_SAFE_ONLY -DOT_MESO_CA_MUTANT_NO_TIMEOUT", D, False)
         for m in ("K", "FREERUN", "NO_GUARD", "NO_TAG"):
             full[f"mut{m}_{b}"] = ("bmc", 1200, "abc bmc3", dd + f" -DOT_MESO_CA_MUTANT_{m}", D, False)
 write("fv_ca2_full.sby", full)
@@ -70,3 +75,13 @@ for m, D, p, o, rr in (("K", 4, 3, 0, 12), ("K", 8, 3, 3, 20), ("FREERUN", 4, 3,
     mut[f"m{m}_D{D}_P{p}_O{o}".replace("-", "m")] = ("bmc", 1, "abc bmc3", f"-DOT_MESO_CA_MUTANT_{m} -DFV_HELP -DFV_ONE -DFV_NOLIVE "
                                                      f"-DFV_D={D} -DFV_RRM={rr} -DFV_PH={p} -DFV_OFF={o}", D, True)
 write("fv_ca2_mut.sby", mut)
+# MESO-RECONCILE-1: A_TMO per static configuration below / above the window (k-induction with the helper invariants)
+tk = {}
+for D, rr, offs in ((4, 12, (-3, -2, -1, 0, 4, 5)), (8, 20, (-3, -2, -1, 0, 8, 9))):
+    for p in range(8):
+        for o in offs:
+            tk[f"t{D}_P{p}_O{o}".replace("-", "m")] = ("bmc", 1, "abc bmc3", f"-DFV_HELP -DFV_TMOONE -DFV_D={D} "
+                                                      f"-DFV_RRM={rr} -DFV_PH={p} -DFV_OFF={o}", D, True)
+    tk[f"tmut{D}_NO_TIMEOUT".replace("-", "m")] = ("bmc", 1, "abc bmc3", f"-DOT_MESO_CA_MUTANT_NO_TIMEOUT -DFV_HELP "
+                                                    f"-DFV_TMOONE -DFV_D={D} -DFV_RRM={rr} -DFV_PH=3 -DFV_OFF=-2", D, True)
+write("fv_ca2_tmo.sby", tk)

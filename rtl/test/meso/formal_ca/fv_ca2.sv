@@ -12,6 +12,9 @@
 //   A_SAFE  (every PH, SR, RR in range, no window assumption): ready && !fault -> q == word (receiver count - 1 - K)
 //   A_NOFLT (L in [LMIN, LMAX] steps): fault never rises
 //   A_LIVE  (L in the window): ready once LIVEN receiver cycles passed since the receiver start
+// MESO-RECONCILE-1: the wrapper's ready-timeout (TIMEOUT default = K + ARM + 2D + 8) is in the DUT; A_NOFLT now also
+// proves it never fires in the window (helpers hb18..hb20 on dut.tmo_cnt); A_TMO (FV_TMO): a lag outside the window
+// (L <= 3 or >= 8D - 3 steps) raises fault once TMO + 3 receiver cycles passed since the receiver start.
 `ifndef FV_D
 `define FV_D 4
 `endif
@@ -28,6 +31,7 @@ module fv_ca2 #(parameter integer D = `FV_D, parameter integer K = `FV_K, parame
 );
     localparam integer P = 8, AW = $clog2(D), TW = AW + 1 + 3;   // LAPX = 3 (wrapper default)
     localparam integer CW = $clog2(RRM + 2);
+    localparam integer KP = (K > 0) ? K : 0, ARMW = 2 * D + 4, TMO = KP + ARMW + 2 * D + 8, TCW = $clog2(TMO + 2);
     (* anyconst *) reg [2:0] PH;
     (* anyconst *) reg [CW-1:0] SR, RR;
     (* anyconst *) reg [TW-1:0] N;        // watched sender word (mod 2^TW)
@@ -132,13 +136,15 @@ module fv_ca2 #(parameter integer D = `FV_D, parameter integer K = `FV_K, parame
     // in-window steady state of the wrapper / guard pipeline / RDREG (h2_* driven by `connect` like h_*)
     localparam integer ARMV = 2 * D + 4, CWA = $clog2(ARMV + 1);
     wire h2_seen, h2_fs, h2_rvq, h2_rlq, h2_yq, h2_dxq; wire [CWA-1:0] h2_arm; wire [3:0] h2_glo, h2_ghi;
+    wire [TCW-1:0] h3_tmo;                 // dut.tmo_cnt (MESO-RECONCILE-1 ready-timeout counter)
+    wire h3_armed = h2_seen && (h2_arm == ARMV);
     reg gN = 0;                            // the read at the last rclk edge was a clean read of word N
     wire [TW-1:0] rdw = rc - KT;           // word read at the coming rclk edge
     wire [TW-1:0] dN = sc - N;
     always @($global_clock) if (rn) gN <= rst_n && capv && (rdw == N) && (dN >= 1) && (dN <= D) && !recent[N[AW-1:0]];
     wire [TW-1:0] idx2 = rc - one - KT;
     wire [TW-1:0] dI = sc - idx2;
-    reg [17:11] hb2;
+    reg [20:11] hb2;
     always @* begin
         hb2 = 0;
         if (inwin && re != 0) begin
@@ -152,6 +158,10 @@ module fv_ca2 #(parameter integer D = `FV_D, parameter integer K = `FV_K, parame
             if (h2_seen && idx2 == N && !gN) hb2[16] = 1;
         end
         if (gN && !h2_dxq && !(capv && h2_yq == cap)) hb2[17] = 1;
+        // ready-timeout: counts receiver cycles since start while not armed; in the window armed long before TMO
+        if (re != 0 && !h3_armed && h3_tmo != ((rcs >= TMO) ? TCW'(TMO) : TCW'(rcs))) hb2[18] = 1;
+        if (inwin && re != 0 && rcs >= KP + 4 && !h2_seen) hb2[19] = 1;
+        if (inwin && h2_seen && !h3_armed && rcs > h2_arm + KP + 4) hb2[20] = 1;
     end
 `else
     wire h_ok = 1'b1;
@@ -162,8 +172,12 @@ module fv_ca2 #(parameter integer D = `FV_D, parameter integer K = `FV_K, parame
     wire p_noflt = !(up && inwin) || !fault;
     wire p_live = !(inwin && rcs >= LIVEN) || ready;
     wire p_closed = !((L <= 3 || L >= 8 * D - 3) && up && ready && !fault);   // fail closed outside the window
+    localparam integer TMOW = KP + ARMW + 2 * D + 8 + 3;
+    wire p_tmo = !((L <= 3 || L >= 8 * D - 3) && up && rcs >= TMOW) || fault;   // MESO-RECONCILE-1 ready-timeout
     always @* begin
-`ifdef FV_ONE
+`ifdef FV_TMOONE
+        A_ALLT: assert (p_tmo && p_safe && p_closed && h_ok);   // MESO-RECONCILE-1, per out-of-window config
+`elsif FV_ONE
 `ifdef FV_NOLIVE
         A_ALL: assert (p_safe && p_noflt && p_closed && h_ok);   // liveness checked by BMC (bounded response)
 `else
@@ -175,6 +189,7 @@ module fv_ca2 #(parameter integer D = `FV_D, parameter integer K = `FV_K, parame
         A_H8: assert (!hb[8]); A_H9: assert (!hb[9]); A_H10: assert (!hb[10]);
         A_H11: assert (!hb2[11]); A_H12: assert (!hb2[12]); A_H13: assert (!hb2[13]); A_H14: assert (!hb2[14]);
         A_H15: assert (!hb2[15]); A_H16: assert (!hb2[16]); A_H17: assert (!hb2[17]);
+        A_H18: assert (!hb2[18]); A_H19: assert (!hb2[19]); A_H20: assert (!hb2[20]);
 `elsif FV_SAFE_ONLY
         A_SAFE: assert (p_safe);
 `else
@@ -193,6 +208,10 @@ module fv_ca2 #(parameter integer D = `FV_D, parameter integer K = `FV_K, parame
 `ifdef FV_FLT_RAISE
     always @* if ((L <= 3 || L >= 8 * D - 3) && rcs >= LIVEN) A_FLT: assert (fault);
 `endif
+`endif
+`ifdef FV_TMO
+    // MESO-RECONCILE-1: a lag outside the window is no longer silent: fault within TMO + 3 receiver cycles
+    always @* A_TMO: assert (p_tmo);
 `endif
 `ifdef FV_REACH
     always @* A_REACH: assert (!(up && ready && !fault && inwin && L == LMAX));

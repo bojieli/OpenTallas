@@ -372,3 +372,25 @@ s8_P4_O126 base=1 ind=1
 s8_P4_O20 base=1 ind=1 
 s8_P4_O30 base=1 ind=1 
 s8_P4_O60 base=1 ind=1 
+
+=== MESO-RECONCILE-1 (Tue Oct 27 22:23:16 PDT 2026) ===
+RTL: rtl/common/ot_dp_clk_landing_ca.sv wrapper: GUARD_HI default = DEPTH (was 4); new parameter TIMEOUT (default
+  max(K,0) + ARM + 2*DEPTH + 8, ARM = 2*DEPTH + 4; D4 K2 = 30, D8 K2 = 46 receiver cycles; 0 = off; elaboration $fatal if
+  0 < TIMEOUT < max(K,0)+ARM+3). tmo_cnt counts receiver cycles after rst_n release while !armed; at TIMEOUT -> trip ->
+  sticky fault_state -> same fault port. Why the default is safe: in the window word 0 is consumed at receiver count
+  max(K,0), seen one count later, armed ARM counts after that (armed by max(K,0)+ARM+2); +2*DEPTH+6 slack. Mutant
+  OT_MESO_CA_MUTANT_NO_TIMEOUT. Ring module unchanged.
+Harness: fv_ca2.sv helpers hb18 (tmo_cnt == min(rcs,TMO) while !armed, all lags), hb19 (in window: seen by rcs >= K+4),
+  hb20 (in window: rcs <= arm_cnt + K + 4 while !armed) -> A_NOFLT now covers "timeout never fires in the window".
+  New p_tmo / A_TMO: L <= 3 or L >= 8D-3 steps (outside the window) and rcs >= TMO+3 -> fault.
+  FV_TMOONE single output A_ALLT = p_tmo && p_safe && p_closed && h_ok (per out-of-window config, k-induction).
+PROVEN unbounded (abc bmc3 base + scorr;dc2;ind -u, same flow as above):
+  A_ALL (safe + noflt incl. timeout + closed + 21 helpers): D4 120/120 (PH0..7 x OFF -3..11, B260/K250), D8 184/184 (PH0..7 x OFF -3..19, B260/K250)
+  A_ALLT (fault raised outside the window): D4 48/48 (PH0..7 x OFF {-3,-2,-1,0,4,5}, B420/K400), D8 48/48 (PH0..7 x OFF {-3,-2,-1,0,8,9}, B620/K600)
+  (3 configs s4_P1_O9, s4_P1_O3, s8_P0_O1 first lost their model build to a parallel sby race; rebuilt and PROVEN on retry)
+Mutants (k-ind flow base case, CAUGHT = assertion fails): K D4 frame 3 / D8 3; FREERUN 8 / 8; NO_GUARD 138 / 202; NO_TAG 195 / 323;
+  NO_TIMEOUT (A_ALLT, PH3 OFF-2) D4 267 / D8 395.
+Verilator (rtl/test/meso/ca/tb_dp_clk_landing_ca, 1-ps lag sweep +-(2D+1)T, K {-2,1,2,5} x D {4,8}): clean window [0.502, DEPTH-0.499] T
+  unchanged, silent-wrong 0, unclean-without-fault 0 at every K/D (every out-of-window lag now faults); mutant NO_TIMEOUT D4 K2:
+  7498 unclean lags without fault (CAUGHT). Lint -Wall clean D4/D8 x K {-3,2,9}, W 64.
+Not re-run: full-anyconst BMC (fv_ca2_full.sby) and the tag-range samples (to 63T / 127T); still K=2, W=1 abstraction.
