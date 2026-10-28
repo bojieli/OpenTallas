@@ -66,6 +66,21 @@ def type_pins(P, tn):
     return out
 
 
+def strap_pin_sites(P, tn):
+    """[(pin, layer, x, y)] interior pin centres of the type's declared ID straps (plan id_straps[].sites_um, one
+    [x, y] per bit, on id_straps[].layer), or [] when the plan declares no sites (opt-in, DIE-HEAD-5 TILEIO 10-28:
+    without sites the strap ports had no pin, port_bind counted them as extra).  Tied per instance at the die top."""
+    out = []
+    for sp in P.types[tn].get("id_straps", []) or []:
+        xy = sp.get("sites_um")
+        if not xy:
+            continue
+        if len(xy) != sp["width"] or not sp.get("layer"):
+            raise ValueError(f"type {tn}: id_straps {sp['name']} needs layer and exactly {sp['width']} sites_um")
+        out += [(f"{sp['name']}[{i}]", sp["layer"], float(x), float(y)) for i, (x, y) in enumerate(xy)]
+    return out
+
+
 def plan_pin_records(P, tn, pins, bump_sites=()):
     """[{name, layer, x, y}] pin CENTRES of every pin io.tcl places for type tn, computed from the plan: type_pins edge
     points moved PIN_LEN_UM/2 inward, native infrastructure ports, clock/reset taps, reset outs, landing pins and bump
@@ -95,6 +110,8 @@ def plan_pin_records(P, tn, pins, bump_sites=()):
             add(p["name"], p["layer"], *p["xy_um"])
     for port, i, ln, cx, cy, pw, ph in bump_sites:
         add(f"{port}[{i}]", ln, cx, cy)
+    for name, ln, x, y in strap_pin_sites(P, tn):
+        add(name, ln, x, y)
     return list(recs.values())
 
 
@@ -151,6 +168,9 @@ def io_tcl(P, tn, pins):
     for name, x, y in reset_out_pins(P, tn):
         lines.append(f"place_pin -pin_name {name} -layer {top} -location {{{x:.4f} {y:.4f}}} "
                      f"-pin_size {{{LAYER_W.get(top, 0.04):.4f} {4 * PIN_LEN_UM:.4f}}}   ;# interior: reset wavefront out")
+    for name, ln, x, y in strap_pin_sites(P, tn):
+        lines.append(f"place_pin -pin_name {{{name}}} -layer {ln} -location {{{x:.4f} {y:.4f}}} "
+                     f"-pin_size {{{LAYER_W.get(ln, 0.04):.4f} {4 * PIN_LEN_UM:.4f}}}   ;# interior: ID strap (tied at die top)")
     if t.get("clock", {}).get("landing_contract"):
         import landing_contract as LC
         lines.append(LC.io_tcl(P, tn).rstrip())
@@ -440,6 +460,117 @@ add_pdn_connect -grid {top} -layers {M2 M5}
 add_pdn_connect -grid {top} -layers {M5 M6}
 add_pdn_connect -grid {top} -layers {M6 M7}
 """
+
+
+# DIE-HEAD-5 PGCUT (DRT-TRIAL-1 10-28, opt-in plan partition_types.<t>.pg_island_cut): the kit M6 PG straps of PDN
+# (VDD offset 1.968, VSS one width + spacing after it, pitch 4.32, width 0.288; horizontal) run over the hard cores.
+# A signed core's in-core island pins (interior M5 signal/clock pins, e.g. the elemA/elemB centre rst_n) can only be
+# reached through an M5->M6 via; where such a pin lies under (or within M6 spacing of) a strap, the only access shorts
+# the strap (hd_tile: 5 x M6 Short rst_n vs VDD).  Legal core moves cannot fix it (rows 0.27 x M4 tracks 0.048 ->
+# steps of 2.16 = half the strap pitch, and clk / rst_n sit 2.16 apart, so one of them is always covered).  The cut
+# removes the strap metal (and its M6 vias) over a window = pin x +- PG_CUT_MARGIN_UM, the strap's own y extent, after
+# pdngen (POST_PDN_TCL); the strap stays connected on both sides through its other vias.
+PG_M6 = (1.968, 0.288, 0.096, 4.32)          # offset, width, spacing, pitch (PDN M6 line)
+PG_CUT_MARGIN_UM = 0.6                       # x: via M6 enclosure + M6 end-of-line spacing + an M7 escape track
+PG_CUT_SPACE_UM = 0.072                      # y: M6 min spacing (pin -> strap) that also counts as covered
+PG_CUT_EDGE_UM = 2.0                         # an "interior" pin is at least this far from every core edge
+
+
+def _orient_rect_r(r, w, h, o):
+    x0, y0, x1, y1 = r
+    xs = {"R0": (x0, x1), "MX": (x0, x1), "MY": (w - x1, w - x0), "R180": (w - x1, w - x0)}[o]
+    ys = {"R0": (y0, y1), "MY": (y0, y1), "MX": (h - y1, h - y0), "R180": (h - y1, h - y0)}[o]
+    return xs[0], ys[0], xs[1], ys[1]
+
+
+def lef_interior_pins(path, layer="M5", edge=PG_CUT_EDGE_UM):
+    """([(pin, (x0, y0, x1, y1))], (w, h)): macro-frame rects of SIGNAL/CLOCK pins on `layer` at least `edge` from
+    every macro edge (the in-core island pins), and the macro SIZE."""
+    text = Path(path).read_text(errors="replace")
+    w, h = map(float, re.search(r"SIZE\s+([-\d.]+)\s+BY\s+([-\d.]+)", text).groups())
+    out = []
+    for m in re.finditer(r"\n\s*PIN\s+(\S+)(.*?)\n\s*END\s+\1\b", text, re.S):
+        name, body = m.groups()
+        u = re.search(r"USE\s+(\w+)", body)
+        if (u.group(1) if u else "SIGNAL") not in ("SIGNAL", "CLOCK"):
+            continue
+        for lm in re.finditer(r"LAYER\s+(\w+)\s*;(.*?)(?=LAYER|\bEND\b)", body, re.S):
+            if lm.group(1) != layer:
+                continue
+            for r in re.finditer(r"RECT\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)", lm.group(2)):
+                x0, y0, x1, y1 = map(float, r.groups())
+                if min(x0, y0, w - x1, h - y1) >= edge:
+                    out.append((name, (x0, y0, x1, y1)))
+    return out, (w, h)
+
+
+def pg_island_cuts(P, tn, root=None):
+    """[(inst, pin, (x0, y0, x1, y1))] type-frame cut windows of an opt-in type (pg_island_cut): every interior M5
+    pin of a placed hard core, grown by PG_CUT_MARGIN_UM in x and PG_CUT_SPACE_UM in y.  Which straps it hits is
+    decided on the actual pdngen geometry (pg_island_cut_tcl), not re-derived here.  [] when not opted in."""
+    t = P.types[tn]
+    if not t.get("pg_island_cut"):
+        return []
+    import cores as C
+    cuts = []
+    for inst, _mod, lef, _lib, ox, oy, o in type_macros(P, tn):
+        pins, (w, h) = lef_interior_pins(C.resolve(lef, root))
+        for pin, r in pins:
+            x0, y0, x1, y1 = _orient_rect_r(r, w, h, o)
+            cuts.append((inst, pin, (round(x0 + ox - PG_CUT_MARGIN_UM, 4), round(y0 + oy - PG_CUT_SPACE_UM, 4),
+                                     round(x1 + ox + PG_CUT_MARGIN_UM, 4), round(y1 + oy + PG_CUT_SPACE_UM, 4))))
+    return cuts
+
+
+def pg_island_cut_tcl(cuts):
+    """POST_PDN_TCL: every M6 VDD/VSS strap sbox that overlaps a pin window is split around the window's x span
+    (full strap height), then every PG via touching M6 inside a cut is removed."""
+    L = ["# GENERATED by tools/die_plan/gen.py phys (DIE-HEAD-5 PGCUT, opt-in pg_island_cut): M6 PG strap cuts over",
+         "# in-core island pins (gen_phys.pg_island_cuts).  Runs after pdngen (POST_PDN_TCL).",
+         "set pgc_b [ord::get_db_block]", "set pgc_u [$pgc_b getDbUnitsPerMicron]",
+         "set pgc_cuts {}; set pgc_via 0",
+         "proc pgc_layers {s} {",
+         "  foreach v [list [$s getTechVia] [$s getBlockVia]] {",
+         '    if {$v ne "NULL" && $v ne ""} { return [list [[$v getTopLayer] getName] [[$v getBottomLayer] getName]] }',
+         "  }",
+         "  return {}",
+         "}",
+         "proc pgc_window {wx0 wy0 wx1 wy1} {",
+         "  global pgc_b pgc_u pgc_cuts",
+         "  set X0 [expr {round($wx0*$pgc_u)}]; set Y0 [expr {round($wy0*$pgc_u)}]",
+         "  set X1 [expr {round($wx1*$pgc_u)}]; set Y1 [expr {round($wy1*$pgc_u)}]",
+         "  foreach net {VDD VSS} {",
+         "    set n [$pgc_b findNet $net]",
+         '    if {$n eq "NULL" || $n eq ""} continue',
+         "    foreach sw [$n getSWires] {",
+         "      foreach s [$sw getWires] {",
+         "        if {[$s isVia]} continue",
+         '        if {[[$s getTechLayer] getName] ne "M6"} continue',
+         "        if {[$s xMax] <= $X0 || [$s xMin] >= $X1 || [$s yMax] <= $Y0 || [$s yMin] >= $Y1} continue",
+         "        set lay [$s getTechLayer]; set st [$s getWireShapeType]",
+         "        set a [$s xMin]; set b [$s yMin]; set c [$s xMax]; set d [$s yMax]",
+         "        odb::dbSBox_destroy $s",
+         "        if {$a < $X0} { odb::dbSBox_create $sw $lay $a $b $X0 $d $st }",
+         "        if {$c > $X1} { odb::dbSBox_create $sw $lay $X1 $b $c $d $st }",
+         "        lappend pgc_cuts [list $net $X0 $b $X1 $d]",
+         "      }",
+         "    }",
+         "  }",
+         "}"]
+    for inst, pin, (x0, y0, x1, y1) in cuts:
+        L.append(f"pgc_window {x0:.4f} {y0:.4f} {x1:.4f} {y1:.4f}   ;# {inst}.{pin}")
+    L += ["foreach cut $pgc_cuts {",
+          "  lassign $cut net X0 Y0 X1 Y1",
+          "  foreach sw [[$pgc_b findNet $net] getSWires] {",
+          "    foreach s [$sw getWires] {",
+          "      if {![$s isVia]} continue",
+          "      if {[$s xMax] <= $X0 || [$s xMin] >= $X1 || [$s yMax] <= $Y0 || [$s yMin] >= $Y1} continue",
+          '      if {"M6" in [pgc_layers $s]} { odb::dbSBox_destroy $s; incr pgc_via }',
+          "    }",
+          "  }",
+          "}",
+          'puts "OT_PG_ISLAND_CUT windows=%d strap_cuts=[llength $pgc_cuts] vias_removed=$pgc_via"' % len(cuts)]
+    return "\n".join(L) + "\n"
 
 
 # ASAP7 liberty units (asap7sc7p5t_*.lib: time_unit "1ps", capacitive_load_unit (1,fF)): every SDC value below is in
@@ -1082,7 +1213,10 @@ def type_macros(P, tn):
 def phy_pg_domains(P, tn):
     """PATH-KV-SYSC 10-25 (OWNER decision 7, PHY PG hook): the die.pg.domains that fall inside partition type tn, as
     [(name, power_net, ground_net, rect_type_um, [macro inst fully inside])].  Identical for every instance (a hardened
-    type cannot carry per-instance supply variants); empty for every type without a PHY domain (kits unchanged)."""
+    type cannot carry per-instance supply variants); empty for every type without a PHY domain (kits unchanged).
+    DIE-HEAD-5 opt-in: a type with "phy_pg_offmodel" (a non-empty note: the PHY body is not part of the partition view,
+    e.g. the s81_head analog PMA behind the type pads) may hold a domain with no macro; the region then gets its VDDPHY
+    straps/pins and the hard placement blockage only (no macro grid).  Default (key absent) unchanged: fail closed."""
     doms = P.die.get("pg", {}).get("domains", []) or []
     if not doms:
         return []
@@ -1095,7 +1229,7 @@ def phy_pg_domains(P, tn):
         for d in doms:
             b = d["rect_um"]
             r = [max(a[0], b[0]), max(a[1], b[1]), min(a[2], b[2]), min(a[3], b[3])]
-            if r[0] >= r[2] or r[1] >= r[3]:
+            if r[0] >= r[2] - 1e-6 or r[1] >= r[3] - 1e-6:   # DIE-HEAD-5: abutting neighbour domain (float sliver)
                 continue
             u, v = P.to_type(inst, r[:2]), P.to_type(inst, r[2:])
             rt = [round(min(u[0], v[0]), 4), round(min(u[1], v[1]), 4), round(max(u[0], v[0]), 4),
@@ -1115,11 +1249,12 @@ def phy_pg_domains(P, tn):
                 if not (box[0] >= rt[0] and box[1] >= rt[1] and box[2] <= rt[2] and box[3] <= rt[3]):
                     raise ValueError(f"type {tn}: macro {c['inst']} straddles PG domain {d['name']} {rt}")
                 mac.append(c["inst"])
-            if not mac:
+            if not mac and not t.get("phy_pg_offmodel"):
                 raise ValueError(f"type {tn}: PG domain {d['name']} holds no macro (a PHY domain powers its PHY macro)")
             got.append((d["name"], d["nets"][0], d["nets"][1], rt, sorted(mac)))
         per.append(got)
-    if any(json.dumps(g) != json.dumps(per[0]) for g in per):
+    # DIE-HEAD-5: compare supply/geometry/macros, not the per-instance domain name (die.pg.domains names one per window)
+    if any(json.dumps([x[1:] for x in g]) != json.dumps([x[1:] for x in per[0]]) for g in per):
         raise ValueError(f"type {tn}: per-instance PHY PG domains differ; cannot harden one type for them")
     return per[0]
 
@@ -1242,7 +1377,83 @@ def _macro_pg_layers(lef):
     return levels[0] + " M" + str(int(levels[0][1:]) + 1)
 
 
-def phy_pg_pdn(P, tn, doms, macros, root=None):
+# PG-CORECONN-1 10-28 (opt-in plan partition_types.<t>.core_pg_connect, default off = kit bytes unchanged): the
+# kit PDN global_connect binds every hard core's VDD/VSS ITerm to the tile nets (logical), but outside the PHY-domain
+# path no macro grid exists, so pdngen drops no via onto the core PG pins: in hd_tile all 10 core PG terms / 744 M5
+# pin shapes are untouched by tile PG metal (PDNSim PSM-0069; an LVS open).  Each placed non-PHY macro gets a pdngen
+# macro grid on its own LEF PG pin layer L, connected to the tile strap layer above it (M4->M5, M5->M6, M6->M7).
+CORE_PG_UP = {"M4": "M5", "M5": "M6", "M6": "M7"}
+
+
+def macro_pg_pin_layers(lef):
+    """{'VDD': {layers}, 'VSS': {layers}} of a macro LEF (PIN VDD / PIN VSS PORT geometry; missing pin -> empty)."""
+    text = Path(lef).read_text(errors="replace")
+    out = {}
+    for pin in ("VDD", "VSS"):
+        block = re.search(r"\bPIN\s+" + pin + r"\b(.*?)\bEND\s+" + pin + r"\b", text, re.S)
+        out[pin] = set(re.findall(r"\bLAYER\s+(M[0-9]+)\s*;", block[1])) if block else set()
+    return out
+
+
+def core_pg_connect_layer(lef):
+    """(pin_layer, tile_layer) the macro's PG pins connect on: the highest LEF PG layer that has a tile strap layer
+    above it (CORE_PG_UP), identical for VDD and VSS.  ValueError when the LEF has no connectable PG geometry."""
+    got = macro_pg_pin_layers(lef)
+    pick = {}
+    for pin, lays in got.items():
+        ok = sorted((l for l in lays if l in CORE_PG_UP), key=lambda l: int(l[1:]))
+        if not ok:
+            raise ValueError(f"{lef}: {pin} has no PG pin geometry on {'/'.join(CORE_PG_UP)} (found {sorted(lays)}); "
+                             "core_pg_connect cannot land it on the tile grid")
+        pick[pin] = ok[-1]
+    if pick["VDD"] != pick["VSS"]:
+        raise ValueError(f"{lef}: VDD on {pick['VDD']} but VSS on {pick['VSS']}; one macro grid needs one layer")
+    return pick["VDD"], CORE_PG_UP[pick["VDD"]]
+
+
+def core_pg_grids(P, tn, macros, root=None, exclude=()):
+    """pdn.tcl lines of an opt-in type (core_pg_connect): one CORE macro grid per PG pin layer over the type's placed
+    macros (hard_cores + hardened contents, minus `exclude` = PHY-domain macros), add_pdn_connect pin layer -> tile
+    strap layer.  [] when not opted in or the type places no macro."""
+    if not P.types[tn].get("core_pg_connect"):
+        return []
+    import cores as C
+    groups = {}
+    for inst, _mod, lef, *_ in macros:
+        if inst in exclude:
+            continue
+        groups.setdefault(core_pg_connect_layer(C.resolve(lef, root)), []).append(inst)
+    t = []
+    for (lo, hi), insts in sorted(groups.items(), key=lambda kv: int(kv[0][0][1:])):
+        g = f"core_pg_{lo}"
+        t += [f"# PG-CORECONN-1 (core_pg_connect): {len(insts)} placed macro(s) with {lo} PG pins onto the tile {hi} straps",
+              f"define_pdn_grid -macro -name {{{g}}} -instances {{{_pdn_inst_patterns(insts)}}} -voltage_domains {{CORE}} -halo {{0}}",
+              f"add_pdn_connect -grid {{{g}}} -layers {{{lo} {hi}}}"]
+    return t
+
+
+def core_pg_unconnected(pdn, macros, root=None, exclude=()):
+    """[(inst, pin_layer, tile_layer)] placed non-PHY macros of `macros` that no macro grid of the pdn.tcl text lands
+    (no define_pdn_grid -macro whose -instances matches the instance with an add_pdn_connect on its LEF PG layer to
+    the strap layer above).  [] = every macro PG pin layer is connected."""
+    import cores as C
+    grids, conns = {}, {}
+    for m in re.finditer(r"define_pdn_grid -macro -name \{(\S+?)\} -instances \{(.*)\} -voltage_domains", pdn):
+        grids[m[1]] = [re.compile(p) for p in re.findall(r"\{(\^.*?\$)\}", m[2])]   # ODB-name regexes
+    for m in re.finditer(r"add_pdn_connect -grid \{(\S+?)\} -layers \{(M\d+) (M\d+)\}", pdn):
+        conns.setdefault(m[1], set()).add((m[2], m[3]))
+    bad = []
+    for inst, _mod, lef, *_ in macros:
+        if inst in exclude:
+            continue
+        lo, hi = core_pg_connect_layer(C.resolve(lef, root))
+        name = re.sub(r"(?<!\\)([\[\]])", r"\\\1", inst)
+        if not any((lo, hi) in conns.get(g, ()) and any(r.match(name) for r in pats) for g, pats in grids.items()):
+            bad.append((inst, lo, hi))
+    return bad
+
+
+def phy_pg_pdn(P, tn, doms, macros, root=None, core_grids=False):
     """Partition PDN with separate PHY supply regions (OWNER decision 7; OpenROAD voltage regions, the die-level form is
     pg_regions.pdn_tcl).  CORE keeps the abutment-continuous grid of PDN everywhere outside the regions (pdngen cuts the
     core domain at other domains' regions); each region gets its own net (VDDPHY) + VSS: M6/M7 straps at the same
@@ -1260,8 +1471,11 @@ def phy_pg_pdn(P, tn, doms, macros, root=None):
     for net in sorted({d[1] for d in doms} - {"VDD"}):
         t += [f"set n [$b findNet {net}]", f'if {{$n eq "NULL"}} {{ set n [odb::dbNet_create $b {net}] }}',
               "$n setSigType POWER; $n setSpecial"]
-    t += [f"add_global_connection -net {{VDD}} -inst_pattern {{^(?!({excl})$).*}} -pin_pattern {{^VDD$}} -power"]
+    t += [f"add_global_connection -net {{VDD}} -inst_pattern {{^(?!({excl})$).*}} -pin_pattern {{^VDD$}} -power"
+          if phy_insts else "add_global_connection -net {VDD} -inst_pattern {.*} -pin_pattern {^VDD$} -power"]
     for name, pw, gd, r, mac in doms:
+        if not mac:
+            continue
         t += [f"add_global_connection -net {{{pw}}} -inst_pattern {{^({'|'.join(_tcl_re(i) for i in mac)})$}} "
               f"-pin_pattern {{^VDD$}} -power"]
     t += ["add_global_connection -net {VSS} -inst_pattern {.*} -pin_pattern {^VSS$} -ground", "global_connect",
@@ -1274,22 +1488,57 @@ def phy_pg_pdn(P, tn, doms, macros, root=None):
     t += [ln for ln in PDN.splitlines()[5:] if ln.strip()]       # the CORE grid of PDN (after its global connects)
     for k, (name, pw, gd, r, mac) in enumerate(doms):
         rn = f"ot_phy_pg_{k}"
-        if len({phy_layers[i] for i in mac}) != 1:
+        if mac and len({phy_layers[i] for i in mac}) != 1:
             raise ValueError(f"PG domain {name}: mixed PHY PG interfaces require separate grids")
         t += [f"# PHY supply region {name}: {pw}/{gd} over {' '.join(mac)} (die.pg.domains, OWNER decision 7)",
               f"define_pdn_grid -name {{{rn}}} -voltage_domains {{{rn}}} -pins {{M7}}",
               f"add_pdn_stripe -grid {{{rn}}} -layer {{M6}} -width {{0.288}} -spacing {{0.096}} -pitch {{4.32}} -offset {{1.968}}",
               f"add_pdn_stripe -grid {{{rn}}} -layer {{M7}} -width {{0.288}} -spacing {{0.096}} -pitch {{8.64}} -offset {{4.128}}",
               f"add_pdn_connect -grid {{{rn}}} -layers {{M6 M7}}",
-              f"define_pdn_grid -macro -name {{{rn}_macro}} -instances {{{_pdn_inst_patterns(mac)}}} -voltage_domains {{{rn}}} -halo {{0}}",
-              f"add_pdn_connect -grid {{{rn}_macro}} -layers {{{phy_layers[mac[0]]}}}",
+              *([f"define_pdn_grid -macro -name {{{rn}_macro}} -instances {{{_pdn_inst_patterns(mac)}}} -voltage_domains {{{rn}}} -halo {{0}}",
+                 f"add_pdn_connect -grid {{{rn}_macro}} -layers {{{phy_layers[mac[0]]}}}"] if mac else
+                [f"# off-model PHY body (type phy_pg_offmodel): no macro in {name}, region straps + blockage only"]),
               f"odb::dbBlockage_create $b " + " ".join(f"[expr {{round({v:g}*$dbu)}}]" for v in r),
               "ot_clear_keepout_physical $b [list [list " + " ".join(f"[expr {{round({v:g}*$dbu)}}]" for v in r) + "]] phy_supply_region"]
-    if core_macros:
+    if core_grids:      # core_pg_connect: per-LEF-layer CORE macro grids (core_pg_grids) replace the M4-only grid
+        t += core_pg_grids(P, tn, macros, root, exclude=set(phy_insts))
+    elif core_macros:
         t += ["# CORE content macros: M4 PG pins onto the core M5 straps",
               f"define_pdn_grid -macro -name {{core_macros}} -instances {{{_pdn_inst_patterns(core_macros)}}} -voltage_domains {{CORE}} -halo {{0}}",
               "add_pdn_connect -grid {core_macros} -layers {M4 M5}"]
     return "\n".join(t) + "\n"
+
+
+def signed_mean_core_taps(P, tn):
+    """Select measured means for an explicitly SIGNED early-core-tap plan."""
+    ck = P.types[tn].get("clock", {}) or {}
+    taps = [tp for tp in ck.get("taps", []) or [] if tp.get("kind") == "core"]
+    return bool(ck.get("core_taps") == "early" and taps and P.types[tn].get("hard_cores")
+                and all("insertion_ff_ps" in tp and str(tp.get("budget_owner", "")).startswith("SIGNED") for tp in taps))
+
+
+def core_mean_contract_options(P, tn, trial=False):
+    """COORD 10-28 03:35: explicit parent budgets may drive non-release probes.
+
+    Existing plans keep their legacy path. Parent-budget early taps opt into the
+    selected view's explicit TT/FF contract only in a --trial kit; they cannot
+    qualify release kits. The contract reader still rejects ETM extrema as means.
+    """
+    if signed_mean_core_taps(P, tn):
+        return dict(mean_contract=True, require_signed=True)
+    ck = P.types[tn].get("clock", {}) or {}
+    taps = [tp for tp in ck.get("taps", []) or [] if tp.get("kind") == "core"]
+    budget = bool(ck.get("core_taps") == "early" and taps and P.types[tn].get("hard_cores")
+                  and all("insertion_ff_ps" in tp and
+                          str(tp.get("budget_owner", "")).startswith(("SIGNED", "parent_budget"))
+                          for tp in taps)
+                  and any(str(tp.get("budget_owner", "")).startswith("parent_budget") for tp in taps))
+    if budget:
+        if not trial:
+            import core_clock_contract as CC
+            raise CC.ContractError(f"{tn}: parent_budget mean core taps require a non-release --trial kit; release requires SIGNED")
+        return dict(mean_contract=True, require_signed=False)
+    return dict(mean_contract=False, require_signed=True)
 
 
 def core_latency_files(P, tn, kd, root=None, mean_contract=False, require_signed=True):
@@ -1380,6 +1629,28 @@ def _corner_libs(mlib, kd, corner):
 KEEP_REGS_HOOK = ("ot_keep_regs.tcl", "ot_pin_regs.tcl", "pin_reg_split.tcl", "ot_rst_copies.tcl", "ot_rst_copies.py")
 
 
+_INCLUDE = re.compile(r'^[ \t]*`include[ \t]+"([^"]+)"', re.M)
+
+
+def stage_includes(rtl_files, rtl_dir):
+    """DIE-HEAD-7 / RISK-SWEEP-2 10-28: copy every `include "x" a staged source names (transitively) from the source's
+    own directory into the kit rtl/ (yosys resolves includes next to the including file); the HEAD hd_serdes kit
+    dropped s81_link/ot_s81_gf1024.svh + kp4 *_mat.svh.  A missing include stays missing: KIT_PREFLIGHT fails it."""
+    todo, done = [Path(f) for f in rtl_files], set()
+    while todo:
+        f = todo.pop()
+        if f in done or not f.is_file():
+            continue
+        done.add(f)
+        for inc in _INCLUDE.findall(f.read_text(errors="replace")):
+            src = f.parent / inc
+            dst = Path(rtl_dir) / Path(inc).name
+            if src.is_file():
+                if not dst.exists():
+                    shutil.copyfile(src, dst)
+                todo.append(src)
+
+
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False,
                    bump_ports=None, gpl_plain=False):
@@ -1435,6 +1706,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         if Path(f).resolve() != dst.resolve():
             shutil.copyfile(f, dst)
         srcs.append(f"/work/rtl/{Path(f).name}")
+    stage_includes(rtl_files, kd / "rtl")
     pins = type_pins(P, tn)
     bump_sites = bump_pin_sites(P, tn, bump_ports, macros, Path(root) if root else Path(__file__).resolve().parent.parent.parent) \
         if bump_ports else []
@@ -1469,10 +1741,22 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     phy_doms = phy_pg_domains(P, tn)
     if phy_doms:
         # PATH-KV-SYSC 10-25 PHY PG hook: separate VDDPHY region(s) of die.pg.domains inside this type
-        pdn = phy_pg_pdn(P, tn, phy_doms, macros, root=root) + pdn[len(PDN):]
+        pdn = phy_pg_pdn(P, tn, phy_doms, macros, root=root,
+                         core_grids=bool(P.types[tn].get("core_pg_connect"))) + pdn[len(PDN):]
         (kd / "phy_pg.json").write_text(json.dumps([dict(name=d[0], power=d[1], ground=d[2], rect_type_um=d[3],
                                                           macros=d[4]) for d in phy_doms], indent=1) + "\n")
+    elif P.types[tn].get("core_pg_connect"):
+        cg = core_pg_grids(P, tn, macros, root)
+        if cg:
+            pdn += "\n".join(cg) + "\n"
+    if P.types[tn].get("core_pg_connect"):
+        bad = core_pg_unconnected(pdn, macros, root, exclude={i for d in phy_doms for i in d[4]})
+        if bad:
+            raise ValueError(f"type {tn}: core_pg_connect leaves macro PG pins unconnected: {bad[:4]}")
     (kd / "pdn.tcl").write_text(pdn)
+    pg_cuts = pg_island_cuts(P, tn, root)
+    if pg_cuts:
+        (kd / "pg_island_cut.tcl").write_text(pg_island_cut_tcl(pg_cuts))
     (kd / "make_tracks.tcl").write_text(make_tracks_tcl(P))
     (kd / "constraint.sdc").write_text(sdc(P, tn, pins))
     if core_tap_rows(P, tn):
@@ -1504,7 +1788,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     lerr = sdc_lint.lint((kd / "constraint.sdc").read_text(), **lctx)
     if lerr:
         raise sdc_lint.SdcLintError(f"type {tn}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
-    clat = core_latency_files(P, tn, kd, root)
+    clat = core_latency_files(P, tn, kd, root, **core_mean_contract_options(P, tn, trial=trial))
     m = CORE_MARGIN_UM
     forest = any(Path(f).name == "ot_pl_land_reset_forest.sv" for f in srcs)
     cfg = [f"# GENERATED by tools/die_plan/gen.py phys: partition type {tn} of die_plan {P.name}. Do not edit.",
@@ -1518,6 +1802,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            f"export CORE_AREA = {_um(m)} {_um(m)} {_um(w - m)} {_um(h - m)}",
            "export IO_CONSTRAINTS = /work/io.tcl",
            "export PDN_TCL = /work/pdn.tcl",
+           *(["export POST_PDN_TCL = /work/pg_island_cut.tcl"] if pg_cuts else []),
            # override: platforms/asap7/config.mk (read AFTER the design config) sets MAKE_TRACKS with a plain
            # export, which silently replaced the plan tracks (M7 offset 0.016, not 0.032) -> every plan pin off-track
            "override export MAKE_TRACKS = /work/make_tracks.tcl",
@@ -1853,7 +2138,12 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     import infra_rtl as IR
     infra = IR.type_ports(t)
     port_pins += [dict(bus=p["name"], bit=None) for p in infra]
+    sps = strap_pin_sites(P, tn)
+    port_pins += [dict(bus=n.split("[")[0], bit=int(n.split("[")[1][:-1])) for n, _l, _x, _y in sps]
     (kd / "port_bind_pins.json").write_text(json.dumps(port_pins, indent=1) + "\n")
+    if sps:
+        # declared ID straps of this kit for port_bind_gate / straps.py (OWNER 10-25 option B)
+        (kd / "straps.json").write_text(json.dumps(dict(straps=sorted({n.split("[")[0] for n, *_ in sps})), indent=1) + "\n")
     if infra:
         import ft_ports as FT
         decl = FT.declaration(t.get("infra_arcs", []), f"die plan {P.name} type {tn}: explicit native hard-core interfaces")
@@ -2019,7 +2309,9 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
         else:
             mine = [cells, rs, rtl_dir / f"{t['module']}.sv"] + [root / s for s in t.get("sources", [])]
             if landing is not None:
-                mine += landing_rtl(root, (rtl_dir / f"{t['module']}.sv").read_text())
+                have = {Path(x).resolve() for x in mine}
+                mine += [f for f in landing_rtl(root, (rtl_dir / f"{t['module']}.sv").read_text())
+                         if Path(f).resolve() not in have]
         bumps = kit_bump_ports(P, tn, kit_rtl[tn]) if kit_rtl and tn in kit_rtl else None
         kits.append(write_type_kit(P, tn, out, [str(f) for f in mine], util, proof, root, hold_ff_margin, margins,
                                    skip_ir, max_wire_um, rc_cal, master_slice, trial, bump_ports=bumps,
@@ -2030,18 +2322,34 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
 
 
 LANDING_RTL = ("rtl/common/ot_dp_clk_landing.sv", "rtl/common/ot_dp_clk_landing_ca.sv")
+# DIE-HEAD-7 10-28: library RTL the landing rings instantiate (ot_meso_ring / _dsel / _ohor / _sel / _wch live in
+# ot_meso_fifo.sv); taken only when the closure reaches it (the HEAD r2 kit dropped it -> RTL_LINT u_ring missing).
+LANDING_LIB = ("rtl/common/ot_meso_fifo.sv",)
+_LAND_INST = r"^\s*(\w+)\s+(?:#\s*\(|\w+\s*\()"
 
 
 def landing_rtl(root, wrapper_text):
-    """the landing ring RTL files (LANDING_RTL, under root) defining a module the landed wrapper instantiates."""
+    """the landing ring RTL files (LANDING_RTL, under root) defining a module the landed wrapper instantiates, plus
+    (transitively) the LANDING_LIB files defining what those files instantiate."""
     import re
-    used = set(re.findall(r"^\s*(\w+)\s+(?:#\(|\w+\s*\()", wrapper_text, re.M))
-    out = []
-    for rel in LANDING_RTL:
+    def strip(t):
+        return re.sub(r"//[^\n]*", "", re.sub(r"/\*.*?\*/", " ", t, flags=re.S))
+    need = set(re.findall(_LAND_INST, strip(wrapper_text), re.M))
+    pool = []
+    for rel in LANDING_RTL + LANDING_LIB:
         f = Path(root) / rel
-        if f.is_file() and used & set(re.findall(r"^\s*module\s+(\w+)", f.read_text(), re.M)):
-            out.append(f)
-    return out
+        if f.is_file():
+            t = strip(f.read_text())
+            pool.append((f, set(re.findall(r"^\s*module\s+(\w+)", t, re.M)), set(re.findall(_LAND_INST, t, re.M))))
+    taken, grew = set(), True
+    while grew:
+        grew = False
+        for f, defs, uses in pool:
+            if f not in taken and need & defs:
+                taken.add(f)
+                need |= uses
+                grew = True
+    return [f for f, _, _ in pool if f in taken]
 
 
 # ------------------------------------------------------------------------------------------------- assembly (3d)
