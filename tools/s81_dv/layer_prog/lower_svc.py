@@ -978,12 +978,13 @@ def main(argv=None):
     ap.add_argument('--timing-profile', choices=tuple(SERVICE_TIMING), default='legacy_fg3')
     ap.add_argument('--compressed-only', action='store_true', help='compressed layer: base + selection mutants only')
     ap.add_argument('--pio-safe', type=int, default=0, help='also emit base_safe with PIO this many edges later')
+    ap.add_argument('--die-src', default=None, help='die tree of the compile (dv_layer_compile --die-src); else DIE_REF')
     a = ap.parse_args(argv)
     sched = json.loads(Path(a.sched).read_text()) if a.sched else None
     die = None
     try:
         import dv_layer_compile as DC
-        die = DC.Die(DC.die_tree(DC.DIE_REF))
+        die = DC.Die(DC.die_tree(DC.DIE_REF, src=a.die_src))
     except Exception as e:    # noqa: BLE001 -- the link ages fall back to the bind9 values
         print('die model unavailable, bind9 link ages:', e)
     muts = (None, 'slot', 'pio_early' if PPATH else 'late') + (('allq_off',) if ALLQ else ())

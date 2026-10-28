@@ -85,9 +85,16 @@ def hoist(src, dst):
     Path(dst).write_text('\n'.join(out))
 
 
+def leaf_module(part_sv):
+    """KV-HOST-REGEN-1 10-27: the module the bound partition instantiates as u_host.  The bind of record
+    (recipe_kv_2350, KV-KITS-7 b3) binds the boot-event variant qkd_host_root_admission_obsx_bo1_c45 (same obsx
+    children + d2d boot-event / FDI pace glue), the older bound_r8 the plain TOP; both elaborate the same member paths."""
+    m = re.search(r'^\s*(' + TOP + r'\w*)\s*#\((.*?)\)\s*' + LEAF_INST + r'\s*\(', Path(part_sv).read_text(), re.M)
+    return (m.group(1), m.group(2)) if m else (TOP, '')
+
+
 def leaf_params(part_sv):
-    m = re.search(r'^\s*' + TOP + r'\s*#\((.*?)\)\s*' + LEAF_INST + r'\s*\(', Path(part_sv).read_text(), re.M)
-    return re.findall(r'\.(\w+)\(([^()]*)\)', m.group(1)) if m else []
+    return re.findall(r'\.(\w+)\(([^()]*)\)', leaf_module(part_sv)[1])
 
 
 def elaborate(kit_f, part_sv, work):
@@ -98,14 +105,15 @@ def elaborate(kit_f, part_sv, work):
     fs = [l.strip() for l in open(kit_f) if l.strip() and not l.startswith(('+', '-', '//'))]
     fs = [f for f in fs if not re.search(r'/kv3_hub_Wi_part(_bound)?\.sv$', f)]
     fs2 = []
+    top = leaf_module(part_sv)[0]
     for f in fs:
-        if f.endswith('/' + TOP + '.sv'):
-            hoist(f, work / (TOP + '.sv'))
-            f = str(work / (TOP + '.sv'))
+        if re.search(r'/' + TOP + r'\w*\.sv$', f):          # obsx + its bound variant (e.g. _bo1_c45) carry g_mu blocks
+            hoist(f, work / Path(f).name)
+            f = str(work / Path(f).name)
         fs2.append(f)
     ch = ' '.join(f'-chparam {k} {v}' for k, v in leaf_params(part_sv))
     ys = work / 'host_elab.ys'
-    ys.write_text(f"read_verilog -defer -sv -DSYNTHESIS {' '.join(fs2)}\nhierarchy -top {TOP} {ch}\nproc\n"
+    ys.write_text(f"read_verilog -defer -sv -DSYNTHESIS {' '.join(fs2)}\nhierarchy -top {top} {ch}\nproc\n"
                   f"write_json {js}\n")
     env = dict(os.environ, PATH=str(Path.home() / '.local/opentallas-tools/bin') + ':' + os.environ.get('PATH', ''))
     subprocess.run(['yosys', '-q', '-l', str(work / 'host_elab.log'), str(ys)], check=True, env=env,
