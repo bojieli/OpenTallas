@@ -2910,7 +2910,25 @@ def trace_constant_closure(L, log, tried):
 RESET_PORT = re.compile(r"^(?:\w+_)?h?(?:rst|reset|rn|rstn|nrst|arst|srst)(?:_?n|_ni|_b|_l)?(?:_pin)?$", re.I)
 
 
-def reset_vars(d, pis, asserted=None, levels=None):
+def kit_reset_ports(kit):
+    """reset port names the kit declares (FLOW-GEN-1 10-28): core.json boundary_role {port: 'reset'} (the typed
+    boundary map every core-kit generator writes) and the constraint.sdc '# reset <ports>: ...' line.  None when the
+    kit declares nothing (the name pattern alone then decides, as before)."""
+    kit, out = Path(kit), set()
+    try:
+        roles = json.loads((kit / "core.json").read_text()).get("boundary_role") or {}
+        out |= {str(k) for k, v in roles.items() if v == "reset"}
+    except (OSError, ValueError, AttributeError):
+        pass
+    try:
+        for m in re.finditer(r"^# reset ([^:\n]+):", (kit / "constraint.sdc").read_text(), re.M):
+            out |= set(m.group(1).split())
+    except OSError:
+        pass
+    return sorted(out) or None
+
+
+def reset_vars(d, pis, asserted=None, levels=None, declared=None):
     """{var: asserted value} of the reset ports of one side (pi keys; OT_LEC_RESET_PORTS=a,b overrides the name
     pattern).  Active low when the name ends in n / _ni / _b / _l (rst_n, rn, core_rst_n) -- unless the structure
     says otherwise (LEC-FPREG-7 10-27, S81 dsdv_bksel_c: port 'rst' is the ACTIVE-LOW async reset of every register,
@@ -2920,14 +2938,16 @@ def reset_vars(d, pis, asserted=None, levels=None):
     level); when the opposite level of the name rule forces more than twice as many registers that the name level does
     not force, it is the asserted level (registers constant at both levels do not count: S81 RXsf gold has ~2,070).  OT_LEC_RESET_POLARITY=name keeps the name rule only.  asserted: {pi key: logical asserted value} decided
     on the gold side, applied unchanged to the gate (one port, one polarity); levels: dict filled with {pi key: asserted
-    value} -> R = {var: asserted literal value}."""
+    value} -> R = {var: asserted literal value}.  declared: the kit's declared reset ports (kit_reset_ports), reset
+    ports in addition to the name pattern, so a declared reset needs no name rule (KV hrst_n)."""
     names = [n for n in os.environ.get("OT_LEC_RESET_PORTS", "").split(",") if n]
+    declared = set(declared or ())
     R, key_of, lv = {}, {}, {}
     for k, lit in pis.items():
         if not k.startswith("pi:"):
             continue
         base = re.sub(r"\[\d+\]$", "", k[3:]).split(".")[-1]
-        if not (base in names if names else RESET_PORT.match(base)):
+        if not (base in names if names else (base in declared or RESET_PORT.match(base))):
             continue
         stem = re.sub(r"_pin$", "", base, flags=re.I)
         low = bool(re.search(r"(n|_ni|_b|_l)$", stem, re.I))
@@ -2988,7 +3008,7 @@ def noreset_classify(L):
     pol = None
     for side, d, p in (("gold", L.gold, L.gp), ("gate", L.gate, L.tp)):
         lv = {}
-        R = reset_vars(d, p, pol, lv)
+        R = reset_vars(d, p, pol, lv, getattr(L, "kit_reset_ports", None))
         pol = lv if pol is None else pol
         L.__dict__.setdefault("rst_asserted", {})[side] = lv
         L.rst_ports[side] = sorted(k for k, lit in p.items() if (lit >> 1) in R and k.startswith("pi:"))
@@ -5034,6 +5054,8 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         t1 = time.time()
         L = Lec(read_aig(out / "gold.aig"), read_map(out / "gold.map"),
                 read_aig(out / "gate.aig"), read_map(out / "gate.map"), port_map)
+        L.kit_reset_ports = kit_reset_ports(kit)
+        rec["kit_reset_ports"] = L.kit_reset_ports
         correspond(L, out, conflicts, log)
         hf = Path(hints) if hints else Path(kit) / "lec_hints.json"
         if hf.is_file():
