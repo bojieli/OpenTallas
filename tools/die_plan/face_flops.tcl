@@ -298,5 +298,10 @@ if {[file exists /work/reset_tree.tcl]} { source /work/reset_tree.tcl }
 # per-tap reset synchronisers (gen_rtl ot_dp_rsync_s<N>): place them at their taps, re-point FIRM flops (reset_taps.tcl)
 if {[file exists /work/reset_taps.tcl]} { source /work/reset_taps.tcl }
 }
+# Explicit reviewed roads override automatic midpoint clustering, off by default.
+if {[info exists ::env(OT_RELAY_ROAD_FILE)] && $::env(OT_RELAY_ROAD_FILE) ne ""} {
+  if {![file exists /work/relay_roads.tcl]} { error "RELAY_ROADS helper missing" }
+  source /work/relay_roads.tcl
+}
 # S81-P8 10-23: soft relay stations on their source-sink lines (kits with hard cores; gen_phys copies relay_mid.tcl)
 if {[file exists /work/relay_mid.tcl] && [info exists ::env(OT_RELAY_MID_RE)]} { source /work/relay_mid.tcl }

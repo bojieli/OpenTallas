@@ -10,11 +10,20 @@ if {[info exists ::env(OT_RESET_PAIR_FIXED)] && $::env(OT_RESET_PAIR_FIXED) eq "
   foreach n [split [read $ff_rf] "\n"] { if {$n ne ""} { dict set ff_reset_fixed $n 1 } }
   close $ff_rf
 }
+# Explicit road sites are already legal and must survive DPL unchanged.
+set ff_road_fixed {}
+if {[info exists ::env(OT_RELAY_ROAD_FILE)] && $::env(OT_RELAY_ROAD_FILE) ne ""} {
+  set ff_road_file $::env(RESULTS_DIR)/ot_relay_road_fixed.txt
+  if {![file exists $ff_road_file]} { error "RELAY_ROADS fixed-site receipt missing" }
+  set ff_rr [open $ff_road_file r]
+  foreach n [split [read $ff_rr] "\n"] { if {$n ne ""} { dict set ff_road_fixed $n 1 } }
+  close $ff_rr
+}
 set fh [open $::env(RESULTS_DIR)/ot_face_flops.txt r]
 foreach ln [split [read $fh] "\n"] {
   if {$ln eq ""} continue
   set ff_name [lindex [split $ln "\t"] 0]
-  if {[dict exists $ff_reset_fixed $ff_name]} continue
+  if {[dict exists $ff_reset_fixed $ff_name] || [dict exists $ff_road_fixed $ff_name]} continue
   set i [$ff_blk findInst $ff_name]
   if {$i ne "NULL" && $i ne "" && [$i getPlacementStatus] eq "FIRM"} { $i setPlacementStatus PLACED; incr ff_n }
 }
@@ -26,7 +35,7 @@ if {[file exists $ff_f]} {
   set ff_m 0
   set fh [open $ff_f r]
   foreach n [split [read $fh] "\n"] {
-    if {$n eq ""} continue
+    if {$n eq "" || [dict exists $ff_road_fixed $n]} continue
     set i [$ff_blk findInst $n]
     if {$i ne "NULL" && $i ne "" && [$i getPlacementStatus] eq "FIRM"} { $i setPlacementStatus PLACED; incr ff_m }
   }
