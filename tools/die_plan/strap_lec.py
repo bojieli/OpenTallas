@@ -19,7 +19,7 @@ Verilog-parameter wrapper the binder emitted before 12.15a: ot_dp_clk_landing_ca
         leaf cores are identical instances on both sides: read as black boxes (read_verilog -lib of the type's
         sources; equiv_make merges identical black-box cells and compares their inputs);
   check yosys proc; flatten; async2sync; opt -full (constant propagation of the ties); equiv_make ref tied;
-        equiv_simple -seq N; equiv_induct -seq N; equiv_status -assert (key-point / register-correspondence LEC by
+        equiv_struct; equiv_simple; equiv_induct; equiv_status -assert (key-point / register-correspondence LEC by
         name, sequential induction; every $equiv proved -> EQUIVALENT).
   --mutant  also runs the first variant of each type with one tie bit flipped (lowest bit of the first strap): it must NOT be equivalent
         (the LEC sees a wrong constant; the tie-VALUE audit in straps.py is the G0 check of the die top / netlist).
@@ -154,7 +154,7 @@ def run_lec(work, files, libs, gold, gate, seq, image, timeout, leaves=()):
         ("expose -evert " + " ".join(f"{m}/t:{c}" for m in (gold, gate) for c in list(leaves) + CELL_TYPES))
         if list(leaves) + CELL_TYPES else "", "setundef -undriven -expose", "async2sync", "opt -full", "opt_clean -purge",
         f"equiv_make {gold} {gate} lec_eq", "hierarchy -top lec_eq", "async2sync",
-        f"equiv_simple -seq {seq}", f"equiv_induct -seq {seq}", "equiv_status -assert"]
+        "equiv_struct", "equiv_simple" + (f" -seq {seq}" if seq > 1 else ""), "equiv_induct", "equiv_status -assert"]
     script = work / "lec.ys"
     script.write_text("\n".join(x for x in ys if x) + "\n")
     log = work / "lec.log"
@@ -171,8 +171,8 @@ def run_lec(work, files, libs, gold, gate, seq, image, timeout, leaves=()):
                 error=None if ok else (re.findall(r"ERROR:.*", out) or [out[-300:]])[-1][:300], log=str(log))
 
 
-def lec_type(Ls, Lp, tn, mod, base, libs, common, out, seq=4, image="openroad/orfs:asap7lock", timeout=3600,
-             mutant=False, max_variants=0, jobs=1):
+def lec_type(Ls, Lp, tn, mod, base, libs, common, out, seq=1, image="openroad/orfs:asap7lock", timeout=3600,
+             mutant=False, max_variants=0, jobs=1, run=True):
     """LEC rows of plan type tn (module mod, generated wrapper text `base` before the landing insertion): strap master
     tied to each variant's values vs the parameter wrapper of the variant's first copy (+ one flipped-bit mutant)"""
     st = Ls.strap
@@ -205,8 +205,15 @@ def lec_type(Ls, Lp, tn, mod, base, libs, common, out, seq=4, image="openroad/or
             (w / "leaf_stubs.sv").write_text(stubs)
             jobs_in.append((i, kind, vv, qs, w))
 
+    if not run:
+        return [(tn, mod, common, seq, image, timeout, leaves) + j for j in jobs_in]
+    return run_jobs([(tn, mod, common, seq, image, timeout, leaves) + j for j in jobs_in], jobs)
+
+
+def run_jobs(all_jobs, jobs=1):
+    """run prepared LEC jobs (lec_type(run=False)) in a pool of `jobs` parallel yosys runs"""
     def one(j):
-        i, kind, vv, qs, w = j
+        tn, mod, common, seq, image, timeout, leaves, i, kind, vv, qs, w = j
         r = run_lec(w, [str(w / "cells.sv")] + list(common) + [str(w / "ref.sv"), str(w / "tied.sv")],
                     [str(w / "leaf_stubs.sv")], f"{mod}__ref", f"{mod}__tied", seq, image, timeout, leaves)
         r.update(type=tn, variant=i, kind=kind, values=vv, copies=len(qs), representative=qs[0])
@@ -216,7 +223,7 @@ def lec_type(Ls, Lp, tn, mod, base, libs, common, out, seq=4, image="openroad/or
         return r
     from concurrent.futures import ThreadPoolExecutor
     with ThreadPoolExecutor(max(1, jobs)) as ex:
-        rows = list(ex.map(one, jobs_in))
+        rows = list(ex.map(one, all_jobs))
     return rows
 
 
@@ -229,7 +236,7 @@ def main(argv=None):
     ap.add_argument("--types", help="comma list of plan types (default: every type with count straps)")
     ap.add_argument("--max-variants", type=int, default=0, help="0 = every variant")
     ap.add_argument("--mutant", action="store_true")
-    ap.add_argument("--seq", type=int, default=4)
+    ap.add_argument("--seq", type=int, default=1, help="equiv_simple -seq (1 = combinational key points; equiv_induct proves the rest)")
     ap.add_argument("--timeout", type=int, default=3600)
     ap.add_argument("--image", default="openroad/orfs:asap7lock")
     ap.add_argument("--jobs", type=int, default=1, help="parallel yosys runs per type")
@@ -249,13 +256,14 @@ def main(argv=None):
     out.mkdir(parents=True, exist_ok=True)
     want = a.types.split(",") if a.types else sorted(t for t, v in st["types"].items() if v["straps"])
     common = [str(Path(a.rtl_root) / f) for f in COMMON]
-    rows = []
+    prepared = []
     for tn in want:
         t = P.types[tn]
-        rows += lec_type(Ls, Lp, tn, t["module"], GR.wrapper(P, tn, ep, a.rtl_root),
+        prepared += lec_type(Ls, Lp, tn, t["module"], GR.wrapper(P, tn, ep, a.rtl_root),
                          [str(Path(a.rtl_root) / f) for f in t.get("sources", [])], common, out, seq=a.seq,
                          image=a.image, timeout=a.timeout, mutant=a.mutant, max_variants=a.max_variants,
-                         jobs=a.jobs)
+                         run=False)
+    rows = run_jobs(prepared, a.jobs)
     eq = [r for r in rows if r["kind"] == "eq"]
     rep = dict(schema="opentallas.strap_lec.v1", plan=a.plan, landing=a.landing, types=want,
                variants=len(eq), equivalent=sum(r["equivalent"] for r in eq),
