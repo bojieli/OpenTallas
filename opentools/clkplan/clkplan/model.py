@@ -37,13 +37,35 @@ ASAP7 = dict(
     # capture aperture = setup + hold of the placement / sampling flop (count-aligned crossing window):
     # asap7 DFFHQNx1 RVT setup(rise) + hold(fall) at 40 ps D/CK slew (NUMBER-CHECK LAND-HEAD-3, COORD 20:26).
     capture_aperture_ps={"TT": 10.86 + 15.63, "FF": 6.68 + 12.61},
+    # delay basis of this model's own stage delays: 'spice' (the default stage above IS ngspice BSIM-CMG) or 'sta'
+    # (an OpenSTA-fitted stage, e.g. mscts asap7_bufx24_sta_fit.json without spice_scale)
+    delay_basis="spice",
+    # SPICE-SCALED ARRIVALS (COORD 21:10, OSS-CLOCK-2 measured failure: OpenSTA clock arrivals read 4.2 % TT / 4.9 % FF
+    # early vs ngspice at 0.5-3.2 ns insertion).  Every STA-basis arrival (declared sink / macro insertion, declared
+    # region local insertion, and the model's own stage delays when delay_basis == 'sta') is multiplied by
+    # spice_cal[corner] before crossing margins are computed (d, unshared and the OCV terms scale with it).
+    # Source file = the mscts calibration (per-stage slope of spice = a x STA + b; b is a root offset, cancels in d).
+    # Disable with clkplan.run --no-spice-scale (or spice_cal = null in a model file).
+    spice_cal_file="../../mscts/data/asap7_bufx24_spice_cal.json",
+    spice_cal={"TT": 1.0485, "FF": 1.0552},
 )
 
 
-def load(path=None):
+def load(path=None, spice_scale=True):
+    """spice_scale False -> no spice calibration of arrivals (plain STA-basis plan, the pre-OSS-CLOCK-3 numbers)."""
     m = copy.deepcopy(ASAP7)
     if path:
-        m.update(json.loads(Path(path).read_text()))
+        u = json.loads(Path(path).read_text())
+        if "seg_fit" in u and "delay_basis" not in u:
+            u["delay_basis"] = "spice" if u.get("spice_scale") else "sta"
+        m.update(u)
+    cf = m.get("spice_cal_file")
+    if cf and (DATA / cf).exists():
+        cal = json.loads((DATA / cf).read_text()).get("spice_scale")
+        if cal and m.get("spice_cal") is not None:
+            m["spice_cal"] = cal
+    if not spice_scale:
+        m["spice_cal"] = None
     return Model(m)
 
 
@@ -72,6 +94,15 @@ class Model:
         self.T = json.loads((DATA / m["aocv_table"]).read_text()) if m.get("aocv_table") else None
         if self.T is not None:
             self.T = self.T.get("clock_aocv", self.T)
+
+    def arrival_scale(self, corner, basis="sta"):
+        """factor applied to an arrival of the given delay basis ('sta' or 'model') at plan time (1.0 if disabled)."""
+        cal = self.m.get("spice_cal")
+        if not cal:
+            return 1.0
+        if basis == "model" and self.m.get("delay_basis", "spice") != "sta":
+            return 1.0
+        return float(cal.get(corner, 1.0))
 
     def __getitem__(self, k):
         return self.m[k]

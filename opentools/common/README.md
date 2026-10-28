@@ -27,8 +27,9 @@ Units: micrometres, picoseconds; origin at the die lower-left corner. Corners `T
 | `layers[]` | `{name, dir, pitch_um, min_width_um, min_space_um}` | routing layers (informational for clkplan) |
 | `channels[]` | `{rect, reason?}` | declared channels (optional; clkplan derives streets itself) |
 | `streets_config` | `{raster_um, width_um?, reach_um?, demand{clock_cols, clock_col_um, hold_cols, hold_col_um, ft_bits, ft_bits_per_col, ft_col_um, fill}}` | street rule inputs |
-| `clock` | `{name, period_ps, entry[x,y]?, layers{H,V}, ndr{width_um, space_um, shield none/drawn/pg_flank, shield_width_um?}, target_latency_ps?, skew_target_ps, min_crossing_margin_ps, flow_oriented_repeaters?, crossing_mode phase/count_aligned?, count_aligned{form ring/period, depth, half_cycle, aperture_ps{TT,FF}?, origin_cycles[X,Y]?}?}` | clock definition and constraints. `crossing_mode` `count_aligned`: margin in the count-aligned window (ring: [(0.5T+ap), (DEPTH-0.5)T-ap], COORD 20:35; period: +-(T-ap)/2 around a whole/half-cycle count, COORD 20:26, withdrawn for the CA ring), one design-time K for all corners; `crossings[].mode` overrides per crossing |
-| `crossings[].count_aligned` | OUTPUT (clkplan, count_aligned) | `{K, form}`: the design-time count of the crossing |
+| `clock` | `{name, period_ps, entry[x,y]?, layers{H,V}, ndr{width_um, space_um, shield none/drawn/pg_flank, shield_width_um?}, target_latency_ps?, skew_target_ps, min_crossing_margin_ps, flow_oriented_repeaters?, crossing_mode phase/count_aligned/ring_phase?, count_aligned{aperture_ps (scalar, default T/8)?, depths[4,8]?, wander_frac 0.05?, origin_cycles[X,Y]?}?, ring_phase{half_cycle?, aperture_ps{TT,FF}?}?}` | clock definition and constraints. `crossing_mode`: `phase` = one-period landing ring (budget P/2 - derated abs d); `count_aligned` = count-aligned ring read by count (COORD 20:35 + 21:10): K from the DERATED lag (one K for all corners), lag L inside [0.5T+ap, (DEPTH-0.5)T-ap], DEPTH 4 else 8, margins to the guard edges 0.5T / (DEPTH-0.5)T, gate >= min_crossing_margin_ps; `ring_phase` = the SUPERSEDED one-period setup+hold window +-(T-ap)/2 around a whole/half-cycle count (COORD 20:26, kept only for phase-placed samplers); `crossings[].mode` overrides per crossing, `crossings[].origin_cycles [X,Y]` = start-tree whole-cycle ambiguity of that crossing |
+| `crossings[].count_aligned` | OUTPUT (clkplan, count_aligned) | `{K, depth, latency_cycles, aperture_ps, wander_ps, origin_cycles, L_lo_ps, L_hi_ps, margin_lo_ps, margin_hi_ps}`: K = lag in whole cycles (RTL K = K - nominal origin difference from the start tree), latency K+1 |
+| `crossings[].ring_phase` | OUTPUT (clkplan, ring_phase) | `{K, step_ps, half_cycle}` |
 | `region_clock_plan` | OUTPUT (clkplan --mode region) | per region: root arrival, local insertion, feed path/stages |
 | `metal_alloc` | OUTPUT (opentools.metal) | per layer/row: slot census, assignment of clock wires to slots, conflicts |
 | `mscts` | OUTPUT (opentools.mscts) | built region tree: cells, wires, per-sink arrival, verification numbers |
@@ -43,3 +44,9 @@ Region mode (12.13) and the locality tool: `tools/die_plan/locality.py` (LOCALIT
 (1 clock region == 1 hierarchical partition). Mapping of the locality.py feed model (claude/locality-score-1027@53396c427a):
 'fwd'/'spt' child c of p = feed {src p, dst c, tap leaf, len_um = |t - centre(c)|_1}; 'top' = feeds {src root, tap root}
 with the I_max - I_r balance as regions[].clock.local_insertion_ps; region insertion I_r = regions[].clock.local_insertion_ps.
+
+Arrival basis: clkplan crossing margins use SPICE-SCALED arrivals by default (COORD 21:10 after OSS-CLOCK-2: OpenSTA clock
+arrivals read 4.2 % TT / 4.9 % FF early vs ngspice). STA-basis delays (declared sink/macro insertion_ps, declared
+regions[].clock.local_insertion_ps, external crossing rows in clkplan.crossrows, and an STA-fitted stage model) are
+multiplied by the model's spice_cal (opentools/mscts/data/asap7_bufx24_spice_cal.json: TT 1.0485, FF 1.0552); the built-in
+ASAP7 stage model is already ngspice-based and is not scaled twice. `--no-spice-scale` gives the plain STA-basis numbers.

@@ -20,13 +20,17 @@ Prediction, analytic, no placement tool:
                             OCV + droop with the SAME math as clkplan.ocv (= main tools/die_plan/clk_aocv.py and
                             tools/s81_head/landed_phase_ocv.py): derated |d| and margin = budget - derated |d|.
   The plan FAILS a landed crossing below clock.min_crossing_margin_ps (default 100 ps).
-  --crossing-mode count_aligned (or clock.crossing_mode / crossings[].mode): the margin is the count-aligned window
-  margin instead (ocv.count_aligned_margin: COORD 20:35 ring form [(0.5T+ap), (DEPTH-0.5)T-ap], one design-time K for
-  all corners; or the one-period 'period' form with optional half-cycle placement).
+  --crossing-mode count_aligned (or clock.crossing_mode / crossings[].mode): the margin is the count-aligned ring
+  margin instead (ocv.count_aligned_margin: K from the derated lag, L inside [0.5T+ap, (DEPTH-0.5)T-ap], DEPTH 4/8,
+  one K for all corners); --crossing-mode ring_phase = the superseded one-period setup+hold window (kept for
+  phase-placed samplers only).
+  Arrivals are SPICE-SCALED by default (model.spice_cal, x1.0485 TT / x1.0552 FF on STA-basis delays); --no-spice-scale.
 """
 import math
 
 from . import ocv
+
+CROSSING_MODES = ("phase", "count_aligned", "ring_phase")
 
 
 def _centre(r):
@@ -70,7 +74,10 @@ def predict(P, model, sinks, corners=("TT", "FF")):
         root = tuple(ck.get("root_xy") or _centre(r["rect"]))
         ss = by_reg.get(name, [])
         L = max((abs(s["xy"][0] - root[0]) + abs(s["xy"][1] - root[1]) for s in ss), default=0.0)
-        loc = {c: float((ck.get("local_insertion_ps") or {}).get(c, model.wire_ps(L, c))) for c in corners}
+        decl = ck.get("local_insertion_ps") or {}
+        # spice-scaled arrivals: a declared (STA-basis) local insertion and the model's own delays (if STA-basis)
+        loc = {c: (float(decl[c]) * model.arrival_scale(c, "sta") if c in decl
+                   else model.wire_ps(L, c) * model.arrival_scale(c, "model")) for c in corners}
         nst = int(ck.get("local_stages") or max(1, math.ceil(L / model["rep_um"] - 1e-9)))
         R[name] = dict(root_xy=root, local_path_um=round(L, 1), local_insertion_ps={c: round(v, 1) for c, v in loc.items()}, local_stages=nst)
     arr_cache = {}
@@ -88,7 +95,7 @@ def predict(P, model, sinks, corners=("TT", "FF")):
             if src in regs and f.get("tap", "root") == "leaf":     # fed from a LEAF of the parent's region tree
                 a += R[src]["local_insertion_ps"][c]
                 n += R[src]["local_stages"]
-            v = (a + model.wire_ps(f["len_um"], c), n + fs)
+            v = (a + model.wire_ps(f["len_um"], c) * model.arrival_scale(c, "model"), n + fs)
         arr_cache[k] = v
         return v
     for name in R:
@@ -102,21 +109,27 @@ def predict(P, model, sinks, corners=("TT", "FF")):
             S[s["name"]] = dict(error=f"sink {s['name']} is in no region")
             continue
         S[s["name"]] = dict(region=g, arr={c: root_arr(g, c)[0] + R[g]["local_insertion_ps"][c] for c in corners},
-                            ins={c: float(s["insertion_ps"].get(c, 0.0)) for c in corners}, xy=s["xy"],
+                            ins={c: float(s["insertion_ps"].get(c, 0.0)) * model.arrival_scale(c, "sta")
+                                 for c in corners}, xy=s["xy"],
                             stages=R[g]["feed_stages"] + R[g]["local_stages"])
         S[s["name"]]["latency"] = {c: S[s["name"]]["arr"][c] + S[s["name"]]["ins"][c] for c in corners}
-    return dict(regions=R, sinks=S, par=par)
+    return dict(regions=R, sinks=S, par=par, spice_cal={c: model.arrival_scale(c, "sta") for c in corners})
 
 
 def crossings(P, model, pred, corners=("TT", "FF"), droop="regions", crossing_mode=None):
-    """crossing_mode 'phase' (default: today's one-period landing ring, margin = budget - derated |d|) or
-    'count_aligned' (clock.count_aligned {form ring|period, depth, half_cycle, aperture_ps, origin_cycles}; see
-    ocv.count_aligned_margin).  A crossing may override with its own 'mode'."""
+    """crossing_mode (CROSSING_MODES; crossings[].mode overrides per crossing):
+      'phase'         today's one-period landing ring: margin = budget (P/2) - derated |d|;
+      'count_aligned' the count-aligned ring: K from the derated lag, window [0.5T+ap, (DEPTH-0.5)T-ap], DEPTH 4/8
+                      (ocv.count_aligned_margin; clock.count_aligned {aperture_ps (default T/8), depths [4, 8],
+                      wander_frac 0.05}; crossings[].origin_cycles [X, Y] = start-tree whole-cycle ambiguity);
+      'ring_phase'    the SUPERSEDED one-period setup+hold window with a design-time count (ocv.ring_phase_margin;
+                      clock.ring_phase {half_cycle, aperture_ps per corner (default flop setup + hold)})."""
     Tb = model.T
-    cfg_ca = dict(P["clock"].get("count_aligned") or {})
     mode0 = crossing_mode or P["clock"].get("crossing_mode") or "phase"
-    ap = dict(model.m.get("capture_aperture_ps") or {})
-    ap.update(cfg_ca.get("aperture_ps") or {})
+    cfg_ca = dict(P["clock"].get("count_aligned") or {})
+    cfg_rp = dict(P["clock"].get("ring_phase") or {})
+    ap_rp = dict(model.m.get("capture_aperture_ps") or {})
+    ap_rp.update(cfg_rp.get("aperture_ps") or {})
     R, S, par = pred["regions"], pred["sinks"], pred["par"]
     per = P["clock"].get("period_ps") or 1000.0
     mm = P["clock"].get("min_crossing_margin_ps", 100.0)
@@ -152,24 +165,39 @@ def crossings(P, model, pred, corners=("TT", "FF"), droop="regions", crossing_mo
             trip[c] = (d, p_up, p_dn)
             worst = mg if worst is None else min(worst, mg)
         mode = x.get("mode") or mode0
+        if mode not in CROSSING_MODES:
+            raise ValueError(f"crossing {x.get('name')}: unknown crossing mode {mode!r} (one of {CROSSING_MODES})")
         r["mode"] = mode
         if mode == "count_aligned":
-            ca = ocv.count_aligned_margin(trip, per, {c: float(ap.get(c, 0.0)) for c in corners},
-                                          form=cfg_ca.get("form", "ring"), depth=int(cfg_ca.get("depth", 4)),
-                                          half_cycle=bool(cfg_ca.get("half_cycle", False)),
-                                          origin_cycles=tuple(cfg_ca.get("origin_cycles", (0, 0))), target_ps=mm)
-            r["count_aligned"] = dict(form=ca["form"], K=ca["K"], depth=ca["depth"], half_cycle=ca["half_cycle"],
-                                      corners={c: {k: round(v, 1) for k, v in e.items()} for c, e in ca["corners"].items()})
+            wf = float(cfg_ca.get("wander_frac", 0.05))
+            w = wf * max(max(r[c]["unshared_a_ps"], r[c]["unshared_b_ps"]) for c in corners)
+            ca = ocv.count_aligned_margin(trip, per, cfg_ca.get("aperture_ps"), depths=tuple(cfg_ca.get("depths", ocv.CA_DEPTHS)),
+                                          origin_cycles=tuple(x.get("origin_cycles") or cfg_ca.get("origin_cycles") or (0, 0)),
+                                          wander_ps=w)
+            r["count_aligned"] = dict(K=ca["K"], depth=ca["depth"], latency_cycles=ca["latency_cycles"],
+                                      aperture_ps=round(ca["aperture_ps"], 2), wander_ps=round(w, 1),
+                                      origin_cycles=list(ca["origin_cycles"]), L_lo_ps=round(ca["L_lo_ps"], 1),
+                                      L_hi_ps=round(ca["L_hi_ps"], 1), margin_lo_ps=round(ca["margin_lo_ps"], 1),
+                                      margin_hi_ps=round(ca["margin_hi_ps"], 1))
             for c in corners:
                 r[c]["phase_margin_ps"] = r[c]["margin_ps"]
                 r[c]["margin_ps"] = round(ca["corners"][c]["margin_ps"], 1)
-            worst = ca["margin_ps"]
+            worst = ca["margin_ps"] if ca["depth"] else min(ca["margin_ps"], -1e-3)
+        elif mode == "ring_phase":
+            rp = ocv.ring_phase_margin(trip, per, {c: float(ap_rp.get(c, 0.0)) for c in corners},
+                                       half_cycle=bool(cfg_rp.get("half_cycle", False)))
+            r["ring_phase"] = dict(K=rp["K"], step_ps=round(rp["step_ps"], 2), half_cycle=rp["half_cycle"])
+            for c in corners:
+                r[c]["phase_margin_ps"] = r[c]["margin_ps"]
+                r[c]["margin_ps"] = round(rp["corners"][c]["margin_ps"], 1)
+            worst = rp["margin_ps"]
         r["worst_margin_ps"] = round(worst, 1)
         r["pass"] = (r["kind"] != "landed") or worst >= mm
         rows.append(r)
     rows.sort(key=lambda r: r.get("worst_margin_ps", -1e9))
     landed = [r for r in rows if r.get("kind") == "landed" and "error" not in r]
     summ = dict(crossings=len(rows), landed=len(landed), min_margin_ps=mm, crossing_mode=mode0,
+                spice_cal=pred.get("spice_cal"),
                 fail=sum(1 for r in landed if not r["pass"]), errors=sum(1 for r in rows if "error" in r))
     for c in corners:
         if landed:
@@ -197,6 +225,7 @@ def write_schema_outputs(P, res):
             x["derated_margin_ps"] = {c: r[c]["margin_ps"] for c in ("TT", "FF") if c in r}
             x["unshared_ps"] = {c: max(r[c]["unshared_a_ps"], r[c]["unshared_b_ps"]) for c in ("TT", "FF") if c in r}
             x["margin_pass"] = r["pass"]
-            if "count_aligned" in r:
-                x["count_aligned"] = dict(K=r["count_aligned"]["K"], form=r["count_aligned"]["form"])
+            for k in ("count_aligned", "ring_phase"):
+                if k in r:
+                    x[k] = dict(r[k])
     return Q

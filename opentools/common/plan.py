@@ -23,7 +23,7 @@ FEED_KINDS = ("forward", "spine")
 DEFAULT_CLOCK = dict(name="clk", period_ps=None, entry=None, layers={"H": None, "V": None},
                      ndr=dict(width_um=None, space_um=None, shield="none", shield_width_um=None),
                      target_latency_ps=None, skew_target_ps=80.0, min_crossing_margin_ps=100.0,
-                     crossing_mode="phase", count_aligned=None)
+                     crossing_mode="phase", count_aligned=None, ring_phase=None)
 
 
 def rect_ok(r):

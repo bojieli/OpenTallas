@@ -64,11 +64,14 @@ def crossings(T, model, plan_crossings, period_ps, min_margin_ps=100.0, corners=
                  stages_a=na, stages_b=nb, same_region=same, budget_ps=budget)
         worst = None
         for c in corners:
-            ua = a["arr"][c] - T.cells[l]["arr"][c]
-            ub = b["arr"][c] - T.cells[l]["arr"][c]
-            bra = ocv.branch(Tb, c, ua, na, float(a["insertion_ps"].get(c, 0.0)))
-            brb = ocv.branch(Tb, c, ub, nb, float(b["insertion_ps"].get(c, 0.0)))
-            d = b["latency"][c] - a["latency"][c]
+            # spice-scaled arrivals (model.spice_cal): tree delays by the model's basis, macro insertion as STA basis
+            sm, ss = model.arrival_scale(c, "model"), model.arrival_scale(c, "sta")
+            ua = (a["arr"][c] - T.cells[l]["arr"][c]) * sm
+            ub = (b["arr"][c] - T.cells[l]["arr"][c]) * sm
+            ia, ib = float(a["insertion_ps"].get(c, 0.0)) * ss, float(b["insertion_ps"].get(c, 0.0)) * ss
+            bra = ocv.branch(Tb, c, ua, na, ia)
+            brb = ocv.branch(Tb, c, ub, nb, ib)
+            d = (b["arr"][c] - a["arr"][c]) * sm + ib - ia
             p_up, p_dn, der, mg = ocv.landed_margin(Tb, c, d, bra, brb, dist, same, budget)
             r[c] = dict(unshared_a_ps=round(ua, 1), unshared_b_ps=round(ub, 1), d_ps=round(d, 1), p_up_ps=round(p_up, 1),
                         p_dn_ps=round(p_dn, 1), derated_abs_ps=round(der, 1), margin_ps=round(mg, 1))

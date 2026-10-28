@@ -1,6 +1,7 @@
 """clkplan driver: plan -> streets -> tree -> budgets / skew / crossings / tracks -> PASS/FAIL report + render.
 
     python3 -m clkplan.run PLAN.json --out OUTDIR [--model MODEL.json] [--leaf-um 300] [--no-streets] [--png]
+                           [--mode die|region] [--crossing-mode phase|count_aligned|ring_phase] [--no-spice-scale]
 """
 import argparse
 import json
@@ -39,7 +40,8 @@ def analyse(P, M=None, cfg=None):
                  cfg=dict(leaf_um=cfg.get("leaf_um"), leaf_sinks=cfg.get("leaf_sinks", 1), max_move_um=cfg.get("max_move_um"), frame=cfg.get("frame", "die")))
     ck = P["clock"]
     per = ck.get("period_ps") or 1000.0
-    res = dict(plan=P.get("name"), schema=PL.SCHEMA, model=M["name"])
+    res = dict(plan=P.get("name"), schema=PL.SCHEMA, model=M["name"], spice_cal=M.m.get("spice_cal"),
+               delay_basis=M.m.get("delay_basis"))
     res["streets"] = S.summary() if S is not None else None
     res["tree"] = TR.summary(T)
     res["unplaced"] = T.unplaced[:50]
@@ -111,11 +113,14 @@ def main(argv=None):
     ap.add_argument("--png", action="store_true")
     ap.add_argument("--mode", default="die", choices=["die", "region"],
                     help="die = one planned die H-tree; region = METHODOLOGY 12.13 region clocks fed along feeds[]")
-    ap.add_argument("--crossing-mode", choices=["phase", "count_aligned"],
-                    help="region mode: landed crossing margin form (default clock.crossing_mode or phase)")
+    ap.add_argument("--crossing-mode", choices=["phase", "count_aligned", "ring_phase"],
+                    help="region mode: landed crossing margin form (default clock.crossing_mode or phase); "
+                         "ring_phase = the superseded one-period setup+hold window")
+    ap.add_argument("--no-spice-scale", action="store_true",
+                    help="do NOT spice-scale arrivals (default: STA-basis arrivals x model.spice_cal, TT 1.0485 / FF 1.0552)")
     a = ap.parse_args(argv)
     P = PL.load(a.plan)
-    M = MD.load(a.model)
+    M = MD.load(a.model, spice_scale=not a.no_spice_scale)
     if a.mode == "region":
         from . import regionmode as RM
         res = RM.analyse(P, M, PL.clock_sinks(P), droop=a.droop, crossing_mode=a.crossing_mode)

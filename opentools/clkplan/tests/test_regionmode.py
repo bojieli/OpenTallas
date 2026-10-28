@@ -104,31 +104,89 @@ AP = {"TT": 10.86 + 15.63, "FF": 6.68 + 12.61}       # asap7 DFFHQNx1 setup + ho
 TRIP = {"TT": (-437.0, 100.0, 100.0), "FF": (-376.0, 100.0, 100.0)}
 
 
-def test_count_aligned_period_whole_vs_half_cycle():
-    """COORD 20:26 'period' form: window +-(T - setup - hold)/2, ONE K for TT and FF, residual counts.
-    whole cycle: K=0 -> TT 403.42 - 537 = -133.6 (K=-1 is worse: FF -150.3); half cycle: K=-1 -> FF 266.3 (worst)."""
-    w = ocv.count_aligned_margin(TRIP, T833, AP, form="period")
+def test_ring_phase_whole_vs_half_cycle():
+    """SUPERSEDED one-period window (COORD 20:26), kept as crossing_mode ring_phase: +-(T - setup - hold)/2, ONE K for TT
+    and FF, residual counts.  whole cycle: K=0 -> TT 403.42 - 537 = -133.6; half cycle: K=-1 -> FF 266.3 (worst)."""
+    w = ocv.ring_phase_margin(TRIP, T833, AP)
     assert w["K"] == 0 and abs(w["margin_ps"] - (-133.58)) < 0.05
-    h = ocv.count_aligned_margin(TRIP, T833, AP, form="period", half_cycle=True)
+    h = ocv.ring_phase_margin(TRIP, T833, AP, half_cycle=True)
     assert h["K"] == -1 and abs(h["step_ps"] - T833 / 2) < 1e-9
     assert abs(h["corners"]["FF"]["margin_ps"] - ((T833 - AP["FF"]) / 2 - (-376 + T833 / 2 + 100))) < 1e-6
     assert h["margin_ps"] > 100 > w["margin_ps"]
 
 
-def test_count_aligned_ring_smallest_k_and_window():
-    """COORD 20:35 ring form: L = K T + d inside [(0.5T+ap), (DEPTH-0.5)T-ap]; smallest K passing 100 ps (latency)."""
-    r = ocv.count_aligned_margin(TRIP, T833, AP, form="ring", depth=4, target_ps=100.0)
-    assert r["K"] == 2                                  # K=1: TT low end 296.3 < 443.2 -> FAIL
-    tt = r["corners"]["TT"]
-    assert abs(tt["margin_lo_ps"] - (2 * T833 - 537 - (0.5 * T833 + AP["TT"]))) < 1e-6
-    assert abs(tt["margin_hi_ps"] - ((3.5 * T833 - AP["TT"]) - (2 * T833 - 337))) < 1e-6
-    assert abs(r["margin_ps"] - tt["margin_lo_ps"]) < 1e-9
-    # origin uncertainty of one whole cycle on the low side moves K up by one
-    r2 = ocv.count_aligned_margin(TRIP, T833, AP, form="ring", depth=4, target_ps=100.0, origin_cycles=(1, 0))
-    assert r2["K"] == 3
-    # a spread wider than the DEPTH window fails at every K
-    wide = {"TT": (0.0, 1500.0, 1500.0), "FF": (0.0, 1400.0, 1400.0)}
-    assert ocv.count_aligned_margin(wide, T833, AP, form="ring", depth=4, target_ps=100.0)["margin_ps"] < 0
+def test_count_aligned_window_k_depth():
+    """count-aligned ring (COORD 20:35 + 21:10): L = K T + rel inside [0.5T+ap, (DEPTH-0.5)T-ap], ap = T/8, K = the
+    smallest integer from the DERATED lag (union of corners), DEPTH 4 else 8, margins measured to the guard edges."""
+    ap = T833 / 8
+    r = ocv.count_aligned_margin(TRIP, T833)
+    assert r["aperture_ps"] == ap and r["K"] == 2 and r["depth"] == 4 and r["latency_cycles"] == 3
+    assert abs(r["L_lo_ps"] - (2 * T833 - 537)) < 1e-6 and abs(r["L_hi_ps"] - (2 * T833 - 276)) < 1e-6
+    assert abs(r["margin_lo_ps"] - (2 * T833 - 537 - 0.5 * T833)) < 1e-6
+    assert abs(r["margin_hi_ps"] - (3.5 * T833 - (2 * T833 - 276))) < 1e-6
+    assert r["margin_lo_ps"] >= ap and r["margin_ps"] == min(r["margin_lo_ps"], r["margin_hi_ps"])
+    # K follows the derated low end, not the nominal d: d = -300 alone -> K 1; p_dn 50 pushes it below 0.5T + ap -> K 2
+    assert ocv.count_aligned_margin({"TT": (-300.0, 0.0, 0.0)}, T833)["K"] == 1
+    assert ocv.count_aligned_margin({"TT": (-300.0, 0.0, 50.0)}, T833)["K"] == 2
+    # origin ambiguity (one whole cycle low) and wander widen the lag interval
+    assert ocv.count_aligned_margin(TRIP, T833, origin_cycles=(1, 0))["K"] == 3
+    rw = ocv.count_aligned_margin(TRIP, T833, wander_ps=30.0)
+    assert abs((rw["L_hi_ps"] - rw["L_lo_ps"]) - (r["L_hi_ps"] - r["L_lo_ps"] + 60.0)) < 1e-6
+    # 3000 ps spread: DEPTH 8; 6000 ps: FAIL (depth None, negative margin)
+    assert ocv.count_aligned_margin({"TT": (0.0, 1500.0, 1500.0)}, T833)["depth"] == 8
+    f = ocv.count_aligned_margin({"TT": (0.0, 3000.0, 3000.0)}, T833)
+    assert f["depth"] is None and f["latency_cycles"] is None and f["margin_ps"] < 0
+
+
+# HEAD feed40 rows (DIE-HEAD routed_sfb250/landed_ocv.json remapped to maps/feed36b.json; corners TT corelat250 + FF
+# corelat202.5): [d, p_up, p_dn, unshared_a, unshared_b] and MESO-COUNT-2 count_align_plan.py (f7b28e70d) results
+# (T 833, ap T/8, wander 5 %, spice scale OFF): K_eff, depth, L_lo, L_hi
+FEED40 = [
+    ("coll_WS0_u__0", [-41.86, 53.39, 54.53, 260.7, 218.8], [-36.86, 42.14, 43.0, 223.0, 186.2], 1, 4, 723.6, 857.6),
+    ("coll_ES0_d__0", [33.18, 55.63, 54.73, 235.6, 268.8], [29.46, 43.94, 43.25, 201.0, 230.5], 1, 4, 798.0, 935.2),
+    ("sp_x0__0", [-226.88, 64.66, 70.83, 526.2, 299.3], [-192.46, 51.88, 56.39, 448.0, 255.5], 2, 4, 1342.0, 1551.7),
+]
+
+
+def test_count_aligned_parity_count_align_plan():
+    """same K / DEPTH / lag window as tools/die_plan/count_align_plan.py (MESO-COUNT-2) on clean-path crossings."""
+    from clkplan import crossrows as CR
+    Mn = MD.load(spice_scale=False)
+    cs = ["TT_x", "FF_x"]
+    by = {p: {cs[0]: dict(port=p, d_ps=t[0], p_up_ps=t[1], p_dn_ps=t[2], unshared_a_ps=t[3], unshared_b_ps=t[4]),
+              cs[1]: dict(port=p, d_ps=f[0], p_up_ps=f[1], p_dn_ps=f[2], unshared_a_ps=f[3], unshared_b_ps=f[4])}
+          for p, t, f, *_ in FEED40}
+    out = {o["port"]: o for o in CR.evaluate(by, cs, Mn, T=833.0)}
+    for p, t, f, K, D, lo, hi in FEED40:
+        o = out[p]
+        assert (o["K"], o["depth"]) == (K, D), p
+        assert abs(o["L_lo_ps"] - lo) < 0.11 and abs(o["L_hi_ps"] - hi) < 0.11, (p, o)
+    # spice-scaled (default model): every STA-basis term x1.0485 TT / x1.0552 FF -> lag interval widens
+    Ms = MD.load()
+    o2 = {o["port"]: o for o in CR.evaluate(by, cs, Ms, T=833.0)}["sp_x0__0"]
+    assert o2["L_hi_ps"] - o2["L_lo_ps"] > out["sp_x0__0"]["L_hi_ps"] - out["sp_x0__0"]["L_lo_ps"]
+
+
+def test_spice_scale_default_and_flag():
+    """COORD 21:10: plan-time margins use spice-scaled arrivals by default (STA-basis delays x cal); flag disables;
+    the built-in stage model is already spice basis (not scaled twice); an STA-fitted model file is scaled."""
+    assert M.arrival_scale("TT", "sta") == 1.0485 and M.arrival_scale("FF", "sta") == 1.0552
+    assert M.arrival_scale("TT", "model") == 1.0
+    assert MD.load(spice_scale=False).arrival_scale("TT", "sta") == 1.0
+    fit = REPO / "opentools" / "mscts" / "data" / "asap7_bufx24_sta_fit.json"
+    if fit.exists():
+        assert MD.load(fit).arrival_scale("FF", "model") == 1.0552
+    # region mode: declared (STA) insertions -> d scales by the TT factor
+    P = PL.load(EX)
+    for r in P["regions"]:
+        r.setdefault("clock", {})["local_insertion_ps"] = {"TT": 100.0 + 50 * int(r["name"][1:]), "FF": 80.0}
+    P["feeds"] = [dict(name=f"s{i}", src="root", dst=f"r{i}", len_um=1500.0, kind="spine") for i in range(3)]
+    on = RM.analyse(P, M, PL.clock_sinks(P))
+    off = RM.analyse(P, MD.load(spice_scale=False), PL.clock_sinks(P))
+    a = {r["name"]: r for r in on["crossings"]["rows"]}["x01"]
+    b = {r["name"]: r for r in off["crossings"]["rows"]}["x01"]
+    assert abs(b["TT"]["d_ps"]) > 10 and abs(a["TT"]["d_ps"] / b["TT"]["d_ps"] - 1.0485) < 0.01
+    assert on["crossings"]["summary"]["spice_cal"]["TT"] == 1.0485
 
 
 def test_forwarded_hop_passes_count_aligned_ring():
@@ -139,6 +197,9 @@ def test_forwarded_hop_passes_count_aligned_ring():
     ca = RM.analyse(P, M, PL.clock_sinks(P), crossing_mode="count_aligned")
     x = {r["name"]: r for r in ca["crossings"]["rows"]}["x01"]
     assert x["mode"] == "count_aligned" and x["TT"]["phase_margin_ps"] < 0 < x["TT"]["margin_ps"]
-    assert x["pass"] and isinstance(x["count_aligned"]["K"], int)
+    assert x["pass"] and isinstance(x["count_aligned"]["K"], int) and x["count_aligned"]["depth"] in (4, 8)
+    assert x["count_aligned"]["margin_lo_ps"] >= T833 / 8 - 1        # K from the derated lag keeps >= ap low side
+    rp = RM.analyse(P, M, PL.clock_sinks(P), crossing_mode="ring_phase")
+    assert {r["name"]: r for r in rp["crossings"]["rows"]}["x01"]["mode"] == "ring_phase"
     assert ca["crossings"]["summary"]["crossing_mode"] == "count_aligned"
     assert ph["verdict"] == "FAIL"
