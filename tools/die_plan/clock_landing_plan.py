@@ -330,14 +330,30 @@ def _monitor_endpoints(P,W,src,dst,hard_xy=None):
     raise ValueError(f"monitor edge {src}->{dst} is not an existing reset-neighbor edge")
 
 
-def _dataflow_tree(P,table,pports,observer):
+def _intra_links(raw,table,region):
+    """Plan ports that stay inside one clock region (monitor="region"): (id, src, src_bus, dst, dst_bus)."""
+    landed={r["port"] for r in table["ports"]}
+    out=[]
+    for pr in raw["ports"]:
+        s,d=pr["src"]["part"],pr["dst"]["part"]
+        if pr["id"] in landed or s not in region or d not in region:continue
+        if region[s]!=region[d]:raise ValueError(f"region monitor: port {pr['id']} crosses {region[s]}->{region[d]} but is not landed")
+        out.append((pr["id"],s,pr["src"]["bus"],d,pr["dst"]["bus"]))
+    return out
+
+
+def _dataflow_tree(P,table,pports,observer,intra=()):
     """Monitor DAG on the landed DATA ports (opt-in monitor="dataflow").  Potential = reverse-BFS distance to the
     observer over the data ports; each type gets ONE uniform tree bus (an out bus that strictly lowers the potential
     for every instance), so the monitor needs no per-position cohort types.  Other outputs carry local-only status,
-    so the AND network has no cycle.  -> (tree_bus {type: bus|None}, parent {part: part|None}, dist)."""
+    so the AND network has no cycle.  intra (opt-in monitor="region", DIE-HEAD-2): the plan's same-region links
+    (_intra_links) join the walk, so parts that reach the observer only through their region are covered; their
+    status rides registered region-clock ctl pins, no ring.  -> (tree_bus {type: bus|None}, parent {part: part|None}, dist)."""
     rin=defaultdict(set);outp=defaultdict(list)
     for r in table["ports"]:
         pr=pports[r["port"]];outp[r["src"]].append((pr["src"]["bus"],r["dst"]));rin[r["dst"]].add(r["src"])
+    for _,s,sb,d,_db in intra:
+        outp[s].append((sb,d));rin[d].add(s)
     dist={observer:0};todo=[observer]
     while todo:
         u=todo.pop(0)
@@ -359,12 +375,25 @@ def _dataflow_tree(P,table,pports,observer):
     return tree_bus,parent,dist
 
 
-def _compose_dataflow(raw,plan_path,table,pports,ins,outs,region,base_type,observer_part,observer=None):
+def _compose_dataflow(raw,plan_path,table,pports,ins,outs,region,base_type,observer_part,observer=None,intra=None):
     """Monitor rides each landed data crossing: 2 status bits (ready, fault) in the receiving data ring (spare padded
     ring bits, same forwarded write clock), scalar ctl pins named by the DATA bus, so every instance of a type has
     identical ports and every pin has exactly one real driver/receiver (no absent-child ties, no cohort types)."""
     P=S.Plan(raw,plan_path);W=RT.wf_plan(P)
-    tree_bus,parent,dist=_dataflow_tree(P,table,pports,observer_part)
+    mode="dataflow" if intra is None else "region"
+    tree_bus,parent,dist=_dataflow_tree(P,table,pports,observer_part,intra or ())
+    # monitor="region": status rides only the same-region links leaving each type's tree bus (registered ctl pins on
+    # the region clock); every instance of a type must then see the same such inputs (exact uniform hardware).
+    mon_intra=[l for l in (intra or ()) if l[2]==tree_bus[P.parts[l[1]]["type"]]]
+    iin=defaultdict(set)
+    for _,s_,sb,d,db in mon_intra:
+        if db in ins[d]:raise ValueError(f"region monitor: {d}.{db} is both landed and same-region")
+        iin[d].add(db)
+    for tn in raw["partition_types"]:
+        sigs={tuple(sorted(iin[n])) for n,p in P.parts.items() if p["type"]==tn}
+        if len(sigs)>1:raise ValueError(f"region monitor: {tn} instances differ in same-region monitor inputs {sorted(sigs)}")
+        outsig={any(l[1]==n for l in mon_intra) for n,p in P.parts.items() if p["type"]==tn}
+        if len(outsig)>1:raise ValueError(f"region monitor: {tn} instances differ in same-region tree-bus use")
     bytype={};placement_failures=[];monitor_edges=[]
     for tn,t in raw["partition_types"].items():
         names=sorted(pn for pn,p in P.parts.items() if p["type"]==tn);pn=names[0]
@@ -372,7 +401,10 @@ def _compose_dataflow(raw,plan_path,table,pports,ins,outs,region,base_type,obser
             if sorted(ins[n])!=sorted(ins[pn]) or sorted(outs[n])!=sorted(outs[pn]):
                 raise ValueError(f"dataflow monitor: {tn} instances differ in landed buses ({n} vs {pn})")
         sig=dict(inputs=sorted(ins[pn]),outputs=sorted(outs[pn]),active=True,observer=pn==observer_part,
-                 monitor="dataflow",tree_bus=tree_bus[tn])
+                 monitor=mode,tree_bus=tree_bus[tn])
+        if intra is not None:
+            sig.update(intra_inputs=sorted(iin[pn]),
+                       intra_outputs=[tree_bus[tn]] if tree_bus[tn] and any(l[1]==pn for l in mon_intra) else [])
         info=dict(base_type=base_type[pn],mask=sig,tree=None,local_sources=[],children=[],up_buses=[],
                   up_parent=None,reset_entry_um=W["types"].get(tn,{}).get("in_um"),bands={},
                   bus_geometry=copy.deepcopy(t.get("_cland_geom",{})))
@@ -400,6 +432,17 @@ def _compose_dataflow(raw,plan_path,table,pports,ins,outs,region,base_type,obser
             for j,kind in enumerate(("ready","fault")):
                 t["buses"].append(_scalar(t,f"cland_up_{kind}_{bus}","out",point,"ctl",shift=2.16*(j+2)))
             info["up_buses"].append(dict(bus=bus,carries="aggregate" if bus==tree_bus[tn] else "local"))
+        for bus in sig.get("intra_inputs",[]):     # region clock: plain registered status, no ring, no forwarded clock
+            point=_bus_xy(t,bus)
+            for j,kind in enumerate(("ready","fault")):
+                t.setdefault("buses",[]).append(_scalar(t,f"cland_dn_{kind}_{bus}","in",point,"ctl",shift=2.16*(j+2)))
+            info["children"].append(dict(bus=bus,ready=f"cland_dn_ready_{bus}",fault=f"cland_dn_fault_{bus}",xy_um=point,seam=False))
+        for bus in sig.get("intra_outputs",[]):
+            if bus in outs[pn]:continue            # landed tree bus already carries the up pins
+            point=_bus_xy(t,bus)
+            for j,kind in enumerate(("ready","fault")):
+                t.setdefault("buses",[]).append(_scalar(t,f"cland_up_{kind}_{bus}","out",point,"ctl",shift=2.16*(j+2)))
+            info["up_buses"].append(dict(bus=bus,carries="aggregate",same_region=True))
         tgt=_bus_xy(t,tree_bus[tn]) if tree_bus[tn] else [v/2 for v in t["outline_um"]]
         srcs=[c["xy_um"] for c in info["children"]] or [tgt]
         info["local_registered_depth"]=1+max(math.ceil((abs(x-tgt[0])+abs(y-tgt[1]))/405) for x,y in srcs)
@@ -421,6 +464,12 @@ def _compose_dataflow(raw,plan_path,table,pports,ins,outs,region,base_type,obser
         monitor_edges.append(dict(port=r["port"],src=r["src"],dst=r["dst"],seam=True,
             carries="aggregate" if pr["src"]["bus"]==tree_bus[tn] and parent[r["src"]]==r["dst"] else "local",
             data_cycles_added=0,boot_transport_extra_cycles=3))
+    for pid,s_,sb,d,db in mon_intra:
+        for kind in ("ready","fault"):
+            raw["ports"].append(dict(id=f"cland_mon_{kind}__{pid}",src=dict(part=s_,bus=f"cland_up_{kind}_{sb}"),
+                dst=dict(part=d,bus=f"cland_dn_{kind}_{db}"),width=1,kind="ctl",epoch=False))
+        monitor_edges.append(dict(port=pid,src=s_,dst=d,seam=False,carries="aggregate" if parent[s_]==d else "local",
+            data_cycles_added=0,boot_transport_extra_cycles=1))
     # boot budget: rings train in parallel (21); an aggregate input arrives after its source's aggregate + ring (3);
     # a local-only input after the source's local ready; then the receiver's registered depth.
     loc={pn:W["max_release"]+21+bytype[P.parts[pn]["type"]]["local_registered_depth"] for pn in P.parts};agg={}
@@ -428,10 +477,10 @@ def _compose_dataflow(raw,plan_path,table,pports,ins,outs,region,base_type,obser
         d=bytype[P.parts[pn]["type"]]["local_registered_depth"]
         arr=[W["max_release"]+21]
         for e in monitor_edges:
-            if e["dst"]==pn:arr.append((agg[e["src"]] if e["carries"]=="aggregate" else loc[e["src"]])+3)
+            if e["dst"]==pn:arr.append((agg[e["src"]] if e["carries"]=="aggregate" else loc[e["src"]])+e["boot_transport_extra_cycles"])
         agg[pn]=max(arr)+d
     side=copy.deepcopy(table);side["added_cycles_per_crossing"]="count_aligned" if table.get("count_aligned") else 3
-    side["collector"]=dict(root=observer_part,monitor="dataflow",observer=dict(part=observer_part,**({k:observer[k] for k in ("module","instance_suffix","fault_port","ready_port")}
+    side["collector"]=dict(root=observer_part,monitor=mode,observer=dict(part=observer_part,**({k:observer[k] for k in ("module","instance_suffix","fault_port","ready_port")}
             if observer else dict(module="OPEN",instance_suffix="OPEN",fault_port="OPEN",ready_port="OPEN"))),
         parts={pn:dict(type=P.parts[pn]["type"],parent=parent[pn],active=True,potential=dist[pn]) for pn in P.parts},
         types=bytype,edges=monitor_edges,base_type_by_part=base_type,tree_bus=tree_bus,
@@ -444,12 +493,35 @@ def _compose_dataflow(raw,plan_path,table,pports,ins,outs,region,base_type,obser
     return _finish(raw,P,bytype,pports,side)
 
 
+def _split_by_landed_mask(raw,plan_path,ins,outs):
+    """monitor="region": one clone per (type, landed in/out mask) cohort, named like the reset-mode cohorts; the
+    reset-entry sites are pinned from the unsplit plan first, so the clones keep their base type's entry."""
+    P=S.Plan(raw,plan_path);W=RT.wf_plan(P)
+    raw.setdefault("reset",{}).setdefault("in_sites",{}).update({tn:t["in_um"] for tn,t in W["types"].items() if "in_um" in t})
+    groups=defaultdict(lambda:defaultdict(list))
+    for p in raw["partitions"]:
+        groups[p["type"]][json.dumps(dict(inputs=sorted(ins[p["name"]]),outputs=sorted(outs[p["name"]])),sort_keys=True)].append(p["name"])
+    for tn,cohorts in sorted(groups.items()):
+        if len(cohorts)==1:continue
+        old=raw["partition_types"].pop(tn)
+        for sig,names in sorted(cohorts.items()):
+            name=tn+"__cl"+hashlib.sha256((tn+sig).encode()).hexdigest()[:8]
+            clone=copy.deepcopy(old);clone["module"]=name;clone["landing_base_type"]=tn
+            clone["note"]=clone.get("note","")+f";clock landing region cohort from {tn} (landed mask)"
+            raw["partition_types"][name]=clone
+            if tn in raw["reset"]["in_sites"]:raw["reset"]["in_sites"][name]=raw["reset"]["in_sites"][tn]
+            for p in raw["partitions"]:
+                if p["name"] in names:p["type"]=name
+
+
 def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor="reset",band_reserve="padded"):
     """band_reserve="live" (opt-in): storage bands reserve the live ring (width+epoch) instead of the 64-bit padded ring.
     observer: {module, instance_suffix, fault_port, ready_port} of the real
     one-bit fault/ready inputs gated in observer_part (reset mode default QC_OBSERVER).
-    monitor="dataflow" (opt-in, FALLBACK-HEAD): observer None stays OPEN (fails closed at bind)."""
-    if monitor not in ("reset","dataflow"):raise ValueError(f"unknown monitor mode {monitor}")
+    monitor="dataflow" (opt-in, FALLBACK-HEAD): observer None stays OPEN (fails closed at bind).
+    monitor="region" (opt-in, DIE-HEAD-2): dataflow monitor whose observer walk also follows same-region links
+    (multi-partition clock regions); types split once by their landed mask (exact uniform hardware)."""
+    if monitor not in ("reset","dataflow","region"):raise ValueError(f"unknown monitor mode {monitor}")
     if band_reserve not in ("padded","live"):raise ValueError(f"unknown band_reserve {band_reserve}")
     global BAND_RESERVE
     BAND_RESERVE=band_reserve
@@ -476,6 +548,10 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
         region[p["name"]]=rs[0]
     if monitor=="dataflow":     # opt-in (FALLBACK-HEAD): uniform per-type monitor on the data crossings, no cohort split
         return _compose_dataflow(raw,plan_path,table,pports,ins,outs,region,base_type,observer_part,observer)
+    if monitor=="region":
+        _split_by_landed_mask(raw,plan_path,ins,outs)
+        return _compose_dataflow(raw,plan_path,table,pports,ins,outs,region,base_type,observer_part,observer,
+                                 intra=_intra_links(raw,table,region))
     # Pin the existing reset-entry choices before splitting replicated types.
     # Parent/child graph can refine after OUT-site cohorts shrink, so repeat the
     # exact active-child hardware partition until no further type splits occur.
@@ -689,7 +765,7 @@ def _finish(raw,P,bytype,pports,side):
                 collector_root_node=bytype[tn].get("collector_root_node"),
                 collector_local_sources=bytype[tn]["local_sources"],
                 collector_children=bytype[tn]["children"],
-                **({"monitor":"dataflow"} if bytype[tn]["mask"].get("monitor")=="dataflow" else {}))
+                **({"monitor":bytype[tn]["mask"]["monitor"]} if bytype[tn]["mask"].get("monitor") in ("dataflow","region") else {}))
         t["buses"]=[b for b in t.get("buses",[]) if b not in special]
     infra_edges=[]
     for pr in raw["ports"]:

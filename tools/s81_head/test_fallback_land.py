@@ -95,3 +95,35 @@ def test_region_map_granularity(tmp_path):
     assert len(t["regions"]) == len(set(pr.values())) == 40
     assert len(t["ports"]) == 94 and all(pr[r["src"]] != pr[r["dst"]] for r in t["ports"])
     assert F.head_pass(p, t)["head_pass_crossings"] == 4
+
+
+def test_region_monitor_walks_same_region_links():
+    """DIE-HEAD-2 10-27: opt-in monitor="region": the observer walk follows same-region links as well as the landed
+    crossings; dataflow (landed ports only) still fails closed on a multi-partition region map; default unchanged."""
+    import pytest
+    import clock_landing_plan as CLP
+    import landing_contract as LC
+    import schema as S
+    p = _plan()
+    m = ROOT / "results" / "die_head_1027" / "maps" / "feed36b.json"
+    if not m.is_file():
+        return
+    t = F.table(p, "map:" + str(m))
+    with pytest.raises(ValueError, match="cannot reach observer"):
+        CLP.compose(p, t, str(PLAN), observer_part="ctl", monitor="dataflow")
+    raw, side = CLP.compose(p, t, str(PLAN), observer_part="ctl", monitor="region")
+    c = side["collector"]
+    assert c["monitor"] == "region" and len(raw["partition_types"]) == 21
+    assert {pn: x["type"] for pn, x in c["parts"].items()} == {q["name"]: q["type"] for q in raw["partitions"]}
+    assert set(c["parts"]) == {q["name"] for q in p["partitions"]}
+    for pn, x in c["parts"].items():                       # every part reaches ctl, potential strictly falls
+        if x["parent"] is not None:
+            assert c["parts"][x["parent"]]["potential"] < x["potential"]
+    seams = [e for e in c["edges"] if e["seam"]]
+    assert len(seams) == 94 and all(e["boot_transport_extra_cycles"] == 3 for e in seams)
+    intra = [e for e in c["edges"] if not e["seam"]]
+    assert intra and all(e["boot_transport_extra_cycles"] == 1 for e in intra)
+    pr = json.loads(m.read_text())["part_region"]
+    assert all(pr[e["src"]] == pr[e["dst"]] for e in intra)
+    assert all(not t_["bands"] or t_["mask"]["inputs"] for t_ in c["types"].values())   # rings only on landed inputs
+    assert c["placement_failures"] == [] and not LC.check(S.Plan(raw, str(PLAN)))["errors"]
