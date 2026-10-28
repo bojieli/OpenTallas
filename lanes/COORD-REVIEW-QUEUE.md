@@ -2670,3 +2670,8 @@ LEC NOT EQUIVALENT: the kit stops (lec/lec.json)
   (6) Census: vs 160 differs = the LEC-FPREG constant-0 class, routed to LEC-FPREG-7. l5/eg collects -> R26.
 - 10-27 18:23 [COORD] HBM-R16 4459ad13f (hard_cores schema overlay keys + tests; other dies byte-identical CHECKED) APPROVED -> ROOT-MERGE-82 (5b08762885 already in RM81).
 - 2026-10-27 18:25 PDT [HBM-R16] ASK: (a) die clock on C16r fails 52 plan errors (50 tree legs >480 um over hard cores without island sites) -> MASTER-PLAN/CLOCK-128 island-site delta before any clock-incl GRT; (b) tkm_idpin/split3_lane islands: approve die drop into each island (centre-fed misses 250: 290/388 TT pred UNCHECKED); (c) adopt C17g (6f226140b1f3, G0 PASS, away groups 147->50) as partial PLAN-DELTA? Details lanes/PATH-HBM.md HBM-R16.
+- 10-27 18:25 [COORD] HBM-R16 ASK rulings:
+  (a) YES. No clock-inclusive die GRT on C16r until the 50 over-length legs are fixed. First choice: re-route the leg along a channel if the plan has one within the 480 um repeater reach. Otherwise use a pushdown repeater island inside the hard core (12.2a1, no parent cells in the core outline). Do both through one MASTER-PLAN/CLOCK-128 island-site delta, and place the 2 unplaced mesh drivers.
+  (b) APPROVED: the die clock drops into each island of tkm_idpin and split3_lane. This is the standard short local tree from the mesh to each entry, and the drops count against the core latency 250 TT / 202.5 FF +-20 on the real view.
+  (c) C17g is NOT adopted as a partial delta (G0C still FAILs 12). Finish the outline growth and the retap of the 24 re-oriented cores, then adopt C17 as one plan event with the island-site delta.
+  The signal-only die GRT is diagnostic only.
