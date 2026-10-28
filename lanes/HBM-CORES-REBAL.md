@@ -74,3 +74,10 @@
   - Render viewed (canon_post/cts.png): 24 SRAMs in left/right column groups; logic and flops form one central blob. The WCOPY copy regs sit in that blob, far from their SRAMs, which is the wd_in residual. Next place: the snapped kit _m5w1g plus WCOPY regs placed next to their macro.
   - Token check (512 lanes): POS PASS, BRIDGE_LEAF PASS. CAUGHT: DATA, RF, RED, CAL, EPOCH. ADDR NOT_CAUGHT, and it is a stale TB constant, not a design escape. The ADDR mutant is hard-wired to serial edge 1040, the MLAT4 first live line. m5w1 shifts the programme +1 (first live line 1041; the field is live on 5808 edges in both builds), so at 1040 the line is idle (all zero) and the mutant touches nothing.
   - Fix: opt-in +MUT_ADDR_EDGE in the TB (default 1040, unchanged) plus mut_addr_edge.py on 9b@e10cd90411. Rebuild + ADDR@1041 + POS are running on epyc2 (ot-run, ~2.5 h). Token verdict and the release-flag READY wait on that rerun.
+
+- 2026-10-28 16:46 PDT RESULT [HBM-CORES-REBAL-9] TOKEN PASS at MLAT5/WCOPY1 (512 lanes, bit-exact, su_multirate_native vehicle). POS PASS: lanes512, 135,184 writes, scalars 9, serial 7121 / stream 9496 edges. BRIDGE_LEAF PASS. Mutants CAUGHT 6/6: DATA, RF, RED, CAL, EPOCH; ADDR at its first live line (edge 1041, from mut_addr_edge.py).
+  - The ADDR signature matches the MLAT4 baseline (fault 001e0, first error at serial 1053 vs 1052, 6174 vs 6170 errors).
+  - The rebuilt TB (9b@e10cd90411, +MUT_ADDR_EDGE opt-in) gives a byte-identical POS PASS/endpoints line to the first m5w1 binary.
+  - The first-run ADDR NOT_CAUGHT was the stale TB edge 1040 (an idle line at m5w1), not a design escape.
+  - Price (UNCHECKED model, accepted): 1902.26 -> 1880.14 tok/s (-1.16%).
+  - Branch claude/hbm-cores-rebal-9b-1028@48957e0967.
