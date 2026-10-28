@@ -71,3 +71,19 @@ def test_pad_metadata_and_actual_arrival_export(tmp_path, monkeypatch):
     arr.write_text("\n".join(l for l in arr.read_text().splitlines() if not l.startswith("N p"))+"\n")
     with pytest.raises(ValueError, match="missing N"):
         E.export(out/"tree.json", arr, "TT")
+
+
+def test_actual_cli_preserves_body_packer_sibling_sites(tmp_path, monkeypatch):
+    path = tmp_path/"tap_pad_bays.json"
+    raw = dict(pad={"t_part__ck": 2}, sites={"t_part__ck": [[20.,20.],[30.,20.]]})
+    path.write_text(json.dumps(raw))
+    captured = {}
+    def write(*args, **kwargs):
+        captured.update(kwargs)
+        return dict.fromkeys(("die","parts","types","closed_views","hard_cores","clock_tree","grt","psm","sta"))
+    monkeypatch.setattr(D, "write_kit", write)
+    D.main(["kit", "unused_plan.json", "--out", str(tmp_path/"kit"), "--tap-pad", str(path)])
+    assert captured["tap_pad"] == {"t_part__ck": 2, "sites": raw["sites"]}
+    # Existing counts-only envelope and direct function input stay unchanged.
+    path.write_text(json.dumps(dict(pad=raw["pad"], source="old metadata")))
+    assert D.load_tap_pad(path) == raw["pad"]
