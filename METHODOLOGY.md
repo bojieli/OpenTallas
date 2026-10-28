@@ -520,3 +520,21 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
   e. DETAILED-ROUTE TRIAL PER DIE (estimate run, not a gate). Once a die's region map is stable, route one representative region
      with real core views through detailed route (DRT), plus global route with clock. Report DRC count, overflow and pin access.
      Limit 400k cells per run. The results feed the freeze gate early; they never block a row on their own.
+- 12.16 COUNT-ALIGNED CROSSINGS, SAFE BY DESIGN (OWNER 2026-10-28 07:29 PDT: "maybe we need to go with count aligned buffer. make sure the design
+     is safe by design rather than tweaks"; context: CA-OCV-1 showed every earlier CA pass lacked clock OCV/droop).
+  a. Every clock-region crossing on a production path is a count-aligned (CA) landing buffer with a fixed latency. No async/elastic
+     FIFOs on production paths; the 10-14 static schedule is unchanged.
+  b. Safety comes from the plan, not from tuning:
+     (i) Bounded unshared clock by construction. Crossings follow the clock-forwarding graph (12.13b/c): a data link is a clock-tree
+         edge (a tree node at the crossing), or it closes a SHORT tree loop. The plan reports the unshared clock per crossing; far links
+         are hop chains of neighbour crossings, never one crossing between distant tree branches.
+     (ii) The uncertainty bound per crossing is computed at plan time with the ONE shared model (STA phase + 0.21 %/mm AOCV + shared
+         droop + spice scale, clock_variation=table) on the unshared clock only.
+     (iii) Depth comes from a small standard set (DEPTH 8 or 16, each with an RTL proof), chosen so the window covers the bound plus
+         the >=100 ps margin on both sides. Count K comes from the planned arrival centre.
+     (iv) Reset release to both counters is planned and checked with the same model; reset is a crossing.
+  c. NOT a primary fix: hand-tuned per-crossing PAD/K, per-pair tree-parent overrides that rescue a failing crossing, or clock trims
+     or pads for a crossing. Allowed only as ledgered residuals (<= 5 %, v5.1) after (b) passes. A tree-parent choice the planner
+     derives from the clock tree is part of (b), not a tweak.
+  d. Proof: the plan-time check gates the plan event; the same check reruns on built clock arrivals before freeze; NUMBER-CHECK on
+     headline margins. No new gate threshold: the gate stays CA margin >= 100 ps TT/FF incl. OCV + droop.
