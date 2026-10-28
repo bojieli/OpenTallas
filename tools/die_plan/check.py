@@ -1850,7 +1850,7 @@ def check_seams(P, R):
     return dict(nets=tot, pairs=dict(pairs))
 
 
-def check_core_pg(P, R, plan_dir=None, strict=False, max_msgs=40):
+def check_core_pg(P, R, plan_dir=None, strict=False, max_msgs=1000):
     """PG-CORECONN-2 (measured failure PG-CORECONN-1 10-28: hd_tile 10/10 core PG terms / 744 M5 pin shapes, S81
     col_h10_r2 134/134 / 21001 untouched by tile PG metal = physical open).  Every type that places hard-core /
     hardened macros (gen_phys.type_macros, PHY-domain macros excluded: their VDDPHY grid lands them) must set
