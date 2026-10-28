@@ -60,15 +60,33 @@ def J(d, T, off):
     return -math.floor((d - off) / T)
 
 
-def sync_choice(r, T, ap):
-    """(n_values, edge, off, dist): best sample edge for the start sync across crossing r"""
+def sync_choice(r, T, ap, start_skew=(0.0, 0.0), sync_ap=26.5):
+    """(n_values, edge, off, dist): best sample edge for the start sync across crossing r.
+    start_skew (lo, hi) ps (DIE-HEAD-4b, COORD NC-HEAD-PART): start arrival at the child's first sync flop minus the
+    forwarded clock (clk->Q of the parent origin register + start wire - fclk wire; die_sta_related start row).  The
+    sync samples the phase d - skew.  n (sample values over the static interval +- ap) stays the primary key, so the
+    start tree and the J deviation ranges are unchanged; among the edges with the fewest values an edge is kept only if
+    it also clears the skew.  Hard (the die STA start row): skewed interval [lo - hi_s, hi - lo_s] >= sync aperture
+    from the boundary off + kT and static distance - sync aperture >= max|skew|.  Soft: the skewed interval >= ap
+    (T/8 >= 100 ps) from the boundary.  Order: fewest values, smaller hard shortfall, smaller soft shortfall, larger
+    static distance (an edge that clears both keeps the static order).  dist stays the STATIC
+    distance (start_skew_limit = dist - sync aperture, as die_sta_related reads it).  Default (0, 0): unchanged."""
     lo, hi = r["lo"], r["hi"]
+    s_lo, s_hi = float(start_skew[0]), float(start_skew[1])
+    skewed = bool(s_lo or s_hi)
+    smax = max(abs(s_lo), abs(s_hi))
     best = None
     for edge, off in (("rise", 0.0), ("fall", T / 2)):
         n = interval_boundaries(lo - ap, hi + ap, T, off) + 1
-        key = (n, -boundary_dist(lo, hi, T, off))
+        dist = boundary_dist(lo, hi, T, off)
+        hard = soft = 0.0
+        if skewed:
+            sd = boundary_dist(lo - s_hi, hi - s_lo, T, off)
+            hard = max(0.0, sync_ap - sd, smax - (dist - sync_ap))
+            soft = max(0.0, ap - sd)
+        key = (n, hard, soft, -dist)
         if best is None or key < best[0]:
-            best = (key, (n, edge, off, boundary_dist(lo, hi, T, off)))
+            best = (key, (n, edge, off, dist))
     return best[1]
 
 
@@ -158,14 +176,14 @@ def directed_tree(rows, regions):
     return best[1], best[2]
 
 
-def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edge_pad=None):
+def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edge_pad=None, start_skew=(0.0, 0.0)):
     """edge_pad {tree port or child region: PAD}: per-start-tree-edge PAD overriding the default `pad` (MESO-RECONCILE-1,
     COORD 10-27).  An edge PAD p_e >= pad delays the child's origin by p_e - pad counts and HOLDS the tree crossing's RTL K
     at its default-PAD value, so that crossing's lag (and latency) grow by (p_e - pad) T; every other crossing's K is
     re-chosen against the new origins (its latency is unchanged)."""
     for r in rows:
         r["lo"], r["hi"] = r["d_ps"] - r["p_dn_ps"], r["d_ps"] + r["p_up_ps"]
-        r["_nv"], r["_edge"], r["_off"], r["_dist"] = sync_choice(r, T, ap)
+        r["_nv"], r["_edge"], r["_off"], r["_dist"] = sync_choice(r, T, ap, start_skew, sync_ap)
         r["_w"] = wander_frac * max(r.get("unshared_a_ps", 0.0), r.get("unshared_b_ps", 0.0))
     regions = sorted({r["src"] for r in rows} | {r["dst"] for r in rows})
     root, par = directed_tree(rows, regions)
@@ -365,6 +383,14 @@ def load_rows(ocv_json, corners, scale=1.0):
     return rows
 
 
+def parse_skew(text):
+    """'LO,HI' ps -> (lo, hi) with lo <= hi"""
+    lo, hi = (float(x) for x in text.split(","))
+    if lo > hi:
+        raise argparse.ArgumentTypeError(f"--start-skew {text}: LO > HI")
+    return lo, hi
+
+
 def parse_edge_pad(items):
     """['PORT_OR_REGION=N', ...] -> {key: N}"""
     out = {}
@@ -392,12 +418,18 @@ def main(argv=None):
     ap.add_argument("--edge-pad", action="append", metavar="PORT=N", help="per-start-tree-edge PAD override (tree port "
                     "or child region); the tree crossing keeps its RTL K, so its latency grows by N - PAD")
     ap.add_argument("--scale", type=float, default=1.0, help="plan-time arrival scale (OSS-CLOCK-2 21:10: 1.05)")
+    ap.add_argument("--start-skew", type=parse_skew, default=(0.0, 0.0), metavar="LO,HI",
+                    help="start skew ps at the child's first sync flop (parent origin clk->Q + start wire - fclk wire; "
+                         "die_sta_related start row clkq_ps); the sample edge keeps ap from either boundary with it")
     ap.add_argument("--mc-chips", type=int, default=0)
     ap.add_argument("--out")
     ap.add_argument("--cases", help="TSV for the Verilator bench: port DEPTH L_ps (lo / mid / hi per crossing)")
     a = ap.parse_args(argv)
     rows = load_rows(a.ocv_json, a.corner, a.scale)
-    summ, out, regs = plan(rows, a.period, a.aperture, a.wander_frac, a.sync_aperture, a.pad, parse_edge_pad(a.edge_pad))
+    summ, out, regs = plan(rows, a.period, a.aperture, a.wander_frac, a.sync_aperture, a.pad, parse_edge_pad(a.edge_pad),
+                           a.start_skew)
+    if any(a.start_skew):
+        summ["start_skew_ps"] = list(a.start_skew)
     summ.update(corner=a.corner, period_ps=a.period, aperture_ps=a.aperture, sync_aperture_ps=a.sync_aperture,
                 wander_frac=a.wander_frac, pad=a.pad, scale=a.scale, source=a.ocv_json)
     if a.mc_chips:
