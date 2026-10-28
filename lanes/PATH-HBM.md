@@ -932,3 +932,11 @@ Resumed exclusive whole-hub mover endpoint work in fresh sparse codex/hbm-datafl
   - UNCHECKED:
     - the root-side driver reach after the permutation (no root placement dump);
     - the post-move tile r2r, which needs a re-kit of the tkm tile (d25/d30 rows are WITHDRAWN).
+- 10-28 02:27 PDT DIE-HBM-5 tok/s price of the corrected hub split + SF (region3_tok price; tool run CHECKED, latency model UNCHECKED). Ideal is 1906 tok/s on ds_ar.
+  - hso spt @278.6: 336 crossings, 0 FAIL. ds_ar 1836.5 tok/s with latency hiding (-3.97%), 1784.1 without; qwen_ar -1.06%.
+  - hso spt @219.2: ds_ar 1840.5 with hiding (-3.74%).
+  - Old mirrored split @278.6: 4 FAIL, 1827.0 (-4.51%).
+  - Worst op-latency delta: SM/ATT +41 cycles, IDX.TOPK +21.
+  - All of this is under the 1906 target, which the owner accepted ("<1906 OK, closure over perf").
+  - File: intel2 die-hbm-1027/region3/r5/price_hso.json.
+  - The HX hub cycles (2-4) are not lanes in the ledger, so they are not in this price yet (record only).
