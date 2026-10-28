@@ -1,0 +1,187 @@
+"""START-TREE-1 tests: --start-tree clock (the start / reset-release tree follows the clock tree, METHODOLOGY 12.16b(iv))."""
+import copy
+import importlib.util
+import json
+import sys
+from pathlib import Path
+
+import pytest
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+spec = importlib.util.spec_from_file_location("cap_st", HERE / "count_align_plan.py")
+cap = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(cap)
+import count_align_bind as CAB  # noqa: E402
+
+T = 833.0
+AP = T / 8
+SEG = 90.0      # ps per spine tree level
+
+
+def ctx_chain(n=6, seg=SEG, ocv_frac=0.10):
+    """clock spine h -> h0 -> h00 ... ; region Ri hangs off spine node i at 'h'+'0'*i+'1' with two taps (leaf legs
+    40 / 60 ps).  ocv = ocv_frac x unshared (late branch) per side, a stand-in for clock_ocv_fn."""
+    nl, ne, ns, nxy = {}, {}, {}, {}
+    taps = {}
+
+    def node(p, t, st):
+        nl[p], ne[p], ns[p], nxy[p] = t, t - 2.0, st, [100.0 * len(p), 0.0]
+    for i in range(n + 1):
+        p = "h" + "0" * i
+        node(p, seg * i, i)
+    for i in range(n):
+        rp = "h" + "0" * i + "1"
+        node(rp, seg * i + 50.0, i + 1)
+        for j, leg in enumerate((40.0, 60.0)):
+            tp = rp + str(j)
+            node(tp, nl[rp] + leg, i + 2)
+            k = f"t_R{i}_{j}"
+            taps[k] = dict(port=k, part=f"R{i}", cppr_node=f"R{i}", tree_path=tp, late_ps=nl[tp], early_ps=ne[tp],
+                           stages_from_root=i + 2, xy_um=nxy[tp])
+    meta = dict(node_late_ps=nl, node_early_ps=ne, node_stages=ns, node_xy_um=nxy, cppr_node_range_ps={})
+
+    def ocv(a, b, check):
+        A, B = taps[a], taps[b]
+        f = cap._lcp(A["tree_path"], B["tree_path"])
+        return ocv_frac * max(A["late_ps"] - nl[f], B["late_ps"] - nl[f])
+    return {"TT": dict(meta=meta, taps=taps, ocv=ocv, rng={})}
+
+
+def row(port, s, d, dd, up, dn, unsh=500.0):
+    return dict(port=port, src=s, dst=d, d_ps=dd, p_up_ps=up, p_dn_ps=dn, unshared_a_ps=unsh, unshared_b_ps=unsh,
+                margin_ps=0.0)
+
+
+def by(out):
+    return {o["port"]: o for o in out}
+
+
+def chain_rows(n=6, wide=380.0):
+    """neighbour crossings Ri -> Ri+1 with WIDE region-pair-union intervals (ambiguous as start edges) + a far loop
+    R0 -> R(n-1) and its way back"""
+    rows = [row(f"x{i}", f"R{i}", f"R{i+1}", 300.0, wide, wide) for i in range(n - 1)]
+    rows += [row("far", "R0", f"R{n-1}", 450.0, 200.0, 200.0), row("back", f"R{n-1}", "R0", -450.0, 200.0, 200.0)]
+    return rows
+
+
+def test_default_unchanged_without_start_edges():
+    rows = chain_rows()
+    a = cap.plan(copy.deepcopy(rows), T, AP, 0.05)
+    b = cap.plan(copy.deepcopy(rows), T, AP, 0.05, start_edges=None, start_root=None)
+    assert json.dumps(a, sort_keys=True, default=str) == json.dumps(b, sort_keys=True, default=str)
+    assert "start_tree" not in a[0] and all("start_hops" not in o for o in a[1])
+
+
+def test_data_tree_accumulates_ambiguity_clock_tree_does_not():
+    rows = chain_rows()
+    s0, out0, _ = cap.plan(copy.deepcopy(rows), T, AP, 0.05)
+    assert s0["max_path_ambiguous_cycles"] >= 3          # the root cause: ambiguity adds up along the start path
+    root, edges, info = cap.clock_start_edges(rows, ctx_chain())
+    s1, out1, regs = cap.plan(rows, T, AP, 0.05, start_edges=edges, start_root=root)
+    st = s1["start_tree"]
+    assert st["start_fail"] == 0 and st["start_clean"] == st["start_edges"] == len(edges)
+    assert s1["max_path_ambiguous_cycles"] == 0 and s1["fail"] == 0
+    assert all(o["kind"] == "nontree" and o["path_ambiguous_cycles"] == 0 for o in out1)
+    worst = max(out0, key=lambda o: o["path_ambiguous_cycles"])
+    assert worst["L_width_ps"] - by(out1)[worst["port"]]["L_width_ps"] >= 3 * T - 1   # >= 3 cycles narrower
+    # the start tree follows the clock: every region hangs off a spine (virtual) node or another region
+    assert {g["region"] for g in regs if not g.get("virtual")} == {f"R{i}" for i in range(6)}
+    assert root.startswith("st:") and info["branch_nodes"] >= 4
+    # each port's ends: virtual node tap -> region's shortest-leg tap
+    e = next(e for e in edges if e["dst"] == "R3")
+    assert e["capture"] == "t_R3_0" and e["launch"].startswith("__st__")
+    n, bad, wl, wh = cap.mc_check(rows + edges, out1, regs, T, 600)
+    assert bad == 0
+
+
+def test_mc_catches_wrong_start_step():
+    rows = chain_rows()
+    root, edges, _ = cap.clock_start_edges(rows, ctx_chain())
+    s, out, regs = cap.plan(rows, T, AP, 0.05, start_edges=edges, start_root=root)
+    n, bad, _, _ = cap.mc_check(rows + edges, out, regs, T, 300)
+    assert bad == 0
+    g = next(g for g in regs if g["region"] == "R4")
+    g["start_from"]["rtl"]["PAD"] += 3                    # mutant: start origin 3 counts late
+    n, bad, _, _ = cap.mc_check(rows + edges, out, regs, T, 300)
+    assert bad > 0
+
+
+def test_long_edge_is_retimed_on_tree_nodes():
+    """one region far down a slow, high-variation spine: the direct port is too wide, retime stages on spine nodes make
+    every segment clean (bounded stages); --start-clean width demands it whatever the phase"""
+    mk = lambda: ctx_chain(n=12, seg=150.0, ocv_frac=0.15)  # noqa: E731
+    rows = [row("ab", "R0", "R11", 1800.0, 100.0, 100.0), row("ba", "R11", "R0", -1800.0, 100.0, 100.0)]
+    root, edges, info = cap.clock_start_edges(rows, mk(), clean_by="width")
+    s, out, regs = cap.plan(copy.deepcopy(rows), T, AP, 0.05, start_edges=edges, start_root=root)
+    assert 1 <= info["retime_nodes"] <= 8 and s["start_tree"]["start_fail"] == 0
+    assert all(e["dst"].startswith("st:") for e in edges if e["retime"])
+    assert all(e["p_up_ps"] + e["p_dn_ps"] <= T / 2 - 2 * AP + 1e-9 for e in edges)
+    assert s["max_path_ambiguous_cycles"] == 0
+    root1, edges1, info1 = cap.clock_start_edges(rows, mk())                  # default: the CA (phase) rule
+    assert info1["retime_nodes"] <= info["retime_nodes"]
+    root2, edges2, info2 = cap.clock_start_edges(rows, mk(), retime_max=0, clean_by="width")
+    s2, _, _ = cap.plan(copy.deepcopy(rows), T, AP, 0.05, start_edges=edges2, start_root=root2)
+    assert info2["retime_nodes"] == 0 and s2["start_tree"]["start_fail"] >= 1   # unclean reset release FAILs
+
+
+def test_bind_and_verify_with_start_ports_region_and_parts():
+    rows = chain_rows()
+    for r in rows:
+        r["src_part"], r["dst_part"] = r["src"], r["dst"]
+    root, edges, _ = cap.clock_start_edges(rows, ctx_chain())
+    s, out, regs = cap.plan(copy.deepcopy(rows), T, AP, 0.05, start_edges=edges, start_root=root)
+    doc = dict(summary=dict(s, period_ps=T, pad=0), regions=regs, crossings=out,
+               start_edges=[{k: v for k, v in e.items() if not k.startswith("_")} for e in edges])
+    for parts in (None, {r["port"]: (r["src_part"], r["dst_part"]) for r in rows}):
+        b = CAB.bind(copy.deepcopy(doc), parts=parts)
+        assert b["start_tree"] == "clock" and len(b["start_ports"]) == len(edges)
+        v = CAB.verify(b, 600)
+        assert v["identity_and_loop_errors"] == [] and v["sim_window_violations"] == 0
+        assert v["fundamental_cycles"] == len(rows)
+    bad = copy.deepcopy(doc)
+    g = next(g for g in bad["regions"] if g["region"] == "R2")
+    g["origin_cycles"] += 1
+    with pytest.raises(CAB.BindError):
+        CAB.bind(bad)
+
+
+def test_cli_needs_proof_and_clock_variation(tmp_path):
+    f = tmp_path / "x.json"
+    f.write_text(json.dumps(dict(corners={"TT_x": dict(all=chain_rows())})))
+    for extra in ([], ["--sta-proof", str(tmp_path), "--sta-plan", str(f)]):
+        with pytest.raises(SystemExit):     # no proof / no --sta-clock-ocv table: refused (12.16b(iv))
+            cap.main([str(f), "--corner", "TT_x", "--start-tree", "clock"] + extra)
+
+
+def test_die_sta_rechecks_start_ports_on_arrivals():
+    """12.16d: the gate re-times every start port on the proof arrivals; a moved sync tap clock FAILs it"""
+    import die_sta_related as DSR
+    rows = chain_rows()
+    ctx = ctx_chain()
+    root, edges, _ = cap.clock_start_edges(rows, ctx)
+    s, out, regs = cap.plan(rows, T, AP, 0.05, start_edges=edges, start_root=root)
+    doc = dict(summary=dict(s, period_ps=T, pad=0), regions=regs, crossings=out,
+               start_edges=[{k: v for k, v in e.items() if not k.startswith("_")} for e in edges])
+    b = CAB.bind(doc)
+    k = ctx["TT"]
+    taps = {q: t for q, t in k["taps"].items() if not q.startswith("__st__")}
+    old, DSR.CPPR_LCA = DSR.CPPR_LCA, True
+    try:
+        ok = DSR.count_align_start_ports(b, taps, k["meta"], T, {}, k["ocv"])
+        assert len(ok) == len(edges) and all(r["ok"] for r in ok)
+        assert not any(q.startswith("__st__") for q in taps)          # virtual pins removed again
+        e = next(e for e in edges if e["dst"] == "R3")
+        off = T / 2 if b["regions"]["R3"]["edge_fall"] else 0.0
+        sh = (off - e["d_ps"]) % T                    # mutant: the sync tap clock moves the phase onto the boundary
+        moved = dict(taps)
+        moved[e["capture"]] = dict(moved[e["capture"]], late_ps=moved[e["capture"]]["late_ps"] + sh,
+                                   early_ps=moved[e["capture"]]["early_ps"] + sh)
+        bad = {r["port"]: r for r in DSR.count_align_start_ports(b, moved, k["meta"], T, {}, k["ocv"])}
+        assert not bad[e["port"]]["ok"]
+        b2 = copy.deepcopy(b)
+        b2["start_ports"][e["port"]]["capture"] = "no_such_tap"
+        miss = {r["port"]: r for r in DSR.count_align_start_ports(b2, taps, k["meta"], T, {}, k["ocv"])}
+        assert miss[e["port"]]["ok"] is False and miss[e["port"]]["reason"] == "no taps"
+    finally:
+        DSR.CPPR_LCA = old
