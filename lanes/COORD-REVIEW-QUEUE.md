@@ -2668,6 +2668,9 @@ LEC NOT EQUIVALENT: the kit stops (lec/lec.json)
   (4) Graded mesh: the narrowed rails are clock-mesh rails, so the IR gate does not apply. The gate is restated as a mesh R/skew/EM sim through main die_sta_related.py (mesh MC), plus EM on the narrowed rails. ec2257b62c is READY once that passes.
   (5) The LEC add-on fe067d91e2 is APPROVED -> RM82 after the BZ0 200k bench passes. It must be checked against the R20/R21 cap_* recipes.
   (6) Census: vs 160 differs = the LEC-FPREG constant-0 class, routed to LEC-FPREG-7. l5/eg collects -> R26.
+FAILED [AUTOPILOT 30a8a335f89a] 2026-10-27 18:22:30 PDT AUTOPILOT -> KV-CORES: FAILED 30a8a335f89a qwen_kvsys/kv3_head_eighth_e0 (CRASH/flow-error): .s2_sh[3], ff:u_dut.u_g_t_0_u_l8.g_d[0].u_p.s2_sh[4], ff:u_dut.u_g_t_0_u_l8.g_d[1].u_p.s2_normal); RTL registers removed by synthesis although not constant: ff:u_dut.u_g_t_0_u_l8.g_d[0].u_p.s1_e[9], ff:u_dut.u_g_t_1_u_l8.g_d[0].u_p.s1_e[9] (5678.3 s)
+LEC NOT EQUIVALENT: the kit stops (lec/lec.json)
+ | kit localhost:/srv/opentallas-scratch2/claude/qk-cores-5/kits_heads/kv3_head_eighth_e0__216x216 src claude/qk-cores-5-1027@588401f850424faf3c69ac84506753f6314afd0b | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
 - 10-27 18:23 [COORD] HBM-R16 4459ad13f (hard_cores schema overlay keys + tests; other dies byte-identical CHECKED) APPROVED -> ROOT-MERGE-82 (5b08762885 already in RM81).
 - 2026-10-27 18:25 PDT [HBM-R16] ASK: (a) die clock on C16r fails 52 plan errors (50 tree legs >480 um over hard cores without island sites) -> MASTER-PLAN/CLOCK-128 island-site delta before any clock-incl GRT; (b) tkm_idpin/split3_lane islands: approve die drop into each island (centre-fed misses 250: 290/388 TT pred UNCHECKED); (c) adopt C17g (6f226140b1f3, G0 PASS, away groups 147->50) as partial PLAN-DELTA? Details lanes/PATH-HBM.md HBM-R16.
 - 10-27 18:25 [COORD] HBM-R16 ASK rulings:
