@@ -193,10 +193,13 @@ if [ "${COLL_TRANSPORT:-0}" = 1 ]; then
 fi
 PV_ARGS=()
 [ "${PV_PROBABILITY_CANDIDATE:-0}" != 1 ] || PV_ARGS=(--pv-probability-candidate --pv-probability-source "$OUT/bundle" --pv-probability-contract "$FC")
+# VMX-TOK-1 2026-10-28 (opt-in, default empty = unchanged): HALF_ARGS="--half-local 0|1 --native-xread-lx N" is appended to
+# the DS layer_images calls ONLY (half-local VM placement, DIE-HBM-10; layer_images refuses it with CX / su-lower2 / rope).
+HALF_A=(); [ -z "${HALF_ARGS:-}" ] || read -r -a HALF_A <<< "$HALF_ARGS"
 for LL in 00 02 14; do l=$((10#$LL))
   CXA=(); if [ "$CX" = 1 ]; then CXA=(--cx --cx-contract "$FC" --cx-l12 "$OUT/l12.json" --cx-checkpoint "${HC_CHECKPOINT:-$HOME/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277}" --cx-ops "COLL,HC$([ "$CX_IDX" = 1 ] && echo ,IDX)"); [ "${COLL_TRANSPORT:-0}" = 1 ] && CXA+=(--cx-coll-transport "$OUT/coll_transport.json"); [ "$l" = 14 ] && CXA+=($CX_L14); fi
   (cd "$ROOT" && python3 tools/hbm_layer_vehicle/layer_images.py --design ds --layer $l --programme "$FIX_DS/L$LL/images/ds_v41_1M_L${LL}_per_die.json" \
-     --fixtures "$FIX_DS/L$LL" --boundary "$B" "${CONNECTED_ARGS[@]}" "${SU2_ARGS[@]}" --native-read-return $RR --native-write-return $WR --native-pin-reg $SPR "${CXA[@]}" "${SM_ARGS[@]}" "${PV_ARGS[@]}" --out "$OUT/emit/ds_l$l") > "$L/emit_ds_l$l.log" 2>&1 \
+     --fixtures "$FIX_DS/L$LL" --boundary "$B" "${CONNECTED_ARGS[@]}" "${SU2_ARGS[@]}" --native-read-return $RR --native-write-return $WR --native-pin-reg $SPR "${CXA[@]}" "${SM_ARGS[@]}" "${PV_ARGS[@]}" "${HALF_A[@]}" --out "$OUT/emit/ds_l$l") > "$L/emit_ds_l$l.log" 2>&1 \
     || { say "EMIT_FAIL ds_l$l"; exit 3; }; cp "$OUT/emit/ds_l$l/replay.json" "$RJ/ds_l$l.json"; say "EMIT ds_l$l $(tail -c 260 "$L/emit_ds_l$l.log" | tr -d '\n')"
   for xp in "$OUT/emit/ds_l$l/replay_x"[0-9]*.json; do [ -f "$xp" ] || continue   # SU_LOWER2 independent parts (NEV fit)
     xn=$(basename "$xp" .json); cp "$xp" "$RJ/ds_l${l}_${xn#replay_}.json"; SU2_EXTRA="${SU2_EXTRA:-} ds_l${l}_${xn#replay_}"
