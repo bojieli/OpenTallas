@@ -36,3 +36,25 @@ def test_bounded_coupon_rejects_escaping_guides_even_with_zero_overflow(tmp_path
     (tmp_path/'grt/route.guide').write_text('ft_p__a_1[0]\n(\n1000 1000 12000 2000 M6\n)\n')
     result=probe.report(tmp_path)
     assert result['verdict']=='FAIL' and result['boundary']['outside_canvas_rectangles']==1
+
+
+def test_f1_station_layer_follows_face_class_and_direction():
+    # KV/HEAD plans alternate [M4,M6] / [M5,M7]: even bits lower class, odd bits upper class
+    assert probe.station_layer('M4','E',0)=='M4' and probe.station_layer('M6','W',1)=='M6'
+    assert probe.station_layer('M5','N',0)=='M5' and probe.station_layer('M7','S',1)=='M7'
+    # S81-style reversed port layer order: the class follows the face pin, not the bit parity
+    assert probe.station_layer('M6','E',0)=='M6' and probe.station_layer('M4','E',1)=='M4'
+    # a vertical face pin class on an E/W-entering slot maps to the horizontal layer of the same class
+    assert probe.station_layer('M7','E',0)=='M6' and probe.station_layer('M5','W',1)=='M4'
+    # unknown layer -> parity fallback (even M4, odd M6)
+    assert probe.station_layer('M8','E',0)=='M4' and probe.station_layer('M8','E',3)=='M6'
+
+
+def test_f1_station_layers_and_single_layer_pin(monkeypatch):
+    pins=[('ft_i',0,'M4',0.,10.,'W'),('ft_i',1,'M6',0.,11.,'W'),('ft_o',0,'M4',50.,10.,'E'),('ft_o',1,'M6',50.,11.,'E')]
+    monkeypatch.setattr(probe.gen_phys,'type_pins',lambda p,t:pins)
+    assert probe.station_layers(None,'t',dict(name='ft'),2)==['M4','M6']
+    one=probe.pin('ot_s_ft_0_d[1]','INPUT',5.,6.,'M6')
+    assert one.count('LAYER ')==1 and 'LAYER M6' in one and 'RECT 4.98400 5.98400 5.01600 6.01600' in one
+    legacy=probe.pin('ot_s_ft_0_d[1]','INPUT',5.,6.)
+    assert 'LAYER M4' in legacy and 'LAYER M5' in legacy
