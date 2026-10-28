@@ -96,3 +96,49 @@ def test_leaf_tap_adds_parent_insertion():
         f["tap"] = "leaf"
     pr = RM.predict(P, M, PL.clock_sinks(P))["regions"]
     assert abs(pr["r0"]["root_arrival_ps"]["TT"] - a - pr["r1"]["local_insertion_ps"]["TT"]) < 0.2
+
+
+# ------------------------------------------------------------------ count-aligned crossing margin (COORD definitions)
+T833 = 833.333
+AP = {"TT": 10.86 + 15.63, "FF": 6.68 + 12.61}       # asap7 DFFHQNx1 setup + hold (model data)
+TRIP = {"TT": (-437.0, 100.0, 100.0), "FF": (-376.0, 100.0, 100.0)}
+
+
+def test_count_aligned_period_whole_vs_half_cycle():
+    """COORD 20:26 'period' form: window +-(T - setup - hold)/2, ONE K for TT and FF, residual counts.
+    whole cycle: K=0 -> TT 403.42 - 537 = -133.6 (K=-1 is worse: FF -150.3); half cycle: K=-1 -> FF 266.3 (worst)."""
+    w = ocv.count_aligned_margin(TRIP, T833, AP, form="period")
+    assert w["K"] == 0 and abs(w["margin_ps"] - (-133.58)) < 0.05
+    h = ocv.count_aligned_margin(TRIP, T833, AP, form="period", half_cycle=True)
+    assert h["K"] == -1 and abs(h["step_ps"] - T833 / 2) < 1e-9
+    assert abs(h["corners"]["FF"]["margin_ps"] - ((T833 - AP["FF"]) / 2 - (-376 + T833 / 2 + 100))) < 1e-6
+    assert h["margin_ps"] > 100 > w["margin_ps"]
+
+
+def test_count_aligned_ring_smallest_k_and_window():
+    """COORD 20:35 ring form: L = K T + d inside [(0.5T+ap), (DEPTH-0.5)T-ap]; smallest K passing 100 ps (latency)."""
+    r = ocv.count_aligned_margin(TRIP, T833, AP, form="ring", depth=4, target_ps=100.0)
+    assert r["K"] == 2                                  # K=1: TT low end 296.3 < 443.2 -> FAIL
+    tt = r["corners"]["TT"]
+    assert abs(tt["margin_lo_ps"] - (2 * T833 - 537 - (0.5 * T833 + AP["TT"]))) < 1e-6
+    assert abs(tt["margin_hi_ps"] - ((3.5 * T833 - AP["TT"]) - (2 * T833 - 337))) < 1e-6
+    assert abs(r["margin_ps"] - tt["margin_lo_ps"]) < 1e-9
+    # origin uncertainty of one whole cycle on the low side moves K up by one
+    r2 = ocv.count_aligned_margin(TRIP, T833, AP, form="ring", depth=4, target_ps=100.0, origin_cycles=(1, 0))
+    assert r2["K"] == 3
+    # a spread wider than the DEPTH window fails at every K
+    wide = {"TT": (0.0, 1500.0, 1500.0), "FF": (0.0, 1400.0, 1400.0)}
+    assert ocv.count_aligned_margin(wide, T833, AP, form="ring", depth=4, target_ps=100.0)["margin_ps"] < 0
+
+
+def test_forwarded_hop_passes_count_aligned_ring():
+    """the toy 3-mm forwarded hop FAILS the one-period ring on nominal d alone, but its derated variation fits the
+    count-aligned ring window: same predictor, crossing_mode only changes the window."""
+    P = PL.load(EX)
+    ph = RM.analyse(P, M, PL.clock_sinks(P))
+    ca = RM.analyse(P, M, PL.clock_sinks(P), crossing_mode="count_aligned")
+    x = {r["name"]: r for r in ca["crossings"]["rows"]}["x01"]
+    assert x["mode"] == "count_aligned" and x["TT"]["phase_margin_ps"] < 0 < x["TT"]["margin_ps"]
+    assert x["pass"] and isinstance(x["count_aligned"]["K"], int)
+    assert ca["crossings"]["summary"]["crossing_mode"] == "count_aligned"
+    assert ph["verdict"] == "FAIL"

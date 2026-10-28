@@ -1,0 +1,22 @@
+{
+ "name": "asap7_bufx24_ndr_m8m9_spicecal",
+ "note": "OpenSTA stage fit (asap7_bufx24_sta_fit.json) x spice_scale: per-sink least squares spice = s x model on the OSS-CLOCK ngspice runs (ot-ngspice:r3 BSIM-CMG, extracted BUFx24, same netlists as OpenSTA): qcs_small (24 sinks) + qcq_ls (48) + qcq_nn (48, TT only); TT s=1.0727 (120 sinks, residual -6.8..+4.6 ps at 490-1035 ps), FF s=1.0731 (72 sinks, -5.5..+1.9 ps). OSS-CLOCK-2 2026-10-27; held-out check = the full-slice ngspice runs (qcs_ls/qcs_nn, ~3.1 ns).",
+ "seg_fit": {
+  "TT": {
+   "d0": 21.2438,
+   "k1": 0.017202,
+   "k2": 0.00019318,
+   "ks": 0.062359
+  },
+  "FF": {
+   "d0": 16.7019,
+   "k1": 0.013647,
+   "k2": 0.00018845,
+   "ks": 0.045904
+  }
+ },
+ "spice_scale": {
+  "TT": 1.0727,
+  "FF": 1.0731
+ }
+}

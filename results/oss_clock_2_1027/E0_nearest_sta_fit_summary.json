@@ -1,0 +1,355 @@
+{
+ "region": "qc_E0_std_bg_0_0_r35",
+ "objective": "nearest",
+ "model": "asap7_bufx24_ndr_m8m9_stafit",
+ "buffers": 1615,
+ "wirelength_um": 380382.6,
+ "summary": {
+  "sinks": 584,
+  "insertion_TT_ps": 3685.5,
+  "tap_spread_TT_ps": 231.5,
+  "skew_TT_ps": 0.47,
+  "latency_TT_ps": [
+   3935.0,
+   3935.5
+  ],
+  "snakes": [
+   {
+    "leaf": "leg_0",
+    "um": 1547.6,
+    "ps": 333.7
+   },
+   {
+    "leaf": "leg_2",
+    "um": 1936.5,
+    "ps": 412.3
+   },
+   {
+    "leaf": "leg_3",
+    "um": 767.0,
+    "ps": 160.1
+   },
+   {
+    "leaf": "leg_4",
+    "um": 1303.7,
+    "ps": 276.9
+   },
+   {
+    "leaf": "leg_5",
+    "um": 1746.2,
+    "ps": 370.5
+   },
+   {
+    "leaf": "leg_6",
+    "um": 854.9,
+    "ps": 180.9
+   },
+   {
+    "leaf": "leg_7",
+    "um": 1767.7,
+    "ps": 376.5
+   },
+   {
+    "leaf": "leg_8",
+    "um": 1179.5,
+    "ps": 246.9
+   },
+   {
+    "leaf": "leg_9",
+    "um": 838.7,
+    "ps": 177.2
+   },
+   {
+    "leaf": "leg_10",
+    "um": 1746.2,
+    "ps": 370.5
+   },
+   {
+    "leaf": "leg_11",
+    "um": 1303.7,
+    "ps": 276.9
+   },
+   {
+    "leaf": "leg_12",
+    "um": 767.0,
+    "ps": 160.1
+   },
+   {
+    "leaf": "leg_13",
+    "um": 1936.5,
+    "ps": 412.3
+   },
+   {
+    "leaf": "leg_15",
+    "um": 1547.6,
+    "ps": 333.7
+   }
+  ],
+  "snake_um": 62735.7,
+  "crossings": 78,
+  "moved_merges": 96,
+  "TT": {
+   "max_unshared_ps": 3664.2,
+   "mean_unshared_ps": 504.5,
+   "worst_margin_ps": 230.7,
+   "under_min": 0
+  },
+  "FF": {
+   "max_unshared_ps": 3084.7,
+   "mean_unshared_ps": 422.7,
+   "worst_margin_ps": 248.2,
+   "under_min": 0
+  },
+  "tap_arrival_TT_ps": [
+   3454.0,
+   3685.5
+  ],
+  "latency_FF_ps": [
+   3291.0,
+   3316.8
+  ],
+  "skew_FF_ps": 25.85,
+  "tap_arrival_FF_ps": [
+   2906.4,
+   3114.3
+  ],
+  "legal": {
+   "repeaters_moved": 142,
+   "max_stage_um": 779.8,
+   "stages_over_leg_max": 43,
+   "leg_max_um": 480.0,
+   "rebalance_snake_um": 13357.1,
+   "illegal_merge_buffers": 0,
+   "moved_merges": 96,
+   "moved_merge_um_max": 378.6
+  }
+ },
+ "leaves": {
+  "leg_0": {
+   "sinks": 32,
+   "local_t_ps": 845.6
+  },
+  "leg_1": {
+   "sinks": 40,
+   "local_t_ps": 1179.3
+  },
+  "leg_2": {
+   "sinks": 32,
+   "local_t_ps": 767.0
+  },
+  "leg_3": {
+   "sinks": 40,
+   "local_t_ps": 1019.2
+  },
+  "leg_4": {
+   "sinks": 32,
+   "local_t_ps": 902.4
+  },
+  "leg_5": {
+   "sinks": 32,
+   "local_t_ps": 808.8
+  },
+  "leg_6": {
+   "sinks": 50,
+   "local_t_ps": 998.4
+  },
+  "leg_7": {
+   "sinks": 38,
+   "local_t_ps": 802.8
+  },
+  "leg_8": {
+   "sinks": 40,
+   "local_t_ps": 932.4
+  },
+  "leg_9": {
+   "sinks": 40,
+   "local_t_ps": 1002.1
+  },
+  "leg_10": {
+   "sinks": 32,
+   "local_t_ps": 808.8
+  },
+  "leg_11": {
+   "sinks": 32,
+   "local_t_ps": 902.4
+  },
+  "leg_12": {
+   "sinks": 40,
+   "local_t_ps": 1019.2
+  },
+  "leg_13": {
+   "sinks": 32,
+   "local_t_ps": 767.0
+  },
+  "leg_14": {
+   "sinks": 40,
+   "local_t_ps": 1179.3
+  },
+  "leg_15": {
+   "sinks": 32,
+   "local_t_ps": 845.6
+  }
+ },
+ "crossings_worst": [
+  {
+   "a": "sl_E0_fw__clk_t6",
+   "b": "sl_E0_st_a__clk",
+   "TT": {
+    "unshared_ps": 3664.2,
+    "d_ps": 0.1,
+    "derated_abs_ps": 185.8,
+    "margin_ps": 230.7
+   },
+   "FF": {
+    "unshared_ps": 3084.7,
+    "d_ps": -5.9,
+    "derated_abs_ps": 168.3,
+    "margin_ps": 248.2
+   }
+  },
+  {
+   "a": "sl_E0_st_a__clk",
+   "b": "sl_E0_fw__clk_t6",
+   "TT": {
+    "unshared_ps": 3664.2,
+    "d_ps": -0.1,
+    "derated_abs_ps": 185.8,
+    "margin_ps": 230.7
+   },
+   "FF": {
+    "unshared_ps": 3084.7,
+    "d_ps": 5.9,
+    "derated_abs_ps": 168.3,
+    "margin_ps": 248.2
+   }
+  },
+  {
+   "a": "sl_E0_ctl__clk",
+   "b": "sl_E0_stm__clk_t6",
+   "TT": {
+    "unshared_ps": 3664.2,
+    "d_ps": -0.1,
+    "derated_abs_ps": 182.3,
+    "margin_ps": 234.2
+   },
+   "FF": {
+    "unshared_ps": 3081.3,
+    "d_ps": 5.9,
+    "derated_abs_ps": 165.6,
+    "margin_ps": 250.9
+   }
+  },
+  {
+   "a": "sl_E0_stm__clk_t6",
+   "b": "sl_E0_ctl__clk",
+   "TT": {
+    "unshared_ps": 3664.2,
+    "d_ps": 0.1,
+    "derated_abs_ps": 182.3,
+    "margin_ps": 234.2
+   },
+   "FF": {
+    "unshared_ps": 3081.3,
+    "d_ps": -5.9,
+    "derated_abs_ps": 165.6,
+    "margin_ps": 250.9
+   }
+  },
+  {
+   "a": "sl_E0_ctl__clk_t2",
+   "b": "sl_E0_sc__clk_t6",
+   "TT": {
+    "unshared_ps": 3664.2,
+    "d_ps": -0.1,
+    "derated_abs_ps": 179.7,
+    "margin_ps": 236.8
+   },
+   "FF": {
+    "unshared_ps": 3081.4,
+    "d_ps": 6.3,
+    "derated_abs_ps": 164.0,
+    "margin_ps": 252.5
+   }
+  },
+  {
+   "a": "sl_E0_sc__clk_t6",
+   "b": "sl_E0_ctl__clk_t2",
+   "TT": {
+    "unshared_ps": 3664.2,
+    "d_ps": 0.1,
+    "derated_abs_ps": 179.7,
+    "margin_ps": 236.8
+   },
+   "FF": {
+    "unshared_ps": 3081.4,
+    "d_ps": -6.3,
+    "derated_abs_ps": 164.0,
+    "margin_ps": 252.5
+   }
+  },
+  {
+   "a": "sl_E0_fe__clk_t6",
+   "b": "sl_E0_st_b__clk",
+   "TT": {
+    "unshared_ps": 3664.2,
+    "d_ps": 0.1,
+    "derated_abs_ps": 178.4,
+    "margin_ps": 238.1
+   },
+   "FF": {
+    "unshared_ps": 3082.1,
+    "d_ps": -6.3,
+    "derated_abs_ps": 163.2,
+    "margin_ps": 253.3
+   }
+  },
+  {
+   "a": "sl_E0_st_b__clk",
+   "b": "sl_E0_fe__clk_t6",
+   "TT": {
+    "unshared_ps": 3664.2,
+    "d_ps": -0.1,
+    "derated_abs_ps": 178.4,
+    "margin_ps": 238.1
+   },
+   "FF": {
+    "unshared_ps": 3082.1,
+    "d_ps": 6.3,
+    "derated_abs_ps": 163.2,
+    "margin_ps": 253.3
+   }
+  },
+  {
+   "a": "c_E0_bf_10__clk_t24",
+   "b": "c_E0_bf_11__clk",
+   "TT": {
+    "unshared_ps": 666.7,
+    "d_ps": -0.3,
+    "derated_abs_ps": 56.5,
+    "margin_ps": 360.0
+   },
+   "FF": {
+    "unshared_ps": 558.3,
+    "d_ps": -6.3,
+    "derated_abs_ps": 52.8,
+    "margin_ps": 363.7
+   }
+  },
+  {
+   "a": "c_E0_tf_10__clk_t24",
+   "b": "c_E0_tf_11__clk",
+   "TT": {
+    "unshared_ps": 666.7,
+    "d_ps": -0.3,
+    "derated_abs_ps": 56.5,
+    "margin_ps": 360.0
+   },
+   "FF": {
+    "unshared_ps": 558.3,
+    "d_ps": -6.3,
+    "derated_abs_ps": 52.8,
+    "margin_ps": 363.7
+   }
+  }
+ ]
+}

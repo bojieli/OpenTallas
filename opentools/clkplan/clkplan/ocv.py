@@ -71,3 +71,69 @@ def landed_margin(T, corner, d_ps, bra, brb, dist_um, same_region, budget_ps):
     p_dn = branch_pessimism(T, corner, bra, brb, dist_um, same_region)   # a late, b early: d shrinks
     der = max(abs(d_ps + p_up), abs(d_ps - p_dn))
     return p_up, p_dn, der, budget_ps - der
+
+
+# ------------------------------------------------------------------------------------------ count-aligned crossings
+# COORD-REVIEW-QUEUE definitions (2026-10-27):
+#   form 'ring'   (COORD 20:35 ruling on MESO-COUNT-1, binding): a count-aligned ring delivers sender word n at
+#                 receiver count n + K.  Lag  L = K T + d (+ origin uncertainty -X T .. +Y T).  Correct iff
+#                     (0.5 T + ap) <= L_low   and   L_high <= (DEPTH - 0.5) T - ap,
+#                 L_low = min over corners of K T + d_c - p_dn_c - X T,  L_high = max over corners of K T + d_c + p_up_c + Y T,
+#                 ONE design-time K for all corners; gate >= min margin on both sides.
+#   form 'period' (COORD 20:26, WITHDRAWN 20:35 for the CA ring; kept for a one-period sampler with a design-time count):
+#                 window = full period minus the placement flop's setup + hold, centred: +-(T - ap_c)/2; the count
+#                 absorbs whole cycles only (or half cycles with half-cycle placement): residual r_c = d_c - K step,
+#                 margin_c = (T - ap_c)/2 - max(|r_c + p_up_c|, |r_c - p_dn_c|); ONE K for all corners.
+# ap = capture aperture (setup + hold of the placement / sampling flop), PDK data (model 'capture_aperture_ps').
+def count_aligned_margin(per_corner, T_ps, ap, form="ring", depth=4, half_cycle=False, origin_cycles=(0, 0),
+                         k_range=None, target_ps=None):
+    """per_corner = {corner: (d_ps, p_up_ps, p_dn_ps)}, ap = {corner: aperture_ps}.
+    -> dict(K, step_ps, margin_ps, per corner {margin_ps, lag/residual}) with ONE integer K for every corner:
+    ring form: the SMALLEST K (least latency) whose worst-corner margin >= target_ps, else the K that maximises the
+    worst-corner margin; period form: the K that maximises the worst-corner margin."""
+    cs = list(per_corner)
+    if not cs:
+        raise ValueError("no corners")
+    ds = [per_corner[c][0] for c in cs]
+    X, Y = origin_cycles
+    if form == "ring":
+        step = T_ps
+        lo_w = {c: 0.5 * T_ps + ap[c] for c in cs}
+        hi_w = {c: (depth - 0.5) * T_ps - ap[c] for c in cs}
+
+        def ev(K):
+            out = {}
+            for c in cs:
+                d, pu, pd = per_corner[c]
+                lo = K * T_ps + d - pd - X * T_ps
+                hi = K * T_ps + d + pu + Y * T_ps
+                out[c] = dict(lag_lo_ps=lo, lag_hi_ps=hi, margin_lo_ps=lo - lo_w[c], margin_hi_ps=hi_w[c] - hi,
+                              margin_ps=min(lo - lo_w[c], hi_w[c] - hi))
+            return out
+        guess = -min(ds) / T_ps
+    elif form == "period":
+        step = T_ps / 2.0 if half_cycle else T_ps
+
+        def ev(K):
+            out = {}
+            for c in cs:
+                d, pu, pd = per_corner[c]
+                r = d - K * step
+                w2 = (T_ps - ap[c]) / 2.0
+                out[c] = dict(residual_ps=r, half_window_ps=w2, margin_ps=w2 - max(abs(r + pu), abs(r - pd)))
+            return out
+        guess = sum(ds) / len(ds) / step
+    else:
+        raise ValueError(f"unknown count-aligned form {form!r}")
+    ks = range(*k_range) if k_range else range(math.floor(guess) - depth - 2, math.ceil(guess) + depth + 3)
+    best = first = None
+    for K in ks:
+        e = ev(K)
+        w = min(v["margin_ps"] for v in e.values())
+        if best is None or w > best[0] + 1e-9:
+            best = (w, K, e)
+        if first is None and form == "ring" and target_ps is not None and w >= target_ps:
+            first = (w, K, e)
+    w, K, e = first or best
+    return dict(form=form, K=K, step_ps=step, depth=depth if form == "ring" else None, half_cycle=bool(half_cycle),
+                margin_ps=w, corners=e)

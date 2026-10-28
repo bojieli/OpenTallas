@@ -81,8 +81,32 @@ def fit(d, corner):
     return out
 
 
+def spice_scale(files):
+    """per-sink least squares spice = s x model over mscts.run compare outputs (compare_<C>.json) of ONE corner.
+    -> dict(scale, sinks, resid_min, resid_max); the scale goes into the model JSON as spice_scale {corner: s}."""
+    X = []
+    for f in files:
+        d = json.loads(Path(f).read_text())
+        X += [(r["model"], r["spice"]) for r in d["rows"] if r["spice"] == r["spice"] and r["model"] > 0]
+    s = sum(m * p for m, p in X) / sum(m * m for m, _ in X)
+    r = [p - s * m for m, p in X]
+    n = len(X)
+    mx, my = sum(m for m, _ in X) / n, sum(p for _, p in X) / n
+    a = sum((m - mx) * (p - my) for m, p in X) / sum((m - mx) ** 2 for m, _ in X)
+    b = my - a * mx
+    ra = [p - (a * m + b) for m, p in X]
+    # 'slope' (affine fit) is the per-stage scale to use: the constant b is a root offset (absolute insertion only;
+    # it cancels in skew and in every crossing d)
+    out = dict(scale=round(s, 4), sinks=n, resid_min_ps=round(min(r), 2), resid_max_ps=round(max(r), 2),
+               slope=round(a, 4), offset_ps=round(b, 1), affine_resid_ps=[round(min(ra), 2), round(max(ra), 2)])
+    print(json.dumps(out))
+    return out
+
+
 if __name__ == "__main__":
     if sys.argv[1] == "gen":
         gen(sys.argv[2])
+    elif sys.argv[1] == "spice-scale":
+        spice_scale(sys.argv[2:])
     else:
         fit(sys.argv[2], sys.argv[3] if len(sys.argv) > 3 else "TT")

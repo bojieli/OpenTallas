@@ -1,0 +1,355 @@
+{
+ "region": "qc_E0_std_bg_0_0_r35",
+ "objective": "nearest",
+ "model": "asap7_bufx24_ndr_m8m9_spicecal",
+ "buffers": 1613,
+ "wirelength_um": 380356.6,
+ "summary": {
+  "sinks": 584,
+  "insertion_TT_ps": 3953.4,
+  "tap_spread_TT_ps": 231.1,
+  "skew_TT_ps": 0.59,
+  "latency_TT_ps": [
+   4202.9,
+   4203.5
+  ],
+  "snakes": [
+   {
+    "leaf": "leg_0",
+    "um": 1547.6,
+    "ps": 358.0
+   },
+   {
+    "leaf": "leg_2",
+    "um": 1936.5,
+    "ps": 442.3
+   },
+   {
+    "leaf": "leg_3",
+    "um": 767.0,
+    "ps": 171.8
+   },
+   {
+    "leaf": "leg_4",
+    "um": 1303.7,
+    "ps": 297.0
+   },
+   {
+    "leaf": "leg_5",
+    "um": 1746.2,
+    "ps": 397.5
+   },
+   {
+    "leaf": "leg_6",
+    "um": 849.5,
+    "ps": 192.7
+   },
+   {
+    "leaf": "leg_7",
+    "um": 1767.7,
+    "ps": 403.8
+   },
+   {
+    "leaf": "leg_8",
+    "um": 1179.5,
+    "ps": 264.8
+   },
+   {
+    "leaf": "leg_9",
+    "um": 838.7,
+    "ps": 190.0
+   },
+   {
+    "leaf": "leg_10",
+    "um": 1746.2,
+    "ps": 397.5
+   },
+   {
+    "leaf": "leg_11",
+    "um": 1303.7,
+    "ps": 297.0
+   },
+   {
+    "leaf": "leg_12",
+    "um": 767.0,
+    "ps": 171.8
+   },
+   {
+    "leaf": "leg_13",
+    "um": 1936.5,
+    "ps": 442.3
+   },
+   {
+    "leaf": "leg_15",
+    "um": 1547.6,
+    "ps": 358.0
+   }
+  ],
+  "snake_um": 62654.6,
+  "crossings": 78,
+  "moved_merges": 96,
+  "TT": {
+   "max_unshared_ps": 3930.6,
+   "mean_unshared_ps": 541.2,
+   "worst_margin_ps": 218.1,
+   "under_min": 0
+  },
+  "FF": {
+   "max_unshared_ps": 3310.3,
+   "mean_unshared_ps": 453.7,
+   "worst_margin_ps": 236.4,
+   "under_min": 0
+  },
+  "tap_arrival_TT_ps": [
+   3722.3,
+   3953.4
+  ],
+  "latency_FF_ps": [
+   3516.7,
+   3544.5
+  ],
+  "skew_FF_ps": 27.74,
+  "tap_arrival_FF_ps": [
+   3133.5,
+   3342.0
+  ],
+  "legal": {
+   "repeaters_moved": 141,
+   "max_stage_um": 779.8,
+   "stages_over_leg_max": 43,
+   "leg_max_um": 480.0,
+   "rebalance_snake_um": 13333.6,
+   "illegal_merge_buffers": 0,
+   "moved_merges": 96,
+   "moved_merge_um_max": 378.6
+  }
+ },
+ "leaves": {
+  "leg_0": {
+   "sinks": 32,
+   "local_t_ps": 888.9
+  },
+  "leg_1": {
+   "sinks": 40,
+   "local_t_ps": 1246.9
+  },
+  "leg_2": {
+   "sinks": 32,
+   "local_t_ps": 804.5
+  },
+  "leg_3": {
+   "sinks": 40,
+   "local_t_ps": 1075.1
+  },
+  "leg_4": {
+   "sinks": 32,
+   "local_t_ps": 949.8
+  },
+  "leg_5": {
+   "sinks": 32,
+   "local_t_ps": 849.4
+  },
+  "leg_6": {
+   "sinks": 50,
+   "local_t_ps": 1054.2
+  },
+  "leg_7": {
+   "sinks": 38,
+   "local_t_ps": 843.0
+  },
+  "leg_8": {
+   "sinks": 40,
+   "local_t_ps": 982.0
+  },
+  "leg_9": {
+   "sinks": 40,
+   "local_t_ps": 1056.8
+  },
+  "leg_10": {
+   "sinks": 32,
+   "local_t_ps": 849.4
+  },
+  "leg_11": {
+   "sinks": 32,
+   "local_t_ps": 949.8
+  },
+  "leg_12": {
+   "sinks": 40,
+   "local_t_ps": 1075.1
+  },
+  "leg_13": {
+   "sinks": 32,
+   "local_t_ps": 804.5
+  },
+  "leg_14": {
+   "sinks": 40,
+   "local_t_ps": 1246.9
+  },
+  "leg_15": {
+   "sinks": 32,
+   "local_t_ps": 888.9
+  }
+ },
+ "crossings_worst": [
+  {
+   "a": "sl_E0_fw__clk_t6",
+   "b": "sl_E0_st_a__clk",
+   "TT": {
+    "unshared_ps": 3930.6,
+    "d_ps": -0.0,
+    "derated_abs_ps": 198.4,
+    "margin_ps": 218.1
+   },
+   "FF": {
+    "unshared_ps": 3310.3,
+    "d_ps": -6.5,
+    "derated_abs_ps": 180.1,
+    "margin_ps": 236.4
+   }
+  },
+  {
+   "a": "sl_E0_st_a__clk",
+   "b": "sl_E0_fw__clk_t6",
+   "TT": {
+    "unshared_ps": 3930.6,
+    "d_ps": 0.0,
+    "derated_abs_ps": 198.4,
+    "margin_ps": 218.1
+   },
+   "FF": {
+    "unshared_ps": 3310.3,
+    "d_ps": 6.5,
+    "derated_abs_ps": 180.1,
+    "margin_ps": 236.4
+   }
+  },
+  {
+   "a": "sl_E0_ctl__clk",
+   "b": "sl_E0_stm__clk_t6",
+   "TT": {
+    "unshared_ps": 3930.6,
+    "d_ps": 0.0,
+    "derated_abs_ps": 194.7,
+    "margin_ps": 221.8
+   },
+   "FF": {
+    "unshared_ps": 3306.7,
+    "d_ps": 6.5,
+    "derated_abs_ps": 177.2,
+    "margin_ps": 239.3
+   }
+  },
+  {
+   "a": "sl_E0_stm__clk_t6",
+   "b": "sl_E0_ctl__clk",
+   "TT": {
+    "unshared_ps": 3930.6,
+    "d_ps": -0.0,
+    "derated_abs_ps": 194.7,
+    "margin_ps": 221.8
+   },
+   "FF": {
+    "unshared_ps": 3306.7,
+    "d_ps": -6.5,
+    "derated_abs_ps": 177.2,
+    "margin_ps": 239.3
+   }
+  },
+  {
+   "a": "sl_E0_ctl__clk_t2",
+   "b": "sl_E0_sc__clk_t6",
+   "TT": {
+    "unshared_ps": 3930.6,
+    "d_ps": 0.0,
+    "derated_abs_ps": 191.9,
+    "margin_ps": 224.6
+   },
+   "FF": {
+    "unshared_ps": 3306.8,
+    "d_ps": 6.8,
+    "derated_abs_ps": 175.5,
+    "margin_ps": 241.0
+   }
+  },
+  {
+   "a": "sl_E0_sc__clk_t6",
+   "b": "sl_E0_ctl__clk_t2",
+   "TT": {
+    "unshared_ps": 3930.6,
+    "d_ps": -0.0,
+    "derated_abs_ps": 191.9,
+    "margin_ps": 224.6
+   },
+   "FF": {
+    "unshared_ps": 3306.8,
+    "d_ps": -6.8,
+    "derated_abs_ps": 175.5,
+    "margin_ps": 241.0
+   }
+  },
+  {
+   "a": "sl_E0_fe__clk_t6",
+   "b": "sl_E0_st_b__clk",
+   "TT": {
+    "unshared_ps": 3930.6,
+    "d_ps": -0.0,
+    "derated_abs_ps": 190.6,
+    "margin_ps": 225.9
+   },
+   "FF": {
+    "unshared_ps": 3307.4,
+    "d_ps": -6.9,
+    "derated_abs_ps": 174.7,
+    "margin_ps": 241.8
+   }
+  },
+  {
+   "a": "sl_E0_st_b__clk",
+   "b": "sl_E0_fe__clk_t6",
+   "TT": {
+    "unshared_ps": 3930.6,
+    "d_ps": 0.0,
+    "derated_abs_ps": 190.6,
+    "margin_ps": 225.9
+   },
+   "FF": {
+    "unshared_ps": 3307.4,
+    "d_ps": 6.9,
+    "derated_abs_ps": 174.7,
+    "margin_ps": 241.8
+   }
+  },
+  {
+   "a": "c_E0_bf_10__clk_t24",
+   "b": "c_E0_bf_11__clk",
+   "TT": {
+    "unshared_ps": 715.2,
+    "d_ps": -0.4,
+    "derated_abs_ps": 59.5,
+    "margin_ps": 357.0
+   },
+   "FF": {
+    "unshared_ps": 599.1,
+    "d_ps": -6.8,
+    "derated_abs_ps": 55.7,
+    "margin_ps": 360.8
+   }
+  },
+  {
+   "a": "c_E0_tf_10__clk_t24",
+   "b": "c_E0_tf_11__clk",
+   "TT": {
+    "unshared_ps": 715.2,
+    "d_ps": -0.4,
+    "derated_abs_ps": 59.5,
+    "margin_ps": 357.0
+   },
+   "FF": {
+    "unshared_ps": 599.1,
+    "d_ps": -6.8,
+    "derated_abs_ps": 55.7,
+    "margin_ps": 360.8
+   }
+  }
+ ]
+}

@@ -34,6 +34,9 @@ ASAP7 = dict(
     local_fanout=4, local_leaf_sinks=12,
     buf_w_um=1.62, row_h_um=0.27,
     aocv_table="aocv_asap7_g021.json",
+    # capture aperture = setup + hold of the placement / sampling flop (count-aligned crossing window):
+    # asap7 DFFHQNx1 RVT setup(rise) + hold(fall) at 40 ps D/CK slew (NUMBER-CHECK LAND-HEAD-3, COORD 20:26).
+    capture_aperture_ps={"TT": 10.86 + 15.63, "FF": 6.68 + 12.61},
 )
 
 
@@ -60,6 +63,12 @@ class Model:
         for c, f in (m.get("seg_fit") or {}).items():      # STA/SPICE-fitted stage (opentools.mscts.calib)
             self.k[c] = (f["d0"], f["k1"], f["k2"])
             self.ks[c] = f.get("ks", 0.0)
+        # spice_scale {corner: s}: uniform transistor-level correction of the stage model (spice = s x model,
+        # fitted per sink on mscts trees by mscts.calib spice-scale); applies to every delay term
+        for c, sc in (m.get("spice_scale") or {}).items():
+            if c in self.k:
+                self.k[c] = tuple(v * sc for v in self.k[c])
+                self.ks[c] *= sc
         self.T = json.loads((DATA / m["aocv_table"]).read_text()) if m.get("aocv_table") else None
         if self.T is not None:
             self.T = self.T.get("clock_aocv", self.T)

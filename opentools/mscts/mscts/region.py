@@ -16,7 +16,10 @@ Merge order = the objective:
 The region root is driven from the feed entry (a neighbour-forwarded feed or a spine tap) with one repeated leg.
 Outputs: cells, wires (driver -> load, length, route), per-sink model arrival, per-crossing LCA / unshared / derated
 margin (clkplan.ocv, shared model), snake ledger.  netlist.py turns it into SPICE + Verilog/SPEF for verification.
-Placement legality (streets, islands, allocated tracks from opentools.metal) is NOT applied in this version.
+Placement legality: build(legal=mscts.legal.Legality) keeps every merge buffer on a legal site (moved along its L
+path, re-balanced by a ledgered snake); legal.legalize_repeaters() slides repeaters out of keepouts and reports the
+stage lengths; trunk.py composes a FIXED trunk on allocated tracks (opentools.metal / a row reservation) with
+mscts local trees below its leaves.
 """
 import math
 
@@ -35,10 +38,12 @@ def _lpoint(a, b, s):
 
 
 class RegionTree:
-    def __init__(self, model, corner="TT"):
+    def __init__(self, model, corner="TT", legal=None):
         self.M, self.c = model, corner
         self.nodes = []            # dict(id, xy, kind sink|merge|root, kids[(node, L_um, snake_um)], t_ps, sink?)
         self.snakes = []
+        self.legal = legal         # mscts.legal.Legality (buffer sites) or None
+        self.moved = []            # merge points moved off an illegal site
 
     def branch_ps(self, L, two_loads=False):
         return self.M.wire_ps(L, self.c)
@@ -97,6 +102,21 @@ class RegionTree:
         else:
             x = solve(lambda t: f(t, D - t), 0.0, D)
             La, Lb = x, D - x
+        if self.legal is not None and not self.legal.ok(_lpoint(a["xy"], b["xy"], x)):
+            # placement legality: the merge buffer moves to the nearest legal site ON the L path; the pair is then
+            # re-balanced with a snake on the faster side (ledgered), never by an illegal buffer
+            x2 = self.legal.nearest_on_path(a["xy"], b["xy"], x, D)
+            if x2 is not None and abs(x2 - x) > 1e-6:
+                self.moved.append(dict(at=list(_lpoint(a["xy"], b["xy"], x)), to=list(_lpoint(a["xy"], b["xy"], x2)),
+                                       um=round(abs(x2 - x), 1)))
+                x, La, Lb, snake, side = x2, x2, D - x2, 0.0, None
+                g = f(La, Lb)
+                if g > 1e-9:                     # a slower: lengthen b
+                    Lb = solve(lambda L: -f(La, L), Lb, Lb + 20000.0)
+                    snake, side = Lb - (D - x2), j
+                elif g < -1e-9:
+                    La = solve(lambda L: f(L, Lb), La, La + 20000.0)
+                    snake, side = La - x2, i
         xy = _lpoint(a["xy"], b["xy"], x)
         da, db = self.pair_ps(La, Lb, sink_a=sa, sink_b=sb)
         t = max(da + ta, db + tb)
@@ -106,14 +126,17 @@ class RegionTree:
                         t_ps=t)
 
 
-def build(sinks, model, entry_xy, crossings=(), objective="late_split", bonus_um=None, corner="TT"):
-    """sinks = [dict(name, xy)], crossings = [(a, b)] sink names.  -> RegionTree with .root"""
-    R = RegionTree(model, corner)
+def build(sinks, model, entry_xy, crossings=(), objective="late_split", bonus_um=None, corner="TT", legal=None):
+    """sinks = [dict(name, xy, insertion_ps{TT,FF}?)], crossings = [(a, b)] sink names.  -> RegionTree with .root
+    A sink's insertion_ps (its own internal clock insertion, e.g. a hard core's signed view) is balanced: the tree
+    targets equal LATENCY (tree arrival + insertion), early taps for late cores (METHODOLOGY v5.0)."""
+    R = RegionTree(model, corner, legal)
     bonus = bonus_um if bonus_um is not None else 4.0 * model["rep_um"]
     act = {}
     member = {}
     for s in sinks:
-        n = R.add(xy=tuple(s["xy"]), kind="sink", kids=[], t_ps=0.0, name=s["name"])
+        ins = {k: float(v) for k, v in (s.get("insertion_ps") or {}).items()}
+        n = R.add(xy=tuple(s["xy"]), kind="sink", kids=[], t_ps=ins.get(corner, 0.0), name=s["name"], ins=ins)
         act[n] = {s["name"]}
         member[s["name"]] = n
     partners = {}
@@ -165,6 +188,9 @@ def arrivals(R, corner=None):
             arr[k] = arr[n] + dk
             par[k] = n
             st.append(k)
+    if getattr(R, "segs", None):                 # legalized repeaters: actual stage lengths (mscts.legal)
+        from .legal import arrivals_seg
+        arr = arrivals_seg(R, R.segs, c)
     return arr, par
 
 
@@ -183,16 +209,21 @@ def segments(R):
         bufs[bname(nd["id"])] = (nd["xy"], nd["kind"])
     for nd in R.nodes:
         for k, L, sn in nd["kids"]:
-            n = max(1, math.ceil(L / rep - 1e-9))
+            sg = (getattr(R, "segs", None) or {}).get((nd["id"], k))
+            if sg is None:
+                n = max(1, math.ceil(L / rep - 1e-9))
+                sg = [L / n] * n
             prev = bname(nd["id"])
             a, b = nd["xy"], R.nodes[k]["xy"]
             D = _man(a, b)
-            for r in range(1, n):
+            s = 0.0
+            for r, ln in enumerate(sg[:-1], 1):
+                s += ln
                 nm = f"r{nd['id']}_{k}_{r}"
-                bufs[nm] = (_lpoint(a, b, D * r / n), "rep")
-                edges.append((prev, nm, L / n))
+                bufs[nm] = (_lpoint(a, b, min(s, D)), "rep")
+                edges.append((prev, nm, ln))
                 prev = nm
-            edges.append((prev, bname(k), L / n))
+            edges.append((prev, bname(k), sg[-1]))
     return bufs, edges
 
 
@@ -233,15 +264,19 @@ def report(R, crossings, budget_ps, min_margin_ps=100.0, corners=("TT", "FF"), s
             idx = {nd.get("name"): nd["id"] for nd in R.nodes if nd["kind"] == "sink"}
             pts = [R.nodes[idx[a]]["xy"], R.nodes[idx[b]]["xy"], R.nodes[l]["xy"]]
             dist = math.hypot(max(p[0] for p in pts) - min(p[0] for p in pts), max(p[1] for p in pts) - min(p[1] for p in pts))
-            bra, brb = ocv.branch(T, c, ua, na, 0.0), ocv.branch(T, c, ub, nb, 0.0)
-            d = arr[idx[b]] - arr[idx[a]]
+            ia, ib = (R.nodes[idx[a]].get("ins", {}).get(c, 0.0), R.nodes[idx[b]].get("ins", {}).get(c, 0.0))
+            bra, brb = ocv.branch(T, c, ua, na, ia), ocv.branch(T, c, ub, nb, ib)
+            d = arr[idx[b]] + ib - arr[idx[a]] - ia
             p_up, p_dn, der, mg = ocv.landed_margin(T, c, d, bra, brb, dist, same_region, budget_ps)
             row[c] = dict(unshared_ps=round(max(ua, ub), 1), d_ps=round(d, 1), derated_abs_ps=round(der, 1), margin_ps=round(mg, 1))
         rows.append(row)
     arrTT, _ = arrivals(R, "TT")
     sk = [arrTT[nd["id"]] for nd in R.nodes if nd["kind"] == "sink"]
-    out = dict(sinks=len(sk), insertion_TT_ps=round(max(sk), 1), skew_TT_ps=round(max(sk) - min(sk), 3),
-               snakes=len(R.snakes), snake_um=round(sum(s["um"] for s in R.snakes), 1), crossings=len(rows))
+    lat = [arrTT[nd["id"]] + nd.get("ins", {}).get("TT", 0.0) for nd in R.nodes if nd["kind"] == "sink"]
+    out = dict(sinks=len(sk), insertion_TT_ps=round(max(sk), 1), tap_spread_TT_ps=round(max(sk) - min(sk), 1),
+               skew_TT_ps=round(max(lat) - min(lat), 3), latency_TT_ps=round(max(lat), 1),
+               snakes=len(R.snakes), snake_um=round(sum(s["um"] for s in R.snakes), 1), crossings=len(rows),
+               moved_merges=len(R.moved))
     if rows:
         for c in corners:
             u = [r[c]["unshared_ps"] for r in rows]

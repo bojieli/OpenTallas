@@ -1,0 +1,32 @@
+{
+ "TT": {
+  "sinks": 584,
+  "model_over_sta": 1.0613,
+  "model_minus_sta_ps": [
+   200.6,
+   230.8
+  ],
+  "sta_tap_arrival_ps": [
+   3347.7,
+   3582.9
+  ],
+  "sta_latency_skew_ps": 30.0,
+  "model_latency_skew_ps": 0.5,
+  "crossing_d_model_vs_sta_max_ps": 6.0
+ },
+ "FF": {
+  "sinks": 584,
+  "model_over_sta": 1.0662,
+  "model_minus_sta_ps": [
+   187.8,
+   205.4
+  ],
+  "sta_tap_arrival_ps": [
+   2792.4,
+   2995.4
+  ],
+  "sta_latency_skew_ps": 26.6,
+  "model_latency_skew_ps": 31.8,
+  "crossing_d_model_vs_sta_max_ps": 2.8
+ }
+}

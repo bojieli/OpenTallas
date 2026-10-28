@@ -111,12 +111,14 @@ def main(argv=None):
     ap.add_argument("--png", action="store_true")
     ap.add_argument("--mode", default="die", choices=["die", "region"],
                     help="die = one planned die H-tree; region = METHODOLOGY 12.13 region clocks fed along feeds[]")
+    ap.add_argument("--crossing-mode", choices=["phase", "count_aligned"],
+                    help="region mode: landed crossing margin form (default clock.crossing_mode or phase)")
     a = ap.parse_args(argv)
     P = PL.load(a.plan)
     M = MD.load(a.model)
     if a.mode == "region":
         from . import regionmode as RM
-        res = RM.analyse(P, M, PL.clock_sinks(P), droop=a.droop)
+        res = RM.analyse(P, M, PL.clock_sinks(P), droop=a.droop, crossing_mode=a.crossing_mode)
         out = Path(a.out)
         out.mkdir(parents=True, exist_ok=True)
         (out / "clkplan_region_report.json").write_text(json.dumps(res, indent=1, default=str) + "\n")

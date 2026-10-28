@@ -20,6 +20,9 @@ Prediction, analytic, no placement tool:
                             OCV + droop with the SAME math as clkplan.ocv (= main tools/die_plan/clk_aocv.py and
                             tools/s81_head/landed_phase_ocv.py): derated |d| and margin = budget - derated |d|.
   The plan FAILS a landed crossing below clock.min_crossing_margin_ps (default 100 ps).
+  --crossing-mode count_aligned (or clock.crossing_mode / crossings[].mode): the margin is the count-aligned window
+  margin instead (ocv.count_aligned_margin: COORD 20:35 ring form [(0.5T+ap), (DEPTH-0.5)T-ap], one design-time K for
+  all corners; or the one-period 'period' form with optional half-cycle placement).
 """
 import math
 
@@ -105,8 +108,15 @@ def predict(P, model, sinks, corners=("TT", "FF")):
     return dict(regions=R, sinks=S, par=par)
 
 
-def crossings(P, model, pred, corners=("TT", "FF"), droop="regions"):
+def crossings(P, model, pred, corners=("TT", "FF"), droop="regions", crossing_mode=None):
+    """crossing_mode 'phase' (default: today's one-period landing ring, margin = budget - derated |d|) or
+    'count_aligned' (clock.count_aligned {form ring|period, depth, half_cycle, aperture_ps, origin_cycles}; see
+    ocv.count_aligned_margin).  A crossing may override with its own 'mode'."""
     Tb = model.T
+    cfg_ca = dict(P["clock"].get("count_aligned") or {})
+    mode0 = crossing_mode or P["clock"].get("crossing_mode") or "phase"
+    ap = dict(model.m.get("capture_aperture_ps") or {})
+    ap.update(cfg_ca.get("aperture_ps") or {})
     R, S, par = pred["regions"], pred["sinks"], pred["par"]
     per = P["clock"].get("period_ps") or 1000.0
     mm = P["clock"].get("min_crossing_margin_ps", 100.0)
@@ -127,6 +137,7 @@ def crossings(P, model, pred, corners=("TT", "FF"), droop="regions"):
                  region_a=a["region"], region_b=b["region"], common=common, dist_um=round(dist, 1),
                  same_region=same, budget_ps=budget)
         worst = None
+        trip = {}
         for c in corners:
             base = R[common]["root_arrival_ps"][c] if common in R else 0.0
             ua, ub = a["arr"][c] - base, b["arr"][c] - base
@@ -138,13 +149,27 @@ def crossings(P, model, pred, corners=("TT", "FF"), droop="regions"):
             p_up, p_dn, der, mg = ocv.landed_margin(Tb, c, d, bra, brb, dist, same, budget)
             r[c] = dict(unshared_a_ps=round(ua, 1), unshared_b_ps=round(ub, 1), d_ps=round(d, 1), p_up_ps=round(p_up, 1),
                         p_dn_ps=round(p_dn, 1), derated_abs_ps=round(der, 1), margin_ps=round(mg, 1))
+            trip[c] = (d, p_up, p_dn)
             worst = mg if worst is None else min(worst, mg)
+        mode = x.get("mode") or mode0
+        r["mode"] = mode
+        if mode == "count_aligned":
+            ca = ocv.count_aligned_margin(trip, per, {c: float(ap.get(c, 0.0)) for c in corners},
+                                          form=cfg_ca.get("form", "ring"), depth=int(cfg_ca.get("depth", 4)),
+                                          half_cycle=bool(cfg_ca.get("half_cycle", False)),
+                                          origin_cycles=tuple(cfg_ca.get("origin_cycles", (0, 0))), target_ps=mm)
+            r["count_aligned"] = dict(form=ca["form"], K=ca["K"], depth=ca["depth"], half_cycle=ca["half_cycle"],
+                                      corners={c: {k: round(v, 1) for k, v in e.items()} for c, e in ca["corners"].items()})
+            for c in corners:
+                r[c]["phase_margin_ps"] = r[c]["margin_ps"]
+                r[c]["margin_ps"] = round(ca["corners"][c]["margin_ps"], 1)
+            worst = ca["margin_ps"]
         r["worst_margin_ps"] = round(worst, 1)
         r["pass"] = (r["kind"] != "landed") or worst >= mm
         rows.append(r)
     rows.sort(key=lambda r: r.get("worst_margin_ps", -1e9))
     landed = [r for r in rows if r.get("kind") == "landed" and "error" not in r]
-    summ = dict(crossings=len(rows), landed=len(landed), min_margin_ps=mm,
+    summ = dict(crossings=len(rows), landed=len(landed), min_margin_ps=mm, crossing_mode=mode0,
                 fail=sum(1 for r in landed if not r["pass"]), errors=sum(1 for r in rows if "error" in r))
     for c in corners:
         if landed:
@@ -153,9 +178,9 @@ def crossings(P, model, pred, corners=("TT", "FF"), droop="regions"):
     return dict(summary=summ, rows=rows)
 
 
-def analyse(P, model, sinks, droop="regions"):
+def analyse(P, model, sinks, droop="regions", crossing_mode=None):
     pred = predict(P, model, sinks)
-    xs = crossings(P, model, pred, droop=droop)
+    xs = crossings(P, model, pred, droop=droop, crossing_mode=crossing_mode)
     regs = {k: dict(v, root_xy=list(v["root_xy"])) for k, v in pred["regions"].items()}
     ok = xs["summary"]["fail"] == 0 and xs["summary"]["errors"] == 0
     return dict(mode="region", verdict="PASS" if ok else "FAIL", regions=regs, crossings=xs)
@@ -172,4 +197,6 @@ def write_schema_outputs(P, res):
             x["derated_margin_ps"] = {c: r[c]["margin_ps"] for c in ("TT", "FF") if c in r}
             x["unshared_ps"] = {c: max(r[c]["unshared_a_ps"], r[c]["unshared_b_ps"]) for c in ("TT", "FF") if c in r}
             x["margin_pass"] = r["pass"]
+            if "count_aligned" in r:
+                x["count_aligned"] = dict(K=r["count_aligned"]["K"], form=r["count_aligned"]["form"])
     return Q

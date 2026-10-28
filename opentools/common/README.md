@@ -27,7 +27,8 @@ Units: micrometres, picoseconds; origin at the die lower-left corner. Corners `T
 | `layers[]` | `{name, dir, pitch_um, min_width_um, min_space_um}` | routing layers (informational for clkplan) |
 | `channels[]` | `{rect, reason?}` | declared channels (optional; clkplan derives streets itself) |
 | `streets_config` | `{raster_um, width_um?, reach_um?, demand{clock_cols, clock_col_um, hold_cols, hold_col_um, ft_bits, ft_bits_per_col, ft_col_um, fill}}` | street rule inputs |
-| `clock` | `{name, period_ps, entry[x,y]?, layers{H,V}, ndr{width_um, space_um, shield none/drawn/pg_flank, shield_width_um?}, target_latency_ps?, skew_target_ps, min_crossing_margin_ps, flow_oriented_repeaters?}` | clock definition and constraints |
+| `clock` | `{name, period_ps, entry[x,y]?, layers{H,V}, ndr{width_um, space_um, shield none/drawn/pg_flank, shield_width_um?}, target_latency_ps?, skew_target_ps, min_crossing_margin_ps, flow_oriented_repeaters?, crossing_mode phase/count_aligned?, count_aligned{form ring/period, depth, half_cycle, aperture_ps{TT,FF}?, origin_cycles[X,Y]?}?}` | clock definition and constraints. `crossing_mode` `count_aligned`: margin in the count-aligned window (ring: [(0.5T+ap), (DEPTH-0.5)T-ap], COORD 20:35; period: +-(T-ap)/2 around a whole/half-cycle count, COORD 20:26, withdrawn for the CA ring), one design-time K for all corners; `crossings[].mode` overrides per crossing |
+| `crossings[].count_aligned` | OUTPUT (clkplan, count_aligned) | `{K, form}`: the design-time count of the crossing |
 | `region_clock_plan` | OUTPUT (clkplan --mode region) | per region: root arrival, local insertion, feed path/stages |
 | `metal_alloc` | OUTPUT (opentools.metal) | per layer/row: slot census, assignment of clock wires to slots, conflicts |
 | `mscts` | OUTPUT (opentools.mscts) | built region tree: cells, wires, per-sink arrival, verification numbers |
