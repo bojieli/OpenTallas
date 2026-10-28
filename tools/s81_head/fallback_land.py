@@ -261,12 +261,27 @@ def cmd_variant(a):
             # entry inside the VDDPHY domain (no core rows): move it to the middle of the digital strip
             lo, hi = (0.0, phy[1]) if phy[1] > 0 else (phy[3], h)
             xy = [xy[0], round(round((lo + hi) / 2 / 8.64) * 8.64, 3)]
-        gone = [k for k in ("taps", "core_taps", "tap_mode", "sink_sites_um") if k in ck]
+        # DIE-HEAD-5 (COORD 10-28 DRT-TRIAL-1): EARLY core taps (clock.core_taps 'early', signed mean insertion) stay:
+        # the die tree delivers each core clock pin directly (12.3 v5.0); stacking a signed core behind the partition
+        # tree breaks the common latency (the -875 ps FF hold).  Only grid / sink-site taps collapse to the one entry.
+        early = ck.get("core_taps") == "early" and any(tp.get("kind") == "core" for tp in ck.get("taps", []) or [])
+        if early:
+            ck["taps"] = [tp for tp in ck["taps"] if tp.get("kind") == "core"]
+        gone = [k for k in ("taps", "core_taps", "tap_mode", "sink_sites_um") if k in ck and not (early and k in ("taps", "core_taps"))]
         for k in gone:
             ck.pop(k)
         ck["tap_um"] = [float(xy[0]), float(xy[1])]
-        ck["note"] = "FALLBACK-HEAD FB1: single region-root entry; partition-local CTS to all sinks; landed seams"
-        rows[tn] = dict(tap_um=ck["tap_um"], removed=gone)
+        # the plan schema has no clock.note (gen phys rejects it): the FB1 marker goes on the type note
+        t["note"] = (t.get("note", "") + " | " if t.get("note") else "") + \
+            "FALLBACK-HEAD FB1: single region-root entry; partition-local CTS to all non-core sinks; landed seams"
+        # landing contract forwarded-clock exports named a grid tap (clk_t3) that FB1 removes: re-source them at the entry
+        resrc = []
+        for p_ in (ck.get("landing_contract") or {}).get("pins", []) or []:
+            if p_.get("source_clock_port") and p_["source_clock_port"] != "clk":
+                resrc.append((p_["name"], p_["source_clock_port"]))
+                p_["source_clock_port"] = "clk"
+        rows[tn] = dict(tap_um=ck["tap_um"], removed=gone, early_core_taps=len(ck.get("taps", [])) if early else 0,
+                        landing_resourced=resrc)
     plan["note"] = plan.get("note", "") + " | FALLBACK-HEAD FB1 die-clock variant (one entry per partition), NOT canonical"
     Path(a.out).write_text(json.dumps(plan, indent=1) + "\n")
     print(json.dumps(rows, indent=1))

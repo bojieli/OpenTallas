@@ -958,9 +958,10 @@
        177.144,
        168.516
       ],
-      "insertion_ps": 250.0,
-      "budget_owner": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
-      "note": "INSERTION PENDING (no centre-entry real view; hold2 kits have edge clk pins). D-INFRA-FIRST-HEAD: 12.8a centre clock entry (M9->M5 in-core island), core-local (159.84, 159.84) on the rebuilt 319.68 outline; die common latency target until the core's centre-entry signed view publishes its real insertion (12.3 v5.0)"
+      "insertion_ps": 255.24,
+      "budget_owner": "SIGNED capsule elemA_signed signoff.json core_latency.measured pin-register mean at ft_mstrap_i (results/head_core_clockfreeze_release)",
+      "note": "DIE-HEAD-5: early core tap (12.3 v5.0) at the signed view's measured mean insertion; die tree delivers it max(0, insertion - common latency) early",
+      "insertion_ff_ps": 208.27
      },
      {
       "name": "u_core.u_b.g_cv.u_eA1.ft_mstrap_i",
@@ -969,9 +970,10 @@
        531.384,
        168.516
       ],
-      "insertion_ps": 250.0,
-      "budget_owner": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
-      "note": "INSERTION PENDING (no centre-entry real view; hold2 kits have edge clk pins). D-INFRA-FIRST-HEAD: 12.8a centre clock entry (M9->M5 in-core island), core-local (159.84, 159.84) on the rebuilt 319.68 outline; die common latency target until the core's centre-entry signed view publishes its real insertion (12.3 v5.0)"
+      "insertion_ps": 255.24,
+      "budget_owner": "SIGNED capsule elemA_signed signoff.json core_latency.measured pin-register mean at ft_mstrap_i (results/head_core_clockfreeze_release)",
+      "note": "DIE-HEAD-5: early core tap (12.3 v5.0) at the signed view's measured mean insertion; die tree delivers it max(0, insertion - common latency) early",
+      "insertion_ff_ps": 208.27
      },
      {
       "name": "u_core.u_b.g_cv.u_eA2.ft_mstrap_i",
@@ -980,9 +982,10 @@
        177.144,
        540.012
       ],
-      "insertion_ps": 250.0,
-      "budget_owner": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
-      "note": "INSERTION PENDING (no centre-entry real view; hold2 kits have edge clk pins). D-INFRA-FIRST-HEAD: 12.8a centre clock entry (M9->M5 in-core island), core-local (159.84, 159.84) on the rebuilt 319.68 outline; die common latency target until the core's centre-entry signed view publishes its real insertion (12.3 v5.0)"
+      "insertion_ps": 255.24,
+      "budget_owner": "SIGNED capsule elemA_signed signoff.json core_latency.measured pin-register mean at ft_mstrap_i (results/head_core_clockfreeze_release)",
+      "note": "DIE-HEAD-5: early core tap (12.3 v5.0) at the signed view's measured mean insertion; die tree delivers it max(0, insertion - common latency) early",
+      "insertion_ff_ps": 208.27
      },
      {
       "name": "u_core.u_b.g_cv.u_eA3.ft_mstrap_i",
@@ -991,9 +994,10 @@
        531.384,
        540.012
       ],
-      "insertion_ps": 250.0,
-      "budget_owner": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
-      "note": "INSERTION PENDING (no centre-entry real view; hold2 kits have edge clk pins). D-INFRA-FIRST-HEAD: 12.8a centre clock entry (M9->M5 in-core island), core-local (159.84, 159.84) on the rebuilt 319.68 outline; die common latency target until the core's centre-entry signed view publishes its real insertion (12.3 v5.0)"
+      "insertion_ps": 255.24,
+      "budget_owner": "SIGNED capsule elemA_signed signoff.json core_latency.measured pin-register mean at ft_mstrap_i (results/head_core_clockfreeze_release)",
+      "note": "DIE-HEAD-5: early core tap (12.3 v5.0) at the signed view's measured mean insertion; die tree delivers it max(0, insertion - common latency) early",
+      "insertion_ff_ps": 208.27
      },
      {
       "name": "u_core.u_b.g_cvb.u_eB.ft_mstrap_i",
@@ -1002,9 +1006,10 @@
        360.744,
        880.572
       ],
-      "insertion_ps": 250.0,
-      "budget_owner": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemB_cv/ot_s81hd_elemB_cv_tt.lib",
-      "note": "INSERTION PENDING (no centre-entry real view; hold2 kits have edge clk pins). D-INFRA-FIRST-HEAD: 12.8a centre clock entry (M9->M5 in-core island), core-local (138.24, 142.56) on the rebuilt 285.12 outline; die common latency target until the core's centre-entry signed view publishes its real insertion (12.3 v5.0)"
+      "insertion_ps": 230.71,
+      "budget_owner": "SIGNED capsule elemB_signed signoff.json core_latency.measured pin-register mean at ft_mstrap_i (results/head_core_clockfreeze_release)",
+      "note": "DIE-HEAD-5: early core tap (12.3 v5.0) at the signed view's measured mean insertion; die tree delivers it max(0, insertion - common latency) early",
+      "insertion_ff_ps": 189.31
      }
     ],
     "die_islands_um": [
@@ -1386,7 +1391,8 @@
       362.88,
       358.56
      ]
-    ]
+    ],
+    "core_taps": "early"
    },
    "reset": {
     "sync_stages": 2

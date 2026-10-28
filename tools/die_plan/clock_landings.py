@@ -665,7 +665,8 @@ class Landings:
             raise LandingError("clock landing: binder non-ANSI die header not found")
         # gen_rtl (native generated top, LAND-HEAD-BIND-1) emits an ANSI header whose only clock is the die `clk`
         # feeding every partition clock pin (.clk / spine taps .clk_t<i>).  In the landed form each partition's
-        # pins are its REGION clock; the die `clk` port is then unread and removed (the die clock emission supplies
+        # pins are its REGION clock (incl. CP2 early core-tap ports .clk_c<k>, DIE-HEAD-5 10-28: the core island
+        # entry is landed on the same region clock); the die `clk` port is then unread and removed (the die clock emission supplies
         # the region clocks).  The binder's non-ANSI path below is unchanged.
         ansi = re.search(r"\b(input|output)\b", match.group(2)) is not None
         if ansi:
@@ -711,7 +712,7 @@ class Landings:
                 raise LandingError(f"clock landing: expected exactly one bound instance {pn}")
             m = matches[0]
             if ansi:
-                body, count = re.subn(r"\.(clk(?:_t\d+)?)\(clk\)", lambda mm: f".{mm.group(1)}(clk_region_{ident(self.region[pn])})", m.group(2))
+                body, count = re.subn(r"\.(clk(?:_[tc]\d+)?)\(clk\)", lambda mm: f".{mm.group(1)}(clk_region_{ident(self.region[pn])})", m.group(2))
                 if not re.search(r"\.clk\(clk_region_", body):
                     raise LandingError(f"clock landing: default clock connection not found on {pn}")
             else:
