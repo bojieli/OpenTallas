@@ -39,6 +39,11 @@ module ot_s81c_attn_hcore #(
 `else
     , parameter integer BZ0 = 0
 `endif
+`ifdef OT_S81C_HCORE_WSEL
+    , parameter integer WSEG = 4      // S81-CORES-R1 10-27: segmented write select (hgrp_s WSEG), same cycles
+`else
+    , parameter integer WSEG = 0
+`endif
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -81,7 +86,7 @@ module ot_s81c_attn_hcore #(
     assign rst_core_n = rst_n;
 `endif
     ot_hdc_v41x_attn_hgrp_s #(.H(16), .HG(1), .TD(32), .NBANK(5), .BW(3), .PWORDS(2), .FPL(4), .FML(6), .F12(1),
-                              .PCOLP(1), .WPRE(WPRE), .BZ0(BZ0)) u_h (
+                              .PCOLP(1), .WPRE(WPRE), .BZ0(BZ0), .WSEG(WSEG)) u_h (
         .clk(clk), .rst_n(rst_core_n), .gid(gid), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank), .ld_grp(ld_grp),
         .ld_w({512'd0, ld_w}), .ld_wp(ld_wp), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov), .oy(oy),
         .oflt(oflt));

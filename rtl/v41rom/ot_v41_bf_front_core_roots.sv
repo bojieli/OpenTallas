@@ -281,6 +281,7 @@ module ot_v41_bf_front_core_roots #(
     input  wire          prog_half_pin,
     input  wire [$clog2(NCH)-1:0] prog_chain_pin
 );
+    wire [7:0]   xs_p2;                 // N32: kept copy of the boundary xs_p (declared before the g_b1n use)
     // fclk: the free-running core clock (static programme: the root clock itself, c10).
     wire fclk;
     if (STATIC_PROGRAM != 0) begin : g_fcg
@@ -470,7 +471,6 @@ module ot_v41_bf_front_core_roots #(
     wire [4:0]   cfg_a_e;
     wire [47:0]  cfg_d_e;
     wire [7:0]   xs_p_e;
-    wire [7:0]   xs_p2;                 // N32: kept copy of the boundary xs_p (the upper classes' pair-offset adders)
     wire [2:0]   xs_b_e, xs_pos_e, xb_pos_e, xb_b_e;
     wire [1:0]   xs_sv_e;
     wire [255:0] xs_q0_e, xs_q1_e;
@@ -964,6 +964,7 @@ module ot_v41_bf_front_core_roots #(
     wire [UW-1:0] qn_nx2 = {qn_same2 || !qn_endq, qn_same2 ? n_q : qn_endq ? 3'd0 : qn_b7 ? n_q + 3'd1 : n_q,
                             qn_same2 ? n_b : qn_endq ? 3'd0 : n_b + 3'd1, qn_c_nx2, qn_case_a2 ? qn_j1 : 3'd0};
     wire [UW-1:0] n_nx2 = (N32 != 0 && QX >= 3) ? qn_nx2 : n_nx;
+    wire n_more;                        // declared before the g_hr / g_nhr uses (was an implicit net there)
     wire qx_n_end = (QX >= 3) ? !qn_same && qn_endq : (QX >= 2) ? !qx_n_same && qx_n_endq : !n_nx0[UW-1];
     wire qx_n_adv = (QX >= 3) ? !qn_same && !qn_endq && qn_b7 :
                     (QX >= 2) ? !qx_n_same && !qx_n_endq && n_b == 3'd7 : n_nx0[UW-1] && n_nx0[UW-2 -: 3] != n_q;
@@ -1604,7 +1605,7 @@ module ot_v41_bf_front_core_roots #(
     wire [SW-1:0] s0_live = c_s0[c_live];
     wire h_live = !s_fp4[s0_live] && !s_bf[s0_live] && !s_lo[s0_live];
     // MTP: a walker that finishes a position's rounds restarts for the next position
-    wire n_more = n_pos != plast;
+    assign n_more = n_pos != plast;
     wire w_more = w_pos != plast;
     wire w_restart = issue && w_cls_last && ((QX != 0) ? !qx_same && qx_endq : !w_nx[UW-1]) && w_more;
     // QX = 5: hazard_r's next value (above).  On an issue w_cnt restarts at 0 exactly when the class's last word
