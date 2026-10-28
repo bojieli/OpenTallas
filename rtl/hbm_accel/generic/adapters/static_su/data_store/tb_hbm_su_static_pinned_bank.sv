@@ -1,6 +1,9 @@
 `timescale 1ns/1ps
 module tb_hbm_su_static_pinned_bank;
  parameter integer MUT_COHERENCE=0,MUT_RETURN=0,MUT_RESET=0;
+ // WCOPY: the DUT's per-column write copy (commit n+2); EXP_WC: the write commit latency the bench expects
+ // (EXP_WC != 1+WCOPY is the latency mutant: the bench must FAIL)
+ parameter integer WCOPY=0,EXP_WC=1+WCOPY;
  reg halt_macro5=0,halt_rd=0,halt_ws=0;
  wire[5:0]clk_macro={clk&&!halt_macro5,{5{clk}}};
  reg clk=0;always #5 clk=~clk;
@@ -8,7 +11,7 @@ module tb_hbm_su_static_pinned_bank;
  wire[191:0]rd;wire[5:0]ret;
  reg wv=0;reg[8:0]wa=0;reg[31:0]wd=0;
  integer c,r,checks=0,errors=0;
- ot_hbm_su_static_bank6_clock_physical #(.MUT_COHERENCE(MUT_COHERENCE),.MUT_RETURN(MUT_RETURN),.MUT_RESET(MUT_RESET))d(
+ ot_hbm_su_static_bank6_clock_physical #(.MUT_COHERENCE(MUT_COHERENCE),.MUT_RETURN(MUT_RETURN),.MUT_RESET(MUT_RESET),.WCOPY(WCOPY))d(
  .clk(clk),.clk_rd(clk&&!halt_rd),.clk_ws(clk&&!halt_ws),.clk_macro0(clk_macro[0]),.clk_macro1(clk_macro[1]),.clk_macro2(clk_macro[2]),.clk_macro3(clk_macro[3]),.clk_macro4(clk_macro[4]),.clk_macro5(clk_macro[5]),.rst_n(rst_n),.read_v(rv),.read_addr(ra),.read_data(rd),.read_return(ret),
  .write_v(wv),.write_addr(wa),.write_data(wd));
  function automatic[31:0]word(input integer row);word=32'h12340000+32'(row*31+1);endfunction
@@ -38,6 +41,11 @@ module tb_hbm_su_static_pinned_bank;
   @(posedge clk);#1;@(negedge clk);
   @(posedge clk);#1;
   for(r=0;r<6;r=r+1)begin checks=checks+1;if(rd[r*32+:32]!==word(511))errors=errors+1;end
+  // write commit EXP_WC: reads issued fewer than EXP_WC edges after the write still return the old word
+  for(c=1;c<EXP_WC;c=c+1)begin
+   @(negedge clk);@(posedge clk);#1;
+   for(r=0;r<6;r=r+1)begin checks=checks+1;if(rd[r*32+:32]!==word(511))errors=errors+1;end
+  end
   @(negedge clk);@(posedge clk);#1;
   for(r=0;r<6;r=r+1)begin checks=checks+1;if(rd[r*32+:32]!==32'hdeadbeef)errors=errors+1;end
   // r10 reset phase: commands issued while rst_n is low must neither return nor write (row 0 keeps word(0))
@@ -57,6 +65,6 @@ module tb_hbm_su_static_pinned_bank;
    if(rd[r*32+:32]!==word(0))begin if(errors<8)$display("ERR reset-write landed replica=%0d data=%h",r,rd[r*32+:32]);errors=errors+1;end
   end
   if(errors)$fatal(1,"SU_PINNED_BANK FAIL checks=%0d errors=%0d",checks,errors);
-  $display("SU_PINNED_BANK PASS actual_SRAMs=6 independent_macro_ports=6 checks=%0d read_latency=2 write_commit_latency=1 II=1 coherence prewrite",checks);$finish;
+  $display("SU_PINNED_BANK PASS actual_SRAMs=6 independent_macro_ports=6 checks=%0d read_latency=2 write_commit_latency=%0d II=1 coherence prewrite",checks,EXP_WC);$finish;
  end
 endmodule
