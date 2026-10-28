@@ -436,6 +436,19 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
     return out
 
 
+def landed_gate(corners):
+    """Summary gate for the landed class from {corner: {"classes": {...}}}.  A die with one clock region has 0 landed
+    pairs in both TT and FF (time_class returns pairs=0, no plan_landing): an empty class -> verdict N/A, not FAIL.
+    Fail closed: landed pairs in either corner with plan_landing missing (or not PASS) in either corner -> FAIL."""
+    cl = {c: (corners.get(c) or {}).get("classes", {}).get("landed") or {} for c in ("TT", "FF")}
+    if not any(cl[c].get("pairs") for c in cl):
+        return dict(tt_setup_margin_ps=None, ff_hold_margin_ps=None, pairs=0, verdict="N/A",
+                    note="no landed pairs (single clock region)")
+    lt, lf = cl["TT"].get("plan_landing") or {}, cl["FF"].get("plan_landing") or {}
+    return dict(tt_setup_margin_ps=lt.get("setup_margin_ps"), ff_hold_margin_ps=lf.get("hold_margin_ps"),
+                verdict="PASS" if lt.get("verdict") == "PASS" and lf.get("verdict") == "PASS" else "FAIL")
+
+
 def clock_ocv_fn(mode, droop, meta, taps, core_lat, table_path=None, margins_path=None, cell_share=None, region=None):
     """CLK-AOCV (METHODOLOGY 12.4a b1, DRAFT, opt-in): per pair clock OCV pessimism on the branches below the last
     common node.  Needs per-tap 'stages_from_root' + 'xy_um' and per-node meta 'node_stages' / 'node_xy_um' plus the
@@ -1250,10 +1263,7 @@ def main(argv=None):
             gate[k]["kit_contract_window_ps"] = kc["window_ps"]
             gate[k]["kit_contract_window_needed_ps"] = kc["window_needed_ps"]
             gate[k]["kit_contract_verdict"] = kc["verdict"]
-    lt = res["corners"].get("TT", {}).get("classes", {}).get("landed", {}).get("plan_landing", {})
-    lf = res["corners"].get("FF", {}).get("classes", {}).get("landed", {}).get("plan_landing", {})
-    gate["landed"] = dict(tt_setup_margin_ps=lt.get("setup_margin_ps"), ff_hold_margin_ps=lf.get("hold_margin_ps"),
-                          verdict="PASS" if lt.get("verdict") == "PASS" and lf.get("verdict") == "PASS" else "FAIL")
+    gate["landed"] = landed_gate(res["corners"])
     if a.hold_buffers != "none" and "TT" in hbrec and "FF" in hbrec:
         hb = {}
         HBM = HB4_ABUTTED if a.hb4_delay == "abutted" else HB4
