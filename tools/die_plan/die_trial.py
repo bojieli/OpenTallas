@@ -1055,6 +1055,44 @@ def build_slice_spine_tree(P, taps, regions, leaf_um=600.0, site=None, top_leaf_
     return nodes, info
 
 
+def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None, route_um=480.0):
+    """DIE-QC-3 opt-in (--tree-form link_htree --region-dme): hang one legal-site DME tree (dme_region_tree) under every
+    LEGALIZED feed-end node that carries region_root; legs that cross a core take the L corner through the channels
+    (same rule as the slice-spine form).  Runs after the site pass, so nothing it places slides afterwards."""
+    rt = defaultdict(list)
+    for t in taps:
+        rt[regions[t[0]]].append(t)
+    st = {}
+    for e in [i for i, nd in list(nodes.items()) if nd.get("region_root") is not None]:
+        rn = nodes[e]["region_root"]
+        if not rt.get(rn):
+            continue
+        dn, droot, dst = dme_region_tree(site, rt[rn], rep_um=rep_um, delay_rep_um=delay_rep_um)
+
+        def attach(j, parent):
+            d = dn[j]
+            i = len(nodes)
+            nodes[i] = dict(id=i, x=round(d["x"], 3), y=round(d["y"], 3), parent=parent, level=nodes[parent]["level"] + 1,
+                            kids=[], taps=list(d["taps"]), region=list(nodes[e].get("region_box", nodes[e]["region"])),
+                            dme=rn, **({"part_root": d["part_root"]} if d.get("part_root") else {}))
+            nodes[i]["req_xy"] = [nodes[i]["x"], nodes[i]["y"]]
+            nodes[parent]["kids"].append(i)
+            pa, q = (nodes[parent]["x"], nodes[parent]["y"]), (nodes[i]["x"], nodes[i]["y"])
+            if abs(pa[0] - q[0]) > 1e-6 and abs(pa[1] - q[1]) > 1e-6:
+                best = None
+                for cn in ((q[0], pa[1]), (pa[0], q[1])):
+                    r = max(leg_blocked_run(site, pa, cn), leg_blocked_run(site, cn, q))
+                    if best is None or r < best[0]:
+                        best = (r, cn)
+                if best[0] <= route_um and best[0] < leg_blocked_run(site, pa, q):
+                    nodes[i]["route"] = [list(pa), list(best[1]), list(q)]
+            for k in d["kids"]:
+                attach(k, i)
+        attach(droot, e)
+        st[rn] = dict(merges=dst.get("merges"), imbalanced=dst.get("imbalanced"), spread=dst.get("spread_um"))
+    return st
+
+
 def _man(a, b):
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
@@ -1459,6 +1497,12 @@ def build_link_fishbone(P, taps, regions, feed, col_um=60.0, local="fishbone", l
             nodes[a]["region_root"] = c
             rr[c] = a
             order.append(c)
+    if local == "none":        # DIE-QC-3 opt-in (link_htree + --region-dme): feed only; region trees attached later
+        nodes[0]["link_feed"] = dict(root=root, regions=len(box), local="dme",
+                                     feed_edges=sum(1 for v in par.values() if v is not None))
+        for r in rr:
+            nodes[rr[r]]["region_box"] = list(box[r])
+        return nodes
     if local == "htree":
         def bisect(nid, reg, tl):
             x0, y0, x1, y1 = reg
@@ -1610,8 +1654,8 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
               slice_balance=False, region_dme=False):
     out = Path(out)
     wire_r, wire_c = WIRE_RC_1X if clock_rc == "1x" else (WIRE_R, WIRE_C)
-    if region_dme and not slice_spine:
-        raise ValueError("--region-dme needs --slice-spine")
+    if region_dme and not slice_spine and not (tree_form == "link_htree" and site_slide):
+        raise ValueError("--region-dme needs --slice-spine or --tree-form link_htree --tree-site-slide")
     if slice_balance and not slice_spine:
         raise ValueError("--slice-balance needs --slice-spine")
     out.mkdir(parents=True, exist_ok=True)
@@ -1663,7 +1707,7 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
     elif tree_form in ("link_fishbone", "link_htree"):
         to = dict(tree_opts or {})
         if tree_form == "link_htree":
-            to.update(local="htree", leaf_um=leaf_um)
+            to.update(local="none" if region_dme else "htree", leaf_um=leaf_um)
         nodes = build_link_fishbone(P, taps, regions, json.loads(Path(to.pop("feed")).read_text()), **to)
     else:
         nodes = (build_spine_fishbone(P, taps, **(tree_opts or {})) if tree_form == "spine_fishbone" else
@@ -1673,7 +1717,7 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
         for nd in nodes.values():
             nd["req_xy"] = [nd["x"], nd["y"]]
         for nd in nodes.values():
-            if tree_form == "link_htree" and (nd.get("rib") is not None or nd.get("region_root") is not None):
+            if tree_form == "link_htree" and not region_dme and (nd.get("rib") is not None or nd.get("region_root") is not None):
                 continue        # region H-tree nodes: balance_legalize below
             if nd["parent"] is None:
                 q = site.nearest((nd["x"], nd["y"]))
@@ -1692,7 +1736,11 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
                     slid_fallback += 1
                     q = site.nearest(tuple(nd["req_xy"]))
             nd["x"], nd["y"] = round(q[0], 3), round(q[1], 3)
-        if tree_form == "link_htree":
+        if tree_form == "link_htree" and region_dme:   # DIE-QC-3 opt-in: legal-site DME region trees, no re-slide
+            balanced = dict(region_dme=attach_region_dme(nodes, site, taps, regions,
+                                                         rep_um=rep_um if region_dme == "priced" else None,
+                                                         delay_rep_um=rep_um if region_dme == "delay" else None))
+        elif tree_form == "link_htree":
             balanced = balance_legalize(nodes, site)
     elif site_legal and not slice_spine:          # opt-in: every buffer/repeater on a legal channel site; a one-entry leaf drives AT its entry
         site = SiteMap(P)
