@@ -1,0 +1,74 @@
+{
+ "ot_hfd_coll_q2_hard_v8g__reduce": {
+  "source": "C20e kit CTS (DIE-HBM kits_fix ot_hfd_coll_q2_hard_v8g__reduce_d5760c6fb862-_c20efix run_finish.log OT_TAP_BALANCE it0 clk=240(232-253, 22920 sinks), TritonCTS natural, placement RC, current outline)",
+  "label": "UNCHECKED vs routed (measured CTS, placement RC; FF = TT x routed ratio)",
+  "tt": {
+   "mean": 240,
+   "min": 232,
+   "max": 253
+  },
+  "ff": {
+   "mean": 195.8,
+   "min": 189.3,
+   "max": 206.4
+  },
+  "ff_note": "ratio placeholder"
+ },
+ "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap": {
+  "source": "HBM-CORE-LAT-2 CTS probe on C20e kit ot_hgi_coll_tkm_tp192_tile_core__idpin__strap_61e365d09ac2-_c20e (epyc2 copy, existing 3_place, TritonCTS + kit tap_balance 0 delay cells; postcts_gate pin-register set n=1382, placement RC setRC_rcx)",
+  "label": "CHECKED run / UNCHECKED vs routed (placement RC)",
+  "tt": {
+   "mean": 259.95,
+   "min": 247.8,
+   "max": 274.8
+  },
+  "ff": {
+   "mean": 210.69,
+   "min": 198.66,
+   "max": 225.36
+  }
+ },
+ "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap": {
+  "source": "FAMILY PROXY: HBM-CORE-LAT-2 CTS probe on C20e kit ot_hgi_coll_tkm_tp192_tile_core__idpin__strap_61e365d09ac2-_c20e (epyc2 copy, existing 3_place, TritonCTS + kit tap_balance 0 delay cells; postcts_gate pin-register set n=1382, placement RC setRC_rcx) (same 319.68x345.6 outline, terminal variant)",
+  "label": "UNCHECKED (proxy of the tile_core CTS probe)",
+  "tt": {
+   "mean": 259.95,
+   "min": 247.8,
+   "max": 274.8
+  },
+  "ff": {
+   "mean": 210.69,
+   "min": 198.66,
+   "max": 225.36
+  }
+ },
+ "ot_hbm_su_static_pgslice_lg__pretree": {
+  "source": "HBM-CORE-LAT-2 CTS probe on C20e kit ot_hbm_su_static_pgslice_lg__pretree_b51f26423130-_c20e (epyc2 copy; synth->place->TritonCTS; natural it0 clk_ctl 220 (211-240), kit tap_balance +1 delay cell -> postcts_gate pin-reg n=1350, placement RC; RTL lint BYPASSED in the diagnostic copy: 32+ multiple-driver bits)",
+  "label": "CHECKED run / UNCHECKED vs routed (placement RC; lint bypass)",
+  "tt": {
+   "mean": 245.41,
+   "min": 239.29,
+   "max": 265.54
+  },
+  "ff": {
+   "mean": 195.12,
+   "min": 189.44,
+   "max": 214.94
+  }
+ },
+ "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691": {
+  "source": "HBM-CORE-LAT-2 CTS probe on C20e kit ..lane_exp__canon_7cd691_2c5a1e71375b-_c20efix (16 clock pins; postcts_gate pin-reg n=3600 placement RC; TT min = lowest reg-pin tree clk_lane[5] 220 from tap_balance; per pin it0 TT: clk_insert0 346 clk_insert1 305 clk_lane0..7 364/368/340/268/357/247/156/138 clk_bank 262; kit OT_HOLD_GATE FAIL -143.7)",
+  "label": "CHECKED run / UNCHECKED vs routed (placement RC)",
+  "tt": {
+   "mean": 295.98,
+   "min": 220.0,
+   "max": 447.35
+  },
+  "ff": {
+   "mean": 243.06,
+   "min": 181.48,
+   "max": 375.52
+  },
+  "multi": "MULTI-CLOCK C20e kit: 16 pins, per-pin TT means 138-368 -> one '*' tap cannot balance; per-pin '<inst>.<pin>' early taps needed + in-core trees (kit TAP_CHECK WARN >290, hold gate FAIL)"
+ }
+}

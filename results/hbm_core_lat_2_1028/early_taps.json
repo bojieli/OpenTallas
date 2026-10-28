@@ -1,0 +1,3498 @@
+{
+ "schema": "opentallas.hbm_core_lat_2.early_taps.v1",
+ "plan": "C20h die-hbm-1027/c20h/die_plan.json sha 2e5644cf5f65",
+ "common_latency": {
+  "tt": 250.0,
+  "ff": 202.5
+ },
+ "ff_tt_ratio_routed_views": 0.8177,
+ "n_ratio": 22,
+ "hold_model": {
+  "m0_ps": 25.0,
+  "ocv": 0.05,
+  "u_hold_ps": 25.0,
+  "label": "UNCHECKED model (HBM-RISK-2 R3 basis)"
+ },
+ "tap_rule": "each plan core tap of the module: insertion_ps = TT mean, insertion_ff_ps = FF mean, budget_owner = source (not SIGNED -> gen_phys keeps the legacy core_latency path; signed_mean_core_taps only when SIGNED)",
+ "rows": [
+  {
+   "module": "hnx_rp3lp3h_s",
+   "placements": 128,
+   "types": [
+    "q_sm0",
+    "q_sm1",
+    "q_sm2",
+    "q_sm3"
+   ],
+   "outline": [
+    630.72,
+    1036.8
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 833.8 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 704.6,
+    "min": 704.6,
+    "max": 704.6
+   },
+   "ff": {
+    "mean": 563.6,
+    "min": 563.6,
+    "max": 563.6
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 704.6,
+   "insertion_ff_ps": 563.6,
+   "early_tt_ps": 454.6,
+   "early_ff_ps": 361.1,
+   "hold_ff_before": -364.3,
+   "hold_in": -3.2,
+   "hold_out": -3.2,
+   "hold_ff_after": -3.2,
+   "hold_ff_after_u25": -28.2,
+   "residual_skew_ff_ps": 0.0,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "NO DATA: model only"
+   ],
+   "r3_basis": {
+    "cls": "INTERNAL_HTREE_ISLANDS",
+    "model_centre_tt_ps": 704.6,
+    "model_centre_ff_ps": 563.6,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 833.76
+   }
+  },
+  {
+   "module": "hnx_rp3lp3h_n",
+   "placements": 128,
+   "types": [
+    "q_sm0",
+    "q_sm1",
+    "q_sm2",
+    "q_sm3"
+   ],
+   "outline": [
+    630.72,
+    1209.6
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 920.2 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 777.6,
+    "min": 777.6,
+    "max": 777.6
+   },
+   "ff": {
+    "mean": 622.0,
+    "min": 622.0,
+    "max": 622.0
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 777.6,
+   "insertion_ff_ps": 622.0,
+   "early_tt_ps": 527.6,
+   "early_ff_ps": 419.5,
+   "hold_ff_before": -425.6,
+   "hold_in": -6.1,
+   "hold_out": -6.1,
+   "hold_ff_after": -6.1,
+   "hold_ff_after_u25": -31.1,
+   "residual_skew_ff_ps": 0.0,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "NO DATA: model only"
+   ],
+   "r3_basis": {
+    "cls": "INTERNAL_HTREE_ISLANDS",
+    "model_centre_tt_ps": 777.6,
+    "model_centre_ff_ps": 622.0,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 920.16
+   }
+  },
+  {
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "placements": 112,
+   "types": [
+    "q_b001",
+    "q_b002",
+    "q_b003",
+    "q_b010",
+    "q_b011",
+    "q_b012",
+    "q_b013"
+   ],
+   "outline": [
+    250.56,
+    267.84
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 259.2 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 219.1,
+    "min": 219.1,
+    "max": 219.1
+   },
+   "ff": {
+    "mean": 175.2,
+    "min": 175.2,
+    "max": 175.2
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 219.1,
+   "insertion_ff_ps": 175.2,
+   "early_tt_ps": 0.0,
+   "early_ff_ps": 0.0,
+   "hold_ff_before": -11.1,
+   "hold_in": 43.5,
+   "hold_out": -11.1,
+   "hold_ff_after": -11.1,
+   "hold_ff_after_u25": -36.1,
+   "residual_skew_ff_ps": 27.3,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "SHALLOW (FF mean 175.2 < 202.5-20): early taps give 0; in-core fixed trunk 12.8c or late delivery",
+    "NO DATA: model only"
+   ],
+   "r3_basis": {
+    "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+    "model_centre_tt_ps": 219.1,
+    "model_centre_ff_ps": 175.2,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 259.2
+   }
+  },
+  {
+   "module": "ot_hbm_idx_score_hcol_h0",
+   "placements": 64,
+   "types": [
+    "q_b100",
+    "q_b101",
+    "q_b101_nw",
+    "q_b102",
+    "q_b103"
+   ],
+   "outline": [
+    218.59,
+    187.49
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 205.7 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 173.8,
+    "min": 173.8,
+    "max": 173.8
+   },
+   "ff": {
+    "mean": 139.0,
+    "min": 139.0,
+    "max": 139.0
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 173.8,
+   "insertion_ff_ps": 139.0,
+   "early_tt_ps": 0.0,
+   "early_ff_ps": 0.0,
+   "hold_ff_before": -45.5,
+   "hold_in": 81.5,
+   "hold_out": -45.5,
+   "hold_ff_after": -45.5,
+   "hold_ff_after_u25": -70.5,
+   "residual_skew_ff_ps": 63.5,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "SHALLOW (FF mean 139.0 < 202.5-20): early taps give 0; in-core fixed trunk 12.8c or late delivery",
+    "NO DATA: model only"
+   ],
+   "r3_basis": null
+  },
+  {
+   "module": "ot_hbm_idx_score_hcol_h1",
+   "placements": 64,
+   "types": [
+    "q_b100",
+    "q_b101",
+    "q_b101_nw",
+    "q_b102",
+    "q_b103"
+   ],
+   "outline": [
+    218.59,
+    187.49
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 205.7 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 173.8,
+    "min": 173.8,
+    "max": 173.8
+   },
+   "ff": {
+    "mean": 139.0,
+    "min": 139.0,
+    "max": 139.0
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 173.8,
+   "insertion_ff_ps": 139.0,
+   "early_tt_ps": 0.0,
+   "early_ff_ps": 0.0,
+   "hold_ff_before": -45.5,
+   "hold_in": 81.5,
+   "hold_out": -45.5,
+   "hold_ff_after": -45.5,
+   "hold_ff_after_u25": -70.5,
+   "residual_skew_ff_ps": 63.5,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "SHALLOW (FF mean 139.0 < 202.5-20): early taps give 0; in-core fixed trunk 12.8c or late delivery",
+    "NO DATA: model only"
+   ],
+   "r3_basis": null
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+   "placements": 60,
+   "types": [
+    "q_su00",
+    "q_su01",
+    "q_su10",
+    "q_su11"
+   ],
+   "outline": [
+    440.64,
+    207.36
+   ],
+   "source": "HBM-CORE-LAT-2 CTS probe on C20e kit ..lane_exp__canon_7cd691_2c5a1e71375b-_c20efix (16 clock pins; postcts_gate pin-reg n=3600 placement RC; TT min = lowest reg-pin tree clk_lane[5] 220 from tap_balance; per pin it0 TT: clk_insert0 346 clk_insert1 305 clk_lane0..7 364/368/340/268/357/247/156/138 clk_bank 262; kit OT_HOLD_GATE FAIL -143.7)",
+   "label": "CHECKED run / UNCHECKED vs routed (placement RC)",
+   "tt": {
+    "mean": 295.98,
+    "min": 220.0,
+    "max": 447.35
+   },
+   "ff": {
+    "mean": 243.06,
+    "min": 181.48,
+    "max": 375.52
+   },
+   "spread_tt": 227.4,
+   "spread_ff": 194.0,
+   "insertion_ps": 295.98,
+   "insertion_ff_ps": 243.06,
+   "early_tt_ps": 46.0,
+   "early_ff_ps": 40.6,
+   "hold_ff_before": -166.8,
+   "hold_in": -126.2,
+   "hold_out": -45.7,
+   "hold_ff_after": -126.2,
+   "hold_ff_after_u25": -151.2,
+   "residual_skew_ff_ps": 132.5,
+   "gate": "FAIL",
+   "flags": [
+    "SPREAD>150 (TT 227.4): early taps cannot fix, in-core fix",
+    "MULTI-CLOCK C20e kit: 16 pins, per-pin TT means 138-368 -> one '*' tap cannot balance; per-pin '<inst>.<pin>' early taps needed + in-core trees (kit TAP_CHECK WARN >290, hold gate FAIL)"
+   ],
+   "r3_basis": null
+  },
+  {
+   "module": "ot_hgi_sfu_split3_lane_core__idpin",
+   "placements": 32,
+   "types": [
+    "q_b110",
+    "q_b111",
+    "q_b112",
+    "q_b113"
+   ],
+   "outline": [
+    388.8,
+    345.6
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 367.2 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 310.3,
+    "min": 310.3,
+    "max": 310.3
+   },
+   "ff": {
+    "mean": 248.2,
+    "min": 248.2,
+    "max": 248.2
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 310.3,
+   "insertion_ff_ps": 248.2,
+   "early_tt_ps": 60.3,
+   "early_ff_ps": 45.7,
+   "hold_ff_before": -33.1,
+   "hold_in": 12.6,
+   "hold_out": 12.6,
+   "hold_ff_after": 12.6,
+   "hold_ff_after_u25": -12.4,
+   "residual_skew_ff_ps": 0.0,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "NO DATA: model only"
+   ],
+   "r3_basis": {
+    "cls": "INTERNAL_HTREE_ISLANDS",
+    "model_centre_tt_ps": 310.3,
+    "model_centre_ff_ps": 248.2,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 367.2
+   }
+  },
+  {
+   "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "placements": 32,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    177.98,
+    177.98
+   ],
+   "source": "real routed view physical/ref_tile/hdie_pc_ctrl_cfg_h9b/views/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b/insertion.json (spef, 6_final.odb, boundary regs n=1228)",
+   "label": "CHECKED (measured routed SPEF view, plan-selected lib; NUMBER-CHECK not independent)",
+   "tt": {
+    "mean": 455.4,
+    "min": 402.0,
+    "max": 519.5
+   },
+   "ff": {
+    "mean": 363.2,
+    "min": 312.5,
+    "max": 430.2
+   },
+   "spread_tt": 117.5,
+   "spread_ff": 117.7,
+   "insertion_ps": 455.4,
+   "insertion_ff_ps": 363.2,
+   "early_tt_ps": 205.4,
+   "early_ff_ps": 160.7,
+   "hold_ff_before": -224.2,
+   "hold_in": -63.5,
+   "hold_out": -41.3,
+   "hold_ff_after": -63.5,
+   "hold_ff_after_u25": -88.5,
+   "residual_skew_ff_ps": 67.0,
+   "gate": "FAIL",
+   "flags": [],
+   "r3_basis": {
+    "cls": "CENTRE_ENTRY_STRUCTURED_TREE",
+    "model_centre_tt_ps": 153.3,
+    "model_centre_ff_ps": 122.6,
+    "measured_edge_entry_tt_ps": 295,
+    "farthest_um": 181.44
+   }
+  },
+  {
+   "module": "ot_hnx_idxn_keybuf_slice",
+   "placements": 32,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    241.92,
+    293.76
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 267.9 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 226.4,
+    "min": 226.4,
+    "max": 226.4
+   },
+   "ff": {
+    "mean": 181.1,
+    "min": 181.1,
+    "max": 181.1
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 226.4,
+   "insertion_ff_ps": 181.1,
+   "early_tt_ps": 0.0,
+   "early_ff_ps": 0.0,
+   "hold_ff_before": -5.5,
+   "hold_in": 37.3,
+   "hold_out": -5.5,
+   "hold_ff_after": -5.5,
+   "hold_ff_after_u25": -30.5,
+   "residual_skew_ff_ps": 21.4,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "SHALLOW (FF mean 181.1 < 202.5-20): early taps give 0; in-core fixed trunk 12.8c or late delivery",
+    "NO DATA: model only"
+   ],
+   "r3_basis": null
+  },
+  {
+   "module": "hnx_fused_lane",
+   "placements": 32,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    345.6,
+    518.4
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 432.0 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 365.1,
+    "min": 365.1,
+    "max": 365.1
+   },
+   "ff": {
+    "mean": 292.0,
+    "min": 292.0,
+    "max": 292.0
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 365.1,
+   "insertion_ff_ps": 292.0,
+   "early_tt_ps": 115.1,
+   "early_ff_ps": 89.5,
+   "hold_ff_before": -79.1,
+   "hold_in": 10.4,
+   "hold_out": 10.4,
+   "hold_ff_after": 10.4,
+   "hold_ff_after_u25": -14.6,
+   "residual_skew_ff_ps": 0.0,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "NO DATA: model only"
+   ],
+   "r3_basis": null
+  },
+  {
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap",
+   "placements": 31,
+   "types": [
+    "root"
+   ],
+   "outline": [
+    319.68,
+    345.6
+   ],
+   "source": "HBM-CORE-LAT-2 CTS probe on C20e kit ot_hgi_coll_tkm_tp192_tile_core__idpin__strap_61e365d09ac2-_c20e (epyc2 copy, existing 3_place, TritonCTS + kit tap_balance 0 delay cells; postcts_gate pin-register set n=1382, placement RC setRC_rcx)",
+   "label": "CHECKED run / UNCHECKED vs routed (placement RC)",
+   "tt": {
+    "mean": 259.95,
+    "min": 247.8,
+    "max": 274.8
+   },
+   "ff": {
+    "mean": 210.69,
+    "min": 198.66,
+    "max": 225.36
+   },
+   "spread_tt": 27.0,
+   "spread_ff": 26.7,
+   "insertion_ps": 259.95,
+   "insertion_ff_ps": 210.69,
+   "early_tt_ps": 9.9,
+   "early_ff_ps": 8.2,
+   "hold_ff_before": -9.1,
+   "hold_in": -0.9,
+   "hold_out": 3.0,
+   "hold_ff_after": -0.9,
+   "hold_ff_after_u25": -25.9,
+   "residual_skew_ff_ps": 14.7,
+   "gate": "FAIL",
+   "flags": [],
+   "r3_basis": {
+    "cls": "INTERNAL_HTREE_ISLANDS",
+    "model_centre_tt_ps": 281.1,
+    "model_centre_ff_ps": 224.8,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 332.64
+   }
+  },
+  {
+   "module": "ot_hnx_fused_tnode",
+   "placements": 30,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    172.8,
+    172.8
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 172.8 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 146.1,
+    "min": 146.1,
+    "max": 146.1
+   },
+   "ff": {
+    "mean": 116.8,
+    "min": 116.8,
+    "max": 116.8
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 146.1,
+   "insertion_ff_ps": 116.8,
+   "early_tt_ps": 0.0,
+   "early_ff_ps": 0.0,
+   "hold_ff_before": -66.5,
+   "hold_in": 104.9,
+   "hold_out": -66.5,
+   "hold_ff_after": -66.5,
+   "hold_ff_after_u25": -91.5,
+   "residual_skew_ff_ps": 85.7,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "SHALLOW (FF mean 116.8 < 202.5-20): early taps give 0; in-core fixed trunk 12.8c or late delivery",
+    "NO DATA: model only"
+   ],
+   "r3_basis": null
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+   "placements": 28,
+   "types": [
+    "q_su20",
+    "q_su21",
+    "q_su30",
+    "q_su31"
+   ],
+   "outline": [
+    760.32,
+    725.76
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 743.1 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 628.0,
+    "min": 628.0,
+    "max": 628.0
+   },
+   "ff": {
+    "mean": 502.3,
+    "min": 502.3,
+    "max": 502.3
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 628.0,
+   "insertion_ff_ps": 502.3,
+   "early_tt_ps": 378.0,
+   "early_ff_ps": 299.8,
+   "hold_ff_before": -299.9,
+   "hold_in": -0.1,
+   "hold_out": -0.1,
+   "hold_ff_after": -0.1,
+   "hold_ff_after_u25": -25.1,
+   "residual_skew_ff_ps": 0.0,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "NO DATA: model only"
+   ],
+   "r3_basis": null
+  },
+  {
+   "module": "ot_hbm_hc_bank128_pair_first_core",
+   "placements": 16,
+   "types": [
+    "q_b000"
+   ],
+   "outline": [
+    250.56,
+    267.84
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 259.2 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 219.1,
+    "min": 219.1,
+    "max": 219.1
+   },
+   "ff": {
+    "mean": 175.2,
+    "min": 175.2,
+    "max": 175.2
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 219.1,
+   "insertion_ff_ps": 175.2,
+   "early_tt_ps": 0.0,
+   "early_ff_ps": 0.0,
+   "hold_ff_before": -11.1,
+   "hold_in": 43.5,
+   "hold_out": -11.1,
+   "hold_ff_after": -11.1,
+   "hold_ff_after_u25": -36.1,
+   "residual_skew_ff_ps": 27.3,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "SHALLOW (FF mean 175.2 < 202.5-20): early taps give 0; in-core fixed trunk 12.8c or late delivery",
+    "NO DATA: model only"
+   ],
+   "r3_basis": {
+    "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+    "model_centre_tt_ps": 219.1,
+    "model_centre_ff_ps": 175.2,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 259.2
+   }
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+   "placements": 16,
+   "types": [
+    "q_su00",
+    "q_su01",
+    "q_su10",
+    "q_su11"
+   ],
+   "outline": [
+    440.64,
+    457.92
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 449.3 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 379.7,
+    "min": 379.7,
+    "max": 379.7
+   },
+   "ff": {
+    "mean": 303.7,
+    "min": 303.7,
+    "max": 303.7
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 379.7,
+   "insertion_ff_ps": 303.7,
+   "early_tt_ps": 129.7,
+   "early_ff_ps": 101.2,
+   "hold_ff_before": -91.4,
+   "hold_in": 9.8,
+   "hold_out": 9.8,
+   "hold_ff_after": 9.8,
+   "hold_ff_after_u25": -15.2,
+   "residual_skew_ff_ps": 0.0,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "NO DATA: model only"
+   ],
+   "r3_basis": null
+  },
+  {
+   "module": "hnx_vms_bank_q0_faces__vecd4ae",
+   "placements": 16,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    270.0,
+    403.92
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 384.6 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 325.0,
+    "min": 325.0,
+    "max": 325.0
+   },
+   "ff": {
+    "mean": 259.9,
+    "min": 259.9,
+    "max": 259.9
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 325.0,
+   "insertion_ff_ps": 259.9,
+   "early_tt_ps": 75.0,
+   "early_ff_ps": 57.4,
+   "hold_ff_before": -45.4,
+   "hold_in": 12.0,
+   "hold_out": 12.0,
+   "hold_ff_after": 12.0,
+   "hold_ff_after_u25": -13.0,
+   "residual_skew_ff_ps": 0.0,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "NO DATA: model only"
+   ],
+   "r3_basis": null
+  },
+  {
+   "module": "ot_hgi_sm_xload_cl2_bfqg",
+   "placements": 16,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    302.4,
+    298.08
+   ],
+   "source": "real routed view physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/insertion.json (spef, 6_final.odb, all regs n=2568)",
+   "label": "CHECKED (measured routed SPEF view, plan-selected lib; NUMBER-CHECK not independent)",
+   "tt": {
+    "mean": 212.8,
+    "min": 202.6,
+    "max": 227.5
+   },
+   "ff": {
+    "mean": 174.4,
+    "min": 164.9,
+    "max": 188.3
+   },
+   "spread_tt": 24.9,
+   "spread_ff": 23.4,
+   "insertion_ps": 212.8,
+   "insertion_ff_ps": 174.4,
+   "early_tt_ps": 0.0,
+   "early_ff_ps": 0.0,
+   "hold_ff_before": -20.8,
+   "hold_in": 29.8,
+   "hold_out": -20.8,
+   "hold_ff_after": -20.8,
+   "hold_ff_after_u25": -45.8,
+   "residual_skew_ff_ps": 37.6,
+   "gate": "FAIL",
+   "flags": [
+    "SHALLOW (FF mean 174.4 < 202.5-20): early taps give 0; in-core fixed trunk 12.8c or late delivery",
+    "MULTI-CLOCK view: 20 clock pins (clk,clk_ctrl,clk_l0,clk_l1,clk_l2,clk_l3); plan taps '*' = one insertion for all pins -> per-pin taps needed"
+   ],
+   "r3_basis": {
+    "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+    "model_centre_tt_ps": 255.6,
+    "model_centre_ff_ps": 204.4,
+    "measured_edge_entry_tt_ps": 385,
+    "farthest_um": 302.4
+   }
+  },
+  {
+   "module": "ot_hbm_svc_vmdel_lane_n",
+   "placements": 16,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    142.56,
+    108.0
+   ],
+   "source": "real routed view physical/ref_tile/hv18_vmdel_lane2/views/ot_hbm_svc_vmdel_lane_n/insertion.json (spef, 6_final.odb, boundary regs n=920)",
+   "label": "CHECKED (measured routed SPEF view, plan-selected lib; NUMBER-CHECK not independent)",
+   "tt": {
+    "mean": 280.7,
+    "min": 258.4,
+    "max": 326.6
+   },
+   "ff": {
+    "mean": 236.2,
+    "min": 215.9,
+    "max": 277.4
+   },
+   "spread_tt": 68.2,
+   "spread_ff": 61.5,
+   "insertion_ps": 280.7,
+   "insertion_ff_ps": 236.2,
+   "early_tt_ps": 30.7,
+   "early_ff_ps": 33.7,
+   "hold_ff_before": -63.8,
+   "hold_in": -30.1,
+   "hold_out": -6.1,
+   "hold_ff_after": -30.1,
+   "hold_ff_after_u25": -55.1,
+   "residual_skew_ff_ps": 41.2,
+   "gate": "FAIL",
+   "flags": [],
+   "r3_basis": {
+    "cls": "SHALLOW_FIXED_TRUNK (12.8c)",
+    "model_centre_tt_ps": 157.0,
+    "model_centre_ff_ps": 125.6,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 185.76
+   }
+  },
+  {
+   "module": "hnx_vms_bank_q0_faces__vec6293",
+   "placements": 16,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    270.0,
+    403.92
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 384.6 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 325.0,
+    "min": 325.0,
+    "max": 325.0
+   },
+   "ff": {
+    "mean": 259.9,
+    "min": 259.9,
+    "max": 259.9
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 325.0,
+   "insertion_ff_ps": 259.9,
+   "early_tt_ps": 75.0,
+   "early_ff_ps": 57.4,
+   "hold_ff_before": -45.4,
+   "hold_in": 12.0,
+   "hold_out": 12.0,
+   "hold_ff_after": 12.0,
+   "hold_ff_after_u25": -13.0,
+   "residual_skew_ff_ps": 0.0,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "NO DATA: model only"
+   ],
+   "r3_basis": null
+  },
+  {
+   "module": "ot_hbm_svc_sm_xcal_rel_t",
+   "placements": 8,
+   "types": [
+    "q_spb2",
+    "q_spt0"
+   ],
+   "outline": [
+    241.92,
+    224.64
+   ],
+   "source": "b2l natural CTS (TritonCTS it0, placement RC) ot_hbm_svc_sm_xcal_rel_t@2fe24f8b638c outline [209.952, 210.6] != plan [241.92, 224.64] (OLD OUTLINE)",
+   "label": "UNCHECKED (old kit, placement RC, outline changed; FF = TT x 0.8177 routed-view ratio)",
+   "tt": {
+    "mean": 527,
+    "min": 269,
+    "max": 693
+   },
+   "ff": {
+    "mean": 430.9,
+    "min": 220.0,
+    "max": 566.7
+   },
+   "spread_tt": 424,
+   "spread_ff": 346.7,
+   "insertion_ps": 527,
+   "insertion_ff_ps": 430.9,
+   "early_tt_ps": 277.0,
+   "early_ff_ps": 228.4,
+   "hold_ff_before": -367.5,
+   "hold_in": -139.1,
+   "hold_out": -196.9,
+   "hold_ff_after": -196.9,
+   "hold_ff_after_u25": -221.9,
+   "residual_skew_ff_ps": 210.9,
+   "gate": "FAIL",
+   "flags": [
+    "SPREAD>150 (TT 424): early taps cannot fix, in-core fix"
+   ],
+   "r3_basis": {
+    "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+    "model_centre_tt_ps": 211.8,
+    "model_centre_ff_ps": 169.4,
+    "measured_edge_entry_tt_ps": 527,
+    "farthest_um": 250.56
+   }
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__pretree",
+   "placements": 8,
+   "types": [
+    "q_su00",
+    "q_su10",
+    "q_su20",
+    "q_su30"
+   ],
+   "outline": [
+    164.16,
+    241.92
+   ],
+   "source": "HBM-CORE-LAT-2 CTS probe on C20e kit ot_hbm_su_static_pgslice_lg__pretree_b51f26423130-_c20e (epyc2 copy; synth->place->TritonCTS; natural it0 clk_ctl 220 (211-240), kit tap_balance +1 delay cell -> postcts_gate pin-reg n=1350, placement RC; RTL lint BYPASSED in the diagnostic copy: 32+ multiple-driver bits)",
+   "label": "CHECKED run / UNCHECKED vs routed (placement RC; lint bypass)",
+   "tt": {
+    "mean": 245.41,
+    "min": 239.29,
+    "max": 265.54
+   },
+   "ff": {
+    "mean": 195.12,
+    "min": 189.44,
+    "max": 214.94
+   },
+   "spread_tt": 26.3,
+   "spread_ff": 25.5,
+   "insertion_ps": 245.41,
+   "insertion_ff_ps": 195.12,
+   "early_tt_ps": 0.0,
+   "early_ff_ps": 0.0,
+   "hold_ff_before": 1.8,
+   "hold_in": 1.8,
+   "hold_out": 2.4,
+   "hold_ff_after": 1.8,
+   "hold_ff_after_u25": -23.2,
+   "residual_skew_ff_ps": 13.1,
+   "gate": "PASS",
+   "flags": [],
+   "r3_basis": {
+    "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+    "model_centre_tt_ps": 262.9,
+    "model_centre_ff_ps": 210.2,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 311.04
+   }
+  },
+  {
+   "module": "ot_hbm_svc_sm_group_rel_id",
+   "placements": 8,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    776.3,
+    646.92
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 712.8 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 602.4,
+    "min": 602.4,
+    "max": 602.4
+   },
+   "ff": {
+    "mean": 481.8,
+    "min": 481.8,
+    "max": 481.8
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 602.4,
+   "insertion_ff_ps": 481.8,
+   "early_tt_ps": 352.4,
+   "early_ff_ps": 279.3,
+   "hold_ff_before": -278.4,
+   "hold_in": 0.9,
+   "hold_out": 0.9,
+   "hold_ff_after": 0.9,
+   "hold_ff_after_u25": -24.1,
+   "residual_skew_ff_ps": 0.0,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "NO DATA: model only"
+   ],
+   "r3_basis": {
+    "cls": "INTERNAL_HTREE_ISLANDS",
+    "model_centre_tt_ps": 602.4,
+    "model_centre_ff_ps": 481.8,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 712.8
+   }
+  },
+  {
+   "module": "ot_hbm_hc_subtree32_core",
+   "placements": 8,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    220.32,
+    220.32
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 224.6 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 189.8,
+    "min": 189.8,
+    "max": 189.8
+   },
+   "ff": {
+    "mean": 151.8,
+    "min": 151.8,
+    "max": 151.8
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 189.8,
+   "insertion_ff_ps": 151.8,
+   "early_tt_ps": 0.0,
+   "early_ff_ps": 0.0,
+   "hold_ff_before": -33.3,
+   "hold_in": 68.1,
+   "hold_out": -33.3,
+   "hold_ff_after": -33.3,
+   "hold_ff_after_u25": -58.3,
+   "residual_skew_ff_ps": 50.7,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "SHALLOW (FF mean 151.8 < 202.5-20): early taps give 0; in-core fixed trunk 12.8c or late delivery",
+    "NO DATA: model only"
+   ],
+   "r3_basis": {
+    "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+    "model_centre_tt_ps": 189.8,
+    "model_centre_ff_ps": 151.8,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 224.64
+   }
+  },
+  {
+   "module": "hfd_ep_static",
+   "placements": 6,
+   "types": [
+    "NE_io",
+    "NW_io",
+    "q_spb0",
+    "vsN0"
+   ],
+   "outline": [
+    241.92,
+    397.44
+   ],
+   "source": "real routed view physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static/insertion.json (spef, 6_final.odb, boundary regs n=2290)",
+   "label": "CHECKED (measured routed SPEF view, plan-selected lib; NUMBER-CHECK not independent)",
+   "tt": {
+    "mean": 386.4,
+    "min": 365.4,
+    "max": 418.8
+   },
+   "ff": {
+    "mean": 315.9,
+    "min": 296.0,
+    "max": 345.3
+   },
+   "spread_tt": 53.4,
+   "spread_ff": 49.3,
+   "insertion_ps": 386.4,
+   "insertion_ff_ps": 315.9,
+   "early_tt_ps": 136.4,
+   "early_ff_ps": 113.4,
+   "hold_ff_before": -135.1,
+   "hold_in": -21.7,
+   "hold_out": -9.7,
+   "hold_ff_after": -21.7,
+   "hold_ff_after_u25": -46.7,
+   "residual_skew_ff_ps": 29.4,
+   "gate": "FAIL",
+   "flags": [],
+   "r3_basis": {
+    "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+    "model_centre_tt_ps": 266.5,
+    "model_centre_ff_ps": 213.2,
+    "measured_edge_entry_tt_ps": 577,
+    "farthest_um": 315.36
+   }
+  },
+  {
+   "module": "ot_hbm_svc_vm_kshare_splitstrap__v700685",
+   "placements": 6,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    354.24,
+    453.6
+   ],
+   "source": "FAMILY PROXY: b2l natural CTS of 4 related old kits (ot_hbm_svc_vm_kshare_splitstrap, outline [354.24, 453.6] vs plan [354.24, 453.6])",
+   "label": "UNCHECKED (proxy of a related design; FF = TT x 0.8177)",
+   "tt": {
+    "mean": 530.5,
+    "min": 418,
+    "max": 683
+   },
+   "ff": {
+    "mean": 433.8,
+    "min": 341.8,
+    "max": 558.5
+   },
+   "spread_tt": 265,
+   "spread_ff": 216.7,
+   "insertion_ps": 530.5,
+   "insertion_ff_ps": 433.8,
+   "early_tt_ps": 280.5,
+   "early_ff_ps": 231.3,
+   "hold_ff_before": -358.9,
+   "hold_in": -127.6,
+   "hold_out": -84.1,
+   "hold_ff_after": -127.6,
+   "hold_ff_after_u25": -152.6,
+   "residual_skew_ff_ps": 124.7,
+   "gate": "FAIL",
+   "flags": [
+    "SPREAD>150 (TT 265): early taps cannot fix, in-core fix"
+   ],
+   "r3_basis": null
+  },
+  {
+   "module": "ot_pdie_serdes",
+   "placements": 5,
+   "types": [
+    "NE_io",
+    "NW_io",
+    "q_spb0",
+    "vsN0"
+   ],
+   "outline": [
+    600.05,
+    600.48
+   ],
+   "source": "b2l natural CTS (TritonCTS it0, placement RC) ot_pdie_serdes@8104b4722883 outline [600.048, 600.48]",
+   "label": "UNCHECKED (old kit, placement RC; FF = TT x 0.8177 routed-view ratio)",
+   "tt": {
+    "mean": 627,
+    "min": 609,
+    "max": 722
+   },
+   "ff": {
+    "mean": 512.7,
+    "min": 498.0,
+    "max": 590.4
+   },
+   "spread_tt": 113,
+   "spread_ff": 92.4,
+   "insertion_ps": 627,
+   "insertion_ff_ps": 512.7,
+   "early_tt_ps": 377.0,
+   "early_ff_ps": 310.2,
+   "hold_ff_before": -392.4,
+   "hold_in": -82.2,
+   "hold_out": -14.6,
+   "hold_ff_after": -82.2,
+   "hold_ff_after_u25": -107.2,
+   "residual_skew_ff_ps": 77.7,
+   "gate": "FAIL",
+   "flags": [],
+   "r3_basis": {
+    "cls": "IP_DECLARED",
+    "model_centre_tt_ps": 510.8,
+    "model_centre_ff_ps": 408.5,
+    "measured_edge_entry_tt_ps": 627,
+    "farthest_um": 604.368
+   }
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lane_exp0",
+   "placements": 4,
+   "types": [
+    "q_su00",
+    "q_su10"
+   ],
+   "outline": [
+    440.64,
+    207.36
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 324.0 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 273.8,
+    "min": 273.8,
+    "max": 273.8
+   },
+   "ff": {
+    "mean": 219.0,
+    "min": 219.0,
+    "max": 219.0
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 273.8,
+   "insertion_ff_ps": 219.0,
+   "early_tt_ps": 23.8,
+   "early_ff_ps": 16.5,
+   "hold_ff_before": -2.5,
+   "hold_in": 14.0,
+   "hold_out": 14.0,
+   "hold_ff_after": 14.0,
+   "hold_ff_after_u25": -11.0,
+   "residual_skew_ff_ps": 0.0,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "NO DATA: model only"
+   ],
+   "r3_basis": {
+    "cls": "INTERNAL_HTREE_ISLANDS",
+    "model_centre_tt_ps": 273.8,
+    "model_centre_ff_ps": 219.0,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 324.0
+   }
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__side_softplus",
+   "placements": 4,
+   "types": [
+    "q_su00",
+    "q_su10"
+   ],
+   "outline": [
+    440.64,
+    457.92
+   ],
+   "source": "b2l natural CTS (TritonCTS it0, placement RC) ot_hbm_su_static_pgslice_lg__side_softplus@7c274b52e5df outline [440.64, 457.92]",
+   "label": "UNCHECKED (old kit, placement RC; FF = TT x 0.8177 routed-view ratio)",
+   "tt": {
+    "mean": 572,
+    "min": 317,
+    "max": 678
+   },
+   "ff": {
+    "mean": 467.7,
+    "min": 259.2,
+    "max": 554.4
+   },
+   "spread_tt": 361,
+   "spread_ff": 295.2,
+   "insertion_ps": 572,
+   "insertion_ff_ps": 467.7,
+   "early_tt_ps": 322.0,
+   "early_ff_ps": 265.2,
+   "hold_ff_before": -354.6,
+   "hold_in": -89.4,
+   "hold_out": -196.5,
+   "hold_ff_after": -196.5,
+   "hold_ff_after_u25": -221.5,
+   "residual_skew_ff_ps": 208.5,
+   "gate": "FAIL",
+   "flags": [
+    "SPREAD>150 (TT 361): early taps cannot fix, in-core fix",
+    "MULTI-CLOCK old kit: clk_side[0] 441, clk_side[1] 338, clk_side[2] 572"
+   ],
+   "r3_basis": {
+    "cls": "INTERNAL_HTREE_ISLANDS",
+    "model_centre_tt_ps": 379.7,
+    "model_centre_ff_ps": 303.7,
+    "measured_edge_entry_tt_ps": 572,
+    "farthest_um": 449.28
+   }
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__side_rest",
+   "placements": 4,
+   "types": [
+    "q_su01",
+    "q_su11"
+   ],
+   "outline": [
+    440.64,
+    457.92
+   ],
+   "source": "b2l natural CTS (TritonCTS it0, placement RC) ot_hbm_su_static_pgslice_lg__side_rest@1bbe3488b9c4 outline [440.64, 457.92]",
+   "label": "UNCHECKED (old kit, placement RC; FF = TT x 0.8177 routed-view ratio)",
+   "tt": {
+    "mean": 515,
+    "min": 374,
+    "max": 605
+   },
+   "ff": {
+    "mean": 421.1,
+    "min": 305.8,
+    "max": 494.7
+   },
+   "spread_tt": 231,
+   "spread_ff": 188.9,
+   "insertion_ps": 515,
+   "insertion_ff_ps": 421.1,
+   "early_tt_ps": 265.0,
+   "early_ff_ps": 218.6,
+   "hold_ff_before": -291.9,
+   "hold_in": -73.3,
+   "hold_out": -105.6,
+   "hold_ff_after": -105.6,
+   "hold_ff_after_u25": -130.6,
+   "residual_skew_ff_ps": 115.3,
+   "gate": "FAIL",
+   "flags": [
+    "SPREAD>150 (TT 231): early taps cannot fix, in-core fix",
+    "MULTI-CLOCK old kit: clk_side[0] 454, clk_side[1] 385, clk_side[2] 515"
+   ],
+   "r3_basis": {
+    "cls": "INTERNAL_HTREE_ISLANDS",
+    "model_centre_tt_ps": 379.7,
+    "model_centre_ff_ps": 303.7,
+    "measured_edge_entry_tt_ps": 515,
+    "farthest_um": 449.28
+   }
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lanes8_11",
+   "placements": 4,
+   "types": [
+    "q_su20",
+    "q_su30"
+   ],
+   "outline": [
+    760.32,
+    725.76
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 743.0 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 628.0,
+    "min": 628.0,
+    "max": 628.0
+   },
+   "ff": {
+    "mean": 502.2,
+    "min": 502.2,
+    "max": 502.2
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 628.0,
+   "insertion_ff_ps": 502.2,
+   "early_tt_ps": 378.0,
+   "early_ff_ps": 299.7,
+   "hold_ff_before": -299.8,
+   "hold_in": -0.1,
+   "hold_out": -0.1,
+   "hold_ff_after": -0.1,
+   "hold_ff_after_u25": -25.1,
+   "residual_skew_ff_ps": 0.0,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "NO DATA: model only"
+   ],
+   "r3_basis": {
+    "cls": "INTERNAL_HTREE_ISLANDS",
+    "model_centre_tt_ps": 628.0,
+    "model_centre_ff_ps": 502.2,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 743.04
+   }
+  },
+  {
+   "module": "ot_hgi_sfu_programme_store_r10",
+   "placements": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    574.56,
+    738.72
+   ],
+   "source": "b2l natural CTS (TritonCTS it0, placement RC) ot_hgi_sfu_programme_store_r10@de93d4cbfe0e outline [1080.0, 950.4] != plan [574.56, 738.72] (OLD OUTLINE)",
+   "label": "UNCHECKED (old kit, placement RC, outline changed; FF = TT x 0.8177 routed-view ratio)",
+   "tt": {
+    "mean": 1150,
+    "min": 921,
+    "max": 1457
+   },
+   "ff": {
+    "mean": 940.4,
+    "min": 753.1,
+    "max": 1191.4
+   },
+   "spread_tt": 536,
+   "spread_ff": 438.3,
+   "insertion_ps": 1150,
+   "insertion_ff_ps": 940.4,
+   "early_tt_ps": 900.0,
+   "early_ff_ps": 737.9,
+   "hold_ff_before": -1023.5,
+   "hold_in": -285.6,
+   "hold_out": -200.0,
+   "hold_ff_after": -285.6,
+   "hold_ff_after_u25": -310.6,
+   "residual_skew_ff_ps": 251.0,
+   "gate": "FAIL",
+   "flags": [
+    "SPREAD>150 (TT 536): early taps cannot fix, in-core fix"
+   ],
+   "r3_basis": {
+    "cls": "INTERNAL_HTREE_ISLANDS",
+    "model_centre_tt_ps": 558.6,
+    "model_centre_ff_ps": 446.8,
+    "measured_edge_entry_tt_ps": 1150,
+    "farthest_um": 660.96
+   }
+  },
+  {
+   "module": "ot_hbm_su_programme_pslice_c5",
+   "placements": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    939.6,
+    760.32
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 851.0 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 719.2,
+    "min": 719.2,
+    "max": 719.2
+   },
+   "ff": {
+    "mean": 575.2,
+    "min": 575.2,
+    "max": 575.2
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 719.2,
+   "insertion_ff_ps": 575.2,
+   "early_tt_ps": 469.2,
+   "early_ff_ps": 372.7,
+   "hold_ff_before": -376.5,
+   "hold_in": -3.8,
+   "hold_out": -3.8,
+   "hold_ff_after": -3.8,
+   "hold_ff_after_u25": -28.8,
+   "residual_skew_ff_ps": 0.0,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "NO DATA: model only"
+   ],
+   "r3_basis": {
+    "cls": "INTERNAL_HTREE_ISLANDS",
+    "model_centre_tt_ps": 719.2,
+    "model_centre_ff_ps": 575.3,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 851.04
+   }
+  },
+  {
+   "module": "ot_hfd_coll_q2_hard_v8g__ring_ag",
+   "placements": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    233.28,
+    233.28
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 233.3 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 197.1,
+    "min": 197.1,
+    "max": 197.1
+   },
+   "ff": {
+    "mean": 157.7,
+    "min": 157.7,
+    "max": 157.7
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 197.1,
+   "insertion_ff_ps": 157.7,
+   "early_tt_ps": 0.0,
+   "early_ff_ps": 0.0,
+   "hold_ff_before": -27.7,
+   "hold_in": 61.9,
+   "hold_out": -27.7,
+   "hold_ff_after": -27.7,
+   "hold_ff_after_u25": -52.7,
+   "residual_skew_ff_ps": 44.8,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "SHALLOW (FF mean 157.7 < 202.5-20): early taps give 0; in-core fixed trunk 12.8c or late delivery",
+    "NO DATA: model only"
+   ],
+   "r3_basis": {
+    "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+    "model_centre_tt_ps": 197.1,
+    "model_centre_ff_ps": 157.7,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 233.28
+   }
+  },
+  {
+   "module": "ot_hfd_coll_q2_hard_v8g__reduce",
+   "placements": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    233.28,
+    233.28
+   ],
+   "source": "C20e kit CTS (DIE-HBM kits_fix ot_hfd_coll_q2_hard_v8g__reduce_d5760c6fb862-_c20efix run_finish.log OT_TAP_BALANCE it0 clk=240(232-253, 22920 sinks), TritonCTS natural, placement RC, current outline)",
+   "label": "UNCHECKED vs routed (measured CTS, placement RC; FF = TT x routed ratio)",
+   "tt": {
+    "mean": 240,
+    "min": 232,
+    "max": 253
+   },
+   "ff": {
+    "mean": 195.8,
+    "min": 189.3,
+    "max": 206.4
+   },
+   "spread_tt": 21,
+   "spread_ff": 17.1,
+   "insertion_ps": 240,
+   "insertion_ff_ps": 195.8,
+   "early_tt_ps": 0.0,
+   "early_ff_ps": 0.0,
+   "hold_ff_before": 2.3,
+   "hold_in": 10.8,
+   "hold_out": 2.3,
+   "hold_ff_after": 2.3,
+   "hold_ff_after_u25": -22.7,
+   "residual_skew_ff_ps": 13.2,
+   "gate": "PASS",
+   "flags": [],
+   "r3_basis": {
+    "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+    "model_centre_tt_ps": 197.1,
+    "model_centre_ff_ps": 157.7,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 233.28
+   }
+  },
+  {
+   "module": "ot_hbm_svc_wb_kport_q",
+   "placements": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    475.2,
+    475.2
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 475.2 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 401.6,
+    "min": 401.6,
+    "max": 401.6
+   },
+   "ff": {
+    "mean": 321.2,
+    "min": 321.2,
+    "max": 321.2
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 401.6,
+   "insertion_ff_ps": 321.2,
+   "early_tt_ps": 151.6,
+   "early_ff_ps": 118.7,
+   "hold_ff_before": -109.8,
+   "hold_in": 8.9,
+   "hold_out": 8.9,
+   "hold_ff_after": 8.9,
+   "hold_ff_after_u25": -16.1,
+   "residual_skew_ff_ps": 0.0,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "NO DATA: model only"
+   ],
+   "r3_basis": {
+    "cls": "INTERNAL_HTREE_ISLANDS",
+    "model_centre_tt_ps": 401.6,
+    "model_centre_ff_ps": 321.2,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 475.2
+   }
+  },
+  {
+   "module": "ot_hgi_coll_inj_idx_join_rg",
+   "placements": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    211.68,
+    207.36
+   ],
+   "source": "real routed view physical/ref_tile/hcoll_inj_idx_join_rg_1017/views/ot_hgi_coll_inj_idx_join_rg/insertion.json (spef, 6_final.odb, boundary regs n=2428)",
+   "label": "CHECKED (measured routed SPEF view, plan-selected lib; NUMBER-CHECK not independent)",
+   "tt": {
+    "mean": 244.8,
+    "min": 218.1,
+    "max": 265.7
+   },
+   "ff": {
+    "mean": 201.6,
+    "min": 177.7,
+    "max": 221.6
+   },
+   "spread_tt": 47.6,
+   "spread_ff": 43.9,
+   "insertion_ps": 244.8,
+   "insertion_ff_ps": 201.6,
+   "early_tt_ps": 0.0,
+   "early_ff_ps": 0.0,
+   "hold_ff_before": -8.7,
+   "hold_in": -5.2,
+   "hold_out": -8.7,
+   "hold_ff_after": -8.7,
+   "hold_ff_after_u25": -33.7,
+   "residual_skew_ff_ps": 24.8,
+   "gate": "FAIL",
+   "flags": [
+    "MULTI-CLOCK view: 2 clock pins (clk_r0,clk_r1); plan taps '*' = one insertion for all pins -> per-pin taps needed"
+   ],
+   "r3_basis": {
+    "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+    "model_centre_tt_ps": 226.4,
+    "model_centre_ff_ps": 181.0,
+    "measured_edge_entry_tt_ps": 417,
+    "farthest_um": 267.84
+   }
+  },
+  {
+   "module": "hfd_hgi_vms_glue_nw_t",
+   "placements": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    777.6,
+    1635.55
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 1206.6 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 1019.7,
+    "min": 1019.7,
+    "max": 1019.7
+   },
+   "ff": {
+    "mean": 815.6,
+    "min": 815.6,
+    "max": 815.6
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 1019.7,
+   "insertion_ff_ps": 815.6,
+   "early_tt_ps": 769.7,
+   "early_ff_ps": 613.1,
+   "hold_ff_before": -628.9,
+   "hold_in": -15.8,
+   "hold_out": -15.8,
+   "hold_ff_after": -15.8,
+   "hold_ff_after_u25": -40.8,
+   "residual_skew_ff_ps": 0.0,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "NO DATA: model only"
+   ],
+   "r3_basis": {
+    "cls": "INTERNAL_HTREE_ISLANDS",
+    "model_centre_tt_ps": 934.6,
+    "model_centre_ff_ps": 747.5,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 1105.92
+   }
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "placements": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    250.56,
+    449.28
+   ],
+   "source": "real routed view physical/ref_tile/hbm_su_cx_ijq_1019t/views/ot_hbm_su_static_cxport_ij_q/insertion.json (spef, 6_final.odb, boundary regs n=6227)",
+   "label": "CHECKED (measured routed SPEF view, plan-selected lib; NUMBER-CHECK not independent)",
+   "tt": {
+    "mean": 305.4,
+    "min": 286.4,
+    "max": 326.0
+   },
+   "ff": {
+    "mean": 252.2,
+    "min": 234.5,
+    "max": 271.9
+   },
+   "spread_tt": 39.6,
+   "spread_ff": 37.4,
+   "insertion_ps": 305.4,
+   "insertion_ff_ps": 252.2,
+   "early_tt_ps": 55.4,
+   "early_ff_ps": 49.7,
+   "hold_ff_before": -58.0,
+   "hold_in": -8.3,
+   "hold_out": -4.4,
+   "hold_ff_after": -8.3,
+   "hold_ff_after_u25": -33.3,
+   "residual_skew_ff_ps": 19.7,
+   "gate": "FAIL",
+   "flags": [],
+   "r3_basis": {
+    "cls": "INTERNAL_HTREE_ISLANDS",
+    "model_centre_tt_ps": 295.7,
+    "model_centre_ff_ps": 236.5,
+    "measured_edge_entry_tt_ps": 447,
+    "farthest_um": 349.92
+   }
+  },
+  {
+   "module": "ot_hbm_sm_vm_wr_q_t_lanes4",
+   "placements": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    142.56,
+    216.0
+   ],
+   "source": "real routed view physical/ref_tile/hsm_smvm_wrq_t4_r1/views/ot_hbm_sm_vm_wr_q_t_lanes4/insertion.json (spef, 6_final.odb, boundary regs n=335)",
+   "label": "CHECKED (measured routed SPEF view, plan-selected lib; NUMBER-CHECK not independent)",
+   "tt": {
+    "mean": 132.1,
+    "min": 117.2,
+    "max": 145.3
+   },
+   "ff": {
+    "mean": 108.5,
+    "min": 94.4,
+    "max": 121.0
+   },
+   "spread_tt": 28.1,
+   "spread_ff": 26.6,
+   "insertion_ps": 132.1,
+   "insertion_ff_ps": 108.5,
+   "early_tt_ps": 0.0,
+   "early_ff_ps": 0.0,
+   "hold_ff_before": -87.8,
+   "hold_in": 100.5,
+   "hold_out": -87.8,
+   "hold_ff_after": -87.8,
+   "hold_ff_after_u25": -112.8,
+   "residual_skew_ff_ps": 108.1,
+   "gate": "FAIL",
+   "flags": [
+    "SHALLOW (FF mean 108.5 < 202.5-20): early taps give 0; in-core fixed trunk 12.8c or late delivery",
+    "MULTI-CLOCK view: 6 clock pins (clk,clk_cal,clk_l0,clk_l1,clk_l2,clk_l3); plan taps '*' = one insertion for all pins -> per-pin taps needed"
+   ],
+   "r3_basis": {
+    "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+    "model_centre_tt_ps": 226.4,
+    "model_centre_ff_ps": 181.0,
+    "measured_edge_entry_tt_ps": 356,
+    "farthest_um": 267.84
+   }
+  },
+  {
+   "module": "ot_hgi_sm_xload_cl2_ctlx",
+   "placements": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    391.39,
+    416.45
+   ],
+   "source": "real routed view physical/ref_tile/hgi_sm_xl2_ctlx/views/ot_hgi_sm_xload_cl2_ctlx/insertion.json (spef, 6_final.odb, boundary regs n=6466)",
+   "label": "CHECKED (measured routed SPEF view, plan-selected lib; NUMBER-CHECK not independent)",
+   "tt": {
+    "mean": 437.3,
+    "min": 403.3,
+    "max": 483.1
+   },
+   "ff": {
+    "mean": 358.7,
+    "min": 328.0,
+    "max": 402.6
+   },
+   "spread_tt": 79.8,
+   "spread_ff": 74.6,
+   "insertion_ps": 437.3,
+   "insertion_ff_ps": 358.7,
+   "early_tt_ps": 187.3,
+   "early_ff_ps": 156.2,
+   "hold_ff_before": -195.2,
+   "hold_in": -39.0,
+   "hold_out": -22.1,
+   "hold_ff_after": -39.0,
+   "hold_ff_after_u25": -64.0,
+   "residual_skew_ff_ps": 43.9,
+   "gate": "FAIL",
+   "flags": [
+    "MULTI-CLOCK view: 2 clock pins (clk,clk_cal); plan taps '*' = one insertion for all pins -> per-pin taps needed"
+   ],
+   "r3_basis": {
+    "cls": "INTERNAL_HTREE_ISLANDS",
+    "model_centre_tt_ps": 328.6,
+    "model_centre_ff_ps": 262.8,
+    "measured_edge_entry_tt_ps": 505,
+    "farthest_um": 388.8
+   }
+  },
+  {
+   "module": "ot_hgi_sm_xload_xq_pegress",
+   "placements": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    362.88,
+    276.48
+   ],
+   "source": "real routed view physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/insertion.json (spef, 6_final.odb, boundary regs n=2065)",
+   "label": "CHECKED (measured routed SPEF view, plan-selected lib; NUMBER-CHECK not independent)",
+   "tt": {
+    "mean": 170.0,
+    "min": 153.4,
+    "max": 186.3
+   },
+   "ff": {
+    "mean": 137.7,
+    "min": 121.7,
+    "max": 153.1
+   },
+   "spread_tt": 32.9,
+   "spread_ff": 31.4,
+   "insertion_ps": 170.0,
+   "insertion_ff_ps": 137.7,
+   "early_tt_ps": 0.0,
+   "early_ff_ps": 0.0,
+   "hold_ff_before": -61.9,
+   "hold_in": 66.7,
+   "hold_out": -61.9,
+   "hold_ff_after": -61.9,
+   "hold_ff_after_u25": -86.9,
+   "residual_skew_ff_ps": 80.8,
+   "gate": "FAIL",
+   "flags": [
+    "SHALLOW (FF mean 137.7 < 202.5-20): early taps give 0; in-core fixed trunk 12.8c or late delivery",
+    "MULTI-CLOCK view: 5 clock pins (clk,clk_c,clk_e,clk_s,clk_w); plan taps '*' = one insertion for all pins -> per-pin taps needed"
+   ],
+   "r3_basis": {
+    "cls": "INTERNAL_HTREE_ISLANDS",
+    "model_centre_tt_ps": 314.0,
+    "model_centre_ff_ps": 251.1,
+    "measured_edge_entry_tt_ps": 448,
+    "farthest_um": 371.52
+   }
+  },
+  {
+   "module": "ot_hgi_sm_xload_cl2_bdring",
+   "placements": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    86.4,
+    302.4
+   ],
+   "source": "real routed view physical/ref_tile/hgi_sm_xl2_bdring/views/ot_hgi_sm_xload_cl2_bdring/insertion.json (spef, 6_final.odb, boundary regs n=2686)",
+   "label": "CHECKED (measured routed SPEF view, plan-selected lib; NUMBER-CHECK not independent)",
+   "tt": {
+    "mean": 242.0,
+    "min": 230.4,
+    "max": 255.8
+   },
+   "ff": {
+    "mean": 197.4,
+    "min": 186.1,
+    "max": 210.3
+   },
+   "spread_tt": 25.4,
+   "spread_ff": 24.2,
+   "insertion_ps": 242.0,
+   "insertion_ff_ps": 197.4,
+   "early_tt_ps": 0.0,
+   "early_ff_ps": 0.0,
+   "hold_ff_before": -0.7,
+   "hold_in": 6.7,
+   "hold_out": -0.7,
+   "hold_ff_after": -0.7,
+   "hold_ff_after_u25": -25.7,
+   "residual_skew_ff_ps": 16.4,
+   "gate": "FAIL",
+   "flags": [],
+   "r3_basis": {
+    "cls": "OK_OR_CENTRE",
+    "model_centre_tt_ps": 164.3,
+    "model_centre_ff_ps": 131.4,
+    "measured_edge_entry_tt_ps": 288,
+    "farthest_um": 194.4
+   }
+  },
+  {
+   "module": "ot_hbm_su_static_qcore_r13",
+   "placements": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    224.64,
+    207.36
+   ],
+   "source": "real routed view physical/ref_tile/hbm_su_qcore_r19b_1022/views/ot_hbm_su_static_qcore_r13/insertion.json (spef, 6_final.odb, boundary regs n=7709)",
+   "label": "CHECKED (measured routed SPEF view, plan-selected lib; NUMBER-CHECK not independent)",
+   "tt": {
+    "mean": 354.7,
+    "min": 330.1,
+    "max": 382.7
+   },
+   "ff": {
+    "mean": 289.6,
+    "min": 267.1,
+    "max": 317.0
+   },
+   "spread_tt": 52.6,
+   "spread_ff": 49.9,
+   "insertion_ps": 354.7,
+   "insertion_ff_ps": 289.6,
+   "early_tt_ps": 104.7,
+   "early_ff_ps": 87.1,
+   "hold_ff_before": -105.3,
+   "hold_in": -18.2,
+   "hold_out": -10.9,
+   "hold_ff_after": -18.2,
+   "hold_ff_after_u25": -43.2,
+   "residual_skew_ff_ps": 27.4,
+   "gate": "FAIL",
+   "flags": [],
+   "r3_basis": {
+    "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+    "model_centre_tt_ps": 248.3,
+    "model_centre_ff_ps": 198.6,
+    "measured_edge_entry_tt_ps": 434,
+    "farthest_um": 293.76
+   }
+  },
+  {
+   "module": "ot_hbm_su_static_sfustore_hw",
+   "placements": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    336.96,
+    328.32
+   ],
+   "source": "real routed view physical/ref_tile/hbm_su_sfustore_hw_1018/views/ot_hbm_su_static_sfustore_hw/insertion.json (spef, 6_final.odb, boundary regs n=1833)",
+   "label": "CHECKED (measured routed SPEF view, plan-selected lib; NUMBER-CHECK not independent)",
+   "tt": {
+    "mean": 354.0,
+    "min": 328.8,
+    "max": 400.5
+   },
+   "ff": {
+    "mean": 289.3,
+    "min": 265.8,
+    "max": 330.2
+   },
+   "spread_tt": 71.7,
+   "spread_ff": 64.4,
+   "insertion_ps": 354.0,
+   "insertion_ff_ps": 289.3,
+   "early_tt_ps": 104.0,
+   "early_ff_ps": 86.8,
+   "hold_ff_before": -119.2,
+   "hold_in": -32.4,
+   "hold_out": -11.8,
+   "hold_ff_after": -32.4,
+   "hold_ff_after_u25": -57.4,
+   "residual_skew_ff_ps": 40.9,
+   "gate": "FAIL",
+   "flags": [],
+   "r3_basis": {
+    "cls": "INTERNAL_HTREE_ISLANDS",
+    "model_centre_tt_ps": 281.1,
+    "model_centre_ff_ps": 224.8,
+    "measured_edge_entry_tt_ps": 550,
+    "farthest_um": 332.64
+   }
+  },
+  {
+   "module": "ot_hgi_qw_dec",
+   "placements": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    260.0,
+    260.0
+   ],
+   "source": "b2l natural CTS (TritonCTS it0, placement RC) ot_hgi_qw_dec@3ea301eff4ef outline [260.0, 260.0]",
+   "label": "UNCHECKED (old kit, placement RC; FF = TT x 0.8177 routed-view ratio)",
+   "tt": {
+    "mean": 368,
+    "min": 352,
+    "max": 386
+   },
+   "ff": {
+    "mean": 300.9,
+    "min": 287.8,
+    "max": 315.6
+   },
+   "spread_tt": 34,
+   "spread_ff": 27.8,
+   "insertion_ps": 368,
+   "insertion_ff_ps": 300.9,
+   "early_tt_ps": 118.0,
+   "early_ff_ps": 98.4,
+   "hold_ff_before": -103.9,
+   "hold_in": -5.5,
+   "hold_out": -2.5,
+   "hold_ff_after": -5.5,
+   "hold_ff_after_u25": -30.5,
+   "residual_skew_ff_ps": 14.7,
+   "gate": "FAIL",
+   "flags": [],
+   "r3_basis": {
+    "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+    "model_centre_tt_ps": 220.4,
+    "model_centre_ff_ps": 176.3,
+    "measured_edge_entry_tt_ps": 368,
+    "farthest_um": 260.8
+   }
+  },
+  {
+   "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "placements": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    239.98,
+    240.84
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 241.9 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 204.5,
+    "min": 204.5,
+    "max": 204.5
+   },
+   "ff": {
+    "mean": 163.5,
+    "min": 163.5,
+    "max": 163.5
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 204.5,
+   "insertion_ff_ps": 163.5,
+   "early_tt_ps": 0.0,
+   "early_ff_ps": 0.0,
+   "hold_ff_before": -22.2,
+   "hold_in": 55.8,
+   "hold_out": -22.2,
+   "hold_ff_after": -22.2,
+   "hold_ff_after_u25": -47.2,
+   "residual_skew_ff_ps": 39.0,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "SHALLOW (FF mean 163.5 < 202.5-20): early taps give 0; in-core fixed trunk 12.8c or late delivery",
+    "NO DATA: model only"
+   ],
+   "r3_basis": {
+    "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+    "model_centre_tt_ps": 204.5,
+    "model_centre_ff_ps": 163.5,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 241.92
+   }
+  },
+  {
+   "module": "ot_hgi_coll_gq_issue",
+   "placements": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    237.6,
+    237.6
+   ],
+   "source": "b2l natural CTS (TritonCTS it0, placement RC) ot_hgi_coll_gq_issue@620157ecc938 outline [237.6, 237.6]",
+   "label": "UNCHECKED (old kit, placement RC; FF = TT x 0.8177 routed-view ratio)",
+   "tt": {
+    "mean": 343,
+    "min": 331,
+    "max": 364
+   },
+   "ff": {
+    "mean": 280.5,
+    "min": 270.7,
+    "max": 297.6
+   },
+   "spread_tt": 33,
+   "spread_ff": 26.9,
+   "insertion_ps": 343,
+   "insertion_ff_ps": 280.5,
+   "early_tt_ps": 93.0,
+   "early_ff_ps": 78.0,
+   "hold_ff_before": -85.0,
+   "hold_in": -7.0,
+   "hold_out": 1.7,
+   "hold_ff_after": -7.0,
+   "hold_ff_after_u25": -32.0,
+   "residual_skew_ff_ps": 17.1,
+   "gate": "FAIL",
+   "flags": [],
+   "r3_basis": {
+    "cls": "REACH_GT200_INTERNAL_HTREE_MODEL_IN_WINDOW",
+    "model_centre_tt_ps": 204.5,
+    "model_centre_ff_ps": 163.5,
+    "measured_edge_entry_tt_ps": 343,
+    "farthest_um": 241.92
+   }
+  },
+  {
+   "module": "ot_hgi_coll_gq_land",
+   "placements": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    142.56,
+    207.36
+   ],
+   "source": "real routed view physical/ref_tile/hcoll_gq_land_1018/views/ot_hgi_coll_gq_land/insertion.json (spef, 6_final.odb, boundary regs n=3869)",
+   "label": "CHECKED (measured routed SPEF view, plan-selected lib; NUMBER-CHECK not independent)",
+   "tt": {
+    "mean": 315.5,
+    "min": 291.4,
+    "max": 361.3
+   },
+   "ff": {
+    "mean": 262.5,
+    "min": 239.7,
+    "max": 305.8
+   },
+   "spread_tt": 69.9,
+   "spread_ff": 66.1,
+   "insertion_ps": 315.5,
+   "insertion_ff_ps": 262.5,
+   "early_tt_ps": 65.5,
+   "early_ff_ps": 60.0,
+   "hold_ff_before": -93.6,
+   "hold_in": -33.6,
+   "hold_out": -9.8,
+   "hold_ff_after": -33.6,
+   "hold_ff_after_u25": -58.6,
+   "residual_skew_ff_ps": 43.3,
+   "gate": "FAIL",
+   "flags": [],
+   "r3_basis": {
+    "cls": "CENTRE_ENTRY_STRUCTURED_TREE",
+    "model_centre_tt_ps": 149.7,
+    "model_centre_ff_ps": 119.7,
+    "measured_edge_entry_tt_ps": 328,
+    "farthest_um": 177.12
+   }
+  },
+  {
+   "module": "ot_hbm_idx_qctl_static",
+   "placements": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    194.83,
+    82.08
+   ],
+   "source": "real routed view physical/ref_tile/hidx_qctl_d4g/views/ot_hbm_idx_qctl_static/insertion.json (spef, 6_final.odb, boundary regs n=337)",
+   "label": "CHECKED (measured routed SPEF view, plan-selected lib; NUMBER-CHECK not independent)",
+   "tt": {
+    "mean": 119.0,
+    "min": 110.8,
+    "max": 125.6
+   },
+   "ff": {
+    "mean": 96.2,
+    "min": 88.1,
+    "max": 102.8
+   },
+   "spread_tt": 14.8,
+   "spread_ff": 14.7,
+   "insertion_ps": 119.0,
+   "insertion_ff_ps": 96.2,
+   "early_tt_ps": 0.0,
+   "early_ff_ps": 0.0,
+   "hold_ff_before": -93.8,
+   "hold_in": 119.6,
+   "hold_out": -93.8,
+   "hold_ff_after": -93.8,
+   "hold_ff_after_u25": -118.8,
+   "residual_skew_ff_ps": 114.4,
+   "gate": "FAIL",
+   "flags": [
+    "SHALLOW (FF mean 96.2 < 202.5-20): early taps give 0; in-core fixed trunk 12.8c or late delivery"
+   ],
+   "r3_basis": {
+    "cls": "SHALLOW_FIXED_TRUNK (12.8c)",
+    "model_centre_tt_ps": 167.9,
+    "model_centre_ff_ps": 134.3,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 198.72
+   }
+  },
+  {
+   "module": "ot_hbm_idx_query_static",
+   "placements": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    170.64,
+    164.16
+   ],
+   "source": "real routed view physical/ref_tile/hidx_q_r4/views/ot_hbm_idx_query_static/insertion.json (spef, 6_final.odb, boundary regs n=1625)",
+   "label": "CHECKED (measured routed SPEF view, plan-selected lib; NUMBER-CHECK not independent)",
+   "tt": {
+    "mean": 311.5,
+    "min": 265.2,
+    "max": 344.8
+   },
+   "ff": {
+    "mean": 262.6,
+    "min": 218.7,
+    "max": 294.0
+   },
+   "spread_tt": 79.6,
+   "spread_ff": 75.3,
+   "insertion_ps": 311.5,
+   "insertion_ff_ps": 262.6,
+   "early_tt_ps": 61.5,
+   "early_ff_ps": 60.1,
+   "hold_ff_before": -81.2,
+   "hold_in": -21.1,
+   "hold_out": -29.8,
+   "hold_ff_after": -29.8,
+   "hold_ff_after_u25": -54.8,
+   "residual_skew_ff_ps": 43.9,
+   "gate": "FAIL",
+   "flags": [],
+   "r3_basis": {
+    "cls": "OK_OR_CENTRE",
+    "model_centre_tt_ps": 142.4,
+    "model_centre_ff_ps": 113.9,
+    "measured_edge_entry_tt_ps": 275,
+    "farthest_um": 168.48
+   }
+  },
+  {
+   "module": "hfd_hgi_vm_calendar_f20",
+   "placements": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    241.92,
+    116.64
+   ],
+   "source": "real routed view physical/ref_tile/hv16_vm_cal_f20_ww/views/hfd_hgi_vm_calendar_f20/insertion.json (spef, 6_final.odb, boundary regs n=225)",
+   "label": "CHECKED (measured routed SPEF view, plan-selected lib; NUMBER-CHECK not independent)",
+   "tt": {
+    "mean": 184.8,
+    "min": 177.1,
+    "max": 202.4
+   },
+   "ff": {
+    "mean": 152.7,
+    "min": 145.9,
+    "max": 167.7
+   },
+   "spread_tt": 25.3,
+   "spread_ff": 21.8,
+   "insertion_ps": 184.8,
+   "insertion_ff_ps": 152.7,
+   "early_tt_ps": 0.0,
+   "early_ff_ps": 0.0,
+   "hold_ff_before": -38.9,
+   "hold_in": 51.4,
+   "hold_out": -38.9,
+   "hold_ff_after": -38.9,
+   "hold_ff_after_u25": -63.9,
+   "residual_skew_ff_ps": 56.6,
+   "gate": "FAIL",
+   "flags": [
+    "SHALLOW (FF mean 152.7 < 202.5-20): early taps give 0; in-core fixed trunk 12.8c or late delivery",
+    "MULTI-CLOCK view: 4 clock pins (clk,clk_cap,clk_mem,clk_tgt); plan taps '*' = one insertion for all pins -> per-pin taps needed"
+   ],
+   "r3_basis": {
+    "cls": "OK_OR_CENTRE",
+    "model_centre_tt_ps": 153.3,
+    "model_centre_ff_ps": 122.6,
+    "measured_edge_entry_tt_ps": 241,
+    "farthest_um": 181.44
+   }
+  },
+  {
+   "module": "ot_hbm_idx_vm_query_static_n12",
+   "placements": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    216.0,
+    138.24
+   ],
+   "source": "real routed view physical/ref_tile/hidx_op_n12_1018/views/ot_hbm_idx_vm_query_static_n12/insertion.json (spef, 6_final.odb, boundary regs n=3288)",
+   "label": "CHECKED (measured routed SPEF view, plan-selected lib; NUMBER-CHECK not independent)",
+   "tt": {
+    "mean": 215.7,
+    "min": 193.8,
+    "max": 243.2
+   },
+   "ff": {
+    "mean": 175.8,
+    "min": 156.1,
+    "max": 201.8
+   },
+   "spread_tt": 49.4,
+   "spread_ff": 45.7,
+   "insertion_ps": 215.7,
+   "insertion_ff_ps": 175.8,
+   "early_tt_ps": 0.0,
+   "early_ff_ps": 0.0,
+   "hold_ff_before": -29.2,
+   "hold_in": 15.6,
+   "hold_out": -29.2,
+   "hold_ff_after": -29.2,
+   "hold_ff_after_u25": -54.2,
+   "residual_skew_ff_ps": 46.4,
+   "gate": "FAIL",
+   "flags": [
+    "SHALLOW (FF mean 175.8 < 202.5-20): early taps give 0; in-core fixed trunk 12.8c or late delivery"
+   ],
+   "r3_basis": {
+    "cls": "OK_OR_CENTRE",
+    "model_centre_tt_ps": 138.7,
+    "model_centre_ff_ps": 111.0,
+    "measured_edge_entry_tt_ps": 259,
+    "farthest_um": 164.16
+   }
+  },
+  {
+   "module": "ot_hbm_xp_aq_tree13_fmt",
+   "placements": 4,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    183.6,
+    108.0
+   ],
+   "source": "real routed view physical/ref_tile/hxp_aq13_fmt/views/ot_hbm_xp_aq_tree13_fmt/insertion.json (spef, 6_final.odb, boundary regs n=1774)",
+   "label": "CHECKED (measured routed SPEF view, plan-selected lib; NUMBER-CHECK not independent)",
+   "tt": {
+    "mean": 229.8,
+    "min": 221.8,
+    "max": 239.5
+   },
+   "ff": {
+    "mean": 190.1,
+    "min": 182.6,
+    "max": 199.5
+   },
+   "spread_tt": 17.7,
+   "spread_ff": 16.9,
+   "insertion_ps": 229.8,
+   "insertion_ff_ps": 190.1,
+   "early_tt_ps": 0.0,
+   "early_ff_ps": 0.0,
+   "hold_ff_before": -4.0,
+   "hold_in": 18.0,
+   "hold_out": -4.0,
+   "hold_ff_after": -4.0,
+   "hold_ff_after_u25": -29.0,
+   "residual_skew_ff_ps": 19.9,
+   "gate": "FAIL",
+   "flags": [],
+   "r3_basis": {
+    "cls": "OK_OR_CENTRE",
+    "model_centre_tt_ps": 126.0,
+    "model_centre_ff_ps": 100.7,
+    "measured_edge_entry_tt_ps": 236,
+    "farthest_um": 149.04
+   }
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__tailx__v3fcb6a",
+   "placements": 2,
+   "types": [
+    "q_b103"
+   ],
+   "outline": [
+    218.59,
+    187.49
+   ],
+   "source": "FAMILY PROXY: b2l natural CTS of 12 related old kits (ot_hbm_idx_score_quarter_static__r0c0_k0h0, outline [181.44, 155.52] vs plan [218.59, 187.49])",
+   "label": "UNCHECKED (proxy of a related design; FF = TT x 0.8177)",
+   "tt": {
+    "mean": 256.6,
+    "min": 233,
+    "max": 299
+   },
+   "ff": {
+    "mean": 209.8,
+    "min": 190.5,
+    "max": 244.5
+   },
+   "spread_tt": 66,
+   "spread_ff": 54.0,
+   "insertion_ps": 256.6,
+   "insertion_ff_ps": 209.8,
+   "early_tt_ps": 6.6,
+   "early_ff_ps": 7.3,
+   "hold_ff_before": -29.2,
+   "hold_in": -21.9,
+   "hold_out": -3.8,
+   "hold_ff_after": -21.9,
+   "hold_ff_after_u25": -46.9,
+   "residual_skew_ff_ps": 34.7,
+   "gate": "FAIL",
+   "flags": [],
+   "r3_basis": null
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__tailx__v36d446",
+   "placements": 2,
+   "types": [
+    "q_b103"
+   ],
+   "outline": [
+    218.59,
+    187.49
+   ],
+   "source": "FAMILY PROXY: b2l natural CTS of 12 related old kits (ot_hbm_idx_score_quarter_static__r0c0_k0h0, outline [181.44, 155.52] vs plan [218.59, 187.49])",
+   "label": "UNCHECKED (proxy of a related design; FF = TT x 0.8177)",
+   "tt": {
+    "mean": 256.6,
+    "min": 233,
+    "max": 299
+   },
+   "ff": {
+    "mean": 209.8,
+    "min": 190.5,
+    "max": 244.5
+   },
+   "spread_tt": 66,
+   "spread_ff": 54.0,
+   "insertion_ps": 256.6,
+   "insertion_ff_ps": 209.8,
+   "early_tt_ps": 6.6,
+   "early_ff_ps": 7.3,
+   "hold_ff_before": -29.2,
+   "hold_in": -21.9,
+   "hold_out": -3.8,
+   "hold_ff_after": -21.9,
+   "hold_ff_after_u25": -46.9,
+   "residual_skew_ff_ps": 34.7,
+   "gate": "FAIL",
+   "flags": [],
+   "r3_basis": null
+  },
+  {
+   "module": "ot_hgi_sfu_core_split3__opstore_a",
+   "placements": 2,
+   "types": [
+    "q_b113"
+   ],
+   "outline": [
+    390.53,
+    436.32
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 459.6 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 388.5,
+    "min": 388.5,
+    "max": 388.5
+   },
+   "ff": {
+    "mean": 310.7,
+    "min": 310.7,
+    "max": 310.7
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 388.5,
+   "insertion_ff_ps": 310.7,
+   "early_tt_ps": 138.5,
+   "early_ff_ps": 108.2,
+   "hold_ff_before": -98.7,
+   "hold_in": 9.5,
+   "hold_out": 9.5,
+   "hold_ff_after": 9.5,
+   "hold_ff_after_u25": -15.5,
+   "residual_skew_ff_ps": 0.0,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "NO DATA: model only"
+   ],
+   "r3_basis": {
+    "cls": "INTERNAL_HTREE_ISLANDS",
+    "model_centre_tt_ps": 310.3,
+    "model_centre_ff_ps": 248.2,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 367.2
+   }
+  },
+  {
+   "module": "ot_hgi_sfu_core_split3__opstore_b",
+   "placements": 2,
+   "types": [
+    "q_b113"
+   ],
+   "outline": [
+    760.32,
+    691.2
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 725.8 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 613.4,
+    "min": 613.4,
+    "max": 613.4
+   },
+   "ff": {
+    "mean": 490.6,
+    "min": 490.6,
+    "max": 490.6
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 613.4,
+   "insertion_ff_ps": 490.6,
+   "early_tt_ps": 363.4,
+   "early_ff_ps": 288.1,
+   "hold_ff_before": -287.6,
+   "hold_in": 0.5,
+   "hold_out": 0.5,
+   "hold_ff_after": 0.5,
+   "hold_ff_after_u25": -24.5,
+   "residual_skew_ff_ps": 0.0,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "NO DATA: model only"
+   ],
+   "r3_basis": {
+    "cls": "INTERNAL_HTREE_ISLANDS",
+    "model_centre_tt_ps": 613.4,
+    "model_centre_ff_ps": 490.6,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 725.76
+   }
+  },
+  {
+   "module": "ot_hgi_sfu_core_split3__ctl",
+   "placements": 2,
+   "types": [
+    "q_b113"
+   ],
+   "outline": [
+    669.6,
+    626.4
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 652.4 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 551.4,
+    "min": 551.4,
+    "max": 551.4
+   },
+   "ff": {
+    "mean": 441.0,
+    "min": 441.0,
+    "max": 441.0
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 551.4,
+   "insertion_ff_ps": 441.0,
+   "early_tt_ps": 301.4,
+   "early_ff_ps": 238.5,
+   "hold_ff_before": -235.6,
+   "hold_in": 2.9,
+   "hold_out": 2.9,
+   "hold_ff_after": 2.9,
+   "hold_ff_after_u25": -22.1,
+   "residual_skew_ff_ps": 0.0,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "NO DATA: model only"
+   ],
+   "r3_basis": {
+    "cls": "INTERNAL_HTREE_ISLANDS",
+    "model_centre_tt_ps": 551.3,
+    "model_centre_ff_ps": 440.9,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 652.32
+   }
+  },
+  {
+   "module": "ot_hbm_hc_root_static__tailx_sk_step0",
+   "placements": 2,
+   "types": [
+    "root"
+   ],
+   "outline": [
+    155.52,
+    241.92
+   ],
+   "source": "FAMILY PROXY: b2l natural CTS of 1 related old kits (ot_hbm_hc_root_static__hcp_sys1, outline [155.52, 172.8] vs plan [155.52, 241.92])",
+   "label": "UNCHECKED (proxy of a related design; FF = TT x 0.8177)",
+   "tt": {
+    "mean": 251,
+    "min": 242,
+    "max": 259
+   },
+   "ff": {
+    "mean": 205.2,
+    "min": 197.9,
+    "max": 211.8
+   },
+   "spread_tt": 17,
+   "spread_ff": 13.9,
+   "insertion_ps": 251,
+   "insertion_ff_ps": 205.2,
+   "early_tt_ps": 1.0,
+   "early_ff_ps": 2.7,
+   "hold_ff_before": 5.1,
+   "hold_in": 7.8,
+   "hold_out": 7.8,
+   "hold_ff_after": 7.8,
+   "hold_ff_after_u25": -17.2,
+   "residual_skew_ff_ps": 7.3,
+   "gate": "PASS",
+   "flags": [],
+   "r3_basis": null
+  },
+  {
+   "module": "ot_hbm_hc_root_static__tailx_sk_steady",
+   "placements": 2,
+   "types": [
+    "root"
+   ],
+   "outline": [
+    155.52,
+    198.72
+   ],
+   "source": "FAMILY PROXY: b2l natural CTS of 1 related old kits (ot_hbm_hc_root_static__hcp_sys1, outline [155.52, 172.8] vs plan [155.52, 198.72])",
+   "label": "UNCHECKED (proxy of a related design; FF = TT x 0.8177)",
+   "tt": {
+    "mean": 251,
+    "min": 242,
+    "max": 259
+   },
+   "ff": {
+    "mean": 205.2,
+    "min": 197.9,
+    "max": 211.8
+   },
+   "spread_tt": 17,
+   "spread_ff": 13.9,
+   "insertion_ps": 251,
+   "insertion_ff_ps": 205.2,
+   "early_tt_ps": 1.0,
+   "early_ff_ps": 2.7,
+   "hold_ff_before": 5.1,
+   "hold_in": 7.8,
+   "hold_out": 7.8,
+   "hold_ff_after": 7.8,
+   "hold_ff_after_u25": -17.2,
+   "residual_skew_ff_ps": 7.3,
+   "gate": "PASS",
+   "flags": [],
+   "r3_basis": null
+  },
+  {
+   "module": "ot_hfd_coll_q3_body_core",
+   "placements": 2,
+   "types": [
+    "q_hub_nw"
+   ],
+   "outline": [
+    578.88,
+    1054.08
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 816.5 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 690.0,
+    "min": 690.0,
+    "max": 690.0
+   },
+   "ff": {
+    "mean": 551.9,
+    "min": 551.9,
+    "max": 551.9
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 690.0,
+   "insertion_ff_ps": 551.9,
+   "early_tt_ps": 440.0,
+   "early_ff_ps": 349.4,
+   "hold_ff_before": -352.0,
+   "hold_in": -2.6,
+   "hold_out": -2.6,
+   "hold_ff_after": -2.6,
+   "hold_ff_after_u25": -27.6,
+   "residual_skew_ff_ps": 0.0,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "NO DATA: model only"
+   ],
+   "r3_basis": {
+    "cls": "INTERNAL_HTREE_ISLANDS",
+    "model_centre_tt_ps": 690.0,
+    "model_centre_ff_ps": 551.9,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 816.48
+   }
+  },
+  {
+   "module": "ot_hfd_coll_q3_edge_core",
+   "placements": 2,
+   "types": [
+    "q_hub_nw"
+   ],
+   "outline": [
+    216.0,
+    1054.08
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 635.0 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 536.7,
+    "min": 536.7,
+    "max": 536.7
+   },
+   "ff": {
+    "mean": 429.2,
+    "min": 429.2,
+    "max": 429.2
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 536.7,
+   "insertion_ff_ps": 429.2,
+   "early_tt_ps": 286.7,
+   "early_ff_ps": 226.7,
+   "hold_ff_before": -223.2,
+   "hold_in": 3.5,
+   "hold_out": 3.5,
+   "hold_ff_after": 3.5,
+   "hold_ff_after_u25": -21.5,
+   "residual_skew_ff_ps": 0.0,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "NO DATA: model only"
+   ],
+   "r3_basis": {
+    "cls": "INTERNAL_HTREE_ISLANDS",
+    "model_centre_tt_ps": 525.7,
+    "model_centre_ff_ps": 420.5,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 622.08
+   }
+  },
+  {
+   "module": "ot_hfd_coll_q3_vm_core",
+   "placements": 2,
+   "types": [
+    "q_hub_nw"
+   ],
+   "outline": [
+    328.32,
+    717.12
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 522.7 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 441.8,
+    "min": 441.8,
+    "max": 441.8
+   },
+   "ff": {
+    "mean": 353.3,
+    "min": 353.3,
+    "max": 353.3
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 441.8,
+   "insertion_ff_ps": 353.3,
+   "early_tt_ps": 191.8,
+   "early_ff_ps": 150.8,
+   "hold_ff_before": -143.5,
+   "hold_in": 7.3,
+   "hold_out": 7.3,
+   "hold_ff_after": 7.3,
+   "hold_ff_after_u25": -17.7,
+   "residual_skew_ff_ps": 0.0,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "NO DATA: model only"
+   ],
+   "r3_basis": {
+    "cls": "INTERNAL_HTREE_ISLANDS",
+    "model_centre_tt_ps": 441.8,
+    "model_centre_ff_ps": 353.3,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 522.72
+   }
+  },
+  {
+   "module": "ot_hbm_svc_vm_kshare_splitstrap__v8e478a",
+   "placements": 2,
+   "types": [
+    "q_hub_ne",
+    "q_hub_nw"
+   ],
+   "outline": [
+    445.82,
+    506.3
+   ],
+   "source": "FAMILY PROXY: b2l natural CTS of 4 related old kits (ot_hbm_svc_vm_kshare_splitstrap, outline [354.24, 453.6] vs plan [445.82, 506.3])",
+   "label": "UNCHECKED (proxy of a related design; FF = TT x 0.8177)",
+   "tt": {
+    "mean": 530.5,
+    "min": 418,
+    "max": 683
+   },
+   "ff": {
+    "mean": 433.8,
+    "min": 341.8,
+    "max": 558.5
+   },
+   "spread_tt": 265,
+   "spread_ff": 216.7,
+   "insertion_ps": 530.5,
+   "insertion_ff_ps": 433.8,
+   "early_tt_ps": 280.5,
+   "early_ff_ps": 231.3,
+   "hold_ff_before": -358.9,
+   "hold_in": -127.6,
+   "hold_out": -84.1,
+   "hold_ff_after": -127.6,
+   "hold_ff_after_u25": -152.6,
+   "residual_skew_ff_ps": 124.7,
+   "gate": "FAIL",
+   "flags": [
+    "SPREAD>150 (TT 265): early taps cannot fix, in-core fix"
+   ],
+   "r3_basis": null
+  },
+  {
+   "module": "ot_hfd_coll_q2n2_body_core",
+   "placements": 2,
+   "types": [
+    "q_hub_ne"
+   ],
+   "outline": [
+    786.24,
+    743.04
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 764.6 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 646.2,
+    "min": 646.2,
+    "max": 646.2
+   },
+   "ff": {
+    "mean": 516.8,
+    "min": 516.8,
+    "max": 516.8
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 646.2,
+   "insertion_ff_ps": 516.8,
+   "early_tt_ps": 396.2,
+   "early_ff_ps": 314.3,
+   "hold_ff_before": -315.1,
+   "hold_in": -0.8,
+   "hold_out": -0.8,
+   "hold_ff_after": -0.8,
+   "hold_ff_after_u25": -25.8,
+   "residual_skew_ff_ps": 0.0,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "NO DATA: model only"
+   ],
+   "r3_basis": {
+    "cls": "INTERNAL_HTREE_ISLANDS",
+    "model_centre_tt_ps": 646.2,
+    "model_centre_ff_ps": 516.8,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 764.64
+   }
+  },
+  {
+   "module": "ot_hfd_coll_q2n2_vm_core",
+   "placements": 2,
+   "types": [
+    "q_hub_ne"
+   ],
+   "outline": [
+    924.48,
+    509.76
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 717.1 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 606.1,
+    "min": 606.1,
+    "max": 606.1
+   },
+   "ff": {
+    "mean": 484.7,
+    "min": 484.7,
+    "max": 484.7
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 606.1,
+   "insertion_ff_ps": 484.7,
+   "early_tt_ps": 356.1,
+   "early_ff_ps": 282.2,
+   "hold_ff_before": -281.4,
+   "hold_in": 0.8,
+   "hold_out": 0.8,
+   "hold_ff_after": 0.8,
+   "hold_ff_after_u25": -24.2,
+   "residual_skew_ff_ps": 0.0,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "NO DATA: model only"
+   ],
+   "r3_basis": {
+    "cls": "INTERNAL_HTREE_ISLANDS",
+    "model_centre_tt_ps": 606.1,
+    "model_centre_ff_ps": 484.7,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 717.12
+   }
+  },
+  {
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap",
+   "placements": 1,
+   "types": [
+    "root"
+   ],
+   "outline": [
+    319.68,
+    345.6
+   ],
+   "source": "FAMILY PROXY: HBM-CORE-LAT-2 CTS probe on C20e kit ot_hgi_coll_tkm_tp192_tile_core__idpin__strap_61e365d09ac2-_c20e (epyc2 copy, existing 3_place, TritonCTS + kit tap_balance 0 delay cells; postcts_gate pin-register set n=1382, placement RC setRC_rcx) (same 319.68x345.6 outline, terminal variant)",
+   "label": "UNCHECKED (proxy of the tile_core CTS probe)",
+   "tt": {
+    "mean": 259.95,
+    "min": 247.8,
+    "max": 274.8
+   },
+   "ff": {
+    "mean": 210.69,
+    "min": 198.66,
+    "max": 225.36
+   },
+   "spread_tt": 27.0,
+   "spread_ff": 26.7,
+   "insertion_ps": 259.95,
+   "insertion_ff_ps": 210.69,
+   "early_tt_ps": 9.9,
+   "early_ff_ps": 8.2,
+   "hold_ff_before": -9.1,
+   "hold_in": -0.9,
+   "hold_out": 3.0,
+   "hold_ff_after": -0.9,
+   "hold_ff_after_u25": -25.9,
+   "residual_skew_ff_ps": 14.7,
+   "gate": "FAIL",
+   "flags": [],
+   "r3_basis": {
+    "cls": "INTERNAL_HTREE_ISLANDS",
+    "model_centre_tt_ps": 281.1,
+    "model_centre_ff_ps": 224.8,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 332.64
+   }
+  },
+  {
+   "module": "ot_hgi_coll_tkm_m_tp192__root",
+   "placements": 1,
+   "types": [
+    "root"
+   ],
+   "outline": [
+    319.68,
+    389.66
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 376.7 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 318.4,
+    "min": 318.4,
+    "max": 318.4
+   },
+   "ff": {
+    "mean": 254.6,
+    "min": 254.6,
+    "max": 254.6
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 318.4,
+   "insertion_ff_ps": 254.6,
+   "early_tt_ps": 68.4,
+   "early_ff_ps": 52.1,
+   "hold_ff_before": -39.8,
+   "hold_in": 12.3,
+   "hold_out": 12.3,
+   "hold_ff_after": 12.3,
+   "hold_ff_after_u25": -12.7,
+   "residual_skew_ff_ps": 0.0,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "NO DATA: model only"
+   ],
+   "r3_basis": {
+    "cls": "INTERNAL_HTREE_ISLANDS",
+    "model_centre_tt_ps": 281.1,
+    "model_centre_ff_ps": 224.8,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 332.64
+   }
+  },
+  {
+   "module": "ot_hbm_hc_root_static__tailx_rest__v6bc7f2",
+   "placements": 1,
+   "types": [
+    "root"
+   ],
+   "outline": [
+    182.3,
+    201.31
+   ],
+   "source": "FAMILY PROXY: b2l natural CTS of 1 related old kits (ot_hbm_hc_root_static__hcp_sys1, outline [155.52, 172.8] vs plan [182.3, 201.31])",
+   "label": "UNCHECKED (proxy of a related design; FF = TT x 0.8177)",
+   "tt": {
+    "mean": 251,
+    "min": 242,
+    "max": 259
+   },
+   "ff": {
+    "mean": 205.2,
+    "min": 197.9,
+    "max": 211.8
+   },
+   "spread_tt": 17,
+   "spread_ff": 13.9,
+   "insertion_ps": 251,
+   "insertion_ff_ps": 205.2,
+   "early_tt_ps": 1.0,
+   "early_ff_ps": 2.7,
+   "hold_ff_before": 5.1,
+   "hold_in": 7.8,
+   "hold_out": 7.8,
+   "hold_ff_after": 7.8,
+   "hold_ff_after_u25": -17.2,
+   "residual_skew_ff_ps": 7.3,
+   "gate": "PASS",
+   "flags": [],
+   "r3_basis": null
+  },
+  {
+   "module": "ot_hbm_hc_root_static__tailx_rest__v4f4566",
+   "placements": 1,
+   "types": [
+    "root"
+   ],
+   "outline": [
+    182.3,
+    201.31
+   ],
+   "source": "FAMILY PROXY: b2l natural CTS of 1 related old kits (ot_hbm_hc_root_static__hcp_sys1, outline [155.52, 172.8] vs plan [182.3, 201.31])",
+   "label": "UNCHECKED (proxy of a related design; FF = TT x 0.8177)",
+   "tt": {
+    "mean": 251,
+    "min": 242,
+    "max": 259
+   },
+   "ff": {
+    "mean": 205.2,
+    "min": 197.9,
+    "max": 211.8
+   },
+   "spread_tt": 17,
+   "spread_ff": 13.9,
+   "insertion_ps": 251,
+   "insertion_ff_ps": 205.2,
+   "early_tt_ps": 1.0,
+   "early_ff_ps": 2.7,
+   "hold_ff_before": 5.1,
+   "hold_in": 7.8,
+   "hold_out": 7.8,
+   "hold_ff_after": 7.8,
+   "hold_ff_after_u25": -17.2,
+   "residual_skew_ff_ps": 7.3,
+   "gate": "PASS",
+   "flags": [],
+   "r3_basis": null
+  },
+  {
+   "module": "ot_hbm_hc_root_static__hcp_sys1",
+   "placements": 1,
+   "types": [
+    "root"
+   ],
+   "outline": [
+    155.52,
+    172.8
+   ],
+   "source": "b2l natural CTS (TritonCTS it0, placement RC) ot_hbm_hc_root_static__hcp_sys1@eeab1883a31b outline [155.52, 172.8]",
+   "label": "UNCHECKED (old kit, placement RC; FF = TT x 0.8177 routed-view ratio)",
+   "tt": {
+    "mean": 251,
+    "min": 242,
+    "max": 259
+   },
+   "ff": {
+    "mean": 205.2,
+    "min": 197.9,
+    "max": 211.8
+   },
+   "spread_tt": 17,
+   "spread_ff": 13.9,
+   "insertion_ps": 251,
+   "insertion_ff_ps": 205.2,
+   "early_tt_ps": 1.0,
+   "early_ff_ps": 2.7,
+   "hold_ff_before": 5.1,
+   "hold_in": 7.8,
+   "hold_out": 7.8,
+   "hold_ff_after": 7.8,
+   "hold_ff_after_u25": -17.2,
+   "residual_skew_ff_ps": 7.3,
+   "gate": "PASS",
+   "flags": [],
+   "r3_basis": {
+    "cls": "OK_OR_CENTRE",
+    "model_centre_tt_ps": 138.7,
+    "model_centre_ff_ps": 111.0,
+    "measured_edge_entry_tt_ps": 251,
+    "farthest_um": 164.16
+   }
+  },
+  {
+   "module": "ot_hbm_idx_topk_link_static",
+   "placements": 1,
+   "types": [
+    "root"
+   ],
+   "outline": [
+    650.16,
+    500.04
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 576.7 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 487.4,
+    "min": 487.4,
+    "max": 487.4
+   },
+   "ff": {
+    "mean": 389.8,
+    "min": 389.8,
+    "max": 389.8
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 487.4,
+   "insertion_ff_ps": 389.8,
+   "early_tt_ps": 237.4,
+   "early_ff_ps": 187.3,
+   "hold_ff_before": -181.8,
+   "hold_in": 5.5,
+   "hold_out": 5.5,
+   "hold_ff_after": 5.5,
+   "hold_ff_after_u25": -19.5,
+   "residual_skew_ff_ps": 0.0,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "NO DATA: model only"
+   ],
+   "r3_basis": {
+    "cls": "INTERNAL_HTREE_ISLANDS",
+    "model_centre_tt_ps": 487.4,
+    "model_centre_ff_ps": 389.8,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 576.72
+   }
+  },
+  {
+   "module": "ot_hbm_idx_selector_static_sel",
+   "placements": 1,
+   "types": [
+    "root"
+   ],
+   "outline": [
+    600.05,
+    450.36
+   ],
+   "source": "r4 centre-entry model TT = 0.9429 x 0.8963 ps/um x Lmax 527.7 um (plan entry -> farthest corner)",
+   "label": "UNCHECKED model (no view, no kit CTS; spread unknown, 0 assumed)",
+   "tt": {
+    "mean": 446.0,
+    "min": 446.0,
+    "max": 446.0
+   },
+   "ff": {
+    "mean": 356.7,
+    "min": 356.7,
+    "max": 356.7
+   },
+   "spread_tt": 0.0,
+   "spread_ff": 0.0,
+   "insertion_ps": 446.0,
+   "insertion_ff_ps": 356.7,
+   "early_tt_ps": 196.0,
+   "early_ff_ps": 154.2,
+   "hold_ff_before": -147.0,
+   "hold_in": 7.2,
+   "hold_out": 7.2,
+   "hold_ff_after": 7.2,
+   "hold_ff_after_u25": -17.8,
+   "residual_skew_ff_ps": 0.0,
+   "gate": "UNPROVEN (model, spread unknown)",
+   "flags": [
+    "NO DATA: model only"
+   ],
+   "r3_basis": {
+    "cls": "INTERNAL_HTREE_ISLANDS",
+    "model_centre_tt_ps": 446.0,
+    "model_centre_ff_ps": 356.7,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 527.688
+   }
+  },
+  {
+   "module": "ot_hbm_host_cp_rxs",
+   "placements": 1,
+   "types": [
+    "root"
+   ],
+   "outline": [
+    434.81,
+    432.0
+   ],
+   "source": "real routed view physical/ref_tile/hdie_host_cprxs_r1/views/ot_hbm_host_cp_rxs/insertion.json (spef, 6_final.odb, boundary regs n=1351)",
+   "label": "CHECKED (measured routed SPEF view, plan-selected lib; NUMBER-CHECK not independent)",
+   "tt": {
+    "mean": 479.9,
+    "min": 453.1,
+    "max": 507.1
+   },
+   "ff": {
+    "mean": 390.3,
+    "min": 366.0,
+    "max": 416.8
+   },
+   "spread_tt": 54.0,
+   "spread_ff": 50.8,
+   "insertion_ps": 479.9,
+   "insertion_ff_ps": 390.3,
+   "early_tt_ps": 229.9,
+   "early_ff_ps": 187.8,
+   "hold_ff_before": -210.1,
+   "hold_in": -22.3,
+   "hold_out": -17.6,
+   "hold_ff_after": -22.3,
+   "hold_ff_after_u25": -47.3,
+   "residual_skew_ff_ps": 26.5,
+   "gate": "FAIL",
+   "flags": [],
+   "r3_basis": {
+    "cls": "INTERNAL_HTREE_ISLANDS",
+    "model_centre_tt_ps": 367.5,
+    "model_centre_ff_ps": 293.9,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 434.808
+   }
+  },
+  {
+   "module": "ot_hbm_idx_rootctl_static_am",
+   "placements": 1,
+   "types": [
+    "root"
+   ],
+   "outline": [
+    475.2,
+    259.2
+   ],
+   "source": "real routed view physical/ref_tile/hidx_rootctl_am_1018/views/ot_hbm_idx_rootctl_static_am/insertion.json (spef, 6_final.odb, boundary regs n=3542)",
+   "label": "CHECKED (measured routed SPEF view, plan-selected lib; NUMBER-CHECK not independent)",
+   "tt": {
+    "mean": 754.0,
+    "min": 724.4,
+    "max": 800.7
+   },
+   "ff": {
+    "mean": 608.0,
+    "min": 589.2,
+    "max": 652.9
+   },
+   "spread_tt": 76.3,
+   "spread_ff": 63.7,
+   "insertion_ps": 754.0,
+   "insertion_ff_ps": 608.0,
+   "early_tt_ps": 504.0,
+   "early_ff_ps": 405.5,
+   "hold_ff_before": -458.0,
+   "hold_in": -52.5,
+   "hold_out": -23.3,
+   "hold_ff_after": -52.5,
+   "hold_ff_after_u25": -77.5,
+   "residual_skew_ff_ps": 44.9,
+   "gate": "FAIL",
+   "flags": [],
+   "r3_basis": {
+    "cls": "INTERNAL_HTREE_ISLANDS",
+    "model_centre_tt_ps": 310.3,
+    "model_centre_ff_ps": 248.2,
+    "measured_edge_entry_tt_ps": null,
+    "farthest_um": 367.2
+   }
+  },
+  {
+   "module": "ot_hbm_argmax_static_sw_vm_r2",
+   "placements": 1,
+   "types": [
+    "root"
+   ],
+   "outline": [
+    118.8,
+    118.8
+   ],
+   "source": "real routed view physical/ref_tile/hbm_argmax_swvm_r2_1017/views/ot_hbm_argmax_static_sw_vm_r2/insertion.json (spef, 6_final.odb, boundary regs n=719)",
+   "label": "CHECKED (measured routed SPEF view, plan-selected lib; NUMBER-CHECK not independent)",
+   "tt": {
+    "mean": 165.3,
+    "min": 153.4,
+    "max": 178.9
+   },
+   "ff": {
+    "mean": 134.7,
+    "min": 123.5,
+    "max": 146.8
+   },
+   "spread_tt": 25.5,
+   "spread_ff": 23.3,
+   "insertion_ps": 165.3,
+   "insertion_ff_ps": 134.7,
+   "early_tt_ps": 0.0,
+   "early_ff_ps": 0.0,
+   "hold_ff_before": -60.2,
+   "hold_in": 73.4,
+   "hold_out": -60.2,
+   "hold_ff_after": -60.2,
+   "hold_ff_after_u25": -85.2,
+   "residual_skew_ff_ps": 79.0,
+   "gate": "FAIL",
+   "flags": [
+    "SHALLOW (FF mean 134.7 < 202.5-20): early taps give 0; in-core fixed trunk 12.8c or late delivery"
+   ],
+   "r3_basis": {
+    "cls": "SHALLOW_FIXED_TRUNK (12.8c)",
+    "model_centre_tt_ps": 102.2,
+    "model_centre_ff_ps": 81.8,
+    "measured_edge_entry_tt_ps": 191,
+    "farthest_um": 120.96
+   }
+  },
+  {
+   "module": "ot_hbm_static_cfg_collar_idx256r",
+   "placements": 1,
+   "types": [
+    "root"
+   ],
+   "outline": [
+    88.99,
+    88.99
+   ],
+   "source": "real routed view physical/ref_tile/hdie_col_idx256r_a/views/ot_hbm_static_cfg_collar_idx256r/insertion.json (spef, 6_final.odb, boundary regs n=1894)",
+   "label": "CHECKED (measured routed SPEF view, plan-selected lib; NUMBER-CHECK not independent)",
+   "tt": {
+    "mean": 173.1,
+    "min": 157.0,
+    "max": 193.2
+   },
+   "ff": {
+    "mean": 142.2,
+    "min": 127.0,
+    "max": 160.3
+   },
+   "spread_tt": 36.2,
+   "spread_ff": 33.3,
+   "insertion_ps": 173.1,
+   "insertion_ff_ps": 142.2,
+   "early_tt_ps": 0.0,
+   "early_ff_ps": 0.0,
+   "hold_ff_before": -56.9,
+   "hold_in": 59.2,
+   "hold_out": -56.8,
+   "hold_ff_after": -56.8,
+   "hold_ff_after_u25": -81.8,
+   "residual_skew_ff_ps": 75.5,
+   "gate": "FAIL",
+   "flags": [
+    "SHALLOW (FF mean 142.2 < 202.5-20): early taps give 0; in-core fixed trunk 12.8c or late delivery"
+   ],
+   "r3_basis": {
+    "cls": "SHALLOW_FIXED_TRUNK (12.8c)",
+    "model_centre_tt_ps": 94.9,
+    "model_centre_ff_ps": 75.9,
+    "measured_edge_entry_tt_ps": 182,
+    "farthest_um": 112.32
+   }
+  }
+ ]
+}
