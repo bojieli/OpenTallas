@@ -278,8 +278,8 @@ class Landings:
                 c = self.ca["ports"].get(pid)
                 if c is None:
                     raise LandingError(f"count-aligned landing {pid}: no K/DEPTH/latency in the bind table")
-                if int(c["depth"]) not in (4, 8):
-                    raise LandingError(f"count-aligned landing {pid}: DEPTH {c['depth']} not 4/8")
+                if int(c["depth"]) not in (4, 8, 16):
+                    raise LandingError(f"count-aligned landing {pid}: DEPTH {c['depth']} not 4/8/16")
                 row.update(added_cycles=int(c["sched_lat"]), module="ot_dp_clk_landing_cas" if self.strap else
                            "ot_dp_clk_landing_ca", ring_depth=int(c["depth"]),
                            ring_offset=None, ring_k=int(c["K"]), start_tree_port=bool(c["tree"]))

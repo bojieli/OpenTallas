@@ -35,6 +35,29 @@ class BandReserve(unittest.TestCase):
         padded = CP._storage_band(_type(), "wide_i", 63, [])["area_reserve_um2"]
         self.assertLess(abs(live - padded) / padded, 0.02)
 
+    def test_ring_ff_is_flop_count_times_footprint(self):
+        # DIE-HEAD-11: hd_tile u_cland_i W=567 -> rw 576, (5*576+160) flops x 1.4166 um2 >= measured 4177.4 um2
+        CP.BAND_RESERVE = "ring_ff"
+        b = CP._storage_band(_type(), "wide_i", 63, [])
+        self.assertAlmostEqual(b["area_reserve_um2"], (5 * 64 + 160) * 4177.4 / 2949 * 1.05, places=3)
+        self.assertGreaterEqual((5 * 576 + 160) * CP.RING_FF_RESERVE_UM2, 4177.4)
+        rect = b["rect_um"]
+        self.assertGreaterEqual((rect[2] - rect[0]) * (rect[3] - rect[1]) + 1e-6, b["area_reserve_um2"])
+
+    def test_compose_accepts_ring_ff(self):
+        self.assertIn("ring_ff", CP.BAND_MODES)
+
+    def test_ring_ff_avoids_die_islands(self):
+        CP.BAND_RESERVE = "ring_ff"
+        ty = _type()
+        free = CP._storage_band(ty, "wide_i", 63, [])["rect_um"]
+        ty["clock"] = dict(die_islands_um=[[free[0], free[1], free[0] + 8.64, free[1] + 8.64]])
+        r = CP._storage_band(ty, "wide_i", 63, [])["rect_um"]
+        isl = ty["clock"]["die_islands_um"][0]
+        self.assertFalse(min(r[2], isl[2]) > max(r[0], isl[0]) and min(r[3], isl[3]) > max(r[1], isl[1]))
+        CP.BAND_RESERVE = "padded"
+        self.assertEqual(CP._storage_band(ty, "wide_i", 63, [])["rect_um"], CP._storage_band(_type(), "wide_i", 63, [])["rect_um"])
+
     def test_compose_rejects_unknown_mode(self):
         with self.assertRaises(ValueError):
             CP.compose(dict(), dict(), band_reserve="tiny")

@@ -563,6 +563,28 @@ def lef_pin_rects(path):
     return out
 
 
+def slice_clock_pins_out(kd, ms_mod, clks):
+    """QC-A0-KITS-4 10-28: a master slice moves the clock port to its interior M5 entry (io.tcl rewritten by
+    kit_apply), so the routed pin is no longer the plan face pin.  pins.json is the face-pin audit table
+    (pin_audit.py / face_guard_core.py); the moved clock ports leave it (pin_audit already treats clk / clk_t<i> as
+    interior spine pins) instead of being audited against the stale face location (romleaf a0k3: PIN_AUDIT clk
+    planned M4 face, routed M5 entry).  Returns the dropped names; no slice or no moved clock port: unchanged."""
+    kd = Path(kd)
+    if not (kd / "master_slice.json").is_file() or not (kd / "pins.json").is_file():
+        return []
+    sl = json.loads((kd / "master_slice.json").read_text())
+    ports = {c for c in clks if c}
+    moved = {n for n in ms_mod.slice_pins(sl, ms_mod._clock_port(kd, sl)) if n in ports}
+    rows = json.loads((kd / "pins.json").read_text())
+
+    def name(r):
+        return r["bus"] if r.get("bit") is None else f"{r['bus']}[{r['bit']}]"
+    keep = [r for r in rows if name(r) not in moved]
+    if len(keep) != len(rows):
+        (kd / "pins.json").write_text(json.dumps(keep) + "\n")
+    return sorted(moved & {name(r) for r in rows})
+
+
 def kit_hash(kd):
     h = hashlib.sha256()
     for f in sorted(p for p in Path(kd).rglob("*") if p.is_file() and p.relative_to(kd).parts[0] not in ("run", "views")
@@ -1044,6 +1066,7 @@ def main():
     # (face_flops.tcl: after io placement, before GPL); refused without a slice once required unless --trial
     ms = MS.kit_apply(kd, mod, [w, h], a.master_slice, plan, a.trial, kind="core",
                       gpl_hook=kd / "face_flops.tcl", clock_ports=clks, reset_ports=rsts)
+    slice_clock_pins_out(kd, MS, clks)
     # CTS-HOOK-PORT-1: plan-built core tree -> shared PRE/POST_CTS hook (no plan tree: kit unchanged)
     MS.plan_tree_cts(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
@@ -1073,6 +1096,19 @@ def main():
         shutil.copyfile(ppf, kd / "plan_pins.json")
         fz["pins_canon_sha256"] = kit_contract._canon(json.loads(ppf.read_text()), [w, h])
         fz["pins_placed_canon_sha256"] = kit_contract._canon(kit_contract.placed_pins(kd), [w, h])
+    else:
+        # QC-A0-KITS-3 10-28 (GATE-PINS-2 for LEF-contract kits, gen_phys plan_pins.json form): the declared pin contract
+        # is the closed view LEF; its pin centres (lef_contract) are written beside the kit as plan_pins.json, which
+        # becomes the kit-relative pins_file (sha = pins_sha256); the LEF stays recorded as pins_contract_lef + sha.
+        import kit_contract
+        body = json.dumps(dict(schema="opentallas.core_pins.v1", module=mod, outline_um=[w, h],
+                               source=hc["pins_file"], source_sha256=sha(REPO / hc["pins_file"]),
+                               pins=hc["pins"]), indent=1) + "\n"
+        (kd / "plan_pins.json").write_text(body)
+        fz.update(pins_contract_lef=hc["pins_file"], pins_contract_lef_sha256=sha(REPO / hc["pins_file"]),
+                  pins_file="plan_pins.json", pins_sha256=hashlib.sha256(body.encode()).hexdigest(),
+                  pins_canon_sha256=kit_contract._canon(dict(pins=hc["pins"]), [w, h]),
+                  pins_placed_canon_sha256=kit_contract._canon(kit_contract.placed_pins(kd), [w, h]))
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     print(json.dumps(dict(kit=str(kd), pins=len(pins), clocks=clks, resets=rsts, ins=len(buses_in),
                           outs=len(buses_out), macros=sum(len(v) for v in mplace.values()), kit_hash=fz["kit_hash"])))

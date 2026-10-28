@@ -350,8 +350,70 @@ def sta_d_intervals(proof, plan, corners=("TT", "FF"), clock_cal="none", cppr_lc
         CPPR_LCA = old
 
 
+def tap_leg(meta, taps):
+    """START-TREE-1: median (late, early, stages) of the leg from a tap's driving tree node (tree_path minus its last
+    level) to the tap pin, over the proof's taps: the clock leg of a retime flop placed on a tree node"""
+    lt = [t for t in taps.values() if len(t.get("tree_path", "")) > 1 and t.get("part") is not None]
+    ls = sorted(float(t["late_ps"]) - float(meta["node_late_ps"][t["tree_path"][:-1]]) for t in lt)
+    es = sorted(float(t["early_ps"]) - float(meta["node_early_ps"][t["tree_path"][:-1]]) for t in lt)
+    ss = sorted(int(t["stages_from_root"]) - int(meta["node_stages"][t["tree_path"][:-1]]) for t in lt)
+    return ls[len(ls) // 2], es[len(es) // 2], ss[len(ss) // 2]
+
+
+def virtual_tap(meta, taps, path, leg):
+    """START-TREE-1: the clock pin of a start retime flop on tree node `path` ('__st__<path>', added to taps): node
+    arrival + leg, stages + leg stages, node xy; cppr_node 'h' (own droop region: the shared-droop term applies)"""
+    k = f"__st__{path}"
+    if k not in taps:
+        taps[k] = dict(port=k, part=None, cppr_node="h", tree_path=path,
+                       late_ps=float(meta["node_late_ps"][path]) + leg[0],
+                       early_ps=float(meta["node_early_ps"][path]) + leg[1],
+                       stages_from_root=int(meta["node_stages"][path]) + leg[2], xy_um=meta["node_xy_um"][path])
+    return k
+
+
+def count_align_start_ports(bind, taps, meta, period, cppr_range=None, ocv=None, sync_ap=26.5, clkq=(0.0, 0.0)):
+    """START-TREE-1 (METHODOLOGY 12.16b(iv)/(d)): reset release is a crossing.  Every dedicated start port of a
+    '--start-tree clock' bind is re-timed on THIS proof's arrivals with the same interval model (count_align_d_intervals
+    on its launch -> capture tap pair, CPPR at the last common node, the same ocv callable).  PASS iff the plan's
+    sample edge is clean on the STA interval shifted by the start skew (clk->Q range; distance >= sync aperture) and the
+    plan marked it clean (sync_values 1); a missing tap fails closed."""
+    leg = None
+    rows = []
+    reg = bind.get("regions", {})
+    added = [k for c in bind.get("start_ports", {}).values() for k in (c["launch"], c["capture"])
+             if k and k.startswith("__st__") and k not in taps]
+    for pid, c in sorted(bind.get("start_ports", {}).items()):
+        ends = []
+        for k in (c["launch"], c["capture"]):
+            if k and k.startswith("__st__") and meta is not None and k[6:] in meta.get("node_late_ps", {}):
+                leg = leg or tap_leg(meta, {q: t for q, t in taps.items() if not q.startswith("__st__")})
+                virtual_tap(meta, taps, k[6:], leg)
+            ends.append(k if k in taps else None)
+        r = reg.get(c["dst"], {})
+        row = dict(port=pid, region=c["dst"], edge="fall" if r.get("edge_fall") else "rise",
+                   sync_values=int(r.get("sync_values", 1)), skew_lo_ps=round(clkq[0], 1), skew_hi_ps=round(clkq[1], 1),
+                   limit_ps=r.get("start_skew_limit_ps"), source="start-port", launch=c["launch"], capture=c["capture"])
+        if None in ends:
+            row.update(ok=False, reason="no taps")
+            rows.append(row)
+            continue
+        iv = count_align_d_intervals([(ends[0], ends[1], "s")], taps, cppr_range, ocv=ocv)["s"]
+        off = period / 2 if row["edge"] == "fall" else 0.0
+        elo, ehi = iv[0] - clkq[1], iv[1] - clkq[0]
+        k = math.floor((elo - off) / period)
+        dist = min(elo - (off + k * period), off + (k + 1) * period - ehi) if math.floor((ehi - off) / period) == k \
+            else -1.0
+        row.update(d_lo_ps=round(iv[0], 1), d_hi_ps=round(iv[1], 1), plan_d_lo_ps=c["d_lo_ps"], plan_d_hi_ps=c["d_hi_ps"],
+                   sta_sync_dist_ps=round(dist, 1), ok=row["sync_values"] == 1 and dist >= sync_ap)
+        rows.append(row)
+    for k in added:
+        taps.pop(k, None)       # the virtual clock pins never leak into the other classes
+    return rows
+
+
 def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, start_wire=None, cppr_range=None,
-                       key="part", ocv=None, ocv_label=None):
+                       key="part", ocv=None, ocv_label=None, meta=None):
     """MESO-INTEG-1 / MESO-RECONCILE-1 (opt-in --count-align BIND.json, count_align_bind.py v2): the count-aligned ring
     (ot_dp_clk_landing_ca) replaces the +-T/2 placement window by a write->read lag window per crossing.  Bind L_lo/L_hi
     are the plan's TRUE derated lag bounds (wander included, no aperture); d = capture-region clock - launch-region clock.
@@ -440,6 +502,9 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
                 ok = ok and dist >= sap
             s["ok"] = ok
             srows.append(s)
+    if bind.get("start_ports"):
+        # START-TREE-1: dedicated start ports (--start-tree clock) are checked as crossings on this proof
+        srows += count_align_start_ports(bind, taps, meta, period, cppr_range, ocv, sap, (cq_min, cq_max))
     nfail = sum(1 for r in rows if not r["lag_ok"])
     sfail = sum(1 for s in srows if not s["ok"])
     rfail = sum(1 for r in rows if not r["slot_read_ok"])
@@ -790,6 +855,21 @@ HB4_ABUTTED = dict(HB4, ff_early_ps=37.41, tt_late_ps=67.67,
 _DATA_PIN_SKIP = re.compile(r"(^|_)(clk|ck|rst_n|rst|strap_[a-z]+)(\[|$)|__clk|__rst_n")
 
 
+def _pin_names(doc):
+    """pin names of a core pins file in either form: {"pins": [{name, ...}]} (core view) or the run pins.json list
+    [{bus, bit, layer, x, y, face}] (FLOW-GEN-1 10-28: DIE-QC-10 K2b --hold-buffers HB4 crashed on .get of the list)."""
+    rows = doc if isinstance(doc, list) else (doc.get("pins", []) if isinstance(doc, dict) else [])
+    out = []
+    for q in rows:
+        if isinstance(q, str):
+            out.append(q)
+        elif isinstance(q, dict):
+            n = q.get("name") or (f"{q['bus']}[{q['bit']}]" if q.get("bus") is not None and q.get("bit") is not None
+                                  else q.get("bus"))
+            out.append(str(n or ""))
+    return out
+
+
 def intra_bits(plan_path):
     """{partition: data pins of all its hard cores} (clock/reset/strap pins excluded), the INTRA HB4 cell-count basis:
     every core pin is registered (pin registers) and its other end is a register of the same partition under the
@@ -805,8 +885,8 @@ def intra_bits(plan_path):
             pf = h.get("pins_file")
             if pf not in cache:
                 f = root / pf if pf else None
-                pins = json.loads(f.read_text()).get("pins", []) if f and f.exists() else []
-                cache[pf] = sum(1 for q in pins if not _DATA_PIN_SKIP.search(str(q.get("name", ""))))
+                pins = _pin_names(json.loads(f.read_text())) if f and f.exists() else []
+                cache[pf] = sum(1 for q in pins if not _DATA_PIN_SKIP.search(q))
             tot += cache[pf]
         out[n] = tot
     return out
@@ -1555,7 +1635,7 @@ def main(argv=None):
             ca = count_align_landed(pairs["landed"], taps, json.loads(Path(a.count_align).read_text()), period, reg,
                                     start_wire=json.loads(Path(a.count_align_start_wire).read_text())
                                     if a.count_align_start_wire else None, cppr_range=rng, key=a.count_align_key,
-                                    ocv=ocv, ocv_label=ca_lab)
+                                    ocv=ocv, ocv_label=ca_lab, meta=meta)
             res.setdefault("count_aligned", {})[c] = ca
             if c == "TT" and a.count_align_ss_scale > 0 and "SS" not in corners:
                 ss = count_align_ss_info(pairs["landed"], taps, json.loads(Path(a.count_align).read_text()), period, reg,

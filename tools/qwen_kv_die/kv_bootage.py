@@ -50,7 +50,10 @@ SUCC = dict(
     pv_ctl=('rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tb.sv', 'ot_qwen_tp8_pv_wide_ctl_tb'),
     pv_ctl_floor=('rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tbf.sv', 'ot_qwen_tp8_pv_wide_ctl_tbf'))
 # hardware bounds (RTL parameters of the successors: delay-line depth / register range)
-BOUNDS = dict(PV_LEAD=63, F_DLY=127, D_QK=255, D_RL=255, VPORT_RT=63, VPORT_DQ=15, PV_FIRST_INPUT_AGE=255)
+# DIE-KV-12 (COORD 10-28 08:49, accepted with conditions): VPORT_RT bound 63 -> 95.  The local-form re-tree cannot bring the
+# vport<->slg round trip to <=63 (bound RT 66-74, floor 61-67 at the minimum CA latency), so the slot line is deeper
+# (SLM = DQ + RT + 1 = 111 <= 255); lockstep tb_kvba_vport incl. phase D (K/V flag) PASS at RB 95, mutants 1-8 caught.
+BOUNDS = dict(PV_LEAD=63, F_DLY=127, D_QK=255, D_RL=255, VPORT_RT=95, VPORT_DQ=15, PV_FIRST_INPUT_AGE=255)
 MIN = dict(PV_LEAD=0, F_DLY=1, D_QK=0, D_RL=0, VPORT_RT=1, VPORT_DQ=0, PV_FIRST_INPUT_AGE=1)
 NAGE = 19
 # kv_static_params.schedule_check ids the boot image check replaces (hard tile value comparisons)
