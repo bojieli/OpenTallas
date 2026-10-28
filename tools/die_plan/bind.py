@@ -2653,7 +2653,18 @@ class Binder:
                 raise BindError("die reset pad gate (por_gate.py): " + "; ".join(g["errors"][:6]))
         man = dict(schema="opentallas.parent_id_straps.v1", types=self.parent_id_ports,
                    instances=self.parent_id_values, added_data_cycles=0)
-        if any(self.parent_id_ports.values()):
+        cl = getattr(self, "clock_landings", None)
+        cexp = cl.strap_expected() if cl is not None and getattr(cl, "strap", None) else {}
+        if cexp:
+            # MESO-STRAP-1 (OWNER 12.15a): count straps strap_ca_* join the parent strap manifest (same 1.8 rules)
+            man = json.loads(json.dumps(man))
+            decl = cl.strap_declarations({tn: self.types[tn].get("split_of", tn) for tn in self.types})
+            for tn, ports in decl.items():
+                man["types"].setdefault(tn, {}).update({sp: dict(width=w, kind="count_strap") for sp, w in ports.items()})
+            for q, ports in cexp.items():
+                man["instances"].setdefault(q, {}).update({sp: dict(width=w, value=v, kind="count_strap")
+                                                           for sp, (w, v) in ports.items()})
+        if any(man["types"].values()):
             (out.parent / "bind_parent_id_straps.json").write_text(json.dumps(man, indent=1) + "\n")
         # tie-off audit (OWNER 10-25 option B): a literal on a partition pin is legal ONLY on a declared ID strap;
         # each strap bit then gets its own TIEHI/TIELO next to the pin (die_constant_cells.tcl; strap_ties_check.tcl)
@@ -2662,8 +2673,18 @@ class Binder:
         (out.parent / "bind_tie_audit.json").write_text(json.dumps(aud, indent=1) + "\n")
         if aud["verdict"] != "PASS":
             raise BindError(f"tie-off audit: {aud['reason']}")
-        if aud["rows"]:
-            (out.parent / "strap_ties_check.tcl").write_text(STR.tie_check_tcl(aud["rows"]))
+        rows = aud["rows"]
+        if cexp:
+            # count-strap VALUE audit (COORD addition, 12.14a: extends this audit): literal == bind value, every pin
+            cva = STR.audit_count_strap_values(f.read_text(), {re.sub(r"[^A-Za-z0-9_]", "_", q): v for q, v in cexp.items()})
+            (out.parent / "bind_count_strap_audit.json").write_text(json.dumps(cva, indent=1) + "\n")
+            if cva["verdict"] != "PASS":
+                raise BindError(f"count-strap tie-value audit (G0 ERROR): {cva['reason']}")
+            # the netlist tie check takes count-strap values from the bind, not from the literals it just checked
+            rows = [r for r in rows if not STR.COUNT_STRAP_RE.match(r[1])] + \
+                STR.count_strap_rows({re.sub(r"[^A-Za-z0-9_]", "_", q): v for q, v in cexp.items()})
+        if rows:
+            (out.parent / "strap_ties_check.tcl").write_text(STR.tie_check_tcl(rows))
         return files
 
     def _pname(self, k):
@@ -3238,39 +3259,14 @@ class Binder:
                 f"\nendmodule\n`default_nettype wire\n")
 
     def write_wavefront_open_pads(self, P, f, top_text):
-        """KV-KITS-2 (COORD 10-27 03:41): declare, with the plan proof, the type-uniform wavefront outs
-        (rst_o_<k> / start_o_<k>) an instance leaves open (reset_tree.wf_open_outs), as instance entries of the
-        strict port-bind's default pad file <top>.pads.json (spare OUTPUT ports: open, never tied).  Only ports the
-        die top really leaves unconnected are declared; anything else stays OUTPUT_OPEN."""
+        """KV-KITS-2 (COORD 10-27 03:41): the wavefront open outs of the bound top as <top>.pads.json instance entries
+        (one writer for bind and gen_rtl: reset_tree.write_wf_open_pads)."""
         import reset_tree as RT
-        oo = RT.wf_open_outs(P)
-        pf = Path(str(f) + ".pads.json")
-        doc = json.loads(pf.read_text()) if pf.exists() else {}
-        inst_m = {m.group(2): m.group(1) for m in
-                  re.finditer(r"^    (\w+)(?: #\(.*?\))? (\w+) \(\n(.*?)\n    \);", top_text, re.S | re.M)}
-        body = {m.group(2): m.group(3) for m in
-                re.finditer(r"^    (\w+)(?: #\(.*?\))? (\w+) \(\n(.*?)\n    \);", top_text, re.S | re.M)}
-        ent = doc.setdefault("instances", {})
-        n = 0
-        for p, ports in sorted(oo.items()):
-            name = sv_id(p)
-            if name not in inst_m:
-                raise BindError(f"wavefront open outs: instance {name} not in the bound top")
-            for port, why in sorted(ports.items()):
-                if re.search(rf"\.{port}\(", body[name]):
-                    raise BindError(f"wavefront open outs: {name}.{port} is connected in the top but wf_open_outs "
-                                    "says it has no child")
-                e = ent.setdefault(name, dict(master=inst_m[name], reason="", ports={}))
-                e["ports"][port] = [[0, 0]]
-                e.setdefault("wavefront_open", {})[port] = why
-                n += 1
-        for name, e in ent.items():
-            if e.get("wavefront_open"):
-                e["reason"] = ("KV-KITS-2 wavefront open outs: type-uniform registered reset/START out pins with no "
-                               "wavefront child on this instance (reset_tree.wf_open_outs proof per port); open, "
-                               "never tied")
+        try:
+            n = RT.write_wf_open_pads(P, f, top_text, sv_id)
+        except ValueError as exc:
+            raise BindError(str(exc)) from exc
         if n:
-            pf.write_text(json.dumps(doc, indent=1, sort_keys=True) + "\n")
             self.wavefront_open_outs = n
         return n
 
@@ -3501,13 +3497,16 @@ def load_plan(path):
     raw = json.loads(Path(path).read_text())
     if _AB_OVERRIDE.get("path"):
         ab = json.loads(Path(_AB_OVERRIDE["path"]).read_text())
-        ab.setdefault("base", str(E.REPO))
-        if ab.get("map_file") and not Path(ab["map_file"]).is_absolute():
-            ab["map_file"] = str(Path(_AB_OVERRIDE["path"]).parent / ab["map_file"])
         raw["asbuilt"] = ab
     if "asbuilt" not in raw:
         raise BindError(f"{path}: no `asbuilt` section (README: As-built binding)")
     _gate_manifest_paths(raw["asbuilt"], Path(_AB_OVERRIDE.get("path") or path), bool(_AB_OVERRIDE.get("path")))
+    if _AB_OVERRIDE.get("path"):
+        # Validate declared paths before normalizing them for internal consumers.
+        ab = raw["asbuilt"]
+        ab.setdefault("base", str(E.REPO))
+        if ab.get("map_file") and not Path(ab["map_file"]).is_absolute():
+            ab["map_file"] = str(Path(_AB_OVERRIDE["path"]).parent / ab["map_file"])
     return raw
 
 
@@ -3589,8 +3588,10 @@ def cmd_bind(a):
             B._clock_landing_table = json.loads(landing_path.read_text())
             CL.expand_station_types(B, B._clock_landing_table)
             B.clock_landings = CL.Landings(raw, B._clock_landing_table)
-            B.extra_lib.extend(str(landing_base / f) for f in
-                               ("rtl/common/ot_meso_fifo.sv", "rtl/common/ot_dp_clk_landing.sv"))
+            landing_libs = ["rtl/common/ot_meso_fifo.sv", "rtl/common/ot_dp_clk_landing.sv"]
+            if B._clock_landing_table.get("count_aligned"):
+                landing_libs.append("rtl/common/ot_dp_clk_landing_ca.sv")
+            B.extra_lib.extend(str(landing_base / f) for f in landing_libs)
         except (ValueError, OSError) as exc:
             raise BindError(f"clock landing: {exc}") from exc
     B.map_cells()

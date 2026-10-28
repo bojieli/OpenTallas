@@ -221,9 +221,10 @@ def _landing_kit():
 
 def test_landing_contract_sdc_forms_pass():
     """COORD 10-27 RULING S81-KITS-1: the landing contract SDC (generated clock on the forwarded output,
-    -ignore_clock_latency window on the landed crossing, remove_from_collection into a variable) lints clean."""
+    -ignore_clock_latency window on the landed crossing, an explicit output collection into a variable) lints clean."""
     txt, ctx = _landing_kit()
-    assert "remove_from_collection" in txt and "create_generated_clock" in txt and "-ignore_clock_latency" in txt
+    assert "remove_from_collection" not in txt and "set cland_data_outputs [get_ports {" in txt
+    assert "create_generated_clock" in txt and "-ignore_clock_latency" in txt
     assert ctx["forwarded_clock_outputs"] == ["fclk_out_a"] and ctx["landed_clock_inputs"] == ["fclk_in_a"]
     assert _errs(txt, ctx) == []
     # without the declared landing context the same text stays fail-closed
@@ -255,8 +256,8 @@ def _gen_line(txt):
     (lambda t: t + "set_max_delay -ignore_clock_latency 356.5 -from [get_clocks vclk] -to [get_clocks clk]\n",
      "not between a landed receive clock"),
     (lambda t: t + "set_false_path -from [get_clocks fclk_in_a] -to [get_clocks clk]\n", "forbidden"),
-    (lambda t: t.replace("[remove_from_collection [all_outputs] [get_ports {fclk_out_a}]]",
-                         "[remove_from_collection [all_outputs] [get_ports {fclk_out_a din}]]"), "not in the collection"),
+    (lambda t: t.replace("[get_ports {x_o[*] cfg_o[*]}]",
+                         "[get_ports {x_o[*] cfg_o[*] missing_landing_output}]"), "matches no port"),
     (lambda t: t.replace("set cland_data_outputs", "set cland_other"), "undefined variable"),
 ])
 def test_landing_contract_sdc_negatives(mut, msg):

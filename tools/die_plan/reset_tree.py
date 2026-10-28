@@ -1572,6 +1572,48 @@ def wf_open_outs(P):
     return res
 
 
+_WF_INST = re.compile(r"^    (\w+)(?: #\(.*?\))? (\w+) \(\n(.*?)\n    \);", re.S | re.M)
+
+
+def write_wf_open_pads(P, f, top_text, sv_id, fresh=False):
+    """KV-KITS-2 (COORD 10-27 03:41): declare, with the plan proof, the type-uniform wavefront outs
+    (rst_o_<k> / start_o_<k>) an instance leaves open (wf_open_outs), as instance entries of the strict port-bind's
+    default pad file <top>.pads.json (spare OUTPUT ports: open, never tied).  Only ports the die top really leaves
+    unconnected (absent, or an empty `.port()`) are declared; anything else stays OUTPUT_OPEN.  Shared by the as-built
+    binder (bind.py) and the generated die top (gen_rtl, DIE-HEAD-4b).  fresh: drop a stale pad file first (gen_rtl
+    owns the whole file).  -> number of declared ports; ValueError on a port the top connects."""
+    oo = wf_open_outs(P)
+    pf = Path(str(f) + ".pads.json")
+    if fresh and pf.exists():
+        pf.unlink()
+    doc = json.loads(pf.read_text()) if pf.exists() else {}
+    inst_m, body = {}, {}
+    for m in _WF_INST.finditer(top_text):
+        inst_m[m.group(2)], body[m.group(2)] = m.group(1), m.group(3)
+    ent = doc.setdefault("instances", {})
+    n = 0
+    for p, ports in sorted(oo.items()):
+        name = sv_id(p)
+        if name not in inst_m:
+            raise ValueError(f"wavefront open outs: instance {name} not in the bound top")
+        for port, why in sorted(ports.items()):
+            if re.search(rf"\.{port}\(\s*[^\s)]", body[name]):
+                raise ValueError(f"wavefront open outs: {name}.{port} is connected in the top but wf_open_outs "
+                                 "says it has no child")
+            e = ent.setdefault(name, dict(master=inst_m[name], reason="", ports={}))
+            e["ports"][port] = [[0, 0]]
+            e.setdefault("wavefront_open", {})[port] = why
+            n += 1
+    for name, e in ent.items():
+        if e.get("wavefront_open"):
+            e["reason"] = ("KV-KITS-2 wavefront open outs: type-uniform registered reset/START out pins with no "
+                           "wavefront child on this instance (reset_tree.wf_open_outs proof per port); open, "
+                           "never tied")
+    if n:
+        pf.write_text(json.dumps(doc, indent=1, sort_keys=True) + "\n")
+    return n
+
+
 # ----------------------------------------------------------------------------------------------- RTL / TCL
 def relay_sv():
     """the ot_dp_rrelay module text (held in gen_rtl.CELLS, the one copy of the kit cells)."""

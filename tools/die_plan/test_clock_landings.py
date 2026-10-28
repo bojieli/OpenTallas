@@ -261,3 +261,245 @@ def test_replicas_of_one_type_must_agree_on_ring_form():
                            ring_module="ot_dp_clk_landing_ca"))
     with pytest.raises(LandingError, match="TYPE_SPLIT"):
         Landings(p, t)
+
+
+def region_vehicle():
+    """DIE-HEAD-3: dataflow_vehicle + partition c in a's clock region r0 with NO landed port; its tree bus u feeds
+    a.v inside the region, so its status rides same-region ctl pins (compose monitor="region")."""
+    def pin(n, d):
+        return dict(name=n, dir=d, width=1, face="E", window_um=[1, 2], layers=["M4"])
+    p, t, a, b = dataflow_vehicle()
+    t["regions"][0]["box_um"] = [0, 0, 10, 20]
+    p["partitions"].append(dict(name="c", type="C", origin_um=[0, 10]))
+    p["partition_types"]["C"] = dict(module="c_mod", outline_um=[10, 10], buses=[pin("cland_up_ready_u", "out"), pin("cland_up_fault_u", "out")])
+    p["partition_types"]["A"]["buses"] += [pin("cland_dn_ready_v", "in"), pin("cland_dn_fault_v", "in")]
+    p["ports"].append(dict(id="R", width=2, kind="data", src=dict(part="c", bus="u"), dst=dict(part="a", bus="v")))
+    for k in ("ready", "fault"):
+        p["ports"].append(dict(id=f"cland_mon_{k}__R", width=1, kind="ctl", src=dict(part="c", bus=f"cland_up_{k}_u"),
+                               dst=dict(part="a", bus=f"cland_dn_{k}_v")))
+    col = t["collector"]; col["monitor"] = "region"
+    for m in col["types"].values():
+        m["mask"].update(monitor="region", intra_inputs=[], intra_outputs=[])
+    col["types"]["A"]["mask"]["intra_inputs"] = ["v"]
+    col["types"]["C"] = dict(mask=dict(inputs=[], outputs=[], active=True, observer=False, monitor="region", tree_bus="u",
+                                       intra_inputs=[], intra_outputs=["u"]),
+                             tree=None, local_registered_depth=1, collector_root_xy=[5, 5], children=[], local_sources=[])
+    col["parts"]["c"] = dict(parent="a", active=True)
+    c = ("module c_mod (\n input wire clk,\n output wire [1:0] u\n);\n wire rst_n, rst_n_t0, rr_parent, run;\n"
+         " ot_dp_rgate u_rrl_0 (.clk(clk), .d(rr_parent), .run(run), .q(rst_n_t0));\n assign u = 2'b0;\nendmodule\n")
+    return p, t, a, b, c
+
+
+def test_region_monitor_binds_same_region_status_pins():
+    p, t, a, b, c = region_vehicle(); L = Landings(p, t)
+    cc = L.type_rtl("C", c)
+    assert "output wire cland_up_ready_u" in cc and "u_cland_rst_monitor (.clk(clk), .d(rr_parent), .q(cland_reset_monitor))" in cc
+    assert ".clk(clk), .rst_n(cland_reset_monitor), .ready_i({1'b1}),\n        .fault_i({1'b0}), .ready_o(cland_up_ready_u)" in cc
+    aa = L.type_rtl("A", a)
+    assert "input wire cland_dn_ready_v" in aa
+    assert ".ready_i({cland_ok_w, cland_dn_ready_v}),\n        .fault_i({cland_bad_w, cland_dn_fault_v}), .ready_o(cland_up_ready), .fault_o(cland_up_fault)" in aa
+    L.type_rtl("B", b)
+    top = ("module die_bound_top (rst_n, clk_core);\n    a_mod a (\n        .clk(clk_core)\n    );\n    b_mod b (\n        .clk(clk_core)\n    );\n"
+           "    c_mod c (\n        .clk(clk_core)\n    );\nendmodule\n")
+    tt = L.top_rtl(top)
+    assert "wire cland_mon_c__u_ready, cland_mon_c__u_fault;" in tt
+    assert ".cland_up_ready_u(cland_mon_c__u_ready)" in tt and ".cland_dn_fault_v(cland_mon_c__u_fault)" in tt
+    assert "fclk_in_v" not in tt and "u_cland_v" not in aa          # same region: no ring, no forwarded clock
+    assert L.manifest()["implemented"] is True and L.reset_placements["C"]["monitor"]["mode"] == "region"
+    # composed form: the status ports live in clock.landing_network.edges, not in ports
+    p, t, a, b, c = region_vehicle()
+    mon = [x for x in p["ports"] if x["id"].startswith("cland_mon_")]
+    p["ports"] = [x for x in p["ports"] if x not in mon]; p["clock"] = dict(landing_network=dict(edges=mon))
+    assert Landings(p, t).intra_links == [("R", "c", "u", "a", "v")]
+
+
+def test_region_monitor_fails_closed():
+    p, t, a, b, c = region_vehicle(); t["collector"]["types"]["A"]["mask"]["intra_inputs"] = []
+    with pytest.raises(LandingError, match="region monitor pins"):
+        Landings(p, t)
+    p, t, a, b, c = region_vehicle(); p["ports"] = [x for x in p["ports"] if x["id"] != "cland_mon_fault__R"]
+    with pytest.raises(LandingError, match="ready/fault pair"):
+        Landings(p, t)
+    p, t, a, b, c = region_vehicle(); t["collector"]["monitor"] = "dataflow"   # plain dataflow keeps its strict rules
+    with pytest.raises(LandingError):
+        Landings(p, t)
+def ca_vehicle(k=-2, depth=4, edge_fall=False):
+    """MESO-INTEG-1 count-aligned form: the same a -> b crossing with the bind's K/DEPTH/latency and start tree."""
+    p, t = vehicle()
+    def pin(name, direction):
+        return dict(name=name, dir=direction, width=1, face="E", window_um=[1, 2], layers=["M8"])
+    p["partition_types"]["A"]["buses"].append(pin("cland_fstart_out_x", "out"))
+    p["partition_types"]["B"]["buses"].append(pin("cland_fstart_in_y", "in"))
+    t["count_aligned"] = dict(schema="opentallas.count_align_bind.v1", period_ps=833.0, root="r0", pad=0,
+                              root_settle_cycles=40,
+                              ports={"P": dict(K=k, depth=depth, sched_lat=2, tree=True)},
+                              regions={"r0": dict(parent=None, tree_port=None, edge_fall=False, pad=0),
+                                       "r1": dict(parent="r0", tree_port="P", edge_fall=edge_fall, pad=0)})
+    return p, t
+
+
+A_BODY = ("module a_mod (\n input wire clk,\n output wire [4:0] x\n);\n wire rr_parent, rst_n_t0;\n"
+          " ot_dp_rrelay u_rrl_0 (.clk(clk), .d(rr_parent), .q(rst_n_t0));\n assign x = 0;\nendmodule\n")
+B_BODY = ("module b_mod (\n input wire clk,\n input wire [4:0] y // whole bundle\n);\n wire rst_n, rst_n_t0, rr_parent, run;\n"
+          " ot_dp_rgate u_rrl_0 (.clk(clk), .d(rr_parent), .run(run), .q(rst_n_t0));\n wire [4:0] y_q;\n assign y_q = y;\nendmodule\n")
+
+
+def test_count_aligned_form_emits_ca_ring_origin_and_start_pins():
+    p, t = ca_vehicle(edge_fall=True); c = Landings(p, t)
+    aa = c.type_rtl("A", A_BODY); bb = c.type_rtl("B", B_BODY)
+    assert "ot_dp_landing_root #(.SETTLE(40)) u_cland_origin (.clk(clk), .rst_raw_n(rst_n_t0), .start(cland_start));" in aa
+    assert "assign cland_fstart_out_x = cland_start;" in aa and "output wire cland_fstart_out_x" in aa
+    assert "ot_dp_clk_landing_ca #(.W(5), .DEPTH(4), .K(-2)) u_cland_y" in bb
+    assert ".t_rst_n(cland_fstart_in_y), .clk(clk), .rst_n(cland_start), .d(y), .q(cland_y)" in bb
+    assert ("ot_dp_landing_origin #(.PAD(0), .EDGE_FALL(1)) u_cland_origin (" in bb
+            and ".p_start(cland_fstart_in_y), .start(cland_start));" in bb and ".rst_raw_n(cland_reset_y)" in bb)
+    assert ".ready(landing_ready_y), .fault(landing_fault_y));" in bb   # status still observed, never dropped
+    assert "ot_dp_clk_landing #(" not in bb                            # old ring not emitted in this form
+    top = ("module die_bound_top (rst_n, clk_core);\n input wire rst_n;\n input wire clk_core;\n    a_mod a (\n"
+           "        .clk(clk_core)\n    );\n    b_mod b (\n        .clk(clk_core)\n    );\nendmodule\n")
+    tt = c.top_rtl(top)
+    assert ".cland_fstart_out_x(clock_landing_start_a__x)" in tt and ".cland_fstart_in_y(clock_landing_start_a__x)" in tt
+    assert ".landing_fault_y(clock_landing_fault[0])" in tt
+    m = c.manifest()
+    assert m["lane_added_cycles"] == {"L": 2} and m["count_aligned"] is True
+    assert requirements(p, t)["lane_added_cycles"] == {"L": 2}
+
+
+def test_count_aligned_form_old_ring_stays_default():
+    p, t = vehicle(); c = Landings(p, t)
+    assert c.rows[0]["module"] == "ot_dp_clk_landing" and c.rows[0]["added_cycles"] == 3 and not c.ca
+
+
+def test_count_aligned_form_requires_bind_pins_and_type_uniform_parameters():
+    p, t = ca_vehicle(); p["partition_types"]["B"]["buses"].pop()
+    with pytest.raises(LandingError, match="cland_fstart_in_y"):
+        Landings(p, t)
+    p, t = ca_vehicle(); t["count_aligned"]["ports"] = {}
+    with pytest.raises(LandingError, match="no K/DEPTH/latency"):
+        Landings(p, t)
+    # two copies of type B whose crossings need different K -> TYPE_SPLIT, never a silent first-copy wrapper
+    p, t = ca_vehicle()
+    p["partitions"].append(dict(name="c", type="B", origin_um=[20, 0]))
+    p["ports"].append(dict(id="Q", width=4, kind="data", src=dict(part="a", bus="x"), dst=dict(part="c", bus="y")))
+    t["regions"].append(dict(tag="r2", box_um=[20, 0, 30, 10]))
+    t["ports"].append(dict(port="Q", width=4, src="a", dst="c", src_region="r0", dst_region="r2", lane="L2"))
+    t["count_aligned"]["ports"]["Q"] = dict(K=-1, depth=4, sched_lat=3, tree=True)
+    t["count_aligned"]["regions"]["r2"] = dict(parent="r0", tree_port="Q", edge_fall=False, pad=0)
+    with pytest.raises(LandingError, match="count-aligned landing TYPE_SPLIT"):
+        Landings(p, t)
+
+
+def test_count_aligned_network_prices_per_crossing():
+    from clock_landings import network_lane_cycles
+    p, t = vehicle()
+    p["lanes"] = [dict(id="L", ports=["P"])]
+    p["clock"] = dict(landing_network=dict(data_cycles_per_crossing="count_aligned", count_aligned_cycles={"P": 4},
+                      edges=[dict(id="cland_clk__P", kind="clock", src=dict(part="a", bus="fclk_out_x"),
+                                  dst=dict(part="b", bus="fclk_in_y"))]))
+    assert network_lane_cycles(p) == {"L": 4}
+    del p["clock"]["landing_network"]["count_aligned_cycles"]
+    with pytest.raises(LandingError, match="count_aligned_cycles"):
+        network_lane_cycles(p)
+
+
+def ca_relay_vehicle(parts=True):
+    """DIE-KV-3/CAORIGIN: region r1 holds b (origin, tree port P lands there) and c (relay, crossing Q a -> c)"""
+    p, t = ca_vehicle()
+    def pin(name, direction):
+        return dict(name=name, dir=direction, width=1, face="E", window_um=[1, 2], layers=["M8"])
+    p["partitions"].append(dict(name="c", type="C", origin_um=[10, 5]))
+    p["partition_types"]["B"]["outline_um"] = [10, 5]
+    p["partition_types"]["C"] = dict(module="c_mod", outline_um=[10, 5], buses=[pin("z", "in"), pin("fclk_in_z", "in"),
+        pin("landing_ready_z", "out"), pin("landing_fault_z", "out"), pin("cland_fstart_in_z", "in"),
+        pin("cland_rstart_in", "in")])
+    p["partition_types"]["B"]["buses"].append(pin("cland_rstart_out", "out"))
+    p["partition_types"]["A"]["buses"] += [pin("fclk_out_w", "out"), pin("cland_fstart_out_w", "out")]
+    p["ports"].append(dict(id="Q", width=4, kind="data", src=dict(part="a", bus="w"), dst=dict(part="c", bus="z")))
+    t["ports"].append(dict(port="Q", width=4, src="a", dst="c", src_region="r0", dst_region="r1", lane="LQ"))
+    ca = t["count_aligned"]
+    ca["ports"]["Q"] = dict(K=-1, depth=4, sched_lat=3, tree=False)
+    ca["regions"]["r0"]["origin_part"] = "a"; ca["regions"]["r1"]["origin_part"] = "b"
+    if parts:
+        ca["relay_stages"] = 2
+        ca["parts"] = dict(a=dict(region="r0", role="origin", src=None, stages=0),
+                           b=dict(region="r1", role="origin", src=None, stages=0),
+                           c=dict(region="r1", role="relay", src="b", stages=2))
+    return p, t
+
+
+C_BODY = ("module c_mod (\n input wire clk,\n input wire [4:0] z // whole bundle\n);\n wire rst_n, rst_n_t0, rr_parent, run;\n"
+          " ot_dp_rgate u_rrl_0 (.clk(clk), .d(rr_parent), .run(run), .q(rst_n_t0));\n wire [4:0] z_q;\n assign z_q = z;\nendmodule\n")
+
+
+def test_count_aligned_relay_emits_one_origin_and_timed_start_relay():
+    p, t = ca_relay_vehicle(); c = Landings(p, t)
+    bb = c.type_rtl("B", B_BODY); cc = c.type_rtl("C", C_BODY)
+    assert "u_cland_origin" in bb and "output wire cland_rstart_out" in bb
+    assert "ot_dp_landing_relay u_cland_rstart_tx (.clk(clk), .rst_raw_n(cland_reset_y), .d(cland_start), .q(cland_rstart_out));" in bb
+    assert "u_cland_origin" not in cc and "input wire cland_rstart_in" in cc
+    assert "ot_dp_landing_relay u_cland_rstart_rx (.clk(clk), .rst_raw_n(cland_reset_z), .d(cland_rstart_in), .q(cland_start));" in cc
+    assert "ot_dp_clk_landing_ca #(.W(5), .DEPTH(4), .K(-1)) u_cland_z" in cc and ".rst_n(cland_start)" in cc
+    top = ("module die_bound_top (rst_n, clk_core);\n input wire rst_n;\n input wire clk_core;\n    a_mod a (\n"
+           "        .clk(clk_core)\n    );\n    b_mod b (\n        .clk(clk_core)\n    );\n    c_mod c (\n"
+           "        .clk(clk_core)\n    );\nendmodule\n")
+    tt = c.top_rtl(top)
+    assert "wire clock_landing_rstart_b;" in tt
+    assert ".cland_rstart_out(clock_landing_rstart_b)" in tt and ".cland_rstart_in(clock_landing_rstart_b)" in tt
+    assert c.ca_part_role["c"]["role"] == "relay" and c.ca_part_role["b"]["relay_tx"]
+
+
+def test_count_aligned_multi_partition_region_without_relay_roles_fails_closed():
+    p, t = ca_relay_vehicle(parts=False)
+    with pytest.raises(LandingError, match="one partition per region"):
+        Landings(p, t)
+    p, t = ca_relay_vehicle(); p["partition_types"]["C"]["buses"].pop()
+    with pytest.raises(LandingError, match="cland_rstart_in"):
+        Landings(p, t)
+    p, t = ca_relay_vehicle(); t["count_aligned"]["parts"]["c"]["stages"] = 3
+    with pytest.raises(LandingError, match="relay role"):
+        Landings(p, t)
+
+
+def test_plan_relay_pins_and_registered_ctl_ports():
+    import clock_landing_plan as CP
+    p, t = ca_relay_vehicle()
+    assert (CP._ca_relay(t, "a"), CP._ca_relay(t, "b"), CP._ca_relay(t, "c")) == (None, "tx", "rx")
+    raw = dict(ports=[]); CP._ca_relay_ports(raw, t)
+    assert raw["ports"] == [dict(id="cland_relay__c", src=dict(part="b", bus="cland_rstart_out"),
+                                 dst=dict(part="c", bus="cland_rstart_in"), width=1, kind="ctl", epoch=False)]
+    ty = dict(outline_um=[10, 5], buses=[dict(name="y", face="W", window_um=[1, 2])])
+    CP._ca_relay_pins(ty, t, "b", {"y": dict(port="P")}, set())
+    assert ty["buses"][-1]["name"] == "cland_rstart_out" and ty["buses"][-1]["kind"] == "ctl"
+    p, t = ca_relay_vehicle(parts=False)
+    raw = dict(ports=[]); CP._ca_relay_ports(raw, t)
+    assert raw["ports"] == [] and CP._ca_relay(t, "b") is None        # no bind roles: nothing added (old form)
+
+
+def test_receiver_uses_collector_geometry_when_bus_is_declaration_only():
+    p, t, a, b = dataflow_vehicle()
+    reference = Landings(p, t).type_rtl("B", b)
+    pin = next(v for v in p["partition_types"]["B"]["buses"] if v["name"] == "y")
+    saved = dict(pin)
+    pin.pop("face"); pin.pop("window_um")
+    t["collector"]["types"]["B"]["bus_geometry"] = {"y": saved}
+    assert Landings(p, t).type_rtl("B", b) == reference
+    del t["collector"]["types"]["B"]["bus_geometry"]
+    with pytest.raises(LandingError, match="receiver face geometry not found"):
+        Landings(p, t).type_rtl("B", b)
+
+
+def test_native_top_regions_include_early_core_clock_inputs():
+    p, t, _a, _b = dataflow_vehicle()
+    c = Landings(p, t)
+    top = ("module die_top (\n    input  wire clk,\n    input wire rst_n\n);\n"
+           "    a_mod a (\n        .clk(clk),\n        .clk_t3(clk),\n        .clk_c0(clk)\n    );\n"
+           "    b_mod b (\n        .clk(clk),\n        .clk_c4(clk)\n    );\nendmodule\n")
+    out = c.top_rtl(top)
+    assert ".clk_c0(clk_region_r0)" in out
+    assert ".clk_c4(clk_region_r1)" in out
+    assert ".clk_t3(clk_region_r0)" in out
+    assert "input  wire clk," not in out
+    assert "(clk)" not in out
+    # A clock-looking name outside the generated grid/core families stays rejected.
+    with pytest.raises(LandingError, match="still drives a partition pin"):
+        Landings(p, t).top_rtl(top.replace(".clk_c0(clk)", ".clk_phy(clk)"))

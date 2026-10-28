@@ -15,6 +15,19 @@ class NativeStations(unittest.TestCase):
   with self.assertRaises(ValueError):native_istations.annotate(b)
   b,L=self.fixture();L['cycles']=9
   with self.assertRaises(ValueError):native_istations.annotate(b)
+ def test_signed_clock_landing_budget(self):
+  # Reset landing removes both generic boundary stages; the real source stations remain.
+  b,L=self.fixture();L.update(cycles=8,clock_landing_cycles=-2)
+  native_istations.annotate(b)
+  self.assertEqual(bind.lane_pad(L),0)
+  self.assertEqual(2+L['internal_source_cycles']+L['clock_landing_cycles'],8)
+  b,L=self.fixture();L.update(cycles=7,clock_landing_cycles=-2)
+  with self.assertRaisesRegex(ValueError,'priced lane depth'):native_istations.annotate(b)
+  # A positive CA landing consumes its own budget and cannot be reused for source stations.
+  b,L=self.fixture();L.update(cycles=12,clock_landing_cycles=3)
+  with self.assertRaisesRegex(ValueError,'priced lane depth'):native_istations.annotate(b)
+  L['cycles']=13;native_istations.annotate(b)
+  self.assertEqual(bind.lane_pad(L),0)
  def test_mixed_and_duplicate_metadata(self):
   b,L=self.fixture();t=b.types['sys'];e=t['internal_stations'][0]
   t['internal_stations'].append(copy.deepcopy(e));t['internal_stations'][-1]['note']='same geometry, another reference'

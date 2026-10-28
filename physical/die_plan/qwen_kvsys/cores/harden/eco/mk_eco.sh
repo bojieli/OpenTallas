@@ -5,6 +5,10 @@
 # 6_final.spef + 1_2_yosys.v (+ 1_synth.v / clock_period / mem.json / ot_*.txt) and objects/, a 4_cts.sdc = the kit SDC +
 # set_propagated_clock, the POST_GLOBAL_ROUTE hook eco_route.tcl, TC/BC libs, and SO_DIR's tools/die_plan
 # signoff.py / face_guard.py / sdc_lint.py (the branch's sign-off with the hard-core latency contract).
+# env OT_ECO_FROM=grt (FLOW-SHARED-10, COORD 10-27 20:53): start from the kit's PRE-DRT 5_1_grt.odb instead of the routed
+#   5_2_route.odb; the repair still reads the kit's routed 6_final.spef (the measured RC the post-route ECO uses), then the
+#   ECO's do-route runs ONE detailed route on a DB without detailed wires (no re-route of a routed DB: DRT-1231 on the
+#   47ce KV canary repeats on any re-DRT of the routed DB, FLOW-SHARED-9 probes).  Default route = the post-route form.
 # env OT_PAD_MASTERS='FAx1_ASAP7_75t_R:1': placement padding before the ECO legalization (DRT pin access)
 # env OT_DRV_PLACE=1: DRV-first on placement parasitics, then incremental GRT, then timing repair on GRT parasitics
 # env OT_DRV_LAST=1: hold/setup repair before the fanout/slew repair (eco_route.tcl; avoids RSZ-0074)
@@ -15,12 +19,14 @@ KIT=$(cd "$1" && pwd); OUT=$2; V=$3; SO=$4
 HERE=$(cd "$(dirname "$0")" && pwd)
 test ! -e "$OUT" || { echo "mk_eco: $OUT exists (never relaunch into a run dir)"; exit 2; }
 RS=$(ls -d $KIT/run/results/asap7/*/base); NICK=$(basename $(dirname $RS))
-test -f $RS/5_2_route.odb -a -f $RS/6_final.spef || { echo "mk_eco: $RS lacks 5_2_route.odb / 6_final.spef"; exit 2; }
+FROM=${OT_ECO_FROM:-route}
+case $FROM in route) SRC=5_2_route.odb ;; grt) SRC=5_1_grt.odb ;; *) echo "mk_eco: OT_ECO_FROM=$FROM: want route|grt"; exit 2 ;; esac
+test -f $RS/$SRC -a -f $RS/6_final.spef || { echo "mk_eco: $RS lacks $SRC / 6_final.spef"; exit 2; }
 mkdir -p $OUT
 rsync -a --exclude /run --exclude /views --exclude /signoff --exclude '/signoff_*' --exclude '/signoff*.log' --exclude '/run_*.log' --exclude /rc.txt $KIT/ $OUT/
 B=$OUT/run/results/asap7/$NICK/base
 mkdir -p $B $OUT/run/logs/asap7/$NICK/base $OUT/run/reports/asap7/$NICK/base $OUT/run/objects/asap7/$NICK/base
-cp $RS/5_2_route.odb $B/4_cts.odb
+cp $RS/$SRC $B/4_cts.odb
 for f in 6_final.spef 1_2_yosys.v 1_synth.v clock_period.txt mem.json ot_face_flops.txt ot_unreg_pins.txt; do
   test -f $RS/$f && cp $RS/$f $B/; done
 rsync -a $KIT/run/objects/asap7/$NICK/base/ $OUT/run/objects/asap7/$NICK/base/ 2>/dev/null || true
@@ -60,6 +66,7 @@ esac > $OUT/variant.env
 [ -n "${OT_RETIME_LAST:-}" ] && echo "OT_RETIME_LAST=$OT_RETIME_LAST" >> $OUT/variant.env
 [ ${V:0:1} = b ] && [ -f $OUT/vclk_corner.tcl ] && echo "OT_VCLK_CORNER=ff" >> $OUT/variant.env
 [ -n "${OT_PAD_MASTERS:-}" ] && echo "OT_PAD_MASTERS='$OT_PAD_MASTERS'" >> $OUT/variant.env
-printf '{"variant": "%s", "source_kit": "%s:%s", "source_route": "%s/5_2_route.odb", "signoff_tools": "%s"}\n' \
-  $V "$(hostname)" $KIT $RS "$SO" > $OUT/ECO.json
+echo "OT_ECO_FROM=$FROM" >> $OUT/variant.env
+printf '{"variant": "%s", "source_kit": "%s:%s", "source_route": "%s/%s", "eco_from": "%s", "parasitics": "%s/6_final.spef", "signoff_tools": "%s"}\n' \
+  $V "$(hostname)" $KIT $RS $SRC $FROM $RS "$SO" > $OUT/ECO.json
 echo "eco ready $OUT ($(du -sh $OUT | cut -f1))"

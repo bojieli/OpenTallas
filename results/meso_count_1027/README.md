@@ -130,3 +130,104 @@ edges as the bound. That is not done here.
 * `head_ocv_ca.json` (LAND-HEAD-2 rows), `head3_ocv_ca.json` (LAND-HEAD-3 rows) and `kv_lpo_ca.json`: the per-crossing plans.
 * `*_cases.tsv`: the bench inputs.
 * `bench.log` and `formal.log`: the run logs.
+
+## MESO-COUNT-2 (2026-10-27 21:xx): plan fixes, emitted RTL parameters, start-up check
+
+This section applies the COORD 20:48 ruling. Tool: `tools/die_plan/count_align_plan.py`, 9 tests PASS.
+
+### Plan fixes
+
+* **K comes from the derated lag on every crossing, including tree crossings.**
+  * A clean tree crossing is planned like any other crossing: its path ambiguity is 0, so L = K_eff·T + [d−p_dn, d+p_up] ± wander.
+  * MESO-COUNT-1 instead pinned L_lo to 0.5T+ap. That is where its "104.1 ps" came from.
+  * An ambiguous tree crossing uses its sync window [off−sap, off+T+sap] − J_nom·T, with sap = 26.5 ps.
+* **Start offset per tree edge:**
+  * a_child − a_parent = **PAD + 2 + J(d)**, where J(d) = −floor((d−off)/T), off = 0 (rise) or T/2 (fall).
+  * Counted from the parent's start *launch* edge (a_parent − 1), this is the ruling's "3 sync flops + PAD".
+  * MESO-COUNT-1 used +1 per edge, which was wrong.
+  * The RTL bench below checks this.
+* **Emitted RTL parameters:**
+  * Per crossing: `rtl = {ot_dp_clk_landing_ca, DEPTH, K, GUARD_LO 0, GUARD_HI DEPTH}`, with
+    **K = K_eff − n0** and n0 = a_dst − a_src (nominal).
+    The RTL uses K mod 2^(log2 DEPTH+1+LAPX), so values like 62/63 are equivalent to −2/−1.
+  * Per region: `origin_cycles`, plus `start_from = {parent, port, edge, J_nominal, offset_from_parent, sync_dist_ps,
+    rtl {ot_dp_landing_origin, PAD, EDGE_FALL}}`.
+  * Per crossing, two latencies:
+    * `lat_cycles` = K_eff+1, in the root count frame;
+    * `rx_lat_counts` = K+1, in receiver counts, fixed by construction.
+* **The start tree is now DIRECTED: the start travels src→dst only.**
+  * MESO-COUNT-1's tree was undirected. It reversed the d of one-way crossings, which cannot carry the start backwards.
+  * HEAD has 300 one-way region pairs out of 337.
+  * The new tree has the fewest ambiguous edges: equal-ambiguity levels, clean edges first, best root over all regions.
+  * KV: **7 ambiguous edges**, which equals the lower bound: 8 clean source-SCCs, so at least 7 are needed.
+* **Monte-Carlo check of the emitted parameters (`--mc-chips`):**
+  * Each of 3000 chips draws d per crossing in its derated interval (uniform, plus endpoints) and wander ±w.
+  * Each tree edge's J comes from its own d; inside the sync aperture, either value is drawn.
+  * Origins are summed down the tree, then L = (K + a_dst − a_src)T + d is checked against the guard window.
+  * Tests also show the check catches mutants: K−1, and the PAD+3 start rule.
+
+### Results
+
+Joint TT_droop corelat250 + FF_droop corelat202.5, ap = T/8, wander ±5 % unshared on all crossings (default):
+
+| die (rows) | D4 / D8 / FAIL | worst low / high margin (ps) | latency hist (K_eff+1) | tree clean / ambiguous / fall | MC 3000 chips |
+|---|---|---|---|---|---|
+| HEAD (LAND-HEAD-3 sfbR, md5 890b23fb) | 427 / 0 / 0 | 126.2 (sp_x5__0) / 885.1 | {2: 256, 3: 171} | 325 / 0 / 43 | 0 violations, worst 126.2 / 885.2 |
+| HEAD, wander 0 | 427 / 0 / 0 | **173.6** (sp_b3__0) / 1401.6 | {2: 264, 3: 163} | same | 0 violations |
+| KV (304c20fb8d lpo, md5 39657aaf) | 3392 / 523 / 0 | 105.1 / 162.9 | {2: 2676, 3: 763, 4: 382, 5: 94} | 152 / 7 / 138 | 0 violations, worst 105.1 / 162.9 |
+| KV, wander 0 | 3686 / 229 / 0 | 104.7 / 104.7 | {1: 23, 2: 3248, 3: 311, 4: 259, 5: 74} | same | 0 violations |
+
+* **HEAD matches the NUMBER-CHECK exactly**: 173.6 / 1401.6, 126.2 / 885.1 with wander, latency {2: 264, 3: 163}.
+* **KV with wander**: D4/D8 3392/523, the same as the NUMBER-CHECK's "+5 % wander own".
+* Every crossing is ≥ 100 ps on both sides.
+* Minimum clean-edge sync distance (the derated interval to the sample boundary):
+  * HEAD 142.5 ps; KV 105.4 ps.
+  * This bounds the start-path skew δ: p_start relative to fclk at the first sync flop must satisfy |δ| ≤ 142.5−26.5 = 116 ps (HEAD)
+    and ≤ 79 ps (KV). This is an STA constraint for MESO-INTEG-1.
+* Start wavefront depth: HEAD 27 hops, KV 14 hops. Start-up only.
+
+### Start-up check (`rtl/test/meso/origin/run_origin.sh`, Verilator, RTL `ot_dp_landing_origin`)
+
+* Scope: every child phase at 1 ps (833), × parent launch edge 3/4, × PAD 0/2, × rise/fall, × start skew δ 0/40 ps.
+* A first-stage sample within ±27 ps of the transition is run with **both** outcomes.
+* Results:
+  * **0 bad of 8 × 1666 phase cases.**
+  * Every clean phase gives exactly a_c − a_p = PAD+2+J(d).
+  * All 110 ambiguous phases per configuration take two values. Both stay inside the plan's sync window:
+    [−27, 860] ps (rise) and [390, 1277] ps (fall). This is the ambiguous-edge handling.
+* The ring benches also pass on the new cases (`bench_ca2.log`):
+  * HEAD 1281 PASS, 0 FAIL;
+  * KV 10176 + 1569 PASS, 0 FAIL;
+  * sweeps unchanged, with clean window [0.502, 3.501]T / [0.502, 7.501]T and 0 silent-wrong;
+  * NO_TAG and K mutants CAUGHT.
+
+### Formal (MESO-COUNT-2, `rtl/test/meso/formal_ca/fv_ca2*`, yosys-abc in openroad/orfs:asap7lock; RTL unchanged)
+
+* **Proven unbounded by k-induction** (abc `fold; strash; bmc3; scorr; dc2; ind`, seconds per config) for W = 1 (data independence, one
+  watched word) and K = 2.
+* The three properties, proven together:
+  * **safe**: while ready && !fault, the delivered word is the captured word at latency K+1;
+  * **no-fault**: no fault for lag L inside [5/8 T, (D − 5/8) T];
+  * **fail-closed**: for L ≤ 3/8 T or L ≥ (D − 3/8) T, ready && !fault never holds.
+  * 18 helper invariants are asserted and proven, not assumed.
+* **Coverage**:
+  * D4: 120/120 configs (phase 0..7/8 T × offset −3..11, L −1.9T..13T, which includes the 2·DEPTH lap alias), plus 30/30
+    tag-range samples up to 63T.
+  * D8: 184/184 configs (L up to 21T, including the 16T alias), plus 16/16 samples up to 127T.
+* **BMC only** (all lags in one run):
+  * liveness + safe + no-fault: D4 800/1100 frames PASS; D8 ≥ 939 / ≥ 768 frames, no failure (stopped);
+  * fail-closed: D4 420 / D8 600 frames PASS;
+  * ready at the maximum in-window lag is reachable (not vacuous).
+* **Mutants caught**:
+
+  | mutant | property that fails | frame (D4 / D8) |
+  |---|---|---|
+  | K | no-fault | 129 / 193 |
+  | FREERUN | no-fault | 129 / 193 |
+  | NO_GUARD | wrong word | 137 / 201 |
+  | NO_TAG | wrong word | 180 / 308 (alias config 195 / 323 in the k-ind flow) |
+
+* **Findings**:
+  1. The wrapper default GUARD_HI = 4 is wrong for DEPTH 8 (no-fault fails). Bind GUARD_HI = DEPTH, as the plan's `rtl` fields do.
+  2. At negative lag the reader never becomes ready and never raises fault. The guaranteed behaviour is fail-closed (never ready && !fault), not fault raised.
+* MESO-COUNT-1's PDR on the 10-bit-time harness (mc1-prove) did not converge: 0 of 3 proven at about 40 min, UNPROVEN.

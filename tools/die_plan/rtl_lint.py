@@ -67,7 +67,11 @@ def script(kit, mount='/work'):
                        if re.search(r'_bb\.(?:v|sv)$', s) else
                        'read_verilog -defer -sv -noautowire ') +
                       ' '.join(includes + [s]) for s in sources] +
-                     parameter_commands + [f'hierarchy -check -top {top[0]}', 'proc', 'check -assert']) + '\n'
+                     parameter_commands + [f'hierarchy -check -top {top[0]}', 'proc',
+                                           # Check the elaborated live design. Dead parameter-disabled cones can
+                                           # retain unassigned legacy wires after proc (safe4 PIPE=2); live
+                                           # undriven nets still survive opt_clean and fail check -assert.
+                                           'opt_clean', 'check -assert']) + '\n'
 
 
 # ---- YOSYS-CONCAT 10-26: reject source forms that the flow's yosys read_verilog -sv (0.68+post, orfs:asap7lock)

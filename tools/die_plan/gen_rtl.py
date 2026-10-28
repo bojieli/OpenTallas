@@ -677,7 +677,30 @@ def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None, landing=None)
         files.append(mf)
     f.write_text(text)
     files.append(f)
+    # DIE-HEAD-4b: the type-uniform wavefront relay outs (rst_o_<k> / start_o_<k>) an instance leaves open are declared
+    # spare outputs in the strict port-bind's default pad file <top>.sv.pads.json (same writer as bind.py).
+    import reset_tree as RT
+    try:
+        RT.write_wf_open_pads(P, f, text, sv_id, fresh=True)   # not returned: callers compile the returned files
+    except ValueError as e:
+        raise GenError(str(e)) from e
     man = parent_id_manifest(P)
+    if L is not None and getattr(L, "strap", None):
+        # MESO-STRAP-1 (OWNER 12.15a): count straps strap_ca_* join the parent strap manifest (same 1.8 rules) and
+        # their tie VALUES are audited against the bind (COORD addition, 12.14a): a wrong / missing tie = G0 ERROR
+        import json
+        import straps as STR
+        cexp = L.strap_expected()
+        for tn, ports in L.strap_declarations().items():
+            man["types"].setdefault(tn, {}).update({sp: dict(width=w, kind="count_strap") for sp, w in ports.items()})
+        for q, ports in cexp.items():
+            man["instances"].setdefault(q, {}).update({sp: dict(width=w, value=v, kind="count_strap")
+                                                       for sp, (w, v) in ports.items()})
+        cva = STR.audit_count_strap_values(text, {CL.ident(q): v for q, v in cexp.items()})
+        (out / "gen_count_strap_audit.json").write_text(json.dumps(cva, indent=1) + "\n")
+        files.append(out / "gen_count_strap_audit.json")
+        if cva["verdict"] != "PASS":
+            raise GenError(f"count-strap tie-value audit (G0 ERROR): {cva['reason']}")
     if man["types"]:
         import json
         f = out / "parent_id_straps.json"

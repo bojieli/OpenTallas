@@ -46,6 +46,8 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
               street network (free area >= die.streets.width_um wide, largest connected component); street_width: width >=
               (clock + hold + FT repeater widths) / 0.6; street_clock_leg: no die-clock H-tree leg / driver of a
               --clock-build across a hard core, unplaced build rows = ERROR; street_die_leg: no lane station inside a core
+  core_pg     (PG-CORECONN-2) a type placing hard-core / hardened macros (non-PHY) without core_pg_connect: true, or
+              a macro LEF with no VDD+VSS PG pin geometry on M4/M5/M6: WARN; ERROR with --strict-core-pg
   G0C (--completeness): hard_cores, core_faces, complete, clock_entry_macro; PLAN-TOOL5 cross-die rules die_io_plan (die_io.py),
               cut_lines / reach / face_tracks / ft_budget (xdie.py, per-layer reach table reach.py)
 Outputs in --out (default: next to the plan): g0_report.json and, with --png, die_plan.png (the G1 render).
@@ -1848,6 +1850,77 @@ def check_seams(P, R):
     return dict(nets=tot, pairs=dict(pairs))
 
 
+def check_core_pg(P, R, plan_dir=None, strict=False, max_msgs=1000):
+    """PG-CORECONN-2 (measured failure PG-CORECONN-1 10-28: hd_tile 10/10 core PG terms / 744 M5 pin shapes, S81
+    col_h10_r2 134/134 / 21001 untouched by tile PG metal = physical open).  Every type that places hard-core /
+    hardened macros (gen_phys.type_macros, PHY-domain macros excluded: their VDDPHY grid lands them) must set
+    partition_types.<t>.core_pg_connect: true, and every such macro LEF must carry PG pin geometry gen_phys can land
+    (gen_phys.core_pg_connect_layer: VDD+VSS on one of M4/M5/M6).  WARN by default (dies regenerate their kits first);
+    ERROR with --strict-core-pg (COORD flips it once the dies have regenerated).  A LEF that does not resolve is a WARN
+    (unchecked) in both modes."""
+    import cores as C
+    import gen_phys as GP
+    emit = R.err if strict else R.warn
+    out = dict(mode="ERROR" if strict else "WARN", types_with_macros=0, types_missing=[], macro_insts_missing=0,
+               lefs_no_pg={}, lefs_unresolved=[], insts_no_pg=0,
+               # hard_cores declared without a plan LEF (view attached at kit generation): not checkable here
+               types_cores_without_lef=sorted(tn for tn, t in P.types.items()
+                                              if any(not c.get("lef") for c in t.get("hard_cores", []))))
+    n = [0]
+
+    def say(f, msg, **kw):
+        n[0] += 1
+        if n[0] <= max_msgs:
+            f("core_pg", msg, **kw)
+
+    lef_ok = {}
+    for tn in sorted(P.types):
+        try:
+            mac = GP.type_macros(P, tn)
+        except (ValueError, KeyError, TypeError) as ex:
+            say(R.warn, f"type {tn}: macros not enumerable ({ex}); core PG landing unchecked", type=tn)
+            continue
+        try:
+            phy = {i for d in GP.phy_pg_domains(P, tn) for i in d[4]}
+        except (ValueError, KeyError, TypeError):
+            phy = set()
+        mac = [m for m in mac if m[0] not in phy]
+        if not mac:
+            continue
+        out["types_with_macros"] += 1
+        ninst = sum(1 for p in P.parts.values() if p["type"] == tn)
+        if not P.types[tn].get("core_pg_connect"):
+            out["types_missing"].append(tn)
+            out["macro_insts_missing"] += len(mac) * max(ninst, 1)
+            say(emit, f"type {tn}: {len(mac)} placed hard-core macro(s) ({mac[0][0]} ...) without core_pg_connect: true "
+                f"-- the kit PDN lands no via on their PG pins (physical PG open); set core_pg_connect and regenerate",
+                type=tn)
+        for inst, _mod, lef, *_ in mac:
+            if lef not in lef_ok:
+                cand = [C.resolve(lef)] + ([Path(plan_dir) / lef] if plan_dir and not Path(lef).is_absolute() else [])
+                f = next((c for c in cand if c.is_file()), None)
+                if f is None:
+                    lef_ok[lef] = "unresolved"
+                    out["lefs_unresolved"].append(lef)
+                    say(R.warn, f"type {tn}: macro {inst} LEF {lef} not found; PG pin geometry unchecked", type=tn)
+                else:
+                    try:
+                        GP.core_pg_connect_layer(f)
+                        lef_ok[lef] = "ok"
+                    except ValueError as ex:
+                        lef_ok[lef] = str(ex)
+                        out["lefs_no_pg"][lef] = 0
+                        say(emit, f"type {tn}: macro {inst}: {ex}", type=tn)
+            if lef in out["lefs_no_pg"]:
+                out["lefs_no_pg"][lef] += max(ninst, 1)
+                out["insts_no_pg"] += max(ninst, 1)
+    if n[0] > max_msgs:
+        R.warn("core_pg", f"... {n[0] - max_msgs} more core_pg findings (counts in summary.core_pg)")
+    out["types_missing_n"] = len(out["types_missing"])
+    out["types_cores_without_lef_n"] = len(out["types_cores_without_lef"])
+    return out
+
+
 def check_types(P, R):
     """type count, instances per type, and near-duplicate types: same outline + same bus interface (name, dir, width,
     kind) + same ft slots (faces, width, stations), differing only in pin offsets / contents.  Such types should be
@@ -1989,7 +2062,7 @@ def g0c_summary(P, R):
 
 
 def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, core_conns=None, completeness=False,
-        clock_builds=None, core_macros=None):
+        clock_builds=None, core_macros=None, strict_core_pg=False):
     R = Report(completeness)
     io_src = "plan" if raw.get("die", {}).get("io") else None
     sc = Path(plan_dir) / "die_io.json" if plan_dir else None
@@ -2014,6 +2087,7 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
         except (ValueError, KeyError, TypeError) as ex:
             R.err("infrastructure", str(ex))
     summ["types"] = check_types(P, R)
+    summ["core_pg"] = check_core_pg(P, R, plan_dir, strict=strict_core_pg)
     summ["taps_cores"] = check_taps_cores(P, R, plan_dir, evidence)
     summ["core_faces"] = check_core_faces(P, R, plan_dir, core_conns)
     _views = _pin_views(P, plan_dir)
@@ -2108,6 +2182,9 @@ def main(argv=None):
     ap.add_argument("--clock-build", action="append", default=[],
                     help="die clock mesh build dir (die_clock_mesh build/combo); repeatable: ERROR unless the mesh is one "
                          "connected net (VIA89 at every strap crossing, emitted + routed DB)")
+    ap.add_argument("--strict-core-pg", action="store_true",
+                    help="core_pg: a type placing hard-core macros without core_pg_connect, or a macro LEF with no "
+                         "connectable PG geometry, is an ERROR (default WARN until the dies regenerate their kits)")
     a = ap.parse_args(argv)
     raw = S.load(a.plan)
     out = Path(a.out) if a.out else Path(a.plan).resolve().parent
@@ -2115,7 +2192,7 @@ def main(argv=None):
     R, summ = run(raw, png=(out / "die_plan.png") if a.png else None, plan_dir=Path(a.plan).resolve().parent,
                   groups=a.groups, landing=a.landing, evidence=a.cells_evidence, core_conns=a.core_conns,
                   completeness=a.completeness, clock_builds=a.clock_build,
-                  core_macros=a.core_macros)
+                  core_macros=a.core_macros, strict_core_pg=a.strict_core_pg)
     ne = len(R.errors())
     npv = len(R.pendings())
     nw = len(R.items) - ne - npv

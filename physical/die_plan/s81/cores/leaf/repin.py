@@ -14,6 +14,8 @@ Writes inputs/core_pins/<module>_lfp.json (plan pin table) and cores/leaf/lef/<m
 pins + OBS M1-M7 over the core, for plan / G1 / leaf-kit placement until the re-pinned view closes).
 usage (repo root): python3 physical/die_plan/s81/cores/leaf/repin.py [MODULE ...]   (default: all)"""
 import json, os, re, sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), ../..)))
+from core_pg_stub import port_lines as core_pg_port_lines
 D = "physical/die_plan/s81"
 OFF = (0.108, 0.012)
 LAY = {"M3": (0.036, 0.009), "M4": (0.048, 0.024), "M5": (0.048, 0.024)}
@@ -155,6 +157,7 @@ def lef(mod, W, H, pins, dirs):
               "    PORT", "      LAYER %s ;" % p["layer"],
               "        RECT %.4f %.4f %.4f %.4f ;" % (p["x"] - w / 2, p["y"] - h / 2, p["x"] + w / 2, p["y"] + h / 2),
               "    END", "  END %s" % p["name"]]
+    o += core_pg_port_lines(W, H)
     o += ["  OBS"] + ["    LAYER %s ;\n      RECT 0.5 0.5 %.3f %.3f ;" % (L, W - 0.5, H - 0.5)
                      for L in ("M1", "M2", "M3", "M4", "M5", "M6", "M7")] + ["  END", "END %s" % mod, "END LIBRARY", ""]
     return "\n".join(o)
