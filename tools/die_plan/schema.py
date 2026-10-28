@@ -315,6 +315,9 @@ SCHEMA = {
                 "type": "object", "required": ["module", "outline_um"], "additionalProperties": False,
                 "properties": {
                     "module": _name,                 # generated wrapper module name
+                    # DIE-HEAD-5 10-28 (gen_phys.phy_pg_domains opt-in): the type PHY body is off-model (behind its pads),
+                    # so its die.pg.domains region may hold no macro; the note states why
+                    "phy_pg_offmodel": {"type": "string", "minLength": 1},
                     "infra_ports": {"type": "array", "items": _infra_port},
                     "infra_arcs": {"type": "array", "items": _infra_arc},
                     # HEAD native views: physical (synthesis black-box) source -> simulation model source
@@ -360,6 +363,9 @@ SCHEMA = {
                                        "face": {"enum": list(FACES)}, "window_um": _win, "layers": _lays,
                                        "order": _order,
                                        "note": {"type": "string"}}}},
+                    # DIE-HEAD-5 PGCUT 10-28 (DRT-TRIAL-1, opt-in): cut the kit M6 PG straps over the interior M5
+                    # signal pins (in-core island pins) of every hard core whose LEF is known (gen_phys.pg_island_cuts)
+                    "pg_island_cut": {"type": "boolean"},
                     # HEAD-BIND-4 10-27 (OWNER 10-25 option B): per-INSTANCE ID strap input ports of the partition
                     # (strap_* names, exact widths in parent_id_straps.PHYSICAL_ID_WIDTHS).  No pin register, kit SDC
                     # set_false_path -from, each instance ties its own value (partitions[].id_straps) at the die top;
@@ -367,7 +373,11 @@ SCHEMA = {
                     "id_straps": {"type": "array", "items": {
                         "type": "object", "required": ["name", "width"], "additionalProperties": False,
                         "properties": {"name": {"type": "string", "pattern": "^strap_[A-Za-z0-9_]+$"},
-                                       "width": {"type": "integer", "minimum": 1}, "note": {"type": "string"}}}},
+                                       "width": {"type": "integer", "minimum": 1}, "note": {"type": "string"},
+                                       # DIE-HEAD-5 TILEIO 10-28 (opt-in): interior pin site per bit [x, y] (type
+                                       # frame) on `layer`; gen_phys places them and lists them in port_bind_pins
+                                       "layer": {"type": "string"},
+                                       "sites_um": {"type": "array", "items": _xy}}}},
                     # MESO-STRAP-1 (OWNER 12.15a): count-aligned crossing straps strap_ca_* (ring K, origin PAD/EDGE_FALL/
                     # tree select/root) emitted by clock_landings (strap form); values per instance from
                     # count_align_bind.strap_ties, tied at the die top by clock_landings.top_rtl, value-audited (straps.py)
@@ -375,6 +385,7 @@ SCHEMA = {
                         "type": "object", "required": ["name", "width"], "additionalProperties": False,
                         "properties": {"name": {"type": "string", "pattern": "^strap_ca_[A-Za-z0-9_]+$"},
                                        "width": {"type": "integer", "minimum": 1}, "note": {"type": "string"}}}},
+
                     # HEAD-BIND-4 10-27: off-die PHY pad ports (PMA side of a PHY leaf): NO boundary flop (their
                     # timing belongs to the PHY's own clocks), bound to the leaf as "pad:<name>", carried to the die
                     # top as <part>_<name> (behavioural word pads; die.io phy_macro windows hold the bumps)
@@ -510,6 +521,9 @@ SCHEMA = {
                                            "insertion_tol_ps": _nonneg, "budget_owner": {"type": "string"},
                                            "merged_clock_ports": {"type": "array", "minItems": 2, "uniqueItems": True, "items": _name},
                                            "from_root_um": _nonneg, "parent": _name, "note": {"type": "string"}}}}}},
+                    # PG-CORECONN-1 10-28 (opt-in): pdngen macro grids land every placed non-PHY macro's LEF PG pins
+                    # on the tile strap layer above them (gen_phys.core_pg_grids); off = kit PDN unchanged
+                    "core_pg_connect": {"type": "boolean"},
                     # hard cores built on PLATFORM tracks (macros inside): a per-core placement offset puts their
                     # boundary pins on the plan tracks (COORD 10-23 08:36; A0: y +0.012)
                     "hard_cores": {"type": "array", "items": {
