@@ -1,0 +1,126 @@
+{
+ "source": "fbb34b6aac",
+ "runtime": "/srv/opentallas-scratch2/claude/codex-meso-kv-1028",
+ "scope": "count-aligned crossing/start component only; no PNR or die closure",
+ "corners": {
+  "TT": {
+   "verdict": "PASS",
+   "crossings": 3595,
+   "unbound": 0,
+   "ca_fail": 0,
+   "slot_fail": 0,
+   "guard_fail": 0,
+   "start_fail": 0,
+   "start_edges": 127,
+   "margin_lo_ps": 136.6,
+   "margin_hi_ps": 329.1
+  },
+  "FF": {
+   "verdict": "PASS",
+   "crossings": 3595,
+   "unbound": 0,
+   "ca_fail": 0,
+   "slot_fail": 0,
+   "guard_fail": 0,
+   "start_fail": 0,
+   "start_edges": 127,
+   "margin_lo_ps": 127.2,
+   "margin_hi_ps": 128.5
+  }
+ },
+ "pad_plus1": {
+  "hgi_ES_7": 1,
+  "hgi_WS_5": 1,
+  "hgi_WS_6": 1
+ },
+ "latency": {
+  "need_clean_dist_ps": 116.3,
+  "need_amb_margin_ps": 189.8,
+  "tree_edges_amb_by_skew": 16,
+  "tree_edges_amb_by_skew_J_free": 4,
+  "padded_edges": 3,
+  "pad_plus1": {
+   "hgi_ES_7": 1,
+   "hgi_WS_5": 1,
+   "hgi_WS_6": 1
+  },
+  "added_latency_cycles_pad": 3,
+  "added_latency_cycles_vs_noflag": 159,
+  "crossings_lat_changed_vs_noflag": 159,
+  "fail_noflag": 0,
+  "note": "added latency (12.15c cost, record only): _pad = sum lat_cycles vs the same tree at the input PAD; _vs_noflag = vs the plan without --start-skew-clean, over crossings that pass in both"
+ },
+ "bind_report": {
+  "verify": {
+   "identity_and_loop_errors": [],
+   "fundamental_cycles": 3468,
+   "samples": 2000,
+   "sim_window_violations": 0,
+   "sim_min_margin_low_ps": 106.2,
+   "sim_min_margin_high_ps": 196.8,
+   "sim_worst_ports": {
+    "lo": "L410_0",
+    "hi": "L132_0"
+   },
+   "sim_below_need": false,
+   "note": "margins to the ring guards 0.5T / (DEPTH-0.5)T (COORD 20:35/20:48 gate >= 100 ps); MESO-INTEG-1 sync physics with metastable resolution both ways"
+  },
+  "sched_lat_hist": {
+   "-4": 2,
+   "-3": 2,
+   "-2": 28,
+   "-1": 7,
+   "0": 29,
+   "1": 153,
+   "2": 1272,
+   "3": 1786,
+   "4": 172,
+   "5": 59,
+   "6": 29,
+   "7": 11,
+   "8": 10,
+   "9": 4,
+   "11": 28,
+   "12": 3
+  },
+  "sched_lat_total": 9672,
+  "tree_sched_lat_total": 232,
+  "old_ring_total": 10785,
+  "depth_hist": {
+   "4": 3291,
+   "8": 304
+  },
+  "K_range": [
+   -26,
+   32
+  ],
+  "start_tree_depth": 18,
+  "tree_edges_fall": 37,
+  "max_origin_cycles": 43,
+  "relay": {
+   "landed_regions": 128,
+   "multi_partition_regions": 32,
+   "partitions_per_region_hist": {
+    "1": 96,
+    "2": 32
+   },
+   "relay_partitions": 32,
+   "relay_pins": {
+    "tx_out": 32,
+    "rx_in": 32
+   },
+   "relay_stages": 2,
+   "crossings_with_relayed_receiver": 60,
+   "crossings_with_relayed_sender": 54,
+   "tree_ports_from_relay_sender": 2,
+   "nontree_K_shifted_by_relay": 60
+  },
+  "plan_source": "/srv/opentallas-scratch2/claude/die-kv-5-1027/capad2/pad2_spice_xing_lpo.json"
+ },
+ "cli": "import subprocess,pathlib\nR=pathlib.Path(\"/srv/opentallas-scratch2/claude/codex-meso-kv-1028\");T=R/\"tools/die_plan\"\nD=pathlib.Path(\"/srv/opentallas-scratch2/claude/die-kv-5-1027\")\nX=str(D/\"capad2/pad2_spice_xing_lpo.json\");P=\"/srv/opentallas-scratch2/claude/die-kv-4-1027/pd9c/hm_r26q9c.json\";proof=str(D/\"proofpad2\")\nfor name,hull in [(\"skew\",False),(\"hull\",True)]:\n O=R/name;O.mkdir(exist_ok=True)\n a=[\"--start-skew-clean\",\"--start-skew\",\"57.6,89.8\"]\n if hull:a+=[\"--sta-proof\",proof,\"--sta-plan\",P,\"--sta-clock-cal\",\"spice\",\"--sta-cppr-lca\"]\n cmds=[(\"plan\",[\"python3\",str(T/\"count_align_plan.py\"),X,*a,\"--out\",str(O/\"plan.json\")]),(\"bind\",[\"python3\",str(T/\"count_align_bind.py\"),X,\"--from-ocv\",\"--parts\",\"ocv\",\"--samples\",\"2000\",*a,\"--out\",str(O/\"bind.json\")]),(\"sta\",[\"python3\",str(T/\"die_sta_related.py\"),proof,\"--plan\",P,\"--out\",str(O/\"sta\"),\"--corner\",\"TT\",\"--corner\",\"FF\",\"--clock-ocv\",\"table\",\"--clock-droop\",\"shared\",\"--droop-regions\",str(D/\"proofpad2/droop_regions.json\"),\"--hold-buffers\",\"none\",\"--cppr-lca\",\"--clock-cal\",\"spice\",\"--count-align\",str(O/\"bind.json\"),\"--count-align-key\",\"region\"])]\n for label,c in cmds:\n  with (O/(label+\".log\")).open(\"w\") as f:r=subprocess.run(c,stdout=f,stderr=subprocess.STDOUT)\n  print(name,label,r.returncode,flush=True)\n  if label==\"bind\" and not (O/\"bind.json\").exists():break\n\n",
+ "input_sha256": {
+  "/srv/opentallas-scratch2/claude/die-kv-5-1027/capad2/pad2_spice_xing_lpo.json": "8b0491621feb7aca031449d4741e2787a026009d20c6fd386ed0b840f625786f",
+  "/srv/opentallas-scratch2/claude/die-kv-5-1027/proofpad2/tap_arrivals_TT.json": "c8e644989878e3b8a7086d4dbdf0dfbfc86c2631ecba30b114a6532b0c6fae69",
+  "/srv/opentallas-scratch2/claude/die-kv-5-1027/proofpad2/tap_arrivals_FF.json": "4c58cb7662f5a8ccf3371c985076bef08e1c2e518d9667f1c889c483e0ab0804"
+ }
+}
