@@ -26,10 +26,10 @@ from pathlib import Path
 FTS = ("ck0", "ck1", "mesh", "rst")
 NATIVE = {"ot_s81hd_tile.sv": "ot_s81hd_tile_native.sv", "ot_s81hd_bundle.sv": "ot_s81hd_bundle_native.sv",
           "ot_s81hd_elem_cv_bb.v": "ot_s81hd_elem_cv_bb_native.v"}
-SIGNED = {"ot_s81hd_elemA_cv": ("results/head_core_clockfreeze_release/elemA_signed/ot_s81hd_elemA_cv.lef",
-                                "results/head_core_clockfreeze_release/elemA_signed/ot_s81hd_elemA_cv_tc.lib"),
-          "ot_s81hd_elemB_cv": ("results/head_core_clockfreeze_release/elemB_signed/ot_s81hd_elemB_cv.lef",
-                                "results/head_core_clockfreeze_release/elemB_signed/ot_s81hd_elemB_cv_tc.lib")}
+SIGNED = {"ot_s81hd_elemA_cv": ("results/head_core_clockfreeze_release/elemA_corner/ot_s81hd_elemA_cv.lef",
+                                "results/head_core_clockfreeze_release/elemA_corner/ot_s81hd_elemA_cv_tt.lib"),
+          "ot_s81hd_elemB_cv": ("results/head_core_clockfreeze_release/elemB_corner/ot_s81hd_elemB_cv.lef",
+                                "results/head_core_clockfreeze_release/elemB_corner/ot_s81hd_elemB_cv_tt.lib")}
 OWNER = "LAND-HEAD-3"
 REASON = "landed form: no die mesh/reset crosses this core island; region-tree use is LAND-HEAD-3's call"
 
