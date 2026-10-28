@@ -48,6 +48,7 @@ TOL = {"ins_ps": 5.0, "wns_ps": 10.0, "hold_ep_frac": 0.05, "overflow": 0, "drv"
 # reach, judged through the metrics
 FLOW_STAGES = ("lint", "sdc_lint", "selrange", "synth", "lec", "face_guard", "face_cover", "reg_fanout", "rc_file",
                "cts", "tcl_errors")
+STRUCT_RE = re.compile(r"^OT_HOLD_STRUCTURAL stage=(\w+): FF hold ws (-?[0-9.]+) ps, (\d+) true failing endpoints", re.M)
 HOLD_RE = re.compile(r"^OT_HOLD_GATE\s+(PASS|FAIL)\s+FF\s+wns_ps\s+(-?[0-9.]+)\s+endpoints\s+(\d+)", re.M)
 GATE_RE = re.compile(r"^OT_POSTCTS_GATE\s+(TT|FF)\b.*?\bmean\s+(-?[0-9.]+)\s+bound\s+(-?[0-9.]+).*?\b(PASS|FAIL)\s*$",
                      re.M)
@@ -154,6 +155,14 @@ def design_stop(kit):
     hg = HOLD_RE.findall(read(kit / "hold_gate.log"))
     if hg and hg[-1][0] == "FAIL":
         why.append("structural FF hold gate")
+    # FLOW-SHARED-6 2026-10-27: kits staged two-mode (OT_HOLD_MM, e.g. HBM since RM37 5b3f0f6b2) run the structural FF
+    # hold guard INSIDE the GRT step (tools/orfs_hold_mm.tcl ot_hold_structural_gate) and stop there with
+    # 'OT_HOLD_STRUCTURAL stage=grt' before the post-CTS insertion gate runs; no FAIL_POSTCTS marker is written.  That is
+    # the same flow-own design gate, so later metrics are NOT REACHED, not 'not measured' REGRESSED.
+    log = _first(f"{kit}/run/logs/asap7/*/base/5_1_grt.log")
+    st = STRUCT_RE.findall(read(log)) if log else []
+    if st:
+        why.append("structural FF hold gate at %s (ws %s ps, %s endpoints)" % st[-1])
     return "; ".join(why)
 
 

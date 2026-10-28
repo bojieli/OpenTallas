@@ -36,6 +36,13 @@ def touched(paths, watch):
     return sorted({p for p in paths for w in watch if fnmatch.fnmatch(p, w)})
 
 
+def is_ab_candidate(meta):
+    """FLOW-SHARED-6 2026-10-27: a candidate-branch A/B canary (source snapshot under flow-canary/ab/) is not a main
+    reference run; it never blocks main's canary of the same die (main 47ce1af8bc got 1/7 canaries while A/B runs of
+    f9d9190f11 / 15c4459bb3 were live)."""
+    return "/flow-canary/ab/" in str(meta.get("src", ""))
+
+
 def live_dies(root, now=None):
     """Uncollected transient clients never expire into permission for a duplicate.
 
@@ -50,6 +57,8 @@ def live_dies(root, now=None):
         if (run / "canary.json").exists():
             continue
         m = json.loads(Path(d).read_text())
+        if is_ab_candidate(m):
+            continue
         if m.get("client_unit") or now - run.stat().st_mtime < LIVE_S:
             out.add(m["spec"]["die"])
     return out
