@@ -1288,3 +1288,6 @@ All HBM plan/streets/locality/clock/crossing/core/native boot+token/PG aliases c
   - Separate finding: 95 of the 129 cited core LEFs have a SIZE different from the plan outline. The kit uses pins_files, so this is only a staleness note for now.
   - Fix, die-local plan data, no rule change: c22v = C22 with lef/lib dropped on those 4 cores, making them PENDING-VIEW, which retaps when their own view is signed off. Audit: 85 PENDING-VIEW, 0 FAIL.
   - trial2b (the same chain on c22v) started 12:35 on intel2, ~2.5 h. trial1 was left running by design: stop_trial1 kills it only on a clean trial2. The same 4-core drop goes into the C23q event.
+- RESULT DIE-HBM-10 2026-10-28 13:38 PDT: the one tok/s rerun now uses REBAL-9's -1.16% (COORD 12:50).
+  - Combined estimate: 1906 / 1.0298 x (1 - 0.0116) = 1829 tok/s, -4.0% (UNCHECKED model). Under 5%, so no OWNER item on this estimate.
+  - The measured VMX-TOK-1 replay delta (running on epyc2) replaces the VMX term. If that measured total exceeds 5%, it goes to the OWNER.
