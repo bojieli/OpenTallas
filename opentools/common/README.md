@@ -17,7 +17,7 @@ Units: micrometres, picoseconds; origin at the die lower-left corner. Corners `T
 | `sinks[]` | `{name, xy, insertion_ps{TT,FF}?, region?, weight?}` | other clock taps (partition entries, std-cell region taps) |
 | `regions[]` | `{name, rect, partition?}` | clock / PDN regions. Guidance: 1 clock region == 1 hierarchical partition. Two sinks in one region share supply droop |
 | `regions[].clock` | `{root_xy?, local_insertion_ps{TT,FF}?, local_stages?}` | region clock root and (optional, measured) local tree insertion; region mode predicts it from the longest root->sink path when absent |
-| `feeds[]` | `{name?, src, dst, len_um, kind forward/spine, stages?}` | region clock feed graph (METHODOLOGY 12.13b clock follows data): `src` = `root` or a region, `dst` = a region, one incoming feed per region (a tree). `forward` = neighbour-forwarded region clock, `spine` = tap off a shared spine along the links |
+| `feeds[]` | `{name?, src, dst, len_um, kind forward/spine, tap root/leaf, stages?}` | region clock feed graph (METHODOLOGY 12.13b clock follows data): `src` = `root` or a region, `dst` = a region, one incoming feed per region (a tree). `forward` = neighbour-forwarded region clock, `spine` = tap off a shared spine along the links |
 | `crossings[]` | `{name, a, b, kind, bits?, budget_ps?}` | related pairs between sinks (`a`, `b` = sink names or `macro/pin`). `kind`: `landed` (mesochronous, phase budget default P/2) or `sync` |
 | `crossings[].derated_margin_ps{TT,FF}` | OUTPUT (clkplan) | derated phase margin: budget - max(\|d + p_up\|, \|d - p_dn\|) with AOCV + droop on the unshared clock |
 | `crossings[].unshared_ps{TT,FF}` | OUTPUT (clkplan) | larger unshared die-tree delay of the pair (below the last common tree cell) |
@@ -39,4 +39,6 @@ Rules for tools: read with `plan.load()`, never drop fields you do not know, wri
 Region mode (12.13) and the locality tool: `tools/die_plan/locality.py` (LOCALITY-SCORE-1) should emit `regions[]`,
 `feeds[]` and `crossings[]` in this schema (sinks = partition entries / macro clock pins with `region`); clkplan
 `--mode region` then gives the unshared clock and derated margin per crossing. Region names = partition names
-(1 clock region == 1 hierarchical partition).
+(1 clock region == 1 hierarchical partition). Mapping of the locality.py feed model (claude/locality-score-1027@53396c427a):
+'fwd'/'spt' child c of p = feed {src p, dst c, tap leaf, len_um = |t - centre(c)|_1}; 'top' = feeds {src root, tap root}
+with the I_max - I_r balance as regions[].clock.local_insertion_ps; region insertion I_r = regions[].clock.local_insertion_ps.

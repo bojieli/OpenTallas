@@ -88,6 +88,8 @@ def validate(P):
             e.append(f"feed {f.get('name')}: src must be 'root' or a region, dst a region")
         if not (isinstance(f.get("len_um"), (int, float)) and f["len_um"] >= 0):
             e.append(f"feed {f.get('name')}: len_um >= 0 required")
+        if f.get("tap", "root") not in ("root", "leaf"):
+            e.append(f"feed {f.get('name')}: tap must be 'root' or 'leaf'")
         if f.get("kind", "forward") not in FEED_KINDS:
             e.append(f"feed {f.get('name')}: kind must be one of {FEED_KINDS}")
     dsts = [f.get("dst") for f in P.get("feeds", [])]

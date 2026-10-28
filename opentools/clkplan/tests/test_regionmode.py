@@ -86,3 +86,13 @@ def test_parity_with_main_clk_aocv():
             ours = ocv.branch_pessimism(T, c, a, b, 3200.0, same)
             ref = CA.branch_pessimism(T, c, a, b, 3200.0, same, "setup")
             assert abs(ours - ref) < 1e-9
+
+
+def test_leaf_tap_adds_parent_insertion():
+    """locality.py 'fwd' form: a child fed from a LEAF of its parent arrives I_parent later than from the root."""
+    P = PL.load(EX)
+    a = RM.predict(P, M, PL.clock_sinks(P))["regions"]["r0"]["root_arrival_ps"]["TT"]
+    for f in P["feeds"]:
+        f["tap"] = "leaf"
+    pr = RM.predict(P, M, PL.clock_sinks(P))["regions"]
+    assert abs(pr["r0"]["root_arrival_ps"]["TT"] - a - pr["r1"]["local_insertion_ps"]["TT"]) < 0.2

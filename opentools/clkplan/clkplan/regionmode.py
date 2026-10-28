@@ -2,7 +2,7 @@
 
 Input (shared schema opentools.plan/1):
   regions[]  {name, rect, partition?, clock?{root_xy?, local_insertion_ps{TT,FF}?}}
-  feeds[]    {name?, src, dst, len_um, kind 'forward'|'spine', stages?}  src = a region name or 'root' (the die
+  feeds[]    {name?, src, dst, len_um, kind 'forward'|'spine', tap 'root'|'leaf', stages?}  src = a region or 'root' (the die
              clock entry); every region has at most one incoming feed, so feeds form a tree (the feed graph).
              'forward' = neighbour-forwarded region clock; 'spine' = a tap off a shared spine running along the links.
   sinks / macro clock pins (with their own insertion_ps), crossings[] (a, b, kind landed|sync, budget_ps?).
@@ -10,7 +10,9 @@ Prediction, analytic, no placement tool:
   region local insertion  = repeated wire (model.wire_ps) over the region's longest root->sink Manhattan path
                             (a balanced local tree delivers every sink at the longest path), or the declared
                             regions[].clock.local_insertion_ps;
-  region root arrival     = sum over the feed path from 'root' of model.wire_ps(len_um) (+ declared stages);
+  region root arrival     = sum over the feed path from 'root' of model.wire_ps(len_um) (+ declared stages), plus the
+                            parent's local insertion for a feed with tap 'leaf' (fed from a leaf of the parent tree, the
+                            tools/die_plan/locality.py 'fwd' form: T_root(c) = T_root(p) + I_p + v |t - centre(c)|);
   latency(sink)           = root arrival + local insertion + the sink's own insertion (macro signed view);
   crossing a -> b         : common point = the deepest region on both feed paths (or the region itself if
                             a, b share a region: the plan-level bound then is a split at the region root);
@@ -80,6 +82,9 @@ def predict(P, model, sinks, corners=("TT", "FF")):
             src, f = par[name]
             a, n = root_arr(src, c) if src in regs else (0.0, 0)
             fs = int(f.get("stages") or max(1, math.ceil(f["len_um"] / model["rep_um"] - 1e-9)))
+            if src in regs and f.get("tap", "root") == "leaf":     # fed from a LEAF of the parent's region tree
+                a += R[src]["local_insertion_ps"][c]
+                n += R[src]["local_stages"]
             v = (a + model.wire_ps(f["len_um"], c), n + fs)
         arr_cache[k] = v
         return v

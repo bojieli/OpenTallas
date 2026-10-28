@@ -59,3 +59,12 @@ def test_netlist_views_agree():
     assert abs(tot - wl * NL.CFG["c_ff_um"]) < 1e-3 * tot
     # every SPEF internal node is net:<int>
     assert not re.search(r"^\d+ o_\S+:\d+_\d+ ", sp, re.M)
+
+
+def test_sta_fitted_model_is_data_and_balances():
+    Mf = MD.load(ROOT / "data" / "asap7_bufx24_sta_fit.json")
+    assert Mf.ks["TT"] > 0 and abs(Mf.k["TT"][0] - 21.2438) < 1e-9
+    R = RG.build(QC["sinks"], Mf, tuple(QC["entry"]), [tuple(x) for x in QC["crossings"]], objective="late_split")
+    rep, _ = RG.report(R, [tuple(x) for x in QC["crossings"]], 416.5)
+    assert rep["skew_TT_ps"] < 1.0 and rep["snakes"] == 0
+    assert 2900 < rep["insertion_TT_ps"] < 3200          # OpenSTA on the built tree: 3088-3103 ps (OSS-CLOCK run)
