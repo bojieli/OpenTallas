@@ -1092,3 +1092,19 @@ Resumed exclusive whole-hub mover endpoint work in fresh sparse codex/hbm-datafl
   - COORD cond (1): PHY_N NOT COVERED (placeholder, no lib). SM halves NOT COVERED: _s CTS blocked by kit GPL OT_CORE_INFRA_PLANNED_OVERLAP mp_isl0_ck1/ck0 (same as programme_store_r10); _n probe still running on epyc2.
   - Collect SM_n: epyc2:/srv/opentallas-scratch2/claude/hbm-core-lat-2/kits/hnx_rp3lp3h_n_a97a6f92c3e0-_c20e/run_cts.log "OT_TAP_BALANCE it0" + postcts_gate_{tt,ff}.json -> add to probes.json, rerun build.py.
   - Kit blockers for owners: lanes__canon_cf1e77 / lanes_plain__canon_663526 GPL OT_CORE_INFRA_CLOCK_ENTRY_PORT clk_bank; SM halves + pretree RTL lint (conflicting constant drivers).
+- 10-28 03:33 PDT DIE-HBM-5 collect (all CHECKED unless marked).
+  - c20h_tree probe GRT (core abstracts, die tree incl clock obstructions): overflow 0 on all layers; M4 3.07 / M5 6.28 / M6 6.66 / M7 6.78 / M8 0.83 / M9 0.82 %; 312,777 nets; WL 475.4 m.
+  - All 4 congestion probes (c20f, v1c5, t63, c20h_tree) are overflow 0, so congestion does not drive the map; no M5 cap.
+  - c20i_po (sha 16f454f05cbf = fork C20i v2 f4bdd65c953d + tkm pin-order delta):
+    - G0 PASS 0 errors / 0 pending.
+    - G0C FAIL 20, the same 20 as C20i v2: core_faces 12 vmb dq/rr, merged_clock_view 4 u_xq eg, street_reach 4 (exception). The pin-order delta adds 0.
+    - Not G0C-clean, so no die GRT0 on it.
+  - Hub reset local taps (COORD 02:5x (b), reset_local.py, greedy cover on the RISK-2 tap model, UNCHECKED vs kit):
+    - NW 656.6 -> 468.7 um, NE 661.0 -> 473.0, after 2 taps each. Then STUCK.
+    - The remaining >405 regs (135 NW / 75 NE) are S-face bus regs at y 0-4.3, x about 1.96 mm. They sit under cores that abut the face, and no free site is within 405 um.
+    - Local taps cannot fix these. They need either a reset relay fed through the S face from the neighbour partition, or face regs moved out from under the cores. Not applied.
+  - Bind prerequisite (COORD 04:1x): `bind.py all` on c20i_po refuses (rc 2): "no `asbuilt` section (README: As-built binding)".
+    - HBM has no as-built binding, so kit-rtl cannot run for any HBM partition yet.
+    - Authoring the asbuilt section is step 0 of the C20i/partition event. run_bind_c20i.sh is ready to run after it.
+  - Deleted: c20i_out (v1, superseded) and dry_c20h_hs (36-region map, superseded by region = partition).
+  - Branch: claude/die-hbm-5-1028@36e18a54bd (results/die_hbm_1027/hbm5).
