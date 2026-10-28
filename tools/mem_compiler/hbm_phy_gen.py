@@ -632,15 +632,111 @@ def generate_rc(out: Path | None, edge_mm: float = V2_EDGE_BASIS["value_mm"], np
     return sheet
 
 
+# ---- DIE-HBM-10 2026-10-28: PHY-ONLY slice abstract (COORD ruling DIE-HBM-10 ASK 1, PHY_N C23 split) -------------------
+# The rc macro has ONE clk/rst_n pin (window 16) for 32 pseudo-channels, so a die region tree cannot be split across it.
+# rc_slice is the same PHY-only boundary for pseudo-channels LO..HI (whole HBM3 channels, i.e. PC pairs): the same
+# per-PC pins (local index 0..n-1 = global PC LO..HI), the same window pitch as the full rc macro (floor(w/32) on the M5
+# track) snapped up to the 8.64-um partition lattice, the same height, its own clk/rst_n in its middle window.  W/C/E
+# slices 0-7 / 8-23 / 24-31 tile 8501.76 um (246 + 492 + 246 x 8.64).  ASSUMED: the licensed PHY supports one clock input
+# per channel group; stack-global functions sit in the slice holding the full macro's window 16.  Opt-in: the default
+# rc variant and every existing view are byte-identical.
+SLICE_LATTICE_UM = 8.64
+
+
+def rc_full_geometry(edge_mm: float = V2_EDGE_BASIS["value_mm"], npc: int = 32) -> tuple[float, float, float]:
+    """(width, height, window) of the full rc macro, computed exactly as generate_rc / write_lef_v41x_legal do."""
+    area = tech("hbm.hbm3e.phy_area_mm2_per_stack")
+    w_um = asap7.snap_up(edge_mm * 1000.0, JOINT_X_UM)
+    h_um = asap7.snap_up(area["value"] * 1e6 / w_um, 2.16)
+    win = math.floor(w_um / npc / M5_TRACK_UM) * M5_TRACK_UM
+    return w_um, h_um, win
+
+
+def rc_slice_name(lo: int, hi: int, edge_mm: float = V2_EDGE_BASIS["value_mm"]) -> str:
+    return f"{RC}_e{edge_mm:g}".replace(".", "p") + f"_pc{lo}_{hi}"
+
+
+def generate_rc_slice(out: Path | None, lo: int, hi: int, edge_mm: float = V2_EDGE_BASIS["value_mm"],
+                      npc_full: int = 32) -> dict[str, Any]:
+    """PHY-only abstract for pseudo-channels lo..hi (inclusive) of the rc macro."""
+    n = hi - lo + 1
+    if not (0 <= lo <= hi < npc_full) or lo % 2 or n % 2:
+        raise SystemExit(f"rc_slice: PCs {lo}-{hi} must be whole channels (even lo, even count) inside 0..{npc_full - 1}")
+    w_full, h_um, win_full = rc_full_geometry(edge_mm, npc_full)
+    w_um = asap7.snap_up(n * win_full, SLICE_LATTICE_UM)
+    _n(w_um, JOINT_X_UM)
+    name = rc_slice_name(lo, hi, edge_mm)
+    plist, place = rc_pins(n)
+    lef, pin_info = write_lef_v41x_legal(w_um, h_um, plist, place, n, 0.192, name=name)
+    lef = lef.replace("--variant v41x_legal (v2): HBM3E PHY + controller",
+                      f"--variant rc_slice (v1): HBM3E PHY ONLY, pseudo-channels {lo}-{hi}")
+    lef = lef.replace("ABSTRACT for the adopted V4.1 die (rtl/chip/ot_chip_v41x_hbm3e_phy.sv); controller-side pins only.",
+                      "SLICE of the rc abstract at the row/column/data boundary of ot_hbm_svc_pc_ctrl_leaf.")
+    pin_info["matches"] = (f"ot_hbm3e_phy_rc pins of PCs {lo}-{hi}: local PC i = global PC {lo} + i")
+    pin_info["placement"] = (f"local pseudo-channel i's row/column/data bits in [i*window + span]; clk, rst_n in window {n // 2} "
+                             f"(global PC {lo + n // 2})")
+    cal = asap7.calibration()
+    per_corner = {}
+    for c in asap7.CORNERS:
+        k = cal["corners"][c]
+        fo4 = k["fo4_ps"]
+        per_corner[c] = Timing(
+            corner=c, voltage=k["voltage_v"], temperature=k["temperature_c"],
+            clk_to_q_ps=k["dff_clk_to_q_ps"] + 3 * fo4, out_r_kohm=k["inv4_r_kohm"] / 2.0,
+            out_slew_intrinsic_ps=1.5 * fo4, setup_ps=k["dff_setup_ps"] + 3 * fo4, hold_ps=k["dff_hold_ps"] + fo4,
+            min_period_ps=900.0, min_pulse_ps=360.0,
+            read_energy_fj=tech("energy.hbm_j_per_byte")["value"] * 1e15 * 32, write_energy_fj=0.0,
+            leakage_nw=0.0, pin_cap_ff=k["inv1_cin_ff"] * 2, clk_cap_ff=50.0 * n / npc_full,
+            breakdown={"fo4_ps": fo4})
+    sheet: dict[str, Any] = {
+        "schema": "opentallas.hbm-phy-abstract.v2",
+        "generator": f"tools/mem_compiler/hbm_phy_gen.py --variant rc_slice --pcs {lo}-{hi} --edge-mm {edge_mm:g} v1.0",
+        "kind": "hbm_phy_abstract", "name": name,
+        "slice_of": {"macro": f"{RC}_e{edge_mm:g}".replace(".", "p"), "pcs": [lo, hi], "channels": [lo // 2, hi // 2],
+                     "full_width_um": w_full, "full_window_um": win_full},
+        "footprint": {"width_um": w_um, "height_um": h_um, "area_mm2": w_um * h_um / 1e6,
+                      "width_basis": f"{n} x full window {win_full} um snapped up to {SLICE_LATTICE_UM} um",
+                      "depth": "full rc macro height"},
+        "interface": {"port_list": "ot_hbm3e_phy_rc PHY-side ports at NPC = " + str(n), "parameters": {"NPC": n},
+                      "controller_clock_mhz": {"value": 1087.0, "grade": "assumed"}},
+        "pins": pin_info,
+        "power_share": {"fraction_of_stack": n / npc_full, "basis": "by pseudo-channel count (ASSUMED)"},
+        "timing": {c: asdict(t) for c, t in per_corner.items()},
+        "timing_grade": "assumed: registered boundary, as ot_hbm3e_phy_rc",
+        "claim_boundary": ("a placement and connection abstract for licensed PHY IP only; ASSUMED: one clock input per "
+                           "channel group, stack-global functions in the slice holding full window 16"),
+    }
+    if out is not None:
+        d = out / name
+        d.mkdir(parents=True, exist_ok=True)
+        (d / f"{name}.lef").write_text(lef)
+        comment = f"HBM3E PHY-only abstract slice PCs {lo}-{hi} (row/column/data boundary), boundary timing assumed"
+        for c, t in per_corner.items():
+            (d / f"{name}_{c}.lib").write_text(write_liberty(name, t, plist, w_um * h_um, None, comment))
+        (d / f"{name}_bb.v").write_text(blackbox_verilog(name, plist, comment))
+        files = sorted(q.name for q in d.iterdir() if q.name != f"{name}.json")
+        sheet["views"] = {f: asap7.sha256_file(d / f) for f in files}
+        (d / f"{name}.json").write_text(json.dumps(sheet, indent=2, sort_keys=True) + "\n")
+    return sheet
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", type=Path, default=asap7.ROOT / "physical/asap7_memory_macros")
-    ap.add_argument("--variant", choices=["v1", "v41x", "v41x_legal", "rc"], default="v1")
+    ap.add_argument("--variant", choices=["v1", "v41x", "v41x_legal", "rc", "rc_slice"], default="v1")
+    ap.add_argument("--pcs", default=None, help="rc_slice: pseudo-channel range LO-HI (whole channels), e.g. 8-23")
     ap.add_argument("--edge-mm", type=float, default=V2_EDGE_BASIS["value_mm"],
                     help="v41x_legal: core-facing PHY edge per stack (mm)")
     ap.add_argument("--area-mm2", type=float, default=None, help="v41x_legal: override the PHY area")
     ap.add_argument("--k-aw", type=int, default=28, help="V4.1 K sector address width: 28 reduced or 30 full")
     args = ap.parse_args()
+    if args.variant == "rc_slice":
+        lo, hi = (int(v) for v in (args.pcs or "").split("-"))
+        s = generate_rc_slice(args.out, lo, hi, edge_mm=args.edge_mm)
+        f = s["footprint"]
+        print(f"{s['name']}: {f['width_um']:.3f} x {f['height_um']:.3f} um, {s['pins']['signal_pins']} pins, "
+              f"window {s['pins']['pseudo_channel_window_um']} um")
+        return 0
     if args.variant == "rc":
         s = generate_rc(args.out, edge_mm=args.edge_mm)
         f = s["footprint"]
