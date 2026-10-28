@@ -185,3 +185,20 @@ ohier compare --gen gen5 --sta-dir sta5 --out sta5/compare.json
   - the region rectangle from `locality.py`.
 - With TT ETMs and hold on the stitched view (above), the method is ready. Next lane: one small QC-slice sub-region
   (2-4 cores) end to end.
+
+### gen5 hier collected (21:56 PDT): the registered map with context, built at CORNER=TC
+
+The abstract log reads the TT libraries.
+
+- **Top detailed route:** 0 violations, 0 DRT-0418.
+- **Abstract check:** PASS for both partitions. TT clock insertion is RMEM 62/87 ps and RCORE 84/113 ps (min/max).
+- **WNS:** stitched -500.0 ps setup and +46.9 ps hold; the native ETM view gives -518.8 ps setup.
+- **Boundary-pin setup error of the native ETM:** -15.7 ps mean, 40.3 ps max, r 0.9998. This matches the re-characterised
+  gen4 result (-12.1 / 36.9), so the corner fix is confirmed.
+- **Hold:** still optimistic, +190 ps mean.
+- **Register endpoints, setup:** stitched vs ETM mean 3.9 ps, max 5.3 ps.
+- **Stitched WNS did not improve with the TT build** (-500.0 vs -487.7). The worst path is internal to RCORE. Partition QoR
+  against the first-pass budgets is the next lever: a re-budget loop.
+
+The TC flat baseline (`work5_flat`, container `ohier_flat_3302759`) was still running at lane end. Collect it with the
+recipe above using `--flat-work work5_flat`.
