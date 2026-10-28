@@ -497,6 +497,7 @@ KV_SEAM = {"KS_RXV": ("d2d_kv", r"att_rx_v", "kvs_attn", r"d2d__srx"),
            "SK_TXV": ("kvs_attn", r"attn__tx_valid", "d2d_kv", r"att_tx_v"),
            "SK_TXP": ("kvs_attn", r"attn__tx_payload", "d2d_kv", r"att_tx_payload")}
 LANDING_SEG, VPORT_RT_SEG, VPORT_RL_BASE, QK_WBR, QK_KIT = 8, 9, 4, 11, 34
+VPORT_RT_MAX = 95   # = tools/qwen_kv_die/kv_bootage.BOUNDS['VPORT_RT'] (qkd_pv16_vport_b RT bound; DIE-KV-12, was 31)
 
 
 def kv_ectl(o):
@@ -690,8 +691,8 @@ def kv_vport(o):
         return
     rl = max(v["RT"] + v["W"] for v in out.values())
     dq = {k: rl - (v["RT"] + v["W"]) for k, v in out.items()}
-    o.add("VPORT_RT", {k: v["RT"] for k, v in out.items()}, "boot", "9 + max_g(D(vq_g) + D(rs_g)) (<= 31)", group="vport",
-          status="OK" if all(v["RT"] <= 31 for v in out.values()) else "ERROR")
+    o.add("VPORT_RT", {k: v["RT"] for k, v in out.items()}, "boot", f"9 + max_g(D(vq_g) + D(rs_g)) (<= {VPORT_RT_MAX})", group="vport",
+          status="OK" if all(v["RT"] <= VPORT_RT_MAX for v in out.values()) else "ERROR")
     o.add("VPORT_DQ", dq, "boot", "max_q(W_q + RT_q) - (W_p + RT_p) (<= 15, else W-lane pads)", group="vport",
           status="OK" if max(dq.values()) <= 15 else "WARN",
           note=None if max(dq.values()) <= 15 else f"DQ > 15 on {[k for k, v in dq.items() if v > 15]}: W request pads")

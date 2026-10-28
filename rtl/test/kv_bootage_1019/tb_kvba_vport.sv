@@ -5,6 +5,9 @@
 //   phase B  landing model: rsp side g = vq<g> delayed R edges (the RT contract), tag / data from the request;
 //            the reference must stay fault-free (proves the slot / sel path is exercised, not only the fault path)
 //   phase C  invalid ages (RT 0, RT > bound, DQ > bound): the first request must set the successor's fault
+//   phase D  (DIE-KV-12) K/V-flag injection: the landing model of phase B, but one landed rsp word (both faces) arrives
+//            with vflag = 0 (a K word on the V face); the reference must fault on it (proves the flag path is exercised)
+//            and the successor must match it edge for edge (catches MUT 3, flag ignored).
 // Prints "KVBA_VPORT PASS D=.. R=.. mut=.. checks=N" or "KVBA_VPORT FAIL ...".
 module tb_kvba_vport;
     parameter integer D = 0, R = 8, MUT = 0, NCYC = 4000, SEED = 1;
@@ -48,7 +51,7 @@ module tb_kvba_vport;
         repeat (6) @(negedge ck);
         rst_n = 1; repeat (2) @(negedge ck);
     end endtask
-    reg [13:0] tq; integer bad_ok;
+    reg [13:0] tq; integer bad_ok, flag_seen, flag_cyc, kvf;
     initial begin
         seed = SEED; cfg = {8'(D), 8'(R)};
         pr_t = 0; i0t = 0; i1t = 0; i0e = 0; i1e = 0; i0d = 0; i1d = 0; lv0 = 0; lv1 = 0; lt0 = 0; lt1 = 0;
@@ -71,6 +74,18 @@ module tb_kvba_vport;
             for (k = 0; k < 32; k = k + 1) begin i0d[32*k +: 32] = $random(seed); i1d[32*k +: 32] = $random(seed); end
             @(posedge ck); #0.1 cmp; if (a_f) refault = refault + 1; if (a_ov) words = words + 1; @(negedge ck);
         end
+        // ---- phase D: a landed rsp word with the V flag low (K word on the V face) must fault both, edge for edge
+        do_reset; flag_seen = 0; flag_cyc = -1; kvf = 0;
+        for (cyc = 0; cyc < NCYC / 2; cyc = cyc + 1) begin
+            tq = $random(seed);
+            pr_valid = (cyc % 2 == 0) && (cyc < NCYC / 2 - 4 * (D + R + 8)); pr_t = {tq[13:1], cyc[1]};
+            i0v = lv0[R-1]; i0t = lt0[14*(R-1) +: 14]; i0e = 16'h0d0d;
+            i1v = lv1[R-1]; i1t = lt1[14*(R-1) +: 14]; i1e = 16'h0d0d;
+            if (flag_cyc < 0 && cyc > NCYC / 8 && (i0v || i1v)) flag_cyc = cyc;
+            i0f = (cyc != flag_cyc); i1f = (cyc != flag_cyc);
+            for (k = 0; k < 32; k = k + 1) begin i0d[32*k +: 32] = $random(seed); i1d[32*k +: 32] = $random(seed); end
+            @(posedge ck); #0.1 cmp; if (a_f && !flag_seen) begin flag_seen = 1; kvf = cyc - flag_cyc; end @(negedge ck);
+        end
         // ---- phase C: invalid boot ages fault the successor on the first request
         bad_ok = 0;
         for (k = 0; k < 3; k = k + 1) begin
@@ -83,11 +98,11 @@ module tb_kvba_vport;
                 if (b_f) bad_ok = bad_ok + 1; else $display("PHASE_C k=%0d invalid ages accepted (no fault)", k);
             end
         end
-        if (errs == 0 && refault == 0 && words > NCYC / 4 && bad_ok == 3)
-            $display("KVBA_VPORT PASS D=%0d R=%0d mut=%0d checks=%0d words=%0d", D, R, MUT, checks, words);
+        if (errs == 0 && refault == 0 && words > NCYC / 4 && bad_ok == 3 && flag_seen == 1)
+            $display("KVBA_VPORT PASS D=%0d R=%0d mut=%0d checks=%0d words=%0d kv_flag_fault_after=%0d", D, R, MUT, checks, words, kvf);
         else
-            $display("KVBA_VPORT FAIL D=%0d R=%0d mut=%0d checks=%0d errors=%0d ref_fault_cycles=%0d words=%0d invalid_caught=%0d/3",
-                     D, R, MUT, checks, errs, refault, words, bad_ok);
+            $display("KVBA_VPORT FAIL D=%0d R=%0d mut=%0d checks=%0d errors=%0d ref_fault_cycles=%0d words=%0d invalid_caught=%0d/3 kv_flag_ref_fault=%0d",
+                     D, R, MUT, checks, errs, refault, words, bad_ok, flag_seen);
         $finish;
     end
 endmodule
