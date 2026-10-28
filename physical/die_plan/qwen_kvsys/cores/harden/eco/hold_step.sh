@@ -9,10 +9,15 @@
 # FLOW-SHARED-9 2026-10-27: KIT/hold_step.json records the step (NOT_NEEDED / SKIP / PASS / FAILED + rc + first ERROR);
 # a FAILED step removes any older KIT/signoff_hold, prints HOLD_STEP FAILED and is a canary stage FAIL (never silently
 # judged as the plain route).
+# FLOW-SHARED-10 2026-10-27 (COORD 20:53 DRT-1231 ruling): OT_HOLD_FORM=pre_drt (DEFAULT) = the same b<MARGIN> hold
+# repair on the routed RC, applied to the kit's PRE-DRT 5_1_grt.odb (mk_eco OT_ECO_FROM=grt), then ONE detailed route
+# (no re-route of a routed DB); post_route = the old warm ECO on 5_2_route.odb.  The ECO sign-off stays the verdict.
 set -uo pipefail
+FORM=${OT_HOLD_FORM:-pre_drt}
+case $FORM in pre_drt) ECO_FROM=grt ;; post_route) ECO_FROM=route ;; *) echo "HOLD_STEP FAILED: OT_HOLD_FORM=$FORM (want pre_drt|post_route)"; exit 2 ;; esac
 K=$(cd "$1" && pwd); SO=$(cd "$2" && pwd); CPUS=${3:-8}; MEM=${4:-32}; HM=${5:-3}
 HERE=$(cd "$(dirname "$0")" && pwd)
-rec() { python3 -I -c 'import json,sys; json.dump(dict(status=sys.argv[2], rc=int(sys.argv[3]), error=sys.argv[4], eco_dir=sys.argv[5]), open(sys.argv[1], "w"), indent=1)' "$K/hold_step.json" "$@"; }
+rec() { python3 -I -c 'import json,sys; json.dump(dict(status=sys.argv[2], rc=int(sys.argv[3]), error=sys.argv[4], eco_dir=sys.argv[5], form=sys.argv[6]), open(sys.argv[1], "w"), indent=1)' "$K/hold_step.json" "$@" "$FORM"; }
 rm -f "$K/hold_step.json"
 SJ=$K/signoff/signoff.json
 if [ ! -f "$SJ" ]; then echo "HOLD_STEP SKIP: no $SJ (route/sign-off did not complete)"; rec SKIP 0 "no plain sign-off" ""; exit 0; fi
@@ -22,9 +27,9 @@ if ! python3 -I -c 'import sys; sys.exit(0 if float(sys.argv[1]) < 0 else 1)' "$
   echo "HOLD_STEP NOT NEEDED: FF hold WNS $W ps >= 0"; rec NOT_NEEDED 0 "" ""; exit 0; fi
 FO=$(sed -n 's/^set_max_fanout \([0-9][0-9]*\).*/\1/p' "$K/max_fanout.tcl" 2>/dev/null | head -n 1)
 D=${K}_holdeco
-echo "HOLD_STEP FF hold WNS $W ps < 0: ECO b$HM fanout cap ${FO:-0} -> $D"
+echo "HOLD_STEP FF hold WNS $W ps < 0: ECO b$HM form $FORM fanout cap ${FO:-0} -> $D"
 rm -rf "$K/signoff_hold"
-bash "$HERE/mk_eco.sh" "$K" "$D" "b$HM" "$SO" || { echo "HOLD_STEP FAILED: mk_eco"; rec FAILED 1 "mk_eco failed" "$D"; exit 1; }
+OT_ECO_FROM=$ECO_FROM bash "$HERE/mk_eco.sh" "$K" "$D" "b$HM" "$SO" || { echo "HOLD_STEP FAILED: mk_eco"; rec FAILED 1 "mk_eco failed" "$D"; exit 1; }
 sed -i "s/^OT_MAX_FANOUT=.*/OT_MAX_FANOUT=${FO:-0}/" "$D/variant.env"
 cp "$HERE/run_eco.sh" "$D/"
 bash "$D/run_eco.sh" "$D" "$CPUS" "$MEM"; rc=$?

@@ -20,7 +20,7 @@ from ohier import schema as S          # noqa: E402
 from ohier import verify as V          # noqa: E402
 
 LIB = """library (t) {
-  cell (INV) { area : 1.0; pin (A) { direction : input; } pin (Y) { direction : output; function : "!A"; } }
+  cell (INV) { area : 1.0; pin (A) { direction : input; capacitance : 0.5; } pin (Y) { direction : output; function : "!A"; } }
   cell (DFF) { area : 4.0; ff (IQ, IQN) { next_state : "D"; clocked_on : "CLK"; }
     pin (D) { direction : input; } pin (CLK) { direction : input; clock : true; }
     pin (Q) { direction : output; } }
@@ -363,6 +363,35 @@ def test_abstract_check():
     assert c["unconstrained_inputs"] == ["d_1_"]
     bad = A.check(dict(reg, bbox_um=[0, 0, 12.0, 5.4]), ABS_LEF, ETM, ["clk", "d[0]", "d[1]", "q", "x"])
     assert not bad["ok"] and len(bad["problems"]) == 3     # size, LEF pins, ETM pins
+
+
+def test_budget_context_and_track_grid():
+    """12.14g budgets: crossing inputs get the real driver cell, crossing outputs the far-side pin
+    cap + top wire; region corners sit on the pin-track grid (2.16 um: DRT-0418/0255 fix)."""
+    cells, macros = _lib()
+    assert cells["INV"].pin_caps == {"A": 0.5}
+    nl = N.flatten(_design(), "top", cells)
+    base, rmap = S.region_map(_region_map_doc())
+    o = PL.Options(cap_cells=400, period_ps=500, latency_ps=50, util=0.5, die_margin_um=2.0,
+                   unit_max_cells=100, wire_ff_per_um=0.1)
+    plan, leaf_part, part_ports = PL.build_plan(nl, cells, macros, o, region_map=rmap, die_wh=(82.0, 62.0))
+    for r in plan["regions"]:
+        for v in r["bbox_um"]:
+            assert abs(v / 2.16 - round(v / 2.16)) < 1e-6, r["bbox_um"]
+    (b,) = plan["budgets"]                     # link2: u2.g7 (INV) -> u3.r (DFF D, no cap in lib)
+    assert b["drive_cell"] == "INV" and b["drive_pin"] == "Y"
+    pa = [d for d in plan["pins"] if d["port"] == b["port"]]
+    wl = abs(pa[0]["xy_um"][0] - pa[1]["xy_um"][0]) + abs(pa[0]["xy_um"][1] - pa[1]["xy_um"][1])
+    assert abs(b["load_ff"] - (b["sink_ff"] + 0.1 * wl)) < 1e-3 and b["sink_ff"] == 0.0
+    sdcs = PL.partition_sdcs(plan, part_ports, o)
+    port = b["port"]
+    assert f"set_driving_cell -lib_cell INV -pin Y [get_ports {{{port}}}]" in sdcs[1]
+    assert f"set_load -pin_load {b['load_ff']:.4f} [get_ports {{{port}}}]" in sdcs[0]
+    # chip input din -> default drive cell; context off -> no context lines
+    assert "set_driving_cell -lib_cell BUFx2_ASAP7_75t_R -pin Y [get_ports {din}]" in sdcs[0]
+    o2 = PL.Options(**{**o.__dict__, "context": False})
+    assert all("set_driving_cell" not in t and "set_load" not in t
+               for t in PL.partition_sdcs(plan, part_ports, o2).values())
 
 
 if __name__ == "__main__":

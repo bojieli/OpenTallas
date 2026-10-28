@@ -66,3 +66,122 @@ measured here.
 2. Budget SDC with `set_driving_cell`/`set_load` from the top context so ETM arcs see real slews.
 3. Clock-pin access: keep the partition clock pin off the PDN-ring corner, or let the top route
    the clock on M5+ (DRT-0255 above).
+
+---
+
+# OSS-HIER-2 update (2026-10-27 20:40-21:40 PDT): root cause of the +340 ps, registered map, context, top DRT
+
+All numbers below were measured by this lane. They are **UNCHECKED** (no independent NUMBER-CHECK).
+Run data is in the same directory: `sta3tt/`, `gen4/ work4/ sta4/ sta4tt/` (registered map with context),
+`gen4n/ work4n/ sta4ntt/` (registered map, no context), and `gen5/ work5/ work5_flat/` (TC rebuild, see the end).
+
+## Root cause of the +340 ps: a library-corner mismatch, not the boundary crossings
+
+The ORFS asap7 platform defaults to `CORNER ?= BC`, which selects the FF libraries. ohier did not set a corner, so the
+following were all built and characterised with FF libraries:
+
+- every partition, the top and the flat baseline;
+- every `generate_abstract` ETM. Its log shows `read_liberty ..._FF_nldm...`.
+
+The hierarchical STA reads TT libraries. As a result, the ETM view compared an FF model against TT netlists.
+
+Measured case: in `gen4`, the RCORE block-only TT STA gives an arrival at the `dataadr_5_` port of 1105.6 ps. The arcs
+for the same path compare as follows:
+
+| ETM | clk->dataadr_5_ fall arc |
+|---|---|
+| FF `_typ.lib` | 806 ps |
+| TT re-characterisation (`scripts/etm_tt.sh`, same routed block, same SDC/SPEF, TT libs) | 1106 ps |
+
+Fixes:
+
+- `emit.CORNER = "TC"` is now written into every block, top and flat `config.mk`.
+- `ohier abstract` and `ohier sta-scripts` take `--etm-suffix`. It is `typ` for new runs; use `TT` for the re-characterised
+  old runs.
+
+The ETM clock insertion in the shared plan was also FF. The TT values for `gen4` are RMEM 58/84 ps and RCORE 83/110 ps
+(min/max).
+
+## (1) Flat baseline vs stitched vs ETM (TT STA, all FF-built implementations)
+
+| run | map | flat WNS | stitched WNS | ETM WNS (TT model) | flat-stitched endpoint mean / max (ps) |
+|---|---|---|---|---|---|
+| gen3 (top SPEF from GRT) | 3 regions, 5 comb crossings/cycle | -378.8 | -669.9 | -642.7 | -223.1 / 340.3 (r 0.987) |
+| gen4n (top routed) | 2 regions, SRAM boundary, no context | -378.8 | -476.6 | -469.4 | -71.2 / 139.0 (r 0.993) |
+| gen4 (top routed) | 2 regions, SRAM boundary, context | -378.8 | -487.7 | -515.1 | -83.4 / 157.0 (r 0.994) |
+
+- Hold WNS is about +47 ps in flat and in stitched for all three runs.
+- The registered map cuts the hierarchy penalty against flat from 223 to 71-83 ps (mean over 1355 common endpoints).
+- The worst stitched path in gen4/gen4n is inside RCORE: pcreg -> boot ROM -> decode -> ALU -> dataadr. It does not cross
+  a boundary. Part of the remaining flat-to-stitched gap is therefore partition QoR against first-pass budgets, not a
+  boundary effect.
+
+## (2) and (3): abstract error, per partition boundary pin, stitched vs ETM
+
+Each row uses the worst slack through each of the common boundary data pins. "+" means the ETM is optimistic.
+
+| run | setup mean / max abs / p95 (ps) | setup r | hold mean / max abs (ps) | hold r |
+|---|---|---|---|---|
+| gen3, FF ETM (OSS-HIER-1 number) | +340.4 / 437.4 / 432.5 | 0.9988 | -14.2 / 197.7 | 0.57 |
+| gen3, TT ETM, 5 crossings/cycle | **+22.2 / 52.1 / 38.4** | 0.9999 | +89.4 / 281.4 | 0.63 |
+| gen4n, TT ETM, <=1 SRAM crossing, no context | **+9.1 / 19.0 / 15.7** | 0.9999 | +176.1 / 515.7 | 0.26 |
+| gen4, TT ETM, <=1 SRAM crossing, context | **-12.1 / 36.9 / 31.8** | 0.9997 | +190.9 / 538.3 | 0.33 |
+
+Register-endpoint view, stitched vs ETM over the 99 common endpoints:
+
+- setup: mean +3.9 ps, max 4.7 (gen4) and 5.8 (gen4n);
+- hold: mean +227 ps.
+
+Findings:
+
+- **Setup.** The TT ETM is accurate to <= 19 ps on the registered map and 52 ps with 5 comb crossings. The error still grows
+  with crossings per cycle, as OSS-HIER-1 expected, but it was 22 ps, not 340.
+  - The prototype map is not strictly 12.13c. `dmem`'s byte/word read mux in RMEM uses the current address, so
+    `dataadr -> RMEM glue -> readdata -> RCORE` is a 2-crossing combinational path. The worst stitched boundary path
+    (-487.7, through `dataadr_31_` and `readdata_7_`) is that path.
+- **(3) Drive/load context** (`set_driving_cell` = real driver leaf, `set_load` = far-side pin caps + 0.2 fF/um top wire)
+  makes the TT ETM **21 ps more pessimistic** (+9.1 -> -12.1 mean). It does not improve accuracy. These ETMs index only
+  the output load (OpenSTA `write_timing_model`), so the driver cell delay in the block SDC is counted again at the top.
+  Context stays on by default because it is the conservative side and is industry practice for block constraints.
+  `--no-context` reproduces the closer number.
+- **Hold: the ETM cannot be used per pin.** OpenSTA `write_timing_model` writes one (max) table per arc, so the min
+  analysis reuses max delays. Example: the gen4n path through `dataadr_28_` has stitched hold slack 336 ps. In the ETM
+  view the worst min path is an `instr` -> `dataadr` arc of 695 ps, giving 851.6 ps. Hold must be signed off on the
+  stitched (or flat) view. A min-delay ETM is open work. The worst-pin hold slack still agrees by chance (within 5 ps).
+
+## (4) Top detailed route: FIXED
+
+- OSS-HIER-1's top log showed `DRT-0418 Term u_riscv_top_RRF/clk has no pins on routing grid` before DRT-0255. The
+  region corners were snapped to 1.08 um. With 1.08, a slot at x = 5.4 um puts every M5 partition pin 0.024 um off the
+  top's M5 tracks (pitch 0.048, offset 0.012).
+- Region corners now snap to `grid_um = 2.16` = lcm(1.08 row/site grid, 0.048 M4/M5 pin pitch).
+- Result: in gen4 and gen4n the top detailed route finishes with 0 violations and 0 DRT-0418. The STA above uses the
+  routed top SPEF.
+- Caveat: gen4 also has a different map than gen3. The grid is the cause shown by the DRT-0418 term, but the 3-region
+  map was not rerun with the new grid.
+
+## Live at lane end: gen5 = gen4 plan built at CORNER=TC (hier blocks+top and flat)
+
+These are the first apples-to-apples TT implementations. When they finish, collect:
+
+```
+ohier abstract --gen gen5 --work work5 --nick riscv32i_ohier
+ohier sta-scripts --gen gen5 --work work5 --flat-work work5_flat --nick riscv32i_ohier --lib "$B/libs/*.lib" --out sta5
+scripts/sta_run.sh sta5 $B $H
+ohier compare --gen gen5 --sta-dir sta5 --out sta5/compare.json
+```
+
+## (5) A real die region as a partition: NOT BUILT, estimate only (12.14b)
+
+- The HEAD 27-region connectivity map (LAND-HEAD-3) groups 326 partitions, about 12 hard cores per region. At ASAP7, about
+  400k cells fill about 0.10-0.14 mm² (owner cap memory). A HEAD region flattened into one partition is therefore about
+  10x over the 400k OpenROAD cap.
+- The feasible form is macro-aware: the region partition holds its member hard cores as BLOCK macros (signed-off
+  LEF + ETM) plus the region glue and clock, and ohier only flattens the glue. ohier already treats LEF CLASS BLOCK
+  leaves as macros (as with the SRAMs here).
+- Inputs needed:
+  - the region netlist (`gen_rtl` with the member cores as black boxes);
+  - per-core LEF/ETM at TT;
+  - the region rectangle from `locality.py`.
+- With TT ETMs and hold on the stitched view (above), the method is ready. Next lane: one small QC-slice sub-region
+  (2-4 cores) end to end.

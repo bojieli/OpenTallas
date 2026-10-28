@@ -1,6 +1,8 @@
 #!/bin/bash
 # KVHR2 10-26: hr face recut for one core: yosys pre.json -> hr_face_ports.py -> <mod>.v ; equiv proof + mutant.
 # usage: hr_face_ports.sh CORE_JSON OUTDIR   (run inside the ORFS image; yosys on PATH or ORFS install)
+# DIE-KV-3/CORETX 10-27: optional HR_RETIME_IN="pin[i] ..." -> hr_face_ports.py --retime-in (0-cycle face capture flop
+# for an input whose cone ends in one flop, e.g. core_tx u_ctrl__package_abort[0]); unset = unchanged.
 set -e
 CJ=$1; O=$2; mkdir -p $O
 HERE=$(cd $(dirname $0) && pwd)
@@ -18,8 +20,9 @@ opt_clean
 write_json $O/pre.json
 YS
 $Y -q -l $O/pre.log $O/pre.ys
-python3 $HERE/hr_face_ports.py transform $O/pre.json $O/post.json $O/hr_face_ports.json --top $MOD
-python3 $HERE/hr_face_ports.py transform $O/pre.json $O/mut.json $O/hr_face_ports_mut.json --top $MOD --mutant > /dev/null
+RT=""; for p in ${HR_RETIME_IN:-}; do RT="$RT --retime-in $p"; done
+python3 $HERE/hr_face_ports.py transform $O/pre.json $O/post.json $O/hr_face_ports.json --top $MOD $RT
+python3 $HERE/hr_face_ports.py transform $O/pre.json $O/mut.json $O/hr_face_ports_mut.json --top $MOD --mutant $RT > /dev/null
 cat > $O/emit.ys <<YS
 read_json $O/post.json
 select $MOD
@@ -57,6 +60,10 @@ YS
 set +e; $Y -q -l $O/eq_$V.log $O/eq_$V.ys > /dev/null 2>&1; echo "$V rc=$?" >> $O/eq_rc.txt; set -e
 done
 # round trip: the emitted kit RTL itself vs pre
+# KV-KITS-5 10-28: write_verilog emits multi-bit flops (e.g. a 2-stage reset synchroniser) as reg _NNN_ + 
+# assign {sync_rst_n, pipe[0]} = _NNN_; read back, readers of _NNN_[1] are not merged by equiv_make, so equiv_induct
+# sees a free gate-side reset (14 false unproven regs on cdc_pc/cdc_ch). rename -hide + opt_clean makes the named
+# alias canonical; ports and named state are unchanged, so the proof is not weakened.
 BB=$(python3 -c "import json;print(' '.join(f for f in json.load(open('$CJ'))['files'] if f.endswith('_bb.v')))")
 BBF=""; [ -n "$BB" ] && BBF="read_verilog -sv -DSYNTHESIS $BB"
 cat > $O/eq_v.ys <<YS
@@ -72,6 +79,8 @@ proc
 memory_collect
 memory_share
 memory_map
+rename -hide w:_*_
+opt_clean
 rename $MOD gate
 design -copy-from g -as gold gold
 equiv_make gold gate eq
