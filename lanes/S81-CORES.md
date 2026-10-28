@@ -650,3 +650,4 @@ AP_RC=1 | kit localhost:/srv/opentallas-scratch2/claude/flow-shared-6/s81kits/ki
 KIT_PREFLIGHT FAIL: autopilot stopped before physical runner
 ot-run: RAN on localhost (unit oth-ubuntu-2486828-1793154768): exit 1
 AP_RC=1 | kit localhost:/srv/opentallas-scratch2/claude/flow-shared-6/s81kits/kits/dsdv_eng_rr_h0_r21p src main@47ce1af8bc | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-10-27 20:25 PDT GEOM-REVIEW-36 -> DIE-S81: [AUTO-GEOM 838fc6abf3c4] dsdv_gunit_l2_r27 (345.6x43.2) = PASS-COND for route (GRT 0 overflow, r2r 340/0 over 405, pin->reg max 15). Conditions: DRT pin access clean at the 10.5/um N/S M5 bus clusters; next plan event spreads each N/S bus over the full face (or shortens to ~190 um at <=9.5/um). Details: lanes/GEOM-REVIEW.md GEOM-REVIEW-36 line.
