@@ -39,6 +39,10 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
               ONE connected net: an M8-M9 VIA89 at every strap crossing, emitted (mesh.json meta.mesh_vias) and in the
               routed DB (OT_MESH_VIAS of combo_<corner>.log); ERROR in G0 and G0C (die_clock_mesh.mesh_via_findings)
   clock_entry_macro (G0C) plan clock entry / island (clock_entries.json) over a hard-core macro of core_macros.json
+  streets     (G0C, METHODOLOGY 12.10c street rule, streets.py) street_reach: every hard-core point <= 400 um from the
+              street network (free area >= die.streets.width_um wide, largest connected component); street_width: width >=
+              (clock + hold + FT repeater widths) / 0.6; street_clock_leg: no die-clock H-tree leg / driver of a
+              --clock-build across a hard core, unplaced build rows = ERROR; street_die_leg: no lane station inside a core
   G0C (--completeness): hard_cores, core_faces, complete, clock_entry_macro; PLAN-TOOL5 cross-die rules die_io_plan (die_io.py),
               cut_lines / reach / face_tracks / ft_budget (xdie.py, per-layer reach table reach.py)
 Outputs in --out (default: next to the plan): g0_report.json and, with --png, die_plan.png (the G1 render).
@@ -73,7 +77,9 @@ G0C_CHECKS = ("hard_cores", "core_faces", "complete",
               # PLAN-TOOL5 (COORD die-plan visual review 10-23, cross-die items (a)-(e)): die_io.py / xdie.py
               "die_io_plan", "cut_lines", "reach", "face_tracks", "ft_budget",
               # HBM-MU-QUAD-6/CLK (COORD 10-27): a core clock entry (12.8a) / its island never sits over a hard-core macro
-              "clock_entry_macro")
+              "clock_entry_macro",
+              # HBM-STREETS-1 (OWNER 10-27 ~18:4x, METHODOLOGY 12.10c): street rule (streets.py)
+              "street_reach", "street_width", "street_clock_leg", "street_die_leg")
 
 
 class Report:
@@ -223,6 +229,40 @@ def check_clock_entry_macro(P, R, plan_dir=None, macros_file=None, entries_file=
                           "region at the core's clock centroid (12.8a)", type=tn)
     out["unknown_macros"] = len(unknown)
     return out
+
+
+def check_streets(P, R, plan_dir=None, clock_builds=(), geo=None, max_msgs=40, png=None):
+    """METHODOLOGY 12.10c STREET RULE (G0C, streets.py): hard cores on a street grid, every core point <= reach_um
+    (400) from the street network, street width >= repeater + hold + FT budget / fill, no clock leg (clock builds:
+    htree legs, driver sites, unplaced rows) across a hard core, every die lane station off the hard cores."""
+    import die_clock as DC
+    import streets as ST
+    ko = DC.keepouts(P)
+    cfg = ST.config(P.die.get("streets"))
+    legs, pts, unpl = [], [], []
+    for b in clock_builds or ():
+        lg, pt, up = ST.clock_build_legs(b)
+        legs += lg
+        pts += pt
+        unpl += up
+    for lid, (_pts, regs, _xs) in (geo or {}).items():
+        pts += [(f"{lid}#{k}", tuple(p), "lane_station") for k, p in enumerate(regs[1:-1], 1)]
+    A = ST.analyze(float(P.W), float(P.H), ko, cfg, legs, pts, unpl)
+    if png:
+        ST.render(A, ko, png, float(P.W), float(P.H), P.name)
+    n = {}
+    for chk, core, msg in A["errors"]:
+        n[chk] = n.get(chk, 0) + 1
+        if n[chk] <= max_msgs:
+            R.err(chk, msg)
+    for chk, c in n.items():
+        if c > max_msgs:
+            R.err(chk, f"... {c - max_msgs} more {chk} findings (g0_report summary.streets)")
+    over = [c for c in A["cores"] if c["street_dist_um"] is None or c["street_dist_um"] > cfg["reach_um"] + 1e-6]
+    return dict(cfg={k: v for k, v in cfg.items()}, clock_builds=len(clock_builds or ()), streets=A["streets"], cores=len(A["cores"]), cores_over_reach=len(over),
+                worst_cores=A["worst_cores"], clock_legs=len(legs), clock_legs_over_core=len(A["legs_over_core"]),
+                legs_over_core=A["legs_over_core"][:50], points_in_core=len(A["points_in_core"]),
+                points_in_core_rows=A["points_in_core"][:50], unplaced=len(unpl), counts=n)
 
 
 def check_geometry(P, R):
@@ -1843,6 +1883,8 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["reach"] = xdie.check_reach(P, R, geo)
     summ["face_tracks"] = xdie.check_face_tracks(P, R, fp)
     summ["ft_budget"] = xdie.check_ft_budget(P, R, fp)
+    summ["streets"] = check_streets(P, R, plan_dir, clock_builds, geo,
+                                    png=(Path(png).with_name("streets.png") if png else None))
     summ["g0c"] = g0c_summary(P, R)
     summ["xdie_counts"] = {c: sum(1 for i in R.items if i["check"] == c and i.get("g0c")) for c in G0C_CHECKS}
     import census_cov
