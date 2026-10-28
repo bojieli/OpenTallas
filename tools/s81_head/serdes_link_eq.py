@@ -30,6 +30,7 @@ for f in files:shutil.copyfile(link/f,out/f)
 for n in ['ot_sram_1r1w2c_64x546_m1','ot_sram_1r1w_32x546_m1']:
  shutil.copyfile(ROOT/'physical/asap7_memory_macros'/n/(n+'.v'),out/(n+'.v'))
 shutil.copyfile(ROOT/'rtl/dsrom_sys/s81_head/ot_s81hd_serdes_link.sv',out/'ot_s81hd_serdes_link.sv')
+shutil.copyfile(ROOT/'rtl/lib/ot_reset_sync.sv',out/'ot_reset_sync.sv')   # DIE-HEAD-9: CDC shell reset pipes
 (out/'run.sh').write_text('''#!/bin/bash
 set -uo pipefail
 D=$(cd "$(dirname "$0")" && pwd);cd "$D"
