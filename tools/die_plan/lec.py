@@ -76,6 +76,8 @@ UNSUPPORTED_CELLS = re.compile(r"^(ICG|DHL|DLL|SDF|SDFH|SDFL)")   # clock gates,
 # latch-based integrated clock gates modelled by the clock-gate -> enable abstraction (icg_to_enable); every ASAP7
 # ICG drive strength has the same statetable: IQ = ENA | SE while CLK is low, held while high; GCLK = CLK & IQ
 ICG_CELLS = re.compile(r"^ICGx(1|2|2p67DC|3|4|4DC|5|5p33DC|6p67DC|8DC)_ASAP7_75t_(R|L|SL)$")
+# transparent-low latches (lockup latches, latch : enable "!CLK"): modelled by latch_to_wire (OT_LEC_LATCH=0 refuses)
+LOCKUP_CELLS = re.compile(r"^DLLx(1|2|3)_ASAP7_75t_(R|L|SL)$")
 TYPE_SFX = re.compile(r"\$_[A-Z]+(?:_[A-Z0-9]+)?_$")
 IDX = re.compile(r"^(.*?)((?:\[\d+\])+)$")
 GENBLK = re.compile(r"(?<![^.])genblk\d+\.")
@@ -276,6 +278,11 @@ SEQ_TAIL = [
 ]
 
 
+def split_seq(env):
+    """phase A / JSON rewrite / phase B is needed for clock gates and for lockup latches."""
+    return bool(env.get("_LEC_ICG_V") or env.get("_LEC_LATCH"))
+
+
 def seq_tail(out, lecff, icg):
     """SEQ_TAIL; with clock gates (icg) it is split at the clock-gate -> enable abstraction: phase A writes the
     flattened fine-grained design as JSON, icg_to_enable rewrites it, phase B (seq_tail_b) reads it back."""
@@ -309,7 +316,7 @@ def gold_script(env, kit, frontend, lib_bbs, stubs, wrap, lecff, out, slang_extr
           # the RTL registers as written and an asynchronous read port
           "memory -nomap -nordff", "memory_map", "opt_expr -keepdc", "opt_clean",
           "techmap", "opt_clean"]
-    return "\n".join(s + seq_tail(out, lecff, env.get("_LEC_ICG_V"))) + "\n"
+    return "\n".join(s + seq_tail(out, lecff, split_seq(env))) + "\n"
 
 
 # Formal preparation must retain every FF already present in the physical netlist.
@@ -325,7 +332,7 @@ def gate_script(env, netlist, stubs, wrap, lecff, out):
     s += [f"read_verilog {stubs}", f"read_verilog {netlist}", f"read_verilog {wrap}", f"hierarchy -check -top {WRAP}",
           "setattr -mod -unset keep_hierarchy", "setattr -unset keep_hierarchy", "proc",
           GATE_PHYSICAL_FF_KEEP, "flatten -noscopeinfo", "opt_clean", "techmap", "opt_clean"]
-    return "\n".join(s + seq_tail(out, lecff, env.get("_LEC_ICG_V"))) + "\n"
+    return "\n".join(s + seq_tail(out, lecff, split_seq(env))) + "\n"
 
 
 # ---------------------------------------------------------------------------------------------- clock gates
@@ -561,6 +568,146 @@ def icg_to_enable(src, dst, side):
         del cells[cn]
     for k in [k for k, v in d["modules"].items() if ICG_CELLS.match(k)]:
         del d["modules"][k]
+    Path(dst).write_text(json.dumps(d))
+    return st
+
+
+def latch_to_wire(src, dst, side):
+    """Lockup-latch abstraction (JSON src -> dst, both sides): a transparent-low latch ($_DLATCH_N_ with E = a
+    primary-input clock, or $_DLATCH_P_ with E = NOT(that clock): the ASAP7 DLL liberty model) whose data cone
+    holds only primary inputs, constants and rising-edge flops on primary-input clocks, and whose Q reaches (through
+    combinational logic only) nothing but synchronous pins (D / E / sync R) of rising-edge flops on primary-input
+    clocks, is a wire in the cycle model: its sources change only at rising edges, it is transparent for the low
+    phase before the next rising edge, and its readers sample only at that edge -> they see D of the same cycle.
+    The high-phase hold value is never sampled (hold / phase timing is STA's).  Refused (Unproven), never
+    approximated: transparent-high latches, an enable that is not a (buffered / inverted) primary input, a data
+    source that is a latch / falling-edge flop / clock net / unknown cell / LEC stub, a Q load that is a clock or
+    async pin, a falling-edge flop, a latch, a module output, a black-box compare pin, memory or unknown cell."""
+    d = json.loads(Path(src).read_text())
+    tops = [k for k, v in d["modules"].items() if str(v.get("attributes", {}).get("top", "0")).strip("0") != ""]
+    if len(tops) != 1:
+        raise LecError(f"latch {side}: {len(tops)} top modules in {src}")
+    m = d["modules"][tops[0]]
+    cells = m["cells"]
+    name_of = {}
+    for n, w in m["netnames"].items():
+        for b in w["bits"]:
+            if isinstance(b, int):
+                name_of.setdefault(b, n)
+    pis = {b for p in m["ports"].values() if p["direction"] == "input" for b in p["bits"] if isinstance(b, int)}
+    pos = {b for p in m["ports"].values() if p["direction"] != "input" for b in p["bits"] if isinstance(b, int)}
+    drv, loads = {}, collections.defaultdict(list)
+    for cn, c in cells.items():
+        for p, bits in c["connections"].items():
+            out = c.get("port_directions", {}).get(p) == "output"
+            for i, b in enumerate(bits):
+                if isinstance(b, int):
+                    if out:
+                        drv[b] = (cn, p)
+                    else:
+                        loads[b].append((cn, p, i))
+    lats = {cn: c for cn, c in cells.items() if LATCH_TYPE.match(c["type"])}
+    st = dict(latches=len(lats), to_wire=0, per_latch={})
+    if not lats:
+        Path(dst).write_text(json.dumps(d))
+        return st
+
+    def one(cn, p):
+        b = cells[cn]["connections"].get(p, ["x"])
+        if len(b) != 1:
+            raise Unproven(f"latch {side}: {cn}.{p} is not a single bit")
+        return b[0]
+
+    def through(b, inv=False):            # through $_BUF_ (and $_NOT_ when inv): -> (bit, inverted)
+        neg = False
+        while isinstance(b, int) and b in drv and cells[drv[b][0]]["type"] in (("$_BUF_", "$_NOT_") if inv else ("$_BUF_",)):
+            neg ^= cells[drv[b][0]]["type"] == "$_NOT_"
+            b = cells[drv[b][0]]["connections"]["A"][0]
+        return b, neg
+
+    stub = re.compile(r"(^|\.)lec_(bbo|bbi|po)_")
+
+    def rise_ff(cn):
+        """a rising-edge flop on a primary-input clock (no LEC stub / wrapper flop) -> its FF_TYPE match, else None."""
+        f = FF_TYPE.match(cells[cn]["type"])
+        if not f or f[2] != "P":
+            return None
+        if through(cells[cn]["connections"]["C"][0])[0] not in pis:
+            return None
+        if stub.search(str(name_of.get(cells[cn]["connections"].get("Q", [None])[0], ""))):
+            return None
+        return f
+
+    clock_bits = set()
+    for cn, c in cells.items():
+        if FF_TYPE.match(c["type"]):
+            clock_bits.add(through(c["connections"]["C"][0])[0])
+    ff_clocks = set(clock_bits)          # a latch enable must be a clock of some flop, not any input
+    for cn in lats:
+        clock_bits.add(through(one(cn, "E"), True)[0])
+
+    for cn in sorted(lats):
+        c = cells[cn]
+        t = c["type"]
+        e, neg = through(one(cn, "E"), True)
+        if t not in ("$_DLATCH_N_", "$_DLATCH_P_") or e not in pis or e not in ff_clocks or (t == "$_DLATCH_P_") != neg:
+            raise Unproven(f"latch {side}: {t} {cn} is not a transparent-low latch on a primary-input clock")
+        seen, todo, srcs = set(), [one(cn, "D")], 0
+        while todo:                        # data cone
+            b = todo.pop()
+            if not isinstance(b, int) or b in seen:
+                continue
+            seen.add(b)
+            if b in clock_bits:
+                raise Unproven(f"latch {side}: {cn} data reads a clock net ({name_of.get(b, b)})")
+            if b in pis or b not in drv:
+                srcs += 1
+                continue
+            dn, dp = drv[b]
+            if FF_TYPE.match(cells[dn]["type"]):
+                if not rise_ff(dn):
+                    raise Unproven(f"latch {side}: {cn} data reads {cells[dn]['type']} {dn} (not a rising-edge flop "
+                                   f"on a primary-input clock)")
+                srcs += 1
+                continue
+            if not re.match(r"^\$_(BUF|NOT|AND|NAND|OR|NOR|XOR|XNOR|ANDNOT|ORNOT|MUX|NMUX|AOI3|OAI3|AOI4|OAI4)_$",
+                            cells[dn]["type"]):
+                raise Unproven(f"latch {side}: {cn} data reads {cells[dn]['type']} {dn}: not modelled")
+            todo += [x for p, bits in cells[dn]["connections"].items()
+                     if cells[dn].get("port_directions", {}).get(p) != "output" for x in bits]
+        q = one(cn, "Q")
+        seen2, todo, sinks = set(), [q], 0
+        while todo:                        # Q fan-out
+            b = todo.pop()
+            if not isinstance(b, int) or b in seen2:
+                continue
+            seen2.add(b)
+            if b in pos:
+                raise Unproven(f"latch {side}: {cn} Q reaches module output {name_of.get(b, b)}")
+            for ln, lp, li in loads.get(b, ()):
+                lt = cells[ln]["type"]
+                f = FF_TYPE.match(lt)
+                if f:
+                    ok = rise_ff(ln) and (lp in ("D", "E") or (lp == "R" and f[1].startswith("SDFF")))
+                    if not ok:
+                        raise Unproven(f"latch {side}: {cn} Q reaches {lt} {ln}.{lp} (only D / E / sync R of "
+                                       f"rising-edge flops on primary-input clocks are modelled)")
+                    sinks += 1
+                    continue
+                if not re.match(r"^\$_(BUF|NOT|AND|NAND|OR|NOR|XOR|XNOR|ANDNOT|ORNOT|MUX|NMUX|AOI3|OAI3|AOI4|OAI4)_$",
+                                lt):
+                    raise Unproven(f"latch {side}: {cn} Q reaches {lt} {ln}.{lp}: not modelled")
+                todo += [x for p, bits in cells[ln]["connections"].items()
+                         if cells[ln].get("port_directions", {}).get(p) == "output" for x in bits]
+        if q in clock_bits:
+            raise Unproven(f"latch {side}: {cn} Q is a clock net")
+        st["per_latch"][cn] = dict(type=t, clk=name_of.get(e, str(e)), data_sources=srcs, sinks=sinks)
+    for cn in sorted(lats):               # all checked first: then each latch -> $_BUF_ D -> Q
+        c = cells[cn]
+        cells[cn] = {"hide_name": c.get("hide_name", 1), "type": "$_BUF_", "parameters": {}, "attributes": {},
+                     "port_directions": {"A": "input", "Y": "output"},
+                     "connections": {"A": [one(cn, "D")], "Y": [one(cn, "Q")]}}
+        st["to_wire"] += 1
     Path(dst).write_text(json.dumps(d))
     return st
 
@@ -2850,11 +2997,18 @@ def raw_constant_bases(L, work, conflicts, log):
     """
     cache = L.__dict__.setdefault("raw_constant_status", {})
     batch = L.__dict__.get("_raw_constant_batch", 0)
+    if not hasattr(L, "rst_val"):
+        noreset_classify(L)
+    # LEC-FPREG-3 10-27 (KV core 112 differ): also every constant the reset state does not give.  An adder MSB that
+    # is 0 for every operand (qwen nearhbm_prod s1_e[9] = ea + ek + 5 < 512) is X in the ternary reset state when its
+    # operand registers have no reset, and the reload rule refuses it when an operand register carries an equality
+    # hypothesis; the universal proof (everything free) needs neither.
     for side, d, points in (("gold", L.gold, L.gc), ("gate", L.gate, L.tc)):
         candidates = sorted({(k, h[1]) for (sd, k), h in L.hyp.items()
                              if h[0] == "const" and sd in (side, "both")
                              and (side, k, h[1]) not in cache
-                             and latch_cone(L, side, k) is None})
+                             and (latch_cone(L, side, k) is None
+                                  or L.rst_val.get((side, k), (None, None))[0] != h[1])})
         if not candidates:
             continue
         m = Aig()
@@ -3710,9 +3864,21 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     # while the time budget lasts (s81 hd_tile: false copies along 60-stage skew delay lines peel one stage
     # per round -- stopping at 64 rounds freed every unmatched flop and left 83 points differing)
     t_ref, budget = time.time(), float(os.environ.get("OT_LEC_REFINE_S", "3600"))
+    # LEC-FPREG-3 10-27 (SYS_C 4,561 differ): when the budget expires, refinement used to clear EVERY hypothesis
+    # (6 false counter constants peeling one bit per SAT round wiped ~5,490 valid relations).  It now finishes
+    # monotonically instead: each failing hypothesis is dropped together with every hypothesis whose raw next state
+    # (no assumption applied) reads a dropped register, transitively, and the smaller set is proved again.  Dropping
+    # only removes assumptions, the loop still returns only on a fully proved (inductive) set, so this is sound;
+    # OT_LEC_REFINE_MONOTONE=0 restores the old clear-all.
+    expired, sup = False, {}
     for rnd in range(rounds + 1000):
         if rnd >= rounds + 40 and time.time() - t_ref > budget:
-            break
+            if os.environ.get("OT_LEC_REFINE_MONOTONE", "1") == "0":
+                break
+            if not expired:
+                log.append(f"correspondence: refine budget {budget:.0f} s spent at round {rnd}; monotone finish "
+                           f"(failures + raw-next-state fanout dropped) with {len(L.hyp)} hypotheses")
+            expired = True
         adding = rnd < rounds           # then refine only: drop what fails until the set is inductive
         before = dict(L.hyp)
         if adding:
@@ -4066,6 +4232,9 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                 return
             continue
         drop_failed(L, [n for n in bad if n.startswith("cons:")])
+        if expired and any(hk not in sup for hk in L.hyp):
+            sup.update(raw_support(L, [hk for hk in L.hyp if hk not in sup]))
+        gone = set()
         for n in bad:
             if n.startswith("cons:"):
                 continue
@@ -4074,15 +4243,60 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             h = L.hyp.pop((side, k), None)
             if h is None:
                 continue
+            gone.add(k)
             # Equality candidates are looked up with an integer polarity. Keep
             # that key unchanged when recording rejection, or they are retried
             # in every adding round. FSM cube tuples keep their textual key.
             tried[(side, k, "c") if h[0] == "const" else
                   (side, k, h[2], h[3]) if h[0] == "eq" else
                   (side, k, str(h[2]), str(h[3]))] += 1
+        if expired and gone:
+            n0 = len(L.hyp)
+            cascade_drop(L, sup, gone)
+            log.append(f"correspondence round {rnd}: monotone finish dropped {n0 - len(L.hyp)} dependent "
+                       f"hypotheses, {len(L.hyp)} left")
     L.hyp.clear()                             # refinement did not converge: no assumptions at all
     L.cons.clear()
     log.append("correspondence: refinement did not converge; all unmatched flops free")
+
+
+def raw_support(L, keys):
+    """{(side, key): register keys read by the RAW next state of each hypothesis (and of its 'eq' partner)}, built
+    with no hypothesis applied, so a constant's dependence on another hypothesised register stays visible."""
+    saved = L.hyp
+    L.hyp = {}
+    try:
+        m, kind = L.build(with_compare=False, with_hyp=False)
+        out = {}
+        for hk in keys:
+            side, k = hk
+            h = saved.get(hk)
+            lits = [L.dlit.get((sd, k)) for sd in (("gold", "gate") if side == "both" else (side,))]
+            if h and h[0] == "eq":
+                lits += [L.dlit.get((h[1], h[2])), L.dlit.get(("gold", h[2]))]
+            reads = set()
+            for lit in lits:
+                if lit is not None:
+                    reads |= {kind[v][1] for v in m.cone_inputs(lit) if v in kind}
+            out[hk] = reads
+        return out
+    finally:
+        L.hyp = saved
+
+
+def cascade_drop(L, sup, gone):
+    """drop, transitively, every hypothesis whose raw next state reads a register in `gone` (its own hypothesis
+    was dropped, so that register is free).  Removes assumptions only.  -> keys dropped."""
+    gone, out, changed = set(gone), [], True
+    while changed:
+        changed = False
+        for hk in list(L.hyp):
+            if sup.get(hk, set()) & gone:
+                L.hyp.pop(hk)
+                gone.add(hk[1])
+                out.append(hk)
+                changed = True
+    return out
 
 
 def apply_hints(L, hints, work, conflicts, log, rounds=40):
@@ -4189,10 +4403,12 @@ def run_gold(env, kit, gold_fe, lib_bbs, out, log, rec):
 def run_side(env, script, out, side, log, rec):
     """one side's AIG: one yosys run, or with clock gates phase A -> icg_to_enable -> phase B."""
     r = run_yosys(script, out / f"{side}.ys", log)
-    if not env.get("_LEC_ICG_V"):
+    if not split_seq(env):
         return r
     pre = out / f"{side}"
     rec.setdefault("clock_gates", {})[side] = icg_to_enable(f"{pre}.preicg.json", f"{pre}.icg.json", side)
+    if env.get("_LEC_LATCH"):
+        rec.setdefault("lockup_latches", {})[side] = latch_to_wire(f"{pre}.icg.json", f"{pre}.icg.json", side)
     r = run_yosys(seq_tail_b(pre, out / "lecff.v"), out / f"{side}_b.ys", log)
     for f in (f"{pre}.preicg.json", f"{pre}.icg.json"):
         Path(f).unlink(missing_ok=True)
@@ -4304,6 +4520,59 @@ def ft_parallel_normalise(kit, top, netlist, out, rec):
     return str(dst)
 
 
+RESET_DEFAULT = 4
+
+
+def reset_contract_gate(kit, top, environ=None):
+    """The reset window of the no-reset constant base cases (OT_LEC_RESET_CYCLES) beyond the default 4 edges is a
+    DECLARED die reset length (COORD 10-27): used only when KIT/reset_contract.json (or OT_LEC_RESET_CONTRACT)
+    records an RTL proof that the die's reset generator holds reset for that many clocked edges, with a caught
+    mutant control and a receipt file whose sha256 matches, and lists this core.  Otherwise it fails CLOSED to the
+    default (a larger request is recorded and refused).  Schema opentallas.reset_contract.v1:
+      {die, edges, modules: [core top, ...], proof: {verdict: PASS, assert_edges, mutant: CAUGHT,
+       receipt: path relative to the contract, receipt_sha256}}
+    Sets environ[OT_LEC_RESET_CYCLES] to the length used. -> report dict."""
+    environ = os.environ if environ is None else environ
+    req = environ.get("OT_LEC_RESET_CYCLES")
+    path = environ.get("OT_LEC_RESET_CONTRACT") or str(Path(kit) / "reset_contract.json")
+    rep = dict(default=RESET_DEFAULT, requested=int(req) if req else None, contract=None, used=RESET_DEFAULT)
+
+    def refuse(why):
+        rep["refused"] = why
+        environ["OT_LEC_RESET_CYCLES"] = str(RESET_DEFAULT)
+        return rep
+    if not Path(path).is_file():
+        if req and int(req) > RESET_DEFAULT:
+            return refuse("no reset contract: a reset window above the default needs a proven die reset length")
+        if req:
+            rep["used"] = int(req)         # a SHORTER window only removes base cases: always sound
+        environ["OT_LEC_RESET_CYCLES"] = str(rep["used"])
+        return rep
+    try:
+        c = json.loads(Path(path).read_text())
+        pr = c["proof"]
+        rcpt = (Path(path).parent / pr["receipt"]).resolve()
+        rep["contract"] = dict(file=str(path), die=c.get("die"), edges=int(c["edges"]),
+                               assert_edges=int(pr["assert_edges"]), receipt=str(rcpt))
+        if c.get("schema") != "opentallas.reset_contract.v1":
+            return refuse("reset contract schema")
+        if pr.get("verdict") != "PASS" or pr.get("mutant") != "CAUGHT":
+            return refuse("reset contract proof not PASS with a CAUGHT mutant control")
+        if top not in c.get("modules", []):
+            return refuse(f"reset contract does not list {top}")
+        if not rcpt.is_file() or hashlib.sha256(rcpt.read_bytes()).hexdigest() != pr.get("receipt_sha256"):
+            return refuse("reset contract receipt missing or sha256 mismatch")
+        proven = min(int(c["edges"]), int(pr["assert_edges"]))
+    except (OSError, ValueError, KeyError, TypeError) as e:
+        return refuse(f"reset contract unreadable: {e}")
+    want = int(req) if req else proven
+    if want > proven:
+        return refuse(f"requested {want} edges > proven {proven}")
+    rep["used"] = max(want, 1)
+    environ["OT_LEC_RESET_CYCLES"] = str(rep["used"])
+    return rep
+
+
 def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_map=None, reuse=False, hints=None):
     kit = str(Path(kit).resolve())
     out = Path(out or Path(kit) / "lec")
@@ -4314,6 +4583,7 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
     try:
         env = parse_config(kit)
         top = env["DESIGN_NAME"]
+        rec["reset_contract"] = reset_contract_gate(kit, top)
         netlist = netlist or find_netlist(kit)
         gate_fe = env.get("SYNTH_HDL_FRONTEND", "") or "verilog"
         gold_fe = gold_frontend or ("verilog" if gate_fe == "slang" else "slang")
@@ -4322,7 +4592,12 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
             rec["warning"] = "gold frontend == synthesis frontend (frontend bugs are not independent)"
         netlist = ft_parallel_normalise(kit, top, netlist, out, rec)
         types = netlist_cell_types(netlist)
-        bad = sorted(c for c in types if UNSUPPORTED_CELLS.match(c) and not ICG_CELLS.match(c))
+        latch_ok = os.environ.get("OT_LEC_LATCH", "1") != "0"
+        bad = sorted(c for c in types if UNSUPPORTED_CELLS.match(c) and not ICG_CELLS.match(c)
+                     and not (latch_ok and LOCKUP_CELLS.match(c)))
+        if any(LOCKUP_CELLS.match(c) for c in types):
+            env["_LEC_LATCH"] = "1"
+            rec["lockup_latch_cells"] = sorted(c for c in types if LOCKUP_CELLS.match(c))
         if bad:
             raise Unproven(f"netlist holds cells LEC does not model: {bad[:8]}")
         srcmods, rtl_cells = set(), set()
@@ -4532,6 +4807,9 @@ def via_docker(args, image, mem):
         cmd += ["-e", "OT_LEC_SUPERSET_VEC=1"]
     if "OT_LEC_RAW_BASE_STEPS" in os.environ:
         cmd += ["-e", f"OT_LEC_RAW_BASE_STEPS={os.environ['OT_LEC_RAW_BASE_STEPS']}"]
+    for k in ("OT_LEC_LATCH", "OT_LEC_RESET_CYCLES"):      # model switches (the reset contract is KIT/reset_contract.json)
+        if os.environ.get(k):
+            cmd += ["-e", f"{k}={os.environ[k]}"]
     sol = os.environ.get("OT_LEC_SOLVER", "")
     if sol and os.path.isdir(sol):
         cmd += ["-v", f"{os.path.abspath(sol)}:/lecsolver:ro", "-e", "LEC_SOLVER_PATH=/lecsolver"]

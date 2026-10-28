@@ -151,6 +151,14 @@ proc ot_mm_sync {} {
   if {!$ot_mm_ioref_read && [file exists $ot_mm_ioref_file]} {
     puts "OT_HOLD_MM: ff mode reads $ot_mm_ioref_file (loop default, appended last)"; read_sdc $ot_mm_ioref_file
   }
+  # Opt-in measured FF boundary frame; mode ss keeps its TT constraints.
+  # Run while the BC arrival shim is active and BEFORE either repair.
+  if {$::ot_mm_stage eq "4_cts.sdc" && [info exists ::env(OT_MM_MEASURED_HOLD)] && $::env(OT_MM_MEASURED_HOLD) eq "1"} {
+    set vmh [file join [file dirname $::env(OT_MM_FF_SDC)] vclk_measured_hold.tcl]
+    if {![file isfile $vmh]} { error "OT_HOLD_MM: missing measured FF hook $vmh" }
+    source $vmh
+    ot_vclk_measured_bind
+  }
   ot_mm_sync_link_periods
   ot_mm_scene_shim 0
   set_false_path -setup -from [all_clocks]

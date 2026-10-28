@@ -25,9 +25,21 @@
 //     xk[k] in front of the ring (the ring slots then load the capture flop, not the pin: 1 load per pin instead of
 //     D = 4).  CONTRACT CHANGE: lane latency from the last relay station to the slot write grows by ONE xk[k] edge
 //     (E + 1 -> E + 2 edges; same window, same K) -- a die calendar change that needs a COORD ruling before any die uses it.
+// S81-CORE-LAT-R21 (2026-10-27, COORD S81-CORE-LAT-R20 ruling (a) "replicate face registers per landing slot, no added
+//   cycle"): LGATE = 1 (release kit: define DSFD_CRS4_LGATE; default 0 = the form above, unchanged) lands each lane in
+//   ot_s81_land with GSLOT = 1, whose D ring slots are written through their own ICG.  The slots then ARE the pin's
+//   face registers, one per landing slot: each xl<k> bit drives exactly D = 4 flop D pins on its own forwarded clock
+//   xk[k], no recirculation mux (face_guard land declaration: class land_slot).  Same edges, same K, same window,
+//   ZERO added cycles (bench tools/s81_dv/crs4_bench.py --lgate: LGATE 1 vs the closed reference).  LFACE (+1 edge)
+//   is not used.  Instance paths are unchanged (g_lane[k].u_l).
 `timescale 1ns/1ps
 module dsfd_cfifo_crs4 #(
-    parameter integer LFACE = 0      // 1 = per-bit lane face capture flop on xk[k] (+1 lane edge, see header)
+    parameter integer LFACE = 0,     // 1 = per-bit lane face capture flop on xk[k] (+1 lane edge, see header)
+`ifdef DSFD_CRS4_LGATE
+    parameter integer LGATE = 1      // 1 = gated landing slots (face register per landing slot, 0 added edges)
+`else
+    parameter integer LGATE = 0
+`endif
 ) (
     output wire [14:0] cc,
     input wire cr,
@@ -75,8 +87,8 @@ module dsfd_cfifo_crs4 #(
         end else begin : g_pin
             assign xi = xin[276 * g +: 276];
         end
-        ot_s81_land #(.W(276), .D(4)) u_l (.k(lk_q[3 * g +: 3]), .ck_f(ckl), .i(xi), .ck(cr), .rs(rsync),
-                                           .o(xl[276 * g +: 276]), .fault(lf[g]));
+        ot_s81_land #(.W(276), .D(4), .GSLOT(LGATE)) u_l (.k(lk_q[3 * g +: 3]), .ck_f(ckl), .i(xi), .ck(cr), .rs(rsync),
+                                                          .o(xl[276 * g +: 276]), .fault(lf[g]));
     end endgenerate
     // bundle words as dsfd_cfifo_crs's ingress delivered them ({W:1} of each, marker stripped), bubbles before the marker
     wire [564:0] oa_ = xl[565:1] & {565{xl[0]}};

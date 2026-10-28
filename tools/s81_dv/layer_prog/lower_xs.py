@@ -319,8 +319,31 @@ def frame_lk(die, frame):
             raise ValueError('as-built frame schedule lacks its measured cfifo lk: ' + master)
         if value is not None and value != measured:
             raise ValueError('as-built frame parent lk differs from measured cfifo lk: ' + frame)
+        check_plan_lk(frame, measured)
         return measured
     return value
+
+
+def frame_lk_plan():
+    """TOK-DS-12 (COORD ruling TOK-DS-11 (b), 10-27): the per-frame landing K comes from the measured landing window
+    (S81-UNBLOCK-3 frame_lk.json, one row per die frame instance).  OT_S81_FRAME_LK_PLAN overrides the path."""
+    path = Path(os.environ.get('OT_S81_FRAME_LK_PLAN', str(ROOT / 'results/s81_unblock3_1027/fi_seam/frame_lk.json')))
+    if not path.is_file():
+        raise ValueError('per-frame landing plan (frame_lk.json) missing: ' + str(path))
+    plan = json.loads(path.read_text())
+    if plan.get('schema') != 'opentallas.s81.frame_lk.v1' or not isinstance(plan.get('rows'), dict):
+        raise ValueError('per-frame landing plan has an unknown schema: ' + str(path))
+    return plan
+
+
+def check_plan_lk(frame, measured):
+    """Every lane of the as-built cfifo constant must land at the plan's per-frame K (no blanket value)."""
+    row = frame_lk_plan()['rows'].get(frame)
+    if row is None:
+        raise ValueError('as-built frame has no per-frame landing plan row: ' + frame)
+    lanes = sorted({(measured >> (3 * k)) & 7 for k in range(4)})
+    if lanes != [row['K']] or row['K'] not in row.get('legal_E', [row['K']]):
+        raise ValueError(f'as-built frame cfifo lk {measured:03x} lands at E {lanes}, plan K {row["K"]}: ' + frame)
 
 
 def qualify_frame_source(schedule, master, source_root, selected_manifest=None):

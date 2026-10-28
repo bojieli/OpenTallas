@@ -885,6 +885,39 @@ def ff_binding_errors(kitdir, ctx):
     if abs(float(ctx["insertion_ff_ps"]) - ff * unit) > FF_BINDING_TOL_PS:
         return [f"clocks: sdc_lint.json insertion_ff_ps {float(ctx['insertion_ff_ps']):g} ps != config.mk OT_VCLK_FF "
                 f"{ff:g} x {unit:g} ps (flow repair and sign-off would use different FF references)"]
+    return measured_frame_errors(kitdir)
+
+
+def measured_frame_errors(kitdir):
+    """FLOW-SHARED-4 10-27 (rebase of codex/flow-mcmm-1351 2f4c07767 + 9891c5f4e7 WITHOUT b52ec3248..fba10301d, COORD RM77):
+    the measured-FF two-mode hold reference is OPT-IN per kit (config.mk 'override export OT_MM_MEASURED_HOLD = 1',
+    staged by kit_modes.py stage --measured-hold).  Kits without the flag are untouched (no new preflight error).  An
+    opted-in kit must be a 'rebind' kit with an active two-mode session and the staged BC binding hook; else fail closed
+    before synth.  -> [errors]"""
+    kd = Path(kitdir)
+    try:
+        import kit_modes
+        cfg = kit_modes.mk_vars((kd / "config.mk").read_text())
+    except Exception as e:                       # noqa: BLE001
+        return [f"clocks: measured MM configuration undecidable ({e})"]
+    if cfg.get("OT_MM_MEASURED_HOLD") != "1":
+        return []
+    try:
+        import vclk_ref
+        ref = vclk_ref.ff_reference(kd)["ref"]
+        if ref != "rebind":
+            raise ValueError(f"measured hold requires the 'rebind' FF reference, kit has {ref}")
+        miss = [f for f in ("vclk_measured_hold.tcl", "vclk_ref.py", "orfs_hold_mm.tcl") if not (kd / f).is_file()]
+        if miss:
+            raise ValueError(", ".join(miss))
+        if not kit_modes.mm_state(kd, kit_modes.binding(kd)):
+            raise ValueError("measured hold requires an active two-mode session")
+        mm = (kd / "orfs_hold_mm.tcl").read_text()
+        vm = (kd / "vclk_measured_hold.tcl").read_text()
+        if "ot_vclk_measured_bind" not in mm or "OT_MM_MEASURED_HOLD" not in mm or "proc ot_vclk_measured_bind" not in vm:
+            raise ValueError("measured BC binding hook missing")
+    except Exception as e:                       # noqa: BLE001
+        return [f"clocks: measured MM hold repair is incomplete ({e}); regenerate the staged kit"]
     return []
 
 

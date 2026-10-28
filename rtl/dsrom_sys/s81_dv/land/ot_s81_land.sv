@@ -37,6 +37,12 @@ module ot_s81_land #(
                                     // takes KW > AW + 1: the slot / epoch arithmetic stays mod 2D (2^KW is a multiple
                                     // of 2D), only the warm-up count uses the full K, so K = E + G - R0 needs no
                                     // reset-calendar offset between the source gate G and the receiver release R0.
+    ,parameter integer GSLOT = 0    // S81-CORE-LAT-R21 (10-27): 1 = GATED SLOTS.  Every slot is written through its own
+                                    // integrated clock gate (ot_hdc_cg -> ICGx1 in synthesis; the ot_s81_static_lane_cross_hr
+                                    // r5c structure) at exactly the ck_f edges at which the default writes it (wc == s;
+                                    // also while rs is low, wc = 0 -> slot 0), so the lane pin drives the D pins of its D
+                                    // slot flops directly -- one face register per landing slot, no recirculation mux in
+                                    // front -- with ZERO added edges and the same calendar / window / K.  0 = unchanged.
 ) (
     input  wire [KW-1:0] k,         // read offset K: identity STRAP (die tie, compile-time per lane from the die STA dL
                                     // at TT and FF; 1 <= K <= 2^KW-1); case-analysed in the tile and die STA
@@ -58,8 +64,14 @@ module ot_s81_land #(
         else     wc <= wc + 1'b1;
     genvar s;
     generate for (s = 0; s < D; s = s + 1) begin : g_slot
-        always @(posedge ck_f)
-            if (wc[AW-1:0] == s) begin bank[s] <= i; epo[s] <= wc; end   // no rs term: rs is a ck-domain net
+        if (GSLOT != 0) begin : g_gs
+            wire gck;
+            ot_hdc_cg u_cg (.clk(ck_f), .en(wc[AW-1:0] == s), .gclk(gck));
+            always @(posedge gck) begin bank[s] <= i; epo[s] <= wc; end
+        end else begin : g_ms
+            always @(posedge ck_f)
+                if (wc[AW-1:0] == s) begin bank[s] <= i; epo[s] <= wc; end   // no rs term: rs is a ck-domain net
+        end
     end endgenerate
     // ------------------------------------------------------------------ read side (ck)
 `ifdef OT_S81_LAND_MUT_SEL

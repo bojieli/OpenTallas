@@ -71,7 +71,7 @@ for p in (ROOT / 'tools', ROOT / 'tools/s81_dv', ROOT):
     if str(p) not in sys.path:
         sys.path.insert(0, str(p))
 
-OPS = [r'^attn\.(own_row_write|window_load|gather|scores|max|exp|den|sink|pv|normalize)$']
+OPS = [r'^attn\.(own_row_write|window_load|rows_allgather|gather|scores|max|exp|den|sink|pv|normalize)$']
 BENCH = 'results/rtl/s81_layer_tput_1018/compiler/bench_svc'
 BENCH_P = 'results/rtl/s81_layer_tput_1018/compiler/bench_svc_p'   # TOK-S81-GAPS/SVCP: on-die P path (PPATH)
 BENCH_ALLQ = 'results/rtl/s81_rtlgap_so_1021/bench_allq'           # RTLGAP-SO: all-quarter P.V on one die (-DOT_SVC_ALLQ)
@@ -247,6 +247,20 @@ def f32bits(x):
     return np.asarray(x, dtype=np.float32).view(np.uint32).astype(np.int64)
 
 
+def sliding_window_residency(job):
+    """An actual source job with no selected rows aliases its already-qualified local window read."""
+    if job.compressed or job.meta['kind'] != 'sliding' or job.T != WIN or len(job.sel):
+        raise ValueError('selected/compressed rows require their actual cross-die producer')
+    if any(n in ('SEL_IDS', 'ROWS') for n, _ in job.frames):
+        raise ValueError('sliding-only alias contains selected-row traffic')
+    return dict(schema='opentallas.s81.sliding_window_residency.v1', kind=job.meta['kind'],
+                window_rows=WIN, selected_rows=0, alias_of='attn.window_load',
+                golden_window_and_attended_rows_bit_exact=True,
+                existing_frames=[n for n, _ in job.frames], extra_q_words=0, extra_link_beats=0,
+                added_rtl_cycles=0,
+                qualification='service/window component only; native OWN_ROW producer, resident state and die replay remain separate')
+
+
 class Job:
     """the layer's svc attention job, built once per (layer, fixtures, tag, mutant)"""
 
@@ -324,7 +338,7 @@ class Job:
         assert np.array_equal(V.bits(kvm[:WIN]), V.bits(op('attn.window_load'))), 'window rows'
         if self.compressed:
             assert np.array_equal(V.bits(kvm[WIN:]), V.bits(op('attn.gather'))), 'gathered compressed rows'
-            assert np.array_equal(V.bits(kvm), V.bits(op('attn.rows_allgather'))), 'attended rows'
+        assert np.array_equal(V.bits(kvm), V.bits(op('attn.rows_allgather'))), 'attended rows'
         sc, pv = job.expected()
         scale = np.float32(self.meta.get('attn_scale', D ** -0.5))
         self.anchor = dict(
@@ -901,6 +915,20 @@ def lower(die, op, ctx):
                       f'prog/svc/{layer}/hbm_window.hex': ''.join(f'{k:016x} {im[k]:064x}\n' for k in sorted(im)),
                       f'prog/svc/{layer}/qwd.hex': ''.join(f'{c} {x:0128x}\n' for c, x in s['words'])}
         st = 'LOWERED'
+    elif name == 'attn.rows_allgather' and not job.compressed:
+        # A sliding layer attends only the 128 replicated local window rows. The constructor checks their exact
+        # FP32 bits against BOTH window_load and rows_allgather, including the newly appended OWN_ROW. No selected
+        # rows, SEL_IDS or ROWS traffic exists in this source programme: this op aliases the existing WIN_LOAD.
+        contract = sliding_window_residency(job)
+        st = 'LOWERED'
+        r['unit'] = 'local HBM sliding-window read (alias of attn.window_load; no selected-row exchange)'
+        r['files'] = {f'prog/svc/{ctx.get("layer")}/window_residency.json': json.dumps(contract, indent=2) + '\n'}
+    elif name == 'attn.rows_allgather':
+        st = 'GAP'
+        r['gap'] = dict(module='ROWX production integration', port='service entry q / packed XB links',
+                        missing='compressed selected rows still require an enabled ROWX profile, native bridge/controller, '
+                                'and an accepted owner-to-system-circuit mapping; separate ROWX3b/codec component passes '
+                                'do not qualify that production path')
     elif name in ('attn.window_load', 'attn.scores'):
         st = 'LOWERED'
     elif name == 'attn.gather' and job.compressed:

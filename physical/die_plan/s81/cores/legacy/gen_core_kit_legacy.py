@@ -985,11 +985,9 @@ def main():
     if spec.get("children"):
         raise SystemExit(hard_children_refusal(mod, spec, REPO))
     mr = multi_root_contract(mod, spec, rec)   # None (single root) or the declared multi-root contract; refuses else
-    if mr is not None and a.master_slice:
-        # the 12.7c slice carries ONE clock entry + one core_tree (master_slice.slice_pins / _consume_io / core_infra):
-        # a slice kit would move the primary root only -> fail closed until the slice schema has one entry per root
-        raise SystemExit(f"{mod}: multi-root core: master slices carry one clock entry; per-root slice entries "
-                         f"(clock_entries[]) are not in master_slice.py yet -- use --trial (census) only")
+    # S81-CORE-LAT-R21 (COORD R20 ruling (e)): a multi-root core takes a master slice only in the multi-root form
+    # (clock_entries[], one entry per root pin, master_slice.py); kit_apply refuses the single-entry form and any
+    # entry set != the declared root pins.
     w, h = hc["outline_um"]
     per = float(plan["die"]["period_ps"])
     if modern:
@@ -1210,7 +1208,26 @@ def main():
             "if {![llength [info commands kr_default_repair_timing_helper]]} {\n"
             " rename repair_timing_helper kr_default_repair_timing_helper\n"
             " proc repair_timing_helper {args} {kr_default_repair_timing_helper -max_buffer_percent 100 {*}$args}\n}\n")
-    (kd / "face_guard_core.py").write_text(FACE_GUARD_CORE)
+    land = rec.get("land_slots") or {}
+    if land:
+        # S81-CORE-LAT-R21 (COORD S81-CORE-LAT-R20 ruling (a)): DECLARED landing-ring input buses {bus: D}; the D gated
+        # ring slots are the pin's face registers (face_guard class land_slot checks D flop D pins on D own ICGs of one
+        # clock).  Kits without the declaration keep the byte-identical face_guard_core.py.
+        bad = sorted(b for b in land if b not in buses_in or int(land[b]) < 2)
+        if bad:
+            raise SystemExit(f"{mod}: land_slots {bad} are not plan input buses with D >= 2")
+        (kd / "land_slots.json").write_text(json.dumps(dict(
+            schema="opentallas.core_land_slots.v1", buses={b: int(land[b]) for b in sorted(land)},
+            why=rec.get("why_land_slots", "")), indent=1) + "\n")
+        fgc = FACE_GUARD_CORE.replace(
+            "r = G.guard(Path(net).read_text(), top, skip_re=skip, ft1=G.read_ft1(_ftf) if _ftf.is_file() else set())",
+            "_lf = Path(__file__).resolve().parent / \"land_slots.json\"\n"
+            "r = G.guard(Path(net).read_text(), top, skip_re=skip, ft1=G.read_ft1(_ftf) if _ftf.is_file() else set(),\n"
+            "            land=G.kit_land(_lf) if _lf.is_file() else None)")
+        assert fgc != FACE_GUARD_CORE, "FACE_GUARD_CORE guard call anchor changed"
+        (kd / "face_guard_core.py").write_text(fgc)
+    else:
+        (kd / "face_guard_core.py").write_text(FACE_GUARD_CORE)
     # one-station bus pairs of the core's RTL contract (reviewed per recipe; face_guard / signoff read ft_stations.txt)
     pairs = rec.get("ft1_pairs", [])
     for i_, o_ in pairs:
@@ -1395,7 +1412,8 @@ def main():
     # MASTER PLAN 12.7c (opt-in --master-slice DIR): slice -> master_slice.json/.tcl, sourced at PRE_GLOBAL_PLACE
     # (face_flops.tcl: after io placement, before GPL); refused without a slice once required unless --trial
     ms = MS.kit_apply(kd, mod, [w, h], a.master_slice, plan, a.trial, kind="core",
-                      gpl_hook=kd / "face_flops.tcl")
+                      gpl_hook=kd / "face_flops.tcl",
+                      **({"clock_ports": [p for r_ in mr["roots"] for p in r_["pins"]]} if mr else {}))
     planned_tree_cts(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     rev = subprocess.run(["git", "-C", str(REPO), "rev-parse", "--short", "HEAD"], capture_output=True,

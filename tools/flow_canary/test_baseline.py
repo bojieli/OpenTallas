@@ -137,6 +137,54 @@ def test_crash_cannot_seed_and_lost_reach_or_stage_is_regression(tmp_path):
         "NO-REGRESSION"
 
 
+def _lec(run, differs, keys, kinds=("gold_only",), undecided=0):
+    kit = Path(json.loads((run / "canary_meta.json").read_text())["kit"])
+    (kit / "lec").mkdir(exist_ok=True)
+    fail = [{"point": f"ff:p{i}", "status": "differs", "cone_unmatched": list(kinds), "cone_unmatched_keys": [keys[i % len(keys)]]}
+            for i in range(differs)] if keys else []
+    (kit / "lec/lec.json").write_text(json.dumps({"verdict": "NOT EQUIVALENT" if differs else "EQUIVALENT", "failing": fail,
+                                                  "counts": {"differs": differs, "undecided": undecided}}))
+    (kit / "lec.py").write_text("# lec tool\n")
+    return run
+
+
+def test_known_lec_class_is_not_a_flow_regression(tmp_path):
+    """FLOW-SHARED-4 (COORD ruling 2): KV core 144-point synthesis-removed-register class owned by LEC-FPREG-3."""
+    K6 = ["ff:u.g_d[0].u_a.u_cc.g_r.r[66]", "ff:u.g_d[0].u_p.s1_e[9]"]
+    base = mkrun(tmp_path, "b", die="kv", item="e1", hold=None, signoff=so(12.02, 2.93, 0))
+    B.verdict(base, tmp_path)                                   # seed: LEC PASS under the old tool
+    cur_old = _lec(mkrun(tmp_path, "c144", die="kv", item="e1", ins=None, hold=None, ovf=None, stages={"lec": "FAIL"}),
+                   144, K6, kinds=("gold_only", "gold_x"))
+    assert B.verdict(cur_old, tmp_path)["verdict"] == "REGRESSION"            # no known class yet
+    assert B.main(["known-lec", "--root", str(tmp_path), "--die", "kv", "--item", "e1", "--run", str(cur_old),
+                   "--owner", "LEC-FPREG-3", "--stage-fail"]) == 0
+    rec = B.load(tmp_path, "kv", "e1")
+    assert rec["stages"]["lec"] == "FAIL" and rec["known"]["lec"]["max_differs"] == 144
+    assert rec["contexts"]["signoff"]["setup_tt_wns"] == 12.02               # QoR context kept
+    v = B.verdict(cur_old, tmp_path)
+    assert v["verdict"] == "NO-REGRESSION", v
+    assert any(r["verdict"] == "KNOWN" for r in v["rows"])
+    assert {r["metric"] for r in v["rows"] if r["verdict"] == "NOT REACHED"} >= {"setup_tt_wns", "hold_ff_wns"}
+    # a shrunk class (the d9973 112-point s1_e[9]-only result) stays inside
+    sub = _lec(mkrun(tmp_path, "c112", die="kv", item="e1", ins=None, hold=None, ovf=None,
+                     stages={"lec": "FAIL", "cts": "NOT RUN", "rc_file": "NOT RUN"}), 112, K6[1:])
+    assert B.verdict(sub, tmp_path)["verdict"] == "NO-REGRESSION"
+    # a new register, more points or an undecided point is a REGRESSION
+    new = _lec(mkrun(tmp_path, "cnew", die="kv", item="e1", ins=None, hold=None, ovf=None, stages={"lec": "FAIL"}), 10,
+               ["ff:u.other_reg"])
+    assert B.verdict(new, tmp_path)["verdict"] == "REGRESSION"
+    more = _lec(mkrun(tmp_path, "cmore", die="kv", item="e1", ins=None, hold=None, ovf=None, stages={"lec": "FAIL"}), 150, K6)
+    assert B.verdict(more, tmp_path)["verdict"] == "REGRESSION"
+    und = _lec(mkrun(tmp_path, "cund", die="kv", item="e1", ins=None, hold=None, ovf=None, stages={"lec": "FAIL"}), 4, K6,
+               undecided=1)
+    assert B.verdict(und, tmp_path)["verdict"] == "REGRESSION"
+    # LEC fixed (PASS) and the route reaches sign-off: judged on QoR as before
+    ok = _lec(mkrun(tmp_path, "cfix", die="kv", item="e1", hold=None, signoff=so(11.0, 2.5, 0)), 0, [])
+    assert B.verdict(ok, tmp_path)["verdict"] == "NO-REGRESSION"
+    bad = mkrun(tmp_path, "cbad", die="kv", item="e1", hold=None, signoff=so(-5.0, 2.5, 0))
+    assert B.verdict(bad, tmp_path)["verdict"] == "REGRESSION"
+
+
 def test_autopilot_gate_releases_on_no_regression_and_holds_regression(tmp_path):
     repo = tmp_path / "repo"
     (repo / "tools/flow_canary").mkdir(parents=True)
