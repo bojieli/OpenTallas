@@ -25,6 +25,10 @@ Static only (no synth, no place): each check is one bug class seen on 10-26/10-2
   clock_entry_clear    no clock entry lies over a macro
   island_macro_clear   no macro (+ MACRO_PLACE_HALO) over a plan island_ft rect: static sites clear, or the core_flow
                        island_macro_guard hooks staged for rtl_macro_placer (COORD 10-27)
+  macro_pin_grid       every signal pin of every statically placed hard macro has a preferred-direction routing track
+                       of its layer inside the pin (pitch = tech LEF PITCH, offsets = the kit's make_tracks, else the
+                       ASAP7 platform make_tracks), i.e. the macro origin keeps its pins on the track grid (FLOW-GEN-2
+                       (f): KV pv_pair, a pair 18 nm off the M4 grid: 794 off-grid pin warnings, DRT-0255)
 """
 import json
 import re
@@ -710,8 +714,9 @@ def _plan_contents(kd, plan_dir):
     return {e["inst"]: e for e in pt.get("contents", []) if isinstance(e, dict) and e.get("inst") and e.get("outline_um")}
 
 
-def macro_boxes(kd, plan_dir=None):
-    """(boxes [(name, x0, y0, x1, y1)], problem or None) from the kit's static macro placement."""
+def macro_boxes(kd, plan_dir=None, sites_out=None):
+    """(boxes [(name, x0, y0, x1, y1)], problem or None) from the kit's static macro placement.  sites_out (list):
+    gets (master, x, y, orient) per box, in box order."""
     kd = Path(kd)
     cfg = _mk(kd)
     sizes = _lef_sizes(kd, cfg)
@@ -742,6 +747,8 @@ def macro_boxes(kd, plan_dir=None):
                 w, h = sizes[master]
                 if o in ("R90", "R270", "MXR90", "MYR90"):
                     w, h = h, w
+                if sites_out is not None:
+                    sites_out.append((master, x, y, o))
                 boxes.append((f"{master}#{len(boxes)}", x, y, x + w, y + h))
     pm = list(re.finditer(r"place_macro\s+-macro_name\s+(\S+)\s+-location\s+\{\s*" + _NUM + r"\s+" + _NUM +
                           r"\s*\}(?:\s+-orientation\s+(\S+))?", txt))
@@ -764,6 +771,8 @@ def macro_boxes(kd, plan_dir=None):
                 return None, f"macro {master}: LEF SIZE {sizes[master]} != plan outline {(w, h)}"
             if o in ("R90", "R270", "MXR90", "MYR90"):
                 w, h = h, w
+            if sites_out is not None:
+                sites_out.append((master, x, y, o))
             boxes.append((f"{master}#{len(boxes)}", x, y, x + w, y + h))
     # gen_core_kit_kv --hard-children form (one block per instance): master match, setOrient, setLocation
     # [expr {round(X * $dbu) ...}] [expr {round(Y * $dbu) ...}] (KV-KITS-7: static FIRM sites, was "no macro sites parsed")
@@ -775,6 +784,8 @@ def macro_boxes(kd, plan_dir=None):
         w, h = sizes[master]
         if o in ("R90", "R270", "MXR90", "MYR90"):
             w, h = h, w
+        if sites_out is not None:
+            sites_out.append((master, x, y, o))
         boxes.append((f"{master}#{len(boxes)}", x, y, x + w, y + h))
     if not boxes:
         return None, f"{mp.name}: no macro sites parsed"
@@ -899,8 +910,115 @@ def island_macro_clear(kd):
     return err, dict(applies=True, mode="rtlmp+guard", islands=len(isl), halo_um=halo)
 
 
+# ------------------------------------------------------------------------------------------- 12 macro pin grid
+# ASAP7 tech LEF (asap7_tech_1x_201209.lef) preferred direction, PITCH and min WIDTH per routing layer, and the
+# platform make_tracks offsets (platforms/asap7/openRoad/make_tracks.tcl) used when the kit stages none.
+TECH_LAYERS = {"M2": ("H", 0.036, 0.018), "M3": ("V", 0.036, 0.018), "M4": ("H", 0.048, 0.024),
+               "M5": ("V", 0.048, 0.024), "M6": ("H", 0.064, 0.032), "M7": ("V", 0.064, 0.032),
+               "M8": ("H", 0.080, 0.040), "M9": ("V", 0.080, 0.040)}
+PLATFORM_TRACK_OFFSETS = {"M2": (0.045, 0.081), "M3": (0.009,), "M4": (0.012,), "M5": (0.012,), "M6": (0.016,),
+                          "M7": (0.016,), "M8": (0.116,), "M9": (0.116,)}
+GRID_TOL = 0.0005
+
+
+def _kit_tracks(kd, cfg):
+    """{layer: (dir, pitch, width, (offsets...))} preferred-direction tracks: kit make_tracks if staged, else platform."""
+    offs = {k: tuple(v) for k, v in PLATFORM_TRACK_OFFSETS.items()}
+    src = "platform"
+    f = _kfile(kd, cfg.get("MAKE_TRACKS", "") or "/")
+    if cfg.get("MAKE_TRACKS") and f is not None and f.is_file():
+        src = f.name
+        kit = {}
+        for line in f.read_text(errors="replace").splitlines():
+            m = re.match(r"\s*make_tracks\s+(M\d)\s+(.*)$", line)
+            if not m or m.group(1) not in TECH_LAYERS:
+                continue
+            d = TECH_LAYERS[m.group(1)][0]
+            o = re.search(r"-" + ("y" if d == "H" else "x") + r"_offset\s+" + _NUM, m.group(2))
+            pt = re.search(r"-" + ("y" if d == "H" else "x") + r"_pitch\s+" + _NUM, m.group(2))
+            if o and pt and abs(float(pt.group(1)) - TECH_LAYERS[m.group(1)][1]) <= TOL:
+                kit.setdefault(m.group(1), []).append(float(o.group(1)))
+        offs.update({k: tuple(v) for k, v in kit.items()})
+    return {k: (d, p, w, offs[k]) for k, (d, p, w) in TECH_LAYERS.items() if k in offs}, src
+
+
+def _lef_pins(kd, cfg):
+    """{master: [(pin, layer, x0, y0, x1, y1)]} signal pin port rects (macro frame) of the kit's macro LEFs."""
+    files = list((Path(kd) / "macros").glob("*.lef")) if (Path(kd) / "macros").is_dir() else []
+    for w in cfg.get("ADDITIONAL_LEFS", "").split():
+        f = _kfile(kd, w)
+        if f is not None and f.is_file() and f not in files:
+            files.append(f)
+    out = {}
+    for f in files:
+        for m in re.finditer(r"^MACRO\s+(\S+)(.*?)^END\s+\1", f.read_text(errors="replace"), re.M | re.S):
+            rows = out.setdefault(m.group(1), [])
+            for pm in re.finditer(r"^\s*PIN\s+(\S+)(.*?)^\s*END\s+\1\b", m.group(2), re.M | re.S):
+                if re.search(r"\bUSE\s+(POWER|GROUND)\b", pm.group(2)):
+                    continue
+                layer = None
+                for tok in re.finditer(r"LAYER\s+(\S+)\s*;|RECT\s+" + r"\s+".join([_NUM] * 4), pm.group(2)):
+                    if tok.group(1):
+                        layer = tok.group(1)
+                    elif layer:
+                        x0, y0, x1, y1 = (float(tok.group(i)) for i in range(2, 6))
+                        rows.append((pm.group(1), layer, min(x0, x1), min(y0, y1), max(x0, x1), max(y0, y1)))
+    return out
+
+
+def _place_rect(r, x, y, o, w, h):
+    """macro-frame rect -> die rect for DEF orientation o (w, h = LEF SIZE)."""
+    x0, y0, x1, y1 = r
+    f = {"R0": lambda a, b: (a, b), "MX": lambda a, b: (a, h - b), "MY": lambda a, b: (w - a, b),
+         "R180": lambda a, b: (w - a, h - b), "R90": lambda a, b: (h - b, a), "R270": lambda a, b: (b, w - a),
+         "MXR90": lambda a, b: (b, a), "MYR90": lambda a, b: (h - b, w - a)}.get(o)
+    if f is None:
+        raise ValueError(f"orientation {o}")
+    (ax, ay), (bx, by) = f(x0, y0), f(x1, y1)
+    return x + min(ax, bx), y + min(ay, by), x + max(ax, bx), y + max(ay, by)
+
+
+def macro_pin_grid(kd, plan_dir=None):
+    kd = Path(kd)
+    cfg = _mk(kd)
+    sites = []
+    boxes, problem = macro_boxes(kd, plan_dir, sites_out=sites)
+    if problem:
+        return [problem], dict(applies=True)
+    if not boxes:
+        return [], dict(applies=False)
+    tracks, src = _kit_tracks(kd, cfg)
+    pins, sizes = _lef_pins(kd, cfg), _lef_sizes(kd, cfg)
+    err, n_pins, worst = [], 0, 0.0
+    for k, (master, x, y, o) in enumerate(sites):
+        off, first = 0, None
+        for name, layer, *r in pins.get(master, []):
+            if layer not in tracks:
+                continue
+            d, pitch, width, offsets = tracks[layer]
+            X0, Y0, X1, Y1 = _place_rect(r, x, y, o, *sizes[master])
+            lo, hi = (Y0, Y1) if d == "H" else (X0, X1)
+            n_pins += 1
+            ok, miss = False, None
+            for of in offsets:
+                c = (lo + hi) / 2.0
+                t = of + round((c - of) / pitch) * pitch
+                for tt in (t - pitch, t, t + pitch):
+                    if lo + width / 2.0 - GRID_TOL <= tt <= hi - width / 2.0 + GRID_TOL:
+                        ok = True
+                miss = abs(c - t) if miss is None else min(miss, abs(c - t))
+            if not ok:
+                off += 1
+                worst = max(worst, miss)
+                first = first or f"{name} {layer} centre {round((lo + hi) / 2, 4)} is {miss * 1000:.1f} nm off the track"
+        if off:
+            err.append(f"macro {master}#{k} at ({x:g}, {y:g}) {o}: {off} signal pin(s) off the {src} track grid "
+                       f"({first})")
+    return err, dict(applies=True, macros=len(sites), pins=n_pins, tracks=src, worst_off_nm=round(worst * 1000, 1))
+
+
 CHECKS = ("corner_modes", "ff_binding", "clock_pin_geometry", "rc_calibration", "duplicate_modules", "keep_hook",
-          "pins_canonical", "mesh_vias", "macro_channels", "clock_entry_clear", "island_macro_clear")
+          "pins_canonical", "mesh_vias", "macro_channels", "clock_entry_clear", "island_macro_clear", "macro_pin_grid")
 
 
 def is_core_kit(kd):
@@ -924,7 +1042,8 @@ def run_all(kd, plan_dir=None):
     for name in CHECKS:
         fn = globals()[name]
         try:
-            errors, info = fn(kd, plan_dir) if name in ("pins_canonical", "macro_channels", "clock_entry_clear") else fn(kd)
+            errors, info = fn(kd, plan_dir) if name in ("pins_canonical", "macro_channels", "clock_entry_clear",
+                                                           "macro_pin_grid") else fn(kd)
         except Exception as error:      # fail closed: a check that cannot run is a FAIL, never a skip
             errors, info = [f"check could not run: {type(error).__name__}: {error}"], dict(applies=True)
         verdict = "FAIL" if errors else ("PASS" if info.get("applies", True) else "NA")
