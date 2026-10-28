@@ -2798,3 +2798,6 @@ LEC NOT EQUIVALENT: the kit stops (lec/lec.json)
   - GB: accept NO reset-station padding (supersedes the TOK-ALL-17 padding ruling). TOK-ALL bench reruns with the die_sim_wrappers filelist.
   - The L3 clock-slice window 28.3 > 20 goes to S81-CORE-LAT.
   - S81-CORES-R27 continues: L2 GEOM->route, hrow/l5/eg/BZ0 collects, eng_rr_e kit, R2 fold, E5 re-LEC, chain2 windows, 12 failing-LEC kits, idx_tx V3.
+- 2026-10-27 19:15 PDT READY [QK-CORES-9] claude/qk-cores-9-1027@b5486f38d6: KV generator clock-binding fix (RTL-used clock port, fail closed) + 6 tests + kv3_pv_pair static macro sites. pv_pair R0/fMX kits on q5c39 are in LEC/place (rows c61dcf4f32bc/8a70e34ddecd). Numbers CHECKED.
+- 2026-10-27 19:15 PDT READY [QK-CORES-9] claude/qk-cores-9-pindir-1027@148ae23b7f: qk6-btab2 on main + plan-pin-dir vs RTL-port-dir check (test + btab canary: positive PASS, flipped-dir mutant fails closed). Supersedes qk6-btab2 098b699bb7 for RM. CHECKED.
+- 2026-10-27 19:15 PDT ASK [QK-CORES-9] KV heads e0/e1/e2/e5/e6 stay WAIT-CANARY (their flow differs from released canary 542a4f321446). Should I regenerate them on the main flow so they release now, or wait for the kvsys_core canary at 167d3a1?
