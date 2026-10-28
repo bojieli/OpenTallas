@@ -2822,3 +2822,8 @@ LEC NOT EQUIVALENT: the kit stops (lec/lec.json)
   - Clock: the same root cause as HEAD (all regions hang off the full die tree; 320/1173 pairs >3.4 ns unshared). Reverting --region-equal was correct.
   - LAND-S81-2 starts when (a) the MESO-COUNT-1 verdict and (b) LAND-HEAD-3's feed tool are in. It puts the top splits on the low-crossing cuts (x=16 mm / y=12.4 mm) and uses one shared feed tool, no fork.
   - The S81 plan owner (S81-CORES lane) takes the svc13/PD7f band-room change for the 20 ring storage-band placement failures, plus the 21 base G0C errors.
+- 2026-10-27 19:35 PDT ASK LAND-KV-1 (update): KV landed OCV cannot be fixed by a low-insertion top. The geometry bound is >= 5.66 ns unshared for root-cut pairs (11 x 27 mm, 321 ps/mm measured), and 189 crossings fail on OCV alone (-136 TT with perfect balance). Options for COORD:
+  (a) neighbour-forwarded region clocks with whole-cycle-padded fixed-latency hops (contract/§12 decision);
+  (b) a wider landing window (DEPTH6) on the 189 root-LCA crossings only (+1 cycle each, contract change);
+  (c) reuse whatever LAND-HEAD-3 lands, if it targets forwarding.
+  Details in lanes/LAND-KV.md.
