@@ -459,6 +459,79 @@ def face_of(x, y, w, h):
     return min([(x, "W"), (w - x, "E"), (y, "S"), (h - y, "N")])[1]
 
 
+def rtl_port_dirs(text, mod):
+    """ANSI port list of `module mod` -> {port: (dir, hi, lo)}; dir INPUT/OUTPUT/INOUT, (hi, lo) None when the range is
+    not a plain number (parameterised) and (0, 0) for a scalar.  Comments stripped; names inherit the previous
+    direction/range (`input wire [3:0] a, b`)."""
+    text = re.sub(r"/\*.*?\*/", " ", text, flags=re.S)
+    text = re.sub(r"//[^\n]*", "", text)
+    m = re.search(r"\bmodule\s+" + re.escape(mod) + r"\b", text)
+    if not m:
+        return None
+    i = m.end()
+    while i < len(text) and text[i].isspace():
+        i += 1
+    if text.startswith("#", i):                     # parameter list
+        j, depth = text.index("(", i), 0
+        while True:
+            depth += {"(": 1, ")": -1}.get(text[j], 0)
+            j += 1
+            if depth == 0:
+                break
+        i = j
+    i = text.index("(", i)
+    j, depth = i, 0
+    while True:
+        depth += {"(": 1, ")": -1}.get(text[j], 0)
+        j += 1
+        if depth == 0:
+            break
+    body = text[i + 1:j - 1]
+    ports, cur, rng = {}, None, (0, 0)
+    for item in (x.strip() for x in body.split(",")):
+        if not item:
+            continue
+        d = re.match(r"(input|output|inout)\b\s*(.*)$", item, re.S)
+        if d:
+            cur = d.group(1).upper()
+            rest = d.group(2)
+            r = re.search(r"\[\s*([^\]:]+?)\s*:\s*([^\]]+?)\s*\]", rest)
+            if r:
+                try:
+                    rng = (int(r.group(1)), int(r.group(2)))
+                except ValueError:
+                    rng = None
+            else:
+                rng = (0, 0)
+            item = rest
+        nm = re.findall(r"([A-Za-z_][\w$]*)\s*$", item)
+        if cur and nm:
+            ports[nm[0]] = (cur, rng)
+    return ports
+
+
+def plan_dir_errors(pins, ports):
+    """QK-CORES-9 (COORD 10-27, QC btab no-LEF path): the plan pin table's per-pin dir is the kit's pin direction
+    contract; it must equal the RTL top port direction (and name a bit inside the port range).  [error strings]"""
+    err = []
+    want = {"in": "INPUT", "out": "OUTPUT", "inout": "INOUT"}
+    for q in pins:
+        n = q["name"]
+        mm = re.match(r"^(.*)\[(\d+)\]$", n)
+        b, bit = (mm.group(1), int(mm.group(2))) if mm else (n, None)
+        if b not in ports:
+            err.append(f"{n}: no RTL port {b}")
+            continue
+        d, rng = ports[b]
+        if want.get(q.get("dir")) != d:
+            err.append(f"{n}: plan dir {q.get('dir')} != RTL {d.lower()}")
+        if rng is not None and bit is not None and not (min(rng) <= bit <= max(rng)):
+            err.append(f"{n}: bit outside RTL range [{rng[0]}:{rng[1]}]")
+        if rng is not None and bit is None and rng != (0, 0):
+            err.append(f"{n}: scalar plan pin for RTL bus [{rng[0]}:{rng[1]}]")
+    return err
+
+
 def lef_dirs(path):
     d, cur = {}, None
     for ln in Path(path).read_text().splitlines():
@@ -643,8 +716,21 @@ def main():
     ib = core_insertion(rec, plan)       # FLOW 10-25: bound IO vclk insertion per corner
     ins, tol = ib["tt"], ib["tol"]
     pins = hc["pins"] if "pins" in hc else json.load(open(Path(a.plan).parent / hc["pins_file"]))["pins"]
-    dirs = lef_dirs(REPO / hc["lef"])
-    shapes = lef_pin_rects(REPO / hc["lef"])
+    plan_dir_contract = False
+    if hc.get("lef"):
+        dirs = lef_dirs(REPO / hc["lef"])
+        shapes = lef_pin_rects(REPO / hc["lef"])
+    else:
+        # QK-CORES-6 (10-27): a NEW-aspect plan core (e.g. btab profile1713) has no closed LEF of its outline; the plan
+        # pin table (opentallas.core_pins.v1) is then the only pin contract: direction + layer per pin, every pin required.
+        if not rec.get("plan_pins_contract"):
+            raise SystemExit(f"{mod}: no plan LEF; set recipe plan_pins_contract to use the plan pin table")
+        nod = [q["name"] for q in pins if q.get("dir") not in ("in", "out")]
+        if nod:
+            raise SystemExit(f"{mod}: {len(nod)} plan pins without dir in/out: {nod[:4]}")
+        dirs = {q["name"]: {"in": "INPUT", "out": "OUTPUT"}[q["dir"]] for q in pins}
+        shapes = {q["name"]: (q["layer"],) for q in pins}
+        plan_dir_contract = True
     suffix = rec.get("suffix", "c")
     kd = Path(a.out) / f"{mod}_{suffix}"
     MS.precheck(a.master_slice, a.trial, plan, mod)
@@ -665,6 +751,14 @@ def main():
             bbs.add(Path(f).name)
         if not f.endswith((".svh", ".vh")):
             srcs.append(f"/work/rtl/{dst.name}")
+    if plan_dir_contract:   # QK-CORES-9: plan pin dir (the only direction source here) == RTL top port direction
+        tops = [f for f in sorted((kd / "rtl").iterdir()) if f.suffix in (".sv", ".v")
+                and re.search(r"\bmodule\s+" + re.escape(mod) + r"\b", f.read_text(errors="replace"))]
+        if len(tops) != 1:
+            raise SystemExit(f"{mod}: plan pin dir check: {len(tops)} kit RTL files define module {mod}")
+        pd_err = plan_dir_errors(pins, rtl_port_dirs(tops[0].read_text(errors="replace"), mod) or {})
+        if pd_err:
+            raise SystemExit(f"{mod}: {len(pd_err)} plan pin dir/port mismatches vs RTL: {pd_err[:5]}")
     # macros: the closed kit's views; sites from the recipe, default spec "at" (lower-left core-frame um) snapped onto
     # the M4 track phase of the macro pins
     lefs, libs, mplace = [], [], {}
@@ -958,7 +1052,7 @@ def main():
     fz = dict(schema="opentallas.qc.core_freeze.v1", kit=f"{mod}_{suffix}", module=mod, plan_type=ptype,
               outline_um=[w, h], ref_tile=rec.get("ref_tile"), spec=spec_src or f"{rec['ref_tile']}/spec.json",
               spec_sha256=hashlib.sha256(json.dumps(spec, sort_keys=True).encode()).hexdigest(),
-              pins_file=hc["pins_file"], pins_sha256=sha(REPO / hc["pins_file"] if "pins" in hc else Path(a.plan).parent / hc["pins_file"]), pins=len(pins), plan_lef=hc["lef"],
+              pins_file=hc["pins_file"], pins_sha256=sha(REPO / hc["pins_file"] if "pins" in hc else Path(a.plan).parent / hc["pins_file"]), pins=len(pins), plan_lef=hc.get("lef") or "plan pin table (plan_pins_contract)",
               clocks=clks, resets=rsts,
               recipe_sha256=hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest(),
               period_ps=per, insertion_ps=ins, insertion_ff_ps=ib["ff"], insertion_basis=ib["basis"],
@@ -971,6 +1065,14 @@ def main():
                            for f, pt in patches.items()], kit_hash=kit_hash(kd))
     if ms is not None:
         fz["master_plan"] = ms
+    if "pins" not in hc:
+        # GATE-PINS-2 (QK-CORES-6 10-27): declared plan pin set (byte copy beside the kit, sha = pins_sha256) and its
+        # canonical hash; the placed set is recorded separately (slice moves are judged by kit_contract.pins_canonical)
+        import kit_contract
+        ppf = Path(a.plan).parent / hc["pins_file"]
+        shutil.copyfile(ppf, kd / "plan_pins.json")
+        fz["pins_canon_sha256"] = kit_contract._canon(json.loads(ppf.read_text()), [w, h])
+        fz["pins_placed_canon_sha256"] = kit_contract._canon(kit_contract.placed_pins(kd), [w, h])
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     print(json.dumps(dict(kit=str(kd), pins=len(pins), clocks=clks, resets=rsts, ins=len(buses_in),
                           outs=len(buses_out), macros=sum(len(v) for v in mplace.values()), kit_hash=fz["kit_hash"])))
