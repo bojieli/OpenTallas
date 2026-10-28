@@ -11,7 +11,7 @@ FRAME=${GB_FRAME:-u_f_0L01}; SLICE=${GB_SLICE:-u_s_0S}
 cd "$SRC"
 mkdir -p "$OUT"
 export OT_XS_ASB_SCHEDULE_DIR=$SCHED
-export OT_S81_SELECTED_ASBUILT_MANIFEST=physical/die_plan/s81/bind/asbuilt_b178_gb_image_candidate_1450.json
+export OT_S81_SELECTED_ASBUILT_MANIFEST=${GB_MANIFEST:-physical/die_plan/s81/bind/asbuilt_b178_gb_image_candidate_1450.json}
 export OT_S81_SELECTED_SOURCE_ROOT=$SRC
 export OT_S81_SELECTED_CHILD_FILES=rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv,rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv
 export OT_XS_GB_PROVIDER_UNDER_TEST=1 OT_XS_Q_CPR=1

@@ -49,7 +49,8 @@ d={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(set(paths))
 Path(sys.argv[2]).write_text(json.dumps(d,sort_keys=True,indent=2)+'\n')
 PY
 # exactly the selected (candidate) manifest's defines, as the fresh schedule extraction elaborated
-DEFS=$(python3 -c "import json;print(' '.join('-D'+d for d in json.load(open('physical/die_plan/s81/bind/asbuilt_b178_gb_image_candidate_1450.json'))['defines']))")
+GB_MANIFEST=${GB_MANIFEST:-physical/die_plan/s81/bind/asbuilt_b178_gb_image_candidate_1450.json}
+DEFS=$(python3 -c "import json,sys;print(' '.join('-D'+d for d in json.load(open(sys.argv[1]))['defines']))" "$GB_MANIFEST")
 if [ ! -x "$BINARY" ]; then
     [ "$BINARY" = "$O/obj/Vtb_dense_xs_cap_gb" ] || { echo 'External binary missing' >&2; exit 3; }
     /usr/bin/time -v -o "$O/build.time" "$V" --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD \
