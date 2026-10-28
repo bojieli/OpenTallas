@@ -1,0 +1,489 @@
+{
+ "schema": "opentallas.hbm_q6_clk.v1",
+ "inp": "/srv/opentallas-scratch2/claude/hbm-r15-1027/c16",
+ "out": "/srv/opentallas-scratch2/claude/hbm-r15-1027/c16clk",
+ "macros": "/srv/opentallas-scratch2/claude/hbm-r15-1027/c16/core_macros.json",
+ "halo_um": 0.0,
+ "renamed": [],
+ "created": [],
+ "port_fixed": [],
+ "moved": [],
+ "not_unique": [],
+ "unknown_macros": [
+  {
+   "module": "hfd_ep_static",
+   "why": "not in sidecar"
+  },
+  {
+   "module": "hnx_fused_lane",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "hnx_rp3lp3h_n",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "hnx_rp3lp3h_s",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "hnx_vms_bank_q0_faces__vec6293",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "hnx_vms_bank_q0_faces__vecd4ae",
+   "why": "recipe macros ['ot_sram_1r1w_1024x256_m2_r2c2'], no placement evidence at the plan outline"
+  },
+  {
+   "module": "ot_hbm_hc_root_static__tailx_rest__v4f4566",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hbm_hc_root_static__tailx_rest__v6bc7f2",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hbm_hc_root_static__tailx_sk_steady",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hbm_hc_root_static__tailx_sk_step0",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hbm_host_cp_rxs",
+   "why": "recipe macros ['ot_sram_1r1w_256x256_m2_r2c2', 'ot_sram_1r1w_64x512_m1_r2c2'], no placement evidence at the plan outline"
+  },
+  {
+   "module": "ot_hbm_idx_score_hcol_h0",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hbm_idx_score_hcol_h1",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__tailx__v36d446",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hbm_idx_score_quarter_static__tailx__v3fcb6a",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hbm_idx_selector_static_sel",
+   "why": "recipe macros ['ot_sram_1r1w_256x256_m2_r2c2'], no placement evidence at the plan outline"
+  },
+  {
+   "module": "ot_hbm_idx_topk_link_static",
+   "why": "recipe macros ['ot_sram_1r1w_64x512_m1_r2c2'], no placement evidence at the plan outline"
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lanes8_11",
+   "why": "recipe macros ['ot_sram_1r1w_128x256_m1_r2c2'], no placement evidence at the plan outline"
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "why": "recipe macros ['ot_sram_1r1w_128x256_m1_r2c2'], no placement evidence at the plan outline"
+  },
+  {
+   "module": "ot_hbm_svc_sm_group_rel_id",
+   "why": "recipe macros ['ot_sram_1r1w_1024x256_m2_r2c2', 'ot_sram_1r1w_128x256_m1_r2c2', 'ot_sram_1r1w_256x256_m2_r2c2'], no placement evidence at the plan outline"
+  },
+  {
+   "module": "ot_hbm_svc_vm_kshare_splitstrap__v700685",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hbm_svc_vm_kshare_splitstrap__v8e478a",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hbm_svc_wb_kport_q",
+   "why": "recipe macros ['ot_sram_1r1w_128x256_m1_r2c2'], no placement evidence at the plan outline"
+  },
+  {
+   "module": "ot_hfd_coll_q2n2_body_core",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hfd_coll_q2n2_vm_core",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hfd_coll_q3_body_core",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hfd_coll_q3_edge_core",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hfd_coll_q3_vm_core",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hgi_coll_tkm_m_tp192__root",
+   "why": "recipe macros ['ot_sram_1r1w_1024x256_m2_r2c2'], no placement evidence at the plan outline"
+  },
+  {
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "why": "recipe macros ['ot_sram_1r1w_128x256_m1_r2c2'], no placement evidence at the plan outline"
+  },
+  {
+   "module": "ot_hgi_sfu_core_split3__opstore_a",
+   "why": "recipe macros ['ot_sram_1r1w_128x256_m1_r2c2', 'ot_sram_1r1w_256x256_m2_r2c2', 'ot_sram_1r1w_1024x256_m2_r2c2'], no placement evidence at the plan outline"
+  },
+  {
+   "module": "ot_hgi_sfu_core_split3__opstore_b",
+   "why": "recipe macros ['ot_sram_1r1w_128x256_m1_r2c2', 'ot_sram_1r1w_256x256_m2_r2c2', 'ot_sram_1r1w_1024x256_m2_r2c2'], no placement evidence at the plan outline"
+  },
+  {
+   "module": "ot_hgi_sfu_programme_store_r10",
+   "why": "recipe macros ['ot_sram_1r1w_512x256_m1_r2c2'], no placement evidence at the plan outline"
+  },
+  {
+   "module": "ot_hgi_sfu_split3_lane_core__idpin",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hnx_fused_tnode",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_hnx_idxn_keybuf_slice",
+   "why": "no recipe and no kit evidence (macro presence unknown)"
+  },
+  {
+   "module": "ot_pdie_serdes",
+   "why": "recipe macros ['ot_sram_1r1w2c_64x546_m1', 'ot_sram_1r1w_32x546_m1'], no placement evidence at the plan outline"
+  }
+ ],
+ "taps_moved": [],
+ "taps_added": [],
+ "tap_formula_mismatch_before": [
+  [
+   "NW_io",
+   "u_ep_N0",
+   [
+    358.536,
+    1300.32
+   ],
+   [
+    354.24,
+    1287.36
+   ]
+  ],
+  [
+   "NW_io",
+   "u_host_ep",
+   [
+    254.856,
+    1689.12
+   ],
+   [
+    250.56,
+    1702.08
+   ]
+  ],
+  [
+   "q_spb0",
+   "u_ep_S0",
+   [
+    341.256,
+    1300.32
+   ],
+   [
+    336.96,
+    1287.36
+   ]
+  ],
+  [
+   "q_su00",
+   "u_su_Q0_pretree",
+   [
+    540.0,
+    678.24
+   ],
+   [
+    539.976,
+    673.944
+   ]
+  ],
+  [
+   "q_su10",
+   "u_su_Q1_pretree",
+   [
+    1568.16,
+    263.52
+   ],
+   [
+    1568.184,
+    259.224
+   ]
+  ],
+  [
+   "q_su20",
+   "u_su_Q2_pretree",
+   [
+    367.2,
+    531.36
+   ],
+   [
+    367.176,
+    527.016
+   ]
+  ],
+  [
+   "q_su30",
+   "u_su_Q3_pretree",
+   [
+    125.28,
+    1317.6
+   ],
+   [
+    125.256,
+    1313.256
+   ]
+  ],
+  [
+   "vsN0",
+   "u_ep_S1",
+   [
+    341.256,
+    1300.32
+   ],
+   [
+    336.96,
+    1287.36
+   ]
+  ],
+  [
+   "NE_io",
+   "u_ep_N2",
+   [
+    323.976,
+    1300.32
+   ],
+   [
+    319.68,
+    1287.36
+   ]
+  ],
+  [
+   "q_hub_nw",
+   "u_svg_Q0",
+   [
+    1235.52,
+    2137.32
+   ],
+   [
+    1235.52,
+    2137.296
+   ]
+  ],
+  [
+   "q_hub_nw",
+   "u_svg_Q1",
+   [
+    6531.84,
+    3873.96
+   ],
+   [
+    6531.84,
+    3873.936
+   ]
+  ],
+  [
+   "q_hub_nw",
+   "u_vmb_Q3",
+   [
+    3425.784,
+    2410.56
+   ],
+   [
+    3425.688,
+    2410.56
+   ]
+  ],
+  [
+   "q_hub_nw",
+   "u_hb_idx__op_Q__q1",
+   [
+    7547.04,
+    708.48
+   ],
+   [
+    7547.04,
+    725.76
+   ]
+  ],
+  [
+   "q_hub_nw",
+   "u_hb_coll_Q_edge__q0",
+   [
+    190.08,
+    561.6
+   ],
+   [
+    203.04,
+    561.6
+   ]
+  ],
+  [
+   "q_hub_nw",
+   "u_hb_coll_Q_edge__q1",
+   [
+    4129.92,
+    552.96
+   ],
+   [
+    4142.88,
+    552.96
+   ]
+  ],
+  [
+   "q_hub_nw",
+   "u_cij_Q__q1",
+   [
+    4397.76,
+    185.76
+   ],
+   [
+    4397.76,
+    181.44
+   ]
+  ],
+  [
+   "q_hub_nw",
+   "u_hb_dbk_Q__q1",
+   [
+    7281.576,
+    967.68
+   ],
+   [
+    7281.552,
+    967.68
+   ]
+  ],
+  [
+   "q_hub_ne",
+   "u_svg_Q0",
+   [
+    1235.52,
+    2137.32
+   ],
+   [
+    1235.52,
+    2137.296
+   ]
+  ],
+  [
+   "q_hub_ne",
+   "u_svg_Q1",
+   [
+    6531.84,
+    3873.96
+   ],
+   [
+    6531.84,
+    3873.936
+   ]
+  ],
+  [
+   "q_hub_ne",
+   "u_vmb_Q3",
+   [
+    3425.784,
+    2410.56
+   ],
+   [
+    3425.688,
+    2410.56
+   ]
+  ],
+  [
+   "q_hub_ne",
+   "u_hb_idx__op_Q__q0",
+   [
+    1343.52,
+    177.12
+   ],
+   [
+    1343.52,
+    155.52
+   ]
+  ],
+  [
+   "q_hub_ne",
+   "u_hb_idx__op_Q__q1",
+   [
+    7547.04,
+    708.48
+   ],
+   [
+    7547.04,
+    725.76
+   ]
+  ],
+  [
+   "q_hub_ne",
+   "u_cij_Q__q1",
+   [
+    4397.76,
+    185.76
+   ],
+   [
+    4397.76,
+    181.44
+   ]
+  ],
+  [
+   "q_hub_ne",
+   "u_hb_dbk_Q__q1",
+   [
+    7281.576,
+    967.68
+   ],
+   [
+    7281.552,
+    967.68
+   ]
+  ]
+ ],
+ "stale_not_regenerated": [
+  "clock_taps_die.json",
+  "clock_htree.json",
+  "entries.json",
+  "clock_entry_report.json",
+  "die_plan.sha256 (rewritten)"
+ ],
+ "not_unique_final": [],
+ "modules_changed": [],
+ "counts": {
+  "renamed": 0,
+  "created": 0,
+  "port_fixed": 0,
+  "moved": 0,
+  "not_unique": 0,
+  "unknown_macros": 40,
+  "taps_moved": 0,
+  "taps_added": 0,
+  "tap_formula_mismatch_before": 24,
+  "stale_not_regenerated": 5,
+  "not_unique_final": 0,
+  "modules_changed": 0
+ }
+}

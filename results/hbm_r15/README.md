@@ -16,3 +16,14 @@ Pin-window census (pin6_capacity_c15.txt, from Codex c15_pin_windows.json, 47 vi
 on every face -> local clustering only, fixed by an even re-spread in the partition pin emitter; 31 CORES have >=1 face over
 capacity even if perfectly spread -> need per-type outline growth or partner-side face split (xq_split pattern). XQ resolved
 in pin6_bundle; EP resolved here.
+
+C16r (final candidate, intel2 .../hbm-r15-1027/c16r, plan sha 732240f89458):
+- incore_restation.py: 182 station registers left inside the grown cores (EP, q3 edge, XQ from pin6_bundle) moved to the
+  nearest free 4.32 lattice point 2.16 um clear of cores (144 chains, max move 95.04 um, count kept); 13 chains then >405
+  re-sited by relax_route (0 added cycles, 0 failing). EP clk pin put on the centre entry (120.984,198.744).
+- apply_clk.py (HBM-MU-QUAD-6/CLK, COORD 10-27) on C16 --halo 0: renamed 0 / created 0 / moved 0 (C15 lineage already has
+  the entry fix); it found 24 core taps != origin+orient(entry) (7 from C16 moves, 17 pre-existing) -> retap.py fixed all 24.
+  clock_taps_die.json / clock_htree.json / entries.json are STALE (die clock tool owner regenerates).
+- Gates (branch check.py codex-hbm-plan-1351): G0 PASS 0 errors; G0C FAIL 12 = core_faces only (q_hub_nw 6 / q_hub_ne 6,
+  pre-existing hub away groups), 49/51 types clean (C15: G0C 20, 47/51).
+- tools/die_plan/check.py: G0C clock_entry_macro ported from rescue e33799a17 (halo 0 per COORD ruling) + 6 tests.
