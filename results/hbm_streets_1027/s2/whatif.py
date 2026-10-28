@@ -1,4 +1,5 @@
 import json, sys, collections
+from pathlib import Path
 sys.path.insert(0, sys.argv[1] + "/tools/die_plan")
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import check, schema as S, die_clock as DC, streets as ST
