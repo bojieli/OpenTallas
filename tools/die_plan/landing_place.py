@@ -7,6 +7,13 @@ import re
 def safe(s):return re.sub(r'\W','_',s)
 
 
+def _spread(band):
+    """DIE-HEAD-12 opt-in band_spread: ring tag suffix '@<spread>' (landing_placement.tcl widens each ring cell's reserved
+    footprint by it, so the ring fills the whole band); no suffix when the band has no spread (default plans)."""
+    sp=band.get('spread')
+    return '' if not sp or sp<=1.0 else f'@{sp:.4f}'
+
+
 def tcl(P,tn):
     c=P.types[tn].get('clock',{}).get('landing_contract',{})
     groups=[];status=[];tree=c.get('collector_tree');root=c.get('collector_root_node')
@@ -16,7 +23,7 @@ def tcl(P,tn):
         return _dataflow_tcl(tn,c)
     for name,band in c.get('bands',{}).items():
         if band.get('placement')=='FAIL' or not band.get('rect_um'):raise ValueError(f'{tn}.{name}: landing band absent')
-        groups.append((band.get('instance','u_cland_'+name),band['rect_um'],'ring:'+name))
+        groups.append((band.get('instance','u_cland_'+name),band['rect_um'],'ring:'+name+_spread(band)))
     for s in c.get('collector_local_sources',[]):
         x,y=s['xy_um']
         for kind in ('ready','fault'):status.append((f'landing_{kind}_'+s['name'],x,y))
@@ -60,7 +67,7 @@ def _dataflow_tcl(tn,c):
     groups=[];status=[]
     for name,band in sorted(c.get('bands',{}).items()):
         if band.get('placement')=='FAIL' or not band.get('rect_um'):raise ValueError(f'{tn}.{name}: landing band absent')
-        groups.append((band.get('instance','u_cland_'+name),band['rect_um'],'ring:'+name))
+        groups.append((band.get('instance','u_cland_'+name),band['rect_um'],'ring:'+name+_spread(band)))
     for pin in sorted(c.get('pins',[]),key=lambda q:q['name']):
         if pin['dir']=='out' and pin['name'].startswith(('cland_up_ready_','cland_up_fault_')):
             x,y=pin['xy_um'];status.append((pin['name'],x,y))
