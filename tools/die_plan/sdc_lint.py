@@ -787,6 +787,11 @@ def kit_context(P, tn):
     for n, _x, _y in gen_phys.reset_out_pins(P, tn):      # reset wavefront registered outs (OWNER DECISION 13)
         outs.append(n)
         floor[n] = gen_phys.IO_BUDGET * per
+    for p in t.get("pads",[]):
+        if p.get("clock",False):continue
+        dest=ins if p["dir"]=="in" else outs
+        if p["name"] not in dest:dest.append(p["name"])
+        floor[p["name"]]=gen_phys.IO_BUDGET*per
     # Landing status/start pins are real timed control ports. Forwarded clock
     # exports remain in _landing_ctx and must never get ordinary IO delays.
     for p in t.get("clock",{}).get("landing_contract",{}).get("pins",[]):
