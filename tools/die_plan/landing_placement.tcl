@@ -60,7 +60,9 @@ proc cland_put {i rect tag} {
    $i setOrient [dict get $ff_orient $y];$i setLocation $x $y;$i setPlacementStatus FIRM
    # Reserve spacing as well as the real body. Density margin permits the
    # datapath mux/control cells and leaves room for clock/reset repair.
-   cland_occupy $x $y [expr {int(ceil(double($w)/0.4/$ff_sw))*$ff_sw}] $h
+   # DIE-HEAD-12 opt-in band spread: tag ring:<bus>@<spread> widens the reserved footprint so the ring fills its band
+   set sp 1.0; regexp {^ring:[^@]*@([0-9.]+)$} $tag -> sp
+   cland_occupy $x $y [expr {int(ceil(double($w)/0.4*$sp/$ff_sw))*$ff_sw}] $h
    dict set cland_done $name 1;incr cland_n
    puts $cland_fh "$name\tcland:$tag\t[expr {$x/double($ff_dbu)}]\t[expr {$y/double($ff_dbu)}]\t-"
    return

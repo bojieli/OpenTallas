@@ -1,0 +1,10 @@
+{
+  "source": "rtl/qwen_split/qfd_native59_svc_obs1.sv",
+  "sha256": "2fbfc36fdb90a852bb4cb603f2d7f8b1b436b956e8ff8aa19fcc1c38749253a5",
+  "scope": "Actual input pipeline, pending/cohort join, filler sequence and descriptor blocks. Other native command-context input stays inactive; HOST p_* inputs are already core-published, not external HOST pins.",
+  "mutants": [
+    "nominal exact blocks",
+    "pending-authority bypass",
+    "token-identity bypass"
+  ]
+}

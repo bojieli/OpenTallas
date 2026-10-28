@@ -6,12 +6,12 @@
   "ot_sram_1r1w_32x128_m1": [
    [
     15.552,
-    76.35,
+    76.332,
     "MY"
    ],
    [
     77.976,
-    76.35,
+    76.332,
     "R0"
    ],
    [
@@ -45,5 +45,6 @@
     "MX"
    ]
   ]
- }
+ },
+ "note_kvkits10": "KV-KITS-10 10-28 (pv_pair DRT-0255 root cause, CHECKED 5_2_route.log R0+fMX): every one of the 397 M4 signal pins of u_s0 g_mem[0]/[1] (the W lower pair, site y 76.35) was 18 nm off the M4 track grid (DRT-0418 x794 = 2 x 397; the 6 other macros 0). LEF pin centres sit at 0.780 + 0.096 j (= 0.036 mod the 0.048 M4 pitch, tracks at 0.024 + 0.048 k), so an R0/MY site needs y = 0.012 mod 0.048 and an MX/R180 site y = 0.030 mod 0.048 (108.156, 142.86, 4.35 do; 76.35 = 0.030 with MY did not). Lower W pair y 76.35 -> 76.332 (-18 nm; W row gap 11.016 -> 11.034, >= 10.8 macro_channels rule); the fMX image 92.958 R180/MX is on grid too."
 }

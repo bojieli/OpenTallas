@@ -160,3 +160,39 @@ def test_tap_fall_merge_tree_adds_node_falls(tmp_path, monkeypatch):
     assert TFM.main([str(proof), "TT", str(arr), "--out", str(tmp_path / "pg")]) == 0
     g = json.loads((tmp_path / "pg" / "tap_arrivals_TT.json").read_text())
     assert all(t["fall_late_ps"] == t["late_ps"] + 40.0 for t in g["taps"]) and "node_fall_late_ps" not in g
+
+
+def test_tap_fall_merge_tree_resolves_node_cell_keys_and_fails_closed_on_low_coverage(tmp_path, monkeypatch):
+    """FLOW-ONEMODEL-4 (DIE-HEAD-12: 1/2229 nodes merged): a DIE-HEAD mk_proof --tree-path proof keys its nodes by
+    U+0100 child-index paths + region names and carries node_cell {key: clock cell}; the merge resolves through that
+    map.  Keys that resolve to nothing (< 95 % of nodes) fail closed and leave no output proof."""
+    out = _kit(tmp_path, monkeypatch)
+    tree = json.loads((out / "tree.json").read_text())
+    arr = _arr(tree, tmp_path / "a.txt")
+    cells = sorted({str(v) for v in tree["node_buf"].values()})
+    rise = tmp_path / "rise.txt"
+    rise.write_text("\n".join(ln for ln in arr.read_text().splitlines() if ln[:1] in ("T", "N")) + "\n")
+    r, _ = E.export(out / "tree.json", rise, "TT")
+    key_cell = {k: cells[int(v) - 10] for k, v in r["node_late_ps"].items()}      # N late = 10 + cell index
+    ren = {k: "h" + "".join(chr(0x100 + CH_I) for CH_I in range(len(k) - 1)) + f"#{i}" if k.startswith("h") else k
+           for i, k in enumerate(r["node_late_ps"])}
+    for f in ("node_late_ps", "node_early_ps", "node_stages", "node_xy_um", "cppr_node_range_ps"):
+        r[f] = {ren[k]: v for k, v in r[f].items()}
+    r["node_cell"] = {ren[k]: c for k, c in key_cell.items()}
+    proof = tmp_path / "proof"
+    proof.mkdir()
+    (proof / "tap_arrivals_TT.json").write_text(json.dumps(r))
+    assert TFM.main([str(proof), "TT", str(arr), "--out", str(tmp_path / "pf"), "--tree", str(out / "tree.json")]) == 0
+    m = json.loads((tmp_path / "pf" / "tap_arrivals_TT.json").read_text())
+    fa = m["fall_arrivals"]
+    assert fa["nodes_with_fall"] == fa["nodes"] == len(r["node_late_ps"]) and fa["node_match"]["node_cell"] == fa["nodes"]
+    for k in m["node_late_ps"]:
+        assert m["node_fall_late_ps"][k] == m["node_late_ps"][k] + 40.0
+        assert m["node_fall_early_ps"][k] == m["node_early_ps"][k] + 37.0
+    # the same proof without node_cell: keys match nothing in the export -> fail closed, no proof written
+    r.pop("node_cell")
+    (proof / "tap_arrivals_TT.json").write_text(json.dumps(r))
+    assert TFM.main([str(proof), "TT", str(arr), "--out", str(tmp_path / "pz"), "--tree", str(out / "tree.json")]) == 2
+    assert not (tmp_path / "pz" / "tap_arrivals_TT.json").exists()
+    with pytest.raises(TFM.NodeCoverageError):
+        TFM.merge_tree(r, out / "tree.json", arr, "TT")

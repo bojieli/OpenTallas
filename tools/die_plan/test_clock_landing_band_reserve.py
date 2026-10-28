@@ -16,6 +16,7 @@ def _type():
 class BandReserve(unittest.TestCase):
     def tearDown(self):
         CP.BAND_RESERVE = "padded"
+        CP.BAND_SPREAD = 1.0
 
     def test_default_is_padded(self):
         self.assertEqual(CP.BAND_RESERVE, "padded")
@@ -57,6 +58,37 @@ class BandReserve(unittest.TestCase):
         self.assertFalse(min(r[2], isl[2]) > max(r[0], isl[0]) and min(r[3], isl[3]) > max(r[1], isl[1]))
         CP.BAND_RESERVE = "padded"
         self.assertEqual(CP._storage_band(ty, "wide_i", 63, [])["rect_um"], CP._storage_band(_type(), "wide_i", 63, [])["rect_um"])
+
+    def test_band_spread_default_unchanged(self):
+        # DIE-HEAD-12: BAND_SPREAD 1.0 (default) leaves every band byte-identical and adds no spread key
+        CP.BAND_RESERVE = "ring_ff"
+        b = CP._storage_band(_type(), "wide_i", 63, [])
+        self.assertNotIn("spread", b)
+        CP.BAND_SPREAD = 2.0
+        s = CP._storage_band(_type(), "wide_i", 63, [])
+        self.assertEqual(s["area_reserve_um2"], b["area_reserve_um2"])
+        r = s["rect_um"]
+        self.assertAlmostEqual((r[2] - r[0]) * (r[3] - r[1]) / s["area_reserve_um2"], s["spread"], places=3)
+        self.assertGreaterEqual(s["spread"], 2.0 - 1e-6)
+
+    def test_band_spread_steps_down_to_fit_reach(self):
+        # a band that cannot be 2x within the 405-um reach of its pin steps the spread down (never past reach / macros)
+        CP.BAND_RESERVE = "ring_ff"
+        CP.BAND_SPREAD = 4.0
+        ty = _type()
+        ty["hard_cores"] = [dict(origin_um=[0.0, 40.0], outline_um=[400.0, 260.0]),
+                            dict(origin_um=[150.0, 0.0], outline_um=[250.0, 40.0])]   # pocket ~128 x 18 um: 4x does not fit
+        s = CP._storage_band(ty, "wide_i", 63, [])
+        r = s["rect_um"]
+        self.assertLess(s["spread"], 4.0)
+        self.assertGreater(s["spread"], 1.0)
+        self.assertLessEqual(s["max_pin_to_band_hop_um"], 405 - 2.16)
+        self.assertLessEqual(r[3], 40.0 - 4.32)
+        self.assertLessEqual(r[2], 150.0 - 4.32)
+
+    def test_compose_band_spread_needs_ring_ff(self):
+        with self.assertRaises(ValueError):
+            CP.compose(dict(), dict(), band_reserve="padded", band_spread=2.0)
 
     def test_compose_rejects_unknown_mode(self):
         with self.assertRaises(ValueError):

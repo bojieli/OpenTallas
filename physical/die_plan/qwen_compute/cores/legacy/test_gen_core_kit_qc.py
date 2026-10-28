@@ -182,5 +182,14 @@ class SramPinColumnHalo(unittest.TestCase):
         self.assertEqual(G.pch_hits(s, [("in", 175.0, 20.0), ("out", 190.0, 20.0)]), ["in"])
         self.assertIn("odb::dbBlockage_create", G.pch_tcl(s))
 
+    def test_post_tapcell_clears_physical_cells_under_every_rect(self):
+        # CORES-EARLY-2 (btab a1713 DPL-0033, 72 taps at macro x - 0.54 in the uncut rows beside the column ends)
+        s = G.pincol_halo_strips(_lef(410), [(90.72, 86.4, "R0")], 4.32)
+        t = G.pch_tap_tcl(s)
+        self.assertIn("source /work/keepout_phys.tcl", t)
+        self.assertIn("ot_clear_keepout_physical $b $ot_pch_rects sram_pincol_halo", t)
+        for q in s[0]["rects"]:
+            self.assertIn("{%g %g %g %g}" % tuple(q), t)
+
 if __name__ == "__main__":
     unittest.main()

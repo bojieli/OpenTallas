@@ -51,8 +51,10 @@ from su_arith_compile import pack, physical_word  # noqa: E402
 import su_pretree_lower as SPL  # noqa: E402  (closed HH-6 pre-tree: tree_cmd_word, block_subtree, PT_RED)
 from hdc_golden import add, mul, to_bf16, exp, neg, z, rsqrt  # noqa: E402
 F = np.float32
-MLAT, ALAT, LEAF = 4, 3, 1
-LIN = 23 + 4 * (MLAT - 3) + (ALAT - 3) + LEAF            # emit -> lane write (= su_top_compile FO - 8) = 28 (HBM-SUFIX: was +4 = 32)
+import su_lane_build as SLB  # noqa: E402  (HBM-CORES-REBAL-9: lane build depths, one place)
+MLAT, ALAT, LEAF = 4, 3, 1                                # as built; --mlat (REBAL-9 opt-in MLAT 5)
+WCOPY = 0                                                 # --wcopy 1: pinned-bank write copy, every bank write commits +1
+LIN = SLB.lin(MLAT, ALAT, LEAF)                           # emit -> lane write (= su_top_compile FO - 8) = 28 (HBM-SUFIX: was +4 = 32)
 FPIN = 2                                                  # fill: bank pins sample E+RR+2 (pgslice fd/fr_v), commit E+RR+3
 HOLD = 16                                                 # HBM-SUFIX: record fields held on non-emit lines past the last lane write
 RLAT, DEP, NCH, LRF, RFL = 9, 10, 10, 1, 32              # reducer; RF_LOCAL 1; L_TREE 32 (stree)
@@ -65,10 +67,8 @@ SIDE_FN = (2, 3, 6, 7)          # rsqrt, sqrt, sqrt(softplus), Engram gate: glob
 
 
 def sfu_depth(m):
-    d_exp = 7 * MLAT + 8 * ALAT + 4
-    s = {0: 0, 1: d_exp, 4: d_exp + ALAT + 19, 5: d_exp + ALAT + 19,
-         2: 1 + 9 * MLAT + 3 * ALAT, 3: 31, 6: 180, 7: 111}[m.get('ci_sfu', 0)]   # lane H_* insertion depths (MLAT 4)
-    return s + ((19 - MLAT) if m.get('cp_m1') in (4, 5) else 0)
+    s = SLB.depths(MLAT, ALAT)[m.get('ci_sfu', 0)]          # lane H_* insertion depths (ot_hbm_su_static_lane D_*)
+    return s + (SLB.div_extra(MLAT) if m.get('cp_m1') in (4, 5) else 0)
 
 
 # Records: name -> (design, shape key from census, N per row, rows, roles {role: 'vm'|'rf'}, mods, red)
@@ -369,7 +369,13 @@ def main():
     ap.add_argument('--rfd-slack', type=int, default=1)  # HBM-SUFIX: class-5 RF drain strictly after RF commit (su_top_compile Z > g_ready)
     ap.add_argument('--pretree', action='store_true')    # HBM-PRETREE2: reductions through the bound pre-tree (build PRETREE=1)
     ap.add_argument('--qpr', type=int, default=0)        # quarters per reduction row: 1/2/4; 0 = try all, keep the fastest
+    ap.add_argument('--mlat', type=int, default=4)       # HBM-CORES-REBAL-9: lane build (die su / pg_lane* MLAT)
+    ap.add_argument('--wcopy', type=int, default=0)      # HBM-CORES-REBAL-9: pinned-bank WCOPY (bank write commit +1)
     a = ap.parse_args()
+    global MLAT, LIN, WCOPY
+    SLB.check(a.mlat, ALAT, LEAF, a.wcopy)
+    MLAT, WCOPY = a.mlat, SLB.commit_extra(a.wcopy)
+    LIN = SLB.lin(MLAT, ALAT, LEAF)
     if a.pretree and RECS[a.rec][5] and a.qpr == 0:
         import copy, io, contextlib
         best = None
@@ -547,7 +553,7 @@ def compile_rec(a):
                             P.put(P.vmr, e, q, p * 30, 30, (1 << 29) | (sec << 13) | (j << 9) | row)
                             for k in range(8): P.bankw.add((e + RR + FPIN, q, j * 8 + k))
                 vmr_next = e + 1
-                rdy = max(rdy, e + RR + 3)
+                rdy = max(rdy, e + RR + 3 + WCOPY)          # bank commit (WCOPY: per-column copy +1)
         fill_ready[g] = rdy
     # issues
     ldc = 0
@@ -590,7 +596,7 @@ def compile_rec(a):
     # HBM-SUFIX: the SIDE pipe is built at MLAT 3 (ot_hbm_su_static_side localparam) while the bound lane takes its
     # result at its MLAT-4 insertion depth; the side result register is overwritten by the next element first unless
     # side elements are spaced by (lane depth - side depth + 1).  RTL lever: side pipe at the lane's MLAT.
-    SII = (a.side_ii if a.side_ii > 0 else {2: 10, 3: 1, 6: 19, 7: 8}.get(mods.get('ci_sfu', 0), 1)) if side else 1
+    SII = (a.side_ii if a.side_ii > 0 else SLB.side_ii(mods.get('ci_sfu', 0), MLAT, ALAT)) if side else 1
     prev_row = 0
     for g in range(G):
         rk = tuple(rowq(g, q) for q in range(4)) if PT else row_of_issue[g]
@@ -642,7 +648,7 @@ def compile_rec(a):
             row = base['O'] + g
             for hi in (0, 1):
                 if not any((p + 8 * hi) * 8 < live[g, q] for q in range(4) for p in range(8)): continue
-                e = max(dnext, out_w[g] + a.drain_slack)
+                e = max(dnext, out_w[g] + a.drain_slack + WCOPY)   # read after the lane write commits
                 for q in range(4):
                     for p in range(8):
                         j = p + 8 * hi
@@ -781,6 +787,8 @@ def compile_rec(a):
                        'MODEL order (hdc_golden_v41.csum chunk8 / ordered canonical max), asserted on the lowered tree') if PT else
                       'hdc_golden add/mul/to_bf16/exp + NumPy float32 division (independent of the DUT), calendar order',
                pretree=dict(on=True, qpr=QPR, quarter_run_words=SW, blocks_per_row=NBQ, pt_red=SPL.PT_RED) if PT else None)
+    if (MLAT, WCOPY) != (4, 0):
+        man['lane_build'] = dict(mlat=MLAT, alat=ALAT, leaf=LEAF, wcopy=WCOPY, lin=LIN, source='tools/hbm_static/su_lane_build.py')
     (out / 'programme.json').write_text(json.dumps(man, indent=1) + '\n')
     print(json.dumps({k: man[k] for k in ('record', 'issues', 'emissions', 'cycles_serial', 'cycles_stream_833ps', 'edges', 'expected_vm_writes', 'expected_scalars')}))
     return ser

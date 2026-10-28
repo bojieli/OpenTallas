@@ -307,6 +307,11 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False,
     # binds PIN_REG 1: lane write-back +4); else the old leaf_split_latency environment default.
     first_out = (FIRST_OUT if timing is None or timing.pin_reg is None
                  else 8 + 23 + 4 * (4 - 3) + 0 + 1 + 4 * timing.pin_reg)
+    if timing is not None and (timing.mlat is not None or timing.wcopy):
+        # HBM-CORES-REBAL-9 lane build from the die contract (tools/hbm_static/su_lane_build.py)
+        import su_lane_build as SLB
+        first_out += SLB.lin(timing.lane_mlat, 3, 1) - SLB.lin(4, 3, 1)
+    pin_extra = 0 if timing is None else timing.wcopy   # WCOPY: commit +1, write-port pins unchanged
     import su_arith_lower as L
     import su_program_inventory as I
     from su_arith_compile import pack, physical_word
@@ -469,7 +474,10 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False,
     # while a fill of this record is still returning: the setup line and every issue wait until the last fill write
     # has passed.  (Historical SU31: fills 0..79 returned on 23..102 while groups wrote back from 53/57 -> fault.)
     lw_lat = first_out - SETUP_TO_EMIT
-    last_fill_write = max([fe + fill_commit - 1 for _, fe in fills] + [x["arrive"] - 1 for x in far_fills], default=-1)
+    # write-port pin edge of every fill (near and far-half crossing): WCOPY (REBAL-9) moves the bank commit +1
+    # (fill_commit, arrive) but not the write-port pins, so the pin edge is commit - 1 - pin_extra for both.
+    last_fill_write = max([fe + fill_commit - 1 - pin_extra for _, fe in fills]
+                          + [x["arrive"] - 1 - pin_extra for x in far_fills], default=-1)
     first_issue_min = last_fill_write + 1 - lw_lat
     setup = max(0, min(e_issue) - SETUP_TO_EMIT, first_issue_min - SETUP_TO_EMIT) if e_issue else 0
     res["write_port_guard"] = dict(last_fill_write=last_fill_write, lane_write_latency=lw_lat,
@@ -514,7 +522,7 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False,
         for g, G in enumerate(groups):
             # Pin-captured write and read coincide under the old calendar.
             # OLD-read SRAM requires the DRAIN to sample one serial edge later.
-            ready = setup + first_out + (issue_at[g] - setup - SETUP_TO_EMIT) + int(safe_calendar) + drain_guard
+            ready = setup + first_out + (issue_at[g] - setup - SETUP_TO_EMIT) + int(safe_calendar) + drain_guard + pin_extra
             for k in range(16):
                 ln = slice(8 * k, 8 * k + 8)
                 m = G["act"][ln]
@@ -986,6 +994,8 @@ def main():
     ap.add_argument("--rank", default="0", help="fixture rank")
     ap.add_argument("--native-read-return", type=int, help="explicit native stream read-return edges")
     ap.add_argument("--native-write-return", type=int, help="explicit native stream write-return edges")
+    ap.add_argument("--native-mlat", type=int, choices=(4, 5), help="HBM-CORES-REBAL-9: die lane build MLAT (contract); default = as built 4")
+    ap.add_argument("--native-wcopy", type=int, choices=(0, 1), default=0, help="HBM-CORES-REBAL-9: pinned-bank WCOPY (bank write commit +1)")
     ap.add_argument("--native-pin-reg", type=int, choices=(0, 1), help="die su_<q><g> PIN_REG (contract); default = leaf_split_latency env")
     ap.add_argument("--native-xread-lx", type=int, help="DIE-HBM-10: die VM crossing-read link LX (contract); with --half-local")
     ap.add_argument("--half-local", type=int, choices=(0, 1), help="DIE-HBM-10 opt-in: the client half of this quarter (ports 0-3 = 0, 4-7 = 1)")
@@ -1045,7 +1055,8 @@ def main():
     if a.half_local is not None and (a.native_read_return is None or a.native_xread_lx is None):
         ap.error("--half-local needs the native return contract and --native-xread-lx")
     native_timing = (None if a.native_read_return is None else
-                     NativeTiming(a.native_read_return, a.native_write_return, a.native_pin_reg, a.native_xread_lx))
+                     NativeTiming(a.native_read_return, a.native_write_return, a.native_pin_reg, a.native_xread_lx,
+                                  a.native_mlat, a.native_wcopy))
     if a.design == "qwen":
         sys.exit("layer_images: Qwen D4G8 programme source (qwen_d4g_proof program.hgi1) not wired yet -- see lane notes")
     bnd = json.loads(a.boundary.read_text())
