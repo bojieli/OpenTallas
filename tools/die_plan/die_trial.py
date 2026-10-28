@@ -487,6 +487,69 @@ def build_htree(P, taps, leaf_um=600.0, full_depth=False, regions=None):
     return nodes
 
 
+# LAND-S81-1 10-27 (opt-in --region-equal, METHODOLOGY 12.11 + 12.8 c/d1): equal-latency region trunks.  With
+# --region-trees every region root gets a local tree whose depth follows the region size, so a large region (the hard-PHY
+# region, ~11.5 x 3.7 mm on S81) arrives later than a small one and its landed crossings see the difference (FALLBACK-S81-2
+# GRT: landed |d| fails 135 TT / 85 FF, PHY region ~2 ns late).  Structural fix, computed from plan geometry BEFORE any
+# build and never from a measurement: model every die-root -> entry path with the shared per-stage model
+# d = D0 + K * L_seg (region_clock.STAGE TT, CLOCK-128-R4 calibration), take each region's slowest entry, and give every
+# region root a designed fixed trunk of n zero-length BUF stages (12.8c: same cell chain, plan-computed) so all regions
+# reach the die-wide maximum within one stage (<= D0/2).  Recorded in tree.json meta.region_equal.
+REGION_EQUAL = False
+EQ_STAGE_TT = (52.713, 0.058822)       # = region_clock.STAGE["TT"] (ps, ps/um), UNCHECKED basis (not RCX)
+
+
+def region_equalise(nodes, rep_um):
+    """set nodes[root]['pad'] = n zero-length BUF stages per region root; returns the meta record."""
+    D0, K = EQ_STAGE_TT
+    dly = {}
+
+    def d(i):
+        chain = []
+        while i not in dly:
+            chain.append(i)
+            if nodes[i]["parent"] is None:
+                break
+            i = nodes[i]["parent"]
+        for j in reversed(chain):
+            nd = nodes[j]
+            if nd["parent"] is None:
+                dly[j] = D0
+                continue
+            p = nodes[nd["parent"]]
+            L = abs(p["x"] - nd["x"]) + abs(p["y"] - nd["y"])
+            n = max(0, int(math.ceil(L / rep_um)) - 1) + 1
+            dly[j] = dly[nd["parent"]] + n * D0 + K * L
+        return dly[chain[0]] if chain else dly[i]
+
+    def rroot(i):
+        while i is not None and nodes[i].get("region_root") is None:
+            i = nodes[i]["parent"]
+        return i
+    worst = {}
+    for i, nd in nodes.items():
+        for (_part, _port, x, y) in nd["taps"]:
+            r = rroot(i)
+            if r is None:
+                continue
+            t = d(i) + K * (abs(nd["x"] - x) + abs(nd["y"] - y))
+            worst[r] = max(worst.get(r, 0.0), t)
+    if not worst:
+        return dict(regions=0)
+    top = max(worst.values())
+    pads = {}
+    for r, w in worst.items():
+        n = int(math.floor((top - w) / D0 + 0.5))
+        nodes[r]["pad"] = n
+        pads[nodes[r]["region_root"]] = dict(n=n, model_ps=round(w, 1), after_ps=round(w + n * D0, 1))
+    after = [v["after_ps"] for v in pads.values()]
+    before = list(worst.values())
+    return dict(model="d = D0 + K*L per stage, TT", D0_ps=D0, K_ps_um=K, regions=len(pads),
+                pad_stages=sum(v["n"] for v in pads.values()), max_pad=max(v["n"] for v in pads.values()),
+                spread_before_ps=round(max(before) - min(before), 1), spread_after_ps=round(max(after) - min(after), 1),
+                per_region=pads, checked="UNCHECKED (plan model)")
+
+
 def tree_netlist(nodes, taps, rep_um=450.0, site=None):
     """buffered tree: a BUF at every node (branch / leaf driver), repeaters every rep_um along each leg.
     -> (verilog, placements [(inst, x, y)], tap ports [(port, x, y)], node_buf {node id: inst}, path {tap port: [inst]})"""
@@ -522,6 +585,14 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None):
                 parent_of[inst] = prev_inst
                 prev_inst = inst
                 src = o
+            for j in range(int(nd.get("pad", 0) or 0)):      # --region-equal designed trunk (zero-length stages)
+                inst, o = f"q{i}_{j}", f"qn{i}_{j}"
+                cells.append(f"  {BUF} {inst} (.A({src}), .Y({o}));")
+                wires.append(o)
+                place.append((inst, nd["x"] + 0.54 * (j + 1), nd["y"]))
+                parent_of[inst] = prev_inst
+                prev_inst = inst
+                src = o
             parent_of[node_buf[i]] = prev_inst
         cells.append(f"  {BUF} {node_buf[i]} (.A({src}), .Y({net(i)}));")
         wires.append(net(i))
@@ -546,6 +617,7 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
     out.mkdir(parents=True, exist_ok=True)
     taps = clock_taps(P)
     nodes = build_htree(P, taps, leaf_um, full_depth, regions)
+    req = region_equalise(nodes, rep_um) if (regions and REGION_EQUAL) else None
     site = None
     slid_fallback = 0
     if site_slide:          # opt-in: slide each buffer back along its OWN incoming leg (equal length by construction)
@@ -638,6 +710,8 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
         meta["site_legal"] = dict(mode="slide" if site_slide else "nearest", slide_fallbacks=slid_fallback,
                                   cells=len(place), illegal=bad, forbidden_rects=len(site.forb),
                                   moved_nodes=sum(1 for n in nodes.values() if [n["x"], n["y"]] != n["req_xy"]))
+    if req is not None:
+        meta["region_equal"] = req
     tree = dict(meta=meta, nodes={i: {k: v for k, v in n.items() if k != "taps"} | dict(ntaps=len(n["taps"]))
                                   for i, n in nodes.items()},
                 taps=[dict(port=tp, part=part, tap=port, xy=[x, y], node=i) for tp, x, y, part, port, i in tap_ports],
@@ -2181,6 +2255,9 @@ def main(argv=None):
                         "(root->entry Manhattan lengths unchanged = equal length kept by construction)")
     k.add_argument("--region-trees", help="fallback regions.json (part_region): die reference tree to one root per "
                    "region + equal-depth local tree per region (FALLBACK-S81-2, opt-in)")
+    k.add_argument("--region-equal", action="store_true",
+                   help="opt-in with --region-trees (LAND-S81-1): plan-computed equal-latency region trunks (zero-length "
+                        "BUF stages at each region root up to the die-wide modelled maximum)")
     k.add_argument("--coarse-um", type=float, default=0.72)
     k.add_argument("--density", type=float, default=0.15, help="die power density W/mm2 for PDNSim")
     k.add_argument("--island-sites", nargs="+", help="CLOCK-128-R7 opt-in: die_tree_plan.json / ot_clock_sites/1 / "
@@ -2247,6 +2324,8 @@ def main(argv=None):
         print(json.dumps(dict(cell=die_sta.bhold_cell(a.tol_ps), types=len(tot), input_bits=sum(tot.values())), indent=1))
         return 0
     if a.cmd == "kit":
+        global REGION_EQUAL
+        REGION_EQUAL = bool(getattr(a, "region_equal", False))
         m = write_kit(a.plan, a.out, a.views, a.leaf_um, a.rep_um, a.coarse_um, a.density, a.island_sites,
                       a.island_margin_um, full_depth=a.htree_full_depth, site_legal=a.tree_site_legal,
                       site_slide=a.tree_site_slide, regions=a.region_trees)
