@@ -131,6 +131,9 @@ def bind(plan, T=None, parts=None):
                 convention="a_child - a_parent = PAD + 2 + J(d) = MESO-INTEG-1 m + 1 + PAD (identity, checked per edge); "
                            "RTL K = plan K_eff - n0",
                 latency_frame="receiver counts; sched_lat = K + 1 + n_dst - n_src (nominal) = plan lat_cycles")
+    if summ.get("start_skew_clean"):
+        # MESO-START-2 (opt-in): the start-up sim samples each tree edge at d - skew (plan --start-skew-clean)
+        b["start_skew_ps"] = [float(x) for x in summ["start_skew_ps"]]
     return b if parts is None else bind_parts(b, parts)
 
 
@@ -300,6 +303,9 @@ def verify(b, samples=2000, seed=1, need_ps=100.0):
             c = ports[r["tree_port"]]
             # the start was synchronised at a phase inside the derated interval (no post-start wander yet)
             d0 = min(max(dd[r["tree_port"]], c["d_lo_ps"]), c["d_hi_ps"])
+            if "start_skew_ps" in b:
+                sk = b["start_skew_ps"]
+                d0 -= rnd.uniform(*sk) if mode == 0 else rnd.choice(sk)   # the sync samples d - skew
             edge = "fall" if r["edge_fall"] else "rise"
             s = sync_start(edge, T)
             ph = (d0 - s) % T                      # distance past the last sampling boundary
@@ -560,6 +566,12 @@ def main(argv=None):
     ap.add_argument("--scale", type=float, default=1.0, help="count_align_plan.py --scale (with --from-ocv)")
     ap.add_argument("--start-skew", type=CAP.parse_skew, default=(0.0, 0.0), metavar="LO,HI",
                     help="count_align_plan.py --start-skew (with --from-ocv)")
+    ap.add_argument("--start-skew-clean", action="store_true",
+                    help="count_align_plan.py --start-skew-clean (with --from-ocv); the start-up sim then samples d - skew")
+    ap.add_argument("--sta-proof", metavar="DIR", help="count_align_plan.py --sta-proof (with --from-ocv)")
+    ap.add_argument("--sta-plan", help="count_align_plan.py --sta-plan (with --from-ocv)")
+    ap.add_argument("--sta-clock-cal", choices=("none", "spice"), default="spice")
+    ap.add_argument("--sta-cppr-lca", action="store_true")
     ap.add_argument("--samples", type=int, default=2000)
     ap.add_argument("--table")
     ap.add_argument("--table-out")
@@ -576,8 +588,17 @@ def main(argv=None):
     a = ap.parse_args(argv)
     if a.from_ocv:
         rows = CAP.load_rows(a.plan_json, a.corner, a.scale)
+        if a.sta_proof:
+            # count_align_plan.py --sta-proof (DIE-HEAD-5 one interval model) in the in-process plan (MESO-START-2)
+            if not a.sta_plan:
+                ap.error("--sta-proof needs --sta-plan")
+            import die_sta_related as DSR
+            cs = sorted({c.split("_")[0] for c in a.corner.split(",")})
+            CAP.sta_hull(rows, DSR.sta_d_intervals(a.sta_proof, a.sta_plan, cs, a.sta_clock_cal, a.sta_cppr_lca))
+        if a.start_skew_clean and not any(a.start_skew):
+            ap.error("--start-skew-clean needs --start-skew LO,HI")
         s, out, regs = CAP.plan(rows, a.period, a.aperture, a.wander_frac, a.sync_aperture, a.pad,
-                                CAP.parse_edge_pad(a.edge_pad), a.start_skew)
+                                CAP.parse_edge_pad(a.edge_pad), a.start_skew, a.start_skew_clean)
         if any(a.start_skew):
             s["start_skew_ps"] = list(a.start_skew)
         s.update(period_ps=a.period, aperture_ps=a.aperture, sync_aperture_ps=a.sync_aperture, pad=a.pad, scale=a.scale,
