@@ -12,13 +12,15 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import lec  # noqa: E402
 
-CLK, EN, WE, WA, WD, Q, GCLK, WE2 = 2, 3, 4, 5, 6, 7, 10, 11
+CLK, EN, WE, WA, WD, Q, GCLK, WE2, GCLK2 = 2, 3, 4, 5, 6, 7, 10, 11, 12
 
 
-def _design(tmp_path, wr_pol="1", wr_ce="1", rd_ce="0", rd_srst="0", two_wr=False, rd_on_gclk=False):
+def _design(tmp_path, wr_pol="1", wr_ce="1", rd_ce="0", rd_srst="0", two_wr=False, rd_on_gclk=False,
+            gated_addrs=None):
+    """gated_addrs=(a0, a1): two write ports, each through its own ICG on clk, constant addresses a0 / a1."""
     ports = {"clk": ("input", [CLK]), "en": ("input", [EN]), "we": ("input", [WE]), "wa": ("input", [WA]),
              "wd": ("input", [WD]), "we2": ("input", [WE2]), "q": ("output", [Q])}
-    nwr = 2 if two_wr else 1
+    nwr = 2 if two_wr or gated_addrs else 1
     mem = {"type": "$mem_v2", "parameters": {
         "WIDTH": "00000000000000000000000000000001", "SIZE": "00000000000000000000000000000010",
         "ABITS": "00000000000000000000000000000001", "WR_PORTS": format(nwr, "032b"), "RD_PORTS": format(1, "032b"),
@@ -27,15 +29,17 @@ def _design(tmp_path, wr_pol="1", wr_ce="1", rd_ce="0", rd_srst="0", two_wr=Fals
         "port_directions": {"WR_CLK": "input", "WR_EN": "input", "WR_ADDR": "input", "WR_DATA": "input",
                             "RD_CLK": "input", "RD_EN": "input", "RD_ADDR": "input", "RD_DATA": "output",
                             "RD_SRST": "input", "RD_ARST": "input"},
-        "connections": {"WR_CLK": [GCLK] + ([CLK] if two_wr else []), "WR_EN": [WE] + ([WE2] if two_wr else []),
-                        "WR_ADDR": [WA] * nwr, "WR_DATA": [WD] * nwr, "RD_CLK": [GCLK if rd_on_gclk else CLK],
+        "connections": {"WR_CLK": [GCLK] + ([CLK] if two_wr else [GCLK2] if gated_addrs else []),
+                        "WR_EN": [WE] + ([WE2] if nwr == 2 else []),
+                        "WR_ADDR": [str(a) for a in gated_addrs] if gated_addrs else [WA] * nwr, "WR_DATA": [WD] * nwr, "RD_CLK": [GCLK if rd_on_gclk else CLK],
                         "RD_EN": [WE2], "RD_ADDR": [WA], "RD_DATA": [Q], "RD_SRST": [rd_srst], "RD_ARST": ["0"]}}
     icg = {"type": "ICGx1_ASAP7_75t_R", "parameters": {},
            "port_directions": {"CLK": "input", "ENA": "input", "SE": "input", "GCLK": "output"},
            "connections": {"CLK": [CLK], "ENA": [EN], "SE": ["0"], "GCLK": [GCLK]}}
     mod = {"attributes": {"top": "00000000000000000000000000000001"},
            "ports": {n: {"direction": d, "bits": b} for n, (d, b) in ports.items()},
-           "cells": {"u_icg": icg, "bank": mem},
+           "cells": {"u_icg": icg, "bank": mem} | ({"u_icg2": dict(icg, connections=dict(
+               icg["connections"], ENA=[WE2], GCLK=[GCLK2]))} if gated_addrs else {}),
            "netnames": {n: {"bits": b} for n, (d, b) in ports.items()} | {"gclk": {"bits": [GCLK]}}}
     src = tmp_path / "in.json"
     src.write_text(json.dumps({"modules": {"top": mod}}))
@@ -71,9 +75,22 @@ def test_gated_clocked_read_port_gets_gated_read_enable(tmp_path):
     (dict(wr_pol="0"), "not rising-edge clocked"),
     (dict(wr_ce="0"), "not rising-edge clocked"),
     (dict(rd_ce="1", rd_on_gclk=True, rd_srst=WE), "with a reset"),
-    (dict(two_wr=True), "different clocks"),
+    (dict(two_wr=True), "different clocks"),            # second port on the root itself, same (variable) address
+    (dict(gated_addrs=(1, 1)), "different clocks"),     # MUTANT: two gated slots writing the same constant address
 ])
 def test_uncovered_memory_ports_are_refused(tmp_path, kw, why):
     src, dst = _design(tmp_path, **kw)
     with pytest.raises(lec.Unproven, match=why):
         lec.icg_to_enable(src, dst, "gold")
+
+
+def test_gated_slots_with_constant_distinct_addresses_are_modelled(tmp_path):
+    """crs4 ot_s81_land GSLOT ring: slot s writes bank[s] through its own ICG on the lane clock."""
+    src, dst = _design(tmp_path, gated_addrs=(0, 1))
+    st = lec.icg_to_enable(src, dst, "gold")
+    cells = _mem(dst)
+    pc = cells["bank"]["connections"]
+    assert pc["WR_CLK"] == [CLK, CLK] and st["gated_mem_ports"] == 2 and "u_icg2" not in cells
+    for b, en in zip(pc["WR_EN"], (EN, WE2)):
+        a = [c for c in cells.values() if c["type"] == "$_AND_" and c["connections"]["Y"] == [b]]
+        assert len(a) == 1 and en in (a[0]["connections"]["A"][0], a[0]["connections"]["B"][0])

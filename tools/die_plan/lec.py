@@ -505,7 +505,8 @@ def icg_to_enable(src, dst, side):
         """LEC-FPREG-7 10-27 (S81 dsfd_cfifo_crs4: slot ICG GCLK -> bank $mem_v2 WR_CLK): a rising-edge clocked
         memory port on GCLK == the same port on the root clock with its enables ANDed with ENA | SE (the flop rule
         applied to the port's write / read-enable bits).  Refused: falling-edge or unclocked write port, a clocked
-        read port with a sync / async reset, and a memory with another write port on a different clock."""
+        read port with a sync / async reset, and another write port on a different clock unless both are
+        gated from the same root and write constant, distinct addresses."""
         c = cells[ln]
         P, pc = c["parameters"], c["connections"]
         ival = lambda v: int(v, 2) if isinstance(v, str) else int(v)
@@ -519,9 +520,20 @@ def icg_to_enable(src, dst, side):
             if not (pbit("WR_CLK_ENABLE", li) and pbit("WR_CLK_POLARITY", li)):
                 raise Unproven(f"icg {side}: {cn} GCLK clocks {ln} write port {li} that is not rising-edge clocked")
             wclk = mem_wclk.setdefault(ln, [gclk_of.get(b, through_bufs(b)) for b in pc["WR_CLK"]])  # before rewrites
+            ab = ival(P["ABITS"])
+            addr = lambda j: pc["WR_ADDR"][j * ab:(j + 1) * ab]
             for j, cb in enumerate(wclk):
-                if j != li and pbit("WR_CLK_ENABLE", j) and cb != wclk[li]:
-                    raise Unproven(f"icg {side}: {ln} write ports {li}/{j} on different clocks: not modelled")
+                if j == li or not pbit("WR_CLK_ENABLE", j) or cb == wclk[li]:
+                    continue
+                # another write port on a different (gated) clock: kept only when it is gated from the SAME root and
+                # both ports write constant, different addresses (crs4 ot_s81_land GSLOT ring: slot s writes bank[s]
+                # through its own ICG), so no write-write collision order is ever needed after the move to the root
+                rj = root[cb] if cb in icgs else cb
+                ca, cj = addr(li), addr(j)
+                if rj != root[cn] or not all(str(x) in "01" for x in ca + cj) or [str(x) for x in ca] == \
+                        [str(x) for x in cj]:
+                    raise Unproven(f"icg {side}: {ln} write ports {li}/{j} on different clocks (not one root with "
+                                   f"constant distinct addresses): not modelled")
             w = ival(P["WIDTH"])
             pc["WR_EN"][li * w:(li + 1) * w] = [and_(en, b) for b in pc["WR_EN"][li * w:(li + 1) * w]]
         elif pbit("RD_CLK_ENABLE", li):
