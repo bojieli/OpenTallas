@@ -1,0 +1,56 @@
+{
+ "schema": "opentallas.ft_fix_delta.v1",
+ "plan": "/srv/opentallas-scratch2/claude/wt/qc-infra-r31-1027/results/qc_infra_r30/event_n100_ft_leg.json.gz",
+ "limit_um": 405.0,
+ "basis": "ft_pin_hops_src.py: per-bit kit pin table (schema.Plan.port_pins, = gen_phys type_pins) of the source partition bus",
+ "r32_pessimistic_over": 37,
+ "real_over": 0,
+ "moved_bit_sites": [],
+ "added_stations": [],
+ "added_cycles": 0,
+ "tok_ledger": "none needed",
+ "note": "0 instances >405 um under real source pins -> no register move, no station. Smallest margins kept for re-check after any pin/window change.",
+ "tightest": [
+  {
+   "part": "coll_f4",
+   "slot": "out_err_re_wi",
+   "real_in_hop": 402.907,
+   "real_out_hop": 401.183,
+   "src_part": "coll_f3",
+   "src_bus": "out_err_re_wi_o"
+  },
+  {
+   "part": "coll_f4",
+   "slot": "dr_o_dr_wi",
+   "real_in_hop": 397.395,
+   "real_out_hop": 396.591,
+   "src_part": "native59",
+   "src_bus": "dr_o"
+  },
+  {
+   "part": "c_W5_bf_00",
+   "slot": "rx_v_serdes_rx_valid",
+   "real_in_hop": 377.063,
+   "real_out_hop": 179.695,
+   "src_part": "c_W5_bf_01",
+   "src_bus": "rx_v_serdes_rx_valid_o"
+  },
+  {
+   "part": "c_W5_bf_00",
+   "slot": "rx_flit_serdes_rx",
+   "real_in_hop": 375.807,
+   "real_out_hop": 182.875,
+   "src_part": "c_W5_bf_01",
+   "src_bus": "rx_flit_serdes_rx_o"
+  },
+  {
+   "part": "c_W5_bf_01",
+   "slot": "serdes_tx_valid_tx_v",
+   "real_in_hop": 374.435,
+   "real_out_hop": 171.083,
+   "src_part": "c_W5_bf_00",
+   "src_bus": "serdes_tx_valid_tx_v_o"
+  }
+ ],
+ "crosscheck": "coll_n rec_rx_s0 plan pins == QC-KITS-R1 pre-kit coll_n pins.json (548/548 bits, max dx 0, layers equal) CHECKED; other source types: no cut kit yet, plan-derived table UNCHECKED vs kit"
+}

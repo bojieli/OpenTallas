@@ -586,6 +586,8 @@ def lattice(a):
 
 def build(a, st):
     set_lattice(a)
+    cts = getattr(a, "col_tap_side", None)
+    COLTAP_SIDE[0] = None if cts is None else float(cts) * float(a.island_pitch_x)
     rec, P, dtp, parts, cores, cols, gaps, rows, m, dy = lattice(a)
     free = lambda x: not any(c[0] - ISL < x < c[2] + ISL for c in cores)
     bk = defaultdict(list)
@@ -914,6 +916,15 @@ def band_tree(leaves, xc, tap, et, tag, S_target, blocked=None, feed_bands=()):
     return nodes,r
 
 
+def col_lane_side(cores, x):
+    """legalize() lane_sign: the column-tree lane sits on the wider channel side of column x (+1 east / -1 west).
+    W/E mirrored types get mirrored signs (the core geometry is mirrored), so offsets in these units are type-frame
+    identical (12.2a1)."""
+    L = max([c[2] for c in cores if c[2] <= x + 1e-6] or [-1e9])
+    R = min([c[0] for c in cores if c[0] >= x - 1e-6] or [1e9])
+    return 1.0 if R - x >= x - L else -1.0
+
+
 def band_trees(B, st, a):
     """R26: the balanced band trees for every band / W-edge driver (see the section comment)."""
     F = B["a0"]
@@ -978,6 +989,16 @@ def band_trees(B, st, a):
         # their M8 driver jogs / escape jogs share the same island row windows at the same x.
         if not wedge and getattr(a, "a0_band_col_dx", None):
             xc = xc + float(a.a0_band_col_dx)
+        # R33 (opt-in --a0-band-col-side N; COORD ruling INFRA-FIRST-QC-R32 (b)): the band y-tree takes its OWN island
+        # column N island x-pitches from the feed column on the column-tree side (signed: + = past the column-tree lane
+        # side, - = the far side); side from the core geometry, so W/E mirror types keep identical slots
+        if not wedge and getattr(a, "a0_band_col_side", None) is not None:
+            sg_ = col_lane_side(B["cores"], xc)
+            I_ = B.get("islands")
+            inside = lambda x_: I_ is None or any(r[0] + 1e-6 < x_ < r[2] - 1e-6 for r in I_.prect.values())
+            dxb = sg_ * float(a.a0_band_col_side) * float(a.island_pitch_x)
+            # die-edge column: the column-tree side has no partition beyond it (the die edge) -> the other side
+            xc = r3(xc + dxb) if inside(xc + dxb) else r3(xc - dxb)
         feed_bands = sorted({d["y"] for d in F["drivers"] if d["kind"] == "band"},
                             key=lambda y:min(abs(y-q[1]) for q in leaves))[:4] if wedge else ()
         best = None
@@ -1611,6 +1632,7 @@ def r9_feed(a, top, gaps, scols, xrow, ytree, nodes):
 
 
 # ------------------------------------------------------------------------------------------------ legal sites
+COLTAP_SIDE = [None]     # R33 --col-tap-side (um, signed, set by build from island pitches)
 DX_LANE = 8.64      # column / trunk tree lane: buffers one ISL beside the driver column (same nk channel)
 DY_LANE = 4.32      # top x-tree lane: buffers 16 rows above the gap-row strap line (fine drivers sit on the line)
 CELL_W = 6.48       # BUFx24 footprint width incl. spacing (UNCHECKED vs LEF; conservative)
@@ -1735,6 +1757,15 @@ def legalize(B, fine_masters=None):
         masters = masters if masters is not None else ["BUFx24"] * int(units)
         cells.append(dict(kind=kind, xy0=(r3(xy[0]), r3(xy[1])), site=[xy[0] + dx, xy[1] + dy], units=len(masters), lane=lane,
                           ref=ref, masters=masters))
+        if kind == "col_tap" and COLTAP_SIDE[0] is not None:
+            # R33 (opt-in --col-tap-side N): the merged top-leaf / column-tap cell snaps from a plan point N island
+            # x-pitches toward (+) / away from (-) the column-tree lane, so tap, column tree and band y-tree hold
+            # disjoint island columns at the feed column (side from core geometry -> W/E mirror identical)
+            sx_ = r3(xy[0] + lane_sign(xy[0]) * COLTAP_SIDE[0])
+            I_ = B.get("islands")
+            if I_ is not None and not any(r[0] + 1e-6 < sx_ < r[2] - 1e-6 and r[1] - 1e-6 <= xy[1] <= r[3] + 1e-6 for r in I_.prect.values()):
+                sx_ = r3(xy[0] - lane_sign(xy[0]) * COLTAP_SIDE[0])     # die-edge column: the other side
+            cells[-1]["snap0"] = (sx_, r3(xy[1]))
         return len(cells) - 1
     top, col = B["et"]["top"], B["et"]["col"]
     site_of = {}
@@ -2002,10 +2033,11 @@ def assign_periodic(B, I, cells, topk):
     for i, c in enumerate(cells):
         if c["kind"] not in topk:
             continue
-        n = host(*c["xy0"])
+        p0 = c.get("snap0") or c["xy0"]
+        n = host(*p0)
         if n is None:
             raise RuntimeError(f"top cell outside partitions {c['xy0']}")
-        fx, fy = frame(n, *c["xy0"])
+        fx, fy = frame(n, *p0)
         if getattr(I, "vss", False):    # R15: class by the VSS slot row (R0 / MX slot centres differ by 0.27 um in frame)
             gy_ = I.tgrid[P.parts[n]["type"]][1]
             fy = float(gy_[int(np.argmin(np.abs(gy_ + ROW_H / 2 - fy)))]) + ROW_H / 2
@@ -3153,6 +3185,10 @@ def add_common(p):
                    help="R32: max worst-corner match loss (ps) accepted to move a band feed to an anchor with window room")
     p.add_argument("--a0-band-col-dx", type=float, default=None,
                    help="R32 opt-in: band y-tree column = feed column + DX um (off the column-tree column)")
+    p.add_argument("--a0-band-col-side", type=float, default=None,
+                   help="R33 opt-in: band y-tree column = feed column + N island x-pitches toward the column-tree lane side (signed)")
+    p.add_argument("--col-tap-side", type=float, default=None,
+                   help="R33 opt-in: column-tap (merged top leaf) slot snaps N island x-pitches toward the column-tree lane side (signed)")
     p.add_argument("--a0-band-up", type=int, default=4,
                    help="R26: max top-tree levels above the column tap a band tree may anchor on (equal levels incl. the skipped edges)")
     p.add_argument("--a0-tap-jog", type=float, default=0.0,

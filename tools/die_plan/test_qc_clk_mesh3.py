@@ -228,3 +228,12 @@ def test_stacked_units_share_same_pg_rail_and_transform_access():
     a1 = M.unit_pin(c,1,"A",access=True)
     assert abs(a0[1]-(low+.09))<1e-9
     assert abs(a1[1]-(high+.18))<1e-9
+
+
+def test_r33_col_lane_side_mirrors():
+    """R33: the column-tree lane side is the wider channel side; a W/E mirrored core pair gives mirrored signs."""
+    import qc_clk_mesh3 as M
+    cores = [(0.0, 0.0, 90.0, 10.0), (130.0, 0.0, 200.0, 10.0)]          # channel 90..130, column at 100 -> east wider
+    assert M.col_lane_side(cores, 100.0) == 1.0
+    mir = [(200.0 - c[2], c[1], 200.0 - c[0], c[3]) for c in cores]       # mirror about x = 100
+    assert M.col_lane_side(mir, 100.0) == -1.0
