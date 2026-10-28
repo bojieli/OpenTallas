@@ -315,13 +315,14 @@ class Landings:
                 if cat and cat["role"][0] == "relay":
                     required["cland_rstart_in"] = "in"
                 if cat and cat.get("straps"):
-                    # strap pins: placed input buses of the declared width (TIEHI/TIELO next to each bit at the parent)
+                    # strap pins: types[].count_straps of the declared width (like id_straps: no plan bus; the parent
+                    # ties each bit with its own TIEHI/TIELO next to the pin)
+                    cs = {x["name"]: int(x["width"]) for x in self.types[tn].get("count_straps", [])}
                     for sp, w in cat["straps"].items():
-                        b = declared.get(sp)
-                        if not b or b.get("dir") != "in" or int(b.get("width", 0)) != int(w):
-                            raise LandingError(f"clock landing {tn}: declare placed strap input {sp}[{w}]")
-                        if not all(k in b for k in ("face", "window_um", "layers")):
-                            raise LandingError(f"clock landing {tn}.{sp}: missing physical pin geometry")
+                        if cs.get(sp) != int(w):
+                            raise LandingError(f"clock landing {tn}: declare count strap {sp}[{w}] in types[].count_straps")
+                        if sp in declared:
+                            raise LandingError(f"clock landing {tn}.{sp}: a count strap is not a plan bus (types[].count_straps)")
             for b in mask[0]:
                 required.update({f"fclk_in_{b}": "in"})
                 if not self.collector:

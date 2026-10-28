@@ -10,6 +10,10 @@ from clock_landings import Landings, LandingError
 from test_clock_landings import ca_vehicle, A_BODY, B_BODY
 
 
+def cs(name, width=1):
+    return dict(name=name, width=width)
+
+
 def pin(name, direction, width=1):
     return dict(name=name, dir=direction, width=width, face="E", window_um=[1, 2], layers=["M8"])
 
@@ -26,8 +30,7 @@ def strap_vehicle(k_b=-2, k_c=-1, efall_c=True, pad_c=1, strap_form=True):
     ca["regions"]["r2"] = dict(parent="r0", tree_port="Q", edge_fall=efall_c, pad=pad_c)
     if strap_form:
         ca["strap_form"] = True
-        p["partition_types"]["B"]["buses"] += [pin("strap_ca_k_y", "in", 6), pin("strap_ca_pad", "in", 1),
-                                               pin("strap_ca_efall", "in", 1)]
+        p["partition_types"]["B"]["count_straps"] = [cs("strap_ca_k_y", 6), cs("strap_ca_pad"), cs("strap_ca_efall")]
     return p, t
 
 
@@ -71,8 +74,17 @@ def test_parameter_form_still_type_splits_and_strap_form_does_not():
 
 def test_strap_pins_must_be_declared_with_width():
     p, t = strap_vehicle()
-    p["partition_types"]["B"]["buses"] = [b for b in p["partition_types"]["B"]["buses"] if b["name"] != "strap_ca_pad"]
+    tb = p["partition_types"]["B"]
+    tb["count_straps"] = [c for c in tb["count_straps"] if c["name"] != "strap_ca_pad"]
     with pytest.raises(LandingError, match="strap_ca_pad"):
+        Landings(p, t)
+    p, t = strap_vehicle()
+    p["partition_types"]["B"]["count_straps"][0]["width"] = 5            # strap_ca_k_y needs 6 bits at D4
+    with pytest.raises(LandingError, match="strap_ca_k_y"):
+        Landings(p, t)
+    p, t = strap_vehicle()
+    p["partition_types"]["B"]["buses"].append(pin("strap_ca_pad", "in"))  # a strap is never a plan bus
+    with pytest.raises(LandingError, match="not a plan bus"):
         Landings(p, t)
 
 
@@ -148,8 +160,8 @@ def test_root_and_child_copies_share_one_strap_type():
     p, t = ca_vehicle(k=-2)
     p["partitions"][0]["type"] = "B"
     tb = p["partition_types"]["B"]
-    tb["buses"] += [pin("fclk_out_x", "out"), pin("cland_fstart_out_x", "out"), pin("strap_ca_k_y", "in", 7),
-                    pin("strap_ca_pad", "in", 1), pin("strap_ca_efall", "in", 1), pin("strap_ca_root", "in", 1)]
+    tb["buses"] += [pin("fclk_out_x", "out"), pin("cland_fstart_out_x", "out")]
+    tb["count_straps"] = [cs("strap_ca_k_y", 7), cs("strap_ca_pad"), cs("strap_ca_efall"), cs("strap_ca_root")]
     p["ports"].append(dict(id="R", width=4, kind="data", src=dict(part="b", bus="x"), dst=dict(part="a", bus="y")))
     t["ports"].append(dict(port="R", width=4, src="b", dst="a", src_region="r1", dst_region="r0", lane="L3"))
     t["count_aligned"]["ports"]["R"] = dict(K=3, depth=8, sched_lat=4, tree=False)
@@ -201,12 +213,11 @@ def test_plan_declares_strap_pins_and_kit_sdc_false_path():
     import clock_landing_plan as CP
     p, t = strap_vehicle()
     raw = copy.deepcopy(p)
-    for b in list(raw["partition_types"]["B"]["buses"]):
-        if b["name"].startswith("strap_ca_"):
-            raw["partition_types"]["B"]["buses"].remove(b)
+    del raw["partition_types"]["B"]["count_straps"]
+    nb = len(raw["partition_types"]["B"]["buses"])
     st = CP._ca_strap_pins(raw, t)
     tb = raw["partition_types"]["B"]
-    assert [s["name"] for s in tb["count_straps"]] == ["strap_ca_efall", "strap_ca_k_y", "strap_ca_pad"]
-    k = next(b for b in tb["buses"] if b["name"] == "strap_ca_k_y")
-    assert k["width"] == 6 and k["dir"] == "in" and abs(k["window_um"][1] - k["window_um"][0] - 6 * .432) < 1e-6
+    assert [(s["name"], s["width"]) for s in tb["count_straps"]] == [("strap_ca_efall", 1), ("strap_ca_k_y", 6),
+                                                                      ("strap_ca_pad", 1)]
+    assert len(tb["buses"]) == nb and "count_straps" not in raw["partition_types"]["A"]   # no plan bus (like id_straps)
     assert st["summary"]["lec_variants"] == 3

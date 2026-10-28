@@ -353,28 +353,18 @@ def _ca_relay_pins(t,table,pn,ins,outs):
 
 
 def _ca_strap_pins(raw,table):
-    """MESO-STRAP-1 (OWNER 12.15a, opt-in count_aligned.strap_form): declare each type's strap_ca_* input pins
-    (types[].count_straps -> kit SDC set_false_path -from, die_trial free ports) with pin geometry: a K strap beside the
-    landed bus it configures, the origin straps beside the type's first start-tree bus; one track per bit (the parent's
-    TIEHI/TIELO cells sit next to these pins).  Values are per instance (count_align_bind.strap_ties), never in the plan."""
+    """MESO-STRAP-1 (OWNER 12.15a, opt-in count_aligned.strap_form): declare each type's strap_ca_* input pins as
+    types[].count_straps (like types[].id_straps: no plan port/bus, no pin register; kit SDC set_false_path -from,
+    die_trial free ports, the parent's TIEHI/TIELO cell per bit sits next to the pin).  Values are per instance
+    (count_align_bind.strap_ties), never in the plan."""
     ca=table.get("count_aligned") or {}
     if not ca.get("strap_form"):return None
     import count_align_bind as CAB
     st=CAB.strap_ties(ca,raw)
     for tn,info in st["types"].items():
-        t=raw["partition_types"][tn]
-        names={b["name"] for b in t.get("buses",[])}
-        anchor=(info["origin"].get("tree_buses") or sorted(info["buses"]) or [None])[0]
-        cs=[]
-        for j,(sp,w) in enumerate(sorted(info["straps"].items())):
-            bus=sp[len("strap_ca_k_"):] if sp.startswith("strap_ca_k_") else anchor
-            if bus is None:raise ValueError(f"count strap {tn}.{sp}: no landed bus to sit beside")
-            cs.append(dict(name=sp,width=w,note="OWNER 12.15a count strap (tied at the parent)"))
-            if sp in names:continue
-            b=_scalar(t,sp,"in",_bus_xy(t,bus),"ctl",shift=2.16*(6+(0 if sp.startswith("strap_ca_k_") else j)))
-            lo=b["window_um"][0];b.update(width=w,window_um=[lo,round(lo+.432*w,6)])
-            t.setdefault("buses",[]).append(b)
-        t["count_straps"]=cs
+        if info["straps"]:
+            raw["partition_types"][tn]["count_straps"]=[dict(name=sp,width=w,note="OWNER 12.15a count strap (tied at the parent)")
+                                                        for sp,w in sorted(info["straps"].items())]
     return st
 
 
