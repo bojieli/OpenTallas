@@ -170,8 +170,9 @@ if rp and Path(rp).is_file():
         c["origin_um"] = [r4(nx), r4(ny)]
         if e.get("new_outline"): c["outline_um"] = list(e["new_outline"])
         if e.get("new_pins_file"):
-            src = Path(e["new_pins_file"]); dst = OUT / "cores" / src.name
+            src = Path(e["new_pins_file"]); src = src if src.is_absolute() else Path(rp).parent / src; dst = OUT / "cores" / src.name
             if src.is_file(): shutil.copy2(src, dst); c["pins_file"] = "cores/" + src.name
+            elif e.get("grown"): done.append(dict(e=e["inst"], err=f"pins file missing {src}"))
         for tp in (t.get("clock") or {}).get("taps") or []:
             if str(tp.get("name", "")).split(".")[0] == e["inst"] and tp.get("xy"):
                 if e.get("new_tap_xy"): tp["xy"] = list(e["new_tap_xy"])
