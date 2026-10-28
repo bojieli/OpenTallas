@@ -19,6 +19,8 @@ A.add_argument("--iters", type=int, default=400000); A.add_argument("--hard-util
 A.add_argument("--halo", type=float, default=20.0); A.add_argument("--b-units", default="SU,IDX,HC,FUSED")
 A.add_argument("--affine-col", action="store_true", help="bank-affine at COLUMN (quarter) level: a bank->client edge goes to a same-family bank in the client column (k-ordered pick), else half partner")
 A.add_argument("--bank-spread", action="store_true", help="move even-k banks (u_{fam}_Q<k>*) one column toward the half edge so every column of a half holds banks")
+A.add_argument("--face-align", action="store_true", help="N/S hub-face bus windows moved over the client column (plan face-pin assignment)")
+A.add_argument("--cut-clear", action="store_true", help="hard cores straddling a vertical grid cut line shifted off it (+halo) toward their larger side")
 A.add_argument("--mode", default="half", choices=("base", "half", "col", "ub"))
 A.add_argument("--groups", default="pgp,cxij_q,calendar,sucore,smw,coll_body")
 A.add_argument("--affine", default="", help="half mode: bank-affine families (vmb,vmdel): an edge from a bank to a client in the other half goes to the partner bank Q(k^4) in the client half (= half-local data allocation by the static schedule; no new area)")
@@ -50,9 +52,22 @@ for hub, tn in (("NW_hub", "q_hub_nw"), ("NE_hub", "q_hub_ne")):
     hard = t["hard_cores"]
     hrect = {h["inst"]: (h["origin_um"][0], h["origin_um"][1], h["origin_um"][0] + h["outline_um"][0], h["origin_um"][1] + h["outline_um"][1]) for h in hard}
     hmod = {h["inst"]: h["module"] for h in hard}
+    cleared = []
+    if a.cut_clear:
+        for h, r in list(hrect.items()):
+            for k in range(1, nx):
+                X = k * cw
+                if r[0] - a.halo < X < r[2] + a.halo:
+                    dx = (X + a.halo - r[0]) if (r[2] - X) > (X - r[0]) else (X - a.halo - r[2])
+                    if 0 <= r[0] + dx and r[2] + dx <= W: hrect[h] = r = (r[0] + dx, r[1], r[2] + dx, r[3]); cleared.append((h, round(dx, 1)))
+        print("cut-clear moved", len(cleared), flush=True)
+    NSF = set()
     def cell(x, y): return (min(nx - 1, max(0, int(x / cw))), min(ny - 1, max(0, int(y / ch))))
     def resolve(name, pt):
-        if name.startswith("face bus"): return ("F",) + cell(*pt)
+        if name.startswith("face bus"):
+            n = ("F",) + cell(*pt)
+            if pt[1] < 1.0 or pt[1] > H - 1.0: NSF.add(n)
+            return n
         for h, r in hrect.items():
             if r[0] - 1 <= pt[0] <= r[2] + 1 and r[1] - 1 <= pt[1] <= r[3] + 1: return ("H", h)
         return ("S", name.split(".")[0])
@@ -143,6 +158,19 @@ for hub, tn in (("NW_hub", "q_hub_nw"), ("NE_hub", "q_hub_ne")):
             if (u2, v2) != (u, v): aff_moved += b
             raw2.append((u2, v2, el, un, b, ends))
         raw = raw2
+    fa_bits = 0
+    if a.face_align:
+        raw2 = []
+        for (u, v, el, un, b, ends) in raw:
+            if u in NSF and v[0] != "F":
+                c = init_cell0(v)[0]
+                if c != u[1]: u = ("F", c, u[2]); NSF.add(u); fa_bits += b
+            elif v in NSF and u[0] != "F":
+                c = init_cell0(u)[0]
+                if c != v[1]: v = ("F", c, v[2]); NSF.add(v); fa_bits += b
+            raw2.append((u, v, el, un, b, ends))
+        raw = raw2
+        print("face-align moved bits", fa_bits, flush=True)
     edges = collections.Counter(); dup_bits = 0; repointed = 0
     for (u, v, el, un, b, ends) in raw:
         gu, gv = grp(u), grp(v)
