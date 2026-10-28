@@ -58,3 +58,9 @@ def test_f1_station_layers_and_single_layer_pin(monkeypatch):
     assert one.count('LAYER ')==1 and 'LAYER M6' in one and 'RECT 4.98400 5.98400 5.01600 6.01600' in one
     legacy=probe.pin('ot_s_ft_0_d[1]','INPUT',5.,6.)
     assert 'LAYER M4' in legacy and 'LAYER M5' in legacy
+
+
+def test_f1_station_pins_is_opt_in():
+    # KV-PLAN-DELTA-8 canary: F1 regressed the S81 coupon (M7-scarce die), so the default stays the stacked M4+M5 square
+    import inspect
+    assert inspect.signature(probe.build).parameters["f1_station_pins"].default is False
