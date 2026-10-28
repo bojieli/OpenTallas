@@ -1,0 +1,43 @@
+[OK      ] ectl       RESPONSE_LAT           12
+[OK      ] ectl       QK_ISSUE_AGE           34
+[OK      ] ectl       ROW_RETURN_LAT         19
+[OK      ] ectl       QK_ROW_LATENCY         14
+[OK      ] ectl       QK_D_QK                0
+[OK      ] ahub       AP_OFS                 "64'hffd7ffd6ffd9ffd9"
+[OK      ] ahub       FR_OFS                 -7
+[OK      ] ahub       AM_LAG_DELTA           {"WS": -2, "WN": -31, "ES": 0, "EN": -2}
+[WARN    ] pv         TRUNK_D                54
+[WARN    ] pv         FLAG_D                 58
+[ERROR   ] vport      VPORT_RT               {"vport_EN_0": 47, "vport_EN_1": 49, "vport_EN_2": 50, "vport_EN_3": 50, "vport_ES_0": 47, "vport_ES  (9 + max_g(D(vq_g) + D(rs_g)) (<= 31))
+[WARN    ] vport      VPORT_DQ               {"vport_EN_0": 25, "vport_EN_1": 8, "vport_EN_2": 15, "vport_EN_3": 1, "vport_ES_0": 25, "vport_ES_1
+[WARN    ] vport      CFG_FIA                113
+[OK      ] prog       KVN_A0                 28
+[OK      ] prog       D2D_AGES               {"programme_start": [50], "d2d_to_attention_rx": [56], "d2d_to_writer": [56], "d2d_to_seq_kvn": [55]
+[OK      ] prog       HROOT_DOWN_RET         {"WS": [11, 12], "WN": [14, 13], "ES": [12, 12], "EN": [14, 12]}
+[OK      ] xdie       XDIE_SEAM_K            "56,56,54,54,54,56,56"
+[MISMATCH] xdie       D2D_TXDP_K             "32'h03030472"  !! bind applied ["32'h03030471"] on 1 inst, regen 32'h03030472
+[OK      ] xdie       D2D_KV_TX_LAT          114
+[OK      ] pc833      PC_CORE_CLOCK          {"qkd_kvs_pc": 1, "qkd_kvs_pc_h_head_p": 1}
+[OK      ] pc833      PC_CONTROLLER_PROFILE  "common833"
+[OK      ] pc833      PC_HBM_RL              29
+[OK      ] pc833      PC_T_CCDL              4
+[OK      ] pc833      PC_T_FAW               19
+[OK      ] pc833      PC_T_RAS               35
+[OK      ] pc833      PC_T_RCD               24
+[OK      ] pc833      PC_T_RCDW              13
+[OK      ] pc833      PC_T_REFI              4680
+[OK      ] pc833      PC_T_REFIPB            144
+[OK      ] pc833      PC_T_RFC               421
+[OK      ] pc833      PC_T_RFCPB             241
+[OK      ] pc833      PC_T_RP                20
+[OK      ] pc833      PC_T_RRDL              5
+[OK      ] pc833      PC_T_RRDS              4
+[OK      ] pc833      PC_T_RREFD             10
+[OK      ] pc833      PC_T_RTP               8
+[OK      ] pc833      PC_T_RTW               13
+[OK      ] pc833      PC_T_WRR               35
+[OK      ] pc833      PC_T_WTR               18
+[OK      ] pc833      PC_WDONE               19
+[OK      ] pc833      PC_PHASE_TICKS         [625, 625]
+[OK      ] xdie       XDIE_DIE_STAGES        "2,2,2,3,2,2/56,56,54,54,54,56,56"
+REGEN_CONSTANTS qwen_kvsys FAIL {'OK': 36, 'WARN': 4, 'ERROR': 1, 'MISMATCH': 1}

@@ -1,0 +1,357 @@
+{
+ "vport_dq_pads": {
+  "dq_unpadded": {
+   "vport_WS_0": 15,
+   "vport_WS_1": 15,
+   "vport_WS_2": 14,
+   "vport_WS_3": 15,
+   "vport_WN_0": 15,
+   "vport_WN_1": 15,
+   "vport_WN_2": 14,
+   "vport_WN_3": 15,
+   "vport_ES_0": 15,
+   "vport_ES_1": 14,
+   "vport_ES_2": 0,
+   "vport_ES_3": 15,
+   "vport_EN_0": 15,
+   "vport_EN_1": 14,
+   "vport_EN_2": 0,
+   "vport_EN_3": 15
+  },
+  "pad_stages": {
+   "vport_WS_0": 0,
+   "vport_WS_1": 0,
+   "vport_WS_2": 0,
+   "vport_WS_3": 0,
+   "vport_WN_0": 0,
+   "vport_WN_1": 0,
+   "vport_WN_2": 0,
+   "vport_WN_3": 0,
+   "vport_ES_0": 0,
+   "vport_ES_1": 0,
+   "vport_ES_2": 0,
+   "vport_ES_3": 0,
+   "vport_EN_0": 0,
+   "vport_EN_1": 0,
+   "vport_EN_2": 0,
+   "vport_EN_3": 0
+  },
+  "pad_flops": 0,
+  "RL": 131
+ },
+ "asbuilt": {
+  "QK_ISSUE_AGE": 91,
+  "response_lat": [
+   80,
+   80
+  ],
+  "pv": {
+   "RL": 112,
+   "FIRST_INPUT_AGE": 113,
+   "W": [
+    82,
+    85,
+    86,
+    88,
+    89
+   ],
+   "rule": "kv_static_params.schedule: RL = 4 + W + DQ + RT, W = pvrq + O; FIRST_INPUT_AGE = RL + 1"
+  },
+  "link": {
+   "programme_start": 3,
+   "programme_to_attention": 4,
+   "d2d_to_attention_rx": 11,
+   "programme_to_writer": 0,
+   "d2d_to_writer": 6,
+   "programme_to_groups": 111,
+   "group_internal": 0,
+   "return_to_landing_ld": null
+  },
+  "boot_error": null,
+  "boot_attn": {
+   "PV_LEAD": 38,
+   "F_DLY": 55,
+   "D_QK": 57,
+   "D_RL": 93
+  },
+  "vport": {
+   "vport_WS_0": [
+    18,
+    8
+   ],
+   "vport_WS_1": [
+    18,
+    8
+   ],
+   "vport_WS_2": [
+    18,
+    4
+   ],
+   "vport_WS_3": [
+    18,
+    8
+   ],
+   "vport_WN_0": [
+    18,
+    8
+   ],
+   "vport_WN_1": [
+    18,
+    8
+   ],
+   "vport_WN_2": [
+    18,
+    8
+   ],
+   "vport_WN_3": [
+    18,
+    2
+   ],
+   "vport_ES_0": [
+    19,
+    7
+   ],
+   "vport_ES_1": [
+    19,
+    7
+   ],
+   "vport_ES_2": [
+    19,
+    4
+   ],
+   "vport_ES_3": [
+    19,
+    7
+   ],
+   "vport_EN_0": [
+    19,
+    7
+   ],
+   "vport_EN_1": [
+    19,
+    7
+   ],
+   "vport_EN_2": [
+    19,
+    7
+   ],
+   "vport_EN_3": [
+    19,
+    0
+   ]
+  }
+ },
+ "bound": {
+  "QK_ISSUE_AGE": 34,
+  "response_lat": [
+   12,
+   12
+  ],
+  "pv": {
+   "RL": 131,
+   "FIRST_INPUT_AGE": 132,
+   "W": [
+    61,
+    63,
+    64,
+    65,
+    68,
+    76,
+    77
+   ],
+   "rule": "kv_static_params.schedule: RL = 4 + W + DQ + RT, W = pvrq + O; FIRST_INPUT_AGE = RL + 1"
+  },
+  "link": {
+   "programme_start": 50,
+   "programme_to_attention": 4,
+   "d2d_to_attention_rx": 56,
+   "programme_to_writer": 0,
+   "d2d_to_writer": 56,
+   "programme_to_groups": 55,
+   "group_internal": 0,
+   "return_to_landing_ld": null
+  },
+  "boot_error": null,
+  "boot_attn": {
+   "PV_LEAD": 38,
+   "F_DLY": 55,
+   "D_QK": 0,
+   "D_RL": 112
+  },
+  "vport": {
+   "vport_WS_0": [
+    49,
+    15
+   ],
+   "vport_WS_1": [
+    48,
+    15
+   ],
+   "vport_WS_2": [
+    45,
+    14
+   ],
+   "vport_WS_3": [
+    47,
+    15
+   ],
+   "vport_WN_0": [
+    49,
+    15
+   ],
+   "vport_WN_1": [
+    48,
+    15
+   ],
+   "vport_WN_2": [
+    45,
+    14
+   ],
+   "vport_WN_3": [
+    47,
+    15
+   ],
+   "vport_ES_0": [
+    48,
+    15
+   ],
+   "vport_ES_1": [
+    50,
+    14
+   ],
+   "vport_ES_2": [
+    51,
+    0
+   ],
+   "vport_ES_3": [
+    51,
+    15
+   ],
+   "vport_EN_0": [
+    48,
+    15
+   ],
+   "vport_EN_1": [
+    50,
+    14
+   ],
+   "vport_EN_2": [
+    50,
+    0
+   ],
+   "vport_EN_3": [
+    51,
+    15
+   ]
+  }
+ },
+ "bound_padded": {
+  "QK_ISSUE_AGE": 34,
+  "response_lat": [
+   12,
+   12
+  ],
+  "pv": {
+   "RL": 131,
+   "FIRST_INPUT_AGE": 132,
+   "W": [
+    61,
+    63,
+    64,
+    65,
+    68,
+    76,
+    77
+   ],
+   "rule": "kv_static_params.schedule: RL = 4 + W + DQ + RT, W = pvrq + O; FIRST_INPUT_AGE = RL + 1"
+  },
+  "link": {
+   "programme_start": 50,
+   "programme_to_attention": 4,
+   "d2d_to_attention_rx": 56,
+   "programme_to_writer": 0,
+   "d2d_to_writer": 56,
+   "programme_to_groups": 55,
+   "group_internal": 0,
+   "return_to_landing_ld": null
+  },
+  "boot_error": null,
+  "boot_attn": {
+   "PV_LEAD": 38,
+   "F_DLY": 55,
+   "D_QK": 0,
+   "D_RL": 112
+  },
+  "vport": {
+   "vport_WS_0": [
+    49,
+    15
+   ],
+   "vport_WS_1": [
+    48,
+    15
+   ],
+   "vport_WS_2": [
+    45,
+    14
+   ],
+   "vport_WS_3": [
+    47,
+    15
+   ],
+   "vport_WN_0": [
+    49,
+    15
+   ],
+   "vport_WN_1": [
+    48,
+    15
+   ],
+   "vport_WN_2": [
+    45,
+    14
+   ],
+   "vport_WN_3": [
+    47,
+    15
+   ],
+   "vport_ES_0": [
+    48,
+    15
+   ],
+   "vport_ES_1": [
+    50,
+    14
+   ],
+   "vport_ES_2": [
+    51,
+    0
+   ],
+   "vport_ES_3": [
+    51,
+    15
+   ],
+   "vport_EN_0": [
+    48,
+    15
+   ],
+   "vport_EN_1": [
+    50,
+    14
+   ],
+   "vport_EN_2": [
+    50,
+    0
+   ],
+   "vport_EN_3": [
+    51,
+    15
+   ]
+  }
+ },
+ "bound_qk23": {
+  "D_QK": -11,
+  "boot_error": "kv_bootage: D_QK = -11 outside [0, 255]"
+ },
+ "asbuilt_boot_reproduces_case_boot_ages": true
+}
