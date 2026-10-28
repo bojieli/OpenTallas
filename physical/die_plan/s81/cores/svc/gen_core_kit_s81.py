@@ -99,6 +99,15 @@ def make_tracks(plan):
             "make_tracks M4 -x_offset 0.012 -x_pitch 0.048 -y_offset 0.012 -y_pitch 0.048\n" + M123_TRACKS)
 
 
+
+def _reset_sdc(rsts, per):
+    """reset ports: the shared core-kit reset IO rule tools/die_plan/gen_phys.core_reset_sdc (no local copy)."""
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parents[5] / "tools/die_plan"))
+    import gen_phys
+    return gen_phys.core_reset_sdc(rsts, per)
+
+
 def sdc(per, ins, clks, rsts, tid):
     io = IO_BUDGET * per
     skip = "|".join(re.escape(c) for c in clks + rsts)
@@ -118,8 +127,7 @@ def sdc(per, ins, clks, rsts, tid):
          f"set_output_delay {io:.4f} -clock vclk [all_outputs]\n"
          f"set_input_delay -min 0.0000 -clock vclk $non_clk_in\n")
     if rsts:
-        s += (f"# reset: async assert, released by the partition's reset synchroniser one cycle ahead (recovery at 1 T)\n"
-              f"set_input_delay {0.5 * per:.4f} -clock vclk [get_ports {{{' '.join(rsts)}}}]\n")
+        s += _reset_sdc(rsts, per)
     return s + (f"set_load {IO_LOAD_FF:g} [all_outputs]\n"
                 "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
 
