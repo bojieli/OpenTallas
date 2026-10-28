@@ -1,0 +1,2 @@
+cd /srv/opentallas-scratch2/claude/kv-plan-d9b-1027; W=/srv/opentallas-scratch2/claude/wt/kv-plan-d9b
+for it in 3 4 5 6; do python3 upkeep.py; timeout 600 python3 d9b_event.py rt ../kv-plan-d9-1027/pd9/hm_r26q9.json pd9b/hm_r26q9b.json ledger_d9b.json --keep keep.txt > event.log 2>&1; grep "PORTS\|D9B_DONE" event.log; rm -rf g0c_q9b; python3 $W/tools/die_plan/check.py pd9b/hm_r26q9b.json --out g0c_q9b --completeness > g0c_q9b.log 2>&1; tail -n 1 g0c_q9b.log | cut -c1-40; grep -q "G0C PASS" g0c_q9b.log && break; done; date
