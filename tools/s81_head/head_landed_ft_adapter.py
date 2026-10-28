@@ -39,8 +39,22 @@ class AdapterError(Exception):
 
 
 def apply(raw, owner=OWNER, signed=SIGNED, repo=None):
+    """Adapts hd_tile and (DIE-HEAD-3, multi-partition clock regions) every landed-mask cohort clone of it
+    (partition_types[*].landing_base_type == "hd_tile", clock_landing_plan monitor="region"); the report keeps the
+    single-type form when there are no clones and adds "types" otherwise."""
     P = copy.deepcopy(raw)
-    t = P["partition_types"]["hd_tile"]
+    names = sorted(tn for tn, t in P["partition_types"].items() if tn == "hd_tile" or t.get("landing_base_type") == "hd_tile")
+    if not names:
+        raise AdapterError("no hd_tile type (or landing cohort of it) in the plan")
+    reps = [_apply_type(P["partition_types"][tn], owner, signed, repo) for tn in names]
+    rep = reps[0]
+    if names != ["hd_tile"]:
+        rep = dict(rep, types=names, ports_bound=sum(r["ports_bound"] for r in reps),
+                   spare_outputs=sum(r["spare_outputs"] for r in reps), bindings=[b for r in reps for b in r["bindings"]])
+    return P, rep
+
+
+def _apply_type(t, owner, signed, repo):
     if len(t.get("contents", [])) != 1:
         raise AdapterError("hd_tile must have exactly one leaf")
     c = t["contents"][0]
@@ -85,7 +99,7 @@ def apply(raw, owner=OWNER, signed=SIGNED, repo=None):
                cores=len(idx), ft_ports_per_core=8, ports_bound=len(rows) * 2, functional_clock="ft_mstrap_i <- ck (clk)",
                data_cycles_added=0, ties=0, spare_outputs=len(spares), owner=owner,
                signed_views={m: dict(lef=v[0], lib=v[1]) for m, v in (signed or {}).items()}, bindings=rows)
-    return P, rep
+    return rep
 
 
 def main():
