@@ -778,7 +778,10 @@ def demand_metrics(D, max_layer="M5", min_layer="M2"):
 def clock_entry_metrics(D, ck):
     """clock entry: the input port rooting the most sinks; inside a macro outline -> FAIL (GEOM-REVIEW-24
     vm_calendar_f20 'clock entry island ON the SRAM').  Reach = max over clocked flops of the Manhattan distance to the
-    nearest entry point (the port, plus pre-placed FIRM/LOCKED clock cells = in-core islands, METHODOLOGY 12.8b)."""
+    nearest entry point (the port, plus pre-placed FIRM/LOCKED clock cells = in-core islands, METHODOLOGY 12.8b).
+    That nearest point need not be the sink's own driver, so two INFO measures are added (GEOM-REVIEW-46 10-28, node
+    a0k3: reach 13.66 while 79 sinks sit >100 um from their own leaf): clock_leaf_reach_max = max sink distance to the
+    cell / port that drives its clock pin, and clock_entry_sink_max = max distance from the root port to a sink."""
     ts = ck.get("tap_sinks") or {}
     if not ts or not any(ts.values()):
         return dict(clock_entry=None)
@@ -799,10 +802,31 @@ def clock_entry_metrics(D, ck):
                 D.nets[n][0] == "CLOCK" or ck_net(D, n) for n in D.drives.get(cid, [])):
             pts.append(ctr(c))
             clk_fixed += 1
-    sinks = []
+    sinks, leaf, ent = [], (0.0, None, None), (0.0, None)
     for cid, c in D.cells.items():
-        if c[0] == "S" and any(isc for _, isc in D.cell_in.get(cid, [])):
-            sinks.append(ctr(c))
+        cn = [n for n, isc in D.cell_in.get(cid, []) if isc]
+        if c[0] == "S" and cn:
+            sx, sy = ctr(c)
+            sinks.append((sx, sy))
+            dd = abs(sx - p["x"]) + abs(sy - p["y"])
+            if dd > ent[0]:
+                ent = (dd, (round(sx, 1), round(sy, 1)))
+            dr = D.nets[cn[0]][1]
+            if dr is None:
+                continue
+            if dr[0] == "i":
+                dc = D.cells.get(dr[1])
+                if dc is None:
+                    continue
+                dxy = ctr(dc)
+            else:
+                pp = D.pin_by_k.get(dr[1])
+                if pp is None:
+                    continue
+                dxy = (pp["x"], pp["y"])
+            dd = abs(sx - dxy[0]) + abs(sy - dxy[1])
+            if dd > leaf[0]:
+                leaf = (dd, (round(sx, 1), round(sy, 1)), (round(dxy[0], 1), round(dxy[1], 1)))
     reach, far = 0.0, None
     if sinks:
         import numpy as np
@@ -817,7 +841,8 @@ def clock_entry_metrics(D, ck):
         reach, far = float(best[k]), (round(float(S[k][0]), 1), round(float(S[k][1]), 1))
     return dict(clock_entry=root, clock_entry_xy=[round(p["x"], 3), round(p["y"], 3)], clock_entry_on_macro=len(on_macro),
                 clock_entry_macro=on_macro[:2], clock_islands_fixed=clk_fixed, clock_reach_max=round(reach, 2),
-                clock_reach_far=far)
+                clock_reach_far=far, clock_leaf_reach_max=round(leaf[0], 2), clock_leaf_reach_far=leaf[1],
+                clock_leaf_reach_driver=leaf[2], clock_entry_sink_max=round(ent[0], 2), clock_entry_sink_far=ent[1])
 
 
 def ck_net(D, n):
@@ -1074,8 +1099,15 @@ def judge(m, template=None, outline=None, all_kits=False):
         lim("clock_on_macro", "clock_entry_on_macro", 0, "GEOM-REVIEW-24 vm_calendar_f20 (entry ON the SRAM)",
             detail=f"{m['clock_entry']} at {m['clock_entry_xy']} {m.get('clock_entry_macro')}")
         lim("clock_reach", "clock_reach_max", round(CLK_REACH_MAX * CLK_REACH_TOL, 1),
-            "METHODOLOGY 12.8b entry-to-sink ~<=200 um", detail=f"far sink {m.get('clock_reach_far')}, "
+            "METHODOLOGY 12.8b entry-to-sink ~<=200 um (sink to NEAREST entry: port or pre-placed clock cell)",
+            detail=f"sink farthest from its nearest entry {m.get('clock_reach_far')}, "
             f"{m.get('clock_islands_fixed')} pre-placed clock cells")
+        if m.get("clock_leaf_reach_max") is not None:
+            add("clock_leaf_reach", "INFO", m["clock_leaf_reach_max"], "info",
+                "sink to its OWN clock driver (leaf cell or port), GEOM-REVIEW-46",
+                f"sink {m.get('clock_leaf_reach_far')} driver {m.get('clock_leaf_reach_driver')}")
+            add("clock_entry_sink", "INFO", m.get("clock_entry_sink_max"), "info",
+                "root port to farthest clock sink", f"sink {m.get('clock_entry_sink_far')}")
     else:
         add("clock_entry", "NA", None, "clock root port", "METHODOLOGY 12.8a", "no clock entry found")
     if m.get("grt_overflow") is None:
