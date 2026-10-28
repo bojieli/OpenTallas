@@ -39,6 +39,7 @@ All runs are read-only diagnostics; nothing is written into the plan.  Heavy ste
 through ot-run on a 1 TB host: DIR/run_<step>.sh.
 """
 import argparse
+import collections
 import json
 import math
 import os
@@ -487,6 +488,165 @@ def build_htree(P, taps, leaf_um=600.0, full_depth=False, regions=None):
     return nodes
 
 
+def build_spine_fishbone(P, taps, col_um=60.0, merge_um=800.0, matched=False, station_max_taps=24):
+    """LAND-HEAD-3 (opt-in --tree-form spine_fishbone, COORD 10-27 ruling A): LOW-INSERTION landed-form die clock in which
+    every landed pair splits late.  Two levels, both straight M8/M9 legs, no padding/detour:
+      (1) SPINE: a 1-D zero-skew (DME) binary tree along the vertical spine line x = clock.spine.root_um[0] that feeds one
+          RIB ROOT per rib row; rib rows = the tap y of every partition that touches the spine line (spine/ctl/host rows).
+          Adjacent rib roots are paired bottom-up; the merge point on the segment is the equal-length point, so every rib
+          root sits at the same spine length by construction (an out-of-segment merge is clamped and reported).
+      (2) RIBS: from each rib root a horizontal trunk E and W along the rib row; one trunk node per tap column (taps within
+          col_um share it); a vertical stub to a leaf node per tap row.  Every tap belongs to its nearest rib row.
+    A landed pair in the same rib then shares the trunk up to its own column (unshared = one column pitch + stubs) and a
+    spine pair shares the spine down to its DME merge (insertion of the whole tree ~ spine half-span + longest rib)."""
+    sx = (P.clock.get("spine", {}).get("root_um") or [P.W / 2, P.H / 2])[0]
+    ry_root = (P.clock.get("spine", {}).get("root_um") or [P.W / 2, P.H / 2])[1]
+    ribs = set()
+    for n, p in P.parts.items():
+        w = P.types[p["type"]]["outline_um"][0]
+        if p["origin_um"][0] - 1e-3 <= sx <= p["origin_um"][0] + w + 1e-3:
+            ribs.update(round(t[3], 3) for t in taps if t[0] == n)
+    cnt = collections.Counter(round(t[3], 3) for t in taps)
+    keep = []
+    for r in sorted(ribs):                       # rows closer than merge_um (a PHY strip beside its station row) share
+        if keep and r - keep[-1][-1] < merge_um:  # one rib: the row with the most taps carries it
+            keep[-1].append(r)
+        else:
+            keep.append([r])
+    ribs = sorted(max(g, key=lambda r: (cnt[r], -r)) for g in keep)
+    by_rib = defaultdict(list)
+    for t in taps:
+        by_rib[min(ribs, key=lambda r: (abs(r - t[3]), r))].append(t)
+    nodes = {}
+
+    def mk(x, y, parent, level, **kw):
+        i = len(nodes)
+        nodes[i] = dict(id=i, x=round(x, 3), y=round(y, 3), parent=parent, level=level, kids=[], taps=[],
+                        region=[0.0, 0.0, P.W, P.H], **kw)
+        if parent is not None:
+            nodes[parent]["kids"].append(i)
+        return i
+    # (1) spine DME (1-D): items (y, length below, structure)
+    # LAND-HEAD-3 matched=True (12.13b phase-matched rib heads): (a) a rib with <= station_max_taps taps (a station row,
+    # pitch ~1.4 mm, too long for a travelling rib) is a 1-D zero-skew DME along the row; (b) on a channel rib the spine
+    # partition entry gets a detour leg equal to the column-0 trunk + mean stub, so it is in phase with o0/b0;
+    # (c) the spine DME balances the rib HEAD lengths (the entries that cross between ribs), not just the rib roots.
+    head_len, row_dme = {}, {}
+    if matched:
+        for r in ribs:
+            tl = by_rib[r]
+            if len(tl) <= station_max_taps:
+                its = sorted(((t[2], abs(t[3] - r), ("tap", t)) for t in tl), key=lambda v: v[0])
+                while len(its) > 1:
+                    nx = []
+                    for k2 in range(0, len(its) - 1, 2):
+                        (xa, la_, sa), (xb, lb_, sb) = its[k2], its[k2 + 1]
+                        D = xb - xa
+                        xa2 = min(max((D + lb_ - la_) / 2, 0.0), D)
+                        nx.append((xa + xa2, max(la_ + xa2, lb_ + D - xa2), ("m", xa + xa2, sa, sb)))
+                    if len(its) % 2:
+                        nx.append(its[-1])
+                    its = nx
+                row_dme[r] = its[0]
+                head_len[r] = abs(its[0][0] - sx) + its[0][1]
+            else:
+                cx0 = min((abs(t[2] - sx) for t in tl if abs(t[2] - sx) > col_um), default=0.0)
+                stubs = [abs(t[3] - r) for t in tl if abs(abs(t[2] - sx) - cx0) <= col_um]
+                head_len[r] = cx0 + (sum(stubs) / len(stubs) if stubs else 0.0)
+    items = [(r, head_len.get(r, 0.0), ("rib", r)) for r in ribs]
+    clamp = 0.0
+    while len(items) > 1:
+        nxt = []
+        for k in range(0, len(items) - 1, 2):
+            (ya, la, sa), (yb, lb, sb) = items[k], items[k + 1]
+            D = yb - ya
+            xa = (D + lb - la) / 2
+            da = db = 0.0
+            if xa < 0 or xa > D:
+                clamp = max(clamp, abs(min(xa, D - xa)))
+                if matched:       # matched: balance by a detour leg on the shorter side (no clamp skew)
+                    db, da = (la - lb - D, 0.0) if xa < 0 else (0.0, lb - la - D)
+                xa = min(max(xa, 0.0), D)
+            nxt.append((ya + xa, max(la + xa + da, lb + D - xa + db), ("m", ya + xa, sa, sb, da, db)))
+        if len(items) % 2:
+            nxt.append(items[-1])
+        items = nxt
+    top_y, top_len, top = items[0]
+    root = mk(sx, ry_root, None, 0, spine=True)
+    rib_root = {}
+
+    def place(st, parent, level):
+        if st[0] == "rib":
+            i = parent if (abs(nodes[parent]["y"] - st[1]) < 1e-6 and abs(nodes[parent]["x"] - sx) < 1e-6) else \
+                mk(sx, st[1], parent, level, spine=True)
+            rib_root[st[1]] = i
+            return
+        _, y, sa, sb, da, db = st
+        i = parent if abs(nodes[parent]["y"] - y) < 1e-6 else mk(sx, y, parent, level, spine=True)
+        for ch, det in ((sa, da), (sb, db)):
+            par = i
+            if det > 1e-6:      # detour node beside the spine at the child's y: leg = |dy| + det/2, back det/2
+                par = mk(sx + det / 2 if sx + det / 2 < P.W else sx - det / 2, ch[1], i, nodes[i]["level"] + 1,
+                         spine=True, detour_um=round(det, 1))
+            place(ch, par, nodes[par]["level"] + 1)
+    place(top, root, 1)
+    # (2) ribs
+    for r in ribs:
+        r0 = rib_root[r]
+        if r in row_dme:          # matched station row: 1-D zero-skew DME hung below the rib root
+            xr, _, st = row_dme[r]
+            top = mk(xr, r, r0, nodes[r0]["level"] + 1, rib=r) if abs(xr - nodes[r0]["x"]) > 1e-6 else r0
+            stk = [(st, top)]
+            while stk:
+                s2, par = stk.pop()
+                if s2[0] == "tap":
+                    t = s2[1]
+                    lf = mk(t[2], t[3], par, nodes[par]["level"] + 1, rib=r)
+                    nodes[lf]["taps"].append(t)
+                else:
+                    i = mk(s2[1], r, par, nodes[par]["level"] + 1, rib=r) if abs(s2[1] - nodes[par]["x"]) > 1e-6 else par
+                    stk += [(s2[2], i), (s2[3], i)]
+            continue
+        for side in (-1, 1):
+            tl = [t for t in by_rib[r] if (t[2] - sx) * side > 1e-6 or (side == 1 and abs(t[2] - sx) <= 1e-6)]
+            tl.sort(key=lambda t: abs(t[2] - sx))
+            cols = []
+            for t in tl:
+                if cols and abs(t[2] - cols[-1][0][2]) <= col_um:
+                    cols[-1].append(t)
+                else:
+                    cols.append([t])
+            prev = r0
+            for c in cols:
+                cx = sum(t[2] for t in c) / len(c)
+                if abs(cx - sx) <= col_um and prev == r0 and matched and head_len.get(r, 0) > 2 * col_um:
+                    h2 = head_len[r] / 2
+                    q = mk(sx, r + h2 if r + h2 < P.H else r - h2, r0, nodes[r0]["level"] + 1, rib=r, detour_um=round(h2 * 2, 1))
+                    tn = mk(sx, r, q, nodes[q]["level"] + 1, rib=r)
+                    for t in c:
+                        nodes[tn]["taps"].append(t)
+                    continue
+                if abs(cx - sx) <= col_um and prev == r0:
+                    tn = r0
+                else:
+                    tn = mk(cx, r, prev, nodes[prev]["level"] + 1, rib=r)
+                    prev = tn
+                rows = defaultdict(list)
+                for t in c:
+                    rows[round(t[3], 1)].append(t)
+                for yy, tt in sorted(rows.items()):
+                    if abs(yy - r) <= col_um:
+                        nodes[tn]["taps"] += tt
+                    else:
+                        lf = mk(nodes[tn]["x"], yy, tn, nodes[tn]["level"] + 1, rib=r)
+                        nodes[lf]["taps"] += tt
+    nodes[0]["spine_dme"] = dict(ribs=ribs, merge_len_um=round(top_len, 1), top_merge_y=round(top_y, 3),
+                                 root_feed_um=round(abs(top_y - ry_root), 1), clamp_um=round(clamp, 1))
+    return nodes
+
+
+
+
 def tree_netlist(nodes, taps, rep_um=450.0, site=None):
     """buffered tree: a BUF at every node (branch / leaf driver), repeaters every rep_um along each leg.
     -> (verilog, placements [(inst, x, y)], tap ports [(port, x, y)], node_buf {node id: inst}, path {tap port: [inst]})"""
@@ -541,11 +701,13 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None):
     return "\n".join(v) + "\n", place, tap_ports, node_buf, parent_of
 
 
-def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_slide=False, regions=None):
+def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_slide=False, regions=None, tree_form="htree",
+              tree_opts=None):
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     taps = clock_taps(P)
-    nodes = build_htree(P, taps, leaf_um, full_depth, regions)
+    nodes = (build_spine_fishbone(P, taps, **(tree_opts or {})) if tree_form == "spine_fishbone" else
+             build_htree(P, taps, leaf_um, full_depth, regions))
     site = None
     slid_fallback = 0
     if site_slide:          # opt-in: slide each buffer back along its OWN incoming leg (equal length by construction)
@@ -623,6 +785,8 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
             "puts OT_DONE"]
     (out / "ctree.tcl").write_text("\n".join(tcl) + "\n")
     meta = dict(leaf_um=leaf_um, rep_um=rep_um, **({"full_depth": True} if full_depth else {}),
+                **({"tree_form": tree_form, "spine_dme": nodes[0].get("spine_dme")}
+                   if tree_form != "htree" else {}),
                 **({"region_trees": len({n.get("region_root") for n in nodes.values()} - {None})} if regions else {}), buffer=BUF, wire_r_kohm_um=WIRE_R, wire_c_ff_um=WIRE_C,
                 tap_load_ff=TAP_LOAD_FF, nodes=len(nodes), leaves=sum(1 for n in nodes.values() if n["taps"]),
                 repeaters=sum(1 for i, *_ in place if i.startswith("r")), taps=len(tap_ports),
@@ -1581,7 +1745,8 @@ exit $rc
 
 
 def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.72, density=0.15, island_sites=None,
-              island_margin=ISLAND_MARGIN_UM, full_depth=False, site_legal=False, site_slide=False, regions=None):
+              island_margin=ISLAND_MARGIN_UM, full_depth=False, site_legal=False, site_slide=False, regions=None,
+              tree_form="htree", tree_opts=None):
     raw = S.load(plan_path)
     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
     plan_dir = Path(plan_path).parent
@@ -1649,7 +1814,8 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
                            sites=w.get("sites"), signals=w.get("signals"), host=w.get("host", False)) for w in io]
     # clock
     nodes, segs, leaf_legs, cm = clock_kit(P, out / "clock", leaf_um, rep_um, full_depth, site_legal, site_slide,
-                                           json.loads(Path(regions).read_text())["part_region"] if regions else None)
+                                           json.loads(Path(regions).read_text())["part_region"] if regions else None,
+                                           tree_form=tree_form, tree_opts=tree_opts)
     (out / "clock" / "make_tracks.tcl").write_text(gen_phys.make_tracks_tcl(P))
     meta["clock_tree"] = cm
     reserve = reserve_rects(segs, leaf_legs, P)
@@ -2212,6 +2378,11 @@ def main(argv=None):
     k.add_argument("--tree-site-slide", action="store_true",
                    help="opt-in: like --tree-site-legal, but each buffer slides back along its own incoming leg "
                         "(root->entry Manhattan lengths unchanged = equal length kept by construction)")
+    k.add_argument("--tree-form", choices=("htree", "spine_fishbone"), default="htree",
+                   help="die clock topology: htree (default) or spine_fishbone (LAND-HEAD-3 opt-in: 1-D DME spine + per-row "
+                        "fishbone ribs, low insertion so landed pairs split late)")
+    k.add_argument("--tree-opt", action="append", default=[], metavar="K=V",
+                   help="spine_fishbone options: matched=1 (phase-matched rib heads, station rows as 1-D DME; LAND-HEAD-3 model: worse), col_um, merge_um")
     k.add_argument("--region-trees", help="fallback regions.json (part_region): die reference tree to one root per "
                    "region + equal-depth local tree per region (FALLBACK-S81-2, opt-in)")
     k.add_argument("--coarse-um", type=float, default=0.72)
@@ -2282,7 +2453,9 @@ def main(argv=None):
     if a.cmd == "kit":
         m = write_kit(a.plan, a.out, a.views, a.leaf_um, a.rep_um, a.coarse_um, a.density, a.island_sites,
                       a.island_margin_um, full_depth=a.htree_full_depth, site_legal=a.tree_site_legal,
-                      site_slide=a.tree_site_slide, regions=a.region_trees)
+                      site_slide=a.tree_site_slide, regions=a.region_trees,
+                      tree_form=a.tree_form,
+                      tree_opts={k: float(v) for k, v in (o.split("=") for o in a.tree_opt)})
         print(json.dumps({k: m[k] for k in ("die", "parts", "types", "closed_views", "hard_cores", "clock_tree", "grt",
                                              "psm", "sta")}, indent=1))
     elif a.cmd == "report":
