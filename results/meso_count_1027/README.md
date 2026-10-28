@@ -201,9 +201,9 @@ Joint TT_droop corelat250 + FF_droop corelat202.5, ap = T/8, wander ±5 % unshar
   * sweeps unchanged, with clean window [0.502, 3.501]T / [0.502, 7.501]T and 0 silent-wrong;
   * NO_TAG and K mutants CAUGHT.
 
-### Formal (MESO-COUNT-2, , yosys-abc in openroad/orfs:asap7lock; RTL unchanged)
+### Formal (MESO-COUNT-2, `rtl/test/meso/formal_ca/fv_ca2*`, yosys-abc in openroad/orfs:asap7lock; RTL unchanged)
 
-* **Proven unbounded by k-induction** (abc , seconds per config) for W = 1 (data independence, one
+* **Proven unbounded by k-induction** (abc `fold; strash; bmc3; scorr; dc2; ind`, seconds per config) for W = 1 (data independence, one
   watched word) and K = 2.
 * The three properties, proven together:
   * **safe**: while ready && !fault, the delivered word is the captured word at latency K+1;
@@ -228,6 +228,6 @@ Joint TT_droop corelat250 + FF_droop corelat202.5, ap = T/8, wander ±5 % unshar
   | NO_TAG | wrong word | 180 / 308 (alias config 195 / 323 in the k-ind flow) |
 
 * **Findings**:
-  1. The wrapper default GUARD_HI = 4 is wrong for DEPTH 8 (no-fault fails). Bind GUARD_HI = DEPTH, as the plan's  fields do.
+  1. The wrapper default GUARD_HI = 4 is wrong for DEPTH 8 (no-fault fails). Bind GUARD_HI = DEPTH, as the plan's `rtl` fields do.
   2. At negative lag the reader never becomes ready and never raises fault. The guaranteed behaviour is fail-closed (never ready && !fault), not fault raised.
 * MESO-COUNT-1's PDR on the 10-bit-time harness (mc1-prove) did not converge: 0 of 3 proven at about 40 min, UNPROVEN.
