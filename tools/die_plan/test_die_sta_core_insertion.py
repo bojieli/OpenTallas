@@ -143,3 +143,9 @@ def test_main_plan_without_early_core_taps_unchanged(tmp_path, monkeypatch):
     assert "core_insertion" not in r["summary"] and "core_insertion" not in r["corners"]["TT"]
     assert r["corners"]["TT"]["classes"]["intra"]["label"] == "declared-budget"
     assert "real_view" not in r["corners"]["TT"]["classes"]["intra"]
+
+
+def test_early_core_map_minimal_plan_skips_schema_parse():
+    # CA-OCV-style minimal plan (no 'die'): no early core taps -> {} without a schema.Plan parse (RM188 hold)
+    assert R.early_core_map(dict(partition_types={"fa": {"clock": {}}}, partitions=[], ports=[]), _taps()) == {}
+    assert R.early_core_map(dict(partitions=[], ports=[]), _taps()) == {}

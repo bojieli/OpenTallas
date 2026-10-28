@@ -1630,7 +1630,11 @@ CORE_INSERTION_MODES = ("view", "declared")
 def early_core_map(plan, taps):
     """{proof port: [dict(part, inst, module, pin, ins_ps{TT,FF}, early_ps{TT,FF}, pins_file, outline_um)]} for every
     plan early core tap present in the proof (port t_<part>__clk_c<k>, gen_phys.core_tap_rows).  {} for a plan
-    without early core taps."""
+    without early core taps (read from the raw plan types, no schema parse: minimal plans stay valid)."""
+    pt = plan.get("partition_types") or {}
+    if not any(((t or {}).get("clock") or {}).get("core_taps") == "early"
+               for t in (pt.values() if isinstance(pt, dict) else pt)):
+        return {}
     import schema as S
     import gen_phys as G
     P = S.Plan(plan)
