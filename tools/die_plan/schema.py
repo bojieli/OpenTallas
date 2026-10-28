@@ -224,6 +224,7 @@ SCHEMA = {
                     "additionalProperties": False,
                     "properties": {"name": _layer, "dir": {"enum": ["H", "V"]}, "pitch_um": _pos,
                                    "offset_um": _nonneg}}},
+                "streets": {"type": "object"},   # 12.10c street rule config (streets.config: reach/width/raster/clock/hold/ft/fill, mode, enforce, note)
                 "layer_budget": {"type": "object", "additionalProperties": False, "properties": {
                     "partition_signal_max": _layer,
                     "die_layers": {"type": "array", "items": _layer},
