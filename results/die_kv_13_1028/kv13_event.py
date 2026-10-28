@@ -84,7 +84,7 @@ table = CB.annotate_table(json.load(open(I / "l128_table.json")), b, strap_form=
 (E / "regions_ca.json").write_text(json.dumps(table, indent=1) + "\n")
 observer = dict(module="qkd_seq_core_static_s", instance_suffix="u_seq_u_core", fault_port="hf", ready_port="lp_run")
 plan, side = LP.compose(raw, table, plan_path=I / "hm_r26q9d.json", observer_part="hub_C", observer=observer, monitor="reset",
-                        band_reserve="live")
+                        band_reserve="live", forward_source="clk")
 for typ in plan["partition_types"].values():
     for h in typ.get("hard_cores", []):
         if h.get("pins_file") and not Path(h["pins_file"]).is_absolute():
