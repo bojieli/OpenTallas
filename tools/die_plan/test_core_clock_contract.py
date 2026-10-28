@@ -133,3 +133,17 @@ def test_mean_selector_default_signed_and_incomplete_budget_controls():
         G.core_mean_contract_options(p, 'tile')
     del p.types['tile']['clock']['taps'][1]['insertion_ff_ps']
     assert G.core_mean_contract_options(p, 'tile', trial=True) == dict(mean_contract=False, require_signed=True)
+
+
+def test_internal_cts_keeps_signed_means_without_external_core_taps():
+    from types import SimpleNamespace
+    import gen_phys as G
+    import schema as S
+    p = SimpleNamespace(types={"tile":dict(hard_cores=[dict(inst="u")], clock=dict(
+        core_taps="internal", taps=[dict(kind="core", name="u.clk", xy=[1,2],
+        insertion_ps=250., insertion_ff_ps=199.6, budget_owner="SIGNED selected view")]))})
+    assert S.core_taps(p,"tile") == []
+    assert G.core_mean_contract_options(p,"tile") == dict(mean_contract=True,require_signed=True)
+    p.types["tile"]["clock"]["taps"][0]["budget_owner"]="parent_budget trial"
+    with pytest.raises(CC.ContractError,match="internal core CTS"):
+        G.core_mean_contract_options(p,"tile",trial=True)

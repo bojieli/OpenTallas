@@ -302,6 +302,29 @@ def test_pushdown_feedthrough_pins_clear_core_clock_entry():
     assert all(abs(abs(x-100)-2.16) < 1e-8 and abs(abs(y-100)-2.16) < 1e-8 for x,y in ports)
 
 
+def test_pushdown_ft_pin_dx_clears_core_m5_stripe_pair():
+    """HBM-CORES-REBAL-2: legacy +-2.16 pins sit in the 72 nm VSS/VDD M5 pair gap (no legal M5 track -> DRT-0255);
+    pin_dx_um=1.08 lands on an M5 track (offset 0.024, pitch 0.048) clear of both stripes; default byte-identical."""
+    import master_plan as M
+    def stripes(x):          # measured core pdn (coll_q2 5_1_grt.odb): VSS 2.004-2.124, VDD 2.196-2.316 past each 4.32 line
+        k = int(x // 4.32)
+        return [(4.32 * j + 2.004 + d, 4.32 * j + 2.004 + d + 0.12) for j in (k - 1, k, k + 1) for d in (0.0, 0.192)]
+    def clear(x, w=0.032, space=0.024):
+        return all(x + w / 2 + space <= a + 1e-9 or x - w / 2 - space >= b - 1e-9 for a, b in stripes(x))
+    def on_track(x):
+        return abs(((x - 0.024) / 0.048) - round((x - 0.024) / 0.048)) < 1e-6
+    rect, c = [56.16, 112.32, 64.8, 120.96], [60.48, 116.64]
+    old = M.pushdown_island(1, rect, c, "tree_leaf", 0.0, 0)
+    assert old == M.pushdown_island(1, rect, c, "tree_leaf", 0.0, 0, pin_dx_um=2.16)
+    assert not any(clear(p["xy_um"][0]) for p in old["ft_ports"])      # the measured DRT-0255 geometry
+    new = M.pushdown_island(1, rect, c, "tree_leaf", 0.0, 0, pin_dx_um=1.08)
+    xs = [p["xy_um"][0] for p in new["ft_ports"]]
+    assert sorted(set(xs)) == [59.4, 61.56]
+    assert all(clear(x) and on_track(x) for x in xs)
+    assert [p["xy_um"][1] for p in new["ft_ports"]] == [p["xy_um"][1] for p in old["ft_ports"]]
+    assert {k: v for k, v in new.items() if k != "ft_ports"} == {k: v for k, v in old.items() if k != "ft_ports"}
+
+
 def test_entry_pin_ring_keeps_exact_prior_order():
     import master_plan as M
     for cx,cy in [(0,0),(7,11),(-2,5)]:

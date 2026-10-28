@@ -526,6 +526,27 @@ def head_lane_s3copy(text, mod, kd):
     return text
 
 
+def head_strap_direct(text, mod, kd):
+    """KV-KITS-8 10-28 (COORD ruling 06:26 on the KV-KITS-7 head ASK): no strap-capture register without timed fan-in.
+    ot_qkh_lane8 STRAP_DIRECT=1 compares against the bsel strap port (bs3 dropped); ot_qkh_head_frontq_native
+    STRAP_SAMPLE=1 latches hid at reset release (hid2 rides the f_t relays to the other eighths, so it stays a flop).
+    0 cycles; leaves from this repo (ot_qkh_subtiles.sv via --head-lane-ltcopy / --head-port-regs, r4 via --head-port-regs)."""
+    rx = re.compile(r"(ot_qkh_lane8 #\()(?![^)]*STRAP_DIRECT)")
+    text, nl = rx.subn(r"\1.STRAP_DIRECT(1), ", text)
+    fq = re.compile(r"(ot_qkh_head_frontq_native #\()(?![^)]*STRAP_SAMPLE)")
+    text, nf = fq.subn(r"\1.STRAP_SAMPLE(1), ", text)
+    if nl < 1:
+        raise SystemExit(f"{mod}: --head-strap-direct found no parameterised ot_qkh_lane8 instance")
+    if (nf > 0) != (mod[-1] in "0246"):
+        raise SystemExit(f"{mod}: frontq instances {nf}; the even head_eighth cores carry exactly the head front")
+    (kd / "head_strap_direct_delta.json").write_text(json.dumps(dict(
+        lane8_strap_direct=nl, frontq_strap_sample=nf, removed_flops_estimate=2, added_cycles=0,
+        source="COORD 2026-10-28 06:26 ruling on the KV-KITS-7 ASK (unconstrained strap-capture endpoints bs3 / hid2); "
+               "rtl/hdc/nearhbm/ot_qkh_subtiles.sv STRAP_DIRECT, rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv STRAP_SAMPLE",
+        note="defaults 0 = unchanged leaves (signed heads)"), indent=1) + "\n")
+    return text
+
+
 def head_strap_master(text, mod, kd, cj):
     """OWNER DECISION 2026-10-25 07:01 (option B, ID straps): the head-dependent constants of an even head_eighth become
     strap_* INPUT ports of one hardened master, tied at the parent (TIEHI/TIELO next to the pin): BSEL (the 2-bit
@@ -832,6 +853,9 @@ def main():
                          "0 cycles, COORD ruling 5); odd heads refresh only the LT-copy leaf; even heads need --head-port-regs")
     ap.add_argument("--head-lane-s3copy", action="store_true",
                     help="even head_eighth: ot_qkh_lane8 S3_COPY=1 (per-lane S3 pin-flop copies, 0 cycles, PATH-KV-HEAD 10-25)")
+    ap.add_argument("--head-strap-direct", action="store_true",
+                    help="head_eighth: ot_qkh_lane8 STRAP_DIRECT=1 (bsel strap port, no bs3 capture flop) + even heads "
+                         "frontq STRAP_SAMPLE=1 (hid latched at reset release); KV-KITS-8 10-28, 0 cycles")
     ap.add_argument("--head-lane-taps", action=argparse.BooleanOptionalAction, default=None,
                     help="per-lane regional clock taps + GPL lane guide regions (KV-HEADCLK 10-25); default ON for the even "
                          "head_eighth cores, odd heads opt in (PATH-KV e1 LT_COPY successor), --no-head-lane-taps = old single-tree CTS")
@@ -948,6 +972,10 @@ def main():
         raise SystemExit("--head-lane-ltcopy only applies to head_eighth cores e0..e7")
     if a.head_lane_ltcopy and mod[-1] in "0246" and not a.head_port_regs:
         raise SystemExit("--head-lane-ltcopy needs --head-port-regs (repo ot_qkh_subtiles.sv carries LT_COPY)")
+    if a.head_strap_direct and not (re.fullmatch(r"kv3_head_eighth_e[0-7]", mod) and a.head_lane_ltcopy
+                                    and (a.head_port_regs or mod[-1] in "1357")):
+        raise SystemExit("--head-strap-direct: head_eighth cores with --head-lane-ltcopy (+ --head-port-regs on even heads), "
+                         "so the STRAP_DIRECT / STRAP_SAMPLE leaves come from this repo")
     if a.head_port_regs and not re.fullmatch(r"kv3_head_eighth_e[0246]", mod):
         raise SystemExit("--head-port-regs only applies to the even head_eighth cores (e0/e2/e4/e6)")
     is_even_head = bool(re.fullmatch(r"kv3_head_eighth_e[0246]", mod))
@@ -1028,6 +1056,8 @@ def main():
             dst.write_text(head_lane_ltcopy(dst.read_text(), mod, kd))
         if a.head_lane_s3copy and dst.stem == mod:
             dst.write_text(head_lane_s3copy(dst.read_text(), mod, kd))
+        if a.head_strap_direct and dst.stem == mod:
+            dst.write_text(head_strap_direct(dst.read_text(), mod, kd))
         if a.head_strap_master and dst.stem == mod:
             dst.write_text(head_strap_master(dst.read_text(), mod, kd, cj))
         if a.am_g_drop and dst.stem == mod:

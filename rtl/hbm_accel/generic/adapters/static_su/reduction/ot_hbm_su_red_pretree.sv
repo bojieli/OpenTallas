@@ -51,7 +51,7 @@ module ot_hbm_su_red_pretree_s #(parameter integer LAT=6,MUT=0)(
  output reg fault
 );
  // stage 1: capture the block (edge E)
- reg [31:0] x1 [0:31]; reg [31:0] v1; reg m1; reg bad1; integer n;
+ reg [31:0] x1 [0:31]; reg [31:0] v1; reg m1; reg bad1; integer n, n2;  // one loop index per process (yosys check -assert multi-driver; HBM-CORES-REBAL-1 lint fix)
  always @(posedge clk) begin
   for(n=0;n<32;n=n+1) x1[n]<=ro_x[n*32+:32];
   m1<=(MUT==3)?1'b0:tree_cmd[10];
@@ -60,12 +60,12 @@ module ot_hbm_su_red_pretree_s #(parameter integer LAT=6,MUT=0)(
   if(!rst_n) begin v1<=32'd0; bad1<=1'b0; end
   else begin
    bad1<=1'b0;
-   for(n=0;n<32;n=n+1) begin : lv
+   for(n2=0;n2<32;n2=n2+1) begin : lv
     reg [4:0] cn; reg on;
-    cn=(n<16)?tree_cmd[4:0]:tree_cmd[9:5];
-    on=tree_cmd[11]&&(5'(n%16)<cn);
-    v1[n]<=(MUT==4)?(tree_cmd[11]&&5'(n%16)<=cn):on;
-    if(on&&!ro_v[n]) bad1<=1'b1;
+    cn=(n2<16)?tree_cmd[4:0]:tree_cmd[9:5];
+    on=tree_cmd[11]&&(5'(n2%16)<cn);
+    v1[n2]<=(MUT==4)?(tree_cmd[11]&&5'(n2%16)<=cn):on;
+    if(on&&!ro_v[n2]) bad1<=1'b1;
    end
   end
  // chunk chains: chunk c = lanes 8c..8c+7 (c 0,1 half A; 2,3 half B)
