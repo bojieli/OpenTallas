@@ -17,6 +17,24 @@ HERE = Path(__file__).resolve().parent
 BUFFER = re.compile(r"BUFx(?:2|3|4|5|6|8|10|12|16|20|24)(?:f)?_ASAP7_75t_R\Z")
 IDENT = re.compile(r"[A-Za-z_][A-Za-z0-9_$]*\Z")
 ICG = re.compile(r"ICGx(?:1|2|3|4|5|6|8|10|12|16)(?:p\d+)?(?:DC)?_ASAP7_75t_[RLS]\Z")
+# ASAP7 7.5T RVT BUF footprint widths (um, asap7sc7p5t_28_R_1x_220121a.lef) and the placement site width.  Parallel
+# island drivers sit side by side in one row; their pitch must clear the master width (HBM-CORES-REBAL-1 10-28: the
+# fixed 1.08 um pitch overlapped BUFx16f/BUFx24 groups -> OT_CORE_INFRA_PLANNED_OVERLAP mp_isl0_ck1 mp_isl0_ck0).
+BUF_WIDTH_UM = {"BUFx2": 0.27, "BUFx3": 0.324, "BUFx4": 0.378, "BUFx4f": 0.432, "BUFx5": 0.432, "BUFx6f": 0.54,
+                "BUFx8": 0.648, "BUFx10": 0.756, "BUFx12": 0.864, "BUFx12f": 0.972, "BUFx16f": 1.188, "BUFx24": 1.62}
+SITE_UM = 0.054
+PARALLEL_PITCH_UM = 1.08
+
+
+def parallel_pitch(master):
+    """Row pitch of side-by-side parallel island drivers: the legacy 1.08 um where the master fits it (byte-identical
+    plans), else the master width plus one site gap, on the site grid."""
+    w = BUF_WIDTH_UM.get(master.split("_ASAP7")[0])
+    if w is None:
+        raise InfraError(f"{master}: no footprint width for parallel placement")
+    return max(PARALLEL_PITCH_UM, round(math.ceil(round(w / SITE_UM, 6) + 1) * SITE_UM, 6))
+
+
 CTS_FANOUT = 24        # legacy core-kit CTS sink-cluster size (gen_core_kit_legacy defaults: fanout 24)
 
 
@@ -125,9 +143,10 @@ def compile_slice(sl, kd=None):
                 op = [p for p in plist if p["name"].endswith(f"_{kind}_o")]
                 if len(ip) != 1 or len(op) != 1:
                     raise InfraError(f"{name}: exactly one {kind} input/output feedthrough pair required")
+                pitch = parallel_pitch(master) if nbuf > 1 else PARALLEL_PITCH_UM
                 for k in range(nbuf):
                     n = add_cell(dict(name=f"mp_{name}_{kind}{k}", master=master,
-                                      xy_um=[cx + (k - (nbuf - 1) / 2) * 1.08, yy]), rect)
+                                      xy_um=[cx + (k - (nbuf - 1) / 2) * pitch, yy]), rect)
                     arcs.append(dict(cell=n, source=ip[0]["name"], sink=op[0]["name"]))
     # partition H-tree leg repeaters (COORD 06:53): one fixed BUF per site between its own in/out ft ports
     for rep in sl.get("pushdown", {}).get("clock_repeaters", []):
