@@ -940,3 +940,23 @@ Resumed exclusive whole-hub mover endpoint work in fresh sparse codex/hbm-datafl
   - All of this is under the 1906 target, which the owner accepted ("<1906 OK, closure over perf").
   - File: intel2 die-hbm-1027/region3/r5/price_hso.json.
   - The HX hub cycles (2-4) are not lanes in the ledger, so they are not in this price yet (record only).
+- 2026-10-28 02:35 PDT [HBM-RISK-2] R6 ESTIMATE on the hub region (q_hub_nw / q_hub_ne, C20h 2e5644cf5f65).
+  - RESET REACH = FAIL risk.
+    - The hub's plan reset is one tap_um (4298.4,1468.8). The kit gives one reset terminal per R4 grid tap: 21x11 = 231 taps at the default 400-um pitch, with no clock.tap_pitch_um and no tap_mode.
+    - 154 of the 231 grid taps land on a hard core and are moved by up to 294 um (NW) / 323 um (NE).
+    - Station regs to nearest tap, Manhattan: max 656.6 um (NW) / 669.6 um (NE) against the 405 relay_um. 171 (NW) / 162 (NE) of about 29k station regs are beyond 405. The channel-point bound is 440 um.
+    - The failures cluster on the bottom face at x 1.5-2.5 mm (bus L26_i/L27_i/L69_i/L5_o/L2_o regs at y 4.3), at (5.0-5.5, 2.5-3.0) mm and at the top face x 2.0-2.5 mm.
+    - Model: r6fast.py re-implements schema.tap_clear (nearest legal 2.16-um site, clearance 8.64) without the taken-tap spacing, so it is UNCHECKED vs the kit. About 1.5k station regs sit inside core boxes (pushdown stations) and are counted.
+    - This is the same failure as the HEAD hd_tile reset leaf (646.5 um). A kit would hit OT_RESET_LEAF at GPL.
+    - Fix (plan only, about 1 h): add sink-anchored taps (clock.tap_mode grid+sinks) or plan reset relays at the 3 clusters, then rerun the leaf check.
+  - PG, measured-activity rule: UNCHECKED for the hub. PG-ACTIVITY-5 measured only the SM (0.618 W/mm2); the hub has no measured toggle density.
+    - Best available: the Codex core-only upper-stack hub coupon (U6d, 1.2709 W/mm2 upper basis, 150-um bumps / 70-um pads) gives 23.4 mV, which leaves 11.6 of the 35 mV for below-M7. The SM below-M7 estimate is 5.13 mV.
+    - So the hub is a likely PASS, but on a non-measured density and a U6d (not C20h) geometry.
+    - Next: a hub toggle window in the PG-ACTIVITY tb (the same 14 cases), then rerun the canonical deck on C20h.
+  - Data: epyc2:/srv/opentallas-scratch2/claude/hbm-risk-2/{r6fast.py,r6_reach.txt}.
+- 2026-10-28 02:35 PDT [HBM-RISK-2] R5 DRT PREVIEW: NOT RUN. The blockers were measured (CHECKED unless marked):
+  - (a) There is no all-real-view HBM region. Only 129 of 733 hard-core records carry lef/lib: hub 60/159, root 4/46, SM 0/32, and 0 in every q_b*/q_su*. The hottest known area is the NW hub E side: M4 15.05 % hub-internal in R12. The C20f/C20h congestion probes have no GRT yet (DIE-HBM-5 01:55).
+  - (b) The hub is too big for one kit. Glue outside hard cores is 0.97 M cells (incl. u_hb_coll_Q 662k, part of which may be in its q3 cut cores) plus 306k parent-of-cut, against the 400k-cell cap. W/E halves would be about 0.5 M each (UNCHECKED).
+  - (c) gen.py phys --trial --types q_hub_nw (die-hbm-1027@1d784227c1) did not write the kit in 15 min (rc 124). Profile: schema.tap_clear inside _grid_taps, i.e. 231 grid taps x 159 cores with a candidate product per tap. That is a shared-tool performance gap (ROOT-MERGE scope, not fixed here).
+  - Rerun without a limit is LIVE: epyc2 pid 1292431 (started 02:31), out epyc2:/srv/opentallas-scratch2/claude/hbm-risk-2/kits_hub, log phys_hub.log. Collect whether a kit appears + kit_preflight. Do not route it (it is over the cap).
+  - DEFAULT next: DRT preview on a <=400k hub sub-partition once (1) the probes name the hot gcells and (2) the hub W/E split becomes a partition split with real views.
