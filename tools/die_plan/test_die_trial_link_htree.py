@@ -51,3 +51,54 @@ def test_link_fishbone_default_unchanged():
     a = D.build_link_fishbone(_P(), TAPS, REG, FEED)
     b = D.build_link_fishbone(_P(), TAPS, REG, FEED, local="fishbone", leaf_um=123.0)
     assert a == b and "local" not in a[0]["link_feed"]
+
+
+class _Site:
+    """legal everywhere except a 300 x 300 um block around the region-A centre (1000, 200)"""
+    W, H = 3000.0, 400.0
+
+    def legal(self, q):
+        return not (850 < q[0] < 1150 and 50 < q[1] < 350)
+
+    def hits(self, q):
+        return [] if self.legal(q) else [(850.0, 50.0, 1150.0, 350.0, "core")]
+
+    def nearest(self, p, axis=None):
+        if self.legal(p):
+            return tuple(p)
+        return min(((850.0, p[1]), (1150.0, p[1]), (p[0], 50.0), (p[0], 350.0)),
+                   key=lambda c: abs(c[0] - p[0]) + abs(c[1] - p[1]))
+
+
+def test_balance_legalize_keeps_region_balanced():
+    n = D.build_link_fishbone(_P(), TAPS, REG, FEED, local="htree", leaf_um=200.0)
+    for d in n.values():
+        d["req_xy"] = [d["x"], d["y"]]
+    st = D.balance_legalize(n, _Site())
+    assert st["unbalanced"] == 0 and st["moved"] >= 1
+    site = _Site()
+    for d in n.values():
+        if d.get("rib") is not None or d.get("region_root") is not None:
+            assert site.legal((d["x"], d["y"]))
+    # region A: every root->tap wire length (legs + last mile) equal within tol where the leaves hold one tap
+    rr = next(i for i, d in n.items() if d.get("region_root") == "A")
+    tot = []
+    for i, d in n.items():
+        if d["taps"] and REG[d["taps"][0][0]] == "A":
+            L, j = abs(d["taps"][0][2] - d["x"]) + abs(d["taps"][0][3] - d["y"]), i
+            while j != rr:
+                p = n[n[j]["parent"]]
+                L += abs(p["x"] - n[j]["x"]) + abs(p["y"] - n[j]["y"])
+                j = n[j]["parent"]
+            tot.append(L)
+    assert max(tot) - min(tot) <= 2.0 * 4 + 1e-6, tot
+
+
+
+def test_link_htree_full_keeps_empty_halves():
+    n = D.build_link_fishbone(_P(), TAPS, REG, FEED, local="htree", leaf_um=200.0, full=1.0)
+    lf = n[0]["link_feed"]
+    assert lf["full"] and lf["tapless_leaves"] > 0
+    for i, d in n.items():
+        if d.get("rib") is not None and d["kids"]:
+            assert len(d["kids"]) == 2

@@ -32,3 +32,31 @@ Pairs: every ordered tap pair inside one partition (die STA 'intra') and inside 
 BUILD die_trial --tree-form link_htree (new opt-in, general) --leaf-um 200 --rep-um 250 --tree-site-legal --tree-site-slide
 on hm_r26q9b + land128 + fish feed. Gates after build: die GRT0 incl clock TT+FF (50 it, critical 0), CA on measured
 rows (MESO-INTEG-1 K convention), die STA related pairs (main die_sta_related, droop, HB4).
+
+## MEASURED (2026-10-27 22:17 PDT; intel1 run dir /srv/opentallas-scratch2/claude/die-kv-3-1027; files in measured/)
+All builds: hm_r26q9b + land128 + feed_land128_fish, --rep-um 250, die GRT incl clock (M4-M7 signal, M8-M9 clock),
+TT + FF, 50 congestion it, critical 0: overflow 0 on M1-M9 in every build (H200B: M8 1.6 % / M9 0.6 %), EXIT 0.
+Die STA = main die_sta_related (shared model, clk_aocv g021 + shared droop). CA = landed_phase_ocv -> count_align_plan
++ count_align_bind (MESO-INTEG-1 convention, K_tree=-1-PAD), x1.00 and spice x1.05.
+
+| build | tree | cells | clock wire mm | intra skew TT/FF ps | intra FF hold / kit-contract (W 80) | seam skew TT/FF | seam FF kit-contract | CA x1.00 FAIL, lo/hi | CA x1.05 FAIL |
+|---|---|---|---|---|---|---|---|---|---|
+| DIE-KV-2 fishbone | link_fishbone | 5,289 | 1,021 | 567 | -538 | - | - | 0, 104.3/138.7 | - |
+| H200 | link_htree leaf 200, slide legalize | 10,482 | 1,631 | 505 / 432 | -479.7 | 230 / 198 | - | 0, 105.0/108.9 | - |
+| **H200B** | **+ balance_legalize** | **10,537 (8,421 nodes + 2,116 reps)** | **1,709** | **98.6 / 86.3** | **-131.2 / -6.26 (12 pairs, need W 86.3)** | **169.7 / 146.3** | **-66.3 (323 pairs)** | **0, 113.0/143.5** | **7** |
+| H200C | + level-uniform reps (reverted) | - | - | - / 88 | - | - / 151 | - | 0, -/107.0 | 19 |
+| H200F | leaf 200 full (empty halves kept) | 27,916 | 3,582 | 113.1 / 99.1 | -144.9 / -19.1 (41) | 142.4 / 127.5 | -47.5 (203) | 0, 104.6/136.5 | 81 |
+| H300F | leaf 300 full | 19,261 | 2,975 | 127.9 / 108.8 | -157.0 / -28.8 (36) | 109.2 / 97.3 | -17.3 (40) | 10 | 82 |
+
+- Chosen: **H200B** (link_htree leaf 200 + balance_legalize). In-region spread with OCV + droop 98.6 ps TT / 86.3 FF
+  (target <= ~150 met; estimate 55 x1.38 = 76 -> measured 86-99). FF intra hold -538 -> -131 raw; vs the 80 ps kit
+  contract only 12 pairs short by <= 6.3 ps.
+- Seam (2-part phy/pc regions): phy taps 70-150 ps earlier than pc taps (pruned sparse half = lighter load). Full trees
+  (F) trade 2.6x cells / 2.1x wire for no net gain (balance_legalize leaves 689 unbalanced nodes on the full tree).
+- HB4 to close at raw FF hold (plan delay model): intra 6.94 M cells (28,869 pairs), seam 145,650 cells (445 pairs).
+  At the kit-contract window W=80: intra 12 pairs, seam 323 pairs.
+- CA x1.00 (H200B): 3,595 crossings, D4 3,451 / D8 144 / FAIL 0, plan lo/hi 113.0/143.5; bind 0 identity/loop errors on
+  3,468 fundamental cycles, 2000-chip MC 0 violations, sim min 113.0/143.6. x1.05: 7 FAIL (pv_S_0/1 <-> hgi_WS_0/1;
+  start-tree path ambiguity 5, interval width 5.7 ns) -> bind fails closed.
+- Render (viewed): measured/clock_tree_H200B.png: one H-tree per region, root at region centre, feed fish legs between
+  region roots; diagonals in the PNG are node-to-node draw lines (routing is Manhattan in GRT).
