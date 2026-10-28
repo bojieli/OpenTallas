@@ -640,3 +640,13 @@ PARKED.
   GB add-on: NOT a silicon fault: tok17 cone bench used RTL dsfd_dvland_70 without the 2 reset_landing flops of the hardened s81dv_land_70 (bind landing_reset_stages=2); with them TT+FF 6/6 lanes 44/44 PASS at unchanged K (CHECKED, claude/s81-cores-r26-gbland-1027@a78d69530f). Padding (RL=4/5) would add +1 data cycle on 4 lanes -> not applied. Landing window unchanged (E=2/D=4/K=2). LAND-S81 note d58709442. TOK-ALL-18: rerun six-frame GB bench with die_sim_wrappers filelist; expect 23/40/36/27/38/48.
   6) R2 fold, E5 re-LEC, chain2 windows, 12 failing-LEC kits, idx_tx V3: NOT done.
 - 2026-10-27 19:32 PDT [LAND-S81-1 note] S81 landed form (12.11, claude/land-s81-1027@20a7f28c24) changes NO hard-core pins and NO core clock taps (CHECKED on all 171 types; cores tapped early by their signed insertion per 12.3 v5.0). Core kits stay as they are; only partition types re-kit (rings/fclk pins). The 8 internal_station G0C errors (7 leaf vn->vp 406-407 um, eng vi_s 416 um) stay with S81-CORES.
+2026-10-27 19:42:32 PDT AUTOPILOT -> S81-CORES: FAILED 49dbbdfd75eb s81/ot_s81_cfg7_seq_bfp (STRUCTURAL/preflight): KIT_PREFLIGHT FAIL issues 1
+  - pins_canonical: slice kit: plan pin file (freeze pins_file) not reachable -- cannot judge slice-placed pins
+KIT_PREFLIGHT FAIL: autopilot stopped before physical runner
+ot-run: RAN on localhost (unit oth-ubuntu-2486037-1793154767): exit 1
+AP_RC=1 | kit localhost:/srv/opentallas-scratch2/claude/flow-shared-6/s81kits/kits/ot_s81_cfg7_seq_bfp_r21p src main@47ce1af8bc | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-10-27 19:42:34 PDT AUTOPILOT -> S81-CORES: FAILED e80a98421626 s81/dsdv_eng_rr_h0 (STRUCTURAL/preflight): KIT_PREFLIGHT FAIL issues 1
+  - pins_canonical: slice kit: plan pin file (freeze pins_file) not reachable -- cannot judge slice-placed pins
+KIT_PREFLIGHT FAIL: autopilot stopped before physical runner
+ot-run: RAN on localhost (unit oth-ubuntu-2486828-1793154768): exit 1
+AP_RC=1 | kit localhost:/srv/opentallas-scratch2/claude/flow-shared-6/s81kits/kits/dsdv_eng_rr_h0_r21p src main@47ce1af8bc | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
