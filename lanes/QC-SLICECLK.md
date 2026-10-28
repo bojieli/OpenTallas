@@ -245,3 +245,4 @@ A0 parent remainsprimaryphysicalcriticalpath. Importanthandoffcorrection: romlea
     - (3) FF duty spice check on trial11;
     - (4) FF hold region balance.
   - No live jobs.
+- 2026-10-28 11:01 PDT [DIE-QC-14] START (successor of DIE-QC-13 9c4415e27c; no live QC-13 jobs). Branch claude/die-qc14-1028 (from main 3800ee3830), wt intel2 wt/die-qc14-1028 (sparse), runs intel2:/srv/opentallas-scratch2/claude/die-qc14-1028. Task 1 (re-plan CA/STA, clock_cell=inv2 declared) BLOCKED: main lacks FLOW-ONEMODEL-1 (RM157 stacking), CLK-INV-CAL-1 (RM165 HELD, rework) and region_stub (QC-13 approved, not merged). Doing task 2 first: A0 trunk on the real a0k5 romleaf clk pin (21.612,15.12; rawleaf/node a0k3 pins are at macro centre = fixture, CHECKED io.tcl), child pins balanced to the 250/202.5 contract, wire-length elongation instead of pad stacks. ESTIMATE first.
