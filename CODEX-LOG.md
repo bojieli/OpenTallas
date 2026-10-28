@@ -5178,3 +5178,152 @@ Shared source/jobs/results/failures/remaining work at handoff/codex_flow_2026102
 
 ## Handoff to Claude 2026-10-28 06:03 PDT
 EXPLICIT reset received; HEAD parked, no new jobs or source edits after reset. Full packet: handoff/codex_s81_head_20261028_reset.md. Own sparse intel2 branch codex/head-die-1028-0405@2309df2935 pushed; only untracked complete head_regional_one_entry.py draft remains, no merge in progress. Main has B1/pad context/nativecore clocks/signed aliases/live-cone lint/landing-count pin inventory/CA mem2reg fixes. Tile64,565cells and PORT_BIND1185/1185 pass, then FACE570shared+clockfeedthrough fails before placement; no bypass. LEP622,032leafcells +265SRAMs, over400k and unstaged LEF masters; must split and physically pack, no P&R launched. ROOT requests exact bank FF/mux/enable/clock/timing witness and mutants before considering any checker extension; +1capture alternative requires coupled origins/K/ledgers/proof. Two SerDes lints continue intel2 PID2866283(old,38GB) and319066(new,29.5GB), logs in packet. One-entry clock source2309 internal mean API pending intake; actual feeder/12CAfail still open. PHY clocks and production HEAD dates/checkpoint authority remain OWNER? items. All details, SHAs, actual failures, evidence paths and next actions in packet.
+
+## Handoff to Claude 2026-10-28 06:04 PDT
+
+EXPLICIT RESET received from the owner. All ten active lanes were told to park immediately, finish only already-started safe writes/merges, start no new jobs, and leave fleet jobs running. This section supersedes the initial03:59 takeover inventory. No whole die has a release signoff plus token pass.
+
+Main observed at handback: intel2 ~/OpenTallas HEAD == origin/main == 4d4c968ee0e227880d15c0d1622d49e1c3b8463a. Tracked main clean; pre-existing untracked FETCH_HEAD/ untouched. Shared merge completed RM95–114, plus S81 owner die-local merges da60a3a04a,7b97cf9e33,4d4c968ee0. Latest two are L5 checked aliases/clock experiment and EG PG stub. No root merge is in progress.
+
+### Root work and exact parked state
+
+- All-lane ownership inventory appended to lanes/CODEX.md (144 lane aliases). Sole die owners: QC=qwen, KV=tokens, HEAD=s81_head, S81=coverage, HBM=hbm; shared flow=flow, integration=merge. Two later focused supports: hbm_core_closure and s81_core_lec. Old Oct27 children were not resurrected.
+- acbf0993be on codex/coremean-0359-1028 is merged (RM97). Explicit parent_budget early core taps may select per-view TT/FF mean contracts in --trial partition kits only; release refuses unsigned budgets. Selected-view hashes/mean-reader controls retained;8 focused tests passed.
+- codex/tappad-0359-1028@d24a19f5e6 is merged (129ce543f2 +9bb81cb43d +d24a19f5e6, RM105/RM108). Actual pad identity includes port; parents/drivers/depth/physical CPPR paths include pads/repeaters; optional explicit body-bay sites and buffered wire segments are retained. Generated padded arrivals include measured slew. CLI sibling sites are no longer silently discarded.47 die_trial tests and the later4 focused CLI/path controls passed.
+- Own intel2 WTs codex-coremean-0359, codex-tappad-0359 and codex-qc-activity-0359 are clean. Empty preparation WT codex-trial-parent-0359 on codex/trial-parent-0359-1028@57e3aa2efc is also clean: NO parent backend code was written. Do not assume that promised dependency is implemented.
+- Source progress includes PG-core connectivity/strict opt-in checker; MESO START2; HEAD RTL/include/SDC/strap/pad/alias/lint/flop-ring fixes; PG island cuts/PHY offmodel; measured final FF repair; canary background policy; KV relative-manifest, signed-CA capacity, position-bank identity/tie-audit fixes; canonical HBM and bootstrap helper restoration. See merge packet/log for exact per-RM SHAs.
+
+### Root QC power task — completed bounded measurements, not PG closure
+
+Branch codex/qc-activity-0359-1028@4fc469ac5c is pushed, currently contains the earlier stress/floor diagnostics and su8_superpose.py. The later production results remain in owned scratch paths below and were NOT yet committed into this branch.
+
+Actual signed SU8 source/view: intel1:/srv/opentallas-scratch2/claude/qccores1-1027/rst3_k0/hold_b, actual6_final ODB+SDC+SPEF,833ps/RVT TT. Stress12001cycles SU8_EQ passed;4359/4655FF matched,488inputs, other296FF activity0.5 assumption. Power22.38182mW; current extracted vectorless30.24517mW; zero-data/free-running-clock sensitivity12.26238mW. Existing class responses reproduce old50.426mV. Stress with retained6.602below-M7 and background.5823W/mm2 gives40.690mV on150um, INFO only.
+
+Production counters: own epyc2:/srv/opentallas-scratch2/claude/codex-qc-activity-0359/qclm.
+- Read-only generated-source links to tok-qk-qclm-r2 were used to recompile C++ only, with an own counter driver; no original tree was edited.402 retained W5 slice0 SU8 state/alias signals,6809bits. Own build and counter compile/link jobs all terminal.
+- First L0_resid1 replay exact-log comparison FAILED because harness NCYC was lastcycle+1. Diagnosis proves first1925records exactly match and only13 terminal status snapshots move6218→6219 with identical payload. Original FAIL remains runs/summary.json. first_replay_diagnosis.json and first_replay_qualified_window.json explicitly qualify only that full-programme+one-idle-edge diagnostic window; no failed verdict overwritten.
+- Corrected parallel replays L0_resid2,silu,qk,qkv,gu,od,lm all EXIT0 with byte-identical original logs. Results in qclm/runs_v2/*_summary.json; full activity maps in qclm/production_activity. Replay unit oth-ubuntu-2619045-1793188489 terminal0.
+- Exact source input-capture concat yields487 inferred top-port rates from u_input_pins.q; reset input remains an explicit fallback. Selected old production RTL differs from current signed kit in synchronous reset/constant lane0/input-copy cleanup; record this scope, not a fresh parent equivalence claim.
+- Actual16 power models (8cases × unmatched18FF activity0.5/1.0) are COMPLETE on intel1:/srv/opentallas-scratch2/claude/codex-qc-activity-0359/su8_production_activity. Summary power_summary.json; each case/u0.5 or u1.0 has report/log.4637/4655FF mapped,487/488 inputs; duty0.5 assumption. Range12.39607–12.56227mW, clock group6.374471mW unchanged. Max L0_resid2 at unmatched1.0.
+- IMPORTANT: these are W5 slice0 FULL single-operation fixtures including boot/idle, NOT steady-state parent or die power. qk/qkv/od/lm do not launch this W5 SU8 start input; do not turn this into a full spatial/throughput power envelope. First-window qualification is separate from seven exact replays.
+- Old class superposition at max12.56227mW and assumed background.5823W/mm2 is about32.242mV incl retained6.602below-M7, INFO. A0 background, parent glue/clock, spatial/active duty, current physical integration remain unknown. No150um PG or cooling claim;75um option also remains conditional on its declared power model.
+- Root power jobs all TERMINAL. Last batch unit oth-ubuntu-2811437-1793189428, intel2 log /srv/opentallas-scratch2/claude/codex-qc-activity-0359/su8_production_all.otrun.log. Earlier stress Tcl literal-newline failure retained at intel1 su8_power; corrected su8_power_v2. First compile launch127 missing prepared script retained qclm_build.otrun.log; corrected qclm_build_ready terminal0. Intel1-to-epyc2 SSH alias transfer failed once; transfer via intel2 succeeded. No live root-owned heavy job remains.
+
+### QC / qwen
+
+Final packet handoff/codex_qwen_20261028_reset.md.
+- Own branch codex/die-qc-0359-1028; cc23146d6d fixes21 signed-SU12nm phase placements, G0C126→0errors/98types clean. Native signed pins unchanged.
+- Actual packed trial4 has46628base +14760pads=61388 bodies,0overlap/macro/host violations; TT/FF clock GRT50it terminal0overflow, all61388N/7121tap rows. Geometry-only evidence.
+- First409/355ps evaluation INVALID: it omitted common-path CPPR credit. Corrected official related-set bound still fails conservative declared budgets: TT187.07intra/206.31seam, FF160.74/172.39. It charges max473ps privatecore model widely; exact endpoint contracts/real views and fresh K/PAD still needed. No clock closure or signal GRT.
+- Measured-stage next candidate13146pads/max12, analytic nominal28/25ps. Trial5_measured generated59774cells and packed clean. Images generated but NOT YET PERSONALLY VIEWED: do not route/STA before review. No trial5 physical run launched.
+- A0 centre-entry/ONEck parent critical. Source raw probes prove47103/47103 with10911KEEP; no complete current parent kit. Remove old42-clock defines in new parent; no fake tap-count savings (physical taps7121 both old/new).
+- All3 unsigned CTS placement-RC child fixtures exported at intel2 ownR=/srv/opentallas-scratch2/claude/codex-die-qc-0359-1028/a0_child_fixture. views.json; ROM child_record.json; parent_nk_children.json/parent_nl_children.json; actual parent19/18placement input a0_parent_floorplan_input.json one level above. Means raw157.98/126.28, NODE222.31/178.41, ROM170.29/139.94TT/FF. Raw probe predates selectedrst145 geometry, not qualified.
+- Explicit parent_nk_pdn.tcl/parent_nl_pdn.tcl ready with native M5 +M6/M7 bridges and shared core_pg_grids; static unconnected0, actual pdngen/PG/IR and pin-island cuts still owed.
+- NEXT ROOT DEPENDENCY: physical/die_plan/qwen_compute/cores/legacy/gen_core_kit_qc.py line~712 still unconditionally rejects spec.children. Need a real --trial +explicit parent_budget path: stage actual LEF/TTFF/BB, validate selected per-lib CC budget hashes, exact child instances/placements, explicit parent_budget.pdn_tcl, clock means, and durable nonrelease guard. Do not simply bypass refusal or disguise hard children as SRAMs. Root's preparation WT is empty.
+- Rst3/BTAB/A0 child closure and actual per-parent activity/calendar duty remain owned; no production power proxy adopted.
+
+### KV / tokens
+
+Final packet requested handoff/codex_tokens_20261028_reset.md.
+- Branch codex/kv-die-1028-0405; exact SYS_C diagnostic packet db8725fd7b. All42 residual compares proved with8 exact predecessor cfg_data aliases; joint16D relations/reset bases pass and16wrong-predecessor SAT controls. Old AIG/noKEEP diagnostic only; fresh current KEEP-aware whole proof still required.
+- Full-hull CA component from FLOW: TT/FF0CA/slot/guard/START127, margins136.6/329.1 and127.2/128.5;3PAD+1 ES7/WS5/WS6, +159aggregate crossing cycles, not token delta.
+- Composed58types/160parts/124constantvariants/22654strapbits; missing die_io sidecar fixed by exact embedded declaration; old stale latency regenerated2065lanes. Strict bind terminal33errors vs4118old:0unbound/undriven/multibound, but30R8_STALE +ECTL PARAM_REGEN +PB/tie audit. Shared c9 capacity and9f268 identity/tie fixes now main; fresh bind_hull_audit and K-only RT20 compose/proofs in packet.
+- ECTL K-only candidate+106cycles passes actual3595CA/127START TTFF; strict K regen/whole source remains next.
+- Actual current R8 cannot reuse5types uniformly; old pads fail58word/6inversion/13replica groups. Do not relabel old table.
+- Optional R8v2 prototype99222560cd: exact12newfiles/defaultOFF/v1 unchanged, fixed existing positionIDs/no new selector pins.28usedIDvariants LEC, wrongtap36FAIL, model all28×300edges +mutant. Ordinary TOK9/EPOCH2(194FF) and head4/0(72FF):4944total vs1456old, +3488. Merger reviewed sound; ROOT HAD NOT YET APPROVED/MERGED when reset arrived. PreRT20 ledger must regenerate before plan adoption. Fault-OR/header/boot-go R8 component unresolved; do not delay already-ORed signal blindly.
+- CDC prototypes rejected: keeping input capture alone still shared22; keeping all54FF/Q aliases worsened shared1078 by materializing alias-buffer loads. No fix published, no cycles/state changed. Next separate FF-cell keep from alias-net keep in a tiny control-cone coupon.
+- New PVJ clock descriptor stale after DRST0: err0 now real DFF_P but old explicit sink census wants SDFF_PN0; regenerate exact current sink graph, not alias/waive.
+- Four PVJ/PVpair +heads jobs were running. PHY7539 busy holder is real parent core_prompt/peer stage PIDs3001977/3001989; do not kill or bypass. Collect final packet for precise hosts/paths.
+
+### HEAD / s81_head
+
+Final packet handoff/codex_s81_head_20261028_reset.md.
+- Main includes shared kit closure e6fd, TILEIO, B1/physical pads, portable signed-corner aliases, strict lint dead-cone cleanup, clk_c rewrite, declared port/strap inventory0359 and mem2reg17e2.
+- Fresh tile synthesis64565leafcells/0problems and port bind1185/1185; actual count strap sites supplied.
+- LEP normal synth622032leafcells (local364173+nested~258k), over400k. Five SRAM types unstaged; ODB stops missing ot_sram_1r1w2c_256x64_m1. Plan LEP declares no hard children/macros despite actual SRAMs. Need four~64k collective hard children plus real macro recipe; no P&R.
+- FACE_GUARD tile570shared +forwarded fclk buffered-from-clk. CA data/epoch directly fan to4 feedbackMUX/DFF slots; existing land_slot recognizes distinct ICG clocks, while global DONT_USE blocks ICGs. No waiver adopted.
+- Exact CE feedback-bank structural witness/checker proposal versus +1 private capture alternative remain pending. Root authorized preparing evidence only; keep generic fanout guard. Added crossing latency is allowed by12.15c, but any porch requires reset/count/K/static ledgers +component proof. Owner policy interpretation question remains plain OWNER?.
+- Current external6grid/5core feeder mismatch41..123ps exceeds~9.84ps conditional budget. Old r2b wrongly assumed NDR vsplain1x. One-entry balanced regional CTS candidate being estimated; no blind tap compensation.
+- Pushed2309df2935 pending internal core_taps mean API; nonSIGNED internal hardfails, not enough for unsigned A0 parents. Untracked one-entry helper in own WT is parked, unadopted.
+- SerDes old/new lints still running (~26–29GB CPU progress), leave them. PMA receive clock physical period/uncertainty contract missing; no PHY signoff.
+- Full programme/checkpoint authority (dba1be0.../ctx1048576_head.npz) unavailable;128row fixture is not2640 production image.
+
+### S81 / coverage
+
+Final packet requested handoff/codex_coverage_20261028_reset.md.
+- codex/s81-owner-1028-0359@4c49143d80/a5cad8a0d3 plus e2d41302be merged die-locally: main4d4c latest.470fcd754e M5 PG stub writer8LEFs/writers connects modeled1602instances (1024hcore+128hrow+450templates), functional geometry unchanged; later EG native PG stub also merged. Remaining39other stubs/456BF M7 interfaces open.
+- Original G clock24523cells had474bodyoverlaps/133coincident; packed all-body layout0overlap/macro/unhosted, max2.222um shift, personally viewed. Fresh TT/FF GRT terminal0overflow.
+- Routed current-main CA+SPICE+LCA2306crossings0missing/0FAIL; min113.2TT/105.9FF, intra skew134.01/109.68 <=150. These are owner-run numbers, NOT independently recomputed root headlines or real-core release.
+- Declared-budget FF hold−162.50 still fails; no actual signed-core timing closure.
+- F1 opaque-M7 macro crossings are actual main routing blocker.9065FF graph,3268roads,1085targetFFs;3banks constructive max391.697um/0all73macro8.64halo hits in v3. v2 had59halo hits, retained. Shared buffer/fork reservation and rq/reset/tie completion remain before review/build.
+- L5 exact16aliases recipe-only n32 proof98941/98941 +27603KEEP0missing; k+1mutantUNPROVEN, merged. No RTL/cycle changes.
+- New L2 AP838fc6abf3c4: initialGRT0 then max hold-buffer failure3034endpoints, TT−15.738→−3.111ps with2799buffers/+11.5%area. Do not cap-knob rerun; refit old345.6×43.2strip/clock+hold structure.
+- Core means from placement-RC metrology are diagnostic; vn_a old400ps cutoff would silently discard real flops and was avoided. No SIGNED claim.
+- Inherited col_h9 GRT still running (17/30 last seen), untouched. Fresh clock model postprocessing/support proof details in packets.
+
+### HBM / hbm
+
+Final packet requested handoff/codex_hbm_20261028_reset.md.
+- codex/hbm-die-1028; source-only0bf12bd931 recovered9namespacedB2native donors, actual110module undefined0/ambiguous0, mergedRM102. Diagnostic two-stop vehicle NEVER authorizes deleting canonical slots.
+- Canonical four-quarter/four-VMS source recovered from101bfe8fbb: eb97d1569c +bootstrap6cc3759241 +targetguard a5f2f63b2a merged RM11457e3. Exact4+5source identities checked;256HCOL+8tails actualcensus,68SRAM contract,187explicit initial obligations. TARGET0 disabled; attach guard16..255 matchesRTL,8/15reject16/225positive.
+- Actual target225 attachment succeeded with pinned original gzip representation/14decoder bodies equal. Prior hash fail was wrong input representation, not relaxed gate. External compiler frontend still pinned old snapshot, current calendar/boot/token not qualified.
+- Storage restoration source candidate375instances/four calendars/32banks/eight write mergers; missing-provider126→88, reset obligations44→88. Missing current8SM→four-role producer/cadence wiring remains exact OPEN; do not import old extra SM/SU or alias onto8currentSM. Physical C20 reconciliation must use canonical source, not diagnostic B2.
+- VMS actual families: SW NC2/RG5WG2/SID0; NW NC0+8bankfault/RG5WG3/SID2; E NC0/noNWfault/RG4WG2/SIDs1/3. RG/WG dead afterhoist, but NC/interface differences real. Existing E NC1 wrapper cannot substitute. Four fixed-SID native masters until genuine E SID strap qualified. Support has full93bus/source/slot inventory.
+- Exact IDX132members expanded; SFU/SU143+expanded source resolves true paths, human-only metadata replaced. Some diagnostic QID2/3 side slots absent; not deleted from canonical plan without reconciliation.
+- Bank prototype53fe78e506:1080lockstep/0 and3mutants caught833ps, no cycles/reset change. Physical centroid packing FAIL. Correct405um basis safe local subset3801NW/3770NE leaves1.908M/2.002Msoft cells→at least6subparts/hub; straight cuts37–63kbits exceed25.9kface capacity and cross30–96bodies. No bank adoption/plan change.
+- Fourfold-static-cadence estimate is OWNER? only: reduced station/cut load, but actual producer hold/buffering/cadence and rate unproven; no serializer/calendar implementation. Source reconciliation before recomputing traffic.
+- Fresh measured PG/real region tree, S-face reset, G0C20 and actual regional DME imbalance remain open; analytic0FAIL is not built-clock proof.
+
+### Focused HBM core closure support
+
+Packet requested handoff/codex_hbm_core_20261028_reset.md (and local coord/handoff/codex_hbm_core_closure_0359/).
+- codex/hbm-core-closure-0359-1028:16f73a2276 optional finalFF helper mergedRM1099fa; a91a9597a1 reviewed freshkit geometry. No margin/SDC/clock waiver.
+- Header correction: inherited+186.03ps was FF setup INFO, NOT TT. Actual TT+27.43, FF endrepair−.34.
+- Fresh trial LIVE intel1 unit oth-ubuntu-2791390-1793189206 (32GB/8threads, admission measured24GB), kit /srv/opentallas-scratch2/claude/codex-hbm-core-closure-0359/kits/ot_hfd_coll_q2_hard_v8g__reduce_d5760c6fb862-finalff3. Check intel2 same lane/finalff3_route.otrun.log and intel1 kit/run_route.log. Face/preflight/port/LEC preludes pass. End-GRT baseline reproduces TT+27.43/FF−61.77 before hold repair; final helper/signoff/routed LEC still pending. Leave running.
+- Programme_store proposal has44 SRAM INSTANCES (not4; freeze.macros countedmaster), raw69.7%area/halos~87.7%. Existing driverpitch1.08 wrong vsBUF24body1.62; existing LEF legalizer packs35infra bodies0overlap/maxmove.162 with16FT relocation proposal. Evidence reviewed, parent clock/topology repricing still owed; no new GP/CTS.
+- VMS inventory delivered to HBM owner, no plan/source aliases or physical job.
+
+### Focused S81 core LEC support
+
+Packet handoff/codex_s81_core_lec_20261028_reset.md.
+- Results-only branch codex/s81-ve-lec-0359-1028@bdf3fd32b2 (5c68e93a8c,2879dfd5fc,bdf parents) pushed. No adopted RTL or generic matcher fix.
+-640missing KEEP are REAL synthesized constants:256ring BF16low16,256BF16×BF16productlow32,128BF16×FP32productlow16. High q/q2 aliases alreadycount; generic component matcher changes0 actual counts, parked/unmerged.
+- Actual smallest cones prove allconstants after6edges, ring→x_aman after8; short/wrong-bit controlsSAT. Full-word ring shift miter passes/MUT3 caught. Ring-only structural prototype valid/control and defined-invalid checks pass but startup SAT remains diagnostic, not phase/reset waiver. Uncommitted prototype and unrelated parked matcher experiment are in OWN WTs, patch/evidence archived; do not adopt.
+- PRIMARY proof STILL LIVE intel2 unit oth-ubuntu-636488-1793188532, docker de478bd52f99, Python636620; /srv/opentallas-scratch2/claude/codex-s81-ve-lec-0359/prefix8 and prefix8.otrun.log. Last >1h active~1.9GB; hyp0failed94,hyp1failed34,hyp2failed0, rawprefix6/7 done, closure/guard pending, no lec.json yet. Check existing job; no duplicate or timeout.
+- IMPORTANT trial-parent safety dependency found: signoff.py does NOT currently enforce --trial/unsigned-child status. master_slice.kit_apply with a real slice returns normalstamp even for--trial; core_flow onlywritesbinding; clock-model coverage is incidental, not durable. Before enabling unsigned hard-child core parents, emit an explicit marker and persist it through signoff discover→inputs→evaluate/cmd_verdict so record-only re-evaluation cannot becomeSIGNED if kit disappears. Suggested marker trial_hard_children.json/schema opentallas.trial_hard_children.v1, release_qualified:false. NO SUCH GUARD CODE WAS WRITTEN. Existing unconditional children refusal must not simply be removed.
+
+### Shared FLOW / open tools / operations
+
+Final packet requested handoff/codex_flow_20261028_reset.md.
+- AP2712+16c2+ff23 merged1472/deployed live frommain. Pending/absent/different-flow canaries advisory, matchingactualREGRESSION holds; source comparison errors failclosed, newer uncomparable cannotfall back toolderPASS.16controls pass.
+- Normal tick actually submitted4KV(PVpair/PVJ variants)+S81L2+oldHBMAQ. HBMAQ correctlypreflightFAIL6 (missingruntime/slice/RC/pinmetadata) beforephysical; exact supersededrow withdrawn byHBM. MissingHCPLdir rejected; realPHYbusy kept. No manualrow bypass/otherjobkill.
+- Obsolete OWN K2 search stopped only its exactscope oth-ubuntu-3760737-1793186090.scope after checkpoint round12/20CAfail/min106.8/sumlat6870. Indiscriminate reverseSTARTwire trial fails, no adoption. Fresh QC rows need newK/PAD; no oldprogramme reused.
+- Relay-road source f089eb8f11 on codex/relay-roads-1028: optional/defaultoff,6focused executedcontrols, actual3268/3268branches; runtime exactcell/master/pin/net/body/halo/rowcontract. Actualjointpacking stillpending. FF-first consumedsharedfork corridor andv3hadfixedtapoverlap; bothfailures retained. Shared-prefix reservation nowjoint; reset/rq/ties typed scope stillowner-open. No P&R claim or root approval/merge yet.
+- landed_phase_ocv.analyse currentlylast-tap-per-part selector defect being fixed with actual declared window geometry/worst bounds; no replacement of the unchangedall-tap STAinterval hull.
+- OSS-HIER TCflat work5 terminal0, WNS−366.46/DRC0 vsstitched−500; ETMholdmax-only unusable. No repeatedbuild. A0 reference API at claude/oss-hier-1027@679abdfc83/opentools/hier/ohier emit.py+hsta.py experimental only, not a ready parent composer or macro-latency-balancedCTS.
+- CORE/DRT/PG review rules unchanged; no external publication or messages sent.
+
+### Shared merge / A0 evidence
+
+Final packet requested handoff/codex_merge_20261028_reset.md. Main latest observed4d4c==origin/main; no root merge pending.
+- A0 diagnostic packet codex/qc-a0-activity-0359-1028@aa376e7c5e +parentmodel2b3e7727fa retained OFF MAIN at rootrequest, no VCD/objects committed.
+- ActualsameCTS833ps/setRC_rcx stress:raw56.51149vs91.61480mW,11646/11838FF+192explicitanchor-default;node69.14761vs55.10803mW,12102/12102+9explicitnamingaliases;ROM15.95736vs14.61787mW,2200/2200. Inputs391/1539/15allmatched, clockidentical eachpair. Rate-only/duty.5 and ROM8.944526mW unconditionalLibmacroASSUMED(56%) explicit. No invented CE scaling (actual CE duty/rate recovered but selectedLib has no CE energycondition).
+- FixedA0census b5e8528: area.5301614592mm2; NK8raw+10ROM+1node, NL8raw+10ROM. Partialchild totals.68081313/.61166552W, NOT fullparentpower. NK Clock.131714311+ROMmacro.08944526+other.459653559; NLClock.12172971+sameROM+.40049055. Parentglue/clock/integrationloadmissing→fullparentNULL. Do not replace4.73rawproxy withthesechilddensities.
+- Pending source packets: R8v2 prototype99222560cd reviewed but rootapproval NOT YET granted at reset; relay f089 not yetreviewed/adopted; HEAD2309internalmean API pending; actual trial-parent hook+durable signoffguard NOTIMPLEMENTED. All need freshcurrentmain composition and only exactapprovedpaths, no broad ancestry.
+
+### OWNER? items and immediate next priorities
+
+OWNER? HEAD CA bank representation: existing clock-enabled feedbackMUX slot FFs vs ICG-only land_slot recognizer; do not waive generic FACE. Prepare exact bank witness or privatecapture+pricedcycle underexisting12.15c; any binding gate-policy relaxation needs ownerdecision.
+OWNER? HEAD PMA rck physical clock period/uncertainty/IO authority and full productionprogramme/checkpoint location remainopen.
+OWNER? HBM physical hub/station architecture and current8SM→four-role producer/cadence/calendar contract remainopen; serialization estimate is notadopted and cannot assume bubbleable fixed bursts.
+Technical next priority: complete trial hard-child backend WITH durable unsigned-parent releaseguard, then QC ONEck parent. Review trial5 image before routing; collect actual freshclock phase results. Complete KV R8/ECTL source event and CDC structuralprivacy. Continue S81 F1 roads+realviews/hold, HEAD LEP macro/hard-child plan+FACE/clock, HBM canonical producer closure+legal physical plan. Collect all running jobs above before rerunning anything.
+
+Root has parked all work. Fleet jobs intentionally continue. No new code, P&R, policy decision or source intake is authorized by this handback itself.
+
+### Final park acknowledgements
+
+All nine lanes acknowledged PARK and wrote final packets in coord/handoff/: codex_qwen_20261028_reset.md, codex_tokens_20261028_reset.md, codex_coverage_20261028_reset.md, codex_hbm_20261028_reset.md, codex_s81_head_20261028_reset.md, codex_flow_20261028_reset.md, codex_merge_20261028_reset.md, codex_hbm_core_20261028_reset.md, and codex_s81_core_lec_20261028_reset.md. These packets contain the latest lane corrections and collection commands. No further project work started.
+
+Latest corrections: KV strict bind has 31 remaining R8/ECTL errors; RT20 K-only COPY +106 crossing cycles passes actual SPICE+CPPR 3595 crossings/127 START and 58-type/160-part composition; new strict bind not launched. Newly terminal HEAD e1/e5 fail FF hold -3.89/-1.78 ps, e5 TT setup -1.78 ps, DRV and two unconstrained paths each. Old 116-strap LEC mutant TIMEOUT was logged pass=True: this is NOT a caught mutant and must be diagnosed. HEAD FACE count is 568 bank bits plus two FSTART ports; LEP census includes 265 SRAM instances. HBM storage candidate elaboration terminal exit0, 144 modules, zero undefined/ambiguous, ten controls pass; uncommitted source preserved. Collq2 remains running, latest repair iteration60 with118 buffers and FF hold -52.371 ps, final hook pending. FLOW joint4 allocator remains running on intel2 unit1373579/PID1373618; uncommitted bounded-search and fresh port-tap reader followups preserved, reader three tests pass but no actual fresh model run. Merge lane confirms main==origin/main 4d4c968ee0e227880d15c0d1622d49e1c3b8463a, no merge pending.
+
+Fleet jobs remain alive. Root and all lanes are parked for Claude.

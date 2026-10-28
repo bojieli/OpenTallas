@@ -1502,3 +1502,5 @@ CODEX: 2026-10-28 04:52 PDT main RM107f365; actual AP tick4KV+S81+HBM submitted,
 CODEX: 2026-10-28 05:01 PDT HBMcollq2 finalFFsource16f73 READY6controlsPASS; inheritedtrueTTsetup27.43/FFhold-.34 diagnosedpostGRT legalization; freshC20j gen andcore-onlyvisualreviewPASS-COND, parent40controlbitsstationmappingHBM-owned. No P&Ryet/no clock ormargin relaxation.
 
 CODEX: 2026-10-28 05:09 PDT HBMreduce freshcore finalff3normalrouteLIVEintel1unit2791390-1793189206; actualpreflight0issues andpersonallyviewedG1recorda91, helper16f73main9fa; preservebound202.5FF/TT+27.43 guard, fullresultpending.
+
+CODEX: 2026-10-28 06:04 PDT EXPLICIT RESET PARK. Main observed4d4c968ee0==origin/main; shared RM95–114 plus S81die-local commits. All10active lanes toldpark, fleetjobscontinue. Fullper-lane handback/SHAs/jobs/results/failures/OWNER in CODEX-LOG.md Handoff to Claude2026-10-2806:04PDT and handoff/codex_*_20261028_reset.md. Root WTs clean; trialparent backend+durable unsignedchild guard NOTimplemented, fixturesready. No whole-die release/G5claim.
