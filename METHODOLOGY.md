@@ -461,3 +461,6 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
      frequency from one source with unknown but bounded phase (|phase difference| < P/2), and every region crossing is a
      FIXED-LATENCY MESOCHRONOUS SYNCHRONIZER (ot_dp_clk_landing ring, +K cycles, no handshake/credits). In the paper and in external
      text, say "mesochronous regions with fixed-latency crossings"; never "GALS" or "async FIFO". Tool, lane and plan-field names keep "landed".
+- 12.12 (OWNER 2026-10-27 ~19:1x) droop INFO rerun extended: every signed core with TT setup slack < 70 ps gets the 0.665 V INFO rerun
+     (12.4a b2 had < 25 ps). An INFO FAIL is fixed structurally at the core's next re-sign; it is not a sign-off gate. Measured basis:
+     VQ 2.48 -> -60.90, NNfd 8.23 -> -65.12 (DROOP-DERATE-1, UNCHECKED).
