@@ -1240,7 +1240,83 @@ def _macro_pg_layers(lef):
     return levels[0] + " M" + str(int(levels[0][1:]) + 1)
 
 
-def phy_pg_pdn(P, tn, doms, macros, root=None):
+# PG-CORECONN-1 10-28 (opt-in plan partition_types.<t>.core_pg_connect, default off = kit bytes unchanged): the
+# kit PDN global_connect binds every hard core's VDD/VSS ITerm to the tile nets (logical), but outside the PHY-domain
+# path no macro grid exists, so pdngen drops no via onto the core PG pins: in hd_tile all 10 core PG terms / 744 M5
+# pin shapes are untouched by tile PG metal (PDNSim PSM-0069; an LVS open).  Each placed non-PHY macro gets a pdngen
+# macro grid on its own LEF PG pin layer L, connected to the tile strap layer above it (M4->M5, M5->M6, M6->M7).
+CORE_PG_UP = {"M4": "M5", "M5": "M6", "M6": "M7"}
+
+
+def macro_pg_pin_layers(lef):
+    """{'VDD': {layers}, 'VSS': {layers}} of a macro LEF (PIN VDD / PIN VSS PORT geometry; missing pin -> empty)."""
+    text = Path(lef).read_text(errors="replace")
+    out = {}
+    for pin in ("VDD", "VSS"):
+        block = re.search(r"\bPIN\s+" + pin + r"\b(.*?)\bEND\s+" + pin + r"\b", text, re.S)
+        out[pin] = set(re.findall(r"\bLAYER\s+(M[0-9]+)\s*;", block[1])) if block else set()
+    return out
+
+
+def core_pg_connect_layer(lef):
+    """(pin_layer, tile_layer) the macro's PG pins connect on: the highest LEF PG layer that has a tile strap layer
+    above it (CORE_PG_UP), identical for VDD and VSS.  ValueError when the LEF has no connectable PG geometry."""
+    got = macro_pg_pin_layers(lef)
+    pick = {}
+    for pin, lays in got.items():
+        ok = sorted((l for l in lays if l in CORE_PG_UP), key=lambda l: int(l[1:]))
+        if not ok:
+            raise ValueError(f"{lef}: {pin} has no PG pin geometry on {'/'.join(CORE_PG_UP)} (found {sorted(lays)}); "
+                             "core_pg_connect cannot land it on the tile grid")
+        pick[pin] = ok[-1]
+    if pick["VDD"] != pick["VSS"]:
+        raise ValueError(f"{lef}: VDD on {pick['VDD']} but VSS on {pick['VSS']}; one macro grid needs one layer")
+    return pick["VDD"], CORE_PG_UP[pick["VDD"]]
+
+
+def core_pg_grids(P, tn, macros, root=None, exclude=()):
+    """pdn.tcl lines of an opt-in type (core_pg_connect): one CORE macro grid per PG pin layer over the type's placed
+    macros (hard_cores + hardened contents, minus `exclude` = PHY-domain macros), add_pdn_connect pin layer -> tile
+    strap layer.  [] when not opted in or the type places no macro."""
+    if not P.types[tn].get("core_pg_connect"):
+        return []
+    import cores as C
+    groups = {}
+    for inst, _mod, lef, *_ in macros:
+        if inst in exclude:
+            continue
+        groups.setdefault(core_pg_connect_layer(C.resolve(lef, root)), []).append(inst)
+    t = []
+    for (lo, hi), insts in sorted(groups.items(), key=lambda kv: int(kv[0][0][1:])):
+        g = f"core_pg_{lo}"
+        t += [f"# PG-CORECONN-1 (core_pg_connect): {len(insts)} placed macro(s) with {lo} PG pins onto the tile {hi} straps",
+              f"define_pdn_grid -macro -name {{{g}}} -instances {{{_pdn_inst_patterns(insts)}}} -voltage_domains {{CORE}} -halo {{0}}",
+              f"add_pdn_connect -grid {{{g}}} -layers {{{lo} {hi}}}"]
+    return t
+
+
+def core_pg_unconnected(pdn, macros, root=None, exclude=()):
+    """[(inst, pin_layer, tile_layer)] placed non-PHY macros of `macros` that no macro grid of the pdn.tcl text lands
+    (no define_pdn_grid -macro whose -instances matches the instance with an add_pdn_connect on its LEF PG layer to
+    the strap layer above).  [] = every macro PG pin layer is connected."""
+    import cores as C
+    grids, conns = {}, {}
+    for m in re.finditer(r"define_pdn_grid -macro -name \{(\S+?)\} -instances \{(.*)\} -voltage_domains", pdn):
+        grids[m[1]] = [re.compile(p) for p in re.findall(r"\{(\^.*?\$)\}", m[2])]   # ODB-name regexes
+    for m in re.finditer(r"add_pdn_connect -grid \{(\S+?)\} -layers \{(M\d+) (M\d+)\}", pdn):
+        conns.setdefault(m[1], set()).add((m[2], m[3]))
+    bad = []
+    for inst, _mod, lef, *_ in macros:
+        if inst in exclude:
+            continue
+        lo, hi = core_pg_connect_layer(C.resolve(lef, root))
+        name = re.sub(r"(?<!\\)([\[\]])", r"\\\1", inst)
+        if not any((lo, hi) in conns.get(g, ()) and any(r.match(name) for r in pats) for g, pats in grids.items()):
+            bad.append((inst, lo, hi))
+    return bad
+
+
+def phy_pg_pdn(P, tn, doms, macros, root=None, core_grids=False):
     """Partition PDN with separate PHY supply regions (OWNER decision 7; OpenROAD voltage regions, the die-level form is
     pg_regions.pdn_tcl).  CORE keeps the abutment-continuous grid of PDN everywhere outside the regions (pdngen cuts the
     core domain at other domains' regions); each region gets its own net (VDDPHY) + VSS: M6/M7 straps at the same
@@ -1283,7 +1359,9 @@ def phy_pg_pdn(P, tn, doms, macros, root=None):
               f"add_pdn_connect -grid {{{rn}_macro}} -layers {{{phy_layers[mac[0]]}}}",
               f"odb::dbBlockage_create $b " + " ".join(f"[expr {{round({v:g}*$dbu)}}]" for v in r),
               "ot_clear_keepout_physical $b [list [list " + " ".join(f"[expr {{round({v:g}*$dbu)}}]" for v in r) + "]] phy_supply_region"]
-    if core_macros:
+    if core_grids:      # core_pg_connect: per-LEF-layer CORE macro grids (core_pg_grids) replace the M4-only grid
+        t += core_pg_grids(P, tn, macros, root, exclude=set(phy_insts))
+    elif core_macros:
         t += ["# CORE content macros: M4 PG pins onto the core M5 straps",
               f"define_pdn_grid -macro -name {{core_macros}} -instances {{{_pdn_inst_patterns(core_macros)}}} -voltage_domains {{CORE}} -halo {{0}}",
               "add_pdn_connect -grid {core_macros} -layers {M4 M5}"]
@@ -1467,9 +1545,18 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     phy_doms = phy_pg_domains(P, tn)
     if phy_doms:
         # PATH-KV-SYSC 10-25 PHY PG hook: separate VDDPHY region(s) of die.pg.domains inside this type
-        pdn = phy_pg_pdn(P, tn, phy_doms, macros, root=root) + pdn[len(PDN):]
+        pdn = phy_pg_pdn(P, tn, phy_doms, macros, root=root,
+                         core_grids=bool(P.types[tn].get("core_pg_connect"))) + pdn[len(PDN):]
         (kd / "phy_pg.json").write_text(json.dumps([dict(name=d[0], power=d[1], ground=d[2], rect_type_um=d[3],
                                                           macros=d[4]) for d in phy_doms], indent=1) + "\n")
+    elif P.types[tn].get("core_pg_connect"):
+        cg = core_pg_grids(P, tn, macros, root)
+        if cg:
+            pdn += "\n".join(cg) + "\n"
+    if P.types[tn].get("core_pg_connect"):
+        bad = core_pg_unconnected(pdn, macros, root, exclude={i for d in phy_doms for i in d[4]})
+        if bad:
+            raise ValueError(f"type {tn}: core_pg_connect leaves macro PG pins unconnected: {bad[:4]}")
     (kd / "pdn.tcl").write_text(pdn)
     (kd / "make_tracks.tcl").write_text(make_tracks_tcl(P))
     (kd / "constraint.sdc").write_text(sdc(P, tn, pins))
