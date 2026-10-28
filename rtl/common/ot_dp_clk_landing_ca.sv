@@ -91,8 +91,11 @@ module ot_dp_clk_landing_ca #(
             fault_state <= fault_next;
         end
     end
-    ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .K(K), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI)) u_ring (
-        .tclk(fclk), .t_rst_n(t_rst_n), .t_d({{(RW-W){1'b0}}, d}), .rclk(clk), .r_rst_n(rst_n),
+    localparam integer KTW = AW + 1 + 3;      // ring count width (LAPX = 3)
+    localparam integer KNT = 1 << KTW;
+    localparam integer KM  = ((K % KNT) + KNT) % KNT;
+    ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI)) u_ring (
+        .tclk(fclk), .t_rst_n(t_rst_n), .t_d({{(RW-W){1'b0}}, d}), .rclk(clk), .r_rst_n(rst_n), .k_s(KTW'(KM)),
         .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok), .r_glo_ok(glo_ok), .r_ghi_ok(ghi_ok)
 `ifdef OT_MESO_CA_FV
        ,.fv_recent(fv_recent), .fv_now(fv_now), .fv_any(fv_any)
@@ -108,11 +111,97 @@ module ot_dp_clk_landing_ca #(
 `endif
 endmodule
 
+// MESO-STRAP-1 (OWNER 12.15a COUNT STRAPS, METHODOLOGY 1.8 conditions): ot_dp_clk_landing_ca with K as the strap input
+// strap_k instead of a parameter, so all copies of a partition type share one hardened design; DEPTH stays a parameter
+// (the type's largest).  strap_k = K mod 2^KW, KW = log2(DEPTH) + 4 (D4 6 bits, D8 7 bits); every value is legal.  Quasi-
+// static: no pin register, read only by the reader-pointer reset load, kit SDC set_false_path -from the strap port, TIEHI/
+// TIELO per bit at the parent.  Same logic as ot_dp_clk_landing_ca (LEC per used K: tools/die_plan/strap_lec.py); proof
+// with strap_k free-but-constant over all 2^KW values: rtl/test/meso/formal_ca/fv_ca2.sv FV_STRAP.
+(* keep_hierarchy *)
+module ot_dp_clk_landing_cas #(
+    parameter integer W        = 1,
+    parameter integer DEPTH    = 4,   // power of two >= 4
+    parameter integer GUARD_LO = 0,
+    parameter integer GUARD_HI = DEPTH, // <= DEPTH; MESO-RECONCILE-1: default DEPTH (4 was wrong at DEPTH 8)
+    parameter integer ARM      = 2 * DEPTH + 4, // receiver cycles after the first valid word before guards are trusted
+    // MESO-RECONCILE-1 ready-timeout: fault if the crossing is not armed TIMEOUT receiver cycles after rst_n release
+    // (0 = off).  In the window the first valid word (sender count 0) is consumed at receiver count max(K, 0), seen one
+    // count later, armed ARM counts after that: armed by count max(K,0) + ARM + 2.  The default adds 2*DEPTH + 6 counts
+    // of slack, so it never fires in the window (proven, fv_ca2 A_ALL); a lag below the window (no valid word is ever
+    // consumed: never ready, previously no fault) now raises fault (fv_ca2 A_TMO).
+    // strap form: K is any value of strap_k, so the timeout covers the largest, 2^KW - 1 (D4 91, D8 171 cycles)
+    parameter integer TIMEOUT  = (1 << ($clog2(DEPTH) + 4)) - 1 + ARM + 2 * DEPTH + 8
+) (
+    input  wire         fclk,
+    input  wire         t_rst_n,     // sender start, forwarded with fclk (synchronous to fclk)
+    input  wire         clk,
+    input  wire         rst_n,       // receiver start (count origin), synchronous to clk
+    input  wire [$clog2(DEPTH)+3:0] strap_k,  // K mod 2^(log2(DEPTH)+4), quasi-static strap (tied at the parent)
+    input  wire [W-1:0] d,
+    output wire [W-1:0] q,
+    output reg          ready,
+    output wire         fault
+`ifdef OT_MESO_CA_FV
+   ,input  wire [DEPTH-1:0] fv_recent, fv_now,
+    input  wire [W+3:0]     fv_any
+`endif
+);
+    localparam integer RW = ((W + 63) / 64) * 64;
+    localparam integer AW = $clog2(DEPTH);
+    localparam integer CW = $clog2(ARM + 1);
+    localparam integer TCW = $clog2(TIMEOUT + 2);
+    wire rv, lap_ok, glo_ok, ghi_ok;
+    wire [RW-1:0] ring_q;
+    assign q = ring_q[W-1:0];
+    reg seen;                       // first valid word consumed
+    reg [CW-1:0] arm_cnt;
+    wire armed = seen && (arm_cnt == CW'(ARM));
+    reg fault_state;
+    reg [TCW-1:0] tmo_cnt;          // receiver cycles since rst_n release while not armed (saturates at TIMEOUT)
+`ifdef OT_MESO_CA_MUTANT_NO_TIMEOUT
+    wire tmo = 1'b0;                // MUTANT: ready-timeout disabled
+`else
+    wire tmo = (TIMEOUT > 0) && !armed && (tmo_cnt == TCW'(TIMEOUT));
+`endif
+    wire trip = (armed && (!rv || !lap_ok || !glo_ok || !ghi_ok)) || tmo;
+    wire fault_next = fault_state || trip;
+    ot_dp_landing_fault_port u_fault_port (.clk(clk), .rst_n(rst_n), .d(fault_next), .q(fault));
+    always @(posedge clk) begin
+        if (!rst_n) begin
+            seen <= 0; arm_cnt <= 0; ready <= 0; fault_state <= 0; tmo_cnt <= 0;
+        end else begin
+            if (!armed && tmo_cnt != TCW'(TIMEOUT)) tmo_cnt <= tmo_cnt + 1'b1;
+            if (rv) seen <= 1;
+            if (seen && arm_cnt != CW'(ARM)) arm_cnt <= arm_cnt + 1'b1;
+            ready <= armed && !fault_next;
+            fault_state <= fault_next;
+        end
+    end
+    ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI)) u_ring (
+        .tclk(fclk), .t_rst_n(t_rst_n), .t_d({{(RW-W){1'b0}}, d}), .rclk(clk), .r_rst_n(rst_n), .k_s(strap_k),
+        .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok), .r_glo_ok(glo_ok), .r_ghi_ok(ghi_ok)
+`ifdef OT_MESO_CA_FV
+       ,.fv_recent(fv_recent), .fv_now(fv_now), .fv_any(fv_any)
+`endif
+    );
+`ifndef SYNTHESIS
+    initial begin
+        if (W < 1) $fatal(1, "count-aligned landing requires a nonempty bundle");
+        if (DEPTH < 4 || (DEPTH & (DEPTH - 1)) != 0) $fatal(1, "DEPTH must be a power of two >= 4");
+        if (GUARD_LO < 0 || GUARD_HI > DEPTH || GUARD_HI < GUARD_LO + 2) $fatal(1, "need 0 <= GUARD_LO, GUARD_LO+2 <= GUARD_HI <= DEPTH");
+        if (TIMEOUT != 0 && TIMEOUT < (1 << ($clog2(DEPTH) + 4)) - 1 + ARM + 3) $fatal(1, "strap TIMEOUT below 2^KW - 1 + ARM + 3 would fire in the window");
+    end
+`endif
+endmodule
+
 // One direction: DEPTH-slot ring, writer slot = sender count, reader slot = receiver count - K.
+// MESO-STRAP-1 (OWNER 12.15a): the read offset is the INPUT k_s (K mod 2^TW, TW = log2(DEPTH)+1+LAPX), so one hardened
+// type serves every K: ot_dp_clk_landing_ca drives it with the constant K (identical logic after constant propagation),
+// ot_dp_clk_landing_cas with its strap_k pin.  k_s is quasi-static (tied at the parent, sampled only by the reset load of
+// rp/oh/dsel), never registered; every value is legal (the ring only uses K mod 2^TW).
 module ot_meso_ring_ca #(
     parameter int W        = 64,
     parameter int DEPTH    = 4,
-    parameter int K        = 2,
     parameter int GUARD_LO = 0,
     parameter int GUARD_HI = 4,
     parameter int LAPX     = 3      // extra lap-tag bits per slot: a consumed word from the wrong lap is caught for
@@ -123,6 +212,7 @@ module ot_meso_ring_ca #(
     input  logic [W-1:0] t_d,
     input  logic         rclk,
     input  logic         r_rst_n,
+    input  logic [$clog2(DEPTH)+LAPX:0] k_s,   // read offset K mod 2^TW (constant / strap)
     output logic [W-1:0] r_d,        // RDREG: word captured at the consuming edge, presented one period later
     output logic         r_v,        // consumed slot written since the sender start, in the expected lap
     output logic         r_lap_ok,
@@ -139,13 +229,12 @@ module ot_meso_ring_ca #(
     localparam int TW = PW + LAPX;                       // count bits kept: {ext tag, lap, slot}
     localparam int NT = 1 << TW;
     // reader reset value: count of sender word (0 - K) modulo 2^TW
-    localparam int KM = ((K % NT) + NT) % NT;
 `ifdef OT_MESO_CA_MUTANT_K
-    localparam logic [TW-1:0] RP0T = TW'((NT - KM + 1) % NT);   // MUTANT: one count late
+    wire [TW-1:0] RP0T = TW'(0) - k_s + TW'(1);   // MUTANT: one count late
 `else
-    localparam logic [TW-1:0] RP0T = TW'((NT - KM) % NT);
+    wire [TW-1:0] RP0T = TW'(0) - k_s;
 `endif
-    localparam logic [PW-1:0] RP0 = RP0T[PW-1:0];
+    wire [PW-1:0] RP0 = RP0T[PW-1:0];
 
     // ---------------- transmit (tclk): slot = sender count ----------------
     logic [TW-1:0] tc;
@@ -303,6 +392,42 @@ module ot_dp_landing_origin #(
     end else begin : g_nopad
         assign start = s2;
     end
+endmodule
+
+// MESO-STRAP-1 (OWNER 12.15a): ot_dp_landing_origin with PAD and EDGE_FALL as strap inputs instead of parameters, so the
+// copies of a partition type that differ only in their start-tree edge share one hardened design.  strap_pad selects the
+// tap of a PADMAX = 2^PADW - 1 flop chain (every value legal), strap_efall the falling-edge first synchroniser.  Both are
+// quasi-static (tied TIEHI/TIELO at the parent, no pin register, set_false_path -from in the kit SDC); for a tied value the
+// logic equals ot_dp_landing_origin #(.PAD(strap_pad), .EDGE_FALL(strap_efall)) plus unobservable flops (LEC per used
+// value: tools/die_plan/strap_lec.py).  The static select muxes sit before the first synchroniser flop (p_start is
+// asynchronous; a constant select never glitches) and after the chain (start, timed like the parameter form's last flop).
+(* keep_hierarchy *)
+module ot_dp_landing_origin_s #(
+    parameter integer PADW = 1
+) (
+    input  wire            clk,
+    input  wire            rst_raw_n,
+    input  wire            p_start,
+    input  wire            strap_efall,
+    input  wire [PADW-1:0] strap_pad,
+    output wire            start
+);
+    localparam integer PADMAX = (1 << PADW) - 1;
+    (* async_reg = "true" *) reg s0, s1, sf;
+    reg s2;
+    always @(negedge clk) sf <= p_start;
+    wire s_in = strap_efall ? sf : p_start;
+    always @(posedge clk) begin
+        if (!rst_raw_n) begin s0 <= 0; s1 <= 0; s2 <= 0; end
+        else begin s0 <= s_in; s1 <= s0; s2 <= s1; end
+    end
+    reg [PADMAX-1:0] pd;
+    always @(posedge clk) if (!rst_raw_n) pd <= 0; else pd <= PADMAX'({pd, s2});
+    wire [PADMAX:0] taps = {pd, s2};
+    assign start = taps[strap_pad];
+`ifndef SYNTHESIS
+    initial if (PADW < 1 || PADW > 4) $fatal(1, "origin strap PADW must be 1..4");
+`endif
 endmodule
 
 // Root region count origin (MESO-INTEG-1): the start tree's root has no parent start; its origin is a plain counter

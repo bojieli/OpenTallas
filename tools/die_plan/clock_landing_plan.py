@@ -352,6 +352,22 @@ def _ca_relay_pins(t,table,pn,ins,outs):
     t.setdefault("buses",[]).append(_scalar(t,name,d,_bus_xy(t,bus),"ctl",shift=2.16*5))
 
 
+def _ca_strap_pins(raw,table):
+    """MESO-STRAP-1 (OWNER 12.15a, opt-in count_aligned.strap_form): declare each type's strap_ca_* input pins as
+    types[].count_straps (like types[].id_straps: no plan port/bus, no pin register; kit SDC set_false_path -from,
+    die_trial free ports, the parent's TIEHI/TIELO cell per bit sits next to the pin).  Values are per instance
+    (count_align_bind.strap_ties), never in the plan."""
+    ca=table.get("count_aligned") or {}
+    if not ca.get("strap_form"):return None
+    import count_align_bind as CAB
+    st=CAB.strap_ties(ca,raw)
+    for tn,info in st["types"].items():
+        if info["straps"]:
+            raw["partition_types"][tn]["count_straps"]=[dict(name=sp,width=w,note="OWNER 12.15a count strap (tied at the parent)")
+                                                        for sp,w in sorted(info["straps"].items())]
+    return st
+
+
 def _ca_relay_ports(raw,table):
     """registered same-region ctl edge origin -> each relay partition (tx flop -> rx flop, timed by die STA as an
     intra-region related pair; never a landed crossing)"""
@@ -506,6 +522,7 @@ def _compose_dataflow(raw,plan_path,table,pports,ins,outs,region,base_type,obser
         monitor_edges.append(dict(port=pid,src=s_,dst=d,seam=False,carries="aggregate" if parent[s_]==d else "local",
             data_cycles_added=0,boot_transport_extra_cycles=1))
     _ca_relay_ports(raw,table)
+    _ca_strap_pins(raw,table)
     # boot budget: rings train in parallel (21); an aggregate input arrives after its source's aggregate + ring (3);
     # a local-only input after the source's local ready; then the receiver's registered depth.
     loc={pn:W["max_release"]+21+bytype[P.parts[pn]["type"]]["local_registered_depth"] for pn in P.parts};agg={}
@@ -722,6 +739,7 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
             raw["ports"].append(dict(id="cland_start__"+r["port"],src=dict(part=r["src"],bus="cland_fstart_out_"+pr["src"]["bus"]),
                 dst=dict(part=r["dst"],bus="cland_fstart_in_"+pr["dst"]["bus"]),width=1,kind="ctl",epoch=False))
     _ca_relay_ports(raw,table)
+    _ca_strap_pins(raw,table)
     for pn in sorted(active):
         par=monitor_parent[pn]
         if par is None:continue
