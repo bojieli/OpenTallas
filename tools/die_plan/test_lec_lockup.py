@@ -67,10 +67,19 @@ def _netlist(v):
     return "\n".join(s)
 
 
-def _kit(tmp_path, v):
+# Gold-side RTL lockup latch (S81 R21b u_view c_lk, LEC-FPREG-4 10-27): always_latch if (!clk) elaborates to a
+# $_DLATCH_P_ whose enable is the unoptimised constant-data $_MUX_ (clk ? 0 : 1); RTL_LAT_HI (if (clk)) is a
+# transparent-high latch and must stay UNPROVEN.
+RTL_LAT = RTL.replace("always @(posedge clk) begin r0 <= a; r1 <= r0; n0 <= b; end",
+                      "reg [1:0] lk;\n  always_latch if (!clk) lk = r0;\n"
+                      "  always @(posedge clk) begin r0 <= a; r1 <= lk; n0 <= b; end")
+RTL_LAT_HI = RTL_LAT.replace("if (!clk)", "if (clk)")
+
+
+def _kit(tmp_path, v, rtl=RTL):
     k = tmp_path / v
     (k / "rtl").mkdir(parents=True)
-    (k / "rtl" / "lec_lk_t.sv").write_text(RTL)
+    (k / "rtl" / "lec_lk_t.sv").write_text(rtl)
     n = k / "run" / "results" / "asap7" / "lec_lk_t" / "base"
     n.mkdir(parents=True)
     (n / "1_2_yosys.v").write_text(_netlist(v))
@@ -118,3 +127,136 @@ def test_latch_topologies_outside_the_model_are_refused(tmp_path, ref, why):
 def test_latch_switch_off_refuses(tmp_path):
     rc, r = _run(_kit(tmp_path, "ok"), OT_LEC_LATCH="0")
     assert rc == 2 and r["verdict"] == "UNPROVEN" and "does not model" in r["reason"], r
+
+
+@needs_image
+def test_rtl_lockup_latch_both_sides_is_equivalent(tmp_path):
+    rc, r = _run(_kit(tmp_path, "ok", RTL_LAT))
+    assert rc == 0 and r["verdict"] == "EQUIVALENT", r
+    assert r["lockup_latches"]["gold"]["to_wire"] == 2 and r["lockup_latches"]["gate"]["to_wire"] == 2, r
+
+
+@needs_image
+def test_rtl_lockup_latch_mutant_is_not_equivalent(tmp_path):
+    rc, r = _run(_kit(tmp_path, "MUT_SKIP", RTL_LAT))
+    assert rc == 1 and r["verdict"] == "NOT EQUIVALENT", r
+
+
+@needs_image
+def test_rtl_transparent_high_latch_is_refused(tmp_path):
+    rc, r = _run(_kit(tmp_path, "ok", RTL_LAT_HI))
+    assert rc == 2 and r["verdict"] == "UNPROVEN" and "transparent-low" in r["reason"], r
+
+
+def _mux_json(path, a, b, mtype="$_MUX_"):
+    """r0 ($_DFF_P_ on clk) -> $_DLATCH_P_ (E = mtype(S = clk, A = a, B = b)) -> r1 ($_DFF_P_ on clk), the shape the
+    RTL frontend leaves for always_latch if (!clk) (S81 R21b u_view c_lk, LEC-FPREG-4 10-27)."""
+    io = lambda d: {"A": "input", "B": "input", "S": "input", "C": "input", "D": "input", "E": "input",
+                    "Q": "output", "Y": "output"}
+    cells = {
+        "r0": {"type": "$_DFF_P_", "port_directions": io(0), "connections": {"C": [2], "D": [3], "Q": [10]}},
+        "m": {"type": mtype, "port_directions": io(0), "connections": {"A": [a], "B": [b], "S": [2], "Y": [11]}},
+        "lk": {"type": "$_DLATCH_P_", "port_directions": io(0), "connections": {"E": [11], "D": [10], "Q": [12]}},
+        "r1": {"type": "$_DFF_P_", "port_directions": io(0), "connections": {"C": [2], "D": [12], "Q": [4]}},
+    }
+    d = {"modules": {"t": {"attributes": {"top": "00000000000000000000000000000001"},
+                           "ports": {"clk": {"direction": "input", "bits": [2]}, "a": {"direction": "input", "bits": [3]},
+                                     "y": {"direction": "output", "bits": [4]}},
+                           "cells": cells,
+                           "netnames": {"clk": {"bits": [2]}, "a": {"bits": [3]}, "y": {"bits": [4]},
+                                        "r0q": {"bits": [10]}, "en": {"bits": [11]}, "lq": {"bits": [12]}}}}}
+    path.write_text(json.dumps(d))
+    return path
+
+
+@pytest.mark.parametrize("a,b,mtype", [("1", "0", "$_MUX_"), ("0", "1", "$_NMUX_")])
+def test_constant_mux_inverted_clock_enable_is_a_lockup_latch(tmp_path, a, b, mtype):
+    st = lec.latch_to_wire(_mux_json(tmp_path / "s.json", a, b, mtype), tmp_path / "d.json", "gold")
+    assert st["to_wire"] == 1 and st["per_latch"]["lk"]["clk"] == "clk", st
+    cells = json.loads((tmp_path / "d.json").read_text())["modules"]["t"]["cells"]
+    assert cells["lk"]["type"] == "$_BUF_" and cells["lk"]["connections"] == {"A": [10], "Y": [12]}
+
+
+@pytest.mark.parametrize("a,b,mtype", [("0", "1", "$_MUX_"), ("1", "0", "$_NMUX_"), ("1", "1", "$_MUX_"),
+                                       ("0", 3, "$_MUX_")])
+def test_constant_mux_enable_mutants_are_refused(tmp_path, a, b, mtype):
+    # transparent-high (MUX 0/1 = clk; NMUX 1/0 = clk), a constant enable, a data-dependent mux: never a wire
+    with pytest.raises(lec.Unproven):
+        lec.latch_to_wire(_mux_json(tmp_path / "s.json", a, b, mtype), tmp_path / "d.json", "gold")
+
+
+def _dmux_json(path, dmux):
+    """r0 -> $_DLATCH_N_ (E = clk) whose D is a $_MUX_ (the frontend's always_latch form) -> r1.  dmux = (S, A, B)
+    with net 10 = r0.Q, 2 = clk, 3 = a, 13 = NOT(clk)."""
+    io = {"A": "input", "B": "input", "S": "input", "C": "input", "D": "input", "E": "input", "Q": "output", "Y": "output"}
+    S, A, B = dmux
+    cells = {
+        "r0": {"type": "$_DFF_P_", "port_directions": io, "connections": {"C": [2], "D": [3], "Q": [10]}},
+        "n": {"type": "$_NOT_", "port_directions": io, "connections": {"A": [2], "Y": [13]}},
+        "dm": {"type": "$_MUX_", "port_directions": io, "connections": {"A": [A], "B": [B], "S": [S], "Y": [11]}},
+        "lk": {"type": "$_DLATCH_N_", "port_directions": io, "connections": {"E": [2], "D": [11], "Q": [12]}},
+        "r1": {"type": "$_DFF_P_", "port_directions": io, "connections": {"C": [2], "D": [12], "Q": [4]}},
+    }
+    d = {"modules": {"t": {"attributes": {"top": "00000000000000000000000000000001"},
+                           "ports": {"clk": {"direction": "input", "bits": [2]}, "a": {"direction": "input", "bits": [3]},
+                                     "y": {"direction": "output", "bits": [4]}},
+                           "cells": cells, "netnames": {"clk": {"bits": [2]}, "a": {"bits": [3]}, "y": {"bits": [4]}}}}}
+    path.write_text(json.dumps(d))
+    return path
+
+
+@pytest.mark.parametrize("dmux", [(2, 10, "x"), (13, "x", 10)])
+def test_latch_data_phase_mux_takes_the_transparent_branch(tmp_path, dmux):
+    st = lec.latch_to_wire(_dmux_json(tmp_path / "s.json", dmux), tmp_path / "d.json", "gold")
+    assert st["to_wire"] == 1 and st["per_latch"]["lk"]["phase_mux"], st
+    lk = json.loads((tmp_path / "d.json").read_text())["modules"]["t"]["cells"]["lk"]
+    assert lk["connections"] == {"A": [10], "Y": [12]}, lk
+
+
+def test_latch_data_mux_on_a_data_select_is_kept(tmp_path):
+    st = lec.latch_to_wire(_dmux_json(tmp_path / "s.json", (3, 10, "x")), tmp_path / "d.json", "gold")
+    lk = json.loads((tmp_path / "d.json").read_text())["modules"]["t"]["cells"]["lk"]
+    assert not st["per_latch"]["lk"]["phase_mux"] and lk["connections"] == {"A": [11], "Y": [12]}, (st, lk)
+
+
+def test_latch_data_reading_the_clock_elsewhere_is_refused(tmp_path):
+    # the clock in the data cone outside the phase mux select (here: the opaque-phase branch is the clock itself
+    # behind a data-select mux) stays a clock read -> Unproven
+    with pytest.raises(lec.Unproven):
+        lec.latch_to_wire(_dmux_json(tmp_path / "s.json", (3, 10, 2)), tmp_path / "d.json", "gold")
+
+
+def _chain_json(path, loop=False):
+    """r0 (clk) -> L1 ($_DLATCH_N_ on clk) -> NOT -> L2 ($_DLATCH_N_ on ck2, D = phase mux) -> r1 (ck2): the R21b
+    io_clk go latch -> core -> ck seam latch chain.  loop: L2's Q also feeds L1's data (AND), a latch loop."""
+    io = {"A": "input", "B": "input", "S": "input", "C": "input", "D": "input", "E": "input", "Q": "output", "Y": "output"}
+    cells = {
+        "r0": {"type": "$_DFF_P_", "port_directions": io, "connections": {"C": [2], "D": [3], "Q": [10]}},
+        "L1": {"type": "$_DLATCH_N_", "port_directions": io, "connections": {"E": [2], "D": [15 if loop else 10], "Q": [11]}},
+        "n": {"type": "$_NOT_", "port_directions": io, "connections": {"A": [11], "Y": [12]}},
+        "pm": {"type": "$_MUX_", "port_directions": io, "connections": {"A": [12], "B": ["x"], "S": [5], "Y": [13]}},
+        "L2": {"type": "$_DLATCH_N_", "port_directions": io, "connections": {"E": [5], "D": [13], "Q": [14]}},
+        "r1": {"type": "$_DFF_P_", "port_directions": io, "connections": {"C": [5], "D": [14], "Q": [4]}},
+    }
+    if loop:
+        cells["a"] = {"type": "$_AND_", "port_directions": io, "connections": {"A": [10], "B": [14], "Y": [15]}}
+    d = {"modules": {"t": {"attributes": {"top": "00000000000000000000000000000001"},
+                           "ports": {"clk": {"direction": "input", "bits": [2]}, "a": {"direction": "input", "bits": [3]},
+                                     "ck2": {"direction": "input", "bits": [5]}, "y": {"direction": "output", "bits": [4]}},
+                           "cells": cells, "netnames": {"clk": {"bits": [2]}, "a": {"bits": [3]}, "ck2": {"bits": [5]},
+                                                        "y": {"bits": [4]}}}}}
+    path.write_text(json.dumps(d))
+    return path
+
+
+def test_latch_chain_is_a_wire(tmp_path):
+    st = lec.latch_to_wire(_chain_json(tmp_path / "s.json"), tmp_path / "d.json", "gold")
+    assert st["to_wire"] == 2 and st["phase_mux"] == 1, st
+    assert st["per_latch"]["L1"]["sinks"] == 1 and st["per_latch"]["L2"]["data_sources"] == 1, st
+    c = json.loads((tmp_path / "d.json").read_text())["modules"]["t"]["cells"]
+    assert c["L1"]["connections"] == {"A": [10], "Y": [11]} and c["L2"]["connections"] == {"A": [12], "Y": [14]}, c
+
+
+def test_latch_loop_is_refused(tmp_path):
+    with pytest.raises(lec.Unproven, match="latch loop"):
+        lec.latch_to_wire(_chain_json(tmp_path / "s.json", loop=True), tmp_path / "d.json", "gold")
