@@ -588,6 +588,8 @@ def build(a, st):
     set_lattice(a)
     cts = getattr(a, "col_tap_side", None)
     COLTAP_SIDE[0] = None if cts is None else float(cts) * float(a.island_pitch_x)
+    trc = getattr(a, "top_rep_col_clear", None)
+    TOPREP_CLEAR[0] = None if trc is None else float(trc) * float(a.island_pitch_x)
     rec, P, dtp, parts, cores, cols, gaps, rows, m, dy = lattice(a)
     free = lambda x: not any(c[0] - ISL < x < c[2] + ISL for c in cores)
     bk = defaultdict(list)
@@ -898,16 +900,29 @@ def orthogonal_lift(r, tap, et, tag, nodes, S_target, blocked=None, feed_bands=(
     return r
 
 
-def band_tree(leaves, xc, tap, et, tag, S_target, blocked=None, feed_bands=()):
+def band_tree(leaves, xc, tap, et, tag, S_target, blocked=None, feed_bands=(), row_dy=None):
     """DME row trees, column merge, and an explicit orthogonal upstream feed."""
     nodes=[]
     byrow=defaultdict(list)
     for x,y in leaves:byrow[r3(y)].append(r3(x))
     subs=[]
     for k,(y,xs_) in enumerate(sorted(byrow.items())):
+        k0=len(nodes)
         r=dtree([(x,y) for x in sorted(xs_)],"x",et,f"{tag}r{k:02d}_",nodes)
         if abs(r["xy"][0]-xc)>1e-6:
             r=lift(r,(xc,y),et,f"{tag}r{k:02d}_L",nodes)
+        d_=row_dy(y,min(xs_+[xc]),max(xs_+[xc])) if row_dy else 0.0
+        if d_:
+            # R34 (opt-in --a0-band-row-clear): the row x-tree (nodes + lift) runs on the nearest island slot row whose
+            # pin windows carry no horizontal top-tree leg over the row span; each driver gets the same |d| vertical
+            # leg (common to every leaf of the band, no extra stage).  R33 census: 108 band row x-tree node escape jogs
+            # shared a row window with a passing 16w top trunk.
+            for n_ in nodes[k0:]:
+                if n_["kids"]:
+                    n_["xy"]=(n_["xy"][0],r3(n_["xy"][1]+d_))
+                else:
+                    n_["leg"]=n_.get("leg",0.0)+abs(d_)
+            BAND_ROW_MOVES.append(d_)
         subs.append(r)
     r=stree(subs,"y",et,f"{tag}y",nodes)
     if md(r["xy"],tap)>1e-6 or r["S"]<S_target:
@@ -977,6 +992,24 @@ def band_trees(B, st, a):
             if n.get("parent") in tn and hz(tn[n["parent"]]["xy"], n["xy"]):
                 wload[n["tag"]] += 1
     wstat = defaultdict(int)
+    row_dy = None
+    if getattr(a, "a0_band_row_clear", None) is not None:
+        hl = []
+        tn_ = {n["tag"]: n for n in B["top_nodes"]}
+        for n in B["top_nodes"]:
+            q = tn_.get(n.get("parent"))
+            if q is not None and abs(q["xy"][0] - n["xy"][0]) > 1e-6 and abs(q["xy"][0] - n["xy"][0]) >= abs(q["xy"][1] - n["xy"][1]):
+                # horizontal(-dominant) top leg: its M8 trunk runs on the driving node's row; the L end lands on the kid row
+                for yy in {q["xy"][1], n["xy"][1]}:
+                    hl.append((yy, min(q["xy"][0], n["xy"][0]), max(q["xy"][0], n["xy"][0])))
+        clr = float(a.a0_band_row_clear)
+
+        def row_dy(y, x0, x1):
+            busy = lambda yy: any(abs(yy - h[0]) < clr and h[1] < x1 and x0 < h[2] for h in hl)
+            for d_ in (0.0, -ISL, ISL, -2 * ISL, 2 * ISL):
+                if not busy(y + d_):
+                    return d_
+            return 0.0
     for key, ks in sorted(by.items(), key=lambda kv: (ct_of[kv[0][0]]["g"], ct_of[kv[0][0]]["c"], ct_of[kv[0][0]]["tap"], str(kv[0][1]))):
         ct = ct_of[key[0]]
         croot = [n for n in ct["nodes"] if n["tag"] == ct["root"]][0]
@@ -1014,7 +1047,7 @@ def band_trees(B, st, a):
                     continue
                 et = EdgeType(st, w, mm, float(getattr(a, "a0_band_reach", 405.0)))
                 tag = f"b{ct['g']:02d}_{ct['c']:02d}_{len(out):03d}_"
-                nodes, r = band_tree(leaves, xc, anc, et, tag, Sc, B["incore"], feed_bands)
+                nodes, r = band_tree(leaves, xc, anc, et, tag, Sc, B["incore"], feed_bands, row_dy)
                 if r is None or r["S"] != Sc:
                     continue           # equal levels is a hard rule; a deeper band tree is not a candidate
                 d = r["T"]["TT"] - Tc["TT"]
@@ -1633,6 +1666,9 @@ def r9_feed(a, top, gaps, scols, xrow, ytree, nodes):
 
 # ------------------------------------------------------------------------------------------------ legal sites
 COLTAP_SIDE = [None]     # R33 --col-tap-side (um, signed, set by build from island pitches)
+TOPREP_CLEAR = [None]
+TOPREP_MOVES = []
+BAND_ROW_MOVES = []    # R34 --top-rep-col-clear (um, set by build from island pitches)
 DX_LANE = 8.64      # column / trunk tree lane: buffers one ISL beside the driver column (same nk channel)
 DY_LANE = 4.32      # top x-tree lane: buffers 16 rows above the gap-row strap line (fine drivers sit on the line)
 CELL_W = 6.48       # BUFx24 footprint width incl. spacing (UNCHECKED vs LEF; conservative)
@@ -1766,6 +1802,20 @@ def legalize(B, fine_masters=None):
             if I_ is not None and not any(r[0] + 1e-6 < sx_ < r[2] - 1e-6 and r[1] - 1e-6 <= xy[1] <= r[3] + 1e-6 for r in I_.prect.values()):
                 sx_ = r3(xy[0] - lane_sign(xy[0]) * COLTAP_SIDE[0])     # die-edge column: the other side
             cells[-1]["snap0"] = (sx_, r3(xy[1]))
+        if kind == "top_rep" and TOPREP_CLEAR[0] is not None and lane == "h":
+            # R34 (opt-in --top-rep-col-clear N): a horizontal top-tree repeater whose plan point falls on a column-tree
+            # island column (within N x-pitches of a column-tree cell x) moves N x-pitches along its own row AWAY from
+            # that column, so the repeater's 16w pin window / escape jog does not share the column tree's island column
+            # (R33/R34 census: 123 'top_rep escape jog drv', all at type-frame x 318 = the feed column).  Same cells,
+            # same stages; the two adjacent segments change by +-N pitches (recorded as top_rep_col_moves).
+            ccx = [c_["site"][0] for c_ in cells[:-1] if c_["kind"] in ("col_node", "col_tap", "col_rep")
+                   and abs(c_["site"][0] - xy[0]) < TOPREP_CLEAR[0] and abs(c_["site"][1] - xy[1]) < 400.0]
+            if ccx:
+                cx_ = min(ccx, key=lambda v: abs(v - xy[0]))
+                sg_ = (1.0 if xy[0] > cx_ else -1.0) if abs(xy[0] - cx_) > 1e-6 else -lane_sign(xy[0])
+                sx_ = r3(cx_ + sg_ * TOPREP_CLEAR[0])
+                cells[-1]["snap0"] = (sx_, r3(xy[1]))
+                TOPREP_MOVES.append(r3(abs(sx_ - xy[0])))
         return len(cells) - 1
     top, col = B["et"]["top"], B["et"]["col"]
     site_of = {}
@@ -1903,7 +1953,7 @@ def legalize(B, fine_masters=None):
                  instances_by_master=dict(Counter(m for c in phys for m in c["masters"])),
                  coincident_items=sum(v for v in post.values() if v > 1), footprint_overlaps=0, cells_on_core=oncore,
                  cells_within_ISL_of_core=near_isl, cells_within_ISL_note="r2 fine-driver sites kept as r2 placed them (r2 seam_channel)",
-                 bumped=bumped, max_bump_um=r3(maxbump), merged_top_leaf_eq_col_tap=len(ctap),
+                 bumped=bumped, max_bump_um=r3(maxbump), merged_top_leaf_eq_col_tap=len(ctap), band_row_moves=dict(n=len(BAND_ROW_MOVES), um=sorted(set(BAND_ROW_MOVES))), top_rep_col_moves=dict(n=len(TOPREP_MOVES), max_um=max(TOPREP_MOVES or [0.0])),
                  lane_offsets_um=dict(dx_tree_lane=DX_LANE, dy_top_lane=DY_LANE, lanes_left=sum(1 for v in side.values() if v < 0),
                                       lanes_right=sum(1 for v in side.values() if v > 0)), repeaters=nrep,
                  max_net_extra_vs_leg_um=r3(DX_LANE + DY_LANE + maxbump), islands=isl,
@@ -3187,6 +3237,10 @@ def add_common(p):
                    help="R32 opt-in: band y-tree column = feed column + DX um (off the column-tree column)")
     p.add_argument("--a0-band-col-side", type=float, default=None,
                    help="R33 opt-in: band y-tree column = feed column + N island x-pitches toward the column-tree lane side (signed)")
+    p.add_argument("--a0-band-row-clear", type=float, default=None,
+                   help="R34 opt-in: band row x-trees move to the nearest island slot row (+-1/2 ISL) with no horizontal top-tree leg within this many um over the row span")
+    p.add_argument("--top-rep-col-clear", type=float, default=None,
+                   help="R34 opt-in: horizontal top repeaters within N island x-pitches of a column-tree column move to N pitches clear of it")
     p.add_argument("--col-tap-side", type=float, default=None,
                    help="R33 opt-in: column-tap (merged top leaf) slot snaps N island x-pitches toward the column-tree lane side (signed)")
     p.add_argument("--a0-band-up", type=int, default=4,

@@ -21,6 +21,7 @@ default flow is byte-identical.
 """
 import gzip
 import math
+import os
 import re
 from collections import defaultdict
 from pathlib import Path
@@ -492,7 +493,22 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
         c, mode, e = router.place(layer, ideal, a0, a1, name, **(dict(keep=keep) if keep else {}))
         last_ext[0] = e
         if c is None:
-            errs.append(dict(kind="no_clock_track", name=name, detail=f"{what} {layer} ideal {ideal:.3f}"))
+            row_ = dict(kind="no_clock_track", name=name, detail=f"{what} {layer} ideal {ideal:.3f}")
+            if os.environ.get("OT_V2_BLOCKERS") == "1":
+                # R34 diagnostic only: the other-net shapes that block the ideal track (net, kind), no state change
+                try:
+                    sh_ = seg_shapes(layer, ideal, a0, a1, name, router.nd, router.shield)
+                    bl_ = []
+                    for q_ in sh_:
+                        for h_ in router.ix.hits(q_):
+                            k_ = h_[0] if isinstance(h_, tuple) else h_
+                            t_ = router.ix.shapes[k_]
+                            bl_.append(f"{t_[1]}:{t_[2]}@{(t_[3] + t_[4]) / 2:.2f}[{t_[5]:.1f},{t_[6]:.1f}]")
+                    row_["blockers"] = sorted(set(bl_))[:8]
+                    row_["span"] = [round(a0, 3), round(a1, 3)]
+                except Exception as ex_:
+                    row_["blockers"] = [f"diag error {ex_}"]
+            errs.append(row_)
             return ideal, DRAWN
         return c, mode
 
@@ -549,6 +565,9 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
             # out of the island window FIRST (pass-through trunks need the window only at their ends); shorter ones
             # escape only when the window is full.  True = window-full fallback only.
             first = dcell and em is not None and not isinstance(em, bool) and max(xs_all) - min(xs_all) >= float(em)
+            efn = M.get("meta", {}).get("escape_first_ndr")
+            if first and efn and getattr(router, "nd_name", None) not in efn:
+                first = False     # INFRA-FIRST-QC-R34 (opt-in): escape-first only for the listed NDRs (others: window-full fallback)
             if (dcell and router is not None and em and (first or
                     router.place("M8", D[1] + off, rsv[0], rsv[1], nm, keep=pin_keep(n["drv"], chan_keep(D)), dry=True)[0] is None)):
                 # R31 trunk escape (opt-in meta.trunk_escape): the driver island pin window (+-STACK_RISER_MAX_UM of the
@@ -556,7 +575,30 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
                 # window (next PG gaps, <= ESCAPE_MAX_UM off the pin row); driver and loads reach it by an M8 jog inside
                 # their own window + an M9 drop at their bar column (the R12 L-net form).  Same cells/NDR/endpoints.
                 lo_w = STACK_RISER_MAX_UM + 0.5
-                for dy in sorted((s_ * k for k in (lo_w + 4.32, lo_w + 12.96) for s_ in (1.0, -1.0)), key=abs):
+                meta_ = M.get("meta", {})
+                ks_ = [lo_w + float(k) for k in (meta_.get("escape_offsets") or (4.32, 12.96)) if lo_w + float(k) <= ESCAPE_MAX_UM + 1e-9]
+                cells_here = [n["drv"]] + [ld for ld, _ in Ls if not ld.startswith("port:")]
+                used_ = set()
+                if meta_.get("escape_alt_side"):
+                    # INFRA-FIRST-QC-R34 (opt-in): a cell already linked to an escaped trunk on one side (a repeater's
+                    # input leg, a node's parent leg) takes this trunk on the OTHER side, so its two escape jogs / drops
+                    # do not compete for the same half of its pin window (R33 census: 104 'top_rep escape jog drv')
+                    used_ = {sd for c_ in cells_here for sd in getattr(router, "esc_side", {}).get(c_, ())}
+                h16 = getattr(router, "h16_rows", None) if meta_.get("escape_avoid_16w") else None
+
+                def lane_busy(y):
+                    # INFRA-FIRST-QC-R34 (opt-in): the escape track must not sit in the pin window (+-STACK_RISER_MAX_UM +
+                    # one 16w shielded pitch) of a row that carries a PLANNED 16w M8 trunk of another net over this span
+                    if not h16:
+                        return False
+                    for (yr, x0, x1, who) in h16:
+                        if who != nm and abs(y - yr) < STACK_RISER_MAX_UM + 1.7 and x0 < rsv[1] and rsv[0] < x1:
+                            return True
+                    return False
+                cand_ = sorted((s_ * k for k in ks_ for s_ in (1.0, -1.0)), key=lambda d_: (d_ > 0 and 1.0 in used_ or d_ < 0 and -1.0 in used_, abs(d_), -d_))
+                if h16:
+                    cand_ = [d_ for d_ in cand_ if not lane_busy(D[1] + d_)] + [d_ for d_ in cand_ if lane_busy(D[1] + d_)]
+                for dy in cand_:
                     kp = (D[1] + lo_w, D[1] + ESCAPE_MAX_UM) if dy > 0 else (D[1] - ESCAPE_MAX_UM, D[1] - lo_w)
                     if router.place("M8", D[1] + dy, rsv[0], rsv[1], nm, keep=kp, dry=True)[0] is not None:
                         esc = (D[1] + dy, kp)
@@ -583,6 +625,9 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
                 s_ = stack(cell, pin, p, (p[0], by))
                 s_["drop"] = dict(layer="M9", x=bx, y0=ty, y1=by)
                 s_["trunk_escape"] = True
+                if not hasattr(router, "esc_side"):
+                    router.esc_side = {}
+                router.esc_side.setdefault(cell, set()).add(sg)
                 stacks.append(s_)
                 return bx
             if dcell and esc is not None:

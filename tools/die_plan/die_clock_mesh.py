@@ -2720,6 +2720,11 @@ def _body_keepout_violations(K, W, H, cells):
     return bad
 
 
+def pin_xy_v2(cells, c, pin="Y"):
+    """bar-centre (x, y) of a V2 group's representative pin (die_clock_128.pin_xy)."""
+    return C128.pin_xy(cells, c, pin, ROW_Y)
+
+
 def _explicit_v2_wires(out, cells, nets, groups, router, off, r8, exact, default_ndr):
     """V2 keeps per-edge widths on pieces of ONE logical net.
 
@@ -2748,11 +2753,40 @@ def _explicit_v2_wires(out, cells, nets, groups, router, off, r8, exact, default
     elif order!="input":
         raise ValueError(f"unknown explicit route order {order}")
     collect=os.environ.get("OT_V2_COLLECT_PLAN_ERRORS")=="1"; collected=[]
+    if out.get("meta",{}).get("escape_avoid_16w"):
+        # INFRA-FIRST-QC-R34: plan-level table of every 16w M8 trunk row (driver pin row, x span) for escape lane choice
+        h16=[]
+        for n in nets:
+            for e in n.get("plan_connections") or ():
+                if e.get("layer")=="M8" and e.get("ndr",default_ndr)=="16w":
+                    d_=pin_xy_v2(proxy,n["drv"]); l_=pin_xy_v2(proxy,e["loads"][0],"A")
+                    h16.append((d_[1],min(d_[0],l_[0]),max(d_[0],l_[0]),n["name"]))
+        router.h16_rows=h16
     for n in nets:
         pieces=[]
         conns=n.get("plan_connections")
+        if conns and out.get("meta",{}).get("merge_collinear_m8"):
+            # INFRA-FIRST-QC-R34 (opt-in spec.merge_collinear_m8): an H-tree node whose two M8 kids leave it in opposite
+            # x directions with the same NDR is ONE straight trunk through the driver (electrically the same two legs
+            # from the driver tap point).  Routed as two branches, each long leg escaped on its own and both needed an
+            # M9 drop at the SAME driver bar column (R32/R33 census: 104 'top_node escape drop drv').  One piece = one
+            # trunk track, one driver stack / escape drop.  At most one load per side, so no leg is shared.
+            dxy=pin_xy_v2(proxy,n["drv"])
+            m8=[e for e in conns if e.get("layer")=="M8"]
+            merged=[]
+            for nd_ in sorted({e.get("ndr",default_ndr) for e in m8}):
+                es=[e for e in m8 if e.get("ndr",default_ndr)==nd_]
+                if len(es)!=2: continue
+                xs_=[pin_xy_v2(proxy,e["loads"][0],"A")[0]-dxy[0] for e in es]
+                if xs_[0]*xs_[1]<0:
+                    merged.append(es)
+            if merged:
+                rest=[e for e in conns if not any(e is x for es in merged for x in es)]
+                conns=rest+[dict(es[0],loads=[es[0]["loads"][0],es[1]["loads"][0]],edge=f'{es[0].get("edge")}+{es[1].get("edge")}',merged_m8=True)
+                            for es in merged]
+                router.modes["merge_collinear_m8"]+=len(merged)
         if conns:
-            branches=[(e.get("ndr",default_ndr),dict(n,loads=[e["loads"][0]],plan_connections=None,
+            branches=[(e.get("ndr",default_ndr),dict(n,loads=list(e["loads"]) if e.get("merged_m8") else [e["loads"][0]],plan_connections=None,
                         physical_edge=e.get("edge"),physical_layer=e.get("layer"))) for e in conns]
         else:
             branches=[(default_ndr,n)]
@@ -2763,6 +2797,7 @@ def _explicit_v2_wires(out, cells, nets, groups, router, off, r8, exact, default
             # The metal occupancy is shared across widths. The largest spacing
             # is conservative for narrow pieces; no pre-existing shape is lost.
             router.nd=nd
+            router.nd_name=ndr
             router.wide_merge_um=nd.get("wide_merge_um",C128.WIDE_MERGE_UM) if r8 else None
             router.ix.space=nd["space"] if router.ix.pairwise else max(router.ix.space,nd["space"])
             reservation_start=len(router.ix.shapes)
@@ -3040,6 +3075,9 @@ def build_explicit(spec, P=None, ndr="16w", pg_shapes=None, track_profile=None, 
         out["meta"]["plan_trunk_layers"] = True
         out["meta"]["explicit_route_order"] = spec.get("route_order","input")
         out["meta"]["trunk_escape"] = spec.get("trunk_escape", False)
+        for k_ in ("merge_collinear_m8", "escape_alt_side", "escape_avoid_16w", "escape_offsets", "escape_first_ndr"):
+            if spec.get(k_) is not None:
+                out["meta"][k_] = spec[k_]       # INFRA-FIRST-QC-R34 opt-in census fixes (default off)
         # Replaced leaf stubs are diagnostic ports, not physical routes. Their
         # real output is the pre-reserved continuous mesh.
         routed_phys = [n for n in phys if not (n["drv"] in mesh_driver_units
