@@ -670,3 +670,16 @@ def test_intra_bits_reads_both_pins_file_forms(tmp_path, monkeypatch):
     monkeypatch.setattr(S, "Plan", lambda raw: P)
     assert R._pin_names(json.loads((tmp_path / "run.json").read_text())) == ["q[0]", "q[1]", "rst_n"]
     assert R.intra_bits(plan) == {"p0": 4}
+
+
+def test_start_stage_taps_form_no_intra_pairs():
+    # DIE-HEAD-13: die-level start-stage taps (part None) are not one partition; partition taps keep their pairs
+    taps = {"a": dict(part="p", cppr_node="p"), "b": dict(part="p", cppr_node="p"),
+            "__st__h0": dict(part=None, cppr_node="h"), "__st__h1": dict(part=None, cppr_node="h"),
+            "__st__h2": dict(part=None, cppr_node="h")}
+    pairs, cov = R.build_pairs({"ports": []}, taps)
+    assert sorted(pairs["intra"]) == [("a", "b", "p"), ("b", "a", "p")]
+    assert not pairs["intra_cross_region"] and not pairs["seam"] and not pairs["landed"]
+    assert cov["start_stage_taps_no_pairs"] == 3 and cov["partitions_with_taps"] == 1
+    _, cov0 = R.build_pairs({"ports": []}, {k: v for k, v in taps.items() if v["part"]})
+    assert "start_stage_taps_no_pairs" not in cov0

@@ -727,7 +727,15 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
 def build_pairs(plan, taps):
     """complete pair sets from the plan ports and the tap table (one corner's rows; ports are corner independent)."""
     by_part = defaultdict(list)
+    # DIE-HEAD-13 10-28: a tap with part None is a die-level start stage (start_stage_emit '__st__<path>' / virtual_tap):
+    # it belongs to no partition, so it never forms intra/seam pairs (HEAD: 193 stage taps were grouped as ONE
+    # 'partition' None -> 193 x 192 = 37056 false die-wide intra pairs, setup -5350 / hold -5992 ps). Their related
+    # timing is the count-align start-skew check (stage -> stage along the start tree).
+    unpart = 0
     for p, r in taps.items():
+        if r.get("part") is None:
+            unpart += 1
+            continue
         by_part[r["part"]].append(p)
     for v in by_part.values():
         v.sort()
@@ -749,7 +757,8 @@ def build_pairs(plan, taps):
             for b in by_part[t]:
                 (seam if taps[a]["cppr_node"] == taps[b]["cppr_node"] else landed).append((a, b, f"{s}->{t}"))
     return dict(intra=intra, intra_cross_region=straddle, seam=seam, landed=landed), dict(
-        partitions_with_taps=len(by_part), connected_part_pairs=len(conn), uncovered_bits=dict(uncovered))
+        partitions_with_taps=len(by_part), connected_part_pairs=len(conn), uncovered_bits=dict(uncovered),
+        **({"start_stage_taps_no_pairs": unpart} if unpart else {}))
 
 
 def nearest_pairs(d, plan_path, tool, taps):
