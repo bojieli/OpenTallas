@@ -45,6 +45,10 @@ def window(ax, E, box, title, findings):
     vs = [v for v in E["vias"] if x0 <= v["x_um"] <= x1 and y0 <= v["y_um"] <= y1]
     ax.add_collection(PatchCollection([Rectangle((v["x_um"] - v["pad_um"] / 2, v["y_um"] - v["pad_um"] / 2), v["pad_um"], v["pad_um"]) for v in vs],
                                       facecolor="none", edgecolor="k", linewidth=.6, label=f"VIA89 pad ({len(vs)})"))
+    tv = [t for t in E.get("shield_ties") or [] if x0 <= t[0] <= x1 and y0 <= t[1] <= y1]
+    if tv:
+        ax.add_collection(PatchCollection([Rectangle((t[0] - .04, t[1] - .04), .08, .08) for t in tv], facecolor="#2ca02c",
+                                          edgecolor="k", linewidth=.3, label=f"shield VIA89 tie ({len(tv)})"))
     st = [s for s in E["stacks"] if x0 <= s["xy_um"][0] <= x1 and y0 <= s["xy_um"][1] <= y1]
     if st:
         ax.plot([s["xy_um"][0] for s in st], [s["xy_um"][1] for s in st], "m.", ms=3, label=f"pin stack ({len(st)})")
@@ -100,6 +104,19 @@ def main(a):
     for j, t in ((0, "first"), (len(ce) // 2, "middle"), (len(ce) - 1, "last")):
         if ce:
             wins.append((f"PHY-band rail end ({t} of {len(ce)})", ce[j][0], ce[j][1], 14))
+    if ce:   # R24b: the W-most and E-most PHY-band clip ends (both band edges viewed)
+        w_, e_ = min(ce, key=lambda p: (p[0], p[1])), max(ce, key=lambda p: (p[0], -p[1]))
+        wins += [("PHY-band clip, W-most rail end", w_[0], w_[1], 8), ("PHY-band clip, E-most rail end", e_[0], e_[1], 8)]
+    br = [x for x in E["shapes"] if x[2] == "rail_shield" and x[4] - x[3] > 0.6]
+    if br:   # a stepped shield bridge at the widest graded step
+        b = max(br, key=lambda x: x[4] - x[3])
+        bx, by = ((b[5] + b[6]) / 2, (b[3] + b[4]) / 2) if b[0] == "M8" else ((b[3] + b[4]) / 2, (b[5] + b[6]) / 2)
+        wins.append((f"VSS-side fill bridge at PHY/core hand-over ({b[4] - b[3]:.2f} um)", bx, by, 6))
+    wr = [x for x in E["shapes"] if x[2] == "mesh" and x[4] - x[3] >= 1.44 and x[6] - x[5] > 20]
+    if wr:   # widest mesh rail (>=1.44 um) with its drawn VSS shield
+        m = max(wr, key=lambda x: (x[4] - x[3], x[6] - x[5]))
+        mx, my = ((m[5] + m[6]) / 2, (m[3] + m[4]) / 2) if m[0] == "M8" else ((m[3] + m[4]) / 2, (m[5] + m[6]) / 2)
+        wins.append((f"wide-rail shield ({m[0]} {m[4] - m[3]:.2f} um rail)", mx, my, 6))
     if fpts:
         wins.append(("first census finding", fpts[0][0], fpts[0][1], 12))
     if len(fpts) > 1:

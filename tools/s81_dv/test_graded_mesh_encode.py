@@ -212,3 +212,64 @@ def test_vss_shields_per_piece_clear_graded_rail_and_phy_band():
     pg2 = _pg("M8", 100, 110, 0.0, 60.0) + [(n, "M8", 60.0, y0 - 0.9, 90.0, y1 - 0.9) for n, _, _, y0, _, y1 in _pg("M8", 105, 105, 0, 1, w=1.92, phy=True)]
     sh2, rep2, _ = E.vss_shields(g, pg2, ND)
     assert E.phy_band_findings(sh2, E.phy_index(pg2), kinds=("rail_shield",)) == [] and any(k.startswith("missing") for k in rep2["vdd_sides"])
+
+
+# ---- R24b (COORD ruling c): 100 % shield coverage --------------------------------------------------------------------
+def test_shield_width_cap_fits_shielded_core_gap():
+    assert abs(E.shield_width_cap(ND) - 1.6) < 1e-9            # 0.48 VSS | 1.0 | 1.6 | 1.0 | 0.16 shield | 0.08 | VDD
+
+
+def test_cap_widths_narrows_and_shrinks_vias():
+    g = mesh([4.0, 12.64, 21.28], [4.0, 12.64, 21.28], w=lambda x, y: 1.76)
+    g2, rep = E.cap_widths(g, 1.6)
+    assert all(abs(s["width_um"] - 1.6) < 1e-9 for s in g2["segments"]) and rep["segments_narrowed"] == len(g["segments"])
+    assert all(v["pad_um"] <= 1.6 + 1e-9 for v in g2["vias"]) and rep["via_cuts_after"] < rep["via_cuts_before"]
+    shapes, _ = E.rail_shapes(g2, ND, drawn=False)
+    assert E.via_findings(g2, shapes) == []
+    assert abs(rep["segment_R_increase_max_pct"] - 10.0) < 1e-6
+
+
+def _graded_phy_rail():
+    # M8 rail in the gap 449.28 (VSS) .. 453.6 (VDD); core PG x < 60, 1.92-um PHY PG (2.4-um gaps) from x = 60
+    pg = _pg("M8", 100, 110, 0.0, 60.0) + _pg("M8", 100, 110, 60.0, 90.0, w=1.92, phy=True) + _pg("M9", 0, 20, 440.0, 460.0)
+    nm = E.pg_net_at(pg)
+    y = E.vss_side_axis(451.0, 1.6, nm, "M8")
+    xs = [0.0, 10.0, 20.0, 30.0, 58.0, 80.0]
+    ws = [0.4, 1.6, 0.4, 0.08, 0.08]
+    segs = [dict(layer="M8", width_um=w, centre_um=[a, y, b, y], rect_um=[a, y - w / 2, b, y + w / 2]) for a, b, w in zip(xs, xs[1:], ws)]
+    vias = [dict(x_um=x, y_um=y, rows=1, cols=1, cut_um=.04, pitch_um=.098, pad_um=.08) for x in xs]
+    return dict(segments=segs, vias=vias, xs=xs, ys=[y], attachments=[]), pg, y
+
+
+def test_shield_profile_full_coverage_through_width_steps_and_phy_domain():
+    import die_clock_128 as C
+    g, pg, y = _graded_phy_rail()
+    sh, runs = E.shield_profile(g, pg, ND)
+    assert sh and all(s[1] == "VSS" and s[3] > y for s in sh)                     # VDD side only
+    assert any(s[4] - s[3] > ND["width"] + 1e-6 for s in sh)                      # step bridges present
+    rep, rows = E.shield_census(g, pg, sh, ND)
+    assert rep["sides"] == {"shielded": 2 * len(g["segments"])} and rep["unshielded_um"] == 0, rows
+    mesh_shapes, _ = E.rail_shapes(g, ND, drawn=False)
+    cen = C.metal_census(C.pg_shapes(pg) + mesh_shapes + sh, ND["space"])
+    assert cen["shorts"] == 0 and cen["spacing"] == 0, cen["rows"][:3]
+    assert E.phy_band_findings(mesh_shapes + sh, E.phy_index(pg), kinds=("mesh", "rail_shield")) == []
+    ties, trep, floating = E.shield_ties(sh, pg)
+    assert trep["tie_vias"] > 0 and trep["floating_groups"] == 0 and not floating
+
+
+def test_shield_census_never_counts_vdd_and_flags_missing_side():
+    g, pg, y = _graded_phy_rail()
+    rep, rows = E.shield_census(g, pg, [], ND)                                    # no drawn shield
+    assert rep["sides"]["shielded"] == len(g["segments"]) and rep["sides"]["unshielded"] == len(g["segments"])
+    assert all(r["side"] == 1 for r in rows)                                      # the VDD/VDDPHY side, never the VSS side
+    sh, _ = E.shield_profile(g, pg, ND)
+    part = [s for s in sh if not (s[5] < 25.0 < s[6])]                            # drop the shield over x = 25
+    rep2, rows2 = E.shield_census(g, pg, part, ND)
+    assert rep2["sides"].get("unshielded", 0) >= 1 and rep2["unshielded_um"] > 0
+
+
+def test_shield_ties_report_floating_piece():
+    sh = [("M8", "VSS", "rail_shield", 451.5, 451.66, 1.0, 3.0)]                 # no orthogonal VSS stripe under it
+    pg = _pg("M9", 2, 3, 440.0, 460.0)                                            # x = 8.64 VSS, 12.96 VDD
+    ties, rep, fl = E.shield_ties(sh, pg)
+    assert rep["floating_groups"] == 1 and not ties and fl
