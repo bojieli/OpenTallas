@@ -1277,3 +1277,7 @@ All HBM plan/streets/locality/clock/crossing/core/native boot+token/PG aliases c
     - CA: 0 fail, 0 below 100; PHY links D4 at >=206.9 ps; die worst is still T047~T052 at 109.6;
     - rc_slice widths 2661.12 / 3188.16 / 2661.12 um.
   - CA is UNCHECKED-model until the build re-plans on the CLK-INV-CAL-1 model.
+- DIE-HBM-10 2026-10-28 11:47 PDT: COORD cd858d29e acknowledged. The VMX token run is launched as sub-lane VMX-TOK-1 on epyc2.
+  - What runs: tok_func_hbm.sh with an opt-in HALF_ARGS hook. The DS layers are emitted with --half-local 0 and with --half-local 1 --native-xread-lx 15, with the VMX link in the die.
+  - What decides: the measured h0-vs-h1 replay cycles. If the combined cost is over 5%, it goes to the OWNER before adoption.
+  - VMX stays unmerged until that run PASSES.
