@@ -500,7 +500,14 @@ def check_run(run, spec=None, die_plan_dir=None):
                 continue
             errs.append(f"{Path(l).name}: {m.group(0)[:120]}")
     res["tcl_errors"] = st(not errs, "; ".join(errs[:6]) or "none", n=len(errs))
+    # FLOW-SHARED-9: a post-route hold step (KIT/hold_step.json from eco/hold_step.sh) that FAILED is a flow failure,
+    # never silently replaced by the plain-route sign-off
+    hs = jload(kit / "hold_step.json")
+    if hs:
+        res["hold_step"] = st(hs.get("status") != "FAILED", f"{hs.get('status')} rc {hs.get('rc')} {hs.get('error', '')}"[:300])
     failing = [k for k in req if res.get(k, {}).get("verdict") != "PASS"]
+    if res.get("hold_step", {}).get("verdict") == "FAIL" and "hold_step" not in failing:
+        failing.append("hold_step")
     out = dict(schema="opentallas.flow_canary.v1", die=spec.get("die"), item=spec.get("item"), run=str(run),
                kit=str(kit), src=meta.get("src_commit"), generated=time.strftime("%Y-%m-%dT%H:%M:%S%z"),
                verdict="PASS" if not failing else "FAIL", failing=failing, stages=res,

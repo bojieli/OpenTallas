@@ -6,19 +6,27 @@
 # The ECO sign-off lands in KIT/signoff_hold/signoff.json (newest signoff*/ = the canary's verdict); KIT/signoff/ keeps
 # the plain-route sign-off. Used by the qwen_kvsys_core flow canary (tools/flow_canary/canaries.json) and by KV kits.
 #   hold_step.sh KIT SO_ROOT [CPUS=8] [MEM_GB=32] [MARGIN_PS=3]     (SO_ROOT = checkout holding tools/die_plan/signoff.py)
+# FLOW-SHARED-9 2026-10-27: KIT/hold_step.json records the step (NOT_NEEDED / SKIP / PASS / FAILED + rc + first ERROR);
+# a FAILED step removes any older KIT/signoff_hold, prints HOLD_STEP FAILED and is a canary stage FAIL (never silently
+# judged as the plain route).  OT_PAD_NEW (default 1 site): the ECO pads the cells it inserts before legalisation
+# (47ce kvsys_core: DRT-1231 RESETN access point after a hold buffer abutted a DFFASRHQNx1).
 set -uo pipefail
 K=$(cd "$1" && pwd); SO=$(cd "$2" && pwd); CPUS=${3:-8}; MEM=${4:-32}; HM=${5:-3}
 HERE=$(cd "$(dirname "$0")" && pwd)
+rec() { python3 -I -c 'import json,sys; json.dump(dict(status=sys.argv[2], rc=int(sys.argv[3]), error=sys.argv[4], eco_dir=sys.argv[5]), open(sys.argv[1], "w"), indent=1)' "$K/hold_step.json" "$@"; }
+rm -f "$K/hold_step.json"
 SJ=$K/signoff/signoff.json
-if [ ! -f "$SJ" ]; then echo "HOLD_STEP SKIP: no $SJ (route/sign-off did not complete)"; exit 0; fi
+if [ ! -f "$SJ" ]; then echo "HOLD_STEP SKIP: no $SJ (route/sign-off did not complete)"; rec SKIP 0 "no plain sign-off" ""; exit 0; fi
 W=$(python3 -I -c 'import json,sys; print(json.load(open(sys.argv[1]))["checks"]["hold_ff"]["wns_ps"])' "$SJ" 2>/dev/null)
-if [ -z "$W" ] || [ "$W" = None ]; then echo "HOLD_STEP SKIP: no FF hold WNS in $SJ"; exit 0; fi
+if [ -z "$W" ] || [ "$W" = None ]; then echo "HOLD_STEP SKIP: no FF hold WNS in $SJ"; rec SKIP 0 "no FF hold WNS" ""; exit 0; fi
 if ! python3 -I -c 'import sys; sys.exit(0 if float(sys.argv[1]) < 0 else 1)' "$W"; then
-  echo "HOLD_STEP NOT NEEDED: FF hold WNS $W ps >= 0"; exit 0; fi
+  echo "HOLD_STEP NOT NEEDED: FF hold WNS $W ps >= 0"; rec NOT_NEEDED 0 "" ""; exit 0; fi
 FO=$(sed -n 's/^set_max_fanout \([0-9][0-9]*\).*/\1/p' "$K/max_fanout.tcl" 2>/dev/null | head -n 1)
 D=${K}_holdeco
 echo "HOLD_STEP FF hold WNS $W ps < 0: ECO b$HM fanout cap ${FO:-0} -> $D"
-bash "$HERE/mk_eco.sh" "$K" "$D" "b$HM" "$SO" || { echo "HOLD_STEP mk_eco FAILED"; exit 1; }
+rm -rf "$K/signoff_hold"
+export OT_PAD_NEW=${OT_PAD_NEW:-1}
+bash "$HERE/mk_eco.sh" "$K" "$D" "b$HM" "$SO" || { echo "HOLD_STEP FAILED: mk_eco"; rec FAILED 1 "mk_eco failed" "$D"; exit 1; }
 sed -i "s/^OT_MAX_FANOUT=.*/OT_MAX_FANOUT=${FO:-0}/" "$D/variant.env"
 cp "$HERE/run_eco.sh" "$D/"
 bash "$D/run_eco.sh" "$D" "$CPUS" "$MEM"; rc=$?
@@ -27,5 +35,12 @@ if [ -f "$D/signoff/signoff.json" ]; then
   cp "$D/ECO.json" "$D/variant.env" "$K/signoff_hold/" 2>/dev/null
   echo "HOLD_STEP signoff -> $K/signoff_hold/signoff.json"
   grep -E "^SIGNOFF" "$D/signoff.log" 2>/dev/null | tail -n 1
+fi
+if [ $rc = 0 ] && [ -f "$K/signoff_hold/signoff.json" ]; then rec PASS 0 "" "$D"; else
+  [ $rc = 0 ] && rc=3
+  ERR=$(grep -h -m1 -E '^\[ERROR|^Error' "$D/run_eco.log" "$D"/run/logs/asap7/*/base/*.log 2>/dev/null | head -n 1)
+  rec FAILED $rc "${ERR:-no hold sign-off (rc.txt: $(tr '\n' ' ' < "$D/rc.txt" 2>/dev/null))}" "$D"
+  rm -rf "$K/signoff_hold"
+  echo "HOLD_STEP FAILED rc=$rc: ${ERR:-no hold sign-off} -- the plain route is NOT a hold-step result"
 fi
 echo "HOLD_STEP rc=$rc"; exit $rc
