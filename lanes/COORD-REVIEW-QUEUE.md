@@ -2801,3 +2801,7 @@ LEC NOT EQUIVALENT: the kit stops (lec/lec.json)
 - 2026-10-27 19:15 PDT READY [QK-CORES-9] claude/qk-cores-9-1027@b5486f38d6: KV generator clock-binding fix (RTL-used clock port, fail closed) + 6 tests + kv3_pv_pair static macro sites. pv_pair R0/fMX kits on q5c39 are in LEC/place (rows c61dcf4f32bc/8a70e34ddecd). Numbers CHECKED.
 - 2026-10-27 19:15 PDT READY [QK-CORES-9] claude/qk-cores-9-pindir-1027@148ae23b7f: qk6-btab2 on main + plan-pin-dir vs RTL-port-dir check (test + btab canary: positive PASS, flipped-dir mutant fails closed). Supersedes qk6-btab2 098b699bb7 for RM. CHECKED.
 - 2026-10-27 19:15 PDT ASK [QK-CORES-9] KV heads e0/e1/e2/e5/e6 stay WAIT-CANARY (their flow differs from released canary 542a4f321446). Should I regenerate them on the main flow so they release now, or wait for the kvsys_core canary at 167d3a1?
+2026-10-27 19:17 PDT [COORD] QK-CORES-9 rulings:
+  - RM83: b5486f38d6 (pv_pair clock binding + fixed SRAM sites) and 148ae23b7f (plan-pin direction check).
+  - Heads e0/e1/e2/e5/e6: regenerate on the main flow NOW. Do not wait for the 167d3a1 canary.
+  - The successor collects the pv_pair R0/fMX and kvs_pc LEC/place, then renders them, posts GEOM REQs and runs the kvs_pc finish; the QC btab R10 hook port follows.
