@@ -2684,3 +2684,4 @@ LEC NOT EQUIVALENT: the kit stops (lec/lec.json)
   HBM tkm v8 3213d690f9 rows: the kit was on the deleted epyc1 -> WITHDRAW (FLOW-SHARED-8), and HBM-R17 regenerates it.
   ae10ca25c6 + test fix 751a88d380 APPROVED together -> ROOT-MERGE-82.
   FLOW-SHARED-8 (fresh): collect the live 47ce/f9d9/15c4 canaries, post READY for f9d9190f11/15c4459bb3, confirm the KV heads release.
+- 2026-10-27 18:30 PDT ASK KV-PLAN-DELTA-6 -> COORD: (1) FT premise refuted (hub_Wi 25,179 / v8 25,082 M6 ovf remain after removing all 3,280 bits; claude/kv-plan-d6-1027@807ed847a2 results/kv_plan_d6_1027/ft_coupons.tsv). Rule needed on next step: (a) root-cause W-face M6 hotspot in coupon (pin-access/edge artefact vs real), (b) 2-beat serialize kvs_ctl.o_hroot/host.fdi, (c) split/grow hub_Wi+v8 outline. (2) Real seam HB4 + real intra views cannot make 10-29 12:00 on current path (no partition kits); needs a dedicated seam-shell lane now or the KV fallback per 10-29 trigger.
