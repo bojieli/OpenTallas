@@ -1,0 +1,15 @@
+{
+ "schema": "opentallas.dead_by_schedule_ties.v0 (DIE-HBM-10 proposal; 1.8 strap conditions per 10-25 dead-inputs + 10-28 tied-strap rule)",
+ "status": "DECLARED FORM; instance pin list UNRESOLVED until the hub glue client->bank-group map is bound (see README)",
+ "link_module": "hfd_vms_xread_link (rtl/hbm_accel/generic/vm/static/xread)",
+ "plan_links": {"q_hub_nw": ["vmx_W2E", "vmx_E2W"], "q_hub_ne": ["vmx_W2E", "vmx_E2W"]},
+ "tie_form": {
+  "what": "far-half client request station -> owner-half bank read-group pins rq<g>[16:0] (g = the group the shared tensor is read on; x-load = 2 in the q0_faces RG5 map 0 LG,1 DMA-back,2 x-load,3 COLL,4 IDX)",
+  "value": "17'b0 (TIELO on every bit at the bank pin; valid bit [16] = 0 means the group is never requested by the far client)",
+  "response": "rr<g> of that bank toward the far client: unconnected (the far client takes rr_far from hfd_vms_xread_link)",
+  "quasi_static": "constant for the release (no runtime change); set_false_path -from the tie cells",
+  "lec": "bank master unchanged (reuse hfd_vms_bank_native_q0_faces): the constant variant is the parent tie; master LEC vs RTL already holds for all inputs, so it holds with rq<g>=0 (constant propagation). A per-variant kit LEC of the tied master is still owed if the master is re-hardened with the tie folded in.",
+  "dead_by_schedule_proof": "bench tb_vms_xread_link: tied group never answers, no FAULT, owner-issued reads arrive at n+6+PIN+LX exact; compiler token check owed (schedule must issue every shared-tensor read from the owner half)"
+ },
+ "instances": []
+}

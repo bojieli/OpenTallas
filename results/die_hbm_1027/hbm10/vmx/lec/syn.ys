@@ -1,0 +1,9 @@
+read_slang --top hfd_vms_xread_link -G LANES=16 -G LX=4 /work/hfd_vms_xread_link.sv
+hierarchy -top hfd_vms_xread_link
+synth -top hfd_vms_xread_link -flatten
+rename -wire t:$_*DFF*_ t:$_*FF*_
+dfflibmap -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+abc -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+opt_clean
+stat
+write_verilog -noattr /work/run/results/asap7/hfd_vms_xread_link/base/1_2_yosys.v
