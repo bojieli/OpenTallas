@@ -67,7 +67,7 @@ module ot_hbm_su_side_rest_core #(parameter integer MUT=0) (
     ot_hdc_qadd_lat #(.KEEP(KS), .LAT(ALAT)) u_den (clk[5], rst_n, ve[D_EXP], e_y, 32'h3F800000, den, f_eg3);
     wire [ALAT:0] vd;
     ot_hdc_vline #(.D(ALAT)) u_vd (.clk(clk[5]), .rst_n(rst_n), .v(ve[D_EXP]), .vd(vd));
-    ot_hdc_v41x_fdiv u_div (.clk(clk[5]), .rst_n(rst_n), .v(vd[ALAT]), .a(32'h3F800000), .b(den), .y(y_eg), .vo(),
+    ot_hdc_v41x_fdiv #(.ZERO_RST(1)) u_div (.clk(clk[5]), .rst_n(rst_n), .v(vd[ALAT]), .a(32'h3F800000), .b(den), .y(y_eg), .vo(),
                             .fault(f_eg4));
     assign y = (output_fn == SFU_RSQRT) ? y_rsq : (output_fn == SFU_SQRT) ? y_sq : (output_fn == SFU_SPSQRT) ? y_sp : y_eg;
     assign fault = f_rsq | f_sq | f_sp | f_eg1 | f_eg2 | f_eg3 | f_eg4;
