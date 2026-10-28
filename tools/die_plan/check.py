@@ -249,7 +249,7 @@ def channel_flows(P):
     return out
 
 
-def check_streets(P, R, plan_dir=None, clock_builds=(), geo=None, max_msgs=40, png=None):
+def check_streets(P, R, plan_dir=None, clock_builds=(), geo=None, max_msgs=40, png=None, keep=None):
     """METHODOLOGY 12.10c STREET RULE (G0C, streets.py): hard cores on a street grid, every core point <= reach_um
     (400) from the street network, street width >= repeater + hold + FT budget / fill, no clock leg (clock builds:
     htree legs, driver sites, unplaced rows) across a hard core, every die lane station off the hard cores."""
@@ -279,6 +279,8 @@ def check_streets(P, R, plan_dir=None, clock_builds=(), geo=None, max_msgs=40, p
     A = ST.analyze(float(P.W), float(P.H), ko, cfg, legs, pts, unpl, flows=flows)
     if png:
         ST.render(A, ko, png, float(P.W), float(P.H), P.name)
+    if keep is not None:
+        keep.append((A, ko))      # ROOT-MERGE-82: run() renders streets.png AFTER the G1 render (see run)
     # severity (COORD 10-27 18:52): ERROR on hbm (12.10c); REPORT-ONLY (WARN) on the other dies until their own ruling;
     # die.streets.enforce overrides
     enforce = (P.die.get("streets") or {}).get("enforce")
@@ -1911,6 +1913,39 @@ def check_clock_mesh(R, builds):
     return out
 
 
+KNOWN_ERRORS_FILE = "g0c_known_errors.json"
+
+
+def apply_known_errors(R, plan_dir, completeness):
+    """NAMED KNOWN-ERROR LIST (COORD 10-27 18:21, S81 gunit plan event): PLANDIR/g0c_known_errors.json
+    {"owner": lane, "rule": ..., "errors": [{"check": c, "msg": exact finding text}, ...]} lists G0C ERRORs that a
+    reviewed plan event newly exposed and that a named owner fixes.  Under --completeness each listed ERROR is reported
+    as WARN "[KNOWN-ERROR <owner>] ..." (counted in summary.known_errors), so the check stays ON for every other
+    finding.  The list may only shrink: an entry that no longer matches an ERROR is itself an ERROR (remove it), and
+    the list must be empty before the die freeze.  No file = no effect."""
+    f = Path(plan_dir) / KNOWN_ERRORS_FILE if plan_dir else None
+    if not completeness or f is None or not f.is_file():
+        return None
+    K = json.loads(f.read_text())
+    owner = K.get("owner")
+    want = {(e["check"], e["msg"]) for e in K.get("errors", [])}
+    hit = set()
+    for i in R.items:
+        key = (i["check"], i["msg"])
+        if i["level"] == "ERROR" and key in want:
+            i["level"] = "WARN"
+            i["msg"] = f"[KNOWN-ERROR {owner}] " + i["msg"]
+            i["known_error"] = True
+            hit.add(key)
+    stale = sorted(want - hit)
+    for c, m in stale:
+        R.err("known_errors", f"{KNOWN_ERRORS_FILE}: entry no longer matches an ERROR ({c}: {m[:160]}); remove it "
+                              f"(the list may only shrink)")
+    if want and not owner:
+        R.err("known_errors", f"{KNOWN_ERRORS_FILE}: no owner named")
+    return dict(file=str(f), owner=owner, listed=len(want), matched=len(hit), stale=len(stale))
+
+
 def g0c_summary(P, R):
     """per partition type: G0C findings by check; types with none are G3-eligible (as far as the plan goes)."""
     by = {tn: defaultdict(int) for tn in P.types}
@@ -2002,18 +2037,25 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["reach"] = xdie.check_reach(P, R, geo)
     summ["face_tracks"] = xdie.check_face_tracks(P, R, fp)
     summ["ft_budget"] = xdie.check_ft_budget(P, R, fp)
-    summ["streets"] = check_streets(P, R, plan_dir, clock_builds, geo,
-                                    png=(Path(png).with_name("streets.png") if png else None))
+    _st = []
+    summ["streets"] = check_streets(P, R, plan_dir, clock_builds, geo, keep=_st)
     summ["g0c"] = g0c_summary(P, R)
     summ["xdie_counts"] = {c: sum(1 for i in R.items if i["check"] == c and i.get("g0c")) for c in G0C_CHECKS}
     import census_cov
     summ["census"] = census_cov.coverage(P, plan_dir or ".", R)
     if clock_builds:
         summ["clock_mesh"] = check_clock_mesh(R, clock_builds)
+    summ["known_errors"] = apply_known_errors(R, plan_dir, completeness)
     if png:
         import render
         render.render(P, geo, R, png)
         summ["png"] = str(png)
+        # ROOT-MERGE-82 (COORD 18:52): the street map renders after the G1 render, so a render failure (e.g. no
+        # matplotlib) surfaces from the existing die_plan.png render first, as before the street rule
+        import streets as ST
+        A_, ko_ = _st[0]
+        ST.render(A_, ko_, Path(png).with_name("streets.png"), float(P.W), float(P.H), P.name)
+        summ["streets_png"] = str(Path(png).with_name("streets.png"))
     return R, summ
 
 
