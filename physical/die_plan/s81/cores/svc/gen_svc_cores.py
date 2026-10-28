@@ -20,6 +20,8 @@ import argparse, hashlib, json, math, os, sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE.parents[1]))
+from core_pg_stub import port_lines as core_pg_port_lines
 REPO = HERE.parents[4]
 G = 8.64
 GAP, EDGE = 13.8, 4 * 8.64
@@ -96,8 +98,7 @@ def lef_text(P):
             r = (p["x"] - 0.012, y0, p["x"] + 0.012, y0 + 0.192)
         L += [f"  PIN {p['name']}", f"    DIRECTION {d} ;", f"    USE {use} ;", "    PORT",
               f"      LAYER {p['layer']} ;", "        RECT %.3f %.3f %.3f %.3f ;" % r, "    END", f"  END {p['name']}"]
-    for pg in ("VDD", "VSS"):
-        L += [f"  PIN {pg}", "    DIRECTION INOUT ;", f"    USE {'POWER' if pg == 'VDD' else 'GROUND'} ;", "  END " + pg]
+    L += core_pg_port_lines(W, H)
     L += ["  OBS"] + [f"    LAYER M{i} ;\n      RECT 0.200 0.200 {W - 0.2:.3f} {H - 0.2:.3f} ;" for i in range(1, 6)] + \
          ["  END", f"END {MOD}", "END LIBRARY", ""]
     return "\n".join(L)

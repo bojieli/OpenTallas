@@ -1579,7 +1579,7 @@ def build_link_fishbone(P, taps, regions, feed, col_um=60.0, local="fishbone", l
     return nodes
 
 
-def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None):
+def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sites=None):
     """buffered tree: a BUF at every node (branch / leaf driver), repeaters every rep_um along each leg.
     tap_pad (DIE-KV-5 opt-in --tap-pad, METHODOLOGY 12.8 plan-computed per-tap sizing): {tap port: n} puts n BUF cells in
     series between the tap's leaf net and the tap (insertion-delay balancing of a light, pruned branch); default None =
@@ -1649,14 +1649,29 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None):
             tp = f"t_{sv(part)}__{port}"
             tap_ports.append((tp, x, y, part, port, i))
             src = net(i)
+            prev_inst = node_buf[i]
             for j in range(int((tap_pad or {}).get(tp, 0))):
-                inst, o = f"p{i}_{sv(part)}_{j}", f"pn{i}_{sv(part)}_{j}"
+                inst, o = f"p{i}_{tp}_{j}", f"pn{i}_{tp}_{j}"
                 cells.append(f"  {BUF} {inst} (.A({src}), .Y({o}));")
                 wires.append(o)
-                q = (nd["x"] + 0.54 * (j + 1), nd["y"])
-                if site is not None and not site.legal(q):
-                    q = site.nearest(q)
+                explicit = tp in (tap_pad_sites or {})
+                if explicit:
+                    rows = tap_pad_sites[tp]
+                    if len(rows) != int((tap_pad or {}).get(tp, 0)):
+                        raise ValueError(f"--tap-pad sites {tp}: count does not match pad buffers")
+                    q = tuple(rows[j])
+                    if len(q) != 2 or not all(isinstance(v, (int, float)) and not isinstance(v, bool)
+                                               and math.isfinite(v) for v in q):
+                        raise ValueError(f"--tap-pad sites {tp}: finite x/y required")
+                    if site is not None and not site.legal(q):
+                        raise ValueError(f"--tap-pad sites {tp}: declared site {q} is not legal")
+                else:
+                    q = (nd["x"] + 0.54 * (j + 1), nd["y"])
+                    if site is not None and not site.legal(q):
+                        q = site.nearest(q)
                 place.append((inst, q[0], q[1]))
+                parent_of[inst] = prev_inst
+                prev_inst = inst
                 src = o
             cells.append(f"  assign {tp} = {src};")
     v = ["module ctree (root, " + ", ".join(t[0] for t in tap_ports) + ");", "  input root;"]
@@ -1785,7 +1800,20 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
             nd["x"], nd["y"] = round(q[0], 3), round(q[1], 3)
         if tree_form == "link_htree":
             balanced = balance_legalize(nodes, site)
-    v, place, tap_ports, node_buf, parent_of = tree_netlist(nodes, taps, rep_um, site, tap_pad)
+    # Optional explicit plan bays share the existing tap-pad JSON; ordinary
+    # {tap_port: count} inputs retain their old placement path.
+    pad_sites = dict((tap_pad or {}).get("sites", {}))
+    if pad_sites:
+        tap_pad = {k: v for k, v in tap_pad.items() if k != "sites"}
+        unknown_sites = sorted(set(pad_sites) - set(tap_pad))
+        if unknown_sites:
+            raise ValueError(f"--tap-pad sites: no count for {unknown_sites[:5]}")
+        for port, rows in pad_sites.items():
+            if len(rows) != int(tap_pad[port]):
+                raise ValueError(f"--tap-pad sites {port}: count does not match pad buffers")
+    elif tap_pad and "sites" in tap_pad:
+        tap_pad = {k: v for k, v in tap_pad.items() if k != "sites"}
+    v, place, tap_ports, node_buf, parent_of = tree_netlist(nodes, taps, rep_um, site, tap_pad, pad_sites)
     if tap_pad:
         unknown = sorted(set(tap_pad) - {t[0] for t in tap_ports})
         if unknown:
@@ -1802,9 +1830,16 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
                 segs.append((p["x"], p["y"], nd["x"], nd["y"], nd["level"]))
     # leaf -> tap last-mile legs (L: horizontal on M8, then vertical on M9)
     leaf_legs = []
+    pad_xy = {inst: (x, y) for inst, x, y in place} if tap_pad else {}
     for tp, x, y, part, port, i in tap_ports:
         nd = nodes[i]
-        leaf_legs.append((nd["x"], nd["y"], x, y))
+        count = int((tap_pad or {}).get(tp, 0))
+        prev = (nd["x"], nd["y"])
+        for j in range(count):
+            q = pad_xy[f"p{i}_{tp}_{j}"]
+            leaf_legs.append((*prev, *q))
+            prev = q
+        leaf_legs.append((*prev, x, y))
     tcl = [f"read_lef {TECH_LEF}", f"read_lef {SC_LEF}",
            "foreach f [glob $::env(LIBDIR)/*RVT_$::env(CORNER)_nldm*.lib*] { read_liberty $f }",
            "read_verilog /work/clock/ctree.v", "link_design ctree",
@@ -1829,9 +1864,12 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
             # arrival at a port = period - slack (output delay 0); at a buffer output pin = its arrival property
             "foreach p [get_ports t_*] { set n [get_full_name $p]; "
             "set smx [get_property $p slack_max_rise]; set smn [get_property $p slack_min_rise]; "
-            "puts $fh \"T $n [expr {833.333 - $smx}] [expr {$smn}]\" }",
-            "foreach i [get_cells b*] { set q [get_pins [get_full_name $i]/Y]; "
-            "puts $fh \"N [get_full_name $i] [get_property $q arrival_max_rise] [get_property $q arrival_min_rise]\" }",
+            "puts $fh \"T $n [expr {833.333 - $smx}] [expr {$smn}]" + (" [get_property $p slew_max_rise]"
+                         if any(int(v) > 0 for v in (tap_pad or {}).values()) else "") + "\" }",
+            ("foreach i [get_cells {b* r* p*}] { set q [get_pins [get_full_name $i]/Y]; "
+             if any(int(v) > 0 for v in (tap_pad or {}).values()) else
+             "foreach i [get_cells b*] { set q [get_pins [get_full_name $i]/Y]; ")
+            + "puts $fh \"N [get_full_name $i] [get_property $q arrival_max_rise] [get_property $q arrival_min_rise]\" }",
             "close $fh",
             "report_checks -path_delay max -group_path_count 1 -format full -fields {cap slew fanout}",
             "puts OT_DONE"]
@@ -1882,6 +1920,22 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
                                   for i, n in nodes.items()},
                 taps=[dict(port=tp, part=part, tap=port, xy=[x, y], node=i) for tp, x, y, part, port, i in tap_ports],
                 node_buf=node_buf, parent_of=parent_of, sites={inst: [round(x, 3), round(y, 3)] for inst, x, y in place})
+    if any(int(v) > 0 for v in (tap_pad or {}).values()):
+        # Physical paths include every repeater and final pad. The geometric
+        # node id is retained for region membership, never substituted for the
+        # actual padded tap driver during CPPR / depth accounting.
+        def cell_path(cell):
+            path = [cell]
+            while cell in parent_of:
+                cell = parent_of[cell]
+                path.append(cell)
+            return list(reversed(path))
+        tree["node_stages"] = {cell: len(cell_path(cell)) for cell, *_ in place}
+        for t in tree["taps"]:
+            count = int((tap_pad or {}).get(t["port"], 0))
+            t["driver"] = f"p{t['node']}_{t['port']}_{count - 1}" if count else node_buf[t["node"]]
+            t["path"] = cell_path(t["driver"])
+            t["stages_from_root"] = len(t["path"])
     (out / "tree.json").write_text(json.dumps(tree) + "\n")
     return nodes, segs, leaf_legs, meta
 
@@ -3442,6 +3496,14 @@ def render_all(d, P, plan_path):
     return out
 
 
+def load_tap_pad(path):
+    """Retain explicit sibling sites from the existing {pad: counts} CLI file."""
+    raw = json.loads(Path(path).read_text())
+    if "pad" in raw:
+        return dict(raw["pad"], **({"sites": raw["sites"]} if "sites" in raw else {}))
+    return raw
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -3568,7 +3630,7 @@ def main(argv=None):
                       tree_opts={**{k: float(v) for k, v in (o.split("=") for o in a.tree_opt)},
                                  **({"feed": a.feed} if a.tree_form in ("link_fishbone", "link_htree") else {})},
                       slice_spine=a.slice_spine, spine_top_leaf_um=a.spine_top_leaf_um, slice_rows=a.slice_rows,
-                      tap_pad=json.loads(Path(a.tap_pad).read_text())["pad"] if a.tap_pad else None,
+                      tap_pad=load_tap_pad(a.tap_pad) if a.tap_pad else None,
                       clock_rc=a.clock_rc, slice_balance=a.slice_balance, region_dme=a.region_dme,
                       region_dme_only=[r for r in a.region_dme_only.split(",") if r] if a.region_dme_only else None)
         print(json.dumps({k: m[k] for k in ("die", "parts", "types", "closed_views", "hard_cores", "clock_tree", "grt",

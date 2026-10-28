@@ -3497,13 +3497,16 @@ def load_plan(path):
     raw = json.loads(Path(path).read_text())
     if _AB_OVERRIDE.get("path"):
         ab = json.loads(Path(_AB_OVERRIDE["path"]).read_text())
-        ab.setdefault("base", str(E.REPO))
-        if ab.get("map_file") and not Path(ab["map_file"]).is_absolute():
-            ab["map_file"] = str(Path(_AB_OVERRIDE["path"]).parent / ab["map_file"])
         raw["asbuilt"] = ab
     if "asbuilt" not in raw:
         raise BindError(f"{path}: no `asbuilt` section (README: As-built binding)")
     _gate_manifest_paths(raw["asbuilt"], Path(_AB_OVERRIDE.get("path") or path), bool(_AB_OVERRIDE.get("path")))
+    if _AB_OVERRIDE.get("path"):
+        # Validate declared paths before normalizing them for internal consumers.
+        ab = raw["asbuilt"]
+        ab.setdefault("base", str(E.REPO))
+        if ab.get("map_file") and not Path(ab["map_file"]).is_absolute():
+            ab["map_file"] = str(Path(_AB_OVERRIDE["path"]).parent / ab["map_file"])
     return raw
 
 
