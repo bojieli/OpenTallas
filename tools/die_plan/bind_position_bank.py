@@ -24,6 +24,7 @@ def spec(b, ci, port):
     c = b.F.cells[ci]
     part = b.cpart.get(ci)
     tn = b.parts[part]['type'] if part in b.parts else None
+    tn = getattr(b, 'types', {}).get(tn, {}).get('landing_base_type', tn)
     if tn not in WRAPPERS:
         return None
     if c.module != WRAPPERS[tn]:

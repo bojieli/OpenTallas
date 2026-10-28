@@ -208,6 +208,11 @@ class PlanCells:
                 if old[0] == "tied":
                     B.counts["tied"] = B.counts.get("tied", 0) - 1
                     B.tied_by_port[f"{B.F.cells[ci].module}.{port} <- literal"] -= 1
+                    tied_key = (B.F.cells[ci].path, port, B.F.cells[ci].module)
+                    if tied_key in B.tied_pins:
+                        B.tied_pins[tied_key] = [bit for bit in B.tied_pins[tied_key] if bit[0] != j]
+                        if not B.tied_pins[tied_key]:
+                            del B.tied_pins[tied_key]
                     drop.add(f"TIED {B.F.cells[ci].path}.{port}[{j}] ")
                 elif old[0] == "strap":
                     B.counts["strap"] = B.counts.get("strap", 0) - 1

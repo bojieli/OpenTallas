@@ -44,3 +44,25 @@ def test_unknown_timing_declaration_fails_closed():
     b=bank();b.ab['position_banks']='phase_selector_v0'
     with pytest.raises(ValueError,match='unknown position-bank declaration'):
         P.layout(b)
+
+
+def test_declared_landing_cohort_preserves_exact_position_bank_identity():
+    b=bank(typ='kv3_pc__clabc')
+    assert P.spec(b,0,'x__tok') is None
+    b.types={'kv3_pc__clabc':{'landing_base_type':'kv3_pc'}}
+    assert P.spec(b,0,'x__tok')['pad']==2
+    b.F.cells[0].module='wrong_wrapper'
+    assert P.spec(b,0,'x__tok') is None
+
+def test_landing_cohort_retains_physical_position_guard():
+    b=bank('slg_EN_2',typ='kv3_pc__clabc')
+    b.types={'kv3_pc__clabc':{'landing_base_type':'kv3_pc'}}
+    with pytest.raises(ValueError,match='does not match'):
+        P.spec(b,0,'x__tok')
+
+def test_landing_cohort_retains_bank_abi_width_guard():
+    b=bank(typ='kv3_pc__clabc')
+    b.types={'kv3_pc__clabc':{'landing_base_type':'kv3_pc'}}
+    b.F.cells[0].ports['x__tok']=[0]
+    with pytest.raises(ValueError,match='ABI width'):
+        P.spec(b,0,'x__tok')
