@@ -1034,9 +1034,35 @@ def hr_src_params(J, ty, name):
     m = re.search(r'\bmodule\s+' + re.escape(name) + r'\s*#\s*\((.*?)\)\s*\(', txt, re.S)
     if not m:
         return set()
-    hdr = re.sub(r'//[^\n]*', '', m.group(1))
-    return set(re.findall(r'\bparameter\s+(?:integer\s+|int\s+|logic\s+|bit\s+|real\s+|string\s+)?'
-                          r'(?:signed\s+)?(?:\[[^\]]*\]\s*)?([A-Za-z_]\w*)\s*=', hdr))
+    hdr = re.sub(r'/\*.*?\*/', '', re.sub(r'//[^\n]*', '', m.group(1)), flags=re.S)
+    # QK-CORES-7 2026-10-27: every name of a comma-continued list ("parameter integer A=0,B=0,C=0") is overridable.
+    # The old regex took only the FIRST name after each 'parameter' keyword, so e.g. qkd_host_ctrl_token_service_
+    # packet_collected_mu lost MUT/STRAPPED/ENABLE_SERVICE/ENABLE_TOKEN and the hr core was built at the module
+    # defaults (ENABLE_TOKEN 0) instead of the bound values (1): package_abort/por_n looked dead in qkd_hr_core_tx.
+    items, depth, cur = [], 0, ''
+    for ch in hdr:
+        if ch in '([{':
+            depth += 1
+        elif ch in ')]}':
+            depth -= 1
+        if ch == ',' and depth == 0:
+            items.append(cur)
+            cur = ''
+        else:
+            cur += ch
+    items.append(cur)
+    names, local = set(), False
+    for it in items:
+        it = it.strip()
+        if re.match(r'localparam\b', it):
+            local = True
+        elif re.match(r'parameter\b', it):
+            local = False
+        mm = re.match(r'(?:(?:localparam|parameter)\s+)?(?:(?:integer|int|logic|bit|real|string|signed|unsigned)\s+)*'
+                      r'(?:\[[^\]]*\]\s*)?([A-Za-z_]\w*)\s*=', it)
+        if mm and not local:
+            names.add(mm.group(1))
+    return names
 
 
 def hr_pval(v):
