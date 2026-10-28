@@ -164,3 +164,47 @@ def test_qc_hold_chain_runs_its_hook_on_routed_kits():
     assert "override export PRE_DETAIL_ROUTE_TCL =\n" in t and "override export POST_DETAIL_ROUTE_TCL =\n" in t
     p = (lg / "eco_pre_grt.tcl").read_text()
     assert "![grt::have_routes]" in p and "read_spef $s" in p and "source $::env(OT_KIT_PRE_GRT)" in p
+
+
+# FLOW-SHARED-10: pre-DRT hold ECO (5_1_grt start, one detailed route) -> --pre-unrouted
+PRE_UNROUTED = [
+    "#CLKDUMP tag pre nets 2 block top",
+    "NET\tclkA\tCLOCK\t0\t\t",
+    "PIN\tclkA\tbuf0/Y ff1/CLK ff2/CLK",
+    "NET\tclkB\tCLOCK\t0\t\t",
+    "PIN\tclkB\tbuf1/Y ff3/CLK",
+    "INST\tbuf0\tBUFx4_ASAP7_75t_R\t10\t20\tR0\tLOCKED",
+    "INST\tff1\tDFFHQNx1_ASAP7_75t_R\t30\t40\tR0\tLOCKED",
+]
+
+
+def run_pu(tmp, pre, post):
+    a, b, j = tmp / "pre.tsv", tmp / "post.tsv", tmp / "d.json"
+    a.write_text("\n".join(pre) + "\n")
+    b.write_text("\n".join(post) + "\n")
+    p = subprocess.run([sys.executable, "-I", str(DIFF), str(a), str(b), "--json", str(j), "--pre-unrouted"],
+                       capture_output=True, text=True)
+    return p.returncode, p.stdout, (json.loads(j.read_text()) if j.exists() else None)
+
+
+def test_pre_unrouted_first_route_passes_but_pins_and_insts_stay_blocking(tmp_path):
+    rc, out, r = run_pu(tmp_path, PRE_UNROUTED, PRE)          # the single DRT routed both clock nets
+    assert rc == 0 and r["verdict"] == "PASS" and r["mode"] == "pre_unrouted" and "not compared" in out
+    rc, _, r = run_pu(tmp_path, PRE_UNROUTED, [l.replace("ff2/CLK", "ff2/CLK hb1/A") for l in PRE])
+    assert rc == 1 and r["pins"] == ["clkA"]
+    rc, _, r = run_pu(tmp_path, PRE_UNROUTED, [l.replace("\t30\t40\t", "\t31\t40\t") for l in PRE])
+    assert rc == 1 and r["inst"] == ["ff1"]
+    # without the flag the same first route is a wire change (the post-route ECO contract is unchanged)
+    rc, _, r = run(tmp_path, PRE_UNROUTED, PRE)
+    assert rc == 1 and set(r["wire"]) == {"clkA", "clkB"}
+
+
+def test_pre_unrouted_refuses_a_wired_start(tmp_path):
+    rc, out, r = run_pu(tmp_path, PRE, PRE)                   # a routed DB is not a pre-DRT start
+    assert rc == 1 and r["pre_wired"] == ["clkA", "clkB"] and "pre_wired" in out
+
+
+def test_check_script_selects_pre_unrouted_only_for_grt_eco():
+    t = (DP / "clk_freeze_check.sh").read_text()
+    assert "grep -qs '^OT_ECO_FROM=grt$' \"$D/variant.env\" && PU=--pre-unrouted" in t
+    assert '--json "$D/clk_geom_diff.json" $PU' in t
