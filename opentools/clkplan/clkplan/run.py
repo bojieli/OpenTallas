@@ -109,9 +109,23 @@ def main(argv=None):
     ap.add_argument("--droop", default="regions", choices=["regions", "always"])
     ap.add_argument("--no-streets", action="store_true")
     ap.add_argument("--png", action="store_true")
+    ap.add_argument("--mode", default="die", choices=["die", "region"],
+                    help="die = one planned die H-tree; region = METHODOLOGY 12.13 region clocks fed along feeds[]")
     a = ap.parse_args(argv)
     P = PL.load(a.plan)
     M = MD.load(a.model)
+    if a.mode == "region":
+        from . import regionmode as RM
+        res = RM.analyse(P, M, PL.clock_sinks(P), droop=a.droop)
+        out = Path(a.out)
+        out.mkdir(parents=True, exist_ok=True)
+        (out / "clkplan_region_report.json").write_text(json.dumps(res, indent=1, default=str) + "\n")
+        PL.save(RM.write_schema_outputs(P, res), out / "plan_out.json")
+        cs = res["crossings"]["summary"]
+        print(f"{P.get('name')}: region mode {res['verdict']}: {cs['fail']}/{cs['landed']} landed crossings under "
+              f"{cs['min_margin_ps']} ps" + "".join(f"; {c} worst {cs[c]['worst_margin_ps']} ps, max unshared "
+                                                   f"{cs[c]['max_unshared_ps']} ps" for c in ("TT", "FF") if c in cs))
+        return 0 if res["verdict"] == "PASS" else 1
     res, T, S = analyse(P, M, dict(leaf_um=a.leaf_um, leaf_sinks=a.leaf_sinks, max_move_um=a.max_move_um, frame=a.frame, droop=a.droop,
                                    no_streets=a.no_streets))
     out = Path(a.out)

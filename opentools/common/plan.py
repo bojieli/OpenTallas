@@ -18,6 +18,7 @@ SCHEMA = "opentools.plan/1"
 MACRO_KINDS = ("hard_core", "phy", "blockage")
 SHIELD_MODES = ("none", "drawn", "pg_flank")
 CORNERS = ("TT", "FF")
+FEED_KINDS = ("forward", "spine")
 
 DEFAULT_CLOCK = dict(name="clk", period_ps=None, entry=None, layers={"H": None, "V": None},
                      ndr=dict(width_um=None, space_um=None, shield="none", shield_width_um=None),
@@ -82,7 +83,16 @@ def validate(P):
     for r in P.get("regions", []):
         if r.get("partition") is not None and not isinstance(r["partition"], str):
             e.append(f"region {r.get('name')}: partition must be a name")
-    del regs
+    for f in P.get("feeds", []):
+        if f.get("dst") not in regs or not (f.get("src") == "root" or f.get("src") in regs):
+            e.append(f"feed {f.get('name')}: src must be 'root' or a region, dst a region")
+        if not (isinstance(f.get("len_um"), (int, float)) and f["len_um"] >= 0):
+            e.append(f"feed {f.get('name')}: len_um >= 0 required")
+        if f.get("kind", "forward") not in FEED_KINDS:
+            e.append(f"feed {f.get('name')}: kind must be one of {FEED_KINDS}")
+    dsts = [f.get("dst") for f in P.get("feeds", [])]
+    for d in {d for d in dsts if dsts.count(d) > 1}:
+        e.append(f"region {d}: more than one incoming feed (feeds must form a tree)")
     return e
 
 
@@ -96,6 +106,7 @@ def fill_defaults(P):
     P.setdefault("layers", [])
     P.setdefault("pin_windows", [])
     P.setdefault("channels", [])
+    P.setdefault("feeds", [])
     ck = copy.deepcopy(DEFAULT_CLOCK)
     user = P.get("clock", {})
     for k, v in user.items():
