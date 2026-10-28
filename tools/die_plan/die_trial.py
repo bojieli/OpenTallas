@@ -645,6 +645,220 @@ def build_spine_fishbone(P, taps, col_um=60.0, merge_um=800.0, matched=False, st
     return nodes
 
 
+def _legal_on_line(site, q, along, tol=1.0):
+    """legal clock site, or a sample sitting in the <0.5-um abutment sliver between two partitions with legal points
+    tol um either side ALONG the line (a wire runs straight through an abutment edge)."""
+    if site.legal(q):
+        return True
+    d = (tol, 0.0) if along == "x" else (0.0, tol)
+    return site.why(q) == "outside" and site.legal((q[0] - d[0], q[1] - d[1])) and site.legal((q[0] + d[0], q[1] + d[1]))
+
+
+def find_spine_column(site, box, step=2.16, dy=10.0):
+    """x of the full-height legal column of `box` nearest its centre (QC-SLICECLK-3): every sample every dy um from
+    y0+dy/2 to y1-dy/2 is a legal clock-tree site.  None if the region has no such column."""
+    x0, y0, x1, y1 = box
+    xc = (x0 + x1) / 2
+    ys = [y0 + dy / 2 + i * dy for i in range(max(1, int((y1 - y0) / dy)))]
+    n = int((x1 - x0) / 2 / step)
+    for k in range(n + 1):
+        for x in ((xc,) if k == 0 else (xc - k * step, xc + k * step)):
+            if x0 + 1.0 <= x <= x1 - 1.0 and all(_legal_on_line(site, (x, y), "y") for y in ys):
+                return round(x, 3)
+    return None
+
+
+def find_spine_row(site, xa, xb, y_want, dx=10.0, step=1.08, reach=3000.0):
+    """y of the legal horizontal row over [xa, xb] nearest y_want (shared top spine along the slice band)."""
+    xs = [xa + i * dx for i in range(int((xb - xa) / dx) + 1)] + [xb]
+    for k in range(int(reach / step) + 1):
+        for y in ((y_want,) if k == 0 else (y_want - k * step, y_want + k * step)):
+            if 0 < y < site.H and all(_legal_on_line(site, (x, y), "x") for x in xs):
+                return round(y, 3)
+    return None
+
+
+def build_slice_spine_tree(P, taps, regions, leaf_um=600.0, site=None, top_leaf_um=50.0, rows=None):
+    """QC-SLICECLK-3 opt-in (--slice-spine, needs --region-trees): clock follows the slice band (METHODOLOGY 12.13b).
+    - top: ONE shared horizontal spine at the legal row y_s nearest the common region centre; a 1-D equal-length
+      bisection along it (full depth to top_leaf_um) reaches every region's spine column x_r at (x_r, y_s);
+    - per region: a vertical leg on its full-height legal column to (x_r, yc), then every y-bisection level ON that
+      column (no slide: siblings stay equal), until the strip height <= region width; then one equal horizontal leg to
+      the strip centre (same length for every strip of the region) and a full-depth local bisection to leaf_um;
+    - a region without a full-height legal column falls back to the stock equal-depth local tree from its bbox centre.
+    rows (opt-in, qc_slice_clock_rows/1 of INFRA-FIRST-QC-R35): the plan's reserved geometry wins: column x = the
+    region's top tap x (slices[].spine_x, HUB feed col), spine row = top.rows.T3_tap.y.
+    Nodes on the spine / columns carry fixed=True (never slid); local nodes carry their split axis; the site pass (balanced_site) moves them where root->kid lengths change least.
+    -> (nodes, info)"""
+    W, H = P.W, P.H
+    root = P.clock.get("spine", {}).get("root_um") or [W / 2, H / 2]
+    nodes = {}
+
+    def mk(x, y, parent, level, region, **kw):
+        i = len(nodes)
+        nodes[i] = dict(id=i, x=round(x, 3), y=round(y, 3), parent=parent, level=level, kids=[], taps=[],
+                        region=[round(v, 3) for v in region], **kw)
+        if parent is not None:
+            nodes[parent]["kids"].append(i)
+        return i
+
+    def link(nid, x, y, region, **kw):
+        """straight or L leg (corner node on the parent's row) from nid to (x, y)"""
+        px, py, lv = nodes[nid]["x"], nodes[nid]["y"], nodes[nid]["level"] + 1
+        if abs(px - x) > 1e-6 and abs(py - y) > 1e-6:
+            nid = mk(x, py, nid, lv, region, corner=True, **kw)
+        return mk(x, y, nid, lv, region, **kw)
+
+    def local(nid, region, tlist):          # stock full-depth bisection (= build_htree.rec with full_depth)
+        x0, y0, x1, y1 = region
+        if max(x1 - x0, y1 - y0) <= leaf_um:
+            nodes[nid]["taps"] = tlist
+            return
+        if x1 - x0 >= y1 - y0:
+            xm = (x0 + x1) / 2
+            halves = [((x0, y0, xm, y1), [t for t in tlist if t[2] < xm]), ((xm, y0, x1, y1), [t for t in tlist if t[2] >= xm])]
+        else:
+            ym = (y0 + y1) / 2
+            halves = [((x0, y0, x1, ym), [t for t in tlist if t[3] < ym]), ((x0, ym, x1, y1), [t for t in tlist if t[3] >= ym])]
+        nodes[nid]["split"] = "x" if x1 - x0 >= y1 - y0 else "y"
+        for reg, tl in halves:
+            if tl:
+                c = link(nid, (reg[0] + reg[2]) / 2, (reg[1] + reg[3]) / 2, reg)
+                local(c, reg, tl)
+
+    rt = defaultdict(list)
+    for t in taps:
+        rt[regions[t[0]]].append(t)
+    box = {}
+    for rn, tl in rt.items():
+        rs = [(P.parts[n]["origin_um"][0], P.parts[n]["origin_um"][1],
+               P.parts[n]["origin_um"][0] + P.types[P.parts[n]["type"]]["outline_um"][0],
+               P.parts[n]["origin_um"][1] + P.types[P.parts[n]["type"]]["outline_um"][1]) for n in {t[0] for t in tl}]
+        box[rn] = (min(a[0] for a in rs), min(a[1] for a in rs), max(a[2] for a in rs), max(a[3] for a in rs))
+    site = site or SiteMap(P)
+    if rows:
+        tapx = {t["region"]: t["x"] for t in rows["top"]["taps"]}
+        col = {rn: tapx.get(rn) for rn in box}
+    else:
+        col = {rn: find_spine_column(site, b) for rn, b in sorted(box.items())}
+    xcol = {rn: (col[rn] if col[rn] is not None else round((b[0] + b[2]) / 2, 3)) for rn, b in box.items()}
+    ycs = sorted((b[1] + b[3]) / 2 for b in box.values())
+    y_want = ycs[len(ycs) // 2]
+    xa, xb = min(xcol.values()), max(xcol.values())
+    y_s = rows["top"]["rows"]["T3_tap"]["y"] if rows else find_spine_row(site, xa, xb, y_want)
+    if y_s is None:
+        raise ValueError(f"no legal horizontal spine row over x {xa}-{xb} near y {y_want}")
+    r = mk(root[0], root[1], None, 0, (0, 0, W, H), fixed=True)
+    s0 = link(r, (xa + xb) / 2, y_s, (xa, y_s, xb, y_s), fixed=True, spine="top")
+
+    def spine1d(nid, a, b, items):
+        if b - a <= top_leaf_um:
+            for rn, x in items:
+                c = link(nid, x, y_s, box[rn], fixed=True, spine="top")
+                nodes[c]["region_entry"] = rn
+            return
+        m = (a + b) / 2
+        nodes[nid]["split"] = "x"
+        for lo, hi in ((a, m), (m, b)):
+            it = [(rn, x) for rn, x in items if (lo <= x < hi or (hi == b and x == b))]
+            if it:
+                c = link(nid, (lo + hi) / 2, y_s, (lo, y_s, hi, y_s), fixed=True, spine="top")
+                spine1d(c, lo, hi, it)
+    half = max(xb - xa, top_leaf_um) / 2 + 1e-3
+    spine1d(s0, (xa + xb) / 2 - half, (xa + xb) / 2 + half, sorted((rn, x) for rn, x in xcol.items()))
+    info = dict(spine_row_y_um=y_s, spine_x_um=[xa, xb], top_leaf_um=top_leaf_um, regions={},
+                rows_source=(rows.get("lane"), rows.get("schema")) if rows else None)
+
+    def column(nid, rn, y0, y1, tlist):
+        b = box[rn]
+        if y1 - y0 <= (b[2] - b[0]) + 1e-6:
+            ysc = (y0 + y1) / 2
+            s = nid
+            if abs(nodes[nid]["x"] - (b[0] + b[2]) / 2) > 1e-6:
+                s = link(nid, (b[0] + b[2]) / 2, ysc, (b[0], y0, b[2], y1), strip_root=rn)
+            local(s, (b[0], y0, b[2], y1), tlist)
+            return
+        ym = (y0 + y1) / 2
+        nodes[nid]["split"] = "y"
+        for lo, hi, tl in ((y0, ym, [t for t in tlist if t[3] < ym]), (ym, y1, [t for t in tlist if t[3] >= ym])):
+            if tl:
+                c = link(nid, xcol[rn], (lo + hi) / 2, (b[0], lo, b[2], hi), fixed=True, spine="column")
+                column(c, rn, lo, hi, tl)
+
+    for e in [i for i, nd in list(nodes.items()) if nd.get("region_entry")]:
+        rn = nodes[e]["region_entry"]
+        b = box[rn]
+        xc, yc = (b[0] + b[2]) / 2, (b[1] + b[3]) / 2
+        if col[rn] is None:        # fallback: stock local tree from the bbox centre
+            c = link(e, xc, yc, b, region_root=rn)
+            local(c, b, rt[rn])
+            info["regions"][rn] = dict(mode="local", box=[round(v, 3) for v in b])
+            continue
+        c = link(e, xcol[rn], yc, b, fixed=True, spine="column", region_root=rn) if abs(yc - y_s) > 1e-6 else e
+        nodes[c]["region_root"] = rn
+        column(c, rn, b[1], b[3], rt[rn])
+        info["regions"][rn] = dict(mode="spine_column", box=[round(v, 3) for v in b], column_x_um=xcol[rn],
+                                   strip_leg_um=round(abs(xcol[rn] - xc), 3), feed_leg_um=round(abs(yc - y_s), 3))
+    return nodes, info
+
+
+def _man(a, b):
+    return abs(a[0] - b[0]) + abs(a[1] - b[1])
+
+
+def balanced_site(site, p, parent, kids, split=None, reach=1300.0, step=2.16, fine=0.54):
+    """legal site for an illegal tree node that keeps root->descendant lengths as equal as possible (QC-SLICECLK-3).
+    Candidates: the first legal point on each of the 4 axis rays from p (coarse walk, refined back toward p) + the
+    nearest legal point.  Cost = worst |change of root->kid length| over the node's kids (taps for a leaf), i.e. the
+    imbalance the move adds against the rest of the tree.  A branch node moved back along an incoming leg that is
+    perpendicular to its split axis costs 0 (the old --tree-site-slide guarantee); a move ALONG the split axis costs
+    2x its length between siblings and is chosen only when nothing cheaper is legal.  -> (point, cost_um) or (None, None)"""
+    p = (float(p[0]), float(p[1]))
+    if site.legal(p):
+        return p, 0.0
+    cands = []
+    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+        k = 1
+        while k * step <= reach:
+            q = (p[0] + dx * k * step, p[1] + dy * k * step)
+            if site.legal(q):
+                j = 1
+                while j * fine < step:          # refine back toward p
+                    r = (q[0] - dx * j * fine, q[1] - dy * j * fine)
+                    if not site.legal(r):
+                        break
+                    q = r
+                    j += 1
+                cands.append((round(q[0], 3), round(q[1], 3)))
+                break
+            k += 1
+    try:
+        cands.append(site.nearest(p))
+    except ValueError:
+        pass
+    if not cands:
+        return None, None
+
+    def cost(q):
+        din = (_man(parent, q) - _man(parent, p)) if parent is not None else 0.0
+        if not kids:
+            return abs(din)
+        return max(abs(din + _man(q, k) - _man(p, k)) for k in kids)
+    best = min(cands, key=lambda q: (round(cost(q), 3), _man(p, q)))
+    return best, round(cost(best), 3)
+
+
+def path_lengths(nodes):
+    """root -> node Manhattan length (um) of every node (for balance self-checks)."""
+    L = {}
+    for i in sorted(nodes):
+        nd = nodes[i]
+        if nd["parent"] is None:
+            L[i] = 0.0
+        else:
+            p = nodes[nd["parent"]]
+            L[i] = L[nd["parent"]] + abs(p["x"] - nd["x"]) + abs(p["y"] - nd["y"])
+    return L
 
 
 def tree_netlist(nodes, taps, rep_um=450.0, site=None):
@@ -702,15 +916,51 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None):
 
 
 def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_slide=False, regions=None, tree_form="htree",
-              tree_opts=None):
+              tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None):
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     taps = clock_taps(P)
-    nodes = (build_spine_fishbone(P, taps, **(tree_opts or {})) if tree_form == "spine_fishbone" else
-             build_htree(P, taps, leaf_um, full_depth, regions))
+    if slice_spine and tree_form != "htree":
+        raise ValueError("--slice-spine and --tree-form %s are exclusive opt-ins" % tree_form)
     site = None
     slid_fallback = 0
-    if site_slide:          # opt-in: slide each buffer back along its OWN incoming leg (equal length by construction)
+    spine_info = None
+    if slice_spine:         # QC-SLICECLK-3 opt-in: spine-column region trees + shared top spine, no slide along a split axis
+        if not regions:
+            raise ValueError("--slice-spine needs --region-trees")
+        site = SiteMap(P)
+        nodes, spine_info = build_slice_spine_tree(P, taps, regions, leaf_um, site, spine_top_leaf_um,
+                                                    json.loads(Path(slice_rows).read_text()) if slice_rows else None)
+        moves = []
+        for i, nd in sorted(nodes.items()):
+            nd["req_xy"] = [nd["x"], nd["y"]]
+            if site.legal((nd["x"], nd["y"])):
+                continue
+            par = (nodes[nd["parent"]]["x"], nodes[nd["parent"]]["y"]) if nd["parent"] is not None else None
+            kids = [(nodes[k]["x"], nodes[k]["y"]) for k in nd["kids"]] + [tuple(t[2:4]) for t in nd["taps"]]
+            q, c = balanced_site(site, (nd["x"], nd["y"]), par, kids, nd.get("split"))
+            if q is None:
+                slid_fallback += 1
+                q, c = site.nearest((nd["x"], nd["y"])), None
+            moves.append(dict(node=i, fixed=bool(nd.get("fixed")), um=round(_man(q, (nd["x"], nd["y"])), 3),
+                              imbalance_um=c))
+            nd["x"], nd["y"] = round(q[0], 3), round(q[1], 3)
+        L = path_lengths(nodes)
+        reg_len = defaultdict(list)
+        for i, nd in nodes.items():
+            for t in nd["taps"]:
+                reg_len[regions[t[0]]].append(L[i] + abs(t[2] - nd["x"]) + abs(t[3] - nd["y"]))
+        for rn, v in reg_len.items():     # Manhattan root -> tap incl. the leaf->tap leg (balance self-check, um)
+            spine_info["regions"].setdefault(rn, {})["root_to_tap_um"] = [round(min(v), 1), round(max(v), 1)]
+        imb = [m["imbalance_um"] for m in moves if m["imbalance_um"] is not None]
+        spine_info["moved"] = dict(nodes=len(moves), fixed_nodes=sum(m["fixed"] for m in moves),
+                                   max_um=max([m["um"] for m in moves], default=0.0),
+                                   sum_um=round(sum(m["um"] for m in moves), 1),
+                                   zero_cost=sum(1 for v in imb if v <= 1e-6), max_imbalance_um=max(imb, default=0.0))
+    else:
+        nodes = (build_spine_fishbone(P, taps, **(tree_opts or {})) if tree_form == "spine_fishbone" else
+                 build_htree(P, taps, leaf_um, full_depth, regions))
+    if site_slide and not slice_spine:          # opt-in: slide each buffer back along its OWN incoming leg (equal length by construction)
         site = SiteMap(P)
         for nd in nodes.values():
             nd["req_xy"] = [nd["x"], nd["y"]]
@@ -732,7 +982,7 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
                     slid_fallback += 1
                     q = site.nearest(tuple(nd["req_xy"]))
             nd["x"], nd["y"] = round(q[0], 3), round(q[1], 3)
-    elif site_legal:          # opt-in: every buffer/repeater on a legal channel site; a one-entry leaf drives AT its entry
+    elif site_legal and not slice_spine:          # opt-in: every buffer/repeater on a legal channel site; a one-entry leaf drives AT its entry
         site = SiteMap(P)
         for nd in nodes.values():
             nd["req_xy"] = [nd["x"], nd["y"]]
@@ -793,13 +1043,16 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
                 wire_um=round(sum(abs(a - c) + abs(b - d) for a, b, c, d, _ in segs) +
                               sum(abs(a - c) + abs(b - d) for a, b, c, d in leaf_legs), 1),
                 levels=max(n["level"] for n in nodes.values()))
+    if spine_info is not None:
+        meta["slice_spine"] = spine_info
+        meta["region_trees"] = len(spine_info["regions"])
     if site is not None:
         bad = {}
         for inst, x, y in place:
             w = site.why((x, y))
             if w:
                 bad[w] = bad.get(w, 0) + 1
-        meta["site_legal"] = dict(mode="slide" if site_slide else "nearest", slide_fallbacks=slid_fallback,
+        meta["site_legal"] = dict(mode="slice_spine" if slice_spine else "slide" if site_slide else "nearest", slide_fallbacks=slid_fallback,
                                   cells=len(place), illegal=bad, forbidden_rects=len(site.forb),
                                   moved_nodes=sum(1 for n in nodes.values() if [n["x"], n["y"]] != n["req_xy"]))
     tree = dict(meta=meta, nodes={i: {k: v for k, v in n.items() if k != "taps"} | dict(ntaps=len(n["taps"]))
@@ -1746,7 +1999,7 @@ exit $rc
 
 def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.72, density=0.15, island_sites=None,
               island_margin=ISLAND_MARGIN_UM, full_depth=False, site_legal=False, site_slide=False, regions=None,
-              tree_form="htree", tree_opts=None):
+              tree_form="htree", tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None):
     raw = S.load(plan_path)
     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
     plan_dir = Path(plan_path).parent
@@ -1815,7 +2068,8 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     # clock
     nodes, segs, leaf_legs, cm = clock_kit(P, out / "clock", leaf_um, rep_um, full_depth, site_legal, site_slide,
                                            json.loads(Path(regions).read_text())["part_region"] if regions else None,
-                                           tree_form=tree_form, tree_opts=tree_opts)
+                                           tree_form=tree_form, tree_opts=tree_opts, slice_spine=slice_spine,
+                                           spine_top_leaf_um=spine_top_leaf_um, slice_rows=slice_rows)
     (out / "clock" / "make_tracks.tcl").write_text(gen_phys.make_tracks_tcl(P))
     meta["clock_tree"] = cm
     reserve = reserve_rects(segs, leaf_legs, P)
@@ -2385,6 +2639,15 @@ def main(argv=None):
                    help="spine_fishbone options: matched=1 (phase-matched rib heads, station rows as 1-D DME; LAND-HEAD-3 model: worse), col_um, merge_um")
     k.add_argument("--region-trees", help="fallback regions.json (part_region): die reference tree to one root per "
                    "region + equal-depth local tree per region (FALLBACK-S81-2, opt-in)")
+    k.add_argument("--slice-spine", action="store_true",
+                   help="QC-SLICECLK-3 opt-in (needs --region-trees): one shared horizontal top spine + per-region "
+                        "trees whose y levels sit on the region's full-height legal column, an equal leg per strip, "
+                        "local bisection; illegal nodes move to the legal site that changes root->kid lengths least "
+                        "(never a blind slide along a split axis)")
+    k.add_argument("--spine-top-leaf-um", type=float, default=50.0,
+                   help="top-spine 1-D bisection leaf (um): nominal top imbalance <= half of it")
+    k.add_argument("--slice-rows", help="with --slice-spine: qc_slice_clock_rows/1 reservation (INFRA-FIRST-QC-R35): "
+                   "column x and top spine row come from the plan reservation")
     k.add_argument("--coarse-um", type=float, default=0.72)
     k.add_argument("--density", type=float, default=0.15, help="die power density W/mm2 for PDNSim")
     k.add_argument("--island-sites", nargs="+", help="CLOCK-128-R7 opt-in: die_tree_plan.json / ot_clock_sites/1 / "
@@ -2455,7 +2718,8 @@ def main(argv=None):
                       a.island_margin_um, full_depth=a.htree_full_depth, site_legal=a.tree_site_legal,
                       site_slide=a.tree_site_slide, regions=a.region_trees,
                       tree_form=a.tree_form,
-                      tree_opts={k: float(v) for k, v in (o.split("=") for o in a.tree_opt)})
+                      tree_opts={k: float(v) for k, v in (o.split("=") for o in a.tree_opt)},
+                      slice_spine=a.slice_spine, spine_top_leaf_um=a.spine_top_leaf_um, slice_rows=a.slice_rows)
         print(json.dumps({k: m[k] for k in ("die", "parts", "types", "closed_views", "hard_cores", "clock_tree", "grt",
                                              "psm", "sta")}, indent=1))
     elif a.cmd == "report":
