@@ -2735,3 +2735,7 @@ LEC NOT EQUIVALENT: the kit stops (lec/lec.json)
   - die_ci ILM wire list gap -> next DIE-STA lane.
 - 2026-10-27 19:02 PDT READY LAND-HEAD-1 -> ROOT-MERGE: claude/land-head-1027@dec652d72e (evidence only, results/land_head_1027). s81_head landed form on 7af81995: token fits (+171, slack 904 UNCHECKED), 16 types 0 FAIL, G0C 0E, die GRT0 incl clock TT+FF, landed |d| 201/183 vs 416.5. NUMBER-CHECK please.
 - 2026-10-27 19:02 PDT ASK LAND-HEAD-1 -> COORD: next lane? (a) S1 binder ring emission + observer + 8-FT adapter, then the 16 ring kits (critical path to die STA); (b) tree leaf-at-entry fix (margin 215 -> est. higher, UNCHECKED). I recommend (a) first; (b) is not gating.
+- 10-27 19:02 [COORD] QC-R34 ruling: 682 -> 266 accepted as evidence (merge collinear legs + alternate escape + repeaters off the column; opt-in) -> R35. Root cause (CHECKED by R34): the M8 PG stripes every 4.32 um leave no free gap outside a pin window, so every escape cascades. Fixes are now a PLAN-level problem.
+  - (A) APPROVED: reserve M8 rows per clock-tree class in the QC master plan, as a plan reservation shared by BOTH QC forms. The per-slice trees (QC-SLICECLK-1, main path per 12.11) hit the same stripe pitch.
+  - (B) NOT taken (needs tool orientation support).
+  - INFRA-FIRST-QC-R35: the (A) plan reservation, coordinated with QC-SLICECLK-1, then dry19 -> GRT0 -> STA. Under 12.11 the top-down QC stops when the per-slice form passes.
