@@ -153,3 +153,20 @@ are under `results/die_hbm_1027/hbm10/vmx/` on that branch.
 5. vmx: LX 15 bench, then wire it into the hub glue / die contract; token pass once the compiler does half-local
    allocation.
 6. Hub repack from the constructive placement in the plan event.
+
+## (5) 2026-10-28 11:00-11:50: C22b gates, the one tok/s rerun, compiler half-local slice, C23 PHY map, reset contract
+- C22b (lattice-fixed C22) G0/G0C, same mainsnap tools as C20j/C21 (CHECKED): **G0 PASS** (0 errors, 565 warnings);
+  **G0C 16 errors = the C20j baseline exactly** (12 core_faces + 4 street_reach), 0 new, 0 gone. Logs `c22b/`.
+- One tok/s rerun (`tok_rerun_c22.py`, `tok/`; ds S2, ESTIMATE, model UNCHECKED): hop chains (17 links, per-unit worst
+  added latency, every record of the unit serial) + half-local far reads (LX 15, Wx 4096, f 0.5).
+  - Estimate of record (data-path hop latency SM +2 / SU +7 / IDX,DMA +17; SM matvec far reads stream under the op):
+    **+2.98 % -> 1,851 tok/s** from 1,906. Serial far reads: +5.01 %.
+  - Bounds: hop latency incl. the 27-b io<->SFU ctl links on every SU record (+24): +4.72 % alone, +6.0/+6.96 % with
+    far reads; blanket (all VM inputs of every record half far): +10.6 % / +15.1 %.
+- Compiler half-local VM (claude/die-hbm-10-vmhalf-1028@f5558f45be, opt-in): Placement half mode keeps k%8; far-half
+  groups are owner-issued crossing reads at fill_commit + NativeTiming.xread_lx; calendar assert refuses a late or
+  unpriced (tied-pin) far read. Default output byte-identical (DS L2, 366 files). 5 new + 9 existing tests PASS.
+  DS L2 fixture run (`vmhalf/ds_l2_runs.jsonl`): 9 emitted records, 0 mismatched words in both halves; 866 / 881
+  crossing reads, 0 late, 0 unpriced; replay end 15,406 -> 15,406 / 15,416 cycles. RTL slice replay: NOT RUN.
+- C23 PHY map + rc_slice generator (claude/die-hbm-10-physlice-1028@c99b18e969): see `phy_split/`.
+- Reset contract per kit: `write_kit_reset_contract.py`, 65 HBM kits, all gate-checked used = 64.
