@@ -200,3 +200,34 @@ Joint TT_droop corelat250 + FF_droop corelat202.5, ap = T/8, wander ±5 % unshar
   * KV 10176 + 1569 PASS, 0 FAIL;
   * sweeps unchanged, with clean window [0.502, 3.501]T / [0.502, 7.501]T and 0 silent-wrong;
   * NO_TAG and K mutants CAUGHT.
+
+### Formal (MESO-COUNT-2, , yosys-abc in openroad/orfs:asap7lock; RTL unchanged)
+
+* **Proven unbounded by k-induction** (abc , seconds per config) for W = 1 (data independence, one
+  watched word) and K = 2.
+* The three properties, proven together:
+  * **safe**: while ready && !fault, the delivered word is the captured word at latency K+1;
+  * **no-fault**: no fault for lag L inside [5/8 T, (D − 5/8) T];
+  * **fail-closed**: for L ≤ 3/8 T or L ≥ (D − 3/8) T, ready && !fault never holds.
+  * 18 helper invariants are asserted and proven, not assumed.
+* **Coverage**:
+  * D4: 120/120 configs (phase 0..7/8 T × offset −3..11, L −1.9T..13T, which includes the 2·DEPTH lap alias), plus 30/30
+    tag-range samples up to 63T.
+  * D8: 184/184 configs (L up to 21T, including the 16T alias), plus 16/16 samples up to 127T.
+* **BMC only** (all lags in one run):
+  * liveness + safe + no-fault: D4 800/1100 frames PASS; D8 ≥ 939 / ≥ 768 frames, no failure (stopped);
+  * fail-closed: D4 420 / D8 600 frames PASS;
+  * ready at the maximum in-window lag is reachable (not vacuous).
+* **Mutants caught**:
+
+  | mutant | property that fails | frame (D4 / D8) |
+  |---|---|---|
+  | K | no-fault | 129 / 193 |
+  | FREERUN | no-fault | 129 / 193 |
+  | NO_GUARD | wrong word | 137 / 201 |
+  | NO_TAG | wrong word | 180 / 308 (alias config 195 / 323 in the k-ind flow) |
+
+* **Findings**:
+  1. The wrapper default GUARD_HI = 4 is wrong for DEPTH 8 (no-fault fails). Bind GUARD_HI = DEPTH, as the plan's  fields do.
+  2. At negative lag the reader never becomes ready and never raises fault. The guaranteed behaviour is fail-closed (never ready && !fault), not fault raised.
+* MESO-COUNT-1's PDR on the 10-bit-time harness (mc1-prove) did not converge: 0 of 3 proven at about 40 min, UNPROVEN.
