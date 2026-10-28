@@ -2,7 +2,12 @@
 // TX half of W528 transport. Four local source queue credits per HOST/CTRL/
 // completion. Peer application credits are independent of adapter IBUF4.
 // Returned class-credit packet7 has priority, then IRQ level6, then fair RR.
-module qkd_host_tx_class #(parameter integer MUT=0)(
+// KV-KITS-9 10-28 (COORD core_tx LEC ruling): RST_Q=1 resets the source queues hq/cq/iq (and their input stages
+// hd/cd/id) to 0.  Default 0 = unchanged.  Function is identical either way: a slot is read only when appsend picks
+// class k, which needs count[k]!=0, and count/wp/rp (reset) keep every slot in [rp, rp+count) written since reset
+// (write at wp then count+1; read at rp then count-1).  RST_Q=1 gives the reset-state constants that keypoint LEC
+// needs when synthesis removes queue bits whose D is constant (no X power-up value is ever observed).
+module qkd_host_tx_class #(parameter integer MUT=0, parameter integer RST_Q=0)(
  input wire ck,rst_n,
  input wire host_v,input wire[511:0]host_d,output reg host_cr,
  input wire ctrl_v,input wire[511:0]ctrl_d,output reg ctrl_cr,
@@ -24,12 +29,26 @@ module qkd_host_tx_class #(parameter integer MUT=0)(
  wire free_credit=acc[0]!=0||acc[1]!=0||acc[2]!=0;
  wire send=!fault&&physical!=0;
  wire appsend=send&&!free_credit&&(irq_q==irq_sent)&&chosen>=0;
+ generate if(RST_Q!=0)begin:g_rstq
+ always @(posedge ck or negedge rst_n)begin
+  if(!rst_n)begin
+   hd<=0;cd<=0;id<=0;
+   for(integer q=0;q<4;q++)begin hq[q]<=0;cq[q]<=0;iq[q]<=0;end
+  end else begin
+   hd<=host_d;cd<=ctrl_d;id<=ing_d;
+   if(hv&&count[0]<4)hq[wp[0]]<=hd;
+   if(cv&&count[1]<4)cq[wp[1]]<=cd;
+   if(iv&&count[2]<4)iq[wp[2]]<=id;
+  end
+ end
+ end else begin:g_nrq
  always @(posedge ck)begin
   hd<=host_d;cd<=ctrl_d;id<=ing_d;
   if(hv&&count[0]<4)hq[wp[0]]<=hd;
   if(cv&&count[1]<4)cq[wp[1]]<=cd;
   if(iv&&count[2]<4)iq[wp[2]]<=id;
  end
+ end endgenerate
  always @(posedge ck or negedge rst_n)begin
   if(!rst_n)begin hv<=0;cv<=0;iv<=0;tc<=0;irq_q<=0;irq_sent<=0;rc<=0;pc<=0;physical<=4;rr<=0;
    tx_v<=0;tx_d<=0;host_cr<=0;ctrl_cr<=0;ing_cr<=0;fault<=0;
