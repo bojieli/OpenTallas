@@ -352,11 +352,25 @@ def publish_line(ap, text):
         ap.log(f"AUTO-GEOM publish to lanes/GEOM-REVIEW.md failed: {type(e).__name__}: {e}")
 
 
-def gaps(st, now):
-    """LOOP-GAPS lines: AUTO-GEOM FAIL / sampled rows waiting for a visual reply"""
+# a reviewer answer of a tag in lanes/GEOM-REVIEW.md (same vocabulary as loopgaps.REPLY_RE)
+ANSWER_RE = re.compile(r"(?:REPLY|VERDICT|ACK|RECONCILE|AMEND)\s*\[([^\]]+)\]")
+
+
+def answered_tags(geom_text):
+    """tags with a REPLY / VERDICT / ACK / RECONCILE / AMEND line in lanes/GEOM-REVIEW.md"""
+    return {t.strip() for t in ANSWER_RE.findall(geom_text or "")}
+
+
+def gaps(st, now, geom_text=""):
+    """LOOP-GAPS lines: AUTO-GEOM FAIL / sampled rows waiting for a visual reply.  FLOW-SHARED-4 10-27 (COORD): a row
+    whose tag [AUTO-GEOM <id>] already has a REPLY / VERDICT line in lanes/GEOM-REVIEW.md is answered -> not listed
+    (before, every FAIL stayed in LOOP-GAPS forever)."""
     out = []
+    done = answered_tags(geom_text)
     for rid, a in (st.get("auto_geom") or {}).items():
         if a.get("state") == "DONE" and (a.get("verdict") == "FAIL" or a.get("sampled")):
+            if f"AUTO-GEOM {rid}" in done:
+                continue
             out.append((a.get("t_done") or now, f"AUTO-GEOM-{'FAIL' if a['verdict'] == 'FAIL' else 'SAMPLE'} {rid}: "
                         f"visual review of GEOM REQ [AUTO-GEOM {rid}] ({a.get('line', '')[:140]})"))
     return out

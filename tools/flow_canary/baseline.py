@@ -17,6 +17,12 @@ tcl errors ...) that PASSed in the baseline run must still PASS.  A run that rea
 no sign-off) is a REGRESSION unless it stopped at the flow's own design gate (post-CTS insertion gate or structural
 hold gate) with that gate's metrics within tolerance: then the later metrics are NOT REACHED (design stop) and listed.
 
+KNOWN CLASSES (FLOW-SHARED-4 2026-10-27, COORD ruling 2): a baseline may record a pre-existing, owned failure class of a
+flow stage (`known.lec`: the LEC tool sha it was measured with, max differing points, the allowed cone-unmatched kinds and
+the exact gold-only register keys, owner lane).  A current LEC FAIL whose every failing point lies inside that class
+(undecided 0, differs <= max, cone kinds and gold-only keys subsets) is KNOWN, not REGRESSED; the kit flow stops at LEC,
+so later metrics are NOT REACHED (a known design stop, owner named).  Any point outside the class is REGRESSED.
+
 Verdicts: NO-REGRESSION, REGRESSION, INFO (this run set the baseline; non-gating), NO-BASELINE (no baseline and this run
 cannot set one: Tcl crash or no metric at all; it holds rows).
 
@@ -151,6 +157,50 @@ def design_stop(kit):
     return "; ".join(why)
 
 
+def lec_summary(kit):
+    """the kit LEC receipt (lec/lec.json): verdict, counts, failing-point cone classes and gold-only register keys"""
+    d = jload(Path(kit) / "lec" / "lec.json")
+    if not d:
+        return None
+    kinds, keys, xkeys = set(), set(), set()
+    for f in d.get("failing") or []:
+        k = f.get("cone_unmatched") or []
+        kinds.update(k)
+        for key in f.get("cone_unmatched_keys") or []:
+            (keys if str(key).startswith(("ff:", "pi:", "po:")) else xkeys).add(key)
+    lp = Path(kit) / "lec.py"
+    sha = None
+    if lp.is_file():
+        import hashlib
+        sha = hashlib.sha256(lp.read_bytes()).hexdigest()
+    return dict(verdict=d.get("verdict"), counts=d.get("counts") or {}, kinds=sorted(kinds), gold_only_keys=sorted(keys),
+                x_keys=len(xkeys), failing=len(d.get("failing") or []), lec_sha256=sha)
+
+
+def known_lec(known, lec):
+    """(inside, why): is the current LEC result inside the baseline's recorded known class?"""
+    if not known or not lec:
+        return False, "no known LEC class recorded" if not known else "no lec/lec.json"
+    c = lec.get("counts") or {}
+    out = []
+    if (c.get("undecided") or 0) != 0:
+        out.append(f"undecided {c.get('undecided')}")
+    if (c.get("differs") or 0) > int(known.get("max_differs") or 0):
+        out.append(f"differs {c.get('differs')} > known {known.get('max_differs')}")
+    extra_k = sorted(set(lec.get("kinds") or []) - set(known.get("kinds") or []))
+    if extra_k:
+        out.append(f"cone kinds {extra_k} outside known {known.get('kinds')}")
+    extra = sorted(set(lec.get("gold_only_keys") or []) - set(known.get("gold_only_keys") or []))
+    if extra:
+        out.append(f"{len(extra)} register keys outside the known class (first {extra[:3]})")
+    if not (lec.get("failing") or 0) and lec.get("verdict") != "EQUIVALENT":
+        out.append(f"verdict {lec.get('verdict')} without failing points")
+    if out:
+        return False, "; ".join(out)
+    return True, (f"known pre-existing LEC class ({known.get('owner')}): differs {c.get('differs')} <= "
+                  f"{known.get('max_differs')}, keys {lec.get('gold_only_keys')}")
+
+
 def run_metrics(run):
     """metrics of one canary run dir (reads the kit files, so it also works for canary.json written before metrics)"""
     run = Path(run)
@@ -159,12 +209,13 @@ def run_metrics(run):
     kit = Path(meta.get("kit") or res.get("kit") or (run / "kit"))
     spec = meta.get("spec") or {}
     sop = sorted(glob.glob(f"{kit}/signoff*/signoff.json"), key=os.path.getmtime)
+    lec = lec_summary(kit)
     so = jload(sop[-1]) if sop else None
     stages = {k: (v or {}).get("verdict") for k, v in (res.get("stages") or {}).items()}
     return dict(run=str(run), die=spec.get("die") or res.get("die"), item=spec.get("item") or res.get("item"),
                 src=meta.get("src_commit") or res.get("src"), verdict=res.get("verdict"),
                 contexts={"grt": grt_metrics(kit), "signoff": signoff_metrics(so)}, stages=stages,
-                design_stop=design_stop(kit), signoff_path=sop[-1] if sop else None)
+                design_stop=design_stop(kit), signoff_path=sop[-1] if sop else None, lec=lec)
 
 
 # ------------------------------------------------------------------------------------------------------- comparison
@@ -195,6 +246,17 @@ def compare(base, cur):
     """(verdict, rows, notes): verdict NO-REGRESSION / REGRESSION of run metrics `cur` vs baseline `base`"""
     rows, notes, bad = [], [], []
     stop = cur.get("design_stop") or ""
+    known = (base.get("known") or {}).get("lec")
+    lec_known = False
+    if known and (cur.get("stages") or {}).get("lec") == "FAIL":
+        lec_known, lec_why = known_lec(known, cur.get("lec"))
+        if lec_known:
+            stop = "; ".join(x for x in (stop, lec_why + " (kit flow stops at LEC)") if x)
+        else:
+            r = dict(ctx="stage", metric="lec", base=f"known class {known.get('owner')}", cur="FAIL", verdict="REGRESSED",
+                     how="outside the known LEC class: " + lec_why)
+            rows.append(r)
+            bad.append(r)
     compared = 0
     for ctx in ("grt", "signoff"):
         bm = (base.get("contexts") or {}).get(ctx) or {}
@@ -220,11 +282,22 @@ def compare(base, cur):
                 bad.append(r)
     for s in FLOW_STAGES:
         b, c = (base.get("stages") or {}).get(s), (cur.get("stages") or {}).get(s)
+        if s == "lec" and known:
+            if c == "FAIL" and lec_known:
+                rows.append(dict(ctx="stage", metric=s, base=b, cur=c, verdict="KNOWN", how=lec_why))
+            elif c not in ("PASS", "FAIL"):
+                r = dict(ctx="stage", metric=s, base=b, cur=c, verdict="REGRESSED", how="LEC did not run to a verdict")
+                rows.append(r)
+                bad.append(r)
+            continue
+        if lec_known and b == "PASS" and c in (None, "NOT RUN", "SKIP", "SKIPPED"):
+            rows.append(dict(ctx="stage", metric=s, base=b, cur=c, verdict="NOT REACHED", how="after the known LEC stop"))
+            continue
         if b == "PASS" and c not in (None, "PASS"):
             r = dict(ctx="stage", metric=s, base=b, cur=c, verdict="REGRESSED", how="flow stage PASSed in the baseline run")
             rows.append(r)
             bad.append(r)
-    if not compared and not bad:
+    if not compared and not bad and not lec_known:   # a known-class LEC stop reaches no metric by construction
         has_base = any((base.get("contexts") or {}).get(x) for x in ("grt", "signoff"))
         if has_base:
             bad.append(dict(ctx="-", metric="-", verdict="REGRESSED", how="no metric comparable with the baseline"))
@@ -282,7 +355,7 @@ def usable(m):
     return False, "no metric measured (flow stopped before GRT)"
 
 
-def make_record(m, kind, note="", signoff_ref=None, signoff_kind=None):
+def make_record(m, kind, note="", signoff_ref=None, signoff_kind=None, known=None):
     ctx = {}
     for c in ("grt", "signoff"):
         v = dict((m.get("contexts") or {}).get(c) or {})
@@ -299,7 +372,7 @@ def make_record(m, kind, note="", signoff_ref=None, signoff_kind=None):
     return dict(schema=SCHEMA, die=m.get("die"), item=m.get("item"), set_at=time.strftime("%Y-%m-%d %H:%M:%S %Z"),
                 source=dict(kind=kind, run=m.get("run"), src=m.get("src"), note=note), verdict=m.get("verdict"),
                 contexts=ctx, stages={k: v for k, v in (m.get("stages") or {}).items() if k in FLOW_STAGES},
-                tolerances=TOL)
+                tolerances=TOL, **({"known": known} if known else {}))
 
 
 def golden_ref(spec):
@@ -376,6 +449,34 @@ def cmd_set(a):
     return 0 if wrote else 1
 
 
+def cmd_known_lec(a):
+    """record (replace) the known pre-existing LEC class of a baseline from one or more completed runs' lec.json"""
+    rec = load(a.root, a.die, a.item)
+    if rec is None:
+        print(f"no baseline {store_path(a.root, a.die, a.item)}")
+        return 2
+    kinds, keys, mx, runs = set(), set(), 0, []
+    for r in a.run:
+        m = run_metrics(r)
+        lec = m.get("lec")
+        if not lec or (lec.get("counts") or {}).get("undecided"):
+            print(f"{r}: no decided lec/lec.json")
+            return 2
+        kinds.update(lec["kinds"]); keys.update(lec["gold_only_keys"])
+        mx = max(mx, int((lec.get("counts") or {}).get("differs") or 0))
+        runs.append(dict(run=r, src=m.get("src"), counts=lec.get("counts"), lec_sha256=lec.get("lec_sha256"),
+                         gold_only_keys=lec["gold_only_keys"]))
+    rec.setdefault("known", {})["lec"] = dict(owner=a.owner, note=a.note or "", max_differs=mx, kinds=sorted(kinds),
+                                              gold_only_keys=sorted(keys), runs=runs,
+                                              set_at=time.strftime("%Y-%m-%d %H:%M:%S %Z"))
+    if a.stage_fail:
+        rec.setdefault("stages", {})["lec"] = "FAIL"
+    write(a.root, rec, force=True)
+    print("KNOWN_LEC SET " + str(store_path(a.root, a.die, a.item)))
+    print(json.dumps(rec["known"], indent=1)[:3000])
+    return 0
+
+
 def cmd_show(a):
     for p in sorted(glob.glob(f"{a.root}/baselines/*.json")):
         print(p)
@@ -408,10 +509,18 @@ def main(argv=None):
     v.add_argument("--root", required=True)
     v.add_argument("--run", required=True)
     v.add_argument("--dry", action="store_true", help="never write a baseline")
+    k = sub.add_parser("known-lec")
+    k.add_argument("--root", required=True)
+    k.add_argument("--die", required=True)
+    k.add_argument("--item", required=True)
+    k.add_argument("--run", required=True, action="append", help="completed canary run(s) under the current lec.py")
+    k.add_argument("--owner", required=True)
+    k.add_argument("--note")
+    k.add_argument("--stage-fail", action="store_true", help="record the baseline LEC stage as FAIL (current tool)")
     w = sub.add_parser("show")
     w.add_argument("--root", required=True)
     a = ap.parse_args(argv)
-    return dict(set=cmd_set, verdict=cmd_verdict, show=cmd_show)[a.cmd](a)
+    return dict(set=cmd_set, verdict=cmd_verdict, show=cmd_show, **{"known-lec": cmd_known_lec})[a.cmd](a)
 
 
 if __name__ == "__main__":

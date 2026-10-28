@@ -1,8 +1,8 @@
 {
 "module": "dsdv_gunit_l2",
 "lef": "physical/ref_tile/dsdv_gunit_l2/views/dsdv_gunit_l2/dsdv_gunit_l2.lef",
-"source": "S81-P9-HC 10-23 from LEF physical/ref_tile/dsdv_gunit_l2/views/dsdv_gunit_l2/dsdv_gunit_l2.lef (largest non-M1 rect centre, CORE-KS rule); OWNER DECISION 8 10-24: 1258 constant pins dropped (inputs/const_pins_dropped.json)",
-"pinhash": "9395ff71076c",
+"source": "S81-P9-HC 10-23 from LEF physical/ref_tile/dsdv_gunit_l2/views/dsdv_gunit_l2/dsdv_gunit_l2.lef (largest non-M1 rect centre, CORE-KS rule); OWNER DECISION 8 10-24: 1258 constant pins dropped (inputs/const_pins_dropped.json); S81 plan event 2026-10-27 S81-CORES-R22 (delta_ninepins_1027.py): 8 pin centre(s) -> existing outline-face PORT RECT, LEF unchanged",
+"pinhash": "1389c76618a5",
 "pins": [
 {
 "name": "clk",
@@ -3188,7 +3188,7 @@
 "name": "cwn_v",
 "layer": "M5",
 "x": 225.564,
-"y": 172.1465
+"y": 172.758
 },
 {
 "name": "cws_a[0]",
@@ -4778,7 +4778,7 @@
 "name": "cws_v",
 "layer": "M5",
 "x": 225.564,
-"y": 0.0735
+"y": 0.042
 },
 {
 "name": "dl_a[61]",
@@ -6206,7 +6206,7 @@
 "name": "dl_av",
 "layer": "M5",
 "x": 114.876,
-"y": 1.0765
+"y": 0.042
 },
 {
 "name": "dl_b[61]",
@@ -8666,13 +8666,13 @@
 "name": "hct_v",
 "layer": "M5",
 "x": 282.396,
-"y": 172.4345
+"y": 172.758
 },
 {
 "name": "hf",
 "layer": "M5",
 "x": 338.748,
-"y": 172.4345
+"y": 172.758
 },
 {
 "name": "hp_a[100]",
@@ -9902,7 +9902,7 @@
 "name": "hp_av",
 "layer": "M5",
 "x": 114.876,
-"y": 171.8585
+"y": 172.758
 },
 {
 "name": "hp_b[100]",
@@ -12158,13 +12158,13 @@
 "name": "rct_v",
 "layer": "M5",
 "x": 282.396,
-"y": 1.0765
+"y": 0.042
 },
 {
 "name": "rf",
 "layer": "M5",
 "x": 338.748,
-"y": 0.8895
+"y": 0.042
 },
 {
 "name": "rn_i[0]",

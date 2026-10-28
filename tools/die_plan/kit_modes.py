@@ -253,10 +253,27 @@ def main(argv=None):
     ap.add_argument("--vclk-corner", default="")
     ap.add_argument("--hold-repair", action="store_true", default=None)
     ap.add_argument("--ff-bound-ps", type=float, default=None)
+    ap.add_argument("--measured-hold", action="store_true", help="stage opt-in measured FF reference in coupled TT/FF repair")
     a = ap.parse_args(argv)
     try:
         if a.cmd == "stage":
             r = stage(a.kit)
+            if a.measured_hold:
+                import vclk_ref
+                ref = vclk_ref.ff_reference(a.kit)
+                if ref["ref"] != "rebind":
+                    raise Fail(f"measured hold requires rebind reference, got {ref['ref']}")
+                for name in ("vclk_measured_hold.tcl", "vclk_ref.py"):
+                    shutil.copyfile(HERE / name, a.kit / name)
+                cfg = a.kit / "config.mk"
+                flag = "override export OT_MM_MEASURED_HOLD = 1"
+                if flag not in cfg.read_text():
+                    with cfg.open("a") as f:
+                        f.write(flag + "\n")
+                # An already-staged kit may carry an earlier MM helper.
+                for name in MM_FILES:
+                    shutil.copyfile(REPO / "tools" / name, a.kit / name)
+                r["measured_hold"] = True
         else:
             if not a.step:
                 raise Fail("check needs --step")

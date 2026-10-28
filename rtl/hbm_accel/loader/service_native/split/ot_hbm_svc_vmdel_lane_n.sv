@@ -12,7 +12,7 @@
 // the compiler issues start only when block_ready (checked, fault otherwise); no credits, no ready, no retry.
 // Bench: tb_hbm_svc_vmdel_lane_n_lockstep.sv (NPC 2 lane vs the d4f NPC 4 lane on the same fills).
 // Original history (unchanged mechanics) follows.
-module ot_hbm_svc_vmdel_lane_n #(parameter integer NPC = 4) (
+module ot_hbm_svc_vmdel_lane_n #(parameter integer NPC = 4, parameter integer PAYLOAD_BANK_CAPTURE = 0) (
  input wire clk,rst_n,input wire [2:0] bank_id,
  input wire begin_v_i,begin_bank_i,input wire [15:0] begin_epoch_i,
  input wire start_i,start_bank_i,input wire [15:0] start_epoch_i,start_base_sector_i,
@@ -42,7 +42,19 @@ module ot_hbm_svc_vmdel_lane_n #(parameter integer NPC = 4) (
  always @(posedge clk)
   if(!rst_s) begin block_ready<=0;busy<=0;fault<=0;dq[280]<=0; end
   else begin block_ready<=block_ready_c;busy<=busy_c;fault<=fault_c;dq[280]<=dq_c[280]; end
- always @(posedge clk) dq[279:0]<=dq_c[279:0];
+ // Physical-only opt-in: keep each SRAM's read capture local, then select the
+ // captured bank with the selector captured on the SAME edge as legacy dq.
+ // The public payload value still changes on the same edge; the existing
+ // external face register is retained by the physical recipe.
+ generate if(PAYLOAD_BANK_CAPTURE==0)begin:g_payload_legacy
+  always @(posedge clk) dq[279:0]<=dq_c[279:0];
+ end else begin:g_payload_bank_capture
+  wire [255:0] payload_q;
+  ot_hbm_svc_vmdel_payload_capture #(.NPC(NPC),.W(256)) u_capture (
+   .clk(clk),.group_in(out_group[(NPC==2?1:2)-1:0]),.data_in(macro_data),.q(payload_q));
+  always @(posedge clk)begin dq[279:264]<=dq_c[279:264];dq[7:0]<=dq_c[7:0];end
+  always @* dq[263:8]=payload_q;
+ end endgenerate
  // Flush the status loop before releasing it after reset. The plain capture
  // flops can still contain the sender's pre-reset status on the body's reset
  // edge; that stale fault must not be recirculated into the new image.
@@ -137,5 +149,30 @@ module ot_hbm_svc_vmdel_lane_n #(parameter integer NPC = 4) (
  end
  wire [15:0] sector0=(NPC==4)?base_q+{5'b0,out_slot,out_group,3'b0}:base_q+{6'b0,out_slot,out_group[0],3'b0};
  assign dq_c={out_v && !fault_c,sector0[15:3],bank_q,sel,8'hff};
+endmodule
+
+// Zero-cycle read-capture retiming. Data and the selecting group are sampled
+// together on every edge, including invalid/reset edges just as legacy dq.
+// Inactive private captures hold; no reset is added to datapath or selector.
+module ot_hbm_svc_vmdel_payload_capture #(
+ parameter integer NPC=2, parameter integer W=256, parameter integer MUT=0,
+ parameter integer GW=(NPC==2?1:2)
+)(input wire clk,input wire [GW-1:0] group_in,input wire [NPC*W-1:0] data_in,output wire [W-1:0] q);
+ reg [GW-1:0] group_q;
+ always @(posedge clk) group_q <= (MUT==1) ? group_in+1'b1 : group_in;
+ wire [NPC*W-1:0] bank_q;
+ genvar g;
+ generate for(g=0;g<NPC;g=g+1)begin:g_bank
+  reg [W-1:0] data_q;
+  always @(posedge clk) if(group_in==GW'(g)) data_q<=data_in[g*W+:W];
+  assign bank_q[g*W+:W]=data_q;
+ end endgenerate
+ reg [W-1:0] selected;
+ integer b;
+ always @*begin
+  selected={W{1'b0}};
+  for(b=0;b<NPC;b=b+1)selected=selected|({W{group_q==GW'(b)}}&bank_q[b*W+:W]);
+ end
+ assign q=selected;
 endmodule
 `default_nettype wire

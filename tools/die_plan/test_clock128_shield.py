@@ -128,7 +128,10 @@ def test_shield_union_merges_overlapping_same_track_shields_only():
 
 def test_shield_merge_tcl_is_one_proc_and_call_on_the_shield_net():
     L = C.shield_merge_tcl("VSS", ND)
-    assert len(L) == 2 and L[0].startswith("proc ot_merge_shields ") and L[1].startswith("ot_merge_shields VSS ")
+    # RM76 (5512b607f4) appends the guarded shield-notch post-pass after the merge call.
+    from shield_notches import tcl as notch_tcl
+    assert L[2:] == notch_tcl("VSS", ND["width"])
+    assert L[0].startswith("proc ot_merge_shields ") and L[1].startswith("ot_merge_shields VSS ")
     assert "odb::dbSBox_destroy" in L[0] and L[0].count("odb::dbSBox_create") == 2
     assert L[0].count("{") == L[0].count("}")
 

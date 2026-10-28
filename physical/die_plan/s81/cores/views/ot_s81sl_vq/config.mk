@@ -45,3 +45,20 @@ export SYNTH_HDL_FRONTEND = slang
 
 # Extracted-route slew diagnosis: retain 40% estimation margin.
 export POST_GLOBAL_ROUTE_TCL = /work/post_grt_drv.tcl
+# S81-ECO-1 2026-10-27 (COORD RETIME-VIEWS-2 ruling): FF hold repair in the FF vclk frame (METHODOLOGY 12.3: TT 250 / FF 202.5)
+export OT_VCLK_TT = 250.0000
+export OT_VCLK_FF = 202.5000
+override export PRE_GLOBAL_ROUTE_TCL = /work/eco_grt_pre.tcl
+override export POST_GLOBAL_ROUTE_TCL = /work/eco_grt_post.tcl
+
+# VQ shared measured TT/FF coupled successor 2f4c07767c
+override export PRE_GLOBAL_ROUTE_TCL = /work/drv.tcl
+override export POST_GLOBAL_ROUTE_TCL = /work/post_grt_drv.tcl
+export GDS_ALLOW_EMPTY = ^(fakeram.*|ot_sram_1r1w_128x256_m1_r2c2)$
+
+# ---- SIGNOFF-MODES-1 per-mode binding (tools/die_plan/kit_modes.py stage): scene tc (mode ss) TT setup vclk 250 / scene BC (mode ff) FF hold vclk 202.5
+override export CORNERS = tc BC
+override export OT_HOLD_MM = 1
+override export OT_MM_SETUP_CORNER = tc
+override export OT_MM_FF_SDC = /work/vclk_ff.sdc
+override export OT_MM_MEASURED_HOLD = 1
