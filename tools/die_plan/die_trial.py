@@ -1065,7 +1065,7 @@ def build_slice_spine_tree(P, taps, regions, leaf_um=600.0, site=None, top_leaf_
 
 
 def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None, route_um=480.0, only=None, early=None,
-                      snake=None):
+                      snake=None, early_mode="hang"):
     """DIE-QC-3 opt-in (--tree-form link_htree --region-dme): hang one legal-site DME tree (dme_region_tree) under every
     LEGALIZED feed-end node that carries region_root; legs that cross a core take the L corner through the channels
     (same rule as the slice-spine form).  Runs after the site pass, so nothing it places slides afterwards."""
@@ -1079,7 +1079,8 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
             continue
         sn = bool(snake) and (snake == "all" or rn in snake)    # DIE-QC-9 --region-dme-snake: listed regions (or all)
         dn, droot, dst = dme_region_tree(site, rt[rn], rep_um=rep_um, delay_rep_um=delay_rep_um, early=early,
-                                         **({"snake": True} if sn else {}))
+                                         **({"snake": True} if sn else {}),
+                                         **({"early_mode": early_mode} if early_mode != "hang" else {}))
 
         def attach(j, parent, snake_pts=None):
             d = dn[j]
@@ -1364,7 +1365,7 @@ SNAKE_TOL_PS = 1.0      # DIE-QC-9 --region-dme-snake: a delay-mode merge imbala
 
 
 def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MODES, rep_um=None, delay_rep_um=None,
-                    early=None, snake=False):
+                    early=None, snake=False, early_mode="hang"):
     """DIE-QC-3 opt-in (--region-dme): a region clock tree built ON legal sites, so nothing slides after balancing.
     Embedding: bottom-up DME with Manhattan length as the delay proxy (repeated 1x line: delay ~ linear in length);
     every merge point is the legal zero-skew point from merge_point() (no slide, no snake; an elongated merge point is
@@ -1375,12 +1376,20 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
     'gap' cuts over the partition roots.  Geometry only: no timing value.
     -> (tree nodes [dict(x, y, kids, taps, S, Smin, part_root)], root index, stats)"""
     out = []
+    if early_mode not in ("hang", "merge"):
+        raise ValueError(f"early_mode {early_mode!r}: hang | merge")
+    # DIE-S81-14 opt-in early_mode='merge': an early core tap is an ordinary DME sink whose declared early (model ps) is a
+    # sink delay, so the bottom-up zero-skew merges deliver it early by construction (binary merges, no upper-node hang
+    # legs / star nodes; a pair with no zero-skew point is joined lower down or snaked like any other).  'hang' = DIE-QC-8.
+    sink_early = early if (early and delay_rep_um and early_mode == "merge") else None
 
     def leaf(t):
         q = (t[2], t[3]) if site.legal((t[2], t[3])) else site.nearest((t[2], t[3]))
         q = round_legal(site, q)
         d = _man(q, (t[2], t[3]))
         sd = tap_wire_ps(d) if snake and delay_rep_um else d
+        if sink_early:      # DIE-S81-14 --region-dme-early-mode merge: declared early = DME sink delay (zero-skew merge)
+            sd += float(sink_early.get((t[0], t[1]), 0.0))
         out.append(dict(x=q[0], y=q[1], kids=[], taps=[t], S=sd, Smin=sd, W=d))
         return len(out) - 1
 
@@ -1461,7 +1470,7 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
     byp = defaultdict(list)
     late = []           # DIE-QC-8 opt-in --region-dme-early: early core taps hang from an upper node (below)
     for t in taps:
-        if early and delay_rep_um and early.get((t[0], t[1]), 0.0) > 0.0:
+        if early and delay_rep_um and early_mode == "hang" and early.get((t[0], t[1]), 0.0) > 0.0:
             late.append(t)
         else:
             byp[t[0]].append(t)
@@ -1542,6 +1551,9 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
     st = dict(merges=0, imbalanced=0, worst_imbalance_um=0.0, extra_wire_um=0.0, topology=dict(pick))
     if snake:
         st.update(snakes=0, snake_wire_um=0.0, snake_buffers=0)
+    if sink_early:
+        early_rows = [dict(part=t[0], port=t[1], early_model_ps=round(float(sink_early[(t[0], t[1])]), 2), mode="merge")
+                      for t in taps if float(sink_early.get((t[0], t[1]), 0.0)) > 0.0]
     if early_rows:
         st["early_taps"] = early_rows
     stack = [root]
@@ -2024,7 +2036,7 @@ def clock_edge_readout(verilog, path, period="833.333", cells="b*", tap_slew=Fal
 def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_slide=False, regions=None, tree_form="htree",
               tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None, clock_rc="ndr",
               slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None,
-              region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf"):
+              region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf", region_dme_early_mode="hang"):
     global EVEN_LEGS
     EVEN_LEGS = clock_cell == "inv2"
     out = Path(out)
@@ -2032,6 +2044,10 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
         raise ValueError("--region-dme-early needs --region-dme delay")
     if region_dme_early_ff and not region_dme_early:
         raise ValueError("--region-dme-early-ff needs --region-dme-early")
+    if region_dme_early_mode not in ("hang", "merge"):
+        raise ValueError("--region-dme-early-mode: hang | merge")
+    if region_dme_early_mode != "hang" and not region_dme_early:
+        raise ValueError("--region-dme-early-mode merge needs --region-dme-early")
     if region_dme_snake and not (region_dme == "delay" and tree_form == "link_htree" and site_slide and not slice_spine):
         raise ValueError("--region-dme-snake needs --region-dme delay with --tree-form link_htree --tree-site-slide")
     if region_dme_only and not (region_dme and tree_form == "link_htree" and site_slide and not slice_spine):
@@ -2139,13 +2155,17 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
                                                        rep_um=rep_um if region_dme == "priced" else None,
                                                        delay_rep_um=rep_um if region_dme == "delay" else None,
                                                        only=set(region_dme_only), early=dme_early,
-                                                       **({"snake": region_dme_snake} if region_dme_snake else {}))
+                                                       **({"snake": region_dme_snake} if region_dme_snake else {}),
+                                                       **({"early_mode": region_dme_early_mode}
+                                                          if region_dme_early_mode != "hang" else {}))
         elif tree_form == "link_htree" and region_dme:   # DIE-QC-3 opt-in: legal-site DME region trees, no re-slide
             balanced = dict(region_dme=attach_region_dme(nodes, site, taps, regions,
                                                          rep_um=rep_um if region_dme == "priced" else None,
                                                          delay_rep_um=rep_um if region_dme == "delay" else None,
                                                          early=dme_early,
-                                                         **({"snake": region_dme_snake} if region_dme_snake else {})))
+                                                         **({"snake": region_dme_snake} if region_dme_snake else {}),
+                                                         **({"early_mode": region_dme_early_mode}
+                                                            if region_dme_early_mode != "hang" else {})))
         elif tree_form == "link_htree":
             balanced = balance_legalize(nodes, site)
     elif site_legal and not slice_spine:          # opt-in: every buffer/repeater on a legal channel site; a one-entry leaf drives AT its entry
@@ -3233,7 +3253,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
               island_margin=ISLAND_MARGIN_UM, full_depth=False, site_legal=False, site_slide=False, regions=None,
               tree_form="htree", tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None,
               clock_rc="ndr", slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None,
-              region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf"):
+              region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf", region_dme_early_mode="hang"):
     raw = S.load(plan_path)
     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
     plan_dir = Path(plan_path).parent
@@ -3307,7 +3327,9 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
                                            clock_rc=clock_rc, slice_balance=slice_balance, region_dme=region_dme,
                                            region_dme_only=region_dme_only, region_dme_early=region_dme_early,
                                            region_dme_early_ff=region_dme_early_ff, region_dme_snake=region_dme_snake,
-                                           **({"clock_cell": clock_cell} if clock_cell != "buf" else {}))
+                                           **({"clock_cell": clock_cell} if clock_cell != "buf" else {}),
+                                           **({"region_dme_early_mode": region_dme_early_mode}
+                                              if region_dme_early_mode != "hang" else {}))
     (out / "clock" / "make_tracks.tcl").write_text(gen_phys.make_tracks_tcl(P))
     meta["clock_tree"] = cm
     reserve = reserve_rects(segs, leaf_legs, P)
@@ -3922,6 +3944,10 @@ def main(argv=None):
     k.add_argument("--region-dme-early-ff", type=float, default=None, metavar="RATIO_FF",
                    help="DIE-QC-9 opt-in (with --region-dme-early): corner-averaged early hang target = mean of "
                         "early_TT/RATIO and early_FF/RATIO_FF (model ps), e.g. 1.293 from QC trial6 FF")
+    k.add_argument("--region-dme-early-mode", choices=("hang", "merge"), default="hang",
+                   help="DIE-S81-14 opt-in (with --region-dme-early): 'merge' = the declared early (model ps) is a DME "
+                        "sink delay, so bottom-up zero-skew merges deliver the core tap early (binary, no upper-node hang "
+                        "legs / star nodes); default 'hang' = DIE-QC-8 hang from an upper node")
     k.add_argument("--region-dme-snake", default=None, metavar="REGIONS",
                    help="DIE-QC-9 opt-in (with --region-dme delay, link_htree; COORD 10-28: standard zero-skew DME wire "
                         "elongation, plan-computed, part of the tree, not a residual ECO): comma list of DME regions "
@@ -4026,6 +4052,7 @@ def main(argv=None):
                       region_dme_only=[r for r in a.region_dme_only.split(",") if r] if a.region_dme_only else None,
                       region_dme_early=a.region_dme_early, region_dme_early_ff=a.region_dme_early_ff,
                       **({"clock_cell": a.clock_cell} if a.clock_cell != "buf" else {}),
+                      **({"region_dme_early_mode": a.region_dme_early_mode} if a.region_dme_early_mode != "hang" else {}),
                       region_dme_snake=(a.region_dme_snake if a.region_dme_snake == "all" else
                                         set(r for r in a.region_dme_snake.split(",") if r)) if a.region_dme_snake else None)
         print(json.dumps({k: m[k] for k in ("die", "parts", "types", "closed_views", "hard_cores", "clock_tree", "grt",
