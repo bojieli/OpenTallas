@@ -9,9 +9,17 @@ import os
 import re
 from pathlib import Path
 import sys
-os.environ['OT_QWEN_HEAD_PREP']='1'
-sys.path.insert(0,str(Path(__file__).resolve().parent))
-import record_bundles as RB
+
+
+def _record_bundles():
+    """record_bundles in HEAD_PREP mode, loaded only when a GEN is measured.  Setting OT_QWEN_HEAD_PREP=1 and
+    importing record_bundles at module import leaked HEAD_PREP into every later module of the same process
+    (die_params / record_bundles / static_link_bind read it at import: other view pin geometry), so a pytest
+    session that imported this module for export_result() failed unrelated qwen_split tests."""
+    os.environ['OT_QWEN_HEAD_PREP']='1'
+    sys.path.insert(0,str(Path(__file__).resolve().parent))
+    import record_bundles as RB
+    return RB
 
 def face_boundaries(root, case, master):
     if master != 'qfd_sys_face_lctx3_wrapped':
@@ -85,7 +93,7 @@ def measure(case, tt_source_receipt=None):
             raise ValueError('selected GEN must have one exact head-prepare master for '+base+': '+str(sorted(names)))
         selected.append(next(iter(names)))
     if not lanes.is_file(): raise ValueError('actual GEN fwd_lanes.json required; K-only reconstruction prohibited')
-    audit=RB.audit_netlist(die,lanes)
+    audit=_record_bundles().audit_netlist(die,lanes)
     if audit['verdict']!='PASS': raise ValueError('record bundle audit fails: '+str(audit['fails']))
     ages={}
     for name,n in [('TT.head_prepare',4),('SF.head_descriptor',3)]:
@@ -151,6 +159,7 @@ def export_result(result, *, component_only=False, host_schedule=None):
 
 
 def main():
+    os.environ['OT_QWEN_HEAD_PREP']='1'   # the CLI process runs HEAD_PREP (was set at import)
     p=argparse.ArgumentParser();p.add_argument('case');p.add_argument('--out',required=True)
     p.add_argument('--tt-source-receipt',help='source/LP-record hash-bound local embedding output ages for a selected LP/native TT')
     p.add_argument('--component-only',action='store_true',help='export noninstallable filler/user0-minimum component ages only')
