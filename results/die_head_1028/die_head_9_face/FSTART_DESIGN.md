@@ -41,3 +41,13 @@ count_align_plan hull), boot depth. Root senders (ot_dp_landing_root / non-strap
 3. face_guard on the regenerated hd_tile: cland_fstart_in_i / cland_fstart_out_o as ordinary 1-load / 1-FF pins.
 Shared files: rtl/common/ot_dp_clk_landing_ca.sv, tools/die_plan/clock_landings.py, count_align_bind.py (pad>=1
 rule) -> ROOT-MERGE; HEAD plan straps die-local.
+
+## Status 2026-10-28 07:00 PDT (DIE-HEAD-9 face fork)
+- DONE: ot_dp_landing_origin_s gets `start_o` (registered copy, taps_e = {taps[PADMAX-1:0], s1}); not yet connected
+  by any emitter (unconnected output: no behaviour change; Yosys removes it). Proof fv_origin_start_o.sh: SAT temporal
+  induction start_o == start, PADW 1..4 x every strap_pad x strap_efall 0/1 = 60/60 PASS (induction length 1);
+  mutant OT_ORIGIN_MUTANT_LATE (so <= taps[pad], +1 cycle) caught 60/60 (CHECKED, fv_summary.txt).
+- OPEN: emitter hookup (clock_landings.py L605-606 cland_fstart_out_<b> = cland_start_o) needs start_o on every origin
+  form that can drive a forwarded start: strap (+ strap_ca_root mux: root copy too), child ot_dp_landing_origin,
+  root ot_dp_landing_root, relay rx. Then regenerate hd_tile, face_guard, crossing bench 56/56, strap_lec per value.
+- OPEN: FSTART in (receiver fclk capture FF + sender early tap, pad 0 senders +1 K) -- ledger first.

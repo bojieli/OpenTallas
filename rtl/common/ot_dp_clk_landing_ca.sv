@@ -411,7 +411,10 @@ module ot_dp_landing_origin_s #(
     input  wire            p_start,
     input  wire            strap_efall,
     input  wire [PADW-1:0] strap_pad,
-    output wire            start
+    output wire            start,
+    // DIE-HEAD-9 FACE: dedicated registered copy of start for the forwarded cland_fstart_out pin (face register,
+    // 0 added cycles: start_o(t) == start(t), proven by fv_origin_start_o); internal loads keep start
+    output wire            start_o
 );
     localparam integer PADMAX = (1 << PADW) - 1;
     (* async_reg = "true" *) reg s0, s1, sf;
@@ -426,6 +429,15 @@ module ot_dp_landing_origin_s #(
     always @(posedge clk) if (!rst_raw_n) pd <= 0; else pd <= PADMAX'({pd, s2});
     wire [PADMAX:0] taps = {pd, s2};
     assign start = taps[strap_pad];
+    // one tap earlier, registered: taps_e[j] is the D-side of taps[j] (taps_e[0] = s1 -> s2, taps_e[j] = taps[j-1])
+    wire [PADMAX:0] taps_e = {taps[PADMAX-1:0], s1};
+    (* keep = "true" *) reg so;
+`ifdef OT_ORIGIN_MUTANT_LATE
+    always @(posedge clk) if (!rst_raw_n) so <= 0; else so <= taps[strap_pad];   // MUTANT: one cycle late
+`else
+    always @(posedge clk) if (!rst_raw_n) so <= 0; else so <= taps_e[strap_pad];
+`endif
+    assign start_o = so;
 `ifndef SYNTHESIS
     initial if (PADW < 1 || PADW > 4) $fatal(1, "origin strap PADW must be 1..4");
 `endif
