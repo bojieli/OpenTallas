@@ -12,7 +12,14 @@
 // shared ck root at TT 556..1230 ps over 10,644 sinks); each TX root owns only its LSL's two rungs + reset relay.
 module qfd_tile_nk_a0c #(
     parameter integer G4_ROOTS = 1,
-    parameter integer REGROOT_MODE = 3
+    parameter integer REGROOT_MODE = 3,
+    // DIE-QC-16 ICG (opt-in, default 0 = the ungated form above, unchanged elaboration): 1 = one tile-root ICG
+    // (ICGx8DC, QC-PG-4) gating every body clock entry except the input faces (ck_fa4 tap/tile_id/reset sample, ck_fa0/ck_fa1 n_a/n_b).
+    // Enable from existing signals with a 1-cycle lead (see g_icg).  ICG_GOH = go hold cycles (go face -> engine idle
+    // falls), ICG_DRAIN = cycles kept after the last activity (engine drained -> output faces, reset relays).
+    parameter integer ICG = 0,
+    parameter integer ICG_GOH = 3,
+    parameter integer ICG_DRAIN = 64
 `ifndef SYNTHESIS
   , parameter integer ROM_TILE = -1
 `endif
@@ -92,51 +99,104 @@ module qfd_tile_nk_a0c #(
     input  wire [513:0]  n_b,
     output wire [513:0]  n_y
 );
+    // ---- DIE-QC-16 tile-root clock gate ------------------------------------------------------------------------
+    // Gated body clock ck_g; the input faces (and the enable state below) stay on the ungated ck.  The ICG latches en
+    // on the low phase, so en computed in cycle c (after edge c) clocks edge c+1:
+    //   go face copy go_f = tap_q[0] (edge t)  -> clocks edge t+1, the first gated capture (IREG go_q)       [1-cycle lead]
+    //   go hold go_h (ICG_GOH cycles)          -> covers go_q -> engine accept until the engine idle register falls
+    //   ~me_idle (engine drained flag, ot_qwen_w12_matvec_part.idle: OR of every valid stage, cleared on accept)
+    //   node face valid / fault bits           -> node pipe, mis_q, fy_q
+    //   ~rst_n                                 -> clocked through reset
+    //   drain counter dr (reloaded on any term, also during reset) -> output faces, tree/node drain, reset relays
+    wire ck_g;
+    generate if (ICG == 0) begin : g_noicg
+        assign ck_g = ck;
+    end else begin : g_icg
+`ifdef SYNTHESIS
+        localparam integer mut = 0;
+`else
+        integer mut;                                             // bench-only mutants (+ICG_MUT=n, 0 = none)
+        initial begin mut = 0; if ($value$plusargs("ICG_MUT=%d", mut)) begin end end
+`endif
+        reg go_f;
+        reg [ICG_GOH-1:0] go_h;
+        always @(posedge ck) begin go_f <= tap[0]; go_h <= {go_h[ICG_GOH-2:0], go_f}; end
+        // node face activity: n_a/n_b valid (mis_q, node pipe) and fault bits (fy_q), from copies of the n_a_q/n_b_q faces
+        reg [3:0] nv_f;
+        always @(posedge ck) nv_f <= {n_b[513], n_a[513], n_b[512], n_a[512]};
+        wire nv_act = |nv_f;
+        wire me_idle;
+`ifdef SYNTHESIS
+        // The engine idle register is not a port of the pinned body yet: synthesis keeps the gate OPEN (en = 1, safe,
+        // no saving) until the proposed `idle` output is threaded (rp2_45 / rom_tile_nk / rom_tile_w12 / logic_w12).
+        assign me_idle = 1'b0;
+`else
+        assign me_idle = u_g.u_tile.u_tile.u_logic.u_me.idle;
+`endif
+        wire go_act = ((mut == 1) ? 1'b0 : go_f) | ((mut == 6) ? 1'b0 : |go_h);
+        wire act = ((mut == 5) ? 1'b0 : !rst_n) | go_act | ((mut == 2) ? 1'b0 : !me_idle) | ((mut == 4) ? 1'b0 : nv_act);
+        reg [7:0] dr;
+        always @(posedge ck or negedge rst_n)
+            if (!rst_n) dr <= (mut == 5) ? 8'd0 : 8'(ICG_DRAIN);
+            else if (act) dr <= 8'(ICG_DRAIN);
+            else if (dr != 8'd0) dr <= dr - 8'd1;
+        wire en = act | ((mut == 3) ? 1'b0 : (dr != 8'd0)) | (mut == 9);
+`ifdef SYNTHESIS
+        ICGx8DC_ASAP7_75t_R u_icg (.CLK(ck), .ENA(en), .SE(1'b0), .GCLK(ck_g));
+`else
+        reg en_l;
+        /* verilator lint_off COMBDLY */
+        always_latch if (!ck) en_l = en;      // ICG cell function: latch transparent while ck is low, AND with ck
+        /* verilator lint_on COMBDLY */
+        assign ck_g = ck & en_l;
+`endif
+        initial if (ICG_GOH < 2 || ICG_DRAIN < 1 || ICG_DRAIN > 255) $fatal(1, "a0c ICG: ICG_GOH >= 2, 1 <= ICG_DRAIN <= 255");
+    end endgenerate
     // former clock entries: one clock domain, CTS balances every sink (macros via clock_tree_path)
-    wire ck_rp0 = ck;
-    wire ck_rp1 = ck;
-    wire ck_rp2 = ck;
-    wire ck_rp3 = ck;
-    wire ck_rp4 = ck;
-    wire ck_rp5 = ck;
-    wire ck_rp6 = ck;
-    wire ck_rp7 = ck;
-    wire ck_rp8 = ck;
-    wire ck_rp9 = ck;
-    wire ck_tx0 = ck;
-    wire ck_tx1 = ck;
-    wire ck_tx2 = ck;
-    wire ck_tx3 = ck;
-    wire ck_tx4 = ck;
-    wire ck_tx5 = ck;
-    wire ck_tx6 = ck;
-    wire ck_tx7 = ck;
-    wire ck_rsw = ck;
-    wire ck_rnw = ck;
-    wire ck_dw = ck;
-    wire ck_de = ck;
-    wire ck_rs = ck;
-    wire ck_rn = ck;
+    wire ck_rp0 = ck_g;
+    wire ck_rp1 = ck_g;
+    wire ck_rp2 = ck_g;
+    wire ck_rp3 = ck_g;
+    wire ck_rp4 = ck_g;
+    wire ck_rp5 = ck_g;
+    wire ck_rp6 = ck_g;
+    wire ck_rp7 = ck_g;
+    wire ck_rp8 = ck_g;
+    wire ck_rp9 = ck_g;
+    wire ck_tx0 = ck_g;
+    wire ck_tx1 = ck_g;
+    wire ck_tx2 = ck_g;
+    wire ck_tx3 = ck_g;
+    wire ck_tx4 = ck_g;
+    wire ck_tx5 = ck_g;
+    wire ck_tx6 = ck_g;
+    wire ck_tx7 = ck_g;
+    wire ck_rsw = ck_g;
+    wire ck_rnw = ck_g;
+    wire ck_dw = ck_g;
+    wire ck_de = ck_g;
+    wire ck_rs = ck_g;
+    wire ck_rn = ck_g;
     wire ck_fa0 = ck;
     wire ck_fa1 = ck;
-    wire ck_fa2 = ck;
-    wire ck_fa3 = ck;
+    wire ck_fa2 = ck_g;
+    wire ck_fa3 = ck_g;
     wire ck_fa4 = ck;
-    wire ck_lsl0 = ck;
-    wire ck_lsl1 = ck;
-    wire ck_lsl2 = ck;
-    wire ck_lsl3 = ck;
-    wire ck_lsl4 = ck;
-    wire ck_lsl5 = ck;
-    wire ck_lsl6 = ck;
-    wire ck_lsl7 = ck;
-    wire ck_node = ck;
+    wire ck_lsl0 = ck_g;
+    wire ck_lsl1 = ck_g;
+    wire ck_lsl2 = ck_g;
+    wire ck_lsl3 = ck_g;
+    wire ck_lsl4 = ck_g;
+    wire ck_lsl5 = ck_g;
+    wire ck_lsl6 = ck_g;
+    wire ck_lsl7 = ck_g;
+    wire ck_node = ck_g;
 `ifndef SYNTHESIS
     qfd_tile_nk_rp2_45 #(.ROM_TILE(ROM_TILE),.RPH(3),.REGROOT(REGROOT_MODE)) u_g (
 `else
     qfd_tile_nk_rp2_45 #(.RPH(3),.REGROOT(REGROOT_MODE)) u_g (
 `endif
-        .ck(ck),
+        .ck(ck_g),
         .ck_rp0(ck_rp0),
         .ck_rp1(ck_rp1),
         .ck_rp2(ck_rp2),
