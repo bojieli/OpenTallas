@@ -1,0 +1,7 @@
+# C20 payload-bank prototype — no physical adoption
+
+The resetless payload bank replaces data flops only, on the exact existing rising edge. Original station epoch/reset state remains soft and unchanged. Two prototype masters contain256 and1024 flops. At833ps, two independently patterned source stations (617/570bits) packed across both widths compare1080checks/0errors, including repeated asynchronous resets. Same binary controls: bit permutation, incorrect payload reset, incorrect epoch each caught. These controls do not qualify timing or native programme composition.
+
+Fixed existing core outlines leave dense station sites with insufficient adjacent bank area. A pin-accessible width256 frame60.48x8.64 and1024 frame207.36x8.64 (0.192um data-pin pitch plus4.32 edge insets) fails local packing/reach. A conservative subset removes banks until every centerline hop is<=441.36um, reserving8.64um for opposing pin faces. It retains4702NW/4715NE banks but leaves residual soft halves790/803k and874/803k estimated cells atF1.3, over the400k implementation limit. Smaller128 frames also fail local capacity; there is no accepted density sweep or route.
+
+Next implementation choice must combine a measured street recomposition or additional hub subpartitions with the exact source/binder mapping. No epoch is banked, no cycle is added, and no outline grows. The full layouts remain at intel2:/srv/opentallas-scratch2/claude/codex-hbm-die-1028/bank/. Bank estimate script preserves source station/bit identity; it does not rewrite bound RTL.

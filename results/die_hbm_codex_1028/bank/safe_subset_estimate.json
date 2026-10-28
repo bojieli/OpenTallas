@@ -1,0 +1,188 @@
+{
+  "scope": "estimate only, no RTL/plan adoption",
+  "types": {
+    "q_hub_nw": {
+      "safe_subset": true,
+      "pruned_banks": 1013,
+      "remaining_soft_cells_halves_F1p3": [
+        789581.1000000322,
+        802645.0000000515
+      ],
+      "banks": 4702,
+      "width_counts": {
+        "1024": 445,
+        "256": 4257
+      },
+      "unplaced_banks": 896,
+      "unplaced_first": [
+        {
+          "site": [
+            68,
+            30
+          ],
+          "width": 1024,
+          "used": 1024
+        },
+        {
+          "site": [
+            68,
+            30
+          ],
+          "width": 1024,
+          "used": 1024
+        },
+        {
+          "site": [
+            68,
+            30
+          ],
+          "width": 1024,
+          "used": 1024
+        },
+        {
+          "site": [
+            68,
+            30
+          ],
+          "width": 1024,
+          "used": 1024
+        },
+        {
+          "site": [
+            68,
+            30
+          ],
+          "width": 1024,
+          "used": 1024
+        },
+        {
+          "site": [
+            68,
+            30
+          ],
+          "width": 1024,
+          "used": 1024
+        },
+        {
+          "site": [
+            68,
+            30
+          ],
+          "width": 256,
+          "used": 256
+        },
+        {
+          "site": [
+            68,
+            30
+          ],
+          "width": 256,
+          "used": 60
+        }
+      ],
+      "banked_payload_bits": 1242824,
+      "max_original_hop_um": 404.11199999999974,
+      "max_repacked_hop_um": 441.31200000000035,
+      "payload_bits_with_hop_gt450": 0,
+      "payload_bits_unplaced": 0,
+      "first_hop_failures": [],
+      "bank_macro_area_um2": 3021741.1583999903,
+      "verdict": "ESTIMATE_FAIL"
+    },
+    "q_hub_ne": {
+      "safe_subset": true,
+      "pruned_banks": 1171,
+      "remaining_soft_cells_halves_F1p3": [
+        873982.5000000293,
+        802742.6000000559
+      ],
+      "banks": 4715,
+      "width_counts": {
+        "1024": 426,
+        "256": 4289
+      },
+      "unplaced_banks": 854,
+      "unplaced_first": [
+        {
+          "site": [
+            105,
+            11
+          ],
+          "width": 1024,
+          "used": 1024
+        },
+        {
+          "site": [
+            105,
+            11
+          ],
+          "width": 1024,
+          "used": 1024
+        },
+        {
+          "site": [
+            105,
+            11
+          ],
+          "width": 1024,
+          "used": 1024
+        },
+        {
+          "site": [
+            105,
+            11
+          ],
+          "width": 1024,
+          "used": 1024
+        },
+        {
+          "site": [
+            105,
+            11
+          ],
+          "width": 1024,
+          "used": 1024
+        },
+        {
+          "site": [
+            105,
+            11
+          ],
+          "width": 256,
+          "used": 256
+        },
+        {
+          "site": [
+            105,
+            11
+          ],
+          "width": 256,
+          "used": 29
+        },
+        {
+          "site": [
+            98,
+            14
+          ],
+          "width": 1024,
+          "used": 1024
+        }
+      ],
+      "banked_payload_bits": 1221014,
+      "max_original_hop_um": 404.18399999999974,
+      "max_repacked_hop_um": 441.3120000000011,
+      "payload_bits_with_hop_gt450": 0,
+      "payload_bits_unplaced": 0,
+      "first_hop_failures": [],
+      "bank_macro_area_um2": 3004422.4511999907,
+      "verdict": "ESTIMATE_FAIL"
+    }
+  },
+  "limitations": [
+    "Estimate only: exact source/binder bit packing and current clock roles not integrated.",
+    "Centerline hop model reserves8.64um for opposing face offsets in safe subset.",
+    "Geometry alone does not close pin escape, routing capacity, PG, or SPICE-scaled local clock spread.",
+    "Existing core outlines fixed; no die growth."
+  ],
+  "full_geometry_remote": "/srv/opentallas-scratch2/claude/codex-hbm-die-1028/bank/safe_subset_estimate.json"
+}

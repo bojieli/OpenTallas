@@ -1,0 +1,274 @@
+{
+  "scope": "estimate only, no RTL/plan adoption",
+  "types": {
+    "q_hub_nw": {
+      "banks": 5715,
+      "width_counts": {
+        "1024": 755,
+        "256": 4960
+      },
+      "unplaced_banks": 896,
+      "unplaced_first": [
+        {
+          "site": [
+            68,
+            30
+          ],
+          "width": 1024,
+          "used": 1024
+        },
+        {
+          "site": [
+            68,
+            30
+          ],
+          "width": 1024,
+          "used": 1024
+        },
+        {
+          "site": [
+            68,
+            30
+          ],
+          "width": 1024,
+          "used": 1024
+        },
+        {
+          "site": [
+            68,
+            30
+          ],
+          "width": 1024,
+          "used": 1024
+        },
+        {
+          "site": [
+            68,
+            30
+          ],
+          "width": 1024,
+          "used": 1024
+        },
+        {
+          "site": [
+            68,
+            30
+          ],
+          "width": 1024,
+          "used": 1024
+        },
+        {
+          "site": [
+            68,
+            30
+          ],
+          "width": 256,
+          "used": 256
+        },
+        {
+          "site": [
+            68,
+            30
+          ],
+          "width": 256,
+          "used": 60
+        }
+      ],
+      "banked_payload_bits": 1695031,
+      "max_original_hop_um": 404.11199999999974,
+      "max_repacked_hop_um": 666.2400000000005,
+      "payload_bits_with_hop_gt450": 26195,
+      "payload_bits_unplaced": 167448,
+      "first_hop_failures": [
+        {
+          "station": 2,
+          "conn": "u_svg_Q1.k_addr|u_vmks_Q1",
+          "bit": 0,
+          "max_hop_um": 457.9010000000003
+        },
+        {
+          "station": 2,
+          "conn": "u_svg_Q1.k_addr|u_vmks_Q1",
+          "bit": 1,
+          "max_hop_um": 457.7090000000003
+        },
+        {
+          "station": 2,
+          "conn": "u_svg_Q1.k_addr|u_vmks_Q1",
+          "bit": 2,
+          "max_hop_um": 457.5170000000003
+        },
+        {
+          "station": 2,
+          "conn": "u_svg_Q1.k_addr|u_vmks_Q1",
+          "bit": 3,
+          "max_hop_um": 457.3250000000003
+        },
+        {
+          "station": 2,
+          "conn": "u_svg_Q1.k_addr|u_vmks_Q1",
+          "bit": 4,
+          "max_hop_um": 457.13300000000027
+        },
+        {
+          "station": 2,
+          "conn": "u_svg_Q1.k_addr|u_vmks_Q1",
+          "bit": 5,
+          "max_hop_um": 456.94100000000026
+        },
+        {
+          "station": 2,
+          "conn": "u_svg_Q1.k_addr|u_vmks_Q1",
+          "bit": 6,
+          "max_hop_um": 456.74900000000025
+        },
+        {
+          "station": 2,
+          "conn": "u_svg_Q1.k_addr|u_vmks_Q1",
+          "bit": 7,
+          "max_hop_um": 456.55700000000024
+        }
+      ],
+      "bank_macro_area_um2": 3944484.864,
+      "verdict": "ESTIMATE_FAIL"
+    },
+    "q_hub_ne": {
+      "banks": 5886,
+      "width_counts": {
+        "1024": 830,
+        "256": 5056
+      },
+      "unplaced_banks": 854,
+      "unplaced_first": [
+        {
+          "site": [
+            105,
+            11
+          ],
+          "width": 1024,
+          "used": 1024
+        },
+        {
+          "site": [
+            105,
+            11
+          ],
+          "width": 1024,
+          "used": 1024
+        },
+        {
+          "site": [
+            105,
+            11
+          ],
+          "width": 1024,
+          "used": 1024
+        },
+        {
+          "site": [
+            105,
+            11
+          ],
+          "width": 1024,
+          "used": 1024
+        },
+        {
+          "site": [
+            105,
+            11
+          ],
+          "width": 1024,
+          "used": 1024
+        },
+        {
+          "site": [
+            105,
+            11
+          ],
+          "width": 256,
+          "used": 256
+        },
+        {
+          "site": [
+            105,
+            11
+          ],
+          "width": 256,
+          "used": 29
+        },
+        {
+          "site": [
+            98,
+            14
+          ],
+          "width": 1024,
+          "used": 1024
+        }
+      ],
+      "banked_payload_bits": 1779575,
+      "max_original_hop_um": 404.18399999999974,
+      "max_repacked_hop_um": 706.3680000000008,
+      "payload_bits_with_hop_gt450": 18790,
+      "payload_bits_unplaced": 168598,
+      "first_hop_failures": [
+        {
+          "station": 0,
+          "conn": "u_pgp_Q.command|u_sucore_Q",
+          "bit": 0,
+          "max_hop_um": 473.17400000000015
+        },
+        {
+          "station": 0,
+          "conn": "u_pgp_Q.command|u_sucore_Q",
+          "bit": 1,
+          "max_hop_um": 472.98200000000014
+        },
+        {
+          "station": 0,
+          "conn": "u_pgp_Q.command|u_sucore_Q",
+          "bit": 2,
+          "max_hop_um": 472.79000000000013
+        },
+        {
+          "station": 0,
+          "conn": "u_pgp_Q.command|u_sucore_Q",
+          "bit": 3,
+          "max_hop_um": 472.5980000000001
+        },
+        {
+          "station": 0,
+          "conn": "u_pgp_Q.command|u_sucore_Q",
+          "bit": 4,
+          "max_hop_um": 472.4060000000001
+        },
+        {
+          "station": 0,
+          "conn": "u_pgp_Q.command|u_sucore_Q",
+          "bit": 5,
+          "max_hop_um": 472.2140000000001
+        },
+        {
+          "station": 0,
+          "conn": "u_pgp_Q.command|u_sucore_Q",
+          "bit": 6,
+          "max_hop_um": 472.0220000000001
+        },
+        {
+          "station": 0,
+          "conn": "u_pgp_Q.command|u_sucore_Q",
+          "bit": 7,
+          "max_hop_um": 471.8300000000001
+        }
+      ],
+      "bank_macro_area_um2": 4129018.6752,
+      "verdict": "ESTIMATE_FAIL"
+    }
+  },
+  "limitations": [
+    "Estimate only: exact source/binder bit packing and current clock roles not integrated.",
+    "Centerline hop model reserves8.64um for opposing face offsets in safe subset.",
+    "Geometry alone does not close pin escape, routing capacity, PG, or SPICE-scaled local clock spread.",
+    "Existing core outlines fixed; no die growth."
+  ],
+  "full_geometry_remote": "/srv/opentallas-scratch2/claude/codex-hbm-die-1028/bank/layout_estimate.json"
+}
