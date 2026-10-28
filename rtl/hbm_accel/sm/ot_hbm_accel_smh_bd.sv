@@ -141,7 +141,9 @@ module ot_hbm_accel_bterm3 (
         if (c[2:1] == 2'd0) e2m1 = {c[3], c[0] ? 4'd6 : 4'd0, 3'd0};
         else                e2m1 = {c[3], {2'b00, c[2:1]} + 4'd6, c[0], 2'b00};
     endfunction
-    integer i, j;
+    // one loop index per process (a module-scope index shared by several always blocks is a multi-driven
+    // register for yosys check -assert; HBM-CORES-REBAL-1 10-28 lint fix, logic unchanged)
+    integer i0, i1, j1, i2, i3;
     // valid pipe (reset), one bit per stage
     reg [LAT-1:0] vp;
     always @(posedge clk or negedge rst_n)
@@ -155,7 +157,7 @@ module ot_hbm_accel_bterm3 (
     reg signed [9:0] p0_xe, p0_we;
     always @(posedge clk) begin
         p0_xq <= xq; p0_xe <= xe; p0_we <= we;
-        for (i = 0; i < 32; i = i + 1) p0_wq[8*i +: 8] <= fp4 ? e2m1(wq[8*i +: 4]) : wq[8*i +: 8];
+        for (i0 = 0; i0 < 32; i0 = i0 + 1) p0_wq[8*i0 +: 8] <= fp4 ? e2m1(wq[8*i0 +: 4]) : wq[8*i0 +: 8];
     end
 
     // -- P1a: per-element decode: significands, sign, shift amount, NaN per group of 8 ----------------
@@ -170,21 +172,21 @@ module ot_hbm_accel_bterm3 (
     reg        nn;
     always @(posedge clk) begin
         q_es <= p0_xe + p0_we;
-        for (i = 0; i < 32; i = i + 1) begin
-            xc = p0_xq[8*i +: 8];
-            wc = p0_wq[8*i +: 8];
-            q_xs[i] <= {(xc[6:3] != 4'd0), xc[2:0]};
-            q_ws[i] <= {(wc[6:3] != 4'd0), wc[2:0]};
-            q_sg[i] <= xc[7] ^ wc[7];
+        for (i1 = 0; i1 < 32; i1 = i1 + 1) begin
+            xc = p0_xq[8*i1 +: 8];
+            wc = p0_wq[8*i1 +: 8];
+            q_xs[i1] <= {(xc[6:3] != 4'd0), xc[2:0]};
+            q_ws[i1] <= {(wc[6:3] != 4'd0), wc[2:0]};
+            q_sg[i1] <= xc[7] ^ wc[7];
             xf = (xc[6:3] == 4'd0) ? 4'd1 : xc[6:3];
             wf = (wc[6:3] == 4'd0) ? 4'd1 : wc[6:3];
-            q_sh[i] <= {1'b0, xf} + {1'b0, wf} - 5'd2;
+            q_sh[i1] <= {1'b0, xf} + {1'b0, wf} - 5'd2;
         end
-        for (i = 0; i < 4; i = i + 1) begin
+        for (i1 = 0; i1 < 4; i1 = i1 + 1) begin
             nn = 1'b0;
-            for (j = 0; j < 8; j = j + 1)
-                nn = nn | (p0_xq[8*(8*i+j) +: 7] == 7'h7F) | (p0_wq[8*(8*i+j) +: 7] == 7'h7F);
-            q_nan[i] <= nn;
+            for (j1 = 0; j1 < 8; j1 = j1 + 1)
+                nn = nn | (p0_xq[8*(8*i1+j1) +: 7] == 7'h7F) | (p0_wq[8*(8*i1+j1) +: 7] == 7'h7F);
+            q_nan[i1] <= nn;
         end
     end
 
@@ -196,18 +198,18 @@ module ot_hbm_accel_bterm3 (
     reg [7:0]         pm;
     always @(posedge clk) begin
         p1_es <= q_es; p1_nan <= |q_nan;
-        for (i = 0; i < 32; i = i + 1) begin
-            pm = q_xs[i] * q_ws[i];
-            p1_p[i] <= q_sg[i] ? -$signed({1'b0, pm}) : $signed({1'b0, pm});
-            p1_sh[i] <= q_sh[i];
+        for (i2 = 0; i2 < 32; i2 = i2 + 1) begin
+            pm = q_xs[i2] * q_ws[i2];
+            p1_p[i2] <= q_sg[i2] ? -$signed({1'b0, pm}) : $signed({1'b0, pm});
+            p1_sh[i2] <= q_sh[i2];
         end
     end
 
     // -- P2a: terms (units of 2^-18) and one 3:2 level (32 -> 22) --------------------------------------
     reg [32*W-1:0] terms;
     always @(*) begin
-        for (i = 0; i < 32; i = i + 1)
-            terms[W*i +: W] = {{(W-9){p1_p[i][8]}}, p1_p[i]} << p1_sh[i];
+        for (i3 = 0; i3 < 32; i3 = i3 + 1)
+            terms[W*i3 +: W] = {{(W-9){p1_p[i3][8]}}, p1_p[i3]} << p1_sh[i3];
     end
     wire [22*W-1:0] c22;
     ot_v41_csa #(.N(32), .M(22), .W(W)) u_csa1 (.d(terms), .q(c22));
