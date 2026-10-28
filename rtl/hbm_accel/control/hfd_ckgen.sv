@@ -32,13 +32,29 @@ module hfd_ckgen_rel4 (input wire ck_stream, ck_serial, ck_hbm, ck_link, input w
     hfd_ckgen_rel u_rl (.ck(ck_link),   .por_n(por_n), .locked(locked), .rst_n(rst_link));
 endmodule
 
-// asynchronous assert, two-flop synchronous release in the domain clock
-module hfd_ckgen_rel (input wire ck, input wire por_n, input wire locked, output wire rst_n);
+// asynchronous assert, two-flop synchronous release in the domain clock, then a HOLD-edge reset window
+// (DIE-HBM-10 10-28, COORD ruling "REBAL-7 reset contract"): every arm (power-on, a mid-run por_n pulse of any width, a
+// PLL lock loss) restarts the window, so each domain reset stays asserted until rising edge 2 + HOLD of its OWN running
+// clock after arm (por_n & locked) returns high.  The staged tree below only adds edges (async assert, later release),
+// so every sink reset pin sees >= HOLD clocked edges in reset: unreset pipeline constants flush by construction, and the
+// HBM die reset contract declares 64 edges (physical/die_plan/hbm/reset_contract.json).
+module hfd_ckgen_rel #(parameter integer HOLD = 64)
+                      (input wire ck, input wire por_n, input wire locked, output wire rst_n);
+    localparam integer W = $clog2(HOLD + 1);
     wire arm_n = por_n & locked;
     reg [1:0] s;
+    reg [W-1:0] n;
+    reg done;
     always @(posedge ck or negedge arm_n)
-        if (!arm_n) s <= 2'b00;
-        else        s <= {s[0], 1'b1};
-    assign rst_n = s[1];
+        if (!arm_n) begin
+            s <= 2'b00; n <= {W{1'b0}}; done <= 1'b0;
+        end else begin
+            s <= {s[0], 1'b1};
+            if (s[1] && !done) begin
+                n <= n + 1'b1;
+                if (n == W'(HOLD - 1)) done <= 1'b1;
+            end
+        end
+    assign rst_n = done;
 endmodule
 `default_nettype wire
