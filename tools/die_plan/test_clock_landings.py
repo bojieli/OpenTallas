@@ -486,3 +486,20 @@ def test_receiver_uses_collector_geometry_when_bus_is_declaration_only():
     del t["collector"]["types"]["B"]["bus_geometry"]
     with pytest.raises(LandingError, match="receiver face geometry not found"):
         Landings(p, t).type_rtl("B", b)
+
+
+def test_native_top_regions_include_early_core_clock_inputs():
+    p, t, _a, _b = dataflow_vehicle()
+    c = Landings(p, t)
+    top = ("module die_top (\n    input  wire clk,\n    input wire rst_n\n);\n"
+           "    a_mod a (\n        .clk(clk),\n        .clk_t3(clk),\n        .clk_c0(clk)\n    );\n"
+           "    b_mod b (\n        .clk(clk),\n        .clk_c4(clk)\n    );\nendmodule\n")
+    out = c.top_rtl(top)
+    assert ".clk_c0(clk_region_r0)" in out
+    assert ".clk_c4(clk_region_r1)" in out
+    assert ".clk_t3(clk_region_r0)" in out
+    assert "input  wire clk," not in out
+    assert "(clk)" not in out
+    # A clock-looking name outside the generated grid/core families stays rejected.
+    with pytest.raises(LandingError, match="still drives a partition pin"):
+        Landings(p, t).top_rtl(top.replace(".clk_c0(clk)", ".clk_phy(clk)"))
