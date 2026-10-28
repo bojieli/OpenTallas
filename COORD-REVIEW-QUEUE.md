@@ -1,4 +1,0 @@
-- 2026-10-28 08:50 PDT ASK [DIE-HBM-9] (default after 30 min):
-  - (a) idx SCORER_CARDINALITY (e15f211e9b): the plan homes 2 of 4 native idx quarters (128/256 hcols). RTL/plan owner: either the plan adds SW/SE quarter partitions, or the canonical top drops to 2 quarters. Default: ask the RTL owner and keep SW/SE UNPLANNED.
-  - (b) Quarter cuts: next estimate face-window-to-client-column + hard cores off v0/v2. Default: run it.
-  - (c) Deepest HBM taps in the inverter form are estimated at FF duty ~0.42. Default: plan a shorter feed, then measure on the first HBM clock GRT.
