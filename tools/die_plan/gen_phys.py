@@ -305,6 +305,9 @@ def core_tap_ff_sdc(P, tn):
         seen.add(n)
         lines.append(f"# CP2 FF core tap {n} ({inst}/{pin}: internal {ins:g} ps)\n"
                      f"set_clock_latency -source -clock clk {t_lib(-early):.4f} [get_ports {n}]\n")
+    if lines and tap_window_ps(P):
+        lines.append(f"# plan clock.tap_window {tap_window_ps(P):g} ps on the FF core taps (early end only)\n"
+                     + core_tap_window_tcl(P, tn, "FF"))
     return "".join(lines)
 
 
@@ -661,7 +664,11 @@ def seam_hold(P):
 # output hold checks by W, so input max delays are W smaller and output min delays W larger in the SDC
 # (tap_window_io_shift); the CONTRACT values (seam_hold, sender guarantees) are unchanged.  Pre-CTS (ideal clocks, no
 # CRPR) the window would hit same-tap pairs too, so prects_estimate.tcl zeroes it and pre_cts.tcl restores it before
-# the tree is built.  Requires clock.seam_hold (the seam half of the same ruling) and no early core taps (12.8d).
+# the tree is built.  Requires clock.seam_hold (the seam half of the same ruling).
+# DIE-S81-10 (COORD 2026-10-28 06:47, METHODOLOGY 12.3 v5.0 lifted the 12.8d early-tap ban): types with CP2 early core
+# taps take the same window.  Each core tap port keeps its own early latency e (TT in the golden SDC, FF in
+# core_taps_ff.sdc) as its late value and gets early -(e + W) (core_tap_window_tcl), so a core <-> grid-tap or
+# core <-> other-core path sees the full W while CRPR still credits same-tap pairs at the common core tap port.
 def tap_window_ps(P):
     """the plan's declared per-tap latency window W (ps) of the kit SDC, 0.0 when absent (legacy kits unchanged)."""
     tw = P.clock.get("tap_window")
@@ -676,19 +683,37 @@ def tap_window_ps(P):
     return w
 
 
-def tap_window_tcl(P, tn, value_ps=None):
-    """the window's two set_clock_latency lines on the grid tap ports of type tn ('' without a window).
-    value_ps overrides the early value (0 = the pre-CTS ideal stage)."""
+def tap_window_tcl(P, tn, value_ps=None, core=True):
+    """the window's two set_clock_latency lines on the grid tap ports of type tn ('' without a window), then (core)
+    the early-core-tap window lines (core_tap_window_tcl, TT).  value_ps overrides the early value (0 = the pre-CTS
+    ideal stage).  core=False: grid / edge ports only (the golden SDC writes the core lines after the core taps' own
+    source latency, which would otherwise overwrite them)."""
     w = tap_window_ps(P)
     if not w:
         return ""
-    if core_tap_rows(P, tn):
-        raise ValueError(f"type {tn}: clock.tap_window with early core taps (banned by 12.8d) is not supported")
     e = (-w if value_ps is None else -float(value_ps)) + 0.0     # never "-0.0000"
     out = ""
     for ck, ports in tap_window_ports(P, tn):
         out += (f"set_clock_latency -source -early -clock {ck} {t_lib(e):.4f} [get_ports {{{' '.join(ports)}}}]\n"
                 f"set_clock_latency -source -late -clock {ck} {t_lib(0.0):.4f} [get_ports {{{' '.join(ports)}}}]\n")
+    return out + (core_tap_window_tcl(P, tn, value_ps=value_ps) if core else "")
+
+
+def core_tap_window_tcl(P, tn, corner="TT", value_ps=None):
+    """early-core-tap window lines of type tn at corner ('' without a window or core taps): one line per core tap
+    port, set_clock_latency -source -early -clock clk -(early + W) [get_ports tap], written AFTER the port's own
+    -source -clock clk -early line (which sets both early and late), so late keeps the core's own early latency and
+    only the early end widens by W.  value_ps overrides W (0 = the pre-CTS ideal stage: early back to the tap's own)."""
+    w = tap_window_ps(P)
+    if not w:
+        return ""
+    v = w if value_ps is None else float(value_ps)
+    out, seen = "", set()
+    for n, _inst, _pin, early, _ins in core_tap_rows(P, tn, corner):
+        if n in seen:
+            continue
+        seen.add(n)
+        out += f"set_clock_latency -source -early -clock clk {t_lib(-(early + v)) + 0.0:.4f} [get_ports {n}]\n"
     return out
 
 
@@ -1133,7 +1158,7 @@ def sdc(P, tn, pins):
            f"set_clock_latency -source {lat:.4f} [get_clocks vclk]\n"
            + (f"# plan clock.tap_window (COORD 11:24): die tap-to-tap arrival window {tap_window_ps(P):g} ps on every "
               "real clock port, [-W, 0]; IO delays shifted to keep the seam contract (gen_phys.tap_window_ps)\n"
-              + tap_window_tcl(P, tn) if tap_window_ps(P) else "") +
+              + tap_window_tcl(P, tn, core=False) if tap_window_ps(P) else "") +
            f"set_clock_uncertainty {t_lib(UNC_SETUP_PS):.4f} -setup [all_clocks]\n"
            f"set_clock_uncertainty {t_lib(UNC_HOLD_PS):.4f} -hold [all_clocks]\n"
            f"# seam paths: uncertainty counted once per seam (COORD 16:58): {UNC_SPLIT:g} on each partition side\n"
@@ -1153,6 +1178,9 @@ def sdc(P, tn, pins):
         source_ports.add(n)
         out += (f"# CP2 early core tap {n} ({inst}/{pin}: internal {ins:g} ps): the spine delivers it {early:g} ps early\n"
                 f"set_clock_latency -source -clock clk {t_lib(-early):.4f} [get_ports {n}]\n")
+    if source_ports and tap_window_ps(P):
+        out += (f"# plan clock.tap_window {tap_window_ps(P):g} ps on the early core taps: early end -(early + W), "
+                "late keeps the tap's own early latency\n" + core_tap_window_tcl(P, tn))
     if slots:
         sh = ft_hop_in_share(P)
         out += (f"# ft slots: hop share {sh:g} T at the face, the rest is the last station segment\n"
@@ -1526,10 +1554,10 @@ def phy_pg_pdn(P, tn, doms, macros, root=None, core_grids=False):
 
 
 def signed_mean_core_taps(P, tn):
-    """Select measured means for an explicitly SIGNED early-core-tap plan."""
+    """Select measured means for explicitly SIGNED early or internal core CTS metadata."""
     ck = P.types[tn].get("clock", {}) or {}
     taps = [tp for tp in ck.get("taps", []) or [] if tp.get("kind") == "core"]
-    return bool(ck.get("core_taps") == "early" and taps and P.types[tn].get("hard_cores")
+    return bool(ck.get("core_taps") in ("early", "internal") and taps and P.types[tn].get("hard_cores")
                 and all("insertion_ff_ps" in tp and str(tp.get("budget_owner", "")).startswith("SIGNED") for tp in taps))
 
 
@@ -1543,6 +1571,9 @@ def core_mean_contract_options(P, tn, trial=False):
     if signed_mean_core_taps(P, tn):
         return dict(mean_contract=True, require_signed=True)
     ck = P.types[tn].get("clock", {}) or {}
+    if ck.get("core_taps") == "internal":
+        import core_clock_contract as CC
+        raise CC.ContractError(f"{tn}: internal core CTS requires explicit SIGNED TT/FF mean metadata")
     taps = [tp for tp in ck.get("taps", []) or [] if tp.get("kind") == "core"]
     budget = bool(ck.get("core_taps") == "early" and taps and P.types[tn].get("hard_cores")
                   and all("insertion_ff_ps" in tp and

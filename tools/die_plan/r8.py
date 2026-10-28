@@ -245,8 +245,17 @@ def type_norm(raw):
     return out
 
 
-def check(bg, raw, landing=None, replica="all", bus="part", limit=40):
-    """G0 R8: [(severity, message)] + stats.  landing = {member id: landed depth} or None (use landed_stages)."""
+STRAP_PAD_MAX = 15     # 4-bit pad-count strap (ot_dp_dly_cnt CW); a site needing more is an ERROR
+
+
+def check(bg, raw, landing=None, replica="all", bus="part", limit=40, strap_pads=False):
+    """G0 R8: [(severity, message)] + stats.  landing = {member id: landed depth} or None (use landed_stages).
+    strap_pads (OWNER 2026-10-28 KV R8 decision, opt-in, default off = unchanged): instances of one type that need
+    different landing pads at a site are NOT a type conflict; the site becomes ONE max-capacity delay bank
+    (fixed ot_dp_dly of the smallest pad + ot_dp_dly_cnt of DMAX = the span) whose pad count is a declared static strap tied per
+    instance at the parent, LEC'd against every used constant.  stats.strap_sites lists every such site with its
+    per-instance pads; a pad above STRAP_PAD_MAX stays an ERROR.  Position-bank members are then judged by their raw
+    landed pad (the strap bank replaces the ID decode)."""
     bg, landed_found = landed_bundles(bg)
     N, uf, used = classes(bg, raw, replica, bus)
     msgs = []
@@ -295,6 +304,9 @@ def check(bg, raw, landing=None, replica="all", bus="part", limit=40):
                                  f"delay per sink partition {per}"))
     # types hardened once: instances of one type need identical landing pads
     bad_t = 0
+    site_pads = defaultdict(lambda: defaultdict(dict))
+    site_bits = defaultdict(dict)
+    strap_sites = []
     if True:
         tn = type_norm(raw)
         want = defaultdict(lambda: defaultdict(set))
@@ -305,14 +317,35 @@ def check(bg, raw, landing=None, replica="all", bus="part", limit=40):
             norm = (rx.sub("*", g["sink"]) if rx else g["sink"], m["sink_port"], str(m["sink_bits"]),
                     rx.sub("*", m["source"]) if rx else m["source"], m["asbuilt_stages"])
             physical_pad = dep(g, m) - m["bound_stages"]
-            if m.get("position_bank"):
+            if m.get("position_bank") and not strap_pads:
                 try:
                     physical_pad = PB.physical_key(m["position_bank"], physical_pad)
                 except ValueError as exc:
                     msgs.append(("ERROR", f"R8 position bank {g['sink']}.{m['sink_port']}: {exc}"))
             want[t][norm].add(physical_pad)
+            if strap_pads:
+                site_pads[t][norm][g["sink_part"]] = physical_pad
+                site_bits[t][norm] = m["sink_bits"]
         for t, d in sorted(want.items()):
             conf = {k: sorted(v, key=repr) for k, v in d.items() if len(v) > 1}
+            if conf and strap_pads:
+                for k in sorted(conf):
+                    pads = dict(sorted(site_pads[t][k].items()))
+                    mx = max(pads.values())
+                    width = sum(b - a + 1 for a, b in site_bits[t][k])
+                    # fixed common part (min pad) stays an ordinary ot_dp_dly; only the span is a strap-count bank
+                    base = min(pads.values())
+                    strap_sites.append(dict(type=t, sink=k[0], sink_port=k[1], sink_bits=site_bits[t][k], width=width,
+                                            source=k[3], asbuilt=k[4], dmax=mx, base=base, span=mx - base, pads=pads,
+                                            used=sorted(set(pads.values())),
+                                            strap_counts=sorted({v - base for v in pads.values()})))
+                    if mx > STRAP_PAD_MAX:
+                        bad_t += 1
+                        msgs.append(("ERROR", f"R8 strap pad {t} {k[0]}.{k[1]} <- {k[3]}: pad {mx} > strap capacity "
+                                     f"{STRAP_PAD_MAX}"))
+                msgs.append(("WARN", f"R8 type {t}: {len(conf)} strap-pad sites (instances tie their pad count; "
+                             "OWNER 10-28 strap pads)"))
+                continue
             if conf:
                 bad_t += 1
                 k, v = next(iter(sorted(conf.items())))
@@ -332,6 +365,9 @@ def check(bg, raw, landing=None, replica="all", bus="part", limit=40):
                  replica_sets=len(bg.get("replica", [])), replica_unequal=bad_r, types_conflicting=bad_t,
                  replica_mode=replica, bus_mode=bus, async_skipped=sum(
                      1 for g in bg["landing"] for m in g["members"] if is_async(m)), depth_source="landing file" if landing is not None else "bus_groups landed_stages")
+    if strap_pads:
+        stats.update(strap_pads=True, strap_sites=strap_sites, strap_site_count=len(strap_sites),
+                     strap_used_constants=sorted({(x["width"], x["span"], c) for x in strap_sites for c in x["strap_counts"]}))
     return msgs, stats
 
 
@@ -442,6 +478,8 @@ def main(argv=None):
         else:
             a.add_argument("--landing")
             a.add_argument("--json")
+            a.add_argument("--strap-pads", action="store_true",
+                           help="OWNER 10-28: per-instance pad differences become strap-count delay banks (opt-in)")
     a = ap.parse_args(argv)
     configure(a.exempt, a.landed, a.landed_window, a.landed_stage_cycles, a.landed_over_margin)
     raw = S.load(a.plan)
@@ -451,7 +489,7 @@ def main(argv=None):
         print(f"{p}: {json.dumps(sm)}")
         return 0
     landing = load_landing(a.landing)[0] if a.landing else None
-    msgs, st = check(bg, raw, landing, a.replica, a.bus)
+    msgs, st = check(bg, raw, landing, a.replica, a.bus, strap_pads=a.strap_pads)
     for sev, m in msgs:
         print(f"{sev} {m}")
     ok = not any(s == "ERROR" for s, _ in msgs)

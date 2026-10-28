@@ -17,6 +17,7 @@ The source-side prevention is gen_rtl.CELLS: ot_dp_st / ot_dp_ste / ot_dp_ep car
 run_kit.sh runs this guard right after `make synth` and stops the kit on FAIL.
 """
 import argparse
+import itertools
 import json
 import re
 import sys
@@ -357,7 +358,67 @@ def kit_strap_list(kitdir):
 def kit_land(path):
     """declared landing-ring buses of a kit land_slots.json {"schema": ..., "buses": {bus: D}} (S81-CORE-LAT-R21)."""
     d = json.loads(Path(path).read_text())
-    return {str(k): int(v) for k, v in (d.get("buses") or {}).items()}
+    return {str(k): (dict(v) if isinstance(v, dict) else int(v)) for k, v in (d.get("buses") or {}).items()}
+
+
+LAND_FORMS = ("icg", "hold_mux")
+
+
+def land_spec(v):
+    """(D, form) of one declared landing bus: an int D = the ICG slot form (S81-CORE-LAT-R21); a dict
+    {"D": n, "form": "hold_mux"} = the enable-mux slot form (COORD 10-28 06:30, DIE-HEAD-8 witness).  ValueError else."""
+    if isinstance(v, dict):
+        if set(v) - {"D", "form"} or v.get("form", "icg") not in LAND_FORMS:
+            raise ValueError(f"land_slots bus spec {v}: want {{D, form in {LAND_FORMS}}}")
+        return int(v["D"]), str(v.get("form", "icg"))
+    return int(v), "icg"
+
+
+# ---- single-output std-cell boolean models (hold_mux slot proof; a cell without a model rejects the slot) --------
+def _cell_base(m):
+    return re.sub(r"x(p\d+|\d+).*$", "", m.split("_ASAP7")[0])
+
+
+def cell_fn(m, ins):
+    """ins {pin: bool} -> output bool of a single-output ASAP7 combinational cell; KeyError when not modelled."""
+    b = _cell_base(m)
+    if b.startswith(("BUF", "HB")):
+        return ins["A"]
+    if b.startswith("INV"):
+        return not ins["A"]
+    if b in ("TIEHI",):
+        return True
+    if b in ("TIELO",):
+        return False
+    mm = re.fullmatch(r"(N?AND|N?OR|XN?OR)(\d)", b)
+    if mm:
+        op, n = mm.group(1), int(mm.group(2))
+        v = [ins[c] for c in "ABCDE"[:n]]
+        if op in ("AND", "NAND"):
+            o = all(v)
+        elif op in ("OR", "NOR"):
+            o = any(v)
+        else:
+            o = sum(v) % 2 == 1
+        return (not o) if op in ("NAND", "NOR", "XNOR") else o
+    mm = re.fullmatch(r"(AOI|OAI|AO|OA)(\d+)", b)
+    if mm:
+        kind, sizes = mm.group(1), [int(c) for c in mm.group(2)]
+        vals = []
+        for gi, n in enumerate(sizes):
+            L = chr(65 + gi)
+            v = [ins[L]] if n == 1 else [ins[f"{L}{j}"] for j in range(1, n + 1)]
+            vals.append(all(v) if kind.startswith("AO") else any(v))
+        o = any(vals) if kind.startswith("AO") else all(vals)
+        return (not o) if kind.endswith("I") else o
+    if b == "A2O1A1I":
+        return not (((ins["A1"] and ins["A2"]) or ins["B"]) and ins["C"])
+    if b == "O2A1O1I":
+        return not (((ins["A1"] or ins["A2"]) and ins["B"]) or ins["C"])
+    if b in ("MAJ", "MAJI"):
+        o = (ins["A"] + ins["B"] + ins["C"]) >= 2
+        return (not o) if b == "MAJI" else o
+    raise KeyError(f"no boolean model for {m}")
 
 
 def kit_bump_list(kitdir):
@@ -408,7 +469,21 @@ def sdc_clock_ports(text):
     return out
 
 
-def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(), clocks=(), land=None, dead=()):
+def sdc_clock_exports(text):
+    """[(output port, source port)] of every `create_generated_clock ... -source [get_ports S] ... [get_ports T]`
+    with -divide_by 1 (a forwarded clock output, landing_contract.sdc)."""
+    out = []
+    for m in re.finditer(r"^\s*create_generated_clock\b([^\n]*)$", text, re.M):
+        ln = m.group(1)
+        src = re.search(r"-source\s+\[get_ports\s+\{?([A-Za-z_][A-Za-z0-9_]*)\}?\s*\]", ln)
+        tgt = re.search(r"\[get_ports\s+\{?([A-Za-z_][A-Za-z0-9_]*)\}?\s*\]\s*$", ln)
+        if src and tgt and re.search(r"-divide_by\s+1\b", ln) and (tgt.group(1), src.group(1)) not in out:
+            out.append((tgt.group(1), src.group(1)))
+    return out
+
+
+def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(), clocks=(), land=None, dead=(),
+          exports=()):
     """straps: declared ID strap ports (OWNER 10-25 option B, straps.py): quasi-static strap_* inputs tied at the
     parent need no pin register -> exempt (recorded in the result); any other name is refused (ValueError).
     bumps: declared hard-IP line-side ports [(port, dir, width)] (plan bump_ports, KV-KITS-4 10-27): the bump IS the
@@ -420,6 +495,17 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
     clock gates (one ICG* per slot; its GCLK net feeds flop clock pins only), all D ICGs gated from ONE clock net (the
     lane's forwarded clock).  Anything else
     fails class "land_slot"; a declared bus that is not an input port fails too.
+    A bus declared {"D": n, "form": "hold_mux"} (COORD 10-28 06:30: the enable-mux slot form, no ICG) instead needs,
+    per bit: EXACTLY D cell-pin loads; everything reachable forward from each load through combinational std cells is
+    ONE flop D pin (no port, macro, other flop pin or second flop: no leak), the D flops distinct and on one clock net;
+    each flop's D cone (leaves = the bit, the flop's OWN Q/QN, control leaves) evaluates exhaustively to the bit when
+    its write condition W holds and to its own state otherwise (own-Q hold, never written -> FAIL), W uses no landing
+    bit and no undriven/macro leaf, and the D write conditions are pairwise mutually exclusive.  Each slot flop is that
+    bit's face register (two bits on one slot flop -> merged).
+    exports: declared forwarded clock outputs [(T, S)] (kit SDC create_generated_clock -source [get_ports S] -divide_by 1
+    [get_ports T], DIE-HEAD-9 FACE (c)): T is an output port wired from clock port S through single-driver,
+    single-load buffers / an even number of inverters only, the T net and every chain net carry nothing else; then T
+    is a clock role (recorded in clock_exports), not face data.  Anything else fails class "clock_export".
     dead: declared proven-dead input bits (kit dead_inputs.json, dead_input_list): each must be an input port bit
     whose net has NO load and no driver in the netlist -- then it is recorded (dead_declared), not a face register;
     a declared bit that is not an input port bit, or that still loads anything, fails class "dead"."""
@@ -490,10 +576,176 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                                 f"{[F.cells[c][0] for c, _ in hard[:3]]})")
                 continue
             res["bump_bits"] = res.get("bump_bits", 0) + 1
-    land = dict(land or {})
+    land_form = {}
+    land_raw = dict(land or {})
+    land = {}
+    for x, v in land_raw.items():
+        land[x], land_form[x] = land_spec(v)
     for x, dd in land.items():                   # a declared landing bus: an input port, D >= 2
         if T.dirs.get(x) != "input" or int(dd) < 2:
             fail("land_slot", x, f"declared landing bus is {T.dirs.get(x)} with D {dd} (want input, D >= 2)")
+    land_roots = {port_root[b] for x in land if x in T.ports for b in _bits_of(T, x)}
+    out_port_roots = {port_root[b] for x in T.ports if T.dirs.get(x) == "output" for b in _bits_of(T, x)}
+    lmemo = {}
+
+    def _single_drv(net):
+        return drv[net][0] if len(drv[net]) == 1 else None
+
+    def _leaves(net):
+        """cone leaves of net back through single-driver combinational std cells (stop at flops, ports, consts,
+        macros, undriven/multi-driven nets)."""
+        if net in lmemo:
+            return lmemo[net]
+        d = _single_drv(net)
+        if net.startswith("CONST_") or net in roots_ports or d is None:
+            lmemo[net] = frozenset([net])
+            return lmemo[net]
+        m, _, pp = F.cells[d[0]]
+        if is_ff(m) or not _std_cell(m):
+            lmemo[net] = frozenset([net])
+            return lmemo[net]
+        lmemo[net] = frozenset()                 # combinational loop guard
+        acc = set()
+        for k, (dd_, v) in pp.items():
+            if dd_ == "in" and v:
+                acc |= _leaves(F.find(v[0]))
+        lmemo[net] = frozenset(acc)
+        return lmemo[net]
+
+    def _ev(net, asg, memo):
+        if net in asg:
+            return asg[net]
+        if net == "CONST_1":
+            return True
+        if net == "CONST_0":
+            return False
+        if net in memo:
+            return memo[net]
+        ci = _single_drv(net)[0]
+        m, _, pp = F.cells[ci]
+        memo[net] = cell_fn(m, {k: _ev(F.find(v[0]), asg, memo) for k, (dd_, v) in pp.items() if dd_ == "in" and v})
+        return memo[net]
+
+    def _depth(src, dst, memo):
+        if dst == src:
+            return 0
+        if dst in memo:
+            return memo[dst]
+        d = _single_drv(dst)
+        memo[dst] = -1
+        if d is None or dst in roots_ports or is_ff(F.cells[d[0]][0]) or not _std_cell(F.cells[d[0]][0]):
+            return -1
+        best = -1
+        for k, (dd_, v) in F.cells[d[0]][2].items():
+            if dd_ == "in" and v:
+                x = _depth(src, F.find(v[0]), memo)
+                if x >= 0:
+                    best = max(best, x + 1)
+        memo[dst] = best
+        return best
+
+    def _fwd(ci, seen, out):
+        """sinks reachable from cell ci's output through combinational std cells"""
+        m, path, pp = F.cells[ci]
+        for k, (dd_, v) in pp.items():
+            if dd_ != "out" or not v:
+                continue
+            n = F.find(v[0])
+            if n in out_port_roots or (n in roots_ports and n not in out_port_roots):
+                out.append(("port", n))
+            for cj, pin in loads[n]:
+                if (cj, pin) in seen:
+                    continue
+                seen.add((cj, pin))
+                mj = F.cells[cj][0]
+                if is_ff(mj):
+                    out.append(("ff_D" if pin == "D" else f"ff_{pin}", cj))
+                elif not _std_cell(mj):
+                    out.append(("macro", cj))
+                else:
+                    _fwd(cj, seen, out)
+
+    def land_mux(b, r, D):
+        """(None, flops, depths) = OK, else (failure text, [], [])."""
+        ld = loads[r]
+        if len(ld) != D:
+            return f"{len(ld)} loads on {r}, declared D {D}", [], []
+        if drv[r]:
+            return f"landing bit net also driven by {F.cells[drv[r][0][0]][1]}", [], []
+        ffs, per = [], []
+        for ci, pin in ld:
+            m, path, pp = F.cells[ci]
+            if is_ff(m):
+                sinks = [("ff_D" if pin == "D" else f"ff_{pin}", ci)]
+            elif not _std_cell(m):
+                return f"load {m} {path} is a macro pin", [], []
+            else:
+                sinks = []
+                _fwd(ci, {(ci, pin)}, sinks)
+            bad = sorted({k for k, _ in sinks if k != "ff_D"})
+            fl = sorted({c for k, c in sinks if k == "ff_D"})
+            if bad or len(fl) != 1:
+                return f"load {path} reaches {bad or ''} {len(fl)} slot flop(s) (want exactly one flop D)", [], []
+            ffs.append(fl[0])
+        if len(set(ffs)) != D:
+            return f"{len(set(ffs))} distinct slot flops for {D} loads", [], []
+        clks, depths = set(), []
+        for fi in ffs:
+            m, path, pp = F.cells[fi]
+            ck = [v for k, (dd_, v) in pp.items() if k in ("CLK", "C", "CK") and len(v) == 1]
+            dn = [v for k, (dd_, v) in pp.items() if k == "D" and len(v) == 1]
+            st = [(k, F.find(v[0])) for k, (dd_, v) in pp.items() if k in ("Q", "QN") and v]
+            if len(ck) != 1 or len(dn) != 1:
+                return f"slot flop {path} clock/D pin not found", [], []
+            if len(st) != 1:
+                return f"slot flop {path} has {len(st)} connected Q/QN (want one own state)", [], []
+            clks.add(F.find(ck[0][0]))
+            dnet = F.find(dn[0][0])
+            L = _leaves(dnet)
+            sp, sn = st[0]
+            if r not in L:
+                return f"slot flop {path} D cone does not contain the bit", [], []
+            if sn not in L:
+                return f"slot flop {path}: own {sp} not in its D cone (no hold feedback)", [], []
+            ctl = sorted(x for x in L if x not in (r, sn) and not x.startswith("CONST_"))
+            for x in ctl:
+                if x in land_roots:
+                    return f"slot flop {path} write condition uses landing bit {roots_ports[x][0]}", [], []
+                d = _single_drv(x)
+                if x not in roots_ports and (d is None or not is_ff(F.cells[d[0]][0])):
+                    return f"slot flop {path} control leaf {x} is not a flop output or port", [], []
+            if len(ctl) > 14:
+                return f"slot flop {path}: {len(ctl)} control leaves (too wide to prove)", [], []
+            W = set()
+            for vals in itertools.product((False, True), repeat=len(ctl)):
+                a0 = dict(zip(ctl, vals))
+                res_ = []
+                try:
+                    for bv in (False, True):
+                        for sv in (False, True):
+                            a = dict(a0)
+                            a[r], a[sn] = bv, sv
+                            res_.append((bv, (not sv) if sp == "QN" else sv, _ev(dnet, a, {})))
+                except KeyError as e:
+                    return f"slot flop {path} D cone: {e.args[0]}", [], []
+                if all(dv == bv for bv, s_, dv in res_):
+                    W.add(vals)
+                elif not all(dv == s_ for bv, s_, dv in res_):
+                    return f"slot flop {path}: D is neither the bit nor its own state at {a0}", [], []
+            if not W:
+                return f"slot flop {path} is never written", [], []
+            per.append((ctl, W))
+            depths.append(_depth(r, dnet, {}))
+        if len(clks) != 1:
+            return f"slot flops on {len(clks)} clock nets (want one forwarded clock)", [], []
+        allc = sorted({x for c, _ in per for x in c})
+        if len(allc) > 16:
+            return f"{len(allc)} union control leaves (too wide to prove exclusivity)", [], []
+        for vals in itertools.product((False, True), repeat=len(allc)):
+            a = dict(zip(allc, vals))
+            if sum(1 for c, Wk in per if tuple(a[x] for x in c) in Wk) > 1:
+                return f"write conditions not mutually exclusive at {a}", [], []
+        return None, ffs, depths
 
     def land_slot(b, r, D):
         """None = OK (the D slot flops), else the failure text."""
@@ -530,11 +782,49 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
             return f"slot ICGs gated from {len(roots)} clock nets (want one forwarded clock)"
         return None
 
+    res["clock_exports"] = {}
+    exp_names = set()
+    for t_, s_ in (exports or ()):               # a declared forwarded clock output: buffers only from its source port
+        exp_names.add(t_)
+        if T.dirs.get(t_) != "output" or len(_bits_of(T, t_)) != 1 or T.dirs.get(s_) != "input" or \
+                not re.match(skip_re, s_) or len(_bits_of(T, s_)) != 1:
+            fail("clock_export", t_, f"export {t_} ({T.dirs.get(t_)}) from {s_} ({T.dirs.get(s_)}): want a 1-bit output "
+                                     f"from a 1-bit clock input port")
+            continue
+        cur, inv, why, seen = port_root[_bits_of(T, t_)[0]], 0, None, set()
+        src_r = port_root[_bits_of(T, s_)[0]]
+        first = True
+        while cur != src_r:
+            if not first and cur in roots_ports:
+                why = f"wired from port {roots_ports[cur][0]}, contract source {s_}"
+                break
+            if cur in seen or len(drv[cur]) != 1 or len(loads[cur]) != (0 if first else 1) or \
+                    len(roots_ports.get(cur, [])) != (1 if first else 0):
+                why = f"net {cur}: {len(drv[cur])} driver(s), {len(loads[cur])} load(s), ports {roots_ports.get(cur, [])[:3]}"
+                break
+            seen.add(cur)
+            first = False
+            ci, _ = drv[cur][0]
+            m, path, pp = F.cells[ci]
+            ins = [v for k, (dd, v) in pp.items() if dd == "in"]
+            if not is_buf(m) or len(ins) != 1 or len(ins[0]) != 1:
+                why = f"driven by {m} {path} (want buffers/inverters only)"
+                break
+            inv += m.upper().startswith(("INV", "$_NOT_"))
+            cur = F.find(ins[0][0])
+        if why is None and first:
+            why = f"{t_} is the same net as {s_} (no driver)"
+        if why is None and inv % 2:
+            why = f"odd inversion count {inv}"
+        if why:
+            fail("clock_export", t_, why)
+        else:
+            res["clock_exports"][t_] = s_
     for x in (straps or ()):                     # an exempt strap must be an input port of this block (rule 1)
         if T.dirs.get(x) != "input":
             fail("strap", x, f"declared ID strap is not an input port ({T.dirs.get(x)})")
     for p in T.ports:
-        if re.match(skip_re, p):
+        if re.match(skip_re, p) or p in exp_names:
             continue
         d = T.dirs.get(p)
         for b in _bits_of(T, p):
@@ -595,6 +885,21 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                         break
                 if not ok:
                     continue
+            elif p in land and land_form[p] == "hold_mux":
+                why, mffs, dep = land_mux(b, r, int(land[p]))
+                if why:
+                    fail("land_slot", b, why)
+                    continue
+                for ci in mffs:
+                    claimed[ci].append(b)
+                for x in dep:
+                    h = res.setdefault("land_mux_depth", {})
+                    h[str(x)] = h.get(str(x), 0) + 1
+                res["flops"][b] = F.cells[mffs[0]][1]
+                res["land_slot_bits"] = res.get("land_slot_bits", 0) + 1
+                res["land_mux_bits"] = res.get("land_mux_bits", 0) + 1
+                res["ok"] += 1
+                continue
             elif p in land:
                 why = land_slot(b, r, int(land[p]))
                 if why:
@@ -717,7 +1022,8 @@ def main(argv=None):
     ap.add_argument("--straps", help="kit straps.json (default: beside --pins): declared ID straps, exempt")
     ap.add_argument("--budget-dir", help="kit dir with budget.json (default: beside --pins): declared bump_ports")
     ap.add_argument("--sdc", help="kit constraint.sdc (default: beside --pins): create_clock ports are clock pins")
-    ap.add_argument("--land", help="kit land_slots.json (default: beside --pins): declared landing-ring buses {bus: D}")
+    ap.add_argument("--land", help="kit land_slots.json (default: beside --pins): declared landing-ring buses "
+                                   "{bus: D} (ICG form) or {bus: {D, form: hold_mux}}")
     a = ap.parse_args(argv)
     stf = a.straps or (str(Path(a.pins).parent) if a.pins else None)
     sl = kit_strap_list(Path(stf).parent if stf.endswith(".json") else stf) if stf else []
@@ -728,10 +1034,11 @@ def main(argv=None):
     bl = kit_bump_list(bd) if bd else []
     sdc = a.sdc or (str(Path(a.pins).with_name("constraint.sdc")) if a.pins else None)
     ck = sdc_clock_ports(Path(sdc).read_text()) if sdc and Path(sdc).exists() else []
+    ex = sdc_clock_exports(Path(sdc).read_text()) if sdc and Path(sdc).exists() else []
     lf = a.land or (str(Path(a.pins).with_name("land_slots.json")) if a.pins else None)
     land = kit_land(lf) if lf and Path(lf).exists() else None
     dl = kit_dead_list(Path(a.pins).parent) if a.pins else []
-    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl, bumps=bl, clocks=ck, land=land, dead=dl)
+    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl, bumps=bl, clocks=ck, land=land, dead=dl, exports=ex)
     r["netlist"] = a.netlist
     if a.out:
         Path(a.out).write_text(json.dumps(r, indent=1) + "\n")

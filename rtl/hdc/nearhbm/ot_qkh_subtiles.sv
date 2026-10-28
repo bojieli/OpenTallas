@@ -20,7 +20,13 @@ module ot_qkh_lane8 #(
     // e_in, q_valid_in, q_beat_in} (27 FF / lane; the hid / bsel straps stay one shared register, same D as the shared S3 flops, same edges, 0 added cycles) and
     // its own q0/q1 16-bit slice write enables, so each copy drives one lane (~17-34 loads).  The shared c3[3:1] still feeds
     // u_ctl.  S3_COPY = 0 (default) is the unchanged RTL (odd heads e1/e3/e5/e7 signed).
-    parameter integer S3_COPY = 0
+    parameter integer S3_COPY = 0,
+    // KV-KITS-8 10-28 (COORD ruling 06:26 on the KV-KITS-7 ASK): STRAP_DIRECT = 1 compares the beat column against the
+    // bsel strap PORT itself instead of the bs3 capture register.  bsel is an OWNER option-B ID strap (tied at the parent,
+    // false-pathed from the port), so bs3 had no timed fan-in: an unconstrained endpoint in every head kit (e1/e2/e5/e6)
+    // and the start of the e5 TT -1.78 ps path (bs3[1] fanout 119).  Static strap -> same value every edge after the first,
+    // 0 cycles, -2 FF.  STRAP_DIRECT = 0 (default) is the unchanged RTL (signed heads keep bs3).
+    parameter integer STRAP_DIRECT = 0
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -61,8 +67,9 @@ module ot_qkh_lane8 #(
     end
     // q rows of heads hid (q0) and 4 + hid (q1): beat 4 hid + t / 4, resp. 4 (4 + hid) + t / 4 (HD 128: 4 beats a row)
     reg  [127:0] q0, q1;
-    wire w0 = qv3 && (qb3 == {2'b00, hid3, bs3});
-    wire w1 = qv3 && (qb3 == {2'b01, hid3, bs3});
+    wire [1:0] bsq = (STRAP_DIRECT != 0) ? bsel : bs3;   // STRAP_DIRECT: the strap port (bs3 then unloaded, removed)
+    wire w0 = qv3 && (qb3 == {2'b00, hid3, bsq});
+    wire w1 = qv3 && (qb3 == {2'b01, hid3, bsq});
     always @(posedge clk) begin
         if (w0) q0 <= qd3;
         if (w1) q1 <= qd3;
@@ -118,8 +125,8 @@ module ot_qkh_lane8 #(
             always @(posedge clk) begin
                 cg3 <= c_in[0]; el3 <= e_in; qbl <= q_beat_in;
             end
-            wire lw0 = qvl && (qbl == {2'b00, hid3, bs3});
-            wire lw1 = qvl && (qbl == {2'b01, hid3, bs3});
+            wire lw0 = qvl && (qbl == {2'b00, hid3, bsq});
+            wire lw1 = qvl && (qbl == {2'b01, hid3, bsq});
             always @(posedge clk) begin
                 if (lw0) ql0 <= qd3[d * 16 +: 16];
                 if (lw1) ql1 <= qd3[d * 16 +: 16];
