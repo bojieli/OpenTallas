@@ -196,7 +196,7 @@ def test_die_sta_rechecks_start_ports_on_arrivals():
         DSR.CPPR_LCA = old
 
 
-def ctx_deep(depth=6, seg=130.0, feed=120.0, ocv_frac=0.15, fall=0.0):
+def ctx_deep(depth=6, seg=130.0, feed=120.0, ocv_frac=0.15, fall=0.0, extra=()):
     """region A (root h0, below the die root by a short feed) and region B fed THROUGH A's root (B root h02); each region
     has two taps `depth` levels of `seg` ps below its root (big-partition in-region insertion).
     fall (FLOW-ONEMODEL-1, as ctx_chain): MEASURED fall arrival = rise + fall ps at every tap and node; None = rise only."""
@@ -208,7 +208,9 @@ def ctx_deep(depth=6, seg=130.0, feed=120.0, ocv_frac=0.15, fall=0.0):
     node("h", 0.0, 0)
     node("h0", feed, 1)                       # A root
     node("h02", 2 * feed, 2)                  # B root, fed through A's root
-    for rp, part in (("h0", "A"), ("h02", "B")):
+    for rp, _ in extra:                       # more regions fed through A's root (multi-feed A)
+        node(rp, 2 * feed, 2)
+    for rp, part in (("h0", "A"), ("h02", "B")) + tuple(extra):
         for j in range(2):
             p = rp + str(j)
             node(p, nl[rp] + seg, ns[rp] + 1)
@@ -246,8 +248,9 @@ def test_retime_up_climbs_launch_region_to_fork():
     assert all(e["p_up_ps"] + e["p_dn_ps"] <= T / 2 - 2 * AP + 1e-9 for e in e1)
     la = ctx_deep()["TT"]["taps"]["t_A_0"]["tree_path"]             # A's launch leaf path
     up = [e for e in e1 if e["retime"] and e["launch"] == "t_A_0"]
-    assert len(up) == 1 and up[0]["dst"].startswith("st:")
-    assert la.startswith(up[0]["dst"][3:]) and len(up[0]["dst"][3:]) < len(la)   # climbs to an ancestor of the A leaf
+    assert len(up) == 1 and up[0]["dst"].startswith("st:") and up[0]["capture"].startswith("__st__")
+    upp = up[0]["capture"][6:]                                        # the up stage's tree node
+    assert la.startswith(upp) and len(upp) < len(la)                 # climbs to an ancestor of the A leaf
     assert all(e.get("fall_lo") is not None for e in e1)          # every stage judged on the MEASURED fall too
     assert 1 <= i1["retime_nodes"] <= 8
     # same answer as default when nothing needs to climb (phase rule on the chain fixture)
@@ -291,3 +294,28 @@ def test_retime_up_stage_interval_equals_gate_pair_interval():
         DSR.CPPR_LCA = old
     assert abs((up["d_ps"] - up["p_dn_ps"]) - r[0]) < 1e-6 and abs((up["d_ps"] + up["p_up_ps"]) - r[1]) < 1e-6
     assert abs(up["fall_lo"] - f[0]) < 1e-6 and abs(up["fall_hi"] - f[1]) < 1e-6
+
+
+def test_retime_up_multi_feed_region_one_tree():
+    """DIE-QC-13: region A feeds B, C and D through its root; every child climbs from the same A launch leaf to the same
+    ancestor.  The up stage is built ONCE and shared (no duplicate fork retime node), the start graph is one tree from
+    the root, and every port is clean."""
+    rows = [row(a + b, a, b, 0.0, 100.0, 100.0) for a, b in (("A", "B"), ("A", "C"), ("A", "D"))]
+    c = ctx_deep(extra=(("h03", "C"), ("h04", "D")))
+    r, e, _ = cap.clock_start_edges(rows, c, clean_by="width", retime_up=True)
+    up = [x for x in e if x["retime"] and x["src"] == "A"]
+    assert len(up) == 1                                                # one shared up stage, not one per child
+    dsts = [x["dst"] for x in e]
+    assert len(dsts) == len(set(dsts))                                 # each node has one parent
+    cap.start_tree_check(r, e)
+    s, _, _ = cap.plan(copy.deepcopy(rows), T, AP, 0.05, start_edges=e, start_root=r)
+    assert s["start_tree"]["start_fail"] == 0
+
+
+def test_start_tree_check_fails_closed():
+    """a duplicate node (two parents) or an unreached node raises: the plan never runs on a start graph that is not a tree"""
+    e = [dict(src="R", dst="st:x"), dict(src="R", dst="st:x")]
+    with pytest.raises(ValueError, match="not a tree"):
+        cap.start_tree_check("R", e)
+    with pytest.raises(ValueError, match="not reached"):
+        cap.start_tree_check("R", [dict(src="R", dst="A"), dict(src="Q", dst="B")])

@@ -731,6 +731,7 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
             del par_of[v], kids_of[v]
             contracted += 1
     pairs = [(x, y) for x in sorted(kids_of) for y in kids_of[x]]
+    up_made = {}
     for x, y in pairs:
         cap = capture_of(y)
         cpath = c0["taps"][cap]["tree_path"]
@@ -751,6 +752,7 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
                 if clean(rm):
                     best = (mp, rm)
                     break
+            up = False
             if best is None and retime_up:
                 lp = c0["taps"][lau]["tree_path"] if lau in c0["taps"] else path_of.get(src, "")
                 nlp = c0["meta"]["node_late_ps"]
@@ -760,27 +762,60 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
                         continue
                     rm = interval(lau, vtap(cs[0], mp))
                     if clean(rm):
-                        best = (mp, rm)
+                        best, up = (mp, rm), True
                         break
             if best is None:
                 break
             mp, rm = best
-            mid = f"st:{mp}"
+            # DIE-S81-13 / DIE-QC-13: an up stage sits on the LAUNCH side, where a branch node st:<mp> of the start tree
+            # (or another child's up stage) may already exist; it is its own flop, named by its launch tap (or by its
+            # start parent when that is itself a retime node), and a second
+            # child of the same region that climbs from the same launch tap to the same node REUSES it (one edge)
+            mid = f"st:{mp}@{src if lau.startswith('__st__') else lau}" if up else f"st:{mp}"
             path_of[mid] = mp
-            edges.append(dict(port=f"start:{src}->{mid}", src=src, dst=mid, launch=lau, capture=vtap(cs[0], mp),
-                              launch_part=part(lau), capture_part=None, retime=True, clean_ok=True, **rm))
+            if not (up and mid in up_made):
+                edges.append(dict(port=f"start:{src}->{mid}", src=src, dst=mid, launch=lau, capture=vtap(cs[0], mp),
+                                  launch_part=part(lau), capture_part=None, retime=True, clean_ok=True, **rm))
+                if up:
+                    up_made[mid] = src
+            elif up_made[mid] != src:
+                raise ValueError(f"--start-retime-up: up stage {mid} reached from {up_made[mid]} and {src}")
             chain.append(mid)
             src, lau = mid, vtap(cs[0], mp)
         edges.append(dict(port=f"start:{src}->{y}", src=src, dst=y, launch=lau, capture=cap, launch_part=part(lau),
                           capture_part=part(cap), retime=False, clean_ok=clean(r), **r))
     for e in edges:
         e["lo"], e["hi"] = e["d_ps"] - e["p_dn_ps"], e["d_ps"] + e["p_up_ps"]
+    start_tree_check(root, edges)
     info = dict(clean_by=clean_by, clean_by_width=sum(1 for e in edges if width_robust(e, T, ap)),
                 fall_measured=sum(1 for e in edges if e.get("fall_lo") is not None),
                 root=root, root_path=path_of[root], leg_ps={c: list(v) for c, v in leg.items()},
                 regions=len(regions), branch_nodes=sum(1 for p in allp if not at.get(p)), branch_nodes_contracted=contracted,
                 retime_nodes=sum(1 for e in edges if e["retime"]))
     return root, edges, info
+
+
+def start_tree_check(root, edges):
+    """fail closed unless the start edges form ONE tree from root: every node has exactly one incoming edge (the root
+    none) and every node is reached from the root (DIE-QC-13: duplicate retime nodes made '753 nodes not reached')"""
+    inc = defaultdict(list)
+    kids = defaultdict(list)
+    for e in edges:
+        inc[e["dst"]].append(e["src"])
+        kids[e["src"]].append(e["dst"])
+    dup = {v: u for v, u in inc.items() if len(u) > 1}
+    if root in inc:
+        dup[root] = inc[root]
+    seen, st = {root}, [root]
+    while st:
+        for k in kids[st.pop()]:
+            if k not in seen:
+                seen.add(k)
+                st.append(k)
+    lost = sorted((set(inc) | set(kids)) - seen)
+    if dup or lost:
+        raise ValueError(f"start tree is not a tree from {root}: {len(dup)} nodes with !=1 parent "
+                         f"(e.g. {list(dup.items())[:3]}), {len(lost)} not reached (e.g. {lost[:3]})")
 
 
 def mc_check(rows, out, regs, T=833.0, chips=2000, sync_ap=26.5, seed=1, start_skew=None):
