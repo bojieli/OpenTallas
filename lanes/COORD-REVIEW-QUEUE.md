@@ -2669,3 +2669,4 @@ LEC NOT EQUIVALENT: the kit stops (lec/lec.json)
   (5) The LEC add-on fe067d91e2 is APPROVED -> RM82 after the BZ0 200k bench passes. It must be checked against the R20/R21 cap_* recipes.
   (6) Census: vs 160 differs = the LEC-FPREG constant-0 class, routed to LEC-FPREG-7. l5/eg collects -> R26.
 - 10-27 18:23 [COORD] HBM-R16 4459ad13f (hard_cores schema overlay keys + tests; other dies byte-identical CHECKED) APPROVED -> ROOT-MERGE-82 (5b08762885 already in RM81).
+- 2026-10-27 18:25 PDT [HBM-R16] ASK: (a) die clock on C16r fails 52 plan errors (50 tree legs >480 um over hard cores without island sites) -> MASTER-PLAN/CLOCK-128 island-site delta before any clock-incl GRT; (b) tkm_idpin/split3_lane islands: approve die drop into each island (centre-fed misses 250: 290/388 TT pred UNCHECKED); (c) adopt C17g (6f226140b1f3, G0 PASS, away groups 147->50) as partial PLAN-DELTA? Details lanes/PATH-HBM.md HBM-R16.
