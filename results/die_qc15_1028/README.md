@@ -40,3 +40,55 @@ tools/die_plan/parent_trunk_dme.py (plan / corr / tcl) + parent_trunk_insert.tcl
 (`--entry`, `--pin-offset MODULE=dx,dy`, `--orient-rule`, fail closed without orientation / budgets / measured sinks).
 Byte identity with trunk2.py CHECKED on the real A0 nk inputs: plan q0 and corr q1, q2, q3, q4 and the tcl emit all
 `cmp`-identical. Nothing calls it by default (no existing file changed except the README section).
+
+## Task 3a: nl variant (same flow, shared tool end to end)
+nl/prep.sh: QC-A0-KITS-3 nl 3_place.odb (13,982 glue regs, 10 romleaf + 8 rawleaf, no node), 49 clusters <=160 um
+(clusters.py, kid orientation taken from the placed macros: MY/R0), TritonCTS local trees, clins from the cluster build,
+romleaf a0k5 pin by LEF/DEF round trip (pins CHECKED: MY x 173.652 / R0 x 284.268, y = y0 + 15.12). nl/step.sh: shared
+parent_trunk_dme plan (geometry orient, no --orient-rule) -> parent_trunk_insert.tcl -> clock GRT TT/FF -> evr; corr on
+ROUTED TT arrivals (q3/q4 with --damp 0.7: q1/q2 oscillated).
+
+| build | TT min-max (spread) | FF min-max (spread) | regs mean TT/FF | duty TT / FF | MPW | max clk slew |
+|---|---|---|---|---|---|---|
+| q0 plan (routed) | 758.9-837.4 (78.5) | 661.7-735.3 (73.6) | 790.8 / 690.6 | 48.5-50.5 / 47.9-50.1 | 0 | 224 / 229 |
+| q1 | 772.0-836.7 (64.7) | 671.7-736.7 (65.0) | 801.4 / 699.1 | | 0 | 211 / 214 |
+| q2 | 763.6-820.8 (57.1) | 662.2-718.8 (56.6) | 795.7 / 692.8 | | 0 | 138 / 140 |
+| **q3 (damp 0.7)** | **776.7-812.6 (35.9)** | **677.0-713.3 (36.3)** | **796.4 / 693.8** | 49.2-50.8 / 48.9-50.3 | **0** | **137 / 139** |
+| q4 (damp 0.7) | 777.1-812.3 (35.2) | 671.2-720.3 (49.1) | 792.3 / 688.4 | | 0 | 139 / 141 |
+
+- nl q3 meets the contract with ~24 ps margin: 191 INV, 12.87 mm, elongation 3431 um on 39 legs (2x nk: the nl
+  clusters are farther from the trunk merge points), 0 odd parity, 0 repeaters in macros, legalisation max 3.5 um,
+  GRT overflow 0. Render a0trunk_nl_q3.png VIEWED: PASS-COND. Repeaters sit in the 20 um romleaf row channels and at
+  the macro edges, but long elongated legs run OVER the W romleaf column on M5-M7 (x~153, y 130-1140) and over
+  the rawleaf macros. Same class as the nk centre-pin legs. GRT routes them with 0 overflow.
+- nl insertion (routed q3 regs mean): **796 TT / 694 FF**, ~60 TT / 55 FF above nk (736/639). Both variants are
+  balanced inside, but the die must tap nl and nk A0 centres early by different amounts. c_* uses per variant values.
+
+## Task 4: FF hold (intra -282 / seam -143), ESTIMATE only, nothing built
+hold/hold_est2.py on the DIE-QC-13 trial11 proof (tap_arrivals_FF) + the K2b plan.
+- The worst FF intra pairs (gate: -281.85, damage 250.43) are all in sl_*_su_c, between the prog early tap c4
+  (u_suvm_u_vm8q_u_pg) and the glue/common taps. c4 hangs about 219 ps early at FF BY DESIGN (CORELAT-SQ-1 early tap,
+  SIGNED prog 472.7 / 363.3).
+- The gate block model is declared-budget: 250 / 202.5 core latency on BOTH sides of every pair. So it counts the
+  early tap as skew and never adds the prog core's own +161 FF.
+- With the plan's own per-tap insertion (insertion_ff_ps = the signed views: prog 363.3, btab 295.2, crh 240.6), the
+  su_c intra damage falls from 219 (max) / 200 (median) to **91 / 66**.
+- The worst partition is then c_* (98.4, in-region tree). Estimated intra FF hold is ~ -144, scaled with the gate's
+  remainder of 31.4 ps. UNCHECKED.
+- Structural fix order:
+  - (1) Bind the signed core views (`--core-view`, existing gate input) for prog/btab/crh, or have the gate honour the
+    plan per-tap insertion. This is a gate input/model question, so it goes to COORD as an ASK. It is not a new rule.
+  - (2) c_*: the A0 centre entry (task 3b) replaces the c_* in-region taps for A0 by one early tap per A0 instance at
+    the routed nk/nl insertion. That removes most c_* intra pairs.
+  - (3) su_c residual 91: region DME balance of the c-taps against the t-taps in the plan.
+  - HB4 only as a ledgered residual after (1)-(3).
+- Seam -143 (damage 110.6, kit contract W 40) was not decomposed in this slice.
+- hold/hold_est.py (first try, nearest-tap core map) is kept as a NEGATIVE control: map_cores_to_taps maps cores by
+  distance, so it put prog on t4, not c4. The plan core tap order (c<k> = k-th core tap) is the right map.
+
+## Not done
+- c_* centre-entry die delta (3b): needs a die_trial re-plan of the c_* regions with one early A0 tap per instance
+  (nk 736/639, nl 796/694 routed). Not started.
+- Task 5 (CA/STA re-plan with clock_cell=inv2 declared): BLOCKED. Main 9644a2fed still lacks the CLK-INV-CAL-1 rework
+  (RM165) and region_stub (QC-13).
+- ICG enable RTL + gated bench + LEC (required before the trunk is adopted).
