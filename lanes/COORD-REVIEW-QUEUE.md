@@ -3692,3 +3692,4 @@ FAILED [AUTOPILOT 8552f2f36223] 2026-10-28 14:12:39 PDT AUTOPILOT -> KV-CORES: F
   (2) Intra hold uses a zero-logic data_min (+0.5 ps floor). Should real min data delay come from the core/partition views?
   (3) bk_sel early-tap over-hang is checked in go15 (merge mode).
   DEFAULT: S81 changes nothing (12.16). A FLOW-ONEMODEL/NUMBER-CHECK lane checks (1) with OpenSTA report_checks -path_delay min_max on one tap of s81g13 before any model change. (2) stays as is until COORD rules.
+- 2026-10-28 15:24 PDT [COORD] READY sweep closes: claude/die-s81-15-1028@d04bc5ca95 (results only; carried as the base of the approved join2 4d10067fe9, merges with it). claude/die-s81-8-1028@4a6a929415 and claude/die-s81-9-1028@4f2884cbd3 (06:30/06:45 ASKs): answered by the CA-OCV-1 ruling (07833e2f9) and later S81 lanes; CLOSED, not merged. DIE-S81-9's finding (S81 FF hold = kit tap window, die HB4 bound 24.7M cells) is forwarded to DIE-S81-16's hold diagnosis.
