@@ -457,3 +457,7 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
   d. The top-down lanes continue only until the landed form of the same die passes the gate (first to pass wins), then stop.
   e. The 10-29 12:00 trigger is no longer a decision point; it becomes a status check.
   f. Not taken: modelling a thick clock/PG layer ASAP7 lacks (would misstate the PDK); allowed only as a labelled what-if.
+  g. TERMINOLOGY (OWNER 10-27): "landed form" / "landed crossing" is the INTERNAL name for MESOCHRONOUS CLOCKING. All regions run at one
+     frequency from one source with unknown but bounded phase (|phase difference| < P/2), and every region crossing is a
+     FIXED-LATENCY MESOCHRONOUS SYNCHRONIZER (ot_dp_clk_landing ring, +K cycles, no handshake/credits). In the paper and in external
+     text, say "mesochronous regions with fixed-latency crossings"; never "GALS" or "async FIFO". Tool, lane and plan-field names keep "landed".
