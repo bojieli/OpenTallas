@@ -102,3 +102,20 @@
     - K2 gate form: 2531/2531 crossings timed, lag lo 121.7 TT / 116.8 FF, hi 179.9/182.4, slot 0, guard 0 fail. 3 unbound region pairs = exactly the 3 CA-FAIL pairs.
     - start-skew FAIL 34/312 TT, 21/312 FF (more tree ports are timed now).
   - NOW: COORD 04:0x merge of the 3 pairs (c_E4_tf_11->c_E4_tf_01, c_W0_bf_11->c_W0_bf_01, c_W0_tf_11->c_W0_tf_01; 310 regions). Plan, G0C, kit, clock-first GRT, CA and STA are running.
+- 2026-10-28 03:21 PDT DIE-QC-5 RESULT + PARKED claude/die-qc5-1028@4edf8acf6c (hub; results/die_qc5_1028/README.md). All OWN/UNCHECKED unless marked.
+  - COORD 04:0x merge K3 (3 FAIL pairs merged, 310 regions; plan 01799f1f6cc5): G0C PASS (0 errors / 164 warnings, render viewed). Clock-first GRT ov 0. It does NOT close:
+    - Intra skew 151.50 TT / 132.17 FF: FAIL. The c_W0_bf_01 region nominal spread is 153.8. Seam skew is 178.06 / 156.19.
+    - The CA plan still has 5 FAIL. The ambiguous start edge moves one hop: c_E4_tf_00->c_E4_tf_10, c_W0_bf_00->c_W0_bf_10, c_W0_tf_00->c_W0_tf_10, plus a new c_W0_bn_11->c_W0_bn_01.
+    - start-skew 34/309 TT, 20/309 FF. TT setup +438.12. FF hold -195.83.
+    - K2 stays the QC base.
+  - FREEZE GATE on K2 (fixed tools, event plan, --clock-cal spice, --count-align-key region): FAIL.
+    - GRT0 incl clock: PASS (CHECKED).
+    - In-region skew 135.39/117.43: PASS (CHECKED).
+    - TT setup +475.43: PASS (CHECKED).
+    - FF hold -162.18: FAIL (structural, see the NUMBER-CHECK line).
+    - CA lag >=100 (121.7/116.8 over 2528 bound crossings): PASS. But 3 region pairs are unbound (the 6 ports) and start-skew fails 34/312 TT, 21/312 FF: FAIL.
+  - NEXT:
+    - (a) MESO-START-2 PAD+1 lands -> re-run scripts/runCA.sh K2 with --count-align-key region.
+    - (b) For the 3 unbound pairs, the remaining route is the old-ring bind (92-94 ps at x1.00, under 100) or a different start edge, not a merge.
+    - (c) FF hold needs a real-view die STA: QC A0/NL ETM views via --core-view. Main has no QC ETM view; the hold structure is OCV + the zero-delay model, not skew.
+  - No live jobs. The data stays on epyc2.
