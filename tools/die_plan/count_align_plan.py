@@ -182,7 +182,7 @@ def directed_tree(rows, regions):
 
 
 def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edge_pad=None, start_skew=(0.0, 0.0),
-         skew_clean=False, _pad_pass=False, tree_parent=None, start_edges=None, start_root=None):
+         skew_clean=False, _pad_pass=False, tree_parent=None, max_depth=8, start_edges=None, start_root=None):
     """edge_pad {tree port or child region: PAD}: per-start-tree-edge PAD overriding the default `pad` (MESO-RECONCILE-1,
     COORD 10-27).  An edge PAD p_e >= pad delays the child's origin by p_e - pad counts and HOLDS the tree crossing's RTL K
     at its default-PAD value, so that crossing's lag (and latency) grow by (p_e - pad) T; every other crossing's K is
@@ -197,10 +197,15 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
     tree_parent {child region: port} (MESO-START-2, COORD 03:4x, opt-in): re-parent the child (with its subtree) onto
     the given crossing (src -> child) after the min-ambiguity tree is built, so a region pair that has no bound crossing
     gets its crossing as the start edge itself (no path ambiguity); refused if the src lies in the child's subtree.
+    max_depth (DIE-S81-11, METHODOLOGY 12.16 b(iii), opt-in): largest standard ring DEPTH, 8 (default, unchanged) or 16
+    (RTL proof: results/die_s81_11_1028/D16.md, ot_dp_clk_landing_ca lag sweep [0.5, 15.5] T, mutants caught); a
+    crossing takes the smallest of 4 / 8 / 16 whose window holds L_hi with ap (16 only when max_depth = 16).
     start_edges / start_root (START-TREE-1, METHODOLOGY 12.16b(iv)/12.16e, opt-in --start-tree clock): the start tree is
     given (clock_start_edges: the clock tree's own region/branch nodes, one dedicated start port per edge) instead of
     the min-ambiguity tree over data crossings; every data crossing is then 'nontree' and its origin difference is
     summed over the start ports on the clock-tree path between its two regions.  None (default): unchanged."""
+    if max_depth not in (8, 16):
+        raise ValueError(f"max_depth {max_depth}: standard ring depths are 8 or 16")
     if start_edges is not None:
         if tree_parent:
             raise ValueError("tree_parent does not apply with a given start tree (--start-tree clock)")
@@ -212,7 +217,8 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
         need = 100.0 + smax
         args = (T, ap, wander_frac, sync_ap, pad)
         kw = dict(start_edges=start_edges, start_root=start_root)
-        s0, out0, regs0 = plan([dict(r) for r in rows], *args, edge_pad, start_skew, True, True, tree_parent, **kw)
+        s0, out0, regs0 = plan([dict(r) for r in rows], *args, edge_pad, start_skew, True, True, tree_parent, max_depth,
+                               **kw)
         byp = {o["port"]: o for o in out0}
         ep = dict(edge_pad or {})
         add = {}
@@ -226,8 +232,9 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
             if o.get("depth") and o["margin_lo_ps"] < need:
                 ep.pop(e["port"], None)
                 ep[g["region"]] = add[g["region"]] = int(e["rtl"]["PAD"]) + 1
-        summ, out, regs = plan(rows, *args, ep, start_skew, True, True, tree_parent, **kw)
-        sn, outn, _ = plan([dict(r) for r in rows], *args, edge_pad, start_skew, tree_parent=tree_parent, **kw)
+        summ, out, regs = plan(rows, *args, ep, start_skew, True, True, tree_parent, max_depth, **kw)
+        sn, outn, _ = plan([dict(r) for r in rows], *args, edge_pad, start_skew, tree_parent=tree_parent,
+                           max_depth=max_depth, **kw)
 
         def lat(xs):
             return sum(o["lat_cycles"] for o in xs if o.get("lat_cycles") is not None)
@@ -374,7 +381,7 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
         k_eff = math.ceil((lo_win - rel_lo) / T - 1e-12) + (pe(child) - pad if child is not None else 0)
         L_lo, L_hi = k_eff * T + rel_lo, k_eff * T + rel_hi
         nh = max(ap, 100.0 + smax) if (skew_clean and kind == "tree_ambiguous") else ap
-        dep = 4 if L_hi <= 3.5 * T - nh + 1e-9 else (8 if L_hi <= 7.5 * T - nh + 1e-9 else None)
+        dep = next((dd for dd in (4, 8, 16) if dd <= max_depth and L_hi <= (dd - 0.5) * T - nh + 1e-9), None)
         old_vals = interval_boundaries(r["lo"], r["hi"], T, T / 2) + 1
         out.append(dict(port=r["port"], src=u, dst=v, kind=kind, d_ps=r["d_ps"], p_up_ps=r["p_up_ps"],
                         p_dn_ps=r["p_dn_ps"], wander_ps=round(w, 1), path_ambiguous_cycles=amb[1] - amb[0],
@@ -434,7 +441,8 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
                     (g["start_from"]["sync_dist_ps"] for g in regs if g["start_from"] and g["start_from"]["sync_values"] == 1),
                     default=None),
                 crossings=len(out), depth4=sum(1 for o in ok if o["depth"] == 4),
-                depth8=sum(1 for o in ok if o["depth"] == 8), fail=len(out) - len(ok),
+                depth8=sum(1 for o in ok if o["depth"] == 8), depth16=sum(1 for o in ok if o["depth"] == 16),
+                max_depth=max_depth, fail=len(out) - len(ok),
                 max_path_ambiguous_cycles=max((o.get("path_ambiguous_cycles", 0) for o in out), default=0),
                 worst_margin_lo_ps=min((o["margin_lo_ps"] for o in ok), default=None),
                 worst_margin_lo_port=min(ok, key=lambda o: o["margin_lo_ps"])["port"] if ok else None,
@@ -897,6 +905,8 @@ def main(argv=None):
                     help="as die_sta_related --clock-cal (12.15b gate: spice)")
     ap.add_argument("--sta-cppr-lca", action="store_true", help="as die_sta_related --cppr-lca")
     add_sta_ocv_args(ap)
+    ap.add_argument("--max-depth", type=int, choices=(8, 16), default=8,
+                    help="DIE-S81-11 / 12.16 b(iii) opt-in: largest standard ring DEPTH (16 needs its RTL proof; default 8)")
     add_start_tree_args(ap)
     ap.add_argument("--mc-chips", type=int, default=0)
     ap.add_argument("--out")
@@ -924,7 +934,7 @@ def main(argv=None):
     skw = dict(start_edges=sedges, start_root=sroot) if sedges is not None else {}
     summ, out, regs = plan(rows, a.period, a.aperture, a.wander_frac, a.sync_aperture, a.pad, parse_edge_pad(a.edge_pad),
                            a.start_skew, a.start_skew_clean, tree_parent=parse_edge_pad(a.tree_parent, str) or None,
-                           **skw)
+                           max_depth=a.max_depth, **skw)
     if sinfo:
         summ["start_tree"].update(sinfo)
     if a.tree_parent:

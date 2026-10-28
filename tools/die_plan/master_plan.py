@@ -1092,11 +1092,25 @@ def size_driver(length_um, sinks, sink_cin_ff=2.0):
 FT_PIN_DX_UM = 2.16
 
 
-def pushdown_island(k, rect, centre, role, drive_len_um, sinks, pin_dx_um=FT_PIN_DX_UM):
+def pushdown_island(k, rect, centre, role, drive_len_um, sinks, pin_dx_um=FT_PIN_DX_UM, driver_rect=None):
     """12.2a1 pushdown spec of one in-core island: ft ports (in from the M9->M5 stack, out to the die mesh/tree or
-    the core-internal tree), fixed driver cells at the island centre, sizing per 12.8 d1."""
+    the core-internal tree), fixed driver cells at the island centre, sizing per 12.8 d1.
+
+    driver_rect (opt-in, HBM-CORES-REBAL-5 / COORD 10-28 07:23 (1)): where the island centre lies over a core SRAM
+    array, the plan names a legal site in the nearest macro channel; the driver cells sit at ITS centre while the ft
+    pins and the M9->M5 drop stay at the island centre (M5 is free over the SRAM: its OBS is M1-M4), so no die tap
+    moves.  The pin -> driver -> pin detour (2 x Manhattan) is added to the sized drive length.  None = byte-identical."""
     cx, cy = centre
-    return dict(name=f"isl{k}", role=role, rect_um=rect, centre_um=[r3(cx), r3(cy)], via_stack=["M9", "M5"],
+    extra = {}
+    if driver_rect is not None:
+        dr = [float(v) for v in driver_rect]
+        if len(dr) != 4 or not (dr[2] > dr[0] and dr[3] > dr[1]):
+            raise ValueError(f"isl{k}: driver_rect must be [x0, y0, x1, y1], got {driver_rect!r}")
+        dx, dy = (dr[0] + dr[2]) / 2, (dr[1] + dr[3]) / 2
+        detour = 2 * (abs(dx - cx) + abs(dy - cy))
+        drive_len_um = drive_len_um + detour
+        extra = dict(driver_rect_um=[r3(v) for v in dr], driver_detour_um=r3(detour))
+    d = dict(name=f"isl{k}", role=role, rect_um=rect, centre_um=[r3(cx), r3(cy)], via_stack=["M9", "M5"],
                 ft_ports=[dict(name=f"mp_isl{k}_ck_i", dir="in", layer="M5", xy_um=[r3(cx - pin_dx_um), r3(cy + 2.16)],
                                connect="die M9 clock stack (M9->M5 at the island centre)"),
                           dict(name=f"mp_isl{k}_ck_o", dir="out", layer="M5", xy_um=[r3(cx + pin_dx_um), r3(cy + 2.16)],
@@ -1108,6 +1122,10 @@ def pushdown_island(k, rect, centre, role, drive_len_um, sinks, pin_dx_um=FT_PIN
                 driver=dict(size_driver(drive_len_um, sinks), placement="fixed dont_touch at centre_um",
                             basis="12.8 d1: plan geometry only (driven length %.1f um, %d sinks)" % (drive_len_um, sinks)),
                 lec="die-owned feed-through: no core logic on mp_isl* ports (12.2a1)")
+    if extra:
+        d["driver"]["placement"] = "fixed dont_touch at the driver_rect_um centre (nearest macro channel); ft pins at centre_um"
+        d.update(extra)
+    return d
 
 
 def rect_overlap(a, b, eps=1e-6):
@@ -2546,7 +2564,7 @@ def write_slices(P, d, bays, pins, roads, islands, entry, core_types, in_core, g
                               max(1, len(leaves)))]
         for i, q in enumerate(leaves):
             pd.append(pushdown_island(i + 1, q["rect_um"], q["centre_um"], "tree_leaf",
-                                      sub.get("leaf_reach_um", 0.0), 0))
+                                      sub.get("leaf_reach_um", 0.0), 0, driver_rect=q.get("driver_rect_um")))
         sl["pushdown"] = dict(rule="12.2a1: island drivers are core-netlist cells at these fixed coordinates, "
                                    "identical for every instance; die connects only via the mp_isl* ft ports",
                               islands=pd)

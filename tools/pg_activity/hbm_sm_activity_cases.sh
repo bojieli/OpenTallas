@@ -6,6 +6,8 @@
 #   caseK/       : +C0=K +C1=K+1 +DUMP, window = record issue .. min(retire, DUMPMAX) cycles -> act_SM.txt, VCD deleted
 #   act/         : act_SM_mean.txt (cycle-weighted all cases), act_SM_peak.txt (largest summed rate case), cases.json
 #   hbm_sm_activity_cases.sh OUTDIR   (cwd = repo root, Verilator 5.050)   env: DUMPMAX (4000) P (parallel cases, 14)
+#   HUB=1 (PG-CORECONN-3): the case window also traces the hub (+HUB): act_HUB_<u>.txt per top-level tb instance u_*
+#         beside act_SM.txt, merged to act/HUB_<u>/ (same cycle weighting). Default HUB=0 = unchanged.
 set -eu
 O=$(realpath -m "${1:?outdir}"); mkdir -p "$O"; T=$(dirname "$(realpath "$0")")
 VL=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator
@@ -25,9 +27,11 @@ B="$O/obj/Vtb_hgi_sm_e2e"
 FULL=$!
 run_case() {
   c=$1; d="$O/case$c"; mkdir -p "$d"
-  "$B" +DIR="$O/vec" +C0=$c +C1=$((c+1)) +DUMP +DUMPMAX=${DUMPMAX:-4000} +VCD="$d/sm.vcd" > "$d/run.log" 2>&1 || echo "SIM_EXIT $?" >> "$d/run.log"
+  hp=""; [ "${HUB:-0}" = 1 ] && hp=+HUB
+  "$B" +DIR="$O/vec" +C0=$c +C1=$((c+1)) +DUMP $hp +DUMPMAX=${DUMPMAX:-4000} +VCD="$d/sm.vcd" > "$d/run.log" 2>&1 || echo "SIM_EXIT $?" >> "$d/run.log"
   grep -q DUMP_OFF "$d/run.log" || { echo "case $c NO DUMP_OFF"; return 1; }
-  python3 "$T/vcd_activity.py" "$d/sm.vcd" "$d" --clk 'tb_hgi_sm_e2e.g_sm[0].u_sm.clk' --root 'SM=tb_hgi_sm_e2e.g_sm[0].u_sm' > "$d/act.log" 2>&1
+  hr=""; [ "${HUB:-0}" = 1 ] && hr=$(python3 "$T/vcd_activity.py" "$d/sm.vcd" "$d" --clk 'tb_hgi_sm_e2e.clk' --list-scopes '^tb_hgi_sm_e2e\.u_[A-Za-z0-9_]+$' | sed 's/^tb_hgi_sm_e2e\.\(.*\)$/--root HUB_\1=tb_hgi_sm_e2e.\1/')
+  python3 "$T/vcd_activity.py" "$d/sm.vcd" "$d" --clk 'tb_hgi_sm_e2e.g_sm[0].u_sm.clk' --root 'SM=tb_hgi_sm_e2e.g_sm[0].u_sm' $hr > "$d/act.log" 2>&1
   ls -la "$d/sm.vcd" >> "$d/act.log"; rm -f "$d/sm.vcd"; echo "case $c $(grep DUMP_OFF "$d/run.log") $(grep -m1 '^SM ' "$d/act.log")"
 }
 pids=(); for c in $(seq 0 $((N-1))); do
@@ -37,5 +41,7 @@ done
 rc=0; for p in "${pids[@]}"; do wait $p || rc=1; done
 wait $FULL; command tail -n 3 "$O/run_full.log"
 python3 "$T/act_merge.py" "$O/act" $(for c in $(seq 0 $((N-1))); do echo "$O/case$c"; done)
+if [ "${HUB:-0}" = 1 ]; then for f in "$O/case0"/act_HUB_*.txt; do u=$(basename "$f" .txt); u=${u#act_}
+  ACT_TAG=$u python3 "$T/act_merge.py" "$O/act/$u" $(for c in $(seq 0 $((N-1))); do echo "$O/case$c"; done); done; fi
 grep -a -q "HGI_SM_E2E PASS" "$O/run_full.log" || { echo "FULL BENCH NOT PASS"; rc=2; }
 echo "ALL_DONE rc=$rc $(date -Is)"; exit $rc

@@ -3819,8 +3819,8 @@ def cmd_bind(a):
                                                            note="per crossing bus: as-built stages (relays / landings "
                                                                 "removed) vs bound stages (2 boundary flops)",
                                                            buses=lat, landing_pads=B.land_pads,
-                                                           **({"reset": json.loads((out / "bind_reset.json").read_text())}
-                                                              if B.wavefront_plan() is not None else {})), indent=1))
+                                                           **_reset_latency_meta(out, B.wavefront_plan() is not None)),
+                                    indent=1))
     pr = rep["proof"]
     print(json.dumps(dict(partitions=rep["partitions"], types=len(rep["types"]), crossings=rep["crossings"],
                           crossing_bits=rep["crossing_bits"], errors=rep["n_errors"], **pr)))
@@ -4404,6 +4404,18 @@ def lane_pad(L):
     if L.get("spine") or not L.get("lane") or "cycles" not in L:
         return 0
     return max(0, int(L["cycles"]) - 2 - sum(h["stations"] for h in L.get("ft", [])) - int(L.get("internal_source_cycles", 0)) - int(L.get("clock_landing_cycles", 0)))
+
+
+def _reset_latency_meta(out, wavefront):
+    """-> {"reset": ...} for bind_latency.json.  The wavefront reset plan is written to OUT/bind_reset.json by the
+    RTL generation step; a bind that fails closed before that step (e.g. an empty as-built map) has no such file, and
+    the latency report must record that instead of crashing on the error path (DIE-HBM-6b strict bind, 290 errors)."""
+    if not wavefront:
+        return {}
+    f = Path(out) / "bind_reset.json"
+    if not f.exists():
+        return {"reset": {"missing": "bind_reset.json not written: RTL generation did not run (see bind errors)"}}
+    return {"reset": json.loads(f.read_text())}
 
 
 def _desc_json(B, d, ci_part=None):
