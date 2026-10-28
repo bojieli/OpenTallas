@@ -192,9 +192,13 @@ def _bind_any(completed, kit_source, root, repo, run_git, seed, watch, spec, ref
     erase an older measured regression; source changes are advisory until tested.
     Corrective annotations cannot override a regression of the same flow.
     """
+    unavailable = []
     for r in reversed(completed):
         changed = _flow_diff(run_git, repo, r['src'], kit_source, watch, spec, ref_die)
-        if changed is None or changed:
+        if changed is None:
+            unavailable.append(r['ref'])
+            continue
+        if changed:
             continue
         rv, rwhy = regression(r, root, repo, seed)
         if rv in RELEASE:
@@ -203,6 +207,8 @@ def _bind_any(completed, kit_source, root, repo, run_git, seed, watch, spec, ref
             return False, 'matching canary evaluation error: ' + rwhy
         if rv == 'REGRESSION':
             return False, ('matching reference canary REGRESSION: ' + r['ref'] + ' (' + rwhy[:300] + ')')
+    if unavailable:
+        return False, 'source integrity error: cannot compare kit flow with canary ' + unavailable[0]
     return True, 'background canary advisory: no measured regression of this kit flow'
 
 

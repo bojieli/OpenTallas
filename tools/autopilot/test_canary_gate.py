@@ -125,6 +125,13 @@ class Gate(unittest.TestCase):
             self.git=lambda *a,**kw:(0,'tools/die_plan/gen_phys.py\n','')
             self.assertTrue(self.gate()) # changed flow has no measured regression yet
 
+    def test_git_comparison_error_is_not_an_unmeasured_flow(self):
+        self.runref('ref','FAIL')
+        self.git=lambda *a,**k:(128,'','missing source object')
+        ok,why=assess(self.row,self.root,self.repo,self.git)
+        self.assertFalse(ok)
+        self.assertIn('source integrity error',why)
+
     def test_existing_adoption_observation_unblocked(self):
         self.row['mode']='adopt'
         self.assertTrue(self.gate())
