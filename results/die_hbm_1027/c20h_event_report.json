@@ -1,9 +1,30 @@
 {
- "event": "C20g L96 station",
+ "event": "C20h L96 station + latency",
  "base": "c20f",
- "sha": "1b6170a09617d073859b29d373a9144aff8f00e47be225db6591727f298a3fa5",
+ "sha": "2e5644cf5f65bbd2274a434d48e863211782be6a9088b44fdca44bbfd81052d1",
  "edits": [
   {
+   "lane": "L96",
+   "latency_before": {
+    "cycles": 11,
+    "stations": 9,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 11,
+    "pad": 0,
+    "param": "LAT_L96"
+   },
+   "latency_after": {
+    "cycles": 12,
+    "stations": 10,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 12,
+    "pad": 0,
+    "param": "LAT_L96"
+   },
    "slot": "L96x1",
    "inserted_at": 1,
    "reg": [
@@ -98,6 +119,27 @@
    ]
   },
   {
+   "lane": "L96m",
+   "latency_before": {
+    "cycles": 11,
+    "stations": 9,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 11,
+    "pad": 0,
+    "param": "LAT_L96M"
+   },
+   "latency_after": {
+    "cycles": 12,
+    "stations": 10,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 12,
+    "pad": 0,
+    "param": "LAT_L96M"
+   },
    "slot": "L96mx1",
    "inserted_at": 9,
    "reg": [
