@@ -861,3 +861,8 @@ Resumed exclusive whole-hub mover endpoint work in fresh sparse codex/hbm-datafl
     - (a) Relay-split only the 31 flagged pairs through the feed path. Tree hops are 2-6, so the cost is at most 5 extra crossings per pair (S81 needed 43).
     - (b) Better: re-root the spt so the heavy W/E pairs are on-feed. The candidate parents are R019 under R015W and R022 under R016W, which carry 18 kb each.
   - Gate is R4 (die STA count-align at spice on these pairs). If R4 passes on built arrivals, keep DEPTH 8 and no relays.
+- 2026-10-28 02:02 PDT [DIE-HBM-5] PROBES ARE NOW IN GRT. The kits' last stage (STA stand-in netlists, not a GRT input) had stalled for 20+ min on the q_hub types at 100% CPU. As soon as grt.tcl, obs.tcl, route.v, psm and the abstracts were written, I stopped the adopted probe chains and launched GRT via ot-run on the same kit files (50 it, -critical_nets_percentage 0, CHECKED in grt.tcl).
+  - v1c5: GRT running on epyc2, oth-ubuntu-1151132, dtrial-grt since 02:01.
+  - c20f die tree: GRT running on intel2, oth-ubuntu-1426587, since 02:00.
+  - t63 / c20h_tree: watchers on localhost launch GRT on intel1 when their kit inputs exist.
+  - Kits: ring_ag 4dc6100ca123 is in AUTO-GEOM CHECK. tkm idpin d25 dabf2206bd6b / d30 7b97a340aa07 are in detail placement (3_5_place_dp); the autopilot picks them up at 3_place. q2 reduce e2ba1ba7dd28 is ROUTING (the autopilot pickup gap is closed).
