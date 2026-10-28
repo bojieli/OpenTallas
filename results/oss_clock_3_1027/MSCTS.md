@@ -43,7 +43,7 @@ Labels: CHECKED-own = measured by this lane from the files named here; UNCHECKED
   short stages -0.8 ps/stage, on wire +6.1 ps/mm. Next step for skew is the stage delay model, not routing.
 - `--balance-at leaf`: snake 6.2 %, STA skew 38.3 / 21.5 ps, margins 233.1 / 251.6 ps (CHECKED-own).
 - Quarter sub-slice L2_3283 (144 sinks, 8 crossings, `mscts_subslice.py`): OpenSTA skew TT 21.5 / FF 13.6 ps,
-  model/STA 1.025 / 1.04 (CHECKED-own). ngspice TT: see the end of this file.
+  model/STA 1.025 / 1.04 (CHECKED-own). ngspice TT: see below.
 
 ## Renders
 `mscts_E0_street.png` (whole slice), `mscts_E0_street_zoom.png` (x 17300-18900, y 9900-11400, small macro keepouts):
@@ -51,3 +51,10 @@ viewed; repeaters on street edges, 0 inside keepouts. `mscts_render.py tree.json
 
 ## Tests
 `cd opentools/mscts && python3 -m pytest -q tests`: 14 passed (5 new street tests).
+
+## ngspice TT (ot-ngspice:r3, intel1)
+- Quarter sub-slice E0q_street_tree (144 sinks), CHECKED-own: spice skew 27.4 ps vs OpenSTA 21.5 ps vs model 0.25 ps;
+  STA - spice mean -53.9 ps (-4.0 %, range -59.8..-50.4); model - spice mean -21.7 ps; crossing d STA vs spice max 1.1 ps.
+- Full slice (pre placement-fix tree; same ledger, STA identical): container oc3sp_E0_street_tree_TT on intel1,
+  writes intel1:/srv/opentallas-scratch2/claude/oss-clock-3-1027/E0_street_tree/arr_TT.dat; collect with
+  `cd opentools/mscts && python3 -m mscts.run compare <that dir> --corner TT`. UNCHECKED until collected.
