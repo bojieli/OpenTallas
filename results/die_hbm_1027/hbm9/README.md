@@ -176,3 +176,67 @@ Crossing latency Lx = 4/8 cycles, link width Wx = 2048/4096 b/cycle.
 - Risk 2: start syncs on the spine tap use the rising edge, so they are not affected. Any EDGE_FALL start edge or half-cycle
   path must budget the fall-edge error, +-67 ps FF.
 - Plan: the hub clock is planned as an inverter tree (`--clock-cell inv`).
+
+## (10) Plan event C21 (COORD 08:51 rulings; `apply_c21.py` on C20j)
+- Output: intel2:/srv/opentallas-scratch2/claude/die-hbm-9/c21. Contents: `die_plan.json`, `c21_side.json`, and
+  `c21_event_report.json`.
+- Split: only schema-valid changes go into `die_plan.json`. Data the schema does not know goes in `c21_side.json`, as
+  with earlier events (e.g. regions_c20.json).
+- (a) idx SW/SE native quarters get homes (RTL = functional truth):
+  - Contents: the 2nd quarter of each side, 64 hcol pieces + 2 tails.
+  - Placement: q_b010 holds 40 pieces (hard fill 0.15 -> 0.61), q_b001 holds 26 (0.16 -> 0.47).
+  - Glue: contents entry u_hb_idx__s_Q2. The keybuf stays in the hub.
+  - Pieces use the same canon views as the planned quarter, so there are 0 new core types and 0 new partition types.
+    NW and NE share the types through MY, so each side gets exactly one quarter.
+  - Total hard area: 66 x 0.041 = 2.70 mm2 per side.
+  - Face load estimate, from 4 lanes (2484 + 2484 + 54 + 2 b): q_b000 E 10.4k -> 15.4k (0.60), q_b000 W 14.3k -> 19.3k
+    (0.74), q_b010 E 0.74, all of 25.9k.
+  - Latency: about 1 cycle to the hub W face. tok/s cost is negligible (fixed static latency), UNCHECKED.
+  - Lanes are listed in the report but are NOT yet die ports. Windows and ft bit sites are owed.
+- (b) Planned VM crossing link: 2 internal stations per hub, u_vmb_Q1 <-> u_vmb_Q5, 4096 b each, span 3.98 mm,
+  3 registers, Lx 4.
+  - RTL owed: the crossing-read port pair.
+  - The far bank<->client stations stay in the plan until the RTL owner declares them dead-by-schedule ties. Until
+    then the x-bisection relief is NOT real.
+- (c) REBAL-6 (c21_side.json core_arrays):
+  - lanes_plain: 24 SRAMs, 9 driver_rects, max detour 19.1 um.
+  - programme_store: 44 SRAMs, 16 driver_rects, max detour 87.4 um.
+  - Island rects match the plan rects exactly.
+- (d) Clock local form (c21_side.json clock_local_form):
+  - inverter cell, D8, start sync on the spine;
+  - the hub comb trees;
+  - the die region re-tree (see (11)).
+- (e) hnx_lane_x view: c21_side.json core_views.
+- Gates G0 / G0C use the main tools snapshot, on C21 and on the C20j baseline: see (13).
+
+## (11) T059/T060 die re-tree (ESTIMATE, `retree/die_retree.py`, CLK-LOCAL-EST-1 feed + crossings)
+- Model check: reproduces the CLK-LOCAL worst link, 18.3 ns (T059<->T060, 6.55k b, 9 hops) vs 18.55 there.
+- Root cause:
+  - PHY_N (T060) is ONE 8.8-mm region, but three branches enter it: the NW side (L8/L21/L22 from NW_mcb), the centre
+    column (L9/L63/L114 from vsN6) and the NE side.
+  - The centre column vsN4-6 (T054/T057) hangs from the top, so T010<->T054 is also a long loop (12.4 ns, 5.6k b).
+- Fix:
+  - Split region T060 by connectivity into W (child of T059), C (child of T057) and E (child of T061).
+  - Feed the centre column from the root: T054 <- T010, T057 <- T054.
+- Result:
+  - T059<->T060W is a tree edge at 1.52 ns; T010<->T054 2.77 ns; T054<->T057 0.55 ns.
+  - Die worst unshared: 18.3 -> 8.9 ns; over 3.4 ns: 31 links / 63k b -> 29 / 50.8k.
+  - Greedy locality moves on top: 7.9 ns, 11 links / 18.4k b.
+  - What remains is not top-row: T018-T038 / T011-T019, 1.2k b each, 14 hops.
+- The split needs PHY_N split into 3 partitions (W/C/E pin registers; the PHY model has 0 cells). That is a plan delta
+  owed in the next event pass.
+- trial1 builds only the centre-column re-tree (c21_feed.json).
+
+## (12) Quarter cuts: face windows over client columns + hard cores off v0/v2 (COORD 08:51 (b); 3 seeds each)
+Script `rep/hub_replica_est_q.py --face-align --cut-clear`. Base for all runs: half + bank affinity.
+- Face-align: 24.2-24.7k bits of N/S hub-face pins re-sited over the client column.
+  - Quarter cuts v0/v2: 0.57-1.18 (was 0.82-1.38).
+  - Worst face 1.00-1.34.
+- Plus cut-clear (26-30 cores moved off the lines):
+  - worst 0.95-1.43;
+  - one seed closes both hubs (0.948 / 1.011);
+  - cut-clear alone is worse (1.07-1.66), because moved cores crowd cells and block the horizontal faces.
+- Verdict: face alignment is the real lever for v0/v2. What remains are local core:VM / SM-VM faces at 0.95-1.43,
+  which is inside the random placer's seed noise (+-0.3).
+- Next: a constructive (non-random) hub placement on the face-aligned net, not a further model knob.
+- The face-pin re-site changes the neighbours' bus windows: a plan delta, priced there.
