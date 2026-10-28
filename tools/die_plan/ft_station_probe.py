@@ -42,10 +42,37 @@ def station_sites(P, tn, slot, bits):
     return sites
 
 
-def pin(name,d,x,y):
+# F1 (KV-PLAN-DELTA-7/8, COORD 10-27 19:12 ruling a): ONE pin layer per FT bit end to end.  A station pin sits on the
+# layer of the SAME class as the bit's face pin (lower class M4/M5 or upper class M6/M7; the plan alternates bits over the
+# port layers, so on KV/HEAD even bits are M4 (E/W) / M5 (N/S) and odd bits M6 / M7), on the horizontal layer of the
+# class for an E/W slot and the vertical one for a N/S slot.  The legacy stacked M4+M5 square (no layer preference) let
+# FastRoute's 3D layer assignment pile whole bundles onto M6 with M4 idle (d7: hub_Wi M6 25,179 -> 2,975 with F1).
+# OPT-IN (--f1-station-pins), NOT the default: the KV-PLAN-DELTA-8 A/B canary on the S81 s_0N_L1 coupon REGRESSED with F1
+# (total congestion 549,592 -> 598,250; M6 325,862 -> 166,871 but M7 33,431 -> 288,885: S81 cores obstruct M4/M5/M7, so the
+# upper vertical class M7 is the scarce layer there).  Die GRT (die_trial) has no station pins and is unchanged.
+FT_CLASS={'M4':0,'M5':0,'M6':1,'M7':1}
+FT_LAYER={(0,'H'):'M4',(1,'H'):'M6',(0,'V'):'M5',(1,'V'):'M7'}
+FT_HALF={'M4':.012,'M5':.012,'M6':.016,'M7':.016}
+
+
+def station_layer(face_layer,face,bit):
+    """F1 single station-pin layer for one FT bit: class of its face-pin layer (parity fallback when the face layer is
+    outside M4-M7), direction from the slot's input face (E/W -> horizontal, N/S -> vertical)."""
+    c=FT_CLASS.get(face_layer,bit%2)
+    return FT_LAYER[(c,'H' if face in 'EW' else 'V')]
+
+
+def station_layers(P,tn,slot,bits):
+    """[layer per bit] for the stations of one FT slot, from the slot's input face pins (gen_phys.type_pins)."""
+    pins={bit:(layer,f) for bus,bit,layer,x,y,f in gen_phys.type_pins(P,tn) if bus==slot['name']+'_i'}
+    return [station_layer(*pins[b],b) for b in range(bits)]
+
+
+def pin(name,d,x,y,layer=None):
     # Local cell access is abstracted on the permitted horizontal/vertical
     # layers; this creates no obstacle and no guide beyond the given point.
-    return f'''  PIN {name}
+    if layer is None:  # default (no --f1-station-pins): M4+M5 square, no layer preference
+        return f'''  PIN {name}
     DIRECTION {d} ;
     USE SIGNAL ;
     PORT
@@ -56,9 +83,19 @@ def pin(name,d,x,y):
     END
   END {name}
 '''
+    h=FT_HALF[layer]
+    return f'''  PIN {name}
+    DIRECTION {d} ;
+    USE SIGNAL ;
+    PORT
+      LAYER {layer} ;
+        RECT {x-h:.5f} {y-h:.5f} {x+h:.5f} {y+h:.5f} ;
+    END
+  END {name}
+'''
 
 
-def build(plan,out,part=None,segmented=False,slots=None,bounded=None):
+def build(plan,out,part=None,segmented=False,slots=None,bounded=None,iterations=5,signal_max=None,f1_station_pins=False):
     raw=S.load(plan);P=S.Plan(raw,Path(plan));out=Path(out)
     if bounded is None:bounded=bool(part)
     if bounded and not part:raise ValueError('--bounded requires --part')
@@ -66,7 +103,7 @@ def build(plan,out,part=None,segmented=False,slots=None,bounded=None):
         P.parts={part:P.parts[part]}
         tn=P.parts[part]['type'];P.types={tn:P.types[tn]}
     for x in ['abstracts','grt']:(out/x).mkdir(parents=True,exist_ok=True)
-    bits={};tables={};lefs=[];stats={}
+    bits={};tables={};lefs=[];stats={};layer_count=defaultdict(int)
     for tn,t in sorted(P.types.items()):
         b=defaultdict(int)
         for bus,bit,*_ in gen_phys.type_pins(P,tn):b[bus]=max(b[bus],bit+1)
@@ -84,10 +121,12 @@ def build(plan,out,part=None,segmented=False,slots=None,bounded=None):
                 k=min(b[sl['name']+'_i'],b[sl['name']+'_o'])
                 if not k:continue
                 xy=station_sites(P,tn,sl,k);tables[tn][sl['name']]=xy
+                lays=station_layers(P,tn,sl,k) if f1_station_pins else [None]*k
                 for j,row in enumerate(xy):
                     for bit,(x,y) in enumerate(row):
-                        add+=pin(f"ot_s_{sl['name']}_{j}_d[{bit}]",'INPUT',x,y)
-                        add+=pin(f"ot_s_{sl['name']}_{j}_q[{bit}]",'OUTPUT',x,y)
+                        add+=pin(f"ot_s_{sl['name']}_{j}_d[{bit}]",'INPUT',x,y,lays[bit])
+                        add+=pin(f"ot_s_{sl['name']}_{j}_q[{bit}]",'OUTPUT',x,y,lays[bit])
+                        if lays[bit]:layer_count[lays[bit]]+=2
         if add:lef=lef.replace('  OBS',add+'  OBS',1)
         # Type-specific abstract master identity avoids aliasing different pin
         # tables with the same RTL master; geometry comes from the same type.
@@ -115,7 +154,13 @@ def build(plan,out,part=None,segmented=False,slots=None,bounded=None):
     (out/'grt/route.v').write_text('\n'.join(v+instances+['endmodule'])+'\n')
     (out/'grt/tracks.tcl').write_text(DT.coarse_tracks(P,.72))
     adjust=[(f'M{i}',.75) for i in range(4,8)]+[('M8',.4),('M9',.4)]
-    tcl=DT.grt_tcl(P,out/'grt',.72,lefs,[],adjust).replace('-congestion_iterations 50','-congestion_iterations 5')
+    tcl=DT.grt_tcl(P,out/'grt',.72,lefs,[],adjust).replace('-congestion_iterations 50',f'-congestion_iterations {int(iterations)}')
+    if signal_max:
+        # Kit-level coupon (KV-PLAN-DELTA-3): partition routing ends at the plan partition ceiling
+        # (layer_budget.partition_signal_max, M7); M8/M9 stay die clock/PG/reset (METHODOLOGY 12.1c/12.2).
+        top=int(str(signal_max)[1:]);assert 4<=top<=9,signal_max
+        tcl=re.sub(r'set_routing_layers -signal M4-M\d',f'set_routing_layers -signal M4-M{top}',tcl)
+        assert f'-signal M4-M{top}' in tcl
     coupon_canvas=None
     if bounded:
         # Preserve the original die's 10.8um GRT gcell phase and include only
@@ -149,7 +194,7 @@ def build(plan,out,part=None,segmented=False,slots=None,bounded=None):
             if a<c and b<d:clipped.append(f'create_obstruction -region {{{a:.6f} {b:.6f} {c:.6f} {d:.6f}}} -layer {m[2]}')
         obs.write_text('\n'.join(clipped)+'\n')
     (out/'grt/grt.tcl').write_text(tcl)
-    result=dict(die_trial_sha256=hashlib.sha256(Path(DT.__file__).read_bytes()).hexdigest(),plan_sha256=hashlib.sha256(Path(plan).read_bytes()).hexdigest(),part=part,segmented=segmented,original_ft_bits=original,wire_segments=segments,adjust=dict(adjust),types=stats,added_data_cycles=0,qualification='ROUTING_DIAGNOSTIC_ONLY',bounded=bounded,part_bounds_um=list(P.rect(part)) if part else None,coupon_canvas_um=coupon_canvas)
+    result=dict(die_trial_sha256=hashlib.sha256(Path(DT.__file__).read_bytes()).hexdigest(),plan_sha256=hashlib.sha256(Path(plan).read_bytes()).hexdigest(),part=part,segmented=segmented,original_ft_bits=original,wire_segments=segments,adjust=dict(adjust),types=stats,added_data_cycles=0,qualification='ROUTING_DIAGNOSTIC_ONLY',bounded=bounded,congestion_iterations=int(iterations),signal_max=signal_max,station_pin_layers=dict(sorted(layer_count.items())) if f1_station_pins else 'stacked_M4M5',part_bounds_um=list(P.rect(part)) if part else None,coupon_canvas_um=coupon_canvas)
     (out/'station_probe.json').write_text(json.dumps(result,indent=2))
     (out/'station_sites.json').write_text(json.dumps(tables))
     return result
@@ -195,6 +240,6 @@ def report(out):
 if __name__=='__main__':
     if len(sys.argv)>1 and sys.argv[1]=='report':
         r=report(sys.argv[2]);print(json.dumps(r));sys.exit(0 if r['verdict']=='PASS' else 1)
-    a=argparse.ArgumentParser(description=__doc__);a.add_argument('plan',type=Path);a.add_argument('--out',type=Path,required=True);a.add_argument('--part');a.add_argument('--slot',action='append');a.add_argument('--segmented',action='store_true')
+    a=argparse.ArgumentParser(description=__doc__);a.add_argument('plan',type=Path);a.add_argument('--out',type=Path,required=True);a.add_argument('--part');a.add_argument('--slot',action='append');a.add_argument('--segmented',action='store_true');a.add_argument('--iterations',type=int,default=5);a.add_argument('--signal-max');a.add_argument('--f1-station-pins',action='store_true',help='F1: one station pin layer per FT bit (class of its face pin); default = stacked M4+M5 squares')
     scope=a.add_mutually_exclusive_group();scope.add_argument('--bounded',action='store_const',const=True,default=None);scope.add_argument('--unbounded',dest='bounded',action='store_const',const=False)
-    p=a.parse_args();print(json.dumps(build(p.plan,p.out,p.part,p.segmented,p.slot,p.bounded)))
+    p=a.parse_args();print(json.dumps(build(p.plan,p.out,p.part,p.segmented,p.slot,p.bounded,p.iterations,p.signal_max,p.f1_station_pins)))
