@@ -66,6 +66,21 @@ def type_pins(P, tn):
     return out
 
 
+def strap_pin_sites(P, tn):
+    """[(pin, layer, x, y)] interior pin centres of the type's declared ID straps (plan id_straps[].sites_um, one
+    [x, y] per bit, on id_straps[].layer), or [] when the plan declares no sites (opt-in, DIE-HEAD-5 TILEIO 10-28:
+    without sites the strap ports had no pin, port_bind counted them as extra).  Tied per instance at the die top."""
+    out = []
+    for sp in P.types[tn].get("id_straps", []) or []:
+        xy = sp.get("sites_um")
+        if not xy:
+            continue
+        if len(xy) != sp["width"] or not sp.get("layer"):
+            raise ValueError(f"type {tn}: id_straps {sp['name']} needs layer and exactly {sp['width']} sites_um")
+        out += [(f"{sp['name']}[{i}]", sp["layer"], float(x), float(y)) for i, (x, y) in enumerate(xy)]
+    return out
+
+
 def plan_pin_records(P, tn, pins, bump_sites=()):
     """[{name, layer, x, y}] pin CENTRES of every pin io.tcl places for type tn, computed from the plan: type_pins edge
     points moved PIN_LEN_UM/2 inward, native infrastructure ports, clock/reset taps, reset outs, landing pins and bump
@@ -95,6 +110,8 @@ def plan_pin_records(P, tn, pins, bump_sites=()):
             add(p["name"], p["layer"], *p["xy_um"])
     for port, i, ln, cx, cy, pw, ph in bump_sites:
         add(f"{port}[{i}]", ln, cx, cy)
+    for name, ln, x, y in strap_pin_sites(P, tn):
+        add(name, ln, x, y)
     return list(recs.values())
 
 
@@ -151,6 +168,9 @@ def io_tcl(P, tn, pins):
     for name, x, y in reset_out_pins(P, tn):
         lines.append(f"place_pin -pin_name {name} -layer {top} -location {{{x:.4f} {y:.4f}}} "
                      f"-pin_size {{{LAYER_W.get(top, 0.04):.4f} {4 * PIN_LEN_UM:.4f}}}   ;# interior: reset wavefront out")
+    for name, ln, x, y in strap_pin_sites(P, tn):
+        lines.append(f"place_pin -pin_name {{{name}}} -layer {ln} -location {{{x:.4f} {y:.4f}}} "
+                     f"-pin_size {{{LAYER_W.get(ln, 0.04):.4f} {4 * PIN_LEN_UM:.4f}}}   ;# interior: ID strap (tied at die top)")
     if t.get("clock", {}).get("landing_contract"):
         import landing_contract as LC
         lines.append(LC.io_tcl(P, tn).rstrip())
@@ -1963,7 +1983,12 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     import infra_rtl as IR
     infra = IR.type_ports(t)
     port_pins += [dict(bus=p["name"], bit=None) for p in infra]
+    sps = strap_pin_sites(P, tn)
+    port_pins += [dict(bus=n.split("[")[0], bit=int(n.split("[")[1][:-1])) for n, _l, _x, _y in sps]
     (kd / "port_bind_pins.json").write_text(json.dumps(port_pins, indent=1) + "\n")
+    if sps:
+        # declared ID straps of this kit for port_bind_gate / straps.py (OWNER 10-25 option B)
+        (kd / "straps.json").write_text(json.dumps(dict(straps=sorted({n.split("[")[0] for n, *_ in sps})), indent=1) + "\n")
     if infra:
         import ft_ports as FT
         decl = FT.declaration(t.get("infra_arcs", []), f"die plan {P.name} type {tn}: explicit native hard-core interfaces")

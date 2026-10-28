@@ -43,7 +43,7 @@ def check(text, top, pins, straps=()):
 
 
 _INST = re.compile(r"^    ([A-Za-z_]\w*)\s*(?:#\s*\((?P<par>[^;]*?)\))?\s+([A-Za-z_]\w*)\s*\((?P<body>.*?)\);", re.S | re.M)
-_DECL = re.compile(r"^\s*(?:input|output|inout|wire)\s+(?:(?:wire|reg|logic|signed)\s+)*(?:\[\s*(\d+)\s*:\s*(\d+)\s*\]\s*)?"
+_DECL = re.compile(r"^\s*(?:\(\*[^*]*\*\)\s*)*(?:input|output|inout|wire)\s+(?:(?:wire|reg|logic|signed)\s+)*(?:\[\s*(\d+)\s*:\s*(\d+)\s*\]\s*)?"
                    r"([A-Za-z_].*)$")
 _KW = {"module", "input", "output", "inout", "wire", "reg", "assign", "always", "if", "else", "case", "endmodule",
        "localparam", "parameter", "genvar", "generate", "begin", "end", "for", "function", "task", "initial"}
