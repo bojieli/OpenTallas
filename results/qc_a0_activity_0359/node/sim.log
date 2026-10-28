@@ -1,0 +1,5 @@
+PASS tile_r5_node cycles=4144 checks=4144 node_results=3137 nonzero=3137 go=2 fault_cycles=2767
+- /srv/opentallas-scratch2/claude/codex-qc-a0-activity-0359/node/tb_qwen_tile_r5_node_trace.sv:88: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 13.783 s; speed 601.847 ns/s
+- Verilator: cpu 13.781 s on 1 threads; allocated 39 MB

@@ -1,0 +1,22 @@
+{
+  "scope": "diagnostic correctness-stress activity; not production programme",
+  "register_inventory": "/srv/opentallas-scratch2/claude/corelat-sq-1-a0cts/node/ck_tt.csv",
+  "registers": 12102,
+  "exact_name_matched": 12093,
+  "unmatched": 0,
+  "nonregister_clocked_instances": [],
+  "matched_mean_toggles_per_cycle": 0.4481700889770942,
+  "explicit_naming_alias_matched": 9,
+  "initial_unmatched_names": [
+    "u_vy.genblk1.g_line.line[0]",
+    "u_vy.genblk1.g_line.line[1]",
+    "u_vy.genblk1.g_line.line[2]",
+    "u_vy.genblk1.g_line.line[3]",
+    "u_vy.genblk1.g_line.line[4]",
+    "u_vy.genblk1.g_line.line[5]",
+    "u_vy.genblk1.g_line.line[6]",
+    "u_vy.genblk1.g_line.line[7]",
+    "u_wv.q"
+  ],
+  "total_annotated": 12102
+}

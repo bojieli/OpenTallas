@@ -1,0 +1,21 @@
+{
+  "scope": "actual retained ROMleaf trace macro scalar pins; not macro internal energy calibration",
+  "timescale": "1ps",
+  "duration_ticks": 6922627,
+  "cycles": 8301,
+  "write_enable": "not present on ROM macro",
+  "pins": {
+    "clk": {
+      "duty_high": 0.49997060364511914,
+      "known_fraction": 1.0,
+      "transitions": 16601,
+      "transitions_per_cycle": 1.9998795325864354
+    },
+    "ce_in": {
+      "duty_high": 0.8563944005649878,
+      "known_fraction": 1.0,
+      "transitions": 2373,
+      "transitions_per_cycle": 0.28586917238886883
+    }
+  }
+}

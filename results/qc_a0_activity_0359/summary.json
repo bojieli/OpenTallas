@@ -1,0 +1,56 @@
+{
+  "scope": "diagnostic correctness-stress source activity and same-CTS-ODB power; not production programme, routed SIGNED or whole-A0 qualification",
+  "rawleaf": {
+    "outline_um": [
+      115.344,
+      140.4
+    ],
+    "measured_w": 0.05651149,
+    "vectorless_w": 0.0916148,
+    "clock_w": 0.01245658,
+    "exact_gate_registers": 11646,
+    "register_total": 11838,
+    "input_coverage": "391/391",
+    "fallback": "192 physical input-anchor FF outputs; QN unconnected in actual synthesis netlist",
+    "primitive": "actual selected ASAP7 ASRHQN IQNnext=!D,preset=!RESETN,clear=!SETN,both=L;8truthcasesPASS",
+    "measured_w_mm2": 3.4895919166015568,
+    "vectorless_w_mm2": 5.657225911422055
+  },
+  "romleaf": {
+    "outline_um": [
+      172.8,
+      110.16
+    ],
+    "measured_w": 0.01595736,
+    "vectorless_w": 0.01461787,
+    "clock_w": 0.002207707,
+    "macro_default_w": 0.008944526,
+    "exact_registers": "2200/2200",
+    "inputs": "15/15",
+    "measured_w_mm2": 0.8382882473977245,
+    "vectorless_w_mm2": 0.7679207978630409,
+    "macro_basis": "selected TTLib clock internal_power is unconditional(no CE when), cell_leakage_power constant; actual CE duty0.8563944006/transitionrate0.2858691724 collected but cannot calibrate unconditional macro energy without a separate qualified model"
+  },
+  "node": {
+    "outline_um": [
+      47.52,
+      432.0
+    ],
+    "measured_w": 0.06914761,
+    "vectorless_w": 0.05510803,
+    "clock_w": 0.009984601,
+    "exact_registers": 12093,
+    "explicit_naming_aliases": 9,
+    "register_total": 12102,
+    "register_default": 0,
+    "inputs": "1539/1539",
+    "source_match": "selected CTS kit ot_qwen_tile_node.sv byte-identical to actual bench source",
+    "measured_w_mm2": 3.3683483172777144,
+    "vectorless_w_mm2": 2.6844462175770043
+  },
+  "scratch": "/srv/opentallas-scratch2/claude/codex-qc-a0-activity-0359",
+  "source_branch": "codex/qc-a0-activity-0359-1028",
+  "rtl_source": "2eb5e60188",
+  "power_basis": "exact corelat-sq-1-a0cts child4_1cts ODB +constraint833ps+kit setRC_rcx placement parasitics, sameclockcap bothreports",
+  "activity_limitations": "rates are measured; existing core_power_meas helper assigns duty0.5 to register outputs and inputs; this is retained, not measured static duty"
+}
