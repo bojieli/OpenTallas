@@ -66311,5 +66311,732 @@
 "face:W"
 ]
 }
+},
+"gunit__t1": {
+"u_gunit.u_l0": {
+"cw_a": [
+"core:u_gunit.u_l2.cwn_a"
+],
+"cw_d": [
+"core:u_gunit.u_l2.cwn_d"
+],
+"cw_v": [
+"core:u_gunit.u_l2.cwn_v"
+],
+"cwo_a": [
+"core:u_gunit.u_l4.cw_a"
+],
+"cwo_d": [
+"core:u_gunit.u_l4.cw_d"
+],
+"cwo_v": [
+"core:u_gunit.u_l4.cw_v"
+],
+"f4": [
+"core:u_gunit.u_l4.fault"
+],
+"fault": [
+"core:u_gunit.u_l2.hf"
+],
+"g_acc": [
+"core:u_gunit.u_l4.g_acc"
+],
+"g_d": [
+"core:u_gunit.u_l4.g_d"
+],
+"g_i": [
+"core:u_gunit.u_l4.g_i"
+],
+"g_v": [
+"core:u_gunit.u_l4.g_v"
+],
+"go_a": [
+"core:u_gunit.u_l0r.go_a"
+],
+"go_acc": [
+"core:u_gunit.u_l0r.go_acc"
+],
+"go_b": [
+"core:u_gunit.u_l0r.go_b"
+],
+"hct4_b": [
+"core:u_gunit.u_l4.hct_b"
+],
+"hct4_v": [
+"core:u_gunit.u_l4.hct_v"
+],
+"hct_b": [
+"core:u_gunit.u_l2.hct_b"
+],
+"hct_v": [
+"core:u_gunit.u_l2.hct_v"
+],
+"hp_a": [
+"core:u_gunit.u_l2.hp_a"
+],
+"hp_av": [
+"core:u_gunit.u_l2.hp_av"
+],
+"hp_b": [
+"core:u_gunit.u_l2.hp_b"
+],
+"hp_bv": [
+"core:u_gunit.u_l2.hp_bv"
+],
+"j_lm": [
+"core:u_gunit.u_l4.j_lm"
+],
+"j_row": [
+"core:u_gunit.u_l4.j_row"
+],
+"j_set": [
+"core:u_gunit.u_l4.j_set"
+],
+"j_sm": [
+"core:u_gunit.u_l4.j_sm"
+],
+"j_v": [
+"core:u_gunit.u_l4.j_v"
+],
+"j_w": [
+"core:u_gunit.u_l4.j_w"
+],
+"launch": [
+"core:u_gunit.u_l4.launch_s"
+],
+"mix_go": [
+"core:u_gunit.u_l4.mix_go_s"
+],
+"r_acc": [
+"core:u_gunit.u_l0r.r_acc"
+],
+"r_d": [
+"core:u_gunit.u_l0r.r_d"
+],
+"r_f": [
+"core:u_gunit.u_l0r.r_f"
+],
+"r_i": [
+"core:u_gunit.u_l0r.r_i"
+],
+"r_v": [
+"core:u_gunit.u_l0r.r_v"
+],
+"rn_i": [
+"core:u_gunit.u_l4.rs_o"
+],
+"rn_o": [
+"core:u_gunit.u_l4.rs_i"
+],
+"rs_i": [
+"core:u_gunit.u_l2.rn_o"
+],
+"rs_o": [
+"core:u_gunit.u_l2.rn_i"
+],
+"sid_i": [
+"core:u_gunit.u_l2.sidn"
+],
+"sid_o": [
+"core:u_gunit.u_l4.sid_i"
+],
+"wr_ad": [
+"core:u_gunit.u_l0r.wr_ad"
+],
+"wr_agh": [
+"core:u_gunit.u_l0r.wr_agh"
+],
+"wr_av": [
+"core:u_gunit.u_l0r.wr_av"
+],
+"wr_b": [
+"core:u_gunit.u_l0r.wr_b"
+],
+"wr_bd": [
+"core:u_gunit.u_l0r.wr_bd"
+],
+"wr_bgh": [
+"core:u_gunit.u_l0r.wr_bgh"
+],
+"wr_bv": [
+"core:u_gunit.u_l0r.wr_bv"
+]
+},
+"u_gunit.u_l0r": {
+"go_a": [
+"core:u_gunit.u_l0.go_a"
+],
+"go_acc": [
+"core:u_gunit.u_l0.go_acc"
+],
+"go_b": [
+"core:u_gunit.u_l0.go_b"
+],
+"r_acc": [
+"core:u_gunit.u_l0.r_acc"
+],
+"r_d": [
+"core:u_gunit.u_l0.r_d"
+],
+"r_f": [
+"core:u_gunit.u_l0.r_f"
+],
+"r_i": [
+"core:u_gunit.u_l0.r_i"
+],
+"r_v": [
+"core:u_gunit.u_l0.r_v"
+],
+"wr_ad": [
+"core:u_gunit.u_l0.wr_ad"
+],
+"wr_agh": [
+"core:u_gunit.u_l0.wr_agh"
+],
+"wr_av": [
+"core:u_gunit.u_l0.wr_av"
+],
+"wr_b": [
+"core:u_gunit.u_l0.wr_b"
+],
+"wr_bd": [
+"core:u_gunit.u_l0.wr_bd"
+],
+"wr_bgh": [
+"core:u_gunit.u_l0.wr_bgh"
+],
+"wr_bv": [
+"core:u_gunit.u_l0.wr_bv"
+]
+},
+"u_gunit.u_l1": {
+"ct_b": [
+"core:u_gunit.u_l2.rct_b"
+],
+"ct_v": [
+"core:u_gunit.u_l2.rct_v"
+],
+"cw_a": [
+"core:u_gunit.u_l2.cws_a"
+],
+"cw_d": [
+"core:u_gunit.u_l2.cws_d"
+],
+"cw_v": [
+"core:u_gunit.u_l2.cws_v"
+],
+"dl_a": [
+"core:u_gunit.u_l2.dl_a"
+],
+"dl_av": [
+"core:u_gunit.u_l2.dl_av"
+],
+"dl_b": [
+"core:u_gunit.u_l2.dl_b"
+],
+"dl_bv": [
+"core:u_gunit.u_l2.dl_bv"
+],
+"f3": [
+"core:u_gunit.u_l3.fault"
+],
+"fault": [
+"core:u_gunit.u_l2.rf"
+],
+"fc": [
+"core:u_gunit.u_l1c.fault"
+],
+"gs_d": [
+"core:u_gunit.u_l1c.s_d"
+],
+"gs_v": [
+"core:u_gunit.u_l1c.s_v"
+],
+"i_ids": [
+"core:u_gunit.u_l1c.i_ids"
+],
+"i_v": [
+"core:u_gunit.u_l1c.i_v"
+],
+"rn_i": [
+"core:u_gunit.u_l2.rs_o"
+],
+"rn_o": [
+"core:u_gunit.u_l2.rs_i"
+],
+"rs_i": [
+"core:u_gunit.u_l3.rn_o"
+],
+"rs_o": [
+"core:u_gunit.u_l3.rn_i"
+],
+"rw_l": [
+"core:u_gunit.u_l3.rw_l"
+],
+"rw_lm": [
+"core:u_gunit.u_l3.rw_lm"
+],
+"rw_row": [
+"core:u_gunit.u_l3.rw_row"
+],
+"rw_scale": [
+"core:u_gunit.u_l3.rw_scale"
+],
+"rw_sm": [
+"core:u_gunit.u_l3.rw_sm"
+],
+"rw_st": [
+"core:u_gunit.u_l3.rw_st"
+],
+"rw_v": [
+"core:u_gunit.u_l3.rw_v"
+],
+"rw_x": [
+"core:u_gunit.u_l3.rw_x"
+],
+"sid_i": [
+"core:u_gunit.u_l2.sids"
+],
+"sid_o": [
+"core:u_gunit.u_l3.sid_i"
+],
+"w_b": [
+"core:u_gunit.u_l3.w_b"
+],
+"w_v": [
+"core:u_gunit.u_l3.w_v"
+]
+},
+"u_gunit.u_l1c": {
+"fault": [
+"core:u_gunit.u_l1.fc"
+],
+"i_ids": [
+"core:u_gunit.u_l1.i_ids"
+],
+"i_v": [
+"core:u_gunit.u_l1.i_v"
+],
+"s_d": [
+"core:u_gunit.u_l1.gs_d"
+],
+"s_v": [
+"core:u_gunit.u_l1.gs_v"
+]
+},
+"u_gunit.u_l2": {
+"cw_d": [
+"bus:unit_i0"
+],
+"cwn_a": [
+"core:u_gunit.u_l0.cw_a"
+],
+"cwn_d": [
+"core:u_gunit.u_l0.cw_d"
+],
+"cwn_v": [
+"core:u_gunit.u_l0.cw_v"
+],
+"cws_a": [
+"core:u_gunit.u_l1.cw_a"
+],
+"cws_d": [
+"core:u_gunit.u_l1.cw_d"
+],
+"cws_v": [
+"core:u_gunit.u_l1.cw_v"
+],
+"dl_a": [
+"core:u_gunit.u_l1.dl_a"
+],
+"dl_av": [
+"core:u_gunit.u_l1.dl_av"
+],
+"dl_b": [
+"core:u_gunit.u_l1.dl_b"
+],
+"dl_bv": [
+"core:u_gunit.u_l1.dl_bv"
+],
+"hct_b": [
+"core:u_gunit.u_l0.hct_b"
+],
+"hct_v": [
+"core:u_gunit.u_l0.hct_v"
+],
+"hf": [
+"core:u_gunit.u_l0.fault"
+],
+"hp_a": [
+"core:u_gunit.u_l0.hp_a"
+],
+"hp_av": [
+"core:u_gunit.u_l0.hp_av"
+],
+"hp_b": [
+"core:u_gunit.u_l0.hp_b"
+],
+"hp_bv": [
+"core:u_gunit.u_l0.hp_bv"
+],
+"rct_b": [
+"core:u_gunit.u_l1.ct_b"
+],
+"rct_v": [
+"core:u_gunit.u_l1.ct_v"
+],
+"rf": [
+"core:u_gunit.u_l1.fault"
+],
+"rn_i": [
+"core:u_gunit.u_l0.rs_o"
+],
+"rn_o": [
+"core:u_gunit.u_l0.rs_i"
+],
+"rs_i": [
+"core:u_gunit.u_l1.rn_o"
+],
+"rs_o": [
+"core:u_gunit.u_l1.rn_i"
+],
+"sidn": [
+"core:u_gunit.u_l0.sid_i"
+],
+"sids": [
+"core:u_gunit.u_l1.sid_i"
+]
+},
+"u_gunit.u_l3": {
+"fault": [
+"core:u_gunit.u_l1.f3"
+],
+"rn_i": [
+"core:u_gunit.u_l1.rs_o"
+],
+"rn_o": [
+"core:u_gunit.u_l1.rs_i"
+],
+"rw_l": [
+"core:u_gunit.u_l1.rw_l"
+],
+"rw_lm": [
+"core:u_gunit.u_l1.rw_lm"
+],
+"rw_row": [
+"core:u_gunit.u_l1.rw_row"
+],
+"rw_scale": [
+"core:u_gunit.u_l1.rw_scale"
+],
+"rw_sm": [
+"core:u_gunit.u_l1.rw_sm"
+],
+"rw_st": [
+"core:u_gunit.u_l1.rw_st"
+],
+"rw_v": [
+"core:u_gunit.u_l1.rw_v"
+],
+"rw_x": [
+"core:u_gunit.u_l1.rw_x"
+],
+"sid_i": [
+"core:u_gunit.u_l1.sid_o"
+],
+"vi_s": [
+"bus:xtier_i0"
+],
+"vo_s": [
+"bus:xtier_o0"
+],
+"w_b": [
+"core:u_gunit.u_l1.w_b"
+],
+"w_v": [
+"core:u_gunit.u_l1.w_v"
+]
+},
+"u_gunit.u_l4": {
+"cw_a": [
+"core:u_gunit.u_l0.cwo_a"
+],
+"cw_d": [
+"core:u_gunit.u_l0.cwo_d"
+],
+"cw_v": [
+"core:u_gunit.u_l0.cwo_v"
+],
+"cwo_a": [
+"core:u_gunit.u_l5.cw_a"
+],
+"cwo_d": [
+"core:u_gunit.u_l5.cw_d"
+],
+"cwo_v": [
+"core:u_gunit.u_l5.cw_v"
+],
+"eps_c": [
+"core:u_gunit.u_l4r.eps_c"
+],
+"f5": [
+"core:u_gunit.u_l5.fault"
+],
+"fault": [
+"core:u_gunit.u_l0.f4"
+],
+"g_acc": [
+"core:u_gunit.u_l0.g_acc"
+],
+"g_d": [
+"core:u_gunit.u_l0.g_d"
+],
+"g_i": [
+"core:u_gunit.u_l0.g_i"
+],
+"g_v": [
+"core:u_gunit.u_l0.g_v"
+],
+"hct5_b": [
+"core:u_gunit.u_l5.ct_b"
+],
+"hct5_v": [
+"core:u_gunit.u_l5.ct_v"
+],
+"hct_b": [
+"core:u_gunit.u_l0.hct4_b"
+],
+"hct_v": [
+"core:u_gunit.u_l0.hct4_v"
+],
+"j_lm": [
+"core:u_gunit.u_l0.j_lm"
+],
+"j_row": [
+"core:u_gunit.u_l0.j_row"
+],
+"j_set": [
+"core:u_gunit.u_l0.j_set"
+],
+"j_sm": [
+"core:u_gunit.u_l0.j_sm"
+],
+"j_v": [
+"core:u_gunit.u_l0.j_v"
+],
+"j_w": [
+"core:u_gunit.u_l0.j_w"
+],
+"launch": [
+"core:u_gunit.u_l5.launch"
+],
+"launch_s": [
+"core:u_gunit.u_l0.launch"
+],
+"mix_go_s": [
+"core:u_gunit.u_l0.mix_go"
+],
+"mx_i": [
+"core:u_gunit.u_l5.mx_i"
+],
+"mx_v": [
+"core:u_gunit.u_l5.mx_v"
+],
+"mx_y": [
+"core:u_gunit.u_l5.mx_y"
+],
+"r_f": [
+"core:u_gunit.u_l4r.r_f"
+],
+"r_v": [
+"core:u_gunit.u_l4r.r_v"
+],
+"r_y": [
+"core:u_gunit.u_l4r.r_y"
+],
+"rn_i": [
+"core:u_gunit.u_l5.rs_o"
+],
+"rn_o": [
+"core:u_gunit.u_l5.rs_i"
+],
+"rs_i": [
+"core:u_gunit.u_l0.rn_o"
+],
+"rs_o": [
+"core:u_gunit.u_l0.rn_i"
+],
+"sid_i": [
+"core:u_gunit.u_l0.sid_o"
+],
+"sid_o": [
+"core:u_gunit.u_l5.sid_i"
+],
+"ss": [
+"core:u_gunit.u_l4r.ss"
+],
+"ss_v": [
+"core:u_gunit.u_l4r.ss_v"
+],
+"t_lm": [
+"core:u_gunit.u_l5.t_lm"
+],
+"t_row": [
+"core:u_gunit.u_l5.t_row"
+],
+"t_set": [
+"core:u_gunit.u_l5.t_set"
+],
+"t_sm": [
+"core:u_gunit.u_l5.t_sm"
+],
+"t_w": [
+"core:u_gunit.u_l5.t_w"
+]
+},
+"u_gunit.u_l4r": {
+"eps_c": [
+"core:u_gunit.u_l4.eps_c"
+],
+"r_f": [
+"core:u_gunit.u_l4.r_f"
+],
+"r_v": [
+"core:u_gunit.u_l4.r_v"
+],
+"r_y": [
+"core:u_gunit.u_l4.r_y"
+],
+"ss": [
+"core:u_gunit.u_l4.ss"
+],
+"ss_v": [
+"core:u_gunit.u_l4.ss_v"
+]
+},
+"u_gunit.u_l5": {
+"ct_b": [
+"core:u_gunit.u_l4.hct5_b"
+],
+"ct_v": [
+"core:u_gunit.u_l4.hct5_v"
+],
+"cw_a": [
+"core:u_gunit.u_l4.cwo_a"
+],
+"cw_d": [
+"core:u_gunit.u_l4.cwo_d"
+],
+"cw_v": [
+"core:u_gunit.u_l4.cwo_v"
+],
+"fault": [
+"core:u_gunit.u_l4.f5"
+],
+"launch": [
+"core:u_gunit.u_l4.launch"
+],
+"mx_i": [
+"core:u_gunit.u_l4.mx_i"
+],
+"mx_v": [
+"core:u_gunit.u_l4.mx_v"
+],
+"mx_y": [
+"core:u_gunit.u_l4.mx_y"
+],
+"rs_i": [
+"core:u_gunit.u_l4.rn_o"
+],
+"rs_o": [
+"core:u_gunit.u_l4.rn_i"
+],
+"sid_i": [
+"core:u_gunit.u_l4.sid_o"
+],
+"t_lm": [
+"core:u_gunit.u_l4.t_lm"
+],
+"t_row": [
+"core:u_gunit.u_l4.t_row"
+],
+"t_set": [
+"core:u_gunit.u_l4.t_set"
+],
+"t_sm": [
+"core:u_gunit.u_l4.t_sm"
+],
+"t_w": [
+"core:u_gunit.u_l4.t_w"
+],
+"vi_n": [
+"bus:xtier_i1"
+],
+"vo_n": [
+"bus:xtier_o1"
+],
+"xd_b": [
+"core:u_gunit.u_l5f.xd_b"
+],
+"xd_v": [
+"core:u_gunit.u_l5f.xd_v"
+],
+"xe_v": [
+"core:u_gunit.u_l5f.xe_v"
+],
+"xe_x": [
+"core:u_gunit.u_l5f.xe_x"
+],
+"yd_f": [
+"core:u_gunit.u_l5f.yd_f"
+],
+"yd_v": [
+"core:u_gunit.u_l5f.yd_v"
+],
+"yd_y": [
+"core:u_gunit.u_l5f.yd_y"
+],
+"ye_f": [
+"core:u_gunit.u_l5f.ye_f"
+],
+"ye_v": [
+"core:u_gunit.u_l5f.ye_v"
+],
+"ye_y": [
+"core:u_gunit.u_l5f.ye_y"
+]
+},
+"u_gunit.u_l5f": {
+"xd_b": [
+"core:u_gunit.u_l5.xd_b"
+],
+"xd_v": [
+"core:u_gunit.u_l5.xd_v"
+],
+"xe_v": [
+"core:u_gunit.u_l5.xe_v"
+],
+"xe_x": [
+"core:u_gunit.u_l5.xe_x"
+],
+"yd_f": [
+"core:u_gunit.u_l5.yd_f"
+],
+"yd_v": [
+"core:u_gunit.u_l5.yd_v"
+],
+"yd_y": [
+"core:u_gunit.u_l5.yd_y"
+],
+"ye_f": [
+"core:u_gunit.u_l5.ye_f"
+],
+"ye_v": [
+"core:u_gunit.u_l5.ye_v"
+],
+"ye_y": [
+"core:u_gunit.u_l5.ye_y"
+]
+}
 }
 }

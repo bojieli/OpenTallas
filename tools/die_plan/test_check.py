@@ -744,3 +744,28 @@ def test_run_keeps_plan_path_for_plan_relative_files(tmp_path, monkeypatch):
     check.run(json.loads((HERE / "examples" / "tiny_plan.json").read_text()), plan_dir=tmp_path)
     P = seen[-1]  # schema.validate builds its own path-free structural Plan first
     assert P.path is not None and Path(P.path).parent == tmp_path
+
+
+def test_core_bundle_reach_pin_to_pin(tmp_path):
+    """S81-CORES-R25 10-27 (COORD ruling: the plan bundle check measures pin-to-pin, not box-to-box).  Two abutting
+    hard cores (box distance 0) whose bundle pins sit on the FAR faces (gunit L1/L2 class: 928 um pin-to-pin, box 17)
+    must FAIL the 405-um core reach; the same pins re-faced to the shared face PASS; orient MX is honoured."""
+    def plan(pa_y, pb_y, orient_b="R0", port_named=True):
+        p = copy.deepcopy(EX)
+        t = p["partition_types"]["src"]
+        t["hard_cores"] = [
+            dict(inst="u_a", origin_um=[8.64, 8.64], outline_um=[345.6, 345.6], track_offset_um=[0.0, 0.0],
+                 pins=[dict(name=f"q[{i}]", layer="M5", xy=[10.0 + i, pa_y]) for i in range(4)]),
+            dict(inst="u_b", origin_um=[8.64, 354.24], outline_um=[345.6, 345.6], track_offset_um=[0.0, 0.0],
+                 orient=orient_b, pins=[dict(name=f"d[{i}]", layer="M5", xy=[330.0 - i, pb_y]) for i in range(4)])]
+        tg = "core:u_b.d" if port_named else "core:u_b"
+        (tmp_path / "core_conns.json").write_text(json.dumps({"src": {"u_a": {"q": [tg]}}}))
+        p.setdefault("budgets", {})["core_internal_reach_um"] = 405.0
+        R, _ = check.run(p, plan_dir=tmp_path, completeness=True)
+        return [i["msg"] for i in R.errors() if i["check"] == "complete" and "core bundle u_a.q" in i["msg"]]
+    # boxes abut (distance 0): the old box-to-box check passed every case below
+    far = plan(0.0, 345.6)              # u_a pins on its S face, u_b pins on its N face: >= 2 x 345.6 apart
+    assert len(far) == 1 and ">= 1011 um" in far[0], far
+    assert plan(345.6, 0.0) == []      # both on the shared face: |dx| <= 323 um, dy 0
+    assert plan(345.6, 345.6, orient_b="MX") == []          # MX puts u_b's N-face pins on its S (shared) face
+    assert plan(0.0, 345.6, port_named=False) == []         # partner without a port: pin -> partner box (345.6 lower bound)

@@ -1227,6 +1227,32 @@ def _core_face(o, x, y, cw, ch):
     return f
 
 
+def _bus_bit_targets(P, tn):
+    """{bus: {bit: (x, y)}} type-frame pin of every bit of the type's planned partition ports (schema port_pins of the
+    first instance that carries the bus, die -> type frame); a bus whose pins cannot be placed is left out."""
+    insts = {n for n, p_ in P.parts.items() if p_["type"] == tn}
+    out = {}
+    for pid, pr in P.ports.items():
+        if "face" not in pr or "window_um" not in pr:
+            continue
+        for side in ("src", "dst"):
+            e = pr[side]
+            if e["part"] not in insts or e["bus"] in out:
+                continue
+            df = pr["face"] if side == "src" or pr["src"]["part"] == DIE_PART else OPP[pr["face"]]
+            x0, y0, x1, y1 = P.rect(e["part"])
+            try:
+                pins = P.port_pins(pid)
+            except (ValueError, KeyError):
+                continue
+            pts = {}
+            for b, _ln, c in pins:
+                dpt = dict(N=(c, y1), S=(c, y0), E=(x1, c), W=(x0, c))[df]
+                pts[str(b)] = P.to_type(e["part"], dpt)
+            out[e["bus"]] = pts
+    return out
+
+
 def _bus_targets(P, tn):
     """{bus: (x, y) type-frame point on the partition face that carries it}: the type's bus face/window when
     declared, else the first planned port of an instance of the type (die window -> type frame)."""
@@ -1436,7 +1462,7 @@ def _hops_ok(a, regs, b, smax):
     return max(abs(p[0] - q[0]) + abs(p[1] - q[1]) for p, q in zip(pts, pts[1:])) <= smax + EPS
 
 
-def check_completeness(P, R, no_cells=(), max_msgs=5, side=None):
+def check_completeness(P, R, no_cells=(), max_msgs=5, side=None, plan_dir=None):
     """PLAN COMPLETENESS (COORD 10-23 ~20:00): G0 is a completeness check; a missing field is an ERROR.
     Per partition type (hard IP types: cells / clock / reset / face flops not required):
       cells            a cell estimate (type.cells, contents[].cells or cells.py evidence)
@@ -1454,6 +1480,16 @@ def check_completeness(P, R, no_cells=(), max_msgs=5, side=None):
                        internal_stations[] hops, and every declared core port bundle -- bus window -> core box, core box
                        -> partner core box (lower bounds) -- longer than it needs an entry (conn "bus:<bus>" with capture
                        "<core>.<port>", or conn "core:<core>.<port>|core:<partner>" either way round)
+                       S81-CORES-R25 10-27 (COORD ruling: pin-to-pin, not box-to-box): where the core has plan pins
+                       (pins[] / pins_file) the length is measured from its PINS (origin + track_offset + orient), per
+                       bit: bus window point -> each pin of the port; core -> partner "core:<inst>.<port>" = per-bit pin
+                       -> partner pin Manhattan (max over common bits); a partner named without a port = pin -> partner
+                       box.  The box distance stays the floor, so a pin-aware length is never shorter than the old one.
+                       A bus target is measured per bit (the bus's planned partition pin, schema port_pins -> core
+                       port bit of the same index) when the port covers all bus bits but at most max(2, width/32)
+                       side bits (valid, tag); a port that is a slice of a wider bus has no known bit map -> pin ->
+                       window centre.
+                       An entry covers a core -> bus bundle with conn "bus:<bus>" and capture OR launch "<core>.<port>".
     Die: clock.common_latency_ps (R4 owner rule)."""
     miss = {f: 0 for f in COMPLETE_FIELDS}
     smax0 = smax = station_max(P)
@@ -1521,6 +1557,31 @@ def check_completeness(P, R, no_cells=(), max_msgs=5, side=None):
             if not _hops_ok(e["from_um"], e["regs_um"], e["to_um"], smax):
                 bad("internal_station", tn, f"internal_stations {e.get('conn', e['from_um'])}: a hop > {smax:g} um")
         conns = {e.get("conn") for e in ist if e.get("conn")}
+        hcs = {hc["inst"]: hc for hc in t.get("hard_cores", [])}
+        cpin = {}
+
+        def port_pins(ci, lp):
+            """{bit: (x, y)} of core ci's port lp in the type frame; None when the core has no plan pins."""
+            if ci not in cpin:
+                hc = hcs.get(ci)
+                tab = None
+                if hc is not None and (hc.get("pins") or hc.get("pins_file")):
+                    try:
+                        raw = core_pins(hc, plan_dir)
+                    except (OSError, ValueError, KeyError):
+                        raw = []
+                    if raw:
+                        tab = defaultdict(dict)
+                        cw_, ch_ = hc["outline_um"]
+                        o_ = hc.get("orient", "R0")
+                        dx_, dy_ = hc.get("track_offset_um", [0.0, 0.0])
+                        for nm_, _ln, x_, y_ in raw:
+                            pn, _, bit = nm_.partition("[")
+                            tx, ty = _orient_pt(o_, cw_, ch_, x_, y_)
+                            tab[pn][bit.rstrip("]")] = (hc["origin_um"][0] + dx_ + tx, hc["origin_um"][1] + dy_ + ty)
+                cpin[ci] = tab
+            tab = cpin[ci]
+            return None if tab is None or lp not in tab else tab[lp]
 
         def covered(key, a, b_box):
             if key in conns:
@@ -1557,7 +1618,8 @@ def check_completeness(P, R, no_cells=(), max_msgs=5, side=None):
                     if d > smax and f"{x}|{y}" not in conns and f"{y}|{x}" not in conns:
                         todo.append((f"net {nm} ({x} <-> {y})", d))
         if creach and tn in cside:
-            ents = {(e.get("conn"), e.get("capture")) for e in ist}
+            ents = {(e.get("conn"), e.get("capture")) for e in ist} | {(e.get("conn"), e.get("launch")) for e in ist}
+            bbt = None
             for ci, ports in cside[tn].items():
                 if ci not in boxes:
                     continue
@@ -1570,10 +1632,32 @@ def check_completeness(P, R, no_cells=(), max_msgs=5, side=None):
                             if nm not in bt:
                                 continue
                             d = _box_dist(bt[nm][1], boxes[ci])
+                            pp = port_pins(ci, lp)
+                            if pp:
+                                if bbt is None:
+                                    bbt = _bus_bit_targets(P, tn)
+                                bq = bbt.get(nm) or {}
+                                if bq and set(pp) <= set(bq) and len(bq) - len(pp) <= max(2, len(pp) // 32):
+                                    d = max(d, max(abs(v[0] - bq[k][0]) + abs(v[1] - bq[k][1]) for k, v in pp.items()))
+                                else:
+                                    q = bt[nm][1]
+                                    d = max(d, max(abs(v[0] - q[0]) + abs(v[1] - q[1]) for v in pp.values()))
                             ok = (f"bus:{nm}", f"{ci}.{lp}") in ents
-                        elif kd == "core" and nm in boxes and nm != ci:
+                        elif kd == "core" and (nm in boxes or nm.rpartition(".")[0] in boxes) and nm != ci:
+                            np_ = None
+                            if nm not in boxes:
+                                nm, _, np_ = nm.rpartition(".")
+                            if nm == ci:
+                                continue
                             bx, by = boxes[ci], boxes[nm]
                             d = max(bx[0] - by[2], by[0] - bx[2], 0) + max(bx[1] - by[3], by[1] - bx[3], 0)
+                            pa = port_pins(ci, lp)
+                            pb = port_pins(nm, np_) if np_ else None
+                            common = set(pa) & set(pb) if pa and pb else set()
+                            if common:
+                                d = max(d, max(abs(pa[k][0] - pb[k][0]) + abs(pa[k][1] - pb[k][1]) for k in common))
+                            elif pa:
+                                d = max(d, max(_box_dist(v, by) for v in pa.values()))
                             ok = any(c_ == f"core:{ci}.{lp}|core:{nm}" or
                                      (str(c_).startswith(f"core:{nm}.") and str(c_).endswith(f"|core:{ci}")
                                       and cap == f"{ci}.{lp}") for c_, cap in ents)
@@ -1797,7 +1881,7 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     _views = _pin_views(P, plan_dir)
     summ["core_pin_form"] = check_core_pin_forms(P, R, plan_dir, _views)
     summ["island_ft_rows"] = check_island_ft_rows(P, R, plan_dir, _views)
-    summ["complete"] = check_completeness(P, R, summ["taps_cores"].get("no_cells", ()),
+    summ["complete"] = check_completeness(P, R, summ["taps_cores"].get("no_cells", ()), plan_dir=plan_dir,
                                           side=load_core_conns(plan_dir, core_conns))
     summ["g0c"] = g0c_summary(P, R)
     summ["geometry"] = check_geometry(P, R)
