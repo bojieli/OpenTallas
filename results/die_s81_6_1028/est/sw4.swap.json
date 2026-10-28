@@ -1,0 +1,37 @@
+{
+ "v_tt": 368.1,
+ "ff_over_tt": 0.8455,
+ "swaps": [
+  {
+   "child": "s_4S_L4",
+   "new_parent": "seqhost",
+   "hop_um": 1405.1,
+   "old_hop_um": 1324.0,
+   "shift_tt_ps": -10722.8
+  },
+  {
+   "child": "s_4S_C",
+   "new_parent": "s_3S_C",
+   "hop_um": 1946.2,
+   "old_hop_um": 1553.0,
+   "shift_tt_ps": -10439.8
+  },
+  {
+   "child": "s_4S_L3",
+   "new_parent": "s_4S_x06",
+   "hop_um": 1229.1,
+   "old_hop_um": 1272.4,
+   "shift_tt_ps": 4003.1
+  },
+  {
+   "child": "s_5S_L4",
+   "new_parent": "s_5N_L2",
+   "hop_um": 1277.5,
+   "old_hop_um": 1287.4,
+   "shift_tt_ps": -6178.2
+  }
+ ],
+ "new_hop_um": 5857.9,
+ "old_hop_um": 5436.8,
+ "new_repeaters": 21
+}

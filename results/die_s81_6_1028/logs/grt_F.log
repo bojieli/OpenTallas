@@ -1,0 +1,39 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/die-s81-5
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/die-s81-5
+ot-run: localhost      admits   680 GB (avail 840, reserve 0, fresh 32, peak 63.8, headroom 0, waiters 0/0 GB) load 104/112 running 20 disk 854 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-1938077-1793180204 after 1 s
+START Wed Oct 28 02:36:45 PDT 2026 host tolerant-swine code 92bc805201 plan d29050658673 variant F
+1
+5e5b2c2575873844798ec05ac303de786b0547fecc18649e68bdb34301e41478
+1
+612cde6890191735a06e44b5616e28405faf3fe2631441fd658b16d2271dd989
+0
+0
+COMBO_DONE Wed Oct 28 02:42:08 PDT 2026
+M1                   0             0            0.00%             0 /  0 /  0
+M2                   0             0            0.00%             0 /  0 /  0
+M3                   0             0            0.00%             0 /  0 /  0
+M4           246715830       7508733            3.04%             0 /  0 /  0
+M5           248095619       10855310            4.38%             0 /  0 /  0
+M6           206534533       10140437            4.91%             0 /  0 /  0
+M7           207802619       17837609            8.58%             0 /  0 /  0
+M8           914635584       7848623            0.86%             0 /  0 /  0
+M9           914589360       9089535            0.99%             0 /  0 /  0
+Total        -1556593751       63280247           -4.07%             0 /  0 /  0
+	Exit status: 0
+EXIT 0
+M1                   0             0            0.00%             0 /  0 /  0
+M2                   0             0            0.00%             0 /  0 /  0
+M3                   0             0            0.00%             0 /  0 /  0
+M4           246715830       7508733            3.04%             0 /  0 /  0
+M5           248095619       10855310            4.38%             0 /  0 /  0
+M6           206534533       10140437            4.91%             0 /  0 /  0
+M7           207802619       17837609            8.58%             0 /  0 /  0
+M8           914635584       7848623            0.86%             0 /  0 /  0
+M9           914589360       9089535            0.99%             0 /  0 /  0
+Total        -1556593751       63280247           -4.07%             0 /  0 /  0
+	Exit status: 0
+EXIT 0
+GRT_DONE Wed Oct 28 02:42:08 PDT 2026
+ot-run: RAN on localhost (unit oth-ubuntu-1938077-1793180204): exit 0
