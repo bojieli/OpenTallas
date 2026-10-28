@@ -2758,3 +2758,7 @@ LEC NOT EQUIVALENT: the kit stops (lec/lec.json)
   - Add the cell-estimate file for the 24 new cohort types (the tool artefact; the same fix serves LAND-KV).
   - Then die GRT incl the routed clock, then die STA (main die_sta_related.py, class droop).
   - QC-SLICECLK-2 (fresh) owns all of the above.
+2026-10-27 19:08 PDT [COORD] HEAD-R24 ruling:
+  (1) The shared mesh sign-off adapter claude/head-r24-mesh-1027@8d7190cda goes to RM83. Merge condition: KV q5c39 output stays byte-identical, and all 95 tests pass.
+  (2) HEAD die-wide mesh: skew is 1.56 ns, a structural failure (each BUFx24 pair drives ~3.6 pF and the edge bands have no driver rows). Under 12.11 the HEAD main path is LANDED (GRT0 incl clock already). There will be NO HEAD mesh rebuild lane now. HEAD-R25 (edge-band driver rows + drive sizing per 12.8e) is PARKED and starts only if LAND-HEAD-2 fails its phase-margin or STA gate.
+  (3) The 1.06 ohm/um 8w M8/M9 wire R stays UNCHECKED; NUMBER-CHECK it against the ASAP7 tech LEF/qrc before anyone quotes the 1.56 ns figure.
