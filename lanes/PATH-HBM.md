@@ -1062,3 +1062,6 @@ Resumed exclusive whole-hub mover endpoint work in fresh sparse codex/hbm-datafl
   - (a) builder fix and <=150 proof on R002/R024/R015E, starting from --region-dme priced.
   - (b) spt re-root + relay plan for the 38 pairs over 3.4 ns at 342 ps/mm.
   - No jobs left running.
+- 2026-10-28 03:06 PDT [HBM-RISK-2] R5 COLLECT: the epyc2 run of gen.py phys --trial --types q_hub_nw (pid 1292431) ended with "ERROR type q_hub_nw: bus L0_o is not bound to any leaf port (open output)", and no kit was written (CHECKED phys_hub.log).
+  - This is the same blocker DRT-TRIAL-1 found on KV: the HBM partitions need bind.py kit RTL (--kit-rtl), not the plan wrapper. That is one more prerequisite before any HBM partition DRT preview.
+  - Failed kit data and my epyc2 worktree are deleted; logs are kept in epyc2:/srv/opentallas-scratch2/claude/hbm-risk-2/. No jobs of mine are left running.
