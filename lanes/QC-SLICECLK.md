@@ -229,3 +229,19 @@ A0 parent remainsprimaryphysicalcriticalpath. Importanthandoffcorrection: romlea
   - Empirical stage table built from 3 builds. Next: DME wire elongation instead of padding-stage stacks; a0k5/rawleaf abstracts with real pins. Render viewed PASS-COND (some last legs run over child macros to centre fixture pins). nl, c_* centre entry, FF-duty spice sizing and FF hold structural fix: not started.
   - NEXT (DIE-QC-13): (1) slice-head shared feed node -> rerun width CA; (2) A0 trunk elongation DME + real child abstracts -> nk/nl -> c_* tap early by measured trunk insertion (TT ~535 / FF ~457 now); (3) FF duty spice sizing; (4) FF hold region balance. No live jobs.
 - 2026-10-28 09:53 PDT [DIE-QC-13] START (successor of DIE-QC-12 ede1e3275d; no live QC-12 jobs; main 5e316d5fee has RM150 --clock-cell). Branch claude/die-qc13-1028 (from main), wt intel2 wt/die-qc13-1028 (sparse), runs intel2:/srv/opentallas-scratch2/claude/die-qc13-1028. Order: (1) slice-head start width (60/871) plan fix -> width CA + die STA; (2) A0 trunk on real a0k5 layout; (3) FF duty spice sizing + max slew; (4) FF hold region balance. ESTIMATE first.
+- 2026-10-28 10:52 PDT [DIE-QC-13] RESULT + PARKED claude/die-qc13-1028@9c4415e27c (tool 719d3e554a; results/die_qc13_1028/README.md). Runs intel2:/srv/opentallas-scratch2/claude/die-qc13-1028. OWN/UNCHECKED-independent unless marked.
+  - WIDTH ROOT CAUSE: all 60 failing start ports launch from a parent-region LEAF 430-441 ps below the fork, which is the region root and the child-feed fork. The nearest capture-side retime node gives a 209-216 ps segment against the 208.25 limit, so no retime is possible.
+  - FIX (structural, opt-in die_trial --tree-opt region_stub=1, 4 tests / 70 PASS): shared feed node. Each feed-parent region's own tree hangs from a stub at the feed end, so every start port leaves the fork as a retime flop.
+  - ESTIMATE on the trial10 proof: 60 -> 0 FAIL (stub 10/30/60 ps), D8 13 -> 0.
+  - --start-retime-up (S81-13) compared: plan() crashes on QC with duplicate fork retime nodes (30 dup st: dst), so it was not used.
+  - trial11 BUILT (177 shared nodes, 39,440 cells): clock GRT TT/FF EXIT 0, overflow 0, 4.665 m (CHECKED). Duty TT 48.5-51.7 / FF 49.4-54.25 %, 0 outside 45-55, MPW 0 (CHECKED). Max slew 247.8 TT / 248.5 FF on cell pins, 0 >320 (CHECKED). Spread unchanged: c_* 66.2/106.3. Render viewed: no detours.
+  - CA (main model): width 977/977 start clean, 0 FAIL, 2537 D4, min lo 104.8; phase 566/566; die STA TT 105.9 / FF 104.6, start-skew 0/977.
+  - CLK-INV-CAL-1 preview (fccbe1df43 archive, proof tagged clock_cell=inv2): width 826/826, 0 FAIL, min lo 107.0; STA TT 108.1 / FF 106.8, start-skew 0/826. trial10 control under the same model: 3 FAIL.
+  - FF hold still intra -281.9 / seam -143.3 (inv-cal: intra -249.0).
+  - NOTE: the QC lane proof has no clock netlist, so detect_clock_cell falls back to BUF. Tag it or use trial_tap_arrivals.
+  - NEXT (DIE-QC-14):
+    - (1) re-plan width/phase CA + die STA on main after CLK-INV-CAL-1 + FLOW-ONEMODEL-1 + the wander commit (ca/runCA11i.sh is the template);
+    - (2) A0 trunk on the real a0k5 romleaf layout (wire-length balance, <=60 ps), then nl + c_* centre entry;
+    - (3) FF duty spice check on trial11;
+    - (4) FF hold region balance.
+  - No live jobs.
