@@ -221,6 +221,52 @@ def credit(rng, node, la, ea, lc, ec):
     return min(max(0.0, rng.get(c, 0.0)), max(0.0, la - ea), max(0.0, lc - ec))
 
 
+def count_align_landed(landed, taps, bind, period, ap=None, need_ps=100.0):
+    """MESO-INTEG-1 (opt-in --count-align BIND.json): the count-aligned landing ring (ot_dp_clk_landing_ca) replaces the
+    +-T/2 placement window by a write->read lag window per crossing.  COORD margin rule: the lag L must sit inside
+    [0.5T + ap, (DEPTH - 0.5)T - ap], >= need_ps clear on both sides (ap = T/8 sync aperture).
+    Non-tree crossing: the binder fixed L = L_plan - d_plan + d, d = capture-region clock - launch-region clock; this
+    model re-derives the d interval from ITS OWN derated arrivals over every landed tap pair of the partition pair
+    (d_lo = min(capture early - launch late), d_hi = max(capture late - launch early)) and shifts the plan window by
+    the difference.  Tree (start) crossing: L is set at start by the sync, so its window is the plan one (the start
+    edge is sampled on the real clocks; only post-start wander moves it, carried by the binder).
+    Slot->read path: L_lo >= T/2 + ap means the read register samples a slot written >= T/2 + ap earlier, so the
+    existing landing_contract slot->RDREG half-period SDC holds; reported as slot_to_read_ps = L_lo - T/2."""
+    ap = period / 8 if ap is None else ap
+    dsta = {}
+    for a, b, tag in landed:
+        A, B = taps[a], taps[b]
+        la, ea, lc, ec = arr4(A, B, pair_node(A, B))
+        lo, hi = ec - la, lc - ea
+        o = dsta.get(tag)
+        dsta[tag] = (lo, hi) if o is None else (min(o[0], lo), max(o[1], hi))
+    rows, miss = [], []
+    for pid, b in sorted(bind["ports"].items()):
+        tag = f"{b['src']}->{b['dst']}"
+        D = int(b["depth"])
+        if b.get("tree"):
+            lo, hi, src = b["L_lo_ps"] + ap, b["L_hi_ps"] - ap, "plan-sync"
+        elif tag in dsta and "d_lo_ps" in b:
+            dl, dh = dsta[tag]
+            # plan L_lo/L_hi include the aperture (L_lo = .. + d_lo - ap): strip it to get the true lag
+            lo, hi, src = b["L_lo_ps"] + ap + (dl - b["d_lo_ps"]), b["L_hi_ps"] - ap + (dh - b["d_hi_ps"]), "sta"
+        else:
+            miss.append(pid)
+            continue
+        ml, mh = lo - (0.5 * period + ap), (D - 0.5) * period - ap - hi
+        rows.append(dict(port=pid, tag=tag, depth=D, tree=bool(b.get("tree")), L_lo_ps=round(lo, 1), L_hi_ps=round(hi, 1),
+                         margin_lo_ps=round(ml, 1), margin_hi_ps=round(mh, 1), slot_to_read_ps=round(lo - 0.5 * period, 1),
+                         source=src))
+    wl = min(rows, key=lambda r: r["margin_lo_ps"]) if rows else None
+    wh = min(rows, key=lambda r: r["margin_hi_ps"]) if rows else None
+    nfail = sum(1 for r in rows if min(r["margin_lo_ps"], r["margin_hi_ps"]) < need_ps)
+    return dict(crossings=len(rows), sta_timed=sum(r["source"] == "sta" for r in rows),
+                tree_plan=sum(r["tree"] for r in rows), no_taps=len(miss), no_taps_ports=miss[:20],
+                need_ps=need_ps, aperture_ps=round(ap, 3), fail=nfail,
+                worst_lo=wl, worst_hi=wh, verdict="PASS" if rows and not nfail and not miss else "FAIL",
+                rows=rows)
+
+
 def build_pairs(plan, taps):
     """complete pair sets from the plan ports and the tap table (one corner's rows; ports are corner independent)."""
     by_part = defaultdict(list)
@@ -1115,6 +1161,9 @@ def main(argv=None):
     ap.add_argument("--seam-wire-um", type=float, default=40.0)
     ap.add_argument("--wire-ff-per-um", type=float, default=0.15)
     ap.add_argument("--landing-window-ps", type=float)
+    ap.add_argument("--count-align", metavar="BIND.json",
+                    help="MESO-INTEG-1 opt-in: landed pairs use the count-aligned ring lag window of this count_align_bind "
+                         "file (COORD rule: >= 100 ps inside [T/2 + T/8, (DEPTH - 1/2)T - T/8]) instead of +-T/2")
     ap.add_argument("--intra-window-ps", type=float,
                     help="WHAT-IF override of the intra-partition kit window (default: the plan's clock.tap_window."
                          "window_ps, else 0 = the one-ideal-clock kit SDC)")
@@ -1226,6 +1275,12 @@ def main(argv=None):
         slew = max(r["slew_ps"] for r in taps.values())
         reg = characterise(out, c, slew, a.seam_wire_um * a.wire_ff_per_um)
         pairs, cov = build_pairs(plan, taps)
+        if a.count_align:
+            ca = count_align_landed(pairs["landed"], taps, json.loads(Path(a.count_align).read_text()), period)
+            res.setdefault("count_aligned", {})[c] = ca
+            print(f"COUNT-ALIGN {c} crossings {ca['crossings']} (sta {ca['sta_timed']}, tree {ca['tree_plan']}, no taps "
+                  f"{ca['no_taps']}) worst lo {ca['worst_lo'] and ca['worst_lo']['margin_lo_ps']} hi "
+                  f"{ca['worst_hi'] and ca['worst_hi']['margin_hi_ps']} fail {ca['fail']} {ca['verdict']}")
         views = None
         if real:
             import schema as S_
@@ -1307,6 +1362,13 @@ def main(argv=None):
             gate[k]["kit_contract_window_needed_ps"] = kc["window_needed_ps"]
             gate[k]["kit_contract_verdict"] = kc["verdict"]
     gate["landed"] = landed_gate(res["corners"])
+    if a.count_align:
+        cas = res.get("count_aligned", {})
+        gate["landed"] = dict(form="count_aligned", bind=str(Path(a.count_align).resolve()),
+                              worst_margin_lo_ps={c: v["worst_lo"] and v["worst_lo"]["margin_lo_ps"] for c, v in cas.items()},
+                              worst_margin_hi_ps={c: v["worst_hi"] and v["worst_hi"]["margin_hi_ps"] for c, v in cas.items()},
+                              half_period_INFO=gate["landed"],
+                              verdict="PASS" if cas and all(v["verdict"] == "PASS" for v in cas.values()) else "FAIL")
     if a.hold_buffers != "none" and "TT" in hbrec and "FF" in hbrec:
         hb = {}
         HBM = HB4_ABUTTED if a.hb4_delay == "abutted" else HB4

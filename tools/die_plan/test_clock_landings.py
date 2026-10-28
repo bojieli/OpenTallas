@@ -261,3 +261,82 @@ def test_replicas_of_one_type_must_agree_on_ring_form():
                            ring_module="ot_dp_clk_landing_ca"))
     with pytest.raises(LandingError, match="TYPE_SPLIT"):
         Landings(p, t)
+
+
+def ca_vehicle(k=-2, depth=4, edge_fall=False):
+    """MESO-INTEG-1 count-aligned form: the same a -> b crossing with the bind's K/DEPTH/latency and start tree."""
+    p, t = vehicle()
+    def pin(name, direction):
+        return dict(name=name, dir=direction, width=1, face="E", window_um=[1, 2], layers=["M8"])
+    p["partition_types"]["A"]["buses"].append(pin("cland_fstart_out_x", "out"))
+    p["partition_types"]["B"]["buses"].append(pin("cland_fstart_in_y", "in"))
+    t["count_aligned"] = dict(schema="opentallas.count_align_bind.v1", period_ps=833.0, root="r0", pad=0,
+                              root_settle_cycles=40,
+                              ports={"P": dict(K=k, depth=depth, sched_lat=2, tree=True)},
+                              regions={"r0": dict(parent=None, tree_port=None, edge_fall=False, pad=0),
+                                       "r1": dict(parent="r0", tree_port="P", edge_fall=edge_fall, pad=0)})
+    return p, t
+
+
+A_BODY = ("module a_mod (\n input wire clk,\n output wire [4:0] x\n);\n wire rr_parent, rst_n_t0;\n"
+          " ot_dp_rrelay u_rrl_0 (.clk(clk), .d(rr_parent), .q(rst_n_t0));\n assign x = 0;\nendmodule\n")
+B_BODY = ("module b_mod (\n input wire clk,\n input wire [4:0] y // whole bundle\n);\n wire rst_n, rst_n_t0, rr_parent, run;\n"
+          " ot_dp_rgate u_rrl_0 (.clk(clk), .d(rr_parent), .run(run), .q(rst_n_t0));\n wire [4:0] y_q;\n assign y_q = y;\nendmodule\n")
+
+
+def test_count_aligned_form_emits_ca_ring_origin_and_start_pins():
+    p, t = ca_vehicle(edge_fall=True); c = Landings(p, t)
+    aa = c.type_rtl("A", A_BODY); bb = c.type_rtl("B", B_BODY)
+    assert "ot_dp_landing_root #(.SETTLE(40)) u_cland_origin (.clk(clk), .rst_raw_n(rst_n_t0), .start(cland_start));" in aa
+    assert "assign cland_fstart_out_x = cland_start;" in aa and "output wire cland_fstart_out_x" in aa
+    assert "ot_dp_clk_landing_ca #(.W(5), .DEPTH(4), .K(-2)) u_cland_y" in bb
+    assert ".t_rst_n(cland_fstart_in_y), .clk(clk), .rst_n(cland_start), .d(y), .q(cland_y)" in bb
+    assert ("ot_dp_landing_origin #(.PAD(0), .EDGE_FALL(1)) u_cland_origin (" in bb
+            and ".p_start(cland_fstart_in_y), .start(cland_start));" in bb and ".rst_raw_n(cland_reset_y)" in bb)
+    assert ".ready(landing_ready_y), .fault(landing_fault_y));" in bb   # status still observed, never dropped
+    assert "ot_dp_clk_landing #(" not in bb                            # old ring not emitted in this form
+    top = ("module die_bound_top (rst_n, clk_core);\n input wire rst_n;\n input wire clk_core;\n    a_mod a (\n"
+           "        .clk(clk_core)\n    );\n    b_mod b (\n        .clk(clk_core)\n    );\nendmodule\n")
+    tt = c.top_rtl(top)
+    assert ".cland_fstart_out_x(clock_landing_start_a__x)" in tt and ".cland_fstart_in_y(clock_landing_start_a__x)" in tt
+    assert ".landing_fault_y(clock_landing_fault[0])" in tt
+    m = c.manifest()
+    assert m["lane_added_cycles"] == {"L": 2} and m["count_aligned"] is True
+    assert requirements(p, t)["lane_added_cycles"] == {"L": 2}
+
+
+def test_count_aligned_form_old_ring_stays_default():
+    p, t = vehicle(); c = Landings(p, t)
+    assert c.rows[0]["module"] == "ot_dp_clk_landing" and c.rows[0]["added_cycles"] == 3 and not c.ca
+
+
+def test_count_aligned_form_requires_bind_pins_and_type_uniform_parameters():
+    p, t = ca_vehicle(); p["partition_types"]["B"]["buses"].pop()
+    with pytest.raises(LandingError, match="cland_fstart_in_y"):
+        Landings(p, t)
+    p, t = ca_vehicle(); t["count_aligned"]["ports"] = {}
+    with pytest.raises(LandingError, match="no K/DEPTH/latency"):
+        Landings(p, t)
+    # two copies of type B whose crossings need different K -> TYPE_SPLIT, never a silent first-copy wrapper
+    p, t = ca_vehicle()
+    p["partitions"].append(dict(name="c", type="B", origin_um=[20, 0]))
+    p["ports"].append(dict(id="Q", width=4, kind="data", src=dict(part="a", bus="x"), dst=dict(part="c", bus="y")))
+    t["regions"].append(dict(tag="r2", box_um=[20, 0, 30, 10]))
+    t["ports"].append(dict(port="Q", width=4, src="a", dst="c", src_region="r0", dst_region="r2", lane="L2"))
+    t["count_aligned"]["ports"]["Q"] = dict(K=-1, depth=4, sched_lat=3, tree=True)
+    t["count_aligned"]["regions"]["r2"] = dict(parent="r0", tree_port="Q", edge_fall=False, pad=0)
+    with pytest.raises(LandingError, match="count-aligned landing TYPE_SPLIT"):
+        Landings(p, t)
+
+
+def test_count_aligned_network_prices_per_crossing():
+    from clock_landings import network_lane_cycles
+    p, t = vehicle()
+    p["lanes"] = [dict(id="L", ports=["P"])]
+    p["clock"] = dict(landing_network=dict(data_cycles_per_crossing="count_aligned", count_aligned_cycles={"P": 4},
+                      edges=[dict(id="cland_clk__P", kind="clock", src=dict(part="a", bus="fclk_out_x"),
+                                  dst=dict(part="b", bus="fclk_in_y"))]))
+    assert network_lane_cycles(p) == {"L": 4}
+    del p["clock"]["landing_network"]["count_aligned_cycles"]
+    with pytest.raises(LandingError, match="count_aligned_cycles"):
+        network_lane_cycles(p)

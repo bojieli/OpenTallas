@@ -101,9 +101,14 @@ def head_pass(plan, tab):
     """Serial landed crossings of one lm_head pass: ctl -> spine down to row-pair k -> W/E chain -> spine up -> ctl
     (max over k and halves), plus the TP4 rank all-gather legs (m*/coll lanes) reported separately."""
     landed = collections.Counter(r["lane"] for r in tab["ports"])
+    # added cycles per lane: +CYC per crossing (old ring), or the count-aligned per-crossing schedule latency
+    # (count_align_bind.annotate_table sets r["added_cycles"]; MESO-INTEG-1)
+    cyc = collections.Counter()
+    for r in tab["ports"]:
+        cyc[r["lane"]] += int(r.get("added_cycles", CYC))
     lanes = {ln["id"]: ln for ln in plan["lanes"]}
     nsp = len([l for l in lanes if re.match(r"^sp_x\d+$", l)])
-    best = (0, None)
+    best = (0, None, 0)
     for k in range(nsp):
         for h in "WE":
             ch = [l for l in lanes if l.startswith(f"ch{h}{k}_")]
@@ -112,15 +117,20 @@ def head_pass(plan, tab):
             down = sum(landed[f"sp_x{i}"] for i in range(k + 1))
             up = sum(landed[f"sp_b{i}"] for i in range(k + 1))
             n = down + sum(landed[l] for l in ch) + up
-            if n > best[0]:
+            c = (sum(cyc[f"sp_x{i}"] + cyc[f"sp_b{i}"] for i in range(k + 1)) + sum(cyc[l] for l in ch))
+            if (c, n) > (best[2], best[0]):
                 best = (n, dict(rowpair=k, half=h, spine_down=down, chain=sum(landed[l] for l in ch), spine_up=up,
-                                chain_lanes=len(ch)))
+                                chain_lanes=len(ch)), c)
     gather = {l: landed[l] for l in lanes if re.match(r"^(m\d[SN]_|coll_|kd|ku|unit_lep|ctrl_lep|lepf)", l) and landed[l]}
     worst_leg = max(gather.values()) if gather else 0
-    return dict(head_pass_crossings=best[0], path=best[1], added_cycles=best[0] * CYC,
+    gcyc = {l: cyc[l] for l in gather}
+    # round trip = the worst one-way leg (by added cycles) twice: tx and rx legs are separate lanes of equal depth
+    worst_leg_cyc = max(gcyc.values()) if gcyc else 0
+    return dict(head_pass_crossings=best[0], path=best[1], added_cycles=best[2],
                 gather_lanes=gather, gather_worst_one_way_crossings=worst_leg,
-                gather_round_trip_added_cycles=2 * worst_leg * CYC,
-                total_added_cycles_per_head_pass=(best[0] + 2 * worst_leg) * CYC)
+                gather_round_trip_added_cycles=2 * worst_leg_cyc,
+                total_added_cycles_per_head_pass=best[2] + 2 * worst_leg_cyc,
+                count_aligned=any("added_cycles" in r and r["added_cycles"] != CYC for r in tab["ports"]))
 
 
 def summary(plan, tab):

@@ -1,5 +1,6 @@
 // COUNT-ALIGNED landed (mesochronous) crossing.  MESO-COUNT-1 study (OWNER-approved 10-27), opt-in, default-off:
-// nothing instantiates it yet.  ot_dp_clk_landing / ot_meso_ring are unchanged.
+// opt-in: instantiated only by the count_aligned form of tools/die_plan/clock_landings.py (MESO-INTEG-1, table
+// "count_aligned" from count_align_bind.py).  ot_dp_clk_landing / ot_meso_ring are unchanged and stay the default.
 //
 // Why.  ot_meso_ring places its read pointer at start-up from the MEASURED PHASE (half-period resolution), so the
 // whole-cycle latency of a crossing is a function of (phase mod T).  Two chips whose phases differ by exactly T
@@ -284,4 +285,30 @@ module ot_dp_landing_origin #(
     end else begin : g_nopad
         assign start = s2;
     end
+endmodule
+
+// Root region count origin (MESO-INTEG-1): the start tree's root has no parent start; its origin is a plain counter
+// SETTLE cycles after its raw reset release, so it is chip-invariant.  SETTLE must cover the die's raw-reset wavefront
+// release spread (every child origin's rst_raw_n must be high before the start wave reaches it); the binder takes it
+// from the bind table (root_settle_cycles).  Cleared only by the raw reset; start rises once and stays high.
+(* keep_hierarchy *)
+module ot_dp_landing_root #(
+    parameter integer SETTLE = 64
+) (
+    input  wire clk,
+    input  wire rst_raw_n,
+    output reg  start
+);
+    localparam integer CW = $clog2(SETTLE + 1);
+    reg [CW-1:0] n;
+    always @(posedge clk) begin
+        if (!rst_raw_n) begin n <= 0; start <= 0; end
+        else begin
+            if (n != CW'(SETTLE)) n <= n + 1'b1;
+            start <= (n == CW'(SETTLE));
+        end
+    end
+`ifndef SYNTHESIS
+    initial if (SETTLE < 1) $fatal(1, "root SETTLE must be >= 1");
+`endif
 endmodule
