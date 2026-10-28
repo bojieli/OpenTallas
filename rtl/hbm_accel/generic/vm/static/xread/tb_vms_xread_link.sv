@@ -92,7 +92,7 @@ module tb_vms_xread_link;
             far_live={1'b1,1'b0,2'd1,10'd5,3'd1};
             tick();
         end
-        clear();repeat(12)tick();
+        clear();repeat(LX+6+8)tick();   // drain: every in-flight read lands (n+6+PIN+LX)
         if(far_reads!=issued||issued<1700)$fatal(1,"FATAL crossing inventory %0d",far_reads);
         $display("XREAD_LINK PASS lanes=%0d LX=%0d XG=%0d crossing_reads=%0d far_local_reads=%0d edge=n+6+PIN+LX exact; tied group never answered",LANES,LX,XG,far_reads,far_local);
         $finish;

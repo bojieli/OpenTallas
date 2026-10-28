@@ -41,3 +41,13 @@ latency 4); DIE-HBM-9 (6) (half-local VM banks, shared tensors = one-owner cross
 1. Bind the tie instance list from the hub glue (client -> bank group per half) and add it to `xread_ties.json`.
 2. Compiler: half-local VM allocation + owner-issued crossing reads (static schedule), then the token pass.
 3. Wire the link into the hub glue / die contract (plan event); per-hop STA at the comb taps.
+
+## LX 15 re-bench (COORD ruling DIE-HBM-10 ASK 3, 2026-10-28 10:09 PDT)
+- C22 plan: the reach-legal VM link has 14 regs (NW) / 13 (NE). One static constant, LX = 15, on both hubs.
+- `run_xread.sh OUT [LX]` now takes LX. The bench drain scales with LX (was a fixed 12 cycles, so at LX 15 the
+  1687-of-1755 in-flight tail was cut off and the exact inventory check failed). The checks are unchanged.
+- LX 15, CHECKED: positive PASS (1,755 crossing reads at exactly n+6+PIN+15; 256 far-local reads; the tied group never
+  answered). 4/4 mutants FATAL. Logs in `bench_lx15/`. LX 4 re-run: PASS + 4/4 (in `bench/`).
+- The bench drives 8 real owner banks (lanes=8); the 16-lane width is covered by the LEC (LANES 16, LX 4). LEC at LX 15:
+  UNCHECKED (same generate chain, only the depth differs).
+- Still owed before merge: the token check (compiler half-local VM allocation + owner-issued reads; next slice).
