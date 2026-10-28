@@ -231,6 +231,24 @@ def check_clock_entry_macro(P, R, plan_dir=None, macros_file=None, entries_file=
     return out
 
 
+def channel_flows(P):
+    """declared partition channels that state a bit count ("N bits" in channel.reason): a flow along the channel's
+    long axis through its centre (die frame), for the per-street demand."""
+    import re as _re
+    out = []
+    for n, p in P.parts.items():
+        for k, ch in enumerate(P.types[p["type"]].get("channels", []) or []):
+            m = _re.search(r"(\d+)\s*bits", str(ch.get("reason", "")))
+            if not m or not ch.get("rect_um"):
+                continue
+            x, y, w, h = ch["rect_um"]
+            a, b = ((x, y + h / 2), (x + w, y + h / 2)) if w >= h else ((x + w / 2, y), (x + w / 2, y + h))
+            a, b = P.to_die(n, a), P.to_die(n, b)
+            if abs(a[0] - b[0]) < 1e-6 or abs(a[1] - b[1]) < 1e-6:
+                out.append((f"{n}/channel{k}", int(m.group(1)), [tuple(a), tuple(b)]))
+    return out
+
+
 def check_streets(P, R, plan_dir=None, clock_builds=(), geo=None, max_msgs=40, png=None):
     """METHODOLOGY 12.10c STREET RULE (G0C, streets.py): hard cores on a street grid, every core point <= reach_um
     (400) from the street network, street width >= repeater + hold + FT budget / fill, no clock leg (clock builds:
@@ -245,21 +263,38 @@ def check_streets(P, R, plan_dir=None, clock_builds=(), geo=None, max_msgs=40, p
         legs += lg
         pts += pt
         unpl += up
-    for lid, (_pts, regs, _xs) in (geo or {}).items():
+    flows = []
+    for lid, (lpts, regs, _xs) in (geo or {}).items():
         pts += [(f"{lid}#{k}", tuple(p), "lane_station") for k, p in enumerate(regs[1:-1], 1)]
-    A = ST.analyze(float(P.W), float(P.H), ko, cfg, legs, pts, unpl)
+        try:
+            bits = int(P.ports[P.lanes[lid]["ports"][0]]["width"])
+        except (KeyError, IndexError, TypeError, ValueError):
+            bits = 0
+        flows.append((lid, bits, [tuple(q) for q in lpts]))
+    flows += channel_flows(P)
+    # HBM-STREETS-2 (COORD 10-27 18:52): per-street demand replaces the flat 34.56-um width; a plan may still pin the
+    # legacy flat width with die.streets.mode = "flat"
+    if str((P.die.get("streets") or {}).get("mode", "demand")) == "flat":
+        flows = None
+    A = ST.analyze(float(P.W), float(P.H), ko, cfg, legs, pts, unpl, flows=flows)
     if png:
         ST.render(A, ko, png, float(P.W), float(P.H), P.name)
+    # severity (COORD 10-27 18:52): ERROR on hbm (12.10c); REPORT-ONLY (WARN) on the other dies until their own ruling;
+    # die.streets.enforce overrides
+    enforce = (P.die.get("streets") or {}).get("enforce")
+    if enforce is None:
+        enforce = str(getattr(P, "name", "")).lower().startswith("hbm")
+    emit = R.err if enforce else R.warn
     n = {}
     for chk, core, msg in A["errors"]:
         n[chk] = n.get(chk, 0) + 1
         if n[chk] <= max_msgs:
-            R.err(chk, msg)
+            emit(chk, msg)
     for chk, c in n.items():
         if c > max_msgs:
-            R.err(chk, f"... {c - max_msgs} more {chk} findings (g0_report summary.streets)")
+            emit(chk, f"... {c - max_msgs} more {chk} findings (g0_report summary.streets)")
     over = [c for c in A["cores"] if c["street_dist_um"] is None or c["street_dist_um"] > cfg["reach_um"] + 1e-6]
-    return dict(cfg={k: v for k, v in cfg.items()}, clock_builds=len(clock_builds or ()), streets=A["streets"], cores=len(A["cores"]), cores_over_reach=len(over),
+    return dict(enforce=bool(enforce), cfg={k: v for k, v in cfg.items()}, clock_builds=len(clock_builds or ()), streets=A["streets"], cores=len(A["cores"]), cores_over_reach=len(over),
                 worst_cores=A["worst_cores"], clock_legs=len(legs), clock_legs_over_core=len(A["legs_over_core"]),
                 legs_over_core=A["legs_over_core"][:50], points_in_core=len(A["points_in_core"]),
                 points_in_core_rows=A["points_in_core"][:50], unplaced=len(unpl), counts=n)

@@ -77,8 +77,8 @@ def test_points_and_unplaced():
 
 class _P:
     """minimal plan stand-in for check.check_streets (die_clock.keepouts reads parts/types/to_die/die.io)."""
-    def __init__(self, cores, W=2000.0, H=500.0, streets=None):
-        self.W, self.H = W, H
+    def __init__(self, cores, W=2000.0, H=500.0, streets=None, name="hbm_t"):
+        self.W, self.H, self.name = W, H, name
         self.die = dict(io=[], **({"streets": streets} if streets else {}))
         self.types = dict(t=dict(hard_cores=[dict(inst=n, origin_um=[r[0], r[1]], outline_um=[r[2] - r[0], r[3] - r[1]])
                                              for *r, n in cores]))
@@ -129,3 +129,35 @@ def test_render(tmp_path):
     A = ST.analyze(900.0, 500.0, ko, CFG, legs=[("L9:h0", (20.0, 200.0), (800.0, 200.0))])
     ST.render(A, ko, tmp_path / "s.png", 900.0, 500.0, "t")
     assert (tmp_path / "s.png").stat().st_size > 1000
+
+
+def test_severity_hbm_error_other_dies_report_only():
+    # COORD 10-27 18:52: ERROR on hbm, REPORT-ONLY (WARN) on the other dies; die.streets.enforce overrides
+    cores = [(17.28, 17.28, 1017.28, 482.72, "big")]
+    for name, streets, want in (("hbm_arch_B2o", dict(reach_um=200.0), True), ("s81", dict(reach_um=200.0), False),
+                                ("s81", dict(reach_um=200.0, enforce=True), True)):
+        R = check.Report(True)
+        out = check.check_streets(_P(cores, W=1100.0, H=500.0, streets=streets, name=name), R)
+        assert out["enforce"] is want and bool(R.errors()) is want
+        assert any(i["check"] == "street_reach" for i in R.items)
+
+
+def test_per_street_demand_base_and_ft():
+    # HBM-STREETS-2: per-street demand. A 17.28-um slit carrying no FT is a street (base (4.32 + 4.32) / 0.6 -> 17.28);
+    # the same slit carrying a 1000-bit N-S flow needs 17.28 + 1000 x 0.04 = 57.28 um and is no street.
+    assert abs(ST.base_width(CFG) - 17.28) < 1e-9 and abs(ST.ft_um_per_bit(CFG) - 0.04) < 1e-9
+    ko = [(0.0, 0.0, 370.0, 2000.0, "a"), (387.28, 0.0, 757.28, 2000.0, "b")]
+    A = ST.analyze(757.28, 2000.0, ko, CFG, flows=[])
+    assert not A["errors"] and A["streets"]["demand"]["base_um"] == 17.28
+    A2 = ST.analyze(757.28, 2000.0, ko, CFG, flows=[("L1", 1000, [(378.0, 0.0), (378.0, 2000.0)])])
+    assert {e[1] for e in A2["errors"] if e[0] == "street_reach"} == {"a", "b"}
+    assert abs(A2["streets"]["demand"]["max_req_ns_um"] - 57.28) < 1e-6
+    ko3 = [(0.0, 0.0, 370.0, 2000.0, "a"), (439.12, 0.0, 809.12, 2000.0, "b")]          # 69.12-um street >= 57.28
+    A3 = ST.analyze(809.12, 2000.0, ko3, CFG, flows=[("L1", 1000, [(400.0, 0.0), (400.0, 2000.0)])])
+    assert not A3["errors"]
+
+
+def test_phy_hard_core_inside_io_rect_not_reach_checked():
+    ko = [(0.0, 0.0, 600.0, 1050.0, "io/io_x"), (4.0, 0.0, 604.0, 600.0, "NW_io/u_lk_N0"), (0.0, 1100.0, 300.0, 1400.0, "c0")]
+    A = ST.analyze(2000.0, 1500.0, ko, CFG, flows=[])
+    assert [c["name"] for c in A["cores"]] == ["c0"]

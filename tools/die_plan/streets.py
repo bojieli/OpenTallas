@@ -30,6 +30,8 @@ DEFAULTS = dict(
     ft_um=8.64,          # FT repeater columns (bits crossing at <= 60 % fill, plan default; per die override)
     fill=0.6,            # 12.7e margin: bays / streets <= 60 % full
     leg_max_um=480.0,    # die clock: max unrepeated leg (die_clock_mesh hop_max)
+    ft_pitch_um=0.048,   # per-street demand (HBM-STREETS-2): FT bit track pitch (M4/M6, the plan channel convention)
+    ft_layers=2.0,       # routing layers per direction a street offers to FT bits (M4+M6 E-W, M5+M7 N-S)
 )
 
 
@@ -38,6 +40,63 @@ def required_width(cfg):
     w = (cfg["clock_um"] + cfg["hold_um"] + cfg["ft_um"]) / cfg["fill"]
     g = cfg["raster_um"]
     return math.ceil(w / g - 1e-9) * g
+
+
+def base_width(cfg):
+    """per-street demand mode: the width every street needs before FT (clock repeater + hold column) / fill, snapped."""
+    g = cfg["raster_um"]
+    return math.ceil((cfg["clock_um"] + cfg["hold_um"]) / cfg["fill"] / g - 1e-9) * g
+
+
+def ft_um_per_bit(cfg):
+    return cfg["ft_pitch_um"] / (cfg["ft_layers"] * cfg["fill"])
+
+
+def _run_start(free, axis):
+    """index (along `axis`) of the first cell of the free run containing each cell."""
+    a = np.moveaxis(free, axis, -1)
+    n = a.shape[-1]
+    idx = np.arange(n)
+    left = np.maximum.accumulate(np.where(~a, idx, -1), axis=-1) + 1
+    return np.moveaxis(left, -1, axis)
+
+
+def demand(free, g, flows, cfg):
+    """PER-STREET DEMAND (HBM-STREETS-2, COORD 10-27 18:52): required street width per cell, counted from the plan.
+    flows: [(name, bits, [(x, y), ...])] axis-aligned polylines (die lanes, declared partition channels).  An E-W flow
+    segment loads the street CROSS-SECTION it runs through, i.e. the vertical free run containing each free cell it
+    crosses (blocked cells = the flow detours, counted where it runs); every flow counts once per cross-section.
+    Returns (req_y, req_x) in um: needed vertical extent (E-W streets) / horizontal extent (N-S streets) per cell
+    = base (clock + hold) / fill + sum(bits) * pitch / (layers * fill)."""
+    ny, nx = free.shape
+    base = base_width(cfg)
+    k = ft_um_per_bit(cfg)
+    sy, sx = _run_start(free, 0), _run_start(free, 1)
+    loads = ({}, {})                       # 0: E-W flows keyed (i, start_j); 1: N-S flows keyed (j, start_i)
+    for name, bits, pts in flows:
+        if not bits:
+            continue
+        for a, b in zip(pts, pts[1:]):
+            if abs(a[1] - b[1]) < 1e-9 and abs(a[0] - b[0]) > 1e-9:          # E-W
+                j = min(ny - 1, max(0, int(a[1] // g)))
+                i0, i1 = sorted((int(a[0] // g), int(b[0] // g)))
+                for i in range(max(0, i0), min(nx, i1 + 1)):
+                    if free[j, i]:
+                        loads[0].setdefault((i, int(sy[j, i])), {})[name] = bits
+            elif abs(a[0] - b[0]) < 1e-9 and abs(a[1] - b[1]) > 1e-9:        # N-S
+                i = min(nx - 1, max(0, int(a[0] // g)))
+                j0, j1 = sorted((int(a[1] // g), int(b[1] // g)))
+                for j in range(max(0, j0), min(ny, j1 + 1)):
+                    if free[j, i]:
+                        loads[1].setdefault((j, int(sx[j, i])), {})[name] = bits
+    req_y = np.full(free.shape, base)
+    req_x = np.full(free.shape, base)
+    ry, rx = _runs(free, 0), _runs(free, 1)
+    for (i, j0), fl in loads[0].items():
+        req_y[j0:j0 + int(ry[j0, i]), i] = base + k * sum(fl.values())
+    for (j, i0), fl in loads[1].items():
+        req_x[j, i0:i0 + int(rx[j, i0])] = base + k * sum(fl.values())
+    return req_y, req_x
 
 
 def config(decl=None):
@@ -155,6 +214,10 @@ def is_phy(name):
     return str(name).startswith("io/") or "/clock_keepout_" in str(name)
 
 
+def _ovl(a, b):
+    return max(0.0, min(a[2], b[2]) - max(a[0], b[0])) * max(0.0, min(a[3], b[3]) - max(a[1], b[1]))
+
+
 def in_open(p, r, eps=1e-6):
     return r[0] + eps < p[0] < r[2] - eps and r[1] + eps < p[1] < r[3] - eps
 
@@ -177,7 +240,7 @@ class _Index:
                         yield r
 
 
-def analyze(W, H, keepouts, cfg=None, legs=(), points=(), unplaced=()):
+def analyze(W, H, keepouts, cfg=None, legs=(), points=(), unplaced=(), flows=None):
     """keepouts: [(x0, y0, x1, y1, name)] die frame (hard cores + PHY macros).  legs: [(name, a, b)] clock legs.
     points: [(name, (x, y), kind)] cells / stations that must sit on streets.  unplaced: [(name, detail)] build rows.
     Returns dict(cfg, streets, cores[...], legs_over_core[...], points_in_core[...], unplaced[...], errors[...])."""
@@ -185,8 +248,18 @@ def analyze(W, H, keepouts, cfg=None, legs=(), points=(), unplaced=()):
     g = cfg["raster_um"]
     occ = raster(W, H, keepouts, g)
     free = ~occ
-    k = int(math.ceil(cfg["width_um"] / g - 1e-9))
-    wide = free & (_runs(free, 1) >= k) & (_runs(free, 0) >= k)
+    dem = None
+    if flows is not None:                 # per-street demand (HBM-STREETS-2): width counted per cross-section
+        req_y, req_x = demand(free, g, flows, cfg)
+        wide = free & (_runs(free, 0) * g >= req_y - 1e-6) & (_runs(free, 1) * g >= req_x - 1e-6)
+        fy, fx = req_y[free], req_x[free]
+        dem = dict(mode="per_street", base_um=base_width(cfg), ft_um_per_bit=ft_um_per_bit(cfg),
+                   max_req_ew_um=round(float(fy.max()) if fy.size else 0.0, 2),
+                   max_req_ns_um=round(float(fx.max()) if fx.size else 0.0, 2),
+                   flows=len(flows), flow_bits=int(sum(b for _, b, _ in flows)))
+    else:
+        k = int(math.ceil(cfg["width_um"] / g - 1e-9))
+        wide = free & (_runs(free, 1) >= k) & (_runs(free, 0) >= k)
     lab, sizes = components(wide)
     main = max(sizes, key=sizes.get) if sizes else None
     net = lab == main if main is not None else np.zeros_like(wide)
@@ -194,9 +267,11 @@ def analyze(W, H, keepouts, cfg=None, legs=(), points=(), unplaced=()):
     errors = []
     cores = []
     ny, nx = occ.shape
+    phys = [r for r in keepouts if str(r[4]).startswith("io/")]
     for r in keepouts:
-        if is_phy(r[4]):
-            continue                     # die PHY macros: obstacles for streets, own clock inside (not a hard core)
+        if is_phy(r[4]) or any(_ovl(r, p) >= 0.9 * (r[2] - r[0]) * (r[3] - r[1]) for p in phys):
+            continue                     # die PHY macros (and a PHY hard core >= 90 % inside a die.io PHY rect): obstacles for
+            #                              streets, own clock inside (not a reach-checked hard core)
         i0 = max(0, int(math.floor(r[0] / g)))
         i1 = min(nx, max(i0 + 1, int(math.ceil(r[2] / g))))
         j0 = max(0, int(math.floor(r[1] / g)))
@@ -208,7 +283,7 @@ def analyze(W, H, keepouts, cfg=None, legs=(), points=(), unplaced=()):
             errors.append(("street_reach", r[4], f"core {r[4]}: farthest point {('no street' if d >= 1e17 else f'{d:.0f} um')} "
                            f"from the street network > {cfg['reach_um']:g} um (12.10c: open a street beside it / move it onto "
                            "the street grid)"))
-    if cfg["width_um"] + 1e-6 < cfg["required_width_um"]:
+    if flows is None and cfg["width_um"] + 1e-6 < cfg["required_width_um"]:
         errors.append(("street_width", None, f"die.streets.width_um {cfg['width_um']:g} < required {cfg['required_width_um']:g} um "
                        f"((clock {cfg['clock_um']:g} + hold {cfg['hold_um']:g} + FT {cfg['ft_um']:g}) / fill {cfg['fill']:g})"))
     idx = _Index(list(keepouts))
@@ -235,7 +310,8 @@ def analyze(W, H, keepouts, cfg=None, legs=(), points=(), unplaced=()):
               street_area_mm2=round(float(net.sum()) * g * g / 1e6, 3),
               free_area_mm2=round(float(free.sum()) * g * g / 1e6, 3),
               pockets=len(sizes) - (1 if sizes else 0),
-              pocket_area_mm2=round(float(sum(v for kk, v in sizes.items() if kk != main)) * g * g / 1e6, 3))
+              pocket_area_mm2=round(float(sum(v for kk, v in sizes.items() if kk != main)) * g * g / 1e6, 3),
+              demand=dem)
     worst = sorted((c for c in cores), key=lambda c: -(c["street_dist_um"] if c["street_dist_um"] is not None else 1e9))
     return dict(cfg=cfg, streets=st, cores=cores, worst_cores=worst[:10], legs_over_core=over, points_in_core=inside,
                 errors=errors, net=net)
@@ -292,7 +368,8 @@ def render(A, keepouts, png, W, H, title=""):
     ax.set_ylim(0, H)
     ax.set_aspect("equal")
     st = A["streets"]
-    ax.set_title(f"{title} street map (12.10c): green = streets >= {st['width_um']:g} um, red = {len(bad)} cores > "
+    wl = (f"per-street demand (base {st['demand']['base_um']:g} um + FT)" if st.get("demand") else f">= {st['width_um']:g} um")
+    ax.set_title(f"{title} street map (12.10c): green = streets {wl}, red = {len(bad)} cores > "
                  f"{A['cfg']['reach_um']:g} um from a street, magenta = {len(A['legs_over_core'])} clock legs over a core, "
                  f"x = {len(A['points_in_core'])} stations in a core", fontsize=9)
     fig.tight_layout()
