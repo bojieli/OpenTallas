@@ -25,9 +25,22 @@ proc cland_put {i rect tag} {
  set name [$i getName]
  if {[dict exists $cland_done $name]} { error "OT_CLAND duplicate placement $name" }
  lassign $rect ax ay bx by
- set ax [expr {max($ff_x0,int(ceil($ax*$ff_dbu)))}];set ay [expr {max($ff_y0,int(ceil($ay*$ff_dbu)))}]
- set bx [expr {min($ff_x1,int(floor($bx*$ff_dbu)))}];set by [expr {min($ff_y1,int(floor($by*$ff_dbu)))}]
  set m [$i getMaster];set w [$m getWidth];set h [$m getHeight]
+ set ax [expr {int(ceil($ax*$ff_dbu))}];set ay [expr {int(ceil($ay*$ff_dbu))}]
+ set bx [expr {int(floor($bx*$ff_dbu))}];set by [expr {int(floor($by*$ff_dbu))}]
+ # FLOW-GEN-1 10-28 (DIE-HEAD-9 bug 5): a window centred within half its size of the core edge (a status pin in the
+ # core margin) clips to less than the cell; slide it, same size, inside the core (windows that fit are unchanged,
+ # windows farther out still fail closed)
+ set ov [expr {min($bx,$ff_x1)-max($ax,$ff_x0)}]
+ if {$ov < $w && $bx-$ax >= $w && 2*$ov >= $ax-$bx} {
+  if {$ax < $ff_x0} { set bx [expr {$bx+$ff_x0-$ax}];set ax $ff_x0 } elseif {$bx > $ff_x1} { set ax [expr {$ax-($bx-$ff_x1)}];set bx $ff_x1 }
+ }
+ set ov [expr {min($by,$ff_y1)-max($ay,$ff_y0)}]
+ if {$ov < $h && $by-$ay >= $h && 2*$ov >= $ay-$by} {
+  if {$ay < $ff_y0} { set by [expr {$by+$ff_y0-$ay}];set ay $ff_y0 } elseif {$by > $ff_y1} { set ay [expr {$ay-($by-$ff_y1)}];set by $ff_y1 }
+ }
+ set ax [expr {max($ff_x0,$ax)}];set ay [expr {max($ff_y0,$ay)}]
+ set bx [expr {min($ff_x1,$bx)}];set by [expr {min($ff_y1,$by)}]
  set startx [expr {$ff_x0+int(ceil(double($ax-$ff_x0)/$ff_sw))*$ff_sw}]
  set starty [expr {$ff_y0+int(ceil(double($ay-$ff_y0)/$ff_rh))*$ff_rh}]
  for {set y $starty} {$y+$h<=$by} {incr y $ff_rh} {
@@ -55,14 +68,27 @@ proc cland_put {i rect tag} {
  }
  error "OT_CLAND no legal nonoverlapping row/site in reserved band for $name ($tag)"
 }
+proc cland_drivers {n} {
+ set d {}
+ foreach it [$n getITerms] { if {[[$it getMTerm] getIoType] eq "OUTPUT"} { lappend d [$it getInst] } }
+ return $d
+}
 # Registered status outputs sit at their declared source point, separately
 # from the ring storage band; the collector then follows its original tree.
 foreach spec $cland_status {
  lassign $spec net x y
  set n [$ff_blk findNet $net]
  if {$n eq "NULL"} { error "OT_CLAND missing actual status net $net" }
- set drivers {}
- foreach it [$n getITerms] { if {[[$it getMTerm] getIoType] eq "OUTPUT"} { lappend drivers [$it getInst] } }
+ set drivers [cland_drivers $n]
+ # FLOW-GEN-1 10-28 (DIE-HEAD-9 bug 4): ASAP7 maps the status FF as DFFHQN + INV (no Q flop): follow exactly one
+ # inverter to its single QN flop driver; the flop is placed at the status point, the INV is left to GPL beside it
+ if {[llength $drivers]==1 && [string match "INV*" [[[lindex $drivers 0] getMaster] getName]]} {
+  set cland_inv [lindex $drivers 0];set cland_qd {}
+  foreach it [$cland_inv getITerms] {
+   if {[[$it getMTerm] getIoType] eq "INPUT" && [$it getNet] ne "NULL"} { set cland_qd [cland_drivers [$it getNet]] }
+  }
+  if {[llength $cland_qd]==1 && [string match "*DFF*" [[[lindex $cland_qd 0] getMaster] getName]]} { set drivers $cland_qd }
+ }
  if {[llength $drivers]!=1 || ![string match "*DFF*" [[[lindex $drivers 0] getMaster] getName]]} {
   error "OT_CLAND $net requires one actual dedicated output FF"
  }
