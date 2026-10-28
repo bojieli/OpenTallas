@@ -85,3 +85,28 @@ for D, rr, offs in ((4, 12, (-3, -2, -1, 0, 4, 5)), (8, 20, (-3, -2, -1, 0, 8, 9
     tk[f"tmut{D}_NO_TIMEOUT".replace("-", "m")] = ("bmc", 1, "abc bmc3", f"-DOT_MESO_CA_MUTANT_NO_TIMEOUT -DFV_HELP "
                                                     f"-DFV_TMOONE -DFV_D={D} -DFV_RRM={rr} -DFV_PH=3 -DFV_OFF=-2", D, True)
 write("fv_ca2_tmo.sby", tk)
+# MESO-STRAP-1 (OWNER 12.15a): strap form ot_dp_clk_landing_cas, strap_k = KS free constant over all 2^TW values; one
+# k-induction task per (phase PH, E = start offset + K); SRM = RRM = 2^TW/2 + 1 so KS takes every residue in each task.
+SRR = {4: 33, 8: 65}
+for D, es in ((4, range(-1, 14)), (8, range(-1, 22))):
+    sr = SRR[D]
+    k = {f"k{D}_P{p}_E{e}".replace("-", "m"): ("bmc", 1, "abc bmc3", f"-DFV_STRAP -DFV_HELP -DFV_ONE -DFV_NOLIVE -DFV_D={D} "
+                                                f"-DFV_SRM={sr} -DFV_RRM={sr} -DFV_PH={p} -DFV_E={e}", D, True)
+         for p in range(8) for e in es}
+    write(f"fv_ca2_strap{D}.sby", k)
+smut = {}
+for m, D, p, e in (("K", 4, 3, 2), ("K", 8, 3, 5), ("FREERUN", 4, 3, 2), ("FREERUN", 8, 3, 5),
+                   ("NO_GUARD", 4, 2, 1), ("NO_GUARD", 8, 2, 1), ("NO_TAG", 4, 3, 11), ("NO_TAG", 8, 3, 19)):
+    smut[f"sm{m}_D{D}_P{p}_E{e}"] = ("bmc", 1, "abc bmc3", f"-DFV_STRAP -DOT_MESO_CA_MUTANT_{m} -DFV_HELP -DFV_ONE -DFV_NOLIVE "
+                                     f"-DFV_D={D} -DFV_SRM={SRR[D]} -DFV_RRM={SRR[D]} -DFV_PH={p} -DFV_E={e}", D, True)
+for D, e in ((4, -1), (8, -1)):
+    smut[f"smNO_TIMEOUT_D{D}"] = ("bmc", 1, "abc bmc3", f"-DFV_STRAP -DOT_MESO_CA_MUTANT_NO_TIMEOUT -DFV_HELP -DFV_TMOONE "
+                                  f"-DFV_D={D} -DFV_SRM={SRR[D]} -DFV_RRM={SRR[D]} -DFV_PH=3 -DFV_E={e}", D, True)
+write("fv_ca2_strapmut.sby", smut)
+st = {}
+for D, es in ((4, (-2, -1, 0, 4, 5)), (8, (-2, -1, 0, 8, 9))):
+    for p in range(8):
+        for e in es:
+            st[f"st{D}_P{p}_E{e}".replace("-", "m")] = ("bmc", 1, "abc bmc3", f"-DFV_STRAP -DFV_HELP -DFV_TMOONE -DFV_D={D} "
+                                                        f"-DFV_SRM={SRR[D]} -DFV_RRM={SRR[D]} -DFV_PH={p} -DFV_E={e}", D, True)
+write("fv_ca2_straptmo.sby", st)

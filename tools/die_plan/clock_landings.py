@@ -193,8 +193,11 @@ def expand_station_types(binder,table):
 
 
 class Landings:
-    def __init__(self, plan, table, *, require_geometry=True):
+    def __init__(self, plan, table, *, require_geometry=True, ca_variants=False):
+        """ca_variants (MESO-STRAP-1, LEC only): count-aligned PARAMETER form without the TYPE_SPLIT stop, so
+        type_rtl(..., inst=<partition>) can emit one copy's parameter wrapper (the LEC reference of a strap master)."""
         self.plan = plan
+        self.ca_variants = ca_variants
         self.collector = table.get("collector")
         # monitor="region" (opt-in, DIE-HEAD-3): the dataflow monitor plus same-region status links (registered ctl
         # pins on the region clock, no ring) from clock_landing_plan.compose(monitor="region").
@@ -222,6 +225,12 @@ class Landings:
         self.ins = defaultdict(dict)
         self.outs = defaultdict(set)
         self.ca = table.get("count_aligned")
+        # MESO-STRAP-1 (OWNER 12.15a, opt-in: count_aligned.strap_form): K / PAD / EDGE_FALL / tree select / root become
+        # strap_ca_* input pins of ONE design per type, tied at the parent to count_align_bind.strap_ties() values
+        self.strap = None
+        if self.ca and self.ca.get("strap_form"):
+            import count_align_bind as CAB
+            self.strap = CAB.strap_ties(self.ca, plan)
         seen = set()
         for r in table["ports"]:
             pid = r["port"]
@@ -271,7 +280,8 @@ class Landings:
                     raise LandingError(f"count-aligned landing {pid}: no K/DEPTH/latency in the bind table")
                 if int(c["depth"]) not in (4, 8):
                     raise LandingError(f"count-aligned landing {pid}: DEPTH {c['depth']} not 4/8")
-                row.update(added_cycles=int(c["sched_lat"]), module="ot_dp_clk_landing_ca", ring_depth=int(c["depth"]),
+                row.update(added_cycles=int(c["sched_lat"]), module="ot_dp_clk_landing_cas" if self.strap else
+                           "ot_dp_clk_landing_ca", ring_depth=int(c["depth"]),
                            ring_offset=None, ring_k=int(c["K"]), start_tree_port=bool(c["tree"]))
             self.rows.append(row)
             self.ins[dp][db] = row
@@ -310,6 +320,15 @@ class Landings:
                     required["cland_rstart_out"] = "out"
                 if cat and cat["role"][0] == "relay":
                     required["cland_rstart_in"] = "in"
+                if cat and cat.get("straps"):
+                    # strap pins: types[].count_straps of the declared width (like id_straps: no plan bus; the parent
+                    # ties each bit with its own TIEHI/TIELO next to the pin)
+                    cs = {x["name"]: int(x["width"]) for x in self.types[tn].get("count_straps", [])}
+                    for sp, w in cat["straps"].items():
+                        if cs.get(sp) != int(w):
+                            raise LandingError(f"clock landing {tn}: declare count strap {sp}[{w}] in types[].count_straps")
+                        if sp in declared:
+                            raise LandingError(f"clock landing {tn}.{sp}: a count strap is not a plan bus (types[].count_straps)")
             for b in mask[0]:
                 required.update({f"fclk_in_{b}": "in"})
                 if not self.collector:
@@ -432,6 +451,7 @@ class Landings:
         ports = {r["port"]: r for r in self.rows}
         out, per_type = {}, defaultdict(dict)
         self.ca_part_role = {}
+        self.ca_part_cat = {}
         for reg, ps in sorted(regs.items()):
             rg = ca["regions"].get(reg)
             if rg is None:
@@ -463,16 +483,31 @@ class Landings:
                 self.ca_part_role[pn] = dict(region=reg, role=role[0], origin=org, relay_tx=tx)
                 sig = (tuple((b, r["ring_k"], r["ring_depth"]) for b, r in sorted(self.ins[pn].items())),
                        role if role[0] != "relay" else role[::2], tx)
+                self.ca_part_cat[pn] = dict(rings={b: dict(K=k, depth=d) for b, k, d in sig[0]}, role=sig[1], relay_tx=tx)
+                if self.strap:
+                    # strap form: K, PAD, EDGE_FALL, tree select and root/child are strap values, not type identity;
+                    # only the relay pin list (rx in / tx out) still separates copies (residual TYPE_SPLIT)
+                    sig = (tuple(sorted(self.ins[pn])), role[0] == "relay", tx)
                 per_type[self.parts[pn]["type"]].setdefault(sig, []).append(pn)
         bad = {tn: [ps for ps in sigs.values()] for tn, sigs in per_type.items() if len(sigs) > 1}
         self.ca_type_split = dict(types_needing_split=len(bad), type_count_before=len(per_type),
                                   type_count_after=sum(len(s) for s in per_type.values()))
-        if bad and raise_split:
-            raise LandingError(f"count-aligned landing TYPE_SPLIT required (K/DEPTH/origin differ between copies): "
+        if bad and raise_split and not self.ca_variants:
+            what = "relay rx/tx pins differ between copies" if self.strap else "K/DEPTH/origin differ between copies"
+            raise LandingError(f"count-aligned landing TYPE_SPLIT required ({what}): "
                                f"{len(bad)} types, e.g. {dict(list(bad.items())[:2])}")
         for tn, sigs in per_type.items():
-            (ins, role, tx), _ = next(iter(sigs.items()))
-            out[tn] = dict(rings={b: dict(K=k, depth=d) for b, k, d in ins}, role=role, relay_tx=tx)
+            pn0 = next(iter(sigs.values()))[0]
+            out[tn] = dict(self.ca_part_cat[pn0])
+            if self.strap:
+                st = self.strap["types"][tn]
+                o = st["origin"]
+                role = out[tn]["role"]
+                if role[0] != "relay" and o["form"] == "strap":
+                    role = ("strap", tuple(o["tree_buses"]), o["padw"], int(self.ca.get("root_settle_cycles", 64)),
+                            bool(o["root"]))
+                out[tn] = dict(rings={b: dict(K=None, depth=v["depth"], kw=v["kw"]) for b, v in st["buses"].items()},
+                               role=role, relay_tx=out[tn]["relay_tx"], straps=dict(st["straps"]))
         return out
 
     def validate_observer(self,binder):
@@ -518,7 +553,7 @@ class Landings:
                                   ports=dict(ready=spec["ready_port"],fault=spec["fault_port"]),gating="ready AND, fault OR",
                                   added_data_cycles=0,added_external_ports=0,check="native leaf header (gen_rtl)")
 
-    def type_rtl(self, tn, text, base=None):
+    def type_rtl(self, tn, text, base=None, inst=None, depth=None):
         """Emit actual landing hardware before each incoming boundary/station.
 
         Existing data/epoch buses and their station chains stay intact. The
@@ -539,6 +574,15 @@ class Landings:
         head, body = text.split(marker, 1)
         extra, logic = [], []
         cat = self.ca_type.get(key) if self.ca else None
+        if inst is not None:
+            # MESO-STRAP-1 LEC reference: the parameter wrapper of ONE copy (ca_variants), ring DEPTH from `depth`
+            # (the strap master's per-bus DEPTH) so the two forms differ only in parameters vs tied straps
+            if self.strap or not self.ca_variants:
+                raise LandingError("type_rtl(inst=...) needs the parameter form with ca_variants=True")
+            cat = json.loads(json.dumps(self.ca_part_cat[inst]))
+            cat["role"] = tuple(cat["role"])
+            for b, d in (depth or {}).items():
+                cat["rings"][b]["depth"] = int(d)
         if cat:
             logic.append("    wire cland_start;  // count origin of this region (count-aligned landings)")
         ca_raw = {}
@@ -565,7 +609,8 @@ class Landings:
             # Copy the nearest tap's raw reset relay at the SAME parent/depth.
             # This is a timed local data relay, never another synchronizer.
             t = self.types[key]
-            geom = next((x for x in t.get("buses", []) if x["name"] == b), None)
+            # A bus declaration without face/window is not physical geometry.
+            geom = next((x for x in t.get("buses", []) if x["name"] == b and "face" in x and "window_um" in x), None)
             if geom is None and collector_info:
                 geom=collector_info.get("bus_geometry",{}).get(b)
             if geom is None:
@@ -615,9 +660,16 @@ class Landings:
             if cat:
                 extra += [f"    input wire cland_fstart_in_{b}"]
                 ca_raw[b] = reset
-                ring_mod = (f"ot_dp_clk_landing_ca #(.W({{w}}), .DEPTH({cat['rings'][b]['depth']}), "
-                            f".K({cat['rings'][b]['K']}))")
-                ring_rst = f".t_rst_n(cland_fstart_in_{b}), .clk(clk), .rst_n(cland_start)"
+                if cat.get("straps"):
+                    kw = cat["rings"][b]["kw"]
+                    extra += [f"    input wire [{kw-1}:0] strap_ca_k_{b}"]
+                    ring_mod = f"ot_dp_clk_landing_cas #(.W({{w}}), .DEPTH({cat['rings'][b]['depth']}))"
+                    ring_rst = (f".t_rst_n(cland_fstart_in_{b}), .clk(clk), .rst_n(cland_start), "
+                                f".strap_k(strap_ca_k_{b})")
+                else:
+                    ring_mod = (f"ot_dp_clk_landing_ca #(.W({{w}}), .DEPTH({cat['rings'][b]['depth']}), "
+                                f".K({cat['rings'][b]['K']}))")
+                    ring_rst = f".t_rst_n(cland_fstart_in_{b}), .clk(clk), .rst_n(cland_start)"
                 self.reset_placements[tn][b].update(ring_rst_n="cland_start", origin_raw_reset=reset)
             else:
                 # per-row ring form (main: ring_module/ring_params/ring_ports sidecar); default = today's ring
@@ -721,7 +773,9 @@ class Landings:
             extra.append("    input wire cland_rstart_in")
             return [f"    ot_dp_landing_relay u_cland_rstart_rx (.clk(clk), .rst_raw_n({raw}), .d(cland_rstart_in), "
                     f".q(cland_start));"]
-        if role[0] == "child":
+        if role[0] == "strap":
+            logic, raw = self._origin_strap_rtl(tn, role, ca_raw, extra, local_raw)
+        elif role[0] == "child":
             b = role[1]
             raw = ca_raw.get(b)
             if raw is None:
@@ -740,6 +794,50 @@ class Landings:
             logic.append(f"    ot_dp_landing_relay u_cland_rstart_tx (.clk(clk), .rst_raw_n({raw}), .d(cland_start), "
                          f".q(cland_rstart_out));")
         return logic
+
+    def _origin_strap_rtl(self, tn, role, ca_raw, extra, local_raw):
+        """MESO-STRAP-1 strap origin: ot_dp_landing_origin_s (strap_ca_pad / strap_ca_efall), the parent's forwarded
+        start and the child raw reset chosen by strap_ca_tsel among the copies' tree buses (static select before the
+        first synchroniser; out-of-range values take the last bus), optional root counter chosen by strap_ca_root.  The
+        raw reset of each choice is exactly the parameter form's (child: the tree bus's timed relay; root: local_raw)."""
+        _, tbs, padw, settle, root = role
+        for b in tbs:
+            if b not in ca_raw:
+                raise LandingError(f"{tn}: start-tree bus {b} is not a landed input of this type")
+        extra.append(f"    input wire [{padw-1}:0] strap_ca_pad")
+        extra.append("    input wire strap_ca_efall")
+        logic = []
+        if len(tbs) > 1:
+            tsw = (len(tbs) - 1).bit_length()
+            extra.append(f"    input wire [{tsw-1}:0] strap_ca_tsel")
+            def sel(names):
+                e = names[-1]
+                for i in range(len(names) - 2, -1, -1):
+                    e = f"(strap_ca_tsel == {tsw}'d{i}) ? {names[i]} : {e}"
+                return e
+            p_start, raw = "cland_pstart", "cland_oraw"
+            logic += [f"    wire cland_pstart = {sel([f'cland_fstart_in_{b}' for b in tbs])};",
+                      f"    wire cland_oraw = {sel([ca_raw[b] for b in tbs])};"]
+        else:
+            p_start, raw = f"cland_fstart_in_{tbs[0]}", ca_raw[tbs[0]]
+        start = "cland_start"
+        if root:
+            extra.append("    input wire strap_ca_root")
+            rraw = local_raw("root count origin")
+            logic += ["    wire cland_start_child, cland_start_root;",
+                      f"    wire cland_raw_sel = strap_ca_root ? {rraw} : {raw};",
+                      f"    ot_dp_landing_root #(.SETTLE({settle})) u_cland_root (.clk(clk), .rst_raw_n({rraw}), "
+                      ".start(cland_start_root));",
+                      "    assign cland_start = strap_ca_root ? cland_start_root : cland_start_child;"]
+            start, raw_used = "cland_start_child", "cland_raw_sel"
+        else:
+            raw_used = raw
+        logic += [f"    ot_dp_landing_origin_s #(.PADW({padw})) u_cland_origin (",
+                  f"        .clk(clk), .rst_raw_n({raw}), .p_start({p_start}), .strap_efall(strap_ca_efall), "
+                  f".strap_pad(strap_ca_pad), .start({start}));"]
+        self.reset_placements.setdefault(tn, {})["count_origin"] = dict(kind="strap", tree_buses=list(tbs), padw=padw,
+                                                                     root=bool(root), raw_reset=raw_used)
+        return logic, raw_used
 
     def _dataflow_monitor(self, tn, key, mask, info, extra, logic, body):
         """Registered dataflow monitor: local = AND(landing_ready) / OR(landing_fault), aggregate = AND(in_ok) /
@@ -832,7 +930,7 @@ class Landings:
         if not match:
             raise LandingError("clock landing: binder non-ANSI die header not found")
         # gen_rtl (native generated top, LAND-HEAD-BIND-1) emits an ANSI header whose only clock is the die `clk`
-        # feeding every partition clock pin (.clk / spine taps .clk_t<i>).  In the landed form each partition's
+        # feeding every partition clock pin (.clk / grid .clk_t<i> / early-core .clk_c<i>).  In the landed form each partition's
         # pins are its REGION clock; the die `clk` port is then unread and removed (the die clock emission supplies
         # the region clocks).  The binder's non-ANSI path below is unchanged.
         ansi = re.search(r"\b(input|output)\b", match.group(2)) is not None
@@ -884,7 +982,7 @@ class Landings:
                 raise LandingError(f"clock landing: expected exactly one bound instance {pn}")
             m = matches[0]
             if ansi:
-                body, count = re.subn(r"\.(clk(?:_t\d+)?)\(clk\)", lambda mm: f".{mm.group(1)}(clk_region_{ident(self.region[pn])})", m.group(2))
+                body, count = re.subn(r"\.(clk(?:_[tc]\d+)?)\(clk\)", lambda mm: f".{mm.group(1)}(clk_region_{ident(self.region[pn])})", m.group(2))
                 if not re.search(r"\.clk\(clk_region_", body):
                     raise LandingError(f"clock landing: default clock connection not found on {pn}")
             else:
@@ -897,6 +995,14 @@ class Landings:
                 conn.append(f"        .cland_rstart_out({rst[pn]})")
             if pn in rpr and rpr[pn]["role"] == "relay":
                 conn.append(f"        .cland_rstart_in({rst[rpr[pn]['origin']]})")
+            if self.strap and pn in self.strap["instances"]:
+                # OWNER 12.15a / 1.8 rule 3: each strap bit a literal here; die_constant_cells.tcl maps every bit to its
+                # own TIEHI/TIELO next to the pin; straps.audit_count_strap_values checks the pattern against the bind
+                si = self.strap["instances"][pn]
+                widths = self.strap["types"][si["type"]]["straps"]
+                for sp in sorted(widths):
+                    w = widths[sp]
+                    conn.append(f"        .{sp}({w}'b{format(si['values'][sp], '0' + str(w) + 'b')})")
             if self.dataflow:
                 for b in sorted(self.outs[pn]):
                     conn += [f"        .cland_up_ready_{b}({mon[(pn,b)]}_ready)", f"        .cland_up_fault_{b}({mon[(pn,b)]}_fault)"]
@@ -937,6 +1043,24 @@ class Landings:
         self.emitted_top = True
         return text
 
+    def strap_declarations(self, binder_types=None):
+        """MESO-STRAP-1: {type: {strap port: width}} of the strap form (binder_types: {binder type: plan type} for
+        binder T__vN splits), for the parent strap manifest the tie-off audit reads."""
+        if not self.strap:
+            return {}
+        out = {}
+        for bt, pt in (binder_types or {t: t for t in self.strap["types"]}).items():
+            if pt in self.strap["types"]:
+                out[bt] = dict(self.strap["types"][pt]["straps"])
+        return out
+
+    def strap_expected(self):
+        """MESO-STRAP-1: {instance: {strap port: (width, value)}} = count_align_bind.strap_ties tie values"""
+        if not self.strap:
+            return {}
+        return {q: {sp: (self.strap["types"][v["type"]]["straps"][sp], v["values"][sp]) for sp in v["values"]}
+                for q, v in self.strap["instances"].items()}
+
     def manifest(self):
         by_lane = defaultdict(int)
         for r in self.rows:
@@ -946,6 +1070,7 @@ class Landings:
                     physical_qualified=False,
                     added_cycles_per_crossing="count_aligned (per crossing)" if self.ca else 3,
                     count_aligned=bool(self.ca),
+                    count_straps=self.strap,
                     crossings=len(self.rows), ports=self.rows,
                     lane_added_cycles=dict(sorted(by_lane.items())),
                     types=self.by_type, reset_placements=self.reset_placements,

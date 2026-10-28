@@ -473,3 +473,33 @@ def test_plan_relay_pins_and_registered_ctl_ports():
     p, t = ca_relay_vehicle(parts=False)
     raw = dict(ports=[]); CP._ca_relay_ports(raw, t)
     assert raw["ports"] == [] and CP._ca_relay(t, "b") is None        # no bind roles: nothing added (old form)
+
+
+def test_receiver_uses_collector_geometry_when_bus_is_declaration_only():
+    p, t, a, b = dataflow_vehicle()
+    reference = Landings(p, t).type_rtl("B", b)
+    pin = next(v for v in p["partition_types"]["B"]["buses"] if v["name"] == "y")
+    saved = dict(pin)
+    pin.pop("face"); pin.pop("window_um")
+    t["collector"]["types"]["B"]["bus_geometry"] = {"y": saved}
+    assert Landings(p, t).type_rtl("B", b) == reference
+    del t["collector"]["types"]["B"]["bus_geometry"]
+    with pytest.raises(LandingError, match="receiver face geometry not found"):
+        Landings(p, t).type_rtl("B", b)
+
+
+def test_native_top_regions_include_early_core_clock_inputs():
+    p, t, _a, _b = dataflow_vehicle()
+    c = Landings(p, t)
+    top = ("module die_top (\n    input  wire clk,\n    input wire rst_n\n);\n"
+           "    a_mod a (\n        .clk(clk),\n        .clk_t3(clk),\n        .clk_c0(clk)\n    );\n"
+           "    b_mod b (\n        .clk(clk),\n        .clk_c4(clk)\n    );\nendmodule\n")
+    out = c.top_rtl(top)
+    assert ".clk_c0(clk_region_r0)" in out
+    assert ".clk_c4(clk_region_r1)" in out
+    assert ".clk_t3(clk_region_r0)" in out
+    assert "input  wire clk," not in out
+    assert "(clk)" not in out
+    # A clock-looking name outside the generated grid/core families stays rejected.
+    with pytest.raises(LandingError, match="still drives a partition pin"):
+        Landings(p, t).top_rtl(top.replace(".clk_c0(clk)", ".clk_phy(clk)"))

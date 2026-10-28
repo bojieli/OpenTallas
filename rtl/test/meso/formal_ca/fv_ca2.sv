@@ -24,14 +24,41 @@
 `ifndef FV_RRM
 `define FV_RRM 12
 `endif
-module fv_ca2 #(parameter integer D = `FV_D, parameter integer K = `FV_K, parameter integer SRM = 4, parameter integer RRM = `FV_RRM,
-                parameter integer LMIN = 5, parameter integer LMAX = 8 * D - 5, parameter integer LIVEN = 3 * D + 16) (
+`ifndef FV_SRM
+`define FV_SRM 4
+`endif
+// MESO-STRAP-1 FV_STRAP: the DUT is ot_dp_clk_landing_cas (K = strap_k input, OWNER 12.15a).  The strap value KS is a free
+// constant (anyconst) over ALL 2^TW values; the harness keeps the integer K it stands for as a free constant KI with
+// KS = KI mod 2^TW, and a configuration fixes only the phase PH and E = (RR - SR) + KI (so the lag L = PH' + 8 (E - 1)).
+// With SRM = RRM = 2^TW/2 + 1 the start offset RR - SR spans 2^TW + 1 values, so in every configuration KS takes every
+// residue (each with its own start offset): the proof holds for all strap values, not one.
+module fv_ca2 #(parameter integer D = `FV_D, parameter integer K = `FV_K, parameter integer SRM = `FV_SRM, parameter integer RRM = `FV_RRM,
+                parameter integer LMIN = 5, parameter integer LMAX = 8 * D - 5,
+`ifdef FV_STRAP
+                parameter integer LIVEN = 3 * D + 16 + SRM) (
+`else
+                parameter integer LIVEN = 3 * D + 16) (
+`endif
     input wire [0:0] d,
     input wire [4:0] fv_any
 );
     localparam integer P = 8, AW = $clog2(D), TW = AW + 1 + 3;   // LAPX = 3 (wrapper default)
     localparam integer CW = $clog2(RRM + 2);
-    localparam integer KP = (K > 0) ? K : 0, ARMW = 2 * D + 4, TMO = KP + ARMW + 2 * D + 8, TCW = $clog2(TMO + 2);
+`ifdef FV_STRAP
+    localparam integer NTK = 1 << TW;
+    localparam integer ARMW = 2 * D + 4, TMO = NTK - 1 + ARMW + 2 * D + 8, TCW = $clog2(TMO + 2), RCW = 8;
+    (* anyconst *) reg [TW-1:0] KS;        // the strap value seen by the DUT
+    (* anyconst *) reg signed [9:0] KI;    // the integer K it stands for (harness only)
+    always @* assume(KS == KI[TW-1:0]);
+    wire signed [9:0] KIP = (KI > 0) ? KI : 10'sd0;
+    wire signed [9:0] KL = KI;
+    wire [TW-1:0] KT = KS;
+`else
+    localparam integer KP = (K > 0) ? K : 0, ARMW = 2 * D + 4, TMO = KP + ARMW + 2 * D + 8, TCW = $clog2(TMO + 2), RCW = 7;
+    wire signed [9:0] KIP = KP;
+    wire signed [9:0] KL = K;
+    wire [TW-1:0] KT = K;
+`endif
     (* anyconst *) reg [2:0] PH;
     (* anyconst *) reg [CW-1:0] SR, RR;
     (* anyconst *) reg [TW-1:0] N;        // watched sender word (mod 2^TW)
@@ -42,6 +69,9 @@ module fv_ca2 #(parameter integer D = `FV_D, parameter integer K = `FV_K, parame
 `ifdef FV_OFF
     always @* assume($signed({1'b0, RR}) - $signed({1'b0, SR}) == `FV_OFF);
 `endif
+`ifdef FV_E
+    always @* assume($signed({1'b0, RR}) - $signed({1'b0, SR}) + KL == `FV_E);
+`endif
     reg [2:0] tick = 0;
     wire tclk = (tick < 3'd4);
     wire [2:0] rt = tick - PH;
@@ -51,7 +81,7 @@ module fv_ca2 #(parameter integer D = `FV_D, parameter integer K = `FV_K, parame
     wire rn = (tick1 == PH);               // rclk rises at the next step
     reg [CW-1:0] te = 0, re = 0; reg t_rst_n = 0, rst_n = 0;
     reg [TW-1:0] sc = 0, rc = 0; reg [0:0] cap = 0; reg capv = 0;
-    reg [6:0] rcs = 0;                     // receiver cycles since its start, saturating
+    reg [RCW-1:0] rcs = 0;                 // receiver cycles since its start, saturating
     wire wr = tn && t_rst_n;               // a word is written at the next step, slot sc[AW-1:0]
     always @($global_clock) begin
         tick <= tick + 1'b1;
@@ -66,11 +96,11 @@ module fv_ca2 #(parameter integer D = `FV_D, parameter integer K = `FV_K, parame
         if (rn) begin
             if (re != {CW{1'b1}}) re <= re + 1'b1;
             rst_n <= rst_n || (re + 1'b1 >= RR);
-            if (rst_n) begin rc <= rc + 1'b1; if (rcs != 7'h7f) rcs <= rcs + 1'b1; end
+            if (rst_n) begin rc <= rc + 1'b1; if (rcs != {RCW{1'b1}}) rcs <= rcs + 1'b1; end
         end
     end
     wire [3:0] php = (PH == 3'd0) ? 4'd8 : {1'b0, PH};
-    wire signed [12:0] L = $signed({9'b0, php}) + 13'sd8 * ($signed({1'b0, RR}) - $signed({1'b0, SR}) + K - 1);
+    wire signed [12:0] L = $signed({9'b0, php}) + 13'sd8 * ($signed({1'b0, RR}) - $signed({1'b0, SR}) + KL - 1);
     wire inwin = L >= LMIN && L <= LMAX;
     reg [2:0] age [0:D-1];
     integer i;
@@ -83,8 +113,13 @@ module fv_ca2 #(parameter integer D = `FV_D, parameter integer K = `FV_K, parame
         assign recent[g] = wnext[g] || (age[g] <= 3'd2);
     end
     wire [0:0] q; wire ready, fault;
+`ifdef FV_STRAP
+    ot_dp_clk_landing_cas #(.W(1), .DEPTH(D), .GUARD_LO(0), .GUARD_HI(D)) dut (
+        .fclk(tclk), .t_rst_n(t_rst_n), .clk(rclk), .rst_n(rst_n), .strap_k(KS), .d(d), .q(q), .ready(ready), .fault(fault),
+`else
     ot_dp_clk_landing_ca #(.W(1), .DEPTH(D), .K(K), .GUARD_LO(0), .GUARD_HI(D)) dut (
         .fclk(tclk), .t_rst_n(t_rst_n), .clk(rclk), .rst_n(rst_n), .d(d), .q(q), .ready(ready), .fault(fault),
+`endif
         .fv_recent(recent), .fv_now(wnext), .fv_any(fv_any));
 
 `ifdef FV_HELP
@@ -98,7 +133,6 @@ module fv_ca2 #(parameter integer D = `FV_D, parameter integer K = `FV_K, parame
         if (tn && t_rst_n) begin sst <= 1'b1; if (nw != D) nw <= nw + 1'b1; end
         if (rn && rst_n) rst <= 1'b1;
     end
-    wire [TW-1:0] KT = K;
     wire [TW-1:0] teT = te, reT = re, srT = SR, rrT = RR;
     wire [TW-1:0] sR = sst ? sc : teT - srT;
     wire [TW-1:0] rR = rst ? rc : reT - rrT;
@@ -160,19 +194,19 @@ module fv_ca2 #(parameter integer D = `FV_D, parameter integer K = `FV_K, parame
         if (gN && !h2_dxq && !(capv && h2_yq == cap)) hb2[17] = 1;
         // ready-timeout: counts receiver cycles since start while not armed; in the window armed long before TMO
         if (re != 0 && !h3_armed && h3_tmo != ((rcs >= TMO) ? TCW'(TMO) : TCW'(rcs))) hb2[18] = 1;
-        if (inwin && re != 0 && rcs >= KP + 4 && !h2_seen) hb2[19] = 1;
-        if (inwin && h2_seen && !h3_armed && rcs > h2_arm + KP + 4) hb2[20] = 1;
+        if (inwin && re != 0 && $signed({2'b0, rcs}) >= KIP + 4 && !h2_seen) hb2[19] = 1;
+        if (inwin && h2_seen && !h3_armed && $signed({2'b0, rcs}) > $signed({2'b0, h2_arm}) + KIP + 4) hb2[20] = 1;
     end
 `else
     wire h_ok = 1'b1;
 `endif
-    wire [TW-1:0] idx = rc - 1'b1 - TW'(K);
+    wire [TW-1:0] idx = rc - 1'b1 - KT;
     wire up = (re != 0);                   // >= 1 rclk edge (a reset edge, RR >= 1): DUT state defined
     wire p_safe = !(up && ready && !fault && idx == N) || (capv && q == cap);
     wire p_noflt = !(up && inwin) || !fault;
     wire p_live = !(inwin && rcs >= LIVEN) || ready;
     wire p_closed = !((L <= 3 || L >= 8 * D - 3) && up && ready && !fault);   // fail closed outside the window
-    localparam integer TMOW = KP + ARMW + 2 * D + 8 + 3;
+    localparam integer TMOW = TMO + 3;
     wire p_tmo = !((L <= 3 || L >= 8 * D - 3) && up && rcs >= TMOW) || fault;   // MESO-RECONCILE-1 ready-timeout
     always @* begin
 `ifdef FV_TMOONE

@@ -47,7 +47,7 @@ def annotate(b):
             if len(incoming)>1:raise ValueError(f'native stations {L.get("lane")}: conflicting destination station counts')
             receiver=next(iter(incoming),0)
             if int(raw.get('fixed_cycles',0))!=count+receiver:raise ValueError(f'native stations {L.get("lane")}: fixed_cycles must equal source {count} + destination {receiver}')
-            base=2+sum(h['stations'] for h in L.get('ft',[]))
+            base=2+sum(h['stations'] for h in L.get('ft',[]))+int(L.get('clock_landing_cycles',0))
             if L['cycles']<base+count:raise ValueError('native stations exceed priced lane depth')
             L['internal_source_cycles']=count
 

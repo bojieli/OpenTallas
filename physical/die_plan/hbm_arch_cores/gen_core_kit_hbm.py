@@ -580,9 +580,13 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     # GRT hold repair (TT setup then only at the post-CTS hook).
     ap.add_argument("--no-cts-setup", action="store_true", help="no post-CTS TT setup-only repair (old behaviour)")
     ap.add_argument("--single-mode-grt", action="store_true", help="FF-only GRT hold repair (no TT setup repair at GRT)")
+    ap.add_argument("--final-ff-hold", action="store_true",
+                    help="opt-in final TT-guarded FF data repair and mandatory post-legalization/GRT recheck; clock frozen")
     MS = _ms()
     MS.add_args(ap)   # 12.7c: --master-slice DIR (opt-in), --trial
     a = ap.parse_args()
+    if a.final_ff_hold and a.single_mode_grt:
+        raise SystemExit("--final-ff-hold requires the coupled TT/FF GRT session")
     V = json.load(open(a.views))
     v = next((x for x in V["view_list"] if x["view"] == a.view), None)
     if not v:
@@ -885,6 +889,15 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     shutil.copyfile(TOOL / "pg_connect.tcl", kd / "pg_connect.tcl")
     (kd / "core_grt_post.tcl").write_text("if {[info exists ::env(OT_VCLK_CORNER)] && $::env(OT_VCLK_CORNER) eq \"ff\"} { ot_vclk_bind tt }\n"
                                           "uplevel #0 [list source /work/pg_connect.tcl]\not_pg_connect_all grt_post\not_pg_require_bound grt_post\n")
+    if a.final_ff_hold:
+        for name in ("final_ff_hold.tcl", "clk_freeze.tcl", "clk_geom_diff.py"):
+            shutil.copyfile(TOOL / name, kd / name)
+        post = kd / "core_grt_post.tcl"
+        text = post.read_text()
+        text = text.replace("uplevel #0 [list source /work/pg_connect.tcl]",
+                            "uplevel #0 [list source /work/final_ff_hold.tcl]\not_final_ff_hold\n"
+                            "uplevel #0 [list source /work/pg_connect.tcl]")
+        post.write_text(text)
     # Keep the standalone runtime complete, including sender-min qualification and clock helpers.
     subprocess.run([sys.executable, "-I", str(TOOL / "signoff.py"), "bundle", str(kd)], check=True)
     # HBM-KITS-B2 10-25: replicated (* keep *) registers (ot_rst_relay region copies, ...) need the ORFS
@@ -1086,6 +1099,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     cfg += [f"export {kv.split('=', 1)[0]} = {kv.split('=', 1)[1]}" for kv in a.orfs_var]
     if a.prects_estimate:
         flow["prects_estimate"] = prects_phase_hooks(kd, cfg, clks, ins)
+    if a.final_ff_hold:
+        cfg += ["override export OT_FINAL_FF_HOLD = 1"]
     # MASTER PLAN 12.7c (opt-in --master-slice DIR): slice -> master_slice.json/.tcl, sourced at PRE_GLOBAL_PLACE
     # (face_flops.tcl: after io placement, before GPL); refused without a slice once required unless --trial
     ms = MS.kit_apply(kd, module, [w, h], a.master_slice, plan, a.trial, kind="core",
@@ -1150,6 +1165,9 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     if multiport_hold:
         fz["clock_stage_hold"] = dict(ports=clks, reason="reviewed common-domain multi-port stage required")
     fz["flow_defaults"] = dict(flow, rule="FLOW 2026-10-25 F1/F2/F4 (HBM-KITS port to core kits)")
+    if a.final_ff_hold:
+        fz["final_ff_hold"] = dict(frame="existing coupled TT/FF kit SDC",
+                                   phase="post GRT optimization/legalization", clock="frozen + strict diff")
     if a.clock_taps != "off":
         fz["clock_taps"] = dict(mode=a.clock_taps, sinks=a.clock_tap_sinks, dmax_um=a.clock_tap_dmax)
     if ms is not None:
