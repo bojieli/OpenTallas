@@ -501,3 +501,16 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
   f. GATES THAT EARN THEIR PLACE. Keep checks that have caught real failures; flow canaries run in the background and do not block
      a row unless they show a regression; no serial gate chains where checks can run in parallel.
   g. Once OSS-HIER works, regions become hierarchical partitions to cut the number of hard cores.
+- 12.15 OWNER DECISIONS 2026-10-27 ~23:2x ("1.(a) 2.(a) 3.(a) for now, the top priority is closure. accept performance reductions and
+  keep safe clocking and routing").
+  a. COUNT STRAPS. The 1.8 strap rule is extended from ID straps to crossing-configuration straps: count K, PAD and related
+     count-aligned constants may be strap_* input pins tied at the parent. They follow all four 1.8 conditions: declared, quasi-static
+     with false_path, TIEHI/TIELO at the pin, and LEC per master against every constant variant used. Ring DEPTH stays a per-type
+     parameter, set to the largest any instance needs. Do not type-split per K signature; the KV 119 variants are dropped.
+  b. SPICE-CALIBRATED CLOCK IN DIE STA. Die STA gates scale clock-network arrivals by the measured OpenSTA-vs-ngspice factor
+     (data/asap7_bufx24_spice_cal.json: x1.0485 TT, x1.0552 FF; plan tools may use x1.05). Data-path derates (droop (a)+(i)) are
+     unchanged. A crossing that fails only with the factor is fixed structurally (PAD+1 or D8).
+  c. CLOSURE OVER PERFORMANCE. The release takes the throughput the safe locality form gives. HBM may land below the 1906 tok/s floor
+     (about 1700-1770 tok/s priced). Never trade safe clocking or routing (in-region spread <=150 ps incl. OCV+droop, CA margin
+     >=100 ps, GRT0 incl. clock) for throughput. Latency hiding is optional and only where it costs no closure risk. The same applies
+     to all dies: added crossing latency is accepted, and the static schedule absorbs it.
