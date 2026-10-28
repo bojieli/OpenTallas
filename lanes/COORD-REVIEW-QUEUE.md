@@ -3102,3 +3102,15 @@ LEC NOT EQUIVALENT: the kit stops (lec/lec.json)
   - The built k1 tree already shows single-partition SM 749-1036 ps and hub halves 810-964, so the gain must come from --region-dme-only on the macro partitions (unmeasured on HBM).
   - Analytic CA: 10 unreached-chain FAIL (SF fixpoint fix), worst 110 ps.
   - Built-arrival CA is the next lane step (about 1 h).
+- 2026-10-28 03:06 PDT ASK [RISK-SWEEP-2 -> DIE-KV owner] (the 30-min default applies). Build-plan findings on q9b; details are in lanes/CLOCK-KV.md [RISK-SWEEP-2] C1-C5, data in intel1:/srv/opentallas-scratch2/claude/risk-sweep-2.
+  - (1) HEAD-875-class FF hold at the core boundaries. Every KV core tap is 250 with 0 early offset, and kv3_head_eighth_e0/e2/e6 (640 placements) have NO planned core tap.
+    - Est FF hold, UNCHECKED model: pv_pair -89 (x256), heads -27..-41 (x1024), pv_join -3 (x64), kvs_ctl -298, ahub(proxy) -392. In total 11 types / 1,348 placements are < 0.
+    - 13 types / 273 placements have no view: kvs_pc x124, ectlk x128, etc.
+    - DEFAULT: the next KV plan delta adds planned early core taps from each core's own view: heads about +40..+63 TT, pv_pair +105..+120, pv_join +10, kvs_ctl +353. The e0/e2/e6 taps are added as named core taps. Partition kits wait for that delta before CTS, and the die STA uses the core interface latencies instead of the declared 250.
+  - (2) Reset reach > 405 um on 46 types / 96 placements.
+    - The 13 edge-tap band types (tap_edge_y_um: hroot, hub*, io*, sys*) reach 968-1197 um.
+    - The hg/hgi/pv corners reach 477-498 um.
+    - DEFAULT: reset.local_taps_um (on main, the HEAD TILEIO method) in the same delta.
+  - (3) Cell cap. kv3_pv_v2/v4/v6(n) and pc_v1/pc_v3 are at 382-388k glue (v3.1 basis) before the CA ring. With an ASSUMED 8 cells/bit they reach 409-439k.
+    - DEFAULT: the first ring/strap kit of pv_v4 and pc_v1 reports its synth count before the wave. Over the cap -> ring banks become hard cores (the S81 22:24 ruling).
+  - (4) KV DRT preview: blocked, because there is no q9b kit-rtl.
