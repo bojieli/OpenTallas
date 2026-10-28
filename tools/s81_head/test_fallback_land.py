@@ -60,7 +60,7 @@ def test_tree_site_legal(tmp_path):
     F.cmd_variant(types.SimpleNamespace(plan=str(PLAN), out=str(out)))
     P = S.Plan(S.load(str(out)))
     *_, m = DT.clock_kit(P, tmp_path / "clk", 300.0, 450.0, True, True)
-    assert m["site_legal"]["illegal"] == {} and m["site_legal"]["forbidden_rects"] == 1332
+    assert m["site_legal"]["illegal"] == {} and m["site_legal"]["forbidden_rects"] == 1336   # DIE-HEAD-10 LEP-C0: +4 hd_lep0N PAIR child boxes
 
 
 def test_tree_site_slide_keeps_lengths(tmp_path):
