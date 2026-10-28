@@ -225,10 +225,27 @@ class Placement:
     sector is placed on first touch and keeps its place, so producer -> consumer records chain inside the slice;
     a later touch on another port is a placement conflict (needs an F2 re-placement copy, counted)."""
 
-    def __init__(s, q):
-        s.q, s.map, s.nxt, s.written, s.conflicts = q, {}, [0] * 8, set(), []
+    # DIE-HBM-10 2026-10-28 HALF-LOCAL mode (opt-in, COORD default (a)): the quarter's VM banks are split in two halves,
+    # ports 0-3 and 4-7 (u_vmb_Q1..Q4 / Q5..Q8).  The k%8 rule is kept (no remap).  A client of half h reads its own
+    # half's ports directly; a group on the far half's port is read by that port's OWNER half and arrives over the
+    # crossing link (hfd_vms_xread_link) LX edges later; the client's own request pins toward the far bank group are
+    # tied (dead by schedule).  get(..., priced=True) records such a read as an owner-issued crossing read; a far read
+    # that its lowering did not price is recorded in `unpriced` and the record is refused (fail closed).
+    HALF_PORTS = 4
 
-    def get(s, lsec, port, why):
+    def __init__(s, q, half=None, lx=None):
+        s.q, s.map, s.nxt, s.written, s.conflicts = q, {}, [0] * 8, set(), []
+        if half is not None and (half not in (0, 1) or type(lx) is not int or lx < 1):
+            raise ValueError("half-local Placement needs half 0/1 and an integer xread LX >= 1")
+        s.half, s.lx, s.xreads, s.unpriced = half, lx, [], []
+
+    def far(s, port):
+        return s.half is not None and port // s.HALF_PORTS != s.half
+
+    def get(s, lsec, port, why, priced=False, read=True):
+        if read and s.far(port):
+            (s.xreads if priced else s.unpriced).append(dict(logical_sector=lsec, port=port, owner_half=port // s.HALF_PORTS,
+                                                             at=why))
         if lsec in s.map:
             ps = s.map[lsec]
             if ps % 8 != port:
@@ -408,6 +425,9 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False,
     QL, preload, expect = QLine(), {}, []
     place = place if place is not None else Placement(q)
     fills, drains = [], []
+    far_fills = []                           # DIE-HBM-10 half-local: owner-issued crossing reads
+    if getattr(place, "half", None) is not None and (timing is None or timing.xread_lx != place.lx):
+        raise ValueError("half-local Placement LX must equal the contract NativeTiming.xread_lx")
     vals = {}
     srow = {r: 0 for r in "ABCDO"}
     fill_e = [0] * 8                         # next free fill edge per VM port (one read sector / bank / edge)
@@ -428,12 +448,17 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False,
                 if not (la[0] % 8 == 0 and all(int(la[j]) == int(la[0]) + j for j in range(8))):
                     res["reasons"].append(f"operand {r} group {k} not one aligned VM sector")
                     continue
-                sec = place.get(int(la[0]) >> 3, p, f"{tag}:{r}")
+                far = getattr(place, "half", None) is not None and place.far(p)
+                sec = (place.get(int(la[0]) >> 3, p, f"{tag}:{r}", priced=True) if far
+                       else place.get(int(la[0]) >> 3, p, f"{tag}:{r}"))
                 e = fill_e[p]
                 fill_e[p] = e + 1
                 QL.vmr(e, p, sec, k, st_row)
                 fills.append((int(la[0]) >> 3, e))
-                last_commit = max(last_commit, e + fill_commit)
+                lxe = place.lx if far else 0          # owner-issued crossing read: arrives LX edges later
+                if far:
+                    far_fills.append(dict(lsec=int(la[0]) >> 3, port=p, edge=e, group=g, arrive=e + fill_commit + lxe))
+                last_commit = max(last_commit, e + fill_commit + lxe)
                 if (int(la[0]) >> 3) not in place.written:
                     preload[sec] = [int(a) for a in la]      # not produced earlier in this run: enters as an image
         e_issue.append(last_commit)
@@ -444,7 +469,7 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False,
     # while a fill of this record is still returning: the setup line and every issue wait until the last fill write
     # has passed.  (Historical SU31: fills 0..79 returned on 23..102 while groups wrote back from 53/57 -> fault.)
     lw_lat = first_out - SETUP_TO_EMIT
-    last_fill_write = max((fe + fill_commit - 1 for _, fe in fills), default=-1)
+    last_fill_write = max([fe + fill_commit - 1 for _, fe in fills] + [x["arrive"] - 1 for x in far_fills], default=-1)
     first_issue_min = last_fill_write + 1 - lw_lat
     setup = max(0, min(e_issue) - SETUP_TO_EMIT, first_issue_min - SETUP_TO_EMIT) if e_issue else 0
     res["write_port_guard"] = dict(last_fill_write=last_fill_write, lane_write_latency=lw_lat,
@@ -471,6 +496,17 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False,
         QL.f["control"][e] = with_vb(G["word"], G)
         issue_at.append(e)
         e += 1
+    # DIE-HBM-10 half-local CALENDAR ASSERT (fail closed): every far group of this record is owner-issued (priced) and
+    # its group issues no earlier than its crossing arrival; no read of this record went to a far port unpriced (the
+    # client's own request pins toward the far bank group are tied: it must never be scheduled to use them).
+    if getattr(place, "half", None) is not None:
+        bad = [x for x in far_fills if issue_at[x["group"]] + LANE_FETCH < x["arrive"]]
+        if bad:
+            res["reasons"].append(f"half_local_calendar: {len(bad)} far groups issue before their crossing arrival")
+        res["half_local"] = dict(half=place.half, lx=place.lx, crossing_reads=len(far_fills),
+                                 late_groups=len(bad), unpriced_far_reads=len(place.unpriced))
+        if place.unpriced:
+            res["reasons"].append(f"half_local_calendar: {len(place.unpriced)} unpriced far reads (tied group used)")
     # drain the O words of every issue group: store row orow -> VM sector (quarter-packed), after the lane write
     drain_e = [0] * 8
     commits = []
@@ -491,7 +527,8 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False,
                 if not (la[0] % 8 == 0 and all(int(la[j]) == int(la[0]) + j for j in range(8))):
                     res["reasons"].append(f"output group {k} not one aligned VM sector")
                     continue
-                sec = place.get(int(la[0]) >> 3, p, f"{tag}:O")
+                sec = (place.get(int(la[0]) >> 3, p, f"{tag}:O", read=False)
+                       if getattr(place, "half", None) is not None else place.get(int(la[0]) >> 3, p, f"{tag}:O"))
                 place.written.add(int(la[0]) >> 3)
                 mask = int(sum(1 << j for j in range(8) if m[j]))
                 QL.vmw(de, p, 0, k, G["orow"], sec, mask)
@@ -950,6 +987,8 @@ def main():
     ap.add_argument("--native-read-return", type=int, help="explicit native stream read-return edges")
     ap.add_argument("--native-write-return", type=int, help="explicit native stream write-return edges")
     ap.add_argument("--native-pin-reg", type=int, choices=(0, 1), help="die su_<q><g> PIN_REG (contract); default = leaf_split_latency env")
+    ap.add_argument("--native-xread-lx", type=int, help="DIE-HBM-10: die VM crossing-read link LX (contract); with --half-local")
+    ap.add_argument("--half-local", type=int, choices=(0, 1), help="DIE-HBM-10 opt-in: the client half of this quarter (ports 0-3 = 0, 4-7 = 1)")
     ap.add_argument("--connected-lowering", action="store_true", help="selected source-bound L0 reduction/scalar implementation; execution remains unqualified")
     ap.add_argument("--side-source", type=Path, help="actual repaired scoped SIDE source in compiled bundle")
     ap.add_argument("--su-lower2", action="store_true", help="TOK-FUNC2-HBM-SU opt-in production SU lowerings by "
@@ -1003,8 +1042,10 @@ def main():
     if a.safe_calendar and a.native_read_return is None:
         ap.error("--safe-calendar requires an explicit native read/write return contract")
     from hbm_layer_vehicle.native_profile import NativeTiming
+    if a.half_local is not None and (a.native_read_return is None or a.native_xread_lx is None):
+        ap.error("--half-local needs the native return contract and --native-xread-lx")
     native_timing = (None if a.native_read_return is None else
-                     NativeTiming(a.native_read_return, a.native_write_return, a.native_pin_reg))
+                     NativeTiming(a.native_read_return, a.native_write_return, a.native_pin_reg, a.native_xread_lx))
     if a.design == "qwen":
         sys.exit("layer_images: Qwen D4G8 programme source (qwen_d4g_proof program.hgi1) not wired yet -- see lane notes")
     bnd = json.loads(a.boundary.read_text())
@@ -1056,7 +1097,9 @@ def main():
     a.out.mkdir(parents=True, exist_ok=True)
     events, manifest, t_su_free = [], [], 0
     rng = np.random.default_rng(1018)
-    place, vm_data = Placement(a.quarter), {}
+    place, vm_data = Placement(a.quarter, a.half_local, a.native_xread_lx if a.half_local is not None else None), {}
+    if a.half_local is not None and (a.cx or a.rope_candidate or a.su_lower2):
+        ap.error("--half-local covers the su_record lowering only (cx / rope / su-lower2 paths do not price far reads yet)")
     if a.rope_candidate and not a.cx:
         from hbm_layer_vehicle import cx_layer_1021 as CX
         place = CX.make_placement(Placement, a.quarter)
@@ -1622,6 +1665,8 @@ def main():
                boundary=str(a.boundary), records=manifest, placement_conflicts=place.conflicts,
                placed_sectors=len(place.map), su_programmes=cfgs, t0_serial=t0,
                **({"sm_lowering": sm_summary} if sm_summary is not None else {}),
+               **({} if place.half is None else dict(half_local=dict(half=place.half, lx=place.lx, crossing_reads=len(place.xreads),
+                                                                    unpriced_far_reads=place.unpriced))),
                **({} if cx is None else dict(cx=dict(versions=place.versions, epochs=cx_epochs,
                                                      components=cx_comp_place, parts=cx_parts,
                                                      su_images_superseded_by_component_image=cx_dropped,

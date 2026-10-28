@@ -53,6 +53,10 @@ class NativeTiming:
     # TOK-HBM-SU 2026-10-26: the die's su_<q><g> PIN_REG (pin-registered lanes: lane writes / first output +4 edges,
     # requests +2).  None = the leaf_split_latency environment default (old behaviour); a die contract passes its own.
     pin_reg: object = None
+    # DIE-HBM-10 2026-10-28: half-local VM (COORD default (a)): the far half's VM port groups reach a client over the
+    # one-owner crossing read link (hfd_vms_xread_link) LX edges later.  None = no half-local VM (old behaviour); a die
+    # contract that binds the link passes its LX.
+    xread_lx: object = None
 
     def __post_init__(self):
         if (type(self.read_return) is not int or type(self.write_return) is not int
@@ -60,6 +64,8 @@ class NativeTiming:
             raise ValueError("native multirate contract requires integer RR>=10 and 7<=WR<=RR")
         if self.pin_reg not in (None, 0, 1):
             raise ValueError("native PIN_REG must be 0 or 1")
+        if self.xread_lx is not None and (type(self.xread_lx) is not int or not 1 <= self.xread_lx <= 64):
+            raise ValueError("native xread LX must be an integer 1..64")
 
     @staticmethod
     def serial_return(stream_return):
@@ -77,7 +83,10 @@ class NativeTiming:
         return 4 + self.serial_return(self.write_return)
 
     def as_dict(self):
-        return dict(asdict(self), fill_commit=self.fill_commit,
+        d = asdict(self)
+        if self.xread_lx is None:
+            d.pop("xread_lx")              # DIE-HBM-10: default views byte-identical
+        return dict(d, fill_commit=self.fill_commit,
                     drain_done=self.drain_done, multirate=True,
                     topology_qualified=False,
                     source="ot_hbm_su_static_pgslice + ot_hbm_su_multirate_bridge")
