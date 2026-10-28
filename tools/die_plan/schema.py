@@ -360,6 +360,9 @@ SCHEMA = {
                                        "face": {"enum": list(FACES)}, "window_um": _win, "layers": _lays,
                                        "order": _order,
                                        "note": {"type": "string"}}}},
+                    # DIE-HEAD-5 PGCUT 10-28 (DRT-TRIAL-1, opt-in): cut the kit M6 PG straps over the interior M5
+                    # signal pins (in-core island pins) of every hard core whose LEF is known (gen_phys.pg_island_cuts)
+                    "pg_island_cut": {"type": "boolean"},
                     # HEAD-BIND-4 10-27 (OWNER 10-25 option B): per-INSTANCE ID strap input ports of the partition
                     # (strap_* names, exact widths in parent_id_straps.PHYSICAL_ID_WIDTHS).  No pin register, kit SDC
                     # set_false_path -from, each instance ties its own value (partitions[].id_straps) at the die top;
