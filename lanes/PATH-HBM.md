@@ -1036,3 +1036,19 @@ Resumed exclusive whole-hub mover endpoint work in fresh sparse codex/hbm-datafl
      - Low risk.
   - Data: epyc2:/srv/opentallas-scratch2/claude/hbm-risk-1/r2 and intel2:/srv/opentallas-scratch2/claude/hbm-risk-1/{r1,r4}.
   - Scripts (own, not committed to the repo): r1_feed.py, r2_clock.py (clock_kit-only driver; it needs about 23 min of clock_taps for the hub types, so taps are cached in k1/taps.json), r2_post.py, r4/mkproof_place.py, r4/r4_sta.py.
+- 2026-10-28 02:58 PDT [HBM-RISK-1] RE-RUN at the DIE-HEAD-6 routed rate (COORD 03:1x). I used the RATE, not routed arrivals: 78 ps / 228 um = 342.1 ps/mm. I also ran 358.7 = x1.0485, in case that rate is not spice-calibrated. Same map, feed and tools as before. Own runs, CHECKED; the model is UNCHECKED. Files: hbm-risk-1/r1/hs_spt_{342.1,358.7}.json and r4/est_{342.1,358.7}.json.
+  - **R1:**
+    - Pairs over 3.4 ns: 31 (at 278.6) -> **38 pairs / 212 ports** at 342.1, and 38 / 220 at 358.7.
+    - Worst R014-R019: 6.85 -> 8.41 / 8.82 ns. Max leaf insertion 7.87 -> 9.66 / 10.13 ns.
+    - **7 pairs FLIP to >3.4 ns:**
+      - R019-R024 and R022-R027: 3.98 ns.
+      - R015E-R020: 3.82 ns.
+      - R002-R011 and R004-R012: 3.81 ns.
+      - R020-R025 and R021-R026: 3.80 ns.
+  - **R4 analytic CA at spice:**
+    - 278.6: FAIL 4 (the unreached links only), worst 114.2 ps.
+    - 342.1: D4/D8/FAIL 129/193/**11**, worst 105.6 / 128.5. Verdicts FLIP PASS->FAIL on 7 crossings (4.3 kb): R014-R018 x3, R017-R023 x3, R017-R022 x1.
+    - 358.7: 96/169/**68**, worst 111.8 / 133.8. 64 crossings (52.6 kb) flip: R016W-R022 24, R008-R016W 16, R019-R029 6, R022-R030 6, R014-R018 3, R017-R023 3, R010-R014 2, R013-R017 2, R014-R019 1, R017-R022 1.
+  - So the candidate's "4 FAIL" verdict holds only at <=~300 ps/mm.
+  - R2 and R4 part 2 did NOT use the 30-ps model. They used OpenSTA placement arrivals of the built tree (1x setRC), about 0.29 ns/mm, e.g. R024 7.42 ns over 25.2 mm.
+  - Routed arrivals would add GRT detours on top. Expect the R2 spreads and the 200 R4 FAILs to get worse, not better (UNCHECKED). No routed HBM clock exists yet.
