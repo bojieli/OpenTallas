@@ -108,3 +108,30 @@ def test_malformed_and_cross_reads_are_skipped(tmp_path, monkeypatch):
            ["cons", "gold", [K("p1")], [[1]]]]
     rec, st = _run(tmp_path, monkeypatch, L, bad)
     assert len(rec["skipped"]) == 6 and not any(h[0] in ("fill", "loaded") for h in L.hyp.values())
+
+
+def test_fill_mux_bound_after_every_input(tmp_path, monkeypatch):
+    """ROOT-MERGE-81b 10-27 regression: the (filled ? c : X) mux was built (ANDs) inside the input loop, so the next
+    fill ghost or gold-only register (sorted after it) raised 'inputs after ands'.  Fills on p only: the unhinted q
+    registers sort after every p fill and must still become plain inputs, with no AND before the last input."""
+    L = _design(tmp_path)
+    monkeypatch.setattr(lec, "prove", _sim_prove)
+    lec.apply_hints(L, chain(P), tmp_path, 100, [])
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    names = m.inames
+    assert sum(n.startswith("fill:") for n in names) == N
+    assert any(n.endswith(K("q6")) for n in names)   # a gold-only register bound after the fills
+    assert _sim_prove(m)[K("o")] == "proved"
+
+
+def test_fill_mux_bound_after_every_input(tmp_path, monkeypatch):
+    """ROOT-MERGE-81b 10-27 regression: the (filled ? c : X) mux was built (ANDs) inside the input loop, so the next
+    fill ghost or gold-only register (sorted after it) raised 'inputs after ands'.  Fills on p only: the unhinted q
+    registers sort after every p fill and must still become plain inputs, with no AND before the last input."""
+    L = _design(tmp_path)
+    monkeypatch.setattr(lec, "prove", _sim_prove)
+    lec.apply_hints(L, chain(P), tmp_path, 100, [])
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert sum(n.startswith("fill:") for n in m.inames) == N
+    assert any(n.endswith(K("q6")) for n in m.inames)   # a gold-only register bound after the fills
+    assert _sim_prove(m)[K("o")] == "proved"

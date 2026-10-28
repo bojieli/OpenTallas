@@ -1289,6 +1289,7 @@ class Lec:
         unwritten = set(self.unwritten)
         self.fill_live = fill_live(self.hyp)      # pipeline-fill hints whose ghost chain reaches its constant root
         self.fill_in = {}                         # gold key -> ghost 'filled' input literal
+        fillq = []
         for side, keys, p, lmap in (("gold", self.gonly, self.gp, lg), ("gate", self.tonly, self.tp, lt)):
             for k in keys:
                 h = self.hyp.get((side, k))
@@ -1307,8 +1308,7 @@ class Lec:
                     v = m.add_input(f"gold:{k}")
                     kind[v >> 1] = ("gold_x", k)
                     self.fill_in[k] = f
-                    bind(lmap, p[k], m.AND(m.AND(f, h[1]) ^ 1, m.AND(f ^ 1, v) ^ 1) ^ 1)
-                    lgx[p[k] & ~1] = f ^ 1
+                    fillq.append((k, h, f, v))      # bound after every input (the mux is ANDs)
                 elif h and h[0] == "const":
                     bind(lmap, p[k], h[1])
                 elif h and h[0] in ("eq", "cube"):
@@ -1375,6 +1375,9 @@ class Lec:
                 v = m.AND(v, olmap[op[ok] & ~1] ^ (op[ok] & 1) ^ (ov ^ 1))
             lmap, p = (lg, self.gp) if side == "gold" else (lt, self.tp)
             bind(lmap, p[k], v)
+        for k, h, f, v in fillq:                  # Q = filled ? c : X (gold X rail = not filled)
+            bind(lg, self.gp[k], m.AND(m.AND(f, h[1]) ^ 1, m.AND(f ^ 1, v) ^ 1) ^ 1)
+            lgx[self.gp[k] & ~1] = f ^ 1
         lkeys = {k for k, _, _ in loaded}
         for k, h, v in loaded:                    # Q = guard ? c : power-up value (loaded-valid qualification)
             if any(key in lkeys for cube in h[2] for key, _ in cube):
