@@ -1,0 +1,3 @@
+COUNT-ALIGN SS-INFO (TT x 1.27) worst lo 70.3 hi 714.6 fail 4 slot_read fail 0 guard fail 0 start-skew fail 487/495 FAIL (INFO, never gates)
+COUNT-ALIGN TT crossings 427 (sta 427, tree 0, no taps 0, key region unbound 0) worst lo 132.1 hi 802.3 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/495 <100 0 ocv table max lo/hi 212.9/212.9 PASS
+COUNT-ALIGN FF crossings 427 (sta 427, tree 0, no taps 0, key region unbound 0) worst lo 168.2 hi 852.2 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/495 <100 0 ocv table max lo/hi 176.6/176.6 PASS
