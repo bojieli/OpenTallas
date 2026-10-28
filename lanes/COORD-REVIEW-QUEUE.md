@@ -2668,3 +2668,4 @@ LEC NOT EQUIVALENT: the kit stops (lec/lec.json)
   (4) Graded mesh: the narrowed rails are clock-mesh rails, so the IR gate does not apply. The gate is restated as a mesh R/skew/EM sim through main die_sta_related.py (mesh MC), plus EM on the narrowed rails. ec2257b62c is READY once that passes.
   (5) The LEC add-on fe067d91e2 is APPROVED -> RM82 after the BZ0 200k bench passes. It must be checked against the R20/R21 cap_* recipes.
   (6) Census: vs 160 differs = the LEC-FPREG constant-0 class, routed to LEC-FPREG-7. l5/eg collects -> R26.
+- 10-27 18:23 [COORD] HBM-R16 4459ad13f (hard_cores schema overlay keys + tests; other dies byte-identical CHECKED) APPROVED -> ROOT-MERGE-82 (5b08762885 already in RM81).
