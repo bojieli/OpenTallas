@@ -1052,3 +1052,13 @@ Resumed exclusive whole-hub mover endpoint work in fresh sparse codex/hbm-datafl
   - So the candidate's "4 FAIL" verdict holds only at <=~300 ps/mm.
   - R2 and R4 part 2 did NOT use the 30-ps model. They used OpenSTA placement arrivals of the built tree (1x setRC), about 0.29 ns/mm, e.g. R024 7.42 ns over 25.2 mm.
   - Routed arrivals would add GRT detours on top. Expect the R2 spreads and the 200 R4 FAILs to get worse, not better (UNCHECKED). No routed HBM clock exists yet.
+- 2026-10-28 02:59 PDT [HBM-RISK-1] R2 third variant: --region-dme priced (k_priced, same inputs, placement STA, spice; CHECKED).
+  - TT spread: 10/36 regions <= 150; median 308; worst R002 666, R016E 655, R000 590, R007 536, R015E 493, R016W 489 ps.
+  - FF: 13/36 <= 150; worst 585.
+  - Cells on cores/PHY: 0/0.
+  - This is the best of the three forms. Ranking: priced (median 308) > balance_legalize (458) > delay (566). It is still a **FAIL** at <=150.
+  - Use priced as the base for the R024/R015E/R002 builder-fix proof.
+- 2026-10-28 02:59 PDT [HBM-RISK-1] PARKED. R1/R2/R4 done; R3/R5/R6 belong to HBM-RISK-2. NEXT is the ASK default:
+  - (a) builder fix and <=150 proof on R002/R024/R015E, starting from --region-dme priced.
+  - (b) spt re-root + relay plan for the 38 pairs over 3.4 ns at 342 ps/mm.
+  - No jobs left running.
