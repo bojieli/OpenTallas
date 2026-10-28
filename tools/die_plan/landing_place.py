@@ -11,7 +11,8 @@ def _spread(band):
     """DIE-HEAD-12 opt-in band_spread: ring tag suffix '@<spread>' (landing_placement.tcl widens each ring cell's reserved
     footprint by it, so the ring fills the whole band); no suffix when the band has no spread (default plans)."""
     sp=band.get('spread')
-    return '' if not sp or sp<=1.0 else f'@{sp:.4f}'
+    # DIE-HEAD-13 opt-in band_ring="ff": '+ff' = place only the ring flops FIRM (bit-major), ring logic to GPL
+    return ('' if not sp or sp<=1.0 else f'@{sp:.4f}')+('+ff' if band.get('ring_place')=='ff' else '')
 
 
 def tcl(P,tn):
