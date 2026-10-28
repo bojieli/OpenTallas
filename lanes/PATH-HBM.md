@@ -770,3 +770,40 @@ Resumed exclusive whole-hub mover endpoint work in fresh sparse codex/hbm-datafl
 - (4) No GRT0: G0 is not PASS (cuts) and G0C is known to fail (hard_cores 26, core_faces, merged_clock_view, street_reach exception).
 - RUNNING (collect): C20d G0C oth-ubuntu-1158877 (c20d/gates/g0c, ~22:45). C20e G0 oth-ubuntu-2431882 + G0C oth-ubuntu-2431905 (c20e/gates/g0{,c}, ~22:50 / ~23:20). The C20b/C20c G0C belong to the sub-lanes.
 - 2026-10-27 22:35 PDT [DIE-HBM-3] START (fresh owner lane, succeeds DIE-HBM-2 429de8a890). C20f built = C20e + COORD 22:18 (b) L12 split + (c) vms_glue +106.272 (intel2:/srv/opentallas-scratch2/claude/die-hbm-1027/c20f, die_plan 5959e8fecd8b, schema 0 CHECKED, branch claude/die-hbm-1027@3fcf3f6321). Gates RUNNING oth-ubuntu-2735890-1793165547 -> c20f/gates/g0{,c}/g0_report.json. Kits sub-fork done (claude/die-hbm-kits-1027@4d8237f42f, 33 kits from C20e, 8 preflight PASS; place-only RUNNING oth-ubuntu-2682152/2682149/2682161 for tkm idpin, q2 reduce, q2 ring_ag). Region-map/clock-speed fork running.
+- 2026-10-27 23:24 PDT [DIE-HBM-4] START (fresh, succeeds DIE-HBM-3 after usage limit). Adopted: C20f G0 DONE = FAIL 2 (hops L96 hop1 / L96m hop9 458 um > reach 405; CHECKED c20f/gates/g0/g0_report.json); its G0C in gates20f.sh was killed (exit 143) and re-run in parallel as oth-ubuntu-2966786 (c20f/gates/g0c_p, RUNNING, adopt). Place-only: tkm idpin, q2 reduce, q2 ring_ag exit 0 with 3_place.odb + FACE_GUARD PASS (1382/1108/2226 CHECKED); qw_dec + gq_issue stop at FAIL_PREFLOOR rtl_lint (68 / 2 check -assert problems). Region3 estimate already pushed claude/die-hbm-1027@3448bfd9fe (wire speed 209.1 TT ps/mm CHECKED; 34-region tok_l10_v1_c5 1805/1846/1854 tok/s UNCHECKED). Now: crossing margins nominal vs x1.05, hub split for spread, hiding cost in flops/area.
+- 2026-10-27 23:48 PDT [DIE-HBM-4] (a) 12.15 SAFE MAP ESTIMATE (no build), page results/die_hbm_1027/region4/REGION4_SAFE_MAP.md (claude/die-hbm-1027@0fac1b04eb):
+  - Base map tok_l10_v1_c5 on C20f: CA margins nominal vs x1.0485.
+    - 209.1 -> 106.2 / 169.7; 219.2 -> 119.2 / 175.7.
+    - 265.7 -> 105.0 / 105.0; 278.6 -> 115.8 / 145.3 (lo/hi ps).
+    - 4 FAIL = 26-bit unreached status links. Tool runs CHECKED, ring model UNCHECKED.
+    - Unsplit soft hubs have a spread of 158 / 196 ps @219.2 / 278.6, which is > 150.
+  - FIX: split NW_hub and NE_hub into W/E clock regions at die x 9097.9 / 18973.4.
+    - Cut bits 9.9k / 9.5k (3.3 % of the hub station bits).
+    - Half spread 105-108 @219.2 and 128-133 @278.6 (UNCHECKED model). All soft regions are <= 150.
+    - Only the hard PHY_N (172) and the SM singles (159) remain over 150; they are in-core island clocks owned by core sign-off.
+  - With the spt feed: 0 geometry FAIL @219.2 and @278.6, worst lo margin 111.9 / 114.2 (CHECKED tool). D8 count 38 / 167.
+    - fish feed: 22 FAIL. 366.4: 68 FAIL.
+  - ds_ar (no hiding; hiding dropped per 12.15c): 1764.7 @278.6 / 1792.7 @219.2 tok/s (UNCHECKED).
+    - Base C20f = 1805.8, which reproduces DIE-HBM-3's 1805.4.
+    - In-hub HX latency (2-4 cycles on ~19.4 kb) is not priced.
+- 2026-10-27 23:48 PDT [DIE-HBM-4] (b) C20g = C20f + 1 root ft station on L96x1/L96mx1 (claude/die-hbm-1027, plan 1b6170a09617). The G0 hop 458 is now max 354 um (CHECKED lane_geometry). G0+G0C RUNNING oth-ubuntu-3700418 -> c20g/gates/g0{,c}. (c) C20f die GRT CONGESTION PROBE (estimate, not gate): die_trial kit on core abstracts, 50 it, -critical_nets_percentage 0. RUNNING oth-ubuntu-3668760 -> intel2:/srv/opentallas-scratch2/claude/die-hbm-1027/c20f_probe (kit ~50 min, then GRT).
+- 2026-10-27 23:52 PDT [DIE-HBM-4] (d) C20f G0C (adopted oth-ubuntu-2966786): FAIL 109, CHECKED c20f/gates/g0c_p/g0_report.json.
+  - hard_cores 85 (u_tkm_SW tile lattice + pin-track), core_faces 12, merged_clock_view 4, hops 2 (the L96 pair, fixed in C20g), reach 2, street_reach 4 (accepted exception). pending_view 81.
+  - => no GRT0 gate run. The congestion probe runs as an estimate instead.
+- (e) Per COORD (KV lesson), every map candidate was re-scored with the MESO-RECONCILE-2 planner (count_align_plan @32e8cbb164, min-ambiguity start tree), spice x1.0485 TT / x1.0552 FF, on C20f. Tool runs CHECKED, model UNCHECKED. The 4 FAIL in every row are the same 26-bit unreached status links (L117/L138 pairs); they need a start-forward wire.
+  - t63, measured 219.2: fish 0 geometry FAIL (lo/hi 106.4/185.6), spt 0 (132.0/140.4).
+  - t63, analytic 278.6: fish 0 (104.3/104.3), spt 0 (104.8/105.7).
+  - => the earlier 9 FAIL on t63 disappear with the new planner, as on KV.
+  - v1c5 (34 regions): fish 0 FAIL @219.2 and @278.6 (lo 119.2/106.8); spt 0 (lo 111.9/114.2).
+  - hub-split v1c5 (36 regions): spt 0 FAIL (lo 111.9/114.2); fish 22 nontree FAIL @278.6.
+  - SPREAD: every map that keeps the hub unsplit (t63 included) is at 158/196 ps @219.2/278.6 > 150. => the hub W/E split is needed whichever map is chosen.
+  - Candidate: v1c5 + hub split + spt (ds_ar 1765-1793, UNCHECKED). Fallback: t63 + hub split (1701-1766 priced earlier).
+- 2026-10-28 00:26 PDT [DIE-HBM-4] (f) C20g G0 = FAIL 2 latency (L96/L96m: table 11, plan 12, from the added station; CHECKED). Hops are clean.
+  - C20h = C20f + the station + LAT_L96/LAT_L96M 11 -> 12 (static schedule absorbs the +1, 12.15c). plan 2e5644cf5f65, results/die_hbm_1027/apply_c20h_l96.py.
+  - G0 RUNNING oth-ubuntu-28134 -> c20h/gates/g0. The c20g G0C keeps running; its findings carry over except latency.
+- (g) Per COORD, congestion probes run IN PARALLEL on 3 clock forms of C20f. All are core abstracts, 50 it, -critical_nets_percentage 0.
+  - Base die tree: intel2 oth-ubuntu-3668760 -> die-hbm-1027/c20f_probe.
+  - --region-trees tok_l10_v1_c5: epyc2 oth-ubuntu-212460 -> epyc2:/srv/opentallas-scratch2/claude/die-hbm-4-probe/probe_v1c5.
+  - --region-trees t63: intel1 oth-ubuntu-1640891 -> intel1:/srv/opentallas-scratch2/claude/die-hbm-4-probe-i1/probe_t63.
+  - Worktree on each host: wt/die-hbm-4-probe @c997261d9e. Kits take ~50 min each, then GRT.
+2026-10-28 00:28 PDT GEOM-REVIEW-40 -> DIE-HBM: [AUTO-GEOM f287d70d8655] tile_core__idpin__strap FAIL STRUCTURAL (ins_b one-hop broadcast to p_bg[0..8] over 325 um height + datapath packed into centre column x 82-220 under pins spanning x 10-276 -> lateral up to 146 um; fix: spread placement/PLACE_DENSITY ~fill, then pin order if needed); [AUTO-GEOM 68d657fa5a42] ring_ag FAIL (qid[1:0] pins at SW corner -> NE out_p regs 425 um; fix: plan pin delta to W-face middle or ID strap); [AUTO-GEOM e2ba1ba7dd28] reduce PASS. mp_isl* pin_unreg = island ft, exempt. Details lanes/GEOM-REVIEW.md.
