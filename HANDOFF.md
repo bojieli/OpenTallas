@@ -1496,3 +1496,5 @@ CODEX: 2026-10-27 nativehost bootstrap clean1b90666eff609e2103d04ec96e63ccac76c6
 CODEX: 2026-10-27 14:52 PDT KVcommensuratePG CHECKED FAIL50.596mV; 1558s/21.1GiB, bothPGchecksPASS, rawedge-source diagnosis retained/no rerun. Sharedphase+finitePHYpadguard983e208815 and two-net/loadsAPI032bec1341 READY,18tests+8subtestsPASS; no planadoption.
 
 CODEX: 2026-10-28 04:09 PDT takeover0359: all5dieowners collecting freshresults; sharedflowfoundMESOseedsearch0CAFAIL candidatependingSTA, romleafce_d oldfailurealreadyfixedfaf0685063. Rootacbf0993be explicitparent_budget means trial-onlyREADY8focusedPASS,releaseSIGNED/wrongviewcontrolsretained;144laneinventoryCODEX.md. Nooldchildtree/jobreruns.
+
+CODEX: 2026-10-28 04:52 PDT main RM107f365; actual AP tick4KV+S81+HBM submitted, staleHBM correctlypreflightFAILowned. Root tap-pad physicalpaths/sites9bb+meanacbfmerged; QC/S81bodyoverlaps diagnosed and genericpacker6ffreviewing. Tenfocusedlanes active; productionQCLMcountersreplaylive, no dieG5claim.
