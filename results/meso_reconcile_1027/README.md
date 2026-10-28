@@ -162,3 +162,45 @@ TOK:
 - `results/meso_reconcile_1027/{head3,kv}_{plan,bind}.json`, `*.summary.txt`, `*_cases.tsv`, `head_tok.{py,json}`,
   `kv_tok.json`, `loop_bench_*.log`.
 - MESO-INTEG-1's `results/meso_integ_1027/bind/*` are kept as history (fixed tree K). They are superseded.
+
+## MESO-RECONCILE-2 (2026-10-27 23:xx PDT): per-edge PAD, KV ca-origin relay, SS row, spice clock cal, main RM86
+
+Base: this branch (MESO-RECONCILE-1 cc2a507386) + main 810b714798 (RM86) + DIE-KV-3 ca-origin 69d1ba8933.
+
+**Per-start-tree-edge PAD** (COORD 22:53 HEAD (b)): `count_align_plan.py --edge-pad PORT_OR_REGION=N` (N >= --pad).
+The child origin (and its subtree) moves N - PAD counts later. The tree crossing's RTL K is held, so its lag grows by
+(N - PAD) T and its latency by N - PAD. Every other crossing's K is re-chosen against the new origins; the plan emits
+`start_from.rtl.PAD` per edge and the bind consumes it. The identity PAD_e + 2 + J == m + 1 + PAD_e is checked per edge.
+- HEAD part map (DIE-HEAD-3 sfb250c landed_ocv, x1.05, `head_part/`): 6 chW*_t__2 tree edges (child regions tW{0..5}b10) PAD 1.
+  chW*_t__2 margin_lo 208.1 -> 1041.1 ps, latency 2 -> 3 (+6 cycles total, 1025 -> 1027 sched_lat with the part map's
+  re-chosen K). Die worst lo/hi 134.3 / 967.3 ps (sp_b3__0), unchanged. NOTE: with MESO-COUNT-2 K (derated lag) these
+  edges already have 208.1 ps at PAD 0 (the 104.1 was the MESO-COUNT-1 d150 number), so PAD 1 is margin, not a fix.
+- MC (count_align_plan mc_check, 3000 chips): 0 violations. Bind verify (2000 chips, metastable both ways): 0
+  violations, 0 identity/loop errors (102 loops). The bind re-run after the merges is byte-identical (report excluded).
+- Loop bench (RTL, 200 chips, lint clean, 0 bad chips): single PAD0 782,383 checks; single EDGE_PAD b=1,e=2 780,783;
+  PAD2+edge 774,983 (MESO-RECONCILE-1 worktree log).
+
+**DIE-KV-3 ca-origin (69d1ba8933) ported onto the plan-param bind v2**: `bind(plan, parts=)` / `--parts table|ocv`:
+one origin partition per region, relay partitions start origin + 2 (ot_dp_landing_relay x2), tree K = plan K, non-tree
+K in partition frames, sched_lat unchanged; loops over the partition tree; relay-aware start-up sim; annotate_table
+writes parts/roles; clock_landing_plan keeps main's intra-region monitor AND the relay pins/ports.
+- Loop bench multi graph (17 crossings, 3 relays): 200 chips 1,203,619 checks 0 bad; with EDGE_PAD c=1 1,201,419, 0 bad;
+  mutant_noshift 20/20 chips bad (caught). Unit mutant: identity + loop errors (a 2-count K error can stay inside the
+  D4 window, so the sim window alone does not catch it; the RTL bench does).
+- KV L128 (DIE-KV-3 inputs, sha b37d5307/3ea38080; `kv_l128/`): x1.05: 3595 crossings D4/D8 3442/153, 32 relays,
+  3468 loops 0 errors, 2000 chips 0 violations, worst 107.1 / 141.0 ps; x1.00: D4/D8 3490/105, 109.0 / 127.5 ps.
+  sched_lat total 9399 (x1.05) / 9259 (x1.00). (UNCHECKED, own run.) Supersedes `results/meso_integ_1027/caorigin/kv_l128_bind.json` (v1 bind).
+
+**die_sta_related**:
+- `--count-align` SS INFO row (`count_aligned_info.SS`, gate `ss_INFO`, never gates per METHODOLOGY 6.1): no die proof
+  has tap_arrivals_SS.json, so TT taps and clk->Q x `--count-align-ss-scale` (1.27, ASAP7 logic SS/TT from uarch_model;
+  clock scaling alike UNCHECKED). A proof with real SS taps runs `--corner SS`.
+- `--clock-cal spice` (METHODOLOGY 12.15 b): clock arrivals and CPPR node ranges x1.0485 TT / x1.0552 FF (SS uses TT)
+  before every class and the --count-align rows. Opt-in here; flipping the default is a ROOT-MERGE/COORD call.
+
+**Not done: 12.15 a count straps (K/PAD as strap_* pins).** Estimate (before build): RTL ring `strap_kr[TW-1:0]` input
+replacing the K localparam (KSTRAP param; TIMEOUT from a per-type KMAX), origin `strap_pad`/`strap_efall` with a PAD_MAX
+shift chain + mux after the 3rd sync flop (no mux before the first flop); clock_landings signature without K/PAD/EDGE_FALL,
+DEPTH = per-type max, per-instance strap values (KM = K mod 2^TW at the type DEPTH) in the bind manifest; straps.py
+declaration + kit false_path + TIEHI/TIELO; fv_ca2 re-run with the strap tied (same proof) + LEC per used constant set.
+~3-4 h for one lane; RTL first (it is a blocker for the kits, not for die STA).

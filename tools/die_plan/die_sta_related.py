@@ -231,6 +231,22 @@ def count_align_ss_info(landed, taps, bind, period, reg=None, scale=1.27, need_p
     return r
 
 
+# METHODOLOGY 12.15 b (OWNER 10-27 23:2x): die STA gates scale clock-network arrivals by the measured OpenSTA-vs-ngspice
+# factor (ASAP7 BUFx24 spice calibration: x1.0485 TT, x1.0552 FF); data-path derates unchanged.  Opt-in --clock-cal spice.
+SPICE_CLOCK_CAL = {"TT": 1.0485, "FF": 1.0552}
+TAP_TIME_KEYS = ("late_ps", "early_ps", "abs_late_ps", "abs_early_ps")
+
+
+def scale_clock(meta, taps, f):
+    """clock arrivals x f (tap late/early incl. mesh-absolute, and the CPPR node ranges); returns new (meta, taps)"""
+    if f == 1.0:
+        return meta, taps
+    t = {k: dict(v, **{x: float(v[x]) * f for x in TAP_TIME_KEYS if x in v}) for k, v in taps.items()}
+    m = dict(meta, cppr_node_range_ps={k: float(v) * f for k, v in (meta.get("cppr_node_range_ps") or {}).items()},
+             clock_cal_factor=f)
+    return m, t
+
+
 def credit(rng, node, la, ea, lc, ec):
     c = node
     while c not in rng and len(c) > 1:
@@ -1234,6 +1250,9 @@ def main(argv=None):
                     help="MESO-INTEG-1 opt-in: landed pairs use the count-aligned ring lag window of this count_align_bind "
                          "file (count_align_bind.py v2; rows: lag >= 100 ps to the guards, slot->read, guard T/8, "
                          "start skew per tree edge) instead of +-T/2")
+    ap.add_argument("--clock-cal", choices=("none", "spice"), default="none",
+                    help="METHODOLOGY 12.15 b: spice = scale clock arrivals x1.0485 TT / x1.0552 FF (SPICE_CLOCK_CAL; SS "
+                         "uses the TT factor) before every class and the --count-align rows")
     ap.add_argument("--count-align-ss-scale", type=float, default=1.27,
                     help="--count-align SS INFO row (never gates): TT taps x this SS/TT delay ratio when the proof has no "
                          "tap_arrivals_SS.json; 0 = off")
@@ -1347,6 +1366,8 @@ def main(argv=None):
     hbrec, hbbits = {}, None
     for c in corners:
         meta, taps = load_taps(d, c)
+        if a.clock_cal == "spice":
+            meta, taps = scale_clock(meta, taps, SPICE_CLOCK_CAL.get(c, SPICE_CLOCK_CAL["TT"]))
         rng = meta["cppr_node_range_ps"]
         slew = max(r["slew_ps"] for r in taps.values())
         reg = characterise(out, c, slew, a.seam_wire_um * a.wire_ff_per_um)

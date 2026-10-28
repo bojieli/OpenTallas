@@ -577,3 +577,14 @@ def test_count_align_ss_info_scales_tt_taps_and_never_gates():
     assert x["x"]["L_lo_ps"] == round(T + 254.0, 1) and x["x"]["L_hi_ps"] == round(T + 304.8, 1)
     assert r["start_skew"]["rows"][0]["skew_hi_ps"] == round(48.0 * 1.27, 1)
     assert taps["a0"]["late_ps"] == 300.0   # input not mutated
+
+
+def test_clock_cal_spice_scales_taps_and_ranges():
+    """METHODOLOGY 12.15 b: clock arrivals x1.0485 TT / x1.0552 FF; inputs untouched; factor 1 = identity."""
+    taps = {"a0": dict(_ca_tap("A", 300.0, 280.0), abs_late_ps=310.0)}
+    meta = dict(cppr_node_range_ps={"h": 10.0})
+    m, t = R.scale_clock(meta, taps, R.SPICE_CLOCK_CAL["TT"])
+    assert abs(t["a0"]["late_ps"] - 300.0 * 1.0485) < 1e-9 and abs(t["a0"]["abs_late_ps"] - 310.0 * 1.0485) < 1e-9
+    assert abs(m["cppr_node_range_ps"]["h"] - 10.485) < 1e-9 and taps["a0"]["late_ps"] == 300.0
+    assert R.SPICE_CLOCK_CAL == {"TT": 1.0485, "FF": 1.0552}
+    assert R.scale_clock(meta, taps, 1.0) == (meta, taps)
