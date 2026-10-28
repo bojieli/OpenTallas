@@ -1166,3 +1166,37 @@ All HBM plan/streets/locality/clock/crossing/core/native boot+token/PG aliases c
   3. Fold: once a 4-role calendar programme exists, count free slots per bank port and the COLL operand placement; then the RTL steering + equivalence + token test.
   4. Canonical asbuilt map: generate a map for the 342 matched instances (adapt mk_asbuilt_c20i.py to canonical names); the 33 S-role/MU instances wait for plan slots in the canonical source/slot event.
   5. FLOW: bind.py cmd_bind reads OUT/bind_reset.json on the error path (wavefront plan, 290-error run) -> FileNotFoundError; guard it.
+- 2026-10-28 06:52 PDT [DIE-HBM-7] START (successor of DIE-HBM-6b, claude/die-hbm-6-1028@023df55e3f). Order: collq2 collect/launch LEC+bound-ff -> hub estimate A/B/A+B -> canonical partition map 342+33 -> bind.py bind_reset.json guard (READY ROOT-MERGE).
+- 2026-10-28 07:26 PDT [DIE-HBM-7] RESULT claude/die-hbm-7-1028@24569e0aba (results/die_hbm_1027/hbm7/README.md). Tool runs CHECKED, models UNCHECKED.
+  - (1) collq2 finalff3: the final-FF hook PASSED (FF hold -0.341 -> +0.0095 ps, TT 27.43, clock freeze OK). The route then FAILED at DRT with DRT-0255 on mp_isl0/1_rst_i and mp_isl2_rst_o (legacy 2.16 island pins, known root cause). There is no 6_final.v, so routed LEC and bound-FF sign-off were NOT launched. Successor: the HBM-CORES-REBAL-2b reduce _c20ek2p AUTO kit. The 1.1 GB run dir is Codex-owned and was left alone.
+  - (2) Hub, 4x3 grid, worst face / 6 pins/um, NW/NE:
+    - base 2.56/2.78.
+    - A (connectivity re-placement, same outline and cores, 3 SA seeds): 0.85-1.04 / 1.08-1.25. NE fails.
+    - B full (2:1 on SU,SM,IDX,HC,FUSED links with duty x k <= 0.5; COLL 0.583 and VM aggregate 0.80 ineligible): 1.96/1.80.
+    - A+B full: 0.79-0.86 / 0.81-1.04.
+    - A+B cheap (IDX,HC,FUSED only): 0.98-1.13 / 1.02-1.21.
+    - All regions stay under 360k. Face length is taken full, with no hard-body subtraction, so these numbers are optimistic.
+  - B tok/s:
+    - Latency form (+1 cycle per record): 0.25 % (full) / 0.04 % (cheap).
+    - Link-bound form (op time x2): 46.7 % (full) / 15.5 % (cheap); per unit SU 19.6, SM 16.1, FUSED 12.2, IDX 3.3, HC 0 %.
+    - Which form applies depends on whether the op streams through that link at full width. This is not yet measured.
+  - 12.13 rework (COORD 07:1x):
+    - Client-anchored scatter: 56 % of station bits are local to one client and 33-35 % (~100k) are die-wide. R9 "lane geography" holds; the die-wide bits come from fan-out cores (pgp, cxij, calendar, sucore, coll body to 4 SU slices; smw to 4 SM rows).
+    - Scatter bit-mm is 1606k/1551k against 945k/953k today (my metric: hub-internal 557k/582k + external lanes 389k/372k; COORD's 424k/394k not reproduced). Up to 47 hops.
+    - Scatter CA OCV with the die-root LCA: 36 crossings / 2.8k bits exceed the 833-ps window (923 ps). With a tree node at each crossing: max 607 ps, 0 fail.
+    - Hybrid (only the externally dominated cores move): 80 % of bits stay in the hub. Bit-mm 882k/826k (-7/-13 %), max window 736 ps, but the hub group slices are still 1.7-2.0x over.
+    - The hub is internally coupled (VM banks, pc_ctl, svg/vmks, wb). Moving cores next to their clients does not drain it.
+  - (3) Canonical map, all 375 leaves accounted for:
+    - 321 census.
+    - 12 slice rules OPEN.
+    - 28 fold-contract slots: S role -> q0 half of the folded hub (10). vmb_S*k -> u_vmb_Q<k>_mu1 (16; UNCHECKED, the _mu1 slots may be meant for MU). mu_fused_n4_nw/ne (2).
+    - 2 hb_idx__s S-role slices OPEN.
+    - 3 proposed for root but needing plan contents: hb_ckgen, mu_fused_programme, mu_fused_root.
+    - Strict bind running on intel2 (pids 3719511/3719537), out /srv/opentallas-scratch2/claude/die-hbm-7/sbind_canon, worktree /srv/opentallas-scratch2/claude/wt/die-hbm-7-canon. Expected to fail closed on the 88 fold provider nets and the open slices.
+  - (4) bind.py bind_reset guard: claude/bind-reset-guard-1028@20830bdc78 (READY ROOT-MERGE).
+- 2026-10-28 07:26 PDT [DIE-HBM-7] PARKED. Next, in order:
+  1. Collect sbind_canon (bind_report.json kinds).
+  2. Per-op link-bound check for B: per op, bytes per record / (link width x op cycles). Then pick the B link set.
+  3. Hub A+B constructive placement with face hard-body spans subtracted.
+  4. Confirm the vmb _mu1 slot semantics with the fold contract.
+  5. Collect the _c20ek2p reduce kit (HBM-CORES-REBAL).
