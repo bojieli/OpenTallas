@@ -1,0 +1,124 @@
+{
+ "schema": "opentallas.s81.graded_mesh_rcem.v1",
+ "metal": "/in4/enc4/encoded_metal.json",
+ "corner": "TT",
+ "model": " (declared, UNCHECKED, same constants as main tools/die_plan/kv_r7/qc_clk_mesh2.py RC_R6 + PD12 width extrapolation):\n  R(w) = R6_4w * 0.16 / w  ohm/um (M8 2.115, M9 2.228 at 0.16 um);  C(w) = C6_4w * (0.9 + 0.0875 w/0.04) / 1.25 fF/um\n  VIA89 cut 2.0 ohm (declared; parallel cuts rows*cols);  driver = (R_th 303 TT / 230 FF + 51.2 stack) / units BUFx24\n  (thev_r2); local-tree input load 2.3 fF; bank/stub_drop/tie metal C lumped on the nearest node of its attachment.\nScenarios: (a) nominal, all drivers launch together -> Elmore m1 at the 7481 local-tree inputs (spread = mesh-only skew);\n  (b) MC: per-driver launch offset N(0, s) + per-segment R,C N(1, 5 %) (same draws on both encodings): load spread and\n  absorption (load spread / driver spread).\nEM: per segment charge per transition Q = V * (m1_b - m1_a) / R (exact first moment for linear RC, all drivers at t=0);\n  QC r2/r3 method: I_avg ",
+ "graph": {
+  "nodes": 84980,
+  "wire_edges": 84587,
+  "via_edges": 36486,
+  "drivers": 3747,
+  "drv_units": 40540,
+  "loads": 7481,
+  "unmatched": {
+   "lump": 3
+  },
+  "components": 1
+ },
+ "totals": {
+  "mesh_wire_mm": 10503.029,
+  "mesh_C_pF": 3244.615,
+  "lumped_C_pF": 4.596,
+  "total_C_pF": 3266.418,
+  "narrowed_1p6_um": 343353.0
+ },
+ "nominal": {
+  "load_m1_min_ps": 12.349,
+  "load_m1_max_ps": 527.527,
+  "load_spread_ps": 515.178,
+  "load_p50_ps": 42.378,
+  "load_p99_ps": 178.795
+ },
+ "mc": {
+  "samples": [
+   {
+    "load_spread_ps": 540.532,
+    "load_sd_ps": 37.749,
+    "drv_spread_ps": 76.234
+   },
+   {
+    "load_spread_ps": 529.649,
+    "load_sd_ps": 37.773,
+    "drv_spread_ps": 73.075
+   },
+   {
+    "load_spread_ps": 538.904,
+    "load_sd_ps": 38.003,
+    "drv_spread_ps": 82.7
+   },
+   {
+    "load_spread_ps": 531.089,
+    "load_sd_ps": 37.938,
+    "drv_spread_ps": 71.354
+   },
+   {
+    "load_spread_ps": 546.003,
+    "load_sd_ps": 37.745,
+    "drv_spread_ps": 70.975
+   },
+   {
+    "load_spread_ps": 545.466,
+    "load_sd_ps": 37.84,
+    "drv_spread_ps": 68.861
+   },
+   {
+    "load_spread_ps": 554.691,
+    "load_sd_ps": 38.229,
+    "drv_spread_ps": 76.748
+   },
+   {
+    "load_spread_ps": 518.379,
+    "load_sd_ps": 38.23,
+    "drv_spread_ps": 70.254
+   }
+  ],
+  "drv_sigma_ps": 10.0,
+  "wire_rel": 0.05,
+  "load_spread_max_ps": 554.691,
+  "load_sd_max_ps": 38.23
+ },
+ "em": {
+  "budget_MA_cm2": 1.0,
+  "method": "QC r2/r3 budgets_em: I_avg=Qf, I_peak=Q/tr(25ps), I_rms=I_peak*sqrt(2 tr f/3), t 65 nm, declared UNCHECKED",
+  "worst_Javg_all": {
+   "J": 22.8384,
+   "layer": "M9",
+   "width_um": 0.08,
+   "xy": [
+    4399.88,
+    1410.44
+   ]
+  },
+  "worst_Jrms_all": {
+   "J": 107.6612,
+   "layer": "M9",
+   "width_um": 0.08,
+   "xy": [
+    4399.88,
+    1410.44
+   ]
+  },
+  "worst_Javg_1p6": {
+   "J": 2.7565,
+   "layer": "M9",
+   "width_um": 1.6,
+   "xy": [
+    15722.68,
+    1363.16
+   ]
+  },
+  "worst_Jrms_1p6": {
+   "J": 12.9941,
+   "layer": "M9",
+   "width_um": 1.6,
+   "xy": [
+    15722.68,
+    1363.16
+   ]
+  },
+  "n_Jrms_over_budget": 46690,
+  "n_Javg_over_budget": 14336,
+  "n_Jrms_over_budget_1p6": 916
+ },
+ "runtime_s": 13.2
+}

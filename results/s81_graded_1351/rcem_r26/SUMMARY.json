@@ -1,0 +1,53 @@
+{
+ "schema": "opentallas.s81.graded_mesh_rcem_summary.v1",
+ "status": "DIAGNOSTIC_ONLY_GATE_BLOCKED",
+ "inputs": {
+  "enc4": "intel1:/srv/opentallas-scratch2/claude/s81-graded-enc-r24/enc4/encoded_metal.json sha256 4d474e20f554081894c825d806406d43ec1c99f24a26336e608c9da68041f0df",
+  "enc8": "intel1:/srv/opentallas-scratch2/claude/s81-cores-r25/mesh/enc8/encoded_metal.json sha256 ae18db907fee45c7494055341a20ad14b6b7649704873c6859687535ad9ab76f"
+ },
+ "gate_blocker": "main die_sta_related --mesh-signoff needs a die_clock_mesh proof (tap_arrivals_<C>, mesh_<C> stubs) + kv_r18/mesh_mc18 MC on a qc_clk_mesh2 REC (routed tree arrivals at driver inputs, Thevenin); none exist for the explicit graded encoding (combo rejects the graded marker until physical_encoder_qualified; no native RC of 1.60-1.76 rails). Same missing explicit-mesh adapter as HEAD-R23 (c).",
+ "ps_metric": "Elmore first moment at the 7481 local-tree inputs, all drivers launched together (mesh-only); MC 8 samples driver offset N(0,10ps) + wire R/C 5%",
+ "em_budget": "declared QC r2/r3 method, 1.0 MA/cm2 J_avg and J_rms, t 65 nm",
+ "corners": {
+  "TT": {
+   "pre_cap_enc4": {
+    "spread": 515.178,
+    "p99": 178.795,
+    "mc_spread_max": 554.691,
+    "Jrms_max": 107.6612,
+    "Javg_max": 22.8384,
+    "segs_Jrms_over": 46690,
+    "mesh_C_pF": 3244.615
+   },
+   "capped_enc8": {
+    "spread": 515.315,
+    "p99": 178.75,
+    "mc_spread_max": 554.818,
+    "Jrms_max": 107.1273,
+    "Javg_max": 22.7251,
+    "segs_Jrms_over": 46674,
+    "mesh_C_pF": 3232.853
+   }
+  },
+  "FF": {
+   "pre_cap_enc4": {
+    "spread": 499.58,
+    "p99": 169.261,
+    "mc_spread_max": 542.267,
+    "Jrms_max": 119.8546,
+    "Javg_max": 25.425,
+    "segs_Jrms_over": 48474,
+    "mesh_C_pF": 3244.615
+   },
+   "capped_enc8": {
+    "spread": 499.728,
+    "p99": 169.305,
+    "mc_spread_max": 542.412,
+    "Jrms_max": 119.255,
+    "Javg_max": 25.2978,
+    "segs_Jrms_over": 48437,
+    "mesh_C_pF": 3232.853
+   }
+  }
+ }
+}
