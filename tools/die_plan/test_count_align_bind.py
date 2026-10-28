@@ -132,3 +132,38 @@ def test_start_skew_limit_emitted_per_tree_edge():
         if e and e["sync_values"] == 1:
             assert math.isclose(e["start_skew_limit_ps"], round(e["sync_dist_ps"] - 26.5, 1), abs_tol=0.11)
     assert p["summary"]["start_skew_limit_clean_min_ps"] is not None
+
+
+def test_edge_pad_delays_child_origin_and_adds_tree_cycles_only():
+    # MESO-RECONCILE (COORD 22:53 HEAD (b)): per-start-tree-edge PAD.  Edge PAD p on the tree edge into b delays b (and
+    # its subtree) by p - PAD counts and holds that tree crossing's RTL K, so its latency grows by p - PAD; identity and
+    # every loop sum still hold.
+    rows = [row("ab", "a", "b", 0.8 * T, 30, 30), row("bc", "b", "c", 100), row("ca", "c", "a", -60, 200, 200)]
+    for pad in (0, 2):
+        p0 = plan(rows, pad)
+        s, out, regs = CAP.plan([dict(r) for r in rows], T, T / 8, 0.05, 26.5, pad, {"b": pad + 1})
+        s.update(period_ps=T, aperture_ps=T / 8, sync_aperture_ps=26.5, pad=pad)
+        p1 = CB.plan_doc(s, out, regs)
+        b1 = CB.bind(p1)
+        v1 = CB.verify(b1, 400)
+        assert not v1["identity_and_loop_errors"] and v1["sim_window_violations"] == 0
+        assert s["edge_pad"] == {"b": pad + 1}
+        o0 = {g["region"]: g for g in p0["regions"]}
+        o1 = {g["region"]: g for g in p1["regions"]}
+        assert o1["b"]["origin_cycles"] == o0["b"]["origin_cycles"] + 1
+        assert o1["b"]["start_from"]["rtl"]["PAD"] == pad + 1 and b1["regions"]["b"]["pad"] == pad + 1
+        x0 = {o["port"]: o for o in p0["crossings"]}
+        x1 = {o["port"]: o for o in p1["crossings"]}
+        tree = o1["b"]["start_from"]["port"]
+        assert x1[tree]["rtl"]["K"] == x0[tree]["rtl"]["K"]
+        assert x1[tree]["lat_cycles"] == x0[tree]["lat_cycles"] + 1
+        assert abs(x1[tree]["margin_lo_ps"] - x0[tree]["margin_lo_ps"] - T) < 0.2
+
+
+def test_edge_pad_rejects_non_tree_edge_and_below_default():
+    rows = [row("ab", "a", "b", 0.8 * T, 30, 30), row("bc", "b", "c", 100), row("ca", "c", "a", -60, 200, 200)]
+    with pytest.raises(ValueError):
+        CAP.plan([dict(r) for r in rows], T, T / 8, 0.05, 26.5, 0, {"nosuch": 1})
+    with pytest.raises(ValueError):
+        CAP.plan([dict(r) for r in rows], T, T / 8, 0.05, 26.5, 2, {"b": 1})
+    assert CAP.parse_edge_pad(["tW0b10=1", "x=y=2"]) == {"tW0b10": 1, "x=y": 2}

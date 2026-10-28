@@ -158,7 +158,11 @@ def directed_tree(rows, regions):
     return best[1], best[2]
 
 
-def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0):
+def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edge_pad=None):
+    """edge_pad {tree port or child region: PAD}: per-start-tree-edge PAD overriding the default `pad` (MESO-RECONCILE-1,
+    COORD 10-27).  An edge PAD p_e >= pad delays the child's origin by p_e - pad counts and HOLDS the tree crossing's RTL K
+    at its default-PAD value, so that crossing's lag (and latency) grow by (p_e - pad) T; every other crossing's K is
+    re-chosen against the new origins (its latency is unchanged)."""
     for r in rows:
         r["lo"], r["hi"] = r["d_ps"] - r["p_dn_ps"], r["d_ps"] + r["p_up_ps"]
         r["_nv"], r["_edge"], r["_off"], r["_dist"] = sync_choice(r, T, ap)
@@ -175,11 +179,24 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0):
         for y in sorted(kids[x]):
             depth[y] = depth[x] + 1
             order.append(y)
+    epad = {}
+    for k, v in (edge_pad or {}).items():
+        hits = [x for x in order[1:] if x == k or par[x][1]["port"] == k]
+        if not hits:
+            raise ValueError(f"edge_pad {k!r}: not a start-tree edge (tree port or child region) of this plan")
+        if int(v) < pad:
+            raise ValueError(f"edge_pad {k!r}={v} below the default PAD {pad} (would cut the tree crossing's lag)")
+        for x in hits:
+            epad[x] = int(v)
+
+    def pe(x):
+        return epad.get(x, pad)
+
     a0, dev, jn = {root: 0}, {}, {}
     for x in order[1:]:
         p, r = par[x]
         jn[x] = J(r["d_ps"], T, r["_off"])
-        a0[x] = a0[p] + pad + 2 + jn[x]
+        a0[x] = a0[p] + pe(x) + 2 + jn[x]
         # J deviation range over the derated interval +- ap (J decreases with d)
         dev[x] = (J(r["hi"] + ap, T, r["_off"]) - jn[x], J(r["lo"] - ap, T, r["_off"]) - jn[x])
 
@@ -216,7 +233,7 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0):
             amb = path_amb(u, v) if (u != v and child is None) else (0, 0)
             rel_lo, rel_hi = r["lo"] + amb[0] * T, r["hi"] + amb[1] * T
         rel_lo, rel_hi = rel_lo - w, rel_hi + w
-        k_eff = math.ceil((lo_win - rel_lo) / T - 1e-12)
+        k_eff = math.ceil((lo_win - rel_lo) / T - 1e-12) + (pe(child) - pad if child is not None else 0)
         L_lo, L_hi = k_eff * T + rel_lo, k_eff * T + rel_hi
         dep = 4 if L_hi <= 3.5 * T - ap + 1e-9 else (8 if L_hi <= 7.5 * T - ap + 1e-9 else None)
         old_vals = interval_boundaries(r["lo"], r["hi"], T, T / 2) + 1
@@ -251,9 +268,9 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0):
                 lim, basis = None, "ambiguous: tree crossing FAIL"
             e = dict(parent=p, port=r["port"], edge=r["_edge"], sync_values=r["_nv"],
                      sync_dist_ps=round(r["_dist"], 1), J_nominal=jn[x], J_dev=list(dev[x]),
-                     offset_from_parent=pad + 2 + jn[x],
+                     offset_from_parent=pe(x) + 2 + jn[x], pad_override=x in epad,
                      start_skew_limit_ps=None if lim is None else round(lim, 1), start_skew_basis=basis,
-                     rtl=dict(module="ot_dp_landing_origin", PAD=pad, EDGE_FALL=int(r["_edge"] == "fall")))
+                     rtl=dict(module="ot_dp_landing_origin", PAD=pe(x), EDGE_FALL=int(r["_edge"] == "fall")))
         regs.append(dict(region=x, origin_cycles=a0[x], tree_depth=depth[x], start_from=e))
     ok = [o for o in out if o.get("depth")]
     amb_edges = [g for g in regs if g["start_from"] and g["start_from"]["sync_values"] > 1]
@@ -261,6 +278,7 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0):
                 tree_edges_clean=len(order) - 1 - len(amb_edges),
                 tree_edges_ambiguous=[dict(region=g["region"], **{k: g["start_from"][k] for k in
                                       ("parent", "port", "edge", "sync_values", "sync_dist_ps")}) for g in amb_edges],
+                edge_pad={x: epad[x] for x in sorted(epad)},
                 tree_edges_fall=sum(1 for g in regs if g["start_from"] and g["start_from"]["edge"] == "fall"),
                 start_skew_limit_clean_min_ps=min((g["start_from"]["start_skew_limit_ps"] for g in regs if g["start_from"]
                                                    and g["start_from"]["sync_values"] == 1), default=None),
@@ -324,7 +342,8 @@ def mc_check(rows, out, regs, T=833.0, chips=2000, sync_ap=26.5, seed=1):
     return chips, bad, round(wl, 1), round(wh, 1)
 
 
-def load_rows(ocv_json, corners):
+def load_rows(ocv_json, corners, scale=1.0):
+    """scale: plan-time arrival scale (OSS-CLOCK-2 ruling 21:10: x1.05) on d, p_dn, p_up and unshared (as DIE-HEAD-3 ca3)"""
     d = json.load(open(ocv_json))
     cs = corners.split(",")
     rows = [dict(r) for r in d["corners"][cs[0]]["all"]]
@@ -338,7 +357,23 @@ def load_rows(ocv_json, corners):
             r["margin_ps"] = min(r["margin_ps"], o["margin_ps"])
             for k in ("unshared_a_ps", "unshared_b_ps"):
                 r[k] = max(r.get(k, 0.0), o.get(k, 0.0))
+    if scale != 1.0:
+        for r in rows:
+            for k in ("d_ps", "p_dn_ps", "p_up_ps", "unshared_a_ps", "unshared_b_ps"):
+                if k in r:
+                    r[k] *= scale
     return rows
+
+
+def parse_edge_pad(items):
+    """['PORT_OR_REGION=N', ...] -> {key: N}"""
+    out = {}
+    for it in items or []:
+        k, _, v = it.rpartition("=")
+        if not k:
+            raise ValueError(f"--edge-pad {it!r}: want PORT=N or REGION=N")
+        out[k] = int(v)
+    return out
 
 
 def main(argv=None):
@@ -354,14 +389,17 @@ def main(argv=None):
                     "(ps): an ambiguous tree crossing's lag phase lies in [off - sap, off + T + sap]")
     ap.add_argument("--wander-frac", type=float, default=0.05, help="post-start drift +- frac x unshared, all crossings")
     ap.add_argument("--pad", type=int, default=0, help="PAD flops of every ot_dp_landing_origin")
+    ap.add_argument("--edge-pad", action="append", metavar="PORT=N", help="per-start-tree-edge PAD override (tree port "
+                    "or child region); the tree crossing keeps its RTL K, so its latency grows by N - PAD")
+    ap.add_argument("--scale", type=float, default=1.0, help="plan-time arrival scale (OSS-CLOCK-2 21:10: 1.05)")
     ap.add_argument("--mc-chips", type=int, default=0)
     ap.add_argument("--out")
     ap.add_argument("--cases", help="TSV for the Verilator bench: port DEPTH L_ps (lo / mid / hi per crossing)")
     a = ap.parse_args(argv)
-    rows = load_rows(a.ocv_json, a.corner)
-    summ, out, regs = plan(rows, a.period, a.aperture, a.wander_frac, a.sync_aperture, a.pad)
+    rows = load_rows(a.ocv_json, a.corner, a.scale)
+    summ, out, regs = plan(rows, a.period, a.aperture, a.wander_frac, a.sync_aperture, a.pad, parse_edge_pad(a.edge_pad))
     summ.update(corner=a.corner, period_ps=a.period, aperture_ps=a.aperture, sync_aperture_ps=a.sync_aperture,
-                wander_frac=a.wander_frac, pad=a.pad, source=a.ocv_json)
+                wander_frac=a.wander_frac, pad=a.pad, scale=a.scale, source=a.ocv_json)
     if a.mc_chips:
         n, bad, wl, wh = mc_check(rows, out, regs, a.period, a.mc_chips, a.sync_aperture)
         summ["mc"] = dict(chips=n, violations=bad, worst_lo_to_guard_ps=wl, worst_hi_to_guard_ps=wh)

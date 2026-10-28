@@ -215,6 +215,22 @@ def arr4(A, B, node):
     return A["late_ps"], A["early_ps"], B["late_ps"], B["early_ps"]
 
 
+def count_align_ss_info(landed, taps, bind, period, reg=None, scale=1.27, need_ps=100.0, start_wire=None):
+    """MESO-RECONCILE (COORD 22:31 HEAD (3)): SS corner row of the count-aligned crossings, INFORMATION ONLY (AGENTS.md /
+    METHODOLOGY 6.1: SS never gates).  No die clock proof carries SS tap arrivals, so the TT taps (and the pin-register
+    clk->Q) are scaled by the SS/TT delay ratio `scale` (default 1.27 = ASAP7 logic SS/TT derate used by uarch_model;
+    clock buffers/wires assumed to scale alike, UNCHECKED) and the same rows (lag, slot->read, guard, start skew) are
+    evaluated against the fixed TT/FF-planned K/DEPTH/origins at the same 833 ps period.  A die with real
+    tap_arrivals_SS.json runs --corner SS instead (then the SS row is real)."""
+    keys = ("late_ps", "early_ps", "abs_late_ps", "abs_early_ps")
+    st = {k: dict(v, **{f: float(v[f]) * scale for f in keys if f in v}) for k, v in taps.items()}
+    rg = None if reg is None else dict(reg, clkq_max_wire_ps=float(reg["clkq_max_wire_ps"]) * scale,
+                                       clkq_min_nowire_ps=float(reg["clkq_min_nowire_ps"]) * scale)
+    r = count_align_landed(landed, st, bind, period, rg, need_ps, start_wire)
+    r.update(info_only=True, ss_scale=scale, basis="TT taps x SS/TT scale (no SS clock proof)", gates=False)
+    return r
+
+
 def credit(rng, node, la, ea, lc, ec):
     c = node
     while c not in rng and len(c) > 1:
@@ -1218,6 +1234,9 @@ def main(argv=None):
                     help="MESO-INTEG-1 opt-in: landed pairs use the count-aligned ring lag window of this count_align_bind "
                          "file (count_align_bind.py v2; rows: lag >= 100 ps to the guards, slot->read, guard T/8, "
                          "start skew per tree edge) instead of +-T/2")
+    ap.add_argument("--count-align-ss-scale", type=float, default=1.27,
+                    help="--count-align SS INFO row (never gates): TT taps x this SS/TT delay ratio when the proof has no "
+                         "tap_arrivals_SS.json; 0 = off")
     ap.add_argument("--count-align-start-wire", metavar="JSON",
                     help="routed start-wire minus fclk-wire delay per tree port {port: [lo_ps, hi_ps]} (default: "
                          "co-routed model, mismatch 0)")
@@ -1337,6 +1356,16 @@ def main(argv=None):
                                     start_wire=json.loads(Path(a.count_align_start_wire).read_text())
                                     if a.count_align_start_wire else None)
             res.setdefault("count_aligned", {})[c] = ca
+            if c == "TT" and a.count_align_ss_scale > 0 and "SS" not in corners:
+                ss = count_align_ss_info(pairs["landed"], taps, json.loads(Path(a.count_align).read_text()), period, reg,
+                                         a.count_align_ss_scale,
+                                         start_wire=json.loads(Path(a.count_align_start_wire).read_text())
+                                         if a.count_align_start_wire else None)
+                res.setdefault("count_aligned_info", {})["SS"] = ss
+                print(f"COUNT-ALIGN SS-INFO (TT x {a.count_align_ss_scale}) worst lo "
+                      f"{ss['worst_lo'] and ss['worst_lo']['margin_lo_ps']} hi {ss['worst_hi'] and ss['worst_hi']['margin_hi_ps']} "
+                      f"fail {ss['fail']} slot_read fail {ss['slot_read']['fail']} guard fail {ss['guard']['fail']} start-skew "
+                      f"fail {ss['start_skew']['fail']}/{ss['start_skew']['tree_ports']} {ss['verdict']} (INFO, never gates)")
             print(f"COUNT-ALIGN {c} crossings {ca['crossings']} (sta {ca['sta_timed']}, tree {ca['tree_plan']}, no taps "
                   f"{ca['no_taps']}) worst lo {ca['worst_lo'] and ca['worst_lo']['margin_lo_ps']} hi "
                   f"{ca['worst_hi'] and ca['worst_hi']['margin_hi_ps']} fail {ca['fail']} slot_read fail {ca['slot_read']['fail']} "
@@ -1429,6 +1458,7 @@ def main(argv=None):
                               worst_margin_lo_ps={c: v["worst_lo"] and v["worst_lo"]["margin_lo_ps"] for c, v in cas.items()},
                               worst_margin_hi_ps={c: v["worst_hi"] and v["worst_hi"]["margin_hi_ps"] for c, v in cas.items()},
                               half_period_INFO=gate["landed"],
+                              ss_INFO={k: v["verdict"] for k, v in res.get("count_aligned_info", {}).items()},
                               verdict="PASS" if cas and all(v["verdict"] == "PASS" for v in cas.values()) else "FAIL")
     if a.hold_buffers != "none" and "TT" in hbrec and "FF" in hbrec:
         hb = {}

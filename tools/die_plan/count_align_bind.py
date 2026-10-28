@@ -266,6 +266,8 @@ def main(argv=None):
     ap.add_argument("--sync-aperture", type=float, default=26.5)
     ap.add_argument("--wander-frac", type=float, default=0.05)
     ap.add_argument("--pad", type=int, default=0)
+    ap.add_argument("--edge-pad", action="append", metavar="PORT=N", help="count_align_plan.py --edge-pad (with --from-ocv)")
+    ap.add_argument("--scale", type=float, default=1.0, help="count_align_plan.py --scale (with --from-ocv)")
     ap.add_argument("--samples", type=int, default=2000)
     ap.add_argument("--table")
     ap.add_argument("--table-out")
@@ -273,9 +275,10 @@ def main(argv=None):
     ap.add_argument("--out", required=True)
     a = ap.parse_args(argv)
     if a.from_ocv:
-        rows = CAP.load_rows(a.plan_json, a.corner)
-        s, out, regs = CAP.plan(rows, a.period, a.aperture, a.wander_frac, a.sync_aperture, a.pad)
-        s.update(period_ps=a.period, aperture_ps=a.aperture, sync_aperture_ps=a.sync_aperture, pad=a.pad,
+        rows = CAP.load_rows(a.plan_json, a.corner, a.scale)
+        s, out, regs = CAP.plan(rows, a.period, a.aperture, a.wander_frac, a.sync_aperture, a.pad,
+                                CAP.parse_edge_pad(a.edge_pad))
+        s.update(period_ps=a.period, aperture_ps=a.aperture, sync_aperture_ps=a.sync_aperture, pad=a.pad, scale=a.scale,
                  wander_frac=a.wander_frac, source=a.plan_json)
         plan = plan_doc(s, out, regs)
     else:

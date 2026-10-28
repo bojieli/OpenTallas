@@ -26,7 +26,9 @@ rows = [dict(port=f"{u}{v}", src=u, dst=v, d_ps=PH[v] - PH[u], p_up_ps=SPREAD, p
 # origins, tree crossings one count later where the plan's K is lower -> both must pass (same physics).
 import math, os  # noqa: E401,E402
 PAD = int(os.environ.get("PAD", "0"))
-s_, o_, g_ = CAP.plan([dict(r) for r in rows], T, T / 8, 0.05, 26.5, PAD)
+# EDGE_PAD="ab=1,ae=2": per-start-tree-edge PAD overrides (count_align_plan.py --edge-pad), tree crossing K held
+EDGE_PAD = CAP.parse_edge_pad([x for x in os.environ.get("EDGE_PAD", "").split(",") if x])
+s_, o_, g_ = CAP.plan([dict(r) for r in rows], T, T / 8, 0.05, 26.5, PAD, EDGE_PAD)
 s_.update(period_ps=T, aperture_ps=T / 8, sync_aperture_ps=26.5, pad=PAD)
 b = CB.bind(CB.plan_doc(s_, o_, g_))
 if os.environ.get("VARIANT") == "integ":
@@ -73,5 +75,5 @@ h += ["  X(%s, %d, %d, %d) \\" % (p, regs.index(c["src"]), regs.index(c["dst"]),
 h.append("")
 (out / "loop_params.h").write_text("\n".join(h) + "\n")
 (out / "loop_bind.json").write_text(json.dumps(dict(bind=b, verify=v), indent=1) + "\n")
-print(json.dumps(dict(variant=os.environ.get("VARIANT", "plan"), pad=PAD, fall_edges=sorted(x for x, r in b["regions"].items() if r["edge_fall"]), regions=regs, root=b["root"], ports={p: [c["src"], c["dst"], c["K"], c["depth"], c["sched_lat"],
+print(json.dumps(dict(variant=os.environ.get("VARIANT", "plan"), pad=PAD, edge_pad=s_["edge_pad"], fall_edges=sorted(x for x, r in b["regions"].items() if r["edge_fall"]), regions=regs, root=b["root"], ports={p: [c["src"], c["dst"], c["K"], c["depth"], c["sched_lat"],
                       c["tree"]] for p, c in sorted(b["ports"].items())}, loops=v["fundamental_cycles"]), indent=None))

@@ -560,3 +560,20 @@ def test_count_align_landed_ambiguous_tree_keeps_plan_window_and_no_taps_fails()
     bind["ports"]["y"] = dict(bind["ports"]["x"], src="C", dst="B")
     r = R.count_align_landed([("a0", "b0", "A->B"), ("b0", "a0", "B->A")], taps, bind, T, CA_REG)
     assert r["no_taps"] == 1 and r["verdict"] == "FAIL"
+
+
+def test_count_align_ss_info_scales_tt_taps_and_never_gates():
+    """MESO-RECONCILE: SS row = TT taps x SS/TT scale against the fixed plan; info only (SS never gates)."""
+    T = 833.0
+    taps = {"a0": _ca_tap("A", 300.0, 280.0), "b0": _ca_tap("B", 520.0, 500.0)}
+    landed = [("a0", "b0", "A->B"), ("b0", "a0", "B->A")]
+    bind = _ca_bind(T)
+    r1 = R.count_align_ss_info(landed, taps, bind, T, CA_REG, 1.0)
+    r0 = R.count_align_landed(landed, taps, bind, T, CA_REG)
+    assert r1["rows"] == r0["rows"] and r1["info_only"] and not r1["gates"]
+    r = R.count_align_ss_info(landed, taps, bind, T, CA_REG, 1.27)
+    x = {o["port"]: o for o in r["rows"]}
+    # d A->B scales to [1.27 * 500 - 1.27 * 300, 1.27 * 520 - 1.27 * 280] = [254, 304.8]
+    assert x["x"]["L_lo_ps"] == round(T + 254.0, 1) and x["x"]["L_hi_ps"] == round(T + 304.8, 1)
+    assert r["start_skew"]["rows"][0]["skew_hi_ps"] == round(48.0 * 1.27, 1)
+    assert taps["a0"]["late_ps"] == 300.0   # input not mutated
