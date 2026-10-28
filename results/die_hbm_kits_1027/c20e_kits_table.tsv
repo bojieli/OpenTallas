@@ -30,19 +30,19 @@ ot_hbm_svc_sm_xcal_rel_t	OK	FAIL	clock_entry_clear;macro_channels	BLOCKED PREFLI
 ot_hbm_svc_vm_kshare_splitstrap__v700685	NO_RECIPE	None		BLOCKED NO_RECIPE	
 ot_hbm_svc_vm_kshare_splitstrap__v8e478a	off the plan lattice	None		BLOCKED off the plan lattice	
 ot_hbm_svc_wb_kport_q	OK	FAIL	clock_entry_clear;clock_pin_geometry;macro_channels	BLOCKED PREFLIGHT clock_entry_clear;clock_pin_geometry;macro_channels	ot_hbm_svc_wb_kport_q_cee4184ae914-_c20e
-ot_hfd_coll_q2_hard_v8g__reduce	OK(fix)	PASS		PLACE-ONLY oth-ubuntu-2682149-1793165404	ot_hfd_coll_q2_hard_v8g__reduce_d5760c6fb862-_c20efix
-ot_hfd_coll_q2_hard_v8g__ring_ag	OK(fix)	PASS		PLACE-ONLY oth-ubuntu-2682161-1793165404	ot_hfd_coll_q2_hard_v8g__ring_ag_fafbfbb5dae5-_c20efix
+ot_hfd_coll_q2_hard_v8g__reduce	OK(fix)	PASS		PLACE-ONLY oth-ubuntu-2682149-1793165404 + AUTO-GEOM trial row e2ba1ba7dd28	ot_hfd_coll_q2_hard_v8g__reduce_d5760c6fb862-_c20efix
+ot_hfd_coll_q2_hard_v8g__ring_ag	OK(fix)	PASS		PLACE-ONLY oth-ubuntu-2682161-1793165404 + AUTO-GEOM trial row 68d657fa5a42	ot_hfd_coll_q2_hard_v8g__ring_ag_fafbfbb5dae5-_c20efix
 ot_hfd_coll_q2n2_body_core	OK	FAIL	clock_entry_clear;clock_pin_geometry;macro_channels	BLOCKED PREFLIGHT clock_entry_clear;clock_pin_geometry;macro_channels	ot_hfd_coll_q2n2_body_core_e17fe02ad377-_c20e
 ot_hfd_coll_q2n2_vm_core	OK	FAIL	clock_pin_geometry	BLOCKED PREFLIGHT clock_pin_geometry	ot_hfd_coll_q2n2_vm_core_6a79e1020526-_c20e
 ot_hfd_coll_q3_body_core	NO_RECIPE	None		BLOCKED NO_RECIPE	
 ot_hfd_coll_q3_edge_core	NO_RECIPE	None		BLOCKED NO_RECIPE	
 ot_hfd_coll_q3_vm_core	NO_RECIPE	None		BLOCKED NO_RECIPE	
-ot_hgi_coll_gq_issue	OK	PASS		PLACE-ONLY oth-ubuntu-2682153-1793165404	ot_hgi_coll_gq_issue_e49873327b17-_c20e
+ot_hgi_coll_gq_issue	OK	PASS		BLOCKED place-only FAIL_PREFLOOR rtl_lint (loop-integer multi-driver; same RTL/lint as C20b) oth-ubuntu-2682153-1793165404	ot_hgi_coll_gq_issue_e49873327b17-_c20e
 ot_hgi_coll_tkm_m_tp192__root	off the plan lattice	None		BLOCKED off the plan lattice	
-ot_hgi_coll_tkm_tp192_tile_core__idpin__strap	OK	PASS		PLACE-ONLY oth-ubuntu-2682152-1793165404	ot_hgi_coll_tkm_tp192_tile_core__idpin__strap_61e365d09ac2-_c20e
+ot_hgi_coll_tkm_tp192_tile_core__idpin__strap	OK	PASS		PLACE-ONLY oth-ubuntu-2682152-1793165404 + AUTO-GEOM trial row f287d70d8655	ot_hgi_coll_tkm_tp192_tile_core__idpin__strap_61e365d09ac2-_c20e
 ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap	OK	PASS		HELD open R8 ASK terminal tile_up_in=0 tie ruling	ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap_0676d08ecaf8-_c20e
 ot_hgi_dma_back_static_vp4_banks_cp	OK	FAIL	clock_entry_clear;clock_pin_geometry;macro_channels	BLOCKED PREFLIGHT clock_entry_clear;clock_pin_geometry;macro_channels	ot_hgi_dma_back_static_vp4_banks_cp_2f0b6ac4a51c-_c20e
-ot_hgi_qw_dec	OK	PASS		PLACE-ONLY oth-ubuntu-2682144-1793165404	ot_hgi_qw_dec_3b6333ac608b-_c20e
+ot_hgi_qw_dec	OK	PASS		BLOCKED place-only FAIL_PREFLOOR rtl_lint (loop-integer multi-driver; same RTL/lint as C20b) oth-ubuntu-2682144-1793165404	ot_hgi_qw_dec_3b6333ac608b-_c20e
 ot_hgi_sfu_core_split3__ctl	MAP_AMBIGUOUS	None		BLOCKED MAP_AMBIGUOUS	
 ot_hgi_sfu_core_split3__opstore_a	MAP_AMBIGUOUS	None		BLOCKED MAP_AMBIGUOUS	
 ot_hgi_sfu_core_split3__opstore_b	OK	FAIL	clock_entry_clear;macro_channels	BLOCKED PREFLIGHT clock_entry_clear;macro_channels	ot_hgi_sfu_core_split3__opstore_b_de3ef0436950-_c20e
