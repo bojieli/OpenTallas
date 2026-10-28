@@ -1,0 +1,22 @@
+prepared 20 skipped (no captured base) []
+kv3_phy v0 eq copies=1 rep=phy_EN_0 equivalent=True pass=True 
+kv3_phy v1 eq copies=1 rep=phy_WS_0 equivalent=True pass=True 
+kv3_phy v2 eq copies=2 rep=phy_ES_0 equivalent=True pass=True 
+kv3_phy_v1__cl4e8762c1 v0 eq copies=1 rep=phy_WS_1 equivalent=True pass=True 
+kv3_phy_v1__clc9d4bd7d v3 eq copies=1 rep=phy_ES_7 equivalent=True pass=True 
+kv3_phy_v1__clc9d4bd7d v0 eq copies=1 rep=phy_EN_7 equivalent=True pass=True 
+kv3_phy_v1__clc9d4bd7d v2 eq copies=1 rep=phy_WS_5 equivalent=True pass=True 
+kv3_phy_v1__cl4e8762c1 v0 mutant copies=1 rep=phy_WS_1 equivalent=False pass=True ERROR: Found 1 unproven $equiv cells in 'equiv_status -assert'.
+kv3_phy_v1__clc9d4bd7d v1 eq copies=1 rep=phy_WS_3 equivalent=True pass=True 
+kv3_phy_v1__clc9d4bd7d v4 eq copies=1 rep=phy_WS_7 equivalent=True pass=True 
+kv3_phy v0 mutant copies=1 rep=phy_EN_0 equivalent=False pass=True ERROR: Found 7 unproven $equiv cells in 'equiv_status -assert'.
+kv3_phy_v1__clc9d4bd7d v0 mutant copies=1 rep=phy_EN_7 equivalent=False pass=True ERROR: Found 8 unproven $equiv cells in 'equiv_status -assert'.
+kv3_phy_v1__clc9d4bd7d v5 eq copies=11 rep=phy_ES_1 equivalent=True pass=True 
+kv3_phy_v1__clc9d4bd7d v6 eq copies=1 rep=phy_WN_7 equivalent=True pass=True 
+kv3_phy_v1__clc9d4bd7d v8 eq copies=1 rep=phy_EN_2 equivalent=True pass=True 
+kv3_phy_v1__clc9d4bd7d v7 eq copies=9 rep=phy_EN_1 equivalent=True pass=True 
+kv3_sys_SD_v1 v0 eq copies=1 rep=sys_SE equivalent=True pass=True 
+kv3_sys_SD v0 eq copies=1 rep=sys_SW equivalent=True pass=True 
+kv3_sys_SD_v1 v0 mutant copies=1 rep=sys_SE equivalent=False pass=True ERROR: Found 1 unproven $equiv cells in 'equiv_status -assert'.
+kv3_sys_SD v0 mutant copies=1 rep=sys_SW equivalent=False pass=True ERROR: Found 1 unproven $equiv cells in 'equiv_status -assert'.
+{"schema": "opentallas.strap_lec.v1", "note": "DIE-KV-6 KV driver (captured bound base)", "plan": "/srv/opentallas-scratch2/claude/die-kv-6-1028/compose/landed_d9_plan.json", "landing": "/srv/opentallas-scratch2/claude/die-kv-6-1028/compose/landed_d9_sidecar.json", "types": ["kv3_phy", "kv3_phy_v1__cl4e8762c1", "kv3_phy_v1__clc9d4bd7d", "kv3_sys_SD", "kv3_sys_SD_v1"], "skipped": [], "variants": 15, "equivalent": 15, "copies_equivalent": 34, "mutants": 5, "mutants_caught": 5, "verdict": "PASS"}

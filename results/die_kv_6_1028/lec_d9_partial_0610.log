@@ -1,0 +1,44 @@
+PREP_FAIL kv3_phy strap_lec kv3_phy: leaf module(s) ['qkd_hbm3e_phy_pc4'] not found in the type sources
+PREP_FAIL kv3_phy_v1__cl4e8762c1 strap_lec kv3_phy_v1__cl4e8762c1: leaf module(s) ['qkd_hbm3e_phy_pc4'] not found in the type sources
+PREP_FAIL kv3_phy_v1__clc9d4bd7d strap_lec kv3_phy_v1__clc9d4bd7d: leaf module(s) ['qkd_hbm3e_phy_pc4'] not found in the type sources
+PREP_FAIL kv3_sys_SD strap_lec kv3_sys_SD: leaf module(s) ['ot_qfd_serdes_112g_x6_phy_c45'] not found in the type sources
+PREP_FAIL kv3_sys_SD_v1 strap_lec kv3_sys_SD_v1: leaf module(s) ['ot_qfd_serdes_112g_x6_phy_c45'] not found in the type sources
+prepared 160 skipped (no captured base) ['kv3_phy', 'kv3_phy_v1__cl4e8762c1', 'kv3_phy_v1__clc9d4bd7d', 'kv3_sys_SD', 'kv3_sys_SD_v1']
+kv3_hg v2 eq copies=1 rep=hg_WN_0 equivalent=True pass=True 
+kv3_hg v1 eq copies=1 rep=hg_EN_0 equivalent=True pass=True 
+kv3_hg v0 eq copies=2 rep=hg_ES_0 equivalent=True pass=True 
+kv3_hg_v1 v1 eq copies=1 rep=hg_WN_1 equivalent=True pass=True 
+kv3_hg_v1p3 v2 eq copies=1 rep=hg_WN_3 equivalent=True pass=True 
+kv3_hg_v1p3 v1 eq copies=1 rep=hg_ES_3 equivalent=True pass=True 
+kv3_hg_v1p3 v3 eq copies=1 rep=hg_EN_3 equivalent=True pass=True 
+kv3_hg_v1p4 v0 eq copies=1 rep=hg_ES_4 equivalent=True pass=True 
+kv3_hg_v1p4 v3 eq copies=1 rep=hg_EN_4 equivalent=True pass=True 
+kv3_hg_v1p2 v0 eq copies=1 rep=hg_WS_2 equivalent=True pass=True 
+kv3_hg_v1p3 v0 eq copies=1 rep=hg_WS_3 equivalent=True pass=True 
+kv3_hg_v1p2 v2 eq copies=1 rep=hg_WN_2 equivalent=True pass=True 
+kv3_hg_v1p2 v1 eq copies=1 rep=hg_ES_2 equivalent=True pass=True 
+kv3_hg_v1 v2 eq copies=1 rep=hg_EN_1 equivalent=True pass=True 
+kv3_hg_v1p4 v1 eq copies=1 rep=hg_WS_4 equivalent=True pass=True 
+kv3_hg_v1 v0 eq copies=1 rep=hg_ES_1 equivalent=True pass=True 
+kv3_hg_v1p4 v2 eq copies=1 rep=hg_WN_4 equivalent=True pass=True 
+kv3_hg_v1p2 v3 eq copies=1 rep=hg_EN_2 equivalent=True pass=True 
+kv3_hg_v1 v0 mutant copies=1 rep=hg_ES_1 equivalent=False pass=True ERROR: Found 1 unproven $equiv cells in 'equiv_status -assert'.
+kv3_hgi v1 eq copies=1 rep=hgi_ES_0 equivalent=True pass=True 
+kv3_hgi v0 eq copies=1 rep=hgi_WS_0 equivalent=True pass=True 
+kv3_hgi v0 mutant copies=1 rep=hgi_WS_0 equivalent=False pass=True ERROR: Found 1 unproven $equiv cells in 'equiv_status -assert'.
+kv3_hg v0 mutant copies=2 rep=hg_ES_0 equivalent=False pass=True TIMEOUT
+kv3_hg_v1p2 v0 mutant copies=1 rep=hg_WS_2 equivalent=False pass=True TIMEOUT
+kv3_hg_v1 v3 eq copies=1 rep=hg_WS_1 equivalent=False pass=False TIMEOUT
+kv3_hg_v1p3 v0 mutant copies=1 rep=hg_WS_3 equivalent=False pass=True TIMEOUT
+kv3_hg_v1p4 v0 mutant copies=1 rep=hg_ES_4 equivalent=False pass=True TIMEOUT
+kv3_hgi_v1__cl141fc26e v1 eq copies=3 rep=hgi_WS_2 equivalent=True pass=True 
+kv3_hgi_v1__cl141fc26e v0 eq copies=1 rep=hgi_WS_1 equivalent=True pass=True 
+kv3_hg_v1p5 v0 eq copies=1 rep=hg_ES_5 equivalent=True pass=True 
+kv3_hgi_v1__cl141fc26e v2 eq copies=2 rep=hgi_WS_5 equivalent=True pass=True 
+kv3_hgi_v1__cl42bc8b12 v0 eq copies=6 rep=hgi_ES_1 equivalent=True pass=True 
+kv3_hgi_v2__cl2862d491 v0 eq copies=1 rep=hgi_ES_7 equivalent=True pass=True 
+kv3_hg_v1p5 v1 eq copies=1 rep=hg_WS_5 equivalent=True pass=True 
+kv3_hgi_v2__cle0015330 v0 eq copies=1 rep=hgi_WS_7 equivalent=True pass=True 
+kv3_hg_v1p5 v0 mutant copies=1 rep=hg_ES_5 equivalent=False pass=True TIMEOUT
+kv3_hg_v1p5 v3 eq copies=1 rep=hg_WN_5 equivalent=True pass=True 
+kv3_hg_v1p5 v2 eq copies=1 rep=hg_EN_5 equivalent=True pass=True 
