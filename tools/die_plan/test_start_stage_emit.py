@@ -61,11 +61,14 @@ def test_emit_stages_netlist_and_clock_taps():
     st = {s["region"]: s for s in doc["stages"]}
     assert doc["schema"] == E.SCHEMA and doc["counts"]["stages"] == 2
     r, l = st[f"st:{P_ROOT}"], st[f"st:{P_L}"]
-    assert (r["id"], r["clock_net"], r["clock_from"], r["root"], r["flops"]) == ("b1", "n1", "Y", True, 3)
+    assert (r["id"], r["clock_net"], r["clock_from"], r["root"], r["flops"]) == ("b1", "n1", "Y", True, 7 + 1)
+    assert (r["module"], r["settle"], doc["root_settle"]) == ("ot_dp_landing_root", 64, 64)
     assert (l["id"], l["clock_net"], l["flops"], l["pad"], l["edge_fall"]) == ("b2", "n2", 3 + 2 + 1, 2, True)
     assert l["parent"] == f"st:{P_ROOT}" and l["children"] == ["a"] and r["children"] == ["b", f"st:{P_L}"]
-    # netlist: one landing origin per stage, root from root_p_start, chain, outputs to the data regions
-    assert "u_st_b1 (.clk(t_st_b1__clk), .rst_raw_n(rst_raw_n), .p_start(root_p_start), .start(st_b1_start))" in sv
+    # netlist: the root stage is the die root counter (no die-top root start), chain, outputs to the data regions
+    assert ("ot_dp_landing_root #(.SETTLE(64)) u_st_b1 (.clk(t_st_b1__clk), .rst_raw_n(rst_raw_n), "
+            ".start(st_b1_start))") in sv
+    assert "root_p_start" not in sv
     assert "#(.PAD(2), .EDGE_FALL(1)) u_st_b2 (.clk(t_st_b2__clk), .rst_raw_n(rst_raw_n), .p_start(st_b1_start)" in sv
     assert "assign pst_a = st_b2_start;" in sv and "assign pst_b = st_b1_start;" in sv
     assert sorted(o["dst_region"] for o in doc["die_outputs"]) == ["a", "b"] and doc["die_inputs"] == []
@@ -78,6 +81,45 @@ def test_emit_stages_netlist_and_clock_taps():
     x, y = l["clock_pin_xy_um"]
     assert f"place_pin -pin_name t_st_b2__clk -layer M9 -location {{{x:.3f} {y:.3f}}}" in t2
     assert t2.index("t_st_b2__clk") < t2.index("place_inst")
+
+
+def test_root_counter_settle_from_bind_or_option():
+    v, t = _tree()
+    b = dict(_bind(), root_settle_cycles=16)
+    doc, sv, _, _ = E.emit(b, _meta(), v, t)
+    r = next(s for s in doc["stages"] if s["root"])
+    assert (r["settle"], r["flops"]) == (16, 5 + 1) and "ot_dp_landing_root #(.SETTLE(16)) u_st_b1 " in sv
+    doc, sv, _, _ = E.emit(b, _meta(), v, t, root_settle=3)
+    assert "ot_dp_landing_root #(.SETTLE(3)) u_st_b1 " in sv
+    with pytest.raises(E.StageError, match="SETTLE"):
+        E.emit(b, _meta(), v, t, root_settle=0)
+
+
+def test_root_counter_simulates_release_chain(tmp_path):
+    """iverilog: raw release -> root counter start after SETTLE+1 edges -> child stage start a few cycles later"""
+    import shutil
+    import subprocess
+    iv = shutil.which("iverilog")
+    if iv is None:
+        pytest.skip("iverilog not installed")
+    v, t = _tree()
+    _, sv, _, _ = E.emit(_bind(), _meta(), v, t, root_settle=4)
+    rtl = Path(__file__).resolve().parents[2] / "rtl" / "common" / "ot_dp_clk_landing_ca.sv"
+    (tmp_path / "s.sv").write_text(sv)
+    (tmp_path / "tb.sv").write_text(
+        "module tb; reg clk = 0, rst = 0; wire a, b; integer c = 0, ta = -1, tb_ = -1;\n"
+        " always #5 clk = ~clk;\n"
+        " ot_die_start_stages u (.rst_raw_n(rst), .t_st_b1__clk(clk), .t_st_b2__clk(clk), .pst_a(a), .pst_b(b));\n"
+        " always @(posedge clk) begin c <= c + 1; if (b && tb_ < 0) tb_ <= c; if (a && ta < 0) ta <= c; end\n"
+        " initial begin #22 rst = 1; #400 $display(\"B %0d A %0d\", tb_, ta); $finish; end\nendmodule\n")
+    r = subprocess.run([iv, "-g2012", "-s", "tb", "-o", str(tmp_path / "a.out"), str(rtl), str(tmp_path / "s.sv"),
+                        str(tmp_path / "tb.sv")], capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+    out = subprocess.run(["vvp", str(tmp_path / "a.out")], capture_output=True, text=True).stdout
+    m = re.search(r"B (-?\d+) A (-?\d+)", out)
+    assert m, out
+    tb_, ta = int(m.group(1)), int(m.group(2))
+    assert tb_ > 4 and ta > tb_, out     # root start after SETTLE counts; the child stage (PAD 2) releases later
 
 
 def test_stage_rows_clear_clock_cells_and_each_other():
