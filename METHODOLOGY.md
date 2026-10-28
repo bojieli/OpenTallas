@@ -538,3 +538,9 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
      derives from the clock tree is part of (b), not a tweak.
   d. Proof: the plan-time check gates the plan event; the same check reruns on built clock arrivals before freeze; NUMBER-CHECK on
      headline margins. No new gate threshold: the gate stays CA margin >= 100 ps TT/FF incl. OCV + droop.
+  e. OWNER 2026-10-28 07:33 PDT: "I suggest fixing the unshared paths of the clock trees for all the 5 dies. this is the root cause." On ALL 5 dies
+     the release clock form is the LOCAL form (12.13b): region clocks forwarded from a neighbour, or fed from a spine along the
+     data links, so each crossing shares its clock up to a tree node at the crossing. Die-wide trees, H-trees and deep landed
+     roots that leave multi-ns unshared clock on crossings STOP as release forms. Deeper buffers (D8/D16) are chosen only after
+     the local form, from its computed bounds. CLK-LOCAL-EST-1 gives the per-die estimate; each die owner turns it into its plan
+     event.
