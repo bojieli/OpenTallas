@@ -348,6 +348,20 @@ def tap_pins(P, tn):
     return clock_pins(P, tn) + core_tap_pins(P, tn) + [("arst_n",) + rs] + st + [e[:3] for e in edge_clock_pins(P, tn)]
 
 
+def core_reset_sdc(rsts, per):
+    """THE core-kit reset IO rule, shared by every core-kit generator (FLOW-GEN-2 (d), COORD 10-28 all-die sweep of
+    the HBM-CORES-REBAL-8 fix; OWNER DECISION 13 reset wavefront; die reset contract): a core reset pin is driven by
+    the die reset tree's last relay flop (reset_tree.py), so it is a SYNCHRONOUS input timed under the normal data
+    IO budget (IO_BUDGET x T, both max and min from the generator's $non_clk_in lines), recovery / removal timed.
+    No reset-specific input delay: the old 0.5 T line ("released one cycle ahead, recovery at 1 T") modelled an
+    unregistered half-cycle source that the reset tree does not have, and cost 0.3 T of every reset path (HBM
+    lanes__canon -464.6 ps).  Returns the SDC comment for the reset ports (empty without reset pins)."""
+    if not rsts:
+        return ""
+    return (f"# reset {' '.join(rsts)}: wavefront relay -> registered synchronous input, "
+            f"data IO budget ({IO_BUDGET * per:.4f})\n")
+
+
 def reset_out_pins(P, tn):
     """[(port, x, y)] interior registered reset OUT pins of a wavefront plan type (reset_tree.out_pins)."""
     import reset_tree as RT

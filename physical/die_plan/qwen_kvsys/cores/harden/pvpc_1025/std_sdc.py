@@ -1,4 +1,7 @@
 import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[6] / "tools/die_plan"))
+import gen_phys
 clk, rst, tap = sys.argv[1], sys.argv[2], float(sys.argv[3])
 per, ins, tol, io = 833.0, 250.0, 40.0, 0.2*833.0
 s = "# KV-CORES/PV-PC 10-25: standard core SDC (gen_core_kit_kv.sdc vocabulary) for re-sign-off of a reused closed view\n"
@@ -17,8 +20,8 @@ set_input_delay -max {io:.4f} -clock vclk $non_clk_in
 set_input_delay -min {-tol:.4f} -clock vclk $non_clk_in
 set_output_delay -max {io:.4f} -clock vclk [all_outputs]
 set_output_delay -min 0.0000 -clock vclk [all_outputs]
-set_input_delay -max {0.5*per:.4f} -clock vclk [get_ports {{{rst}}}]
-set_load 2 [all_outputs]
+{{RST_LINE}}set_load 2 [all_outputs]
 set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in
 """
+s = s.replace("{RST_LINE}", gen_phys.core_reset_sdc([rst], per))
 print(s, end="")

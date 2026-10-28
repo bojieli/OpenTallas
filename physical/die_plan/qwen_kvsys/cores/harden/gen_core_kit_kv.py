@@ -430,6 +430,15 @@ def related_clock_sdc(per, related):
     return s
 
 
+
+def _reset_sdc(rsts, per):
+    """reset ports: the shared core-kit reset IO rule tools/die_plan/gen_phys.core_reset_sdc (no local copy)."""
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parents[5] / "tools/die_plan"))
+    import gen_phys
+    return gen_phys.core_reset_sdc(rsts, per)
+
+
 def sdc(per, ins, tol, clks, rsts, tid, straps=(), in_min_ports=None, related=()):
     """core SDC in the sdc_lint vocabulary (CP1-R10): one real clock 'clk' on the core clock pin(s), one virtual IO clock
     at the plan common latency, 60/25 ps uncertainty split once per seam, explicit max AND min delays on every port
@@ -467,8 +476,7 @@ def sdc(per, ins, tol, clks, rsts, tid, straps=(), in_min_ports=None, related=()
             ps = sorted(p for p, x in in_min_ports.items() if x == v)
             s += f"set_input_delay -min {v:.4f} -clock vclk [get_ports {{{' '.join(p + '[*]' for p in ps)}}}]\n"
     if rsts:
-        s += (f"# reset: async assert, released by the partition's reset synchroniser one cycle ahead (recovery at 1 T)\n"
-              f"set_input_delay -max {0.5 * per:.4f} -clock vclk [get_ports {{{' '.join(rsts)}}}]\n")
+        s += _reset_sdc(rsts, per)
     if straps:
         # OWNER 10-25 option B rule 2: declared ID straps are quasi-static parent constants -> the one allowed exception
         s += ("# ID straps (OWNER 10-25 option B): tied at the parent, quasi-static\n"
