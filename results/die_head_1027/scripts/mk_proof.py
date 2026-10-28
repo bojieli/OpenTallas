@@ -2,7 +2,12 @@
 """DIE-HEAD-2 (4): die_sta_related proof-dir export from a die_trial routed die-clock run (combo GRT, FB1 one entry
 per partition).  NOT a die_clock_mesh proof: this only re-packages the run's own numbers.
 
-    mk_proof.py RUN_DIR MAP_JSON OUT_DIR      (RUN_DIR/clk/tree.json, RUN_DIR/out_<C>/arr_<C>.txt)
+    mk_proof.py RUN_DIR MAP_JSON OUT_DIR [--tree-path]   (RUN_DIR/clk/tree.json, RUN_DIR/out_<C>/arr_<C>.txt)
+
+--tree-path (DIE-HEAD-5, opt-in): every tap also carries tree_path = 'h' + one character per tree level below the root
+cell (child index, U+0100 + i, never an ASCII region name), and every tree-path prefix gets its cell's arrivals in
+node_cell / node_stages / node_xy_um / node_late_ps / node_early_ps / cppr_node_range_ps, so die_sta_related --cppr-lca
+takes CPPR at the TRUE last common tree cell of a cross-region pair (12.4b) instead of the die root 'h'.
 
 Per tap port t_<part>__clk: late = 833.333 - slack_max_rise (= max arrival, output delay 0), early = slack_min_rise
 (= min arrival), slew = slew_max_rise.  cppr_node = the partition's clock region from MAP_JSON part_region (feed40);
@@ -16,7 +21,9 @@ import json
 import sys
 from pathlib import Path
 
-run, mp, out = Path(sys.argv[1]), Path(sys.argv[2]), Path(sys.argv[3])
+args = [a for a in sys.argv[1:] if a != "--tree-path"]
+TREE_PATH = "--tree-path" in sys.argv[1:]
+run, mp, out = Path(args[0]), Path(args[1]), Path(args[2])
 out.mkdir(parents=True, exist_ok=True)
 tree = json.loads((run / "clk" / "tree.json").read_text())
 pr = json.loads(mp.read_text())["part_region"]
@@ -53,6 +60,17 @@ for C in ("TT", "FF"):
         elif x and x[0] == "N":
             N[x[1]] = (float(x[2]), float(x[3]))
     nodes = dict(h=root, **{r: c for r, c in rnode.items()})
+    tpath = {}
+    if TREE_PATH:
+        kids = {}
+        for c, par in sorted(tree["parent_of"].items()):
+            kids.setdefault(par, []).append(c)
+        for p in tap:
+            ch = chain(leaf[p])[::-1]            # root .. leaf
+            s_ = "h" + "".join(chr(0x100 + kids[ch[i - 1]].index(ch[i])) for i in range(1, len(ch)))
+            tpath[p] = s_
+            for i in range(1, len(ch)):
+                nodes.setdefault(s_[:i + 1], ch[i])
     meta = dict(corner=C, basis=f"die_trial combo GRT-RC routed die clock {run} (DIE-HEAD-2 mk_proof.py; regions = feed40 map)",
                 node_cell=nodes,
                 node_stages={n: len(chain(c)) for n, c in nodes.items()},
@@ -64,7 +82,8 @@ for C in ("TT", "FF"):
     for p, t in sorted(tap.items()):
         late, early, slew = T[p]
         taps.append(dict(port=p, part=t["part"], late_ps=late, early_ps=early, slew_ps=slew, cppr_node=pr[t["part"]],
-                         stages_from_root=len(chain(leaf[p])), xy_um=t["xy"], leaf_cell=leaf[p]))
+                         stages_from_root=len(chain(leaf[p])), xy_um=t["xy"], leaf_cell=leaf[p],
+                         **({"tree_path": tpath[p]} if TREE_PATH else {})))
     meta["taps"] = taps
     (out / f"tap_arrivals_{C}.json").write_text(json.dumps(meta, indent=0) + "\n")
 (out / "mesh.json").write_text(json.dumps(dict(note="tap list only (no mesh): nearest-tap/HB4 bit counts",
