@@ -61,12 +61,26 @@ Labels: OWN = my run, not independently checked. Nothing here is a gate number; 
   - STA - spice per sink is -28.9 ± 0.8 TT and -25.2 ± 0.15 FF. That is a uniform 4.4 / 4.7 % early STA.
   - The crossing-pair nominal d is the same in both tools (0.00 ps difference).
   - The fitted model is 7 % below spice (model - spice -47 TT, -38 FF). Files: qcs_small_compare_{TT,FF}.json.
-- Late split cuts the unshared clock on the listed pairs from 896 to 45 ps TT at the same insertion (model). On the full
-  slice the STA nominal |d| of those pairs is 0.0 ps.
+- ngspice vs STA, quarter slice (4 strips, 48 taps, about 124 BUFx24, 37 mm wire), OWN:
+
+| tree | spice ins TT | spice skew TT / FF | STA skew TT / FF | STA - spice TT (mean, spread) | FF | model - spice TT |
+|---|---|---|---|---|---|---|
+| late_split | 1024.8-1034.6 | 9.9 / 11.5 | 6.1 / 6.8 | -45.6 (4.7) = -4.4 % | -42.6 (5.1) = -5.0 % | -69.8 |
+| nearest | 1015.2-1018.8 | 3.6 / - | 2.2 / - | -45.8 (1.4) = -4.5 % | - | -68.0 |
+
+  Files: qcq_*_compare_*.json.
+- What this shows:
+  - STA and transistor-level spice agree on the relative arrivals to within 1.4-5.1 ps per sink, with a uniform
+    -4.4..-5.0 % absolute offset (STA earlier).
+  - The planner model is 6-7 % optimistic in absolute insertion. It is fitted to STA, so that offset comes on top.
+- Caveat: on this regular grid the listed crossing pairs are mirror-symmetric, so their nominal d is 0.00 in both tools
+  and that comparison carries no information. The per-sink spread above is the real STA-vs-spice check.
+- Late split cuts the model's unshared clock on the listed pairs from 896 to 45 ps TT at the same insertion. Its cost is a
+  little more skew (spice 9.9 vs 3.6 ps on the quarter slice).
 
 ## Not done / next
-- The ngspice runs on the quarter slice (qcq_ls TT/FF, qcq_nn TT) and the full slice (qcs_ls TT/FF, qcs_nn TT) were still
-  running on intel1 at the time of writing. Extracted-cell decks run at about 0.1 ns of sim time per minute.
+- The full-slice ngspice runs (qcs_ls TT/FF, qcs_nn TT; 554 extracted BUFx24 cells) were still running on intel1 at
+  20:35, at about 0.01-0.04 ns of sim time per minute, so expect them to take hours.
   - Collect: rsync arr_<C>.dat + sta_arr_<C>.txt into the local build dir, then
     `python3 -m mscts.run compare DIR --corner C`.
   - Containers are named ossclk_<dir>_<C>.
