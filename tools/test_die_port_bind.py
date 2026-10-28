@@ -451,3 +451,19 @@ class ManifestOnly(unittest.TestCase):
         self.assertEqual(rc, 2)
         self.assertIn('--manifest-only', so)
 
+
+
+def test_ansi_header_ports_are_die_nets(tmp_path):
+    """DIE-HEAD-3: an ANSI die-top header declares nets (gen_rtl native tops): no UNPARSED .clk(clk), full widths."""
+    import die_port_bind as D
+    p = tmp_path / "top.sv"
+    p.write_text("module top (\n    input  wire clk,\n    input  wire [543:0] rx, rx2,\n    output wire [3:0] y\n);\n"
+                 "    leaf u (\n        .clk(clk),\n        .d(rx)\n    );\nendmodule\n")
+    nets, tin, tout, insts = D.parse_die(str(p), "top")
+    assert nets["clk"] == (1, 0) and nets["rx"] == (544, 0) and nets["rx2"] == (544, 0) and nets["y"] == (4, 0)
+    assert tin == {"clk", "rx", "rx2"} and tout == {"y"}
+    assert D.expr_bits("rx", nets)[0] == ("rx", 543)
+    q = tmp_path / "old.v"
+    q.write_text("module old (clk, y);\n    input clk;\n    output [1:0] y;\nendmodule\n")
+    n2, ti2, to2, _ = D.parse_die(str(q), "old")
+    assert n2 == {"clk": (1, 0), "y": (2, 0)} and ti2 == {"clk"} and to2 == {"y"}

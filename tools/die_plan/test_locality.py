@@ -238,18 +238,19 @@ HEAD3 = HERE / "testdata" / "land_head3_sfbR_ocv_ttff.json.gz"
 
 
 def test_cap_reproduces_meso_count_head3():
-    """the adopted CA ring through locality's entry on the LAND-HEAD-3 routed rows = MESO-COUNT-1's HEAD result:
-    427/427 DEPTH4, 0 FAIL, latency 2 x 349 / 3 x 78, worst margin 104.1 ps on the low side (the aperture T/8)."""
+    """the adopted CA ring through locality's entry on the LAND-HEAD-3 routed rows = MESO-COUNT-2's HEAD result
+    (K from the derated lag, directed start tree; MESO-RECONCILE-1): 427/427 DEPTH4, 0 FAIL, latency 2 x 256 / 3 x 171,
+    worst margin 126.2 ps low (+-5% wander; MESO-COUNT-1's 104.1 was the pinned tree low edge, NUMBER-CHECK 20:48)."""
     import gzip
     d = json.load(gzip.open(HEAD3, "rt"))
     cr = {c[:2]: d["corners"][c]["all"] for c in ("TT_droop-regions_corelat250", "FF_droop-regions_corelat202.5")}
     s, res = LO.cap_plan_corners(cr, 833.0)
     assert s["crossings"] == 427 and s["depth4"] == 427 and s["depth8"] == 0 and s["fail"] == 0
     assert s["components"] == 1 and s["tree_edges_clean"] == s["tree_edges"] == 325
-    assert s["lat_hist"] == {"2": 349, "3": 78}
-    assert s["worst_margin_lo_ps"] == 104.1 and s["worst_margin_hi_ps"] >= 100.0
-    w = res["coll_EN1_u__0"]  # the 20:26 ruling's worst crossing: L in [1065, 1432], latency 3 at DEPTH 4
-    assert w["depth"] == 4 and w["lat_cycles"] == 3 and round(w["L_lo_ps"]) == 1065 and round(w["L_hi_ps"]) == 1432
+    assert s["lat_hist"] == {"2": 256, "3": 171}
+    assert s["worst_margin_lo_ps"] == 126.2 and s["worst_margin_hi_ps"] >= 100.0
+    w = res["coll_EN1_u__0"]  # the 20:26 ruling's worst crossing: derated L 1169-1327 (NC) +-22 wander, latency 3, DEPTH 4
+    assert w["depth"] == 4 and w["lat_cycles"] == 3 and round(w["L_lo_ps"]) == 1147 and round(w["L_hi_ps"]) == 1350
 
 
 def test_cap_reading_on_modelled_crossings():

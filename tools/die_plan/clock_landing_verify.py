@@ -91,8 +91,8 @@ class Verification:
     def clock(self,c,part,port='clk'):
         self.equal_input(c,port,[('top','clk_region_'+ident(self.region[part]),0)])
 
-    def check_reset(self,c,part,node,extra=None):
-        bits=c.ports.get('rst_n',[])
+    def check_reset(self,c,part,node,extra=None,port='rst_n'):
+        bits=c.ports.get(port,[])
         if len(bits)!=1:self.fail(c.path+': exact one-bit raw reset required');return
         tree=self.collector['types'][self.parts[part]['type']]['tree']
         rows={r['q']:r for r in tree['relays']};prefix=ident(part)+'.'
@@ -154,12 +154,19 @@ class Verification:
         rows=self.table['ports'];ports={p['id']:p for p in self.raw['ports']}
         for r in rows:
             pr=ports[r['port']];bus=pr['dst']['bus'];path=ident(r['dst'])+'.u_cland_'+bus
-            c=self.instance(path,'ot_dp_clk_landing')
+            ca=self.table.get('count_aligned')
+            c=self.instance(path,'ot_dp_clk_landing_ca' if ca else 'ot_dp_clk_landing')
             if c:
                 self.clock(c,r['dst']);self.clock(c,r['src'],'fclk')
                 info=self.collector['types'][self.parts[r['dst']]['type']]
                 local=next(x for x in info['local_sources'] if x['name']==bus)
-                self.check_reset(c,r['dst'],self.ring_reset_node(r['dst'],bus,info),'u_cland_rst_'+bus)
+                if ca:
+                    # count-aligned (MESO-INTEG-1): read count from the receiver's origin, write count from the
+                    # sender's origin forwarded beside the bus; the origins themselves are checked below
+                    self.equal_input(c,'rst_n',[self.start_net(r['dst'])])
+                    self.equal_input(c,'t_rst_n',[self.start_net(r['src'])])
+                else:
+                    self.check_reset(c,r['dst'],self.ring_reset_node(r['dst'],bus,info),'u_cland_rst_'+bus)
                 import schema
                 lane=r.get('lane',r['port'])
                 data_width=int(r['width']) if self.live_widths is None else self.live_widths.get(lane)
@@ -169,6 +176,7 @@ class Verification:
                     expected=data_width+int(schema.has_epoch(pr))
                     if len(c.ports.get('q',[]))!=expected or len(c.ports.get('d',[]))!=expected:
                         self.fail(path+f': whole live payload/epoch bus must survive (expected {expected})')
+        if self.table.get('count_aligned'):self._check_origins(rows,ports)
         for pn,p in self.parts.items():
             info=self.collector['types'][p['type']]
             if not info['mask']['active']:continue
@@ -212,9 +220,78 @@ class Verification:
                     want=[s[key] for s in at[n]]+[self.output(ident(pn)+'.u_cland_collect_'+ident(q),key+'_o') for q in sorted(children[n])]
                     # Concatenation is MSB first in RTL, Yosys bits are LSB first.
                     self.equal_input(c,port,list(reversed(want)))
-        actual={c.path for c in self.F.cells if c.module in ('ot_dp_clk_landing','ot_dp_landing_collect')}
+        actual={c.path for c in self.F.cells if c.module in ('ot_dp_clk_landing','ot_dp_landing_collect','ot_dp_clk_landing_ca',
+                                                             'ot_dp_landing_origin','ot_dp_landing_root','ot_dp_landing_relay')}
         for x in sorted(actual-self.expected):self.fail('unexpected/unpriced infrastructure '+x)
         for x in sorted(self.expected-actual):self.fail('missing infrastructure instance '+x)
+
+    def start_net(self,pn):
+        """a landed partition's count start: its origin's start, or (intra-region relay, DIE-KV-3/CAORIGIN) its rx
+        relay flop's q"""
+        parts=self.table['count_aligned'].get('parts') or {}
+        if parts.get(pn,{}).get('role')=='relay':return self.output(ident(pn)+'.u_cland_rstart_rx','q')
+        return self.output(ident(pn)+'.u_cland_origin','start')
+
+    def _raw_node(self,pn,ins,info):
+        b=sorted(ins[pn])[0] if ins[pn] else None
+        return (self.ring_reset_node(pn,b,info) if b else 'rst_n_t0'),('u_cland_rst_'+b if b else None)
+
+    def _check_origins(self,rows,ports):
+        """Start tree: one origin per region; root = ot_dp_landing_root on a raw reset, child = ot_dp_landing_origin on
+        its tree bus's raw ring reset with p_start = the tree port SENDER partition's start.  Intra-region relay (bind
+        "parts", COORD 21:14 ASK 3): the origin partition's u_cland_rstart_tx (d = origin start) drives every relay
+        partition's u_cland_rstart_rx (q = that partition's start), both ot_dp_landing_relay on the region clock and the
+        partition's raw reset; without "parts" a region must hold exactly one landed partition."""
+        ca=self.table['count_aligned'];ins=defaultdict(list);landed=set();cparts=ca.get('parts')
+        for r in rows:
+            pr=ports[r['port']];ins[r['dst']].append(pr['dst']['bus']);landed.update((r['src'],r['dst']))
+        by_region={}
+        for pn in landed:by_region.setdefault(self.region[pn],[]).append(pn)
+        for tag,ps in sorted(by_region.items()):
+            rg=ca['regions'].get(tag)
+            if rg is None:self.fail(f'count-aligned region {tag} not in the start tree');continue
+            if cparts is None:
+                if len(ps)!=1:self.fail(f'count-aligned region {tag}: one landed partition required, actual {sorted(ps)}');continue
+                pn=ps[0]
+            else:
+                pn=rg.get('origin_part')
+                roles={q:(cparts.get(q) or {}).get('role') for q in ps}
+                if pn not in ps or roles[pn]!='origin' or sorted(q for q,v in roles.items() if v=='origin')!=[pn] or None in roles.values():
+                    self.fail(f'count-aligned region {tag}: bind roles {roles} need exactly one origin {pn}');continue
+            path=ident(pn)+'.u_cland_origin'
+            info=self.collector['types'][self.parts[pn]['type']]
+            if rg['parent'] is None:
+                c=self.instance(path,'ot_dp_landing_root')
+                if c:
+                    node,relay=self._raw_node(pn,ins,info)
+                    self.clock(c,pn);self.check_reset(c,pn,node,relay,port='rst_raw_n')
+            else:
+                tp=next((r for r in rows if r['port']==rg['tree_port']),None)
+                if tp is None or tp['dst']!=pn:self.fail(f'count-aligned region {tag}: tree port {rg["tree_port"]} does not land in {pn}');continue
+                b=ports[tp['port']]['dst']['bus']
+                if self.region.get(tp['src'])!=rg['parent']:
+                    self.fail(f'count-aligned region {tag}: tree port sender {tp["src"]} is not in parent region {rg["parent"]}');continue
+                c=self.instance(path,'ot_dp_landing_origin')
+                if c:
+                    self.clock(c,pn);self.check_reset(c,pn,self.ring_reset_node(pn,b,info),'u_cland_rst_'+b,port='rst_raw_n')
+                    self.equal_input(c,'p_start',[self.start_net(tp['src'])])
+            rel=[q for q in ps if q!=pn]
+            if not rel:continue
+            tx=self.instance(ident(pn)+'.u_cland_rstart_tx','ot_dp_landing_relay')
+            if tx:
+                node,relay=self._raw_node(pn,ins,info)
+                self.clock(tx,pn);self.check_reset(tx,pn,node,relay,port='rst_raw_n')
+                self.equal_input(tx,'d',[self.output(path,'start')])
+            for q in sorted(rel):
+                v=cparts[q]
+                if v.get('src')!=pn or int(v.get('stages',-1))!=2:
+                    self.fail(f'count-aligned relay {q}: bind relay {v} != relay({pn}, 2 stages)');continue
+                rx=self.instance(ident(q)+'.u_cland_rstart_rx','ot_dp_landing_relay')
+                if rx:
+                    qi=self.collector['types'][self.parts[q]['type']]
+                    node,relay=self._raw_node(q,ins,qi)
+                    self.clock(rx,q);self.check_reset(rx,q,node,relay,port='rst_raw_n')
+                    self.equal_input(rx,'d',[self.output(ident(pn)+'.u_cland_rstart_tx','q')])
 
     def observer_input(self,c,port,bit):
         """Return original input net only after the exact live gate is proved."""

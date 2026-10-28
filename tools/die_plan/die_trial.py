@@ -1579,8 +1579,11 @@ def build_link_fishbone(P, taps, regions, feed, col_um=60.0, local="fishbone", l
     return nodes
 
 
-def tree_netlist(nodes, taps, rep_um=450.0, site=None):
+def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None):
     """buffered tree: a BUF at every node (branch / leaf driver), repeaters every rep_um along each leg.
+    tap_pad (DIE-KV-5 opt-in --tap-pad, METHODOLOGY 12.8 plan-computed per-tap sizing): {tap port: n} puts n BUF cells in
+    series between the tap's leaf net and the tap (insertion-delay balancing of a light, pruned branch); default None =
+    byte-identical netlist.
     -> (verilog, placements [(inst, x, y)], tap ports [(port, x, y)], node_buf {node id: inst}, path {tap port: [inst]})"""
     cells, place, wires = [], [], []
     node_buf, parent_of = {}, {}
@@ -1645,7 +1648,17 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None):
         for (part, port, x, y) in nd["taps"]:
             tp = f"t_{sv(part)}__{port}"
             tap_ports.append((tp, x, y, part, port, i))
-            cells.append(f"  assign {tp} = {net(i)};")
+            src = net(i)
+            for j in range(int((tap_pad or {}).get(tp, 0))):
+                inst, o = f"p{i}_{sv(part)}_{j}", f"pn{i}_{sv(part)}_{j}"
+                cells.append(f"  {BUF} {inst} (.A({src}), .Y({o}));")
+                wires.append(o)
+                q = (nd["x"] + 0.54 * (j + 1), nd["y"])
+                if site is not None and not site.legal(q):
+                    q = site.nearest(q)
+                place.append((inst, q[0], q[1]))
+                src = o
+            cells.append(f"  assign {tp} = {src};")
     v = ["module ctree (root, " + ", ".join(t[0] for t in tap_ports) + ");", "  input root;"]
     v += [f"  output {t[0]};" for t in tap_ports]
     v += [f"  wire {w};" for w in wires]
@@ -1656,7 +1669,7 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None):
 
 
 def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_slide=False, regions=None, tree_form="htree",
-              tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, clock_rc="ndr",
+              tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None, clock_rc="ndr",
               slice_balance=False, region_dme=False, region_dme_only=None):
     out = Path(out)
     if region_dme_only and not (region_dme and tree_form == "link_htree" and site_slide and not slice_spine):
@@ -1772,7 +1785,11 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
             nd["x"], nd["y"] = round(q[0], 3), round(q[1], 3)
         if tree_form == "link_htree":
             balanced = balance_legalize(nodes, site)
-    v, place, tap_ports, node_buf, parent_of = tree_netlist(nodes, taps, rep_um, site)
+    v, place, tap_ports, node_buf, parent_of = tree_netlist(nodes, taps, rep_um, site, tap_pad)
+    if tap_pad:
+        unknown = sorted(set(tap_pad) - {t[0] for t in tap_ports})
+        if unknown:
+            raise ValueError(f"--tap-pad: not a tap port of this tree: {unknown[:5]}")
     (out / "ctree.v").write_text(v)
     segs = []
     for i, nd in nodes.items():
@@ -1830,6 +1847,9 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
                 wire_um=round(sum(abs(a - c) + abs(b - d) for a, b, c, d, _ in segs) +
                               sum(abs(a - c) + abs(b - d) for a, b, c, d in leaf_legs), 1),
                 levels=max(n["level"] for n in nodes.values()))
+    if tap_pad:
+        meta["tap_pad"] = dict(taps=sum(1 for v in tap_pad.values() if v), cells=sum(int(v) for v in tap_pad.values()),
+                               max_per_tap=max(int(v) for v in tap_pad.values()), cell=BUF)
     if spine_info is not None:
         meta["slice_spine"] = spine_info
         meta["region_trees"] = len(spine_info["regions"])
@@ -2802,7 +2822,7 @@ exit $rc
 
 def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.72, density=0.15, island_sites=None,
               island_margin=ISLAND_MARGIN_UM, full_depth=False, site_legal=False, site_slide=False, regions=None,
-              tree_form="htree", tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None,
+              tree_form="htree", tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None,
               clock_rc="ndr", slice_balance=False, region_dme=False, region_dme_only=None):
     raw = S.load(plan_path)
     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
@@ -2873,7 +2893,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     nodes, segs, leaf_legs, cm = clock_kit(P, out / "clock", leaf_um, rep_um, full_depth, site_legal, site_slide,
                                            json.loads(Path(regions).read_text())["part_region"] if regions else None,
                                            tree_form=tree_form, tree_opts=tree_opts, slice_spine=slice_spine,
-                                           spine_top_leaf_um=spine_top_leaf_um, slice_rows=slice_rows,
+                                           spine_top_leaf_um=spine_top_leaf_um, slice_rows=slice_rows, tap_pad=tap_pad,
                                            clock_rc=clock_rc, slice_balance=slice_balance, region_dme=region_dme,
                                            region_dme_only=region_dme_only)
     (out / "clock" / "make_tracks.tcl").write_text(gen_phys.make_tracks_tcl(P))
@@ -3479,6 +3499,8 @@ def main(argv=None):
                    "mesh.json (derived trunk sites): open plan-computed island windows (no M1-M3 OBS, M7 PG cut) in "
                    "every partition abstract, identical per type; island_windows.json lists them")
     k.add_argument("--island-margin-um", type=float, default=ISLAND_MARGIN_UM)
+    k.add_argument("--tap-pad", help="DIE-KV-5 opt-in (12.8 plan-computed per-tap sizing): JSON {\"pad\": {tap port: n}} -> n "
+                   "BUF cells in series on that tap's last leg (insertion-delay balancing of a light pruned branch)")
     r = sub.add_parser("report")
     r.add_argument("dir")
     r.add_argument("--plan")
@@ -3546,6 +3568,7 @@ def main(argv=None):
                       tree_opts={**{k: float(v) for k, v in (o.split("=") for o in a.tree_opt)},
                                  **({"feed": a.feed} if a.tree_form in ("link_fishbone", "link_htree") else {})},
                       slice_spine=a.slice_spine, spine_top_leaf_um=a.spine_top_leaf_um, slice_rows=a.slice_rows,
+                      tap_pad=json.loads(Path(a.tap_pad).read_text())["pad"] if a.tap_pad else None,
                       clock_rc=a.clock_rc, slice_balance=a.slice_balance, region_dme=a.region_dme,
                       region_dme_only=[r for r in a.region_dme_only.split(",") if r] if a.region_dme_only else None)
         print(json.dumps({k: m[k] for k in ("die", "parts", "types", "closed_views", "hard_cores", "clock_tree", "grt",
