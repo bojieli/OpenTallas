@@ -776,7 +776,7 @@ def kit_context(P, tn):
         floor[ni] = (1 - gen_phys.ft_hop_in_share(P)) * per
         floor[no] = gen_phys.ft_hop_in_share(P) * per
     floor["arst_n"] = gen_phys.IO_BUDGET * per
-    ids = [sp["name"] for sp in t.get("id_straps", [])]      # HEAD-BIND-4: partition ID straps (OWNER 10-25 B)
+    ids = [sp["name"] for sp in t.get("id_straps", []) + t.get("count_straps", [])]      # HEAD-BIND-4: partition ID straps (OWNER 10-25 B)
     for n in ids:
         ins.append(n)
         floor[n] = gen_phys.IO_BUDGET * per
@@ -787,6 +787,13 @@ def kit_context(P, tn):
     for n, _x, _y in gen_phys.reset_out_pins(P, tn):      # reset wavefront registered outs (OWNER DECISION 13)
         outs.append(n)
         floor[n] = gen_phys.IO_BUDGET * per
+    # Landing status/start pins are real timed control ports. Forwarded clock
+    # exports remain in _landing_ctx and must never get ordinary IO delays.
+    for p in t.get("clock",{}).get("landing_contract",{}).get("pins",[]):
+        if p["kind"]=="clock":continue
+        dest=ins if p["dir"]=="in" else outs
+        if p["name"] not in dest:dest.append(p["name"])
+        floor[p["name"]]=gen_phys.IO_BUDGET*per
     ib = gen_phys.insertion_binding(P, tn)
     pad = {"reset_pad_pins": RT.pad_false_path_pins(P, tn)} if RT.pad_false_path_pins(P, tn) else {}
     return dict(**pad, period_ps=per, insertion_ps=ib["tt"], insertion_ff_ps=ib["ff"],

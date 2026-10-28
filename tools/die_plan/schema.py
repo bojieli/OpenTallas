@@ -367,7 +367,11 @@ SCHEMA = {
                     "id_straps": {"type": "array", "items": {
                         "type": "object", "required": ["name", "width"], "additionalProperties": False,
                         "properties": {"name": {"type": "string", "pattern": "^strap_[A-Za-z0-9_]+$"},
-                                       "width": {"type": "integer", "minimum": 1}, "note": {"type": "string"}}}},
+                                       "width": {"type": "integer", "minimum": 1}, "note": {"type": "string"},
+                                       # DIE-HEAD-5 TILEIO 10-28 (opt-in): interior pin site per bit [x, y] (type
+                                       # frame) on `layer`; gen_phys places them and lists them in port_bind_pins
+                                       "layer": {"type": "string"},
+                                       "sites_um": {"type": "array", "items": _xy}}}},
                     # MESO-STRAP-1 (OWNER 12.15a): count-aligned crossing straps strap_ca_* (ring K, origin PAD/EDGE_FALL/
                     # tree select/root) emitted by clock_landings (strap form); values per instance from
                     # count_align_bind.strap_ties, tied at the die top by clock_landings.top_rtl, value-audited (straps.py)
@@ -375,6 +379,7 @@ SCHEMA = {
                         "type": "object", "required": ["name", "width"], "additionalProperties": False,
                         "properties": {"name": {"type": "string", "pattern": "^strap_ca_[A-Za-z0-9_]+$"},
                                        "width": {"type": "integer", "minimum": 1}, "note": {"type": "string"}}}},
+
                     # HEAD-BIND-4 10-27: off-die PHY pad ports (PMA side of a PHY leaf): NO boundary flop (their
                     # timing belongs to the PHY's own clocks), bound to the leaf as "pad:<name>", carried to the die
                     # top as <part>_<name> (behavioural word pads; die.io phy_macro windows hold the bumps)

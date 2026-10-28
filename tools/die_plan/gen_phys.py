@@ -66,6 +66,21 @@ def type_pins(P, tn):
     return out
 
 
+def strap_pin_sites(P, tn):
+    """[(pin, layer, x, y)] interior pin centres of the type's declared ID straps (plan id_straps[].sites_um, one
+    [x, y] per bit, on id_straps[].layer), or [] when the plan declares no sites (opt-in, DIE-HEAD-5 TILEIO 10-28:
+    without sites the strap ports had no pin, port_bind counted them as extra).  Tied per instance at the die top."""
+    out = []
+    for sp in P.types[tn].get("id_straps", []) or []:
+        xy = sp.get("sites_um")
+        if not xy:
+            continue
+        if len(xy) != sp["width"] or not sp.get("layer"):
+            raise ValueError(f"type {tn}: id_straps {sp['name']} needs layer and exactly {sp['width']} sites_um")
+        out += [(f"{sp['name']}[{i}]", sp["layer"], float(x), float(y)) for i, (x, y) in enumerate(xy)]
+    return out
+
+
 def plan_pin_records(P, tn, pins, bump_sites=()):
     """[{name, layer, x, y}] pin CENTRES of every pin io.tcl places for type tn, computed from the plan: type_pins edge
     points moved PIN_LEN_UM/2 inward, native infrastructure ports, clock/reset taps, reset outs, landing pins and bump
@@ -95,6 +110,8 @@ def plan_pin_records(P, tn, pins, bump_sites=()):
             add(p["name"], p["layer"], *p["xy_um"])
     for port, i, ln, cx, cy, pw, ph in bump_sites:
         add(f"{port}[{i}]", ln, cx, cy)
+    for name, ln, x, y in strap_pin_sites(P, tn):
+        add(name, ln, x, y)
     return list(recs.values())
 
 
@@ -151,6 +168,9 @@ def io_tcl(P, tn, pins):
     for name, x, y in reset_out_pins(P, tn):
         lines.append(f"place_pin -pin_name {name} -layer {top} -location {{{x:.4f} {y:.4f}}} "
                      f"-pin_size {{{LAYER_W.get(top, 0.04):.4f} {4 * PIN_LEN_UM:.4f}}}   ;# interior: reset wavefront out")
+    for name, ln, x, y in strap_pin_sites(P, tn):
+        lines.append(f"place_pin -pin_name {{{name}}} -layer {ln} -location {{{x:.4f} {y:.4f}}} "
+                     f"-pin_size {{{LAYER_W.get(ln, 0.04):.4f} {4 * PIN_LEN_UM:.4f}}}   ;# interior: ID strap (tied at die top)")
     if t.get("clock", {}).get("landing_contract"):
         import landing_contract as LC
         lines.append(LC.io_tcl(P, tn).rstrip())
@@ -1370,6 +1390,38 @@ def phy_pg_pdn(P, tn, doms, macros, root=None, core_grids=False):
     return "\n".join(t) + "\n"
 
 
+def signed_mean_core_taps(P, tn):
+    """Select measured means for an explicitly SIGNED early-core-tap plan."""
+    ck = P.types[tn].get("clock", {}) or {}
+    taps = [tp for tp in ck.get("taps", []) or [] if tp.get("kind") == "core"]
+    return bool(ck.get("core_taps") == "early" and taps and P.types[tn].get("hard_cores")
+                and all("insertion_ff_ps" in tp and str(tp.get("budget_owner", "")).startswith("SIGNED") for tp in taps))
+
+
+def core_mean_contract_options(P, tn, trial=False):
+    """COORD 10-28 03:35: explicit parent budgets may drive non-release probes.
+
+    Existing plans keep their legacy path. Parent-budget early taps opt into the
+    selected view's explicit TT/FF contract only in a --trial kit; they cannot
+    qualify release kits. The contract reader still rejects ETM extrema as means.
+    """
+    if signed_mean_core_taps(P, tn):
+        return dict(mean_contract=True, require_signed=True)
+    ck = P.types[tn].get("clock", {}) or {}
+    taps = [tp for tp in ck.get("taps", []) or [] if tp.get("kind") == "core"]
+    budget = bool(ck.get("core_taps") == "early" and taps and P.types[tn].get("hard_cores")
+                  and all("insertion_ff_ps" in tp and
+                          str(tp.get("budget_owner", "")).startswith(("SIGNED", "parent_budget"))
+                          for tp in taps)
+                  and any(str(tp.get("budget_owner", "")).startswith("parent_budget") for tp in taps))
+    if budget:
+        if not trial:
+            import core_clock_contract as CC
+            raise CC.ContractError(f"{tn}: parent_budget mean core taps require a non-release --trial kit; release requires SIGNED")
+        return dict(mean_contract=True, require_signed=False)
+    return dict(mean_contract=False, require_signed=True)
+
+
 def core_latency_files(P, tn, kd, root=None, mean_contract=False, require_signed=True):
     """Write authoritative TT/FF boundary-register mean contracts for hard cores.
 
@@ -1458,6 +1510,28 @@ def _corner_libs(mlib, kd, corner):
 KEEP_REGS_HOOK = ("ot_keep_regs.tcl", "ot_pin_regs.tcl", "pin_reg_split.tcl", "ot_rst_copies.tcl", "ot_rst_copies.py")
 
 
+_INCLUDE = re.compile(r'^[ \t]*`include[ \t]+"([^"]+)"', re.M)
+
+
+def stage_includes(rtl_files, rtl_dir):
+    """DIE-HEAD-7 / RISK-SWEEP-2 10-28: copy every `include "x" a staged source names (transitively) from the source's
+    own directory into the kit rtl/ (yosys resolves includes next to the including file); the HEAD hd_serdes kit
+    dropped s81_link/ot_s81_gf1024.svh + kp4 *_mat.svh.  A missing include stays missing: KIT_PREFLIGHT fails it."""
+    todo, done = [Path(f) for f in rtl_files], set()
+    while todo:
+        f = todo.pop()
+        if f in done or not f.is_file():
+            continue
+        done.add(f)
+        for inc in _INCLUDE.findall(f.read_text(errors="replace")):
+            src = f.parent / inc
+            dst = Path(rtl_dir) / Path(inc).name
+            if src.is_file():
+                if not dst.exists():
+                    shutil.copyfile(src, dst)
+                todo.append(src)
+
+
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False,
                    bump_ports=None, gpl_plain=False):
@@ -1513,6 +1587,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         if Path(f).resolve() != dst.resolve():
             shutil.copyfile(f, dst)
         srcs.append(f"/work/rtl/{Path(f).name}")
+    stage_includes(rtl_files, kd / "rtl")
     pins = type_pins(P, tn)
     bump_sites = bump_pin_sites(P, tn, bump_ports, macros, Path(root) if root else Path(__file__).resolve().parent.parent.parent) \
         if bump_ports else []
@@ -1591,7 +1666,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     lerr = sdc_lint.lint((kd / "constraint.sdc").read_text(), **lctx)
     if lerr:
         raise sdc_lint.SdcLintError(f"type {tn}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
-    clat = core_latency_files(P, tn, kd, root)
+    clat = core_latency_files(P, tn, kd, root, **core_mean_contract_options(P, tn, trial=trial))
     m = CORE_MARGIN_UM
     forest = any(Path(f).name == "ot_pl_land_reset_forest.sv" for f in srcs)
     cfg = [f"# GENERATED by tools/die_plan/gen.py phys: partition type {tn} of die_plan {P.name}. Do not edit.",
@@ -1940,7 +2015,12 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     import infra_rtl as IR
     infra = IR.type_ports(t)
     port_pins += [dict(bus=p["name"], bit=None) for p in infra]
+    sps = strap_pin_sites(P, tn)
+    port_pins += [dict(bus=n.split("[")[0], bit=int(n.split("[")[1][:-1])) for n, _l, _x, _y in sps]
     (kd / "port_bind_pins.json").write_text(json.dumps(port_pins, indent=1) + "\n")
+    if sps:
+        # declared ID straps of this kit for port_bind_gate / straps.py (OWNER 10-25 option B)
+        (kd / "straps.json").write_text(json.dumps(dict(straps=sorted({n.split("[")[0] for n, *_ in sps})), indent=1) + "\n")
     if infra:
         import ft_ports as FT
         decl = FT.declaration(t.get("infra_arcs", []), f"die plan {P.name} type {tn}: explicit native hard-core interfaces")
@@ -2106,7 +2186,9 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
         else:
             mine = [cells, rs, rtl_dir / f"{t['module']}.sv"] + [root / s for s in t.get("sources", [])]
             if landing is not None:
-                mine += landing_rtl(root, (rtl_dir / f"{t['module']}.sv").read_text())
+                have = {Path(x).resolve() for x in mine}
+                mine += [f for f in landing_rtl(root, (rtl_dir / f"{t['module']}.sv").read_text())
+                         if Path(f).resolve() not in have]
         bumps = kit_bump_ports(P, tn, kit_rtl[tn]) if kit_rtl and tn in kit_rtl else None
         kits.append(write_type_kit(P, tn, out, [str(f) for f in mine], util, proof, root, hold_ff_margin, margins,
                                    skip_ir, max_wire_um, rc_cal, master_slice, trial, bump_ports=bumps,
@@ -2117,18 +2199,34 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
 
 
 LANDING_RTL = ("rtl/common/ot_dp_clk_landing.sv", "rtl/common/ot_dp_clk_landing_ca.sv")
+# DIE-HEAD-7 10-28: library RTL the landing rings instantiate (ot_meso_ring / _dsel / _ohor / _sel / _wch live in
+# ot_meso_fifo.sv); taken only when the closure reaches it (the HEAD r2 kit dropped it -> RTL_LINT u_ring missing).
+LANDING_LIB = ("rtl/common/ot_meso_fifo.sv",)
+_LAND_INST = r"^\s*(\w+)\s+(?:#\s*\(|\w+\s*\()"
 
 
 def landing_rtl(root, wrapper_text):
-    """the landing ring RTL files (LANDING_RTL, under root) defining a module the landed wrapper instantiates."""
+    """the landing ring RTL files (LANDING_RTL, under root) defining a module the landed wrapper instantiates, plus
+    (transitively) the LANDING_LIB files defining what those files instantiate."""
     import re
-    used = set(re.findall(r"^\s*(\w+)\s+(?:#\(|\w+\s*\()", wrapper_text, re.M))
-    out = []
-    for rel in LANDING_RTL:
+    def strip(t):
+        return re.sub(r"//[^\n]*", "", re.sub(r"/\*.*?\*/", " ", t, flags=re.S))
+    need = set(re.findall(_LAND_INST, strip(wrapper_text), re.M))
+    pool = []
+    for rel in LANDING_RTL + LANDING_LIB:
         f = Path(root) / rel
-        if f.is_file() and used & set(re.findall(r"^\s*module\s+(\w+)", f.read_text(), re.M)):
-            out.append(f)
-    return out
+        if f.is_file():
+            t = strip(f.read_text())
+            pool.append((f, set(re.findall(r"^\s*module\s+(\w+)", t, re.M)), set(re.findall(_LAND_INST, t, re.M))))
+    taken, grew = set(), True
+    while grew:
+        grew = False
+        for f, defs, uses in pool:
+            if f not in taken and need & defs:
+                taken.add(f)
+                need |= uses
+                grew = True
+    return [f for f, _, _ in pool if f in taken]
 
 
 # ------------------------------------------------------------------------------------------------- assembly (3d)
