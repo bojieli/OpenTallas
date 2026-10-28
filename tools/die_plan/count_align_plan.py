@@ -181,7 +181,92 @@ def directed_tree(rows, regions):
     return best[1], best[2]
 
 
-def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edge_pad=None, start_skew=(0.0, 0.0)):
+def contract_feed(feed, regions):
+    """MESO-START-1: region clock feed graph {node: parent | None} (clock follows data, 12.13b) -> {region: parent
+    region | None} over the plan's regions; feed nodes that are not crossing regions are skipped (their parent's parent
+    is used), so every edge is a chain of feed hops"""
+    regions = set(regions)
+    out = {}
+    for x in regions:
+        if x not in feed:
+            raise ValueError(f"feed graph: region {x} has no feed parent entry")
+        p, seen = feed[x], {x}
+        while p is not None and p not in regions:
+            if p in seen or p not in feed:
+                raise ValueError(f"feed graph: broken parent chain at {p!r} above {x}")
+            seen.add(p)
+            p = feed[p]
+        out[x] = p
+    roots = [x for x, p in out.items() if p is None]
+    if len(roots) != 1:
+        raise ValueError(f"feed graph: need exactly one root region, got {sorted(roots)[:5]}")
+    return out
+
+
+def feed_edges_ok(regs, feedc):
+    """[(region, parent)] of start-tree edges that are NOT feed edges (empty = every start edge follows the clock)"""
+    return [(g["region"], g["start_from"]["parent"]) for g in regs
+            if g["start_from"] and feedc.get(g["region"]) != g["start_from"]["parent"]]
+
+
+def feed_tree(rows, regions, feedc):
+    """MESO-START-1 start tree = the region clock feed tree: per feed edge parent -> child the forward crossing (or
+    start relay row) with the fewest sync values, then the larger sync distance.  A feed edge without any candidate
+    leaves the child (and its subtree) unreached: fail closed, never an off-feed edge."""
+    best = {}
+    for r in rows:
+        k = (r["src"], r["dst"])
+        if r["src"] == r["dst"] or feedc.get(r["dst"]) != r["src"]:
+            continue
+        key = (r["_nv"], -r["_dist"], r["port"])
+        if k not in best or key < best[k][0]:
+            best[k] = (key, r)
+    root = next(x for x, p in feedc.items() if p is None)
+    par, q = {root: None}, [root]
+    kids = defaultdict(list)
+    for x, p in feedc.items():
+        if p is not None:
+            kids[p].append(x)
+    for x in q:
+        for y in sorted(kids[x]):
+            if (x, y) in best:
+                par[y] = (x, best[(x, y)][1])
+                q.append(y)
+    return root, par
+
+
+def start_relay_rows(rows, feedc):
+    """MESO-START-1 start relay (COORD 02:42 (1)): a feed edge p -> c that carries no forward crossing gets a start-only
+    hop: the parent's registered start wired beside the feed into the child's ot_dp_landing_origin (no data ring).  Its
+    phase is the clock pair's own d = arr_c - arr_p, taken (negated) from the reverse crossing c -> p with the
+    narrowest derated interval; partitions swapped.  Returns the new rows (kind start_relay)."""
+    have = {(r["src"], r["dst"]) for r in rows}
+    rev = defaultdict(list)
+    for r in rows:
+        rev[(r["dst"], r["src"])].append(r)
+    out = []
+    for c, p in sorted(feedc.items()):
+        if p is None or (p, c) in have or (p, c) not in rev:
+            continue
+        r0 = min(rev[(p, c)], key=lambda r: (r["p_up_ps"] + r["p_dn_ps"], r["port"]))
+        r = dict(port=f"start_relay:{p}->{c}", src=p, dst=c, d_ps=-r0["d_ps"], p_up_ps=r0["p_dn_ps"],
+                 p_dn_ps=r0["p_up_ps"], unshared_a_ps=r0.get("unshared_b_ps", 0.0),
+                 unshared_b_ps=r0.get("unshared_a_ps", 0.0), margin_ps=r0.get("margin_ps", 0.0), start_only=True,
+                 reverse_of=r0["port"])
+        if "src_part" in r0:
+            r["src_part"], r["dst_part"] = r0["dst_part"], r0["src_part"]
+        out.append(r)
+    return out
+
+
+def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edge_pad=None, start_skew=(0.0, 0.0),
+         feed=None, start_relay=False, hop_relay=False):
+    """feed (MESO-START-1, COORD 02:42, opt-in): region clock feed graph {node: parent}; the start tree is then the feed
+    tree (every start edge a feed edge, 12.13b clock follows data).  start_relay: a feed edge without a forward crossing
+    gets a start-only relay row (start_relay_rows); without it such a child is unreached (fail closed).  hop_relay: a
+    non-tree crossing that FAILs is split into two count-aligned hops through an intermediate region x on its feed-tree
+    path (u -> x -> v, each hop an existing crossing pair's derated interval, one region-x register between the rings);
+    see hop_relays().  Default (feed None): unchanged byte path."""
     """edge_pad {tree port or child region: PAD}: per-start-tree-edge PAD overriding the default `pad` (MESO-RECONCILE-1,
     COORD 10-27).  An edge PAD p_e >= pad delays the child's origin by p_e - pad counts and HOLDS the tree crossing's RTL K
     at its default-PAD value, so that crossing's lag (and latency) grow by (p_e - pad) T; every other crossing's K is
@@ -191,7 +276,19 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
         r["_nv"], r["_edge"], r["_off"], r["_dist"] = sync_choice(r, T, ap, start_skew, sync_ap)
         r["_w"] = wander_frac * max(r.get("unshared_a_ps", 0.0), r.get("unshared_b_ps", 0.0))
     regions = sorted({r["src"] for r in rows} | {r["dst"] for r in rows})
-    root, par = directed_tree(rows, regions)
+    feedc = None
+    if feed is not None:
+        feedc = contract_feed(feed, regions)
+        if start_relay:
+            extra = start_relay_rows(rows, feedc)
+            for r in extra:
+                r["lo"], r["hi"] = r["d_ps"] - r["p_dn_ps"], r["d_ps"] + r["p_up_ps"]
+                r["_nv"], r["_edge"], r["_off"], r["_dist"] = sync_choice(r, T, ap, start_skew, sync_ap)
+                r["_w"] = wander_frac * max(r.get("unshared_a_ps", 0.0), r.get("unshared_b_ps", 0.0))
+            rows = list(rows) + extra
+        root, par = feed_tree(rows, regions, feedc)
+    else:
+        root, par = directed_tree(rows, regions)
     # BFS order down the tree
     kids = defaultdict(list)
     for x, v in par.items():
@@ -220,8 +317,10 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
         p, r = par[x]
         jn[x] = J(r["d_ps"], T, r["_off"])
         a0[x] = a0[p] + pe(x) + 2 + jn[x]
-        # J deviation range over the derated interval +- ap (J decreases with d)
-        dev[x] = (J(r["hi"] + ap, T, r["_off"]) - jn[x], J(r["lo"] - ap, T, r["_off"]) - jn[x])
+        # J deviation range over the derated interval +- ap (J decreases with d); a start-only relay (MESO-START-1) has
+        # no tree crossing to absorb start skew, so its range also covers sync aperture + |start skew|
+        apr = max(ap, sync_ap + max(abs(start_skew[0]), abs(start_skew[1]))) if r.get("start_only") else ap
+        dev[x] = (J(r["hi"] + apr, T, r["_off"]) - jn[x], J(r["lo"] - apr, T, r["_off"]) - jn[x])
 
     def path_amb(u, v):
         """whole-cycle deviation range of (a_v - a_u) from nominal"""
@@ -247,6 +346,14 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
         w = r["_w"]
         n0 = a0[v] - a0[u]
         child = tree_port.get(r["port"])
+        if r.get("start_only"):
+            if child is None:
+                continue     # unused start relay candidate
+            out.append(dict(port=r["port"], src=u, dst=v, kind="start_relay", start_only=True, d_ps=r["d_ps"],
+                            p_up_ps=r["p_up_ps"], p_dn_ps=r["p_dn_ps"], wander_ps=round(w, 1), n0=n0,
+                            reverse_of=r.get("reverse_of"), depth=None, lat_cycles=None, K=None, rtl=None,
+                            **{k: r[k] for k in ("src_part", "dst_part") if k in r}))
+            continue
         if child is not None and r["_nv"] > 1:
             kind, amb = "tree_ambiguous", (0, 0)
             rel_lo = r["_off"] - sync_ap - jn[child] * T
@@ -285,6 +392,9 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
             o = byp.get(r["port"], {})
             if r["_nv"] == 1:
                 lim, basis = r["_dist"] - sync_ap, "clean: sync_dist - sync_aperture"
+            elif r.get("start_only"):
+                apr = max(ap, sync_ap + max(abs(start_skew[0]), abs(start_skew[1])))
+                lim, basis = apr - sync_ap, "ambiguous start relay: J range covers +-(sync aperture + |skew|)"
             elif o.get("depth"):
                 lim, basis = min(o["margin_lo_ps"], o["margin_hi_ps"]) - 100.0, "ambiguous: tree crossing margin - 100"
             else:
@@ -295,6 +405,8 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
                      start_skew_limit_ps=None if lim is None else round(lim, 1), start_skew_basis=basis,
                      rtl=dict(module="ot_dp_landing_origin", PAD=pe(x), EDGE_FALL=int(r["_edge"] == "fall")))
         regs.append(dict(region=x, origin_cycles=a0[x], tree_depth=depth[x], start_from=e))
+    rel = [o for o in out if o.get("start_only")]
+    out_x = [o for o in out if not o.get("start_only")]
     ok = [o for o in out if o.get("depth")]
     amb_edges = [g for g in regs if g["start_from"] and g["start_from"]["sync_values"] > 1]
     summ = dict(regions=len(regions), regions_reached=len(a0), tree_root=root, tree_edges=len(order) - 1,
@@ -310,8 +422,8 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
                 max_tree_depth=max(depth.values()), min_sync_dist_clean_ps=min(
                     (g["start_from"]["sync_dist_ps"] for g in regs if g["start_from"] and g["start_from"]["sync_values"] == 1),
                     default=None),
-                crossings=len(out), depth4=sum(1 for o in ok if o["depth"] == 4),
-                depth8=sum(1 for o in ok if o["depth"] == 8), fail=len(out) - len(ok),
+                crossings=len(out_x), depth4=sum(1 for o in ok if o["depth"] == 4),
+                depth8=sum(1 for o in ok if o["depth"] == 8), fail=len(out_x) - len(ok),
                 max_path_ambiguous_cycles=max((o.get("path_ambiguous_cycles", 0) for o in out), default=0),
                 worst_margin_lo_ps=min((o["margin_lo_ps"] for o in ok), default=None),
                 worst_margin_lo_port=min(ok, key=lambda o: o["margin_lo_ps"])["port"] if ok else None,
@@ -323,7 +435,90 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
                 lat_total_vs_old3=sum(o["lat_cycles"] - 3 for o in ok),
                 old_ring_not_cycle_fixed=sum(1 for o in out if o.get("old_ring_lat_values", 1) > 1),
                 old_ring_fail_margin=sum(1 for o in out if o.get("old_ring_ok") is False))
+    if feedc is not None:
+        off = feed_edges_ok(regs, feedc)
+        if off:
+            raise AssertionError(f"feed start tree has off-feed edges: {off[:5]}")
+        summ.update(start_tree="feed", feed_parent=dict(sorted(feedc.items())), start_relays=len(rel),
+                    start_relay_ports=[o["port"] for o in rel],
+                    unreached_regions=sorted(set(regions) - set(a0))[:20])
+    if hop_relay:
+        hop_relays(summ, out, rows, a0, path_amb, T, ap, lo_win)
     return summ, out, regs
+
+
+def hop_relays(summ, out, rows, a0, path_amb, T, ap, lo_win):
+    """MESO-START-1 hop relay (COORD 02:42 (1), 12.13c far links = chains of fixed-latency hops): every non-tree crossing
+    u -> v that FAILs is replaced by two count-aligned rings u -> x -> v through an intermediate region x that already
+    has forward crossings u -> x and x -> v (each leg takes the narrowest such pair's derated interval and its own tree
+    path ambiguity; K / DEPTH as any non-tree crossing).  The word is re-launched in x by one region-x register between
+    the rings (latency = leg1 + leg2 + 1).  No new RTL form: two ot_dp_clk_landing_ca rings (each proven) and a same-clock
+    register.  The chosen x minimises (legs pass, total latency, worst leg margin).  Appends legs to out (kind hop_leg)
+    and marks the original kind hop_relayed (no rtl)."""
+    best_row = {}
+    for r in rows:
+        if r.get("start_only") or r["src"] == r["dst"]:
+            continue
+        k = (r["src"], r["dst"])
+        key = (r["p_up_ps"] + r["p_dn_ps"] + 2 * r["_w"], r["port"])
+        if k not in best_row or key < best_row[k][0]:
+            best_row[k] = (key, r)
+    succ = defaultdict(set)
+    for (a, b) in best_row:
+        succ[a].add(b)
+
+    def leg(u, x):
+        r = best_row[(u, x)][1]
+        amb = path_amb(u, x)
+        rel_lo, rel_hi = r["lo"] + amb[0] * T - r["_w"], r["hi"] + amb[1] * T + r["_w"]
+        k_eff = math.ceil((lo_win - rel_lo) / T - 1e-12)
+        L_lo, L_hi = k_eff * T + rel_lo, k_eff * T + rel_hi
+        dep = 4 if L_hi <= 3.5 * T - ap + 1e-9 else (8 if L_hi <= 7.5 * T - ap + 1e-9 else None)
+        return r, amb, k_eff, L_lo, L_hi, dep
+    added, done, left = [], 0, 0
+    for o in list(out):
+        if o.get("kind") != "nontree" or o.get("depth"):
+            continue
+        u, v = o["src"], o["dst"]
+        opts = []
+        for x in sorted(succ[u]):
+            if x in (u, v) or (x, v) not in best_row or x not in a0:
+                continue
+            l1, l2 = leg(u, x), leg(x, v)
+            if not (l1[5] and l2[5]):
+                continue
+            m = min(l1[3] - 0.5 * T, (l1[5] - 0.5) * T - l1[4], l2[3] - 0.5 * T, (l2[5] - 0.5) * T - l2[4])
+            opts.append((l1[2] + l2[2] + 3, -m, x, l1, l2))
+        if not opts:
+            left += 1
+            continue
+        lat, _, x, l1, l2 = min(opts)
+        o.update(kind="hop_relayed", hop_via=x, hop_lat_cycles=lat, hop_legs=[f"{o['port']}#hop1", f"{o['port']}#hop2"])
+        for i, (r, amb, k_eff, L_lo, L_hi, dep) in enumerate((l1, l2), 1):
+            a, b = (u, x) if i == 1 else (x, v)
+            n0 = a0[b] - a0[a]
+            e = dict(port=f"{o['port']}#hop{i}", src=a, dst=b, kind="hop_leg", hop_of=o["port"], leg_row=r["port"],
+                     d_ps=r["d_ps"], p_up_ps=r["p_up_ps"], p_dn_ps=r["p_dn_ps"], wander_ps=round(r["_w"], 1),
+                     path_ambiguous_cycles=amb[1] - amb[0], n0=n0, K_eff=k_eff, K=k_eff - n0, L_lo_ps=round(L_lo, 1),
+                     L_hi_ps=round(L_hi, 1), L_width_ps=round(L_hi - L_lo, 1), depth=dep,
+                     margin_lo_ps=round(L_lo - 0.5 * T, 1), margin_hi_ps=round((dep - 0.5) * T - L_hi, 1),
+                     lat_cycles=k_eff + 1, rx_lat_counts=k_eff - n0 + 1,
+                     rtl=dict(module="ot_dp_clk_landing_ca", DEPTH=dep, K=k_eff - n0, GUARD_LO=0, GUARD_HI=dep))
+            for k in ("src_part", "dst_part"):
+                if k in r:
+                    e[k] = r[k]
+            added.append(e)
+        done += 1
+    out.extend(added)
+    ok = [o for o in out if o.get("depth")]
+    xs = [o for o in out if not o.get("start_only") and o.get("kind") != "hop_relayed"]
+    summ.update(hop_relayed=done, hop_relay_unresolved=left, hop_legs=len(added),
+                fail=sum(1 for o in xs if not o.get("depth")),
+                depth4=sum(1 for o in ok if o["depth"] == 4), depth8=sum(1 for o in ok if o["depth"] == 8),
+                worst_margin_lo_ps=min((o["margin_lo_ps"] for o in ok), default=None),
+                worst_margin_hi_ps=min((o["margin_hi_ps"] for o in ok), default=None),
+                below_100ps=sum(1 for o in ok if min(o["margin_lo_ps"], o["margin_hi_ps"]) < 100),
+                hop_lat_cycles=sum(o["hop_lat_cycles"] for o in out if o.get("kind") == "hop_relayed"))
 
 
 def mc_check(rows, out, regs, T=833.0, chips=2000, sync_ap=26.5, seed=1):
@@ -331,6 +526,9 @@ def mc_check(rows, out, regs, T=833.0, chips=2000, sync_ap=26.5, seed=1):
     worst hi) with margins measured to the guard edges 0.5 T / (DEPTH - 0.5) T (no ap)."""
     rnd = random.Random(seed)
     byp = {r["port"]: r for r in rows}
+    for o in out:   # MESO-START-1 start relays / hop legs: their own derated interval
+        if o["port"] not in byp and o.get("d_ps") is not None:
+            byp[o["port"]] = dict(lo=o["d_ps"] - o["p_dn_ps"], hi=o["d_ps"] + o["p_up_ps"])
     pl = {o["port"]: o for o in out if o.get("depth")}
     bad, wl, wh = 0, 1e9, 1e9
     for c in range(chips):
@@ -433,6 +631,27 @@ def parse_edge_pad(items):
     return out
 
 
+def load_feed(path):
+    """region clock feed graph JSON: {"parent": {node: parent | null}, ...} (die_trial feed_*.json) or a plain map"""
+    d = json.load(open(path))
+    return d["parent"] if isinstance(d, dict) and "parent" in d else d
+
+
+def add_start_args(ap):
+    ap.add_argument("--feed", metavar="FEED.json", help="MESO-START-1 (opt-in): start tree = the region clock feed tree "
+                    "(every start edge a feed edge, 12.13b); feed graph {parent: {node: parent}}")
+    ap.add_argument("--start-relay", action="store_true", help="with --feed: a feed edge without a forward crossing gets "
+                    "a start-only relay (parent start beside the feed into the child origin); else fail closed")
+    ap.add_argument("--hop-relay", action="store_true", help="a FAIL non-tree crossing becomes two count-aligned hops "
+                    "via an intermediate region (12.13c hop chain, +1 register cycle)")
+
+
+def start_kw(a):
+    if (a.start_relay) and not a.feed:
+        raise SystemExit("--start-relay needs --feed")
+    return dict(feed=load_feed(a.feed) if a.feed else None, start_relay=a.start_relay, hop_relay=a.hop_relay)
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("ocv_json")
@@ -459,6 +678,7 @@ def main(argv=None):
     ap.add_argument("--sta-clock-cal", choices=("none", "spice"), default="spice",
                     help="as die_sta_related --clock-cal (12.15b gate: spice)")
     ap.add_argument("--sta-cppr-lca", action="store_true", help="as die_sta_related --cppr-lca")
+    add_start_args(ap)
     ap.add_argument("--mc-chips", type=int, default=0)
     ap.add_argument("--out")
     ap.add_argument("--cases", help="TSV for the Verilator bench: port DEPTH L_ps (lo / mid / hi per crossing)")
@@ -477,7 +697,7 @@ def main(argv=None):
             print(f"WARNING --sta-proof: {sta_info['missing']} crossings without STA tap pairs keep the OCV interval "
                   "(die_sta_related fails them closed: no taps)", file=sys.stderr)
     summ, out, regs = plan(rows, a.period, a.aperture, a.wander_frac, a.sync_aperture, a.pad, parse_edge_pad(a.edge_pad),
-                           a.start_skew)
+                           a.start_skew, **start_kw(a))
     if any(a.start_skew):
         summ["start_skew_ps"] = list(a.start_skew)
     if sta_info:

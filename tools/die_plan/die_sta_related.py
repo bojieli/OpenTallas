@@ -327,23 +327,33 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
         D = int(b["depth"])
         tr = tree_reg.get(pid)
         amb_tree = bool(tr) and int(tr[1].get("sync_values", 1)) > 1
-        if tag not in dsta or "d_lo_ps" not in b:
+        if b.get("start_only"):
+            # MESO-START-1 start-only relay on a feed edge (no ring, no lag row): its phase is the reverse crossing
+            # pair's STA interval negated (d = arr_dst - arr_src); only the start row below applies
+            rt = f"{b['dst']}->{b['src']}"
+            if rt not in dsta or not tr:
+                miss.append(pid)
+                continue
+            dl, dh = -dsta[rt][1], -dsta[rt][0]
+        elif tag not in dsta or "d_lo_ps" not in b:
             miss.append(pid)
             continue
-        dl, dh = dsta[tag]
-        if amb_tree:
-            lo, hi, src = b["L_lo_ps"], b["L_hi_ps"], "plan-sync"
         else:
-            lo, hi, src = b["L_lo_ps"] + (dl - b["d_lo_ps"]), b["L_hi_ps"] + (dh - b["d_hi_ps"]), "sta"
-        ml, mh = lo - 0.5 * period, (D - 0.5) * period - hi
-        row = dict(port=pid, tag=tag, depth=D, tree=bool(tr), L_lo_ps=round(lo, 1), L_hi_ps=round(hi, 1),
-                   margin_lo_ps=round(ml, 1), margin_hi_ps=round(mh, 1), source=src,
-                   slot_read_ps=round(lo - 0.5 * period, 1), guard_budget_ps=round(ap, 1),
-                   guard_hi_slack_ps=round(mh - ap, 1))
-        row["lag_ok"] = min(ml, mh) >= need_ps
-        row["slot_read_ok"] = row["slot_read_ps"] >= 0
-        row["guard_ok"] = row["guard_hi_slack_ps"] >= 0
-        rows.append(row)
+            dl, dh = dsta[tag]
+        if not b.get("start_only"):
+            if amb_tree:
+                lo, hi, src = b["L_lo_ps"], b["L_hi_ps"], "plan-sync"
+            else:
+                lo, hi, src = b["L_lo_ps"] + (dl - b["d_lo_ps"]), b["L_hi_ps"] + (dh - b["d_hi_ps"]), "sta"
+            ml, mh = lo - 0.5 * period, (D - 0.5) * period - hi
+            row = dict(port=pid, tag=tag, depth=D, tree=bool(tr), L_lo_ps=round(lo, 1), L_hi_ps=round(hi, 1),
+                       margin_lo_ps=round(ml, 1), margin_hi_ps=round(mh, 1), source=src,
+                       slot_read_ps=round(lo - 0.5 * period, 1), guard_budget_ps=round(ap, 1),
+                       guard_hi_slack_ps=round(mh - ap, 1))
+            row["lag_ok"] = min(ml, mh) >= need_ps
+            row["slot_read_ok"] = row["slot_read_ps"] >= 0
+            row["guard_ok"] = row["guard_hi_slack_ps"] >= 0
+            rows.append(row)
         if tr:
             x, rg = tr
             w = (start_wire or {}).get(pid)

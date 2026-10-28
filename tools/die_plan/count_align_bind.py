@@ -81,11 +81,25 @@ def bind(plan, T=None, parts=None):
     T = float(summ.get("period_ps", 833.0) if T is None else T)
     if summ.get("regions_reached") != summ.get("regions"):
         raise BindError(f"start tree not spanning: {summ.get('regions_reached')} of {summ.get('regions')} regions")
-    bad = [o["port"] for o in xs if not o.get("rtl")]
+    # MESO-START-1: a start-only relay (no ring) and a crossing replaced by hop legs carry no RTL K by design
+    bad = [o["port"] for o in xs if not o.get("rtl") and not o.get("start_only") and o.get("kind") != "hop_relayed"]
     if bad:
         raise BindError(f"{len(bad)} crossings have no RTL K/DEPTH (plan FAIL/unreached): {bad[:5]}")
+    xs = [o for o in xs if o.get("kind") != "hop_relayed"]
     rows = {o["port"]: o for o in xs}
     n = {g["region"]: int(g["origin_cycles"]) for g in regs}
+    if summ.get("start_tree") == "feed":
+        # MESO-START-1 (COORD 02:42 (1)): every start-tree edge must be a region clock feed edge (clock follows data)
+        fp = summ.get("feed_parent") or {}
+        off = [(g["region"], g["start_from"]["parent"]) for g in regs
+               if g["start_from"] and fp.get(g["region"]) != g["start_from"]["parent"]]
+        if off:
+            raise BindError(f"{len(off)} start-tree edges are not feed edges (child, parent): {off[:5]}")
+    if parts is not None:
+        parts = dict(parts)
+        for o in xs:     # start relays / hop legs carry their partition endpoints in the plan
+            if o["port"] not in parts and "src_part" in o and "dst_part" in o:
+                parts[o["port"]] = (o["src_part"], o["dst_part"])
     root = [g["region"] for g in regs if g["start_from"] is None]
     if len(root) != 1:
         raise BindError(f"need one root region, got {root}")
@@ -115,6 +129,15 @@ def bind(plan, T=None, parts=None):
     ports = {}
     for o in xs:
         u, v = o["src"], o["dst"]
+        if o.get("start_only"):
+            # start-only relay: no ring; K = -1 and sched_lat = n0 keep K + 1 + n_dst - n_src = sched_lat (loops telescope)
+            if o["port"] not in tree_ports:
+                raise BindError(f"start relay {o['port']} is not a start-tree edge")
+            ports[o["port"]] = dict(src=u, dst=v, K=-1, depth=0, sched_lat=n[v] - n[u], tree=True, kind=o["kind"],
+                                    start_only=True, reverse_of=o.get("reverse_of"),
+                                    d_lo_ps=round(o["d_ps"] - o["p_dn_ps"], 1),
+                                    d_hi_ps=round(o["d_ps"] + o["p_up_ps"], 1), wander_ps=o.get("wander_ps", 0.0))
+            continue
         ports[o["port"]] = dict(src=u, dst=v, K=int(o["rtl"]["K"]), depth=int(o["rtl"]["DEPTH"]),
                                 sched_lat=int(o["lat_cycles"]), tree=o["port"] in tree_ports, kind=o["kind"],
                                 # TRUE derated lag bounds incl. wander (no aperture), and the plan's derated phase
@@ -313,6 +336,8 @@ def verify(b, samples=2000, seed=1, need_ps=100.0):
             for q in relay_of[x]:
                 nn[q] = nn[org[x]] + b["parts"][q]["stages"]
         for pid, c in ports.items():
+            if c.get("start_only"):
+                continue
             s_, d_ = _ends(b, c)
             L = (c["K"] + nn[d_] - nn[s_]) * T + dd[pid]
             ml, mh = L - 0.5 * T, (c["depth"] - 0.5) * T - L
@@ -392,6 +417,9 @@ def lane_cycles(table):
 
 def report(b, v):
     hist = defaultdict(int)
+    rings = {p: c for p, c in b["ports"].items() if not c.get("start_only")}
+    nrel = len(b["ports"]) - len(rings)
+    b = dict(b, ports=rings)
     for c in b["ports"].values():
         hist[c["sched_lat"]] += 1
     tree = [c for c in b["ports"].values() if c["tree"]]
@@ -403,7 +431,8 @@ def report(b, v):
                 K_range=[min(c["K"] for c in b["ports"].values()), max(c["K"] for c in b["ports"].values())],
                 start_tree_depth=max(r["depth"] for r in b["regions"].values()),
                 tree_edges_fall=sum(1 for r in b["regions"].values() if r["edge_fall"]),
-                max_origin_cycles=max(r["n_nominal"] for r in b["regions"].values()))
+                max_origin_cycles=max(r["n_nominal"] for r in b["regions"].values()),
+                start_relays=nrel, hop_legs=sum(1 for c in rings.values() if c["kind"] == "hop_leg"))
 
 
 def main(argv=None):
@@ -420,6 +449,7 @@ def main(argv=None):
     ap.add_argument("--scale", type=float, default=1.0, help="count_align_plan.py --scale (with --from-ocv)")
     ap.add_argument("--start-skew", type=CAP.parse_skew, default=(0.0, 0.0), metavar="LO,HI",
                     help="count_align_plan.py --start-skew (with --from-ocv)")
+    CAP.add_start_args(ap)   # MESO-START-1 --feed / --start-relay / --hop-relay (with --from-ocv)
     ap.add_argument("--samples", type=int, default=2000)
     ap.add_argument("--table")
     ap.add_argument("--table-out")
@@ -433,7 +463,7 @@ def main(argv=None):
     if a.from_ocv:
         rows = CAP.load_rows(a.plan_json, a.corner, a.scale)
         s, out, regs = CAP.plan(rows, a.period, a.aperture, a.wander_frac, a.sync_aperture, a.pad,
-                                CAP.parse_edge_pad(a.edge_pad), a.start_skew)
+                                CAP.parse_edge_pad(a.edge_pad), a.start_skew, **CAP.start_kw(a))
         if any(a.start_skew):
             s["start_skew_ps"] = list(a.start_skew)
         s.update(period_ps=a.period, aperture_ps=a.aperture, sync_aperture_ps=a.sync_aperture, pad=a.pad, scale=a.scale,
