@@ -766,7 +766,7 @@ def build_spine_fishbone(P, taps, col_um=60.0, merge_um=800.0, matched=False, st
 
 
 
-def build_link_fishbone(P, taps, regions, feed, col_um=60.0):
+def build_link_fishbone(P, taps, regions, feed, col_um=60.0, local="fishbone", leaf_um=200.0):
     """DIE-KV-2 (opt-in --tree-form link_fishbone --region-trees MAP --feed FEED, METHODOLOGY 12.13 clock follows data):
     the die clock is fed ALONG THE REGION LINKS, not by a die-wide balanced tree.
       (1) FEED: the region feed tree of tools/die_plan/locality.py (feed 'fish': max-bit spanning tree of the region
@@ -777,7 +777,12 @@ def build_link_fishbone(P, taps, regions, feed, col_um=60.0):
           count-aligned ring (MESO-COUNT-1 ruling 20:35; per-crossing K from count_align_plan.py).
       (2) FISHBONE region tree: a trunk along the region's long axis through its centre; one trunk node per tap column
           (taps within col_um share it); a perpendicular stub to a leaf per tap row (leaf delay ~ Manhattan distance).
-    Region names come from the map values; every tap's partition must be in the map and every region in the feed."""
+    Region names come from the map values; every tap's partition must be in the map and every region in the feed.
+    local='htree' (DIE-KV-3, opt-in --tree-form link_htree; COORD 21:38 CROSS-DIE NOTE: balanced local tree inside each
+    region): instead of (2), a BALANCED H-tree per region rooted at the region centre (= the feed end): full-depth
+    bisection of the region bbox along its longer axis down to leaf_um (both halves of a split at the same depth, the child
+    node at the child box centre, so every root->leaf path has the same leg lengths and repeater count by construction;
+    empty halves pruned); taps hang from their leaf (leaf->tap last-mile leg <= leaf_um).  No trims, pads or detours."""
     par = feed["parent"]
     tapxy = {tuple(k.split("->")): v for k, v in feed["tap"].items()}
     rt = defaultdict(list)
@@ -827,6 +832,31 @@ def build_link_fishbone(P, taps, regions, feed, col_um=60.0):
             nodes[a]["region_root"] = c
             rr[c] = a
             order.append(c)
+    if local == "htree":
+        def bisect(nid, reg, tl):
+            x0, y0, x1, y1 = reg
+            if max(x1 - x0, y1 - y0) <= leaf_um:
+                nodes[nid]["taps"] += tl
+                return
+            if x1 - x0 >= y1 - y0:
+                xm = (x0 + x1) / 2
+                halves = [((x0, y0, xm, y1), [t for t in tl if t[2] < xm]), ((xm, y0, x1, y1), [t for t in tl if t[2] >= xm])]
+            else:
+                ym = (y0 + y1) / 2
+                halves = [((x0, y0, x1, ym), [t for t in tl if t[3] < ym]), ((x0, ym, x1, y1), [t for t in tl if t[3] >= ym])]
+            for rg, sub in halves:
+                if sub:
+                    c = leg(nid, (rg[0] + rg[2]) / 2, (rg[1] + rg[3]) / 2, rg, rib=r)
+                    bisect(c, rg, sub)
+        for r, tl in rt.items():
+            bisect(rr[r], box[r], tl)
+        nodes[0]["link_feed"] = dict(root=root, regions=len(box), local="htree", leaf_um=leaf_um,
+                                     feed_edges=sum(1 for v in par.values() if v is not None),
+                                     feed_wire_um=round(sum(abs(nodes[i]["x"] - nodes[n["parent"]]["x"]) +
+                                                            abs(nodes[i]["y"] - nodes[n["parent"]]["y"])
+                                                            for i, n in nodes.items() if n.get("feed") and
+                                                            n["parent"] is not None), 1))
+        return nodes
     # (2) fishbone per region
     for r, tl in rt.items():
         b, (cx, cy), r0 = box[r], cen[r], rr[r]
@@ -942,8 +972,10 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     taps = clock_taps(P)
-    if tree_form == "link_fishbone":
+    if tree_form in ("link_fishbone", "link_htree"):
         to = dict(tree_opts or {})
+        if tree_form == "link_htree":
+            to.update(local="htree", leaf_um=leaf_um)
         nodes = build_link_fishbone(P, taps, regions, json.loads(Path(to.pop("feed")).read_text()), **to)
     else:
         nodes = (build_spine_fishbone(P, taps, **(tree_opts or {})) if tree_form == "spine_fishbone" else
@@ -2639,9 +2671,11 @@ def main(argv=None):
                    help="opt-in: like --tree-site-legal, but each buffer slides back along its own incoming leg "
                         "(root->entry Manhattan lengths unchanged = equal length kept by construction)")
     k.add_argument("--feed", help="link_fishbone: region feed tree JSON (tools/die_plan/locality.py score()['feed'])")
-    k.add_argument("--tree-form", choices=("htree", "spine_fishbone", "link_fishbone"), default="htree",
+    k.add_argument("--tree-form", choices=("htree", "spine_fishbone", "link_fishbone", "link_htree"), default="htree",
                    help="die clock topology: htree (default) or spine_fishbone (LAND-HEAD-3 opt-in: 1-D DME spine + per-row "
-                        "fishbone ribs, low insertion so landed pairs split late)")
+                        "fishbone ribs, low insertion so landed pairs split late); link_fishbone / link_htree (DIE-KV-2/3 opt-in: "
+                        "region clocks fed along the locality feed tree --feed; fishbone or balanced H-tree (--leaf-um) inside "
+                        "each --region-trees region)")
     k.add_argument("--tree-opt", action="append", default=[], metavar="K=V",
                    help="spine_fishbone options: matched=1 (phase-matched rib heads, station rows as 1-D DME; LAND-HEAD-3 model: worse), col_um, merge_um")
     k.add_argument("--region-trees", help="fallback regions.json (part_region): die reference tree to one root per "
@@ -2717,7 +2751,7 @@ def main(argv=None):
                       site_slide=a.tree_site_slide, regions=a.region_trees,
                       tree_form=a.tree_form,
                       tree_opts={**{k: float(v) for k, v in (o.split("=") for o in a.tree_opt)},
-                                 **({"feed": a.feed} if a.tree_form == "link_fishbone" else {})})
+                                 **({"feed": a.feed} if a.tree_form in ("link_fishbone", "link_htree") else {})})
         print(json.dumps({k: m[k] for k in ("die", "parts", "types", "closed_views", "hard_cores", "clock_tree", "grt",
                                              "psm", "sta")}, indent=1))
     elif a.cmd == "report":
