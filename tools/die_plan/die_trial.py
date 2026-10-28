@@ -1057,7 +1057,8 @@ def build_slice_spine_tree(P, taps, regions, leaf_um=600.0, site=None, top_leaf_
     return nodes, info
 
 
-def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None, route_um=480.0, only=None):
+def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None, route_um=480.0, only=None, early=None,
+                      snake=None):
     """DIE-QC-3 opt-in (--tree-form link_htree --region-dme): hang one legal-site DME tree (dme_region_tree) under every
     LEGALIZED feed-end node that carries region_root; legs that cross a core take the L corner through the channels
     (same rule as the slice-spine form).  Runs after the site pass, so nothing it places slides afterwards."""
@@ -1069,9 +1070,11 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
         rn = nodes[e]["region_root"]
         if not rt.get(rn) or (only is not None and rn not in only):   # DIE-QC-4 --region-dme-only: listed regions only
             continue
-        dn, droot, dst = dme_region_tree(site, rt[rn], rep_um=rep_um, delay_rep_um=delay_rep_um)
+        sn = bool(snake) and (snake == "all" or rn in snake)    # DIE-QC-9 --region-dme-snake: listed regions (or all)
+        dn, droot, dst = dme_region_tree(site, rt[rn], rep_um=rep_um, delay_rep_um=delay_rep_um, early=early,
+                                         **({"snake": True} if sn else {}))
 
-        def attach(j, parent):
+        def attach(j, parent, snake_pts=None):
             d = dn[j]
             i = len(nodes)
             nodes[i] = dict(id=i, x=round(d["x"], 3), y=round(d["y"], 3), parent=parent, level=nodes[parent]["level"] + 1,
@@ -1080,7 +1083,9 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
             nodes[i]["req_xy"] = [nodes[i]["x"], nodes[i]["y"]]
             nodes[parent]["kids"].append(i)
             pa, q = (nodes[parent]["x"], nodes[parent]["y"]), (nodes[i]["x"], nodes[i]["y"])
-            if abs(pa[0] - q[0]) > 1e-6 and abs(pa[1] - q[1]) > 1e-6:
+            if snake_pts:       # DIE-QC-9: elongated leg = explicit legal buffer chain (tree_netlist places it as is)
+                nodes[i]["snake"] = [list(x) for x in snake_pts]
+            elif abs(pa[0] - q[0]) > 1e-6 and abs(pa[1] - q[1]) > 1e-6:
                 best = None
                 for cn in ((q[0], pa[1]), (pa[0], q[1])):
                     r = max(leg_blocked_run(site, pa, cn), leg_blocked_run(site, cn, q))
@@ -1089,9 +1094,11 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
                 if best[0] <= route_um and best[0] < leg_blocked_run(site, pa, q):
                     nodes[i]["route"] = [list(pa), list(best[1]), list(q)]
             for k in d["kids"]:
-                attach(k, i)
+                attach(k, i, (d.get("snakes") or {}).get(k))
         attach(droot, e)
-        st[rn] = dict(merges=dst.get("merges"), imbalanced=dst.get("imbalanced"), spread=dst.get("spread_um"))
+        st[rn] = dict(merges=dst.get("merges"), imbalanced=dst.get("imbalanced"), spread=dst.get("spread_um"),
+                      **({"early_taps": dst["early_taps"]} if dst.get("early_taps") else {}),
+                      **({k: dst[k] for k in ("snakes", "snake_wire_um", "snake_buffers")} if sn else {}))
     return st
 
 
@@ -1223,6 +1230,94 @@ def leg_ps(L, rep_um):
     return n * d0 + k1 * L + k2 * L * L / n
 
 
+def tap_wire_ps(d_um):
+    """DIE-QC-9 (with --region-dme-snake): delay of the unbuffered tap leg from the leaf driver to a core pin d um away
+    (often inside the core outline: QC vmr pins sit ~100 um in), wire part of STAGE_1X_TT only.  The DIE-QC-3/8 delay
+    DME priced this leg as d (um read as ps): ~100 model ps too late for an in-core pin, so the tree delivered those pins
+    ~150 ps TT early (trial6/7 measured).  Kept behind the opt-in so trial6 stays reproducible."""
+    _, k1, k2 = STAGE_1X_TT
+    return k1 * d_um + k2 * d_um * d_um
+
+
+def chain_ps(pts):
+    """delay (model ps) of a leg whose buffers sit at pts[1:] (pts[0] = driver): one STAGE_1X_TT stage per consecutive
+    pair, stage length = Manhattan between the two buffers (what the router connects).  leg_ps is the even-split case."""
+    d0, k1, k2 = STAGE_1X_TT
+    s = 0.0
+    for a, b in zip(pts, pts[1:]):
+        L = _man(a, b)
+        s += d0 + k1 * L + k2 * L * L
+    return s
+
+
+def _snake_pts(pa, q, u, h, rep_um, shape="dogleg"):
+    """elongated leg pa -> q, pushed h um outside the pa/q bounding box along axis direction u (adds 2h of wire):
+    'dogleg' = one turning buffer w at the bbox mid-edge + h u (waypoints pa, w, q: >= 1 extra stage);
+    'hairpin' = waypoints pa, pa + h u, q + h u, q (>= 2 extra stages).  Every waypoint is a buffer (the router
+    joins buffers by Manhattan wire, so the turn must be a buffer) and each piece gets ceil(len / rep_um) equal stages."""
+    if shape == "dogleg":
+        m = [(pa[0] + q[0]) / 2, (pa[1] + q[1]) / 2]
+        for ax in (0, 1):
+            if u[ax]:
+                m[ax] = (max(pa[ax], q[ax]) if u[ax] > 0 else min(pa[ax], q[ax])) + u[ax] * h
+        w = [pa, tuple(m), q]
+    else:
+        w = [pa, (pa[0] + u[0] * h, pa[1] + u[1] * h), (q[0] + u[0] * h, q[1] + u[1] * h), q]
+    pts = [pa]
+    for a, b in zip(w, w[1:]):
+        L = _man(a, b)
+        if L < 1e-6:
+            continue
+        n = max(1, int(math.ceil(L / rep_um - 1e-9)))
+        path = [a, (b[0], a[1]), b]
+        p, _ = polyline_points(path, [j / n for j in range(1, n + 1)])
+        pts += [tuple(x) for x in p]
+    return pts
+
+
+def snake_leg(site, pa, q, target_ps, rep_um, h_max=3000.0, step=1.08):
+    """DIE-QC-9 opt-in (--region-dme-snake, COORD 10-28 ruling: standard zero-skew DME wire elongation, plan-computed,
+    part of the tree): the buffer chain pa -> q whose chain_ps is closest to target_ps (> leg_ps of the plain leg).
+    Shapes (_snake_pts) dogleg / hairpin x the 4 axis directions; h by bisection on the ideal chain, then a local
+    scan with every buffer snapped to the nearest LEGAL site and the delay re-priced on the snapped chain (honest: the
+    reported delay is that of the placed buffers).  Kept only if it beats the plain leg.  Ties: least snap distance,
+    then least wire.  -> (repeater points [excluding pa and q], chain ps, added wire um over the plain leg) or None"""
+    L0 = _man(pa, q)
+    plain = leg_ps(L0, rep_um)
+    best = None
+    for shape in ("dogleg", "hairpin"):
+        for u in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            lo, hi = 0.0, h_max
+            if chain_ps(_snake_pts(pa, q, u, hi, rep_um, shape)) < target_ps:
+                continue
+            for _ in range(40):
+                m = (lo + hi) / 2
+                if chain_ps(_snake_pts(pa, q, u, m, rep_um, shape)) < target_ps:
+                    lo = m
+                else:
+                    hi = m
+            for k in range(-6, 7):
+                h = max(0.0, hi + k * step)
+                raw = _snake_pts(pa, q, u, h, rep_um, shape)
+                if not all(0 <= x <= site.W and 0 <= y <= site.H for x, y in raw):
+                    continue
+                pts, snap = [pa], 0.0
+                for x in raw[1:-1]:
+                    y = x if site.legal(x) else site.nearest(x)
+                    y = round_legal(site, y)
+                    snap += _man(x, y)
+                    pts.append(y)
+                pts.append(q)
+                ps = chain_ps(pts)
+                wire = sum(_man(a, b) for a, b in zip(pts, pts[1:]))
+                key = (round(abs(ps - target_ps), 1), round(snap, 1), wire)
+                if best is None or key < best[0]:
+                    best = (key, pts[1:-1], ps, wire - L0)
+    if best is None or abs(best[2] - target_ps) >= abs(plain - target_ps):
+        return None
+    return best[1], best[2], best[3]
+
+
 def merge_point_delay(site, c1, s1, c2, s2, rep_um, radius_um=800.0, step=1.08, extra_ps_um=0.03):
     """delay-aware DME merge (opt-in --region-dme delay): s1/s2 are subtree delays (ps); candidates = the length-locus
     pool of merge_point (depths converted at the repeated-line ps/um) + every legal point on the kids' shortest L path;
@@ -1254,7 +1349,11 @@ def merge_point_delay(site, c1, s1, c2, s2, rep_um, radius_um=800.0, step=1.08, 
     return q, abs(leg_ps(md(q, c1), rep_um) + s1 - leg_ps(md(q, c2), rep_um) - s2), md(q, c1) + md(q, c2) - D_
 
 
-def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MODES, rep_um=None, delay_rep_um=None):
+SNAKE_TOL_PS = 1.0      # DIE-QC-9 --region-dme-snake: a delay-mode merge imbalanced by more than this is elongated
+
+
+def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MODES, rep_um=None, delay_rep_um=None,
+                    early=None, snake=False):
     """DIE-QC-3 opt-in (--region-dme): a region clock tree built ON legal sites, so nothing slides after balancing.
     Embedding: bottom-up DME with Manhattan length as the delay proxy (repeated 1x line: delay ~ linear in length);
     every merge point is the legal zero-skew point from merge_point() (no slide, no snake; an elongated merge point is
@@ -1270,7 +1369,8 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
         q = (t[2], t[3]) if site.legal((t[2], t[3])) else site.nearest((t[2], t[3]))
         q = round_legal(site, q)
         d = _man(q, (t[2], t[3]))
-        out.append(dict(x=q[0], y=q[1], kids=[], taps=[t], S=d, Smin=d, W=d))
+        sd = tap_wire_ps(d) if snake and delay_rep_um else d
+        out.append(dict(x=q[0], y=q[1], kids=[], taps=[t], S=sd, Smin=sd, W=d))
         return len(out) - 1
 
     def merge(a, b):
@@ -1281,8 +1381,23 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
             q = round_legal(site, q)
             la, lb = _man(q, (A["x"], A["y"])), _man(q, (B["x"], B["y"]))
             da, db = leg_ps(la, delay_rep_um), leg_ps(lb, delay_rep_um)
+            snakes, sw = {}, 0.0
+            if snake and abs(da + A["S"] - db - B["S"]) > SNAKE_TOL_PS:
+                # DIE-QC-9 opt-in: no zero-skew legal point -> elongate the fast kid's leg (plan-computed hairpin of
+                # legal buffer sites, priced on the placed chain); the merge point itself is unchanged
+                fast, Fx, slow_t = (a, A, db + B["S"]) if da + A["S"] < db + B["S"] else (b, B, da + A["S"])
+                r = snake_leg(site, q, (Fx["x"], Fx["y"]), slow_t - Fx["S"], delay_rep_um)
+                if r is not None:
+                    pts, ps, sw = r
+                    snakes[fast] = [list(x) for x in pts]
+                    if fast == a:
+                        da, la = ps, la + sw
+                    else:
+                        db, lb = ps, lb + sw
+                    imb = abs(da + A["S"] - db - B["S"])
             out.append(dict(x=q[0], y=q[1], kids=[a, b], taps=[], S=max(da + A["S"], db + B["S"]),
-                            Smin=min(da + A["Smin"], db + B["Smin"]), W=la + lb + A["W"] + B["W"], imb=imb, ex=ex))
+                            Smin=min(da + A["Smin"], db + B["Smin"]), W=la + lb + A["W"] + B["W"], imb=imb, ex=ex,
+                            **({"snakes": snakes, "snake_um": sw} if snakes else {})))
             return len(out) - 1
         q, imb, ex, da, db = merge_point_routed(site, (A["x"], A["y"]), A["S"], (B["x"], B["y"]), B["S"], rad, 1.08,
                                                 extra_wire_w, rep_um=rep_um)
@@ -1333,8 +1448,15 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
             live = [x for k, x in enumerate(live) if k not in (a, b)] + [m]
         return live[0]
     byp = defaultdict(list)
+    late = []           # DIE-QC-8 opt-in --region-dme-early: early core taps hang from an upper node (below)
     for t in taps:
-        byp[t[0]].append(t)
+        if early and delay_rep_um and early.get((t[0], t[1]), 0.0) > 0.0:
+            late.append(t)
+        else:
+            byp[t[0]].append(t)
+    if late and not byp:
+        byp[late[0][0]] = late
+        late = []
     proots, pick = [], defaultdict(int)
     for pn in sorted(byp):
         tl = sorted(byp[pn], key=lambda t: (t[2], t[3], t[1]))
@@ -1344,11 +1466,81 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
         out[tries[k]]["part_root"] = pn
         proots.append(tries[k])
     root = build(proots, lambda i: (out[i]["x"], out[i]["y"]), lambda i: i, "gap")
+    early_rows = []
+    if late:
+        # DIE-QC-8 opt-in (12.3 v5.0 macro insertion-delay balancing): a core tap with declared early e (model ps) is
+        # delivered early BY CONSTRUCTION: it hangs from the kept-tree node j whose subtree delay S_j best matches
+        # e + leg_ps(j -> tap) (arrival at j = S_root - S_j, so the tap arrives e before the other taps); no pads.
+        # A shortfall (root not deep enough) is reported, never hidden.
+        kept, stack = [], [root]
+        while stack:
+            i = stack.pop()
+            kept.append(i)
+            stack += out[i]["kids"]
+        for t in sorted(late, key=lambda t: ((-early[(t[0], t[1])],) if snake else ()) + (t[0], t[1])):
+            e = float(early[(t[0], t[1])])
+            q = (t[2], t[3]) if site.legal((t[2], t[3])) else site.nearest((t[2], t[3]))
+            q = round_legal(site, q)
+            d = _man(q, (t[2], t[3]))
+            dw = d
+            if snake:       # DIE-QC-9: the tap leg in ps (see tap_wire_ps), not um
+                d = tap_wire_ps(d)
+
+            def miss(j):
+                return out[j]["S"] - e - leg_ps(_man((out[j]["x"], out[j]["y"]), q), delay_rep_um) - d
+            cand = [j for j in kept if out[j]["kids"]]
+            if snake and cand and max(miss(j) for j in cand) < -SNAKE_TOL_PS:
+                # DIE-QC-9: no node is deep enough for this early -> a new top node at the old root's site; the leg
+                # down to the old root is elongated (in place: a dogleg out and back on legal sites) so the new
+                # root is exactly deep enough; the early tap then hangs from it like any other
+                rq = (out[root]["x"], out[root]["y"])
+                need = e + leg_ps(_man(rq, q), delay_rep_um) + d - out[root]["S"]
+                r = snake_leg(site, rq, rq, max(need, leg_ps(0.0, delay_rep_um)), delay_rep_um)
+                if r is None:   # no elongated chain beats one plain stage (stage quantum): take the plain stage
+                    r = ([], leg_ps(0.0, delay_rep_um), 0.0)
+                if r is not None:
+                    pts, ps, sw = r
+                    out.append(dict(x=rq[0], y=rq[1], kids=[root], taps=[], S=out[root]["S"] + ps,
+                                    Smin=out[root]["Smin"] + ps, W=out[root]["W"] + sw, imb=0.0, ex=0.0,
+                                    snakes={root: [list(x) for x in pts]}, snake_um=sw,
+                                    **({"part_root": out[root]["part_root"]} if out[root].get("part_root") else {})))
+                    root = len(out) - 1
+                    kept.append(root)
+                    cand.append(root)
+            if snake and any(miss(j) >= 0 for j in cand):
+                # DIE-QC-9 --region-dme-snake: hang where the tap would be early by MORE than e, then elongate the
+                # hang leg by the miss (a too-shallow node cannot be fixed by wire, so it is chosen only if nothing else)
+                j = min((j for j in cand if miss(j) >= 0), key=lambda j: (round(miss(j), 3), j))
+            else:
+                j = min(cand, key=lambda j: (round(abs(miss(j)), 3), j), default=root)
+            m0 = miss(j)
+            out.append(dict(x=q[0], y=q[1], kids=[], taps=[t], S=d, Smin=d, W=dw))
+            out[j]["kids"].append(len(out) - 1)
+            row = dict(part=t[0], port=t[1], early_model_ps=round(e, 2), node_S_ps=round(out[j]["S"], 2),
+                       leg_um=round(_man((out[j]["x"], out[j]["y"]), q), 1), miss_ps=round(m0, 2),
+                       root_S_ps=round(out[root]["S"], 2))
+            if snake and m0 > SNAKE_TOL_PS:
+                jq = (out[j]["x"], out[j]["y"])
+                r = snake_leg(site, jq, q, leg_ps(_man(jq, q), delay_rep_um) + m0, delay_rep_um)
+                if r is not None:
+                    pts, ps, sw = r
+                    out[j].setdefault("snakes", {})[len(out) - 1] = [list(x) for x in pts]
+                    out[j]["snake_um"] = out[j].get("snake_um", 0.0) + sw
+                    row.update(snake_um=round(sw, 1), miss_ps=round(out[j]["S"] - e - ps - d, 2), miss_unsnaked_ps=round(m0, 2))
+            early_rows.append(row)
     st = dict(merges=0, imbalanced=0, worst_imbalance_um=0.0, extra_wire_um=0.0, topology=dict(pick))
+    if snake:
+        st.update(snakes=0, snake_wire_um=0.0, snake_buffers=0)
+    if early_rows:
+        st["early_taps"] = early_rows
     stack = [root]
     while stack:                       # stats of the kept tree only
         d = out[stack.pop()]
         stack += d["kids"]
+        if d.get("snakes") and snake:
+            st["snakes"] += len(d["snakes"])
+            st["snake_buffers"] += sum(len(v) for v in d["snakes"].values())
+            st["snake_wire_um"] = round(st["snake_wire_um"] + d.get("snake_um", 0.0), 1)
         if d["kids"]:
             st["merges"] += 1
             st["extra_wire_um"] += d["ex"]
@@ -1602,7 +1794,14 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
             L = abs(p["x"] - nd["x"]) + abs(p["y"] - nd["y"])
             nrep = max(0, int(math.ceil(L / rep_um)) - 1)
             poly = None
-            if nd.get("route") and site is not None and _man(nd["route"][0], (p["x"], p["y"])) < 1e-3 \
+            if nd.get("snake"):     # DIE-QC-9 --region-dme-snake: plan-computed elongated leg, buffers at the given sites
+                pts = [tuple(q) for q in nd["snake"]]
+                nrep = len(pts)
+                chain = [(p["x"], p["y"])] + pts + [(nd["x"], nd["y"])]
+                poly = chain
+                nd["detour"] = [[round(a, 3), round(b, 3)] for a, b in chain]
+                nd["detour_um"] = round(sum(_man(a, b) for a, b in zip(chain, chain[1:])) - L, 1)
+            elif nd.get("route") and site is not None and _man(nd["route"][0], (p["x"], p["y"])) < 1e-3 \
                     and _man(nd["route"][-1], (nd["x"], nd["y"])) < 1e-3:    # DIE-QC-3 --region-dme: the leg's L route
                 poly = [tuple(q) for q in nd["route"]]
                 _, Ld = polyline_points(poly, [])
@@ -1685,8 +1884,15 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
 
 def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_slide=False, regions=None, tree_form="htree",
               tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None, clock_rc="ndr",
-              slice_balance=False, region_dme=False, region_dme_only=None):
+              slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None,
+              region_dme_early_ff=None, region_dme_snake=None):
     out = Path(out)
+    if region_dme_early and region_dme != "delay":
+        raise ValueError("--region-dme-early needs --region-dme delay")
+    if region_dme_early_ff and not region_dme_early:
+        raise ValueError("--region-dme-early-ff needs --region-dme-early")
+    if region_dme_snake and not (region_dme == "delay" and tree_form == "link_htree" and site_slide and not slice_spine):
+        raise ValueError("--region-dme-snake needs --region-dme delay with --tree-form link_htree --tree-site-slide")
     if region_dme_only and not (region_dme and tree_form == "link_htree" and site_slide and not slice_spine):
         raise ValueError("--region-dme-only needs --region-dme with --tree-form link_htree --tree-site-slide")
     wire_r, wire_c = WIRE_RC_1X if clock_rc == "1x" else (WIRE_R, WIRE_C)
@@ -1696,6 +1902,17 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
         raise ValueError("--slice-balance needs --slice-spine")
     out.mkdir(parents=True, exist_ok=True)
     taps = clock_taps(P)
+    dme_early = None
+    if region_dme_early:    # DIE-QC-8 opt-in: declared core early (TT) in DME model ps = early / measured-over-model ratio
+        dme_early = {}
+        for n, p in P.parts.items():
+            for port, _, _, tp in S.core_taps(P, p["type"]):
+                e = S.core_tap_early_ps(P, tp, "TT")
+                if e > 0:
+                    dme_early[(n, port)] = e / float(region_dme_early)
+                    if region_dme_early_ff:   # DIE-QC-9 opt-in: corner-averaged target (TT and FF in model ps)
+                        dme_early[(n, port)] = 0.5 * (dme_early[(n, port)]
+                                                      + S.core_tap_early_ps(P, tp, "FF") / float(region_dme_early_ff))
     if slice_spine and tree_form != "htree":
         raise ValueError("--slice-spine and --tree-form %s are exclusive opt-ins" % tree_form)
     site = None
@@ -1780,11 +1997,14 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
             balanced["region_dme"] = attach_region_dme(nodes, site, taps, regions,
                                                        rep_um=rep_um if region_dme == "priced" else None,
                                                        delay_rep_um=rep_um if region_dme == "delay" else None,
-                                                       only=set(region_dme_only))
+                                                       only=set(region_dme_only), early=dme_early,
+                                                       **({"snake": region_dme_snake} if region_dme_snake else {}))
         elif tree_form == "link_htree" and region_dme:   # DIE-QC-3 opt-in: legal-site DME region trees, no re-slide
             balanced = dict(region_dme=attach_region_dme(nodes, site, taps, regions,
                                                          rep_um=rep_um if region_dme == "priced" else None,
-                                                         delay_rep_um=rep_um if region_dme == "delay" else None))
+                                                         delay_rep_um=rep_um if region_dme == "delay" else None,
+                                                         early=dme_early,
+                                                         **({"snake": region_dme_snake} if region_dme_snake else {})))
         elif tree_form == "link_htree":
             balanced = balance_legalize(nodes, site)
     elif site_legal and not slice_spine:          # opt-in: every buffer/repeater on a legal channel site; a one-entry leaf drives AT its entry
@@ -2877,7 +3097,8 @@ exit $rc
 def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.72, density=0.15, island_sites=None,
               island_margin=ISLAND_MARGIN_UM, full_depth=False, site_legal=False, site_slide=False, regions=None,
               tree_form="htree", tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None,
-              clock_rc="ndr", slice_balance=False, region_dme=False, region_dme_only=None):
+              clock_rc="ndr", slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None,
+              region_dme_early_ff=None, region_dme_snake=None):
     raw = S.load(plan_path)
     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
     plan_dir = Path(plan_path).parent
@@ -2949,7 +3170,8 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
                                            tree_form=tree_form, tree_opts=tree_opts, slice_spine=slice_spine,
                                            spine_top_leaf_um=spine_top_leaf_um, slice_rows=slice_rows, tap_pad=tap_pad,
                                            clock_rc=clock_rc, slice_balance=slice_balance, region_dme=region_dme,
-                                           region_dme_only=region_dme_only)
+                                           region_dme_only=region_dme_only, region_dme_early=region_dme_early,
+                                           region_dme_early_ff=region_dme_early_ff, region_dme_snake=region_dme_snake)
     (out / "clock" / "make_tracks.tcl").write_text(gen_phys.make_tracks_tcl(P))
     meta["clock_tree"] = cm
     reserve = reserve_rects(segs, leaf_legs, P)
@@ -3555,6 +3777,21 @@ def main(argv=None):
     k.add_argument("--region-dme-only", help="DIE-QC-4 opt-in (with --tree-form link_htree --tree-site-slide --region-dme): "
                    "comma list of regions that get the legal-site DME tree; every other region keeps the balanced "
                    "link_htree (balance_legalize).  Per-region fallback: DME only where the H-tree is worse")
+    k.add_argument("--region-dme-early", type=float, default=None, metavar="RATIO",
+                   help="DIE-QC-8 opt-in (with --region-dme delay; 12.3 v5.0 macro insertion-delay balancing): every early "
+                        "core tap (clk_c<k>, early = core insertion - common latency, TT) in a DME region hangs from the "
+                        "upper DME node whose subtree delay matches early/RATIO + its leg (RATIO = measured/model ps of "
+                        "the routed clock, e.g. 1.548 from QC trial4), so it arrives early by construction; no pads. "
+                        "Default: core taps are ordinary DME sinks")
+    k.add_argument("--region-dme-early-ff", type=float, default=None, metavar="RATIO_FF",
+                   help="DIE-QC-9 opt-in (with --region-dme-early): corner-averaged early hang target = mean of "
+                        "early_TT/RATIO and early_FF/RATIO_FF (model ps), e.g. 1.293 from QC trial6 FF")
+    k.add_argument("--region-dme-snake", default=None, metavar="REGIONS",
+                   help="DIE-QC-9 opt-in (with --region-dme delay, link_htree; COORD 10-28: standard zero-skew DME wire "
+                        "elongation, plan-computed, part of the tree, not a residual ECO): comma list of DME regions "
+                        "(or 'all') where a merge with no zero-skew legal point elongates the fast kid's leg as a "
+                        "hairpin of legal buffer sites, and an over-early hung core tap gets its hang leg elongated. "
+                        "Default: no elongation")
     k.add_argument("--coarse-um", type=float, default=0.72)
     k.add_argument("--density", type=float, default=0.15, help="die power density W/mm2 for PDNSim")
     k.add_argument("--island-sites", nargs="+", help="CLOCK-128-R7 opt-in: die_tree_plan.json / ot_clock_sites/1 / "
@@ -3632,7 +3869,10 @@ def main(argv=None):
                       slice_spine=a.slice_spine, spine_top_leaf_um=a.spine_top_leaf_um, slice_rows=a.slice_rows,
                       tap_pad=load_tap_pad(a.tap_pad) if a.tap_pad else None,
                       clock_rc=a.clock_rc, slice_balance=a.slice_balance, region_dme=a.region_dme,
-                      region_dme_only=[r for r in a.region_dme_only.split(",") if r] if a.region_dme_only else None)
+                      region_dme_only=[r for r in a.region_dme_only.split(",") if r] if a.region_dme_only else None,
+                      region_dme_early=a.region_dme_early, region_dme_early_ff=a.region_dme_early_ff,
+                      region_dme_snake=(a.region_dme_snake if a.region_dme_snake == "all" else
+                                        set(r for r in a.region_dme_snake.split(",") if r)) if a.region_dme_snake else None)
         print(json.dumps({k: m[k] for k in ("die", "parts", "types", "closed_views", "hard_cores", "clock_tree", "grt",
                                              "psm", "sta")}, indent=1))
     elif a.cmd == "report":

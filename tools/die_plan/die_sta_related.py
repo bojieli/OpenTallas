@@ -90,6 +90,11 @@ DATA DROOP (METHODOLOGY 12.4a b2, OWNER 10-27 ~18:1x; tools/die_plan/data_droop.
   = no data term (byte-identical pre-b2 output).  The record carries summary.data_droop {mode, fractions, worst TT
   setup penalty}.
 
+COUNT-ALIGNED CROSSINGS (--count-align, CA-OCV-1): the CA interval = STA phase (OpenSTA late/early + CPPR) + exactly
+  ONE clock variation term, the same per-pair callable the related-pair classes get (--clock-ocv table/flat with the
+  --clock-droop rule, + --mesh-signoff U, or --pair-unc): d_lo -= ocv(setup), d_hi += ocv(hold).  The exported tap
+  late/early carry no derate (their spread is the liberty pin-cap range), so this is not a double count.  Without a
+  variation model the CA record says clock_variation 'none' and a WARNING is printed (12.14a needs OCV + droop).
 Output OUT/die_sta_related.json (+ worst pairs per class); prints one line per class and corner.
 """
 import argparse
@@ -216,7 +221,7 @@ def arr4(A, B, node):
 
 
 def count_align_ss_info(landed, taps, bind, period, reg=None, scale=1.27, need_ps=100.0, start_wire=None, cppr_range=None,
-                        key="part"):
+                        key="part", ocv=None, ocv_label=None):
     """MESO-RECONCILE (COORD 22:31 HEAD (3)): SS corner row of the count-aligned crossings, INFORMATION ONLY (AGENTS.md /
     METHODOLOGY 6.1: SS never gates).  No die clock proof carries SS tap arrivals, so the TT taps (and the pin-register
     clk->Q) are scaled by the SS/TT delay ratio `scale` (default 1.27 = ASAP7 logic SS/TT derate used by uarch_model;
@@ -229,7 +234,8 @@ def count_align_ss_info(landed, taps, bind, period, reg=None, scale=1.27, need_p
                                        clkq_min_nowire_ps=float(reg["clkq_min_nowire_ps"]) * scale)
     r = count_align_landed(landed, st, bind, period, rg, need_ps, start_wire,
                            None if cppr_range is None else {k: float(v) * scale for k, v in cppr_range.items()},
-                           key=key)
+                           key=key, ocv=None if ocv is None else (lambda x, y, c: scale * ocv(x, y, c)),
+                           ocv_label=ocv_label and f"{ocv_label} x {scale}")
     r.update(info_only=True, ss_scale=scale, basis="TT taps x SS/TT scale (no SS clock proof)", gates=False)
     return r
 
@@ -268,7 +274,7 @@ def credit(rng, node, la, ea, lc, ec):
     return min(max(0.0, rng.get(c, 0.0)), max(0.0, la - ea), max(0.0, lc - ec))
 
 
-def count_align_d_intervals(landed, taps, cppr_range=None, part_region=None):
+def count_align_d_intervals(landed, taps, cppr_range=None, part_region=None, ocv=None, stats=None):
     """THE count-aligned crossing phase interval (DIE-HEAD-5, COORD 00:22 follow-up: ONE interval model for planner and
     STA): {'srcpart->dstpart': (d_lo, d_hi)} over EVERY landed tap pair of the partition pair, d = capture clock - launch
     clock, d_lo = min(capture early - launch late), d_hi = max(capture late - launch early) (arr4 at the pair's last
@@ -278,7 +284,14 @@ def count_align_d_intervals(landed, taps, cppr_range=None, part_region=None):
     count_align_plan --sta-proof plans on it (sta_d_intervals).
     part_region (DIE-QC-5, opt-in --count-align-key region): {partition: clock region}; the interval is then keyed
     'srcregion->dstregion' over every landed tap pair of the REGION pair, as the bind keys its crossings when a region
-    holds several partitions (QC grp maps).  A partition missing from it raises (fail closed)."""
+    holds several partitions (QC grp maps).  A partition missing from it raises (fail closed).
+    ocv (CA-OCV-1, METHODOLOGY 12.14a "crossing margin counted after OCV + droop", ONE SHARED DIE TIMING MODEL): the
+    SAME per-pair clock variation callable (a, b, check) -> ps the intra/seam classes get (clock_ocv_fn table/flat incl.
+    the shared-droop rule, + signed-mesh U, or --pair-unc).  It widens the interval by exactly one variation term:
+    d_lo -= ocv(a, b, 'setup') (launch late, capture early), d_hi += ocv(a, b, 'hold') (capture late, launch early).
+    The OpenSTA late/early tap arrivals carry no derate/AOCV (no set_timing_derate in the exports; the late-early spread
+    is the liberty pin-capacitance range, CLOCK-MESH-2), so this is not a double count.  None = no variation term
+    (pre-CA-OCV-1 interval; the record labels it).  stats: optional dict, filled {tag: [max ocv setup, max ocv hold]}."""
     dsta = {}
     for a, b, tag in landed:
         A, B = taps[a], taps[b]
@@ -288,14 +301,36 @@ def count_align_d_intervals(landed, taps, cppr_range=None, part_region=None):
         la, ea, lc, ec = arr4(A, B, node)
         cr = credit(cppr_range, node, la, ea, lc, ec) if cppr_range else 0.0
         lo, hi = ec - la + cr, lc - ea - cr
+        if ocv is not None:
+            os_, oh = float(ocv(a, b, "setup")), float(ocv(a, b, "hold"))
+            lo, hi = lo - os_, hi + oh
+            if stats is not None:
+                m = stats.setdefault(tag, [0.0, 0.0])
+                m[0], m[1] = max(m[0], os_), max(m[1], oh)
         o = dsta.get(tag)
         dsta[tag] = (lo, hi) if o is None else (min(o[0], lo), max(o[1], hi))
     return dsta
 
 
-def sta_d_intervals(proof, plan, corners=("TT", "FF"), clock_cal="none", cppr_lca=False):
+def ca_ocv(proof, meta, taps, corner, lat, clock_ocv="none", clock_droop=None, droop_region="mesh",
+           droop_regions_file=None, aocv_table=None, cell_share=None):
+    """CA-OCV-1: the clock variation callable main() hands the related-pair classes and the count-aligned row
+    (--clock-ocv flat/table with the --clock-droop rule and --droop-region regions); None for --clock-ocv none."""
+    if clock_ocv == "none":
+        return None
+    droop = clock_droop or ("shared" if clock_ocv == "table" else "stated")
+    dreg = droop_regions(proof, taps, droop_region, droop_regions_file) if droop == "shared" else None
+    return clock_ocv_fn(clock_ocv, droop, dict(meta, corner=corner), taps, lat, aocv_table, cell_share=cell_share,
+                        region=dreg)
+
+
+def sta_d_intervals(proof, plan, corners=("TT", "FF"), clock_cal="none", cppr_lca=False, clock_ocv="none",
+                    clock_droop=None, droop_regions_file=None, core_latency_ff=None, aocv_table=None):
     """{corner: count_align_d_intervals} exactly as main() feeds count_align_landed: tap_arrivals_<C>.json of PROOF,
-    --clock-cal spice scaling (SPICE_CLOCK_CAL), build_pairs on the plan (dict or path), --cppr-lca node choice."""
+    --clock-cal spice scaling (SPICE_CLOCK_CAL), build_pairs on the plan (dict or path), --cppr-lca node choice.
+    clock_ocv != 'none' (CA-OCV-1): the same clock variation term main() adds with --clock-ocv / --clock-droop /
+    --droop-regions / --core-latency-ff (core latency TT = plan clock.common_latency_ps, FF = core_latency_ff or TT),
+    so the planner hull and the gate share one interval model; 'none' = unchanged."""
     global CPPR_LCA
     plan = plan if isinstance(plan, dict) else json.loads(Path(plan).read_text())
     old, CPPR_LCA = CPPR_LCA, bool(cppr_lca)
@@ -306,14 +341,17 @@ def sta_d_intervals(proof, plan, corners=("TT", "FF"), clock_cal="none", cppr_lc
             if clock_cal == "spice":
                 meta, taps = scale_clock(meta, taps, SPICE_CLOCK_CAL.get(c, SPICE_CLOCK_CAL["TT"]))
             pairs, _ = build_pairs(plan, taps)
-            out[c] = count_align_d_intervals(pairs["landed"], taps, meta.get("cppr_node_range_ps"))
+            lt = float(plan.get("clock", {}).get("common_latency_ps", 250.0))
+            lat = core_latency_ff if (c == "FF" and core_latency_ff is not None) else lt
+            ocv = ca_ocv(Path(proof), meta, taps, c, lat, clock_ocv, clock_droop, "mesh", droop_regions_file, aocv_table)
+            out[c] = count_align_d_intervals(pairs["landed"], taps, meta.get("cppr_node_range_ps"), ocv=ocv)
         return out
     finally:
         CPPR_LCA = old
 
 
 def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, start_wire=None, cppr_range=None,
-                       key="part"):
+                       key="part", ocv=None, ocv_label=None):
     """MESO-INTEG-1 / MESO-RECONCILE-1 (opt-in --count-align BIND.json, count_align_bind.py v2): the count-aligned ring
     (ot_dp_clk_landing_ca) replaces the +-T/2 placement window by a write->read lag window per crossing.  Bind L_lo/L_hi
     are the plan's TRUE derated lag bounds (wander included, no aperture); d = capture-region clock - launch-region clock.
@@ -337,7 +375,10 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
     PARTITIONS; 'region' maps each landed partition through bind['parts'][p]['region'] first (the bind's own map), so a
     bind whose crossings are region pairs is timed over every landed tap pair of the region pair, and every landed
     region pair without a bind crossing is listed in 'unbound' and fails closed (a landed crossing with no count-align
-    ring is not timed by the half-period window in --count-align mode, so it must not pass silently)."""
+    ring is not timed by the half-period window in --count-align mode, so it must not pass silently).
+    ocv / ocv_label (CA-OCV-1): the clock variation callable of count_align_d_intervals and its label; each row then
+    carries ocv_lo_ps / ocv_hi_ps (max over the crossing's tap pairs); None keeps the pre-CA-OCV-1 interval and the
+    record says clock_variation 'none'."""
     ap = period / 8
     sap = float(bind.get("sync_aperture_ps", 26.5))
     cq_max = float(reg["clkq_max_wire_ps"]) if reg else 0.0
@@ -351,7 +392,8 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
                              f"(e.g. {lost[:5]})")
     elif key != "part":
         raise SystemExit(f"--count-align-key: unknown key {key!r}")
-    dsta = count_align_d_intervals(landed, taps, cppr_range, part_region=pr)
+    ost = {}
+    dsta = count_align_d_intervals(landed, taps, cppr_range, part_region=pr, ocv=ocv, stats=ost)
     tree_reg = {r["tree_port"]: (x, r) for x, r in bind.get("regions", {}).items() if r.get("tree_port")}
     rows, miss, srows = [], [], []
     for pid, b in sorted(bind["ports"].items()):
@@ -372,6 +414,8 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
                    margin_lo_ps=round(ml, 1), margin_hi_ps=round(mh, 1), source=src,
                    slot_read_ps=round(lo - 0.5 * period, 1), guard_budget_ps=round(ap, 1),
                    guard_hi_slack_ps=round(mh - ap, 1))
+        if ocv is not None and src == "sta":
+            row["ocv_lo_ps"], row["ocv_hi_ps"] = (round(x, 1) for x in ost.get(tag, (0.0, 0.0)))
         row["lag_ok"] = min(ml, mh) >= need_ps
         row["slot_read_ok"] = row["slot_read_ps"] >= 0
         row["guard_ok"] = row["guard_hi_slack_ps"] >= 0
@@ -405,7 +449,11 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
     btags = {f"{b['src']}->{b['dst']}" for b in bind["ports"].values()}
     unbound = sorted(t for t in dsta if t not in btags) if key == "region" else []
     ok = rows and not (nfail or sfail or rfail or gfail or miss or unbound)
-    return dict(key=key, landed_tags=len(dsta), unbound=len(unbound), unbound_tags=unbound[:20], crossings=len(rows), sta_timed=sum(r["source"] == "sta" for r in rows),
+    return dict(clock_variation=(ocv_label or "callable") if ocv is not None else "none",
+                ocv_max_lo_ps=round(max((v[0] for v in ost.values()), default=0.0), 1) if ocv is not None else None,
+                ocv_max_hi_ps=round(max((v[1] for v in ost.values()), default=0.0), 1) if ocv is not None else None,
+                below_need=sum(1 for r in rows if min(r["margin_lo_ps"], r["margin_hi_ps"]) < need_ps),
+                key=key, landed_tags=len(dsta), unbound=len(unbound), unbound_tags=unbound[:20], crossings=len(rows), sta_timed=sum(r["source"] == "sta" for r in rows),
                 tree_plan=sum(r["source"] == "plan-sync" for r in rows), no_taps=len(miss), no_taps_ports=miss[:20],
                 need_ps=need_ps, aperture_ps=round(ap, 3), fail=nfail, worst_lo=wl, worst_hi=wh,
                 slot_read=dict(fail=rfail, worst_ps=min((r["slot_read_ps"] for r in rows), default=None),
@@ -1461,27 +1509,6 @@ def main(argv=None):
         slew = max(r["slew_ps"] for r in taps.values())
         reg = characterise(out, c, slew, a.seam_wire_um * a.wire_ff_per_um)
         pairs, cov = build_pairs(plan, taps)
-        if a.count_align:
-            ca = count_align_landed(pairs["landed"], taps, json.loads(Path(a.count_align).read_text()), period, reg,
-                                    start_wire=json.loads(Path(a.count_align_start_wire).read_text())
-                                    if a.count_align_start_wire else None, cppr_range=rng, key=a.count_align_key)
-            res.setdefault("count_aligned", {})[c] = ca
-            if c == "TT" and a.count_align_ss_scale > 0 and "SS" not in corners:
-                ss = count_align_ss_info(pairs["landed"], taps, json.loads(Path(a.count_align).read_text()), period, reg,
-                                         a.count_align_ss_scale,
-                                         start_wire=json.loads(Path(a.count_align_start_wire).read_text())
-                                         if a.count_align_start_wire else None, cppr_range=rng,
-                                         key=a.count_align_key)
-                res.setdefault("count_aligned_info", {})["SS"] = ss
-                print(f"COUNT-ALIGN SS-INFO (TT x {a.count_align_ss_scale}) worst lo "
-                      f"{ss['worst_lo'] and ss['worst_lo']['margin_lo_ps']} hi {ss['worst_hi'] and ss['worst_hi']['margin_hi_ps']} "
-                      f"fail {ss['fail']} slot_read fail {ss['slot_read']['fail']} guard fail {ss['guard']['fail']} start-skew "
-                      f"fail {ss['start_skew']['fail']}/{ss['start_skew']['tree_ports']} {ss['verdict']} (INFO, never gates)")
-            print(f"COUNT-ALIGN {c} crossings {ca['crossings']} (sta {ca['sta_timed']}, tree {ca['tree_plan']}, no taps "
-                  f"{ca['no_taps']}, key {ca['key']} unbound {ca['unbound']}) worst lo {ca['worst_lo'] and ca['worst_lo']['margin_lo_ps']} hi "
-                  f"{ca['worst_hi'] and ca['worst_hi']['margin_hi_ps']} fail {ca['fail']} slot_read fail {ca['slot_read']['fail']} "
-                  f"guard fail {ca['guard']['fail']} start-skew fail {ca['start_skew']['fail']}/{ca['start_skew']['tree_ports']} "
-                  f"{ca['verdict']}")
         views = None
         if real:
             import schema as S_
@@ -1532,6 +1559,36 @@ def main(argv=None):
                 return (_b(x, y, check) if _b is not None else 0.0) + u
             mrec["unc_max_ps"] = umax
             cr["mesh_signoff"] = mrec
+        if a.count_align:
+            # CA-OCV-1: the CA interval = STA phase + the SAME clock variation term as the related-pair classes
+            # (ONE SHARED DIE TIMING MODEL); without --clock-ocv/--pair-unc/--mesh-signoff it carries none (labelled)
+            ca_lab = (cr.get("clock_ocv", {}).get("mode", "callable") + ("+mesh-signoff" if unc is not None else "")) \
+                if ocv is not None else None
+            if ocv is None:
+                print("WARNING --count-align: no clock variation model (--clock-ocv none): the CA interval carries no "
+                      "AOCV/droop term (12.14a margin after OCV + droop not met by this run)")
+            ca = count_align_landed(pairs["landed"], taps, json.loads(Path(a.count_align).read_text()), period, reg,
+                                    start_wire=json.loads(Path(a.count_align_start_wire).read_text())
+                                    if a.count_align_start_wire else None, cppr_range=rng, key=a.count_align_key,
+                                    ocv=ocv, ocv_label=ca_lab)
+            res.setdefault("count_aligned", {})[c] = ca
+            if c == "TT" and a.count_align_ss_scale > 0 and "SS" not in corners:
+                ss = count_align_ss_info(pairs["landed"], taps, json.loads(Path(a.count_align).read_text()), period, reg,
+                                         a.count_align_ss_scale,
+                                         start_wire=json.loads(Path(a.count_align_start_wire).read_text())
+                                         if a.count_align_start_wire else None, cppr_range=rng,
+                                         key=a.count_align_key, ocv=ocv, ocv_label=ca_lab)
+                res.setdefault("count_aligned_info", {})["SS"] = ss
+                print(f"COUNT-ALIGN SS-INFO (TT x {a.count_align_ss_scale}) worst lo "
+                      f"{ss['worst_lo'] and ss['worst_lo']['margin_lo_ps']} hi {ss['worst_hi'] and ss['worst_hi']['margin_hi_ps']} "
+                      f"fail {ss['fail']} slot_read fail {ss['slot_read']['fail']} guard fail {ss['guard']['fail']} start-skew "
+                      f"fail {ss['start_skew']['fail']}/{ss['start_skew']['tree_ports']} {ss['verdict']} (INFO, never gates)")
+            print(f"COUNT-ALIGN {c} crossings {ca['crossings']} (sta {ca['sta_timed']}, tree {ca['tree_plan']}, no taps "
+                  f"{ca['no_taps']}, key {ca['key']} unbound {ca['unbound']}) worst lo {ca['worst_lo'] and ca['worst_lo']['margin_lo_ps']} hi "
+                  f"{ca['worst_hi'] and ca['worst_hi']['margin_hi_ps']} fail {ca['fail']} slot_read fail {ca['slot_read']['fail']} "
+                  f"guard fail {ca['guard']['fail']} start-skew fail {ca['start_skew']['fail']}/{ca['start_skew']['tree_ports']} "
+                  f"<{ca['need_ps']:g} {ca['below_need']} ocv {ca['clock_variation']} max lo/hi {ca['ocv_max_lo_ps']}/"
+                  f"{ca['ocv_max_hi_ps']} {ca['verdict']}")
         for k, pl in pairs.items():
             hrec = hbrec.setdefault(c, {}).setdefault(k, {}) if a.hold_buffers != "none" else None
             cr["classes"][k] = time_class(pl, taps, rng, reg, a.core_tol_ps, period, UNC_SETUP_PS, UNC_HOLD_PS,
@@ -1570,6 +1627,7 @@ def main(argv=None):
                               worst_margin_hi_ps={c: v["worst_hi"] and v["worst_hi"]["margin_hi_ps"] for c, v in cas.items()},
                               half_period_INFO=gate["landed"],
                               ss_INFO={k: v["verdict"] for k, v in res.get("count_aligned_info", {}).items()},
+                              clock_variation={c: v.get("clock_variation") for c, v in cas.items()},
                               verdict="PASS" if cas and all(v["verdict"] == "PASS" for v in cas.values()) else "FAIL")
     if a.hold_buffers != "none" and "TT" in hbrec and "FF" in hbrec:
         hb = {}

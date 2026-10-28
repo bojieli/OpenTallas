@@ -7,7 +7,16 @@ module ot_qkh_head_frontq_native #(
     // flop in RTL (per-port copies of the NRS relay stage, same D, same edge) instead of one relay stage whose 41 shared
     // bits ({cr 16, c0, e 16, qb 6, hid 2}) fan out to all four ports (left to the flow's pin_reg_split in partition
     // kits).  0 cycles, identical outputs every edge (miter); +124 flops (4 x 233 vs 809, plus fault pin copy).  PORT_REGS=0 = original.
-    parameter integer PORT_REGS=0
+    parameter integer PORT_REGS=0,
+    // KV-KITS-8 10-28 (COORD ruling 06:26, KV-KITS-7 ASK): STRAP_SAMPLE=1 latches the hid ID strap at reset release
+    // (hid2 = 0 while the front reset relay rp is low, = hid after) instead of a free-running copy.  hid is an OWNER
+    // option-B strap (false-pathed from the port), so the plain hid2 copy had no timed fan-in (unconstrained endpoint in
+    // e2/e6).  hid2 cannot simply be dropped: it rides the f_t relays to the lanes of the other eighths, and a relay flop
+    // fed straight from the strap port is the same unconstrained endpoint (8 of them); a strap pin -> output pin wire
+    // fails face_guard (feedthrough).  The rp term gives hid2 a timed D (rp is a relay flop).  hid2 differs from the old
+    // copy only while rp = 0, when qv2 / the cr relays are held in reset (no beat is valid), so every valid beat carries
+    // the same hid as before: 0 cycles, 0 FF.  STRAP_SAMPLE=0 (default) is the unchanged RTL.
+    parameter integer STRAP_SAMPLE=0
 )(input wire clk, rst_n,
   input wire [3:0] c_in, input wire [255:0] row_in,
   input wire [15:0] e_in, input wire [11:0] lt_in,
@@ -38,7 +47,8 @@ module ot_qkh_head_frontq_native #(
     always @(posedge clk or negedge rp)
         if (!rp) begin c2[3:1] <= 3'd0; lt2 <= {LTW{1'b0}}; qv2 <= 1'b0; end
         else begin c2[3:1] <= c_in[3:1]; lt2 <= lt_in; qv2 <= q_valid_in; end
-    always @(posedge clk) begin c2[0] <= c_in[0]; row2 <= row_in; e2 <= e_in; qb2 <= q_beat_in; qd2 <= q_data_in; hid2 <= hid; end
+    always @(posedge clk) begin c2[0] <= c_in[0]; row2 <= row_in; e2 <= e_in; qb2 <= q_beat_in; qd2 <= q_data_in; end
+    always @(posedge clk) hid2 <= (STRAP_SAMPLE != 0 && !rp) ? 2'b00 : hid;
     // Native FP32 transport uses twice the legacy beat count. Round at the
     // canonical attention consumption point, pair consecutive beats, and retain
     // each hardened lane's 128-bit BF16 face. No producer-side Q narrowing.

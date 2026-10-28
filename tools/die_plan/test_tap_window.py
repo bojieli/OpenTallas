@@ -85,11 +85,14 @@ def test_requires_seam_hold_and_bounds():
         gen_phys.tap_window_ps(schema.Plan(_raw(window=300.0)))
 
 
-def test_early_core_taps_fail_closed(monkeypatch):
+def test_early_core_taps_take_the_window(monkeypatch):
+    """DIE-S81-10: 12.8d ban lifted (v5.0); the core tap keeps its own early latency, early end -(early + W)
+    (full coverage in test_tap_window_core.py)."""
     P = schema.Plan(_raw())
     monkeypatch.setattr(gen_phys, "core_tap_rows", lambda p, t, corner="TT": [("clk_c0", "u", "*", 50.0, 300.0)])
-    with pytest.raises(ValueError, match="12.8d"):
-        gen_phys.tap_window_tcl(P, "src")
+    t = gen_phys.tap_window_tcl(P, "src")
+    assert t.endswith("set_clock_latency -source -early -clock clk -130.0000 [get_ports clk_c0]\n")
+    assert "clk_c0" not in gen_phys.tap_window_tcl(P, "src", core=False)
 
 
 def test_kit_config_and_signoff_overlay(tmp_path):

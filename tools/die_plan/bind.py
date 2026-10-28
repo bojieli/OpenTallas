@@ -1538,6 +1538,12 @@ class Binder:
                 row = []
                 for i in range(len(bits)):
                     d = self.sinks[(ci, pn, i)]
+                    sp = getattr(self, "r8sp", {}).get((ci, pn, i))
+                    if sp is not None:      # R8 strap-pad site: the per-instance count is a strap value, not contents
+                        L, j = self.bitpos[(d[1], p, d[2], d[3], d[4])]
+                        row.append(("bus", L["iname"], j, ("r8strap", sp[0], sp[1], sp[2])))
+                        inst_vals[("r8pad", sp[0])] = sp[3]
+                        continue
                     row.append(self._rel_desc(p, d, inst_vals, (r, pn, i), nm))
                 conns[(r, pn)] = tuple(row)
         obus = sorted((L["oname"], ("plan", L["width"]) if L.get("plan") else tuple((nm(it[1]), it[2], it[3]) if it[0] == "leaf" else
@@ -2374,6 +2380,57 @@ class Binder:
             self.warns.append(f"TYPE_CANON {tn}: " + ", ".join(f"{m['inst']}->{m['ref']} ({m['renamed']} renamed)"
                                                                for m in merged if m["type"] == tn))
 
+    def r8_strap_sites(self, by_type):
+        """asbuilt.land_r8_strap_pads = true (OWNER 2026-10-28 KV R8 decision, opt-in): instances of one partition type
+        whose R8 landing pads differ at a sink bit are NOT a type split.  Every such (leaf, port) bit set with one
+        per-instance pad pattern is a strap SITE: fixed ot_dp_dly of the smallest pad (base) + one max-capacity
+        ot_dp_dly_cnt #(DMAX = span) bank whose 4-bit count (pad - base) is the partition input strap_r8pad_<site>,
+        tied per instance at the parent (G0 tie-value audit; per-type LEC tools/die_plan/r8_strap_lec.py).  The landed
+        depth of every bit is unchanged (bound + its own pad).  A pad above r8.STRAP_PAD_MAX stays an ERROR.
+        -> self.r8sp {(ci, port, bit): (site, base, span, count)}; self.r8_sites {type: {site: record}}"""
+        import r8 as R8
+        self.r8sp, self.r8_sites = {}, {}
+        for tn, ps in sorted(by_type.items()):
+            if len(ps) < 2:
+                continue
+            pads = defaultdict(dict)        # (rel, port, bit) -> {p: pad}
+            where = defaultdict(dict)       # (rel, port, bit) -> {p: ci}
+            for p in ps:
+                for ci in self.members[p]:
+                    r = self.rel_of(ci)
+                    for pn, bits in self.F.cells[ci].ports.items():
+                        if self.G.dirs[ci].get(pn) != "input":
+                            continue
+                        for i in range(len(bits)):
+                            d = self.sinks[(ci, pn, i)]
+                            if d[0] != "x":
+                                continue
+                            pads[(r, pn, i)][p] = d[7] if len(d) > 7 else 0
+                            where[(r, pn, i)][p] = ci
+            pattern = defaultdict(list)     # (rel, port, per-instance pads) -> [bits]
+            for k, v in pads.items():
+                if len(v) == len(ps) and len(set(v.values())) > 1:
+                    pattern[(k[0], k[1], tuple(v[p] for p in ps))].append(k[2])
+            per_port = defaultdict(int)
+            sites = {}
+            for (r, pn, pv), bits in sorted(pattern.items()):
+                n = per_port[(r, pn)]
+                per_port[(r, pn)] += 1
+                site = short_id(f"strap_r8pad_{r}__{pn}" + (f"_{n}" if n else ""), 80)
+                base, mx = min(pv), max(pv)
+                if mx > R8.STRAP_PAD_MAX:
+                    self.errors.append(f"R8_STRAP_PAD {tn} {r}.{pn}: pad {mx} > strap capacity {R8.STRAP_PAD_MAX}")
+                    continue
+                counts = {p: pv[k] - base for k, p in enumerate(ps)}
+                sites[site] = dict(leaf=r, port=pn, bits=sorted(bits), width=len(bits), base=base, span=mx - base,
+                                   pads={p: pv[k] for k, p in enumerate(ps)}, counts=counts,
+                                   used=sorted(set(counts.values())))
+                for i in bits:
+                    for p in ps:
+                        self.r8sp[(where[(r, pn, i)][p], pn, i)] = (site, base, mx - base, counts[p])
+            if sites:
+                self.r8_sites[tn] = sites
+
     def check_types(self):
         self.tsig, self.tvals, self.tparams = {}, {}, {}
         split_more = []
@@ -2381,6 +2438,8 @@ class Binder:
         for p in self.members:
             by_type[self.parts[p]["type"]].append(p)
         self.by_type = by_type
+        if self.ab.get("land_r8_strap_pads"):
+            self.r8_strap_sites(by_type)
         for tn, ps in sorted(by_type.items()):
             sigs = {}
             for p in ps:
@@ -2460,7 +2519,7 @@ class Binder:
             params = {}
             for k in sorted(keys, key=repr):
                 vals = [sigs[p][1].get(k) for p in ps]
-                if k[0] == "strap" or len(set(vals)) > 1:
+                if k[0] in ("strap", "r8pad") or len(set(vals)) > 1:
                     params[k] = vals
             self.tsig[tn] = s0
             self.tvals[tn] = {p: sigs[p][1] for p in ps}
@@ -2664,6 +2723,16 @@ class Binder:
             for q, ports in cexp.items():
                 man["instances"].setdefault(q, {}).update({sp: dict(width=w, value=v, kind="count_strap")
                                                            for sp, (w, v) in ports.items()})
+        r8v = getattr(self, "r8pad_values", {})
+        if r8v:
+            # OWNER 10-28 R8 pad-count straps strap_r8pad_* join the parent strap manifest (same tie rules)
+            man = json.loads(json.dumps(man))
+            for tn, ports in self.__dict__.get("r8pad_ports", {}).items():
+                if ports:
+                    man["types"].setdefault(tn, {}).update(ports)
+            for q, ports in r8v.items():
+                man["instances"].setdefault(q, {}).update({sp: dict(width=w, value=v, kind="r8pad_strap")
+                                                           for sp, (w, v) in ports.items()})
         if any(man["types"].values()):
             (out.parent / "bind_parent_id_straps.json").write_text(json.dumps(man, indent=1) + "\n")
         # tie-off audit (OWNER 10-25 option B): a literal on a partition pin is legal ONLY on a declared ID strap;
@@ -2683,6 +2752,13 @@ class Binder:
             # the netlist tie check takes count-strap values from the bind, not from the literals it just checked
             rows = [r for r in rows if not STR.COUNT_STRAP_RE.match(r[1])] + \
                 STR.count_strap_rows({re.sub(r"[^A-Za-z0-9_]", "_", q): v for q, v in cexp.items()})
+        if r8v:
+            # R8 pad-count strap VALUE audit (G0 ERROR): every strap_r8pad_* pin tied to exactly its bind count
+            rva = STR.audit_count_strap_values(f.read_text(), r8v, prefix="strap_r8pad_")
+            (out.parent / "bind_r8pad_strap_audit.json").write_text(json.dumps(rva, indent=1) + "\n")
+            if rva["verdict"] != "PASS":
+                raise BindError(f"R8 pad-strap tie-value audit (G0 ERROR): {rva['reason']}")
+            rows = [r for r in rows if not r[1].startswith("strap_r8pad_")] + STR.count_strap_rows(r8v)
         if rows:
             (out.parent / "strap_ties_check.tcl").write_text(STR.tie_check_tcl(rows))
         return files
@@ -2752,6 +2828,14 @@ class Binder:
         ports = ["    input  wire clk", "    input  wire arst_n"]
         ports += [f"    input wire [{d['width'] - 1}:0] {nm}   // parent-tied ID strap (OWNER 10-25 B): quasi-static"
                   for nm, d in sorted(id_ports.items())]
+        r8_ports = {}
+        for k in sorted(params, key=repr):
+            if k[0] == "r8pad":
+                r8_ports[k[1]] = dict(width=4, kind="r8pad_strap")
+                pnames[k] = (k[1], 4)
+                ports.append(f"    input wire [3:0] {k[1]}   // parent-tied R8 pad-count strap (OWNER 10-28): static")
+        self.__dict__.setdefault("r8pad_ports", {})[tn] = r8_ports
+        r8banks = {}                         # site -> output wire of the bank (one bank per site, W = site bits)
         # die IO inputs (pads) read by this partition's leaves: one partition port per die port, named io_<port>
         io = set()
         for ci in self.members[p]:
@@ -3029,6 +3113,34 @@ class Binder:
                 return f"{w}[{d[3]}]"
             if k == "x":
                 L, j = self.bitpos[(d[1], p, d[2], d[3], d[4])]
+                sp = getattr(self, "r8sp", {}).get((ci, pn, i))
+                if sp is not None:              # R8 strap-pad site (OWNER 10-28): fixed base + strap-count bank
+                    site, base, span, _cnt = sp
+                    if reg:
+                        raise BindError(f"registered_pins {p}: R8 strap pad on {F.cells[ci].path}.{pn}[{i}] needs "
+                                        "flops a bare macro lacks")
+                    if site not in r8banks:
+                        sb = sorted(b for (c2, p2, b), v in self.r8sp.items() if c2 == ci and p2 == pn and v[0] == site)
+                        src = []
+                        for b in sb:
+                            db = self.sinks[(ci, pn, b)]
+                            Lb, jb = self.bitpos[(db[1], p, db[2], db[3], db[4])]
+                            src.append(f"{Lb['iname']}_q[{jb}]")
+                        W = len(sb)
+                        nb = short_id(f"r8b_{site}", 100)
+                        prev = _concat(src)
+                        if base:
+                            decl.append(f"    wire [{W - 1}:0] {nb}_f;")
+                            body.append(f"    ot_dp_dly #(.W({W}), .D({base})) u_{nb}_f (.clk(clk), .d({prev}), "
+                                        f".q({nb}_f));  // R8 strap site {site}: fixed common pad {base}")
+                            prev = f"{nb}_f"
+                        decl.append(f"    wire [{W - 1}:0] {nb};")
+                        body.append(f"    ot_dp_dly_cnt #(.W({W}), .DMAX({span})) u_{nb} (.clk(clk), "
+                                    f".strap_cnt({site}), .d({prev}), .q({nb}));  // R8 strap-count bank "
+                                    f"(pad = {base} + {site})")
+                        r8banks[site] = (nb, sb)
+                    nb, sb = r8banks[site]
+                    return f"{nb}[{sb.index(i)}]"
                 if reg and len(d) > 7 and (d[7] if PT is None else d[7] - PT[(id(L), j)]):
                     raise BindError(f"registered_pins {p}: landing pad on {F.cells[ci].path}.{pn}[{i}] needs flops a "
                                     "bare macro lacks")
@@ -3212,6 +3324,13 @@ class Binder:
             ov = []
             parent_ids = []
             for k, (nm, w) in sorted(pn.items(), key=lambda kv: kv[1][0]):
+                if k[0] == "r8pad":
+                    cnt = self.tvals[tn][p].get(k)
+                    if type(cnt) is not int or not 0 <= cnt < 16:
+                        raise BindError(f"R8 strap pad {p}.{nm}: count {cnt} is not a 4-bit constant")
+                    parent_ids.append((nm, f"4'b{cnt:04b}"))
+                    self.__dict__.setdefault("r8pad_values", {}).setdefault(sv_id(p), {})[nm] = (4, cnt)
+                    continue
                 if k[0] == "strap":
                     r, port = k[1], k[2]
                     ci = {self.rel_of(c): c for c in self.members[p]}[r]
@@ -3611,6 +3730,9 @@ def cmd_bind(a):
     except ValueError as exc:
         B.errors.append(f"POSITION_BANK {exc}")
     B.check_types()
+    if getattr(B, "r8sp", None):
+        # OWNER 10-28 R8 strap pads: the strap-count bank master (rtl/common, LEC'd per used constant)
+        B.extra_lib.append(str(Path(B.base).resolve() / "rtl/common/ot_dp_dly_cnt.sv"))
     if B.ab.get("land_pad_tree"):
         B.pad_trees()
     files = []
@@ -3645,6 +3767,12 @@ def cmd_bind(a):
     rep["variants"] = dict(instances=len(B.variants), removed_input_bits=dict(getattr(B, "variant_removed", {})),
                            list=B.variants[:500])
     rep["type_splits"] = B.type_splits
+    if getattr(B, "r8_sites", None):
+        rep["r8_strap_sites"] = dict(types=len(B.r8_sites), sites=sum(len(v) for v in B.r8_sites.values()),
+                                     bits=sum(x["width"] for v in B.r8_sites.values() for x in v.values()),
+                                     used_constants=sorted({(x["width"], x["span"], c) for v in B.r8_sites.values()
+                                                            for x in v.values() for c in x["used"]}),
+                                     list=B.r8_sites)
     rep["bound_groups"] = getattr(B, "bound_group_records", {})
     if getattr(B, "inner_uniform_stats", None):
         rep["inner_uniform"] = B.inner_uniform_stats
@@ -3691,8 +3819,8 @@ def cmd_bind(a):
                                                            note="per crossing bus: as-built stages (relays / landings "
                                                                 "removed) vs bound stages (2 boundary flops)",
                                                            buses=lat, landing_pads=B.land_pads,
-                                                           **({"reset": json.loads((out / "bind_reset.json").read_text())}
-                                                              if B.wavefront_plan() is not None else {})), indent=1))
+                                                           **_reset_latency_meta(out, B.wavefront_plan() is not None)),
+                                    indent=1))
     pr = rep["proof"]
     print(json.dumps(dict(partitions=rep["partitions"], types=len(rep["types"]), crossings=rep["crossings"],
                           crossing_bits=rep["crossing_bits"], errors=rep["n_errors"], **pr)))
@@ -4276,6 +4404,18 @@ def lane_pad(L):
     if L.get("spine") or not L.get("lane") or "cycles" not in L:
         return 0
     return max(0, int(L["cycles"]) - 2 - sum(h["stations"] for h in L.get("ft", [])) - int(L.get("internal_source_cycles", 0)) - int(L.get("clock_landing_cycles", 0)))
+
+
+def _reset_latency_meta(out, wavefront):
+    """-> {"reset": ...} for bind_latency.json.  The wavefront reset plan is written to OUT/bind_reset.json by the
+    RTL generation step; a bind that fails closed before that step (e.g. an empty as-built map) has no such file, and
+    the latency report must record that instead of crashing on the error path (DIE-HBM-6b strict bind, 290 errors)."""
+    if not wavefront:
+        return {}
+    f = Path(out) / "bind_reset.json"
+    if not f.exists():
+        return {"reset": {"missing": "bind_reset.json not written: RTL generation did not run (see bind errors)"}}
+    return {"reset": json.loads(f.read_text())}
 
 
 def _desc_json(B, d, ci_part=None):

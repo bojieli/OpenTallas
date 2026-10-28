@@ -54,6 +54,9 @@ def _verdict(tmp_path, monkeypatch, L):
 def test_reset_port_detection():
     assert all(lec.RESET_PORT.match(n) for n in ("rn", "rst_n", "core_rst_n", "rst", "reset", "rst_ni"))
     assert not any(lec.RESET_PORT.match(n) for n in ("en", "a", "first", "burst_len", "rnd"))
+    # KV-KITS-9: HBM-domain reset names
+    assert all(lec.RESET_PORT.match(n) for n in ("hrst_n", "hrst", "u_x__hrst_n"))
+    assert not any(lec.RESET_PORT.match(n) for n in ("thrst", "hfirst", "hrnd"))
 
 
 def test_reloaded_from_a_reset_register_is_proved(tmp_path, monkeypatch):

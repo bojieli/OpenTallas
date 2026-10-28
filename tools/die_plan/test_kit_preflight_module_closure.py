@@ -106,3 +106,25 @@ def test_gen_phys_stages_includes_transitively(tmp_path):
     d.mkdir()
     gen_phys.stage_includes([str(s / 'a.sv')], d)
     assert sorted(p.name for p in d.iterdir()) == ['b.svh', 'c.svh']
+
+
+def test_event_control_star_is_not_an_attribute(tmp_path):
+    """QC-A0-KITS-3 10-28: `always @(*)` before a `(* keep *)` attribute made the attribute strip eat the text between
+    them, so ot_qwen_w12_tadd (defined in between) read as undefined (node kit FAIL, false)."""
+    src = """module top(input wire clk, input wire a, output reg y, output wire z);
+    always @(*) begin
+        y = a;
+    end
+    sub u_s (.a(a), .z(z));
+endmodule
+module sub(input wire a, output wire z);
+    assign z = a;
+endmodule
+module other(input wire clk);
+    (* keep *) reg r;
+    always @( * ) r = clk;
+endmodule
+"""
+    k = kit(tmp_path, {'top.sv': src})
+    assert K.unresolved_modules(k) == []
+    assert 'module sub' in K._strip_src(src) and 'keep' not in K._strip_src(src)
