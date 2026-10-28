@@ -1,0 +1,11 @@
+# HEAD regional strap-form source and synthesis estimate, 2026-10-28
+
+Scope: source-only preparation and synthesis counts for hd_tile, hd_serdes and hd_lep0N. No P&R or STA is authorized by this estimate. This COPY retains the main locality architecture and 326 partition regions; the physical local-clock implementation remains unqualified.
+
+The sp5 baseline has 427 crossings, all D4, CA minimum 134.7ps and 2000 Monte Carlo samples without a violation, with the published OCV/SPICE corrections. It excludes the unresolved real local-core distribution cost. The actual r2b local-core branch leaves 12 CA failures; one ambiguity window spans 8765.8ps, exceeding the available D8 envelope. PAD alone cannot solve that result. FLOW owns the bounded existing-edge START reparent search. A new physical clock build needs an estimate meeting <=150ps local spread including OCV/droop and the TT/FF SPICE multipliers, plus a rendered floorplan review.
+
+Strap composition measured 16 types before/after, zero type splits, 427 crossings, 1,708 scalar infrastructure edges, zero placement failures, landing-contract max hop 22.592um. It adds 1,061,200 live data-storage flops across the complete die, not per partition. The count/PAD straps encode per-instance constants rather than creating 119 signature types. Latency export will price the actual composed paths before kit generation.
+
+HD tile glue is approximately 51.4k floorplan instances excluding its five pre-existing signed hard cores. HD SerDes previously synthesized near 347k; repaired landing logic is estimated 382–400k and must be counted. HD LEP old estimate 365k plus landing cost implies 391–410k, potentially over the 400k partition limit. These latter estimates are not physical admission: the synthesis counts decide whether partition splitting is necessary. Real digital SerDes/FEC logic remains present; only the explicitly declared analog PHY region is off-model.
+
+This source COPY adopts the qualified native32 two-define profile on four actual provider types and the measured hd_tile PGcoreconn/PGcut fixes (previous actual DRT 5 shorts -> 0). It retains current corner-correct hard-core views. Synthesis is source/size diagnosis; timing, PG, local clock, bootstrap, native binding and token gates remain open where not separately qualified.
