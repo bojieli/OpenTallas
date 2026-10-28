@@ -228,7 +228,7 @@ def count_align_ss_info(landed, taps, bind, period, reg=None, scale=1.27, need_p
     clock buffers/wires assumed to scale alike, UNCHECKED) and the same rows (lag, slot->read, guard, start skew) are
     evaluated against the fixed TT/FF-planned K/DEPTH/origins at the same 833 ps period.  A die with real
     tap_arrivals_SS.json runs --corner SS instead (then the SS row is real)."""
-    keys = ("late_ps", "early_ps", "abs_late_ps", "abs_early_ps")
+    keys = TAP_TIME_KEYS
     st = {k: dict(v, **{f: float(v[f]) * scale for f in keys if f in v}) for k, v in taps.items()}
     rg = None if reg is None else dict(reg, clkq_max_wire_ps=float(reg["clkq_max_wire_ps"]) * scale,
                                        clkq_min_nowire_ps=float(reg["clkq_min_nowire_ps"]) * scale)
@@ -244,10 +244,11 @@ def count_align_ss_info(landed, taps, bind, period, reg=None, scale=1.27, need_p
 # factor (ASAP7 BUFx24 spice calibration: x1.0485 TT, x1.0552 FF); data-path derates unchanged.  Opt-in --clock-cal spice.
 # Source: OSS-CLOCK-2 data/asap7_bufx24_spice_cal.json "spice_scale" (opentools/mscts/data/, claude/oss-clock-2-1027@285ba72636).
 SPICE_CLOCK_CAL = {"TT": 1.0485, "FF": 1.0552}
-TAP_TIME_KEYS = ("late_ps", "early_ps", "abs_late_ps", "abs_early_ps")
+TAP_TIME_KEYS = ("late_ps", "early_ps", "abs_late_ps", "abs_early_ps", "fall_late_ps", "fall_early_ps", "abs_fall_late_ps",
+                 "abs_fall_early_ps")
 
 
-NODE_TIME_KEYS = ("node_late_ps", "node_early_ps")
+NODE_TIME_KEYS = ("node_late_ps", "node_early_ps", "node_fall_late_ps", "node_fall_early_ps")
 
 
 def scale_clock(meta, taps, f):
@@ -274,7 +275,55 @@ def credit(rng, node, la, ea, lc, ec):
     return min(max(0.0, rng.get(c, 0.0)), max(0.0, la - ea), max(0.0, lc - ec))
 
 
-def count_align_d_intervals(landed, taps, cppr_range=None, part_region=None, ocv=None, stats=None):
+class FallArrivalMissing(ValueError):
+    """FLOW-ONEMODEL-1: a falling-edge sample needs the MEASURED fall arrival of its capture clock pin (tap
+    fall_late_ps / fall_early_ps, tap_fall_merge.py); fall = rise + T/2 is never assumed (duty distortion on BUF
+    trees is 148-1149 ps, QC-11 / S81-12 / HEAD-11 / KV-11)."""
+
+
+def _capture_arr(B, node, edge):
+    """capture late/early of tap B for a rise- or fall-sampling flop.  fall: the measured fall arrival (relative to
+    the source's falling edge, so the sampling instant is T/2 + fall arrival); raises FallArrivalMissing without it"""
+    if edge == "rise":
+        return None
+    if edge != "fall":
+        raise ValueError(f"edge {edge!r}: rise or fall")
+    if node == "m" or "fall_late_ps" not in B or "fall_early_ps" not in B:
+        raise FallArrivalMissing(f"tap {B.get('port')}: no measured fall arrival (fall_late_ps/fall_early_ps)")
+    return float(B.get("abs_fall_late_ps", B["fall_late_ps"])), float(B.get("abs_fall_early_ps", B["fall_early_ps"]))
+
+
+def ca_pair_interval(A, B, a, b, cppr_range=None, ocv=None, edge="rise"):
+    """THE count-aligned phase interval of ONE launch -> capture tap pair (FLOW-ONEMODEL-1: the single function the
+    planner, the binder and the gate all call).  d = capture clock - launch clock at the pair's last common node,
+    lo = capture early - launch late (+ CPPR credit), hi = capture late - launch early (- credit), then exactly one
+    clock variation term (ocv setup on lo, hold on hi).  The launch is a rising-edge register; edge = the capture
+    flop's sampling edge: 'fall' takes the capture tap's MEASURED fall arrival (FallArrivalMissing if absent).
+    CPPR on BOTH edges (one model, COORD 10-28 DIE-KV-13): the common path's late-early pessimism is removed for a
+    rise-launch / fall-capture pair as for rise/rise, with the industry opposite-edge rule (PrimeTime CRPR: the smaller
+    of the rise and fall common-pin ranges): credit = min(rise range at the last common node, its fall range if the
+    proof has one (meta-free: cppr_range key '<node>@fall'), launch late-early, capture FALL late-early).  Without a
+    measured node fall range the rise range stands for it (the late/early spread is the liberty pin-cap range,
+    transition-independent in the exports, CLOCK-MESH-2; UNCHECKED on spice).  Returns (lo, hi, ocv_setup, ocv_hold)."""
+    node = pair_node(A, B)
+    la, ea, lc, ec = arr4(A, B, node)
+    f = _capture_arr(B, node, edge)
+    if f is not None:
+        lc, ec = f
+    cr = credit(cppr_range, node, la, ea, lc, ec) if cppr_range else 0.0
+    if f is not None and cppr_range:
+        fr = {k[:-5]: v for k, v in cppr_range.items() if k.endswith("@fall")}
+        if fr:
+            cr = min(cr, credit(fr, node, la, ea, lc, ec))
+    lo, hi = ec - la + cr, lc - ea - cr
+    os_ = oh = 0.0
+    if ocv is not None:
+        os_, oh = float(ocv(a, b, "setup")), float(ocv(a, b, "hold"))
+        lo, hi = lo - os_, hi + oh
+    return lo, hi, os_, oh
+
+
+def count_align_d_intervals(landed, taps, cppr_range=None, part_region=None, ocv=None, stats=None, edge="rise"):
     """THE count-aligned crossing phase interval (DIE-HEAD-5, COORD 00:22 follow-up: ONE interval model for planner and
     STA): {'srcpart->dstpart': (d_lo, d_hi)} over EVERY landed tap pair of the partition pair, d = capture clock - launch
     clock, d_lo = min(capture early - launch late), d_hi = max(capture late - launch early) (arr4 at the pair's last
@@ -291,25 +340,75 @@ def count_align_d_intervals(landed, taps, cppr_range=None, part_region=None, ocv
     d_lo -= ocv(a, b, 'setup') (launch late, capture early), d_hi += ocv(a, b, 'hold') (capture late, launch early).
     The OpenSTA late/early tap arrivals carry no derate/AOCV (no set_timing_derate in the exports; the late-early spread
     is the liberty pin-capacitance range, CLOCK-MESH-2), so this is not a double count.  None = no variation term
-    (pre-CA-OCV-1 interval; the record labels it).  stats: optional dict, filled {tag: [max ocv setup, max ocv hold]}."""
+    (pre-CA-OCV-1 interval; the record labels it).  stats: optional dict, filled {tag: [max ocv setup, max ocv hold]}.
+    edge (FLOW-ONEMODEL-1): the capture flop's sampling edge, see ca_pair_interval (fall: measured fall arrival)."""
     dsta = {}
     for a, b, tag in landed:
         A, B = taps[a], taps[b]
         if part_region is not None:
             tag = f"{part_region[A['part']]}->{part_region[B['part']]}"
-        node = pair_node(A, B)
-        la, ea, lc, ec = arr4(A, B, node)
-        cr = credit(cppr_range, node, la, ea, lc, ec) if cppr_range else 0.0
-        lo, hi = ec - la + cr, lc - ea - cr
-        if ocv is not None:
-            os_, oh = float(ocv(a, b, "setup")), float(ocv(a, b, "hold"))
-            lo, hi = lo - os_, hi + oh
-            if stats is not None:
-                m = stats.setdefault(tag, [0.0, 0.0])
-                m[0], m[1] = max(m[0], os_), max(m[1], oh)
+        lo, hi, os_, oh = ca_pair_interval(A, B, a, b, cppr_range, ocv, edge)
+        if ocv is not None and stats is not None:
+            m = stats.setdefault(tag, [0.0, 0.0])
+            m[0], m[1] = max(m[0], os_), max(m[1], oh)
         o = dsta.get(tag)
         dsta[tag] = (lo, hi) if o is None else (min(o[0], lo), max(o[1], hi))
     return dsta
+
+
+def _port_owners(ports, part_region):
+    reg = (lambda p: p) if part_region is None else (lambda p: part_region[p])
+    named, byreg = defaultdict(list), defaultdict(list)
+    for pid, c in ports.items():
+        if c.get("src_part") is not None and c.get("dst_part") is not None:
+            named[(c["src_part"], c["dst_part"])].append(pid)
+        byreg[(c["src"], c["dst"])].append(pid)
+
+    def owners(A, B):
+        sp, dp = A["part"], B["part"]
+        rk = (reg(sp), reg(dp))
+        return named.get((sp, dp)) or byreg.get(rk), f"{rk[0]}->{rk[1]}"
+    return owners
+
+
+def count_align_port_intervals(ports, landed, taps, cppr_range=None, part_region=None, ocv=None, stats=None,
+                               edge="rise"):
+    """FLOW-ONEMODEL-1: THE per-crossing interval the planner (count_align_plan --sta-proof) and the gate
+    (die_sta_related --count-align) both use.  ports = {port: {src, dst[, src_part, dst_part]}}; part_region =
+    {partition: region} (None: src/dst are partitions, the default 'part' key).
+    Each landed tap pair belongs to the crossing(s) that carry it:
+      * the ports that NAME its partition pair (src_part -> dst_part), else
+      * every port of its REGION pair (a region-level crossing carries all partition pairs nobody names).
+    A port's interval is the union over its tap pairs (ca_pair_interval), so a crossing is timed on its own
+    clock pins and never on another crossing's (DIE-KV-11: a region-key union put the 12 pc_WN_3->pc_WN_2 ports'
+    early bound on the phy_WN_3->phy_WN_2 ring, 61.8 ps below the plan).  Landed pairs of a region pair with no port
+    are returned as unbound (fail closed by the caller).  Returns ({port: (lo, hi)}, unbound_tags, {port: n_pairs});
+    stats (optional) gets {port: [max ocv setup, max ocv hold]}.
+    edge 'fall' (FLOW-ONEMODEL-1): capture on the MEASURED fall arrival (ca_pair_interval); a port with any capture
+    tap lacking it maps to None (the caller fails it closed / never plans a fall sample on it)."""
+    own = _port_owners(ports, part_region)
+    iv, npairs, unbound, nofall = {}, defaultdict(int), set(), set()
+    for a, b, _ in landed:
+        A, B = taps[a], taps[b]
+        owners, rt = own(A, B)
+        if not owners:
+            unbound.add(rt)
+            continue
+        try:
+            lo, hi, os_, oh = ca_pair_interval(A, B, a, b, cppr_range, ocv, edge)
+        except FallArrivalMissing:
+            nofall.update(owners)
+            continue
+        for pid in owners:
+            o = iv.get(pid)
+            iv[pid] = (lo, hi) if o is None else (min(o[0], lo), max(o[1], hi))
+            npairs[pid] += 1
+            if ocv is not None and stats is not None:
+                m = stats.setdefault(pid, [0.0, 0.0])
+                m[0], m[1] = max(m[0], os_), max(m[1], oh)
+    for pid in nofall:
+        iv[pid] = None
+    return iv, sorted(unbound), dict(npairs)
 
 
 def ca_ocv(proof, meta, taps, corner, lat, clock_ocv="none", clock_droop=None, droop_region="mesh",
@@ -350,6 +449,36 @@ def sta_d_intervals(proof, plan, corners=("TT", "FF"), clock_cal="none", cppr_lc
         CPPR_LCA = old
 
 
+def sta_port_intervals(proof, plan, corners, ports, part_region=None, clock_cal="none", cppr_lca=False,
+                       clock_ocv="none", clock_droop=None, droop_regions_file=None, core_latency_ff=None, aocv_table=None,
+                       fall=False):
+    """FLOW-ONEMODEL-1: {corner: dict(rise={port: (lo, hi)}, fall={port: (lo, hi) | None} (fall=True), unbound=[...])}
+    = count_align_port_intervals on the proof exactly as main() feeds count_align_landed (same tap arrivals, spice
+    scale, build_pairs, CPPR node, clock variation term).  The planner hulls on THIS; the gate times on THIS."""
+    global CPPR_LCA
+    plan = plan if isinstance(plan, dict) else json.loads(Path(plan).read_text())
+    old, CPPR_LCA = CPPR_LCA, bool(cppr_lca)
+    try:
+        out = {}
+        for c in corners:
+            meta, taps = load_taps(Path(proof), c)
+            if clock_cal == "spice":
+                meta, taps = scale_clock(meta, taps, SPICE_CLOCK_CAL.get(c, SPICE_CLOCK_CAL["TT"]))
+            pairs, _ = build_pairs(plan, taps)
+            lt = float(plan.get("clock", {}).get("common_latency_ps", 250.0))
+            lat = core_latency_ff if (c == "FF" and core_latency_ff is not None) else lt
+            ocv = ca_ocv(Path(proof), meta, taps, c, lat, clock_ocv, clock_droop, "mesh", droop_regions_file, aocv_table)
+            rng = meta.get("cppr_node_range_ps")
+            iv, unb, _ = count_align_port_intervals(ports, pairs["landed"], taps, rng, part_region, ocv)
+            out[c] = dict(rise=iv, unbound=unb)
+            if fall:
+                out[c]["fall"] = count_align_port_intervals(ports, pairs["landed"], taps, rng, part_region, ocv,
+                                                            edge="fall")[0]
+        return out
+    finally:
+        CPPR_LCA = old
+
+
 def tap_leg(meta, taps):
     """START-TREE-1: median (late, early, stages) of the leg from a tap's driving tree node (tree_path minus its last
     level) to the tap pin, over the proof's taps: the clock leg of a retime flop placed on a tree node"""
@@ -360,15 +489,36 @@ def tap_leg(meta, taps):
     return ls[len(ls) // 2], es[len(es) // 2], ss[len(ss) // 2]
 
 
-def virtual_tap(meta, taps, path, leg):
+def tap_leg_fall(meta, taps):
+    """FLOW-ONEMODEL-1: median (fall late, fall early) leg from the driving tree node's MEASURED fall arrival
+    (meta node_fall_late_ps / node_fall_early_ps) to the tap's fall arrival; None if the proof has no node falls"""
+    nfl, nfe = meta.get("node_fall_late_ps"), meta.get("node_fall_early_ps")
+    if not isinstance(nfl, dict) or not isinstance(nfe, dict):
+        return None
+    lt = [t for t in taps.values() if len(t.get("tree_path", "")) > 1 and t.get("part") is not None
+          and "fall_late_ps" in t and nfl.get(t["tree_path"][:-1]) is not None]
+    if not lt:
+        return None
+    ls = sorted(float(t["fall_late_ps"]) - float(nfl[t["tree_path"][:-1]]) for t in lt)
+    es = sorted(float(t["fall_early_ps"]) - float(nfe[t["tree_path"][:-1]]) for t in lt)
+    return ls[len(ls) // 2], es[len(es) // 2]
+
+
+def virtual_tap(meta, taps, path, leg, fleg=None):
     """START-TREE-1: the clock pin of a start retime flop on tree node `path` ('__st__<path>', added to taps): node
-    arrival + leg, stages + leg stages, node xy; cppr_node 'h' (own droop region: the shared-droop term applies)"""
+    arrival + leg, stages + leg stages, node xy; cppr_node 'h' (own droop region: the shared-droop term applies).
+    FLOW-ONEMODEL-1: fall arrival = measured node fall arrival + fall leg (tap_leg_fall) when the proof has both,
+    else none (a fall sample on that flop then fails closed)."""
     k = f"__st__{path}"
     if k not in taps:
         taps[k] = dict(port=k, part=None, cppr_node="h", tree_path=path,
                        late_ps=float(meta["node_late_ps"][path]) + leg[0],
                        early_ps=float(meta["node_early_ps"][path]) + leg[1],
                        stages_from_root=int(meta["node_stages"][path]) + leg[2], xy_um=meta["node_xy_um"][path])
+        nfl, nfe = meta.get("node_fall_late_ps") or {}, meta.get("node_fall_early_ps") or {}
+        if fleg is not None and nfl.get(path) is not None and nfe.get(path) is not None:
+            taps[k]["fall_late_ps"] = float(nfl[path]) + fleg[0]
+            taps[k]["fall_early_ps"] = float(nfe[path]) + fleg[1]
     return k
 
 
@@ -378,7 +528,7 @@ def count_align_start_ports(bind, taps, meta, period, cppr_range=None, ocv=None,
     on its launch -> capture tap pair, CPPR at the last common node, the same ocv callable).  PASS iff the plan's
     sample edge is clean on the STA interval shifted by the start skew (clk->Q range; distance >= sync aperture) and the
     plan marked it clean (sync_values 1); a missing tap fails closed."""
-    leg = None
+    leg = fleg = None
     rows = []
     reg = bind.get("regions", {})
     added = [k for c in bind.get("start_ports", {}).values() for k in (c["launch"], c["capture"])
@@ -387,8 +537,10 @@ def count_align_start_ports(bind, taps, meta, period, cppr_range=None, ocv=None,
         ends = []
         for k in (c["launch"], c["capture"]):
             if k and k.startswith("__st__") and meta is not None and k[6:] in meta.get("node_late_ps", {}):
-                leg = leg or tap_leg(meta, {q: t for q, t in taps.items() if not q.startswith("__st__")})
-                virtual_tap(meta, taps, k[6:], leg)
+                if leg is None:
+                    real = {q: t for q, t in taps.items() if not q.startswith("__st__")}
+                    leg, fleg = tap_leg(meta, real), tap_leg_fall(meta, real)
+                virtual_tap(meta, taps, k[6:], leg, fleg)
             ends.append(k if k in taps else None)
         r = reg.get(c["dst"], {})
         row = dict(port=pid, region=c["dst"], edge="fall" if r.get("edge_fall") else "rise",
@@ -398,7 +550,13 @@ def count_align_start_ports(bind, taps, meta, period, cppr_range=None, ocv=None,
             row.update(ok=False, reason="no taps")
             rows.append(row)
             continue
-        iv = count_align_d_intervals([(ends[0], ends[1], "s")], taps, cppr_range, ocv=ocv)["s"]
+        try:
+            # FLOW-ONEMODEL-1: a fall-edge sync samples on the capture pin's MEASURED fall arrival (no T/2 assumption)
+            iv = ca_pair_interval(taps[ends[0]], taps[ends[1]], ends[0], ends[1], cppr_range, ocv, row["edge"])[:2]
+        except FallArrivalMissing:
+            row.update(ok=False, reason="fall edge without a measured fall arrival (fail closed)")
+            rows.append(row)
+            continue
         off = period / 2 if row["edge"] == "fall" else 0.0
         elo, ehi = iv[0] - clkq[1], iv[1] - clkq[0]
         k = math.floor((elo - off) / period)
@@ -455,18 +613,25 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
     elif key != "part":
         raise SystemExit(f"--count-align-key: unknown key {key!r}")
     ost = {}
-    dsta = count_align_d_intervals(landed, taps, cppr_range, part_region=pr, ocv=ocv, stats=ost)
+    # FLOW-ONEMODEL-1: per-port intervals (count_align_port_intervals), the SAME function count_align_plan --sta-proof
+    # hulls on: a port is timed over the tap pairs it carries (its named partition pair, else its region pair)
+    dsta, unbound, _ = count_align_port_intervals(bind["ports"], landed, taps, cppr_range, part_region=pr, ocv=ocv,
+                                                  stats=ost)
     tree_reg = {r["tree_port"]: (x, r) for x, r in bind.get("regions", {}).items() if r.get("tree_port")}
+    dfall = None
+    if any(r.get("edge_fall") for _, r in tree_reg.values()):
+        dfall = count_align_port_intervals({p: bind["ports"][p] for p in tree_reg if p in bind["ports"]}, landed, taps,
+                                           cppr_range, part_region=pr, ocv=ocv, edge="fall")[0]
     rows, miss, srows = [], [], []
     for pid, b in sorted(bind["ports"].items()):
         tag = f"{b['src']}->{b['dst']}"
         D = int(b["depth"])
         tr = tree_reg.get(pid)
         amb_tree = bool(tr) and int(tr[1].get("sync_values", 1)) > 1
-        if tag not in dsta or "d_lo_ps" not in b:
+        if dsta.get(pid) is None or "d_lo_ps" not in b:
             miss.append(pid)
             continue
-        dl, dh = dsta[tag]
+        dl, dh = dsta[pid]
         if amb_tree:
             lo, hi, src = b["L_lo_ps"], b["L_hi_ps"], "plan-sync"
         else:
@@ -477,8 +642,12 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
                    slot_read_ps=round(lo - 0.5 * period, 1), guard_budget_ps=round(ap, 1),
                    guard_hi_slack_ps=round(mh - ap, 1))
         if ocv is not None and src == "sta":
-            row["ocv_lo_ps"], row["ocv_hi_ps"] = (round(x, 1) for x in ost.get(tag, (0.0, 0.0)))
+            row["ocv_lo_ps"], row["ocv_hi_ps"] = (round(x, 1) for x in ost.get(pid, (0.0, 0.0)))
         row["lag_ok"] = min(ml, mh) >= need_ps
+        if amb_tree and tr[1].get("edge_fall"):
+            # FLOW-ONEMODEL-1: an ambiguous tree crossing's lag window is the plan sync window, which places the fall
+            # sample at rise + T/2; with measured duty distortion that is not a bound -> fail closed
+            row.update(lag_ok=False, reason="ambiguous fall-edge tree crossing (sync window assumes fall = rise + T/2)")
         row["slot_read_ok"] = row["slot_read_ps"] >= 0
         row["guard_ok"] = row["guard_hi_slack_ps"] >= 0
         rows.append(row)
@@ -495,7 +664,16 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
             if s["sync_values"] == 1:
                 # J chip-invariant on the STA's own d: the effective sampled phase d - skew keeps >= sap from off + kT
                 off = period / 2 if s["edge"] == "fall" else 0.0
-                elo, ehi = dl - sk_hi, dh - sk_lo
+                sl, sh = dl, dh
+                if s["edge"] == "fall":
+                    # FLOW-ONEMODEL-1: the fall sample is timed on the MEASURED fall arrival, never rise + T/2
+                    fv = (dfall or {}).get(pid)
+                    if fv is None:
+                        s.update(ok=False, reason="fall edge without a measured fall arrival (fail closed)")
+                        srows.append(s)
+                        continue
+                    sl, sh = fv
+                elo, ehi = sl - sk_hi, sh - sk_lo
                 k = math.floor((elo - off) / period)
                 dist = min(elo - (off + k * period), off + (k + 1) * period - ehi)
                 s["sta_sync_dist_ps"] = round(dist, 1)
@@ -511,14 +689,16 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
     gfail = sum(1 for r in rows if not r["guard_ok"])
     wl = min(rows, key=lambda r: r["margin_lo_ps"]) if rows else None
     wh = min(rows, key=lambda r: r["margin_hi_ps"]) if rows else None
-    btags = {f"{b['src']}->{b['dst']}" for b in bind["ports"].values()}
-    unbound = sorted(t for t in dsta if t not in btags) if key == "region" else []
+    ltags = {f"{(pr or {}).get(taps[a_]['part'], taps[a_]['part'])}->{(pr or {}).get(taps[b_]['part'], taps[b_]['part'])}"
+             for a_, b_, _ in landed}
+    unbound = unbound if key == "region" else []
     ok = rows and not (nfail or sfail or rfail or gfail or miss or unbound)
     return dict(clock_variation=(ocv_label or "callable") if ocv is not None else "none",
                 ocv_max_lo_ps=round(max((v[0] for v in ost.values()), default=0.0), 1) if ocv is not None else None,
                 ocv_max_hi_ps=round(max((v[1] for v in ost.values()), default=0.0), 1) if ocv is not None else None,
                 below_need=sum(1 for r in rows if min(r["margin_lo_ps"], r["margin_hi_ps"]) < need_ps),
-                key=key, landed_tags=len(dsta), unbound=len(unbound), unbound_tags=unbound[:20], crossings=len(rows), sta_timed=sum(r["source"] == "sta" for r in rows),
+                key=key, interval="port (FLOW-ONEMODEL-1 count_align_port_intervals)", landed_tags=len(ltags),
+                unbound=len(unbound), unbound_tags=unbound[:20], crossings=len(rows), sta_timed=sum(r["source"] == "sta" for r in rows),
                 tree_plan=sum(r["source"] == "plan-sync" for r in rows), no_taps=len(miss), no_taps_ports=miss[:20],
                 need_ps=need_ps, aperture_ps=round(ap, 3), fail=nfail, worst_lo=wl, worst_hi=wh,
                 slot_read=dict(fail=rfail, worst_ps=min((r["slot_read_ps"] for r in rows), default=None),

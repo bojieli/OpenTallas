@@ -47,13 +47,25 @@ def test_planner_uses_sta_interval_start_edge_clears_ap_on_sta_numbers(tmp_path)
     # old planner (own rows only): rise, and the STA's skewed interval [-10, 250] crosses the rise boundary -> start FAIL
     regs, st = _sta_start_row([_row()], taps, rng)
     assert regs[1]["start_from"]["edge"] == "rise" and st["sta_sync_dist_ps"] < AP and not st["ok"]
+    # FLOW-ONEMODEL-1: the per-port interval (the gate's function) with the MEASURED fall arrival (50 % duty here)
+    ftaps = [dict(t, fall_late_ps=t["late_ps"], fall_early_ps=t["early_ps"]) for t in taps]
+    ports, pr = CAP.row_ports([_row()])
+    sta = D.sta_port_intervals(_proof(tmp_path, ftaps, rng), plan, ("TT", "FF"), ports, pr, fall=True)
+    assert sta["TT"]["rise"]["ab"] == (50.0, 300.0) and sta["TT"]["fall"]["ab"] == (50.0, 300.0)
     # one interval model: hull -> rise is ambiguous on [50, 300] +- ap, fall is clean and keeps >= ap on STA numbers
     rows = [_row()]
     info = CAP.sta_hull(rows, sta)
     assert info["widened"] == 1 and info["missing"] == 0 and rows[0]["p_dn_ps"] == 210.0 and rows[0]["p_up_ps"] == 40.0
-    regs, st = _sta_start_row(rows, taps, rng)
+    regs, st = _sta_start_row(rows, ftaps, rng)
     assert regs[1]["start_from"]["edge"] == "fall" and regs[1]["start_from"]["sync_values"] == 1
     assert st["ok"] and st["sta_sync_dist_ps"] >= AP
+    # rise-only proof: the planner may not assume fall = rise + T/2 -> rise (ambiguous), and the gate fails a fall
+    # sample closed; plan and gate agree that this start edge is not clean
+    rows = [_row()]
+    CAP.sta_hull(rows, D.sta_port_intervals(_proof(tmp_path, taps, rng), plan, ("TT", "FF"), ports, pr, fall=True))
+    assert rows[0]["fall_lo"] is None
+    regs, st = _sta_start_row(rows, taps, rng)
+    assert regs[1]["start_from"]["edge"] == "rise" and regs[1]["start_from"]["sync_values"] > 1
 
 
 def test_count_align_interval_takes_cppr_at_last_common_node():

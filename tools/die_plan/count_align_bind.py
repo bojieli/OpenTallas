@@ -108,13 +108,16 @@ def bind(plan, T=None, parts=None):
         if step != e["offset_from_parent"]:
             raise BindError(f"tree edge {port}: origin step {step} != plan offset_from_parent {e['offset_from_parent']}")
         # convention equality on the nominal phase and on both ends of the plan's J deviation interval
-        a = integ_step(o["d_ps"], e["edge"], T, pad)
-        b = count2_step(o["d_ps"], e["edge"], T, pad)
+        sd = e.get("sample_d_ps", o["d_ps"])     # FLOW-ONEMODEL-1: the sampled phase (measured fall for a fall sample)
+        a = integ_step(sd, e["edge"], T, pad)
+        b = count2_step(sd, e["edge"], T, pad)
         if not (a == b == step):
             raise BindError(f"tree edge {port}: MESO-INTEG-1 step {a} / MESO-COUNT-2 step {b} / plan {step} differ")
         regions[x] = dict(parent=p, tree_port=port, edge_fall=bool(e["rtl"]["EDGE_FALL"]), pad=pad, n_nominal=n[x],
                           depth=int(g["tree_depth"]), sync_values=int(e["sync_values"]),
                           sync_dist_ps=e["sync_dist_ps"], start_skew_limit_ps=e.get("start_skew_limit_ps"))
+        if "sample_interval_ps" in e:
+            regions[x]["sample_lo_ps"], regions[x]["sample_hi_ps"] = e["sample_interval_ps"]
         tree_ports[port] = x
     ports = {}
     for o in xs:
@@ -128,6 +131,9 @@ def bind(plan, T=None, parts=None):
                                 d_lo_ps=round(o["d_ps"] - o["p_dn_ps"], 1), d_hi_ps=round(o["d_ps"] + o["p_up_ps"], 1),
                                 wander_ps=o.get("wander_ps", 0.0), margin_lo_ps=o["margin_lo_ps"],
                                 margin_hi_ps=o["margin_hi_ps"])
+        if o.get("src_part") is not None:
+            # FLOW-ONEMODEL-1: the partition pair the plan timed this port on (die_sta_related times it on the same)
+            ports[o["port"]].update(src_part=o["src_part"], dst_part=o["dst_part"])
     b = dict(schema="opentallas.count_align_bind.v2", form="count_aligned", period_ps=T,
                 pad=int(summ.get("pad", 0)), root=root[0], ports=ports, regions=regions,
                 sync_aperture_ps=summ.get("sync_aperture_ps", 26.5), aperture_ps=summ.get("aperture_ps", T / 8),
@@ -339,6 +345,10 @@ def verify(b, samples=2000, seed=1, need_ps=100.0):
             c = ports.get(r["tree_port"]) or b["start_ports"][r["tree_port"]]
             # the start was synchronised at a phase inside the derated interval (no post-start wander yet)
             d0 = min(max(dd[r["tree_port"]], c["d_lo_ps"]), c["d_hi_ps"])
+            if "sample_lo_ps" in r:
+                # FLOW-ONEMODEL-1: the sync samples its own (measured fall / rise) interval
+                slo, shi = r["sample_lo_ps"], r["sample_hi_ps"]
+                d0 = rnd.uniform(slo, shi) if mode == 0 else rnd.choice((slo, shi))
             if "start_skew_ps" in b:
                 sk = b["start_skew_ps"]
                 d0 -= rnd.uniform(*sk) if mode == 0 else rnd.choice(sk)   # the sync samples d - skew
@@ -635,10 +645,7 @@ def main(argv=None):
             # count_align_plan.py --sta-proof (DIE-HEAD-5 one interval model) in the in-process plan (MESO-START-2)
             if not a.sta_plan:
                 ap.error("--sta-proof needs --sta-plan")
-            import die_sta_related as DSR
-            cs = sorted({c.split("_")[0] for c in a.corner.split(",")})
-            CAP.sta_hull(rows, DSR.sta_d_intervals(a.sta_proof, a.sta_plan, cs, a.sta_clock_cal, a.sta_cppr_lca,
-                                                   **CAP.sta_ocv_kw(a)))
+            CAP.sta_rows_hull(rows, a)     # FLOW-ONEMODEL-1: the gate's per-port interval + measured fall
         if a.start_skew_clean and not any(a.start_skew):
             ap.error("--start-skew-clean needs --start-skew LO,HI")
         sedges, sroot, sinfo = CAP.start_tree_from_args(a, rows, ap.error)
