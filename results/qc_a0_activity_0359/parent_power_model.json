@@ -1,0 +1,58 @@
+{
+  "scope": "fixed NK/NL child composition model; not whole-parent or production power",
+  "census_source": "b5e8528af8 results/qc_cores_1027/a0_split/a0_split_plan.json; QC owner confirms fixed census, obsolete pin coordinates excluded",
+  "outline_um": [
+    457.92,
+    1157.76
+  ],
+  "area_mm2": 0.5301614592,
+  "variants": {
+    "nk": {
+      "child_counts": {
+        "romleaf": 10,
+        "node": 1,
+        "rawleaf": 8
+      },
+      "partial_child_activity_annotated_w": 0.68081313,
+      "partial_child_vectorless_w": 0.9342051299999999,
+      "child_Clock_group_w": 0.131714311,
+      "assumed_ROM_macro_w": 0.08944526,
+      "child_other_w": 0.45965355900000004,
+      "partial_child_density_w_mm2": 1.2841618684001086,
+      "clock_component_density_w_mm2": 0.24844188258941627,
+      "assumed_macro_density_w_mm2": 0.16871324470656654,
+      "parent_total_w": null,
+      "parent_total_density_w_mm2": null,
+      "formula": "P_parent_W = 0.68081313 + P_parent_glue_and_clock_W + delta_parent_load_interconnect_W",
+      "remaining_glue_inventory": "NK64205std/16592FF historical;NL61550std UNCHECKED; no glue power result"
+    },
+    "nl": {
+      "child_counts": {
+        "romleaf": 10,
+        "rawleaf": 8
+      },
+      "partial_child_activity_annotated_w": 0.61166552,
+      "partial_child_vectorless_w": 0.8790971,
+      "child_Clock_group_w": 0.12172971,
+      "assumed_ROM_macro_w": 0.08944526,
+      "child_other_w": 0.40049055,
+      "partial_child_density_w_mm2": 1.1537344131408336,
+      "clock_component_density_w_mm2": 0.22960875010357598,
+      "assumed_macro_density_w_mm2": 0.16871324470656654,
+      "parent_total_w": null,
+      "parent_total_density_w_mm2": null,
+      "formula": "P_parent_W = 0.61166552 + P_parent_glue_and_clock_W + delta_parent_load_interconnect_W",
+      "remaining_glue_inventory": "NK64205std/16592FF historical;NL61550std UNCHECKED; no glue power result"
+    }
+  },
+  "assumptions": [
+    "independent correctness-stress windows; generic duty0.5",
+    "ROM macro energy unconditional in selectedLib and remains assumed",
+    "child CTS placement parasitics/load basis; parent integration not repriced"
+  ],
+  "remaining_terms": [
+    "parent glue logic/state power",
+    "parent clock distribution power",
+    "parent load/interconnect correction"
+  ]
+}

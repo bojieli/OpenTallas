@@ -1,0 +1,174 @@
+{
+  "outline_um": [
+    457.92,
+    1157.76
+  ],
+  "source": "b5e8528af8 results/qc_cores_1027/a0_split/a0_split_plan.json; QC owner confirms fixed census, obsolete pin coordinates excluded",
+  "variants": {
+    "nk": {
+      "counts": {
+        "romleaf": 10,
+        "node": 1,
+        "rawleaf": 8
+      },
+      "children": [
+        {
+          "type": "ot_qwen_tile_romleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].u_leaf"
+        },
+        {
+          "type": "ot_qwen_tile_romleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[0].u_leaf"
+        },
+        {
+          "type": "ot_qwen_tile_romleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[0].u_leaf"
+        },
+        {
+          "type": "ot_qwen_tile_romleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[0].u_leaf"
+        },
+        {
+          "type": "ot_qwen_tile_romleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[0].u_leaf"
+        },
+        {
+          "type": "ot_qwen_tile_romleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf"
+        },
+        {
+          "type": "ot_qwen_tile_romleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[1].u_leaf"
+        },
+        {
+          "type": "ot_qwen_tile_romleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf"
+        },
+        {
+          "type": "ot_qwen_tile_romleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[1].u_leaf"
+        },
+        {
+          "type": "ot_qwen_tile_romleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[1].u_leaf"
+        },
+        {
+          "type": "ot_qwen_tile_node",
+          "inst": "u_g.u_tile.u_tile.u_logic.genblk5.g_ndh.u_node"
+        },
+        {
+          "type": "rawleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+        },
+        {
+          "type": "rawleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh.u_native_rawleaf"
+        },
+        {
+          "type": "rawleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh.u_native_rawleaf"
+        },
+        {
+          "type": "rawleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh.u_native_rawleaf"
+        },
+        {
+          "type": "rawleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh.u_native_rawleaf"
+        },
+        {
+          "type": "rawleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh.u_native_rawleaf"
+        },
+        {
+          "type": "rawleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh.u_native_rawleaf"
+        },
+        {
+          "type": "rawleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh.u_native_rawleaf"
+        }
+      ]
+    },
+    "nl": {
+      "counts": {
+        "romleaf": 10,
+        "rawleaf": 8
+      },
+      "children": [
+        {
+          "type": "ot_qwen_tile_romleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].u_leaf"
+        },
+        {
+          "type": "ot_qwen_tile_romleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[0].u_leaf"
+        },
+        {
+          "type": "ot_qwen_tile_romleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[0].u_leaf"
+        },
+        {
+          "type": "ot_qwen_tile_romleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[0].u_leaf"
+        },
+        {
+          "type": "ot_qwen_tile_romleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[0].u_leaf"
+        },
+        {
+          "type": "ot_qwen_tile_romleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf"
+        },
+        {
+          "type": "ot_qwen_tile_romleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[1].u_leaf"
+        },
+        {
+          "type": "ot_qwen_tile_romleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf"
+        },
+        {
+          "type": "ot_qwen_tile_romleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[1].u_leaf"
+        },
+        {
+          "type": "ot_qwen_tile_romleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[1].u_leaf"
+        },
+        {
+          "type": "rawleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+        },
+        {
+          "type": "rawleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh.u_native_rawleaf"
+        },
+        {
+          "type": "rawleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh.u_native_rawleaf"
+        },
+        {
+          "type": "rawleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh.u_native_rawleaf"
+        },
+        {
+          "type": "rawleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh.u_native_rawleaf"
+        },
+        {
+          "type": "rawleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh.u_native_rawleaf"
+        },
+        {
+          "type": "rawleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh.u_native_rawleaf"
+        },
+        {
+          "type": "rawleaf",
+          "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh.u_native_rawleaf"
+        }
+      ]
+    }
+  }
+}
