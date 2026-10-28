@@ -168,6 +168,15 @@ def sdc(per, ins, tol, clks, rsts, tag, common=None):
                 "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
 
 
+def plan_pins_canon_sha256(pins_doc, outline_um):
+    """GATE-PINS-2: freeze.json pins_canon_sha256 = canonical physical hash of the DECLARED plan pin table (the file
+    named by pins_file/pins_sha256, before any face-shell drop), computed by the shared kit_contract._canon that
+    kit_preflight pins_canonical and die_sta_related.pins_relation recompute (as gen_phys / S81 legacy do)."""
+    sys.path.insert(0, str(TOOL))
+    import kit_contract as KC
+    return KC._canon(pins_doc, [float(outline_um[0]), float(outline_um[1])])
+
+
 def kit_hash(kd):
     h = hashlib.sha256()
     for f in sorted(p for p in Path(kd).rglob("*") if p.is_file() and p.relative_to(kd).parts[0] not in ("run", "views")
@@ -588,6 +597,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     pins = json.load(open(pdir / v["pins_file"]))
     if sha(pdir / v["pins_file"]) != v["pins_sha256"]:
         raise SystemExit("pins file changed since the inventory")
+    pins_canon = plan_pins_canon_sha256(pins, [w, h])
     off = [q["name"] for q in pins if q["layer"] in ("M4", "M5") and
            abs(((q["x"] if q["layer"] == "M5" else q["y"]) - 0.024) / 0.048 -
                round(((q["x"] if q["layer"] == "M5" else q["y"]) - 0.024) / 0.048)) > 0.05]
@@ -1095,6 +1105,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
               recipe_key=rk, recipe_sha256=hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest(),
               canonical_type=v.get("canonical_type"), wrapper=wrap_rep, outline_um=[w, h],
               plan=str(plan_path), plan_sha256=sha(plan_path), pins_file=v["pins_file"], pins_sha256=v["pins_sha256"],
+              pins_canon_sha256=pins_canon,
               pins=len(pins), clocks=clks, resets=rsts, period_ps=per, common_latency_ps=ins, corner=a.corner,
               plan_common_latency_ps=common, core_clock_contract=contract, orfs_var_overrides=a.orfs_var,
               sdc_lint="PASS (gen)", macros=rec.get("macros", []),
