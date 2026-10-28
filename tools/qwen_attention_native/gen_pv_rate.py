@@ -29,7 +29,10 @@ def derive_slice():
     s = edit(s, '.r_addr_in(read_leaf?leaf_c:c),.rd_out(rd[256*m+:256]),', '.r_addr_in(5\'(read_leaf?leaf_c:c)),.rd_out(rd[128*m+:128]),')
     s = edit(s, '.w_addr_in(init_zero?init_c:commit_c),.wd_in(init_zero?256\'b0:sum[256*m+:256]),.w_mask_in({256{1\'b1}}),\n'
                 '   .rr_en(2\'b0),.rr_addr(12\'b0),.cr_en(2\'b0),.cr_sel(16\'b0));',
-             '.w_addr_in(5\'(init_zero?init_c:commit_c)),.wd_in(init_zero?128\'b0:sum[128*m+:128]),.w_mask_in({128{1\'b1}}));')
+             '.w_addr_in({1\'b0,4\'(init_zero?init_c:commit_c)}),.wd_in(init_zero?128\'b0:sum[128*m+:128]),.w_mask_in({128{1\'b1}}));')
+    # QK-CORES-10 10-27: the 16 used chains are rows 0-15 (the wide pair drives c/init_c/reduce_dst bits [6:4] = 0), so
+    # write-address bit 4 is the defined constant 0 instead of the unreset 11-stage cp->wp copy of c[4] (its X power-up
+    # window outlived the 4-edge LEC reset window and reached the SRAM address pin: kit LEC 8 differs, CHECKED)
     # data registers without reset (every consumer is valid-qualified): adder DRST 0, tree_sum written before its read
     s = edit(s, 'ot_hdc_fp32_add_lat #(.LAT(7)) u_add(', 'ot_hdc_fp32_add_lat #(.LAT(7),.DRST(0)) u_add(')
     s = edit(s, 'if(!rst_n)begin vp<=0;fp<=0;lastp<=0;tree_sum<=0;end', 'if(!rst_n)begin vp<=0;fp<=0;lastp<=0;end')
