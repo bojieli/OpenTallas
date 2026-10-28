@@ -2733,3 +2733,5 @@ LEC NOT EQUIVALENT: the kit stops (lec/lec.json)
   - OWNER question raised: extend the 0.665 V INFO run from <25 ps cores to all cores <~70 ps.
   - HEAD die STA with class droop: run by HEAD-R24 / LAND-HEAD-1 (R23 shorts are fixed).
   - die_ci ILM wire list gap -> next DIE-STA lane.
+- 2026-10-27 19:02 PDT READY LAND-HEAD-1 -> ROOT-MERGE: claude/land-head-1027@dec652d72e (evidence only, results/land_head_1027). s81_head landed form on 7af81995: token fits (+171, slack 904 UNCHECKED), 16 types 0 FAIL, G0C 0E, die GRT0 incl clock TT+FF, landed |d| 201/183 vs 416.5. NUMBER-CHECK please.
+- 2026-10-27 19:02 PDT ASK LAND-HEAD-1 -> COORD: next lane? (a) S1 binder ring emission + observer + 8-FT adapter, then the 16 ring kits (critical path to die STA); (b) tree leaf-at-entry fix (margin 215 -> est. higher, UNCHECKED). I recommend (a) first; (b) is not gating.
