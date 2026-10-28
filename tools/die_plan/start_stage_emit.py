@@ -266,18 +266,25 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
 
 def proof_with_stages(proof, stages_doc, arrs, out):
     """copy a die_sta_related proof dir and add every stage's MEASURED clock pin as tap '__st__<tree_path>' (arrival
-    files: die_trial / combo 'T <port> <late> <early> [slew]' lines)"""
+    files: die_trial / combo 'T <port> <late> <early> [slew]' lines).  DIE-HEAD-12: a both-edge readout (FLOW-ONEMODEL-2
+    die_trial readout, 'F <port> <late> <early> [slew]' = the source FALLING edge at the same pin) also gives the stage
+    tap its measured fall_late_ps / fall_early_ps, so an EDGE_FALL stage sample is timed on its own fall arrival like
+    every other tap (tap_fall_merge keys taps by port and never sees the '__st__' names; without an F row the stage tap
+    stays rise-only and a fall sample on it fails closed, as before).  Run it AFTER tap_fall_merge (which resets fall
+    fields on every tap it does not match)."""
     out = Path(out)
     if out.exists():
         raise StageError(f"{out} exists")
     shutil.copytree(proof, out)
     st = stages_doc["stages"]
     for corner, f in arrs.items():
-        T = {}
+        T, F = {}, {}
         for line in Path(f).read_text().splitlines():
             s = line.split()
             if s and s[0] == "T":
                 T[s[1]] = s[2:]
+            elif s and s[0] == "F" and len(s) >= 4:
+                F[s[1]] = s[2:]
         pf = out / f"tap_arrivals_{corner}.json"
         d = json.loads(pf.read_text())
         meta = d
@@ -293,7 +300,9 @@ def proof_with_stages(proof, stages_doc, arrs, out):
             d["taps"].append(dict(port=k, part=None, late_ps=float(v[0]), early_ps=float(v[1]),
                                   **({"slew_ps": float(v[2])} if len(v) > 2 else {}), cppr_node="h", tree_path=path,
                                   stages_from_root=int(meta["node_stages"][path]), xy_um=list(s["clock_pin_xy_um"]),
-                                  leaf_cell=s["node_cell"], start_stage=s["id"]))
+                                  leaf_cell=s["node_cell"], start_stage=s["id"],
+                                  **({"fall_late_ps": float(F[s["clock_port"]][0]),
+                                      "fall_early_ps": float(F[s["clock_port"]][1])} if s["clock_port"] in F else {})))
         d.setdefault("basis_start_stages", f"{SCHEMA} measured stage clock pins ({len(st)})")
         pf.write_text(json.dumps(d, indent=1))
     return out
