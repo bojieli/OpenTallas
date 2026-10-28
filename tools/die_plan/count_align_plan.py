@@ -490,6 +490,21 @@ def sta_hull(rows, sta):
                 max_widen_port=worst[1], missing=len(missing), missing_ports=missing[:20])
 
 
+def add_sta_ocv_args(ap):
+    """CA-OCV-1: the --sta-proof hull takes the same clock variation term die_sta_related --count-align adds
+    (--clock-ocv / --clock-droop / --droop-regions / --core-latency-ff); default none = unchanged hull."""
+    ap.add_argument("--sta-clock-ocv", choices=("none", "flat", "table"), default="none",
+                    help="as die_sta_related --clock-ocv (CA-OCV-1: the gate's CA interval carries it; table = gate form)")
+    ap.add_argument("--sta-clock-droop", choices=("stated", "shared"), help="as die_sta_related --clock-droop")
+    ap.add_argument("--sta-droop-regions", help="as die_sta_related --droop-regions")
+    ap.add_argument("--sta-core-latency-ff", type=float, help="as die_sta_related --core-latency-ff")
+
+
+def sta_ocv_kw(a):
+    return dict(clock_ocv=a.sta_clock_ocv, clock_droop=a.sta_clock_droop, droop_regions_file=a.sta_droop_regions,
+                core_latency_ff=a.sta_core_latency_ff)
+
+
 def parse_skew(text):
     """'LO,HI' ps -> (lo, hi) with lo <= hi"""
     lo, hi = (float(x) for x in text.split(","))
@@ -542,6 +557,7 @@ def main(argv=None):
     ap.add_argument("--sta-clock-cal", choices=("none", "spice"), default="spice",
                     help="as die_sta_related --clock-cal (12.15b gate: spice)")
     ap.add_argument("--sta-cppr-lca", action="store_true", help="as die_sta_related --cppr-lca")
+    add_sta_ocv_args(ap)
     ap.add_argument("--mc-chips", type=int, default=0)
     ap.add_argument("--out")
     ap.add_argument("--cases", help="TSV for the Verilator bench: port DEPTH L_ps (lo / mid / hi per crossing)")
@@ -553,8 +569,10 @@ def main(argv=None):
             ap.error("--sta-proof needs --sta-plan")
         import die_sta_related as DSR
         cs = sorted({c.split("_")[0] for c in a.corner.split(",")})
-        sta_info = sta_hull(rows, DSR.sta_d_intervals(a.sta_proof, a.sta_plan, cs, a.sta_clock_cal, a.sta_cppr_lca))
+        sta_info = sta_hull(rows, DSR.sta_d_intervals(a.sta_proof, a.sta_plan, cs, a.sta_clock_cal, a.sta_cppr_lca,
+                                                      **sta_ocv_kw(a)))
         sta_info.update(proof=a.sta_proof, plan=a.sta_plan, clock_cal=a.sta_clock_cal, cppr_lca=a.sta_cppr_lca,
+                        clock_ocv=a.sta_clock_ocv,
                         model="hull(landed_phase_ocv derated, die_sta_related.count_align_d_intervals)")
         if sta_info["missing"]:
             print(f"WARNING --sta-proof: {sta_info['missing']} crossings without STA tap pairs keep the OCV interval "
