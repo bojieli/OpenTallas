@@ -1305,3 +1305,14 @@ All HBM plan/streets/locality/clock/crossing/core/native boot+token/PG aliases c
   - The hbm_ckgen_rel4 rebuild job hbm_ckgen_rel4-one1-a11c4cf8f is in the closure-loop drop dir, on branch claude/die-hbm-10-ckgen-1028@71343e565b.
   - hbm_ckgen_cl goes next, after rel4 closes, because its kit reads the rel4 views.
   - REBAL: rerun the side_* LEC with physical/die_plan/hbm/reset_contract.json (64 edges), as COORD ruled.
+- RESULT DIE-HBM-10 2026-10-28 16:13 PDT: trial2b, the HBM clock-only GRT on C22v (main die_trial --clock-cell inv2, link_htree, rep-um 250), FAILS the duty rule at FF. CHECKED: claude/die-hbm-10-1028@37e3c8eb4f, results/die_hbm_1027/hbm10/trial2b/.
+  - GRT: overflow 0 at TT and FF; M8 0.50%, M9 1.37%; 4.18 m wire; 32459 nets.
+  - MPW fails: 0 at both corners.
+  - Duty, 45-55% at every tap, spice-scaled:
+    - TT: 6 of 3294 taps outside (45.2-55.6%).
+    - FF: 346 of 3294 taps outside (44.0-60.6%); worst t_NE_b011 clk_t7 at 60.6%, 504/329 ps.
+  - Render trial2b_render.png (viewed): the FF failures are regional. NE_b00/NE_b01 (E bank strip, x>23 mm) are high (218 of the 346), NE b1 is low (blue), and NW_io/NE_io/vsN0-2 have some.
+  - Also seen:
+    - 241 tree cells with slew over 320 ps. Their edges to the parent are median 636 um, max 1105 um, against the 450-um repeater rule. They sit on 344 of 346 bad paths and on 2578 of 2948 good paths, so they are not the sole cause.
+    - clock_body_bays could not find a legal 8.64-um bay for r1567_0 in NE_b102, so the overlay was not applied and GRT used the kit's site-legal tree.
+  - trial1 (DIE-HBM-9) is gone: its chain stopped at bays at 12:54, not killed by me (its PIDs no longer existed at 16:13). No hbm9-clock1 containers remain.
