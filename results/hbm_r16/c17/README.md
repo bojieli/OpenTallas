@@ -36,3 +36,9 @@ G0 + G0C on c17 and c17g launched via ot-run 17:40-17:45 PDT; collect `c17*/gate
 G0 (duplicate of br_g0c_p).
 
 Render: `c17g_render.png` (orange = re-oriented, red edge = away ports left, blue = moved pins).
+
+## Gate results (collected 18:12 PDT, CHECKED from g0_report.json)
+- c17  G0 PASS 0 err / 484 warn; G0C (br_g0c_p) FAIL 12 err, all core_faces (q_hub_nw 6, q_hub_ne 6 = 5 listed + 1 summary each); away groups 50.
+- c17g G0 PASS 0 err / 484 warn; G0C FAIL 12 err, same core_faces only; away groups 50, pins away 30329.
+- C16r had G0C FAIL 12 err with 147 away groups: the error COUNT is unchanged because check.py lists 5 per type + 1 summary per type; no new error classes.
+- The serial G0C started by chain17.sh/gates17g.sh into gates/br_g0c duplicates br_g0c_p (can be ignored or killed).
