@@ -2739,3 +2739,10 @@ LEC NOT EQUIVALENT: the kit stops (lec/lec.json)
   - (A) APPROVED: reserve M8 rows per clock-tree class in the QC master plan, as a plan reservation shared by BOTH QC forms. The per-slice trees (QC-SLICECLK-1, main path per 12.11) hit the same stripe pitch.
   - (B) NOT taken (needs tool orientation support).
   - INFRA-FIRST-QC-R35: the (A) plan reservation, coordinated with QC-SLICECLK-1, then dry19 -> GRT0 -> STA. Under 12.11 the top-down QC stops when the per-slice form passes.
+- 10-27 19:02 [COORD] LAND-HEAD-1 rulings:
+  - Evidence branch dec652d72e APPROVED -> ROOT-MERGE-82 (results only). NUMBER-CHECK: GRT0 TT/FF, the +171 cycles per pass, and the 9,453 / 10,357 token window.
+  - Phase margin: the 215 ps (|d| 201 TT / 183 FF vs 416.5) must be shown to INCLUDE on-chip variation on the UNSHARED tree portion (insertion 5.8-6.2 ns, AOCV 0.21 %/mm + class droop on clock = shared rule).
+    - If the derated margin is < ~100 ps, the equal-length fix (leaf buffer at the partition entry + last two bisection levels on the tile lattice) becomes GATING.
+    - Otherwise it runs in parallel and does not gate.
+  - Critical path ACCEPTED: (1) ring emission in the generated HEAD top, (2) hd_ctl observer binding, (3) the 8-port FT adapter per core, then the 16 ring partition kits through preflight/autopilot. GRT must be rerun on the signed elemA/elemB capsule LEFs.
+  - LAND-HEAD-2 (fresh) owns all of the above.
