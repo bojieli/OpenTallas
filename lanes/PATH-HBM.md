@@ -940,3 +940,57 @@ Resumed exclusive whole-hub mover endpoint work in fresh sparse codex/hbm-datafl
   - All of this is under the 1906 target, which the owner accepted ("<1906 OK, closure over perf").
   - File: intel2 die-hbm-1027/region3/r5/price_hso.json.
   - The HX hub cycles (2-4) are not lanes in the ledger, so they are not in this price yet (record only).
+- 2026-10-28 02:35 PDT [HBM-RISK-2] R6 ESTIMATE on the hub region (q_hub_nw / q_hub_ne, C20h 2e5644cf5f65).
+  - RESET REACH = FAIL risk.
+    - The hub's plan reset is one tap_um (4298.4,1468.8). The kit gives one reset terminal per R4 grid tap: 21x11 = 231 taps at the default 400-um pitch, with no clock.tap_pitch_um and no tap_mode.
+    - 154 of the 231 grid taps land on a hard core and are moved by up to 294 um (NW) / 323 um (NE).
+    - Station regs to nearest tap, Manhattan: max 656.6 um (NW) / 669.6 um (NE) against the 405 relay_um. 171 (NW) / 162 (NE) of about 29k station regs are beyond 405. The channel-point bound is 440 um.
+    - The failures cluster on the bottom face at x 1.5-2.5 mm (bus L26_i/L27_i/L69_i/L5_o/L2_o regs at y 4.3), at (5.0-5.5, 2.5-3.0) mm and at the top face x 2.0-2.5 mm.
+    - Model: r6fast.py re-implements schema.tap_clear (nearest legal 2.16-um site, clearance 8.64) without the taken-tap spacing, so it is UNCHECKED vs the kit. About 1.5k station regs sit inside core boxes (pushdown stations) and are counted.
+    - This is the same failure as the HEAD hd_tile reset leaf (646.5 um). A kit would hit OT_RESET_LEAF at GPL.
+    - Fix (plan only, about 1 h): add sink-anchored taps (clock.tap_mode grid+sinks) or plan reset relays at the 3 clusters, then rerun the leaf check.
+  - PG, measured-activity rule: UNCHECKED for the hub. PG-ACTIVITY-5 measured only the SM (0.618 W/mm2); the hub has no measured toggle density.
+    - Best available: the Codex core-only upper-stack hub coupon (U6d, 1.2709 W/mm2 upper basis, 150-um bumps / 70-um pads) gives 23.4 mV, which leaves 11.6 of the 35 mV for below-M7. The SM below-M7 estimate is 5.13 mV.
+    - So the hub is a likely PASS, but on a non-measured density and a U6d (not C20h) geometry.
+    - Next: a hub toggle window in the PG-ACTIVITY tb (the same 14 cases), then rerun the canonical deck on C20h.
+  - Data: epyc2:/srv/opentallas-scratch2/claude/hbm-risk-2/{r6fast.py,r6_reach.txt}.
+- 2026-10-28 02:35 PDT [HBM-RISK-2] R5 DRT PREVIEW: NOT RUN. The blockers were measured (CHECKED unless marked):
+  - (a) There is no all-real-view HBM region. Only 129 of 733 hard-core records carry lef/lib: hub 60/159, root 4/46, SM 0/32, and 0 in every q_b*/q_su*. The hottest known area is the NW hub E side: M4 15.05 % hub-internal in R12. The C20f/C20h congestion probes have no GRT yet (DIE-HBM-5 01:55).
+  - (b) The hub is too big for one kit. Glue outside hard cores is 0.97 M cells (incl. u_hb_coll_Q 662k, part of which may be in its q3 cut cores) plus 306k parent-of-cut, against the 400k-cell cap. W/E halves would be about 0.5 M each (UNCHECKED).
+  - (c) gen.py phys --trial --types q_hub_nw (die-hbm-1027@1d784227c1) did not write the kit in 15 min (rc 124). Profile: schema.tap_clear inside _grid_taps, i.e. 231 grid taps x 159 cores with a candidate product per tap. That is a shared-tool performance gap (ROOT-MERGE scope, not fixed here).
+  - Rerun without a limit is LIVE: epyc2 pid 1292431 (started 02:31), out epyc2:/srv/opentallas-scratch2/claude/hbm-risk-2/kits_hub, log phys_hub.log. Collect whether a kit appears + kit_preflight. Do not route it (it is over the cap).
+  - DEFAULT next: DRT preview on a <=400k hub sub-partition once (1) the probes name the hot gcells and (2) the hub W/E split becomes a partition split with real views.
+- 2026-10-28 02:36 PDT [HBM-RISK-2] RISK TABLE for R3/R5/R6. R1/R2/R4 are HBM-RISK-1's. Results: claude/hbm-risk-2-1028@9656989896 (results/hbm_risk_2_1028).
+| # | risk | measured | gate | fix | cost h |
+|---|---|---|---|---|---|
+| 1 | Deep cores vs 250-ps zero-early core taps -> HEAD-style FF hold at core boundaries | 30 types / 381 placements est. FF hold < -100 ps; worst programme_store_r10 -751, vms_glue -557, rootctl_am -510, SM halves -426/-364 (UNCHECKED model; 22 types from real lib ETM max) | FF hold >= 0 (12.4a) | rebuild to 250+-20 (12.3) or plan early taps from the core's real mean (12.3 v5.0; DIE-HEAD-5 opt-in signed_mean_core_taps once cores are signed); 18 types / 376 placements have no data -> measure first | 2 (plan early-tap delta) to many (rebuilds) |
+| 2 | Hub reset final hop > 405 um | 657 / 670 um, 171 / 162 station regs > 405 (UNCHECKED re-impl of tap_clear) | 405 um leaf | sink-anchored taps or plan reset relays at 3 clusters (cf. HEAD reset.local_taps) | 1 |
+| 3 | Hub partition over the 400k-cell cap | glue 0.97 M (+0.31 M parent-of-cut) vs 400k | <=400k/run | make the hub W/E clock split a partition split, or more cuts | 3-4 (re-plan event) |
+| 4 | gen phys kit gen stalls on the hub | >15 min in schema.tap_clear (231 taps x 159 cores) | n/a | vectorise tap_clear (shared tool, ROOT-MERGE) | 1 |
+| 5 | No real views -> PHY_N 172 / SM 159 spreads and most core latencies unproven | real lef/lib 129 / 733; PHY_N 0 taps / no lib; SM 0/32 | real-view die STA | SM half views + PHY lib clock arc | as per core lanes |
+| 6 | Hub PG on unmeasured activity | 23.4 mV above-M7 at 1.27 W/mm2 upper (Codex U6d) | 35 mV | hub toggle window in the PG-ACTIVITY tb | 1.5 |
+- 2026-10-28 02:36 PDT [HBM-RISK-1] ESTIMATE R2 IN-REGION BALANCE next to macros/PHY: **FAIL, measured**.
+  - Method: clock-only builder estimate. die_trial clock_kit only, from claude/die-qc3b-1027@2de66bb213: --tree-form link_htree --tree-site-slide --region-dme delay --clock-rc 1x, leaf 200 / rep 250, then the placement OpenSTA of ctree.tcl at TT and FF with spice x1.0485 / x1.0552.
+  - Inputs: C20h plan, the hub-split map, and the spt feed from R1. The hub W/E split is clock-only, so the hub taps are relabelled by x against the cut.
+  - All runs are my own, CHECKED. There is no NUMBER-CHECK.
+  - Data: epyc2:/srv/opentallas-scratch2/claude/hbm-risk-1/r2/{k1 = region-dme delay, k_off = balance_legalize}/r2_post.json, plus the clock/ dirs.
+  - Scope: 26 of 36 regions contain hard cores. 10 touch a VDDPHY domain: R000 R001 R002 R003 R005 R006 R010 R013 R014 R017. So every region is in scope for R2.
+  - Tree: 3294 taps, 12,708 cells. Cells inside a core+halo or PHY rect: **0 / 0** (target met).
+  - Taps inside PHY domains: 5. Taps inside core rects: 1063. These 1063 are the native core clock pins and early core taps, so they are by design.
+  - Spread TT nominal (k1, region-dme delay): only 6/36 regions are <= 150 ps; median 566 ps.
+    - Worst: R024 = NW_sm0 1036 ps, R002 = NW_sm3 1000, R027 963, R015E (NW hub E) 964, R016E 877, R016W 876, R015W 810.
+    - With grid taps only (no early core taps), the median is still 544 and the max is 806 (R002).
+    - FF worst is 877 ps.
+  - Incl. OCV+droop (unshared in-region U x (5.11 % + 2 x 3 % + 0.21 %/mm diag), the r3 spread.py terms on the built tree, UNCHECKED model): worst 1485 TT / 1259 FF. Only R028/R031/R032/R033 are <= 155 ps.
+  - k_off (balance_legalize instead of region-dme) is no better: 4/36 <= 150, hubs 1080-1392 ps. Taking the best of the two per region still leaves the hubs at about 880-960 and most hard regions at 400-800 ps.
+  - CAUSE (measured on tree.json):
+    - Root-to-tap path length within a region differs by 1.0-2.0 mm, e.g. R024 25,178-26,225 um, R015E 7,227-9,217 um.
+    - Stage count differs by 14-17, e.g. R024 110-127, R002 68-84, R015E 36-50.
+    - The region-dme reports 23-96 imbalanced merges per big region, and its own model spread already reaches 310 ps (R016E).
+    - So the DME on legal sites cannot balance HBM's core-dense regions: the merge points fall on cores, which is the QC su_c pattern, but over most regions. The gap opens at PLACEMENT, not at GRT.
+- 2026-10-28 02:36 PDT [HBM-RISK-1] ESTIMATE R4 part 2: the CA planner with the STA interval of the BUILT R2 tree. Main count_align_plan --sta-proof (tap_arrivals from the k1 placement STA) --sta-clock-cal spice --sta-cppr-lca, unioned with the locality OCV interval. Own run, CHECKED. Data intel2:/srv/opentallas-scratch2/claude/hbm-risk-1/r4/sta_k1_*.json.
+  - **FAIL 200 / 333 crossings (187 kb) at 278.6**, D4 49 / D8 84. 202 FAIL at 219.2. Worst margin of the passing crossings is 108.1 ps.
+  - The STA interval widened 329 rows, by up to 3.46 ns (L113_0).
+  - 180 of the FAILs touch the hub halves. Those are partly my artefact: the proof maps NW_hubW/E back to NW_hub, so a hub port's interval spans the taps of both halves (UNCHECKED; it overstates).
+  - The other 20 FAILs (21.5 kb) are 4 unreached status links plus 16 crossings. All 16 are in R1 >3.4 ns pairs: R029/R030-R032, R014-R018, R017-R023, R010-R014, R013-R017, R014-R019, R017-R022.
+  - So R1 and R4 agree. The analytic estimate's 4 FAIL / 114 ps does NOT hold once the in-region spreads of R2 are real.
