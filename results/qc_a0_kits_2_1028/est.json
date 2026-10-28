@@ -1,0 +1,435 @@
+{
+ "schema": "qc-a0-parent-estimate.v1",
+ "date": "2026-10-28",
+ "status": "ESTIMATE (12.14 estimate-before-build), UNCHECKED model",
+ "inputs": {
+  "outline_um": [
+   457.92,
+   1157.76
+  ],
+  "centre_entry_um": [
+   228.96,
+   578.88
+  ],
+  "children_source": "intel2 codex-die-qc-0359-1028/a0_child_fixture/parent_{nk,nl}_children.json (census b5e8528af8)",
+  "child_insertion_ps": "trial CTS placement-RC (corelat-sq-1-a0cts): rawleaf 157.98/126.28, romleaf 170.29/139.94, node 222.31/178.41 TT/FF",
+  "child_clk_pin": "centre entry of every child (rawleaf (57.66,70.2), romleaf (86.4,55.08), node (23.76,216)) -> orientation invariant",
+  "wire_ps_per_mm": [
+   199,
+   334
+  ],
+  "ff_over_tt": 0.8
+ },
+ "types": {
+  "nk": {
+   "children": 19,
+   "max_manhattan_um": 641.6,
+   "balanced_insertion_at_199": {
+    "tt": 324.8,
+    "ff": 260.4,
+    "critical_child": "ot_qwen_tile_node",
+    "critical_um": 515.0,
+    "early_tap_vs_250_tt": 74.8
+   },
+   "balanced_insertion_at_334": {
+    "tt": 394.3,
+    "ff": 316.0,
+    "critical_child": "ot_qwen_tile_node",
+    "critical_um": 515.0,
+    "early_tap_vs_250_tt": 144.3
+   },
+   "rows": [
+    {
+     "child": "ot_qwen_tile_romleaf",
+     "pin": [
+      108.864,
+      77.256
+     ],
+     "manhattan_um": 621.7,
+     "tt": 170.29,
+     "ff": 139.94
+    },
+    {
+     "child": "ot_qwen_tile_romleaf",
+     "pin": [
+      108.864,
+      207.432
+     ],
+     "manhattan_um": 491.5,
+     "tt": 170.29,
+     "ff": 139.94
+    },
+    {
+     "child": "ot_qwen_tile_romleaf",
+     "pin": [
+      108.864,
+      337.608
+     ],
+     "manhattan_um": 361.4,
+     "tt": 170.29,
+     "ff": 139.94
+    },
+    {
+     "child": "ot_qwen_tile_romleaf",
+     "pin": [
+      108.864,
+      597.96
+     ],
+     "manhattan_um": 139.2,
+     "tt": 170.29,
+     "ff": 139.94
+    },
+    {
+     "child": "ot_qwen_tile_romleaf",
+     "pin": [
+      108.864,
+      467.784
+     ],
+     "manhattan_um": 231.2,
+     "tt": 170.29,
+     "ff": 139.94
+    },
+    {
+     "child": "ot_qwen_tile_romleaf",
+     "pin": [
+      349.056,
+      77.256
+     ],
+     "manhattan_um": 621.7,
+     "tt": 170.29,
+     "ff": 139.94
+    },
+    {
+     "child": "ot_qwen_tile_romleaf",
+     "pin": [
+      349.056,
+      207.432
+     ],
+     "manhattan_um": 491.5,
+     "tt": 170.29,
+     "ff": 139.94
+    },
+    {
+     "child": "ot_qwen_tile_romleaf",
+     "pin": [
+      349.056,
+      337.608
+     ],
+     "manhattan_um": 361.4,
+     "tt": 170.29,
+     "ff": 139.94
+    },
+    {
+     "child": "ot_qwen_tile_romleaf",
+     "pin": [
+      349.056,
+      597.96
+     ],
+     "manhattan_um": 139.2,
+     "tt": 170.29,
+     "ff": 139.94
+    },
+    {
+     "child": "ot_qwen_tile_romleaf",
+     "pin": [
+      349.056,
+      467.784
+     ],
+     "manhattan_um": 231.2,
+     "tt": 170.29,
+     "ff": 139.94
+    },
+    {
+     "child": "ot_qwen_tile_node",
+     "pin": [
+      418.176,
+      904.656
+     ],
+     "manhattan_um": 515.0,
+     "tt": 222.31,
+     "ff": 178.41
+    },
+    {
+     "child": "ot_qwen_tile_lsl_rawfault_m3",
+     "pin": [
+      325.944,
+      744.12
+     ],
+     "manhattan_um": 262.2,
+     "tt": 157.98,
+     "ff": 126.28
+    },
+    {
+     "child": "ot_qwen_tile_lsl_rawfault_m3",
+     "pin": [
+      325.944,
+      904.632
+     ],
+     "manhattan_um": 422.7,
+     "tt": 157.98,
+     "ff": 126.28
+    },
+    {
+     "child": "ot_qwen_tile_lsl_rawfault_m3",
+     "pin": [
+      325.944,
+      1065.144
+     ],
+     "manhattan_um": 583.2,
+     "tt": 157.98,
+     "ff": 126.28
+    },
+    {
+     "child": "ot_qwen_tile_lsl_rawfault_m3",
+     "pin": [
+      199.8,
+      904.632
+     ],
+     "manhattan_um": 354.9,
+     "tt": 157.98,
+     "ff": 126.28
+    },
+    {
+     "child": "ot_qwen_tile_lsl_rawfault_m3",
+     "pin": [
+      199.8,
+      1065.144
+     ],
+     "manhattan_um": 515.4,
+     "tt": 157.98,
+     "ff": 126.28
+    },
+    {
+     "child": "ot_qwen_tile_lsl_rawfault_m3",
+     "pin": [
+      73.656,
+      744.12
+     ],
+     "manhattan_um": 320.5,
+     "tt": 157.98,
+     "ff": 126.28
+    },
+    {
+     "child": "ot_qwen_tile_lsl_rawfault_m3",
+     "pin": [
+      73.656,
+      904.632
+     ],
+     "manhattan_um": 481.1,
+     "tt": 157.98,
+     "ff": 126.28
+    },
+    {
+     "child": "ot_qwen_tile_lsl_rawfault_m3",
+     "pin": [
+      73.656,
+      1065.144
+     ],
+     "manhattan_um": 641.6,
+     "tt": 157.98,
+     "ff": 126.28
+    }
+   ]
+  },
+  "nl": {
+   "children": 18,
+   "max_manhattan_um": 641.6,
+   "balanced_insertion_at_199": {
+    "tt": 294.0,
+    "ff": 238.9,
+    "critical_child": "ot_qwen_tile_romleaf",
+    "critical_um": 621.7,
+    "early_tap_vs_250_tt": 44.0
+   },
+   "balanced_insertion_at_334": {
+    "tt": 377.9,
+    "ff": 306.1,
+    "critical_child": "ot_qwen_tile_romleaf",
+    "critical_um": 621.7,
+    "early_tap_vs_250_tt": 127.9
+   },
+   "rows": [
+    {
+     "child": "ot_qwen_tile_romleaf",
+     "pin": [
+      108.864,
+      77.256
+     ],
+     "manhattan_um": 621.7,
+     "tt": 170.29,
+     "ff": 139.94
+    },
+    {
+     "child": "ot_qwen_tile_romleaf",
+     "pin": [
+      108.864,
+      207.432
+     ],
+     "manhattan_um": 491.5,
+     "tt": 170.29,
+     "ff": 139.94
+    },
+    {
+     "child": "ot_qwen_tile_romleaf",
+     "pin": [
+      108.864,
+      337.608
+     ],
+     "manhattan_um": 361.4,
+     "tt": 170.29,
+     "ff": 139.94
+    },
+    {
+     "child": "ot_qwen_tile_romleaf",
+     "pin": [
+      108.864,
+      597.96
+     ],
+     "manhattan_um": 139.2,
+     "tt": 170.29,
+     "ff": 139.94
+    },
+    {
+     "child": "ot_qwen_tile_romleaf",
+     "pin": [
+      108.864,
+      467.784
+     ],
+     "manhattan_um": 231.2,
+     "tt": 170.29,
+     "ff": 139.94
+    },
+    {
+     "child": "ot_qwen_tile_romleaf",
+     "pin": [
+      349.056,
+      77.256
+     ],
+     "manhattan_um": 621.7,
+     "tt": 170.29,
+     "ff": 139.94
+    },
+    {
+     "child": "ot_qwen_tile_romleaf",
+     "pin": [
+      349.056,
+      207.432
+     ],
+     "manhattan_um": 491.5,
+     "tt": 170.29,
+     "ff": 139.94
+    },
+    {
+     "child": "ot_qwen_tile_romleaf",
+     "pin": [
+      349.056,
+      337.608
+     ],
+     "manhattan_um": 361.4,
+     "tt": 170.29,
+     "ff": 139.94
+    },
+    {
+     "child": "ot_qwen_tile_romleaf",
+     "pin": [
+      349.056,
+      597.96
+     ],
+     "manhattan_um": 139.2,
+     "tt": 170.29,
+     "ff": 139.94
+    },
+    {
+     "child": "ot_qwen_tile_romleaf",
+     "pin": [
+      349.056,
+      467.784
+     ],
+     "manhattan_um": 231.2,
+     "tt": 170.29,
+     "ff": 139.94
+    },
+    {
+     "child": "ot_qwen_tile_lsl_rawfault_m3",
+     "pin": [
+      325.944,
+      744.12
+     ],
+     "manhattan_um": 262.2,
+     "tt": 157.98,
+     "ff": 126.28
+    },
+    {
+     "child": "ot_qwen_tile_lsl_rawfault_m3",
+     "pin": [
+      325.944,
+      904.632
+     ],
+     "manhattan_um": 422.7,
+     "tt": 157.98,
+     "ff": 126.28
+    },
+    {
+     "child": "ot_qwen_tile_lsl_rawfault_m3",
+     "pin": [
+      325.944,
+      1065.144
+     ],
+     "manhattan_um": 583.2,
+     "tt": 157.98,
+     "ff": 126.28
+    },
+    {
+     "child": "ot_qwen_tile_lsl_rawfault_m3",
+     "pin": [
+      199.8,
+      904.632
+     ],
+     "manhattan_um": 354.9,
+     "tt": 157.98,
+     "ff": 126.28
+    },
+    {
+     "child": "ot_qwen_tile_lsl_rawfault_m3",
+     "pin": [
+      199.8,
+      1065.144
+     ],
+     "manhattan_um": 515.4,
+     "tt": 157.98,
+     "ff": 126.28
+    },
+    {
+     "child": "ot_qwen_tile_lsl_rawfault_m3",
+     "pin": [
+      73.656,
+      744.12
+     ],
+     "manhattan_um": 320.5,
+     "tt": 157.98,
+     "ff": 126.28
+    },
+    {
+     "child": "ot_qwen_tile_lsl_rawfault_m3",
+     "pin": [
+      73.656,
+      904.632
+     ],
+     "manhattan_um": 481.1,
+     "tt": 157.98,
+     "ff": 126.28
+    },
+    {
+     "child": "ot_qwen_tile_lsl_rawfault_m3",
+     "pin": [
+      73.656,
+      1065.144
+     ],
+     "manhattan_um": 641.6,
+     "tt": 157.98,
+     "ff": 126.28
+    }
+   ]
+  }
+ }
+}
