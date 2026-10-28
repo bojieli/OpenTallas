@@ -302,13 +302,12 @@ def _clock_netlists(proof, meta):
     return c
 
 
-def detect_clock_cell(proof, meta=None):
-    """CLK-INV-CAL-1: (cell, basis) of the die clock.  meta 'clock_cell' (trial_tap_arrivals export) wins; else the
-    majority clock master of the first netlist _clock_netlists finds ('inv' when CKINVDCx16 instances outnumber BUFx24);
-    else 'buf' (legacy proofs without a netlist: unchanged BUFx24 model)."""
-    mc = (meta or {}).get("clock_cell")
-    if mc in ("buf", "inv", "inv2"):
-        return ("inv" if mc == "inv2" else mc), f"tap_arrivals meta clock_cell={mc}"
+class ClockCellUndeclared(SystemExit):
+    pass
+
+
+def netlist_clock_cell(proof, meta=None):
+    """(cell, basis) from the majority clock master of the first clock netlist _clock_netlists finds, else None."""
     for f in _clock_netlists(proof, meta):
         if f.is_file():
             txt = f.read_text()
@@ -316,14 +315,40 @@ def detect_clock_cell(proof, meta=None):
                  for k, v in CLOCK_CELL_MASTERS.items()}
             if n["inv"] or n["buf"]:
                 return ("inv" if n["inv"] > n["buf"] else "buf"), f"{f}: {n['inv']} CKINVDCx16 / {n['buf']} BUFx24"
-    return "buf", "no clock netlist found (legacy BUFx24 model)"
+    return None
+
+
+def _declared(cell, basis, proof, meta):
+    if cell not in ("buf", "inv", "inv2"):
+        raise ClockCellUndeclared(f"clock cell {cell!r} ({basis}) is not one of buf / inv / inv2: the die clock model "
+                                  "(spice factor + AOCV class) is undefined -> FAIL closed (COORD ruling ba28d3143)")
+    c = "inv" if cell == "inv2" else cell
+    nl = netlist_clock_cell(proof, meta)
+    if nl is not None and nl[0] != c:
+        raise ClockCellUndeclared(f"declared clock_cell {cell} ({basis}) contradicts the clock netlist ({nl[1]}) -> FAIL "
+                                  "closed")
+    return c, basis + (f"; netlist agrees ({nl[1]})" if nl else "")
+
+
+def detect_clock_cell(proof, meta=None):
+    """CLK-INV-CAL-1 + COORD ruling ba28d3143 (no silent fallback): (cell, basis) of the die clock from the proof's
+    DECLARATION, meta 'clock_cell' in tap_arrivals_<C>.json (trial_tap_arrivals writes it from die_trial's tree.json /
+    the built netlist).  Missing or not buf/inv/inv2 -> ClockCellUndeclared (SystemExit, planner and gate alike); a
+    declaration that contradicts a clock netlist found beside the proof also fails closed."""
+    mc = (meta or {}).get("clock_cell")
+    if mc is None:
+        raise ClockCellUndeclared(f"{proof}: the proof declares no clock_cell (tap_arrivals meta) -> FAIL closed (COORD "
+                                  "ruling ba28d3143: no silent BUFx24 fallback).  Re-export with trial_tap_arrivals, "
+                                  "or declare it with --clock-cell buf|inv|inv2")
+    return _declared(mc, f"tap_arrivals meta clock_cell={mc}", proof, meta)
 
 
 def resolve_clock_cell(choice, proof, meta=None):
-    """--clock-cell: 'auto' = detect_clock_cell; buf / inv / inv2 (inv2 = inv model) as given."""
+    """--clock-cell: 'auto' = the proof's declaration (detect_clock_cell, fail closed if missing); buf / inv / inv2 =
+    the operator's declaration (inv2 = inv model), checked against the netlist the same way."""
     if choice in (None, "auto"):
         return detect_clock_cell(proof, meta)
-    return ("inv" if choice == "inv2" else choice), f"--clock-cell {choice}"
+    return _declared(choice, f"--clock-cell {choice}", proof, meta)
 
 
 def credit(rng, node, la, ea, lc, ec):

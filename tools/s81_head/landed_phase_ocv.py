@@ -159,14 +159,19 @@ def main(argv=None):
     ap.add_argument("--out")
     ap.add_argument("--clock-cell", choices=("auto", "buf", "inv", "inv2"), default="auto",
                     help="CLK-INV-CAL-1: die clock cell (AOCV die class A for buf, Ainv for CKINVDCx16 inv/inv2); auto = "
-                         "majority master of RUN/clk/ctree.v (die_sta_related.detect_clock_cell), else buf")
+                         "the declaration in RUN/clk/tree.json meta clock_cell (die_trial); missing -> FAIL closed "
+                         "(COORD ruling ba28d3143)")
     ap.add_argument("--port-taps",action="store_true",help="use declared endpoint pins and union all nearest-tap pairs; legacy last tap otherwise")
     a = ap.parse_args(argv)
     sys.path.insert(0, a.tools)
     import clk_aocv as CA
     T = CA.load(Path(a.tools) / "clk_aocv_table_g021.json")
     import die_sta_related as DSR
-    cc, cbasis = DSR.resolve_clock_cell(a.clock_cell, Path(a.run), {"source": str(Path(a.run) / "out_TT" / "arr_TT.txt")})
+    tj = Path(a.run) / "clk" / "tree.json"
+    decl = (json.loads(tj.read_text()).get("meta") or {}).get("clock_cell") if tj.is_file() else None
+    cc, cbasis = DSR.resolve_clock_cell(a.clock_cell, Path(a.run),
+                                        {"source": str(Path(a.run) / "out_TT" / "arr_TT.txt"),
+                                         **({"clock_cell": decl} if decl is not None else {})})
     cls = DSR.CLOCK_CELL_AOCV_CLASS[cc]
     assert abs(T["systematic"]["g_per_mm"] - 0.21) < 1e-9 or abs(T["systematic"]["g_per_mm"] - 0.0021) < 1e-9, T["systematic"]
     plan = json.loads(Path(a.plan).read_text())

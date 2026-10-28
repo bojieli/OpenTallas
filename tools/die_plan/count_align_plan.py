@@ -540,7 +540,7 @@ def _lcp(a, b):
 
 
 def clock_contexts(proof, plan_path, corners, clock_cal="spice", clock_ocv="table", clock_droop=None,
-                   droop_regions_file=None, core_latency_ff=None):
+                   droop_regions_file=None, core_latency_ff=None, clock_cell="auto"):
     """{corner: dict(meta, taps, ocv, rng)} with the ONE shared die model exactly as sta_d_intervals builds it (tap
     arrivals of PROOF, --clock-cal spice, CPPR at the last common tree node, clock_ocv_fn table + shared droop)."""
     import die_sta_related as DSR
@@ -555,7 +555,7 @@ def clock_contexts(proof, plan_path, corners, clock_cal="spice", clock_ocv="tabl
         meta, taps = DSR.load_taps(Path(proof), c)
         if not all("tree_path" in t for t in taps.values()):
             raise ValueError("--start-tree clock needs tap tree_path in the proof (the clock tree topology)")
-        cc, _ = DSR.detect_clock_cell(proof, meta)      # CLK-INV-CAL-1: same clock-cell model as sta_d_intervals
+        cc, _ = DSR.resolve_clock_cell(clock_cell, proof, meta)   # CLK-INV-CAL-1: same clock-cell model as the gate
         if clock_cal == "spice":
             meta, taps = DSR.scale_clock(meta, taps, DSR.spice_cal_factor(c, cc))
         taps = dict(taps)
@@ -929,11 +929,14 @@ def add_sta_ocv_args(ap):
     ap.add_argument("--sta-clock-droop", choices=("stated", "shared"), help="as die_sta_related --clock-droop")
     ap.add_argument("--sta-droop-regions", help="as die_sta_related --droop-regions")
     ap.add_argument("--sta-core-latency-ff", type=float, help="as die_sta_related --core-latency-ff")
+    ap.add_argument("--sta-clock-cell", choices=("auto", "buf", "inv", "inv2"), default="auto",
+                    help="as die_sta_related --clock-cell: auto = the proof's tap_arrivals clock_cell declaration; "
+                         "missing -> FAIL closed (COORD ruling ba28d3143)")
 
 
 def sta_ocv_kw(a):
     return dict(clock_ocv=a.sta_clock_ocv, clock_droop=a.sta_clock_droop, droop_regions_file=a.sta_droop_regions,
-                core_latency_ff=a.sta_core_latency_ff)
+                core_latency_ff=a.sta_core_latency_ff, clock_cell=getattr(a, "sta_clock_cell", "auto"))
 
 
 def add_start_tree_args(ap):
@@ -969,7 +972,7 @@ def start_tree_from_args(a, rows, err):
     cs = [c.split("_")[0] for c in a.corner.split(",")]
     cs = list(dict.fromkeys(cs))
     ctx = clock_contexts(a.sta_proof, a.sta_plan, cs, a.sta_clock_cal, a.sta_clock_ocv, a.sta_clock_droop,
-                         a.sta_droop_regions, a.sta_core_latency_ff)
+                         a.sta_droop_regions, a.sta_core_latency_ff, getattr(a, "sta_clock_cell", "auto"))
     root, edges, info = clock_start_edges(rows, ctx, a.period, a.aperture, a.sync_aperture, a.start_skew,
                                           a.start_skew_clean, a.start_retime_max, a.start_clean)
     return edges, root, info
@@ -1048,7 +1051,10 @@ def main(argv=None):
         import die_sta_related as DSR
         cs = sorted({c.split("_")[0] for c in a.corner.split(",")})
         tp = DSR.Path(a.sta_proof) / f"tap_arrivals_{cs[0]}.json"
-        cc, cb = DSR.detect_clock_cell(a.sta_proof, DSR.load_taps(DSR.Path(a.sta_proof), cs[0])[0]) if tp.exists()             else ("buf", "no tap_arrivals")
+        # record only (the hull above already resolved the cell, fail closed); no proof file = stubbed hull in tests
+        cc, cb = (DSR.resolve_clock_cell(getattr(a, "sta_clock_cell", "auto"), a.sta_proof,
+                                         DSR.load_taps(DSR.Path(a.sta_proof), cs[0])[0]) if tp.exists()
+                  else ("buf", "no tap_arrivals"))
         if cc != "buf":         # CLK-INV-CAL-1 (BUFx24 records unchanged)
             sta_info["clock_cell"] = dict(cell=cc, basis=cb, aocv_class=DSR.CLOCK_CELL_AOCV_CLASS[cc])
         if sta_info["missing"]:

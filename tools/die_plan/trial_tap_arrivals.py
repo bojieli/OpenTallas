@@ -50,14 +50,17 @@ def export(tree, arr, corner):
             stack.append((c, p + CH[k]))
     meta = dict(corner=corner, source=f"{arr} (die_trial region trees, combo GRT routed RC, OpenSTA)",
                 node_late_ps={}, node_early_ps={}, node_stages={}, node_xy_um={}, cppr_node_range_ps={})
-    # CLK-INV-CAL-1: an inverter die clock (die_trial --clock-cell inv/inv2: ctree.v beside tree.json) is recorded so
-    # die_sta_related picks the inverter model (spice factor + AOCV class Ainv); BUFx24 exports are unchanged
+    # CLK-INV-CAL-1 + COORD ruling ba28d3143: the export DECLARES the die clock cell (die_sta_related fails closed without
+    # it): die_trial tree.json meta clock_cell, else the majority master of the built ctree.v beside tree.json
+    tm = (T.get("meta") or {}).get("clock_cell")
     nl = Path(tree).parent / "ctree.v"
-    if nl.is_file():
+    if tm is None and nl.is_file():
         txt = nl.read_text()
         ninv = len(re.findall(r"^\s*CKINVDCx16_ASAP7_75t_R\s", txt, re.M))
-        if ninv > len(re.findall(r"^\s*BUFx24_ASAP7_75t_R\s", txt, re.M)):
-            meta["clock_cell"] = "inv"
+        nbuf = len(re.findall(r"^\s*BUFx24_ASAP7_75t_R\s", txt, re.M))
+        tm = ("inv" if ninv > nbuf else "buf") if (ninv or nbuf) else None
+    if tm is not None:
+        meta["clock_cell"] = "inv" if tm == "inv2" else tm
 
     def put_cell(key, cell, xy):
         if cell not in N:

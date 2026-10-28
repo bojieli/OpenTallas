@@ -48,19 +48,55 @@ def test_spice_factor_keyed_by_cell():
 
 
 def test_detect_clock_cell(tmp_path):
+    import pytest
     p = tmp_path / "proof"
     p.mkdir()
-    assert R.detect_clock_cell(p, {})[0] == "buf"                         # legacy proof: BUFx24 model
+    # COORD ruling ba28d3143: no silent BUFx24 fallback -> missing and unknown declarations fail closed
+    with pytest.raises(R.ClockCellUndeclared, match="declares no clock_cell"):
+        R.detect_clock_cell(p, {})
+    with pytest.raises(R.ClockCellUndeclared, match="not one of buf / inv / inv2"):
+        R.detect_clock_cell(p, dict(clock_cell="ckbuf"))
+    with pytest.raises(R.ClockCellUndeclared, match="not one of"):
+        R.resolve_clock_cell("BUFx8", p, {})
+    assert R.detect_clock_cell(p, dict(clock_cell="buf"))[0] == "buf"
+    assert R.detect_clock_cell(p, dict(clock_cell="inv2"))[0] == "inv"
     run = tmp_path / "run"
     _netlist(run / "clk", 30, 2)
     meta = dict(source=f"{run}/out_TT/arr_TT.txt (die_trial region trees, combo GRT routed RC, OpenSTA)")
-    cell, basis = R.detect_clock_cell(p, meta)
+    with pytest.raises(R.ClockCellUndeclared):          # a netlist alone is not a declaration
+        R.detect_clock_cell(p, meta)
+    cell, basis = R.detect_clock_cell(p, dict(meta, clock_cell="inv"))
     assert cell == "inv" and "30 CKINVDCx16 / 2 BUFx24" in basis
-    _netlist(p, 0, 9)                                                     # PROOF/ctree.v wins over the source path
-    assert R.detect_clock_cell(p, meta)[0] == "buf"
-    assert R.detect_clock_cell(p, dict(meta, clock_cell="inv2"))[0] == "inv"   # export meta wins
-    assert R.resolve_clock_cell("buf", p, dict(clock_cell="inv"))[0] == "buf"
-    assert R.resolve_clock_cell("inv2", p, {})[0] == "inv"
+    with pytest.raises(R.ClockCellUndeclared, match="contradicts"):   # declaration vs built netlist
+        R.detect_clock_cell(p, dict(meta, clock_cell="buf"))
+    with pytest.raises(R.ClockCellUndeclared, match="contradicts"):
+        R.resolve_clock_cell("buf", p, meta)
+    assert R.resolve_clock_cell("inv2", p, meta)[0] == "inv"
+
+
+def test_planner_and_gate_fail_closed_without_declaration(tmp_path):
+    import pytest
+    import count_align_plan as CAP
+    p = _proof(tmp_path, "inv")
+    for c in ("TT", "FF"):
+        f = p / f"tap_arrivals_{c}.json"
+        m = json.loads(f.read_text())
+        m.pop("clock_cell")
+        f.write_text(json.dumps(m))
+    plan = tmp_path / "plan.json"
+    plan.write_text(json.dumps({"clock": {"common_latency_ps": 250.0}, "ports": []}))
+    kw = dict(clock_cal="spice", clock_ocv="table", clock_droop="shared")
+    with pytest.raises(R.ClockCellUndeclared):
+        CAP.clock_contexts(p, plan, ("TT",), **kw)                                # planner
+    with pytest.raises(R.ClockCellUndeclared):
+        R.sta_port_intervals(p, json.loads(plan.read_text()), ("TT",), {}, None, "spice", True, clock_ocv="table")
+    with pytest.raises(SystemExit, match="declares no clock_cell"):            # gate
+        R.main([str(p), "--plan", str(plan), "--out", str(tmp_path / "o"), "--corner", "TT"])
+    for c in ("TT", "FF"):
+        f = p / f"tap_arrivals_{c}.json"
+        f.write_text(json.dumps(dict(json.loads(f.read_text()), clock_cell="bufx")))
+    with pytest.raises(SystemExit, match="not one of"):
+        R.main([str(p), "--plan", str(plan), "--out", str(tmp_path / "o"), "--corner", "TT"])
 
 
 def test_clock_ocv_fn_inverter_class_and_buf_unchanged():
@@ -109,7 +145,7 @@ def _proof(tmp_path, cell):
                      tree_path="h0", stages_from_root=70, xy_um=[100.0, 100.0]),
                 dict(port="t_B__clk", part="B", late_ps=3100.0, early_ps=3090.0, slew_ps=40.0, cppr_node="B",
                      tree_path="h1", stages_from_root=72, xy_um=[900.0, 100.0])]
-        meta = dict(corner=c, source="x", node_late_ps={"h": 30.0, "h0": 2900.0, "h1": 2950.0},
+        meta = dict(corner=c, source="x", clock_cell=cell, node_late_ps={"h": 30.0, "h0": 2900.0, "h1": 2950.0},
                     node_early_ps={"h": 29.0, "h0": 2890.0, "h1": 2940.0}, node_stages={"h": 2, "h0": 66, "h1": 66},
                     node_xy_um={"h": [500.0, 100.0], "h0": [100.0, 100.0], "h1": [900.0, 100.0]},
                     cppr_node_range_ps={"h": 1.0, "h0": 10.0, "h1": 10.0}, taps=taps, regions=2)
@@ -133,9 +169,9 @@ def test_sta_d_intervals_auto_detects_inverter_model(tmp_path, monkeypatch):
     db = R.sta_d_intervals(pb, plan, ("TT", "FF"), **kw)
     assert seen == [R.SPICE_CLOCK_CAL_INV["TT"], R.SPICE_CLOCK_CAL_INV["FF"], 1.0485, 1.0552]
     assert di != db
-    seen.clear()
-    db2 = R.sta_d_intervals(pi, plan, ("TT", "FF"), clock_cell="buf", **kw)       # explicit override = BUFx24 model
-    assert db2 == db and seen == [1.0485, 1.0552]
+    import pytest
+    with pytest.raises(R.ClockCellUndeclared, match="contradicts"):   # a BUF override on an inverter netlist fails
+        R.sta_d_intervals(pi, plan, ("TT", "FF"), clock_cell="buf", **kw)
 
 
 def test_count_align_plan_contexts_use_detected_cell(tmp_path):
@@ -151,7 +187,7 @@ def test_count_align_plan_contexts_use_detected_cell(tmp_path):
 
 def test_trial_tap_arrivals_records_inverter_clock(tmp_path):
     import trial_tap_arrivals as TA
-    for cell, want in (("inv", "inv"), ("buf", None)):
+    for cell, want in (("inv", "inv"), ("buf", "buf")):
         d = tmp_path / cell / "clk"
         _netlist(d, 3 if cell == "inv" else 0, 0 if cell == "inv" else 3)
         tree = dict(nodes={"0": dict(parent=None, x=0.0, y=0.0, kids=[])}, node_buf={"0": "b0"}, parent_of={},

@@ -14,8 +14,16 @@ import count_align_bind as CAB  # noqa: E402
 import count_align_plan as CAP  # noqa: E402
 import die_sta_related as D  # noqa: E402
 
+import pytest  # noqa: E402
+
 T = 833.0
 AP = T / 8
+
+
+@pytest.fixture(autouse=True)
+def _restore_cppr_lca(monkeypatch):
+    # die_sta_related.main() sets the module flag CPPR_LCA from --cppr-lca; restore it for the other test modules
+    monkeypatch.setattr(D, "CPPR_LCA", D.CPPR_LCA)
 INV, BUF = "CKINVDCx16_ASAP7_75t_R", "BUFx24_ASAP7_75t_R"
 
 
@@ -34,7 +42,7 @@ def _proof(d, cell="inv", far_late=0.0):
     taps = [tap("t_s0", "suc", 3000.0, "h00", 70, 100.0), tap("t_s1", "suc", 3000.0 + far_late, "h01", 74, 300.0),
             tap("t_m0", "stm", 3600.0, "h10", 84, 2000.0)]
     for c in ("TT", "FF"):
-        meta = dict(corner=c, source="x", taps=taps, regions=2,
+        meta = dict(corner=c, source="x", taps=taps, regions=2, clock_cell=cell,
                     node_late_ps={"h": 30.0, "h0": 1500.0, "h1": 1800.0, "h00": 2900.0, "h01": 2900.0, "h10": 3500.0},
                     node_early_ps={"h": 29.0, "h0": 1490.0, "h1": 1790.0, "h00": 2890.0, "h01": 2890.0, "h10": 3490.0},
                     node_fall_late_ps={"h": 26.0, "h0": 1496.0, "h1": 1796.0, "h00": 2896.0, "h01": 2896.0,
