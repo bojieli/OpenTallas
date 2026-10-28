@@ -164,3 +164,27 @@ A0 parent remainsprimaryphysicalcriticalpath. Importanthandoffcorrection: romlea
   - Where: c_* glue taps (28/part, 4 types): 4215/5376 padded, 1-5 pads (~24-120 ps) = in-region local-tree wire/load asymmetry (Codex measured 95.8 ps late spread on two same-250 taps in c_W3_bn_00). sl_*_su_c: 276/288 padded, 9-12 pads (~220-290 ps) = SU core insertion vs the region's max contract (UNCHECKED which core sets the max; prog 472.7 / A0 390 placeholder are the candidates).
   - Structural fixes (12.8 a-e, v5.0) instead: (1) su_c: early tap on the long core (CORELAT prog 472.7) / centre entry, not late pads on 276 short taps; (2) c_*: local trees balanced by construction (equal-length H-tree, equal-load density taps from the region entry), then pads only as ledgered residual. Also noted: c_* taps sit 90-92 stages from b0 (UNCHECKED whether all r* are repeaters of the regional feed or die-wide root depth; 12.13 locality asks).
   - Verdict: FAIL STRUCTURAL (residual share). NO trial5 GRT launched by me (geom review before P&R). Start-skew: the old K2 tp_search is obsolete (Codex/root parked it; 9-tp seed = 0 CA but FF 11/312 start fail); the fresh K2b crossing rows need a routed clock + FLOW's parked --port-taps reader (codex/meso-port-taps-1028, uncommitted) first. No jobs launched; Codex jobs untouched.
+- 2026-10-28 06:41 PDT [DIE-QC-8] RESULT trial6 (COORD 06:11 ruling) claude/die-qc8-1028@923d712861 (GitHub + hub; results/die_qc8_1028/README.md). Runs intel2:/srv/opentallas-scratch2/claude/die-qc8-1028. Codex jobs/dirs untouched (read-only inputs from codex-die-qc-0359-1028).
+  - ESTIMATE (trial4 routed, pads removed; CHECKED arithmetic): su_c spread 279/291 TT. Early taps alone -> 89/106. c_* 94/238 TT is pure local tree.
+  - c_* ROOT CAUSE (CHECKED): the planned H-tree is equal length, but site slides move merge points off the A0 cores by up to 853 um. Placed path spread is 333/534 um, corr 0.82 with arrival.
+  - Measured/model leg ratio 1.548 TT / 1.293 FF (CHECKED, 14,615 legs). Estimated residual pads to the gate: 2.7 % of taps.
+  - TRIAL6 BUILT, 0 pads: channel DME (--region-dme delay) on 192 c_* + 12 su_c regions, plus a new opt-in --region-dme-early 1.548. Early core taps hang from the upper DME node whose subtree delay matches. CORELAT taps prog 472.7, btab 352.8, crh 292.5.
+    - Cells: 29,645 (trial5 59,774). Wire 5.38 m (trial4 7.74). 0 illegal. Body pack 0 overlap/macro/unhosted.
+    - Renders viewed: PASS-COND.
+    - Clock-only GRT 2W2S, 50-it budget: TT + FF EXIT 0, overflow 0 all layers (CHECKED).
+  - MEASURED spread TT med/max (OCV term 0.062 x entry->tap, UNCHECKED):
+    - c_*: 73.5/180.7 (was 94/238). Regions >150 incl OCV: 32 TT / 12 FF (trial4 estimate 59).
+    - su_c: 212.9/225.4 (was 279/291). All 12 regions are still >150.
+    - Other classes unchanged (<=41).
+  - Early delivered TT: crh 42.0 of 42.5, btab 74.8 of 102.8, prog 251.9 of 222.7.
+  - The su_c residual is mostly NOT the early taps: the NON-early core taps (vmr/su8) arrive 153 ps early (median). The DME cannot zero-skew the core-pin cluster against the top grid taps without snaking (model spread 63-77 ps, 4-5 imbalanced merges per region).
+  - Residual pads to the gate: 297/7121 taps (4.17 %), 634 pads, max 5 (trial5: 68.7 %, 13,146). This is sparse-compliant but close to 5 %, so principle fixes come first.
+  - FLOW --port-taps reader (codex/meso-port-taps-1028, uncommitted) reviewed: coherent. Committed byte-for-byte on my branch with tests (5 + 51 PASS).
+    - Default keeps the legacy last tap per part.
+    - Note: CPPR now starts from tap.driver (pad ancestry), so numbers change only on padded trees.
+  - NEXT (DIE-QC-9):
+    - (1) DME snake-on-imbalance in delay mode for su_c, or region entry at the delay centroid.
+    - (2) Corner-averaged early hang target (btab -28 / prog +29).
+    - (3) c_* A0 centre-entry plan delta (core_taps early + explicit glue taps; needs glue sink census + QC-A0-KITS-2).
+    - (4) Then CA + die STA (spice, region key, tree-parent) and start-skew with --port-taps.
+    - No live jobs (kit/bays/GRT all finished).
