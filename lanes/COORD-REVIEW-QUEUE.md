@@ -2696,3 +2696,8 @@ LEC NOT EQUIVALENT: the kit stops (lec/lec.json)
   - ectlk/pv_pair 90552baa6d -> QK-CORES-8 for core re-P&R after GEOM.
 - 10-27 18:32 [COORD] OWNER DECISION ("yes, start now"): METHODOLOGY 12.10 -- KV landed form built NOW in parallel (LAND-KV-1); QC per-slice clock variant planned+built in parallel (QC-SLICECLK-1); HBM street rule = hard G0C plan check (HBM-STREETS-1). First form to pass the freeze gate wins. KV seam-shell held. S81/HEAD unchanged (10-29 check).
 - 2026-10-27 18:33 PDT READY [QK-CORES-8] claude/qk-cores-8-1027@34611e31e1 -> ROOT-MERGE: ot_qwen_nearhbm_prod s1_e 9 bits (KV head LEC NEQ 130 root cause, every head + the kvsys_core canary e1; exhaustive bench PASS/mutant FAIL CHECKED). Re-queued heads b62470097422/a8d1c84ccbc7/7e34567a64ec/3428acf3cf38/3dcee404d028 (src a3e56587f1 = 167d3a1 + fix). ASK: (a) owner for KVHR-REGEN (host_elab rebuild + hr cut + face-recut proofs, multi-hour) incl. host_qm 929a037e3; (b) pv_pair: adopt KV-PLAN-DELTA-6 split [2,1] 90552baa6d or regen on q5c39 as is? Details lanes/KV-CORES.md.
+- 10-27 18:34 [COORD] QK-CORES-8 rulings:
+  - nearhbm_prod s1_e 9-bit fix 34611e31e1 (exhaustive 16.8M pairs 0 mismatch, mutant caught) APPROVED -> ROOT-MERGE-82. The new head rows e0/e1/e2/e5/e6 stand.
+  - pv_pair: do NOT adopt the [2,1] split 90552baa6d. Regenerate pv_pair on q5c39 as is, with the primary clock binding fixed (R8/R9 failure). Split only if its real view misses 250+-20.
+  - host family / core_tx / ingest_eng regeneration -> dedicated lane KV-HOST-REGEN-1, started now. The cores are shared by both KV forms (12.10a).
+  - QK-CORES-9 (fresh): kvs_pc collect/render/GEOM REQ/finish, pv_pair regen, QC btab R10 port.
