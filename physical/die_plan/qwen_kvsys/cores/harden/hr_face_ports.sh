@@ -1,6 +1,8 @@
 #!/bin/bash
 # KVHR2 10-26: hr face recut for one core: yosys pre.json -> hr_face_ports.py -> <mod>.v ; equiv proof + mutant.
 # usage: hr_face_ports.sh CORE_JSON OUTDIR   (run inside the ORFS image; yosys on PATH or ORFS install)
+# DIE-KV-3/CORETX 10-27: optional HR_RETIME_IN="pin[i] ..." -> hr_face_ports.py --retime-in (0-cycle face capture flop
+# for an input whose cone ends in one flop, e.g. core_tx u_ctrl__package_abort[0]); unset = unchanged.
 set -e
 CJ=$1; O=$2; mkdir -p $O
 HERE=$(cd $(dirname $0) && pwd)
@@ -18,8 +20,9 @@ opt_clean
 write_json $O/pre.json
 YS
 $Y -q -l $O/pre.log $O/pre.ys
-python3 $HERE/hr_face_ports.py transform $O/pre.json $O/post.json $O/hr_face_ports.json --top $MOD
-python3 $HERE/hr_face_ports.py transform $O/pre.json $O/mut.json $O/hr_face_ports_mut.json --top $MOD --mutant > /dev/null
+RT=""; for p in ${HR_RETIME_IN:-}; do RT="$RT --retime-in $p"; done
+python3 $HERE/hr_face_ports.py transform $O/pre.json $O/post.json $O/hr_face_ports.json --top $MOD $RT
+python3 $HERE/hr_face_ports.py transform $O/pre.json $O/mut.json $O/hr_face_ports_mut.json --top $MOD --mutant $RT > /dev/null
 cat > $O/emit.ys <<YS
 read_json $O/post.json
 select $MOD
