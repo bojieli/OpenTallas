@@ -587,9 +587,40 @@ def parse_die(path, top=None):
                 cm.dups.append(c[0])
             cm[c[0]] = c[1]
         insts.append((mst, inst.strip(), params, cm))
-    for n in re.findall(r'(\\\S+|\w+)', hdr):
-        pass
+    _ansi_header_ports(hdr, nets, tin, tout)
     return nets, tin, tout, insts
+
+
+def _ansi_header_ports(hdr, nets, tin, tout):
+    """DIE-HEAD-3: ANSI die-top header `module top (input wire [543:0] x, output wire y, ...)` (gen_rtl native tops).
+    The body-declaration loop above only sees non-ANSI ports, so header ports were UNDECL: every `.clk(clk)` counted as
+    UNPARSED and a [543:0] top port bound as 1 bit (WIDTH_MISMATCH 1 vs 544).  A non-ANSI header (bare names) adds
+    nothing here; a direction carries over to following bare names, as in Verilog-2001."""
+    h = hdr.strip()
+    if h.startswith('#'):
+        p0 = h.find('(')
+        h = h[_closing_paren(h, p0) + 1:].strip() if p0 >= 0 else h
+    if not h.startswith('('):
+        return
+    inner = h[1:h.rfind(')')] if ')' in h else h[1:]
+    d = w = lo = None
+    for item in _split_commas(inner):
+        m = re.match(r'\s*(input|output|inout)\b\s*(?:(?:wire|logic|reg|tri)\b)?\s*(?:signed\b)?\s*((?:\[[^\]]+\]\s*)?)(\\\S+|\w+)\s*$', item, re.S)
+        if m:
+            d = m.group(1)
+            rng = re.match(r'\[\s*(\d+)\s*:\s*(\d+)\s*\]', m.group(2) or '')
+            w = abs(int(rng.group(1)) - int(rng.group(2))) + 1 if rng else 1
+            lo = min(int(rng.group(1)), int(rng.group(2))) if rng else 0
+            n = m.group(3)
+        elif d is not None and re.fullmatch(r'\s*(\\\S+|\w+)\s*', item):
+            n = item.strip()
+        else:
+            continue
+        nets[n] = (w, lo)
+        if d == 'input':
+            tin.add(n)
+        elif d == 'output':
+            tout.add(n)
 
 
 def _named_conns(s):
