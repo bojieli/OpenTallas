@@ -1,0 +1,234 @@
+diff --git a/tools/die_plan/die_trial.py b/tools/die_plan/die_trial.py
+index c88aa187d2..3c2384d7d5 100644
+--- a/tools/die_plan/die_trial.py
++++ b/tools/die_plan/die_trial.py
+@@ -719,6 +719,60 @@ def path_lengths(nodes):
+     return L
+ 
+ 
++def length_match(nodes, err=None, inside=None):
++    """DIE-QC-2 opt-in (--tree-length-match, slice-spine path): DME-style equal-length construction AFTER the site
++    pass.  Legal-site moves of blocked nodes make sibling root->leaf lengths unequal (QC r250 routed tree: up to 783 um
++    inside a std partition, 1,518 um in W5; the ideal req_xy tree has 0).  Bottom-up, each node's down-length
++    D(n) = max_k(|n k| + pad_k + D(k)) (a leaf: its longest leaf->tap leg); every shorter kid leg gets
++    pad_k = D(n) - |n k| - D(k) um of extra wire, drawn as a U-jog at the leg middle (tree_netlist).  Plan geometry
++    only (no measured value); leaf->tap legs are not padded.
++    err {node: um}: realized-minus-drawn leg length from the previous placement (repeaters snapped to legal sites),
++    so the pads close on the REALIZED lengths (clock_kit iterates).  inside: nodes whose incoming leg may be padded
++    (below a region root: cross-region phase is absorbed by the count-aligned crossings, so feeds stay unpadded).
++    -> dict(pad_um_total, legs, max_pad_um)"""
++    err = err or {}
++    D, order = {}, [i for i, nd in nodes.items() if nd["parent"] is None]
++    for i in order:                                  # BFS (corner nodes share their child's level)
++        order.extend(nodes[i]["kids"])
++    for i in reversed(order):
++        nd = nodes[i]
++        tl = [abs(t[2] - nd["x"]) + abs(t[3] - nd["y"]) for t in nd["taps"]]
++        kl = {k: abs(nodes[k]["x"] - nd["x"]) + abs(nodes[k]["y"] - nd["y"]) + err.get(k, 0.0) + D[k]
++              for k in nd["kids"]}
++        free = [k for k in nd["kids"] if inside is None or k in inside]
++        fixed = [kl[k] for k in nd["kids"] if k not in free]
++        D[i] = max(tl + list(kl.values()), default=0.0)
++        for k, v in kl.items():
++            nodes[k]["pad_um"] = round(D[i] - v, 3) if (k in free and D[i] - v > 1.0) else 0.0
++        if fixed:                     # unpadded feeds: D is the longest branch (no balance across regions)
++            D[i] = max([D[i]] + fixed)
++    pads = [nd["pad_um"] for nd in nodes.values() if nd.get("pad_um", 0.0) > 0]
++    return dict(pad_um_total=round(sum(pads), 1), legs=len(pads), max_pad_um=round(max(pads, default=0.0), 1),
++                down_len_root_um=round(D[min(nodes)], 1))
++
++
++def leg_points(p, c, pad, site=None, w=5.0):
++    """polyline p -> c whose Manhattan length is |p c| + pad: a U-jog (depth pad/2, width 2w) at the leg middle,
++    perpendicular to the leg's long axis, on the side whose far corner needs the smaller legal-site move."""
++    p, c = (float(p[0]), float(p[1])), (float(c[0]), float(c[1]))
++    if pad <= 0:
++        return [p, c]
++    h = pad / 2.0
++    if abs(c[0] - p[0]) >= abs(c[1] - p[1]):            # horizontal leg: vertical jog at x = mid
++        mx, sx = (p[0] + c[0]) / 2, (1.0 if c[0] >= p[0] else -1.0)
++        opts = [[p, (mx - sx * w, p[1]), (mx - sx * w, p[1] + s_ * h), (mx + sx * w, p[1] + s_ * h), (mx + sx * w, p[1]), c]
++                for s_ in (1.0, -1.0)]
++    else:
++        my, sy = (p[1] + c[1]) / 2, (1.0 if c[1] >= p[1] else -1.0)
++        opts = [[p, (p[0], my - sy * w), (p[0] + s_ * h, my - sy * w), (p[0] + s_ * h, my + sy * w), (p[0], my + sy * w), c]
++                for s_ in (1.0, -1.0)]
++    if site is not None:
++        def cost(o):
++            return sum(0.0 if site.legal(q) else _man(q, site.nearest(q)) for q in o[2:4])
++        opts.sort(key=cost)
++    return opts[0]
++
++
+ def tree_netlist(nodes, taps, rep_um=450.0, site=None):
+     """buffered tree: a BUF at every node (branch / leaf driver), repeaters every rep_um along each leg.
+     -> (verilog, placements [(inst, x, y)], tap ports [(port, x, y)], node_buf {node id: inst}, path {tap port: [inst]})"""
+@@ -736,17 +790,25 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None):
+             src = "root"
+         else:
+             p = nodes[nd["parent"]]
+-            L = abs(p["x"] - nd["x"]) + abs(p["y"] - nd["y"])
++            pts = leg_points((p["x"], p["y"]), (nd["x"], nd["y"]), nd.get("pad_um", 0.0), site)
++            segl = [_man(pts[q], pts[q + 1]) for q in range(len(pts) - 1)]
++            L = sum(segl)
+             nrep = max(0, int(math.ceil(L / rep_um)) - 1)
+             src = f"{net(nd['parent'])}"
+             prev_inst = node_buf[nd["parent"]]
+             for j in range(nrep):
+-                f = (j + 1) / (nrep + 1)
+-                x = p["x"] + (nd["x"] - p["x"]) * f
+-                y = p["y"] + (nd["y"] - p["y"]) * f
++                s_ = L * (j + 1) / (nrep + 1)          # arc position along the (padded) leg
++                q = 0
++                while q < len(segl) - 1 and s_ > segl[q]:
++                    s_ -= segl[q]
++                    q += 1
++                a, b = pts[q], pts[q + 1]
++                f = s_ / segl[q] if segl[q] > 0 else 0.0
++                x = a[0] + (b[0] - a[0]) * f
++                y = a[1] + (b[1] - a[1]) * f
+                 inst = f"r{i}_{j}"
+                 if site is not None:
+-                    x, y = site.nearest((x, y), "x" if abs(nd["x"] - p["x"]) >= abs(nd["y"] - p["y"]) else "y")
++                    x, y = site.nearest((x, y), "x" if abs(b[0] - a[0]) >= abs(b[1] - a[1]) else "y")
+                 o = f"rn{i}_{j}"
+                 cells.append(f"  {BUF} {inst} (.A({src}), .Y({o}));")
+                 wires.append(o)
+@@ -774,7 +836,7 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None):
+ 
+ 
+ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_slide=False, regions=None,
+-              slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None):
++              slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, length_match_on=False):
+     out = Path(out)
+     out.mkdir(parents=True, exist_ok=True)
+     taps = clock_taps(P)
+@@ -813,6 +875,34 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
+                                    max_um=max([m["um"] for m in moves], default=0.0),
+                                    sum_um=round(sum(m["um"] for m in moves), 1),
+                                    zero_cost=sum(1 for v in imb if v <= 1e-6), max_imbalance_um=max(imb, default=0.0))
++        if length_match_on:     # DIE-QC-2 opt-in: equal root->leaf length after the site pass (U-jog pads)
++            inside, stack = set(), [i for i, nd in nodes.items() if nd.get("region_root")]
++            while stack:
++                j = stack.pop()
++                stack.extend(nodes[j]["kids"])
++                inside.update(nodes[j]["kids"])
++            err, hist = {}, []
++            for it in range(4):            # close the pads on REALIZED (site-snapped) leg lengths
++                lm = length_match(nodes, err, inside)
++                _, place_, _, nb_, po_ = tree_netlist(nodes, taps, rep_um, site)
++                xy = {inst: (x, y) for inst, x, y in place_}
++                res = {}
++                for k, nd in nodes.items():
++                    if nd["parent"] is None:
++                        continue
++                    a, real = nb_[k], 0.0
++                    while a != nb_[nd["parent"]]:
++                        real += _man(xy[po_[a]], xy[a])
++                        a = po_[a]
++                    drawn = abs(nd["x"] - nodes[nd["parent"]]["x"]) + abs(nd["y"] - nodes[nd["parent"]]["y"])
++                    res[k] = real - drawn - nd.get("pad_um", 0.0)
++                resid = max((abs(res[k] - err.get(k, 0.0)) for k in inside), default=0.0)
++                hist.append(dict(it=it, pad_um_total=lm["pad_um_total"], max_change_um=round(resid, 1)))
++                err = {k: v for k, v in res.items()}
++                if resid < 5.0:
++                    break
++            lm = length_match(nodes, err, inside) if resid >= 5.0 else lm
++            spine_info["length_match"] = dict(lm, inside_legs=len(inside), iterations=hist)
+     else:
+         nodes = build_htree(P, taps, leaf_um, full_depth, regions)
+     if site_slide and not slice_spine:          # opt-in: slide each buffer back along its OWN incoming leg (equal length by construction)
+@@ -1820,7 +1910,7 @@ exit $rc
+ 
+ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.72, density=0.15, island_sites=None,
+               island_margin=ISLAND_MARGIN_UM, full_depth=False, site_legal=False, site_slide=False, regions=None,
+-              slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None):
++              slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, length_match_on=False):
+     raw = S.load(plan_path)
+     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
+     plan_dir = Path(plan_path).parent
+@@ -1889,7 +1979,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
+     # clock
+     nodes, segs, leaf_legs, cm = clock_kit(P, out / "clock", leaf_um, rep_um, full_depth, site_legal, site_slide,
+                                            json.loads(Path(regions).read_text())["part_region"] if regions else None,
+-                                           slice_spine, spine_top_leaf_um, slice_rows)
++                                           slice_spine, spine_top_leaf_um, slice_rows, length_match_on)
+     (out / "clock" / "make_tracks.tcl").write_text(gen_phys.make_tracks_tcl(P))
+     meta["clock_tree"] = cm
+     reserve = reserve_rects(segs, leaf_legs, P)
+@@ -2462,6 +2552,9 @@ def main(argv=None):
+                    help="top-spine 1-D bisection leaf (um): nominal top imbalance <= half of it")
+     k.add_argument("--slice-rows", help="with --slice-spine: qc_slice_clock_rows/1 reservation (INFRA-FIRST-QC-R35): "
+                    "column x and top spine row come from the plan reservation")
++    k.add_argument("--tree-length-match", action="store_true",
++                   help="DIE-QC-2 opt-in (with --slice-spine): after the site pass, pad every shorter sibling leg "
++                        "(U-jog at the leg middle) so root->leaf lengths are equal (DME-style); plan geometry only")
+     k.add_argument("--coarse-um", type=float, default=0.72)
+     k.add_argument("--density", type=float, default=0.15, help="die power density W/mm2 for PDNSim")
+     k.add_argument("--island-sites", nargs="+", help="CLOCK-128-R7 opt-in: die_tree_plan.json / ot_clock_sites/1 / "
+@@ -2531,7 +2624,8 @@ def main(argv=None):
+         m = write_kit(a.plan, a.out, a.views, a.leaf_um, a.rep_um, a.coarse_um, a.density, a.island_sites,
+                       a.island_margin_um, full_depth=a.htree_full_depth, site_legal=a.tree_site_legal,
+                       site_slide=a.tree_site_slide, regions=a.region_trees, slice_spine=a.slice_spine,
+-                      spine_top_leaf_um=a.spine_top_leaf_um, slice_rows=a.slice_rows)
++                      spine_top_leaf_um=a.spine_top_leaf_um, slice_rows=a.slice_rows,
++                      length_match_on=a.tree_length_match)
+         print(json.dumps({k: m[k] for k in ("die", "parts", "types", "closed_views", "hard_cores", "clock_tree", "grt",
+                                              "psm", "sta")}, indent=1))
+     elif a.cmd == "report":
+diff --git a/tools/die_plan/test_die_trial_slice_spine.py b/tools/die_plan/test_die_trial_slice_spine.py
+index df586af456..9b702349ab 100644
+--- a/tools/die_plan/test_die_trial_slice_spine.py
++++ b/tools/die_plan/test_die_trial_slice_spine.py
+@@ -155,3 +155,51 @@ def test_balanced_site_then_round_legal_never_lands_inside_a_halo():
+     q, _ = D.balanced_site(site, p, (10521.36, 12000.0), [(10521.36, 10900.0), (10521.36, 11200.0)], "y")
+     r = D.round_legal(site, q)
+     assert site.legal(r) and r == (round(r[0], 3), round(r[1], 3))
++
++
++def _toy_nodes():
++    # root 0 at (0,0) -> kids 1 (100,0) and 2 (-300,0) [kid 2 slid farther]; leaves carry one tap each at their node
++    n = {0: dict(x=0.0, y=0.0, parent=None, level=0, kids=[1, 2], taps=[]),
++         1: dict(x=100.0, y=0.0, parent=0, level=1, kids=[], taps=[("p", "a", 100.0, 50.0)]),
++         2: dict(x=-300.0, y=0.0, parent=0, level=1, kids=[], taps=[("p", "b", -300.0, 10.0)])}
++    return n
++
++
++def test_length_match_pads_the_shorter_sibling_to_equal_root_to_leaf_length():
++    n = _toy_nodes()
++    info = D.length_match(n)
++    # down lengths: kid1 100 + 50 = 150, kid2 300 + 10 = 310 -> kid1 leg padded by 160
++    assert n[1]["pad_um"] == 160.0 and n[2]["pad_um"] == 0.0
++    assert info["legs"] == 1 and info["pad_um_total"] == 160.0 and info["down_len_root_um"] == 310.0
++
++
++def test_length_match_handles_corner_nodes_on_the_same_level():
++    n = {0: dict(x=0.0, y=0.0, parent=None, level=0, kids=[1, 3], taps=[]),
++         1: dict(x=200.0, y=0.0, parent=0, level=1, kids=[2], taps=[], corner=True),
++         2: dict(x=200.0, y=100.0, parent=1, level=1, kids=[], taps=[("p", "a", 200.0, 100.0)]),
++         3: dict(x=-50.0, y=0.0, parent=0, level=1, kids=[], taps=[("p", "b", -50.0, 0.0)])}
++    D.length_match(n)
++    assert n[3]["pad_um"] == 250.0 and n[1]["pad_um"] == 0.0 and n[2]["pad_um"] == 0.0
++
++
++def test_leg_points_add_exactly_the_pad_and_end_at_the_child():
++    for p, c in (((0.0, 0.0), (400.0, 0.0)), ((0.0, 0.0), (0.0, -300.0)), ((0.0, 0.0), (250.0, 40.0))):
++        pts = D.leg_points(p, c, 120.0)
++        L = sum(abs(pts[i][0] - pts[i + 1][0]) + abs(pts[i][1] - pts[i + 1][1]) for i in range(len(pts) - 1))
++        assert abs(L - (abs(p[0] - c[0]) + abs(p[1] - c[1]) + 120.0)) < 1e-6 and pts[0] == p and pts[-1] == c
++    assert D.leg_points((0.0, 0.0), (10.0, 0.0), 0.0) == [(0.0, 0.0), (10.0, 0.0)]
++
++
++def test_tree_netlist_places_repeaters_on_the_padded_leg():
++    n = _toy_nodes()
++    D.length_match(n)
++    v, place, *_ = D.tree_netlist(n, [], rep_um=50.0)
++    reps = [(i, x, y) for i, x, y in place if i.startswith("r1_")]
++    # padded leg 100 + 160 = 260 um -> ceil(260/50)-1 = 5 repeaters, some off the straight y=0 line (the U-jog)
++    assert len(reps) == 5 and any(abs(y) > 1.0 for _, _, y in reps)
++
++
++def test_length_match_is_opt_in():
++    sig = inspect.signature(D.clock_kit)
++    assert sig.parameters["length_match_on"].default is False
++    assert inspect.signature(D.write_kit).parameters["length_match_on"].default is False
