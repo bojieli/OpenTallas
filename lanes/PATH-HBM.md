@@ -1011,3 +1011,28 @@ Resumed exclusive whole-hub mover endpoint work in fresh sparse codex/hbm-datafl
   - Cost of the re-plan event: 3-4 h+ beyond my slice (ends 04:15), so I will hand off the build in my PARKED line.
   - (b) hub reset taps/relays at the 3 clusters and (c) hub PG on measured activity are folded into the same event. (c) needs a hub toggle window in the PG-ACTIVITY tb first (RISK-2 R6); it is not run.
   - early_ps hook: core taps stay at 250/202.5 until HBM-CORE-LAT-2 lands.
+- 2026-10-28 02:48 PDT [HBM-RISK-1] RISK TABLE, R1/R2/R4 on the candidate (v1c5 + hub W/E split + spt). Ranked by build impact.
+  1. **In-region clock balance.**
+     - Measured (CHECKED): placement STA, spice cal. Region-dme spread median 566 / max 1036 ps TT (877 FF). 30/36 regions are over 150. With OCV+droop the max is 1485 (UNCHECKED model).
+     - Gate: <=150 ps.
+     - Fix: per-region delay/snake on the short branch of the imbalanced merges (DIE-QC-4 b) plus the clock routed first with NDR. For the SM/PHY hard partitions, accept tap targets from the core's real view (early taps). Prove it on R024 + R015E first.
+     - Cost: about 4-6 h (UNCHECKED).
+     - Renders viewed: epyc2:.../hbm-risk-1/r2/k1/R024.png and R015E.png. The NW_sm0 core-pin taps run 7.8-8.8 ns; the hub is late at the W/E cut column x~11.6 mm.
+  2. **Crossings on the built arrivals.**
+     - Measured (CHECKED): CA plan with the STA hull has 200 FAIL / 333. 16 of them, plus the 4 unreached, are not hub artefacts.
+     - Gate: 0 FAIL, >=100 ps.
+     - Fix: follows from (1) for the hub/in-region part. The 16 R1 pairs need (3). The 4 unreached links need the SF wire (DIE-HBM-5 r5).
+     - Cost: rerun about 0.5 h after (1).
+  3. **Feed unshared length.**
+     - Measured (CHECKED tool, UNCHECKED model): 31 pairs (162 kb) over 3.4 ns at 278.6 and 19 at 219.2. Worst 6.85 ns, R014-R019. Max feed hops is 3 (S81 had 43), but each hop carries the parent insertion.
+     - Gate: about 3.4 ns.
+     - Fix: no feed form gets under the limit (trunk/top/spine/fwd/dme all tried). Re-root the spt so the heavy W/E pairs are on-feed (R019 under R015W, R022 under R016W). Relay-split the rest along the tree path, 2-6 hops each.
+     - Cost: about 2 h estimate.
+  4. **Analytic CA estimate.**
+     - Reproduced (CHECKED): 4 FAIL, 114.2 / 111.9 ps. Only the 4 unreached status links fail.
+     - The risk is that it is optimistic: it misses (1)-(3).
+  5. **Clock cells on cores/PHY.**
+     - Measured: 0 / 0 of 12,708 cells (CHECKED computed + viewed). Taps in PHY domains: 5.
+     - Low risk.
+  - Data: epyc2:/srv/opentallas-scratch2/claude/hbm-risk-1/r2 and intel2:/srv/opentallas-scratch2/claude/hbm-risk-1/{r1,r4}.
+  - Scripts (own, not committed to the repo): r1_feed.py, r2_clock.py (clock_kit-only driver; it needs about 23 min of clock_taps for the hub types, so taps are cached in k1/taps.json), r2_post.py, r4/mkproof_place.py, r4/r4_sta.py.
