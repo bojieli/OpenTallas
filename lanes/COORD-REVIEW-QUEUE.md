@@ -2857,3 +2857,7 @@ FAILED [AUTOPILOT e80a98421626] 2026-10-27 19:42:34 PDT AUTOPILOT -> S81-CORES: 
 KIT_PREFLIGHT FAIL: autopilot stopped before physical runner
 ot-run: RAN on localhost (unit oth-ubuntu-2486828-1793154768): exit 1
 AP_RC=1 | kit localhost:/srv/opentallas-scratch2/claude/flow-shared-6/s81kits/kits/dsdv_eng_rr_h0_r21p src main@47ce1af8bc | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-10-27 19:44 PDT [COORD] OWNER 12.13 LOCALITY FIRST (coord 1a411ba4c) applies to all 5 dies (none has passed freeze).
+  New lanes: LOCALITY-SCORE-1 (shared locality.py: traffic matrix, score, proposer, baseline for all dies), LOCALITY-S81-1, LOCALITY-HBM-1.
+  Re-briefed: LAND-HEAD-3 (feed along links, not a die trunk), LAND-KV-2 (regroup + link-following feed), QC-SLICECLK-3 (already fits), OSS-CLKPLAN-1 (align schema).
+  Stopped per 12.13f: die-wide QC clock work in INFRA-FIRST-QC-R35 (only the slice M8 rows + PG finish); HEAD-R25 (parked die mesh) CANCELLED.

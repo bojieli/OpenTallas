@@ -464,3 +464,40 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
 - 12.12 (OWNER 2026-10-27 ~19:1x) droop INFO rerun extended: every signed core with TT setup slack < 70 ps gets the 0.665 V INFO rerun
      (12.4a b2 had < 25 ps). An INFO FAIL is fixed structurally at the core's next re-sign; it is not a sign-off gate. Measured basis:
      VQ 2.48 -> -60.90, NNfd 8.23 -> -65.12 (DROOP-DERATE-1, UNCHECKED).
+- 12.13 LOCALITY FIRST (OWNER 2026-10-27 ~20:3x: "all of the non-closing dies must be reworked to use locality as the first principle").
+     Applies to every die that has not passed the 12.4a freeze gate, which today is all 5. It overrides any earlier die-wide clock
+     form (12.7/12.8 MSCTS die mesh/H-tree as the release clock). Top-down PLANNING (12.7 master plan, PG first, streets, budgets,
+     pins) stays: it is how locality is made.
+  a. Regions from connectivity. Cluster cores/tiles by measured traffic (bit-mm from the plan/RTL), so that heavy traffic stays inside a
+     region. Size regions so the region clock stays shallow (guidance about 3-4 mm span, about 1-1.5 ns insertion). The gate is the
+     derated margin in d, not these numbers.
+  b. Clock follows data. Each region has its own local tree/spine. Region clocks are fed along the inter-region link graph
+     (neighbour-forwarded, or from a shared spine running along the links). No region hangs off a deep die-wide tree.
+  c. Links. Neighbour links are registered hops placed along the clock spine. Far links are chains of neighbour hops that cross
+     regions through fixed-latency mesochronous crossings. The crossing design follows the MESO-COUNT-1 verdict: count-aligned if
+     proven, otherwise the current ring with a per-crossing margin. The 10-14 static schedule stays: no runtime credits/backpressure on
+     production paths.
+  d. Gates unchanged: die GRT0 incl clock; die STA related pairs inside regions; landed_phase_ocv derated margin >=100 ps TT and FF on
+     every crossing; token pass. NUMBER-CHECK before quoting.
+  e. Rework order per die: traffic matrix -> region map with a locality score (bit-mm inside vs across, crossings, worst unshared
+     clock per crossing) -> re-plan event (one source for the die) -> region clocks -> crossings -> gates. Existing closed cores are
+     reused; only partition/plan glue changes, unless a core straddles a region cut.
+  f. Lanes that build a die-wide clock as the release form stop. Their reusable parts (M8 row reservations, streets, PG) move to
+     the locality form.
+- 12.14 FASTER CLOSURE (OWNER 2026-10-27 "agree with your changes to close faster" + "I don't agree with working on one die first.
+     work 5 dies in parallel"). Changes to how we work; no gate threshold changes.
+  a. RULE FREEZE. The binding set is: locality first (12.13); fixed-latency mesochronous crossings + static schedule; crossing margin
+     counted after OCV + droop (landed_phase_ocv >=100 ps TT/FF); one plan source per die; NUMBER-CHECK on headline numbers; die gates
+     (12.4a freeze gate, release = die STA real views + token pass). No new rule or hard check is added unless a MEASURED failure forces
+     it; proposals are batched to the owner, never added by a lane or by COORD alone.
+  b. ESTIMATE BEFORE BUILD. Every architecture choice (region map, clock feed, crossing form, plan event) gets a one-page analytic
+     feasibility estimate first (delay/mm x span x derate, track demand vs supply, crossing margin). Build only if the estimate passes.
+  c. ALL 5 DIES IN PARALLEL, one DIE OWNER lane each (S81, HEAD, QC, KV, HBM). The die owner holds the plan, the region map, clocks,
+     crossings and gates for that die and may merge die-local changes (die plan/results/die-specific scripts) to main itself via the
+     intel2 merge.lock with tests passing. Shared tools/flow/rtl/common go through the shared merge lane.
+  d. ~10 LANES total: 5 die owners + shared merge/flow + locality/estimate tool + crossing (MESO-COUNT/OSS-MESO) + open clock tools
+     + open hierarchy tool. Current short lanes finish; their follow-ups go to the die owner.
+  e. COORD answers every ASK within 30 min; with no answer the lane's stated default applies.
+  f. GATES THAT EARN THEIR PLACE. Keep checks that have caught real failures; flow canaries run in the background and do not block
+     a row unless they show a regression; no serial gate chains where checks can run in parallel.
+  g. Once OSS-HIER works, regions become hierarchical partitions to cut the number of hard cores.
