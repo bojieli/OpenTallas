@@ -1444,8 +1444,8 @@
             0.036
           ],
           "pins_file": "cores/elemA_pins.json",
-          "lef": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv.lef",
-          "lib": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
+          "lef": "results/head_core_clockfreeze_release/elemA_corner/ot_s81hd_elemA_cv.lef",
+          "lib": "results/head_core_clockfreeze_release/elemA_corner/ot_s81hd_elemA_cv_tt.lib",
           "note": "214445 cells (ASSUMED: elemB cells x area ratio (no elemA count committed)); CLOSED SS view dshead-elemA-ss-f11f3cc47 (SS +133.67 / FF +10.81 ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff SPLIT9 1), renamed ot_s81hd_elemA_cv (tools/s81_head/hd_cv_views.py, names only). 10-24: the tile is rebased on this parameter point (ot_s81hd_tile CUT 0x1ff / SPLIT9 1 / CV 1); ot_s81hd_elem == the closed RTL there (tools/s81_head/hd_elem_eq.sh EQ_BENCH_PASS A and B)"
         },
         {
@@ -1465,8 +1465,8 @@
             0.036
           ],
           "pins_file": "cores/elemA_pins.json",
-          "lef": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv.lef",
-          "lib": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
+          "lef": "results/head_core_clockfreeze_release/elemA_corner/ot_s81hd_elemA_cv.lef",
+          "lib": "results/head_core_clockfreeze_release/elemA_corner/ot_s81hd_elemA_cv_tt.lib",
           "note": "214445 cells (ASSUMED: elemB cells x area ratio (no elemA count committed)); CLOSED SS view dshead-elemA-ss-f11f3cc47 (SS +133.67 / FF +10.81 ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff SPLIT9 1), renamed ot_s81hd_elemA_cv (tools/s81_head/hd_cv_views.py, names only). 10-24: the tile is rebased on this parameter point (ot_s81hd_tile CUT 0x1ff / SPLIT9 1 / CV 1); ot_s81hd_elem == the closed RTL there (tools/s81_head/hd_elem_eq.sh EQ_BENCH_PASS A and B)"
         },
         {
@@ -1486,8 +1486,8 @@
             0.012
           ],
           "pins_file": "cores/elemA_pins.json",
-          "lef": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv.lef",
-          "lib": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
+          "lef": "results/head_core_clockfreeze_release/elemA_corner/ot_s81hd_elemA_cv.lef",
+          "lib": "results/head_core_clockfreeze_release/elemA_corner/ot_s81hd_elemA_cv_tt.lib",
           "note": "214445 cells (ASSUMED: elemB cells x area ratio (no elemA count committed)); CLOSED SS view dshead-elemA-ss-f11f3cc47 (SS +133.67 / FF +10.81 ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff SPLIT9 1), renamed ot_s81hd_elemA_cv (tools/s81_head/hd_cv_views.py, names only). 10-24: the tile is rebased on this parameter point (ot_s81hd_tile CUT 0x1ff / SPLIT9 1 / CV 1); ot_s81hd_elem == the closed RTL there (tools/s81_head/hd_elem_eq.sh EQ_BENCH_PASS A and B)"
         },
         {
@@ -1507,8 +1507,8 @@
             0.012
           ],
           "pins_file": "cores/elemA_pins.json",
-          "lef": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv.lef",
-          "lib": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemA_cv/ot_s81hd_elemA_cv_tt.lib",
+          "lef": "results/head_core_clockfreeze_release/elemA_corner/ot_s81hd_elemA_cv.lef",
+          "lib": "results/head_core_clockfreeze_release/elemA_corner/ot_s81hd_elemA_cv_tt.lib",
           "note": "214445 cells (ASSUMED: elemB cells x area ratio (no elemA count committed)); CLOSED SS view dshead-elemA-ss-f11f3cc47 (SS +133.67 / FF +10.81 ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff SPLIT9 1), renamed ot_s81hd_elemA_cv (tools/s81_head/hd_cv_views.py, names only). 10-24: the tile is rebased on this parameter point (ot_s81hd_tile CUT 0x1ff / SPLIT9 1 / CV 1); ot_s81hd_elem == the closed RTL there (tools/s81_head/hd_elem_eq.sh EQ_BENCH_PASS A and B)"
         },
         {
@@ -1528,8 +1528,8 @@
             0.012
           ],
           "pins_file": "cores/elemB_pins.json",
-          "lef": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemB_cv/ot_s81hd_elemB_cv.lef",
-          "lib": "physical/die_plan/s81_head/cores/views/ot_s81hd_elemB_cv/ot_s81hd_elemB_cv_tt.lib",
+          "lef": "results/head_core_clockfreeze_release/elemB_corner/ot_s81hd_elemB_cv.lef",
+          "lib": "results/head_core_clockfreeze_release/elemB_corner/ot_s81hd_elemB_cv_tt.lib",
           "note": "163817 cells (measured (elemB_final original_physical.json)); CLOSED SS view dshead-elemB-ss-a318fdf47 (SS +91.75 / FF +19.13 ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff SPLIT9 1), renamed ot_s81hd_elemB_cv (tools/s81_head/hd_cv_views.py, names only). 10-24: the tile is rebased on this parameter point (ot_s81hd_tile CUT 0x1ff / SPLIT9 1 / CV 1); ot_s81hd_elem == the closed RTL there (tools/s81_head/hd_elem_eq.sh EQ_BENCH_PASS A and B)"
         }
       ],
@@ -3365,7 +3365,8 @@
         "rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv",
         "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
         "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v"
-      ]
+      ],
+      "phy_pg_offmodel": "DIE-HEAD-5 10-28: the VDDPHY domain (die.pg.domains phy_lk_*) reserves the analog PMA body + its bump field; the PMA is not part of this partition view (it sits behind the type pads pma_*; ot_pdie_serdes keeps only a behavioural PMA latency model), so the kit domain holds no macro: VDDPHY M6/M7 straps + M7 pins + hard placement blockage; the digital link ot_s81hd_serdes_link is placed on core VDD in the 150-um strip"
     },
     "hd_st_turn": {
       "module": "ot_s81hd_st_turn",
