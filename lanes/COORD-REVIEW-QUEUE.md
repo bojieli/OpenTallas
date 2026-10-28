@@ -2783,3 +2783,18 @@ LEC NOT EQUIVALENT: the kit stops (lec/lec.json)
   (3) YES, move the die FT band out of the su31 gap into its own street sized by the street rule; do not widen the gap.
   (4) Move the spb0 PHY ~70 µm outward ONLY if the bump map and the die-edge keep-out are unchanged; otherwise shift the 4 SM t07 cores instead.
   The C18 base is shared with LAND-HBM-1 (one source, both forms).
+2026-10-27 19:14 PDT [COORD] LAND-HEAD-2 rulings (be648cbdd7: landed_phase_ocv.py -> RM83):
+  - Take (A). Every landed pair must split LATE: either a short unshared clock (target ≤3.4 ns TT, giving ≥100 ps derated margin) or a region clock forwarded from the neighbour across the top splits.
+  - Root cause: a 6.1 ns die tree feeding the regions is still a die-wide tree. The landed form needs a LOW-INSERTION top distribution; regions must not hang off a deep die tree.
+  - Keep the separate-droop-per-region assumption (conservative).
+  - (B)/(C) are not adopted as the fix.
+  - LAND-HEAD-3 = clock-form fix + GRT + recheck. LAND-HEAD-BIND-1 runs in parallel: hd_ctl observer -> ot_s81hd_ctl_core .start_i/.lep_fault_i, HEAD top hook, 8-port FT adapter.
+  - ALL landed lanes (KV/S81/HBM/QC-slice) must run landed_phase_ocv on their crossings as soon as they have arrivals. The margin includes OCV on the unshared tree plus droop; a |d| that is nominal only does not pass.
+2026-10-27 19:14 PDT [COORD] S81-CORES-R26 rulings:
+  - RM83: da48c2bc8e with 117e37566c; g0c b37d1c52c6.
+  - hrow 2465260038 goes to RM83 after its sign-off + routed LEC are collected.
+  - HCPL: no waiver. Redo the pin event so the clock is the centred M5 entry, then regenerate the kit.
+  - Graded mesh: use the shared adapter explicit_mesh_signoff (claude/head-r24-mesh-1027@8d7190cda, RM83). The ~107 MA/cm2 EM at M9 driver rails is a structural fix (more distributed, smaller drivers + wider driver straps), inside the S81 region clock under LAND-S81.
+  - GB: accept NO reset-station padding (supersedes the TOK-ALL-17 padding ruling). TOK-ALL bench reruns with the die_sim_wrappers filelist.
+  - The L3 clock-slice window 28.3 > 20 goes to S81-CORE-LAT.
+  - S81-CORES-R27 continues: L2 GEOM->route, hrow/l5/eg/BZ0 collects, eng_rr_e kit, R2 fold, E5 re-LEC, chain2 windows, 12 failing-LEC kits, idx_tx V3.
